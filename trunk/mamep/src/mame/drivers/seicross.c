@@ -90,7 +90,7 @@ READ8_MEMBER(seicross_state::friskyt_portB_r)
 WRITE8_MEMBER(seicross_state::friskyt_portB_w)
 {
 
-	//logerror("PC %04x: 8910 port B = %02x\n", space->device().safe_pc(), data);
+	//logerror("PC %04x: 8910 port B = %02x\n", space.device().safe_pc(), data);
 	/* bit 0 is IRQ enable */
 	m_irq_mask = data & 1;
 
@@ -388,12 +388,11 @@ static const ay8910_interface ay8910_config =
 	DEVCB_DRIVER_MEMBER(seicross_state,friskyt_portB_w)
 };
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(seicross_state::vblank_irq)
 {
-	seicross_state *state = device->machine().driver_data<seicross_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 
 }
 
@@ -404,7 +403,7 @@ static MACHINE_CONFIG_START( nvram, seicross_state )
 	MCFG_CPU_ADD("maincpu", Z80, 3072000)	/* 3.072 MHz? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seicross_state,  vblank_irq)
 
 	MCFG_CPU_ADD("mcu", NSC8105, 3072000)	/* ??? */
 	MCFG_CPU_PROGRAM_MAP(mcu_nvram_map)
@@ -419,7 +418,7 @@ static MACHINE_CONFIG_START( nvram, seicross_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seicross)
+	MCFG_SCREEN_UPDATE_DRIVER(seicross_state, screen_update_seicross)
 
 	MCFG_GFXDECODE(seicross)
 	MCFG_PALETTE_LENGTH(64)

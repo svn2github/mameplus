@@ -221,7 +221,7 @@ static MACHINE_CONFIG_START( funybubl, funybubl_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		 /* 6 MHz?? */
 	MCFG_CPU_PROGRAM_MAP(funybubl_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", funybubl_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)		 /* 4 MHz?? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -234,7 +234,7 @@ static MACHINE_CONFIG_START( funybubl, funybubl_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(12*8, 512-12*8-1, 16, 256-16-1)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(funybubl)
+	MCFG_SCREEN_UPDATE_DRIVER(funybubl_state, screen_update_funybubl)
 
 	MCFG_GFXDECODE(funybubl)
 	MCFG_PALETTE_LENGTH(0x400)

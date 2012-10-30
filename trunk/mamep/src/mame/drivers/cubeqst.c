@@ -56,6 +56,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_cubeqst(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank);
+	TIMER_CALLBACK_MEMBER(delayed_bank_swap);
 };
 
 
@@ -110,9 +113,8 @@ WRITE16_MEMBER(cubeqst_state::palette_w)
 }
 
 /* TODO: This is a simplified version of what actually happens */
-static SCREEN_UPDATE_RGB32( cubeqst )
+UINT32 cubeqst_state::screen_update_cubeqst(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	cubeqst_state *state = screen.machine().driver_data<cubeqst_state>();
 	int y;
 
 	/*
@@ -121,19 +123,19 @@ static SCREEN_UPDATE_RGB32( cubeqst )
     */
 
 	/* Bit 3 selects LD/#GRAPHICS */
-	bitmap.fill(state->m_colormap[255], cliprect);
+	bitmap.fill(m_colormap[255], cliprect);
 
 	/* TODO: Add 1 for linebuffering? */
 	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
 		int i;
-		int num_entries = cubeqcpu_get_ptr_ram_val(screen.machine().device("line_cpu"), y);
-		UINT32 *stk_ram = cubeqcpu_get_stack_ram(screen.machine().device("line_cpu"));
+		int num_entries = cubeqcpu_get_ptr_ram_val(machine().device("line_cpu"), y);
+		UINT32 *stk_ram = cubeqcpu_get_stack_ram(machine().device("line_cpu"));
 		UINT32 *dest = &bitmap.pix32(y);
 		UINT32 pen;
 
 		/* Zap the depth buffer */
-		memset(state->m_depth_buffer, 0xff, 512);
+		memset(m_depth_buffer, 0xff, 512);
 
 		/* Process all the spans on this scanline */
 		if (y < 256)
@@ -170,13 +172,13 @@ static SCREEN_UPDATE_RGB32( cubeqst )
 				}
 
 				/* Draw the span, testing for depth */
-				pen = state->m_colormap[state->m_generic_paletteram_16[color]];
+				pen = m_colormap[m_generic_paletteram_16[color]];
 				for (x = h1; x <= h2; ++x)
 				{
-					if (!(state->m_depth_buffer[x] < depth))
+					if (!(m_depth_buffer[x] < depth))
 					{
 						dest[x] = pen;
-						state->m_depth_buffer[x] = depth;
+						m_depth_buffer[x] = depth;
 					}
 				}
 			}
@@ -192,15 +194,14 @@ READ16_MEMBER(cubeqst_state::line_r)
 	return machine().primary_screen->vpos();
 }
 
-static INTERRUPT_GEN( vblank )
+INTERRUPT_GEN_MEMBER(cubeqst_state::vblank)
 {
-	cubeqst_state *state = device->machine().driver_data<cubeqst_state>();
-	int int_level = state->m_video_field == 0 ? 5 : 6;
+	int int_level = m_video_field == 0 ? 5 : 6;
 
-	device->execute().set_input_line(int_level, HOLD_LINE);
+	device.execute().set_input_line(int_level, HOLD_LINE);
 
 	/* Update the laserdisc */
-	state->m_video_field ^= 1;
+	m_video_field ^= 1;
 }
 
 
@@ -256,19 +257,20 @@ WRITE16_MEMBER(cubeqst_state::control_w)
  *
  *************************************/
 
-static TIMER_CALLBACK( delayed_bank_swap )
+TIMER_CALLBACK_MEMBER(cubeqst_state::delayed_bank_swap)
 {
-	cubeqcpu_swap_line_banks(machine.device("line_cpu"));
+	cubeqcpu_swap_line_banks(machine().device("line_cpu"));
 
 	/* TODO: This is a little dubious */
-	cubeqcpu_clear_stack(machine.device("line_cpu"));
+	cubeqcpu_clear_stack(machine().device("line_cpu"));
 }
 
 
 static void swap_linecpu_banks(running_machine &machine)
 {
+	cubeqst_state *state = machine.driver_data<cubeqst_state>();
 	/* Best sync up before we switch banks around */
-	machine.scheduler().synchronize(FUNC(delayed_bank_swap));
+	machine.scheduler().synchronize(timer_expired_delegate(FUNC(cubeqst_state::delayed_bank_swap),state));
 }
 
 
@@ -393,22 +395,22 @@ INPUT_PORTS_END
 
 READ16_MEMBER(cubeqst_state::read_rotram)
 {
-	return cubeqcpu_rotram_r(machine().device("rotate_cpu"), offset, mem_mask);
+	return cubeqcpu_rotram_r(machine().device("rotate_cpu"), space, offset, mem_mask);
 }
 
 WRITE16_MEMBER(cubeqst_state::write_rotram)
 {
-	cubeqcpu_rotram_w(machine().device("rotate_cpu"), offset, data, mem_mask);
+	cubeqcpu_rotram_w(machine().device("rotate_cpu"), space, offset, data, mem_mask);
 }
 
 READ16_MEMBER(cubeqst_state::read_sndram)
 {
-	return cubeqcpu_sndram_r(machine().device("sound_cpu"), offset, mem_mask);
+	return cubeqcpu_sndram_r(machine().device("sound_cpu"), space, offset, mem_mask);
 }
 
 WRITE16_MEMBER(cubeqst_state::write_sndram)
 {
-	cubeqcpu_sndram_w(machine().device("sound_cpu"), offset, data, mem_mask);
+	cubeqcpu_sndram_w(machine().device("sound_cpu"), space, offset, data, mem_mask);
 }
 
 static ADDRESS_MAP_START( m68k_program_map, AS_PROGRAM, 16, cubeqst_state )
@@ -513,7 +515,7 @@ static const cubeqst_lin_config lin_config =
 static MACHINE_CONFIG_START( cubeqst, cubeqst_state )
 	MCFG_CPU_ADD("main_cpu", M68000, XTAL_16MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(m68k_program_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cubeqst_state,  vblank)
 
 	MCFG_CPU_ADD("rotate_cpu", CQUESTROT, XTAL_10MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(rotate_map)
@@ -532,7 +534,7 @@ static MACHINE_CONFIG_START( cubeqst, cubeqst_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_LASERDISC_SIMUTREK_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(CUBEQST_HBLANK, CUBEQST_VCOUNT, cubeqst)
+	MCFG_LASERDISC_OVERLAY_DRIVER(CUBEQST_HBLANK, CUBEQST_VCOUNT, cubeqst_state, screen_update_cubeqst)
 	MCFG_LASERDISC_OVERLAY_CLIP(0, 320-1, 0, 256-8)
 	MCFG_LASERDISC_OVERLAY_POSITION(0.002f, -0.018f)
 	MCFG_LASERDISC_OVERLAY_SCALE(1.0f, 1.030f)

@@ -108,33 +108,31 @@ static void gijoe_objdma( running_machine &machine )
 	}
 }
 
-static TIMER_CALLBACK( dmaend_callback )
+TIMER_CALLBACK_MEMBER(gijoe_state::dmaend_callback)
 {
-	gijoe_state *state = machine.driver_data<gijoe_state>();
 
-	if (state->m_cur_control2 & 0x0020)
-		state->m_maincpu->set_input_line(6, HOLD_LINE);
+	if (m_cur_control2 & 0x0020)
+		m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( gijoe_interrupt )
+INTERRUPT_GEN_MEMBER(gijoe_state::gijoe_interrupt)
 {
-	gijoe_state *state = device->machine().driver_data<gijoe_state>();
 
 	// global interrupt masking (*this game only)
-	if (!k056832_is_irq_enabled(state->m_k056832, 0))
+	if (!k056832_is_irq_enabled(m_k056832, 0))
 		return;
 
-	if (k053246_is_irq_enabled(state->m_k053246))
+	if (k053246_is_irq_enabled(m_k053246))
 	{
-		gijoe_objdma(device->machine());
+		gijoe_objdma(machine());
 
 		// 42.7us(clr) + 341.3us(xfer) delay at 6Mhz dotclock
-		state->m_dmadelay_timer->adjust(JOE_DMADELAY);
+		m_dmadelay_timer->adjust(JOE_DMADELAY);
 	}
 
 	// trigger V-blank interrupt
-	if (state->m_cur_control2 & 0x0080)
-		device->execute().set_input_line(5, HOLD_LINE);
+	if (m_cur_control2 & 0x0080)
+		device.execute().set_input_line(5, HOLD_LINE);
 }
 
 WRITE16_MEMBER(gijoe_state::sound_cmd_w)
@@ -281,7 +279,7 @@ void gijoe_state::machine_start()
 	m_k053246 = machine().device("k053246");
 	m_k053251 = machine().device("k053251");
 
-	m_dmadelay_timer = machine().scheduler().timer_alloc(FUNC(dmaend_callback));
+	m_dmadelay_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(gijoe_state::dmaend_callback),this));
 
 	save_item(NAME(m_cur_control2));
 }
@@ -296,7 +294,7 @@ static MACHINE_CONFIG_START( gijoe, gijoe_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* Confirmed */
 	MCFG_CPU_PROGRAM_MAP(gijoe_map)
-	MCFG_CPU_VBLANK_INT("screen", gijoe_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gijoe_state,  gijoe_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)	/* Amuse & confirmed. z80e */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -312,7 +310,7 @@ static MACHINE_CONFIG_START( gijoe, gijoe_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(24, 24+288-1, 16, 16+224-1)
-	MCFG_SCREEN_UPDATE_STATIC(gijoe)
+	MCFG_SCREEN_UPDATE_DRIVER(gijoe_state, screen_update_gijoe)
 
 	MCFG_PALETTE_LENGTH(2048)
 

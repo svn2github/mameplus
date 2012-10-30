@@ -140,8 +140,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( port_map, AS_IO, 8, xyonix_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x20, 0x20) AM_READNOP AM_DEVWRITE("sn1", sn76496_new_device, write)	/* SN76496 ready signal */
-	AM_RANGE(0x21, 0x21) AM_READNOP AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0x20, 0x20) AM_READNOP AM_DEVWRITE("sn1", sn76496_device, write)	/* SN76496 ready signal */
+	AM_RANGE(0x21, 0x21) AM_READNOP AM_DEVWRITE("sn2", sn76496_device, write)
 	AM_RANGE(0x40, 0x40) AM_WRITENOP		/* NMI ack? */
 	AM_RANGE(0x50, 0x50) AM_WRITE(xyonix_irqack_w)
 	AM_RANGE(0x60, 0x61) AM_WRITENOP		/* mc6845 */
@@ -235,8 +235,8 @@ static MACHINE_CONFIG_START( xyonix, xyonix_state )
 	MCFG_CPU_ADD("maincpu", Z80,16000000 / 4)		 /* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(port_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
-	MCFG_CPU_PERIODIC_INT(irq0_line_assert,4*60)	/* ?? controls music tempo */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", xyonix_state,  nmi_line_pulse)
+	MCFG_CPU_PERIODIC_INT_DRIVER(xyonix_state, irq0_line_assert, 4*60)	/* ?? controls music tempo */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -244,7 +244,7 @@ static MACHINE_CONFIG_START( xyonix, xyonix_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(80*4, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 80*4-1, 0, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(xyonix)
+	MCFG_SCREEN_UPDATE_DRIVER(xyonix_state, screen_update_xyonix)
 
 	MCFG_GFXDECODE(xyonix)
 	MCFG_PALETTE_LENGTH(256)
@@ -253,11 +253,11 @@ static MACHINE_CONFIG_START( xyonix, xyonix_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, 16000000/4)
+	MCFG_SOUND_ADD("sn1", SN76496, 16000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 16000000/4)
+	MCFG_SOUND_ADD("sn2", SN76496, 16000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

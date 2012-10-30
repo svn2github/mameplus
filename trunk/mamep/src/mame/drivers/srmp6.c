@@ -105,6 +105,7 @@ public:
 	DECLARE_READ16_MEMBER(srmp6_irq_ack_r);
 	DECLARE_DRIVER_INIT(INIT);
 	virtual void video_start();
+	UINT32 screen_update_srmp6(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 #define VERBOSE 0
@@ -172,12 +173,11 @@ void srmp6_state::video_start()
 static int xixi=0;
 #endif
 
-static SCREEN_UPDATE_RGB32(srmp6)
+UINT32 srmp6_state::screen_update_srmp6(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	srmp6_state *state = screen.machine().driver_data<srmp6_state>();
 	int alpha;
 	int x,y,tileno,height,width,xw,yw,sprite,xb,yb;
-	UINT16 *sprite_list = state->m_sprram_old;
+	UINT16 *sprite_list = m_sprram_old;
 	UINT16 mainlist_offset = 0;
 
 	union
@@ -190,13 +190,13 @@ static SCREEN_UPDATE_RGB32(srmp6)
 
 #if 0
 	/* debug */
-	if(screen.machine().input().code_pressed_once(KEYCODE_Q))
+	if(machine().input().code_pressed_once(KEYCODE_Q))
 	{
 		++xixi;
 		printf("%x\n",xixi);
 	}
 
-	if(screen.machine().input().code_pressed_once(KEYCODE_W))
+	if(machine().input().code_pressed_once(KEYCODE_W))
 	{
 		--xixi;
 		printf("%x\n",xixi);
@@ -207,7 +207,7 @@ static SCREEN_UPDATE_RGB32(srmp6)
 	while (mainlist_offset<0x2000/2)
 	{
 
-		UINT16 *sprite_sublist = &state->m_sprram_old[sprite_list[mainlist_offset+1]<<3];
+		UINT16 *sprite_sublist = &m_sprram_old[sprite_list[mainlist_offset+1]<<3];
 		UINT16 sublist_length=sprite_list[mainlist_offset+0]&0x7fff; //+1 ?
 		INT16 global_x,global_y, flip_x, flip_y;
 		UINT16 global_pal;
@@ -273,7 +273,7 @@ static SCREEN_UPDATE_RGB32(srmp6)
 						else
 							yb=y+(height-yw-1)*8+global_y;
 
-						drawgfx_alpha(bitmap,cliprect,screen.machine().gfx[0],tileno,global_pal,flip_x,flip_y,xb,yb,0,alpha);
+						drawgfx_alpha(bitmap,cliprect,machine().gfx[0],tileno,global_pal,flip_x,flip_y,xb,yb,0,alpha);
 						tileno++;
 					}
 				}
@@ -285,12 +285,12 @@ static SCREEN_UPDATE_RGB32(srmp6)
 		mainlist_offset+=8;
 	}
 
-	memcpy(state->m_sprram_old, state->m_sprram, 0x80000);
+	memcpy(m_sprram_old, m_sprram, 0x80000);
 
-	if(screen.machine().input().code_pressed_once(KEYCODE_Q))
+	if(machine().input().code_pressed_once(KEYCODE_Q))
 	{
 		FILE *p=fopen("tileram.bin","wb");
-		fwrite(state->m_tileram, 1, 0x100000*16, p);
+		fwrite(m_tileram, 1, 0x100000*16, p);
 		fclose(p);
 	}
 
@@ -674,14 +674,14 @@ static MACHINE_CONFIG_START( srmp6, srmp6_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(srmp6_map)
-	MCFG_CPU_VBLANK_INT("screen",irq4_line_assert) // irq3 is a timer irq, but it's never enabled
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", srmp6_state, irq4_line_assert) // irq3 is a timer irq, but it's never enabled
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 42*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(srmp6)
+	MCFG_SCREEN_UPDATE_DRIVER(srmp6_state, screen_update_srmp6)
 
 	MCFG_PALETTE_LENGTH(0x800)
 

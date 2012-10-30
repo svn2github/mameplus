@@ -75,24 +75,22 @@ WRITE8_MEMBER(espial_state::espial_sound_nmi_mask_w)
 	m_sound_nmi_enabled = data & 1;
 }
 
-static TIMER_DEVICE_CALLBACK( espial_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(espial_state::espial_scanline)
 {
-	espial_state *state = timer.machine().driver_data<espial_state>();
 	int scanline = param;
 
-	if(scanline == 240 && state->m_main_nmi_enabled) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(scanline == 240 && m_main_nmi_enabled) // vblank-out irq
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if(scanline == 16) // timer irq, checks soundlatch port then updates some sound related work RAM buffers
-		timer.machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 
-INTERRUPT_GEN( espial_sound_nmi_gen )
+INTERRUPT_GEN_MEMBER(espial_state::espial_sound_nmi_gen)
 {
-	espial_state *state = device->machine().driver_data<espial_state>();
 
-	if (state->m_sound_nmi_enabled)
+	if (m_sound_nmi_enabled)
 		nmi_line_pulse(device);
 }
 
@@ -323,12 +321,12 @@ static MACHINE_CONFIG_START( espial, espial_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 3072000)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(espial_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", espial_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", espial_state, espial_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3072000)	/* 2 MHz?????? */
 	MCFG_CPU_PROGRAM_MAP(espial_sound_map)
 	MCFG_CPU_IO_MAP(espial_sound_io_map)
-	MCFG_CPU_PERIODIC_INT(espial_sound_nmi_gen,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(espial_state, espial_sound_nmi_gen, 4*60)
 
 
 	/* video hardware */
@@ -337,7 +335,7 @@ static MACHINE_CONFIG_START( espial, espial_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(espial)
+	MCFG_SCREEN_UPDATE_DRIVER(espial_state, screen_update_espial)
 
 	MCFG_GFXDECODE(espial)
 	MCFG_PALETTE_LENGTH(256)

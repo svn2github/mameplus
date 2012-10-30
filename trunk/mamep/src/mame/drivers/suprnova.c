@@ -416,9 +416,9 @@ READ32_MEMBER(skns_state::skns_hit_r)
 /* start old driver code */
 
 
-static TIMER_DEVICE_CALLBACK( interrupt_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(skns_state::interrupt_callback)
 {
-	timer.machine().device("maincpu")->execute().set_input_line(param, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(param, HOLD_LINE);
 }
 
 void skns_state::machine_reset()
@@ -434,15 +434,14 @@ void skns_state::machine_reset()
 }
 
 
-static TIMER_DEVICE_CALLBACK(skns_irq)
+TIMER_DEVICE_CALLBACK_MEMBER(skns_state::skns_irq)
 {
-	skns_state *state = timer.machine().driver_data<skns_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(5,HOLD_LINE); //vblank
+		m_maincpu->set_input_line(5,HOLD_LINE); //vblank
 	else if(scanline == 0)
-		state->m_maincpu->set_input_line(1,HOLD_LINE); // spc
+		m_maincpu->set_input_line(1,HOLD_LINE); // spc
 }
 
 /**********************************************************************************
@@ -757,17 +756,17 @@ static MSM6242_INTERFACE( rtc_intf )
 static MACHINE_CONFIG_START( skns, skns_state )
 	MCFG_CPU_ADD("maincpu", SH2,28638000)
 	MCFG_CPU_PROGRAM_MAP(skns_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", skns_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", skns_state, skns_irq, "screen", 0, 1)
 
 	MCFG_MSM6242_ADD("rtc", rtc_intf)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_TIMER_ADD_PERIODIC("int15_timer", interrupt_callback, attotime::from_msec(2))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("int15_timer", skns_state, interrupt_callback, attotime::from_msec(2))
 	MCFG_TIMER_PARAM(15)
-	MCFG_TIMER_ADD_PERIODIC("int11_timer", interrupt_callback, attotime::from_msec(8))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("int11_timer", skns_state, interrupt_callback, attotime::from_msec(8))
 	MCFG_TIMER_PARAM(11)
-	MCFG_TIMER_ADD_PERIODIC("int9_timer", interrupt_callback, attotime::from_hz(28638000/1824))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("int9_timer", skns_state, interrupt_callback, attotime::from_hz(28638000/1824))
 	MCFG_TIMER_PARAM(9)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
@@ -777,8 +776,8 @@ static MACHINE_CONFIG_START( skns, skns_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(340,262)
 	MCFG_SCREEN_VISIBLE_AREA(0,319,0,239)
-	MCFG_SCREEN_UPDATE_STATIC(skns)
-	MCFG_SCREEN_VBLANK_STATIC(skns)
+	MCFG_SCREEN_UPDATE_DRIVER(skns_state, screen_update_skns)
+	MCFG_SCREEN_VBLANK_DRIVER(skns_state, screen_eof_skns)
 
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_GFXDECODE(skns_bg)
@@ -970,21 +969,21 @@ static void set_drc_pcflush(running_machine &machine, UINT32 addr)
 
 DRIVER_INIT_MEMBER(skns_state,galpani4)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-5,-1); init_skns(machine());  }
 DRIVER_INIT_MEMBER(skns_state,galpanis)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-5,-1); init_skns(machine());  }
-DRIVER_INIT_MEMBER(skns_state,cyvern)     { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+0,+2); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x604d3c8, 0x604d3cb, read32_delegate(FUNC(skns_state::cyvern_speedup_r),this) );  set_drc_pcflush(machine(), 0x402ebd2);  }
-DRIVER_INIT_MEMBER(skns_state,galpans2)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-1,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x60fb6bc, 0x60fb6bf, read32_delegate(FUNC(skns_state::galpans2_speedup_r),this) ); set_drc_pcflush(machine(), 0x4049ae2); }
-DRIVER_INIT_MEMBER(skns_state,gutsn)      { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+0,+0); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x600c780, 0x600c783, read32_delegate(FUNC(skns_state::gutsn_speedup_r),this) ); set_drc_pcflush(machine(), 0x402206e); }
-DRIVER_INIT_MEMBER(skns_state,panicstr)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-1,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x60f19e4, 0x60f19e7, read32_delegate(FUNC(skns_state::panicstr_speedup_r),this) ); set_drc_pcflush(machine(), 0x404e68a);  }
-DRIVER_INIT_MEMBER(skns_state,senknow)    { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+1,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x60000dc, 0x60000df, read32_delegate(FUNC(skns_state::senknow_speedup_r),this) ); set_drc_pcflush(machine(), 0x4017dce);  }
-DRIVER_INIT_MEMBER(skns_state,puzzloope)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6081d38, 0x6081d3b, read32_delegate(FUNC(skns_state::puzzloope_speedup_r),this) ); set_drc_pcflush(machine(), 0x401da14); }
-DRIVER_INIT_MEMBER(skns_state,puzzloopj)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6086714, 0x6086717, read32_delegate(FUNC(skns_state::puzzloopj_speedup_r),this) ); set_drc_pcflush(machine(), 0x401dca0); }
-DRIVER_INIT_MEMBER(skns_state,puzzloopa)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6085bcc, 0x6085bcf, read32_delegate(FUNC(skns_state::puzzloopa_speedup_r),this) ); set_drc_pcflush(machine(), 0x401d9d4); }
-DRIVER_INIT_MEMBER(skns_state,puzzloopu)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6085cec, 0x6085cef, read32_delegate(FUNC(skns_state::puzzloopu_speedup_r),this) ); set_drc_pcflush(machine(), 0x401dab0); }
-DRIVER_INIT_MEMBER(skns_state,jjparads)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6000994, 0x6000997, read32_delegate(FUNC(skns_state::jjparads_speedup_r),this) ); set_drc_pcflush(machine(), 0x4015e84); }
-DRIVER_INIT_MEMBER(skns_state,jjparad2)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6000984, 0x6000987, read32_delegate(FUNC(skns_state::jjparad2_speedup_r),this) ); set_drc_pcflush(machine(), 0x401620a); }
-DRIVER_INIT_MEMBER(skns_state,ryouran)    { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6000a14, 0x6000a17, read32_delegate(FUNC(skns_state::ryouran_speedup_r),this) );  set_drc_pcflush(machine(), 0x40182ce); }
-DRIVER_INIT_MEMBER(skns_state,teljan)     { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6002fb4, 0x6002fb7, read32_delegate(FUNC(skns_state::teljan_speedup_r),this) ); set_drc_pcflush(machine(), 0x401ba32); }
-DRIVER_INIT_MEMBER(skns_state,sengekis)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-192,-272); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x60b74bc, 0x60b74bf, read32_delegate(FUNC(skns_state::sengekis_speedup_r),this) ); set_drc_pcflush(machine(), 0x60006ec); }
-DRIVER_INIT_MEMBER(skns_state,sengekij)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-192,-272); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x60b7380, 0x60b7383, read32_delegate(FUNC(skns_state::sengekij_speedup_r),this) ); set_drc_pcflush(machine(), 0x60006ec); }
+DRIVER_INIT_MEMBER(skns_state,cyvern)     { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+0,+2); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x604d3c8, 0x604d3cb, read32_delegate(FUNC(skns_state::cyvern_speedup_r),this) );  set_drc_pcflush(machine(), 0x402ebd2);  }
+DRIVER_INIT_MEMBER(skns_state,galpans2)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-1,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60fb6bc, 0x60fb6bf, read32_delegate(FUNC(skns_state::galpans2_speedup_r),this) ); set_drc_pcflush(machine(), 0x4049ae2); }
+DRIVER_INIT_MEMBER(skns_state,gutsn)      { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+0,+0); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x600c780, 0x600c783, read32_delegate(FUNC(skns_state::gutsn_speedup_r),this) ); set_drc_pcflush(machine(), 0x402206e); }
+DRIVER_INIT_MEMBER(skns_state,panicstr)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-1,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60f19e4, 0x60f19e7, read32_delegate(FUNC(skns_state::panicstr_speedup_r),this) ); set_drc_pcflush(machine(), 0x404e68a);  }
+DRIVER_INIT_MEMBER(skns_state,senknow)    { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+1,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60000dc, 0x60000df, read32_delegate(FUNC(skns_state::senknow_speedup_r),this) ); set_drc_pcflush(machine(), 0x4017dce);  }
+DRIVER_INIT_MEMBER(skns_state,puzzloope)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6081d38, 0x6081d3b, read32_delegate(FUNC(skns_state::puzzloope_speedup_r),this) ); set_drc_pcflush(machine(), 0x401da14); }
+DRIVER_INIT_MEMBER(skns_state,puzzloopj)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6086714, 0x6086717, read32_delegate(FUNC(skns_state::puzzloopj_speedup_r),this) ); set_drc_pcflush(machine(), 0x401dca0); }
+DRIVER_INIT_MEMBER(skns_state,puzzloopa)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6085bcc, 0x6085bcf, read32_delegate(FUNC(skns_state::puzzloopa_speedup_r),this) ); set_drc_pcflush(machine(), 0x401d9d4); }
+DRIVER_INIT_MEMBER(skns_state,puzzloopu)  { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-9,-1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6085cec, 0x6085cef, read32_delegate(FUNC(skns_state::puzzloopu_speedup_r),this) ); set_drc_pcflush(machine(), 0x401dab0); }
+DRIVER_INIT_MEMBER(skns_state,jjparads)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6000994, 0x6000997, read32_delegate(FUNC(skns_state::jjparads_speedup_r),this) ); set_drc_pcflush(machine(), 0x4015e84); }
+DRIVER_INIT_MEMBER(skns_state,jjparad2)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6000984, 0x6000987, read32_delegate(FUNC(skns_state::jjparad2_speedup_r),this) ); set_drc_pcflush(machine(), 0x401620a); }
+DRIVER_INIT_MEMBER(skns_state,ryouran)    { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6000a14, 0x6000a17, read32_delegate(FUNC(skns_state::ryouran_speedup_r),this) );  set_drc_pcflush(machine(), 0x40182ce); }
+DRIVER_INIT_MEMBER(skns_state,teljan)     { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(+5,+1); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6002fb4, 0x6002fb7, read32_delegate(FUNC(skns_state::teljan_speedup_r),this) ); set_drc_pcflush(machine(), 0x401ba32); }
+DRIVER_INIT_MEMBER(skns_state,sengekis)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-192,-272); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60b74bc, 0x60b74bf, read32_delegate(FUNC(skns_state::sengekis_speedup_r),this) ); set_drc_pcflush(machine(), 0x60006ec); }
+DRIVER_INIT_MEMBER(skns_state,sengekij)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-192,-272); init_skns(machine());machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60b7380, 0x60b7383, read32_delegate(FUNC(skns_state::sengekij_speedup_r),this) ); set_drc_pcflush(machine(), 0x60006ec); }
 DRIVER_INIT_MEMBER(skns_state,sarukani)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-1,-1); init_skns(machine()); set_drc_pcflush(machine(), 0x4013b42); } // Speedup is in skns_io_w()
 DRIVER_INIT_MEMBER(skns_state,galpans3)   { machine().device<sknsspr_device>("spritegen")->skns_sprite_kludge(-1,-1); init_skns(machine());  }
 

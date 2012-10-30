@@ -86,6 +86,9 @@ public:
 	DECLARE_WRITE8_MEMBER(ldp_write);
 	DECLARE_DRIVER_INIT(lgp);
 	virtual void machine_start();
+	UINT32 screen_update_lgp(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_callback_lgp);
+	TIMER_CALLBACK_MEMBER(irq_stop);
 };
 
 
@@ -95,13 +98,12 @@ public:
 
 
 /* VIDEO GOODS */
-static SCREEN_UPDATE_RGB32( lgp )
+UINT32 lgp_state::screen_update_lgp(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	lgp_state *state = screen.machine().driver_data<lgp_state>();
 	int charx, chary;
 
 	/* make color 0 transparent */
-	palette_set_color(screen.machine(), 0, MAKE_ARGB(0,0,0,0));
+	palette_set_color(machine(), 0, MAKE_ARGB(0,0,0,0));
 
 	/* clear */
 	bitmap.fill(0, cliprect);
@@ -115,8 +117,8 @@ static SCREEN_UPDATE_RGB32( lgp )
 
 			/* Somewhere there's a flag that offsets the tilemap by 0x100*x */
 			/* Palette is likely set somewhere as well (tile_control_ram?) */
-			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0],
-					state->m_tile_ram[current_screen_character],
+			drawgfx_transpen(bitmap, cliprect, machine().gfx[0],
+					m_tile_ram[current_screen_character],
 					0,
 					0, 0, charx*8, chary*8, 0);
 		}
@@ -331,26 +333,25 @@ static GFXDECODE_START( lgp )
 	GFXDECODE_ENTRY("gfx4", 0, lgp_gfx_layout_16x32, 0x0, 0x100)
 GFXDECODE_END
 
-static TIMER_CALLBACK( irq_stop )
+TIMER_CALLBACK_MEMBER(lgp_state::irq_stop)
 {
-	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
-static INTERRUPT_GEN( vblank_callback_lgp )
+INTERRUPT_GEN_MEMBER(lgp_state::vblank_callback_lgp)
 {
-	lgp_state *state = device->machine().driver_data<lgp_state>();
 	// NMI
-	//device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	//device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	// IRQ
-	device->execute().set_input_line(0, ASSERT_LINE);
-	state->m_irq_timer->adjust(attotime::from_usec(50));
+	device.execute().set_input_line(0, ASSERT_LINE);
+	m_irq_timer->adjust(attotime::from_usec(50));
 }
 
 
 void lgp_state::machine_start()
 {
-	m_irq_timer = machine().scheduler().timer_alloc(FUNC(irq_stop));
+	m_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(lgp_state::irq_stop),this));
 }
 
 
@@ -360,7 +361,7 @@ static MACHINE_CONFIG_START( lgp, lgp_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_PCB_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_program_map)
 	MCFG_CPU_IO_MAP(main_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_callback_lgp)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lgp_state,  vblank_callback_lgp)
 
 	/* sound cpu */
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_PCB_CLOCK)
@@ -369,7 +370,7 @@ static MACHINE_CONFIG_START( lgp, lgp_state )
 
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, lgp)
+	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, lgp_state, screen_update_lgp)
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")

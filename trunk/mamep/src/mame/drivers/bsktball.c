@@ -80,15 +80,15 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, bsktball_state )
 	AM_RANGE(0x0802, 0x0802) AM_READ_PORT("IN1")
 	AM_RANGE(0x0803, 0x0803) AM_READ_PORT("DSW")
 	AM_RANGE(0x1000, 0x1000) AM_WRITENOP /* Timer Reset */
-	AM_RANGE(0x1010, 0x1010) AM_DEVWRITE_LEGACY("discrete", bsktball_bounce_w) /* Crowd Amp / Bounce */
+	AM_RANGE(0x1010, 0x1010) AM_WRITE(bsktball_bounce_w) /* Crowd Amp / Bounce */
 	AM_RANGE(0x1022, 0x1023) AM_WRITENOP /* Coin Counter */
 	AM_RANGE(0x1024, 0x1025) AM_WRITE(bsktball_led1_w) /* LED 1 */
 	AM_RANGE(0x1026, 0x1027) AM_WRITE(bsktball_led2_w) /* LED 2 */
 	AM_RANGE(0x1028, 0x1029) AM_WRITE(bsktball_ld1_w) /* LD 1 */
 	AM_RANGE(0x102a, 0x102b) AM_WRITE(bsktball_ld2_w) /* LD 2 */
-	AM_RANGE(0x102c, 0x102d) AM_DEVWRITE_LEGACY("discrete", bsktball_noise_reset_w) /* Noise Reset */
+	AM_RANGE(0x102c, 0x102d) AM_WRITE(bsktball_noise_reset_w) /* Noise Reset */
 	AM_RANGE(0x102e, 0x102f) AM_WRITE(bsktball_nmion_w) /* NMI On */
-	AM_RANGE(0x1030, 0x1030) AM_DEVWRITE_LEGACY("discrete", bsktball_note_w) /* Music Ckt Note Dvsr */
+	AM_RANGE(0x1030, 0x1030) AM_WRITE(bsktball_note_w) /* Music Ckt Note Dvsr */
 	AM_RANGE(0x1800, 0x1bbf) AM_RAM_WRITE(bsktball_videoram_w) AM_SHARE("videoram") /* DISPLAY */
 	AM_RANGE(0x1bc0, 0x1bff) AM_RAM AM_SHARE("motion")
 	AM_RANGE(0x1c00, 0x1cff) AM_RAM
@@ -249,7 +249,7 @@ static MACHINE_CONFIG_START( bsktball, bsktball_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502,750000)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bsktball_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", bsktball_state, bsktball_scanline, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -258,7 +258,7 @@ static MACHINE_CONFIG_START( bsktball, bsktball_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bsktball)
+	MCFG_SCREEN_UPDATE_DRIVER(bsktball_state, screen_update_bsktball)
 
 	MCFG_GFXDECODE(bsktball)
 	MCFG_PALETTE_LENGTH(2*4 + 4*4*4*4)

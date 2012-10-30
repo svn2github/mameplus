@@ -109,6 +109,8 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_VIDEO_START(vertical);
+	UINT32 screen_update_statriv2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(statriv2_interrupt);
 };
 
 
@@ -191,13 +193,12 @@ WRITE8_MEMBER(statriv2_state::statriv2_videoram_w)
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( statriv2 )
+UINT32 statriv2_state::screen_update_statriv2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	statriv2_state *state = screen.machine().driver_data<statriv2_state>();
-	if (tms9927_screen_reset(screen.machine().device("tms")))
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	if (tms9927_screen_reset(machine().device("tms")))
+		bitmap.fill(get_black_pen(machine()), cliprect);
 	else
-		state->m_tilemap->draw(bitmap, cliprect, 0, 0);
+		m_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -209,17 +210,16 @@ static SCREEN_UPDATE_IND16( statriv2 )
  *
  *************************************/
 
-static INTERRUPT_GEN( statriv2_interrupt )
+INTERRUPT_GEN_MEMBER(statriv2_state::statriv2_interrupt)
 {
-	statriv2_state *state = device->machine().driver_data<statriv2_state>();
-	UINT8 new_coin = state->ioport("COIN")->read();
+	UINT8 new_coin = ioport("COIN")->read();
 
 	/* check the coin inputs once per frame */
-	state->m_latched_coin |= new_coin & (new_coin ^ state->m_last_coin);
-	state->m_last_coin = new_coin;
+	m_latched_coin |= new_coin & (new_coin ^ m_last_coin);
+	m_last_coin = new_coin;
 
-	device->execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
-	device->execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
+	device.execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
+	device.execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
 }
 
 
@@ -602,7 +602,7 @@ static MACHINE_CONFIG_START( statriv2, statriv2_state )
     MCFG_CPU_ADD("maincpu", I8085A, MASTER_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(statriv2_map)
 	MCFG_CPU_IO_MAP(statriv2_io_map)
-	MCFG_CPU_VBLANK_INT("screen", statriv2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", statriv2_state,  statriv2_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -612,7 +612,7 @@ static MACHINE_CONFIG_START( statriv2, statriv2_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 384, 0, 320, 270, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(statriv2)
+	MCFG_SCREEN_UPDATE_DRIVER(statriv2_state, screen_update_statriv2)
 
 	MCFG_TMS9927_ADD("tms", MASTER_CLOCK/2, tms9927_intf)
 
@@ -1128,8 +1128,8 @@ WRITE8_MEMBER(statriv2_state::laserdisc_io_w)
 
 DRIVER_INIT_MEMBER(statriv2_state,laserdisc)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
-	iospace->install_readwrite_handler(0x28, 0x2b, read8_delegate(FUNC(statriv2_state::laserdisc_io_r), this), write8_delegate(FUNC(statriv2_state::laserdisc_io_w), this));
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	iospace.install_readwrite_handler(0x28, 0x2b, read8_delegate(FUNC(statriv2_state::laserdisc_io_r), this), write8_delegate(FUNC(statriv2_state::laserdisc_io_w), this));
 }
 
 

@@ -398,7 +398,7 @@ static MACHINE_CONFIG_START( epos, epos_state )
 	MCFG_CPU_ADD("maincpu", Z80, 11000000/4)	/* 2.75 MHz (see notes) */
 	MCFG_CPU_PROGRAM_MAP(epos_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", epos_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -407,7 +407,7 @@ static MACHINE_CONFIG_START( epos, epos_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(272, 241)
 	MCFG_SCREEN_VISIBLE_AREA(0, 271, 0, 235)
-	MCFG_SCREEN_UPDATE_STATIC(epos)
+	MCFG_SCREEN_UPDATE_DRIVER(epos_state, screen_update_epos)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -422,7 +422,7 @@ static MACHINE_CONFIG_START( dealer, epos_state )
 	MCFG_CPU_ADD("maincpu", Z80, 11000000/4)	/* 2.75 MHz (see notes) */
 	MCFG_CPU_PROGRAM_MAP(dealer_map)
 	MCFG_CPU_IO_MAP(dealer_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", epos_state,  irq0_line_hold)
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
@@ -434,7 +434,7 @@ static MACHINE_CONFIG_START( dealer, epos_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(272, 241)
 	MCFG_SCREEN_VISIBLE_AREA(0, 271, 0, 235)
-	MCFG_SCREEN_UPDATE_STATIC(epos)
+	MCFG_SCREEN_UPDATE_DRIVER(epos_state, screen_update_epos)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

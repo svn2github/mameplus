@@ -402,21 +402,20 @@ static const ay8910_interface ay8910_interface_2 =
 };
 
 
-TIMER_DEVICE_CALLBACK( changela_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(changela_state::changela_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 256) // vblank irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xdf);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xdf);
 	else if(((scanline % 64) == 0)) // timer irq, 3 times per given vblank field
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf);
 }
 
-static INTERRUPT_GEN( chl_mcu_irq )
+INTERRUPT_GEN_MEMBER(changela_state::chl_mcu_irq)
 {
-	changela_state *state = device->machine().driver_data<changela_state>();
 
-	generic_pulse_irq_line(state->m_mcu, 0, 1);
+	generic_pulse_irq_line(m_mcu->execute(), 0, 1);
 }
 
 void changela_state::machine_start()
@@ -504,18 +503,18 @@ static MACHINE_CONFIG_START( changela, changela_state )
 
 	MCFG_CPU_ADD("maincpu", Z80,5000000)
 	MCFG_CPU_PROGRAM_MAP(changela_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", changela_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", changela_state, changela_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("mcu", M68705,2500000)
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
-	MCFG_CPU_VBLANK_INT("screen",chl_mcu_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", changela_state, chl_mcu_irq)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)  /* vert size is a guess */
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(changela)
+	MCFG_SCREEN_UPDATE_DRIVER(changela_state, screen_update_changela)
 
 	MCFG_PALETTE_LENGTH(0x40)
 

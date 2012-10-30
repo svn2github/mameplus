@@ -123,15 +123,15 @@ READ16_MEMBER(bionicc_state::hacked_soundcommand_r)
 
 ********************************************************************/
 
-static TIMER_DEVICE_CALLBACK( bionicc_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(bionicc_state::bionicc_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in or i8751 related irq
-		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -163,7 +163,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, bionicc_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x8001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x8000, 0x8001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 ADDRESS_MAP_END
@@ -354,7 +354,7 @@ static MACHINE_CONFIG_START( bionicc, bionicc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK / 2) /* 12 MHz - verified in schematics */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bionicc_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", bionicc_state, bionicc_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, EXO3_F0_CLK / 4)   /* EXO3 C,B=GND, A=5V ==> Divisor 2^2 */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -362,7 +362,7 @@ static MACHINE_CONFIG_START( bionicc, bionicc_state )
      * schematics indicate that nmi_line is set on  M680000 access with AB1=1
      * and IOCS=0 (active low), see pages A-1/10, A-4/10 in schematics
      */
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bionicc_state, nmi_line_pulse, 4*60)
 
 
 	/* video hardware */
@@ -371,7 +371,7 @@ static MACHINE_CONFIG_START( bionicc, bionicc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bionicc)
+	MCFG_SCREEN_UPDATE_DRIVER(bionicc_state, screen_update_bionicc)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(bionicc)
@@ -382,7 +382,7 @@ static MACHINE_CONFIG_START( bionicc, bionicc_state )
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 MACHINE_CONFIG_END

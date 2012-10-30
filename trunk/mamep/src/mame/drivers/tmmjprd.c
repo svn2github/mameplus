@@ -67,6 +67,10 @@ public:
 	DECLARE_WRITE32_MEMBER(tmmjprd_brt_2_w);
 	DECLARE_WRITE32_MEMBER(tmmjprd_eeprom_write);
 	virtual void video_start();
+	UINT32 screen_update_tmmjprd_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tmmjprd_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(tmmjprd_blit_done);
+	TIMER_DEVICE_CALLBACK_MEMBER(tmmjprd_scanline);
 };
 
 
@@ -289,51 +293,49 @@ static void ttmjprd_draw_tilemap(running_machine &machine, bitmap_ind16 &bitmap,
 
 }
 
-static SCREEN_UPDATE_IND16( tmmjprd_left )
+UINT32 tmmjprd_state::screen_update_tmmjprd_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tmmjprd_state *state = screen.machine().driver_data<tmmjprd_state>();
-	UINT8* gfxroms = state->memregion("gfx2")->base();
+	UINT8* gfxroms = memregion("gfx2")->base();
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	ttmjprd_draw_tilemap( screen.machine(), bitmap, cliprect, state->m_tilemap_ram[3], state->m_tilemap_regs[3], gfxroms );
-	draw_sprites(screen.machine(),bitmap,cliprect, 1);
-	ttmjprd_draw_tilemap( screen.machine(), bitmap, cliprect, state->m_tilemap_ram[2], state->m_tilemap_regs[2], gfxroms );
+	ttmjprd_draw_tilemap( machine(), bitmap, cliprect, m_tilemap_ram[3], m_tilemap_regs[3], gfxroms );
+	draw_sprites(machine(),bitmap,cliprect, 1);
+	ttmjprd_draw_tilemap( machine(), bitmap, cliprect, m_tilemap_ram[2], m_tilemap_regs[2], gfxroms );
 
 	/*
     popmessage("%08x %08x %08x %08x %08x %08x",
-    state->m_tilemap_regs[2][0],
-    state->m_tilemap_regs[2][1],
-    state->m_tilemap_regs[2][2],
-    state->m_tilemap_regs[2][3],
-    state->m_tilemap_regs[2][4],
-    state->m_tilemap_regs[2][5]);
+    m_tilemap_regs[2][0],
+    m_tilemap_regs[2][1],
+    m_tilemap_regs[2][2],
+    m_tilemap_regs[2][3],
+    m_tilemap_regs[2][4],
+    m_tilemap_regs[2][5]);
     */
 
 /*
     popmessage("%08x %08x %08x %08x %08x %08x %08x",
-    state->m_spriteregs[0],
-    state->m_spriteregs[1],
-    state->m_spriteregs[2],
-    state->m_spriteregs[3],
-    state->m_spriteregs[4],
-    state->m_spriteregs[5],
-    state->m_spriteregs[6]);
+    m_spriteregs[0],
+    m_spriteregs[1],
+    m_spriteregs[2],
+    m_spriteregs[3],
+    m_spriteregs[4],
+    m_spriteregs[5],
+    m_spriteregs[6]);
 */
 
 	return 0;
 }
 
-static SCREEN_UPDATE_IND16( tmmjprd_right )
+UINT32 tmmjprd_state::screen_update_tmmjprd_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tmmjprd_state *state = screen.machine().driver_data<tmmjprd_state>();
-	UINT8* gfxroms = state->memregion("gfx2")->base();
+	UINT8* gfxroms = memregion("gfx2")->base();
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	ttmjprd_draw_tilemap( screen.machine(), bitmap, cliprect, state->m_tilemap_ram[1], state->m_tilemap_regs[1], gfxroms );
-	draw_sprites(screen.machine(),bitmap,cliprect, 0);
-	ttmjprd_draw_tilemap( screen.machine(), bitmap, cliprect, state->m_tilemap_ram[0], state->m_tilemap_regs[0], gfxroms );
+	ttmjprd_draw_tilemap( machine(), bitmap, cliprect, m_tilemap_ram[1], m_tilemap_regs[1], gfxroms );
+	draw_sprites(machine(),bitmap,cliprect, 0);
+	ttmjprd_draw_tilemap( machine(), bitmap, cliprect, m_tilemap_ram[0], m_tilemap_regs[0], gfxroms );
 
 	return 0;
 }
@@ -378,9 +380,9 @@ READ32_MEMBER(tmmjprd_state::randomtmmjprds)
 #define BLITLOG 0
 
 #if 0
-static TIMER_CALLBACK( tmmjprd_blit_done )
+TIMER_CALLBACK_MEMBER(tmmjprd_state::tmmjprd_blit_done)
 {
-	machine.device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 }
 
 static void tmmjprd_do_blit(running_machine &machine)
@@ -428,7 +430,7 @@ static void tmmjprd_do_blit(running_machine &machine)
 				if (!blt_amount)
 				{
 					if(BLITLOG) mame_printf_debug("end of blit list\n");
-					machine.scheduler().timer_set(attotime::from_usec(500), FUNC(tmmjprd_blit_done));
+					machine.scheduler().timer_set(attotime::from_usec(500), timer_expired_delegate(FUNC(tmmjprd_state::tmmjprd_blit_done),this));
 					return;
 				}
 
@@ -731,23 +733,22 @@ static GFXDECODE_START( tmmjprd )
 GFXDECODE_END
 
 
-static TIMER_DEVICE_CALLBACK( tmmjprd_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(tmmjprd_state::tmmjprd_scanline)
 {
-	//tmmjprd_state *state = timer.machine().driver_data<tmmjprd_state>();
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 
 	if(scanline == 736) // blitter irq?
-		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 }
 
 static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	MCFG_CPU_ADD("maincpu",M68EC020,24000000) /* 24 MHz */
 	MCFG_CPU_PROGRAM_MAP(tmmjprd_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", tmmjprd_scanline, "lscreen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", tmmjprd_state, tmmjprd_scanline, "lscreen", 0, 1)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -770,7 +771,7 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 64*16-1, 0*8, 64*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(tmmjprd_left)
+	MCFG_SCREEN_UPDATE_DRIVER(tmmjprd_state, screen_update_tmmjprd_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -778,7 +779,7 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 64*16-1, 0*8, 64*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(tmmjprd_right)
+	MCFG_SCREEN_UPDATE_DRIVER(tmmjprd_state, screen_update_tmmjprd_right)
 
 
 	/* sound hardware */

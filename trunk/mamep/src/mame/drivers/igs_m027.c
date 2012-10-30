@@ -58,6 +58,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_tx_tilemap_tile_info);
 	TILE_GET_INFO_MEMBER(get_bg_tilemap_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_igs_majhong(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(igs_majhong_interrupt);
 };
 
 
@@ -181,19 +183,18 @@ void igs_m027_state::video_start()
 	logerror("Video START OK!\n");
 }
 
-static SCREEN_UPDATE_IND16(igs_majhong)
+UINT32 igs_m027_state::screen_update_igs_majhong(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	igs_m027_state *state = screen.machine().driver_data<igs_m027_state>();
 	//??????????
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	//??????
-	state->m_igs_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_igs_bg_tilemap->draw(bitmap, cliprect, 0,0);
 
 	//CG??????
 
 	//??????
-	state->m_igs_tx_tilemap->draw(bitmap, cliprect, 0,0);
+	m_igs_tx_tilemap->draw(bitmap, cliprect, 0,0);
 	//fprintf(stdout,"Video UPDATE OK!\n");
 	return 0;
 }
@@ -357,9 +358,9 @@ static GFXDECODE_START( igs_m027 )
 GFXDECODE_END
 
 
-static INTERRUPT_GEN( igs_majhong_interrupt )
+INTERRUPT_GEN_MEMBER(igs_m027_state::igs_majhong_interrupt)
 {
-	generic_pulse_irq_line(device, ARM7_FIRQ_LINE, 1);
+	generic_pulse_irq_line(device.execute(), ARM7_FIRQ_LINE, 1);
 }
 
 
@@ -368,7 +369,7 @@ static MACHINE_CONFIG_START( igs_majhong, igs_m027_state )
 
 	MCFG_CPU_PROGRAM_MAP(igs_majhong_map)
 
-	MCFG_CPU_VBLANK_INT("screen", igs_majhong_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs_m027_state,  igs_majhong_interrupt)
 	//MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_GFXDECODE(igs_m027)
@@ -379,7 +380,7 @@ static MACHINE_CONFIG_START( igs_majhong, igs_m027_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC( igs_majhong )
+	MCFG_SCREEN_UPDATE_DRIVER(igs_m027_state, screen_update_igs_majhong)
 
 	MCFG_PALETTE_LENGTH(0x200)
 

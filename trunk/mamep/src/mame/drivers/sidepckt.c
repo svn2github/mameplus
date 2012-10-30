@@ -390,7 +390,7 @@ static MACHINE_CONFIG_START( sidepckt, sidepckt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2000000)        /* 2 MHz */
 	MCFG_CPU_PROGRAM_MAP(sidepckt_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sidepckt_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)        /* 1.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -402,7 +402,7 @@ static MACHINE_CONFIG_START( sidepckt, sidepckt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */  /* VERIFY:  May be 55 or 56 */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sidepckt)
+	MCFG_SCREEN_UPDATE_DRIVER(sidepckt_state, screen_update_sidepckt)
 
 	MCFG_GFXDECODE(sidepckt)
 	MCFG_PALETTE_LENGTH(256)
@@ -502,14 +502,14 @@ ROM_END
 
 DRIVER_INIT_MEMBER(sidepckt_state,sidepckt)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x3014, 0x3014, read8_delegate(FUNC(sidepckt_state::sidepckt_i8751_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x3018, 0x3018, write8_delegate(FUNC(sidepckt_state::sidepckt_i8751_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x3014, 0x3014, read8_delegate(FUNC(sidepckt_state::sidepckt_i8751_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x3018, 0x3018, write8_delegate(FUNC(sidepckt_state::sidepckt_i8751_w),this));
 }
 
 DRIVER_INIT_MEMBER(sidepckt_state,sidepctj)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x3014, 0x3014, read8_delegate(FUNC(sidepckt_state::sidepckt_i8751_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x3018, 0x3018, write8_delegate(FUNC(sidepckt_state::sidepctj_i8751_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x3014, 0x3014, read8_delegate(FUNC(sidepckt_state::sidepckt_i8751_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x3018, 0x3018, write8_delegate(FUNC(sidepckt_state::sidepctj_i8751_w),this));
 }
 
 

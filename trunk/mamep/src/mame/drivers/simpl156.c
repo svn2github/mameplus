@@ -383,9 +383,9 @@ static GFXDECODE_START( simpl156 )
 
 GFXDECODE_END
 
-static INTERRUPT_GEN( simpl156_vbl_interrupt )
+INTERRUPT_GEN_MEMBER(simpl156_state::simpl156_vbl_interrupt)
 {
-	device->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
+	device.execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 
@@ -425,7 +425,7 @@ static MACHINE_CONFIG_START( chainrec, simpl156_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28000000 /* /4 */)	/*DE156*/ /* 7.000 MHz */ /* measured at 7.. seems to need 28? */
 	MCFG_CPU_PROGRAM_MAP(chainrec_map)
-	MCFG_CPU_VBLANK_INT("screen", simpl156_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", simpl156_state,  simpl156_vbl_interrupt)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")  // 93C45
 
@@ -435,7 +435,7 @@ static MACHINE_CONFIG_START( chainrec, simpl156_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(800))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(simpl156)
+	MCFG_SCREEN_UPDATE_DRIVER(simpl156_state, screen_update_simpl156)
 
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_GFXDECODE(simpl156)
@@ -1061,7 +1061,7 @@ READ32_MEMBER(simpl156_state::joemacr_speedup_r)
 
 DRIVER_INIT_MEMBER(simpl156_state,joemacr)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0201018, 0x020101b, read32_delegate(FUNC(simpl156_state::joemacr_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0201018, 0x020101b, read32_delegate(FUNC(simpl156_state::joemacr_speedup_r),this));
 	DRIVER_INIT_CALL(simpl156);
 }
 
@@ -1074,7 +1074,7 @@ READ32_MEMBER(simpl156_state::chainrec_speedup_r)
 
 DRIVER_INIT_MEMBER(simpl156_state,chainrec)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0201018, 0x020101b, read32_delegate(FUNC(simpl156_state::chainrec_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0201018, 0x020101b, read32_delegate(FUNC(simpl156_state::chainrec_speedup_r),this));
 	DRIVER_INIT_CALL(simpl156);
 }
 
@@ -1087,7 +1087,7 @@ READ32_MEMBER(simpl156_state::prtytime_speedup_r)
 
 DRIVER_INIT_MEMBER(simpl156_state,prtytime)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0201ae0, 0x0201ae3, read32_delegate(FUNC(simpl156_state::prtytime_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0201ae0, 0x0201ae3, read32_delegate(FUNC(simpl156_state::prtytime_speedup_r),this));
 	DRIVER_INIT_CALL(simpl156);
 }
 
@@ -1101,7 +1101,7 @@ READ32_MEMBER(simpl156_state::charlien_speedup_r)
 
 DRIVER_INIT_MEMBER(simpl156_state,charlien)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0201010, 0x0201013, read32_delegate(FUNC(simpl156_state::charlien_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0201010, 0x0201013, read32_delegate(FUNC(simpl156_state::charlien_speedup_r),this));
 	DRIVER_INIT_CALL(simpl156);
 }
 
@@ -1114,7 +1114,7 @@ READ32_MEMBER(simpl156_state::osman_speedup_r)
 
 DRIVER_INIT_MEMBER(simpl156_state,osman)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0201010, 0x0201013, read32_delegate(FUNC(simpl156_state::osman_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0201010, 0x0201013, read32_delegate(FUNC(simpl156_state::osman_speedup_r),this));
 	DRIVER_INIT_CALL(simpl156);
 
 }

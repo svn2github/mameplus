@@ -257,9 +257,9 @@ static ADDRESS_MAP_START( snd_io, AS_IO, 8, fitfight_state )
 		AM_RANGE(UPD7810_PORTC, UPD7810_PORTC) AM_READ(snd_portc_r) AM_WRITE(snd_portc_w)
 ADDRESS_MAP_END
 
-static INTERRUPT_GEN( snd_irq )
+INTERRUPT_GEN_MEMBER(fitfight_state::snd_irq)
 {
-	device->execute().set_input_line(UPD7810_INTF2, HOLD_LINE);
+	device.execute().set_input_line(UPD7810_INTF2, HOLD_LINE);
 }
 
 static const UPD7810_CONFIG sound_cpu_config =
@@ -735,13 +735,13 @@ static MACHINE_CONFIG_START( fitfight, fitfight_state )
 
 	MCFG_CPU_ADD("maincpu",M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(fitfight_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fitfight_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", UPD7810, 12000000)
 	MCFG_CPU_CONFIG(sound_cpu_config)
 	MCFG_CPU_PROGRAM_MAP(snd_mem)
 	MCFG_CPU_IO_MAP(snd_io)
-	MCFG_CPU_VBLANK_INT("screen", snd_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fitfight_state,  snd_irq)
 
 
 	MCFG_GFXDECODE(fitfight)
@@ -751,7 +751,7 @@ static MACHINE_CONFIG_START( fitfight, fitfight_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 39*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fitfight)
+	MCFG_SCREEN_UPDATE_DRIVER(fitfight_state, screen_update_fitfight)
 
 	MCFG_PALETTE_LENGTH(0x800)
 
@@ -766,7 +766,7 @@ static MACHINE_CONFIG_START( bbprot, fitfight_state )
 
 	MCFG_CPU_ADD("maincpu",M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(bbprot_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fitfight_state,  irq2_line_hold)
 
 
 	MCFG_GFXDECODE(prot)
@@ -776,7 +776,7 @@ static MACHINE_CONFIG_START( bbprot, fitfight_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 39*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fitfight)
+	MCFG_SCREEN_UPDATE_DRIVER(fitfight_state, screen_update_fitfight)
 
 	MCFG_PALETTE_LENGTH(0x2000)
 
@@ -996,7 +996,7 @@ DRIVER_INIT_MEMBER(fitfight_state,fitfight)
 {
 //  UINT16 *mem16 = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 //  mem16[0x0165B2/2] = 0x4e71; // for now so it boots
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x700000, 0x700001, read16_delegate(FUNC(fitfight_state::fitfight_700000_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x700000, 0x700001, read16_delegate(FUNC(fitfight_state::fitfight_700000_r),this));
 	m_bbprot_kludge = 0;
 }
 
@@ -1004,7 +1004,7 @@ DRIVER_INIT_MEMBER(fitfight_state,histryma)
 {
 //  UINT16 *mem16 = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 //  mem16[0x017FDC/2] = 0x4e71; // for now so it boots
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x700000, 0x700001, read16_delegate(FUNC(fitfight_state::histryma_700000_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x700000, 0x700001, read16_delegate(FUNC(fitfight_state::histryma_700000_r),this));
 	m_bbprot_kludge = 0;
 }
 
@@ -1015,7 +1015,7 @@ DRIVER_INIT_MEMBER(fitfight_state,bbprot)
 
 DRIVER_INIT_MEMBER(fitfight_state,hotmindff)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200001, 0, 0, read16_delegate(FUNC(fitfight_state::hotmindff_unk_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, 0, 0, read16_delegate(FUNC(fitfight_state::hotmindff_unk_r),this));
 	DRIVER_INIT_CALL(fitfight);
 }
 

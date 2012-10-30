@@ -213,15 +213,15 @@ static GFXDECODE_START( darkmist )
 	GFXDECODE_ENTRY( "gfx3", 0, tilelayout,  0, 16*4 )
 GFXDECODE_END
 
-static TIMER_DEVICE_CALLBACK( darkmist_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(darkmist_state::darkmist_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
 
 	if(scanline == 0) // vblank-in irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
 }
 
 
@@ -230,7 +230,7 @@ static MACHINE_CONFIG_START( darkmist, darkmist_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,4000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(memmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", darkmist_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", darkmist_state, darkmist_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD(CPUTAG_T5182,Z80,14318180/4)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(t5182_map)
@@ -242,7 +242,7 @@ static MACHINE_CONFIG_START( darkmist, darkmist_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(darkmist)
+	MCFG_SCREEN_UPDATE_DRIVER(darkmist_state, screen_update_darkmist)
 
 	MCFG_GFXDECODE(darkmist)
 	MCFG_PALETTE_LENGTH(0x100*4)
@@ -250,8 +250,8 @@ static MACHINE_CONFIG_START( darkmist, darkmist_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 14318180/4)	/* 3.579545 MHz */
-	MCFG_SOUND_CONFIG(t5182_ym2151_interface)
+	MCFG_YM2151_ADD("ymsnd", 14318180/4)	/* 3.579545 MHz */
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<t5182_ym2151_irq_handler>))
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 
@@ -400,7 +400,7 @@ static void decrypt_snd(running_machine &machine)
 
 DRIVER_INIT_MEMBER(darkmist_state,darkmist)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i, len;
 	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 	UINT8 *buffer = auto_alloc_array(machine(), UINT8, 0x10000);
@@ -436,8 +436,8 @@ DRIVER_INIT_MEMBER(darkmist_state,darkmist)
 		decrypt[i] = p;
 	}
 
-	space->set_decrypted_region(0x0000, 0x7fff, decrypt);
-	space->machine().root_device().membank("bank1")->set_base(&ROM[0x010000]);
+	space.set_decrypted_region(0x0000, 0x7fff, decrypt);
+	space.machine().root_device().membank("bank1")->set_base(&ROM[0x010000]);
 
 	/* adr line swaps */
 	ROM = machine().root_device().memregion("user1")->base();

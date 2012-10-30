@@ -257,11 +257,11 @@ static MACHINE_CONFIG_START( 1943, _1943_state )
 	// basic machine hardware
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_24MHz/4)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(c1943_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", _1943_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/8)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(_1943_state, irq0_line_hold,  4*60)
 
 
 	// video hardware
@@ -270,7 +270,7 @@ static MACHINE_CONFIG_START( 1943, _1943_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(1943)
+	MCFG_SCREEN_UPDATE_DRIVER(_1943_state, screen_update_1943)
 
 	MCFG_GFXDECODE(1943)
 	MCFG_PALETTE_LENGTH(32*4+16*16+16*16+16*16)
@@ -650,7 +650,7 @@ DRIVER_INIT_MEMBER(_1943_state,1943b)
 	DRIVER_INIT_CALL(1943);
 	//it expects 0x00 to be returned from the protection reads because the protection has been patched out.
 	//AM_RANGE(0xc007, 0xc007) AM_READ(c1943_protection_r)
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc007, 0xc007, read8_delegate(FUNC(_1943_state::_1943b_c007_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc007, 0xc007, read8_delegate(FUNC(_1943_state::_1943b_c007_r),this));
 
 }
 

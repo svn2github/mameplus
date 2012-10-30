@@ -64,6 +64,8 @@ public:
 	DECLARE_DRIVER_INIT(showhanc);
 	DECLARE_DRIVER_INIT(showhand);
 	DECLARE_VIDEO_START(astrocorp);
+	UINT32 screen_update_astrocorp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(skilldrp_scanline);
 };
 
 /***************************************************************************
@@ -150,14 +152,13 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	}
 }
 
-static SCREEN_UPDATE_IND16(astrocorp)
+UINT32 astrocorp_state::screen_update_astrocorp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	astrocorp_state *state = screen.machine().driver_data<astrocorp_state>();
 
-	if (state->m_screen_enable & 1)
-		copybitmap(bitmap, state->m_bitmap, 0,0,0,0, cliprect);
+	if (m_screen_enable & 1)
+		copybitmap(bitmap, m_bitmap, 0,0,0,0, cliprect);
 	else
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 
 	return 0;
 }
@@ -192,7 +193,7 @@ WRITE16_MEMBER(astrocorp_state::astrocorp_sound_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * ((data >> 8) & 1));
-//      logerror("CPU #0 PC %06X: OKI bank %08X\n", space->device().safe_pc(), data);
+//      logerror("CPU #0 PC %06X: OKI bank %08X\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -203,7 +204,7 @@ WRITE16_MEMBER(astrocorp_state::skilldrp_sound_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * (data & 1));
-//      logerror("CPU #0 PC %06X: OKI bank %08X\n", space->device().safe_pc(), data);
+//      logerror("CPU #0 PC %06X: OKI bank %08X\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -475,7 +476,7 @@ static MACHINE_CONFIG_START( showhand, astrocorp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_20MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(showhand_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", astrocorp_state,  irq4_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_EEPROM_93C46_ADD("eeprom")
@@ -487,7 +488,7 @@ static MACHINE_CONFIG_START( showhand, astrocorp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(astrocorp)
+	MCFG_SCREEN_UPDATE_DRIVER(astrocorp_state, screen_update_astrocorp)
 
 	MCFG_GFXDECODE(astrocorp)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -508,15 +509,15 @@ static MACHINE_CONFIG_DERIVED( showhanc, showhand )
 MACHINE_CONFIG_END
 
 
-static TIMER_DEVICE_CALLBACK( skilldrp_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(astrocorp_state::skilldrp_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq. controls sprites, sound, i/o
-		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in? controls palette
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( skilldrp, astrocorp_state )
@@ -524,7 +525,7 @@ static MACHINE_CONFIG_START( skilldrp, astrocorp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz / 2)	// JX-1689F1028N GRX586.V5
 	MCFG_CPU_PROGRAM_MAP(skilldrp_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", skilldrp_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", astrocorp_state, skilldrp_scanline, "screen", 0, 1)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_EEPROM_93C46_ADD("eeprom")
@@ -538,7 +539,7 @@ static MACHINE_CONFIG_START( skilldrp, astrocorp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(0x200, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x200-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(astrocorp)
+	MCFG_SCREEN_UPDATE_DRIVER(astrocorp_state, screen_update_astrocorp)
 
 	MCFG_GFXDECODE(astrocorp)
 	MCFG_PALETTE_LENGTH(0x100)

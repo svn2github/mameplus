@@ -47,27 +47,18 @@ static void cage_irq_callback(running_machine &machine, int reason);
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void atarigt_state::update_interrupts()
 {
-	atarigt_state *state = machine.driver_data<atarigt_state>();
-	machine.device("maincpu")->execute().set_input_line(3, state->m_sound_int_state    ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(4, state->m_video_int_state    ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(6, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-MACHINE_START_MEMBER(atarigt_state,atarigt)
-{
-	atarigen_init(machine());
+	machine().device("maincpu")->execute().set_input_line(3, m_sound_int_state    ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(4, m_video_int_state    ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(6, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 MACHINE_RESET_MEMBER(atarigt_state,atarigt)
 {
-
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, update_interrupts);
-	atarigen_scanline_timer_reset(*machine().primary_screen, atarigt_scanline_update, 8);
+	atarigen_state::machine_reset();
+	scanline_timer_reset(*machine().primary_screen, 8);
 }
 
 
@@ -80,12 +71,13 @@ MACHINE_RESET_MEMBER(atarigt_state,atarigt)
 
 static void cage_irq_callback(running_machine &machine, int reason)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	atarigen_state *atarigen = machine.driver_data<atarigen_state>();
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	if (reason)
-		atarigen_sound_int_gen(machine.device("maincpu"));
+		atarigen->sound_int_gen(*machine.device("maincpu"));
 	else
-		atarigen_sound_int_ack_w(space,0,0,0xffff);
+		atarigen->sound_int_ack_w(space,0,0);
 }
 
 
@@ -201,7 +193,7 @@ WRITE32_MEMBER(atarigt_state::latch_w)
 
 	if (ACCESSING_BITS_16_23)
 	{
-		//cage_reset_w(&space, data & 0x00100000);
+		//cage_reset_w(space, data & 0x00100000);
 		coin_counter_w(machine(), 0, data & 0x00080000);
 		coin_counter_w(machine(), 1, data & 0x00010000);
 	}
@@ -236,7 +228,7 @@ READ32_MEMBER(atarigt_state::sound_data_r)
 	if (ACCESSING_BITS_0_15)
 		result |= cage_control_r(machine());
 	if (ACCESSING_BITS_16_31)
-		result |= cage_main_r(&space) << 16;
+		result |= cage_main_r(space) << 16;
 	return result;
 }
 
@@ -246,7 +238,7 @@ WRITE32_MEMBER(atarigt_state::sound_data_w)
 	if (ACCESSING_BITS_0_15)
 		cage_control_w(machine(), data);
 	if (ACCESSING_BITS_16_31)
-		cage_main_w(&space, data >> 16);
+		cage_main_w(space, data >> 16);
 }
 
 
@@ -271,9 +263,9 @@ static void tmek_update_mode(atarigt_state *state, offs_t offset)
 }
 
 
-static void tmek_protection_w(address_space *space, offs_t offset, UINT16 data)
+static void tmek_protection_w(address_space &space, offs_t offset, UINT16 data)
 {
-	atarigt_state *state = space->machine().driver_data<atarigt_state>();
+	atarigt_state *state = space.machine().driver_data<atarigt_state>();
 /*
     T-Mek init:
         ($387C0) = $0001
@@ -282,7 +274,7 @@ static void tmek_protection_w(address_space *space, offs_t offset, UINT16 data)
         Read ($38488)
 */
 
-	if (LOG_PROTECTION) logerror("%06X:Protection W@%06X = %04X\n", space->device().safe_pcbase(), offset, data);
+	if (LOG_PROTECTION) logerror("%06X:Protection W@%06X = %04X\n", space.device().safe_pcbase(), offset, data);
 
 	/* track accesses */
 	tmek_update_mode(state, offset);
@@ -295,10 +287,10 @@ static void tmek_protection_w(address_space *space, offs_t offset, UINT16 data)
 	}
 }
 
-static void tmek_protection_r(address_space *space, offs_t offset, UINT16 *data)
+static void tmek_protection_r(address_space &space, offs_t offset, UINT16 *data)
 {
-	atarigt_state *state = space->machine().driver_data<atarigt_state>();
-	if (LOG_PROTECTION) logerror("%06X:Protection R@%06X\n", space->device().safe_pcbase(), offset);
+	atarigt_state *state = space.machine().driver_data<atarigt_state>();
+	if (LOG_PROTECTION) logerror("%06X:Protection R@%06X\n", space.device().safe_pcbase(), offset);
 
 	/* track accesses */
 	tmek_update_mode(state, offset);
@@ -362,12 +354,12 @@ static void primage_update_mode(atarigt_state *state, offs_t offset)
 
 
 
-static void primrage_protection_w(address_space *space, offs_t offset, UINT16 data)
+static void primrage_protection_w(address_space &space, offs_t offset, UINT16 data)
 {
-	atarigt_state *state = space->machine().driver_data<atarigt_state>();
+	atarigt_state *state = space.machine().driver_data<atarigt_state>();
 	if (LOG_PROTECTION)
 	{
-	UINT32 pc = space->device().safe_pcbase();
+	UINT32 pc = space.device().safe_pcbase();
 	switch (pc)
 	{
 		/* protection code from 20f90 - 21000 */
@@ -400,7 +392,7 @@ static void primrage_protection_w(address_space *space, offs_t offset, UINT16 da
 
 		/* catch anything else */
 		default:
-			logerror("%06X:Unknown protection W@%06X = %04X\n", space->device().safe_pcbase(), offset, data);
+			logerror("%06X:Unknown protection W@%06X = %04X\n", space.device().safe_pcbase(), offset, data);
 			break;
 	}
 	}
@@ -433,15 +425,15 @@ static void primrage_protection_w(address_space *space, offs_t offset, UINT16 da
 
 
 
-static void primrage_protection_r(address_space *space, offs_t offset, UINT16 *data)
+static void primrage_protection_r(address_space &space, offs_t offset, UINT16 *data)
 {
-	atarigt_state *state = space->machine().driver_data<atarigt_state>();
+	atarigt_state *state = space.machine().driver_data<atarigt_state>();
 	/* track accesses */
 	primage_update_mode(state, offset);
 
 if (LOG_PROTECTION)
 {
-	UINT32 pc = space->device().safe_pcbase();
+	UINT32 pc = space.device().safe_pcbase();
 	UINT32 p1, p2, a6;
 	switch (pc)
 	{
@@ -461,9 +453,9 @@ if (LOG_PROTECTION)
 		case 0x275bc:
 			break;
 		case 0x275cc:
-			a6 = space->device().state().state_int(M68K_A6);
-			p1 = (space->read_word(a6+8) << 16) | space->read_word(a6+10);
-			p2 = (space->read_word(a6+12) << 16) | space->read_word(a6+14);
+			a6 = space.device().state().state_int(M68K_A6);
+			p1 = (space.read_word(a6+8) << 16) | space.read_word(a6+10);
+			p2 = (space.read_word(a6+12) << 16) | space.read_word(a6+14);
 			logerror("Known Protection @ 275BC(%08X, %08X): R@%06X ", p1, p2, offset);
 			break;
 		case 0x275d2:
@@ -479,8 +471,8 @@ if (LOG_PROTECTION)
 
 		/* protection code from 3d8dc - 3d95a */
 		case 0x3d8f4:
-			a6 = space->device().state().state_int(M68K_A6);
-			p1 = (space->read_word(a6+12) << 16) | space->read_word(a6+14);
+			a6 = space.device().state().state_int(M68K_A6);
+			p1 = (space.read_word(a6+12) << 16) | space.read_word(a6+14);
 			logerror("Known Protection @ 3D8F4(%08X): R@%06X ", p1, offset);
 			break;
 		case 0x3d8fa:
@@ -490,8 +482,8 @@ if (LOG_PROTECTION)
 
 		/* protection code from 437fa - 43860 */
 		case 0x43814:
-			a6 = space->device().state().state_int(M68K_A6);
-			p1 = space->read_dword(a6+14) & 0xffffff;
+			a6 = space.device().state().state_int(M68K_A6);
+			p1 = space.read_dword(a6+14) & 0xffffff;
 			logerror("Known Protection @ 43814(%08X): R@%06X ", p1, offset);
 			break;
 		case 0x4381c:
@@ -504,7 +496,7 @@ if (LOG_PROTECTION)
 
 		/* catch anything else */
 		default:
-			logerror("%06X:Unknown protection R@%06X\n", space->device().safe_pcbase(), offset);
+			logerror("%06X:Unknown protection R@%06X\n", space.device().safe_pcbase(), offset);
 			break;
 	}
 }
@@ -557,13 +549,13 @@ READ32_MEMBER(atarigt_state::colorram_protection_r)
 	if (ACCESSING_BITS_16_31)
 	{
 		result = atarigt_colorram_r(address);
-		(*m_protection_r)(&space, address, &result);
+		(*m_protection_r)(space, address, &result);
 		result32 |= result << 16;
 	}
 	if (ACCESSING_BITS_0_15)
 	{
 		result = atarigt_colorram_r(address + 2);
-		(*m_protection_r)(&space, address + 2, &result);
+		(*m_protection_r)(space, address + 2, &result);
 		result32 |= result;
 	}
 
@@ -579,13 +571,13 @@ WRITE32_MEMBER(atarigt_state::colorram_protection_w)
 	{
 		if (!m_ignore_writes)
 			atarigt_colorram_w(address, data >> 16, mem_mask >> 16);
-		(*m_protection_w)(&space, address, data >> 16);
+		(*m_protection_w)(space, address, data >> 16);
 	}
 	if (ACCESSING_BITS_0_15)
 	{
 		if (!m_ignore_writes)
 			atarigt_colorram_w(address + 2, data, mem_mask);
-		(*m_protection_w)(&space, address + 2, data);
+		(*m_protection_w)(space, address + 2, data);
 	}
 }
 
@@ -602,18 +594,18 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 32, atarigt_state )
 	AM_RANGE(0xc00000, 0xc00003) AM_READWRITE(sound_data_r, sound_data_w)
 	AM_RANGE(0xd00014, 0xd00017) AM_READ(analog_port0_r)
 	AM_RANGE(0xd0001c, 0xd0001f) AM_READ(analog_port1_r)
-	AM_RANGE(0xd20000, 0xd20fff) AM_READWRITE_LEGACY(atarigen_eeprom_upper32_r, atarigen_eeprom32_w) AM_SHARE("eeprom")
-	AM_RANGE(0xd40000, 0xd4ffff) AM_WRITE_LEGACY(atarigen_eeprom_enable32_w)
-	AM_RANGE(0xd72000, 0xd75fff) AM_WRITE_LEGACY(atarigen_playfield32_w) AM_SHARE("playfield32")
-	AM_RANGE(0xd76000, 0xd76fff) AM_WRITE_LEGACY(atarigen_alpha32_w) AM_SHARE("alpha32")
+	AM_RANGE(0xd20000, 0xd20fff) AM_READWRITE(eeprom_upper32_r, eeprom32_w) AM_SHARE("eeprom")
+	AM_RANGE(0xd40000, 0xd4ffff) AM_WRITE16(eeprom_enable_w, 0xffffffff)
+	AM_RANGE(0xd72000, 0xd75fff) AM_WRITE(playfield32_w) AM_SHARE("playfield32")
+	AM_RANGE(0xd76000, 0xd76fff) AM_WRITE(alpha32_w) AM_SHARE("alpha32")
 	AM_RANGE(0xd78000, 0xd78fff) AM_DEVREADWRITE_LEGACY("rle", atarirle_spriteram32_r, atarirle_spriteram32_w)
 	AM_RANGE(0xd7a200, 0xd7a203) AM_WRITE(mo_command_w) AM_SHARE("mo_command")
 	AM_RANGE(0xd70000, 0xd7ffff) AM_RAM
 	AM_RANGE(0xd80000, 0xdfffff) AM_READWRITE(colorram_protection_r, colorram_protection_w) AM_SHARE("colorram")
 	AM_RANGE(0xe04000, 0xe04003) AM_WRITE(led_w)
 	AM_RANGE(0xe08000, 0xe08003) AM_WRITE(latch_w)
-	AM_RANGE(0xe0a000, 0xe0a003) AM_WRITE_LEGACY(atarigen_scanline_int_ack32_w)
-	AM_RANGE(0xe0c000, 0xe0c003) AM_WRITE_LEGACY(atarigen_video_int_ack32_w)
+	AM_RANGE(0xe0a000, 0xe0a003) AM_WRITE16(scanline_int_ack_w, 0xffffffff)
+	AM_RANGE(0xe0c000, 0xe0c003) AM_WRITE16(video_int_ack_w, 0xffffffff)
 	AM_RANGE(0xe0e000, 0xe0e003) AM_WRITENOP//watchdog_reset_w },
 	AM_RANGE(0xe80000, 0xe80003) AM_READ_PORT("P1_P2")
 	AM_RANGE(0xe82000, 0xe82003) AM_READ(special_port2_r)
@@ -810,10 +802,9 @@ static MACHINE_CONFIG_START( atarigt, atarigt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, ATARI_CLOCK_50MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
-	MCFG_CPU_PERIODIC_INT(atarigen_scanline_int_gen, 250)
+	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
+	MCFG_CPU_PERIODIC_INT_DRIVER(atarigen_state, scanline_int_gen, 250)
 
-	MCFG_MACHINE_START_OVERRIDE(atarigt_state,atarigt)
 	MCFG_MACHINE_RESET_OVERRIDE(atarigt_state,atarigt)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
@@ -826,8 +817,8 @@ static MACHINE_CONFIG_START( atarigt, atarigt_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses a pair of GALs to determine H and V parameters */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(atarigt)
-	MCFG_SCREEN_VBLANK_STATIC(atarigt)
+	MCFG_SCREEN_UPDATE_DRIVER(atarigt_state, screen_update_atarigt)
+	MCFG_SCREEN_VBLANK_DRIVER(atarigt_state, screen_eof_atarigt)
 
 	MCFG_VIDEO_START_OVERRIDE(atarigt_state,atarigt)
 
@@ -1257,7 +1248,7 @@ WRITE32_MEMBER(atarigt_state::tmek_pf_w)
 	if (pc == 0x25834 || pc == 0x25860)
 		logerror("%06X:PFW@%06X = %08X & %08X (src=%06X)\n", space.device().safe_pc(), 0xd72000 + offset*4, data, mem_mask, (UINT32)space.device().state().state_int(M68K_A3) - 2);
 
-	atarigen_playfield32_w(&space, offset, data, mem_mask);
+	playfield32_w(space, offset, data, mem_mask);
 }
 
 DRIVER_INIT_MEMBER(atarigt_state,tmek)
@@ -1274,7 +1265,7 @@ DRIVER_INIT_MEMBER(atarigt_state,tmek)
 	m_protection_w = tmek_protection_w;
 
 	/* temp hack */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd72000, 0xd75fff, write32_delegate(FUNC(atarigt_state::tmek_pf_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd72000, 0xd75fff, write32_delegate(FUNC(atarigt_state::tmek_pf_w),this));
 }
 
 

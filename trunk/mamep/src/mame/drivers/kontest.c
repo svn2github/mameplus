@@ -53,6 +53,8 @@ protected:
 
 	virtual void video_start();
 	virtual void palette_init();
+public:
+	INTERRUPT_GEN_MEMBER(kontest_interrupt);
 };
 
 
@@ -165,8 +167,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( kontest_io, AS_IO, 8, kontest_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVWRITE("sn1", sn76489a_new_device, write)
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE("sn2", sn76489a_new_device, write)
+	AM_RANGE(0x00, 0x00) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE("sn2", sn76489a_device, write)
 	AM_RANGE(0x08, 0x08) AM_WRITE(control_w)
 	AM_RANGE(0x0c, 0x0c) AM_READ_PORT("IN0")
 	AM_RANGE(0x0d, 0x0d) AM_READ_PORT("IN1")
@@ -240,11 +242,10 @@ static const sn76496_config psg_intf =
 
 ***************************************************************************/
 
-static INTERRUPT_GEN( kontest_interrupt )
+INTERRUPT_GEN_MEMBER(kontest_state::kontest_interrupt)
 {
-	kontest_state *state = device->machine().driver_data<kontest_state>();
-	if (state->m_control & 8)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if (m_control & 8)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 void kontest_state::machine_start()
@@ -264,7 +265,7 @@ static MACHINE_CONFIG_START( kontest, kontest_state )
 	MCFG_CPU_ADD("maincpu", Z80,MAIN_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(kontest_map)
 	MCFG_CPU_IO_MAP(kontest_io)
-	MCFG_CPU_VBLANK_INT("screen", kontest_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", kontest_state,  kontest_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -279,11 +280,11 @@ static MACHINE_CONFIG_START( kontest, kontest_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("sn1", SN76489A_NEW, MAIN_CLOCK/16)
+	MCFG_SOUND_ADD("sn1", SN76489A, MAIN_CLOCK/16)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A_NEW, MAIN_CLOCK/16)
+	MCFG_SOUND_ADD("sn2", SN76489A, MAIN_CLOCK/16)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

@@ -34,8 +34,6 @@
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "includes/bfm_sc45.h"
-#include "sound/ymz280b.h"
-#include "machine/68681.h"
 #include "bfm_sc4.lh"
 #include "video/awpvid.h"
 //DMD01
@@ -103,7 +101,7 @@ READ16_MEMBER(sc4_state::sc4_cs1_r)
 		}
 
 
-		return m_cpuregion[offset];
+		return m_cpuregion->u16(offset);
 	}
 	else
 		logerror("%08x maincpu read access offset %08x mem_mask %04x cs %d\n", pc, offset*2, mem_mask, 1);
@@ -192,10 +190,10 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 							return 0x0000;//space.machine().rand();;
 
 						case 0x1244:
-							return ymz280b_r(m_ymz,0);
+							return ymz280b_r(m_ymz,space,0);
 
 						case 0x1246:
-							return ymz280b_r(m_ymz,1);
+							return ymz280b_r(m_ymz,space,1);
 
 						default:
 							logerror("%08x maincpu read access offset %08x mem_mask %04x cs %d (LAMPS etc.)\n", pc, offset*2, mem_mask, cs);
@@ -215,7 +213,7 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 			if ((offset>=base) && (offset<end))
 			{
 				offset-=base;
-				return duart68681_r(m_duart,offset);
+				return duart68681_r(m_duart,space,offset);
 			}
 			else
 			{
@@ -235,7 +233,7 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 	return 0x0000;
 }
 
-static WRITE8_HANDLER( bfm_sc4_reel4_w );
+static DECLARE_WRITE8_HANDLER( bfm_sc4_reel4_w );
 
 WRITE8_MEMBER(sc4_state::mux_output_w)
 {
@@ -336,15 +334,15 @@ WRITE16_MEMBER(sc4_state::sc4_mem_w)
 							break;
 
 						case 0x1248:
-							ymz280b_w(m_ymz,0, data & 0xff);
+							ymz280b_w(m_ymz,space,0, data & 0xff);
 							break;
 
 						case 0x124a:
-							ymz280b_w(m_ymz,1, data & 0xff);
+							ymz280b_w(m_ymz,space,1, data & 0xff);
 							break;
 
 						case 0x1330:
-							bfm_sc4_reel4_w(&space,0,data&0xf);
+							bfm_sc4_reel4_w(space,0,data&0xf);
 							//m_meterstatus = (m_meterstatus&0x3f) | ((data & 0x30) << 2);
 							sec.write_data_line(~data&0x10);
 							break;
@@ -367,7 +365,7 @@ WRITE16_MEMBER(sc4_state::sc4_mem_w)
 			if ((offset>=base) && (offset<end))
 			{
 				offset-=base;
-				duart68681_w(m_duart,offset,data&0x00ff);
+				duart68681_w(m_duart,space,offset,data&0x00ff);
 			}
 			else
 			{
@@ -504,9 +502,9 @@ void bfm_sc4_write_serial_vfd(running_machine &machine, bool cs, bool clock, boo
 }
 
 
-void bfm_sc4_68307_porta_w(address_space *space, bool dedicated, UINT8 data, UINT8 line_mask)
+void bfm_sc4_68307_porta_w(address_space &space, bool dedicated, UINT8 data, UINT8 line_mask)
 {
-	sc4_state *state = space->machine().driver_data<sc4_state>();
+	sc4_state *state = space.machine().driver_data<sc4_state>();
 
 	state->m_reel12_latch = data;
 
@@ -524,7 +522,7 @@ void bfm_sc4_68307_porta_w(address_space *space, bool dedicated, UINT8 data, UIN
 
 static WRITE8_HANDLER( bfm_sc4_reel3_w )
 {
-	sc4_state *state = space->machine().driver_data<sc4_state>();
+	sc4_state *state = space.machine().driver_data<sc4_state>();
 
 	state->m_reel3_latch = data;
 
@@ -538,7 +536,7 @@ static WRITE8_HANDLER( bfm_sc4_reel3_w )
 
 static WRITE8_HANDLER( bfm_sc4_reel4_w )
 {
-	sc4_state *state = space->machine().driver_data<sc4_state>();
+	sc4_state *state = space.machine().driver_data<sc4_state>();
 
 	state->m_reel4_latch = data;
 
@@ -550,29 +548,29 @@ static WRITE8_HANDLER( bfm_sc4_reel4_w )
 	awp_draw_reel(3);
 }
 
-void bfm_sc4_68307_portb_w(address_space *space, bool dedicated, UINT16 data, UINT16 line_mask)
+void bfm_sc4_68307_portb_w(address_space &space, bool dedicated, UINT16 data, UINT16 line_mask)
 {
 //  if (dedicated == false)
 	{
-		int pc = space->device().safe_pc();
-		//m68ki_cpu_core *m68k = m68k_get_safe_token(&space->device());
+		int pc = space.device().safe_pc();
+		//m68ki_cpu_core *m68k = m68k_get_safe_token(&space.device());
 		// serial output to the VFD at least..
 		logerror("%08x bfm_sc4_68307_portb_w %04x %04x\n", pc, data, line_mask);
 
-		bfm_sc4_write_serial_vfd(space->machine(), (data & 0x4000)?1:0, (data & 0x1000)?1:0, !(data & 0x2000)?1:0);
+		bfm_sc4_write_serial_vfd(space.machine(), (data & 0x4000)?1:0, (data & 0x1000)?1:0, !(data & 0x2000)?1:0);
 
-		bfm_sc4_reel3_w(space, 0, (data&0x0f00)>>8);
+		bfm_sc4_reel3_w(space, 0, (data&0x0f00)>>8, 0xff);
 	}
 
 }
-UINT8 bfm_sc4_68307_porta_r(address_space *space, bool dedicated, UINT8 line_mask)
+UINT8 bfm_sc4_68307_porta_r(address_space &space, bool dedicated, UINT8 line_mask)
 {
-	int pc = space->device().safe_pc();
+	int pc = space.device().safe_pc();
 	logerror("%08x bfm_sc4_68307_porta_r\n", pc);
-	return space->machine().rand();
+	return space.machine().rand();
 }
 
-UINT16 bfm_sc4_68307_portb_r(address_space *space, bool dedicated, UINT16 line_mask)
+UINT16 bfm_sc4_68307_portb_r(address_space &space, bool dedicated, UINT16 line_mask)
 {
 	if (dedicated==false)
 	{
@@ -603,36 +601,17 @@ MACHINE_RESET_MEMBER(sc4_state,sc4)
 	sec.reset();
 }
 
-static NVRAM_HANDLER( bfm_sc4 )
-{
-	sc4_state *state = machine.driver_data<sc4_state>();
-	if ( read_or_write )
-	{	// writing
-		file->write(state->m_mainram,0x10000);
-	}
-	else
-	{ // reading
-		if ( file )
-		{
-			file->read(state->m_mainram,0x10000);
-		}
-	}
-}
-
-
 
 MACHINE_START_MEMBER(sc4_state,sc4)
 {
-	m_cpuregion = (UINT16*)memregion( "maincpu" )->base();
-	m_mainram = (UINT16*)auto_alloc_array_clear(machine(), UINT16, 0x10000);
-	m_duart = machine().device("duart68681");
-	m_ymz = machine().device("ymz");
-	m68307_set_port_callbacks(machine().device("maincpu"),
+	m_nvram->set_base(m_mainram, sizeof(m_mainram));
+
+	m68307_set_port_callbacks(m_maincpu,
 		bfm_sc4_68307_porta_r,
 		bfm_sc4_68307_porta_w,
 		bfm_sc4_68307_portb_r,
 		bfm_sc4_68307_portb_w );
-	m68307_set_duart68681(machine().device("maincpu"),machine().device("m68307_68681"));
+	m68307_set_duart68681(m_maincpu,machine().device("m68307_68681"));
 
 	int reels = 6;
 	m_reels=reels;
@@ -773,7 +752,7 @@ MACHINE_CONFIG_START( sc4, sc4_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_NVRAM_HANDLER(bfm_sc4)
+	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_DUART68681_ADD("duart68681", 16000000/4, bfm_sc4_duart68681_config) // ?? Mhz
 

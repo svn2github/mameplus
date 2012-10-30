@@ -77,6 +77,7 @@ public:
 	DECLARE_WRITE8_MEMBER(irq_mask_w);
 	DECLARE_DRIVER_INIT(penta);
 	DECLARE_DRIVER_INIT(pengo);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
 
 
@@ -369,12 +370,11 @@ static const namco_interface namco_config =
  *
  *************************************/
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(pengo_state::vblank_irq)
 {
-	pengo_state *state = device->machine().driver_data<pengo_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -383,7 +383,7 @@ static MACHINE_CONFIG_START( pengo, pengo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)
 	MCFG_CPU_PROGRAM_MAP(pengo_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pengo_state,  vblank_irq)
 
 	/* video hardware */
 	MCFG_GFXDECODE(pengo)
@@ -391,7 +391,7 @@ static MACHINE_CONFIG_START( pengo, pengo_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(pacman)
+	MCFG_SCREEN_UPDATE_DRIVER(pengo_state, screen_update_pacman)
 
 	MCFG_PALETTE_INIT_OVERRIDE(pengo_state,pacman)
 	MCFG_VIDEO_START_OVERRIDE(pengo_state,pengo)
@@ -692,12 +692,12 @@ DRIVER_INIT_MEMBER(pengo_state,penta)
 		{ 0x88,0x0a,0x82,0x00,0xa0,0x22,0xaa,0x28 },	/* ...1...1...0.... */
 		{ 0x88,0x0a,0x82,0x00,0xa0,0x22,0xaa,0x28 }		/* ...1...1...1.... */
 	};
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0x8000);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	int A;
 
-	space->set_decrypted_region(0x0000, 0x7fff, decrypt);
+	space.set_decrypted_region(0x0000, 0x7fff, decrypt);
 
 	for (A = 0x0000;A < 0x8000;A++)
 	{

@@ -222,7 +222,7 @@ static MACHINE_CONFIG_START( pcktgal, pcktgal_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 2000000)
 	MCFG_CPU_PROGRAM_MAP(pcktgal_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pcktgal_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(pcktgal_sound_map)
@@ -235,7 +235,7 @@ static MACHINE_CONFIG_START( pcktgal, pcktgal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pcktgal)
+	MCFG_SCREEN_UPDATE_DRIVER(pcktgal_state, screen_update_pcktgal)
 
 	MCFG_GFXDECODE(pcktgal)
 	MCFG_PALETTE_LENGTH(512)
@@ -262,7 +262,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( bootleg, pcktgal )
 	MCFG_GFXDECODE(bootleg)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(pcktgalb)
+	MCFG_SCREEN_UPDATE_DRIVER(pcktgal_state, screen_update_pcktgalb)
 MACHINE_CONFIG_END
 
 /***************************************************************************/
@@ -411,11 +411,11 @@ ROM_END
 DRIVER_INIT_MEMBER(pcktgal_state,deco222)
 {
 	int A;
-	address_space *space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
 	UINT8 *rom = machine().root_device().memregion("audiocpu")->base();
 
-	space->set_decrypted_region(0x8000, 0xffff, decrypted);
+	space.set_decrypted_region(0x8000, 0xffff, decrypted);
 
 	/* bits 5 and 6 of the opcodes are swapped */
 	for (A = 0x8000;A < 0x18000;A++)

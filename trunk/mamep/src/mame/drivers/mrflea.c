@@ -116,13 +116,12 @@ READ8_MEMBER(mrflea_state::mrflea_io_status_r)
 	return m_status ^ 0x01;
 }
 
-static TIMER_DEVICE_CALLBACK( mrflea_slave_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(mrflea_state::mrflea_slave_interrupt)
 {
-	mrflea_state *state = timer.machine().driver_data<mrflea_state>();
 	int scanline = param;
 
-	if ((scanline == 248) || (scanline == 248/2 && (state->m_status & 0x08)))
-		state->m_subcpu->set_input_line(0, HOLD_LINE);
+	if ((scanline == 248) || (scanline == 248/2 && (m_status & 0x08)))
+		m_subcpu->set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(mrflea_state::mrflea_interrupt_type_r)
@@ -357,12 +356,12 @@ static MACHINE_CONFIG_START( mrflea, mrflea_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000) /* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(mrflea_master_map)
 	MCFG_CPU_IO_MAP(mrflea_master_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold) /* NMI resets the game */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mrflea_state,  irq0_line_hold) /* NMI resets the game */
 
 	MCFG_CPU_ADD("sub", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(mrflea_slave_map)
 	MCFG_CPU_IO_MAP(mrflea_slave_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mrflea_slave_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mrflea_state, mrflea_slave_interrupt, "screen", 0, 1)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -373,7 +372,7 @@ static MACHINE_CONFIG_START( mrflea, mrflea_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mrflea)
+	MCFG_SCREEN_UPDATE_DRIVER(mrflea_state, screen_update_mrflea)
 
 	MCFG_GFXDECODE(mrflea)
 	MCFG_PALETTE_LENGTH(32)

@@ -206,11 +206,11 @@ static MACHINE_CONFIG_START( pokechmp, pokechmp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 4000000)
 	MCFG_CPU_PROGRAM_MAP(pokechmp_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pokechmp_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 4000000)
 	MCFG_CPU_PROGRAM_MAP(pokechmp_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pokechmp_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -218,7 +218,7 @@ static MACHINE_CONFIG_START( pokechmp, pokechmp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pokechmp)
+	MCFG_SCREEN_UPDATE_DRIVER(pokechmp_state, screen_update_pokechmp)
 
 	MCFG_GFXDECODE(pokechmp)
 	MCFG_PALETTE_LENGTH(0x400)

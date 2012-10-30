@@ -60,6 +60,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info_fg);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_ettrivia(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(ettrivia_interrupt);
 };
 
 
@@ -115,20 +117,20 @@ WRITE8_MEMBER(ettrivia_state::b800_w)
 		/* special case to return the value written to 0xb000 */
 		/* does it reset the chips too ? */
 		case 0:	break;
-		case 0xc4: m_b000_ret = ay8910_r(machine().device("ay1"), 0);	break;
-		case 0x94: m_b000_ret = ay8910_r(machine().device("ay2"), 0);	break;
-		case 0x86: m_b000_ret = ay8910_r(machine().device("ay3"), 0);	break;
+		case 0xc4: m_b000_ret = ay8910_r(machine().device("ay1"), space, 0);	break;
+		case 0x94: m_b000_ret = ay8910_r(machine().device("ay2"), space, 0);	break;
+		case 0x86: m_b000_ret = ay8910_r(machine().device("ay3"), space, 0);	break;
 
 		case 0x80:
 			switch(m_b800_prev)
 			{
-				case 0xe0: ay8910_address_w(machine().device("ay1"),0,m_b000_val);	break;
-				case 0x98: ay8910_address_w(machine().device("ay2"),0,m_b000_val);	break;
-				case 0x83: ay8910_address_w(machine().device("ay3"),0,m_b000_val);	break;
+				case 0xe0: ay8910_address_w(machine().device("ay1"),space,0,m_b000_val);	break;
+				case 0x98: ay8910_address_w(machine().device("ay2"),space,0,m_b000_val);	break;
+				case 0x83: ay8910_address_w(machine().device("ay3"),space,0,m_b000_val);	break;
 
-				case 0xa0: ay8910_data_w(machine().device("ay1"),0,m_b000_val);	break;
-				case 0x88: ay8910_data_w(machine().device("ay2"),0,m_b000_val);	break;
-				case 0x81: ay8910_data_w(machine().device("ay3"),0,m_b000_val);	break;
+				case 0xa0: ay8910_data_w(machine().device("ay1"),space,0,m_b000_val);	break;
+				case 0x88: ay8910_data_w(machine().device("ay2"),space,0,m_b000_val);	break;
+				case 0x81: ay8910_data_w(machine().device("ay3"),space,0,m_b000_val);	break;
 
 			}
 		break;
@@ -260,11 +262,10 @@ void ettrivia_state::video_start()
 	m_fg_tilemap->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16( ettrivia )
+UINT32 ettrivia_state::screen_update_ettrivia(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ettrivia_state *state = screen.machine().driver_data<ettrivia_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
@@ -289,19 +290,19 @@ static const ay8910_interface ay8912_interface_3 =
 };
 
 
-static INTERRUPT_GEN( ettrivia_interrupt )
+INTERRUPT_GEN_MEMBER(ettrivia_state::ettrivia_interrupt)
 {
-	if( device->machine().root_device().ioport("COIN")->read() & 0x01 )
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if( machine().root_device().ioport("COIN")->read() & 0x01 )
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		device->execute().set_input_line(0, HOLD_LINE);
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( ettrivia, ettrivia_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/4-48000) //should be ok, it gives the 300 interrupts expected
 	MCFG_CPU_PROGRAM_MAP(cpu_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", ettrivia_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ettrivia_state,  ettrivia_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -311,7 +312,7 @@ static MACHINE_CONFIG_START( ettrivia, ettrivia_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ettrivia)
+	MCFG_SCREEN_UPDATE_DRIVER(ettrivia_state, screen_update_ettrivia)
 
 	MCFG_GFXDECODE(ettrivia)
 	MCFG_PALETTE_LENGTH(256)

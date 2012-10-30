@@ -1248,32 +1248,32 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static TIMER_CALLBACK( rockn_timer_level4_callback )
+TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_level4_callback)
 {
-	machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( rockn_timer_sub_level4_callback )
+TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_sub_level4_callback)
 {
-	machine.device("sub")->execute().set_input_line(4, HOLD_LINE);
+	machine().device("sub")->execute().set_input_line(4, HOLD_LINE);
 }
 
 
-static TIMER_CALLBACK( rockn_timer_level1_callback )
+TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_level1_callback)
 {
-	machine.device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( rockn_timer_sub_level1_callback )
+TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_sub_level1_callback)
 {
-	machine.device("sub")->execute().set_input_line(1, HOLD_LINE);
+	machine().device("sub")->execute().set_input_line(1, HOLD_LINE);
 }
 
 static void init_rockn_timer(running_machine &machine)
 {
 	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	machine.scheduler().timer_pulse(attotime::from_msec(32), FUNC(rockn_timer_level1_callback));
-	state->m_rockn_timer_l4 = machine.scheduler().timer_alloc(FUNC(rockn_timer_level4_callback));
+	machine.scheduler().timer_pulse(attotime::from_msec(32), timer_expired_delegate(FUNC(tetrisp2_state::rockn_timer_level1_callback),state));
+	state->m_rockn_timer_l4 = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(tetrisp2_state::rockn_timer_level4_callback),state));
 
 	state_save_register_global_array(machine, state->m_systemregs);
 	state_save_register_global_array(machine, state->m_rocknms_sub_systemregs);
@@ -1304,8 +1304,8 @@ DRIVER_INIT_MEMBER(tetrisp2_state,rocknms)
 {
 	init_rockn_timer(machine());
 
-	machine().scheduler().timer_pulse(attotime::from_msec(32), FUNC(rockn_timer_sub_level1_callback));
-	m_rockn_timer_sub_l4 = machine().scheduler().timer_alloc(FUNC(rockn_timer_sub_level4_callback));
+	machine().scheduler().timer_pulse(attotime::from_msec(32), timer_expired_delegate(FUNC(tetrisp2_state::rockn_timer_sub_level1_callback),this));
+	m_rockn_timer_sub_l4 = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(tetrisp2_state::rockn_timer_sub_level4_callback),this));
 
 	m_rockn_protectdata = 3;
 
@@ -1329,7 +1329,7 @@ static MACHINE_CONFIG_START( tetrisp2, tetrisp2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(tetrisp2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tetrisp2_state,  irq2_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_WATCHDOG_VBLANK_INIT(8)	/* guess */
@@ -1340,7 +1340,7 @@ static MACHINE_CONFIG_START( tetrisp2, tetrisp2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(tetrisp2)
+	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_tetrisp2)
 
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1361,7 +1361,7 @@ static MACHINE_CONFIG_START( nndmseal, tetrisp2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz)
 	MCFG_CPU_PROGRAM_MAP(nndmseal_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tetrisp2_state,  irq2_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1371,7 +1371,7 @@ static MACHINE_CONFIG_START( nndmseal, tetrisp2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x180, 0xf0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x180-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(tetrisp2)
+	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_tetrisp2)
 
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1391,7 +1391,7 @@ static MACHINE_CONFIG_START( rockn, tetrisp2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(rockn1_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tetrisp2_state,  irq2_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1401,7 +1401,7 @@ static MACHINE_CONFIG_START( rockn, tetrisp2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(rockntread)
+	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_rockntread)
 
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1422,7 +1422,7 @@ static MACHINE_CONFIG_START( rockn2, tetrisp2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(rockn2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tetrisp2_state,  irq2_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1432,7 +1432,7 @@ static MACHINE_CONFIG_START( rockn2, tetrisp2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(rockntread)
+	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_rockntread)
 
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1453,11 +1453,11 @@ static MACHINE_CONFIG_START( rocknms, tetrisp2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(rocknms_main_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", tetrisp2_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(rocknms_sub_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", tetrisp2_state,  irq2_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1472,14 +1472,14 @@ static MACHINE_CONFIG_START( rocknms, tetrisp2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(rocknms_left)
+	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_rocknms_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(rocknms_right)
+	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_rocknms_right)
 
 	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,rocknms)
 
@@ -1495,11 +1495,11 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( stepstag, stepstag_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000 ) //??
 	MCFG_CPU_PROGRAM_MAP(stepstag_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold) // lev 4 triggered by system timer
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tetrisp2_state,  irq2_line_hold) // lev 4 triggered by system timer
 
 	MCFG_CPU_ADD("sub", M68000, 16000000 ) //??
 	MCFG_CPU_PROGRAM_MAP(stepstag_sub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold) // lev 6 triggered by main CPU
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tetrisp2_state,  irq4_line_hold) // lev 6 triggered by main CPU
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1509,21 +1509,21 @@ static MACHINE_CONFIG_START( stepstag, stepstag_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x160, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x160-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(stepstag_left)
+	MCFG_SCREEN_UPDATE_DRIVER(stepstag_state, screen_update_stepstag_left)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x160, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x160-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(stepstag_mid)
+	MCFG_SCREEN_UPDATE_DRIVER(stepstag_state, screen_update_stepstag_mid)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x160, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x160-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(stepstag_right)
+	MCFG_SCREEN_UPDATE_DRIVER(stepstag_state, screen_update_stepstag_right)
 
 	MCFG_PALETTE_LENGTH(0x8000)	// 0x8000 * 3 needed I guess, but it hits an assert
 

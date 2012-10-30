@@ -524,9 +524,9 @@ namcos21_kickstart( running_machine &machine, int internal )
 }
 
 static UINT16
-ReadWordFromSlaveInput( address_space *space )
+ReadWordFromSlaveInput( address_space &space )
 {
-	namcos21_state *state = space->machine().driver_data<namcos21_state>();
+	namcos21_state *state = space.machine().driver_data<namcos21_state>();
 	UINT16 data = 0;
 	if( state->m_mpDspState->slaveBytesAvailable>0 )
 	{
@@ -537,7 +537,7 @@ ReadWordFromSlaveInput( address_space *space )
 		{
 			state->m_mpDspState->slaveBytesAdvertised--;
 		}
-		if (ENABLE_LOGGING) logerror( "%s:-%04x(0x%04x)\n", space->machine().describe_context(), data, state->m_mpDspState->slaveBytesAvailable );
+		if (ENABLE_LOGGING) logerror( "%s:-%04x(0x%04x)\n", space.machine().describe_context(), data, state->m_mpDspState->slaveBytesAvailable );
 	}
 	return data;
 } /* ReadWordFromSlaveInput */
@@ -853,7 +853,7 @@ RenderSlaveOutput( running_machine &machine, UINT16 data )
 
 READ16_MEMBER(namcos21_state::slave_port0_r)
 {
-	return ReadWordFromSlaveInput(&space);
+	return ReadWordFromSlaveInput(space);
 } /* slave_port0_r */
 
 WRITE16_MEMBER(namcos21_state::slave_port0_w)
@@ -1369,7 +1369,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( am_sound_winrun, AS_PROGRAM, 8, namcos21_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROMBANK("bank6") /* banked */
 	AM_RANGE(0x3000, 0x3003) AM_WRITENOP /* ? */
-	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0x5000, 0x6fff) AM_DEVREADWRITE_LEGACY("c140", c140_r,c140_w)
 	AM_RANGE(0x7000, 0x77ff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) AM_SHARE("mpdualportram")
 	AM_RANGE(0x7800, 0x7fff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) /* mirror */
@@ -1489,20 +1489,20 @@ MACHINE_START_MEMBER(namcos21_state,namcos21)
 static MACHINE_CONFIG_START( namcos21, namcos21_state )
 	MCFG_CPU_ADD("maincpu", M68000,12288000) /* Master */
 	MCFG_CPU_PROGRAM_MAP(namcos21_68k_master)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000,12288000) /* Slave */
 	MCFG_CPU_PROGRAM_MAP(namcos21_68k_slave)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809,3072000) /* Sound */
 	MCFG_CPU_PROGRAM_MAP(am_sound_winrun)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold,120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos21_state, irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos21_state, irq1_line_hold, 120)
 
 	MCFG_CPU_ADD("mcu", HD63705,2048000) /* IO */
 	MCFG_CPU_PROGRAM_MAP(am_mcu_winrun)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("dspmaster", TMS32025,24000000) /* 24 MHz? overclocked */
 	MCFG_CPU_PROGRAM_MAP(master_dsp_program)
@@ -1526,7 +1526,7 @@ static MACHINE_CONFIG_START( namcos21, namcos21_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(NAMCOS21_POLY_FRAME_WIDTH,NAMCOS21_POLY_FRAME_HEIGHT)
 	MCFG_SCREEN_VISIBLE_AREA(0,495,0,479)
-	MCFG_SCREEN_UPDATE_STATIC(namcos21)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos21_state, screen_update_namcos21)
 
 	MCFG_GFXDECODE(namcos21)
 	MCFG_PALETTE_LENGTH(NAMCOS21_NUM_COLORS)
@@ -1540,7 +1540,7 @@ static MACHINE_CONFIG_START( namcos21, namcos21_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579580)
+	MCFG_YM2151_ADD("ymsnd", 3579580)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.30)
 MACHINE_CONFIG_END
@@ -1549,20 +1549,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( driveyes, namcos21_state )
 	MCFG_CPU_ADD("maincpu", M68000,12288000) /* Master */
 	MCFG_CPU_PROGRAM_MAP(driveyes_68k_master)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000,12288000) /* Slave */
 	MCFG_CPU_PROGRAM_MAP(driveyes_68k_slave)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809,3072000) /* Sound */
 	MCFG_CPU_PROGRAM_MAP(am_sound_winrun)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold,120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos21_state, irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos21_state, irq1_line_hold, 120)
 
 	MCFG_CPU_ADD("mcu", HD63705,2048000) /* IO */
 	MCFG_CPU_PROGRAM_MAP(am_mcu_winrun)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("dsp", TMS32025,24000000*2) /* 24 MHz? overclocked */
 	MCFG_CPU_PROGRAM_MAP(winrun_dsp_program)
@@ -1581,7 +1581,7 @@ static MACHINE_CONFIG_START( driveyes, namcos21_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(NAMCOS21_POLY_FRAME_WIDTH,NAMCOS21_POLY_FRAME_HEIGHT)
 	MCFG_SCREEN_VISIBLE_AREA(0,495,0,479)
-	MCFG_SCREEN_UPDATE_STATIC(namcos21)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos21_state, screen_update_namcos21)
 
 	MCFG_GFXDECODE(namcos21)
 	MCFG_PALETTE_LENGTH(NAMCOS21_NUM_COLORS)
@@ -1595,7 +1595,7 @@ static MACHINE_CONFIG_START( driveyes, namcos21_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579580)
+	MCFG_YM2151_ADD("ymsnd", 3579580)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.30)
 MACHINE_CONFIG_END
@@ -1604,20 +1604,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( winrun, namcos21_state )
 	MCFG_CPU_ADD("maincpu", M68000,12288000) /* Master */
 	MCFG_CPU_PROGRAM_MAP(am_master_winrun)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000,12288000) /* Slave */
 	MCFG_CPU_PROGRAM_MAP(am_slave_winrun)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809,3072000) /* Sound */
 	MCFG_CPU_PROGRAM_MAP(am_sound_winrun)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold,120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos21_state, irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos21_state, irq1_line_hold, 120)
 
 	MCFG_CPU_ADD("mcu", HD63705,2048000) /* IO */
 	MCFG_CPU_PROGRAM_MAP(am_mcu_winrun)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("dsp", TMS32025,24000000) /* 24 MHz? overclocked */
 	MCFG_CPU_PROGRAM_MAP(winrun_dsp_program)
@@ -1626,7 +1626,7 @@ static MACHINE_CONFIG_START( winrun, namcos21_state )
 
 	MCFG_CPU_ADD("gpu", M68000,12288000) /* graphics coprocessor */
 	MCFG_CPU_PROGRAM_MAP(am_gpu_winrun)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_gpu_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos21_state,  namcos2_68k_gpu_vblank)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* 100 CPU slices per frame */
 
@@ -1640,7 +1640,7 @@ static MACHINE_CONFIG_START( winrun, namcos21_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(NAMCOS21_POLY_FRAME_WIDTH,NAMCOS21_POLY_FRAME_HEIGHT)
 	MCFG_SCREEN_VISIBLE_AREA(0,495,0,479)
-	MCFG_SCREEN_UPDATE_STATIC(namcos21)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos21_state, screen_update_namcos21)
 
 	MCFG_PALETTE_LENGTH(NAMCOS21_NUM_COLORS)
 
@@ -1653,7 +1653,7 @@ static MACHINE_CONFIG_START( winrun, namcos21_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579580)
+	MCFG_YM2151_ADD("ymsnd", 3579580)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.30)
 MACHINE_CONFIG_END

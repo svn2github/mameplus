@@ -19,12 +19,11 @@ Preliminary driver by:
 /* prototypes */
 static KONAMI_SETLINES_CALLBACK( aliens_banking );
 
-static INTERRUPT_GEN( aliens_interrupt )
+INTERRUPT_GEN_MEMBER(aliens_state::aliens_interrupt)
 {
-	aliens_state *state = device->machine().driver_data<aliens_state>();
 
-	if (k051960_is_irq_enabled(state->m_k051960))
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (k051960_is_irq_enabled(m_k051960))
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 READ8_MEMBER(aliens_state::bankedram_r)
@@ -92,25 +91,25 @@ READ8_MEMBER(aliens_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(aliens_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 static ADDRESS_MAP_START( aliens_map, AS_PROGRAM, 8, aliens_state )
@@ -131,7 +130,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( aliens_sound_map, AS_PROGRAM, 8, aliens_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM										/* ROM g04_b03.bin */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM										/* RAM */
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)							/* soundlatch_byte_r */
 	AM_RANGE(0xe000, 0xe00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
 ADDRESS_MAP_END
@@ -203,12 +202,6 @@ static const k007232_interface k007232_config =
 	volume_callback	/* external port callback */
 };
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(aliens_state,aliens_snd_bankswitch_w)
-};
-
 
 static const k052109_interface aliens_k052109_intf =
 {
@@ -256,7 +249,7 @@ static MACHINE_CONFIG_START( aliens, aliens_state )
 
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8)		/* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(aliens_map)
-	MCFG_CPU_VBLANK_INT("screen", aliens_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aliens_state,  aliens_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) 	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(aliens_sound_map)
@@ -270,7 +263,7 @@ static MACHINE_CONFIG_START( aliens, aliens_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(aliens)
+	MCFG_SCREEN_UPDATE_DRIVER(aliens_state, screen_update_aliens)
 
 	MCFG_PALETTE_LENGTH(512)
 
@@ -281,8 +274,8 @@ static MACHINE_CONFIG_START( aliens, aliens_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)	/* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)	/* verified on pcb */
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(aliens_state,aliens_snd_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 

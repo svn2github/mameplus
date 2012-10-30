@@ -66,14 +66,13 @@ WRITE8_MEMBER(dec8_state::dec8_mxc06_karn_buffer_spriteram_w)
 }
 
 /* Only used by ghostb, gondo, garyoret, other games can control buffering */
-static SCREEN_VBLANK( dec8 )
+void dec8_state::screen_eof_dec8(screen_device &screen, bool state)
 {
-	dec8_state *state = screen.machine().driver_data<dec8_state>();
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
-		state->dec8_mxc06_karn_buffer_spriteram_w(*space, 0, 0);
+		address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+		dec8_mxc06_karn_buffer_spriteram_w(space, 0, 0);
 	}
 }
 
@@ -130,12 +129,11 @@ READ8_MEMBER(dec8_state::gondo_player_2_r)
 *
 ***************************************************/
 
-static TIMER_CALLBACK( dec8_i8751_timer_callback )
+TIMER_CALLBACK_MEMBER(dec8_state::dec8_i8751_timer_callback)
 {
 	// The schematics show a clocked LS194 shift register (3A) is used to automatically
 	// clear the IRQ request.  The MCU does not clear it itself.
-	dec8_state *state = machine.driver_data<dec8_state>();
-	state->m_mcu->execute().set_input_line(MCS51_INT1_LINE, CLEAR_LINE);
+	m_mcu->execute().set_input_line(MCS51_INT1_LINE, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(dec8_state::dec8_i8751_w)
@@ -146,7 +144,7 @@ WRITE8_MEMBER(dec8_state::dec8_i8751_w)
 	case 0: /* High byte - SECIRQ is trigged on activating this latch */
 		m_i8751_value = (m_i8751_value & 0xff) | (data << 8);
 		m_mcu->execute().set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
-		machine().scheduler().timer_set(m_mcu->clocks_to_attotime(64), FUNC(dec8_i8751_timer_callback)); // 64 clocks not confirmed
+		machine().scheduler().timer_set(m_mcu->clocks_to_attotime(64), timer_expired_delegate(FUNC(dec8_state::dec8_i8751_timer_callback),this)); // 64 clocks not confirmed
 		break;
 	case 1: /* Low byte */
 		m_i8751_value = (m_i8751_value & 0xff00) | data;
@@ -1956,22 +1954,20 @@ static const msm5205_interface msm5205_config =
 
 /******************************************************************************/
 
-static INTERRUPT_GEN( gondo_interrupt )
+INTERRUPT_GEN_MEMBER(dec8_state::gondo_interrupt)
 {
-	dec8_state *state = device->machine().driver_data<dec8_state>();
-	if (state->m_nmi_enable)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE); /* VBL */
+	if (m_nmi_enable)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE); /* VBL */
 }
 
 /* Coins generate NMI's */
-static INTERRUPT_GEN( oscar_interrupt )
+INTERRUPT_GEN_MEMBER(dec8_state::oscar_interrupt)
 {
-	dec8_state *state = device->machine().driver_data<dec8_state>();
-	if ((state->ioport("IN2")->read() & 0x7) == 0x7) state->m_latch = 1;
-	if (state->m_latch && (state->ioport("IN2")->read() & 0x7) != 0x7)
+	if ((ioport("IN2")->read() & 0x7) == 0x7) m_latch = 1;
+	if (m_latch && (ioport("IN2")->read() & 0x7) != 0x7)
 	{
-		state->m_latch = 0;
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_latch = 0;
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -2056,7 +2052,7 @@ static MACHINE_CONFIG_START( lastmisn, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lastmisn)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_lastmisn)
 
 	MCFG_GFXDECODE(shackled)
 	MCFG_PALETTE_LENGTH(1024)
@@ -2103,7 +2099,7 @@ static MACHINE_CONFIG_START( shackled, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(shackled)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_shackled)
 
 	MCFG_GFXDECODE(shackled)
 	MCFG_PALETTE_LENGTH(1024)
@@ -2129,7 +2125,7 @@ static MACHINE_CONFIG_START( gondo, dec8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309,3000000*4) /* HD63C09EP */
 	MCFG_CPU_PROGRAM_MAP(gondo_map)
-	MCFG_CPU_VBLANK_INT("screen", gondo_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  gondo_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(oscar_s_map)
@@ -2150,8 +2146,8 @@ static MACHINE_CONFIG_START( gondo, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gondo)
-	MCFG_SCREEN_VBLANK_STATIC(dec8)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_gondo)
+	MCFG_SCREEN_VBLANK_DRIVER(dec8_state, screen_eof_dec8)
 
 	MCFG_GFXDECODE(gondo)
 	MCFG_PALETTE_LENGTH(1024)
@@ -2177,7 +2173,7 @@ static MACHINE_CONFIG_START( garyoret, dec8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309,3000000*4) /* HD63C09EP */
 	MCFG_CPU_PROGRAM_MAP(garyoret_map)
-	MCFG_CPU_VBLANK_INT("screen", gondo_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  gondo_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(oscar_s_map)
@@ -2198,8 +2194,8 @@ static MACHINE_CONFIG_START( garyoret, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(garyoret)
-	MCFG_SCREEN_VBLANK_STATIC(dec8)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_garyoret)
+	MCFG_SCREEN_VBLANK_DRIVER(dec8_state, screen_eof_dec8)
 
 	MCFG_GFXDECODE(gondo)
 	MCFG_PALETTE_LENGTH(1024)
@@ -2225,7 +2221,7 @@ static MACHINE_CONFIG_START( ghostb, dec8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)
 	MCFG_CPU_PROGRAM_MAP(meikyuh_map)
-	MCFG_CPU_VBLANK_INT("screen", gondo_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  gondo_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(dec8_s_map)
@@ -2249,8 +2245,8 @@ static MACHINE_CONFIG_START( ghostb, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ghostb)
-	MCFG_SCREEN_VBLANK_STATIC(dec8)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_ghostb)
+	MCFG_SCREEN_VBLANK_DRIVER(dec8_state, screen_eof_dec8)
 
 	MCFG_GFXDECODE(ghostb)
 	MCFG_PALETTE_LENGTH(1024)
@@ -2280,7 +2276,7 @@ static MACHINE_CONFIG_START( csilver, dec8_state )
 
 	MCFG_CPU_ADD("sub", M6809, XTAL_12MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(csilver_sub_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", M6502, XTAL_12MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(csilver_s_map)
@@ -2299,7 +2295,7 @@ static MACHINE_CONFIG_START( csilver, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lastmisn)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_lastmisn)
 
 	MCFG_GFXDECODE(shackled)
 	MCFG_PALETTE_LENGTH(1024)
@@ -2329,7 +2325,7 @@ static MACHINE_CONFIG_START( oscar, dec8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, XTAL_12MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(oscar_map)
-	MCFG_CPU_VBLANK_INT("screen", oscar_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  oscar_interrupt)
 
 	MCFG_CPU_ADD("sub", HD6309, XTAL_12MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(oscar_sub_map)
@@ -2354,7 +2350,7 @@ static MACHINE_CONFIG_START( oscar, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(oscar)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_oscar)
 
 	MCFG_GFXDECODE(oscar)
 	MCFG_PALETTE_LENGTH(512)
@@ -2380,7 +2376,7 @@ static MACHINE_CONFIG_START( srdarwin, dec8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809,2000000)  /* MC68A09EP */
 	MCFG_CPU_PROGRAM_MAP(srdarwin_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(dec8_s_map)
@@ -2395,7 +2391,7 @@ static MACHINE_CONFIG_START( srdarwin, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(srdarwin)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_srdarwin)
 
 	MCFG_GFXDECODE(srdarwin)
 	MCFG_PALETTE_LENGTH(144)
@@ -2421,7 +2417,7 @@ static MACHINE_CONFIG_START( cobracom, dec8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2000000)
 	MCFG_CPU_PROGRAM_MAP(cobra_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dec8_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(dec8_s_map)
@@ -2445,7 +2441,7 @@ static MACHINE_CONFIG_START( cobracom, dec8_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 58Hz, 529ms Vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cobracom)
+	MCFG_SCREEN_UPDATE_DRIVER(dec8_state, screen_update_cobracom)
 
 	MCFG_GFXDECODE(cobracom)
 	MCFG_PALETTE_LENGTH(256)
@@ -3527,7 +3523,7 @@ DRIVER_INIT_MEMBER(dec8_state,dec8)
 /* Ghostbusters, Darwin, Oscar use a "Deco 222" custom 6502 for sound. */
 DRIVER_INIT_MEMBER(dec8_state,deco222)
 {
-	address_space *space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
 	int A;
 	UINT8 *decrypt;
 	UINT8 *rom;
@@ -3536,7 +3532,7 @@ DRIVER_INIT_MEMBER(dec8_state,deco222)
 	rom = memregion("audiocpu")->base();
 	decrypt = auto_alloc_array(machine(), UINT8, 0x8000);
 
-	space->set_decrypted_region(0x8000, 0xffff, decrypt);
+	space.set_decrypted_region(0x8000, 0xffff, decrypt);
 
 	for (A = 0x8000; A < 0x10000; A++)
 		decrypt[A - 0x8000] = (rom[A] & 0x9f) | ((rom[A] & 0x20) << 1) | ((rom[A] & 0x40) >> 1);

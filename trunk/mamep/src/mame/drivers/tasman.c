@@ -36,6 +36,8 @@ public:
 	DECLARE_WRITE8_MEMBER(kongambl_ff_w);
 	DECLARE_DRIVER_INIT(kingtut);
 	DECLARE_VIDEO_START(kongambl);
+	UINT32 screen_update_kongambl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(kongambl_vblank);
 };
 
 
@@ -54,11 +56,10 @@ VIDEO_START_MEMBER(kongambl_state,kongambl)
 	#endif
 }
 
-static SCREEN_UPDATE_IND16(kongambl)
+UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	#if CUSTOM_DRAW
-	kongambl_state *state = screen.machine().driver_data<kongambl_state>();
-	gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = machine().gfx[0];
 	UINT32 count;
 
 	count = 0;
@@ -67,9 +68,9 @@ static SCREEN_UPDATE_IND16(kongambl)
 	{
 		for (int x=0;x<128;x++)
 		{
-			UINT32 tile = state->m_vram[count] & 0xffff;
+			UINT32 tile = m_vram[count] & 0xffff;
 
-			if(screen.machine().primary_screen->visible_area().contains(x*8, y*8))
+			if(machine().primary_screen->visible_area().contains(x*8, y*8))
 				drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
 
 			count++;
@@ -82,9 +83,9 @@ static SCREEN_UPDATE_IND16(kongambl)
 	{
 		for (int x=0;x<128;x++)
 		{
-			UINT32 tile = state->m_vram[count] & 0xffff;
+			UINT32 tile = m_vram[count] & 0xffff;
 
-			if(screen.machine().primary_screen->visible_area().contains(x*8, y*8))
+			if(machine().primary_screen->visible_area().contains(x*8, y*8))
 				drawgfx_transpen(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8,0);
 
 			count++;
@@ -93,10 +94,10 @@ static SCREEN_UPDATE_IND16(kongambl)
 
 
 	#else
-	device_t *k056832 = screen.machine().device("k056832");
+	device_t *k056832 = machine().device("k056832");
 
 	bitmap.fill(0, cliprect);
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 3, 0, 0);
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 2, 0, 0);
@@ -137,13 +138,13 @@ WRITE32_MEMBER(kongambl_state::eeprom_w)
 
 static READ32_HANDLER( test_r )
 {
-	return -1;//space->machine().rand();
+	return -1;//space.machine().rand();
 }
 
 /*
  static READ32_HANDLER( rng_r )
 {
-    return space->machine().rand();
+    return space.machine().rand();
 }
 */
 
@@ -579,26 +580,25 @@ static const k053247_interface k053247_intf =
 	kongambl_sprite_callback
 };
 
-static TIMER_DEVICE_CALLBACK( kongambl_vblank )
+TIMER_DEVICE_CALLBACK_MEMBER(kongambl_state::kongambl_vblank)
 {
-	kongambl_state *state = timer.machine().driver_data<kongambl_state>();
 	int scanline = param;
 
 	if(scanline == 512)
-		state->m_maincpu->set_input_line(1, HOLD_LINE); // vblank?
+		m_maincpu->set_input_line(1, HOLD_LINE); // vblank?
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line(3, HOLD_LINE); // sprite irq?
+		m_maincpu->set_input_line(3, HOLD_LINE); // sprite irq?
 }
 
 static MACHINE_CONFIG_START( kongambl, kongambl_state )
 	MCFG_CPU_ADD("maincpu", M68EC020, 25000000)
 	MCFG_CPU_PROGRAM_MAP(kongambl_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", kongambl_vblank, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kongambl_state, kongambl_vblank, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sndcpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(kongamaud_map)
-	MCFG_CPU_PERIODIC_INT(irq2_line_hold, 480)
+	MCFG_CPU_PERIODIC_INT_DRIVER(kongambl_state, irq2_line_hold,  480)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -607,7 +607,7 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(96*8, 64*8+16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 80*8-1, 0*8, 64*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(kongambl)
+	MCFG_SCREEN_UPDATE_DRIVER(kongambl_state, screen_update_kongambl)
 
 	MCFG_PALETTE_LENGTH(0x8000)
 

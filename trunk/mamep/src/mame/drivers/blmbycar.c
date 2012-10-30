@@ -355,7 +355,7 @@ static MACHINE_CONFIG_START( blmbycar, blmbycar_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(blmbycar_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blmbycar_state,  irq1_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(blmbycar_state,blmbycar)
 	MCFG_MACHINE_RESET_OVERRIDE(blmbycar_state,blmbycar)
@@ -366,7 +366,7 @@ static MACHINE_CONFIG_START( blmbycar, blmbycar_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x180, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x180-1, 0, 0x100-1)
-	MCFG_SCREEN_UPDATE_STATIC(blmbycar)
+	MCFG_SCREEN_UPDATE_DRIVER(blmbycar_state, screen_update_blmbycar)
 
 	MCFG_GFXDECODE(blmbycar)
 	MCFG_PALETTE_LENGTH(0x300)
@@ -398,7 +398,7 @@ static MACHINE_CONFIG_START( watrball, blmbycar_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(watrball_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blmbycar_state,  irq1_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(blmbycar_state,watrball)
 	MCFG_MACHINE_RESET_OVERRIDE(blmbycar_state,watrball)
@@ -409,7 +409,7 @@ static MACHINE_CONFIG_START( watrball, blmbycar_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(0x180, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x180-1, 16, 0x100-1)
-	MCFG_SCREEN_UPDATE_STATIC(blmbycar)
+	MCFG_SCREEN_UPDATE_DRIVER(blmbycar_state, screen_update_blmbycar)
 
 	MCFG_GFXDECODE(blmbycar)
 	MCFG_PALETTE_LENGTH(0x300)

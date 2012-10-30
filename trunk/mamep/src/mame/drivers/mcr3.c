@@ -109,6 +109,7 @@
 #include "includes/mcr.h"
 #include "includes/mcr3.h"
 
+#include "spyhunt.lh"
 #include "turbotag.lh"
 
 
@@ -181,6 +182,7 @@ READ8_MEMBER(mcr3_state::maxrpm_ip1_r)
 
 READ8_MEMBER(mcr3_state::maxrpm_ip2_r)
 {
+	/* this is a blatant hack, should really do a better implementation */
 	static const UINT8 shift_bits[5] = { 0x00, 0x05, 0x06, 0x01, 0x02 };
 	UINT8 start = ioport("MONO.IP0")->read();
 	UINT8 shift = ioport("SHIFT")->read();
@@ -599,11 +601,10 @@ static INPUT_PORTS_START( demoderm )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(4)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(4)
-
 INPUT_PORTS_END
 
 
-/* not verified, no manual found */
+/* inputs not verfied yet, DIP switches from manual */
 static INPUT_PORTS_START( sarge )
 	PORT_START("MONO.IP0")	/* J2 1-8 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -630,7 +631,10 @@ static INPUT_PORTS_START( sarge )
 	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
 
-	PORT_START("MONO.IP3")
+	PORT_START("MONO.IP3")	/* DIPSW @ A13 */
+	PORT_DIPUNKNOWN( 0x01, 0x01 ) // used, maybe for the "hidden player incentive" easter egg?
+	PORT_DIPUNKNOWN( 0x02, 0x02 ) // "
+	PORT_DIPUNKNOWN( 0x04, 0x04 ) // "
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -638,8 +642,9 @@ static INPUT_PORTS_START( sarge )
 	PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
-/* 0x00 says 2 Coins/2 Credits in service mode, but gives 1 Coin/1 Credit */
-	PORT_BIT( 0xc7, IP_ACTIVE_LOW, IPT_UNKNOWN )
+//  PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) ) // dupe/invalid
+	PORT_DIPUNUSED( 0x40, 0x40 )
+	PORT_DIPUNUSED( 0x80, 0x80 )
 
 	PORT_START("MONO.IP4")	/* J4 1-7,9 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -672,7 +677,7 @@ static INPUT_PORTS_START( maxrpm )
 	PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
-/* 0x00 says 2 Coins/2 Credits in service mode, but gives 1 Coin/1 Credit */
+//  PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) ) // dupe/invalid
 	PORT_BIT( 0xc7, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("MONO.IP4")	/* J4 1-7,9 */
@@ -688,11 +693,11 @@ static INPUT_PORTS_START( maxrpm )
 	PORT_BIT( 0xff, 0x74, IPT_PADDLE ) PORT_MINMAX(0x34,0xb4) PORT_SENSITIVITY(40) PORT_KEYDELTA(10) PORT_REVERSE PORT_PLAYER(1)
 
 	PORT_START("SHIFT")	/* fake for shifting */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 Shift Up")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 Shift Down")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_NAME("P2 Shift Up")
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_NAME("P2 Shift Down")
-	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   ) PORT_2WAY PORT_PLAYER(1) PORT_NAME("P1 Shift Up")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_2WAY PORT_PLAYER(1) PORT_NAME("P1 Shift Down")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   ) PORT_2WAY PORT_PLAYER(2) PORT_NAME("P2 Shift Up")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_2WAY PORT_PLAYER(2) PORT_NAME("P2 Shift Down")
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 
@@ -704,7 +709,7 @@ static INPUT_PORTS_START( rampage )
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_SERVICE( 0x20, IP_ACTIVE_LOW )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("MONO.IP1")	/* J2 10-13,15-18 */
@@ -880,7 +885,7 @@ static INPUT_PORTS_START( stargrds )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )		/* same as MONO.IN0 */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START3 )
-	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )		/* same as MONO.IN0 */
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )	/* same as MONO.IN0 */
 INPUT_PORTS_END
 
 
@@ -890,17 +895,17 @@ static INPUT_PORTS_START( spyhunt )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Gear Shift") PORT_CODE(KEYCODE_ENTER) PORT_TOGGLE
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Gear Shift") PORT_TOGGLE
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
 	PORT_START("ssio:IP1")	/* J4 10-13,15-18 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Oil Slick")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Missiles")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Weapon Truck")
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Smoke Screen")
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Machine Guns")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Left Button / Oil Slick")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Left Trigger / Missiles")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1  ) PORT_NAME("Center Button / Weapons Van")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Right Button / Smoke Screen")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Right Trigger / Machine Guns")
 	PORT_BIT( 0x60, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* status from CS deluxe, never read */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
@@ -970,17 +975,17 @@ static INPUT_PORTS_START( turbotag )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Gear Shift") PORT_CODE(KEYCODE_ENTER) PORT_TOGGLE
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Gear Shift") PORT_TOGGLE
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
 	PORT_START("ssio:IP1")	/* J4 10-13,15-18 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Left Button")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Left Trigger")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Center Button")
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Right Button")
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Right Trigger")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1  ) PORT_NAME("Left Button / 1 Player")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Left Trigger")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Center Button")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START2  ) PORT_NAME("Right Button / 2 Player")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Right Trigger")
 	PORT_BIT( 0x60, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* status from CS deluxe, never read */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
@@ -1081,7 +1086,7 @@ static MACHINE_CONFIG_START( mcrmono, mcr3_state )
 	MCFG_CPU_PROGRAM_MAP(mcrmono_map)
 	MCFG_CPU_IO_MAP(mcrmono_portmap)
 	MCFG_CPU_CONFIG(mcr_daisy_chain)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mcr_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mcr3_state, mcr_interrupt, "screen", 0, 1)
 
 	MCFG_Z80CTC_ADD("ctc", MASTER_CLOCK/4 /* same as "maincpu" */, mcr_ctc_intf)
 
@@ -1101,7 +1106,7 @@ static MACHINE_CONFIG_START( mcrmono, mcr3_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 0*16, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(mcr3)
+	MCFG_SCREEN_UPDATE_DRIVER(mcr3_state, screen_update_mcr3)
 
 	MCFG_GFXDECODE(mcr3)
 	MCFG_PALETTE_LENGTH(64)
@@ -1152,7 +1157,7 @@ static MACHINE_CONFIG_DERIVED( mcrscroll, mcrmono )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_SIZE(30*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 30*16-1, 0, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(spyhunt)
+	MCFG_SCREEN_UPDATE_DRIVER(mcr3_state, screen_update_spyhunt)
 	MCFG_GFXDECODE(spyhunt)
 	MCFG_PALETTE_LENGTH(64+4)
 
@@ -1525,26 +1530,26 @@ static void mcr_common_init(running_machine &machine)
 DRIVER_INIT_MEMBER(mcr3_state,demoderm)
 {
 	mcr_common_init(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x01, 0x01, read8_delegate(FUNC(mcr3_state::demoderm_ip1_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x02, 0x02, read8_delegate(FUNC(mcr3_state::demoderm_ip2_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::demoderm_op6_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x01, 0x01, read8_delegate(FUNC(mcr3_state::demoderm_ip1_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x02, 0x02, read8_delegate(FUNC(mcr3_state::demoderm_ip2_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::demoderm_op6_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(mcr3_state,sarge)
 {
 	mcr_common_init(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x06, write8_delegate(FUNC(midway_turbo_chip_squeak_device::write),m_turbo_chip_squeak.target()));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x06, write8_delegate(FUNC(midway_turbo_chip_squeak_device::write),m_turbo_chip_squeak.target()));
 }
 
 
 DRIVER_INIT_MEMBER(mcr3_state,maxrpm)
 {
 	mcr_common_init(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x01, 0x01, read8_delegate(FUNC(mcr3_state::maxrpm_ip1_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x02, 0x02, read8_delegate(FUNC(mcr3_state::maxrpm_ip2_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x05, 0x05, write8_delegate(FUNC(mcr3_state::maxrpm_op5_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::maxrpm_op6_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x01, 0x01, read8_delegate(FUNC(mcr3_state::maxrpm_ip1_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x02, 0x02, read8_delegate(FUNC(mcr3_state::maxrpm_ip2_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x05, 0x05, write8_delegate(FUNC(mcr3_state::maxrpm_op5_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::maxrpm_op6_w),this));
 
 	state_save_register_global(machine(), m_maxrpm_adc_control);
 	state_save_register_global(machine(), m_maxrpm_adc_select);
@@ -1557,26 +1562,26 @@ DRIVER_INIT_MEMBER(mcr3_state,maxrpm)
 DRIVER_INIT_MEMBER(mcr3_state,rampage)
 {
 	mcr_common_init(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x04, 0x04, read8_delegate(FUNC(mcr3_state::rampage_ip4_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::rampage_op6_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x04, 0x04, read8_delegate(FUNC(mcr3_state::rampage_ip4_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::rampage_op6_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(mcr3_state,powerdrv)
 {
 	mcr_common_init(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x02, 0x02, read8_delegate(FUNC(mcr3_state::powerdrv_ip2_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x05, 0x05, write8_delegate(FUNC(mcr3_state::powerdrv_op5_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::powerdrv_op6_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x02, 0x02, read8_delegate(FUNC(mcr3_state::powerdrv_ip2_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x05, 0x05, write8_delegate(FUNC(mcr3_state::powerdrv_op5_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::powerdrv_op6_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(mcr3_state,stargrds)
 {
 	mcr_common_init(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x00, 0x00, read8_delegate(FUNC(mcr3_state::stargrds_ip0_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x05, 0x05, write8_delegate(FUNC(mcr3_state::stargrds_op5_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::stargrds_op6_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x00, 0x00, read8_delegate(FUNC(mcr3_state::stargrds_ip0_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x05, 0x05, write8_delegate(FUNC(mcr3_state::stargrds_op5_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x06, write8_delegate(FUNC(mcr3_state::stargrds_op6_w),this));
 }
 
 
@@ -1615,7 +1620,7 @@ DRIVER_INIT_MEMBER(mcr3_state,turbotag)
 	machine().device<cpu_device>("csd:cpu")->suspend(SUSPEND_REASON_DISABLE, 1);
 
 	/* kludge for bad ROM read */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0b53, 0x0b53, read8_delegate(FUNC(mcr3_state::turbotag_kludge_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0b53, 0x0b53, read8_delegate(FUNC(mcr3_state::turbotag_kludge_r),this));
 }
 
 
@@ -1636,7 +1641,7 @@ GAME( 1986, powerdrv, 0,        mono_sg,   powerdrv, mcr3_state, powerdrv, ROT0,
 GAME( 1987, stargrds, 0,        mono_sg,   stargrds, mcr3_state, stargrds, ROT0,  "Bally Midway", "Star Guards", GAME_SUPPORTS_SAVE )
 
 /* MCR scrolling games */
-GAME( 1983, spyhunt,  0,        mcrsc_csd, spyhunt, mcr3_state,  spyhunt,  ROT90, "Bally Midway", "Spy Hunter", GAME_SUPPORTS_SAVE )
-GAME( 1983, spyhuntp, spyhunt,  mcrsc_csd, spyhunt, mcr3_state,  spyhunt,  ROT90, "Bally Midway", "Spy Hunter (Playtronic license)", GAME_SUPPORTS_SAVE )
+GAMEL(1983, spyhunt,  0,        mcrsc_csd, spyhunt, mcr3_state,  spyhunt,  ROT90, "Bally Midway", "Spy Hunter", GAME_SUPPORTS_SAVE, layout_spyhunt )
+GAMEL(1983, spyhuntp, spyhunt,  mcrsc_csd, spyhunt, mcr3_state,  spyhunt,  ROT90, "Bally Midway (Playtronic license)", "Spy Hunter (Playtronic license)", GAME_SUPPORTS_SAVE, layout_spyhunt )
 GAME( 1984, crater,   0,        mcrscroll, crater, mcr3_state,   crater,   ORIENTATION_FLIP_X, "Bally Midway", "Crater Raider", GAME_SUPPORTS_SAVE )
 GAMEL(1985, turbotag, 0,        mcrsc_csd, turbotag, mcr3_state, turbotag, ROT90, "Bally Midway", "Turbo Tag (prototype)", GAME_SUPPORTS_SAVE, layout_turbotag )

@@ -81,21 +81,21 @@ WRITE8_MEMBER(tx1_state::z80_intreq_w)
 }
 
 /* Periodic Z80 interrupt */
-static INTERRUPT_GEN( z80_irq )
+INTERRUPT_GEN_MEMBER(tx1_state::z80_irq)
 {
-	device->execute().set_input_line(0, HOLD_LINE);
+	device.execute().set_input_line(0, HOLD_LINE);
 }
 
 READ16_MEMBER(tx1_state::z80_shared_r)
 {
-	address_space *cpu2space = machine().device("audio_cpu")->memory().space(AS_PROGRAM);
-	return cpu2space->read_byte(offset);
+	address_space &cpu2space = machine().device("audio_cpu")->memory().space(AS_PROGRAM);
+	return cpu2space.read_byte(offset);
 }
 
 WRITE16_MEMBER(tx1_state::z80_shared_w)
 {
-	address_space *cpu2space = machine().device("audio_cpu")->memory().space(AS_PROGRAM);
-	cpu2space->write_byte(offset, data & 0xff);
+	address_space &cpu2space = machine().device("audio_cpu")->memory().space(AS_PROGRAM);
+	cpu2space.write_byte(offset, data & 0xff);
 }
 
 
@@ -701,7 +701,7 @@ static MACHINE_CONFIG_START( tx1, tx1_state )
 	MCFG_CPU_ADD("audio_cpu", Z80, TX1_PIXEL_CLOCK / 2)
 	MCFG_CPU_PROGRAM_MAP(tx1_sound_prg)
 	MCFG_CPU_IO_MAP(tx1_sound_io)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, TX1_PIXEL_CLOCK / 4 / 2048 / 2)
+	MCFG_CPU_PERIODIC_INT_DRIVER(tx1_state, irq0_line_hold,  TX1_PIXEL_CLOCK / 4 / 2048 / 2)
 
 	MCFG_MACHINE_RESET_OVERRIDE(tx1_state,tx1)
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -715,16 +715,16 @@ static MACHINE_CONFIG_START( tx1, tx1_state )
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(TX1_PIXEL_CLOCK, TX1_HTOTAL, TX1_HBEND, TX1_HBSTART, TX1_VTOTAL, TX1_VBEND, TX1_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(tx1_left)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_tx1_left)
 
 	MCFG_SCREEN_ADD("cscreen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(TX1_PIXEL_CLOCK, TX1_HTOTAL, TX1_HBEND, TX1_HBSTART, TX1_VTOTAL, TX1_VBEND, TX1_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(tx1_middle)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_tx1_middle)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(TX1_PIXEL_CLOCK, TX1_HTOTAL, TX1_HBEND, TX1_HBSTART, TX1_VTOTAL, TX1_VBEND, TX1_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(tx1_right)
-	MCFG_SCREEN_VBLANK_STATIC(tx1)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_tx1_right)
+	MCFG_SCREEN_VBLANK_DRIVER(tx1_state, screen_eof_tx1)
 
 	MCFG_VIDEO_START_OVERRIDE(tx1_state,tx1)
 
@@ -753,7 +753,7 @@ static MACHINE_CONFIG_START( buggyboy, tx1_state )
 
 	MCFG_CPU_ADD("audio_cpu", Z80, BUGGYBOY_ZCLK / 2)
 	MCFG_CPU_PROGRAM_MAP(buggyboy_sound_prg)
-	MCFG_CPU_PERIODIC_INT(z80_irq, BUGGYBOY_ZCLK / 2 / 4 / 2048)
+	MCFG_CPU_PERIODIC_INT_DRIVER(tx1_state, z80_irq,  BUGGYBOY_ZCLK / 2 / 4 / 2048)
 	MCFG_CPU_IO_MAP(buggyboy_sound_io)
 
 	MCFG_MACHINE_RESET_OVERRIDE(tx1_state,buggyboy)
@@ -765,16 +765,16 @@ static MACHINE_CONFIG_START( buggyboy, tx1_state )
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(BB_PIXEL_CLOCK, BB_HTOTAL, BB_HBEND, BB_HBSTART, BB_VTOTAL, BB_VBEND, BB_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(buggyboy_left)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_buggyboy_left)
 
 	MCFG_SCREEN_ADD("cscreen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(BB_PIXEL_CLOCK, BB_HTOTAL, BB_HBEND, BB_HBSTART, BB_VTOTAL, BB_VBEND, BB_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(buggyboy_middle)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_buggyboy_middle)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(BB_PIXEL_CLOCK, BB_HTOTAL, BB_HBEND, BB_HBSTART, BB_VTOTAL, BB_VBEND, BB_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(buggyboy_right)
-	MCFG_SCREEN_VBLANK_STATIC(buggyboy)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_buggyboy_right)
+	MCFG_SCREEN_VBLANK_DRIVER(tx1_state, screen_eof_buggyboy)
 
 	MCFG_PALETTE_LENGTH(256)
 	MCFG_PALETTE_INIT_OVERRIDE(tx1_state,buggyboy)
@@ -808,15 +808,15 @@ static MACHINE_CONFIG_START( buggybjr, tx1_state )
 	MCFG_CPU_ADD("audio_cpu", Z80, BUGGYBOY_ZCLK / 2)
 	MCFG_CPU_PROGRAM_MAP(buggybjr_sound_prg)
 	MCFG_CPU_IO_MAP(buggyboy_sound_io)
-	MCFG_CPU_PERIODIC_INT(z80_irq, BUGGYBOY_ZCLK / 2 / 4 / 2048)
+	MCFG_CPU_PERIODIC_INT_DRIVER(tx1_state, z80_irq,  BUGGYBOY_ZCLK / 2 / 4 / 2048)
 
 	MCFG_MACHINE_RESET_OVERRIDE(tx1_state,buggyboy)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(BB_PIXEL_CLOCK, BB_HTOTAL, BB_HBEND, BB_HBSTART, BB_VTOTAL, BB_VBEND, BB_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(buggybjr)
-	MCFG_SCREEN_VBLANK_STATIC(buggyboy)
+	MCFG_SCREEN_UPDATE_DRIVER(tx1_state, screen_update_buggybjr)
+	MCFG_SCREEN_VBLANK_DRIVER(tx1_state, screen_eof_buggyboy)
 
 	MCFG_PALETTE_LENGTH(256)
 	MCFG_PALETTE_INIT_OVERRIDE(tx1_state,buggyboy)

@@ -49,6 +49,9 @@ public:
 	DECLARE_DRIVER_INIT(esh);
 	virtual void machine_start();
 	virtual void palette_init();
+	UINT32 screen_update_esh(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_callback_esh);
+	TIMER_CALLBACK_MEMBER(irq_stop);
 };
 
 
@@ -57,9 +60,8 @@ public:
 
 
 /* VIDEO GOODS */
-static SCREEN_UPDATE_RGB32( esh )
+UINT32 esh_state::screen_update_esh(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	esh_state *state = screen.machine().driver_data<esh_state>();
 	int charx, chary;
 
 	/* clear */
@@ -72,13 +74,13 @@ static SCREEN_UPDATE_RGB32( esh )
 		{
 			int current_screen_character = (chary*32) + charx;
 
-			int palIndex  = (state->m_tile_control_ram[current_screen_character] & 0x0f);
-			int tileOffs  = (state->m_tile_control_ram[current_screen_character] & 0x10) >> 4;
-			//int blinkLine = (state->m_tile_control_ram[current_screen_character] & 0x40) >> 6;
-			//int blinkChar = (state->m_tile_control_ram[current_screen_character] & 0x80) >> 7;
+			int palIndex  = (m_tile_control_ram[current_screen_character] & 0x0f);
+			int tileOffs  = (m_tile_control_ram[current_screen_character] & 0x10) >> 4;
+			//int blinkLine = (m_tile_control_ram[current_screen_character] & 0x40) >> 6;
+			//int blinkChar = (m_tile_control_ram[current_screen_character] & 0x80) >> 7;
 
-			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0],
-					state->m_tile_ram[current_screen_character] + (0x100 * tileOffs),
+			drawgfx_transpen(bitmap, cliprect, machine().gfx[0],
+					m_tile_ram[current_screen_character] + (0x100 * tileOffs),
 					palIndex,
 					0, 0, charx*8, chary*8, 0);
 		}
@@ -278,16 +280,16 @@ static GFXDECODE_START( esh )
 	GFXDECODE_ENTRY("gfx1", 0, esh_gfx_layout, 0x0, 0x20)
 GFXDECODE_END
 
-static TIMER_CALLBACK( irq_stop )
+TIMER_CALLBACK_MEMBER(esh_state::irq_stop)
 {
-	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
-static INTERRUPT_GEN( vblank_callback_esh )
+INTERRUPT_GEN_MEMBER(esh_state::vblank_callback_esh)
 {
 	// IRQ
-	device->execute().set_input_line(0, ASSERT_LINE);
-	device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(irq_stop));
+	device.execute().set_input_line(0, ASSERT_LINE);
+	machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(esh_state::irq_stop),this));
 }
 
 void esh_state::machine_start()
@@ -302,13 +304,13 @@ static MACHINE_CONFIG_START( esh, esh_state )
 	MCFG_CPU_ADD("maincpu", Z80, PCB_CLOCK/6)						/* The denominator is a Daphne guess based on PacMan's hardware */
 	MCFG_CPU_PROGRAM_MAP(z80_0_mem)
 	MCFG_CPU_IO_MAP(z80_0_io)
-	MCFG_CPU_VBLANK_INT("screen", vblank_callback_esh)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", esh_state,  vblank_callback_esh)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, esh)
+	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, esh_state, screen_update_esh)
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")

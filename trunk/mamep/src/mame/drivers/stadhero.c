@@ -229,7 +229,7 @@ static MACHINE_CONFIG_START( stadhero, stadhero_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_20MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", stadhero_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", M6502, XTAL_24MHz/16)
 	MCFG_CPU_PROGRAM_MAP(audio_map)
@@ -240,7 +240,7 @@ static MACHINE_CONFIG_START( stadhero, stadhero_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(stadhero)
+	MCFG_SCREEN_UPDATE_DRIVER(stadhero_state, screen_update_stadhero)
 
 	MCFG_GFXDECODE(stadhero)
 	MCFG_PALETTE_LENGTH(1024)

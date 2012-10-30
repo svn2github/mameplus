@@ -47,31 +47,29 @@ Stephh's notes (based on the game M68000 code and some tests) :
                       INTERRUPTS
 ***********************************************************/
 
-static TIMER_CALLBACK( gcpinbal_interrupt1 )
+TIMER_CALLBACK_MEMBER(gcpinbal_state::gcpinbal_interrupt1)
 {
-	gcpinbal_state *state = machine.driver_data<gcpinbal_state>();
-	state->m_maincpu->set_input_line(1, HOLD_LINE);
+	m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 #ifdef UNUSED_FUNCTION
-static TIMER_CALLBACK( gcpinbal_interrupt3 )
+TIMER_CALLBACK_MEMBER(gcpinbal_state::gcpinbal_interrupt3)
 {
-	gcpinbal_state *state = machine.driver_data<gcpinbal_state>();
 	// IRQ3 is from the M6585
 //  if (!ADPCM_playing(0))
 	{
-		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 	}
 }
 #endif
 
-static INTERRUPT_GEN( gcpinbal_interrupt )
+INTERRUPT_GEN_MEMBER(gcpinbal_state::gcpinbal_interrupt)
 {
 	/* Unsure of actual sequence */
 
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(500), FUNC(gcpinbal_interrupt1));
-//  device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(1000), FUNC(gcpinbal_interrupt3));
-	device->execute().set_input_line(4, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(500), timer_expired_delegate(FUNC(gcpinbal_state::gcpinbal_interrupt1),this));
+//  machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(1000), timer_expired_delegate(FUNC(gcpinbal_state::gcpinbal_interrupt3),this));
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -439,7 +437,7 @@ static MACHINE_CONFIG_START( gcpinbal, gcpinbal_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 32000000/2)	/* 16 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(gcpinbal_map)
-	MCFG_CPU_VBLANK_INT("screen", gcpinbal_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gcpinbal_state,  gcpinbal_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -447,7 +445,7 @@ static MACHINE_CONFIG_START( gcpinbal, gcpinbal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gcpinbal)
+	MCFG_SCREEN_UPDATE_DRIVER(gcpinbal_state, screen_update_gcpinbal)
 
 
 	MCFG_GFXDECODE(gcpinbal)

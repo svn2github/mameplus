@@ -288,8 +288,7 @@ static ADDRESS_MAP_START( aerofgt_map, AS_PROGRAM, 16, aerofgt_state )
 	AM_RANGE(0x1b0ff0, 0x1b0fff) AM_RAM	/* stack area during boot */
 	AM_RANGE(0x1b2000, 0x1b3fff) AM_RAM_WRITE(aerofgt_bg1videoram_w) AM_SHARE("bg1videoram")
 	AM_RANGE(0x1b4000, 0x1b5fff) AM_RAM_WRITE(aerofgt_bg2videoram_w) AM_SHARE("bg2videoram")
-	AM_RANGE(0x1c0000, 0x1c3fff) AM_RAM AM_SHARE("spriteram1")
-	AM_RANGE(0x1c4000, 0x1c7fff) AM_RAM AM_SHARE("spriteram2")
+	AM_RANGE(0x1c0000, 0x1c7fff) AM_RAM AM_SHARE("spriteram1")
 	AM_RANGE(0x1d0000, 0x1d1fff) AM_RAM AM_SHARE("spriteram3")
 	AM_RANGE(0xfef000, 0xffefff) AM_RAM	/* work RAM */
 	AM_RANGE(0xffff80, 0xffff87) AM_WRITE(aerofgt_gfxbank_w)
@@ -1254,8 +1253,7 @@ GFXDECODE_END
 static GFXDECODE_START( aerofgt )
 	GFXDECODE_ENTRY( "gfx1", 0, aerofgt_charlayout,     0, 16 )
 	GFXDECODE_ENTRY( "gfx1", 0, aerofgt_charlayout,   256, 16 )
-	GFXDECODE_ENTRY( "gfx2", 0, aerofgt_spritelayout, 512, 16 )
-	GFXDECODE_ENTRY( "gfx3", 0, aerofgt_spritelayout, 768, 16 )
+	GFXDECODE_ENTRY( "gfx2", 0, aerofgt_spritelayout, 512, 32 )
 GFXDECODE_END
 
 static GFXDECODE_START( aerfboot )
@@ -1327,7 +1325,7 @@ static MACHINE_CONFIG_START( pspikes, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,XTAL_20MHz/2)    /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(pspikes_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_CPU_ADD("audiocpu",Z80,XTAL_20MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1343,10 +1341,12 @@ static MACHINE_CONFIG_START( pspikes, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+4, 44*8+4-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pspikes)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_pspikes)
 
 	MCFG_GFXDECODE(pspikes)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,pspikes)
 
@@ -1366,7 +1366,7 @@ static MACHINE_CONFIG_START( spikes91, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(spikes91_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	/* + Z80 for sound */
 
@@ -1379,7 +1379,7 @@ static MACHINE_CONFIG_START( spikes91, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 320-1, 0*8+4, 224+4-1)
-	MCFG_SCREEN_UPDATE_STATIC(spikes91)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_spikes91)
 
 	MCFG_GFXDECODE(spikes91)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1400,7 +1400,7 @@ static MACHINE_CONFIG_START( pspikesb, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(pspikesb_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_MACHINE_START_OVERRIDE(aerofgt_state,common)
 	MCFG_MACHINE_RESET_OVERRIDE(aerofgt_state,common)
@@ -1411,7 +1411,7 @@ static MACHINE_CONFIG_START( pspikesb, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+4, 44*8+4-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pspikesb)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_pspikesb)
 
 	MCFG_GFXDECODE(pspikesb)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1430,7 +1430,7 @@ static MACHINE_CONFIG_START( pspikesc, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(pspikesc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_MACHINE_START_OVERRIDE(aerofgt_state,common)
 	MCFG_MACHINE_RESET_OVERRIDE(aerofgt_state,common)
@@ -1441,10 +1441,12 @@ static MACHINE_CONFIG_START( pspikesc, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+4, 44*8+4-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pspikes)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_pspikes)
 
 	MCFG_GFXDECODE(pspikes)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,pspikes)
 
@@ -1460,7 +1462,7 @@ static MACHINE_CONFIG_START( karatblz, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(karatblz_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu",Z80,8000000/2) /* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1476,10 +1478,13 @@ static MACHINE_CONFIG_START( karatblz, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 45*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(karatblz)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_karatblz)
 
 	MCFG_GFXDECODE(turbofrc)
 	MCFG_PALETTE_LENGTH(1024)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
+	MCFG_DEVICE_ADD("vsystem_spr_ol2", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,karatblz)
 
@@ -1499,7 +1504,7 @@ static MACHINE_CONFIG_START( spinlbrk, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,XTAL_20MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(spinlbrk_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* there are vectors for 3 and 4 too */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* there are vectors for 3 and 4 too */
 
 	MCFG_CPU_ADD("audiocpu",Z80,XTAL_20MHz/4)	/* 5mhz verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1515,10 +1520,13 @@ static MACHINE_CONFIG_START( spinlbrk, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 45*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(spinlbrk)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_spinlbrk)
 
 	MCFG_GFXDECODE(turbofrc)
 	MCFG_PALETTE_LENGTH(1024)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
+	MCFG_DEVICE_ADD("vsystem_spr_ol2", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,spinlbrk)
 
@@ -1538,7 +1546,7 @@ static MACHINE_CONFIG_START( turbofrc, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,XTAL_20MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(turbofrc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_CPU_ADD("audiocpu",Z80,XTAL_5MHz)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1554,10 +1562,13 @@ static MACHINE_CONFIG_START( turbofrc, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 44*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(turbofrc)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_turbofrc)
 
 	MCFG_GFXDECODE(turbofrc)
 	MCFG_PALETTE_LENGTH(1024)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
+	MCFG_DEVICE_ADD("vsystem_spr_ol2", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,turbofrc)
 
@@ -1577,7 +1588,7 @@ static MACHINE_CONFIG_START( aerofgtb, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(aerofgtb_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_CPU_ADD("audiocpu",Z80,8000000/2) /* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1594,10 +1605,13 @@ static MACHINE_CONFIG_START( aerofgtb, aerofgt_state )
 				/* wrong but improves sprite-background synchronization */
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+12, 40*8-1+12, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(turbofrc)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_turbofrc)
 
 	MCFG_GFXDECODE(aerofgtb)
 	MCFG_PALETTE_LENGTH(1024)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
+	MCFG_DEVICE_ADD("vsystem_spr_ol2", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,turbofrc)
 
@@ -1617,7 +1631,7 @@ static MACHINE_CONFIG_START( aerofgt, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,XTAL_20MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(aerofgt_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_CPU_ADD("audiocpu",Z80,XTAL_20MHz/4) /* 5 MHz verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1634,10 +1648,14 @@ static MACHINE_CONFIG_START( aerofgt, aerofgt_state )
 				/* wrong but improves sprite-background synchronization */
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(aerofgt)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_aerofgt)
 
 	MCFG_GFXDECODE(aerofgt)
 	MCFG_PALETTE_LENGTH(1024)
+
+	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
+	MCFG_VSYSTEM_SPR_SET_TILE_INDIRECT( aerofgt_state, aerofgt_tile_callback )
+	MCFG_VSYSTEM_SPR_SET_GFXREGION(2)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,turbofrc)
 
@@ -1657,7 +1675,7 @@ static MACHINE_CONFIG_START( aerfboot, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(aerfboot_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu",Z80,8000000/2) /* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(aerfboot_sound_map)
@@ -1672,7 +1690,7 @@ static MACHINE_CONFIG_START( aerfboot, aerofgt_state )
 				/* wrong but improves sprite-background synchronization */
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+12, 40*8-1+12, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(aerfboot)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_aerfboot)
 
 	MCFG_GFXDECODE(aerfboot)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1691,7 +1709,7 @@ static MACHINE_CONFIG_START( aerfboo2, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(aerfboo2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq2_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(aerofgt_state,common)
 	MCFG_MACHINE_RESET_OVERRIDE(aerofgt_state,common)
@@ -1703,7 +1721,7 @@ static MACHINE_CONFIG_START( aerfboo2, aerofgt_state )
 				/* wrong but improves sprite-background synchronization */
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+12, 40*8-1+12, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(aerfboo2)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_aerfboo2)
 
 	MCFG_GFXDECODE(aerfboo2)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1722,7 +1740,7 @@ static MACHINE_CONFIG_START( wbbc97, aerofgt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,20000000/2)	/* 10 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(wbbc97_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* all irq vectors are the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aerofgt_state,  irq1_line_hold)/* all irq vectors are the same */
 
 	MCFG_CPU_ADD("audiocpu",Z80,8000000/2) /* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(wbbc97_sound_map)
@@ -1736,10 +1754,12 @@ static MACHINE_CONFIG_START( wbbc97, aerofgt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+14, 44*8-1+4, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wbbc97)
+	MCFG_SCREEN_UPDATE_DRIVER(aerofgt_state, screen_update_wbbc97)
 
 	MCFG_GFXDECODE(wbbc97)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(aerofgt_state,wbbc97)
 
@@ -1945,41 +1965,6 @@ ROM_START( spikes91 )
 
 	ROM_REGION( 0x1000, "user2", 0 ) /* ? */
 	ROM_LOAD( "ep910pc.ic7",   0x00000, 0x884, CRC(e7a3913a) SHA1(6f18f55ecdc94a416baecd16fe7c6698b1ec9d87) )
-ROM_END
-
-/* similar-looking h/w to spikes91, includes roms from spikes91 and svolley.  possibly an svolley boot on spikes91 h/w? */
-ROM_START( spikes91a )
-	ROM_REGION( 0x40000, "maincpu", 0 )	/* 68000 code */
-    ROM_LOAD16_BYTE( "4-prg.bin", 0x00001, 0x10000, CRC(eefaa208) SHA1(2a0417e170de3212f45be64719bb1eb0c6d33c59) )
-    ROM_LOAD16_BYTE( "6-prg.bin", 0x00000, 0x10000, CRC(da7d2e81) SHA1(ca78a661876ddbcb0e7599edcc819558afb76930) )
-	ROM_LOAD16_BYTE( "5-prg.bin", 0x20000, 0x08000, CRC(e7630122) SHA1(d200afe5134030be615f112af0ab54ac3b349eca) ) // these 2 match program ROMs from svolley
-	ROM_LOAD16_BYTE( "3-prg.bin", 0x20001, 0x08000, CRC(b6b24910) SHA1(2e4cf80a8eb1fcd9448405ff881bb99ae4ce8909) )
-
-	ROM_REGION( 0x080000, "gfx1", 0 )
-    ROM_LOAD( "19.bin",       0x000000, 0x010000, CRC(12a67e3f) SHA1(c77b264eae0f55af36728b6e5e5e1fec3d366eb1) )
-    ROM_LOAD( "20.bin",       0x010000, 0x010000, CRC(31828996) SHA1(b324902b9fff0bab1daa3af5136b96d50d12956f) )
-    ROM_LOAD( "21.bin",       0x020000, 0x010000, CRC(51cbe0d6) SHA1(d60b2a297d7e994c60db28e8ba60b0664e01f61d) )
-    ROM_LOAD( "22.bin",       0x030000, 0x010000, CRC(c289bfc0) SHA1(4a8929c5f304a1d203cad04c72fc6e96764dc858) )
-
-	ROM_REGION( 0x100000, "gfx2", ROMREGION_INVERT )
-    ROM_LOAD( "7.bin",        0x000000, 0x010000, CRC(9596a4c0) SHA1(1f233bb2fa662fb8cd9c0db478e392ca26d9484b) )
-    ROM_LOAD( "8.bin",        0x010000, 0x010000, CRC(451ebd75) SHA1(67d5a9fadf3c8a39d59e7b21cb8633dd19886f76) )
-    ROM_LOAD( "10.bin",       0x020000, 0x010000, CRC(a05249e6) SHA1(8671e0c980ba87ea14895176fb5c8a48bb4c932e) )
-    ROM_LOAD( "11.bin",       0x030000, 0x010000, CRC(0983987a) SHA1(c334276774ffdee0023ea6287e98e0e6e372fb80) )
-    ROM_LOAD( "13.bin",       0x040000, 0x010000, CRC(429159f3) SHA1(4395413c4ab4a1fd322a1af6f2b93bb62b044223) )
-    ROM_LOAD( "14.bin",       0x050000, 0x010000, CRC(4babf749) SHA1(1d5055e825b9efc17a200f4e04e6fa326397f7cc) )
-    ROM_LOAD( "16.bin",       0x060000, 0x010000, CRC(f5436c8d) SHA1(d29508cc5ee43d7b072112c6d95c36ee0328e5fb) )
-    ROM_LOAD( "17.bin",       0x070000, 0x010000, CRC(f82f9664) SHA1(678fd8f3abc39ccb4ef32e9d6ef481d7d751aecb) )
-    ROM_LOAD( "9.bin",        0x080000, 0x008000, CRC(3291e3e0) SHA1(dcc358bf66e4c65992d4376c203b811928068cf3) )
-    ROM_LOAD( "12.bin",       0x088000, 0x008000, CRC(40aedad9) SHA1(cbf50eae4ccbc06213a5c227409e1dade7180572) )
-    ROM_LOAD( "15.bin",       0x090000, 0x008000, CRC(911104d7) SHA1(66b48c34da2cc17faeffa1d36f5b6b7e15c2033b) )
-    ROM_LOAD( "18.bin",       0x098000, 0x008000, CRC(07265de1) SHA1(bad7f1b168640a7d90b0d4d9c255ba98fa4c6fa8) )
-
-	ROM_REGION( 0x020000, "user1", ROMREGION_ERASEFF ) /* lookup tables for the sprites  */
-
-	ROM_REGION( 0x20000, "cpu1", 0 ) /* Z80 Sound CPU */
-	ROM_LOAD( "2-snd.bin", 0x00000, 0x10000, CRC(e3065b1d) SHA1(c4a3a95ba7f43cdf1b0c574f41de06d007ad2bd8) ) // matches 1.ic140 from pspikes91
-    ROM_LOAD( "1-snd.bin", 0x10000, 0x08000, CRC(009d7157) SHA1(2cdda7094c7476289d75a78ee25b34fa3b3225c0) )
 ROM_END
 
 /* this is a bootleg / chinese hack of power spikes */
@@ -2305,11 +2290,9 @@ ROM_START( aerofgt )
 	ROM_LOAD( "538a54.124",   0x000000, 0x80000, CRC(4d2c4df2) SHA1(f51c2b3135f0a921ac1a79e63d6878c03cb6254b) )
 	ROM_LOAD( "1538a54.124",  0x080000, 0x80000, CRC(286d109e) SHA1(3a5f3d2d89cf58f6ef15e4bd3f570b84e8e695b2) )
 
-	ROM_REGION( 0x100000, "gfx2", 0 )
+	ROM_REGION( 0x400000, "gfx2", 0 )
 	ROM_LOAD( "538a53.u9",    0x000000, 0x100000, CRC(630d8e0b) SHA1(5a0c252ccd53c5199a695909d25ecb4e53dc15b9) )
-
-	ROM_REGION( 0x080000, "gfx3", 0 )
-	ROM_LOAD( "534g8f.u18",   0x000000, 0x80000, CRC(76ce0926) SHA1(5ef4cec215d4dd600d8fcd1bd9a4c09081d59e33) )
+	ROM_LOAD( "534g8f.u18",   0x200000, 0x080000, CRC(76ce0926) SHA1(5ef4cec215d4dd600d8fcd1bd9a4c09081d59e33) )
 
 	ROM_REGION( 0x40000, "ymsnd.deltat", 0 ) /* sound samples */
 	ROM_LOAD( "it-19-01",     0x00000, 0x40000, CRC(6d42723d) SHA1(57c59234e9925430a4c687733682efed06d7eed1) )
@@ -2495,22 +2478,27 @@ ROM_END
 GAME( 1990, spinlbrk, 0,        spinlbrk, spinlbrk, driver_device, 0, ROT0,   "V-System Co.",     "Spinal Breakers (World)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1990, spinlbrku,spinlbrk, spinlbrk, spinlbrku, driver_device,0, ROT0,   "V-System Co.",     "Spinal Breakers (US)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1990, spinlbrkj,spinlbrk, spinlbrk, spinlbrk, driver_device, 0, ROT0,   "V-System Co.",     "Spinal Breakers (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+
 GAME( 1991, pspikes,  0,        pspikes,  pspikes, driver_device,  0, ROT0,   "Video System Co.", "Power Spikes (World)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1991, pspikesk, pspikes,  pspikes,  pspikes, driver_device,  0, ROT0,   "Video System Co.", "Power Spikes (Korea)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1991, svolly91, pspikes,  pspikes,  pspikes, driver_device,  0, ROT0,   "Video System Co.", "Super Volley '91 (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1991, pspikesb, pspikes,  pspikesb, pspikesb, driver_device, 0, ROT0,   "bootleg",          "Power Spikes (bootleg)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1991, spikes91, pspikes,  spikes91, pspikes, driver_device,  0, ROT0,   "bootleg",          "1991 Spikes (Italian bootleg)", GAME_SUPPORTS_SAVE | GAME_NO_SOUND | GAME_NO_COCKTAIL )
-GAME( 1991, spikes91a,pspikes,  spikes91, pspikes, driver_device,  0, ROT0,   "bootleg",          "1991 Spikes (Italian bootleg, set 2)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING | GAME_NO_SOUND | GAME_NO_COCKTAIL )
 GAME( 1991, pspikesc, pspikes,  pspikesc, pspikesc, driver_device, 0, ROT0,   "bootleg",          "Power Spikes (China)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+GAME( 1997, wbbc97,   0,        wbbc97,   wbbc97, driver_device,   0, ROT0,   "Comad",            "Beach Festival World Championship 1997", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL ) // based on power spikes codebase
+
 GAME( 1991, karatblz, 0,        karatblz, karatblz, driver_device, 0, ROT0,   "Video System Co.", "Karate Blazers (World)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1991, karatblzu,karatblz, karatblz, karatblz, driver_device, 0, ROT0,   "Video System Co.", "Karate Blazers (US)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1991, karatblzj,karatblz, karatblz, karatblz, driver_device, 0, ROT0,   "Video System Co.", "Karate Blazers (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+
 GAME( 1991, turbofrc, 0,        turbofrc, turbofrc, driver_device, 0, ROT270, "Video System Co.", "Turbo Force (old revision)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 // there's also an undumped Turbo Force (new revision). Most notable thing in there is the points value of the rocks in level 6 (5.000 versus 500).
-GAME( 1992, aerofgt,  0,        aerofgt,  aerofgt, driver_device,  0, ROT270, "Video System Co.", "Aero Fighters", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1992, aerofgtb, aerofgt,  aerofgtb, aerofgtb, driver_device, 0, ROT270, "Video System Co.", "Aero Fighters (Turbo Force hardware set 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1992, aerofgtc, aerofgt,  aerofgtb, aerofgtb, driver_device, 0, ROT270, "Video System Co.", "Aero Fighters (Turbo Force hardware set 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+
+// the tiles on these also contain an alt title 'The Final War' for both the title screen and attract logo was it ever used?
+GAME( 1992, aerofgt,  0,        aerofgt,  aerofgt, driver_device,  0, ROT270, "Video System Co.", "Aero Fighters (World / USA + Canada / Korea / Hong Kong / Taiwan) (newer hardware)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL ) // this has the newer sprite chip etc. unlike all other games in this driver..
+GAME( 1992, aerofgtb, aerofgt,  aerofgtb, aerofgtb, driver_device, 0, ROT270, "Video System Co.", "Aero Fighters (Taiwan / Japan, set 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL ) // probably intended for Taiwan because the Japanese name is Sonic Wings (below)
+GAME( 1992, aerofgtc, aerofgt,  aerofgtb, aerofgtb, driver_device, 0, ROT270, "Video System Co.", "Aero Fighters (Taiwan / Japan, set 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1992, sonicwi,  aerofgt,  aerofgtb, aerofgtb, driver_device, 0, ROT270, "Video System Co.", "Sonic Wings (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1992, aerfboot, aerofgt,  aerfboot, aerofgtb, driver_device, 0, ROT270, "bootleg",          "Aero Fighters (bootleg set 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
 GAME( 1992, aerfboo2, aerofgt,  aerfboo2, aerofgtb, driver_device, 0, ROT270, "bootleg",          "Aero Fighters (bootleg set 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
-GAME( 1997, wbbc97,   0,        wbbc97,   wbbc97, driver_device,   0, ROT0,   "Comad",            "Beach Festival World Championship 1997", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+

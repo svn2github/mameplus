@@ -499,16 +499,16 @@ GFXDECODE_END
 /******************************************************************************/
 
 /* Main Z80 uses IM2 */
-static TIMER_DEVICE_CALLBACK( djboy_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(djboy_state::djboy_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
 
 	/* Pandora "sprite end dma" irq? TODO: timing is clearly off, attract mode relies on this */
 	if(scanline == 64)
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 static const kaneko_pandora_interface djboy_pandora_config =
@@ -572,17 +572,17 @@ static MACHINE_CONFIG_START( djboy, djboy_state )
 	MCFG_CPU_ADD("maincpu", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(cpu0_am)
 	MCFG_CPU_IO_MAP(cpu0_port_am)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", djboy_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", djboy_state, djboy_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("cpu1", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(cpu1_am)
 	MCFG_CPU_IO_MAP(cpu1_port_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", djboy_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("cpu2", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(cpu2_am)
 	MCFG_CPU_IO_MAP(cpu2_port_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", djboy_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("beast", I80C51, 6000000)
 	MCFG_CPU_IO_MAP(djboy_mcu_io_map)
@@ -595,8 +595,8 @@ static MACHINE_CONFIG_START( djboy, djboy_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(djboy)
-	MCFG_SCREEN_VBLANK_STATIC(djboy)
+	MCFG_SCREEN_UPDATE_DRIVER(djboy_state, screen_update_djboy)
+	MCFG_SCREEN_VBLANK_DRIVER(djboy_state, screen_eof_djboy)
 
 	MCFG_GFXDECODE(djboy)
 	MCFG_PALETTE_LENGTH(0x200)

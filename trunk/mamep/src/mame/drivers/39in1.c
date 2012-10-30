@@ -52,6 +52,7 @@ public:
 	UINT32 m_pxa255_lcd_palette[0x100];
 	UINT8 m_pxa255_lcd_framebuffer[0x100000];
 
+
 	//FILE* audio_dump;
 	UINT32 m_words[0x800];
 	INT16 m_samples[0x1000];
@@ -73,35 +74,24 @@ public:
 	DECLARE_WRITE32_MEMBER(cpld_w);
 	DECLARE_READ32_MEMBER(prot_cheater_r);
 	DECLARE_DRIVER_INIT(39in1);
+	DECLARE_MACHINE_START(60in1);
 	virtual void machine_start();
+	UINT32 screen_update_39in1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(pxa255_vblank_start);
+	TIMER_CALLBACK_MEMBER(pxa255_dma_dma_end);
+	TIMER_CALLBACK_MEMBER(pxa255_ostimer_match);
+	TIMER_CALLBACK_MEMBER(pxa255_lcd_dma_eof);
+	void pxa255_dma_irq_check();
+	void pxa255_dma_load_descriptor_and_start(int channel);
+	void pxa255_ostimer_irq_check();
+	void pxa255_update_interrupts();
+	void pxa255_set_irq_line(UINT32 line, int state);
+	void pxa255_lcd_load_dma_descriptor(address_space & space, UINT32 address, int channel);
+	void pxa255_lcd_irq_check();
+	void pxa255_lcd_dma_kickoff(int channel);
+	void pxa255_lcd_check_load_next_branch(int channel);
+	void pxa255_start();
 };
-
-
-static void pxa255_dma_irq_check(running_machine& machine);
-
-
-
-
-
-
-static void pxa255_ostimer_irq_check(running_machine& machine);
-static TIMER_CALLBACK( pxa255_ostimer_match );
-
-
-
-static void pxa255_update_interrupts(running_machine& machine);
-static void pxa255_set_irq_line(running_machine& machine, UINT32 line, int state);
-
-
-
-
-
-
-static void pxa255_lcd_load_dma_descriptor(address_space* space, UINT32 address, int channel);
-static void pxa255_lcd_irq_check(running_machine& machine);
-static void pxa255_lcd_dma_kickoff(running_machine& machine, int channel);
-static void pxa255_lcd_check_load_next_branch(running_machine& machine, int channel);
-
 
 
 #define VERBOSE_LEVEL ( 3 )
@@ -240,10 +230,9 @@ WRITE32_MEMBER(_39in1_state::pxa255_i2s_w)
 
 */
 
-static void pxa255_dma_irq_check(running_machine& machine)
+void _39in1_state::pxa255_dma_irq_check()
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_DMA_Regs *dma_regs = &state->m_dma_regs;
+	PXA255_DMA_Regs *dma_regs = &m_dma_regs;
 	int channel = 0;
 	int set_intr = 0;
 
@@ -260,13 +249,12 @@ static void pxa255_dma_irq_check(running_machine& machine)
 		}
 	}
 
-	pxa255_set_irq_line(machine, PXA255_INT_DMA, set_intr);
+	pxa255_set_irq_line(PXA255_INT_DMA, set_intr);
 }
 
-static void pxa255_dma_load_descriptor_and_start(running_machine& machine, int channel)
+void _39in1_state::pxa255_dma_load_descriptor_and_start(int channel)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_DMA_Regs *dma_regs = &state->m_dma_regs;
+	PXA255_DMA_Regs *dma_regs = &m_dma_regs;
 	attotime period;
 
 	// Shut down any transfers that are currently going on, software should be smart enough to check if a
@@ -278,17 +266,17 @@ static void pxa255_dma_load_descriptor_and_start(running_machine& machine, int c
 
 	// Load the next descriptor
 
-	address_space *space = machine.device<pxa255_device>("maincpu")->space(AS_PROGRAM);
-	dma_regs->dsadr[channel] = space->read_dword(dma_regs->ddadr[channel] + 0x4);
-	dma_regs->dtadr[channel] = space->read_dword(dma_regs->ddadr[channel] + 0x8);
-	dma_regs->dcmd[channel]  = space->read_dword(dma_regs->ddadr[channel] + 0xc);
-	dma_regs->ddadr[channel] = space->read_dword(dma_regs->ddadr[channel]);
+	address_space &space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
+	dma_regs->dsadr[channel] = space.read_dword(dma_regs->ddadr[channel] + 0x4);
+	dma_regs->dtadr[channel] = space.read_dword(dma_regs->ddadr[channel] + 0x8);
+	dma_regs->dcmd[channel]  = space.read_dword(dma_regs->ddadr[channel] + 0xc);
+	dma_regs->ddadr[channel] = space.read_dword(dma_regs->ddadr[channel]);
 
 	// Start our end-of-transfer timer
 	switch(channel)
 	{
 		case 3:
-			period = attotime::from_hz((147600000 / state->m_i2s_regs.sadiv) / (4 * 64)) * (dma_regs->dcmd[channel] & 0x00001fff);
+			period = attotime::from_hz((147600000 / m_i2s_regs.sadiv) / (4 * 64)) * (dma_regs->dcmd[channel] & 0x00001fff);
 			break;
 		default:
 			period = attotime::from_hz(100000000) * (dma_regs->dcmd[channel] & 0x00001fff);
@@ -306,10 +294,9 @@ static void pxa255_dma_load_descriptor_and_start(running_machine& machine, int c
 	dma_regs->dcsr[channel] &= ~PXA255_DCSR_STOPSTATE;
 }
 
-static TIMER_CALLBACK( pxa255_dma_dma_end )
+TIMER_CALLBACK_MEMBER(_39in1_state::pxa255_dma_dma_end)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_DMA_Regs *dma_regs = &state->m_dma_regs;
+	PXA255_DMA_Regs *dma_regs = &m_dma_regs;
 	UINT32 sadr = dma_regs->dsadr[param];
 	UINT32 tadr = dma_regs->dtadr[param];
 	UINT32 count = dma_regs->dcmd[param] & 0x00001fff;
@@ -318,18 +305,18 @@ static TIMER_CALLBACK( pxa255_dma_dma_end )
 	UINT16 temp16;
 	UINT32 temp32;
 
-	address_space *space = machine.device<pxa255_device>("maincpu")->space(AS_PROGRAM);
+	address_space &space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
 	switch(param)
 	{
 		case 3:
 			for(index = 0; index < count; index += 4)
 			{
-				state->m_words[index >> 2] = space->read_dword(sadr);
-				state->m_samples[(index >> 1) + 0] = (INT16)(state->m_words[index >> 2] >> 16);
-				state->m_samples[(index >> 1) + 1] = (INT16)(state->m_words[index >> 2] & 0xffff);
+				m_words[index >> 2] = space.read_dword(sadr);
+				m_samples[(index >> 1) + 0] = (INT16)(m_words[index >> 2] >> 16);
+				m_samples[(index >> 1) + 1] = (INT16)(m_words[index >> 2] & 0xffff);
 				sadr += 4;
 			}
-			dmadac_transfer(&state->m_dmadac[0], 2, 2, 2, count/4, state->m_samples);
+			dmadac_transfer(&m_dmadac[0], 2, 2, 2, count/4, m_samples);
 			break;
 		default:
 			for(index = 0; index < count;)
@@ -337,18 +324,18 @@ static TIMER_CALLBACK( pxa255_dma_dma_end )
 				switch(dma_regs->dcmd[param] & PXA255_DCMD_SIZE)
 				{
 					case PXA255_DCMD_SIZE_8:
-						temp8 = space->read_byte(sadr);
-						space->write_byte(tadr, temp8);
+						temp8 = space.read_byte(sadr);
+						space.write_byte(tadr, temp8);
 						index++;
 						break;
 					case PXA255_DCMD_SIZE_16:
-						temp16 = space->read_word(sadr);
-						space->write_word(tadr, temp16);
+						temp16 = space.read_word(sadr);
+						space.write_word(tadr, temp16);
 						index += 2;
 						break;
 					case PXA255_DCMD_SIZE_32:
-						temp32 = space->read_dword(sadr);
-						space->write_dword(tadr, temp32);
+						temp32 = space.read_dword(sadr);
+						space.write_dword(tadr, temp32);
 						index += 4;
 						break;
 					default:
@@ -401,7 +388,7 @@ static TIMER_CALLBACK( pxa255_dma_dma_end )
 	{
 		if(dma_regs->dcsr[param] & PXA255_DCSR_RUN)
 		{
-			pxa255_dma_load_descriptor_and_start(machine, param);
+			pxa255_dma_load_descriptor_and_start(param);
 		}
 		else
 		{
@@ -414,7 +401,7 @@ static TIMER_CALLBACK( pxa255_dma_dma_end )
 		dma_regs->dcsr[param] &= ~PXA255_DCSR_RUN;
 		dma_regs->dcsr[param] |= PXA255_DCSR_STOPSTATE;
 	}
-	pxa255_dma_irq_check(machine);
+	pxa255_dma_irq_check();
 }
 
 READ32_MEMBER(_39in1_state::pxa255_dma_r)
@@ -498,14 +485,14 @@ WRITE32_MEMBER(_39in1_state::pxa255_dma_w)
 					break;
 				}
 
-				pxa255_dma_load_descriptor_and_start(machine(), offset);
+				pxa255_dma_load_descriptor_and_start(offset);
 			}
 			else if(!(data & PXA255_DCSR_RUN))
 			{
 				dma_regs->dcsr[offset] &= ~PXA255_DCSR_RUN;
 			}
 
-			pxa255_dma_irq_check(machine());
+			pxa255_dma_irq_check();
 			break;
 		case PXA255_DINT:
 			verboselog( machine(), 3, "pxa255_dma_w: DMA Interrupt Register: %08x & %08x\n", data, mem_mask );
@@ -566,26 +553,24 @@ WRITE32_MEMBER(_39in1_state::pxa255_dma_w)
 
 */
 
-static void pxa255_ostimer_irq_check(running_machine& machine)
+void _39in1_state::pxa255_ostimer_irq_check()
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_OSTMR_Regs *ostimer_regs = &state->m_ostimer_regs;
+	PXA255_OSTMR_Regs *ostimer_regs = &m_ostimer_regs;
 
-	pxa255_set_irq_line(machine, PXA255_INT_OSTIMER0, (ostimer_regs->oier & PXA255_OIER_E0) ? ((ostimer_regs->ossr & PXA255_OSSR_M0) ? 1 : 0) : 0);
-	//pxa255_set_irq_line(machine, PXA255_INT_OSTIMER1, (ostimer_regs->oier & PXA255_OIER_E1) ? ((ostimer_regs->ossr & PXA255_OSSR_M1) ? 1 : 0) : 0);
-	//pxa255_set_irq_line(machine, PXA255_INT_OSTIMER2, (ostimer_regs->oier & PXA255_OIER_E2) ? ((ostimer_regs->ossr & PXA255_OSSR_M2) ? 1 : 0) : 0);
-	//pxa255_set_irq_line(machine, PXA255_INT_OSTIMER3, (ostimer_regs->oier & PXA255_OIER_E3) ? ((ostimer_regs->ossr & PXA255_OSSR_M3) ? 1 : 0) : 0);
+	pxa255_set_irq_line(PXA255_INT_OSTIMER0, (ostimer_regs->oier & PXA255_OIER_E0) ? ((ostimer_regs->ossr & PXA255_OSSR_M0) ? 1 : 0) : 0);
+	//pxa255_set_irq_line(PXA255_INT_OSTIMER1, (ostimer_regs->oier & PXA255_OIER_E1) ? ((ostimer_regs->ossr & PXA255_OSSR_M1) ? 1 : 0) : 0);
+	//pxa255_set_irq_line(PXA255_INT_OSTIMER2, (ostimer_regs->oier & PXA255_OIER_E2) ? ((ostimer_regs->ossr & PXA255_OSSR_M2) ? 1 : 0) : 0);
+	//pxa255_set_irq_line(PXA255_INT_OSTIMER3, (ostimer_regs->oier & PXA255_OIER_E3) ? ((ostimer_regs->ossr & PXA255_OSSR_M3) ? 1 : 0) : 0);
 }
 
-static TIMER_CALLBACK( pxa255_ostimer_match )
+TIMER_CALLBACK_MEMBER(_39in1_state::pxa255_ostimer_match)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_OSTMR_Regs *ostimer_regs = &state->m_ostimer_regs;
+	PXA255_OSTMR_Regs *ostimer_regs = &m_ostimer_regs;
 
-	if (0) verboselog(machine, 3, "pxa255_ostimer_match channel %d\n", param);
+	if (0) verboselog(machine(), 3, "pxa255_ostimer_match channel %d\n", param);
 	ostimer_regs->ossr |= (1 << param);
 	ostimer_regs->oscr = ostimer_regs->osmr[param];
-	pxa255_ostimer_irq_check(machine);
+	pxa255_ostimer_irq_check();
 }
 
 READ32_MEMBER(_39in1_state::pxa255_ostimer_r)
@@ -681,7 +666,7 @@ WRITE32_MEMBER(_39in1_state::pxa255_ostimer_w)
 		case PXA255_OSSR:
 			if (0) verboselog( machine(), 3, "pxa255_ostimer_w: OS Timer Status Register: %08x & %08x\n", data, mem_mask );
 			ostimer_regs->ossr &= ~data;
-			pxa255_ostimer_irq_check(machine());
+			pxa255_ostimer_irq_check();
 			break;
 		case PXA255_OWER:
 			if (0) verboselog( machine(), 3, "pxa255_ostimer_w: OS Timer Watchdog Enable Register: %08x & %08x\n", data, mem_mask );
@@ -718,26 +703,24 @@ WRITE32_MEMBER(_39in1_state::pxa255_ostimer_w)
 
 */
 
-static void pxa255_update_interrupts(running_machine& machine)
+void _39in1_state::pxa255_update_interrupts()
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_INTC_Regs *intc_regs = &state->m_intc_regs;
+	PXA255_INTC_Regs *intc_regs = &m_intc_regs;
 
 	intc_regs->icfp = (intc_regs->icpr & intc_regs->icmr) & intc_regs->iclr;
 	intc_regs->icip = (intc_regs->icpr & intc_regs->icmr) & (~intc_regs->iclr);
-	machine.device("maincpu")->execute().set_input_line(ARM7_FIRQ_LINE, intc_regs->icfp ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(ARM7_IRQ_LINE,  intc_regs->icip ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(ARM7_FIRQ_LINE, intc_regs->icfp ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(ARM7_IRQ_LINE,  intc_regs->icip ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static void pxa255_set_irq_line(running_machine& machine, UINT32 line, int irq_state)
+void _39in1_state::pxa255_set_irq_line(UINT32 line, int irq_state)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_INTC_Regs *intc_regs = &state->m_intc_regs;
+	PXA255_INTC_Regs *intc_regs = &m_intc_regs;
 
 	intc_regs->icpr &= ~line;
 	intc_regs->icpr |= irq_state ? line : 0;
 	//printf( "Setting IRQ line %08x to %d\n", line, irq_state );
-	pxa255_update_interrupts(machine);
+	pxa255_update_interrupts();
 }
 
 READ32_MEMBER(_39in1_state::pxa255_intc_r)
@@ -1058,43 +1041,40 @@ WRITE32_MEMBER(_39in1_state::pxa255_gpio_w)
 
 */
 
-static void pxa255_lcd_load_dma_descriptor(address_space* space, UINT32 address, int channel)
+void _39in1_state::pxa255_lcd_load_dma_descriptor(address_space & space, UINT32 address, int channel)
 {
-	_39in1_state *state = space->machine().driver_data<_39in1_state>();
-	PXA255_LCD_Regs *lcd_regs = &state->m_lcd_regs;
+	PXA255_LCD_Regs *lcd_regs = &m_lcd_regs;
 
-	lcd_regs->dma[channel].fdadr = space->read_dword(address);
-	lcd_regs->dma[channel].fsadr = space->read_dword(address + 0x04);
-	lcd_regs->dma[channel].fidr  = space->read_dword(address + 0x08);
-	lcd_regs->dma[channel].ldcmd = space->read_dword(address + 0x0c);
-	verboselog( space->machine(), 4, "pxa255_lcd_load_dma_descriptor, address = %08x, channel = %d\n", address, channel);
-	verboselog( space->machine(), 4, "    DMA Frame Descriptor: %08x\n", lcd_regs->dma[channel].fdadr );
-	verboselog( space->machine(), 4, "    DMA Frame Source Address: %08x\n", lcd_regs->dma[channel].fsadr );
-	verboselog( space->machine(), 4, "    DMA Frame ID: %08x\n", lcd_regs->dma[channel].fidr );
-	verboselog( space->machine(), 4, "    DMA Command: %08x\n", lcd_regs->dma[channel].ldcmd );
+	lcd_regs->dma[channel].fdadr = space.read_dword(address);
+	lcd_regs->dma[channel].fsadr = space.read_dword(address + 0x04);
+	lcd_regs->dma[channel].fidr  = space.read_dword(address + 0x08);
+	lcd_regs->dma[channel].ldcmd = space.read_dword(address + 0x0c);
+	verboselog( space.machine(), 4, "pxa255_lcd_load_dma_descriptor, address = %08x, channel = %d\n", address, channel);
+	verboselog( space.machine(), 4, "    DMA Frame Descriptor: %08x\n", lcd_regs->dma[channel].fdadr );
+	verboselog( space.machine(), 4, "    DMA Frame Source Address: %08x\n", lcd_regs->dma[channel].fsadr );
+	verboselog( space.machine(), 4, "    DMA Frame ID: %08x\n", lcd_regs->dma[channel].fidr );
+	verboselog( space.machine(), 4, "    DMA Command: %08x\n", lcd_regs->dma[channel].ldcmd );
 }
 
-static void pxa255_lcd_irq_check(running_machine& machine)
+void _39in1_state::pxa255_lcd_irq_check()
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_LCD_Regs *lcd_regs = &state->m_lcd_regs;
+	PXA255_LCD_Regs *lcd_regs = &m_lcd_regs;
 
 	if(((lcd_regs->lcsr & PXA255_LCSR_BS)  != 0 && (lcd_regs->lccr0 & PXA255_LCCR0_BM)  == 0) ||
 	   ((lcd_regs->lcsr & PXA255_LCSR_EOF) != 0 && (lcd_regs->lccr0 & PXA255_LCCR0_EFM) == 0) ||
 	   ((lcd_regs->lcsr & PXA255_LCSR_SOF) != 0 && (lcd_regs->lccr0 & PXA255_LCCR0_SFM) == 0))
 	{
-		pxa255_set_irq_line(machine, PXA255_INT_LCD, 1);
+		pxa255_set_irq_line(PXA255_INT_LCD, 1);
 	}
 	else
 	{
-		pxa255_set_irq_line(machine, PXA255_INT_LCD, 0);
+		pxa255_set_irq_line(PXA255_INT_LCD, 0);
 	}
 }
 
-static void pxa255_lcd_dma_kickoff(running_machine& machine, int channel)
+void _39in1_state::pxa255_lcd_dma_kickoff(int channel)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_LCD_Regs *lcd_regs = &state->m_lcd_regs;
+	PXA255_LCD_Regs *lcd_regs = &m_lcd_regs;
 
 	if(lcd_regs->dma[channel].fdadr != 0)
 	{
@@ -1106,49 +1086,48 @@ static void pxa255_lcd_dma_kickoff(running_machine& machine, int channel)
 		{
 			lcd_regs->liidr = lcd_regs->dma[channel].fidr;
 			lcd_regs->lcsr |= PXA255_LCSR_SOF;
-			pxa255_lcd_irq_check(machine);
+			pxa255_lcd_irq_check();
 		}
 
 		if(lcd_regs->dma[channel].ldcmd & PXA255_LDCMD_PAL)
 		{
-			address_space *space = machine.device<pxa255_device>("maincpu")->space(AS_PROGRAM);
+			address_space &space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
 			int length = lcd_regs->dma[channel].ldcmd & 0x000fffff;
 			int index = 0;
 			for(index = 0; index < length; index += 2)
 			{
-				UINT16 color = space->read_word((lcd_regs->dma[channel].fsadr &~ 1) + index);
-				state->m_pxa255_lcd_palette[index >> 1] = (((((color >> 11) & 0x1f) << 3) | (color >> 13)) << 16) | (((((color >> 5) & 0x3f) << 2) | ((color >> 9) & 0x3)) << 8) | (((color & 0x1f) << 3) | ((color >> 2) & 0x7));
-				palette_set_color_rgb(machine, index >> 1, (((color >> 11) & 0x1f) << 3) | (color >> 13), (((color >> 5) & 0x3f) << 2) | ((color >> 9) & 0x3), ((color & 0x1f) << 3) | ((color >> 2) & 0x7));
+				UINT16 color = space.read_word((lcd_regs->dma[channel].fsadr &~ 1) + index);
+				m_pxa255_lcd_palette[index >> 1] = (((((color >> 11) & 0x1f) << 3) | (color >> 13)) << 16) | (((((color >> 5) & 0x3f) << 2) | ((color >> 9) & 0x3)) << 8) | (((color & 0x1f) << 3) | ((color >> 2) & 0x7));
+				palette_set_color_rgb(machine(), index >> 1, (((color >> 11) & 0x1f) << 3) | (color >> 13), (((color >> 5) & 0x3f) << 2) | ((color >> 9) & 0x3), ((color & 0x1f) << 3) | ((color >> 2) & 0x7));
 			}
 		}
 		else
 		{
-			address_space *space = machine.device<pxa255_device>("maincpu")->space(AS_PROGRAM);
+			address_space &space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
 			int length = lcd_regs->dma[channel].ldcmd & 0x000fffff;
 			int index = 0;
 			for(index = 0; index < length; index++)
 			{
-				state->m_pxa255_lcd_framebuffer[index] = space->read_byte(lcd_regs->dma[channel].fsadr + index);
+				m_pxa255_lcd_framebuffer[index] = space.read_byte(lcd_regs->dma[channel].fsadr + index);
 			}
 		}
 	}
 }
 
-static void pxa255_lcd_check_load_next_branch(running_machine& machine, int channel)
+void _39in1_state::pxa255_lcd_check_load_next_branch(int channel)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_LCD_Regs *lcd_regs = &state->m_lcd_regs;
+	PXA255_LCD_Regs *lcd_regs = &m_lcd_regs;
 
 	if(lcd_regs->fbr[channel] & 1)
 	{
-		verboselog( machine, 4, "pxa255_lcd_check_load_next_branch: Taking branch\n" );
+		verboselog( machine(), 4, "pxa255_lcd_check_load_next_branch: Taking branch\n" );
 		lcd_regs->fbr[channel] &= ~1;
-		address_space *space = machine.device<pxa255_device>("maincpu")->space(AS_PROGRAM);
-		//lcd_regs->fbr[channel] = (space->read_dword(lcd_regs->fbr[channel] & 0xfffffff0) & 0xfffffff0) | (lcd_regs->fbr[channel] & 0x00000003);
+		address_space &space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
+		//lcd_regs->fbr[channel] = (space.read_dword(lcd_regs->fbr[channel] & 0xfffffff0) & 0xfffffff0) | (lcd_regs->fbr[channel] & 0x00000003);
 		//printf( "%08x\n", lcd_regs->fbr[channel] );
 		pxa255_lcd_load_dma_descriptor(space, lcd_regs->fbr[channel] & 0xfffffff0, 0);
-		lcd_regs->fbr[channel] = (space->read_dword(lcd_regs->fbr[channel] & 0xfffffff0) & 0xfffffff0) | (lcd_regs->fbr[channel] & 0x00000003);
-		pxa255_lcd_dma_kickoff(machine, 0);
+		lcd_regs->fbr[channel] = (space.read_dword(lcd_regs->fbr[channel] & 0xfffffff0) & 0xfffffff0) | (lcd_regs->fbr[channel] & 0x00000003);
+		pxa255_lcd_dma_kickoff(0);
 		if(lcd_regs->fbr[channel] & 2)
 		{
 			lcd_regs->fbr[channel] &= ~2;
@@ -1160,23 +1139,22 @@ static void pxa255_lcd_check_load_next_branch(running_machine& machine, int chan
 	}
 	else
 	{
-		if (0) verboselog( machine, 3, "pxa255_lcd_check_load_next_branch: Not taking branch\n" );
+		if (0) verboselog( machine(), 3, "pxa255_lcd_check_load_next_branch: Not taking branch\n" );
 	}
 }
 
-static TIMER_CALLBACK( pxa255_lcd_dma_eof )
+TIMER_CALLBACK_MEMBER(_39in1_state::pxa255_lcd_dma_eof)
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
-	PXA255_LCD_Regs *lcd_regs = &state->m_lcd_regs;
+	PXA255_LCD_Regs *lcd_regs = &m_lcd_regs;
 
-	if (0) verboselog( machine, 3, "End of frame callback\n" );
+	if (0) verboselog( machine(), 3, "End of frame callback\n" );
 	if(lcd_regs->dma[param].ldcmd & PXA255_LDCMD_EOFINT)
 	{
 		lcd_regs->liidr = lcd_regs->dma[param].fidr;
 		lcd_regs->lcsr |= PXA255_LCSR_EOF;
 	}
-	pxa255_lcd_check_load_next_branch(machine, param);
-	pxa255_lcd_irq_check(machine);
+	pxa255_lcd_check_load_next_branch(param);
+	pxa255_lcd_irq_check();
 }
 
 READ32_MEMBER(_39in1_state::pxa255_lcd_r)
@@ -1274,8 +1252,8 @@ WRITE32_MEMBER(_39in1_state::pxa255_lcd_w)
 			if(!lcd_regs->dma[0].eof->enabled())
 			{
 				if (0) verboselog( machine(), 3, "ch0 EOF timer is not enabled, taking branch now\n" );
-				pxa255_lcd_check_load_next_branch(machine(), 0);
-				pxa255_lcd_irq_check(machine());
+				pxa255_lcd_check_load_next_branch(0);
+				pxa255_lcd_irq_check();
 			}
 			break;
 		case PXA255_FBR1:		// 0x44000024
@@ -1284,14 +1262,14 @@ WRITE32_MEMBER(_39in1_state::pxa255_lcd_w)
 			if(!lcd_regs->dma[1].eof->enabled())
 			{
 				verboselog( machine(), 3, "ch1 EOF timer is not enabled, taking branch now\n" );
-				pxa255_lcd_check_load_next_branch(machine(), 1);
-				pxa255_lcd_irq_check(machine());
+				pxa255_lcd_check_load_next_branch(1);
+				pxa255_lcd_irq_check();
 			}
 			break;
 		case PXA255_LCSR:		// 0x44000038
 			verboselog( machine(), 4, "pxa255_lcd_w: LCD Controller Status Register: %08x & %08x\n", data, mem_mask );
 			lcd_regs->lcsr &= ~data;
-			pxa255_lcd_irq_check(machine());
+			pxa255_lcd_irq_check();
 			break;
 		case PXA255_LIIDR:		// 0x4400003c
 			verboselog( machine(), 3, "pxa255_lcd_w: LCD Controller Interrupt ID Register: %08x & %08x\n", data, mem_mask );
@@ -1308,7 +1286,7 @@ WRITE32_MEMBER(_39in1_state::pxa255_lcd_w)
 			verboselog( machine(), 4, "pxa255_lcd_w: LCD DMA Frame Descriptor Address Register 0: %08x & %08x\n", data, mem_mask );
 			if(!lcd_regs->dma[0].eof->enabled())
 			{
-				pxa255_lcd_load_dma_descriptor(&space, data & 0xfffffff0, 0);
+				pxa255_lcd_load_dma_descriptor(space, data & 0xfffffff0, 0);
 			}
 			else
 			{
@@ -1329,7 +1307,7 @@ WRITE32_MEMBER(_39in1_state::pxa255_lcd_w)
 			verboselog( machine(), 4, "pxa255_lcd_w: LCD DMA Frame Descriptor Address Register 1: %08x & %08x\n", data, mem_mask );
 			if(!lcd_regs->dma[1].eof->enabled())
 			{
-				pxa255_lcd_load_dma_descriptor(&space, data & 0xfffffff0, 1);
+				pxa255_lcd_load_dma_descriptor(space, data & 0xfffffff0, 1);
 			}
 			else
 			{
@@ -1352,7 +1330,7 @@ WRITE32_MEMBER(_39in1_state::pxa255_lcd_w)
 	}
 }
 
-static INTERRUPT_GEN( pxa255_vblank_start )
+INTERRUPT_GEN_MEMBER(_39in1_state::pxa255_vblank_start)
 {
 }
 
@@ -1459,14 +1437,15 @@ READ32_MEMBER(_39in1_state::prot_cheater_r)
 
 DRIVER_INIT_MEMBER(_39in1_state,39in1)
 {
-
 	m_dmadac[0] = machine().device<dmadac_sound_device>("dac1");
 	m_dmadac[1] = machine().device<dmadac_sound_device>("dac2");
 	m_eeprom = machine().device<eeprom_device>("eeprom");
 
-	address_space *space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
-	space->install_read_handler (0xa0151648, 0xa015164b, read32_delegate(FUNC(_39in1_state::prot_cheater_r), this));
+	address_space &space = machine().device<pxa255_device>("maincpu")->space(AS_PROGRAM);
+	space.install_read_handler (0xa0151648, 0xa015164b, read32_delegate(FUNC(_39in1_state::prot_cheater_r), this));
 }
+
+
 
 static ADDRESS_MAP_START( 39in1_map, AS_PROGRAM, 32, _39in1_state )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM
@@ -1517,27 +1496,25 @@ static INPUT_PORTS_START( 39in1 )
 	PORT_SERVICE_NO_TOGGLE( 0x80000000, IP_ACTIVE_LOW )
 INPUT_PORTS_END
 
-static SCREEN_UPDATE_RGB32( 39in1 )
+UINT32 _39in1_state::screen_update_39in1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	_39in1_state *state = screen.machine().driver_data<_39in1_state>();
 	int x = 0;
 	int y = 0;
 
-	for(y = 0; y <= (state->m_lcd_regs.lccr2 & PXA255_LCCR2_LPP); y++)
+	for(y = 0; y <= (m_lcd_regs.lccr2 & PXA255_LCCR2_LPP); y++)
 	{
 		UINT32 *d = &bitmap.pix32(y);
-		for(x = 0; x <= (state->m_lcd_regs.lccr1 & PXA255_LCCR1_PPL); x++)
+		for(x = 0; x <= (m_lcd_regs.lccr1 & PXA255_LCCR1_PPL); x++)
 		{
-			d[x] = state->m_pxa255_lcd_palette[state->m_pxa255_lcd_framebuffer[y*((state->m_lcd_regs.lccr1 & PXA255_LCCR1_PPL) + 1) + x]];
+			d[x] = m_pxa255_lcd_palette[m_pxa255_lcd_framebuffer[y*((m_lcd_regs.lccr1 & PXA255_LCCR1_PPL) + 1) + x]];
 		}
 	}
 	return 0;
 }
 
 /* To be moved to DEVICE_START( pxa255 ) upon completion */
-static void pxa255_start(running_machine& machine)
+void _39in1_state::pxa255_start()
 {
-	_39in1_state *state = machine.driver_data<_39in1_state>();
 	int index = 0;
 
 	//pxa255_t* pxa255 = pxa255_get_safe_token( device );
@@ -1546,24 +1523,24 @@ static void pxa255_start(running_machine& machine)
 
 	for(index = 0; index < 16; index++)
 	{
-		state->m_dma_regs.dcsr[index] = 0x00000008;
-		state->m_dma_regs.timer[index] = machine.scheduler().timer_alloc(FUNC(pxa255_dma_dma_end));
+		m_dma_regs.dcsr[index] = 0x00000008;
+		m_dma_regs.timer[index] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(_39in1_state::pxa255_dma_dma_end),this));
 	}
 
-	memset(&state->m_ostimer_regs, 0, sizeof(state->m_ostimer_regs));
+	memset(&m_ostimer_regs, 0, sizeof(m_ostimer_regs));
 	for(index = 0; index < 4; index++)
 	{
-		state->m_ostimer_regs.osmr[index] = 0;
-		state->m_ostimer_regs.timer[index] = machine.scheduler().timer_alloc(FUNC(pxa255_ostimer_match));
+		m_ostimer_regs.osmr[index] = 0;
+		m_ostimer_regs.timer[index] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(_39in1_state::pxa255_ostimer_match),this));
 	}
 
-	memset(&state->m_intc_regs, 0, sizeof(state->m_intc_regs));
+	memset(&m_intc_regs, 0, sizeof(m_intc_regs));
 
-	memset(&state->m_lcd_regs, 0, sizeof(state->m_lcd_regs));
-	state->m_lcd_regs.dma[0].eof = machine.scheduler().timer_alloc(FUNC(pxa255_lcd_dma_eof));
-	state->m_lcd_regs.dma[1].eof = machine.scheduler().timer_alloc(FUNC(pxa255_lcd_dma_eof));
-	state->m_lcd_regs.trgbr = 0x00aa5500;
-	state->m_lcd_regs.tcr = 0x0000754f;
+	memset(&m_lcd_regs, 0, sizeof(m_lcd_regs));
+	m_lcd_regs.dma[0].eof = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(_39in1_state::pxa255_lcd_dma_eof),this));
+	m_lcd_regs.dma[1].eof = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(_39in1_state::pxa255_lcd_dma_eof),this));
+	m_lcd_regs.trgbr = 0x00aa5500;
+	m_lcd_regs.tcr = 0x0000754f;
 
 	//pxa255_register_state_save(device);
 }
@@ -1576,22 +1553,32 @@ void _39in1_state::machine_start()
 	for (i = 0; i < 0x80000; i += 2)
 	{
 		ROM[i] = BITSWAP8(ROM[i],7,2,5,6,0,3,1,4) ^ BITSWAP8((i>>3)&0xf, 3,2,4,1,4,4,0,4) ^ 0x90;
-
-// 60-in-1 decrypt
-//          if ((i%2)==0)
-//          {
-//              ROM[i] = BITSWAP8(ROM[i],5,1,4,2,0,7,6,3)^BITSWAP8(i, 6,0,4,13,0,5,3,11);
-//          }
 	}
 
-	pxa255_start(machine());
+	pxa255_start();
+}
+
+MACHINE_START_MEMBER(_39in1_state,60in1)
+{
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	int i;
+
+	for (i = 0; i < 0x80000; i += 2)
+	{
+		if ((i%2)==0)
+		{
+			ROM[i] = BITSWAP8(ROM[i],5,1,4,2,0,7,6,3)^BITSWAP8(i, 6,0,4,13,0,5,3,11);
+		}
+	}
+
+	pxa255_start();
 }
 
 static MACHINE_CONFIG_START( 39in1, _39in1_state )
 
 	MCFG_CPU_ADD("maincpu", PXA255, 200000000)
 	MCFG_CPU_PROGRAM_MAP(39in1_map)
-	MCFG_CPU_VBLANK_INT("screen", pxa255_vblank_start)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", _39in1_state,  pxa255_vblank_start)
 
 	MCFG_PALETTE_LENGTH(32768)
 
@@ -1600,7 +1587,7 @@ static MACHINE_CONFIG_START( 39in1, _39in1_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(1024, 1024)
 	MCFG_SCREEN_VISIBLE_AREA(0, 295, 0, 479)
-	MCFG_SCREEN_UPDATE_STATIC(39in1)
+	MCFG_SCREEN_UPDATE_DRIVER(_39in1_state, screen_update_39in1)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -1612,6 +1599,10 @@ static MACHINE_CONFIG_START( 39in1, _39in1_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ADD("dac2", DMADAC, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( 60in1, 39in1 )
+	MCFG_MACHINE_START_OVERRIDE(_39in1_state,60in1)
 MACHINE_CONFIG_END
 
 ROM_START( 39in1 )
@@ -1642,6 +1633,22 @@ ROM_START( 48in1 )
 	ROM_LOAD16_WORD_SWAP( "48in1_93c66_eeprom.bin", 0x000, 0x200, NO_DUMP )
 ROM_END
 
+
+ROM_START( 48in1b )
+	// main program, encrypted
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "hph_ver309",   0x000000, 0x080000, CRC(27023186) SHA1(a2b3770c4b03d6026c6a0ff2e62ab17c3b359b12) )
+
+	// data ROM - contains a filesystem with ROMs, fonts, graphics, etc. in an unknown compressed format
+	ROM_REGION32_LE( 0x400000, "data", 0 )
+	ROM_LOAD( "48_flash.u19", 0x000000, 0x400000, CRC(a975db44) SHA1(5be6520b2ba7728e9e2de3c62ae7c3b88b25172a) )
+
+	// EEPROM - contains security data
+	ROM_REGION16_BE( 0x200, "eeprom", 0 )
+	ROM_LOAD16_WORD_SWAP( "48_93c66.u32", 0x000, 0x200, CRC(cec06912) SHA1(2bc2e45602c5b1e8a3e031dd384e9f16be4e2ddb) )
+ROM_END
+
+
 ROM_START( 48in1a )
 	// main program, encrypted
 	ROM_REGION( 0x80000, "maincpu", 0 )
@@ -1656,6 +1663,70 @@ ROM_START( 48in1a )
 	ROM_LOAD16_WORD_SWAP( "48in1_93c66_eeprom.bin", 0x000, 0x200, NO_DUMP )
 ROM_END
 
+
+ROM_START( 60in1 )
+	// main program, encrypted
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "hph_ver300.u8",   0x000000, 0x080000, CRC(6fba84c4) SHA1(28881e51227e94a80c8449d9c00a1a675f008d64) )
+
+	// data ROM - contains a filesystem with ROMs, fonts, graphics, etc. in an unknown compressed format
+	ROM_REGION32_LE( 0x400000, "data", 0 )
+	ROM_LOAD( "flash.u19", 0x000000, 0x400000, CRC(0cfed2a0) SHA1(9aac23f5267af56255e6f8aefade9f00bc106325) )
+
+	// EEPROM - contains security data
+	ROM_REGION16_BE( 0x200, "eeprom", 0 )
+	ROM_LOAD16_WORD_SWAP( "60in1_eeprom.u32", 0x000, 0x200, CRC(54af5973) SHA1(30aca7790458f4be906f7fa7c74206e16d9fc36f) )
+ROM_END
+
+ROM_START( 4in1a )
+	// main program, encrypted
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "plz-v014_ver300.bin", 0x000000, 0x080000, CRC(775f101d) SHA1(8a299a67b487518ba2e2cb5334347b93f8640190) )
+
+	// data ROM - contains a filesystem with ROMs, fonts, graphics, etc. in an unknown compressed format
+	ROM_REGION32_LE( 0x200000, "data", 0 )
+	ROM_LOAD( "16mflash.bin", 0x000000, 0x200000, CRC(a089f0f8) SHA1(e975eadd9176a8b9e416229589dfe3158cba22cb) ) // confirmed same flash rom as 39 in 1
+
+	// EEPROM - contains security data
+	ROM_REGION16_BE( 0x200, "eeprom", 0 )
+	ROM_LOAD16_WORD_SWAP( "4in1_eeprom.bin", 0x000, 0x200, CRC(df1724f7) SHA1(07814aee3622f4bb8bada938f2a93fae791d6e31) )
+ROM_END
+
+ROM_START( 4in1b )
+	// main program, encrypted
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "pzv001-4.bin", 0x000000, 0x080000, CRC(7679a95f) SHA1(56c20fa7d086560b76477b42208cb43d42adba41) )
+
+	// data ROM - contains a filesystem with ROMs, fonts, graphics, etc. in an unknown compressed format
+	ROM_REGION32_LE( 0x200000, "data", 0 )
+	ROM_LOAD( "16mflash.bin", 0x000000, 0x200000, CRC(a089f0f8) SHA1(e975eadd9176a8b9e416229589dfe3158cba22cb) )
+
+	// EEPROM - contains security data
+	ROM_REGION16_BE( 0x200, "eeprom", 0 )
+	ROM_LOAD16_WORD_SWAP( "93c66-4.bin", 0x000, 0x200, CRC(84d1c26a) SHA1(de823adddf949bf77d8478762720fe0b56fba8ea) )
+ROM_END
+
+// 19-in-1 is visibly different hardware, extent of differences unknown due to lack of quality pictures/scans
+// also, there is a bootleg of the 19-in-1 which may have less or different protection
+ROM_START( 19in1 )
+	// main program, encrypted
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "19in1.u8",    0x000000, 0x080000, CRC(87b0506c) SHA1(c43ae4b403864a28e56370685572fa02e7572e66) )
+
+	// data ROM - contains a filesystem with ROMs, fonts, graphics, etc. in an unknown compressed format
+	ROM_REGION32_LE( 0x200000, "data", 0 )
+	ROM_LOAD( "16mflash.bin", 0x000000, 0x200000, CRC(a089f0f8) SHA1(e975eadd9176a8b9e416229589dfe3158cba22cb) ) // assuming same flash rom
+
+	// EEPROM - contains security data
+	ROM_REGION16_BE( 0x200, "eeprom", 0 )
+	ROM_LOAD16_WORD_SWAP( "19in1_eeprom.bin", 0x000, 0x200, NO_DUMP )
+ROM_END
+
+GAME(2004, 4in1a,  39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "4 in 1 MAME bootleg (set 1, ver 3.00)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
+GAME(2004, 4in1b,  39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "4 in 1 MAME bootleg (set 2)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
+GAME(2004, 19in1,  39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "19 in 1 MAME bootleg", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
 GAME(2004, 39in1,  0,     39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "39 in 1 MAME bootleg", GAME_IMPERFECT_SOUND)
-GAME(2004, 48in1,  39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "48 in 1 MAME bootleg (ver 3.09)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
-GAME(2004, 48in1a, 39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "48 in 1 MAME bootleg (ver 3.02)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
+GAME(2004, 48in1,  39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "48 in 1 MAME bootleg (set 1, ver 3.09)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
+GAME(2004, 48in1b, 39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "48 in 1 MAME bootleg (set 2, ver 3.09, alt flash)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
+GAME(2004, 48in1a, 39in1, 39in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "48 in 1 MAME bootleg (set 3, ver 3.02)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)
+GAME(2004, 60in1,  39in1, 60in1, 39in1, _39in1_state, 39in1, ROT270, "bootleg", "60 in 1 MAME bootleg (ver 3.00)", GAME_NOT_WORKING|GAME_IMPERFECT_SOUND)

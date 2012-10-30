@@ -178,7 +178,7 @@ static const ay8910_interface ay8910_config =
 	DEVCB_INPUT_PORT("DSW"),
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_HANDLER(hanaawas_portB_w)
+	DEVCB_DRIVER_MEMBER(hanaawas_state, hanaawas_portB_w)
 };
 
 
@@ -200,7 +200,7 @@ static MACHINE_CONFIG_START( hanaawas, hanaawas_state )
 	MCFG_CPU_ADD("maincpu", Z80,18432000/6)	/* 3.072 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(hanaawas_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", hanaawas_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -209,7 +209,7 @@ static MACHINE_CONFIG_START( hanaawas, hanaawas_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hanaawas)
+	MCFG_SCREEN_UPDATE_DRIVER(hanaawas_state, screen_update_hanaawas)
 
 	MCFG_GFXDECODE(hanaawas)
 	MCFG_PALETTE_LENGTH(32*8)

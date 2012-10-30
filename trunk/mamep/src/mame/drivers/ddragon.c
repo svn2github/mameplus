@@ -116,25 +116,24 @@ INLINE int scanline_to_vcount( int scanline )
 		return (vcount - 0x18) | 0x100;
 }
 
-static TIMER_DEVICE_CALLBACK( ddragon_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(ddragon_state::ddragon_scanline)
 {
-	ddragon_state *state = timer.machine().driver_data<ddragon_state>();
 	int scanline = param;
-	int screen_height = timer.machine().primary_screen->height();
+	int screen_height = machine().primary_screen->height();
 	int vcount_old = scanline_to_vcount((scanline == 0) ? screen_height - 1 : scanline - 1);
 	int vcount = scanline_to_vcount(scanline);
 
 	/* update to the current point */
 	if (scanline > 0)
-		timer.machine().primary_screen->update_partial(scanline - 1);
+		machine().primary_screen->update_partial(scanline - 1);
 
 	/* on the rising edge of VBLK (vcount == F8), signal an NMI */
 	if (vcount == 0xf8)
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	/* set 1ms signal on rising edge of vcount & 8 */
 	if (!(vcount_old & 8) && (vcount & 8))
-		state->m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
+		m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
 
@@ -331,10 +330,9 @@ WRITE8_MEMBER(ddragon_state::ddragon2_sub_irq_w)
 }
 
 
-static void irq_handler( device_t *device, int irq )
+WRITE_LINE_MEMBER(ddragon_state::irq_handler)
 {
-	ddragon_state *state = device->machine().driver_data<ddragon_state>();
-	state->m_snd_cpu->execute().set_input_line(state->m_ym_irq , irq ? ASSERT_LINE : CLEAR_LINE );
+	m_snd_cpu->execute().set_input_line(m_ym_irq , state ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -579,7 +577,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1800, 0x1800) AM_READ(dd_adpcm_status_r)
-	AM_RANGE(0x2800, 0x2801) AM_DEVREADWRITE_LEGACY("fmsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2800, 0x2801) AM_DEVREADWRITE("fmsnd", ym2151_device, read, write)
 	AM_RANGE(0x3800, 0x3807) AM_WRITE(dd_adpcm_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -588,7 +586,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dd2_sound_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("fmsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE("fmsnd", ym2151_device, read, write)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xA000, 0xA000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -942,11 +940,6 @@ GFXDECODE_END
  *
  *************************************/
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler)
-};
-
 static const msm5205_interface msm5205_config =
 {
 	dd_adpcm_int,	/* interrupt function */
@@ -966,7 +959,7 @@ static MACHINE_CONFIG_START( ddragon, ddragon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, MAIN_CLOCK)		/* 12 MHz / 4 internally */
 	MCFG_CPU_PROGRAM_MAP(ddragon_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", ddragon_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", ddragon_state, ddragon_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", HD63701, MAIN_CLOCK / 2)	/* 6 MHz / 4 internally */
 	MCFG_CPU_PROGRAM_MAP(sub_map)
@@ -985,15 +978,15 @@ static MACHINE_CONFIG_START( ddragon, ddragon_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(ddragon)
+	MCFG_SCREEN_UPDATE_DRIVER(ddragon_state, screen_update_ddragon)
 
 	MCFG_VIDEO_START_OVERRIDE(ddragon_state,ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("fmsnd", YM2151, SOUND_CLOCK)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("fmsnd", SOUND_CLOCK)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(ddragon_state,irq_handler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 
@@ -1029,7 +1022,7 @@ static MACHINE_CONFIG_START( ddragon6809, ddragon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MAIN_CLOCK / 8)	/* 1.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(ddragon_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", ddragon_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", ddragon_state, ddragon_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", M6809, MAIN_CLOCK / 8)	/* 1.5 Mhz */
 	MCFG_CPU_PROGRAM_MAP(sub_map)
@@ -1048,15 +1041,15 @@ static MACHINE_CONFIG_START( ddragon6809, ddragon_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(ddragon)
+	MCFG_SCREEN_UPDATE_DRIVER(ddragon_state, screen_update_ddragon)
 
 	MCFG_VIDEO_START_OVERRIDE(ddragon_state,ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("fmsnd", YM2151, SOUND_CLOCK)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("fmsnd", SOUND_CLOCK)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(ddragon_state,irq_handler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 
@@ -1075,7 +1068,7 @@ static MACHINE_CONFIG_START( ddragon2, ddragon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, MAIN_CLOCK)		/* 12 MHz / 4 internally */
 	MCFG_CPU_PROGRAM_MAP(dd2_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", ddragon_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", ddragon_state, ddragon_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", Z80, MAIN_CLOCK / 3)		/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(dd2_sub_map)
@@ -1094,15 +1087,15 @@ static MACHINE_CONFIG_START( ddragon2, ddragon_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(ddragon)
+	MCFG_SCREEN_UPDATE_DRIVER(ddragon_state, screen_update_ddragon)
 
 	MCFG_VIDEO_START_OVERRIDE(ddragon_state,ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("fmsnd", YM2151, SOUND_CLOCK)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("fmsnd", SOUND_CLOCK)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(ddragon_state,irq_handler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 
@@ -2002,7 +1995,7 @@ DRIVER_INIT_MEMBER(ddragon_state,darktowr)
 	m_sound_irq = M6809_IRQ_LINE;
 	m_ym_irq = M6809_FIRQ_LINE;
 	m_technos_video_hw = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::darktowr_bankswitch_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::darktowr_bankswitch_w),this));
 }
 
 
@@ -2014,7 +2007,7 @@ DRIVER_INIT_MEMBER(ddragon_state,toffy)
 	m_sound_irq = M6809_IRQ_LINE;
 	m_ym_irq = M6809_FIRQ_LINE;
 	m_technos_video_hw = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::toffy_bankswitch_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::toffy_bankswitch_w),this));
 
 	/* the program rom has a simple bitswap encryption */
 	rom = memregion("maincpu")->base();

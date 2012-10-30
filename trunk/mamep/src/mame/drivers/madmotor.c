@@ -69,7 +69,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, madmotor_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r,ym2203_w)
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r,ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ym2", ym2151_device,read,write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -219,17 +219,6 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static void sound_irq(device_t *device, int state)
-{
-	madmotor_state *driver_state = device->machine().driver_data<madmotor_state>();
-	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
-
 void madmotor_state::machine_start()
 {
 
@@ -250,7 +239,7 @@ static MACHINE_CONFIG_START( madmotor, madmotor_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000) /* Custom chip 59, 24 MHz crystal */
 	MCFG_CPU_PROGRAM_MAP(madmotor_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)/* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", madmotor_state,  irq6_line_hold)/* VBL */
 
 	MCFG_CPU_ADD("audiocpu", H6280, 8053000/2) /* Custom chip 45, Crystal near CPU is 8.053 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -264,7 +253,7 @@ static MACHINE_CONFIG_START( madmotor, madmotor_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */ /* frames per second, vblank duration taken from Burger Time */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(madmotor)
+	MCFG_SCREEN_UPDATE_DRIVER(madmotor_state, screen_update_madmotor)
 
 	MCFG_GFXDECODE(madmotor)
 	MCFG_PALETTE_LENGTH(1024)
@@ -287,8 +276,8 @@ static MACHINE_CONFIG_START( madmotor, madmotor_state )
 	MCFG_SOUND_ADD("ym1", YM2203, 21470000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("ym2", YM2151, 21470000/6)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ym2", 21470000/6)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) /* IRQ 2 */
 	MCFG_SOUND_ROUTE(0, "mono", 0.45)
 	MCFG_SOUND_ROUTE(1, "mono", 0.45)
 

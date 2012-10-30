@@ -212,6 +212,8 @@ protected:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+public:
+	UINT32 screen_update_magictg(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -259,10 +261,9 @@ void magictg_state::video_start()
 
 }
 
-static SCREEN_UPDATE_RGB32( magictg )
+UINT32 magictg_state::screen_update_magictg(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	magictg_state* state = screen.machine().driver_data<magictg_state>();
-	return voodoo_update(state->m_voodoo[0], bitmap, cliprect) ? 0 : UPDATE_HAS_NOT_CHANGED;
+	return voodoo_update(m_voodoo[0], bitmap, cliprect) ? 0 : UPDATE_HAS_NOT_CHANGED;
 }
 
 
@@ -334,7 +335,7 @@ static void voodoo_0_pci_w(device_t *busdevice, device_t *device, int function, 
 #if defined(USE_TWO_3DFX)
 static UINT32 voodoo_1_pci_r(device_t *busdevice, device_t *device, int function, int reg, UINT32 mem_mask)
 {
-	magictg_state* state = space->machine().driver_data<magictg_state>();
+	magictg_state* state = space.machine().driver_data<magictg_state>();
 	UINT32 val = 0;
 
 	switch (reg)
@@ -356,7 +357,7 @@ static UINT32 voodoo_1_pci_r(device_t *busdevice, device_t *device, int function
 
 static void voodoo_1_pci_w(device_t *busdevice, device_t *device, int function, int reg, UINT32 data, UINT32 mem_mask)
 {
-	magictg_state* state = space->machine().driver_data<magictg_state>();
+	magictg_state* state = space.machine().driver_data<magictg_state>();
 
 	switch (reg)
 	{
@@ -473,7 +474,7 @@ READ32_MEMBER( magictg_state::zr36120_r )
 	else
 	{
 		/* Post office */
-		res = 0;//mame_rand(space->machine);//m_zr36120.as_regs[0x48/4];
+		res = 0;//mame_rand(space.machine);//m_zr36120.as_regs[0x48/4];
 	}
 	mame_printf_debug("PINKEYE_R[%x]\n", offset);
 	return res;
@@ -752,7 +753,6 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 
 			if (data > 0)
 			{
-				address_space* addr_space;
 				UINT8* adsp_rom = (UINT8*)space.machine().root_device().memregion("adsp")->base();
 
 				UINT32 page = (m_adsp_regs.bdma_control >> 8) & 0xff;
@@ -761,10 +761,7 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 
 				UINT32 src_addr = (page << 14) | m_adsp_regs.bdma_external_addr;
 
-				if (type == 0)
-					addr_space = m_adsp->space(AS_PROGRAM);
-				else
-					addr_space = m_adsp->space(AS_DATA);
+				address_space &addr_space = m_adsp->space((type == 0) ? AS_PROGRAM : AS_DATA);
 
 				if (dir == 0)
 				{
@@ -776,7 +773,7 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 											 (adsp_rom[src_addr + 1] << 8) |
 											 (adsp_rom[src_addr + 2]);
 
-							addr_space->write_dword(m_adsp_regs.bdma_internal_addr * 4, src_word);
+							addr_space.write_dword(m_adsp_regs.bdma_internal_addr * 4, src_word);
 
 							src_addr += 3;
 							m_adsp_regs.bdma_internal_addr ++;
@@ -785,7 +782,7 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 						{
 							UINT32 src_word =(adsp_rom[src_addr + 0] << 8) | adsp_rom[src_addr + 1];
 
-							addr_space->write_dword(m_adsp_regs.bdma_internal_addr * 2, src_word);
+							addr_space.write_dword(m_adsp_regs.bdma_internal_addr * 2, src_word);
 
 							src_addr += 2;
 							m_adsp_regs.bdma_internal_addr ++;
@@ -964,7 +961,7 @@ static MACHINE_CONFIG_START( magictg, magictg_state )
 	MCFG_SCREEN_SIZE(1024, 1024)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 16, 447)
 
-	MCFG_SCREEN_UPDATE_STATIC(magictg)
+	MCFG_SCREEN_UPDATE_DRIVER(magictg_state, screen_update_magictg)
 MACHINE_CONFIG_END
 
 

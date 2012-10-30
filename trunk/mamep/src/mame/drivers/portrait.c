@@ -240,10 +240,16 @@ static GFXDECODE_START( portrait )
 	GFXDECODE_ENTRY( "gfx1", 0x00000, tile_layout, 0, 0x800/8 )
 GFXDECODE_END
 
+static const tms52xx_config tms_intf =
+{
+	DEVCB_NULL
+};
+
+
 static MACHINE_CONFIG_START( portrait, portrait_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)     /* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(portrait_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", portrait_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", I8039, 3120000)  /* ? */
 	MCFG_CPU_PROGRAM_MAP(portrait_sound_map)
@@ -256,7 +262,7 @@ static MACHINE_CONFIG_START( portrait, portrait_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 0*8, 40*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(portrait)
+	MCFG_SCREEN_UPDATE_DRIVER(portrait_state, screen_update_portrait)
 
 	MCFG_GFXDECODE(portrait)
 	MCFG_PALETTE_LENGTH(0x800)
@@ -264,9 +270,9 @@ static MACHINE_CONFIG_START( portrait, portrait_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-
-	MCFG_SOUND_ADD("tms", TMS5200, 640000)
+	MCFG_SOUND_ADD("tms", TMS5200N, 640000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(tms_intf)
 MACHINE_CONFIG_END
 
 

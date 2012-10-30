@@ -133,17 +133,18 @@ public:
 	DECLARE_WRITE8_MEMBER(nmi_mask_w);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_sub(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(subm_sound_irq);
 };
 
 void sub_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16(sub)
+UINT32 sub_state::screen_update_sub(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	sub_state *state = screen.machine().driver_data<sub_state>();
-	gfx_element *gfx = screen.machine().gfx[0];
-	gfx_element *gfx_1 = screen.machine().gfx[1];
+	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx_1 = machine().gfx[1];
 	int y,x;
 	int count = 0;
 
@@ -151,12 +152,12 @@ static SCREEN_UPDATE_IND16(sub)
 	{
 		for (x=0;x<32;x++)
 		{
-			UINT16 tile = state->m_vid[count];
+			UINT16 tile = m_vid[count];
 			UINT8 col;
-			UINT8 y_offs = state->m_scrolly[x];
+			UINT8 y_offs = m_scrolly[x];
 
-			tile += (state->m_attr[count]&0xe0)<<3;
-			col = (state->m_attr[count]&0x1f);
+			tile += (m_attr[count]&0xe0)<<3;
+			col = (m_attr[count]&0x1f);
 
 			drawgfx_opaque(bitmap,cliprect,gfx,tile,col+0x40,0,0,x*8,(y*8)-y_offs);
 			drawgfx_opaque(bitmap,cliprect,gfx,tile,col+0x40,0,0,x*8,(y*8)-y_offs+256);
@@ -177,8 +178,8 @@ static SCREEN_UPDATE_IND16(sub)
     1 --cc cccc color
     */
 	{
-		UINT8 *spriteram = state->m_spriteram;
-		UINT8 *spriteram_2 = state->m_spriteram2;
+		UINT8 *spriteram = m_spriteram;
+		UINT8 *spriteram_2 = m_spriteram2;
 		UINT8 x,y,spr_offs,i,col,fx,fy;
 
 		for(i=0;i<0x40;i+=2)
@@ -202,12 +203,12 @@ static SCREEN_UPDATE_IND16(sub)
 	{
 		for (x=0;x<32;x++)
 		{
-			UINT16 tile = state->m_vid[count];
+			UINT16 tile = m_vid[count];
 			UINT8 col;
-			UINT8 y_offs = state->m_scrolly[x];
+			UINT8 y_offs = m_scrolly[x];
 
-			tile += (state->m_attr[count]&0xe0)<<3;
-			col = (state->m_attr[count]&0x1f);
+			tile += (m_attr[count]&0xe0)<<3;
+			col = (m_attr[count]&0x1f);
 
 			if(x >= 28)
 			{
@@ -418,12 +419,11 @@ void sub_state::palette_init()
 }
 
 
-static INTERRUPT_GEN( subm_sound_irq )
+INTERRUPT_GEN_MEMBER(sub_state::subm_sound_irq)
 {
-	sub_state *state = device->machine().driver_data<sub_state>();
 
-	if(state->m_nmi_en)
-		device->machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_en)
+		machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( sub, sub_state )
@@ -432,12 +432,12 @@ static MACHINE_CONFIG_START( sub, sub_state )
 	MCFG_CPU_ADD("maincpu", Z80,MASTER_CLOCK/6)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(subm_map)
 	MCFG_CPU_IO_MAP(subm_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sub_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80,MASTER_CLOCK/6)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(subm_sound_map)
 	MCFG_CPU_IO_MAP(subm_sound_io)
-	MCFG_CPU_PERIODIC_INT(subm_sound_irq, 120) //???
+	MCFG_CPU_PERIODIC_INT_DRIVER(sub_state, subm_sound_irq,  120) //???
 
 
 	/* video hardware */
@@ -446,7 +446,7 @@ static MACHINE_CONFIG_START( sub, sub_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(sub)
+	MCFG_SCREEN_UPDATE_DRIVER(sub_state, screen_update_sub)
 
 	MCFG_GFXDECODE(sub)
 	MCFG_PALETTE_LENGTH(0x400)

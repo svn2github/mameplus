@@ -175,7 +175,7 @@ Added Multiple Coin Feature:
 
 static WRITE8_HANDLER( pipedrm_bankswitch_w )
 {
-	fromance_state *state = space->machine().driver_data<fromance_state>();
+	fromance_state *state = space.machine().driver_data<fromance_state>();
 	/*
         Bit layout:
 
@@ -191,14 +191,14 @@ static WRITE8_HANDLER( pipedrm_bankswitch_w )
 	state->membank("bank1")->set_entry(data & 0x7);
 
 	/* map to the fromance gfx register */
-	state->fromance_gfxreg_w(*space, offset, ((data >> 6) & 0x01) | 	/* flipscreen */
+	state->fromance_gfxreg_w(space, offset, ((data >> 6) & 0x01) |	/* flipscreen */
 							  ((~data >> 2) & 0x02));	/* videoram select */
 }
 
 
 static WRITE8_HANDLER( sound_bankswitch_w )
 {
-	space->machine().root_device().membank("bank2")->set_entry(data & 0x01);
+	space.machine().root_device().membank("bank2")->set_entry(data & 0x01);
 }
 
 
@@ -225,19 +225,19 @@ static TIMER_CALLBACK( delayed_command_w	)
 
 static WRITE8_HANDLER( sound_command_w )
 {
-	space->machine().scheduler().synchronize(FUNC(delayed_command_w), data | 0x100);
+	space.machine().scheduler().synchronize(FUNC(delayed_command_w), data | 0x100);
 }
 
 
 static WRITE8_HANDLER( sound_command_nonmi_w )
 {
-	space->machine().scheduler().synchronize(FUNC(delayed_command_w), data);
+	space.machine().scheduler().synchronize(FUNC(delayed_command_w), data);
 }
 
 
 static WRITE8_HANDLER( pending_command_clear_w )
 {
-	fromance_state *state = space->machine().driver_data<fromance_state>();
+	fromance_state *state = space.machine().driver_data<fromance_state>();
 	state->m_pending_command = 0;
 	state->m_subcpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
@@ -245,14 +245,14 @@ static WRITE8_HANDLER( pending_command_clear_w )
 
 static READ8_HANDLER( pending_command_r )
 {
-	fromance_state *state = space->machine().driver_data<fromance_state>();
+	fromance_state *state = space.machine().driver_data<fromance_state>();
 	return state->m_pending_command;
 }
 
 
 static READ8_HANDLER( sound_command_r )
 {
-	fromance_state *state = space->machine().driver_data<fromance_state>();
+	fromance_state *state = space.machine().driver_data<fromance_state>();
 	return state->m_sound_command;
 }
 
@@ -638,7 +638,7 @@ static MACHINE_CONFIG_START( pipedrm, fromance_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fromance_state, irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80,14318000/4)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -653,10 +653,12 @@ static MACHINE_CONFIG_START( pipedrm, fromance_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(44*8, 30*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 44*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pipedrm)
+	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_pipedrm)
 
 	MCFG_GFXDECODE(pipedrm)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(fromance_state,pipedrm)
 
@@ -677,7 +679,7 @@ static MACHINE_CONFIG_START( hatris, fromance_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fromance_state, irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80,14318000/4)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -692,7 +694,7 @@ static MACHINE_CONFIG_START( hatris, fromance_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(44*8, 30*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 44*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromance)
+	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
 
 	MCFG_GFXDECODE(hatris)
 	MCFG_PALETTE_LENGTH(2048)
@@ -877,14 +879,14 @@ DRIVER_INIT_MEMBER(fromance_state,pipedrm)
 
 	/* sprite RAM lives at the end of palette RAM */
 	m_spriteram.set_target(&m_generic_paletteram_8[0xc00], 0x400);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0xcc00, 0xcfff, m_spriteram);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0xcc00, 0xcfff, m_spriteram);
 }
 
 
 DRIVER_INIT_MEMBER(fromance_state,hatris)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_legacy_write_handler(0x20, 0x20, FUNC(sound_command_nonmi_w));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x21, 0x21, write8_delegate(FUNC(fromance_state::fromance_gfxreg_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_legacy_write_handler(0x20, 0x20, FUNC(sound_command_nonmi_w));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x21, 0x21, write8_delegate(FUNC(fromance_state::fromance_gfxreg_w),this));
 }
 
 

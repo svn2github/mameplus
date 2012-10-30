@@ -73,7 +73,7 @@ WRITE8_MEMBER(dambustr_state::dambustr_noise_enable_w)
 	device_t *device = machine().device("GAL_AUDIO");
 	if (data != m_noise_data) {
 		m_noise_data = data;
-		galaxian_noise_enable_w(device, offset, data);
+		galaxian_noise_enable_w(device, space, offset, data);
 	}
 }
 
@@ -251,17 +251,17 @@ static MACHINE_CONFIG_START( dambustr, dambustr_state )
 
 	MCFG_MACHINE_RESET_OVERRIDE(dambustr_state,galaxold)
 
-	MCFG_7474_ADD("7474_9m_1", "7474_9m_1", galaxold_7474_9m_1_callback, NULL)
-	MCFG_7474_ADD("7474_9m_2", "7474_9m_1", NULL, galaxold_7474_9m_2_q_callback)
+	MCFG_7474_ADD("7474_9m_1", WRITELINE(dambustr_state,galaxold_7474_9m_1_callback), NOOP)
+	MCFG_7474_ADD("7474_9m_2", NOOP, WRITELINE(dambustr_state,galaxold_7474_9m_2_q_callback))
 
-	MCFG_TIMER_ADD("int_timer", galaxold_interrupt_timer)
+	MCFG_TIMER_DRIVER_ADD("int_timer", dambustr_state, galaxold_interrupt_timer)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(16000.0/132/2)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dambustr)
+	MCFG_SCREEN_UPDATE_DRIVER(dambustr_state, screen_update_dambustr)
 
 	MCFG_GFXDECODE(dambustr)
 	MCFG_PALETTE_LENGTH(32+2+64+8)		/* 32 for the characters, 2 for the bullets, 64 for the stars, 8 for the background */

@@ -88,7 +88,7 @@ static MACHINE_CONFIG_START( beezer, beezer_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 1000000)        /* 1 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", beezer_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", beezer_state, beezer_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 1000000)        /* 1 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -99,7 +99,7 @@ static MACHINE_CONFIG_START( beezer, beezer_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(384, 256)
 	MCFG_SCREEN_VISIBLE_AREA(16, 304-1, 0, 240-1) // 288 x 240, correct?
-	MCFG_SCREEN_UPDATE_STATIC(beezer)
+	MCFG_SCREEN_UPDATE_DRIVER(beezer_state, screen_update_beezer)
 
 	MCFG_PALETTE_LENGTH(16)
 

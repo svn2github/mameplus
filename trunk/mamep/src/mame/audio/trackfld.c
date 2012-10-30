@@ -71,7 +71,7 @@ static DEVICE_RESET( trackfld_audio )
 
 READ8_HANDLER( trackfld_sh_timer_r )
 {
-	UINT32 clock = space->machine().device<cpu_device>("audiocpu")->total_cycles() / TIMER_RATE;
+	UINT32 clock = space.machine().device<cpu_device>("audiocpu")->total_cycles() / TIMER_RATE;
 
 	return clock & 0xF;
 }
@@ -83,7 +83,7 @@ READ8_DEVICE_HANDLER( trackfld_speech_r )
 
 WRITE8_DEVICE_HANDLER( trackfld_sound_w )
 {
-	device_t *audio = device->machine().device("trackfld_audio");
+	device_t *audio = space.machine().device("trackfld_audio");
 	trackfld_audio_state *state = get_safe_token(audio);
 	int changes = offset ^ state->m_last_addr;
 
@@ -104,7 +104,7 @@ WRITE8_DEVICE_HANDLER( trackfld_sound_w )
 
 READ8_HANDLER( hyperspt_sh_timer_r )
 {
-	device_t *audio = space->machine().device("trackfld_audio");
+	device_t *audio = space.machine().device("trackfld_audio");
 	trackfld_audio_state *state = get_safe_token(audio);
 	UINT32 clock = state->m_audiocpu->total_cycles() / TIMER_RATE;
 
@@ -116,7 +116,7 @@ READ8_HANDLER( hyperspt_sh_timer_r )
 
 WRITE8_DEVICE_HANDLER( hyperspt_sound_w )
 {
-	device_t *audio = device->machine().device("trackfld_audio");
+	device_t *audio = space.machine().device("trackfld_audio");
 	trackfld_audio_state *state = get_safe_token(audio);
 	int changes = offset ^ state->m_last_addr;
 
@@ -142,7 +142,7 @@ WRITE8_DEVICE_HANDLER( hyperspt_sound_w )
 
 WRITE8_HANDLER( konami_sh_irqtrigger_w )
 {
-	device_t *audio = space->machine().device("trackfld_audio");
+	device_t *audio = space.machine().device("trackfld_audio");
 	trackfld_audio_state *state = get_safe_token(audio);
 	if (state->m_last_irq == 0 && data)
 	{
@@ -166,7 +166,7 @@ trackfld_audio_device::trackfld_audio_device(const machine_config &mconfig, cons
 	: device_t(mconfig, TRACKFLD_AUDIO, "Track And Field Audio", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(trackfld_audio_state));
+	m_token = global_alloc_clear(trackfld_audio_state);
 }
 
 //-------------------------------------------------

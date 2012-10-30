@@ -26,12 +26,11 @@
 #include "includes/konamipt.h"
 #include "includes/spy.h"
 
-static INTERRUPT_GEN( spy_interrupt )
+INTERRUPT_GEN_MEMBER(spy_state::spy_interrupt)
 {
-	spy_state *state = device->machine().driver_data<spy_state>();
 
-	if (k052109_is_irq_enabled(state->m_k052109))
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (k052109_is_irq_enabled(m_k052109))
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(spy_state::spy_bankedram1_r)
@@ -356,25 +355,25 @@ READ8_MEMBER(spy_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(spy_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 static ADDRESS_MAP_START( spy_map, AS_PROGRAM, 8, spy_state )
@@ -532,7 +531,7 @@ static MACHINE_CONFIG_START( spy, spy_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 3000000) /* ? */
 	MCFG_CPU_PROGRAM_MAP(spy_map)
-	MCFG_CPU_VBLANK_INT("screen", spy_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", spy_state,  spy_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(spy_sound_map)
@@ -547,7 +546,7 @@ static MACHINE_CONFIG_START( spy, spy_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(spy)
+	MCFG_SCREEN_UPDATE_DRIVER(spy_state, screen_update_spy)
 
 	MCFG_PALETTE_LENGTH(1024)
 

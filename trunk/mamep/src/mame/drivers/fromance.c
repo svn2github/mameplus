@@ -59,18 +59,17 @@ READ8_MEMBER(fromance_state::fromance_commanddata_r)
 }
 
 
-static TIMER_CALLBACK( deferred_commanddata_w )
+TIMER_CALLBACK_MEMBER(fromance_state::deferred_commanddata_w)
 {
-	fromance_state *state = machine.driver_data<fromance_state>();
-	state->m_commanddata = param;
-	state->m_directionflag = 1;
+	m_commanddata = param;
+	m_directionflag = 1;
 }
 
 
 WRITE8_MEMBER(fromance_state::fromance_commanddata_w)
 {
 	/* do this on a timer to let the slave CPU synchronize */
-	machine().scheduler().synchronize(FUNC(deferred_commanddata_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(fromance_state::deferred_commanddata_w),this), data);
 }
 
 
@@ -1004,7 +1003,7 @@ static MACHINE_CONFIG_START( nekkyoku, fromance_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		/* 6.00 Mhz ? */
 	MCFG_CPU_PROGRAM_MAP(nekkyoku_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fromance_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80,12000000/2)		/* 6.00 Mhz ? */
 	MCFG_CPU_PROGRAM_MAP(nekkyoku_sub_map)
@@ -1018,7 +1017,7 @@ static MACHINE_CONFIG_START( nekkyoku, fromance_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromance)
+	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
 
 	MCFG_GFXDECODE(fromance)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1042,7 +1041,7 @@ static MACHINE_CONFIG_START( idolmj, fromance_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		/* 6.00 Mhz ? */
 	MCFG_CPU_PROGRAM_MAP(fromance_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fromance_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80,12000000/2)		/* 6.00 Mhz ? */
 	MCFG_CPU_PROGRAM_MAP(fromance_sub_map)
@@ -1056,7 +1055,7 @@ static MACHINE_CONFIG_START( idolmj, fromance_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromance)
+	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
 
 	MCFG_GFXDECODE(fromance)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1080,7 +1079,7 @@ static MACHINE_CONFIG_START( fromance, fromance_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		/* 6.00 Mhz ? */
 	MCFG_CPU_PROGRAM_MAP(fromance_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fromance_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80,12000000/2)		/* 6.00 Mhz ? */
 	MCFG_CPU_PROGRAM_MAP(fromance_sub_map)
@@ -1094,7 +1093,7 @@ static MACHINE_CONFIG_START( fromance, fromance_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromance)
+	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
 
 	MCFG_GFXDECODE(fromance)
 	MCFG_PALETTE_LENGTH(2048)

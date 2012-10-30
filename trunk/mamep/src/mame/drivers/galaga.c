@@ -857,20 +857,19 @@ static const namco_53xx_interface namco_53xx_intf =
 };
 
 
-static TIMER_CALLBACK( cpu3_interrupt_callback )
+TIMER_CALLBACK_MEMBER(galaga_state::cpu3_interrupt_callback)
 {
-	galaga_state *state = machine.driver_data<galaga_state>();
 	int scanline = param;
 
-	if(state->m_sub2_nmi_mask)
-		nmi_line_pulse(machine.device("sub2"));
+	if(m_sub2_nmi_mask)
+		nmi_line_pulse(machine().device("sub2")->execute());
 
 	scanline = scanline + 128;
 	if (scanline >= 272)
 		scanline = 64;
 
 	/* the vertical synch chain is clocked by H256 -- this is probably not important, but oh well */
-	state->m_cpu3_interrupt_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_cpu3_interrupt_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -878,7 +877,7 @@ MACHINE_START_MEMBER(galaga_state,galaga)
 {
 
 	/* create the interrupt timer */
-	m_cpu3_interrupt_timer = machine().scheduler().timer_alloc(FUNC(cpu3_interrupt_callback));
+	m_cpu3_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(galaga_state::cpu3_interrupt_callback),this));
 	m_custom_mod = 0;
 	state_save_register_global(machine(), m_custom_mod);
 	save_item(NAME(m_main_irq_mask));
@@ -889,12 +888,12 @@ MACHINE_START_MEMBER(galaga_state,galaga)
 static void bosco_latch_reset(running_machine &machine)
 {
 	galaga_state *state = machine.driver_data<galaga_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0;i < 8;i++)
-		state->bosco_latch_w(*space,i,0);
+		state->bosco_latch_w(space,i,0);
 }
 
 MACHINE_RESET_MEMBER(galaga_state,galaga)
@@ -1637,20 +1636,18 @@ static const samples_interface battles_samples_interface =
 };
 
 
-static INTERRUPT_GEN( main_vblank_irq )
+INTERRUPT_GEN_MEMBER(galaga_state::main_vblank_irq)
 {
-	galaga_state *state = device->machine().driver_data<galaga_state>();
 
-	if(state->m_main_irq_mask)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if(m_main_irq_mask)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
-static INTERRUPT_GEN( sub_vblank_irq )
+INTERRUPT_GEN_MEMBER(galaga_state::sub_vblank_irq)
 {
-	galaga_state *state = device->machine().driver_data<galaga_state>();
 
-	if(state->m_sub_irq_mask)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if(m_sub_irq_mask)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 const namco_06xx_config bosco_namco_06xx_0_intf =
@@ -1673,11 +1670,11 @@ static MACHINE_CONFIG_START( bosco, bosco_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(bosco_map)
-	MCFG_CPU_VBLANK_INT("screen", main_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  main_vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(bosco_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  sub_vblank_irq)
 
 	MCFG_CPU_ADD("sub2", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(bosco_map)
@@ -1700,8 +1697,8 @@ static MACHINE_CONFIG_START( bosco, bosco_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 288, 264, 16, 224+16)
-	MCFG_SCREEN_UPDATE_STATIC(bosco)
-	MCFG_SCREEN_VBLANK_STATIC(bosco)
+	MCFG_SCREEN_UPDATE_DRIVER(bosco_state, screen_update_bosco)
+	MCFG_SCREEN_VBLANK_DRIVER(bosco_state, screen_eof_bosco)
 
 	MCFG_GFXDECODE(bosco)
 	MCFG_PALETTE_LENGTH(64*4+64*4+4+64)
@@ -1733,11 +1730,11 @@ static MACHINE_CONFIG_START( galaga, galaga_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(galaga_map)
-	MCFG_CPU_VBLANK_INT("screen", main_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  main_vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(galaga_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  sub_vblank_irq)
 
 	MCFG_CPU_ADD("sub2", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(galaga_map)
@@ -1756,8 +1753,8 @@ static MACHINE_CONFIG_START( galaga, galaga_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 288, 264, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(galaga)
-	MCFG_SCREEN_VBLANK_STATIC(galaga)
+	MCFG_SCREEN_UPDATE_DRIVER(galaga_state, screen_update_galaga)
+	MCFG_SCREEN_VBLANK_DRIVER(galaga_state, screen_eof_galaga)
 
 	MCFG_GFXDECODE(galaga)
 	MCFG_PALETTE_LENGTH(64*4+64*4+64)
@@ -1810,11 +1807,11 @@ static MACHINE_CONFIG_START( xevious, xevious_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(xevious_map)
-	MCFG_CPU_VBLANK_INT("screen", main_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  main_vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80,MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(xevious_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  sub_vblank_irq)
 
 	MCFG_CPU_ADD("sub2", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(xevious_map)
@@ -1834,7 +1831,7 @@ static MACHINE_CONFIG_START( xevious, xevious_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 288, 264, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(xevious)
+	MCFG_SCREEN_UPDATE_DRIVER(xevious_state, screen_update_xevious)
 
 	MCFG_GFXDECODE(xevious)
 	MCFG_PALETTE_LENGTH(128*4+64*8+64*2)
@@ -1873,9 +1870,9 @@ static MACHINE_CONFIG_DERIVED( battles, xevious )
 
 	MCFG_CPU_ADD("sub3", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(battles_mem4)
-	MCFG_CPU_VBLANK_INT("screen", battles_interrupt_4)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", xevious_state, battles_interrupt_4)
 
-	MCFG_TIMER_ADD("battles_nmi", battles_nmi_generate)
+	MCFG_TIMER_DRIVER_ADD("battles_nmi", xevious_state, battles_nmi_generate)
 
 	MCFG_MACHINE_RESET_OVERRIDE(xevious_state,battles)
 
@@ -1899,11 +1896,11 @@ static MACHINE_CONFIG_START( digdug, digdug_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(digdug_map)
-	MCFG_CPU_VBLANK_INT("screen", main_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  main_vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(digdug_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaga_state,  sub_vblank_irq)
 
 	MCFG_CPU_ADD("sub2", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(digdug_map)
@@ -1923,7 +1920,7 @@ static MACHINE_CONFIG_START( digdug, digdug_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 288, 264, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(digdug)
+	MCFG_SCREEN_UPDATE_DRIVER(digdug_state, screen_update_digdug)
 
 	MCFG_GFXDECODE(digdug)
 	MCFG_PALETTE_LENGTH(16*2+64*4+64*4)
@@ -3314,7 +3311,7 @@ DRIVER_INIT_MEMBER(galaga_state,gatsbee)
 	DRIVER_INIT_CALL(galaga);
 
 	/* Gatsbee has a larger character ROM, we need a handler for banking */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x1000, 0x1000, write8_delegate(FUNC(galaga_state::gatsbee_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x1000, 0x1000, write8_delegate(FUNC(galaga_state::gatsbee_bank_w),this));
 }
 
 
@@ -3355,8 +3352,8 @@ DRIVER_INIT_MEMBER(xevious_state,xevios)
 DRIVER_INIT_MEMBER(xevious_state,battles)
 {
 	/* replace the Namco I/O handlers with interface to the 4th CPU */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x7000, 0x700f, FUNC(battles_customio_data0_r), FUNC(battles_customio_data0_w) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x7100, 0x7100, FUNC(battles_customio0_r), FUNC(battles_customio0_w) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(0x7000, 0x700f, FUNC(battles_customio_data0_r), FUNC(battles_customio_data0_w) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(0x7100, 0x7100, FUNC(battles_customio0_r), FUNC(battles_customio0_w) );
 
 	DRIVER_INIT_CALL(xevious);
 }

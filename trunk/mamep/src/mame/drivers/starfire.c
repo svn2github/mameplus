@@ -263,12 +263,12 @@ static MACHINE_CONFIG_START( starfire, starfire_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, STARFIRE_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", starfire_state,  nmi_line_pulse)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(STARFIRE_PIXEL_CLOCK, STARFIRE_HTOTAL, STARFIRE_HBEND, STARFIRE_HBSTART, STARFIRE_VTOTAL, STARFIRE_VBEND, STARFIRE_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(starfire)
+	MCFG_SCREEN_UPDATE_DRIVER(starfire_state, screen_update_starfire)
 
 
 	/* audio hardware */

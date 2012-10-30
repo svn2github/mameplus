@@ -1170,7 +1170,7 @@ WRITE16_MEMBER( segas16b_state::standard_io_w )
 
 WRITE16_MEMBER( segas16b_state::atomicp_sound_w )
 {
-	ym2413_w(m_ym2413, offset, data >> 8);
+	ym2413_w(m_ym2413, space, offset, data >> 8);
 }
 
 
@@ -1369,14 +1369,14 @@ void segas16b_state::altbeast_common_i8751_sim(offs_t soundoffs, offs_t inputoff
 	m_maincpu->set_input_line(4, HOLD_LINE);
 
 	// set tile banks
-	address_space *space = m_maincpu->space(AS_PROGRAM);
-	rom_5704_bank_w(*space, 1, m_workram[0x3094/2] & 0x00ff, 0x00ff);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
+	rom_5704_bank_w(space, 1, m_workram[0x3094/2] & 0x00ff, 0x00ff);
 
 	// process any new sound data
 	UINT16 temp = m_workram[soundoffs];
 	if ((temp & 0xff00) != 0x0000)
 	{
-		m_mapper->write(*space, 0x03, temp >> 8);
+		m_mapper->write(space, 0x03, temp >> 8);
 		m_workram[soundoffs] = temp & 0x00ff;
 	}
 
@@ -1414,8 +1414,8 @@ void segas16b_state::ddux_i8751_sim()
 	UINT16 temp = m_workram[0x0bd0/2];
 	if ((temp & 0xff00) != 0x0000)
 	{
-		address_space *space = m_maincpu->space(AS_PROGRAM);
-		m_mapper->write(*space, 0x03, temp >> 8);
+		address_space &space = m_maincpu->space(AS_PROGRAM);
+		m_mapper->write(space, 0x03, temp >> 8);
 		m_workram[0x0bd0/2] = temp & 0x00ff;
 	}
 }
@@ -1444,8 +1444,8 @@ void segas16b_state::goldnaxe_i8751_sim()
 	UINT16 temp = m_workram[0x2cfc/2];
 	if ((temp & 0xff00) != 0x0000)
 	{
-		address_space *space = m_maincpu->space(AS_PROGRAM);
-		m_mapper->write(*space, 0x03, temp >> 8);
+		address_space &space = m_maincpu->space(AS_PROGRAM);
+		m_mapper->write(space, 0x03, temp >> 8);
 		m_workram[0x2cfc/2] = temp & 0x00ff;
 	}
 
@@ -1471,8 +1471,8 @@ void segas16b_state::tturf_i8751_sim()
 	temp = m_workram[0x01d0/2];
 	if ((temp & 0xff00) != 0x0000)
 	{
-		address_space *space = m_maincpu->space(AS_PROGRAM);
-		m_mapper->write(*space, 0x03, temp);
+		address_space &space = m_maincpu->space(AS_PROGRAM);
+		m_mapper->write(space, 0x03, temp);
 		m_workram[0x01d0/2] = temp & 0x00ff;
 	}
 
@@ -1497,8 +1497,8 @@ void segas16b_state::wb3_i8751_sim()
 	UINT16 temp = m_workram[0x0008/2];
 	if ((temp & 0x00ff) != 0x0000)
 	{
-		address_space *space = m_maincpu->space(AS_PROGRAM);
-		m_mapper->write(*space, 0x03, temp >> 8);
+		address_space &space = m_maincpu->space(AS_PROGRAM);
+		m_mapper->write(space, 0x03, temp >> 8);
 		m_workram[0x0008/2] = temp & 0xff00;
 	}
 }
@@ -1620,9 +1620,9 @@ WRITE16_MEMBER( segas16b_state::hwchamp_custom_io_w )
 					// bit 4 is GONG
 			//      if (data & 0x10) popmessage("GONG");
 					// are the following really lamps?
-			//      set_led_status(space->machine(), 1,data & 0x20);
-			//      set_led_status(space->machine(), 2,data & 0x40);
-			//      set_led_status(space->machine(), 3,data & 0x80);
+			//      set_led_status(space.machine(), 1,data & 0x20);
+			//      set_led_status(space.machine(), 2,data & 0x40);
+			//      set_led_status(space.machine(), 3,data & 0x80);
 					break;
 			}
 			break;
@@ -1768,7 +1768,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, segas16b_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE_LEGACY("ym2151", ym2151_r, ym2151_w)
+	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE("ym2151", ym2151_device, read, write)
 	AM_RANGE(0x40, 0x40) AM_MIRROR(0x3f) AM_WRITE(upd7759_control_w)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3f) AM_READ(upd7759_status_r) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
 	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x3f) AM_READ(soundlatch_byte_r)
@@ -3286,7 +3286,7 @@ static MACHINE_CONFIG_START( system16b, segas16b_state )
 	// basic machine hardware
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK_10MHz)
 	MCFG_CPU_PROGRAM_MAP(system16b_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segas16b_state, irq4_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80, MASTER_CLOCK_10MHz/2)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -3309,7 +3309,7 @@ static MACHINE_CONFIG_START( system16b, segas16b_state )
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ym2151", YM2151, MASTER_CLOCK_8MHz/2)
+	MCFG_YM2151_ADD("ym2151", MASTER_CLOCK_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.43)
 
 	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)
@@ -3321,19 +3321,19 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( system16b_fd1089a, system16b )
 	MCFG_CPU_REPLACE("maincpu", FD1089A, MASTER_CLOCK_10MHz)
 	MCFG_CPU_PROGRAM_MAP(system16b_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segas16b_state, irq4_line_hold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( system16b_fd1089b, system16b )
 	MCFG_CPU_REPLACE("maincpu", FD1089B, MASTER_CLOCK_10MHz)
 	MCFG_CPU_PROGRAM_MAP(system16b_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segas16b_state, irq4_line_hold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( system16b_fd1094, system16b )
 	MCFG_CPU_REPLACE("maincpu", FD1094, MASTER_CLOCK_10MHz)
 	MCFG_CPU_PROGRAM_MAP(system16b_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segas16b_state, irq4_line_hold)
 MACHINE_CONFIG_END
 
 
@@ -7122,7 +7122,7 @@ static MACHINE_CONFIG_DERIVED_CLASS( isgsm, system16b, isgsm_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 16000000) // no obvious CPU, but seems to be clocked faster than an original system16 based on the boot times
 	MCFG_CPU_PROGRAM_MAP(isgsm_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", isgsm_state, irq4_line_hold)
 
 MACHINE_CONFIG_END
 

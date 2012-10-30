@@ -117,11 +117,10 @@ WRITE8_MEMBER(dynax_state::dynax_blitter_ack_w)
 	sprtmtch_update_irq(machine());
 }
 
-static INTERRUPT_GEN( sprtmtch_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(dynax_state::sprtmtch_vblank_interrupt)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-	state->m_vblank_irq = 1;
-	sprtmtch_update_irq(device->machine());
+	m_vblank_irq = 1;
+	sprtmtch_update_irq(machine());
 }
 
 static void sprtmtch_sound_callback( device_t *device, int state )
@@ -162,11 +161,10 @@ WRITE8_MEMBER(dynax_state::jantouki_blitter2_ack_w)
 	jantouki_update_irq(machine());
 }
 
-static INTERRUPT_GEN( jantouki_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(dynax_state::jantouki_vblank_interrupt)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-	state->m_vblank_irq = 1;
-	jantouki_update_irq(device->machine());
+	m_vblank_irq = 1;
+	jantouki_update_irq(machine());
 }
 
 
@@ -181,11 +179,10 @@ static void jantouki_sound_update_irq(running_machine &machine)
 	state->m_soundcpu->set_input_line_and_vector(0, irq ? ASSERT_LINE : CLEAR_LINE, 0xc7 | irq); /* rst $xx */
 }
 
-static INTERRUPT_GEN( jantouki_sound_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(dynax_state::jantouki_sound_vblank_interrupt)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-	state->m_sound_vblank_irq = 1;
-	jantouki_sound_update_irq(device->machine());
+	m_sound_vblank_irq = 1;
+	jantouki_sound_update_irq(machine());
 }
 
 WRITE8_MEMBER(dynax_state::jantouki_sound_vblank_ack_w)
@@ -1636,8 +1633,8 @@ WRITE8_MEMBER(dynax_state::gekisha_8000_w)
 			case 0x8050:	// CRT controller
 			case 0x8051:	return;
 
-			case 0x8070:	ym2413_register_port_w(m_ymsnd, 0, data);	return;
-			case 0x8071:	ym2413_data_port_w(m_ymsnd, 0, data);	return;
+			case 0x8070:	ym2413_register_port_w(m_ymsnd, space, 0, data);	return;
+			case 0x8071:	ym2413_data_port_w(m_ymsnd, space, 0, data);	return;
 
 			case 0x8060:	m_keyb = data;	return;
 
@@ -4288,7 +4285,7 @@ static MACHINE_CONFIG_START( hanamai, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80,22000000 / 4)	/* 5.5MHz */
 	MCFG_CPU_PROGRAM_MAP(sprtmtch_mem_map)
 	MCFG_CPU_IO_MAP(hanamai_io_map)
-	MCFG_CPU_VBLANK_INT("screen", sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hanamai)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4301,7 +4298,7 @@ static MACHINE_CONFIG_START( hanamai, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1-4, 16+8, 255-8)
-	MCFG_SCREEN_UPDATE_STATIC(hanamai)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_hanamai)
 
 	MCFG_PALETTE_LENGTH(512)
 
@@ -4345,7 +4342,7 @@ static MACHINE_CONFIG_START( hnoridur, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80,22000000 / 4)	/* 5.5MHz */
 	MCFG_CPU_PROGRAM_MAP(hnoridur_mem_map)
 	MCFG_CPU_IO_MAP(hnoridur_io_map)
-	MCFG_CPU_VBLANK_INT("screen", sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hnoridur)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4358,7 +4355,7 @@ static MACHINE_CONFIG_START( hnoridur, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1-4, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(hnoridur)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_hnoridur)
 
 	MCFG_PALETTE_LENGTH(16*256)
 
@@ -4390,7 +4387,7 @@ static MACHINE_CONFIG_START( hjingi, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_22MHz / 4)
 	MCFG_CPU_PROGRAM_MAP(hjingi_mem_map)
 	MCFG_CPU_IO_MAP(hjingi_io_map)
-	MCFG_CPU_VBLANK_INT("screen", sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hnoridur)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4403,7 +4400,7 @@ static MACHINE_CONFIG_START( hjingi, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1-4, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(hnoridur)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_hnoridur)
 
 	MCFG_PALETTE_LENGTH(16*256)
 
@@ -4448,7 +4445,7 @@ static MACHINE_CONFIG_START( sprtmtch, dynax_state )
 	MCFG_CPU_ADD("maincpu", Z80,22000000 / 4)	/* 5.5MHz */
 	MCFG_CPU_PROGRAM_MAP(sprtmtch_mem_map)
 	MCFG_CPU_IO_MAP(sprtmtch_io_map)
-	MCFG_CPU_VBLANK_INT("screen", sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hanamai)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4461,7 +4458,7 @@ static MACHINE_CONFIG_START( sprtmtch, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(sprtmtch)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_sprtmtch)
 
 	MCFG_PALETTE_LENGTH(512)
 
@@ -4490,7 +4487,7 @@ static MACHINE_CONFIG_START( mjfriday, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80,24000000/4)	/* 6 MHz? */
 	MCFG_CPU_PROGRAM_MAP(sprtmtch_mem_map)
 	MCFG_CPU_IO_MAP(mjfriday_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  irq0_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hanamai)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4503,7 +4500,7 @@ static MACHINE_CONFIG_START( mjfriday, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(mjdialq2)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_mjdialq2)
 
 	MCFG_PALETTE_LENGTH(512)
 
@@ -4538,17 +4535,16 @@ MACHINE_CONFIG_END
   what was it trying to do?
   set an irq and clear it before its even taken? */
 
-static INTERRUPT_GEN( yarunara_clock_interrupt )
+INTERRUPT_GEN_MEMBER(dynax_state::yarunara_clock_interrupt)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-	state->m_yarunara_clk_toggle ^= 1;
+	m_yarunara_clk_toggle ^= 1;
 
-	if (state->m_yarunara_clk_toggle == 1)
-		state->m_sound_irq = 0;
+	if (m_yarunara_clk_toggle == 1)
+		m_sound_irq = 0;
 	else
-		state->m_sound_irq = 1;
+		m_sound_irq = 1;
 
-	sprtmtch_update_irq(device->machine());
+	sprtmtch_update_irq(machine());
 }
 
 static MSM6242_INTERFACE( yarunara_rtc_intf )
@@ -4562,7 +4558,7 @@ static MACHINE_CONFIG_DERIVED( yarunara, hnoridur )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(yarunara_mem_map)
 	MCFG_CPU_IO_MAP(yarunara_io_map)
-	MCFG_CPU_PERIODIC_INT(yarunara_clock_interrupt, 60)	// RTC
+	MCFG_CPU_PERIODIC_INT_DRIVER(dynax_state, yarunara_clock_interrupt,  60)	// RTC
 
 	MCFG_NVRAM_REPLACE_0FILL("nvram")
 
@@ -4646,12 +4642,12 @@ static MACHINE_CONFIG_START( jantouki, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80,22000000 / 4)	/* 5.5MHz */
 	MCFG_CPU_PROGRAM_MAP(jantouki_mem_map)
 	MCFG_CPU_IO_MAP(jantouki_io_map)
-	MCFG_CPU_VBLANK_INT("top", jantouki_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("top", dynax_state,  jantouki_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
 
 	MCFG_CPU_ADD("soundcpu",Z80,22000000 / 4)	/* 5.5MHz */
 	MCFG_CPU_PROGRAM_MAP(jantouki_sound_mem_map)
 	MCFG_CPU_IO_MAP(jantouki_sound_io_map)
-	MCFG_CPU_VBLANK_INT("top", jantouki_sound_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("top", dynax_state,  jantouki_sound_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,jantouki)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4667,14 +4663,14 @@ static MACHINE_CONFIG_START( jantouki, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(jantouki_top)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_jantouki_top)
 
 	MCFG_SCREEN_ADD("bottom", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(jantouki_bottom)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_jantouki_bottom)
 
 	MCFG_PALETTE_INIT_OVERRIDE(dynax_state,sprtmtch)			// static palette
 	MCFG_VIDEO_START_OVERRIDE(dynax_state,jantouki)
@@ -4715,21 +4711,20 @@ void mjelctrn_update_irq( running_machine &machine )
 	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xfa);
 }
 
-static INTERRUPT_GEN( mjelctrn_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(dynax_state::mjelctrn_vblank_interrupt)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
 
 	// This is a kludge to avoid losing blitter interrupts
 	// there should be a vblank ack mechanism
-	if (!state->m_blitter_irq)
-		device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xf8);
+	if (!m_blitter_irq)
+		device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xf8);
 }
 
 static MACHINE_CONFIG_DERIVED( mjelctrn, hnoridur )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(nanajign_mem_map)
 	MCFG_CPU_IO_MAP(mjelctrn_io_map)
-	MCFG_CPU_VBLANK_INT("screen", mjelctrn_vblank_interrupt)	/* IM 2 needs a vector on the data bus */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  mjelctrn_vblank_interrupt)	/* IM 2 needs a vector on the data bus */
 
 	MCFG_VIDEO_START_OVERRIDE(dynax_state,mjelctrn)
 MACHINE_CONFIG_END
@@ -4750,24 +4745,23 @@ void neruton_update_irq( running_machine &machine )
 	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x42);
 }
 
-static TIMER_DEVICE_CALLBACK( neruton_irq_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(dynax_state::neruton_irq_scanline)
 {
-	dynax_state *state = timer.machine().driver_data<dynax_state>();
 	int scanline = param;
 
 	// This is a kludge to avoid losing blitter interrupts
 	// there should be a vblank ack mechanism
-	if (state->m_blitter_irq)	return;
+	if (m_blitter_irq)	return;
 
 	if(scanline == 256)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x40);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x40);
 	else if((scanline % 32) == 0)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x46);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x46);
 }
 
 static MACHINE_CONFIG_DERIVED( neruton, mjelctrn )
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_TIMER_ADD_SCANLINE("scantimer", neruton_irq_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dynax_state, neruton_irq_scanline, "screen", 0, 1)
 
 	MCFG_VIDEO_START_OVERRIDE(dynax_state,neruton)
 MACHINE_CONFIG_END
@@ -4780,24 +4774,23 @@ MACHINE_CONFIG_END
     0x42 and 0x44 are very similar, they should be triggered by the blitter
     0x40 is vblank  */
 
-static TIMER_DEVICE_CALLBACK( majxtal7_vblank_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(dynax_state::majxtal7_vblank_interrupt)
 {
-	dynax_state *state = timer.machine().driver_data<dynax_state>();
 	int scanline = param;
 
 	// This is a kludge to avoid losing blitter interrupts
 	// there should be a vblank ack mechanism
-	if (state->m_blitter_irq)	return;
+	if (m_blitter_irq)	return;
 
 	if(scanline == 256)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x40);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x40);
 	else if((scanline % 32) == 0)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x44); // temp kludge
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x44); // temp kludge
 }
 
 static MACHINE_CONFIG_DERIVED( majxtal7, neruton )
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(majxtal7_vblank_interrupt)
+	MCFG_TIMER_DRIVER_CALLBACK(dynax_state, majxtal7_vblank_interrupt)
 MACHINE_CONFIG_END
 
 
@@ -4826,8 +4819,8 @@ static MACHINE_CONFIG_START( htengoku, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80,20000000 / 4)
 	MCFG_CPU_PROGRAM_MAP(yarunara_mem_map)
 	MCFG_CPU_IO_MAP(htengoku_io_map)
-	MCFG_CPU_VBLANK_INT("screen", sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
-	MCFG_CPU_PERIODIC_INT(yarunara_clock_interrupt, 60)	// RTC
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  sprtmtch_vblank_interrupt)	/* IM 0 needs an opcode on the data bus */
+	MCFG_CPU_PERIODIC_INT_DRIVER(dynax_state, yarunara_clock_interrupt,  60)	// RTC
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,htengoku)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4840,7 +4833,7 @@ static MACHINE_CONFIG_START( htengoku, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 0+8, 256-1-8)
-	MCFG_SCREEN_UPDATE_STATIC(htengoku)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_htengoku)
 
 	MCFG_PALETTE_LENGTH(16*256)
 
@@ -4866,16 +4859,15 @@ MACHINE_CONFIG_END
                                Mahjong Tenkaigen
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( tenkai_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(dynax_state::tenkai_interrupt)
 {
-	dynax_state *state = timer.machine().driver_data<dynax_state>();
 	int scanline = param;
 
 	if(scanline == 256)
-		state->m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line(INPUT_LINE_IRQ1, HOLD_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_IRQ1, HOLD_LINE);
 }
 
 static const ay8910_interface tenkai_ay8910_interface =
@@ -4910,7 +4902,7 @@ static MACHINE_CONFIG_START( tenkai, dynax_state )
 	MCFG_CPU_ADD("maincpu",TMP91640, 21472700 / 2)
 	MCFG_CPU_PROGRAM_MAP(tenkai_map)
 	MCFG_CPU_IO_MAP(tenkai_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", tenkai_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dynax_state, tenkai_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,tenkai)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,dynax)
@@ -4923,7 +4915,7 @@ static MACHINE_CONFIG_START( tenkai, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(4, 512-1, 4, 255-8-4)	// hide first 4 horizontal pixels (see scroll of gal 4 in test mode)
-	MCFG_SCREEN_UPDATE_STATIC(hnoridur)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_hnoridur)
 
 	MCFG_PALETTE_LENGTH(16*256)
 
@@ -4979,7 +4971,7 @@ static MACHINE_CONFIG_START( gekisha, dynax_state )
 	MCFG_CPU_ADD("maincpu",TMP90841, XTAL_10MHz )	// ?
 	MCFG_CPU_PROGRAM_MAP(gekisha_map)
 	MCFG_CPU_IO_MAP(gekisha_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state,  irq0_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,gekisha)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,gekisha)
@@ -4992,7 +4984,7 @@ static MACHINE_CONFIG_START( gekisha, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(2, 256-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(mjdialq2)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_mjdialq2)
 
 	MCFG_PALETTE_LENGTH(512)
 	MCFG_PALETTE_INIT_OVERRIDE(dynax_state,sprtmtch)			// static palette
@@ -6482,7 +6474,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(dynax_state,mjreach)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x10060, 0x10060, write8_delegate(FUNC(dynax_state::yarunara_flipscreen_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x10060, 0x10060, write8_delegate(FUNC(dynax_state::yarunara_flipscreen_w),this));
 }
 
 /***************************************************************************

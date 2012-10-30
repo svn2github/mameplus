@@ -210,12 +210,11 @@
 #include "video/avgdvg.h"
 #include "machine/mathbox.h"
 #include "machine/atari_vg.h"
-#include "rendlay.h"
 #include "includes/bzone.h"
-
 #include "sound/pokey.h"
 
 #include "bzone.lh"
+#include "redbaron.lh"
 
 
 /*************************************
@@ -244,10 +243,10 @@ MACHINE_START_MEMBER(bzone_state,redbaron)
  *
  *************************************/
 
-static INTERRUPT_GEN( bzone_interrupt )
+INTERRUPT_GEN_MEMBER(bzone_state::bzone_interrupt)
 {
-	if (device->machine().root_device().ioport("IN0")->read() & 0x10)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (machine().root_device().ioport("IN0")->read() & 0x10)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -286,7 +285,7 @@ WRITE8_MEMBER(bzone_state::redbaron_joysound_w)
 {
 	device_t *device = machine().device("custom");
 	m_rb_input_select = data & 1;
-	redbaron_sounds_w(device, offset, data);
+	redbaron_sounds_w(device, space, offset, data);
 }
 
 
@@ -311,7 +310,7 @@ static ADDRESS_MAP_START( bzone_map, AS_PROGRAM, 8, bzone_state )
 	AM_RANGE(0x1810, 0x1810) AM_DEVREAD_LEGACY("mathbox", mathbox_lo_r)
 	AM_RANGE(0x1818, 0x1818) AM_DEVREAD_LEGACY("mathbox", mathbox_hi_r)
 	AM_RANGE(0x1820, 0x182f) AM_DEVREADWRITE("pokey", pokey_device, read, write)
-	AM_RANGE(0x1840, 0x1840) AM_DEVWRITE_LEGACY("discrete", bzone_sounds_w)
+	AM_RANGE(0x1840, 0x1840) AM_WRITE(bzone_sounds_w)
 	AM_RANGE(0x1860, 0x187f) AM_DEVWRITE_LEGACY("mathbox", mathbox_go_w)
 	AM_RANGE(0x2000, 0x2fff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x2000)
 	AM_RANGE(0x3000, 0x7fff) AM_ROM
@@ -553,7 +552,7 @@ static MACHINE_CONFIG_START( bzone_base, bzone_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, BZONE_MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(bzone_map)
-	MCFG_CPU_PERIODIC_INT(bzone_interrupt, (double)BZONE_MASTER_CLOCK / 4096 / 12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bzone_state, bzone_interrupt,  (double)BZONE_MASTER_CLOCK / 4096 / 12)
 
 
 	/* video hardware */
@@ -584,7 +583,7 @@ static MACHINE_CONFIG_DERIVED( redbaron, bzone_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(redbaron_map)
-	MCFG_CPU_PERIODIC_INT(bzone_interrupt, (double)BZONE_MASTER_CLOCK / 4096 / 12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bzone_state, bzone_interrupt,  (double)BZONE_MASTER_CLOCK / 4096 / 12)
 
 	MCFG_MACHINE_START_OVERRIDE(bzone_state,redbaron)
 
@@ -876,12 +875,12 @@ WRITE8_MEMBER(bzone_state::analog_select_w)
 
 DRIVER_INIT_MEMBER(bzone_state,bradley)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space->install_ram(0x400, 0x7ff);
-	space->install_read_port(0x1808, 0x1808, "1808");
-	space->install_read_port(0x1809, 0x1809, "1809");
-	space->install_read_handler(0x180a, 0x180a, read8_delegate(FUNC(bzone_state::analog_data_r),this));
-	space->install_write_handler(0x1848, 0x1850, write8_delegate(FUNC(bzone_state::analog_select_w),this));
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space.install_ram(0x400, 0x7ff);
+	space.install_read_port(0x1808, 0x1808, "1808");
+	space.install_read_port(0x1809, 0x1809, "1809");
+	space.install_read_handler(0x180a, 0x180a, read8_delegate(FUNC(bzone_state::analog_data_r),this));
+	space.install_write_handler(0x1848, 0x1850, write8_delegate(FUNC(bzone_state::analog_select_w),this));
 }
 
 
@@ -896,5 +895,5 @@ GAMEL(1980, bzone,     0,        bzone,    bzone, driver_device,    0,       ROT
 GAMEL(1980, bzonea,    bzone,    bzone,    bzone, driver_device,    0,       ROT0, "Atari", "Battle Zone (rev 1)", GAME_SUPPORTS_SAVE, layout_bzone )
 GAMEL(1980, bzonec,    bzone,    bzone,    bzone, driver_device,    0,       ROT0, "Atari", "Battle Zone (cocktail)", GAME_SUPPORTS_SAVE|GAME_NO_COCKTAIL, layout_bzone )
 GAME( 1980, bradley,   0,        bzone,    bradley, bzone_state,  bradley, ROT0, "Atari", "Bradley Trainer", GAME_SUPPORTS_SAVE )
-GAMEL(1980, redbaron,  0,        redbaron, redbaron, driver_device, 0,       ROT0, "Atari", "Red Baron (Revised Hardware)", GAME_SUPPORTS_SAVE, layout_ho88ffff )
-GAMEL(1980, redbarona, redbaron, redbaron, redbaron, driver_device, 0,       ROT0, "Atari", "Red Baron", GAME_SUPPORTS_SAVE, layout_ho88ffff )
+GAMEL(1980, redbaron,  0,        redbaron, redbaron, driver_device, 0,       ROT0, "Atari", "Red Baron (Revised Hardware)", GAME_SUPPORTS_SAVE, layout_redbaron )
+GAMEL(1980, redbarona, redbaron, redbaron, redbaron, driver_device, 0,       ROT0, "Atari", "Red Baron", GAME_SUPPORTS_SAVE, layout_redbaron )

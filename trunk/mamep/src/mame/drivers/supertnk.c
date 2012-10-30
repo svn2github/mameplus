@@ -125,6 +125,8 @@ public:
 	DECLARE_DRIVER_INIT(supertnk);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_supertnk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(supertnk_interrupt);
 };
 
 
@@ -166,10 +168,10 @@ WRITE8_MEMBER(supertnk_state::supertnk_bankswitch_1_w)
  *
  *************************************/
 
-static INTERRUPT_GEN( supertnk_interrupt )
+INTERRUPT_GEN_MEMBER(supertnk_state::supertnk_interrupt)
 {
 	/* On a TMS9980, a 6 on the interrupt bus means a level 4 interrupt */
-	device->execute().set_input_line_and_vector(0, ASSERT_LINE, 6);
+	device.execute().set_input_line_and_vector(0, ASSERT_LINE, 6);
 }
 
 
@@ -245,9 +247,8 @@ WRITE8_MEMBER(supertnk_state::supertnk_bitplane_select_1_w)
 }
 
 
-static SCREEN_UPDATE_RGB32( supertnk )
+UINT32 supertnk_state::screen_update_supertnk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	supertnk_state *state = screen.machine().driver_data<supertnk_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < 0x2000; offs++)
@@ -257,14 +258,14 @@ static SCREEN_UPDATE_RGB32( supertnk )
 		UINT8 y = offs >> 5;
 		UINT8 x = offs << 3;
 
-		UINT8 data0 = state->m_videoram[0][offs];
-		UINT8 data1 = state->m_videoram[1][offs];
-		UINT8 data2 = state->m_videoram[2][offs];
+		UINT8 data0 = m_videoram[0][offs];
+		UINT8 data1 = m_videoram[1][offs];
+		UINT8 data2 = m_videoram[2][offs];
 
 		for (i = 0; i < 8; i++)
 		{
 			UINT8 color = ((data0 & 0x80) >> 5) | ((data1 & 0x80) >> 6) | ((data2 & 0x80) >> 7);
-			bitmap.pix32(y, x) = state->m_pens[color];
+			bitmap.pix32(y, x) = m_pens[color];
 
 			data0 = data0 << 1;
 			data1 = data1 << 1;
@@ -287,12 +288,12 @@ static SCREEN_UPDATE_RGB32( supertnk )
 
 void supertnk_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	supertnk_bankswitch_0_w(*space, 0, 0);
-	supertnk_bankswitch_1_w(*space, 0, 0);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	supertnk_bankswitch_0_w(space, 0, 0);
+	supertnk_bankswitch_1_w(space, 0, 0);
 
-	supertnk_bitplane_select_0_w(*space, 0, 0);
-	supertnk_bitplane_select_1_w(*space, 0, 0);
+	supertnk_bitplane_select_0_w(space, 0, 0);
+	supertnk_bitplane_select_1_w(space, 0, 0);
 }
 
 
@@ -429,7 +430,7 @@ static MACHINE_CONFIG_START( supertnk, supertnk_state )
 	MCFG_CPU_ADD("maincpu", TMS9980L, 2598750) /* ? to which frequency is the 20.79 Mhz crystal mapped down? */
 	MCFG_CPU_PROGRAM_MAP(supertnk_map)
 	MCFG_CPU_IO_MAP(supertnk_io_map)
-	MCFG_CPU_VBLANK_INT("screen", supertnk_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", supertnk_state,  supertnk_interrupt)
 
 
 	/* video hardware */
@@ -439,7 +440,7 @@ static MACHINE_CONFIG_START( supertnk, supertnk_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_UPDATE_STATIC(supertnk)
+	MCFG_SCREEN_UPDATE_DRIVER(supertnk_state, screen_update_supertnk)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

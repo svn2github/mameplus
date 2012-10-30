@@ -167,11 +167,10 @@ READ32_MEMBER(deco_mlc_state::mlc_scanline_r)
 	return machine().primary_screen->vpos();
 }
 
-static TIMER_DEVICE_CALLBACK( interrupt_gen )
+TIMER_DEVICE_CALLBACK_MEMBER(deco_mlc_state::interrupt_gen)
 {
-	deco_mlc_state *state = timer.machine().driver_data<deco_mlc_state>();
 //  logerror("hit scanline IRQ %d (%08x)\n", machine.primary_screen->vpos(), info.i);
-	timer.machine().device("maincpu")->execute().set_input_line(state->m_mainCpuIsArm ? ARM_IRQ_LINE : 1, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(m_mainCpuIsArm ? ARM_IRQ_LINE : 1, HOLD_LINE);
 }
 
 WRITE32_MEMBER(deco_mlc_state::mlc_irq_w)
@@ -384,15 +383,15 @@ static MACHINE_CONFIG_START( avengrgs, deco_mlc_state )
 	MCFG_MACHINE_RESET_OVERRIDE(deco_mlc_state,mlc)
 	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
 
-	MCFG_TIMER_ADD("int_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("int_timer", deco_mlc_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mlc)
-	MCFG_SCREEN_VBLANK_STATIC(mlc)
+	MCFG_SCREEN_UPDATE_DRIVER(deco_mlc_state, screen_update_mlc)
+	MCFG_SCREEN_VBLANK_DRIVER(deco_mlc_state, screen_eof_mlc)
 
 	MCFG_GFXDECODE(deco_mlc)
 	MCFG_PALETTE_LENGTH(2048)
@@ -416,15 +415,15 @@ static MACHINE_CONFIG_START( mlc, deco_mlc_state )
 	MCFG_MACHINE_RESET_OVERRIDE(deco_mlc_state,mlc)
 	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
 
-	MCFG_TIMER_ADD("int_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("int_timer", deco_mlc_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mlc)
-	MCFG_SCREEN_VBLANK_STATIC(mlc)
+	MCFG_SCREEN_UPDATE_DRIVER(deco_mlc_state, screen_update_mlc)
+	MCFG_SCREEN_VBLANK_DRIVER(deco_mlc_state, screen_eof_mlc)
 
 	MCFG_GFXDECODE(deco_mlc)
 	MCFG_PALETTE_LENGTH(2048)
@@ -738,7 +737,7 @@ DRIVER_INIT_MEMBER(deco_mlc_state,avengrgs)
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x32dc);
 
 	m_mainCpuIsArm = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x01089a0, 0x01089a3, read32_delegate(FUNC(deco_mlc_state::avengrgs_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x01089a0, 0x01089a3, read32_delegate(FUNC(deco_mlc_state::avengrgs_speedup_r),this));
 	descramble_sound(machine());
 }
 

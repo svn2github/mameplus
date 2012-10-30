@@ -528,12 +528,12 @@ GFXDECODE_END
 static MACHINE_CONFIG_START( amazon, terracre_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2)	// 8mhz
 	MCFG_CPU_PROGRAM_MAP(amazon_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", terracre_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)		// 4mhz? should be derived from XTAL_22MHz? how?
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_3526_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, XTAL_16MHz/4/512)	// ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(terracre_state, irq0_line_hold,  XTAL_16MHz/4/512)	// ?
 
 	MCFG_MACHINE_START_OVERRIDE(terracre_state,amazon)
 
@@ -542,7 +542,7 @@ static MACHINE_CONFIG_START( amazon, terracre_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amazon)
+	MCFG_SCREEN_UPDATE_DRIVER(terracre_state, screen_update_amazon)
 
 	MCFG_GFXDECODE(terracre)
 	MCFG_PALETTE_LENGTH(1*16+16*16+16*256)
@@ -563,19 +563,19 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( ym3526, terracre_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2)	// 8mhz
 	MCFG_CPU_PROGRAM_MAP(terracre_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", terracre_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)		// 4.0mhz when compared to sound recordings, should be derived from XTAL_22MHz? how?
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_3526_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, XTAL_16MHz/4/512)	// ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(terracre_state, irq0_line_hold,  XTAL_16MHz/4/512)	// ?
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE( 60 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amazon)
+	MCFG_SCREEN_UPDATE_DRIVER(terracre_state, screen_update_amazon)
 
 	MCFG_GFXDECODE(terracre)
 	MCFG_PALETTE_LENGTH(1*16+16*16+16*256)
@@ -596,19 +596,19 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( ym2203, terracre_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2)	// 8mhz
 	MCFG_CPU_PROGRAM_MAP(terracre_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", terracre_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)		// 4.0mhz when compared to sound recordings, should be derived from XTAL_22MHz? how?
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_2203_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, XTAL_16MHz/4/512)	// ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(terracre_state, irq0_line_hold,  XTAL_16MHz/4/512)	// ?
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amazon)
+	MCFG_SCREEN_UPDATE_DRIVER(terracre_state, screen_update_amazon)
 
 	MCFG_GFXDECODE(terracre)
 	MCFG_PALETTE_LENGTH(1*16+16*16+16*256)
@@ -1014,7 +1014,7 @@ DRIVER_INIT_MEMBER(terracre_state,amatelas)
 DRIVER_INIT_MEMBER(terracre_state,horekid)
 {
 	m_mpProtData = mHoreKidProtData;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x44004, 0x44005, read16_delegate(FUNC(terracre_state::horekid_IN2_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x44004, 0x44005, read16_delegate(FUNC(terracre_state::horekid_IN2_r),this));
 }
 
 /*    YEAR, NAME,   PARENT,     MACHINE, INPUT,    INIT,     MONITOR,  COMPANY,      FULLNAME, FLAGS */

@@ -273,20 +273,18 @@ WRITE16_MEMBER(othunder_state::irq_ack_w)
 	update_irq(machine());
 }
 
-static INTERRUPT_GEN( vblank_interrupt )
+INTERRUPT_GEN_MEMBER(othunder_state::vblank_interrupt)
 {
-	othunder_state *state = device->machine().driver_data<othunder_state>();
 
-	state->m_vblank_irq = 1;
-	update_irq(device->machine());
+	m_vblank_irq = 1;
+	update_irq(machine());
 }
 
-static TIMER_CALLBACK( ad_interrupt )
+TIMER_CALLBACK_MEMBER(othunder_state::ad_interrupt)
 {
-	othunder_state *state = machine.driver_data<othunder_state>();
 
-	state->m_ad_irq = 1;
-	update_irq(machine);
+	m_ad_irq = 1;
+	update_irq(machine());
 }
 
 
@@ -340,7 +338,7 @@ WRITE16_MEMBER(othunder_state::othunder_tc0220ioc_w)
 				break;
 
 			default:
-				tc0220ioc_w(m_tc0220ioc, offset, data & 0xff);
+				tc0220ioc_w(m_tc0220ioc, space, offset, data & 0xff);
 		}
 	}
 }
@@ -359,7 +357,7 @@ READ16_MEMBER(othunder_state::othunder_tc0220ioc_r)
 			return (m_eeprom->read_bit() & 1) << 7;
 
 		default:
-			return tc0220ioc_r(m_tc0220ioc, offset);
+			return tc0220ioc_r(m_tc0220ioc, space, offset);
 	}
 }
 
@@ -382,7 +380,7 @@ WRITE16_MEMBER(othunder_state::othunder_lightgun_w)
        The ADC60808 clock is 512kHz. Conversion takes between 0 and 8 clock
        cycles, so would end in a maximum of 15.625us. We'll use 10. */
 
-	machine().scheduler().timer_set(attotime::from_usec(10), FUNC(ad_interrupt));
+	machine().scheduler().timer_set(attotime::from_usec(10), timer_expired_delegate(FUNC(othunder_state::ad_interrupt),this));
 }
 
 
@@ -406,15 +404,15 @@ WRITE8_MEMBER(othunder_state::sound_bankswitch_w)
 WRITE16_MEMBER(othunder_state::othunder_sound_w)
 {
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
 }
 
 READ16_MEMBER(othunder_state::othunder_sound_r)
 {
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, 0) & 0xff));
+		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff));
 	else
 		return 0;
 }
@@ -710,7 +708,7 @@ static MACHINE_CONFIG_START( othunder, othunder_state )
 //  MCFG_CPU_ADD("maincpu", M68000, 24000000/2 )   /* 12 MHz */
 	MCFG_CPU_ADD("maincpu", M68000, 13000000 )	/* fixes garbage graphics on startup */
 	MCFG_CPU_PROGRAM_MAP(othunder_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", othunder_state,  vblank_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4 )	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
@@ -726,7 +724,7 @@ static MACHINE_CONFIG_START( othunder, othunder_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(othunder)
+	MCFG_SCREEN_UPDATE_DRIVER(othunder_state, screen_update_othunder)
 
 	MCFG_GFXDECODE(othunder)
 	MCFG_PALETTE_LENGTH(4096)

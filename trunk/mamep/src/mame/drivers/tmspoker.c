@@ -232,6 +232,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_tmspoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(tmspoker_interrupt);
 };
 
 
@@ -264,10 +266,9 @@ void tmspoker_state::video_start()
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tmspoker_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
-static SCREEN_UPDATE_IND16( tmspoker )
+UINT32 tmspoker_state::screen_update_tmspoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tmspoker_state *state = screen.machine().driver_data<tmspoker_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -285,9 +286,9 @@ void tmspoker_state::palette_init()
 //  popmessage("written : %02X", data);
 //}
 
-static INTERRUPT_GEN( tmspoker_interrupt )
+INTERRUPT_GEN_MEMBER(tmspoker_state::tmspoker_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
+	device.execute().set_input_line_and_vector(0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
 }
 
 
@@ -568,7 +569,7 @@ static MACHINE_CONFIG_START( tmspoker, tmspoker_state )
 	MCFG_CPU_ADD("maincpu", TMS9980L, MASTER_CLOCK/4)	/* guess */
 	MCFG_CPU_PROGRAM_MAP(tmspoker_map)
 	MCFG_CPU_IO_MAP(tmspoker_cru_map)
-	MCFG_CPU_VBLANK_INT("screen", tmspoker_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tmspoker_state,  tmspoker_interrupt)
 
 //  MCFG_NVRAM_HANDLER(generic_0fill)
 
@@ -583,7 +584,7 @@ static MACHINE_CONFIG_START( tmspoker, tmspoker_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_SCREEN_UPDATE_STATIC(tmspoker)
+	MCFG_SCREEN_UPDATE_DRIVER(tmspoker_state, screen_update_tmspoker)
 
 	MCFG_MC6845_ADD("crtc", MC6845, MASTER_CLOCK/4, mc6845_intf) /* guess */
 

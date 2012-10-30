@@ -280,7 +280,7 @@ static MACHINE_CONFIG_START( holeland, holeland_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)        /* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(holeland_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", holeland_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -288,7 +288,7 @@ static MACHINE_CONFIG_START( holeland, holeland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 2*16, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(holeland)
+	MCFG_SCREEN_UPDATE_DRIVER(holeland_state, screen_update_holeland)
 
 	MCFG_GFXDECODE(holeland)
 	MCFG_PALETTE_LENGTH(256)
@@ -348,7 +348,7 @@ static MACHINE_CONFIG_START( crzrally, holeland_state )
 	MCFG_CPU_ADD("maincpu", Z80, 20000000/4)        /* 5 MHz */
 	MCFG_CPU_PROGRAM_MAP(crzrally_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", holeland_state,  irq0_line_hold)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
@@ -358,7 +358,7 @@ static MACHINE_CONFIG_START( crzrally, holeland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(crzrally)
+	MCFG_SCREEN_UPDATE_DRIVER(holeland_state, screen_update_crzrally)
 
 	MCFG_GFXDECODE(crzrally)
 	MCFG_PALETTE_LENGTH(256)

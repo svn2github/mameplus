@@ -88,6 +88,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_cham24(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -142,25 +143,25 @@ WRITE8_MEMBER(cham24_state::sprite_dma_w)
 {
 	int source = (data & 7);
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
-	ppu->spriteram_dma(&space, source);
+	ppu->spriteram_dma(space, source);
 }
 
 READ8_MEMBER(cham24_state::psg_4015_r)
 {
 	device_t *device = machine().device("nes");
-	return nes_psg_r(device,0x15);
+	return nes_psg_r(device,space,0x15);
 }
 
 WRITE8_MEMBER(cham24_state::psg_4015_w)
 {
 	device_t *device = machine().device("nes");
-	nes_psg_w(device,0x15, data);
+	nes_psg_w(device,space,0x15, data);
 }
 
 WRITE8_MEMBER(cham24_state::psg_4017_w)
 {
 	device_t *device = machine().device("nes");
-	nes_psg_w(device,0x17, data);
+	nes_psg_w(device,space,0x17, data);
 }
 
 
@@ -302,10 +303,10 @@ void cham24_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16( cham24 )
+UINT32 cham24_state::screen_update_cham24(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	/* render the ppu */
-	ppu2c0x_device *ppu = screen.machine().device<ppu2c0x_device>("ppu");
+	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
 	ppu->render(bitmap, 0, 0, 0, 0);
 	return 0;
 }
@@ -321,7 +322,7 @@ void cham24_state::machine_start()
 	memcpy(&dst[0xc000], &src[0x0f8000], 0x4000);
 
 	/* uses 8K swapping, all ROM!*/
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x1fff, "bank1");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x1fff, "bank1");
 	membank("bank1")->set_base(memregion("gfx1")->base());
 
 	/* need nametable ram, though. I doubt this uses more than 2k, but it starts up configured for 4 */
@@ -332,7 +333,7 @@ void cham24_state::machine_start()
 	m_nt_page[3] = m_nt_ram + 0xc00;
 
 	/* and read/write handlers */
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff,read8_delegate(FUNC(cham24_state::nt_r), this), write8_delegate(FUNC(cham24_state::nt_w), this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff,read8_delegate(FUNC(cham24_state::nt_r), this), write8_delegate(FUNC(cham24_state::nt_w), this));
 }
 
 DRIVER_INIT_MEMBER(cham24_state,cham24)
@@ -354,7 +355,7 @@ static MACHINE_CONFIG_START( cham24, cham24_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cham24)
+	MCFG_SCREEN_UPDATE_DRIVER(cham24_state, screen_update_cham24)
 
 	MCFG_GFXDECODE(cham24)
 	MCFG_PALETTE_LENGTH(8*4*16)

@@ -44,24 +44,23 @@
  *
  *************************************/
 
-static SCREEN_UPDATE_RGB32( avalnche )
+UINT32 avalnche_state::screen_update_avalnche(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	avalnche_state *state = screen.machine().driver_data<avalnche_state>();
 	offs_t offs;
 
-	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
+	for (offs = 0; offs < m_videoram.bytes(); offs++)
 	{
 		int i;
 
 		UINT8 x = offs << 3;
 		int y = offs >> 5;
-		UINT8 data = state->m_videoram[offs];
+		UINT8 data = m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
 			pen_t pen;
 
-			if (state->m_avalance_video_inverted)
+			if (m_avalance_video_inverted)
 				pen = (data & 0x80) ? RGB_WHITE : RGB_BLACK;
 			else
 				pen = (data & 0x80) ? RGB_BLACK : RGB_WHITE;
@@ -118,12 +117,12 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, avalnche_state )
 	AM_RANGE(0x2003, 0x2003) AM_MIRROR(0x0ffc) AM_READNOP
 	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x0fff) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x4000, 0x4000) AM_MIRROR(0x0ff8) AM_WRITE(avalance_credit_1_lamp_w)
-	AM_RANGE(0x4001, 0x4001) AM_MIRROR(0x0ff8) AM_DEVWRITE_LEGACY("discrete", avalnche_attract_enable_w)
+	AM_RANGE(0x4001, 0x4001) AM_MIRROR(0x0ff8) AM_WRITE(avalnche_attract_enable_w)
 	AM_RANGE(0x4002, 0x4002) AM_MIRROR(0x0ff8) AM_WRITE(avalance_video_invert_w)
 	AM_RANGE(0x4003, 0x4003) AM_MIRROR(0x0ff8) AM_WRITE(avalance_credit_2_lamp_w)
-	AM_RANGE(0x4004, 0x4006) AM_MIRROR(0x0ff8) AM_DEVWRITE_LEGACY("discrete", avalnche_audio_w)
+	AM_RANGE(0x4004, 0x4006) AM_MIRROR(0x0ff8) AM_WRITE(avalnche_audio_w)
 	AM_RANGE(0x4007, 0x4007) AM_MIRROR(0x0ff8) AM_WRITE(avalance_start_lamp_w)
-	AM_RANGE(0x5000, 0x5000) AM_MIRROR(0x0fff) AM_DEVWRITE_LEGACY("discrete", avalnche_noise_amplitude_w)
+	AM_RANGE(0x5000, 0x5000) AM_MIRROR(0x0fff) AM_WRITE(avalnche_noise_amplitude_w)
 	AM_RANGE(0x6000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -136,10 +135,10 @@ static ADDRESS_MAP_START( catch_map, AS_PROGRAM, 8, avalnche_state )
 	AM_RANGE(0x2003, 0x2003) AM_MIRROR(0x0ffc) AM_READNOP
 	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x0fff) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x4000, 0x4000) AM_MIRROR(0x0ff8) AM_WRITE(avalance_credit_1_lamp_w)
-//  AM_RANGE(0x4001, 0x4001) AM_MIRROR(0x0ff8) AM_DEVWRITE_LEGACY("discrete", avalnche_attract_enable_w) /* It is attract_enable just like avalnche, but not hooked up yet. */
+//  AM_RANGE(0x4001, 0x4001) AM_MIRROR(0x0ff8) AM_WRITE(avalnche_attract_enable_w) /* It is attract_enable just like avalnche, but not hooked up yet. */
 	AM_RANGE(0x4002, 0x4002) AM_MIRROR(0x0ff8) AM_WRITE(avalance_video_invert_w)
 	AM_RANGE(0x4003, 0x4003) AM_MIRROR(0x0ff8) AM_WRITE(avalance_credit_2_lamp_w)
-	AM_RANGE(0x4004, 0x4006) AM_MIRROR(0x0ff8) AM_WRITE_LEGACY(catch_audio_w)
+	AM_RANGE(0x4004, 0x4006) AM_MIRROR(0x0ff8) AM_WRITE(catch_audio_w)
 	AM_RANGE(0x4007, 0x4007) AM_MIRROR(0x0ff8) AM_WRITE(avalance_start_lamp_w)
 	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x0fff) AM_WRITE(catch_coin_counter_w)
 	AM_RANGE(0x7000, 0x7fff) AM_ROM
@@ -249,7 +248,7 @@ static MACHINE_CONFIG_START( avalnche, avalnche_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502,MASTER_CLOCK/16)	   /* clock input is the "2H" signal divided by two */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,8*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(avalnche_state, nmi_line_pulse, 8*60)
 
 
 	/* video hardware */
@@ -258,7 +257,7 @@ static MACHINE_CONFIG_START( avalnche, avalnche_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(avalnche)
+	MCFG_SCREEN_UPDATE_DRIVER(avalnche_state, screen_update_avalnche)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

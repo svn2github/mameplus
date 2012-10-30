@@ -34,6 +34,8 @@ public:
 	DECLARE_WRITE8_MEMBER(albazc_vregs_w);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_hanaroku(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -61,36 +63,35 @@ void albazc_state::video_start()
 {
 }
 
-static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
+void albazc_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	albazc_state *state = machine.driver_data<albazc_state>();
 	int i;
 
 	for (i = 511; i >= 0; i--)
 	{
-		int code = state->m_spriteram1[i] | (state->m_spriteram2[i] << 8);
-		int color = (state->m_spriteram2[i + 0x200] & 0xf8) >> 3;
+		int code = m_spriteram1[i] | (m_spriteram2[i] << 8);
+		int color = (m_spriteram2[i + 0x200] & 0xf8) >> 3;
 		int flipx = 0;
 		int flipy = 0;
-		int sx = state->m_spriteram1[i + 0x200] | ((state->m_spriteram2[i + 0x200] & 0x07) << 8);
-		int sy = 242 - state->m_spriteram3[i];
+		int sx = m_spriteram1[i + 0x200] | ((m_spriteram2[i + 0x200] & 0x07) << 8);
+		int sy = 242 - m_spriteram3[i];
 
-		if (state->m_flip_bit)
+		if (m_flip_bit)
 		{
 			sy = 242 - sy;
 			flipx = !flipx;
 			flipy = !flipy;
 		}
 
-		drawgfx_transpen(bitmap, cliprect, machine.gfx[0], code, color, flipx, flipy,
+		drawgfx_transpen(bitmap, cliprect, machine().gfx[0], code, color, flipx, flipy,
 			sx, sy, 0);
 	}
 }
 
-static SCREEN_UPDATE_IND16(hanaroku)
+UINT32 albazc_state::screen_update_hanaroku(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	bitmap.fill(0x1f0, cliprect);	// ???
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(bitmap, cliprect);
 	return 0;
 }
 
@@ -270,7 +271,7 @@ static MACHINE_CONFIG_START( hanaroku, albazc_state )
 
 	MCFG_CPU_ADD("maincpu", Z80,6000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(hanaroku_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", albazc_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -278,7 +279,7 @@ static MACHINE_CONFIG_START( hanaroku, albazc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hanaroku)
+	MCFG_SCREEN_UPDATE_DRIVER(albazc_state, screen_update_hanaroku)
 
 	MCFG_GFXDECODE(hanaroku)
 	MCFG_PALETTE_LENGTH(0x200)

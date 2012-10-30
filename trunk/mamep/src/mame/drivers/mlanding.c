@@ -77,6 +77,8 @@ public:
 	DECLARE_DRIVER_INIT(mlanding);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_mlanding(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(dma_complete);
 };
 
 
@@ -89,22 +91,21 @@ void mlanding_state::video_start()
 // 256: Cockpit
 // 512: control centre screen
 // 768: plane landing sequence
-static SCREEN_UPDATE_IND16(mlanding)
+UINT32 mlanding_state::screen_update_mlanding(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mlanding_state *state = screen.machine().driver_data<mlanding_state>();
 	int x, y;
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
-		UINT16 *src = &state->m_g_ram[y * 512/2 + cliprect.min_x];
+		UINT16 *src = &m_g_ram[y * 512/2 + cliprect.min_x];
 		UINT16 *dst = &bitmap.pix16(y, cliprect.min_x);
 
 		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			UINT16 srcpix = *src++;
 
-			*dst++ = screen.machine().pens[256+(srcpix & 0xff) + (state->m_pal_fg_bank & 1 ? 0x100 : 0x000)];
-			*dst++ = screen.machine().pens[256+(srcpix >> 8) + (state->m_pal_fg_bank & 1 ? 0x100 : 0x000)];
+			*dst++ = machine().pens[256+(srcpix & 0xff) + (m_pal_fg_bank & 1 ? 0x100 : 0x000)];
+			*dst++ = machine().pens[256+(srcpix >> 8) + (m_pal_fg_bank & 1 ? 0x100 : 0x000)];
 		}
 	}
 
@@ -312,10 +313,9 @@ static void ml_msm5205_vck(device_t *device)
 	}
 }
 
-static TIMER_CALLBACK( dma_complete )
+TIMER_CALLBACK_MEMBER(mlanding_state::dma_complete)
 {
-	mlanding_state *state = machine.driver_data<mlanding_state>();
-	state->m_dma_active = 0;
+	m_dma_active = 0;
 }
 
 /* TODO: this uses many bits */
@@ -329,7 +329,7 @@ WRITE16_MEMBER(mlanding_state::ml_sub_reset_w)
 	if (pixels)
 	{
 		m_dma_active = 1;
-		machine().scheduler().timer_set(attotime::from_msec(20), FUNC(dma_complete));
+		machine().scheduler().timer_set(attotime::from_msec(20), timer_expired_delegate(FUNC(mlanding_state::dma_complete),this));
 	}
 
 	if(!(data & 0x40)) // unknown line used
@@ -348,11 +348,11 @@ WRITE16_MEMBER(mlanding_state::ml_to_sound_w)
 {
 	device_t *tc0140syt = machine().device("tc0140syt");
 	if (offset == 0)
-		tc0140syt_port_w(tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
 	{
 		//machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
-		tc0140syt_comm_w(tc0140syt, 0, data & 0xff);
+		tc0140syt_comm_w(tc0140syt, space, 0, data & 0xff);
 	}
 }
 
@@ -360,11 +360,11 @@ WRITE8_MEMBER(mlanding_state::ml_sound_to_main_w)
 {
 	device_t *tc0140syt = machine().device("tc0140syt");
 	if (offset == 0)
-		tc0140syt_slave_port_w(tc0140syt, 0, data & 0xff);
+		tc0140syt_slave_port_w(tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
 	{
 		//machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
-		tc0140syt_slave_comm_w(tc0140syt, 0, data & 0xff);
+		tc0140syt_slave_comm_w(tc0140syt, space, 0, data & 0xff);
 	}
 }
 
@@ -540,7 +540,7 @@ static ADDRESS_MAP_START( mlanding_z80_mem, AS_PROGRAM, 8, mlanding_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_MIRROR(0x00fe) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x9000, 0x9001) AM_MIRROR(0x00fe) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xa000, 0xa001) AM_WRITE(ml_sound_to_main_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREAD_LEGACY("tc0140syt", tc0140syt_slave_comm_r)
 
@@ -730,21 +730,10 @@ static INPUT_PORTS_START( mlanding )
 	PORT_BIT( 0x0fff, 0x0000, IPT_AD_STICK_X ) PORT_MINMAX(0x0800,0x07ff) PORT_SENSITIVITY(30) PORT_KEYDELTA(20) PORT_PLAYER(1)
 INPUT_PORTS_END
 
-static void irq_handler(device_t *device, int irq)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
 static const msm5205_interface msm5205_config =
 {
 	ml_msm5205_vck,	/* VCK function */
 	MSM5205_S48_4B		/* 8 kHz */
-};
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler),
-	DEVCB_DRIVER_MEMBER(mlanding_state,sound_bankswitch_w)
 };
 
 static const tc0140syt_interface mlanding_tc0140syt_intf =
@@ -768,18 +757,18 @@ static MACHINE_CONFIG_START( mlanding, mlanding_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000 )		/* 12 MHz ??? (guess) */
 	MCFG_CPU_PROGRAM_MAP(mlanding_mem)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mlanding_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000 )		/* 12 MHz ??? (guess) */
 	MCFG_CPU_PROGRAM_MAP(mlanding_sub_mem)
-	MCFG_CPU_PERIODIC_INT(irq6_line_hold,7*60) /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(mlanding_state, irq6_line_hold, 7*60) /* ??? */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000 )		/* 4 MHz ??? (guess) */
 	MCFG_CPU_PROGRAM_MAP(mlanding_z80_mem)
 
 	MCFG_CPU_ADD("z80sub", Z80, 4000000 )		/* 4 MHz ??? (guess) */
 	MCFG_CPU_PROGRAM_MAP(mlanding_z80_sub_mem)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mlanding_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("dsp", TMS32025,12000000)			/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(DSP_map_program)
@@ -794,7 +783,7 @@ static MACHINE_CONFIG_START( mlanding, mlanding_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 14*8, 511)
-	MCFG_SCREEN_UPDATE_STATIC(mlanding)
+	MCFG_SCREEN_UPDATE_DRIVER(mlanding_state, screen_update_mlanding)
 
 	MCFG_PALETTE_LENGTH(512*16)
 
@@ -803,8 +792,9 @@ static MACHINE_CONFIG_START( mlanding, mlanding_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(mlanding_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 

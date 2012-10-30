@@ -231,7 +231,7 @@ static MACHINE_CONFIG_START( gumbo, gumbo_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 14318180 /2)	 // or 10mhz? ?
 	MCFG_CPU_PROGRAM_MAP(gumbo_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold) // all the same
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gumbo_state,  irq1_line_hold) // all the same
 
 	MCFG_GFXDECODE(gumbo)
 
@@ -240,7 +240,7 @@ static MACHINE_CONFIG_START( gumbo, gumbo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gumbo)
+	MCFG_SCREEN_UPDATE_DRIVER(gumbo_state, screen_update_gumbo)
 
 	MCFG_PALETTE_LENGTH(0x200)
 

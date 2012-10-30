@@ -36,7 +36,7 @@ static WRITE16_DEVICE_HANDLER( magicstk_coin_eeprom_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(device->machine(), 0, data & 0x20);
+		coin_counter_w(space.machine(), 0, data & 0x20);
 
 		eeprom_device *eeprom = downcast<eeprom_device *>(device);
 		eeprom->set_cs_line((data & 8) ? CLEAR_LINE : ASSERT_LINE);
@@ -47,7 +47,7 @@ static WRITE16_DEVICE_HANDLER( magicstk_coin_eeprom_w )
 
 static WRITE16_HANDLER( magicstk_bgvideoram_w )
 {
-	playmark_state *state = space->machine().driver_data<playmark_state>();
+	playmark_state *state = space.machine().driver_data<playmark_state>();
 
 	COMBINE_DATA(&state->m_videoram1[offset]);
 	state->m_bg_tilemap->mark_tile_dirty(offset);
@@ -55,7 +55,7 @@ static WRITE16_HANDLER( magicstk_bgvideoram_w )
 
 static WRITE16_HANDLER( tile_banking_w )
 {
-	playmark_state *state = space->machine().driver_data<playmark_state>();
+	playmark_state *state = space.machine().driver_data<playmark_state>();
 
 	if (((data >> 12) & 0x0f) != state->m_tilebank)
 	{
@@ -70,7 +70,7 @@ static WRITE16_DEVICE_HANDLER( oki_banking )
 	{
 		int addr = 0x40000 * ((data & 3) - 1);
 
-		if (addr < device->machine().root_device().memregion("oki")->bytes())
+		if (addr < space.machine().root_device().memregion("oki")->bytes())
 			downcast<okim6295_device *>(device)->set_bank_base(addr);
 	}
 }
@@ -426,12 +426,11 @@ VIDEO_START_MEMBER(playmark_state,powerbal)
 	m_bg_tilemap->set_scrolly(0, m_bg_yoffset);
 }
 
-static SCREEN_UPDATE_IND16( powerbal )
+UINT32 playmark_state::screen_update_powerbal(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	playmark_state *state = screen.machine().driver_data<playmark_state>();
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }
 
@@ -485,7 +484,7 @@ static MACHINE_CONFIG_START( powerbal, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(powerbal_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state, irq2_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(playmark_state,powerbal)
 	MCFG_MACHINE_RESET_OVERRIDE(playmark_state,powerbal)
@@ -496,7 +495,7 @@ static MACHINE_CONFIG_START( powerbal, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(128*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(powerbal)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_powerbal)
 
 	MCFG_GFXDECODE(powerbal)
 	MCFG_PALETTE_LENGTH(512)
@@ -515,7 +514,7 @@ static MACHINE_CONFIG_START( magicstk, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(magicstk_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state, irq2_line_hold)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 	MCFG_EEPROM_DEFAULT_VALUE(0)
@@ -529,7 +528,7 @@ static MACHINE_CONFIG_START( magicstk, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(128*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(powerbal)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_powerbal)
 
 	MCFG_GFXDECODE(powerbal)
 	MCFG_PALETTE_LENGTH(512)

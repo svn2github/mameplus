@@ -64,15 +64,15 @@ WRITE8_MEMBER( draco_state::sound_g_w )
 	switch (data)
 	{
 	case 0x01:
-		ay8910_data_w(m_psg, 0, m_psg_latch);
+		ay8910_data_w(m_psg, space, 0, m_psg_latch);
 		break;
 
 	case 0x02:
-		m_psg_latch = ay8910_r(m_psg, 0);
+		m_psg_latch = ay8910_r(m_psg, space, 0);
 		break;
 
 	case 0x03:
-		ay8910_address_w(m_psg, 0, m_psg_latch);
+		ay8910_address_w(m_psg, space, 0, m_psg_latch);
 		break;
 	}
 }
@@ -425,11 +425,10 @@ INPUT_PORTS_END
 
 /* Machine Start */
 
-static TIMER_CALLBACK( set_cpu_mode )
+TIMER_CALLBACK_MEMBER(cidelsa_state::set_cpu_mode)
 {
-	cidelsa_state *state = machine.driver_data<cidelsa_state>();
 
-	state->m_reset = 1;
+	m_reset = 1;
 }
 
 void cidelsa_state::machine_start()
@@ -456,7 +455,7 @@ void cidelsa_state::machine_reset()
 {
 	/* reset the CPU */
 	m_reset = 0;
-	machine().scheduler().timer_set(attotime::from_msec(200), FUNC(set_cpu_mode));
+	machine().scheduler().timer_set(attotime::from_msec(200), timer_expired_delegate(FUNC(cidelsa_state::set_cpu_mode),this));
 }
 
 /* Machine Drivers */

@@ -196,6 +196,9 @@ public:
 	DECLARE_DRIVER_INIT(vbowlj);
 	DECLARE_DRIVER_INIT(ryukobou);
 	virtual void video_start();
+	UINT32 screen_update_igs011(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_vbowl(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(lhb_vblank_irq);
 };
 
 
@@ -243,9 +246,8 @@ void igs011_state::video_start()
 	m_lhb2_pen_hi = 0;
 }
 
-static SCREEN_UPDATE_IND16( igs011 )
+UINT32 igs011_state::screen_update_igs011(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	igs011_state *state = screen.machine().driver_data<igs011_state>();
 #ifdef MAME_DEBUG
 	int layer_enable = -1;
 #endif
@@ -254,22 +256,22 @@ static SCREEN_UPDATE_IND16( igs011 )
 	UINT16 *pri_ram;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_Z))
+	if (machine().input().code_pressed(KEYCODE_Z))
 	{
 		int mask = 0;
-		if (screen.machine().input().code_pressed(KEYCODE_Q))	mask |= 0x01;
-		if (screen.machine().input().code_pressed(KEYCODE_W))	mask |= 0x02;
-		if (screen.machine().input().code_pressed(KEYCODE_E))	mask |= 0x04;
-		if (screen.machine().input().code_pressed(KEYCODE_R))	mask |= 0x08;
-		if (screen.machine().input().code_pressed(KEYCODE_A))	mask |= 0x10;
-		if (screen.machine().input().code_pressed(KEYCODE_S))	mask |= 0x20;
-		if (screen.machine().input().code_pressed(KEYCODE_D))	mask |= 0x40;
-		if (screen.machine().input().code_pressed(KEYCODE_F))	mask |= 0x80;
+		if (machine().input().code_pressed(KEYCODE_Q))	mask |= 0x01;
+		if (machine().input().code_pressed(KEYCODE_W))	mask |= 0x02;
+		if (machine().input().code_pressed(KEYCODE_E))	mask |= 0x04;
+		if (machine().input().code_pressed(KEYCODE_R))	mask |= 0x08;
+		if (machine().input().code_pressed(KEYCODE_A))	mask |= 0x10;
+		if (machine().input().code_pressed(KEYCODE_S))	mask |= 0x20;
+		if (machine().input().code_pressed(KEYCODE_D))	mask |= 0x40;
+		if (machine().input().code_pressed(KEYCODE_F))	mask |= 0x80;
 		if (mask)	layer_enable &= mask;
 	}
 #endif
 
-	pri_ram = &state->m_priority_ram[(state->m_priority & 7) * 512/2];
+	pri_ram = &m_priority_ram[(m_priority & 7) * 512/2];
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
@@ -280,7 +282,7 @@ static SCREEN_UPDATE_IND16( igs011 )
 
 			for (l = 0; l < 8; l++)
 			{
-				if (	(state->m_layer[l][scr_addr] != 0xff)
+				if (	(m_layer[l][scr_addr] != 0xff)
 #ifdef MAME_DEBUG
 						&& (layer_enable & (1 << l))
 #endif
@@ -293,10 +295,10 @@ static SCREEN_UPDATE_IND16( igs011 )
 
 #ifdef MAME_DEBUG
 			if ((layer_enable != -1) && (pri_addr == 0xff))
-				bitmap.pix16(y, x) = get_black_pen(screen.machine());
+				bitmap.pix16(y, x) = get_black_pen(machine());
 			else
 #endif
-				bitmap.pix16(y, x) = state->m_layer[l][scr_addr] | (l << 8);
+				bitmap.pix16(y, x) = m_layer[l][scr_addr] | (l << 8);
 		}
 	}
 	return 0;
@@ -1034,17 +1036,17 @@ WRITE16_MEMBER(igs011_state::igs011_prot_addr_w)
 
 //  m_prot2 = 0x00;
 
-	address_space *sp = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &sp = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = memregion("maincpu")->base();
 
 	// Plug previous address range with ROM access
-	sp->install_rom(m_prot1_addr + 0, m_prot1_addr + 9, rom + m_prot1_addr);
+	sp.install_rom(m_prot1_addr + 0, m_prot1_addr + 9, rom + m_prot1_addr);
 
 	m_prot1_addr = (data << 4) ^ 0x8340;
 
 	// Add protection memory range
-	sp->install_write_handler(m_prot1_addr + 0, m_prot1_addr + 7, write16_delegate(FUNC(igs011_state::igs011_prot1_w), this));
-	sp->install_read_handler (m_prot1_addr + 8, m_prot1_addr + 9, read16_delegate(FUNC(igs011_state::igs011_prot1_r), this));
+	sp.install_write_handler(m_prot1_addr + 0, m_prot1_addr + 7, write16_delegate(FUNC(igs011_state::igs011_prot1_w), this));
+	sp.install_read_handler (m_prot1_addr + 8, m_prot1_addr + 9, read16_delegate(FUNC(igs011_state::igs011_prot1_r), this));
 }
 /*
 READ16_MEMBER(igs011_state::igs011_prot_fake_r)
@@ -1833,7 +1835,7 @@ DRIVER_INIT_MEMBER(igs011_state,drgnwrldv21)
 
 	drgnwrld_type2_decrypt(machine());
 	drgnwrld_gfx_decrypt(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd4c0, 0xd4ff, read16_delegate(FUNC(igs011_state::drgnwrldv21_igs011_prot2_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd4c0, 0xd4ff, read16_delegate(FUNC(igs011_state::drgnwrldv21_igs011_prot2_r), this));
 /*
     // PROTECTION CHECKS
     // bp 32ee; bp 11ca8; bp 23d5e; bp 23fd0; bp 24170; bp 24348; bp 2454e; bp 246cc; bp 24922; bp 24b66; bp 24de2; bp 2502a; bp 25556; bp 269de; bp 2766a; bp 2a830
@@ -1973,7 +1975,7 @@ DRIVER_INIT_MEMBER(igs011_state,dbc)
 
 	dbc_decrypt(machine());
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::dbc_igs011_prot2_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::dbc_igs011_prot2_r), this));
 /*
     // PROTECTION CHECKS
     rom[0x04c42/2]  =   0x602e;     // 004C42: 6604         bne 4c48  (rom test error otherwise)
@@ -2003,7 +2005,7 @@ DRIVER_INIT_MEMBER(igs011_state,ryukobou)
 
 	ryukobou_decrypt(machine());
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::ryukobou_igs011_prot2_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::ryukobou_igs011_prot2_r), this));
 
 	// PROTECTION CHECKS
 //  rom[0x2df68/2]  =   0x4e75;     // 02DF68: 4E56 FE00    link A6, #-$200  (fills palette with pink otherwise)
@@ -2461,9 +2463,9 @@ READ16_MEMBER(igs011_state::ics2115_word_r)
 	ics2115_device* ics2115 = machine().device<ics2115_device>("ics");
 	switch(offset)
 	{
-		case 0:	return ics2115_device::read(ics2115, (offs_t)0);
-		case 1:	return ics2115_device::read(ics2115, (offs_t)1);
-		case 2:	return (ics2115_device::read(ics2115, (offs_t)3) << 8) | ics2115_device::read(ics2115, (offs_t)2);
+		case 0:	return ics2115_device::read(ics2115, space, (offs_t)0);
+		case 1:	return ics2115_device::read(ics2115, space, (offs_t)1);
+		case 2:	return (ics2115_device::read(ics2115, space, (offs_t)3) << 8) | ics2115_device::read(ics2115, space, (offs_t)2);
 	}
 	return 0xff;
 }
@@ -2474,11 +2476,11 @@ WRITE16_MEMBER(igs011_state::ics2115_word_w)
 	switch(offset)
 	{
 		case 1:
-			if (ACCESSING_BITS_0_7)		ics2115_device::write(ics2115,1,data);
+			if (ACCESSING_BITS_0_7)		ics2115_device::write(ics2115,space, 1,data);
 			break;
 		case 2:
-			if (ACCESSING_BITS_0_7)		ics2115_device::write(ics2115,2,data);
-			if (ACCESSING_BITS_8_15)	ics2115_device::write(ics2115,3,data>>8);
+			if (ACCESSING_BITS_0_7)		ics2115_device::write(ics2115,space, 2,data);
+			if (ACCESSING_BITS_8_15)	ics2115_device::write(ics2115,space, 3,data>>8);
 			break;
 	}
 }
@@ -2488,14 +2490,13 @@ READ16_MEMBER(igs011_state::vbowl_unk_r)
 	return 0xffff;
 }
 
-static SCREEN_VBLANK( vbowl )
+void igs011_state::screen_eof_vbowl(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		igs011_state *state = screen.machine().driver_data<igs011_state>();
-		state->m_vbowl_trackball[0] = state->m_vbowl_trackball[1];
-		state->m_vbowl_trackball[1] = (state->ioport("AN1")->read() << 8) | state->ioport("AN0")->read();
+		m_vbowl_trackball[0] = m_vbowl_trackball[1];
+		m_vbowl_trackball[1] = (ioport("AN1")->read() << 8) | ioport("AN0")->read();
 	}
 }
 
@@ -3809,7 +3810,7 @@ static MACHINE_CONFIG_START( igs011_base, igs011_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC( igs011 )
+	MCFG_SCREEN_UPDATE_DRIVER(igs011_state, screen_update_igs011)
 
 	MCFG_PALETTE_LENGTH(0x800)
 //  MCFG_GFXDECODE(igs011)
@@ -3832,7 +3833,7 @@ static TIMER_DEVICE_CALLBACK ( lev5_timer_irq_cb )
 static MACHINE_CONFIG_DERIVED( drgnwrld, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(drgnwrld)
-	MCFG_CPU_VBLANK_INT("screen",irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev5_timer_irq_cb, attotime::from_hz(240)) // lev5 frequency drives the music tempo
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_3_579545MHz)
@@ -3846,13 +3847,12 @@ MACHINE_CONFIG_END
 
 
 
-static INTERRUPT_GEN( lhb_vblank_irq )
+INTERRUPT_GEN_MEMBER(igs011_state::lhb_vblank_irq)
 {
-	igs011_state *state = device->machine().driver_data<igs011_state>();
-	if (!state->m_lhb_irq_enable)
+	if (!m_lhb_irq_enable)
 		return;
 
-	state->m_maincpu->set_input_line(6, HOLD_LINE);
+	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK ( lhb_timer_irq_cb )
@@ -3867,7 +3867,7 @@ static TIMER_DEVICE_CALLBACK ( lhb_timer_irq_cb )
 static MACHINE_CONFIG_DERIVED( lhb, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(lhb)
-	MCFG_CPU_VBLANK_INT("screen",lhb_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, lhb_vblank_irq)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lhb_timer_irq_cb, attotime::from_hz(240)) // lev5 frequency drives the music tempo
 	// irq 3 points to an apparently unneeded routine
 MACHINE_CONFIG_END
@@ -3885,7 +3885,7 @@ static TIMER_DEVICE_CALLBACK ( lev3_timer_irq_cb )
 static MACHINE_CONFIG_DERIVED( wlcc, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(wlcc)
-	MCFG_CPU_VBLANK_INT("screen",irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev3_timer_irq_cb, attotime::from_hz(240)) // lev3 frequency drives the music tempo
 MACHINE_CONFIG_END
 
@@ -3894,7 +3894,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( xymg, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(xymg)
-	MCFG_CPU_VBLANK_INT("screen",irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev3_timer_irq_cb, attotime::from_hz(240)) // lev3 frequency drives the music tempo
 MACHINE_CONFIG_END
 
@@ -3903,7 +3903,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( lhb2, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(lhb2)
-	MCFG_CPU_VBLANK_INT("screen",irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev5_timer_irq_cb, attotime::from_hz(240)) // lev5 frequency drives the music tempo
 
 //  MCFG_GFXDECODE(igs011_hi)
@@ -3917,7 +3917,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( nkishusp, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(nkishusp)
-	MCFG_CPU_VBLANK_INT("screen",irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev3_timer_irq_cb, attotime::from_hz(240)) // lev3 frequency drives the music tempo
 
 	// VSync 60.0052Hz, HSync 15.620kHz
@@ -3938,13 +3938,13 @@ static void sound_irq(device_t *device, int state)
 static MACHINE_CONFIG_DERIVED( vbowl, igs011_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(vbowl)
-	MCFG_CPU_VBLANK_INT("screen",irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev3_timer_irq_cb, attotime::from_hz(240)) // lev3 frequency drives the music tempo
 	// irq 5 points to a debug function (all routines are clearly patched out)
 	// irq 4 points to an apparently unneeded routine
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_VBLANK_STATIC(vbowl)	// trackball
+	MCFG_SCREEN_VBLANK_DRIVER(igs011_state, screen_eof_vbowl)
 //  MCFG_GFXDECODE(igs011_hi)
 
 	MCFG_DEVICE_REMOVE("oki")

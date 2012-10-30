@@ -21,11 +21,11 @@ Notes:
 #include "sound/ay8910.h"
 #include "includes/popeye.h"
 
-static INTERRUPT_GEN( popeye_interrupt )
+INTERRUPT_GEN_MEMBER(popeye_state::popeye_interrupt)
 {
 	/* NMIs are enabled by the I register?? How can that be? */
-	if (device->state().state_int(Z80_I) & 1)	/* skyskipr: 0/1, popeye: 2/3 but also 0/1 */
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (device.state().state_int(Z80_I) & 1)	/* skyskipr: 0/1, popeye: 2/3 but also 0/1 */
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -428,7 +428,7 @@ static MACHINE_CONFIG_START( skyskipr, popeye_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_8MHz/2)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(skyskipr_map)
 	MCFG_CPU_IO_MAP(popeye_io_map)
-	MCFG_CPU_VBLANK_INT("screen", popeye_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", popeye_state,  popeye_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -436,7 +436,7 @@ static MACHINE_CONFIG_START( skyskipr, popeye_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 2*16, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(popeye)
+	MCFG_SCREEN_UPDATE_DRIVER(popeye_state, screen_update_popeye)
 
 	MCFG_GFXDECODE(popeye)
 	MCFG_PALETTE_LENGTH(16+16*2+64*4)

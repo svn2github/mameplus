@@ -325,7 +325,7 @@ static MACHINE_CONFIG_START( speedatk, speedatk_state )
 	MCFG_CPU_ADD("maincpu", Z80,MASTER_CLOCK/2) //divider is unknown
 	MCFG_CPU_PROGRAM_MAP(speedatk_mem)
 	MCFG_CPU_IO_MAP(speedatk_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", speedatk_state,  irq0_line_hold)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8) // timing is unknown
 
@@ -335,7 +335,7 @@ static MACHINE_CONFIG_START( speedatk, speedatk_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(speedatk)
+	MCFG_SCREEN_UPDATE_DRIVER(speedatk_state, screen_update_speedatk)
 
 	MCFG_MC6845_ADD("crtc", H46505, MASTER_CLOCK/16, mc6845_intf)	/* hand tuned to get ~60 fps */
 

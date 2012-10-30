@@ -142,6 +142,8 @@ public:
 	virtual void machine_start();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_looping(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(looping_interrupt);
 };
 
 
@@ -303,12 +305,11 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 }
 
 
-static SCREEN_UPDATE_IND16( looping )
+UINT32 looping_state::screen_update_looping(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	looping_state *state = screen.machine().driver_data<looping_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }
 
@@ -333,9 +334,9 @@ void looping_state::machine_start()
  *
  *************************************/
 
-static INTERRUPT_GEN( looping_interrupt )
+INTERRUPT_GEN_MEMBER(looping_state::looping_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
+	device.execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
 }
 
 
@@ -642,7 +643,7 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_CPU_ADD("maincpu", TMS9995L, MAIN_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(looping_map)
 	MCFG_CPU_IO_MAP(looping_io_map)
-	MCFG_CPU_VBLANK_INT("screen", looping_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", looping_state,  looping_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", TMS9980L, SOUND_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(looping_sound_map)
@@ -658,7 +659,7 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(looping)
+	MCFG_SCREEN_UPDATE_DRIVER(looping_state, screen_update_looping)
 
 	MCFG_GFXDECODE(looping)
 	MCFG_PALETTE_LENGTH(32)
@@ -915,7 +916,7 @@ DRIVER_INIT_MEMBER(looping_state,looping)
 		rom[i] = BITSWAP8(rom[i], 0,1,2,3,4,5,6,7);
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x7000, 0x7007, read8_delegate(FUNC(looping_state::protection_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x7000, 0x7007, read8_delegate(FUNC(looping_state::protection_r), this));
 }
 
 

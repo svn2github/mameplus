@@ -299,6 +299,9 @@ public:
 	DECLARE_DRIVER_INIT(bfcobra);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_bfcobra(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(timer_irq);
+	INTERRUPT_GEN_MEMBER(vblank_gen);
 };
 
 
@@ -366,9 +369,8 @@ void bfcobra_state::video_start()
 	}
 }
 
-static SCREEN_UPDATE_RGB32( bfcobra )
+UINT32 bfcobra_state::screen_update_bfcobra(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	bfcobra_state *state = screen.machine().driver_data<bfcobra_state>();
 	int x, y;
 	UINT8  *src;
 	UINT32 *dest;
@@ -378,47 +380,47 @@ static SCREEN_UPDATE_RGB32( bfcobra )
 
 	/* Select screen has to be programmed into two registers */
 	/* No idea what happens if the registers are different */
-	if (state->m_flip_8 & 0x40 && state->m_flip_22 & 0x40)
+	if (m_flip_8 & 0x40 && m_flip_22 & 0x40)
 		offset = 0x10000;
 	else
 		offset = 0;
 
-	if(state->m_videomode & 0x20)
+	if(m_videomode & 0x20)
 	{
-		hirescol = state->m_col3bit;
-		lorescol = state->m_col7bit;
+		hirescol = m_col3bit;
+		lorescol = m_col7bit;
 	}
-	else if(state->m_videomode & 0x40)
+	else if(m_videomode & 0x40)
 	{
-		hirescol = state->m_col4bit;
-		lorescol = state->m_col6bit;
+		hirescol = m_col4bit;
+		lorescol = m_col6bit;
 	}
 	else
 	{
-		hirescol = state->m_col4bit;
-		lorescol = state->m_col8bit;
+		hirescol = m_col4bit;
+		lorescol = m_col8bit;
 	}
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
-		UINT16 y_offset = (y + state->m_v_scroll) * 256;
-		src = &state->m_video_ram[offset + y_offset];
+		UINT16 y_offset = (y + m_v_scroll) * 256;
+		src = &m_video_ram[offset + y_offset];
 		dest = &bitmap.pix32(y);
 
 		for (x = cliprect.min_x; x <= cliprect.max_x / 2; ++x)
 		{
-			UINT8 x_offset = x + state->m_h_scroll;
+			UINT8 x_offset = x + m_h_scroll;
 			UINT8 pen = *(src + x_offset);
 
-			if ( ( state->m_videomode & 0x81 ) == 1 || (state->m_videomode & 0x80 && pen & 0x80) )
+			if ( ( m_videomode & 0x81 ) == 1 || (m_videomode & 0x80 && pen & 0x80) )
 			{
-				*dest++ = screen.machine().pens[hirescol[pen & 0x0f]];
-				*dest++ = screen.machine().pens[hirescol[(pen >> 4) & 0x0f]];
+				*dest++ = machine().pens[hirescol[pen & 0x0f]];
+				*dest++ = machine().pens[hirescol[(pen >> 4) & 0x0f]];
 			}
 			else
 			{
-				*dest++ = screen.machine().pens[lorescol[pen]];
-				*dest++ = screen.machine().pens[lorescol[pen]];
+				*dest++ = machine().pens[lorescol[pen]];
+				*dest++ = machine().pens[lorescol[pen]];
 			}
 		}
 	}
@@ -457,11 +459,11 @@ INLINE UINT8* blitter_get_addr(running_machine &machine, UINT32 addr)
     The Flare One blitter is a simpler design with slightly different parameters
     and will require hardware tests to figure everything out correctly.
 */
-static void RunBlit(address_space *space)
+static void RunBlit(address_space &space)
 {
-#define BLITPRG_READ(x)		blitter.x = *(blitter_get_addr(space->machine(), blitter.program.addr++))
+#define BLITPRG_READ(x)		blitter.x = *(blitter_get_addr(space.machine(), blitter.program.addr++))
 
-	bfcobra_state *state = space->machine().driver_data<bfcobra_state>();
+	bfcobra_state *state = space.machine().driver_data<bfcobra_state>();
 	struct blitter_t &blitter = state->m_blitter;
 	int cycles_used = 0;
 
@@ -571,7 +573,7 @@ static void RunBlit(address_space *space)
 						blitter.source.addr0 -=blitter.step;
 					}
 
-					*blitter_get_addr(space->machine(), blitter.dest.addr) = blitter.pattern;
+					*blitter_get_addr(space.machine(), blitter.dest.addr) = blitter.pattern;
 					cycles_used++;
 
 				} while (--innercnt);
@@ -585,7 +587,7 @@ static void RunBlit(address_space *space)
 
 				if (LOOPTYPE == 3 && innercnt == blitter.innercnt)
 				{
-					srcdata = *(blitter_get_addr(space->machine(), blitter.source.addr & 0xfffff));
+					srcdata = *(blitter_get_addr(space.machine(), blitter.source.addr & 0xfffff));
 					blitter.source.loword++;
 					cycles_used++;
 				}
@@ -595,7 +597,7 @@ static void RunBlit(address_space *space)
 				{
 					if (LOOPTYPE == 0 || LOOPTYPE == 1)
 					{
-						srcdata = *(blitter_get_addr(space->machine(), blitter.source.addr & 0xfffff));
+						srcdata = *(blitter_get_addr(space.machine(), blitter.source.addr & 0xfffff));
 						cycles_used++;
 
 						if (blitter.modectl & MODE_SSIGN)
@@ -610,7 +612,7 @@ static void RunBlit(address_space *space)
 				/* Read destination pixel? */
 				if (LOOPTYPE == 0)
 				{
-					dstdata = *blitter_get_addr(space->machine(), blitter.dest.addr & 0xfffff);
+					dstdata = *blitter_get_addr(space.machine(), blitter.dest.addr & 0xfffff);
 					cycles_used++;
 				}
 
@@ -679,10 +681,10 @@ static void RunBlit(address_space *space)
                             The existing destination pixel is used as a lookup
                             into the table and the colours is replaced.
                         */
-						UINT8 dest = *blitter_get_addr(space->machine(), blitter.dest.addr);
-						UINT8 newcol = *(blitter_get_addr(space->machine(), (blitter.source.addr + dest) & 0xfffff));
+						UINT8 dest = *blitter_get_addr(space.machine(), blitter.dest.addr);
+						UINT8 newcol = *(blitter_get_addr(space.machine(), (blitter.source.addr + dest) & 0xfffff));
 
-						*blitter_get_addr(space->machine(), blitter.dest.addr) = newcol;
+						*blitter_get_addr(space.machine(), blitter.dest.addr) = newcol;
 						cycles_used += 3;
 					}
 					else
@@ -701,7 +703,7 @@ static void RunBlit(address_space *space)
 						if (blitter.compfunc & CMPFUNC_LOG0)
 							final_result |= ~result & ~dstdata;
 
-						*blitter_get_addr(space->machine(), blitter.dest.addr) = final_result;
+						*blitter_get_addr(space.machine(), blitter.dest.addr) = final_result;
 						cycles_used++;
 					}
 				}
@@ -741,7 +743,7 @@ static void RunBlit(address_space *space)
 	} while (blitter.command  & CMD_RUN);
 
 	/* Burn Z80 cycles while blitter is in operation */
-	space->device().execute().spin_until_time(attotime::from_nsec( (1000000000 / Z80_XTAL)*cycles_used * 2 ) );
+	space.device().execute().spin_until_time(attotime::from_nsec( (1000000000 / Z80_XTAL)*cycles_used * 2 ) );
 }
 
 
@@ -1008,7 +1010,7 @@ WRITE8_MEMBER(bfcobra_state::chipset_w)
 			m_blitter.command = data;
 
 			if (data & CMD_RUN)
-				RunBlit(&space);
+				RunBlit(space);
 			else
 				mame_printf_debug("Blitter stopped by IO.\n");
 
@@ -1471,7 +1473,7 @@ WRITE8_MEMBER(bfcobra_state::upd_w)
 {
 	device_t *device = machine().device("upd");
 	upd7759_reset_w(device, data & 0x80);
-	upd7759_port_w(device, 0, data & 0x3f);
+	upd7759_port_w(device, space, 0, data & 0x3f);
 	upd7759_start_w(device, data & 0x40 ? 0 : 1);
 }
 
@@ -1762,28 +1764,27 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 }
 
 /* TODO */
-static INTERRUPT_GEN( timer_irq )
+INTERRUPT_GEN_MEMBER(bfcobra_state::timer_irq)
 {
-	generic_pulse_irq_line(device, M6809_IRQ_LINE, 1);
+	generic_pulse_irq_line(device.execute(), M6809_IRQ_LINE, 1);
 }
 
 /* TODO */
-static INTERRUPT_GEN( vblank_gen )
+INTERRUPT_GEN_MEMBER(bfcobra_state::vblank_gen)
 {
-	bfcobra_state *state = device->machine().driver_data<bfcobra_state>();
-	state->m_vblank_irq = 1;
-	update_irqs(device->machine());
+	m_vblank_irq = 1;
+	update_irqs(machine());
 }
 
 static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 	MCFG_CPU_ADD("maincpu", Z80, Z80_XTAL)
 	MCFG_CPU_PROGRAM_MAP(z80_prog_map)
 	MCFG_CPU_IO_MAP(z80_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_gen)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bfcobra_state,  vblank_gen)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M6809_XTAL)
 	MCFG_CPU_PROGRAM_MAP(m6809_prog_map)
-	MCFG_CPU_PERIODIC_INT(timer_irq, 1000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bfcobra_state, timer_irq,  1000)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1794,7 +1795,7 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512 - 1, 0, 256 - 1)
-	MCFG_SCREEN_UPDATE_STATIC(bfcobra)
+	MCFG_SCREEN_UPDATE_DRIVER(bfcobra_state, screen_update_bfcobra)
 
 	MCFG_PALETTE_LENGTH(256)
 

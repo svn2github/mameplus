@@ -95,16 +95,15 @@ TODO:
  *
  *************************************/
 
-static SCREEN_VBLANK( champbas )
+void champbas_state::screen_eof_champbas(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		champbas_state *state = screen.machine().driver_data<champbas_state>();
-		state->m_watchdog_count++;
+		m_watchdog_count++;
 
-		if (state->m_watchdog_count == 0x10)
-			screen.machine().schedule_soft_reset();
+		if (m_watchdog_count == 0x10)
+			machine().schedule_soft_reset();
 	}
 }
 
@@ -135,10 +134,9 @@ WRITE8_MEMBER(champbas_state::irq_enable_w)
 		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
-static TIMER_CALLBACK( exctsccr_fm_callback )
+TIMER_CALLBACK_MEMBER(champbas_state::exctsccr_fm_callback)
 {
-	champbas_state *state = machine.driver_data<champbas_state>();
-	state->m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 // Champion Baseball has only one DAC
@@ -592,7 +590,7 @@ MACHINE_START_MEMBER(champbas_state,exctsccr)
 	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	// FIXME
-	machine().scheduler().timer_pulse(attotime::from_hz(75), FUNC(exctsccr_fm_callback)); /* updates fm */
+	machine().scheduler().timer_pulse(attotime::from_hz(75), timer_expired_delegate(FUNC(champbas_state::exctsccr_fm_callback),this)); /* updates fm */
 
 	MACHINE_START_CALL_MEMBER(champbas);
 }
@@ -605,12 +603,11 @@ MACHINE_RESET_MEMBER(champbas_state,champbas)
 	m_gfx_bank = 0;	// talbot has only 1 bank
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(champbas_state::vblank_irq)
 {
-	champbas_state *state = device->machine().driver_data<champbas_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -619,7 +616,7 @@ static MACHINE_CONFIG_START( talbot, champbas_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(talbot_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", champbas_state,  vblank_irq)
 
 	/* MCU */
 	MCFG_CPU_ADD(CPUTAG_MCU, ALPHA8201, XTAL_18_432MHz/6/8)
@@ -633,8 +630,8 @@ static MACHINE_CONFIG_START( talbot, champbas_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(champbas)
-	MCFG_SCREEN_VBLANK_STATIC(champbas)
+	MCFG_SCREEN_UPDATE_DRIVER(champbas_state, screen_update_champbas)
+	MCFG_SCREEN_VBLANK_DRIVER(champbas_state, screen_eof_champbas)
 
 	MCFG_GFXDECODE(talbot)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -655,7 +652,7 @@ static MACHINE_CONFIG_START( champbas, champbas_state )
 	/* main cpu */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(champbas_main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", champbas_state,  vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(champbas_sub_map)
@@ -668,8 +665,8 @@ static MACHINE_CONFIG_START( champbas, champbas_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(champbas)
-	MCFG_SCREEN_VBLANK_STATIC(champbas)
+	MCFG_SCREEN_UPDATE_DRIVER(champbas_state, screen_update_champbas)
+	MCFG_SCREEN_VBLANK_DRIVER(champbas_state, screen_eof_champbas)
 
 	MCFG_GFXDECODE(champbas)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -706,12 +703,12 @@ static MACHINE_CONFIG_START( exctsccr, champbas_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/6 )
 	MCFG_CPU_PROGRAM_MAP(exctsccr_main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", champbas_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_14_31818MHz/4 )
 	MCFG_CPU_PROGRAM_MAP(exctsccr_sub_map)
 	MCFG_CPU_IO_MAP(exctsccr_sound_io_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse, 4000) /* 4 kHz, updates the dac */
+	MCFG_CPU_PERIODIC_INT_DRIVER(champbas_state, nmi_line_pulse,  4000) /* 4 kHz, updates the dac */
 
 	/* MCU */
 	MCFG_CPU_ADD(CPUTAG_MCU, ALPHA8301, XTAL_18_432MHz/6/8)		/* Actually 8302 */
@@ -725,8 +722,8 @@ static MACHINE_CONFIG_START( exctsccr, champbas_state )
 	MCFG_SCREEN_REFRESH_RATE(60.54)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(exctsccr)
-	MCFG_SCREEN_VBLANK_STATIC(champbas)
+	MCFG_SCREEN_UPDATE_DRIVER(champbas_state, screen_update_exctsccr)
+	MCFG_SCREEN_VBLANK_DRIVER(champbas_state, screen_eof_champbas)
 
 	MCFG_GFXDECODE(exctsccr)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -763,7 +760,7 @@ static MACHINE_CONFIG_START( exctsccrb, champbas_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(exctsccrb_main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", champbas_state,  vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(champbas_sub_map)
@@ -776,8 +773,8 @@ static MACHINE_CONFIG_START( exctsccrb, champbas_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(exctsccr)
-	MCFG_SCREEN_VBLANK_STATIC(champbas)
+	MCFG_SCREEN_UPDATE_DRIVER(champbas_state, screen_update_exctsccr)
+	MCFG_SCREEN_VBLANK_DRIVER(champbas_state, screen_eof_champbas)
 
 	MCFG_GFXDECODE(exctsccr)
 	MCFG_PALETTE_LENGTH(0x200)

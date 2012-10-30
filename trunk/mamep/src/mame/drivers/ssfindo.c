@@ -246,6 +246,10 @@ public:
 	DECLARE_DRIVER_INIT(ppcar);
 	DECLARE_DRIVER_INIT(tetfight);
 	virtual void machine_reset();
+	UINT32 screen_update_ssfindo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(ssfindo_interrupt);
+	TIMER_CALLBACK_MEMBER(PS7500_Timer0_callback);
+	TIMER_CALLBACK_MEMBER(PS7500_Timer1_callback);
 };
 
 
@@ -253,24 +257,23 @@ static void PS7500_startTimer0(running_machine &machine);
 static void PS7500_startTimer1(running_machine &machine);
 
 
-static SCREEN_UPDATE_IND16(ssfindo)
+UINT32 ssfindo_state::screen_update_ssfindo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ssfindo_state *state = screen.machine().driver_data<ssfindo_state>();
 	int s,x,y;
 
-	if( state->m_PS7500_IO[VIDCR]&0x20) //video DMA enabled
+	if( m_PS7500_IO[VIDCR]&0x20) //video DMA enabled
 	{
-		s=( (state->m_PS7500_IO[VIDINITA]&0x1fffffff)-0x10000000)/4;
+		s=( (m_PS7500_IO[VIDINITA]&0x1fffffff)-0x10000000)/4;
 
 		if(s>=0 && s<(0x10000000/4))
 		{
 			for(y=0;y<256;y++)
 				for(x=0;x<320;x+=4)
 				{
-					bitmap.pix16(y, x+0) = state->m_vram[s]&0xff;
-					bitmap.pix16(y, x+1) = (state->m_vram[s]>>8)&0xff;
-					bitmap.pix16(y, x+2) = (state->m_vram[s]>>16)&0xff;
-					bitmap.pix16(y, x+3) = (state->m_vram[s]>>24)&0xff;
+					bitmap.pix16(y, x+0) = m_vram[s]&0xff;
+					bitmap.pix16(y, x+1) = (m_vram[s]>>8)&0xff;
+					bitmap.pix16(y, x+2) = (m_vram[s]>>16)&0xff;
+					bitmap.pix16(y, x+3) = (m_vram[s]>>24)&0xff;
 					s++;
 				}
 		}
@@ -289,13 +292,12 @@ WRITE32_MEMBER(ssfindo_state::FIFO_w)
 		m_PS7500_FIFO[1]++; //autoinc
 	}
 }
-static TIMER_CALLBACK( PS7500_Timer0_callback )
+TIMER_CALLBACK_MEMBER(ssfindo_state::PS7500_Timer0_callback)
 {
-	ssfindo_state *state = machine.driver_data<ssfindo_state>();
-	state->m_PS7500_IO[IRQSTA]|=0x20;
-	if(state->m_PS7500_IO[IRQMSKA]&0x20)
+	m_PS7500_IO[IRQSTA]|=0x20;
+	if(m_PS7500_IO[IRQMSKA]&0x20)
 	{
-		generic_pulse_irq_line(machine.device("maincpu"), ARM7_IRQ_LINE, 1);
+		generic_pulse_irq_line(machine().device("maincpu")->execute(), ARM7_IRQ_LINE, 1);
 	}
 }
 
@@ -310,13 +312,12 @@ static void PS7500_startTimer0(running_machine &machine)
 		state->m_PS7500timer0->adjust(attotime::from_usec(val ), 0, attotime::from_usec(val ));
 }
 
-static TIMER_CALLBACK( PS7500_Timer1_callback )
+TIMER_CALLBACK_MEMBER(ssfindo_state::PS7500_Timer1_callback)
 {
-	ssfindo_state *state = machine.driver_data<ssfindo_state>();
-	state->m_PS7500_IO[IRQSTA]|=0x40;
-	if(state->m_PS7500_IO[IRQMSKA]&0x40)
+	m_PS7500_IO[IRQSTA]|=0x40;
+	if(m_PS7500_IO[IRQMSKA]&0x40)
 	{
-		generic_pulse_irq_line(machine.device("maincpu"), ARM7_IRQ_LINE, 1);
+		generic_pulse_irq_line(machine().device("maincpu")->execute(), ARM7_IRQ_LINE, 1);
 	}
 }
 
@@ -330,13 +331,12 @@ static void PS7500_startTimer1(running_machine &machine)
 		state->m_PS7500timer1->adjust(attotime::from_usec(val ), 0, attotime::from_usec(val ));
 }
 
-static INTERRUPT_GEN( ssfindo_interrupt )
+INTERRUPT_GEN_MEMBER(ssfindo_state::ssfindo_interrupt)
 {
-	ssfindo_state *state = device->machine().driver_data<ssfindo_state>();
-	state->m_PS7500_IO[IRQSTA]|=0x08;
-		if(state->m_PS7500_IO[IRQMSKA]&0x08)
+	m_PS7500_IO[IRQSTA]|=0x08;
+		if(m_PS7500_IO[IRQMSKA]&0x08)
 		{
-			generic_pulse_irq_line(device, ARM7_IRQ_LINE, 1);
+			generic_pulse_irq_line(device.execute(), ARM7_IRQ_LINE, 1);
 		}
 }
 
@@ -350,23 +350,23 @@ static void PS7500_reset(running_machine &machine)
 		state->m_PS7500timer1->adjust( attotime::never);
 }
 
-typedef void (*ssfindo_speedup_func)(address_space *space);
+typedef void (*ssfindo_speedup_func)(address_space &space);
 ssfindo_speedup_func ssfindo_speedup;
 
-static void ssfindo_speedups(address_space* space)
+static void ssfindo_speedups(address_space& space)
 {
-	if (space->device().safe_pc()==0x2d6c8) // ssfindo
-		space->device().execute().spin_until_time(attotime::from_usec(20));
-	else if (space->device().safe_pc()==0x2d6bc) // ssfindo
-		space->device().execute().spin_until_time(attotime::from_usec(20));
+	if (space.device().safe_pc()==0x2d6c8) // ssfindo
+		space.device().execute().spin_until_time(attotime::from_usec(20));
+	else if (space.device().safe_pc()==0x2d6bc) // ssfindo
+		space.device().execute().spin_until_time(attotime::from_usec(20));
 }
 
-static void ppcar_speedups(address_space* space)
+static void ppcar_speedups(address_space& space)
 {
-	if (space->device().safe_pc()==0x000bc8) // ppcar
-		space->device().execute().spin_until_time(attotime::from_usec(20));
-	else if (space->device().safe_pc()==0x000bbc) // ppcar
-		space->device().execute().spin_until_time(attotime::from_usec(20));
+	if (space.device().safe_pc()==0x000bc8) // ppcar
+		space.device().execute().spin_until_time(attotime::from_usec(20));
+	else if (space.device().safe_pc()==0x000bbc) // ppcar
+		space.device().execute().spin_until_time(attotime::from_usec(20));
 }
 
 
@@ -394,7 +394,7 @@ READ32_MEMBER(ssfindo_state::PS7500_IO_r)
 			return (m_PS7500_IO[IRQSTA] & m_PS7500_IO[IRQMSKA]) | 0x80;
 
 		case IOCR: //TODO: nINT1, OD[n] p.81
-			if (ssfindo_speedup) ssfindo_speedup(&space);
+			if (ssfindo_speedup) ssfindo_speedup(space);
 
 			if( m_iocr_hack)
 			{
@@ -757,7 +757,7 @@ static MACHINE_CONFIG_START( ssfindo, ssfindo_state )
 	MCFG_CPU_ADD("maincpu", ARM7, 54000000) // guess...
 	MCFG_CPU_PROGRAM_MAP(ssfindo_map)
 
-	MCFG_CPU_VBLANK_INT("screen", ssfindo_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ssfindo_state,  ssfindo_interrupt)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -765,7 +765,7 @@ static MACHINE_CONFIG_START( ssfindo, ssfindo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(ssfindo)
+	MCFG_SCREEN_UPDATE_DRIVER(ssfindo_state, screen_update_ssfindo)
 
 	MCFG_PALETTE_LENGTH(256)
 MACHINE_CONFIG_END
@@ -857,8 +857,8 @@ ROM_END
 DRIVER_INIT_MEMBER(ssfindo_state,common)
 {
 	ssfindo_speedup = 0;
-	m_PS7500timer0 = machine().scheduler().timer_alloc(FUNC(PS7500_Timer0_callback));
-	m_PS7500timer1 = machine().scheduler().timer_alloc(FUNC(PS7500_Timer1_callback));
+	m_PS7500timer0 = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(ssfindo_state::PS7500_Timer0_callback),this));
+	m_PS7500timer1 = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(ssfindo_state::PS7500_Timer1_callback),this));
 
 }
 

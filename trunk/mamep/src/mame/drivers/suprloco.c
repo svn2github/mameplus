@@ -45,8 +45,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, suprloco_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa003) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0xc000, 0xc003) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xa000, 0xa003) AM_DEVWRITE("sn1", sn76496_device, write)
+	AM_RANGE(0xc000, 0xc003) AM_DEVWRITE("sn2", sn76496_device, write)
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
@@ -171,11 +171,11 @@ static MACHINE_CONFIG_START( suprloco, suprloco_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", suprloco_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)			/* NMIs are caused by the main CPU */
+	MCFG_CPU_PERIODIC_INT_DRIVER(suprloco_state, irq0_line_hold, 4*60)			/* NMIs are caused by the main CPU */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -183,7 +183,7 @@ static MACHINE_CONFIG_START( suprloco, suprloco_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(5000))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(suprloco)
+	MCFG_SCREEN_UPDATE_DRIVER(suprloco_state, screen_update_suprloco)
 
 	MCFG_GFXDECODE(suprloco)
 	MCFG_PALETTE_LENGTH(512+256)
@@ -192,11 +192,11 @@ static MACHINE_CONFIG_START( suprloco, suprloco_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, 4000000)
+	MCFG_SOUND_ADD("sn1", SN76496, 4000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 2000000)
+	MCFG_SOUND_ADD("sn2", SN76496, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

@@ -454,7 +454,7 @@ static MACHINE_CONFIG_START( cop01, cop01_state )
 	MCFG_CPU_ADD("maincpu", Z80, MAINCPU_CLOCK/2)	/* unknown clock / divider */
 	MCFG_CPU_PROGRAM_MAP(cop01_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cop01_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3MHz)	/* unknown clock / divider, hand-tuned to match audio reference */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -467,7 +467,7 @@ static MACHINE_CONFIG_START( cop01, cop01_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cop01)
+	MCFG_SCREEN_UPDATE_DRIVER(cop01_state, screen_update_cop01)
 
 	MCFG_GFXDECODE(cop01)
 	MCFG_PALETTE_LENGTH(16+8*16+16*16)
@@ -492,7 +492,7 @@ static MACHINE_CONFIG_START( mightguy, cop01_state )
 	MCFG_CPU_ADD("maincpu", Z80, MAINCPU_CLOCK/2)	/* unknown divider */
 	MCFG_CPU_PROGRAM_MAP(cop01_map)
 	MCFG_CPU_IO_MAP(mightguy_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cop01_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", Z80, AUDIOCPU_CLOCK/2)	/* unknown divider */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -505,7 +505,7 @@ static MACHINE_CONFIG_START( mightguy, cop01_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cop01)
+	MCFG_SCREEN_UPDATE_DRIVER(cop01_state, screen_update_cop01)
 
 	MCFG_GFXDECODE(cop01)
 	MCFG_PALETTE_LENGTH(16+8*16+16*16)

@@ -154,9 +154,9 @@ READ32_MEMBER(polygonet_state::psac_rom_r)
 /* irq 3 is network.  don't generate if you don't emulate the network h/w! */
 /* irq 5 is vblank */
 /* irq 7 does nothing (it jsrs to a rts and then rte) */
-static INTERRUPT_GEN(polygonet_interrupt)
+INTERRUPT_GEN_MEMBER(polygonet_state::polygonet_interrupt)
 {
-	device->execute().set_input_line(M68K_IRQ_5, HOLD_LINE);
+	device.execute().set_input_line(M68K_IRQ_5, HOLD_LINE);
 }
 
 /* sound CPU communications */
@@ -555,9 +555,9 @@ WRITE8_MEMBER(polygonet_state::sound_bankswitch_w)
 	reset_sound_region(machine());
 }
 
-static INTERRUPT_GEN(audio_interrupt)
+INTERRUPT_GEN_MEMBER(polygonet_state::audio_interrupt)
 {
-	device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, polygonet_state )
@@ -622,7 +622,7 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 
 	MCFG_CPU_ADD("maincpu", M68EC020, 16000000)	/* 16 MHz (xtal is 32.0 MHz) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", polygonet_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", polygonet_state,  polygonet_interrupt)
 
 	MCFG_CPU_ADD("dsp", DSP56156, 40000000)		/* xtal is 40.0 MHz, DSP has an internal divide-by-2 */
 	MCFG_CPU_PROGRAM_MAP(dsp_program_map)
@@ -630,7 +630,7 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 
 	MCFG_CPU_ADD("soundcpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(audio_interrupt, 480)
+	MCFG_CPU_PERIODIC_INT_DRIVER(polygonet_state, audio_interrupt,  480)
 
 
 	MCFG_GFXDECODE(plygonet)
@@ -646,7 +646,7 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(64, 64+368-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(polygonet)
+	MCFG_SCREEN_UPDATE_DRIVER(polygonet_state, screen_update_polygonet)
 
 	MCFG_PALETTE_LENGTH(32768)
 
@@ -738,8 +738,8 @@ DRIVER_INIT_MEMBER(polygonet_state,polygonet)
 	memset(m_dsp56k_bank04_ram, 0, sizeof(m_dsp56k_bank04_ram));
 
 	/* The dsp56k occasionally executes out of mapped memory */
-	address_space *space = machine().device<dsp56k_device>("dsp")->space(AS_PROGRAM);
-	m_dsp56k_update_handler = space->set_direct_update_handler(direct_update_delegate(FUNC(polygonet_state::plygonet_dsp56k_direct_handler), this));
+	address_space &space = machine().device<dsp56k_device>("dsp")->space(AS_PROGRAM);
+	m_dsp56k_update_handler = space.set_direct_update_handler(direct_update_delegate(FUNC(polygonet_state::plygonet_dsp56k_direct_handler), this));
 
     /* save states */
 	save_item(NAME(m_dsp56k_bank00_ram));

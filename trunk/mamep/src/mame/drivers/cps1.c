@@ -343,11 +343,11 @@ WRITE16_MEMBER(cps_state::cpsq_coinctrl2_w)
     }
 }
 
-INTERRUPT_GEN( cps1_interrupt )
+INTERRUPT_GEN_MEMBER(cps_state::cps1_interrupt)
 {
 	/* Strider also has a IRQ4 handler. It is input port related, but the game */
 	/* works without it. It is the *only* CPS1 game to have that. */
-	device->execute().set_input_line(2, HOLD_LINE);
+	device.execute().set_input_line(2, HOLD_LINE);
 }
 
 /********************************************************************
@@ -358,9 +358,9 @@ INTERRUPT_GEN( cps1_interrupt )
 ********************************************************************/
 
 
-static INTERRUPT_GEN( cps1_qsound_interrupt )
+INTERRUPT_GEN_MEMBER(cps_state::cps1_qsound_interrupt)
 {
-	device->execute().set_input_line(2, HOLD_LINE);
+	device.execute().set_input_line(2, HOLD_LINE);
 }
 
 
@@ -602,7 +602,7 @@ static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 8, cps_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("2151", ym2151_r, ym2151_w)
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("2151", ym2151_device, read, write)
 	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
 	AM_RANGE(0xf006, 0xf006) AM_WRITE(cps1_oki_pin7_w) /* controls pin 7 of OKI chip */
@@ -3295,19 +3295,6 @@ GFXDECODE_END
 
 
 
-static void cps1_irq_handler_mus(device_t *device, int irq)
-{
-	cps_state *state = device->machine().driver_data<cps_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(cps1_irq_handler_mus)
-};
-
-
-
 /********************************************************************
 *
 *  Machine Driver macro
@@ -3341,7 +3328,7 @@ static MACHINE_CONFIG_START( cps1_10MHz, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_10MHz )	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)  /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sub_map)
@@ -3350,12 +3337,13 @@ static MACHINE_CONFIG_START( cps1_10MHz, cps_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(59.61) /* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(64*8, 32*8)
-	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(cps1)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+//  MCFG_SCREEN_REFRESH_RATE(59.61) /* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
+//  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+//  MCFG_SCREEN_SIZE(64*8, 32*8)
+//  MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+	MCFG_SCREEN_RAW_PARAMS(XTAL_16MHz/2, 518, 64, 448, 259, 16, 240) /* guess: assume that CPS-1 uses the same exact timings as CPS-2 */
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_cps1)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(0xc00)
@@ -3365,8 +3353,8 @@ static MACHINE_CONFIG_START( cps1_10MHz, cps_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("2151", YM2151, XTAL_3_579545MHz)  /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("2151", XTAL_3_579545MHz)  /* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.35)
 	MCFG_SOUND_ROUTE(1, "mono", 0.35)
 
@@ -3396,11 +3384,11 @@ static MACHINE_CONFIG_DERIVED( qsound, cps1_12MHz )
 
 	MCFG_CPU_REPLACE("maincpu", M68000, XTAL_12MHz )	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(qsound_main_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)  /* ??? interrupts per frame */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_qsound_interrupt)  /* ??? interrupts per frame */
 
 	MCFG_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)  /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(qsound_sub_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 250)	/* ?? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(cps_state, irq0_line_hold,  250)	/* ?? */
 
 	MCFG_MACHINE_START_OVERRIDE(cps_state,qsound)
 
@@ -3425,7 +3413,7 @@ static MACHINE_CONFIG_START( cpspicb, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_qsound_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", PIC16C57, 12000000)
 	MCFG_DEVICE_DISABLE() /* no valid dumps .. */
@@ -3438,8 +3426,8 @@ static MACHINE_CONFIG_START( cpspicb, cps_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(cps1)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_cps1)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(0xc00)
@@ -3499,7 +3487,7 @@ static MACHINE_CONFIG_START( sf2mdt, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(sf2mdt_z80map)
@@ -3512,8 +3500,8 @@ static MACHINE_CONFIG_START( sf2mdt, cps_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(cps1)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_cps1)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(0xc00)
@@ -3523,8 +3511,8 @@ static MACHINE_CONFIG_START( sf2mdt, cps_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("2151", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("2151", 3579545)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.35)
 	MCFG_SOUND_ROUTE(1, "mono", 0.35)
 
@@ -3583,7 +3571,7 @@ static MACHINE_CONFIG_START( knightsb, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 24000000 / 2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 29821000 / 8)
 	MCFG_CPU_PROGRAM_MAP(sf2mdt_z80map)
@@ -3596,8 +3584,8 @@ static MACHINE_CONFIG_START( knightsb, cps_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(cps1)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_cps1)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(0xc00)
@@ -3607,8 +3595,8 @@ static MACHINE_CONFIG_START( knightsb, cps_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("2151", YM2151, 29821000 / 8)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("2151", 29821000 / 8)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.35)
 	MCFG_SOUND_ROUTE(1, "mono", 0.35)
 
@@ -11657,13 +11645,12 @@ ROM_END
 
 DRIVER_INIT_MEMBER(cps_state,forgottn)
 {
-
 	/* Forgotten Worlds has a NEC uPD4701AC on the B-board handling dial inputs from the CN-MOWS connector. */
 	/* The memory mapping is handled by PAL LWIO */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800040, 0x800041, write16_delegate(FUNC(cps_state::forgottn_dial_0_reset_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800048, 0x800049, write16_delegate(FUNC(cps_state::forgottn_dial_1_reset_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800052, 0x800055, read16_delegate(FUNC(cps_state::forgottn_dial_0_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80005a, 0x80005d, read16_delegate(FUNC(cps_state::forgottn_dial_1_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800040, 0x800041, write16_delegate(FUNC(cps_state::forgottn_dial_0_reset_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800048, 0x800049, write16_delegate(FUNC(cps_state::forgottn_dial_1_reset_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800052, 0x800055, read16_delegate(FUNC(cps_state::forgottn_dial_0_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80005a, 0x80005d, read16_delegate(FUNC(cps_state::forgottn_dial_1_r),this));
 
 	save_item(NAME(m_dial));
 
@@ -11673,12 +11660,54 @@ DRIVER_INIT_MEMBER(cps_state,forgottn)
 	DRIVER_INIT_CALL(cps1);
 }
 
+READ16_MEMBER(cps_state::sf2rb_prot_r)
+{
+	switch (offset)
+	{
+		case 0x01201/2:
+			return 0x0002;
+
+		case 0x81201/2:
+			return 0x0040;
+	}
+
+	return 0;
+}
+
+DRIVER_INIT_MEMBER(cps_state,sf2rb)
+{
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x2fffff, read16_delegate(FUNC(cps_state::sf2rb_prot_r),this));
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+READ16_MEMBER(cps_state::sf2rb2_prot_r)
+{
+	switch (offset)
+	{
+		case 0x01201/2:
+			return 0x0000;
+
+		case 0x81201/2:
+			return 0x0040;
+	}
+
+	return 0;
+}
+
+DRIVER_INIT_MEMBER(cps_state,sf2rb2)
+{
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x2fffff, read16_delegate(FUNC(cps_state::sf2rb2_prot_r),this));
+
+	DRIVER_INIT_CALL(cps1);
+}
+
 DRIVER_INIT_MEMBER(cps_state,sf2ee)
 {
 	/* This specific revision of SF2 has the CPS-B custom mapped at a different address. */
 	/* The mapping is handled by the PAL IOB2 on the B-board */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->unmap_readwrite(0x800140, 0x80017f);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x8001c0, 0x8001ff, read16_delegate(FUNC(cps_state::cps1_cps_b_r),this), write16_delegate(FUNC(cps_state::cps1_cps_b_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).unmap_readwrite(0x800140, 0x80017f);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x8001c0, 0x8001ff, read16_delegate(FUNC(cps_state::cps1_cps_b_r),this), write16_delegate(FUNC(cps_state::cps1_cps_b_w),this));
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -11686,7 +11715,7 @@ DRIVER_INIT_MEMBER(cps_state,sf2ee)
 DRIVER_INIT_MEMBER(cps_state,sf2thndr)
 {
 	/* This particular hack uses a modified B-board PAL which mirrors the CPS-B registers at an alternate address */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x8001c0, 0x8001ff, read16_delegate(FUNC(cps_state::cps1_cps_b_r),this), write16_delegate(FUNC(cps_state::cps1_cps_b_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x8001c0, 0x8001ff, read16_delegate(FUNC(cps_state::cps1_cps_b_r),this), write16_delegate(FUNC(cps_state::cps1_cps_b_w),this));
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -11694,7 +11723,7 @@ DRIVER_INIT_MEMBER(cps_state,sf2thndr)
 DRIVER_INIT_MEMBER(cps_state,sf2hack)
 {
 	/* some SF2 hacks have some inputs wired to the LSB instead of MSB */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800018, 0x80001f, read16_delegate(FUNC(cps_state::cps1_hack_dsw_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800018, 0x80001f, read16_delegate(FUNC(cps_state::cps1_hack_dsw_r),this));
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -11727,7 +11756,7 @@ DRIVER_INIT_MEMBER(cps_state,pang3b)
 {
 	/* Pang 3 is the only non-QSound game to have an EEPROM. */
 	/* It is mapped in the CPS-B address range so probably is on the C-board. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_port(0x80017a, 0x80017b, "EEPROMIN", "EEPROMOUT");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_port(0x80017a, 0x80017b, "EEPROMIN", "EEPROMOUT");
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -11810,8 +11839,8 @@ DRIVER_INIT_MEMBER(cps_state,sf2m1)
 //	mem16[0x15A4/2] = 0xFFC0; // Alignment
 	mem16[0x6322/2] = 0x0181; // SFX
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800012, 0x800013, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
-//	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800006, 0x800007, write16_delegate(FUNC(cps_state::cps1hack_soundlatch_w),this)); /* Sound command */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800012, 0x800013, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
+//	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800006, 0x800007, write16_delegate(FUNC(cps_state::cps1hack_soundlatch_w),this)); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
 }
 
@@ -11827,10 +11856,10 @@ DRIVER_INIT_MEMBER(cps_state,sf2m3)
 	mem8[0x630] = 0x16;
 	mem8[0x638] = 0x20;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800010, 0x800011, read16_delegate(FUNC(cps_state::cps1_in1_r),this)); /* Player input ports */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800028, 0x80002f, read16_delegate(FUNC(cps_state::cps1_hack_dsw_r),this)); /* System input ports / Dip Switches */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800186, 0x800187, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800190, 0x800191, write16_delegate(FUNC(cps_state::cps1_soundlatch_w),this)); /* Sound command */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800010, 0x800011, read16_delegate(FUNC(cps_state::cps1_in1_r),this)); /* Player input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800028, 0x80002f, read16_delegate(FUNC(cps_state::cps1_hack_dsw_r),this)); /* System input ports / Dip Switches */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800186, 0x800187, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800190, 0x800191, write16_delegate(FUNC(cps_state::cps1_soundlatch_w),this)); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
 }
 
@@ -11966,7 +11995,7 @@ DRIVER_INIT_MEMBER(cps_state,wofsjb)
 	mem8[0x72B8] = 0x00;
 	mem8[0x72B9] = 0x0C;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80001a, 0x80001b, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80001a, 0x80001b, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
 	wof_decode(machine());
 	DRIVER_INIT_CALL(cps1);
 }
@@ -11989,7 +12018,7 @@ DRIVER_INIT_MEMBER(cps_state,wof3js)
 	mem8[0x5A5A] = 0x11;
 	mem8[0x5A5B] = 0x00;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800176, 0x800177, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800176, 0x800177, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
 	wof_decode(machine());
 	DRIVER_INIT_CALL(cps1);
 }
@@ -12239,9 +12268,9 @@ DRIVER_INIT_MEMBER(cps_state,wofh)
 
 DRIVER_INIT_MEMBER(cps_state,cawingb)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x882000, 0x882001, read16_delegate(FUNC(cps_state::cps1_in1_r),this)); /* Player input ports */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x882008, 0x88200f, read16_delegate(FUNC(cps_state::cps1_dsw_r),this)); /* System input ports / Dip Switches */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x882006, 0x882007, write16_delegate(FUNC(cps_state::cps1hack_soundlatch_w),this)); /* Sound command */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x882000, 0x882001, read16_delegate(FUNC(cps_state::cps1_in1_r),this)); /* Player input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x882008, 0x88200f, read16_delegate(FUNC(cps_state::cps1_dsw_r),this)); /* System input ports / Dip Switches */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x882006, 0x882007, write16_delegate(FUNC(cps_state::cps1hack_soundlatch_w),this)); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
 }
 
@@ -12250,7 +12279,7 @@ READ16_MEMBER(cps_state::sf2mdt_r)
 	return 0xffff;
 }
 
-DRIVER_INIT_MEMBER( cps_state,sf2mdt )
+DRIVER_INIT_MEMBER(cps_state,sf2mdt)
 {
 	int i;
 	UINT32 gfx_size = machine().root_device().memregion( "gfx" )->bytes();
@@ -12266,19 +12295,19 @@ DRIVER_INIT_MEMBER( cps_state,sf2mdt )
 		rom[i + 3] = rom[i + 6];
 		rom[i + 6] = tmp;
 	}
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x70c01a, 0x70c01b, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x70c01c, 0x70c01d, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x70c01e, 0x70c01f, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x70c010, 0x70c011, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x70c018, 0x70c019, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x70c01a, 0x70c01b, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x70c01c, 0x70c01d, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x70c01e, 0x70c01f, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x70c010, 0x70c011, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x70c018, 0x70c019, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
 
 	DRIVER_INIT_CALL(cps1);
 }
 
 DRIVER_INIT_MEMBER(cps_state,dinoh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf18000, 0xf19fff,  read16_delegate(FUNC(cps_state::sf2mdt_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800180, 0x800181, write16_delegate(FUNC(cps_state::dinoh_sound_command_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff,  read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800180, 0x800181, write16_delegate(FUNC(cps_state::dinoh_sound_command_w),this));
 	dino_decode(machine());	
 	DRIVER_INIT_CALL(cps1);
 }
@@ -12396,9 +12425,9 @@ DRIVER_INIT_MEMBER(cps_state,dinohb)
 
 DRIVER_INIT_MEMBER( cps_state,dinohunt )
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf18000, 0xf19fff, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xfc0000, 0xfc0001, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800180, 0x800181, write16_delegate(FUNC(cps_state::dinoh_sound_command_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff, read16_delegate(FUNC(cps_state::sf2mdt_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfc0000, 0xfc0001, read16_delegate(FUNC(cps_state::cps1_hack_in2_r),this)); /* Extra input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800180, 0x800181, write16_delegate(FUNC(cps_state::dinoh_sound_command_w),this));
 	dino_decode(machine());
 	DRIVER_INIT_CALL(cps1);
 }
@@ -12504,8 +12533,8 @@ GAME( 1992, sf2ceuc,     sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     
 GAME( 1992, sf2ceja,     sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (Japan 920322)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2cejb,     sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (Japan 920513)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2cejc,     sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (Japan 920803)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2rb,       sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Rainbow set 1, bootleg)", GAME_SUPPORTS_SAVE )			// 920322 - based on World version
-GAME( 1992, sf2rb2,      sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Rainbow set 2, bootleg)", GAME_SUPPORTS_SAVE )			// 920322 - based on World version
+GAME( 1992, sf2rb,       sf2ce,    cps1_12MHz, sf2, cps_state,        sf2rb,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (Rainbow set 1, bootleg)", GAME_SUPPORTS_SAVE )			// 920322 - based on World version
+GAME( 1992, sf2rb2,      sf2ce,    cps1_12MHz, sf2, cps_state,        sf2rb2,   ROT0,   "bootleg", "Street Fighter II': Champion Edition (Rainbow set 2, bootleg)", GAME_SUPPORTS_SAVE )			// 920322 - based on World version
 GAME( 1992, sf2rb3,      sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Rainbow set 3, bootleg)", GAME_SUPPORTS_SAVE )			// 920322 - based on World version
 GAME( 1992, sf2red,      sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Red Wave, bootleg)", GAME_SUPPORTS_SAVE )			// 920313 - based on World version
 GAME( 1992, sf2v004,     sf2ce,    cps1_12MHz, sf2, cps_state,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (V004, bootleg)", GAME_SUPPORTS_SAVE )				// 102092 !!! - based on (heavily modified) World version

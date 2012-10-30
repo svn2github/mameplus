@@ -13,15 +13,14 @@ driver by Allard Van Der Bas
 
 #define MASTER_CLOCK XTAL_18_432MHz
 
-static TIMER_DEVICE_CALLBACK( shaolins_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(shaolins_state::shaolins_interrupt)
 {
-	shaolins_state *state = timer.machine().driver_data<shaolins_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		 state->m_maincpu->set_input_line(0, HOLD_LINE);
+		 m_maincpu->set_input_line(0, HOLD_LINE);
 	else if((scanline % 32) == 0)
-		if (state->m_nmi_enable & 0x02) state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		if (m_nmi_enable & 0x02) m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -30,8 +29,8 @@ static ADDRESS_MAP_START( shaolins_map, AS_PROGRAM, 8, shaolins_state )
 	AM_RANGE(0x0000, 0x0000) AM_WRITE(shaolins_nmi_w)	/* bit 0 = flip screen, bit 1 = nmi enable, bit 2 = ? */
 														/* bit 3, bit 4 = coin counters */
 	AM_RANGE(0x0100, 0x0100) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x0300, 0x0300) AM_DEVWRITE("sn1", sn76489a_new_device, write)	/* trigger chip to read from latch. The program always */
-	AM_RANGE(0x0400, 0x0400) AM_DEVWRITE("sn2", sn76489a_new_device, write)	/* writes the same number as the latch, so we don't */
+	AM_RANGE(0x0300, 0x0300) AM_DEVWRITE("sn1", sn76489a_device, write)	/* trigger chip to read from latch. The program always */
+	AM_RANGE(0x0400, 0x0400) AM_DEVWRITE("sn2", sn76489a_device, write)	/* writes the same number as the latch, so we don't */
 															/* bother emulating them. */
 	AM_RANGE(0x0500, 0x0500) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0600, 0x0600) AM_READ_PORT("DSW2")
@@ -207,7 +206,7 @@ static MACHINE_CONFIG_START( shaolins, shaolins_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/12)        /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(shaolins_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", shaolins_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", shaolins_state, shaolins_interrupt, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -215,7 +214,7 @@ static MACHINE_CONFIG_START( shaolins, shaolins_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(shaolins)
+	MCFG_SCREEN_UPDATE_DRIVER(shaolins_state, screen_update_shaolins)
 
 	MCFG_GFXDECODE(shaolins)
 	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)
@@ -224,11 +223,11 @@ static MACHINE_CONFIG_START( shaolins, shaolins_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A_NEW, MASTER_CLOCK/12)        /* verified on pcb */
+	MCFG_SOUND_ADD("sn1", SN76489A, MASTER_CLOCK/12)        /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A_NEW, MASTER_CLOCK/6)        /* verified on pcb */
+	MCFG_SOUND_ADD("sn2", SN76489A, MASTER_CLOCK/6)        /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -236,11 +235,11 @@ MACHINE_CONFIG_END
 #if 0 // a bootleg board was found with downgraded sound hardware, but is otherwise the same
 static MACHINE_CONFIG_DERIVED( shaolinb, shaolins )
 
-	MCFG_SOUND_REPLACE("sn1", SN76489_NEW, MASTER_CLOCK/12) /* only type verified on pcb */
+	MCFG_SOUND_REPLACE("sn1", SN76489, MASTER_CLOCK/12) /* only type verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_REPLACE("sn2", SN76489_NEW, MASTER_CLOCK/6)  /* only type verified on pcb */
+	MCFG_SOUND_REPLACE("sn2", SN76489, MASTER_CLOCK/6)  /* only type verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

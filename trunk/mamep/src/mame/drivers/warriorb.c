@@ -181,16 +181,16 @@ WRITE16_MEMBER(warriorb_state::warriorb_sound_w)
 {
 
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
 }
 
 READ16_MEMBER(warriorb_state::warriorb_sound_r)
 {
 
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, 0) & 0xff));
+		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff));
 	else
 		return 0;
 }
@@ -218,8 +218,8 @@ WRITE8_MEMBER(warriorb_state::warriorb_pancontrol)
 WRITE16_MEMBER(warriorb_state::tc0100scn_dual_screen_w)
 {
 
-	tc0100scn_word_w(m_tc0100scn_1, offset, data, mem_mask);
-	tc0100scn_word_w(m_tc0100scn_2, offset, data, mem_mask);
+	tc0100scn_word_w(m_tc0100scn_1, space, offset, data, mem_mask);
+	tc0100scn_word_w(m_tc0100scn_2, space, offset, data, mem_mask);
 }
 
 /***********************************************************
@@ -546,7 +546,7 @@ static MACHINE_CONFIG_START( darius2d, warriorb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? (Might well be 16!) */
 	MCFG_CPU_PROGRAM_MAP(darius2d_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", warriorb_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
@@ -564,14 +564,14 @@ static MACHINE_CONFIG_START( darius2d, warriorb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 3*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(warriorb_left)
+	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 3*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(warriorb_right)
+	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_right)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2d_tc0100scn_intf_l)
@@ -609,7 +609,7 @@ static MACHINE_CONFIG_START( warriorb, warriorb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(warriorb_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", warriorb_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
@@ -627,14 +627,14 @@ static MACHINE_CONFIG_START( warriorb, warriorb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(warriorb_left)
+	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(warriorb_right)
+	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_right)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", warriorb_tc0100scn_intf_l)

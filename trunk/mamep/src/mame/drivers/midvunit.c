@@ -132,9 +132,9 @@ READ32_MEMBER(midvunit_state::midvunit_adc_r)
 }
 
 
-static TIMER_CALLBACK( adc_ready )
+TIMER_CALLBACK_MEMBER(midvunit_state::adc_ready)
 {
-	machine.device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 }
 
 
@@ -148,7 +148,7 @@ WRITE32_MEMBER(midvunit_state::midvunit_adc_w)
 		if (which < 0 || which > 2)
 			logerror("adc_w: unexpected which = %02X\n", which + 4);
 		m_adc_data = ioport(adcnames[which])->read_safe(0);
-		machine().scheduler().timer_set(attotime::from_msec(1), FUNC(adc_ready));
+		machine().scheduler().timer_set(attotime::from_msec(1), timer_expired_delegate(FUNC(midvunit_state::adc_ready),this));
 	}
 	else
 		logerror("adc_w without enabling writes!\n");
@@ -362,20 +362,20 @@ WRITE32_MEMBER(midvunit_state::bit_reset_w)
 
 READ32_MEMBER(midvunit_state::offroadc_serial_status_r)
 {
-	int status = midway_serial_pic2_status_r(&space);
+	int status = midway_serial_pic2_status_r(space);
 	return (ioport("991030")->read()  & 0x7fff7fff) | (status << 31) | (status << 15);
 }
 
 
 READ32_MEMBER(midvunit_state::offroadc_serial_data_r)
 {
-	return midway_serial_pic2_r(&space) << 16;
+	return midway_serial_pic2_r(space) << 16;
 }
 
 
 WRITE32_MEMBER(midvunit_state::offroadc_serial_data_w)
 {
-	midway_serial_pic2_w(&space, data >> 16);
+	midway_serial_pic2_w(space, data >> 16);
 }
 
 
@@ -1018,15 +1018,15 @@ static MACHINE_CONFIG_START( midvcommon, midvunit_state )
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_TIMER_ADD("timer0", NULL)
-	MCFG_TIMER_ADD("timer1", NULL)
+	MCFG_TIMER_ADD_NONE("timer0")
+	MCFG_TIMER_ADD_NONE("timer1")
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32768)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MIDVUNIT_VIDEO_CLOCK/2, 666, 0, 512, 432, 0, 400)
-	MCFG_SCREEN_UPDATE_STATIC(midvunit)
+	MCFG_SCREEN_UPDATE_DRIVER(midvunit_state, screen_update_midvunit)
 
 MACHINE_CONFIG_END
 
@@ -1036,13 +1036,6 @@ static MACHINE_CONFIG_DERIVED( midvunit, midvcommon )
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(dcs_audio_2k)
 MACHINE_CONFIG_END
-
-static const ide_config ide_intf =
-{
-	NULL,
-	NULL,
-	0
-};
 
 static MACHINE_CONFIG_DERIVED( midvplus, midvcommon )
 
@@ -1055,7 +1048,7 @@ static MACHINE_CONFIG_DERIVED( midvplus, midvcommon )
 	MCFG_DEVICE_REMOVE("nvram")
 	MCFG_NVRAM_HANDLER(midway_serial_pic2)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(dcs2_audio_2115)
@@ -1725,7 +1718,7 @@ void midvunit_state::init_crusnusa_common(offs_t speedup)
 	m_adc_shift = 24;
 
 	/* speedups */
-	m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(speedup, speedup + 1, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
+	m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(speedup, speedup + 1, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
 }
 DRIVER_INIT_MEMBER(midvunit_state,crusnusa)  { init_crusnusa_common(0xc93e); }
 DRIVER_INIT_MEMBER(midvunit_state,crusnu40)  { init_crusnusa_common(0xc957); }
@@ -1738,21 +1731,21 @@ void midvunit_state::init_crusnwld_common(offs_t speedup)
 	m_adc_shift = 16;
 
 	/* control register is different */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x994000, 0x994000, write32_delegate(FUNC(midvunit_state::crusnwld_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x994000, 0x994000, write32_delegate(FUNC(midvunit_state::crusnwld_control_w),this));
 
 	/* valid values are 450 or 460 */
 	midway_serial_pic_init(machine(), 450);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x991030, 0x991030, read32_delegate(FUNC(midvunit_state::offroadc_serial_status_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x996000, 0x996000, read32_delegate(FUNC(midvunit_state::offroadc_serial_data_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x996000, 0x996000, write32_delegate(FUNC(midvunit_state::offroadc_serial_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x991030, 0x991030, read32_delegate(FUNC(midvunit_state::offroadc_serial_status_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x996000, 0x996000, read32_delegate(FUNC(midvunit_state::offroadc_serial_data_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x996000, 0x996000, write32_delegate(FUNC(midvunit_state::offroadc_serial_data_w),this));
 
 	/* install strange protection device */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9d0000, 0x9d1fff, read32_delegate(FUNC(midvunit_state::bit_data_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x9d0000, 0x9d0000, write32_delegate(FUNC(midvunit_state::bit_reset_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x9d0000, 0x9d1fff, read32_delegate(FUNC(midvunit_state::bit_data_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x9d0000, 0x9d0000, write32_delegate(FUNC(midvunit_state::bit_reset_w),this));
 
 	/* speedups */
 	if (speedup)
-		m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(speedup, speedup + 1, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
+		m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(speedup, speedup + 1, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
 }
 DRIVER_INIT_MEMBER(midvunit_state,crusnwld)  { init_crusnwld_common(0xd4c0); }
 #if 0
@@ -1766,15 +1759,15 @@ DRIVER_INIT_MEMBER(midvunit_state,offroadc)
 	m_adc_shift = 16;
 
 	/* control register is different */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x994000, 0x994000, write32_delegate(FUNC(midvunit_state::crusnwld_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x994000, 0x994000, write32_delegate(FUNC(midvunit_state::crusnwld_control_w),this));
 
 	/* valid values are 230 or 234 */
 	midway_serial_pic2_init(machine(), 230, 94);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x991030, 0x991030, read32_delegate(FUNC(midvunit_state::offroadc_serial_status_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x996000, 0x996000, read32_delegate(FUNC(midvunit_state::offroadc_serial_data_r),this), write32_delegate(FUNC(midvunit_state::offroadc_serial_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x991030, 0x991030, read32_delegate(FUNC(midvunit_state::offroadc_serial_status_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x996000, 0x996000, read32_delegate(FUNC(midvunit_state::offroadc_serial_data_r),this), write32_delegate(FUNC(midvunit_state::offroadc_serial_data_w),this));
 
 	/* speedups */
-	m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x195aa, 0x195aa, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
+	m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x195aa, 0x195aa, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
 }
 
 
@@ -1799,7 +1792,7 @@ DRIVER_INIT_MEMBER(midvunit_state,wargods)
 	midway_serial_pic2_set_default_nvram(default_nvram);
 
 	/* speedups */
-	m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x2f4c, 0x2f4c, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
+	m_generic_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x2f4c, 0x2f4c, read32_delegate(FUNC(midvunit_state::generic_speedup_r),this));
 }
 
 

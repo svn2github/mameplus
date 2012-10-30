@@ -413,7 +413,7 @@ static MACHINE_CONFIG_START( spdodgeb, spdodgeb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502,12000000/6)	/* 2MHz ? */
 	MCFG_CPU_PROGRAM_MAP(spdodgeb_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", spdodgeb_interrupt, "screen", 0, 1) /* 1 IRQ every 8 visible scanlines, plus NMI for vblank */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", spdodgeb_state, spdodgeb_interrupt, "screen", 0, 1) /* 1 IRQ every 8 visible scanlines, plus NMI for vblank */
 
 	MCFG_CPU_ADD("audiocpu", M6809,12000000/6)	/* 2MHz ? */
 	MCFG_CPU_PROGRAM_MAP(spdodgeb_sound_map)
@@ -421,7 +421,7 @@ static MACHINE_CONFIG_START( spdodgeb, spdodgeb_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(12000000/2, 384, 0, 256, 272, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(spdodgeb)
+	MCFG_SCREEN_UPDATE_DRIVER(spdodgeb_state, screen_update_spdodgeb)
 
 	MCFG_GFXDECODE(spdodgeb)
 	MCFG_PALETTE_LENGTH(1024)

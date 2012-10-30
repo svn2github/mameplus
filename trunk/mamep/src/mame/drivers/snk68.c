@@ -165,7 +165,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(snk68_state::D7759_write_port_0_w)
 {
 	device_t *device = machine().device("upd");
-	upd7759_port_w(device, 0, data);
+	upd7759_port_w(device, space, 0, data);
 	upd7759_start_w(device, 0);
 	upd7759_start_w(device, 1);
 }
@@ -593,7 +593,7 @@ static MACHINE_CONFIG_START( pow, snk68_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_18MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(pow_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk68_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -605,7 +605,7 @@ static MACHINE_CONFIG_START( pow, snk68_state )
 	// give a theoretical refresh rate of 59.1856Hz while the measured
 	// rate on a SAR board is 59.16Hz.
 	MCFG_SCREEN_RAW_PARAMS(XTAL_24MHz/4, 384, 0, 256, 264, 16, 240)
-	MCFG_SCREEN_UPDATE_STATIC(pow)
+	MCFG_SCREEN_UPDATE_DRIVER(snk68_state, screen_update_pow)
 
 	MCFG_GFXDECODE(pow)
 	MCFG_PALETTE_LENGTH(0x800)

@@ -53,6 +53,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_skyarmy_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_skyarmy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(skyarmy_nmi_source);
 };
 
 WRITE8_MEMBER(skyarmy_state::skyarmy_flip_screen_x_w)
@@ -124,17 +126,16 @@ void skyarmy_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( skyarmy )
+UINT32 skyarmy_state::screen_update_skyarmy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	skyarmy_state *state = screen.machine().driver_data<skyarmy_state>();
-	UINT8 *spriteram = state->m_spriteram;
+	UINT8 *spriteram = m_spriteram;
 	int sx, sy, flipx, flipy, offs,pal;
 	int i;
 
 	for(i=0;i<0x20;i++)
-		state->m_tilemap->set_scrolly(i,state->m_scrollram[i]);
+		m_tilemap->set_scrolly(i,m_scrollram[i]);
 
-	state->m_tilemap->draw(bitmap, cliprect, 0,0);
+	m_tilemap->draw(bitmap, cliprect, 0,0);
 
 	for (offs = 0 ; offs < 0x40; offs+=4)
 	{
@@ -145,7 +146,7 @@ static SCREEN_UPDATE_IND16( skyarmy )
 		flipy = (spriteram[offs+1]&0x80)>>7;
 		flipx = (spriteram[offs+1]&0x40)>>6;
 
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
 			spriteram[offs+1]&0x3f,
 			pal,
 			flipx,flipy,
@@ -155,11 +156,10 @@ static SCREEN_UPDATE_IND16( skyarmy )
 	return 0;
 }
 
-static INTERRUPT_GEN( skyarmy_nmi_source )
+INTERRUPT_GEN_MEMBER(skyarmy_state::skyarmy_nmi_source)
 {
-	skyarmy_state *state = device->machine().driver_data<skyarmy_state>();
 
-	if(state->m_nmi) device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi) device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -284,8 +284,8 @@ static MACHINE_CONFIG_START( skyarmy, skyarmy_state )
 	MCFG_CPU_ADD("maincpu", Z80,4000000)
 	MCFG_CPU_PROGRAM_MAP(skyarmy_map)
 	MCFG_CPU_IO_MAP(skyarmy_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
-	MCFG_CPU_PERIODIC_INT(skyarmy_nmi_source,650)	/* Hz */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", skyarmy_state,  irq0_line_hold)
+	MCFG_CPU_PERIODIC_INT_DRIVER(skyarmy_state, skyarmy_nmi_source, 650)	/* Hz */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -293,7 +293,7 @@ static MACHINE_CONFIG_START( skyarmy, skyarmy_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8,32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8,32*8-1,1*8,31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(skyarmy)
+	MCFG_SCREEN_UPDATE_DRIVER(skyarmy_state, screen_update_skyarmy)
 
 	MCFG_GFXDECODE(skyarmy)
 	MCFG_PALETTE_LENGTH(32)

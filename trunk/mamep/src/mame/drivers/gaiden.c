@@ -448,7 +448,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( drgnbowl_sound_port_map, AS_IO, 8, gaiden_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x80, 0x80) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xc0, 0xc0) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -764,7 +764,7 @@ static MACHINE_CONFIG_START( shadoww, gaiden_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 18432000/2)	/* 9.216 MHz */
 	MCFG_CPU_PROGRAM_MAP(gaiden_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaiden_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -779,7 +779,7 @@ static MACHINE_CONFIG_START( shadoww, gaiden_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaiden)
+	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_gaiden)
 
 	MCFG_GFXDECODE(gaiden)
 	MCFG_PALETTE_LENGTH(4096)
@@ -809,7 +809,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( raiga, shadoww )
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(raiga)
+	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_raiga)
 
 	MCFG_VIDEO_START_OVERRIDE(gaiden_state,raiga)
 	MCFG_GFXDECODE(raiga)
@@ -820,7 +820,7 @@ static MACHINE_CONFIG_START( drgnbowl, gaiden_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 20000000/2)	/* 10 MHz */
 	MCFG_CPU_PROGRAM_MAP(drgnbowl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaiden_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 12000000/2)	/* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(drgnbowl_sound_map)
@@ -835,7 +835,7 @@ static MACHINE_CONFIG_START( drgnbowl, gaiden_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(drgnbowl)
+	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_drgnbowl)
 
 	MCFG_GFXDECODE(drgnbowl)
 	MCFG_PALETTE_LENGTH(4096)
@@ -845,7 +845,7 @@ static MACHINE_CONFIG_START( drgnbowl, gaiden_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	MCFG_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH)
@@ -936,7 +936,7 @@ static MACHINE_CONFIG_START( mastninj, gaiden_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)	/* 10 MHz? */
 	MCFG_CPU_PROGRAM_MAP(mastninj_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaiden_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* ?? MHz */
 	MCFG_CPU_PROGRAM_MAP(mastninj_sound_map)
@@ -951,7 +951,7 @@ static MACHINE_CONFIG_START( mastninj, gaiden_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaiden)
+	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_gaiden)
 
 	MCFG_GFXDECODE(mastninj)
 	MCFG_PALETTE_LENGTH(4096)
@@ -1495,8 +1495,8 @@ DRIVER_INIT_MEMBER(gaiden_state,wildfang)
 
 	m_prot = 0;
 	m_jumpcode = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::wildfang_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::wildfang_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::wildfang_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::wildfang_protection_w),this));
 }
 
 DRIVER_INIT_MEMBER(gaiden_state,raiga)
@@ -1507,8 +1507,8 @@ DRIVER_INIT_MEMBER(gaiden_state,raiga)
 
 	m_prot = 0;
 	m_jumpcode = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::raiga_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::raiga_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::raiga_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::raiga_protection_w),this));
 }
 
 static void descramble_drgnbowl_gfx(running_machine &machine)

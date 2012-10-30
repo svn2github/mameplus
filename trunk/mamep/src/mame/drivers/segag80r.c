@@ -166,29 +166,29 @@ void segag80r_state::machine_start()
  *
  *************************************/
 
-static offs_t decrypt_offset(address_space *space, offs_t offset)
+static offs_t decrypt_offset(address_space &space, offs_t offset)
 {
-	segag80r_state *state = space->machine().driver_data<segag80r_state>();
+	segag80r_state *state = space.machine().driver_data<segag80r_state>();
 
 	/* ignore anything but accesses via opcode $32 (LD $(XXYY),A) */
-	offs_t pc = space->device().safe_pcbase();
-	if ((UINT16)pc == 0xffff || space->read_byte(pc) != 0x32)
+	offs_t pc = space.device().safe_pcbase();
+	if ((UINT16)pc == 0xffff || space.read_byte(pc) != 0x32)
 		return offset;
 
 	/* fetch the low byte of the address and munge it */
-	return (offset & 0xff00) | (*state->m_decrypt)(pc, space->read_byte(pc + 1));
+	return (offset & 0xff00) | (*state->m_decrypt)(pc, space.read_byte(pc + 1));
 }
 
 WRITE8_MEMBER(segag80r_state::mainram_w)
 {
-	m_mainram[decrypt_offset(&space, offset)] = data;
+	m_mainram[decrypt_offset(space, offset)] = data;
 }
 
-WRITE8_MEMBER(segag80r_state::vidram_w){ segag80r_videoram_w(space, decrypt_offset(&space, offset), data); }
-WRITE8_MEMBER(segag80r_state::monsterb_vidram_w){ monsterb_videoram_w(space, decrypt_offset(&space, offset), data); }
-WRITE8_MEMBER(segag80r_state::pignewt_vidram_w){ pignewt_videoram_w(space, decrypt_offset(&space, offset), data); }
-WRITE8_MEMBER(segag80r_state::sindbadm_vidram_w){ sindbadm_videoram_w(space, decrypt_offset(&space, offset), data); }
-WRITE8_MEMBER(segag80r_state::usb_ram_w){ device_t *device = machine().device("usbsnd"); sega_usb_ram_w(device, decrypt_offset(machine().device("maincpu")->memory().space(AS_PROGRAM), offset), data); }
+WRITE8_MEMBER(segag80r_state::vidram_w){ segag80r_videoram_w(space, decrypt_offset(space, offset), data); }
+WRITE8_MEMBER(segag80r_state::monsterb_vidram_w){ monsterb_videoram_w(space, decrypt_offset(space, offset), data); }
+WRITE8_MEMBER(segag80r_state::pignewt_vidram_w){ pignewt_videoram_w(space, decrypt_offset(space, offset), data); }
+WRITE8_MEMBER(segag80r_state::sindbadm_vidram_w){ sindbadm_videoram_w(space, decrypt_offset(space, offset), data); }
+WRITE8_MEMBER(segag80r_state::usb_ram_w){ device_t *device = machine().device("usbsnd"); sega_usb_ram_w(device, space, decrypt_offset(machine().device("maincpu")->memory().space(AS_PROGRAM), offset), data); }
 
 
 
@@ -843,7 +843,7 @@ static MACHINE_CONFIG_START( g80r_base, segag80r_state )
 	MCFG_CPU_ADD("maincpu", Z80, VIDEO_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", segag80r_vblank_start)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segag80r_state,  segag80r_vblank_start)
 
 
 	/* video hardware */
@@ -852,7 +852,7 @@ static MACHINE_CONFIG_START( g80r_base, segag80r_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(segag80r)
+	MCFG_SCREEN_UPDATE_DRIVER(segag80r_state, screen_update_segag80r)
 
 
 	/* sound hardware */
@@ -931,7 +931,7 @@ static MACHINE_CONFIG_DERIVED( sindbadm, g80r_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(sindbadm_portmap)
-	MCFG_CPU_VBLANK_INT("screen", sindbadm_vblank_start)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segag80r_state,  sindbadm_vblank_start)
 
 	MCFG_I8255A_ADD( "ppi8255", sindbadm_ppi_intf )
 
@@ -943,14 +943,14 @@ static MACHINE_CONFIG_DERIVED( sindbadm, g80r_base )
 
 	MCFG_CPU_ADD("audiocpu", Z80, SINDBADM_SOUND_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(sindbadm_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(segag80r_state, irq0_line_hold, 4*60)
 
 	/* sound hardware */
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, SINDBADM_SOUND_CLOCK/4)
+	MCFG_SOUND_ADD("sn1", SN76496, SINDBADM_SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, SINDBADM_SOUND_CLOCK/2)
+	MCFG_SOUND_ADD("sn2", SN76496, SINDBADM_SOUND_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -1446,7 +1446,7 @@ static void monsterb_expand_gfx(running_machine &machine, const char *region)
 DRIVER_INIT_MEMBER(segag80r_state,astrob)
 {
 	device_t *speech = machine().device("segaspeech");
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	/* configure the 315-0062 security chip */
 	m_decrypt = segag80_security(62);
@@ -1455,11 +1455,11 @@ DRIVER_INIT_MEMBER(segag80r_state,astrob)
 	m_background_pcb = G80_BACKGROUND_NONE;
 
 	/* install speech board */
-	iospace->install_legacy_write_handler(*speech, 0x38, 0x38, FUNC(sega_speech_data_w));
-	iospace->install_legacy_write_handler(*speech, 0x3b, 0x3b, FUNC(sega_speech_control_w));
+	iospace.install_legacy_write_handler(*speech, 0x38, 0x38, FUNC(sega_speech_data_w));
+	iospace.install_legacy_write_handler(*speech, 0x3b, 0x3b, FUNC(sega_speech_control_w));
 
 	/* install Astro Blaster sound board */
-	iospace->install_write_handler(0x3e, 0x3f, write8_delegate(FUNC(segag80r_state::astrob_sound_w),this));
+	iospace.install_write_handler(0x3e, 0x3f, write8_delegate(FUNC(segag80r_state::astrob_sound_w),this));
 }
 
 
@@ -1476,7 +1476,7 @@ DRIVER_INIT_MEMBER(segag80r_state,005)
 
 DRIVER_INIT_MEMBER(segag80r_state,spaceod)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	/* configure the 315-0063 security chip */
 	m_decrypt = segag80_security(63);
@@ -1485,21 +1485,21 @@ DRIVER_INIT_MEMBER(segag80r_state,spaceod)
 	m_background_pcb = G80_BACKGROUND_SPACEOD;
 
 	/* configure ports for the background board */
-	iospace->install_readwrite_handler(0x08, 0x0f, read8_delegate(FUNC(segag80r_state::spaceod_back_port_r),this), write8_delegate(FUNC(segag80r_state::spaceod_back_port_w),this));
+	iospace.install_readwrite_handler(0x08, 0x0f, read8_delegate(FUNC(segag80r_state::spaceod_back_port_r),this), write8_delegate(FUNC(segag80r_state::spaceod_back_port_w),this));
 
 	/* install Space Odyssey sound board */
-	iospace->install_write_handler(0x0e, 0x0f, write8_delegate(FUNC(segag80r_state::spaceod_sound_w),this));
+	iospace.install_write_handler(0x0e, 0x0f, write8_delegate(FUNC(segag80r_state::spaceod_sound_w),this));
 
 	/* install our wacky mangled ports */
-	iospace->install_read_handler(0xf8, 0xfb, read8_delegate(FUNC(segag80r_state::spaceod_mangled_ports_r),this));
-	iospace->install_read_handler(0xfc, 0xfc, read8_delegate(FUNC(segag80r_state::spaceod_port_fc_r),this));
+	iospace.install_read_handler(0xf8, 0xfb, read8_delegate(FUNC(segag80r_state::spaceod_mangled_ports_r),this));
+	iospace.install_read_handler(0xfc, 0xfc, read8_delegate(FUNC(segag80r_state::spaceod_port_fc_r),this));
 }
 
 
 DRIVER_INIT_MEMBER(segag80r_state,monsterb)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the 315-0082 security chip */
 	m_decrypt = segag80_security(82);
@@ -1509,15 +1509,15 @@ DRIVER_INIT_MEMBER(segag80r_state,monsterb)
 	monsterb_expand_gfx(machine(), "gfx1");
 
 	/* install background board handlers */
-	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::monsterb_back_port_w),this));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::monsterb_vidram_w),this));
+	iospace.install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::monsterb_back_port_w),this));
+	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::monsterb_vidram_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(segag80r_state,monster2)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the 315-5006 security chip */
 	spatter_decode(machine(), "maincpu");
@@ -1528,17 +1528,17 @@ DRIVER_INIT_MEMBER(segag80r_state,monster2)
 	monsterb_expand_gfx(machine(), "gfx1");
 
 	/* install background board handlers */
-	iospace->install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
-	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
+	iospace.install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
+	iospace.install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
+	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(segag80r_state,pignewt)
 {
 	device_t *usbsnd = machine().device("usbsnd");
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the 315-0063? security chip */
 	m_decrypt = segag80_security(63);
@@ -1548,21 +1548,21 @@ DRIVER_INIT_MEMBER(segag80r_state,pignewt)
 	monsterb_expand_gfx(machine(), "gfx1");
 
 	/* install background board handlers */
-	iospace->install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
-	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
+	iospace.install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
+	iospace.install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
+	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
 
 	/* install Universal sound board */
-	iospace->install_legacy_readwrite_handler(*usbsnd, 0x3f, 0x3f, FUNC(sega_usb_status_r), FUNC(sega_usb_data_w));
-	pgmspace->install_legacy_read_handler(*usbsnd, 0xd000, 0xdfff, FUNC(sega_usb_ram_r));
-	pgmspace->install_write_handler(0xd000, 0xdfff, write8_delegate(FUNC(segag80r_state::usb_ram_w),this));
+	iospace.install_legacy_readwrite_handler(*usbsnd, 0x3f, 0x3f, FUNC(sega_usb_status_r), FUNC(sega_usb_data_w));
+	pgmspace.install_legacy_read_handler(*usbsnd, 0xd000, 0xdfff, FUNC(sega_usb_ram_r));
+	pgmspace.install_write_handler(0xd000, 0xdfff, write8_delegate(FUNC(segag80r_state::usb_ram_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(segag80r_state,sindbadm)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the encrypted Z80 */
 	sindbadm_decode(machine(), "maincpu");
@@ -1572,8 +1572,8 @@ DRIVER_INIT_MEMBER(segag80r_state,sindbadm)
 	m_background_pcb = G80_BACKGROUND_SINDBADM;
 
 	/* install background board handlers */
-	iospace->install_write_handler(0x40, 0x41, write8_delegate(FUNC(segag80r_state::sindbadm_back_port_w),this));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::sindbadm_vidram_w),this));
+	iospace.install_write_handler(0x40, 0x41, write8_delegate(FUNC(segag80r_state::sindbadm_back_port_w),this));
+	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::sindbadm_vidram_w),this));
 }
 
 

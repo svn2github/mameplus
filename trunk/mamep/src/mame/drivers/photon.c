@@ -36,6 +36,8 @@ public:
 	DECLARE_WRITE8_MEMBER(pk8000_84_portc_w);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_photon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(pk8000_interrupt);
 };
 
 
@@ -184,9 +186,9 @@ static INPUT_PORTS_START( photon )
 	PORT_BIT(0xff, IP_ACTIVE_HIGH, IPT_UNUSED)
 INPUT_PORTS_END
 
-static INTERRUPT_GEN( pk8000_interrupt )
+INTERRUPT_GEN_MEMBER(photon_state::pk8000_interrupt)
 {
-	device->execute().set_input_line(0, HOLD_LINE);
+	device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static IRQ_CALLBACK(pk8000_irq_callback)
@@ -205,9 +207,9 @@ void photon_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16( photon )
+UINT32 photon_state::screen_update_photon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	return pk8000_video_update(screen, bitmap, cliprect, screen.machine().root_device().memregion("maincpu")->base());
+	return pk8000_video_update(screen, bitmap, cliprect, machine().root_device().memregion("maincpu")->base());
 }
 
 static MACHINE_CONFIG_START( photon, photon_state )
@@ -216,7 +218,7 @@ static MACHINE_CONFIG_START( photon, photon_state )
     MCFG_CPU_ADD("maincpu",I8080, 1780000)
     MCFG_CPU_PROGRAM_MAP(pk8000_mem)
     MCFG_CPU_IO_MAP(pk8000_io)
-    MCFG_CPU_VBLANK_INT("screen", pk8000_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", photon_state,  pk8000_interrupt)
 
 
     /* video hardware */
@@ -225,7 +227,7 @@ static MACHINE_CONFIG_START( photon, photon_state )
     MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
     MCFG_SCREEN_SIZE(256+32, 192+32)
     MCFG_SCREEN_VISIBLE_AREA(0, 256+32-1, 0, 192+32-1)
-    MCFG_SCREEN_UPDATE_STATIC(photon)
+	MCFG_SCREEN_UPDATE_DRIVER(photon_state, screen_update_photon)
     MCFG_PALETTE_LENGTH(16)
     MCFG_PALETTE_INIT(pk8000)
 

@@ -381,12 +381,11 @@ void brkthru_state::machine_reset()
 	m_flipscreen = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(brkthru_state::vblank_irq)
 {
-	brkthru_state *state = device->machine().driver_data<brkthru_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( brkthru, brkthru_state )
@@ -394,7 +393,7 @@ static MACHINE_CONFIG_START( brkthru, brkthru_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/8)        /* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(brkthru_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", brkthru_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", M6809, MASTER_CLOCK/8)		/* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -407,7 +406,7 @@ static MACHINE_CONFIG_START( brkthru, brkthru_state )
 	/* not sure; assuming to be the same as darwin */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 384, 8, 248, 272, 8, 248)
-	MCFG_SCREEN_UPDATE_STATIC(brkthru)
+	MCFG_SCREEN_UPDATE_DRIVER(brkthru_state, screen_update_brkthru)
 
 
 	/* sound hardware */
@@ -430,7 +429,7 @@ static MACHINE_CONFIG_START( darwin, brkthru_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/8)        /* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(darwin_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", brkthru_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", M6809, MASTER_CLOCK/8)		/* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -454,7 +453,7 @@ static MACHINE_CONFIG_START( darwin, brkthru_state )
                   = 15.625kHz / (240 + 32)
                   = 57.444855Hz
         tuned by Shingo SUZUKI(VSyncMAME Project) 2000/10/19 */
-	MCFG_SCREEN_UPDATE_STATIC(brkthru)
+	MCFG_SCREEN_UPDATE_DRIVER(brkthru_state, screen_update_brkthru)
 
 
 	/* sound hardware */

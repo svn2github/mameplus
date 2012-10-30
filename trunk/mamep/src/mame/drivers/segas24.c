@@ -861,46 +861,42 @@ void segas24_state::irq_timer_start(int old_tmode)
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( irq_timer_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(segas24_state::irq_timer_cb)
 {
-	segas24_state *state = timer.machine().driver_data<segas24_state>();
-	state->irq_timer_sync();
+	irq_timer_sync();
 
-	if(state->irq_tval != 0x1000)
-		fprintf(stderr, "Error: timer desync %x != 1000\n", state->irq_tval);
+	if(irq_tval != 0x1000)
+		fprintf(stderr, "Error: timer desync %x != 1000\n", irq_tval);
 
-	state->irq_tval = state->irq_tdata;
-	state->irq_timer_start(state->irq_tmode);
+	irq_tval = irq_tdata;
+	irq_timer_start(irq_tmode);
 
-	state->irq_timer_pend0 = state->irq_timer_pend1 = 1;
-	if(state->irq_allow0 & (1 << IRQ_TIMER))
-		timer.machine().device("maincpu")->execute().set_input_line(IRQ_TIMER+1, ASSERT_LINE);
-	if(state->irq_allow1 & (1 << IRQ_TIMER))
-		timer.machine().device("subcpu")->execute().set_input_line(IRQ_TIMER+1, ASSERT_LINE);
+	irq_timer_pend0 = irq_timer_pend1 = 1;
+	if(irq_allow0 & (1 << IRQ_TIMER))
+		machine().device("maincpu")->execute().set_input_line(IRQ_TIMER+1, ASSERT_LINE);
+	if(irq_allow1 & (1 << IRQ_TIMER))
+		machine().device("subcpu")->execute().set_input_line(IRQ_TIMER+1, ASSERT_LINE);
 
-	if(state->irq_tmode == 1 || state->irq_tmode == 2)
-		timer.machine().primary_screen->update_now();
+	if(irq_tmode == 1 || irq_tmode == 2)
+		machine().primary_screen->update_now();
 }
 
-static TIMER_DEVICE_CALLBACK( irq_timer_clear_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(segas24_state::irq_timer_clear_cb)
 {
-	segas24_state *state = timer.machine().driver_data<segas24_state>();
-	state->irq_sprite = state->irq_vblank = 0;
-	timer.machine().device("maincpu")->execute().set_input_line(IRQ_VBLANK+1, CLEAR_LINE);
-	timer.machine().device("maincpu")->execute().set_input_line(IRQ_SPRITE+1, CLEAR_LINE);
-	timer.machine().device("subcpu")->execute().set_input_line(IRQ_VBLANK+1, CLEAR_LINE);
-	timer.machine().device("subcpu")->execute().set_input_line(IRQ_SPRITE+1, CLEAR_LINE);
+	irq_sprite = irq_vblank = 0;
+	machine().device("maincpu")->execute().set_input_line(IRQ_VBLANK+1, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(IRQ_SPRITE+1, CLEAR_LINE);
+	machine().device("subcpu")->execute().set_input_line(IRQ_VBLANK+1, CLEAR_LINE);
+	machine().device("subcpu")->execute().set_input_line(IRQ_SPRITE+1, CLEAR_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( irq_frc_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(segas24_state::irq_frc_cb)
 {
-	segas24_state *state = timer.machine().driver_data<segas24_state>();
+	if(irq_allow0 & (1 << IRQ_FRC) && frc_mode == 1)
+		machine().device("maincpu")->execute().set_input_line(IRQ_FRC+1, ASSERT_LINE);
 
-	if(state->irq_allow0 & (1 << IRQ_FRC) && state->frc_mode == 1)
-		timer.machine().device("maincpu")->execute().set_input_line(IRQ_FRC+1, ASSERT_LINE);
-
-	if(state->irq_allow1 & (1 << IRQ_FRC) && state->frc_mode == 1)
-		timer.machine().device("subcpu")->execute().set_input_line(IRQ_FRC+1, ASSERT_LINE);
+	if(irq_allow1 & (1 << IRQ_FRC) && frc_mode == 1)
+		machine().device("subcpu")->execute().set_input_line(IRQ_FRC+1, ASSERT_LINE);
 }
 
 void segas24_state::irq_init()
@@ -985,53 +981,51 @@ READ16_MEMBER(segas24_state::irq_r)
 	return irq_tval & 0xfff;
 }
 
-static TIMER_DEVICE_CALLBACK(irq_vbl)
+TIMER_DEVICE_CALLBACK_MEMBER(segas24_state::irq_vbl)
 {
-	segas24_state *state = timer.machine().driver_data<segas24_state>();
 	int irq, mask;
 	int scanline = param;
 
 	/* TODO: perhaps vblank irq happens at 400, sprite IRQ certainly don't at 0! */
-	if(scanline == 0) { irq = IRQ_SPRITE; state->irq_sprite = 1; }
-	else if(scanline == 384) { irq = IRQ_VBLANK; state->irq_vblank = 1; }
+	if(scanline == 0) { irq = IRQ_SPRITE; irq_sprite = 1; }
+	else if(scanline == 384) { irq = IRQ_VBLANK; irq_vblank = 1; }
 	else
 		return;
 
-	state->irq_timer_clear->adjust(attotime::from_hz(HSYNC_CLOCK));
+	irq_timer_clear->adjust(attotime::from_hz(HSYNC_CLOCK));
 
 	mask = 1 << irq;
 
-	if(state->irq_allow0 & mask)
-		timer.machine().device("maincpu")->execute().set_input_line(1+irq, ASSERT_LINE);
+	if(irq_allow0 & mask)
+		machine().device("maincpu")->execute().set_input_line(1+irq, ASSERT_LINE);
 
-	if(state->irq_allow1 & mask)
-		timer.machine().device("subcpu")->execute().set_input_line(1+irq, ASSERT_LINE);
+	if(irq_allow1 & mask)
+		machine().device("subcpu")->execute().set_input_line(1+irq, ASSERT_LINE);
 
 	if(scanline == 384) {
 		// Ensure one index pulse every 20 frames
 		// The is some code in bnzabros at 0x852 that makes it crash
 		// if the pulse train is too fast
-		state->fdc_index_count++;
-		if(state->fdc_index_count >= 20)
-			state->fdc_index_count = 0;
+		fdc_index_count++;
+		if(fdc_index_count >= 20)
+			fdc_index_count = 0;
 	}
 
-	state->irq_timer_sync();
-	state->irq_vsynctime = timer.machine().time();
+	irq_timer_sync();
+	irq_vsynctime = machine().time();
 }
 
-static void irq_ym(device_t *device, int irq)
+WRITE_LINE_MEMBER(segas24_state::irq_ym)
 {
-	segas24_state *state = device->machine().driver_data<segas24_state>();
-	state->irq_yms = irq;
-	device->machine().device("maincpu")->execute().set_input_line(IRQ_YM2151+1, state->irq_yms && (state->irq_allow0 & (1 << IRQ_YM2151)) ? ASSERT_LINE : CLEAR_LINE);
-	device->machine().device("subcpu")->execute().set_input_line(IRQ_YM2151+1, state->irq_yms && (state->irq_allow1 & (1 << IRQ_YM2151)) ? ASSERT_LINE : CLEAR_LINE);
+	irq_yms = state;
+	subdevice("maincpu")->execute().set_input_line(IRQ_YM2151+1, irq_yms && (irq_allow0 & (1 << IRQ_YM2151)) ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("subcpu")->execute().set_input_line(IRQ_YM2151+1, irq_yms && (irq_allow1 & (1 << IRQ_YM2151)) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 READ16_MEMBER ( segas24_state::sys16_io_r )
 {
-	//  logerror("IO read %02x (%s:%x)\n", offset, space->device().tag(), space->device().safe_pc());
+	//  logerror("IO read %02x (%s:%x)\n", offset, space.device().tag(), space.device().safe_pc());
 	if(offset < 8)
 		return (this->*io_r)(offset);
 	else if (offset < 0x20) {
@@ -1190,7 +1184,7 @@ static ADDRESS_MAP_START( system24_cpu1_map, AS_PROGRAM, 16, segas24_state )
 	AM_RANGE(0x404000, 0x40401f) AM_MIRROR(0x1fbfe0) AM_DEVREADWRITE("mixer", segas24_mixer, read, write)
 	AM_RANGE(0x600000, 0x63ffff) AM_MIRROR(0x180000) AM_DEVREADWRITE("sprite", segas24_sprite, read, write)
 	AM_RANGE(0x800000, 0x80007f) AM_MIRROR(0x1ffe00) AM_READWRITE(sys16_io_r, sys16_io_w)
-	AM_RANGE(0x800100, 0x800103) AM_MIRROR(0x1ffe00) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x800100, 0x800103) AM_MIRROR(0x1ffe00) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0xa00000, 0xa00007) AM_MIRROR(0x0ffff8) AM_READWRITE(irq_r, irq_w)
 	AM_RANGE(0xb00000, 0xb00007) AM_MIRROR(0x07fff0) AM_READWRITE(fdc_r, fdc_w)
 	AM_RANGE(0xb00008, 0xb0000f) AM_MIRROR(0x07fff0) AM_READWRITE(fdc_status_r, fdc_ctrl_w)
@@ -1231,7 +1225,7 @@ static ADDRESS_MAP_START( system24_cpu2_map, AS_PROGRAM, 16, segas24_state )
 	AM_RANGE(0x404000, 0x40401f) AM_MIRROR(0x1fbfe0) AM_DEVREADWRITE("mixer", segas24_mixer, read, write)
 	AM_RANGE(0x600000, 0x63ffff) AM_MIRROR(0x180000) AM_DEVREADWRITE("sprite", segas24_sprite, read, write)
 	AM_RANGE(0x800000, 0x80007f) AM_MIRROR(0x1ffe00) AM_READWRITE(sys16_io_r, sys16_io_w)
-	AM_RANGE(0x800100, 0x800103) AM_MIRROR(0x1ffe00) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x800100, 0x800103) AM_MIRROR(0x1ffe00) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0xa00000, 0xa00007) AM_MIRROR(0x0ffff8) AM_READWRITE(irq_r, irq_w)
 	AM_RANGE(0xb00000, 0xb00007) AM_MIRROR(0x07fff0) AM_READWRITE(fdc_r, fdc_w)
 	AM_RANGE(0xb00008, 0xb0000f) AM_MIRROR(0x07fff0) AM_READWRITE(fdc_status_r, fdc_ctrl_w)
@@ -1923,18 +1917,6 @@ static INPUT_PORTS_START( gground )
 	PORT_DIPSETTING(    0x00, "0.80 sec" )
 INPUT_PORTS_END
 
-/*************************************
- *
- *  Sound definitions
- *
- *************************************/
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_ym)
-};
-
-
 
 /*************************************
  *
@@ -1946,7 +1928,7 @@ static MACHINE_CONFIG_START( system24, segas24_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(system24_cpu1_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", irq_vbl, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", segas24_state, irq_vbl, "screen", 0, 1)
 
 	MCFG_CPU_ADD("subcpu", M68000, MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(system24_cpu2_map)
@@ -1954,10 +1936,10 @@ static MACHINE_CONFIG_START( system24, segas24_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 
-	MCFG_TIMER_ADD("irq_timer", irq_timer_cb)
-	MCFG_TIMER_ADD("irq_timer_clear", irq_timer_clear_cb)
-	MCFG_TIMER_ADD("frc_timer", NULL)
-	MCFG_TIMER_ADD_PERIODIC("irq_frc", irq_frc_cb, attotime::from_hz(FRC_CLOCK_MODE1))
+	MCFG_TIMER_DRIVER_ADD("irq_timer", segas24_state, irq_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("irq_timer_clear", segas24_state, irq_timer_clear_cb)
+	MCFG_TIMER_ADD_NONE("frc_timer")
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("irq_frc", segas24_state, irq_frc_cb, attotime::from_hz(FRC_CLOCK_MODE1))
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 
@@ -1967,14 +1949,14 @@ static MACHINE_CONFIG_START( system24, segas24_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 656, 0/*+69*/, 496/*+69*/, 424, 0/*+25*/, 384/*+25*/)
-	MCFG_SCREEN_UPDATE_STATIC(system24)
+	MCFG_SCREEN_UPDATE_DRIVER(segas24_state, screen_update_system24)
 
 	MCFG_PALETTE_LENGTH(8192*2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(segas24_state,irq_ym))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 

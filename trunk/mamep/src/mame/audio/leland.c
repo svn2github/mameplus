@@ -307,8 +307,8 @@ void leland_dac_update(device_t *device, int dacnum, UINT8 sample)
 
 static void set_dac_frequency(leland_sound_state *state, int which, int frequency);
 
-static READ16_DEVICE_HANDLER( peripheral_r );
-static WRITE16_DEVICE_HANDLER( peripheral_w );
+static DECLARE_READ16_DEVICE_HANDLER( peripheral_r );
+static DECLARE_WRITE16_DEVICE_HANDLER( peripheral_w );
 
 
 
@@ -385,7 +385,7 @@ static STREAM_UPDATE( leland_80186_dac_update )
 static STREAM_UPDATE( leland_80186_dma_update )
 {
 	leland_sound_state *state = get_safe_token(device);
-	address_space *dmaspace = (address_space *)param;
+	address_space &dmaspace = *(address_space *)param;
 	stream_sample_t *buffer = outputs[0];
 	int i, j;
 
@@ -434,7 +434,7 @@ static STREAM_UPDATE( leland_80186_dma_update )
 				/* sample-rate convert to the output frequency */
 				for (j = 0; j < samples && count > 0; j++)
 				{
-					buffer[j] += ((int)dmaspace->read_byte(source) - 0x80) * volume;
+					buffer[j] += ((int)dmaspace.read_byte(source) - 0x80) * volume;
 					frac += step;
 					source += frac >> 24;
 					count -= frac >> 24;
@@ -521,14 +521,14 @@ static DEVICE_START( common_sh_start )
 {
 	leland_sound_state *state = get_safe_token(device);
 	running_machine &machine = device->machine();
-	address_space *dmaspace = machine.device("audiocpu")->memory().space(AS_PROGRAM);
+	address_space &dmaspace = machine.device("audiocpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* determine which sound hardware is installed */
 	state->m_has_ym2151 = (device->machine().device("ymsnd") != NULL);
 
 	/* allocate separate streams for the DMA and non-DMA DACs */
-	state->m_dma_stream = device->machine().sound().stream_alloc(*device, 0, 1, OUTPUT_RATE, (void *)dmaspace, leland_80186_dma_update);
+	state->m_dma_stream = device->machine().sound().stream_alloc(*device, 0, 1, OUTPUT_RATE, (void *)&dmaspace, leland_80186_dma_update);
 	state->m_nondma_stream = device->machine().sound().stream_alloc(*device, 0, 1, OUTPUT_RATE, NULL, leland_80186_dac_update);
 
 	/* if we have a 2151, install an externally driven DAC stream */
@@ -539,7 +539,7 @@ static DEVICE_START( common_sh_start )
 	}
 
 	/* create timers here so they stick around */
-	state->m_i80186.cpu = &dmaspace->device();
+	state->m_i80186.cpu = &dmaspace.device();
 	state->m_i80186.timer[0].int_timer = machine.scheduler().timer_alloc(FUNC(internal_timer_int), device);
 	state->m_i80186.timer[1].int_timer = machine.scheduler().timer_alloc(FUNC(internal_timer_int), device);
 	state->m_i80186.timer[2].int_timer = machine.scheduler().timer_alloc(FUNC(internal_timer_int), device);
@@ -576,14 +576,14 @@ leland_sound_device::leland_sound_device(const machine_config &mconfig, const ch
 	: device_t(mconfig, LELAND, "Leland DAC", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(leland_sound_state));
+	m_token = global_alloc_clear(leland_sound_state);
 }
 
 leland_sound_device::leland_sound_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(leland_sound_state));
+	m_token = global_alloc_clear(leland_sound_state);
 }
 
 //-------------------------------------------------
@@ -1441,9 +1441,9 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 
 	/* handle partials */
 	if (!ACCESSING_BITS_8_15)
-		data = (i80186_internal_port_r(device, offset, 0xff00) & 0xff00) | (data & 0x00ff);
+		data = (i80186_internal_port_r(device, space, offset, 0xff00) & 0xff00) | (data & 0x00ff);
 	else if (!ACCESSING_BITS_0_7)
-		data = (i80186_internal_port_r(device, offset, 0x00ff) & 0x00ff) | (data & 0xff00);
+		data = (i80186_internal_port_r(device, space, offset, 0x00ff) & 0x00ff) | (data & 0xff00);
 
 	switch (offset)
 	{
@@ -1591,12 +1591,12 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 			temp = (state->m_i80186.mem.peripheral & 0xffc0) << 4;
 			if (state->m_i80186.mem.middle_size & 0x0040)
 			{
-				state->m_i80186.cpu->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(*device, temp, temp + 0x2ff, FUNC(peripheral_r), FUNC(peripheral_w));
+				state->m_i80186.cpu->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(*device, temp, temp + 0x2ff, FUNC(peripheral_r), FUNC(peripheral_w));
 			}
 			else
 			{
 				temp &= 0xffff;
-				state->m_i80186.cpu->memory().space(AS_IO)->install_legacy_readwrite_handler(*device, temp, temp + 0x2ff, FUNC(peripheral_r), FUNC(peripheral_w));
+				state->m_i80186.cpu->memory().space(AS_IO).install_legacy_readwrite_handler(*device, temp, temp + 0x2ff, FUNC(peripheral_r), FUNC(peripheral_w));
 			}
 
 			/* we need to do this at a time when the 80186 context is swapped in */
@@ -1662,12 +1662,12 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 			temp = (data & 0x0fff) << 8;
 			if (data & 0x1000)
 			{
-				state->m_i80186.cpu->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(*device, temp, temp + 0xff, FUNC(i80186_internal_port_r), FUNC(i80186_internal_port_w));
+				state->m_i80186.cpu->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(*device, temp, temp + 0xff, FUNC(i80186_internal_port_r), FUNC(i80186_internal_port_w));
 			}
 			else
 			{
 				temp &= 0xffff;
-				state->m_i80186.cpu->memory().space(AS_IO)->install_legacy_readwrite_handler(*device, temp, temp + 0xff, FUNC(i80186_internal_port_r), FUNC(i80186_internal_port_w));
+				state->m_i80186.cpu->memory().space(AS_IO).install_legacy_readwrite_handler(*device, temp, temp + 0xff, FUNC(i80186_internal_port_r), FUNC(i80186_internal_port_w));
 			}
 /*          popmessage("Sound CPU reset");*/
 			break;
@@ -1839,14 +1839,14 @@ WRITE8_DEVICE_HANDLER( leland_80186_control_w )
 	}
 
 	/* /RESET */
-	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, data & 0x80  ? CLEAR_LINE : ASSERT_LINE);
+	space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, data & 0x80  ? CLEAR_LINE : ASSERT_LINE);
 
 	/* /NMI */
 /*  If the master CPU doesn't get a response by the time it's ready to send
     the next command, it uses an NMI to force the issue; unfortunately, this
     seems to really screw up the sound system. It turns out it's better to
     just wait for the original interrupt to occur naturally */
-/*  device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, data & 0x40  ? CLEAR_LINE : ASSERT_LINE);*/
+/*  space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, data & 0x40  ? CLEAR_LINE : ASSERT_LINE);*/
 
 	/* INT0 */
 	if (data & 0x20)
@@ -1894,7 +1894,7 @@ static TIMER_CALLBACK( command_lo_sync )
 
 WRITE8_DEVICE_HANDLER( leland_80186_command_lo_w )
 {
-	device->machine().scheduler().synchronize(FUNC(command_lo_sync), data, device);
+	space.machine().scheduler().synchronize(FUNC(command_lo_sync), data, device);
 }
 
 
@@ -1957,7 +1957,7 @@ READ8_DEVICE_HANDLER( leland_80186_response_r )
 	if (LOG_COMM) logerror("%04X:Read sound response latch = %02X\n", pc, state->m_sound_response);
 
 	/* synchronize the response */
-	device->machine().scheduler().synchronize(FUNC(delayed_response_r), pc + 2, device);
+	space.machine().scheduler().synchronize(FUNC(delayed_response_r), pc + 2, device);
 	return state->m_sound_response;
 }
 
@@ -2118,13 +2118,13 @@ static WRITE16_DEVICE_HANDLER( ataxx_dac_control )
 		case 0x01:
 		case 0x02:
 			if (ACCESSING_BITS_0_7)
-				dac_w(device, offset, data, 0x00ff);
+				dac_w(device, space, offset, data, 0x00ff);
 			return;
 
 		case 0x03:
-			dac_w(device, 0, ((data << 13) & 0xe000) | ((data << 10) & 0x1c00) | ((data << 7) & 0x0300), 0xff00);
-			dac_w(device, 2, ((data << 10) & 0xe000) | ((data <<  7) & 0x1c00) | ((data << 4) & 0x0300), 0xff00);
-			dac_w(device, 4, ((data <<  8) & 0xc000) | ((data <<  6) & 0x3000) | ((data << 4) & 0x0c00) | ((data << 2) & 0x0300), 0xff00);
+			dac_w(device, space, 0, ((data << 13) & 0xe000) | ((data << 10) & 0x1c00) | ((data << 7) & 0x0300), 0xff00);
+			dac_w(device, space, 2, ((data << 10) & 0xe000) | ((data <<  7) & 0x1c00) | ((data << 4) & 0x0300), 0xff00);
+			dac_w(device, space, 4, ((data <<  8) & 0xc000) | ((data <<  6) & 0x3000) | ((data << 4) & 0x0c00) | ((data << 2) & 0x0300), 0xff00);
 			return;
 	}
 
@@ -2159,7 +2159,7 @@ static WRITE16_DEVICE_HANDLER( ataxx_dac_control )
 				return;
 
 			case 0x21:
-				dac_w(device, offset - 0x21 + 7, data, mem_mask);
+				dac_w(device, space, offset - 0x21 + 7, data, mem_mask);
 				return;
 		}
 	}
@@ -2195,20 +2195,20 @@ static READ16_DEVICE_HANDLER( peripheral_r )
 				return ((state->m_clock_active << 1) & 0x7e);
 
 		case 1:
-			return main_to_sound_comm_r(device, offset, mem_mask);
+			return main_to_sound_comm_r(device, space, offset, mem_mask);
 
 		case 2:
-			return pit8254_r(device, offset, mem_mask);
+			return pit8254_r(device, space, offset, mem_mask);
 
 		case 3:
 			if (!state->m_has_ym2151)
-				return pit8254_r(device, offset | 0x40, mem_mask);
+				return pit8254_r(device, space, offset | 0x40, mem_mask);
 			else
-				return ym2151_r(device->machine().device("ymsnd"), offset);
+				return space.machine().device<ym2151_device>("ymsnd")->read(space, offset);
 
 		case 4:
 			if (state->m_is_redline)
-				return pit8254_r(device, offset | 0x80, mem_mask);
+				return pit8254_r(device, space, offset | 0x80, mem_mask);
 			else
 				logerror("%05X:Unexpected peripheral read %d/%02X\n", state->m_i80186.cpu->safe_pc(), select, offset*2);
 			break;
@@ -2230,29 +2230,29 @@ static WRITE16_DEVICE_HANDLER( peripheral_w )
 	switch (select)
 	{
 		case 1:
-			sound_to_main_comm_w(device, offset, data, mem_mask);
+			sound_to_main_comm_w(device, space, offset, data, mem_mask);
 			break;
 
 		case 2:
-			pit8254_w(device, offset, data, mem_mask);
+			pit8254_w(device, space, offset, data, mem_mask);
 			break;
 
 		case 3:
 			if (!state->m_has_ym2151)
-				pit8254_w(device, offset | 0x40, data, mem_mask);
+				pit8254_w(device, space, offset | 0x40, data, mem_mask);
 			else
-				ym2151_w(device->machine().device("ymsnd"), offset, data);
+				space.machine().device<ym2151_device>("ymsnd")->write(space, offset, data);
 			break;
 
 		case 4:
 			if (state->m_is_redline)
-				pit8254_w(device, offset | 0x80, data, mem_mask);
+				pit8254_w(device, space, offset | 0x80, data, mem_mask);
 			else
-				dac_10bit_w(device, offset, data, mem_mask);
+				dac_10bit_w(device, space, offset, data, mem_mask);
 			break;
 
 		case 5:	/* Ataxx/WSF/Indy Heat only */
-			ataxx_dac_control(device, offset, data, mem_mask);
+			ataxx_dac_control(device, space, offset, data, mem_mask);
 			break;
 
 		default:
@@ -2276,7 +2276,7 @@ WRITE8_DEVICE_HANDLER( ataxx_80186_control_w )
 					((data & 0x02) << 5) |
 					((data & 0x04) << 3) |
 					((data & 0x08) << 1);
-	leland_80186_control_w(device, offset, modified);
+	leland_80186_control_w(device, space, offset, modified);
 }
 
 

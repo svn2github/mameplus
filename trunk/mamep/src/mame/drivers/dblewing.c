@@ -77,12 +77,14 @@ public:
 	cpu_device *m_maincpu;
 	cpu_device *m_audiocpu;
 	device_t *m_deco_tilegen1;
+	DECLARE_WRITE_LINE_MEMBER(sound_irq);
 	DECLARE_READ16_MEMBER(dblewing_prot_r);
 	DECLARE_WRITE16_MEMBER(dblewing_prot_w);
 	DECLARE_READ8_MEMBER(irq_latch_r);
 	DECLARE_DRIVER_INIT(dblewing);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_dblewing(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 UINT16 dblwings_pri_callback(UINT16 x)
@@ -101,20 +103,20 @@ UINT16 dblwings_pri_callback(UINT16 x)
 
 
 
-static SCREEN_UPDATE_IND16(dblewing)
+UINT32 dblewing_state::screen_update_dblewing(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dblewing_state *state = screen.machine().driver_data<dblewing_state>();
-	UINT16 flip = deco16ic_pf_control_r(state->m_deco_tilegen1, 0, 0xffff);
+	address_space &space = generic_space();
+	UINT16 flip = deco16ic_pf_control_r(m_deco_tilegen1, space, 0, 0xffff);
 
-	state->flip_screen_set(BIT(flip, 7));
-	deco16ic_pf_update(state->m_deco_tilegen1, state->m_pf1_rowscroll, state->m_pf2_rowscroll);
+	flip_screen_set(BIT(flip, 7));
+	deco16ic_pf_update(m_deco_tilegen1, m_pf1_rowscroll, m_pf2_rowscroll);
 
 	bitmap.fill(0, cliprect); /* not Confirmed */
-	screen.machine().priority_bitmap.fill(0);
+	machine().priority_bitmap.fill(0);
 
-	deco16ic_tilemap_2_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 2);
-	deco16ic_tilemap_1_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 4);
-	screen.machine().device<decospr_device>("spritegen")->draw_sprites(bitmap, cliprect, state->m_spriteram, 0x400);
+	deco16ic_tilemap_2_draw(m_deco_tilegen1, bitmap, cliprect, 0, 2);
+	deco16ic_tilemap_1_draw(m_deco_tilegen1, bitmap, cliprect, 0, 4);
+	machine().device<decospr_device>("spritegen")->draw_sprites(bitmap, cliprect, m_spriteram, 0x400);
 	return 0;
 }
 
@@ -350,7 +352,7 @@ READ8_MEMBER(dblewing_state::irq_latch_r)
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, dblewing_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_status_port_r,ym2151_w)
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym2151_device, status_r, write)
 	AM_RANGE(0xb000, 0xb000) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xd000, 0xd000) AM_READ(irq_latch_r) //timing? sound latch?
@@ -529,22 +531,15 @@ static INPUT_PORTS_START( dblewing )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
-static void sound_irq( device_t *device, int state )
+WRITE_LINE_MEMBER(dblewing_state::sound_irq)
 {
-	dblewing_state *driver_state = device->machine().driver_data<dblewing_state>();
-
 	/* bit 0 of dblewing_sound_irq specifies IRQ from sound chip */
 	if (state)
-		driver_state->m_sound_irq |= 0x01;
+		m_sound_irq |= 0x01;
 	else
-		driver_state->m_sound_irq &= ~0x01;
-	driver_state->m_audiocpu->set_input_line(0, (driver_state->m_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+		m_sound_irq &= ~0x01;
+	m_audiocpu->set_input_line(0, (m_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 }
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
 
 static int dblewing_bank_callback( const int bank )
 {
@@ -640,7 +635,7 @@ static MACHINE_CONFIG_START( dblewing, dblewing_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)	/* DE102 */
 	MCFG_CPU_PROGRAM_MAP(dblewing_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dblewing_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -655,7 +650,7 @@ static MACHINE_CONFIG_START( dblewing, dblewing_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dblewing)
+	MCFG_SCREEN_UPDATE_DRIVER(dblewing_state, screen_update_dblewing)
 
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_GFXDECODE(dblewing)
@@ -668,8 +663,8 @@ static MACHINE_CONFIG_START( dblewing, dblewing_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(dblewing_state, sound_irq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
 	MCFG_OKIM6295_ADD("oki", 32220000/32, OKIM6295_PIN7_HIGH)

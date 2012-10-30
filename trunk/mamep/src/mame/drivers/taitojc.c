@@ -569,9 +569,9 @@ WRITE32_MEMBER(taitojc_state::dsp_shared_w)
 
 
 
-static UINT8 mcu_comm_reg_r(address_space *space, int reg)
+static UINT8 mcu_comm_reg_r(address_space &space, int reg)
 {
-	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+	taitojc_state *state = space.machine().driver_data<taitojc_state>();
 	UINT8 r = 0;
 
 	switch (reg)
@@ -588,7 +588,7 @@ static UINT8 mcu_comm_reg_r(address_space *space, int reg)
 		}
 		default:
 		{
-			//mame_printf_debug("hc11_reg_r: %02X at %08X\n", reg, space->device().safe_pc());
+			//mame_printf_debug("hc11_reg_r: %02X at %08X\n", reg, space.device().safe_pc());
 			break;
 		}
 	}
@@ -596,9 +596,9 @@ static UINT8 mcu_comm_reg_r(address_space *space, int reg)
 	return r;
 }
 
-static void mcu_comm_reg_w(address_space *space, int reg, UINT8 data)
+static void mcu_comm_reg_w(address_space &space, int reg, UINT8 data)
 {
-	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+	taitojc_state *state = space.machine().driver_data<taitojc_state>();
 
 	switch (reg)
 	{
@@ -615,7 +615,7 @@ static void mcu_comm_reg_w(address_space *space, int reg, UINT8 data)
 		}
 		default:
 		{
-			//mame_printf_debug("hc11_reg_w: %02X, %02X at %08X\n", reg, data, space->device().safe_pc());
+			//mame_printf_debug("hc11_reg_w: %02X, %02X at %08X\n", reg, data, space.device().safe_pc());
 			break;
 		}
 	}
@@ -628,19 +628,19 @@ READ32_MEMBER(taitojc_state::mcu_comm_r)
 
 	if (ACCESSING_BITS_24_31)
 	{
-		r |= mcu_comm_reg_r(&space, reg + 0) << 24;
+		r |= mcu_comm_reg_r(space, reg + 0) << 24;
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		r |= mcu_comm_reg_r(&space, reg + 1) << 16;
+		r |= mcu_comm_reg_r(space, reg + 1) << 16;
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		r |= mcu_comm_reg_r(&space, reg + 2) << 8;
+		r |= mcu_comm_reg_r(space, reg + 2) << 8;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		r |= mcu_comm_reg_r(&space, reg + 3) << 0;
+		r |= mcu_comm_reg_r(space, reg + 3) << 0;
 	}
 
 	return r;
@@ -652,19 +652,19 @@ WRITE32_MEMBER(taitojc_state::mcu_comm_w)
 
 	if (ACCESSING_BITS_24_31)
 	{
-		mcu_comm_reg_w(&space, reg + 0, (data >> 24) & 0xff);
+		mcu_comm_reg_w(space, reg + 0, (data >> 24) & 0xff);
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		mcu_comm_reg_w(&space, reg + 1, (data >> 16) & 0xff);
+		mcu_comm_reg_w(space, reg + 1, (data >> 16) & 0xff);
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		mcu_comm_reg_w(&space, reg + 2, (data >> 8) & 0xff);
+		mcu_comm_reg_w(space, reg + 2, (data >> 8) & 0xff);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		mcu_comm_reg_w(&space, reg + 3, (data >> 0) & 0xff);
+		mcu_comm_reg_w(space, reg + 3, (data >> 0) & 0xff);
 	}
 }
 
@@ -1217,9 +1217,9 @@ void taitojc_state::machine_reset()
 	m_dsp->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
-static INTERRUPT_GEN( taitojc_vblank )
+INTERRUPT_GEN_MEMBER(taitojc_state::taitojc_vblank)
 {
-	device->execute().set_input_line_and_vector(2, HOLD_LINE, 130);
+	device.execute().set_input_line_and_vector(2, HOLD_LINE, 130);
 }
 
 static const tc0640fio_interface taitojc_io_intf =
@@ -1239,7 +1239,7 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68040, 25000000)
 	MCFG_CPU_PROGRAM_MAP(taitojc_map)
-	MCFG_CPU_VBLANK_INT("screen", taitojc_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitojc_state,  taitojc_vblank)
 
 	MCFG_CPU_ADD("sub", MC68HC11, 4000000) // MC68HC11M0
 	MCFG_CPU_PROGRAM_MAP(hc11_pgm_map)
@@ -1263,7 +1263,7 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(512, 400)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 399)
-	MCFG_SCREEN_UPDATE_STATIC(taitojc)
+	MCFG_SCREEN_UPDATE_DRIVER(taitojc_state, screen_update_taitojc)
 
 	MCFG_PALETTE_LENGTH(32768)
 
@@ -1279,7 +1279,7 @@ static MACHINE_CONFIG_DERIVED( dendego, taitojc )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(dendego)
+	MCFG_SCREEN_UPDATE_DRIVER(taitojc_state, screen_update_dendego)
 
 	/* sound hardware */
 	MCFG_SPEAKER_ADD("subwoofer", 0.0, 0.0, 1.0)
@@ -1325,7 +1325,7 @@ DRIVER_INIT_MEMBER(taitojc_state,taitojc)
 
 	m_has_dsp_hack = 1;
 
-	machine().device("dsp")->memory().space(AS_DATA)->install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::taitojc_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
+	machine().device("dsp")->memory().space(AS_DATA).install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::taitojc_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitojc_state,dendego2)
@@ -1333,7 +1333,7 @@ DRIVER_INIT_MEMBER(taitojc_state,dendego2)
 
 	DRIVER_INIT_CALL(taitojc);
 
-	machine().device("dsp")->memory().space(AS_DATA)->install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::dendego2_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
+	machine().device("dsp")->memory().space(AS_DATA).install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::dendego2_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitojc_state,dangcurv)

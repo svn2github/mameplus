@@ -89,27 +89,27 @@ static void xtheball_scanline_update(screen_device &screen, bitmap_rgb32 &bitmap
  *
  *************************************/
 
-static void xtheball_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+static void xtheball_to_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
-	xtheball_state *state = space->machine().driver_data<xtheball_state>();
+	xtheball_state *state = space.machine().driver_data<xtheball_state>();
 	if (address >= 0x01000000 && address <= 0x010fffff)
 		memcpy(shiftreg, &state->m_vram_bg[TOWORD(address & 0xff000)], TOBYTE(0x1000));
 	else if (address >= 0x02000000 && address <= 0x020fffff)
 		memcpy(shiftreg, &state->m_vram_fg[TOWORD(address & 0xff000)], TOBYTE(0x1000));
 	else
-		logerror("%s:xtheball_to_shiftreg(%08X)\n", space->machine().describe_context(), address);
+		logerror("%s:xtheball_to_shiftreg(%08X)\n", space.machine().describe_context(), address);
 }
 
 
-static void xtheball_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+static void xtheball_from_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
-	xtheball_state *state = space->machine().driver_data<xtheball_state>();
+	xtheball_state *state = space.machine().driver_data<xtheball_state>();
 	if (address >= 0x01000000 && address <= 0x010fffff)
 		memcpy(&state->m_vram_bg[TOWORD(address & 0xff000)], shiftreg, TOBYTE(0x1000));
 	else if (address >= 0x02000000 && address <= 0x020fffff)
 		memcpy(&state->m_vram_fg[TOWORD(address & 0xff000)], shiftreg, TOBYTE(0x1000));
 	else
-		logerror("%s:xtheball_from_shiftreg(%08X)\n", space->machine().describe_context(), address);
+		logerror("%s:xtheball_from_shiftreg(%08X)\n", space.machine().describe_context(), address);
 }
 
 
@@ -338,7 +338,7 @@ static MACHINE_CONFIG_START( xtheball, xtheball_state )
 	MCFG_CPU_ADD("maincpu", TMS34010, 40000000)
 	MCFG_CPU_CONFIG(tms_config)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 15000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(xtheball_state, irq1_line_hold,  15000)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 

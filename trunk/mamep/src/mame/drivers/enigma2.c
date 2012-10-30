@@ -89,6 +89,10 @@ public:
 	DECLARE_DRIVER_INIT(enigma2);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_enigma2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_enigma2a(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_clear_callback);
+	TIMER_CALLBACK_MEMBER(interrupt_assert_callback);
 };
 
 
@@ -111,24 +115,22 @@ INLINE int vysnc_chain_counter_to_vpos( UINT16 counter )
 }
 
 
-static TIMER_CALLBACK( interrupt_clear_callback )
+TIMER_CALLBACK_MEMBER(enigma2_state::interrupt_clear_callback)
 {
-	enigma2_state *state = machine.driver_data<enigma2_state>();
-	state->m_maincpu->set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
-static TIMER_CALLBACK( interrupt_assert_callback )
+TIMER_CALLBACK_MEMBER(enigma2_state::interrupt_assert_callback)
 {
-	enigma2_state *state = machine.driver_data<enigma2_state>();
 	UINT16 next_counter;
 	int next_vpos;
 
 	/* compute vector and set the interrupt line */
-	int vpos = machine.primary_screen->vpos();
+	int vpos = machine().primary_screen->vpos();
 	UINT16 counter = vpos_to_vysnc_chain_counter(vpos);
 	UINT8 vector = 0xc7 | ((counter & 0x80) >> 3) | ((~counter & 0x80) >> 4);
-	state->m_maincpu->set_input_line_and_vector(0, ASSERT_LINE, vector);
+	m_maincpu->set_input_line_and_vector(0, ASSERT_LINE, vector);
 
 	/* set up for next interrupt */
 	if (counter == INT_TRIGGER_COUNT_1)
@@ -137,16 +139,16 @@ static TIMER_CALLBACK( interrupt_assert_callback )
 		next_counter = INT_TRIGGER_COUNT_1;
 
 	next_vpos = vysnc_chain_counter_to_vpos(next_counter);
-	state->m_interrupt_assert_timer->adjust(machine.primary_screen->time_until_pos(next_vpos));
-	state->m_interrupt_clear_timer->adjust(machine.primary_screen->time_until_pos(vpos + 1));
+	m_interrupt_assert_timer->adjust(machine().primary_screen->time_until_pos(next_vpos));
+	m_interrupt_clear_timer->adjust(machine().primary_screen->time_until_pos(vpos + 1));
 }
 
 
 static void create_interrupt_timers( running_machine &machine )
 {
 	enigma2_state *state = machine.driver_data<enigma2_state>();
-	state->m_interrupt_clear_timer = machine.scheduler().timer_alloc(FUNC(interrupt_clear_callback));
-	state->m_interrupt_assert_timer = machine.scheduler().timer_alloc(FUNC(interrupt_assert_callback));
+	state->m_interrupt_clear_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(enigma2_state::interrupt_clear_callback),state));
+	state->m_interrupt_assert_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(enigma2_state::interrupt_assert_callback),state));
 }
 
 
@@ -205,15 +207,14 @@ static void get_pens(pen_t *pens)
 }
 
 
-static SCREEN_UPDATE_RGB32( enigma2 )
+UINT32 enigma2_state::screen_update_enigma2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	enigma2_state *state = screen.machine().driver_data<enigma2_state>();
 	pen_t pens[NUM_PENS];
 
 	const rectangle &visarea = screen.visible_area();
-	UINT8 *prom = state->memregion("proms")->base();
-	UINT8 *color_map_base = state->m_flip_screen ? &prom[0x0400] : &prom[0x0000];
-	UINT8 *star_map_base = (state->m_blink_count & 0x08) ? &prom[0x0c00] : &prom[0x0800];
+	UINT8 *prom = memregion("proms")->base();
+	UINT8 *color_map_base = m_flip_screen ? &prom[0x0400] : &prom[0x0000];
+	UINT8 *star_map_base = (m_blink_count & 0x08) ? &prom[0x0c00] : &prom[0x0800];
 
 	UINT8 x = 0;
 	UINT16 bitmap_y = visarea.min_y;
@@ -243,16 +244,16 @@ static SCREEN_UPDATE_RGB32( enigma2 )
 
 			/* when the screen is flipped, all the video address bits are inverted,
                and the adder at 16A is activated */
-			if (state->m_flip_screen)  videoram_address = (~videoram_address + 0x0400) & 0x1fff;
+			if (m_flip_screen)  videoram_address = (~videoram_address + 0x0400) & 0x1fff;
 
-			video_data = state->m_videoram[videoram_address];
+			video_data = m_videoram[videoram_address];
 
 			fore_color = color_map_base[color_map_address] & 0x07;
 			star_color = star_map_base[star_map_address] & 0x07;
 		}
 
 		/* plot the current pixel */
-		if (state->m_flip_screen)
+		if (m_flip_screen)
 		{
 			bit = video_data & 0x80;
 			video_data = video_data << 1;
@@ -287,15 +288,14 @@ static SCREEN_UPDATE_RGB32( enigma2 )
 		}
 	}
 
-	state->m_blink_count++;
+	m_blink_count++;
 
 	return 0;
 }
 
 
-static SCREEN_UPDATE_RGB32( enigma2a )
+UINT32 enigma2_state::screen_update_enigma2a(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	enigma2_state *state = screen.machine().driver_data<enigma2_state>();
 	UINT8 x = 0;
 	const rectangle &visarea = screen.visible_area();
 	UINT16 bitmap_y = visarea.min_y;
@@ -314,13 +314,13 @@ static SCREEN_UPDATE_RGB32( enigma2a )
 
 			/* when the screen is flipped, all the video address bits are inverted,
                and the adder at 16A is activated */
-			if (state->m_flip_screen)  videoram_address = (~videoram_address + 0x0400) & 0x1fff;
+			if (m_flip_screen)  videoram_address = (~videoram_address + 0x0400) & 0x1fff;
 
-			video_data = state->m_videoram[videoram_address];
+			video_data = m_videoram[videoram_address];
 		}
 
 		/* plot the current pixel */
-		if (state->m_flip_screen)
+		if (m_flip_screen)
 		{
 			bit = video_data & 0x80;
 			video_data = video_data << 1;
@@ -611,13 +611,13 @@ static MACHINE_CONFIG_START( enigma2, enigma2_state )
 
 	MCFG_CPU_ADD("audiocpu", Z80, 2500000)
 	MCFG_CPU_PROGRAM_MAP(engima2_audio_cpu_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8*52)
+	MCFG_CPU_PERIODIC_INT_DRIVER(enigma2_state, irq0_line_hold, 8*52)
 
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(enigma2)
+	MCFG_SCREEN_UPDATE_DRIVER(enigma2_state, screen_update_enigma2)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -637,13 +637,13 @@ static MACHINE_CONFIG_START( enigma2a, enigma2_state )
 
 	MCFG_CPU_ADD("audiocpu", Z80, 2500000)
 	MCFG_CPU_PROGRAM_MAP(engima2_audio_cpu_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8*52)
+	MCFG_CPU_PERIODIC_INT_DRIVER(enigma2_state, irq0_line_hold, 8*52)
 
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(enigma2a)
+	MCFG_SCREEN_UPDATE_DRIVER(enigma2_state, screen_update_enigma2a)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

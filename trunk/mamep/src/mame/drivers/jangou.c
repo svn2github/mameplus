@@ -89,6 +89,8 @@ public:
 	DECLARE_MACHINE_RESET(jngolady);
 	DECLARE_MACHINE_START(common);
 	DECLARE_MACHINE_RESET(common);
+	UINT32 screen_update_jangou(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(cvsd_bit_timer_callback);
 };
 
 
@@ -145,21 +147,20 @@ void jangou_state::video_start()
 	save_item(NAME(m_blit_buffer));
 }
 
-static SCREEN_UPDATE_IND16( jangou )
+UINT32 jangou_state::screen_update_jangou(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jangou_state *state = screen.machine().driver_data<jangou_state>();
 	int x, y;
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
-		UINT8 *src = &state->m_blit_buffer[y * 512 / 2 + cliprect.min_x];
+		UINT8 *src = &m_blit_buffer[y * 512 / 2 + cliprect.min_x];
 		UINT16 *dst = &bitmap.pix16(y, cliprect.min_x);
 
 		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			UINT32 srcpix = *src++;
-			*dst++ = screen.machine().pens[srcpix & 0xf];
-			*dst++ = screen.machine().pens[(srcpix >> 4) & 0xf];
+			*dst++ = machine().pens[srcpix & 0xf];
+			*dst++ = machine().pens[(srcpix >> 4) & 0xf];
 		}
 	}
 
@@ -328,17 +329,16 @@ WRITE8_MEMBER(jangou_state::cvsd_w)
 	m_cvsd_shiftreg = data;
 }
 
-static TIMER_CALLBACK( cvsd_bit_timer_callback )
+TIMER_CALLBACK_MEMBER(jangou_state::cvsd_bit_timer_callback)
 {
-	jangou_state *state = machine.driver_data<jangou_state>();
 
 	/* Data is shifted out at the MSB */
-	hc55516_digit_w(state->m_cvsd, (state->m_cvsd_shiftreg >> 7) & 1);
-	state->m_cvsd_shiftreg <<= 1;
+	hc55516_digit_w(m_cvsd, (m_cvsd_shiftreg >> 7) & 1);
+	m_cvsd_shiftreg <<= 1;
 
 	/* Trigger an IRQ for every 8 shifted bits */
-	if ((++state->m_cvsd_shift_cnt & 7) == 0)
-		state->m_cpu_1->execute().set_input_line(0, HOLD_LINE);
+	if ((++m_cvsd_shift_cnt & 7) == 0)
+		m_cpu_1->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -907,7 +907,7 @@ static SOUND_START( jangou )
 	jangou_state *state = machine.driver_data<jangou_state>();
 
 	/* Create a timer to feed the CVSD DAC with sample bits */
-	state->m_cvsd_bit_timer = machine.scheduler().timer_alloc(FUNC(cvsd_bit_timer_callback));
+	state->m_cvsd_bit_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(jangou_state::cvsd_bit_timer_callback),state));
 	state->m_cvsd_bit_timer->adjust(attotime::from_hz(MASTER_CLOCK / 1024), 0, attotime::from_hz(MASTER_CLOCK / 1024));
 }
 
@@ -991,7 +991,7 @@ static MACHINE_CONFIG_START( jangou, jangou_state )
 	MCFG_CPU_ADD("cpu0", Z80, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(cpu0_map)
 	MCFG_CPU_IO_MAP(cpu0_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", jangou_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("cpu1", Z80, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(cpu1_map)
@@ -1005,7 +1005,7 @@ static MACHINE_CONFIG_START( jangou, jangou_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) //not accurate
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(jangou)
+	MCFG_SCREEN_UPDATE_DRIVER(jangou_state, screen_update_jangou)
 
 	MCFG_PALETTE_LENGTH(32)
 
@@ -1363,7 +1363,7 @@ READ8_MEMBER(jangou_state::jngolady_rng_r)
 
 DRIVER_INIT_MEMBER(jangou_state,jngolady)
 {
-	machine().device("nsc")->memory().space(AS_PROGRAM)->install_read_handler(0x08, 0x08, read8_delegate(FUNC(jangou_state::jngolady_rng_r),this) );
+	machine().device("nsc")->memory().space(AS_PROGRAM).install_read_handler(0x08, 0x08, read8_delegate(FUNC(jangou_state::jngolady_rng_r),this) );
 }
 
 DRIVER_INIT_MEMBER(jangou_state,luckygrl)

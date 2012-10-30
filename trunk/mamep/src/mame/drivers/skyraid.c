@@ -78,7 +78,7 @@ static ADDRESS_MAP_START( skyraid_map, AS_PROGRAM, 8, skyraid_state )
 	AM_RANGE(0x1400, 0x1401) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1c00, 0x1c0f) AM_WRITEONLY AM_SHARE("obj_ram")
 	AM_RANGE(0x4000, 0x4000) AM_WRITE(skyraid_scroll_w)
-	AM_RANGE(0x4400, 0x4400) AM_DEVWRITE_LEGACY("discrete", skyraid_sound_w)
+	AM_RANGE(0x4400, 0x4400) AM_WRITE(skyraid_sound_w)
 	AM_RANGE(0x4800, 0x4800) AM_WRITE(skyraid_range_w)
 	AM_RANGE(0x5000, 0x5000) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x5800, 0x5800) AM_WRITE(skyraid_offset_w)
@@ -220,7 +220,7 @@ static MACHINE_CONFIG_START( skyraid, skyraid_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 12096000 / 12)
 	MCFG_CPU_PROGRAM_MAP(skyraid_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", skyraid_state,  irq0_line_hold)
 	MCFG_WATCHDOG_VBLANK_INIT(4)
 
 	/* video hardware */
@@ -229,7 +229,7 @@ static MACHINE_CONFIG_START( skyraid, skyraid_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(22 * 1000000 / 15750))
 	MCFG_SCREEN_SIZE(512, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(skyraid)
+	MCFG_SCREEN_UPDATE_DRIVER(skyraid_state, screen_update_skyraid)
 
 	MCFG_GFXDECODE(skyraid)
 

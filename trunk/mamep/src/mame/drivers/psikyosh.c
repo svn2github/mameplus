@@ -347,9 +347,9 @@ READ32_MEMBER(psikyosh_state::psh_eeprom_r)
 	return 0;
 }
 
-static INTERRUPT_GEN(psikyosh_interrupt)
+INTERRUPT_GEN_MEMBER(psikyosh_state::psikyosh_interrupt)
 {
-	device->execute().set_input_line(4, ASSERT_LINE);
+	device.execute().set_input_line(4, ASSERT_LINE);
 }
 
 // VBL handler writes 0x00 on entry, 0xc0 on exit
@@ -808,7 +808,7 @@ static MACHINE_CONFIG_START( psikyo3v1, psikyosh_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", SH2, MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(ps3v1_map)
-	MCFG_CPU_VBLANK_INT("screen", psikyosh_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", psikyosh_state,  psikyosh_interrupt)
 
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C56)
@@ -822,7 +822,7 @@ static MACHINE_CONFIG_START( psikyo3v1, psikyosh_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 0, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(psikyosh)
+	MCFG_SCREEN_UPDATE_DRIVER(psikyosh_state, screen_update_psikyosh)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram32_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(psikyosh)
@@ -1259,7 +1259,7 @@ DRIVER_INIT_MEMBER(psikyosh_state,mjgtaste)
 {
 	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 	/* needs to install mahjong controls too (can select joystick in test mode tho) */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x03000000, 0x03000003, read32_delegate(FUNC(psikyosh_state::mjgtaste_input_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x03000000, 0x03000003, read32_delegate(FUNC(psikyosh_state::mjgtaste_input_r),this));
 }
 
 

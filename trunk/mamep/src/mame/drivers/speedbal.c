@@ -223,12 +223,12 @@ static MACHINE_CONFIG_START( speedbal, speedbal_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(main_cpu_map)
 	MCFG_CPU_IO_MAP(main_cpu_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", speedbal_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 2660000)	/* 2.66 MHz ???  Maybe yes */
 	MCFG_CPU_PROGRAM_MAP(sound_cpu_map)
 	MCFG_CPU_IO_MAP(sound_cpu_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(speedbal_state, irq0_line_hold, 8*60)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
@@ -238,7 +238,7 @@ static MACHINE_CONFIG_START( speedbal, speedbal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(speedbal)
+	MCFG_SCREEN_UPDATE_DRIVER(speedbal_state, screen_update_speedbal)
 
 	MCFG_GFXDECODE(speedbal)
 	MCFG_PALETTE_LENGTH(768)

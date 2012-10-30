@@ -349,7 +349,7 @@ static MACHINE_CONFIG_START( crospang, crospang_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14318180)
 	MCFG_CPU_PROGRAM_MAP(crospang_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", crospang_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 14318180/4)
 	MCFG_CPU_PROGRAM_MAP(crospang_sound_map)
@@ -362,7 +362,7 @@ static MACHINE_CONFIG_START( crospang, crospang_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(crospang)
+	MCFG_SCREEN_UPDATE_DRIVER(crospang_state, screen_update_crospang)
 
 	MCFG_PALETTE_LENGTH(0x300)
 	MCFG_GFXDECODE(crospang)

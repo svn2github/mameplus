@@ -444,25 +444,22 @@ WRITE16_MEMBER(wgp_state::cpua_ctrl_w)/* assumes Z80 sandwiched between 68Ks */
 /* 68000 A */
 
 #ifdef UNUSED_FUNCTION
-static TIMER_CALLBACK( wgp_interrupt4 )
+TIMER_CALLBACK_MEMBER(wgp_state::wgp_interrupt4)
 {
-	wgp_state *state = machine.driver_data<wgp_state>();
-	state->m_maincpu->set_input_line(4, HOLD_LINE);
+	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 #endif
 
-static TIMER_CALLBACK( wgp_interrupt6 )
+TIMER_CALLBACK_MEMBER(wgp_state::wgp_interrupt6)
 {
-	wgp_state *state = machine.driver_data<wgp_state>();
-	state->m_maincpu->set_input_line(6, HOLD_LINE);
+	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 /* 68000 B */
 
-static TIMER_CALLBACK( wgp_cpub_interrupt6 )
+TIMER_CALLBACK_MEMBER(wgp_state::wgp_cpub_interrupt6)
 {
-	wgp_state *state = machine.driver_data<wgp_state>();
-	state->m_subcpu->set_input_line(6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
+	m_subcpu->set_input_line(6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
 }
 
 
@@ -472,10 +469,10 @@ static TIMER_CALLBACK( wgp_cpub_interrupt6 )
 /* FWIW offset of 10000,10500 on ints can get CPUB obeying the
    first CPUA command the same frame; probably not necessary */
 
-static INTERRUPT_GEN( wgp_cpub_interrupt )
+INTERRUPT_GEN_MEMBER(wgp_state::wgp_cpub_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000-500), FUNC(wgp_cpub_interrupt6));
-	device->execute().set_input_line(4, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000-500), timer_expired_delegate(FUNC(wgp_state::wgp_cpub_interrupt6),this));
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -597,7 +594,7 @@ WRITE16_MEMBER(wgp_state::wgp_adinput_w)
        hardware has got the next a/d conversion ready. We set a token
        delay of 10000 cycles although our inputs are always ready. */
 
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), FUNC(wgp_interrupt6));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), timer_expired_delegate(FUNC(wgp_state::wgp_interrupt6),this));
 }
 
 
@@ -621,16 +618,16 @@ WRITE16_MEMBER(wgp_state::wgp_sound_w)
 {
 
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
 }
 
 READ16_MEMBER(wgp_state::wgp_sound_r)
 {
 
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, 0) & 0xff));
+		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff));
 	else
 		return 0;
 }
@@ -994,14 +991,14 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", wgp_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", wgp_cpub_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", wgp_state,  wgp_cpub_interrupt)
 
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
@@ -1014,7 +1011,7 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wgp)
+	MCFG_SCREEN_UPDATE_DRIVER(wgp_state, screen_update_wgp)
 
 	MCFG_GFXDECODE(wgp)
 	MCFG_PALETTE_LENGTH(4096)

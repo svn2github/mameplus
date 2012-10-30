@@ -24,15 +24,14 @@ To do:
 
 //port A of ay8910#0
 
-static TIMER_CALLBACK( soundlatch_callback )
+TIMER_CALLBACK_MEMBER(tankbust_state::soundlatch_callback)
 {
-	tankbust_state *state = machine.driver_data<tankbust_state>();
-	state->m_latch = param;
+	m_latch = param;
 }
 
 WRITE8_MEMBER(tankbust_state::tankbust_soundlatch_w)
 {
-	machine().scheduler().synchronize(FUNC(soundlatch_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(tankbust_state::soundlatch_callback),this), data);
 }
 
 READ8_MEMBER(tankbust_state::tankbust_soundlatch_r)
@@ -50,12 +49,12 @@ READ8_MEMBER(tankbust_state::tankbust_soundtimer_r)
 	return ret;
 }
 
-static TIMER_CALLBACK( soundirqline_callback )
+TIMER_CALLBACK_MEMBER(tankbust_state::soundirqline_callback)
 {
 //logerror("sound_irq_line write = %2x (after CPUs synced) \n",param);
 
 		if ((param & 1) == 0)
-			machine.device("sub")->execute().set_input_line(0, HOLD_LINE);
+			machine().device("sub")->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -79,7 +78,7 @@ WRITE8_MEMBER(tankbust_state::tankbust_e0xx_w)
 		break;
 
 	case 1:	/* 0xe001 (value 0 then 1) written right after the soundlatch_byte_w */
-		machine().scheduler().synchronize(FUNC(soundirqline_callback), data);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(tankbust_state::soundirqline_callback),this), data);
 		break;
 
 	case 2:	/* 0xe002 coin counter */
@@ -317,12 +316,11 @@ void tankbust_state::machine_reset()
 	m_variable_data = 0x11;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(tankbust_state::vblank_irq)
 {
-	tankbust_state *state = device->machine().driver_data<tankbust_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( tankbust, tankbust_state )
@@ -330,7 +328,7 @@ static MACHINE_CONFIG_START( tankbust, tankbust_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_14_31818MHz/2)	/* Verified on PCB */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tankbust_state,  vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_14_31818MHz/4)		/* Verified on PCB */
 //  MCFG_CPU_ADD("sub", Z80, XTAL_14_31818MHz/3)        /* Accurate to audio recording, but apparently incorrect clock */
@@ -347,7 +345,7 @@ static MACHINE_CONFIG_START( tankbust, tankbust_state )
 	MCFG_SCREEN_SIZE   ( 64*8, 32*8 )
 	MCFG_SCREEN_VISIBLE_AREA  ( 16*8, 56*8-1, 1*8, 31*8-1 )
 //  MCFG_SCREEN_VISIBLE_AREA  (  0*8, 64*8-1, 1*8, 31*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC  ( tankbust )
+	MCFG_SCREEN_UPDATE_DRIVER(tankbust_state, screen_update_tankbust)
 
 	MCFG_GFXDECODE( tankbust )
 

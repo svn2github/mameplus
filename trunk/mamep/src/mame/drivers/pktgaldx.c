@@ -328,7 +328,7 @@ static MACHINE_CONFIG_START( pktgaldx, pktgaldx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(pktgaldx_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pktgaldx_state,  irq6_line_hold)
 
 
 	/* video hardware */
@@ -337,7 +337,7 @@ static MACHINE_CONFIG_START( pktgaldx, pktgaldx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pktgaldx)
+	MCFG_SCREEN_UPDATE_DRIVER(pktgaldx_state, screen_update_pktgaldx)
 
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_GFXDECODE(pktgaldx)
@@ -367,7 +367,7 @@ static MACHINE_CONFIG_START( pktgaldb, pktgaldx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(pktgaldb_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pktgaldx_state,  irq6_line_hold)
 
 
 	/* video hardware */
@@ -376,7 +376,7 @@ static MACHINE_CONFIG_START( pktgaldb, pktgaldx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pktgaldb)
+	MCFG_SCREEN_UPDATE_DRIVER(pktgaldx_state, screen_update_pktgaldb)
 
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_GFXDECODE(bootleg)

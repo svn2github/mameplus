@@ -78,50 +78,50 @@ static TIMER_CALLBACK( namco_52xx_latch_callback )
 
 static READ8_HANDLER( namco_52xx_K_r )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	return state->m_latched_cmd & 0x0f;
 }
 
 static READ8_HANDLER( namco_52xx_SI_r )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	return state->m_si(0) ? 1 : 0;
 }
 
 static READ8_HANDLER( namco_52xx_R0_r )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	return state->m_romread(state->m_address) & 0x0f;
 }
 
 static READ8_HANDLER( namco_52xx_R1_r )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	return state->m_romread(state->m_address) >> 4;
 }
 
 
 static WRITE8_HANDLER( namco_52xx_P_w )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
-	discrete_sound_w(state->m_discrete, NAMCO_52XX_P_DATA(state->m_basenode), data & 0x0f);
+	namco_52xx_state *state = get_safe_token(space.device().owner());
+	discrete_sound_w(state->m_discrete, space, NAMCO_52XX_P_DATA(state->m_basenode), data & 0x0f);
 }
 
 static WRITE8_HANDLER( namco_52xx_R2_w )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	state->m_address = (state->m_address & 0xfff0) | ((data & 0xf) << 0);
 }
 
 static WRITE8_HANDLER( namco_52xx_R3_w )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	state->m_address = (state->m_address & 0xff0f) | ((data & 0xf) << 4);
 }
 
 static WRITE8_HANDLER( namco_52xx_O_w )
 {
-	namco_52xx_state *state = get_safe_token(space->device().owner());
+	namco_52xx_state *state = get_safe_token(space.device().owner());
 	if (data & 0x10)
 		state->m_address = (state->m_address & 0x0fff) | ((data & 0xf) << 12);
 	else
@@ -141,7 +141,7 @@ WRITE8_DEVICE_HANDLER( namco_52xx_write )
 {
 	namco_52xx_state *state = get_safe_token(device);
 
-	device->machine().scheduler().synchronize(FUNC(namco_52xx_latch_callback), data, (void *)device);
+	space.machine().scheduler().synchronize(FUNC(namco_52xx_latch_callback), data, (void *)device);
 
 	state->m_cpu->execute().set_input_line(0, ASSERT_LINE);
 
@@ -153,7 +153,7 @@ WRITE8_DEVICE_HANDLER( namco_52xx_write )
 
 	/* the 52xx uses TSTI to check for an interrupt; it also may be handling
        a timer interrupt, so we need to ensure the IRQ line is held long enough */
-	device->machine().scheduler().timer_set(attotime::from_usec(5*21), FUNC(namco_52xx_irq_clear), 0, (void *)device);
+	space.machine().scheduler().timer_set(attotime::from_usec(5*21), FUNC(namco_52xx_irq_clear), 0, (void *)device);
 }
 
 
@@ -228,7 +228,7 @@ const device_type NAMCO_52XX = &device_creator<namco_52xx_device>;
 namco_52xx_device::namco_52xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, NAMCO_52XX, "Namco 52xx", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(namco_52xx_state));
+	m_token = global_alloc_clear(namco_52xx_state);
 }
 
 //-------------------------------------------------

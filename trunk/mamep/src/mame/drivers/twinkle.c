@@ -271,8 +271,8 @@ public:
 	DECLARE_WRITE16_MEMBER(shared_68k_w);
 	DECLARE_READ16_MEMBER(twinkle_ide_r);
 	DECLARE_WRITE16_MEMBER(twinkle_ide_w);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 	DECLARE_DRIVER_INIT(twinkle);
-	DECLARE_MACHINE_RESET(twinkle);
 };
 
 /* RTC */
@@ -657,13 +657,11 @@ ADDRESS_MAP_END
 
 /* SPU board */
 
-static void ide_interrupt(device_t *device, int state_)
+WRITE_LINE_MEMBER(twinkle_state::ide_interrupt)
 {
-	twinkle_state *state = device->machine().driver_data<twinkle_state>();
-
-	if ((state_) && (state->m_spu_ctrl & 0x0400))
+	if ((state) && (m_spu_ctrl & 0x0400))
 	{
-		device->machine().device("audiocpu")->execute().set_input_line(M68K_IRQ_6, ASSERT_LINE);
+		machine().device("audiocpu")->execute().set_input_line(M68K_IRQ_6, ASSERT_LINE);
 	}
 }
 
@@ -850,16 +848,6 @@ static void scsi_dma_write( twinkle_state *state, UINT32 n_address, INT32 n_size
 	}
 }
 
-static void scsi_irq(running_machine &machine)
-{
-	psx_irq_set(machine, 0x400);
-}
-
-static const struct AM53CF96interface am53cf96_intf =
-{
-	&scsi_irq,		/* command completion IRQ */
-};
-
 DRIVER_INIT_MEMBER(twinkle_state,twinkle)
 {
 	psx_driver_init(machine());
@@ -871,23 +859,6 @@ DRIVER_INIT_MEMBER(twinkle_state,twinkle)
 	i2cmem_wc_write( i2cmem, 0 );
 }
 
-MACHINE_RESET_MEMBER(twinkle_state,twinkle)
-{
-	/* also hook up CDDA audio to the CD-ROM drive */
-	void *cdrom;
-	scsidev_device *scsidev = machine().device<scsidev_device>("scsi:cdrom");
-	scsidev->GetDevice( &cdrom );
-	cdda_set_cdrom(machine().device("cdda"), cdrom);
-}
-
-static void spu_irq(device_t *device, UINT32 data)
-{
-	if (data)
-	{
-		psx_irq_set(device->machine(), 1<<9);
-	}
-}
-
 static const i2cmem_interface i2cmem_interface =
 {
 	I2CMEM_SLAVE_ADDRESS, 0, 0x100
@@ -896,13 +867,6 @@ static const i2cmem_interface i2cmem_interface =
 static const rtc65271_interface twinkle_rtc =
 {
 	DEVCB_NULL
-};
-
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
 };
 
 static MACHINE_CONFIG_START( twinkle, twinkle_state )
@@ -918,14 +882,16 @@ static MACHINE_CONFIG_START( twinkle, twinkle_state )
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_msec(1200)) /* check TD pin on LTC1232 */
 
-	MCFG_MACHINE_RESET_OVERRIDE(twinkle_state, twinkle )
 	MCFG_I2CMEM_ADD("security",i2cmem_interface)
 
 	MCFG_SCSIBUS_ADD("scsi")
 	MCFG_SCSIDEV_ADD("scsi:cdrom", SCSICD, SCSI_ID_4)
-	MCFG_AM53CF96_ADD("scsi:am53cf96", am53cf96_intf)
+	MCFG_AM53CF96_ADD("scsi:am53cf96")
+	MCFG_AM53CF96_IRQ_HANDLER(DEVWRITELINE("^maincpu:irq", psxirq_device, intin10))
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, twinkle_state, ide_interrupt))
+
 	MCFG_RTC65271_ADD("rtc", twinkle_rtc)
 
 	/* video hardware */
@@ -934,7 +900,7 @@ static MACHINE_CONFIG_START( twinkle, twinkle_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("speakerleft", "speakerright")
 
-	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2, &spu_irq )
+	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2 )
 	MCFG_SOUND_ROUTE( 0, "speakerleft", 0.75 )
 	MCFG_SOUND_ROUTE( 1, "speakerright", 0.75 )
 
@@ -942,9 +908,9 @@ static MACHINE_CONFIG_START( twinkle, twinkle_state )
 	MCFG_SOUND_ROUTE(0, "speakerleft", 1.0)
 	MCFG_SOUND_ROUTE(1, "speakerright", 1.0)
 
-	MCFG_SOUND_ADD( "cdda", CDDA, 0 )
-	MCFG_SOUND_ROUTE( 0, "speakerleft", 1.0 )
-	MCFG_SOUND_ROUTE( 1, "speakerright", 1.0 )
+	MCFG_SOUND_MODIFY( "scsi:cdrom:cdda" )
+	MCFG_SOUND_ROUTE( 0, "^^^speakerleft", 1.0 )
+	MCFG_SOUND_ROUTE( 1, "^^^speakerright", 1.0 )
 MACHINE_CONFIG_END
 
 static INPUT_PORTS_START( twinkle )

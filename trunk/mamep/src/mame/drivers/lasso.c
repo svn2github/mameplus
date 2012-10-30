@@ -511,7 +511,7 @@ static MACHINE_CONFIG_START( base, lasso_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 11289000/16)	/* guess */
 	MCFG_CPU_PROGRAM_MAP(lasso_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lasso_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 600000)
 	MCFG_CPU_PROGRAM_MAP(lasso_audio_map)
@@ -525,7 +525,7 @@ static MACHINE_CONFIG_START( base, lasso_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lasso)
+	MCFG_SCREEN_UPDATE_DRIVER(lasso_state, screen_update_lasso)
 
 	MCFG_GFXDECODE(lasso)
 	MCFG_PALETTE_LENGTH(0x40)
@@ -534,11 +534,11 @@ static MACHINE_CONFIG_START( base, lasso_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn76489.1", SN76489_NEW, 2000000)
+	MCFG_SOUND_ADD("sn76489.1", SN76489, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn76489.2", SN76489_NEW, 2000000)
+	MCFG_SOUND_ADD("sn76489.2", SN76489, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -562,7 +562,7 @@ static MACHINE_CONFIG_DERIVED( chameleo, base )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(chameleo)
+	MCFG_SCREEN_UPDATE_DRIVER(lasso_state, screen_update_chameleo)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( wwjgtin, base )
@@ -580,7 +580,7 @@ static MACHINE_CONFIG_DERIVED( wwjgtin, base )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)	// Smaller visible area?
-	MCFG_SCREEN_UPDATE_STATIC(wwjgtin)
+	MCFG_SCREEN_UPDATE_DRIVER(lasso_state, screen_update_wwjgtin)
 	MCFG_GFXDECODE(wwjgtin)	// Has 1 additional layer
 	MCFG_PALETTE_LENGTH(0x40 + 16*16)
 
@@ -597,7 +597,7 @@ static MACHINE_CONFIG_DERIVED( pinbo, base )
 	/* basic machine hardware */
 	MCFG_CPU_REPLACE("maincpu", M6502, XTAL_18MHz/24)
 	MCFG_CPU_PROGRAM_MAP(pinbo_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lasso_state,  irq0_line_hold)
 
 	MCFG_CPU_REPLACE("audiocpu", Z80, XTAL_18MHz/6)
 	MCFG_CPU_PROGRAM_MAP(pinbo_audio_map)
@@ -609,7 +609,7 @@ static MACHINE_CONFIG_DERIVED( pinbo, base )
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MCFG_VIDEO_START_OVERRIDE(lasso_state,pinbo)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(chameleo)
+	MCFG_SCREEN_UPDATE_DRIVER(lasso_state, screen_update_chameleo)
 
 	/* sound hardware */
 	MCFG_DEVICE_REMOVE("sn76489.1")
@@ -890,10 +890,10 @@ ROM_END
 
 ***************************************************************************/
 
-GAME( 1982, lasso,    0,       lasso,    lasso, driver_device,    0, ROT90, "SNK",            "Lasso", GAME_SUPPORTS_SAVE )
-GAME( 1983, chameleo, 0,       chameleo, chameleo, driver_device, 0, ROT0,  "Jaleco",         "Chameleon", GAME_SUPPORTS_SAVE )
-GAME( 1984, wwjgtin,  0,       wwjgtin,  wwjgtin, driver_device,  0, ROT0,  "Jaleco / Casio", "Wai Wai Jockey Gate-In!", GAME_SUPPORTS_SAVE )
-GAME( 1991, photof,   wwjgtin, wwjgtin,  wwjgtin, driver_device,  0, ROT0,  "bootleg?",	   "Photo Finish", GAME_SUPPORTS_SAVE )
-GAME( 1984, pinbo,    0,       pinbo,    pinbo, driver_device,    0, ROT90, "Jaleco",         "Pinbo (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, pinboa,   pinbo,   pinbo,    pinboa, driver_device,   0, ROT90, "Jaleco",         "Pinbo (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1985, pinbos,   pinbo,   pinbo,    pinboa, driver_device,   0, ROT90, "bootleg?",       "Pinbo (Strike)", GAME_SUPPORTS_SAVE )
+GAME( 1982, lasso,    0,       lasso,    lasso,    driver_device,  0, ROT90, "SNK",              "Lasso", GAME_SUPPORTS_SAVE )
+GAME( 1983, chameleo, 0,       chameleo, chameleo, driver_device,  0, ROT0,  "Jaleco",           "Chameleon", GAME_SUPPORTS_SAVE )
+GAME( 1984, wwjgtin,  0,       wwjgtin,  wwjgtin,  driver_device,  0, ROT0,  "Jaleco / Casio",   "Wai Wai Jockey Gate-In!", GAME_SUPPORTS_SAVE )
+GAME( 1991, photof,   wwjgtin, wwjgtin,  wwjgtin,  driver_device,  0, ROT0,  "Jaleco / Casio",   "Photo Finish (bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1984, pinbo,    0,       pinbo,    pinbo,    driver_device,  0, ROT90, "Jaleco",           "Pinbo (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, pinboa,   pinbo,   pinbo,    pinboa,   driver_device,  0, ROT90, "Jaleco",           "Pinbo (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1985, pinbos,   pinbo,   pinbo,    pinboa,   driver_device,  0, ROT90, "bootleg (Strike)", "Pinbo (bootleg)", GAME_SUPPORTS_SAVE )

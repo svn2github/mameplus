@@ -111,6 +111,8 @@ public:
 	DECLARE_WRITE8_MEMBER(nmi_enable_w);
 	DECLARE_READ8_MEMBER(dummy_r);
 	virtual void palette_init();
+	UINT32 screen_update_shougi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(shougi_vblank_nmi);
 };
 
 
@@ -174,9 +176,8 @@ void shougi_state::palette_init()
 
 
 
-static SCREEN_UPDATE_IND16( shougi )
+UINT32 shougi_state::screen_update_shougi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	shougi_state *state = screen.machine().driver_data<shougi_state>();
 	int offs;
 
 	for (offs = 0;offs <0x4000; offs++)
@@ -188,8 +189,8 @@ static SCREEN_UPDATE_IND16( shougi )
 		//if (flipscreen[0]) sx = 31 - sx;
 		//if (flipscreen[1]) sy = 31 - sy;
 
-		data1 = state->m_videoram[offs];				/* color */
-		data2 = state->m_videoram[0x4000 + offs];	/* pixel data */
+		data1 = m_videoram[offs];				/* color */
+		data2 = m_videoram[0x4000 + offs];	/* pixel data */
 
 		for (x=0; x<4; x++) /*4 pixels per byte (2 bitplanes in 2 nibbles: 1st=bits 7-4, 2nd=bits 3-0)*/
 		{
@@ -273,15 +274,14 @@ WRITE8_MEMBER(shougi_state::nmi_enable_w)
 	m_nmi_enabled = 1; /* enable NMIs */
 }
 
-static INTERRUPT_GEN( shougi_vblank_nmi )
+INTERRUPT_GEN_MEMBER(shougi_state::shougi_vblank_nmi)
 {
-	shougi_state *state = device->machine().driver_data<shougi_state>();
 
-	if ( state->m_nmi_enabled == 1 )
+	if ( m_nmi_enabled == 1 )
 	{
 		/* NMI lines are tied together on both CPUs and connected to the LS74 /Q output */
-		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
-		device->machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 }
 
@@ -405,7 +405,7 @@ static MACHINE_CONFIG_START( shougi, shougi_state )
 
 	MCFG_CPU_ADD("maincpu", Z80,10000000/4)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", shougi_vblank_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", shougi_state,  shougi_vblank_nmi)
 
 	MCFG_CPU_ADD("sub", Z80,10000000/4)
 	MCFG_CPU_PROGRAM_MAP(sub_map)
@@ -425,7 +425,7 @@ static MACHINE_CONFIG_START( shougi, shougi_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 255)
-	MCFG_SCREEN_UPDATE_STATIC(shougi)
+	MCFG_SCREEN_UPDATE_DRIVER(shougi_state, screen_update_shougi)
 
 	MCFG_PALETTE_LENGTH(32)
 

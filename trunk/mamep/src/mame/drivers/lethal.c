@@ -203,12 +203,11 @@ WRITE8_MEMBER(lethal_state::control2_w)
 	ioport("EEPROMOUT")->write(m_cur_control2, 0xff);
 }
 
-static INTERRUPT_GEN(lethalen_interrupt)
+INTERRUPT_GEN_MEMBER(lethal_state::lethalen_interrupt)
 {
-	lethal_state *state = device->machine().driver_data<lethal_state>();
 
-	if (k056832_is_irq_enabled(state->m_k056832, 0))
-		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	if (k056832_is_irq_enabled(m_k056832, 0))
+		device.execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(lethal_state::sound_cmd_w)
@@ -266,7 +265,7 @@ READ8_MEMBER(lethal_state::le_4800_r)
 				case 0x4d:
 				case 0x4e:
 				case 0x4f:
-					return k053244_r(m_k053244, offset - 0x40);
+					return k053244_r(m_k053244, space, offset - 0x40);
 
 				case 0x80:
 				case 0x81:
@@ -300,22 +299,22 @@ READ8_MEMBER(lethal_state::le_4800_r)
 				case 0x9d:
 				case 0x9e:
 				case 0x9f:
-					return k054000_r(m_k054000, offset - 0x80);
+					return k054000_r(m_k054000, space, offset - 0x80);
 
 				case 0xca:
 					return sound_status_r(space, 0);
 			}
 		}
 		else if (offset < 0x1800)
-			return k053245_r(m_k053244, (offset - 0x0800) & 0x07ff);
+			return k053245_r(m_k053244, space, (offset - 0x0800) & 0x07ff);
 		else if (offset < 0x2000)
-			return k056832_ram_code_lo_r(m_k056832, offset - 0x1800);
+			return k056832_ram_code_lo_r(m_k056832, space, offset - 0x1800);
 		else if (offset < 0x2800)
-			return k056832_ram_code_hi_r(m_k056832, offset - 0x2000);
+			return k056832_ram_code_hi_r(m_k056832, space, offset - 0x2000);
 		else if (offset < 0x3000)
-			return k056832_ram_attr_lo_r(m_k056832, offset - 0x2800);
+			return k056832_ram_attr_lo_r(m_k056832, space, offset - 0x2800);
 		else // (offset < 0x3800)
-			return k056832_ram_attr_hi_r(m_k056832, offset - 0x3000);
+			return k056832_ram_attr_hi_r(m_k056832, space, offset - 0x3000);
 	}
 
 	return 0;
@@ -358,7 +357,7 @@ WRITE8_MEMBER(lethal_state::le_4800_w)
 				case 0x4d:
 				case 0x4e:
 				case 0x4f:
-					k053244_w(m_k053244, offset - 0x40, data);
+					k053244_w(m_k053244, space, offset - 0x40, data);
 					break;
 
 				case 0x80:
@@ -393,7 +392,7 @@ WRITE8_MEMBER(lethal_state::le_4800_w)
 				case 0x9d:
 				case 0x9e:
 				case 0x9f:
-					k054000_w(m_k054000, offset - 0x80, data);
+					k054000_w(m_k054000, space, offset - 0x80, data);
 					break;
 
 				default:
@@ -402,15 +401,15 @@ WRITE8_MEMBER(lethal_state::le_4800_w)
 			}
 		}
 		else if (offset < 0x1800)
-			k053245_w(m_k053244, (offset - 0x0800) & 0x07ff, data);
+			k053245_w(m_k053244, space, (offset - 0x0800) & 0x07ff, data);
 		else if (offset < 0x2000)
-			k056832_ram_code_lo_w(m_k056832, offset - 0x1800, data);
+			k056832_ram_code_lo_w(m_k056832, space, offset - 0x1800, data);
 		else if (offset < 0x2800)
-			k056832_ram_code_hi_w(m_k056832, offset - 0x2000, data);
+			k056832_ram_code_hi_w(m_k056832, space, offset - 0x2000, data);
 		else if (offset < 0x3000)
-			k056832_ram_attr_lo_w(m_k056832, offset - 0x2800, data);
+			k056832_ram_attr_lo_w(m_k056832, space, offset - 0x2800, data);
 		else // (offset < 0x3800)
-			k056832_ram_attr_hi_w(m_k056832, offset - 0x3000, data);
+			k056832_ram_attr_hi_w(m_k056832, space, offset - 0x3000, data);
 	}
 }
 
@@ -645,7 +644,7 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, MAIN_CLOCK/2)    /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(le_main)
-	MCFG_CPU_VBLANK_INT("screen", lethalen_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lethal_state,  lethalen_interrupt)
 
 	MCFG_CPU_ADD("soundcpu", Z80, MAIN_CLOCK/4)  /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(le_sound)
@@ -663,7 +662,7 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(216, 504-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(lethalen)
+	MCFG_SCREEN_UPDATE_DRIVER(lethal_state, screen_update_lethalen)
 
 	MCFG_PALETTE_LENGTH(7168+1)
 

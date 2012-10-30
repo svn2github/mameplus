@@ -117,6 +117,28 @@ WRITE8_MEMBER(irobot_state::irobot_clearfirq_w)
 }
 
 
+READ8_MEMBER(irobot_state::quad_pokeyn_r)
+{
+	static const char *const devname[4] = { "pokey1", "pokey2", "pokey3", "pokey4" };
+	int pokey_num = (offset >> 3) & ~0x04;
+	int control = (offset & 0x20) >> 2;
+	int pokey_reg = (offset % 8) | control;
+	pokey_device *pokey = machine().device<pokey_device>(devname[pokey_num]);
+
+	return pokey->read(pokey_reg);
+}
+
+WRITE8_MEMBER(irobot_state::quad_pokeyn_w)
+{
+	static const char *const devname[4] = { "pokey1", "pokey2", "pokey3", "pokey4" };
+    int pokey_num = (offset >> 3) & ~0x04;
+    int control = (offset & 0x20) >> 2;
+    int pokey_reg = (offset % 8) | control;
+	pokey_device *pokey = machine().device<pokey_device>(devname[pokey_num]);
+
+    pokey->write(pokey_reg, data);
+}
+
 
 /*************************************
  *
@@ -137,7 +159,7 @@ static ADDRESS_MAP_START( irobot_map, AS_PROGRAM, 8, irobot_state )
     AM_RANGE(0x11c0, 0x11c0) AM_WRITE(irobot_rom_banksel_w)
     AM_RANGE(0x1200, 0x12ff) AM_RAM_WRITE(irobot_nvram_w) AM_SHARE("nvram")
     AM_RANGE(0x1300, 0x13ff) AM_READ(irobot_control_r)
-    AM_RANGE(0x1400, 0x143f) AM_READWRITE_LEGACY(quad_pokeyn_r, quad_pokeyn_w)
+    AM_RANGE(0x1400, 0x143f) AM_READWRITE(quad_pokeyn_r, quad_pokeyn_w)
     AM_RANGE(0x1800, 0x18ff) AM_WRITE(irobot_paletteram_w)
     AM_RANGE(0x1900, 0x19ff) AM_WRITEONLY            /* Watchdog reset */
     AM_RANGE(0x1a00, 0x1a00) AM_WRITE(irobot_clearfirq_w)
@@ -302,14 +324,14 @@ static MACHINE_CONFIG_START( irobot, irobot_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(irobot)
+	MCFG_SCREEN_UPDATE_DRIVER(irobot_state, screen_update_irobot)
 
 	MCFG_GFXDECODE(irobot)
 	MCFG_PALETTE_LENGTH(64 + 32)	/* 64 for polygons, 32 for text */
 
 
-	MCFG_TIMER_ADD("irvg_timer", irobot_irvg_done_callback)
-	MCFG_TIMER_ADD("irmb_timer", irobot_irmb_done_callback)
+	MCFG_TIMER_DRIVER_ADD("irvg_timer", irobot_state, irobot_irvg_done_callback)
+	MCFG_TIMER_DRIVER_ADD("irmb_timer", irobot_state, irobot_irmb_done_callback)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

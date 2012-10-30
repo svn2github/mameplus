@@ -1,6 +1,9 @@
 /*************************************************************************************
 
+    Pinball
     Zaccaria Generation 1
+
+    Made working in Sept 2012 [Robbbert]
 
     These games allow for up to 4 players at the same time.
     Setup is via a menu - there are no dipswitches.
@@ -14,24 +17,26 @@
      and off independently. Some games come with a NE555 and SN76477 with switchable
      sounds (achieved with 21 switching diodes and 8 data bits).
 
+    Each game has its own map of inputs and outputs, although fortunately some
+    of them happen to be fairly common. For example the outhole is always on the
+    same output line, while the knocker is the same except for 'strapids'.
+
 ToDo:
 - Outputs
 - Sound
-- Proper Artwork
-- Battery Backup
 
 **************************************************************************************/
 
 
-#include "emu.h"
+#include "machine/genpin.h"
 #include "cpu/s2650/s2650.h"
 #include "zac_1.lh"
 
-class zac_1_state : public driver_device
+class zac_1_state : public genpin_class
 {
 public:
 	zac_1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
+		: genpin_class(mconfig, type, tag),
 	m_maincpu(*this, "maincpu"),
 	m_p_ram(*this, "ram")
 	{ }
@@ -42,17 +47,19 @@ public:
 	DECLARE_WRITE8_MEMBER(serial_w);
 	DECLARE_READ8_MEMBER(reset_int_r);
 	DECLARE_WRITE8_MEMBER(reset_int_w);
-	UINT8 m_t_c;
-	UINT8 m_out_offs;
-	required_device<cpu_device> m_maincpu;
-	required_shared_ptr<UINT8> m_p_ram;
+	TIMER_DEVICE_CALLBACK_MEMBER(zac_1_inttimer);
+	TIMER_DEVICE_CALLBACK_MEMBER(zac_1_outtimer);
 protected:
 
 	// devices
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_p_ram;
 
 	// driver_device overrides
 	virtual void machine_reset();
 private:
+	UINT8 m_t_c;
+	UINT8 m_out_offs;
 	UINT8 m_input_line;
 };
 
@@ -91,6 +98,7 @@ static INPUT_PORTS_START( zac_1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Burn Test")
 
+	// from here there are variations per game
 	PORT_START("ROW2")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Outhole") PORT_CODE(KEYCODE_X)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Flap") PORT_CODE(KEYCODE_Q)
@@ -181,7 +189,7 @@ void zac_1_state::machine_reset()
 {
 	m_t_c = 0;
 // init system if invalid (from pinmame)
-	if (m_p_ram[0xf7] == 5 && m_p_ram[0xf8] == 0x0a)
+	if (m_p_ram[0xf7] == 5 || m_p_ram[0xf8] == 0x0a)
 	{}
 	else
 	{
@@ -193,34 +201,43 @@ void zac_1_state::machine_reset()
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( zac_1_inttimer )
+TIMER_DEVICE_CALLBACK_MEMBER(zac_1_state::zac_1_inttimer)
 {
-	zac_1_state *state = timer.machine().driver_data<zac_1_state>();
-	if (state->m_t_c > 0x40)
+	if (m_t_c > 0x40)
 	{
-		UINT8 vector = (state->ioport("TEST")->read() ) ? 0x10 : 0x18;
-		state->m_maincpu->set_input_line_and_vector(INPUT_LINE_IRQ0, ASSERT_LINE, vector);
+		UINT8 vector = (ioport("TEST")->read() ) ? 0x10 : 0x18;
+		m_maincpu->set_input_line_and_vector(INPUT_LINE_IRQ0, ASSERT_LINE, vector);
 	}
 	else
-		state->m_t_c++;
+		m_t_c++;
 }
 
-static TIMER_DEVICE_CALLBACK( zac_1_outtimer )
+/* scores = 1800-182D; solenoids = 1840-1853;
+   lamps = 1880-18BF; bookkeeping=18C0-18FF. 4-tone osc=1854-1857.
+   182E-183F is a storage area for inputs. */
+TIMER_DEVICE_CALLBACK_MEMBER(zac_1_state::zac_1_outtimer)
 {
 	static const UINT8 patterns[16] = { 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0, 0, 0, 0, 0, 0 };
-	zac_1_state *state = timer.machine().driver_data<zac_1_state>();
-	state->m_out_offs++;
-// displays, solenoids, lamps
+	m_out_offs++;
 
-	if (state->m_out_offs < 0x40)
+	if (m_out_offs < 0x40)
 	{
-		UINT8 display = (state->m_out_offs >> 3) & 7;
-		UINT8 digit = state->m_out_offs & 7;
-		output_set_digit_value(display * 10 + digit, patterns[state->m_p_ram[state->m_out_offs]&15]);
+		UINT8 display = (m_out_offs >> 3) & 7;
+		UINT8 digit = m_out_offs & 7;
+		output_set_digit_value(display * 10 + digit, patterns[m_p_ram[m_out_offs]&15]);
 	}
-// seems scores = 1800-182D; solenoids = 1840-187F;
-// lamps = 1880-18BF; bookkeeping=18C0-18FF. 4-tone osc=1850-1853.
-// 182E-183F is a storage area for inputs.
+	else
+	if (m_out_offs == 0x4a) // outhole
+	{
+		if (BIT(m_p_ram[m_out_offs], 0))
+			m_samples->start(0, 5);
+	}
+	else
+	if (m_out_offs == 0x4b) // knocker (not strapids)
+	{
+		if (BIT(m_p_ram[m_out_offs], 0))
+			m_samples->start(0, 6);
+	}
 }
 
 static MACHINE_CONFIG_START( zac_1, zac_1_state )
@@ -228,11 +245,16 @@ static MACHINE_CONFIG_START( zac_1, zac_1_state )
 	MCFG_CPU_ADD("maincpu", S2650, 6000000/2)
 	MCFG_CPU_PROGRAM_MAP(zac_1_map)
 	MCFG_CPU_IO_MAP(zac_1_io)
-	MCFG_TIMER_ADD_PERIODIC("zac_1_inttimer", zac_1_inttimer, attotime::from_hz(200))
-	MCFG_TIMER_ADD_PERIODIC("zac_1_outtimer", zac_1_outtimer, attotime::from_hz(187500))
+	MCFG_NVRAM_ADD_0FILL("ram")
+
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("zac_1_inttimer", zac_1_state, zac_1_inttimer, attotime::from_hz(200))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("zac_1_outtimer", zac_1_state, zac_1_outtimer, attotime::from_hz(187500))
 
 	/* Video */
 	MCFG_DEFAULT_LAYOUT(layout_zac_1)
+
+	/* Sound */
+	MCFG_FRAGMENT_ADD( genpin_audio )
 MACHINE_CONFIG_END
 
 /*************************** LOCOMOTION ********************************/

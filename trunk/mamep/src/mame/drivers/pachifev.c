@@ -107,6 +107,7 @@ public:
 	DECLARE_READ8_MEMBER(controls_r);
 	virtual void machine_start();
 	virtual void machine_reset();
+	INTERRUPT_GEN_MEMBER(pachifev_vblank_irq);
 };
 
 WRITE8_MEMBER(pachifev_state::controls_w)
@@ -145,8 +146,8 @@ static ADDRESS_MAP_START( pachifev_map, AS_PROGRAM, 8, pachifev_state )
     AM_RANGE(0xff08, 0xff08) AM_READ_PORT("DSW3")
     AM_RANGE(0xff10, 0xff10) AM_DEVREADWRITE("tms9928a", tms9928a_device, vram_read, vram_write)
     AM_RANGE(0xff12, 0xff12) AM_DEVREADWRITE("tms9928a", tms9928a_device, register_read, register_write)
-    AM_RANGE(0xff20, 0xff20) AM_DEVWRITE("y2404_1", y2404_new_device, write)
-    AM_RANGE(0xff30, 0xff30) AM_DEVWRITE("y2404_2", y2404_new_device, write)
+    AM_RANGE(0xff20, 0xff20) AM_DEVWRITE("y2404_1", y2404_device, write)
+    AM_RANGE(0xff30, 0xff30) AM_DEVWRITE("y2404_2", y2404_device, write)
     AM_RANGE(0xff40, 0xff40) AM_WRITE(controls_w)
     AM_RANGE(0xff50, 0xff50) AM_WRITENOP /* unknown */
     AM_RANGE(0xfffa, 0xfffb) AM_NOP /* decrementer */
@@ -317,34 +318,33 @@ void pachifev_state::machine_reset()
 }
 
 
-static INTERRUPT_GEN( pachifev_vblank_irq )
+INTERRUPT_GEN_MEMBER(pachifev_state::pachifev_vblank_irq)
 {
     {
 		static const char *const inname[2] = { "PLUNGER_P1", "PLUNGER_P2" };
-        pachifev_state *state = device->machine().driver_data<pachifev_state>();
 
 		/* I wish I had found a better way to handle cocktail inputs, but I can't find a way to access internal RAM */
 		/* (bit 5 of 0xf0aa : 0 = player 1 and 1 = player 2 - bit 6 of 0xf0aa : 0 = upright and 1 = cocktail). */
 		/* All I found is that in main RAM, 0xe00f.b determines the player : 0x00 = player 1 and 0x01 = player 2. */
-		address_space *ramspace = device->memory().space(AS_PROGRAM);
+		address_space &ramspace = device.memory().space(AS_PROGRAM);
 		UINT8 player = 0;
 
-		if ((ramspace->read_byte(0xe00f) == 0x01) && ((state->ioport("DSW1")->read() & 0x08) == 0x00))
+		if ((ramspace.read_byte(0xe00f) == 0x01) && ((ioport("DSW1")->read() & 0x08) == 0x00))
 			player = 1;
 
-        int current_power=state->ioport(inname[player])->read() & 0x3f;
-        if(current_power != state->m_previous_power)
+        int current_power=ioport(inname[player])->read() & 0x3f;
+        if(current_power != m_previous_power)
         {
             popmessage    ("%d%%", (current_power * 100) / 0x3f);
         }
 
-        if( (!current_power) && (state->m_previous_power) )
+        if( (!current_power) && (m_previous_power) )
         {
-            state->m_input_power=state->m_previous_power;
-            state->m_cnt=NUM_PLUNGER_REPEATS;
+            m_input_power=m_previous_power;
+            m_cnt=NUM_PLUNGER_REPEATS;
         }
 
-        state->m_previous_power=current_power;
+        m_previous_power=current_power;
     }
 
 }
@@ -378,7 +378,7 @@ static MACHINE_CONFIG_START( pachifev, pachifev_state )
     MCFG_CPU_CONFIG(pachifev_processor_config)
     MCFG_CPU_PROGRAM_MAP(pachifev_map)
     MCFG_CPU_IO_MAP(pachifev_cru)
-    MCFG_CPU_VBLANK_INT("screen",pachifev_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pachifev_state, pachifev_vblank_irq)
 
 
     /* video hardware */
@@ -393,10 +393,10 @@ static MACHINE_CONFIG_START( pachifev, pachifev_state )
     MCFG_SOUND_CONFIG(msm5205_config)
     MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 #endif
-    MCFG_SOUND_ADD("y2404_1", Y2404_NEW, XTAL_10_738635MHz/3) /* guess */
+    MCFG_SOUND_ADD("y2404_1", Y2404, XTAL_10_738635MHz/3) /* guess */
     MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
-    MCFG_SOUND_ADD("y2404_2", Y2404_NEW, XTAL_10_738635MHz/3) /* guess */
+    MCFG_SOUND_ADD("y2404_2", Y2404, XTAL_10_738635MHz/3) /* guess */
     MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

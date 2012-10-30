@@ -16,6 +16,8 @@
 #include "video/awpvid.h"
 #include "machine/roc10937.h"
 
+#include "proconn.lh"
+
 class proconn_state : public driver_device
 {
 public:
@@ -35,8 +37,8 @@ public:
 
 	optional_device<roc10937_t> m_vfd;
 
-	DECLARE_WRITE8_MEMBER( ay_w0 ) { ay8910_address_data_w(m_ay, 0, data); }
-	DECLARE_WRITE8_MEMBER( ay_w1 ) { ay8910_address_data_w(m_ay, 1, data); }
+	DECLARE_WRITE8_MEMBER( ay_w0 ) { ay8910_address_data_w(m_ay, space, 0, data); }
+	DECLARE_WRITE8_MEMBER( ay_w1 ) { ay8910_address_data_w(m_ay, space, 1, data); }
 
 	DECLARE_WRITE8_MEMBER( ctc_w0 ) { m_z80ctc->write(space, 0, data); }
 	DECLARE_WRITE8_MEMBER( ctc_w1 ) { m_z80ctc->write(space, 1, data); }
@@ -73,7 +75,7 @@ public:
 	DECLARE_WRITE8_MEMBER( pio5_w2 ) { m_z80pio_5->write(space, 2, data); }
 	DECLARE_WRITE8_MEMBER( pio5_w3 ) { m_z80pio_5->write(space, 3, data); }
 
-	DECLARE_READ8_MEMBER( ay_r0 ) { return ay8910_r(m_ay, 0); }
+	DECLARE_READ8_MEMBER( ay_r0 ) { return ay8910_r(m_ay, space, 0); }
 
 	DECLARE_READ8_MEMBER( ctc_r0 ) { return m_z80ctc->read(space, 0); }
 	DECLARE_READ8_MEMBER( ctc_r1 ) { return m_z80ctc->read(space, 1); }
@@ -171,6 +173,8 @@ protected:
 public:
 	DECLARE_DRIVER_INIT(proconn);
 	virtual void machine_reset();
+	DECLARE_WRITE16_MEMBER(serial_transmit);
+	DECLARE_READ16_MEMBER(serial_receive);
 };
 
 static ADDRESS_MAP_START( proconn_map, AS_PROGRAM, 8, proconn_state )
@@ -307,37 +311,36 @@ static Z80CTC_INTERFACE( ctc_intf )
 	DEVCB_NULL					// ZC/TO2 callback
 };
 
-static WRITE8_DEVICE_HANDLER( serial_transmit )
+WRITE16_MEMBER(proconn_state::serial_transmit)
 {
-	proconn_state *state = device->machine().driver_data<proconn_state>();
 
 //Don't like the look of this, should be a clock somewhere
 //  if (offset == 0)
-//      state->m_vfd->write_char( data );
+//      m_vfd->write_char( data );
 
 	// should probably be in the pios above
 
 	for (int i=0; i<8;i++)
 	{
-		state->m_vfd->shift_data( (data & (1<<i))?0:1  );
+		m_vfd->shift_data( (data & (1<<i))?0:1  );
 	}
 }
 
 
-static int serial_receive(device_t *device, int channel)
+READ16_MEMBER(proconn_state::serial_receive)
 {
-	return 0xff;
+	return -1;
 }
 
 
 static const z80sio_interface sio_intf =
 {
-	0,					/* interrupt handler */
-	0,					/* DTR changed handler */
-	0,					/* RTS changed handler */
-	0,					/* BREAK changed handler */
-	serial_transmit,	/* transmit handler */
-	serial_receive		/* receive handler */
+	DEVCB_NULL,					/* interrupt handler */
+	DEVCB_NULL,					/* DTR changed handler */
+	DEVCB_NULL,					/* RTS changed handler */
+	DEVCB_NULL,					/* BREAK changed handler */
+	DEVCB_DRIVER_MEMBER16(proconn_state,serial_transmit),	/* transmit handler */
+	DEVCB_DRIVER_MEMBER16(proconn_state,serial_receive)		/* receive handler */
 };
 
 static const ay8910_interface ay8910_config =
@@ -379,7 +382,7 @@ static MACHINE_CONFIG_START( proconn, proconn_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 
-	MCFG_DEFAULT_LAYOUT(layout_awpvid16)
+	MCFG_DEFAULT_LAYOUT(layout_proconn)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, 1000000) /* ?? Mhz */ // YM2149F on PC92?
 	MCFG_SOUND_CONFIG(ay8910_config)

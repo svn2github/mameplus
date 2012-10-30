@@ -1401,10 +1401,10 @@ static void uPD71054_update_timer( running_machine &machine, device_t *cpu, int 
 /*------------------------------
     callback
 ------------------------------*/
-static TIMER_CALLBACK( uPD71054_timer_callback )
+TIMER_CALLBACK_MEMBER(seta_state::uPD71054_timer_callback)
 {
-	machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE );
-	uPD71054_update_timer( machine, NULL, param );
+	machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE );
+	uPD71054_update_timer( machine(), NULL, param );
 }
 
 
@@ -1424,7 +1424,7 @@ static void uPD71054_timer_init( running_machine &machine )
 		uPD71054->max[no] = 0xffff;
 	}
 	for( no = 0; no < USED_TIMER_NUM; no++ ) {
-		uPD71054->timer[no] = machine.scheduler().timer_alloc( FUNC(uPD71054_timer_callback ));
+		uPD71054->timer[no] = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(seta_state::uPD71054_timer_callback),state));
 	}
 }
 
@@ -1595,13 +1595,12 @@ READ8_MEMBER(seta_state::dsw2_r)
  Sprites Buffering
 
 */
-static SCREEN_VBLANK( seta_buffer_sprites )
+void seta_state::screen_eof_seta_buffer_sprites(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		//seta_state *state = machine.driver_data<seta_state>();
-		screen.machine().device<seta001_device>("spritegen")->setac_eof();
+		machine().device<seta001_device>("spritegen")->setac_eof();
 	}
 }
 
@@ -2141,10 +2140,9 @@ READ16_MEMBER(seta_state::keroppi_coin_r)
 	return result;
 }
 
-static TIMER_CALLBACK( keroppi_prize_hop_callback )
+TIMER_CALLBACK_MEMBER(seta_state::keroppi_prize_hop_callback)
 {
-	seta_state *state = machine.driver_data<seta_state>();
-	state->m_keroppi_prize_hop = 2;
+	m_keroppi_prize_hop = 2;
 }
 
 WRITE16_MEMBER(seta_state::keroppi_prize_w)
@@ -2152,7 +2150,7 @@ WRITE16_MEMBER(seta_state::keroppi_prize_w)
 	if ((data & 0x0010) && !m_keroppi_prize_hop)
 	{
 		m_keroppi_prize_hop = 1;
-		machine().scheduler().timer_set(attotime::from_seconds(3), FUNC(keroppi_prize_hop_callback), 0x20);		/* 3 seconds */
+		machine().scheduler().timer_set(attotime::from_seconds(3), timer_expired_delegate(FUNC(seta_state::keroppi_prize_hop_callback),this), 0x20);		/* 3 seconds */
 	}
 }
 
@@ -2280,20 +2278,20 @@ ADDRESS_MAP_END
 WRITE16_MEMBER(seta_state::setaroul_spriteylow_w)
 {
 	seta001_device *dev = machine().device<seta001_device>("spritegen");
-	if ((offset&1)==0) spriteylow_w8(dev, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==0) spriteylow_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
 }
 
 WRITE16_MEMBER(seta_state::setaroul_spritectrl_w)
 {
 	seta001_device *dev = machine().device<seta001_device>("spritegen");
-	if ((offset&1)==0) spritectrl_w8(dev, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==0) spritectrl_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
 }
 
 WRITE16_MEMBER(seta_state::setaroul_spritecode_w)
 {
 	seta001_device *dev = machine().device<seta001_device>("spritegen");
-	if ((offset&1)==1) spritecodelow_w8(dev, offset>>1, (data & 0xff00) >> 8);
-	if ((offset&1)==0) spritecodehigh_w8(dev, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==1) spritecodelow_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==0) spritecodehigh_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
 }
 
 READ16_MEMBER(seta_state::setaroul_spritecode_r)
@@ -2301,9 +2299,9 @@ READ16_MEMBER(seta_state::setaroul_spritecode_r)
 	UINT16 ret;
 	seta001_device *dev = machine().device<seta001_device>("spritegen");
 	if ((offset&1)==1)
-		ret = spritecodelow_r8(dev, offset>>1);
+		ret = spritecodelow_r8(dev, space, offset>>1);
 	else
-		ret = spritecodehigh_r8(dev, offset>>1);
+		ret = spritecodehigh_r8(dev, space, offset>>1);
 	return ret << 8;
 }
 
@@ -3177,8 +3175,8 @@ ADDRESS_MAP_END
 
 MACHINE_RESET_MEMBER(seta_state,calibr50)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	sub_bankswitch_w(*space, 0, 0);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	sub_bankswitch_w(space, 0, 0);
 }
 
 WRITE8_MEMBER(seta_state::calibr50_soundlatch2_w)
@@ -7412,41 +7410,38 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( seta_interrupt_1_and_2 )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::seta_interrupt_1_and_2)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 112)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( seta_interrupt_2_and_4 )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::seta_interrupt_2_and_4)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 112)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 
-static TIMER_DEVICE_CALLBACK( seta_sub_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::seta_sub_interrupt)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if(scanline == 112)
-		state->m_subcpu->set_input_line(0, HOLD_LINE);
+		m_subcpu->set_input_line(0, HOLD_LINE);
 }
 
 
@@ -7468,16 +7463,15 @@ static const ym2203_interface tndrcade_ym2203_interface =
 };
 
 
-static TIMER_DEVICE_CALLBACK( tndrcade_sub_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::tndrcade_sub_interrupt)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if((scanline % 16) == 0)
-		state->m_subcpu->set_input_line(0, HOLD_LINE);
+		m_subcpu->set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( tndrcade, seta_state )
@@ -7485,11 +7479,11 @@ static MACHINE_CONFIG_START( tndrcade, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(tndrcade_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("sub", M65C02, 16000000/8)	/* 2 MHz */
 	MCFG_CPU_PROGRAM_MAP(tndrcade_sub_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", tndrcade_sub_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, tndrcade_sub_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7499,7 +7493,7 @@ static MACHINE_CONFIG_START( tndrcade, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -7535,11 +7529,11 @@ static MACHINE_CONFIG_START( twineagl, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(downtown_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq3_line_hold)
 
 	MCFG_CPU_ADD("sub", M65C02, 16000000/8)	/* 2 MHz */
 	MCFG_CPU_PROGRAM_MAP(twineagl_sub_map)
-	MCFG_TIMER_ADD_SCANLINE("s_scantimer", seta_sub_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("s_scantimer", seta_state, seta_sub_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7549,7 +7543,7 @@ static MACHINE_CONFIG_START( twineagl, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
@@ -7577,11 +7571,11 @@ static MACHINE_CONFIG_START( downtown, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(downtown_map)
-	MCFG_TIMER_ADD_SCANLINE("m_scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("m_scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", M65C02, XTAL_16MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(downtown_sub_map)
-	MCFG_TIMER_ADD_SCANLINE("s_scantimer", seta_sub_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("s_scantimer", seta_state, seta_sub_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7591,7 +7585,7 @@ static MACHINE_CONFIG_START( downtown, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
@@ -7616,16 +7610,15 @@ MACHINE_CONFIG_END
     5 ints per frame
 */
 
-static TIMER_DEVICE_CALLBACK( calibr50_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::calibr50_interrupt)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if((scanline % 64) == 0)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 248)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 
@@ -7634,11 +7627,11 @@ static MACHINE_CONFIG_START( usclssic, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(usclssic_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", calibr50_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, calibr50_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", M65C02, 16000000/8)	/* 2 MHz */
 	MCFG_CPU_PROGRAM_MAP(calibr50_sub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* NMI caused by main cpu when writing to the sound latch */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq0_line_hold)	/* NMI caused by main cpu when writing to the sound latch */
 
 	MCFG_MACHINE_RESET_OVERRIDE(seta_state,calibr50)
 
@@ -7650,7 +7643,7 @@ static MACHINE_CONFIG_START( usclssic, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 33*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(usclssic)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_usclssic)
 
 	MCFG_GFXDECODE(usclssic)
 	MCFG_PALETTE_LENGTH(16*32 + 64*32*2)		/* sprites, layer */
@@ -7682,11 +7675,11 @@ static MACHINE_CONFIG_START( calibr50, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(calibr50_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", calibr50_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, calibr50_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", M65C02, XTAL_16MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(calibr50_sub_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)	/* IRQ: 4/frame
+	MCFG_CPU_PERIODIC_INT_DRIVER(seta_state, irq0_line_hold, 4*60)	/* IRQ: 4/frame
                                NMI: when the 68k writes the sound latch */
 
 	MCFG_MACHINE_RESET_OVERRIDE(seta_state,calibr50)
@@ -7699,7 +7692,7 @@ static MACHINE_CONFIG_START( calibr50, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
@@ -7725,11 +7718,11 @@ static MACHINE_CONFIG_START( metafox, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(downtown_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq3_line_hold)
 
 	MCFG_CPU_ADD("sub", M65C02, 16000000/8)	/* 2 MHz */
 	MCFG_CPU_PROGRAM_MAP(metafox_sub_map)
-	MCFG_TIMER_ADD_SCANLINE("s_scantimer", seta_sub_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("s_scantimer", seta_state, seta_sub_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7739,7 +7732,7 @@ static MACHINE_CONFIG_START( metafox, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
@@ -7765,7 +7758,7 @@ static MACHINE_CONFIG_START( atehate, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(atehate_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7775,7 +7768,7 @@ static MACHINE_CONFIG_START( atehate, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -7807,7 +7800,7 @@ static MACHINE_CONFIG_START( blandia, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(blandia_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_2_and_4, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_2_and_4, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7817,8 +7810,8 @@ static MACHINE_CONFIG_START( blandia, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
-	MCFG_SCREEN_VBLANK_STATIC(seta_buffer_sprites)		/* Blandia uses sprite buffering */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
+	MCFG_SCREEN_VBLANK_DRIVER(seta_state, screen_eof_seta_buffer_sprites)
 
 	MCFG_GFXDECODE(blandia)
 	MCFG_PALETTE_LENGTH((16*32+64*32*4)*2)	/* sprites, layer1, layer2, palette effect */
@@ -7840,7 +7833,7 @@ static MACHINE_CONFIG_START( blandiap, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(blandiap_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_2_and_4, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_2_and_4, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7850,8 +7843,8 @@ static MACHINE_CONFIG_START( blandiap, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
-	MCFG_SCREEN_VBLANK_STATIC(seta_buffer_sprites)		/* Blandia uses sprite buffering */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
+	MCFG_SCREEN_VBLANK_DRIVER(seta_state, screen_eof_seta_buffer_sprites)
 
 	MCFG_GFXDECODE(blandia)
 	MCFG_PALETTE_LENGTH((16*32+64*32*4)*2)	/* sprites, layer1, layer2, palette effect */
@@ -7878,7 +7871,7 @@ static MACHINE_CONFIG_START( blockcar, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(blockcar_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq3_line_hold)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7888,7 +7881,7 @@ static MACHINE_CONFIG_START( blockcar, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -7914,7 +7907,7 @@ static MACHINE_CONFIG_START( daioh, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(daioh_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7924,7 +7917,7 @@ static MACHINE_CONFIG_START( daioh, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
@@ -7955,7 +7948,7 @@ static MACHINE_CONFIG_START( drgnunit, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(drgnunit_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7965,8 +7958,8 @@ static MACHINE_CONFIG_START( drgnunit, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
-	MCFG_SCREEN_VBLANK_STATIC(seta_buffer_sprites)	/* qzkklogy uses sprite buffering */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
+	MCFG_SCREEN_VBLANK_DRIVER(seta_state, screen_eof_seta_buffer_sprites)
 
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
@@ -7990,7 +7983,7 @@ static MACHINE_CONFIG_START( qzkklgy2, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(drgnunit_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8000,8 +7993,8 @@ static MACHINE_CONFIG_START( qzkklgy2, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
-	MCFG_SCREEN_VBLANK_STATIC(seta_buffer_sprites)	/* qzkklogy uses sprite buffering */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
+	MCFG_SCREEN_VBLANK_DRIVER(seta_state, screen_eof_seta_buffer_sprites)
 
 	MCFG_GFXDECODE(qzkklgy2)
 	MCFG_PALETTE_LENGTH(512)
@@ -8021,16 +8014,15 @@ MACHINE_CONFIG_END
                                 Seta Roulette
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( setaroul_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::setaroul_interrupt)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if(scanline == 248)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 112)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 
@@ -8039,7 +8031,7 @@ static MACHINE_CONFIG_START( setaroul, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(setaroul_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", setaroul_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, setaroul_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8051,8 +8043,8 @@ static MACHINE_CONFIG_START( setaroul, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(setaroul)
-	MCFG_SCREEN_VBLANK_STATIC(setaroul)	/* qzkklogy uses sprite buffering */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_setaroul)
+	MCFG_SCREEN_VBLANK_DRIVER(seta_state, screen_eof_setaroul)
 
 	MCFG_GFXDECODE(setaroul)
 	MCFG_PALETTE_LENGTH(512)
@@ -8079,7 +8071,7 @@ static MACHINE_CONFIG_START( eightfrc, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrofaero_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8089,7 +8081,7 @@ static MACHINE_CONFIG_START( eightfrc, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
@@ -8120,7 +8112,7 @@ static MACHINE_CONFIG_START( extdwnhl, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(extdwnhl_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8130,7 +8122,7 @@ static MACHINE_CONFIG_START( extdwnhl, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(zingzip)
 	MCFG_PALETTE_LENGTH(16*32+16*32+64*32*2)	/* sprites, layer2, layer1 */
@@ -8152,9 +8144,9 @@ MACHINE_CONFIG_END
                                 Gundhara
 ***************************************************************************/
 #if __uPD71054_TIMER
-static INTERRUPT_GEN( wrofaero_interrupt )
+INTERRUPT_GEN_MEMBER(seta_state::wrofaero_interrupt)
 {
-	device->execute().set_input_line(2, HOLD_LINE );
+	device.execute().set_input_line(2, HOLD_LINE );
 }
 
 MACHINE_START_MEMBER(seta_state,wrofaero){ uPD71054_timer_init(machine()); }
@@ -8174,9 +8166,9 @@ static MACHINE_CONFIG_START( gundhara, seta_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrofaero_map)
 #if	__uPD71054_TIMER
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 #else
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_2_and_4, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_2_and_4, "screen", 0, 1)
 #endif	// __uPD71054_TIMER
 
 #if	__uPD71054_TIMER
@@ -8191,7 +8183,7 @@ static MACHINE_CONFIG_START( gundhara, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
@@ -8222,7 +8214,7 @@ static MACHINE_CONFIG_START( jjsquawk, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrofaero_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8232,7 +8224,7 @@ static MACHINE_CONFIG_START( jjsquawk, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
@@ -8254,7 +8246,7 @@ static MACHINE_CONFIG_START( jjsquawb, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(jjsquawb_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8264,7 +8256,7 @@ static MACHINE_CONFIG_START( jjsquawb, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
@@ -8291,7 +8283,7 @@ static MACHINE_CONFIG_START( kamenrid, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(kamenrid_map)
-	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  wrofaero_interrupt)
 
 #if	__uPD71054_TIMER
 	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
@@ -8305,7 +8297,7 @@ static MACHINE_CONFIG_START( kamenrid, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
@@ -8332,7 +8324,7 @@ static MACHINE_CONFIG_START( orbs, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14318180/2)	/* 7.143 MHz */
 	MCFG_CPU_PROGRAM_MAP(orbs_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8342,7 +8334,7 @@ static MACHINE_CONFIG_START( orbs, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 39*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(orbs)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8368,7 +8360,7 @@ static MACHINE_CONFIG_START( keroppi, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14318180/2)	/* 7.143 MHz */
 	MCFG_CPU_PROGRAM_MAP(keroppi_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(seta_state,keroppi)
 
@@ -8380,7 +8372,7 @@ static MACHINE_CONFIG_START( keroppi, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(orbs)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8406,7 +8398,7 @@ static MACHINE_CONFIG_START( krzybowl, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(krzybowl_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8416,7 +8408,7 @@ static MACHINE_CONFIG_START( krzybowl, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 39*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8443,7 +8435,7 @@ static MACHINE_CONFIG_START( madshark, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(madshark_map)
-	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  wrofaero_interrupt)
 
 #if	__uPD71054_TIMER
 	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
@@ -8457,7 +8449,7 @@ static MACHINE_CONFIG_START( madshark, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
@@ -8485,7 +8477,7 @@ static MACHINE_CONFIG_START( magspeed, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(magspeed_map)
-	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  wrofaero_interrupt)
 
 #if	__uPD71054_TIMER
 	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
@@ -8499,7 +8491,7 @@ static MACHINE_CONFIG_START( magspeed, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
@@ -8528,9 +8520,9 @@ static MACHINE_CONFIG_START( msgundam, seta_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(msgundam_map)
 #if	__uPD71054_TIMER
-	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  wrofaero_interrupt)
 #else
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_2_and_4, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_2_and_4, "screen", 0, 1)
 #endif	// __uPD71054_TIMER
 
 #if	__uPD71054_TIMER
@@ -8545,8 +8537,8 @@ static MACHINE_CONFIG_START( msgundam, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
-	MCFG_SCREEN_VBLANK_STATIC(seta_buffer_sprites)	/* msgundam uses sprite buffering */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
+	MCFG_SCREEN_VBLANK_DRIVER(seta_state, screen_eof_seta_buffer_sprites)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
@@ -8573,7 +8565,7 @@ static MACHINE_CONFIG_START( oisipuzl, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(oisipuzl_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8583,7 +8575,7 @@ static MACHINE_CONFIG_START( oisipuzl, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
@@ -8610,7 +8602,7 @@ static MACHINE_CONFIG_START( triplfun, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(triplfun_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq3_line_hold)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8620,7 +8612,7 @@ static MACHINE_CONFIG_START( triplfun, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
@@ -8644,7 +8636,7 @@ static MACHINE_CONFIG_START( kiwame, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(kiwame_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* lev 1-7 are the same. WARNING:
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq1_line_hold)/* lev 1-7 are the same. WARNING:
                                    the interrupt table is written to. */
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8655,7 +8647,7 @@ static MACHINE_CONFIG_START( kiwame, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 56*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8684,7 +8676,7 @@ static MACHINE_CONFIG_START( rezon, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrofaero_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8694,7 +8686,7 @@ static MACHINE_CONFIG_START( rezon, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
@@ -8723,7 +8715,7 @@ static MACHINE_CONFIG_START( thunderl, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(thunderl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq2_line_hold)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8733,7 +8725,7 @@ static MACHINE_CONFIG_START( thunderl, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8761,7 +8753,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( thunderlbl_sound_portmap, AS_IO, 8, seta_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	//AM_RANGE(0x40, 0x40) AM_MIRROR(0x3f) AM_DEVWRITE_LEGACY("upd", upd7759_control_w)
 	//AM_RANGE(0x80, 0x80) AM_MIRROR(0x3f) AM_DEVREADWRITE_LEGACY("upd", upd7759_status_r, upd7759_port_w)
 	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x3f) AM_READ(soundlatch_byte_r)
@@ -8773,14 +8765,14 @@ static MACHINE_CONFIG_DERIVED( thunderlbl, thunderl )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(thunderlbl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 10000000/2)
 	MCFG_CPU_PROGRAM_MAP(thunderlbl_sound_map)
 	MCFG_CPU_IO_MAP(thunderlbl_sound_portmap)
 
 	/* the sound hardware / program is ripped from Tetris (S16B) */
-	MCFG_SOUND_ADD("ymsnd", YM2151, 16000000/2)
+	MCFG_YM2151_ADD("ymsnd", 16000000/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -8791,7 +8783,7 @@ static MACHINE_CONFIG_START( wiggie, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(wiggie_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 16000000/4)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(wiggie_sound_map)
@@ -8804,7 +8796,7 @@ static MACHINE_CONFIG_START( wiggie, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(wiggie)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8828,7 +8820,7 @@ static MACHINE_CONFIG_START( wits, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(thunderl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq2_line_hold)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8838,7 +8830,7 @@ static MACHINE_CONFIG_START( wits, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
@@ -8864,7 +8856,7 @@ static MACHINE_CONFIG_START( umanclub, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(umanclub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq3_line_hold)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8874,7 +8866,7 @@ static MACHINE_CONFIG_START( umanclub, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)
@@ -8900,7 +8892,7 @@ static MACHINE_CONFIG_START( utoukond, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(utoukond_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 16000000/4)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(utoukond_sound_map)
@@ -8914,7 +8906,7 @@ static MACHINE_CONFIG_START( utoukond, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
@@ -8946,9 +8938,9 @@ static MACHINE_CONFIG_START( wrofaero, seta_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrofaero_map)
 #if	__uPD71054_TIMER
-	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  wrofaero_interrupt)
 #else
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_2_and_4, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_2_and_4, "screen", 0, 1)
 #endif	// __uPD71054_TIMER
 
 #if	__uPD71054_TIMER
@@ -8963,7 +8955,7 @@ static MACHINE_CONFIG_START( wrofaero, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
@@ -8996,7 +8988,7 @@ static MACHINE_CONFIG_START( zingzip, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrofaero_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seta_state,  irq3_line_hold)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -9006,7 +8998,7 @@ static MACHINE_CONFIG_START( zingzip, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(zingzip)
 	MCFG_PALETTE_LENGTH(16*32+16*32+64*32*2)	/* sprites, layer2, layer1 */
@@ -9031,7 +9023,7 @@ static MACHINE_CONFIG_DERIVED( zingzipbl, zingzip )
 
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(zingzipbl_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1) // irq3 isn't valid on the bootleg
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_REMOVE("x1snd")
 
@@ -9049,7 +9041,7 @@ static MACHINE_CONFIG_START( pairlove, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000/2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(pairlove_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, seta_interrupt_1_and_2, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -9059,7 +9051,7 @@ static MACHINE_CONFIG_START( pairlove, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta_no_layers) /* just draw the sprites */
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta_no_layers)
 
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(2048)	/* sprites only */
@@ -9080,16 +9072,15 @@ MACHINE_CONFIG_END
                                 Crazy Fight
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( crazyfgt_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::crazyfgt_interrupt)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	if((scanline % 48) == 0)
-		state->m_maincpu->set_input_line(2, HOLD_LINE); // should this be triggered by the 3812?
+		m_maincpu->set_input_line(2, HOLD_LINE); // should this be triggered by the 3812?
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( crazyfgt, seta_state )
@@ -9097,7 +9088,7 @@ static MACHINE_CONFIG_START( crazyfgt, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(crazyfgt_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", crazyfgt_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, crazyfgt_interrupt, "screen", 0, 1)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -9107,7 +9098,7 @@ static MACHINE_CONFIG_START( crazyfgt, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(seta)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_seta)
 
 	MCFG_GFXDECODE(crazyfgt)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer1, layer2 */
@@ -9130,23 +9121,22 @@ MACHINE_CONFIG_END
 ***************************************************************************/
 
 // Test mode shows a 16ms and 2ms counters, then there's vblank and presumably ACIA irqs ...
-static TIMER_DEVICE_CALLBACK( inttoote_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(seta_state::inttoote_interrupt)
 {
-	seta_state *state = timer.machine().driver_data<seta_state>();
 	int scanline = param;
 
 	/* ACIA irq */
 	if(scanline == 15)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 38)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 61)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline >= 85 && (scanline % 23) == 0)
-		state->m_maincpu->set_input_line(6, HOLD_LINE);
+		m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static const pia6821_interface inttoote_pia0_intf =
@@ -9191,7 +9181,7 @@ static MACHINE_CONFIG_START( inttoote, seta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(inttoote_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", inttoote_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", seta_state, inttoote_interrupt, "screen", 0, 1)
 
 	MCFG_PIA6821_ADD("pia0", inttoote_pia0_intf)
 	MCFG_PIA6821_ADD("pia1", inttoote_pia1_intf)
@@ -9204,7 +9194,7 @@ static MACHINE_CONFIG_START( inttoote, seta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(inttoote)
+	MCFG_SCREEN_UPDATE_DRIVER(seta_state, screen_update_inttoote)
 
 	MCFG_GFXDECODE(inttoote)
 	MCFG_PALETTE_LENGTH(512 * 1)
@@ -10722,10 +10712,10 @@ WRITE16_MEMBER(seta_state::twineagl_200100_w)
 DRIVER_INIT_MEMBER(seta_state,twineagl)
 {
 	/* debug? */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x800000, 0x8000ff, read16_delegate(FUNC(seta_state::twineagl_debug_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x800000, 0x8000ff, read16_delegate(FUNC(seta_state::twineagl_debug_r),this));
 
 	/* This allows 2 simultaneous players and the use of the "Copyright" Dip Switch. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x200100, 0x20010f, read16_delegate(FUNC(seta_state::twineagl_200100_r),this), write16_delegate(FUNC(seta_state::twineagl_200100_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x200100, 0x20010f, read16_delegate(FUNC(seta_state::twineagl_200100_r),this), write16_delegate(FUNC(seta_state::twineagl_200100_w),this));
 }
 
 
@@ -10754,7 +10744,7 @@ WRITE16_MEMBER(seta_state::downtown_protection_w)
 
 DRIVER_INIT_MEMBER(seta_state,downtown)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x200000, 0x2001ff, read16_delegate(FUNC(seta_state::downtown_protection_r),this), write16_delegate(FUNC(seta_state::downtown_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x200000, 0x2001ff, read16_delegate(FUNC(seta_state::downtown_protection_r),this), write16_delegate(FUNC(seta_state::downtown_protection_w),this));
 }
 
 
@@ -10774,7 +10764,7 @@ READ16_MEMBER(seta_state::arbalest_debug_r)
 
 DRIVER_INIT_MEMBER(seta_state,arbalest)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80000, 0x8000f, read16_delegate(FUNC(seta_state::arbalest_debug_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80000, 0x8000f, read16_delegate(FUNC(seta_state::arbalest_debug_r),this));
 }
 
 
@@ -10783,7 +10773,7 @@ DRIVER_INIT_MEMBER(seta_state,metafox)
 	UINT16 *RAM = (UINT16 *) machine().root_device().memregion("maincpu")->base();
 
 	/* This game uses the 21c000-21ffff area for protection? */
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x21c000, 0x21ffff);
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).nop_readwrite(0x21c000, 0x21ffff);
 
 	RAM[0x8ab1c/2] = 0x4e71;	// patch protection test: "cp error"
 	RAM[0x8ab1e/2] = 0x4e71;
@@ -10827,14 +10817,14 @@ DRIVER_INIT_MEMBER(seta_state,blandia)
 
 DRIVER_INIT_MEMBER(seta_state,eightfrc)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_read(0x500004, 0x500005);	// watchdog??
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_read(0x500004, 0x500005);	// watchdog??
 }
 
 
 DRIVER_INIT_MEMBER(seta_state,zombraid)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf00002, 0xf00003, read16_delegate(FUNC(seta_state::zombraid_gun_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xf00000, 0xf00001, write16_delegate(FUNC(seta_state::zombraid_gun_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf00002, 0xf00003, read16_delegate(FUNC(seta_state::zombraid_gun_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xf00000, 0xf00001, write16_delegate(FUNC(seta_state::zombraid_gun_w),this));
 }
 
 
@@ -10852,7 +10842,7 @@ DRIVER_INIT_MEMBER(seta_state,kiwame)
 
 DRIVER_INIT_MEMBER(seta_state,rezon)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_read(0x500006, 0x500007);	// irq ack?
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_read(0x500006, 0x500007);	// irq ack?
 }
 
 DRIVER_INIT_MEMBER(seta_state,wiggie)
@@ -10884,8 +10874,8 @@ DRIVER_INIT_MEMBER(seta_state,wiggie)
 	}
 
 	/* X1_010 is not used. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x100000, 0x103fff);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xB00008, 0xB00009, write16_delegate(FUNC(seta_state::wiggie_soundlatch_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_readwrite(0x100000, 0x103fff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xB00008, 0xB00009, write16_delegate(FUNC(seta_state::wiggie_soundlatch_w),this));
 
 }
 

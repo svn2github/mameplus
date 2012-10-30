@@ -140,7 +140,7 @@ static MACHINE_CONFIG_START( starcrus, starcrus_state )
 	MCFG_CPU_ADD("maincpu", I8080,9750000/9)  /* 8224 chip is a divide by 9 */
 	MCFG_CPU_PROGRAM_MAP(starcrus_map)
 	MCFG_CPU_IO_MAP(starcrus_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", starcrus_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -148,7 +148,7 @@ static MACHINE_CONFIG_START( starcrus, starcrus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(starcrus)
+	MCFG_SCREEN_UPDATE_DRIVER(starcrus_state, screen_update_starcrus)
 
 	MCFG_GFXDECODE(starcrus)
 	MCFG_PALETTE_LENGTH(2)

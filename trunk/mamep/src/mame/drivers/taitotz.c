@@ -524,6 +524,13 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_taitotz(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(taitotz_vbi);
+	DECLARE_READ8_MEMBER(tlcs_ide0_r);
+	DECLARE_WRITE8_MEMBER(tlcs_ide0_w);
+	DECLARE_READ8_MEMBER(tlcs_ide1_r);
+	DECLARE_WRITE8_MEMBER(tlcs_ide1_w);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 };
 
 
@@ -1279,16 +1286,15 @@ void taitotz_renderer::render_displaylist(running_machine &machine, const rectan
 	wait("render_polygons");
 }
 
-static SCREEN_UPDATE_RGB32( taitotz )
+UINT32 taitotz_state::screen_update_taitotz(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	taitotz_state *state = screen.machine().driver_data<taitotz_state>();
 
 	bitmap.fill(0x000000, cliprect);
-	state->m_renderer->set_fb(&bitmap);
-	state->m_renderer->render_displaylist(screen.machine(), cliprect);
+	m_renderer->set_fb(&bitmap);
+	m_renderer->render_displaylist(machine(), cliprect);
 
 
-	UINT16 *screen_src = (UINT16*)&state->m_screen_ram[state->m_scr_base];
+	UINT16 *screen_src = (UINT16*)&m_screen_ram[m_scr_base];
 
 	for (int j=0; j < 384; j++)
 	{
@@ -1993,8 +1999,9 @@ WRITE8_MEMBER(taitotz_state::tlcs_rtc_w)
 	}
 }
 
-static READ8_DEVICE_HANDLER(tlcs_ide0_r)
+READ8_MEMBER(taitotz_state::tlcs_ide0_r)
 {
+	device_t *device = machine().device("ide");
 	static UINT16 ide_reg_latch;
 	int reg = offset >> 1;
 
@@ -2023,8 +2030,9 @@ static READ8_DEVICE_HANDLER(tlcs_ide0_r)
 	}
 }
 
-static WRITE8_DEVICE_HANDLER(tlcs_ide0_w)
+WRITE8_MEMBER(taitotz_state::tlcs_ide0_w)
 {
+	device_t *device = machine().device("ide");
 	static UINT16 ide_reg_latch;
 	int reg = offset >> 1;
 
@@ -2050,8 +2058,9 @@ static WRITE8_DEVICE_HANDLER(tlcs_ide0_w)
 	}
 }
 
-static READ8_DEVICE_HANDLER(tlcs_ide1_r)
+READ8_MEMBER(taitotz_state::tlcs_ide1_r)
 {
+	device_t *device = machine().device("ide");
 	//static UINT16 ide_reg_latch;
 	int reg = offset >> 1;
 
@@ -2074,8 +2083,9 @@ static READ8_DEVICE_HANDLER(tlcs_ide1_r)
 	}
 }
 
-static WRITE8_DEVICE_HANDLER(tlcs_ide1_w)
+WRITE8_MEMBER(taitotz_state::tlcs_ide1_w)
 {
+	device_t *device = machine().device("ide");
 	static UINT16 ide_reg_latch;
 	int reg = offset >> 1;
 
@@ -2107,7 +2117,7 @@ READ8_MEMBER(taitotz_state::tlcs900_port_read)
 		case 0xe: return ioport("INPUTS4")->read();
 
 		default:
-			printf("tlcs900_port_read %02X\n", offset);
+			//printf("tlcs900_port_read %02X\n", offset);
 			break;
 	}
 
@@ -2177,8 +2187,8 @@ static ADDRESS_MAP_START( tlcs900h_mem, AS_PROGRAM, 8, taitotz_state)
 	AM_RANGE(0x044000, 0x04400f) AM_READWRITE(tlcs_rtc_r, tlcs_rtc_w)
 	AM_RANGE(0x060000, 0x061fff) AM_READWRITE(tlcs_common_r, tlcs_common_w)
 	AM_RANGE(0x064000, 0x064fff) AM_RAM	AM_SHARE("mbox_ram")								// MBox
-	AM_RANGE(0x068000, 0x06800f) AM_DEVREADWRITE_LEGACY("ide", tlcs_ide0_r, tlcs_ide0_w)
-	AM_RANGE(0x06c000, 0x06c00f) AM_DEVREADWRITE_LEGACY("ide", tlcs_ide1_r, tlcs_ide1_w)
+	AM_RANGE(0x068000, 0x06800f) AM_READWRITE(tlcs_ide0_r, tlcs_ide0_w)
+	AM_RANGE(0x06c000, 0x06c00f) AM_READWRITE(tlcs_ide1_r, tlcs_ide1_w)
 	AM_RANGE(0xfc0000, 0xffffff) AM_ROM AM_REGION("io_cpu", 0)
 ADDRESS_MAP_END
 
@@ -2188,8 +2198,8 @@ static ADDRESS_MAP_START( landhigh_tlcs900h_mem, AS_PROGRAM, 8, taitotz_state)
 	AM_RANGE(0x404000, 0x40400f) AM_READWRITE(tlcs_rtc_r, tlcs_rtc_w)
 	AM_RANGE(0x900000, 0x901fff) AM_READWRITE(tlcs_common_r, tlcs_common_w)
 	AM_RANGE(0x910000, 0x910fff) AM_RAM	AM_SHARE("mbox_ram")								// MBox
-	AM_RANGE(0x908000, 0x90800f) AM_DEVREADWRITE_LEGACY("ide", tlcs_ide0_r, tlcs_ide0_w)
-	AM_RANGE(0x918000, 0x91800f) AM_DEVREADWRITE_LEGACY("ide", tlcs_ide1_r, tlcs_ide1_w)
+	AM_RANGE(0x908000, 0x90800f) AM_READWRITE(tlcs_ide0_r, tlcs_ide0_w)
+	AM_RANGE(0x918000, 0x91800f) AM_READWRITE(tlcs_ide1_r, tlcs_ide1_w)
 	AM_RANGE(0xfc0000, 0xffffff) AM_ROM AM_REGION("io_cpu", 0)
 ADDRESS_MAP_END
 
@@ -2415,7 +2425,8 @@ INPUT_PORTS_END
 
 static void set_ide_drive_serial_number(device_t *device, int drive, const char *serial)
 {
-	UINT8 *ide_features = ide_get_features(device, drive);
+	ide_controller_device *ide = (ide_controller_device *) device;
+	UINT8 *ide_features = ide->ide_get_features(drive);
 
 	for (int i=0; i < 20; i++)
 	{
@@ -2445,14 +2456,14 @@ void taitotz_state::machine_start()
 }
 
 
-static INTERRUPT_GEN( taitotz_vbi )
+INTERRUPT_GEN_MEMBER(taitotz_state::taitotz_vbi)
 {
-	device->machine().device("iocpu")->execute().set_input_line(TLCS900_INT3, ASSERT_LINE);
+	machine().device("iocpu")->execute().set_input_line(TLCS900_INT3, ASSERT_LINE);
 }
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(taitotz_state::ide_interrupt)
 {
-	device->machine().device("iocpu")->execute().set_input_line(TLCS900_INT2, state);
+	machine().device("iocpu")->execute().set_input_line(TLCS900_INT2, state);
 }
 
 static const powerpc_config ppc603e_config =
@@ -2470,13 +2481,6 @@ static const tlcs900_interface taitotz_tlcs900_interface =
 	DEVCB_DRIVER_MEMBER(taitotz_state, tlcs900_port_write),
 };
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( taitotz, taitotz_state )
 	/* IBM EMPPC603eBG-100 */
 	MCFG_CPU_ADD("maincpu", PPC603E, 100000000)
@@ -2487,14 +2491,15 @@ static MACHINE_CONFIG_START( taitotz, taitotz_state )
 	MCFG_CPU_ADD("iocpu", TMP95C063, 25000000)
 	MCFG_CPU_CONFIG(taitotz_tlcs900_interface)
 	MCFG_CPU_PROGRAM_MAP(tlcs900h_mem)
-	MCFG_CPU_VBLANK_INT("screen", taitotz_vbi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitotz_state,  taitotz_vbi)
 
 	/* MN1020819DA sound CPU */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(120))
 
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, taitotz_state, ide_interrupt))
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2502,7 +2507,7 @@ static MACHINE_CONFIG_START( taitotz, taitotz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 384)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
-	MCFG_SCREEN_UPDATE_STATIC(taitotz)
+	MCFG_SCREEN_UPDATE_DRIVER(taitotz_state, screen_update_taitotz)
 
 MACHINE_CONFIG_END
 

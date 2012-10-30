@@ -496,11 +496,11 @@ static MACHINE_CONFIG_START( splash, splash_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)		/* 12MHz (24/2) */
 	MCFG_CPU_PROGRAM_MAP(splash_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", splash_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_30MHz/8)		/* 3.75MHz (30/8) */
 	MCFG_CPU_PROGRAM_MAP(splash_sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,60*64)	/* needed for the msm5205 to play the samples */
+	MCFG_CPU_PERIODIC_INT_DRIVER(splash_state, nmi_line_pulse, 60*64)	/* needed for the msm5205 to play the samples */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -508,7 +508,7 @@ static MACHINE_CONFIG_START( splash, splash_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 48*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(splash)
+	MCFG_SCREEN_UPDATE_DRIVER(splash_state, screen_update_splash)
 
 	MCFG_GFXDECODE(splash)
 	MCFG_PALETTE_LENGTH(2048)
@@ -539,11 +539,10 @@ static const ym2203_interface ym2203_config =
 	DEVCB_LINE(ym_irq)
 };
 
-static INTERRUPT_GEN(  roldfrog_interrupt )
+INTERRUPT_GEN_MEMBER(splash_state::roldfrog_interrupt)
 {
-	splash_state *state = device->machine().driver_data<splash_state>();
-	state->m_vblank_irq = 1;
-	roldfrog_update_irq(device->machine());
+	m_vblank_irq = 1;
+	roldfrog_update_irq(machine());
 }
 
 static MACHINE_CONFIG_START( roldfrog, splash_state )
@@ -551,12 +550,12 @@ static MACHINE_CONFIG_START( roldfrog, splash_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)		/* 12 MHz - verified */
 	MCFG_CPU_PROGRAM_MAP(roldfrog_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", splash_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/8)		/* 3 MHz - verified */
 	MCFG_CPU_PROGRAM_MAP(roldfrog_sound_map)
 	MCFG_CPU_IO_MAP(roldfrog_sound_io_map)
-	MCFG_CPU_VBLANK_INT("screen", roldfrog_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", splash_state,  roldfrog_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -565,7 +564,7 @@ static MACHINE_CONFIG_START( roldfrog, splash_state )
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 48*8-1, 2*8, 32*8-1)
 
-	MCFG_SCREEN_UPDATE_STATIC(splash)
+	MCFG_SCREEN_UPDATE_DRIVER(splash_state, screen_update_splash)
 
 	MCFG_GFXDECODE(splash)
 	MCFG_PALETTE_LENGTH(2048)
@@ -632,7 +631,7 @@ static MACHINE_CONFIG_START( funystrp, splash_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)		/* 12 MHz (24/2) */
 	MCFG_CPU_PROGRAM_MAP(funystrp_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", splash_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/4)		/* 6MHz (24/4) */
 	MCFG_CPU_PROGRAM_MAP(funystrp_sound_map)
@@ -644,7 +643,7 @@ static MACHINE_CONFIG_START( funystrp, splash_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(funystrp)
+	MCFG_SCREEN_UPDATE_DRIVER(splash_state, screen_update_funystrp)
 
 	MCFG_GFXDECODE(splash)
 	MCFG_PALETTE_LENGTH(2048)

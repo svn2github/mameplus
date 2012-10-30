@@ -272,7 +272,7 @@ static MACHINE_CONFIG_START( deniam16b, deniam_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,XTAL_25MHz/2)	/* 12.5Mhz verified */
 	MCFG_CPU_PROGRAM_MAP(deniam16b_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deniam_state,  irq4_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_25MHz/4)	/* 6.25Mhz verified */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -286,7 +286,7 @@ static MACHINE_CONFIG_START( deniam16b, deniam_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	//MCFG_SCREEN_VISIBLE_AREA(24*8, 64*8-1, 0*8, 28*8-1) // looks better but doesn't match hardware
 	MCFG_SCREEN_VISIBLE_AREA(24*8-4, 64*8-5, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(deniam)
+	MCFG_SCREEN_UPDATE_DRIVER(deniam_state, screen_update_deniam)
 
 	MCFG_GFXDECODE(deniam)
 	MCFG_PALETTE_LENGTH(2048)
@@ -308,7 +308,7 @@ static MACHINE_CONFIG_START( deniam16c, deniam_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,XTAL_25MHz/2)	/* 12.5Mhz verified */
 	MCFG_CPU_PROGRAM_MAP(deniam16c_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deniam_state,  irq4_line_assert)
 
 
 	/* video hardware */
@@ -318,7 +318,7 @@ static MACHINE_CONFIG_START( deniam16c, deniam_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	//MCFG_SCREEN_VISIBLE_AREA(24*8, 64*8-1, 0*8, 28*8-1) // looks better but doesn't match hardware
 	MCFG_SCREEN_VISIBLE_AREA(24*8-4, 64*8-5, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(deniam)
+	MCFG_SCREEN_UPDATE_DRIVER(deniam_state, screen_update_deniam)
 
 	MCFG_GFXDECODE(deniam)
 	MCFG_PALETTE_LENGTH(2048)

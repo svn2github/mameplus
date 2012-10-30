@@ -23,31 +23,30 @@ void sprint8_set_collision(running_machine &machine, int n)
 }
 
 
-static TIMER_DEVICE_CALLBACK( input_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(sprint8_state::input_callback)
 {
-	sprint8_state *state = timer.machine().driver_data<sprint8_state>();
 	static const char *const dialnames[] = { "DIAL1", "DIAL2", "DIAL3", "DIAL4", "DIAL5", "DIAL6", "DIAL7", "DIAL8" };
 
 	int i;
 
 	for (i = 0; i < 8; i++)
 	{
-		UINT8 val = timer.machine().root_device().ioport(dialnames[i])->read() >> 4;
+		UINT8 val = machine().root_device().ioport(dialnames[i])->read() >> 4;
 
-		signed char delta = (val - state->m_dial[i]) & 15;
+		signed char delta = (val - m_dial[i]) & 15;
 
 		if (delta & 8)
 			delta |= 0xf0; /* extend sign to 8 bits */
 
-		state->m_steer_flag[i] = (delta != 0);
+		m_steer_flag[i] = (delta != 0);
 
 		if (delta > 0)
-			state->m_steer_dir[i] = 0;
+			m_steer_dir[i] = 0;
 
 		if (delta < 0)
-			state->m_steer_dir[i] = 1;
+			m_steer_dir[i] = 1;
 
-		state->m_dial[i] = val;
+		m_dial[i] = val;
 	}
 }
 
@@ -111,13 +110,13 @@ static ADDRESS_MAP_START( sprint8_map, AS_PROGRAM, 8, sprint8_state )
 	AM_RANGE(0x1c20, 0x1c2f) AM_WRITEONLY AM_SHARE("pos_d_ram")
 	AM_RANGE(0x1c30, 0x1c37) AM_WRITE(sprint8_lockout_w)
 	AM_RANGE(0x1d00, 0x1d00) AM_WRITE(sprint8_int_reset_w)
-	AM_RANGE(0x1d01, 0x1d01) AM_DEVWRITE_LEGACY("discrete", sprint8_crash_w)
-	AM_RANGE(0x1d02, 0x1d02) AM_DEVWRITE_LEGACY("discrete", sprint8_screech_w)
+	AM_RANGE(0x1d01, 0x1d01) AM_WRITE(sprint8_crash_w)
+	AM_RANGE(0x1d02, 0x1d02) AM_WRITE(sprint8_screech_w)
 	AM_RANGE(0x1d03, 0x1d03) AM_WRITENOP
 	AM_RANGE(0x1d04, 0x1d04) AM_WRITENOP
 	AM_RANGE(0x1d05, 0x1d05) AM_WRITEONLY AM_SHARE("team")
-	AM_RANGE(0x1d06, 0x1d06) AM_DEVWRITE_LEGACY("discrete", sprint8_attract_w)
-	AM_RANGE(0x1e00, 0x1e07) AM_DEVWRITE_LEGACY("discrete", sprint8_motor_w)
+	AM_RANGE(0x1d06, 0x1d06) AM_WRITE(sprint8_attract_w)
+	AM_RANGE(0x1e00, 0x1e07) AM_WRITE(sprint8_motor_w)
 	AM_RANGE(0x1f00, 0x1f00) AM_WRITENOP /* probably a watchdog, disabled in service mode */
 	AM_RANGE(0x2000, 0x3fff) AM_ROM
 	AM_RANGE(0xf800, 0xffff) AM_ROM
@@ -456,15 +455,15 @@ static MACHINE_CONFIG_START( sprint8, sprint8_state )
 	MCFG_CPU_PROGRAM_MAP(sprint8_map)
 
 
-	MCFG_TIMER_ADD_PERIODIC("input_timer", input_callback, attotime::from_hz(60))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("input_timer", sprint8_state, input_callback, attotime::from_hz(60))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 261)
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 231)
-	MCFG_SCREEN_UPDATE_STATIC(sprint8)
-	MCFG_SCREEN_VBLANK_STATIC(sprint8)
+	MCFG_SCREEN_UPDATE_DRIVER(sprint8_state, screen_update_sprint8)
+	MCFG_SCREEN_VBLANK_DRIVER(sprint8_state, screen_eof_sprint8)
 
 	MCFG_GFXDECODE(sprint8)
 	MCFG_PALETTE_LENGTH(36)

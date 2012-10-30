@@ -55,33 +55,31 @@ WRITE8_MEMBER(pingpong_state::coin_w)
 	/* other bits unknown */
 }
 
-static TIMER_DEVICE_CALLBACK( pingpong_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(pingpong_state::pingpong_interrupt)
 {
-	pingpong_state *state = timer.machine().driver_data<pingpong_state>();
 	int scanline = param;
 
 	if (scanline == 240)
 	{
-		if (state->m_intenable & 0x04) state->m_maincpu->set_input_line(0, HOLD_LINE);
+		if (m_intenable & 0x04) m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 	else if ((scanline % 32) == 0)
 	{
-		if (state->m_intenable & 0x08) state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		if (m_intenable & 0x08) m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( merlinmm_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(pingpong_state::merlinmm_interrupt)
 {
-	pingpong_state *state = timer.machine().driver_data<pingpong_state>();
 	int scanline = param;
 
 	if (scanline == 240)
 	{
-		if (state->m_intenable & 0x04) state->m_maincpu->set_input_line(0, HOLD_LINE);
+		if (m_intenable & 0x04) m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 	else if (scanline == 0)
 	{
-		if (state->m_intenable & 0x08) state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		if (m_intenable & 0x08) m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -98,7 +96,7 @@ static ADDRESS_MAP_START( pingpong_map, AS_PROGRAM, 8, pingpong_state )
 	AM_RANGE(0xa980, 0xa980) AM_READ_PORT("DSW2")
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(coin_w)	/* coin counters + irq enables */
 	AM_RANGE(0xa200, 0xa200) AM_WRITENOP		/* SN76496 data latch */
-	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("snsnd", sn76496_new_device, write)	/* trigger read */
+	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("snsnd", sn76496_device, write)	/* trigger read */
 	AM_RANGE(0xa600, 0xa600) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -119,7 +117,7 @@ static ADDRESS_MAP_START( merlinmm_map, AS_PROGRAM, 8, pingpong_state )
 	AM_RANGE(0xa100, 0xa100) AM_READ_PORT("IN2")
 	AM_RANGE(0xa180, 0xa180) AM_READ_PORT("IN3")
 	AM_RANGE(0xa200, 0xa200) AM_WRITENOP		/* SN76496 data latch */
-	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("snsnd", sn76496_new_device, write)	/* trigger read */
+	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("snsnd", sn76496_device, write)	/* trigger read */
 	AM_RANGE(0xa600, 0xa600) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -464,7 +462,7 @@ static MACHINE_CONFIG_START( pingpong, pingpong_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",Z80,18432000/6)		/* 3.072 MHz (probably) */
 	MCFG_CPU_PROGRAM_MAP(pingpong_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", pingpong_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", pingpong_state, pingpong_interrupt, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -472,7 +470,7 @@ static MACHINE_CONFIG_START( pingpong, pingpong_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(456, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pingpong)
+	MCFG_SCREEN_UPDATE_DRIVER(pingpong_state, screen_update_pingpong)
 
 	MCFG_GFXDECODE(pingpong)
 	MCFG_PALETTE_LENGTH(64*4+64*4)
@@ -481,7 +479,7 @@ static MACHINE_CONFIG_START( pingpong, pingpong_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, 18432000/8)
+	MCFG_SOUND_ADD("snsnd", SN76496, 18432000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -491,7 +489,7 @@ static MACHINE_CONFIG_DERIVED( merlinmm, pingpong )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(merlinmm_map)
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(merlinmm_interrupt)
+	MCFG_TIMER_DRIVER_CALLBACK(pingpong_state, merlinmm_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 MACHINE_CONFIG_END
@@ -598,18 +596,18 @@ DRIVER_INIT_MEMBER(pingpong_state,cashquiz)
 		ROM[i] = BITSWAP8(ROM[i],0,1,2,3,4,5,6,7);
 
 	/* questions banking handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x4000, 0x4000, write8_delegate(FUNC(pingpong_state::cashquiz_question_bank_high_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x4001, 0x4001, write8_delegate(FUNC(pingpong_state::cashquiz_question_bank_low_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x4000, 0x4000, write8_delegate(FUNC(pingpong_state::cashquiz_question_bank_high_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x4001, 0x4001, write8_delegate(FUNC(pingpong_state::cashquiz_question_bank_low_w),this));
 
 	// 8 independents banks for questions
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5000, 0x50ff, "bank1");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5100, 0x51ff, "bank2");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5200, 0x52ff, "bank3");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5300, 0x53ff, "bank4");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5400, 0x54ff, "bank5");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5500, 0x55ff, "bank6");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5600, 0x56ff, "bank7");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5700, 0x57ff, "bank8");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5000, 0x50ff, "bank1");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5100, 0x51ff, "bank2");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5200, 0x52ff, "bank3");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5300, 0x53ff, "bank4");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5400, 0x54ff, "bank5");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5500, 0x55ff, "bank6");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5600, 0x56ff, "bank7");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5700, 0x57ff, "bank8");
 
 	// setup default banks
 	membank("bank1")->set_base(memregion("user1")->base() + 0x100*0 );

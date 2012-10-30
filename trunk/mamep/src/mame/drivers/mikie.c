@@ -121,9 +121,9 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, mikie_state )
 	AM_RANGE(0x4000, 0x43ff) AM_RAM
 	AM_RANGE(0x8000, 0x8000) AM_WRITENOP	// sound command latch
 	AM_RANGE(0x8001, 0x8001) AM_WRITENOP	// ???
-	AM_RANGE(0x8002, 0x8002) AM_DEVWRITE("sn1", sn76489a_new_device, write)	// trigger read of latch
+	AM_RANGE(0x8002, 0x8002) AM_DEVWRITE("sn1", sn76489a_device, write)	// trigger read of latch
 	AM_RANGE(0x8003, 0x8003) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0x8004, 0x8004) AM_DEVWRITE("sn2", sn76489a_new_device, write)	// trigger read of latch
+	AM_RANGE(0x8004, 0x8004) AM_DEVWRITE("sn2", sn76489a_device, write)	// trigger read of latch
 	AM_RANGE(0x8005, 0x8005) AM_READ(mikie_sh_timer_r)
 	AM_RANGE(0x8079, 0x8079) AM_WRITENOP	// ???
 	AM_RANGE(0xa003, 0xa003) AM_WRITENOP	// ???
@@ -264,12 +264,11 @@ void mikie_state::machine_reset()
 	m_last_irq = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(mikie_state::vblank_irq)
 {
-	mikie_state *state = device->machine().driver_data<mikie_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( mikie, mikie_state )
@@ -277,7 +276,7 @@ static MACHINE_CONFIG_START( mikie, mikie_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, OSC/12)
 	MCFG_CPU_PROGRAM_MAP(mikie_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mikie_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, CLK)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -289,7 +288,7 @@ static MACHINE_CONFIG_START( mikie, mikie_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mikie)
+	MCFG_SCREEN_UPDATE_DRIVER(mikie_state, screen_update_mikie)
 
 	MCFG_GFXDECODE(mikie)
 	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)
@@ -298,11 +297,11 @@ static MACHINE_CONFIG_START( mikie, mikie_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A_NEW, XTAL/8)
+	MCFG_SOUND_ADD("sn1", SN76489A, XTAL/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A_NEW, CLK)
+	MCFG_SOUND_ADD("sn2", SN76489A, CLK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

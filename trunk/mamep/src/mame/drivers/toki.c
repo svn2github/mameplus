@@ -418,7 +418,7 @@ static MACHINE_CONFIG_START( toki, toki_state ) /* KOYO 20.000MHz near the cpu *
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,XTAL_20MHz /2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(toki_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)/* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", toki_state,  irq1_line_hold)/* VBL */
 
 	SEIBU_SOUND_SYSTEM_CPU(XTAL_14_31818MHz/4)	/* verifed on pcb */
 
@@ -431,7 +431,7 @@ static MACHINE_CONFIG_START( toki, toki_state ) /* KOYO 20.000MHz near the cpu *
 	MCFG_SCREEN_REFRESH_RATE(59.61)    /* verified on pcb */
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)	/* verified */
-	MCFG_SCREEN_UPDATE_STATIC(toki)
+	MCFG_SCREEN_UPDATE_DRIVER(toki_state, screen_update_toki)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(toki)
@@ -448,7 +448,7 @@ static MACHINE_CONFIG_START( tokib, toki_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)	/* 10MHz causes bad slowdowns with monkey machine rd1, but is correct, 20Mhz XTAL */
 	MCFG_CPU_PROGRAM_MAP(tokib_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)/* VBL (could be level1, same vector) */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", toki_state,  irq6_line_hold)/* VBL (could be level1, same vector) */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* verified with PCB */
 	MCFG_CPU_PROGRAM_MAP(tokib_audio_map)
@@ -460,7 +460,7 @@ static MACHINE_CONFIG_START( tokib, toki_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)	/* verified */
-	MCFG_SCREEN_UPDATE_STATIC(tokib)
+	MCFG_SCREEN_UPDATE_DRIVER(toki_state, screen_update_tokib)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(tokib)
@@ -860,14 +860,14 @@ DRIVER_INIT_MEMBER(toki_state,jujuba)
 
 	/* Decrypt data for z80 program */
 	{
-		address_space *space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
+		address_space &space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
 		UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0x20000);
 		UINT8 *rom = machine().root_device().memregion("audiocpu")->base();
 		int i;
 
 		memcpy(decrypt,rom,0x20000);
 
-		space->set_decrypted_region(0x0000, 0x1fff, decrypt);
+		space.set_decrypted_region(0x0000, 0x1fff, decrypt);
 
 		for (i = 0;i < 0x2000;i++)
 		{

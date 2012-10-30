@@ -1019,36 +1019,33 @@ WRITE16_MEMBER(taitoz_state::dblaxle_cpua_ctrl_w)
 
 /* 68000 A */
 
-static TIMER_CALLBACK( taitoz_interrupt6 )
+TIMER_CALLBACK_MEMBER(taitoz_state::taitoz_interrupt6)
 {
-	taitoz_state *state = machine.driver_data<taitoz_state>();
-	state->m_maincpu->set_input_line(6, HOLD_LINE);
+	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 /* 68000 B */
 
-static TIMER_CALLBACK( taitoz_cpub_interrupt5 )
+TIMER_CALLBACK_MEMBER(taitoz_state::taitoz_cpub_interrupt5)
 {
-	taitoz_state *state = machine.driver_data<taitoz_state>();
-	state->m_subcpu->set_input_line(5, HOLD_LINE);
+	m_subcpu->set_input_line(5, HOLD_LINE);
 }
 
 
 /***** Routines for particular games *****/
 
-static INTERRUPT_GEN( sci_interrupt )
+INTERRUPT_GEN_MEMBER(taitoz_state::sci_interrupt)
 {
 	/* Need 2 int4's per int6 else (-$6b63,A5) never set to 1 which
        causes all sprites to vanish! Spriteram has areas for 2 frames
        so in theory only needs updating every other frame. */
 
-	taitoz_state *state = device->machine().driver_data<taitoz_state>();
-	state->m_sci_int6 = !state->m_sci_int6;
+	m_sci_int6 = !m_sci_int6;
 
-	if (state->m_sci_int6)
-		device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(taitoz_interrupt6));
+	if (m_sci_int6)
+		machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(taitoz_state::taitoz_interrupt6),this));
 
-	device->execute().set_input_line(4, HOLD_LINE);
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -1106,7 +1103,7 @@ WRITE16_MEMBER(taitoz_state::spacegun_output_bypass_w)
 			break;
 
 		default:
-			tc0220ioc_w(m_tc0220ioc, offset, data);	/* might be a 510NIO ! */
+			tc0220ioc_w(m_tc0220ioc, space, offset, data);	/* might be a 510NIO ! */
 	}
 }
 
@@ -1127,7 +1124,7 @@ READ8_MEMBER(taitoz_state::contcirc_input_bypass_r)
 {
 	/* Bypass TC0220IOC controller for analog input */
 
-	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, 0);	/* read port number */
+	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, space, 0);	/* read port number */
 	UINT16 steer = 0xff80 + ioport("STEER")->read_safe(0x80);
 
 	switch (port)
@@ -1139,7 +1136,7 @@ READ8_MEMBER(taitoz_state::contcirc_input_bypass_r)
 			return steer >> 8;
 
 		default:
-			return tc0220ioc_portreg_r(m_tc0220ioc, offset);
+			return tc0220ioc_portreg_r(m_tc0220ioc, space, offset);
 	}
 }
 
@@ -1148,7 +1145,7 @@ READ8_MEMBER(taitoz_state::chasehq_input_bypass_r)
 {
 	/* Bypass TC0220IOC controller for extra inputs */
 
-	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, 0);	/* read port number */
+	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, space, 0);	/* read port number */
 	UINT16 steer = 0xff80 + ioport("STEER")->read_safe(0x80);
 
 	switch (port)
@@ -1172,7 +1169,7 @@ READ8_MEMBER(taitoz_state::chasehq_input_bypass_r)
 			return steer >> 8;
 
 		default:
-			return tc0220ioc_portreg_r(m_tc0220ioc, offset);
+			return tc0220ioc_portreg_r(m_tc0220ioc, space, offset);
 	}
 }
 
@@ -1230,7 +1227,7 @@ WRITE16_MEMBER(taitoz_state::bshark_stick_w)
        but we don't want CPUA to have an int6 before int4 is over (?)
     */
 
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), FUNC(taitoz_interrupt6));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taitoz_state::taitoz_interrupt6),this));
 }
 
 
@@ -1261,7 +1258,7 @@ READ16_MEMBER(taitoz_state::spacegun_input_bypass_r)
 			return m_eeprom->read_bit() << 7;
 
 		default:
-			return tc0220ioc_r(m_tc0220ioc, offset);	/* might be a 510NIO ! */
+			return tc0220ioc_r(m_tc0220ioc, space, offset);	/* might be a 510NIO ! */
 	}
 }
 
@@ -1295,7 +1292,7 @@ WRITE16_MEMBER(taitoz_state::spacegun_lightgun_w)
        Four lightgun interrupts happen before the collected coords
        are moved to shared ram where CPUA can use them. */
 
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), FUNC(taitoz_cpub_interrupt5));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taitoz_state::taitoz_cpub_interrupt5),this));
 }
 
 WRITE16_MEMBER(taitoz_state::spacegun_gun_output_w)
@@ -1422,9 +1419,9 @@ WRITE8_MEMBER(taitoz_state::sound_bankswitch_w)
 WRITE16_MEMBER(taitoz_state::taitoz_sound_w)
 {
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
 
 #ifdef MAME_DEBUG
 //  if (data & 0xff00)
@@ -1440,7 +1437,7 @@ WRITE16_MEMBER(taitoz_state::taitoz_sound_w)
 READ16_MEMBER(taitoz_state::taitoz_sound_r)
 {
 	if (offset == 1)
-		return (tc0140syt_comm_r(m_tc0140syt, 0) & 0xff);
+		return (tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff);
 	else
 		return 0;
 }
@@ -2218,7 +2215,7 @@ static INPUT_PORTS_START( enforce )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) ) PORT_DIPLOCATION("SW A:4")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		// Says SHIFT HI in test mode !?
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )		// Says SHIFT LO in test mode !?
-	TAITO_COINAGE_JAPAN_OLD_LOC(SW A)
+	TAITO_COINAGE_WORLD_LOC(SW A)
 
 	PORT_START("DSWB")
 	TAITO_DIFFICULTY_LOC(SW B)
@@ -2253,6 +2250,13 @@ static INPUT_PORTS_START( enforce )
 
 	PORT_START("IN2")	/* unused */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( enforcej )
+	PORT_INCLUDE(enforce)
+
+	PORT_MODIFY("DSWA")
+	TAITO_COINAGE_JAPAN_OLD_LOC(SW A)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( bshark )
@@ -3076,14 +3080,14 @@ static MACHINE_CONFIG_START( contcirc, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(contcirc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(contcirc_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq6_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3096,7 +3100,7 @@ static MACHINE_CONFIG_START( contcirc, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(contcirc)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_contcirc)
 
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3138,14 +3142,14 @@ static MACHINE_CONFIG_START( chasehq, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(chasehq_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(chq_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3158,7 +3162,7 @@ static MACHINE_CONFIG_START( chasehq, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(chasehq)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_chasehq)
 
 	MCFG_GFXDECODE(chasehq)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3200,14 +3204,14 @@ static MACHINE_CONFIG_START( enforce, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(enforce_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(enforce_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq6_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3222,7 +3226,7 @@ static MACHINE_CONFIG_START( enforce, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(contcirc)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_contcirc)
 
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3263,11 +3267,11 @@ static MACHINE_CONFIG_START( bshark, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(bshark_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(bshark_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,bshark)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3282,7 +3286,7 @@ static MACHINE_CONFIG_START( bshark, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bshark)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_bshark)
 
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3331,14 +3335,14 @@ static MACHINE_CONFIG_START( sci, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sci_map)
-	MCFG_CPU_VBLANK_INT("screen", sci_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  sci_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sci_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3353,7 +3357,7 @@ static MACHINE_CONFIG_START( sci, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sci)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_sci)
 
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3393,14 +3397,14 @@ static MACHINE_CONFIG_START( nightstr, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(nightstr_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(nightstr_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3415,7 +3419,7 @@ static MACHINE_CONFIG_START( nightstr, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(chasehq)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_chasehq)
 
 	MCFG_GFXDECODE(chasehq)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3457,14 +3461,14 @@ static MACHINE_CONFIG_START( aquajack, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(aquajack_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(aquajack_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3479,7 +3483,7 @@ static MACHINE_CONFIG_START( aquajack, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(aquajack)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_aquajack)
 
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3520,11 +3524,11 @@ static MACHINE_CONFIG_START( spacegun, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(spacegun_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, 16000000)	/* 16 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(spacegun_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,bshark)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3540,7 +3544,7 @@ static MACHINE_CONFIG_START( spacegun, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(spacegun)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_spacegun)
 
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3579,14 +3583,14 @@ static MACHINE_CONFIG_START( dblaxle, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(dblaxle_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_32MHz/8)
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(dblaxle_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3601,7 +3605,7 @@ static MACHINE_CONFIG_START( dblaxle, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dblaxle)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_dblaxle)
 
 	MCFG_GFXDECODE(dblaxle)
 	MCFG_PALETTE_LENGTH(4096)
@@ -3641,14 +3645,14 @@ static MACHINE_CONFIG_START( racingb, taitoz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(racingb_map)
-	MCFG_CPU_VBLANK_INT("screen", sci_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  sci_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_32MHz/8)
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(racingb_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoz_state,  irq4_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
 	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
@@ -3663,7 +3667,7 @@ static MACHINE_CONFIG_START( racingb, taitoz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(racingb)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoz_state, screen_update_racingb)
 
 	MCFG_GFXDECODE(dblaxle)
 	MCFG_PALETTE_LENGTH(4096)
@@ -4072,11 +4076,55 @@ ROM_END
 
 ROM_START( enforce )
 	ROM_REGION( 0x40000, "maincpu", 0 )	/* 256K for 68000 code (CPU A) */
-	ROM_LOAD16_BYTE( "b58-27.27", 0x00000, 0x20000, CRC(a1aa0191) SHA1(193d936e1bfe0da4ac984aba65d3e4e6c93a4c11) )
+	ROM_LOAD16_BYTE( "b58-38.27", 0x00000, 0x20000, CRC(a1aa0191) SHA1(193d936e1bfe0da4ac984aba65d3e4e6c93a4c11) )
+	ROM_LOAD16_BYTE( "b58-36.19", 0x00001, 0x20000, CRC(40f43da3) SHA1(bb3d6c6db8df77674bb76c16992d05c297d97c9f) )
+
+	ROM_REGION( 0x40000, "sub", 0 )	/* 256K for 68000 code (CPU B) */
+	ROM_LOAD16_BYTE( "b58-37.26", 0x00000, 0x20000, CRC(e823c85c) SHA1(199b19e81c76eb936f4cf31957ae08bed1395bda) )
+	ROM_LOAD16_BYTE( "b58-35.18", 0x00001, 0x20000, CRC(8b3ceb12) SHA1(c3f7d1ae5082715f202435c13e6d6f7ac4048750) )
+
+	ROM_REGION( 0x1c000, "audiocpu", 0 )	/* Z80 sound cpu */
+	ROM_LOAD( "b58-32.41",   0x00000, 0x04000, CRC(f3fd8eca) SHA1(3b1ab64984ea43805b6494f8add26210ed1175c5) )
+	ROM_CONTINUE(            0x10000, 0x0c000 )	/* banked stuff */
+
+	ROM_REGION( 0x80000, "gfx1", 0 )
+	ROM_LOAD( "b58-09.13", 0x00000, 0x80000, CRC(9ffd5b31) SHA1(0214fb32012a48560ca9c6ed5ee969d3c41cf95c) )	/* SCR 8x8 */
+
+	ROM_REGION( 0x200000, "gfx2", 0 )
+	ROM_LOAD32_BYTE( "b58-04.7",  0x000000, 0x080000, CRC(9482f08d) SHA1(3fc74b9bebca1d82b300ba72c7297c3bcd69cfa9) )
+	ROM_LOAD32_BYTE( "b58-03.6",  0x000001, 0x080000, CRC(158bc440) SHA1(ceab296146363a2e9a48f62118fba6123b4b5a1b) )	/* OBJ 16x8 */
+	ROM_LOAD32_BYTE( "b58-02.2",  0x000002, 0x080000, CRC(6a6e307c) SHA1(fc4a68220e0dd0e64d75ba7c7af0c1ac97dc7fd9) )
+	ROM_LOAD32_BYTE( "b58-01.1",  0x000003, 0x080000, CRC(01e9f0a8) SHA1(0d3a4dc81702e3c57c790eb8a45caca36cb47d4c) )
+
+	ROM_REGION( 0x80000, "gfx3", 0 )	/* don't dispose */
+	ROM_LOAD( "b58-06.116", 0x00000, 0x80000, CRC(b3495d70) SHA1(ead4c2fd20b8f103a849201c7344cded013eb8bb) )	/* ROD, road lines */
+
+	ROM_REGION16_LE( 0x80000, "user1", 0 )
+	ROM_LOAD16_WORD( "b58-05.71", 0x00000, 0x80000, CRC(d1f4991b) SHA1(f1c5a9b8dce994d013290e98fda7bedf73e95900) )	/* STY spritemap */
+
+	ROM_REGION( 0x100000, "ymsnd", 0 )	/* ADPCM samples */
+	ROM_LOAD( "b58-07.11", 0x000000, 0x080000, CRC(eeb5ba08) SHA1(fe40333e09339c76e503ce87b42a89b48d487016) )
+	ROM_LOAD( "b58-08.12", 0x080000, 0x080000, CRC(049243cf) SHA1(1f3099b6d764114dc4161ed308369d0f3148dc4e) )
+
+	ROM_REGION( 0x80000, "ymsnd.deltat", 0 )	/* Delta-T samples ??? */
+	ROM_LOAD( "b58-10.14", 0x00000, 0x80000, CRC(edce0cc1) SHA1(1f6cbc60502b8b12b349e48446ce3a4a1f76bccd) )	/* ??? */
+
+	ROM_REGION( 0x10000, "user2", 0 )	/* unused ROMs */
+	ROM_LOAD( "b58-26.104", 0x00000, 0x10000, CRC(dccb0c7f) SHA1(42f0af72f559133b74912a4478e1323062be4b77) )	// sprite vertical zoom
+	ROM_LOAD( "b58-27.56",  0x00000, 0x02000, CRC(5c6b013d) SHA1(6d02d4560076213b6fb6fe856143bb533090603e) )	// sprite horizontal zoom
+	ROM_LOAD( "b58-23.52",  0x00000, 0x00100, CRC(7b7d8ff4) SHA1(18842ed8160739cd2e2ccc2db605153dbed6cc0a) )	// road/sprite priority and palette select
+	ROM_LOAD( "b58-24.51",  0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	// road A/B internal priority
+	ROM_LOAD( "b58-25.75",  0x00000, 0x00100, CRC(de547342) SHA1(3b2b116d4016ddbf46c41c625c7fcfd76129baa7) )
+// Add pals...
+ROM_END
+
+ROM_START( enforcej )
+	ROM_REGION( 0x40000, "maincpu", 0 )	/* 256K for 68000 code (CPU A) */
+	ROM_LOAD16_BYTE( "b58-17.27", 0x00000, 0x20000, CRC(a1aa0191) SHA1(193d936e1bfe0da4ac984aba65d3e4e6c93a4c11) )
 	ROM_LOAD16_BYTE( "b58-19.19", 0x00001, 0x20000, CRC(40f43da3) SHA1(bb3d6c6db8df77674bb76c16992d05c297d97c9f) )
 
 	ROM_REGION( 0x40000, "sub", 0 )	/* 256K for 68000 code (CPU B) */
-	ROM_LOAD16_BYTE( "b58-26.26", 0x00000, 0x20000, CRC(e823c85c) SHA1(199b19e81c76eb936f4cf31957ae08bed1395bda) )
+	ROM_LOAD16_BYTE( "b58-16.26", 0x00000, 0x20000, CRC(e823c85c) SHA1(199b19e81c76eb936f4cf31957ae08bed1395bda) )
 	ROM_LOAD16_BYTE( "b58-18.18", 0x00001, 0x20000, CRC(65328a3e) SHA1(f51ca107910629e030678e183cc8fd06d2569098) )
 
 	ROM_REGION( 0x1c000, "audiocpu", 0 )	/* Z80 sound cpu */
@@ -4106,11 +4154,11 @@ ROM_START( enforce )
 	ROM_LOAD( "b58-10.14", 0x00000, 0x80000, CRC(edce0cc1) SHA1(1f6cbc60502b8b12b349e48446ce3a4a1f76bccd) )	/* ??? */
 
 	ROM_REGION( 0x10000, "user2", 0 )	/* unused ROMs */
-	ROM_LOAD( "b58-26a.104", 0x00000, 0x10000, CRC(dccb0c7f) SHA1(42f0af72f559133b74912a4478e1323062be4b77) )	// sprite vertical zoom
-	ROM_LOAD( "b58-27.56",   0x00000, 0x02000, CRC(5c6b013d) SHA1(6d02d4560076213b6fb6fe856143bb533090603e) )	// sprite horizontal zoom
-	ROM_LOAD( "b58-23.52",   0x00000, 0x00100, CRC(7b7d8ff4) SHA1(18842ed8160739cd2e2ccc2db605153dbed6cc0a) )	// road/sprite priority and palette select
-	ROM_LOAD( "b58-24.51",   0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	// road A/B internal priority
-	ROM_LOAD( "b58-25.75",   0x00000, 0x00100, CRC(de547342) SHA1(3b2b116d4016ddbf46c41c625c7fcfd76129baa7) )
+	ROM_LOAD( "b58-26.104", 0x00000, 0x10000, CRC(dccb0c7f) SHA1(42f0af72f559133b74912a4478e1323062be4b77) )	// sprite vertical zoom
+	ROM_LOAD( "b58-27.56",  0x00000, 0x02000, CRC(5c6b013d) SHA1(6d02d4560076213b6fb6fe856143bb533090603e) )	// sprite horizontal zoom
+	ROM_LOAD( "b58-23.52",  0x00000, 0x00100, CRC(7b7d8ff4) SHA1(18842ed8160739cd2e2ccc2db605153dbed6cc0a) )	// road/sprite priority and palette select
+	ROM_LOAD( "b58-24.51",  0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	// road A/B internal priority
+	ROM_LOAD( "b58-25.75",  0x00000, 0x00100, CRC(de547342) SHA1(3b2b116d4016ddbf46c41c625c7fcfd76129baa7) )
 // Add pals...
 ROM_END
 
@@ -4909,10 +4957,58 @@ ROM_END
 
 ROM_START( dblaxle )
 	ROM_REGION( 0x80000, "maincpu", 0 )	/* 512K for 68000 code (CPU A) */
-	ROM_LOAD16_BYTE( "c78-41-1.2",  0x00000, 0x20000, CRC(cf297fe4) SHA1(4875de63e8336062c27d83b55938bcb3d08a24a3) )
-	ROM_LOAD16_BYTE( "c78-43-1.4",  0x00001, 0x20000, CRC(38a8bad6) SHA1(50977a6a364893549d2f7899bbc4e0c67086697e) )
-	ROM_LOAD16_BYTE( "c78-42-1.3",  0x40000, 0x20000, CRC(4124ab2b) SHA1(96c3b6e01a1823259b3d7ca43e0a8631bfe33d0e) )
-	ROM_LOAD16_BYTE( "c78-44-1.5",  0x40001, 0x20000, CRC(50a55b6e) SHA1(62a72d33030d50c157a5cf05f6bdc1b02c9b9ff1) )
+	ROM_LOAD16_BYTE( "c78_49-1.2",  0x00000, 0x20000, CRC(a6f0c631) SHA1(371cb7807d2350ceca36fc0fb6a65d3179c011b0) )
+	ROM_LOAD16_BYTE( "c78_51-1.4",  0x00001, 0x20000, CRC(ef24e83b) SHA1(a0bc1d2192bccfcb6f859aa0a27f43cc92080e1e) )
+	ROM_LOAD16_BYTE( "c78_50-1.3",  0x40000, 0x20000, CRC(8b0440f4) SHA1(31f7fcb8acfac13bbf2036670b665744acd37d25) )
+	ROM_LOAD16_BYTE( "c78_53-1.5",  0x40001, 0x20000, CRC(2bb91763) SHA1(a7cd2ac9f3937d88194d7c994d76abc89cc30f4d) )
+
+	ROM_REGION( 0x40000, "sub", 0 )	/* 256K for 68000 code (CPU B) */
+	ROM_LOAD16_BYTE( "c78-30-1.35", 0x00000, 0x20000, CRC(026aac18) SHA1(f50873982b4dc0fc822060f4c20c635efdd75d7e) )
+	ROM_LOAD16_BYTE( "c78-31-1.36", 0x00001, 0x20000, CRC(67ce23e8) SHA1(983e998a79e3d4376b005c92ded050be236d37cc) )
+
+	ROM_REGION( 0x2c000, "audiocpu", 0 )	/* sound cpu */
+	ROM_LOAD    ( "c78-34.c42", 0x00000, 0x04000, CRC(f2186943) SHA1(2e9aed39fddf3aa1db7e20f8a709b6b82cc3e7df) )
+	ROM_CONTINUE(         0x10000, 0x1c000 )	/* banked stuff */
+
+	ROM_REGION( 0x100000, "gfx1", 0 )
+	ROM_LOAD16_BYTE( "c78-10.12", 0x00000, 0x80000, CRC(44b1897c) SHA1(7ad179db6d7dfeb139ea13cb4a231f99d177f2b1) )	/* SCR 8x8 */
+	ROM_LOAD16_BYTE( "c78-11.11", 0x00001, 0x80000, CRC(7db3d4a3) SHA1(fc3c44ed36b212688a5bd8dc61321a994578258e) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 )
+	ROM_LOAD32_BYTE( "c78-08.25", 0x000000, 0x100000, CRC(6c725211) SHA1(3c1765f44fe57b496d305e994516674f71bd4c3c) )	/* OBJ 16x8 */
+	ROM_LOAD32_BYTE( "c78-07.33", 0x000001, 0x100000, CRC(9da00d5b) SHA1(f6b664c7495b936ce1b99852da45ec92cb37062a) )
+	ROM_LOAD32_BYTE( "c78-06.23", 0x000002, 0x100000, CRC(8309e91b) SHA1(3f27557bc82bf42cc77e3c7e363b51a0b119144d) )
+	ROM_LOAD32_BYTE( "c78-05.31", 0x000003, 0x100000, CRC(90001f68) SHA1(5c08dfe6a2e12e6ca84035815563f38fc2c2c029) )
+//  ROMX_LOAD      ( "c78-05l.1", 0x000003, 0x080000, CRC(f24bf972) , ROM_SKIP(7) )
+//  ROMX_LOAD      ( "c78-05h.2", 0x000007, 0x080000, CRC(c01039b5) , ROM_SKIP(7) )
+
+	ROM_REGION( 0x80000, "gfx3", 0 )	/* don't dispose */
+	ROM_LOAD( "c78-09.12", 0x000000, 0x80000, CRC(0dbde6f5) SHA1(4049271e3738b54e0c56d191889b1aea5664d49f) )	/* ROD, road lines */
+
+	ROM_REGION16_LE( 0x80000, "user1", 0 )
+	ROM_LOAD16_WORD( "c78-04.3", 0x00000, 0x80000, CRC(cc1aa37c) SHA1(cfa2eb338dc81c98c637c2f0b14d2baea8b115f5) )	/* STY spritemap */
+
+	ROM_REGION( 0x180000, "ymsnd", 0 )	/* ADPCM samples */
+	ROM_LOAD( "c78-12.33", 0x000000, 0x100000, CRC(b0267404) SHA1(ffd337336ff9b096e3725f733364762f6e6d3fab) )
+	ROM_LOAD( "c78-13.46", 0x100000, 0x080000, CRC(1b363aa2) SHA1(0aae3988024654e98cc0c784307b1c329c8f0783) )
+
+	ROM_REGION( 0x80000, "ymsnd.deltat", 0 )	/* Delta-T samples */
+	ROM_LOAD( "c78-14.31",  0x00000, 0x80000, CRC(9cad4dfb) SHA1(9187ef827a3f1bc9233d0e45e72c72c0956c5912) )
+
+	ROM_REGION( 0x10000, "user2", 0 )	/* unused ROMs */
+	ROM_LOAD( "c78-25.15",  0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )	// 98% compression
+	ROM_LOAD( "c78-15.22",  0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	// road A/B internal priority
+	ROM_LOAD( "c78-21.74",  0x00000, 0x00100, CRC(2926bf27) SHA1(bfbbe6c71bb29a05959f3de0d940816139f9ebfe) )	// road/sprite priority and palette select
+	ROM_LOAD( "c84-10.16",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
+	ROM_LOAD( "c84-11.17",  0x00000, 0x00400, CRC(10728853) SHA1(45d7cc8e06fbe01295cc2194bca9586f0ef8b12b) )
+ROM_END
+
+ROM_START( dblaxleu )
+	ROM_REGION( 0x80000, "maincpu", 0 )	/* 512K for 68000 code (CPU A) */
+	ROM_LOAD16_BYTE( "c78_41-1.2",  0x00000, 0x20000, CRC(cf297fe4) SHA1(4875de63e8336062c27d83b55938bcb3d08a24a3) )
+	ROM_LOAD16_BYTE( "c78_43-1.4",  0x00001, 0x20000, CRC(38a8bad6) SHA1(50977a6a364893549d2f7899bbc4e0c67086697e) )
+	ROM_LOAD16_BYTE( "c78_42-1.3",  0x40000, 0x20000, CRC(4124ab2b) SHA1(96c3b6e01a1823259b3d7ca43e0a8631bfe33d0e) )
+	ROM_LOAD16_BYTE( "c78_44-1.5",  0x40001, 0x20000, CRC(50a55b6e) SHA1(62a72d33030d50c157a5cf05f6bdc1b02c9b9ff1) )
 
 	ROM_REGION( 0x40000, "sub", 0 )	/* 256K for 68000 code (CPU B) */
 	ROM_LOAD16_BYTE( "c78-30-1.35", 0x00000, 0x20000, CRC(026aac18) SHA1(f50873982b4dc0fc822060f4c20c635efdd75d7e) )
@@ -4957,10 +5053,10 @@ ROM_END
 
 ROM_START( pwheelsj )
 	ROM_REGION( 0x80000, "maincpu", 0 )	/* 512K for 68000 code (CPU A) */
-	ROM_LOAD16_BYTE( "c78-26-2.2",  0x00000, 0x20000, CRC(25c8eb2e) SHA1(a526b886c76a19c9ce1abc25cf433574564605a3) )
-	ROM_LOAD16_BYTE( "c78-28-2.4",  0x00001, 0x20000, CRC(a9500eb1) SHA1(ad300add3439515512003703df46e2f9317f2ee8) )
-	ROM_LOAD16_BYTE( "c78-27-2.3",  0x40000, 0x20000, CRC(08d2cffb) SHA1(a4f117a15499c0df85bf8036f00871caa6723082) )
-	ROM_LOAD16_BYTE( "c78-29-2.5",  0x40001, 0x20000, CRC(e1608004) SHA1(c4863264074de09ab38e7b73214f4271728e30aa) )
+	ROM_LOAD16_BYTE( "c78_26-2.2",  0x00000, 0x20000, CRC(25c8eb2e) SHA1(a526b886c76a19c9ce1abc25cf433574564605a3) )
+	ROM_LOAD16_BYTE( "c78_28-2.4",  0x00001, 0x20000, CRC(a9500eb1) SHA1(ad300add3439515512003703df46e2f9317f2ee8) )
+	ROM_LOAD16_BYTE( "c78_27-2.3",  0x40000, 0x20000, CRC(08d2cffb) SHA1(a4f117a15499c0df85bf8036f00871caa6723082) )
+	ROM_LOAD16_BYTE( "c78_29-2.5",  0x40001, 0x20000, CRC(e1608004) SHA1(c4863264074de09ab38e7b73214f4271728e30aa) )
 
 	ROM_REGION( 0x40000, "sub", 0 )	/* 256K for 68000 code (CPU B) */
 	ROM_LOAD16_BYTE( "c78-30-1.35", 0x00000, 0x20000, CRC(026aac18) SHA1(f50873982b4dc0fc822060f4c20c635efdd75d7e) )
@@ -5071,7 +5167,8 @@ GAMEL(1987, contcircua, contcirc, contcirc, contcrcu, taitoz_state, taitoz,   RO
 GAMEL(1988, chasehq,    0,        chasehq,  chasehq, taitoz_state,  taitoz,   ROT0,               "Taito Corporation Japan",   "Chase H.Q. (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1988, chasehqj,   chasehq,  chasehq,  chasehqj, taitoz_state, taitoz,   ROT0,               "Taito Corporation",         "Chase H.Q. (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1988, chasehqu,   chasehq,  chasehq,  chasehq, taitoz_state,  taitoz,   ROT0,               "Taito America Corporation", "Chase H.Q. (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
-GAME( 1988, enforce,    0,        enforce,  enforce, taitoz_state,  taitoz,   ROT0,               "Taito Corporation",         "Enforce (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1988, enforce,    0,        enforce,  enforce,  taitoz_state, taitoz,   ROT0,               "Taito Corporation Japan",   "Enforce (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1988, enforcej,   enforce,  enforce,  enforcej, taitoz_state, taitoz,   ROT0,               "Taito Corporation",         "Enforce (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1989, bshark,     0,        bshark,   bshark, taitoz_state,   bshark,   ORIENTATION_FLIP_X, "Taito Corporation Japan",   "Battle Shark (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1989, bsharku,    bshark,   bshark,   bsharku, taitoz_state,  bshark,   ORIENTATION_FLIP_X, "Taito America Corporation", "Battle Shark (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1989, bsharkj,    bshark,   bshark,   bsharkj, taitoz_state,  bshark,   ORIENTATION_FLIP_X, "Taito Corporation",         "Battle Shark (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
@@ -5091,5 +5188,6 @@ GAME( 1990, spacegun,   0,        spacegun, spacegun, taitoz_state, bshark,   OR
 GAME( 1990, spacegunj,  spacegun, spacegun, spacegnj, taitoz_state, bshark,   ORIENTATION_FLIP_X, "Taito Corporation",         "Space Gun (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1990, spacegunu,  spacegun, spacegun, spacegnu, taitoz_state, bshark,   ORIENTATION_FLIP_X, "Taito America Corporation", "Space Gun (US)", GAME_SUPPORTS_SAVE )
 GAMEL(1991, dblaxle,    0,        dblaxle,  dblaxle, taitoz_state,  taitoz,   ROT0,               "Taito America Corporation", "Double Axle (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_dblaxle )
+GAMEL(1991, dblaxleu,   dblaxle,  dblaxle,  dblaxle, taitoz_state,  taitoz,   ROT0,               "Taito America Corporation", "Double Axle (US, earlier)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_dblaxle )
 GAMEL(1991, pwheelsj,   dblaxle,  dblaxle,  pwheelsj, taitoz_state, taitoz,   ROT0,               "Taito Corporation",         "Power Wheels (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_dblaxle )
 GAMEL(1991, racingb,    0,        racingb,  racingb, taitoz_state,  taitoz,   ROT0,               "Taito Corporation Japan",   "Racing Beat (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_dblaxle )

@@ -58,26 +58,25 @@ WRITE8_MEMBER(magmax_state::ay8910_portB_0_w)
 		m_LS74_q = 0;
 }
 
-static TIMER_CALLBACK( scanline_callback )
+TIMER_CALLBACK_MEMBER(magmax_state::scanline_callback)
 {
-	magmax_state *state = machine.driver_data<magmax_state>();
 	int scanline = param;
 
 	/* bit 0 goes hi whenever line V6 from video part goes lo->hi */
 	/* that is when scanline is 64 and 192 accordingly */
-	if (state->m_LS74_clr != 0)
-		state->m_LS74_q = 1;
+	if (m_LS74_clr != 0)
+		m_LS74_q = 1;
 
 	scanline += 128;
 	scanline &= 255;
 
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 void magmax_state::machine_start()
 {
 	/* Create interrupt timer */
-	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(magmax_state::scanline_callback),this));
 
 	/* Set up save state */
 	state_save_register_global(machine(), m_sound_latch);
@@ -347,7 +346,7 @@ static MACHINE_CONFIG_START( magmax, magmax_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(magmax_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", magmax_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_20MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(magmax_sound_map)
@@ -361,7 +360,7 @@ static MACHINE_CONFIG_START( magmax, magmax_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(magmax)
+	MCFG_SCREEN_UPDATE_DRIVER(magmax_state, screen_update_magmax)
 
 	MCFG_GFXDECODE(magmax)
 	MCFG_PALETTE_LENGTH(1*16 + 16*16 + 256)

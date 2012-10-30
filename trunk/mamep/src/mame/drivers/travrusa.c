@@ -301,7 +301,7 @@ static MACHINE_CONFIG_START( travrusa, travrusa_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", travrusa_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -312,7 +312,7 @@ static MACHINE_CONFIG_START( travrusa, travrusa_state )
 				/* talks about 55Hz and 1790ms vblank duration. */
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(travrusa)
+	MCFG_SCREEN_UPDATE_DRIVER(travrusa_state, screen_update_travrusa)
 
 	MCFG_GFXDECODE(travrusa)
 

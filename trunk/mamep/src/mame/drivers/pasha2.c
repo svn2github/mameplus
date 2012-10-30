@@ -109,6 +109,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_pasha2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -349,9 +350,8 @@ void pasha2_state::video_start()
 	save_item(NAME(m_bitmap1));
 }
 
-static SCREEN_UPDATE_IND16( pasha2 )
+UINT32 pasha2_state::screen_update_pasha2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	pasha2_state *state = screen.machine().driver_data<pasha2_state>();
 	int x, y, count;
 	int color;
 
@@ -364,10 +364,10 @@ static SCREEN_UPDATE_IND16( pasha2 )
 		{
 			if (x * 2 < cliprect.max_x)
 			{
-				color = (state->m_bitmap0[count + (state->m_vbuffer ^ 1) * 0x20000 / 2] & 0xff00) >> 8;
+				color = (m_bitmap0[count + (m_vbuffer ^ 1) * 0x20000 / 2] & 0xff00) >> 8;
 				bitmap.pix16(y, x * 2 + 0) = color + 0x100;
 
-				color = state->m_bitmap0[count + (state->m_vbuffer ^ 1) * 0x20000 / 2] & 0xff;
+				color = m_bitmap0[count + (m_vbuffer ^ 1) * 0x20000 / 2] & 0xff;
 				bitmap.pix16(y, x * 2 + 1) = color + 0x100;
 			}
 
@@ -382,11 +382,11 @@ static SCREEN_UPDATE_IND16( pasha2 )
 		{
 			if (x * 2 < cliprect.max_x)
 			{
-				color = state->m_bitmap1[count + (state->m_vbuffer ^ 1) * 0x20000 / 2] & 0xff;
+				color = m_bitmap1[count + (m_vbuffer ^ 1) * 0x20000 / 2] & 0xff;
 				if (color != 0)
 					bitmap.pix16(y, x * 2 + 1) = color;
 
-				color = (state->m_bitmap1[count + (state->m_vbuffer ^ 1) * 0x20000 / 2] & 0xff00) >> 8;
+				color = (m_bitmap1[count + (m_vbuffer ^ 1) * 0x20000 / 2] & 0xff00) >> 8;
 				if (color != 0)
 					bitmap.pix16(y, x * 2 + 0) = color;
 			}
@@ -418,7 +418,7 @@ static MACHINE_CONFIG_START( pasha2, pasha2_state )
 	MCFG_CPU_ADD("maincpu", E116XT, 20000000*4)		/* 4x internal multiplier */
 	MCFG_CPU_PROGRAM_MAP(pasha2_map)
 	MCFG_CPU_IO_MAP(pasha2_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pasha2_state,  irq0_line_hold)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -428,7 +428,7 @@ static MACHINE_CONFIG_START( pasha2, pasha2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 383, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(pasha2)
+	MCFG_SCREEN_UPDATE_DRIVER(pasha2_state, screen_update_pasha2)
 
 	MCFG_PALETTE_LENGTH(0x200)
 
@@ -481,7 +481,7 @@ READ16_MEMBER(pasha2_state::pasha2_speedup_r)
 
 DRIVER_INIT_MEMBER(pasha2_state,pasha2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x95744, 0x95747, read16_delegate(FUNC(pasha2_state::pasha2_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x95744, 0x95747, read16_delegate(FUNC(pasha2_state::pasha2_speedup_r), this));
 
 	membank("bank1")->set_base(memregion("user2")->base());
 }

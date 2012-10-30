@@ -231,13 +231,13 @@ WRITE16_MEMBER(harddriv_state::hdsnd68k_320ram_w)
 
 READ16_MEMBER(harddriv_state::hdsnd68k_320ports_r)
 {
-	return m_sounddsp->space(AS_IO)->read_word((offset & 7) << 1);
+	return m_sounddsp->space(AS_IO).read_word((offset & 7) << 1);
 }
 
 
 WRITE16_MEMBER(harddriv_state::hdsnd68k_320ports_w)
 {
-	m_sounddsp->space(AS_IO)->write_word((offset & 7) << 1, data);
+	m_sounddsp->space(AS_IO).write_word((offset & 7) << 1, data);
 }
 
 
@@ -293,13 +293,12 @@ READ16_MEMBER(harddriv_state::hdsnddsp_get_bio)
  *
  *************************************/
 
-WRITE16_DEVICE_HANDLER( hdsnddsp_dac_w )
+WRITE16_MEMBER(harddriv_state::hdsnddsp_dac_w)
 {
-	harddriv_state *state = device->machine().driver_data<harddriv_state>();
 
 	/* DAC L */
-	if (!state->m_dacmute)
-		downcast<dac_device *>(device)->write_signed16(data ^ 0x8000);
+	if (!m_dacmute)
+		downcast<dac_device *>(machine().device("dac"))->write_signed16(data ^ 0x8000);
 }
 
 

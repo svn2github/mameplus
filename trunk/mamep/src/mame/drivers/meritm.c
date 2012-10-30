@@ -239,6 +239,10 @@ public:
 	DECLARE_MACHINE_START(meritm_crt250_crt252_crt258);
 	DECLARE_MACHINE_START(meritm_crt260);
 	DECLARE_MACHINE_START(merit_common);
+	UINT32 screen_update_meritm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(meritm_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(vblank_start_tick);
+	TIMER_DEVICE_CALLBACK_MEMBER(vblank_end_tick);
 };
 
 
@@ -370,7 +374,7 @@ static void pc16650d_tx_callback(running_machine &machine, int channel, int coun
 {
 	meritm_state *state = machine.driver_data<meritm_state>();
 	for(int i = 0; i < count; i++)
-		state->m_microtouch->rx(*machine.memory().first_space(), 0, data[i]);
+		state->m_microtouch->rx(machine.driver_data()->generic_space(), 0, data[i]);
 }
 
 WRITE8_MEMBER(meritm_state::microtouch_tx)
@@ -421,20 +425,19 @@ static const microtouch_interface meritm_microtouch_config =
  *************************************/
 
 
-static TIMER_DEVICE_CALLBACK( meritm_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(meritm_state::meritm_interrupt)
 {
-	meritm_state *state = timer.machine().driver_data<meritm_state>();
 	int scanline = param;
 
 	if((scanline % 2) == 0)
 	{
-		state->m_v9938_0->set_sprite_limit(0);
-		state->m_v9938_0->set_resolution(RENDER_HIGH);
-		state->m_v9938_0->interrupt();
+		m_v9938_0->set_sprite_limit(0);
+		m_v9938_0->set_resolution(RENDER_HIGH);
+		m_v9938_0->interrupt();
 
-		state->m_v9938_1->set_sprite_limit(0);
-		state->m_v9938_1->set_resolution(RENDER_HIGH);
-		state->m_v9938_1->interrupt();
+		m_v9938_1->set_sprite_limit(0);
+		m_v9938_1->set_resolution(RENDER_HIGH);
+		m_v9938_1->interrupt();
 	}
 }
 
@@ -461,30 +464,29 @@ void meritm_state::video_start()
 	state_save_register_global(machine(), m_interrupt_vdp1_state);
 }
 
-static SCREEN_UPDATE_IND16( meritm )
+UINT32 meritm_state::screen_update_meritm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	meritm_state *state = screen.machine().driver_data<meritm_state>();
-	if(screen.machine().input().code_pressed_once(KEYCODE_Q))
+	if(machine().input().code_pressed_once(KEYCODE_Q))
 	{
-		state->m_layer0_enabled^=1;
-		popmessage("Layer 0 %sabled",state->m_layer0_enabled ? "en" : "dis");
+		m_layer0_enabled^=1;
+		popmessage("Layer 0 %sabled",m_layer0_enabled ? "en" : "dis");
 	}
-	if(screen.machine().input().code_pressed_once(KEYCODE_W))
+	if(machine().input().code_pressed_once(KEYCODE_W))
 	{
-		state->m_layer1_enabled^=1;
-		popmessage("Layer 1 %sabled",state->m_layer1_enabled ? "en" : "dis");
-	}
-
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
-
-	if ( state->m_layer0_enabled )
-	{
-		copybitmap(bitmap, state->m_v9938_0->get_bitmap(), 0, 0, 0, 0, cliprect);
+		m_layer1_enabled^=1;
+		popmessage("Layer 1 %sabled",m_layer1_enabled ? "en" : "dis");
 	}
 
-	if ( state->m_layer1_enabled )
+	bitmap.fill(get_black_pen(machine()), cliprect);
+
+	if ( m_layer0_enabled )
 	{
-		copybitmap_trans(bitmap, state->m_v9938_1->get_bitmap(), 0, 0, -6, -12, cliprect, state->m_v9938_1->get_transpen());
+		copybitmap(bitmap, m_v9938_0->get_bitmap(), 0, 0, 0, 0, cliprect);
+	}
+
+	if ( m_layer1_enabled )
+	{
+		copybitmap_trans(bitmap, m_v9938_1->get_bitmap(), 0, 0, -6, -12, cliprect, m_v9938_1->get_transpen());
 	}
 	return 0;
 }
@@ -1150,20 +1152,18 @@ MACHINE_START_MEMBER(meritm_state,meritm_crt260)
 #define MSX2_VISIBLE_XBORDER_PIXELS	8 * 2
 #define MSX2_VISIBLE_YBORDER_PIXELS	14 * 2
 
-static TIMER_DEVICE_CALLBACK( vblank_start_tick )
+TIMER_DEVICE_CALLBACK_MEMBER(meritm_state::vblank_start_tick)
 {
-	meritm_state *state = timer.machine().driver_data<meritm_state>();
 	/* this is a workaround to signal the v9938 vblank interrupt correctly */
-	state->m_vint = 0x08;
-	state->m_z80pio_0->port_a_write(state->m_vint);
+	m_vint = 0x08;
+	m_z80pio_0->port_a_write(m_vint);
 }
 
-static TIMER_DEVICE_CALLBACK( vblank_end_tick )
+TIMER_DEVICE_CALLBACK_MEMBER(meritm_state::vblank_end_tick)
 {
-	meritm_state *state = timer.machine().driver_data<meritm_state>();
 	/* this is a workaround to signal the v9938 vblank interrupt correctly */
-	state->m_vint = 0x18;
-	state->m_z80pio_0->port_a_write(state->m_vint);
+	m_vint = 0x18;
+	m_z80pio_0->port_a_write(m_vint);
 }
 
 static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
@@ -1171,7 +1171,7 @@ static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
 	MCFG_CPU_PROGRAM_MAP(meritm_crt250_map)
 	MCFG_CPU_IO_MAP(meritm_crt250_io_map)
 	MCFG_CPU_CONFIG(meritm_daisy_chain)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", meritm_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", meritm_state, meritm_interrupt, "screen", 0, 1)
 
 
 	MCFG_I8255A_ADD( "ppi8255", crt250_ppi8255_intf )
@@ -1179,8 +1179,8 @@ static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
 	MCFG_Z80PIO_ADD( "z80pio_0", SYSTEM_CLK/6, meritm_audio_pio_intf )
 	MCFG_Z80PIO_ADD( "z80pio_1", SYSTEM_CLK/6, meritm_io_pio_intf )
 
-	MCFG_TIMER_ADD_SCANLINE("vblank_start", vblank_start_tick, "screen", 259, 262)
-	MCFG_TIMER_ADD_SCANLINE("vblank_end",   vblank_end_tick,   "screen", 262, 262)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("vblank_start", meritm_state, vblank_start_tick, "screen", 259, 262)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("vblank_end", meritm_state, vblank_end_tick, "screen", 262, 262)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1198,7 +1198,7 @@ static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
 
 	MCFG_SCREEN_SIZE(MSX2_TOTAL_XRES_PIXELS, 262*2)
 	MCFG_SCREEN_VISIBLE_AREA(MSX2_XBORDER_PIXELS - MSX2_VISIBLE_XBORDER_PIXELS, MSX2_TOTAL_XRES_PIXELS - MSX2_XBORDER_PIXELS + MSX2_VISIBLE_XBORDER_PIXELS - 1, MSX2_YBORDER_PIXELS - MSX2_VISIBLE_YBORDER_PIXELS, MSX2_TOTAL_YRES_PIXELS - MSX2_YBORDER_PIXELS + MSX2_VISIBLE_YBORDER_PIXELS - 1)
-	MCFG_SCREEN_UPDATE_STATIC(meritm)
+	MCFG_SCREEN_UPDATE_DRIVER(meritm_state, screen_update_meritm)
 	MCFG_PALETTE_LENGTH(512)
 
 	MCFG_PALETTE_INIT( v9938 )
@@ -1940,6 +1940,25 @@ ROM_START( megat5nj ) /* Dallas DS1204V security key at U5 labeled 9255-60-01 U5
 	ROM_LOAD( "sc3981-0a.u51",  0x000, 0x117, CRC(4fc750d0) SHA1(d09ff7a8c66aeb5c49e9fec84bd1521e3f5d8d0a) )
 ROM_END
 
+ROM_START( megat5t ) /* Dallas DS1204V security key at U5 labeled 9255-70-01 U5-RO C1997 MII */
+	ROM_REGION( 0x400000, "maincpu", 0 )
+	ROM_LOAD( "9255-60-01_u32-r0",  0x000000, 0x100000, CRC(f8f7f48e) SHA1(1bebe1f8898c60b795a0f794ca9b79e03d2744e4) )
+	ROM_LOAD( "qs9255-05_u36-r0",   0x100000, 0x80000,  CRC(0bed9e27) SHA1(1414385ce562b127e1ddeccc20ea4ff2a7098b7e) )
+	ROM_RELOAD(                     0x180000, 0x80000)
+	ROM_LOAD( "qs9255-05_u37-r0",   0x200000, 0x80000,  CRC(b713a1c5) SHA1(d6ccba2ea90fd0e2ecf15249514231eed54000c1) )
+	ROM_RELOAD(                     0x280000, 0x80000)
+	ROM_LOAD( "9255-70-01_u38-r0c", 0x300000, 0x100000, CRC(e4d71764) SHA1(7c4e8b484dc744a93ce42e24f3b6d5bb2a7c09e4) ) /* Location U38, 09/30/1997 12:13:24 - Standard version */
+
+	ROM_REGION( 0x8000, "nvram", 0 ) // DS1644 nv ram
+	ROM_LOAD( "mt5t_ds1644.u31",  0x00000,  0x8000,   CRC(d1b91acf) SHA1(5ae3449d83b35ba5b20f7ff60eba4359f29cb744) ) /* No actual label, so use a unique name for this set */
+
+	ROM_REGION( 0x1000, "user2", 0 ) // PALs
+	ROM_LOAD( "sc3943.u20",     0x000, 0x117, CRC(5a72fe78) SHA1(4b1a36904eb7048518507fe14bdade5c2589dbd7) )
+	ROM_LOAD( "sc3944-0a.u19",  0x000, 0x2dd, CRC(4cc46c5e) SHA1(0bab970df1539ce905f43603ad13171b05449a01) )
+	ROM_LOAD( "sc3980.u40",     0x000, 0x117, CRC(ee0cdab5) SHA1(216fef50a8a0f6a33b704d3501a4c5c3cbac2bad) )
+	ROM_LOAD( "sc3981-0a.u51",  0x000, 0x117, CRC(4fc750d0) SHA1(d09ff7a8c66aeb5c49e9fec84bd1521e3f5d8d0a) )
+ROM_END
+
 ROM_START( megat5tg ) /* Dallas DS1204V security key at U5 labeled 9255-70-50 U5-C-RO1 C1998 MII */
 	ROM_REGION( 0x400000, "maincpu", 0 )
 	ROM_LOAD( "9255-70-50_u32-r0",  0x000000, 0x100000, CRC(f57e4d36) SHA1(c16587c95fa1abe2e7df37027deb2cfbadb27038) )
@@ -2047,7 +2066,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat3te)
 
 	ds1204_init(machine(), megat3_ds1204_key, megat3_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
@@ -2077,7 +2096,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat4te)
 
 	ds1204_init(machine(), 0, megat4te_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
@@ -2088,7 +2107,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat4st)
 
 	ds1204_init(machine(), 0, megat4te_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
@@ -2108,7 +2127,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat5t)
 
 	ds1204_init(machine(), 0, megat5_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 }
 
@@ -2163,5 +2182,6 @@ GAME( 1996, megat4stg, megat4, meritm_crt260, meritm_crt260, meritm_state, megat
 GAME( 1997, megat5,    0,      meritm_crt260, meritm_crt260, meritm_state, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-01 ROI, Standard version)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, megat5a,   megat5, meritm_crt260, meritm_crt260, meritm_state, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-01 ROC, Standard version)", GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING )
 GAME( 1998, megat5nj,  megat5, meritm_crt260, meritm_crt260, meritm_state, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-07 RON, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, megat5t,   megat5, meritm_crt260, meritm_crt260, meritm_state, megat5t,  ROT0, "Merit", "Megatouch 5 Tournament Edition (9255-70-01 ROC, Standard version)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, megat5tg,  megat5, meritm_crt260, meritm_crt260, meritm_state, megat5t,  ROT0, "Merit", "Megatouch 5 Turnier Version (9255-70-50 ROD, Bi-Lingual GER/ENG version)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, megat6,    0,      meritm_crt260, meritm_crt260, meritm_state, megat6,   ROT0, "Merit", "Megatouch 6 (9255-80-01 ROA, Standard version)", GAME_IMPERFECT_GRAPHICS )

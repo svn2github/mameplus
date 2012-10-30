@@ -87,20 +87,18 @@ WRITE8_MEMBER(lwings_state::lwings_bankswitch_w)
 	coin_counter_w(machine(), 0, data & 0x80);
 }
 
-static INTERRUPT_GEN( lwings_interrupt )
+INTERRUPT_GEN_MEMBER(lwings_state::lwings_interrupt)
 {
-	lwings_state *state = device->machine().driver_data<lwings_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7); /* RST 10h */
+	if(m_nmi_mask)
+		device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7); /* RST 10h */
 }
 
-static INTERRUPT_GEN( avengers_interrupt )
+INTERRUPT_GEN_MEMBER(lwings_state::avengers_interrupt)
 {
-	lwings_state *state = device->machine().driver_data<lwings_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -783,11 +781,11 @@ static MACHINE_CONFIG_START( lwings, lwings_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)	/* verified on PCB */
 	MCFG_CPU_PROGRAM_MAP(lwings_map)
-	MCFG_CPU_VBLANK_INT("screen", lwings_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lwings_state,  lwings_interrupt)
 
 	MCFG_CPU_ADD("soundcpu", Z80, XTAL_12MHz/4)	/* verified on PCB */
 	MCFG_CPU_PROGRAM_MAP(lwings_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)	/* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(lwings_state, irq0_line_hold, 4*60)	/* ??? */
 
 
 	/* video hardware */
@@ -798,7 +796,7 @@ static MACHINE_CONFIG_START( lwings, lwings_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lwings)
+	MCFG_SCREEN_UPDATE_DRIVER(lwings_state, screen_update_lwings)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(lwings)
@@ -834,14 +832,14 @@ static MACHINE_CONFIG_DERIVED( trojan, lwings )
 	MCFG_CPU_ADD("adpcm", Z80, XTAL_12MHz/4)	/* verified on PCB */
 	MCFG_CPU_PROGRAM_MAP(trojan_adpcm_map)
 	MCFG_CPU_IO_MAP(trojan_adpcm_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(lwings_state, irq0_line_hold,  4000)
 
 	/* video hardware */
 	MCFG_GFXDECODE(trojan)
 
 	MCFG_VIDEO_START_OVERRIDE(lwings_state,trojan)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(trojan)
+	MCFG_SCREEN_UPDATE_DRIVER(lwings_state, screen_update_trojan)
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("5205", MSM5205, XTAL_384kHz)	/* verified on PCB */
@@ -853,7 +851,7 @@ static MACHINE_CONFIG_DERIVED( avengers, trojan )
 
 	MCFG_CPU_MODIFY("maincpu") //AT: (avengers37b16gre)
 	MCFG_CPU_PROGRAM_MAP(avengers_map)
-	MCFG_CPU_VBLANK_INT("screen", avengers_interrupt) // RST 38h triggered by software
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lwings_state,  avengers_interrupt) // RST 38h triggered by software
 
 	MCFG_CPU_MODIFY("adpcm")
 	MCFG_CPU_IO_MAP(avengers_adpcm_io_map)

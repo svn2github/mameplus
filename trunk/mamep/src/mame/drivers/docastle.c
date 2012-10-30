@@ -228,10 +228,10 @@ static ADDRESS_MAP_START( docastle_map2, AS_PROGRAM, 8, docastle_state )
 	AM_RANGE(0xc005, 0xc005) AM_MIRROR(0x0080) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0xc007, 0xc007) AM_MIRROR(0x0080) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xc084, 0xc084) AM_READWRITE(docastle_flipscreen_on_r, docastle_flipscreen_on_w)
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("sn1", sn76489a_new_device, write)
-	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE("sn2", sn76489a_new_device, write)
-	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("sn3", sn76489a_new_device, write)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("sn4", sn76489a_new_device, write)
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE("sn2", sn76489a_device, write)
+	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("sn3", sn76489a_device, write)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("sn4", sn76489a_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( docastle_map3, AS_PROGRAM, 8, docastle_state )
@@ -264,10 +264,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dorunrun_map2, AS_PROGRAM, 8, docastle_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("sn1", sn76489a_new_device, write)
-	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("sn2", sn76489a_new_device, write)
-	AM_RANGE(0xa800, 0xa800) AM_DEVWRITE("sn3", sn76489a_new_device, write)
-	AM_RANGE(0xac00, 0xac00) AM_DEVWRITE("sn4", sn76489a_new_device, write)
+	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("sn2", sn76489a_device, write)
+	AM_RANGE(0xa800, 0xa800) AM_DEVWRITE("sn3", sn76489a_device, write)
+	AM_RANGE(0xac00, 0xac00) AM_DEVWRITE("sn4", sn76489a_device, write)
 	AM_RANGE(0xc001, 0xc001) AM_MIRROR(0x0080) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc002, 0xc002) AM_MIRROR(0x0080) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc003, 0xc003) AM_MIRROR(0x0080) AM_READ_PORT("JOYS")
@@ -303,10 +303,10 @@ static ADDRESS_MAP_START( idsoccer_map2, AS_PROGRAM, 8, docastle_state )
 	AM_RANGE(0xc005, 0xc005) AM_MIRROR(0x0080) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0xc007, 0xc007) AM_MIRROR(0x0080) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xc084, 0xc084) AM_READ_PORT("JOYS_RIGHT") AM_WRITE(docastle_flipscreen_on_w)
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("sn1", sn76489a_new_device, write)
-	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE("sn2", sn76489a_new_device, write)
-	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("sn3", sn76489a_new_device, write)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("sn4", sn76489a_new_device, write)
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE("sn2", sn76489a_device, write)
+	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("sn3", sn76489a_device, write)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("sn4", sn76489a_device, write)
 ADDRESS_MAP_END
 
 /* Input Ports */
@@ -604,15 +604,15 @@ static MACHINE_CONFIG_START( docastle, docastle_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_4MHz)
 	MCFG_CPU_PROGRAM_MAP(docastle_map)
 	MCFG_CPU_IO_MAP(docastle_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", docastle_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("slave", Z80, XTAL_4MHz)
 	MCFG_CPU_PROGRAM_MAP(docastle_map2)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 8*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(docastle_state, irq0_line_hold,  8*60)
 
 	MCFG_CPU_ADD("cpu3", Z80, XTAL_4MHz)
 	MCFG_CPU_PROGRAM_MAP(docastle_map3)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", docastle_state,  nmi_line_pulse)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -620,7 +620,7 @@ static MACHINE_CONFIG_START( docastle, docastle_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(docastle)
+	MCFG_SCREEN_UPDATE_DRIVER(docastle_state, screen_update_docastle)
 
 	MCFG_GFXDECODE(docastle)
 	MCFG_PALETTE_LENGTH(512)
@@ -630,19 +630,19 @@ static MACHINE_CONFIG_START( docastle, docastle_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A_NEW, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn1", SN76489A, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A_NEW, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn2", SN76489A, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489A_NEW, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn3", SN76489A, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn4", SN76489A_NEW, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn4", SN76489A, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

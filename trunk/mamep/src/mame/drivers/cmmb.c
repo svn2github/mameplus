@@ -66,6 +66,8 @@ public:
 	DECLARE_READ8_MEMBER(kludge_r);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_cmmb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(cmmb_irq);
 };
 
 
@@ -74,11 +76,10 @@ void cmmb_state::video_start()
 
 }
 
-static SCREEN_UPDATE_IND16( cmmb )
+UINT32 cmmb_state::screen_update_cmmb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cmmb_state *state = screen.machine().driver_data<cmmb_state>();
-	UINT8 *videoram = state->m_videoram;
-	gfx_element *gfx = screen.machine().gfx[0];
+	UINT8 *videoram = m_videoram;
+	gfx_element *gfx = machine().gfx[0];
 	int count = 0x00000;
 
 	int y,x;
@@ -143,11 +144,11 @@ READ8_MEMBER(cmmb_state::cmmb_input_r)
 
 /*
     {
-        UINT8 *ROM = space->machine().root_device().memregion("maincpu")->base();
+        UINT8 *ROM = space.machine().root_device().memregion("maincpu")->base();
         UINT32 bankaddress;
 
         bankaddress = 0x10000 + (0x10000 * (data & 0x03));
-        space->machine().root_device().membank("bank1")->set_base(&ROM[bankaddress]);
+        space.machine().root_device().membank("bank1")->set_base(&ROM[bankaddress]);
     }
 */
 
@@ -301,11 +302,11 @@ static GFXDECODE_START( cmmb )
 	GFXDECODE_ENTRY( "gfx", 0, spritelayout,   0x10, 4 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( cmmb_irq )
+INTERRUPT_GEN_MEMBER(cmmb_state::cmmb_irq)
 {
-	//if(device->machine().input().code_pressed_once(KEYCODE_Z))
-	//if(device->machine().input().code_pressed(KEYCODE_Z))
-//      device->execute().set_input_line(0, HOLD_LINE);
+	//if(machine().input().code_pressed_once(KEYCODE_Z))
+	//if(machine().input().code_pressed(KEYCODE_Z))
+//      device.execute().set_input_line(0, HOLD_LINE);
 }
 
 void cmmb_state::machine_reset()
@@ -317,7 +318,7 @@ static MACHINE_CONFIG_START( cmmb, cmmb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M65SC02, XTAL_72_576MHz/5) // Unknown clock, but chip rated for 14MHz
 	MCFG_CPU_PROGRAM_MAP(cmmb_map)
-	MCFG_CPU_VBLANK_INT("screen",cmmb_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cmmb_state, cmmb_irq)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -325,7 +326,7 @@ static MACHINE_CONFIG_START( cmmb, cmmb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) // unknown
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cmmb)
+	MCFG_SCREEN_UPDATE_DRIVER(cmmb_state, screen_update_cmmb)
 
 	MCFG_GFXDECODE(cmmb)
 	MCFG_PALETTE_LENGTH(512)

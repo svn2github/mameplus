@@ -155,7 +155,7 @@ Adder hardware:
 #include "machine/bfm_bd1.h"  // vfd
 #include "machine/meters.h"
 
-#include "bfm_sc2.lh"
+#include "sc2_vid.lh"
 #include "gldncrwn.lh"
 #include "paradice.lh"
 #include "pokio.lh"
@@ -167,10 +167,9 @@ Adder hardware:
 
 /* fruit machines only */
 #include "video/bfm_dm01.h"
-#include "awpdmd.lh"
+#include "sc2_vfd.lh"
+#include "sc2_dmd.lh"
 #include "drwho.lh"
-#include "awpvid14.lh"
-#include "awpvid16.lh"
 #include "machine/bfm_comn.h"
 
 
@@ -232,6 +231,7 @@ public:
 	int m_e2dummywrite;
 	int m_e2data_to_read;
 	UINT8 m_codec_data[256];
+	void e2ram_init(nvram_device &nvram, void *data, size_t size);
 	DECLARE_WRITE8_MEMBER(bankswitch_w);
 	DECLARE_WRITE8_MEMBER(reel12_vid_w);
 	DECLARE_WRITE8_MEMBER(reel12_w);
@@ -298,10 +298,12 @@ public:
 	DECLARE_DRIVER_INIT(focus);
 	DECLARE_DRIVER_INIT(drwho);
 	DECLARE_DRIVER_INIT(drwho_common);
+	DECLARE_MACHINE_START(bfm_sc2);
 	DECLARE_MACHINE_RESET(init);
 	DECLARE_MACHINE_RESET(awp_init);
 	DECLARE_MACHINE_START(sc2dmd);
 	DECLARE_MACHINE_RESET(dm01_init);
+	INTERRUPT_GEN_MEMBER(timer_irq);
 };
 
 
@@ -472,26 +474,11 @@ int Scorpion2_GetSwitchState(running_machine &machine, int strobe, int data)
 
 ///////////////////////////////////////////////////////////////////////////
 
-static NVRAM_HANDLER( bfm_sc2 )
+void bfm_sc2_state::e2ram_init(nvram_device &nvram, void *data, size_t size)
 {
-	bfm_sc2_state *state = machine.driver_data<bfm_sc2_state>();
 	static const UINT8 init_e2ram[10] = { 1, 4, 10, 20, 0, 1, 1, 4, 10, 20 };
-	if ( read_or_write )
-	{	// writing
-		file->write(state->m_e2ram,sizeof(state->m_e2ram));
-	}
-	else
-	{ // reading
-		if ( file )
-		{
-			file->read(state->m_e2ram,sizeof(state->m_e2ram));
-		}
-		else
-		{
-			memset(state->m_e2ram,0x00,sizeof(state->m_e2ram));
-			memcpy(state->m_e2ram,init_e2ram,sizeof(init_e2ram));
-		}
-	}
+	memset(data,0x00,size);
+	memcpy(data,init_e2ram,size);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -503,17 +490,16 @@ WRITE8_MEMBER(bfm_sc2_state::bankswitch_w)
 
 ///////////////////////////////////////////////////////////////////////////
 
-static INTERRUPT_GEN( timer_irq )
+INTERRUPT_GEN_MEMBER(bfm_sc2_state::timer_irq)
 {
-	bfm_sc2_state *state = device->machine().driver_data<bfm_sc2_state>();
-	state->m_timercnt++;
+	m_timercnt++;
 
-	if ( state->m_is_timer_enabled )
+	if ( m_is_timer_enabled )
 	{
-		state->m_irq_timer_stat = 0x01;
-		state->m_irq_status     = 0x02;
+		m_irq_timer_stat = 0x01;
+		m_irq_status     = 0x02;
 
-		generic_pulse_irq_line(device, M6809_IRQ_LINE, 1);
+		generic_pulse_irq_line(device.execute(), M6809_IRQ_LINE, 1);
 	}
 }
 
@@ -731,7 +717,7 @@ WRITE8_MEMBER(bfm_sc2_state::nec_latch_w)
 
 	upd7759_set_bank_base(device, bank*0x20000);
 
-	upd7759_port_w(device, 0, data&0x3F);	// setup sample
+	upd7759_port_w(device, space, 0, data&0x3F);	// setup sample
 	upd7759_start_w(device, 0);
 	upd7759_start_w(device, 1);
 }
@@ -2152,20 +2138,29 @@ INPUT_PORTS_END
 // machine driver for scorpion2 board + adder2 expansion //////////////////
 ///////////////////////////////////////////////////////////////////////////
 
+MACHINE_START_MEMBER(bfm_sc2_state,bfm_sc2)
+{
+	nvram_device *e2ram = subdevice<nvram_device>("e2ram");
+	if (e2ram != NULL)
+		e2ram->set_base(m_e2ram, sizeof(m_e2ram));
+}
+
 static MACHINE_CONFIG_START( scorpion2_vid, bfm_sc2_state )
 	MCFG_MACHINE_RESET_OVERRIDE(bfm_sc2_state, init )							// main scorpion2 board initialisation
 	MCFG_QUANTUM_TIME(attotime::from_hz(960))									// needed for serial communication !!
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/4 )	// 6809 CPU at 2 Mhz
 	MCFG_CPU_PROGRAM_MAP(memmap_vid)					// setup scorpion2 board memorymap
-	MCFG_CPU_PERIODIC_INT(timer_irq, 1000)				// generate 1000 IRQ's per second
+	MCFG_CPU_PERIODIC_INT_DRIVER(bfm_sc2_state, timer_irq,  1000)				// generate 1000 IRQ's per second
 	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(120000,100e-9))
 
 	MCFG_BFMBD1_ADD("vfd0",0)
 	MCFG_BFMBD1_ADD("vfd1",1)
 
+	MCFG_MACHINE_START_OVERRIDE(bfm_sc2_state,bfm_sc2)
+
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_NVRAM_HANDLER(bfm_sc2)
-	MCFG_DEFAULT_LAYOUT(layout_bfm_sc2)
+	MCFG_NVRAM_ADD_CUSTOM_DRIVER("e2ram", bfm_sc2_state, e2ram_init)
+	MCFG_DEFAULT_LAYOUT(layout_sc2_vid)
 
 	MCFG_SCREEN_ADD("adder", RASTER)
 	MCFG_SCREEN_SIZE( 400, 280)
@@ -3693,10 +3688,10 @@ WRITE8_MEMBER(bfm_sc2_state::dmd_reset_w)
 
 MACHINE_START_MEMBER(bfm_sc2_state,sc2dmd)
 {
-
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space->install_write_handler(0x2800, 0x2800, 0, 0, write8_delegate(FUNC(bfm_sc2_state::vfd1_dmd_w),this));
-	space->install_write_handler(0x2900, 0x2900, 0, 0, write8_delegate(FUNC(bfm_sc2_state::dmd_reset_w),this));
+	MACHINE_START_CALL_MEMBER(bfm_sc2);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space.install_write_handler(0x2800, 0x2800, 0, 0, write8_delegate(FUNC(bfm_sc2_state::vfd1_dmd_w),this));
+	space.install_write_handler(0x2900, 0x2900, 0, 0, write8_delegate(FUNC(bfm_sc2_state::dmd_reset_w),this));
 }
 
 /* machine driver for scorpion2 board */
@@ -3705,11 +3700,13 @@ static MACHINE_CONFIG_START( scorpion2, bfm_sc2_state )
 	MCFG_MACHINE_RESET_OVERRIDE(bfm_sc2_state,awp_init)
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/4 )
 	MCFG_CPU_PROGRAM_MAP(sc2_basemap)
-	MCFG_CPU_PERIODIC_INT(timer_irq, 1000 )
+	MCFG_CPU_PERIODIC_INT_DRIVER(bfm_sc2_state, timer_irq,  1000)
 	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(120000,100e-9))
 
 	MCFG_BFMBD1_ADD("vfd0",0)
 	MCFG_BFMBD1_ADD("vfd1",1)
+
+	MCFG_MACHINE_START_OVERRIDE(bfm_sc2_state,bfm_sc2)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("upd",UPD7759, UPD7759_STANDARD_CLOCK)
@@ -3719,10 +3716,10 @@ static MACHINE_CONFIG_START( scorpion2, bfm_sc2_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_NVRAM_HANDLER(bfm_sc2)
+	MCFG_NVRAM_ADD_CUSTOM_DRIVER("e2ram", bfm_sc2_state, e2ram_init)
 
 	/* video hardware */
-	MCFG_DEFAULT_LAYOUT(layout_awpvid14)
+	MCFG_DEFAULT_LAYOUT(layout_sc2_vfd)
 MACHINE_CONFIG_END
 
 
@@ -3739,7 +3736,7 @@ static MACHINE_CONFIG_START( scorpion2_dm01, bfm_sc2_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(960))									// needed for serial communication !!
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/4 )
 	MCFG_CPU_PROGRAM_MAP(sc2_basemap)
-	MCFG_CPU_PERIODIC_INT(timer_irq, 1000 )
+	MCFG_CPU_PERIODIC_INT_DRIVER(bfm_sc2_state, timer_irq,  1000)
 	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(120000,100e-9))
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3751,10 +3748,10 @@ static MACHINE_CONFIG_START( scorpion2_dm01, bfm_sc2_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_NVRAM_HANDLER(bfm_sc2)
+	MCFG_NVRAM_ADD_CUSTOM_DRIVER("e2ram", bfm_sc2_state, e2ram_init)
 
 	/* video hardware */
-	MCFG_DEFAULT_LAYOUT(layout_awpdmd)
+	MCFG_DEFAULT_LAYOUT(layout_sc2_dmd)
 	MCFG_CPU_ADD("matrix", M6809, 2000000 )				/* matrix board 6809 CPU at 2 Mhz ?? I don't know the exact freq.*/
 	MCFG_CPU_PROGRAM_MAP(bfm_dm01_memmap)
 	MCFG_CPU_PERIODIC_INT(bfm_dm01_vbl, 1500 )			/* generate 1500 NMI's per second ?? what is the exact freq?? */

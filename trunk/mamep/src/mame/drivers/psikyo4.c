@@ -191,9 +191,9 @@ READ32_MEMBER(psikyo4_state::ps4_eeprom_r)
 	return 0x00;
 }
 
-static INTERRUPT_GEN(psikyosh_interrupt)
+INTERRUPT_GEN_MEMBER(psikyo4_state::psikyosh_interrupt)
 {
-	device->execute().set_input_line(4, HOLD_LINE);
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 CUSTOM_INPUT_MEMBER(psikyo4_state::system_port_r)
@@ -681,7 +681,7 @@ static MACHINE_CONFIG_START( ps4big, psikyo4_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", SH2, MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(ps4_map)
-	MCFG_CPU_VBLANK_INT("lscreen", psikyosh_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", psikyo4_state,  psikyosh_interrupt)
 
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C56)
@@ -697,14 +697,14 @@ static MACHINE_CONFIG_START( ps4big, psikyo4_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(psikyo4_left)
+	MCFG_SCREEN_UPDATE_DRIVER(psikyo4_state, screen_update_psikyo4_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(psikyo4_right)
+	MCFG_SCREEN_UPDATE_DRIVER(psikyo4_state, screen_update_psikyo4_right)
 
 
 	/* sound hardware */
@@ -960,7 +960,7 @@ static void install_hotgmck_pcm_bank(running_machine &machine)
 	set_hotgmck_pcm_bank(machine, 0);
 	set_hotgmck_pcm_bank(machine, 1);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x5800008, 0x580000b, write32_delegate(FUNC(psikyo4_state::hotgmck_pcm_bank_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x5800008, 0x580000b, write32_delegate(FUNC(psikyo4_state::hotgmck_pcm_bank_w),state));
 	machine.save().register_postload(save_prepost_delegate(FUNC(hotgmck_pcm_bank_postload), &machine));
 }
 

@@ -92,7 +92,7 @@ WRITE8_MEMBER(cd32_state::cd32_cia_0_porta_w)
 	/* bit 2 = Power Led on Amiga */
 	set_led_status(machine(), 0, (data & 2) ? 0 : 1);
 
-	handle_cd32_joystick_cia(machine(), data, mos6526_r(device, 2));
+	handle_cd32_joystick_cia(machine(), data, mos6526_r(device, space, 2));
 }
 
 /*************************************
@@ -725,7 +725,7 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const mos6526_interface cia_0_intf =
+static const legacy_mos6526_interface cia_0_intf =
 {
 	DEVCB_LINE(amiga_cia_0_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -737,7 +737,7 @@ static const mos6526_interface cia_0_intf =
 	DEVCB_DRIVER_MEMBER(cd32_state,cd32_cia_0_portb_w)		/* port B */
 };
 
-static const mos6526_interface cia_1_intf =
+static const legacy_mos6526_interface cia_1_intf =
 {
 	DEVCB_LINE(amiga_cia_1_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -782,7 +782,7 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512*2, 312)
 	MCFG_SCREEN_VISIBLE_AREA((129-8-8)*2, (449+8-1+8)*2, 44-8, 300+8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amiga_aga)
+	MCFG_SCREEN_UPDATE_DRIVER(amiga_state, screen_update_amiga_aga)
 
 	MCFG_VIDEO_START_OVERRIDE(cd32_state,amiga_aga)
 
@@ -800,8 +800,8 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.50 )
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_1_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_0", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_0_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_1", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_1_intf)
 
 	MCFG_MICROTOUCH_ADD( "microtouch", cd32_microtouch_config )
 
@@ -833,6 +833,9 @@ ROM_START( cd32 )
 	CD32_BIOS
 ROM_END
 
+ROM_START( cd32bios )
+	CD32_BIOS
+ROM_END
 /***************************************************************************************************/
 
 DRIVER_INIT_MEMBER(cd32_state,cd32)
@@ -844,7 +847,7 @@ DRIVER_INIT_MEMBER(cd32_state,cd32)
 		NULL,
 		NULL, NULL,
 		NULL,
-		FLAGS_AGA_CHIPSET
+		FLAGS_AGA_CHIPSET | FLAGS_IS_32BIT
 	};
 
 	/* configure our Amiga setup */
@@ -859,7 +862,7 @@ DRIVER_INIT_MEMBER(cd32_state,cd32)
 }
 
 /* BIOS */
-CONS( 1993, cd32,    0,       0,      cd32,   cd32,   cd32_state, cd32,   "Commodore Business Machines",  "Amiga CD32 (PAL)" , GAME_NOT_WORKING|GAME_IS_BIOS_ROOT )
+CONS( 1993, cd32,    0,       0,      cd32,   cd32,   cd32_state, cd32,   "Commodore Business Machines",  "Amiga CD32 (PAL)" , GAME_NOT_WORKING )
 
 
 /*
@@ -1438,7 +1441,7 @@ static void serial_w(running_machine &machine, UINT16 data)
 	cd32_state *state = machine.driver_data<cd32_state>();
 	UINT8 data8 = data & 0xff;
 	if ( data8 != 0x00 )
-		state->m_microtouch->rx(*machine.memory().first_space(), 0, data8);
+		state->m_microtouch->rx(machine.driver_data()->generic_space(), 0, data8);
 }
 
 WRITE8_MEMBER (cd32_state::microtouch_tx)
@@ -1472,11 +1475,12 @@ DRIVER_INIT_MEMBER(cd32_state,odeontw2)
 /***************************************************************************************************/
 
 // these are clones of the cd32 SYSTEM because they run on a stock retail unit, with additional HW
-GAME( 1995, cndypuzl, cd32, cd32base, cndypuzl, cd32_state, cndypuzl, ROT0, "CD Express", "Candy Puzzle (v1.0)",       GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 1995, haremchl, cd32, cd32base, haremchl, cd32_state, haremchl, ROT0, "CD Express", "Harem Challenge",           GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 1995, lsrquiz,  cd32, cd32base, lsrquiz,  cd32_state,  lsrquiz,  ROT0, "CD Express", "Laser Quiz Italy",          GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )  /* no player 2 inputs (ingame) */
-GAME( 1995, lsrquiz2, cd32, cd32base, lsrquiz2, cd32_state, lsrquiz2, ROT0, "CD Express", "Laser Quiz 2 Italy (v1.0)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 1995, lasstixx, cd32, cd32base, lasstixx, cd32_state, lasstixx, ROT0, "CD Express", "Laser Strixx 2",            GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 1995, mgnumber, cd32, cd32base, mgnumber, cd32_state, mgnumber, ROT0, "CD Express", "Magic Number",              GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 1996, mgprem11, cd32, cd32base, mgprem11, cd32_state, mgprem11, ROT0, "CD Express", "Magic Premium (v1.1)",      GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 1999, odeontw2, cd32, cd32base, odeontw2, cd32_state, odeontw2, ROT0, "CD Express", "Odeon Twister 2 (v202.19)", GAME_NOT_WORKING )
+GAME( 1993, cd32bios, 0,		cd32base, cd32, 	cd32_state, cd32,    ROT0, "Commodore Business Machines", "CD32 Bios",       GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND | GAME_IS_BIOS_ROOT )
+GAME( 1995, cndypuzl, cd32bios, cd32base, cndypuzl, cd32_state, cndypuzl, ROT0, "CD Express", "Candy Puzzle (v1.0)",       GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1995, haremchl, cd32bios, cd32base, haremchl, cd32_state, haremchl, ROT0, "CD Express", "Harem Challenge",           GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1995, lsrquiz,  cd32bios, cd32base, lsrquiz,  cd32_state,  lsrquiz,  ROT0, "CD Express", "Laser Quiz Italy",          GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )  /* no player 2 inputs (ingame) */
+GAME( 1995, lsrquiz2, cd32bios, cd32base, lsrquiz2, cd32_state, lsrquiz2, ROT0, "CD Express", "Laser Quiz 2 Italy (v1.0)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1995, lasstixx, cd32bios, cd32base, lasstixx, cd32_state, lasstixx, ROT0, "CD Express", "Laser Strixx 2",            GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1995, mgnumber, cd32bios, cd32base, mgnumber, cd32_state, mgnumber, ROT0, "CD Express", "Magic Number",              GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1996, mgprem11, cd32bios, cd32base, mgprem11, cd32_state, mgprem11, ROT0, "CD Express", "Magic Premium (v1.1)",      GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1999, odeontw2, cd32bios, cd32base, odeontw2, cd32_state, odeontw2, ROT0, "CD Express", "Odeon Twister 2 (v202.19)", GAME_NOT_WORKING )

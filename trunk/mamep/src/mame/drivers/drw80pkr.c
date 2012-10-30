@@ -70,6 +70,7 @@ public:
 	virtual void machine_start();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_drw80pkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -195,11 +196,11 @@ WRITE8_MEMBER(drw80pkr_state::drw80pkr_io_w)
 
 		// ay8910 control port
 		if (m_p1 == 0xfc)
-			ay8910_address_w(machine().device("aysnd"), 0, data);
+			ay8910_address_w(machine().device("aysnd"), space, 0, data);
 
 		// ay8910_write_port_0_w
 		if (m_p1 == 0xfe)
-			ay8910_data_w(machine().device("aysnd"), 0, data);
+			ay8910_data_w(machine().device("aysnd"), space, 0, data);
 	}
 }
 
@@ -339,10 +340,9 @@ void drw80pkr_state::video_start()
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(drw80pkr_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 24, 27);
 }
 
-static SCREEN_UPDATE_IND16( drw80pkr )
+UINT32 drw80pkr_state::screen_update_drw80pkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	drw80pkr_state *state = screen.machine().driver_data<drw80pkr_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -467,7 +467,7 @@ static MACHINE_CONFIG_START( drw80pkr, drw80pkr_state )
 	MCFG_CPU_ADD("maincpu", I8039, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(drw80pkr_map)
     MCFG_CPU_IO_MAP(drw80pkr_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", drw80pkr_state,  irq0_line_hold)
 
 
 	// video hardware
@@ -477,7 +477,7 @@ static MACHINE_CONFIG_START( drw80pkr, drw80pkr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE((31+1)*8, (31+1)*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 24*8-1, 0*8, 27*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(drw80pkr)
+	MCFG_SCREEN_UPDATE_DRIVER(drw80pkr_state, screen_update_drw80pkr)
 
 	MCFG_GFXDECODE(drw80pkr)
 	MCFG_PALETTE_LENGTH(16*16)

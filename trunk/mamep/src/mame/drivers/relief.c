@@ -32,10 +32,9 @@
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void relief_state::update_interrupts()
 {
-	relief_state *state = machine.driver_data<relief_state>();
-	machine.device("maincpu")->execute().set_input_line(4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(4, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -65,17 +64,9 @@ WRITE16_MEMBER(relief_state::relief_atarivc_w)
  *
  *************************************/
 
-MACHINE_START_MEMBER(relief_state,relief)
-{
-	atarigen_init(machine());
-}
-
-
 MACHINE_RESET_MEMBER(relief_state,relief)
 {
-
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_state::machine_reset();
 	atarivc_reset(*machine().primary_screen, m_atarivc_eof_data, 2);
 
 	machine().device<okim6295_device>("oki")->set_bank_base(0);
@@ -96,7 +87,7 @@ READ16_MEMBER(relief_state::special_port2_r)
 {
 	int result = ioport("260010")->read();
 	if (m_cpu_to_sound_ready) result ^= 0x0020;
-	if (!(result & 0x0080) || atarigen_get_hblank(*machine().primary_screen)) result ^= 0x0001;
+	if (!(result & 0x0080) || get_hblank(*machine().primary_screen)) result ^= 0x0001;
 	return result;
 }
 
@@ -113,7 +104,7 @@ WRITE16_MEMBER(relief_state::audio_control_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		m_ym2413_volume = (data >> 1) & 15;
-		atarigen_set_ym2413_vol(machine(), (m_ym2413_volume * m_overall_volume * 100) / (127 * 15));
+		set_ym2413_volume((m_ym2413_volume * m_overall_volume * 100) / (127 * 15));
 		m_adpcm_bank_base = (0x040000 * ((data >> 6) & 3)) | (m_adpcm_bank_base & 0x100000);
 	}
 	if (ACCESSING_BITS_8_15)
@@ -129,8 +120,8 @@ WRITE16_MEMBER(relief_state::audio_volume_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		m_overall_volume = data & 127;
-		atarigen_set_ym2413_vol(machine(), (m_ym2413_volume * m_overall_volume * 100) / (127 * 15));
-		atarigen_set_oki6295_vol(machine(), m_overall_volume * 100 / 127);
+		set_ym2413_volume((m_ym2413_volume * m_overall_volume * 100) / (127 * 15));
+		set_oki6295_volume(m_overall_volume * 100 / 127);
 	}
 }
 
@@ -150,18 +141,18 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, relief_state )
 	AM_RANGE(0x140010, 0x140011) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x140020, 0x140021) AM_WRITE(audio_volume_w)
 	AM_RANGE(0x140030, 0x140031) AM_WRITE(audio_control_w)
-	AM_RANGE(0x180000, 0x180fff) AM_READWRITE_LEGACY(atarigen_eeprom_upper_r, atarigen_eeprom_w) AM_SHARE("eeprom")
-	AM_RANGE(0x1c0030, 0x1c0031) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
+	AM_RANGE(0x180000, 0x180fff) AM_READWRITE(eeprom_r, eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0x1c0030, 0x1c0031) AM_WRITE(eeprom_enable_w)
 	AM_RANGE(0x260000, 0x260001) AM_READ_PORT("260000")
 	AM_RANGE(0x260002, 0x260003) AM_READ_PORT("260002")
 	AM_RANGE(0x260010, 0x260011) AM_READ(special_port2_r)
 	AM_RANGE(0x260012, 0x260013) AM_READ_PORT("260012")
 	AM_RANGE(0x2a0000, 0x2a0001) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM_WRITE_LEGACY(atarigen_666_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM_WRITE(paletteram_666_w) AM_SHARE("paletteram")
 	AM_RANGE(0x3effc0, 0x3effff) AM_READWRITE(relief_atarivc_r, relief_atarivc_w) AM_SHARE("atarivc_data")
-	AM_RANGE(0x3f0000, 0x3f1fff) AM_RAM_WRITE_LEGACY(atarigen_playfield2_latched_msb_w) AM_SHARE("playfield2")
-	AM_RANGE(0x3f2000, 0x3f3fff) AM_RAM_WRITE_LEGACY(atarigen_playfield_latched_lsb_w) AM_SHARE("playfield")
-	AM_RANGE(0x3f4000, 0x3f5fff) AM_RAM_WRITE_LEGACY(atarigen_playfield_dual_upper_w) AM_SHARE("playfield_up")
+	AM_RANGE(0x3f0000, 0x3f1fff) AM_RAM_WRITE(playfield2_latched_msb_w) AM_SHARE("playfield2")
+	AM_RANGE(0x3f2000, 0x3f3fff) AM_RAM_WRITE(playfield_latched_lsb_w) AM_SHARE("playfield")
+	AM_RANGE(0x3f4000, 0x3f5fff) AM_RAM_WRITE(playfield_dual_upper_w) AM_SHARE("playfield_up")
 	AM_RANGE(0x3f6000, 0x3f67ff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
 	AM_RANGE(0x3f6800, 0x3f8eff) AM_RAM
 	AM_RANGE(0x3f8f00, 0x3f8f7f) AM_RAM AM_SHARE("atarivc_eof")
@@ -296,7 +287,6 @@ static MACHINE_CONFIG_START( relief, relief_state )
 	MCFG_CPU_ADD("maincpu", M68000, ATARI_CLOCK_14MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START_OVERRIDE(relief_state,relief)
 	MCFG_MACHINE_RESET_OVERRIDE(relief_state,relief)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
@@ -309,7 +299,7 @@ static MACHINE_CONFIG_START( relief, relief_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses a VAD chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(relief)
+	MCFG_SCREEN_UPDATE_DRIVER(relief_state, screen_update_relief)
 
 	MCFG_VIDEO_START_OVERRIDE(relief_state,relief)
 

@@ -35,20 +35,18 @@ Boards:
 #define SOUND_CLOCK			XTAL_14_31818MHz
 
 
-static INTERRUPT_GEN( pandoras_master_interrupt )
+INTERRUPT_GEN_MEMBER(pandoras_state::pandoras_master_interrupt)
 {
-	pandoras_state *state = device->machine().driver_data<pandoras_state>();
 
-	if (state->m_irq_enable_a)
-		device->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
+	if (m_irq_enable_a)
+		device.execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( pandoras_slave_interrupt )
+INTERRUPT_GEN_MEMBER(pandoras_state::pandoras_slave_interrupt)
 {
-	pandoras_state *state = device->machine().driver_data<pandoras_state>();
 
-	if (state->m_irq_enable_b)
-		device->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
+	if (m_irq_enable_b)
+		device.execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(pandoras_state::pandoras_int_control_w)
@@ -344,11 +342,11 @@ static MACHINE_CONFIG_START( pandoras, pandoras_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/6)	/* CPU A */
 	MCFG_CPU_PROGRAM_MAP(pandoras_master_map)
-	MCFG_CPU_VBLANK_INT("screen", pandoras_master_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pandoras_state,  pandoras_master_interrupt)
 
 	MCFG_CPU_ADD("sub", M6809, MASTER_CLOCK/6)		/* CPU B */
 	MCFG_CPU_PROGRAM_MAP(pandoras_slave_map)
-	MCFG_CPU_VBLANK_INT("screen", pandoras_slave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pandoras_state,  pandoras_slave_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(pandoras_sound_map)
@@ -366,7 +364,7 @@ static MACHINE_CONFIG_START( pandoras, pandoras_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pandoras)
+	MCFG_SCREEN_UPDATE_DRIVER(pandoras_state, screen_update_pandoras)
 
 	MCFG_GFXDECODE(pandoras)
 	MCFG_PALETTE_LENGTH(16*16+16*16)

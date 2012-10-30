@@ -64,8 +64,8 @@ static ADDRESS_MAP_START( ikki_cpu2, AS_PROGRAM, 8, ikki_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd801, 0xd801) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xd801, 0xd801) AM_DEVWRITE("sn1", sn76496_device, write)
+	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn2", sn76496_device, write)
 ADDRESS_MAP_END
 
 
@@ -239,16 +239,15 @@ void ikki_state::machine_reset()
 	m_flipscreen = 0;
 }
 
-static TIMER_DEVICE_CALLBACK( ikki_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(ikki_state::ikki_irq)
 {
-	ikki_state *state = timer.machine().driver_data<ikki_state>();
 	int scanline = param;
 
 	if(scanline == 240 || scanline == 120) // TODO: where non-timer IRQ happens?
 	{
-		state->m_maincpu->set_input_line(0,HOLD_LINE);
+		m_maincpu->set_input_line(0,HOLD_LINE);
 
-		state->m_irq_source = (scanline != 240);
+		m_irq_source = (scanline != 240);
 	}
 }
 
@@ -260,11 +259,11 @@ static MACHINE_CONFIG_START( ikki, ikki_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,8000000/2) /* 4.000MHz */
 	MCFG_CPU_PROGRAM_MAP(ikki_cpu1)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", ikki_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", ikki_state, ikki_irq, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", Z80,8000000/2) /* 4.000MHz */
 	MCFG_CPU_PROGRAM_MAP(ikki_cpu2)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(ikki_state, irq0_line_hold, 2*60)
 
 	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
@@ -276,7 +275,7 @@ static MACHINE_CONFIG_START( ikki, ikki_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8+3*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ikki)
+	MCFG_SCREEN_UPDATE_DRIVER(ikki_state, screen_update_ikki)
 
 	MCFG_GFXDECODE(ikki)
 	MCFG_PALETTE_LENGTH(1024)
@@ -285,11 +284,11 @@ static MACHINE_CONFIG_START( ikki, ikki_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, 8000000/4)
+	MCFG_SOUND_ADD("sn1", SN76496, 8000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 8000000/2)
+	MCFG_SOUND_ADD("sn2", SN76496, 8000000/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

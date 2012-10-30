@@ -263,7 +263,7 @@ GFXDECODE_END
 static MACHINE_CONFIG_START( pirates, pirates_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000) /* 16mhz */
 	MCFG_CPU_PROGRAM_MAP(pirates_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pirates_state,  irq1_line_hold)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -275,7 +275,7 @@ static MACHINE_CONFIG_START( pirates, pirates_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pirates)
+	MCFG_SCREEN_UPDATE_DRIVER(pirates_state, screen_update_pirates)
 
 	MCFG_PALETTE_LENGTH(0x2000)
 
@@ -459,7 +459,7 @@ DRIVER_INIT_MEMBER(pirates_state,genix)
 
 	/* If this value is increased then something has gone wrong and the protection failed */
 	/* Write-protect it for now */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x109e98, 0x109e9b, read16_delegate(FUNC(pirates_state::genix_prot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x109e98, 0x109e9b, read16_delegate(FUNC(pirates_state::genix_prot_r),this));
 }
 
 

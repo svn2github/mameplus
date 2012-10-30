@@ -209,7 +209,7 @@ INPUT_PORTS_END
 /* MEGATECH specific */
 static READ8_HANDLER( megatech_cart_select_r )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 	return state->m_mt_cart_select_reg;
 }
 
@@ -292,16 +292,16 @@ static WRITE8_HANDLER( megatech_cart_select_w )
       but it stores something in (banked?) ram
       because it always seems to show the
       same instructions ... */
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 	state->m_mt_cart_select_reg = data;
 
-	megatech_select_game(space->machine(), state->m_mt_cart_select_reg);
+	megatech_select_game(space.machine(), state->m_mt_cart_select_reg);
 }
 
 
 static READ8_HANDLER( bios_ctrl_r )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 
 	if (offset == 0)
 		return 0;
@@ -313,7 +313,7 @@ static READ8_HANDLER( bios_ctrl_r )
 
 static WRITE8_HANDLER( bios_ctrl_w )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 
 	if (offset == 1)
 	{
@@ -333,17 +333,17 @@ static WRITE8_HANDLER( bios_ctrl_w )
 
 static READ8_HANDLER( megatech_z80_read_68k_banked_data )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
-	address_space *space68k = space->machine().device<legacy_cpu_device>("maincpu")->space();
-	UINT8 ret = space68k->read_byte(state->m_mt_bank_addr + offset);
+	mtech_state *state = space.machine().driver_data<mtech_state>();
+	address_space &space68k = space.machine().device<legacy_cpu_device>("maincpu")->space();
+	UINT8 ret = space68k.read_byte(state->m_mt_bank_addr + offset);
 	return ret;
 }
 
 static WRITE8_HANDLER( megatech_z80_write_68k_banked_data )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
-	address_space *space68k = space->machine().device<legacy_cpu_device>("maincpu")->space();
-	space68k->write_byte(state->m_mt_bank_addr + offset,data);
+	mtech_state *state = space.machine().driver_data<mtech_state>();
+	address_space &space68k = space.machine().device<legacy_cpu_device>("maincpu")->space();
+	space68k.write_byte(state->m_mt_bank_addr + offset,data);
 }
 
 static void megatech_z80_bank_w(running_machine &machine, UINT16 data)
@@ -354,18 +354,18 @@ static void megatech_z80_bank_w(running_machine &machine, UINT16 data)
 
 static WRITE8_HANDLER( mt_z80_bank_w )
 {
-	megatech_z80_bank_w(space->machine(), data & 1);
+	megatech_z80_bank_w(space.machine(), data & 1);
 }
 
 static READ8_HANDLER( megatech_banked_ram_r )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 	return state->m_megatech_banked_ram[offset + 0x1000 * (state->m_mt_cart_select_reg & 0x07)];
 }
 
 static WRITE8_HANDLER( megatech_banked_ram_w )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 	state->m_megatech_banked_ram[offset + 0x1000 * (state->m_mt_cart_select_reg & 0x07)] = data;
 }
 
@@ -391,14 +391,14 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( megatech_bios_port_ctrl_w )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
+	mtech_state *state = space.machine().driver_data<mtech_state>();
 	state->m_bios_port_ctrl = data;
 }
 
 static READ8_HANDLER( megatech_bios_joypad_r )
 {
-	mtech_state *state = space->machine().driver_data<mtech_state>();
-	return megatech_bios_port_cc_dc_r(space->machine(), offset, state->m_bios_port_ctrl);
+	mtech_state *state = space.machine().driver_data<mtech_state>();
+	return megatech_bios_port_cc_dc_r(space.machine(), offset, state->m_bios_port_ctrl);
 }
 
 static WRITE8_HANDLER (megatech_bios_port_7f_w)
@@ -446,22 +446,21 @@ VIDEO_START_MEMBER(mtech_state,mtnew)
 }
 
 //attotime::never
-static SCREEN_UPDATE_RGB32(mtnew)
+UINT32 mtech_state::screen_update_mtnew(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	mtech_state *state = screen.machine().driver_data<mtech_state>();
 
 	/* if we're running an sms game then use the SMS update.. maybe this should be moved to the megadrive emulation core as compatibility mode is a feature of the chip */
-	if (!state->m_current_game_is_sms)
+	if (!m_current_game_is_sms)
 		SCREEN_UPDATE32_CALL(megadriv);
 	else
 		SCREEN_UPDATE32_CALL(megatech_md_sms);
 	return 0;
 }
 
-static SCREEN_VBLANK(mtnew)
+void mtech_state::screen_eof_mtnew(screen_device &screen, bool state)
 {
-	mtech_state *state = screen.machine().driver_data<mtech_state>();
-	if (!state->m_current_game_is_sms)
+	bool vblank_on = state;
+	if (!m_current_game_is_sms)
 		SCREEN_VBLANK_CALL(megadriv);
 	else
 		SCREEN_VBLANK_CALL(megatech_md_sms);
@@ -476,10 +475,9 @@ MACHINE_RESET_MEMBER(mtech_state,mtnew)
 	megatech_select_game(machine(), 0);
 }
 
-static SCREEN_UPDATE_RGB32( megatech_menu )
+UINT32 mtech_state::screen_update_megatech_menu(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	mtech_state *state = screen.machine().driver_data<mtech_state>();
-	state->m_vdp1->screen_update(screen,bitmap,cliprect);
+	m_vdp1->screen_update(screen,bitmap,cliprect);
 	return 0;
 }
 
@@ -497,6 +495,12 @@ static const sega315_5124_interface _vdp_intf =
 	"menu",
 	DEVCB_DRIVER_LINE_MEMBER(mtech_state, int_callback),
 	DEVCB_NULL,
+};
+
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
 };
 
 
@@ -522,7 +526,7 @@ static MACHINE_CONFIG_START( megatech, mtech_state )
 	MCFG_SCREEN_RAW_PARAMS(XTAL_10_738635MHz/2, \
 		SEGA315_5124_WIDTH , SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH, SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256, \
 		SEGA315_5124_HEIGHT_NTSC, SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_224_TBORDER_HEIGHT, SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_224_TBORDER_HEIGHT + 224)
-	MCFG_SCREEN_UPDATE_STATIC( megatech_menu )	/* Combines and copies a bitmap */
+	MCFG_SCREEN_UPDATE_DRIVER(mtech_state, screen_update_megatech_menu)
 
 	MCFG_PALETTE_LENGTH(SEGA315_5124_PALETTE_SIZE)
 	MCFG_PALETTE_INIT(sega315_5124)
@@ -531,11 +535,12 @@ static MACHINE_CONFIG_START( megatech, mtech_state )
 
 
 	MCFG_SCREEN_MODIFY("megadriv")
-	MCFG_SCREEN_UPDATE_STATIC(mtnew)
-	MCFG_SCREEN_VBLANK_STATIC(mtnew)
+	MCFG_SCREEN_UPDATE_DRIVER(mtech_state, screen_update_mtnew)
+	MCFG_SCREEN_VBLANK_DRIVER(mtech_state, screen_eof_mtnew)
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("sn2", SN76496, MASTER_CLOCK/15)
+	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 MACHINE_CONFIG_END

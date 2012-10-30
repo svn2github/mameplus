@@ -128,6 +128,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_imolagp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
 
 
@@ -208,15 +210,14 @@ void imolagp_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( imolagp )
+UINT32 imolagp_state::screen_update_imolagp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	imolagp_state *state = screen.machine().driver_data<imolagp_state>();
-	int scroll2 = state->m_scroll ^ 0x03;
+	int scroll2 = m_scroll ^ 0x03;
 	int pass;
 	for (pass = 0; pass < 2; pass++)
 	{
 		int i;
-		const UINT8 *source = state->m_videoram[pass * 2];
+		const UINT8 *source = m_videoram[pass * 2];
 
 		for (i = 0; i < 0x4000; i++)
 		{
@@ -493,15 +494,14 @@ static TIMER_DEVICE_CALLBACK ( imolagp_nmi_cb )
 	}
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(imolagp_state::vblank_irq)
 {
-	imolagp_state *state = device->machine().driver_data<imolagp_state>();
 
 #ifdef HLE_COM
-	memcpy(&state->m_slave_workram[0x80], state->m_mComData, state->m_mComCount);
-	state->m_mComCount = 0;
+	memcpy(&m_slave_workram[0x80], m_mComData, m_mComCount);
+	m_mComCount = 0;
 #endif
-	device->execute().set_input_line(0, HOLD_LINE);
+	device.execute().set_input_line(0, HOLD_LINE);
 } /* master_interrupt */
 
 
@@ -556,13 +556,13 @@ static MACHINE_CONFIG_START( imolagp, imolagp_state )
 	MCFG_CPU_ADD("maincpu", Z80,8000000) /* ? */
 	MCFG_CPU_PROGRAM_MAP(imolagp_master)
 	MCFG_CPU_IO_MAP(readport_master)
-	MCFG_CPU_VBLANK_INT("screen",vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", imolagp_state, vblank_irq)
 	MCFG_TIMER_ADD_PERIODIC("pot_irq", imolagp_nmi_cb, attotime::from_hz(60*3))
 
 	MCFG_CPU_ADD("slave", Z80,8000000) /* ? */
 	MCFG_CPU_PROGRAM_MAP(imolagp_slave)
 	MCFG_CPU_IO_MAP(readport_slave)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", imolagp_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -574,7 +574,7 @@ static MACHINE_CONFIG_START( imolagp, imolagp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256,256)
 	MCFG_SCREEN_VISIBLE_AREA(0+64-16,255,0+16,255)
-	MCFG_SCREEN_UPDATE_STATIC(imolagp)
+	MCFG_SCREEN_UPDATE_DRIVER(imolagp_state, screen_update_imolagp)
 
 	MCFG_PALETTE_LENGTH(0x20)
 	MCFG_SPEAKER_STANDARD_MONO("mono")

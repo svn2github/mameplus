@@ -94,6 +94,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_galaxi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -181,31 +182,30 @@ void galaxi_state::video_start()
 	m_bg3_tmap->set_scrolldx(-8, 0);
 }
 
-static SCREEN_UPDATE_IND16(galaxi)
+UINT32 galaxi_state::screen_update_galaxi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	galaxi_state *state = screen.machine().driver_data<galaxi_state>();
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_R))	// remapped due to inputs changes.
+	if (machine().input().code_pressed(KEYCODE_R))	// remapped due to inputs changes.
 	{
 		int msk = 0;
-		if (screen.machine().input().code_pressed(KEYCODE_T))	msk |= 1;
-		if (screen.machine().input().code_pressed(KEYCODE_Y))	msk |= 2;
-		if (screen.machine().input().code_pressed(KEYCODE_U))	msk |= 4;
-		if (screen.machine().input().code_pressed(KEYCODE_I))	msk |= 8;
-		if (screen.machine().input().code_pressed(KEYCODE_O))	msk |= 16;
+		if (machine().input().code_pressed(KEYCODE_T))	msk |= 1;
+		if (machine().input().code_pressed(KEYCODE_Y))	msk |= 2;
+		if (machine().input().code_pressed(KEYCODE_U))	msk |= 4;
+		if (machine().input().code_pressed(KEYCODE_I))	msk |= 8;
+		if (machine().input().code_pressed(KEYCODE_O))	msk |= 16;
 		if (msk != 0) layers_ctrl &= msk;
 	}
 #endif
 
-	if (layers_ctrl & 1)	state->m_bg1_tmap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-	else				bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	if (layers_ctrl & 2)	state->m_bg2_tmap->draw(bitmap, cliprect, 0, 0);
-	if (layers_ctrl & 4)	state->m_bg3_tmap->draw(bitmap, cliprect, 0, 0);
-	if (layers_ctrl & 8)	state->m_bg4_tmap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 1)	m_bg1_tmap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	else				bitmap.fill(get_black_pen(machine()), cliprect);
+	if (layers_ctrl & 2)	m_bg2_tmap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 4)	m_bg3_tmap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 8)	m_bg4_tmap->draw(bitmap, cliprect, 0, 0);
 
-	if (layers_ctrl & 16)	state->m_fg_tmap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 16)	m_fg_tmap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -406,7 +406,7 @@ static MACHINE_CONFIG_START( galaxi, galaxi_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_10MHz)	// ?
 	MCFG_CPU_PROGRAM_MAP(galaxi_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaxi_state,  irq4_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -416,7 +416,7 @@ static MACHINE_CONFIG_START( galaxi, galaxi_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(16*5, 512-16*2-1, 16*1, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(galaxi)
+	MCFG_SCREEN_UPDATE_DRIVER(galaxi_state, screen_update_galaxi)
 
 	MCFG_GFXDECODE(galaxi)
 	MCFG_PALETTE_LENGTH(0x400)

@@ -32,6 +32,7 @@ public:
 	UINT8 m_hbeat;
 	DECLARE_CUSTOM_INPUT_MEMBER(rgum_heartbeat_r);
 	virtual void video_start();
+	UINT32 screen_update_royalgum(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -39,11 +40,10 @@ void rgum_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16(royalgum)
+UINT32 rgum_state::screen_update_royalgum(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	rgum_state *state = screen.machine().driver_data<rgum_state>();
 	int x,y,count;
-	gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = machine().gfx[0];
 
 	count = 0;
 
@@ -51,7 +51,7 @@ static SCREEN_UPDATE_IND16(royalgum)
 	{
 		for(x=0;x<66;x++)
 		{
-			int tile = state->m_vram[count] | ((state->m_cram[count] & 0xf) <<8);
+			int tile = m_vram[count] | ((m_cram[count] & 0xf) <<8);
 
 			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
 
@@ -268,7 +268,7 @@ static MACHINE_CONFIG_START( rgum, rgum_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M65C02,24000000/16)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(rgum_map)
-//  MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rgum_state,  nmi_line_pulse)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -276,7 +276,7 @@ static MACHINE_CONFIG_START( rgum, rgum_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(royalgum)
+	MCFG_SCREEN_UPDATE_DRIVER(rgum_state, screen_update_royalgum)
 
 	MCFG_MC6845_ADD("crtc", MC6845, 24000000/16, mc6845_intf)	/* unknown clock & type, hand tuned to get ~50 fps (?) */
 

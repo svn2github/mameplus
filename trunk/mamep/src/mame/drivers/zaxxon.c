@@ -297,12 +297,11 @@ INPUT_CHANGED_MEMBER(zaxxon_state::service_switch)
 }
 
 
-static INTERRUPT_GEN( vblank_int )
+INTERRUPT_GEN_MEMBER(zaxxon_state::vblank_int)
 {
-	zaxxon_state *state = device->machine().driver_data<zaxxon_state>();
 
-	if (state->m_int_enabled)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if (m_int_enabled)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -497,9 +496,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( congo_sound_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76496_device, write)
 	AM_RANGE(0x8000, 0x8003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76496_device, write)
 ADDRESS_MAP_END
 
 
@@ -885,11 +884,11 @@ INPUT_PORTS_END
 static I8255A_INTERFACE( zaxxon_ppi_intf )
 {
 	DEVCB_NULL,							/* Port A read */
-	DEVCB_HANDLER(zaxxon_sound_a_w),	/* Port A write */
+	DEVCB_DRIVER_MEMBER(zaxxon_state, zaxxon_sound_a_w),	/* Port A write */
 	DEVCB_NULL,							/* Port B read */
-	DEVCB_HANDLER(zaxxon_sound_b_w),	/* Port B write */
+	DEVCB_DRIVER_MEMBER(zaxxon_state, zaxxon_sound_b_w),	/* Port B write */
 	DEVCB_NULL,							/* Port C read */
-	DEVCB_HANDLER(zaxxon_sound_c_w)		/* Port C write */
+	DEVCB_DRIVER_MEMBER(zaxxon_state, zaxxon_sound_c_w)		/* Port C write */
 };
 
 static I8255A_INTERFACE( congo_ppi_intf )
@@ -897,9 +896,9 @@ static I8255A_INTERFACE( congo_ppi_intf )
 	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),	/* Port A read */
 	DEVCB_NULL,						/* Port A write */
 	DEVCB_NULL,						/* Port B read */
-	DEVCB_HANDLER(congo_sound_b_w),	/* Port B write */
+	DEVCB_DRIVER_MEMBER(zaxxon_state, congo_sound_b_w),	/* Port B write */
 	DEVCB_NULL,						/* Port C read */
-	DEVCB_HANDLER(congo_sound_c_w)	/* Port C write */
+	DEVCB_DRIVER_MEMBER(zaxxon_state, congo_sound_c_w)	/* Port C write */
 };
 
 
@@ -962,7 +961,7 @@ static MACHINE_CONFIG_START( root, zaxxon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/16)
 	MCFG_CPU_PROGRAM_MAP(zaxxon_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_int)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", zaxxon_state,  vblank_int)
 
 
 	MCFG_I8255A_ADD( "ppi8255", zaxxon_ppi_intf )
@@ -973,7 +972,7 @@ static MACHINE_CONFIG_START( root, zaxxon_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(zaxxon)
+	MCFG_SCREEN_UPDATE_DRIVER(zaxxon_state, screen_update_zaxxon)
 
 MACHINE_CONFIG_END
 
@@ -990,7 +989,7 @@ static MACHINE_CONFIG_DERIVED( futspy, root )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(futspy)
+	MCFG_SCREEN_UPDATE_DRIVER(zaxxon_state, screen_update_futspy)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1008,7 +1007,7 @@ static MACHINE_CONFIG_DERIVED( razmataz, root )
 	/* video hardware */
 	MCFG_VIDEO_START_OVERRIDE(zaxxon_state,razmataz)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(razmataz)
+	MCFG_SCREEN_UPDATE_DRIVER(zaxxon_state, screen_update_razmataz)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1026,22 +1025,22 @@ static MACHINE_CONFIG_DERIVED( congo, root )
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(congo_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)SOUND_CLOCK/16/16/16/4)
+	MCFG_CPU_PERIODIC_INT_DRIVER(zaxxon_state, irq0_line_hold,  (double)SOUND_CLOCK/16/16/16/4)
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(512)
 	MCFG_VIDEO_START_OVERRIDE(zaxxon_state,congo)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(congo)
+	MCFG_SCREEN_UPDATE_DRIVER(zaxxon_state, screen_update_congo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, SOUND_CLOCK)
+	MCFG_SOUND_ADD("sn1", SN76496, SOUND_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, SOUND_CLOCK/4)
+	MCFG_SOUND_ADD("sn2", SN76496, SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -1523,12 +1522,12 @@ static void zaxxonj_decode(running_machine &machine, const char *cputag)
 	};
 
 	int A;
-	address_space *space = machine.device(cputag)->memory().space(AS_PROGRAM);
+	address_space &space = machine.device(cputag)->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine.root_device().memregion(cputag)->base();
 	int size = machine.root_device().memregion(cputag)->bytes();
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, size);
 
-	space->set_decrypted_region(0x0000, size - 1, decrypt);
+	space.set_decrypted_region(0x0000, size - 1, decrypt);
 
 	for (A = 0x0000; A < size; A++)
 	{
@@ -1583,17 +1582,17 @@ DRIVER_INIT_MEMBER(zaxxon_state,futspy)
 
 DRIVER_INIT_MEMBER(zaxxon_state,razmataz)
 {
-	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	nprinces_decode(machine(), "maincpu");
 
 	/* additional input ports are wired */
-	pgmspace->install_read_port(0xc004, 0xc004, 0, 0x18f3, "SW04");
-	pgmspace->install_read_port(0xc008, 0xc008, 0, 0x18f3, "SW08");
-	pgmspace->install_read_port(0xc00c, 0xc00c, 0, 0x18f3, "SW0C");
+	pgmspace.install_read_port(0xc004, 0xc004, 0, 0x18f3, "SW04");
+	pgmspace.install_read_port(0xc008, 0xc008, 0, 0x18f3, "SW08");
+	pgmspace.install_read_port(0xc00c, 0xc00c, 0, 0x18f3, "SW0C");
 
 	/* unknown behavior expected here */
-	pgmspace->install_read_handler(0xc80a, 0xc80a, read8_delegate(FUNC(zaxxon_state::razmataz_counter_r),this));
+	pgmspace.install_read_handler(0xc80a, 0xc80a, read8_delegate(FUNC(zaxxon_state::razmataz_counter_r),this));
 
 	/* additional state saving */
 	save_item(NAME(m_razmataz_dial_pos));

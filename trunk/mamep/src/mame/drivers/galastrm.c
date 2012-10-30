@@ -48,16 +48,15 @@ $305.b invincibility
 
 /*********************************************************************/
 
-static INTERRUPT_GEN( galastrm_interrupt )
+INTERRUPT_GEN_MEMBER(galastrm_state::galastrm_interrupt)
 {
-	galastrm_state *state = device->machine().driver_data<galastrm_state>();
-	state->m_frame_counter ^= 1;
-	device->execute().set_input_line(5, HOLD_LINE);
+	m_frame_counter ^= 1;
+	device.execute().set_input_line(5, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( galastrm_interrupt6 )
+TIMER_CALLBACK_MEMBER(galastrm_state::galastrm_interrupt6)
 {
-	machine.device("maincpu")->execute().set_input_line(6, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(6, HOLD_LINE);
 }
 
 
@@ -159,7 +158,7 @@ READ32_MEMBER(galastrm_state::galastrm_adstick_ctrl_r)
 
 WRITE32_MEMBER(galastrm_state::galastrm_adstick_ctrl_w)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(1000), FUNC(galastrm_interrupt6));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(1000), timer_expired_delegate(FUNC(galastrm_state::galastrm_interrupt6),this));
 }
 
 /***********************************************************
@@ -310,7 +309,7 @@ static MACHINE_CONFIG_START( galastrm, galastrm_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(galastrm_map)
-	MCFG_CPU_VBLANK_INT("screen", galastrm_interrupt) /* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galastrm_state,  galastrm_interrupt) /* VBL */
 
 	MCFG_EEPROM_ADD("eeprom", galastrm_eeprom_interface)
 
@@ -320,7 +319,7 @@ static MACHINE_CONFIG_START( galastrm, galastrm_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 50*8)
 	MCFG_SCREEN_VISIBLE_AREA(0+96, 40*8-1+96, 3*8+60, 32*8-1+60)
-	MCFG_SCREEN_UPDATE_STATIC(galastrm)
+	MCFG_SCREEN_UPDATE_DRIVER(galastrm_state, screen_update_galastrm)
 
 	MCFG_GFXDECODE(galastrm)
 	MCFG_PALETTE_LENGTH(4096)

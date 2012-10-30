@@ -74,7 +74,7 @@ hard drive  3.5 adapter     long 3.5 IDE cable      3.5 adapter   PCB
 
 
 
-#define DISABLE_VB_INT	(!(state->m_v_ctrl & 0x8000))
+#define DISABLE_VB_INT	(!(m_v_ctrl & 0x8000))
 
 
 
@@ -208,7 +208,7 @@ READ32_MEMBER(djmain_state::v_rom_r)
 {
 	device_t *k056832 = machine().device("k056832");
 	UINT8 *mem8 = memregion("gfx2")->base();
-	int bank = k056832_word_r(k056832, 0x34/2, 0xffff);
+	int bank = k056832_word_r(k056832, space, 0x34/2, 0xffff);
 
 	offset *= 2;
 
@@ -280,18 +280,18 @@ READ32_MEMBER(djmain_state::ide_std_r)
 {
 	device_t *device = machine().device("ide");
 	if (ACCESSING_BITS_0_7)
-		return ide_controller16_r(device, IDE_STD_OFFSET + offset, 0xff00) >> 8;
+		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset, 0xff00) >> 8;
 	else
-		return ide_controller16_r(device, IDE_STD_OFFSET + offset, 0xffff) << 16;
+		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset, 0xffff) << 16;
 }
 
 WRITE32_MEMBER(djmain_state::ide_std_w)
 {
 	device_t *device = machine().device("ide");
 	if (ACCESSING_BITS_0_7)
-		ide_controller16_w(device, IDE_STD_OFFSET + offset, data << 8, 0xff00);
+		ide_controller16_w(device, space, IDE_STD_OFFSET + offset, data << 8, 0xff00);
 	else
-		ide_controller16_w(device, IDE_STD_OFFSET + offset, data >> 16, 0xffff);
+		ide_controller16_w(device, space, IDE_STD_OFFSET + offset, data >> 16, 0xffff);
 }
 
 
@@ -299,7 +299,7 @@ READ32_MEMBER(djmain_state::ide_alt_r)
 {
 	device_t *device = machine().device("ide");
 	if (offset == 0)
-		return ide_controller16_r(device, IDE_ALT_OFFSET, 0x00ff) << 24;
+		return ide_controller16_r(device, space, IDE_ALT_OFFSET, 0x00ff) << 24;
 
 	return 0;
 }
@@ -308,7 +308,7 @@ WRITE32_MEMBER(djmain_state::ide_alt_w)
 {
 	device_t *device = machine().device("ide");
 	if (offset == 0 && ACCESSING_BITS_16_23)
-		ide_controller16_w(device, IDE_ALT_OFFSET, data >> 24, 0x00ff);
+		ide_controller16_w(device, space, IDE_ALT_OFFSET, data >> 24, 0x00ff);
 }
 
 
@@ -396,33 +396,32 @@ WRITE32_MEMBER(djmain_state::unknownc02000_w)
  *
  *************************************/
 
-static INTERRUPT_GEN( vb_interrupt )
+INTERRUPT_GEN_MEMBER(djmain_state::vb_interrupt)
 {
-	djmain_state *state = device->machine().driver_data<djmain_state>();
-	state->m_pending_vb_int = 0;
+	m_pending_vb_int = 0;
 
 	if (DISABLE_VB_INT)
 	{
-		state->m_pending_vb_int = 1;
+		m_pending_vb_int = 1;
 		return;
 	}
 
 	//logerror("V-Blank interrupt\n");
-	device->execute().set_input_line(M68K_IRQ_4, HOLD_LINE);
+	device.execute().set_input_line(M68K_IRQ_4, HOLD_LINE);
 }
 
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER( djmain_state::ide_interrupt )
 {
 	if (state != CLEAR_LINE)
 	{
 		//logerror("IDE interrupt asserted\n");
-		device->machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, HOLD_LINE);
+		device().machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, HOLD_LINE);
 	}
 	else
 	{
 		//logerror("IDE interrupt cleared\n");
-		device->machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, CLEAR_LINE);
+		device().machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, CLEAR_LINE);
 	}
 }
 
@@ -1398,12 +1397,12 @@ static const k054539_interface k054539_config =
 
 void djmain_state::machine_start()
 {
-	device_t *ide = machine().device("ide");
+	ide_controller_device *ide = (ide_controller_device *) machine().device("ide");
 
 	if (ide != NULL && m_ide_master_password != NULL)
-		ide_set_master_password(ide, m_ide_master_password);
+		ide->ide_set_master_password(m_ide_master_password);
 	if (ide != NULL && m_ide_user_password != NULL)
-		ide_set_user_password(ide, m_ide_user_password);
+		ide->ide_set_user_password(m_ide_user_password);
 
 	state_save_register_global(machine(), m_sndram_bank);
 	state_save_register_global(machine(), m_pending_vb_int);
@@ -1446,13 +1445,6 @@ static const k056832_interface djmain_k056832_intf =
 	djmain_tile_callback, "none"
 };
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( djmain, djmain_state )
 
 	/* basic machine hardware */
@@ -1460,10 +1452,11 @@ static MACHINE_CONFIG_START( djmain, djmain_state )
 	//MCFG_CPU_ADD("maincpu", M68EC020, 18432000/2)    /*  9.216 MHz!? */
 	MCFG_CPU_ADD("maincpu", M68EC020, 32000000/4)	/*  8.000 MHz!? */
 	MCFG_CPU_PROGRAM_MAP(memory_map)
-	MCFG_CPU_VBLANK_INT("screen", vb_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", djmain_state,  vb_interrupt)
 
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, djmain_state, ide_interrupt))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1471,7 +1464,7 @@ static MACHINE_CONFIG_START( djmain, djmain_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(12, 512-12-1, 0, 384-1)
-	MCFG_SCREEN_UPDATE_STATIC(djmain)
+	MCFG_SCREEN_UPDATE_DRIVER(djmain_state, screen_update_djmain)
 
 	MCFG_PALETTE_LENGTH(0x4440/4)
 	MCFG_GFXDECODE(djmain)

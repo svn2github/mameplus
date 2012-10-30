@@ -205,6 +205,10 @@ public:
 	virtual void machine_reset();
 	DECLARE_VIDEO_START(zr107);
 	DECLARE_VIDEO_START(jetwave);
+	UINT32 screen_update_zr107(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_jetwave(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(zr107_vblank);
+	TIMER_CALLBACK_MEMBER(irq_off);
 };
 
 
@@ -218,21 +222,20 @@ VIDEO_START_MEMBER(zr107_state,jetwave)
 }
 
 
-static SCREEN_UPDATE_RGB32( jetwave )
+UINT32 zr107_state::screen_update_jetwave(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	zr107_state *state = screen.machine().driver_data<zr107_state>();
-	device_t *k001604 = screen.machine().device("k001604");
+	device_t *k001604 = machine().device("k001604");
 
-	bitmap.fill(screen.machine().pens[0], cliprect);
+	bitmap.fill(machine().pens[0], cliprect);
 
 	K001005_draw(bitmap, cliprect);
 
 	k001604_draw_front_layer(k001604, bitmap, cliprect);
 
-	draw_7segment_led(bitmap, 3, 3, state->m_led_reg0);
-	draw_7segment_led(bitmap, 9, 3, state->m_led_reg1);
+	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
+	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
 
-	sharc_set_flag_input(screen.machine().device("dsp"), 1, ASSERT_LINE);
+	sharc_set_flag_input(machine().device("dsp"), 1, ASSERT_LINE);
 	return 0;
 }
 
@@ -271,20 +274,19 @@ VIDEO_START_MEMBER(zr107_state,zr107)
 	K001005_init(machine());
 }
 
-static SCREEN_UPDATE_RGB32( zr107 )
+UINT32 zr107_state::screen_update_zr107(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	zr107_state *state = screen.machine().driver_data<zr107_state>();
-	device_t *k056832 = screen.machine().device("k056832");
-	bitmap.fill(screen.machine().pens[0], cliprect);
+	device_t *k056832 = machine().device("k056832");
+	bitmap.fill(machine().pens[0], cliprect);
 
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 1, 0, 0);
 	K001005_draw(bitmap, cliprect);
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 0, 0, 0);
 
-	draw_7segment_led(bitmap, 3, 3, state->m_led_reg0);
-	draw_7segment_led(bitmap, 9, 3, state->m_led_reg1);
+	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
+	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
 
-	sharc_set_flag_input(screen.machine().device("dsp"), 1, ASSERT_LINE);
+	sharc_set_flag_input(machine().device("dsp"), 1, ASSERT_LINE);
 	return 0;
 }
 
@@ -676,17 +678,18 @@ static const adc083x_interface zr107_adc_interface = {
 };
 
 
-static TIMER_CALLBACK( irq_off )
+TIMER_CALLBACK_MEMBER(zr107_state::irq_off)
 {
-	machine.device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )
 {
+	zr107_state *state = machine.driver_data<zr107_state>();
 	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
 
 	machine.device("audiocpu")->execute().set_input_line(line, ASSERT_LINE);
-	machine.scheduler().timer_set(attotime::from_usec(1), FUNC(irq_off), line);
+	machine.scheduler().timer_set(attotime::from_usec(1), timer_expired_delegate(FUNC(zr107_state::irq_off),state), line);
 }
 
 static const k056800_interface zr107_k056800_interface =
@@ -716,9 +719,9 @@ static const k056230_interface zr107_k056230_intf =
     DMA0
 
 */
-static INTERRUPT_GEN( zr107_vblank )
+INTERRUPT_GEN_MEMBER(zr107_state::zr107_vblank)
 {
-	device->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+	device.execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 void zr107_state::machine_reset()
@@ -731,7 +734,7 @@ static MACHINE_CONFIG_START( zr107, zr107_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC403GA, 64000000/2)	/* PowerPC 403GA 32MHz */
 	MCFG_CPU_PROGRAM_MAP(zr107_map)
-	MCFG_CPU_VBLANK_INT("screen", zr107_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", zr107_state,  zr107_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 64000000/8)	/* 8MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
@@ -751,7 +754,7 @@ static MACHINE_CONFIG_START( zr107, zr107_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(zr107)
+	MCFG_SCREEN_UPDATE_DRIVER(zr107_state, screen_update_zr107)
 
 	MCFG_PALETTE_LENGTH(65536)
 
@@ -787,7 +790,7 @@ static MACHINE_CONFIG_START( jetwave, zr107_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC403GA, 64000000/2)	/* PowerPC 403GA 32MHz */
 	MCFG_CPU_PROGRAM_MAP(jetwave_map)
-	MCFG_CPU_VBLANK_INT("screen", zr107_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", zr107_state,  zr107_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 64000000/8)	/* 8MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
@@ -807,7 +810,7 @@ static MACHINE_CONFIG_START( jetwave, zr107_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jetwave)
+	MCFG_SCREEN_UPDATE_DRIVER(zr107_state, screen_update_jetwave)
 
 	MCFG_PALETTE_LENGTH(65536)
 

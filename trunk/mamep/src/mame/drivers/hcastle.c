@@ -209,7 +209,7 @@ static MACHINE_CONFIG_START( hcastle, hcastle_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)	/* Derived from 24 MHz clock */
 	MCFG_CPU_PROGRAM_MAP(hcastle_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", hcastle_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -224,7 +224,7 @@ static MACHINE_CONFIG_START( hcastle, hcastle_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second verified by comparison with real board */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hcastle)
+	MCFG_SCREEN_UPDATE_DRIVER(hcastle_state, screen_update_hcastle)
 
 	MCFG_GFXDECODE(hcastle)
 	MCFG_PALETTE_LENGTH(2*8*16*16)

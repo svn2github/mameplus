@@ -22,9 +22,6 @@ Cruis'n Exotica  v2.4   08/23/2000
 Invasion         v5.0   12/14/1999
 The Grid         v1.2   10/18/2000
 
-Known to exist, but currently not dumped:
-  Cruis'n Exotica Version 1.3  Fri Feb 11, 2000  16:19:13
-
 **************************************************************************/
 
 #include "emu.h"
@@ -61,7 +58,7 @@ static UINT8 cmos_protected;
 
 static emu_timer *timer[2];
 
-static TIMER_CALLBACK( invasn_gun_callback );
+
 
 
 
@@ -76,8 +73,8 @@ MACHINE_START_MEMBER(midzeus_state,midzeus)
 	timer[0] = machine().scheduler().timer_alloc(FUNC_NULL);
 	timer[1] = machine().scheduler().timer_alloc(FUNC_NULL);
 
-	gun_timer[0] = machine().scheduler().timer_alloc(FUNC(invasn_gun_callback));
-	gun_timer[1] = machine().scheduler().timer_alloc(FUNC(invasn_gun_callback));
+	gun_timer[0] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(midzeus_state::invasn_gun_callback),this));
+	gun_timer[1] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(midzeus_state::invasn_gun_callback),this));
 
 	state_save_register_global(machine(), gun_control);
 	state_save_register_global(machine(), gun_irq_state);
@@ -106,15 +103,15 @@ MACHINE_RESET_MEMBER(midzeus_state,midzeus)
  *
  *************************************/
 
-static TIMER_CALLBACK( display_irq_off )
+TIMER_CALLBACK_MEMBER(midzeus_state::display_irq_off)
 {
-	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
-static INTERRUPT_GEN( display_irq )
+INTERRUPT_GEN_MEMBER(midzeus_state::display_irq)
 {
-	device->execute().set_input_line(0, ASSERT_LINE);
-	device->machine().scheduler().timer_set(attotime::from_hz(30000000), FUNC(display_irq_off));
+	device.execute().set_input_line(0, ASSERT_LINE);
+	machine().scheduler().timer_set(attotime::from_hz(30000000), timer_expired_delegate(FUNC(midzeus_state::display_irq_off),this));
 }
 
 
@@ -158,7 +155,7 @@ WRITE32_MEMBER(midzeus_state::cmos_protect_w)
 READ32_MEMBER(midzeus_state::zeus2_timekeeper_r)
 {
 	device_t *device = machine().device("m48t35");
-	return timekeeper_r(device, offset) | 0xffffff00;
+	return timekeeper_r(device, space, offset) | 0xffffff00;
 }
 
 
@@ -166,7 +163,7 @@ WRITE32_MEMBER(midzeus_state::zeus2_timekeeper_w)
 {
 	device_t *device = machine().device("m48t35");
 	if (bitlatch[2] && !cmos_protected)
-		timekeeper_w(device, offset, data);
+		timekeeper_w(device, space, offset, data);
 	else
 		logerror("%s:zeus2_timekeeper_w with bitlatch[2] = %d, cmos_protected = %d\n", machine().describe_context(), bitlatch[2], cmos_protected);
 	cmos_protected = TRUE;
@@ -489,19 +486,19 @@ static void update_gun_irq(running_machine &machine)
 }
 
 
-static TIMER_CALLBACK( invasn_gun_callback )
+TIMER_CALLBACK_MEMBER(midzeus_state::invasn_gun_callback)
 {
 	int player = param;
-	int beamy = machine.primary_screen->vpos();
+	int beamy = machine().primary_screen->vpos();
 
 	/* set the appropriate IRQ in the internal gun control and update */
 	gun_irq_state |= 0x01 << player;
-	update_gun_irq(machine);
+	update_gun_irq(machine());
 
 	/* generate another interrupt on the next scanline while we are within the BEAM_DY */
 	beamy++;
-	if (beamy <= machine.primary_screen->visible_area().max_y && beamy <= gun_y[player] + BEAM_DY)
-		gun_timer[player]->adjust(machine.primary_screen->time_until_pos(beamy, MAX(0, gun_x[player] - BEAM_DX)), player);
+	if (beamy <= machine().primary_screen->visible_area().max_y && beamy <= gun_y[player] + BEAM_DY)
+		gun_timer[player]->adjust(machine().primary_screen->time_until_pos(beamy, MAX(0, gun_x[player] - BEAM_DX)), player);
 }
 
 
@@ -1091,7 +1088,7 @@ static MACHINE_CONFIG_START( midzeus, midzeus_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", TMS32032, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(zeus_map)
-	MCFG_CPU_VBLANK_INT("screen", display_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", midzeus_state,  display_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(midzeus_state,midzeus)
 	MCFG_MACHINE_RESET_OVERRIDE(midzeus_state,midzeus)
@@ -1102,7 +1099,7 @@ static MACHINE_CONFIG_START( midzeus, midzeus_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MIDZEUS_VIDEO_CLOCK/8, 529, 0, 400, 278, 0, 256)
-	MCFG_SCREEN_UPDATE_STATIC(midzeus)
+	MCFG_SCREEN_UPDATE_DRIVER(midzeus_state, screen_update_midzeus)
 
 	MCFG_VIDEO_START_OVERRIDE(midzeus_state,midzeus)
 
@@ -1131,7 +1128,7 @@ static MACHINE_CONFIG_START( midzeus2, midzeus_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", TMS32032, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(zeus2_map)
-	MCFG_CPU_VBLANK_INT("screen", display_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", midzeus_state,  display_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(midzeus_state,midzeus)
 	MCFG_MACHINE_RESET_OVERRIDE(midzeus_state,midzeus)
@@ -1140,7 +1137,7 @@ static MACHINE_CONFIG_START( midzeus2, midzeus_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MIDZEUS_VIDEO_CLOCK/4, 666, 0, 512, 438, 0, 400)
-	MCFG_SCREEN_UPDATE_STATIC(midzeus2)
+	MCFG_SCREEN_UPDATE_DRIVER(midzeus_state, screen_update_midzeus2)
 
 	MCFG_VIDEO_START_OVERRIDE(midzeus_state,midzeus2)
 
@@ -1349,6 +1346,34 @@ ROM_START( crusnexoc )
 	ROM_LOAD( "exotica.u4", 0x800000, 0x400000, CRC(213f7fd8) SHA1(8528d524a62bc41a8e3b39f0dbeeba33c862ee27) )
 
 	ROM_REGION32_LE( 0x0800000, "user1", 0 )
+	ROM_LOAD32_WORD( "exotica-13.u10", 0x0000000, 0x200000, CRC(ab7f1b5e) SHA1(c0c561e8cb15fd97465278b4b3b15acb27380c5d) ) /* Version 1.3  Fri Feb 11, 2000  16:19:13 */
+	ROM_LOAD32_WORD( "exotica-13.u11", 0x0000002, 0x200000, CRC(62d3c966) SHA1(9a485892295984a292501424d2c78caafac99a75) )
+	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* These 2 roms might be labeled as a different version, */
+	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) ) /* but the data doesn't change. Verified for v1.3 & v1.6 */
+
+	ROM_REGION32_LE( 0x3000000, "user2", 0 )
+	ROM_LOAD32_WORD( "exotica.u14", 0x0000000, 0x400000, CRC(84452fc2) SHA1(06d87263f83ef079e6c5fb9de620e0135040c858) )
+	ROM_LOAD32_WORD( "exotica.u15", 0x0000002, 0x400000, CRC(b6aaebdb) SHA1(6ede6ea123be6a88d1ff38e90f059c9d1f822d6d) )
+	ROM_LOAD32_WORD( "exotica.u16", 0x0800000, 0x400000, CRC(aac6d2a5) SHA1(6c336520269d593b46b82414d9352a3f16955cc3) )
+	ROM_LOAD32_WORD( "exotica.u17", 0x0800002, 0x400000, CRC(71cf5404) SHA1(a6eed1a66fb4f4ddd749e4272a2cdb8e3e354029) )
+	ROM_LOAD32_WORD( "exotica.u22", 0x1000000, 0x400000, CRC(ad6dcda7) SHA1(5c9291753e1659f9adbe7e59fa2d0e030efae5bc) )
+	ROM_LOAD32_WORD( "exotica.u23", 0x1000002, 0x400000, CRC(1f103a68) SHA1(3b3acc63a461677cd424e75e7211fa6f063a37ef) )
+	ROM_LOAD32_WORD( "exotica.u24", 0x1800000, 0x400000, CRC(6312feef) SHA1(4113e4e5d39c99e8131d41a57c973df475b67d18) )
+	ROM_LOAD32_WORD( "exotica.u25", 0x1800002, 0x400000, CRC(b8277b16) SHA1(1355e87affd78e195906aedc9aed9e230374e2bf) )
+	ROM_LOAD32_WORD( "exotica.u18", 0x2000000, 0x200000, CRC(60cf5caa) SHA1(629870a305802d632bd2681131d1ffc0086280d2) )
+	ROM_LOAD32_WORD( "exotica.u19", 0x2000002, 0x200000, CRC(6b919a18) SHA1(20e40e195554146ed1d3fad54f7280823ae89d4b) )
+	ROM_LOAD32_WORD( "exotica.u20", 0x2400000, 0x200000, CRC(4855b68b) SHA1(1f6e557590b2621d0d5c782b95577f1be5cbc51d) )
+	ROM_LOAD32_WORD( "exotica.u21", 0x2400002, 0x200000, CRC(0011b9d6) SHA1(231d768c964a16b905857b0814d758fe93c2eefb) )
+ROM_END
+
+ROM_START( crusnexod )
+	ROM_REGION16_LE( 0xc00000, "dcs", ROMREGION_ERASEFF )	/* sound data */
+	ROM_LOAD( "exotica.u2", 0x000000, 0x200000, CRC(d2d54acf) SHA1(2b4d6fda30af807228bb281335939dfb6df9b530) )
+	ROM_RELOAD(             0x200000, 0x200000 )
+	ROM_LOAD( "exotica.u3", 0x400000, 0x400000, CRC(28a3a13d) SHA1(8d7d641b883df089adefdd144229afef79db9e8a) )
+	ROM_LOAD( "exotica.u4", 0x800000, 0x400000, CRC(213f7fd8) SHA1(8528d524a62bc41a8e3b39f0dbeeba33c862ee27) )
+
+	ROM_REGION32_LE( 0x0800000, "user1", 0 )
 	ROM_LOAD32_WORD( "exotica-10.u10", 0x0000000, 0x200000, CRC(305fe2c1) SHA1(5d12163da0ae6db7d8d1f64f79c767a3c7df29a0) ) /* Version 1.0  Tue Feb 08, 2000  13:22:04 */
 	ROM_LOAD32_WORD( "exotica-10.u11", 0x0000002, 0x200000, CRC(50b241ff) SHA1(b8a353d9420009c4e521bb088575d704a7f386b3) )
 	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) )
@@ -1433,7 +1458,7 @@ DRIVER_INIT_MEMBER(midzeus_state,invasn)
 {
 	dcs2_init(machine(), 0, 0);
 	midway_ioasic_init(machine(), MIDWAY_IOASIC_STANDARD, 468/* or 488 */, 94, NULL);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x9c0000, 0x9c0000, read32_delegate(FUNC(midzeus_state::invasn_gun_r),this), write32_delegate(FUNC(midzeus_state::invasn_gun_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x9c0000, 0x9c0000, read32_delegate(FUNC(midzeus_state::invasn_gun_r),this), write32_delegate(FUNC(midzeus_state::invasn_gun_w),this));
 }
 
 
@@ -1442,8 +1467,8 @@ DRIVER_INIT_MEMBER(midzeus_state,crusnexo)
 	dcs2_init(machine(), 0, 0);
 	midway_ioasic_init(machine(), MIDWAY_IOASIC_STANDARD, 472/* or 476,477,478,110 */, 99, NULL);
 	machine().root_device().membank("bank1")->configure_entries(0, 3, machine().root_device().memregion("user2")->base(), 0x400000*4);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x9b0004, 0x9b0007, read32_delegate(FUNC(midzeus_state::crusnexo_leds_r),this), write32_delegate(FUNC(midzeus_state::crusnexo_leds_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    (0x8d0009, 0x8d000a, write32_delegate(FUNC(midzeus_state::keypad_select_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x9b0004, 0x9b0007, read32_delegate(FUNC(midzeus_state::crusnexo_leds_r),this), write32_delegate(FUNC(midzeus_state::crusnexo_leds_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    (0x8d0009, 0x8d000a, write32_delegate(FUNC(midzeus_state::keypad_select_w),this));
 }
 
 
@@ -1470,6 +1495,7 @@ GAME(  1999, invasnv4, invasnab, invasn,   invasn, midzeus_state,   invasn,   RO
 GAMEL( 1999, crusnexo, 0,        midzeus2, crusnexo, midzeus_state, crusnexo, ROT0, "Midway", "Cruis'n Exotica (version 2.4)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_crusnexo )
 GAMEL( 1999, crusnexoa,crusnexo, midzeus2, crusnexo, midzeus_state, crusnexo, ROT0, "Midway", "Cruis'n Exotica (version 2.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_crusnexo )
 GAMEL( 1999, crusnexob,crusnexo, midzeus2, crusnexo, midzeus_state, crusnexo, ROT0, "Midway", "Cruis'n Exotica (version 1.6)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_crusnexo )
-GAMEL( 1999, crusnexoc,crusnexo, midzeus2, crusnexo, midzeus_state, crusnexo, ROT0, "Midway", "Cruis'n Exotica (version 1.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_crusnexo )
+GAMEL( 1999, crusnexoc,crusnexo, midzeus2, crusnexo, midzeus_state, crusnexo, ROT0, "Midway", "Cruis'n Exotica (version 1.3)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_crusnexo )
+GAMEL( 1999, crusnexod,crusnexo, midzeus2, crusnexo, midzeus_state, crusnexo, ROT0, "Midway", "Cruis'n Exotica (version 1.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_crusnexo )
 GAME(  2001, thegrid,  0,        midzeus2, thegrid, midzeus_state,  thegrid,  ROT0, "Midway", "The Grid (version 1.2)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME(  2001, thegrida, thegrid,  midzeus2, thegrid, midzeus_state,  thegrid,  ROT0, "Midway", "The Grid (version 1.1)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

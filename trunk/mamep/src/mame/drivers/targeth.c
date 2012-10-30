@@ -29,23 +29,22 @@ static GFXDECODE_START( 0x080000 )
 GFXDECODE_END
 
 
-static TIMER_DEVICE_CALLBACK(targeth_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(targeth_state::targeth_interrupt)
 {
-	targeth_state *state = timer.machine().driver_data<targeth_state>();
 	int scanline = param;
 
 	if(scanline == 240)
 	{
 		/* IRQ 2: drives the game */
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 	}
 
 	if(scanline == 0)
 	{
 		/* IRQ 4: Read 1P Gun */
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 		/* IRQ 6: Read 2P Gun */
-		state->m_maincpu->set_input_line(6, HOLD_LINE);
+		m_maincpu->set_input_line(6, HOLD_LINE);
 	}
 }
 
@@ -176,7 +175,7 @@ static MACHINE_CONFIG_START( targeth, targeth_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,24000000/2)			/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", targeth_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", targeth_state, targeth_interrupt, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -184,7 +183,7 @@ static MACHINE_CONFIG_START( targeth, targeth_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)				/* 1024x512 */
 	MCFG_SCREEN_VISIBLE_AREA(0, 24*16-1, 16, 16*16-1)	/* 400x240 */
-	MCFG_SCREEN_UPDATE_STATIC(targeth)
+	MCFG_SCREEN_UPDATE_DRIVER(targeth_state, screen_update_targeth)
 
 	MCFG_GFXDECODE(0x080000)
 	MCFG_PALETTE_LENGTH(1024)

@@ -63,6 +63,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_quizshow(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(quizshow_clock_timer_cb);
 };
 
 
@@ -106,10 +108,9 @@ void quizshow_state::video_start()
 	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(quizshow_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 16, 32, 16);
 }
 
-SCREEN_UPDATE_IND16( quizshow )
+UINT32 quizshow_state::screen_update_quizshow(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	quizshow_state *state = screen.machine().driver_data<quizshow_state>();
-	state->m_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	m_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 	return 0;
 }
 
@@ -352,16 +353,15 @@ static GFXDECODE_START( quizshow )
 GFXDECODE_END
 
 
-static TIMER_DEVICE_CALLBACK( quizshow_clock_timer_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(quizshow_state::quizshow_clock_timer_cb)
 {
-	quizshow_state *state = timer.machine().driver_data<quizshow_state>();
-	state->m_clocks++;
+	m_clocks++;
 
 	// blink is on 4F and 8F
-	int blink_old = state->m_blink_state;
-	state->m_blink_state = (state->m_clocks >> 2 & state->m_clocks >> 1) & 0x40;
-	if (state->m_blink_state != blink_old)
-		state->m_tilemap->mark_all_dirty();
+	int blink_old = m_blink_state;
+	m_blink_state = (m_clocks >> 2 & m_clocks >> 1) & 0x40;
+	if (m_blink_state != blink_old)
+		m_tilemap->mark_all_dirty();
 }
 
 void quizshow_state::machine_reset()
@@ -376,13 +376,13 @@ static MACHINE_CONFIG_START( quizshow, quizshow_state )
 	MCFG_CPU_ADD("maincpu", S2650, MASTER_CLOCK / 16) // divider guessed
 	MCFG_CPU_PROGRAM_MAP(quizshow_mem_map)
 	MCFG_CPU_IO_MAP(quizshow_io_map)
-	MCFG_TIMER_ADD_PERIODIC("clock_timer", quizshow_clock_timer_cb, attotime::from_hz(PIXEL_CLOCK / (HTOTAL * 8))) // 8V
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("clock_timer", quizshow_state, quizshow_clock_timer_cb, attotime::from_hz(PIXEL_CLOCK / (HTOTAL * 8))) // 8V
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 
-	MCFG_SCREEN_UPDATE_STATIC(quizshow)
+	MCFG_SCREEN_UPDATE_DRIVER(quizshow_state, screen_update_quizshow)
 
 	MCFG_GFXDECODE(quizshow)
 	MCFG_PALETTE_LENGTH(8*2)

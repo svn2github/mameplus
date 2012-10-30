@@ -254,6 +254,8 @@ public:
 	DECLARE_DRIVER_INIT(nwktr);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_nwktr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(irq_off);
 };
 
 
@@ -273,13 +275,12 @@ static void voodoo_vblank_0(device_t *device, int param)
 }
 
 
-static SCREEN_UPDATE_RGB32( nwktr )
+UINT32 nwktr_state::screen_update_nwktr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	nwktr_state *state = screen.machine().driver_data<nwktr_state>();
-	device_t *voodoo = screen.machine().device("voodoo");
-	device_t *k001604 = screen.machine().device("k001604");
+	device_t *voodoo = machine().device("voodoo");
+	device_t *k001604 = machine().device("k001604");
 
-	bitmap.fill(screen.machine().pens[0], cliprect);
+	bitmap.fill(machine().pens[0], cliprect);
 
 	voodoo_update(voodoo, bitmap, cliprect);
 
@@ -288,8 +289,8 @@ static SCREEN_UPDATE_RGB32( nwktr )
 
 	k001604_draw_front_layer(k001604, bitmap, tilemap_rect);
 
-	draw_7segment_led(bitmap, 3, 3, state->m_led_reg0);
-	draw_7segment_led(bitmap, 9, 3, state->m_led_reg1);
+	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
+	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
 	return 0;
 }
 
@@ -315,7 +316,7 @@ READ32_MEMBER(nwktr_state::sysreg_r)
 		}
 		if (ACCESSING_BITS_0_7)
 		{
-			r |= adc1213x_do_r(adc12138, 0) | (adc1213x_eoc_r(adc12138, 0) << 2);
+			r |= adc1213x_do_r(adc12138, space, 0) | (adc1213x_eoc_r(adc12138, space, 0) << 2);
 		}
 	}
 	else if (offset == 1)
@@ -352,10 +353,10 @@ WRITE32_MEMBER(nwktr_state::sysreg_w)
 			int di = (data >> 25) & 0x1;
 			int sclk = (data >> 24) & 0x1;
 
-			adc1213x_cs_w(adc12138, 0, cs);
-			adc1213x_conv_w(adc12138, 0, conv);
-			adc1213x_di_w(adc12138, 0, di);
-			adc1213x_sclk_w(adc12138, 0, sclk);
+			adc1213x_cs_w(adc12138, space, 0, cs);
+			adc1213x_conv_w(adc12138, space, 0, conv);
+			adc1213x_di_w(adc12138, space, 0, di);
+			adc1213x_sclk_w(adc12138, space, 0, sclk);
 		}
 		if (ACCESSING_BITS_0_7)
 		{
@@ -510,9 +511,9 @@ WRITE32_MEMBER(nwktr_state::lanc2_w)
 
 /*****************************************************************************/
 
-static TIMER_CALLBACK( irq_off )
+TIMER_CALLBACK_MEMBER(nwktr_state::irq_off)
 {
-	machine.device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
 }
 
 void nwktr_state::machine_start()
@@ -523,7 +524,7 @@ void nwktr_state::machine_start()
 	/* configure fast RAM regions for DRC */
 	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x003fffff, FALSE, m_work_ram);
 
-	m_sound_irq_timer = machine().scheduler().timer_alloc(FUNC(irq_off));
+	m_sound_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(nwktr_state::irq_off),this));
 }
 
 static ADDRESS_MAP_START( nwktr_map, AS_PROGRAM, 32, nwktr_state )
@@ -630,7 +631,7 @@ static INPUT_PORTS_START( nwktr )
 	PORT_DIPSETTING( 0x00, DEF_STR( On ) )
 
 	PORT_START("ANALOG1")		// Steering
-	PORT_BIT( 0xfff, 0x800, IPT_PADDLE ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_INVERT
+	PORT_BIT( 0xfff, 0x800, IPT_PADDLE ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 	PORT_START("ANALOG2")		// Acceleration pedal
 	PORT_BIT( 0xfff, 0x000, IPT_PEDAL ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
@@ -745,7 +746,7 @@ static MACHINE_CONFIG_START( nwktr, nwktr_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 384)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
-	MCFG_SCREEN_UPDATE_STATIC(nwktr)
+	MCFG_SCREEN_UPDATE_DRIVER(nwktr_state, screen_update_nwktr)
 
 	MCFG_PALETTE_LENGTH(65536)
 
@@ -927,10 +928,10 @@ ROM_END
 
 /*****************************************************************************/
 
-GAME( 1998, racingj,    0,       nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam (JAC)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAME( 1999, racingj2,   racingj, nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam: Chapter 2 (EAE)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAME( 1999, racingj2j,  racingj, nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam: Chapter 2 (JAE)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAME( 1998, thrilld,    0,       thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAE)", GAME_IMPERFECT_SOUND )
-GAME( 1998, thrilldb,   thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAB)", GAME_IMPERFECT_SOUND )
-GAME( 1998, thrilldae,  thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (EAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1998, racingj,    0,       nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam (JAC)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAME( 1999, racingj2,   racingj, nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam: Chapter 2 (EAE)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAME( 1999, racingj2j,  racingj, nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam: Chapter 2 (JAE)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAME( 1998, thrilld,    0,       thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAE)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, thrilldb,   thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, thrilldae,  thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (EAA)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 

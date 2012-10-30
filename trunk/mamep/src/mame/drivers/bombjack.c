@@ -101,16 +101,15 @@ Dip Locations and factory settings verified with manual
 #include "includes/bombjack.h"
 
 
-static TIMER_CALLBACK( soundlatch_callback )
+TIMER_CALLBACK_MEMBER(bombjack_state::soundlatch_callback)
 {
-	bombjack_state *state = machine.driver_data<bombjack_state>();
-	state->m_latch = param;
+	m_latch = param;
 }
 
 WRITE8_MEMBER(bombjack_state::bombjack_soundlatch_w)
 {
 	/* make all the CPUs synchronize, and only AFTER that write the new command to the latch */
-	machine().scheduler().synchronize(FUNC(soundlatch_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(bombjack_state::soundlatch_callback),this), data);
 }
 
 READ8_MEMBER(bombjack_state::bombjack_soundlatch_r)
@@ -347,12 +346,11 @@ void bombjack_state::machine_reset()
 }
 
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(bombjack_state::vblank_irq)
 {
-	bombjack_state *state = device->machine().driver_data<bombjack_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( bombjack, bombjack_state )
@@ -360,12 +358,12 @@ static MACHINE_CONFIG_START( bombjack, bombjack_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_4MHz)		/* Confirmed from PCB */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bombjack_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_12MHz/4)	/* Confirmed from PCB */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 	MCFG_CPU_IO_MAP(audio_io_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bombjack_state,  nmi_line_pulse)
 
 
 	/* video hardware */
@@ -374,7 +372,7 @@ static MACHINE_CONFIG_START( bombjack, bombjack_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bombjack)
+	MCFG_SCREEN_UPDATE_DRIVER(bombjack_state, screen_update_bombjack)
 
 	MCFG_GFXDECODE(bombjack)
 	MCFG_PALETTE_LENGTH(128)

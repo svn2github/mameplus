@@ -244,25 +244,25 @@ static MACHINE_CONFIG_START( carpolo, carpolo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_11_289MHz/12)		/* 940.75 kHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", carpolo_timer_interrupt)	/* this not strictly VBLANK,
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", carpolo_state,  carpolo_timer_interrupt)	/* this not strictly VBLANK,
                                                        but it's supposed to happen 60
                                                        times a sec, so it's a good place */
 
 	MCFG_PIA6821_ADD("pia0", carpolo_pia0_intf)
 	MCFG_PIA6821_ADD("pia1", carpolo_pia1_intf)
 
-	MCFG_7474_ADD("7474_2s_1", "74148_3s", NULL, carpolo_7474_2s_1_q_cb)
-	MCFG_7474_ADD("7474_2s_2", "74148_3s", NULL, carpolo_7474_2s_2_q_cb)
-	MCFG_7474_ADD("7474_2u_1", "74148_3s", NULL, carpolo_7474_2u_1_q_cb)
-	MCFG_7474_ADD("7474_2u_2", "74148_3s", NULL, carpolo_7474_2u_2_q_cb)
-	MCFG_7474_ADD("7474_1f_1", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1f_2", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1d_1", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1d_2", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1c_1", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1c_2", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1a_1", NULL, NULL, NULL)
-	MCFG_7474_ADD("7474_1a_2", NULL, NULL, NULL)
+	MCFG_7474_ADD("7474_2s_1", NOOP, WRITELINE(carpolo_state, carpolo_7474_2s_1_q_cb))
+	MCFG_7474_ADD("7474_2s_2", NOOP, WRITELINE(carpolo_state, carpolo_7474_2s_2_q_cb))
+	MCFG_7474_ADD("7474_2u_1", NOOP, WRITELINE(carpolo_state, carpolo_7474_2u_1_q_cb))
+	MCFG_7474_ADD("7474_2u_2", NOOP, WRITELINE(carpolo_state, carpolo_7474_2u_2_q_cb))
+	MCFG_7474_ADD("7474_1f_1", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1f_2", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1d_1", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1d_2", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1c_1", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1c_2", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1a_1", NOOP, NOOP)
+	MCFG_7474_ADD("7474_1a_2", NOOP, NOOP)
 
 	MCFG_74148_ADD("74148_3s", carpolo_ttl74148_intf)
 	MCFG_74153_ADD("74153_1k", carpolo_ttl74153_intf)
@@ -273,8 +273,8 @@ static MACHINE_CONFIG_START( carpolo, carpolo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 239, 0, 255)
-	MCFG_SCREEN_UPDATE_STATIC(carpolo)
-	MCFG_SCREEN_VBLANK_STATIC(carpolo)
+	MCFG_SCREEN_UPDATE_DRIVER(carpolo_state, screen_update_carpolo)
+	MCFG_SCREEN_VBLANK_DRIVER(carpolo_state, screen_eof_carpolo)
 
 	MCFG_GFXDECODE(carpolo)
 	MCFG_PALETTE_LENGTH(12*2+2*16+4*2)

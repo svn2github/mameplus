@@ -122,6 +122,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_dunhuang(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -158,36 +159,35 @@ void dunhuang_state::video_start()
 	save_item(NAME(m_paldata));
 }
 
-static SCREEN_UPDATE_IND16( dunhuang )
+UINT32 dunhuang_state::screen_update_dunhuang(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dunhuang_state *state = screen.machine().driver_data<dunhuang_state>();
 	int layers_ctrl = -1;
 
 #if DUNHUANG_DEBUG
-if (screen.machine().input().code_pressed(KEYCODE_Z))
+if (machine().input().code_pressed(KEYCODE_Z))
 {
 	int msk = 0;
-	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (machine().input().code_pressed(KEYCODE_W))	msk |= 2;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	switch (state->m_layers)
+	switch (m_layers)
 	{
 		case 0x04:	// girl select: bg over fg
-			if (layers_ctrl & 2)	state->m_tmap2->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-			if (layers_ctrl & 1)	state->m_tmap->draw(bitmap, cliprect, 0, 0);
+			if (layers_ctrl & 2)	m_tmap2->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+			if (layers_ctrl & 1)	m_tmap->draw(bitmap, cliprect, 0, 0);
 			break;
 		case 0x05:	// dips: must hide fg
-			if (layers_ctrl & 1)	state->m_tmap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+			if (layers_ctrl & 1)	m_tmap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 			break;
 		case 0x07:	// game,demo: fg over bg
 		default:
-			if (layers_ctrl & 1)	state->m_tmap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-			if (layers_ctrl & 2)	state->m_tmap2->draw(bitmap, cliprect, 0, 0);
+			if (layers_ctrl & 1)	m_tmap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+			if (layers_ctrl & 2)	m_tmap2->draw(bitmap, cliprect, 0, 0);
 			break;
 	}
 
@@ -819,7 +819,7 @@ static MACHINE_CONFIG_START( dunhuang, dunhuang_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)
 	MCFG_CPU_PROGRAM_MAP(dunhuang_map)
 	MCFG_CPU_IO_MAP(dunhuang_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dunhuang_state,  irq0_line_hold)
 
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(5))
@@ -830,7 +830,7 @@ static MACHINE_CONFIG_START( dunhuang, dunhuang_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0+8, 512-8-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(dunhuang)
+	MCFG_SCREEN_UPDATE_DRIVER(dunhuang_state, screen_update_dunhuang)
 
 	MCFG_GFXDECODE(dunhuang)
 	MCFG_PALETTE_LENGTH(0x100)

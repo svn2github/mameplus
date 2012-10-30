@@ -105,10 +105,10 @@
  *
  *************************************/
 
-static INTERRUPT_GEN( capbowl_interrupt )
+INTERRUPT_GEN_MEMBER(capbowl_state::capbowl_interrupt)
 {
-	if (device->machine().root_device().ioport("SERVICE")->read() & 1)						/* get status of the F2 key */
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);	/* trigger self test */
+	if (machine().root_device().ioport("SERVICE")->read() & 1)						/* get status of the F2 key */
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);	/* trigger self test */
 }
 
 
@@ -119,14 +119,14 @@ static INTERRUPT_GEN( capbowl_interrupt )
  *
  *************************************/
 
-static TIMER_CALLBACK( capbowl_update )
+TIMER_CALLBACK_MEMBER(capbowl_state::capbowl_update)
 {
 	int scanline = param;
 
-	machine.primary_screen->update_partial(scanline - 1);
+	machine().primary_screen->update_partial(scanline - 1);
 	scanline += 32;
 	if (scanline > 240) scanline = 32;
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(capbowl_update), scanline);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(capbowl_state::capbowl_update),this), scanline);
 }
 
 
@@ -348,7 +348,7 @@ void capbowl_state::machine_start()
 void capbowl_state::machine_reset()
 {
 
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(32), FUNC(capbowl_update), 32);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(32), timer_expired_delegate(FUNC(capbowl_state::capbowl_update),this), 32);
 
 	m_blitter_addr = 0;
 	m_last_trackball_val[0] = 0;
@@ -361,7 +361,7 @@ static MACHINE_CONFIG_START( capbowl, capbowl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809E, MASTER_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(capbowl_map)
-	MCFG_CPU_VBLANK_INT("screen", capbowl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", capbowl_state,  capbowl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6809E, MASTER_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -376,7 +376,7 @@ static MACHINE_CONFIG_START( capbowl, capbowl_state )
 	MCFG_SCREEN_SIZE(360, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 359, 0, 244)
 	MCFG_SCREEN_REFRESH_RATE(57)
-	MCFG_SCREEN_UPDATE_STATIC(capbowl)
+	MCFG_SCREEN_UPDATE_DRIVER(capbowl_state, screen_update_capbowl)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

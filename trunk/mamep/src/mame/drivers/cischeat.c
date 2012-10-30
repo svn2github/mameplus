@@ -690,7 +690,7 @@ static ADDRESS_MAP_START( bigrun_sound_map, AS_PROGRAM, 16, cischeat_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM													// ROM
 	AM_RANGE(0x040000, 0x040001) AM_READ(soundlatch_word_r) AM_WRITE(bigrun_soundbank_w)	// From Main CPU
 	AM_RANGE(0x060000, 0x060001) AM_WRITE(soundlatch2_word_w)							// To Main CPU
-	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0x0a0000, 0x0a0003) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0c0000, 0x0c0003) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM													// RAM
@@ -720,7 +720,7 @@ static ADDRESS_MAP_START( cischeat_sound_map, AS_PROGRAM, 16, cischeat_state )
 	AM_RANGE(0x040004, 0x040005) AM_WRITE(cischeat_soundbank_2_w)				// Sample Banking
 	AM_RANGE(0x060002, 0x060003) AM_WRITE(soundlatch2_word_w)							// To Main CPU
 	AM_RANGE(0x060004, 0x060005) AM_READ(soundlatch_word_r)								// From Main CPU
-	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0x0a0000, 0x0a0003) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0c0000, 0x0c0003) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM													// RAM
@@ -736,7 +736,7 @@ static ADDRESS_MAP_START( f1gpstar_sound_map, AS_PROGRAM, 16, cischeat_state )
 	AM_RANGE(0x040004, 0x040005) AM_WRITE(cischeat_soundbank_1_w)				// Sample Banking   (cischeat: 40002)
 	AM_RANGE(0x040008, 0x040009) AM_WRITE(cischeat_soundbank_2_w)				// Sample Banking   (cischeat: 40004)
 	AM_RANGE(0x060000, 0x060001) AM_READWRITE(soundlatch_word_r, soundlatch2_word_w)	// From Main CPU    (cischeat: 60004)
-	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0x0a0000, 0x0a0003) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0c0000, 0x0c0003) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0e0000, 0x0fffff) AM_RAM													// RAM              (cischeat: f0000-fffff)
@@ -753,7 +753,7 @@ static ADDRESS_MAP_START( f1gpstr2_sound_map, AS_PROGRAM, 16, cischeat_state )
 	AM_RANGE(0x040008, 0x040009) AM_WRITE(cischeat_soundbank_2_w)					// Sample Banking
 	AM_RANGE(0x04000e, 0x04000f) AM_WRITENOP											// ? 0              (f1gpstar: no)
 	AM_RANGE(0x060004, 0x060005) AM_READWRITE(soundlatch_word_r, soundlatch2_word_w)		// From Main CPU    (f1gpstar: 60000)
-	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x080000, 0x080003) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0x0a0000, 0x0a0003) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0c0000, 0x0c0003) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x0e0000, 0x0fffff) AM_RAM														// RAM
@@ -1533,18 +1533,18 @@ GFXDECODE_END
 **************************************************************************/
 
 /* TODO: this is hackish */
-static TIMER_DEVICE_CALLBACK( bigrun_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(cischeat_state::bigrun_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("cpu1")->execute().set_input_line(4, HOLD_LINE);
+		machine().device("cpu1")->execute().set_input_line(4, HOLD_LINE);
 
 	if(scanline == 154)
-		timer.machine().device("cpu1")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("cpu1")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 69)
-		timer.machine().device("cpu1")->execute().set_input_line(1, HOLD_LINE);
+		machine().device("cpu1")->execute().set_input_line(1, HOLD_LINE);
 }
 
 
@@ -1560,19 +1560,19 @@ static MACHINE_CONFIG_START( bigrun, cischeat_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("cpu1", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(bigrun_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bigrun_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", cischeat_state, bigrun_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("cpu2", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(bigrun_map2)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cischeat_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("cpu3", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(bigrun_map3)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cischeat_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", M68000, 6000000)
 	MCFG_CPU_PROGRAM_MAP(bigrun_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq4_line_hold,16*30)
+	MCFG_CPU_PERIODIC_INT_DRIVER(cischeat_state, irq4_line_hold, 16*30)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1200))
 
@@ -1584,7 +1584,7 @@ static MACHINE_CONFIG_START( bigrun, cischeat_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1,	0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(bigrun)
+	MCFG_SCREEN_UPDATE_DRIVER(cischeat_state, screen_update_bigrun)
 
 	MCFG_GFXDECODE(bigrun)
 	MCFG_PALETTE_LENGTH(16*16 * 3 + 64*16 * 2 + 64*16)	/* scroll 0,1,2; road 0,1; sprites */
@@ -1594,7 +1594,7 @@ static MACHINE_CONFIG_START( bigrun, cischeat_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, STD_FM_CLOCK)
+	MCFG_YM2151_ADD("ymsnd", STD_FM_CLOCK)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
@@ -1626,7 +1626,7 @@ static MACHINE_CONFIG_DERIVED( cischeat, bigrun )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1,	0+16, 256-16-8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cischeat)
+	MCFG_SCREEN_UPDATE_DRIVER(cischeat_state, screen_update_cischeat)
 
 	MCFG_GFXDECODE(cischeat)
 	MCFG_PALETTE_LENGTH(32*16 * 3 + 64*16 * 2 + 128*16)	/* scroll 0,1,2; road 0,1; sprites */
@@ -1659,7 +1659,7 @@ static MACHINE_CONFIG_DERIVED( f1gpstar, bigrun )
 
 	MCFG_VIDEO_START_OVERRIDE(cischeat_state,f1gpstar)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(f1gpstar)
+	MCFG_SCREEN_UPDATE_DRIVER(cischeat_state, screen_update_f1gpstar)
 MACHINE_CONFIG_END
 
 
@@ -1691,15 +1691,15 @@ MACHINE_CONFIG_END
     4]          == 3
 */
 
-static TIMER_DEVICE_CALLBACK( scudhamm_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(cischeat_state::scudhamm_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	if(scanline == 120) // timer irq (clears a flag, presumably sprite DMA end)
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( scudhamm, cischeat_state )
@@ -1707,7 +1707,7 @@ static MACHINE_CONFIG_START( scudhamm, cischeat_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(scudhamm_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", scudhamm_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", cischeat_state, scudhamm_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK | VIDEO_HAS_SHADOWS)
@@ -1717,7 +1717,7 @@ static MACHINE_CONFIG_START( scudhamm, cischeat_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500 * 3) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0 +16, 256-1 -16)
-	MCFG_SCREEN_UPDATE_STATIC(scudhamm)
+	MCFG_SCREEN_UPDATE_DRIVER(cischeat_state, screen_update_scudhamm)
 
 	MCFG_GFXDECODE(scudhamm)
 	MCFG_PALETTE_LENGTH(16*16+16*16+128*16)
@@ -1741,15 +1741,15 @@ MACHINE_CONFIG_END
                             Arm Champs II
 **************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( armchamp2_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(cischeat_state::armchamp2_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 120) // timer irq (TODO: timing)
-		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( armchmp2, scudhamm )
@@ -1758,7 +1758,7 @@ static MACHINE_CONFIG_DERIVED( armchmp2, scudhamm )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(armchmp2_map)
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(armchamp2_scanline)
+	MCFG_TIMER_DRIVER_CALLBACK(cischeat_state, armchamp2_scanline)
 MACHINE_CONFIG_END
 
 
@@ -2481,7 +2481,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(cischeat_state,wildplt)
 {
-	machine().device("cpu1")->memory().space(AS_PROGRAM)->install_read_handler(0x080000, 0x087fff, read16_delegate(FUNC(cischeat_state::wildplt_vregs_r),this));
+	machine().device("cpu1")->memory().space(AS_PROGRAM).install_read_handler(0x080000, 0x087fff, read16_delegate(FUNC(cischeat_state::wildplt_vregs_r),this));
 
 	DRIVER_INIT_CALL(f1gpstar);
 }

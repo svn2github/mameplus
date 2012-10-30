@@ -130,6 +130,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_jantotsu(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -145,14 +146,13 @@ void jantotsu_state::video_start()
 	save_item(NAME(m_bitmap));
 }
 
-static SCREEN_UPDATE_RGB32(jantotsu)
+UINT32 jantotsu_state::screen_update_jantotsu(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	jantotsu_state *state = screen.machine().driver_data<jantotsu_state>();
 	int x, y, i;
 	int count = 0;
 	UINT8 pen_i;
 
-	if(!state->m_display_on)
+	if(!m_display_on)
 		return 0;
 
 	for (y = 0; y < 256; y++)
@@ -163,13 +163,13 @@ static SCREEN_UPDATE_RGB32(jantotsu)
 
 			for (i = 0; i < 8; i++)
 			{
-				color = state->m_col_bank;
+				color = m_col_bank;
 
 				for(pen_i = 0;pen_i<4;pen_i++)
-					color |= (((state->m_bitmap[count + pen_i*0x2000]) >> (7 - i)) & 1) << pen_i;
+					color |= (((m_bitmap[count + pen_i*0x2000]) >> (7 - i)) & 1) << pen_i;
 
 				if (cliprect.contains(x + i, y))
-					bitmap.pix32(y, x + i) = screen.machine().pens[color];
+					bitmap.pix32(y, x + i) = machine().pens[color];
 			}
 
 			count++;
@@ -333,8 +333,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jantotsu_io, AS_IO, 8, jantotsu_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("DSW1") AM_DEVWRITE("sn1", sn76489a_new_device, write)
-	AM_RANGE(0x01, 0x01) AM_READ(jantotsu_dsw2_r) AM_DEVWRITE("sn2", sn76489a_new_device, write)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("DSW1") AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ(jantotsu_dsw2_r) AM_DEVWRITE("sn2", sn76489a_device, write)
 	AM_RANGE(0x02, 0x03) AM_WRITE(jan_adpcm_w)
 	AM_RANGE(0x04, 0x04) AM_READWRITE(jantotsu_mux_r, jantotsu_mux_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(bankaddr_w)
@@ -519,7 +519,7 @@ static MACHINE_CONFIG_START( jantotsu, jantotsu_state )
 	MCFG_CPU_ADD("maincpu", Z80,MAIN_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(jantotsu_map)
 	MCFG_CPU_IO_MAP(jantotsu_io)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", jantotsu_state,  nmi_line_pulse)
 
 
 	/* video hardware */
@@ -528,7 +528,7 @@ static MACHINE_CONFIG_START( jantotsu, jantotsu_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) //not accurate
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(jantotsu)
+	MCFG_SCREEN_UPDATE_DRIVER(jantotsu_state, screen_update_jantotsu)
 
 	MCFG_PALETTE_LENGTH(0x20)
 
@@ -536,11 +536,11 @@ static MACHINE_CONFIG_START( jantotsu, jantotsu_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A_NEW, MAIN_CLOCK/4)
+	MCFG_SOUND_ADD("sn1", SN76489A, MAIN_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A_NEW, MAIN_CLOCK/4)
+	MCFG_SOUND_ADD("sn2", SN76489A, MAIN_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 

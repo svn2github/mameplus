@@ -635,12 +635,11 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL
 };
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(thepit_state::vblank_irq)
 {
-	thepit_state *state = device->machine().driver_data<thepit_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( thepit, thepit_state )
@@ -648,12 +647,12 @@ static MACHINE_CONFIG_START( thepit, thepit_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, PIXEL_CLOCK/2)     /* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(thepit_main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thepit_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/4)     /* 2.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 	MCFG_CPU_IO_MAP(audio_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thepit_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_GFXDECODE(thepit)
@@ -661,7 +660,7 @@ static MACHINE_CONFIG_START( thepit, thepit_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(thepit)
+	MCFG_SCREEN_UPDATE_DRIVER(thepit_state, screen_update_thepit)
 
 
 	/* sound hardware */
@@ -1092,7 +1091,7 @@ READ8_MEMBER(thepit_state::rtriv_question_r)
 DRIVER_INIT_MEMBER(thepit_state,rtriv)
 {
 	// Set-up the weirdest questions read ever done
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x4000, 0x4fff, read8_delegate(FUNC(thepit_state::rtriv_question_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x4000, 0x4fff, read8_delegate(FUNC(thepit_state::rtriv_question_r),this));
 }
 
 

@@ -206,11 +206,11 @@ static MACHINE_CONFIG_START( citycon, citycon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2048000)        /* 2.048 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(citycon_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", citycon_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 640000)       /* 0.640 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-//  MCFG_CPU_VBLANK_INT("screen", irq0_line_hold) //actually unused, probably it was during development
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", citycon_state,  irq0_line_hold) //actually unused, probably it was during development
 
 
 	/* video hardware */
@@ -219,7 +219,7 @@ static MACHINE_CONFIG_START( citycon, citycon_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(citycon)
+	MCFG_SCREEN_UPDATE_DRIVER(citycon_state, screen_update_citycon)
 
 	MCFG_GFXDECODE(citycon)
 	MCFG_PALETTE_LENGTH(640+1024)	/* 640 real palette + 1024 virtual palette */

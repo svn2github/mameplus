@@ -61,16 +61,15 @@ Notes:
 
 
 
-static TIMER_DEVICE_CALLBACK( dbz_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(dbz_state::dbz_scanline)
 {
-	dbz_state *state = timer.machine().driver_data<dbz_state>();
 	int scanline = param;
 
 	if(scanline == 256) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, ASSERT_LINE);
 
-	if(scanline == 0 && k053246_is_irq_enabled(state->m_k053246)) // vblank-in irq
-		timer.machine().device("maincpu")->execute().set_input_line(M68K_IRQ_4, HOLD_LINE); //auto-acks apparently
+	if(scanline == 0 && k053246_is_irq_enabled(m_k053246)) // vblank-in irq
+		machine().device("maincpu")->execute().set_input_line(M68K_IRQ_4, HOLD_LINE); //auto-acks apparently
 }
 
 #if 0
@@ -105,12 +104,6 @@ WRITE16_MEMBER(dbz_state::dbz_sound_cause_nmi)
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static void dbz_sound_irq( device_t *device, int irq )
-{
-	dbz_state *state = device->machine().driver_data<dbz_state>();
-
-	state->m_audiocpu->set_input_line(0, (irq) ? ASSERT_LINE : CLEAR_LINE);
-}
 
 static ADDRESS_MAP_START( dbz_map, AS_PROGRAM, 16, dbz_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
@@ -152,7 +145,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dbz_sound_map, AS_PROGRAM, 8, dbz_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_RAM
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xd000, 0xd002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xe000, 0xe001) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -279,13 +272,6 @@ INPUT_PORTS_END
 
 /**********************************************************************************/
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(dbz_sound_irq)
-};
-
-/**********************************************************************************/
-
 static const gfx_layout bglayout =
 {
 	16,16,
@@ -383,7 +369,7 @@ static MACHINE_CONFIG_START( dbz, dbz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(dbz_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", dbz_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dbz_state, dbz_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(dbz_sound_map)
@@ -398,7 +384,7 @@ static MACHINE_CONFIG_START( dbz, dbz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 40*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 48*8-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dbz)
+	MCFG_SCREEN_UPDATE_DRIVER(dbz_state, screen_update_dbz)
 
 	MCFG_GFXDECODE(dbz)
 
@@ -414,8 +400,8 @@ static MACHINE_CONFIG_START( dbz, dbz_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

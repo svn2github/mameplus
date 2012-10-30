@@ -51,6 +51,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_superdq(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(superdq_vblank);
 };
 
 TILE_GET_INFO_MEMBER(superdq_state::get_tile_info)
@@ -66,11 +68,10 @@ void superdq_state::video_start()
 	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(superdq_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
-static SCREEN_UPDATE_RGB32( superdq )
+UINT32 superdq_state::screen_update_superdq(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	superdq_state *state = screen.machine().driver_data<superdq_state>();
 
-	state->m_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -131,20 +132,19 @@ void superdq_state::machine_reset()
 	m_color_bank = 0;
 }
 
-static INTERRUPT_GEN( superdq_vblank )
+INTERRUPT_GEN_MEMBER(superdq_state::superdq_vblank)
 {
-	superdq_state *state = device->machine().driver_data<superdq_state>();
 
 	/* status is read when the STATUS line from the laserdisc
        toggles (600usec after the vblank). We could set up a
        timer to do that, but this works as well */
-	state->m_ld_in_latch = state->m_laserdisc->status_r();
+	m_ld_in_latch = m_laserdisc->status_r();
 
 	/* command is written when the COMMAND line from the laserdisc
        toggles (680usec after the vblank). We could set up a
        timer to do that, but this works as well */
-	state->m_laserdisc->data_w(state->m_ld_out_latch);
-	device->execute().set_input_line(0, ASSERT_LINE);
+	m_laserdisc->data_w(m_ld_out_latch);
+	device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(superdq_state::superdq_videoram_w)
@@ -215,7 +215,7 @@ static ADDRESS_MAP_START( superdq_io, AS_IO, 8, superdq_state )
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("DSW1")
 	AM_RANGE(0x03, 0x03) AM_READ_PORT("DSW2")
-	AM_RANGE(0x04, 0x04) AM_READ(superdq_ld_r) AM_DEVWRITE("snsnd", sn76496_new_device, write)
+	AM_RANGE(0x04, 0x04) AM_READ(superdq_ld_r) AM_DEVWRITE("snsnd", sn76496_device, write)
 	AM_RANGE(0x08, 0x08) AM_WRITE(superdq_io_w)
 	AM_RANGE(0x0c, 0x0d) AM_NOP /* HD46505S */
 ADDRESS_MAP_END
@@ -345,11 +345,11 @@ static MACHINE_CONFIG_START( superdq, superdq_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(superdq_map)
 	MCFG_CPU_IO_MAP(superdq_io)
-	MCFG_CPU_VBLANK_INT("screen", superdq_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", superdq_state,  superdq_vblank)
 
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, superdq)
+	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, superdq_state, screen_update_superdq)
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")
@@ -361,7 +361,7 @@ static MACHINE_CONFIG_START( superdq, superdq_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, MASTER_CLOCK/8)
+	MCFG_SOUND_ADD("snsnd", SN76496, MASTER_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.8)
 	MCFG_SOUND_CONFIG(psg_intf)
 

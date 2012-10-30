@@ -158,7 +158,7 @@ public:
 	int m_tick;
 	int m_layer;
 	UINT8 m_atapi_regs[16];
-	scsidev_device *m_atapi_device_data[2];
+	scsihle_device *m_atapi_device_data[2];
 	UINT16 m_atapi_data[32*1024];
 	UINT8 m_atapi_scsi_packet[32*1024];
 	int m_atapi_data_ptr;
@@ -183,6 +183,42 @@ public:
 	DECLARE_MACHINE_START(firebeat);
 	DECLARE_MACHINE_RESET(firebeat);
 	DECLARE_VIDEO_START(firebeat);
+	UINT32 screen_update_firebeat_0(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_firebeat_1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(firebeat_interrupt);
+	DECLARE_READ32_MEMBER(gcu0_r);
+	DECLARE_WRITE32_MEMBER(gcu0_w);
+	DECLARE_READ32_MEMBER(gcu1_r);
+	DECLARE_WRITE32_MEMBER(gcu1_w);
+	DECLARE_READ32_MEMBER(input_r);
+	DECLARE_READ32_MEMBER(sensor_r );
+	DECLARE_READ32_MEMBER(flashram_r);
+	DECLARE_WRITE32_MEMBER(flashram_w);
+	DECLARE_READ32_MEMBER(soundflash_r);
+	DECLARE_WRITE32_MEMBER(soundflash_w);
+	DECLARE_READ32_MEMBER(atapi_command_r);
+	DECLARE_WRITE32_MEMBER(atapi_command_w);
+	DECLARE_READ32_MEMBER(atapi_control_r);
+	DECLARE_WRITE32_MEMBER(atapi_control_w);
+	DECLARE_READ32_MEMBER(comm_uart_r);
+	DECLARE_WRITE32_MEMBER(comm_uart_w);
+	DECLARE_READ32_MEMBER(cabinet_r);
+	DECLARE_READ32_MEMBER(keyboard_wheel_r);
+	DECLARE_READ32_MEMBER(midi_uart_r);
+	DECLARE_WRITE32_MEMBER(midi_uart_w);
+	DECLARE_READ32_MEMBER(extend_board_irq_r);
+	DECLARE_WRITE32_MEMBER(extend_board_irq_w);
+	DECLARE_WRITE32_MEMBER(lamp_output_w);
+	DECLARE_WRITE32_MEMBER(lamp_output_kbm_w);
+	DECLARE_WRITE32_MEMBER(lamp_output_ppp_w);
+	DECLARE_WRITE32_MEMBER(lamp_output2_w);
+	DECLARE_WRITE32_MEMBER(lamp_output2_ppp_w);
+	DECLARE_WRITE32_MEMBER(lamp_output3_w);
+	DECLARE_WRITE32_MEMBER(lamp_output3_ppp_w);
+	DECLARE_READ32_MEMBER(ppc_spu_share_r);
+	DECLARE_WRITE32_MEMBER(ppc_spu_share_w);
+	DECLARE_READ16_MEMBER(spu_unk_r);
+	TIMER_CALLBACK_MEMBER(keyboard_timer_callback);
 };
 
 
@@ -598,8 +634,8 @@ static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const r
 	return 0;
 }
 
-static SCREEN_UPDATE_IND16( firebeat_0 ) { return update_screen(screen, bitmap, cliprect, 0); }
-static SCREEN_UPDATE_IND16( firebeat_1 ) { return update_screen(screen, bitmap, cliprect, 1); }
+UINT32 firebeat_state::screen_update_firebeat_0(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect){ return update_screen(screen, bitmap, cliprect, 0); }
+UINT32 firebeat_state::screen_update_firebeat_1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect){ return update_screen(screen, bitmap, cliprect, 1); }
 
 static UINT32 GCU_r(running_machine &machine, int chip, UINT32 offset, UINT32 mem_mask)
 {
@@ -705,116 +741,113 @@ static void GCU_w(running_machine &machine, int chip, UINT32 offset, UINT32 data
 	}
 }
 
-static READ32_HANDLER(gcu0_r)
+READ32_MEMBER(firebeat_state::gcu0_r)
 {
-	return GCU_r(space->machine(), 0, offset, mem_mask);
+	return GCU_r(space.machine(), 0, offset, mem_mask);
 }
 
-static WRITE32_HANDLER(gcu0_w)
+WRITE32_MEMBER(firebeat_state::gcu0_w)
 {
-	GCU_w(space->machine(), 0, offset, data, mem_mask);
+	GCU_w(space.machine(), 0, offset, data, mem_mask);
 }
 
-static READ32_HANDLER(gcu1_r)
+READ32_MEMBER(firebeat_state::gcu1_r)
 {
-	return GCU_r(space->machine(), 1, offset, mem_mask);
+	return GCU_r(space.machine(), 1, offset, mem_mask);
 }
 
-static WRITE32_HANDLER(gcu1_w)
+WRITE32_MEMBER(firebeat_state::gcu1_w)
 {
-	GCU_w(space->machine(), 1, offset, data, mem_mask);
+	GCU_w(space.machine(), 1, offset, data, mem_mask);
 }
 
 /*****************************************************************************/
 
-static READ32_HANDLER(input_r)
+READ32_MEMBER(firebeat_state::input_r)
 {
 	UINT32 r = 0;
 
 	if (ACCESSING_BITS_24_31)
 	{
-		r |= (space->machine().root_device().ioport("IN0")->read() & 0xff) << 24;
+		r |= (space.machine().root_device().ioport("IN0")->read() & 0xff) << 24;
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		r |= (space->machine().root_device().ioport("IN1")->read() & 0xff) << 8;
+		r |= (space.machine().root_device().ioport("IN1")->read() & 0xff) << 8;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		r |= (space->machine().root_device().ioport("IN2")->read() & 0xff);
+		r |= (space.machine().root_device().ioport("IN2")->read() & 0xff);
 	}
 
 	return r;
 }
 
-static READ32_HANDLER( sensor_r )
+READ32_MEMBER(firebeat_state::sensor_r )
 {
 	if (offset == 0)
 	{
-		return space->machine().root_device().ioport("SENSOR1")->read() | 0x01000100;
+		return space.machine().root_device().ioport("SENSOR1")->read() | 0x01000100;
 	}
 	else
 	{
-		return space->machine().root_device().ioport("SENSOR2")->read() | 0x01000100;
+		return space.machine().root_device().ioport("SENSOR2")->read() | 0x01000100;
 	}
 }
 
-static READ32_HANDLER(flashram_r)
+READ32_MEMBER(firebeat_state::flashram_r)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	UINT32 r = 0;
 	if (ACCESSING_BITS_24_31)
 	{
-		r |= (state->m_flash[0]->read((offset*4)+0) & 0xff) << 24;
+		r |= (m_flash[0]->read((offset*4)+0) & 0xff) << 24;
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		r |= (state->m_flash[0]->read((offset*4)+1) & 0xff) << 16;
+		r |= (m_flash[0]->read((offset*4)+1) & 0xff) << 16;
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		r |= (state->m_flash[0]->read((offset*4)+2) & 0xff) << 8;
+		r |= (m_flash[0]->read((offset*4)+2) & 0xff) << 8;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		r |= (state->m_flash[0]->read((offset*4)+3) & 0xff) << 0;
+		r |= (m_flash[0]->read((offset*4)+3) & 0xff) << 0;
 	}
 	return r;
 }
 
-static WRITE32_HANDLER(flashram_w)
+WRITE32_MEMBER(firebeat_state::flashram_w)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	if (ACCESSING_BITS_24_31)
 	{
-		state->m_flash[0]->write((offset*4)+0, (data >> 24) & 0xff);
+		m_flash[0]->write((offset*4)+0, (data >> 24) & 0xff);
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		state->m_flash[0]->write((offset*4)+1, (data >> 16) & 0xff);
+		m_flash[0]->write((offset*4)+1, (data >> 16) & 0xff);
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		state->m_flash[0]->write((offset*4)+2, (data >> 8) & 0xff);
+		m_flash[0]->write((offset*4)+2, (data >> 8) & 0xff);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		state->m_flash[0]->write((offset*4)+3, (data >> 0) & 0xff);
+		m_flash[0]->write((offset*4)+3, (data >> 0) & 0xff);
 	}
 }
 
-static READ32_HANDLER(soundflash_r)
+READ32_MEMBER(firebeat_state::soundflash_r)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	UINT32 r = 0;
 	fujitsu_29f016a_device *chip;
-	if (offset >= 0 && offset < 0x200000/4)
+	if (offset < 0x200000/4)
 	{
-		chip = state->m_flash[1];
+		chip = m_flash[1];
 	}
 	else
 	{
-		chip = state->m_flash[2];
+		chip = m_flash[2];
 	}
 
 	offset &= 0x7ffff;
@@ -838,17 +871,16 @@ static READ32_HANDLER(soundflash_r)
 	return r;
 }
 
-static WRITE32_HANDLER(soundflash_w)
+WRITE32_MEMBER(firebeat_state::soundflash_w)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	fujitsu_29f016a_device *chip;
-	if (offset >= 0 && offset < 0x200000/4)
+	if (offset < 0x200000/4)
 	{
-		chip = state->m_flash[1];
+		chip = m_flash[1];
 	}
 	else
 	{
-		chip = state->m_flash[2];
+		chip = m_flash[2];
 	}
 
 	offset &= 0x7ffff;
@@ -930,8 +962,8 @@ static void atapi_init(running_machine &machine)
 	state->m_atapi_data_ptr = 0;
 	state->m_atapi_cdata_wait = 0;
 
-	state->m_atapi_device_data[0] = machine.device<scsidev_device>( "scsi0" );
-	state->m_atapi_device_data[1] = machine.device<scsidev_device>( "scsi1" );
+	state->m_atapi_device_data[0] = machine.device<scsihle_device>( "scsi0" );
+	state->m_atapi_device_data[1] = machine.device<scsihle_device>( "scsi1" );
 }
 
 static void atapi_reset(running_machine &machine)
@@ -1214,70 +1246,70 @@ static void atapi_control_reg_w(running_machine &machine, int reg, UINT16 data)
 
 
 
-static READ32_HANDLER( atapi_command_r )
+READ32_MEMBER(firebeat_state::atapi_command_r )
 {
 	UINT16 r;
 //  printf("atapi_command_r: %08X, %08X\n", offset, mem_mask);
 	if (ACCESSING_BITS_16_31)
 	{
-		r = atapi_command_reg_r(space->machine(), offset*2);
+		r = atapi_command_reg_r(space.machine(), offset*2);
 		return ATAPI_ENDIAN(r) << 16;
 	}
 	else
 	{
-		r = atapi_command_reg_r(space->machine(), (offset*2) + 1);
+		r = atapi_command_reg_r(space.machine(), (offset*2) + 1);
 		return ATAPI_ENDIAN(r) << 0;
 	}
 }
 
-static WRITE32_HANDLER( atapi_command_w )
+WRITE32_MEMBER(firebeat_state::atapi_command_w )
 {
 //  printf("atapi_command_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 
 	if (ACCESSING_BITS_16_31)
 	{
-		atapi_command_reg_w(space->machine(), offset*2, ATAPI_ENDIAN((data >> 16) & 0xffff));
+		atapi_command_reg_w(space.machine(), offset*2, ATAPI_ENDIAN((data >> 16) & 0xffff));
 	}
 	else
 	{
-		atapi_command_reg_w(space->machine(), (offset*2) + 1, ATAPI_ENDIAN((data >> 0) & 0xffff));
+		atapi_command_reg_w(space.machine(), (offset*2) + 1, ATAPI_ENDIAN((data >> 0) & 0xffff));
 	}
 }
 
 
-static READ32_HANDLER( atapi_control_r )
+READ32_MEMBER(firebeat_state::atapi_control_r )
 {
 	UINT16 r;
 //  printf("atapi_control_r: %08X, %08X\n", offset, mem_mask);
 
 	if (ACCESSING_BITS_16_31)
 	{
-		r = atapi_control_reg_r(space->machine(), offset*2);
+		r = atapi_control_reg_r(space.machine(), offset*2);
 		return ATAPI_ENDIAN(r) << 16;
 	}
 	else
 	{
-		r = atapi_control_reg_r(space->machine(), (offset*2) + 1);
+		r = atapi_control_reg_r(space.machine(), (offset*2) + 1);
 		return ATAPI_ENDIAN(r) << 0;
 	}
 }
 
-static WRITE32_HANDLER( atapi_control_w )
+WRITE32_MEMBER(firebeat_state::atapi_control_w )
 {
 	if (ACCESSING_BITS_16_31)
 	{
-		atapi_control_reg_w(space->machine(), offset*2, ATAPI_ENDIAN(data >> 16) & 0xff);
+		atapi_control_reg_w(space.machine(), offset*2, ATAPI_ENDIAN(data >> 16) & 0xff);
 	}
 	else
 	{
-		atapi_control_reg_w(space->machine(), (offset*2) + 1, ATAPI_ENDIAN(data >> 0) & 0xff);
+		atapi_control_reg_w(space.machine(), (offset*2) + 1, ATAPI_ENDIAN(data >> 0) & 0xff);
 	}
 }
 
 
 /*****************************************************************************/
 
-static READ32_HANDLER( comm_uart_r )
+READ32_MEMBER(firebeat_state::comm_uart_r )
 {
 	UINT32 r = 0;
 
@@ -1301,7 +1333,7 @@ static READ32_HANDLER( comm_uart_r )
 	return r;
 }
 
-static WRITE32_HANDLER( comm_uart_w )
+WRITE32_MEMBER(firebeat_state::comm_uart_w )
 {
 	if (ACCESSING_BITS_24_31)
 	{
@@ -1333,9 +1365,8 @@ static const int cab_data[2] = { 0x0, 0x8 };
 static const int kbm_cab_data[2] = { 0x2, 0x8 };
 static const int ppd_cab_data[2] = { 0x1, 0x9 };
 
-static READ32_HANDLER( cabinet_r )
+READ32_MEMBER(firebeat_state::cabinet_r )
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	UINT32 r = 0;
 
 //  printf("cabinet_r: %08X, %08X\n", offset, mem_mask);
@@ -1344,8 +1375,8 @@ static READ32_HANDLER( cabinet_r )
 	{
 		case 0:
 		{
-			r = state->m_cur_cab_data[state->m_cab_data_ptr & 1] << 28;
-			state->m_cab_data_ptr++;
+			r = m_cur_cab_data[m_cab_data_ptr & 1] << 28;
+			m_cab_data_ptr++;
 			return r;
 		}
 		case 2:		return 0x00000000;
@@ -1357,21 +1388,21 @@ static READ32_HANDLER( cabinet_r )
 
 /*****************************************************************************/
 
-static READ32_HANDLER( keyboard_wheel_r )
+READ32_MEMBER(firebeat_state::keyboard_wheel_r )
 {
 	if (offset == 0)		// Keyboard Wheel (P1)
 	{
-		return space->machine().root_device().ioport("WHEEL_P1")->read() << 24;
+		return space.machine().root_device().ioport("WHEEL_P1")->read() << 24;
 	}
 	else if (offset == 2)	// Keyboard Wheel (P2)
 	{
-		return space->machine().root_device().ioport("WHEEL_P2")->read() << 24;
+		return space.machine().root_device().ioport("WHEEL_P2")->read() << 24;
 	}
 
 	return 0;
 }
 
-static READ32_HANDLER( midi_uart_r )
+READ32_MEMBER(firebeat_state::midi_uart_r )
 {
 	UINT32 r = 0;
 
@@ -1383,7 +1414,7 @@ static READ32_HANDLER( midi_uart_r )
 	return r;
 }
 
-static WRITE32_HANDLER( midi_uart_w )
+WRITE32_MEMBER(firebeat_state::midi_uart_w )
 {
 	if (ACCESSING_BITS_24_31)
 	{
@@ -1445,9 +1476,8 @@ static const int keyboard_notes[24] =
 	0x53,	// B2
 };
 
-static TIMER_CALLBACK( keyboard_timer_callback )
+TIMER_CALLBACK_MEMBER(firebeat_state::keyboard_timer_callback)
 {
-	firebeat_state *state = machine.driver_data<firebeat_state>();
 	static const int kb_uart_channel[2] = { 1, 0 };
 	static const char *const keynames[] = { "KEYBOARD_P1", "KEYBOARD_P2" };
 	int keyboard;
@@ -1455,38 +1485,38 @@ static TIMER_CALLBACK( keyboard_timer_callback )
 
 	for (keyboard=0; keyboard < 2; keyboard++)
 	{
-		UINT32 kbstate = machine.root_device().ioport(keynames[keyboard])->read();
+		UINT32 kbstate = machine().root_device().ioport(keynames[keyboard])->read();
 		int uart_channel = kb_uart_channel[keyboard];
 
-		if (kbstate != state->m_keyboard_state[keyboard])
+		if (kbstate != m_keyboard_state[keyboard])
 		{
 			for (i=0; i < 24; i++)
 			{
 				int kbnote = keyboard_notes[i];
 
-				if ((state->m_keyboard_state[keyboard] & (1 << i)) != 0 && (kbstate & (1 << i)) == 0)
+				if ((m_keyboard_state[keyboard] & (1 << i)) != 0 && (kbstate & (1 << i)) == 0)
 				{
 					// key was on, now off -> send Note Off message
-					pc16552d_rx_data(machine, 1, uart_channel, 0x80);
-					pc16552d_rx_data(machine, 1, uart_channel, kbnote);
-					pc16552d_rx_data(machine, 1, uart_channel, 0x7f);
+					pc16552d_rx_data(machine(), 1, uart_channel, 0x80);
+					pc16552d_rx_data(machine(), 1, uart_channel, kbnote);
+					pc16552d_rx_data(machine(), 1, uart_channel, 0x7f);
 				}
-				else if ((state->m_keyboard_state[keyboard] & (1 << i)) == 0 && (kbstate & (1 << i)) != 0)
+				else if ((m_keyboard_state[keyboard] & (1 << i)) == 0 && (kbstate & (1 << i)) != 0)
 				{
 					// key was off, now on -> send Note On message
-					pc16552d_rx_data(machine, 1, uart_channel, 0x90);
-					pc16552d_rx_data(machine, 1, uart_channel, kbnote);
-					pc16552d_rx_data(machine, 1, uart_channel, 0x7f);
+					pc16552d_rx_data(machine(), 1, uart_channel, 0x90);
+					pc16552d_rx_data(machine(), 1, uart_channel, kbnote);
+					pc16552d_rx_data(machine(), 1, uart_channel, 0x7f);
 				}
 			}
 		}
 		else
 		{
 			// no messages, send Active Sense message instead
-			pc16552d_rx_data(machine, 1, uart_channel, 0xfe);
+			pc16552d_rx_data(machine(), 1, uart_channel, 0xfe);
 		}
 
-		state->m_keyboard_state[keyboard] = kbstate;
+		m_keyboard_state[keyboard] = kbstate;
 	}
 }
 
@@ -1498,35 +1528,33 @@ static TIMER_CALLBACK( keyboard_timer_callback )
 // 0x10: ?
 // 0x20: ?
 
-static READ32_HANDLER( extend_board_irq_r)
+READ32_MEMBER(firebeat_state::extend_board_irq_r)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	UINT32 r = 0;
 
 	if (ACCESSING_BITS_24_31)
 	{
-		r |= (~state->m_extend_board_irq_active) << 24;
+		r |= (~m_extend_board_irq_active) << 24;
 	}
 
 	return r;
 }
 
-static WRITE32_HANDLER( extend_board_irq_w )
+WRITE32_MEMBER(firebeat_state::extend_board_irq_w )
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 //  printf("extend_board_irq_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 
 	if (ACCESSING_BITS_24_31)
 	{
-		state->m_extend_board_irq_active &= ~((data >> 24) & 0xff);
+		m_extend_board_irq_active &= ~((data >> 24) & 0xff);
 
-		state->m_extend_board_irq_enable = (data >> 24) & 0xff;
+		m_extend_board_irq_enable = (data >> 24) & 0xff;
 	}
 }
 
 /*****************************************************************************/
 
-static WRITE32_HANDLER( lamp_output_w )
+WRITE32_MEMBER(firebeat_state::lamp_output_w )
 {
 	// -------- -------- -------- xxxxxxxx   Status LEDs (active low)
 	if (ACCESSING_BITS_0_7)
@@ -1544,7 +1572,7 @@ static WRITE32_HANDLER( lamp_output_w )
 //  printf("lamp_output_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 }
 
-static WRITE32_HANDLER( lamp_output_kbm_w )
+WRITE32_MEMBER(firebeat_state::lamp_output_kbm_w )
 {
 	lamp_output_w(space, offset, data, mem_mask);
 
@@ -1563,7 +1591,7 @@ static WRITE32_HANDLER( lamp_output_kbm_w )
 	}
 }
 
-static WRITE32_HANDLER( lamp_output_ppp_w )
+WRITE32_MEMBER(firebeat_state::lamp_output_ppp_w )
 {
 	lamp_output_w(space, offset, data, mem_mask);
 
@@ -1605,12 +1633,12 @@ static WRITE32_HANDLER( lamp_output_ppp_w )
 	}
 }
 
-static WRITE32_HANDLER( lamp_output2_w )
+WRITE32_MEMBER(firebeat_state::lamp_output2_w )
 {
 //  printf("lamp_output2_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 }
 
-static WRITE32_HANDLER( lamp_output2_ppp_w )
+WRITE32_MEMBER(firebeat_state::lamp_output2_ppp_w )
 {
 	lamp_output2_w(space, offset, data, mem_mask);
 
@@ -1639,12 +1667,12 @@ static WRITE32_HANDLER( lamp_output2_ppp_w )
 	}
 }
 
-static WRITE32_HANDLER( lamp_output3_w )
+WRITE32_MEMBER(firebeat_state::lamp_output3_w )
 {
 //  printf("lamp_output3_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 }
 
-static WRITE32_HANDLER( lamp_output3_ppp_w )
+WRITE32_MEMBER(firebeat_state::lamp_output3_ppp_w )
 {
 	lamp_output3_w(space, offset, data, mem_mask);
 
@@ -1665,67 +1693,63 @@ static WRITE32_HANDLER( lamp_output3_ppp_w )
 /*****************************************************************************/
 
 
-static READ32_HANDLER(ppc_spu_share_r)
+READ32_MEMBER(firebeat_state::ppc_spu_share_r)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	UINT32 r = 0;
 
 	if (ACCESSING_BITS_24_31)
 	{
-		r |= state->m_spu_shared_ram[(offset * 4) + 0] << 24;
+		r |= m_spu_shared_ram[(offset * 4) + 0] << 24;
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		r |= state->m_spu_shared_ram[(offset * 4) + 1] << 16;
+		r |= m_spu_shared_ram[(offset * 4) + 1] << 16;
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		r |= state->m_spu_shared_ram[(offset * 4) + 2] <<  8;
+		r |= m_spu_shared_ram[(offset * 4) + 2] <<  8;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		r |= state->m_spu_shared_ram[(offset * 4) + 3] <<  0;
+		r |= m_spu_shared_ram[(offset * 4) + 3] <<  0;
 	}
 
 	return r;
 }
 
-static WRITE32_HANDLER(ppc_spu_share_w)
+WRITE32_MEMBER(firebeat_state::ppc_spu_share_w)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
 	if (ACCESSING_BITS_24_31)
 	{
-		state->m_spu_shared_ram[(offset * 4) + 0] = (data >> 24) & 0xff;
+		m_spu_shared_ram[(offset * 4) + 0] = (data >> 24) & 0xff;
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		state->m_spu_shared_ram[(offset * 4) + 1] = (data >> 16) & 0xff;
+		m_spu_shared_ram[(offset * 4) + 1] = (data >> 16) & 0xff;
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		state->m_spu_shared_ram[(offset * 4) + 2] = (data >>  8) & 0xff;
+		m_spu_shared_ram[(offset * 4) + 2] = (data >>  8) & 0xff;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		state->m_spu_shared_ram[(offset * 4) + 3] = (data >>  0) & 0xff;
+		m_spu_shared_ram[(offset * 4) + 3] = (data >>  0) & 0xff;
 	}
 }
 
 #ifdef UNUSED_FUNCTION
-static READ16_HANDLER(m68k_spu_share_r)
+READ16_MEMBER(firebeat_state::m68k_spu_share_r)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
-	return state->m_spu_shared_ram[offset] << 8;
+	return m_spu_shared_ram[offset] << 8;
 }
 
-static WRITE16_HANDLER(m68k_spu_share_w)
+WRITE16_MEMBER(firebeat_state::m68k_spu_share_w)
 {
-	firebeat_state *state = space->machine().driver_data<firebeat_state>();
-	state->m_spu_shared_ram[offset] = (data >> 8) & 0xff;
+	m_spu_shared_ram[offset] = (data >> 8) & 0xff;
 }
 #endif
 
-static READ16_HANDLER(spu_unk_r)
+READ16_MEMBER(firebeat_state::spu_unk_r)
 {
 	return 0xffff;
 }
@@ -1747,38 +1771,38 @@ MACHINE_START_MEMBER(firebeat_state,firebeat)
 
 static ADDRESS_MAP_START( firebeat_map, AS_PROGRAM, 32, firebeat_state )
 	AM_RANGE(0x00000000, 0x01ffffff) AM_RAM AM_SHARE("work_ram")
-	AM_RANGE(0x70000000, 0x70000fff) AM_READWRITE_LEGACY(midi_uart_r, midi_uart_w)
-	AM_RANGE(0x70006000, 0x70006003) AM_WRITE_LEGACY(extend_board_irq_w)
-	AM_RANGE(0x70008000, 0x7000800f) AM_READ_LEGACY(keyboard_wheel_r)
-	AM_RANGE(0x7000a000, 0x7000a003) AM_READ_LEGACY(extend_board_irq_r)
-	AM_RANGE(0x74000000, 0x740003ff) AM_READWRITE_LEGACY(ppc_spu_share_r, ppc_spu_share_w) // SPU shared RAM
-	AM_RANGE(0x7d000200, 0x7d00021f) AM_READ_LEGACY(cabinet_r)
-	AM_RANGE(0x7d000340, 0x7d000347) AM_READ_LEGACY(sensor_r)
+	AM_RANGE(0x70000000, 0x70000fff) AM_READWRITE(midi_uart_r, midi_uart_w)
+	AM_RANGE(0x70006000, 0x70006003) AM_WRITE(extend_board_irq_w)
+	AM_RANGE(0x70008000, 0x7000800f) AM_READ(keyboard_wheel_r)
+	AM_RANGE(0x7000a000, 0x7000a003) AM_READ(extend_board_irq_r)
+	AM_RANGE(0x74000000, 0x740003ff) AM_READWRITE(ppc_spu_share_r, ppc_spu_share_w) // SPU shared RAM
+	AM_RANGE(0x7d000200, 0x7d00021f) AM_READ(cabinet_r)
+	AM_RANGE(0x7d000340, 0x7d000347) AM_READ(sensor_r)
 	AM_RANGE(0x7d000400, 0x7d000403) AM_DEVREADWRITE8_LEGACY("ymz", ymz280b_r, ymz280b_w, 0xffff0000)
-	AM_RANGE(0x7d000800, 0x7d000803) AM_READ_LEGACY(input_r)
-	AM_RANGE(0x7d400000, 0x7d5fffff) AM_READWRITE_LEGACY(flashram_r, flashram_w)
-	AM_RANGE(0x7d800000, 0x7dbfffff) AM_READWRITE_LEGACY(soundflash_r, soundflash_w)
-	AM_RANGE(0x7dc00000, 0x7dc0000f) AM_READWRITE_LEGACY(comm_uart_r, comm_uart_w)
+	AM_RANGE(0x7d000800, 0x7d000803) AM_READ(input_r)
+	AM_RANGE(0x7d400000, 0x7d5fffff) AM_READWRITE(flashram_r, flashram_w)
+	AM_RANGE(0x7d800000, 0x7dbfffff) AM_READWRITE(soundflash_r, soundflash_w)
+	AM_RANGE(0x7dc00000, 0x7dc0000f) AM_READWRITE(comm_uart_r, comm_uart_w)
 	AM_RANGE(0x7e000000, 0x7e00003f) AM_DEVREADWRITE8("rtc", rtc65271_device, rtc_r, rtc_w, 0xffffffff)
 	AM_RANGE(0x7e000100, 0x7e00013f) AM_DEVREADWRITE8("rtc", rtc65271_device, xram_r, xram_w, 0xffffffff)
-	AM_RANGE(0x7e800000, 0x7e8000ff) AM_READWRITE_LEGACY(gcu0_r, gcu0_w)
-	AM_RANGE(0x7e800100, 0x7e8001ff) AM_READWRITE_LEGACY(gcu1_r, gcu1_w)
-	AM_RANGE(0x7fe00000, 0x7fe0000f) AM_READWRITE_LEGACY(atapi_command_r, atapi_command_w)
-	AM_RANGE(0x7fe80000, 0x7fe8000f) AM_READWRITE_LEGACY(atapi_control_r, atapi_control_w)
+	AM_RANGE(0x7e800000, 0x7e8000ff) AM_READWRITE(gcu0_r, gcu0_w)
+	AM_RANGE(0x7e800100, 0x7e8001ff) AM_READWRITE(gcu1_r, gcu1_w)
+	AM_RANGE(0x7fe00000, 0x7fe0000f) AM_READWRITE(atapi_command_r, atapi_command_w)
+	AM_RANGE(0x7fe80000, 0x7fe8000f) AM_READWRITE(atapi_control_r, atapi_control_w)
 	AM_RANGE(0x7ff80000, 0x7fffffff) AM_ROM AM_REGION("user1", 0)		/* System BIOS */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( spu_map, AS_PROGRAM, 16, firebeat_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x13ffff) AM_RAM
-	AM_RANGE(0x340000, 0x34000f) AM_READ_LEGACY(spu_unk_r)
+	AM_RANGE(0x340000, 0x34000f) AM_READ(spu_unk_r)
 ADDRESS_MAP_END
 
 /*****************************************************************************/
 
 READ8_MEMBER(firebeat_state::soundram_r)
 {
-	if (offset >= 0 && offset < 0x200000)
+	if (offset < 0x200000)
 	{
 		return m_flash[1]->read(offset & 0x1fffff);
 	}
@@ -1934,7 +1958,7 @@ static INPUT_PORTS_START(popn)
 
 INPUT_PORTS_END
 
-static INTERRUPT_GEN(firebeat_interrupt)
+INTERRUPT_GEN_MEMBER(firebeat_state::firebeat_interrupt)
 {
 	// IRQs
 	// IRQ 0: VBlank
@@ -1942,12 +1966,11 @@ static INTERRUPT_GEN(firebeat_interrupt)
 	// IRQ 2: Main board UART
 	// IRQ 4: ATAPI
 
-	device->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+	device.execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 MACHINE_RESET_MEMBER(firebeat_state,firebeat)
 {
-	void *cd;
 	int i;
 	UINT8 *sound = memregion("ymz")->base();
 
@@ -1956,9 +1979,6 @@ MACHINE_RESET_MEMBER(firebeat_state,firebeat)
 		sound[i] = m_flash[1]->read(i);
 		sound[i+0x200000] = m_flash[2]->read(i);
 	}
-
-	m_atapi_device_data[1]->GetDevice( &cd );
-	cdda_set_cdrom(machine().device("cdda"), cd);
 }
 
 const rtc65271_interface firebeat_rtc =
@@ -1971,7 +1991,7 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC403GCX, 66000000)
 	MCFG_CPU_PROGRAM_MAP(firebeat_map)
-	MCFG_CPU_VBLANK_INT("screen", firebeat_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", firebeat_state,  firebeat_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(firebeat_state,firebeat)
 	MCFG_MACHINE_RESET_OVERRIDE(firebeat_state,firebeat)
@@ -1994,7 +2014,7 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE_STATIC(firebeat_0)
+	MCFG_SCREEN_UPDATE_DRIVER(firebeat_state, screen_update_firebeat_0)
 
 	MCFG_VIDEO_START_OVERRIDE(firebeat_state,firebeat)
 
@@ -2006,9 +2026,9 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("cdda", CDDA, 0)
-	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
-	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+	MCFG_SOUND_MODIFY("scsi1:cdda")
+	MCFG_SOUND_ROUTE(0, "^^lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(1, "^^rspeaker", 1.0)
 
 MACHINE_CONFIG_END
 
@@ -2017,7 +2037,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC403GCX, 66000000)
 	MCFG_CPU_PROGRAM_MAP(firebeat_map)
-	MCFG_CPU_VBLANK_INT("lscreen", firebeat_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", firebeat_state,  firebeat_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(firebeat_state,firebeat)
 	MCFG_MACHINE_RESET_OVERRIDE(firebeat_state,firebeat)
@@ -2040,14 +2060,14 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE_STATIC(firebeat_0)
+	MCFG_SCREEN_UPDATE_DRIVER(firebeat_state, screen_update_firebeat_0)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE_STATIC(firebeat_1)
+	MCFG_SCREEN_UPDATE_DRIVER(firebeat_state, screen_update_firebeat_1)
 
 	MCFG_VIDEO_START_OVERRIDE(firebeat_state,firebeat)
 
@@ -2059,9 +2079,9 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("cdda", CDDA, 0)
-	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
-	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+	MCFG_SOUND_MODIFY("scsi1:cdda")
+	MCFG_SOUND_ROUTE(0, "^^lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(1, "^^rspeaker", 1.0)
 
 MACHINE_CONFIG_END
 
@@ -2211,15 +2231,16 @@ static void security_w(device_t *device, UINT8 data)
 
 /*****************************************************************************/
 
-static void init_lights(running_machine &machine, write32_space_func out1, const char *out1name, write32_space_func out2, const char *out2name, write32_space_func out3, const char *out3name)
+static void init_lights(running_machine &machine, write32_delegate out1, write32_delegate out2, write32_delegate out3)
 {
-	if(!out1) out1 = lamp_output_w, out1name = "lamp_output_w";
-	if(!out2) out2 = lamp_output2_w, out2name = "lamp_output2_w";
-	if(!out3) out3 = lamp_output3_w, out3name = "lamp_output3_w";
+	firebeat_state *state = machine.driver_data<firebeat_state>();
+	if(out1.isnull()) out1 = write32_delegate(FUNC(firebeat_state::lamp_output_w),state);
+	if(out2.isnull()) out2 = write32_delegate(FUNC(firebeat_state::lamp_output2_w),state);
+	if(out3.isnull()) out3 = write32_delegate(FUNC(firebeat_state::lamp_output3_w),state);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x7d000804, 0x7d000807, out1, out1name);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x7d000320, 0x7d000323, out2, out2name);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x7d000324, 0x7d000327, out3, out3name);
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x7d000804, 0x7d000807, out1);
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x7d000320, 0x7d000323, out2);
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x7d000324, 0x7d000327, out3);
 }
 
 static void init_firebeat(running_machine &machine)
@@ -2241,19 +2262,19 @@ static void init_firebeat(running_machine &machine)
 
 	set_ibutton(state, rom);
 
-	init_lights(machine, FUNC_NULL, FUNC_NULL, FUNC_NULL);
+	init_lights(machine, write32_delegate(), write32_delegate(), write32_delegate());
 }
 
 DRIVER_INIT_MEMBER(firebeat_state,ppp)
 {
 	init_firebeat(machine());
-	init_lights(machine(), FUNC(lamp_output_ppp_w), FUNC(lamp_output2_ppp_w), FUNC(lamp_output3_ppp_w));
+	init_lights(machine(), write32_delegate(FUNC(firebeat_state::lamp_output_ppp_w),this), write32_delegate(FUNC(firebeat_state::lamp_output2_ppp_w),this), write32_delegate(FUNC(firebeat_state::lamp_output3_ppp_w),this));
 }
 
 DRIVER_INIT_MEMBER(firebeat_state,ppd)
 {
 	init_firebeat(machine());
-	init_lights(machine(), FUNC(lamp_output_ppp_w), FUNC(lamp_output2_ppp_w), FUNC(lamp_output3_ppp_w));
+	init_lights(machine(), write32_delegate(FUNC(firebeat_state::lamp_output_ppp_w),this), write32_delegate(FUNC(firebeat_state::lamp_output2_ppp_w),this), write32_delegate(FUNC(firebeat_state::lamp_output3_ppp_w),this));
 
 	m_cur_cab_data = ppd_cab_data;
 }
@@ -2262,14 +2283,14 @@ static void init_keyboard(running_machine &machine)
 {
 	firebeat_state *state = machine.driver_data<firebeat_state>();
 	// set keyboard timer
-	state->m_keyboard_timer = machine.scheduler().timer_alloc(FUNC(keyboard_timer_callback));
+	state->m_keyboard_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(firebeat_state::keyboard_timer_callback),state));
 	state->m_keyboard_timer->adjust(attotime::from_msec(10), 0, attotime::from_msec(10));
 }
 
 DRIVER_INIT_MEMBER(firebeat_state,kbm)
 {
 	init_firebeat(machine());
-	init_lights(machine(), FUNC(lamp_output_kbm_w), FUNC_NULL, FUNC_NULL);
+	init_lights(machine(), write32_delegate(FUNC(firebeat_state::lamp_output_kbm_w),this), write32_delegate(), write32_delegate());
 
 	init_keyboard(machine());
 

@@ -127,7 +127,7 @@ static int psgData = 0;
 WRITE8_HANDLER( carnival_audio_1_w )
 {
 	static int port1State = 0;
-	samples_device *samples = space->machine().device<samples_device>("samples");
+	samples_device *samples = space.machine().device<samples_device>("samples");
 	int bitsChanged;
 	int bitsGoneHigh;
 	int bitsGoneLow;
@@ -206,7 +206,7 @@ WRITE8_HANDLER( carnival_audio_1_w )
 
 WRITE8_HANDLER( carnival_audio_2_w )
 {
-	samples_device *samples = space->machine().device<samples_device>("samples");
+	samples_device *samples = space.machine().device<samples_device>("samples");
 	int bitsChanged;
 	int bitsGoneHigh;
 	int bitsGoneLow;
@@ -236,7 +236,7 @@ WRITE8_HANDLER( carnival_audio_2_w )
 
 	if ( bitsGoneHigh & OUT_PORT_2_MUSIC_RESET )
 		/* reset output is no longer asserted active low */
-		space->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE );
+		space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE );
 }
 
 
@@ -274,11 +274,11 @@ static WRITE8_DEVICE_HANDLER( carnival_music_port_2_w )
 			break;
 
 		case PSG_BC_WRITE:
-			ay8910_data_w( device, 0, psgData );
+			ay8910_data_w( device, space, 0, psgData );
 			break;
 
 		case PSG_BC_LATCH_ADDRESS:
-			ay8910_address_w( device, 0, psgData );
+			ay8910_address_w( device, space, 0, psgData );
 			break;
 		}
 	}

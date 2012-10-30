@@ -30,6 +30,8 @@ public:
 	optional_shared_ptr<UINT8> m_dealem_videoram;
 	DECLARE_MACHINE_RESET(dealem_vid);
 	DECLARE_PALETTE_INIT(dealem);
+	UINT32 screen_update_dealem(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_WRITE_LINE_MEMBER(dealem_vsync_changed);
 };
 
 
@@ -112,9 +114,8 @@ PALETTE_INIT_MEMBER(mpu4dealem_state,dealem)
 }
 
 
-static SCREEN_UPDATE_IND16(dealem)
+UINT32 mpu4dealem_state::screen_update_dealem(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mpu4dealem_state *state = screen.machine().driver_data<mpu4dealem_state>();
 	int x,y;
 	int count = 0;
 
@@ -122,9 +123,9 @@ static SCREEN_UPDATE_IND16(dealem)
 	{
 		for (x = 0; x < 40; x++)
 		{
-			int tile = state->m_dealem_videoram[count + 0x1000] | (state->m_dealem_videoram[count] << 8);
+			int tile = m_dealem_videoram[count + 0x1000] | (m_dealem_videoram[count] << 8);
 			count++;
-			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],tile,0,0,0,x * 8,y * 8);
+			drawgfx_opaque(bitmap,cliprect,machine().gfx[0],tile,0,0,0,x * 8,y * 8);
 		}
 	}
 
@@ -132,9 +133,9 @@ static SCREEN_UPDATE_IND16(dealem)
 }
 
 
-static WRITE_LINE_DEVICE_HANDLER( dealem_vsync_changed )
+WRITE_LINE_MEMBER(mpu4dealem_state::dealem_vsync_changed)
 {
-	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, state);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, state);
 }
 
 
@@ -154,7 +155,7 @@ static const mc6845_interface hd6845_intf =
 	DEVCB_NULL,							/* callback for display state changes */
 	DEVCB_NULL,							/* callback for cursor state changes */
 	DEVCB_NULL,							/* HSYNC callback */
-	DEVCB_LINE(dealem_vsync_changed),	/* VSYNC callback */
+	DEVCB_DRIVER_LINE_MEMBER(mpu4dealem_state, dealem_vsync_changed),	/* VSYNC callback */
 	NULL								/* update address callback */
 };
 
@@ -225,7 +226,7 @@ static MACHINE_CONFIG_START( dealem, mpu4dealem_state )
 	MCFG_SCREEN_SIZE((54+1)*8, (32+1)*8)					/* Taken from 6845 init, registers 00 & 04. Normally programmed with (value-1) */
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 31*8-1)		/* Taken from 6845 init, registers 01 & 06 */
 	MCFG_SCREEN_REFRESH_RATE(56)							/* Measured accurately from the flip-flop, but 6845 handles this */
-	MCFG_SCREEN_UPDATE_STATIC(dealem)
+	MCFG_SCREEN_UPDATE_DRIVER(mpu4dealem_state, screen_update_dealem)
 
 	MCFG_GFXDECODE(dealem)
 

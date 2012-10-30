@@ -652,6 +652,8 @@ public:
 	DECLARE_READ64_MEMBER(gfx_fifo_r);
 	DECLARE_WRITE64_MEMBER(gfx_buf_w);
 
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
+
 	cobra_renderer *m_renderer;
 
 	cobra_fifo *m_gfxfifo_in;
@@ -720,6 +722,8 @@ public:
 	DECLARE_DRIVER_INIT(cobra);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_cobra(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(cobra_vblank);
 };
 
 void cobra_renderer::render_color_scan(INT32 scanline, const extent_t &extent, const cobra_polydata &extradata, int threadid)
@@ -994,19 +998,18 @@ void cobra_state::video_start()
 	m_renderer->gfx_init(machine());
 }
 
-SCREEN_UPDATE_RGB32( cobra )
+UINT32 cobra_state::screen_update_cobra(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	cobra_state *cobra = screen.machine().driver_data<cobra_state>();
 
-	if (cobra->m_has_psac)
+	if (m_has_psac)
 	{
-		device_t *k001604 = screen.machine().device("k001604");
+		device_t *k001604 = machine().device("k001604");
 
 		k001604_draw_back_layer(k001604, bitmap, cliprect);
 		k001604_draw_front_layer(k001604, bitmap, cliprect);
 	}
 
-	cobra->m_renderer->display(&bitmap, cliprect);
+	m_renderer->display(&bitmap, cliprect);
 	return 0;
 }
 
@@ -3172,38 +3175,35 @@ static const k001604_interface cobra_k001604_intf =
 };
 
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(cobra_state::ide_interrupt)
 {
-	cobra_state *cobra = device->machine().driver_data<cobra_state>();
-
 	if (state == CLEAR_LINE)
 	{
-		cobra->m_sub_interrupt |= 0x80;
+		m_sub_interrupt |= 0x80;
 	}
 	else
 	{
-		cobra->m_sub_interrupt &= ~0x80;
+		m_sub_interrupt &= ~0x80;
 	}
 }
 
 
-static INTERRUPT_GEN( cobra_vblank )
+INTERRUPT_GEN_MEMBER(cobra_state::cobra_vblank)
 {
-	cobra_state *cobra = device->machine().driver_data<cobra_state>();
 
-	if (cobra->m_vblank_enable & 0x80)
+	if (m_vblank_enable & 0x80)
 	{
-		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
-		cobra->m_gfx_unk_flag = 0x80;
+		device.execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+		m_gfx_unk_flag = 0x80;
 	}
 }
 
 void cobra_state::machine_reset()
 {
-
 	m_sub_interrupt = 0xff;
 
-	UINT8 *ide_features = ide_get_features(machine().device("ide"), 0);
+	ide_controller_device *ide = (ide_controller_device *) machine().device("ide");
+	UINT8 *ide_features = ide->ide_get_features(0);
 
 	// Cobra expects these settings or the BIOS fails
 	ide_features[51*2+0] = 0;			/* 51: PIO data transfer cycle timing mode */
@@ -3223,20 +3223,13 @@ void cobra_state::machine_reset()
 	dmadac_set_frequency(&m_dmadac[1], 1, 44100);
 }
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( cobra, cobra_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC603, 100000000)		/* 603EV, 100? MHz */
 	MCFG_CPU_CONFIG(main_ppc_cfg)
 	MCFG_CPU_PROGRAM_MAP(cobra_main_map)
-	MCFG_CPU_VBLANK_INT("screen", cobra_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cobra_state,  cobra_vblank)
 
 	MCFG_CPU_ADD("subcpu", PPC403GA, 32000000)		/* 403GA, 33? MHz */
 	MCFG_CPU_PROGRAM_MAP(cobra_sub_map)
@@ -3251,7 +3244,8 @@ static MACHINE_CONFIG_START( cobra, cobra_state )
 	MCFG_PCI_BUS_LEGACY_ADD("pcibus", 0)
 	MCFG_PCI_BUS_LEGACY_DEVICE(0, NULL, mpc106_pci_r, mpc106_pci_w)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, cobra_state, ide_interrupt))
 
 	/* video hardware */
 
@@ -3260,7 +3254,7 @@ static MACHINE_CONFIG_START( cobra, cobra_state )
 	MCFG_SCREEN_SIZE(512, 400)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 399)
 	MCFG_PALETTE_LENGTH(65536)
-	MCFG_SCREEN_UPDATE_STATIC(cobra)
+	MCFG_SCREEN_UPDATE_DRIVER(cobra_state, screen_update_cobra)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

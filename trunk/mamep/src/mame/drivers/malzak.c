@@ -74,7 +74,7 @@
 
 READ8_MEMBER(malzak_state::fake_VRLE_r)
 {
-	return (s2636_work_ram_r(m_s2636_0, 0xcb) & 0x3f) + (machine().primary_screen->vblank() * 0x40);
+	return (s2636_work_ram_r(m_s2636_0, space, 0xcb) & 0x3f) + (machine().primary_screen->vblank() * 0x40);
 }
 
 READ8_MEMBER(malzak_state::s2636_portA_r)
@@ -366,7 +366,7 @@ static MACHINE_CONFIG_START( malzak, malzak_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(480, 512)	/* vert size is a guess */
 	MCFG_SCREEN_VISIBLE_AREA(0, 479, 0, 479)
-	MCFG_SCREEN_UPDATE_STATIC(malzak)
+	MCFG_SCREEN_UPDATE_DRIVER(malzak_state, screen_update_malzak)
 
 	MCFG_GFXDECODE(malzak)
 	MCFG_PALETTE_LENGTH(128)

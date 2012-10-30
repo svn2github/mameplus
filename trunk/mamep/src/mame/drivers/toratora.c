@@ -57,6 +57,8 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(sn2_ca2_u2_u3_w);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_toratora(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(toratora_timer);
 };
 
 
@@ -79,18 +81,17 @@ WRITE_LINE_MEMBER(toratora_state::cb2_u3_w)
  *
  *************************************/
 
-static SCREEN_UPDATE_RGB32( toratora )
+UINT32 toratora_state::screen_update_toratora(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	toratora_state *state = screen.machine().driver_data<toratora_state>();
 	offs_t offs;
 
-	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
+	for (offs = 0; offs < m_videoram.bytes(); offs++)
 	{
 		int i;
 
 		UINT8 y = offs >> 5;
 		UINT8 x = offs << 3;
-		UINT8 data = state->m_videoram[offs];
+		UINT8 data = m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
@@ -102,11 +103,11 @@ static SCREEN_UPDATE_RGB32( toratora )
 		}
 
 		/* the video system clears as it writes out the pixels */
-		if (state->m_clear_tv)
-			state->m_videoram[offs] = 0;
+		if (m_clear_tv)
+			m_videoram[offs] = 0;
 	}
 
-	state->m_clear_tv = 0;
+	m_clear_tv = 0;
 
 	return 0;
 }
@@ -150,23 +151,22 @@ WRITE_LINE_MEMBER(toratora_state::main_cpu_irq)
 }
 
 
-static INTERRUPT_GEN( toratora_timer )
+INTERRUPT_GEN_MEMBER(toratora_state::toratora_timer)
 {
-	toratora_state *state = device->machine().driver_data<toratora_state>();
-	state->m_timer++;	/* timer counting at 16 Hz */
+	m_timer++;	/* timer counting at 16 Hz */
 
 	/* also, when the timer overflows (16 seconds) watchdog would kick in */
-	if (state->m_timer & 0x100)
+	if (m_timer & 0x100)
 		popmessage("watchdog!");
 
-	if (state->m_last != (state->ioport("INPUT")->read() & 0x0f))
+	if (m_last != (ioport("INPUT")->read() & 0x0f))
 	{
-		state->m_last = state->ioport("INPUT")->read() & 0x0f;
-		generic_pulse_irq_line(device, 0, 1);
+		m_last = ioport("INPUT")->read() & 0x0f;
+		generic_pulse_irq_line(device.execute(), 0, 1);
 	}
-	state->m_pia_u1->set_a_input(device->machine().root_device().ioport("INPUT")->read() & 0x0f, 0);
-	state->m_pia_u1->ca1_w(device->machine().root_device().ioport("INPUT")->read() & 0x10);
-	state->m_pia_u1->ca2_w(device->machine().root_device().ioport("INPUT")->read() & 0x20);
+	m_pia_u1->set_a_input(machine().root_device().ioport("INPUT")->read() & 0x0f, 0);
+	m_pia_u1->ca1_w(machine().root_device().ioport("INPUT")->read() & 0x10);
+	m_pia_u1->ca2_w(machine().root_device().ioport("INPUT")->read() & 0x20);
 }
 
 READ8_MEMBER(toratora_state::timer_r)
@@ -449,7 +449,7 @@ static MACHINE_CONFIG_START( toratora, toratora_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6800,500000)	/* ?????? game speed is entirely controlled by this */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT(toratora_timer,16)	/* timer counting at 16 Hz */
+	MCFG_CPU_PERIODIC_INT_DRIVER(toratora_state, toratora_timer, 16)	/* timer counting at 16 Hz */
 
 	MCFG_PIA6821_ADD("pia_u1", pia_u1_intf)
 	MCFG_PIA6821_ADD("pia_u2", pia_u2_intf)
@@ -462,7 +462,7 @@ static MACHINE_CONFIG_START( toratora, toratora_state )
 	MCFG_SCREEN_VISIBLE_AREA(0,256-1,8,248-1)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_UPDATE_STATIC(toratora)
+	MCFG_SCREEN_UPDATE_DRIVER(toratora_state, screen_update_toratora)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

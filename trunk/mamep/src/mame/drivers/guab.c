@@ -80,7 +80,7 @@ public:
 		m_sn(*this, "snsnd") { }
 
 	/* devices */
-	required_device<sn76489_new_device> m_sn;
+	required_device<sn76489_device> m_sn;
 
 	struct ef9369 m_pal;
 	emu_timer *m_fdc_timer;
@@ -98,6 +98,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_guab(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(fdc_data_callback);
 };
 
 
@@ -157,10 +159,10 @@ WRITE16_MEMBER(guab_state::guab_tms34061_w)
 		col = offset <<= 1;
 
 	if (ACCESSING_BITS_8_15)
-		tms34061_w(&space, col, row, func, data >> 8);
+		tms34061_w(space, col, row, func, data >> 8);
 
 	if (ACCESSING_BITS_0_7)
-		tms34061_w(&space, col | 1, row, func, data & 0xff);
+		tms34061_w(space, col | 1, row, func, data & 0xff);
 }
 
 
@@ -177,10 +179,10 @@ READ16_MEMBER(guab_state::guab_tms34061_r)
 		col = offset <<= 1;
 
 	if (ACCESSING_BITS_8_15)
-		data |= tms34061_r(&space, col, row, func) << 8;
+		data |= tms34061_r(space, col, row, func) << 8;
 
 	if (ACCESSING_BITS_0_7)
-		data |= tms34061_r(&space, col | 1, row, func);
+		data |= tms34061_r(space, col | 1, row, func);
 
 	return data;
 }
@@ -258,7 +260,7 @@ void guab_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( guab )
+UINT32 guab_state::screen_update_guab(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	int x, y;
 	struct tms34061_display state;
@@ -268,7 +270,7 @@ static SCREEN_UPDATE_IND16( guab )
 	/* If blanked, fill with black */
 	if (state.blanked)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
@@ -282,8 +284,8 @@ static SCREEN_UPDATE_IND16( guab )
 			UINT8 pen = src[x >> 1];
 
 			/* Draw two 4-bit pixels */
-			*dest++ = screen.machine().pens[pen >> 4];
-			*dest++ = screen.machine().pens[pen & 0x0f];
+			*dest++ = machine().pens[pen >> 4];
+			*dest++ = machine().pens[pen & 0x0f];
 		}
 	}
 
@@ -323,11 +325,10 @@ enum wd1770_status
 };
 
 
-static TIMER_CALLBACK( fdc_data_callback )
+TIMER_CALLBACK_MEMBER(guab_state::fdc_data_callback)
 {
-	guab_state *state = machine.driver_data<guab_state>();
-	struct wd1770 &fdc = state->m_fdc;
-	UINT8* disk = (UINT8*)state->memregion("user1")->base();
+	struct wd1770 &fdc = m_fdc;
+	UINT8* disk = (UINT8*)memregion("user1")->base();
 	int more_data = 0;
 
 	/*
@@ -373,7 +374,7 @@ static TIMER_CALLBACK( fdc_data_callback )
 
 	if (more_data)
 	{
-		state->m_fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
+		m_fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
 	}
 	else
 	{
@@ -383,7 +384,7 @@ static TIMER_CALLBACK( fdc_data_callback )
 	}
 
 	fdc.status |= DATA_REQUEST;
-	machine.device("maincpu")->execute().set_input_line(INT_FLOPPYCTRL, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(INT_FLOPPYCTRL, ASSERT_LINE);
 }
 
 
@@ -607,11 +608,11 @@ INPUT_CHANGED_MEMBER(guab_state::coin_inserted)
 	if (newval == 0)
 	{
 		UINT32 credit;
-		address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+		address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 		/* Get the current credit value and add the new coin value */
-		credit = space->read_dword(0x8002c) + (UINT32)(FPTR)param;
-		space->write_dword(0x8002c, credit);
+		credit = space.read_dword(0x8002c) + (UINT32)(FPTR)param;
+		space.write_dword(0x8002c, credit);
 	}
 }
 
@@ -804,7 +805,7 @@ static const sn76496_config psg_intf =
 
 void guab_state::machine_start()
 {
-	m_fdc_timer = machine().scheduler().timer_alloc(FUNC(fdc_data_callback));
+	m_fdc_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(guab_state::fdc_data_callback),this));
 }
 
 void guab_state::machine_reset()
@@ -824,7 +825,7 @@ static MACHINE_CONFIG_START( guab, guab_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 64*8-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(guab)
+	MCFG_SCREEN_UPDATE_DRIVER(guab_state, screen_update_guab)
 
 	MCFG_PALETTE_LENGTH(16)
 
@@ -832,7 +833,7 @@ static MACHINE_CONFIG_START( guab, guab_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	/* TODO: Verify clock */
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, 2000000)
+	MCFG_SOUND_ADD("snsnd", SN76489, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 

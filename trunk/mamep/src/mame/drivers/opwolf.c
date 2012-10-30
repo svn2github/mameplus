@@ -499,7 +499,7 @@ WRITE8_MEMBER(opwolf_state::opwolf_adpcm_b_w)
 		msm5205_reset_w(device, 0);
 	}
 
-//  logerror("CPU #1     b00%i-data=%2x   pc=%4x\n",offset,data,space->device().safe_pc() );
+//  logerror("CPU #1     b00%i-data=%2x   pc=%4x\n",offset,data,space.device().safe_pc() );
 }
 
 
@@ -522,7 +522,7 @@ WRITE8_MEMBER(opwolf_state::opwolf_adpcm_c_w)
 		msm5205_reset_w(device, 0);
 	}
 
-//  logerror("CPU #1     c00%i-data=%2x   pc=%4x\n",offset,data,space->device().safe_pc() );
+//  logerror("CPU #1     c00%i-data=%2x   pc=%4x\n",offset,data,space.device().safe_pc() );
 }
 
 
@@ -540,7 +540,7 @@ static ADDRESS_MAP_START( opwolf_sound_z80_map, AS_PROGRAM, 8, opwolf_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0x9002, 0x9100) AM_READNOP
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
@@ -686,22 +686,6 @@ GFXDECODE_END
                  YM2151 (SOUND)
 **************************************************************/
 
-/* handler called by the YM2151 emulator when the internal timers cause an IRQ */
-
-static void irq_handler( device_t *device, int irq )
-{
-	opwolf_state *state = device->machine().driver_data<opwolf_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler),
-	DEVCB_DRIVER_MEMBER(opwolf_state,sound_bankswitch_w)
-};
-
-
 static const msm5205_interface msm5205_config =
 {
 	opwolf_msm5205_vck,	/* VCK function */
@@ -735,7 +719,7 @@ static MACHINE_CONFIG_START( opwolf, opwolf_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, CPU_CLOCK )	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(opwolf_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", opwolf_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CPU_CLOCK )	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(opwolf_sound_z80_map)
@@ -750,7 +734,7 @@ static MACHINE_CONFIG_START( opwolf, opwolf_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(opwolf)
+	MCFG_SCREEN_UPDATE_DRIVER(opwolf_state, screen_update_opwolf)
 
 	MCFG_GFXDECODE(opwolf)
 	MCFG_PALETTE_LENGTH(8192)
@@ -761,8 +745,9 @@ static MACHINE_CONFIG_START( opwolf, opwolf_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, SOUND_CPU_CLOCK )	/* 4 MHz */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", SOUND_CPU_CLOCK )	/* 4 MHz */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(opwolf_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
@@ -785,14 +770,14 @@ static MACHINE_CONFIG_START( opwolfb, opwolf_state ) /* OSC clocks unknown for t
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, CPU_CLOCK )	/* 8 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(opwolfb_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", opwolf_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CPU_CLOCK )	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(opwolf_sound_z80_map)
 
 	MCFG_CPU_ADD("sub", Z80, SOUND_CPU_CLOCK )	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(opwolfb_sub_z80_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", opwolf_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
@@ -803,7 +788,7 @@ static MACHINE_CONFIG_START( opwolfb, opwolf_state ) /* OSC clocks unknown for t
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(opwolf)
+	MCFG_SCREEN_UPDATE_DRIVER(opwolf_state, screen_update_opwolf)
 
 	MCFG_GFXDECODE(opwolfb)
 	MCFG_PALETTE_LENGTH(8192)
@@ -814,8 +799,9 @@ static MACHINE_CONFIG_START( opwolfb, opwolf_state ) /* OSC clocks unknown for t
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, SOUND_CPU_CLOCK )
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", SOUND_CPU_CLOCK )
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(opwolf_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 

@@ -216,9 +216,9 @@ GFXDECODE_END
 
 /* Interrupt Generator */
 
-static INTERRUPT_GEN( commando_interrupt )
+INTERRUPT_GEN_MEMBER(commando_state::commando_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	// RST 10h - VBLANK
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	// RST 10h - VBLANK
 }
 
 /* Machine Driver */
@@ -247,11 +247,11 @@ static MACHINE_CONFIG_START( commando, commando_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, PHI_MAIN)	// ???
 	MCFG_CPU_PROGRAM_MAP(commando_map)
-	MCFG_CPU_VBLANK_INT("screen", commando_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", commando_state,  commando_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, PHI_B)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(commando_state, irq0_line_hold,  4*60)
 
 
 	/* video hardware */
@@ -260,7 +260,7 @@ static MACHINE_CONFIG_START( commando, commando_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(commando)
+	MCFG_SCREEN_UPDATE_DRIVER(commando_state, screen_update_commando)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(commando)
@@ -511,12 +511,12 @@ ROM_END
 
 DRIVER_INIT_MEMBER(commando_state,commando)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0xc000);
 	int A;
 
-	space->set_decrypted_region(0x0000, 0xbfff, decrypt);
+	space.set_decrypted_region(0x0000, 0xbfff, decrypt);
 
 	// the first opcode is *not* encrypted
 	decrypt[0] = rom[0];
@@ -531,12 +531,12 @@ DRIVER_INIT_MEMBER(commando_state,commando)
 
 DRIVER_INIT_MEMBER(commando_state,spaceinv)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0xc000);
 	int A;
 
-	space->set_decrypted_region(0x0000, 0xbfff, decrypt);
+	space.set_decrypted_region(0x0000, 0xbfff, decrypt);
 
 	// the first opcode *is* encrypted
 	for (A = 0; A < 0xc000; A++)

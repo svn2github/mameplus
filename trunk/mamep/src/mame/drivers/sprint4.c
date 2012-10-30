@@ -41,26 +41,25 @@ CUSTOM_INPUT_MEMBER(sprint4_state::get_collision)
 }
 
 
-static TIMER_CALLBACK( nmi_callback	)
+TIMER_CALLBACK_MEMBER(sprint4_state::nmi_callback)
 {
-	sprint4_state *state = machine.driver_data<sprint4_state>();
 	int scanline = param;
 
 	/* MAME updates controls only once per frame but the game checks them on every NMI */
 
 	UINT8 wheel[4] =
 	{
-		state->ioport("WHEEL1")->read(),
-		state->ioport("WHEEL2")->read(),
-		state->ioport("WHEEL3")->read(),
-		state->ioport("WHEEL4")->read()
+		ioport("WHEEL1")->read(),
+		ioport("WHEEL2")->read(),
+		ioport("WHEEL3")->read(),
+		ioport("WHEEL4")->read()
 	};
 	UINT8 lever[4] =
 	{
-		machine.root_device().ioport("LEVER1")->read(),
-		machine.root_device().ioport("LEVER2")->read(),
-		machine.root_device().ioport("LEVER3")->read(),
-		machine.root_device().ioport("LEVER4")->read()
+		machine().root_device().ioport("LEVER1")->read(),
+		machine().root_device().ioport("LEVER2")->read(),
+		machine().root_device().ioport("LEVER3")->read(),
+		machine().root_device().ioport("LEVER4")->read()
 	};
 
 	int i;
@@ -69,25 +68,25 @@ static TIMER_CALLBACK( nmi_callback	)
 
 	for (i = 0; i < 4; i++)
 	{
-		signed char delta = wheel[i] - state->m_last_wheel[i];
+		signed char delta = wheel[i] - m_last_wheel[i];
 
 		if (delta < 0)
 		{
-			state->m_steer_FF2[i] = 0;
+			m_steer_FF2[i] = 0;
 		}
 		if (delta > 0)
 		{
-			state->m_steer_FF2[i] = 1;
+			m_steer_FF2[i] = 1;
 		}
 
-		state->m_steer_FF1[i] = (wheel[i] >> 4) & 1;
+		m_steer_FF1[i] = (wheel[i] >> 4) & 1;
 
-		if (lever[i] & 1) { state->m_gear[i] = 1; }
-		if (lever[i] & 2) { state->m_gear[i] = 2; }
-		if (lever[i] & 4) { state->m_gear[i] = 3; }
-		if (lever[i] & 8) { state->m_gear[i] = 4; }
+		if (lever[i] & 1) { m_gear[i] = 1; }
+		if (lever[i] & 2) { m_gear[i] = 2; }
+		if (lever[i] & 4) { m_gear[i] = 3; }
+		if (lever[i] & 8) { m_gear[i] = 4; }
 
-		state->m_last_wheel[i] = wheel[i];
+		m_last_wheel[i] = wheel[i];
 	}
 
 	scanline += 64;
@@ -99,18 +98,18 @@ static TIMER_CALLBACK( nmi_callback	)
 
 	/* NMI and watchdog are disabled during service mode */
 
-	machine.watchdog_enable(machine.root_device().ioport("IN0")->read() & 0x40);
+	machine().watchdog_enable(machine().root_device().ioport("IN0")->read() & 0x40);
 
-	if (machine.root_device().ioport("IN0")->read() & 0x40)
-		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (machine().root_device().ioport("IN0")->read() & 0x40)
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(nmi_callback), scanline);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(sprint4_state::nmi_callback),this), scanline);
 }
 
 
 void sprint4_state::machine_reset()
 {
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(32), FUNC(nmi_callback), 32);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(32), timer_expired_delegate(FUNC(sprint4_state::nmi_callback),this), 32);
 
 	memset(m_steer_FF1, 0, sizeof m_steer_FF1);
 	memset(m_steer_FF2, 0, sizeof m_steer_FF2);
@@ -187,28 +186,28 @@ WRITE8_MEMBER(sprint4_state::sprint4_lockout_w)
 WRITE8_MEMBER(sprint4_state::sprint4_screech_1_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, SPRINT4_SCREECH_EN_1, offset & 1);
+	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_1, offset & 1);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_2_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, SPRINT4_SCREECH_EN_2, offset & 1);
+	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_2, offset & 1);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_3_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, SPRINT4_SCREECH_EN_3, offset & 1);
+	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_3, offset & 1);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_4_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, SPRINT4_SCREECH_EN_4, offset & 1);
+	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_4, offset & 1);
 }
 
 
@@ -217,14 +216,14 @@ WRITE8_MEMBER(sprint4_state::sprint4_screech_4_w)
 WRITE8_MEMBER(sprint4_state::sprint4_bang_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, SPRINT4_BANG_DATA, data & 0x0f);
+	discrete_sound_w(device, space, SPRINT4_BANG_DATA, data & 0x0f);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_attract_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, SPRINT4_ATTRACT_EN, data & 1);
+	discrete_sound_w(device, space, SPRINT4_ATTRACT_EN, data & 1);
 }
 
 
@@ -404,8 +403,8 @@ static MACHINE_CONFIG_START( sprint4, sprint4_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, 0, 256, VTOTAL, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(sprint4)
-	MCFG_SCREEN_VBLANK_STATIC(sprint4)
+	MCFG_SCREEN_UPDATE_DRIVER(sprint4_state, screen_update_sprint4)
+	MCFG_SCREEN_VBLANK_DRIVER(sprint4_state, screen_eof_sprint4)
 
 	MCFG_GFXDECODE(sprint4)
 	MCFG_PALETTE_LENGTH(10)

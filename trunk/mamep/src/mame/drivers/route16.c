@@ -601,7 +601,7 @@ static MACHINE_CONFIG_START( route16, route16_state )
 	MCFG_CPU_ADD("cpu1", Z80, 2500000)	/* 10MHz / 4 = 2.5MHz */
 	MCFG_CPU_PROGRAM_MAP(route16_cpu1_map)
 	MCFG_CPU_IO_MAP(cpu1_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", route16_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("cpu2", Z80, 2500000)	/* 10MHz / 4 = 2.5MHz */
 	MCFG_CPU_PROGRAM_MAP(route16_cpu2_map)
@@ -612,7 +612,7 @@ static MACHINE_CONFIG_START( route16, route16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 256-1)
 	MCFG_SCREEN_REFRESH_RATE(57)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	/* frames per second, vblank duration */
-	MCFG_SCREEN_UPDATE_STATIC(route16)
+	MCFG_SCREEN_UPDATE_DRIVER(route16_state, screen_update_route16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -640,7 +640,7 @@ static MACHINE_CONFIG_DERIVED( stratvox, route16 )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(stratvox)
+	MCFG_SCREEN_UPDATE_DRIVER(route16_state, screen_update_stratvox)
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("ay8910")
@@ -667,7 +667,7 @@ static MACHINE_CONFIG_DERIVED( spacecho, speakres )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("cpu2")
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,48*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(route16_state, irq0_line_hold, 48*60)
 MACHINE_CONFIG_END
 
 
@@ -678,7 +678,7 @@ static MACHINE_CONFIG_DERIVED( ttmahjng, route16 )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(ttmahjng)
+	MCFG_SCREEN_UPDATE_DRIVER(route16_state, screen_update_ttmahjng)
 MACHINE_CONFIG_END
 
 

@@ -319,7 +319,7 @@ static MACHINE_CONFIG_START( ohmygod, ohmygod_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(ohmygod_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ohmygod_state,  irq1_line_hold)
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
@@ -330,7 +330,7 @@ static MACHINE_CONFIG_START( ohmygod, ohmygod_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(12*8, (64-12)*8-1, 0*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(ohmygod)
+	MCFG_SCREEN_UPDATE_DRIVER(ohmygod_state, screen_update_ohmygod)
 
 	MCFG_GFXDECODE(ohmygod)
 	MCFG_PALETTE_LENGTH(1024)

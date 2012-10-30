@@ -66,19 +66,18 @@
  *
  *************************************/
 
-static TIMER_CALLBACK( interrupt_gen )
+TIMER_CALLBACK_MEMBER(atetris_state::interrupt_gen)
 {
-	atetris_state *state = machine.driver_data<atetris_state>();
 	int scanline = param;
 
 	/* assert/deassert the interrupt */
-	machine.device("maincpu")->execute().set_input_line(0, (scanline & 32) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, (scanline & 32) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* set the next timer */
 	scanline += 32;
 	if (scanline >= 256)
 		scanline -= 256;
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -107,7 +106,7 @@ void atetris_state::machine_start()
 {
 
 	/* Allocate interrupt timer */
-	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(interrupt_gen));
+	m_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(atetris_state::interrupt_gen),this));
 
 	/* Set up save state */
 	save_item(NAME(m_current_bank));
@@ -139,7 +138,7 @@ void atetris_state::machine_reset()
 READ8_MEMBER(atetris_state::atetris_slapstic_r)
 {
 	int result = m_slapstic_base[0x2000 + offset];
-	int new_bank = slapstic_tweak(&space, offset) & 1;
+	int new_bank = slapstic_tweak(space, offset) & 1;
 
 	/* update for the new bank */
 	if (new_bank != m_current_bank)
@@ -218,9 +217,9 @@ static ADDRESS_MAP_START( atetrisb2_map, AS_PROGRAM, 8, atetris_state )
 	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(atetris_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2000, 0x20ff) AM_RAM_WRITE(paletteram_RRRGGGBB_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0x2400, 0x25ff) AM_RAM_WRITE(nvram_w) AM_SHARE("nvram")
-	AM_RANGE(0x2802, 0x2802) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0x2804, 0x2804) AM_DEVWRITE("sn2", sn76496_new_device, write)
-	AM_RANGE(0x2806, 0x2806) AM_DEVWRITE("sn3", sn76496_new_device, write)
+	AM_RANGE(0x2802, 0x2802) AM_DEVWRITE("sn1", sn76496_device, write)
+	AM_RANGE(0x2804, 0x2804) AM_DEVWRITE("sn2", sn76496_device, write)
+	AM_RANGE(0x2806, 0x2806) AM_DEVWRITE("sn3", sn76496_device, write)
 	AM_RANGE(0x2808, 0x2808) AM_READ_PORT("IN0")
 	AM_RANGE(0x2818, 0x2818) AM_READ_PORT("IN1")
 	AM_RANGE(0x3000, 0x3000) AM_WRITE(watchdog_reset_w)
@@ -354,7 +353,7 @@ static MACHINE_CONFIG_START( atetris, atetris_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(atetris)
+	MCFG_SCREEN_UPDATE_DRIVER(atetris_state, screen_update_atetris)
 
 
 	/* sound hardware */
@@ -386,21 +385,21 @@ static MACHINE_CONFIG_START( atetrisb2, atetris_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(atetris)
+	MCFG_SCREEN_UPDATE_DRIVER(atetris_state, screen_update_atetris)
 
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, BOOTLEG_CLOCK/8)
+	MCFG_SOUND_ADD("sn1", SN76496, BOOTLEG_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, BOOTLEG_CLOCK/8)
+	MCFG_SOUND_ADD("sn2", SN76496, BOOTLEG_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496_NEW, BOOTLEG_CLOCK/8)
+	MCFG_SOUND_ADD("sn3", SN76496, BOOTLEG_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

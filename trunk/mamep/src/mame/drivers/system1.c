@@ -308,9 +308,9 @@ static const UINT8 cc_xy[0x100] = {
 ( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,(19  )*5+3*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,(19  )*5+3*2,( 4+4)*5+2*2,
 ( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,(19  )*5+3*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,( 4+4)*5+2*2,(19  )*5+3*2,( 4+4)*5+2*2,
 ( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,(10+4)*5+4*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,( 0  )*5    ,(10+4)*5+4*2,(17+4)*5+4*2,( 7+4)*5+3*2,(11+4)*5+2*2,
-( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+3*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,( 4+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+3*2,(10+4)*5+4*2,( 4+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,
-( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,(19+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,( 4+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,
-( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,( 6+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2
+( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+3*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,( 4+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+3*2,(10+4)*5+4*2,( 4  )*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,
+( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,(19+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,( 4+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,(10+4)*5+4*2,( 4  )*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,
+( 5+4)*5+2*2,(10+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,(10+4)*5+4*2,(11+4)*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2,( 5+4)*5+2*2,( 6+4)*5+2*2,(10+4)*5+4*2,( 4+4)*5+2*2,(10+4)*5+4*2,( 4  )*5+2*2,( 7+4)*5+3*2,(11+4)*5+2*2
 };
 
 static const UINT8 cc_xycb[0x100] = {
@@ -465,13 +465,27 @@ static void dakkochn_custom_w(running_machine &machine, UINT8 data, UINT8 prevda
 
 /*************************************
  *
+ *  Shooting Master gun input
+ *
+ *************************************/
+
+READ8_MEMBER(system1_state::shtngmst_gunx_r)
+{
+	// x is slightly offset, and has a range of 00-fe
+	UINT8 x = ioport("GUNX")->read() - 0x12;
+	return (x == 0xff) ? 0xfe : x;
+}
+
+
+
+/*************************************
+ *
  *  Sound I/O
  *
  *************************************/
 
 WRITE8_MEMBER(system1_state::sound_control_w)
 {
-	device_t *device = machine().device("ppi8255");
 	/* bit 0 = MUTE (inverted sense on System 2) */
 	machine().sound().system_mute((data ^ m_mute_xor) & 1);
 
@@ -481,7 +495,7 @@ WRITE8_MEMBER(system1_state::sound_control_w)
 	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* remaining bits are used for video RAM banking */
-	system1_videoram_bank_w(device, offset, data);
+	system1_videoram_bank_w(space, offset, data);
 }
 
 
@@ -518,10 +532,10 @@ WRITE8_MEMBER(system1_state::soundport_w)
 }
 
 
-static TIMER_DEVICE_CALLBACK( soundirq_gen )
+TIMER_DEVICE_CALLBACK_MEMBER(system1_state::soundirq_gen)
 {
 	/* sound IRQ is generated on 32V, 96V, ... and auto-acknowledged */
-	timer.machine().device("soundcpu")->execute().set_input_line(0, HOLD_LINE);
+	machine().device("soundcpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -555,11 +569,11 @@ WRITE8_MEMBER(system1_state::mcu_io_w)
 	switch ((m_mcu_control >> 3) & 3)
 	{
 		case 0:
-			machine().device<z80_device>("maincpu")->space(AS_PROGRAM)->write_byte(offset, data);
+			machine().device<z80_device>("maincpu")->space(AS_PROGRAM).write_byte(offset, data);
 			break;
 
 		case 2:
-			machine().device<z80_device>("maincpu")->space(AS_IO)->write_byte(offset, data);
+			machine().device<z80_device>("maincpu")->space(AS_IO).write_byte(offset, data);
 			break;
 
 		default:
@@ -575,13 +589,13 @@ READ8_MEMBER(system1_state::mcu_io_r)
 	switch ((m_mcu_control >> 3) & 3)
 	{
 		case 0:
-			return machine().device<z80_device>("maincpu")->space(AS_PROGRAM)->read_byte(offset);
+			return machine().device<z80_device>("maincpu")->space(AS_PROGRAM).read_byte(offset);
 
 		case 1:
 			return memregion("maincpu")->base()[offset + 0x10000];
 
 		case 2:
-			return machine().device<z80_device>("maincpu")->space(AS_IO)->read_byte(offset);
+			return machine().device<z80_device>("maincpu")->space(AS_IO).read_byte(offset);
 
 		default:
 			logerror("%03X: MCU movx read mode %02X offset %04X\n",
@@ -591,18 +605,18 @@ READ8_MEMBER(system1_state::mcu_io_r)
 }
 
 
-static INTERRUPT_GEN( mcu_irq_assert )
+INTERRUPT_GEN_MEMBER(system1_state::mcu_irq_assert)
 {
 	/* toggle the INT0 line on the MCU */
-	device->execute().set_input_line(MCS51_INT0_LINE, ASSERT_LINE);
-	device->execute().set_input_line(MCS51_INT0_LINE, CLEAR_LINE);
+	device.execute().set_input_line(MCS51_INT0_LINE, ASSERT_LINE);
+	device.execute().set_input_line(MCS51_INT0_LINE, CLEAR_LINE);
 
 	/* boost interleave to ensure that the MCU can break the Z80 out of a HALT */
-	device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
 }
 
 
-static TIMER_DEVICE_CALLBACK( mcu_t0_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(system1_state::mcu_t0_callback)
 {
 	/* The T0 line is clocked by something; if it is not clocked fast
        enough, the MCU will fail; on shtngmst this happens after 3
@@ -610,7 +624,7 @@ static TIMER_DEVICE_CALLBACK( mcu_t0_callback )
        choplift is even more picky about it, affecting scroll speed
     */
 
-	device_t *mcu = timer.machine().device("mcu");
+	device_t *mcu = machine().device("mcu");
 	mcu->execute().set_input_line(MCS51_T0_LINE, ASSERT_LINE);
 	mcu->execute().set_input_line(MCS51_T0_LINE, CLEAR_LINE);
 }
@@ -670,11 +684,9 @@ READ8_MEMBER(system1_state::nob_mcu_status_r)
 
 /*************************************
  *
- *  Generic port definitions
+ *  nob bootleg protection
  *
  *************************************/
-
-// nobb - these ports are used for some kind of replacement protection system used by the bootleg
 
 READ8_MEMBER(system1_state::nobb_inport1c_r)
 {
@@ -771,8 +783,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, system1_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0xa000, 0xa003) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76489a_new_device, write)
-	AM_RANGE(0xc000, 0xc003) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76489a_new_device, write)
+	AM_RANGE(0xa000, 0xa003) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xc000, 0xc003) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76489a_device, write)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1fff) AM_READ(sound_data_r)
 ADDRESS_MAP_END
 
@@ -1748,10 +1760,10 @@ static INPUT_PORTS_START( shtngmst )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START("GUNX") /* 1c */
-	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(15) PORT_PLAYER(1)
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(48) PORT_KEYDELTA(8)
 
 	PORT_START("GUNY") /* 1d */
-	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, -1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(15) PORT_PLAYER(1) PORT_REVERSE
+	PORT_BIT( 0xff, 0x90, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, -1.0, 0.0, 0) PORT_MINMAX(0x20, 0xff) PORT_SENSITIVITY(64) PORT_KEYDELTA(8) PORT_REVERSE
 
 	PORT_START("18") /* 18 */
 	/* what is this? check the game code... */
@@ -2147,11 +2159,11 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK)	/* not really, see notes above */
 	MCFG_CPU_PROGRAM_MAP(system1_map)
 	MCFG_CPU_IO_MAP(system1_ppi_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", system1_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80, SOUND_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_TIMER_ADD_SCANLINE("soundirq", soundirq_gen, "screen", 32, 64)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("soundirq", system1_state, soundirq_gen, "screen", 32, 64)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -2163,7 +2175,7 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 640, 0, 512, 260, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(system1)
+	MCFG_SCREEN_UPDATE_DRIVER(system1_state, screen_update_system1)
 
 	MCFG_GFXDECODE(system1)
 	MCFG_PALETTE_LENGTH(2048)
@@ -2172,11 +2184,11 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A_NEW, SOUND_CLOCK/4)
+	MCFG_SOUND_ADD("sn1", SN76489A, SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A_NEW, SOUND_CLOCK/2)	/* selectable via jumper */
+	MCFG_SOUND_ADD("sn2", SN76489A, SOUND_CLOCK/2)	/* selectable via jumper */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -2220,9 +2232,9 @@ static MACHINE_CONFIG_FRAGMENT( mcu )
 
 	MCFG_CPU_ADD("mcu", I8751, SOUND_CLOCK)
 	MCFG_CPU_IO_MAP(mcu_io_map)
-	MCFG_CPU_VBLANK_INT("screen", mcu_irq_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", system1_state,  mcu_irq_assert)
 
-	MCFG_TIMER_ADD_PERIODIC("mcu_t0", mcu_t0_callback, attotime::from_usec(2500))	/* ??? actual clock unknown */
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("mcu_t0", system1_state, mcu_t0_callback, attotime::from_usec(2500))
 MACHINE_CONFIG_END
 
 
@@ -2252,7 +2264,7 @@ static MACHINE_CONFIG_DERIVED( sys2, sys1ppi )
 	/* video hardware */
 	MCFG_VIDEO_START_OVERRIDE(system1_state,system2)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(system2)
+	MCFG_SCREEN_UPDATE_DRIVER(system1_state, screen_update_system2)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sys2m, sys2 )
@@ -2264,7 +2276,7 @@ static MACHINE_CONFIG_DERIVED( sys2row, sys2 )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(system2_rowscroll)
+	MCFG_SCREEN_UPDATE_DRIVER(system1_state, screen_update_system2_rowscroll)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sys2rowm, sys2row )
@@ -4642,11 +4654,11 @@ DRIVER_INIT_MEMBER(system1_state,dakkochn)
 
 	mc8123_decrypt_rom(machine(), "maincpu", "key", "bank1", 4);
 
-//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x00, 0x00, FUNC(dakkochn_port_00_r));
-//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x03, 0x03, FUNC(dakkochn_port_03_r));
-//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x04, 0x04, FUNC(dakkochn_port_04_r));
+//  machine().device("maincpu")->memory().space(AS_IO).install_legacy_read_handler(0x00, 0x00, FUNC(dakkochn_port_00_r));
+//  machine().device("maincpu")->memory().space(AS_IO).install_legacy_read_handler(0x03, 0x03, FUNC(dakkochn_port_03_r));
+//  machine().device("maincpu")->memory().space(AS_IO).install_legacy_read_handler(0x04, 0x04, FUNC(dakkochn_port_04_r));
 
-//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_write_handler(0x15, 0x15, FUNC(dakkochn_port_15_w));
+//  machine().device("maincpu")->memory().space(AS_IO).install_legacy_write_handler(0x15, 0x15, FUNC(dakkochn_port_15_w));
 }
 
 
@@ -4704,19 +4716,19 @@ READ8_MEMBER(system1_state::nob_start_r)
 
 DRIVER_INIT_MEMBER(system1_state,nob)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	DRIVER_INIT_CALL(bank44);
 
 	/* hack to fix incorrect JMP at start, which should obviously be to $0080 */
 	/* patching the ROM causes errors in the self-test */
 	/* in real-life, it could be some behavior dependent upon M1 */
-	space->install_read_handler(0x0001, 0x0001, read8_delegate(FUNC(system1_state::nob_start_r),this));
+	space.install_read_handler(0x0001, 0x0001, read8_delegate(FUNC(system1_state::nob_start_r),this));
 
 	/* install MCU communications */
-	iospace->install_readwrite_handler(0x18, 0x18, 0x00, 0x00, read8_delegate(FUNC(system1_state::nob_maincpu_latch_r),this), write8_delegate(FUNC(system1_state::nob_maincpu_latch_w),this));
-	iospace->install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nob_mcu_status_r),this));
+	iospace.install_readwrite_handler(0x18, 0x18, 0x00, 0x00, read8_delegate(FUNC(system1_state::nob_maincpu_latch_r),this), write8_delegate(FUNC(system1_state::nob_maincpu_latch_w),this));
+	iospace.install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nob_mcu_status_r),this));
 }
 
 DRIVER_INIT_MEMBER(system1_state,nobb)
@@ -4736,32 +4748,32 @@ DRIVER_INIT_MEMBER(system1_state,nobb)
 //  ROM[0x10000 + 0 * 0x8000 + 0x3347] = 0x18;  // 'jr' instead of 'jr z'
 
 	/* Patch to get sound in later levels(the program enters into a tight loop)*/
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 	UINT8 *ROM2 = machine().root_device().memregion("soundcpu")->base();
 
 	ROM2[0x02f9] = 0x28;//'jr z' instead of 'jr'
 
 	DRIVER_INIT_CALL(bank44);
 
-	iospace->install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nobb_inport1c_r),this));
-	iospace->install_read_handler(0x22, 0x22, read8_delegate(FUNC(system1_state::nobb_inport22_r),this));
-	iospace->install_read_handler(0x23, 0x23, read8_delegate(FUNC(system1_state::nobb_inport23_r),this));
-	iospace->install_write_handler(0x24, 0x24, write8_delegate(FUNC(system1_state::nobb_outport24_w),this));
+	iospace.install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nobb_inport1c_r),this));
+	iospace.install_read_handler(0x22, 0x22, read8_delegate(FUNC(system1_state::nobb_inport22_r),this));
+	iospace.install_read_handler(0x23, 0x23, read8_delegate(FUNC(system1_state::nobb_inport23_r),this));
+	iospace.install_write_handler(0x24, 0x24, write8_delegate(FUNC(system1_state::nobb_outport24_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(system1_state,bootleg)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x10000);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space.set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x10000);
 	DRIVER_INIT_CALL(bank00);
 }
 
 
 DRIVER_INIT_MEMBER(system1_state,bootsys2)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x20000);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space.set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x20000);
 	machine().root_device().membank("bank1")->configure_decrypted_entries(0, 4, machine().root_device().memregion("maincpu")->base() + 0x30000, 0x4000);
 	DRIVER_INIT_CALL(bank0c);
 }
@@ -4780,11 +4792,11 @@ DRIVER_INIT_MEMBER(system1_state,choplift)
 
 DRIVER_INIT_MEMBER(system1_state,shtngmst)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
-	iospace->install_read_port(0x12, 0x12, 0x00, 0x00, "TRIGGER");
-	iospace->install_read_port(0x18, 0x18, 0x00, 0x03, "18");
-	iospace->install_read_port(0x1c, 0x1c, 0x00, 0x02, "GUNX");
-	iospace->install_read_port(0x1d, 0x1d, 0x00, 0x02, "GUNY");
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	iospace.install_read_port(0x12, 0x12, 0x00, 0x00, "TRIGGER");
+	iospace.install_read_port(0x18, 0x18, 0x00, 0x03, "18");
+	iospace.install_read_handler(0x1c, 0x1c, 0x00, 0x02, read8_delegate(FUNC(system1_state::shtngmst_gunx_r),this));
+	iospace.install_read_port(0x1d, 0x1d, 0x00, 0x02, "GUNY");
 	DRIVER_INIT_CALL(bank0c);
 }
 

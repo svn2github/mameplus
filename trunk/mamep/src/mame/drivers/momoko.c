@@ -263,7 +263,7 @@ static MACHINE_CONFIG_START( momoko, momoko_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 5000000)	/* 5.0MHz */
 	MCFG_CPU_PROGRAM_MAP(momoko_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", momoko_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 2500000)	/* 2.5MHz */
 	MCFG_CPU_PROGRAM_MAP(momoko_sound_map)
@@ -275,7 +275,7 @@ static MACHINE_CONFIG_START( momoko, momoko_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(momoko)
+	MCFG_SCREEN_UPDATE_DRIVER(momoko_state, screen_update_momoko)
 
 	MCFG_GFXDECODE(momoko)
 	MCFG_PALETTE_LENGTH(512)

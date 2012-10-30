@@ -73,6 +73,7 @@ public:
 	DECLARE_READ32_MEMBER(skimaxx_analog_r);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_skimaxx(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -149,9 +150,9 @@ void skimaxx_state::video_start()
 	membank("bank1")->configure_entry(1, m_bg_buffer_front);
 }
 
-static SCREEN_UPDATE_IND16( skimaxx )
+UINT32 skimaxx_state::screen_update_skimaxx(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-//  popmessage("%02x %02x", state->ioport("X")->read(), state->ioport("Y")->read() );
+//  popmessage("%02x %02x", ioport("X")->read(), ioport("Y")->read() );
 
 	SCREEN_UPDATE16_CALL(tms340x0_ind16);
 
@@ -165,15 +166,15 @@ static SCREEN_UPDATE_IND16( skimaxx )
  *************************************/
 
 // TODO: Might not be used
-static void skimaxx_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+static void skimaxx_to_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
-	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	skimaxx_state *state = space.machine().driver_data<skimaxx_state>();
 	memcpy(shiftreg, &state->m_fg_buffer[TOWORD(address)], 512 * sizeof(UINT16));
 }
 
-static void skimaxx_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+static void skimaxx_from_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
-	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	skimaxx_state *state = space.machine().driver_data<skimaxx_state>();
 	memcpy(&state->m_fg_buffer[TOWORD(address)], shiftreg, 512 * sizeof(UINT16));
 }
 
@@ -524,7 +525,7 @@ void skimaxx_state::machine_reset()
 static MACHINE_CONFIG_START( skimaxx, skimaxx_state )
 	MCFG_CPU_ADD("maincpu", M68EC030, XTAL_40MHz)
 	MCFG_CPU_PROGRAM_MAP(68030_1_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)	// 1,3,7 are identical, rest is RTE
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", skimaxx_state,  irq3_line_hold)	// 1,3,7 are identical, rest is RTE
 
 	MCFG_CPU_ADD("subcpu", M68EC030, XTAL_40MHz)
 	MCFG_CPU_PROGRAM_MAP(68030_2_map)
@@ -542,7 +543,7 @@ static MACHINE_CONFIG_START( skimaxx, skimaxx_state )
 	MCFG_SCREEN_SIZE(0x400, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x280-1, 0, 0xf0-1)
 //  MCFG_SCREEN_UPDATE_STATIC(tms340x0_ind16)
-	MCFG_SCREEN_UPDATE_STATIC(skimaxx)
+	MCFG_SCREEN_UPDATE_DRIVER(skimaxx_state, screen_update_skimaxx)
 
 
 //  MCFG_GFXDECODE( skimaxx )

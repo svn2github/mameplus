@@ -228,7 +228,7 @@ static MACHINE_CONFIG_START( m57, m57_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", m57_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -238,7 +238,7 @@ static MACHINE_CONFIG_START( m57, m57_state )
 				/* talks about 55Hz and 1790ms vblank duration. */
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(m57)
+	MCFG_SCREEN_UPDATE_DRIVER(m57_state, screen_update_m57)
 
 	MCFG_GFXDECODE(m57)
 	MCFG_PALETTE_LENGTH(32*8+32*8)

@@ -81,6 +81,8 @@ public:
 	DECLARE_READ8_MEMBER(test_r);
 	DECLARE_DRIVER_INIT(hitpoker);
 	virtual void video_start();
+	UINT32 screen_update_hitpoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(hitpoker_irq);
 };
 
 
@@ -93,9 +95,8 @@ void hitpoker_state::video_start()
 	m_colorram = auto_alloc_array(machine(), UINT8, 0x2000);
 }
 
-static SCREEN_UPDATE_IND16(hitpoker)
+UINT32 hitpoker_state::screen_update_hitpoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	hitpoker_state *state = screen.machine().driver_data<hitpoker_state>();
 	int count = 0;
 	int y,x;
 
@@ -107,11 +108,11 @@ static SCREEN_UPDATE_IND16(hitpoker)
 		{
 			int tile,color,gfx_bpp;
 
-			tile = (((state->m_videoram[count]<<8)|(state->m_videoram[count+1])) & 0x3fff);
-			gfx_bpp = (state->m_colorram[count] & 0x80)>>7; //flag between 4 and 8 bpp
-			color = gfx_bpp ? ((state->m_colorram[count] & 0x70)>>4) : (state->m_colorram[count] & 0xf);
+			tile = (((m_videoram[count]<<8)|(m_videoram[count+1])) & 0x3fff);
+			gfx_bpp = (m_colorram[count] & 0x80)>>7; //flag between 4 and 8 bpp
+			color = gfx_bpp ? ((m_colorram[count] & 0x70)>>4) : (m_colorram[count] & 0xf);
 
-			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[gfx_bpp],tile,color,0,0,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,machine().gfx[gfx_bpp],tile,color,0,0,x*8,y*8);
 
 			count+=2;
 		}
@@ -485,9 +486,9 @@ static const hc11_config hitpoker_config =
 	0x01	//INIT defaults to 0x01
 };
 
-static INTERRUPT_GEN( hitpoker_irq )
+INTERRUPT_GEN_MEMBER(hitpoker_state::hitpoker_irq)
 {
-	device->execute().set_input_line(MC68HC11_IRQ_LINE, HOLD_LINE);
+	device.execute().set_input_line(MC68HC11_IRQ_LINE, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( hitpoker, hitpoker_state )
@@ -495,7 +496,7 @@ static MACHINE_CONFIG_START( hitpoker, hitpoker_state )
 	MCFG_CPU_PROGRAM_MAP(hitpoker_map)
 	MCFG_CPU_IO_MAP(hitpoker_io)
 	MCFG_CPU_CONFIG(hitpoker_config)
-	MCFG_CPU_VBLANK_INT("screen", hitpoker_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", hitpoker_state,  hitpoker_irq)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -505,7 +506,7 @@ static MACHINE_CONFIG_START( hitpoker, hitpoker_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) // not accurate
 	MCFG_SCREEN_SIZE(648, 480) //setted by the CRTC
 	MCFG_SCREEN_VISIBLE_AREA(0, 648-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(hitpoker)
+	MCFG_SCREEN_UPDATE_DRIVER(hitpoker_state, screen_update_hitpoker)
 
 	MCFG_MC6845_ADD("crtc", H46505, CRTC_CLOCK/2, mc6845_intf)	/* hand tuned to get ~60 fps */
 

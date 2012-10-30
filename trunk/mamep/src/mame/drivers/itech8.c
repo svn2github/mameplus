@@ -604,19 +604,19 @@ void itech8_update_interrupts(running_machine &machine, int periodic, int tms340
  *
  *************************************/
 
-static TIMER_CALLBACK( irq_off )
+TIMER_CALLBACK_MEMBER(itech8_state::irq_off)
 {
-	itech8_update_interrupts(machine, 0, -1, -1);
+	itech8_update_interrupts(machine(), 0, -1, -1);
 }
 
 
-static INTERRUPT_GEN( generate_nmi )
+INTERRUPT_GEN_MEMBER(itech8_state::generate_nmi)
 {
 	/* signal the NMI */
-	itech8_update_interrupts(device->machine(), 1, -1, -1);
-	device->machine().scheduler().timer_set(attotime::from_usec(1), FUNC(irq_off));
+	itech8_update_interrupts(machine(), 1, -1, -1);
+	machine().scheduler().timer_set(attotime::from_usec(1), timer_expired_delegate(FUNC(itech8_state::irq_off),this));
 
-	if (FULL_LOGGING) logerror("------------ VBLANK (%d) --------------\n", device->machine().primary_screen->vpos());
+	if (FULL_LOGGING) logerror("------------ VBLANK (%d) --------------\n", machine().primary_screen->vpos());
 }
 
 
@@ -640,13 +640,13 @@ static void generate_sound_irq(device_t *device, int state)
  *
  *************************************/
 
-static TIMER_CALLBACK( behind_the_beam_update );
+
 
 
 MACHINE_START_MEMBER(itech8_state,sstrike)
 {
 	/* we need to update behind the beam as well */
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(behind_the_beam_update), 32);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(itech8_state::behind_the_beam_update),this), 32);
 }
 
 void itech8_state::machine_reset()
@@ -676,20 +676,20 @@ void itech8_state::machine_reset()
  *
  *************************************/
 
-static TIMER_CALLBACK( behind_the_beam_update )
+TIMER_CALLBACK_MEMBER(itech8_state::behind_the_beam_update)
 {
 	int scanline = param >> 8;
 	int interval = param & 0xff;
 
 	/* force a partial update to the current scanline */
-	machine.primary_screen->update_partial(scanline);
+	machine().primary_screen->update_partial(scanline);
 
 	/* advance by the interval, and wrap to 0 */
 	scanline += interval;
 	if (scanline >= 256) scanline = 0;
 
 	/* set a new timer */
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(behind_the_beam_update), (scanline << 8) + interval);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(itech8_state::behind_the_beam_update),this), (scanline << 8) + interval);
 }
 
 
@@ -767,7 +767,7 @@ WRITE8_MEMBER(itech8_state::ym2203_portb_out)
 	/* bit 6 controls the diagnostic sound LED */
 	/* bit 7 controls the ticket dispenser */
 	m_pia_portb_data = data;
-	machine().device<ticket_dispenser_device>("ticket")->write(*machine().memory().first_space(), 0, data & 0x80);
+	machine().device<ticket_dispenser_device>("ticket")->write(machine().driver_data()->generic_space(), 0, data & 0x80);
 	coin_counter_w(machine(), 0, (data & 0x20) >> 5);
 }
 
@@ -779,17 +779,16 @@ WRITE8_MEMBER(itech8_state::ym2203_portb_out)
  *
  *************************************/
 
-static TIMER_CALLBACK( delayed_sound_data_w )
+TIMER_CALLBACK_MEMBER(itech8_state::delayed_sound_data_w)
 {
-	itech8_state *state = machine.driver_data<itech8_state>();
-	state->m_sound_data = param;
-	machine.device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+	m_sound_data = param;
+	machine().device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(itech8_state::sound_data_w)
 {
-	machine().scheduler().synchronize(FUNC(delayed_sound_data_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(itech8_state::delayed_sound_data_w),this), data);
 }
 
 
@@ -800,7 +799,7 @@ WRITE8_MEMBER(itech8_state::gtg2_sound_data_w)
 	       ((data & 0x5d) << 1) |
 	       ((data & 0x20) >> 3) |
 	       ((data & 0x02) << 5);
-	machine().scheduler().synchronize(FUNC(delayed_sound_data_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(itech8_state::delayed_sound_data_w),this), data);
 }
 
 
@@ -1685,7 +1684,7 @@ static MACHINE_CONFIG_START( itech8_core_lo, itech8_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, CLOCK_8MHz/4)
 	MCFG_CPU_PROGRAM_MAP(tmslo_map)
-	MCFG_CPU_VBLANK_INT("screen", generate_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", itech8_state,  generate_nmi)
 
 	MCFG_NVRAM_ADD_RANDOM_FILL("nvram")
 
@@ -1792,7 +1791,7 @@ static MACHINE_CONFIG_DERIVED( wfortune, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -1804,10 +1803,10 @@ static MACHINE_CONFIG_DERIVED( grmatch, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 399, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_grmatch)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_grmatch)
 
 	/* palette updater */
-	MCFG_TIMER_ADD_SCANLINE("palette", grmatch_palette_update, "screen", 0, 0)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("palette", itech8_state, grmatch_palette_update, "screen", 0, 0)
 MACHINE_CONFIG_END
 
 
@@ -1819,7 +1818,7 @@ static MACHINE_CONFIG_DERIVED( stratab_hi, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -1831,7 +1830,7 @@ static MACHINE_CONFIG_DERIVED( stratab_lo, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -1847,7 +1846,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_hi, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(slikshot)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_slikshot)
 	MCFG_VIDEO_START_OVERRIDE(itech8_state,slikshot)
 MACHINE_CONFIG_END
 
@@ -1864,7 +1863,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_lo, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(slikshot)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_slikshot)
 	MCFG_VIDEO_START_OVERRIDE(itech8_state,slikshot)
 MACHINE_CONFIG_END
 
@@ -1877,7 +1876,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_lo_noz80, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2page)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2page)
 MACHINE_CONFIG_END
 
 
@@ -1897,7 +1896,7 @@ static MACHINE_CONFIG_DERIVED( hstennis_hi, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 399, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1909,7 +1908,7 @@ static MACHINE_CONFIG_DERIVED( hstennis_lo, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 399, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1920,12 +1919,12 @@ static MACHINE_CONFIG_DERIVED( rimrockn, itech8_core_hi )
 
 	MCFG_CPU_REPLACE("maincpu", HD6309, CLOCK_12MHz)
 	MCFG_CPU_PROGRAM_MAP(tmshi_map)
-	MCFG_CPU_VBLANK_INT("screen", generate_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", itech8_state,  generate_nmi)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(24, 375, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1936,12 +1935,12 @@ static MACHINE_CONFIG_DERIVED( ninclown, itech8_core_hi )
 
 	MCFG_CPU_REPLACE("maincpu", M68000, CLOCK_12MHz)
 	MCFG_CPU_PROGRAM_MAP(ninclown_map)
-	MCFG_CPU_VBLANK_INT("screen", generate_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", itech8_state,  generate_nmi)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(64, 423, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1956,7 +1955,7 @@ static MACHINE_CONFIG_DERIVED( gtg2, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
+	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -2630,25 +2629,25 @@ ROM_END
 
 DRIVER_INIT_MEMBER(itech8_state,grmatch)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0160, 0x0160, write8_delegate(FUNC(itech8_state::grmatch_palette_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0180, 0x0180, write8_delegate(FUNC(itech8_state::grmatch_xscroll_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->unmap_write(0x01e0, 0x01ff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0160, 0x0160, write8_delegate(FUNC(itech8_state::grmatch_palette_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0180, 0x0180, write8_delegate(FUNC(itech8_state::grmatch_xscroll_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).unmap_write(0x01e0, 0x01ff);
 }
 
 
 DRIVER_INIT_MEMBER(itech8_state,slikshot)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler (0x0180, 0x0180, FUNC(slikshot_z80_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler (0x01cf, 0x01cf, FUNC(slikshot_z80_control_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x01cf, 0x01cf, FUNC(slikshot_z80_control_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x0180, 0x0180, FUNC(slikshot_z80_r));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x01cf, 0x01cf, FUNC(slikshot_z80_control_r));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x01cf, 0x01cf, FUNC(slikshot_z80_control_w));
 }
 
 
 DRIVER_INIT_MEMBER(itech8_state,sstrike)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler (0x1180, 0x1180, FUNC(slikshot_z80_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler (0x11cf, 0x11cf, FUNC(slikshot_z80_control_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x11cf, 0x11cf, FUNC(slikshot_z80_control_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x1180, 0x1180, FUNC(slikshot_z80_r));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x11cf, 0x11cf, FUNC(slikshot_z80_control_r));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x11cf, 0x11cf, FUNC(slikshot_z80_control_w));
 }
 
 
@@ -2679,15 +2678,15 @@ DRIVER_INIT_MEMBER(itech8_state,neckneck)
 DRIVER_INIT_MEMBER(itech8_state,rimrockn)
 {
 	/* additional input ports */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port (0x0161, 0x0161, "161");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port (0x0162, 0x0162, "162");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port (0x0163, 0x0163, "163");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port (0x0164, 0x0164, "164");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port (0x0165, 0x0165, "165");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port (0x0161, 0x0161, "161");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port (0x0162, 0x0162, "162");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port (0x0163, 0x0163, "163");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port (0x0164, 0x0164, "164");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port (0x0165, 0x0165, "165");
 
 	/* different banking mechanism (disable the old one) */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x01a0, 0x01a0, write8_delegate(FUNC(itech8_state::rimrockn_bank_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x01c0, 0x01df, write8_delegate(FUNC(itech8_state::itech8_blitter_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01a0, 0x01a0, write8_delegate(FUNC(itech8_state::rimrockn_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01c0, 0x01df, write8_delegate(FUNC(itech8_state::itech8_blitter_w),this));
 }
 
 

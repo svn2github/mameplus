@@ -113,6 +113,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack2_w);
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
 	DECLARE_WRITE_LINE_MEMBER(xtom3d_pic8259_1_set_int_line);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 	virtual void machine_start();
 	virtual void machine_reset();
 };
@@ -386,27 +387,27 @@ READ32_MEMBER(xtom3d_state::ide_r)
 	device_t *device = machine().device("ide");
 	return -1; // crashes otherwise
 
-	return ide_controller32_r(device, 0x1f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, space, 0x1f0/4 + offset, mem_mask);
 }
 
 WRITE32_MEMBER(xtom3d_state::ide_w)
 {
 	device_t *device = machine().device("ide");
 	if(0) // crashes otherwise
-		ide_controller32_w(device, 0x1f0/4 + offset, data, mem_mask);
+		ide_controller32_w(device, space, 0x1f0/4 + offset, data, mem_mask);
 }
 
 READ32_MEMBER(xtom3d_state::fdc_r)
 {
 	device_t *device = machine().device("ide");
-	return ide_controller32_r(device, 0x3f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, space, 0x3f0/4 + offset, mem_mask);
 }
 
 WRITE32_MEMBER(xtom3d_state::fdc_w)
 {
 	device_t *device = machine().device("ide");
 	//mame_printf_debug("FDC: write %08X, %08X, %08X\n", data, offset, mem_mask);
-	ide_controller32_w(device, 0x3f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, space, 0x3f0/4 + offset, data, mem_mask);
 }
 
 READ8_MEMBER(xtom3d_state::at_page8_r)
@@ -455,13 +456,13 @@ WRITE8_MEMBER(xtom3d_state::at_page8_w)
 READ8_MEMBER(xtom3d_state::at_dma8237_2_r)
 {
 	device_t *device = machine().device("dma8237_2");
-	return i8237_r(device, offset / 2);
+	return i8237_r(device, space, offset / 2);
 }
 
 WRITE8_MEMBER(xtom3d_state::at_dma8237_2_w)
 {
 	device_t *device = machine().device("dma8237_2");
-	i8237_w(device, offset / 2, data);
+	i8237_w(device, space, offset / 2, data);
 }
 
 WRITE_LINE_MEMBER(xtom3d_state::pc_dma_hrq_changed)
@@ -525,7 +526,7 @@ static I8237_INTERFACE( dma8237_2_config )
 
 static ADDRESS_MAP_START(xtom3d_map, AS_PROGRAM, 32, xtom3d_state)
 	AM_RANGE(0x00000000, 0x0009ffff) AM_RAM
-	AM_RANGE(0x000a0000, 0x000bffff) AM_RAM
+	AM_RANGE(0x000a0000, 0x000bffff) AM_DEVREADWRITE8("vga", vga_device, mem_r, mem_w, 0xffffffff)
 	AM_RANGE(0x000c0000, 0x000c3fff) AM_ROMBANK("video_bank1") AM_WRITE(isa_ram1_w)
 	AM_RANGE(0x000c4000, 0x000c7fff) AM_ROMBANK("video_bank2") AM_WRITE(isa_ram2_w)
 	AM_RANGE(0x000e0000, 0x000e3fff) AM_ROMBANK("bios_ext1") AM_WRITE(bios_ext1_ram_w)
@@ -549,6 +550,9 @@ static ADDRESS_MAP_START(xtom3d_io, AS_IO, 32, xtom3d_state)
 	AM_RANGE(0x00e8, 0x00ef) AM_NOP
 
 	AM_RANGE(0x01f0, 0x01f7) AM_READWRITE(ide_r, ide_w)
+	AM_RANGE(0x03b0, 0x03bf) AM_DEVREADWRITE8("vga", vga_device, port_03b0_r, port_03b0_w, 0xffffffff)
+	AM_RANGE(0x03c0, 0x03cf) AM_DEVREADWRITE8("vga", vga_device, port_03c0_r, port_03c0_w, 0xffffffff)
+	AM_RANGE(0x03d0, 0x03df) AM_DEVREADWRITE8("vga", vga_device, port_03d0_r, port_03d0_w, 0xffffffff)
 	AM_RANGE(0x03f0, 0x03f7) AM_READWRITE(fdc_r, fdc_w)
 
 	AM_RANGE(0x0cf8, 0x0cff) AM_DEVREADWRITE("pcibus", pci_bus_legacy_device, read, write)
@@ -638,13 +642,10 @@ static IRQ_CALLBACK(irq_callback)
 	return pic8259_acknowledge( state->m_pic8259_1);
 }
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(xtom3d_state::ide_interrupt)
 {
-	xtom3d_state *drvstate = device->machine().driver_data<xtom3d_state>();
-	pic8259_ir6_w(drvstate->m_pic8259_2, state);
+	pic8259_ir6_w(m_pic8259_2, state);
 }
-
-static READ8_HANDLER( vga_setting ) { return 0xff; } // hard-code to color
 
 void xtom3d_state::machine_start()
 {
@@ -663,8 +664,6 @@ void xtom3d_state::machine_start()
 	intel82439tx_init(machine());
 
 	kbdc8042_init(machine(), &at8042);
-	pc_vga_init(machine(), vga_setting, NULL);
-	pc_vga_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine().device("maincpu")->memory().space(AS_IO), 0x0000);
 }
 
 void xtom3d_state::machine_reset()
@@ -677,13 +676,6 @@ void xtom3d_state::machine_reset()
 	machine().root_device().membank("video_bank1")->set_base(machine().root_device().memregion("video_bios")->base() + 0);
 	machine().root_device().membank("video_bank2")->set_base(machine().root_device().memregion("video_bios")->base() + 0x4000);
 }
-
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
 
 static MACHINE_CONFIG_START( xtom3d, xtom3d_state )
 	MCFG_CPU_ADD("maincpu", PENTIUM, 450000000/16)	// actually Pentium II 450
@@ -703,7 +695,8 @@ static MACHINE_CONFIG_START( xtom3d, xtom3d_state )
 	MCFG_PCI_BUS_LEGACY_DEVICE(0, NULL, intel82439tx_pci_r, intel82439tx_pci_w)
 	MCFG_PCI_BUS_LEGACY_DEVICE(7, NULL, intel82371ab_pci_r, intel82371ab_pci_w)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, xtom3d_state, ide_interrupt))
 
 	/* video hardware */
 	MCFG_FRAGMENT_ADD( pcvideo_vga )

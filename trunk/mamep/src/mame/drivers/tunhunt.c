@@ -297,7 +297,7 @@ static MACHINE_CONFIG_START( tunhunt, tunhunt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_12_096MHz/6)		/* ??? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4*60)	/* 48V, 112V, 176V, 240V */
+	MCFG_CPU_PERIODIC_INT_DRIVER(tunhunt_state, irq0_line_hold,  4*60)	/* 48V, 112V, 176V, 240V */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -305,7 +305,7 @@ static MACHINE_CONFIG_START( tunhunt, tunhunt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256-16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 255-16)
-	MCFG_SCREEN_UPDATE_STATIC(tunhunt)
+	MCFG_SCREEN_UPDATE_DRIVER(tunhunt_state, screen_update_tunhunt)
 
 	MCFG_GFXDECODE(tunhunt)
 	MCFG_PALETTE_LENGTH(0x1a)

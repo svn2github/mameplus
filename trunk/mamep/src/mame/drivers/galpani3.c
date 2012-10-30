@@ -112,6 +112,8 @@ public:
 	{
 	}
 	virtual void video_start();
+	UINT32 screen_update_galpani3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(galpani3_vblank);
 };
 
 
@@ -123,19 +125,18 @@ public:
 
 
 
-static TIMER_DEVICE_CALLBACK( galpani3_vblank ) // 2, 3, 5 ?
+TIMER_DEVICE_CALLBACK_MEMBER(galpani3_state::galpani3_vblank)// 2, 3, 5 ?
 {
-	galpani3_state *state = timer.machine().driver_data<galpani3_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 	if(scanline == 128)
-		state->m_maincpu->set_input_line(5, HOLD_LINE); // timer, related to sound chip?
+		m_maincpu->set_input_line(5, HOLD_LINE); // timer, related to sound chip?
 }
 
 
@@ -188,18 +189,17 @@ static int gp3_is_alpha_pen(running_machine &machine, int pen)
 }
 
 
-static SCREEN_UPDATE_RGB32(galpani3)
+UINT32 galpani3_state::screen_update_galpani3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	galpani3_state *state = screen.machine().driver_data<galpani3_state>();
 	int x,y;
 	UINT16* src1;
 	UINT32* dst;
 	UINT16 pixdata1;
-	const pen_t *paldata = screen.machine().pens;
+	const pen_t *paldata = machine().pens;
 
 	bitmap.fill(0x0000, cliprect);
 
-//  popmessage("%02x %02x", state->m_grap2_0->m_framebuffer_bright2, state->m_grap2_1->m_framebuffer_bright2);
+//  popmessage("%02x %02x", m_grap2_0->m_framebuffer_bright2, m_grap2_1->m_framebuffer_bright2);
 
 
 
@@ -207,19 +207,19 @@ static SCREEN_UPDATE_RGB32(galpani3)
 		int drawy, drawx;
 		for (drawy=0;drawy<512;drawy++)
 		{
-			UINT16* srcline1 = state->m_grap2_0->m_framebuffer + ((drawy+state->m_grap2_0->m_framebuffer_scrolly+11)&0x1ff) * 0x200;
-			UINT16* srcline2 = state->m_grap2_1->m_framebuffer + ((drawy+state->m_grap2_1->m_framebuffer_scrolly+11)&0x1ff) * 0x200;
-			UINT16* srcline3 = state->m_grap2_2->m_framebuffer + ((drawy+state->m_grap2_2->m_framebuffer_scrolly+11)&0x1ff) * 0x200;
+			UINT16* srcline1 = m_grap2_0->m_framebuffer + ((drawy+m_grap2_0->m_framebuffer_scrolly+11)&0x1ff) * 0x200;
+			UINT16* srcline2 = m_grap2_1->m_framebuffer + ((drawy+m_grap2_1->m_framebuffer_scrolly+11)&0x1ff) * 0x200;
+			UINT16* srcline3 = m_grap2_2->m_framebuffer + ((drawy+m_grap2_2->m_framebuffer_scrolly+11)&0x1ff) * 0x200;
 
-			UINT16*  priline  = state->m_priority_buffer + ((drawy+state->m_priority_buffer_scrolly+11)&0x1ff) * 0x200;
+			UINT16*  priline  = m_priority_buffer + ((drawy+m_priority_buffer_scrolly+11)&0x1ff) * 0x200;
 
 			for (drawx=0;drawx<512;drawx++)
 			{
-				int srcoffs1 = (drawx+state->m_grap2_0->m_framebuffer_scrollx+67)&0x1ff;
-				int srcoffs2 = (drawx+state->m_grap2_1->m_framebuffer_scrollx+67)&0x1ff;
-				int srcoffs3 = (drawx+state->m_grap2_2->m_framebuffer_scrollx+67)&0x1ff;
+				int srcoffs1 = (drawx+m_grap2_0->m_framebuffer_scrollx+67)&0x1ff;
+				int srcoffs2 = (drawx+m_grap2_1->m_framebuffer_scrollx+67)&0x1ff;
+				int srcoffs3 = (drawx+m_grap2_2->m_framebuffer_scrollx+67)&0x1ff;
 
-				int prioffs  = (drawx+state->m_priority_buffer_scrollx+66)&0x1ff;
+				int prioffs  = (drawx+m_priority_buffer_scrollx+66)&0x1ff;
 
 				UINT8 dat1 = srcline1[srcoffs1];
 				UINT8 dat2 = srcline2[srcoffs2];
@@ -234,12 +234,12 @@ static SCREEN_UPDATE_RGB32(galpani3)
 				// this is all wrong
 				if (pridat==0x0f) // relates to the area you've drawn over
 				{
-					if (dat1 && state->m_grap2_0->m_framebuffer_enable)
+					if (dat1 && m_grap2_0->m_framebuffer_enable)
 					{
 						dst[0] = paldata[dat1+0x4000];
 					}
 
-					if (dat2 && state->m_grap2_1->m_framebuffer_enable)
+					if (dat2 && m_grap2_1->m_framebuffer_enable)
 					{
 						dst[0] = paldata[dat2+0x4100];
 					}
@@ -254,21 +254,21 @@ static SCREEN_UPDATE_RGB32(galpani3)
 					/* this isn't right, but the registers have something to do with
                        alpha / mixing, and bit 0x8000 of the palette is DEFINITELY alpha
                        enable -- see fading in intro */
-					if (dat1 && state->m_grap2_0->m_framebuffer_enable)
+					if (dat1 && m_grap2_0->m_framebuffer_enable)
 					{
 						UINT16 pen = dat1+0x4000;
 						UINT32 pal = paldata[pen];
 
-						if (gp3_is_alpha_pen(screen.machine(), pen))
+						if (gp3_is_alpha_pen(machine(), pen))
 						{
 							int r,g,b;
 							r = (pal & 0x00ff0000)>>16;
 							g = (pal & 0x0000ff00)>>8;
 							b = (pal & 0x000000ff)>>0;
 
-							r = (r * state->m_grap2_0->m_framebuffer_bright2) / 0xff;
-							g = (g * state->m_grap2_0->m_framebuffer_bright2) / 0xff;
-							b = (b * state->m_grap2_0->m_framebuffer_bright2) / 0xff;
+							r = (r * m_grap2_0->m_framebuffer_bright2) / 0xff;
+							g = (g * m_grap2_0->m_framebuffer_bright2) / 0xff;
+							b = (b * m_grap2_0->m_framebuffer_bright2) / 0xff;
 
 							pal = (r & 0x000000ff)<<16;
 							pal |=(g & 0x000000ff)<<8;
@@ -282,21 +282,21 @@ static SCREEN_UPDATE_RGB32(galpani3)
 						}
 					}
 
-					if (dat2 && state->m_grap2_1->m_framebuffer_enable)
+					if (dat2 && m_grap2_1->m_framebuffer_enable)
 					{
 						UINT16 pen = dat2+0x4100;
 						UINT32 pal = paldata[pen];
 
-						if (gp3_is_alpha_pen(screen.machine(), pen))
+						if (gp3_is_alpha_pen(machine(), pen))
 						{
 							int r,g,b;
 							r = (pal & 0x00ff0000)>>16;
 							g = (pal & 0x0000ff00)>>8;
 							b = (pal & 0x000000ff)>>0;
 
-							r = (r * state->m_grap2_1->m_framebuffer_bright2) / 0xff;
-							g = (g * state->m_grap2_1->m_framebuffer_bright2) / 0xff;
-							b = (b * state->m_grap2_1->m_framebuffer_bright2) / 0xff;
+							r = (r * m_grap2_1->m_framebuffer_bright2) / 0xff;
+							g = (g * m_grap2_1->m_framebuffer_bright2) / 0xff;
+							b = (b * m_grap2_1->m_framebuffer_bright2) / 0xff;
 
 							pal = (r & 0x000000ff)<<16;
 							pal |=(g & 0x000000ff)<<8;
@@ -310,7 +310,7 @@ static SCREEN_UPDATE_RGB32(galpani3)
 						}
 					}
 
-					if (dat3 && state->m_grap2_2->m_framebuffer_enable)
+					if (dat3 && m_grap2_2->m_framebuffer_enable)
 					{
 						dst[0] = paldata[dat3+0x4200];
 					}
@@ -319,20 +319,20 @@ static SCREEN_UPDATE_RGB32(galpani3)
 				/*
                 else if (pridat==0x2f) // area outside of the girl
                 {
-                    //dst[0] = screen.machine().rand()&0x3fff;
+                    //dst[0] = machine().rand()&0x3fff;
                 }
 
                 else if (pridat==0x00) // the initial line / box that gets drawn
                 {
-                    //dst[0] = screen.machine().rand()&0x3fff;
+                    //dst[0] = machine().rand()&0x3fff;
                 }
                 else if (pridat==0x30) // during the 'gals boxes' on the intro
                 {
-                    //dst[0] = screen.machine().rand()&0x3fff;
+                    //dst[0] = machine().rand()&0x3fff;
                 }
                 else if (pridat==0x0c) // 'nice' at end of level
                 {
-                    //dst[0] = screen.machine().rand()&0x3fff;
+                    //dst[0] = machine().rand()&0x3fff;
                 }
                 else
                 {
@@ -344,14 +344,14 @@ static SCREEN_UPDATE_RGB32(galpani3)
 	}
 
 
-	state->m_sprite_bitmap_1.fill(0x0000, cliprect);
+	m_sprite_bitmap_1.fill(0x0000, cliprect);
 
-	state->m_spritegen->skns_draw_sprites(screen.machine(), state->m_sprite_bitmap_1, cliprect, &state->m_spriteram32[0], 0x4000, screen.machine().root_device().memregion("gfx1")->base(), screen.machine().root_device().memregion ("gfx1")->bytes(), state->m_spc_regs );
+	m_spritegen->skns_draw_sprites(machine(), m_sprite_bitmap_1, cliprect, &m_spriteram32[0], 0x4000, machine().root_device().memregion("gfx1")->base(), machine().root_device().memregion ("gfx1")->bytes(), m_spc_regs );
 
 	// ignoring priority bits for now..
 	for (y=0;y<240;y++)
 	{
-		src1 = &state->m_sprite_bitmap_1.pix16(y);
+		src1 = &m_sprite_bitmap_1.pix16(y);
 		dst =  &bitmap.pix32(y);
 
 		for (x=0;x<320;x++)
@@ -510,7 +510,7 @@ static const ymz280b_interface ymz280b_intf =
 static MACHINE_CONFIG_START( galpani3, galpani3_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_28_63636MHz/2)	// Confirmed from PCB
 	MCFG_CPU_PROGRAM_MAP(galpani3_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", galpani3_vblank, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", galpani3_state, galpani3_vblank, "screen", 0, 1)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -518,7 +518,7 @@ static MACHINE_CONFIG_START( galpani3, galpani3_state )
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 64*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(galpani3)
+	MCFG_SCREEN_UPDATE_DRIVER(galpani3_state, screen_update_galpani3)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 

@@ -90,6 +90,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_psattack(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_psattack(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(psattack_interrupt);
 };
 
 
@@ -124,17 +127,17 @@ void psattack_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16(psattack)
+UINT32 psattack_state::screen_update_psattack(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	return 0;
 }
 
-static SCREEN_VBLANK(psattack)
+void psattack_state::screen_eof_psattack(screen_device &screen, bool state)
 {
 
 }
 
-static INTERRUPT_GEN(psattack_interrupt)
+INTERRUPT_GEN_MEMBER(psattack_state::psattack_interrupt)
 {
 
 }
@@ -176,7 +179,7 @@ static const vr0_interface vr0_config =
 static MACHINE_CONFIG_START( psattack, psattack_state )
 	MCFG_CPU_ADD("maincpu", SE3208, 43000000)
 	MCFG_CPU_PROGRAM_MAP(psattack_mem)
-	MCFG_CPU_VBLANK_INT("screen", psattack_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", psattack_state,  psattack_interrupt)
 
 
 	//MCFG_NVRAM_ADD_0FILL("nvram")
@@ -186,8 +189,8 @@ static MACHINE_CONFIG_START( psattack, psattack_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(psattack)
-	MCFG_SCREEN_VBLANK_STATIC(psattack)
+	MCFG_SCREEN_UPDATE_DRIVER(psattack_state, screen_update_psattack)
+	MCFG_SCREEN_VBLANK_DRIVER(psattack_state, screen_eof_psattack)
 
 
 	MCFG_PALETTE_INIT(RRRRR_GGGGGG_BBBBB)

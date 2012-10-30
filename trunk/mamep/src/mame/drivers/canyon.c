@@ -108,12 +108,12 @@ WRITE8_MEMBER(canyon_state::canyon_led_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, canyon_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x00ff) AM_MIRROR(0x100) AM_RAM
-	AM_RANGE(0x0400, 0x0401) AM_DEVWRITE_LEGACY("discrete", canyon_motor_w)
-	AM_RANGE(0x0500, 0x0500) AM_DEVWRITE_LEGACY("discrete", canyon_explode_w)
+	AM_RANGE(0x0400, 0x0401) AM_WRITE(canyon_motor_w)
+	AM_RANGE(0x0500, 0x0500) AM_WRITE(canyon_explode_w)
 	AM_RANGE(0x0501, 0x0501) AM_WRITE(watchdog_reset_w) /* watchdog, disabled in service mode */
-	AM_RANGE(0x0600, 0x0603) AM_DEVWRITE_LEGACY("discrete", canyon_whistle_w)
+	AM_RANGE(0x0600, 0x0603) AM_WRITE(canyon_whistle_w)
 	AM_RANGE(0x0680, 0x0683) AM_WRITE(canyon_led_w)
-	AM_RANGE(0x0700, 0x0703) AM_DEVWRITE_LEGACY("discrete", canyon_attract_w)
+	AM_RANGE(0x0700, 0x0703) AM_WRITE(canyon_attract_w)
 	AM_RANGE(0x0800, 0x0bff) AM_RAM_WRITE(canyon_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x1000, 0x17ff) AM_READ(canyon_switches_r) AM_WRITENOP  /* sloppy code writes here */
 	AM_RANGE(0x1800, 0x1fff) AM_READ(canyon_options_r)
@@ -239,7 +239,7 @@ static MACHINE_CONFIG_START( canyon, canyon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_12_096MHz / 16)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", canyon_state,  nmi_line_pulse)
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 
 	/* video hardware */
@@ -248,7 +248,7 @@ static MACHINE_CONFIG_START( canyon, canyon_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(22 * 1000000 / 15750))
 	MCFG_SCREEN_SIZE(256, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(canyon)
+	MCFG_SCREEN_UPDATE_DRIVER(canyon_state, screen_update_canyon)
 
 	MCFG_GFXDECODE(canyon)
 	MCFG_PALETTE_LENGTH(4)

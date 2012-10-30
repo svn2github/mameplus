@@ -225,8 +225,8 @@
 #include "sound/dac.h"
 #include "includes/lazercmd.h"
 
-#include "rendlay.h"
 #include "lazercmd.lh"
+#include "medlanes.lh"
 
 #define MASTER_CLOCK XTAL_8MHz
 
@@ -236,32 +236,30 @@
  * The rate should be at about 1 Hz
  *************************************************************/
 
-static TIMER_DEVICE_CALLBACK( lazercmd_timer )
+TIMER_DEVICE_CALLBACK_MEMBER(lazercmd_state::lazercmd_timer)
 {
-	lazercmd_state *state = timer.machine().driver_data<lazercmd_state>();
 	int scanline = param;
 
 	if((scanline % 2) == 1)
 		return;
 
-	if (++state->m_timer_count >= 64 * 128)
+	if (++m_timer_count >= 64 * 128)
 	{
-		state->m_timer_count = 0;
-		state->m_sense_state ^= 1;
-		state->m_maincpu->set_input_line(1, (state->m_sense_state) ? ASSERT_LINE : CLEAR_LINE);
+		m_timer_count = 0;
+		m_sense_state ^= 1;
+		m_maincpu->set_input_line(1, (m_sense_state) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( bbonk_timer )
+TIMER_DEVICE_CALLBACK_MEMBER(lazercmd_state::bbonk_timer)
 {
-	lazercmd_state *state = timer.machine().driver_data<lazercmd_state>();
 	int scanline = param;
 
 	if((scanline % 2) == 1)
 		return;
 
-	if (++state->m_timer_count >= 64 * 128)
-		state->m_timer_count = 0;
+	if (++m_timer_count >= 64 * 128)
+		m_timer_count = 0;
 }
 
 /*************************************************************
@@ -635,7 +633,7 @@ static MACHINE_CONFIG_START( lazercmd, lazercmd_state )
     thus requiring an extra loading of approx 3-5 */
 	MCFG_CPU_PROGRAM_MAP(lazercmd_map)
 	MCFG_CPU_IO_MAP(lazercmd_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", lazercmd_timer, "screen", 0, 1) /* 7680 Hz */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", lazercmd_state, lazercmd_timer, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -645,7 +643,7 @@ static MACHINE_CONFIG_START( lazercmd, lazercmd_state )
 	MCFG_SCREEN_SIZE(HORZ_RES * HORZ_CHR, VERT_RES * VERT_CHR + 16)
 	MCFG_SCREEN_VISIBLE_AREA(0 * HORZ_CHR, HORZ_RES * HORZ_CHR - 1,
 						0 * VERT_CHR, (VERT_RES - 1) * VERT_CHR - 1)
-	MCFG_SCREEN_UPDATE_STATIC(lazercmd)
+	MCFG_SCREEN_UPDATE_DRIVER(lazercmd_state, screen_update_lazercmd)
 
 	MCFG_GFXDECODE(lazercmd)
 	MCFG_PALETTE_LENGTH(5)
@@ -669,7 +667,7 @@ static MACHINE_CONFIG_START( medlanes, lazercmd_state )
     thus requiring an extra loading of approx 3-5 */
 	MCFG_CPU_PROGRAM_MAP(medlanes_map)
 	MCFG_CPU_IO_MAP(lazercmd_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", lazercmd_timer, "screen", 0, 1) /* 7680 Hz */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", lazercmd_state, lazercmd_timer, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -679,7 +677,7 @@ static MACHINE_CONFIG_START( medlanes, lazercmd_state )
 	MCFG_SCREEN_SIZE(HORZ_RES * HORZ_CHR, VERT_RES * VERT_CHR)
 	MCFG_SCREEN_VISIBLE_AREA(0 * HORZ_CHR, HORZ_RES * HORZ_CHR - 1,
 						 0 * VERT_CHR, VERT_RES * VERT_CHR - 1)
-	MCFG_SCREEN_UPDATE_STATIC(lazercmd)
+	MCFG_SCREEN_UPDATE_DRIVER(lazercmd_state, screen_update_lazercmd)
 
 	MCFG_GFXDECODE(lazercmd)
 	MCFG_PALETTE_LENGTH(5)
@@ -703,7 +701,7 @@ static MACHINE_CONFIG_START( bbonk, lazercmd_state )
     thus requiring an extra loading of approx 3-5 */
 	MCFG_CPU_PROGRAM_MAP(bbonk_map)
 	MCFG_CPU_IO_MAP(lazercmd_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bbonk_timer, "screen", 0, 1) /* 7680 Hz */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", lazercmd_state, bbonk_timer, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -713,7 +711,7 @@ static MACHINE_CONFIG_START( bbonk, lazercmd_state )
 	MCFG_SCREEN_SIZE(HORZ_RES * HORZ_CHR, VERT_RES * VERT_CHR)
 	MCFG_SCREEN_VISIBLE_AREA(0 * HORZ_CHR, HORZ_RES * HORZ_CHR - 1,
 						0 * VERT_CHR, (VERT_RES - 1) * VERT_CHR - 1)
-	MCFG_SCREEN_UPDATE_STATIC(lazercmd)
+	MCFG_SCREEN_UPDATE_DRIVER(lazercmd_state, screen_update_lazercmd)
 
 	MCFG_GFXDECODE(lazercmd)
 	MCFG_PALETTE_LENGTH(5)
@@ -865,5 +863,5 @@ DRIVER_INIT_MEMBER(lazercmd_state,bbonk)
 
 
 GAMEL( 1976, lazercmd, 0, lazercmd, lazercmd, lazercmd_state, lazercmd, ROT0, "Meadows Games, Inc.", "Lazer Command", GAME_SUPPORTS_SAVE, layout_lazercmd )
-GAMEL( 1977, medlanes, 0, medlanes, medlanes, lazercmd_state, medlanes, ROT0, "Meadows Games, Inc.", "Meadows Lanes", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_ho2eff2e )
+GAMEL( 1977, medlanes, 0, medlanes, medlanes, lazercmd_state, medlanes, ROT0, "Meadows Games, Inc.", "Meadows Lanes", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_medlanes )
 GAME ( 1976, bbonk,    0, bbonk,    bbonk, lazercmd_state,    bbonk,    ROT0, "Meadows Games, Inc.", "Bigfoot Bonkers", GAME_SUPPORTS_SAVE )

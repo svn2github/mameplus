@@ -388,6 +388,7 @@ public:
 	DECLARE_DRIVER_INIT(coh3002t_mp);
 	DECLARE_DRIVER_INIT(coh3002t);
 	DECLARE_MACHINE_RESET(coh3002t);
+	TIMER_CALLBACK_MEMBER(dip_timer_fired);
 };
 
 
@@ -404,9 +405,11 @@ static void rf5c296_reg_w(ATTR_UNUSED running_machine &machine, UINT8 reg, UINT8
 			// Check for card reset
 			if (!(data & 0x40))
 			{
-				machine.device(":card")->reset();
+				ide_controller_device *card = (ide_controller_device *) machine.device(":card");
+
+				card->reset();
 				state->m_locked = 0x1ff;
-				ide_set_gnet_readlock (machine.device(":card"), 1);
+				card->ide_set_gnet_readlock(1);
 			}
 		break;
 
@@ -424,7 +427,7 @@ static UINT8 rf5c296_reg_r(ATTR_UNUSED running_machine &machine, UINT8 reg)
 WRITE32_MEMBER(taitogn_state::rf5c296_io_w)
 {
 	if(offset < 2) {
-		ide_controller32_pcmcia_w(machine().device(":card"), offset, data, mem_mask);
+		ide_controller32_pcmcia_w(machine().device(":card"), space, offset, data, mem_mask);
 		return;
 	}
 
@@ -439,7 +442,7 @@ WRITE32_MEMBER(taitogn_state::rf5c296_io_w)
 READ32_MEMBER(taitogn_state::rf5c296_io_r)
 {
 	if(offset < 2)
-		return ide_controller32_pcmcia_r(machine().device(":card"), offset, mem_mask);
+		return ide_controller32_pcmcia_r(machine().device(":card"), space, offset, mem_mask);
 
 	offset *= 4;
 
@@ -489,8 +492,10 @@ WRITE32_MEMBER(taitogn_state::rf5c296_mem_w)
 			m_locked &= ~(1 << pos);
 		else
 			m_locked |= 1 << pos;
-		if (!m_locked) {
-			ide_set_gnet_readlock (machine().device(":card"), 0);
+		if (!m_locked)
+		{
+			ide_controller_device *card = (ide_controller_device *) machine().device(":card");
+			card->ide_set_gnet_readlock(0);
 		}
 	}
 }
@@ -572,19 +577,19 @@ WRITE32_MEMBER(taitogn_state::flash_s3_w)
 static void install_handlers(running_machine &machine, int mode)
 {
 	taitogn_state *state = machine.driver_data<taitogn_state>();
-	address_space *a = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &a = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	if(mode == 0) {
 		// Mode 0 has access to the subbios, the mn102 flash and the rf5c296 mem zone
-		a->install_readwrite_handler(0x1f000000, 0x1f1fffff, read32_delegate(FUNC(taitogn_state::flash_subbios_r),state), write32_delegate(FUNC(taitogn_state::flash_subbios_w),state));
-		a->install_readwrite_handler(0x1f200000, 0x1f2fffff, read32_delegate(FUNC(taitogn_state::rf5c296_mem_r),state), write32_delegate(FUNC(taitogn_state::rf5c296_mem_w),state));
-		a->install_readwrite_handler(0x1f300000, 0x1f37ffff, read32_delegate(FUNC(taitogn_state::flash_mn102_r),state), write32_delegate(FUNC(taitogn_state::flash_mn102_w),state));
-		a->nop_readwrite(0x1f380000, 0x1f5fffff);
+		a.install_readwrite_handler(0x1f000000, 0x1f1fffff, read32_delegate(FUNC(taitogn_state::flash_subbios_r),state), write32_delegate(FUNC(taitogn_state::flash_subbios_w),state));
+		a.install_readwrite_handler(0x1f200000, 0x1f2fffff, read32_delegate(FUNC(taitogn_state::rf5c296_mem_r),state), write32_delegate(FUNC(taitogn_state::rf5c296_mem_w),state));
+		a.install_readwrite_handler(0x1f300000, 0x1f37ffff, read32_delegate(FUNC(taitogn_state::flash_mn102_r),state), write32_delegate(FUNC(taitogn_state::flash_mn102_w),state));
+		a.nop_readwrite(0x1f380000, 0x1f5fffff);
 
 	} else {
 		// Mode 1 has access to the 3 samples flashes
-		a->install_readwrite_handler(0x1f000000, 0x1f1fffff, read32_delegate(FUNC(taitogn_state::flash_s1_r),state), write32_delegate(FUNC(taitogn_state::flash_s1_w),state));
-		a->install_readwrite_handler(0x1f200000, 0x1f3fffff, read32_delegate(FUNC(taitogn_state::flash_s2_r),state), write32_delegate(FUNC(taitogn_state::flash_s2_w),state));
-		a->install_readwrite_handler(0x1f400000, 0x1f5fffff, read32_delegate(FUNC(taitogn_state::flash_s3_r),state), write32_delegate(FUNC(taitogn_state::flash_s3_w),state));
+		a.install_readwrite_handler(0x1f000000, 0x1f1fffff, read32_delegate(FUNC(taitogn_state::flash_s1_r),state), write32_delegate(FUNC(taitogn_state::flash_s1_w),state));
+		a.install_readwrite_handler(0x1f200000, 0x1f3fffff, read32_delegate(FUNC(taitogn_state::flash_s2_r),state), write32_delegate(FUNC(taitogn_state::flash_s2_w),state));
+		a.install_readwrite_handler(0x1f400000, 0x1f5fffff, read32_delegate(FUNC(taitogn_state::flash_s3_r),state), write32_delegate(FUNC(taitogn_state::flash_s3_w),state));
 	}
 }
 
@@ -782,15 +787,14 @@ WRITE32_MEMBER(taitogn_state::znsecsel_w)
         }
 }
 
-static TIMER_CALLBACK( dip_timer_fired )
+TIMER_CALLBACK_MEMBER(taitogn_state::dip_timer_fired)
 {
-	taitogn_state *state = machine.driver_data<taitogn_state>();
 
-	psx_sio_input( machine, 0, PSX_SIO_IN_DSR, param * PSX_SIO_IN_DSR );
+	psx_sio_input( machine(), 0, PSX_SIO_IN_DSR, param * PSX_SIO_IN_DSR );
 
 	if( param )
 	{
-		state->m_dip_timer->adjust(machine.device<cpu_device>("maincpu")->cycles_to_attotime(50));
+		m_dip_timer->adjust(machine().device<cpu_device>("maincpu")->cycles_to_attotime(50));
 	}
 }
 
@@ -868,7 +872,7 @@ DRIVER_INIT_MEMBER(taitogn_state,coh3002t)
 	znsec_init(0, tt10);
 	znsec_init(1, tt16);
 	psx_sio_install_handler(machine(), 0, sio_pad_handler);
-	m_dip_timer = machine().scheduler().timer_alloc( FUNC(dip_timer_fired), NULL );
+	m_dip_timer = machine().scheduler().timer_alloc( timer_expired_delegate(FUNC(taitogn_state::dip_timer_fired),this), NULL );
 
 	UINT32 metalength;
 	memset(m_cis, 0xff, 512);
@@ -879,7 +883,7 @@ DRIVER_INIT_MEMBER(taitogn_state,coh3002t)
 DRIVER_INIT_MEMBER(taitogn_state,coh3002t_mp)
 {
 	DRIVER_INIT_CALL(coh3002t);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x1fa10100, 0x1fa10103, read32_delegate(FUNC(taitogn_state::gnet_mahjong_panel_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x1fa10100, 0x1fa10103, read32_delegate(FUNC(taitogn_state::gnet_mahjong_panel_r),this));
 }
 
 MACHINE_RESET_MEMBER(taitogn_state,coh3002t)
@@ -889,8 +893,10 @@ MACHINE_RESET_MEMBER(taitogn_state,coh3002t)
 	m_locked = 0x1ff;
 	install_handlers(machine(), 0);
 	m_control = 0;
-	machine().device(":card")->reset();
-	ide_set_gnet_readlock(machine().device(":card"), 1);
+
+	ide_controller_device *card = (ide_controller_device *) machine().device(":card");
+	card->reset();
+	card->ide_set_gnet_readlock(1);
 
 	// halt sound CPU since it has no valid program at start
 	machine().device("mn10200")->execute().set_input_line(INPUT_LINE_RESET,ASSERT_LINE); /* MCU */
@@ -930,21 +936,6 @@ static ADDRESS_MAP_START( taitogn_map, AS_PROGRAM, 32, taitogn_state )
 ADDRESS_MAP_END
 
 
-static void spu_irq(device_t *device, UINT32 data)
-{
-	if (data)
-	{
-		psx_irq_set(device->machine(), 1<<9);
-	}
-}
-
-static const ide_config ide_intf =
-{
-	NULL,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( coh3002t, taitogn_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8661R, XTAL_100MHz )
@@ -956,14 +947,14 @@ static MACHINE_CONFIG_START( coh3002t, taitogn_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2, &spu_irq )
+	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2 )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.35)
 
 	MCFG_MACHINE_RESET_OVERRIDE(taitogn_state, coh3002t )
 
 	MCFG_AT28C16_ADD( "at28c16", 0 )
-	MCFG_IDE_CONTROLLER_ADD( "card", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD( "card", ide_devices, "hdd", NULL, true)
 
 	MCFG_MB3773_ADD("mb3773")
 

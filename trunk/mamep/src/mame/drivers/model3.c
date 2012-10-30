@@ -1059,9 +1059,9 @@ WRITE64_MEMBER(model3_state::scsi_w)
 
 static UINT32 scsi_fetch(running_machine &machine, UINT32 dsp)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	UINT32 result;
-	result = space->read_dword(dsp);
+	result = space.read_dword(dsp);
 	return FLIPENDIAN_INT32(result);
 }
 
@@ -1159,7 +1159,7 @@ WRITE64_MEMBER(model3_state::real3d_dma_w)
 
 static void real3d_dma_callback(running_machine &machine, UINT32 src, UINT32 dst, int length, int byteswap)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	switch(dst >> 24)
 	{
 		case 0x88:		/* Display List End Trigger */
@@ -1221,13 +1221,12 @@ static void configure_fast_ram(running_machine &machine)
 	ppcdrc_add_fastram(machine.device("maincpu"), 0x00000000, 0x007fffff, FALSE, state->m_work_ram);
 }
 
-static TIMER_CALLBACK(model3_sound_timer_tick)
+TIMER_CALLBACK_MEMBER(model3_state::model3_sound_timer_tick)
 {
-	model3_state *state = machine.driver_data<model3_state>();
 
-	if (state->m_sound_irq_enable)
+	if (m_sound_irq_enable)
 	{
-		model3_set_irq_line(machine, 0x40, ASSERT_LINE);
+		model3_set_irq_line(machine(), 0x40, ASSERT_LINE);
 	}
 }
 
@@ -1235,25 +1234,25 @@ MACHINE_START_MEMBER(model3_state,model3_10)
 {
 	configure_fast_ram(machine());
 
-	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(model3_state::model3_sound_timer_tick),this));
 }
 MACHINE_START_MEMBER(model3_state,model3_15)
 {
 	configure_fast_ram(machine());
 
-	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(model3_state::model3_sound_timer_tick),this));
 }
 MACHINE_START_MEMBER(model3_state,model3_20)
 {
 	configure_fast_ram(machine());
 
-	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(model3_state::model3_sound_timer_tick),this));
 }
 MACHINE_START_MEMBER(model3_state,model3_21)
 {
 	configure_fast_ram(machine());
 
-	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(model3_state::model3_sound_timer_tick),this));
 }
 
 static void model3_init(running_machine &machine, int step)
@@ -1638,7 +1637,7 @@ WRITE8_MEMBER(model3_state::model3_sound_w)
 			model3_set_irq_line(machine(), 0x40, CLEAR_LINE);
 
 			// send to the sound board
-			scsp_midi_in(machine().device("scsp1"), 0, data, 0);
+			scsp_midi_in(machine().device("scsp1"), space, 0, data, 0);
 
 			if (m_sound_irq_enable)
 			{
@@ -2822,6 +2821,75 @@ ROM_START( bass )	/* step 1.0, Sega game ID# is 833-13317, ROM board ID# 834-133
 	ROM_LOAD64_WORD_SWAP( "epr-20644.18",  0x600004, 0x080000, CRC(c28db2b6) SHA1(0b12fe9e5189714b1aca79c4bba4be57a9e0d5fd) )
 	ROM_LOAD64_WORD_SWAP( "epr-20645.19",  0x600002, 0x080000, CRC(8eefa2b0) SHA1(130ce2a58daa2eba6e56e1f49488017ab871bb7d) )
 	ROM_LOAD64_WORD_SWAP( "epr-20646.20",  0x600000, 0x080000, CRC(d740ae06) SHA1(f6c00b9f3f8cf67c8bd8fff73c64bc0c14d364c4) )
+
+	// CROM0
+	ROM_LOAD64_WORD_SWAP( "mpr-20256.1",   0x800006, 0x400000, CRC(115302ac) SHA1(45f60aa9f91c9a5821a14647e5ac4d53caf71d5f) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20257.2",   0x800004, 0x400000, CRC(025bc06d) SHA1(e774021d8d884871e840100ba6f4c16299233a51) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20258.3",   0x800002, 0x400000, CRC(7b78b071) SHA1(f2b29a1238c9eae0a7a68c91a9728ac31f05ef7d) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20259.4",   0x800000, 0x400000, CRC(40052562) SHA1(2361fd299b76b1c0d112f1fed85bde16e1564382) )
+
+	// CROM1
+	ROM_LOAD64_WORD_SWAP( "mpr-20260.5",  0x1800006, 0x400000, CRC(c56b4c10) SHA1(a0a81d4f05df5b8584c2dca53993c01a35d38812) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20261.6",  0x1800004, 0x400000, CRC(b1e9d44a) SHA1(dfe8c5ed848afd48040775bb5a440c590188272c) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20262.7",  0x1800002, 0x400000, CRC(52b0674d) SHA1(c9f817b46dc7fcd04dfc2bbc4b1d82b1f41fe258) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20263.8",  0x1800000, 0x400000, CRC(1cf4cba9) SHA1(2884bb00990ab4bdad0d524937123c2936523cbb) )
+
+	// CROM2
+	ROM_LOAD64_WORD_SWAP( "mpr-20264.9",  0x2800006, 0x400000, CRC(8d995196) SHA1(ff410d80353956ee8e770d7b9e9dabac87ee76cc) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20265.10", 0x2800004, 0x400000, CRC(28f76e3e) SHA1(5446e0a0df60d77112bd71c726291fdbba7df284) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20266.11", 0x2800002, 0x400000, CRC(abd2db85) SHA1(ebe752071562c532e6ad494f285ff4d0b5050611) )
+	ROM_LOAD64_WORD_SWAP( "mpr-20267.12", 0x2800000, 0x400000, CRC(48989191) SHA1(ddbf787ec5dae298ab29847f117eae2ce1ff935e) )
+
+	// mirror CROM0 to CROM
+	ROM_COPY("user1", 0x800000, 0x000000, 0x600000)
+
+	ROM_REGION( 0x1000000, "user3", 0 )  /* Video ROMs Part 1 */
+	ROM_LOAD_VROM( "mpr-20270.26",  0x000002, 0x200000, CRC(df68a7a7) SHA1(5d610962dd87c010a094fe2ce8d13408595b4ae4) )
+	ROM_LOAD_VROM( "mpr-20271.27",  0x000000, 0x200000, CRC(4b01c3a4) SHA1(8d47109e7f410c9d34d57b22adfe1c3092e70074) )
+	ROM_LOAD_VROM( "mpr-20272.28",  0x000006, 0x200000, CRC(a658da23) SHA1(b96270c64cf75625960fa7c03411af595880353f) )
+	ROM_LOAD_VROM( "mpr-20273.29",  0x000004, 0x200000, CRC(577e9ffa) SHA1(b004fa10a073e6f4715b417da817051752db5636) )
+	ROM_LOAD_VROM( "mpr-20274.30",  0x00000a, 0x200000, CRC(7c7056ae) SHA1(79f6e0ac65f9e80875946b2e73cf9437ecf73407) )
+	ROM_LOAD_VROM( "mpr-20275.31",  0x000008, 0x200000, CRC(e739f77a) SHA1(6547c4bc0925af6e07beab54377a174a9c17e9fa) )
+	ROM_LOAD_VROM( "mpr-20276.32",  0x00000e, 0x200000, CRC(cbf966c0) SHA1(7c63506d01b52c8ab86fe0dc9ac774e2d540f7c5) )
+	ROM_LOAD_VROM( "mpr-20277.33",  0x00000c, 0x200000, CRC(9c75200b) SHA1(b39f571eeab11a619ab964d78a2ba0aa7b1dd24f) )
+
+	ROM_REGION( 0x1000000, "user4", 0 )  /* Video ROMs Part 2 */
+	ROM_LOAD_VROM( "mpr-20278.34",  0x000002, 0x200000, CRC(db3991ba) SHA1(7854a047741042f087a146882e27f2624f1f9e98) )
+	ROM_LOAD_VROM( "mpr-20279.35",  0x000000, 0x200000, CRC(995a11b8) SHA1(eddd32fc3688d12458c5ffb3b3e70459947889a2) )
+	ROM_LOAD_VROM( "mpr-20280.36",  0x000006, 0x200000, CRC(c2c8f9f5) SHA1(dd30c1fbece0a3dc8dad2d9d87e58a9f3798f4a2) )
+	ROM_LOAD_VROM( "mpr-20281.37",  0x000004, 0x200000, CRC(da84b967) SHA1(dfc13942adc9cf438e70470cb17f4d1f846c4c1a) )
+	ROM_LOAD_VROM( "mpr-20282.38",  0x00000a, 0x200000, CRC(1869ff49) SHA1(1368123edfd9c93d1ee591bf40ea110deeac88cf) )
+	ROM_LOAD_VROM( "mpr-20283.39",  0x000008, 0x200000, CRC(7d8fb469) SHA1(ad95fec786e9181d91a6ea18808bbf2772e9be6a) )
+	ROM_LOAD_VROM( "mpr-20284.40",  0x00000e, 0x200000, CRC(5c7f3a6f) SHA1(d242bc7ad213a79203cd6a060229c356ec0867e7) )
+	ROM_LOAD_VROM( "mpr-20285.41",  0x00000c, 0x200000, CRC(4aadc573) SHA1(65aef06c8c48196a0c1f630529ae2248323c5747) )
+
+	ROM_REGION( 0x100000, "audiocpu", 0 )	/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "epr-20313.21",  0x080000, 0x080000, CRC(863a7857) SHA1(72384dc6d7613806ab6bb84d935a3b0497e9e9d2) )
+
+	ROM_REGION( 0x800000, "samples", 0 )	/* SCSP samples */
+	ROM_LOAD( "mpr-20268.22",  0x000000, 0x400000, CRC(3631e93e) SHA1(3991d6cf03e4f39733d467c483857eac874505d1) )
+	ROM_LOAD( "mpr-20269.24",  0x400000, 0x400000, CRC(105a3181) SHA1(022cbce1d01366461a584ff6225ded40bcb9000b) )
+
+	ROM_REGION( 0x20000, "cpu2", 0 )	/* Z80 code */
+	ROM_FILL( 0x000000, 0x20000, 0 )
+
+	ROM_REGION( 0x800000, "dsb", 0 )	/* DSB samples */
+	ROM_FILL( 0x000000, 0x800000, 0 )
+
+	ROM_REGION( 0x80000, "scsp1", 0 )	/* first SCSP's RAM */
+	ROM_FILL( 0x000000, 0x80000, 0 )
+
+	ROM_REGION( 0x80000, "scsp2", 0 )	/* second SCSP's RAM */
+	ROM_FILL( 0x000000, 0x80000, 0 )
+ROM_END
+
+ROM_START( bassdx )	/* step 1.0, Sega game ID# is 833-13476 BSS DX JPN, ROM board ID# 834-13477 BSS DX JPN */
+	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
+	// CROM
+	ROM_LOAD64_WORD_SWAP( "epr-20834.17",  0x600006, 0x080000, CRC(17f466a6) SHA1(2abdc432891cc79733fc29903df87af9eba11b32) )
+	ROM_LOAD64_WORD_SWAP( "epr-20835.18",  0x600004, 0x080000, CRC(f8f19bb2) SHA1(8f1704e532e494086fb5989d0c358ea0a0f6aae5) )
+	ROM_LOAD64_WORD_SWAP( "epr-20836.19",  0x600002, 0x080000, CRC(f8e8ef57) SHA1(5d0950169cf05ec5337aeb368ce149da18d3d0f6) )
+	ROM_LOAD64_WORD_SWAP( "epr-20837.20",  0x600000, 0x080000, CRC(66fc2084) SHA1(963f45df3bce52fea9e7724251342490396ec37a) )
 
 	// CROM0
 	ROM_LOAD64_WORD_SWAP( "mpr-20256.1",   0x800006, 0x400000, CRC(115302ac) SHA1(45f60aa9f91c9a5821a14647e5ac4d53caf71d5f) )
@@ -5252,15 +5320,14 @@ static const scsp_interface scsp2_interface =
     0x02: Video (VBLANK start?)
     0x01: Video (unused?)
 */
-static TIMER_DEVICE_CALLBACK(model3_interrupt)
+TIMER_DEVICE_CALLBACK_MEMBER(model3_state::model3_interrupt)
 {
-//  model3_state *state = timer.machine().driver_data<model3_state>();
 	int scanline = param;
 
 	if (scanline == 384)
-		model3_set_irq_line(timer.machine(), 0x02, ASSERT_LINE);
+		model3_set_irq_line(machine(), 0x02, ASSERT_LINE);
 	else if(scanline == 0)
-		model3_set_irq_line(timer.machine(), 0x0d, ASSERT_LINE);
+		model3_set_irq_line(machine(), 0x0d, ASSERT_LINE);
 }
 
 static const powerpc_config model3_10 =
@@ -5291,7 +5358,7 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_CPU_ADD("maincpu", PPC603E, 66000000)
 	MCFG_CPU_CONFIG(model3_10)
 	MCFG_CPU_PROGRAM_MAP(model3_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model3_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model3_state, model3_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
@@ -5309,7 +5376,7 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(512, 400)
-	MCFG_SCREEN_UPDATE_STATIC(model3)
+	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
 
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
@@ -5334,7 +5401,7 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_CPU_ADD("maincpu", PPC603E, 100000000)
 	MCFG_CPU_CONFIG(model3_15)
 	MCFG_CPU_PROGRAM_MAP(model3_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model3_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model3_state, model3_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
@@ -5350,7 +5417,7 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
-	MCFG_SCREEN_UPDATE_STATIC(model3)
+	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
 
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
@@ -5375,7 +5442,7 @@ static MACHINE_CONFIG_START( model3_20, model3_state )
 	MCFG_CPU_ADD("maincpu", PPC603R, 166000000)
 	MCFG_CPU_CONFIG(model3_2x)
 	MCFG_CPU_PROGRAM_MAP(model3_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model3_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model3_state, model3_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
@@ -5391,7 +5458,7 @@ static MACHINE_CONFIG_START( model3_20, model3_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
-	MCFG_SCREEN_UPDATE_STATIC(model3)
+	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
 
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
@@ -5413,7 +5480,7 @@ static MACHINE_CONFIG_START( model3_21, model3_state )
 	MCFG_CPU_ADD("maincpu", PPC603R, 166000000)
 	MCFG_CPU_CONFIG(model3_2x)
 	MCFG_CPU_PROGRAM_MAP(model3_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model3_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model3_state, model3_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
@@ -5430,7 +5497,7 @@ static MACHINE_CONFIG_START( model3_21, model3_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
-	MCFG_SCREEN_UPDATE_STATIC(model3)
+	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
 
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
@@ -5483,35 +5550,35 @@ DRIVER_INIT_MEMBER(model3_state,model3_10)
 {
 	interleave_vroms(machine());
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc0000000, 0xc00000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,model3_15)
 {
 	interleave_vroms(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,model3_20)
 {
 	interleave_vroms(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc2000000, 0xc20000ff, read64_delegate(FUNC(model3_state::real3d_dma_r),this), write64_delegate(FUNC(model3_state::real3d_dma_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc2000000, 0xc20000ff, read64_delegate(FUNC(model3_state::real3d_dma_r),this), write64_delegate(FUNC(model3_state::real3d_dma_w),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,lostwsga)
@@ -5520,7 +5587,7 @@ DRIVER_INIT_MEMBER(model3_state,lostwsga)
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: there's an M68K device at 0xC0000000 - FF, maybe lightgun controls ? */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[0x7374f0/4] = 0x38840004;		/* This seems to be an actual bug in the original code */
 }
@@ -5531,7 +5598,7 @@ DRIVER_INIT_MEMBER(model3_state,scud)
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: network device at 0xC0000000 - FF */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[(0x71275c^4)/4] = 0x60000000;
 	rom[(0x71277c^4)/4] = 0x60000000;
@@ -5543,7 +5610,7 @@ DRIVER_INIT_MEMBER(model3_state,scudplus)
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: network device at 0xC0000000 - FF */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[(0x713724^4)/4] = 0x60000000;
 	rom[(0x713744^4)/4] = 0x60000000;
@@ -5560,7 +5627,7 @@ DRIVER_INIT_MEMBER(model3_state,scudplusa)
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: network device at 0xC0000000 - FF */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	//rom[(0x713724^4)/4] = 0x60000000; // Fix ME!!!! Needs to corrected for the non REV A version!!!!
 	//rom[(0x713744^4)/4] = 0x60000000;
@@ -5576,7 +5643,7 @@ DRIVER_INIT_MEMBER(model3_state,lemans24)
 	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_15);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[(0x73fe38^4)/4] = 0x38840004;		/* This seems to be an actual bug in the original code */
 
@@ -5607,15 +5674,15 @@ DRIVER_INIT_MEMBER(model3_state,vs215)
 	rom[(0x70e710^4)/4] = 0x60000000;
 
 	interleave_vroms(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,vs29815)
@@ -5626,15 +5693,15 @@ DRIVER_INIT_MEMBER(model3_state,vs29815)
 	rom[(0x60290c^4)/4] = 0x60000000;
 
 	interleave_vroms(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,bass)
@@ -5645,27 +5712,27 @@ DRIVER_INIT_MEMBER(model3_state,bass)
 	rom[(0x7999c8^4)/4] = 0x60000000;
 
 	interleave_vroms(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,getbass)
 {
 	interleave_vroms(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
 }
 
 DRIVER_INIT_MEMBER(model3_state,vs2)
@@ -5735,7 +5802,7 @@ DRIVER_INIT_MEMBER(model3_state,harley)
 	DRIVER_INIT_CALL(model3_20);
 
 	m_network_ram = auto_alloc_array_clear(machine(), UINT64, 0x10000);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),this), write64_delegate(FUNC(model3_state::network_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),this), write64_delegate(FUNC(model3_state::network_w),this));
 
 	rom[(0x50ecb4^4)/4] = 0x60000000;
 	rom[(0x50ecd4^4)/4] = 0x60000000;
@@ -5750,7 +5817,7 @@ DRIVER_INIT_MEMBER(model3_state,harleya)
 	DRIVER_INIT_CALL(model3_20);
 
 	m_network_ram = auto_alloc_array_clear(machine(), UINT64, 0x10000);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),this), write64_delegate(FUNC(model3_state::network_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),this), write64_delegate(FUNC(model3_state::network_w),this));
 
 	rom[(0x50e8d4^4)/4] = 0x60000000;
 	rom[(0x50e8f4^4)/4] = 0x60000000;
@@ -5819,8 +5886,8 @@ DRIVER_INIT_MEMBER(model3_state,daytona2)
 	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
 
 	//rom[(0x68468c^4)/4] = 0x60000000;
 	rom[(0x6063c4^4)/4] = 0x60000000;
@@ -5833,8 +5900,8 @@ DRIVER_INIT_MEMBER(model3_state,dayto2pe)
 	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
 
 	rom[(0x606784^4)/4] = 0x60000000;
 	rom[(0x69a3fc^4)/4] = 0x60000000;		// jump to encrypted code
@@ -5895,7 +5962,8 @@ DRIVER_INIT_MEMBER(model3_state,oceanhun)
 GAME( 1996, vf3,            0, model3_10, model3, model3_state,        vf3, ROT0, "Sega", "Virtua Fighter 3 (Revision C)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1996, vf3a,         vf3, model3_10, model3, model3_state,        vf3, ROT0, "Sega", "Virtua Fighter 3 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1996, vf3tb,        vf3, model3_10, model3, model3_state,  model3_10, ROT0, "Sega", "Virtua Fighter 3 Team Battle", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, bass,           0, model3_10, bass, model3_state,         bass, ROT0, "Sega", "Sega Bass Fishing", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, bass,           0, model3_10, bass, model3_state,         bass, ROT0, "Sega", "Sega Bass Fishing (Japan)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, bassdx,      bass, model3_10, bass, model3_state,      getbass, ROT0, "Sega", "Sega Bass Fishing Deluxe (Japan)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1997, getbass,     bass, model3_10, bass, model3_state,      getbass, ROT0, "Sega", "Get Bass", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* Model 3 Step 1.5 */

@@ -34,11 +34,14 @@
 #include "video/vector.h"
 #include "cpu/ccpu/ccpu.h"
 #include "includes/cinemat.h"
-#include "rendlay.h"
 
 #include "armora.lh"
+#include "barrier.lh"
+#include "demon.lh"
 #include "starcas.lh"
 #include "solarq.lh"
+#include "sundance.lh"
+#include "tailg.lh"
 
 #define MASTER_CLOCK			XTAL_19_923MHz
 
@@ -999,7 +1002,7 @@ static MACHINE_CONFIG_START( cinemat_nojmi_4k, cinemat_state )
 	MCFG_SCREEN_REFRESH_RATE(MASTER_CLOCK/4/16/16/16/16/2)
 	MCFG_SCREEN_SIZE(1024, 768)
 	MCFG_SCREEN_VISIBLE_AREA(0, 1023, 0, 767)
-	MCFG_SCREEN_UPDATE_STATIC(cinemat)
+	MCFG_SCREEN_UPDATE_DRIVER(cinemat_state, screen_update_cinemat)
 
 MACHINE_CONFIG_END
 
@@ -1045,7 +1048,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( spacewar, cinemat_nojmi_4k )
 	MCFG_FRAGMENT_ADD(spacewar_sound)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(spacewar)
+	MCFG_SCREEN_UPDATE_DRIVER(cinemat_state, screen_update_spacewar)
 MACHINE_CONFIG_END
 
 
@@ -1448,34 +1451,34 @@ ROM_END
 DRIVER_INIT_MEMBER(cinemat_state,speedfrk)
 {
 	m_gear = 0xe;
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x00, 0x03, read8_delegate(FUNC(cinemat_state::speedfrk_wheel_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x04, 0x06, read8_delegate(FUNC(cinemat_state::speedfrk_gear_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x00, 0x03, read8_delegate(FUNC(cinemat_state::speedfrk_wheel_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x04, 0x06, read8_delegate(FUNC(cinemat_state::speedfrk_gear_r),this));
 }
 
 
 DRIVER_INIT_MEMBER(cinemat_state,sundance)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x00, 0x0f, read8_delegate(FUNC(cinemat_state::sundance_inputs_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x00, 0x0f, read8_delegate(FUNC(cinemat_state::sundance_inputs_r),this));
 }
 
 
 DRIVER_INIT_MEMBER(cinemat_state,tailg)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x07, 0x07, write8_delegate(FUNC(cinemat_state::mux_select_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x07, 0x07, write8_delegate(FUNC(cinemat_state::mux_select_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(cinemat_state,boxingb)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x0c, 0x0f, read8_delegate(FUNC(cinemat_state::boxingb_dial_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x07, 0x07, write8_delegate(FUNC(cinemat_state::mux_select_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x0c, 0x0f, read8_delegate(FUNC(cinemat_state::boxingb_dial_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x07, 0x07, write8_delegate(FUNC(cinemat_state::mux_select_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(cinemat_state,qb3)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x0f, 0x0f, read8_delegate(FUNC(cinemat_state::qb3_frame_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x00, 0x00, write8_delegate(FUNC(cinemat_state::qb3_ram_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x0f, 0x0f, read8_delegate(FUNC(cinemat_state::qb3_frame_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x00, 0x00, write8_delegate(FUNC(cinemat_state::qb3_ram_bank_w),this));
 
 	membank("bank1")->configure_entries(0, 4, m_rambase, 0x100*2);
 }
@@ -1490,11 +1493,11 @@ DRIVER_INIT_MEMBER(cinemat_state,qb3)
 
 GAME( 1977, spacewar, 0,       spacewar, spacewar, driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Space Wars", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1978, spaceshp, spacewar,spacewar, spaceshp, driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics (Sega license)", "Space Ship", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1979, barrier,  0,       barrier,  barrier, driver_device,  0,        ORIENTATION_FLIP_X ^ ROT270, "Vectorbeam", "Barrier", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1979, barrier,  0,       barrier,  barrier, driver_device,  0,        ORIENTATION_FLIP_X ^ ROT270, "Vectorbeam", "Barrier", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_barrier )
 GAME( 1979, speedfrk, 0,       speedfrk, speedfrk, cinemat_state, speedfrk, ORIENTATION_FLIP_Y,   "Vectorbeam", "Speed Freak", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1979, starhawk, 0,       starhawk, starhawk, driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Hawk", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL(1979, sundance, 0,       sundance, sundance, cinemat_state, sundance, ORIENTATION_FLIP_X ^ ROT270, "Cinematronics", "Sundance", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_voffff20 )
-GAMEL(1979, tailg,    0,       tailg,    tailg, cinemat_state,    tailg,    ORIENTATION_FLIP_Y,   "Cinematronics", "Tailgunner", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_ho20ffff )
+GAMEL(1979, sundance, 0,       sundance, sundance, cinemat_state, sundance, ORIENTATION_FLIP_X ^ ROT270, "Cinematronics", "Sundance", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_sundance )
+GAMEL(1979, tailg,    0,       tailg,    tailg, cinemat_state,    tailg,    ORIENTATION_FLIP_Y,   "Cinematronics", "Tailgunner", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_tailg )
 GAME( 1979, warrior,  0,       warrior,  warrior, driver_device,  0,        ORIENTATION_FLIP_Y,   "Vectorbeam", "Warrior", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAMEL(1980, armora,   0,       armora,   armora, driver_device,   0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Armor Attack", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
 GAMEL(1980, armorap,  armora,  armora,   armora, driver_device,   0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Armor Attack (prototype)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
@@ -1510,5 +1513,5 @@ GAMEL(1981, solarq,   0,       solarq,   solarq, driver_device,   0,        ORIE
 GAME( 1981, boxingb,  0,       boxingb,  boxingb, cinemat_state,  boxingb,  ORIENTATION_FLIP_Y,   "Cinematronics", "Boxing Bugs", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1981, wotw,     0,       wotw,     wotw, driver_device,     0,        ORIENTATION_FLIP_Y,   "Cinematronics", "War of the Worlds", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1981, wotwc,    wotw,    wotwc,    wotw, driver_device,     0,        ORIENTATION_FLIP_Y,   "Cinematronics", "War of the Worlds (color)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1982, demon,    0,       demon,    demon, driver_device,    0,        ORIENTATION_FLIP_Y,   "Rock-Ola", "Demon", GAME_SUPPORTS_SAVE )
+GAMEL(1982, demon,    0,       demon,    demon, driver_device,    0,        ORIENTATION_FLIP_Y,   "Rock-Ola", "Demon", GAME_SUPPORTS_SAVE, layout_demon )
 GAME( 1982, qb3,      0,       qb3,      qb3, cinemat_state,      qb3,      ORIENTATION_FLIP_Y,   "Rock-Ola", "QB-3 (prototype)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

@@ -103,8 +103,8 @@ static ADDRESS_MAP_START( strnskil_map2, AS_PROGRAM, 8, strnskil_state )
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
 
-	AM_RANGE(0xd801, 0xd801) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xd801, 0xd801) AM_DEVWRITE("sn1", sn76496_device, write)
+	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn2", sn76496_device, write)
 ADDRESS_MAP_END
 
 
@@ -317,16 +317,15 @@ static GFXDECODE_START( strnskil )
 GFXDECODE_END
 
 
-static TIMER_DEVICE_CALLBACK( strnskil_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(strnskil_state::strnskil_irq)
 {
-	strnskil_state *state = timer.machine().driver_data<strnskil_state>();
 	int scanline = param;
 
 	if(scanline == 240 || scanline == 96)
 	{
-		state->m_maincpu->set_input_line(0,HOLD_LINE);
+		m_maincpu->set_input_line(0,HOLD_LINE);
 
-		state->m_irq_source = (scanline != 240);
+		m_irq_source = (scanline != 240);
 	}
 }
 
@@ -352,11 +351,11 @@ static MACHINE_CONFIG_START( strnskil, strnskil_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,8000000/2) /* 4.000MHz */
 	MCFG_CPU_PROGRAM_MAP(strnskil_map1)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", strnskil_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", strnskil_state, strnskil_irq, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", Z80,8000000/2) /* 4.000MHz */
 	MCFG_CPU_PROGRAM_MAP(strnskil_map2)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(strnskil_state, irq0_line_hold, 2*60)
 
 //  MCFG_QUANTUM_PERFECT_CPU("maincpu")
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
@@ -367,7 +366,7 @@ static MACHINE_CONFIG_START( strnskil, strnskil_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8+3*8, 32*8+3*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(strnskil)
+	MCFG_SCREEN_UPDATE_DRIVER(strnskil_state, screen_update_strnskil)
 
 	MCFG_GFXDECODE(strnskil)
 	MCFG_PALETTE_LENGTH(1024)
@@ -376,11 +375,11 @@ static MACHINE_CONFIG_START( strnskil, strnskil_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, 8000000/4)
+	MCFG_SOUND_ADD("sn1", SN76496, 8000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 8000000/2)
+	MCFG_SOUND_ADD("sn2", SN76496, 8000000/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -539,16 +538,16 @@ DRIVER_INIT_MEMBER(strnskil_state,pettanp)
 //  AM_RANGE(0xd806, 0xd806) AM_READ_LEGACY(protection_r) /* protection data read (pettanp) */
 
 	/* Fujitsu MB8841 4-Bit MCU */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd806, 0xd806, read8_delegate(FUNC(strnskil_state::pettanp_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd80d, 0xd80d, write8_delegate(FUNC(strnskil_state::protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd806, 0xd806, read8_delegate(FUNC(strnskil_state::pettanp_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd80d, 0xd80d, write8_delegate(FUNC(strnskil_state::protection_w),this));
 
 }
 
 DRIVER_INIT_MEMBER(strnskil_state,banbam)
 {
 	/* Fujitsu MB8841 4-Bit MCU */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd806, 0xd806, read8_delegate(FUNC(strnskil_state::banbam_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd80d, 0xd80d, write8_delegate(FUNC(strnskil_state::protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd806, 0xd806, read8_delegate(FUNC(strnskil_state::banbam_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd80d, 0xd80d, write8_delegate(FUNC(strnskil_state::protection_w),this));
 }
 
 GAME( 1984, strnskil, 0,        strnskil, strnskil, driver_device, 0,       ROT0, "Sun Electronics", "Strength & Skill", 0 )

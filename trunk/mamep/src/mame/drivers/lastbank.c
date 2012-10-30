@@ -1,6 +1,6 @@
 /***************************************************************************
 
-    Last Bank (c) 1994 Excellent Systems
+    Last Bank (c) 1994 Excellent System
 
     driver by Angelo Salese
 
@@ -65,6 +65,7 @@ public:
 
 	UINT8 ram_bank_r(UINT16 offset, UINT8 bank_num);
 	void ram_bank_w(UINT16 offset, UINT8 data, UINT8 bank_num);
+	TIMER_DEVICE_CALLBACK_MEMBER(lastbank_irq_scanline);
 };
 
 void lastbank_state::video_start()
@@ -137,14 +138,14 @@ WRITE8_MEMBER(lastbank_state::lastbank_ram_bank_w)
 
 UINT8 lastbank_state::ram_bank_r(UINT16 offset, UINT8 bank_num)
 {
-	address_space *vdp_space = machine().device<tc0091lvc_device>("tc0091lvc")->space();
-	return vdp_space->read_byte(offset + (m_ram_bank[bank_num]) * 0x1000);;
+	address_space &vdp_space = machine().device<tc0091lvc_device>("tc0091lvc")->space();
+	return vdp_space.read_byte(offset + (m_ram_bank[bank_num]) * 0x1000);;
 }
 
 void lastbank_state::ram_bank_w(UINT16 offset, UINT8 data, UINT8 bank_num)
 {
-	address_space *vdp_space = machine().device<tc0091lvc_device>("tc0091lvc")->space();
-	vdp_space->write_byte(offset + (m_ram_bank[bank_num]) * 0x1000,data);;
+	address_space &vdp_space = machine().device<tc0091lvc_device>("tc0091lvc")->space();
+	vdp_space.write_byte(offset + (m_ram_bank[bank_num]) * 0x1000,data);;
 }
 
 READ8_MEMBER(lastbank_state::lastbank_ram_0_r) { return ram_bank_r(offset, 0); }
@@ -433,19 +434,18 @@ static GFXDECODE_START( lastbank )
 	GFXDECODE_ENTRY( "gfx1",		0, sp2_layout, 0, 16 )
 GFXDECODE_END
 
-static TIMER_DEVICE_CALLBACK( lastbank_irq_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(lastbank_state::lastbank_irq_scanline)
 {
-	lastbank_state *state = timer.machine().driver_data<lastbank_state>();
 	int scanline = param;
 
-	if (scanline == 240 && (state->m_irq_enable & 4))
+	if (scanline == 240 && (m_irq_enable & 4))
 	{
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, state->m_irq_vector[2]);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, m_irq_vector[2]);
 	}
 
-	if (scanline == 0 && (state->m_irq_enable & 2))
+	if (scanline == 0 && (m_irq_enable & 2))
 	{
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, state->m_irq_vector[1]);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, m_irq_vector[1]);
 	}
 }
 
@@ -454,12 +454,12 @@ static MACHINE_CONFIG_START( lastbank, lastbank_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",Z80,MASTER_CLOCK/4) //!!! TC0091LVC !!!
 	MCFG_CPU_PROGRAM_MAP(lastbank_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", lastbank_irq_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", lastbank_state, lastbank_irq_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu",Z80,MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(lastbank_audio_map)
 	MCFG_CPU_IO_MAP(lastbank_audio_io)
-//  MCFG_CPU_PERIODIC_INT(nmi_line_pulse,60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(lastbank_state, nmi_line_pulse, 60)
 
 	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
@@ -509,4 +509,4 @@ ROM_START( lastbank )
 	ROM_LOAD( "7.u60", 0x40000, 0x80000, CRC(41be7146) SHA1(00f1c0d5809efccf888e27518a2a5876c4b633d8) )
 ROM_END
 
-GAME( 1994, lastbank,  0,   lastbank, lastbank, driver_device,  0, ROT0, "Excellent Systems", "Last Bank (v1.16)", GAME_NO_SOUND )
+GAME( 1994, lastbank,  0,   lastbank, lastbank, driver_device,  0, ROT0, "Excellent System", "Last Bank (v1.16)", GAME_NO_SOUND )

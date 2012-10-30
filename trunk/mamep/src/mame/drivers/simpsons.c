@@ -96,7 +96,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, simpsons_state )
 	AM_RANGE(0x1fc0, 0x1fc0) AM_WRITE(simpsons_coin_counter_w)
 	AM_RANGE(0x1fc2, 0x1fc2) AM_WRITE(simpsons_eeprom_w)
 	AM_RANGE(0x1fc4, 0x1fc4) AM_READ(simpsons_sound_interrupt_r)
-	AM_RANGE(0x1fc6, 0x1fc7) AM_DEVREADWRITE_LEGACY("k053260", simpsons_sound_r, k053260_w)
+	AM_RANGE(0x1fc6, 0x1fc7) AM_READ(simpsons_sound_r) AM_DEVWRITE_LEGACY("k053260",k053260_w)
 	AM_RANGE(0x1fc8, 0x1fc9) AM_DEVREAD_LEGACY("k053246", k053246_r)
 	AM_RANGE(0x1fca, 0x1fca) AM_READ(watchdog_reset_r)
 	AM_RANGE(0x2000, 0x3fff) AM_RAMBANK("bank4")
@@ -120,23 +120,22 @@ static void sound_nmi_callback( running_machine &machine, int param )
 }
 #endif
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(simpsons_state::nmi_callback)
 {
-	simpsons_state *state = machine.driver_data<simpsons_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(simpsons_state::z80_arm_nmi_w)
 {
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
-	machine().scheduler().timer_set(attotime::from_usec(25), FUNC(nmi_callback));	/* kludge until the K053260 is emulated correctly */
+	machine().scheduler().timer_set(attotime::from_usec(25), timer_expired_delegate(FUNC(simpsons_state::nmi_callback),this));	/* kludge until the K053260 is emulated correctly */
 }
 
 static ADDRESS_MAP_START( z80_map, AS_PROGRAM, 8, simpsons_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
-	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(z80_arm_nmi_w)
 	AM_RANGE(0xfc00, 0xfc2f) AM_DEVREADWRITE_LEGACY("k053260", k053260_r, k053260_w)
 	AM_RANGE(0xfe00, 0xfe00) AM_WRITE(z80_bankswitch_w)
@@ -252,27 +251,25 @@ static void simpsons_objdma( running_machine &machine )
 	if (num_inactive) do { *dst = 0; dst += 8; } while (--num_inactive);
 }
 
-static TIMER_CALLBACK( dmaend_callback )
+TIMER_CALLBACK_MEMBER(simpsons_state::dmaend_callback)
 {
-	simpsons_state *state = machine.driver_data<simpsons_state>();
-	if (state->m_firq_enabled)
-		state->m_maincpu->set_input_line(KONAMI_FIRQ_LINE, HOLD_LINE);
+	if (m_firq_enabled)
+		m_maincpu->set_input_line(KONAMI_FIRQ_LINE, HOLD_LINE);
 }
 
 
-static INTERRUPT_GEN( simpsons_irq )
+INTERRUPT_GEN_MEMBER(simpsons_state::simpsons_irq)
 {
-	simpsons_state *state = device->machine().driver_data<simpsons_state>();
 
-	if (k053246_is_irq_enabled(state->m_k053246))
+	if (k053246_is_irq_enabled(m_k053246))
 	{
-		simpsons_objdma(device->machine());
+		simpsons_objdma(machine());
 		// 32+256us delay at 8MHz dotclock; artificially shortened since actual V-blank length is unknown
-		device->machine().scheduler().timer_set(attotime::from_usec(30), FUNC(dmaend_callback));
+		machine().scheduler().timer_set(attotime::from_usec(30), timer_expired_delegate(FUNC(simpsons_state::dmaend_callback),this));
 	}
 
-	if (k052109_is_irq_enabled(state->m_k052109))
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (k052109_is_irq_enabled(m_k052109))
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 static const k052109_interface simpsons_k052109_intf =
@@ -309,7 +306,7 @@ static MACHINE_CONFIG_START( simpsons, simpsons_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8) /* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", simpsons_irq)	/* IRQ triggered by the 052109, FIRQ by the sprite hardware */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", simpsons_state,  simpsons_irq)	/* IRQ triggered by the 052109, FIRQ by the sprite hardware */
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(z80_map)
@@ -326,7 +323,7 @@ static MACHINE_CONFIG_START( simpsons, simpsons_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(simpsons)
+	MCFG_SCREEN_UPDATE_DRIVER(simpsons_state, screen_update_simpsons)
 
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -337,7 +334,7 @@ static MACHINE_CONFIG_START( simpsons, simpsons_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz) /* verified on pcb */
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)	/* only left channel is connected */
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.0)

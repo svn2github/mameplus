@@ -33,27 +33,18 @@
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void atarigx2_state::update_interrupts()
 {
-	atarigx2_state *state = machine.driver_data<atarigx2_state>();
-	machine.device("maincpu")->execute().set_input_line(4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(5, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-MACHINE_START_MEMBER(atarigx2_state,atarigx2)
-{
-	atarigen_init(machine());
+	machine().device("maincpu")->execute().set_input_line(4, m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(5, m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 MACHINE_RESET_MEMBER(atarigx2_state,atarigx2)
 {
-
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, update_interrupts);
-	atarigen_scanline_timer_reset(*machine().primary_screen, atarigx2_scanline_update, 8);
-	atarijsa_reset();
+	atarigen_state::machine_reset();
+	scanline_timer_reset(*machine().primary_screen, 8);
+	atarijsa_reset(machine());
 }
 
 
@@ -1149,22 +1140,22 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 32, atarigx2_state )
 	AM_RANGE(0xc80000, 0xc80fff) AM_RAM
 	AM_RANGE(0xca0000, 0xca0fff) AM_READWRITE(atarigx2_protection_r, atarigx2_protection_w) AM_SHARE("protection_base")
 	AM_RANGE(0xd00000, 0xd1ffff) AM_READ(a2d_data_r)
-	AM_RANGE(0xd20000, 0xd20fff) AM_READWRITE_LEGACY(atarigen_eeprom_upper32_r, atarigen_eeprom32_w) AM_SHARE("eeprom")
-	AM_RANGE(0xd40000, 0xd40fff) AM_RAM_WRITE_LEGACY(atarigen_666_paletteram32_w) AM_SHARE("paletteram")
-	AM_RANGE(0xd72000, 0xd75fff) AM_WRITE_LEGACY(atarigen_playfield32_w) AM_SHARE("playfield32")
-	AM_RANGE(0xd76000, 0xd76fff) AM_WRITE_LEGACY(atarigen_alpha32_w) AM_SHARE("alpha32")
+	AM_RANGE(0xd20000, 0xd20fff) AM_READWRITE(eeprom_upper32_r, eeprom32_w) AM_SHARE("eeprom")
+	AM_RANGE(0xd40000, 0xd40fff) AM_RAM_WRITE(paletteram32_666_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd72000, 0xd75fff) AM_WRITE(playfield32_w) AM_SHARE("playfield32")
+	AM_RANGE(0xd76000, 0xd76fff) AM_WRITE(alpha32_w) AM_SHARE("alpha32")
 	AM_RANGE(0xd78000, 0xd78fff) AM_DEVREADWRITE_LEGACY("rle", atarirle_spriteram32_r, atarirle_spriteram32_w)
 	AM_RANGE(0xd7a200, 0xd7a203) AM_WRITE(mo_command_w) AM_SHARE("mo_command")
 	AM_RANGE(0xd70000, 0xd7ffff) AM_RAM
-	AM_RANGE(0xd80000, 0xd9ffff) AM_WRITE_LEGACY(atarigen_eeprom_enable32_w)
-	AM_RANGE(0xe06000, 0xe06003) AM_WRITE_LEGACY(atarigen_sound_upper32_w)
+	AM_RANGE(0xd80000, 0xd9ffff) AM_WRITE16(eeprom_enable_w, 0xffffffff)
+	AM_RANGE(0xe06000, 0xe06003) AM_WRITE8(sound_w, 0xff000000)
 	AM_RANGE(0xe08000, 0xe08003) AM_WRITE(latch_w)
-	AM_RANGE(0xe0c000, 0xe0c003) AM_WRITE_LEGACY(atarigen_video_int_ack32_w)
+	AM_RANGE(0xe0c000, 0xe0c003) AM_WRITE16(video_int_ack_w, 0xffffffff)
 	AM_RANGE(0xe0e000, 0xe0e003) AM_WRITENOP//watchdog_reset_w },
 	AM_RANGE(0xe80000, 0xe80003) AM_READ_PORT("P1_P2")
 	AM_RANGE(0xe82000, 0xe82003) AM_READ(special_port2_r)
 	AM_RANGE(0xe82004, 0xe82007) AM_READ(special_port3_r)
-	AM_RANGE(0xe86000, 0xe86003) AM_READ_LEGACY(atarigen_sound_upper32_r)
+	AM_RANGE(0xe86000, 0xe86003) AM_READ8(sound_r, 0xff000000)
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1431,9 +1422,8 @@ static MACHINE_CONFIG_START( atarigx2, atarigx2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, ATARI_CLOCK_14MHz)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
+	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
 
-	MCFG_MACHINE_START_OVERRIDE(atarigx2_state,atarigx2)
 	MCFG_MACHINE_RESET_OVERRIDE(atarigx2_state,atarigx2)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
@@ -1446,8 +1436,8 @@ static MACHINE_CONFIG_START( atarigx2, atarigx2_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses a pair of GALs to determine H and V parameters */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(atarigx2)
-	MCFG_SCREEN_VBLANK_STATIC(atarigx2)
+	MCFG_SCREEN_UPDATE_DRIVER(atarigx2_state, screen_update_atarigx2)
+	MCFG_SCREEN_VBLANK_DRIVER(atarigx2_state, screen_eof_atarigx2)
 
 	MCFG_VIDEO_START_OVERRIDE(atarigx2_state,atarigx2)
 
@@ -2236,7 +2226,7 @@ DRIVER_INIT_MEMBER(atarigx2_state,rrreveng)
 
 	m_playfield_base = 0x000;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xca0fc0, 0xca0fc3, read32_delegate(FUNC(atarigx2_state::rrreveng_prot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xca0fc0, 0xca0fc3, read32_delegate(FUNC(atarigx2_state::rrreveng_prot_r),this));
 }
 
 

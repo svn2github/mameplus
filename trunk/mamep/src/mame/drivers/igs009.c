@@ -89,6 +89,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(gp98);
+	UINT32 screen_update_jingbell(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(jingbell_interrupt);
 };
 
 
@@ -281,18 +283,17 @@ VIDEO_START_MEMBER(igs009_state,gp98)
 }
 
 
-static SCREEN_UPDATE_IND16(jingbell)
+UINT32 igs009_state::screen_update_jingbell(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	igs009_state *state = screen.machine().driver_data<igs009_state>();
-	int layers_ctrl = state->m_video_enable ? -1 : 0;
+	int layers_ctrl = m_video_enable ? -1 : 0;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_Z))
+	if (machine().input().code_pressed(KEYCODE_Z))
 	{
 		int mask = 0;
-		if (screen.machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
-		if (screen.machine().input().code_pressed(KEYCODE_W))	mask |= 2;
-		if (screen.machine().input().code_pressed(KEYCODE_A))	mask |= 4;
+		if (machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
+		if (machine().input().code_pressed(KEYCODE_W))	mask |= 2;
+		if (machine().input().code_pressed(KEYCODE_A))	mask |= 4;
 		if (mask != 0) layers_ctrl &= mask;
 	}
 #endif
@@ -306,10 +307,10 @@ static SCREEN_UPDATE_IND16(jingbell)
 
 		for (i= 0;i < 0x80;i++)
 		{
-			state->m_gp98_reel1_tilemap->set_scrolly(i, state->m_bg_scroll[i]*2);
-			state->m_gp98_reel2_tilemap->set_scrolly(i, state->m_bg_scroll[i+0x80]*2);
-			state->m_gp98_reel3_tilemap->set_scrolly(i, state->m_bg_scroll[i+0x100]*2);
-			state->m_gp98_reel4_tilemap->set_scrolly(i, state->m_bg_scroll[i+0x180]*2);
+			m_gp98_reel1_tilemap->set_scrolly(i, m_bg_scroll[i]*2);
+			m_gp98_reel2_tilemap->set_scrolly(i, m_bg_scroll[i+0x80]*2);
+			m_gp98_reel3_tilemap->set_scrolly(i, m_bg_scroll[i+0x100]*2);
+			m_gp98_reel4_tilemap->set_scrolly(i, m_bg_scroll[i+0x180]*2);
 		}
 
 
@@ -318,28 +319,28 @@ static SCREEN_UPDATE_IND16(jingbell)
 		for (zz=0;zz<0x80-8;zz++) // -8 because of visible area (2*8 = 16)
 		{
 			rectangle clip;
-			int rowenable = state->m_bg_scroll2[zz];
+			int rowenable = m_bg_scroll2[zz];
 
 			/* draw top of screen */
 			clip.set(visarea.min_x, visarea.max_x, startclipmin, startclipmin+2);
 
-			bitmap.fill(screen.machine().pens[rowenable], clip);
+			bitmap.fill(machine().pens[rowenable], clip);
 
 			if (rowenable==0)
 			{ // 0 and 1 are the same? or is there a global switchoff?
-				state->m_gp98_reel1_tilemap->draw(bitmap, clip, 0,0);
+				m_gp98_reel1_tilemap->draw(bitmap, clip, 0,0);
 			}
 			else if (rowenable==1)
 			{
-				state->m_gp98_reel2_tilemap->draw(bitmap, clip, 0,0);
+				m_gp98_reel2_tilemap->draw(bitmap, clip, 0,0);
 			}
 			else if (rowenable==2)
 			{
-				state->m_gp98_reel3_tilemap->draw(bitmap, clip, 0,0);
+				m_gp98_reel3_tilemap->draw(bitmap, clip, 0,0);
 			}
 			else if (rowenable==3)
 			{
-				state->m_gp98_reel4_tilemap->draw(bitmap, clip, 0,0);
+				m_gp98_reel4_tilemap->draw(bitmap, clip, 0,0);
 			}
 
 
@@ -347,10 +348,10 @@ static SCREEN_UPDATE_IND16(jingbell)
 		}
 
 	}
-	else					bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	else					bitmap.fill(get_black_pen(machine()), cliprect);
 
 
-	if (layers_ctrl & 2)	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 2)	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -733,11 +734,10 @@ void igs009_state::machine_reset()
 	m_video_enable	=	1;
 }
 
-static INTERRUPT_GEN( jingbell_interrupt )
+INTERRUPT_GEN_MEMBER(igs009_state::jingbell_interrupt)
 {
-	igs009_state *state = device->machine().driver_data<igs009_state>();
-	 if (state->m_nmi_enable & 0x80)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	 if (m_nmi_enable & 0x80)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( jingbell, igs009_state )
@@ -745,7 +745,7 @@ static MACHINE_CONFIG_START( jingbell, igs009_state )
 	MCFG_CPU_ADD("maincpu", Z180, XTAL_12MHz / 2)	/* HD64180RP8, 8 MHz? */
 	MCFG_CPU_PROGRAM_MAP(jingbell_map)
 	MCFG_CPU_IO_MAP(jingbell_portmap)
-	MCFG_CPU_VBLANK_INT("screen",jingbell_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs009_state, jingbell_interrupt)
 
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -756,7 +756,7 @@ static MACHINE_CONFIG_START( jingbell, igs009_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(jingbell)
+	MCFG_SCREEN_UPDATE_DRIVER(igs009_state, screen_update_jingbell)
 
 	MCFG_GFXDECODE(jingbell)
 	MCFG_PALETTE_LENGTH(0x400)

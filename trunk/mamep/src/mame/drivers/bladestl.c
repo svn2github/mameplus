@@ -36,16 +36,15 @@
 #include "includes/bladestl.h"
 
 
-static TIMER_DEVICE_CALLBACK( bladestl_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(bladestl_state::bladestl_scanline)
 {
-	bladestl_state *state = timer.machine().driver_data<bladestl_state>();
 	int scanline = param;
 
-	if(scanline == 240 && k007342_is_int_enabled(state->m_k007342)) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(HD6309_FIRQ_LINE, HOLD_LINE);
+	if(scanline == 240 && k007342_is_int_enabled(m_k007342)) // vblank-out irq
+		machine().device("maincpu")->execute().set_input_line(HD6309_FIRQ_LINE, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in or timer irq
-		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /*************************************
@@ -333,7 +332,7 @@ static MACHINE_CONFIG_START( bladestl, bladestl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 24000000/2)		/* 24MHz/2 (?) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bladestl_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", bladestl_state, bladestl_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 2000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -347,7 +346,7 @@ static MACHINE_CONFIG_START( bladestl, bladestl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bladestl)
+	MCFG_SCREEN_UPDATE_DRIVER(bladestl_state, screen_update_bladestl)
 
 	MCFG_GFXDECODE(bladestl)
 	MCFG_PALETTE_LENGTH(32 + 16*16)

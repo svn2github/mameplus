@@ -183,12 +183,11 @@ WRITE8_MEMBER(btime_state::ay_audio_nmi_enable_w)
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( audio_nmi_gen )
+TIMER_DEVICE_CALLBACK_MEMBER(btime_state::audio_nmi_gen)
 {
-	btime_state *state = timer.machine().driver_data<btime_state>();
 	int scanline = param;
-	state->m_audio_nmi_state = scanline & 8;
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+	m_audio_nmi_state = scanline & 8;
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, (m_audio_nmi_enabled && m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -199,9 +198,9 @@ INLINE UINT8 swap_bits_5_6(UINT8 data)
 }
 
 
-static void btime_decrypt( address_space *space )
+static void btime_decrypt( address_space &space )
 {
-	btime_state *state = space->machine().driver_data<btime_state>();
+	btime_state *state = space.machine().driver_data<btime_state>();
 	UINT8 *src, *src1;
 	int addr, addr1;
 
@@ -211,11 +210,11 @@ static void btime_decrypt( address_space *space )
 	/* xxxx xxx1 xxxx x1xx are encrypted. */
 
 	/* get the address of the next opcode */
-	addr = space->device().safe_pc();
+	addr = space.device().safe_pc();
 
 	/* however if the previous instruction was JSR (which caused a write to */
 	/* the stack), fetch the address of the next instruction. */
-	addr1 = space->device().safe_pcbase();
+	addr1 = space.device().safe_pcbase();
 	src1 = (addr1 < 0x9000) ? state->m_rambase : state->memregion("maincpu")->base();
 	if (decrypted[addr1] == 0x20)	/* JSR $xxxx */
 		addr = src1[addr1 + 1] + 256 * src1[addr1 + 2];
@@ -280,7 +279,7 @@ WRITE8_MEMBER(btime_state::btime_w)
 
 	m_rambase[offset] = data;
 
-	btime_decrypt(&space);
+	btime_decrypt(space);
 }
 
 WRITE8_MEMBER(btime_state::tisland_w)
@@ -299,7 +298,7 @@ WRITE8_MEMBER(btime_state::tisland_w)
 
 	m_rambase[offset] = data;
 
-	btime_decrypt(&space);
+	btime_decrypt(space);
 }
 
 WRITE8_MEMBER(btime_state::zoar_w)
@@ -317,7 +316,7 @@ WRITE8_MEMBER(btime_state::zoar_w)
 
 	m_rambase[offset] = data;
 
-	btime_decrypt(&space);
+	btime_decrypt(space);
 }
 
 WRITE8_MEMBER(btime_state::disco_w)
@@ -331,7 +330,7 @@ WRITE8_MEMBER(btime_state::disco_w)
 
 	m_rambase[offset] = data;
 
-	btime_decrypt(&space);
+	btime_decrypt(space);
 }
 
 
@@ -1463,12 +1462,12 @@ static MACHINE_CONFIG_START( btime, btime_state )
 
 	MCFG_CPU_ADD("audiocpu", M6502, HCLK1/3/2)
 	MCFG_CPU_PROGRAM_MAP(audio_map)
-	MCFG_TIMER_ADD_SCANLINE("audionmi", audio_nmi_gen, "screen", 0, 8)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("audionmi", btime_state, audio_nmi_gen, "screen", 0, 8)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(HCLK, 384, 8, 248, 272, 8, 248)
-	MCFG_SCREEN_UPDATE_STATIC(btime)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_btime)
 
 	MCFG_MACHINE_START_OVERRIDE(btime_state,btime)
 	MCFG_MACHINE_RESET_OVERRIDE(btime_state,btime)
@@ -1514,7 +1513,7 @@ static MACHINE_CONFIG_DERIVED( cookrace, btime )
 	MCFG_PALETTE_LENGTH(16)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(cookrace)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_cookrace)
 MACHINE_CONFIG_END
 
 
@@ -1532,7 +1531,7 @@ static MACHINE_CONFIG_DERIVED( lnc, btime )
 
 	MCFG_PALETTE_INIT_OVERRIDE(btime_state,lnc)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(lnc)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_lnc)
 MACHINE_CONFIG_END
 
 
@@ -1542,7 +1541,7 @@ static MACHINE_CONFIG_DERIVED( wtennis, lnc )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(eggs)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_eggs)
 MACHINE_CONFIG_END
 
 
@@ -1569,7 +1568,7 @@ static MACHINE_CONFIG_DERIVED( sdtennis, btime )
 
 	MCFG_VIDEO_START_OVERRIDE(btime_state,bnj)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(bnj)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_bnj)
 MACHINE_CONFIG_END
 
 
@@ -1597,7 +1596,7 @@ static MACHINE_CONFIG_DERIVED( zoar, btime )
 	MCFG_PALETTE_LENGTH(64)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(zoar)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_zoar)
 
 	MCFG_SOUND_REPLACE("ay1", AY8910, HCLK1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.23)
@@ -1623,7 +1622,7 @@ static MACHINE_CONFIG_DERIVED( disco, btime )
 	MCFG_PALETTE_LENGTH(32)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(disco)
+	MCFG_SCREEN_UPDATE_DRIVER(btime_state, screen_update_disco)
 MACHINE_CONFIG_END
 
 
@@ -2038,18 +2037,18 @@ ROM_END
 
 static void decrypt_C10707_cpu(running_machine &machine, const char *cputag)
 {
-	address_space *space = machine.device(cputag)->memory().space(AS_PROGRAM);
+	address_space &space = machine.device(cputag)->memory().space(AS_PROGRAM);
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0x10000);
 	UINT8 *rom = machine.root_device().memregion(cputag)->base();
 	offs_t addr;
 
-	space->set_decrypted_region(0x0000, 0xffff, decrypt);
+	space.set_decrypted_region(0x0000, 0xffff, decrypt);
 
 	/* Swap bits 5 & 6 for opcodes */
 	for (addr = 0; addr < 0x10000; addr++)
 		decrypt[addr] = swap_bits_5_6(rom[addr]);
 
-	if (&space->device() == machine.device("maincpu"))
+	if (&space.device() == machine.device("maincpu"))
 		decrypted = decrypt;
 }
 
@@ -2068,11 +2067,11 @@ READ8_MEMBER(btime_state::wtennis_reset_hack_r)
 
 static void init_rom1(running_machine &machine)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	decrypted = auto_alloc_array(machine, UINT8, 0x10000);
-	space->set_decrypted_region(0x0000, 0xffff, decrypted);
+	space.set_decrypted_region(0x0000, 0xffff, decrypted);
 
 	/* For now, just copy the RAM array over to ROM. Decryption will happen */
 	/* at run time, since the CPU applies the decryption only if the previous */
@@ -2136,7 +2135,7 @@ DRIVER_INIT_MEMBER(btime_state,cookrace)
 {
 	decrypt_C10707_cpu(machine(), "maincpu");
 
-	machine().device("audiocpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0200, 0x0fff, "bank10");
+	machine().device("audiocpu")->memory().space(AS_PROGRAM).install_read_bank(0x0200, 0x0fff, "bank10");
 	membank("bank10")->set_base(memregion("audiocpu")->base() + 0xe200);
 	m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
 }
@@ -2151,9 +2150,9 @@ DRIVER_INIT_MEMBER(btime_state,wtennis)
 {
 	decrypt_C10707_cpu(machine(), "maincpu");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc15f, 0xc15f, read8_delegate(FUNC(btime_state::wtennis_reset_hack_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc15f, 0xc15f, read8_delegate(FUNC(btime_state::wtennis_reset_hack_r),this));
 
-	machine().device("audiocpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0200, 0x0fff, "bank10");
+	machine().device("audiocpu")->memory().space(AS_PROGRAM).install_read_bank(0x0200, 0x0fff, "bank10");
 	membank("bank10")->set_base(memregion("audiocpu")->base() + 0xe200);
 	m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
 }

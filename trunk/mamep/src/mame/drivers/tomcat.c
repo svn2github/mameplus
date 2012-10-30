@@ -41,8 +41,10 @@ class tomcat_state : public driver_device
 public:
 	tomcat_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
+		m_tms(*this, "tms"),
 		m_shared_ram(*this, "shared_ram"){ }
 
+	required_device<tms5220n_device> m_tms;
 	int m_control_num;
 	required_shared_ptr<UINT16> m_shared_ram;
 	UINT8 m_nvram[0x800];
@@ -328,7 +330,7 @@ WRITE8_MEMBER(tomcat_state::soundlatches_w)
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, tomcat_state )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x3000, 0x30df) AM_WRITE(soundlatches_w)
 	AM_RANGE(0x30e0, 0x30e0) AM_NOP // COINRD Inputs: D7 = Coin L, D6 = Coin R, D5 = SOUNDFLAG
 	AM_RANGE(0x5000, 0x507f) AM_RAM	// 6532 ram
@@ -394,11 +396,16 @@ static const riot6532_interface tomcat_riot6532_intf =
 	DEVCB_NULL	// connected to IRQ line of 6502
 };
 
+static const tms52xx_config tms_intf =
+{
+	DEVCB_NULL
+};
+
 static MACHINE_CONFIG_START( tomcat, tomcat_state )
 	MCFG_CPU_ADD("maincpu", M68010, XTAL_12MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(tomcat_map)
-	MCFG_CPU_PERIODIC_INT(irq1_line_assert, 5*60)
-	//MCFG_CPU_PERIODIC_INT(irq1_line_assert, (double)XTAL_12MHz / 16 / 16 / 16 / 12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(tomcat_state, irq1_line_assert,  5*60)
+	//MCFG_CPU_PERIODIC_INT_DRIVER(tomcat_state, irq1_line_assert,  (double)XTAL_12MHz / 16 / 16 / 16 / 12)
 
 	MCFG_CPU_ADD("dsp", TMS32010, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP( dsp_map)
@@ -433,11 +440,12 @@ static MACHINE_CONFIG_START( tomcat, tomcat_state )
 	MCFG_POKEY_ADD("pokey2", XTAL_14_31818MHz / 8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.20)
 
-	MCFG_SOUND_ADD("tms", TMS5220, 325000)
+	MCFG_SOUND_ADD("tms", TMS5220N, 325000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
+	MCFG_SOUND_CONFIG(tms_intf)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_14_31818MHz / 4)
+	MCFG_YM2151_ADD("ymsnd", XTAL_14_31818MHz / 4)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 MACHINE_CONFIG_END

@@ -563,14 +563,13 @@ void norautp_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( norautp )
+UINT32 norautp_state::screen_update_norautp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	norautp_state *state = screen.machine().driver_data<norautp_state>();
 	int x, y, count;
 
 	count = 0;
 
-	bitmap.fill(screen.machine().pens[0], cliprect); //black pen
+	bitmap.fill(machine().pens[0], cliprect); //black pen
 
 	for(y = 0; y < 8; y++)
 	{
@@ -579,10 +578,10 @@ static SCREEN_UPDATE_IND16( norautp )
 		{
 			for(x = 0; x < 16; x++)
 			{
-				int tile = state->m_np_vram[count] & 0x3f;
-				int colour = (state->m_np_vram[count] & 0xc0) >> 6;
+				int tile = m_np_vram[count] & 0x3f;
+				int colour = (m_np_vram[count] & 0xc0) >> 6;
 
-				drawgfx_opaque(bitmap,cliprect, screen.machine().gfx[1], tile, colour, 0, 0, (x * 32) + 8, y * 32);
+				drawgfx_opaque(bitmap,cliprect, machine().gfx[1], tile, colour, 0, 0, (x * 32) + 8, y * 32);
 
 				count+=2;
 			}
@@ -591,10 +590,10 @@ static SCREEN_UPDATE_IND16( norautp )
 		{
 			for(x = 0; x < 32; x++)
 			{
-				int tile = state->m_np_vram[count] & 0x3f;
-				int colour = (state->m_np_vram[count] & 0xc0) >> 6;
+				int tile = m_np_vram[count] & 0x3f;
+				int colour = (m_np_vram[count] & 0xc0) >> 6;
 
-				drawgfx_opaque(bitmap,cliprect, screen.machine().gfx[0], tile, colour, 0, 0, x * 16, y * 32);
+				drawgfx_opaque(bitmap,cliprect, machine().gfx[0], tile, colour, 0, 0, x * 16, y * 32);
 
 				count++;
 			}
@@ -669,8 +668,8 @@ WRITE8_MEMBER(norautp_state::soundlamps_w)
 	output_set_lamp_value(9, (data >> 1) & 1);	/* BET / COLLECT lamp */
 
 	/* the 4 MSB are for discrete sound */
-	discrete_sound_w(discrete, NORAUTP_SND_EN, (data >> 7) & 0x01);
-	discrete_sound_w(discrete, NORAUTP_FREQ_DATA, (data >> 4) & 0x07);
+	discrete_sound_w(discrete, space, NORAUTP_SND_EN, (data >> 7) & 0x01);
+	discrete_sound_w(discrete, space, NORAUTP_FREQ_DATA, (data >> 4) & 0x07);
 
 //  popmessage("sound bits 4-5-6-7: %02x, %02x, %02x, %02x", ((data >> 4) & 0x01), ((data >> 5) & 0x01), ((data >> 6) & 0x01), ((data >> 7) & 0x01));
 }
@@ -1265,7 +1264,7 @@ static MACHINE_CONFIG_START( noraut_base, norautp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(2*16, 31*16-1, (0*16) + 8, 16*16-1)	/* the hardware clips the top 8 pixels */
-	MCFG_SCREEN_UPDATE_STATIC(norautp)
+	MCFG_SCREEN_UPDATE_DRIVER(norautp_state, screen_update_norautp)
 
 	MCFG_GFXDECODE(norautp)
 
@@ -1283,7 +1282,7 @@ static MACHINE_CONFIG_DERIVED( norautp, noraut_base )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 
@@ -1291,7 +1290,7 @@ static MACHINE_CONFIG_DERIVED( norautpl, noraut_base )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("discrete")
@@ -1304,7 +1303,7 @@ static MACHINE_CONFIG_DERIVED( norautxp, noraut_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(norautxp_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 
@@ -1313,7 +1312,7 @@ static MACHINE_CONFIG_DERIVED( nortest1, noraut_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(nortest1_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 
@@ -1322,7 +1321,7 @@ static MACHINE_CONFIG_DERIVED( norautx4, noraut_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(norautx4_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 
@@ -1332,7 +1331,7 @@ static MACHINE_CONFIG_DERIVED( norautx8, noraut_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(norautx8_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 #endif
 
@@ -1342,7 +1341,7 @@ static MACHINE_CONFIG_DERIVED( kimble, noraut_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(kimble_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("discrete")
@@ -1355,7 +1354,7 @@ static MACHINE_CONFIG_DERIVED( newhilop, noraut_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(newhilop_map)
 //  MCFG_CPU_IO_MAP(newhilop_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", norautp_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 /********** 8080 based **********/

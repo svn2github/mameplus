@@ -8200,6 +8200,35 @@ ROM_START( kof97pls )
 	ROM_LOAD16_BYTE( "232-c6.c6", 0x2000001, 0x400000, CRC(4ff4d47b) SHA1(4d5689ede24a5fe4330bd85d4d3f4eb2795308bb) ) /* Plane 2,3 */ /* TC5332205 */
 ROM_END
 
+ROM_START( kof97oro )
+	ROM_REGION( 0x500000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "orochi-p1.bin",  0x0000000, 0x100000, CRC(6dcb2946) SHA1(3ccb3fdf3d32a75c7fcfefff5db1f3c75054731f) )
+	ROM_LOAD16_WORD_SWAP( "orochi-p21.bin", 0x0200000, 0x100000, CRC(6e1c4d8c) SHA1(f514638a599a8a582c5f4df72f6a957bab776b7e) )
+	ROM_CONTINUE( 0x100000, 0x100000 )
+	ROM_LOAD16_WORD_SWAP( "orochi-p29.bin", 0x0400000, 0x100000, CRC(4c7c0221) SHA1(fdd05927743cb12210b74768155bb3f59bff01b5) )
+	ROM_CONTINUE( 0x300000, 0x100000 )
+
+	NEO_SFIX_128K( "orochi-s1.bin", CRC(4ee2149a) SHA1(180a1a90021031eac1a643b769d9cdeda56518f5) )
+
+	NEO_BIOS_AUDIO_128K( "orochi-m1.bin", CRC(45348747) SHA1(ed77cbae2b208d1177a9f5f6e8cd57070e90b65b) )
+
+	ROM_REGION( 0xc00000, "ymsnd", 0 )
+	ROM_LOAD( "orochi-v1.bin", 0x000000, 0x0400000, CRC(22a2b5b5) SHA1(ebdbc977332e6d93e266755000b43857e0082965) )
+	ROM_LOAD( "orochi-v2.bin", 0x400000, 0x0400000, CRC(2304e744) SHA1(98d283e2bcc9291a53f52afd35ef76dfb0828432) )
+	ROM_LOAD( "orochi-v3.bin", 0x800000, 0x0400000, CRC(759eb954) SHA1(54e77c4e9e6b89458e59824e478ddc33a9c72655) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x2800000, "sprites", 0 )
+	// The C1 and C2 here are reconstructed but very likely to be correct.
+	ROM_LOAD16_BYTE( "orochi-c1.bin",  0x0000000, 0x1000000, BAD_DUMP CRC(f13e841c) SHA1(e24b3fb5f7e1c1f4752cad382c264f5f93e737a0) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "orochi-c2.bin",  0x0000001, 0x1000000, BAD_DUMP CRC(2db1f6d3) SHA1(13d957c04bd69f0db140e4633c39db4a9e44eab8) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "orochi-c51.bin", 0x2000000, 0x0200000, CRC(a90340cb) SHA1(97eaa89f0e860e2c591ca3a995fd910d8116347d) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "orochi-c61.bin", 0x2000001, 0x0200000, CRC(188e351a) SHA1(ab724250bc07ace0873fc825b798ace934260988) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "orochi-c52.bin", 0x2400000, 0x0200000, CRC(d4eec50a) SHA1(0930cce5346fbbd5c1524f9148d0577cbe634420) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "orochi-c62.bin", 0x2400001, 0x0200000, CRC(031b1ad5) SHA1(d47b3452953b553348be0a55473b863ce2872f6e) ) /* Plane 2,3 */
+ROM_END
+
 ROM_START( kog )
 	ROM_REGION( 0x600000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "5232-p1.bin", 0x000000, 0x200000, CRC(d2413ec6) SHA1(c0bf409d1e714cba5fdc6f79e4c2aec805316634) )
@@ -11176,13 +11205,13 @@ DRIVER_INIT_MEMBER(neogeo_state,gfxdec50)
 	neogeo_sfix_decrypt(machine());
 }
 
-DRIVER_INIT_MEMBER(neogeo_state,fatfury2 )
+DRIVER_INIT_MEMBER(neogeo_state,fatfury2)
 {
 	DRIVER_INIT_CALL(neogeo);
 	fatfury2_install_protection(machine());
 }
 
-DRIVER_INIT_MEMBER(neogeo_state,zupapa )
+DRIVER_INIT_MEMBER(neogeo_state,zupapa)
 {
 	DRIVER_INIT_CALL(neogeo);
 	m_fixed_layer_bank_type = 1;
@@ -11195,7 +11224,7 @@ DRIVER_INIT_MEMBER(neogeo_state,kof96ep)
 	DRIVER_INIT_CALL(neogeo);
 }
 
-DRIVER_INIT_MEMBER(neogeo_state,kof98 )
+DRIVER_INIT_MEMBER(neogeo_state,kof98)
 {
 	DRIVER_INIT_CALL(neogeo);
 	kof98_decrypt_68k(machine());
@@ -11435,8 +11464,8 @@ DRIVER_INIT_MEMBER(neogeo_state,sengoku3)
 
 static READ16_HANDLER(popbounc_sfix_16_r)
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
-	if (space->device().safe_pc()==0x6b10)
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
+	if (space.device().safe_pc()==0x6b10)
 		return 0;
 	return state->m_save_ram[0x4fbc/2];
 }
@@ -11448,7 +11477,7 @@ DRIVER_INIT_MEMBER(neogeo_state,popbounc)
 
 	/* the game hangs after a while without this patch */
 	if (!machine().sample_rate())
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x104fbc, 0x104fbd, FUNC(popbounc_sfix_16_r));
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x104fbc, 0x104fbd, FUNC(popbounc_sfix_16_r));
 }
 
 DRIVER_INIT_MEMBER(neogeo_state,rotd)
@@ -11841,7 +11870,7 @@ DRIVER_INIT_MEMBER(neogeo_state,kf2k3pcb)
 	neo_pcm2_swap(machine(), 5);
 	m_fixed_layer_bank_type = 2;
 	install_pvc_protection(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc00000, 0xc7ffff, "bios" );  // 512k bios
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xc00000, 0xc7ffff, "bios" );  // 512k bios
 }
 
 DRIVER_INIT_MEMBER(neogeo_state,kof2003)
@@ -11945,7 +11974,7 @@ DRIVER_INIT_MEMBER(neogeo_state,kf2k3pcd) // decrypted C & decrypted Bios
 	neo_pcm2_swap(machine(), 5);
 	m_fixed_layer_bank_type = 2;
 	install_pvc_protection(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc00000, 0xc7ffff, "bios" );  // 512k bios
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0xc00000, 0xc7ffff, "bios" );  // 512k bios
 }
 
 DRIVER_INIT_MEMBER(neogeo_state,samsh5sp)
@@ -11974,26 +12003,34 @@ DRIVER_INIT_MEMBER(neogeo_state,jockeygp)
 	kof2000_neogeo_gfx_decrypt(machine(), 0xac);
 
 	/* install some extra RAM */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0x200000, 0x201fff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0x200000, 0x201fff);
 
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x280000, 0x280001, "IN5");
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2c0000, 0x2c0001, "IN6");
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x280000, 0x280001, "IN5");
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x2c0000, 0x2c0001, "IN6");
 }
 
 DRIVER_INIT_MEMBER(neogeo_state,vliner)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0x200000, 0x201fff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0x200000, 0x201fff);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x280000, 0x280001, "IN5");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2c0000, 0x2c0001, "IN6");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x280000, 0x280001, "IN5");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x2c0000, 0x2c0001, "IN6");
 
+	DRIVER_INIT_CALL(neogeo);
+}
+
+DRIVER_INIT_MEMBER(neogeo_state,kof97oro)
+{
+	kof97oro_px_decode(machine());
+	neogeo_bootleg_sx_decrypt(machine(), 1);
+	neogeo_bootleg_cx_decrypt(machine());
 	DRIVER_INIT_CALL(neogeo);
 }
 
 DRIVER_INIT_MEMBER(neogeo_state,kog)
 {
 	/* overlay cartridge ROM */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x0ffffe, 0x0fffff, "JUMPER");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x0ffffe, 0x0fffff, "JUMPER");
 
 	kog_px_decrypt(machine());
 	neogeo_bootleg_sx_decrypt(machine(), 1);
@@ -12029,16 +12066,16 @@ DRIVER_INIT_MEMBER(neogeo_state,jckeygpd)
 	neogeo_cmc50_m1_decrypt(machine());
 
 	/* install some extra RAM */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0x200000, 0x201fff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0x200000, 0x201fff);
 
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x280000, 0x280001, "IN5");
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2c0000, 0x2c0001, "IN6");
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x280000, 0x280001, "IN5");
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x2c0000, 0x2c0001, "IN6");
 }
 
 
 static READ16_HANDLER( sbp_lowerrom_r )
 {
-	UINT16* rom = (UINT16*)space->machine().root_device().memregion("maincpu")->base();
+	UINT16* rom = (UINT16*)space.machine().root_device().memregion("maincpu")->base();
 	UINT16 origdata = rom[(offset+(0x200/2))];
 	UINT16 data =  BITSWAP16(origdata, 11,10,9,8,15,14,13,12,3,2,1,0,7,6,5,4);
 	int realoffset = 0x200+(offset*2);
@@ -12079,8 +12116,8 @@ DRIVER_INIT_MEMBER(neogeo_state,sbp)
 	// there are also writes to 0x1080..
 	//
 	// other stuff going on as well tho, the main overlay is still missing, and p1 inputs don't work
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00200, 0x001fff, FUNC(sbp_lowerrom_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x00200, 0x001fff, FUNC(sbp_lowerrom_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x00200, 0x001fff, FUNC(sbp_lowerrom_r));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x00200, 0x001fff, FUNC(sbp_lowerrom_w));
 
 	/* the game code clears the text overlay used ingame immediately after writing it.. why? protection? sloppy code that the hw ignores? imperfect emulation? */
 	{
@@ -12125,6 +12162,7 @@ void neogeo_state::mvs_install_protection(device_image_interface& image)
 		if(strcmp(crypt_feature,"mslugx_prot") == 0)		{ DRIVER_INIT_CALL(mslugx); }
 		else if(strcmp(crypt_feature,"fatfury2_prot") == 0)	{ DRIVER_INIT_CALL(fatfury2); }
 		else if(strcmp(crypt_feature,"kog_prot") == 0)		{ DRIVER_INIT_CALL(kog); }
+		else if(strcmp(crypt_feature,"kof97oro_prot") == 0)	{ DRIVER_INIT_CALL(kof97oro); }
 		else if(strcmp(crypt_feature,"kof98_prot") == 0)	{ DRIVER_INIT_CALL(kof98); }
 		else if(strcmp(crypt_feature,"kof99_prot") == 0)	{ DRIVER_INIT_CALL(kof99); }
 		else if(strcmp(crypt_feature,"kof99k_prot") == 0)	{ DRIVER_INIT_CALL(kof99k); }
@@ -12304,7 +12342,8 @@ GAME( 1997, kof97,      neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   RO
 GAME( 1997, kof97h,     kof97,    neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The King of Fighters '97 (NGH-2320)", GAME_SUPPORTS_SAVE )
 GAME( 1997, kof97k,     kof97,    neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The King of Fighters '97 (Korean release)", GAME_SUPPORTS_SAVE )
 GAME( 1997, kof97pls,   kof97,    neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "bootleg", "The King of Fighters '97 Plus (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1997, kog,        kof97,    neogeo,   kog, neogeo_state,      kog,      ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // protected bootleg
+GAME( 1997, kof97oro,   kof97,    neogeo,   neogeo, neogeo_state,   kof97oro, ROT0, "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997, kog,        kof97,    neogeo,   kog,    neogeo_state,   kog,      ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // protected bootleg
 GAME( 1997, lastblad,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (NGM-2340)", GAME_SUPPORTS_SAVE )
 GAME( 1997, lastbladh,  lastblad, neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (NGH-2340)", GAME_SUPPORTS_SAVE )
 GAME( 1997, lastsold,   lastblad, neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The Last Soldier (Korean release of The Last Blade)", GAME_SUPPORTS_SAVE )

@@ -144,17 +144,16 @@
  *
  *************************************/
 
-static TIMER_DEVICE_CALLBACK( scanline_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(beathead_state::scanline_callback)
 {
-	beathead_state *state = timer.machine().driver_data<beathead_state>();
 	int scanline = param;
 
 	/* update the video */
-	timer.machine().primary_screen->update_now();
+	machine().primary_screen->update_now();
 
 	/* on scanline zero, clear any halt condition */
 	if (scanline == 0)
-		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 
 	/* wrap around at 262 */
 	scanline++;
@@ -162,27 +161,19 @@ static TIMER_DEVICE_CALLBACK( scanline_callback )
 		scanline = 0;
 
 	/* set the scanline IRQ */
-	state->m_irq_state[2] = 1;
-	state->update_interrupts();
+	m_irq_state[2] = 1;
+	update_interrupts();
 
 	/* set the timer for the next one */
-	timer.adjust(timer.machine().primary_screen->time_until_pos(scanline) - state->m_hblank_offset, scanline);
+	timer.adjust(machine().primary_screen->time_until_pos(scanline) - m_hblank_offset, scanline);
 }
 
 
-void beathead_state::machine_start()
-{
-	atarigen_init(machine());
-}
-
-
-static void update_interrupts(running_machine &machine) { machine.driver_data<beathead_state>()->update_interrupts(); }
 void beathead_state::machine_reset()
 {
 	/* reset the common subsystems */
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, ::update_interrupts);
-	atarijsa_reset();
+	atarigen_state::machine_reset();
+	atarijsa_reset(machine());
 
 	/* the code is temporarily mapped at 0 at startup */
 	/* just copying the first 0x40 bytes is sufficient */
@@ -222,7 +213,7 @@ void beathead_state::update_interrupts()
 	{
 		m_irq_line_state = gen_int;
 		//if (m_irq_line_state != CLEAR_LINE)
-			machine().device("maincpu")->execute().set_input_line(ASAP_IRQ0, m_irq_line_state);
+			subdevice("maincpu")->execute().set_input_line(ASAP_IRQ0, m_irq_line_state);
 		//else
 			//asap_set_irq_line(ASAP_IRQ0, m_irq_line_state);
 	}
@@ -301,19 +292,6 @@ READ32_MEMBER( beathead_state::input_2_r )
  *
  *************************************/
 
-READ32_MEMBER( beathead_state::sound_data_r )
-{
-	return atarigen_sound_r(&space, offset, 0xffff);
-}
-
-
-WRITE32_MEMBER( beathead_state::sound_data_w )
-{
-	if (ACCESSING_BITS_0_7)
-		atarigen_sound_w(&space, offset, data, mem_mask);
-}
-
-
 WRITE32_MEMBER( beathead_state::sound_reset_w )
 {
 	logerror("Sound reset = %d\n", !offset);
@@ -345,7 +323,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 32, beathead_state)
 	AM_RANGE(0x00000000, 0x0001ffff) AM_RAM AM_SHARE("ram_base")
 	AM_RANGE(0x01800000, 0x01bfffff) AM_ROM AM_REGION("user1", 0) AM_SHARE("rom_base")
 	AM_RANGE(0x40000000, 0x400007ff) AM_RAM_WRITE(eeprom_data_w) AM_SHARE("nvram")
-	AM_RANGE(0x41000000, 0x41000003) AM_READWRITE(sound_data_r, sound_data_w)
+	AM_RANGE(0x41000000, 0x41000003) AM_READWRITE8(sound_r, sound_w, 0x000000ff)
 	AM_RANGE(0x41000100, 0x41000103) AM_READ(interrupt_control_r)
 	AM_RANGE(0x41000100, 0x4100011f) AM_WRITE(interrupt_control_w)
 	AM_RANGE(0x41000200, 0x41000203) AM_READ_PORT("IN1")
@@ -436,7 +414,7 @@ static MACHINE_CONFIG_START( beathead, beathead_state )
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_TIMER_ADD("scan_timer", scanline_callback)
+	MCFG_TIMER_DRIVER_ADD("scan_timer", beathead_state, scanline_callback)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -532,8 +510,8 @@ DRIVER_INIT_MEMBER(beathead_state,beathead)
 	atarijsa_init(machine(), "IN2", 0x0040);
 
 	/* prepare the speedups */
-	m_speedup_data = m_maincpu->space(AS_PROGRAM)->install_read_handler(0x00000ae8, 0x00000aeb, 0, 0, read32_delegate(FUNC(beathead_state::speedup_r), this));
-	m_movie_speedup_data = m_maincpu->space(AS_PROGRAM)->install_read_handler(0x00000804, 0x00000807, 0, 0, read32_delegate(FUNC(beathead_state::movie_speedup_r), this));
+	m_speedup_data = m_maincpu->space(AS_PROGRAM).install_read_handler(0x00000ae8, 0x00000aeb, 0, 0, read32_delegate(FUNC(beathead_state::speedup_r), this));
+	m_movie_speedup_data = m_maincpu->space(AS_PROGRAM).install_read_handler(0x00000804, 0x00000807, 0, 0, read32_delegate(FUNC(beathead_state::movie_speedup_r), this));
 }
 
 

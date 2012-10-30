@@ -522,60 +522,53 @@ static GFXDECODE_START( 2 )
 GFXDECODE_END
 
 
-static TIMER_CALLBACK( network_interrupt_callback )
+TIMER_CALLBACK_MEMBER(namcofl_state::network_interrupt_callback)
 {
-	machine.device("maincpu")->execute().set_input_line(I960_IRQ0, ASSERT_LINE);
-	machine.scheduler().timer_set(machine.primary_screen->frame_period(), FUNC(network_interrupt_callback));
+	machine().device("maincpu")->execute().set_input_line(I960_IRQ0, ASSERT_LINE);
+	machine().scheduler().timer_set(machine().primary_screen->frame_period(), timer_expired_delegate(FUNC(namcofl_state::network_interrupt_callback),this));
 }
 
 
-static TIMER_CALLBACK( vblank_interrupt_callback )
+TIMER_CALLBACK_MEMBER(namcofl_state::vblank_interrupt_callback)
 {
-	machine.device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
-	machine.scheduler().timer_set(machine.primary_screen->frame_period(), FUNC(vblank_interrupt_callback));
+	machine().device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
+	machine().scheduler().timer_set(machine().primary_screen->frame_period(), timer_expired_delegate(FUNC(namcofl_state::vblank_interrupt_callback),this));
 }
 
 
-static TIMER_CALLBACK( raster_interrupt_callback )
+TIMER_CALLBACK_MEMBER(namcofl_state::raster_interrupt_callback)
 {
-	namcofl_state *state = machine.driver_data<namcofl_state>();
-	machine.primary_screen->update_partial(machine.primary_screen->vpos());
-	machine.device("maincpu")->execute().set_input_line(I960_IRQ1, ASSERT_LINE);
-	state->m_raster_interrupt_timer->adjust(machine.primary_screen->frame_period());
+	machine().primary_screen->update_partial(machine().primary_screen->vpos());
+	machine().device("maincpu")->execute().set_input_line(I960_IRQ1, ASSERT_LINE);
+	m_raster_interrupt_timer->adjust(machine().primary_screen->frame_period());
 }
 
-static TIMER_DEVICE_CALLBACK( mcu_irq0_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(namcofl_state::mcu_irq0_cb)
 {
-	namcofl_state *state = timer.machine().driver_data<namcofl_state>();
-
-	state->m_mcu->set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
+	m_mcu->set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( mcu_irq2_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(namcofl_state::mcu_irq2_cb)
 {
-	namcofl_state *state = timer.machine().driver_data<namcofl_state>();
-
-	state->m_mcu->set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
+	m_mcu->set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( mcu_adc_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(namcofl_state::mcu_adc_cb)
 {
-	namcofl_state *state = timer.machine().driver_data<namcofl_state>();
-
-	state->m_mcu->set_input_line(M37710_LINE_ADC, HOLD_LINE);
+	m_mcu->set_input_line(M37710_LINE_ADC, HOLD_LINE);
 }
 
 
 MACHINE_START_MEMBER(namcofl_state,namcofl)
 {
-	m_raster_interrupt_timer = machine().scheduler().timer_alloc(FUNC(raster_interrupt_callback));
+	m_raster_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(namcofl_state::raster_interrupt_callback),this));
 }
 
 
 MACHINE_RESET_MEMBER(namcofl_state,namcofl)
 {
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(machine().primary_screen->visible_area().max_y + 3), FUNC(network_interrupt_callback));
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(machine().primary_screen->visible_area().max_y + 1), FUNC(vblank_interrupt_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(machine().primary_screen->visible_area().max_y + 3), timer_expired_delegate(FUNC(namcofl_state::network_interrupt_callback),this));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(machine().primary_screen->visible_area().max_y + 1), timer_expired_delegate(FUNC(namcofl_state::vblank_interrupt_callback),this));
 
 	membank("bank1")->set_base(memregion("maincpu")->base() );
 	membank("bank2")->set_base(m_workram );
@@ -592,9 +585,9 @@ static MACHINE_CONFIG_START( namcofl, namcofl_state )
 	MCFG_CPU_PROGRAM_MAP(namcoc75_am)
 	MCFG_CPU_IO_MAP(namcoc75_io)
 	/* TODO: irq generation for these */
-	MCFG_TIMER_ADD_PERIODIC("mcu_irq0", mcu_irq0_cb, attotime::from_hz(60))
-	MCFG_TIMER_ADD_PERIODIC("mcu_irq2", mcu_irq2_cb, attotime::from_hz(60))
-	MCFG_TIMER_ADD_PERIODIC("mcu_adc",  mcu_adc_cb, attotime::from_hz(60))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("mcu_irq0", namcofl_state, mcu_irq0_cb, attotime::from_hz(60))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("mcu_irq2", namcofl_state, mcu_irq2_cb, attotime::from_hz(60))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("mcu_adc", namcofl_state, mcu_adc_cb, attotime::from_hz(60))
 
 	MCFG_MACHINE_START_OVERRIDE(namcofl_state,namcofl)
 	MCFG_MACHINE_RESET_OVERRIDE(namcofl_state,namcofl)
@@ -604,7 +597,7 @@ static MACHINE_CONFIG_START( namcofl, namcofl_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(NAMCOFL_HTOTAL, NAMCOFL_VTOTAL)
 	MCFG_SCREEN_VISIBLE_AREA(0, NAMCOFL_HBSTART-1, 0, NAMCOFL_VBSTART-1)
-	MCFG_SCREEN_UPDATE_STATIC(namcofl)
+	MCFG_SCREEN_UPDATE_DRIVER(namcofl_state, screen_update_namcofl)
 
 	MCFG_PALETTE_LENGTH(8192)
 

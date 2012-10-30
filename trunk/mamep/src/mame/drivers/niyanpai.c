@@ -245,14 +245,14 @@ static Z80CTC_INTERFACE( ctc_intf )
 
 void niyanpai_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	// initialize TMPZ84C011 PIO
 	for (i = 0; i < 5; i++)
 	{
 		m_pio_dir[i] = m_pio_latch[i] = 0;
-		tmpz84c011_pio_w(*space, i, 0);
+		tmpz84c011_pio_w(space, i, 0);
 	}
 }
 
@@ -308,7 +308,7 @@ READ16_MEMBER(niyanpai_state::musobana_inputport_0_r)
 
 CUSTOM_INPUT_MEMBER(niyanpai_state::musobana_outcoin_flag_r)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	// tmp68301_parallel_interface[0x05]
 	//  bit 0   coin counter
 	//  bit 2   motor on
@@ -926,9 +926,9 @@ static INPUT_PORTS_START( zokumahj )	// I don't have manual for this game.
 INPUT_PORTS_END
 
 
-static INTERRUPT_GEN( niyanpai_interrupt )
+INTERRUPT_GEN_MEMBER(niyanpai_state::niyanpai_interrupt)
 {
-	device->execute().set_input_line_and_vector(1, HOLD_LINE,0x100/4);
+	device.execute().set_input_line_and_vector(1, HOLD_LINE,0x100/4);
 }
 
 static const z80_daisy_config daisy_chain_sound[] =
@@ -943,7 +943,7 @@ static MACHINE_CONFIG_START( niyanpai, niyanpai_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12288000/2)	/* TMP68301, 6.144 MHz */
 	MCFG_CPU_PROGRAM_MAP(niyanpai_map)
-	MCFG_CPU_VBLANK_INT("screen", niyanpai_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", niyanpai_state,  niyanpai_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)					/* TMPZ84C011, 8.00 MHz */
 	MCFG_CPU_CONFIG(daisy_chain_sound)
@@ -960,7 +960,7 @@ static MACHINE_CONFIG_START( niyanpai, niyanpai_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(niyanpai)
+	MCFG_SCREEN_UPDATE_DRIVER(niyanpai_state, screen_update_niyanpai)
 
 	MCFG_PALETTE_LENGTH(256*3)
 

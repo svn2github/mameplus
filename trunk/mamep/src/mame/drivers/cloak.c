@@ -333,11 +333,11 @@ static MACHINE_CONFIG_START( cloak, cloak_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 1000000)		/* 1 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(master_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(cloak_state, irq0_line_hold,  4*60)
 
 	MCFG_CPU_ADD("slave", M6502, 1250000)		/* 1.25 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(slave_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(cloak_state, irq0_line_hold,  2*60)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1000))
 
@@ -349,7 +349,7 @@ static MACHINE_CONFIG_START( cloak, cloak_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 3*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cloak)
+	MCFG_SCREEN_UPDATE_DRIVER(cloak_state, screen_update_cloak)
 
 	MCFG_GFXDECODE(cloak)
 	MCFG_PALETTE_LENGTH(64)

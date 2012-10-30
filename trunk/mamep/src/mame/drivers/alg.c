@@ -59,9 +59,10 @@ public:
 	DECLARE_MACHINE_START(alg);
 	DECLARE_MACHINE_RESET(alg);
 	DECLARE_VIDEO_START(alg);
+	TIMER_CALLBACK_MEMBER(response_timer);
 };
 
-static TIMER_CALLBACK( response_timer );
+
 
 
 
@@ -115,7 +116,7 @@ VIDEO_START_MEMBER(alg_state,alg)
 MACHINE_START_MEMBER(alg_state,alg)
 {
 
-	m_serial_timer = machine().scheduler().timer_alloc(FUNC(response_timer));
+	m_serial_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(alg_state::response_timer),this));
 	m_serial_timer_active = FALSE;
 }
 
@@ -133,24 +134,23 @@ MACHINE_RESET_MEMBER(alg_state,alg)
  *
  *************************************/
 
-static TIMER_CALLBACK( response_timer )
+TIMER_CALLBACK_MEMBER(alg_state::response_timer)
 {
-	alg_state *state = machine.driver_data<alg_state>();
 
 	/* if we still have data to send, do it now */
-	if (state->m_laserdisc->data_available_r() == ASSERT_LINE)
+	if (m_laserdisc->data_available_r() == ASSERT_LINE)
 	{
-		UINT8 data = state->m_laserdisc->data_r();
+		UINT8 data = m_laserdisc->data_r();
 		if (data != 0x0a)
 			mame_printf_debug("Sending serial data = %02X\n", data);
-		amiga_serial_in_w(machine, data);
+		amiga_serial_in_w(machine(), data);
 	}
 
 	/* if there's more to come, set another timer */
-	if (state->m_laserdisc->data_available_r() == ASSERT_LINE)
-		state->m_serial_timer->adjust(amiga_get_serial_char_period(machine));
+	if (m_laserdisc->data_available_r() == ASSERT_LINE)
+		m_serial_timer->adjust(amiga_get_serial_char_period(machine()));
 	else
-		state->m_serial_timer_active = FALSE;
+		m_serial_timer_active = FALSE;
 }
 
 
@@ -412,7 +412,7 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const mos6526_interface cia_0_intf =
+static const legacy_mos6526_interface cia_0_intf =
 {
 	DEVCB_LINE(amiga_cia_0_irq),								/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -424,7 +424,7 @@ static const mos6526_interface cia_0_intf =
 	DEVCB_DRIVER_MEMBER(alg_state,alg_cia_0_portb_w)	/* port B */
 };
 
-static const mos6526_interface cia_1_intf =
+static const legacy_mos6526_interface cia_1_intf =
 {
 	DEVCB_LINE(amiga_cia_1_irq),								/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -447,7 +447,7 @@ static MACHINE_CONFIG_START( alg_r1, alg_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_LASERDISC_LDP1450_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(512*2, 262, amiga)
+	MCFG_LASERDISC_OVERLAY_DRIVER(512*2, 262, amiga_state, screen_update_amiga)
 	MCFG_LASERDISC_OVERLAY_CLIP((129-8)*2, (449+8-1)*2, 44-8, 244+8-1)
 
 	/* video hardware */
@@ -475,8 +475,8 @@ static MACHINE_CONFIG_START( alg_r1, alg_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
 
 	/* fdc */
 	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)

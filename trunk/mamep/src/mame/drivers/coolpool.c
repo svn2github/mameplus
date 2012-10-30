@@ -109,17 +109,17 @@ static void coolpool_scanline(screen_device &screen, bitmap_rgb32 &bitmap, int s
  *
  *************************************/
 
-static void coolpool_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+static void coolpool_to_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
-	coolpool_state *state = space->machine().driver_data<coolpool_state>();
+	coolpool_state *state = space.machine().driver_data<coolpool_state>();
 
 	memcpy(shiftreg, &state->m_vram_base[TOWORD(address) & ~TOWORD(0xfff)], TOBYTE(0x1000));
 }
 
 
-static void coolpool_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+static void coolpool_from_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
-	coolpool_state *state = space->machine().driver_data<coolpool_state>();
+	coolpool_state *state = space.machine().driver_data<coolpool_state>();
 
 	memcpy(&state->m_vram_base[TOWORD(address) & ~TOWORD(0xfff)], shiftreg, TOBYTE(0x1000));
 }
@@ -155,10 +155,9 @@ MACHINE_RESET_MEMBER(coolpool_state,coolpool)
  *
  *************************************/
 
-static TIMER_DEVICE_CALLBACK( nvram_write_timeout )
+TIMER_DEVICE_CALLBACK_MEMBER(coolpool_state::nvram_write_timeout)
 {
-	coolpool_state *state = timer.machine().driver_data<coolpool_state>();
-	state->m_nvram_write_enable = 0;
+	m_nvram_write_enable = 0;
 }
 
 
@@ -205,12 +204,10 @@ WRITE16_MEMBER(coolpool_state::nvram_thrash_data_w)
  *
  *************************************/
 
-static TIMER_DEVICE_CALLBACK( amerdart_audio_int_gen )
+TIMER_DEVICE_CALLBACK_MEMBER(coolpool_state::amerdart_audio_int_gen)
 {
-	coolpool_state *state = timer.machine().driver_data<coolpool_state>();
-
-	state->m_dsp->execute().set_input_line(0, ASSERT_LINE);
-	state->m_dsp->execute().set_input_line(0, CLEAR_LINE);
+	m_dsp->execute().set_input_line(0, ASSERT_LINE);
+	m_dsp->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -308,9 +305,9 @@ static int amerdart_trackball_dec(int data)
 	return data;
 }
 
-static int amerdart_trackball_direction(address_space *space, int num, int data)
+static int amerdart_trackball_direction(address_space &space, int num, int data)
 {
-	coolpool_state *state = space->machine().driver_data<coolpool_state>();
+	coolpool_state *state = space.machine().driver_data<coolpool_state>();
 
 	UINT16 result_x = (data & 0x0c) >> 2;
 	UINT16 result_y = (data & 0x03) >> 0;
@@ -415,10 +412,10 @@ READ16_MEMBER(coolpool_state::amerdart_trackball_r)
 	m_dy[2] = (INT8)(m_newy[2] - m_oldy[2]);
 
 	/* Determine Trackball 1 direction state */
-	m_result = (m_result & 0xf0ff) | (amerdart_trackball_direction(&space, 1, ((m_result >>  8) & 0xf)) <<  8);
+	m_result = (m_result & 0xf0ff) | (amerdart_trackball_direction(space, 1, ((m_result >>  8) & 0xf)) <<  8);
 
 	/* Determine Trackball 2 direction state */
-	m_result = (m_result & 0x0fff) | (amerdart_trackball_direction(&space, 2, ((m_result >> 12) & 0xf)) << 12);
+	m_result = (m_result & 0x0fff) | (amerdart_trackball_direction(space, 2, ((m_result >> 12) & 0xf)) << 12);
 
 
 //  logerror("%08X:read port 6 (X=%02X Y=%02X oldX=%02X oldY=%02X oldRes=%04X Res=%04X)\n", space.device().safe_pc(), m_newx, m_newy, m_oldx, m_oldy, m_lastresult, m_result);
@@ -454,23 +451,22 @@ WRITE16_MEMBER(coolpool_state::coolpool_misc_w)
  *
  *************************************/
 
-static TIMER_CALLBACK( deferred_iop_w )
+TIMER_CALLBACK_MEMBER(coolpool_state::deferred_iop_w)
 {
-	coolpool_state *state = machine.driver_data<coolpool_state>();
 
-	state->m_iop_cmd = param;
-	state->m_cmd_pending = 1;
-	machine.device("dsp")->execute().set_input_line(0, HOLD_LINE);	/* ???  I have no idea who should generate this! */
+	m_iop_cmd = param;
+	m_cmd_pending = 1;
+	machine().device("dsp")->execute().set_input_line(0, HOLD_LINE);	/* ???  I have no idea who should generate this! */
 															/* the DSP polls the status bit so it isn't strictly */
 															/* necessary to also have an IRQ */
-	machine.scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 }
 
 
 WRITE16_MEMBER(coolpool_state::coolpool_iop_w)
 {
 	logerror("%08x:IOP write %04x\n", space.device().safe_pc(), data);
-	machine().scheduler().synchronize(FUNC(deferred_iop_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(coolpool_state::deferred_iop_w),this), data);
 }
 
 
@@ -859,12 +855,12 @@ static MACHINE_CONFIG_START( amerdart, coolpool_state )
 	MCFG_CPU_PROGRAM_MAP(amerdart_dsp_pgm_map)
 	/* Data Map is internal to the CPU */
 	MCFG_CPU_IO_MAP(amerdart_dsp_io_map)
-	MCFG_TIMER_ADD_SCANLINE("audioint", amerdart_audio_int_gen, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("audioint", coolpool_state, amerdart_audio_int_gen, "screen", 0, 1)
 
 	MCFG_MACHINE_RESET_OVERRIDE(coolpool_state,amerdart)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_TIMER_ADD("nvram_timer", nvram_write_timeout)
+	MCFG_TIMER_DRIVER_ADD("nvram_timer", coolpool_state, nvram_write_timeout)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -893,7 +889,7 @@ static MACHINE_CONFIG_START( coolpool, coolpool_state )
 	MCFG_MACHINE_RESET_OVERRIDE(coolpool_state,coolpool)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_TIMER_ADD("nvram_timer", nvram_write_timeout)
+	MCFG_TIMER_DRIVER_ADD("nvram_timer", coolpool_state, nvram_write_timeout)
 
 	/* video hardware */
 	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
@@ -1184,7 +1180,7 @@ DRIVER_INIT_MEMBER(coolpool_state,amerdart)
 DRIVER_INIT_MEMBER(coolpool_state,coolpool)
 {
 
-	machine().device("dsp")->memory().space(AS_IO)->install_read_handler(0x07, 0x07, read16_delegate(FUNC(coolpool_state::coolpool_input_r),this));
+	machine().device("dsp")->memory().space(AS_IO).install_read_handler(0x07, 0x07, read16_delegate(FUNC(coolpool_state::coolpool_input_r),this));
 
 	register_state_save(machine());
 }

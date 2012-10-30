@@ -23,12 +23,11 @@ Quite similar to Appoooh
  *
  *************************************/
 
-static INTERRUPT_GEN( drmicro_interrupt )
+INTERRUPT_GEN_MEMBER(drmicro_state::drmicro_interrupt)
 {
-	drmicro_state *state = device->machine().driver_data<drmicro_state>();
 
-	if (state->m_nmi_enable)
-		 device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enable)
+		 device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(drmicro_state::nmi_enable_w)
@@ -84,9 +83,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( io_map, AS_IO, 8, drmicro_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76496_new_device, write)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn3", sn76496_new_device, write)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76496_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76496_device, write)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn3", sn76496_device, write)
 	AM_RANGE(0x03, 0x03) AM_READ_PORT("DSW1") AM_WRITE(pcm_set_w)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("DSW2") AM_WRITE(nmi_enable_w)
 	AM_RANGE(0x05, 0x05) AM_NOP // unused? / watchdog?
@@ -263,7 +262,7 @@ static MACHINE_CONFIG_START( drmicro, drmicro_state )
 	MCFG_CPU_ADD("maincpu", Z80,MCLK/6)	/* 3.072MHz? */
 	MCFG_CPU_PROGRAM_MAP(drmicro_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", drmicro_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", drmicro_state,  drmicro_interrupt)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
@@ -274,7 +273,7 @@ static MACHINE_CONFIG_START( drmicro, drmicro_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(drmicro)
+	MCFG_SCREEN_UPDATE_DRIVER(drmicro_state, screen_update_drmicro)
 
 	MCFG_GFXDECODE(drmicro)
 	MCFG_PALETTE_LENGTH(512)
@@ -283,15 +282,15 @@ static MACHINE_CONFIG_START( drmicro, drmicro_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, MCLK/4)
+	MCFG_SOUND_ADD("sn1", SN76496, MCLK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, MCLK/4)
+	MCFG_SOUND_ADD("sn2", SN76496, MCLK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496_NEW, MCLK/4)
+	MCFG_SOUND_ADD("sn3", SN76496, MCLK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 

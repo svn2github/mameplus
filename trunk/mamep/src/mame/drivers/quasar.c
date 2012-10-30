@@ -268,9 +268,9 @@ static GFXDECODE_START( quasar )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, charlayout, 0, 64+1 )	/* ROM chars */
 GFXDECODE_END
 
-static INTERRUPT_GEN( quasar_interrupt )
+INTERRUPT_GEN_MEMBER(quasar_state::quasar_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
 }
 
 static const s2636_interface s2636_0_config =
@@ -328,7 +328,7 @@ static MACHINE_CONFIG_START( quasar, quasar_state )
 	MCFG_CPU_ADD("maincpu", S2650, 14318000/4)	/* 14 mhz crystal divide by 4 on board */
 	MCFG_CPU_PROGRAM_MAP(quasar)
 	MCFG_CPU_IO_MAP(quasar_io)
-	MCFG_CPU_VBLANK_INT("screen", quasar_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", quasar_state,  quasar_interrupt)
 
 	MCFG_CPU_ADD("soundcpu",I8035,6000000)			/* 6MHz crystal divide by 15 in CPU */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -345,7 +345,7 @@ static MACHINE_CONFIG_START( quasar, quasar_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(1*8+1, 29*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(quasar)
+	MCFG_SCREEN_UPDATE_DRIVER(quasar_state, screen_update_quasar)
 
 	MCFG_GFXDECODE(quasar)
 	MCFG_PALETTE_LENGTH((64+1)*8+(4*256))

@@ -414,11 +414,11 @@ void itech32_update_interrupts(running_machine &machine, int vint, int xint, int
 }
 
 
-static INTERRUPT_GEN( generate_int1 )
+INTERRUPT_GEN_MEMBER(itech32_state::generate_int1)
 {
 	/* signal the NMI */
-	itech32_update_interrupts(device->machine(), 1, -1, -1);
-	if (FULL_LOGGING) logerror("------------ VBLANK (%d) --------------\n", device->machine().primary_screen->vpos());
+	itech32_update_interrupts(machine(), 1, -1, -1);
+	if (FULL_LOGGING) logerror("------------ VBLANK (%d) --------------\n", machine().primary_screen->vpos());
 }
 
 
@@ -635,19 +635,18 @@ WRITE8_MEMBER(itech32_state::sound_bank_w)
  *
  *************************************/
 
-static TIMER_CALLBACK( delayed_sound_data_w )
+TIMER_CALLBACK_MEMBER(itech32_state::delayed_sound_data_w)
 {
-	itech32_state *state = machine.driver_data<itech32_state>();
-	state->m_sound_data = param;
-	state->m_sound_int_state = 1;
-	machine.device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+	m_sound_data = param;
+	m_sound_int_state = 1;
+	machine().device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 
 WRITE16_MEMBER(itech32_state::sound_data_w)
 {
 	if (ACCESSING_BITS_0_7)
-		machine().scheduler().synchronize(FUNC(delayed_sound_data_w), data & 0xff);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(itech32_state::delayed_sound_data_w),this), data & 0xff);
 }
 
 
@@ -660,7 +659,7 @@ READ32_MEMBER(itech32_state::sound_data32_r)
 WRITE32_MEMBER(itech32_state::sound_data32_w)
 {
 	if (ACCESSING_BITS_16_23)
-		machine().scheduler().synchronize(FUNC(delayed_sound_data_w), (data >> 16) & 0xff);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(itech32_state::delayed_sound_data_w),this), (data >> 16) & 0xff);
 }
 
 
@@ -704,7 +703,7 @@ WRITE8_MEMBER(itech32_state::drivedge_portb_out)
 	set_led_status(machine(), 1, data & 0x01);
 	set_led_status(machine(), 2, data & 0x02);
 	set_led_status(machine(), 3, data & 0x04);
-	machine().device<ticket_dispenser_device>("ticket")->write(*machine().memory().first_space(), 0, (data & 0x10) << 3);
+	machine().device<ticket_dispenser_device>("ticket")->write(machine().driver_data()->generic_space(), 0, (data & 0x10) << 3);
 	coin_counter_w(machine(), 0, (data & 0x20) >> 5);
 }
 
@@ -722,7 +721,7 @@ WRITE8_MEMBER(itech32_state::pia_portb_out)
 	/* bit 4 controls the ticket dispenser */
 	/* bit 5 controls the coin counter */
 	/* bit 6 controls the diagnostic sound LED */
-	machine().device<ticket_dispenser_device>("ticket")->write(*machine().memory().first_space(), 0, (data & 0x10) << 3);
+	machine().device<ticket_dispenser_device>("ticket")->write(machine().driver_data()->generic_space(), 0, (data & 0x10) << 3);
 	coin_counter_w(machine(), 0, (data & 0x20) >> 5);
 }
 
@@ -1671,7 +1670,7 @@ static MACHINE_CONFIG_START( timekill, itech32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(timekill_map)
-	MCFG_CPU_VBLANK_INT("screen", generate_int1)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", itech32_state,  generate_int1)
 
 	MCFG_CPU_ADD("soundcpu", M6809, SOUND_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1686,7 +1685,7 @@ static MACHINE_CONFIG_START( timekill, itech32_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK, 508, 0, 384, 262, 0, 256)
-	MCFG_SCREEN_UPDATE_STATIC(itech32)
+	MCFG_SCREEN_UPDATE_DRIVER(itech32_state, screen_update_itech32)
 
 
 	/* sound hardware */
@@ -1739,11 +1738,11 @@ static MACHINE_CONFIG_DERIVED( sftm, bloodstm )
 
 	MCFG_CPU_REPLACE("maincpu", M68EC020, CPU020_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(itech020_map)
-	MCFG_CPU_VBLANK_INT("screen", generate_int1)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", itech32_state,  generate_int1)
 
 	MCFG_CPU_MODIFY("soundcpu")
 	MCFG_CPU_PROGRAM_MAP(sound_020_map)
-	MCFG_CPU_PERIODIC_INT(irq1_line_assert,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(itech32_state, irq1_line_assert, 4*60)
 
 	/* via */
 	MCFG_DEVICE_REMOVE("via6522_0")
@@ -4037,8 +4036,8 @@ DRIVER_INIT_MEMBER(itech32_state,drivedge)
 	m_planes = 1;
 	m_is_drivedge = 1;
 
-	machine().device("dsp1")->memory().space(AS_PROGRAM)->install_read_handler(0x8382, 0x8382, read32_delegate(FUNC(itech32_state::drivedge_tms1_speedup_r),this));
-	machine().device("dsp2")->memory().space(AS_PROGRAM)->install_read_handler(0x8382, 0x8382, read32_delegate(FUNC(itech32_state::drivedge_tms2_speedup_r),this));
+	machine().device("dsp1")->memory().space(AS_PROGRAM).install_read_handler(0x8382, 0x8382, read32_delegate(FUNC(itech32_state::drivedge_tms1_speedup_r),this));
+	machine().device("dsp2")->memory().space(AS_PROGRAM).install_read_handler(0x8382, 0x8382, read32_delegate(FUNC(itech32_state::drivedge_tms2_speedup_r),this));
 }
 
 
@@ -4054,11 +4053,11 @@ DRIVER_INIT_MEMBER(itech32_state,wcbowl)
 	m_vram_height = 1024;
 	m_planes = 1;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x680000, 0x680001, read16_delegate(FUNC(itech32_state::trackball_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x680000, 0x680001, read16_delegate(FUNC(itech32_state::trackball_r),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_read(0x578000, 0x57ffff);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x680080, 0x680081, read16_delegate(FUNC(itech32_state::wcbowl_prot_result_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x680080, 0x680081);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_read(0x578000, 0x57ffff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x680080, 0x680081, read16_delegate(FUNC(itech32_state::wcbowl_prot_result_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0x680080, 0x680081);
 }
 
 
@@ -4072,8 +4071,8 @@ static void init_sftm_common(running_machine &machine, int prot_addr)
 
 	state->m_itech020_prot_address = prot_addr;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x300000, 0x300003, write32_delegate(FUNC(itech32_state::itech020_color2_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x380000, 0x380003, write32_delegate(FUNC(itech32_state::itech020_color1_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x300000, 0x300003, write32_delegate(FUNC(itech32_state::itech020_color2_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x380000, 0x380003, write32_delegate(FUNC(itech32_state::itech020_color1_w),state));
 }
 
 
@@ -4104,10 +4103,10 @@ static void init_shuffle_bowl_common(running_machine &machine, int prot_addr)
 
 	state->m_itech020_prot_address = prot_addr;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x300000, 0x300003, write32_delegate(FUNC(itech32_state::itech020_color2_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x380000, 0x380003, write32_delegate(FUNC(itech32_state::itech020_color1_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x180800, 0x180803, read32_delegate(FUNC(itech32_state::trackball32_4bit_p1_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x181000, 0x181003, read32_delegate(FUNC(itech32_state::trackball32_4bit_p2_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x300000, 0x300003, write32_delegate(FUNC(itech32_state::itech020_color2_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x380000, 0x380003, write32_delegate(FUNC(itech32_state::itech020_color1_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x180800, 0x180803, read32_delegate(FUNC(itech32_state::trackball32_4bit_p1_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x181000, 0x181003, read32_delegate(FUNC(itech32_state::trackball32_4bit_p2_r),state));
 }
 
 
@@ -4126,7 +4125,7 @@ DRIVER_INIT_MEMBER(itech32_state,wcbowln)
 static void install_timekeeper(running_machine &machine)
 {
 	device_t *device = machine.device("m48t02");
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(*device, 0x681000, 0x6817ff, FUNC(timekeeper_r), FUNC(timekeeper_w), 0xffffffff);
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(*device, 0x681000, 0x6817ff, FUNC(timekeeper_r), FUNC(timekeeper_w), 0xffffffff);
 }
 
 DRIVER_INIT_MEMBER(itech32_state,wcbowlt)
@@ -4158,7 +4157,7 @@ DRIVER_INIT_MEMBER(itech32_state,gt3d)
         Hacked versions of this PCB have been found with GT97
         through GTClassic. This is _NOT_ a factory modification
     */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200003, read32_delegate(FUNC(itech32_state::trackball32_8bit_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200003, read32_delegate(FUNC(itech32_state::trackball32_8bit_r),this));
 	init_gt_common(machine());
 }
 
@@ -4171,8 +4170,8 @@ DRIVER_INIT_MEMBER(itech32_state,aama)
         board share the same sound CPU code and sample ROMs.
         This board has all versions of GT for it, GT3D through GTClassic
     */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x180800, 0x180803, read32_delegate(FUNC(itech32_state::trackball32_4bit_p1_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x181000, 0x181003, read32_delegate(FUNC(itech32_state::trackball32_4bit_p2_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x180800, 0x180803, read32_delegate(FUNC(itech32_state::trackball32_4bit_p1_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x181000, 0x181003, read32_delegate(FUNC(itech32_state::trackball32_4bit_p2_r),this));
 	init_gt_common(machine());
 }
 
@@ -4196,7 +4195,7 @@ DRIVER_INIT_MEMBER(itech32_state,s_ver)
         board: GT97 v1.21S, GT98, GT99, GT2K & GT Classic Versions 1.00S
         Trackball info is read through 200202 (actually 200203).
     */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200200, 0x200203, read32_delegate(FUNC(itech32_state::trackball32_4bit_p1_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200200, 0x200203, read32_delegate(FUNC(itech32_state::trackball32_4bit_p1_r),this));
 	init_gt_common(machine());
 }
 
@@ -4210,7 +4209,7 @@ DRIVER_INIT_MEMBER(itech32_state,gt3dl)
         Player 1 trackball read through 200003
         Player 2 trackball read through 200002
     */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200003, read32_delegate(FUNC(itech32_state::trackball32_4bit_combined_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200003, read32_delegate(FUNC(itech32_state::trackball32_4bit_combined_r),this));
 	init_gt_common(machine());
 }
 
@@ -4218,7 +4217,7 @@ DRIVER_INIT_MEMBER(itech32_state,gt3dl)
 DRIVER_INIT_MEMBER(itech32_state,gt2kp)
 {
 	/* a little extra protection */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x680000, 0x680003, read32_delegate(FUNC(itech32_state::gt2kp_prot_result_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x680000, 0x680003, read32_delegate(FUNC(itech32_state::gt2kp_prot_result_r),this));
 	DRIVER_INIT_CALL(aama);
 
 	/* The protection code is:
@@ -4239,7 +4238,7 @@ Label1  bne.s       Label1          ; Infinite loop if result isn't 0x01
 DRIVER_INIT_MEMBER(itech32_state,gtclasscp)
 {
 	/* a little extra protection */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x680000, 0x680003, read32_delegate(FUNC(itech32_state::gtclass_prot_result_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x680000, 0x680003, read32_delegate(FUNC(itech32_state::gtclass_prot_result_r),this));
 	DRIVER_INIT_CALL(aama);
 
 	/* The protection code is:

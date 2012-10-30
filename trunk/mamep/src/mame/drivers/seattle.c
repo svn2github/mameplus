@@ -479,6 +479,7 @@ public:
 	DECLARE_READ32_MEMBER(widget_r);
 	DECLARE_WRITE32_MEMBER(widget_w);
 	DECLARE_READ32_MEMBER(seattle_ide_r);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 	DECLARE_DRIVER_INIT(sfrush);
 	DECLARE_DRIVER_INIT(blitz2k);
 	DECLARE_DRIVER_INIT(carnevil);
@@ -493,6 +494,8 @@ public:
 	DECLARE_DRIVER_INIT(blitz99);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_seattle(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(galileo_timer_callback);
 };
 
 
@@ -505,8 +508,8 @@ public:
 static void vblank_assert(device_t *device, int state);
 static void update_vblank_irq(running_machine &machine);
 static void galileo_reset(running_machine &machine);
-static TIMER_CALLBACK( galileo_timer_callback );
-static void galileo_perform_dma(address_space *space, int which);
+
+static void galileo_perform_dma(address_space &space, int which);
 static void voodoo_stall(device_t *device, int stall);
 static void widget_reset(running_machine &machine);
 static void update_widget_irq(running_machine &machine);
@@ -519,10 +522,9 @@ static void update_widget_irq(running_machine &machine);
  *
  *************************************/
 
-static SCREEN_UPDATE_RGB32( seattle )
+UINT32 seattle_state::screen_update_seattle(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	seattle_state *state = screen.machine().driver_data<seattle_state>();
-	return voodoo_update(state->m_voodoo, bitmap, cliprect) ? 0 : UPDATE_HAS_NOT_CHANGED;
+	return voodoo_update(m_voodoo, bitmap, cliprect) ? 0 : UPDATE_HAS_NOT_CHANGED;
 }
 
 
@@ -540,10 +542,10 @@ void seattle_state::machine_start()
 	m_voodoo = machine().device("voodoo");
 
 	/* allocate timers for the galileo */
-	m_galileo.timer[0].timer = machine().scheduler().timer_alloc(FUNC(galileo_timer_callback));
-	m_galileo.timer[1].timer = machine().scheduler().timer_alloc(FUNC(galileo_timer_callback));
-	m_galileo.timer[2].timer = machine().scheduler().timer_alloc(FUNC(galileo_timer_callback));
-	m_galileo.timer[3].timer = machine().scheduler().timer_alloc(FUNC(galileo_timer_callback));
+	m_galileo.timer[0].timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(seattle_state::galileo_timer_callback),this));
+	m_galileo.timer[1].timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(seattle_state::galileo_timer_callback),this));
+	m_galileo.timer[2].timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(seattle_state::galileo_timer_callback),this));
+	m_galileo.timer[3].timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(seattle_state::galileo_timer_callback),this));
 
 	/* set the fastest DRC options, but strict verification */
 	mips3drc_set_options(machine().device("maincpu"), MIPS3DRC_FASTEST_OPTIONS + MIPS3DRC_STRICT_VERIFY);
@@ -618,9 +620,9 @@ void seattle_state::machine_reset()
  *
  *************************************/
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(seattle_state::ide_interrupt)
 {
-	device->machine().device("maincpu")->execute().set_input_line(IDE_IRQ_NUM, state);
+	machine().device("maincpu")->execute().set_input_line(IDE_IRQ_NUM, state);
 }
 
 
@@ -798,9 +800,9 @@ static void vblank_assert(device_t *device, int state)
  *
  *************************************/
 
-static UINT32 pci_bridge_r(address_space *space, UINT8 reg, UINT8 type)
+static UINT32 pci_bridge_r(address_space &space, UINT8 reg, UINT8 type)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	UINT32 result = state->m_galileo.pci_bridge_regs[reg];
 
 	switch (reg)
@@ -815,17 +817,17 @@ static UINT32 pci_bridge_r(address_space *space, UINT8 reg, UINT8 type)
 	}
 
 	if (LOG_PCI)
-		logerror("%08X:PCI bridge read: reg %d type %d = %08X\n", space->device().safe_pc(), reg, type, result);
+		logerror("%08X:PCI bridge read: reg %d type %d = %08X\n", space.device().safe_pc(), reg, type, result);
 	return result;
 }
 
 
-static void pci_bridge_w(address_space *space, UINT8 reg, UINT8 type, UINT32 data)
+static void pci_bridge_w(address_space &space, UINT8 reg, UINT8 type, UINT32 data)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	state->m_galileo.pci_bridge_regs[reg] = data;
 	if (LOG_PCI)
-		logerror("%08X:PCI bridge write: reg %d type %d = %08X\n", space->device().safe_pc(), reg, type, data);
+		logerror("%08X:PCI bridge write: reg %d type %d = %08X\n", space.device().safe_pc(), reg, type, data);
 }
 
 
@@ -836,9 +838,9 @@ static void pci_bridge_w(address_space *space, UINT8 reg, UINT8 type, UINT32 dat
  *
  *************************************/
 
-static UINT32 pci_3dfx_r(address_space *space, UINT8 reg, UINT8 type)
+static UINT32 pci_3dfx_r(address_space &space, UINT8 reg, UINT8 type)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	UINT32 result = state->m_galileo.pci_3dfx_regs[reg];
 
 	switch (reg)
@@ -853,14 +855,14 @@ static UINT32 pci_3dfx_r(address_space *space, UINT8 reg, UINT8 type)
 	}
 
 	if (LOG_PCI)
-		logerror("%08X:PCI 3dfx read: reg %d type %d = %08X\n", space->device().safe_pc(), reg, type, result);
+		logerror("%08X:PCI 3dfx read: reg %d type %d = %08X\n", space.device().safe_pc(), reg, type, result);
 	return result;
 }
 
 
-static void pci_3dfx_w(address_space *space, UINT8 reg, UINT8 type, UINT32 data)
+static void pci_3dfx_w(address_space &space, UINT8 reg, UINT8 type, UINT32 data)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	state->m_galileo.pci_3dfx_regs[reg] = data;
 
 	switch (reg)
@@ -876,7 +878,7 @@ static void pci_3dfx_w(address_space *space, UINT8 reg, UINT8 type, UINT32 data)
 			break;
 	}
 	if (LOG_PCI)
-		logerror("%08X:PCI 3dfx write: reg %d type %d = %08X\n", space->device().safe_pc(), reg, type, data);
+		logerror("%08X:PCI 3dfx write: reg %d type %d = %08X\n", space.device().safe_pc(), reg, type, data);
 }
 
 
@@ -887,9 +889,9 @@ static void pci_3dfx_w(address_space *space, UINT8 reg, UINT8 type, UINT32 data)
  *
  *************************************/
 
-static UINT32 pci_ide_r(address_space *space, UINT8 reg, UINT8 type)
+static UINT32 pci_ide_r(address_space &space, UINT8 reg, UINT8 type)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	UINT32 result = state->m_galileo.pci_ide_regs[reg];
 
 	switch (reg)
@@ -904,17 +906,17 @@ static UINT32 pci_ide_r(address_space *space, UINT8 reg, UINT8 type)
 	}
 
 	if (LOG_PCI)
-		logerror("%08X:PCI IDE read: reg %d type %d = %08X\n", space->device().safe_pc(), reg, type, result);
+		logerror("%08X:PCI IDE read: reg %d type %d = %08X\n", space.device().safe_pc(), reg, type, result);
 	return result;
 }
 
 
-static void pci_ide_w(address_space *space, UINT8 reg, UINT8 type, UINT32 data)
+static void pci_ide_w(address_space &space, UINT8 reg, UINT8 type, UINT32 data)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	state->m_galileo.pci_ide_regs[reg] = data;
 	if (LOG_PCI)
-		logerror("%08X:PCI bridge write: reg %d type %d = %08X\n", space->device().safe_pc(), reg, type, data);
+		logerror("%08X:PCI bridge write: reg %d type %d = %08X\n", space.device().safe_pc(), reg, type, data);
 }
 
 
@@ -940,29 +942,28 @@ static void update_galileo_irqs(running_machine &machine)
 }
 
 
-static TIMER_CALLBACK( galileo_timer_callback )
+TIMER_CALLBACK_MEMBER(seattle_state::galileo_timer_callback)
 {
-	seattle_state *state = machine.driver_data<seattle_state>();
 	int which = param;
-	galileo_timer *timer = &state->m_galileo.timer[which];
+	galileo_timer *timer = &m_galileo.timer[which];
 
 	if (LOG_TIMERS)
 		logerror("timer %d fired\n", which);
 
 	/* copy the start value from the registers */
-	timer->count = state->m_galileo.reg[GREG_TIMER0_COUNT + which];
+	timer->count = m_galileo.reg[GREG_TIMER0_COUNT + which];
 	if (which != 0)
 		timer->count &= 0xffffff;
 
 	/* if we're a timer, adjust the timer to fire again */
-	if (state->m_galileo.reg[GREG_TIMER_CONTROL] & (2 << (2 * which)))
+	if (m_galileo.reg[GREG_TIMER_CONTROL] & (2 << (2 * which)))
 		timer->timer->adjust(TIMER_PERIOD * timer->count, which);
 	else
 		timer->active = timer->count = 0;
 
 	/* trigger the interrupt */
-	state->m_galileo.reg[GREG_INT_STATE] |= 1 << (GINT_T0EXP_SHIFT + which);
-	update_galileo_irqs(machine);
+	m_galileo.reg[GREG_INT_STATE] |= 1 << (GINT_T0EXP_SHIFT + which);
+	update_galileo_irqs(machine());
 }
 
 
@@ -973,9 +974,9 @@ static TIMER_CALLBACK( galileo_timer_callback )
  *
  *************************************/
 
-static int galileo_dma_fetch_next(address_space *space, int which)
+static int galileo_dma_fetch_next(address_space &space, int which)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	galileo_data &galileo = state->m_galileo;
 	offs_t address = 0;
 	UINT32 data;
@@ -990,34 +991,34 @@ static int galileo_dma_fetch_next(address_space *space, int which)
 		if (galileo.reg[GREG_DMA0_CONTROL + which] & 0x400)
 		{
 			galileo.reg[GREG_INT_STATE] |= 1 << (GINT_DMA0COMP_SHIFT + which);
-			update_galileo_irqs(space->machine());
+			update_galileo_irqs(space.machine());
 		}
 		galileo.reg[GREG_DMA0_CONTROL + which] &= ~0x5000;
 		return 0;
 	}
 
 	/* fetch the byte count */
-	data = space->read_dword(address); address += 4;
+	data = space.read_dword(address); address += 4;
 	galileo.reg[GREG_DMA0_COUNT + which] = data;
 
 	/* fetch the source address */
-	data = space->read_dword(address); address += 4;
+	data = space.read_dword(address); address += 4;
 	galileo.reg[GREG_DMA0_SOURCE + which] = data;
 
 	/* fetch the dest address */
-	data = space->read_dword(address); address += 4;
+	data = space.read_dword(address); address += 4;
 	galileo.reg[GREG_DMA0_DEST + which] = data;
 
 	/* fetch the next record address */
-	data = space->read_dword(address); address += 4;
+	data = space.read_dword(address); address += 4;
 	galileo.reg[GREG_DMA0_NEXT + which] = data;
 	return 1;
 }
 
 
-static void galileo_perform_dma(address_space *space, int which)
+static void galileo_perform_dma(address_space &space, int which)
 {
-	seattle_state *state = space->machine().driver_data<seattle_state>();
+	seattle_state *state = space.machine().driver_data<seattle_state>();
 	galileo_data &galileo = state->m_galileo;
 	do
 	{
@@ -1068,7 +1069,7 @@ static void galileo_perform_dma(address_space *space, int which)
 				}
 
 				/* write the data and advance */
-				voodoo_w(state->m_voodoo, (dstaddr & 0xffffff) / 4, space->read_dword(srcaddr), 0xffffffff);
+				voodoo_w(state->m_voodoo, space, (dstaddr & 0xffffff) / 4, space.read_dword(srcaddr), 0xffffffff);
 				srcaddr += srcinc;
 				dstaddr += dstinc;
 				bytesleft -= 4;
@@ -1080,7 +1081,7 @@ static void galileo_perform_dma(address_space *space, int which)
 		{
 			while (bytesleft > 0)
 			{
-				space->write_byte(dstaddr, space->read_byte(srcaddr));
+				space.write_byte(dstaddr, space.read_byte(srcaddr));
 				srcaddr += srcinc;
 				dstaddr += dstinc;
 				bytesleft--;
@@ -1101,7 +1102,7 @@ static void galileo_perform_dma(address_space *space, int which)
 		if (!(galileo.reg[GREG_DMA0_CONTROL + which] & 0x400))
 		{
 			galileo.reg[GREG_INT_STATE] |= 1 << (GINT_DMA0COMP_SHIFT + which);
-			update_galileo_irqs(space->machine());
+			update_galileo_irqs(space.machine());
 		}
 	} while (galileo_dma_fetch_next(space, which));
 
@@ -1169,15 +1170,15 @@ READ32_MEMBER(seattle_state::galileo_r)
 
 			/* unit 0 is the PCI bridge */
 			if (unit == 0 && func == 0)
-				result = pci_bridge_r(&space, reg, type);
+				result = pci_bridge_r(space, reg, type);
 
 			/* unit 8 is the 3dfx card */
 			else if (unit == 8 && func == 0)
-				result = pci_3dfx_r(&space, reg, type);
+				result = pci_3dfx_r(space, reg, type);
 
 			/* unit 9 is the IDE controller */
 			else if (unit == 9 && func == 0)
-				result = pci_ide_r(&space, reg, type);
+				result = pci_ide_r(space, reg, type);
 
 			/* anything else, just log */
 			else
@@ -1230,12 +1231,12 @@ WRITE32_MEMBER(seattle_state::galileo_w)
 
 			/* fetch next record */
 			if (data & 0x2000)
-				galileo_dma_fetch_next(&space, which);
+				galileo_dma_fetch_next(space, which);
 			galileo.reg[offset] &= ~0x2000;
 
 			/* if enabling, start the DMA */
 			if (!(oldata & 0x1000) && (data & 0x1000))
-				galileo_perform_dma(&space, which);
+				galileo_perform_dma(space, which);
 			break;
 		}
 
@@ -1308,15 +1309,15 @@ WRITE32_MEMBER(seattle_state::galileo_w)
 
 			/* unit 0 is the PCI bridge */
 			if (unit == 0 && func == 0)
-				pci_bridge_w(&space, reg, type, data);
+				pci_bridge_w(space, reg, type, data);
 
 			/* unit 8 is the 3dfx card */
 			else if (unit == 8 && func == 0)
-				pci_3dfx_w(&space, reg, type, data);
+				pci_3dfx_w(space, reg, type, data);
 
 			/* unit 9 is the IDE controller */
 			else if (unit == 9 && func == 0)
-				pci_ide_w(&space, reg, type, data);
+				pci_ide_w(space, reg, type, data);
 
 			/* anything else, just log */
 			else
@@ -1353,7 +1354,7 @@ WRITE32_MEMBER(seattle_state::seattle_voodoo_w)
 	/* if we're not stalled, just write and get out */
 	if (!m_voodoo_stalled)
 	{
-		voodoo_w(m_voodoo, offset, data, mem_mask);
+		voodoo_w(m_voodoo, space, offset, data, mem_mask);
 		return;
 	}
 
@@ -1403,7 +1404,7 @@ static void voodoo_stall(device_t *device, int stall)
 		for (which = 0; which < 4; which++)
 			if (state->m_galileo.dma_stalled_on_voodoo[which])
 			{
-				address_space *space = device->machine().device("maincpu")->memory().space(AS_PROGRAM);
+				address_space &space = device->machine().device("maincpu")->memory().space(AS_PROGRAM);
 				if (LOG_DMA) logerror("Resuming DMA%d on voodoo\n", which);
 
 				/* mark this DMA as no longer stalled */
@@ -1419,7 +1420,10 @@ static void voodoo_stall(device_t *device, int stall)
 		{
 			/* if the CPU had a pending write, do it now */
 			if (state->m_cpu_stalled_on_voodoo)
-				voodoo_w(device, state->m_cpu_stalled_offset, state->m_cpu_stalled_data, state->m_cpu_stalled_mem_mask);
+			{
+				address_space &space = device->machine().firstcpu->space(AS_PROGRAM);
+				voodoo_w(device, space, state->m_cpu_stalled_offset, state->m_cpu_stalled_data, state->m_cpu_stalled_mem_mask);
+			}
 			state->m_cpu_stalled_on_voodoo = FALSE;
 
 			/* resume CPU execution */
@@ -1523,9 +1527,9 @@ READ32_MEMBER(seattle_state::ethernet_r)
 {
 	device_t *device = machine().device("ethernet");
 	if (!(offset & 8))
-		return smc91c9x_r(device, offset & 7, mem_mask & 0xffff);
+		return smc91c9x_r(device, space, offset & 7, mem_mask & 0xffff);
 	else
-		return smc91c9x_r(device, offset & 7, mem_mask & 0x00ff);
+		return smc91c9x_r(device, space, offset & 7, mem_mask & 0x00ff);
 }
 
 
@@ -1533,9 +1537,9 @@ WRITE32_MEMBER(seattle_state::ethernet_w)
 {
 	device_t *device = machine().device("ethernet");
 	if (!(offset & 8))
-		smc91c9x_w(device, offset & 7, data & 0xffff, mem_mask | 0xffff);
+		smc91c9x_w(device, space, offset & 7, data & 0xffff, mem_mask | 0xffff);
 	else
-		smc91c9x_w(device, offset & 7, data & 0x00ff, mem_mask | 0x00ff);
+		smc91c9x_w(device, space, offset & 7, data & 0x00ff, mem_mask | 0x00ff);
 }
 
 
@@ -1585,11 +1589,11 @@ READ32_MEMBER(seattle_state::widget_r)
 			break;
 
 		case WREG_ANALOG:
-			result = analog_port_r(*machine().device("maincpu")->memory().space(AS_PROGRAM), 0, mem_mask);
+			result = analog_port_r(machine().device("maincpu")->memory().space(AS_PROGRAM), 0, mem_mask);
 			break;
 
 		case WREG_ETHER_DATA:
-			result = smc91c9x_r(device, m_widget.ethernet_addr & 7, mem_mask & 0xffff);
+			result = smc91c9x_r(device, space, m_widget.ethernet_addr & 7, mem_mask & 0xffff);
 			break;
 	}
 
@@ -1617,11 +1621,11 @@ WRITE32_MEMBER(seattle_state::widget_w)
 			break;
 
 		case WREG_ANALOG:
-			analog_port_w(*machine().device("maincpu")->memory().space(AS_PROGRAM), 0, data, mem_mask);
+			analog_port_w(machine().device("maincpu")->memory().space(AS_PROGRAM), 0, data, mem_mask);
 			break;
 
 		case WREG_ETHER_DATA:
-			smc91c9x_w(device, m_widget.ethernet_addr & 7, data & 0xffff, mem_mask & 0xffff);
+			smc91c9x_w(device, space, m_widget.ethernet_addr & 7, data & 0xffff, mem_mask & 0xffff);
 			break;
 	}
 }
@@ -1784,7 +1788,7 @@ READ32_MEMBER(seattle_state::seattle_ide_r)
 	/* note that blitz times out if we don't have this cycle stealing */
 	if (offset == 0x3f6/4)
 		machine().device("maincpu")->execute().eat_cycles(100);
-	return ide_controller32_r(device, offset, mem_mask);
+	return ide_controller32_r(device, space, offset, mem_mask);
 }
 
 static ADDRESS_MAP_START( seattle_map, AS_PROGRAM, 32, seattle_state )
@@ -2520,13 +2524,6 @@ static const mips3_config r5000_config =
 	SYSTEM_CLOCK	/* system clock rate */
 };
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	"maincpu",
-	AS_PROGRAM
-};
-
 static const voodoo_config voodoo_intf =
 {
 	2, //               fbmem;
@@ -2547,7 +2544,9 @@ static MACHINE_CONFIG_START( seattle_common, seattle_state )
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, seattle_state, ide_interrupt))
+	MCFG_IDE_CONTROLLER_BUS_MASTER("maincpu", AS_PROGRAM)
 
 	MCFG_3DFX_VOODOO_1_ADD("voodoo", STD_VOODOO_1_CLOCK, voodoo_intf)
 
@@ -2556,7 +2555,7 @@ static MACHINE_CONFIG_START( seattle_common, seattle_state )
 	MCFG_SCREEN_REFRESH_RATE(57)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE_STATIC(seattle)
+	MCFG_SCREEN_UPDATE_DRIVER(seattle_state, screen_update_seattle)
 
 	/* sound hardware */
 MACHINE_CONFIG_END
@@ -2870,20 +2869,20 @@ static void init_common(running_machine &machine, int ioasic, int serialnum, int
 	{
 		case PHOENIX_CONFIG:
 			/* original Phoenix board only has 4MB of RAM */
-			machine.device("maincpu")->memory().space(AS_PROGRAM)->unmap_readwrite(0x00400000, 0x007fffff);
+			machine.device("maincpu")->memory().space(AS_PROGRAM).unmap_readwrite(0x00400000, 0x007fffff);
 			break;
 
 		case SEATTLE_WIDGET_CONFIG:
 			/* set up the widget board */
-			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x16c00000, 0x16c0001f, read32_delegate(FUNC(seattle_state::widget_r),state), write32_delegate(FUNC(seattle_state::widget_w),state));
+			machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x16c00000, 0x16c0001f, read32_delegate(FUNC(seattle_state::widget_r),state), write32_delegate(FUNC(seattle_state::widget_w),state));
 			break;
 
 		case FLAGSTAFF_CONFIG:
 			/* set up the analog inputs */
-			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x14000000, 0x14000003, read32_delegate(FUNC(seattle_state::analog_port_r),state), write32_delegate(FUNC(seattle_state::analog_port_w),state));
+			machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x14000000, 0x14000003, read32_delegate(FUNC(seattle_state::analog_port_r),state), write32_delegate(FUNC(seattle_state::analog_port_w),state));
 
 			/* set up the ethernet controller */
-			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x16c00000, 0x16c0003f, read32_delegate(FUNC(seattle_state::ethernet_r),state), write32_delegate(FUNC(seattle_state::ethernet_w),state));
+			machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x16c00000, 0x16c0003f, read32_delegate(FUNC(seattle_state::ethernet_r),state), write32_delegate(FUNC(seattle_state::ethernet_w),state));
 			break;
 	}
 }
@@ -3011,7 +3010,7 @@ DRIVER_INIT_MEMBER(seattle_state,carnevil)
 	init_common(machine(), MIDWAY_IOASIC_CARNEVIL, 469/* 469 or 486 or 528 */, 80, SEATTLE_CONFIG);
 
 	/* set up the gun */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x16800000, 0x1680001f, read32_delegate(FUNC(seattle_state::carnevil_gun_r),this), write32_delegate(FUNC(seattle_state::carnevil_gun_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x16800000, 0x1680001f, read32_delegate(FUNC(seattle_state::carnevil_gun_r),this), write32_delegate(FUNC(seattle_state::carnevil_gun_w),this));
 
 	/* speedups */
 	mips3drc_add_hotspot(machine().device("maincpu"), 0x8015176C, 0x3C03801A, 250);		/* confirmed */

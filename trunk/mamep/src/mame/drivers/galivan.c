@@ -92,7 +92,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(galivan_state::blit_trigger_w)
 {
 
-	nb_1414m4_exec(&space,(m_videoram[0] << 8) | (m_videoram[1] & 0xff),m_videoram,m_scrollx,m_scrolly,m_tx_tilemap);
+	nb_1414m4_exec(space,(m_videoram[0] << 8) | (m_videoram[1] & 0xff),m_videoram,m_scrollx,m_scrolly,m_tx_tilemap);
 }
 
 static ADDRESS_MAP_START( ninjemak_io_map, AS_IO, 8, galivan_state )
@@ -436,12 +436,12 @@ static MACHINE_CONFIG_START( galivan, galivan_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)		/* 6 MHz? */
 	MCFG_CPU_PROGRAM_MAP(galivan_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galivan_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2)		/* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, XTAL_8MHz/2/512)	// ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(galivan_state, irq0_line_hold,  XTAL_8MHz/2/512)	// ?
 
 	MCFG_MACHINE_START_OVERRIDE(galivan_state,galivan)
 	MCFG_MACHINE_RESET_OVERRIDE(galivan_state,galivan)
@@ -452,7 +452,7 @@ static MACHINE_CONFIG_START( galivan, galivan_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(galivan)
+	MCFG_SCREEN_UPDATE_DRIVER(galivan_state, screen_update_galivan)
 
 	MCFG_GFXDECODE(galivan)
 	MCFG_PALETTE_LENGTH(8*16+16*16+256*16)
@@ -478,12 +478,12 @@ static MACHINE_CONFIG_START( ninjemak, galivan_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)		/* 6 MHz? */
 	MCFG_CPU_PROGRAM_MAP(ninjemak_map)
 	MCFG_CPU_IO_MAP(ninjemak_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galivan_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2)		/* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, XTAL_8MHz/2/512)	// ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(galivan_state, irq0_line_hold,  XTAL_8MHz/2/512)	// ?
 
 	MCFG_MACHINE_START_OVERRIDE(galivan_state,ninjemak)
 	MCFG_MACHINE_RESET_OVERRIDE(galivan_state,ninjemak)
@@ -494,7 +494,7 @@ static MACHINE_CONFIG_START( ninjemak, galivan_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjemak)
+	MCFG_SCREEN_UPDATE_DRIVER(galivan_state, screen_update_ninjemak)
 
 	MCFG_GFXDECODE(ninjemak)
 	MCFG_PALETTE_LENGTH(8*16+16*16+256*16)
@@ -1076,22 +1076,22 @@ WRITE8_MEMBER(galivan_state::youmab_86_w)
 
 DRIVER_INIT_MEMBER(galivan_state,youmab)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x82, 0x82, write8_delegate(FUNC(galivan_state::youmab_extra_bank_w),this)); // banks rom at 0x8000? writes 0xff and 0x00 before executing code there
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x7fff, "bank3");
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x82, 0x82, write8_delegate(FUNC(galivan_state::youmab_extra_bank_w),this)); // banks rom at 0x8000? writes 0xff and 0x00 before executing code there
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x7fff, "bank3");
 	membank("bank3")->set_base(memregion("maincpu")->base());
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x8000, 0xbfff, "bank2");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x8000, 0xbfff, "bank2");
 	membank("bank2")->configure_entries(0, 2, memregion("user2")->base(), 0x4000);
 	membank("bank2")->set_entry(0);
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x81, 0x81, write8_delegate(FUNC(galivan_state::youmab_81_w),this)); // ?? often, alternating values
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x84, 0x84, write8_delegate(FUNC(galivan_state::youmab_84_w),this)); // ?? often, sequence..
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x81, 0x81, write8_delegate(FUNC(galivan_state::youmab_81_w),this)); // ?? often, alternating values
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x84, 0x84, write8_delegate(FUNC(galivan_state::youmab_84_w),this)); // ?? often, sequence..
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xd800, 0xd81f); // scrolling isn't here..
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xd800, 0xd81f); // scrolling isn't here..
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x8a, 0x8a, read8_delegate(FUNC(galivan_state::youmab_8a_r),this)); // ???
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x8a, 0x8a, read8_delegate(FUNC(galivan_state::youmab_8a_r),this)); // ???
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x86, 0x86, write8_delegate(FUNC(galivan_state::youmab_86_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x86, 0x86, write8_delegate(FUNC(galivan_state::youmab_86_w),this));
 
 }
 

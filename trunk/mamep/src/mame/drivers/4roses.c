@@ -385,7 +385,7 @@ static MACHINE_CONFIG_START( 4roses, _4roses_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M65C02, MASTER_CLOCK/8)	/* 2MHz, guess */
 	MCFG_CPU_PROGRAM_MAP(4roses_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", _4roses_state,  nmi_line_pulse)
 
 //  MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -396,7 +396,7 @@ static MACHINE_CONFIG_START( 4roses, _4roses_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE((124+1)*4, (30+1)*8)				/* guess. taken from funworld games */
 	MCFG_SCREEN_VISIBLE_AREA(0*4, 96*4-1, 0*8, 29*8-1)	/* guess. taken from funworld games */
-	MCFG_SCREEN_UPDATE_STATIC(funworld)
+	MCFG_SCREEN_UPDATE_DRIVER(_4roses_state, screen_update_funworld)
 
 	MCFG_GFXDECODE(4roses)
 

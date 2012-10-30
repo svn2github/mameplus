@@ -410,7 +410,7 @@ static ADDRESS_MAP_START( rbisland_sound_map, AS_PROGRAM, 8, rbisland_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0x9002, 0x9100) AM_READNOP
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
@@ -617,25 +617,6 @@ static GFXDECODE_START( jumping )
 GFXDECODE_END
 
 
-/**************************************************************
-                   YM2151 & YM2203 (SOUND)
-**************************************************************/
-
-/* handler called by the YM2151 emulator when the internal timers cause an IRQ */
-
-static void irqhandler( device_t *device, int irq )
-{
-	rbisland_state *state = device->machine().driver_data<rbisland_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irqhandler),
-	DEVCB_DRIVER_MEMBER(rbisland_state,bankswitch_w)
-};
-
-
 /***********************************************************
                       MACHINE DRIVERS
 ***********************************************************/
@@ -676,7 +657,7 @@ static MACHINE_CONFIG_START( rbisland, rbisland_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rbisland_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rbisland_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rbisland_sound_map)
@@ -690,7 +671,7 @@ static MACHINE_CONFIG_START( rbisland, rbisland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rainbow)
+	MCFG_SCREEN_UPDATE_DRIVER(rbisland_state, screen_update_rainbow)
 
 	MCFG_GFXDECODE(rbisland)
 	MCFG_PALETTE_LENGTH(8192)
@@ -701,8 +682,9 @@ static MACHINE_CONFIG_START( rbisland, rbisland_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_16MHz/4) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz/4) /* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(rbisland_state,bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
@@ -716,7 +698,7 @@ static MACHINE_CONFIG_START( jumping, rbisland_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/3)	/* not verified but matches original */
 	MCFG_CPU_PROGRAM_MAP(jumping_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rbisland_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_18_432MHz/6)	/* not verified but music tempo matches original */
 	MCFG_CPU_PROGRAM_MAP(jumping_sound_map)
@@ -730,7 +712,7 @@ static MACHINE_CONFIG_START( jumping, rbisland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jumping)
+	MCFG_SCREEN_UPDATE_DRIVER(rbisland_state, screen_update_jumping)
 
 	MCFG_GFXDECODE(jumping)
 	MCFG_PALETTE_LENGTH(8192)

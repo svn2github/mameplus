@@ -38,30 +38,30 @@ ADDRESS_MAP_EXTERN(seibu_newzeroteam_sound_map, 8);
 ADDRESS_MAP_EXTERN(seibu3_sound_map, 8);
 ADDRESS_MAP_EXTERN(seibu3_adpcm_sound_map, 8);
 
-READ16_HANDLER( seibu_main_word_r );
-READ8_HANDLER( seibu_main_v30_r );
-WRITE16_HANDLER( seibu_main_word_w );
-WRITE8_HANDLER( seibu_main_v30_w );
+DECLARE_READ16_HANDLER( seibu_main_word_r );
+DECLARE_READ8_HANDLER( seibu_main_v30_r );
+DECLARE_WRITE16_HANDLER( seibu_main_word_w );
+DECLARE_WRITE8_HANDLER( seibu_main_v30_w );
 
-WRITE16_HANDLER( seibu_main_mustb_w );
+DECLARE_WRITE16_HANDLER( seibu_main_mustb_w );
 
-WRITE8_HANDLER( seibu_irq_clear_w );
-WRITE8_HANDLER( seibu_rst10_ack_w );
-WRITE8_HANDLER( seibu_rst18_ack_w );
-WRITE8_HANDLER( seibu_bank_w );
-WRITE8_HANDLER( seibu_coin_w );
+DECLARE_WRITE8_HANDLER( seibu_irq_clear_w );
+DECLARE_WRITE8_HANDLER( seibu_rst10_ack_w );
+DECLARE_WRITE8_HANDLER( seibu_rst18_ack_w );
+DECLARE_WRITE8_HANDLER( seibu_bank_w );
+DECLARE_WRITE8_HANDLER( seibu_coin_w );
 void seibu_ym3812_irqhandler(device_t *device, int linestate);
-void seibu_ym2151_irqhandler(device_t *device, int linestate);
+WRITE_LINE_DEVICE_HANDLER(seibu_ym2151_irqhandler);
 void seibu_ym2203_irqhandler(device_t *device, int linestate);
-READ8_HANDLER( seibu_soundlatch_r );
-READ8_HANDLER( seibu_main_data_pending_r );
-WRITE8_HANDLER( seibu_main_data_w );
+DECLARE_READ8_HANDLER( seibu_soundlatch_r );
+DECLARE_READ8_HANDLER( seibu_main_data_pending_r );
+DECLARE_WRITE8_HANDLER( seibu_main_data_w );
 MACHINE_RESET( seibu_sound );
 void seibu_sound_decrypt(running_machine &machine,const char *cpu,int length);
 
 void seibu_adpcm_decrypt(running_machine &machine, const char *region);
-WRITE8_DEVICE_HANDLER( seibu_adpcm_adr_w );
-WRITE8_DEVICE_HANDLER( seibu_adpcm_ctl_w );
+DECLARE_WRITE8_DEVICE_HANDLER( seibu_adpcm_adr_w );
+DECLARE_WRITE8_DEVICE_HANDLER( seibu_adpcm_ctl_w );
 
 class seibu_adpcm_device : public device_t,
                                   public device_sound_interface
@@ -88,7 +88,6 @@ extern const device_type SEIBU_ADPCM;
 
 
 extern const ym3812_interface seibu_ym3812_interface;
-extern const ym2151_interface seibu_ym2151_interface;
 extern const ym2203_interface seibu_ym2203_interface;
 
 struct seibu_adpcm_interface
@@ -166,8 +165,8 @@ extern const seibu_adpcm_interface seibu_adpcm2_intf;
 #define SEIBU_SOUND_SYSTEM_YM2151_INTERFACE(freq1,freq2)			\
 	MCFG_SPEAKER_STANDARD_MONO("mono")								\
 																	\
-	MCFG_SOUND_ADD("ymsnd", YM2151, freq1)								\
-	MCFG_SOUND_CONFIG(seibu_ym2151_interface)						\
+	MCFG_YM2151_ADD("ymsnd", freq1)								\
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<seibu_ym2151_irqhandler>)) \
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)								\
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)								\
 																	\
@@ -177,8 +176,8 @@ extern const seibu_adpcm_interface seibu_adpcm2_intf;
 #define SEIBU_AIRRAID_SOUND_SYSTEM_YM2151_INTERFACE(freq1)			\
 	MCFG_SPEAKER_STANDARD_MONO("mono")								\
 																	\
-	MCFG_SOUND_ADD("ymsnd", YM2151, freq1)								\
-	MCFG_SOUND_CONFIG(seibu_ym2151_interface)						\
+	MCFG_YM2151_ADD("ymsnd", freq1)								\
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<seibu_ym2151_irqhandler>)) \
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)								\
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)								\
 																	\
@@ -187,8 +186,8 @@ extern const seibu_adpcm_interface seibu_adpcm2_intf;
 #define SEIBU_SOUND_SYSTEM_YM2151_RAIDEN2_INTERFACE(freq1,freq2,regiona, regionb)		\
 	MCFG_SPEAKER_STANDARD_MONO("mono")								\
 																	\
-	MCFG_SOUND_ADD("ymsnd", YM2151, freq1)								\
-	MCFG_SOUND_CONFIG(seibu_ym2151_interface)						\
+	MCFG_YM2151_ADD("ymsnd", freq1)								\
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<seibu_ym2151_irqhandler>)) \
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)								\
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)								\
 																	\

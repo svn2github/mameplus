@@ -70,20 +70,19 @@ WRITE8_MEMBER(ladyfrog_state::sound_cpu_reset_w)
 	m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 1 ) ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(ladyfrog_state::nmi_callback)
 {
-	ladyfrog_state *state = machine.driver_data<ladyfrog_state>();
 
-	if (state->m_sound_nmi_enable)
-		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_sound_nmi_enable)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		state->m_pending_nmi = 1;
+		m_pending_nmi = 1;
 }
 
 WRITE8_MEMBER(ladyfrog_state::sound_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().scheduler().synchronize(FUNC(nmi_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(ladyfrog_state::nmi_callback),this), data);
 }
 
 WRITE8_MEMBER(ladyfrog_state::nmi_disable_w)
@@ -119,7 +118,8 @@ static const ay8910_interface ay8910_config =
 
 static const msm5232_interface msm5232_config =
 {
-	{ 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6 }
+	{ 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6 },
+	DEVCB_NULL
 };
 
 READ8_MEMBER(ladyfrog_state::snd_flag_r)
@@ -305,11 +305,11 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,8000000/2)
 	MCFG_CPU_PROGRAM_MAP(ladyfrog_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ladyfrog_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)
 	MCFG_CPU_PROGRAM_MAP(ladyfrog_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(ladyfrog_state, irq0_line_hold, 2*60)
 
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
@@ -320,7 +320,7 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 29*8-1) // black borders in ladyfrog gameplay are correct
-	MCFG_SCREEN_UPDATE_STATIC(ladyfrog)
+	MCFG_SCREEN_UPDATE_DRIVER(ladyfrog_state, screen_update_ladyfrog)
 
 	MCFG_GFXDECODE(ladyfrog)
 	MCFG_PALETTE_LENGTH(512)

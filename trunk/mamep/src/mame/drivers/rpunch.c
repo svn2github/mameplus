@@ -122,11 +122,10 @@
  *
  *************************************/
 
-static void ym2151_irq_gen(device_t *device, int state)
+WRITE_LINE_MEMBER(rpunch_state::ym2151_irq_gen)
 {
-	rpunch_state *drvstate = device->machine().driver_data<rpunch_state>();
-	drvstate->m_ym2151_irq = state;
-	device->machine().device("audiocpu")->execute().set_input_line(0, (drvstate->m_ym2151_irq | drvstate->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
+	m_ym2151_irq = state;
+	subdevice("audiocpu")->execute().set_input_line(0, (m_ym2151_irq | m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -156,19 +155,18 @@ CUSTOM_INPUT_MEMBER(rpunch_state::hi_bits_r)
  *
  *************************************/
 
-static TIMER_CALLBACK( sound_command_w_callback )
+TIMER_CALLBACK_MEMBER(rpunch_state::sound_command_w_callback)
 {
-	rpunch_state *state = machine.driver_data<rpunch_state>();
-	state->m_sound_busy = 1;
-	state->m_sound_data = param;
-	machine.device("audiocpu")->execute().set_input_line(0, (state->m_ym2151_irq | state->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
+	m_sound_busy = 1;
+	m_sound_data = param;
+	machine().device("audiocpu")->execute().set_input_line(0, (m_ym2151_irq | m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 WRITE16_MEMBER(rpunch_state::sound_command_w)
 {
 	if (ACCESSING_BITS_0_7)
-		machine().scheduler().synchronize(FUNC(sound_command_w_callback), data & 0xff);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(rpunch_state::sound_command_w_callback),this), data & 0xff);
 }
 
 
@@ -209,7 +207,7 @@ WRITE8_MEMBER(rpunch_state::upd_control_w)
 WRITE8_MEMBER(rpunch_state::upd_data_w)
 {
 	device_t *device = machine().device("upd");
-	upd7759_port_w(device, 0, data);
+	upd7759_port_w(device, space, 0, data);
 	upd7759_start_w(device, 0);
 	upd7759_start_w(device, 1);
 }
@@ -252,7 +250,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, rpunch_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
-	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xf200, 0xf200) AM_READ(sound_command_r)
 	AM_RANGE(0xf400, 0xf400) AM_WRITE(upd_control_w)
 	AM_RANGE(0xf600, 0xf600) AM_WRITE(upd_data_w)
@@ -441,18 +439,33 @@ static GFXDECODE_START( rpunch )
 GFXDECODE_END
 
 
-
-/*************************************
- *
- *  Sound definitions
- *
- *************************************/
-
-static const ym2151_interface ym2151_config =
+static const gfx_layout bootleg_tile_layout =
 {
-	DEVCB_LINE(ym2151_irq_gen)
+	8,8,
+	RGN_FRAC(1,1),
+	4,
+	{ STEP4(0,8) },
+	{ STEP8(0,1) },
+	{ STEP8(0,32) },
+	8*32,
 };
 
+static const gfx_layout bootleg_sprite_layout =
+{
+	16,32,
+	RGN_FRAC(1,1),
+	4,
+	{ STEP4(0,8) },
+	{ STEP8(0,1),  STEP8(1024,1) },
+	{ STEP32(0,32) },
+	32*32*2,
+};
+
+static GFXDECODE_START( spikes91a )
+	GFXDECODE_ENTRY( "gfx1", 0, bootleg_tile_layout,   0, 16 )
+	GFXDECODE_ENTRY( "gfx2", 0, bootleg_tile_layout,   256, 16 )
+	GFXDECODE_ENTRY( "gfx3", 0, bootleg_sprite_layout,   0, 16*4 )
+GFXDECODE_END
 
 
 /*************************************
@@ -476,7 +489,7 @@ static MACHINE_CONFIG_START( rpunch, rpunch_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(304, 224)
 	MCFG_SCREEN_VISIBLE_AREA(8, 303-8, 0, 223-8)
-	MCFG_SCREEN_UPDATE_STATIC(rpunch)
+	MCFG_SCREEN_UPDATE_DRIVER(rpunch_state, screen_update_rpunch)
 
 	MCFG_GFXDECODE(rpunch)
 	MCFG_PALETTE_LENGTH(1024)
@@ -485,8 +498,43 @@ static MACHINE_CONFIG_START( rpunch, rpunch_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, MASTER_CLOCK/4)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", MASTER_CLOCK/4)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(rpunch_state,ym2151_irq_gen))
+	MCFG_SOUND_ROUTE(0, "mono", 0.50)
+	MCFG_SOUND_ROUTE(1, "mono", 0.50)
+
+	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+MACHINE_CONFIG_END
+
+
+// c+p of above for now, bootleg hw, things need verifying
+static MACHINE_CONFIG_START( spikes91a, rpunch_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK/2)
+	MCFG_CPU_PROGRAM_MAP(main_map)
+
+	MCFG_CPU_ADD("audiocpu", Z80, MASTER_CLOCK/4)
+	MCFG_CPU_PROGRAM_MAP(sound_map)
+
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_SIZE(304, 224)
+	MCFG_SCREEN_VISIBLE_AREA(8, 303-8, 0, 223-8)
+	MCFG_SCREEN_UPDATE_DRIVER(rpunch_state, screen_update_rpunch)
+
+	MCFG_GFXDECODE(spikes91a)
+	MCFG_PALETTE_LENGTH(1024)
+
+
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+
+	MCFG_YM2151_ADD("ymsnd", MASTER_CLOCK/4)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(rpunch_state,ym2151_irq_gen))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
@@ -684,6 +732,43 @@ ROM_START( svolleyu )
 ROM_END
 
 
+ROM_START( spikes91a )
+	ROM_REGION( 0x40000, "maincpu", 0 )	/* 68000 code */
+    ROM_LOAD16_BYTE( "4-prg.bin", 0x00001, 0x10000, CRC(eefaa208) SHA1(2a0417e170de3212f45be64719bb1eb0c6d33c59) )
+    ROM_LOAD16_BYTE( "6-prg.bin", 0x00000, 0x10000, CRC(da7d2e81) SHA1(ca78a661876ddbcb0e7599edcc819558afb76930) )
+	ROM_LOAD16_BYTE( "5-prg.bin", 0x20000, 0x08000, CRC(e7630122) SHA1(d200afe5134030be615f112af0ab54ac3b349eca) ) // these 2 match program ROMs from svolley
+	ROM_LOAD16_BYTE( "3-prg.bin", 0x20001, 0x08000, CRC(b6b24910) SHA1(2e4cf80a8eb1fcd9448405ff881bb99ae4ce8909) )
+
+	ROM_REGION( 0x080000, "gfx1", 0 )
+	ROM_LOAD32_BYTE( "7.bin",        0x000000, 0x010000, CRC(9596a4c0) SHA1(1f233bb2fa662fb8cd9c0db478e392ca26d9484b) )
+	ROM_LOAD32_BYTE( "10.bin",       0x000001, 0x010000, CRC(a05249e6) SHA1(8671e0c980ba87ea14895176fb5c8a48bb4c932e) )
+	ROM_LOAD32_BYTE( "13.bin",       0x000002, 0x010000, CRC(429159f3) SHA1(4395413c4ab4a1fd322a1af6f2b93bb62b044223) )
+	ROM_LOAD32_BYTE( "16.bin",       0x000003, 0x010000, CRC(f5436c8d) SHA1(d29508cc5ee43d7b072112c6d95c36ee0328e5fb) )
+
+	ROM_REGION( 0x080000, "gfx2", 0 )
+	ROM_LOAD32_BYTE( "8.bin",        0x000000, 0x010000, CRC(451ebd75) SHA1(67d5a9fadf3c8a39d59e7b21cb8633dd19886f76) )
+	ROM_LOAD32_BYTE( "11.bin",       0x000001, 0x010000, CRC(0983987a) SHA1(c334276774ffdee0023ea6287e98e0e6e372fb80) )
+	ROM_LOAD32_BYTE( "14.bin",       0x000002, 0x010000, CRC(4babf749) SHA1(1d5055e825b9efc17a200f4e04e6fa326397f7cc) )
+	ROM_LOAD32_BYTE( "17.bin",       0x000003, 0x010000, CRC(f82f9664) SHA1(678fd8f3abc39ccb4ef32e9d6ef481d7d751aecb) )
+	ROM_LOAD32_BYTE( "9.bin",        0x040000, 0x008000, CRC(3291e3e0) SHA1(dcc358bf66e4c65992d4376c203b811928068cf3) )
+	ROM_LOAD32_BYTE( "12.bin",       0x040001, 0x008000, CRC(40aedad9) SHA1(cbf50eae4ccbc06213a5c227409e1dade7180572) )
+	ROM_LOAD32_BYTE( "15.bin",       0x040002, 0x008000, CRC(911104d7) SHA1(66b48c34da2cc17faeffa1d36f5b6b7e15c2033b) )
+	ROM_LOAD32_BYTE( "18.bin",       0x040003, 0x008000, CRC(07265de1) SHA1(bad7f1b168640a7d90b0d4d9c255ba98fa4c6fa8) )
+
+	ROM_REGION( 0x080000, "gfx3", ROMREGION_INVERT )
+	ROM_LOAD32_BYTE( "19.bin",       0x000000, 0x010000, CRC(12a67e3f) SHA1(c77b264eae0f55af36728b6e5e5e1fec3d366eb1) )
+	ROM_LOAD32_BYTE( "20.bin",       0x000001, 0x010000, CRC(31828996) SHA1(b324902b9fff0bab1daa3af5136b96d50d12956f) )
+	ROM_LOAD32_BYTE( "21.bin",       0x000002, 0x010000, CRC(51cbe0d6) SHA1(d60b2a297d7e994c60db28e8ba60b0664e01f61d) )
+	ROM_LOAD32_BYTE( "22.bin",       0x000003, 0x010000, CRC(c289bfc0) SHA1(4a8929c5f304a1d203cad04c72fc6e96764dc858) )
+
+
+	ROM_REGION( 0x20000, "audiocpu", 0 ) /* Z80 Sound CPU */
+	ROM_LOAD( "2-snd.bin", 0x00000, 0x10000, CRC(e3065b1d) SHA1(c4a3a95ba7f43cdf1b0c574f41de06d007ad2bd8) ) // matches 1.ic140 from pspikes91
+    ROM_LOAD( "1-snd.bin", 0x10000, 0x08000, CRC(009d7157) SHA1(2cdda7094c7476289d75a78ee25b34fa3b3225c0) )
+
+	ROM_REGION( 0x60000, "upd", ROMREGION_ERASEFF )
+ROM_END
+
 
 /*************************************
  *
@@ -718,3 +803,7 @@ GAME( 1987, rpunch,   rabiolep, rpunch,   rpunch, rpunch_state,   rabiolep, ROT0
 GAME( 1989, svolley,  0,        rpunch,   svolley, rpunch_state,  svolley,  ROT0, "V-System Co.", "Super Volleyball (Japan)", GAME_NO_COCKTAIL )
 GAME( 1989, svolleyk, svolley,  rpunch,   svolley, rpunch_state,  svolley,  ROT0, "V-System Co.", "Super Volleyball (Korea)", GAME_NO_COCKTAIL )
 GAME( 1989, svolleyu, svolley,  rpunch,   svolley, rpunch_state,  svolley,  ROT0, "V-System Co. (Data East license)", "Super Volleyball (US)", GAME_NO_COCKTAIL )
+
+// video registers are changed, and there's some kind of RAM at 090xxx, possible a different sprite scheme for the bootleg (even if the original is intact)
+// the sound system seems to be ripped from the later Power Spikes (see aerofgt.c)
+GAME( 1991, spikes91a,svolley,  spikes91a,svolley, rpunch_state,  svolley,  ROT0, "bootleg",  "Super Volleyball (bootleg)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING | GAME_NO_SOUND | GAME_NO_COCKTAIL ) // aka 1991 Spikes?

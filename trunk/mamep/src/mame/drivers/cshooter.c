@@ -119,6 +119,8 @@ public:
 	virtual void video_start();
 	DECLARE_MACHINE_RESET(cshooter);
 	DECLARE_MACHINE_RESET(airraid);
+	UINT32 screen_update_cshooter(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(cshooter_scanline);
 };
 
 
@@ -150,41 +152,40 @@ void cshooter_state::video_start()
 	m_txtilemap->set_transparent_pen(3);
 }
 
-static SCREEN_UPDATE_IND16(cshooter)
+UINT32 cshooter_state::screen_update_cshooter(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cshooter_state *state = screen.machine().driver_data<cshooter_state>();
 	bitmap.fill(0/*get_black_pen(screen.screen.machine(, cliprect))*/);
-	state->m_txtilemap->mark_all_dirty();
+	m_txtilemap->mark_all_dirty();
 
 	//sprites
 	{
-		UINT8 *spriteram = state->m_spriteram;
+		UINT8 *spriteram = m_spriteram;
 		int i;
-		for(i=0;i<state->m_spriteram.bytes();i+=4)
+		for(i=0;i<m_spriteram.bytes();i+=4)
 		{
 			if(spriteram[i+3]!=0)
 			{
 				int tile=0x30+((spriteram[i]>>2)&0x1f);
 
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[0],
 							tile,
 							spriteram[i+1],
 							0, 0,
 							spriteram[i+3],spriteram[i+2],3);
 
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[0],
 							tile,
 							spriteram[i+1],
 							0, 0,
 							spriteram[i+3]+8,spriteram[i+2],3);
 
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[0],
 							tile,
 							spriteram[i+1],
 							0, 0,
 							spriteram[i+3]+8,spriteram[i+2]+8,3);
 
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[0],
 							tile,
 							spriteram[i+1],
 							0, 0,
@@ -193,8 +194,8 @@ static SCREEN_UPDATE_IND16(cshooter)
 		}
 	}
 
-	state->m_txtilemap->mark_all_dirty();
-	state->m_txtilemap->draw(bitmap, cliprect, 0,0);
+	m_txtilemap->mark_all_dirty();
+	m_txtilemap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
@@ -202,15 +203,15 @@ static SCREEN_UPDATE_IND16(cshooter)
 /* main cpu */
 
 
-static TIMER_DEVICE_CALLBACK( cshooter_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(cshooter_state::cshooter_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
 
 	if(scanline == 0) // vblank-in irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
 }
 
 
@@ -287,12 +288,12 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(cshooter_state::seibu_sound_comms_r)
 {
-	return seibu_main_word_r(&space,offset,0x00ff);
+	return seibu_main_word_r(space,offset,0x00ff);
 }
 
 WRITE8_MEMBER(cshooter_state::seibu_sound_comms_w)
 {
-	seibu_main_word_w(&space,offset,data,0x00ff);
+	seibu_main_word_w(space,offset,data,0x00ff);
 }
 
 static ADDRESS_MAP_START( airraid_map, AS_PROGRAM, 8, cshooter_state )
@@ -439,7 +440,7 @@ GFXDECODE_END
 static MACHINE_CONFIG_START( cshooter, cshooter_state )
 	MCFG_CPU_ADD("maincpu", Z80,XTAL_12MHz/2)		 /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(cshooter_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", cshooter_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", cshooter_state, cshooter_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_14_31818MHz/4)		 /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -452,7 +453,7 @@ static MACHINE_CONFIG_START( cshooter, cshooter_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(cshooter)
+	MCFG_SCREEN_UPDATE_DRIVER(cshooter_state, screen_update_cshooter)
 
 	MCFG_GFXDECODE(cshooter)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -466,7 +467,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( airraid, cshooter_state )
 	MCFG_CPU_ADD("maincpu", Z80,XTAL_12MHz/2)		 /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(airraid_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", cshooter_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", cshooter_state, cshooter_scanline, "screen", 0, 1)
 
 	SEIBU2_AIRRAID_SOUND_SYSTEM_CPU(XTAL_14_31818MHz/4)		 /* verified on pcb */
 
@@ -478,7 +479,7 @@ static MACHINE_CONFIG_START( airraid, cshooter_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(cshooter)
+	MCFG_SCREEN_UPDATE_DRIVER(cshooter_state, screen_update_cshooter)
 
 	MCFG_GFXDECODE(cshooter)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -676,12 +677,12 @@ DRIVER_INIT_MEMBER(cshooter_state,cshooter)
 
 DRIVER_INIT_MEMBER(cshooter_state,cshootere)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int A;
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0x8000);
 
-	space->set_decrypted_region(0x0000, 0x7fff, decrypt);
+	space.set_decrypted_region(0x0000, 0x7fff, decrypt);
 
 	for (A = 0x0000;A < 0x8000;A++)
 	{

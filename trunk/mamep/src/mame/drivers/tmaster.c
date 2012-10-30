@@ -183,6 +183,8 @@ public:
 	DECLARE_VIDEO_START(tmaster);
 	DECLARE_MACHINE_RESET(galgames);
 	DECLARE_VIDEO_START(galgames);
+	UINT32 screen_update_tmaster(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(tm3k_interrupt);
 };
 
 
@@ -224,7 +226,7 @@ static void duart_tx(device_t *device, int channel, UINT8 data)
 	tmaster_state *state = device->machine().driver_data<tmaster_state>();
 	if ( channel == 0 )
 	{
-		state->m_microtouch->rx(*device->machine().memory().first_space(), 0, data);
+		state->m_microtouch->rx(device->machine().driver_data()->generic_space(), 0, data);
 	}
 };
 
@@ -357,26 +359,25 @@ VIDEO_START_MEMBER(tmaster_state,galgames)
 	m_compute_addr = galgames_compute_addr;
 }
 
-static SCREEN_UPDATE_IND16( tmaster )
+UINT32 tmaster_state::screen_update_tmaster(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tmaster_state *state = screen.machine().driver_data<tmaster_state>();
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_Z))
+	if (machine().input().code_pressed(KEYCODE_Z))
 	{
 		int mask = 0;
-		if (screen.machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
-		if (screen.machine().input().code_pressed(KEYCODE_W))	mask |= 2;
+		if (machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
+		if (machine().input().code_pressed(KEYCODE_W))	mask |= 2;
 		if (mask != 0) layers_ctrl &= mask;
 	}
 #endif
 
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	if (layers_ctrl & 1)	copybitmap_trans(bitmap, state->m_bitmap[0][(state->m_regs[0x02/2]>>8)&1], 0,0,0,0, cliprect, 0xff);
-	if (layers_ctrl & 2)	copybitmap_trans(bitmap, state->m_bitmap[1][(state->m_regs[0x02/2]>>9)&1], 0,0,0,0, cliprect, 0xff);
+	if (layers_ctrl & 1)	copybitmap_trans(bitmap, m_bitmap[0][(m_regs[0x02/2]>>8)&1], 0,0,0,0, cliprect, 0xff);
+	if (layers_ctrl & 2)	copybitmap_trans(bitmap, m_bitmap[1][(m_regs[0x02/2]>>9)&1], 0,0,0,0, cliprect, 0xff);
 
 	return 0;
 }
@@ -902,15 +903,14 @@ MACHINE_RESET_MEMBER(tmaster_state,tmaster)
 	m_duart68681 = machine().device( "duart68681" );
 }
 
-static TIMER_DEVICE_CALLBACK( tm3k_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(tmaster_state::tm3k_interrupt)
 {
-	tmaster_state *state = timer.machine().driver_data<tmaster_state>();
 	int scanline = param;
 
 	if(scanline == 0) // vblank, FIXME
-		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 	else if((scanline % 16) == 0)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	// lev 2 triggered at the end of the blit
 }
@@ -927,7 +927,7 @@ static const duart68681_config tmaster_duart68681_config =
 static MACHINE_CONFIG_START( tm3k, tmaster_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz / 2) /* 12MHz */
 	MCFG_CPU_PROGRAM_MAP(tmaster_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", tm3k_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", tmaster_state, tm3k_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_RESET_OVERRIDE(tmaster_state,tmaster)
 
@@ -941,7 +941,7 @@ static MACHINE_CONFIG_START( tm3k, tmaster_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(400, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 400-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(tmaster)
+	MCFG_SCREEN_UPDATE_DRIVER(tmaster_state, screen_update_tmaster)
 
 	MCFG_PALETTE_LENGTH(0x1000)
 
@@ -981,7 +981,7 @@ MACHINE_RESET_MEMBER(tmaster_state,galgames)
 static MACHINE_CONFIG_START( galgames, tmaster_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(galgames_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", tm3k_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", tmaster_state, tm3k_interrupt, "screen", 0, 1)
 
 	// 5 EEPROMs on the motherboard (for BIOS + 4 Carts)
 	MCFG_EEPROM_ADD(GALGAMES_EEPROM_BIOS,  galgames_eeprom_interface)
@@ -998,7 +998,7 @@ static MACHINE_CONFIG_START( galgames, tmaster_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(400, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 400-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(tmaster)
+	MCFG_SCREEN_UPDATE_DRIVER(tmaster_state, screen_update_tmaster)
 
 	MCFG_PALETTE_LENGTH(0x1000)	// only 0x100 used
 

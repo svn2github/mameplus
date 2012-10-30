@@ -619,7 +619,7 @@ static MACHINE_CONFIG_START( lsasquad, lsasquad_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK / 4)
 	MCFG_CPU_PROGRAM_MAP(lsasquad_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lsasquad_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(lsasquad_sound_map)
@@ -640,7 +640,7 @@ static MACHINE_CONFIG_START( lsasquad, lsasquad_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lsasquad)
+	MCFG_SCREEN_UPDATE_DRIVER(lsasquad_state, screen_update_lsasquad)
 
 	MCFG_GFXDECODE(lsasquad)
 	MCFG_PALETTE_LENGTH(512)
@@ -674,7 +674,7 @@ static MACHINE_CONFIG_START( daikaiju, lsasquad_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK / 4)
 	MCFG_CPU_PROGRAM_MAP(daikaiju_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lsasquad_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(daikaiju_sound_map)
@@ -701,7 +701,7 @@ static MACHINE_CONFIG_START( daikaiju, lsasquad_state )
 	MCFG_PALETTE_LENGTH(512)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_SCREEN_UPDATE_STATIC(daikaiju)
+	MCFG_SCREEN_UPDATE_DRIVER(lsasquad_state, screen_update_daikaiju)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

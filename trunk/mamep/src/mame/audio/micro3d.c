@@ -20,13 +20,13 @@
  *
  *************************************/
 
-struct biquad 
+struct biquad
 {
 	double a0, a1, a2;		/* Numerator coefficients */
 	double b0, b1, b2;		/* Denominator coefficients */
 };
 
-struct lp_filter 
+struct lp_filter
 {
 	float *history;
 	float *coef;
@@ -56,7 +56,7 @@ struct noise_state
 
 	float				gain;
 	UINT32				noise_shift;
-	UINT8				noise_state;
+	UINT8				noise_value;
 	UINT8				noise_subcount;
 
 	filter_state		noise_filters[4];
@@ -247,11 +247,11 @@ static STREAM_UPDATE( micro3d_stream_update )
 		for (step = 2000000 / (2000000/8); step >= state->noise_subcount; step -= state->noise_subcount)
 		{
 			state->noise_shift = (state->noise_shift << 1) | (((state->noise_shift >> 13) ^ (state->noise_shift >> 16)) & 1);
-			state->noise_state = (state->noise_shift >> 16) & 1;
+			state->noise_value = (state->noise_shift >> 16) & 1;
 			state->noise_subcount = 2000000 / MM5837_CLOCK;
 		}
 		state->noise_subcount -= step;
-		input = (float)state->noise_state - 0.5;
+		input = (float)state->noise_value - 0.5;
 		white = input;
 
 		/* Pink noise filtering */
@@ -393,9 +393,10 @@ READ8_MEMBER(micro3d_state::micro3d_sound_io_r)
 	}
 }
 
-WRITE8_DEVICE_HANDLER( micro3d_upd7759_w )
+WRITE8_MEMBER(micro3d_state::micro3d_upd7759_w)
 {
-	upd7759_port_w(device, 0, data);
+	device_t *device = machine().device("upd7759");
+	upd7759_port_w(device, space, 0, data);
 	upd7759_start_w(device, 0);
 	upd7759_start_w(device, 1);
 }
@@ -407,7 +408,7 @@ micro3d_sound_device::micro3d_sound_device(const machine_config &mconfig, const 
 	: device_t(mconfig, MICRO3D, "Microprose Custom", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(noise_state));
+	m_token = global_alloc_clear(noise_state);
 }
 
 //-------------------------------------------------

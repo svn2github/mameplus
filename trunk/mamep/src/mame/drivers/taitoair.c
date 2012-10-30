@@ -709,7 +709,7 @@ static MACHINE_CONFIG_START( airsys, taitoair_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,24000000 / 2)		/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(airsys_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoair_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000 / 2)			/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -730,7 +730,7 @@ static MACHINE_CONFIG_START( airsys, taitoair_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 3*16, 28*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitoair)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoair_state, screen_update_taitoair)
 
 	MCFG_GFXDECODE(airsys)
 	MCFG_PALETTE_LENGTH(512*16+512*16)

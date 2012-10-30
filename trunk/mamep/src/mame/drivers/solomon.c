@@ -193,12 +193,11 @@ static GFXDECODE_START( solomon )
 	GFXDECODE_ENTRY( "gfx3", 0, spritelayout,   0, 8 )	/* colors   0-127 */
 GFXDECODE_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(solomon_state::vblank_irq)
 {
-	solomon_state *state = device->machine().driver_data<solomon_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -208,12 +207,12 @@ static MACHINE_CONFIG_START( solomon, solomon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4.0 MHz (?????) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", solomon_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3072000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_portmap)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)	/* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(solomon_state, irq0_line_hold, 2*60)	/* ??? */
 						/* NMIs are caused by the main CPU */
 
 	/* video hardware */
@@ -222,7 +221,7 @@ static MACHINE_CONFIG_START( solomon, solomon_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(solomon)
+	MCFG_SCREEN_UPDATE_DRIVER(solomon_state, screen_update_solomon)
 
 	MCFG_GFXDECODE(solomon)
 	MCFG_PALETTE_LENGTH(256)

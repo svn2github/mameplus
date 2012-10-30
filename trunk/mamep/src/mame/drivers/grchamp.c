@@ -90,21 +90,19 @@ void grchamp_state::machine_reset()
  *
  *************************************/
 
-static INTERRUPT_GEN( grchamp_cpu0_interrupt )
+INTERRUPT_GEN_MEMBER(grchamp_state::grchamp_cpu0_interrupt)
 {
-	grchamp_state *state = device->machine().driver_data<grchamp_state>();
 
-	if (state->m_cpu0_out[0] & 0x01)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if (m_cpu0_out[0] & 0x01)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
-static INTERRUPT_GEN( grchamp_cpu1_interrupt )
+INTERRUPT_GEN_MEMBER(grchamp_state::grchamp_cpu1_interrupt)
 {
-	grchamp_state *state = device->machine().driver_data<grchamp_state>();
 
-	if (state->m_cpu1_out[4] & 0x01)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if (m_cpu1_out[4] & 0x01)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -305,18 +303,18 @@ WRITE8_MEMBER(grchamp_state::cpu1_outputs_w)
 			/* bit 2-4: ATTACK UP 1-3 */
 			/* bit 5-6: SIFT 1-2 */
 			/* bit 7:   ENGINE CS */
-			discrete_sound_w(discrete, GRCHAMP_ENGINE_CS_EN, data & 0x80);
-			discrete_sound_w(discrete, GRCHAMP_SIFT_DATA, (data >> 5) & 0x03);
-			discrete_sound_w(discrete, GRCHAMP_ATTACK_UP_DATA, (data >> 2) & 0x07);
-			discrete_sound_w(discrete, GRCHAMP_IDLING_EN, data & 0x02);
-			discrete_sound_w(discrete, GRCHAMP_FOG_EN, data & 0x01);
+			discrete_sound_w(discrete, space, GRCHAMP_ENGINE_CS_EN, data & 0x80);
+			discrete_sound_w(discrete, space, GRCHAMP_SIFT_DATA, (data >> 5) & 0x03);
+			discrete_sound_w(discrete, space, GRCHAMP_ATTACK_UP_DATA, (data >> 2) & 0x07);
+			discrete_sound_w(discrete, space, GRCHAMP_IDLING_EN, data & 0x02);
+			discrete_sound_w(discrete, space, GRCHAMP_FOG_EN, data & 0x01);
 			break;
 
 		case 0x0d: /* OUTD */
 			/* bit 0-3: ATTACK SPEED 1-4 */
 			/* bit 4-7: PLAYER SPEED 1-4 */
-			discrete_sound_w(discrete, GRCHAMP_PLAYER_SPEED_DATA, (data >> 4) & 0x0f);
-			discrete_sound_w(discrete, GRCHAMP_ATTACK_SPEED_DATA,  data & 0x0f);
+			discrete_sound_w(discrete, space, GRCHAMP_PLAYER_SPEED_DATA, (data >> 4) & 0x0f);
+			discrete_sound_w(discrete, space, GRCHAMP_ATTACK_SPEED_DATA,  data & 0x0f);
 			break;
 
 		default:
@@ -386,17 +384,16 @@ READ8_MEMBER(grchamp_state::sub_to_main_comm_r)
 }
 
 
-static TIMER_CALLBACK( main_to_sub_comm_sync_w )
+TIMER_CALLBACK_MEMBER(grchamp_state::main_to_sub_comm_sync_w)
 {
-	grchamp_state *state = machine.driver_data<grchamp_state>();
 	int offset = param >> 8;
-	state->m_comm_latch2[offset & 3] = param;
+	m_comm_latch2[offset & 3] = param;
 }
 
 
 WRITE8_MEMBER(grchamp_state::main_to_sub_comm_w)
 {
-	machine().scheduler().synchronize(FUNC(main_to_sub_comm_sync_w), data | (offset << 8));
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(grchamp_state::main_to_sub_comm_sync_w),this), data | (offset << 8));
 }
 
 
@@ -416,13 +413,13 @@ READ8_MEMBER(grchamp_state::main_to_sub_comm_r)
 WRITE8_MEMBER(grchamp_state::grchamp_portA_0_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, GRCHAMP_A_DATA, data);
+	discrete_sound_w(device, space, GRCHAMP_A_DATA, data);
 }
 
 WRITE8_MEMBER(grchamp_state::grchamp_portB_0_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, GRCHAMP_B_DATA, 255-data);
+	discrete_sound_w(device, space, GRCHAMP_B_DATA, 255-data);
 }
 
 WRITE8_MEMBER(grchamp_state::grchamp_portA_2_w)
@@ -671,18 +668,18 @@ static MACHINE_CONFIG_START( grchamp, grchamp_state )
 	MCFG_CPU_ADD("maincpu", Z80, PIXEL_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", grchamp_cpu0_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", grchamp_state,  grchamp_cpu0_interrupt)
 
 	/* GAME BOARD */
 	MCFG_CPU_ADD("sub", Z80, PIXEL_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(sub_map)
 	MCFG_CPU_IO_MAP(sub_portmap)
-	MCFG_CPU_VBLANK_INT("screen", grchamp_cpu1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", grchamp_state,  grchamp_cpu1_interrupt)
 
 	/* SOUND BOARD */
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)SOUND_CLOCK/4/16/16/10/16)
+	MCFG_CPU_PERIODIC_INT_DRIVER(grchamp_state, irq0_line_hold,  (double)SOUND_CLOCK/4/16/16/10/16)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
@@ -693,7 +690,7 @@ static MACHINE_CONFIG_START( grchamp, grchamp_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(grchamp)
+	MCFG_SCREEN_UPDATE_DRIVER(grchamp_state, screen_update_grchamp)
 
 
 	/* sound hardware */

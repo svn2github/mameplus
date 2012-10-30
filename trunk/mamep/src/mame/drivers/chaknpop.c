@@ -375,7 +375,7 @@ static MACHINE_CONFIG_START( chaknpop, chaknpop_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18MHz / 6)	/* Verified on PCB */
 	MCFG_CPU_PROGRAM_MAP(chaknpop_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", chaknpop_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -384,7 +384,7 @@ static MACHINE_CONFIG_START( chaknpop, chaknpop_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(chaknpop)
+	MCFG_SCREEN_UPDATE_DRIVER(chaknpop_state, screen_update_chaknpop)
 
 	MCFG_GFXDECODE(chaknpop)
 	MCFG_PALETTE_LENGTH(1024)

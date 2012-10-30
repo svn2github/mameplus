@@ -158,71 +158,16 @@ TODO:
 #define MAIN_CLOCK_12 XTAL_12MHz
 #define MAIN_CLOCK_5  XTAL_5MHz
 
+
+/*************************************
+ *
+ *  Ninja Kid II PCM
+ *
+ *************************************/
+
 // PCM playback is controlled by a 555 timer
 #define NE555_FREQUENCY	16300	// measured on PCB
 //#define NE555_FREQUENCY   (1.0f / (0.693 * (560 + 2*51) * 0.1e-6))    // theoretical: this gives 21.8kHz which is too high
-
-
-static void omegaf_io_protection_reset(running_machine &machine);
-
-
-static INTERRUPT_GEN( ninjakd2_interrupt )
-{
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h */
-}
-
-
-void ninjakd2_state::machine_reset()
-{
-	/* initialize main Z80 bank */
-	machine().root_device().membank("bank1")->configure_entries(0, 8, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
-	machine().root_device().membank("bank1")->set_entry(0);
-}
-
-static void robokid_init_banks(running_machine &machine)
-{
-	/* initialize main Z80 bank */
-	machine.root_device().membank("bank1")->configure_entries(0,  2, machine.root_device().memregion("maincpu")->base(), 0x4000);
-	machine.root_device().membank("bank1")->configure_entries(2, 14, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
-	machine.root_device().membank("bank1")->set_entry(0);
-}
-
-MACHINE_RESET_MEMBER(ninjakd2_state,robokid)
-{
-	robokid_init_banks(machine());
-}
-
-MACHINE_RESET_MEMBER(ninjakd2_state,omegaf)
-{
-	robokid_init_banks(machine());
-
-	omegaf_io_protection_reset(machine());
-}
-
-
-WRITE8_MEMBER(ninjakd2_state::ninjakd2_bankselect_w)
-{
-	membank("bank1")->set_entry(data & 0x7);
-}
-
-WRITE8_MEMBER(ninjakd2_state::robokid_bankselect_w)
-{
-	membank("bank1")->set_entry(data & 0xf);
-}
-
-
-WRITE8_MEMBER(ninjakd2_state::ninjakd2_soundreset_w)
-{
-	// bit 4 resets sound CPU
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
-
-	// bit 7 flips screen
-	flip_screen_set(data & 0x80);
-
-	// other bits unused
-}
-
-
 
 static SAMPLES_START( ninjakd2_init_samples )
 {
@@ -232,10 +177,8 @@ static SAMPLES_START( ninjakd2_init_samples )
 	const int length = state->memregion("pcm")->bytes();
 	INT16* sampledata = auto_alloc_array(machine, INT16, length);
 
-	int i;
-
 	// convert unsigned 8-bit PCM to signed 16-bit
-	for (i = 0; i < length; ++i)
+	for (int i = 0; i < length; ++i)
 		sampledata[i] = rom[i] << 7;
 
 	state->m_sampledata = sampledata;
@@ -250,13 +193,10 @@ WRITE8_MEMBER(ninjakd2_state::ninjakd2_pcm_play_w)
 	if (rom)
 	{
 		const int length = memregion("pcm")->bytes();
-
 		const int start = data << 8;
 
-		int end;
-
 		// find end of sample
-		end = start;
+		int end = start;
 		while (end < length && rom[end] != 0x00)
 			++end;
 
@@ -275,15 +215,22 @@ WRITE8_MEMBER(ninjakd2_state::ninjakd2_pcm_play_w)
  *
  *************************************/
 
-static void omegaf_io_protection_reset(running_machine &machine)
+void ninjakd2_state::omegaf_io_protection_start()
 {
-	ninjakd2_state *state = machine.driver_data<ninjakd2_state>();
+	// register for save states
+	save_item(NAME(m_omegaf_io_protection));
+	save_item(NAME(m_omegaf_io_protection_input));
+	save_item(NAME(m_omegaf_io_protection_tic));
+}
+
+void ninjakd2_state::omegaf_io_protection_reset()
+{
 	// make sure protection starts in a known state
-	state->m_omegaf_io_protection[0] = 0;
-	state->m_omegaf_io_protection[1] = 0;
-	state->m_omegaf_io_protection[2] = 0;
-	state->m_omegaf_io_protection_input = 0;
-	state->m_omegaf_io_protection_tic = 0;
+	m_omegaf_io_protection[0] = 0;
+	m_omegaf_io_protection[1] = 0;
+	m_omegaf_io_protection[2] = 0;
+	m_omegaf_io_protection_input = 0;
+	m_omegaf_io_protection_tic = 0;
 }
 
 READ8_MEMBER(ninjakd2_state::omegaf_io_protection_r)
@@ -352,7 +299,7 @@ READ8_MEMBER(ninjakd2_state::omegaf_io_protection_r)
 			{
 				case 0: result = ioport("DIPSW1")->read(); break;
 				case 1: result = ioport("DIPSW2")->read(); break;
-				case 2: result = 0x02;                         break;
+				case 2: result = 0x02; break;
 			}
 			break;
 
@@ -361,7 +308,7 @@ READ8_MEMBER(ninjakd2_state::omegaf_io_protection_r)
 			{
 				case 0: result = ioport("PAD1")->read(); break;
 				case 1: result = ioport("PAD2")->read(); break;
-				case 2: result = 0x01;                       break;
+				case 2: result = 0x01; break;
 			}
 			break;
 	}
@@ -383,6 +330,26 @@ WRITE8_MEMBER(ninjakd2_state::omegaf_io_protection_w)
 
 
 
+/*****************************************************************************/
+
+WRITE8_MEMBER(ninjakd2_state::ninjakd2_bankselect_w)
+{
+	membank("bank1")->set_entry(data & m_rom_bank_mask);
+}
+
+WRITE8_MEMBER(ninjakd2_state::ninjakd2_soundreset_w)
+{
+	// bit 4 resets sound CPU
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
+
+	// bit 7 flips screen
+	flip_screen_set(data & 0x80);
+
+	// other bits unused
+}
+
+
+
 /*************************************
  *
  *  Memory maps
@@ -398,10 +365,10 @@ static ADDRESS_MAP_START( ninjakd2_main_cpu, AS_PROGRAM, 8, ninjakd2_state )
 	AM_RANGE(0xc003, 0xc003) AM_READ_PORT("DIPSW1")
 	AM_RANGE(0xc004, 0xc004) AM_READ_PORT("DIPSW2")
 	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_byte_w)
-	AM_RANGE(0xc201, 0xc201) AM_WRITE(ninjakd2_soundreset_w)	// sound reset + flip screen
+	AM_RANGE(0xc201, 0xc201) AM_WRITE(ninjakd2_soundreset_w)
 	AM_RANGE(0xc202, 0xc202) AM_WRITE(ninjakd2_bankselect_w)
 	AM_RANGE(0xc203, 0xc203) AM_WRITE(ninjakd2_sprite_overdraw_w)
-	AM_RANGE(0xc208, 0xc20c) AM_WRITE(ninjakd2_bg_ctrl_w)	// scroll + enable
+	AM_RANGE(0xc208, 0xc20c) AM_WRITE(ninjakd2_bg_ctrl_w)
 	AM_RANGE(0xc800, 0xcdff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(ninjakd2_fgvideoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(ninjakd2_bgvideoram_w) AM_SHARE("bg_videoram")
@@ -427,7 +394,7 @@ static ADDRESS_MAP_START( mnight_main_cpu, AS_PROGRAM, 8, ninjakd2_state )
 	AM_RANGE(0xfa01, 0xfa01) AM_WRITE(ninjakd2_soundreset_w)
 	AM_RANGE(0xfa02, 0xfa02) AM_WRITE(ninjakd2_bankselect_w)
 	AM_RANGE(0xfa03, 0xfa03) AM_WRITE(ninjakd2_sprite_overdraw_w)
-	AM_RANGE(0xfa08, 0xfa0c) AM_WRITE(ninjakd2_bg_ctrl_w)	// scroll + enable
+	AM_RANGE(0xfa08, 0xfa0c) AM_WRITE(ninjakd2_bg_ctrl_w)
 ADDRESS_MAP_END
 
 
@@ -439,20 +406,16 @@ static ADDRESS_MAP_START( robokid_main_cpu, AS_PROGRAM, 8, ninjakd2_state )
 	AM_RANGE(0xd000, 0xd3ff) AM_READWRITE(robokid_bg2_videoram_r, robokid_bg2_videoram_w)	// banked
 	AM_RANGE(0xd400, 0xd7ff) AM_READWRITE(robokid_bg1_videoram_r, robokid_bg1_videoram_w)	// banked
 	AM_RANGE(0xd800, 0xdbff) AM_READWRITE(robokid_bg0_videoram_r, robokid_bg0_videoram_w)	// banked
-	AM_RANGE(0xdc00, 0xdc00) AM_READ_PORT("KEYCOIN")
-	AM_RANGE(0xdc01, 0xdc01) AM_READ_PORT("PAD1")
-	AM_RANGE(0xdc02, 0xdc02) AM_READ_PORT("PAD2")
-	AM_RANGE(0xdc03, 0xdc03) AM_READ_PORT("DIPSW1")
+	AM_RANGE(0xdc00, 0xdc00) AM_READ_PORT("KEYCOIN") AM_WRITE(soundlatch_byte_w)
+	AM_RANGE(0xdc01, 0xdc01) AM_READ_PORT("PAD1") AM_WRITE(ninjakd2_soundreset_w)
+	AM_RANGE(0xdc02, 0xdc02) AM_READ_PORT("PAD2") AM_WRITE(ninjakd2_bankselect_w)
+	AM_RANGE(0xdc03, 0xdc03) AM_READ_PORT("DIPSW1") AM_WRITE(ninjakd2_sprite_overdraw_w)
 	AM_RANGE(0xdc04, 0xdc04) AM_READ_PORT("DIPSW2")
-	AM_RANGE(0xdc00, 0xdc00) AM_WRITE(soundlatch_byte_w)
-	AM_RANGE(0xdc01, 0xdc01) AM_WRITE(ninjakd2_soundreset_w)	// sound reset + flip screen
-	AM_RANGE(0xdc02, 0xdc02) AM_WRITE(robokid_bankselect_w)
-	AM_RANGE(0xdc03, 0xdc03) AM_WRITE(ninjakd2_sprite_overdraw_w)
-	AM_RANGE(0xdd00, 0xdd04) AM_WRITE(robokid_bg0_ctrl_w)	// scroll + enable
+	AM_RANGE(0xdd00, 0xdd04) AM_WRITE(robokid_bg0_ctrl_w)
 	AM_RANGE(0xdd05, 0xdd05) AM_WRITE(robokid_bg0_bank_w)
-	AM_RANGE(0xde00, 0xde04) AM_WRITE(robokid_bg1_ctrl_w)	// scroll + enable
+	AM_RANGE(0xde00, 0xde04) AM_WRITE(robokid_bg1_ctrl_w)
 	AM_RANGE(0xde05, 0xde05) AM_WRITE(robokid_bg1_bank_w)
-	AM_RANGE(0xdf00, 0xdf04) AM_WRITE(robokid_bg2_ctrl_w)	// scroll + enable
+	AM_RANGE(0xdf00, 0xdf04) AM_WRITE(robokid_bg2_ctrl_w)
 	AM_RANGE(0xdf05, 0xdf05) AM_WRITE(robokid_bg2_bank_w)
 	AM_RANGE(0xe000, 0xf9ff) AM_RAM
 	AM_RANGE(0xfa00, 0xffff) AM_RAM AM_SHARE("spriteram")
@@ -462,19 +425,18 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( omegaf_main_cpu, AS_PROGRAM, 8, ninjakd2_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc000) AM_READ_PORT("KEYCOIN")
+	AM_RANGE(0xc000, 0xc000) AM_READ_PORT("KEYCOIN") AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xc001, 0xc003) AM_READ(omegaf_io_protection_r)
-	AM_RANGE(0xc000, 0xc000) AM_WRITE(soundlatch_byte_w)
-	AM_RANGE(0xc001, 0xc001) AM_WRITE(ninjakd2_soundreset_w)	// sound reset + flip screen
-	AM_RANGE(0xc002, 0xc002) AM_WRITE(robokid_bankselect_w)
+	AM_RANGE(0xc001, 0xc001) AM_WRITE(ninjakd2_soundreset_w)
+	AM_RANGE(0xc002, 0xc002) AM_WRITE(ninjakd2_bankselect_w)
 	AM_RANGE(0xc003, 0xc003) AM_WRITE(ninjakd2_sprite_overdraw_w)
 	AM_RANGE(0xc004, 0xc006) AM_WRITE(omegaf_io_protection_w)
-	AM_RANGE(0xc100, 0xc104) AM_WRITE(robokid_bg0_ctrl_w)	// scroll + enable
+	AM_RANGE(0xc100, 0xc104) AM_WRITE(robokid_bg0_ctrl_w)
 	AM_RANGE(0xc105, 0xc105) AM_WRITE(robokid_bg0_bank_w)
-	AM_RANGE(0xc1e7, 0xc1e7) AM_READNOP						// see notes
-	AM_RANGE(0xc200, 0xc204) AM_WRITE(robokid_bg1_ctrl_w)	// scroll + enable
+	AM_RANGE(0xc1e7, 0xc1e7) AM_READNOP // see notes
+	AM_RANGE(0xc200, 0xc204) AM_WRITE(robokid_bg1_ctrl_w)
 	AM_RANGE(0xc205, 0xc205) AM_WRITE(robokid_bg1_bank_w)
-	AM_RANGE(0xc300, 0xc304) AM_WRITE(robokid_bg2_ctrl_w)	// scroll + enable
+	AM_RANGE(0xc300, 0xc304) AM_WRITE(robokid_bg2_ctrl_w)
 	AM_RANGE(0xc305, 0xc305) AM_WRITE(robokid_bg2_bank_w)
 	AM_RANGE(0xc400, 0xc7ff) AM_READWRITE(robokid_bg0_videoram_r, robokid_bg0_videoram_w)	// banked
 	AM_RANGE(0xc800, 0xcbff) AM_READWRITE(robokid_bg1_videoram_r, robokid_bg1_videoram_w)	// banked
@@ -934,29 +896,62 @@ static const samples_interface ninjakd2_samples_interface =
  *
  *************************************/
 
+INTERRUPT_GEN_MEMBER(ninjakd2_state::ninjakd2_interrupt)
+{
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h */
+}
+
+void ninjakd2_state::machine_start()
+{
+}
+
+void ninjakd2_state::machine_reset()
+{
+	/* initialize main Z80 bank */
+	int num_banks = (machine().root_device().memregion("maincpu")->bytes() - 0x10000) / 0x4000;
+	machine().root_device().membank("bank1")->configure_entries(0, num_banks, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->set_entry(0);
+
+	m_rom_bank_mask = num_banks - 1;
+}
+
+MACHINE_START_MEMBER(ninjakd2_state,omegaf)
+{
+	omegaf_io_protection_start();
+
+	machine_start();
+}
+
+MACHINE_RESET_MEMBER(ninjakd2_state,omegaf)
+{
+	omegaf_io_protection_reset();
+
+	machine_reset();
+}
+
+/*****************************************************************************/
+
 static MACHINE_CONFIG_START( ninjakd2, ninjakd2_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CLOCK_12/2)		/* verified */
 	MCFG_CPU_PROGRAM_MAP(ninjakd2_main_cpu)
-	MCFG_CPU_VBLANK_INT("screen", ninjakd2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ninjakd2_state,  ninjakd2_interrupt)
 
 	MCFG_CPU_ADD("soundcpu", Z80, MAIN_CLOCK_5)		/* verified */
 	MCFG_CPU_PROGRAM_MAP(ninjakd2_sound_cpu)
 	MCFG_CPU_IO_MAP(ninjakd2_sound_io)
-
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.61)    /* verified on pcb */
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjakd2)
-	MCFG_SCREEN_VBLANK_STATIC(ninjakd2)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjakd2_state, screen_update_ninjakd2)
+	MCFG_SCREEN_VBLANK_DRIVER(ninjakd2_state, screen_eof_ninjakd2)
 
 	MCFG_GFXDECODE(ninjakd2)
 	MCFG_PALETTE_LENGTH(0x300)
-
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -981,7 +976,6 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( mnight, ninjakd2 )
 
 	/* basic machine hardware */
-
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(mnight_main_cpu)
 
@@ -995,7 +989,6 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( arkarea, ninjakd2 )
 
 	/* basic machine hardware */
-
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(mnight_main_cpu)
 
@@ -1009,11 +1002,8 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( robokid, mnight )
 
 	/* basic machine hardware */
-
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(robokid_main_cpu)
-
-	MCFG_MACHINE_RESET_OVERRIDE(ninjakd2_state,robokid)
 
 	/* video hardware */
 	MCFG_GFXDECODE(robokid)
@@ -1021,22 +1011,22 @@ static MACHINE_CONFIG_DERIVED( robokid, mnight )
 
 	MCFG_VIDEO_START_OVERRIDE(ninjakd2_state,robokid)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(robokid)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjakd2_state, screen_update_robokid)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( omegaf, robokid )
 
 	/* basic machine hardware */
-
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(omegaf_main_cpu)
 
+	MCFG_MACHINE_START_OVERRIDE(ninjakd2_state,omegaf)
 	MCFG_MACHINE_RESET_OVERRIDE(ninjakd2_state,omegaf)
 
 	/* video hardware */
 	MCFG_VIDEO_START_OVERRIDE(ninjakd2_state,omegaf)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(omegaf)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjakd2_state, screen_update_omegaf)
 MACHINE_CONFIG_END
 
 
@@ -1210,12 +1200,13 @@ ROM_START( arkarea )
 ROM_END
 
 ROM_START( robokid )
-	ROM_REGION( 0x48000, "maincpu", 0 )
+	ROM_REGION( 0x50000, "maincpu", 0 )
 	ROM_LOAD( "robokid1.18j", 0x00000, 0x08000, CRC(378c21fc) SHA1(58163bd6fbfa8385b1bd648cfde3d75bf81ac07d) )
-	ROM_CONTINUE(             0x10000, 0x08000 )                                                            	// banked at 8000-bfff
-	ROM_LOAD( "robokid2.18k", 0x18000, 0x10000, CRC(ddef8c5a) SHA1(a1dd2f51205863c3d5d3527991d538ca8adf7587) )
-	ROM_LOAD( "robokid3.15k", 0x28000, 0x10000, CRC(05295ec3) SHA1(33dd0853a2064cb4301cfbdc7856def81f6e1223) )
-	ROM_LOAD( "robokid4.12k", 0x38000, 0x10000, CRC(3bc3977f) SHA1(da394e12d197b0e109b03c854da06b1267bd9d59) )
+	ROM_IGNORE(                        0x08000 )
+	ROM_RELOAD(               0x10000, 0x10000 )                                                            	// banked at 8000-bfff
+	ROM_LOAD( "robokid2.18k", 0x20000, 0x10000, CRC(ddef8c5a) SHA1(a1dd2f51205863c3d5d3527991d538ca8adf7587) )
+	ROM_LOAD( "robokid3.15k", 0x30000, 0x10000, CRC(05295ec3) SHA1(33dd0853a2064cb4301cfbdc7856def81f6e1223) )
+	ROM_LOAD( "robokid4.12k", 0x40000, 0x10000, CRC(3bc3977f) SHA1(da394e12d197b0e109b03c854da06b1267bd9d59) )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
 	ROM_LOAD( "robokid.k7",   0x00000, 0x10000, CRC(f490a2e9) SHA1(861d1256c090ce3d1f45f95cc894affbbc3f1466) )
@@ -1258,12 +1249,13 @@ ROM_START( robokid )
 ROM_END
 
 ROM_START( robokidj )
-	ROM_REGION( 0x48000, "maincpu", 0 )
+	ROM_REGION( 0x50000, "maincpu", 0 )
 	ROM_LOAD( "1.29",         0x00000, 0x08000, CRC(59a1e2ec) SHA1(71f9d28dd8d2cf77a27fab163ce9562e3e75a540) )
-	ROM_CONTINUE(             0x10000, 0x08000 )                                                            	// banked at 8000-bfff
-	ROM_LOAD( "2.30",         0x18000, 0x10000, CRC(e3f73476) SHA1(bd1c8946d637df21432bd52ae9324255251570b9) )
-	ROM_LOAD( "robokid3.15k", 0x28000, 0x10000, CRC(05295ec3) SHA1(33dd0853a2064cb4301cfbdc7856def81f6e1223) )
-	ROM_LOAD( "robokid4.12k", 0x38000, 0x10000, CRC(3bc3977f) SHA1(da394e12d197b0e109b03c854da06b1267bd9d59) )
+	ROM_IGNORE(                        0x08000 )
+	ROM_RELOAD(               0x10000, 0x10000 )                                                            	// banked at 8000-bfff
+	ROM_LOAD( "2.30",         0x20000, 0x10000, CRC(e3f73476) SHA1(bd1c8946d637df21432bd52ae9324255251570b9) )
+	ROM_LOAD( "robokid3.15k", 0x30000, 0x10000, CRC(05295ec3) SHA1(33dd0853a2064cb4301cfbdc7856def81f6e1223) )
+	ROM_LOAD( "robokid4.12k", 0x40000, 0x10000, CRC(3bc3977f) SHA1(da394e12d197b0e109b03c854da06b1267bd9d59) )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
 	ROM_LOAD( "robokid.k7",   0x00000, 0x10000, CRC(f490a2e9) SHA1(861d1256c090ce3d1f45f95cc894affbbc3f1466) )
@@ -1306,12 +1298,13 @@ ROM_START( robokidj )
 ROM_END
 
 ROM_START( robokidj2 )
-	ROM_REGION( 0x48000, "maincpu", 0 )
+	ROM_REGION( 0x50000, "maincpu", 0 )
 	ROM_LOAD( "1_rom29.18j",  0x00000, 0x08000, CRC(969fb951) SHA1(aa32f0cb33ba2ccbb933dab5444a7e0dbbb84b3d) )
-	ROM_CONTINUE(             0x10000, 0x08000 )                                                            	// banked at 8000-bfff
-	ROM_LOAD( "2_rom30.18k",  0x18000, 0x10000, CRC(c0228b63) SHA1(8f7e3a29a35723abc8b10bf511fc8611e31a2961) )
-	ROM_LOAD( "robokid3.15k", 0x28000, 0x10000, CRC(05295ec3) SHA1(33dd0853a2064cb4301cfbdc7856def81f6e1223) )
-	ROM_LOAD( "robokid4.12k", 0x38000, 0x10000, CRC(3bc3977f) SHA1(da394e12d197b0e109b03c854da06b1267bd9d59) )
+	ROM_IGNORE(                        0x08000 )
+	ROM_RELOAD(               0x10000, 0x10000 )                                                            	// banked at 8000-bfff
+	ROM_LOAD( "2_rom30.18k",  0x20000, 0x10000, CRC(c0228b63) SHA1(8f7e3a29a35723abc8b10bf511fc8611e31a2961) )
+	ROM_LOAD( "robokid3.15k", 0x30000, 0x10000, CRC(05295ec3) SHA1(33dd0853a2064cb4301cfbdc7856def81f6e1223) )
+	ROM_LOAD( "robokid4.12k", 0x40000, 0x10000, CRC(3bc3977f) SHA1(da394e12d197b0e109b03c854da06b1267bd9d59) )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
 	ROM_LOAD( "robokid.k7",   0x00000, 0x10000, CRC(f490a2e9) SHA1(861d1256c090ce3d1f45f95cc894affbbc3f1466) )
@@ -1354,10 +1347,11 @@ ROM_START( robokidj2 )
 ROM_END
 
 ROM_START( omegaf )
-	ROM_REGION( 0x48000, "maincpu", 0 )
+	ROM_REGION( 0x50000, "maincpu", 0 )
 	ROM_LOAD( "1.5",          0x00000, 0x08000, CRC(57a7fd96) SHA1(65ca290b48f8579fcce00db5b3b3f8694667a136) )
-	ROM_CONTINUE(             0x10000, 0x18000 )                                                            	// banked at 8000-bfff
-	ROM_LOAD( "6.4l",         0x28000, 0x20000, CRC(6277735c) SHA1(b0f91f0cc51d424a1a7834c126736f24c2e23c17) )
+	ROM_IGNORE(                        0x18000 )
+	ROM_RELOAD(               0x10000, 0x20000 )                                                                // banked at 8000-bfff
+	ROM_LOAD( "6.4l",         0x30000, 0x20000, CRC(6277735c) SHA1(b0f91f0cc51d424a1a7834c126736f24c2e23c17) )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
 	ROM_LOAD( "7.7m",         0x00000, 0x10000, CRC(d40fc8d5) SHA1(4f615a0fb786cafc20f82f0b5fa112a9c356378f) )
@@ -1379,10 +1373,11 @@ ROM_START( omegaf )
 ROM_END
 
 ROM_START( omegafs )
-	ROM_REGION( 0x48000, "maincpu", 0 )
+	ROM_REGION( 0x50000, "maincpu", 0 )
 	ROM_LOAD( "5.3l",         0x00000, 0x08000, CRC(503a3e63) SHA1(73420aecb653cd4fd3b6afe67d6f5726f01411dd) )
-	ROM_CONTINUE(             0x10000, 0x18000 )                                                            	// banked at 8000-bfff
-	ROM_LOAD( "6.4l",         0x28000, 0x20000, CRC(6277735c) SHA1(b0f91f0cc51d424a1a7834c126736f24c2e23c17) )
+	ROM_IGNORE(                        0x18000 )
+	ROM_RELOAD(               0x10000, 0x20000 )                                                                // banked at 8000-bfff
+	ROM_LOAD( "6.4l",         0x30000, 0x20000, CRC(6277735c) SHA1(b0f91f0cc51d424a1a7834c126736f24c2e23c17) )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
 	ROM_LOAD( "7.7m",         0x00000, 0x10000, CRC(d40fc8d5) SHA1(4f615a0fb786cafc20f82f0b5fa112a9c356378f) )
@@ -1407,7 +1402,7 @@ ROM_END
 
 /*************************************
  *
- *  Gfx ROM swizzling
+ *  Driver initialization
  *
  *************************************/
 
@@ -1424,24 +1419,17 @@ by one place all the intervening bits.
 static void lineswap_gfx_roms(running_machine &machine, const char *region, const int bit)
 {
 	const int length = machine.root_device().memregion(region)->bytes();
-
 	UINT8* const src = machine.root_device().memregion(region)->base();
-
 	UINT8* const temp = auto_alloc_array(machine, UINT8, length);
-
 	const int mask = (1 << (bit + 1)) - 1;
 
-	int sa;
-
-	for (sa = 0; sa < length; sa++)
+	for (int sa = 0; sa < length; sa++)
 	{
 		const int da = (sa & ~mask) | ((sa << 1) & mask) | ((sa >> bit) & 1);
-
 		temp[da] = src[sa];
 	}
 
 	memcpy(src, temp, length);
-
 	auto_free(machine, temp);
 }
 
@@ -1453,13 +1441,6 @@ static void gfx_unscramble(running_machine &machine)
 }
 
 
-
-/*************************************
- *
- *  Driver initialization
- *
- *************************************/
-
 DRIVER_INIT_MEMBER(ninjakd2_state,ninjakd2)
 {
 	mc8123_decrypt_rom(machine(), "soundcpu", "user1", NULL, 0);
@@ -1469,8 +1450,8 @@ DRIVER_INIT_MEMBER(ninjakd2_state,ninjakd2)
 
 DRIVER_INIT_MEMBER(ninjakd2_state,bootleg)
 {
-	address_space *space = machine().device("soundcpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("soundcpu")->base() + 0x10000);
+	address_space &space = machine().device("soundcpu")->memory().space(AS_PROGRAM);
+	space.set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("soundcpu")->base() + 0x10000);
 
 	gfx_unscramble(machine());
 }
@@ -1478,6 +1459,40 @@ DRIVER_INIT_MEMBER(ninjakd2_state,bootleg)
 DRIVER_INIT_MEMBER(ninjakd2_state,mnight)
 {
 	gfx_unscramble(machine());
+}
+
+/*****************************************************************************/
+
+READ8_MEMBER(ninjakd2_state::robokid_motion_error_verbose_r)
+{
+	popmessage("%s MOTION ERROR, contact MAMEdev", machine().system().name);
+	logerror("maincpu %04x MOTION ERROR\n", space.device().safe_pc());
+	return 0xe6;
+}
+
+void ninjakd2_state::robokid_motion_error_kludge(UINT16 offset)
+{
+	// patch out rare "5268 MOTION ERROR" (MT 05024)
+	// It looks like it's due to a buggy random number generator,
+	// then it possibly happens on the real arcade cabinet too.
+	// I doubt it is protection related, but you can never be sure.
+	UINT8 *ROM = memregion("maincpu")->base() + offset;
+	ROM[0] = 0xe6;
+	ROM[1] = 0x03; // and 3
+	ROM[2] = 0x18;
+	ROM[3] = 0xf6; // jr $-8
+
+	m_maincpu->space(AS_PROGRAM).install_read_handler(offset, offset, read8_delegate(FUNC(ninjakd2_state::robokid_motion_error_verbose_r), this));
+}
+
+DRIVER_INIT_MEMBER(ninjakd2_state,robokid)
+{
+	robokid_motion_error_kludge(0x5247);
+}
+
+DRIVER_INIT_MEMBER(ninjakd2_state,robokidj)
+{
+	robokid_motion_error_kludge(0x5266);
 }
 
 
@@ -1488,15 +1503,15 @@ DRIVER_INIT_MEMBER(ninjakd2_state,mnight)
  *
  *************************************/
 
-//    YEAR, NAME,      PARENT,   MACHINE,  INPUT,    INIT,     MONITOR,COMPANY,FULLNAME,FLAGS
-GAME( 1987, ninjakd2,  0,        ninjakd2, ninjakd2, ninjakd2_state, ninjakd2, ROT0,   "UPL", "Ninja-Kid II / NinjaKun Ashura no Shou (set 1)", 0 )
-GAME( 1987, ninjakd2a, ninjakd2, ninjakd2, ninjakd2, ninjakd2_state, bootleg,  ROT0,   "UPL", "Ninja-Kid II / NinjaKun Ashura no Shou (set 2, bootleg?)", 0 )
-GAME( 1987, ninjakd2b, ninjakd2, ninjakd2, rdaction, ninjakd2_state, bootleg,  ROT0,   "UPL", "Ninja-Kid II / NinjaKun Ashura no Shou (set 3, bootleg?)", 0 )
-GAME( 1987, rdaction,  ninjakd2, ninjakd2, rdaction, ninjakd2_state, ninjakd2, ROT0,   "UPL (World Games license)", "Rad Action / NinjaKun Ashura no Shou", 0 )
-GAME( 1987, mnight,    0,        mnight,   mnight, ninjakd2_state,   mnight,   ROT0,   "UPL (Kawakus license)", "Mutant Night", 0 )
-GAME( 1988, arkarea,   0,        arkarea,  arkarea, ninjakd2_state,  mnight,   ROT0,   "UPL", "Ark Area", 0 )
-GAME( 1988, robokid,   0,        robokid,  robokid, driver_device,  0,        ROT0,   "UPL", "Atomic Robo-kid", 0 )
-GAME( 1988, robokidj,  robokid,  robokid,  robokidj, driver_device, 0,        ROT0,   "UPL", "Atomic Robo-kid (Japan, set 1)", 0 )
-GAME( 1988, robokidj2, robokid,  robokid,  robokidj, driver_device, 0,        ROT0,   "UPL", "Atomic Robo-kid (Japan, set 2)", 0 )
-GAME( 1989, omegaf,    0,        omegaf,   omegaf, driver_device,   0,        ROT270, "UPL", "Omega Fighter", 0 )
-GAME( 1989, omegafs,   omegaf,   omegaf,   omegaf, driver_device,   0,        ROT270, "UPL", "Omega Fighter Special", 0 )
+//    YEAR, NAME,      PARENT,   MACHINE,  INPUT,    INIT,                     MONITOR,COMPANY,FULLNAME,FLAGS
+GAME( 1987, ninjakd2,  0,        ninjakd2, ninjakd2, ninjakd2_state, ninjakd2, ROT0,   "UPL", "Ninja-Kid II / NinjaKun Ashura no Shou (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1987, ninjakd2a, ninjakd2, ninjakd2, ninjakd2, ninjakd2_state, bootleg,  ROT0,   "UPL", "Ninja-Kid II / NinjaKun Ashura no Shou (set 2, bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1987, ninjakd2b, ninjakd2, ninjakd2, rdaction, ninjakd2_state, bootleg,  ROT0,   "UPL", "Ninja-Kid II / NinjaKun Ashura no Shou (set 3, bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1987, rdaction,  ninjakd2, ninjakd2, rdaction, ninjakd2_state, ninjakd2, ROT0,   "UPL (World Games license)", "Rad Action / NinjaKun Ashura no Shou", GAME_SUPPORTS_SAVE )
+GAME( 1987, mnight,    0,        mnight,   mnight,   ninjakd2_state, mnight,   ROT0,   "UPL (Kawakus license)", "Mutant Night", GAME_SUPPORTS_SAVE )
+GAME( 1988, arkarea,   0,        arkarea,  arkarea,  ninjakd2_state, mnight,   ROT0,   "UPL", "Ark Area", GAME_SUPPORTS_SAVE )
+GAME( 1988, robokid,   0,        robokid,  robokid,  ninjakd2_state, robokid,  ROT0,   "UPL", "Atomic Robo-kid", GAME_SUPPORTS_SAVE )
+GAME( 1988, robokidj,  robokid,  robokid,  robokidj, ninjakd2_state, robokidj, ROT0,   "UPL", "Atomic Robo-kid (Japan, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1988, robokidj2, robokid,  robokid,  robokidj, ninjakd2_state, robokidj, ROT0,   "UPL", "Atomic Robo-kid (Japan, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, omegaf,    0,        omegaf,   omegaf,   driver_device,  0,        ROT270, "UPL", "Omega Fighter", GAME_SUPPORTS_SAVE )
+GAME( 1989, omegafs,   omegaf,   omegaf,   omegaf,   driver_device,  0,        ROT270, "UPL", "Omega Fighter Special", GAME_SUPPORTS_SAVE )

@@ -683,14 +683,14 @@ static MACHINE_CONFIG_START( nova2001, nova2001_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CLOCK/4)	// 3 MHz verified on schematics
 	MCFG_CPU_PROGRAM_MAP(nova2001_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nova2001_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nova2001)
+	MCFG_SCREEN_UPDATE_DRIVER(nova2001_state, screen_update_nova2001)
 
 	MCFG_GFXDECODE(nova2001)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -715,11 +715,11 @@ static MACHINE_CONFIG_START( ninjakun, nova2001_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CLOCK/4)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(ninjakun_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nova2001_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, MAIN_CLOCK/4)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(ninjakun_cpu2_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60) /* ? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(nova2001_state, irq0_line_hold, 4*60) /* ? */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame */
 
@@ -731,7 +731,7 @@ static MACHINE_CONFIG_START( ninjakun, nova2001_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(ninjakun)
+	MCFG_SCREEN_UPDATE_DRIVER(nova2001_state, screen_update_ninjakun)
 
 	MCFG_GFXDECODE(ninjakun)
 	MCFG_PALETTE_LENGTH(0x300)
@@ -756,14 +756,14 @@ static MACHINE_CONFIG_START( pkunwar, nova2001_state )
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CLOCK/4)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(pkunwar_map)
 	MCFG_CPU_IO_MAP(pkunwar_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nova2001_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pkunwar)
+	MCFG_SCREEN_UPDATE_DRIVER(nova2001_state, screen_update_pkunwar)
 
 	MCFG_GFXDECODE(pkunwar)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -789,11 +789,11 @@ static MACHINE_CONFIG_START( raiders5, nova2001_state )
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CLOCK/4)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(raiders5_cpu1_map)
 	MCFG_CPU_IO_MAP(raiders5_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nova2001_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, MAIN_CLOCK/4)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(raiders5_cpu2_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)	/* ? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(nova2001_state, irq0_line_hold, 4*60)	/* ? */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(24000))
 
@@ -802,7 +802,7 @@ static MACHINE_CONFIG_START( raiders5, nova2001_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(raiders5)
+	MCFG_SCREEN_UPDATE_DRIVER(nova2001_state, screen_update_raiders5)
 
 	MCFG_GFXDECODE(raiders5)
 	MCFG_PALETTE_LENGTH(0x300)

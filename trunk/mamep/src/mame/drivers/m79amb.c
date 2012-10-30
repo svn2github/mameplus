@@ -58,44 +58,20 @@ and two large (paddles pretending to be) guns.
 #include "includes/m79amb.h"
 #include "cpu/i8085/i8085.h"
 
-class m79amb_state : public driver_device
-{
-public:
-	m79amb_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_videoram(*this, "videoram"),
-		m_mask(*this, "mask"){ }
-
-	/* memory pointers */
-	required_shared_ptr<UINT8> m_videoram;
-	required_shared_ptr<UINT8> m_mask;
-
-	/* misc */
-	UINT8 m_lut_gun1[0x100];
-	UINT8 m_lut_gun2[0x100];
-	DECLARE_WRITE8_MEMBER(ramtek_videoram_w);
-	DECLARE_READ8_MEMBER(gray5bit_controller0_r);
-	DECLARE_READ8_MEMBER(gray5bit_controller1_r);
-	DECLARE_WRITE8_MEMBER(m79amb_8002_w);
-	DECLARE_DRIVER_INIT(m79amb);
-};
-
-
 WRITE8_MEMBER(m79amb_state::ramtek_videoram_w)
 {
 	m_videoram[offset] = data & ~*m_mask;
 }
 
-static SCREEN_UPDATE_RGB32( ramtek )
+UINT32 m79amb_state::screen_update_ramtek(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	m79amb_state *state = screen.machine().driver_data<m79amb_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < 0x2000; offs++)
 	{
 		int i;
 
-		UINT8 data = state->m_videoram[offs];
+		UINT8 data = m_videoram[offs];
 		int y = offs >> 5;
 		int x = (offs & 0x1f) << 3;
 
@@ -140,10 +116,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, m79amb_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x5fff) AM_RAM_WRITE(ramtek_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x6000, 0x63ff) AM_RAM					/* ?? */
-	AM_RANGE(0x8000, 0x8000) AM_READ_PORT("8000") AM_DEVWRITE_LEGACY("discrete", m79amb_8000_w)
+	AM_RANGE(0x8000, 0x8000) AM_READ_PORT("8000") AM_WRITE(m79amb_8000_w)
 	AM_RANGE(0x8001, 0x8001) AM_WRITEONLY AM_SHARE("mask")
 	AM_RANGE(0x8002, 0x8002) AM_READ_PORT("8002") AM_WRITE(m79amb_8002_w)
-	AM_RANGE(0x8003, 0x8003) AM_DEVWRITE_LEGACY("discrete", m79amb_8003_w)
+	AM_RANGE(0x8003, 0x8003) AM_WRITE(m79amb_8003_w)
 	AM_RANGE(0x8004, 0x8004) AM_READ(gray5bit_controller0_r)
 	AM_RANGE(0x8005, 0x8005) AM_READ(gray5bit_controller1_r)
 	AM_RANGE(0xc000, 0xc07f) AM_RAM					/* ?? */
@@ -202,9 +178,9 @@ static INPUT_PORTS_START( m79amb )
 INPUT_PORTS_END
 
 
-static INTERRUPT_GEN( m79amb_interrupt )
+INTERRUPT_GEN_MEMBER(m79amb_state::m79amb_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);  /* RST 08h */
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);  /* RST 08h */
 }
 
 static MACHINE_CONFIG_START( m79amb, m79amb_state )
@@ -212,7 +188,7 @@ static MACHINE_CONFIG_START( m79amb, m79amb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I8080, XTAL_19_6608MHz / 10)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", m79amb_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", m79amb_state,  m79amb_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -220,7 +196,7 @@ static MACHINE_CONFIG_START( m79amb, m79amb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ramtek)
+	MCFG_SCREEN_UPDATE_DRIVER(m79amb_state, screen_update_ramtek)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

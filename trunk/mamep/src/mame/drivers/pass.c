@@ -236,12 +236,12 @@ static MACHINE_CONFIG_START( pass, pass_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14318180/2 )
 	MCFG_CPU_PROGRAM_MAP(pass_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold) /* all the same */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pass_state,  irq1_line_hold) /* all the same */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 14318180/4 )
 	MCFG_CPU_PROGRAM_MAP(pass_sound_map)
 	MCFG_CPU_IO_MAP(pass_sound_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,60) /* probably not accurate, unknown timing and generation (ym2203 sound chip?). */
+	MCFG_CPU_PERIODIC_INT_DRIVER(pass_state, irq0_line_hold, 60) /* probably not accurate, unknown timing and generation (ym2203 sound chip?). */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -249,7 +249,7 @@ static MACHINE_CONFIG_START( pass, pass_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pass)
+	MCFG_SCREEN_UPDATE_DRIVER(pass_state, screen_update_pass)
 
 	MCFG_PALETTE_LENGTH(0x200)
 	MCFG_GFXDECODE(pass)

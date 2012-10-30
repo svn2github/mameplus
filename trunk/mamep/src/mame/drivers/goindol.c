@@ -239,11 +239,11 @@ static MACHINE_CONFIG_START( goindol, goindol_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)	/* XTAL confirmed, divisor is not */
 	MCFG_CPU_PROGRAM_MAP(goindol_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goindol_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_12MHz/2)	/* XTAL confirmed, divisor is not */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(goindol_state, irq0_line_hold, 4*60)
 
 
 	/* video hardware */
@@ -252,7 +252,7 @@ static MACHINE_CONFIG_START( goindol, goindol_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goindol)
+	MCFG_SCREEN_UPDATE_DRIVER(goindol_state, screen_update_goindol)
 
 	MCFG_GFXDECODE(goindol)
 	MCFG_PALETTE_LENGTH(256)

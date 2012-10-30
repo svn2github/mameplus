@@ -266,7 +266,6 @@ void circus_state::machine_start()
 
 	m_maincpu = machine().device<cpu_device>("maincpu");
 	m_samples = machine().device<samples_device>("samples");
-	m_discrete = machine().device("discrete");
 
 	save_item(NAME(m_clown_x));
 	save_item(NAME(m_clown_y));
@@ -296,7 +295,7 @@ static MACHINE_CONFIG_START( circus, circus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(3500)	/* frames per second, vblank duration (complete guess) */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(circus)
+	MCFG_SCREEN_UPDATE_DRIVER(circus_state, screen_update_circus)
 
 	MCFG_GFXDECODE(circus)
 	MCFG_PALETTE_LENGTH(2)
@@ -329,7 +328,7 @@ static MACHINE_CONFIG_START( robotbwl, circus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(3500) /* frames per second, vblank duration (complete guess) */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(robotbwl)
+	MCFG_SCREEN_UPDATE_DRIVER(circus_state, screen_update_robotbwl)
 
 	MCFG_GFXDECODE(robotbwl)
 	MCFG_PALETTE_LENGTH(2)
@@ -347,12 +346,12 @@ static MACHINE_CONFIG_START( robotbwl, circus_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
-static TIMER_DEVICE_CALLBACK( crash_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(circus_state::crash_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 256 || scanline == 0) // vblank-out / in irq
-		timer.machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( crash, circus_state )
@@ -360,7 +359,7 @@ static MACHINE_CONFIG_START( crash, circus_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_11_289MHz / 16) /* 705.562kHz */
 	MCFG_CPU_PROGRAM_MAP(circus_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", crash_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", circus_state, crash_scanline, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -369,7 +368,7 @@ static MACHINE_CONFIG_START( crash, circus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(3500) /* frames per second, vblank duration (complete guess) */)
 	MCFG_SCREEN_SIZE(40*8, 40*8) //TODO
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(crash)
+	MCFG_SCREEN_UPDATE_DRIVER(circus_state, screen_update_crash)
 
 	MCFG_GFXDECODE(circus)
 	MCFG_PALETTE_LENGTH(2)
@@ -401,7 +400,7 @@ static MACHINE_CONFIG_START( ripcord, circus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(3500)	/* frames per second, vblank duration (complete guess) */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ripcord)
+	MCFG_SCREEN_UPDATE_DRIVER(circus_state, screen_update_ripcord)
 
 	MCFG_GFXDECODE(circus)
 	MCFG_PALETTE_LENGTH(2)

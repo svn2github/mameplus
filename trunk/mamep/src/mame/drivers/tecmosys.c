@@ -455,7 +455,7 @@ void tecmosys_state::machine_start()
 static MACHINE_CONFIG_START( deroon, tecmosys_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tecmosys_state,  irq1_line_hold)
 	MCFG_WATCHDOG_VBLANK_INIT(400) // guess
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/2 )
@@ -474,7 +474,7 @@ static MACHINE_CONFIG_START( deroon, tecmosys_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(3000))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tecmosys)
+	MCFG_SCREEN_UPDATE_DRIVER(tecmosys_state, screen_update_tecmosys)
 
 	MCFG_PALETTE_LENGTH(0x4000+0x800)
 

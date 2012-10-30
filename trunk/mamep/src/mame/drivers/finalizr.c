@@ -22,15 +22,14 @@
 
 
 
-static TIMER_DEVICE_CALLBACK( finalizr_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(finalizr_state::finalizr_scanline)
 {
-	finalizr_state *state = timer.machine().driver_data<finalizr_state>();
 	int scanline = param;
 
-	if(scanline == 240 && state->m_irq_enable) // vblank irq
-		timer.machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
-	else if(((scanline % 32) == 0) && state->m_nmi_enable) // timer irq
-		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(scanline == 240 && m_irq_enable) // vblank irq
+		machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
+	else if(((scanline % 32) == 0) && m_nmi_enable) // timer irq
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -106,7 +105,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, finalizr_state )
 	AM_RANGE(0x0813, 0x0813) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0818, 0x0818) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x0819, 0x0819) AM_WRITE(finalizr_coin_w)
-	AM_RANGE(0x081a, 0x081a) AM_DEVWRITE("snsnd", sn76489a_new_device, write)	/* This address triggers the SN chip to read the data port. */
+	AM_RANGE(0x081a, 0x081a) AM_DEVWRITE("snsnd", sn76489a_device, write)	/* This address triggers the SN chip to read the data port. */
 	AM_RANGE(0x081b, 0x081b) AM_WRITENOP		/* Loads the snd command into the snd latch */
 	AM_RANGE(0x081c, 0x081c) AM_WRITE(finalizr_i8039_irq_w)	/* custom sound chip */
 	AM_RANGE(0x081d, 0x081d) AM_WRITE(soundlatch_byte_w)			/* custom sound chip */
@@ -279,7 +278,7 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809,XTAL_18_432MHz/6)	/* ??? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", finalizr_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", finalizr_state, finalizr_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", I8039,XTAL_18_432MHz/2)	/* 9.216MHz clkin ?? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -292,7 +291,7 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 35*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(finalizr)
+	MCFG_SCREEN_UPDATE_DRIVER(finalizr_state, screen_update_finalizr)
 
 	MCFG_GFXDECODE(finalizr)
 	MCFG_PALETTE_LENGTH(2*16*16)
@@ -301,7 +300,7 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, XTAL_18_432MHz/12)
+	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 	MCFG_SOUND_CONFIG(psg_intf)
 

@@ -277,9 +277,9 @@ static const deco16ic_interface fghthist_deco16ic_tilegen2_intf =
 
 
 
-static TIMER_DEVICE_CALLBACK( interrupt_gen )
+TIMER_DEVICE_CALLBACK_MEMBER(deco32_state::interrupt_gen)
 {
-	timer.machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 READ32_MEMBER(deco32_state::deco32_irq_controller_r)
@@ -506,7 +506,7 @@ WRITE32_MEMBER(deco32_state::tattass_prot_w)
 WRITE32_MEMBER(deco32_state::tattass_control_w)
 {
 	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-	address_space *eeprom_space = eeprom->space();
+	address_space &eeprom_space = eeprom->space();
 
 	/* Eprom in low byte */
 	if (mem_mask==0x000000ff) { /* Byte write to low byte only (different from word writing including low byte) */
@@ -556,7 +556,7 @@ WRITE32_MEMBER(deco32_state::tattass_control_w)
 				int d=m_readBitCount/8;
 				int m=7-(m_readBitCount%8);
 				int a=(m_byteAddr+d)%1024;
-				int b=eeprom_space->read_byte(a);
+				int b=eeprom_space.read_byte(a);
 
 				m_tattass_eprom_bit=(b>>m)&1;
 
@@ -573,7 +573,7 @@ WRITE32_MEMBER(deco32_state::tattass_control_w)
 					int b=(m_buffer[24]<<7)|(m_buffer[25]<<6)|(m_buffer[26]<<5)|(m_buffer[27]<<4)
 						|(m_buffer[28]<<3)|(m_buffer[29]<<2)|(m_buffer[30]<<1)|(m_buffer[31]<<0);
 
-					eeprom_space->write_byte(m_byteAddr, b);
+					eeprom_space.write_byte(m_byteAddr, b);
 				}
 				m_lastClock=data&0x20;
 				return;
@@ -588,7 +588,7 @@ WRITE32_MEMBER(deco32_state::tattass_control_w)
 
 				/* Check for read command */
 				if (m_buffer[0] && m_buffer[1]) {
-					m_tattass_eprom_bit=(eeprom_space->read_byte(m_byteAddr)>>7)&1;
+					m_tattass_eprom_bit=(eeprom_space.read_byte(m_byteAddr)>>7)&1;
 					m_readBitCount=1;
 					m_pendingCommand=1;
 				}
@@ -1004,7 +1004,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, deco32_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -1024,7 +1024,7 @@ READ8_MEMBER(deco32_state::latch_r)
 static ADDRESS_MAP_START( nslasher_sound, AS_PROGRAM, 8, deco32_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xb000, 0xb000) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0xc000, 0xc000) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0xd000, 0xd000) AM_READ(latch_r)
@@ -1621,20 +1621,14 @@ GFXDECODE_END
 
 /**********************************************************************************/
 
-static void sound_irq(device_t *device, int state)
+WRITE_LINE_MEMBER(deco32_state::sound_irq_nslasher)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(1, state); /* IRQ 2 */
-}
-
-static void sound_irq_nslasher(device_t *device, int state)
-{
-	deco32_state *drvstate = device->machine().driver_data<deco32_state>();
 	/* bit 0 of nslasher_sound_irq specifies IRQ from sound chip */
 	if (state)
-		drvstate->m_nslasher_sound_irq |= 0x01;
+		m_nslasher_sound_irq |= 0x01;
 	else
-		drvstate->m_nslasher_sound_irq &= ~0x01;
-	device->machine().device("audiocpu")->execute().set_input_line(0, (drvstate->m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+		m_nslasher_sound_irq &= ~0x01;
+	subdevice("audiocpu")->execute().set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE8_MEMBER(deco32_state::sound_bankswitch_w)
@@ -1644,18 +1638,6 @@ WRITE8_MEMBER(deco32_state::sound_bankswitch_w)
 	oki1->set_bank_base(((data >> 0)& 1) * 0x40000);
 	oki2->set_bank_base(((data >> 1)& 1) * 0x40000);
 }
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq),
-	DEVCB_DRIVER_MEMBER(deco32_state,sound_bankswitch_w)
-};
-
-static const ym2151_interface ym2151_interface_nslasher =
-{
-	DEVCB_LINE(sound_irq_nslasher),
-	DEVCB_DRIVER_MEMBER(deco32_state,sound_bankswitch_w)
-};
 
 static const eeprom_interface eeprom_interface_tattass =
 {
@@ -1671,9 +1653,9 @@ MACHINE_RESET_MEMBER(deco32_state,deco32)
 	decoprot_reset(machine());
 }
 
-static INTERRUPT_GEN( deco32_vbl_interrupt )
+INTERRUPT_GEN_MEMBER(deco32_state::deco32_vbl_interrupt)
 {
-	device->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
+	device.execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 UINT16 captaven_pri_callback(UINT16 x)
@@ -1735,21 +1717,21 @@ static MACHINE_CONFIG_START( captaven, deco32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, XTAL_28MHz/4) /* verified on pcb (Data East 101 custom)*/
 	MCFG_CPU_PROGRAM_MAP(captaven_map)
-	MCFG_CPU_VBLANK_INT("screen", deco32_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", H6280, XTAL_32_22MHz/4/3)  /* pin 10 is 32mhz/4, pin 14 is High so internal divisor is 3 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
 
-	MCFG_TIMER_ADD("int_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("int_timer", deco32_state, interrupt_gen)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(42*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(captaven)
-	MCFG_SCREEN_VBLANK_STATIC(captaven)
+	MCFG_SCREEN_UPDATE_DRIVER(deco32_state, screen_update_captaven)
+	MCFG_SCREEN_VBLANK_DRIVER(deco32_state, screen_eof_captaven)
 
 	MCFG_GFXDECODE(captaven)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1767,8 +1749,9 @@ static MACHINE_CONFIG_START( captaven, deco32_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_32_22MHz/9) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_32_22MHz/9) /* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(deco32_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.42)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.42)
 
@@ -1787,7 +1770,7 @@ static MACHINE_CONFIG_START( fghthist, deco32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28000000/4)
 	MCFG_CPU_PROGRAM_MAP(fghthist_map)
-	MCFG_CPU_VBLANK_INT("screen", deco32_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1799,7 +1782,7 @@ static MACHINE_CONFIG_START( fghthist, deco32_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(42*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fghthist)
+	MCFG_SCREEN_UPDATE_DRIVER(deco32_state, screen_update_fghthist)
 
 	MCFG_GFXDECODE(fghthist)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1815,8 +1798,9 @@ static MACHINE_CONFIG_START( fghthist, deco32_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(deco32_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.42)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.42)
 
@@ -1834,7 +1818,7 @@ static MACHINE_CONFIG_START( fghthsta, deco32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28000000/4)
 	MCFG_CPU_PROGRAM_MAP(fghthsta_memmap)
-	MCFG_CPU_VBLANK_INT("screen", deco32_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1845,7 +1829,7 @@ static MACHINE_CONFIG_START( fghthsta, deco32_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(42*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fghthist)
+	MCFG_SCREEN_UPDATE_DRIVER(deco32_state, screen_update_fghthist)
 
 	MCFG_GFXDECODE(fghthist)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1861,8 +1845,9 @@ static MACHINE_CONFIG_START( fghthsta, deco32_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(deco32_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.42)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.42)
 
@@ -1943,7 +1928,7 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28000000/4)
 	MCFG_CPU_PROGRAM_MAP(dragngun_map)
-	MCFG_CPU_VBLANK_INT("screen", deco32_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1951,15 +1936,15 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("int_timer", deco32_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(42*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dragngun)
-	MCFG_SCREEN_VBLANK_STATIC(dragngun)
+	MCFG_SCREEN_UPDATE_DRIVER(dragngun_state, screen_update_dragngun)
+	MCFG_SCREEN_VBLANK_DRIVER(dragngun_state, screen_eof_dragngun)
 
 	MCFG_BUFFERED_SPRITERAM32_ADD("spriteram")
 
@@ -1974,8 +1959,9 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(deco32_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.42)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.42)
 
@@ -1992,21 +1978,20 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
-static TIMER_DEVICE_CALLBACK( lockload_vbl_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(deco32_state::lockload_vbl_irq)
 {
-	deco32_state *state = timer.machine().driver_data<deco32_state>();
 	int scanline = param;
 
 	if(scanline == 31*8)
 	{
-		state->m_irq_source = 0;
-		state->m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
+		m_irq_source = 0;
+		m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 	}
 
 	if(scanline == 0)
 	{
-		state->m_irq_source = 1;
-		state->m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
+		m_irq_source = 1;
+		m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -2016,7 +2001,7 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28000000/4)
 	MCFG_CPU_PROGRAM_MAP(lockload_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", lockload_vbl_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", deco32_state, lockload_vbl_irq, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(nslasher_sound)
@@ -2027,15 +2012,15 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("int_timer", deco32_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(42*8, 32*8+22)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dragngun)
-	MCFG_SCREEN_VBLANK_STATIC(dragngun)
+	MCFG_SCREEN_UPDATE_DRIVER(dragngun_state, screen_update_dragngun)
+	MCFG_SCREEN_VBLANK_DRIVER(dragngun_state, screen_eof_dragngun)
 
 	MCFG_BUFFERED_SPRITERAM32_ADD("spriteram")
 
@@ -2050,8 +2035,9 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_interface_nslasher)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(deco32_state,sound_irq_nslasher))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(deco32_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.42)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.42)
 
@@ -2069,7 +2055,7 @@ static MACHINE_CONFIG_DERIVED( lockloadu, lockload )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 	MCFG_SOUND_MODIFY("ymsnd")
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
 
 MACHINE_CONFIG_END
 
@@ -2110,7 +2096,7 @@ static MACHINE_CONFIG_START( tattass, deco32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28000000/*/4*/) /* Unconfirmed - the divider makes it far too slow, due to inaccurate core timings? */
 	MCFG_CPU_PROGRAM_MAP(tattass_map)
-	MCFG_CPU_VBLANK_INT("screen", deco32_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_tattass)
 
@@ -2119,7 +2105,7 @@ static MACHINE_CONFIG_START( tattass, deco32_state )
 	MCFG_SCREEN_SIZE(42*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 
-	MCFG_SCREEN_UPDATE_STATIC(nslasher)
+	MCFG_SCREEN_UPDATE_DRIVER(deco32_state, screen_update_nslasher)
 
 	MCFG_DECO16IC_ADD("tilegen1", tattass_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", tattass_deco16ic_tilegen2_intf)
@@ -2144,7 +2130,7 @@ static MACHINE_CONFIG_START( nslasher, deco32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", ARM, 28322000/4)
 	MCFG_CPU_PROGRAM_MAP(nslasher_map)
-	MCFG_CPU_VBLANK_INT("screen", deco32_vbl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 32220000/9)
 	MCFG_CPU_PROGRAM_MAP(nslasher_sound)
@@ -2158,7 +2144,7 @@ static MACHINE_CONFIG_START( nslasher, deco32_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(42*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nslasher)
+	MCFG_SCREEN_UPDATE_DRIVER(deco32_state, screen_update_nslasher)
 
 	MCFG_DECO16IC_ADD("tilegen1", tattass_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", tattass_deco16ic_tilegen2_intf)
@@ -2177,8 +2163,9 @@ static MACHINE_CONFIG_START( nslasher, deco32_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_interface_nslasher)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(deco32_state,sound_irq_nslasher))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(deco32_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.40)
 

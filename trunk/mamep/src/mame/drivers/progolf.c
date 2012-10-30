@@ -86,6 +86,8 @@ public:
 	DECLARE_DRIVER_INIT(progolf);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_progolf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(progolf_interrupt);
 };
 
 
@@ -101,14 +103,13 @@ void progolf_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( progolf )
+UINT32 progolf_state::screen_update_progolf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	progolf_state *state = screen.machine().driver_data<progolf_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int count,color,x,y,xi,yi;
 
 	{
-		int scroll = (state->m_scrollx_lo | ((state->m_scrollx_hi & 0x03) << 8));
+		int scroll = (m_scrollx_lo | ((m_scrollx_hi & 0x03) << 8));
 
 		count = 0;
 
@@ -118,9 +119,9 @@ static SCREEN_UPDATE_IND16( progolf )
 			{
 				int tile = videoram[count];
 
-				drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],tile,1,0,0,(256-x*8)+scroll,y*8);
+				drawgfx_opaque(bitmap,cliprect,machine().gfx[0],tile,1,0,0,(256-x*8)+scroll,y*8);
 				/* wrap-around */
-				drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],tile,1,0,0,(256-x*8)+scroll-1024,y*8);
+				drawgfx_opaque(bitmap,cliprect,machine().gfx[0],tile,1,0,0,(256-x*8)+scroll-1024,y*8);
 
 				count++;
 			}
@@ -139,10 +140,10 @@ static SCREEN_UPDATE_IND16( progolf )
 				{
 					for (xi=0;xi<8;xi++)
 					{
-						color = state->m_fg_fb[(xi+yi*8)+count*0x40];
+						color = m_fg_fb[(xi+yi*8)+count*0x40];
 
 						if(color != 0 && cliprect.contains(x+yi, 256-y+xi))
-							bitmap.pix16(x+yi, 256-y+xi) = screen.machine().pens[(color & 0x7)];
+							bitmap.pix16(x+yi, 256-y+xi) = machine().pens[(color & 0x7)];
 					}
 				}
 
@@ -370,7 +371,7 @@ GFXDECODE_END
 
 
 //#ifdef UNUSED_FUNCTION
-static INTERRUPT_GEN( progolf_interrupt )
+INTERRUPT_GEN_MEMBER(progolf_state::progolf_interrupt)
 {
 }
 //#endif
@@ -423,7 +424,7 @@ static MACHINE_CONFIG_START( progolf, progolf_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 3000000/2) /* guess, 3 Mhz makes the game to behave worse? */
 	MCFG_CPU_PROGRAM_MAP(main_cpu)
-	MCFG_CPU_VBLANK_INT("screen", progolf_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", progolf_state,  progolf_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 500000)
 	MCFG_CPU_PROGRAM_MAP(sound_cpu)
@@ -436,7 +437,7 @@ static MACHINE_CONFIG_START( progolf, progolf_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(3072))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(progolf)
+	MCFG_SCREEN_UPDATE_DRIVER(progolf_state, screen_update_progolf)
 
 	MCFG_GFXDECODE(progolf)
 	MCFG_PALETTE_LENGTH(32*3)
@@ -502,11 +503,11 @@ ROM_END
 DRIVER_INIT_MEMBER(progolf_state,progolf)
 {
 	int A;
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8* decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
 
-	space->set_decrypted_region(0x0000,0xffff, decrypted);
+	space.set_decrypted_region(0x0000,0xffff, decrypted);
 
 	/* Swap bits 5 & 6 for opcodes */
 	for (A = 0xb000 ; A < 0x10000 ; A++)
@@ -516,11 +517,11 @@ DRIVER_INIT_MEMBER(progolf_state,progolf)
 DRIVER_INIT_MEMBER(progolf_state,progolfa)
 {
 	int A;
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8* decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
 
-	space->set_decrypted_region(0x0000,0xffff, decrypted);
+	space.set_decrypted_region(0x0000,0xffff, decrypted);
 
 	/* data is likely to not be encrypted, just the opcodes are. */
 	for (A = 0x0000 ; A < 0x10000 ; A++)

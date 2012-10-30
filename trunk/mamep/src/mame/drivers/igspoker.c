@@ -119,6 +119,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(cpokerpk);
+	UINT32 screen_update_igs_video(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cpokerpk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(igs_interrupt);
 };
 
 
@@ -130,19 +133,18 @@ void igspoker_state::machine_reset()
 }
 
 
-static TIMER_DEVICE_CALLBACK( igs_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(igspoker_state::igs_interrupt)
 {
-	igspoker_state *state = timer.machine().driver_data<igspoker_state>();
 	int scanline = param;
 
 	if((scanline % 32) != 0)
 		return;
 
 	if((scanline % 64) == 32)
-		state->m_maincpu->set_input_line(0, ASSERT_LINE);
+		m_maincpu->set_input_line(0, ASSERT_LINE);
 
-	if((scanline % 64) == 0 && state->m_nmi_enable)
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if((scanline % 64) == 0 && m_nmi_enable)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -197,15 +199,14 @@ void igspoker_state::video_start()
 	m_fg_tilemap->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16(igs_video)
+UINT32 igspoker_state::screen_update_igs_video(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	igspoker_state *state = screen.machine().driver_data<igspoker_state>();
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	// FIX: CSK227IT must have some way to disable background, or wrong gfx?
-	if (state->m_bg_enable) state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	if (m_bg_enable) m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -215,10 +216,9 @@ VIDEO_START_MEMBER(igspoker_state,cpokerpk)
 	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igspoker_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  8,	64, 32);
 }
 
-static SCREEN_UPDATE_IND16(cpokerpk)
+UINT32 igspoker_state::screen_update_cpokerpk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	igspoker_state *state = screen.machine().driver_data<igspoker_state>();
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -241,7 +241,7 @@ WRITE8_MEMBER(igspoker_state::igs_nmi_and_coins_w)
 	set_led_status(machine(), 6,		data & 0x20);	// led for coin m_out / m_hopper active
 
 	m_nmi_enable = data & 0x80;     // nmi enable?
-#ifdef VERBOSE
+#if VERBOSE
 	logerror("PC %06X: NMI change %02x\n",space.device().safe_pc(),m_nmi_enable);
 #endif
 
@@ -293,7 +293,7 @@ WRITE8_MEMBER(igspoker_state::igs_lamps_w)
 
 READ8_MEMBER(igspoker_state::custom_io_r)
 {
-#ifdef VERBOSE
+#if VERBOSE
 	logerror("PC %06X: Protection read %02x\n",space.device().safe_pc(), (int) m_protection_res);
 #endif
 	return m_protection_res;
@@ -301,7 +301,7 @@ READ8_MEMBER(igspoker_state::custom_io_r)
 
 WRITE8_MEMBER(igspoker_state::custom_io_w)
 {
-#ifdef VERBOSE
+#if VERBOSE
 	logerror("PC %06X: Protection write %02x\n",space.device().safe_pc(),data);
 #endif
 
@@ -1771,7 +1771,7 @@ static MACHINE_CONFIG_START( igspoker, igspoker_state )
 	MCFG_CPU_ADD("maincpu",Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(igspoker_prg_map)
 	MCFG_CPU_IO_MAP(igspoker_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", igs_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", igspoker_state, igs_interrupt, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -1780,7 +1780,7 @@ static MACHINE_CONFIG_START( igspoker, igspoker_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8) // TODO: wrong screen size!
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(igs_video)
+	MCFG_SCREEN_UPDATE_DRIVER(igspoker_state, screen_update_igs_video)
 
 	MCFG_GFXDECODE(igspoker)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1810,7 +1810,7 @@ static MACHINE_CONFIG_DERIVED( number10, igspoker )
 	MCFG_CPU_IO_MAP(number10_io_map)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(cpokerpk)
+	MCFG_SCREEN_UPDATE_DRIVER(igspoker_state, screen_update_cpokerpk)
 	MCFG_VIDEO_START_OVERRIDE(igspoker_state,cpokerpk)
 
 	MCFG_OKIM6295_ADD("oki", XTAL_12MHz / 12, OKIM6295_PIN7_HIGH)

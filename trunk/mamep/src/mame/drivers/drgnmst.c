@@ -397,7 +397,7 @@ static MACHINE_CONFIG_START( drgnmst, drgnmst_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 12000000) /* Confirmed */
 	MCFG_CPU_PROGRAM_MAP(drgnmst_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", drgnmst_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", PIC16C55, 32000000/8)	/* Confirmed */
 	/* Program and Data Maps are internal to the MCU */
@@ -411,7 +411,7 @@ static MACHINE_CONFIG_START( drgnmst, drgnmst_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, 56*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(drgnmst)
+	MCFG_SCREEN_UPDATE_DRIVER(drgnmst_state, screen_update_drgnmst)
 
 	MCFG_PALETTE_LENGTH(0x2000)
 

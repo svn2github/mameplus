@@ -249,6 +249,8 @@ public:
 	DECLARE_READ64_MEMBER(cpu_r);
 	DECLARE_DRIVER_INIT(m2);
 	virtual void video_start();
+	UINT32 screen_update_m2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(m2);
 };
 
 
@@ -256,20 +258,19 @@ void konamim2_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16( m2 )
+UINT32 konamim2_state::screen_update_m2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	konamim2_state *state = screen.machine().driver_data<konamim2_state>();
 	int i, j;
 
 	UINT32 fb_start = 0xffffffff;
-	if (state->m_vdl0_address != 0)
+	if (m_vdl0_address != 0)
 	{
-		fb_start = *(UINT32*)&state->m_main_ram[(state->m_vdl0_address - 0x40000000) / 8] - 0x40000000;
+		fb_start = *(UINT32*)&m_main_ram[(m_vdl0_address - 0x40000000) / 8] - 0x40000000;
 	}
 
 	if (fb_start <= 0x800000)
 	{
-		UINT16 *frame = (UINT16*)&state->m_main_ram[fb_start/8];
+		UINT16 *frame = (UINT16*)&m_main_ram[fb_start/8];
 		for (j=0; j < 384; j++)
 		{
 			UINT16 *fb = &frame[(j*512)];
@@ -818,9 +819,9 @@ static void cde_handle_reports(running_machine &machine)
 	}
 }
 
-static void cde_dma_transfer(address_space *space, int channel, int next)
+static void cde_dma_transfer(address_space &space, int channel, int next)
 {
-	konamim2_state *state = space->machine().driver_data<konamim2_state>();
+	konamim2_state *state = space.machine().driver_data<konamim2_state>();
 	UINT32 address;
 	//int length;
 	int i;
@@ -838,7 +839,7 @@ static void cde_dma_transfer(address_space *space, int channel, int next)
 
 	for (i=0; i < state->m_cde_dma[channel].next_length; i++)
 	{
-		space->write_byte(address, 0xff);		// TODO: do the real transfer...
+		space.write_byte(address, 0xff);		// TODO: do the real transfer...
 		address++;
 	}
 }
@@ -976,13 +977,13 @@ WRITE64_MEMBER(konamim2_state::cde_w)
 			{
 				m_cde_dma[0].dma_done = 1;
 
-				cde_dma_transfer(&space, 0, 0);
+				cde_dma_transfer(space, 0, 0);
 			}
 			if (d & 0x40)
 			{
 				m_cde_dma[0].dma_done = 1;
 
-				cde_dma_transfer(&space, 0, 1);
+				cde_dma_transfer(space, 0, 1);
 			}
 			break;
 		}
@@ -1150,20 +1151,19 @@ static const powerpc_config ppc602_config =
 	NULL
 };
 
-static INTERRUPT_GEN(m2)
+INTERRUPT_GEN_MEMBER(konamim2_state::m2)
 {
-	konamim2_state *state = device->machine().driver_data<konamim2_state>();
-	if (state->m_irq_enable & 0x800000)
+	if (m_irq_enable & 0x800000)
 	{
-		state->m_irq_active |= 0x800000;
+		m_irq_active |= 0x800000;
 	}
 
-	/*if (state->m_irq_enable & 0x8)
+	/*if (m_irq_enable & 0x8)
     {
-        state->m_irq_active |= 0x8;
+        m_irq_active |= 0x8;
     }*/
 
-	device->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+	device.execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( m2, konamim2_state )
@@ -1172,7 +1172,7 @@ static MACHINE_CONFIG_START( m2, konamim2_state )
 	MCFG_CPU_ADD("maincpu", PPC602, 66000000)	/* actually PPC602, 66MHz */
 	MCFG_CPU_CONFIG(ppc602_config)
 	MCFG_CPU_PROGRAM_MAP(m2_main)
-	MCFG_CPU_VBLANK_INT("screen", m2)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", konamim2_state,  m2)
 
 	MCFG_CPU_ADD("sub", PPC602, 66000000)	/* actually PPC602, 66MHz */
 	MCFG_CPU_CONFIG(ppc602_config)
@@ -1184,7 +1184,7 @@ static MACHINE_CONFIG_START( m2, konamim2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
-	MCFG_SCREEN_UPDATE_STATIC(m2)
+	MCFG_SCREEN_UPDATE_DRIVER(konamim2_state, screen_update_m2)
 
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)

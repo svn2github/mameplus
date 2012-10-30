@@ -263,7 +263,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( rohga_sound_map, AS_PROGRAM, 8, rohga_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_NOP
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -717,23 +717,11 @@ GFXDECODE_END
 
 /**********************************************************************************/
 
-static void sound_irq(device_t *device, int state)
-{
-	rohga_state *driver_state = device->machine().driver_data<rohga_state>();
-	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
-}
-
 WRITE8_MEMBER(rohga_state::sound_bankswitch_w)
 {
 	m_oki1->set_bank_base(BIT(data, 0) * 0x40000);
 	m_oki2->set_bank_base(BIT(data, 1) * 0x40000);
 }
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq),
-	DEVCB_DRIVER_MEMBER(rohga_state,sound_bankswitch_w)
-};
 
 /**********************************************************************************/
 
@@ -800,7 +788,7 @@ static MACHINE_CONFIG_START( rohga, rohga_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(rohga_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rohga_state,  irq6_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/4/3) /* verified on pcb (8.050Mhz is XIN on pin 10 of H6280 */
 	MCFG_CPU_PROGRAM_MAP(rohga_sound_map)
@@ -813,7 +801,7 @@ static MACHINE_CONFIG_START( rohga, rohga_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rohga)
+	MCFG_SCREEN_UPDATE_DRIVER(rohga_state, screen_update_rohga)
 
 	MCFG_GFXDECODE(rohga)
 	MCFG_PALETTE_LENGTH(2048)
@@ -831,8 +819,9 @@ static MACHINE_CONFIG_START( rohga, rohga_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))	/* IRQ 2 */
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(rohga_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.78)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.78)
 
@@ -850,7 +839,7 @@ static MACHINE_CONFIG_START( wizdfire, rohga_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(wizdfire_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rohga_state,  irq6_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/4/3) /* verified on pcb (8.050Mhz is XIN on pin 10 of H6280 */
 	MCFG_CPU_PROGRAM_MAP(rohga_sound_map)
@@ -864,7 +853,7 @@ static MACHINE_CONFIG_START( wizdfire, rohga_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wizdfire)
+	MCFG_SCREEN_UPDATE_DRIVER(rohga_state, screen_update_wizdfire)
 
 	MCFG_GFXDECODE(wizdfire)
 	MCFG_PALETTE_LENGTH(2048)
@@ -885,8 +874,9 @@ static MACHINE_CONFIG_START( wizdfire, rohga_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))	/* IRQ 2 */
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(rohga_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 
@@ -904,7 +894,7 @@ static MACHINE_CONFIG_START( nitrobal, rohga_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(nitrobal_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rohga_state,  irq6_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/4/3) /* verified on pcb (8.050Mhz is XIN on pin 10 of H6280 */
 	MCFG_CPU_PROGRAM_MAP(rohga_sound_map)
@@ -918,7 +908,7 @@ static MACHINE_CONFIG_START( nitrobal, rohga_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nitrobal)
+	MCFG_SCREEN_UPDATE_DRIVER(rohga_state, screen_update_nitrobal)
 
 	MCFG_GFXDECODE(wizdfire)
 	MCFG_PALETTE_LENGTH(2048)
@@ -939,8 +929,9 @@ static MACHINE_CONFIG_START( nitrobal, rohga_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))	/* IRQ 2 */
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(rohga_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 
@@ -958,7 +949,7 @@ static MACHINE_CONFIG_START( schmeisr, rohga_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(schmeisr_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rohga_state,  irq6_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/4/3) /* verified on pcb (8.050Mhz is XIN on pin 10 of H6280 */
 	MCFG_CPU_PROGRAM_MAP(rohga_sound_map)
@@ -971,7 +962,7 @@ static MACHINE_CONFIG_START( schmeisr, rohga_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rohga)
+	MCFG_SCREEN_UPDATE_DRIVER(rohga_state, screen_update_rohga)
 
 	MCFG_GFXDECODE(schmeisr)
 	MCFG_PALETTE_LENGTH(2048)
@@ -990,8 +981,9 @@ static MACHINE_CONFIG_START( schmeisr, rohga_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))	/* IRQ 2 */
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(rohga_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 

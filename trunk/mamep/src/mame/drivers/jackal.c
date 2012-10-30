@@ -175,7 +175,7 @@ static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8, jackal_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, jackal_state )
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x4000, 0x43ff) AM_RAM AM_SHARE("paletteram")	// self test only checks 0x4000-0x423f, 007327 should actually go up to 4fff
 	AM_RANGE(0x6000, 0x605f) AM_RAM						// SOUND RAM (Self test check 0x6000-605f, 0x7c00-0x7fff)
 	AM_RANGE(0x6060, 0x7fff) AM_RAM AM_SHARE("share1")
@@ -307,14 +307,13 @@ GFXDECODE_END
  *
  *************************************/
 
-static INTERRUPT_GEN( jackal_interrupt )
+INTERRUPT_GEN_MEMBER(jackal_state::jackal_interrupt)
 {
-	jackal_state *state = device->machine().driver_data<jackal_state>();
 
-	if (state->m_irq_enable)
+	if (m_irq_enable)
 	{
-		device->execute().set_input_line(0, HOLD_LINE);
-		state->m_slavecpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		device.execute().set_input_line(0, HOLD_LINE);
+		m_slavecpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -358,7 +357,7 @@ static MACHINE_CONFIG_START( jackal, jackal_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("master", M6809, MASTER_CLOCK/12) // verified on pcb
 	MCFG_CPU_PROGRAM_MAP(master_map)
-	MCFG_CPU_VBLANK_INT("screen", jackal_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", jackal_state,  jackal_interrupt)
 
 	MCFG_CPU_ADD("slave", M6809, MASTER_CLOCK/12) // verified on pcb
 	MCFG_CPU_PROGRAM_MAP(slave_map)
@@ -372,7 +371,7 @@ static MACHINE_CONFIG_START( jackal, jackal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jackal)
+	MCFG_SCREEN_UPDATE_DRIVER(jackal_state, screen_update_jackal)
 
 	MCFG_GFXDECODE(jackal)
 	MCFG_PALETTE_LENGTH(0x300)
@@ -381,7 +380,7 @@ static MACHINE_CONFIG_START( jackal, jackal_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, SOUND_CLOCK) // verified on pcb
+	MCFG_YM2151_ADD("ymsnd", SOUND_CLOCK) // verified on pcb
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 MACHINE_CONFIG_END

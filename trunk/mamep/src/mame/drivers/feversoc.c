@@ -78,6 +78,8 @@ public:
 	DECLARE_WRITE32_MEMBER(output_w);
 	DECLARE_DRIVER_INIT(feversoc);
 	virtual void video_start();
+	UINT32 screen_update_feversoc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(feversoc_irq);
 };
 
 
@@ -88,13 +90,12 @@ void feversoc_state::video_start()
 
 }
 
-static SCREEN_UPDATE_IND16( feversoc )
+UINT32 feversoc_state::screen_update_feversoc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	feversoc_state *state = screen.machine().driver_data<feversoc_state>();
-	UINT32 *spriteram32 = state->m_spriteram;
+	UINT32 *spriteram32 = m_spriteram;
 	int offs,spr_offs,colour,sx,sy,h,w,dx,dy;
 
-	bitmap.fill(screen.machine().pens[0], cliprect); //black pen
+	bitmap.fill(machine().pens[0], cliprect); //black pen
 
 	for(offs=(0x2000/4)-2;offs>-1;offs-=2)
 	{
@@ -112,7 +113,7 @@ static SCREEN_UPDATE_IND16( feversoc )
 
 		for(dx=0;dx<w;dx++)
 			for(dy=0;dy<h;dy++)
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],spr_offs++,colour,0,0,(sx+dx*16),(sy+dy*16),0x3f);
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[0],spr_offs++,colour,0,0,(sx+dx*16),(sy+dy*16),0x3f);
 	}
 
 	return 0;
@@ -246,9 +247,9 @@ static INPUT_PORTS_START( feversoc )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-static INTERRUPT_GEN( feversoc_irq )
+INTERRUPT_GEN_MEMBER(feversoc_state::feversoc_irq)
 {
-	device->machine().device("maincpu")->execute().set_input_line(8, HOLD_LINE );
+	machine().device("maincpu")->execute().set_input_line(8, HOLD_LINE );
 }
 
 static MACHINE_CONFIG_START( feversoc, feversoc_state )
@@ -256,7 +257,7 @@ static MACHINE_CONFIG_START( feversoc, feversoc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",SH2,MASTER_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(feversoc_map)
-	MCFG_CPU_VBLANK_INT("screen",feversoc_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", feversoc_state, feversoc_irq)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -264,7 +265,7 @@ static MACHINE_CONFIG_START( feversoc, feversoc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1) //dynamic resolution?
-	MCFG_SCREEN_UPDATE_STATIC(feversoc)
+	MCFG_SCREEN_UPDATE_DRIVER(feversoc_state, screen_update_feversoc)
 
 	MCFG_GFXDECODE(feversoc)
 	MCFG_PALETTE_LENGTH(0x1000)

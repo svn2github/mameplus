@@ -250,15 +250,15 @@ static MACHINE_CONFIG_START( flower, flower_state )
 	// cpus are Z80 "A" type, official maximum speed of 4 MHz, but 4.6 MHz has been proven to work in practice
 	MCFG_CPU_ADD("maincpu", Z80,XTAL_18_432MHz/4)
 	MCFG_CPU_PROGRAM_MAP(flower_cpu1_2)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", flower_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("subcpu", Z80,XTAL_18_432MHz/4)
 	MCFG_CPU_PROGRAM_MAP(flower_cpu1_2)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 120)	// controls game speed? irqsource and frequency unknown
+	MCFG_CPU_PERIODIC_INT_DRIVER(flower_state, irq0_line_hold,  120)	// controls game speed? irqsource and frequency unknown
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_18_432MHz/4)
 	MCFG_CPU_PROGRAM_MAP(flower_sound_cpu)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 90)	// controls music speed. irqsource and frequency unknown, same as subcpu perhaps?
+	MCFG_CPU_PERIODIC_INT_DRIVER(flower_state, irq0_line_hold,  90)	// controls music speed. irqsource and frequency unknown, same as subcpu perhaps?
 
 	// tight sync, slowdowns otherwise
 //  MCFG_QUANTUM_PERFECT_CPU("maincpu")
@@ -270,7 +270,7 @@ static MACHINE_CONFIG_START( flower, flower_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(34*8, 33*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 34*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(flower)
+	MCFG_SCREEN_UPDATE_DRIVER(flower_state, screen_update_flower)
 
 	MCFG_GFXDECODE(flower)
 

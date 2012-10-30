@@ -34,11 +34,11 @@ WRITE8_MEMBER(bogeyman_state::bogeyman_8910_control_w)
 
 	// bit 5 goes to 8910 #0 BDIR pin
 	if ((m_last_write & 0x20) == 0x20 && (data & 0x20) == 0x00)
-		ay8910_data_address_w(machine().device("ay1"), m_last_write >> 4, m_psg_latch);
+		ay8910_data_address_w(machine().device("ay1"), space, m_last_write >> 4, m_psg_latch);
 
 	// bit 7 goes to 8910 #1 BDIR pin
 	if ((m_last_write & 0x80) == 0x80 && (data & 0x80) == 0x00)
-		ay8910_data_address_w(machine().device("ay2"), m_last_write >> 6, m_psg_latch);
+		ay8910_data_address_w(machine().device("ay2"), space, m_last_write >> 6, m_psg_latch);
 
 	m_last_write = data;
 }
@@ -241,7 +241,7 @@ static MACHINE_CONFIG_START( bogeyman, bogeyman_state )
 	// basic machine hardware
 	MCFG_CPU_ADD("maincpu", M6502, 1500000)	/* Verified */
 	MCFG_CPU_PROGRAM_MAP(bogeyman_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 16*60) // Controls sound
+	MCFG_CPU_PERIODIC_INT_DRIVER(bogeyman_state, irq0_line_hold,  16*60) // Controls sound
 
 
 	// video hardware
@@ -252,7 +252,7 @@ static MACHINE_CONFIG_START( bogeyman, bogeyman_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bogeyman)
+	MCFG_SCREEN_UPDATE_DRIVER(bogeyman_state, screen_update_bogeyman)
 
 	MCFG_GFXDECODE(bogeyman)
 	MCFG_PALETTE_LENGTH(16+256)

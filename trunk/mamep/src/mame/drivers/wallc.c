@@ -69,6 +69,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_wallc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -153,10 +154,9 @@ void wallc_state::video_start()
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(wallc_state::get_bg_tile_info),this), TILEMAP_SCAN_COLS_FLIP_Y,	8, 8, 32, 32);
 }
 
-static SCREEN_UPDATE_IND16( wallc )
+UINT32 wallc_state::screen_update_wallc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	wallc_state *state = screen.machine().driver_data<wallc_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -302,7 +302,7 @@ static MACHINE_CONFIG_START( wallc, wallc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 12288000 / 4)	/* 3.072 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(wallc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", wallc_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -310,7 +310,7 @@ static MACHINE_CONFIG_START( wallc, wallc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wallc)
+	MCFG_SCREEN_UPDATE_DRIVER(wallc_state, screen_update_wallc)
 
 	MCFG_GFXDECODE(wallc)
 	MCFG_PALETTE_LENGTH(32)

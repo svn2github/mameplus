@@ -190,6 +190,7 @@ public:
 	DECLARE_WRITE8_MEMBER(zvideoram_w);
 	DECLARE_READ8_MEMBER(spaceg_colorram_r);
 	virtual void palette_init();
+	UINT32 screen_update_spaceg(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 /*************************************
@@ -297,21 +298,20 @@ READ8_MEMBER(spaceg_state::spaceg_colorram_r)
 }
 
 
-static SCREEN_UPDATE_IND16( spaceg )
+UINT32 spaceg_state::screen_update_spaceg(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	spaceg_state *state = screen.machine().driver_data<spaceg_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < 0x2000; offs++)
 	{
 		int i;
-		UINT8 data = state->m_videoram[offs];
+		UINT8 data = m_videoram[offs];
 		int y = offs & 0xff;
 		int x = (offs >> 8) << 3;
 
 		for (i = 0; i < 8; i++)
 		{
-			bitmap.pix16(y, x) = (data & 0x80) ? state->m_colorram[offs] : 0;
+			bitmap.pix16(y, x) = (data & 0x80) ? m_colorram[offs] : 0;
 
 			x++;
 			data <<= 1;
@@ -428,7 +428,7 @@ static MACHINE_CONFIG_START( spaceg, spaceg_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,2500000)		 /* 2.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(spaceg_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)	/* 60 Hz NMIs (verified) */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", spaceg_state,  nmi_line_pulse)	/* 60 Hz NMIs (verified) */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -436,22 +436,22 @@ static MACHINE_CONFIG_START( spaceg, spaceg_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 32, 255)
-	MCFG_SCREEN_UPDATE_STATIC( spaceg )
+	MCFG_SCREEN_UPDATE_DRIVER(spaceg_state, screen_update_spaceg)
 
 	MCFG_PALETTE_LENGTH(16+128-16)
 
 	/* sound hardware */
 //  MCFG_SPEAKER_STANDARD_MONO("mono")
 
-//  MCFG_SOUND_ADD("sn1", SN76496_NEW, 15468480/4)
+//  MCFG_SOUND_ADD("sn1", SN76496, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 //  MCFG_SOUND_CONFIG(psg_intf)
 
-//  MCFG_SOUND_ADD("sn2", SN76496_NEW, 15468480/4)
+//  MCFG_SOUND_ADD("sn2", SN76496, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 //  MCFG_SOUND_CONFIG(psg_intf)
 
-//  MCFG_SOUND_ADD("sn3", SN76496_NEW, 15468480/4)
+//  MCFG_SOUND_ADD("sn3", SN76496, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 //  MCFG_SOUND_CONFIG(psg_intf)
 

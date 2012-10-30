@@ -77,33 +77,33 @@ static TIMER_CALLBACK( namco_54xx_latch_callback )
 
 static READ8_HANDLER( namco_54xx_K_r )
 {
-	namco_54xx_state *state = get_safe_token(space->device().owner());
+	namco_54xx_state *state = get_safe_token(space.device().owner());
 	return state->m_latched_cmd >> 4;
 }
 
 static READ8_HANDLER( namco_54xx_R0_r )
 {
-	namco_54xx_state *state = get_safe_token(space->device().owner());
+	namco_54xx_state *state = get_safe_token(space.device().owner());
 	return state->m_latched_cmd & 0x0f;
 }
 
 
 static WRITE8_HANDLER( namco_54xx_O_w )
 {
-	namco_54xx_state *state = get_safe_token(space->device().owner());
+	namco_54xx_state *state = get_safe_token(space.device().owner());
 	UINT8 out = (data & 0x0f);
 	if (data & 0x10)
-		discrete_sound_w(state->m_discrete, NAMCO_54XX_1_DATA(state->m_basenode), out);
+		discrete_sound_w(state->m_discrete, space, NAMCO_54XX_1_DATA(state->m_basenode), out);
 	else
-		discrete_sound_w(state->m_discrete, NAMCO_54XX_0_DATA(state->m_basenode), out);
+		discrete_sound_w(state->m_discrete, space, NAMCO_54XX_0_DATA(state->m_basenode), out);
 }
 
 static WRITE8_HANDLER( namco_54xx_R1_w )
 {
-	namco_54xx_state *state = get_safe_token(space->device().owner());
+	namco_54xx_state *state = get_safe_token(space.device().owner());
 	UINT8 out = (data & 0x0f);
 
-	discrete_sound_w(state->m_discrete, NAMCO_54XX_2_DATA(state->m_basenode), out);
+	discrete_sound_w(state->m_discrete, space, NAMCO_54XX_2_DATA(state->m_basenode), out);
 }
 
 
@@ -119,7 +119,7 @@ WRITE8_DEVICE_HANDLER( namco_54xx_write )
 {
 	namco_54xx_state *state = get_safe_token(device);
 
-	device->machine().scheduler().synchronize(FUNC(namco_54xx_latch_callback), data, (void *)device);
+	space.machine().scheduler().synchronize(FUNC(namco_54xx_latch_callback), data, (void *)device);
 
 	state->m_cpu->execute().set_input_line(0, ASSERT_LINE);
 
@@ -128,7 +128,7 @@ WRITE8_DEVICE_HANDLER( namco_54xx_write )
 	// The input clock to the 06XX interface chip is 64H, that is
 	// 18432000/6/64 = 48kHz, so it makes sense for the irq line to be
 	// asserted for one clock cycle ~= 21us.
-	device->machine().scheduler().timer_set(attotime::from_usec(21), FUNC(namco_54xx_irq_clear), 0, (void *)device);
+	space.machine().scheduler().timer_set(attotime::from_usec(21), FUNC(namco_54xx_irq_clear), 0, (void *)device);
 }
 
 
@@ -184,7 +184,7 @@ const device_type NAMCO_54XX = &device_creator<namco_54xx_device>;
 namco_54xx_device::namco_54xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, NAMCO_54XX, "Namco 54xx", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(namco_54xx_state));
+	m_token = global_alloc_clear(namco_54xx_state);
 }
 
 //-------------------------------------------------

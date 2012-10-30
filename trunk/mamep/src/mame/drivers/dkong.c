@@ -347,8 +347,8 @@ Donkey Kong Junior Notes
  *
  *************************************/
 
-static UINT8 memory_read_byte(address_space *space, offs_t address) { return space->read_byte(address); }
-static void memory_write_byte(address_space *space, offs_t address, UINT8 data) { space->write_byte(address, data); }
+static UINT8 memory_read_byte(address_space &space, offs_t address, UINT8 mem_mask) { return space.read_byte(address); }
+static void memory_write_byte(address_space &space, offs_t address, UINT8 data, UINT8 mem_mask) { space.write_byte(address, data); }
 
 static Z80DMA_INTERFACE( dk3_dma )
 {
@@ -389,9 +389,9 @@ static I8257_INTERFACE( hb_dma )
  *
  *************************************/
 
-static INTERRUPT_GEN( s2650_interrupt )
+INTERRUPT_GEN_MEMBER(dkong_state::s2650_interrupt)
 {
-    device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
+    device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
 }
 
 /*************************************
@@ -412,7 +412,6 @@ static void dkong_init_device_driver_data( running_machine &machine )
 
 MACHINE_START_MEMBER(dkong_state,dkong2b)
 {
-
 	dkong_init_device_driver_data(machine());
 	m_hardware_type = HARDWARE_TKG04;
 
@@ -455,21 +454,20 @@ MACHINE_START_MEMBER(dkong_state,s2650)
 
 MACHINE_START_MEMBER(dkong_state,radarscp)
 {
-
     MACHINE_START_CALL_MEMBER(dkong2b);
     m_hardware_type = HARDWARE_TRS02;
+    m_vidhw = DKONG_BOARD;
 }
 
 MACHINE_START_MEMBER(dkong_state,radarscp1)
 {
-
     MACHINE_START_CALL_MEMBER(dkong2b);
     m_hardware_type = HARDWARE_TRS01;
+    m_vidhw = DKONG_BOARD;
 }
 
 MACHINE_START_MEMBER(dkong_state,dkong3)
 {
-
 	dkong_init_device_driver_data(machine());
 	m_hardware_type = HARDWARE_TKG04;
 }
@@ -519,8 +517,8 @@ READ8_MEMBER(dkong_state::hb_dma_read_byte)
         fatalerror("hb_dma_read_byte - unmapped access for 0x%02x - bucket 0x%02x\n", offset, bucket);
 
     addr = ((bucket << 7) & 0x7c00) | (offset & 0x3ff);
-
-    return space.read_byte(addr);
+	address_space &prog_space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+    return prog_space.read_byte(addr);
 }
 
 WRITE8_MEMBER(dkong_state::hb_dma_write_byte)
@@ -532,8 +530,8 @@ WRITE8_MEMBER(dkong_state::hb_dma_write_byte)
         fatalerror("hb_dma_read_byte - unmapped access for 0x%02x - bucket 0x%02x\n", offset, bucket);
 
     addr = ((bucket << 7) & 0x7c00) | (offset & 0x3ff);
-
-    space.write_byte(addr, data);
+	address_space &prog_space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+    prog_space.write_byte(addr, data);
 }
 
 READ8_MEMBER(dkong_state::p8257_ctl_r)
@@ -568,7 +566,7 @@ WRITE8_MEMBER(dkong_state::p8257_drq_w)
 READ8_MEMBER(dkong_state::dkong_in2_r)
 {
 	/* mcu status (sound feedback) is inverted bit4 from port B (8039) */
-	UINT8 mcustatus = latch8_bit4_q_r(m_dev_vp2, 0);
+	UINT8 mcustatus = latch8_bit4_q_r(m_dev_vp2, space, 0);
 	UINT8 r;
 
 	r = (ioport("IN2")->read() & 0xBF) | (mcustatus << 6);
@@ -605,7 +603,6 @@ WRITE8_MEMBER(dkong_state::s2650_mirror_w)
 
 READ8_MEMBER(dkong_state::epos_decrypt_rom)
 {
-
     if (offset & 0x01)
     {
         m_decrypt_counter = m_decrypt_counter - 1;
@@ -701,7 +698,6 @@ READ8_MEMBER(dkong_state::s2650_port1_r)
 
 WRITE8_MEMBER(dkong_state::dkong3_2a03_reset_w)
 {
-
 	if (data & 1)
 	{
 		m_dev_n2a03a->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
@@ -1638,12 +1634,10 @@ static void braze_decrypt_rom(running_machine &machine, UINT8 *dest)
  *
  *************************************/
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(dkong_state::vblank_irq)
 {
-	dkong_state *state = device->machine().driver_data<dkong_state>();
-
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( dkong_base, dkong_state )
@@ -1651,7 +1645,7 @@ static MACHINE_CONFIG_START( dkong_base, dkong_state )
     /* basic machine hardware */
     MCFG_CPU_ADD("maincpu", Z80, CLOCK_1H)
     MCFG_CPU_PROGRAM_MAP(dkong_map)
-    MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dkong_state,  vblank_irq)
 
     MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong2b)
     MCFG_MACHINE_RESET_OVERRIDE(dkong_state,dkong)
@@ -1661,47 +1655,46 @@ static MACHINE_CONFIG_START( dkong_base, dkong_state )
     /* video hardware */
     MCFG_SCREEN_ADD("screen", RASTER)
     MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-    MCFG_SCREEN_UPDATE_STATIC(dkong)
+	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_dkong)
 
     MCFG_GFXDECODE(dkong)
     MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
 
     MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong2b)
     MCFG_VIDEO_START_OVERRIDE(dkong_state,dkong)
-
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( radarscp, dkong_base )
 
+	/* basic machine hardware */
     MCFG_MACHINE_START_OVERRIDE(dkong_state,radarscp)
     MCFG_PALETTE_LENGTH(RS_PALETTE_LENGTH)
     MCFG_PALETTE_INIT_OVERRIDE(dkong_state,radarscp)
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(radarscp_audio)
-
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( radarscp1, dkong_base )
 
+	/* basic machine hardware */
     MCFG_MACHINE_START_OVERRIDE(dkong_state,radarscp1)
     MCFG_PALETTE_LENGTH(RS_PALETTE_LENGTH)
     MCFG_PALETTE_INIT_OVERRIDE(dkong_state,radarscp1)
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(radarscp1_audio)
-
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( dkong2b, dkong_base )
 
+	/* basic machine hardware */
     MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong2b)
     MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(dkong2b_audio)
-
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( braze, dkong2b )
@@ -1715,7 +1708,7 @@ static MACHINE_CONFIG_START( dkong3, dkong_state )
     MCFG_CPU_ADD("maincpu", Z80, XTAL_8MHz / 2) /* verified in schematics */
     MCFG_CPU_PROGRAM_MAP(dkong3_map)
     MCFG_CPU_IO_MAP(dkong3_io_map)
-    MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dkong_state,  vblank_irq)
 
     MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong3)
 
@@ -1724,7 +1717,7 @@ static MACHINE_CONFIG_START( dkong3, dkong_state )
     /* video hardware */
     MCFG_SCREEN_ADD("screen", RASTER)
     MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-    MCFG_SCREEN_UPDATE_STATIC(dkong)
+	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_dkong)
 
     MCFG_GFXDECODE(dkong)
     MCFG_PALETTE_LENGTH(DK3_PALETTE_LENGTH)
@@ -1743,17 +1736,16 @@ static MACHINE_CONFIG_DERIVED( dkongjr, dkong_base )
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(dkongjr_audio)
-
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( pestplce, dkongjr )
 
+    /* video hardware */
     MCFG_GFXDECODE(pestplce)
     MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
     MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong2b)  /* wrong! */
 	MCFG_SCREEN_MODIFY("screen")
-    MCFG_SCREEN_UPDATE_STATIC(pestplce)
-
+	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_pestplce)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dkong3b, dkongjr )
@@ -1774,13 +1766,12 @@ static MACHINE_CONFIG_DERIVED( s2650, dkong2b )
     MCFG_CPU_REPLACE("maincpu", S2650, CLOCK_1H / 2)    /* ??? */
     MCFG_CPU_PROGRAM_MAP(s2650_map)
     MCFG_CPU_IO_MAP(s2650_io_map)
-    MCFG_CPU_VBLANK_INT("screen", s2650_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dkong_state,  s2650_interrupt)
 
     MCFG_DEVICE_MODIFY("dma8257")
     MCFG_DEVICE_CONFIG(hb_dma)
 
     MCFG_MACHINE_START_OVERRIDE(dkong_state,s2650)
-
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( spclforc, s2650 )
@@ -1790,8 +1781,7 @@ static MACHINE_CONFIG_DERIVED( spclforc, s2650 )
 
     /* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-    MCFG_SCREEN_UPDATE_STATIC(spclforc)
-
+	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_spclforc)
 MACHINE_CONFIG_END
 
 /*************************************
@@ -1803,7 +1793,6 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( strtheat, dkong2b )
 
 	/* basic machine hardware */
-
     MCFG_CPU_MODIFY("maincpu")
     MCFG_CPU_IO_MAP(epos_readport)
 
@@ -1813,7 +1802,6 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( drakton, dkong2b )
 
 	/* basic machine hardware */
-
     MCFG_CPU_MODIFY("maincpu")
     MCFG_CPU_IO_MAP(epos_readport)
 
@@ -1823,7 +1811,6 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( drktnjr, dkongjr )
 
 	/* basic machine hardware */
-
     MCFG_CPU_MODIFY("maincpu")
     MCFG_CPU_IO_MAP(epos_readport)
 
@@ -3098,7 +3085,7 @@ DRIVER_INIT_MEMBER(dkong_state,drakton)
             {7,1,4,0,3,6,2,5},
     };
 
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x3fff, "bank1" );
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x3fff, "bank1" );
 
     /* While the PAL supports up to 16 decryption methods, only four
         are actually used in the PAL.  Therefore, we'll take a little
@@ -3120,7 +3107,7 @@ DRIVER_INIT_MEMBER(dkong_state,strtheat)
             {6,3,4,1,0,7,2,5},
     };
 
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x3fff, "bank1" );
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x3fff, "bank1" );
 
     /* While the PAL supports up to 16 decryption methods, only four
         are actually used in the PAL.  Therefore, we'll take a little
@@ -3131,25 +3118,25 @@ DRIVER_INIT_MEMBER(dkong_state,strtheat)
     drakton_decrypt_rom(machine(), 0x88, 0x1c000, bs[3]);
 
     /* custom handlers supporting Joystick or Steering Wheel */
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x7c00, 0x7c00, read8_delegate(FUNC(dkong_state::strtheat_inputport_0_r),this));
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x7c80, 0x7c80, read8_delegate(FUNC(dkong_state::strtheat_inputport_1_r),this));
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x7c00, 0x7c00, read8_delegate(FUNC(dkong_state::strtheat_inputport_0_r),this));
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x7c80, 0x7c80, read8_delegate(FUNC(dkong_state::strtheat_inputport_1_r),this));
 }
 
 
 DRIVER_INIT_MEMBER(dkong_state,dkongx)
 {
 	UINT8 *decrypted;
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x5fff, "bank1" );
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x8000, 0xffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x5fff, "bank1" );
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x8000, 0xffff, "bank2" );
 
-	space->install_write_handler(0xe000, 0xe000, write8_delegate(FUNC(dkong_state::braze_a15_w),this));
+	space.install_write_handler(0xe000, 0xe000, write8_delegate(FUNC(dkong_state::braze_a15_w),this));
 
-	space->install_read_handler(0xc800, 0xc800, read8_delegate(FUNC(dkong_state::braze_eeprom_r),this));
-	space->install_write_handler(0xc800, 0xc800, write8_delegate(FUNC(dkong_state::braze_eeprom_w),this));
+	space.install_read_handler(0xc800, 0xc800, read8_delegate(FUNC(dkong_state::braze_eeprom_r),this));
+	space.install_write_handler(0xc800, 0xc800, write8_delegate(FUNC(dkong_state::braze_eeprom_w),this));
 
 	braze_decrypt_rom(machine(), decrypted);
 
@@ -3207,11 +3194,11 @@ GAME( 1983, hunchbkd, hunchbak, s2650,    hunchbkd, driver_device,       0,  ROT
 GAME( 1984, sbdk,     superbik, s2650,    sbdk, driver_device,           0,  ROT90, "Century Electronics", "Super Bike (DK conversion)", GAME_SUPPORTS_SAVE )
 GAME( 1984, herodk,   hero,     s2650,    herodk, dkong_state,    herodk,  ROT90, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion)", GAME_SUPPORTS_SAVE )
 GAME( 1984, herodku,  hero,     s2650,    herodk, driver_device,         0,  ROT90, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1984, 8ballact, 0,        s2650,    8ballact, driver_device,       0,  ROT90, "Seatongrove Ltd (Magic Eletronics USA license)", "Eight Ball Action (DK conversion)", GAME_SUPPORTS_SAVE )
-GAME( 1984, 8ballact2,8ballact, s2650,    8ballact, driver_device,       0,  ROT90, "Seatongrove Ltd (Magic Eletronics USA license)", "Eight Ball Action (DKJr conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1984, 8ballact, 0,        s2650,    8ballact, driver_device,       0,  ROT90, "Seatongrove Ltd (Magic Electronics USA license)", "Eight Ball Action (DK conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1984, 8ballact2,8ballact, s2650,    8ballact, driver_device,       0,  ROT90, "Seatongrove Ltd (Magic Electronics USA license)", "Eight Ball Action (DKJr conversion)", GAME_SUPPORTS_SAVE )
 GAME( 1984, shootgal, 0,        s2650,    shootgal, driver_device,       0,  ROT180,"Seatongrove Ltd (Zaccaria license)", "Shooting Gallery", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1985, spclforc, 0,        spclforc, spclforc, driver_device,       0,  ROT90, "Senko Industries (Magic Eletronics Inc. license)", "Special Forces", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1985, spcfrcii, 0,        spclforc, spclforc, driver_device,       0,  ROT90, "Senko Industries (Magic Eletronics Inc. license)", "Special Forces II", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1985, spclforc, 0,        spclforc, spclforc, driver_device,       0,  ROT90, "Senko Industries (Magic Electronics Inc. license)", "Special Forces", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1985, spcfrcii, 0,        spclforc, spclforc, driver_device,       0,  ROT90, "Senko Industries (Magic Electronics Inc. license)", "Special Forces II", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 
 /* EPOS */
 GAME( 1984, drakton,  0,        drakton,  drakton, dkong_state,  drakton,  ROT90, "Epos Corporation", "Drakton (DK conversion)", GAME_SUPPORTS_SAVE )

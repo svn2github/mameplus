@@ -26,15 +26,14 @@
 
 
 
-static TIMER_DEVICE_CALLBACK( chqflag_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(chqflag_state::chqflag_scanline)
 {
-	chqflag_state *state = timer.machine().driver_data<chqflag_state>();
 	int scanline = param;
 
-	if(scanline == 240 && k051960_is_irq_enabled(state->m_k051960)) // vblank irq
-		timer.machine().device("maincpu")->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
-	else if(((scanline % 32) == 0) && (k051960_is_nmi_enabled(state->m_k051960))) // timer irq
-		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(scanline == 240 && k051960_is_irq_enabled(m_k051960)) // vblank irq
+		machine().device("maincpu")->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	else if(((scanline % 32) == 0) && (k051960_is_nmi_enabled(m_k051960))) // timer irq
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(chqflag_state::chqflag_bankswitch_w)
@@ -186,7 +185,7 @@ static ADDRESS_MAP_START( chqflag_sound_map, AS_PROGRAM, 8, chqflag_state )
 	AM_RANGE(0xa000, 0xa00d) AM_DEVREADWRITE_LEGACY("k007232_1", k007232_r, k007232_w)	/* 007232 (chip 1) */
 	AM_RANGE(0xa01c, 0xa01c) AM_WRITE(k007232_extvolume_w)	/* extra volume, goes to the 007232 w/ A11 */
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232_2", k007232_r, k007232_w)	/* 007232 (chip 2) */
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	/* YM2151 */
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)	/* YM2151 */
 	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)			/* soundlatch_byte_r */
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch2_byte_r)         /* engine sound volume */
 	AM_RANGE(0xf000, 0xf000) AM_WRITENOP					/* ??? */
@@ -256,18 +255,6 @@ static INPUT_PORTS_START( chqflagj )
 INPUT_PORTS_END
 
 
-
-static void chqflag_ym2151_irq_w( device_t *device, int data )
-{
-	chqflag_state *state = device->machine().driver_data<chqflag_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, data ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(chqflag_ym2151_irq_w)
-};
 
 static void volume_callback0( device_t *device, int v )
 {
@@ -356,7 +343,7 @@ static MACHINE_CONFIG_START( chqflag, chqflag_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI,XTAL_24MHz/8)	/* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(chqflag_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", chqflag_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", chqflag_state, chqflag_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(chqflag_sound_map)
@@ -373,7 +360,7 @@ static MACHINE_CONFIG_START( chqflag, chqflag_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(12*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(chqflag)
+	MCFG_SCREEN_UPDATE_DRIVER(chqflag_state, screen_update_chqflag)
 
 	MCFG_PALETTE_LENGTH(1024)
 
@@ -386,8 +373,8 @@ static MACHINE_CONFIG_START( chqflag, chqflag_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz) /* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", INPUT_LINE_NMI))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 

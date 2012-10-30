@@ -321,6 +321,11 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_PALETTE_INIT(lions);
+	UINT32 screen_update_aristmk4(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(note_input_reset);
+	TIMER_CALLBACK_MEMBER(coin_input_reset);
+	TIMER_CALLBACK_MEMBER(hopper_reset);
+	TIMER_DEVICE_CALLBACK_MEMBER(aristmk4_pf);
 };
 
 /* Partial Cashcade protocol */
@@ -370,10 +375,9 @@ INLINE void uBackgroundColour(running_machine &machine)
 	}
 }
 
-static SCREEN_UPDATE_IND16(aristmk4)
+UINT32 aristmk4_state::screen_update_aristmk4(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	aristmk4_state *state = screen.machine().driver_data<aristmk4_state>();
-	gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = machine().gfx[0];
 	int x,y;
 	int count = 0;
 	int color;
@@ -386,14 +390,14 @@ static SCREEN_UPDATE_IND16(aristmk4)
 	{
 		for (x=38;x--;)
 		{
-		color = ((state->m_mkiv_vram[count]) & 0xe0) >> 5;
-			tile = (state->m_mkiv_vram[count+1]|state->m_mkiv_vram[count]<<8) & 0x3ff;
-			bgtile = (state->m_mkiv_vram[count+1]|state->m_mkiv_vram[count]<<8) & 0xff; // first 256 tiles
-			uBackgroundColour(screen.machine());	// read sw7
+		color = ((m_mkiv_vram[count]) & 0xe0) >> 5;
+			tile = (m_mkiv_vram[count+1]|m_mkiv_vram[count]<<8) & 0x3ff;
+			bgtile = (m_mkiv_vram[count+1]|m_mkiv_vram[count]<<8) & 0xff; // first 256 tiles
+			uBackgroundColour(machine());	// read sw7
 			gfx->decode(bgtile);	// force the machine to update only the first 256 tiles.
 								// as we only update the background, not the entire display.
-			flipx = ((state->m_mkiv_vram[count]) & 0x04);
-			flipy = ((state->m_mkiv_vram[count]) & 0x08);
+			flipx = ((m_mkiv_vram[count]) & 0x04);
+			flipy = ((m_mkiv_vram[count]) & 0x08);
 			drawgfx_opaque(bitmap,cliprect,gfx,tile,color,flipx,flipy,(38-x-1)<<3,(27-y-1)<<3);
 			count+=2;
 		}
@@ -484,10 +488,9 @@ READ8_MEMBER(aristmk4_state::u3_p3)
 
 }
 
-static TIMER_CALLBACK(note_input_reset)
+TIMER_CALLBACK_MEMBER(aristmk4_state::note_input_reset)
 {
-	aristmk4_state *state = machine.driver_data<aristmk4_state>();
-	state->m_insnote=0; //reset note input after 150msec
+	m_insnote=0; //reset note input after 150msec
 }
 
 READ8_MEMBER(aristmk4_state::bv_p0)
@@ -504,7 +507,7 @@ READ8_MEMBER(aristmk4_state::bv_p0)
 	case 0x02:
 		bv_p0_ret=0x89;
 		m_insnote++;
-		machine().scheduler().timer_set(attotime::from_msec(150), FUNC(note_input_reset));
+		machine().scheduler().timer_set(attotime::from_msec(150), timer_expired_delegate(FUNC(aristmk4_state::note_input_reset),this));
 		break;
 	default:
 		break; //timer will reset the input
@@ -630,16 +633,14 @@ VERSATILE INTERFACE ADAPTER CONFIGURATION
 
 ******************************************************************************/
 
-static TIMER_CALLBACK(coin_input_reset)
+TIMER_CALLBACK_MEMBER(aristmk4_state::coin_input_reset)
 {
-	aristmk4_state *state = machine.driver_data<aristmk4_state>();
-	state->m_inscrd=0; //reset credit input after 150msec
+	m_inscrd=0; //reset credit input after 150msec
 }
 
-static TIMER_CALLBACK(hopper_reset)
+TIMER_CALLBACK_MEMBER(aristmk4_state::hopper_reset)
 {
-	aristmk4_state *state = machine.driver_data<aristmk4_state>();
-	state->m_hopper_motor=0x01;
+	m_hopper_motor=0x01;
 }
 
 // Port A read (SW1)
@@ -649,13 +650,13 @@ READ8_MEMBER(aristmk4_state::via_a_r)
 
 	if (m_ay8910_1&0x03) // SW1 read.
 	{
-	psg_ret = ay8910_r(machine().device("ay1"), 0);
+	psg_ret = ay8910_r(machine().device("ay1"), space, 0);
 	//logerror("PSG porta ay1 returned %02X\n",psg_ret);
 	}
 
 	else if (m_ay8910_2&0x03) //i don't think we read anything from Port A on ay2, Can be removed once game works ok.
 	{
-		psg_ret = ay8910_r(machine().device("ay2"), 0);
+		psg_ret = ay8910_r(machine().device("ay2"), space, 0);
 		//logerror("PSG porta ay2 returned %02X\n",psg_ret);
 	}
 	return psg_ret;
@@ -686,7 +687,7 @@ READ8_MEMBER(aristmk4_state::via_b_r)
 	case 0x02:
 		ret=ret^0x20;
 		m_inscrd++;
-		machine().scheduler().timer_set(attotime::from_msec(150), FUNC(coin_input_reset));
+		machine().scheduler().timer_set(attotime::from_msec(150), timer_expired_delegate(FUNC(aristmk4_state::coin_input_reset),this));
 		break;
 	default:
 		break; //timer will reset the input
@@ -698,7 +699,7 @@ READ8_MEMBER(aristmk4_state::via_b_r)
 	{
 	case 0x00:
 		ret=ret^0x40;
-		machine().scheduler().timer_set(attotime::from_msec(175), FUNC(hopper_reset));
+		machine().scheduler().timer_set(attotime::from_msec(175), timer_expired_delegate(FUNC(aristmk4_state::hopper_reset),this));
 		m_hopper_motor=0x02;
 		break;
 	case 0x01:
@@ -750,13 +751,13 @@ WRITE8_MEMBER(aristmk4_state::via_b_w)
 		break;
 	case 0x06:	//WRITE
 	{
-		ay8910_data_w( machine().device("ay1"), 0 , m_psg_data );
+		ay8910_data_w( machine().device("ay1"), space, 0 , m_psg_data );
 		//logerror("VIA Port A write data ay1: %02X\n",m_psg_data);
 		break;
 	}
 	case 0x07:	//LATCH Address (set register)
 	{
-		ay8910_address_w( machine().device("ay1"), 0 , m_psg_data );
+		ay8910_address_w( machine().device("ay1"), space, 0 , m_psg_data );
 		//logerror("VIA Port B write register ay1: %02X\n",m_psg_data);
 		break;
 	}
@@ -777,13 +778,13 @@ WRITE8_MEMBER(aristmk4_state::via_b_w)
 		break;
 	case 0x06:	//WRITE
 	{
-		ay8910_data_w( machine().device("ay2"), 0 , m_psg_data );
+		ay8910_data_w( machine().device("ay2"), space, 0 , m_psg_data );
 		//logerror("VIA Port A write data ay2: %02X\n",m_psg_data);
 		break;
 	}
 	case 0x07:	//LATCH Address (set register)
 	{
-		ay8910_address_w( machine().device("ay2"), 0 , m_psg_data );
+		ay8910_address_w( machine().device("ay2"), space, 0 , m_psg_data );
 		//logerror("VIA Port B write register ay2: %02X\n",m_psg_data);
 		break;
 	}
@@ -1656,7 +1657,7 @@ void aristmk4_state::machine_reset()
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( aristmk4_pf )
+TIMER_DEVICE_CALLBACK_MEMBER(aristmk4_state::aristmk4_pf)
 {
 	/*
     IRQ generator pulses the NMI signal to CPU in the event of power down or power failure.
@@ -1674,9 +1675,9 @@ static TIMER_DEVICE_CALLBACK( aristmk4_pf )
     Note: The use of 1 Hz in the timer is to avoid unintentional triggering the NMI ( ie.. hold down L for at least 1 second )
     */
 
-	if(timer.machine().root_device().ioport("powerfail")->read()) // send NMI signal if L pressed
+	if(machine().root_device().ioport("powerfail")->read()) // send NMI signal if L pressed
 	{
-	timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE );
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE );
 	}
 }
 
@@ -1684,10 +1685,10 @@ static MACHINE_CONFIG_START( aristmk4, aristmk4_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MAIN_CLOCK/8) // 1.5mhz
 	MCFG_CPU_PROGRAM_MAP(aristmk4_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aristmk4_state,  irq0_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_TIMER_ADD_PERIODIC("power_fail", aristmk4_pf,attotime::from_hz(1)) // not real but required to simulate power failure to access robot test. How else can we do this ?
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("power_fail", aristmk4_state, aristmk4_pf, attotime::from_hz(1))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1699,7 +1700,7 @@ static MACHINE_CONFIG_START( aristmk4, aristmk4_state )
 	MCFG_GFXDECODE(aristmk4)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_SCREEN_UPDATE_STATIC(aristmk4)
+	MCFG_SCREEN_UPDATE_DRIVER(aristmk4_state, screen_update_aristmk4)
 
 	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_intf )
 	MCFG_VIA6522_ADD("via6522_0", 0, via_interface)	/* 1 MHz.(only 1 or 2 MHz.are valid) */
@@ -1727,7 +1728,7 @@ static MACHINE_CONFIG_DERIVED( aristmk4_poker, aristmk4 )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(aristmk4_poker_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aristmk4_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 /* same as Aristocrat Mark-IV HW color offset 7 */

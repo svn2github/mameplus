@@ -273,8 +273,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( soundmem_io, AS_IO, 8, micro3d_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0xfd00, 0xfd01) AM_DEVREADWRITE_LEGACY("ym2151", ym2151_r, ym2151_w)
-	AM_RANGE(0xfe00, 0xfe00) AM_DEVWRITE_LEGACY("upd7759", micro3d_upd7759_w)
+	AM_RANGE(0xfd00, 0xfd01) AM_DEVREADWRITE("ym2151", ym2151_device, read, write)
+	AM_RANGE(0xfe00, 0xfe00) AM_WRITE(micro3d_upd7759_w)
 	AM_RANGE(0xff00, 0xff00) AM_WRITE(micro3d_snd_dac_a)
 	AM_RANGE(0xff01, 0xff01) AM_WRITE(micro3d_snd_dac_b)
 	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P3) AM_READWRITE(micro3d_sound_io_r, micro3d_sound_io_w)
@@ -335,7 +335,7 @@ static MACHINE_CONFIG_START( micro3d, micro3d_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_32MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(hostmem)
-	MCFG_CPU_VBLANK_INT("screen", micro3d_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", micro3d_state,  micro3d_vblank)
 
 	MCFG_CPU_ADD("vgb", TMS34010, XTAL_40MHz)
 	MCFG_CPU_CONFIG(vgb_config)
@@ -368,7 +368,7 @@ static MACHINE_CONFIG_START( micro3d, micro3d_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.35)
 
-	MCFG_SOUND_ADD("ym2151", YM2151, XTAL_3_579545MHz)
+	MCFG_YM2151_ADD("ym2151", XTAL_3_579545MHz)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.35)
 

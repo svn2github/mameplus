@@ -249,9 +249,9 @@ static GFXDECODE_START( pbaction )
 GFXDECODE_END
 
 
-static INTERRUPT_GEN( pbaction_interrupt )
+INTERRUPT_GEN_MEMBER(pbaction_state::pbaction_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x02);	/* the CPU is in Interrupt Mode 2 */
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x02);	/* the CPU is in Interrupt Mode 2 */
 }
 
 
@@ -270,12 +270,11 @@ void pbaction_state::machine_reset()
 	m_scroll = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(pbaction_state::vblank_irq)
 {
-	pbaction_state *state = device->machine().driver_data<pbaction_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( pbaction, pbaction_state )
@@ -283,12 +282,12 @@ static MACHINE_CONFIG_START( pbaction, pbaction_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(pbaction_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pbaction_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3072000)
 	MCFG_CPU_PROGRAM_MAP(pbaction_sound_map)
 	MCFG_CPU_IO_MAP(pbaction_sound_io_map)
-	MCFG_CPU_PERIODIC_INT(pbaction_interrupt,2*60)	/* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(pbaction_state, pbaction_interrupt, 2*60)	/* ??? */
 									/* IRQs are caused by the main CPU */
 
 
@@ -298,7 +297,7 @@ static MACHINE_CONFIG_START( pbaction, pbaction_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pbaction)
+	MCFG_SCREEN_UPDATE_DRIVER(pbaction_state, screen_update_pbaction)
 
 	MCFG_GFXDECODE(pbaction)
 	MCFG_PALETTE_LENGTH(256)
@@ -488,7 +487,7 @@ DRIVER_INIT_MEMBER(pbaction_state,pbactio3)
 	pbaction_decode(machine(), "maincpu");
 
 	/* install a protection (?) workaround */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc000, 0xc000, read8_delegate(FUNC(pbaction_state::pbactio3_prot_kludge_r),this) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc000, 0xc000, read8_delegate(FUNC(pbaction_state::pbactio3_prot_kludge_r),this) );
 }
 
 DRIVER_INIT_MEMBER(pbaction_state,pbactio4)

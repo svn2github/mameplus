@@ -53,10 +53,10 @@ WRITE16_MEMBER(sf_state::soundcmd_w)
 /* The protection of the Japanese (and alt US) version */
 /* I'd love to see someone dump the 68705 / i8751 roms */
 
-static void write_dword( address_space *space, offs_t offset, UINT32 data )
+static void write_dword( address_space &space, offs_t offset, UINT32 data )
 {
-	space->write_word(offset, data >> 16);
-	space->write_word(offset + 2, data);
+	space.write_word(offset, data >> 16);
+	space.write_word(offset + 2, data);
 }
 
 WRITE16_MEMBER(sf_state::protection_w)
@@ -81,21 +81,21 @@ WRITE16_MEMBER(sf_state::protection_w)
 
 			base = 0x1b6e8 + 0x300e * map;
 
-			write_dword(&space, 0xffc01c, 0x16bfc + 0x270 * map);
-			write_dword(&space, 0xffc020, base + 0x80);
-			write_dword(&space, 0xffc024, base);
-			write_dword(&space, 0xffc028, base + 0x86);
-			write_dword(&space, 0xffc02c, base + 0x8e);
-			write_dword(&space, 0xffc030, base + 0x20e);
-			write_dword(&space, 0xffc034, base + 0x30e);
-			write_dword(&space, 0xffc038, base + 0x38e);
-			write_dword(&space, 0xffc03c, base + 0x40e);
-			write_dword(&space, 0xffc040, base + 0x80e);
-			write_dword(&space, 0xffc044, base + 0xc0e);
-			write_dword(&space, 0xffc048, base + 0x180e);
-			write_dword(&space, 0xffc04c, base + 0x240e);
-			write_dword(&space, 0xffc050, 0x19548 + 0x60 * map);
-			write_dword(&space, 0xffc054, 0x19578 + 0x60 * map);
+			write_dword(space, 0xffc01c, 0x16bfc + 0x270 * map);
+			write_dword(space, 0xffc020, base + 0x80);
+			write_dword(space, 0xffc024, base);
+			write_dword(space, 0xffc028, base + 0x86);
+			write_dword(space, 0xffc02c, base + 0x8e);
+			write_dword(space, 0xffc030, base + 0x20e);
+			write_dword(space, 0xffc034, base + 0x30e);
+			write_dword(space, 0xffc038, base + 0x38e);
+			write_dword(space, 0xffc03c, base + 0x40e);
+			write_dword(space, 0xffc040, base + 0x80e);
+			write_dword(space, 0xffc044, base + 0xc0e);
+			write_dword(space, 0xffc048, base + 0x180e);
+			write_dword(space, 0xffc04c, base + 0x240e);
+			write_dword(space, 0xffc050, 0x19548 + 0x60 * map);
+			write_dword(space, 0xffc054, 0x19578 + 0x60 * map);
 			break;
 		}
 	case 2:
@@ -268,7 +268,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, sf_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xc800) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 ADDRESS_MAP_END
 
 /* Yes, _no_ ram */
@@ -796,17 +796,6 @@ GFXDECODE_END
 
 
 
-static void irq_handler( device_t *device, int irq )
-{
-	sf_state *state = device->machine().driver_data<sf_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler)
-};
-
 static const msm5205_interface msm5205_config =
 {
 	0,				/* interrupt function */
@@ -838,7 +827,7 @@ static MACHINE_CONFIG_START( sf, sf_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)	/* 8 MHz ? (xtal is 16MHz) */
 	MCFG_CPU_PROGRAM_MAP(sf_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sf_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)	/* ? xtal is 3.579545MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -848,7 +837,7 @@ static MACHINE_CONFIG_START( sf, sf_state )
 	MCFG_CPU_ADD("audio2", Z80, 3579545)	/* ? xtal is 3.579545MHz */
 	MCFG_CPU_PROGRAM_MAP(sound2_map)
 	MCFG_CPU_IO_MAP(sound2_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(sf_state, irq0_line_hold, 8000)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -856,7 +845,7 @@ static MACHINE_CONFIG_START( sf, sf_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(sf)
+	MCFG_SCREEN_UPDATE_DRIVER(sf_state, screen_update_sf)
 
 	MCFG_GFXDECODE(sf)
 	MCFG_PALETTE_LENGTH(1024)
@@ -865,8 +854,8 @@ static MACHINE_CONFIG_START( sf, sf_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 
@@ -902,7 +891,7 @@ static MACHINE_CONFIG_DERIVED( sfp, sf )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sf_state,  irq6_line_hold)
 MACHINE_CONFIG_END
 
 

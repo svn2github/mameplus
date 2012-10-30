@@ -52,15 +52,15 @@
 
 /*********************************************************************/
 
-static TIMER_CALLBACK( gunbustr_interrupt5 )
+TIMER_CALLBACK_MEMBER(gunbustr_state::gunbustr_interrupt5)
 {
-	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( gunbustr_interrupt )
+INTERRUPT_GEN_MEMBER(gunbustr_state::gunbustr_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000-500), FUNC(gunbustr_interrupt5));
-	device->execute().set_input_line(4, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000-500), timer_expired_delegate(FUNC(gunbustr_state::gunbustr_interrupt5),this));
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 WRITE32_MEMBER(gunbustr_state::gunbustr_palette_w)
@@ -143,7 +143,7 @@ READ32_MEMBER(gunbustr_state::gunbustr_gun_r)
 WRITE32_MEMBER(gunbustr_state::gunbustr_gun_w)
 {
 	/* 10000 cycle delay is arbitrary */
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), FUNC(gunbustr_interrupt5));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), timer_expired_delegate(FUNC(gunbustr_state::gunbustr_interrupt5),this));
 }
 
 
@@ -305,7 +305,7 @@ static MACHINE_CONFIG_START( gunbustr, gunbustr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(gunbustr_map)
-	MCFG_CPU_VBLANK_INT("screen", gunbustr_interrupt) /* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gunbustr_state,  gunbustr_interrupt) /* VBL */
 
 	MCFG_EEPROM_ADD("eeprom", gunbustr_eeprom_interface)
 
@@ -315,7 +315,7 @@ static MACHINE_CONFIG_START( gunbustr, gunbustr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gunbustr)
+	MCFG_SCREEN_UPDATE_DRIVER(gunbustr_state, screen_update_gunbustr)
 
 	MCFG_GFXDECODE(gunbustr)
 	MCFG_PALETTE_LENGTH(8192)
@@ -442,7 +442,7 @@ READ32_MEMBER(gunbustr_state::main_cycle_r)
 DRIVER_INIT_MEMBER(gunbustr_state,gunbustr)
 {
 	/* Speedup handler */
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x203acc, 0x203acf, read32_delegate(FUNC(gunbustr_state::main_cycle_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x203acc, 0x203acf, read32_delegate(FUNC(gunbustr_state::main_cycle_r),this));
 }
 
 DRIVER_INIT_MEMBER(gunbustr_state,gunbustrj)

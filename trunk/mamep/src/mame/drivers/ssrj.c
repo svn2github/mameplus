@@ -144,7 +144,7 @@ static MACHINE_CONFIG_START( ssrj, ssrj_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,8000000/2)
 	MCFG_CPU_PROGRAM_MAP(ssrj_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ssrj_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -152,8 +152,8 @@ static MACHINE_CONFIG_START( ssrj, ssrj_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 34*8-1, 1*8, 31*8-1) // unknown res
-	MCFG_SCREEN_UPDATE_STATIC(ssrj)
-	MCFG_SCREEN_VBLANK_STATIC(ssrj)
+	MCFG_SCREEN_UPDATE_DRIVER(ssrj_state, screen_update_ssrj)
+	MCFG_SCREEN_VBLANK_DRIVER(ssrj_state, screen_eof_ssrj)
 
 	MCFG_GFXDECODE(ssrj)
 	MCFG_PALETTE_LENGTH(128)

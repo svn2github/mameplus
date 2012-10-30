@@ -16,18 +16,18 @@
 #include "includes/labyrunr.h"
 
 
-static INTERRUPT_GEN( labyrunr_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(labyrunr_state::labyrunr_vblank_interrupt)
 {
-	labyrunr_state *state = device->machine().driver_data<labyrunr_state>();
-	if (k007121_ctrlram_r(state->m_k007121, 7) & 0x02)
-		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	address_space &space = generic_space();
+	if (k007121_ctrlram_r(m_k007121, space, 7) & 0x02)
+		device.execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( labyrunr_timer_interrupt )
+INTERRUPT_GEN_MEMBER(labyrunr_state::labyrunr_timer_interrupt)
 {
-	labyrunr_state *state = device->machine().driver_data<labyrunr_state>();
-	if (k007121_ctrlram_r(state->m_k007121, 7) & 0x01)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	address_space &space = generic_space();
+	if (k007121_ctrlram_r(m_k007121, space, 7) & 0x01)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -195,8 +195,8 @@ static MACHINE_CONFIG_START( labyrunr, labyrunr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)		/* 24MHz/8? */
 	MCFG_CPU_PROGRAM_MAP(labyrunr_map)
-	MCFG_CPU_VBLANK_INT("screen", labyrunr_vblank_interrupt)
-	MCFG_CPU_PERIODIC_INT(labyrunr_timer_interrupt, 4*60)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", labyrunr_state,  labyrunr_vblank_interrupt)
+	MCFG_CPU_PERIODIC_INT_DRIVER(labyrunr_state, labyrunr_timer_interrupt,  4*60)
 
 
 	/* video hardware */
@@ -205,7 +205,7 @@ static MACHINE_CONFIG_START( labyrunr, labyrunr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(37*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 35*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(labyrunr)
+	MCFG_SCREEN_UPDATE_DRIVER(labyrunr_state, screen_update_labyrunr)
 
 	MCFG_GFXDECODE(labyrunr)
 	MCFG_PALETTE_LENGTH(2*8*16*16)

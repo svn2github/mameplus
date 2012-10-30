@@ -406,42 +406,40 @@ static const ym2203_interface thedeep_ym2203_intf =
 	DEVCB_LINE(irqhandler)
 };
 
-static TIMER_DEVICE_CALLBACK( thedeep_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(thedeep_state::thedeep_interrupt)
 {
-	thedeep_state *state = timer.machine().driver_data<thedeep_state>();
 	int scanline = param;
 
 	if (scanline == 124) // TODO: clean this
 	{
-		if (state->m_protection_command != 0x59)
+		if (m_protection_command != 0x59)
 		{
-			int coins = timer.machine().root_device().ioport("MCU")->read();
-			if		(coins & 1)	state->m_protection_data = 1;
-			else if	(coins & 2)	state->m_protection_data = 2;
-			else if	(coins & 4)	state->m_protection_data = 3;
-			else				state->m_protection_data = 0;
+			int coins = machine().root_device().ioport("MCU")->read();
+			if		(coins & 1)	m_protection_data = 1;
+			else if	(coins & 2)	m_protection_data = 2;
+			else if	(coins & 4)	m_protection_data = 3;
+			else				m_protection_data = 0;
 
-			if (state->m_protection_data)
-				state->m_protection_irq = 1;
+			if (m_protection_data)
+				m_protection_irq = 1;
 		}
-		if (state->m_protection_irq)
-			state->m_maincpu->set_input_line(0, HOLD_LINE);
+		if (m_protection_irq)
+			m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 	else if(scanline == 0)
 	{
-		if (state->m_nmi_enable)
+		if (m_nmi_enable)
 		{
-			state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
-			state->m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+			m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+			m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 		}
 	}
 }
 
-static INTERRUPT_GEN( thedeep_mcu_irq )
+INTERRUPT_GEN_MEMBER(thedeep_state::thedeep_mcu_irq)
 {
-	thedeep_state *state = device->machine().driver_data<thedeep_state>();
 
-	state->m_mcu->set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
+	m_mcu->set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( thedeep, thedeep_state )
@@ -449,7 +447,7 @@ static MACHINE_CONFIG_START( thedeep, thedeep_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", thedeep_interrupt, "screen", 0, 1) /* IRQ by MCU, NMI by vblank (maskable) */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", thedeep_state, thedeep_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M65C02, XTAL_12MHz/8)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
@@ -458,7 +456,7 @@ static MACHINE_CONFIG_START( thedeep, thedeep_state )
 	/* MCU is a i8751 running at 8Mhz (8mhz xtal)*/
 	MCFG_CPU_ADD("mcu", I8751, XTAL_8MHz)
 	MCFG_CPU_IO_MAP(mcu_io_map)
-	MCFG_CPU_VBLANK_INT("screen",thedeep_mcu_irq ) // unknown source, but presumably vblank
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thedeep_state, thedeep_mcu_irq) // unknown source, but presumably vblank
 	MCFG_DEVICE_DISABLE()
 
 
@@ -468,7 +466,7 @@ static MACHINE_CONFIG_START( thedeep, thedeep_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x100, 0xf8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x100-1, 0, 0xf8-1)
-	MCFG_SCREEN_UPDATE_STATIC(thedeep)
+	MCFG_SCREEN_UPDATE_DRIVER(thedeep_state, screen_update_thedeep)
 
 	MCFG_GFXDECODE(thedeep)
 	MCFG_PALETTE_LENGTH(512)

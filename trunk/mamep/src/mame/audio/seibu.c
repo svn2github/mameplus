@@ -104,12 +104,12 @@ static UINT8 decrypt_opcode(int a,int src)
 
 void seibu_sound_decrypt(running_machine &machine,const char *cpu,int length)
 {
-	address_space *space = machine.device(cpu)->memory().space(AS_PROGRAM);
+	address_space &space = machine.device(cpu)->memory().space(AS_PROGRAM);
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, length);
 	UINT8 *rom = machine.root_device().memregion(cpu)->base();
 	int i;
 
-	space->set_decrypted_region(0x0000, (length < 0x10000) ? (length - 1) : 0x1fff, decrypt);
+	space.set_decrypted_region(0x0000, (length < 0x10000) ? (length - 1) : 0x1fff, decrypt);
 
 	for (i = 0;i < length;i++)
 	{
@@ -296,7 +296,7 @@ static void update_irq_lines(running_machine &machine, int param)
 WRITE8_HANDLER( seibu_irq_clear_w )
 {
 	/* Denjin Makai and SD Gundam doesn't like this, it's tied to the rst18 ack ONLY so it could be related to it. */
-	//update_irq_lines(space->machine(), VECTOR_INIT);
+	//update_irq_lines(space.machine(), VECTOR_INIT);
 }
 
 WRITE8_HANDLER( seibu_rst10_ack_w )
@@ -306,7 +306,7 @@ WRITE8_HANDLER( seibu_rst10_ack_w )
 
 WRITE8_HANDLER( seibu_rst18_ack_w )
 {
-	update_irq_lines(space->machine(), RST18_CLEAR);
+	update_irq_lines(space.machine(), RST18_CLEAR);
 }
 
 void seibu_ym3812_irqhandler(device_t *device, int linestate)
@@ -314,9 +314,9 @@ void seibu_ym3812_irqhandler(device_t *device, int linestate)
 	update_irq_lines(device->machine(), linestate ? RST10_ASSERT : RST10_CLEAR);
 }
 
-void seibu_ym2151_irqhandler(device_t *device, int linestate)
+WRITE_LINE_DEVICE_HANDLER( seibu_ym2151_irqhandler )
 {
-	update_irq_lines(device->machine(), linestate ? RST10_ASSERT : RST10_CLEAR);
+	update_irq_lines(device->machine(), state ? RST10_ASSERT : RST10_CLEAR);
 }
 
 void seibu_ym2203_irqhandler(device_t *device, int linestate)
@@ -349,13 +349,13 @@ static int main2sub_pending,sub2main_pending;
 
 WRITE8_HANDLER( seibu_bank_w )
 {
-	space->machine().root_device().membank("bank1")->set_entry(data & 1);
+	space.machine().root_device().membank("bank1")->set_entry(data & 1);
 }
 
 WRITE8_HANDLER( seibu_coin_w )
 {
-	coin_counter_w(space->machine(), 0,data & 1);
-	coin_counter_w(space->machine(), 1,data & 2);
+	coin_counter_w(space.machine(), 0,data & 1);
+	coin_counter_w(space.machine(), 1,data & 2);
 }
 
 READ8_HANDLER( seibu_soundlatch_r )
@@ -382,7 +382,7 @@ static WRITE8_HANDLER( seibu_pending_w )
 
 READ16_HANDLER( seibu_main_word_r )
 {
-	//logerror("%06x: seibu_main_word_r(%x)\n",space->device().safe_pc(),offset);
+	//logerror("%06x: seibu_main_word_r(%x)\n",space.device().safe_pc(),offset);
 	switch (offset)
 	{
 		case 2:
@@ -391,14 +391,14 @@ READ16_HANDLER( seibu_main_word_r )
 		case 5:
 			return main2sub_pending ? 1 : 0;
 		default:
-			//logerror("%06x: seibu_main_word_r(%x)\n",space->device().safe_pc(),offset);
+			//logerror("%06x: seibu_main_word_r(%x)\n",space.device().safe_pc(),offset);
 			return 0xffff;
 	}
 }
 
 WRITE16_HANDLER( seibu_main_word_w )
 {
-	//printf("%06x: seibu_main_word_w(%x,%02x)\n",space->device().safe_pc(),offset,data);
+	//printf("%06x: seibu_main_word_w(%x,%02x)\n",space.device().safe_pc(),offset,data);
 	if (ACCESSING_BITS_0_7)
 	{
 		switch (offset)
@@ -408,7 +408,7 @@ WRITE16_HANDLER( seibu_main_word_w )
 				main2sub[offset] = data;
 				break;
 			case 4:
-				update_irq_lines(space->machine(), RST18_ASSERT);
+				update_irq_lines(space.machine(), RST18_ASSERT);
 				break;
 			case 2: //Sengoku Mahjong writes here
 			case 6:
@@ -417,7 +417,7 @@ WRITE16_HANDLER( seibu_main_word_w )
 				main2sub_pending = 1;
 				break;
 			default:
-				//logerror("%06x: seibu_main_word_w(%x,%02x)\n",space->device().safe_pc(),offset,data);
+				//logerror("%06x: seibu_main_word_w(%x,%02x)\n",space.device().safe_pc(),offset,data);
 				break;
 		}
 	}
@@ -440,7 +440,7 @@ WRITE16_HANDLER( seibu_main_mustb_w )
 
 //  logerror("seibu_main_mustb_w: %x -> %x %x\n", data, main2sub[0], main2sub[1]);
 
-	update_irq_lines(space->machine(), RST18_ASSERT);
+	update_irq_lines(space.machine(), RST18_ASSERT);
 }
 
 /***************************************************************************/
@@ -448,11 +448,6 @@ WRITE16_HANDLER( seibu_main_mustb_w )
 const ym3812_interface seibu_ym3812_interface =
 {
 	seibu_ym3812_irqhandler
-};
-
-const ym2151_interface seibu_ym2151_interface =
-{
-	DEVCB_LINE(seibu_ym2151_irqhandler)
 };
 
 const ym2203_interface seibu_ym2203_interface =
@@ -493,7 +488,7 @@ ADDRESS_MAP_START( seibu2_airraid_sound_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x4002, 0x4002) AM_WRITE_LEGACY(seibu_rst10_ack_w)
 	AM_RANGE(0x4003, 0x4003) AM_WRITE_LEGACY(seibu_rst18_ack_w)
 	AM_RANGE(0x4007, 0x4007) AM_WRITENOP // bank, always 0
-	AM_RANGE(0x4008, 0x4009) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x4008, 0x4009) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x4010, 0x4011) AM_READ_LEGACY(seibu_soundlatch_r)
 	AM_RANGE(0x4012, 0x4012) AM_READ_LEGACY(seibu_main_data_pending_r)
 	AM_RANGE(0x4013, 0x4013) AM_READ_PORT("COIN")
@@ -511,7 +506,7 @@ ADDRESS_MAP_START( seibu2_sound_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x4002, 0x4002) AM_WRITE_LEGACY(seibu_rst10_ack_w)
 	AM_RANGE(0x4003, 0x4003) AM_WRITE_LEGACY(seibu_rst18_ack_w)
 	AM_RANGE(0x4007, 0x4007) AM_WRITE_LEGACY(seibu_bank_w)
-	AM_RANGE(0x4008, 0x4009) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x4008, 0x4009) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x4010, 0x4011) AM_READ_LEGACY(seibu_soundlatch_r)
 	AM_RANGE(0x4012, 0x4012) AM_READ_LEGACY(seibu_main_data_pending_r)
 	AM_RANGE(0x4013, 0x4013) AM_READ_PORT("COIN")
@@ -528,7 +523,7 @@ ADDRESS_MAP_START( seibu2_raiden2_sound_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x4001, 0x4001) AM_WRITE_LEGACY(seibu_irq_clear_w)
 	AM_RANGE(0x4002, 0x4002) AM_WRITE_LEGACY(seibu_rst10_ack_w)
 	AM_RANGE(0x4003, 0x4003) AM_WRITE_LEGACY(seibu_rst18_ack_w)
-	AM_RANGE(0x4008, 0x4009) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x4008, 0x4009) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x4010, 0x4011) AM_READ_LEGACY(seibu_soundlatch_r)
 	AM_RANGE(0x4012, 0x4012) AM_READ_LEGACY(seibu_main_data_pending_r)
 	AM_RANGE(0x4013, 0x4013) AM_READ_PORT("COIN")
@@ -607,7 +602,7 @@ seibu_adpcm_device::seibu_adpcm_device(const machine_config &mconfig, const char
 	: device_t(mconfig, SEIBU_ADPCM, "Seibu ADPCM", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(seibu_adpcm_state));
+	m_token = global_alloc_clear(seibu_adpcm_state);
 }
 
 //-------------------------------------------------

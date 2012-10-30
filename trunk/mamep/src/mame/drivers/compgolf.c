@@ -248,7 +248,7 @@ static MACHINE_CONFIG_START( compgolf, compgolf_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2000000)
 	MCFG_CPU_PROGRAM_MAP(compgolf_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", compgolf_state,  nmi_line_pulse)
 
 
 	/* video hardware */
@@ -257,7 +257,7 @@ static MACHINE_CONFIG_START( compgolf, compgolf_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(compgolf)
+	MCFG_SCREEN_UPDATE_DRIVER(compgolf_state, screen_update_compgolf)
 
 	MCFG_PALETTE_LENGTH(0x100)
 	MCFG_GFXDECODE(compgolf)

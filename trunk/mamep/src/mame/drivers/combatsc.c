@@ -707,7 +707,7 @@ MACHINE_START_MEMBER(combatsc_state,combatscb)
 
 void combatsc_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	memset(m_io_ram,  0x00, 0x4000);
@@ -726,7 +726,7 @@ void combatsc_state::machine_reset()
 		m_sign[i] = 0;
 	}
 
-	combatsc_bankselect_w(*space, 0, 0);
+	combatsc_bankselect_w(space, 0, 0);
 }
 
 /* combat school (original) */
@@ -735,7 +735,7 @@ static MACHINE_CONFIG_START( combatsc, combatsc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)	/* 3 MHz? */
 	MCFG_CPU_PROGRAM_MAP(combatsc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", combatsc_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(combatsc_sound_map)
@@ -750,7 +750,7 @@ static MACHINE_CONFIG_START( combatsc, combatsc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(combatsc)
+	MCFG_SCREEN_UPDATE_DRIVER(combatsc_state, screen_update_combatsc)
 
 	MCFG_GFXDECODE(combatsc)
 	MCFG_PALETTE_LENGTH(8*16*16)
@@ -785,11 +785,11 @@ static MACHINE_CONFIG_START( combatscb, combatsc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)	/* 3 MHz? */
 	MCFG_CPU_PROGRAM_MAP(combatscb_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", combatsc_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(combatscb_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,3800) // controls BGM tempo
+	MCFG_CPU_PERIODIC_INT_DRIVER(combatsc_state, irq0_line_hold, 3800) // controls BGM tempo
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1200))
 
@@ -801,7 +801,7 @@ static MACHINE_CONFIG_START( combatscb, combatsc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(combatscb)
+	MCFG_SCREEN_UPDATE_DRIVER(combatsc_state, screen_update_combatscb)
 
 	MCFG_GFXDECODE(combatscb)
 	MCFG_PALETTE_LENGTH(8*16*16)
@@ -991,7 +991,7 @@ ROM_END
 DRIVER_INIT_MEMBER(combatsc_state,combatsc)
 {
 	/* joystick instead of trackball */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x0404, 0x0404, "IN1");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x0404, 0x0404, "IN1");
 }
 
 

@@ -61,7 +61,6 @@ void circusc_state::machine_start()
 
 	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_dac = machine().device<dac_device>("dac");
-	m_discrete = machine().device("fltdisc");
 
 	save_item(NAME(m_sn_latch));
 }
@@ -128,9 +127,9 @@ WRITE8_MEMBER(circusc_state::circusc_sound_w)
 
 		/* CS6 */
 		case 4:
-			discrete_sound_w(m_discrete, NODE_05, (offset & 0x20) >> 5);
-			discrete_sound_w(m_discrete, NODE_06, (offset & 0x18) >> 3);
-			discrete_sound_w(m_discrete, NODE_07, (offset & 0x40) >> 6);
+			discrete_sound_w(m_discrete, space, NODE_05, (offset & 0x20) >> 5);
+			discrete_sound_w(m_discrete, space, NODE_06, (offset & 0x18) >> 3);
+			discrete_sound_w(m_discrete, space, NODE_07, (offset & 0x40) >> 6);
 			break;
 	}
 }
@@ -345,12 +344,11 @@ static DISCRETE_SOUND_START( circusc )
 
 DISCRETE_SOUND_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(circusc_state::vblank_irq)
 {
-	circusc_state *state = device->machine().driver_data<circusc_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( circusc, circusc_state )
@@ -358,7 +356,7 @@ static MACHINE_CONFIG_START( circusc, circusc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2048000)        /* 2 MHz? */
 	MCFG_CPU_PROGRAM_MAP(circusc_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", circusc_state,  vblank_irq)
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_14_31818MHz/4)
@@ -371,7 +369,7 @@ static MACHINE_CONFIG_START( circusc, circusc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(circusc)
+	MCFG_SCREEN_UPDATE_DRIVER(circusc_state, screen_update_circusc)
 
 	MCFG_GFXDECODE(circusc)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
@@ -380,11 +378,11 @@ static MACHINE_CONFIG_START( circusc, circusc_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, XTAL_14_31818MHz/8)
+	MCFG_SOUND_ADD("sn1", SN76496, XTAL_14_31818MHz/8)
 	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE_EX(0, "fltdisc", 1.0, 0)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, XTAL_14_31818MHz/8)
+	MCFG_SOUND_ADD("sn2", SN76496, XTAL_14_31818MHz/8)
 	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE_EX(0, "fltdisc", 1.0, 1)
 

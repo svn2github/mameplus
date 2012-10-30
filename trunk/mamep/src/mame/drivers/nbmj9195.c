@@ -52,9 +52,9 @@ WRITE8_MEMBER(nbmj9195_state::nbmj9195_soundclr_w)
 	soundlatch_clear_byte_w(space, 0, 0);
 }
 
-static void nbmj9195_outcoin_flag_w(address_space *space, int data)
+static void nbmj9195_outcoin_flag_w(address_space &space, int data)
 {
-	nbmj9195_state *state = space->machine().driver_data<nbmj9195_state>();
+	nbmj9195_state *state = space.machine().driver_data<nbmj9195_state>();
 	// bit0: coin in counter
 	// bit1: coin out counter
 	// bit2: hopper
@@ -75,9 +75,9 @@ static int nbmj9195_dipsw_r(running_machine &machine)
 	return (((state->ioport("DSWA")->read() & 0xff) | ((state->ioport("DSWB")->read() & 0xff) << 8)) >> state->m_dipswbitsel) & 0x01;
 }
 
-static void nbmj9195_dipswbitsel_w(address_space *space, int data)
+static void nbmj9195_dipswbitsel_w(address_space &space, int data)
 {
-	nbmj9195_state *state = space->machine().driver_data<nbmj9195_state>();
+	nbmj9195_state *state = space.machine().driver_data<nbmj9195_state>();
 	switch (data & 0xc0)
 	{
 		case 0x00:
@@ -95,9 +95,9 @@ static void nbmj9195_dipswbitsel_w(address_space *space, int data)
 	}
 }
 
-static void mscoutm_inputportsel_w(address_space *space, int data)
+static void mscoutm_inputportsel_w(address_space &space, int data)
 {
-	nbmj9195_state *state = space->machine().driver_data<nbmj9195_state>();
+	nbmj9195_state *state = space.machine().driver_data<nbmj9195_state>();
 	state->m_mscoutm_inputport = (data ^ 0xff);
 }
 
@@ -316,17 +316,17 @@ WRITE8_MEMBER(nbmj9195_state::tmpz84c011_pio_w)
 		switch (offset)
 		{
 			case 0:			/* PA_0 */
-				mscoutm_inputportsel_w(&space, data);	// NB22090
+				mscoutm_inputportsel_w(space, data);	// NB22090
 				break;
 			case 1:			/* PB_0 */
 				break;
 			case 2:			/* PC_0 */
 				break;
 			case 3:			/* PD_0 */
-				nbmj9195_clutsel_w(&space, data);
+				nbmj9195_clutsel_w(space, data);
 				break;
 			case 4:			/* PE_0 */
-				nbmj9195_gfxflag2_w(&space, data);		// NB22090
+				nbmj9195_gfxflag2_w(space, data);		// NB22090
 				break;
 
 			case 5:			/* PA_1 */
@@ -358,13 +358,13 @@ WRITE8_MEMBER(nbmj9195_state::tmpz84c011_pio_w)
 			case 1:			/* PB_0 */
 				break;
 			case 2:			/* PC_0 */
-				nbmj9195_dipswbitsel_w(&space, data);
+				nbmj9195_dipswbitsel_w(space, data);
 				break;
 			case 3:			/* PD_0 */
-				nbmj9195_clutsel_w(&space, data);
+				nbmj9195_clutsel_w(space, data);
 				break;
 			case 4:			/* PE_0 */
-				nbmj9195_outcoin_flag_w(&space, data);
+				nbmj9195_outcoin_flag_w(space, data);
 				break;
 
 			case 5:			/* PA_1 */
@@ -611,9 +611,9 @@ WRITE8_MEMBER(nbmj9195_state::tmpz84c011_1_dir_pe_w)
 }
 
 /* CTC of main cpu, ch0 trigger is vblank */
-static INTERRUPT_GEN( ctc0_trg1 )
+INTERRUPT_GEN_MEMBER(nbmj9195_state::ctc0_trg1)
 {
-	z80ctc_device *ctc = device->machine().device<z80ctc_device>("main_ctc");
+	z80ctc_device *ctc = machine().device<z80ctc_device>("main_ctc");
 	ctc->trg1(1);
 	ctc->trg1(0);
 }
@@ -636,27 +636,27 @@ static Z80CTC_INTERFACE( ctc_intf_audio )
 
 void nbmj9195_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	// initialize TMPZ84C011 PIO
 	for (i = 0; i < (5 * 2); i++)
 	{
 		m_pio_dir[i] = m_pio_latch[i] = 0;
-		tmpz84c011_pio_w(*space, i, 0);
+		tmpz84c011_pio_w(space, i, 0);
 	}
 }
 
 DRIVER_INIT_MEMBER(nbmj9195_state,nbmj9195)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *ROM = memregion("audiocpu")->base();
 
 	// sound program patch
 	ROM[0x0213] = 0x00;			// DI -> NOP
 
 	// initialize sound rom bank
-	nbmj9195_soundbank_w(*space, 0, 0);
+	nbmj9195_soundbank_w(space, 0, 0);
 	logerror("DRIVER_INIT( nbmj9195 )\n");
 }
 
@@ -3165,7 +3165,7 @@ static MACHINE_CONFIG_START( NBMJDRV1, nbmj9195_state )
 	MCFG_CPU_CONFIG(daisy_chain_main)
 	MCFG_CPU_PROGRAM_MAP(sailorws_map)
 	MCFG_CPU_IO_MAP(sailorws_io_map)
-	MCFG_CPU_VBLANK_INT("screen", ctc0_trg1)				/* vblank is connect to ctc triggfer */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nbmj9195_state,  ctc0_trg1)				/* vblank is connect to ctc triggfer */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)					/* TMPZ84C011, 8.00 MHz */
 	MCFG_CPU_CONFIG(daisy_chain_sound)
@@ -3183,7 +3183,7 @@ static MACHINE_CONFIG_START( NBMJDRV1, nbmj9195_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(1024, 512)		/* no way this is correct */
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(nbmj9195)
+	MCFG_SCREEN_UPDATE_DRIVER(nbmj9195_state, screen_update_nbmj9195)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -3220,7 +3220,7 @@ static MACHINE_CONFIG_DERIVED( NBMJDRV3, NBMJDRV1 )
 
 	MCFG_VIDEO_START_OVERRIDE(nbmj9195_state,nbmj9195_nb22090)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(nbmj9195)
+	MCFG_SCREEN_UPDATE_DRIVER(nbmj9195_state, screen_update_nbmj9195)
 MACHINE_CONFIG_END
 
 

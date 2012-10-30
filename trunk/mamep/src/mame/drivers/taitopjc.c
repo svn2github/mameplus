@@ -83,6 +83,7 @@ public:
 	DECLARE_WRITE8_MEMBER(taitopjc_tlcs900_to1);
 	DECLARE_WRITE8_MEMBER(taitopjc_tlcs900_to3);
 	virtual void video_start();
+	UINT32 screen_update_taitopjc(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 void taitopjc_state::video_start()
@@ -90,7 +91,7 @@ void taitopjc_state::video_start()
 
 }
 
-static SCREEN_UPDATE_RGB32( taitopjc )
+UINT32 taitopjc_state::screen_update_taitopjc(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	{
 		UINT8 *s = (UINT8*)jc_char_ram;
@@ -109,7 +110,6 @@ static SCREEN_UPDATE_RGB32( taitopjc )
 				tile &= 0xff;
 				tile -= 0x40;
 
-				if (tile < 0) tile = 0;
 				if (tile > 127) tile = 127;
 
 				for (y=0; y < 16; y++)
@@ -130,7 +130,7 @@ static SCREEN_UPDATE_RGB32( taitopjc )
 
 static UINT32 video_address;
 
-static UINT32 videochip_r(address_space *space, offs_t address)
+static UINT32 videochip_r(address_space &space, offs_t address)
 {
 	UINT32 r = 0;
 
@@ -142,14 +142,14 @@ static UINT32 videochip_r(address_space *space, offs_t address)
 	return r;
 }
 
-static void videochip_w(address_space *space, offs_t address, UINT32 data)
+static void videochip_w(address_space &space, offs_t address, UINT32 data)
 {
 	if (address >= 0x20000000 && address < 0x20008000)
 	{
 		//UINT32 r = (data >> 16) & 0xff;
 		//UINT32 g = (data >> 8) & 0xff;
 		//UINT32 b = (data >> 0) & 0xff;
-		//palette_set_color_rgb(space->machine, address & 0x7fff, r, g, b);
+		//palette_set_color_rgb(space.machine, address & 0x7fff, r, g, b);
 	}
 	else if (address >= 0x1003d000 && address < 0x1003f000)
 	{
@@ -177,7 +177,7 @@ READ64_MEMBER(taitopjc_state::video_r)
 	{
 		if (ACCESSING_BITS_32_63)
 		{
-			r |= (UINT64)(videochip_r(&space, video_address)) << 32;
+			r |= (UINT64)(videochip_r(space, video_address)) << 32;
 		}
 	}
 
@@ -191,7 +191,7 @@ WRITE64_MEMBER(taitopjc_state::video_w)
 		if (ACCESSING_BITS_32_63)
 		{
 			//printf("Address %08X = %08X\n", video_address, (UINT32)(data >> 32));
-			videochip_w(&space, video_address, (UINT32)(data >> 32));
+			videochip_w(space, video_address, (UINT32)(data >> 32));
 		}
 	}
 	if (offset == 1)
@@ -432,7 +432,7 @@ static MACHINE_CONFIG_START( taitopjc, taitopjc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(640, 768)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 767)
-	MCFG_SCREEN_UPDATE_STATIC(taitopjc)
+	MCFG_SCREEN_UPDATE_DRIVER(taitopjc_state, screen_update_taitopjc)
 
 MACHINE_CONFIG_END
 

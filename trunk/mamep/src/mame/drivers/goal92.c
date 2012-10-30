@@ -315,7 +315,7 @@ static MACHINE_CONFIG_START( goal92, goal92_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,12000000)
 	MCFG_CPU_PROGRAM_MAP(goal92_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold) /* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goal92_state,  irq6_line_hold) /* VBL */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 2500000)
 	MCFG_CPU_PROGRAM_MAP(sound_cpu)
@@ -328,8 +328,8 @@ static MACHINE_CONFIG_START( goal92, goal92_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1) // black border at bottom is a game bug...
-	MCFG_SCREEN_UPDATE_STATIC(goal92)
-	MCFG_SCREEN_VBLANK_STATIC(goal92)
+	MCFG_SCREEN_UPDATE_DRIVER(goal92_state, screen_update_goal92)
+	MCFG_SCREEN_VBLANK_DRIVER(goal92_state, screen_eof_goal92)
 
 	MCFG_GFXDECODE(goal92)
 	MCFG_PALETTE_LENGTH(128*16)

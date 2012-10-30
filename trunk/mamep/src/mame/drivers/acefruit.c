@@ -39,59 +39,59 @@ public:
 	DECLARE_DRIVER_INIT(sidewndr);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_acefruit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(acefruit_vblank);
+	TIMER_CALLBACK_MEMBER(acefruit_refresh);
+	void acefruit_update_irq(int vpos);
 };
 
 
 
-static void acefruit_update_irq(running_machine &machine, int vpos )
+void acefruit_state::acefruit_update_irq(int vpos)
 {
-	acefruit_state *state = machine.driver_data<acefruit_state>();
 	int col;
 	int row = vpos / 8;
 
 	for( col = 0; col < 32; col++ )
 	{
 		int tile_index = ( col * 32 ) + row;
-		int color = state->m_colorram[ tile_index ];
+		int color = m_colorram[ tile_index ];
 
 		switch( color )
 		{
 		case 0x0c:
-			machine.device("maincpu")->execute().set_input_line(0, HOLD_LINE );
+			machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE );
 			break;
 		}
 	}
 }
 
 
-static TIMER_CALLBACK( acefruit_refresh )
+TIMER_CALLBACK_MEMBER(acefruit_state::acefruit_refresh)
 {
-	acefruit_state *state = machine.driver_data<acefruit_state>();
-	int vpos = machine.primary_screen->vpos();
+	int vpos = machine().primary_screen->vpos();
 
-	machine.primary_screen->update_partial(vpos );
-	acefruit_update_irq(machine, vpos );
+	machine().primary_screen->update_partial(vpos );
+	acefruit_update_irq(vpos);
 
 	vpos = ( ( vpos / 8 ) + 1 ) * 8;
 
-	state->m_refresh_timer->adjust( machine.primary_screen->time_until_pos(vpos) );
+	m_refresh_timer->adjust( machine().primary_screen->time_until_pos(vpos) );
 }
 
 void acefruit_state::video_start()
 {
-	m_refresh_timer = machine().scheduler().timer_alloc(FUNC(acefruit_refresh));
+	m_refresh_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(acefruit_state::acefruit_refresh),this));
 }
 
-static INTERRUPT_GEN( acefruit_vblank )
+INTERRUPT_GEN_MEMBER(acefruit_state::acefruit_vblank)
 {
-	acefruit_state *state = device->machine().driver_data<acefruit_state>();
-	device->execute().set_input_line(0, HOLD_LINE );
-	state->m_refresh_timer->adjust( attotime::zero );
+	device.execute().set_input_line(0, HOLD_LINE );
+	m_refresh_timer->adjust( attotime::zero );
 }
 
-static SCREEN_UPDATE_IND16( acefruit )
+UINT32 acefruit_state::screen_update_acefruit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	acefruit_state *state = screen.machine().driver_data<acefruit_state>();
 	int startrow = cliprect.min_y / 8;
 	int endrow = cliprect.max_y / 8;
 	int row;
@@ -106,12 +106,12 @@ static SCREEN_UPDATE_IND16( acefruit )
 		for( col = 0; col < 32; col++ )
 		{
 			int tile_index = ( col * 32 ) + row;
-			int code = state->m_videoram[ tile_index ];
-			int color = state->m_colorram[ tile_index ];
+			int code = m_videoram[ tile_index ];
+			int color = m_colorram[ tile_index ];
 
 			if( color < 0x4 )
 			{
-				drawgfx_opaque( bitmap, cliprect, screen.machine().gfx[ 1 ], code, color, 0, 0, col * 16, row * 8 );
+				drawgfx_opaque( bitmap, cliprect, machine().gfx[ 1 ], code, color, 0, 0, col * 16, row * 8 );
 			}
 			else if( color >= 0x5 && color <= 0x7 )
 			{
@@ -119,11 +119,11 @@ static SCREEN_UPDATE_IND16( acefruit )
 				int x;
 				static const int spriteskip[] = { 1, 2, 4 };
 				int spritesize = spriteskip[ color - 5 ];
-				gfx_element *gfx = screen.machine().gfx[ 0 ];
+				gfx_element *gfx = machine().gfx[ 0 ];
 
 				for( x = 0; x < 16; x++ )
 				{
-					int sprite = ( state->m_spriteram[ ( spriteindex / 64 ) % 6 ] & 0xf ) ^ 0xf;
+					int sprite = ( m_spriteram[ ( spriteindex / 64 ) % 6 ] & 0xf ) ^ 0xf;
 					const UINT8 *gfxdata = gfx->get_data(sprite);
 
 					for( y = 0; y < 8; y++ )
@@ -584,7 +584,7 @@ static MACHINE_CONFIG_START( acefruit, acefruit_state )
 	MCFG_CPU_PROGRAM_MAP(acefruit_map)
 	MCFG_CPU_IO_MAP(acefruit_io)
 	MCFG_GFXDECODE(acefruit)
-	MCFG_CPU_VBLANK_INT("screen", acefruit_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", acefruit_state,  acefruit_vblank)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -592,7 +592,7 @@ static MACHINE_CONFIG_START( acefruit, acefruit_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 255)
-	MCFG_SCREEN_UPDATE_STATIC(acefruit)
+	MCFG_SCREEN_UPDATE_DRIVER(acefruit_state, screen_update_acefruit)
 
 	MCFG_PALETTE_LENGTH(16)
 

@@ -269,19 +269,19 @@ static const pia6821_interface pia_1_intf =
 	DEVCB_DRIVER_LINE_MEMBER(spiders_state,main_cpu_irq)		/* IRQB */
 };
 
-static INTERRUPT_GEN( update_pia_1 )
+INTERRUPT_GEN_MEMBER(spiders_state::update_pia_1)
 {
-	pia6821_device *pia1 = device->machine().device<pia6821_device>("pia1");
+	pia6821_device *pia1 = machine().device<pia6821_device>("pia1");
 	/* update the different PIA pins from the input ports */
 
 	/* CA1 - copy of PA1 (COIN1) */
-	pia1->ca1_w(device->machine().root_device().ioport("IN0")->read() & 0x02);
+	pia1->ca1_w(machine().root_device().ioport("IN0")->read() & 0x02);
 
 	/* CA2 - copy of PA0 (SERVICE1) */
-	pia1->ca2_w(device->machine().root_device().ioport("IN0")->read() & 0x01);
+	pia1->ca2_w(machine().root_device().ioport("IN0")->read() & 0x01);
 
 	/* CB1 - (crosshatch) */
-	pia1->cb1_w(device->machine().root_device().ioport("XHATCH")->read());
+	pia1->cb1_w(machine().root_device().ioport("XHATCH")->read());
 
 	/* CB2 - NOT CONNECTED */
 }
@@ -326,8 +326,8 @@ static const pia6821_interface pia_3_intf =
 	DEVCB_NULL,		/* line CB1 in */
 	DEVCB_NULL,		/* line CA2 in */
 	DEVCB_NULL,		/* line CB2 in */
-	DEVCB_DEVICE_HANDLER("discrete", spiders_audio_ctrl_w),		/* port A out */
-	DEVCB_DEVICE_HANDLER("pia4", spiders_audio_command_w),		/* port B out */
+	DEVCB_DRIVER_MEMBER(spiders_state, spiders_audio_ctrl_w),		/* port A out */
+	DEVCB_DRIVER_MEMBER(spiders_state, spiders_audio_command_w),		/* port B out */
 	DEVCB_NULL,		/* line CA2 out */
 	DEVCB_NULL,		/* port CB2 out */
 	DEVCB_DRIVER_LINE_MEMBER(spiders_state,main_cpu_irq),		/* IRQA */
@@ -350,8 +350,8 @@ static const pia6821_interface pia_4_intf =
 	DEVCB_NULL,		/* line CB1 in */
 	DEVCB_NULL,		/* line CA2 in */
 	DEVCB_NULL,		/* line CB2 in */
-	DEVCB_DEVICE_HANDLER("discrete", spiders_audio_a_w),		/* port A out */
-	DEVCB_DEVICE_HANDLER("discrete", spiders_audio_b_w),		/* port B out */
+	DEVCB_DRIVER_MEMBER(spiders_state, spiders_audio_a_w),		/* port A out */
+	DEVCB_DRIVER_MEMBER(spiders_state, spiders_audio_b_w),		/* port B out */
 	DEVCB_NULL,		/* line CA2 out */
 	DEVCB_NULL,		/* port CB2 out */
 	DEVCB_DRIVER_LINE_MEMBER(spiders_state,audio_cpu_irq),		/* IRQA */
@@ -372,9 +372,9 @@ static const pia6821_interface pia_4_intf =
  *
  *************************************/
 
-static WRITE8_DEVICE_HANDLER( ic60_74123_output_changed)
+WRITE8_MEMBER(spiders_state::ic60_74123_output_changed)
 {
-	pia6821_device *pia2 = device->machine().device<pia6821_device>("pia2");
+	pia6821_device *pia2 = machine().device<pia6821_device>("pia2");
 	pia2->ca1_w(data);
 }
 
@@ -387,7 +387,7 @@ static const ttl74123_interface ic60_intf =
 	1,					/* A pin - driven by the CRTC */
 	1,					/* B pin - pulled high */
 	1,					/* Clear pin - pulled high */
-	ic60_74123_output_changed
+	DEVCB_DRIVER_MEMBER(spiders_state,ic60_74123_output_changed)
 };
 
 
@@ -500,7 +500,8 @@ static MC6845_UPDATE_ROW( update_row )
 
 WRITE_LINE_MEMBER(spiders_state::display_enable_changed)
 {
-	ttl74123_a_w(machine().device("ic60"), 0, state);
+	address_space &space = generic_space();
+	ttl74123_a_w(machine().device("ic60"), space, 0, state);
 }
 
 
@@ -692,7 +693,7 @@ static MACHINE_CONFIG_START( spiders, spiders_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2800000)
 	MCFG_CPU_PROGRAM_MAP(spiders_main_map)
-	MCFG_CPU_PERIODIC_INT(update_pia_1, 25)
+	MCFG_CPU_PERIODIC_INT_DRIVER(spiders_state, update_pia_1,  25)
 
 	MCFG_CPU_ADD("audiocpu", M6802, 3000000)
 	MCFG_CPU_PROGRAM_MAP(spiders_audio_map)

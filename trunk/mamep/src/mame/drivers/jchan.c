@@ -224,6 +224,8 @@ public:
 
 	DECLARE_DRIVER_INIT(jchan);
 	virtual void video_start();
+	UINT32 screen_update_jchan(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(jchan_vblank);
 };
 
 
@@ -242,27 +244,26 @@ public:
 //  if it is incorrect jchan2 will crash when
 //  certain characters win/lose but no finish
 //  move was performed
-static TIMER_DEVICE_CALLBACK( jchan_vblank )
+TIMER_DEVICE_CALLBACK_MEMBER(jchan_state::jchan_vblank)
 {
-	jchan_state *state = timer.machine().driver_data<jchan_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 11)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
-	if (state->m_irq_sub_enable)
+	if (m_irq_sub_enable)
 	{
 		if(scanline == 240)
-			state->m_subcpu->set_input_line(1, HOLD_LINE);
+			m_subcpu->set_input_line(1, HOLD_LINE);
 
 		if(scanline == 249)
-			state->m_subcpu->set_input_line(2, HOLD_LINE);
+			m_subcpu->set_input_line(2, HOLD_LINE);
 
 		if(scanline == 11)
-			state->m_subcpu->set_input_line(3, HOLD_LINE);
+			m_subcpu->set_input_line(3, HOLD_LINE);
 	}
 }
 
@@ -295,9 +296,8 @@ void jchan_state::video_start()
 
 
 
-static SCREEN_UPDATE_IND16(jchan)
+UINT32 jchan_state::screen_update_jchan(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jchan_state *state = screen.machine().driver_data<jchan_state>();
 	int x,y;
 	UINT16* src1;
 	UINT16* src2;
@@ -305,28 +305,28 @@ static SCREEN_UPDATE_IND16(jchan)
 	UINT16 pixdata1;
 	UINT16 pixdata2;
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
-	state->m_view2_0->kaneko16_prepare(bitmap, cliprect);
+	m_view2_0->kaneko16_prepare(bitmap, cliprect);
 
 	for ( int i = 0; i < 8; i++ )
 	{
-		state->m_view2_0->render_tilemap_chip(bitmap,cliprect,i);
+		m_view2_0->render_tilemap_chip(bitmap,cliprect,i);
 	}
 
-	state->m_sprite_bitmap_1->fill(0x0000, cliprect);
-	state->m_sprite_bitmap_2->fill(0x0000, cliprect);
+	m_sprite_bitmap_1->fill(0x0000, cliprect);
+	m_sprite_bitmap_2->fill(0x0000, cliprect);
 
-	state->m_spritegen1->skns_draw_sprites(screen.machine(), *state->m_sprite_bitmap_1, cliprect, state->m_sprite_ram32_1, 0x4000, screen.machine().root_device().memregion("gfx1")->base(), screen.machine().root_device().memregion ("gfx1")->bytes(), state->m_sprite_regs32_1 );
-	state->m_spritegen2->skns_draw_sprites(screen.machine(), *state->m_sprite_bitmap_2, cliprect, state->m_sprite_ram32_2, 0x4000, screen.machine().root_device().memregion("gfx2")->base(), state->memregion ("gfx2")->bytes(), state->m_sprite_regs32_2 );
+	m_spritegen1->skns_draw_sprites(machine(), *m_sprite_bitmap_1, cliprect, m_sprite_ram32_1, 0x4000, machine().root_device().memregion("gfx1")->base(), machine().root_device().memregion ("gfx1")->bytes(), m_sprite_regs32_1 );
+	m_spritegen2->skns_draw_sprites(machine(), *m_sprite_bitmap_2, cliprect, m_sprite_ram32_2, 0x4000, machine().root_device().memregion("gfx2")->base(), memregion ("gfx2")->bytes(), m_sprite_regs32_2 );
 
 	// ignoring priority bits for now - might use alpha too, check 0x8000 of palette writes
 	for (y=0;y<240;y++)
 	{
-		src1 = &state->m_sprite_bitmap_1->pix16(y);
-		src2 = &state->m_sprite_bitmap_2->pix16(y);
+		src1 = &m_sprite_bitmap_1->pix16(y);
+		src2 = &m_sprite_bitmap_2->pix16(y);
 		dst =  &bitmap.pix16(y);
 
 		for (x=0;x<320;x++)
@@ -599,7 +599,7 @@ static MACHINE_CONFIG_START( jchan, jchan_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(jchan_main)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", jchan_vblank, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", jchan_state, jchan_vblank, "screen", 0, 1)
 
 	MCFG_CPU_ADD("sub", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(jchan_sub)
@@ -612,7 +612,7 @@ static MACHINE_CONFIG_START( jchan, jchan_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jchan)
+	MCFG_SCREEN_UPDATE_DRIVER(jchan_state, screen_update_jchan)
 
 	MCFG_PALETTE_LENGTH(0x10000)
 
@@ -722,8 +722,8 @@ ROM_END
 
 DRIVER_INIT_MEMBER( jchan_state, jchan )
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x403ffe, 0x403fff, write16_delegate(FUNC(jchan_state::main2sub_cmd_w),this));
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_write_handler(0x400000, 0x400001, write16_delegate(FUNC(jchan_state::sub2main_cmd_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x403ffe, 0x403fff, write16_delegate(FUNC(jchan_state::main2sub_cmd_w),this));
+	machine().device("sub")->memory().space(AS_PROGRAM).install_write_handler(0x400000, 0x400001, write16_delegate(FUNC(jchan_state::sub2main_cmd_w),this));
 }
 
 

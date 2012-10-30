@@ -322,33 +322,31 @@ WRITE16_MEMBER(topspeed_state::cpua_ctrl_w)
 
 /* 68000 A */
 
-static TIMER_CALLBACK( topspeed_interrupt6  )
+TIMER_CALLBACK_MEMBER(topspeed_state::topspeed_interrupt6)
 {
-	topspeed_state *state = machine.driver_data<topspeed_state>();
-	state->m_maincpu->set_input_line(6, HOLD_LINE);
+	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 /* 68000 B */
 
-static TIMER_CALLBACK( topspeed_cpub_interrupt6 )
+TIMER_CALLBACK_MEMBER(topspeed_state::topspeed_cpub_interrupt6)
 {
-	topspeed_state *state = machine.driver_data<topspeed_state>();
-	state->m_subcpu->set_input_line(6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
+	m_subcpu->set_input_line(6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
 }
 
 
-static INTERRUPT_GEN( topspeed_interrupt )
+INTERRUPT_GEN_MEMBER(topspeed_state::topspeed_interrupt)
 {
 	/* Unsure how many int6's per frame */
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(topspeed_interrupt6));
-	device->execute().set_input_line(5, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(topspeed_state::topspeed_interrupt6),this));
+	device.execute().set_input_line(5, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( topspeed_cpub_interrupt )
+INTERRUPT_GEN_MEMBER(topspeed_state::topspeed_cpub_interrupt)
 {
 	/* Unsure how many int6's per frame */
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(topspeed_cpub_interrupt6));
-	device->execute().set_input_line(5, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(topspeed_state::topspeed_cpub_interrupt6),this));
+	device.execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -359,7 +357,7 @@ static INTERRUPT_GEN( topspeed_cpub_interrupt )
 
 READ8_MEMBER(topspeed_state::topspeed_input_bypass_r)
 {
-	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, 0);	/* read port number */
+	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, space, 0);	/* read port number */
 	UINT16 steer = 0xff80 + ioport("STEER")->read_safe(0);
 
 	switch (port)
@@ -371,7 +369,7 @@ READ8_MEMBER(topspeed_state::topspeed_input_bypass_r)
 			return steer >> 8;
 
 		default:
-			return tc0220ioc_portreg_r(m_tc0220ioc, offset);
+			return tc0220ioc_portreg_r(m_tc0220ioc, space, offset);
 	}
 }
 
@@ -421,10 +419,11 @@ WRITE8_MEMBER(topspeed_state::sound_bankswitch_w)/* assumes Z80 sandwiched betwe
 	reset_sound_region(machine());
 }
 
-static WRITE8_DEVICE_HANDLER( topspeed_tc0140syt_comm_w )
+WRITE8_MEMBER(topspeed_state::topspeed_tc0140syt_comm_w)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-	tc0140syt_comm_w(device, 0, data);
+	device_t *device = machine().device("tc0140syt");
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	tc0140syt_comm_w(device, space, 0, data);
 }
 
 static void topspeed_msm5205_clock( device_t *device, int chip )
@@ -506,7 +505,7 @@ static ADDRESS_MAP_START( topspeed_map, AS_PROGRAM, 16, topspeed_state )
 	AM_RANGE(0x500000, 0x503fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x600002, 0x600003) AM_WRITE(cpua_ctrl_w)
 	AM_RANGE(0x7e0000, 0x7e0001) AM_READNOP AM_DEVWRITE8_LEGACY("tc0140syt", tc0140syt_port_w, 0x00ff)
-	AM_RANGE(0x7e0002, 0x7e0003) AM_DEVREADWRITE8_LEGACY("tc0140syt", tc0140syt_comm_r, topspeed_tc0140syt_comm_w, 0x00ff)
+	AM_RANGE(0x7e0002, 0x7e0003) AM_DEVREAD8_LEGACY("tc0140syt", tc0140syt_comm_r, 0x00ff) AM_WRITE8(topspeed_tc0140syt_comm_w, 0x00ff)
 	AM_RANGE(0x800000, 0x8003ff) AM_RAM AM_SHARE("raster_ctrl")
 	AM_RANGE(0x800400, 0x80ffff) AM_RAM
 	AM_RANGE(0xa00000, 0xa0ffff) AM_DEVREADWRITE_LEGACY("pc080sn_1", pc080sn_word_r, pc080sn_word_w)
@@ -536,7 +535,7 @@ static ADDRESS_MAP_START( z80_map, AS_PROGRAM, 8, topspeed_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xb000, 0xd3ff) AM_WRITE(topspeed_msm5205_command_w)
@@ -656,20 +655,6 @@ GFXDECODE_END
                         YM2151 (SOUND)
 **************************************************************/
 
-/* handler called by the YM2151 emulator when the internal timers cause an IRQ */
-
-static void irq_handler( device_t *device, int irq )	/* assumes Z80 sandwiched between 68Ks */
-{
-	topspeed_state *state = device->machine().driver_data<topspeed_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler),
-	DEVCB_DRIVER_MEMBER(topspeed_state,sound_bankswitch_w)
-};
-
 static const msm5205_interface msm5205_config_1 =
 {
 	topspeed_msm5205_vck_1,	/* VCK function */
@@ -751,14 +736,14 @@ static MACHINE_CONFIG_START( topspeed, topspeed_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(topspeed_map)
-	MCFG_CPU_VBLANK_INT("screen", topspeed_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", topspeed_state,  topspeed_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz / 4)
 	MCFG_CPU_PROGRAM_MAP(z80_map)
 
 	MCFG_CPU_ADD("subcpu", M68000, 12000000)	/* 12 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(topspeed_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", topspeed_cpub_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", topspeed_state,  topspeed_cpub_interrupt)
 
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", topspeed_io_intf)
@@ -769,7 +754,7 @@ static MACHINE_CONFIG_START( topspeed, topspeed_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(topspeed)
+	MCFG_SCREEN_UPDATE_DRIVER(topspeed_state, screen_update_topspeed)
 
 	MCFG_GFXDECODE(topspeed)
 	MCFG_PALETTE_LENGTH(8192)
@@ -780,8 +765,9 @@ static MACHINE_CONFIG_START( topspeed, topspeed_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_16MHz / 4)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz / 4)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(topspeed_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.30)
 

@@ -395,32 +395,30 @@ D                                                                               
 
 /******************************************************************************/
 
-static TIMER_CALLBACK( equites_nmi_callback )
+TIMER_CALLBACK_MEMBER(equites_state::equites_nmi_callback)
 {
-	equites_state *state = machine.driver_data<equites_state>();
-	state->m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
-static TIMER_CALLBACK( equites_frq_adjuster_callback )
+TIMER_CALLBACK_MEMBER(equites_state::equites_frq_adjuster_callback)
 {
-	equites_state *state = machine.driver_data<equites_state>();
-	UINT8 frq = state->ioport(FRQ_ADJUSTER_TAG)->read();
+	UINT8 frq = ioport(FRQ_ADJUSTER_TAG)->read();
 
-	msm5232_set_clock(state->m_msm, MSM5232_MIN_CLOCK + frq * (MSM5232_MAX_CLOCK - MSM5232_MIN_CLOCK) / 100);
-//popmessage("8155: C %02x A %02x  AY: A %02x B %02x Unk:%x", state->m_eq8155_port_c, state->m_eq8155_port_a, state->m_ay_port_a, state->m_ay_port_b, state->m_eq_cymbal_ctrl & 15);
+	msm5232_set_clock(m_msm, MSM5232_MIN_CLOCK + frq * (MSM5232_MAX_CLOCK - MSM5232_MIN_CLOCK) / 100);
+//popmessage("8155: C %02x A %02x  AY: A %02x B %02x Unk:%x", m_eq8155_port_c, m_eq8155_port_a, m_ay_port_a, m_ay_port_b, m_eq_cymbal_ctrl & 15);
 
-	state->m_cymvol *= 0.94f;
-	state->m_hihatvol *= 0.94f;
+	m_cymvol *= 0.94f;
+	m_hihatvol *= 0.94f;
 
-	state->m_msm->set_output_gain(10, state->m_hihatvol + state->m_cymvol * (state->m_ay_port_b & 3) * 0.33);	/* NO from msm5232 */
+	m_msm->set_output_gain(10, m_hihatvol + m_cymvol * (m_ay_port_b & 3) * 0.33);	/* NO from msm5232 */
 }
 
 static SOUND_START(equites)
 {
 	equites_state *state = machine.driver_data<equites_state>();
-	state->m_nmi_timer = machine.scheduler().timer_alloc(FUNC(equites_nmi_callback));
+	state->m_nmi_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(equites_state::equites_nmi_callback),state));
 
-	state->m_adjuster_timer = machine.scheduler().timer_alloc(FUNC(equites_frq_adjuster_callback));
+	state->m_adjuster_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(equites_state::equites_frq_adjuster_callback),state));
 	state->m_adjuster_timer->adjust(attotime::from_hz(60), 0, attotime::from_hz(60));
 }
 
@@ -566,7 +564,7 @@ WRITE8_MEMBER(equites_state::equites_8155_portb_w)
 	equites_update_dac(machine());
 }
 
-static void equites_msm5232_gate( device_t *device, int state )
+WRITE_LINE_MEMBER(equites_state::equites_msm5232_gate)
 {
 }
 
@@ -577,26 +575,26 @@ static void equites_msm5232_gate( device_t *device, int state )
 // Interrupt Handlers
 
 // Equites Hardware
-static TIMER_DEVICE_CALLBACK( equites_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(equites_state::equites_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 232) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 
 	if(scanline == 24) // vblank-in irq
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( splndrbt_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(equites_state::splndrbt_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 
 	if(scanline == 32) // vblank-in irq
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 WRITE8_MEMBER(equites_state::equites_8155_w)
@@ -1113,7 +1111,7 @@ GFXDECODE_END
 static const msm5232_interface equites_5232intf =
 {
 	{ 0.47e-6, 0.47e-6, 0.47e-6, 0.47e-6, 0.47e-6, 0.47e-6, 0.47e-6, 0.47e-6 }, // verified
-	equites_msm5232_gate
+	DEVCB_DRIVER_LINE_MEMBER(equites_state,equites_msm5232_gate)
 };
 
 
@@ -1251,7 +1249,7 @@ static MACHINE_CONFIG_START( equites, equites_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz/4) /* 68000P8 running at 3mhz! verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(equites_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", equites_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", equites_state, equites_scanline, "screen", 0, 1)
 
 	MCFG_FRAGMENT_ADD(common_sound)
 
@@ -1263,7 +1261,7 @@ static MACHINE_CONFIG_START( equites, equites_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 3*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(equites)
+	MCFG_SCREEN_UPDATE_DRIVER(equites_state, screen_update_equites)
 
 	MCFG_GFXDECODE(equites)
 	MCFG_PALETTE_LENGTH(0x180)
@@ -1288,7 +1286,7 @@ static MACHINE_CONFIG_START( splndrbt, equites_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/4) /* 68000P8 running at 6mhz, verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(splndrbt_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", splndrbt_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", equites_state, splndrbt_scanline, "screen", 0, 1)
 
 	MCFG_FRAGMENT_ADD(common_sound)
 
@@ -1300,7 +1298,7 @@ static MACHINE_CONFIG_START( splndrbt, equites_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(splndrbt)
+	MCFG_SCREEN_UPDATE_DRIVER(equites_state, screen_update_splndrbt)
 
 	MCFG_GFXDECODE(splndrbt)
 	MCFG_PALETTE_LENGTH(0x280)
@@ -1896,8 +1894,8 @@ DRIVER_INIT_MEMBER(equites_state,gekisou)
 	unpack_region(machine(), "gfx3");
 
 	// install special handlers for unknown device (protection?)
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x580000, 0x580001, write16_delegate(FUNC(equites_state::gekisou_unknown_0_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x5a0000, 0x5a0001, write16_delegate(FUNC(equites_state::gekisou_unknown_1_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x580000, 0x580001, write16_delegate(FUNC(equites_state::gekisou_unknown_0_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x5a0000, 0x5a0001, write16_delegate(FUNC(equites_state::gekisou_unknown_1_w),this));
 }
 
 DRIVER_INIT_MEMBER(equites_state,splndrbt)
@@ -1910,7 +1908,7 @@ DRIVER_INIT_MEMBER(equites_state,hvoltage)
 	unpack_region(machine(), "gfx3");
 
 #if HVOLTAGE_DEBUG
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x000038, 0x000039, read16_delegate(FUNC(equites_state::hvoltage_debug_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x000038, 0x000039, read16_delegate(FUNC(equites_state::hvoltage_debug_r),this));
 #endif
 }
 

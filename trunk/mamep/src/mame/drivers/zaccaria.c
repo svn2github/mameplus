@@ -112,7 +112,7 @@ WRITE_LINE_MEMBER(zaccaria_state::zaccaria_irq0b)
 
 READ8_MEMBER(zaccaria_state::zaccaria_port0a_r)
 {
-	return ay8910_r(machine().device((m_active_8910 == 0) ? "ay1" : "ay2"), 0);
+	return ay8910_r(machine().device((m_active_8910 == 0) ? "ay1" : "ay2"), space, 0);
 }
 
 WRITE8_MEMBER(zaccaria_state::zaccaria_port0a_w)
@@ -127,7 +127,7 @@ WRITE8_MEMBER(zaccaria_state::zaccaria_port0b_w)
 	if ((m_last_port0b & 0x02) == 0x02 && (data & 0x02) == 0x00)
 	{
 		/* bit 0 goes to the 8910 #0 BC1 pin */
-		ay8910_data_address_w(machine().device("ay1"), m_last_port0b, m_port0a);
+		ay8910_data_address_w(machine().device("ay1"), space, m_last_port0b, m_port0a);
 	}
 	else if ((m_last_port0b & 0x02) == 0x00 && (data & 0x02) == 0x02)
 	{
@@ -139,7 +139,7 @@ WRITE8_MEMBER(zaccaria_state::zaccaria_port0b_w)
 	if ((m_last_port0b & 0x08) == 0x08 && (data & 0x08) == 0x00)
 	{
 		/* bit 2 goes to the 8910 #1 BC1 pin */
-		ay8910_data_address_w(machine().device("ay2"), m_last_port0b >> 2, m_port0a);
+		ay8910_data_address_w(machine().device("ay2"), space, m_last_port0b >> 2, m_port0a);
 	}
 	else if ((m_last_port0b & 0x08) == 0x00 && (data & 0x08) == 0x08)
 	{
@@ -151,13 +151,12 @@ WRITE8_MEMBER(zaccaria_state::zaccaria_port0b_w)
 	m_last_port0b = data;
 }
 
-static INTERRUPT_GEN( zaccaria_cb1_toggle )
+INTERRUPT_GEN_MEMBER(zaccaria_state::zaccaria_cb1_toggle)
 {
-	zaccaria_state *state = device->machine().driver_data<zaccaria_state>();
-	pia6821_device *pia0 = device->machine().device<pia6821_device>("pia0");
+	pia6821_device *pia0 = machine().device<pia6821_device>("pia0");
 
-	pia0->cb1_w(state->m_toggle & 1);
-	state->m_toggle ^= 1;
+	pia0->cb1_w(m_toggle & 1);
+	m_toggle ^= 1;
 }
 
 WRITE8_MEMBER(zaccaria_state::zaccaria_port1b_w)
@@ -570,12 +569,11 @@ static const tms5220_interface tms5220_config =
 	DEVCB_DEVICE_LINE_MEMBER("pia1", pia6821_device, ca2_w)		/* READYQ handler */
 };
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(zaccaria_state::vblank_irq)
 {
-	zaccaria_state *state = device->machine().driver_data<zaccaria_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -584,12 +582,12 @@ static MACHINE_CONFIG_START( zaccaria, zaccaria_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,XTAL_18_432MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", zaccaria_state,  vblank_irq)
 	MCFG_QUANTUM_TIME(attotime::from_hz(1000000))
 
 	MCFG_CPU_ADD("audiocpu", M6802,XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map_1)
-	MCFG_CPU_PERIODIC_INT(zaccaria_cb1_toggle,(double)XTAL_3_579545MHz/4096)
+	MCFG_CPU_PERIODIC_INT_DRIVER(zaccaria_state, zaccaria_cb1_toggle, (double)XTAL_3_579545MHz/4096)
 	MCFG_QUANTUM_TIME(attotime::from_hz(1000000))
 
 	MCFG_CPU_ADD("audio2", M6802,XTAL_3_579545MHz) /* verified on pcb */
@@ -606,7 +604,7 @@ static MACHINE_CONFIG_START( zaccaria, zaccaria_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(zaccaria)
+	MCFG_SCREEN_UPDATE_DRIVER(zaccaria_state, screen_update_zaccaria)
 
 	MCFG_GFXDECODE(zaccaria)
 	MCFG_PALETTE_LENGTH(32*8+32*8)

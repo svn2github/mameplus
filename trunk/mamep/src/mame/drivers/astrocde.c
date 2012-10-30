@@ -9,7 +9,7 @@
         * Space Zap
         * Wizard of Wor
         * Gorf
-        * Robby Roto
+        * (The Adventures of) Robby Roto
         * Professor Pac-Man
         * Demons & Dragons
         * Ten Pix Deluxe
@@ -122,8 +122,10 @@
 #include "sound/astrocde.h"
 #include "sound/ay8910.h"
 
-#include "tenpindx.lh"
 #include "gorf.lh"
+#include "seawolf2.lh"
+#include "spacezap.lh"
+#include "tenpindx.lh"
 
 
 /*************************************
@@ -421,18 +423,18 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 	int bank = (data >> 5) & 3;
 
 	/* this is accessed from I/O &space but modifies program &space, so we normalize here */
-	address_space *prog_space = space.device().memory().space(AS_PROGRAM);
+	address_space &prog_space = space.device().memory().space(AS_PROGRAM);
 
 	/* remember the banking bits for save state support */
 	m_profpac_bank = data;
 
 	/* set the main banking */
-	prog_space->install_read_bank(0x4000, 0xbfff, "bank1");
+	prog_space.install_read_bank(0x4000, 0xbfff, "bank1");
 	membank("bank1")->set_base(machine().root_device().memregion("user1")->base() + 0x8000 * bank);
 
 	/* bank 0 reads video RAM in the 4000-7FFF range */
 	if (bank == 0)
-		prog_space->install_read_handler(0x4000, 0x7fff, read8_delegate(FUNC(astrocde_state::profpac_videoram_r),this));
+		prog_space.install_read_handler(0x4000, 0x7fff, read8_delegate(FUNC(astrocde_state::profpac_videoram_r),this));
 
 	/* if we have a 640k EPROM board, map that on top of the 4000-7FFF range if specified */
 	if ((data & 0x80) && memregion("user2")->base() != NULL)
@@ -443,11 +445,11 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 		/* if the bank is in range, map the appropriate bank */
 		if (bank < 0x28)
 		{
-			prog_space->install_read_bank(0x4000, 0x7fff, "bank2");
+			prog_space.install_read_bank(0x4000, 0x7fff, "bank2");
 			membank("bank2")->set_base(machine().root_device().memregion("user2")->base() + 0x4000 * bank);
 		}
 		else
-			prog_space->unmap_read(0x4000, 0x7fff);
+			prog_space.unmap_read(0x4000, 0x7fff);
 	}
 }
 
@@ -455,9 +457,9 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 static void profbank_banksw_restore(running_machine &machine)
 {
 	astrocde_state *state = machine.driver_data<astrocde_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_IO);
+	address_space &space = machine.device("maincpu")->memory().space(AS_IO);
 
-	state->profpac_banksw_w(*space, 0, state->m_profpac_bank);
+	state->profpac_banksw_w(space, 0, state->m_profpac_bank);
 }
 
 
@@ -1298,7 +1300,7 @@ static MACHINE_CONFIG_START( astrocade_base, astrocde_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(ASTROCADE_CLOCK, 455, 0, 352, 262, 0, 240)
 	MCFG_SCREEN_DEFAULT_POSITION(1.1, 0.0, 1.18, -0.018)	/* clip out borders */
-	MCFG_SCREEN_UPDATE_STATIC(astrocde)
+	MCFG_SCREEN_UPDATE_DRIVER(astrocde_state, screen_update_astrocde)
 
 MACHINE_CONFIG_END
 
@@ -1315,7 +1317,7 @@ static MACHINE_CONFIG_DERIVED( astrocade_16color_base, astrocade_base )
 	MCFG_VIDEO_START_OVERRIDE(astrocde_state,profpac)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(profpac)
+	MCFG_SCREEN_UPDATE_DRIVER(astrocde_state, screen_update_profpac)
 MACHINE_CONFIG_END
 
 
@@ -1734,98 +1736,98 @@ ROM_END
 DRIVER_INIT_MEMBER(astrocde_state,seawolf2)
 {
 	m_video_config = 0x00;
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x40, 0x40, 0, 0xff18, write8_delegate(FUNC(astrocde_state::seawolf2_sound_1_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x41, 0x41, 0, 0xff18, write8_delegate(FUNC(astrocde_state::seawolf2_sound_2_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x42, 0x43, 0, 0xff18, write8_delegate(FUNC(astrocde_state::seawolf2_lamps_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x40, 0x40, 0, 0xff18, write8_delegate(FUNC(astrocde_state::seawolf2_sound_1_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x41, 0x41, 0, 0xff18, write8_delegate(FUNC(astrocde_state::seawolf2_sound_2_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x42, 0x43, 0, 0xff18, write8_delegate(FUNC(astrocde_state::seawolf2_lamps_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,ebases)
 {
 	m_video_config = AC_SOUND_PRESENT;
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x20, 0, 0xff07, write8_delegate(FUNC(astrocde_state::ebases_coin_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x28, 0x28, 0, 0xff07, write8_delegate(FUNC(astrocde_state::ebases_trackball_select_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x20, 0x20, 0, 0xff07, write8_delegate(FUNC(astrocde_state::ebases_coin_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x28, 0x28, 0, 0xff07, write8_delegate(FUNC(astrocde_state::ebases_trackball_select_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,spacezap)
 {
 	m_video_config = AC_SOUND_PRESENT | AC_MONITOR_BW;
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x13, 0x13, 0x03ff, 0xff00, read8_delegate(FUNC(astrocde_state::spacezap_io_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x13, 0x13, 0x03ff, 0xff00, read8_delegate(FUNC(astrocde_state::spacezap_io_r),this));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,wow)
 {
 	m_video_config = AC_SOUND_PRESENT | AC_LIGHTPEN_INTS | AC_STARS;
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x15, 0x15, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::wow_io_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x17, 0x17, 0xffff, 0xff00, FUNC(wow_speech_r));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x15, 0x15, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::wow_io_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_legacy_read_handler(0x17, 0x17, 0xffff, 0xff00, FUNC(wow_speech_r));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,gorf)
 {
 	m_video_config = AC_SOUND_PRESENT | AC_LIGHTPEN_INTS | AC_STARS;
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x15, 0x15, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::gorf_io_1_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x16, 0x16, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::gorf_io_2_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x17, 0x17, 0xffff, 0xff00, FUNC(gorf_speech_r));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x15, 0x15, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::gorf_io_1_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x16, 0x16, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::gorf_io_2_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_legacy_read_handler(0x17, 0x17, 0xffff, 0xff00, FUNC(gorf_speech_r));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,robby)
 {
 	m_video_config = AC_SOUND_PRESENT;
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x15, 0x15, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::robby_io_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x15, 0x15, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::robby_io_r),this));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,profpac)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	m_video_config = AC_SOUND_PRESENT;
-	iospace->install_read_handler(0x14, 0x14, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::profpac_io_1_r),this));
-	iospace->install_read_handler(0x15, 0x15, 0x77ff, 0xff00, read8_delegate(FUNC(astrocde_state::profpac_io_2_r),this));
+	iospace.install_read_handler(0x14, 0x14, 0x0fff, 0xff00, read8_delegate(FUNC(astrocde_state::profpac_io_1_r),this));
+	iospace.install_read_handler(0x15, 0x15, 0x77ff, 0xff00, read8_delegate(FUNC(astrocde_state::profpac_io_2_r),this));
 
 	/* reset banking */
-	profpac_banksw_w(*iospace, 0, 0);
+	profpac_banksw_w(iospace, 0, 0);
 	machine().save().register_postload(save_prepost_delegate(FUNC(profbank_banksw_restore), &machine()));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,demndrgn)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	m_video_config = 0x00;
-	iospace->install_read_handler(0x14, 0x14, 0x1fff, 0xff00, read8_delegate(FUNC(astrocde_state::demndrgn_io_r),this));
-	iospace->install_read_port(0x1c, 0x1c, 0x0000, 0xff00, "FIREX");
-	iospace->install_read_port(0x1d, 0x1d, 0x0000, 0xff00, "FIREY");
-	iospace->install_write_handler(0x97, 0x97, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::demndrgn_sound_w),this));
+	iospace.install_read_handler(0x14, 0x14, 0x1fff, 0xff00, read8_delegate(FUNC(astrocde_state::demndrgn_io_r),this));
+	iospace.install_read_port(0x1c, 0x1c, 0x0000, 0xff00, "FIREX");
+	iospace.install_read_port(0x1d, 0x1d, 0x0000, 0xff00, "FIREY");
+	iospace.install_write_handler(0x97, 0x97, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::demndrgn_sound_w),this));
 
 	/* reset banking */
-	profpac_banksw_w(*iospace, 0, 0);
+	profpac_banksw_w(iospace, 0, 0);
 	machine().save().register_postload(save_prepost_delegate(FUNC(profbank_banksw_restore), &machine()));
 }
 
 
 DRIVER_INIT_MEMBER(astrocde_state,tenpindx)
 {
-	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	m_video_config = 0x00;
-	iospace->install_read_port(0x60, 0x60, 0x0000, 0xff00, "P60");
-	iospace->install_read_port(0x61, 0x61, 0x0000, 0xff00, "P61");
-	iospace->install_read_port(0x62, 0x62, 0x0000, 0xff00, "P62");
-	iospace->install_read_port(0x63, 0x63, 0x0000, 0xff00, "P63");
-	iospace->install_read_port(0x64, 0x64, 0x0000, 0xff00, "P64");
-	iospace->install_write_handler(0x65, 0x66, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_lamp_w),this));
-	iospace->install_write_handler(0x67, 0x67, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_counter_w),this));
-	iospace->install_write_handler(0x68, 0x68, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_lights_w),this));
-	iospace->install_write_handler(0x97, 0x97, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_sound_w),this));
+	iospace.install_read_port(0x60, 0x60, 0x0000, 0xff00, "P60");
+	iospace.install_read_port(0x61, 0x61, 0x0000, 0xff00, "P61");
+	iospace.install_read_port(0x62, 0x62, 0x0000, 0xff00, "P62");
+	iospace.install_read_port(0x63, 0x63, 0x0000, 0xff00, "P63");
+	iospace.install_read_port(0x64, 0x64, 0x0000, 0xff00, "P64");
+	iospace.install_write_handler(0x65, 0x66, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_lamp_w),this));
+	iospace.install_write_handler(0x67, 0x67, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_counter_w),this));
+	iospace.install_write_handler(0x68, 0x68, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_lights_w),this));
+	iospace.install_write_handler(0x97, 0x97, 0x0000, 0xff00, write8_delegate(FUNC(astrocde_state::tenpindx_sound_w),this));
 
 	/* reset banking */
-	profpac_banksw_w(*iospace, 0, 0);
+	profpac_banksw_w(iospace, 0, 0);
 	machine().save().register_postload(save_prepost_delegate(FUNC(profbank_banksw_restore), &machine()));
 }
 
@@ -1838,29 +1840,29 @@ DRIVER_INIT_MEMBER(astrocde_state,tenpindx)
  *************************************/
 
 /* 90002 CPU board + 90700 game board + 91312 "characterization card" */
-GAME( 1978, seawolf2, 0,    seawolf2, seawolf2, astrocde_state, seawolf2, ROT0,   "Midway", "Seawolf II", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1978, seawolf2, 0,    seawolf2, seawolf2, astrocde_state, seawolf2, ROT0,   "Dave Nutting Associates / Midway", "Sea Wolf II", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_seawolf2 )
 
 /* 91354 CPU board + 90700 game board + 91356 RAM board */
-GAME( 1980, ebases,   0,    ebases,   ebases, astrocde_state,   ebases,   ROT0,   "Midway", "Extra Bases", GAME_SUPPORTS_SAVE )
+GAME( 1980, ebases,   0,    ebases,   ebases, astrocde_state,   ebases,   ROT0,   "Dave Nutting Associates / Midway", "Extra Bases", GAME_SUPPORTS_SAVE )
 
 /* 91354 CPU board + 90706 game board + 91356 RAM board + 91355 pattern board */
-GAME( 1980, spacezap, 0,    spacezap, spacezap, astrocde_state, spacezap, ROT0,   "Midway", "Space Zap", GAME_SUPPORTS_SAVE )
+GAMEL(1980, spacezap, 0,    spacezap, spacezap, astrocde_state, spacezap, ROT0,   "Midway", "Space Zap", GAME_SUPPORTS_SAVE, layout_spacezap )
 
 /* 91354 CPU board + 90708 game board + 91356 RAM board + 91355 pattern board + 91397 memory board */
-GAME( 1980, wow,      0,    wow,      wow, astrocde_state,      wow,      ROT0,   "Midway", "Wizard of Wor", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, wowg,     wow,  wow,      wowg, astrocde_state,     wow,      ROT0,   "Midway", "Wizard of Wor (with German Language ROM)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, wow,      0,    wow,      wow, astrocde_state,      wow,      ROT0,   "Dave Nutting Associates / Midway", "Wizard of Wor", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, wowg,     wow,  wow,      wowg, astrocde_state,     wow,      ROT0,   "Dave Nutting Associates / Midway", "Wizard of Wor (with German Language ROM)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 
 /* 91354 CPU board + 90708 game board + 91356 RAM board + 91355 pattern board + 91364 ROM/RAM board */
-GAMEL(1981, gorf,     0,    gorf,     gorf, astrocde_state,     gorf,     ROT270, "Midway", "Gorf", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_gorf  )
-GAMEL(1981, gorfpgm1, gorf, gorf,     gorf, astrocde_state,     gorf,     ROT270, "Midway", "Gorf (program 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_gorf )
-GAMEL(1981, gorfpgm1g,gorf, gorf,     gorfpgm1g, astrocde_state,gorf,     ROT270, "Midway", "Gorf (program 1, with German Language ROM)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_gorf )
+GAMEL(1981, gorf,     0,    gorf,     gorf, astrocde_state,     gorf,     ROT270, "Dave Nutting Associates / Midway", "Gorf", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_gorf  )
+GAMEL(1981, gorfpgm1, gorf, gorf,     gorf, astrocde_state,     gorf,     ROT270, "Dave Nutting Associates / Midway", "Gorf (program 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_gorf )
+GAMEL(1981, gorfpgm1g,gorf, gorf,     gorfpgm1g, astrocde_state,gorf,     ROT270, "Dave Nutting Associates / Midway", "Gorf (program 1, with German Language ROM)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_gorf )
 
 /* 91354 CPU board + 90708 game board + 91356 RAM board + 91355 pattern board + 91423 memory board */
-GAME( 1981, robby,    0,    robby,    robby, astrocde_state,    robby,    ROT0,   "Bally Midway", "Robby Roto", GAME_SUPPORTS_SAVE )
+GAME( 1981, robby,    0,    robby,    robby, astrocde_state,    robby,    ROT0,   "Dave Nutting Associates / Bally Midway", "The Adventures of Robby Roto!", GAME_SUPPORTS_SAVE )
 
 /* 91465 CPU board + 91469 game board + 91466 RAM board + 91488 pattern board + 91467 memory board + 91846 EPROM board */
-GAME( 1983, profpac,  0,    profpac,  profpac, astrocde_state,  profpac,  ROT0,   "Bally Midway", "Professor Pac-Man", GAME_SUPPORTS_SAVE )
+GAME( 1983, profpac,  0,    profpac,  profpac, astrocde_state,  profpac,  ROT0,   "Dave Nutting Associates / Bally Midway", "Professor Pac-Man", GAME_SUPPORTS_SAVE )
 
 /* 91465 CPU board + 91699 game board + 91466 RAM board + 91488 pattern board + 91467 memory board */
-GAME( 1982, demndrgn, 0,    demndrgn, demndrgn, astrocde_state, demndrgn, ROT0,   "Bally Midway", "Demons & Dragons (prototype)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL(1983, tenpindx, 0,    tenpindx, tenpindx, astrocde_state, tenpindx, ROT0,   "Bally Midway", "Ten Pin Deluxe", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE | GAME_MECHANICAL, layout_tenpindx )
+GAME( 1982, demndrgn, 0,    demndrgn, demndrgn, astrocde_state, demndrgn, ROT0,   "Dave Nutting Associates / Bally Midway", "Demons & Dragons (prototype)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1983, tenpindx, 0,    tenpindx, tenpindx, astrocde_state, tenpindx, ROT0,   "Dave Nutting Associates / Bally Midway", "Ten Pin Deluxe", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE | GAME_MECHANICAL, layout_tenpindx )

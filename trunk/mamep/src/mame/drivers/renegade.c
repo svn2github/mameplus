@@ -196,7 +196,7 @@ renegade_adpcm_device::renegade_adpcm_device(const machine_config &mconfig, cons
 	: device_t(mconfig, RENEGADE_ADPCM, "Renegade Custom ADPCM", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(renegade_adpcm_state));
+	m_token = global_alloc_clear(renegade_adpcm_state);
 }
 
 //-------------------------------------------------
@@ -316,11 +316,11 @@ DRIVER_INIT_MEMBER(renegade_state,kuniokun)
 
 DRIVER_INIT_MEMBER(renegade_state,kuniokunb)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* Remove the MCU handlers */
-	space->unmap_readwrite(0x3804, 0x3804);
-	space->unmap_read(0x3805, 0x3805);
+	space.unmap_readwrite(0x3804, 0x3804);
+	space.unmap_read(0x3805, 0x3805);
 }
 
 
@@ -664,15 +664,14 @@ WRITE8_MEMBER(renegade_state::bankswitch_w)
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( renegade_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(renegade_state::renegade_interrupt)
 {
-	renegade_state *state = timer.machine().driver_data<renegade_state>();
 	int scanline = param;
 
 	if (scanline == 112) // ???
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else if(scanline == 240)
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(renegade_state::renegade_coin_counter_w)
@@ -935,7 +934,7 @@ static MACHINE_CONFIG_START( renegade, renegade_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 12000000/8)	/* 1.5 MHz (measured) */
 	MCFG_CPU_PROGRAM_MAP(renegade_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", renegade_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", renegade_state, renegade_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 12000000/8)
 	MCFG_CPU_PROGRAM_MAP(renegade_sound_map)	/* IRQs are caused by the main CPU */
@@ -950,7 +949,7 @@ static MACHINE_CONFIG_START( renegade, renegade_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)*2)  /* not accurate */
     MCFG_SCREEN_SIZE(32*8, 32*8)
     MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0, 30*8-1)
-    MCFG_SCREEN_UPDATE_STATIC(renegade)
+	MCFG_SCREEN_UPDATE_DRIVER(renegade_state, screen_update_renegade)
 
     MCFG_GFXDECODE(renegade)
     MCFG_PALETTE_LENGTH(256)

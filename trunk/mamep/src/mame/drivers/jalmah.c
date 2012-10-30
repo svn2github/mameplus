@@ -204,6 +204,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(urashima);
+	UINT32 screen_update_jalmah(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_urashima(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(jalmah_mcu_sim);
 };
 
 
@@ -436,80 +439,78 @@ static void draw_sc3_layer(running_machine &machine, bitmap_ind16 &bitmap, const
 	}
 }
 
-static SCREEN_UPDATE_IND16( jalmah )
+UINT32 jalmah_state::screen_update_jalmah(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jalmah_state *state = screen.machine().driver_data<jalmah_state>();
-	UINT16 *jm_scrollram = state->m_jm_scrollram;
+	UINT16 *jm_scrollram = m_jm_scrollram;
 	UINT8 cur_prin;
-	jalmah_priority_system(screen.machine());
+	jalmah_priority_system(machine());
 
-	state->m_sc0_tilemap_0->set_scrollx(0, jm_scrollram[0] & 0xfff);
-	state->m_sc0_tilemap_1->set_scrollx(0, jm_scrollram[0] & 0x7ff);
-	state->m_sc0_tilemap_2->set_scrollx(0, jm_scrollram[0] & 0x3ff);
-	state->m_sc0_tilemap_3->set_scrollx(0, jm_scrollram[0] & 0x1ff);
+	m_sc0_tilemap_0->set_scrollx(0, jm_scrollram[0] & 0xfff);
+	m_sc0_tilemap_1->set_scrollx(0, jm_scrollram[0] & 0x7ff);
+	m_sc0_tilemap_2->set_scrollx(0, jm_scrollram[0] & 0x3ff);
+	m_sc0_tilemap_3->set_scrollx(0, jm_scrollram[0] & 0x1ff);
 
-	state->m_sc1_tilemap_0->set_scrollx(0, jm_scrollram[1] & 0xfff);
-	state->m_sc1_tilemap_1->set_scrollx(0, jm_scrollram[1] & 0x7ff);
-	state->m_sc1_tilemap_2->set_scrollx(0, jm_scrollram[1] & 0x3ff);
-	state->m_sc1_tilemap_3->set_scrollx(0, jm_scrollram[1] & 0x1ff);
+	m_sc1_tilemap_0->set_scrollx(0, jm_scrollram[1] & 0xfff);
+	m_sc1_tilemap_1->set_scrollx(0, jm_scrollram[1] & 0x7ff);
+	m_sc1_tilemap_2->set_scrollx(0, jm_scrollram[1] & 0x3ff);
+	m_sc1_tilemap_3->set_scrollx(0, jm_scrollram[1] & 0x1ff);
 
-	state->m_sc2_tilemap_0->set_scrollx(0, jm_scrollram[2] & 0xfff);
-	state->m_sc2_tilemap_1->set_scrollx(0, jm_scrollram[2] & 0x7ff);
-	state->m_sc2_tilemap_2->set_scrollx(0, jm_scrollram[2] & 0x3ff);
-	state->m_sc2_tilemap_3->set_scrollx(0, jm_scrollram[2] & 0x1ff);
+	m_sc2_tilemap_0->set_scrollx(0, jm_scrollram[2] & 0xfff);
+	m_sc2_tilemap_1->set_scrollx(0, jm_scrollram[2] & 0x7ff);
+	m_sc2_tilemap_2->set_scrollx(0, jm_scrollram[2] & 0x3ff);
+	m_sc2_tilemap_3->set_scrollx(0, jm_scrollram[2] & 0x1ff);
 
-	state->m_sc3_tilemap_0->set_scrollx(0, jm_scrollram[3] & 0x7ff);
+	m_sc3_tilemap_0->set_scrollx(0, jm_scrollram[3] & 0x7ff);
 //  empty
-	state->m_sc3_tilemap_2->set_scrollx(0, jm_scrollram[3] & 0x3ff);
-	state->m_sc3_tilemap_3->set_scrollx(0, jm_scrollram[3] & 0x1ff);
+	m_sc3_tilemap_2->set_scrollx(0, jm_scrollram[3] & 0x3ff);
+	m_sc3_tilemap_3->set_scrollx(0, jm_scrollram[3] & 0x1ff);
 
 
-	state->m_sc0_tilemap_0->set_scrolly(0, jm_scrollram[4] & 0x1ff);
-	state->m_sc0_tilemap_1->set_scrolly(0, jm_scrollram[4] & 0x3ff);
-	state->m_sc0_tilemap_2->set_scrolly(0, jm_scrollram[4] & 0x7ff);
-	state->m_sc0_tilemap_3->set_scrolly(0, jm_scrollram[4] & 0xfff);
+	m_sc0_tilemap_0->set_scrolly(0, jm_scrollram[4] & 0x1ff);
+	m_sc0_tilemap_1->set_scrolly(0, jm_scrollram[4] & 0x3ff);
+	m_sc0_tilemap_2->set_scrolly(0, jm_scrollram[4] & 0x7ff);
+	m_sc0_tilemap_3->set_scrolly(0, jm_scrollram[4] & 0xfff);
 
-	state->m_sc1_tilemap_0->set_scrolly(0, jm_scrollram[5] & 0x1ff);
-	state->m_sc1_tilemap_1->set_scrolly(0, jm_scrollram[5] & 0x3ff);
-	state->m_sc1_tilemap_2->set_scrolly(0, jm_scrollram[5] & 0x7ff);
-	state->m_sc1_tilemap_3->set_scrolly(0, jm_scrollram[5] & 0xfff);
+	m_sc1_tilemap_0->set_scrolly(0, jm_scrollram[5] & 0x1ff);
+	m_sc1_tilemap_1->set_scrolly(0, jm_scrollram[5] & 0x3ff);
+	m_sc1_tilemap_2->set_scrolly(0, jm_scrollram[5] & 0x7ff);
+	m_sc1_tilemap_3->set_scrolly(0, jm_scrollram[5] & 0xfff);
 
-	state->m_sc2_tilemap_0->set_scrolly(0, jm_scrollram[6] & 0x1ff);
-	state->m_sc2_tilemap_1->set_scrolly(0, jm_scrollram[6] & 0x3ff);
-	state->m_sc2_tilemap_2->set_scrolly(0, jm_scrollram[6] & 0x7ff);
-	state->m_sc2_tilemap_3->set_scrolly(0, jm_scrollram[6] & 0xfff);
+	m_sc2_tilemap_0->set_scrolly(0, jm_scrollram[6] & 0x1ff);
+	m_sc2_tilemap_1->set_scrolly(0, jm_scrollram[6] & 0x3ff);
+	m_sc2_tilemap_2->set_scrolly(0, jm_scrollram[6] & 0x7ff);
+	m_sc2_tilemap_3->set_scrolly(0, jm_scrollram[6] & 0xfff);
 
-	state->m_sc3_tilemap_0->set_scrolly(0, jm_scrollram[7] & 0xff);
+	m_sc3_tilemap_0->set_scrolly(0, jm_scrollram[7] & 0xff);
 //  empty
-	state->m_sc3_tilemap_2->set_scrolly(0, jm_scrollram[7] & 0x1ff);
-	state->m_sc3_tilemap_3->set_scrolly(0, jm_scrollram[7] & 0x3ff);
+	m_sc3_tilemap_2->set_scrolly(0, jm_scrollram[7] & 0x1ff);
+	m_sc3_tilemap_3->set_scrolly(0, jm_scrollram[7] & 0x3ff);
 
-	bitmap.fill(screen.machine().pens[0xff], cliprect); //selectable by a ram address?
+	bitmap.fill(machine().pens[0xff], cliprect); //selectable by a ram address?
 
 	for(cur_prin=1;cur_prin<=0x8;cur_prin<<=1)
 	{
-		if(cur_prin==state->m_sc0_prin) { draw_sc0_layer(screen.machine(),bitmap,cliprect); }
-		if(cur_prin==state->m_sc1_prin) { draw_sc1_layer(screen.machine(),bitmap,cliprect); }
-		if(cur_prin==state->m_sc2_prin) { draw_sc2_layer(screen.machine(),bitmap,cliprect); }
-		if(cur_prin==state->m_sc3_prin) { draw_sc3_layer(screen.machine(),bitmap,cliprect); }
+		if(cur_prin==m_sc0_prin) { draw_sc0_layer(machine(),bitmap,cliprect); }
+		if(cur_prin==m_sc1_prin) { draw_sc1_layer(machine(),bitmap,cliprect); }
+		if(cur_prin==m_sc2_prin) { draw_sc2_layer(machine(),bitmap,cliprect); }
+		if(cur_prin==m_sc3_prin) { draw_sc3_layer(machine(),bitmap,cliprect); }
 	}
 
 	return 0;
 }
 
-static SCREEN_UPDATE_IND16( urashima )
+UINT32 jalmah_state::screen_update_urashima(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jalmah_state *state = screen.machine().driver_data<jalmah_state>();
-	UINT16 *jm_scrollram = state->m_jm_scrollram;
+	UINT16 *jm_scrollram = m_jm_scrollram;
 	/*this game doesn't use the RANGE register at all.*/
-	state->m_sc0_tilemap_0->set_scrollx(0, jm_scrollram[0]);
-	state->m_sc3_tilemap_0->set_scrollx(0, jm_scrollram[3]);
-	state->m_sc0_tilemap_0->set_scrolly(0, jm_scrollram[4]);
-	state->m_sc3_tilemap_0->set_scrolly(0, jm_scrollram[7]);
+	m_sc0_tilemap_0->set_scrollx(0, jm_scrollram[0]);
+	m_sc3_tilemap_0->set_scrollx(0, jm_scrollram[3]);
+	m_sc0_tilemap_0->set_scrolly(0, jm_scrollram[4]);
+	m_sc3_tilemap_0->set_scrolly(0, jm_scrollram[7]);
 
-	bitmap.fill(screen.machine().pens[0x1ff], cliprect);//selectable by a ram address?
-	if(state->m_jm_vregs[0] & 1) { state->m_sc0_tilemap_0->draw(bitmap, cliprect, 0,0); }
-	if(state->m_jm_vregs[3] & 1) { state->m_sc3_tilemap_0->draw(bitmap, cliprect, 0,0); }
+	bitmap.fill(machine().pens[0x1ff], cliprect);//selectable by a ram address?
+	if(m_jm_vregs[0] & 1) { m_sc0_tilemap_0->draw(bitmap, cliprect, 0,0); }
+	if(m_jm_vregs[3] & 1) { m_sc3_tilemap_0->draw(bitmap, cliprect, 0,0); }
 	return 0;
 }
 
@@ -730,7 +731,7 @@ WRITE16_MEMBER(jalmah_state::urashima_dma_w)
 static void daireika_palette_dma(running_machine &machine, UINT16 val)
 {
 	//jalmah_state *state = machine.driver_data<jalmah_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	UINT32 index_1, index_2, src_addr, tmp_addr;
 	/*a0=301c0+jm_shared_ram[0x540/2] & 0xf00 */
 	/*a1=88000*/
@@ -739,10 +740,10 @@ static void daireika_palette_dma(running_machine &machine, UINT16 val)
 	for(index_1 = 0; index_1 < 0x200; index_1 += 0x20)
 	{
 		tmp_addr = src_addr;
-		src_addr = space->read_dword(src_addr);
+		src_addr = space.read_dword(src_addr);
 
 		for(index_2 = 0; index_2 < 0x20; index_2 += 2)
-			space->write_word(0x88000 + index_2 + index_1, space->read_word(src_addr + index_2));
+			space.write_word(0x88000 + index_2 + index_1, space.read_word(src_addr + index_2));
 
 		src_addr = tmp_addr + 4;
 	}
@@ -930,10 +931,9 @@ static void second_mcu_run(running_machine &machine)
 
 }
 
-static TIMER_DEVICE_CALLBACK( jalmah_mcu_sim )
+TIMER_DEVICE_CALLBACK_MEMBER(jalmah_state::jalmah_mcu_sim)
 {
-	jalmah_state *state = timer.machine().driver_data<jalmah_state>();
-	switch(state->m_mcu_prg)
+	switch(m_mcu_prg)
 	{
 		/*
             #define DAIREIKA_MCU (0x11)
@@ -943,12 +943,12 @@ static TIMER_DEVICE_CALLBACK( jalmah_mcu_sim )
             #define KAKUMEI2_MCU (0x22)
             #define SUCHIPI_MCU  (0x23)
         */
-			case MJZOOMIN_MCU: mjzoomin_mcu_run(timer.machine()); break;
-			case DAIREIKA_MCU: daireika_mcu_run(timer.machine()); break;
-			case URASHIMA_MCU: urashima_mcu_run(timer.machine()); break;
+			case MJZOOMIN_MCU: mjzoomin_mcu_run(machine()); break;
+			case DAIREIKA_MCU: daireika_mcu_run(machine()); break;
+			case URASHIMA_MCU: urashima_mcu_run(machine()); break;
 			case KAKUMEI_MCU:
 			case KAKUMEI2_MCU:
-			case SUCHIPI_MCU:  second_mcu_run(timer.machine()); break;
+			case SUCHIPI_MCU:  second_mcu_run(machine()); break;
 	}
 }
 
@@ -1406,7 +1406,7 @@ void jalmah_state::machine_reset()
 static MACHINE_CONFIG_START( jalmah, jalmah_state )
 	MCFG_CPU_ADD("maincpu" , M68000, 12000000) /* 68000-8 */
 	MCFG_CPU_PROGRAM_MAP(jalmah)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", jalmah_state,  irq2_line_hold)
 
 	//M50747 MCU
 
@@ -1417,12 +1417,12 @@ static MACHINE_CONFIG_START( jalmah, jalmah_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jalmah)
+	MCFG_SCREEN_UPDATE_DRIVER(jalmah_state, screen_update_jalmah)
 
 	MCFG_PALETTE_LENGTH(0x400)
 
 
-	MCFG_TIMER_ADD_PERIODIC("mcusim", jalmah_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("mcusim", jalmah_state, jalmah_mcu_sim, attotime::from_hz(10000))
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_OKIM6295_ADD("oki", 4000000, OKIM6295_PIN7_LOW)
@@ -1438,7 +1438,7 @@ static MACHINE_CONFIG_DERIVED( urashima, jalmah )
 
 	MCFG_VIDEO_START_OVERRIDE(jalmah_state,urashima)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(urashima)
+	MCFG_SCREEN_UPDATE_DRIVER(jalmah_state, screen_update_urashima)
 MACHINE_CONFIG_END
 
 /*
@@ -2421,44 +2421,44 @@ READ16_MEMBER(jalmah_state::suchipi_mcu_r)
 
 DRIVER_INIT_MEMBER(jalmah_state,urashima)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::urashima_mcu_r), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::urashima_mcu_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::urashima_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::urashima_mcu_w), this));
 
 	m_mcu_prg = 0x12;
 }
 
 DRIVER_INIT_MEMBER(jalmah_state,daireika)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::daireika_mcu_r), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::daireika_mcu_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::daireika_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::daireika_mcu_w), this));
 
 	m_mcu_prg = 0x11;
 }
 
 DRIVER_INIT_MEMBER(jalmah_state,mjzoomin)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::mjzoomin_mcu_r), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::mjzoomin_mcu_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::mjzoomin_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::mjzoomin_mcu_w), this));
 
 	m_mcu_prg = 0x13;
 }
 
 DRIVER_INIT_MEMBER(jalmah_state,kakumei)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), this));
 	m_mcu_prg = 0x21;
 }
 
 DRIVER_INIT_MEMBER(jalmah_state,kakumei2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), this));
 
 	m_mcu_prg = 0x22;
 }
 
 DRIVER_INIT_MEMBER(jalmah_state,suchipi)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::suchipi_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::suchipi_mcu_r), this));
 
 	m_mcu_prg = 0x23;
 }

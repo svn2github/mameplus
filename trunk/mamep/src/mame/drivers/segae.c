@@ -347,6 +347,7 @@ public:
 	int m_last2;
 	int m_diff1;
 	int m_diff2;
+	UINT32 screen_update_systeme(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 class fantzn2_state : public systeme_state
@@ -424,8 +425,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( io_map, AS_IO, 8, systeme_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 
-	AM_RANGE(0x7b, 0x7b) AM_DEVWRITE("sn1", segapsg_new_device, write )
-	AM_RANGE(0x7e, 0x7f) AM_DEVWRITE("sn2", segapsg_new_device, write )
+	AM_RANGE(0x7b, 0x7b) AM_DEVWRITE("sn1", segapsg_device, write )
+	AM_RANGE(0x7e, 0x7f) AM_DEVWRITE("sn2", segapsg_device, write )
 	AM_RANGE(0x7e, 0x7e) AM_DEVREAD( "vdp1", sega315_5124_device, vcount_read )
 	AM_RANGE(0xba, 0xba) AM_DEVREADWRITE( "vdp1", sega315_5124_device, vram_read, vram_write )
 	AM_RANGE(0xbb, 0xbb) AM_DEVREADWRITE( "vdp1", sega315_5124_device, register_read, register_write )
@@ -511,8 +512,8 @@ void ridleofp_state::driver_start()
 {
 	systeme_state::driver_start();
 
-	m_maincpu->space(AS_IO)->install_read_handler(0xf8, 0xf8, read8_delegate(FUNC(systeme_state::ridleofp_port_f8_read), this));
-	m_maincpu->space(AS_IO)->install_write_handler(0xfa, 0xfa, write8_delegate(FUNC(systeme_state::ridleofp_port_fa_write), this));
+	m_maincpu->space(AS_IO).install_read_handler(0xf8, 0xf8, read8_delegate(FUNC(systeme_state::ridleofp_port_f8_read), this));
+	m_maincpu->space(AS_IO).install_write_handler(0xfa, 0xfa, write8_delegate(FUNC(systeme_state::ridleofp_port_fa_write), this));
 }
 
 
@@ -520,8 +521,8 @@ void hangonjr_state::driver_start()
 {
 	systeme_state::driver_start();
 
-	m_maincpu->space(AS_IO)->install_read_handler(0xf8, 0xf8, read8_delegate(FUNC(systeme_state::hangonjr_port_f8_read), this));
-	m_maincpu->space(AS_IO)->install_write_handler(0xfa, 0xfa, write8_delegate(FUNC(systeme_state::hangonjr_port_fa_write), this));
+	m_maincpu->space(AS_IO).install_read_handler(0xf8, 0xf8, read8_delegate(FUNC(systeme_state::hangonjr_port_f8_read), this));
+	m_maincpu->space(AS_IO).install_write_handler(0xfa, 0xfa, write8_delegate(FUNC(systeme_state::hangonjr_port_fa_write), this));
 }
 
 
@@ -1074,12 +1075,11 @@ static const sega315_5124_interface _315_5124_2_intf =
 };
 
 
-static SCREEN_UPDATE_RGB32( systeme )
+UINT32 systeme_state::screen_update_systeme(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	systeme_state *state = screen.machine().driver_data<systeme_state>();
-	bitmap_rgb32 &vdp1_bitmap = state->m_vdp1->get_bitmap();
-	bitmap_rgb32 &vdp2_bitmap = state->m_vdp2->get_bitmap();
-	bitmap_ind8 &vdp2_y1 = state->m_vdp2->get_y1_bitmap();
+	bitmap_rgb32 &vdp1_bitmap = m_vdp1->get_bitmap();
+	bitmap_rgb32 &vdp2_bitmap = m_vdp2->get_bitmap();
+	bitmap_ind8 &vdp2_y1 = m_vdp2->get_y1_bitmap();
 
 	for( int y = cliprect.min_y; y <= cliprect.max_y; y++ )
 	{
@@ -1118,7 +1118,7 @@ static MACHINE_CONFIG_START( systeme, systeme_state )
 	MCFG_SCREEN_RAW_PARAMS(XTAL_10_738635MHz/2, \
 		SEGA315_5124_WIDTH , SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH, SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256, \
 		SEGA315_5124_HEIGHT_NTSC, SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_192_TBORDER_HEIGHT, SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_192_TBORDER_HEIGHT + 192)
-	MCFG_SCREEN_UPDATE_STATIC( systeme )	/* Combines and copies a bitmap */
+	MCFG_SCREEN_UPDATE_DRIVER(systeme_state, screen_update_systeme)
 
 	MCFG_PALETTE_LENGTH(SEGA315_5124_PALETTE_SIZE)
 	MCFG_PALETTE_INIT(sega315_5124)
@@ -1132,11 +1132,11 @@ static MACHINE_CONFIG_START( systeme, systeme_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SEGAPSG_NEW, XTAL_10_738635MHz/3)
+	MCFG_SOUND_ADD("sn1", SEGAPSG, XTAL_10_738635MHz/3)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SEGAPSG_NEW, XTAL_10_738635MHz/3)
+	MCFG_SOUND_ADD("sn2", SEGAPSG, XTAL_10_738635MHz/3)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

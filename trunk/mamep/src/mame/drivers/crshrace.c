@@ -463,7 +463,7 @@ static MACHINE_CONFIG_START( crshrace, crshrace_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,16000000)	/* 16 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(crshrace_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", crshrace_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -475,11 +475,15 @@ static MACHINE_CONFIG_START( crshrace, crshrace_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(crshrace)
-	MCFG_SCREEN_VBLANK_STATIC(crshrace)
+	MCFG_SCREEN_UPDATE_DRIVER(crshrace_state, screen_update_crshrace)
+	MCFG_SCREEN_VBLANK_DRIVER(crshrace_state, screen_eof_crshrace)
 
 	MCFG_GFXDECODE(crshrace)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
+	MCFG_VSYSTEM_SPR_SET_TILE_INDIRECT( crshrace_state, crshrace_tile_callback )
+	MCFG_VSYSTEM_SPR_SET_GFXREGION(2)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram2")

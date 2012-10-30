@@ -98,9 +98,9 @@ WRITE32_MEMBER(groundfx_state::color_ram_w)
                 INTERRUPTS
 ***********************************************************/
 
-static TIMER_CALLBACK( groundfx_interrupt5 )
+TIMER_CALLBACK_MEMBER(groundfx_state::groundfx_interrupt5)
 {
-	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE); //from 5... ADC port
+	machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE); //from 5... ADC port
 }
 
 
@@ -173,7 +173,7 @@ WRITE32_MEMBER(groundfx_state::groundfx_adc_w)
 {
 	/* One interrupt per input port (4 per frame, though only 2 used).
         1000 cycle delay is arbitrary */
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(1000), FUNC(groundfx_interrupt5));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(1000), timer_expired_delegate(FUNC(groundfx_state::groundfx_interrupt5),this));
 }
 
 WRITE32_MEMBER(groundfx_state::rotate_control_w)/* only a guess that it's rotation */
@@ -354,11 +354,10 @@ static const tc0480scp_interface groundfx_tc0480scp_intf =
 	0		/* col_base */
 };
 
-static INTERRUPT_GEN( groundfx_interrupt )
+INTERRUPT_GEN_MEMBER(groundfx_state::groundfx_interrupt)
 {
-	groundfx_state *state = device->machine().driver_data<groundfx_state>();
-	state->m_frame_counter^=1;
-	device->execute().set_input_line(4, HOLD_LINE);
+	m_frame_counter^=1;
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( groundfx, groundfx_state )
@@ -366,7 +365,7 @@ static MACHINE_CONFIG_START( groundfx, groundfx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(groundfx_map)
-	MCFG_CPU_VBLANK_INT("screen", groundfx_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", groundfx_state,  groundfx_interrupt)
 
 	MCFG_EEPROM_ADD("eeprom", groundfx_eeprom_interface)
 
@@ -376,7 +375,7 @@ static MACHINE_CONFIG_START( groundfx, groundfx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 3*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(groundfx)
+	MCFG_SCREEN_UPDATE_DRIVER(groundfx_state, screen_update_groundfx)
 
 	MCFG_GFXDECODE(groundfx)
 	MCFG_PALETTE_LENGTH(16384)
@@ -457,7 +456,7 @@ DRIVER_INIT_MEMBER(groundfx_state,groundfx)
 	int data;
 
 	/* Speedup handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20b574, 0x20b577, read32_delegate(FUNC(groundfx_state::irq_speedup_r_groundfx),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x20b574, 0x20b577, read32_delegate(FUNC(groundfx_state::irq_speedup_r_groundfx),this));
 
 	/* make piv tile GFX format suitable for gfxdecode */
 	offset = size/2;

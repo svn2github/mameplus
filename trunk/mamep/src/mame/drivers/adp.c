@@ -183,6 +183,8 @@ public:
 	DECLARE_MACHINE_START(skattv);
 	DECLARE_MACHINE_RESET(skattv);
 	DECLARE_PALETTE_INIT(adp);
+	UINT32 screen_update_adp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	//INTERRUPT_GEN_MEMBER(adp_int);
 };
 
 
@@ -203,24 +205,22 @@ UINT32 adp_state::screen_update(screen_device &screen, bitmap_ind16 &bitmap, con
 
 
 #if 0
-static SCREEN_UPDATE_IND16( adp )
+UINT32 adp_state::screen_update_adp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	adp_state *state = screen.machine().driver_data<adp_state>();
 
-	state->m_h63484->update_screen(bitmap, cliprect);
+	m_h63484->update_screen(bitmap, cliprect);
 
 	#if 0
-	adp_state *state = screen.machine().driver_data<adp_state>();
 	int x, y, b, src;
 
-	b = ((hd63484_regs_r(state->m_hd63484, 0xcc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(state->m_hd63484, 0xce/2, 0xffff);
+	b = ((hd63484_regs_r(m_hd63484, 0xcc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(m_hd63484, 0xce/2, 0xffff);
 
 	for (y = 0;y < 280;y++)
 	{
-		for (x = 0 ; x < (hd63484_regs_r(state->m_hd63484, 0xca/2, 0xffff) & 0x0fff) * 4 ; x += 4)
+		for (x = 0 ; x < (hd63484_regs_r(m_hd63484, 0xca/2, 0xffff) & 0x0fff) * 4 ; x += 4)
 		{
 			b &= (HD63484_RAM_SIZE - 1);
-			src = hd63484_ram_r(state->m_hd63484, b, 0xffff);
+			src = hd63484_ram_r(m_hd63484, b, 0xffff);
 			bitmap.pix16(y, x    ) = ((src & 0x000f) >>  0) << 0;
 			bitmap.pix16(y, x + 1) = ((src & 0x00f0) >>  4) << 0;
 			bitmap.pix16(y, x + 2) = ((src & 0x0f00) >>  8) << 0;
@@ -228,25 +228,25 @@ static SCREEN_UPDATE_IND16( adp )
 			b++;
 		}
 	}
-if (!screen.machine().input().code_pressed(KEYCODE_O)) // debug: toggle window
-	if ((hd63484_regs_r(state->m_hd63484, 0x06/2, 0xffff) & 0x0300) == 0x0300)
+if (!machine().input().code_pressed(KEYCODE_O)) // debug: toggle window
+	if ((hd63484_regs_r(m_hd63484, 0x06/2, 0xffff) & 0x0300) == 0x0300)
 	{
-		int sy = (hd63484_regs_r(state->m_hd63484, 0x94/2, 0xffff) & 0x0fff) - (hd63484_regs_r(state->m_hd63484, 0x88/2, 0xffff) >> 8);
-		int h = hd63484_regs_r(state->m_hd63484, 0x96/2, 0xffff) & 0x0fff;
-		int sx = ((hd63484_regs_r(state->m_hd63484, 0x92/2, 0xffff) >> 8) - (hd63484_regs_r(state->m_hd63484, 0x84/2, 0xffff) >> 8)) * 2 * 2;
-		int w = (hd63484_regs_r(state->m_hd63484, 0x92/2, 0xffff) & 0xff) * 2;
+		int sy = (hd63484_regs_r(m_hd63484, 0x94/2, 0xffff) & 0x0fff) - (hd63484_regs_r(m_hd63484, 0x88/2, 0xffff) >> 8);
+		int h = hd63484_regs_r(m_hd63484, 0x96/2, 0xffff) & 0x0fff;
+		int sx = ((hd63484_regs_r(m_hd63484, 0x92/2, 0xffff) >> 8) - (hd63484_regs_r(m_hd63484, 0x84/2, 0xffff) >> 8)) * 2 * 2;
+		int w = (hd63484_regs_r(m_hd63484, 0x92/2, 0xffff) & 0xff) * 2;
 		if (sx < 0) sx = 0;	// not sure about this (shangha2 title screen)
 
-		b = (((hd63484_regs_r(state->m_hd63484, 0xdc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(state->m_hd63484, 0xde/2, 0xffff));
+		b = (((hd63484_regs_r(m_hd63484, 0xdc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(m_hd63484, 0xde/2, 0xffff));
 
 		for (y = sy ; y <= sy + h && y < 280 ; y++)
 		{
-			for (x = 0 ; x < (hd63484_regs_r(state->m_hd63484, 0xca/2, 0xffff) & 0x0fff) * 4 ; x += 4)
+			for (x = 0 ; x < (hd63484_regs_r(m_hd63484, 0xca/2, 0xffff) & 0x0fff) * 4 ; x += 4)
 			{
 				b &= (HD63484_RAM_SIZE - 1);
-				src = hd63484_ram_r(state->m_hd63484, b, 0xffff);
+				src = hd63484_ram_r(m_hd63484, b, 0xffff);
 
-				if (x <= w && x + sx >= 0 && x + sx < (hd63484_regs_r(state->m_hd63484, 0xca/2, 0xffff) & 0x0fff) * 4)
+				if (x <= w && x + sx >= 0 && x + sx < (hd63484_regs_r(m_hd63484, 0xca/2, 0xffff) & 0x0fff) * 4)
 				{
 					bitmap.pix16(y, x + sx    ) = ((src & 0x000f) >>  0) << 0;
 					bitmap.pix16(y, x + sx + 1) = ((src & 0x00f0) >>  4) << 0;
@@ -280,7 +280,7 @@ static void duart_tx( device_t *device, int channel, UINT8 data )
 	adp_state *state = device->machine().driver_data<adp_state>();
 	if (channel == 0)
 	{
-		state->m_microtouch->rx(*device->machine().memory().first_space(), 0, data);
+		state->m_microtouch->rx(device->machine().driver_data()->generic_space(), 0, data);
 	}
 }
 
@@ -622,9 +622,9 @@ static INPUT_PORTS_START( skattv )
 INPUT_PORTS_END
 
 /*
-static INTERRUPT_GEN( adp_int )
+INTERRUPT_GEN_MEMBER(adp_state::adp_int)
 {
-    device->execute().set_input_line(1, HOLD_LINE); // ??? All irqs have the same vector, and the mask used is 0 or 7
+    device.execute().set_input_line(1, HOLD_LINE); // ??? All irqs have the same vector, and the mask used is 0 or 7
 }
 */
 static const ay8910_interface ay8910_config =
@@ -664,7 +664,7 @@ static MACHINE_CONFIG_START( quickjac, adp_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(quickjac_mem)
-//  MCFG_CPU_VBLANK_INT("screen", adp_int)
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", adp_state,  adp_int)
 
 	MCFG_MACHINE_START_OVERRIDE(adp_state,skattv)
 	MCFG_MACHINE_RESET_OVERRIDE(adp_state,skattv)
@@ -696,7 +696,7 @@ static MACHINE_CONFIG_START( skattv, adp_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(skattv_mem)
-//  MCFG_CPU_VBLANK_INT("screen", adp_int)
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", adp_state,  adp_int)
 
 	MCFG_MACHINE_START_OVERRIDE(adp_state,skattv)
 	MCFG_MACHINE_RESET_OVERRIDE(adp_state,skattv)

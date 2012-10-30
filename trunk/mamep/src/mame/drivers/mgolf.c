@@ -38,6 +38,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_mgolf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_callback);
 };
 
 
@@ -62,30 +64,29 @@ void mgolf_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( mgolf )
+UINT32 mgolf_state::screen_update_mgolf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mgolf_state *state = screen.machine().driver_data<mgolf_state>();
 	int i;
 
 	/* draw playfield */
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* draw sprites */
 	for (i = 0; i < 2; i++)
 	{
-		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1],
-			state->m_video_ram[0x399 + 4 * i],
+		drawgfx_transpen(bitmap, cliprect, machine().gfx[1],
+			m_video_ram[0x399 + 4 * i],
 			i,
 			0, 0,
-			state->m_video_ram[0x390 + 2 * i] - 7,
-			state->m_video_ram[0x398 + 4 * i] - 16, 0);
+			m_video_ram[0x390 + 2 * i] - 7,
+			m_video_ram[0x398 + 4 * i] - 16, 0);
 
-		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1],
-			state->m_video_ram[0x39b + 4 * i],
+		drawgfx_transpen(bitmap, cliprect, machine().gfx[1],
+			m_video_ram[0x39b + 4 * i],
 			i,
 			0, 0,
-			state->m_video_ram[0x390 + 2 * i] - 15,
-			state->m_video_ram[0x39a + 4 * i] - 16, 0);
+			m_video_ram[0x390 + 2 * i] - 15,
+			m_video_ram[0x39a + 4 * i] - 16, 0);
 	}
 	return 0;
 }
@@ -113,21 +114,20 @@ static void update_plunger( running_machine &machine )
 }
 
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(mgolf_state::interrupt_callback)
 {
-	mgolf_state *state = machine.driver_data<mgolf_state>();
 	int scanline = param;
 
-	update_plunger(machine);
+	update_plunger(machine());
 
-	generic_pulse_irq_line(state->m_maincpu, 0, 1);
+	generic_pulse_irq_line(*m_maincpu, 0, 1);
 
 	scanline = scanline + 32;
 
 	if (scanline >= 262)
 		scanline = 16;
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(interrupt_callback), scanline);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(mgolf_state::interrupt_callback),this), scanline);
 }
 
 
@@ -316,7 +316,7 @@ void mgolf_state::machine_start()
 
 void mgolf_state::machine_reset()
 {
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(16), FUNC(interrupt_callback), 16);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(16), timer_expired_delegate(FUNC(mgolf_state::interrupt_callback),this), 16);
 
 	m_mask = 0;
 	m_prev = 0;
@@ -335,7 +335,7 @@ static MACHINE_CONFIG_START( mgolf, mgolf_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 223)
-	MCFG_SCREEN_UPDATE_STATIC(mgolf)
+	MCFG_SCREEN_UPDATE_DRIVER(mgolf_state, screen_update_mgolf)
 
 	MCFG_GFXDECODE(mgolf)
 	MCFG_PALETTE_LENGTH(4)

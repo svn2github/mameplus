@@ -261,7 +261,7 @@ static MACHINE_CONFIG_START( ginganin, ginganin_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, MAIN_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(ginganin_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold) /* ? (vectors 1-7 cointain the same address) */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ginganin_state,  irq1_line_hold) /* ? (vectors 1-7 cointain the same address) */
 
 	MCFG_CPU_ADD("audiocpu", M6809, SOUND_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -275,7 +275,7 @@ static MACHINE_CONFIG_START( ginganin, ginganin_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0 + 16 , 255 - 16)
-	MCFG_SCREEN_UPDATE_STATIC(ginganin)
+	MCFG_SCREEN_UPDATE_DRIVER(ginganin_state, screen_update_ginganin)
 
 	MCFG_GFXDECODE(ginganin)
 	MCFG_PALETTE_LENGTH(1024)

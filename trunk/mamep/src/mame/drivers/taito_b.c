@@ -196,140 +196,129 @@ WRITE8_MEMBER(taitob_state::bankswitch_w)
 	membank("bank1")->set_entry((data - 1) & 3);
 }
 
-static TIMER_CALLBACK( rsaga2_interrupt2 )
+TIMER_CALLBACK_MEMBER(taitob_state::rsaga2_interrupt2)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(2, HOLD_LINE);
+	m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( rastansaga2_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::rastansaga2_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(rsaga2_interrupt2));
-	device->execute().set_input_line(4, HOLD_LINE);
-}
-
-
-static TIMER_CALLBACK( crimec_interrupt3 )
-{
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(3, HOLD_LINE);
-}
-
-static INTERRUPT_GEN( crimec_interrupt )
-{
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(crimec_interrupt3));
-	device->execute().set_input_line(5, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::rsaga2_interrupt2),this));
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 
-static TIMER_CALLBACK( hitice_interrupt6 )
+TIMER_CALLBACK_MEMBER(taitob_state::crimec_interrupt3)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(6, HOLD_LINE);
+	m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( hitice_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::crimec_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(hitice_interrupt6));
-	device->execute().set_input_line(4, HOLD_LINE);
-}
-
-
-static TIMER_CALLBACK( rambo3_interrupt1 )
-{
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(1, HOLD_LINE);
-}
-
-static INTERRUPT_GEN( rambo3_interrupt )
-{
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(rambo3_interrupt1));
-	device->execute().set_input_line(6, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::crimec_interrupt3),this));
+	device.execute().set_input_line(5, HOLD_LINE);
 }
 
 
-static TIMER_CALLBACK( pbobble_interrupt5 )
+TIMER_CALLBACK_MEMBER(taitob_state::hitice_interrupt6)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(5, HOLD_LINE);
+	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( pbobble_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::hitice_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(pbobble_interrupt5));
-	device->execute().set_input_line(3, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::hitice_interrupt6),this));
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( viofight_interrupt1 )
+
+TIMER_CALLBACK_MEMBER(taitob_state::rambo3_interrupt1)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(1, HOLD_LINE);
+	m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( viofight_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::rambo3_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(viofight_interrupt1));
-	device->execute().set_input_line(4, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::rambo3_interrupt1),this));
+	device.execute().set_input_line(6, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( masterw_interrupt4 )
+
+TIMER_CALLBACK_MEMBER(taitob_state::pbobble_interrupt5)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(4, HOLD_LINE);
+	m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( masterw_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::pbobble_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(masterw_interrupt4));
-	device->execute().set_input_line(5, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::pbobble_interrupt5),this));
+	device.execute().set_input_line(3, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( silentd_interrupt4 )
+TIMER_CALLBACK_MEMBER(taitob_state::viofight_interrupt1)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(4, HOLD_LINE);
+	m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( silentd_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::viofight_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(silentd_interrupt4));
-	device->execute().set_input_line(6, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::viofight_interrupt1),this));
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( selfeena_interrupt4 )
+TIMER_CALLBACK_MEMBER(taitob_state::masterw_interrupt4)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(4, HOLD_LINE);
+	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( selfeena_interrupt )
+INTERRUPT_GEN_MEMBER(taitob_state::masterw_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(selfeena_interrupt4));
-	device->execute().set_input_line(6, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::masterw_interrupt4),this));
+	device.execute().set_input_line(5, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( sbm_interrupt5 )//4
+TIMER_CALLBACK_MEMBER(taitob_state::silentd_interrupt4)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(5, HOLD_LINE);
+	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( sbm_interrupt )//5
+INTERRUPT_GEN_MEMBER(taitob_state::silentd_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(sbm_interrupt5));
-	device->execute().set_input_line(4, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::silentd_interrupt4),this));
+	device.execute().set_input_line(6, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( realpunc_interrupt3 )//3
+TIMER_CALLBACK_MEMBER(taitob_state::selfeena_interrupt4)
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
-	state->m_maincpu->set_input_line(3, HOLD_LINE);
+	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( realpunc_interrupt )//2
+INTERRUPT_GEN_MEMBER(taitob_state::selfeena_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(realpunc_interrupt3));
-	device->execute().set_input_line(2, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::selfeena_interrupt4),this));
+	device.execute().set_input_line(6, HOLD_LINE);
+}
+
+TIMER_CALLBACK_MEMBER(taitob_state::sbm_interrupt5)//4
+{
+	m_maincpu->set_input_line(5, HOLD_LINE);
+}
+
+INTERRUPT_GEN_MEMBER(taitob_state::sbm_interrupt)//5
+{
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taitob_state::sbm_interrupt5),this));
+	device.execute().set_input_line(4, HOLD_LINE);
+}
+
+TIMER_CALLBACK_MEMBER(taitob_state::realpunc_interrupt3)//3
+{
+	m_maincpu->set_input_line(3, HOLD_LINE);
+}
+
+INTERRUPT_GEN_MEMBER(taitob_state::realpunc_interrupt)//2
+{
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taitob_state::realpunc_interrupt3),this));
+	device.execute().set_input_line(2, HOLD_LINE);
 }
 
 
@@ -478,18 +467,18 @@ READ16_MEMBER(taitob_state::pbobble_input_bypass_r)
 			return ioport("COIN")->read() << 8;
 
 		default:
-			return tc0640fio_r(m_tc0640fio, offset) << 8;
+			return tc0640fio_r(m_tc0640fio, space, offset) << 8;
 	}
 }
 
 WRITE16_MEMBER(taitob_state::spacedxo_tc0220ioc_w)
 {
 	if (ACCESSING_BITS_0_7)
-		tc0220ioc_w(m_tc0220ioc, offset, data & 0xff);
+		tc0220ioc_w(m_tc0220ioc, space, offset, data & 0xff);
 	else
 	{
 		/* &spacedxo also writes here - bug? */
-		tc0220ioc_w(m_tc0220ioc, offset, (data >> 8) & 0xff);
+		tc0220ioc_w(m_tc0220ioc, space, offset, (data >> 8) & 0xff);
 	}
 }
 
@@ -731,7 +720,7 @@ static ADDRESS_MAP_START( realpunc_map, AS_PROGRAM, 16, taitob_state )
 	AM_RANGE(0x300000, 0x300001) AM_DEVREADWRITE_LEGACY("hd63484", hd63484_status_r, hd63484_address_w)
 	AM_RANGE(0x300002, 0x300003) AM_DEVREADWRITE_LEGACY("hd63484", hd63484_data_r, hd63484_data_w)
 //  AM_RANGE(0x320000, 0x320001) AM_READ_LEGACY(SMH_NOP) // ?
-	AM_RANGE(0x320002, 0x320003) AM_READNOP AM_DEVWRITE8_LEGACY("tc0140syt", tc0140syt_comm_r, 0xff00)
+	AM_RANGE(0x320002, 0x320003) AM_READNOP AM_DEVWRITE8_LEGACY("tc0140syt", tc0140syt_comm_w, 0xff00)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( masterw_sound_map, AS_PROGRAM, 8, taitob_state )
@@ -2040,7 +2029,7 @@ static MACHINE_CONFIG_START( rastsag2, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(rastsag2_map)
-	MCFG_CPU_VBLANK_INT("screen", rastansaga2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  rastansaga2_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2056,8 +2045,8 @@ static MACHINE_CONFIG_START( rastsag2, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2084,7 +2073,7 @@ static MACHINE_CONFIG_START( ashura, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(rastsag2_map)
-	MCFG_CPU_VBLANK_INT("screen", rastansaga2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  rastansaga2_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2100,8 +2089,8 @@ static MACHINE_CONFIG_START( ashura, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2128,7 +2117,7 @@ static MACHINE_CONFIG_START( crimec, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(crimec_map)
-	MCFG_CPU_VBLANK_INT("screen", crimec_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  crimec_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2144,8 +2133,8 @@ static MACHINE_CONFIG_START( crimec, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2172,7 +2161,7 @@ static MACHINE_CONFIG_START( tetrist, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz ???*/
 	MCFG_CPU_PROGRAM_MAP(tetrist_map)
-	MCFG_CPU_VBLANK_INT("screen", rastansaga2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  rastansaga2_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2188,8 +2177,8 @@ static MACHINE_CONFIG_START( tetrist, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2215,7 +2204,7 @@ static MACHINE_CONFIG_START( tetrista, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(tetrista_map)
-	MCFG_CPU_VBLANK_INT("screen", masterw_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  masterw_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(masterw_sound_map)
@@ -2231,8 +2220,8 @@ static MACHINE_CONFIG_START( tetrista, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2259,7 +2248,7 @@ static MACHINE_CONFIG_START( hitice, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(hitice_map)
-	MCFG_CPU_VBLANK_INT("screen", hitice_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  hitice_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(viofight_sound_map)
@@ -2275,8 +2264,8 @@ static MACHINE_CONFIG_START( hitice, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2308,7 +2297,7 @@ static MACHINE_CONFIG_START( rambo3p, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rambo3_map)
-	MCFG_CPU_VBLANK_INT("screen", rambo3_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  rambo3_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2324,8 +2313,8 @@ static MACHINE_CONFIG_START( rambo3p, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(rambo3)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2352,7 +2341,7 @@ static MACHINE_CONFIG_START( rambo3, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rambo3_map)
-	MCFG_CPU_VBLANK_INT("screen", rambo3_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  rambo3_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2368,8 +2357,8 @@ static MACHINE_CONFIG_START( rambo3, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2395,7 +2384,7 @@ static MACHINE_CONFIG_START( pbobble, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(pbobble_map)
-	MCFG_CPU_VBLANK_INT("screen", pbobble_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  pbobble_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2415,8 +2404,8 @@ static MACHINE_CONFIG_START( pbobble, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2443,7 +2432,7 @@ static MACHINE_CONFIG_START( spacedx, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(spacedx_map)
-	MCFG_CPU_VBLANK_INT("screen", pbobble_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  pbobble_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2463,8 +2452,8 @@ static MACHINE_CONFIG_START( spacedx, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2491,7 +2480,7 @@ static MACHINE_CONFIG_START( spacedxo, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(spacedxo_map)
-	MCFG_CPU_VBLANK_INT("screen", selfeena_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  selfeena_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2507,8 +2496,8 @@ static MACHINE_CONFIG_START( spacedxo, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2535,7 +2524,7 @@ static MACHINE_CONFIG_START( qzshowby, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz according to the readme*/
 	MCFG_CPU_PROGRAM_MAP(qzshowby_map)
-	MCFG_CPU_VBLANK_INT("screen", pbobble_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  pbobble_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2555,8 +2544,8 @@ static MACHINE_CONFIG_START( qzshowby, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2583,7 +2572,7 @@ static MACHINE_CONFIG_START( viofight, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(viofight_map)
-	MCFG_CPU_VBLANK_INT("screen", viofight_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  viofight_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 6000000)	/* 6 MHz verified */
 	MCFG_CPU_PROGRAM_MAP(viofight_sound_map)
@@ -2599,8 +2588,8 @@ static MACHINE_CONFIG_START( viofight, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2630,7 +2619,7 @@ static MACHINE_CONFIG_START( masterw, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(masterw_map)
-	MCFG_CPU_VBLANK_INT("screen", masterw_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  masterw_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(masterw_sound_map)
@@ -2646,8 +2635,8 @@ static MACHINE_CONFIG_START( masterw, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2675,7 +2664,7 @@ static MACHINE_CONFIG_START( silentd, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* 16 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(silentd_map)
-	MCFG_CPU_VBLANK_INT("screen", silentd_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  silentd_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2691,8 +2680,8 @@ static MACHINE_CONFIG_START( silentd, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2719,7 +2708,7 @@ static MACHINE_CONFIG_START( selfeena, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(selfeena_map)
-	MCFG_CPU_VBLANK_INT("screen", selfeena_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  selfeena_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2735,8 +2724,8 @@ static MACHINE_CONFIG_START( selfeena, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2772,7 +2761,7 @@ static MACHINE_CONFIG_START( ryujin, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(selfeena_map)
-	MCFG_CPU_VBLANK_INT("screen", selfeena_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  selfeena_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2788,8 +2777,8 @@ static MACHINE_CONFIG_START( ryujin, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2823,7 +2812,7 @@ static MACHINE_CONFIG_START( sbm, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(sbm_map)
-	MCFG_CPU_VBLANK_INT("screen", sbm_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  sbm_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2839,8 +2828,8 @@ static MACHINE_CONFIG_START( sbm, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
@@ -2872,7 +2861,7 @@ static MACHINE_CONFIG_START( realpunc, taitob_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(realpunc_map)
-	MCFG_CPU_VBLANK_INT("screen", realpunc_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitob_state,  realpunc_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -2888,14 +2877,14 @@ static MACHINE_CONFIG_START( realpunc, taitob_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitob)
-	MCFG_SCREEN_VBLANK_STATIC(taitob)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_taitob)
+	MCFG_SCREEN_VBLANK_DRIVER(taitob_state, screen_eof_taitob)
 
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
 	MCFG_VIDEO_START_OVERRIDE(taitob_state,realpunc)
-	MCFG_SCREEN_UPDATE_STATIC(realpunc)
+	MCFG_SCREEN_UPDATE_DRIVER(taitob_state, screen_update_realpunc)
 
 	MCFG_HD63484_ADD("hd63484", realpunc_hd63484_intf)
 

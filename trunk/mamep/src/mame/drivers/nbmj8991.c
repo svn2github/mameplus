@@ -1481,7 +1481,7 @@ static MACHINE_CONFIG_START( nbmjdrv1, nbmj8991_state )	// galkoku
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(nbmj8991_type1)
+	MCFG_SCREEN_UPDATE_DRIVER(nbmj8991_state, screen_update_nbmj8991_type1)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -1506,7 +1506,7 @@ static MACHINE_CONFIG_START( nbmjdrv2, nbmj8991_state )	// pstadium
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)					/* 4.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(nbmj8991_sound_map)
 	MCFG_CPU_IO_MAP(nbmj8991_sound_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 128*60) // ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(nbmj8991_state, irq0_line_hold, 128*60) // ?
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1514,7 +1514,7 @@ static MACHINE_CONFIG_START( nbmjdrv2, nbmj8991_state )	// pstadium
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(nbmj8991_type2)
+	MCFG_SCREEN_UPDATE_DRIVER(nbmj8991_state, screen_update_nbmj8991_type2)
 
 	MCFG_PALETTE_LENGTH(256)
 

@@ -171,7 +171,6 @@ public:
 	DECLARE_DRIVER_INIT(konamigv);
 	DECLARE_DRIVER_INIT(btchamp);
 	DECLARE_MACHINE_START(konamigv);
-	DECLARE_MACHINE_RESET(konamigv);
 };
 
 /* EEPROM handlers */
@@ -293,16 +292,6 @@ static void scsi_dma_write( konamigv_state *state, UINT32 n_address, INT32 n_siz
 	}
 }
 
-static void scsi_irq(running_machine &machine)
-{
-	psx_irq_set(machine, 0x400);
-}
-
-static const struct AM53CF96interface am53cf96_intf =
-{
-	&scsi_irq,		/* command completion IRQ */
-};
-
 DRIVER_INIT_MEMBER(konamigv_state,konamigv)
 {
 	psx_driver_init(machine());
@@ -310,30 +299,12 @@ DRIVER_INIT_MEMBER(konamigv_state,konamigv)
 
 MACHINE_START_MEMBER(konamigv_state,konamigv)
 {
-
 	save_item(NAME(m_sector_buffer));
 	save_item(NAME(m_flash_address));
 	save_item(NAME(m_trackball_prev));
 	save_item(NAME(m_trackball_data));
 	save_item(NAME(m_btc_trackball_prev));
 	save_item(NAME(m_btc_trackball_data));
-}
-
-MACHINE_RESET_MEMBER(konamigv_state,konamigv)
-{
-	/* also hook up CDDA audio to the CD-ROM drive */
-	void *cdrom;
-	scsidev_device *scsidev = machine().device<scsidev_device>("scsi:cdrom");
-	scsidev->GetDevice( &cdrom );
-	cdda_set_cdrom(machine().device("cdda"), cdrom);
-}
-
-static void spu_irq(device_t *device, UINT32 data)
-{
-	if (data)
-	{
-		psx_irq_set(device->machine(), 1<<9);
-	}
 }
 
 static MACHINE_CONFIG_START( konamigv, konamigv_state )
@@ -345,13 +316,13 @@ static MACHINE_CONFIG_START( konamigv, konamigv_state )
 	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( scsi_dma_write ), (konamigv_state *) owner ) )
 
 	MCFG_MACHINE_START_OVERRIDE(konamigv_state, konamigv )
-	MCFG_MACHINE_RESET_OVERRIDE(konamigv_state, konamigv )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
 	MCFG_SCSIBUS_ADD("scsi")
 	MCFG_SCSIDEV_ADD("scsi:cdrom", SCSICD, SCSI_ID_4)
-	MCFG_AM53CF96_ADD("scsi:am53cf96", am53cf96_intf)
+	MCFG_AM53CF96_ADD("scsi:am53cf96")
+	MCFG_AM53CF96_IRQ_HANDLER(DEVWRITELINE("^maincpu:irq", psxirq_device, intin10))
 
 	/* video hardware */
 	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8514Q, 0x100000, XTAL_53_693175MHz )
@@ -359,13 +330,13 @@ static MACHINE_CONFIG_START( konamigv, konamigv_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2, &spu_irq )
+	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2 )
 	MCFG_SOUND_ROUTE( 0, "lspeaker", 0.75 )
 	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.75 )
 
-	MCFG_SOUND_ADD( "cdda", CDDA, 0 )
-	MCFG_SOUND_ROUTE( 0, "lspeaker", 1.0 )
-	MCFG_SOUND_ROUTE( 1, "rspeaker", 1.0 )
+	MCFG_SOUND_MODIFY( "scsi:cdrom:cdda" )
+	MCFG_SOUND_ROUTE( 0, "^^^lspeaker", 1.0 )
+	MCFG_SOUND_ROUTE( 1, "^^^rspeaker", 1.0 )
 MACHINE_CONFIG_END
 
 
@@ -528,9 +499,9 @@ DRIVER_INIT_MEMBER(konamigv_state,simpbowl)
 	m_flash8[2] = machine().device<fujitsu_29f016a_device>("flash2");
 	m_flash8[3] = machine().device<fujitsu_29f016a_device>("flash3");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::flash_r),this), write32_delegate(FUNC(konamigv_state::flash_w),this) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler     ( 0x1f6800c0, 0x1f6800c7, read32_delegate(FUNC(konamigv_state::trackball_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler     ( 0x1f6800c8, 0x1f6800cb, read32_delegate(FUNC(konamigv_state::unknown_r),this)); /* ?? */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::flash_r),this), write32_delegate(FUNC(konamigv_state::flash_w),this) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler     ( 0x1f6800c0, 0x1f6800c7, read32_delegate(FUNC(konamigv_state::trackball_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler     ( 0x1f6800c8, 0x1f6800cb, read32_delegate(FUNC(konamigv_state::unknown_r),this)); /* ?? */
 
 	DRIVER_INIT_CALL(konamigv);
 }
@@ -617,9 +588,9 @@ DRIVER_INIT_MEMBER(konamigv_state,btchamp)
 
 	m_flash16[0] = machine().device<sharp_lh28f400_device>("flash");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::btc_trackball_r),this), write32_delegate(FUNC(konamigv_state::btc_trackball_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write                  ( 0x1f6800e0, 0x1f6800e3);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::btc_trackball_r),this), write32_delegate(FUNC(konamigv_state::btc_trackball_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write                  ( 0x1f6800e0, 0x1f6800e3);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this) );
 
 	DRIVER_INIT_CALL(konamigv);
 }
@@ -672,8 +643,8 @@ WRITE32_MEMBER(konamigv_state::tokimeki_serial_w)
 
 DRIVER_INIT_MEMBER(konamigv_state,tokimosh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1f680080, 0x1f680083, read32_delegate(FUNC(konamigv_state::tokimeki_serial_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1f680090, 0x1f680093, write32_delegate(FUNC(konamigv_state::tokimeki_serial_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1f680080, 0x1f680083, read32_delegate(FUNC(konamigv_state::tokimeki_serial_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1f680090, 0x1f680093, write32_delegate(FUNC(konamigv_state::tokimeki_serial_w),this));
 
 	DRIVER_INIT_CALL(konamigv);
 }
@@ -697,13 +668,13 @@ DRIVER_INIT_MEMBER(konamigv_state,kdeadeye)
 
 	m_flash16[0] = machine().device<sharp_lh28f400_device>("flash");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port  ( 0x1f680080, 0x1f680083, "GUNX1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port  ( 0x1f680090, 0x1f680093, "GUNY1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port  ( 0x1f6800a0, 0x1f6800a3, "GUNX2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port  ( 0x1f6800b0, 0x1f6800b3, "GUNY2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port  ( 0x1f6800c0, 0x1f6800c3, "BUTTONS" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    ( 0x1f6800e0, 0x1f6800e3, write32_delegate(FUNC(konamigv_state::kdeadeye_0_w),this) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f680080, 0x1f680083, "GUNX1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f680090, 0x1f680093, "GUNY1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f6800a0, 0x1f6800a3, "GUNX2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f6800b0, 0x1f6800b3, "GUNY2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f6800c0, 0x1f6800c3, "BUTTONS" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1f6800e0, 0x1f6800e3, write32_delegate(FUNC(konamigv_state::kdeadeye_0_w),this) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this));
 
 	DRIVER_INIT_CALL(konamigv);
 }

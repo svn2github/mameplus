@@ -510,10 +510,10 @@ void kyugo_state::machine_start()
 
 void kyugo_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	// must start with interrupts and sub CPU disabled
 	m_nmi_mask = 0;
-	kyugo_sub_cpu_control_w(*space, 0, 0);
+	kyugo_sub_cpu_control_w(space, 0, 0);
 
 	m_scroll_x_lo = 0;
 	m_scroll_x_hi = 0;
@@ -523,12 +523,11 @@ void kyugo_state::machine_reset()
 	m_flipscreen = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(kyugo_state::vblank_irq)
 {
-	kyugo_state *state = device->machine().driver_data<kyugo_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -538,12 +537,12 @@ static MACHINE_CONFIG_START( gyrodine, kyugo_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(kyugo_main_map)
 	MCFG_CPU_IO_MAP(kyugo_main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", kyugo_state,  vblank_irq)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_18_432MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(gyrodine_sub_map)
 	MCFG_CPU_IO_MAP(gyrodine_sub_portmap)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(kyugo_state, irq0_line_hold, 4*60)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -554,7 +553,7 @@ static MACHINE_CONFIG_START( gyrodine, kyugo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(kyugo)
+	MCFG_SCREEN_UPDATE_DRIVER(kyugo_state, screen_update_kyugo)
 
 	MCFG_GFXDECODE(kyugo)
 	MCFG_PALETTE_LENGTH(256)
@@ -1369,18 +1368,17 @@ ROM_END
 DRIVER_INIT_MEMBER(kyugo_state,gyrodine)
 {
 	/* add watchdog */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe000, 0xe000, write8_delegate(FUNC(kyugo_state::watchdog_reset_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe000, 0xe000, write8_delegate(FUNC(kyugo_state::watchdog_reset_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(kyugo_state,srdmissn)
 {
-
 	/* shared RAM is mapped at 0xe000 as well  */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0xe000, 0xe7ff, m_shared_ram);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0xe000, 0xe7ff, m_shared_ram);
 
 	/* extra RAM on sub CPU  */
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_ram(0x8800, 0x8fff);
+	machine().device("sub")->memory().space(AS_PROGRAM).install_ram(0x8800, 0x8fff);
 }
 
 
@@ -1391,22 +1389,22 @@ DRIVER_INIT_MEMBER(kyugo_state,srdmissn)
  *
  *************************************/
 
-GAME( 1984, gyrodine,  0,        gyrodine, gyrodine, kyugo_state, gyrodine, ROT90, "Crux", "Gyrodine", GAME_SUPPORTS_SAVE )
-GAME( 1984, gyrodinet, gyrodine, gyrodine, gyrodine, kyugo_state, gyrodine, ROT90, "Crux (Taito Corporation license)", "Gyrodine (Taito Corporation license)", GAME_SUPPORTS_SAVE )
-GAME( 1984, buzzard,   gyrodine, gyrodine, gyrodine, kyugo_state, gyrodine, ROT90, "Crux", "Buzzard", GAME_SUPPORTS_SAVE )
-GAME( 1985, repulse,   0,        repulse,  repulse, driver_device,  0,        ROT90, "Sega", "Repulse", GAME_SUPPORTS_SAVE ) // by Crux?
-GAME( 1985, 99lstwar,  repulse,  repulse,  repulse, driver_device,  0,        ROT90, "Sega (Proma license)", "'99: The Last War (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1985, 99lstwara, repulse,  repulse,  repulse, driver_device,  0,        ROT90, "Sega (Proma license)", "'99: The Last War (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1985, 99lstwark, repulse,  repulse,  repulse, driver_device,  0,        ROT90, "Sega (Kyugo license)", "'99: The Last War (Kyugo)", GAME_SUPPORTS_SAVE )
-GAME( 1985, sonofphx,  repulse,  repulse,  repulse, driver_device,  0,        ROT90, "bootleg (Associated Overseas MFR, Inc)", "Son of Phoenix", GAME_SUPPORTS_SAVE )
-GAME( 1985, flashgal,  0,        repulse,  flashgal, driver_device, 0,        ROT0,  "Sega", "Flashgal (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1985, flashgala, flashgal, flashgala,flashgal, driver_device, 0,        ROT0,  "Sega", "Flashgal (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1986, srdmissn,  0,        srdmissn, srdmissn, kyugo_state, srdmissn, ROT90, "Taito Corporation", "S.R.D. Mission", GAME_SUPPORTS_SAVE )
-GAME( 1986, fx,        srdmissn, srdmissn, srdmissn, kyugo_state, srdmissn, ROT90, "bootleg", "F-X", GAME_SUPPORTS_SAVE )
-GAME( 1986, legend,    0,        legend,   legend, kyugo_state,   srdmissn, ROT0,  "Sega / Coreland", "Legend", GAME_SUPPORTS_SAVE ) // no copyright (maybe also a bootleg?)
-GAME( 1986, legendb,   legend,   legend,   legend, kyugo_state,   srdmissn, ROT0,  "bootleg", "Legion (bootleg of Legend)", GAME_SUPPORTS_SAVE ) // no copyright
-GAME( 1987, airwolf,   0,        srdmissn, airwolf, kyugo_state,  srdmissn, ROT0,  "Kyugo", "Airwolf", GAME_SUPPORTS_SAVE )
-GAME( 1987, airwolfa,  airwolf,  srdmissn, airwolf, kyugo_state,  srdmissn, ROT0,  "Kyugo (UA Theatre license)", "Airwolf (US)", GAME_SUPPORTS_SAVE )
-GAME( 1987, skywolf,   airwolf,  srdmissn, skywolf, kyugo_state,  srdmissn, ROT0,  "bootleg", "Sky Wolf (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1987, skywolf2,  airwolf,  srdmissn, airwolf, kyugo_state,  srdmissn, ROT0,  "bootleg", "Sky Wolf (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1987, skywolf3,  airwolf,  srdmissn, airwolf, kyugo_state,  srdmissn, ROT0,  "bootleg", "Sky Wolf (set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1984, gyrodine,  0,        gyrodine,  gyrodine, kyugo_state,   gyrodine, ROT90, "Crux", "Gyrodine", GAME_SUPPORTS_SAVE )
+GAME( 1984, gyrodinet, gyrodine, gyrodine,  gyrodine, kyugo_state,   gyrodine, ROT90, "Crux (Taito Corporation license)", "Gyrodine (Taito Corporation license)", GAME_SUPPORTS_SAVE )
+GAME( 1984, buzzard,   gyrodine, gyrodine,  gyrodine, kyugo_state,   gyrodine, ROT90, "Crux", "Buzzard", GAME_SUPPORTS_SAVE )
+GAME( 1985, repulse,   0,        repulse,   repulse,  driver_device, 0,        ROT90, "Crux / Sega", "Repulse", GAME_SUPPORTS_SAVE )
+GAME( 1985, 99lstwar,  repulse,  repulse,   repulse,  driver_device, 0,        ROT90, "Crux / Proma", "'99: The Last War (set 1)", GAME_SUPPORTS_SAVE ) // Crux went bankrupt during Repulse development,
+GAME( 1985, 99lstwara, repulse,  repulse,   repulse,  driver_device, 0,        ROT90, "Crux / Proma", "'99: The Last War (set 2)", GAME_SUPPORTS_SAVE ) // some of their staff later worked on the newer games on this hardware,
+GAME( 1985, 99lstwark, repulse,  repulse,   repulse,  driver_device, 0,        ROT90, "Crux / Kyugo", "'99: The Last War (Kyugo)", GAME_SUPPORTS_SAVE ) // directly for Kyugo? (Flashgal, Legend, SRD Mission, Airwolf, Planet Probe)
+GAME( 1985, sonofphx,  repulse,  repulse,   repulse,  driver_device, 0,        ROT90, "bootleg (Associated Overseas MFR, Inc.)", "Son of Phoenix (bootleg of Repulse)", GAME_SUPPORTS_SAVE )
+GAME( 1985, flashgal,  0,        repulse,   flashgal, driver_device, 0,        ROT0,  "Kyugo / Sega", "Flashgal (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1985, flashgala, flashgal, flashgala, flashgal, driver_device, 0,        ROT0,  "Kyugo / Sega", "Flashgal (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1986, srdmissn,  0,        srdmissn,  srdmissn, kyugo_state,   srdmissn, ROT90, "Kyugo / Taito Corporation", "S.R.D. Mission", GAME_SUPPORTS_SAVE )
+GAME( 1986, fx,        srdmissn, srdmissn,  srdmissn, kyugo_state,   srdmissn, ROT90, "bootleg", "F-X (bootleg of S.R.D. Mission)", GAME_SUPPORTS_SAVE )
+GAME( 1986, legend,    0,        legend,    legend,   kyugo_state,   srdmissn, ROT0,  "Kyugo / Sega", "Legend", GAME_SUPPORTS_SAVE ) // no copyright (maybe also a bootleg?)
+GAME( 1986, legendb,   legend,   legend,    legend,   kyugo_state,   srdmissn, ROT0,  "bootleg", "Legion (bootleg of Legend)", GAME_SUPPORTS_SAVE ) // no copyright
+GAME( 1987, airwolf,   0,        srdmissn,  airwolf,  kyugo_state,   srdmissn, ROT0,  "Kyugo", "Airwolf", GAME_SUPPORTS_SAVE )
+GAME( 1987, airwolfa,  airwolf,  srdmissn,  airwolf,  kyugo_state,   srdmissn, ROT0,  "Kyugo (UA Theatre license)", "Airwolf (US)", GAME_SUPPORTS_SAVE )
+GAME( 1987, skywolf,   airwolf,  srdmissn,  skywolf,  kyugo_state,   srdmissn, ROT0,  "bootleg", "Sky Wolf (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1987, skywolf2,  airwolf,  srdmissn,  airwolf,  kyugo_state,   srdmissn, ROT0,  "bootleg", "Sky Wolf (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1987, skywolf3,  airwolf,  srdmissn,  airwolf,  kyugo_state,   srdmissn, ROT0,  "bootleg", "Sky Wolf (set 3)", GAME_SUPPORTS_SAVE )

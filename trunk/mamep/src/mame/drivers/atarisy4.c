@@ -58,6 +58,8 @@ public:
 	virtual void video_start();
 	virtual void video_reset();
 	DECLARE_MACHINE_RESET(airrace);
+	UINT32 screen_update_atarisy4(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_int);
 };
 
 
@@ -155,9 +157,8 @@ void atarisy4_state::video_reset()
 	gpu.vblank_wait = 0;
 }
 
-static SCREEN_UPDATE_RGB32( atarisy4 )
+UINT32 atarisy4_state::screen_update_atarisy4(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	atarisy4_state *state = screen.machine().driver_data<atarisy4_state>();
 	int y;
 	UINT32 offset = 0;
 
@@ -174,7 +175,7 @@ static SCREEN_UPDATE_RGB32( atarisy4 )
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
-		UINT16 *src = &state->m_screen_ram[(offset + (4096 * y)) / 2];
+		UINT16 *src = &m_screen_ram[(offset + (4096 * y)) / 2];
 		UINT32 *dest = &bitmap.pix32(y, cliprect.min_x);
 		int x;
 
@@ -182,8 +183,8 @@ static SCREEN_UPDATE_RGB32( atarisy4 )
 		{
 			UINT16 data = *src++;
 
-			*dest++ = screen.machine().pens[data & 0xff];
-			*dest++ = screen.machine().pens[data >> 8];
+			*dest++ = machine().pens[data & 0xff];
+			*dest++ = machine().pens[data >> 8];
 		}
 	}
 	return 0;
@@ -516,10 +517,10 @@ READ16_MEMBER(atarisy4_state::gpu_r)
 	return res;
 }
 
-static INTERRUPT_GEN( vblank_int )
+INTERRUPT_GEN_MEMBER(atarisy4_state::vblank_int)
 {
 	if (gpu.mcr & 0x08)
-		device->machine().device("maincpu")->execute().set_input_line(6, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(6, ASSERT_LINE);
 }
 
 
@@ -730,7 +731,7 @@ INPUT_PORTS_END
 static MACHINE_CONFIG_START( atarisy4, atarisy4_state )
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_int)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", atarisy4_state,  vblank_int)
 
 	MCFG_CPU_ADD("dsp0", TMS32010, 16000000)
 	MCFG_CPU_PROGRAM_MAP(dsp0_map)
@@ -740,7 +741,7 @@ static MACHINE_CONFIG_START( atarisy4, atarisy4_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(32000000/2, 660, 0, 512, 404, 0, 384)
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-	MCFG_SCREEN_UPDATE_STATIC(atarisy4)
+	MCFG_SCREEN_UPDATE_DRIVER(atarisy4_state, screen_update_atarisy4)
 	MCFG_PALETTE_LENGTH(256)
 
 MACHINE_CONFIG_END
@@ -804,7 +805,7 @@ INLINE UINT8 hex_to_ascii(UINT8 in)
 		return in;
 }
 
-void load_ldafile(address_space *space, const UINT8 *file)
+void load_ldafile(address_space &space, const UINT8 *file)
 {
 #define READ_CHAR()		file[i++]
 	int i = 0;
@@ -847,7 +848,7 @@ void load_ldafile(address_space *space, const UINT8 *file)
 		{
 			UINT8 data = READ_CHAR();
 			sum += data;
-			space->write_byte(addr++, data);
+			space.write_byte(addr++, data);
 		} while (--len);
 
 		sum += READ_CHAR();
@@ -858,7 +859,7 @@ void load_ldafile(address_space *space, const UINT8 *file)
 }
 
 /* Load memory space with data from a Tektronix-Extended HEX file */
-void load_hexfile(address_space *space, const UINT8 *file)
+void load_hexfile(address_space &space, const UINT8 *file)
 {
 #define READ_HEX_CHAR()		hex_to_ascii(file[i++])
 
@@ -942,7 +943,7 @@ void load_hexfile(address_space *space, const UINT8 *file)
 			sum += data & 0xf;
 
 			if (record == 6)
-				space->write_byte(addr++, data);
+				space.write_byte(addr++, data);
 
 			len -= 2;
 		}
@@ -963,7 +964,7 @@ next_line:
 
 DRIVER_INIT_MEMBER(atarisy4_state,laststar)
 {
-	address_space *main = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &main = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* Allocate 16kB of shared RAM */
 	m_shared_ram[0] = auto_alloc_array_clear(machine(), UINT16, 0x2000);

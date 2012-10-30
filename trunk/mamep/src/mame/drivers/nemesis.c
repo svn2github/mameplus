@@ -56,47 +56,43 @@ So this is the correct behavior of real hardware, not an emulation bug.
 #include "includes/konamipt.h"
 
 
-static INTERRUPT_GEN( nemesis_interrupt )
+INTERRUPT_GEN_MEMBER(nemesis_state::nemesis_interrupt)
 {
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
 
-	if (state->m_irq_on)
-		device->execute().set_input_line(1, HOLD_LINE);
+	if (m_irq_on)
+		device.execute().set_input_line(1, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( blkpnthr_interrupt )
+INTERRUPT_GEN_MEMBER(nemesis_state::blkpnthr_interrupt)
 {
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
 
-	if (state->m_irq_on)
-		device->execute().set_input_line(2, HOLD_LINE);
+	if (m_irq_on)
+		device.execute().set_input_line(2, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( konamigt_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(nemesis_state::konamigt_interrupt)
 {
-	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
 	int scanline = param;
 
-	if (scanline == 240 && state->m_irq_on && (timer.machine().primary_screen->frame_number() & 1) == 0)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+	if (scanline == 240 && m_irq_on && (machine().primary_screen->frame_number() & 1) == 0)
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
-	if (scanline == 0 && state->m_irq2_on)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+	if (scanline == 0 && m_irq2_on)
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( gx400_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(nemesis_state::gx400_interrupt)
 {
-	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
 	int scanline = param;
 
-	if (scanline == 240 && state->m_irq1_on && (timer.machine().primary_screen->frame_number() & 1) == 0)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+	if (scanline == 240 && m_irq1_on && (machine().primary_screen->frame_number() & 1) == 0)
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
-	if (scanline == 0 && state->m_irq2_on)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+	if (scanline == 0 && m_irq2_on)
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
-	if (scanline == 120 && state->m_irq4_on)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+	if (scanline == 120 && m_irq4_on)
+		m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 
@@ -545,7 +541,7 @@ static ADDRESS_MAP_START( sal_sound_map, AS_PROGRAM, 8, nemesis_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xd000, 0xd000) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)
 	AM_RANGE(0xe000, 0xe000) AM_READ(wd_r) /* watchdog?? */
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(salamand_speech_start_w)
@@ -556,7 +552,7 @@ static ADDRESS_MAP_START( blkpnthr_sound_map, AS_PROGRAM, 8, nemesis_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xe000, 0xe000) AM_READ(wd_r) /* watchdog?? */
 ADDRESS_MAP_END
 
@@ -1585,11 +1581,6 @@ static void sound_irq(device_t *device, int state)
 // driver_state->audiocpu->set_input_line(0, HOLD_LINE);
 }
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
-
 static const ym3812_interface ym3812_config =
 {
 	sound_irq
@@ -1650,7 +1641,7 @@ static MACHINE_CONFIG_START( nemesis, nemesis_state )
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 //          14318180/2, /* From schematics, should be accurate */
 	MCFG_CPU_PROGRAM_MAP(nemesis_map)
-	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4) /* From schematics, should be accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)	/* fixed */
@@ -1662,7 +1653,7 @@ static MACHINE_CONFIG_START( nemesis, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1692,11 +1683,11 @@ static MACHINE_CONFIG_START( gx400, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", gx400_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nemesis_state, gx400_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)	/* interrupts are triggered by the main CPU */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nmi_line_pulse)	/* interrupts are triggered by the main CPU */
 
 
 	/* video hardware */
@@ -1705,7 +1696,7 @@ static MACHINE_CONFIG_START( gx400, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1735,7 +1726,7 @@ static MACHINE_CONFIG_START( konamigt, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(konamigt_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", konamigt_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nemesis_state, konamigt_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1747,7 +1738,7 @@ static MACHINE_CONFIG_START( konamigt, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1774,11 +1765,11 @@ static MACHINE_CONFIG_START( rf2_gx400, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(rf2_gx400_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", gx400_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nemesis_state, gx400_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)	/* interrupts are triggered by the main CPU */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nmi_line_pulse)	/* interrupts are triggered by the main CPU */
 
 
 	/* video hardware */
@@ -1787,7 +1778,7 @@ static MACHINE_CONFIG_START( rf2_gx400, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1817,7 +1808,7 @@ static MACHINE_CONFIG_START( salamand, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)       /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(salamand_map)
-	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)         /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sal_sound_map)
@@ -1831,7 +1822,7 @@ static MACHINE_CONFIG_START( salamand, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC((264-256)*125/2))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1851,8 +1842,8 @@ static MACHINE_CONFIG_START( salamand, nemesis_state )
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.08)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.08)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
+//  MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0)) ... Interrupts _are_ generated, I wonder where they go
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.2) // reversed according to MT #4565
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.2)
 MACHINE_CONFIG_END
@@ -1863,7 +1854,7 @@ static MACHINE_CONFIG_START( blkpnthr, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(blkpnthr_map)
-	MCFG_CPU_VBLANK_INT("screen", blkpnthr_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  blkpnthr_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(blkpnthr_sound_map)
@@ -1877,7 +1868,7 @@ static MACHINE_CONFIG_START( blkpnthr, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1893,8 +1884,8 @@ static MACHINE_CONFIG_START( blkpnthr, nemesis_state )
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.10)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.10)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
+//  MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0)) ... Interrupts _are_ generated, I wonder where they go
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1905,7 +1896,7 @@ static MACHINE_CONFIG_START( citybomb, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(citybomb_map)
-	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(city_sound_map)
@@ -1919,7 +1910,7 @@ static MACHINE_CONFIG_START( citybomb, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1951,7 +1942,7 @@ static MACHINE_CONFIG_START( nyanpani, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(nyanpani_map)
-	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(city_sound_map)
@@ -1965,7 +1956,7 @@ static MACHINE_CONFIG_START( nyanpani, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1997,7 +1988,7 @@ static MACHINE_CONFIG_START( hcrash, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/3)         /* 6.144MHz */
 	MCFG_CPU_PROGRAM_MAP(hcrash_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", konamigt_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nemesis_state, konamigt_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)       /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sal_sound_map)
@@ -2009,7 +2000,7 @@ static MACHINE_CONFIG_START( hcrash, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)
@@ -2029,8 +2020,8 @@ static MACHINE_CONFIG_START( hcrash, nemesis_state )
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.10)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.10)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
+//  MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0)) ... Interrupts _are_ generated, I wonder where they go
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -2760,12 +2751,12 @@ static MACHINE_CONFIG_START( bubsys, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_map)
-//  MCFG_TIMER_ADD_SCANLINE("scantimer", gx400_interrupt, "screen", 0, 1)
+	//MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nemesis_state, gx400_interrupt, "screen", 0, 1)
 	MCFG_DEVICE_DISABLE()
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)	/* interrupts are triggered by the main CPU */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nemesis_state,  nmi_line_pulse)	/* interrupts are triggered by the main CPU */
 
 
 	/* video hardware */
@@ -2774,7 +2765,7 @@ static MACHINE_CONFIG_START( bubsys, nemesis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nemesis)
+	MCFG_SCREEN_UPDATE_DRIVER(nemesis_state, screen_update_nemesis)
 
 	MCFG_GFXDECODE(nemesis)
 	MCFG_PALETTE_LENGTH(2048)

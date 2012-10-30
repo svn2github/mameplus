@@ -139,6 +139,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_jollyjgr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_fspider(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(jollyjgr_interrupt);
 };
 
 
@@ -492,27 +495,26 @@ static void draw_bitmap( running_machine &machine, bitmap_ind16 &bitmap )
 	}
 }
 
-static SCREEN_UPDATE_IND16( jollyjgr )
+UINT32 jollyjgr_state::screen_update_jollyjgr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jollyjgr_state *state = screen.machine().driver_data<jollyjgr_state>();
-	UINT8 *spriteram = state->m_spriteram;
+	UINT8 *spriteram = m_spriteram;
 	int offs;
 
 	bitmap.fill(32, cliprect);
 
-	if(state->m_pri) //used in Frog & Spiders level 3
+	if(m_pri) //used in Frog & Spiders level 3
 	{
-		if(!(state->m_bitmap_disable))
-			draw_bitmap(screen.machine(), bitmap);
+		if(!(m_bitmap_disable))
+			draw_bitmap(machine(), bitmap);
 
-		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+		m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	}
 	else
 	{
-		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+		m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
-		if(!(state->m_bitmap_disable))
-			draw_bitmap(screen.machine(), bitmap);
+		if(!(m_bitmap_disable))
+			draw_bitmap(machine(), bitmap);
 	}
 
 	/* Sprites are the same as in Galaxian */
@@ -525,13 +527,13 @@ static SCREEN_UPDATE_IND16( jollyjgr )
 		int code = spriteram[offs + 1] & 0x3f;
 		int color = spriteram[offs + 2] & 7;
 
-		if (state->m_flip_x)
+		if (m_flip_x)
 		{
 			sx = 240 - sx;
 			flipx = !flipx;
 		}
 
-		if (state->m_flip_y)
+		if (m_flip_y)
 			flipy = !flipy;
 		else
 			sy = 240 - sy;
@@ -539,7 +541,7 @@ static SCREEN_UPDATE_IND16( jollyjgr )
 		if (offs < 3 * 4)
 			sy++;
 
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
 				code,color,
 				flipx,flipy,
 				sx,sy,0);
@@ -548,26 +550,25 @@ static SCREEN_UPDATE_IND16( jollyjgr )
 	return 0;
 }
 
-static SCREEN_UPDATE_IND16( fspider )
+UINT32 jollyjgr_state::screen_update_fspider(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jollyjgr_state *state = screen.machine().driver_data<jollyjgr_state>();
 
 	// Draw bg and sprites
-	SCREEN_UPDATE16_CALL(jollyjgr);
+	screen_update_jollyjgr(screen, bitmap, cliprect);
 
 	/* Draw bullets
     16 bytes, 2 bytes per bullet (y,x). 2 player bullets, 6 enemy bullets.
     Assume bullets to look the same as on Galaxian hw,
     that is, simply 4 pixels. Colours are unknown. */
 	for (int offs=0;offs<0x10;offs+=2) {
-		UINT8 sy=~state->m_bulletram[offs];
-		UINT8 sx=~state->m_bulletram[offs|1];
+		UINT8 sy=~m_bulletram[offs];
+		UINT8 sx=~m_bulletram[offs|1];
 		UINT16 bc=(offs<4)?
 			32+7: // player, white
 			32+3; // enemy, yellow
 
-		if (state->m_flip_y) sy^=0xff;
-		if (state->m_flip_x) sx+=8;
+		if (m_flip_y) sy^=0xff;
+		if (m_flip_x) sx+=8;
 
 		if (sy>=cliprect.min_y && sy<=cliprect.max_y)
 			for (int x=sx-4;x<sx;x++)
@@ -621,11 +622,10 @@ GFXDECODE_END
  *
  *************************************/
 
-static INTERRUPT_GEN( jollyjgr_interrupt )
+INTERRUPT_GEN_MEMBER(jollyjgr_state::jollyjgr_interrupt)
 {
-	jollyjgr_state *state = device->machine().driver_data<jollyjgr_state>();
-	if(state->m_nmi_enable)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_enable)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -654,7 +654,7 @@ static MACHINE_CONFIG_START( jollyjgr, jollyjgr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 3579545)		 /* 3,579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(jollyjgr_map)
-	MCFG_CPU_VBLANK_INT("screen", jollyjgr_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", jollyjgr_state,  jollyjgr_interrupt)
 
 
 	/* video hardware */
@@ -663,7 +663,7 @@ static MACHINE_CONFIG_START( jollyjgr, jollyjgr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jollyjgr)
+	MCFG_SCREEN_UPDATE_DRIVER(jollyjgr_state, screen_update_jollyjgr)
 
 	MCFG_GFXDECODE(jollyjgr)
 	MCFG_PALETTE_LENGTH(32+8) /* 32 for tilemap and sprites + 8 for the bitmap */
@@ -682,7 +682,7 @@ static MACHINE_CONFIG_DERIVED( fspider, jollyjgr )
 	MCFG_CPU_PROGRAM_MAP(fspider_map)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(fspider)
+	MCFG_SCREEN_UPDATE_DRIVER(jollyjgr_state, screen_update_fspider)
 
 MACHINE_CONFIG_END
 

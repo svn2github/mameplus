@@ -64,8 +64,8 @@ READ8_MEMBER(amspdwy_state::amspdwy_wheel_1_r)
 
 READ8_MEMBER(amspdwy_state::amspdwy_sound_r)
 {
-	device_t *device = machine().device("ymsnd");
-	return (ym2151_status_port_r(device, 0) & ~ 0x30) | machine().root_device().ioport("IN0")->read();
+	ym2151_device *device = machine().device<ym2151_device>("ymsnd");
+	return (device->status_r(space, 0) & ~ 0x30) | machine().root_device().ioport("IN0")->read();
 }
 
 WRITE8_MEMBER(amspdwy_state::amspdwy_sound_w)
@@ -116,7 +116,7 @@ static ADDRESS_MAP_START( amspdwy_sound_map, AS_PROGRAM, 8, amspdwy_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM									// ROM
 //  AM_RANGE(0x8000, 0x8000) AM_WRITENOP                            // ? Written with 0 at the start
 	AM_RANGE(0x9000, 0x9000) AM_READ(soundlatch_byte_r)					// From Main CPU
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)			//
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)			//
 	AM_RANGE(0xc000, 0xdfff) AM_RAM									// Work RAM
 	AM_RANGE(0xffff, 0xffff) AM_READNOP								// ??? IY = FFFF at the start ?
 ADDRESS_MAP_END
@@ -239,17 +239,6 @@ GFXDECODE_END
 ***************************************************************************/
 
 
-static void irq_handler( device_t *device, int irq )
-{
-	amspdwy_state *state = device->machine().driver_data<amspdwy_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface amspdwy_ym2151_interface =
-{
-	DEVCB_LINE(irq_handler)
-};
-
 void amspdwy_state::machine_start()
 {
 
@@ -275,7 +264,7 @@ static MACHINE_CONFIG_START( amspdwy, amspdwy_state )
 	MCFG_CPU_ADD("maincpu", Z80,3000000)
 	MCFG_CPU_PROGRAM_MAP(amspdwy_map)
 	MCFG_CPU_IO_MAP(amspdwy_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* IRQ: 60Hz, NMI: retn */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", amspdwy_state,  irq0_line_hold)	/* IRQ: 60Hz, NMI: retn */
 
 	MCFG_CPU_ADD("audiocpu", Z80,3000000)	/* Can't be disabled: the YM2151 timers must work */
 	MCFG_CPU_PROGRAM_MAP(amspdwy_sound_map)
@@ -288,7 +277,7 @@ static MACHINE_CONFIG_START( amspdwy, amspdwy_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(amspdwy)
+	MCFG_SCREEN_UPDATE_DRIVER(amspdwy_state, screen_update_amspdwy)
 
 	MCFG_GFXDECODE(amspdwy)
 	MCFG_PALETTE_LENGTH(32)
@@ -297,8 +286,8 @@ static MACHINE_CONFIG_START( amspdwy, amspdwy_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3000000)
-	MCFG_SOUND_CONFIG(amspdwy_ym2151_interface)
+	MCFG_YM2151_ADD("ymsnd", 3000000)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END

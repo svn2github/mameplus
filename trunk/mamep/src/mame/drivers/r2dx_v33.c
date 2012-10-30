@@ -70,6 +70,8 @@ public:
 	tilemap_t *m_fg_tilemap;
 	tilemap_t *m_tx_tilemap;
 	virtual void video_start();
+	UINT32 screen_update_rdx_v33(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(rdx_v33_interrupt);
 };
 
 
@@ -213,52 +215,51 @@ void r2dx_v33_state::video_start()
 	m_tx_tilemap->set_transparent_pen(15);
 }
 
-static SCREEN_UPDATE_IND16( rdx_v33 )
+UINT32 r2dx_v33_state::screen_update_rdx_v33(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	r2dx_v33_state *state = screen.machine().driver_data<r2dx_v33_state>();
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_md_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_md_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
-	draw_sprites(screen.machine(),bitmap,cliprect,0);
+	draw_sprites(machine(),bitmap,cliprect,0);
 
-	state->m_tx_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_tx_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* debug DMA processing */
 	if(0)
 	{
 		static UINT32 src_addr = 0x100000;
 		static int frame;
-		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+		address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-		//if(screen.machine().input().code_pressed_once(KEYCODE_A))
+		//if(machine().input().code_pressed_once(KEYCODE_A))
 		//  src_addr+=0x800;
 
-		//if(screen.machine().input().code_pressed_once(KEYCODE_S))
+		//if(machine().input().code_pressed_once(KEYCODE_S))
 		//  src_addr-=0x800;
 
 		frame++;
 
 		popmessage("%08x 0",src_addr);
 
-		//if(screen.machine().input().code_pressed_once(KEYCODE_Z))
+		//if(machine().input().code_pressed_once(KEYCODE_Z))
 		if(frame == 5)
 		{
 			int i,data;
-			static UINT8 *rom = space->machine().root_device().memregion("mainprg")->base();
+			static UINT8 *rom = space.machine().root_device().memregion("mainprg")->base();
 
 			for(i=0;i<0x800;i+=2)
 			{
 				data = rom[src_addr+i+0];
-				space->write_byte(i+0xd000+0, data);
+				space.write_byte(i+0xd000+0, data);
 				data = rom[src_addr+i+1];
-				space->write_byte(i+0xd000+1, data);
+				space.write_byte(i+0xd000+1, data);
 			}
 
 			popmessage("%08x 1",src_addr);
-			state->m_bg_tilemap->mark_all_dirty();
+			m_bg_tilemap->mark_all_dirty();
 			frame = 0;
 			src_addr+=0x800;
 		}
@@ -440,9 +441,9 @@ READ16_MEMBER(r2dx_v33_state::nzerotea_sound_comms_r)
 {
 	switch(offset+0x780)
 	{
-		case (0x788/2):	return seibu_main_word_r(&space,2,0xffff);
-		case (0x78c/2):	return seibu_main_word_r(&space,3,0xffff);
-		case (0x794/2): return seibu_main_word_r(&space,5,0xffff);
+		case (0x788/2):	return seibu_main_word_r(space,2,0xffff);
+		case (0x78c/2):	return seibu_main_word_r(space,3,0xffff);
+		case (0x794/2): return seibu_main_word_r(space,5,0xffff);
 	}
 
 	return 0xffff;
@@ -453,11 +454,11 @@ WRITE16_MEMBER(r2dx_v33_state::nzerotea_sound_comms_w)
 {
 	switch(offset+0x780)
 	{
-		case (0x780/2): { seibu_main_word_w(&space,0,data,0x00ff); break; }
-		case (0x784/2): { seibu_main_word_w(&space,1,data,0x00ff); break; }
-		//case (0x790/2): { seibu_main_word_w(&space,4,data,0x00ff); break; }
-		case (0x794/2): { seibu_main_word_w(&space,4,data,0x00ff); break; }
-		case (0x798/2): { seibu_main_word_w(&space,6,data,0x00ff); break; }
+		case (0x780/2): { seibu_main_word_w(space,0,data,0x00ff); break; }
+		case (0x784/2): { seibu_main_word_w(space,1,data,0x00ff); break; }
+		//case (0x790/2): { seibu_main_word_w(space,4,data,0x00ff); break; }
+		case (0x794/2): { seibu_main_word_w(space,4,data,0x00ff); break; }
+		case (0x798/2): { seibu_main_word_w(space,6,data,0x00ff); break; }
 	}
 }
 
@@ -509,9 +510,9 @@ static ADDRESS_MAP_START( nzerotea_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x40000, 0xfffff) AM_ROM AM_REGION("mainprg", 0x40000 )
 ADDRESS_MAP_END
 
-static INTERRUPT_GEN( rdx_v33_interrupt )
+INTERRUPT_GEN_MEMBER(r2dx_v33_state::rdx_v33_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc0/4);	/* VBL */
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xc0/4);	/* VBL */
 }
 
 static const gfx_layout rdx_v33_charlayout =
@@ -692,7 +693,7 @@ static MACHINE_CONFIG_START( rdx_v33, r2dx_v33_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V33, 32000000/2 ) // ?
 	MCFG_CPU_PROGRAM_MAP(rdx_v33_map)
-	MCFG_CPU_VBLANK_INT("screen", rdx_v33_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", r2dx_v33_state,  rdx_v33_interrupt)
 
 	//MCFG_MACHINE_RESET_OVERRIDE(r2dx_v33_state,rdx_v33)
 
@@ -704,7 +705,7 @@ static MACHINE_CONFIG_START( rdx_v33, r2dx_v33_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rdx_v33)
+	MCFG_SCREEN_UPDATE_DRIVER(r2dx_v33_state, screen_update_rdx_v33)
 
 	MCFG_GFXDECODE(rdx_v33)
 	MCFG_PALETTE_LENGTH(2048)
@@ -722,7 +723,7 @@ static MACHINE_CONFIG_START( nzerotea, r2dx_v33_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V33,XTAL_32MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(nzerotea_map)
-	MCFG_CPU_VBLANK_INT("screen", rdx_v33_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", r2dx_v33_state,  rdx_v33_interrupt)
 
 	MCFG_MACHINE_RESET(seibu_sound)
 
@@ -737,7 +738,7 @@ static MACHINE_CONFIG_START( nzerotea, r2dx_v33_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate *//2)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rdx_v33)
+	MCFG_SCREEN_UPDATE_DRIVER(r2dx_v33_state, screen_update_rdx_v33)
 	MCFG_GFXDECODE(rdx_v33)
 	MCFG_PALETTE_LENGTH(2048)
 

@@ -66,6 +66,9 @@ public:
 	DECLARE_READ8_MEMBER(subcpu_status_r);
 	DECLARE_WRITE8_MEMBER(msm_cfg_w);
 	virtual void machine_reset();
+	TIMER_CALLBACK_MEMBER(subcpu_suspend);
+	TIMER_CALLBACK_MEMBER(subcpu_resume);
+	TIMER_DEVICE_CALLBACK_MEMBER(sothello_interrupt);
 };
 
 
@@ -94,27 +97,27 @@ WRITE8_MEMBER(sothello_state::bank_w)
     membank("bank1")->set_base(&RAM[bank*0x4000+0x10000]);
 }
 
-static TIMER_CALLBACK( subcpu_suspend )
+TIMER_CALLBACK_MEMBER(sothello_state::subcpu_suspend)
 {
-    machine.device<cpu_device>("sub")->suspend(SUSPEND_REASON_HALT, 1);
+    machine().device<cpu_device>("sub")->suspend(SUSPEND_REASON_HALT, 1);
 }
 
-static TIMER_CALLBACK( subcpu_resume )
+TIMER_CALLBACK_MEMBER(sothello_state::subcpu_resume)
 {
-    machine.device<cpu_device>("sub")->resume(SUSPEND_REASON_HALT);
-    machine.device("sub")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+    machine().device<cpu_device>("sub")->resume(SUSPEND_REASON_HALT);
+    machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 READ8_MEMBER(sothello_state::subcpu_halt_set)
 {
-    machine().scheduler().synchronize(FUNC(subcpu_suspend));
+    machine().scheduler().synchronize(timer_expired_delegate(FUNC(sothello_state::subcpu_suspend),this));
     m_subcpu_status|=2;
     return 0;
 }
 
 READ8_MEMBER(sothello_state::subcpu_halt_clear)
 {
-    machine().scheduler().synchronize(FUNC(subcpu_resume));
+    machine().scheduler().synchronize(timer_expired_delegate(FUNC(sothello_state::subcpu_resume),this));
     m_subcpu_status&=~1;
     m_subcpu_status&=~2;
     return 0;
@@ -206,27 +209,27 @@ ADDRESS_MAP_END
 
 /* sub 6809 */
 
-static void unlock_shared_ram(address_space *space)
+static void unlock_shared_ram(address_space &space)
 {
-	sothello_state *state = space->machine().driver_data<sothello_state>();
-    if(!space->machine().device<cpu_device>("sub")->suspended(SUSPEND_REASON_HALT))
+	sothello_state *state = space.machine().driver_data<sothello_state>();
+    if(!space.machine().device<cpu_device>("sub")->suspended(SUSPEND_REASON_HALT))
     {
         state->m_subcpu_status|=1;
     }
     else
     {
-        logerror("Sub cpu active! @%x\n",space->device().safe_pc());
+        logerror("Sub cpu active! @%x\n",space.device().safe_pc());
     }
 }
 
 WRITE8_MEMBER(sothello_state::subcpu_status_w)
 {
-    unlock_shared_ram(&space);
+    unlock_shared_ram(space);
 }
 
 READ8_MEMBER(sothello_state::subcpu_status_r)
 {
-    unlock_shared_ram(&space);
+    unlock_shared_ram(space);
     return 0;
 }
 
@@ -322,10 +325,9 @@ static void sothello_vdp_interrupt(device_t *, v99x8_device &device, int i)
     device.machine().device("maincpu")->execute().set_input_line(0, (i ? HOLD_LINE : CLEAR_LINE));
 }
 
-static TIMER_DEVICE_CALLBACK( sothello_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(sothello_state::sothello_interrupt)
 {
-	sothello_state *state = timer.machine().driver_data<sothello_state>();
-    state->m_v9938->interrupt();
+    m_v9938->interrupt();
 }
 
 static void adpcm_int(device_t *device)
@@ -367,7 +369,7 @@ static MACHINE_CONFIG_START( sothello, sothello_state )
     MCFG_CPU_ADD("maincpu",Z80, MAINCPU_CLOCK)
     MCFG_CPU_PROGRAM_MAP(maincpu_mem_map)
     MCFG_CPU_IO_MAP(maincpu_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sothello_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sothello_state, sothello_interrupt, "screen", 0, 1)
 
     MCFG_CPU_ADD("soundcpu",Z80, SOUNDCPU_CLOCK)
     MCFG_CPU_PROGRAM_MAP(soundcpu_mem_map)

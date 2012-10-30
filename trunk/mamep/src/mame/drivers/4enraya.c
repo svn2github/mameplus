@@ -72,7 +72,7 @@ WRITE8_MEMBER(_4enraya_state::sound_control_w)
 	device_t *device = machine().device("aysnd");
 
 	if ((m_last_snd_ctrl & m_snd_latch_bit ) == m_snd_latch_bit && (data & m_snd_latch_bit) == 0x00)
-		ay8910_data_address_w(device, m_last_snd_ctrl, m_soundlatch);
+		ay8910_data_address_w(device, space, m_last_snd_ctrl, m_soundlatch);
 
 	m_last_snd_ctrl = data;
 }
@@ -321,7 +321,7 @@ static MACHINE_CONFIG_START( 4enraya, _4enraya_state )
 	MCFG_CPU_ADD("maincpu",Z80,MAIN_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60) // unknown timing
+	MCFG_CPU_PERIODIC_INT_DRIVER(_4enraya_state, irq0_line_hold, 4*60) // unknown timing
 
 
 	/* video hardware */
@@ -330,7 +330,7 @@ static MACHINE_CONFIG_START( 4enraya, _4enraya_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(4enraya)
+	MCFG_SCREEN_UPDATE_DRIVER(_4enraya_state, screen_update_4enraya)
 
 	MCFG_GFXDECODE(4enraya)
 

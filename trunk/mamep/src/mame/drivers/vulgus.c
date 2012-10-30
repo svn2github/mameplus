@@ -47,9 +47,9 @@ All Clocks and Vsync verified by Corrado Tomaselli (August 2012)
 #include "includes/vulgus.h"
 
 
-static INTERRUPT_GEN( vulgus_vblank_irq )
+INTERRUPT_GEN_MEMBER(vulgus_state::vulgus_vblank_irq)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, vulgus_state )
@@ -213,11 +213,11 @@ static MACHINE_CONFIG_START( vulgus, vulgus_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/4)	/* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen",vulgus_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vulgus_state, vulgus_vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_12MHz/4)	/* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(vulgus_state, irq0_line_hold, 8*60)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -225,7 +225,7 @@ static MACHINE_CONFIG_START( vulgus, vulgus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(vulgus)
+	MCFG_SCREEN_UPDATE_DRIVER(vulgus_state, screen_update_vulgus)
 
 	MCFG_GFXDECODE(vulgus)
 	MCFG_PALETTE_LENGTH(64*4+16*16+4*32*8)

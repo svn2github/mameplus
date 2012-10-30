@@ -165,7 +165,7 @@ static MACHINE_CONFIG_START( 3do, _3do_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS( X2_CLOCK_NTSC / 2, 1592, 254, 1534, 263, 22, 262 )
-	MCFG_SCREEN_UPDATE_STATIC( _3do )
+	MCFG_SCREEN_UPDATE_DRIVER(_3do_state, screen_update__3do)
 
 	MCFG_CDROM_ADD( "cdrom", _3do_cdrom)
 MACHINE_CONFIG_END
@@ -179,7 +179,7 @@ static MACHINE_CONFIG_START( 3do_pal, _3do_state )
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_UPDATE_STATIC( _3do )
+	MCFG_SCREEN_UPDATE_DRIVER(_3do_state, screen_update__3do)
 	MCFG_SCREEN_SIZE( 640, 625 )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 639, 0, 479 )
 	MCFG_SCREEN_REFRESH_RATE( 50 )
@@ -217,6 +217,9 @@ ROM_START(3do)
 	NTSC_BIOS
 ROM_END
 
+ROM_START(3dobios)
+	NTSC_BIOS
+ROM_END
 
 ROM_START(3do_pal)
     ROM_REGION32_BE( 0x200000, "user1", 0 )
@@ -242,7 +245,8 @@ ROM_END
 ***************************************************************************/
 
 /*    YEAR  NAME        PARENT  COMPAT  MACHINE     INPUT   INIT    COMPANY FULLNAME        FLAGS */
-CONS( 1991, 3do,        0,      0,      3do,        3do,	driver_device, 0,      "3DO",  "3DO (NTSC)",   GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IS_BIOS_ROOT )
+CONS( 1991, 3do,        0,      0,      3do,        3do,	driver_device, 0,      "3DO",  "3DO (NTSC)",   GAME_NOT_WORKING | GAME_NO_SOUND )
 CONS( 1991, 3do_pal,    3do,    0,      3do_pal,    3do,	driver_device, 0,      "3DO",  "3DO (PAL)",    GAME_NOT_WORKING | GAME_NO_SOUND )
 
-GAME( 199?, orbatak,    3do,    3do,    3do, driver_device,    0, ROT0,     "<unknown>", "Orbatak (prototype)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAME( 1991, 3dobios,    0,      3do,    3do, driver_device, 0, ROT0,     "3DO",  "3DO Bios",   GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IS_BIOS_ROOT )
+GAME( 199?, orbatak,    3dobios,3do,    3do, driver_device, 0, ROT0,     "<unknown>", "Orbatak (prototype)", GAME_NOT_WORKING | GAME_NO_SOUND )

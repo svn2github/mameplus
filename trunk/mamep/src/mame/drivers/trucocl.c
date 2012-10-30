@@ -44,9 +44,9 @@ WRITE8_MEMBER(trucocl_state::irq_enable_w)
 }
 
 
-static TIMER_CALLBACK( dac_irq )
+TIMER_CALLBACK_MEMBER(trucocl_state::dac_irq)
 {
-	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 WRITE8_MEMBER(trucocl_state::audio_dac_w)
@@ -76,7 +76,7 @@ WRITE8_MEMBER(trucocl_state::audio_dac_w)
 
 	device->write_unsigned8( rom[dac_address+m_cur_dac_address_index] );
 
-	machine().scheduler().timer_set( attotime::from_hz( 16000 ), FUNC(dac_irq ));
+	machine().scheduler().timer_set( attotime::from_hz( 16000 ), timer_expired_delegate(FUNC(trucocl_state::dac_irq),this));
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, trucocl_state )
@@ -122,12 +122,11 @@ static GFXDECODE_START( trucocl )
 	GFXDECODE_ENTRY( "gfx1", 0x10000, tilelayout,      0, 2 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( trucocl_interrupt )
+INTERRUPT_GEN_MEMBER(trucocl_state::trucocl_interrupt)
 {
-	trucocl_state *state = device->machine().driver_data<trucocl_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 
 }
 
@@ -135,7 +134,7 @@ static MACHINE_CONFIG_START( trucocl, trucocl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/6)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", trucocl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", trucocl_state,  trucocl_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -143,7 +142,7 @@ static MACHINE_CONFIG_START( trucocl, trucocl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(trucocl)
+	MCFG_SCREEN_UPDATE_DRIVER(trucocl_state, screen_update_trucocl)
 
 	MCFG_GFXDECODE(trucocl)
 	MCFG_PALETTE_LENGTH(32)

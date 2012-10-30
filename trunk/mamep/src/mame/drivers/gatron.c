@@ -341,7 +341,7 @@ static ADDRESS_MAP_START( gat_map, AS_PROGRAM, 8, gatron_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x63ff) AM_RAM_WRITE(gat_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
-	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("snsnd", sn76496_new_device, write)							/* PSG */
+	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("snsnd", sn76496_device, write)							/* PSG */
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(output_port_0_w)										/* lamps */
 ADDRESS_MAP_END
 
@@ -448,7 +448,7 @@ static MACHINE_CONFIG_START( gat, gatron_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/24)	/* 666.66 kHz, guess */
 	MCFG_CPU_PROGRAM_MAP(gat_map)
 	MCFG_CPU_IO_MAP(gat_portmap)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gatron_state,  nmi_line_pulse)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -460,14 +460,14 @@ static MACHINE_CONFIG_START( gat, gatron_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(48*8, 16*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 16*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(gat)
+	MCFG_SCREEN_UPDATE_DRIVER(gatron_state, screen_update_gat)
 
 	MCFG_GFXDECODE(gat)
 	MCFG_PALETTE_LENGTH(8)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, MASTER_CLOCK/8 )	/* 2 MHz, guess */
+	MCFG_SOUND_ADD("snsnd", SN76496, MASTER_CLOCK/8 )	/* 2 MHz, guess */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.00)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

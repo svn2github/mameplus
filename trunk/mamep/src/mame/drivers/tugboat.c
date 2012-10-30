@@ -49,6 +49,8 @@ public:
 	DECLARE_WRITE8_MEMBER(tugboat_ctrl_w);
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_tugboat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_gen);
 };
 
 
@@ -132,15 +134,14 @@ static void draw_tilemap(running_machine &machine, bitmap_ind16 &bitmap,const re
 	}
 }
 
-static SCREEN_UPDATE_IND16( tugboat )
+UINT32 tugboat_state::screen_update_tugboat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tugboat_state *state = screen.machine().driver_data<tugboat_state>();
-	int startaddr0 = state->m_hd46505_0_reg[0x0c]*256 + state->m_hd46505_0_reg[0x0d];
-	int startaddr1 = state->m_hd46505_1_reg[0x0c]*256 + state->m_hd46505_1_reg[0x0d];
+	int startaddr0 = m_hd46505_0_reg[0x0c]*256 + m_hd46505_0_reg[0x0d];
+	int startaddr1 = m_hd46505_1_reg[0x0c]*256 + m_hd46505_1_reg[0x0d];
 
 
-	draw_tilemap(screen.machine(), bitmap,cliprect,startaddr0,0,1,FALSE);
-	draw_tilemap(screen.machine(), bitmap,cliprect,startaddr1,2,3,TRUE);
+	draw_tilemap(machine(), bitmap,cliprect,startaddr0,0,1,FALSE);
+	draw_tilemap(machine(), bitmap,cliprect,startaddr1,2,3,TRUE);
 	return 0;
 }
 
@@ -202,15 +203,15 @@ static const pia6821_interface pia1_intf =
 	DEVCB_NULL		/* IRQB */
 };
 
-static TIMER_CALLBACK( interrupt_gen )
+TIMER_CALLBACK_MEMBER(tugboat_state::interrupt_gen)
 {
-	machine.device("maincpu")->execute().set_input_line(0, HOLD_LINE);
-	machine.scheduler().timer_set(machine.primary_screen->frame_period(), FUNC(interrupt_gen));
+	machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
+	machine().scheduler().timer_set(machine().primary_screen->frame_period(), timer_expired_delegate(FUNC(tugboat_state::interrupt_gen),this));
 }
 
 void tugboat_state::machine_reset()
 {
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(30*8+4), FUNC(interrupt_gen));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(30*8+4), timer_expired_delegate(FUNC(tugboat_state::interrupt_gen),this));
 }
 
 
@@ -333,7 +334,7 @@ GFXDECODE_END
 static MACHINE_CONFIG_START( tugboat, tugboat_state )
 	MCFG_CPU_ADD("maincpu", M6502, 2000000)	/* 2 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tugboat_state,  nmi_line_pulse)
 
 
 	MCFG_PIA6821_ADD("pia0", pia0_intf)
@@ -343,7 +344,7 @@ static MACHINE_CONFIG_START( tugboat, tugboat_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8,32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8,31*8-1,2*8,30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tugboat)
+	MCFG_SCREEN_UPDATE_DRIVER(tugboat_state, screen_update_tugboat)
 
 	MCFG_GFXDECODE(tugboat)
 	MCFG_PALETTE_LENGTH(256)

@@ -109,25 +109,27 @@ public:
 	DECLARE_READ8_MEMBER(sandscrp_soundlatch_r);
 	DECLARE_WRITE8_MEMBER(sandscrp_soundlatch_w);
 	virtual void machine_reset();
+	UINT32 screen_update_sandscrp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_sandscrp(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(sandscrp_interrupt);
 };
 
 
 
-SCREEN_UPDATE_IND16( sandscrp )
+UINT32 sandscrp_state::screen_update_sandscrp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	sandscrp_state *state = screen.machine().driver_data<sandscrp_state>();
-	device_t *pandora = screen.machine().device("pandora");
+	device_t *pandora = machine().device("pandora");
 	bitmap.fill(0, cliprect);
 
 	int i;
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
-	state->m_view2_0->kaneko16_prepare(bitmap, cliprect);
+	m_view2_0->kaneko16_prepare(bitmap, cliprect);
 
 	for ( i = 0; i < 8; i++ )
 	{
-		state->m_view2_0->render_tilemap_chip(bitmap,cliprect,i);
+		m_view2_0->render_tilemap_chip(bitmap,cliprect,i);
 	}
 
 	// copy sprite bitmap to screen
@@ -159,23 +161,21 @@ static void update_irq_state(running_machine &machine)
 
 
 /* Called once/frame to generate the VBLANK interrupt */
-static INTERRUPT_GEN( sandscrp_interrupt )
+INTERRUPT_GEN_MEMBER(sandscrp_state::sandscrp_interrupt)
 {
-	sandscrp_state *state = device->machine().driver_data<sandscrp_state>();
-	state->m_vblank_irq = 1;
-	update_irq_state(device->machine());
+	m_vblank_irq = 1;
+	update_irq_state(machine());
 }
 
 
-static SCREEN_VBLANK( sandscrp )
+void sandscrp_state::screen_eof_sandscrp(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		sandscrp_state *state = screen.machine().driver_data<sandscrp_state>();
-		device_t *pandora = screen.machine().device("pandora");
-		state->m_sprite_irq = 1;
-		update_irq_state(screen.machine());
+		device_t *pandora = machine().device("pandora");
+		m_sprite_irq = 1;
+		update_irq_state(machine());
 		pandora_eof(pandora);
 	}
 }
@@ -500,7 +500,7 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,12000000)	/* TMP68HC000N-12 */
 	MCFG_CPU_PROGRAM_MAP(sandscrp)
-	MCFG_CPU_VBLANK_INT("screen", sandscrp_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sandscrp_state,  sandscrp_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,4000000)	/* Z8400AB1, Reads the DSWs: it can't be disabled */
 	MCFG_CPU_PROGRAM_MAP(sandscrp_soundmem)
@@ -515,8 +515,8 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 	MCFG_SCREEN_VBLANK_TIME( ATTOSECONDS_IN_USEC(2500) /* not accurate */ )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(sandscrp)
-	MCFG_SCREEN_VBLANK_STATIC(sandscrp)
+	MCFG_SCREEN_UPDATE_DRIVER(sandscrp_state, screen_update_sandscrp)
+	MCFG_SCREEN_VBLANK_DRIVER(sandscrp_state, screen_eof_sandscrp)
 
 	MCFG_GFXDECODE(sandscrp)
 	MCFG_PALETTE_LENGTH(2048)

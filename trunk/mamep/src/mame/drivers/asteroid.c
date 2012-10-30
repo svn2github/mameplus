@@ -185,13 +185,14 @@ There is not a rev 03 known or dumped. An Asteroids rev 03 is not mentioned in a
 
 #include "emu.h"
 #include "cpu/m6502/m6502.h"
-#include "rendlay.h"
 #include "video/vector.h"
 #include "video/avgdvg.h"
 #include "machine/atari_vg.h"
 #include "includes/asteroid.h"
 #include "sound/discrete.h"
 #include "sound/pokey.h"
+
+#include "astdelux.lh"
 
 #define MASTER_CLOCK (XTAL_12_096MHz)
 #define CLOCK_3KHZ  (MASTER_CLOCK / 4096)
@@ -245,10 +246,10 @@ static ADDRESS_MAP_START( asteroid_map, AS_PROGRAM, 8, asteroid_state )
 	AM_RANGE(0x3000, 0x3000) AM_WRITE_LEGACY(avgdvg_go_w)
 	AM_RANGE(0x3200, 0x3200) AM_WRITE(asteroid_bank_switch_w)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x3600, 0x3600) AM_DEVWRITE_LEGACY("discrete", asteroid_explode_w)
-	AM_RANGE(0x3a00, 0x3a00) AM_DEVWRITE_LEGACY("discrete", asteroid_thump_w)
-	AM_RANGE(0x3c00, 0x3c05) AM_DEVWRITE_LEGACY("discrete", asteroid_sounds_w)
-	AM_RANGE(0x3e00, 0x3e00) AM_DEVWRITE_LEGACY("discrete", asteroid_noise_reset_w)
+	AM_RANGE(0x3600, 0x3600) AM_WRITE(asteroid_explode_w)
+	AM_RANGE(0x3a00, 0x3a00) AM_WRITE(asteroid_thump_w)
+	AM_RANGE(0x3c00, 0x3c05) AM_WRITE(asteroid_sounds_w)
+	AM_RANGE(0x3e00, 0x3e00) AM_WRITE(asteroid_noise_reset_w)
 	AM_RANGE(0x4000, 0x47ff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x4000)
 	AM_RANGE(0x5000, 0x57ff) AM_ROM						/* vector rom */
 	AM_RANGE(0x6800, 0x7fff) AM_ROM
@@ -268,13 +269,13 @@ static ADDRESS_MAP_START( astdelux_map, AS_PROGRAM, 8, asteroid_state )
 	AM_RANGE(0x3000, 0x3000) AM_WRITE_LEGACY(avgdvg_go_w)
 	AM_RANGE(0x3200, 0x323f) AM_DEVWRITE("earom", atari_vg_earom_device, write)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x3600, 0x3600) AM_DEVWRITE_LEGACY("discrete", asteroid_explode_w)
+	AM_RANGE(0x3600, 0x3600) AM_WRITE(asteroid_explode_w)
 	AM_RANGE(0x3a00, 0x3a00) AM_DEVWRITE("earom", atari_vg_earom_device, ctrl_w)
 	AM_RANGE(0x3c00, 0x3c01) AM_WRITE(astdelux_led_w)
-	AM_RANGE(0x3c03, 0x3c03) AM_DEVWRITE_LEGACY("discrete", astdelux_sounds_w)
+	AM_RANGE(0x3c03, 0x3c03) AM_WRITE(astdelux_sounds_w)
 	AM_RANGE(0x3c04, 0x3c04) AM_WRITE(astdelux_bank_switch_w)
 	AM_RANGE(0x3c05, 0x3c07) AM_WRITE(astdelux_coin_counter_w)
-	AM_RANGE(0x3e00, 0x3e00) AM_DEVWRITE_LEGACY("discrete", asteroid_noise_reset_w)
+	AM_RANGE(0x3e00, 0x3e00) AM_WRITE(asteroid_noise_reset_w)
 	AM_RANGE(0x4000, 0x47ff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x4000)
 	AM_RANGE(0x4800, 0x57ff) AM_ROM						/* vector rom */
 	AM_RANGE(0x6000, 0x7fff) AM_ROM
@@ -291,8 +292,8 @@ static ADDRESS_MAP_START( llander_map, AS_PROGRAM, 8, asteroid_state )
 	AM_RANGE(0x3000, 0x3000) AM_WRITE_LEGACY(avgdvg_go_w)
 	AM_RANGE(0x3200, 0x3200) AM_WRITE(llander_led_w)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x3c00, 0x3c00) AM_DEVWRITE_LEGACY("discrete", llander_sounds_w)
-	AM_RANGE(0x3e00, 0x3e00) AM_DEVWRITE_LEGACY("discrete", llander_snd_reset_w)
+	AM_RANGE(0x3c00, 0x3c00) AM_WRITE(llander_sounds_w)
+	AM_RANGE(0x3e00, 0x3e00) AM_WRITE(llander_snd_reset_w)
 	AM_RANGE(0x4000, 0x47ff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x4000)
 	AM_RANGE(0x4800, 0x5fff) AM_ROM						/* vector rom */
 	AM_RANGE(0x6000, 0x7fff) AM_ROM
@@ -615,7 +616,7 @@ static MACHINE_CONFIG_START( asteroid, asteroid_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(asteroid_map)
-	MCFG_CPU_PERIODIC_INT(asteroid_interrupt, (double)MASTER_CLOCK/4096/12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, asteroid_interrupt,  (double)MASTER_CLOCK/4096/12)
 
 
 	/* video hardware */
@@ -639,7 +640,7 @@ static MACHINE_CONFIG_DERIVED( asterock, asteroid )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_PERIODIC_INT(asterock_interrupt, (double)MASTER_CLOCK/4096/12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, asterock_interrupt,  (double)MASTER_CLOCK/4096/12)
 MACHINE_CONFIG_END
 
 
@@ -668,7 +669,7 @@ static MACHINE_CONFIG_DERIVED( llander, asteroid )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(llander_map)
-	MCFG_CPU_PERIODIC_INT(llander_interrupt, (double)MASTER_CLOCK/4096/12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, llander_interrupt,  (double)MASTER_CLOCK/4096/12)
 
 	MCFG_MACHINE_RESET(avgdvg)
 
@@ -747,19 +748,36 @@ ROM_END
 
 ROM_START( asterock )
 	ROM_REGION( 0x8000, "maincpu", 0 )
-	ROM_LOAD( "sidamas.2",    0x6800, 0x0400, CRC(cdf720c6) SHA1(85fe748096478e28a06bd98ff3aad73ab21b22a4) )
-	ROM_LOAD( "sidamas.3",    0x6c00, 0x0400, CRC(ee58bdf0) SHA1(80094cb5dafd327aff6658ede33106f0493a809d) )
-	ROM_LOAD( "sidamas.4",    0x7000, 0x0400, CRC(8d3e421e) SHA1(5f5719ab84d4755e69bef205d313b455bc59c413) )
-	ROM_LOAD( "sidamas.5",    0x7400, 0x0400, CRC(d2ce7672) SHA1(b6012e09b2439a614a55bcf23be0692c42830e21) )
-	ROM_LOAD( "sidamas.6",    0x7800, 0x0400, CRC(74103c87) SHA1(e568b5ac573a6d0474cf672b3c62abfbd3320799) )
-	ROM_LOAD( "sidamas.7",    0x7c00, 0x0400, CRC(75a39768) SHA1(bf22998fd692fb01964d8894e421435c55d746a0) )
+	ROM_LOAD( "10505.2",       0x6800, 0x0400, CRC(cdf720c6) SHA1(85fe748096478e28a06bd98ff3aad73ab21b22a4) )
+	ROM_LOAD( "10505.3",       0x6c00, 0x0400, CRC(ee58bdf0) SHA1(80094cb5dafd327aff6658ede33106f0493a809d) )
+	ROM_LOAD( "10505.4",       0x7000, 0x0400, CRC(8d3e421e) SHA1(5f5719ab84d4755e69bef205d313b455bc59c413) )
+	ROM_LOAD( "10505.5",       0x7400, 0x0400, CRC(d2ce7672) SHA1(b6012e09b2439a614a55bcf23be0692c42830e21) )
+	ROM_LOAD( "10505.6",       0x7800, 0x0400, CRC(74103c87) SHA1(e568b5ac573a6d0474cf672b3c62abfbd3320799) )
+	ROM_LOAD( "10505.7",       0x7c00, 0x0400, CRC(75a39768) SHA1(bf22998fd692fb01964d8894e421435c55d746a0) )
 	/* Vector ROM */
-	ROM_LOAD( "sidamas.0",    0x5000, 0x0400, CRC(6bd2053f) SHA1(790f2858f44bbb1854e2d9d549e29f4815c4665b) )
-	ROM_LOAD( "sidamas.1",    0x5400, 0x0400, CRC(231ce201) SHA1(710f4c19864d725ba1c9ea447a97e84001a679f7) )
+	ROM_LOAD( "10505.0",       0x5000, 0x0400, CRC(6bd2053f) SHA1(790f2858f44bbb1854e2d9d549e29f4815c4665b) )
+	ROM_LOAD( "10505.1",       0x5400, 0x0400, CRC(231ce201) SHA1(710f4c19864d725ba1c9ea447a97e84001a679f7) )
 
 	/* DVG PROM */
 	ROM_REGION( 0x100, "user1", 0 )
-	ROM_LOAD( "034602-01.c8",    0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
+	ROM_LOAD( "034602-01.c8",  0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
+ROM_END
+
+ROM_START( asterockv )
+	ROM_REGION( 0x8000, "maincpu", 0 )
+	ROM_LOAD( "10505.2",       0x6800, 0x0400, CRC(cdf720c6) SHA1(85fe748096478e28a06bd98ff3aad73ab21b22a4) )
+	ROM_LOAD( "10505.3",       0x6c00, 0x0400, CRC(ee58bdf0) SHA1(80094cb5dafd327aff6658ede33106f0493a809d) )
+	ROM_LOAD( "10505.4",       0x7000, 0x0400, CRC(8d3e421e) SHA1(5f5719ab84d4755e69bef205d313b455bc59c413) )
+	ROM_LOAD( "10505.5",       0x7400, 0x0400, CRC(d2ce7672) SHA1(b6012e09b2439a614a55bcf23be0692c42830e21) )
+	ROM_LOAD( "10505.6",       0x7800, 0x0400, CRC(74103c87) SHA1(e568b5ac573a6d0474cf672b3c62abfbd3320799) )
+	ROM_LOAD( "10505.7",       0x7c00, 0x0400, CRC(75a39768) SHA1(bf22998fd692fb01964d8894e421435c55d746a0) )
+	/* Vector ROM */
+	ROM_LOAD( "videotronas.0", 0x5000, 0x0400, CRC(d1ac90b5) SHA1(7209027d2099c75c6336605ae80491ffc5673674) ) // only this rom differs from Sidam's Asterock
+	ROM_LOAD( "10505.1",       0x5400, 0x0400, CRC(231ce201) SHA1(710f4c19864d725ba1c9ea447a97e84001a679f7) )
+
+	/* DVG PROM */
+	ROM_REGION( 0x100, "user1", 0 )
+	ROM_LOAD( "034602-01.c8",  0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
 ROM_END
 
 ROM_START( meteorts )
@@ -934,14 +952,14 @@ ROM_END
 
 DRIVER_INIT_MEMBER(asteroid_state,asteroidb)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2000, 0x2000, "IN0");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2003, 0x2003, "HS");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x2000, 0x2000, "IN0");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x2003, 0x2003, "HS");
 }
 
 
 DRIVER_INIT_MEMBER(asteroid_state,asterock)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x2000, 0x2007, read8_delegate(FUNC(asteroid_state::asterock_IN0_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x2000, 0x2007, read8_delegate(FUNC(asteroid_state::asterock_IN0_r),this));
 }
 
 
@@ -952,16 +970,17 @@ DRIVER_INIT_MEMBER(asteroid_state,asterock)
  *
  *************************************/
 
-GAME( 1979, asteroid, 0,        asteroid, asteroid, driver_device, 0,        ROT0, "Atari",   "Asteroids (rev 4)",        GAME_SUPPORTS_SAVE )
-GAME( 1979, asteroid2,asteroid, asteroid, asteroid, driver_device, 0,        ROT0, "Atari",   "Asteroids (rev 2)",        GAME_SUPPORTS_SAVE )
-GAME( 1979, asteroid1,asteroid, asteroid, asteroid, driver_device, 0,        ROT0, "Atari",   "Asteroids (rev 1)",        GAME_SUPPORTS_SAVE )
-GAME( 1979, asteroidb,asteroid, asteroid, asteroidb, asteroid_state,asteroidb,ROT0, "bootleg", "Asteroids (bootleg on Lunar Lander hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1979, asterock, asteroid, asterock, asterock, asteroid_state, asterock, ROT0, "bootleg (Sidam)",   "Asterock (bootleg of Asteroids)",    GAME_SUPPORTS_SAVE )
-GAME( 1979, meteorts, asteroid, asteroid, asteroid, driver_device, 0,        ROT0, "bootleg (VGG)",     "Meteorites (bootleg of Asteroids)",  GAME_SUPPORTS_SAVE )
-GAME( 1979, meteorho, asteroid, asteroid, asteroid, driver_device, 0,        ROT0, "bootleg (Hoei)",    "Meteor (bootleg of Asteroids)",      GAME_SUPPORTS_SAVE )
-GAME( 1979, hyperspc, asteroid, asteroid, asteroid, driver_device, 0,        ROT0, "bootleg (Rumiano)", "Hyperspace (bootleg of Asteroids)",  GAME_SUPPORTS_SAVE )
-GAMEL(1980, astdelux, 0,        astdelux, astdelux, driver_device, 0,        ROT0, "Atari",   "Asteroids Deluxe (rev 3)", GAME_SUPPORTS_SAVE, layout_ho88ffff )
-GAMEL(1980, astdelux2,astdelux, astdelux, astdelux, driver_device, 0,        ROT0, "Atari",   "Asteroids Deluxe (rev 2)", GAME_SUPPORTS_SAVE, layout_ho88ffff )
-GAMEL(1980, astdelux1,astdelux, astdelux, astdelux, driver_device, 0,        ROT0, "Atari",   "Asteroids Deluxe (rev 1)", GAME_SUPPORTS_SAVE, layout_ho88ffff )
-GAME( 1979, llander,  0,        llander,  llander, driver_device,  0,        ROT0, "Atari",   "Lunar Lander (rev 2)",     GAME_SUPPORTS_SAVE )
-GAME( 1979, llander1, llander,  llander,  llander1, driver_device, 0,        ROT0, "Atari",   "Lunar Lander (rev 1)",     GAME_SUPPORTS_SAVE )
+GAME( 1979, asteroid,  0,         asteroid,  asteroid,  driver_device,  0,         ROT0, "Atari",   "Asteroids (rev 4)",        GAME_SUPPORTS_SAVE )
+GAME( 1979, asteroid2, asteroid,  asteroid,  asteroid,  driver_device,  0,         ROT0, "Atari",   "Asteroids (rev 2)",        GAME_SUPPORTS_SAVE )
+GAME( 1979, asteroid1, asteroid,  asteroid,  asteroid,  driver_device,  0,         ROT0, "Atari",   "Asteroids (rev 1)",        GAME_SUPPORTS_SAVE )
+GAME( 1979, asteroidb, asteroid,  asteroid,  asteroidb, asteroid_state, asteroidb, ROT0, "bootleg", "Asteroids (bootleg on Lunar Lander hardware)",  GAME_SUPPORTS_SAVE )
+GAME( 1979, asterock,  asteroid,  asterock,  asterock,  asteroid_state, asterock,  ROT0, "bootleg (Sidam)",     "Asterock (Sidam bootleg of Asteroids)",     GAME_SUPPORTS_SAVE )
+GAME( 1979, asterockv, asteroid,  asterock,  asterock,  asteroid_state, asterock,  ROT0, "bootleg (Videotron)", "Asterock (Videotron bootleg of Asteroids)", GAME_SUPPORTS_SAVE )
+GAME( 1979, meteorts,  asteroid,  asteroid,  asteroid,  driver_device,  0,         ROT0, "bootleg (VGG)",       "Meteorites (bootleg of Asteroids)", GAME_SUPPORTS_SAVE )
+GAME( 1979, meteorho,  asteroid,  asteroid,  asteroid,  driver_device,  0,         ROT0, "bootleg (Hoei)",      "Meteor (bootleg of Asteroids)",     GAME_SUPPORTS_SAVE )
+GAME( 1979, hyperspc,  asteroid,  asteroid,  asteroid,  driver_device,  0,         ROT0, "bootleg (Rumiano)",   "Hyperspace (bootleg of Asteroids)", GAME_SUPPORTS_SAVE )
+GAMEL(1980, astdelux,  0,         astdelux,  astdelux,  driver_device,  0,         ROT0, "Atari",   "Asteroids Deluxe (rev 3)", GAME_SUPPORTS_SAVE, layout_astdelux )
+GAMEL(1980, astdelux2, astdelux,  astdelux,  astdelux,  driver_device,  0,         ROT0, "Atari",   "Asteroids Deluxe (rev 2)", GAME_SUPPORTS_SAVE, layout_astdelux )
+GAMEL(1980, astdelux1, astdelux,  astdelux,  astdelux,  driver_device,  0,         ROT0, "Atari",   "Asteroids Deluxe (rev 1)", GAME_SUPPORTS_SAVE, layout_astdelux )
+GAME( 1979, llander,   0,         llander,   llander,   driver_device,  0,         ROT0, "Atari",   "Lunar Lander (rev 2)",     GAME_SUPPORTS_SAVE )
+GAME( 1979, llander1,  llander,   llander,   llander1,  driver_device,  0,         ROT0, "Atari",   "Lunar Lander (rev 1)",     GAME_SUPPORTS_SAVE )

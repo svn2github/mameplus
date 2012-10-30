@@ -282,11 +282,11 @@ static I8255_INTERFACE(turbo_8255_intf_1)
 static I8255_INTERFACE(turbo_8255_intf_2)
 {
 	DEVCB_NULL,
-	DEVCB_HANDLER(turbo_sound_a_w),
+	DEVCB_DRIVER_MEMBER(turbo_state,turbo_sound_a_w),
 	DEVCB_NULL,
-	DEVCB_HANDLER(turbo_sound_b_w),
+	DEVCB_DRIVER_MEMBER(turbo_state,turbo_sound_b_w),
 	DEVCB_NULL,
-	DEVCB_HANDLER(turbo_sound_c_w)
+	DEVCB_DRIVER_MEMBER(turbo_state,turbo_sound_c_w)
 };
 
 static I8255_INTERFACE(turbo_8255_intf_3)
@@ -355,11 +355,11 @@ static I8255_INTERFACE(subroc3d_8255_intf_0)
 static I8255_INTERFACE(subroc3d_8255_intf_1)
 {
 	DEVCB_NULL,
-	DEVCB_HANDLER(subroc3d_sound_a_w),
+	DEVCB_DRIVER_MEMBER(turbo_state,subroc3d_sound_a_w),
 	DEVCB_NULL,
-	DEVCB_HANDLER(subroc3d_sound_b_w),
+	DEVCB_DRIVER_MEMBER(turbo_state,subroc3d_sound_b_w),
 	DEVCB_NULL,
-	DEVCB_HANDLER(subroc3d_sound_c_w)
+	DEVCB_DRIVER_MEMBER(turbo_state,subroc3d_sound_c_w)
 };
 
 
@@ -424,9 +424,9 @@ static I8255_INTERFACE(buckrog_8255_intf_0)
 static I8255_INTERFACE(buckrog_8255_intf_1)
 {
 	DEVCB_NULL,
-	DEVCB_HANDLER(buckrog_sound_a_w),
+	DEVCB_DRIVER_MEMBER(turbo_state,buckrog_sound_a_w),
 	DEVCB_NULL,
-	DEVCB_HANDLER(buckrog_sound_b_w),
+	DEVCB_DRIVER_MEMBER(turbo_state,buckrog_sound_b_w),
 	DEVCB_NULL,
 	DEVCB_DRIVER_MEMBER(turbo_state,buckrog_ppi1c_w)
 };
@@ -564,10 +564,9 @@ READ8_MEMBER(turbo_state::buckrog_port_3_r)
 }
 
 
-static TIMER_CALLBACK( delayed_i8255_w )
+TIMER_CALLBACK_MEMBER(turbo_state::delayed_i8255_w)
 {
-	turbo_state *state = machine.driver_data<turbo_state>();
-	state->m_i8255_0->write(*state->m_maincpu->space(AS_PROGRAM), param >> 8, param & 0xff);
+	m_i8255_0->write(m_maincpu->space(AS_PROGRAM), param >> 8, param & 0xff);
 }
 
 
@@ -575,7 +574,7 @@ WRITE8_MEMBER(turbo_state::buckrog_i8255_0_w)
 {
 	/* the port C handshaking signals control the sub CPU IRQ, */
 	/* so we have to sync whenever we access this PPI */
-	machine().scheduler().synchronize(FUNC(delayed_i8255_w), ((offset & 3) << 8) | (data & 0xff));
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(turbo_state::delayed_i8255_w),this), ((offset & 3) << 8) | (data & 0xff));
 }
 
 
@@ -930,7 +929,7 @@ static MACHINE_CONFIG_START( turbo, turbo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(turbo_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", turbo_state,  irq0_line_hold)
 
 	MCFG_I8255_ADD( "i8255_0", turbo_8255_intf_0 )
 	MCFG_I8255_ADD( "i8255_1", turbo_8255_intf_1 )
@@ -946,7 +945,7 @@ static MACHINE_CONFIG_START( turbo, turbo_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(turbo)
+	MCFG_SCREEN_UPDATE_DRIVER(turbo_state, screen_update_turbo)
 
 	MCFG_PALETTE_INIT_OVERRIDE(turbo_state,turbo)
 	MCFG_VIDEO_START_OVERRIDE(turbo_state,turbo)
@@ -961,7 +960,7 @@ static MACHINE_CONFIG_START( subroc3d, turbo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(subroc3d_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", turbo_state,  irq0_line_hold)
 
 	MCFG_I8255_ADD( "i8255_0", subroc3d_8255_intf_0 )
 	MCFG_I8255_ADD( "i8255_1", subroc3d_8255_intf_1 )
@@ -975,7 +974,7 @@ static MACHINE_CONFIG_START( subroc3d, turbo_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(subroc3d)
+	MCFG_SCREEN_UPDATE_DRIVER(turbo_state, screen_update_subroc3d)
 
 	MCFG_PALETTE_INIT_OVERRIDE(turbo_state,subroc3d)
 	MCFG_VIDEO_START_OVERRIDE(turbo_state,turbo)
@@ -990,7 +989,7 @@ static MACHINE_CONFIG_START( buckrog, turbo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(buckrog_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", turbo_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("subcpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(buckrog_cpu2_map)
@@ -1011,7 +1010,7 @@ static MACHINE_CONFIG_START( buckrog, turbo_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(buckrog)
+	MCFG_SCREEN_UPDATE_DRIVER(turbo_state, screen_update_buckrog)
 
 	MCFG_PALETTE_INIT_OVERRIDE(turbo_state,buckrog)
 	MCFG_VIDEO_START_OVERRIDE(turbo_state,buckrog)

@@ -144,9 +144,9 @@ WRITE8_MEMBER(tehkanwc_state::sound_command_w)
 	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static TIMER_CALLBACK( reset_callback )
+TIMER_CALLBACK_MEMBER(tehkanwc_state::reset_callback)
 {
-	machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
@@ -155,7 +155,7 @@ WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
 
 	/* in Gridiron, the sound CPU goes in a tight loop after the self test, */
 	/* probably waiting to be reset by a watchdog */
-	if (space.device().safe_pc() == 0x08bc) machine().scheduler().timer_set(attotime::from_seconds(1), FUNC(reset_callback));
+	if (space.device().safe_pc() == 0x08bc) machine().scheduler().timer_set(attotime::from_seconds(1), timer_expired_delegate(FUNC(tehkanwc_state::reset_callback),this));
 }
 
 
@@ -642,16 +642,16 @@ static MACHINE_CONFIG_START( tehkanwc, tehkanwc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/4)	/* 18.432000 / 4 */
 	MCFG_CPU_PROGRAM_MAP(main_mem)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tehkanwc_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, 18432000/4)
 	MCFG_CPU_PROGRAM_MAP(sub_mem)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tehkanwc_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 18432000/4)
 	MCFG_CPU_PROGRAM_MAP(sound_mem)
 	MCFG_CPU_IO_MAP(sound_port)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tehkanwc_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - seems enough to keep the CPUs in sync */
 
@@ -661,7 +661,7 @@ static MACHINE_CONFIG_START( tehkanwc, tehkanwc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tehkanwc)
+	MCFG_SCREEN_UPDATE_DRIVER(tehkanwc_state, screen_update_tehkanwc)
 
 	MCFG_GFXDECODE(tehkanwc)
 	MCFG_PALETTE_LENGTH(768)

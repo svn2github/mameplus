@@ -35,16 +35,16 @@
 static WRITE8_DEVICE_HANDLER( mquake_cia_0_porta_w )
 {
 	/* switch banks as appropriate */
-	device->machine().root_device().membank("bank1")->set_entry(data & 1);
+	space.machine().root_device().membank("bank1")->set_entry(data & 1);
 
 	/* swap the write handlers between ROM and bank 1 based on the bit */
 	if ((data & 1) == 0)
 		/* overlay disabled, map RAM on 0x000000 */
-		device->machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_bank(0x000000, 0x07ffff, "bank1");
+		space.machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_bank(0x000000, 0x07ffff, "bank1");
 
 	else
 		/* overlay enabled, map Amiga system ROM on 0x000000 */
-		device->machine().device("maincpu")->memory().space(AS_PROGRAM)->unmap_write(0x000000, 0x07ffff);
+		space.machine().device("maincpu")->memory().space(AS_PROGRAM).unmap_write(0x000000, 0x07ffff);
 }
 
 
@@ -67,14 +67,14 @@ static WRITE8_DEVICE_HANDLER( mquake_cia_0_porta_w )
 static READ8_DEVICE_HANDLER( mquake_cia_0_portb_r )
 {
 	/* parallel port */
-	logerror("%s:CIA0_portb_r\n", device->machine().describe_context());
+	logerror("%s:CIA0_portb_r\n", space.machine().describe_context());
 	return 0xff;
 }
 
 static WRITE8_DEVICE_HANDLER( mquake_cia_0_portb_w )
 {
 	/* parallel port */
-	logerror("%s:CIA0_portb_w(%02x)\n", device->machine().describe_context(), data);
+	logerror("%s:CIA0_portb_w(%02x)\n", space.machine().describe_context(), data);
 }
 
 
@@ -87,8 +87,8 @@ static WRITE8_DEVICE_HANDLER( mquake_cia_0_portb_w )
 
 static READ8_HANDLER( es5503_sample_r )
 {
-	UINT8 *rom = space->machine().root_device().memregion("es5503")->base();
-	es5503_device *es5503 = space->machine().device<es5503_device>("es5503");
+	UINT8 *rom = space.machine().root_device().memregion("es5503")->base();
+	es5503_device *es5503 = space.machine().device<es5503_device>("es5503");
 
 	return rom[offset + (es5503->get_channel_strobe() * 0x10000)];
 }
@@ -100,21 +100,21 @@ ADDRESS_MAP_END
 static WRITE16_HANDLER( output_w )
 {
 	if (ACCESSING_BITS_0_7)
-		logerror("%06x:output_w(%x) = %02x\n", space->device().safe_pc(), offset, data);
+		logerror("%06x:output_w(%x) = %02x\n", space.device().safe_pc(), offset, data);
 }
 
 
 static READ16_HANDLER( coin_chip_r )
 {
 	if (offset == 1)
-		return space->machine().root_device().ioport("COINCHIP")->read();
-	logerror("%06x:coin_chip_r(%02x) & %04x\n", space->device().safe_pc(), offset, mem_mask);
+		return space.machine().root_device().ioport("COINCHIP")->read();
+	logerror("%06x:coin_chip_r(%02x) & %04x\n", space.device().safe_pc(), offset, mem_mask);
 	return 0xffff;
 }
 
 static WRITE16_HANDLER( coin_chip_w )
 {
-	logerror("%06x:coin_chip_w(%02x) = %04x & %04x\n", space->device().safe_pc(), offset, data, mem_mask);
+	logerror("%06x:coin_chip_w(%02x) = %04x & %04x\n", space.device().safe_pc(), offset, data, mem_mask);
 }
 
 // inputs at 282000, 282002 (full word)
@@ -313,7 +313,7 @@ MACHINE_RESET_MEMBER(amiga_state,mquake)
  *
  *************************************/
 
-static const mos6526_interface cia_0_intf =
+static const legacy_mos6526_interface cia_0_intf =
 {
 	DEVCB_LINE(amiga_cia_0_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -325,7 +325,7 @@ static const mos6526_interface cia_0_intf =
 	DEVCB_HANDLER(mquake_cia_0_portb_w)	/* port B */
 };
 
-static const mos6526_interface cia_1_intf =
+static const legacy_mos6526_interface cia_1_intf =
 {
 	DEVCB_LINE(amiga_cia_1_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -354,7 +354,7 @@ static MACHINE_CONFIG_START( mquake, amiga_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512*2, 262)
 	MCFG_SCREEN_VISIBLE_AREA((129-8)*2, (449+8-1)*2, 44-8, 244+8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amiga)
+	MCFG_SCREEN_UPDATE_DRIVER(amiga_state, screen_update_amiga)
 
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_PALETTE_INIT_OVERRIDE(amiga_state,amiga)
@@ -378,8 +378,8 @@ static MACHINE_CONFIG_START( mquake, amiga_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
 
 	/* fdc */
 	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)

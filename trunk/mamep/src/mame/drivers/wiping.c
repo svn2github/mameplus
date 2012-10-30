@@ -262,20 +262,18 @@ static GFXDECODE_START( wiping )
 	GFXDECODE_ENTRY( "gfx2", 0, spritelayout, 64*4, 64 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(wiping_state::vblank_irq)
 {
-	wiping_state *state = device->machine().driver_data<wiping_state>();
 
-	if(state->m_main_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_main_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( sound_timer_irq )
+INTERRUPT_GEN_MEMBER(wiping_state::sound_timer_irq)
 {
-	wiping_state *state = device->machine().driver_data<wiping_state>();
 
-	if(state->m_sound_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_sound_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -285,11 +283,11 @@ static MACHINE_CONFIG_START( wiping, wiping_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,18432000/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", wiping_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80,18432000/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(sound_timer_irq,120)	/* periodic interrupt, don't know about the frequency */
+	MCFG_CPU_PERIODIC_INT_DRIVER(wiping_state, sound_timer_irq, 120)	/* periodic interrupt, don't know about the frequency */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -297,7 +295,7 @@ static MACHINE_CONFIG_START( wiping, wiping_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wiping)
+	MCFG_SCREEN_UPDATE_DRIVER(wiping_state, screen_update_wiping)
 
 	MCFG_GFXDECODE(wiping)
 	MCFG_PALETTE_LENGTH(64*4+64*4)

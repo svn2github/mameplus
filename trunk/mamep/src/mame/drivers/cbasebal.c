@@ -277,7 +277,7 @@ static MACHINE_CONFIG_START( cbasebal, cbasebal_state )
 	MCFG_CPU_ADD("maincpu", Z80, 6000000)	/* ??? */
 	MCFG_CPU_PROGRAM_MAP(cbasebal_map)
 	MCFG_CPU_IO_MAP(cbasebal_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* ??? */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cbasebal_state,  irq0_line_hold)	/* ??? */
 
 
 	MCFG_EEPROM_ADD("eeprom", cbasebal_eeprom_intf)
@@ -290,7 +290,7 @@ static MACHINE_CONFIG_START( cbasebal, cbasebal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(cbasebal)
+	MCFG_SCREEN_UPDATE_DRIVER(cbasebal_state, screen_update_cbasebal)
 
 	MCFG_GFXDECODE(cbasebal)
 	MCFG_PALETTE_LENGTH(1024)

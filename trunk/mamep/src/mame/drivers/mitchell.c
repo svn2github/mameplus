@@ -92,24 +92,6 @@ static const eeprom_interface eeprom_intf =
 	"0111"	/* erase command */
 };
 
-static NVRAM_HANDLER( mitchell )
-{
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	if (read_or_write)
-	{
-		if (state->m_nvram_size)	/* Super Pang, Block Block */
-			file->write(state->m_nvram,state->m_nvram_size);	/* NVRAM */
-	}
-	else
-	{
-		if (file)
-		{
-			if (state->m_nvram_size)	/* Super Pang, Block Block */
-				file->read(state->m_nvram,state->m_nvram_size);	/* NVRAM */
-		}
-	}
-}
-
 READ8_MEMBER(mitchell_state::pang_port5_r)
 {
 
@@ -1096,16 +1078,15 @@ MACHINE_RESET_MEMBER(mitchell_state,mitchell)
 	m_keymatrix = 0;
 }
 
-static TIMER_DEVICE_CALLBACK( mitchell_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(mitchell_state::mitchell_irq)
 {
-	mitchell_state *state = timer.machine().driver_data<mitchell_state>();
 	int scanline = param;
 
 	if (scanline == 240 || scanline == 0)
 	{
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 
-		state->m_irq_source = (scanline == 240);
+		m_irq_source = (scanline == 240);
 	}
 }
 
@@ -1115,7 +1096,7 @@ static MACHINE_CONFIG_START( mgakuen, mitchell_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2) /* probably same clock as the other mitchell hardware games */
 	MCFG_CPU_PROGRAM_MAP(mgakuen_map)
 	MCFG_CPU_IO_MAP(mitchell_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mitchell_irq, "screen", 0, 1)	/* ??? one extra irq seems to be needed for music (see input5_r) */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mitchell_state, mitchell_irq, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(mitchell_state,mitchell)
 	MCFG_MACHINE_RESET_OVERRIDE(mitchell_state,mitchell)
@@ -1128,7 +1109,7 @@ static MACHINE_CONFIG_START( mgakuen, mitchell_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(pang)
+	MCFG_SCREEN_UPDATE_DRIVER(mitchell_state, screen_update_pang)
 
 	MCFG_GFXDECODE(mgakuen)
 	MCFG_PALETTE_LENGTH(1024)	/* less colors than the others */
@@ -1152,12 +1133,11 @@ static MACHINE_CONFIG_START( pang, mitchell_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_16MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mitchell_map)
 	MCFG_CPU_IO_MAP(mitchell_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mitchell_irq, "screen", 0, 1)	/* ??? one extra irq seems to be needed for music (see input5_r) */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mitchell_state, mitchell_irq, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(mitchell_state,mitchell)
 	MCFG_MACHINE_RESET_OVERRIDE(mitchell_state,mitchell)
 
-	MCFG_NVRAM_HANDLER(mitchell)
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
 	/* video hardware */
@@ -1171,7 +1151,7 @@ static MACHINE_CONFIG_START( pang, mitchell_state )
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START_OVERRIDE(mitchell_state,pang)
-	MCFG_SCREEN_UPDATE_STATIC(pang)
+	MCFG_SCREEN_UPDATE_DRIVER(mitchell_state, screen_update_pang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1182,6 +1162,11 @@ static MACHINE_CONFIG_START( pang, mitchell_state )
 	MCFG_SOUND_ADD("ymsnd",YM2413, XTAL_16MHz/4) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( pangnv, pang )
+	MCFG_NVRAM_ADD_0FILL("nvram")
+MACHINE_CONFIG_END
+
 
 static const gfx_layout blcharlayout =
 {
@@ -1220,20 +1205,20 @@ static const msm5205_interface msm5205_config =
 };
 
 
-static MACHINE_CONFIG_DERIVED( spangbl, pang )
+static MACHINE_CONFIG_DERIVED( spangbl, pangnv )
 
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(spangbl_map)
 	MCFG_CPU_IO_MAP(spangbl_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mitchell_state,  irq0_line_hold)
 
 	MCFG_DEVICE_REMOVE("scantimer")
 
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(spangbl_sound_map)
 	MCFG_CPU_IO_MAP(spangbl_sound_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
-//  MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mitchell_state,  irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mitchell_state,  nmi_line_pulse)
 
 	MCFG_GFXDECODE(spangbl)
 
@@ -1252,7 +1237,7 @@ static MACHINE_CONFIG_START( mstworld, mitchell_state )
 	MCFG_CPU_ADD("maincpu", Z80, 6000000*4)
 	MCFG_CPU_PROGRAM_MAP(mitchell_map)
 	MCFG_CPU_IO_MAP(mstworld_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mitchell_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,6000000)		 /* 6 MHz? */
 	MCFG_CPU_PROGRAM_MAP(mstworld_sound_map)
@@ -1271,7 +1256,7 @@ static MACHINE_CONFIG_START( mstworld, mitchell_state )
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START_OVERRIDE(mitchell_state,pang)
-	MCFG_SCREEN_UPDATE_STATIC(pang)
+	MCFG_SCREEN_UPDATE_DRIVER(mitchell_state, screen_update_pang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1287,9 +1272,8 @@ static MACHINE_CONFIG_START( marukin, mitchell_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mitchell_map)
 	MCFG_CPU_IO_MAP(mitchell_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mitchell_irq, "screen", 0, 1)	/* ??? one extra irq seems to be needed for music (see input5_r) */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mitchell_state, mitchell_irq, "screen", 0, 1)
 
-	MCFG_NVRAM_HANDLER(mitchell)
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
 	/* video hardware */
@@ -1303,7 +1287,7 @@ static MACHINE_CONFIG_START( marukin, mitchell_state )
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START_OVERRIDE(mitchell_state,pang)
-	MCFG_SCREEN_UPDATE_STATIC(pang)
+	MCFG_SCREEN_UPDATE_DRIVER(mitchell_state, screen_update_pang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1339,9 +1323,8 @@ static MACHINE_CONFIG_START( pkladiesbl, mitchell_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mitchell_map)
 	MCFG_CPU_IO_MAP(mitchell_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mitchell_irq, "screen", 0, 1)	/* ??? one extra irq seems to be needed for music (see input5_r) */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mitchell_state, mitchell_irq, "screen", 0, 1)
 
-	MCFG_NVRAM_HANDLER(mitchell)
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
 	/* video hardware */
@@ -1355,7 +1338,7 @@ static MACHINE_CONFIG_START( pkladiesbl, mitchell_state )
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START_OVERRIDE(mitchell_state,pang)
-	MCFG_SCREEN_UPDATE_STATIC(pang)
+	MCFG_SCREEN_UPDATE_DRIVER(mitchell_state, screen_update_pang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2104,8 +2087,8 @@ ROM_END
 
 static void bootleg_decode( running_machine &machine )
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x50000);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	space.set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x50000);
 	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x60000, 0x4000);
 }
 
@@ -2119,43 +2102,39 @@ static void configure_banks( running_machine &machine )
 DRIVER_INIT_MEMBER(mitchell_state,dokaben)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	mgakuen2_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,pang)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	pang_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,pangb)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	bootleg_decode(machine());
 	configure_banks(machine());
+	if (m_nvram != NULL)
+		m_nvram->set_base(&m_dummy_nvram, sizeof(m_dummy_nvram));	/* for pangba */
 }
 DRIVER_INIT_MEMBER(mitchell_state,cworld)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	cworld_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,hatena)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	hatena_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,spang)
 {
 	m_input_type = 3;
-	m_nvram_size = 0x80;
-	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	m_nvram->set_base(&memregion("maincpu")->base()[0xe000], 0x80);	/* NVRAM */
 	spang_decode(machine());
 	configure_banks(machine());
 }
@@ -2163,8 +2142,7 @@ DRIVER_INIT_MEMBER(mitchell_state,spang)
 DRIVER_INIT_MEMBER(mitchell_state,spangbl)
 {
 	m_input_type = 3;
-	m_nvram_size = 0x80;
-	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	m_nvram->set_base(&memregion("maincpu")->base()[0xe000], 0x80);	/* NVRAM */
 	bootleg_decode(machine());
 	configure_banks(machine());
 }
@@ -2172,30 +2150,26 @@ DRIVER_INIT_MEMBER(mitchell_state,spangbl)
 DRIVER_INIT_MEMBER(mitchell_state,spangj)
 {
 	m_input_type = 3;
-	m_nvram_size = 0x80;
-	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	m_nvram->set_base(&memregion("maincpu")->base()[0xe000], 0x80);	/* NVRAM */
 	spangj_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,sbbros)
 {
 	m_input_type = 3;
-	m_nvram_size = 0x80;
-	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	m_nvram->set_base(&memregion("maincpu")->base()[0xe000], 0x80);	/* NVRAM */
 	sbbros_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,qtono1)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	qtono1_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,qsangoku)
 {
 	m_input_type = 0;
-	m_nvram_size = 0;
 	qsangoku_decode(machine());
 	configure_banks(machine());
 }
@@ -2203,50 +2177,44 @@ DRIVER_INIT_MEMBER(mitchell_state,mgakuen)
 {
 	m_input_type = 1;
 	configure_banks(machine());
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x03, 0x03, "DSW0");
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x04, 0x04, "DSW1");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x03, 0x03, "DSW0");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x04, 0x04, "DSW1");
 }
 DRIVER_INIT_MEMBER(mitchell_state,mgakuen2)
 {
 	m_input_type = 1;
-	m_nvram_size = 0;
 	mgakuen2_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,pkladies)
 {
 	m_input_type = 1;
-	m_nvram_size = 0;
 	mgakuen2_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,pkladiesbl)
 {
 	m_input_type = 1;
-	m_nvram_size = 0;
 	bootleg_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,marukin)
 {
 	m_input_type = 1;
-	m_nvram_size = 0;
 	marukin_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,block)
 {
 	m_input_type = 2;
-	m_nvram_size = 0x80;
-	m_nvram = &memregion("maincpu")->base()[0xff80];	/* NVRAM */
+	m_nvram->set_base(&memregion("maincpu")->base()[0xff80], 0x80);	/* NVRAM */
 	block_decode(machine());
 	configure_banks(machine());
 }
 DRIVER_INIT_MEMBER(mitchell_state,blockbl)
 {
 	m_input_type = 2;
-	m_nvram_size = 0x80;
-	m_nvram = &memregion("maincpu")->base()[0xff80];	/* NVRAM */
+	m_nvram->set_base(&memregion("maincpu")->base()[0xff80], 0x80);	/* NVRAM */
 	bootleg_decode(machine());
 	configure_banks(machine());
 }
@@ -2321,15 +2289,15 @@ GAME( 1989, bbros,     pang,     pang,    pang, mitchell_state,     pang,     RO
 GAME( 1989, pompingw,  pang,     pang,    pang, mitchell_state,     pang,     ROT0,   "Mitchell", "Pomping World (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989, cworld,    0,        pang,    qtono1, mitchell_state,   cworld,   ROT0,   "Capcom", "Capcom World (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1990, hatena,    0,        pang,    qtono1, mitchell_state,   hatena,   ROT0,   "Capcom", "Adventure Quiz 2 - Hatena? no Daibouken (Japan 900228)", GAME_SUPPORTS_SAVE )
-GAME( 1990, spang,     0,        pang,    pang, mitchell_state,     spang,    ROT0,   "Mitchell", "Super Pang (World 900914)", GAME_SUPPORTS_SAVE )
-GAME( 1990, spangj,    spang,    pang,    pang, mitchell_state,     spangj,   ROT0,   "Mitchell", "Super Pang (Japan 901023)", GAME_SUPPORTS_SAVE )
+GAME( 1990, spang,     0,        pangnv,  pang, mitchell_state,     spang,    ROT0,   "Mitchell", "Super Pang (World 900914)", GAME_SUPPORTS_SAVE )
+GAME( 1990, spangj,    spang,    pangnv,  pang, mitchell_state,     spangj,   ROT0,   "Mitchell", "Super Pang (Japan 901023)", GAME_SUPPORTS_SAVE )
 GAME( 1990, spangbl,   spang,    spangbl, spangbl, mitchell_state,  spangbl,  ROT0,   "bootleg", "Super Pang (World 900914, bootleg)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // different sound hardware
 GAME( 1994, mstworld,  0,        mstworld,mstworld, mitchell_state, mstworld, ROT0,   "bootleg (TCH)", "Monsters World (bootleg of Super Pang)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1990, sbbros,    spang,    pang,    pang, mitchell_state,     sbbros,   ROT0,   "Mitchell (Capcom license)", "Super Buster Bros. (US 901001)", GAME_SUPPORTS_SAVE )
+GAME( 1990, sbbros,    spang,    pangnv,  pang, mitchell_state,     sbbros,   ROT0,   "Mitchell (Capcom license)", "Super Buster Bros. (US 901001)", GAME_SUPPORTS_SAVE )
 GAME( 1990, marukin,   0,        marukin, marukin, mitchell_state,  marukin,  ROT0,   "Yuga", "Super Marukin-Ban (Japan 901017)", GAME_SUPPORTS_SAVE )
 GAME( 1991, qtono1,    0,        pang,    qtono1, mitchell_state,   qtono1,   ROT0,   "Capcom", "Quiz Tonosama no Yabou (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1991, qsangoku,  0,        pang,    qtono1, mitchell_state,   qsangoku, ROT0,   "Capcom", "Quiz Sangokushi (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1991, block,     0,        pang,    block, mitchell_state,    block,    ROT270, "Capcom", "Block Block (World 910910)", GAME_SUPPORTS_SAVE )
-GAME( 1991, blockj,    block,    pang,    block, mitchell_state,    block,    ROT270, "Capcom", "Block Block (Japan 910910)", GAME_SUPPORTS_SAVE )
-GAME( 1991, blockjoy,  block,    pang,    blockjoy, mitchell_state, block,    ROT270, "Capcom", "Block Block (World 911106 Joystick)", GAME_SUPPORTS_SAVE )
-GAME( 1991, blockbl,   block,    pang,    block, mitchell_state,    blockbl,  ROT270, "bootleg", "Block Block (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1991, block,     0,        pangnv,  block, mitchell_state,    block,    ROT270, "Capcom", "Block Block (World 910910)", GAME_SUPPORTS_SAVE )
+GAME( 1991, blockj,    block,    pangnv,  block, mitchell_state,    block,    ROT270, "Capcom", "Block Block (Japan 910910)", GAME_SUPPORTS_SAVE )
+GAME( 1991, blockjoy,  block,    pangnv,  blockjoy, mitchell_state, block,    ROT270, "Capcom", "Block Block (World 911106 Joystick)", GAME_SUPPORTS_SAVE )
+GAME( 1991, blockbl,   block,    pangnv,  block, mitchell_state,    blockbl,  ROT270, "bootleg", "Block Block (bootleg)", GAME_SUPPORTS_SAVE )

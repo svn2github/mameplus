@@ -24,7 +24,7 @@ static DEVICE_START( hyprolyb_adpcm )
 {
 	hyprolyb_adpcm_state *state = get_safe_token(device);
 
-	state->m_space = device->machine().device("audiocpu")->memory().space(AS_PROGRAM);
+	state->m_space = &device->machine().device("audiocpu")->memory().space(AS_PROGRAM);
 	state->m_msm = device->machine().device("msm");
 	device->save_item(NAME(state->m_adpcm_ready));	// only bootlegs
 	device->save_item(NAME(state->m_adpcm_busy));
@@ -44,7 +44,7 @@ static DEVICE_RESET( hyprolyb_adpcm )
 WRITE8_DEVICE_HANDLER( hyprolyb_adpcm_w )
 {
 	hyprolyb_adpcm_state *state = get_safe_token(device);
-	driver_device *drvstate = device->machine().driver_data<driver_device>();
+	driver_device *drvstate = space.machine().driver_data<driver_device>();
 	drvstate->soundlatch2_byte_w(*state->m_space, offset, data);
 	state->m_adpcm_ready = 0x80;
 }
@@ -83,7 +83,7 @@ static READ8_DEVICE_HANDLER( hyprolyb_adpcm_ready_r )
 static READ8_DEVICE_HANDLER( hyprolyb_adpcm_data_r )
 {
 	hyprolyb_adpcm_state *state = get_safe_token(device);
-	driver_device *drvstate = device->machine().driver_data<driver_device>();
+	driver_device *drvstate = space.machine().driver_data<driver_device>();
 	state->m_adpcm_ready = 0x00;
 	return drvstate->soundlatch2_byte_r(*state->m_space, offset);
 }
@@ -141,7 +141,7 @@ hyprolyb_adpcm_device::hyprolyb_adpcm_device(const machine_config &mconfig, cons
 	: device_t(mconfig, HYPROLYB_ADPCM, "Hyper Olympics Audio", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(hyprolyb_adpcm_state));
+	m_token = global_alloc_clear(hyprolyb_adpcm_state);
 }
 
 //-------------------------------------------------

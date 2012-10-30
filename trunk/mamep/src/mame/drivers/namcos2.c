@@ -736,7 +736,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_default_am, AS_PROGRAM, 8, namcos2_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROMBANK("bank6") /* banked */
-	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0x5000, 0x6fff) AM_DEVREADWRITE_LEGACY("c140", c140_r,c140_w)
 	AM_RANGE(0x7000, 0x77ff) AM_READWRITE(dpram_byte_r,dpram_byte_w) AM_SHARE("dpram")
 	AM_RANGE(0x7800, 0x7fff) AM_READWRITE(dpram_byte_r,dpram_byte_w) /* mirror */
@@ -1606,20 +1606,20 @@ via software as INT1
 static MACHINE_CONFIG_START( default, namcos2_state )
 	MCFG_CPU_ADD("maincpu", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(master_default_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000, M68K_CPU_CLOCK) /*  12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(slave_default_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M68B09_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - Sound handling */
 	MCFG_CPU_PROGRAM_MAP(sound_default_am)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq1_line_hold,  120)
 
 	MCFG_CPU_ADD("mcu", HD63705, C65_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - I/O handling */
 	MCFG_CPU_PROGRAM_MAP(mcu_default_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000)) /* CPU slices per frame */
 
@@ -1645,7 +1645,7 @@ static MACHINE_CONFIG_START( default, namcos2_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, YM2151_SOUND_CLOCK) /* 3.579545MHz */
+	MCFG_YM2151_ADD("ymsnd", YM2151_SOUND_CLOCK) /* 3.579545MHz */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 MACHINE_CONFIG_END
@@ -1680,20 +1680,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( gollygho, namcos2_state )
 	MCFG_CPU_ADD("maincpu", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(master_default_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(slave_default_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M68B09_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - Sound handling */
 	MCFG_CPU_PROGRAM_MAP(sound_default_am)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq0_line_hold,  2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq1_line_hold,  120)
 
 	MCFG_CPU_ADD("mcu", HD63705, C65_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - I/O handling */
 	MCFG_CPU_PROGRAM_MAP(mcu_default_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
@@ -1719,7 +1719,7 @@ static MACHINE_CONFIG_START( gollygho, namcos2_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, YM2151_SOUND_CLOCK) /* 3.579545MHz */
+	MCFG_YM2151_ADD("ymsnd", YM2151_SOUND_CLOCK) /* 3.579545MHz */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 MACHINE_CONFIG_END
@@ -1727,20 +1727,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( finallap, namcos2_state )
 	MCFG_CPU_ADD("maincpu", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(master_finallap_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(slave_finallap_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M68B09_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - Sound handling */
 	MCFG_CPU_PROGRAM_MAP(sound_default_am)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq0_line_hold,  2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq1_line_hold,  120)
 
 	MCFG_CPU_ADD("mcu", HD63705, C65_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - I/O handling */
 	MCFG_CPU_PROGRAM_MAP(mcu_default_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
@@ -1770,7 +1770,7 @@ static MACHINE_CONFIG_START( finallap, namcos2_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, YM2151_SOUND_CLOCK) /* 3.579545MHz */
+	MCFG_YM2151_ADD("ymsnd", YM2151_SOUND_CLOCK) /* 3.579545MHz */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 MACHINE_CONFIG_END
@@ -1778,20 +1778,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( sgunner, namcos2_state )
 	MCFG_CPU_ADD("maincpu", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(master_sgunner_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(slave_sgunner_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M68B09_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - Sound handling */
 	MCFG_CPU_PROGRAM_MAP(sound_default_am)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq0_line_hold,  2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq1_line_hold,  120)
 
 	MCFG_CPU_ADD("mcu", HD63705, C65_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - I/O handling */
 	MCFG_CPU_PROGRAM_MAP(mcu_default_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
@@ -1819,7 +1819,7 @@ static MACHINE_CONFIG_START( sgunner, namcos2_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, YM2151_SOUND_CLOCK) /* 3.579545MHz */
+	MCFG_YM2151_ADD("ymsnd", YM2151_SOUND_CLOCK) /* 3.579545MHz */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 MACHINE_CONFIG_END
@@ -1827,20 +1827,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( luckywld, namcos2_state )
 	MCFG_CPU_ADD("maincpu", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(master_luckywld_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(slave_luckywld_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M68B09_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - Sound handling */
 	MCFG_CPU_PROGRAM_MAP(sound_default_am)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold,120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq1_line_hold, 120)
 
 	MCFG_CPU_ADD("mcu", HD63705, C65_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - I/O handling */
 	MCFG_CPU_PROGRAM_MAP(mcu_default_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
@@ -1870,7 +1870,7 @@ static MACHINE_CONFIG_START( luckywld, namcos2_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, YM2151_SOUND_CLOCK) /* 3.579545MHz */
+	MCFG_YM2151_ADD("ymsnd", YM2151_SOUND_CLOCK) /* 3.579545MHz */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 MACHINE_CONFIG_END
@@ -1878,20 +1878,20 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( metlhawk, namcos2_state )
 	MCFG_CPU_ADD("maincpu", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(master_metlhawk_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_master_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_master_vblank)
 
 	MCFG_CPU_ADD("slave", M68000, M68K_CPU_CLOCK) /* 12.288MHz (49.152MHz OSC/4) */
 	MCFG_CPU_PROGRAM_MAP(slave_metlhawk_am)
-	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_slave_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  namcos2_68k_slave_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M6809, M68B09_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - Sound handling */
 	MCFG_CPU_PROGRAM_MAP(sound_default_am)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold,120)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq0_line_hold, 2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(namcos2_shared_state, irq1_line_hold, 120)
 
 	MCFG_CPU_ADD("mcu", HD63705, C65_CPU_CLOCK) /* 2.048MHz (49.152MHz OSC/24) - I/O handling */
 	MCFG_CPU_PROGRAM_MAP(mcu_default_am)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos2_shared_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
@@ -1919,7 +1919,7 @@ static MACHINE_CONFIG_START( metlhawk, namcos2_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, YM2151_SOUND_CLOCK) /* 3.579545MHz */
+	MCFG_YM2151_ADD("ymsnd", YM2151_SOUND_CLOCK) /* 3.579545MHz */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 MACHINE_CONFIG_END

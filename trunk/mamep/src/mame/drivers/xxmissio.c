@@ -63,18 +63,16 @@ WRITE8_MEMBER(xxmissio_state::xxmissio_status_s_w)
 	}
 }
 
-static INTERRUPT_GEN( xxmissio_interrupt_m )
+INTERRUPT_GEN_MEMBER(xxmissio_state::xxmissio_interrupt_m)
 {
-	xxmissio_state *state = device->machine().driver_data<xxmissio_state>();
-	state->m_status &= ~0x20;
-	device->execute().set_input_line(0, HOLD_LINE);
+	m_status &= ~0x20;
+	device.execute().set_input_line(0, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( xxmissio_interrupt_s )
+INTERRUPT_GEN_MEMBER(xxmissio_state::xxmissio_interrupt_s)
 {
-	xxmissio_state *state = device->machine().driver_data<xxmissio_state>();
-	state->m_status &= ~0x10;
-	device->execute().set_input_line(0, HOLD_LINE);
+	m_status &= ~0x10;
+	device.execute().set_input_line(0, HOLD_LINE);
 }
 
 void xxmissio_state::machine_start()
@@ -275,8 +273,8 @@ static const ym2203_interface ym2203_interface_2 =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL,
 		DEVCB_NULL,
-		DEVCB_HANDLER(xxmissio_scroll_x_w),
-		DEVCB_HANDLER(xxmissio_scroll_y_w)
+		DEVCB_DRIVER_MEMBER(xxmissio_state, xxmissio_scroll_x_w),
+		DEVCB_DRIVER_MEMBER(xxmissio_state, xxmissio_scroll_y_w)
 	},
 	DEVCB_NULL
 };
@@ -286,11 +284,11 @@ static MACHINE_CONFIG_START( xxmissio, xxmissio_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,12000000/4)	/* 3.0MHz */
 	MCFG_CPU_PROGRAM_MAP(map1)
-	MCFG_CPU_VBLANK_INT("screen", xxmissio_interrupt_m)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", xxmissio_state,  xxmissio_interrupt_m)
 
 	MCFG_CPU_ADD("sub", Z80,12000000/4)	/* 3.0MHz */
 	MCFG_CPU_PROGRAM_MAP(map2)
-	MCFG_CPU_PERIODIC_INT(xxmissio_interrupt_s,2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(xxmissio_state, xxmissio_interrupt_s, 2*60)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -301,7 +299,7 @@ static MACHINE_CONFIG_START( xxmissio, xxmissio_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(xxmissio)
+	MCFG_SCREEN_UPDATE_DRIVER(xxmissio_state, screen_update_xxmissio)
 
 	MCFG_GFXDECODE(xxmissio)
 	MCFG_PALETTE_LENGTH(768)

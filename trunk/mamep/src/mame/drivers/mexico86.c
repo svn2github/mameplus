@@ -66,7 +66,7 @@ PS4  J8635      PS4  J8541       PS4  J8648
 READ8_MEMBER(mexico86_state::kiki_ym2203_r)
 {
 	device_t *device = machine().device("ymsnd");
-	UINT8 result = ym2203_r(device, offset);
+	UINT8 result = ym2203_r(device, space, offset);
 
 	if (offset == 0)
 		result &= 0x7f;
@@ -477,15 +477,15 @@ static MACHINE_CONFIG_START( mexico86, mexico86_state )
 
 	MCFG_CPU_ADD("audiocpu", Z80, 24000000/4)      /* 6 MHz, Uses clock divided 24MHz OSC */
 	MCFG_CPU_PROGRAM_MAP(mexico86_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mexico86_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("mcu", M68705, 4000000) /* xtal is 4MHz, divided by 4 internally */
 	MCFG_CPU_PROGRAM_MAP(mexico86_m68705_map)
-	MCFG_CPU_VBLANK_INT("screen",mexico86_m68705_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mexico86_state, mexico86_m68705_interrupt)
 
 	MCFG_CPU_ADD("sub", Z80, 8000000/2)      /* 4 MHz, Uses 8Mhz OSC */
 	MCFG_CPU_PROGRAM_MAP(mexico86_sub_cpu_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mexico86_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper synchronization of the CPUs */
 
@@ -496,7 +496,7 @@ static MACHINE_CONFIG_START( mexico86, mexico86_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)  /* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mexico86)
+	MCFG_SCREEN_UPDATE_DRIVER(mexico86_state, screen_update_mexico86)
 
 	MCFG_GFXDECODE(mexico86)
 	MCFG_PALETTE_LENGTH(256)
@@ -523,7 +523,7 @@ static MACHINE_CONFIG_DERIVED( knightb, mexico86 )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(kikikai)
+	MCFG_SCREEN_UPDATE_DRIVER(mexico86_state, screen_update_kikikai)
 MACHINE_CONFIG_END
 
 
@@ -532,13 +532,13 @@ static MACHINE_CONFIG_DERIVED( kikikai, knightb )
 	/* basic machine hardware */
 
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", kikikai_interrupt) // IRQs should be triggered by the MCU, but we don't have it
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mexico86_state,  kikikai_interrupt) // IRQs should be triggered by the MCU, but we don't have it
 
 	MCFG_DEVICE_REMOVE("mcu")	// we don't have code for the MC6801U4
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(kikikai)
+	MCFG_SCREEN_UPDATE_DRIVER(mexico86_state, screen_update_kikikai)
 MACHINE_CONFIG_END
 
 

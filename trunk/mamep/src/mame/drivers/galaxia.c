@@ -67,10 +67,10 @@ TODO:
 #include "includes/galaxia.h"
 
 
-static INTERRUPT_GEN( galaxia_interrupt )
+INTERRUPT_GEN_MEMBER(galaxia_state::galaxia_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
-	cvs_scroll_stars(device->machine());
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
+	cvs_scroll_stars(machine());
 }
 
 
@@ -296,7 +296,7 @@ static MACHINE_CONFIG_START( galaxia, galaxia_state )
 	MCFG_CPU_ADD("maincpu", S2650, 2000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(galaxia_mem_map)
 	MCFG_CPU_IO_MAP(galaxia_io_map)
-	MCFG_CPU_VBLANK_INT("screen", galaxia_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaxia_state,  galaxia_interrupt)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
@@ -305,7 +305,7 @@ static MACHINE_CONFIG_START( galaxia, galaxia_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 30*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(galaxia)
+	MCFG_SCREEN_UPDATE_DRIVER(galaxia_state, screen_update_galaxia)
 
 	MCFG_GFXDECODE(galaxia)
 	MCFG_PALETTE_LENGTH(0x18+2)
@@ -336,7 +336,7 @@ static MACHINE_CONFIG_START( astrowar, galaxia_state )
 	MCFG_CPU_ADD("maincpu", S2650, 2000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(astrowar_mem_map)
 	MCFG_CPU_IO_MAP(galaxia_io_map)
-	MCFG_CPU_VBLANK_INT("screen", galaxia_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", galaxia_state,  galaxia_interrupt)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
@@ -345,7 +345,7 @@ static MACHINE_CONFIG_START( astrowar, galaxia_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(astrowar)
+	MCFG_SCREEN_UPDATE_DRIVER(galaxia_state, screen_update_astrowar)
 
 	MCFG_GFXDECODE(astrowar)
 	MCFG_PALETTE_LENGTH(0x18+2)

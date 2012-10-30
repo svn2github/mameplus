@@ -238,6 +238,9 @@ public:
 	TILE_GET_INFO_MEMBER(get_gfx0a_tile_info);
 	TILE_GET_INFO_MEMBER(get_gfx1_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_witch(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(witch_main_interrupt);
+	INTERRUPT_GEN_MEMBER(witch_sub_interrupt);
 };
 
 
@@ -764,41 +767,40 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 }
 
-static SCREEN_UPDATE_IND16(witch)
+UINT32 witch_state::screen_update_witch(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	witch_state *state = screen.machine().driver_data<witch_state>();
-	state->m_gfx1_tilemap->set_scrollx(0, state->m_scrollx-7 ); //offset to have it aligned with the sprites
-	state->m_gfx1_tilemap->set_scrolly(0, state->m_scrolly+8 );
+	m_gfx1_tilemap->set_scrollx(0, m_scrollx-7 ); //offset to have it aligned with the sprites
+	m_gfx1_tilemap->set_scrolly(0, m_scrolly+8 );
 
 
 
-	state->m_gfx1_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_gfx0a_tilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(), bitmap, cliprect);
-	state->m_gfx0b_tilemap->draw(bitmap, cliprect, 0,0);
+	m_gfx1_tilemap->draw(bitmap, cliprect, 0,0);
+	m_gfx0a_tilemap->draw(bitmap, cliprect, 0,0);
+	draw_sprites(machine(), bitmap, cliprect);
+	m_gfx0b_tilemap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
-static INTERRUPT_GEN( witch_main_interrupt )
+INTERRUPT_GEN_MEMBER(witch_state::witch_main_interrupt)
 {
-	device->execute().set_input_line(0,ASSERT_LINE);
+	device.execute().set_input_line(0,ASSERT_LINE);
 }
 
-static INTERRUPT_GEN( witch_sub_interrupt )
+INTERRUPT_GEN_MEMBER(witch_state::witch_sub_interrupt)
 {
-	device->execute().set_input_line(0,ASSERT_LINE);
+	device.execute().set_input_line(0,ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( witch, witch_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,8000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(map_main)
-	MCFG_CPU_VBLANK_INT("screen", witch_main_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", witch_state,  witch_main_interrupt)
 
 	/* 2nd z80 */
 	MCFG_CPU_ADD("sub", Z80,8000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(map_sub)
-	MCFG_CPU_VBLANK_INT("screen", witch_sub_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", witch_state,  witch_sub_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -808,7 +810,7 @@ static MACHINE_CONFIG_START( witch, witch_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(8, 256-1-8, 8*4, 256-8*4-1)
-	MCFG_SCREEN_UPDATE_STATIC(witch)
+	MCFG_SCREEN_UPDATE_DRIVER(witch_state, screen_update_witch)
 
 	MCFG_GFXDECODE(witch)
 	MCFG_PALETTE_LENGTH(0x800)
@@ -873,7 +875,7 @@ DRIVER_INIT_MEMBER(witch_state,witch)
 	UINT8 *ROM = (UINT8 *)memregion("maincpu")->base();
 	membank("bank1")->set_base(&ROM[0x10000+UNBANKED_SIZE]);
 
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_read_handler(0x7000, 0x700f, read8_delegate(FUNC(witch_state::prot_read_700x), this));
+	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x7000, 0x700f, read8_delegate(FUNC(witch_state::prot_read_700x), this));
 	m_bank = -1;
 }
 

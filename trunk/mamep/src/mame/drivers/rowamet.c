@@ -13,7 +13,7 @@ ToDO:
 
 *************************************************************************************/
 
-#include "emu.h"
+#include "machine/genpin.h"
 #include "cpu/z80/z80.h"
 #include "sound/dac.h"
 #include "rowamet.lh"
@@ -33,22 +33,21 @@ public:
 	DECLARE_WRITE8_MEMBER(mute_w);
 	DECLARE_READ8_MEMBER(io_r);
 	DECLARE_WRITE8_MEMBER(io_w);
-	UINT8 m_out_offs;
-	UINT8 m_sndcmd;
-	UINT8 m_io[16];
-	required_device<cpu_device> m_maincpu;
-	required_device<cpu_device> m_cpu2;
-	required_shared_ptr<UINT8> m_p_ram;
+	TIMER_DEVICE_CALLBACK_MEMBER(rowamet_timer);
 
 protected:
 
 	// devices
-
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_cpu2;
+	required_shared_ptr<UINT8> m_p_ram;
 
 	// driver_device overrides
 	virtual void machine_reset();
-public:
-	DECLARE_DRIVER_INIT(rowamet);
+private:
+	UINT8 m_out_offs;
+	UINT8 m_sndcmd;
+	UINT8 m_io[16];
 };
 
 
@@ -106,7 +105,7 @@ WRITE8_MEMBER( rowamet_state::io_w )
 		if (cmd != m_sndcmd)
 		{
 			m_sndcmd = cmd;
-			machine().device("cpu2")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			m_cpu2->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
 	}
 }
@@ -115,19 +114,14 @@ void rowamet_state::machine_reset()
 {
 }
 
-DRIVER_INIT_MEMBER(rowamet_state,rowamet)
-{
-}
-
-static TIMER_DEVICE_CALLBACK( rowamet_timer )
+TIMER_DEVICE_CALLBACK_MEMBER(rowamet_state::rowamet_timer)
 {
 	static const UINT8 patterns[16] = { 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0, 0, 0, 0, 0, 0 };
-	rowamet_state *state = timer.machine().driver_data<rowamet_state>();
-	state->m_out_offs &= 15;
+	m_out_offs &= 15;
 
-	UINT8 digit = state->m_out_offs << 1;
-	output_set_digit_value(digit, patterns[state->m_p_ram[state->m_out_offs]>>4]);
-	output_set_digit_value(++digit, patterns[state->m_p_ram[state->m_out_offs++]&15]);
+	UINT8 digit = m_out_offs << 1;
+	output_set_digit_value(digit, patterns[m_p_ram[m_out_offs]>>4]);
+	output_set_digit_value(++digit, patterns[m_p_ram[m_out_offs++]&15]);
 }
 
 static MACHINE_CONFIG_START( rowamet, rowamet_state )
@@ -137,7 +131,7 @@ static MACHINE_CONFIG_START( rowamet, rowamet_state )
 	MCFG_CPU_ADD("cpu2", Z80, 1888888)
 	MCFG_CPU_PROGRAM_MAP(rowamet_sub_map)
 	MCFG_CPU_IO_MAP(rowamet_sub_io)
-	MCFG_TIMER_ADD_PERIODIC("rowamet_timer", rowamet_timer, attotime::from_hz(200))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("rowamet_timer", rowamet_state, rowamet_timer, attotime::from_hz(200))
 
 	/* Video */
 	MCFG_DEFAULT_LAYOUT(layout_rowamet)
@@ -170,4 +164,4 @@ ROM_END
 /-------------------------------------------------------------------*/
 
 
-GAME(198?,  heavymtl,  0,  rowamet,  rowamet, rowamet_state,  rowamet,  ROT0,  "Rowamet",    "Heavy Metal",      GAME_IS_SKELETON_MECHANICAL)
+GAME(198?, heavymtl, 0, rowamet, rowamet, driver_device, 0,  ROT0,  "Rowamet", "Heavy Metal", GAME_IS_SKELETON_MECHANICAL)

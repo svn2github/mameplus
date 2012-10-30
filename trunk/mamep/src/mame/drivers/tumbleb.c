@@ -439,11 +439,10 @@ static void tumbleb2_playmusic( device_t *device )
 }
 
 
-static INTERRUPT_GEN( tumbleb2_interrupt )
+INTERRUPT_GEN_MEMBER(tumbleb_state::tumbleb2_interrupt)
 {
-	tumbleb_state *state = device->machine().driver_data<tumbleb_state>();
-	device->execute().set_input_line(6, HOLD_LINE);
-	tumbleb2_playmusic(state->m_oki);
+	device.execute().set_input_line(6, HOLD_LINE);
+	tumbleb2_playmusic(m_oki);
 }
 
 static const int tumbleb_sound_lookup[256] = {
@@ -655,7 +654,7 @@ static ADDRESS_MAP_START( fncywld_main_map, AS_PROGRAM, 16, tumbleb_state )
 #if FNCYWLD_HACK
 	AM_RANGE(0x000000, 0x0fffff) AM_WRITEONLY	/* To write levels modifications */
 #endif
-	AM_RANGE(0x100000, 0x100003) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x100000, 0x100003) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0x100004, 0x100005) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* sprites */
@@ -756,7 +755,7 @@ WRITE8_MEMBER(tumbleb_state::oki_sound_bank_w)
 static ADDRESS_MAP_START( semicom_sound_map, AS_PROGRAM, 8, tumbleb_state )
 	AM_RANGE(0x0000, 0xcfff) AM_ROM
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	//AM_RANGE(0xf006, 0xf006) ??
 	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_byte_r)
@@ -1977,7 +1976,7 @@ static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(tumblepopb_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  irq6_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
 	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
@@ -1988,7 +1987,7 @@ static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tumblepb)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_tumblepb)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -2012,7 +2011,7 @@ static MACHINE_CONFIG_START( tumbleb2, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(tumblepopb_main_map)
-	MCFG_CPU_VBLANK_INT("screen", tumbleb2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  tumbleb2_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
 	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
@@ -2023,7 +2022,7 @@ static MACHINE_CONFIG_START( tumbleb2, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tumblepb)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_tumblepb)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -2046,7 +2045,7 @@ static MACHINE_CONFIG_START( jumpkids, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(jumpkids_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  irq6_line_hold)
 
 	/* z80? */
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000/2)
@@ -2061,7 +2060,7 @@ static MACHINE_CONFIG_START( jumpkids, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jumpkids)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_jumpkids)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -2084,7 +2083,7 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(fncywld_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  irq6_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
 	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
@@ -2095,7 +2094,7 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fncywld)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_fncywld)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -2110,7 +2109,7 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 
@@ -2120,18 +2119,6 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 MACHINE_CONFIG_END
 
 
-
-static void semicom_irqhandler( device_t *device, int irq )
-{
-	tumbleb_state *state = device->machine().driver_data<tumbleb_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-static const ym2151_interface semicom_ym2151_interface =
-{
-	DEVCB_LINE(semicom_irqhandler)
-};
 
 MACHINE_RESET_MEMBER(tumbleb_state,htchctch)
 {
@@ -2151,7 +2138,7 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 15000000) /* verified */
 	MCFG_CPU_PROGRAM_MAP(htchctch_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 15000000/4) /* verified on dquizgo */
 	MCFG_CPU_PROGRAM_MAP(semicom_sound_map)
@@ -2165,7 +2152,7 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2400)) // ?? cookbib needs it above ~2400 or the Joystick on the How to Play screen is the wrong colour?!
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(semicom)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_semicom)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -2179,8 +2166,8 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	/* sound hardware - same as hyperpac */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3427190)
-	MCFG_SOUND_CONFIG(semicom_ym2151_interface)
+	MCFG_YM2151_ADD("ymsnd", 3427190)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.10)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.10)
 
@@ -2191,7 +2178,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cookbib, htchctch )
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC( semicom_altoffsets )
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_semicom_altoffsets)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cookbib_mcu, htchctch )
@@ -2203,35 +2190,35 @@ static MACHINE_CONFIG_DERIVED( cookbib_mcu, htchctch )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC( semicom_altoffsets )
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_semicom_altoffsets)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( bcstory, htchctch )
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(bcstory)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_bcstory)
 
 	MCFG_SOUND_REPLACE("ymsnd", YM2151, 3427190)
-	MCFG_SOUND_CONFIG(semicom_ym2151_interface)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.10)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.10)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( semibase, bcstory )
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(semibase )
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_semibase)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sdfight, bcstory )
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,sdfight)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(sdfight)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_sdfight)
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( metlsavr, cookbib )
 
 	MCFG_SOUND_REPLACE("ymsnd", YM2151, 3427190)
-	MCFG_SOUND_CONFIG(semicom_ym2151_interface)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.10)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.10)
 MACHINE_CONFIG_END
@@ -2244,7 +2231,7 @@ static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000) /* 14mhz should be correct, but lots of sprite flicker later in game */
 	MCFG_CPU_PROGRAM_MAP(suprtrio_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(suprtrio_sound_map)
@@ -2258,7 +2245,7 @@ static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8-1, 31*8-2)
-	MCFG_SCREEN_UPDATE_STATIC(suprtrio)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_suprtrio)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -2282,7 +2269,7 @@ static MACHINE_CONFIG_START( pangpang, tumbleb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(pangpang_main_map)
-	MCFG_CPU_VBLANK_INT("screen", tumbleb2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tumbleb_state,  tumbleb2_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
 	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
@@ -2293,7 +2280,7 @@ static MACHINE_CONFIG_START( pangpang, tumbleb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pangpang)
+	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_pangpang)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
@@ -3233,7 +3220,7 @@ DRIVER_INIT_MEMBER(tumbleb_state,tumbleb2)
 	#if TUMBLEP_HACK
 	tumblepb_patch_code(machine(), 0x000132);
 	#endif
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100000, 0x100001, write16_delegate(FUNC(tumbleb_state::tumbleb2_soundmcu_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x100000, 0x100001, write16_delegate(FUNC(tumbleb_state::tumbleb2_soundmcu_w),this));
 
 }
 
@@ -3271,7 +3258,7 @@ READ16_MEMBER(tumbleb_state::bcstory_1a0_read)
 DRIVER_INIT_MEMBER(tumbleb_state,bcstory)
 {
 	tumblepb_gfx1_rearrange(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x180008, 0x180009, read16_delegate(FUNC(tumbleb_state::bcstory_1a0_read),this)); // io should be here??
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x180008, 0x180009, read16_delegate(FUNC(tumbleb_state::bcstory_1a0_read),this)); // io should be here??
 }
 
 
@@ -3335,10 +3322,10 @@ DRIVER_INIT_MEMBER(tumbleb_state,chokchok)
 	DRIVER_INIT_CALL(htchctch);
 
 	/* different palette format, closer to tumblep -- is this controlled by a register? the palette was right with the hatch catch trojan */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), this));
 
 	/* slightly different banking */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),this));
 }
 
 DRIVER_INIT_MEMBER(tumbleb_state,wlstar)
@@ -3346,7 +3333,7 @@ DRIVER_INIT_MEMBER(tumbleb_state,wlstar)
 	tumblepb_gfx1_rearrange(machine());
 
 	/* slightly different banking */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::wlstar_tilebank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::wlstar_tilebank_w),this));
 
 	m_protbase = 0x0000;
 }

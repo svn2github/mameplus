@@ -30,12 +30,11 @@
 /* prototypes */
 static KONAMI_SETLINES_CALLBACK( blockhl_banking );
 
-static INTERRUPT_GEN( blockhl_interrupt )
+INTERRUPT_GEN_MEMBER(blockhl_state::blockhl_interrupt)
 {
-	blockhl_state *state = device->machine().driver_data<blockhl_state>();
 
-	if (k052109_is_irq_enabled(state->m_k052109) && state->m_rombank == 0)	/* kludge to prevent crashes */
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (k052109_is_irq_enabled(m_k052109) && m_rombank == 0)	/* kludge to prevent crashes */
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 READ8_MEMBER(blockhl_state::bankedram_r)
@@ -69,25 +68,25 @@ READ8_MEMBER(blockhl_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(blockhl_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 
@@ -111,7 +110,7 @@ static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, blockhl_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xe00c, 0xe00d) AM_WRITENOP		/* leftover from missing 007232? */
 ADDRESS_MAP_END
 
@@ -215,7 +214,7 @@ static MACHINE_CONFIG_START( blockhl, blockhl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI,3000000)		/* Konami custom 052526 */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", blockhl_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blockhl_state,  blockhl_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(audio_map)
@@ -229,7 +228,7 @@ static MACHINE_CONFIG_START( blockhl, blockhl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(blockhl)
+	MCFG_SCREEN_UPDATE_DRIVER(blockhl_state, screen_update_blockhl)
 
 	MCFG_PALETTE_LENGTH(1024)
 
@@ -240,7 +239,7 @@ static MACHINE_CONFIG_START( blockhl, blockhl_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 MACHINE_CONFIG_END

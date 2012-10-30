@@ -25,11 +25,11 @@ Dip locations and factory settings verified with manual
 #include "includes/contra.h"
 
 
-static INTERRUPT_GEN( contra_interrupt )
+INTERRUPT_GEN_MEMBER(contra_state::contra_interrupt)
 {
-	contra_state *state = device->machine().driver_data<contra_state>();
-	if (k007121_ctrlram_r(state->m_k007121_1, 7) & 0x02)
-		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	address_space &space = generic_space();
+	if (k007121_ctrlram_r(m_k007121_1, space, 7) & 0x02)
+		device.execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(contra_state::contra_bankswitch_w)
@@ -97,7 +97,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, contra_state )
 	AM_RANGE(0x0000, 0x0000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x4000, 0x4000) AM_WRITENOP /* read triggers irq reset and latch read (in the hardware only). */
 	AM_RANGE(0x6000, 0x67ff) AM_RAM
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -191,7 +191,7 @@ static MACHINE_CONFIG_START( contra, contra_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, XTAL_24MHz / 2 /* 3000000*4? */)
 	MCFG_CPU_PROGRAM_MAP(contra_map)
-	MCFG_CPU_VBLANK_INT("screen", contra_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", contra_state,  contra_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6809, XTAL_24MHz/8) /* 3000000? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -205,7 +205,7 @@ static MACHINE_CONFIG_START( contra, contra_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(37*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 35*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(contra)
+	MCFG_SCREEN_UPDATE_DRIVER(contra_state, screen_update_contra)
 
 	MCFG_GFXDECODE(contra)
 	MCFG_PALETTE_LENGTH(2*8*16*16)
@@ -217,7 +217,7 @@ static MACHINE_CONFIG_START( contra, contra_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 MACHINE_CONFIG_END

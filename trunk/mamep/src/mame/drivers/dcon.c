@@ -251,7 +251,7 @@ static MACHINE_CONFIG_START( dcon, dcon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(dcon_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dcon_state,  irq4_line_hold)
 
 	SEIBU_SOUND_SYSTEM_CPU(4000000) /* Perhaps 14318180/4? */
 
@@ -263,7 +263,7 @@ static MACHINE_CONFIG_START( dcon, dcon_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dcon)
+	MCFG_SCREEN_UPDATE_DRIVER(dcon_state, screen_update_dcon)
 
 	MCFG_GFXDECODE(dcon)
 	MCFG_PALETTE_LENGTH(2048)
@@ -278,7 +278,7 @@ static MACHINE_CONFIG_START( sdgndmps, dcon_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(dcon_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dcon_state,  irq4_line_hold)
 
 	SEIBU2_SOUND_SYSTEM_CPU(14318180/4)
 
@@ -290,7 +290,7 @@ static MACHINE_CONFIG_START( sdgndmps, dcon_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sdgndmps)
+	MCFG_SCREEN_UPDATE_DRIVER(dcon_state, screen_update_sdgndmps)
 
 	MCFG_GFXDECODE(dcon)
 	MCFG_PALETTE_LENGTH(2048)

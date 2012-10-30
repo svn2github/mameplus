@@ -7,12 +7,11 @@
 ToDo:
 - Once game starts, nothing responds
 - No sound due to missing roms
-- Battery backup to be added
 
 ***********************************************************************************/
 
 
-#include "emu.h"
+#include "machine/genpin.h"
 #include "cpu/m68000/m68000.h"
 #include "techno.lh"
 
@@ -49,13 +48,15 @@ protected:
 private:
 	bool m_digwait;
 	UINT8 m_keyrow;
+public:
+	INTERRUPT_GEN_MEMBER(techno_intgen);
 };
 
 
 static ADDRESS_MAP_START( techno_map, AS_PROGRAM, 16, techno_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x1ffff)
 	AM_RANGE(0x00000, 0x03fff) AM_ROM
-	AM_RANGE(0x04000, 0x04fff) AM_RAM // battery backed-up
+	AM_RANGE(0x04000, 0x04fff) AM_RAM AM_SHARE("nvram") // battery backed-up
 	AM_RANGE(0x06000, 0x0ffff) AM_ROM
 	AM_RANGE(0x14000, 0x147ff) AM_READWRITE(key_r,lamp1_w)
 	AM_RANGE(0x14800, 0x14fff) AM_READWRITE(sound_r,lamp2_w)
@@ -230,15 +231,14 @@ static INPUT_PORTS_START( techno )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Fix top left target middle") PORT_CODE(KEYCODE_EQUALS)
 INPUT_PORTS_END
 
-static INTERRUPT_GEN( techno_intgen )
+INTERRUPT_GEN_MEMBER(techno_state::techno_intgen)
 {
-	techno_state *state = device->machine().driver_data<techno_state>();
 	// vectors change per int: 88-8F, 98-9F)
-	if ((state->m_vector & 7) == 7)
-		state->m_vector = (state->m_vector ^ 0x10) & 0x97;
-	state->m_vector++;
+	if ((m_vector & 7) == 7)
+		m_vector = (m_vector ^ 0x10) & 0x97;
+	m_vector++;
 	// core doesn't support clearing of irq via hardware
-	generic_pulse_irq_line_and_vector(device, 1, state->m_vector, 1);
+	generic_pulse_irq_line_and_vector(device.execute(), 1, m_vector, 1);
 }
 
 void techno_state::machine_reset()
@@ -251,7 +251,8 @@ static MACHINE_CONFIG_START( techno, techno_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, TECHNO_MAINCLK)
 	MCFG_CPU_PROGRAM_MAP(techno_map)
-	MCFG_CPU_PERIODIC_INT(techno_intgen, TECHNO_MAINCLK/256) // 31250Hz
+	MCFG_CPU_PERIODIC_INT_DRIVER(techno_state, techno_intgen,  TECHNO_MAINCLK/256) // 31250Hz
+	MCFG_NVRAM_ADD_0FILL("nvram")
 	//MCFG_CPU_ADD("cpu2", TMS7000, 4000000)
 	//MCFG_CPU_PROGRAM_MAP(techno_sub_map)
 

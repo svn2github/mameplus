@@ -465,8 +465,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, namcos1_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROMBANK("bank17")	/* Banked ROMs */
-	AM_RANGE(0x4000, 0x4001) AM_DEVREAD_LEGACY("ymsnd", ym2151_status_port_r)
-	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x4000, 0x4001) AM_DEVREAD("ymsnd", ym2151_device, status_r)
+	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x5000, 0x53ff) AM_DEVREADWRITE_LEGACY("namco", namcos1_cus30_r, namcos1_cus30_w) AM_MIRROR(0x400) /* PSG ( Shared ) */
 	AM_RANGE(0x7000, 0x77ff) AM_RAMBANK("bank18")	/* TRIRAM (shared) */
 	AM_RANGE(0x8000, 0x9fff) AM_RAM	/* Sound RAM 3 */
@@ -1056,16 +1056,6 @@ GFXDECODE_END
 
 
 
-static void namcos1_sound_interrupt( device_t *device, int irq )
-{
-	device->machine().device("audiocpu")->execute().set_input_line(M6809_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(namcos1_sound_interrupt)
-};
-
 static const namco_interface namco_config =
 {
 	8,          /* number of voices */
@@ -1083,20 +1073,20 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809,49152000/32)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos1_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("sub", M6809,49152000/32)
 	MCFG_CPU_PROGRAM_MAP(sub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos1_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", M6809,49152000/32)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos1_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("mcu",HD63701,49152000/8)
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
 	MCFG_CPU_IO_MAP(mcu_port_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", namcos1_state,  irq0_line_assert)
 
 	// heavy sync required to prevent CPUs from fighting for video RAM access and going into deadlocks
 	MCFG_QUANTUM_TIME(attotime::from_hz(38400))
@@ -1111,8 +1101,8 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(9 + 8*8, 9 + 44*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(namcos1)
-	MCFG_SCREEN_VBLANK_STATIC(namcos1)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos1_state, screen_update_namcos1)
+	MCFG_SCREEN_VBLANK_DRIVER(namcos1_state, screen_eof_namcos1)
 
 	MCFG_GFXDECODE(namcos1)
 	MCFG_PALETTE_LENGTH(0x2000)
@@ -1121,8 +1111,8 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579580)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579580)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", M6809_FIRQ_LINE))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 

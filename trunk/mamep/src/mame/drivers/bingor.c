@@ -454,6 +454,9 @@ public:
 	DECLARE_READ16_MEMBER(test_r);
 	DECLARE_READ8_MEMBER(test8_r);
 	virtual void video_start();
+	UINT32 screen_update_bingor(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	INTERRUPT_GEN_MEMBER(unk_irq);
 };
 
 
@@ -461,12 +464,11 @@ void bingor_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_RGB32(bingor)
+UINT32 bingor_state::screen_update_bingor(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	bingor_state *state = screen.machine().driver_data<bingor_state>();
 	int x,y,count;
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	count = (0x2000/2);
 
@@ -476,25 +478,25 @@ static SCREEN_UPDATE_RGB32(bingor)
 		{
 			UINT32 color;
 
-			color = (state->m_blit_ram[count] & 0xf000)>>12;
+			color = (m_blit_ram[count] & 0xf000)>>12;
 
 			if(cliprect.contains(x+3, y))
-				bitmap.pix32(y, x+3) = screen.machine().pens[color];
+				bitmap.pix32(y, x+3) = machine().pens[color];
 
-			color = (state->m_blit_ram[count] & 0x0f00)>>8;
+			color = (m_blit_ram[count] & 0x0f00)>>8;
 
 			if(cliprect.contains(x+2, y))
-				bitmap.pix32(y, x+2) = screen.machine().pens[color];
+				bitmap.pix32(y, x+2) = machine().pens[color];
 
-			color = (state->m_blit_ram[count] & 0x00f0)>>4;
+			color = (m_blit_ram[count] & 0x00f0)>>4;
 
 			if(cliprect.contains(x+1, y))
-				bitmap.pix32(y, x+1) = screen.machine().pens[color];
+				bitmap.pix32(y, x+1) = machine().pens[color];
 
-			color = (state->m_blit_ram[count] & 0x000f)>>0;
+			color = (m_blit_ram[count] & 0x000f)>>0;
 
 			if(cliprect.contains(x+0, y))
-				bitmap.pix32(y, x+0) = screen.machine().pens[color];
+				bitmap.pix32(y, x+0) = machine().pens[color];
 
 			count++;
 		}
@@ -587,15 +589,15 @@ static INPUT_PORTS_START( bingor )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(bingor_state::vblank_irq)
 {
-//  device->execute().set_input_line_and_vector(0,HOLD_LINE,0x08/4); // reads i/o 0x200 and puts the result in ram, pic irq?
-	device->execute().set_input_line_and_vector(0,HOLD_LINE,0x4c/4); // ?
+//  device.execute().set_input_line_and_vector(0,HOLD_LINE,0x08/4); // reads i/o 0x200 and puts the result in ram, pic irq?
+	device.execute().set_input_line_and_vector(0,HOLD_LINE,0x4c/4); // ?
 }
 
-static INTERRUPT_GEN( unk_irq )
+INTERRUPT_GEN_MEMBER(bingor_state::unk_irq)
 {
-	device->execute().set_input_line_and_vector(0,HOLD_LINE,0x48/4); // ?
+	device.execute().set_input_line_and_vector(0,HOLD_LINE,0x48/4); // ?
 }
 
 
@@ -619,9 +621,9 @@ static MACHINE_CONFIG_START( bingor, bingor_state )
 	MCFG_CPU_ADD("maincpu", I80186, 14000000 ) //?? Mhz
 	MCFG_CPU_PROGRAM_MAP(bingor_map)
 	MCFG_CPU_IO_MAP(bingor_io)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse, 30)
-	MCFG_CPU_PERIODIC_INT(unk_irq, 30)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bingor_state,  vblank_irq)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bingor_state, nmi_line_pulse,  30)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bingor_state, unk_irq,  30)
 
 	MCFG_CPU_ADD("pic", PIC16C57, 12000000) //?? Mhz
 	MCFG_CPU_IO_MAP(pic_io_map)
@@ -635,7 +637,7 @@ static MACHINE_CONFIG_START( bingor, bingor_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(400, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 400-1, 0, 300-1)
-	MCFG_SCREEN_UPDATE_STATIC(bingor)
+	MCFG_SCREEN_UPDATE_DRIVER(bingor_state, screen_update_bingor)
 
 	MCFG_PALETTE_LENGTH(0x100)
 

@@ -63,7 +63,11 @@ public:
 	DECLARE_DRIVER_INIT(drill);
 	DECLARE_MACHINE_START(drill);
 	DECLARE_MACHINE_RESET(drill);
-
+	INTERRUPT_GEN_MEMBER(drill_vblank_irq);
+	//INTERRUPT_GEN_MEMBER(drill_device_irq);
+	TIMER_CALLBACK_MEMBER(shutter_req);
+	TIMER_CALLBACK_MEMBER(defender_req);
+	void tile_decode();
 };
 
 
@@ -131,16 +135,14 @@ WRITE16_MEMBER(_2mindril_state::drill_io_w)
     PORT_DIPSETTING(      0x0800, DEF_STR( On ) )
 */
 #ifdef UNUSED_FUNCTION
-static TIMER_CALLBACK( shutter_req )
+TIMER_CALLBACK_MEMBER(_2mindril_state::shutter_req)
 {
-	_2mindril_state *state = machine.driver_data<_2mindril_state>();
-	state->m_shutter_sensor = param;
+	m_shutter_sensor = param;
 }
 
-static TIMER_CALLBACK( defender_req )
+TIMER_CALLBACK_MEMBER(_2mindril_state::defender_req)
 {
-	_2mindril_state *state = machine.driver_data<_2mindril_state>();
-	state->m_defender_sensor = param;
+	m_defender_sensor = param;
 }
 #endif
 
@@ -400,15 +402,15 @@ static GFXDECODE_START( 2mindril )
 GFXDECODE_END
 
 
-static INTERRUPT_GEN( drill_vblank_irq )
+INTERRUPT_GEN_MEMBER(_2mindril_state::drill_vblank_irq)
 {
-	device->execute().set_input_line(4, ASSERT_LINE);
+	device.execute().set_input_line(4, ASSERT_LINE);
 }
 
 #if 0
-static INTERRUPT_GEN( drill_device_irq )
+INTERRUPT_GEN_MEMBER(_2mindril_state::drill_device_irq)
 {
-	device->execute().set_input_line(5, ASSERT_LINE);
+	device.execute().set_input_line(5, ASSERT_LINE);
 }
 #endif
 
@@ -446,8 +448,8 @@ static MACHINE_CONFIG_START( drill, _2mindril_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 16000000 )
 	MCFG_CPU_PROGRAM_MAP(drill_map)
-	MCFG_CPU_VBLANK_INT("screen", drill_vblank_irq)
-	//MCFG_CPU_PERIODIC_INT(drill_device_irq,60)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", _2mindril_state,  drill_vblank_irq)
+	//MCFG_CPU_PERIODIC_INT_DRIVER(_2mindril_state, drill_device_irq, 60)
 	MCFG_GFXDECODE(2mindril)
 
 	MCFG_MACHINE_START_OVERRIDE(_2mindril_state,drill)
@@ -458,8 +460,8 @@ static MACHINE_CONFIG_START( drill, _2mindril_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* inaccurate, same as Taito F3? (needs screen raw params anyway) */
 	MCFG_SCREEN_SIZE(40*8+48*2, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(46, 40*8-1 + 46, 24, 24+224-1)
-	MCFG_SCREEN_UPDATE_STATIC(f3)
-	MCFG_SCREEN_VBLANK_STATIC(f3)
+	MCFG_SCREEN_UPDATE_DRIVER(_2mindril_state, screen_update_f3)
+	MCFG_SCREEN_VBLANK_DRIVER(_2mindril_state, screen_eof_f3)
 
 	MCFG_PALETTE_LENGTH(0x2000)
 
@@ -493,12 +495,12 @@ ROM_START( 2mindril )
 	ROM_RELOAD(              0x600000, 0x200000 )
 ROM_END
 
-static void tile_decode(running_machine &machine)
+void _2mindril_state::tile_decode()
 {
 	UINT8 lsb,msb;
 	UINT32 offset,i;
-	UINT8 *gfx = machine.root_device().memregion("gfx2")->base();
-	int size=machine.root_device().memregion("gfx2")->bytes();
+	UINT8 *gfx = machine().root_device().memregion("gfx2")->base();
+	int size=machine().root_device().memregion("gfx2")->bytes();
 	int data;
 
 	/* Setup ROM formats:
@@ -530,8 +532,8 @@ static void tile_decode(running_machine &machine)
 		offset+=4;
 	}
 
-	gfx = machine.root_device().memregion("gfx1")->base();
-	size=machine.root_device().memregion("gfx1")->bytes();
+	gfx = machine().root_device().memregion("gfx1")->base();
+	size=machine().root_device().memregion("gfx1")->bytes();
 
 	offset = size/2;
 	for (i = size/2+size/4; i<size; i++)
@@ -556,7 +558,7 @@ static void tile_decode(running_machine &machine)
 DRIVER_INIT_MEMBER(_2mindril_state,drill)
 {
 	m_f3_game=TMDRILL;
-	tile_decode(machine());
+	tile_decode();
 }
 
 GAME( 1993, 2mindril,    0,        drill,    drill, _2mindril_state,    drill, ROT0,  "Taito", "Two Minute Drill", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE | GAME_MECHANICAL)

@@ -124,6 +124,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_lastfght(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(unknown_interrupt);
 };
 
 
@@ -143,43 +145,42 @@ void lastfght_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( lastfght )
+UINT32 lastfght_state::screen_update_lastfght(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	lastfght_state *state = screen.machine().driver_data<lastfght_state>();
 
 #ifdef MAME_DEBUG
 #if 1
 	// gfx roms viewer (toggle with enter, use pgup/down to browse)
 	int x, y, count = 0;
-	UINT8 *gfxdata = screen.machine().root_device().memregion("gfx1")->base();
+	UINT8 *gfxdata = machine().root_device().memregion("gfx1")->base();
 	UINT8 data;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_ENTER))	state->m_view_roms ^= 1;
-	if (state->m_view_roms)
+	if (machine().input().code_pressed_once(KEYCODE_ENTER))	m_view_roms ^= 1;
+	if (m_view_roms)
 	{
-		if (screen.machine().input().code_pressed_once(KEYCODE_PGDN))	state->m_base += 512 * 256;
-		if (screen.machine().input().code_pressed_once(KEYCODE_PGUP))	state->m_base -= 512 * 256;
-		state->m_base %= state->memregion("gfx1")->bytes();
+		if (machine().input().code_pressed_once(KEYCODE_PGDN))	m_base += 512 * 256;
+		if (machine().input().code_pressed_once(KEYCODE_PGUP))	m_base -= 512 * 256;
+		m_base %= memregion("gfx1")->bytes();
 
-		count = state->m_base;
+		count = m_base;
 
-		bitmap.fill(get_black_pen(screen.machine()), cliprect );
+		bitmap.fill(get_black_pen(machine()), cliprect );
 		for (y = 0 ; y < 256; y++)
 		{
 			for (x = 0; x < 512; x++)
 			{
-				data = (((count & 0xf) == 0) && ((count & 0x1e00) == 0)) ? get_white_pen(screen.machine()) : gfxdata[count];	// white grid or data
+				data = (((count & 0xf) == 0) && ((count & 0x1e00) == 0)) ? get_white_pen(machine()) : gfxdata[count];	// white grid or data
 				bitmap.pix16(y, x) = data;
 				count++;
 			}
 		}
-		popmessage("%x", state->m_base);
+		popmessage("%x", m_base);
 		return 0;
 	}
 #endif
 #endif
 
-	copybitmap(bitmap, state->m_bitmap[state->m_dest ^ 1], 0, 0, 0, 0, cliprect);
+	copybitmap(bitmap, m_bitmap[m_dest ^ 1], 0, 0, 0, 0, cliprect);
 
 	return 0;
 }
@@ -527,11 +528,10 @@ INPUT_PORTS_END
                                 Machine Drivers
 ***************************************************************************/
 
-static INTERRUPT_GEN( unknown_interrupt )
+INTERRUPT_GEN_MEMBER(lastfght_state::unknown_interrupt)
 {
-	lastfght_state *state = device->machine().driver_data<lastfght_state>();
 
-	state->m_maincpu->set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
+	m_maincpu->set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 void lastfght_state::machine_start()
@@ -581,8 +581,8 @@ static MACHINE_CONFIG_START( lastfght, lastfght_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", H83044, 32000000/2)
 	MCFG_CPU_PROGRAM_MAP( lastfght_map)
-	MCFG_CPU_VBLANK_INT("screen",irq0_line_hold)
-	MCFG_CPU_PERIODIC_INT(unknown_interrupt,60)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lastfght_state, irq0_line_hold)
+	MCFG_CPU_PERIODIC_INT_DRIVER(lastfght_state, unknown_interrupt, 60)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -594,7 +594,7 @@ static MACHINE_CONFIG_START( lastfght, lastfght_state )
 	MCFG_SCREEN_SIZE( 512, 256 )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 512-1, 0, 256-16-1 )
 	MCFG_SCREEN_REFRESH_RATE( 60 )
-	MCFG_SCREEN_UPDATE_STATIC( lastfght )
+	MCFG_SCREEN_UPDATE_DRIVER(lastfght_state, screen_update_lastfght)
 
 MACHINE_CONFIG_END
 

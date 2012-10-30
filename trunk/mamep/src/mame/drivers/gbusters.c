@@ -19,12 +19,11 @@
 /* prototypes */
 static KONAMI_SETLINES_CALLBACK( gbusters_banking );
 
-static INTERRUPT_GEN( gbusters_interrupt )
+INTERRUPT_GEN_MEMBER(gbusters_state::gbusters_interrupt)
 {
-	gbusters_state *state = device->machine().driver_data<gbusters_state>();
 
-	if (k052109_is_irq_enabled(state->m_k052109))
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (k052109_is_irq_enabled(m_k052109))
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 READ8_MEMBER(gbusters_state::bankedram_r)
@@ -127,25 +126,25 @@ READ8_MEMBER(gbusters_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(gbusters_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 
@@ -174,8 +173,8 @@ static ADDRESS_MAP_START( gbusters_sound_map, AS_PROGRAM, 8, gbusters_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM													/* RAM */
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)									/* soundlatch_byte_r */
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)		/* 007232 registers */
-	AM_RANGE(0xc001, 0xc001) AM_DEVREAD_LEGACY("ymsnd", ym2151_status_port_r)					/* YM 2151 */
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)				/* YM 2151 */
+	AM_RANGE(0xc001, 0xc001) AM_DEVREAD("ymsnd", ym2151_device, status_r)					/* YM 2151 */
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)				/* YM 2151 */
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(gbusters_snd_bankswitch_w)		/* 007232 bankswitch? */
 ADDRESS_MAP_END
 
@@ -303,7 +302,7 @@ static MACHINE_CONFIG_START( gbusters, gbusters_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)	/* Konami custom 052526 */
 	MCFG_CPU_PROGRAM_MAP(gbusters_map)
-	MCFG_CPU_VBLANK_INT("screen", gbusters_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gbusters_state,  gbusters_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)		/* ? */
 	MCFG_CPU_PROGRAM_MAP(gbusters_sound_map)
@@ -317,7 +316,7 @@ static MACHINE_CONFIG_START( gbusters, gbusters_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(gbusters)
+	MCFG_SCREEN_UPDATE_DRIVER(gbusters_state, screen_update_gbusters)
 
 	MCFG_PALETTE_LENGTH(1024)
 
@@ -328,7 +327,7 @@ static MACHINE_CONFIG_START( gbusters, gbusters_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "mono", 0.60)
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 

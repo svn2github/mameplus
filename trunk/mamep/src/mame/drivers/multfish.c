@@ -239,6 +239,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_MACHINE_RESET(island2a);
+	UINT32 screen_update_multfish(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 TILE_GET_INFO_MEMBER(multfish_state::get_multfish_tile_info)
@@ -280,28 +281,27 @@ void multfish_state::video_start()
 	m_reel_tilemap->set_scroll_cols(64);
 }
 
-static SCREEN_UPDATE_IND16(multfish)
+UINT32 multfish_state::screen_update_multfish(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	multfish_state *state = screen.machine().driver_data<multfish_state>();
 	int i;
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	if (!state->m_disp_enable) return 0;
+	if (!m_disp_enable) return 0;
 
 	/* Draw lower part of static tilemap (low pri tiles) */
-	state->m_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_CATEGORY(1),0);
+	m_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_CATEGORY(1),0);
 
 	/* Setup the column scroll and draw the reels */
 	for (i=0;i<64;i++)
 	{
-		int colscroll = (state->m_vid[i*2] | state->m_vid[i*2+1] << 8);
-		state->m_reel_tilemap->set_scrolly(i, colscroll );
+		int colscroll = (m_vid[i*2] | m_vid[i*2+1] << 8);
+		m_reel_tilemap->set_scrolly(i, colscroll );
 	}
-	state->m_reel_tilemap->draw(bitmap, cliprect, 0,0);
+	m_reel_tilemap->draw(bitmap, cliprect, 0,0);
 
 	/* Draw upper part of static tilemap (high pri tiles) */
-	state->m_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_CATEGORY(0),0);
+	m_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_CATEGORY(0),0);
 
 	return 0;
 }
@@ -363,13 +363,13 @@ WRITE8_MEMBER(multfish_state::multfish_bank_w)
 READ8_MEMBER(multfish_state::multfish_timekeeper_r)
 {
 	device_t *device = machine().device("m48t35");
-	return timekeeper_r(device, offset + 0x6000);
+	return timekeeper_r(device, space, offset + 0x6000);
 }
 
 WRITE8_MEMBER(multfish_state::multfish_timekeeper_w)
 {
 	device_t *device = machine().device("m48t35");
-	timekeeper_w(device, offset + 0x6000, data);
+	timekeeper_w(device, space, offset + 0x6000, data);
 }
 
 READ8_MEMBER(multfish_state::bankedram_r)
@@ -377,7 +377,7 @@ READ8_MEMBER(multfish_state::bankedram_r)
 
 	if ((m_rambk & 0x80) == 0x00)
 	{
-		return timekeeper_r(machine().device("m48t35"), offset + 0x2000*(m_rambk & 0x03));
+		return timekeeper_r(machine().device("m48t35"), space, offset + 0x2000*(m_rambk & 0x03));
 	}
 	else
 	{
@@ -391,7 +391,7 @@ WRITE8_MEMBER(multfish_state::bankedram_w)
 
 	if ((m_rambk & 0x80) == 0x00)
 	{
-		timekeeper_w(machine().device("m48t35"), offset + 0x2000*(m_rambk & 0x03), data);
+		timekeeper_w(machine().device("m48t35"), space, offset + 0x2000*(m_rambk & 0x03), data);
 	}
 	else
 	{
@@ -1099,7 +1099,7 @@ static MACHINE_CONFIG_START( multfish, multfish_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_24MHz/4)
 	MCFG_CPU_PROGRAM_MAP(multfish_map)
 	MCFG_CPU_IO_MAP(multfish_portmap)
-	MCFG_CPU_VBLANK_INT("screen",irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", multfish_state, irq0_line_hold)
 
 
 	/* video hardware */
@@ -1108,7 +1108,7 @@ static MACHINE_CONFIG_START( multfish, multfish_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(17*16, 1024-16*7-1, 1*16, 32*16-1*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(multfish)
+	MCFG_SCREEN_UPDATE_DRIVER(multfish_state, screen_update_multfish)
 	MCFG_GFXDECODE(multfish)
 	MCFG_PALETTE_LENGTH(0x1000)
 
@@ -1131,8 +1131,8 @@ MACHINE_RESET_MEMBER(multfish_state,island2a)
 	multfish_state::machine_reset();
 
 	// this set needs preprogrammed data in timekeeper
-	timekeeper_w(machine().device("m48t35"), 0x2003 , 0x01);
-	timekeeper_w(machine().device("m48t35"), 0x4003 , 0x02);
+	timekeeper_w(machine().device("m48t35"), generic_space(), 0x2003 , 0x01);
+	timekeeper_w(machine().device("m48t35"), generic_space(), 0x4003 , 0x02);
 }
 static MACHINE_CONFIG_DERIVED( island2a, multfish )
 

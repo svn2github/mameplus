@@ -53,6 +53,8 @@ public:
 	DECLARE_DRIVER_INIT(istellar);
 	virtual void machine_start();
 	virtual void palette_init();
+	UINT32 screen_update_istellar(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_callback_istellar);
 };
 
 
@@ -61,9 +63,8 @@ public:
 
 
 /* VIDEO GOODS */
-static SCREEN_UPDATE_RGB32( istellar )
+UINT32 istellar_state::screen_update_istellar(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	istellar_state *state = screen.machine().driver_data<istellar_state>();
 	int x, y;
 
 	/* clear */
@@ -74,10 +75,10 @@ static SCREEN_UPDATE_RGB32( istellar )
 	{
 		for (x = 0; x < 32; x++)
 		{
-			int tile = state->m_tile_ram[x+y*32];
-			int attr = state->m_tile_control_ram[x+y*32];
+			int tile = m_tile_ram[x+y*32];
+			int attr = m_tile_control_ram[x+y*32];
 
-			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0],tile,attr & 0x0f,0, 0, x*8, y*8, 0);
+			drawgfx_transpen(bitmap, cliprect, machine().gfx[0],tile,attr & 0x0f,0, 0, x*8, y*8, 0);
 		}
 	}
 
@@ -316,13 +317,13 @@ static GFXDECODE_START( istellar )
 	GFXDECODE_ENTRY( "gfx1", 0, istellar_gfx_layout, 0x0, 0x20 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( vblank_callback_istellar )
+INTERRUPT_GEN_MEMBER(istellar_state::vblank_callback_istellar)
 {
 	/* Interrupt presumably comes from VBlank */
-	device->execute().set_input_line(0, HOLD_LINE);
+	device.execute().set_input_line(0, HOLD_LINE);
 
 	/* Interrupt presumably comes from the LDP's status strobe */
-	device->machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -332,7 +333,7 @@ static MACHINE_CONFIG_START( istellar, istellar_state )
 	MCFG_CPU_ADD("maincpu", Z80, GUESSED_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(z80_0_mem)
 	MCFG_CPU_IO_MAP(z80_0_io)
-	MCFG_CPU_VBLANK_INT("screen", vblank_callback_istellar)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", istellar_state,  vblank_callback_istellar)
 
 	/* sound cpu */
 	MCFG_CPU_ADD("audiocpu", Z80, GUESSED_CLOCK)
@@ -346,7 +347,7 @@ static MACHINE_CONFIG_START( istellar, istellar_state )
 
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, istellar)
+	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, istellar_state, screen_update_istellar)
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")

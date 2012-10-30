@@ -101,16 +101,16 @@ PC5380-9651            5380-JY3306A           5380-N1045503A
  *
  *************************************/
 
-static TIMER_CALLBACK( irq5_gen )
+TIMER_CALLBACK_MEMBER(policetr_state::irq5_gen)
 {
-	machine.device("maincpu")->execute().set_input_line(R3000_IRQ5, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(R3000_IRQ5, ASSERT_LINE);
 }
 
 
-static INTERRUPT_GEN( irq4_gen )
+INTERRUPT_GEN_MEMBER(policetr_state::irq4_gen)
 {
-	device->execute().set_input_line(R3000_IRQ4, ASSERT_LINE);
-	device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(0), FUNC(irq5_gen));
+	device.execute().set_input_line(R3000_IRQ4, ASSERT_LINE);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(policetr_state::irq5_gen),this));
 }
 
 
@@ -416,7 +416,7 @@ static MACHINE_CONFIG_START( policetr, policetr_state )
 	MCFG_CPU_ADD("maincpu", R3000BE, MASTER_CLOCK/2)
 	MCFG_CPU_CONFIG(r3000_config)
 	MCFG_CPU_PROGRAM_MAP(policetr_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_gen)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", policetr_state,  irq4_gen)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_policetr)
 
@@ -427,7 +427,7 @@ static MACHINE_CONFIG_START( policetr, policetr_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(400, 262)	/* needs to be verified */
 	MCFG_SCREEN_VISIBLE_AREA(0, 393, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(policetr)
+	MCFG_SCREEN_UPDATE_DRIVER(policetr_state, screen_update_policetr)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -697,26 +697,26 @@ ROM_END
 
 DRIVER_INIT_MEMBER(policetr_state,policetr)
 {
-	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00000fc8, 0x00000fcb, write32_delegate(FUNC(policetr_state::speedup_w),this));
+	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x00000fc8, 0x00000fcb, write32_delegate(FUNC(policetr_state::speedup_w),this));
 	m_speedup_pc = 0x1fc028ac;
 }
 
 DRIVER_INIT_MEMBER(policetr_state,plctr13b)
 {
-	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00000fc8, 0x00000fcb, write32_delegate(FUNC(policetr_state::speedup_w),this));
+	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x00000fc8, 0x00000fcb, write32_delegate(FUNC(policetr_state::speedup_w),this));
 	m_speedup_pc = 0x1fc028bc;
 }
 
 
 DRIVER_INIT_MEMBER(policetr_state,sshooter)
 {
-	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00018fd8, 0x00018fdb, write32_delegate(FUNC(policetr_state::speedup_w),this));
+	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x00018fd8, 0x00018fdb, write32_delegate(FUNC(policetr_state::speedup_w),this));
 	m_speedup_pc = 0x1fc03470;
 }
 
 DRIVER_INIT_MEMBER(policetr_state,sshoot12)
 {
-	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00018fd8, 0x00018fdb, write32_delegate(FUNC(policetr_state::speedup_w),this));
+	m_speedup_data = machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x00018fd8, 0x00018fdb, write32_delegate(FUNC(policetr_state::speedup_w),this));
 	m_speedup_pc = 0x1fc033e0;
 }
 

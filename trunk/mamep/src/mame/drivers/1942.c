@@ -52,7 +52,7 @@ Two interrupts must be triggered per refresh for the game to function
 correctly.
 
 0x10 is the video retrace. This controls the speed of the game and generally
-     drives the code. This must be triggerd for each video retrace.
+     drives the code. This must be triggered for each video retrace.
 0x08 is the sound card service interrupt. The game uses this to throw sounds
      at the sound CPU.
 
@@ -74,15 +74,15 @@ WRITE8_MEMBER(_1942_state::c1942_bankswitch_w)
 	membank("bank1")->set_entry(data & 0x03);
 }
 
-static TIMER_DEVICE_CALLBACK( c1942_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(_1942_state::c1942_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 
 	if(scanline == 0) // unknown irq event, presumably vblank-in or a periodic one (writes to the soundlatch and drives freeze dip-switch)
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
 }
 
 
@@ -258,11 +258,11 @@ static MACHINE_CONFIG_START( 1942, _1942_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CPU_CLOCK)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(c1942_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", c1942_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", _1942_state, c1942_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CPU_CLOCK)	/* 3 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(_1942_state, irq0_line_hold, 4*60)
 
 
 	/* video hardware */
@@ -274,7 +274,7 @@ static MACHINE_CONFIG_START( 1942, _1942_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(1942)
+	MCFG_SCREEN_UPDATE_DRIVER(_1942_state, screen_update_1942)
 
 
 	/* sound hardware */

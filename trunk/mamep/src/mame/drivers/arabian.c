@@ -360,7 +360,7 @@ static MACHINE_CONFIG_START( arabian, arabian_state )
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_OSC/4)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", arabian_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("mcu", MB8841, MAIN_OSC/3/2)
 	MCFG_CPU_IO_MAP(mcu_io_map)
@@ -374,7 +374,7 @@ static MACHINE_CONFIG_START( arabian, arabian_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 11, 244)
-	MCFG_SCREEN_UPDATE_STATIC(arabian)
+	MCFG_SCREEN_UPDATE_DRIVER(arabian_state, screen_update_arabian)
 
 	MCFG_PALETTE_LENGTH(256*32)
 

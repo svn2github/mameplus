@@ -185,14 +185,14 @@ WRITE8_MEMBER(wiz_state::sound_command_w)
 
 		// explosion sound trigger(analog?)
 		case 0x08:
-			discrete_sound_w(discrete, STINGER_BOOM_EN1, m_dsc1);
-			discrete_sound_w(discrete, STINGER_BOOM_EN2, m_dsc1^=1);
+			discrete_sound_w(discrete, space, STINGER_BOOM_EN1, m_dsc1);
+			discrete_sound_w(discrete, space, STINGER_BOOM_EN2, m_dsc1^=1);
 		break;
 
 		// player shot sound trigger(analog?)
 		case 0x0a:
-			discrete_sound_w(discrete, STINGER_SHOT_EN1, m_dsc0);
-			discrete_sound_w(discrete, STINGER_SHOT_EN2, m_dsc0^=1);
+			discrete_sound_w(discrete, space, STINGER_SHOT_EN1, m_dsc0);
+			discrete_sound_w(discrete, space, STINGER_SHOT_EN2, m_dsc0^=1);
 		break;
 	}
 }
@@ -700,20 +700,18 @@ void wiz_state::machine_reset()
 	m_dsc0 = m_dsc1 = 1;
 }
 
-static INTERRUPT_GEN( wiz_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(wiz_state::wiz_vblank_interrupt)
 {
-	wiz_state *state = device->machine().driver_data<wiz_state>();
 
-	if(state->m_main_nmi_mask & 1)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_main_nmi_mask & 1)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( wiz_sound_interrupt )
+INTERRUPT_GEN_MEMBER(wiz_state::wiz_sound_interrupt)
 {
-	wiz_state *state = device->machine().driver_data<wiz_state>();
 
-	if(state->m_sound_nmi_mask & 1)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_sound_nmi_mask & 1)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -722,11 +720,11 @@ static MACHINE_CONFIG_START( wiz, wiz_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/6)	/* 3.072 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", wiz_vblank_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", wiz_state,  wiz_vblank_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 14318000/8)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(wiz_sound_interrupt,4*60)	/* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(wiz_state, wiz_sound_interrupt, 4*60)	/* ??? */
 
 
 	/* video hardware */
@@ -735,7 +733,7 @@ static MACHINE_CONFIG_START( wiz, wiz_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wiz)
+	MCFG_SCREEN_UPDATE_DRIVER(wiz_state, screen_update_wiz)
 
 	MCFG_GFXDECODE(wiz)
 	MCFG_PALETTE_LENGTH(256)
@@ -765,7 +763,7 @@ static MACHINE_CONFIG_DERIVED( stinger, wiz )
 	/* video hardware */
 	MCFG_GFXDECODE(stinger)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(stinger)
+	MCFG_SCREEN_UPDATE_DRIVER(wiz_state, screen_update_stinger)
 
 	/* sound hardware */
 	MCFG_DEVICE_REMOVE("8910.3")
@@ -794,7 +792,7 @@ static MACHINE_CONFIG_DERIVED( kungfut, wiz )
 	/* video hardware */
 	MCFG_GFXDECODE(stinger)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(kungfut)
+	MCFG_SCREEN_UPDATE_DRIVER(wiz_state, screen_update_kungfut)
 
 MACHINE_CONFIG_END
 
@@ -1059,14 +1057,14 @@ DRIVER_INIT_MEMBER(wiz_state,stinger)
 		{ 5,3,7, 0x80 },
 		{ 5,7,3, 0x28 }
 	};
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	int size = machine().root_device().memregion("maincpu")->bytes();
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, size);
 	int A;
 	const UINT8 *tbl;
 
-	space->set_decrypted_region(0x0000, 0xffff, decrypt);
+	space.set_decrypted_region(0x0000, 0xffff, decrypt);
 
 	for (A = 0x0000;A < 0x10000;A++)
 	{
@@ -1096,13 +1094,13 @@ DRIVER_INIT_MEMBER(wiz_state,stinger)
 
 DRIVER_INIT_MEMBER(wiz_state,scion)
 {
-	machine().device("audiocpu")->memory().space(AS_PROGRAM)->nop_write(0x4000, 0x4001);
+	machine().device("audiocpu")->memory().space(AS_PROGRAM).nop_write(0x4000, 0x4001);
 }
 
 
 DRIVER_INIT_MEMBER(wiz_state,wiz)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd400, 0xd400, read8_delegate(FUNC(wiz_state::wiz_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd400, 0xd400, read8_delegate(FUNC(wiz_state::wiz_protection_r),this));
 }
 
 

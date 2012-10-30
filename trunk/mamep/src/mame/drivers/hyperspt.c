@@ -272,12 +272,11 @@ static GFXDECODE_START( roadf )
 	GFXDECODE_ENTRY( "gfx2", 0, roadf_charlayout,	 16*16, 16 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(hyperspt_state::vblank_irq)
 {
-	hyperspt_state *state = device->machine().driver_data<hyperspt_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 //-------------------------------------------------
@@ -294,7 +293,7 @@ static MACHINE_CONFIG_START( hyperspt, hyperspt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, XTAL_18_432MHz/12)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(hyperspt_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", hyperspt_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_14_31818MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -307,7 +306,7 @@ static MACHINE_CONFIG_START( hyperspt, hyperspt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hyperspt)
+	MCFG_SCREEN_UPDATE_DRIVER(hyperspt_state, screen_update_hyperspt)
 
 	MCFG_GFXDECODE(hyperspt)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
@@ -321,7 +320,7 @@ static MACHINE_CONFIG_START( hyperspt, hyperspt_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, XTAL_14_31818MHz/8) /* verified on pcb */
+	MCFG_SOUND_ADD("snsnd", SN76496, XTAL_14_31818MHz/8) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 

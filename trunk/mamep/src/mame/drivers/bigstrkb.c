@@ -198,7 +198,7 @@ static MACHINE_CONFIG_START( bigstrkb, bigstrkb_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(bigstrkb_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bigstrkb_state,  irq6_line_hold)
 
 	MCFG_GFXDECODE(bigstrkb)
 
@@ -207,13 +207,13 @@ static MACHINE_CONFIG_START( bigstrkb, bigstrkb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bigstrkb)
+	MCFG_SCREEN_UPDATE_DRIVER(bigstrkb_state, screen_update_bigstrkb)
 
 	MCFG_PALETTE_LENGTH(0x400)
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-//  MCFG_SOUND_ADD("ymsnd", YM2151, ym2151_config)
+//  MCFG_YM2151_ADD("ymsnd", ym2151_config)
 
 	MCFG_OKIM6295_ADD("oki1", 4000000, OKIM6295_PIN7_HIGH)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.30)

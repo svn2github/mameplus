@@ -38,6 +38,8 @@ public:
 	DECLARE_READ16_MEMBER(kothello_hd63484_status_r);
 	virtual void video_start();
 	DECLARE_PALETTE_INIT(shanghai);
+	UINT32 screen_update_shanghai(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(shanghai_interrupt);
 };
 
 
@@ -75,41 +77,42 @@ void shanghai_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16( shanghai )
+UINT32 shanghai_state::screen_update_shanghai(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	device_t *hd63484 = screen.machine().device("hd63484");
+	device_t *hd63484 = machine().device("hd63484");
 	int x, y, b, src;
 
-	b = ((hd63484_regs_r(hd63484, 0xcc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(hd63484, 0xce/2, 0xffff);
+	address_space &space = machine().driver_data()->generic_space();
+	b = ((hd63484_regs_r(hd63484, space, 0xcc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(hd63484, space, 0xce/2, 0xffff);
 	for (y = 0; y < 280; y++)
 	{
-		for (x = 0 ; x < (hd63484_regs_r(hd63484, 0xca/2, 0xffff) & 0x0fff) * 2 ; x += 2)
+		for (x = 0 ; x < (hd63484_regs_r(hd63484, space, 0xca/2, 0xffff) & 0x0fff) * 2 ; x += 2)
 		{
 			b &= (HD63484_RAM_SIZE - 1);
-			src = hd63484_ram_r(hd63484, b, 0xffff);
+			src = hd63484_ram_r(hd63484, space, b, 0xffff);
 			bitmap.pix16(y, x)     = src & 0x00ff;
 			bitmap.pix16(y, x + 1) = (src & 0xff00) >> 8;
 			b++;
 		}
 	}
 
-	if ((hd63484_regs_r(hd63484, 0x06/2, 0xffff) & 0x0300) == 0x0300)
+	if ((hd63484_regs_r(hd63484, space, 0x06/2, 0xffff) & 0x0300) == 0x0300)
 	{
-		int sy = (hd63484_regs_r(hd63484, 0x94/2, 0xffff) & 0x0fff) - (hd63484_regs_r(hd63484, 0x88/2, 0xffff) >> 8);
-		int h = hd63484_regs_r(hd63484, 0x96/2, 0xffff) & 0x0fff;
-		int sx = ((hd63484_regs_r(hd63484, 0x92/2, 0xffff) >> 8) - (hd63484_regs_r(hd63484, 0x84/2, 0xffff) >> 8)) * 4;
-		int w = (hd63484_regs_r(hd63484, 0x92/2, 0xffff) & 0xff) * 4;
+		int sy = (hd63484_regs_r(hd63484, space, 0x94/2, 0xffff) & 0x0fff) - (hd63484_regs_r(hd63484, space, 0x88/2, 0xffff) >> 8);
+		int h = hd63484_regs_r(hd63484, space, 0x96/2, 0xffff) & 0x0fff;
+		int sx = ((hd63484_regs_r(hd63484, space, 0x92/2, 0xffff) >> 8) - (hd63484_regs_r(hd63484, space, 0x84/2, 0xffff) >> 8)) * 4;
+		int w = (hd63484_regs_r(hd63484, space, 0x92/2, 0xffff) & 0xff) * 4;
 		if (sx < 0) sx = 0;	// not sure about this (shangha2 title screen)
 
-		b = (((hd63484_regs_r(hd63484, 0xdc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(hd63484, 0xde/2, 0xffff));
+		b = (((hd63484_regs_r(hd63484, space, 0xdc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(hd63484, space, 0xde/2, 0xffff));
 
 		for (y = sy ; y <= sy + h && y < 280 ; y++)
 		{
-			for (x = 0 ; x < (hd63484_regs_r(hd63484, 0xca/2, 0xffff) & 0x0fff) * 2 ; x += 2)
+			for (x = 0 ; x < (hd63484_regs_r(hd63484, space, 0xca/2, 0xffff) & 0x0fff) * 2 ; x += 2)
 			{
 				b &= (HD63484_RAM_SIZE - 1);
-				src = hd63484_ram_r(hd63484, b, 0xffff);
-				if (x <= w && x + sx >= 0 && x + sx < (hd63484_regs_r(hd63484, 0xca/2, 0xffff) & 0x0fff) * 2)
+				src = hd63484_ram_r(hd63484, space, b, 0xffff);
+				if (x <= w && x + sx >= 0 && x + sx < (hd63484_regs_r(hd63484, space, 0xca/2, 0xffff) & 0x0fff) * 2)
 				{
 					bitmap.pix16(y, x + sx)     = src & 0x00ff;
 					bitmap.pix16(y, x + sx + 1) = (src & 0xff00) >> 8;
@@ -122,9 +125,9 @@ static SCREEN_UPDATE_IND16( shanghai )
 	return 0;
 }
 
-static INTERRUPT_GEN( shanghai_interrupt )
+INTERRUPT_GEN_MEMBER(shanghai_state::shanghai_interrupt)
 {
-	device->execute().set_input_line_and_vector(0,HOLD_LINE,0x80);
+	device.execute().set_input_line_and_vector(0,HOLD_LINE,0x80);
 }
 
 WRITE16_MEMBER(shanghai_state::shanghai_coin_w)
@@ -444,14 +447,14 @@ static MACHINE_CONFIG_START( shanghai, shanghai_state )
 	MCFG_CPU_ADD("maincpu", V30,16000000/2)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(shanghai_map)
 	MCFG_CPU_IO_MAP(shanghai_portmap)
-	MCFG_CPU_VBLANK_INT("screen", shanghai_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", shanghai_state,  shanghai_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(30)
 	MCFG_SCREEN_SIZE(384, 280)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 0, 280-1) // Base Screen is 384 pixel
-	MCFG_SCREEN_UPDATE_STATIC(shanghai)
+	MCFG_SCREEN_UPDATE_DRIVER(shanghai_state, screen_update_shanghai)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -477,14 +480,14 @@ static MACHINE_CONFIG_START( shangha2, shanghai_state )
 	MCFG_CPU_ADD("maincpu", V30,16000000/2)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(shangha2_map)
 	MCFG_CPU_IO_MAP(shangha2_portmap)
-	MCFG_CPU_VBLANK_INT("screen", shanghai_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", shanghai_state,  shanghai_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(30)
 	MCFG_SCREEN_SIZE(384, 280)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 0, 280-1) // Base Screen is 384 pixel
-	MCFG_SCREEN_UPDATE_STATIC(shanghai)
+	MCFG_SCREEN_UPDATE_DRIVER(shanghai_state, screen_update_shanghai)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -508,7 +511,7 @@ static MACHINE_CONFIG_START( kothello, shanghai_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V30,16000000/2)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(kothello_map)
-	MCFG_CPU_VBLANK_INT("screen", shanghai_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", shanghai_state,  shanghai_interrupt)
 
 	SEIBU3A_SOUND_SYSTEM_CPU(14318180/4)
 
@@ -521,7 +524,7 @@ static MACHINE_CONFIG_START( kothello, shanghai_state )
 	MCFG_SCREEN_REFRESH_RATE(30)
 	MCFG_SCREEN_SIZE(384, 280)
 	MCFG_SCREEN_VISIBLE_AREA(8, 384-1, 0, 250-1) // Base Screen is 376 pixel
-	MCFG_SCREEN_UPDATE_STATIC(shanghai)
+	MCFG_SCREEN_UPDATE_DRIVER(shanghai_state, screen_update_shanghai)
 
 	MCFG_PALETTE_LENGTH(256)
 

@@ -113,6 +113,11 @@ public:
 	DECLARE_MACHINE_START(dlair);
 	DECLARE_MACHINE_RESET(dlair);
 	DECLARE_PALETTE_INIT(dleuro);
+	UINT32 screen_update_dleuro(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_callback);
+	DECLARE_WRITE_LINE_MEMBER(dleuro_interrupt);
+	DECLARE_WRITE16_MEMBER(serial_transmit);
+	DECLARE_READ16_MEMBER(serial_receive);
 };
 
 
@@ -148,25 +153,23 @@ static const UINT8 led_map[16] =
  *
  *************************************/
 
-static void dleuro_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(dlair_state::dleuro_interrupt)
 {
-	device->machine().device("maincpu")->execute().set_input_line(0, state);
+	machine().device("maincpu")->execute().set_input_line(0, state);
 }
 
 
-static WRITE8_DEVICE_HANDLER( serial_transmit )
+WRITE16_MEMBER(dlair_state::serial_transmit)
 {
-	dlair_state *state = device->machine().driver_data<dlair_state>();
-	state->laserdisc_data_w(data);
+	laserdisc_data_w(data);
 }
 
 
-static int serial_receive(device_t *device, int channel)
+READ16_MEMBER(dlair_state::serial_receive)
 {
-	dlair_state *state = device->machine().driver_data<dlair_state>();
 	/* if we still have data to send, do it now */
-	if (channel == 0 && state->laserdisc_data_available_r() == ASSERT_LINE)
-		return state->laserdisc_data_r();
+	if (offset == 0 && laserdisc_data_available_r() == ASSERT_LINE)
+		return laserdisc_data_r();
 
 	return -1;
 }
@@ -183,12 +186,12 @@ static Z80CTC_INTERFACE( ctc_intf )
 
 static const z80sio_interface sio_intf =
 {
-	dleuro_interrupt,	/* interrupt handler */
-	0,					/* DTR changed handler */
-	0,					/* RTS changed handler */
-	0,					/* BREAK changed handler */
-	serial_transmit,	/* transmit handler */
-	serial_receive		/* receive handler */
+	DEVCB_DRIVER_LINE_MEMBER(dlair_state, dleuro_interrupt),	/* interrupt handler */
+	DEVCB_NULL,					/* DTR changed handler */
+	DEVCB_NULL,					/* RTS changed handler */
+	DEVCB_NULL,					/* BREAK changed handler */
+	DEVCB_DRIVER_MEMBER16(dlair_state,serial_transmit),	/* transmit handler */
+	DEVCB_DRIVER_MEMBER16(dlair_state,serial_receive)		/* receive handler */
 };
 
 
@@ -226,10 +229,9 @@ PALETTE_INIT_MEMBER(dlair_state,dleuro)
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( dleuro )
+UINT32 dlair_state::screen_update_dleuro(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dlair_state *state = screen.machine().driver_data<dlair_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int x, y;
 
 	/* redraw the overlay */
@@ -237,7 +239,7 @@ static SCREEN_UPDATE_IND16( dleuro )
 		for (x = 0; x < 32; x++)
 		{
 			UINT8 *base = &videoram[y * 64 + x * 2 + 1];
-			drawgfx_opaque(bitmap, cliprect, screen.machine().gfx[0], base[0], base[1], 0, 0, 10 * x, 16 * y);
+			drawgfx_opaque(bitmap, cliprect, machine().gfx[0], base[0], base[1], 0, 0, 10 * x, 16 * y);
 		}
 
 	return 0;
@@ -277,13 +279,13 @@ MACHINE_RESET_MEMBER(dlair_state,dlair)
  *
  *************************************/
 
-static INTERRUPT_GEN( vblank_callback )
+INTERRUPT_GEN_MEMBER(dlair_state::vblank_callback)
 {
 	/* also update the speaker on the European version */
-	beep_device *beep = device->machine().device<beep_device>("beep");
+	beep_device *beep = machine().device<beep_device>("beep");
 	if (beep != NULL)
 	{
-		z80ctc_device *ctc = device->machine().device<z80ctc_device>("ctc");
+		z80ctc_device *ctc = machine().device<z80ctc_device>("ctc");
 		beep_set_state(beep, 1);
 		beep_set_frequency(beep, ATTOSECONDS_TO_HZ(ctc->period(0).attoseconds));
 	}
@@ -723,8 +725,8 @@ static MACHINE_CONFIG_START( dlair_base, dlair_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK_US/4)
 	MCFG_CPU_PROGRAM_MAP(dlus_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_callback)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)MASTER_CLOCK_US/8/16/16/16/16)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dlair_state,  vblank_callback)
+	MCFG_CPU_PERIODIC_INT_DRIVER(dlair_state, irq0_line_hold,  (double)MASTER_CLOCK_US/8/16/16/16/16)
 
 	MCFG_MACHINE_START_OVERRIDE(dlair_state,dlair)
 	MCFG_MACHINE_RESET_OVERRIDE(dlair_state,dlair)
@@ -761,7 +763,7 @@ static MACHINE_CONFIG_START( dleuro, dlair_state )
 	MCFG_CPU_CONFIG(dleuro_daisy_chain)
 	MCFG_CPU_PROGRAM_MAP(dleuro_map)
 	MCFG_CPU_IO_MAP(dleuro_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_callback)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dlair_state,  vblank_callback)
 
 	MCFG_Z80CTC_ADD("ctc", MASTER_CLOCK_EURO/4 /* same as "maincpu" */, ctc_intf)
 	MCFG_Z80SIO_ADD("sio", MASTER_CLOCK_EURO/4 /* same as "maincpu" */, sio_intf)
@@ -772,7 +774,7 @@ static MACHINE_CONFIG_START( dleuro, dlair_state )
 	MCFG_MACHINE_RESET_OVERRIDE(dlair_state,dlair)
 
 	MCFG_LASERDISC_22VP932_ADD("ld_22vp932")
-	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, dleuro)
+	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, dlair_state, screen_update_dleuro)
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_PAL("screen", "ld_22vp932")

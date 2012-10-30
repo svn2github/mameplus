@@ -883,20 +883,18 @@ MACHINE_RESET_MEMBER(trackfld_state,trackfld)
 	m_old_gfx_bank = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(trackfld_state::vblank_irq)
 {
-	trackfld_state *state = device->machine().driver_data<trackfld_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( vblank_nmi )
+INTERRUPT_GEN_MEMBER(trackfld_state::vblank_nmi)
 {
-	trackfld_state *state = device->machine().driver_data<trackfld_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 //-------------------------------------------------
@@ -913,7 +911,7 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/6/2)	/* a guess for now */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", trackfld_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -928,7 +926,7 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(trackfld)
+	MCFG_SCREEN_UPDATE_DRIVER(trackfld_state, screen_update_trackfld)
 
 	MCFG_GFXDECODE(trackfld)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
@@ -944,7 +942,7 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, SOUND_CLOCK/8)
+	MCFG_SOUND_ADD("snsnd", SN76496, SOUND_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -953,12 +951,11 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 MACHINE_CONFIG_END
 
 
-static INTERRUPT_GEN( yieartf_timer_irq )
+INTERRUPT_GEN_MEMBER(trackfld_state::yieartf_timer_irq)
 {
-	trackfld_state *state = device->machine().driver_data<trackfld_state>();
 
-	if (state->m_yieartf_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_yieartf_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( yieartf, trackfld_state )
@@ -966,8 +963,8 @@ static MACHINE_CONFIG_START( yieartf, trackfld_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/6/2)	/* a guess for now */
 	MCFG_CPU_PROGRAM_MAP(yieartf_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
-	MCFG_CPU_PERIODIC_INT(yieartf_timer_irq,480)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", trackfld_state,  vblank_irq)
+	MCFG_CPU_PERIODIC_INT_DRIVER(trackfld_state, yieartf_timer_irq, 480)
 
 //  z80 isn't used
 //  MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/4)
@@ -983,7 +980,7 @@ static MACHINE_CONFIG_START( yieartf, trackfld_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(trackfld)
+	MCFG_SCREEN_UPDATE_DRIVER(trackfld_state, screen_update_trackfld)
 
 	MCFG_GFXDECODE(trackfld)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
@@ -999,7 +996,7 @@ static MACHINE_CONFIG_START( yieartf, trackfld_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, MASTER_CLOCK/6/2)
+	MCFG_SOUND_ADD("snsnd", SN76496, MASTER_CLOCK/6/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -1041,7 +1038,7 @@ static MACHINE_CONFIG_DERIVED( wizzquiz, trackfld )
 	// right cpu?
 	MCFG_CPU_REPLACE("maincpu",M6800,2048000)		/* 1.400 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(wizzquiz_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", trackfld_state,  vblank_nmi)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( reaktor, trackfld )
@@ -1050,7 +1047,7 @@ static MACHINE_CONFIG_DERIVED( reaktor, trackfld )
 	MCFG_CPU_REPLACE("maincpu",Z80,MASTER_CLOCK/6)
 	MCFG_CPU_PROGRAM_MAP(reaktor_map)
 	MCFG_CPU_IO_MAP(reaktor_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", trackfld_state,  vblank_irq)
 MACHINE_CONFIG_END
 
 
@@ -1447,7 +1444,7 @@ DRIVER_INIT_MEMBER(trackfld_state,trackfld)
 
 DRIVER_INIT_MEMBER(trackfld_state,atlantol)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8 *decrypt;
 	int A;
@@ -1459,16 +1456,16 @@ DRIVER_INIT_MEMBER(trackfld_state,atlantol)
 	for (A = 0; A < 0x6000; A++)
 		decrypt[A] = rom[A];
 
-	space->set_decrypted_region(0x0000, 0xffff, decrypt);
+	space.set_decrypted_region(0x0000, 0xffff, decrypt);
 
-	space->install_write_handler(0x0800, 0x0800, write8_delegate(FUNC(trackfld_state::atlantol_gfxbank_w),this));
-	space->nop_write(0x1000, 0x1000);
+	space.install_write_handler(0x0800, 0x0800, write8_delegate(FUNC(trackfld_state::atlantol_gfxbank_w),this));
+	space.nop_write(0x1000, 0x1000);
 
 	/* unmapped areas read as ROM */
-	space->install_read_bank(0x0000, 0x11ff, "bank10");
-	space->install_read_bank(0x1380, 0x17ff, "bank11");
-	space->install_read_bank(0x2000, 0x27ff, "bank12");
-	space->install_read_bank(0x4000, 0x5fff, "bank13");
+	space.install_read_bank(0x0000, 0x11ff, "bank10");
+	space.install_read_bank(0x1380, 0x17ff, "bank11");
+	space.install_read_bank(0x2000, 0x27ff, "bank12");
+	space.install_read_bank(0x4000, 0x5fff, "bank13");
 	membank("bank10")->set_base(&rom[0x0000]);
 	membank("bank11")->set_base(&rom[0x1380]);
 	membank("bank12")->set_base(&rom[0x2000]);

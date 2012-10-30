@@ -87,10 +87,9 @@ READ8_MEMBER(astrof_state::irq_clear_r)
 }
 
 
-static TIMER_DEVICE_CALLBACK( irq_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(astrof_state::irq_callback)
 {
-	astrof_state *state = timer.machine().driver_data<astrof_state>();
-	state->m_maincpu->set_input_line(0, ASSERT_LINE);
+	m_maincpu->set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -413,25 +412,25 @@ static void video_update_common( running_machine &machine, bitmap_rgb32 &bitmap,
 }
 
 
-static SCREEN_UPDATE_RGB32( astrof )
+UINT32 astrof_state::screen_update_astrof(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	pen_t pens[ASTROF_NUM_PENS];
 
-	astrof_get_pens(screen.machine(), pens);
+	astrof_get_pens(machine(), pens);
 
-	video_update_common(screen.machine(), bitmap, cliprect, pens);
+	video_update_common(machine(), bitmap, cliprect, pens);
 
 	return 0;
 }
 
 
-static SCREEN_UPDATE_RGB32( tomahawk )
+UINT32 astrof_state::screen_update_tomahawk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	pen_t pens[TOMAHAWK_NUM_PENS];
 
-	tomahawk_get_pens(screen.machine(), pens);
+	tomahawk_get_pens(machine(), pens);
 
-	video_update_common(screen.machine(), bitmap, cliprect, pens);
+	video_update_common(machine(), bitmap, cliprect, pens);
 
 	return 0;
 }
@@ -943,7 +942,7 @@ static MACHINE_CONFIG_START( base, astrof_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MAIN_CPU_CLOCK)
-	MCFG_TIMER_ADD_SCANLINE("vblank", irq_callback, "screen", VBSTART, 0)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("vblank", astrof_state, irq_callback, "screen", VBSTART, 0)
 
 	/* video hardware */
 
@@ -962,7 +961,7 @@ static MACHINE_CONFIG_DERIVED( astrof, base )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(astrof)
+	MCFG_SCREEN_UPDATE_DRIVER(astrof_state, screen_update_astrof)
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(astrof_audio)
@@ -988,7 +987,7 @@ static MACHINE_CONFIG_DERIVED( spfghmk2, base )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(astrof)
+	MCFG_SCREEN_UPDATE_DRIVER(astrof_state, screen_update_astrof)
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(spfghmk2_audio)
@@ -1005,7 +1004,7 @@ static MACHINE_CONFIG_DERIVED( tomahawk, base )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(tomahawk)
+	MCFG_SCREEN_UPDATE_DRIVER(astrof_state, screen_update_tomahawk)
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(tomahawk_audio)
@@ -1290,8 +1289,8 @@ DRIVER_INIT_MEMBER(astrof_state,abattle)
 		rom[i] = prom[rom[i]];
 
 	/* set up protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
 }
 
 
@@ -1304,8 +1303,8 @@ DRIVER_INIT_MEMBER(astrof_state,afire)
 		rom[i] = ~rom[i];
 
 	/* set up protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::afire_coin_prot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::afire_coin_prot_r),this));
 }
 
 
@@ -1318,8 +1317,8 @@ DRIVER_INIT_MEMBER(astrof_state,sstarbtl)
 		rom[i] = ~rom[i];
 
 	/* set up protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
 }
 
 

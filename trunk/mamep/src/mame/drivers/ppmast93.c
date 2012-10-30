@@ -155,6 +155,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_ppmast93_bg_tile_info);
 	TILE_GET_INFO_MEMBER(get_ppmast93_fg_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_ppmast93(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -217,7 +218,7 @@ WRITE8_MEMBER(ppmast93_state::ppmast_sound_w)
 	switch(offset&0xff)
 	{
 		case 0:
-		case 1: ym2413_w(machine().device("ymsnd"),offset,data); break;
+		case 1: ym2413_w(machine().device("ymsnd"),space,offset,data); break;
 		case 2: machine().device<dac_device>("dac")->write_unsigned8(data);break;
 		default: logerror("%x %x - %x\n",offset,data,space.device().safe_pcbase());
 	}
@@ -353,11 +354,10 @@ void ppmast93_state::video_start()
 	m_fg_tilemap->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16( ppmast93 )
+UINT32 ppmast93_state::screen_update_ppmast93(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ppmast93_state *state = screen.machine().driver_data<ppmast93_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
@@ -366,12 +366,12 @@ static MACHINE_CONFIG_START( ppmast93, ppmast93_state )
 	MCFG_CPU_ADD("maincpu", Z80,5000000)		 /* 5 MHz */
 	MCFG_CPU_PROGRAM_MAP(ppmast93_cpu1_map)
 	MCFG_CPU_IO_MAP(ppmast93_cpu1_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ppmast93_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80,5000000)		 /* 5 MHz */
 	MCFG_CPU_PROGRAM_MAP(ppmast93_cpu2_map)
 	MCFG_CPU_IO_MAP(ppmast93_cpu2_io)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(ppmast93_state, irq0_line_hold, 8000)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -379,7 +379,7 @@ static MACHINE_CONFIG_START( ppmast93, ppmast93_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(ppmast93)
+	MCFG_SCREEN_UPDATE_DRIVER(ppmast93_state, screen_update_ppmast93)
 
 	MCFG_GFXDECODE(ppmast93)
 

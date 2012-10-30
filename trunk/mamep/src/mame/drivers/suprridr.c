@@ -99,11 +99,10 @@ WRITE8_MEMBER(suprridr_state::nmi_enable_w)
 }
 
 
-static INTERRUPT_GEN( main_nmi_gen )
+INTERRUPT_GEN_MEMBER(suprridr_state::main_nmi_gen)
 {
-	suprridr_state *state = device->machine().driver_data<suprridr_state>();
-	if (state->m_nmi_enable)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enable)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -114,17 +113,16 @@ static INTERRUPT_GEN( main_nmi_gen )
  *
  *************************************/
 
-static TIMER_CALLBACK( delayed_sound_w )
+TIMER_CALLBACK_MEMBER(suprridr_state::delayed_sound_w)
 {
-	suprridr_state *state = machine.driver_data<suprridr_state>();
-	state->m_sound_data = param;
-	machine.device("audiocpu")->execute().set_input_line(0, ASSERT_LINE);
+	m_sound_data = param;
+	machine().device("audiocpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(suprridr_state::sound_data_w)
 {
-	machine().scheduler().synchronize(FUNC(delayed_sound_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(suprridr_state::delayed_sound_w),this), data);
 }
 
 
@@ -360,7 +358,7 @@ static MACHINE_CONFIG_START( suprridr, suprridr_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_49_152MHz/16)		/* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", main_nmi_gen)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", suprridr_state,  main_nmi_gen)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 10000000/4)		/* 2.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -372,7 +370,7 @@ static MACHINE_CONFIG_START( suprridr, suprridr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(suprridr)
+	MCFG_SCREEN_UPDATE_DRIVER(suprridr_state, screen_update_suprridr)
 
 	MCFG_GFXDECODE(suprridr)
 	MCFG_PALETTE_LENGTH(96)

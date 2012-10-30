@@ -47,6 +47,8 @@ public:
 	DECLARE_DRIVER_INIT(galaxygame);
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_galaxygame(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(galaxygame_irq);
 };
 
 /*************************************
@@ -168,13 +170,12 @@ WRITE16_MEMBER(galaxygame_state::ke_w)
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( galaxygame )
+UINT32 galaxygame_state::screen_update_galaxygame(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	galaxygame_state *state = screen.machine().driver_data<galaxygame_state>();
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	for (int i = 0; i < state->m_point_display_list_index; i++ )
+	bitmap.fill(get_black_pen(machine()), cliprect);
+	for (int i = 0; i < m_point_display_list_index; i++ )
 	{
-		bitmap.pix16(state->m_point_display_list[i].x >> 7, state->m_point_display_list[i].y >> 7) = 1;
+		bitmap.pix16(m_point_display_list[i].x >> 7, m_point_display_list[i].y >> 7) = 1;
 	}
 	return 0;
 }
@@ -301,13 +302,12 @@ static IRQ_CALLBACK(galaxygame_irq_callback)
 	return 0x40;
 }
 
-static INTERRUPT_GEN(galaxygame_irq)
+INTERRUPT_GEN_MEMBER(galaxygame_state::galaxygame_irq)
 {
-	galaxygame_state *state = device->machine().driver_data<galaxygame_state>();
-	if ( state->m_clk & 0x40 )
+	if ( m_clk & 0x40 )
 	{
-		device->execute().set_input_line(0, ASSERT_LINE);
-		state->m_interrupt = 1;
+		device.execute().set_input_line(0, ASSERT_LINE);
+		m_interrupt = 1;
 	}
 }
 
@@ -331,7 +331,7 @@ static MACHINE_CONFIG_START( galaxygame, galaxygame_state )
 	MCFG_CPU_ADD("maincpu", T11, 3000000 )
 	MCFG_CPU_PROGRAM_MAP(galaxygame_map)
 	MCFG_CPU_CONFIG(t11_data)
-	MCFG_CPU_PERIODIC_INT(galaxygame_irq,60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(galaxygame_state, galaxygame_irq, 60)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -339,7 +339,7 @@ static MACHINE_CONFIG_START( galaxygame, galaxygame_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 511)
-	MCFG_SCREEN_UPDATE_STATIC(galaxygame)
+	MCFG_SCREEN_UPDATE_DRIVER(galaxygame_state, screen_update_galaxygame)
 
 	MCFG_PALETTE_LENGTH(2)
 
@@ -396,7 +396,7 @@ static UINT8 read_uint8(UINT8 *pval, int pos, const UINT8* line, int linelen)
 
 DRIVER_INIT_MEMBER(galaxygame_state,galaxygame)
 {
-	address_space *main = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &main = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *code = machine().root_device().memregion("code")->base();
 
 	int filepos = 0, linepos, linelen;
@@ -426,20 +426,20 @@ DRIVER_INIT_MEMBER(galaxygame_state,galaxygame)
 			if ( (linelen >= 15+6) && (line[15] != ' ') )
 			{
 				read_uint16(&val, 15, line, linelen);
-				main->write_word(address, val, 0xffff);
+				main.write_word(address, val, 0xffff);
 				address += 2;
 
 				if ( (linelen >= 22+6) && (line[22] != ' ') )
 				{
 					read_uint16(&val, 22, line, linelen);
-					main->write_word(address, val, 0xffff);
+					main.write_word(address, val, 0xffff);
 					address += 2;
 				}
 
 				if ( (linelen >= 29+6) && (line[29] != ' ') )
 				{
 					read_uint16(&val, 29, line, linelen);
-					main->write_word(address, val, 0xffff);
+					main.write_word(address, val, 0xffff);
 					address += 2;
 				}
 
@@ -449,7 +449,7 @@ DRIVER_INIT_MEMBER(galaxygame_state,galaxygame)
 				if ( (linelen >= 18+3) && (line[18] != ' ') )
 				{
 					read_uint8(&val8, 18, line, linelen);
-					main->write_byte(address, val8);
+					main.write_byte(address, val8);
 					address += 1;
 				}
 			}
@@ -458,11 +458,11 @@ DRIVER_INIT_MEMBER(galaxygame_state,galaxygame)
 	}
 
 	// set startup code
-	main->write_word(0, 012700); /* MOV #0, R0 */
-	main->write_word(2, 0);
-	main->write_word(4, 0x8d00); /* MTPS R0 */
-	main->write_word(6, 000167); /* JMP 0500*/
-	main->write_word(8, 000500 - 10);
+	main.write_word(0, 012700); /* MOV #0, R0 */
+	main.write_word(2, 0);
+	main.write_word(4, 0x8d00); /* MTPS R0 */
+	main.write_word(6, 000167); /* JMP 0500*/
+	main.write_word(8, 000500 - 10);
 }
 
 GAME(1971, galgame, 0, galaxygame, galaxygame, galaxygame_state, galaxygame, ROT270, "Computer Recreations, Inc", "Galaxy Game", GAME_NO_SOUND_HW )

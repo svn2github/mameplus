@@ -137,6 +137,9 @@ public:
 	TILE_GET_INFO_MEMBER(get_rabbit_tilemap2_tile_info);
 	TILE_GET_INFO_MEMBER(get_rabbit_tilemap3_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_rabbit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(rabbit_vblank_interrupt);
+	TIMER_CALLBACK_MEMBER(rabbit_blit_done);
 };
 
 
@@ -461,39 +464,38 @@ static void rabbit_drawtilemap( running_machine &machine, bitmap_ind16 &bitmap, 
 			tran ? 0 : TILEMAP_DRAW_OPAQUE,0);
 }
 
-static SCREEN_UPDATE_IND16(rabbit)
+UINT32 rabbit_state::screen_update_rabbit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	rabbit_state *state = screen.machine().driver_data<rabbit_state>();
 	int prilevel;
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-//  popmessage("%08x %08x", state->m_viewregs0[0], state->m_viewregs0[1]);
-//  popmessage("%08x %08x %08x %08x %08x %08x", state->m_tilemap_regs[0][0],state->m_tilemap_regs[0][1],state->m_tilemap_regs[0][2],state->m_tilemap_regs[0][3],state->m_tilemap_regs[0][4],state->m_tilemap_regs[0][5]);
-//  popmessage("%08x %08x %08x %08x %08x %08x", state->m_tilemap_regs[1][0],state->m_tilemap_regs[1][1],state->m_tilemap_regs[1][2],state->m_tilemap_regs[1][3],state->m_tilemap_regs[1][4],state->m_tilemap_regs[1][5]);
-//  popmessage("%08x %08x %08x %08x %08x %08x", state->m_tilemap_regs[2][0],state->m_tilemap_regs[2][1],state->m_tilemap_regs[2][2],state->m_tilemap_regs[2][3],state->m_tilemap_regs[2][4],state->m_tilemap_regs[2][5]);
-//  popmessage("%08x %08x %08x %08x %08x %08x", state->m_tilemap_regs[3][0],state->m_tilemap_regs[3][1],state->m_tilemap_regs[3][2],state->m_tilemap_regs[3][3],state->m_tilemap_regs[3][4],state->m_tilemap_regs[3][5]);
-//  popmessage("%08x %08x %08x %08x %08x %08x %08x", state->m_spriteregs[0],state->m_spriteregs[1],state->m_spriteregs[2],state->m_spriteregs[3],state->m_spriteregs[4],state->m_spriteregs[5], state->m_spriteregs[6]);
-//  popmessage("%08x %08x %08x %08x %08x", state->m_viewregs6[0],state->m_viewregs6[1],state->m_viewregs6[2],state->m_viewregs6[3],state->m_viewregs6[4]);
-//  popmessage("%08x", state->m_viewregs7[0]);
-//  popmessage("%08x %08x %08x %08x", state->m_blitterregs[0],state->m_blitterregs[1],state->m_blitterregs[2],state->m_blitterregs[3]);
-//  popmessage("%08x %08x %08x %08x", state->m_viewregs9[0],state->m_viewregs9[1],state->m_viewregs9[2],state->m_viewregs9[3]);
+//  popmessage("%08x %08x", m_viewregs0[0], m_viewregs0[1]);
+//  popmessage("%08x %08x %08x %08x %08x %08x", m_tilemap_regs[0][0],m_tilemap_regs[0][1],m_tilemap_regs[0][2],m_tilemap_regs[0][3],m_tilemap_regs[0][4],m_tilemap_regs[0][5]);
+//  popmessage("%08x %08x %08x %08x %08x %08x", m_tilemap_regs[1][0],m_tilemap_regs[1][1],m_tilemap_regs[1][2],m_tilemap_regs[1][3],m_tilemap_regs[1][4],m_tilemap_regs[1][5]);
+//  popmessage("%08x %08x %08x %08x %08x %08x", m_tilemap_regs[2][0],m_tilemap_regs[2][1],m_tilemap_regs[2][2],m_tilemap_regs[2][3],m_tilemap_regs[2][4],m_tilemap_regs[2][5]);
+//  popmessage("%08x %08x %08x %08x %08x %08x", m_tilemap_regs[3][0],m_tilemap_regs[3][1],m_tilemap_regs[3][2],m_tilemap_regs[3][3],m_tilemap_regs[3][4],m_tilemap_regs[3][5]);
+//  popmessage("%08x %08x %08x %08x %08x %08x %08x", m_spriteregs[0],m_spriteregs[1],m_spriteregs[2],m_spriteregs[3],m_spriteregs[4],m_spriteregs[5], m_spriteregs[6]);
+//  popmessage("%08x %08x %08x %08x %08x", m_viewregs6[0],m_viewregs6[1],m_viewregs6[2],m_viewregs6[3],m_viewregs6[4]);
+//  popmessage("%08x", m_viewregs7[0]);
+//  popmessage("%08x %08x %08x %08x", m_blitterregs[0],m_blitterregs[1],m_blitterregs[2],m_blitterregs[3]);
+//  popmessage("%08x %08x %08x %08x", m_viewregs9[0],m_viewregs9[1],m_viewregs9[2],m_viewregs9[3]);
 
-//  popmessage("%08x %08x %08x %08x %08x", state->m_viewregs10[0],state->m_viewregs10[1],state->m_viewregs10[2],state->m_viewregs10[3],state->m_viewregs10[4]);
+//  popmessage("%08x %08x %08x %08x %08x", m_viewregs10[0],m_viewregs10[1],m_viewregs10[2],m_viewregs10[3],m_viewregs10[4]);
 
 	/* prio isnt certain but seems to work.. */
 	for (prilevel = 0xf; prilevel >0; prilevel--)
 	{
-		if (prilevel == ((state->m_tilemap_regs[3][0]&0x0f000000)>>24)) rabbit_drawtilemap(screen.machine(),bitmap,cliprect, 3);
-		if (prilevel == ((state->m_tilemap_regs[2][0]&0x0f000000)>>24)) rabbit_drawtilemap(screen.machine(),bitmap,cliprect, 2);
-		if (prilevel == ((state->m_tilemap_regs[1][0]&0x0f000000)>>24)) rabbit_drawtilemap(screen.machine(),bitmap,cliprect, 1);
-		if (prilevel == ((state->m_tilemap_regs[0][0]&0x0f000000)>>24)) rabbit_drawtilemap(screen.machine(),bitmap,cliprect, 0);
+		if (prilevel == ((m_tilemap_regs[3][0]&0x0f000000)>>24)) rabbit_drawtilemap(machine(),bitmap,cliprect, 3);
+		if (prilevel == ((m_tilemap_regs[2][0]&0x0f000000)>>24)) rabbit_drawtilemap(machine(),bitmap,cliprect, 2);
+		if (prilevel == ((m_tilemap_regs[1][0]&0x0f000000)>>24)) rabbit_drawtilemap(machine(),bitmap,cliprect, 1);
+		if (prilevel == ((m_tilemap_regs[0][0]&0x0f000000)>>24)) rabbit_drawtilemap(machine(),bitmap,cliprect, 0);
 
 		if (prilevel == 0x09) // should it be selectable?
 		{
-			rabbit_clearspritebitmap(screen.machine(),bitmap,cliprect);
-			draw_sprites(screen.machine(),bitmap,cliprect);  // render to bitmap
-			draw_sprite_bitmap(screen.machine(),bitmap,cliprect); // copy bitmap to screen
+			rabbit_clearspritebitmap(machine(),bitmap,cliprect);
+			draw_sprites(machine(),bitmap,cliprect);  // render to bitmap
+			draw_sprite_bitmap(machine(),bitmap,cliprect); // copy bitmap to screen
 		}
 	}
 	return 0;
@@ -557,10 +559,9 @@ WRITE32_MEMBER(rabbit_state::rabbit_rombank_w)
 #define BLITCMDLOG 0
 #define BLITLOG 0
 
-static TIMER_CALLBACK( rabbit_blit_done )
+TIMER_CALLBACK_MEMBER(rabbit_state::rabbit_blit_done)
 {
-	rabbit_state *state = machine.driver_data<rabbit_state>();
-	machine.device("maincpu")->execute().set_input_line(state->m_bltirqlevel, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(m_bltirqlevel, HOLD_LINE);
 }
 
 static void rabbit_do_blit(running_machine &machine)
@@ -608,7 +609,7 @@ static void rabbit_do_blit(running_machine &machine)
 				if (!blt_amount)
 				{
 					if(BLITLOG) mame_printf_debug("end of blit list\n");
-					machine.scheduler().timer_set(attotime::from_usec(500), FUNC(rabbit_blit_done));
+					machine.scheduler().timer_set(attotime::from_usec(500), timer_expired_delegate(FUNC(rabbit_state::rabbit_blit_done),state));
 					return;
 				}
 
@@ -869,16 +870,15 @@ GFXDECODE_END
 
   */
 
-static INTERRUPT_GEN( rabbit_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(rabbit_state::rabbit_vblank_interrupt)
 {
-	rabbit_state *state = device->machine().driver_data<rabbit_state>();
-	device->machine().device("maincpu")->execute().set_input_line(state->m_vblirqlevel, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(m_vblirqlevel, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( rabbit, rabbit_state )
 	MCFG_CPU_ADD("maincpu", M68EC020, XTAL_24MHz)
 	MCFG_CPU_PROGRAM_MAP(rabbit_map)
-	MCFG_CPU_VBLANK_INT("screen", rabbit_vblank_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rabbit_state,  rabbit_vblank_interrupt)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -891,7 +891,7 @@ static MACHINE_CONFIG_START( rabbit, rabbit_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 64*16-1, 0*16, 64*16-1)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 20*16-1, 32*16, 48*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(rabbit)
+	MCFG_SCREEN_UPDATE_DRIVER(rabbit_state, screen_update_rabbit)
 
 	MCFG_PALETTE_LENGTH(0x4000)
 	MCFG_PALETTE_INIT( all_black )

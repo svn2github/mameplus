@@ -39,14 +39,13 @@ READ8_MEMBER(aeroboto_state::aeroboto_201_r)
 }
 
 
-static INTERRUPT_GEN( aeroboto_interrupt )
+INTERRUPT_GEN_MEMBER(aeroboto_state::aeroboto_interrupt)
 {
-	aeroboto_state *state = device->machine().driver_data<aeroboto_state>();
 
-	if (!state->m_disable_irq)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if (!m_disable_irq)
+		device.execute().set_input_line(0, ASSERT_LINE);
 	else
-		state->m_disable_irq--;
+		m_disable_irq--;
 }
 
 READ8_MEMBER(aeroboto_state::aeroboto_irq_ack_r)
@@ -252,11 +251,11 @@ static MACHINE_CONFIG_START( formatz, aeroboto_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, XTAL_10MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", aeroboto_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aeroboto_state,  aeroboto_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6809, XTAL_10MHz/16) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", aeroboto_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -265,7 +264,7 @@ static MACHINE_CONFIG_START( formatz, aeroboto_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 31*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(aeroboto)
+	MCFG_SCREEN_UPDATE_DRIVER(aeroboto_state, screen_update_aeroboto)
 
 	MCFG_GFXDECODE(aeroboto)
 

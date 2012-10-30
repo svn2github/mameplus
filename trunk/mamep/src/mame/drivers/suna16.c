@@ -107,6 +107,43 @@ ADDRESS_MAP_END
                                 Ultra Balloon
 ***************************************************************************/
 
+READ8_MEMBER(suna16_state::uballoon_prot_r)
+{
+	UINT8 ret = 0;
+
+	switch (offset)
+	{
+		case 0x0011/2:
+			ret  = ((m_prot & 0x03) == 0x03) ? 2 : 0;
+			ret |= ((m_prot & 0x30) == 0x30) ? 1 : 0;
+			break;
+
+		case 0x0311/2:
+			ret = 0x03;
+			break;
+
+		default:
+			//logerror("uballoon_prot_r %04X\n", offset);
+			break;
+	}
+
+	return ret;
+}
+
+WRITE8_MEMBER(suna16_state::uballoon_prot_w)
+{
+	switch (offset)
+	{
+		case 0x0001/2:
+			m_prot = data;
+			break;
+
+		default:
+			//logerror("uballoon_prot_w %04X=%02X\n", offset, data);
+			break;
+	}
+}
+
 static ADDRESS_MAP_START( uballoon_map, AS_PROGRAM, 16, suna16_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM	// ROM
 	AM_RANGE(0x800000, 0x803fff) AM_RAM	// RAM
@@ -120,7 +157,7 @@ static ADDRESS_MAP_START( uballoon_map, AS_PROGRAM, 16, suna16_state )
 	AM_RANGE(0x600008, 0x600009) AM_WRITE(uballoon_leds_w)	// Leds
 	AM_RANGE(0x60000c, 0x60000d) AM_WRITENOP	// ? IRQ 1 Ack
 	AM_RANGE(0x600010, 0x600011) AM_WRITENOP	// ? IRQ 1 Ack
-	AM_RANGE(0xa00000, 0xa0ffff) AM_NOP			// Protection
+	AM_RANGE(0xa00000, 0xa0ffff) AM_READWRITE8(uballoon_prot_r, uballoon_prot_w, 0x00ff)	// Protection
 ADDRESS_MAP_END
 
 
@@ -145,27 +182,21 @@ ADDRESS_MAP_END
                             Best Of Best
 ***************************************************************************/
 
-READ16_MEMBER(suna16_state::bestbest_prot_r)
+READ8_MEMBER(suna16_state::bestbest_prot_r)
 {
-
 	return m_prot;
 }
 
-WRITE16_MEMBER(suna16_state::bestbest_prot_w)
+WRITE8_MEMBER(suna16_state::bestbest_prot_w)
 {
-	if (ACCESSING_BITS_0_7)
+	switch (data)
 	{
-
-		switch (data & 0xff)
-		{
-			case 0x00:	m_prot = m_prot ^ 0x0009;	break;
-			case 0x08:	m_prot = m_prot ^ 0x0002;	break;
-			case 0x0c:	m_prot = m_prot ^ 0x0003;	break;
-			//default:    logerror("CPU#0 PC %06X - Unknown protection value: %04X\n", space.device().safe_pc(), data);
-		}
+		case 0x00:	m_prot = m_prot ^ 0x0009;	break;
+		case 0x08:	m_prot = m_prot ^ 0x0002;	break;
+		case 0x0c:	m_prot = m_prot ^ 0x0003;	break;
+		//default:    logerror("CPU#0 PC %06X - Unknown protection value: %04X\n", space.device().safe_pc(), data);
 	}
 }
-
 
 static ADDRESS_MAP_START( bestbest_map, AS_PROGRAM, 16, suna16_state )
 	AM_RANGE( 0x000000, 0x03ffff ) AM_ROM AM_MIRROR(0xc0000)		// ROM
@@ -173,8 +204,8 @@ static ADDRESS_MAP_START( bestbest_map, AS_PROGRAM, 16, suna16_state )
 	AM_RANGE( 0x500000, 0x500001 ) AM_READ_PORT("P1") AM_WRITE(suna16_soundlatch_w)		// To Sound CPU
 	AM_RANGE( 0x500002, 0x500003 ) AM_READ_PORT("P2") AM_WRITE(bestbest_flipscreen_w)	// P2 + Coins, Flip Screen
 	AM_RANGE( 0x500004, 0x500005 ) AM_READ_PORT("DSW") AM_WRITE(bestbest_coin_w)		// Coin Counter
-	AM_RANGE( 0x500008, 0x500009 ) AM_WRITE(bestbest_prot_w )		// Protection
-	AM_RANGE( 0x500018, 0x500019 ) AM_READ(bestbest_prot_r )		//
+	AM_RANGE( 0x500008, 0x500009 ) AM_WRITE8(bestbest_prot_w, 0x00ff)		// Protection
+	AM_RANGE( 0x500018, 0x500019 ) AM_READ8(bestbest_prot_r, 0x00ff)		// "
 	AM_RANGE( 0x540000, 0x540fff ) AM_READWRITE(suna16_paletteram16_r, suna16_paletteram16_w )	// Banked(?) Palette
 	AM_RANGE( 0x541000, 0x54ffff ) AM_RAM														//
 	AM_RANGE( 0x580000, 0x58ffff ) AM_RAM							// RAM
@@ -201,7 +232,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( bssoccer_sound_map, AS_PROGRAM, 8, suna16_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM	// ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM	// RAM
-	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	// YM2151
+	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)	// YM2151
 	AM_RANGE(0xfc00, 0xfc00) AM_READ(soundlatch_byte_r)	// From Main CPU
 	AM_RANGE(0xfd00, 0xfd00) AM_WRITE(soundlatch2_byte_w)	// To PCM Z80 #1
 	AM_RANGE(0xfe00, 0xfe00) AM_WRITE(soundlatch3_byte_w)	// To PCM Z80 #2
@@ -214,7 +245,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( uballoon_sound_map, AS_PROGRAM, 8, suna16_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM	// ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM	// RAM
-	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	// YM2151
+	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)	// YM2151
 	AM_RANGE(0xfc00, 0xfc00) AM_READWRITE(soundlatch_byte_r, soundlatch2_byte_w)	// To PCM Z80
 ADDRESS_MAP_END
 
@@ -225,7 +256,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sunaq_sound_map, AS_PROGRAM, 8, suna16_state )
 	AM_RANGE(0x0000, 0xe82f) AM_ROM	// ROM
 	AM_RANGE(0xe830, 0xf7ff) AM_RAM	// RAM (writes to efxx, could be a program bug tho)
-	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	// YM2151
+	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)	// YM2151
 	AM_RANGE(0xfc00, 0xfc00) AM_READWRITE(soundlatch_byte_r, soundlatch2_byte_w)	// To PCM Z80
 ADDRESS_MAP_END
 
@@ -361,8 +392,8 @@ ADDRESS_MAP_END
 
 MACHINE_RESET_MEMBER(suna16_state,uballoon)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	uballoon_pcm_1_bankswitch_w(*space, 0, 0);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	uballoon_pcm_1_bankswitch_w(space, 0, 0);
 }
 
 
@@ -753,16 +784,15 @@ GFXDECODE_END
                             Back Street Soccer
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( bssoccer_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(suna16_state::bssoccer_interrupt)
 {
-	suna16_state *state = timer.machine().driver_data<suna16_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line(2, HOLD_LINE); // does RAM to sprite buffer copy here
+		m_maincpu->set_input_line(2, HOLD_LINE); // does RAM to sprite buffer copy here
 }
 
 static MACHINE_CONFIG_START( bssoccer, suna16_state )
@@ -770,7 +800,7 @@ static MACHINE_CONFIG_START( bssoccer, suna16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(bssoccer_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bssoccer_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", suna16_state, bssoccer_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)		/* Z80B */
 	MCFG_CPU_PROGRAM_MAP(bssoccer_sound_map)
@@ -791,7 +821,7 @@ static MACHINE_CONFIG_START( bssoccer, suna16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(suna16)
+	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_suna16)
 
 	MCFG_GFXDECODE(suna16)
 	MCFG_PALETTE_LENGTH(512)
@@ -800,7 +830,7 @@ static MACHINE_CONFIG_START( bssoccer, suna16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 
@@ -828,7 +858,7 @@ static MACHINE_CONFIG_START( uballoon, suna16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(uballoon_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", suna16_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(uballoon_sound_map)
@@ -849,7 +879,7 @@ static MACHINE_CONFIG_START( uballoon, suna16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(suna16)
+	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_suna16)
 
 	MCFG_GFXDECODE(suna16)
 	MCFG_PALETTE_LENGTH(512)
@@ -858,7 +888,7 @@ static MACHINE_CONFIG_START( uballoon, suna16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
@@ -878,7 +908,7 @@ static MACHINE_CONFIG_START( sunaq, suna16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 24000000/4)
 	MCFG_CPU_PROGRAM_MAP(sunaq_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", suna16_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 14318000/4)
 	MCFG_CPU_PROGRAM_MAP(sunaq_sound_map)
@@ -897,7 +927,7 @@ static MACHINE_CONFIG_START( sunaq, suna16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(suna16)
+	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_suna16)
 
 	MCFG_GFXDECODE(suna16)
 	MCFG_PALETTE_LENGTH(512)
@@ -906,7 +936,7 @@ static MACHINE_CONFIG_START( sunaq, suna16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 14318000/4)
+	MCFG_YM2151_ADD("ymsnd", 14318000/4)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
@@ -944,7 +974,7 @@ static MACHINE_CONFIG_START( bestbest, suna16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 24000000/4)
 	MCFG_CPU_PROGRAM_MAP(bestbest_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bssoccer_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", suna16_state, bssoccer_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 24000000/4)
 	MCFG_CPU_PROGRAM_MAP(bestbest_sound_map)
@@ -963,7 +993,7 @@ static MACHINE_CONFIG_START( bestbest, suna16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(bestbest)
+	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_bestbest)
 
 	MCFG_GFXDECODE(bestbest)
 	MCFG_PALETTE_LENGTH(256*8)
@@ -1026,7 +1056,6 @@ MACHINE_CONFIG_END
 ***************************************************************************/
 
 ROM_START( bssoccer )
-
 	ROM_REGION( 0x200000, "maincpu", 0 )	/* 68000 Code */
 	ROM_LOAD16_BYTE( "02", 0x000000, 0x080000, CRC(32871005) SHA1(b094ee3f4fc24c0521915d565f6e203d51e51f6d) )
 	ROM_LOAD16_BYTE( "01", 0x000001, 0x080000, CRC(ace00db6) SHA1(6bd146f9b44c97be77578b4f0ffa28cbf66283c2) )
@@ -1049,7 +1078,6 @@ ROM_START( bssoccer )
 	ROM_LOAD( "06", 0x180000, 0x080000, CRC(d42ce84b) SHA1(3a3d07d571793ecf4c936d3af244c63b9e4b4bb9) )
 	ROM_LOAD( "08", 0x200000, 0x080000, CRC(96cd2136) SHA1(1241859d6c5e64de73898763f0358171ea4aeae3) )
 	ROM_LOAD( "10", 0x280000, 0x080000, CRC(1ca94d21) SHA1(23d892b840e37064a175584f955f25f990d9179d) )
-
 ROM_END
 
 
@@ -1074,7 +1102,6 @@ audio2.rom    27c010
 ***************************************************************************/
 
 ROM_START( uballoon )
-
 	ROM_REGION( 0x100000, "maincpu", 0 )	/* 68000 Code */
 	ROM_LOAD16_BYTE( "prg2.rom", 0x000000, 0x080000, CRC(72ab80ea) SHA1(b755940877cf286559208106dd5e6933aeb72242) )
 	ROM_LOAD16_BYTE( "prg1.rom", 0x000001, 0x080000, CRC(27a04f55) SHA1(a530294b000654db8d84efe4835b72e0dca62819) )
@@ -1092,22 +1119,7 @@ ROM_START( uballoon )
 	ROM_LOAD( "gfx2.rom", 0x080000, 0x080000, CRC(6307aa60) SHA1(00406eba98ec368e72ee53c08b9111dec4f2552f) )
 	ROM_LOAD( "gfx3.rom", 0x100000, 0x080000, CRC(718f3150) SHA1(5971f006203f86743ebc825e4ab1ed1f811e3165) )
 	ROM_LOAD( "gfx4.rom", 0x180000, 0x080000, CRC(af7e057e) SHA1(67a03b54ffa1483c8ed044f27287b7f3f1150455) )
-
 ROM_END
-
-
-DRIVER_INIT_MEMBER(suna16_state,uballoon)
-{
-	UINT16 *RAM = (UINT16 *) machine().root_device().memregion("maincpu")->base();
-
-	// Patch out the protection checks
-	RAM[0x0113c/2] = 0x4e71;	// bne $646
-	RAM[0x0113e/2] = 0x4e71;	// ""
-	RAM[0x01784/2] = 0x600c;	// beq $1792
-	RAM[0x018e2/2] = 0x600c;	// beq $18f0
-	RAM[0x03c54/2] = 0x600C;	// beq $3c62
-	RAM[0x126a0/2] = 0x4e71;	// bne $1267a (ROM test)
-}
 
 /***************************************************************************
                             Suna Quiz 6000 Academy
@@ -1251,7 +1263,7 @@ ROM_END
 
 ***************************************************************************/
 
-GAME( 1994, bestbest, 0, bestbest, bestbest, driver_device, 0,        ROT0, "SunA", "Best Of Best", 0 )
-GAME( 1994, sunaq,    0, sunaq,    sunaq, driver_device,    0,        ROT0, "SunA", "SunA Quiz 6000 Academy (940620-6)", 0 )	// Date/Version on-screen is 940620-6, but in the program rom it's 1994,6,30  K.H.T  V6.00
-GAME( 1996, bssoccer, 0, bssoccer, bssoccer, driver_device, 0,        ROT0, "SunA", "Back Street Soccer", 0 )
-GAME( 1996, uballoon, 0, uballoon, uballoon, suna16_state, uballoon, ROT0, "SunA", "Ultra Balloon", 0 )
+GAME( 1994, bestbest, 0, bestbest, bestbest, driver_device, 0, ROT0, "SunA", "Best Of Best", 0 )
+GAME( 1994, sunaq,    0, sunaq,    sunaq,    driver_device, 0, ROT0, "SunA", "SunA Quiz 6000 Academy (940620-6)", 0 )	// Date/Version on-screen is 940620-6, but in the program rom it's 1994,6,30  K.H.T  V6.00
+GAME( 1996, bssoccer, 0, bssoccer, bssoccer, driver_device, 0, ROT0, "SunA (Unico license)", "Back Street Soccer", 0 )
+GAME( 1996, uballoon, 0, uballoon, uballoon, driver_device, 0, ROT0, "SunA (Unico license)", "Ultra Balloon", 0 )

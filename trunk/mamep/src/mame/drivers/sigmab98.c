@@ -175,6 +175,10 @@ public:
 	DECLARE_DRIVER_INIT(ucytokyu);
 	DECLARE_DRIVER_INIT(haekaka);
 	DECLARE_MACHINE_RESET(sammymdl);
+	UINT32 screen_update_sigmab98(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_sammymdl(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(gegege_vblank_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(sammymd1_irq);
 };
 
 
@@ -302,29 +306,29 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	}
 }
 
-static SCREEN_UPDATE_IND16(sigmab98)
+UINT32 sigmab98_state::screen_update_sigmab98(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_Z))
+	if (machine().input().code_pressed(KEYCODE_Z))
 	{
 		int msk = 0;
-		if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-		if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-		if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-		if (screen.machine().input().code_pressed(KEYCODE_R))	msk |= 8;
+		if (machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+		if (machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+		if (machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+		if (machine().input().code_pressed(KEYCODE_R))	msk |= 8;
 		if (msk != 0) layers_ctrl &= msk;
 	}
 #endif
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	// Draw from priority 3 (bottom, converted to a bitmask) to priority 0 (top)
-	draw_sprites(screen.machine(), bitmap, cliprect, layers_ctrl & 8);
-	draw_sprites(screen.machine(), bitmap, cliprect, layers_ctrl & 4);
-	draw_sprites(screen.machine(), bitmap, cliprect, layers_ctrl & 2);
-	draw_sprites(screen.machine(), bitmap, cliprect, layers_ctrl & 1);
+	draw_sprites(machine(), bitmap, cliprect, layers_ctrl & 8);
+	draw_sprites(machine(), bitmap, cliprect, layers_ctrl & 4);
+	draw_sprites(machine(), bitmap, cliprect, layers_ctrl & 2);
+	draw_sprites(machine(), bitmap, cliprect, layers_ctrl & 1);
 
 	return 0;
 }
@@ -680,13 +684,12 @@ WRITE8_MEMBER(sigmab98_state::vblank_w)
 	m_vblank = (m_vblank & ~0x03) | (data & 0x03);
 }
 
-static SCREEN_VBLANK( sammymdl )
+void sigmab98_state::screen_eof_sammymdl(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		sigmab98_state *state = screen.machine().driver_data<sigmab98_state>();
-		state->m_vblank &= ~0x01;
+		m_vblank &= ~0x01;
 	}
 }
 
@@ -1689,16 +1692,16 @@ const eeprom_interface eeprom_intf =
 	7				// reset_delay (otherwise gegege will hang when saving settings)
 };
 
-static INTERRUPT_GEN( gegege_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(sigmab98_state::gegege_vblank_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x5a);
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x5a);
 }
 
 static MACHINE_CONFIG_START( gegege, sigmab98_state )
 	MCFG_CPU_ADD("maincpu", Z80, 10000000)	// !! TAXAN KY-80, clock @X1? !!
 	MCFG_CPU_PROGRAM_MAP(gegege_mem_map)
 	MCFG_CPU_IO_MAP(gegege_io_map)
-	MCFG_CPU_VBLANK_INT("screen", gegege_vblank_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sigmab98_state,  gegege_vblank_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
@@ -1710,7 +1713,7 @@ static MACHINE_CONFIG_START( gegege, sigmab98_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	// game reads vblank state
 	MCFG_SCREEN_SIZE(0x200, 0x200)
 	MCFG_SCREEN_VISIBLE_AREA(0,0x140-1, 0,0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(sigmab98)
+	MCFG_SCREEN_UPDATE_DRIVER(sigmab98_state, screen_update_sigmab98)
 
 	MCFG_GFXDECODE(sigmab98)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -1764,8 +1767,8 @@ static MACHINE_CONFIG_START( sammymdl, sigmab98_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(0x140, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE_STATIC(sigmab98)
-	MCFG_SCREEN_VBLANK_STATIC(sammymdl)
+	MCFG_SCREEN_UPDATE_DRIVER(sigmab98_state, screen_update_sigmab98)
+	MCFG_SCREEN_VBLANK_DRIVER(sigmab98_state, screen_eof_sammymdl)
 
 	MCFG_GFXDECODE(sigmab98)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -1783,26 +1786,25 @@ MACHINE_CONFIG_END
                                  Animal Catch
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( sammymd1_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(sigmab98_state::sammymd1_irq)
 {
-	sigmab98_state *state = timer.machine().driver_data<sigmab98_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line_and_vector(0,HOLD_LINE, state->m_vblank_vector);
+		m_maincpu->set_input_line_and_vector(0,HOLD_LINE, m_vblank_vector);
 
 	if(scanline == 128)
-		state->m_maincpu->set_input_line_and_vector(0,HOLD_LINE, state->m_timer0_vector);
+		m_maincpu->set_input_line_and_vector(0,HOLD_LINE, m_timer0_vector);
 
 	if(scanline == 32)
-		state->m_maincpu->set_input_line_and_vector(0,HOLD_LINE, state->m_timer1_vector);
+		m_maincpu->set_input_line_and_vector(0,HOLD_LINE, m_timer1_vector);
 }
 
 static MACHINE_CONFIG_DERIVED( animalc, sammymdl )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP( animalc_map )
 	MCFG_CPU_IO_MAP( animalc_io )
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sammymd1_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sigmab98_state, sammymd1_irq, "screen", 0, 1)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -1813,7 +1815,7 @@ static MACHINE_CONFIG_DERIVED( haekaka, sammymdl )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP( haekaka_map )
 	MCFG_CPU_IO_MAP( haekaka_io )
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sammymd1_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sigmab98_state, sammymd1_irq, "screen", 0, 1)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -1824,7 +1826,7 @@ static MACHINE_CONFIG_DERIVED( itazuram, sammymdl )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP( itazuram_map )
 	MCFG_CPU_IO_MAP( itazuram_io )
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sammymd1_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sigmab98_state, sammymd1_irq, "screen", 0, 1)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -1835,7 +1837,7 @@ static MACHINE_CONFIG_DERIVED( pyenaget, sammymdl )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP( haekaka_map )
 	MCFG_CPU_IO_MAP( pyenaget_io )
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sammymd1_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sigmab98_state, sammymd1_irq, "screen", 0, 1)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -1846,7 +1848,7 @@ static MACHINE_CONFIG_DERIVED( tdoboon, sammymdl )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP( tdoboon_map )
 	MCFG_CPU_IO_MAP( tdoboon_io )
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sammymd1_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sigmab98_state, sammymd1_irq, "screen", 0, 1)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0,0x140-1, 0+4,0xf0+4-1)

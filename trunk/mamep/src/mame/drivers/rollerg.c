@@ -43,9 +43,9 @@ READ8_MEMBER(rollerg_state::rollerg_k051316_r)
 {
 
 	if (m_readzoomroms)
-		return k051316_rom_r(m_k051316, offset);
+		return k051316_rom_r(m_k051316, space, offset);
 	else
-		return k051316_r(m_k051316, offset);
+		return k051316_r(m_k051316, space, offset);
 }
 
 READ8_MEMBER(rollerg_state::rollerg_sound_r)
@@ -53,7 +53,7 @@ READ8_MEMBER(rollerg_state::rollerg_sound_r)
 	device_t *device = machine().device("k053260");
 	/* If the sound CPU is running, read the status, otherwise
        just make it pass the test */
-	return k053260_r(device, 2 + offset);
+	return k053260_r(device, space, 2 + offset);
 }
 
 WRITE8_MEMBER(rollerg_state::soundirq_w)
@@ -61,16 +61,15 @@ WRITE8_MEMBER(rollerg_state::soundirq_w)
 	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(rollerg_state::nmi_callback)
 {
-	rollerg_state *state = machine.driver_data<rollerg_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(rollerg_state::sound_arm_nmi_w)
 {
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
-	machine().scheduler().timer_set(attotime::from_usec(50), FUNC(nmi_callback));	/* kludge until the K053260 is emulated correctly */
+	machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(rollerg_state::nmi_callback),this));	/* kludge until the K053260 is emulated correctly */
 }
 
 READ8_MEMBER(rollerg_state::pip_r)
@@ -277,7 +276,7 @@ static MACHINE_CONFIG_START( rollerg, rollerg_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)		/* ? */
 	MCFG_CPU_PROGRAM_MAP(rollerg_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rollerg_state,  irq0_line_assert)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(rollerg_sound_map)
@@ -291,7 +290,7 @@ static MACHINE_CONFIG_START( rollerg, rollerg_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(rollerg)
+	MCFG_SCREEN_UPDATE_DRIVER(rollerg_state, screen_update_rollerg)
 
 	MCFG_PALETTE_LENGTH(1024)
 

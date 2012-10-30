@@ -241,6 +241,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_maygayv1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_maygayv1(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(vsync_interrupt);
 };
 
 
@@ -293,10 +296,9 @@ void maygayv1_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( maygayv1 )
+UINT32 maygayv1_state::screen_update_maygayv1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	maygayv1_state *state = screen.machine().driver_data<maygayv1_state>();
-	i82716_t &i82716 = state->m_i82716;
+	i82716_t &i82716 = m_i82716;
 	UINT16 *atable = &i82716.dram[VREG(ATBA)];
 	UINT16 *otable = &i82716.dram[VREG(ODTBA) & 0xfc00];  // both must be bank 0
 
@@ -310,7 +312,7 @@ static SCREEN_UPDATE_IND16( maygayv1 )
 	/* If screen output is disabled, fill with black */
 	if (!(VREG(VCR0) & VCR0_DEN))
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
@@ -424,13 +426,12 @@ static SCREEN_UPDATE_IND16( maygayv1 )
 	return 0;
 }
 
-static SCREEN_VBLANK( maygayv1 )
+void maygayv1_state::screen_eof_maygayv1(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		maygayv1_state *state = screen.machine().driver_data<maygayv1_state>();
-		i82716_t &i82716 = state->m_i82716;
+		i82716_t &i82716 = m_i82716;
 		// UCF
 		if (VREG(VCR0) & VCR0_UCF)
 		{
@@ -453,7 +454,7 @@ static SCREEN_VBLANK( maygayv1 )
 			for (i = 0; i < 16; ++i)
 			{
 				UINT16 entry = *palbase++;
-				palette_set_color_rgb(screen.machine(), entry & 0xf, pal4bit(entry >> 12), pal4bit(entry >> 8), pal4bit(entry >> 4));
+				palette_set_color_rgb(machine(), entry & 0xf, pal4bit(entry >> 12), pal4bit(entry >> 8), pal4bit(entry >> 4));
 			}
 		}
 	}
@@ -817,7 +818,7 @@ static INPUT_PORTS_START( screenpl )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 
 	PORT_START("STROBE2")
-	PORT_DIPNAME( 0x01, 0x01, "Teste")
+	PORT_DIPNAME( 0x01, 0x01, "Test")
 	PORT_DIPSETTING(	0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -1025,18 +1026,17 @@ void maygayv1_state::machine_reset()
 }
 
 
-static INTERRUPT_GEN( vsync_interrupt )
+INTERRUPT_GEN_MEMBER(maygayv1_state::vsync_interrupt)
 {
-	maygayv1_state *state = device->machine().driver_data<maygayv1_state>();
-	if (state->m_vsync_latch_preset)
-		device->machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
+	if (m_vsync_latch_preset)
+		machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 }
 
 
 static MACHINE_CONFIG_START( maygayv1, maygayv1_state )
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK / 2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vsync_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", maygayv1_state,  vsync_interrupt)
 
 	MCFG_CPU_ADD("soundcpu", I8052, SOUND_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(sound_prg)
@@ -1054,8 +1054,8 @@ static MACHINE_CONFIG_START( maygayv1, maygayv1_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(640, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640 - 1, 0, 300 - 1)
-	MCFG_SCREEN_UPDATE_STATIC(maygayv1)
-	MCFG_SCREEN_VBLANK_STATIC(maygayv1)
+	MCFG_SCREEN_UPDATE_DRIVER(maygayv1_state, screen_update_maygayv1)
+	MCFG_SCREEN_VBLANK_DRIVER(maygayv1_state, screen_eof_maygayv1)
 
 	MCFG_PALETTE_LENGTH(16)
 

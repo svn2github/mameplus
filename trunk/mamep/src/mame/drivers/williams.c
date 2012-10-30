@@ -519,23 +519,23 @@ static ADDRESS_MAP_START( defender_map, AS_PROGRAM, 8, williams_state )
 ADDRESS_MAP_END
 
 
-void defender_install_io_space(address_space *space)
+void defender_install_io_space(address_space &space)
 {
-	williams_state *state = space->machine().driver_data<williams_state>();
-	pia6821_device *pia_0 = space->machine().device<pia6821_device>("pia_0");
-	pia6821_device *pia_1 = space->machine().device<pia6821_device>("pia_1");
+	williams_state *state = space.machine().driver_data<williams_state>();
+	pia6821_device *pia_0 = space.machine().device<pia6821_device>("pia_0");
+	pia6821_device *pia_1 = space.machine().device<pia6821_device>("pia_1");
 
 	/* this routine dynamically installs the memory mapped above from c000-cfff */
-	space->install_write_bank    (0xc000, 0xc00f, 0, 0x03e0, "bank4");
-	space->install_write_handler    (0xc010, 0xc01f, 0, 0x03e0, write8_delegate(FUNC(williams_state::defender_video_control_w),state));
-	space->install_write_handler    (0xc3ff, 0xc3ff, write8_delegate(FUNC(williams_state::williams_watchdog_reset_w),state));
-	space->install_read_bank(0xc400, 0xc4ff, 0, 0x0300, "bank3");
-	space->install_write_handler(0xc400, 0xc4ff, 0, 0x0300, write8_delegate(FUNC(williams_state::williams_cmos_w),state));
-	space->install_read_handler     (0xc800, 0xcbff, 0, 0x03e0, read8_delegate(FUNC(williams_state::williams_video_counter_r),state));
-	space->install_readwrite_handler(0xcc00, 0xcc03, 0, 0x03e0, read8_delegate(FUNC(pia6821_device::read), pia_1), write8_delegate(FUNC(pia6821_device::write), pia_1));
-	space->install_readwrite_handler(0xcc04, 0xcc07, 0, 0x03e0, read8_delegate(FUNC(pia6821_device::read), pia_0), write8_delegate(FUNC(pia6821_device::write), pia_0));
-	state->membank("bank3")->set_base(space->machine().driver_data<williams_state>()->m_nvram);
-	state->membank("bank4")->set_base(space->machine().driver_data<williams_state>()->m_generic_paletteram_8);
+	space.install_write_bank    (0xc000, 0xc00f, 0, 0x03e0, "bank4");
+	space.install_write_handler    (0xc010, 0xc01f, 0, 0x03e0, write8_delegate(FUNC(williams_state::defender_video_control_w),state));
+	space.install_write_handler    (0xc3ff, 0xc3ff, write8_delegate(FUNC(williams_state::williams_watchdog_reset_w),state));
+	space.install_read_bank(0xc400, 0xc4ff, 0, 0x0300, "bank3");
+	space.install_write_handler(0xc400, 0xc4ff, 0, 0x0300, write8_delegate(FUNC(williams_state::williams_cmos_w),state));
+	space.install_read_handler     (0xc800, 0xcbff, 0, 0x03e0, read8_delegate(FUNC(williams_state::williams_video_counter_r),state));
+	space.install_readwrite_handler(0xcc00, 0xcc03, 0, 0x03e0, read8_delegate(FUNC(pia6821_device::read), pia_1), write8_delegate(FUNC(pia6821_device::write), pia_1));
+	space.install_readwrite_handler(0xcc04, 0xcc07, 0, 0x03e0, read8_delegate(FUNC(pia6821_device::read), pia_0), write8_delegate(FUNC(pia6821_device::write), pia_0));
+	state->membank("bank3")->set_base(space.machine().driver_data<williams_state>()->m_nvram);
+	state->membank("bank4")->set_base(space.machine().driver_data<williams_state>()->m_generic_paletteram_8);
 }
 
 
@@ -1443,15 +1443,15 @@ static MACHINE_CONFIG_START( defender, williams_state )
 	MCFG_MACHINE_RESET_OVERRIDE(williams_state,defender)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_TIMER_ADD("scan_timer", williams_va11_callback)
-	MCFG_TIMER_ADD("240_timer", williams_count240_callback)
+	MCFG_TIMER_DRIVER_ADD("scan_timer", williams_state, williams_va11_callback)
+	MCFG_TIMER_DRIVER_ADD("240_timer", williams_state, williams_count240_callback)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE | VIDEO_ALWAYS_UPDATE)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK*2/3, 512, 10, 304, 260, 7, 245)
-	MCFG_SCREEN_UPDATE_STATIC(williams)
+	MCFG_SCREEN_UPDATE_DRIVER(williams_state, screen_update_williams)
 
 	MCFG_VIDEO_START_OVERRIDE(williams_state,williams)
 
@@ -1590,7 +1590,7 @@ static MACHINE_CONFIG_DERIVED( blastkit, williams )
 	/* video hardware */
 	MCFG_VIDEO_START_OVERRIDE(williams_state,blaster)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(blaster)
+	MCFG_SCREEN_UPDATE_DRIVER(williams_state, screen_update_blaster)
 
 	/* pia */
 	MCFG_PIA6821_MODIFY("pia_0", williams_49way_muxed_pia_0_intf)
@@ -1633,8 +1633,8 @@ static MACHINE_CONFIG_START( williams2, williams_state )
 	MCFG_MACHINE_RESET_OVERRIDE(williams_state,williams2)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_TIMER_ADD("scan_timer", williams2_va11_callback)
-	MCFG_TIMER_ADD("254_timer", williams2_endscreen_callback)
+	MCFG_TIMER_DRIVER_ADD("scan_timer", williams_state, williams2_va11_callback)
+	MCFG_TIMER_DRIVER_ADD("254_timer", williams_state, williams2_endscreen_callback)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE | VIDEO_ALWAYS_UPDATE)
@@ -1643,7 +1643,7 @@ static MACHINE_CONFIG_START( williams2, williams_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK*2/3, 512, 8, 284, 260, 8, 248)
-	MCFG_SCREEN_UPDATE_STATIC(williams2)
+	MCFG_SCREEN_UPDATE_DRIVER(williams_state, screen_update_williams2)
 
 	MCFG_VIDEO_START_OVERRIDE(williams_state,williams2)
 
@@ -2744,7 +2744,7 @@ DRIVER_INIT_MEMBER(williams_state,mayday)
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_NONE, 0x0000);
 
 	/* install a handler to catch protection checks */
-	m_mayday_protection = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa190, 0xa191, read8_delegate(FUNC(williams_state::mayday_protection_r),this));
+	m_mayday_protection = machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa190, 0xa191, read8_delegate(FUNC(williams_state::mayday_protection_r),this));
 }
 
 
@@ -2778,7 +2778,7 @@ DRIVER_INIT_MEMBER(williams_state,bubbles)
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 
 	/* bubbles has a full 8-bit-wide CMOS */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xcc00, 0xcfff, write8_delegate(FUNC(williams_state::bubbles_cmos_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xcc00, 0xcfff, write8_delegate(FUNC(williams_state::bubbles_cmos_w),this));
 }
 
 
@@ -2813,27 +2813,27 @@ DRIVER_INIT_MEMBER(williams_state,spdball)
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 
 	/* add a third PIA */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc808, 0xc80b, read8_delegate(FUNC(pia6821_device::read), pia_3), write8_delegate(FUNC(pia6821_device::write), pia_3));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc808, 0xc80b, read8_delegate(FUNC(pia6821_device::read), pia_3), write8_delegate(FUNC(pia6821_device::write), pia_3));
 
 	/* install extra input handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc800, 0xc800, "AN0");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc801, 0xc801, "AN1");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc802, 0xc802, "AN2");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc803, 0xc803, "AN3");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0xc800, 0xc800, "AN0");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0xc801, 0xc801, "AN1");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0xc802, 0xc802, "AN2");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0xc803, 0xc803, "AN3");
 }
 
 
 DRIVER_INIT_MEMBER(williams_state,alienar)
 {
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xcbff, 0xcbff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xcbff, 0xcbff);
 }
 
 
 DRIVER_INIT_MEMBER(williams_state,alienaru)
 {
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xcbff, 0xcbff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xcbff, 0xcbff);
 }
 
 

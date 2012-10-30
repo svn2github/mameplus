@@ -124,42 +124,42 @@ The current set of Super Model is an example of type C
 #include "includes/galpanic.h"
 #include "includes/galpnipt.h"
 
-static SCREEN_VBLANK( galpanic )
+void galpanic_state::screen_eof_galpanic(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		device_t *pandora = screen.machine().device("pandora");
+		device_t *pandora = machine().device("pandora");
 		pandora_eof(pandora);
 	}
 }
 
-static TIMER_DEVICE_CALLBACK( galpanic_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(galpanic_state::galpanic_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	/* Pandora "sprite end dma" irq? */
 	if(scanline == 32)
-		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 
-static TIMER_DEVICE_CALLBACK( galhustl_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(galpanic_state::galhustl_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	/* Pandora "sprite end dma" irq? */
 	if(scanline == 32)
-		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0) // timer irq?
-		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -207,7 +207,7 @@ WRITE16_MEMBER(galpanic_state::galpanic_bgvideoram_mirror_w)
 	for(i = 0; i < 8; i++)
 	{
 		// or offset + i * 0x2000 ?
-		galpanic_bgvideoram_w(&space, offset * 8 + i, data, mem_mask);
+		galpanic_bgvideoram_w(space, offset * 8 + i, data, mem_mask);
 	}
 }
 
@@ -559,7 +559,7 @@ static MACHINE_CONFIG_START( galpanic, galpanic_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(galpanic_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", galpanic_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", galpanic_state, galpanic_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -567,8 +567,8 @@ static MACHINE_CONFIG_START( galpanic, galpanic_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 224-1)
-	MCFG_SCREEN_UPDATE_STATIC(galpanic)
-	MCFG_SCREEN_VBLANK_STATIC( galpanic )
+	MCFG_SCREEN_UPDATE_DRIVER(galpanic_state, screen_update_galpanic)
+	MCFG_SCREEN_VBLANK_DRIVER(galpanic_state, screen_eof_galpanic)
 
 	MCFG_GFXDECODE(galpanic)
 	MCFG_PALETTE_LENGTH(1024 + 32768)
@@ -611,7 +611,7 @@ static MACHINE_CONFIG_DERIVED( comad, galpanic )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(comad)
+	MCFG_SCREEN_UPDATE_DRIVER(galpanic_state, screen_update_comad)
 	MCFG_SCREEN_VBLANK_NONE()
 MACHINE_CONFIG_END
 
@@ -621,11 +621,11 @@ static MACHINE_CONFIG_DERIVED( supmodel, comad )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_CLOCK(12000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(supmodel_map)
-//  MCFG_TIMER_ADD_SCANLINE("scantimer", galpanic_scanline, "screen", 0, 1)
+	//MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", galpanic_state, galpanic_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(comad)
+	MCFG_SCREEN_UPDATE_DRIVER(galpanic_state, screen_update_comad)
 	MCFG_SCREEN_VBLANK_NONE()
 
 	/* sound hardware */
@@ -643,7 +643,7 @@ static MACHINE_CONFIG_DERIVED( fantsia2, comad )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(comad)
+	MCFG_SCREEN_UPDATE_DRIVER(galpanic_state, screen_update_comad)
 	MCFG_SCREEN_VBLANK_NONE()
 MACHINE_CONFIG_END
 
@@ -654,11 +654,11 @@ static MACHINE_CONFIG_DERIVED( galhustl, comad )
 	MCFG_CPU_CLOCK(12000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(galhustl_map)
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(galhustl_scanline)
+	MCFG_TIMER_DRIVER_CALLBACK(galpanic_state, galhustl_scanline)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(comad)
+	MCFG_SCREEN_UPDATE_DRIVER(galpanic_state, screen_update_comad)
 	MCFG_SCREEN_VBLANK_NONE()
 
 	/* sound hardware */
@@ -673,11 +673,11 @@ static MACHINE_CONFIG_DERIVED( zipzap, comad )
 	MCFG_CPU_CLOCK(12000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(zipzap_map)
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(galhustl_scanline)
+	MCFG_TIMER_DRIVER_CALLBACK(galpanic_state, galhustl_scanline)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(comad)
+	MCFG_SCREEN_UPDATE_DRIVER(galpanic_state, screen_update_comad)
 
 	/* sound hardware */
 	MCFG_OKIM6295_REPLACE("oki", 1056000, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified

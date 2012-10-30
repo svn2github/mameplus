@@ -117,6 +117,9 @@ public:
 	TILE_GET_INFO_MEMBER(get_pturn_bg_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_pturn(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(pturn_sub_intgen);
+	INTERRUPT_GEN_MEMBER(pturn_main_intgen);
 };
 
 
@@ -163,16 +166,15 @@ void pturn_state::video_start()
 	m_bgmap->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16(pturn)
+UINT32 pturn_state::screen_update_pturn(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	pturn_state *state = screen.machine().driver_data<pturn_state>();
-	UINT8 *spriteram = state->m_spriteram;
+	UINT8 *spriteram = m_spriteram;
 	int offs;
 	int sx, sy;
 	int flipx, flipy;
 
-	bitmap.fill(state->m_bgcolor, cliprect);
-	state->m_bgmap->draw(bitmap, cliprect, 0,0);
+	bitmap.fill(m_bgcolor, cliprect);
+	m_bgmap->draw(bitmap, cliprect, 0,0);
 	for ( offs = 0x80-4 ; offs >=0 ; offs -= 4)
 	{
 		sy=256-spriteram[offs]-16 ;
@@ -182,13 +184,13 @@ static SCREEN_UPDATE_IND16(pturn)
 		flipy=spriteram[offs+1]&0x80;
 
 
-		if (state->flip_screen_x())
+		if (flip_screen_x())
 		{
 			sx = 224 - sx;
 			flipx ^= 0x40;
 		}
 
-		if (state->flip_screen_y())
+		if (flip_screen_y())
 		{
 			flipy ^= 0x80;
 			sy = 224 - sy;
@@ -196,14 +198,14 @@ static SCREEN_UPDATE_IND16(pturn)
 
 		if(sx|sy)
 		{
-			drawgfx_transpen(bitmap, cliprect,screen.machine().gfx[2],
+			drawgfx_transpen(bitmap, cliprect,machine().gfx[2],
 			spriteram[offs+1] & 0x3f ,
 			(spriteram[offs+2] & 0x1f),
 			flipx, flipy,
 			sx,sy,0);
 		}
 	}
-	state->m_fgmap->draw(bitmap, cliprect, 0,0);
+	m_fgmap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
@@ -459,38 +461,36 @@ static INPUT_PORTS_START( pturn )
 	PORT_DIPSETTING(    0x80, DEF_STR( Japanese ) )
 INPUT_PORTS_END
 
-static INTERRUPT_GEN( pturn_sub_intgen )
+INTERRUPT_GEN_MEMBER(pturn_state::pturn_sub_intgen)
 {
-	pturn_state *state = device->machine().driver_data<pturn_state>();
-	if(state->m_nmi_sub)
+	if(m_nmi_sub)
 	{
-		device->execute().set_input_line(INPUT_LINE_NMI,PULSE_LINE);
+		device.execute().set_input_line(INPUT_LINE_NMI,PULSE_LINE);
 	}
 }
 
-static INTERRUPT_GEN( pturn_main_intgen )
+INTERRUPT_GEN_MEMBER(pturn_state::pturn_main_intgen)
 {
-	pturn_state *state = device->machine().driver_data<pturn_state>();
-	if (state->m_nmi_main)
+	if (m_nmi_main)
 	{
-		device->execute().set_input_line(INPUT_LINE_NMI,PULSE_LINE);
+		device.execute().set_input_line(INPUT_LINE_NMI,PULSE_LINE);
 	}
 }
 
 void pturn_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	soundlatch_clear_byte_w(*space,0,0);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	soundlatch_clear_byte_w(space,0,0);
 }
 
 static MACHINE_CONFIG_START( pturn, pturn_state )
 	MCFG_CPU_ADD("maincpu", Z80, 12000000/3)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", pturn_main_intgen)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pturn_state,  pturn_main_intgen)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 12000000/3)
 	MCFG_CPU_PROGRAM_MAP(sub_map)
-	MCFG_CPU_PERIODIC_INT(pturn_sub_intgen,3*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(pturn_state, pturn_sub_intgen, 3*60)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -498,7 +498,7 @@ static MACHINE_CONFIG_START( pturn, pturn_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pturn)
+	MCFG_SCREEN_UPDATE_DRIVER(pturn_state, screen_update_pturn)
 
 	MCFG_PALETTE_LENGTH(0x100)
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
@@ -555,8 +555,8 @@ ROM_END
 DRIVER_INIT_MEMBER(pturn_state,pturn)
 {
 	/*
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xc0dd, 0xc0dd, FUNC(pturn_protection_r));
-    machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xc0db, 0xc0db, FUNC(pturn_protection2_r));
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xc0dd, 0xc0dd, FUNC(pturn_protection_r));
+    machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xc0db, 0xc0db, FUNC(pturn_protection2_r));
     */
 }
 

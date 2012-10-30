@@ -113,7 +113,7 @@ READ8_MEMBER(gyruss_state::gyruss_portA_r)
 
 WRITE8_MEMBER(gyruss_state::gyruss_dac_w)
 {
-	discrete_sound_w(m_discrete, NODE(16), data);
+	discrete_sound_w(m_discrete, space, NODE(16), data);
 }
 
 WRITE8_MEMBER(gyruss_state::gyruss_irq_clear_w)
@@ -130,7 +130,8 @@ static void filter_w( device_t *device, int chip, int data )
 	{
 		/* low bit: 47000pF = 0.047uF */
 		/* high bit: 220000pF = 0.22uF */
-		discrete_sound_w(device, NODE(3 * chip + i + 21), data & 3);
+		address_space &space = device->machine().driver_data()->generic_space();
+		discrete_sound_w(device, space, NODE(3 * chip + i + 21), data & 3);
 		data >>= 2;
 	}
 }
@@ -495,20 +496,18 @@ void gyruss_state::machine_start()
 	save_item(NAME(m_slave_irq_mask));
 }
 
-static INTERRUPT_GEN( master_vblank_irq )
+INTERRUPT_GEN_MEMBER(gyruss_state::master_vblank_irq)
 {
-	gyruss_state *state = device->machine().driver_data<gyruss_state>();
 
-	if (state->m_master_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_master_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( slave_vblank_irq )
+INTERRUPT_GEN_MEMBER(gyruss_state::slave_vblank_irq)
 {
-	gyruss_state *state = device->machine().driver_data<gyruss_state>();
 
-	if (state->m_slave_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (m_slave_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( gyruss, gyruss_state )
@@ -516,11 +515,11 @@ static MACHINE_CONFIG_START( gyruss, gyruss_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", master_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gyruss_state,  master_vblank_irq)
 
 	MCFG_CPU_ADD("sub", M6809, MASTER_CLOCK/12)		/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", slave_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gyruss_state,  slave_vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/4)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(audio_cpu1_map)
@@ -536,7 +535,7 @@ static MACHINE_CONFIG_START( gyruss, gyruss_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(gyruss)
+	MCFG_SCREEN_UPDATE_DRIVER(gyruss_state, screen_update_gyruss)
 
 	MCFG_GFXDECODE(gyruss)
 	MCFG_PALETTE_LENGTH(16*4+16*16)

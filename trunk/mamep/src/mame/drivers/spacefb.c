@@ -124,15 +124,14 @@
  *************************************/
 
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(spacefb_state::interrupt_callback)
 {
-	spacefb_state *state = machine.driver_data<spacefb_state>();
 	int next_vpos;
 
 	/* compute vector and set the interrupt line */
-	int vpos = machine.primary_screen->vpos();
+	int vpos = machine().primary_screen->vpos();
 	UINT8 vector = 0xc7 | ((vpos & 0x40) >> 2) | ((~vpos & 0x40) >> 3);
-	machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, vector);
+	machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, vector);
 
 	/* set up for next interrupt */
 	if (vpos == SPACEFB_INT_TRIGGER_COUNT_1)
@@ -140,14 +139,14 @@ static TIMER_CALLBACK( interrupt_callback )
 	else
 		next_vpos = SPACEFB_INT_TRIGGER_COUNT_1;
 
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(next_vpos));
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(next_vpos));
 }
 
 
 static void create_interrupt_timer(running_machine &machine)
 {
 	spacefb_state *state = machine.driver_data<spacefb_state>();
-	state->m_interrupt_timer = machine.scheduler().timer_alloc(FUNC(interrupt_callback));
+	state->m_interrupt_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(spacefb_state::interrupt_callback),state));
 }
 
 
@@ -180,11 +179,11 @@ void spacefb_state::machine_start()
 
 void spacefb_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &space = machine().device("maincpu")->memory().space(AS_IO);
 	/* the 3 output ports are cleared on reset */
-	spacefb_port_0_w(*space, 0, 0);
-	spacefb_port_1_w(*space, 0, 0);
-	spacefb_port_2_w(*space, 0, 0);
+	spacefb_port_0_w(space, 0, 0);
+	spacefb_port_1_w(space, 0, 0);
+	spacefb_port_2_w(space, 0, 0);
 
 	start_interrupt_timer(machine());
 }
@@ -345,7 +344,7 @@ static MACHINE_CONFIG_START( spacefb, spacefb_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(SPACEFB_PIXEL_CLOCK, SPACEFB_HTOTAL, SPACEFB_HBEND, SPACEFB_HBSTART, SPACEFB_VTOTAL, SPACEFB_VBEND, SPACEFB_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(spacefb)
+	MCFG_SCREEN_UPDATE_DRIVER(spacefb_state, screen_update_spacefb)
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(spacefb_audio)

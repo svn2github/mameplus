@@ -369,9 +369,9 @@ WRITE16_MEMBER(ninjaw_state::ninjaw_sound_w)
 {
 
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, 0, data & 0xff);
+		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
 
 #ifdef MAME_DEBUG
 	if (data & 0xff00)
@@ -383,7 +383,7 @@ READ16_MEMBER(ninjaw_state::ninjaw_sound_r)
 {
 
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, 0) & 0xff));
+		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff));
 	else
 		return 0;
 }
@@ -413,9 +413,9 @@ WRITE8_MEMBER(ninjaw_state::ninjaw_pancontrol)
 WRITE16_MEMBER(ninjaw_state::tc0100scn_triple_screen_w)
 {
 
-	tc0100scn_word_w(m_tc0100scn_1, offset, data, mem_mask);
-	tc0100scn_word_w(m_tc0100scn_2, offset, data, mem_mask);
-	tc0100scn_word_w(m_tc0100scn_3, offset, data, mem_mask);
+	tc0100scn_word_w(m_tc0100scn_1, space, offset, data, mem_mask);
+	tc0100scn_word_w(m_tc0100scn_2, space, offset, data, mem_mask);
+	tc0100scn_word_w(m_tc0100scn_3, space, offset, data, mem_mask);
 }
 
 /***********************************************************
@@ -843,14 +843,14 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,16000000/2)	/* 8 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(ninjaw_master_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", ninjaw_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 16/4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(ninjaw_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000,16000000/2)	/* 8 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(ninjaw_slave_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", ninjaw_state,  irq4_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* CPU slices */
 
@@ -867,21 +867,21 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjaw_left)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_left)
 
 	MCFG_SCREEN_ADD("mscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjaw_middle)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_middle)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjaw_right)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_right)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2_tc0100scn_intf_l)
@@ -923,14 +923,14 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,16000000/2)	/* 8 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(darius2_master_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", ninjaw_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)	/* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(ninjaw_sound_map)
 
 	MCFG_CPU_ADD("sub", M68000,16000000/2)	/* 8 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(darius2_slave_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", ninjaw_state,  irq4_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* CPU slices */
 
@@ -947,21 +947,21 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjaw_left)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_left)
 
 	MCFG_SCREEN_ADD("mscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjaw_middle)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_middle)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ninjaw_right)
+	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_right)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2_tc0100scn_intf_l)

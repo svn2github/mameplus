@@ -114,15 +114,14 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack2_w);
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
 	DECLARE_WRITE_LINE_MEMBER(gamecstl_pic8259_1_set_int_line);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 	DECLARE_READ8_MEMBER(get_slave_ack);
 	DECLARE_DRIVER_INIT(gamecstl);
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_gamecstl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-static void ide_interrupt(device_t *device, int state);
 
 
 static const rgb_t cga_palette[16] =
@@ -162,12 +161,11 @@ static void draw_char(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_eleme
 	}
 }
 
-static SCREEN_UPDATE_IND16(gamecstl)
+UINT32 gamecstl_state::screen_update_gamecstl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	gamecstl_state *state = screen.machine().driver_data<gamecstl_state>();
 	int i, j;
-	gfx_element *gfx = screen.machine().gfx[0];
-	UINT32 *cga = state->m_cga_ram;
+	gfx_element *gfx = machine().gfx[0];
+	UINT32 *cga = m_cga_ram;
 	int index = 0;
 
 	bitmap.fill(0, cliprect);
@@ -192,13 +190,13 @@ static SCREEN_UPDATE_IND16(gamecstl)
 READ8_MEMBER(gamecstl_state::at_dma8237_2_r)
 {
 	device_t *device = machine().device("dma8237_2");
-	return i8237_r(device, offset / 2);
+	return i8237_r(device, space, offset / 2);
 }
 
 WRITE8_MEMBER(gamecstl_state::at_dma8237_2_w)
 {
 	device_t *device = machine().device("dma8237_2");
-	i8237_w(device, offset / 2, data);
+	i8237_w(device, space, offset / 2, data);
 }
 
 // Intel 82439TX System Controller (MXTC)
@@ -367,26 +365,26 @@ WRITE32_MEMBER(gamecstl_state::pnp_data_w)
 READ32_MEMBER(gamecstl_state::ide_r)
 {
 	device_t *device = machine().device("ide");
-	return ide_controller32_r(device, 0x1f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, space, 0x1f0/4 + offset, mem_mask);
 }
 
 WRITE32_MEMBER(gamecstl_state::ide_w)
 {
 	device_t *device = machine().device("ide");
-	ide_controller32_w(device, 0x1f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, space, 0x1f0/4 + offset, data, mem_mask);
 }
 
 READ32_MEMBER(gamecstl_state::fdc_r)
 {
 	device_t *device = machine().device("ide");
-	return ide_controller32_r(device, 0x3f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, space, 0x3f0/4 + offset, mem_mask);
 }
 
 WRITE32_MEMBER(gamecstl_state::fdc_w)
 {
 	device_t *device = machine().device("ide");
 	//mame_printf_debug("FDC: write %08X, %08X, %08X\n", data, offset, mem_mask);
-	ide_controller32_w(device, 0x3f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, space, 0x3f0/4 + offset, data, mem_mask);
 }
 
 
@@ -687,13 +685,6 @@ static const struct pit8253_config gamecstl_pit8254_config =
 	}
 };
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 
 	/* basic machine hardware */
@@ -716,7 +707,8 @@ static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 
 	MCFG_PIC8259_ADD( "pic8259_2", gamecstl_pic8259_2_config )
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, gamecstl_state, ide_interrupt))
 
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 
@@ -726,7 +718,7 @@ static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 199)
-	MCFG_SCREEN_UPDATE_STATIC(gamecstl)
+	MCFG_SCREEN_UPDATE_DRIVER(gamecstl_state, screen_update_gamecstl)
 
 	MCFG_GFXDECODE(CGA)
 	MCFG_PALETTE_LENGTH(16)
@@ -745,10 +737,9 @@ static void keyboard_interrupt(running_machine &machine, int state)
 	pic8259_ir1_w(drvstate->m_pic8259_1, state);
 }
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(gamecstl_state::ide_interrupt)
 {
-	gamecstl_state *drvstate = device->machine().driver_data<gamecstl_state>();
-	pic8259_ir6_w(drvstate->m_pic8259_2, state);
+	pic8259_ir6_w(m_pic8259_2, state);
 }
 
 static int gamecstl_get_out2(running_machine &machine)

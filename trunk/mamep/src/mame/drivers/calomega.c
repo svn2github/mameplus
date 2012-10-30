@@ -2736,7 +2736,7 @@ static MACHINE_CONFIG_START( sys903, calomega_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, CPU_CLOCK)	/* confirmed */
 	MCFG_CPU_PROGRAM_MAP(sys903_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", calomega_state,  irq0_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -2749,7 +2749,7 @@ static MACHINE_CONFIG_START( sys903, calomega_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE((39+1)*8, (31+1)*8)                  /* Taken from MC6845 init, registers 00 & 04. Normally programmed with (value-1) */
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 31*8-1)    /* Taken from MC6845 init, registers 01 & 06 */
-	MCFG_SCREEN_UPDATE_STATIC(calomega)
+	MCFG_SCREEN_UPDATE_DRIVER(calomega_state, screen_update_calomega)
 
 	MCFG_GFXDECODE(calomega)
 	MCFG_PALETTE_LENGTH(1024)

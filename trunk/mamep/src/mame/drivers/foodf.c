@@ -104,16 +104,15 @@ WRITE16_MEMBER(foodf_state::nvram_recall_w)
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void foodf_state::update_interrupts()
 {
-	foodf_state *state = machine.driver_data<foodf_state>();
-	machine.device("maincpu")->execute().set_input_line(1, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(2, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(3, state->m_scanline_int_state && state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(1, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(2, m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(3, m_scanline_int_state && m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static TIMER_DEVICE_CALLBACK( scanline_update )
+TIMER_DEVICE_CALLBACK_MEMBER(foodf_state::scanline_update_timer)
 {
 	int scanline = param;
 
@@ -123,7 +122,7 @@ static TIMER_DEVICE_CALLBACK( scanline_update )
        mystery yet */
 
 	/* INT 1 is on 32V */
-	atarigen_scanline_int_gen(timer.machine().device("maincpu"));
+	scanline_int_gen(*subdevice("maincpu"));
 
 	/* advance to the next interrupt */
 	scanline += 64;
@@ -131,20 +130,19 @@ static TIMER_DEVICE_CALLBACK( scanline_update )
 		scanline = 0;
 
 	/* set a timer for it */
-	timer.adjust(timer.machine().primary_screen->time_until_pos(scanline), scanline);
+	timer.adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
 MACHINE_START_MEMBER(foodf_state,foodf)
 {
-	atarigen_init(machine());
+	atarigen_state::machine_start();
 	save_item(NAME(m_whichport));
 }
 
 
 MACHINE_RESET_MEMBER(foodf_state,foodf)
 {
-	atarigen_interrupt_reset(this, update_interrupts);
 	timer_device *scan_timer = machine().device<timer_device>("scan_timer");
 	scan_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
@@ -164,9 +162,9 @@ WRITE8_MEMBER(foodf_state::digital_w)
 	m_nvram->store(data & 0x02);
 
 	if (!(data & 0x04))
-		atarigen_scanline_int_ack_w(&space,0,0,0xffff);
+		scanline_int_ack_w(space,0,0);
 	if (!(data & 0x08))
-		atarigen_video_int_ack_w(&space,0,0,0xffff);
+		video_int_ack_w(space,0,0);
 
 	output_set_led_value(0, (data >> 4) & 1);
 	output_set_led_value(1, (data >> 5) & 1);
@@ -211,7 +209,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, foodf_state )
 	AM_RANGE(0x014000, 0x014fff) AM_MIRROR(0x3e3000) AM_RAM
 	AM_RANGE(0x018000, 0x018fff) AM_MIRROR(0x3e3000) AM_RAM
 	AM_RANGE(0x01c000, 0x01c0ff) AM_MIRROR(0x3e3f00) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x800000, 0x8007ff) AM_MIRROR(0x03f800) AM_RAM_WRITE_LEGACY(atarigen_playfield_w) AM_SHARE("playfield")
+	AM_RANGE(0x800000, 0x8007ff) AM_MIRROR(0x03f800) AM_RAM_WRITE(playfield_w) AM_SHARE("playfield")
 	AM_RANGE(0x900000, 0x9001ff) AM_MIRROR(0x03fe00) AM_DEVREADWRITE8("nvram", x2212_device, read, write, 0x00ff)
 	AM_RANGE(0x940000, 0x940007) AM_MIRROR(0x023ff8) AM_READ(analog_r)
 	AM_RANGE(0x944000, 0x944007) AM_MIRROR(0x023ff8) AM_WRITE(analog_w)
@@ -354,7 +352,7 @@ static MACHINE_CONFIG_START( foodf, foodf_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
+	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
 
 	MCFG_MACHINE_START_OVERRIDE(foodf_state,foodf)
 	MCFG_MACHINE_RESET_OVERRIDE(foodf_state,foodf)
@@ -363,7 +361,7 @@ static MACHINE_CONFIG_START( foodf, foodf_state )
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 
-	MCFG_TIMER_ADD("scan_timer", scanline_update)
+	MCFG_TIMER_DRIVER_ADD("scan_timer", foodf_state, scanline_update_timer)
 
 	/* video hardware */
 	MCFG_GFXDECODE(foodf)
@@ -371,7 +369,7 @@ static MACHINE_CONFIG_START( foodf, foodf_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 384, 0, 256, 259, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(foodf)
+	MCFG_SCREEN_UPDATE_DRIVER(foodf_state, screen_update_foodf)
 
 	MCFG_VIDEO_START_OVERRIDE(foodf_state,foodf)
 

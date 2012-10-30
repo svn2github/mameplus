@@ -130,9 +130,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bankp_io_map, AS_IO, 8, bankp_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0") AM_DEVWRITE("sn1", sn76489_new_device, write)
-	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1") AM_DEVWRITE("sn2", sn76489_new_device, write)
-	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN2") AM_DEVWRITE("sn3", sn76489_new_device, write)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0") AM_DEVWRITE("sn1", sn76489_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1") AM_DEVWRITE("sn2", sn76489_device, write)
+	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN2") AM_DEVWRITE("sn3", sn76489_device, write)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("DSW1")
 	AM_RANGE(0x05, 0x05) AM_WRITE(bankp_scroll_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(bankp_out_w)
@@ -289,12 +289,11 @@ void bankp_state::machine_reset()
 	m_priority = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(bankp_state::vblank_irq)
 {
-	bankp_state *state = device->machine().driver_data<bankp_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( bankp, bankp_state )
@@ -303,13 +302,13 @@ static MACHINE_CONFIG_START( bankp, bankp_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)
 	MCFG_CPU_PROGRAM_MAP(bankp_map)
 	MCFG_CPU_IO_MAP(bankp_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bankp_state,  vblank_irq)
 
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(bankp)
+	MCFG_SCREEN_UPDATE_DRIVER(bankp_state, screen_update_bankp)
 
 	MCFG_GFXDECODE(bankp)
 	MCFG_PALETTE_LENGTH(32*4+16*8)
@@ -318,15 +317,15 @@ static MACHINE_CONFIG_START( bankp, bankp_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489_NEW, MASTER_CLOCK/6)
+	MCFG_SOUND_ADD("sn1", SN76489, MASTER_CLOCK/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489_NEW, MASTER_CLOCK/6)
+	MCFG_SOUND_ADD("sn2", SN76489, MASTER_CLOCK/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489_NEW, MASTER_CLOCK/6)
+	MCFG_SOUND_ADD("sn3", SN76489, MASTER_CLOCK/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

@@ -425,7 +425,7 @@ static SOUND_START( mario )
 	if (audiocpu != NULL && audiocpu->type() != Z80)
 	{
 		state->m_eabank = "bank1";
-		audiocpu->memory().space(AS_PROGRAM)->install_read_bank(0x000, 0x7ff, "bank1");
+		audiocpu->memory().space(AS_PROGRAM).install_read_bank(0x000, 0x7ff, "bank1");
 		state->membank("bank1")->configure_entry(0, state->memregion("audiocpu")->base());
 	    state->membank("bank1")->configure_entry(1, state->memregion("audiocpu")->base() + 0x1000);
 	}
@@ -437,19 +437,19 @@ static SOUND_START( mario )
 static SOUND_RESET( mario )
 {
 	mario_state	*state = machine.driver_data<mario_state>();
-	address_space *space = machine.device("audiocpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("audiocpu")->memory().space(AS_PROGRAM);
 
 #if USE_8039
     set_ea(machine, 1);
 #endif
 
     /* FIXME: convert to latch8 */
-	state->soundlatch_clear_byte_w(*space, 0, 0);
-	state->soundlatch2_clear_byte_w(*space, 0, 0);
-	state->soundlatch3_clear_byte_w(*space, 0, 0);
-	state->soundlatch4_clear_byte_w(*space, 0, 0);
-	state->I8035_P1_W(*space, 0x00); /* Input port */
-	I8035_P2_W(*space, 0xff); /* Port is in high impedance state after reset */
+	state->soundlatch_clear_byte_w(space, 0, 0);
+	state->soundlatch2_clear_byte_w(space, 0, 0);
+	state->soundlatch3_clear_byte_w(space, 0, 0);
+	state->soundlatch4_clear_byte_w(space, 0, 0);
+	state->I8035_P1_W(space, 0x00); /* Input port */
+	I8035_P2_W(space, 0xff); /* Port is in high impedance state after reset */
 
 	state->m_last = 0;
 }
@@ -492,9 +492,9 @@ READ8_MEMBER(mario_state::mario_sh_tune_r)
 		return (SND[(0x1000 + (p2 & 0x0f) * 256 + offset) & mask]);
 }
 
-static WRITE8_DEVICE_HANDLER( mario_sh_sound_w )
+WRITE8_MEMBER(mario_state::mario_sh_sound_w)
 {
-	discrete_sound_w(device, DS_DAC, data);
+	discrete_sound_w(m_discrete, space, DS_DAC, data);
 }
 
 WRITE8_MEMBER(mario_state::mario_sh_p1_w)
@@ -534,15 +534,15 @@ WRITE8_MEMBER(mario_state::mario_sh_tuneselect_w)
 /* Sound 0 and 1 are pulsed !*/
 
 /* Mario running sample */
-WRITE8_DEVICE_HANDLER( mario_sh1_w )
+WRITE8_MEMBER(mario_state::mario_sh1_w)
 {
-	discrete_sound_w(device, DS_SOUND0_INP, 0);
+	discrete_sound_w(m_discrete, space, DS_SOUND0_INP, 0);
 }
 
 /* Luigi running sample */
-WRITE8_DEVICE_HANDLER( mario_sh2_w )
+WRITE8_MEMBER(mario_state::mario_sh2_w)
 {
-	discrete_sound_w(device, DS_SOUND1_INP, 0);
+	discrete_sound_w(m_discrete, space, DS_SOUND1_INP, 0);
 }
 
 /* Misc samples */
@@ -576,7 +576,7 @@ WRITE8_MEMBER(mario_state::mario_sh3_w)
 			I8035_P1_W_AH(space, 3, data & 1);
 			break;
 		case 7: /* skid */
-			discrete_sound_w(machine().device("discrete"), DS_SOUND7_INP, data & 1);
+			discrete_sound_w(machine().device("discrete"), space, DS_SOUND7_INP, data & 1);
 			break;
 	}
 }
@@ -593,7 +593,7 @@ static ADDRESS_MAP_START( mario_sound_map, AS_PROGRAM, 8, mario_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mario_sound_io_map, AS_IO, 8, mario_state )
-	AM_RANGE(0x00, 0xff) AM_READ(mario_sh_tune_r) AM_DEVWRITE_LEGACY("discrete", mario_sh_sound_w)
+	AM_RANGE(0x00, 0xff) AM_READ(mario_sh_tune_r) AM_WRITE(mario_sh_sound_w)
 	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_READWRITE(mario_sh_p1_r, mario_sh_p1_w)
 	AM_RANGE(MCS48_PORT_P2, MCS48_PORT_P2) AM_READWRITE(mario_sh_p2_r, mario_sh_p2_w)
 	AM_RANGE(MCS48_PORT_T0, MCS48_PORT_T0) AM_READ(mario_sh_t0_r)

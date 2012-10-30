@@ -95,19 +95,18 @@ TODO:
 #define MCU_CLOCK			(XTAL_12MHz/4)
 
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(lkage_state::nmi_callback)
 {
-	lkage_state *state = machine.driver_data<lkage_state>();
-	if (state->m_sound_nmi_enable)
-		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_sound_nmi_enable)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		state->m_pending_nmi = 1;
+		m_pending_nmi = 1;
 }
 
 WRITE8_MEMBER(lkage_state::lkage_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().scheduler().synchronize(FUNC(nmi_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(lkage_state::nmi_callback),this), data);
 }
 
 WRITE8_MEMBER(lkage_state::lkage_sh_nmi_disable_w)
@@ -556,7 +555,7 @@ static MACHINE_CONFIG_START( lkage, lkage_state )
 	MCFG_CPU_ADD("maincpu", Z80, MAIN_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lkage_map)
 	MCFG_CPU_IO_MAP(lkage_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lkage_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lkage_sound_map)
@@ -572,7 +571,7 @@ static MACHINE_CONFIG_START( lkage, lkage_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lkage)
+	MCFG_SCREEN_UPDATE_DRIVER(lkage_state, screen_update_lkage)
 
 	MCFG_GFXDECODE(lkage)
 	MCFG_PALETTE_LENGTH(1024)
@@ -602,7 +601,7 @@ static MACHINE_CONFIG_START( lkageb, lkage_state )
 	MCFG_CPU_ADD("maincpu", Z80,MAIN_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lkage_map)
 	MCFG_CPU_IO_MAP(lkage_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lkage_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lkage_sound_map)
@@ -615,7 +614,7 @@ static MACHINE_CONFIG_START( lkageb, lkage_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lkage)
+	MCFG_SCREEN_UPDATE_DRIVER(lkage_state, screen_update_lkage)
 
 	MCFG_GFXDECODE(lkage)
 	MCFG_PALETTE_LENGTH(1024)
@@ -960,9 +959,9 @@ DRIVER_INIT_MEMBER(lkage_state,lkage)
 
 DRIVER_INIT_MEMBER(lkage_state,lkageb)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf062, 0xf062, read8_delegate(FUNC(lkage_state::fake_mcu_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf087, 0xf087, read8_delegate(FUNC(lkage_state::fake_status_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xf062, 0xf062, write8_delegate(FUNC(lkage_state::fake_mcu_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf062, 0xf062, read8_delegate(FUNC(lkage_state::fake_mcu_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf087, 0xf087, read8_delegate(FUNC(lkage_state::fake_status_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xf062, 0xf062, write8_delegate(FUNC(lkage_state::fake_mcu_w),this));
 	m_sprite_dx=0;
 }
 

@@ -237,9 +237,9 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static INTERRUPT_GEN( raiden_interrupt )
+INTERRUPT_GEN_MEMBER(raiden_state::raiden_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);	/* VBL */
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);	/* VBL */
 }
 
 static MACHINE_CONFIG_START( raiden, raiden_state )
@@ -247,11 +247,11 @@ static MACHINE_CONFIG_START( raiden, raiden_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V30,XTAL_20MHz/2) /* NEC V30 CPU, 20MHz verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", raiden_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", raiden_state,  raiden_interrupt)
 
 	MCFG_CPU_ADD("sub", V30,XTAL_20MHz/2) /* NEC V30 CPU, 20MHz verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sub_map)
-	MCFG_CPU_VBLANK_INT("screen", raiden_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", raiden_state,  raiden_interrupt)
 
 	SEIBU_SOUND_SYSTEM_CPU(XTAL_14_31818MHz/4) /* verified on pcb */
 
@@ -267,7 +267,7 @@ static MACHINE_CONFIG_START( raiden, raiden_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(raiden)
+	MCFG_SCREEN_UPDATE_DRIVER(raiden_state, screen_update_raiden)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(raiden)
@@ -606,7 +606,7 @@ static void common_decrypt(running_machine &machine)
 DRIVER_INIT_MEMBER(raiden_state,raidena)
 {
 #ifdef SYNC_HACK
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4008, 0x4009, FUNC(sub_cpu_spin_r));
+	machine().device("sub")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x4008, 0x4009, FUNC(sub_cpu_spin_r));
 #endif
 }
 

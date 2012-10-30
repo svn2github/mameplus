@@ -319,6 +319,9 @@ public:
 	DECLARE_DRIVER_INIT(coolridr);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_coolridr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(system_h1);
+	TIMER_DEVICE_CALLBACK_MEMBER(system_h1_sub);
 };
 
 
@@ -331,45 +334,44 @@ void coolridr_state::video_start()
 	m_test_offs = 0x2000;
 }
 
-static SCREEN_UPDATE_RGB32(coolridr)
+UINT32 coolridr_state::screen_update_coolridr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	coolridr_state *state = screen.machine().driver_data<coolridr_state>();
 	/* planes seems to basically be at 0x8000 and 0x28000... */
-	gfx_element *gfx = screen.machine().gfx[2];
+	gfx_element *gfx = machine().gfx[2];
 	UINT32 count;
 	int y,x;
 
 
-	if(screen.machine().input().code_pressed(KEYCODE_Z))
-		state->m_test_offs+=4;
+	if(machine().input().code_pressed(KEYCODE_Z))
+		m_test_offs+=4;
 
-	if(screen.machine().input().code_pressed(KEYCODE_X))
-		state->m_test_offs-=4;
+	if(machine().input().code_pressed(KEYCODE_X))
+		m_test_offs-=4;
 
-	if(screen.machine().input().code_pressed(KEYCODE_C))
-		state->m_test_offs+=0x40;
+	if(machine().input().code_pressed(KEYCODE_C))
+		m_test_offs+=0x40;
 
-	if(screen.machine().input().code_pressed(KEYCODE_V))
-		state->m_test_offs-=0x40;
+	if(machine().input().code_pressed(KEYCODE_V))
+		m_test_offs-=0x40;
 
-	if(screen.machine().input().code_pressed(KEYCODE_B))
-		state->m_test_offs+=0x400;
+	if(machine().input().code_pressed(KEYCODE_B))
+		m_test_offs+=0x400;
 
-	if(screen.machine().input().code_pressed(KEYCODE_N))
-		state->m_test_offs-=0x400;
+	if(machine().input().code_pressed(KEYCODE_N))
+		m_test_offs-=0x400;
 
-	if(screen.machine().input().code_pressed_once(KEYCODE_A))
-		state->m_color++;
+	if(machine().input().code_pressed_once(KEYCODE_A))
+		m_color++;
 
-	if(screen.machine().input().code_pressed_once(KEYCODE_S))
-		state->m_color--;
+	if(machine().input().code_pressed_once(KEYCODE_S))
+		m_color--;
 
-	if(state->m_test_offs > 0x100000*4)
-		state->m_test_offs = 0;
+	if(m_test_offs > 0x100000*4)
+		m_test_offs = 0;
 
-	count = state->m_test_offs/4;
+	count = m_test_offs/4;
 
-	popmessage("%08x %04x",state->m_test_offs,state->m_color);
+	popmessage("%08x %04x",m_test_offs,m_color);
 
 	for (y=0;y<64;y++)
 	{
@@ -377,18 +379,18 @@ static SCREEN_UPDATE_RGB32(coolridr)
 		{
 			int tile;
 
-			tile = (state->m_h1_vram[count] & 0x0fff0000) >> 16;
-			drawgfx_opaque(bitmap,cliprect,gfx,tile,state->m_color,0,0,(x+0)*16,y*16);
+			tile = (m_h1_vram[count] & 0x0fff0000) >> 16;
+			drawgfx_opaque(bitmap,cliprect,gfx,tile,m_color,0,0,(x+0)*16,y*16);
 
-			tile = (state->m_h1_vram[count] & 0x00000fff) >> 0;
-			drawgfx_opaque(bitmap,cliprect,gfx,tile,state->m_color,0,0,(x+1)*16,y*16);
+			tile = (m_h1_vram[count] & 0x00000fff) >> 0;
+			drawgfx_opaque(bitmap,cliprect,gfx,tile,m_color,0,0,(x+1)*16,y*16);
 
 			count++;
 		}
 	}
 
-	copybitmap_trans(bitmap, state->m_temp_bitmap_sprites, 0, 0, 0, 0, cliprect, 0);
-	state->m_temp_bitmap_sprites.fill(0, cliprect);
+	copybitmap_trans(bitmap, m_temp_bitmap_sprites, 0, 0, 0, 0, cliprect, 0);
+	m_temp_bitmap_sprites.fill(0, cliprect);
 
 
 	return 0;
@@ -593,9 +595,9 @@ WRITE32_MEMBER(coolridr_state::sysh1_pal_w)
 
 
 /* FIXME: this seems to do a hell lot of stuff, it's not ST-V SCU but still somewhat complex :/ */
-static void sysh1_dma_transfer( address_space *space, UINT16 dma_index )
+static void sysh1_dma_transfer( address_space &space, UINT16 dma_index )
 {
-	coolridr_state *state = space->machine().driver_data<coolridr_state>();
+	coolridr_state *state = space.machine().driver_data<coolridr_state>();
 	UINT32 src,dst,size,type,s_i;
 	UINT8 end_dma_mark;
 
@@ -644,14 +646,14 @@ static void sysh1_dma_transfer( address_space *space, UINT16 dma_index )
 			//size/=2;
 			if((src & 0xff00000) == 0x3e00000)
 				return; //FIXME: kludge to avoid palette corruption
-			//debugger_break(space->machine());
+			//debugger_break(space.machine());
 		}
 
 		if(type == 0xc || type == 0xd || type == 0xe)
 		{
 			for(s_i=0;s_i<size;s_i+=4)
 			{
-				space->write_dword(dst,space->read_dword(src));
+				space.write_dword(dst,space.read_dword(src));
 				dst+=4;
 				src+=4;
 			}
@@ -676,7 +678,7 @@ WRITE32_MEMBER(coolridr_state::sysh1_dma_w)
 	if(offset*4 == 0x000)
 	{
 		if((m_framebuffer_vram[offset] & 0xff00000) == 0xfe00000)
-			sysh1_dma_transfer(&space, m_framebuffer_vram[offset] & 0xffff);
+			sysh1_dma_transfer(space, m_framebuffer_vram[offset] & 0xffff);
 	}
 }
 
@@ -1137,22 +1139,21 @@ INPUT_PORTS_END
 
 
 // IRQs 4, 6 (& 8?) are valid on SH-2
-static INTERRUPT_GEN( system_h1 )
+INTERRUPT_GEN_MEMBER(coolridr_state::system_h1)
 {
-	device->execute().set_input_line(4, HOLD_LINE);
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 //IRQs 10,12 and 14 are valid on SH-1 instead
-static TIMER_DEVICE_CALLBACK( system_h1_sub )
+TIMER_DEVICE_CALLBACK_MEMBER(coolridr_state::system_h1_sub)
 {
-	coolridr_state *state = timer.machine().driver_data<coolridr_state>();
 	int scanline = param;
 
 	switch(scanline)
 	{
-    	case 512:state->m_subcpu->set_input_line(0xa, HOLD_LINE); break;
-        case 256:state->m_subcpu->set_input_line(0xc, HOLD_LINE); break;
-        case 0:state->m_subcpu->set_input_line(0xe, HOLD_LINE); break;
+    	case 512:m_subcpu->set_input_line(0xa, HOLD_LINE); break;
+        case 256:m_subcpu->set_input_line(0xc, HOLD_LINE); break;
+        case 0:m_subcpu->set_input_line(0xe, HOLD_LINE); break;
 	}
 }
 
@@ -1165,14 +1166,14 @@ void coolridr_state::machine_reset()
 static MACHINE_CONFIG_START( coolridr, coolridr_state )
 	MCFG_CPU_ADD("maincpu", SH2, 28000000)	// 28 mhz
 	MCFG_CPU_PROGRAM_MAP(system_h1_map)
-	MCFG_CPU_VBLANK_INT("screen",system_h1)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", coolridr_state, system_h1)
 
 	MCFG_CPU_ADD("soundcpu", M68000, 11289600) //256 x 44100 Hz = 11.2896 MHz
 	MCFG_CPU_PROGRAM_MAP(system_h1_sound_map)
 
 	MCFG_CPU_ADD("sub", SH1, 16000000)	// SH7032 HD6417032F20!! 16 mhz
 	MCFG_CPU_PROGRAM_MAP(coolridr_submap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", system_h1_sub, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", coolridr_state, system_h1_sub, "screen", 0, 1)
 
 	MCFG_GFXDECODE(coolridr)
 
@@ -1181,7 +1182,7 @@ static MACHINE_CONFIG_START( coolridr, coolridr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(128*8+22, 64*8+44)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 128*8-1, 0*8, 64*8-1) //TODO: these are just two different screens
-	MCFG_SCREEN_UPDATE_STATIC(coolridr)
+	MCFG_SCREEN_UPDATE_DRIVER(coolridr_state, screen_update_coolridr)
 
 	MCFG_PALETTE_LENGTH(0x10000)
 
@@ -1251,8 +1252,8 @@ READ32_MEMBER(coolridr_state::coolridr_hack2_r)
 
 DRIVER_INIT_MEMBER(coolridr_state,coolridr)
 {
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x60d88a4, 0x060d88a7, FUNC(coolridr_hack1_r) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x60d8894, 0x060d8897, read32_delegate(FUNC(coolridr_state::coolridr_hack2_r), this));
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x60d88a4, 0x060d88a7, FUNC(coolridr_hack1_r) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60d8894, 0x060d8897, read32_delegate(FUNC(coolridr_state::coolridr_hack2_r), this));
 }
 
 GAME( 1995, coolridr,    0, coolridr,    coolridr, coolridr_state,    coolridr, ROT0,  "Sega", "Cool Riders (US)",GAME_NOT_WORKING|GAME_NO_SOUND )

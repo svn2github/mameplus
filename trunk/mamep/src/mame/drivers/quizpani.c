@@ -197,8 +197,8 @@ static const nmk112_interface quizpani_nmk112_intf =
 static MACHINE_CONFIG_START( quizpani, quizpani_state )
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(quizpani_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold,164) // music tempo
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", quizpani_state,  irq4_line_hold)
+	MCFG_CPU_PERIODIC_INT_DRIVER(quizpani_state, irq1_line_hold, 164) // music tempo
 
 	MCFG_GFXDECODE(quizpani)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -208,7 +208,7 @@ static MACHINE_CONFIG_START( quizpani, quizpani_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(quizpani)
+	MCFG_SCREEN_UPDATE_DRIVER(quizpani_state, screen_update_quizpani)
 
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -193,7 +193,7 @@ static MACHINE_CONFIG_START( yard, m58_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/3/2)
 	MCFG_CPU_PROGRAM_MAP(yard_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", m58_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_GFXDECODE(yard)
@@ -201,7 +201,7 @@ static MACHINE_CONFIG_START( yard, m58_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 256, 282, 42, 266)
-	MCFG_SCREEN_UPDATE_STATIC(yard)
+	MCFG_SCREEN_UPDATE_DRIVER(m58_state, screen_update_yard)
 
 
 	/* sound hardware */

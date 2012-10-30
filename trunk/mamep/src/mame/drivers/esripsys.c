@@ -163,16 +163,15 @@ WRITE8_MEMBER(esripsys_state::f_status_w)
  *
  *************************************/
 
-static TIMER_CALLBACK( delayed_bank_swap )
+TIMER_CALLBACK_MEMBER(esripsys_state::delayed_bank_swap)
 {
-	esripsys_state *state = machine.driver_data<esripsys_state>();
-	state->m_fasel ^= 1;
-	state->m_fbsel ^= 1;
+	m_fasel ^= 1;
+	m_fbsel ^= 1;
 }
 
 WRITE8_MEMBER(esripsys_state::frame_w)
 {
-	machine().scheduler().synchronize(FUNC(delayed_bank_swap));
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(esripsys_state::delayed_bank_swap),this));
 	m_frame_vbl = 1;
 }
 
@@ -201,7 +200,7 @@ WRITE8_MEMBER(esripsys_state::fdt_w)
 
 static READ16_DEVICE_HANDLER( fdt_rip_r )
 {
-	esripsys_state *state = device->machine().driver_data<esripsys_state>();
+	esripsys_state *state = space.machine().driver_data<esripsys_state>();
 	offset = (offset & 0x7ff) << 1;
 
 	if (!state->m_fasel)
@@ -212,7 +211,7 @@ static READ16_DEVICE_HANDLER( fdt_rip_r )
 
 static WRITE16_DEVICE_HANDLER( fdt_rip_w )
 {
-	esripsys_state *state = device->machine().driver_data<esripsys_state>();
+	esripsys_state *state = space.machine().driver_data<esripsys_state>();
 	offset = (offset & 0x7ff) << 1;
 
 	if (!state->m_fasel)
@@ -524,7 +523,7 @@ READ8_MEMBER(esripsys_state::tms5220_r)
 	{
 		/* TMS5220 core returns status bits in D7-D6 */
 		device_t *tms = machine().device("tms5220nl");
-		UINT8 status = tms5220_status_r(tms, 0);
+		UINT8 status = tms5220_status_r(tms, space, 0);
 
 		status = ((status & 0x80) >> 5) | ((status & 0x40) >> 5) | ((status & 0x20) >> 5);
 		return (tms5220_readyq_r(tms) << 7) | (tms5220_intq_r(tms) << 6) | status;
@@ -540,12 +539,12 @@ WRITE8_MEMBER(esripsys_state::tms5220_w)
 	if (offset == 0)
 	{
 		m_tms_data = data;
-		tms5220_data_w(tms, 0, m_tms_data);
+		tms5220_data_w(tms, space, 0, m_tms_data);
 	}
 #if 0
 	if (offset == 1)
 	{
-		tms5220_data_w(tms, 0, m_tms_data);
+		tms5220_data_w(tms, space, 0, m_tms_data);
 	}
 #endif
 }
@@ -699,7 +698,7 @@ static const esrip_config rip_config =
 static MACHINE_CONFIG_START( esripsys, esripsys_state )
 	MCFG_CPU_ADD("game_cpu", M6809E, XTAL_8MHz)
 	MCFG_CPU_PROGRAM_MAP(game_cpu_map)
-	MCFG_CPU_VBLANK_INT("screen", esripsys_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", esripsys_state,  esripsys_vblank_irq)
 
 	MCFG_CPU_ADD("frame_cpu", M6809E, XTAL_8MHz)
 	MCFG_CPU_PROGRAM_MAP(frame_cpu_map)
@@ -716,7 +715,7 @@ static MACHINE_CONFIG_START( esripsys, esripsys_state )
 	/* Video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(ESRIPSYS_PIXEL_CLOCK, ESRIPSYS_HTOTAL, ESRIPSYS_HBLANK_END, ESRIPSYS_HBLANK_START, ESRIPSYS_VTOTAL, ESRIPSYS_VBLANK_END, ESRIPSYS_VBLANK_START)
-	MCFG_SCREEN_UPDATE_STATIC(esripsys)
+	MCFG_SCREEN_UPDATE_DRIVER(esripsys_state, screen_update_esripsys)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
 

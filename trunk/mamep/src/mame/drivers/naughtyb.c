@@ -431,7 +431,7 @@ static MACHINE_CONFIG_START( naughtyb, naughtyb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(naughtyb)
+	MCFG_SCREEN_UPDATE_DRIVER(naughtyb_state, screen_update_naughtyb)
 
 	MCFG_GFXDECODE(naughtyb)
 	MCFG_PALETTE_LENGTH(256)
@@ -463,7 +463,7 @@ static MACHINE_CONFIG_START( popflame, naughtyb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(naughtyb)
+	MCFG_SCREEN_UPDATE_DRIVER(naughtyb_state, screen_update_naughtyb)
 
 	MCFG_GFXDECODE(naughtyb)
 	MCFG_PALETTE_LENGTH(256)
@@ -832,10 +832,10 @@ ROM_END
 DRIVER_INIT_MEMBER(naughtyb_state,popflame)
 {
 	/* install a handler to catch protection checks */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9000, 0x9000, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9090, 0x9090, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x9000, 0x9000, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x9090, 0x9090, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb000, 0xb0ff, write8_delegate(FUNC(naughtyb_state::popflame_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xb000, 0xb0ff, write8_delegate(FUNC(naughtyb_state::popflame_protection_w),this));
 }
 
 
@@ -863,7 +863,7 @@ WRITE8_MEMBER(naughtyb_state::trvmstr_questions_w)
 DRIVER_INIT_MEMBER(naughtyb_state,trvmstr)
 {
 	/* install questions' handlers  */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc000, 0xc002, read8_delegate(FUNC(naughtyb_state::trvmstr_questions_r),this), write8_delegate(FUNC(naughtyb_state::trvmstr_questions_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xc000, 0xc002, read8_delegate(FUNC(naughtyb_state::trvmstr_questions_r),this), write8_delegate(FUNC(naughtyb_state::trvmstr_questions_w),this));
 }
 
 

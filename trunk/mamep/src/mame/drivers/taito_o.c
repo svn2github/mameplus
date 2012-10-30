@@ -212,16 +212,15 @@ static GFXDECODE_START( parentj )
 GFXDECODE_END
 
 /* unknown sources ... */
-static TIMER_DEVICE_CALLBACK( parentj_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(taitoo_state::parentj_interrupt)
 {
-	taitoo_state *state = timer.machine().driver_data<taitoo_state>();
 	int scanline = param;
 
 	if(scanline == 448)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -253,7 +252,7 @@ static MACHINE_CONFIG_START( parentj, taitoo_state )
 
 	MCFG_CPU_ADD("maincpu", M68000,12000000 )		/*?? MHz */
 	MCFG_CPU_PROGRAM_MAP(parentj_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", parentj_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", taitoo_state, parentj_interrupt, "screen", 0, 1)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -261,7 +260,7 @@ static MACHINE_CONFIG_START( parentj, taitoo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 3*16, 31*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(parentj)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoo_state, screen_update_parentj)
 
 	MCFG_GFXDECODE(parentj)
 	MCFG_PALETTE_LENGTH(33*16)

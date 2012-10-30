@@ -1,21 +1,37 @@
 /********************************************************************************
 
-Pinball
-NSM : Hot Fire Birds
+    Pinball
+    NSM (Lowen) : Hot Fire Birds
+
+    Schematic and PinMAME used as references
+
+    Everything in this machine is controlled by a serial bus based on the
+    processor's CRU pins (serial i/o).
+
+ToDo:
+- Inputs (i have no idea how CRU inputs work)
+- Mechanical sounds
+- Further testing, etc
 
 *********************************************************************************/
 
-#include "emu.h"
+#include "machine/genpin.h"
 #include "cpu/tms9900/tms9900l.h"
+#include "sound/ay8910.h"
+#include "nsm.lh"
+
 
 class nsm_state : public driver_device
 {
 public:
 	nsm_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_maincpu(*this, "maincpu")
+	m_maincpu(*this, "maincpu")
 	{ }
 
+	DECLARE_READ8_MEMBER(ff_r);
+	DECLARE_WRITE8_MEMBER(cru_w);
+	DECLARE_WRITE8_MEMBER(oe_w);
 protected:
 
 	// devices
@@ -23,24 +39,79 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
-public:
-	DECLARE_DRIVER_INIT(nsm);
+private:
+	UINT8 m_cru_data[9];
+	UINT8 m_cru_count;
 };
 
 
 static ADDRESS_MAP_START( nsm_map, AS_PROGRAM, 8, nsm_state )
-	AM_RANGE(0x0000, 0x5fff) AM_ROM
-	AM_RANGE(0x6000, 0xffff) AM_RAM
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0xe000, 0xefff) AM_RAM
+	AM_RANGE(0xf000, 0xf0fb) AM_READ_LEGACY(tms9995_internal1_r)
+	AM_RANGE(0xffec, 0xffed) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
+	AM_RANGE(0xffee, 0xffef) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
+	AM_RANGE(0xfffc, 0xffff) AM_READ_LEGACY(tms9995_internal2_r)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( nsm_io_map, AS_IO, 8, nsm_state )
+	// 00-71 selected by IC600 (74LS151)
+	AM_RANGE(0x0000, 0x0001) AM_READ(ff_r) // 5v supply
+	AM_RANGE(0x0010, 0x0011) AM_READNOP // antenna
+	AM_RANGE(0x0020, 0x0021) AM_READNOP // reset circuit
+	AM_RANGE(0x0030, 0x0031) AM_READ(ff_r) // service plug
+	AM_RANGE(0x0040, 0x0041) AM_READ(ff_r) // service plug
+	AM_RANGE(0x0050, 0x0051) AM_READ(ff_r) // test of internal battery
+	AM_RANGE(0x0060, 0x0061) AM_READ(ff_r) // sum of analog outputs of ay2
+	//AM_RANGE(0x0070, 0x0071) AM_READNOP // serial data in
+	AM_RANGE(0x0f70, 0x0f7d) AM_WRITENOP
+	AM_RANGE(0x0fe4, 0x0fff) AM_READNOP
+	AM_RANGE(0x7fb0, 0x7fbf) AM_WRITE(cru_w)
+	AM_RANGE(0x7fd0, 0x7fd1) AM_WRITE(oe_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( nsm )
 INPUT_PORTS_END
 
-void nsm_state::machine_reset()
+READ8_MEMBER( nsm_state::ff_r ) { return 1; }
+
+WRITE8_MEMBER( nsm_state::oe_w )
 {
+	m_cru_count = 9;
 }
 
-DRIVER_INIT_MEMBER(nsm_state,nsm)
+WRITE8_MEMBER( nsm_state::cru_w )
+{
+	offset &= 7;
+	if (!offset)
+	{
+		m_cru_count--;
+		m_cru_data[m_cru_count] = 0;
+	}
+	m_cru_data[m_cru_count] |= (data << offset);
+
+	UINT8 i,j;
+	int segments;
+	if (!m_cru_count && (offset == 7))
+	{
+		m_cru_count = 9;
+		//for (i = 0; i < 9; i++) printf("%02X ",m_cru_data[i]);printf("\n");
+		for (i = 0; i < 8; i++)
+		{
+			if (BIT(m_cru_data[0], i))
+			{
+				for (j = 0; j < 5; j++)
+				{
+					segments = m_cru_data[8-j]^0xff;
+					output_set_digit_value(j * 10 + i, BITSWAP16(segments, 8, 8, 8, 8, 8, 8, 0, 0, 1, 1, 2, 3, 4, 5, 6, 7));
+				}
+			}
+		}
+	}
+}
+
+
+void nsm_state::machine_reset()
 {
 }
 
@@ -48,6 +119,17 @@ static MACHINE_CONFIG_START( nsm, nsm_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", TMS9995L, 11052000)
 	MCFG_CPU_PROGRAM_MAP(nsm_map)
+	MCFG_CPU_IO_MAP(nsm_io_map)
+
+	/* Video */
+	MCFG_DEFAULT_LAYOUT(layout_nsm)
+
+	/* Sound */
+	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
+	MCFG_SOUND_ADD("ay1", AY8912, 11052000/8)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.75)
+	MCFG_SOUND_ADD("ay2", AY8912, 11052000/8)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.75)
 MACHINE_CONFIG_END
 
 /*-------------------------------------------------------------------
@@ -72,4 +154,4 @@ ROM_END
 / The Games (1985)
 /-------------------------------------------------------------------*/
 
-GAME(1985,  firebird,  0,  nsm,  nsm, nsm_state,  nsm,  ROT0,  "NSM",    "Hot Fire Birds",     GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
+GAME(1985,  firebird,  0,  nsm,  nsm, driver_device, 0,  ROT0, "NSM", "Hot Fire Birds", GAME_NOT_WORKING | GAME_MECHANICAL)

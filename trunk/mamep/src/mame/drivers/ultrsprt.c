@@ -35,17 +35,18 @@ public:
 	DECLARE_WRITE16_MEMBER(K056800_68k_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(analog_ctrl_r);
 	virtual void machine_start();
+	UINT32 screen_update_ultrsprt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(ultrsprt_vblank);
 };
 
 
 
 
-static SCREEN_UPDATE_IND16( ultrsprt )
+UINT32 ultrsprt_state::screen_update_ultrsprt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ultrsprt_state *state = screen.machine().driver_data<ultrsprt_state>();
 	int i, j;
 
-	UINT8 *ram = reinterpret_cast<UINT8 *>(state->m_vram.target());
+	UINT8 *ram = reinterpret_cast<UINT8 *>(m_vram.target());
 
 	for (j=0; j < 400; j++)
 	{
@@ -136,10 +137,10 @@ READ16_MEMBER(ultrsprt_state::K056800_68k_r)
 	UINT16 r = 0;
 
 	if (ACCESSING_BITS_8_15)
-		r |= k056800_sound_r(k056800, (offset*2)+0, 0xffff) << 8;
+		r |= k056800_sound_r(k056800, space, (offset*2)+0, 0xffff) << 8;
 
 	if (ACCESSING_BITS_0_7)
-		r |= k056800_sound_r(k056800, (offset*2)+1, 0xffff) << 0;
+		r |= k056800_sound_r(k056800, space, (offset*2)+1, 0xffff) << 0;
 
 	return r;
 }
@@ -149,10 +150,10 @@ WRITE16_MEMBER(ultrsprt_state::K056800_68k_w)
 	device_t *k056800 = machine().device("k056800");
 
 	if (ACCESSING_BITS_8_15)
-		k056800_sound_w(k056800, (offset*2)+0, (data >> 8) & 0xff, 0x00ff);
+		k056800_sound_w(k056800, space, (offset*2)+0, (data >> 8) & 0xff, 0x00ff);
 
 	if (ACCESSING_BITS_0_7)
-		k056800_sound_w(k056800, (offset*2)+1, (data >> 0) & 0xff, 0x00ff);
+		k056800_sound_w(k056800, space, (offset*2)+1, (data >> 0) & 0xff, 0x00ff);
 }
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 16, ultrsprt_state )
@@ -203,9 +204,9 @@ static INPUT_PORTS_START( ultrsprt )
 INPUT_PORTS_END
 
 
-static INTERRUPT_GEN( ultrsprt_vblank )
+INTERRUPT_GEN_MEMBER(ultrsprt_state::ultrsprt_vblank)
 {
-	device->execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
+	device.execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 }
 
 static void sound_irq_callback(running_machine &machine, int irq)
@@ -227,11 +228,11 @@ static MACHINE_CONFIG_START( ultrsprt, ultrsprt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC403GA, 25000000)		/* PowerPC 403GA 25MHz */
 	MCFG_CPU_PROGRAM_MAP(ultrsprt_map)
-	MCFG_CPU_VBLANK_INT("screen", ultrsprt_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ultrsprt_state,  ultrsprt_vblank)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 8000000)		/* Not sure about the frequency */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq5_line_hold, 1)	// ???
+	MCFG_CPU_PERIODIC_INT_DRIVER(ultrsprt_state, irq5_line_hold,  1)	// ???
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
@@ -243,7 +244,7 @@ static MACHINE_CONFIG_START( ultrsprt, ultrsprt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 400)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 399)
-	MCFG_SCREEN_UPDATE_STATIC(ultrsprt)
+	MCFG_SCREEN_UPDATE_DRIVER(ultrsprt_state, screen_update_ultrsprt)
 
 	MCFG_PALETTE_LENGTH(8192)
 

@@ -734,12 +734,11 @@ static const ay8910_interface ay8910_interface_2 =
 	DEVCB_NULL
 };
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(slapfght_state::vblank_irq)
 {
-	slapfght_state *state = device->machine().driver_data<slapfght_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -749,11 +748,11 @@ static MACHINE_CONFIG_START( perfrman, slapfght_state )
 	MCFG_CPU_ADD("maincpu", Z80,16000000/4)			/* 4MHz ???, 16MHz Oscillator */
 	MCFG_CPU_PROGRAM_MAP(perfrman_map)
 	MCFG_CPU_IO_MAP(slapfght_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", slapfght_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/8)			/* 2MHz ???, 16MHz Oscillator */
 	MCFG_CPU_PROGRAM_MAP(perfrman_sound_map)
-	MCFG_CPU_PERIODIC_INT(getstar_interrupt,4*60)	/* music speed, verified */
+	MCFG_CPU_PERIODIC_INT_DRIVER(slapfght_state, getstar_interrupt, 4*60)	/* music speed, verified */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))		/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
@@ -767,7 +766,7 @@ static MACHINE_CONFIG_START( perfrman, slapfght_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 34*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(perfrman)
+	MCFG_SCREEN_UPDATE_DRIVER(slapfght_state, screen_update_perfrman)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(perfrman)
@@ -795,11 +794,11 @@ static MACHINE_CONFIG_START( tigerhb, slapfght_state )
 	MCFG_CPU_ADD("maincpu", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(tigerh_map)
 	MCFG_CPU_IO_MAP(tigerhb_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", slapfght_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(slapfght_sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,6*60)    /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(slapfght_state, nmi_line_pulse, 6*60)    /* ??? */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
@@ -813,7 +812,7 @@ static MACHINE_CONFIG_START( tigerhb, slapfght_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(slapfight)
+	MCFG_SCREEN_UPDATE_DRIVER(slapfght_state, screen_update_slapfight)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(slapfght)
@@ -840,11 +839,11 @@ static MACHINE_CONFIG_START( tigerh, slapfght_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_36MHz/6) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(tigerh_map)
 	MCFG_CPU_IO_MAP(tigerh_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", slapfght_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_36MHz/12) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(slapfght_sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,6*60)    /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(slapfght_state, nmi_line_pulse, 6*60)    /* ??? */
 
 	MCFG_CPU_ADD("mcu", M68705,XTAL_36MHz/12) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(tigerh_m68705_map)
@@ -861,7 +860,7 @@ static MACHINE_CONFIG_START( tigerh, slapfght_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(slapfight)
+	MCFG_SCREEN_UPDATE_DRIVER(slapfght_state, screen_update_slapfight)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(slapfght)
@@ -889,11 +888,11 @@ static MACHINE_CONFIG_START( slapfigh, slapfght_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_36MHz/6) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(slapfght_map)
 	MCFG_CPU_IO_MAP(slapfght_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", slapfght_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_36MHz/12) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(slapfght_sound_map)
-	MCFG_CPU_PERIODIC_INT(getstar_interrupt, 3*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(slapfght_state, getstar_interrupt,  3*60)
 
 	MCFG_CPU_ADD("mcu", M68705, XTAL_36MHz/12) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(slapfight_m68705_map)
@@ -910,7 +909,7 @@ static MACHINE_CONFIG_START( slapfigh, slapfght_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(slapfight)
+	MCFG_SCREEN_UPDATE_DRIVER(slapfght_state, screen_update_slapfight)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(slapfght)
@@ -1740,12 +1739,12 @@ ROM_END
 
 DRIVER_INIT_MEMBER(slapfght_state,tigerh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::tigerh_mcu_r),this), write8_delegate(FUNC(slapfght_state::tigerh_mcu_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::tigerh_mcu_r),this), write8_delegate(FUNC(slapfght_state::tigerh_mcu_w),this));
 }
 
 DRIVER_INIT_MEMBER(slapfght_state,tigerhb)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::tigerhb_e803_r),this), write8_delegate(FUNC(slapfght_state::tigerhb_e803_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::tigerhb_e803_r),this), write8_delegate(FUNC(slapfght_state::tigerhb_e803_w),this));
 }
 
 
@@ -1806,8 +1805,8 @@ READ8_MEMBER(slapfght_state::gtstarb1_port_0_read)
 static void getstar_init( running_machine &machine )
 {
 	slapfght_state *state = machine.driver_data<slapfght_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::getstar_e803_r),state), write8_delegate(FUNC(slapfght_state::getstar_e803_w),state));
-	machine.device("maincpu")->memory().space(AS_IO)->install_read_handler(0x00, 0x00, read8_delegate(FUNC(slapfght_state::slapfight_port_00_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::getstar_e803_r),state), write8_delegate(FUNC(slapfght_state::getstar_e803_w),state));
+	machine.device("maincpu")->memory().space(AS_IO).install_read_handler(0x00, 0x00, read8_delegate(FUNC(slapfght_state::slapfight_port_00_r),state));
 }
 
 DRIVER_INIT_MEMBER(slapfght_state,getstar)
@@ -1830,7 +1829,7 @@ DRIVER_INIT_MEMBER(slapfght_state,gtstarb1)
 	getstar_init(machine());
 
 	/* specific handlers for this bootleg */
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x0, 0x0, read8_delegate(FUNC(slapfght_state::gtstarb1_port_0_read),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x0, 0x0, read8_delegate(FUNC(slapfght_state::gtstarb1_port_0_read),this));
 	/* requires this or it gets stuck with 'rom test' on screen */
 	/* it is possible the program roms are slighly corrupt like the gfx roms, or
        that the bootleg simply shouldn't execute the code due to the modified roms */
@@ -1846,13 +1845,13 @@ DRIVER_INIT_MEMBER(slapfght_state,gtstarb2)
 
 DRIVER_INIT_MEMBER(slapfght_state,slapfigh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::slapfight_mcu_r),this), write8_delegate(FUNC(slapfght_state::slapfight_mcu_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x00, 0x00, read8_delegate(FUNC(slapfght_state::slapfight_mcu_status_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xe803, 0xe803, read8_delegate(FUNC(slapfght_state::slapfight_mcu_r),this), write8_delegate(FUNC(slapfght_state::slapfight_mcu_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x00, 0x00, read8_delegate(FUNC(slapfght_state::slapfight_mcu_status_r),this));
 }
 
 DRIVER_INIT_MEMBER(slapfght_state,perfrman)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x00, 0x00, read8_delegate(FUNC(slapfght_state::perfrman_port_00_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x00, 0x00, read8_delegate(FUNC(slapfght_state::perfrman_port_00_r),this));
 }
 
 /*  ( YEAR  NAME        PARENT    MACHINE     INPUT     INIT      MONITOR  COMPANY    FULLNAME     FLAGS ) */

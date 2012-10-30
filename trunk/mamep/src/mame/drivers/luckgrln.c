@@ -150,6 +150,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_luckgrln_reel3_tile_info);
 	TILE_GET_INFO_MEMBER(get_luckgrln_reel4_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_luckgrln(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(luckgrln_irq);
 };
 
 
@@ -287,9 +289,8 @@ void luckgrln_state::video_start()
 	m_reel4_tilemap->set_transparent_pen(0 );
 }
 
-static SCREEN_UPDATE_IND16(luckgrln)
+UINT32 luckgrln_state::screen_update_luckgrln(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	luckgrln_state *state = screen.machine().driver_data<luckgrln_state>();
 	int y,x;
 	int count = 0;
 	const rectangle &visarea = screen.visible_area();
@@ -301,10 +302,10 @@ static SCREEN_UPDATE_IND16(luckgrln)
 
 	for (i= 0;i < 64;i++)
 	{
-		state->m_reel1_tilemap->set_scrolly(i, state->m_reel1_scroll[i]);
-		state->m_reel2_tilemap->set_scrolly(i, state->m_reel2_scroll[i]);
-		state->m_reel3_tilemap->set_scrolly(i, state->m_reel3_scroll[i]);
-		state->m_reel4_tilemap->set_scrolly(i, state->m_reel4_scroll[i]);
+		m_reel1_tilemap->set_scrolly(i, m_reel1_scroll[i]);
+		m_reel2_tilemap->set_scrolly(i, m_reel2_scroll[i]);
+		m_reel3_tilemap->set_scrolly(i, m_reel3_scroll[i]);
+		m_reel4_tilemap->set_scrolly(i, m_reel4_scroll[i]);
 	}
 
 
@@ -318,9 +319,9 @@ static SCREEN_UPDATE_IND16(luckgrln)
 
 		for (x=0;x<64;x++)
 		{
-			UINT16 tile = (state->m_luck_vram1[count] & 0xff);
-			UINT16 tile_high = (state->m_luck_vram2[count]);
-			UINT16 tileattr = (state->m_luck_vram3[count]);
+			UINT16 tile = (m_luck_vram1[count] & 0xff);
+			UINT16 tile_high = (m_luck_vram2[count]);
+			UINT16 tileattr = (m_luck_vram3[count]);
 			UINT8 col = 0;
 			UINT8 region = 0;
 			UINT8 bgenable;
@@ -332,8 +333,8 @@ static SCREEN_UPDATE_IND16(luckgrln)
 			if (clip.max_x>visarea.max_x) clip.max_x = visarea.max_x;
 
 			/*
-              state->m_luck_vram1  tttt tttt   (t = low tile bits)
-              state->m_luck_vram2  tttt ppp?   (t = high tile bits) (p = pal select)?
+              m_luck_vram1  tttt tttt   (t = low tile bits)
+              m_luck_vram2  tttt ppp?   (t = high tile bits) (p = pal select)?
 
 
              */
@@ -344,7 +345,7 @@ static SCREEN_UPDATE_IND16(luckgrln)
 			// ?? low bit is used too
 			col = tile_high&0xf;
 
-			// --ss fbt-   state->m_luck_vram3
+			// --ss fbt-   m_luck_vram3
 			// - = unused?
 			// s = reel layer select for this 8x8 region
 			// f = fg enabled for this 8x8 region (or priority?)
@@ -356,26 +357,26 @@ static SCREEN_UPDATE_IND16(luckgrln)
 #if 0 // treat bit as fg enable
 			if (tileattr&0x04)
 			{
-				if (bgenable==0) state->m_reel1_tilemap->draw(bitmap, clip, 0, 0);
-				if (bgenable==1) state->m_reel2_tilemap->draw(bitmap, clip, 0, 0);
-				if (bgenable==2) state->m_reel3_tilemap->draw(bitmap, clip, 0, 0);
-				if (bgenable==3) state->m_reel4_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==0) m_reel1_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==1) m_reel2_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==2) m_reel3_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==3) m_reel4_tilemap->draw(bitmap, clip, 0, 0);
 			}
 
-			if (tileattr&0x08) drawgfx_transpen(bitmap,clip,screen.machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
+			if (tileattr&0x08) drawgfx_transpen(bitmap,clip,machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
 
 #else // treat it as priority flag instead (looks better in non-adult title screen - needs verifying)
-			if (!(tileattr&0x08)) drawgfx_transpen(bitmap,clip,screen.machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
+			if (!(tileattr&0x08)) drawgfx_transpen(bitmap,clip,machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
 
 			if (tileattr&0x04)
 			{
-				if (bgenable==0) state->m_reel1_tilemap->draw(bitmap, clip, 0, 0);
-				if (bgenable==1) state->m_reel2_tilemap->draw(bitmap, clip, 0, 0);
-				if (bgenable==2) state->m_reel3_tilemap->draw(bitmap, clip, 0, 0);
-				if (bgenable==3) state->m_reel4_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==0) m_reel1_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==1) m_reel2_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==2) m_reel3_tilemap->draw(bitmap, clip, 0, 0);
+				if (bgenable==3) m_reel4_tilemap->draw(bitmap, clip, 0, 0);
 			}
 
-			if ((tileattr&0x08)) drawgfx_transpen(bitmap,clip,screen.machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
+			if ((tileattr&0x08)) drawgfx_transpen(bitmap,clip,machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
 #endif
 
 			count++;
@@ -986,18 +987,17 @@ static const mc6845_interface mc6845_intf =
 	NULL		/* update address callback */
 };
 
-static INTERRUPT_GEN( luckgrln_irq )
+INTERRUPT_GEN_MEMBER(luckgrln_state::luckgrln_irq)
 {
-	luckgrln_state *state = device->machine().driver_data<luckgrln_state>();
-	if(state->m_nmi_enable)
-		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_enable)
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( luckgrln, luckgrln_state )
 	MCFG_CPU_ADD("maincpu", Z180,8000000)
 	MCFG_CPU_PROGRAM_MAP(mainmap)
 	MCFG_CPU_IO_MAP(portmap)
-	MCFG_CPU_VBLANK_INT("screen", luckgrln_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", luckgrln_state,  luckgrln_irq)
 
 	MCFG_MC6845_ADD("crtc", H46505, 6000000/4, mc6845_intf)	/* unknown clock, hand tuned to get ~60 fps */
 
@@ -1006,7 +1006,7 @@ static MACHINE_CONFIG_START( luckgrln, luckgrln_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(luckgrln)
+	MCFG_SCREEN_UPDATE_DRIVER(luckgrln_state, screen_update_luckgrln)
 
 	MCFG_GFXDECODE(luckgrln)
 	MCFG_PALETTE_LENGTH(0x8000)

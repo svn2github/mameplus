@@ -111,6 +111,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_silvmil(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -148,13 +149,12 @@ void silvmil_state::video_start()
 	m_fg_layer->set_transparent_pen(0);
 }
 
-SCREEN_UPDATE_IND16( silvmil )
+UINT32 silvmil_state::screen_update_silvmil(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	silvmil_state *state = screen.machine().driver_data<silvmil_state>();
 
-	state->m_bg_layer->draw(bitmap, cliprect, 0, 0);
-	state->m_fg_layer->draw(bitmap, cliprect, 0, 0);
-	screen.machine().device<decospr_device>("spritegen")->draw_sprites(bitmap, cliprect, state->m_spriteram, 0x400);
+	m_bg_layer->draw(bitmap, cliprect, 0, 0);
+	m_fg_layer->draw(bitmap, cliprect, 0, 0);
+	machine().device<decospr_device>("spritegen")->draw_sprites(bitmap, cliprect, m_spriteram, 0x400);
 	return 0;
 }
 
@@ -293,7 +293,7 @@ void silvmil_state::machine_reset()
 static ADDRESS_MAP_START( silvmil_sound_map, AS_PROGRAM, 8, silvmil_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xc002, 0xc002) AM_DEVREADWRITE("oki", okim6295_device, read, write) AM_MIRROR(1)
 	AM_RANGE(0xc006, 0xc006) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc00f, 0xc00f) AM_WRITENOP // ??
@@ -301,24 +301,12 @@ ADDRESS_MAP_END
 
 /* CLOCKS UNKNOWN! */
 
-static void silvmil_irqhandler( device_t *device, int irq )
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-
-static const ym2151_interface silvmil_ym2151_interface =
-{
-	DEVCB_LINE(silvmil_irqhandler)
-};
-
-
 static MACHINE_CONFIG_START( silvmil, silvmil_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz)
 	MCFG_CPU_PROGRAM_MAP(silvmil_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", silvmil_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_4_096MHz) // 4.096MHz or 3.579545MHz - Need to verify
 	MCFG_CPU_PROGRAM_MAP(silvmil_sound_map)
@@ -330,7 +318,7 @@ static MACHINE_CONFIG_START( silvmil, silvmil_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(silvmil)
+	MCFG_SCREEN_UPDATE_DRIVER(silvmil_state, screen_update_silvmil)
 
 	MCFG_PALETTE_LENGTH(0x300)
 	MCFG_GFXDECODE(silvmil)
@@ -343,8 +331,8 @@ static MACHINE_CONFIG_START( silvmil, silvmil_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_14_31818MHz/4)
-	MCFG_SOUND_CONFIG(silvmil_ym2151_interface)
+	MCFG_YM2151_ADD("ymsnd", XTAL_14_31818MHz/4)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 

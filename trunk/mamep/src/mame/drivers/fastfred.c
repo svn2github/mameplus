@@ -626,20 +626,18 @@ GFXDECODE_END
 
 #define CLOCK 18432000  /* The crystal is 18.432MHz */
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(fastfred_state::vblank_irq)
 {
-	fastfred_state *state = device->machine().driver_data<fastfred_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( sound_timer_irq )
+INTERRUPT_GEN_MEMBER(fastfred_state::sound_timer_irq)
 {
-	fastfred_state *state = device->machine().driver_data<fastfred_state>();
 
-	if(state->m_sound_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_sound_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( fastfred, fastfred_state )
@@ -647,11 +645,11 @@ static MACHINE_CONFIG_START( fastfred, fastfred_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, CLOCK/6)     /* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(fastfred_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fastfred_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, CLOCK/12)	 /* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(sound_timer_irq,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(fastfred_state, sound_timer_irq, 4*60)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -659,7 +657,7 @@ static MACHINE_CONFIG_START( fastfred, fastfred_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))	//CLOCK/16/60
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fastfred)
+	MCFG_SCREEN_UPDATE_DRIVER(fastfred_state, screen_update_fastfred)
 
 	MCFG_GFXDECODE(fastfred)
 	MCFG_PALETTE_LENGTH(32*8)
@@ -706,7 +704,7 @@ static MACHINE_CONFIG_DERIVED( imago, fastfred )
 
 	MCFG_VIDEO_START_OVERRIDE(fastfred_state,imago)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(imago)
+	MCFG_SCREEN_UPDATE_DRIVER(fastfred_state, screen_update_imago)
 MACHINE_CONFIG_END
 
 #undef CLOCK
@@ -1002,8 +1000,8 @@ ROM_END
 
 DRIVER_INIT_MEMBER(fastfred_state,flyboy)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc085, 0xc099, read8_delegate(FUNC(fastfred_state::flyboy_custom1_io_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc8fb, 0xc900, read8_delegate(FUNC(fastfred_state::flyboy_custom2_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc085, 0xc099, read8_delegate(FUNC(fastfred_state::flyboy_custom1_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc8fb, 0xc900, read8_delegate(FUNC(fastfred_state::flyboy_custom2_io_r),this));
 	m_hardware_type = 1;
 }
 
@@ -1014,29 +1012,29 @@ DRIVER_INIT_MEMBER(fastfred_state,flyboyb)
 
 DRIVER_INIT_MEMBER(fastfred_state,fastfred)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::fastfred_custom_io_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::fastfred_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xc800, 0xcfff);
 	m_hardware_type = 1;
 }
 
 DRIVER_INIT_MEMBER(fastfred_state,jumpcoas)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xc800, 0xcfff);
 	m_hardware_type = 0;
 }
 
 DRIVER_INIT_MEMBER(fastfred_state,boggy84b)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xc800, 0xcfff);
 	m_hardware_type = 2;
 }
 
 DRIVER_INIT_MEMBER(fastfred_state,boggy84)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::boggy84_custom_io_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::boggy84_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xc800, 0xcfff);
 	m_hardware_type = 2;
 }
 

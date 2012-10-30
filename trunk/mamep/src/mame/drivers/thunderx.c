@@ -6,6 +6,10 @@
 
     K052591 emulation by Eddie Edwards
 
+- There was a set in MAME at one time that was given the setname (thndrxja)
+  which is supposedly a later revision of the japanese set currently in MAME.
+  No roms were ever sourced for this set, so the GAME macro no longer exists.
+
 ***************************************************************************/
 
 #include "emu.h"
@@ -21,18 +25,16 @@ static KONAMI_SETLINES_CALLBACK( thunderx_banking );
 
 /***************************************************************************/
 
-static INTERRUPT_GEN( scontra_interrupt )
+INTERRUPT_GEN_MEMBER(thunderx_state::scontra_interrupt)
 {
-	thunderx_state *state = device->machine().driver_data<thunderx_state>();
 
-	if (k052109_is_irq_enabled(state->m_k052109))
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (k052109_is_irq_enabled(m_k052109))
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
-static TIMER_CALLBACK( thunderx_firq_callback )
+TIMER_CALLBACK_MEMBER(thunderx_state::thunderx_firq_callback)
 {
-	thunderx_state *state = machine.driver_data<thunderx_state>();
-	state->m_maincpu->set_input_line(KONAMI_FIRQ_LINE, HOLD_LINE);
+	m_maincpu->set_input_line(KONAMI_FIRQ_LINE, HOLD_LINE);
 }
 
 READ8_MEMBER(thunderx_state::scontra_bankedram_r)
@@ -307,7 +309,7 @@ WRITE8_MEMBER(thunderx_state::thunderx_1f98_w)
 		calculate_collisions(machine());
 
 		/* 100 cycle delay is arbitrary */
-		machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(100), FUNC(thunderx_firq_callback));
+		machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(100), timer_expired_delegate(FUNC(thunderx_state::thunderx_firq_callback),this));
 	}
 
 	m_1f98_data = data;
@@ -373,25 +375,25 @@ READ8_MEMBER(thunderx_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(thunderx_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 /***************************************************************************/
@@ -441,7 +443,7 @@ static ADDRESS_MAP_START( scontra_sound_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM					/* RAM */
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)			/* soundlatch_byte_r */
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)		/* 007232 registers */
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)		/* YM2151 */
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)		/* YM2151 */
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(scontra_snd_bankswitch_w)	/* 007232 bank select */
 ADDRESS_MAP_END
 
@@ -449,7 +451,7 @@ static ADDRESS_MAP_START( thunderx_sound_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -658,7 +660,7 @@ static MACHINE_CONFIG_START( scontra, thunderx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8)		/* Verified on pcb, CPU is 052001 */
 	MCFG_CPU_PROGRAM_MAP(scontra_map)
-	MCFG_CPU_VBLANK_INT("screen", scontra_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thunderx_state,  scontra_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(scontra_sound_map)
@@ -674,7 +676,7 @@ static MACHINE_CONFIG_START( scontra, thunderx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(scontra)
+	MCFG_SCREEN_UPDATE_DRIVER(thunderx_state, screen_update_scontra)
 
 	MCFG_PALETTE_LENGTH(1024)
 
@@ -685,7 +687,7 @@ static MACHINE_CONFIG_START( scontra, thunderx_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)	/* verified on pcb */
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)	/* verified on pcb */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 
@@ -701,7 +703,7 @@ static MACHINE_CONFIG_START( thunderx, thunderx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)		/* ? */
 	MCFG_CPU_PROGRAM_MAP(thunderx_map)
-	MCFG_CPU_VBLANK_INT("screen", scontra_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thunderx_state,  scontra_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)		/* ? */
 	MCFG_CPU_PROGRAM_MAP(thunderx_sound_map)
@@ -717,7 +719,7 @@ static MACHINE_CONFIG_START( thunderx, thunderx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(scontra)
+	MCFG_SCREEN_UPDATE_DRIVER(thunderx_state, screen_update_scontra)
 
 	MCFG_PALETTE_LENGTH(1024)
 
@@ -728,7 +730,7 @@ static MACHINE_CONFIG_START( thunderx, thunderx_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 MACHINE_CONFIG_END
@@ -996,4 +998,3 @@ GAME( 1988, thunderx,  0,        thunderx, thunderx, driver_device, 0, ROT0,  "K
 GAME( 1988, thunderxa, thunderx, thunderx, thunderx, driver_device, 0, ROT0,  "Konami", "Thunder Cross (set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1988, thunderxb, thunderx, thunderx, thunderx, driver_device, 0, ROT0,  "Konami", "Thunder Cross (set 3)", GAME_SUPPORTS_SAVE )
 GAME( 1988, thunderxj, thunderx, thunderx, thnderxj, driver_device, 0, ROT0,  "Konami", "Thunder Cross (Japan)", GAME_SUPPORTS_SAVE )
-//GAME( 1988, thndrxja, thunderx, thunderx, thndrxja, driver_device, 0, ROT0,  "Konami", "Thunder Cross (Japan, newer revision)", GAME_SUPPORTS_SAVE )

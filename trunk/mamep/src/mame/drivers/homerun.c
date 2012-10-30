@@ -82,7 +82,7 @@ WRITE8_MEMBER(homerun_state::homerun_control_w)
 
 		if (~data & 0x10 & m_control && !m_samples->playing(0))
 		{
-			samples_iterator iter(*m_samples);
+			samples_iterator iter(m_samples);
 			if (m_sample < iter.count())
 				m_samples->start(0, m_sample);
 		}
@@ -97,7 +97,7 @@ WRITE8_MEMBER(homerun_state::homerun_d7756_sample_w)
 	m_sample = data;
 
 	if (m_d7756 != NULL)
-		upd7759_port_w(m_d7756, 0, data);
+		upd7759_port_w(m_d7756, space, 0, data);
 }
 
 static ADDRESS_MAP_START( homerun_memmap, AS_PROGRAM, 8, homerun_state )
@@ -120,14 +120,6 @@ static ADDRESS_MAP_START( homerun_iomap, AS_IO, 8, homerun_state )
 	AM_RANGE(0x70, 0x71) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
 ADDRESS_MAP_END
 
-
-CUSTOM_INPUT_MEMBER(homerun_state::homerun_40_r)
-{
-	// screen split location is a guess, but works in homerun
-	UINT8 ret = (machine().primary_screen->vpos() > 116) ? 1 : 0;
-
-	return ret;
-}
 
 CUSTOM_INPUT_MEMBER(homerun_state::homerun_d7756_busy_r)
 {
@@ -155,7 +147,7 @@ CUSTOM_INPUT_MEMBER(homerun_state::ganjaja_hopper_status_r)
 static INPUT_PORTS_START( homerun )
 	PORT_START("IN0")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, homerun_40_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, homerun_sprite0_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, homerun_d7756_busy_r, NULL)
 	PORT_BIT( 0x37, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
@@ -192,8 +184,9 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( dynashot )
 	PORT_START("IN0")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN1 )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, homerun_40_r, NULL)
-	PORT_BIT( 0xb7, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, homerun_sprite0_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED ) // doesn't have d7756
+	PORT_BIT( 0x37, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP )
@@ -229,8 +222,9 @@ static INPUT_PORTS_START( ganjaja )
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN ) // ?
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN1 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, homerun_sprite0_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, homerun_state, ganjaja_d7756_busy_r, NULL)
-	PORT_BIT( 0x76, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x36, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    ) PORT_NAME("P1 Up / Rock")
@@ -349,7 +343,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_INPUT_PORT("DSW"),
 		DEVCB_NULL,
 		DEVCB_NULL,
-		DEVCB_HANDLER(homerun_banking_w)
+		DEVCB_DRIVER_MEMBER(homerun_state, homerun_banking_w)
 	},
 	DEVCB_NULL
 };
@@ -387,7 +381,7 @@ static MACHINE_CONFIG_START( dynashot, homerun_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_20MHz/4)
 	MCFG_CPU_PROGRAM_MAP(homerun_memmap)
 	MCFG_CPU_IO_MAP(homerun_iomap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", homerun_state,  irq0_line_hold)
 
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
@@ -397,7 +391,7 @@ static MACHINE_CONFIG_START( dynashot, homerun_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(homerun)
+	MCFG_SCREEN_UPDATE_DRIVER(homerun_state, screen_update_homerun)
 
 	MCFG_GFXDECODE(homerun)
 	MCFG_PALETTE_LENGTH(16*4)
@@ -424,7 +418,7 @@ static MACHINE_CONFIG_DERIVED( ganjaja, dynashot )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4*60) // ?
+	MCFG_CPU_PERIODIC_INT_DRIVER(homerun_state, irq0_line_hold,  4*60) // ?
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("d7756", UPD7756, UPD7759_STANDARD_CLOCK)

@@ -165,6 +165,10 @@ public:
 	DECLARE_VIDEO_START(mtrain);
 	DECLARE_MACHINE_RESET(am188em);
 	DECLARE_VIDEO_START(xtrain);
+	UINT32 screen_update_subsino2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(am188em_int0_irq);
+	TIMER_DEVICE_CALLBACK_MEMBER(am188em_timer2_irq);
+	TIMER_DEVICE_CALLBACK_MEMBER(h8_timer_irq);
 };
 
 
@@ -210,7 +214,7 @@ WRITE8_MEMBER(subsino2_state::ss9601_byte_lo2_w)
 }
 
 
-INLINE void ss9601_videoram_w(layer_t *l, vram_t vram, address_space *space, offs_t offset, UINT8 data)
+INLINE void ss9601_videoram_w(layer_t *l, vram_t vram, address_space &space, offs_t offset, UINT8 data)
 {
 	l->videorams[vram][offset] = data;
 
@@ -239,24 +243,24 @@ INLINE void ss9601_videoram_w(layer_t *l, vram_t vram, address_space *space, off
 // Layer 0
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_0_hi_w)
 {
-	ss9601_videoram_w(&m_layers[0], VRAM_HI, &space, offset, data);
+	ss9601_videoram_w(&m_layers[0], VRAM_HI, space, offset, data);
 }
 
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_0_lo_w)
 {
-	ss9601_videoram_w(&m_layers[0], VRAM_LO, &space, offset, data);
+	ss9601_videoram_w(&m_layers[0], VRAM_LO, space, offset, data);
 }
 
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_0_hi_lo_w)
 {
-	ss9601_videoram_w(&m_layers[0], VRAM_HI, &space, offset, data);
-	ss9601_videoram_w(&m_layers[0], VRAM_LO, &space, offset, m_ss9601_byte_lo);
+	ss9601_videoram_w(&m_layers[0], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&m_layers[0], VRAM_LO, space, offset, m_ss9601_byte_lo);
 }
 
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_0_hi_lo2_w)
 {
-	ss9601_videoram_w(&m_layers[0], VRAM_HI, &space, offset, data);
-	ss9601_videoram_w(&m_layers[0], VRAM_LO, &space, offset, m_ss9601_byte_lo2);
+	ss9601_videoram_w(&m_layers[0], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&m_layers[0], VRAM_LO, space, offset, m_ss9601_byte_lo2);
 }
 
 READ8_MEMBER(subsino2_state::ss9601_videoram_0_hi_r)
@@ -272,24 +276,24 @@ READ8_MEMBER(subsino2_state::ss9601_videoram_0_lo_r)
 // Layer 1
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_1_hi_w)
 {
-	ss9601_videoram_w(&m_layers[1], VRAM_HI, &space, offset, data);
+	ss9601_videoram_w(&m_layers[1], VRAM_HI, space, offset, data);
 }
 
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_1_lo_w)
 {
-	ss9601_videoram_w(&m_layers[1], VRAM_LO, &space, offset, data);
+	ss9601_videoram_w(&m_layers[1], VRAM_LO, space, offset, data);
 }
 
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_1_hi_lo_w)
 {
-	ss9601_videoram_w(&m_layers[1], VRAM_HI, &space, offset, data);
-	ss9601_videoram_w(&m_layers[1], VRAM_LO, &space, offset, m_ss9601_byte_lo);
+	ss9601_videoram_w(&m_layers[1], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&m_layers[1], VRAM_LO, space, offset, m_ss9601_byte_lo);
 }
 
 WRITE8_MEMBER(subsino2_state::ss9601_videoram_1_hi_lo2_w)
 {
-	ss9601_videoram_w(&m_layers[1], VRAM_HI, &space, offset, data);
-	ss9601_videoram_w(&m_layers[1], VRAM_LO, &space, offset, m_ss9601_byte_lo2);
+	ss9601_videoram_w(&m_layers[1], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&m_layers[1], VRAM_LO, space, offset, m_ss9601_byte_lo2);
 }
 
 READ8_MEMBER(subsino2_state::ss9601_videoram_1_hi_r)
@@ -631,18 +635,17 @@ VIDEO_START_MEMBER(subsino2_state,xtrain)
 	m_ss9601_reelrects[2].set(0, 0, 0x18*8, 256-16-1);
 }
 
-static SCREEN_UPDATE_IND16( subsino2 )
+UINT32 subsino2_state::screen_update_subsino2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	subsino2_state *state = screen.machine().driver_data<subsino2_state>();
-	int layers_ctrl = ~state->m_ss9601_disable;
+	int layers_ctrl = ~m_ss9601_disable;
 	int y;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_Z))
+	if (machine().input().code_pressed(KEYCODE_Z))
 	{
 		int msk = 0;
-		if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-		if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+		if (machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+		if (machine().input().code_pressed(KEYCODE_W))	msk |= 2;
 		if (msk != 0) layers_ctrl &= msk;
 	}
 #endif
@@ -650,7 +653,7 @@ static SCREEN_UPDATE_IND16( subsino2 )
 	// Line Scroll / Reel Control
 	int mask_y[2] = {0, 0};
 	bool l0_reel = false;
-	switch ( state->m_ss9601_scrollctrl )
+	switch ( m_ss9601_scrollctrl )
 	{
 		case 0xbf:
 			mask_y[0] = ~(32-1);
@@ -669,7 +672,7 @@ static SCREEN_UPDATE_IND16( subsino2 )
 	// Scroll
 	for (int i = 0; i < 2; i++)
 	{
-		layer_t *l = &state->m_layers[i];
+		layer_t *l = &m_layers[i];
 
 		l->tmap->set_scroll_cols(1);
 		l->tmap->set_scroll_rows(0x200);
@@ -687,11 +690,11 @@ static SCREEN_UPDATE_IND16( subsino2 )
 		}
 	}
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	if (layers_ctrl & 1)
 	{
-		layer_t *l = &state->m_layers[0];
+		layer_t *l = &m_layers[0];
 
 		if (l0_reel)
 		{
@@ -700,7 +703,7 @@ static SCREEN_UPDATE_IND16( subsino2 )
 
 			for (int r = 0; r < 3; r++)
 			{
-				rectangle visible = state->m_ss9601_reelrects[r];
+				rectangle visible = m_ss9601_reelrects[r];
 
 				for (int x = 0; x < 0x40; x++)
 				{
@@ -708,7 +711,7 @@ static SCREEN_UPDATE_IND16( subsino2 )
 					visible.max_x = 8 * (x+1) - 1;
 
 					int reeladdr = (visible.min_y / 0x10) * 0x80 + x;
-					UINT16 reelscroll = (state->m_ss9601_reelrams[VRAM_HI][reeladdr] << 8) + state->m_ss9601_reelrams[VRAM_LO][reeladdr];
+					UINT16 reelscroll = (m_ss9601_reelrams[VRAM_HI][reeladdr] << 8) + m_ss9601_reelrams[VRAM_LO][reeladdr];
 
 					l->tmap->set_scrollx(0, (reelscroll >> 9) * 8 + l->scroll_x - visible.min_x);
 
@@ -746,9 +749,9 @@ static SCREEN_UPDATE_IND16( subsino2 )
 		}
 	}
 
-	if (layers_ctrl & 2)	state->m_layers[1].tmap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 2)	m_layers[1].tmap->draw(bitmap, cliprect, 0, 0);
 
-//  popmessage("scrl: %03x,%03x - %03x,%03x dis: %02x siz: %02x ctrl: %02x", state->m_layers[0].scroll_x,state->m_layers[0].scroll_y, state->m_layers[1].scroll_x,state->m_layers[1].scroll_y, state->m_ss9601_disable, state->m_ss9601_tilesize, state->m_ss9601_scrollctrl);
+//  popmessage("scrl: %03x,%03x - %03x,%03x dis: %02x siz: %02x ctrl: %02x", m_layers[0].scroll_x,m_layers[0].scroll_y, m_layers[1].scroll_x,m_layers[1].scroll_y, m_ss9601_disable, m_ss9601_tilesize, m_ss9601_scrollctrl);
 
 	return 0;
 }
@@ -862,19 +865,17 @@ MACHINE_RESET_MEMBER(subsino2_state,am188em)
 	m_am188em_regs[AM188EM_I0CON+1] = 0x00;
 }
 
-static INTERRUPT_GEN( am188em_int0_irq )
+INTERRUPT_GEN_MEMBER(subsino2_state::am188em_int0_irq)
 {
-	subsino2_state *state = device->machine().driver_data<subsino2_state>();
-	if ( ((state->m_am188em_regs[AM188EM_IMASK+0] & 0x10) == 0) ||	// IMASK.I0 mask
-		 ((state->m_am188em_regs[AM188EM_I0CON+0] & 0x08) == 0) )	// I0CON.MSK mask
-		device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x0c);	// INT0 (background scrolling in xplan)
+	if ( ((m_am188em_regs[AM188EM_IMASK+0] & 0x10) == 0) ||	// IMASK.I0 mask
+		 ((m_am188em_regs[AM188EM_I0CON+0] & 0x08) == 0) )	// I0CON.MSK mask
+		device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x0c);	// INT0 (background scrolling in xplan)
 }
 
-static TIMER_DEVICE_CALLBACK( am188em_timer2_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(subsino2_state::am188em_timer2_irq)
 {
-	subsino2_state *state = timer.machine().driver_data<subsino2_state>();
-	if ((state->m_am188em_regs[AM188EM_IMASK+0] & 0x01) == 0)	// TMR mask
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x4c/4);
+	if ((m_am188em_regs[AM188EM_IMASK+0] & 0x01) == 0)	// TMR mask
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x4c/4);
 }
 
 /***************************************************************************
@@ -882,9 +883,9 @@ static TIMER_DEVICE_CALLBACK( am188em_timer2_irq )
 ***************************************************************************/
 
 // To be removed when cpu core is updated
-static TIMER_DEVICE_CALLBACK( h8_timer_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(subsino2_state::h8_timer_irq)
 {
-	timer.machine().device("maincpu")->execute().set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 
@@ -1084,11 +1085,11 @@ WRITE8_MEMBER(subsino2_state::mtrain_videoram_w)
 	vram_t vram = (m_ss9601_byte_lo & 0x08) ? VRAM_HI : VRAM_LO;
 	switch (m_ss9601_byte_lo & (~0x08))
 	{
-		case 0x00:	ss9601_videoram_w(&m_layers[1], vram, &space, offset,        data);
-					ss9601_videoram_w(&m_layers[1], vram, &space, offset+0x1000, data);	break;
+		case 0x00:	ss9601_videoram_w(&m_layers[1], vram, space, offset,        data);
+					ss9601_videoram_w(&m_layers[1], vram, space, offset+0x1000, data);	break;
 
-		case 0x04:	ss9601_videoram_w(&m_layers[0], vram, &space, offset,        data);
-					ss9601_videoram_w(&m_layers[0], vram, &space, offset+0x1000, data);	break;
+		case 0x04:	ss9601_videoram_w(&m_layers[0], vram, space, offset,        data);
+					ss9601_videoram_w(&m_layers[0], vram, space, offset+0x1000, data);	break;
 
 		case 0x06:	m_ss9601_reelrams[vram][offset] = data;	break;
 	}
@@ -2177,8 +2178,8 @@ INPUT_PORTS_END
 static MACHINE_CONFIG_START( bishjan, subsino2_state )
 	MCFG_CPU_ADD("maincpu", H83044, XTAL_44_1MHz / 3)
 	MCFG_CPU_PROGRAM_MAP( bishjan_map )
-	MCFG_CPU_VBLANK_INT( "screen", irq0_line_hold )
-	MCFG_TIMER_ADD_PERIODIC("timer", h8_timer_irq, attotime::from_hz(60)) // timer, ?? Hz
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", subsino2_state,  irq0_line_hold)
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer", subsino2_state, h8_timer_irq, attotime::from_hz(60))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_TICKET_DISPENSER_ADD("hopper", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW)
@@ -2188,7 +2189,7 @@ static MACHINE_CONFIG_START( bishjan, subsino2_state )
 	MCFG_SCREEN_SIZE( 512, 256 )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 512-1, 0, 256-16-1 )
 	MCFG_SCREEN_REFRESH_RATE( 60 )
-	MCFG_SCREEN_UPDATE_STATIC( subsino2 )
+	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
 
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
@@ -2216,7 +2217,7 @@ static MACHINE_CONFIG_START( mtrain, subsino2_state )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 512-1, 0, 256-32-1 )
 	MCFG_SCREEN_REFRESH_RATE( 58.7270 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	// game reads vblank state
-	MCFG_SCREEN_UPDATE_STATIC( subsino2 )
+	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
 
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
@@ -2238,7 +2239,7 @@ static MACHINE_CONFIG_START( saklove, subsino2_state )
 	MCFG_CPU_ADD("maincpu", I80188, XTAL_20MHz )	// !! AMD AM188-EM !!
 	MCFG_CPU_PROGRAM_MAP( saklove_map )
 	MCFG_CPU_IO_MAP( saklove_io )
-	MCFG_TIMER_ADD_PERIODIC("timer2", am188em_timer2_irq, attotime::from_hz(60)) // timer 2, ?? Hz
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer2", subsino2_state, am188em_timer2_irq, attotime::from_hz(60))
 
 	MCFG_MACHINE_RESET_OVERRIDE(subsino2_state,am188em)
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -2249,7 +2250,7 @@ static MACHINE_CONFIG_START( saklove, subsino2_state )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 512-1, 0, 256-16-1 )
 	MCFG_SCREEN_REFRESH_RATE( 58.7270 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	// game reads vblank state
-	MCFG_SCREEN_UPDATE_STATIC( subsino2 )
+	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
 
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
@@ -2274,8 +2275,8 @@ static MACHINE_CONFIG_START( xplan, subsino2_state )
 	MCFG_CPU_ADD("maincpu", I80188, XTAL_20MHz )	// !! AMD AM188-EM !!
 	MCFG_CPU_PROGRAM_MAP( xplan_map )
 	MCFG_CPU_IO_MAP( xplan_io )
-	MCFG_CPU_VBLANK_INT( "screen", am188em_int0_irq )
-	MCFG_TIMER_ADD_PERIODIC("timer2", am188em_timer2_irq, attotime::from_hz(60)) // timer 2, ?? Hz
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", subsino2_state,  am188em_int0_irq)
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer2", subsino2_state, am188em_timer2_irq, attotime::from_hz(60))
 
 	MCFG_MACHINE_RESET_OVERRIDE(subsino2_state,am188em)
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -2286,7 +2287,7 @@ static MACHINE_CONFIG_START( xplan, subsino2_state )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 512-1, 0, 256-16-1 )
 	MCFG_SCREEN_REFRESH_RATE( 58.7270 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	// game reads vblank state
-	MCFG_SCREEN_UPDATE_STATIC( subsino2 )
+	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
 
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )

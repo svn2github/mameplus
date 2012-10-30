@@ -47,7 +47,7 @@ void subs_state::palette_init()
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, subs_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
-	AM_RANGE(0x0000, 0x0000) AM_DEVWRITE_LEGACY("discrete", subs_noise_reset_w)
+	AM_RANGE(0x0000, 0x0000) AM_WRITE(subs_noise_reset_w)
 	AM_RANGE(0x0000, 0x0007) AM_READ(subs_control_r)
 	AM_RANGE(0x0020, 0x0020) AM_WRITE(subs_steer_reset_w)
 	AM_RANGE(0x0020, 0x0027) AM_READ(subs_coin_r)
@@ -55,11 +55,11 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, subs_state )
 	AM_RANGE(0x0060, 0x0063) AM_READ(subs_options_r)
 	AM_RANGE(0x0060, 0x0061) AM_WRITE(subs_lamp1_w)
 	AM_RANGE(0x0062, 0x0063) AM_WRITE(subs_lamp2_w)
-	AM_RANGE(0x0064, 0x0065) AM_DEVWRITE_LEGACY("discrete", subs_sonar2_w)
-	AM_RANGE(0x0066, 0x0067) AM_DEVWRITE_LEGACY("discrete", subs_sonar1_w)
+	AM_RANGE(0x0064, 0x0065) AM_WRITE(subs_sonar2_w)
+	AM_RANGE(0x0066, 0x0067) AM_WRITE(subs_sonar1_w)
 // Schematics show crash and explode reversed.  But this is proper.
-	AM_RANGE(0x0068, 0x0069) AM_DEVWRITE_LEGACY("discrete", subs_explode_w)
-	AM_RANGE(0x006a, 0x006b) AM_DEVWRITE_LEGACY("discrete", subs_crash_w)
+	AM_RANGE(0x0068, 0x0069) AM_WRITE(subs_explode_w)
+	AM_RANGE(0x006a, 0x006b) AM_WRITE(subs_crash_w)
 	AM_RANGE(0x006c, 0x006d) AM_WRITE(subs_invert1_w)
 	AM_RANGE(0x006e, 0x006f) AM_WRITE(subs_invert2_w)
 	AM_RANGE(0x0090, 0x009f) AM_SHARE("spriteram")
@@ -179,7 +179,7 @@ static MACHINE_CONFIG_START( subs, subs_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502,12096000/16)		/* clock input is the "4H" signal */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT(subs_interrupt,4*57)
+	MCFG_CPU_PERIODIC_INT_DRIVER(subs_state, subs_interrupt, 4*57)
 
 
 	/* video hardware */
@@ -192,14 +192,14 @@ static MACHINE_CONFIG_START( subs, subs_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(subs_left)
+	MCFG_SCREEN_UPDATE_DRIVER(subs_state, screen_update_subs_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(subs_right)
+	MCFG_SCREEN_UPDATE_DRIVER(subs_state, screen_update_subs_right)
 
 
 	/* sound hardware */

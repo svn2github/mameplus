@@ -37,13 +37,12 @@ WRITE16_MEMBER(tceptor_state::m68k_shared_word_w)
 
 /*******************************************************************/
 
-static INTERRUPT_GEN( m6809_vb_interrupt )
+INTERRUPT_GEN_MEMBER(tceptor_state::m6809_vb_interrupt)
 {
-	tceptor_state *state = device->machine().driver_data<tceptor_state>();
-	if (state->m_m6809_irq_enable)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (m_m6809_irq_enable)
+		device.execute().set_input_line(0, HOLD_LINE);
 	else
-		state->m_m6809_irq_enable = 1;
+		m_m6809_irq_enable = 1;
 }
 
 WRITE8_MEMBER(tceptor_state::m6809_irq_enable_w)
@@ -57,11 +56,10 @@ WRITE8_MEMBER(tceptor_state::m6809_irq_disable_w)
 }
 
 
-static INTERRUPT_GEN( m68k_vb_interrupt )
+INTERRUPT_GEN_MEMBER(tceptor_state::m68k_vb_interrupt)
 {
-	tceptor_state *state = device->machine().driver_data<tceptor_state>();
-	if (state->m_m68k_irq_enable)
-		device->execute().set_input_line(M68K_IRQ_1, HOLD_LINE);
+	if (m_m68k_irq_enable)
+		device.execute().set_input_line(M68K_IRQ_1, HOLD_LINE);
 }
 
 WRITE16_MEMBER(tceptor_state::m68k_irq_enable_w)
@@ -70,13 +68,12 @@ WRITE16_MEMBER(tceptor_state::m68k_irq_enable_w)
 }
 
 
-static INTERRUPT_GEN( mcu_vb_interrupt )
+INTERRUPT_GEN_MEMBER(tceptor_state::mcu_vb_interrupt)
 {
-	tceptor_state *state = device->machine().driver_data<tceptor_state>();
-	if (state->m_mcu_irq_enable)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (m_mcu_irq_enable)
+		device.execute().set_input_line(0, HOLD_LINE);
 	else
-		state->m_mcu_irq_enable = 1;
+		m_mcu_irq_enable = 1;
 }
 
 WRITE8_MEMBER(tceptor_state::mcu_irq_enable_w)
@@ -182,7 +179,7 @@ static ADDRESS_MAP_START( m6502_a_map, AS_PROGRAM, 8, tceptor_state )
 	AM_RANGE(0x0100, 0x01ff) AM_RAM
 	AM_RANGE(0x0200, 0x02ff) AM_RAM
 	AM_RANGE(0x0300, 0x030f) AM_RAM
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x3000, 0x30ff) AM_RAM AM_SHARE("share3")
 	AM_RANGE(0x3c01, 0x3c01) AM_WRITEONLY
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -364,7 +361,7 @@ static MACHINE_CONFIG_START( tceptor, tceptor_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 49152000/32)
 	MCFG_CPU_PROGRAM_MAP(m6809_map)
-	MCFG_CPU_VBLANK_INT("2dscreen", m6809_vb_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("2dscreen", tceptor_state,  m6809_vb_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M65C02, 49152000/24)
 	MCFG_CPU_PROGRAM_MAP(m6502_a_map)
@@ -374,12 +371,12 @@ static MACHINE_CONFIG_START( tceptor, tceptor_state )
 
 	MCFG_CPU_ADD("sub", M68000, 49152000/4)
 	MCFG_CPU_PROGRAM_MAP(m68k_map)
-	MCFG_CPU_VBLANK_INT("2dscreen", m68k_vb_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("2dscreen", tceptor_state,  m68k_vb_interrupt)
 
 	MCFG_CPU_ADD("mcu", HD63701, 49152000/8)	/* or compatible 6808 with extra instructions */
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
 	MCFG_CPU_IO_MAP(mcu_io_map)
-	MCFG_CPU_VBLANK_INT("2dscreen", mcu_vb_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("2dscreen", tceptor_state,  mcu_vb_interrupt)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -398,29 +395,29 @@ static MACHINE_CONFIG_START( tceptor, tceptor_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(38*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
-	MCFG_SCREEN_UPDATE_STATIC(tceptor_2d)
+	MCFG_SCREEN_UPDATE_DRIVER(tceptor_state, screen_update_tceptor_2d)
 
 	MCFG_SCREEN_ADD("3dleft", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60.606060)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(38*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
-	MCFG_SCREEN_UPDATE_STATIC(tceptor_3d_left)
+	MCFG_SCREEN_UPDATE_DRIVER(tceptor_state, screen_update_tceptor_3d_left)
 
 	MCFG_SCREEN_ADD("3dright", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60.606060)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(38*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
-	MCFG_SCREEN_UPDATE_STATIC(tceptor_3d_right)
-	MCFG_SCREEN_VBLANK_STATIC(tceptor)
+	MCFG_SCREEN_UPDATE_DRIVER(tceptor_state, screen_update_tceptor_3d_right)
+	MCFG_SCREEN_VBLANK_DRIVER(tceptor_state, screen_eof_tceptor)
 
 
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 14318180/4)
+	MCFG_YM2151_ADD("ymsnd", 14318180/4)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

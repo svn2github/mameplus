@@ -32,12 +32,11 @@ Known issues:
 //****************************************************************************
 // Interrupt Handlers
 
-static INTERRUPT_GEN ( bwp3_interrupt )
+INTERRUPT_GEN_MEMBER(bwing_state::bwp3_interrupt)
 {
-	bwing_state *state = device->machine().driver_data<bwing_state>();
 
-	if (!state->m_bwp3_nmimask)
-		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	if (!m_bwp3_nmimask)
+		device.execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 //****************************************************************************
@@ -374,7 +373,7 @@ static MACHINE_CONFIG_START( bwing, bwing_state )
 	MCFG_CPU_ADD("audiocpu", DECO16, 2000000)
 	MCFG_CPU_PROGRAM_MAP(bwp3_map)
 	MCFG_CPU_IO_MAP(bwp3_io_map)
-	MCFG_CPU_PERIODIC_INT(bwp3_interrupt, 1000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bwing_state, bwp3_interrupt,  1000)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(18000))		// high enough?
 
@@ -387,7 +386,7 @@ static MACHINE_CONFIG_START( bwing, bwing_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(600))	// must be long enough for polling
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bwing)
+	MCFG_SCREEN_UPDATE_DRIVER(bwing_state, screen_update_bwing)
 
 	MCFG_GFXDECODE(bwing)
 	MCFG_PALETTE_LENGTH(64)

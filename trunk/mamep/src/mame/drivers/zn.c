@@ -32,9 +32,13 @@
 class zn_state : public psx_state
 {
 public:
-	zn_state(const machine_config &mconfig, device_type type, const char *tag)
-		: psx_state(mconfig, type, tag) { }
+	zn_state(const machine_config &mconfig, device_type type, const char *tag) :
+		psx_state(mconfig, type, tag),
+		m_gpu(*this, "gpu")
+	{
+	}
 
+	required_device<psxgpu_device> m_gpu;
 	UINT32 m_n_znsecsel;
 	UINT32 m_b_znsecport;
 	int m_n_dip_bit;
@@ -117,6 +121,8 @@ public:
 	DECLARE_MACHINE_RESET(coh1001l);
 	DECLARE_MACHINE_RESET(coh1002v);
 	DECLARE_MACHINE_RESET(coh1002m);
+	INTERRUPT_GEN_MEMBER(qsound_interrupt);
+	TIMER_CALLBACK_MEMBER(dip_timer_fired);
 };
 
 INLINE void ATTR_PRINTF(3,4) verboselog( running_machine &machine, int n_level, const char *s_fmt, ... )
@@ -242,7 +248,7 @@ static const struct
 	{ "shiryu2",  cp10, cp13 }, /* OK ( random crashes on bosses ) */
 	{ "beastrzr", et01, et02 }, /* OK */
 	{ "bldyroar", et01, et02 }, /* OK */
-	{ "beastrzb", et01, et02 }, /* OK */
+	{ "beastrzrb",et01, et02 }, /* OK */
 	{ "bldyror2", et01, et03 }, /* OK */
 	{ "bldyror2u",et01, et03 }, /* OK */
 	{ "bldyror2a",et01, et03 }, /* OK */
@@ -419,14 +425,13 @@ WRITE32_MEMBER(zn_state::znsecsel_w)
 	verboselog( machine(), 2, "znsecsel_w( %08x, %08x, %08x )\n", offset, data, mem_mask );
 }
 
-static TIMER_CALLBACK( dip_timer_fired )
+TIMER_CALLBACK_MEMBER(zn_state::dip_timer_fired)
 {
-	zn_state *state = machine.driver_data<zn_state>();
-	psx_sio_input( machine, 0, PSX_SIO_IN_DSR, param * PSX_SIO_IN_DSR );
+	psx_sio_input( machine(), 0, PSX_SIO_IN_DSR, param * PSX_SIO_IN_DSR );
 
 	if( param )
 	{
-		state->m_dip_timer->adjust( machine.device<cpu_device>( "maincpu" )->cycles_to_attotime(50 ) );
+		m_dip_timer->adjust( machine().device<cpu_device>( "maincpu" )->cycles_to_attotime(50 ) );
 	}
 }
 
@@ -530,15 +535,7 @@ static void zn_driver_init( running_machine &machine )
 		n_game++;
 	}
 
-	state->m_dip_timer = machine.scheduler().timer_alloc( FUNC(dip_timer_fired), NULL );
-}
-
-static void psx_spu_irq(device_t *device, UINT32 data)
-{
-	if (data)
-	{
-		psx_irq_set(device->machine(), 1<<9);
-	}
+	state->m_dip_timer = machine.scheduler().timer_alloc( timer_expired_delegate(FUNC(zn_state::dip_timer_fired),state), NULL );
 }
 
 static void zn_machine_init( running_machine &machine )
@@ -560,7 +557,7 @@ static MACHINE_CONFIG_START( zn1_1mb_vram, zn_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2, &psx_spu_irq )
+	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2 )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.35)
 
@@ -582,7 +579,7 @@ static MACHINE_CONFIG_START( zn2, zn_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2, &psx_spu_irq )
+	MCFG_SPU_ADD( "spu", XTAL_67_7376MHz/2 )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.35)
 
@@ -719,9 +716,9 @@ WRITE8_MEMBER(zn_state::qsound_bankswitch_w)
 	membank( "bank10" )->set_base( memregion( "audiocpu" )->base() + 0x10000 + ( ( data & 0x0f ) * 0x4000 ) );
 }
 
-static INTERRUPT_GEN( qsound_interrupt )
+INTERRUPT_GEN_MEMBER(zn_state::qsound_interrupt)
 {
-	device->execute().set_input_line(0, HOLD_LINE);
+	device.execute().set_input_line(0, HOLD_LINE);
 }
 
 WRITE32_MEMBER(zn_state::zn_qsound_w)
@@ -732,13 +729,13 @@ WRITE32_MEMBER(zn_state::zn_qsound_w)
 
 DRIVER_INIT_MEMBER(zn_state,coh1000c)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f3fffff, "bank1" );     /* fixed game rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f400000, 0x1f7fffff, "bank2" );     /* banked game rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::bank_coh1000c_w),this)); /* bankswitch */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1fb40010, 0x1fb40013, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1fb40020, 0x1fb40023, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1fb80000, 0x1fbfffff, "bank3" );     /* country rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb60000, 0x1fb60003, write32_delegate(FUNC(zn_state::zn_qsound_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f3fffff, "bank1" );     /* fixed game rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f400000, 0x1f7fffff, "bank2" );     /* banked game rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::bank_coh1000c_w),this)); /* bankswitch */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1fb40010, 0x1fb40013, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1fb40020, 0x1fb40023, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1fb80000, 0x1fbfffff, "bank3" );     /* country rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb60000, 0x1fb60003, write32_delegate(FUNC(zn_state::zn_qsound_w),this));
 
 	zn_driver_init(machine());
 
@@ -779,7 +776,7 @@ static MACHINE_CONFIG_DERIVED( coh1000c, zn1_1mb_vram )
 	MCFG_CPU_ADD( "audiocpu", Z80, 8000000 )  /* 8MHz ?? */
 	MCFG_CPU_PROGRAM_MAP( qsound_map)
 	MCFG_CPU_IO_MAP( qsound_portmap)
-	MCFG_CPU_PERIODIC_INT( qsound_interrupt, 60*4 ) /* 4 interrupts per frame ?? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(zn_state, qsound_interrupt,  60*4) /* 4 interrupts per frame ?? */
 
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh1000c )
 
@@ -793,7 +790,7 @@ static MACHINE_CONFIG_DERIVED( coh1002c, zn1_2mb_vram )
 	MCFG_CPU_ADD( "audiocpu", Z80, 8000000 )  /* 8MHz ?? */
 	MCFG_CPU_PROGRAM_MAP( qsound_map)
 	MCFG_CPU_IO_MAP( qsound_portmap)
-	MCFG_CPU_PERIODIC_INT( qsound_interrupt, 60*4 ) /* 4 interrupts per frame ?? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(zn_state, qsound_interrupt,  60*4) /* 4 interrupts per frame ?? */
 
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh1000c )
 
@@ -949,13 +946,13 @@ WRITE32_MEMBER(zn_state::bank_coh3002c_w)
 
 DRIVER_INIT_MEMBER(zn_state,coh3002c)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f3fffff, "bank1" );     /* fixed game rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f400000, 0x1f7fffff, "bank2" );     /* banked game rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1fb40010, 0x1fb40013, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1fb40020, 0x1fb40023, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::bank_coh3002c_w),this)); /* bankswitch */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1fb80000, 0x1fbfffff, "bank3" );     /* country rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb60000, 0x1fb60003, write32_delegate(FUNC(zn_state::zn_qsound_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f3fffff, "bank1" );     /* fixed game rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f400000, 0x1f7fffff, "bank2" );     /* banked game rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1fb40010, 0x1fb40013, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1fb40020, 0x1fb40023, read32_delegate(FUNC(zn_state::capcom_kickharness_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::bank_coh3002c_w),this)); /* bankswitch */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1fb80000, 0x1fbfffff, "bank3" );     /* country rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb60000, 0x1fb60003, write32_delegate(FUNC(zn_state::zn_qsound_w),this));
 
 	zn_driver_init(machine());
 }
@@ -973,7 +970,7 @@ static MACHINE_CONFIG_DERIVED( coh3002c, zn2 )
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000 )	/* 8MHz ?? */
 	MCFG_CPU_PROGRAM_MAP( qsound_map)
 	MCFG_CPU_IO_MAP( qsound_portmap)
-	MCFG_CPU_PERIODIC_INT( qsound_interrupt, 60*4 ) /* 4 interrupts per frame ?? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(zn_state, qsound_interrupt,  60*4) /* 4 interrupts per frame ?? */
 
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh3002c )
 
@@ -1216,7 +1213,7 @@ WRITE8_MEMBER(zn_state::fx1a_sound_bankswitch_w)
 READ32_MEMBER(zn_state::taitofx1a_ymsound_r)
 {
 	device_t *tc0140syt = machine().device("tc0140syt");
-	return tc0140syt_comm_r(tc0140syt, 0) << 16;
+	return tc0140syt_comm_r(tc0140syt, space, 0) << 16;
 }
 
 WRITE32_MEMBER(zn_state::taitofx1a_ymsound_w)
@@ -1225,11 +1222,11 @@ WRITE32_MEMBER(zn_state::taitofx1a_ymsound_w)
 
 	if (mem_mask == 0x0000ffff)
 	{
-		tc0140syt_port_w(tc0140syt, 0, data & 0xff);
+		tc0140syt_port_w(tc0140syt, space, 0, data & 0xff);
 	}
 	else
 	{
-		tc0140syt_comm_w(tc0140syt, 0, (data >> 16) & 0xff);
+		tc0140syt_comm_w(tc0140syt, space, 0, (data >> 16) & 0xff);
 	}
 }
 
@@ -1238,10 +1235,10 @@ DRIVER_INIT_MEMBER(zn_state,coh1000ta)
 	m_taitofx1_eeprom_size1 = 0x200; m_taitofx1_eeprom1 = auto_alloc_array( machine(), UINT8, m_taitofx1_eeprom_size1 );
 	machine().device<nvram_device>("eeprom1")->set_base(m_taitofx1_eeprom1, m_taitofx1_eeprom_size1);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank     ( 0x1f000000, 0x1f7fffff, "bank1" );     /* banked game rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    ( 0x1fb40000, 0x1fb40003, write32_delegate(FUNC(zn_state::bank_coh1000t_w),this)); /* bankswitch */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1fb80000, 0x1fb80003, read32_delegate(FUNC(zn_state::taitofx1a_ymsound_r),this), write32_delegate(FUNC(zn_state::taitofx1a_ymsound_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_bank( 0x1fbe0000, 0x1fbe0000 + ( m_taitofx1_eeprom_size1 - 1 ), "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank     ( 0x1f000000, 0x1f7fffff, "bank1" );     /* banked game rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1fb40000, 0x1fb40003, write32_delegate(FUNC(zn_state::bank_coh1000t_w),this)); /* bankswitch */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1fb80000, 0x1fb80003, read32_delegate(FUNC(zn_state::taitofx1a_ymsound_r),this), write32_delegate(FUNC(zn_state::taitofx1a_ymsound_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_bank( 0x1fbe0000, 0x1fbe0000 + ( m_taitofx1_eeprom_size1 - 1 ), "bank2" );
 
 	zn_driver_init(machine());
 }
@@ -1327,13 +1324,13 @@ DRIVER_INIT_MEMBER(zn_state,coh1000tb)
 	machine().device<nvram_device>("eeprom1")->set_base(m_taitofx1_eeprom1, m_taitofx1_eeprom_size1);
 	machine().device<nvram_device>("eeprom2")->set_base(m_taitofx1_eeprom2, m_taitofx1_eeprom_size2);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank     ( 0x1f000000, 0x1f7fffff, "bank1" ); /* banked game rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_bank( 0x1fb00000, 0x1fb00000 + ( m_taitofx1_eeprom_size1 - 1 ), "bank2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    ( 0x1fb40000, 0x1fb40003, write32_delegate(FUNC(zn_state::bank_coh1000t_w),this)); /* bankswitch */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    ( 0x1fb80000, 0x1fb8ffff, write32_delegate(FUNC(zn_state::taitofx1b_volume_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    ( 0x1fba0000, 0x1fbaffff, write32_delegate(FUNC(zn_state::taitofx1b_sound_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler     ( 0x1fbc0000, 0x1fbc0003, read32_delegate(FUNC(zn_state::taitofx1b_sound_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_bank( 0x1fbe0000, 0x1fbe0000 + ( m_taitofx1_eeprom_size2 - 1 ), "bank3" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank     ( 0x1f000000, 0x1f7fffff, "bank1" ); /* banked game rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_bank( 0x1fb00000, 0x1fb00000 + ( m_taitofx1_eeprom_size1 - 1 ), "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1fb40000, 0x1fb40003, write32_delegate(FUNC(zn_state::bank_coh1000t_w),this)); /* bankswitch */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1fb80000, 0x1fb8ffff, write32_delegate(FUNC(zn_state::taitofx1b_volume_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1fba0000, 0x1fbaffff, write32_delegate(FUNC(zn_state::taitofx1b_sound_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler     ( 0x1fbc0000, 0x1fbc0003, read32_delegate(FUNC(zn_state::taitofx1b_sound_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_bank( 0x1fbe0000, 0x1fbe0000 + ( m_taitofx1_eeprom_size2 - 1 ), "bank3" );
 
 	zn_driver_init(machine());
 }
@@ -1474,14 +1471,6 @@ Notes:
       *2                  - Unpopulated DIP28 socket
 */
 
-static void atpsx_interrupt(device_t *device, int state)
-{
-	if (state)
-	{
-		psx_irq_set(device->machine(), 0x400);
-	}
-}
-
 static void atpsx_dma_read( zn_state *state, UINT32 n_address, INT32 n_size )
 {
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
@@ -1498,9 +1487,10 @@ static void atpsx_dma_read( zn_state *state, UINT32 n_address, INT32 n_size )
 
 	/* dma size is in 32-bit words, convert to bytes */
 	n_size <<= 2;
+	address_space &space = state->machine().firstcpu->space(AS_PROGRAM);
 	while( n_size > 0 )
 	{
-		psxwritebyte( p_n_psxram, n_address, ide_controller32_r( ide, 0x1f0 / 4, 0x000000ff ) );
+		psxwritebyte( p_n_psxram, n_address, ide_controller32_r( ide, space, 0x1f0 / 4, 0x000000ff ) );
 		n_address++;
 		n_size--;
 	}
@@ -1515,11 +1505,11 @@ DRIVER_INIT_MEMBER(zn_state,coh1000w)
 {
 	device_t *ide = machine().device("ide");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank         ( 0x1f000000, 0x1f1fffff, "bank1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write                         ( 0x1f000000, 0x1f000003);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler( *ide, 0x1f7e4000, 0x1f7e4fff, FUNC(ide_controller32_r), FUNC(ide_controller32_w) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite                     ( 0x1f7e8000, 0x1f7e8003);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler( *ide, 0x1f7f4000, 0x1f7f4fff, FUNC(ide_controller32_r), FUNC(ide_controller32_w) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank         ( 0x1f000000, 0x1f1fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write                         ( 0x1f000000, 0x1f000003);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler( *ide, 0x1f7e4000, 0x1f7e4fff, FUNC(ide_controller32_r), FUNC(ide_controller32_w) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_readwrite                     ( 0x1f7e8000, 0x1f7e8003);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler( *ide, 0x1f7f4000, 0x1f7f4fff, FUNC(ide_controller32_r), FUNC(ide_controller32_w) );
 
 	zn_driver_init(machine());
 }
@@ -1532,17 +1522,11 @@ MACHINE_RESET_MEMBER(zn_state,coh1000w)
 	machine().device("ide")->reset();
 }
 
-static const ide_config ide_intf =
-{
-	atpsx_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_DERIVED( coh1000w, zn1_2mb_vram )
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh1000w )
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE("maincpu:irq", psxirq_device, intin10))
 	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( atpsx_dma_read ), (zn_state *) owner ) )
 	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( atpsx_dma_write ), (zn_state *) owner ) )
 MACHINE_CONFIG_END
@@ -1711,9 +1695,9 @@ WRITE32_MEMBER(zn_state::coh1002e_latch_w)
 
 DRIVER_INIT_MEMBER(zn_state,coh1002e)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f7fffff, "bank1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fa10300, 0x1fa10303, write32_delegate(FUNC(zn_state::coh1002e_bank_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb00000, 0x1fb00007, write32_delegate(FUNC(zn_state::coh1002e_latch_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fa10300, 0x1fa10303, write32_delegate(FUNC(zn_state::coh1002e_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb00000, 0x1fb00007, write32_delegate(FUNC(zn_state::coh1002e_latch_w),this));
 
 	zn_driver_init(machine());
 }
@@ -1851,12 +1835,12 @@ READ32_MEMBER(zn_state::bam2_unk_r)
 
 DRIVER_INIT_MEMBER(zn_state,bam2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f3fffff, "bank1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f400000, 0x1f7fffff, "bank2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1fb00000, 0x1fb00007, read32_delegate(FUNC(zn_state::bam2_mcu_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler ( 0x1fa20000, 0x1fa20003, read32_delegate(FUNC(zn_state::bam2_unk_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fa10300, 0x1fa10303, write32_delegate(FUNC(zn_state::bam2_sec_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb00000, 0x1fb00007, write32_delegate(FUNC(zn_state::bam2_mcu_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f3fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f400000, 0x1f7fffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1fb00000, 0x1fb00007, read32_delegate(FUNC(zn_state::bam2_mcu_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1fa20000, 0x1fa20003, read32_delegate(FUNC(zn_state::bam2_unk_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fa10300, 0x1fa10303, write32_delegate(FUNC(zn_state::bam2_sec_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb00000, 0x1fb00007, write32_delegate(FUNC(zn_state::bam2_mcu_w),this));
 
 	zn_driver_init(machine());
 }
@@ -2044,14 +2028,6 @@ Notes:
       *         - Unpopulated DIP42 socket
 */
 
-static void jdredd_ide_interrupt(device_t *device, int state)
-{
-	if (state)
-	{
-		psx_irq_set(device->machine(), 0x400);
-	}
-}
-
 READ32_MEMBER(zn_state::jdredd_idestat_r)
 {
 	device_t *device = machine().device("ide");
@@ -2132,7 +2108,7 @@ void jdredd_vblank(zn_state *state, screen_device &screen, bool vblank_state)
 		if( x > 0x393 && x < 0xcb2 &&
 			y > 0x02d && y < 0x217 )
 		{
-			psx_lightgun_set( state->machine(), x, y );
+			state->m_gpu->lightgun_set( x, y );
 		}
 	}
 }
@@ -2150,7 +2126,8 @@ WRITE32_MEMBER(zn_state::acpsx_10_w)
 WRITE32_MEMBER(zn_state::nbajamex_80_w)
 {
 	verboselog( machine(), 0, "nbajamex_80_w( %08x, %08x, %08x )\n", offset, data, mem_mask );
-	psx_irq_set(machine(), 0x400);
+	psxirq_device *psxirq = (psxirq_device *) machine().device("maincpu:irq");
+	psxirq->intin10(1);
 }
 
 READ32_MEMBER(zn_state::nbajamex_08_r)
@@ -2170,18 +2147,18 @@ READ32_MEMBER(zn_state::nbajamex_80_r)
 DRIVER_INIT_MEMBER(zn_state,coh1000a)
 {
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f1fffff, "bank1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fbfff00, 0x1fbfff03, write32_delegate(FUNC(zn_state::acpsx_00_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fbfff10, 0x1fbfff13, write32_delegate(FUNC(zn_state::acpsx_10_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f1fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fbfff00, 0x1fbfff03, write32_delegate(FUNC(zn_state::acpsx_00_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fbfff10, 0x1fbfff13, write32_delegate(FUNC(zn_state::acpsx_10_w),this));
 
 	if( strcmp( machine().system().name, "nbajamex" ) == 0 )
 	{
 		m_nbajamex_eeprom_size = 0x8000;
 		m_nbajamex_eeprom = auto_alloc_array( machine(), UINT8, m_nbajamex_eeprom_size );
 
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_bank( 0x1f200000, 0x1f200000 + ( m_nbajamex_eeprom_size - 1 ), "bank2" );
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler     ( 0x1fbfff08, 0x1fbfff0b, read32_delegate(FUNC(zn_state::nbajamex_08_r),this));
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1fbfff80, 0x1fbfff83, read32_delegate(FUNC(zn_state::nbajamex_80_r),this), write32_delegate(FUNC(zn_state::nbajamex_80_w),this));
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_bank( 0x1f200000, 0x1f200000 + ( m_nbajamex_eeprom_size - 1 ), "bank2" );
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler     ( 0x1fbfff08, 0x1fbfff0b, read32_delegate(FUNC(zn_state::nbajamex_08_r),this));
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1fbfff80, 0x1fbfff83, read32_delegate(FUNC(zn_state::nbajamex_80_r),this), write32_delegate(FUNC(zn_state::nbajamex_80_w),this));
 
 		membank( "bank2" )->set_base( m_nbajamex_eeprom ); /* ram/eeprom/?? */
 	}
@@ -2189,9 +2166,9 @@ DRIVER_INIT_MEMBER(zn_state,coh1000a)
 	if( ( !strcmp( machine().system().name, "jdredd" ) ) ||
 		( !strcmp( machine().system().name, "jdreddb" ) ) )
 	{
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x1fbfff8c, 0x1fbfff8f,read32_delegate(FUNC(zn_state::jdredd_idestat_r),this) );
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write                    ( 0x1fbfff8c, 0x1fbfff8f);
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x1fbfff90, 0x1fbfff9f, read32_delegate(FUNC(zn_state::jdredd_ide_r),this), write32_delegate(FUNC(zn_state::jdredd_ide_w),this) );
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x1fbfff8c, 0x1fbfff8f,read32_delegate(FUNC(zn_state::jdredd_idestat_r),this) );
+		machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write                    ( 0x1fbfff8c, 0x1fbfff8f);
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x1fbfff90, 0x1fbfff9f, read32_delegate(FUNC(zn_state::jdredd_ide_r),this), write32_delegate(FUNC(zn_state::jdredd_ide_w),this) );
 	}
 
 	zn_driver_init(machine());
@@ -2213,13 +2190,6 @@ static MACHINE_CONFIG_DERIVED( coh1000a, zn1_2mb_vram )
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh1000a )
 MACHINE_CONFIG_END
 
-static const ide_config jdredd_ide_intf =
-{
-	jdredd_ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_DERIVED( coh1000a_ide, zn1_2mb_vram )
 
 	MCFG_DEVICE_MODIFY( "gpu" )
@@ -2227,7 +2197,8 @@ static MACHINE_CONFIG_DERIVED( coh1000a_ide, zn1_2mb_vram )
 
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh1000a )
 
-	MCFG_IDE_CONTROLLER_ADD("ide", jdredd_ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE("maincpu:irq", psxirq_device, intin10))
 MACHINE_CONFIG_END
 
 /*
@@ -2353,8 +2324,8 @@ WRITE32_MEMBER(zn_state::coh1001l_bnk_w)
 
 DRIVER_INIT_MEMBER(zn_state,coh1001l)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f7fffff, "bank1" ); /* banked rom */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::coh1001l_bnk_w),this) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f7fffff, "bank1" ); /* banked rom */
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::coh1001l_bnk_w),this) );
 
 	zn_driver_init(machine());
 }
@@ -2395,9 +2366,9 @@ WRITE32_MEMBER(zn_state::coh1002v_bnk_w)
 
 DRIVER_INIT_MEMBER(zn_state,coh1002v)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1f000000, 0x1f27ffff, "bank1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank ( 0x1fb00000, 0x1fbfffff, "bank2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::coh1002v_bnk_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1f000000, 0x1f27ffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank ( 0x1fb00000, 0x1fbfffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1fb00000, 0x1fb00003, write32_delegate(FUNC(zn_state::coh1002v_bnk_w),this));
 
 	zn_driver_init(machine());
 }
@@ -2598,9 +2569,9 @@ WRITE32_MEMBER(zn_state::cbaj_z80_w)
 
 DRIVER_INIT_MEMBER(zn_state,coh1002m)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank               ( 0x1f000000, 0x1f7fffff, "bank1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler( 0x1fb00000, 0x1fb00003, read32_delegate(FUNC(zn_state::cbaj_z80_r),this), write32_delegate(FUNC(zn_state::cbaj_z80_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    ( 0x1fb00004, 0x1fb00007, write32_delegate(FUNC(zn_state::coh1002m_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank               ( 0x1f000000, 0x1f7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1fb00000, 0x1fb00003, read32_delegate(FUNC(zn_state::cbaj_z80_r),this), write32_delegate(FUNC(zn_state::cbaj_z80_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1fb00004, 0x1fb00007, write32_delegate(FUNC(zn_state::coh1002m_bank_w),this));
 
 	zn_driver_init(machine());
 }
@@ -4422,7 +4393,7 @@ ROM_START( bldyroar )
 	ROM_LOAD( "ra-b.roar3_rom-3.u0326", 0x000000, 0x400000, CRC(b74cc4d1) SHA1(eb5485582a12959ae06927a2f1d8a7e63e0f956f) )
 ROM_END
 
-ROM_START( beastrzb ) /* bootleg board */
+ROM_START( beastrzrb ) /* bootleg board */
 	PSARC95_BIOS
 
 	ROM_REGION32_LE( 0x1800000, "user2", 0 )
@@ -4898,7 +4869,7 @@ GAME( 1997, psarc95,  0,        coh1002e, zn, zn_state,   coh1002e, ROT0, "Eight
 
 GAME( 1997, beastrzr,  psarc95,  coh1002e, zn, zn_state,   coh1002e, ROT0, "Eighting / Raizing", "Beastorizer (USA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1997, bldyroar,  beastrzr, coh1002e, zn, zn_state,   coh1002e, ROT0, "Eighting / Raizing", "Bloody Roar (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, beastrzb,  psarc95,  coh1002e, zn, zn_state,   coh1002e, ROT0, "bootleg", "Beastorizer (USA bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1997, beastrzrb, beastrzr, coh1002e, zn, zn_state,   coh1002e, ROT0, "bootleg", "Beastorizer (USA bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 
 /* The region on these is determined from the NVRAM, it can't be changed from the test menu, it's pre-programmed */
 GAME( 1998, bldyror2,  psarc95,  coh1002e, zn6b, zn_state, coh1002e, ROT0, "Eighting / Raizing", "Bloody Roar 2 (World)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

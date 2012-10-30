@@ -101,8 +101,8 @@ write:
  *
  *************************************/
 
-static UINT8 memory_read_byte(address_space *space, offs_t address) { return space->read_byte(address); }
-static void memory_write_byte(address_space *space, offs_t address, UINT8 data) { space->write_byte(address, data); }
+static UINT8 memory_read_byte(address_space &space, offs_t address, UINT8 mem_mask) { return space.read_byte(address); }
+static void memory_write_byte(address_space &space, offs_t address, UINT8 data, UINT8 mem_mask) { space.write_byte(address, data); }
 
 static Z80DMA_INTERFACE( mario_dma )
 {
@@ -138,8 +138,8 @@ static ADDRESS_MAP_START( mario_map, AS_PROGRAM, 8, mario_state )
 	AM_RANGE(0x6000, 0x6fff) AM_RAM
 	AM_RANGE(0x7000, 0x73ff) AM_RAM	AM_SHARE("spriteram") /* physical sprite ram */
 	AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(mario_videoram_w) AM_SHARE("videoram")
-	AM_RANGE(0x7c00, 0x7c00) AM_READ_PORT("IN0") AM_DEVWRITE_LEGACY("discrete", mario_sh1_w) /* Mario run sample */
-	AM_RANGE(0x7c80, 0x7c80) AM_READ_PORT("IN1") AM_DEVWRITE_LEGACY("discrete", mario_sh2_w) /* Luigi run sample */
+	AM_RANGE(0x7c00, 0x7c00) AM_READ_PORT("IN0") AM_WRITE(mario_sh1_w) /* Mario run sample */
+	AM_RANGE(0x7c80, 0x7c80) AM_READ_PORT("IN1") AM_WRITE(mario_sh2_w) /* Luigi run sample */
 	AM_RANGE(0x7d00, 0x7d00) AM_WRITE(mario_scroll_w)
 	AM_RANGE(0x7e80, 0x7e80) AM_WRITE(mario_gfxbank_w)
 	AM_RANGE(0x7e82, 0x7e82) AM_WRITE(mario_flip_w)
@@ -323,12 +323,11 @@ GFXDECODE_END
  *
  *************************************/
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(mario_state::vblank_irq)
 {
-	mario_state *state = device->machine().driver_data<mario_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( mario_base, mario_state )
@@ -337,7 +336,7 @@ static MACHINE_CONFIG_START( mario_base, mario_state )
 	MCFG_CPU_ADD("maincpu", Z80, Z80_CLOCK)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mario_map)
 	MCFG_CPU_IO_MAP(mario_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mario_state,  vblank_irq)
 
 	/* devices */
 	MCFG_Z80DMA_ADD("z80dma", Z80_CLOCK, mario_dma)
@@ -345,7 +344,7 @@ static MACHINE_CONFIG_START( mario_base, mario_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(mario)
+	MCFG_SCREEN_UPDATE_DRIVER(mario_state, screen_update_mario)
 	MCFG_GFXDECODE(mario)
 	MCFG_PALETTE_LENGTH(512)
 

@@ -369,6 +369,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	DECLARE_MACHINE_RESET(hornet_2board);
+	UINT32 screen_update_hornet(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_hornet_2board(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(irq_off);
 };
 
 
@@ -377,38 +380,38 @@ public:
 READ32_MEMBER(hornet_state::hornet_k037122_sram_r)
 {
 	device_t *k037122 = machine().device(get_cgboard_id() ? "k037122_2" : "k037122_1");
-	return k037122_sram_r(k037122, offset, mem_mask);
+	return k037122_sram_r(k037122, space, offset, mem_mask);
 }
 
 WRITE32_MEMBER(hornet_state::hornet_k037122_sram_w)
 {
 	device_t *k037122 = machine().device(get_cgboard_id() ? "k037122_2" : "k037122_1");
-	k037122_sram_w(k037122, offset, data, mem_mask);
+	k037122_sram_w(k037122, space, offset, data, mem_mask);
 }
 
 
 READ32_MEMBER(hornet_state::hornet_k037122_char_r)
 {
 	device_t *k037122 = machine().device(get_cgboard_id() ? "k037122_2" : "k037122_1");
-	return k037122_char_r(k037122, offset, mem_mask);
+	return k037122_char_r(k037122, space, offset, mem_mask);
 }
 
 WRITE32_MEMBER(hornet_state::hornet_k037122_char_w)
 {
 	device_t *k037122 = machine().device(get_cgboard_id() ? "k037122_2" : "k037122_1");
-	k037122_char_w(k037122, offset, data, mem_mask);
+	k037122_char_w(k037122, space, offset, data, mem_mask);
 }
 
 READ32_MEMBER(hornet_state::hornet_k037122_reg_r)
 {
 	device_t *k037122 = machine().device(get_cgboard_id() ? "k037122_2" : "k037122_1");
-	return k037122_reg_r(k037122, offset, mem_mask);
+	return k037122_reg_r(k037122, space, offset, mem_mask);
 }
 
 WRITE32_MEMBER(hornet_state::hornet_k037122_reg_w)
 {
 	device_t *k037122 = machine().device(get_cgboard_id() ? "k037122_2" : "k037122_1");
-	k037122_reg_w(k037122, offset, data, mem_mask);
+	k037122_reg_w(k037122, space, offset, data, mem_mask);
 }
 
 static void voodoo_vblank_0(device_t *device, int param)
@@ -420,28 +423,26 @@ static void voodoo_vblank_1(device_t *device, int param)
 {
 }
 
-static SCREEN_UPDATE_RGB32( hornet )
+UINT32 hornet_state::screen_update_hornet(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	hornet_state *state = screen.machine().driver_data<hornet_state>();
-	device_t *voodoo = screen.machine().device("voodoo0");
-	device_t *k037122 = screen.machine().device("k037122_1");
+	device_t *voodoo = machine().device("voodoo0");
+	device_t *k037122 = machine().device("k037122_1");
 
 	voodoo_update(voodoo, bitmap, cliprect);
 
 	k037122_tile_draw(k037122, bitmap, cliprect);
 
-	draw_7segment_led(bitmap, 3, 3, state->m_led_reg0);
-	draw_7segment_led(bitmap, 9, 3, state->m_led_reg1);
+	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
+	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
 	return 0;
 }
 
-static SCREEN_UPDATE_RGB32( hornet_2board )
+UINT32 hornet_state::screen_update_hornet_2board(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	hornet_state *state = screen.machine().driver_data<hornet_state>();
 	if (strcmp(screen.tag(), ":lscreen") == 0)
 	{
-		device_t *k037122 = screen.machine().device("k037122_1");
-		device_t *voodoo = screen.machine().device("voodoo0");
+		device_t *k037122 = machine().device("k037122_1");
+		device_t *voodoo = machine().device("voodoo0");
 		voodoo_update(voodoo, bitmap, cliprect);
 
 		/* TODO: tilemaps per screen */
@@ -449,16 +450,16 @@ static SCREEN_UPDATE_RGB32( hornet_2board )
 	}
 	else if (strcmp(screen.tag(), ":rscreen") == 0)
 	{
-		device_t *k037122 = screen.machine().device("k037122_2");
-		device_t *voodoo = screen.machine().device("voodoo1");
+		device_t *k037122 = machine().device("k037122_2");
+		device_t *voodoo = machine().device("voodoo1");
 		voodoo_update(voodoo, bitmap, cliprect);
 
 		/* TODO: tilemaps per screen */
 		k037122_tile_draw(k037122, bitmap, cliprect);
 	}
 
-	draw_7segment_led(bitmap, 3, 3, state->m_led_reg0);
-	draw_7segment_led(bitmap, 9, 3, state->m_led_reg1);
+	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
+	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
 	return 0;
 }
 
@@ -490,7 +491,7 @@ READ8_MEMBER(hornet_state::sysreg_r)
                 0x01 = ADDO (ADC DO)
             */
 			r = 0xf0 | (eeprom->read_bit() << 3);
-			r |= adc1213x_do_r(adc12138, 0) | (adc1213x_eoc_r(adc12138, 0) << 2);
+			r |= adc1213x_do_r(adc12138, space, 0) | (adc1213x_eoc_r(adc12138, space, 0) << 2);
 			break;
 
 		case 4:	/* I/O port 4 - DIP switches */
@@ -544,10 +545,10 @@ WRITE8_MEMBER(hornet_state::sysreg_w)
                 0x02 = ADDI (ADC DI)
                 0x01 = ADDSCLK (ADC SCLK)
             */
-			adc1213x_cs_w(adc12138, 0, (data >> 3) & 0x1);
-			adc1213x_conv_w(adc12138, 0, (data >> 2) & 0x1);
-			adc1213x_di_w(adc12138, 0, (data >> 1) & 0x1);
-			adc1213x_sclk_w(adc12138, 0, data & 0x1);
+			adc1213x_cs_w(adc12138, space, 0, (data >> 3) & 0x1);
+			adc1213x_conv_w(adc12138, space, 0, (data >> 2) & 0x1);
+			adc1213x_di_w(adc12138, space, 0, (data >> 1) & 0x1);
+			adc1213x_sclk_w(adc12138, space, 0, data & 0x1);
 
 			machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 			mame_printf_debug("System register 1 = %02X\n", data);
@@ -880,7 +881,7 @@ static const sharc_config sharc_cfg =
     NMI:    SCI
 
 */
-static TIMER_CALLBACK( irq_off );
+
 
 void hornet_state::machine_start()
 {
@@ -898,7 +899,7 @@ void hornet_state::machine_start()
 	state_save_register_global_pointer(machine(), m_jvs_sdata, 1024);
 	state_save_register_global(machine(), m_jvs_sdata_ptr);
 
-	m_sound_irq_timer = machine().scheduler().timer_alloc(FUNC(irq_off));
+	m_sound_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(hornet_state::irq_off),this));
 }
 
 void hornet_state::machine_reset()
@@ -933,9 +934,9 @@ static const adc12138_interface hornet_adc_interface = {
 	adc12138_input_callback
 };
 
-static TIMER_CALLBACK( irq_off )
+TIMER_CALLBACK_MEMBER(hornet_state::irq_off)
 {
-	machine.device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )
@@ -993,7 +994,7 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", PPC403GA, 64000000/2)	/* PowerPC 403GA 32MHz */
 	MCFG_CPU_PROGRAM_MAP(hornet_map)
-	MCFG_CPU_PERIODIC_INT(irq1_line_assert, 1000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(hornet_state, irq1_line_assert,  1000)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 64000000/4)	/* 16MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
@@ -1016,7 +1017,7 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hornet)
+	MCFG_SCREEN_UPDATE_DRIVER(hornet_state, screen_update_hornet)
 
 	MCFG_PALETTE_LENGTH(65536)
 
@@ -1106,13 +1107,13 @@ static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 384)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
-	MCFG_SCREEN_UPDATE_STATIC(hornet_2board)
+	MCFG_SCREEN_UPDATE_DRIVER(hornet_state, screen_update_hornet_2board)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 384)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
-	MCFG_SCREEN_UPDATE_STATIC(hornet_2board)
+	MCFG_SCREEN_UPDATE_DRIVER(hornet_state, screen_update_hornet_2board)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( terabrst, hornet_2board )

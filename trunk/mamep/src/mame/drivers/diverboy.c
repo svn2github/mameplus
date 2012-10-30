@@ -70,6 +70,7 @@ public:
 	DECLARE_WRITE8_MEMBER(okibank_w);
 	virtual void machine_start();
 	virtual void video_start();
+	UINT32 screen_update_diverboy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -113,10 +114,10 @@ static void draw_sprites( running_machine& machine, bitmap_ind16 &bitmap, const 
 	}
 }
 
-static SCREEN_UPDATE_IND16(diverboy)
+UINT32 diverboy_state::screen_update_diverboy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-//  bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	draw_sprites(screen.machine(), bitmap, cliprect);
+//  bitmap.fill(get_black_pen(machine()), cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }
 
@@ -256,7 +257,7 @@ static MACHINE_CONFIG_START( diverboy, diverboy_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, 12000000) /* guess */
 	MCFG_CPU_PROGRAM_MAP(diverboy_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", diverboy_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(snd_map)
@@ -269,7 +270,7 @@ static MACHINE_CONFIG_START( diverboy, diverboy_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8+4, 40*8+1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(diverboy)
+	MCFG_SCREEN_UPDATE_DRIVER(diverboy_state, screen_update_diverboy)
 
 	MCFG_PALETTE_LENGTH(0x400)
 

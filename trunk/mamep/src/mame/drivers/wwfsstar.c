@@ -180,7 +180,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, wwfsstar_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -239,35 +239,34 @@ WRITE16_MEMBER(wwfsstar_state::wwfsstar_irqack_w)
     A hack is required: raise the vblank bit a scanline early.
 */
 
-static TIMER_DEVICE_CALLBACK( wwfsstar_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(wwfsstar_state::wwfsstar_scanline)
 {
-	wwfsstar_state *state = timer.machine().driver_data<wwfsstar_state>();
 	int scanline = param;
 
 	/* Vblank is lowered on scanline 0 */
 	if (scanline == 0)
 	{
-		state->m_vblank = 0;
+		m_vblank = 0;
 	}
 	/* Hack */
 	else if (scanline == (240-1))		/* -1 is an hack needed to avoid deadlocks */
 	{
-		state->m_vblank = 1;
+		m_vblank = 1;
 	}
 
 	/* An interrupt is generated every 16 scanlines */
 	if (scanline % 16 == 0)
 	{
 		if (scanline > 0)
-			timer.machine().primary_screen->update_partial(scanline - 1);
-		timer.machine().device("maincpu")->execute().set_input_line(5, ASSERT_LINE);
+			machine().primary_screen->update_partial(scanline - 1);
+		machine().device("maincpu")->execute().set_input_line(5, ASSERT_LINE);
 	}
 
 	/* Vblank is raised on scanline 240 */
 	if (scanline == 240)
 	{
-		timer.machine().primary_screen->update_partial(scanline - 1);
-		timer.machine().device("maincpu")->execute().set_input_line(6, ASSERT_LINE);
+		machine().primary_screen->update_partial(scanline - 1);
+		machine().device("maincpu")->execute().set_input_line(6, ASSERT_LINE);
 	}
 }
 
@@ -402,22 +401,6 @@ GFXDECODE_END
 
 
 /*******************************************************************************
- Sound Stuff..
-********************************************************************************
- Straight from Ddragon 3
-*******************************************************************************/
-
-static void wwfsstar_ymirq_handler(device_t *device, int irq)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0 , irq ? ASSERT_LINE : CLEAR_LINE );
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(wwfsstar_ymirq_handler)
-};
-
-/*******************************************************************************
  Machine Driver(s)
 *******************************************************************************/
 
@@ -426,7 +409,7 @@ static MACHINE_CONFIG_START( wwfsstar, wwfsstar_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", wwfsstar_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", wwfsstar_state, wwfsstar_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -434,7 +417,7 @@ static MACHINE_CONFIG_START( wwfsstar, wwfsstar_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 320, 0, 256, 272, 8, 248)	/* HTOTAL and VTOTAL are guessed */
-	MCFG_SCREEN_UPDATE_STATIC(wwfsstar)
+	MCFG_SCREEN_UPDATE_DRIVER(wwfsstar_state, screen_update_wwfsstar)
 
 	MCFG_GFXDECODE(wwfsstar)
 	MCFG_PALETTE_LENGTH(384)
@@ -443,8 +426,8 @@ static MACHINE_CONFIG_START( wwfsstar, wwfsstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.45)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.45)
 

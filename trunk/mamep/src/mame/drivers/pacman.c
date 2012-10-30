@@ -5,7 +5,7 @@
     driver by Nicola Salmoria and many others
 
     Games supported:
-        * PuckMan
+        * Puck Man
         * Pac-Man Plus
         * Ms. Pac-Man
         * Crush Roller
@@ -388,7 +388,7 @@ MACHINE_RESET_MEMBER(pacman_state,mschamp)
 
 MACHINE_RESET_MEMBER(pacman_state,superabc)
 {
-	superabc_bank_w(*m_maincpu->space(AS_PROGRAM), 0, 0);
+	superabc_bank_w(m_maincpu->space(AS_PROGRAM), 0, 0);
 }
 
 
@@ -399,20 +399,18 @@ MACHINE_RESET_MEMBER(pacman_state,superabc)
  *
  *************************************/
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(pacman_state::vblank_irq)
 {
-	pacman_state *state = device->machine().driver_data<pacman_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( vblank_nmi )
+INTERRUPT_GEN_MEMBER(pacman_state::vblank_nmi)
 {
-	pacman_state *state = device->machine().driver_data<pacman_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(pacman_state::irq_mask_w)
@@ -537,11 +535,11 @@ WRITE8_MEMBER(pacman_state::alibaba_sound_w)
 	/* since the sound region in Ali Baba is not contiguous, translate the
        offset into the 0-0x1f range */
 	if (offset < 0x10)
-		pacman_sound_w(machine().device("namco"), offset, data);
+		pacman_sound_w(machine().device("namco"), space, offset, data);
 	else if (offset < 0x20)
 		m_spriteram2[offset - 0x10] = data;
 	else
-		pacman_sound_w(machine().device("namco"), offset - 0x10, data);
+		pacman_sound_w(machine().device("namco"), space, offset - 0x10, data);
 }
 
 READ8_MEMBER(pacman_state::alibaba_mystery_1_r)
@@ -694,9 +692,9 @@ READ8_MEMBER(pacman_state::bigbucks_question_r)
  *
  ************************************/
 
-static INTERRUPT_GEN( s2650_interrupt )
+INTERRUPT_GEN_MEMBER(pacman_state::s2650_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
 }
 
 WRITE8_MEMBER(pacman_state::porky_banking_w)
@@ -1310,8 +1308,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( vanvan_portmap, AS_IO, 8, pacman_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("namco", sn76496_new_device, write)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE("namco", sn76496_device, write)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn2", sn76496_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dremshpr_portmap, AS_IO, 8, pacman_state )
@@ -1349,7 +1347,7 @@ static ADDRESS_MAP_START( bigbucks_portmap, AS_IO, 8, pacman_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( s2650games_writeport, AS_IO, 8, pacman_state )
-	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_DEVWRITE("namco", sn76496_new_device, write)
+	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_DEVWRITE("namco", sn76496_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( drivfrcp_portmap, AS_IO, 8, pacman_state )
@@ -3294,7 +3292,7 @@ static MACHINE_CONFIG_START( pacman, pacman_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)
 	MCFG_CPU_PROGRAM_MAP(pacman_map)
 	MCFG_CPU_IO_MAP(writeport)
-	MCFG_CPU_VBLANK_INT("screen",vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pacman_state, vblank_irq)
 	MCFG_WATCHDOG_VBLANK_INIT(16)
 
 	/* video hardware */
@@ -3303,7 +3301,7 @@ static MACHINE_CONFIG_START( pacman, pacman_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(pacman)
+	MCFG_SCREEN_UPDATE_DRIVER(pacman_state, screen_update_pacman)
 
 	MCFG_PALETTE_INIT_OVERRIDE(pacman_state,pacman)
 	MCFG_VIDEO_START_OVERRIDE(pacman_state,pacman)
@@ -3375,7 +3373,7 @@ static MACHINE_CONFIG_DERIVED( dremshpr, pacman )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(dremshpr_map)
 	MCFG_CPU_IO_MAP(dremshpr_portmap)
-	MCFG_CPU_VBLANK_INT("screen", vblank_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pacman_state,  vblank_nmi)
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("namco", AY8910, 14318000/8)
@@ -3413,17 +3411,17 @@ static MACHINE_CONFIG_DERIVED( vanvan, pacman )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(dremshpr_map)
 	MCFG_CPU_IO_MAP(vanvan_portmap)
-	MCFG_CPU_VBLANK_INT("screen", vblank_nmi)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pacman_state,  vblank_nmi)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 34*8-1, 0*8, 28*8-1)
 
 	/* sound hardware */
-	MCFG_SOUND_REPLACE("namco", SN76496_NEW, 1789750)
+	MCFG_SOUND_REPLACE("namco", SN76496, 1789750)
 	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 1789750)
+	MCFG_SOUND_ADD("sn2", SN76496, 1789750)
 	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
@@ -3435,7 +3433,7 @@ static MACHINE_CONFIG_DERIVED( bigbucks, pacman )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(bigbucks_map)
 	MCFG_CPU_IO_MAP(bigbucks_portmap)
-	MCFG_CPU_PERIODIC_INT(vblank_irq,20*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(pacman_state, vblank_irq, 20*60)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
@@ -3448,7 +3446,7 @@ static MACHINE_CONFIG_DERIVED( s2650games, pacman )
 	MCFG_DEVICE_REMOVE("maincpu")
 	MCFG_CPU_ADD("maincpu", S2650, MASTER_CLOCK/6/2)	/* 2H */
 	MCFG_CPU_PROGRAM_MAP(s2650games_map)
-	MCFG_CPU_VBLANK_INT("screen", s2650_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pacman_state,  s2650_interrupt)
 
 	MCFG_GFXDECODE(s2650games)
 
@@ -3456,12 +3454,12 @@ static MACHINE_CONFIG_DERIVED( s2650games, pacman )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_UPDATE_STATIC(s2650games)
+	MCFG_SCREEN_UPDATE_DRIVER(pacman_state, screen_update_s2650games)
 
 	MCFG_VIDEO_START_OVERRIDE(pacman_state,s2650games)
 
 	/* sound hardware */
-	MCFG_SOUND_REPLACE("namco", SN76496_NEW, MASTER_CLOCK/6)	/* 1H */
+	MCFG_SOUND_REPLACE("namco", SN76496, MASTER_CLOCK/6)	/* 1H */
 	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
@@ -3496,7 +3494,7 @@ static MACHINE_CONFIG_DERIVED( rocktrv2, pacman )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(rocktrv2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pacman_state,  irq0_line_hold)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
@@ -3509,7 +3507,7 @@ static MACHINE_CONFIG_DERIVED( mschamp, pacman )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(mschamp_map)
 	MCFG_CPU_IO_MAP(mschamp_portmap)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pacman_state,  vblank_irq)
 
 	MCFG_MACHINE_RESET_OVERRIDE(pacman_state,mschamp)
 MACHINE_CONFIG_END
@@ -5744,13 +5742,13 @@ ROM_END
 static void maketrax_rom_decode(running_machine &machine)
 {
 	pacman_state *state = machine.driver_data<pacman_state>();
-	address_space *space = state->m_maincpu->space(AS_PROGRAM);
+	address_space &space = state->m_maincpu->space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x4000);
 	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	/* patch protection using a copy of the opcodes so ROM checksum */
 	/* tests will not fail */
-	space->set_decrypted_region(0x0000, 0x3fff, decrypted);
+	space.set_decrypted_region(0x0000, 0x3fff, decrypted);
 
 	memcpy(decrypted,rom,0x4000);
 
@@ -5768,8 +5766,8 @@ static void maketrax_rom_decode(running_machine &machine)
 DRIVER_INIT_MEMBER(pacman_state,maketrax)
 {
 	/* set up protection handlers */
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x5080, 0x50bf, read8_delegate(FUNC(pacman_state::maketrax_special_port2_r),this));
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x50c0, 0x50ff, read8_delegate(FUNC(pacman_state::maketrax_special_port3_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x5080, 0x50bf, read8_delegate(FUNC(pacman_state::maketrax_special_port2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x50c0, 0x50ff, read8_delegate(FUNC(pacman_state::maketrax_special_port3_r),this));
 
 	maketrax_rom_decode(machine());
 }
@@ -5777,13 +5775,13 @@ DRIVER_INIT_MEMBER(pacman_state,maketrax)
 static void korosuke_rom_decode(running_machine &machine)
 {
 	pacman_state *state = machine.driver_data<pacman_state>();
-	address_space *space = state->m_maincpu->space(AS_PROGRAM);
+	address_space &space = state->m_maincpu->space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x4000);
 	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	/* patch protection using a copy of the opcodes so ROM checksum */
 	/* tests will not fail */
-	space->set_decrypted_region(0x0000, 0x3fff, decrypted);
+	space.set_decrypted_region(0x0000, 0x3fff, decrypted);
 
 	memcpy(decrypted,rom,0x4000);
 
@@ -5801,8 +5799,8 @@ static void korosuke_rom_decode(running_machine &machine)
 DRIVER_INIT_MEMBER(pacman_state,korosuke)
 {
 	/* set up protection handlers */
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x5080, 0x5080, read8_delegate(FUNC(pacman_state::korosuke_special_port2_r),this));
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x50c0, 0x50ff, read8_delegate(FUNC(pacman_state::korosuke_special_port3_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x5080, 0x5080, read8_delegate(FUNC(pacman_state::korosuke_special_port2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x50c0, 0x50ff, read8_delegate(FUNC(pacman_state::korosuke_special_port3_r),this));
 
 	korosuke_rom_decode(machine());
 }
@@ -6104,7 +6102,7 @@ READ8_MEMBER(pacman_state::mspacii_protection_r)
 DRIVER_INIT_MEMBER(pacman_state,mspacii)
 {
 	// protection
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x504d, 0x506f, read8_delegate(FUNC(pacman_state::mspacii_protection_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x504d, 0x506f, read8_delegate(FUNC(pacman_state::mspacii_protection_r), this));
 }
 
 DRIVER_INIT_MEMBER(pacman_state,superabc)
@@ -6165,10 +6163,10 @@ DRIVER_INIT_MEMBER(pacman_state,cannonbp)
 {
 
 	/* extra memory */
-	m_maincpu->space(AS_PROGRAM)->install_ram(0x4800, 0x4bff);
+	m_maincpu->space(AS_PROGRAM).install_ram(0x4800, 0x4bff);
 
 	/* protection? */
-	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x3000, 0x3fff, read8_delegate(FUNC(pacman_state::cannonbp_protection_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x3000, 0x3fff, read8_delegate(FUNC(pacman_state::cannonbp_protection_r),this));
 }
 
 
@@ -6179,13 +6177,13 @@ DRIVER_INIT_MEMBER(pacman_state,cannonbp)
  *************************************/
 
 /*          rom       parent    machine   inp       init */
-GAME( 1980, puckman,  0,        pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "PuckMan (Japan set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1980, puckmana, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "PuckMan (Japan set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1980, puckmanf, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "PuckMan (Japan set 1 with speedup hack)", GAME_SUPPORTS_SAVE )
-GAME( 1980, puckmanh, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "hack", "Puckman (Falcom?)", GAME_SUPPORTS_SAVE )
+GAME( 1980, puckman,  0,        pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "Puck Man (Japan set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1980, puckmana, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "Puck Man (Japan set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1980, puckmanf, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "Puck Man (Japan set 1 with speedup hack)", GAME_SUPPORTS_SAVE )
+GAME( 1980, puckmanh, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "hack", "Puck Man (Falcom?)", GAME_SUPPORTS_SAVE )
 GAME( 1980, pacman,   puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco (Midway license)", "Pac-Man (Midway)", GAME_SUPPORTS_SAVE )
 GAME( 1980, pacmanf,  puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco (Midway license)", "Pac-Man (Midway, with speedup hack)", GAME_SUPPORTS_SAVE )
-GAME( 1981, puckmod,  puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "PuckMan (Japan set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1981, puckmod,  puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco", "Puck Man (Japan set 3)", GAME_SUPPORTS_SAVE )
 GAME( 1981, pacmod,   puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "Namco (Midway license)", "Pac-Man (Midway, harder)", GAME_SUPPORTS_SAVE )
 GAME( 1980, newpuc2,  puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "hack", "Newpuc2 (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1980, newpuc2b, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "hack", "Newpuc2 (set 2)", GAME_SUPPORTS_SAVE )
@@ -6213,7 +6211,7 @@ GAME( 1981, paintrlr, crush,    pacman,   paintrlr, driver_device, 0,        ROT
 GAME( 1982, pacplus,  0,        pacman,   pacman,   pacman_state,  pacplus,  ROT90,  "Namco (Midway license)", "Pac-Man Plus", GAME_SUPPORTS_SAVE )
 GAME( 1982, joyman,   puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "hack", "Joyman", GAME_SUPPORTS_SAVE )
 GAME( 1982, ctrpllrp, puckman,  pacman,   pacman,   driver_device, 0,        ROT90,  "hack", "Caterpillar Pacman Hack", GAME_SUPPORTS_SAVE )
-GAME( 1982, eyes,     0,        pacman,   eyes,     pacman_state,  eyes,     ROT90,  "Digitrex Techstar (Rock-Ola license)", "Eyes (US set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1982, eyes,     0,        pacman,   eyes,     pacman_state,  eyes,     ROT90,  "Techstar (Rock-Ola license)", "Eyes (US set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1982, eyes2,    eyes,     pacman,   eyes,     pacman_state,  eyes,     ROT90,  "Techstar (Rock-Ola license)", "Eyes (US set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1982, eyesb,    eyes,     pacman,   eyes,     pacman_state,  eyes,     ROT90,  "bootleg", "Eyes (bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1982, eyeszac,  eyes,     pacman,   eyes,     pacman_state,  eyes,     ROT90,  "Techstar (Zaccaria license)", "Eyes (Italy)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING ) // bad dump
@@ -6257,9 +6255,9 @@ GAME( 1983, theglobp, suprglob, theglobp, theglobp, driver_device, 0,        ROT
 GAME( 1983, sprglobp, suprglob, theglobp, theglobp, driver_device, 0,        ROT90,  "Epos Corporation", "Super Glob (Pac-Man hardware)", GAME_SUPPORTS_SAVE )
 GAME( 1983, sprglbpg, suprglob, pacman,   theglobp, driver_device, 0,        ROT90,  "bootleg", "Super Glob (Pac-Man hardware) (German bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1984, beastf,   suprglob, theglobp, theglobp, driver_device, 0,        ROT90,  "Epos Corporation", "Beastie Feastie", GAME_SUPPORTS_SAVE )
-GAME( 1984, drivfrcp, 0,        drivfrcp, drivfrcp, pacman_state,  drivfrcp, ROT90,  "Shinkai Inc. (Magic Eletronics Inc. license)", "Driving Force (Pac-Man conversion)", GAME_SUPPORTS_SAVE )
-GAME( 1985, 8bpm,     8ballact, 8bpm,     8bpm,     pacman_state,  8bpm,     ROT90,  "Seatongrove Ltd (Magic Eletronics USA license)", "Eight Ball Action (Pac-Man conversion)", GAME_SUPPORTS_SAVE )
-GAME( 1985, porky,    0,        porky,    porky,    pacman_state,  porky,    ROT90,  "Shinkai Inc. (Magic Eletronics Inc. license)", "Porky", GAME_SUPPORTS_SAVE )
+GAME( 1984, drivfrcp, 0,        drivfrcp, drivfrcp, pacman_state,  drivfrcp, ROT90,  "Shinkai Inc. (Magic Electronics Inc. license)", "Driving Force (Pac-Man conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1985, 8bpm,     8ballact, 8bpm,     8bpm,     pacman_state,  8bpm,     ROT90,  "Seatongrove Ltd (Magic Electronics USA license)", "Eight Ball Action (Pac-Man conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1985, porky,    0,        porky,    porky,    pacman_state,  porky,    ROT90,  "Shinkai Inc. (Magic Electronics Inc. license)", "Porky", GAME_SUPPORTS_SAVE )
 GAME( 1986, rocktrv2, 0,        rocktrv2, rocktrv2, pacman_state,  rocktrv2, ROT90,  "Triumph Software Inc.", "MTV Rock-N-Roll Trivia (Part 2)", GAME_SUPPORTS_SAVE )
 GAME( 1986, bigbucks, 0,        bigbucks, bigbucks, driver_device, 0,        ROT90,  "Dynasoft Inc.", "Big Bucks", GAME_SUPPORTS_SAVE )
 GAME( 1992, mschamp,  mspacman, mschamp,  mschamp,  driver_device, 0,        ROT90,  "hack", "Ms. Pacman Champion Edition / Zola-Puc Gal", GAME_SUPPORTS_SAVE ) /* Rayglo version */

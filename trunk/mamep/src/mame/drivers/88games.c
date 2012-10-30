@@ -22,11 +22,10 @@
  *
  *************************************/
 
-static INTERRUPT_GEN( k88games_interrupt )
+INTERRUPT_GEN_MEMBER(_88games_state::k88games_interrupt)
 {
-	_88games_state *state = device->machine().driver_data<_88games_state>();
 
-	if (k052109_is_irq_enabled(state->m_k052109))
+	if (k052109_is_irq_enabled(m_k052109))
 		irq0_line_hold(device);
 }
 
@@ -38,9 +37,9 @@ READ8_MEMBER(_88games_state::bankedram_r)
 	else
 	{
 		if (m_zoomreadroms)
-			return k051316_rom_r(m_k051316, offset);
+			return k051316_rom_r(m_k051316, space, offset);
 		else
-			return k051316_r(m_k051316, offset);
+			return k051316_r(m_k051316, space, offset);
 	}
 }
 
@@ -50,7 +49,7 @@ WRITE8_MEMBER(_88games_state::bankedram_w)
 	if (m_videobank)
 		m_ram[offset] = data;
 	else
-		k051316_w(m_k051316, offset, data);
+		k051316_w(m_k051316, space, offset, data);
 }
 
 WRITE8_MEMBER(_88games_state::k88games_5f84_w)
@@ -89,7 +88,7 @@ WRITE8_MEMBER(_88games_state::speech_msg_w)
 {
 	device_t *upd = m_speech_chip ? m_upd_2 : m_upd_1;
 
-	upd7759_port_w(upd, 0, data);
+	upd7759_port_w(upd, space, 0, data);
 }
 
 /* special handlers to combine 052109 & 051960 */
@@ -99,25 +98,25 @@ READ8_MEMBER(_88games_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(_88games_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 /*************************************
@@ -151,7 +150,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, _88games_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(speech_msg_w)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(speech_control_w)
 ADDRESS_MAP_END
 
@@ -370,7 +369,7 @@ static MACHINE_CONFIG_START( 88games, _88games_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000) /* ? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", k88games_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", _88games_state,  k88games_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -386,7 +385,7 @@ static MACHINE_CONFIG_START( 88games, _88games_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(88games)
+	MCFG_SCREEN_UPDATE_DRIVER(_88games_state, screen_update_88games)
 
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -397,7 +396,7 @@ static MACHINE_CONFIG_START( 88games, _88games_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "mono", 0.75)
 	MCFG_SOUND_ROUTE(1, "mono", 0.75)
 

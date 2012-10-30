@@ -95,9 +95,9 @@ READ16_MEMBER(exterm_state::exterm_host_data_r)
  *
  *************************************/
 
-static UINT16 exterm_trackball_port_r(address_space *space, int which, UINT16 mem_mask)
+static UINT16 exterm_trackball_port_r(address_space &space, int which, UINT16 mem_mask)
 {
-	exterm_state *state = space->machine().driver_data<exterm_state>();
+	exterm_state *state = space.machine().driver_data<exterm_state>();
 	UINT16 port;
 
 	/* Read the fake input port */
@@ -125,13 +125,13 @@ static UINT16 exterm_trackball_port_r(address_space *space, int which, UINT16 me
 
 READ16_MEMBER(exterm_state::exterm_input_port_0_r)
 {
-	return exterm_trackball_port_r(&space, 0, mem_mask);
+	return exterm_trackball_port_r(space, 0, mem_mask);
 }
 
 
 READ16_MEMBER(exterm_state::exterm_input_port_1_r)
 {
-	return exterm_trackball_port_r(&space, 1, mem_mask);
+	return exterm_trackball_port_r(space, 1, mem_mask);
 }
 
 
@@ -170,20 +170,19 @@ WRITE16_MEMBER(exterm_state::exterm_output_port_0_w)
 }
 
 
-static TIMER_CALLBACK( sound_delayed_w )
+TIMER_CALLBACK_MEMBER(exterm_state::sound_delayed_w)
 {
-	exterm_state *state = machine.driver_data<exterm_state>();
 	/* data is latched independently for both sound CPUs */
-	state->m_master_sound_latch = state->m_slave_sound_latch = param;
-	machine.device("audiocpu")->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
-	machine.device("audioslave")->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
+	m_master_sound_latch = m_slave_sound_latch = param;
+	machine().device("audiocpu")->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
+	machine().device("audioslave")->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
 }
 
 
 WRITE16_MEMBER(exterm_state::sound_latch_w)
 {
 	if (ACCESSING_BITS_0_7)
-		machine().scheduler().synchronize(FUNC(sound_delayed_w), data & 0xff);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(exterm_state::sound_delayed_w),this), data & 0xff);
 }
 
 
@@ -194,20 +193,19 @@ WRITE16_MEMBER(exterm_state::sound_latch_w)
  *
  *************************************/
 
-static TIMER_DEVICE_CALLBACK( master_sound_nmi_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(exterm_state::master_sound_nmi_callback)
 {
-	exterm_state *state = timer.machine().driver_data<exterm_state>();
 	/* bit 0 of the sound control determines if the NMI is actually delivered */
-	if (state->m_sound_control & 0x01)
-		timer.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_sound_control & 0x01)
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
 WRITE8_MEMBER(exterm_state::ym2151_data_latch_w)
 {
-	device_t *device = machine().device("ymsnd");
+	ym2151_device *device = machine().device<ym2151_device>("ymsnd");
 	/* bit 7 of the sound control selects which port */
-	ym2151_w(device, m_sound_control >> 7, data);
+	device->write(space, m_sound_control >> 7, data);
 }
 
 
@@ -458,7 +456,7 @@ static MACHINE_CONFIG_START( exterm, exterm_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_TIMER_ADD("snd_nmi_timer", master_sound_nmi_callback)
+	MCFG_TIMER_DRIVER_ADD("snd_nmi_timer", exterm_state, master_sound_nmi_callback)
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(2048+32768)
@@ -474,7 +472,7 @@ static MACHINE_CONFIG_START( exterm, exterm_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

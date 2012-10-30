@@ -692,14 +692,13 @@ void paradise_state::machine_reset()
 
 }
 
-static INTERRUPT_GEN(paradise_irq)
+INTERRUPT_GEN_MEMBER(paradise_state::paradise_irq)
 {
-	paradise_state *state = device->machine().driver_data<paradise_state>();
 
-	if (state->irq_count<300)
-		state->irq_count++;
+	if (irq_count<300)
+		irq_count++;
 	else
-		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( paradise, paradise_state )
@@ -708,7 +707,7 @@ static MACHINE_CONFIG_START( paradise, paradise_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)			/* Z8400B - 6mhz Verified */
 	MCFG_CPU_PROGRAM_MAP(paradise_map)
 	MCFG_CPU_IO_MAP(paradise_io_map)
-	MCFG_CPU_PERIODIC_INT(paradise_irq,4*54)	/* No nmi routine, timing is confirmed (i.e. three timing irqs for each vblank irq */
+	MCFG_CPU_PERIODIC_INT_DRIVER(paradise_state, paradise_irq, 4*54)	/* No nmi routine, timing is confirmed (i.e. three timing irqs for each vblank irq */
 
 
 	/* video hardware */
@@ -717,7 +716,7 @@ static MACHINE_CONFIG_START( paradise, paradise_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */	/* we're using PORT_VBLANK */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(paradise)
+	MCFG_SCREEN_UPDATE_DRIVER(paradise_state, screen_update_paradise)
 
 	MCFG_GFXDECODE(paradise)
 	MCFG_PALETTE_LENGTH(0x800 + 16)
@@ -749,7 +748,7 @@ static MACHINE_CONFIG_DERIVED( torus, paradise )
 
 	MCFG_GFXDECODE(torus)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(torus)
+	MCFG_SCREEN_UPDATE_DRIVER(paradise_state, screen_update_torus)
 
 	MCFG_DEVICE_REMOVE("oki2")
 MACHINE_CONFIG_END
@@ -764,7 +763,7 @@ static MACHINE_CONFIG_DERIVED( madball, paradise )
 	MCFG_GFXDECODE(madball)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(madball)
+	MCFG_SCREEN_UPDATE_DRIVER(paradise_state, screen_update_madball)
 
 	MCFG_DEVICE_REMOVE("oki2")
 MACHINE_CONFIG_END
@@ -1260,14 +1259,14 @@ DRIVER_INIT_MEMBER(paradise_state,paradise)
 DRIVER_INIT_MEMBER(paradise_state,tgtball)
 {
 	m_sprite_inc = 4;
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2001, 0x2001, write8_delegate(FUNC(paradise_state::tgtball_flipscreen_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x2001, 0x2001, write8_delegate(FUNC(paradise_state::tgtball_flipscreen_w),this));
 
 }
 
 DRIVER_INIT_MEMBER(paradise_state,torus)
 {
 	m_sprite_inc = 4;
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2070, 0x2070, write8_delegate(FUNC(paradise_state::torus_coin_counter_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x2070, 0x2070, write8_delegate(FUNC(paradise_state::torus_coin_counter_w),this));
 }
 
 

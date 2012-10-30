@@ -262,7 +262,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, dassault_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r, ym2203_w)
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ym2", ym2151_device, read, write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -445,24 +445,12 @@ GFXDECODE_END
 
 /**********************************************************************************/
 
-static void sound_irq(device_t *device, int state)
-{
-	dassault_state *driver_state = device->machine().driver_data<dassault_state>();
-	driver_state->m_audiocpu->set_input_line(1, state);
-}
-
 WRITE8_MEMBER(dassault_state::sound_bankswitch_w)
 {
 
 	/* the second OKIM6295 ROM is bank switched */
 	m_oki2->set_bank_base((data & 1) * 0x40000);
 }
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq),
-	DEVCB_DRIVER_MEMBER(dassault_state,sound_bankswitch_w)
-};
 
 /**********************************************************************************/
 
@@ -506,11 +494,11 @@ static MACHINE_CONFIG_START( dassault, dassault_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_28MHz/2)	/* 14MHz - Accurate */
 	MCFG_CPU_PROGRAM_MAP(dassault_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dassault_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, XTAL_28MHz/2)	/* 14MHz - Accurate */
 	MCFG_CPU_PROGRAM_MAP(dassault_sub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dassault_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", H6280, XTAL_32_22MHz/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -524,7 +512,7 @@ static MACHINE_CONFIG_START( dassault, dassault_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dassault)
+	MCFG_SCREEN_UPDATE_DRIVER(dassault_state, screen_update_dassault)
 
 
 	MCFG_GFXDECODE(dassault)
@@ -552,8 +540,9 @@ static MACHINE_CONFIG_START( dassault, dassault_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 
-	MCFG_SOUND_ADD("ym2", YM2151, XTAL_32_22MHz/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ym2", XTAL_32_22MHz/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(dassault_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.45)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.45)
 

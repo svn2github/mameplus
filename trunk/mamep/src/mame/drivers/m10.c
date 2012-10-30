@@ -128,21 +128,19 @@ Notes (couriersud)
 
 #define LOG(x) do { if (DEBUG) printf x; } while (0)
 
-static WRITE8_DEVICE_HANDLER( ic8j1_output_changed )
+WRITE8_MEMBER(m10_state::ic8j1_output_changed)
 {
-	m10_state *state = device->machine().driver_data<m10_state>();
-	LOG(("ic8j1: %d %d\n", data, device->machine().primary_screen->vpos()));
-	state->m_maincpu->set_input_line(0, !data ? CLEAR_LINE : ASSERT_LINE);
+	LOG(("ic8j1: %d %d\n", data, machine().primary_screen->vpos()));
+	m_maincpu->set_input_line(0, !data ? CLEAR_LINE : ASSERT_LINE);
 }
 
-static WRITE8_DEVICE_HANDLER( ic8j2_output_changed )
+WRITE8_MEMBER(m10_state::ic8j2_output_changed)
 {
-	m10_state *state = device->machine().driver_data<m10_state>();
 
 	/* written from /Q to A with slight delight */
 	LOG(("ic8j2: %d\n", data));
-	ttl74123_a_w(device, 0, data);
-	ttl74123_a_w(state->m_ic8j1, 0, data);
+	ttl74123_a_w(m_ic8j2, space, 0, data);
+	ttl74123_a_w(m_ic8j1, space, 0, data);
 }
 
 static const ttl74123_interface ic8j1_intf =
@@ -154,7 +152,7 @@ static const ttl74123_interface ic8j1_intf =
 	1,					/* A pin - driven by the CRTC */
 	1,					/* B pin - pulled high */
 	1,					/* Clear pin - pulled high */
-	ic8j1_output_changed
+	DEVCB_DRIVER_MEMBER(m10_state,ic8j1_output_changed)
 };
 
 static const ttl74123_interface ic8j2_intf =
@@ -166,7 +164,7 @@ static const ttl74123_interface ic8j2_intf =
 	1,					/* A pin - driven by the CRTC */
 	1,					/* B pin - pulled high */
 	1,					/* Clear pin - pulled high */
-	ic8j2_output_changed
+	DEVCB_DRIVER_MEMBER(m10_state,ic8j2_output_changed)
 };
 
 /*************************************
@@ -476,8 +474,8 @@ READ8_MEMBER(m10_state::m10_a700_r)
 {
 	//LOG(("rd:%d\n",machine().primary_screen->vpos()));
 	LOG(("clear\n"));
-	ttl74123_clear_w(m_ic8j1, 0, 0);
-	ttl74123_clear_w(m_ic8j1, 0, 1);
+	ttl74123_clear_w(m_ic8j1, space, 0, 0);
+	ttl74123_clear_w(m_ic8j1, space, 0, 1);
 	return 0x00;
 }
 
@@ -486,8 +484,8 @@ READ8_MEMBER(m10_state::m11_a700_r)
 	//LOG(("rd:%d\n",machine().primary_screen->vpos()));
 	//m_maincpu->set_input_line(0, CLEAR_LINE);
 	LOG(("clear\n"));
-	ttl74123_clear_w(m_ic8j1, 0, 0);
-	ttl74123_clear_w(m_ic8j1, 0, 1);
+	ttl74123_clear_w(m_ic8j1, space, 0, 0);
+	ttl74123_clear_w(m_ic8j1, space, 0, 1);
 	return 0x00;
 }
 
@@ -504,41 +502,40 @@ INPUT_CHANGED_MEMBER(m10_state::coin_inserted)
 }
 
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(m10_state::interrupt_callback)
 {
-	m10_state *state = machine.driver_data<m10_state>();
 	if (param == 0)
 	{
-		state->m_maincpu->set_input_line(0, ASSERT_LINE);
-		machine.scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBSTART + 16), FUNC(interrupt_callback), 1);
+		m_maincpu->set_input_line(0, ASSERT_LINE);
+		machine().scheduler().timer_set(machine().primary_screen->time_until_pos(IREMM10_VBSTART + 16), timer_expired_delegate(FUNC(m10_state::interrupt_callback),this), 1);
 	}
 	if (param == 1)
 	{
-		state->m_maincpu->set_input_line(0, ASSERT_LINE);
-		machine.scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBSTART + 24), FUNC(interrupt_callback), 2);
+		m_maincpu->set_input_line(0, ASSERT_LINE);
+		machine().scheduler().timer_set(machine().primary_screen->time_until_pos(IREMM10_VBSTART + 24), timer_expired_delegate(FUNC(m10_state::interrupt_callback),this), 2);
 	}
 	if (param == -1)
-		state->m_maincpu->set_input_line(0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 
 }
 
 #if 0
-static INTERRUPT_GEN( m11_interrupt )
+INTERRUPT_GEN_MEMBER(m10_state::m11_interrupt)
 {
-	device->execute().set_input_line(0, ASSERT_LINE);
-	//device->machine().scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBEND), FUNC(interrupt_callback), -1);
+	device.execute().set_input_line(0, ASSERT_LINE);
+	//machine().scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBEND), timer_expired_delegate(FUNC(m10_state::interrupt_callback),this), -1);
 }
 
-static INTERRUPT_GEN( m10_interrupt )
+INTERRUPT_GEN_MEMBER(m10_state::m10_interrupt)
 {
-	device->execute().set_input_line(0, ASSERT_LINE);
+	device.execute().set_input_line(0, ASSERT_LINE);
 }
 #endif
 
-static INTERRUPT_GEN( m15_interrupt )
+INTERRUPT_GEN_MEMBER(m10_state::m15_interrupt)
 {
-	device->execute().set_input_line(0, ASSERT_LINE);
-	device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(IREMM10_VBSTART + 1, 80), FUNC(interrupt_callback), -1);
+	device.execute().set_input_line(0, ASSERT_LINE);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(IREMM10_VBSTART + 1, 80), timer_expired_delegate(FUNC(m10_state::interrupt_callback),this), -1);
 }
 
 /*************************************
@@ -757,6 +754,21 @@ static INPUT_PORTS_START( headoni )
 	PORT_DIPSETTING (  0x10, "1 Coin 1 Play" )
 	PORT_DIPSETTING (  0x20, "1 Coin 2 Plays" )
 
+//  PORT_START("VR1")
+//  PORT_ADJUSTER( 50, "Car Rumble Volume" )
+
+//  PORT_START("VR2")
+//  PORT_ADJUSTER( 50, "Collision Volume" )
+
+//  PORT_START("VR3")
+//  PORT_ADJUSTER( 50, "Tire Screech Volume" )
+
+//  PORT_START("VR4")
+//  PORT_ADJUSTER( 50, "Score Counter Volume" )
+
+//  PORT_START("VR5")
+//  PORT_ADJUSTER( 50, "Master Volume" )
+
 	PORT_START("FAKE")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, m10_state,coin_inserted, 0)
 
@@ -832,12 +844,12 @@ static MACHINE_CONFIG_START( m10, m10_state )
 	MCFG_MACHINE_START_OVERRIDE(m10_state,m10)
 	MCFG_MACHINE_RESET_OVERRIDE(m10_state,m10)
 
-	//MCFG_CPU_VBLANK_INT("screen", m10_interrupt)
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", m10_state,  m10_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(IREMM10_PIXEL_CLOCK, IREMM10_HTOTAL, IREMM10_HBEND, IREMM10_HBSTART, IREMM10_VTOTAL, IREMM10_VBEND, IREMM10_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(m10)
+	MCFG_SCREEN_UPDATE_DRIVER(m10_state, screen_update_m10)
 
 	MCFG_GFXDECODE(m10)
 	MCFG_PALETTE_LENGTH(2*8)
@@ -863,7 +875,7 @@ static MACHINE_CONFIG_DERIVED( m11, m10 )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(m11_main)
-	//MCFG_CPU_VBLANK_INT("screen", m11_interrupt)
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", m10_state,  m11_interrupt)
 
 	/* sound hardware */
 MACHINE_CONFIG_END
@@ -877,12 +889,12 @@ static MACHINE_CONFIG_START( m15, m10_state )
 	MCFG_MACHINE_START_OVERRIDE(m10_state,m10)
 	MCFG_MACHINE_RESET_OVERRIDE(m10_state,m10)
 
-	MCFG_CPU_VBLANK_INT("screen", m15_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", m10_state,  m15_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(IREMM15_PIXEL_CLOCK, IREMM15_HTOTAL, IREMM15_HBEND, IREMM15_HBSTART, IREMM15_VTOTAL, IREMM15_VBEND, IREMM15_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(m15)
+	MCFG_SCREEN_UPDATE_DRIVER(m10_state, screen_update_m15)
 
 	MCFG_PALETTE_LENGTH(2*8)
 

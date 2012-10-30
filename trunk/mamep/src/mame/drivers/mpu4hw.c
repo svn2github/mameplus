@@ -1119,7 +1119,7 @@ BDIR BC1       |
 */
 
 /* PSG function selected */
-static void update_ay(device_t *device)
+static void update_ay(device_t *device, address_space &space)
 {
 	device_t *ay = device->machine().device("ay8913");
 	if (!ay) return;
@@ -1145,7 +1145,7 @@ static void update_ay(device_t *device)
 			{/* CA2 = 0 CB2 = 1? : Write to selected PSG register and write data to Port A */
 				pia6821_device *pia_ic6 = device->machine().device<pia6821_device>("pia_ic6");
 				device_t *ay = device->machine().device("ay8913");
-				ay8910_data_w(ay, 0, pia_ic6->a_output());
+				ay8910_data_w(ay, space, 0, pia_ic6->a_output());
 				LOG(("AY Chip Write \n"));
 				break;
 			}
@@ -1154,7 +1154,7 @@ static void update_ay(device_t *device)
              The register will remain selected until another is chosen.*/
 				pia6821_device *pia_ic6 = device->machine().device<pia6821_device>("pia_ic6");
 				device_t *ay = device->machine().device("ay8913");
-				ay8910_address_w(ay, 0, pia_ic6->a_output());
+				ay8910_address_w(ay, space, 0, pia_ic6->a_output());
 				LOG(("AY Chip Select \n"));
 				break;
 			}
@@ -1170,7 +1170,7 @@ static void update_ay(device_t *device)
 WRITE_LINE_MEMBER(mpu4_state::pia_ic5_cb2_w)
 {
 	device_t *device = machine().device("pia_ic5");
-	update_ay(device);
+	update_ay(device, generic_space());
 }
 
 
@@ -1229,7 +1229,7 @@ WRITE8_MEMBER(mpu4_state::pia_ic6_porta_w)
 	if (m_mod_number <4)
 	{
 		m_ay_data = data;
-		update_ay(device);
+		update_ay(device, space);
 	}
 }
 
@@ -1242,7 +1242,7 @@ WRITE_LINE_MEMBER(mpu4_state::pia_ic6_ca2_w)
 	{
 		if ( state ) m_ay8913_address |=  0x01;
 		else         m_ay8913_address &= ~0x01;
-		update_ay(device);
+		update_ay(device, generic_space());
 	}
 }
 
@@ -1255,7 +1255,7 @@ WRITE_LINE_MEMBER(mpu4_state::pia_ic6_cb2_w)
 	{
 		if ( state ) m_ay8913_address |=  0x02;
 		else         m_ay8913_address &= ~0x02;
-		update_ay(device);
+		update_ay(device, generic_space());
 	}
 }
 
@@ -1461,7 +1461,7 @@ WRITE8_MEMBER(mpu4_state::pia_gb_porta_w)
 {
 	device_t *msm6376 = machine().device("msm6376");
 	LOG_SS(("%s: GAMEBOARD: PIA Port A Set to %2x\n", machine().describe_context(),data));
-	okim6376_w(msm6376, 0, data);
+	okim6376_w(msm6376, space, 0, data);
 }
 
 WRITE8_MEMBER(mpu4_state::pia_gb_portb_w)
@@ -2292,7 +2292,7 @@ READ8_MEMBER(mpu4_state::bwb_characteriser_r)
 WRITE8_MEMBER(mpu4_state::mpu4_ym2413_w)
 {
 	device_t *ym = machine().device("ym2413");
-	if (ym) ym2413_w(ym,offset,data);
+	if (ym) ym2413_w(ym,space,offset,data);
 }
 
 READ8_MEMBER(mpu4_state::mpu4_ym2413_r)
@@ -2303,28 +2303,28 @@ READ8_MEMBER(mpu4_state::mpu4_ym2413_r)
 }
 
 
-void mpu4_install_mod4yam_space(address_space *space)
+void mpu4_install_mod4yam_space(address_space &space)
 {
-	mpu4_state *state = space->machine().driver_data<mpu4_state>();
-	space->install_read_handler(0x0880, 0x0882, read8_delegate(FUNC(mpu4_state::mpu4_ym2413_r),state));
-	space->install_write_handler(0x0880, 0x0881, write8_delegate(FUNC(mpu4_state::mpu4_ym2413_w),state));
+	mpu4_state *state = space.machine().driver_data<mpu4_state>();
+	space.install_read_handler(0x0880, 0x0882, read8_delegate(FUNC(mpu4_state::mpu4_ym2413_r),state));
+	space.install_write_handler(0x0880, 0x0881, write8_delegate(FUNC(mpu4_state::mpu4_ym2413_w),state));
 }
 
-void mpu4_install_mod4oki_space(address_space *space)
+void mpu4_install_mod4oki_space(address_space &space)
 {
-	mpu4_state *state = space->machine().driver_data<mpu4_state>();
-	pia6821_device *pia_ic4ss = space->machine().device<pia6821_device>("pia_ic4ss");
-	ptm6840_device *ptm_ic3ss = space->machine().device<ptm6840_device>("ptm_ic3ss");
+	mpu4_state *state = space.machine().driver_data<mpu4_state>();
+	pia6821_device *pia_ic4ss = space.machine().device<pia6821_device>("pia_ic4ss");
+	ptm6840_device *ptm_ic3ss = space.machine().device<ptm6840_device>("ptm_ic3ss");
 
-	space->install_readwrite_handler(0x0880, 0x0883, 0, 0, read8_delegate(FUNC(pia6821_device::read), pia_ic4ss), write8_delegate(FUNC(pia6821_device::write), pia_ic4ss));
-	space->install_read_handler(0x08c0, 0x08c7, 0, 0, read8_delegate(FUNC(ptm6840_device::read), ptm_ic3ss));
-	space->install_write_handler(0x08c0, 0x08c7, 0, 0, write8_delegate(FUNC(mpu4_state::ic3ss_w),state));
+	space.install_readwrite_handler(0x0880, 0x0883, 0, 0, read8_delegate(FUNC(pia6821_device::read), pia_ic4ss), write8_delegate(FUNC(pia6821_device::write), pia_ic4ss));
+	space.install_read_handler(0x08c0, 0x08c7, 0, 0, read8_delegate(FUNC(ptm6840_device::read), ptm_ic3ss));
+	space.install_write_handler(0x08c0, 0x08c7, 0, 0, write8_delegate(FUNC(mpu4_state::ic3ss_w),state));
 }
 
-void mpu4_install_mod4bwb_space(address_space *space)
+void mpu4_install_mod4bwb_space(address_space &space)
 {
-	mpu4_state *state = space->machine().driver_data<mpu4_state>();
-	space->install_readwrite_handler(0x0810, 0x0810, 0, 0, read8_delegate(FUNC(mpu4_state::bwb_characteriser_r),state),write8_delegate(FUNC(mpu4_state::bwb_characteriser_w),state));
+	mpu4_state *state = space.machine().driver_data<mpu4_state>();
+	space.install_readwrite_handler(0x0810, 0x0810, 0, 0, read8_delegate(FUNC(mpu4_state::bwb_characteriser_r),state),write8_delegate(FUNC(mpu4_state::bwb_characteriser_w),state));
 	mpu4_install_mod4oki_space(space);
 }
 
@@ -2359,7 +2359,7 @@ MACHINE_START_MEMBER(mpu4_state,mod2)
 
 MACHINE_START_MEMBER(mpu4_state,mpu4yam)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	mpu4_config_common(machine());
 
 	m_link7a_connected=0;
@@ -2369,7 +2369,7 @@ MACHINE_START_MEMBER(mpu4_state,mpu4yam)
 
 MACHINE_START_MEMBER(mpu4_state,mpu4oki)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	mpu4_config_common(machine());
 
 	m_link7a_connected=0;
@@ -2379,7 +2379,7 @@ MACHINE_START_MEMBER(mpu4_state,mpu4oki)
 
 MACHINE_START_MEMBER(mpu4_state,mpu4bwb)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	mpu4_config_common(machine());
 
 	m_link7a_connected=0;
@@ -2588,7 +2588,7 @@ DRIVER_INIT_MEMBER(mpu4_state,m4default_alt)
 
 DRIVER_INIT_MEMBER(mpu4_state,m4default_big)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	DRIVER_INIT_CALL(m4default);
 
 	int size = machine().root_device().memregion( "maincpu" )->bytes();
@@ -2599,8 +2599,8 @@ DRIVER_INIT_MEMBER(mpu4_state,m4default_big)
 	else
 	{
 		m_bwb_bank=1;
-		space->install_write_handler(0x0858, 0x0858, 0, 0, write8_delegate(FUNC(mpu4_state::bankswitch_w),this));
-		space->install_write_handler(0x0878, 0x0878, 0, 0, write8_delegate(FUNC(mpu4_state::bankset_w),this));
+		space.install_write_handler(0x0858, 0x0858, 0, 0, write8_delegate(FUNC(mpu4_state::bankswitch_w),this));
+		space.install_write_handler(0x0878, 0x0878, 0, 0, write8_delegate(FUNC(mpu4_state::bankset_w),this));
 	}
 }
 
@@ -2620,10 +2620,10 @@ WRITE8_MEMBER(mpu4_state::crystal_sound_w)
 
 DRIVER_INIT_MEMBER(mpu4_state,m_frkstn)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	DRIVER_INIT_CALL(m4default_big);
-	space->install_read_handler(0x0880, 0x0880, 0, 0, read8_delegate(FUNC(mpu4_state::crystal_sound_r),this));
-	space->install_write_handler(0x0881, 0x0881, 0, 0, write8_delegate(FUNC(mpu4_state::crystal_sound_w),this));
+	space.install_read_handler(0x0880, 0x0880, 0, 0, read8_delegate(FUNC(mpu4_state::crystal_sound_r),this));
+	space.install_write_handler(0x0881, 0x0881, 0, 0, write8_delegate(FUNC(mpu4_state::crystal_sound_w),this));
 }
 
 // thanks to Project Amber for descramble information
@@ -2661,16 +2661,15 @@ DRIVER_INIT_MEMBER(mpu4_state,crystali)
 }
 
 /* generate a 50 Hz signal (based on an RC time) */
-TIMER_DEVICE_CALLBACK( gen_50hz )
+TIMER_DEVICE_CALLBACK_MEMBER(mpu4_state::gen_50hz)
 {
-	mpu4_state *state = timer.machine().driver_data<mpu4_state>();
 	/* Although reported as a '50Hz' signal, the fact that both rising and
     falling edges of the pulse are used means the timer actually gives a 100Hz
     oscillating signal.*/
-	state->m_signal_50hz = state->m_signal_50hz?0:1;
-	timer.machine().device<pia6821_device>("pia_ic4")->ca1_w(state->m_signal_50hz);	/* signal is connected to IC4 CA1 */
+	m_signal_50hz = m_signal_50hz?0:1;
+	machine().device<pia6821_device>("pia_ic4")->ca1_w(m_signal_50hz);	/* signal is connected to IC4 CA1 */
 
-	update_meters(state);//run at 100Hz to sync with PIAs
+	update_meters(this);//run at 100Hz to sync with PIAs
 }
 
 static ADDRESS_MAP_START( mpu4_memmap, AS_PROGRAM, 8, mpu4_state )
@@ -2699,7 +2698,7 @@ const ay8910_interface ay8910_config =
 };
 
 MACHINE_CONFIG_FRAGMENT( mpu4_common )
-	MCFG_TIMER_ADD_PERIODIC("50hz",gen_50hz, attotime::from_hz(100))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("50hz", mpu4_state, gen_50hz, attotime::from_hz(100))
 
 	MCFG_MSC1937_ADD("vfd",0,LEFT_TO_RIGHT)
 	/* 6840 PTM */

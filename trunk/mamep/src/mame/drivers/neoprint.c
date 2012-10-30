@@ -55,6 +55,8 @@ public:
 	DECLARE_DRIVER_INIT(nprsp);
 	virtual void video_start();
 	DECLARE_MACHINE_RESET(nprsp);
+	UINT32 screen_update_neoprint(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_nprsp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -109,23 +111,23 @@ static void draw_layer(running_machine &machine, bitmap_ind16 &bitmap,const rect
 	}
 }
 
-SCREEN_UPDATE_IND16(neoprint)
+UINT32 neoprint_state::screen_update_neoprint(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	bitmap.fill(0, cliprect);
 
-	draw_layer(screen.machine(),bitmap,cliprect,1,2);
-	draw_layer(screen.machine(),bitmap,cliprect,0,2);
+	draw_layer(machine(),bitmap,cliprect,1,2);
+	draw_layer(machine(),bitmap,cliprect,0,2);
 
 	return 0;
 }
 
-SCREEN_UPDATE_IND16(nprsp)
+UINT32 neoprint_state::screen_update_nprsp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	bitmap.fill(0, cliprect);
 
-	draw_layer(screen.machine(),bitmap,cliprect,1,0);
-	draw_layer(screen.machine(),bitmap,cliprect,2,0);
-	draw_layer(screen.machine(),bitmap,cliprect,0,0);
+	draw_layer(machine(),bitmap,cliprect,1,0);
+	draw_layer(machine(),bitmap,cliprect,2,0);
+	draw_layer(machine(),bitmap,cliprect,0,0);
 
 	return 0;
 }
@@ -136,12 +138,12 @@ READ16_MEMBER(neoprint_state::neoprint_calendar_r)
 	//if(space.device().safe_pc() != 0x4b38 )//&& space.device().safe_pc() != 0x5f86 && space.device().safe_pc() != 0x5f90)
 	//  printf("%08x\n",space.device().safe_pc());
 
-	return (upd4990a_databit_r(machine().device("upd4990a"), 0) << 15);
+	return (upd4990a_databit_r(machine().device("upd4990a"), space, 0) << 15);
 }
 
 WRITE16_MEMBER(neoprint_state::neoprint_calendar_w)
 {
-	 upd4990a_control_16_w(machine().device("upd4990a"), 0, ((data >> 8) & 7), mem_mask);
+	 upd4990a_control_16_w(machine().device("upd4990a"), space, 0, ((data >> 8) & 7), mem_mask);
 }
 
 READ8_MEMBER(neoprint_state::neoprint_unk_r)
@@ -462,8 +464,8 @@ static const ym2610_interface ym2610_config =
 static MACHINE_CONFIG_START( neoprint, neoprint_state )
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(neoprint_map)
-//  MCFG_CPU_PERIODIC_INT(irq3_line_hold,45) /* camera / printer irq, unknown timing */
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold) // lv1,2,3 valid?
+	MCFG_CPU_PERIODIC_INT_DRIVER(neoprint_state, irq3_line_hold, 45) /* camera / printer irq, unknown timing */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", neoprint_state,  irq2_line_hold) // lv1,2,3 valid?
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(neoprint_audio_map)
@@ -479,7 +481,7 @@ static MACHINE_CONFIG_START( neoprint, neoprint_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(neoprint)
+	MCFG_SCREEN_UPDATE_DRIVER(neoprint_state, screen_update_neoprint)
 
 	MCFG_PALETTE_LENGTH(0x10000)
 
@@ -502,8 +504,8 @@ MACHINE_RESET_MEMBER(neoprint_state,nprsp)
 static MACHINE_CONFIG_START( nprsp, neoprint_state )
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(nprsp_map)
-//  MCFG_CPU_PERIODIC_INT(irq3_line_hold,45) /* camera / printer irq, unknown timing */
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold) // lv1,2,3 valid?
+	MCFG_CPU_PERIODIC_INT_DRIVER(neoprint_state, irq3_line_hold, 45) /* camera / printer irq, unknown timing */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", neoprint_state,  irq2_line_hold) // lv1,2,3 valid?
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(neoprint_audio_map)
@@ -519,7 +521,7 @@ static MACHINE_CONFIG_START( nprsp, neoprint_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nprsp)
+	MCFG_SCREEN_UPDATE_DRIVER(neoprint_state, screen_update_nprsp)
 
 	MCFG_MACHINE_RESET_OVERRIDE(neoprint_state,nprsp)
 

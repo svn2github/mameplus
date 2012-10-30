@@ -395,7 +395,7 @@ static MACHINE_CONFIG_START( sshangha, sshangha_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 28000000/2)
 	MCFG_CPU_PROGRAM_MAP(sshangha_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sshangha_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 16000000/4)
 	MCFG_CPU_PROGRAM_MAP(sshangha_sound_map)
@@ -408,7 +408,7 @@ static MACHINE_CONFIG_START( sshangha, sshangha_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sshangha)
+	MCFG_SCREEN_UPDATE_DRIVER(sshangha_state, screen_update_sshangha)
 
 	MCFG_GFXDECODE(sshangha)
 	MCFG_PALETTE_LENGTH(0x4000)

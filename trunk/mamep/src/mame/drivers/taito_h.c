@@ -183,7 +183,7 @@ READ8_MEMBER(taitoh_state::syvalion_input_bypass_r)
 {
 	/* Bypass TC0220IOC controller for analog input */
 
-	UINT8	port = tc0220ioc_port_r(m_tc0220ioc, 0);	/* read port number */
+	UINT8	port = tc0220ioc_port_r(m_tc0220ioc, space, 0);	/* read port number */
 
 	switch( port )
 	{
@@ -224,7 +224,7 @@ READ8_MEMBER(taitoh_state::syvalion_input_bypass_r)
 				return 0x00;
 
 		default:
-			return tc0220ioc_portreg_r(m_tc0220ioc, offset);
+			return tc0220ioc_portreg_r(m_tc0220ioc, space, offset);
 	}
 }
 
@@ -566,7 +566,7 @@ static MACHINE_CONFIG_START( syvalion, taitoh_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz / 2)		/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(syvalion_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoh_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz / 2)		/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -582,7 +582,7 @@ static MACHINE_CONFIG_START( syvalion, taitoh_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 3*16, 28*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(syvalion)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoh_state, screen_update_syvalion)
 
 	MCFG_GFXDECODE(syvalion)
 	MCFG_PALETTE_LENGTH(33*16)
@@ -607,7 +607,7 @@ static MACHINE_CONFIG_START( recordbr, taitoh_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz / 2)		/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(recordbr_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoh_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz / 2)		/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -623,7 +623,7 @@ static MACHINE_CONFIG_START( recordbr, taitoh_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(1*16, 21*16-1, 2*16, 17*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(recordbr)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoh_state, screen_update_recordbr)
 
 	MCFG_GFXDECODE(recordbr)
 	MCFG_PALETTE_LENGTH(32*16)
@@ -648,7 +648,7 @@ static MACHINE_CONFIG_START( dleague, taitoh_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz / 2)		/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(dleague_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitoh_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz / 2)		/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -664,7 +664,7 @@ static MACHINE_CONFIG_START( dleague, taitoh_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(1*16, 21*16-1, 2*16, 17*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(dleague)
+	MCFG_SCREEN_UPDATE_DRIVER(taitoh_state, screen_update_dleague)
 
 	MCFG_GFXDECODE(dleague)
 	MCFG_PALETTE_LENGTH(33*16)

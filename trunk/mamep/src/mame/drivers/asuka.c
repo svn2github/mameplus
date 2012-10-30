@@ -230,16 +230,15 @@ DIP locations verified for:
                 INTERRUPTS
 ***********************************************************/
 
-static TIMER_CALLBACK( cadash_interrupt5 )
+TIMER_CALLBACK_MEMBER(asuka_state::cadash_interrupt5)
 {
-	asuka_state *state = machine.driver_data<asuka_state>();
-	state->m_maincpu->set_input_line(5, HOLD_LINE);
+	m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( cadash_interrupt )
+INTERRUPT_GEN_MEMBER(asuka_state::cadash_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(500), FUNC(cadash_interrupt5));
-	device->execute().set_input_line(4, HOLD_LINE);  /* interrupt vector 4 */
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(500), timer_expired_delegate(FUNC(asuka_state::cadash_interrupt5),this));
+	device.execute().set_input_line(4, HOLD_LINE);  /* interrupt vector 4 */
 }
 
 
@@ -394,7 +393,7 @@ static ADDRESS_MAP_START( z80_map, AS_PROGRAM, 8, asuka_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 //  AM_RANGE(0x9002, 0x9100) AM_READNOP
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
@@ -408,7 +407,7 @@ static ADDRESS_MAP_START( cadash_z80_map, AS_PROGRAM, 8, asuka_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 ADDRESS_MAP_END
@@ -778,12 +777,6 @@ static const ym2610_interface ym2610_config =
 };
 
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler),
-	DEVCB_DRIVER_MEMBER(asuka_state,sound_bankswitch_2151_w)
-};
-
 static const msm5205_interface msm5205_config =
 {
 	asuka_msm5205_vck,	/* VCK function */
@@ -870,13 +863,12 @@ void asuka_state::machine_reset()
 	memset(m_cval, 0, 26);
 }
 
-static SCREEN_VBLANK( asuka )
+void asuka_state::screen_eof_asuka(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		asuka_state *state = screen.machine().driver_data<asuka_state>();
-		pc090oj_eof_callback(state->m_pc090oj);
+		pc090oj_eof_callback(m_pc090oj);
 	}
 }
 
@@ -897,7 +889,7 @@ static MACHINE_CONFIG_START( bonzeadv, asuka_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)    /* checked on PCB */
 	MCFG_CPU_PROGRAM_MAP(bonzeadv_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", asuka_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,4000000)    /* sound CPU, also required for test mode */
 	MCFG_CPU_PROGRAM_MAP(bonzeadv_z80_map)
@@ -911,8 +903,8 @@ static MACHINE_CONFIG_START( bonzeadv, asuka_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 3*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bonzeadv)
-	MCFG_SCREEN_VBLANK_STATIC(asuka)
+	MCFG_SCREEN_UPDATE_DRIVER(asuka_state, screen_update_bonzeadv)
+	MCFG_SCREEN_VBLANK_DRIVER(asuka_state, screen_eof_asuka)
 
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
@@ -938,7 +930,7 @@ static MACHINE_CONFIG_START( asuka, asuka_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(asuka_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", asuka_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(z80_map)
@@ -954,8 +946,8 @@ static MACHINE_CONFIG_START( asuka, asuka_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(asuka)
-	MCFG_SCREEN_VBLANK_STATIC(asuka)
+	MCFG_SCREEN_UPDATE_DRIVER(asuka_state, screen_update_asuka)
+	MCFG_SCREEN_VBLANK_DRIVER(asuka_state, screen_eof_asuka)
 
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
@@ -967,8 +959,9 @@ static MACHINE_CONFIG_START( asuka, asuka_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_16MHz/4) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz/4) /* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(asuka_state,sound_bankswitch_2151_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
@@ -984,7 +977,7 @@ static MACHINE_CONFIG_START( cadash, asuka_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_32MHz/2)	/* 68000p12 running at 16Mhz, verified on pcb  */
 	MCFG_CPU_PROGRAM_MAP(cadash_map)
-	MCFG_CPU_VBLANK_INT("screen", cadash_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", asuka_state,  cadash_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(cadash_z80_map)
@@ -1004,8 +997,8 @@ static MACHINE_CONFIG_START( cadash, asuka_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bonzeadv)
-	MCFG_SCREEN_VBLANK_STATIC(asuka)
+	MCFG_SCREEN_UPDATE_DRIVER(asuka_state, screen_update_bonzeadv)
+	MCFG_SCREEN_VBLANK_DRIVER(asuka_state, screen_eof_asuka)
 
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
@@ -1017,8 +1010,9 @@ static MACHINE_CONFIG_START( cadash, asuka_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_8MHz/2)	/* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_8MHz/2)	/* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(asuka_state,sound_bankswitch_2151_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
@@ -1030,7 +1024,7 @@ static MACHINE_CONFIG_START( mofflott, asuka_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)	/* 8 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(asuka_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", asuka_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_map)
@@ -1046,8 +1040,8 @@ static MACHINE_CONFIG_START( mofflott, asuka_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(asuka)
-	MCFG_SCREEN_VBLANK_STATIC(asuka)
+	MCFG_SCREEN_UPDATE_DRIVER(asuka_state, screen_update_asuka)
+	MCFG_SCREEN_VBLANK_DRIVER(asuka_state, screen_eof_asuka)
 
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)	/* only Mofflott uses full palette space */
@@ -1059,8 +1053,9 @@ static MACHINE_CONFIG_START( mofflott, asuka_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(asuka_state,sound_bankswitch_2151_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
@@ -1076,7 +1071,7 @@ static MACHINE_CONFIG_START( galmedes, asuka_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)	/* 8 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(asuka_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", asuka_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(cadash_z80_map)
@@ -1092,8 +1087,8 @@ static MACHINE_CONFIG_START( galmedes, asuka_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(asuka)
-	MCFG_SCREEN_VBLANK_STATIC(asuka)
+	MCFG_SCREEN_UPDATE_DRIVER(asuka_state, screen_update_asuka)
+	MCFG_SCREEN_VBLANK_DRIVER(asuka_state, screen_eof_asuka)
 
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)	/* only Mofflott uses full palette space */
@@ -1105,8 +1100,9 @@ static MACHINE_CONFIG_START( galmedes, asuka_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(asuka_state,sound_bankswitch_2151_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
@@ -1118,7 +1114,7 @@ static MACHINE_CONFIG_START( eto, asuka_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)	/* 8 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(eto_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", asuka_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(cadash_z80_map)
@@ -1134,8 +1130,8 @@ static MACHINE_CONFIG_START( eto, asuka_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(asuka)
-	MCFG_SCREEN_VBLANK_STATIC(asuka)
+	MCFG_SCREEN_UPDATE_DRIVER(asuka_state, screen_update_asuka)
+	MCFG_SCREEN_VBLANK_DRIVER(asuka_state, screen_eof_asuka)
 
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
@@ -1147,8 +1143,9 @@ static MACHINE_CONFIG_START( eto, asuka_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(asuka_state,sound_bankswitch_2151_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 

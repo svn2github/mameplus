@@ -349,7 +349,7 @@ static MACHINE_CONFIG_START( spbactn, spbactn_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz)
 	MCFG_CPU_PROGRAM_MAP(spbactn_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", spbactn_state,  irq3_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_4MHz)
 	MCFG_CPU_PROGRAM_MAP(spbactn_sound_map)
@@ -360,7 +360,7 @@ static MACHINE_CONFIG_START( spbactn, spbactn_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(spbactn)
+	MCFG_SCREEN_UPDATE_DRIVER(spbactn_state, screen_update_spbactn)
 
 	MCFG_GFXDECODE(spbactn)
 	MCFG_PALETTE_LENGTH(0x2800/2)

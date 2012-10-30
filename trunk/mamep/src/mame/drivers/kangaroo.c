@@ -181,7 +181,7 @@ void kangaroo_state::machine_start()
 MACHINE_START_MEMBER(kangaroo_state,kangaroo_mcu)
 {
 	kangaroo_state::machine_start();
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xef00, 0xefff, read8_delegate(FUNC(kangaroo_state::mcu_sim_r),this), write8_delegate(FUNC(kangaroo_state::mcu_sim_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xef00, 0xefff, read8_delegate(FUNC(kangaroo_state::mcu_sim_r),this), write8_delegate(FUNC(kangaroo_state::mcu_sim_w),this));
 	save_item(NAME(m_mcu_clock));
 }
 
@@ -428,12 +428,12 @@ static MACHINE_CONFIG_START( nomcu, kangaroo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", kangaroo_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, MASTER_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", kangaroo_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -441,7 +441,7 @@ static MACHINE_CONFIG_START( nomcu, kangaroo_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK, 320*2, 0*2, 256*2, 260, 8, 248)
-	MCFG_SCREEN_UPDATE_STATIC(kangaroo)
+	MCFG_SCREEN_UPDATE_DRIVER(kangaroo_state, screen_update_kangaroo)
 
 
 	/* sound hardware */

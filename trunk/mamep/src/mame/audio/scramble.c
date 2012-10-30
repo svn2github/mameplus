@@ -45,7 +45,7 @@ static const int scramble_timer[10] =
 
 READ8_DEVICE_HANDLER( scramble_portB_r )
 {
-	return scramble_timer[(device->machine().device<cpu_device>("audiocpu")->total_cycles()/512) % 10];
+	return scramble_timer[(space.machine().device<cpu_device>("audiocpu")->total_cycles()/512) % 10];
 }
 
 
@@ -74,23 +74,23 @@ static const int frogger_timer[10] =
 
 READ8_DEVICE_HANDLER( frogger_portB_r )
 {
-	return frogger_timer[(device->machine().device<cpu_device>("audiocpu")->total_cycles()/512) % 10];
+	return frogger_timer[(space.machine().device<cpu_device>("audiocpu")->total_cycles()/512) % 10];
 }
 
 WRITE8_DEVICE_HANDLER( scramble_sh_irqtrigger_w )
 {
-	ttl7474_device *target = device->machine().device<ttl7474_device>("konami_7474");
+	ttl7474_device *target = space.machine().device<ttl7474_device>("konami_7474");
 
 	/* the complement of bit 3 is connected to the flip-flop's clock */
 	target->clock_w((~data & 0x08) >> 3);
 
 	/* bit 4 is sound disable */
-	device->machine().sound().system_mute((data & 0x10) >> 4);
+	space.machine().sound().system_mute((data & 0x10) >> 4);
 }
 
 WRITE8_DEVICE_HANDLER( mrkougar_sh_irqtrigger_w )
 {
-	ttl7474_device *target = device->machine().device<ttl7474_device>("konami_7474");
+	ttl7474_device *target = space.machine().device<ttl7474_device>("konami_7474");
 
 	/* the complement of bit 3 is connected to the flip-flop's clock */
 	target->clock_w((~data & 0x08) >> 3);
@@ -110,12 +110,12 @@ static IRQ_CALLBACK(scramble_sh_irq_callback)
 	return 0xff;
 }
 
-WRITE_LINE_DEVICE_HANDLER( scramble_sh_7474_q_callback )
+WRITE_LINE_MEMBER(scramble_state::scramble_sh_7474_q_callback)
 {
 	/* the Q bar is connected to the Z80's INT line.  But since INT is complemented, */
 	/* we need to complement Q bar */
-	if (device->machine().device("audiocpu"))
-		device->machine().device("audiocpu")->execute().set_input_line(0, !state ? ASSERT_LINE : CLEAR_LINE);
+	if (machine().device("audiocpu"))
+		machine().device("audiocpu")->execute().set_input_line(0, !state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE8_MEMBER(scramble_state::hotshock_sh_irqtrigger_w)
@@ -125,9 +125,9 @@ WRITE8_MEMBER(scramble_state::hotshock_sh_irqtrigger_w)
 
 READ8_DEVICE_HANDLER( hotshock_soundlatch_r )
 {
-	driver_device *drvstate = device->machine().driver_data<driver_device>();
-	device->machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
-	return drvstate->soundlatch_byte_r(*device->machine().device("audiocpu")->memory().space(AS_PROGRAM),0);
+	driver_device *drvstate = space.machine().driver_data<driver_device>();
+	space.machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+	return drvstate->soundlatch_byte_r(space.machine().device("audiocpu")->memory().space(AS_PROGRAM),0);
 }
 
 static void filter_w(device_t *device, int data)
@@ -247,14 +247,14 @@ static WRITE8_DEVICE_HANDLER( ad2083_tms5110_ctrl_w )
 {
 	static const int tbl[8] = {0,4,2,6,1,5,3,7};
 
-	tmsprom_bit_w(device, 0, tbl[data & 0x07]);
+	tmsprom_bit_w(device, space, 0, tbl[data & 0x07]);
 	switch (data>>3)
 	{
 		case 0x01:
-			tmsprom_rom_csq_w(device, 1, 0);
+			tmsprom_rom_csq_w(device, space, 1, 0);
 			break;
 		case 0x03:
-			tmsprom_rom_csq_w(device, 0, 0);
+			tmsprom_rom_csq_w(device, space, 0, 0);
 			break;
 		case 0x00:
 			/* Rom 2 select */

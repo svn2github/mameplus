@@ -112,9 +112,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sprcros2_master_io_map, AS_IO, 8, sprcros2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76489_new_device, write)
-	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76489_new_device, write)
-	AM_RANGE(0x02, 0x02) AM_READ_PORT("EXTRA") AM_DEVWRITE("sn3", sn76489_new_device, write)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76489_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76489_device, write)
+	AM_RANGE(0x02, 0x02) AM_READ_PORT("EXTRA") AM_DEVWRITE("sn3", sn76489_device, write)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("DSW1")
 	AM_RANGE(0x05, 0x05) AM_READ_PORT("DSW2")
 	AM_RANGE(0x07, 0x07) AM_WRITE(sprcros2_m_port7_w)
@@ -245,29 +245,27 @@ static const sn76496_config psg_intf =
 };
 
 
-static TIMER_DEVICE_CALLBACK( sprcros2_m_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(sprcros2_state::sprcros2_m_interrupt)
 {
-	sprcros2_state *state = timer.machine().driver_data<sprcros2_state>();
 	int scanline = param;
 
 	if (scanline == 240)
 	{
-		if(state->m_port7&0x01)
-			state->m_master->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		if(m_port7&0x01)
+			m_master->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	else if(scanline == 0)
 	{
-		if(state->m_port7&0x08)
-			state->m_master->set_input_line(0, HOLD_LINE);
+		if(m_port7&0x08)
+			m_master->set_input_line(0, HOLD_LINE);
 	}
 }
 
-static INTERRUPT_GEN( sprcros2_s_interrupt )
+INTERRUPT_GEN_MEMBER(sprcros2_state::sprcros2_s_interrupt)
 {
-	sprcros2_state *state = device->machine().driver_data<sprcros2_state>();
 
-	if(state->m_s_port3&0x01)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_s_port3&0x01)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 void sprcros2_state::machine_start()
@@ -283,12 +281,12 @@ static MACHINE_CONFIG_START( sprcros2, sprcros2_state )
 	MCFG_CPU_ADD("master", Z80,10000000/2)
 	MCFG_CPU_PROGRAM_MAP(sprcros2_master_map)
 	MCFG_CPU_IO_MAP(sprcros2_master_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", sprcros2_m_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", sprcros2_state, sprcros2_m_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("slave", Z80,10000000/2)
 	MCFG_CPU_PROGRAM_MAP(sprcros2_slave_map)
 	MCFG_CPU_IO_MAP(sprcros2_slave_io_map)
-	MCFG_CPU_PERIODIC_INT(sprcros2_s_interrupt,2*60)	//2 nmis
+	MCFG_CPU_PERIODIC_INT_DRIVER(sprcros2_state, sprcros2_s_interrupt, 2*60)	//2 nmis
 
 
 	/* video hardware */
@@ -297,7 +295,7 @@ static MACHINE_CONFIG_START( sprcros2, sprcros2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sprcros2)
+	MCFG_SCREEN_UPDATE_DRIVER(sprcros2_state, screen_update_sprcros2)
 
 	MCFG_GFXDECODE(sprcros2)
 	MCFG_PALETTE_LENGTH(768)
@@ -306,15 +304,15 @@ static MACHINE_CONFIG_START( sprcros2, sprcros2_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489_NEW, 10000000/4)
+	MCFG_SOUND_ADD("sn1", SN76489, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489_NEW, 10000000/4)
+	MCFG_SOUND_ADD("sn2", SN76489, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489_NEW, 10000000/4)
+	MCFG_SOUND_ADD("sn3", SN76489, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

@@ -12,10 +12,10 @@
         * Monopoly Deluxe
 
     Known Issues:
-        * Artwork support is needed as the monitor bezel illuminates
-        to indicate progress through the games.
-        * Features used by the AWP games such as lamps, reels and
-        meters are not emulated.
+        * Some features used by the AWP games such as reels and meters
+        are not emulated.
+        * Timing for reels, and other opto devices is controlled by the same clock
+        as the lamps, in a weird daisychain setup.
 
     AWP game notes:
       The byte at 0x81 of the EVEN 68k rom appears to be some kind of
@@ -40,6 +40,7 @@
 #include "machine/steppers.h"
 #include "machine/roc10937.h"
 
+#include "jpmsys5.lh"
 
 enum state { IDLE, START, DATA, STOP1, STOP2 };
 
@@ -97,12 +98,16 @@ public:
 	DECLARE_READ_LINE_MEMBER(a2_rx_r);
 	DECLARE_WRITE_LINE_MEMBER(a2_tx_w);
 	DECLARE_READ_LINE_MEMBER(a2_dcd_r);
+	DECLARE_READ16_MEMBER(mux_awp_r);
+	DECLARE_READ16_MEMBER(coins_awp_r);
 	void sys5_draw_lamps();
 	DECLARE_MACHINE_START(jpmsys5v);
 	DECLARE_MACHINE_RESET(jpmsys5v);
 	DECLARE_VIDEO_START(jpmsys5v);
 	DECLARE_MACHINE_START(jpmsys5);
 	DECLARE_MACHINE_RESET(jpmsys5);
+	UINT32 screen_update_jpmsys5v(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(touch_cb);
 };
 
 
@@ -161,10 +166,10 @@ WRITE16_MEMBER(jpmsys5_state::sys5_tms34061_w)
 	}
 
 	if (ACCESSING_BITS_8_15)
-		tms34061_w(&space, col, row, func, data >> 8);
+		tms34061_w(space, col, row, func, data >> 8);
 
 	if (ACCESSING_BITS_0_7)
-		tms34061_w(&space, col | 1, row, func, data & 0xff);
+		tms34061_w(space, col | 1, row, func, data & 0xff);
 }
 
 READ16_MEMBER(jpmsys5_state::sys5_tms34061_r)
@@ -185,10 +190,10 @@ READ16_MEMBER(jpmsys5_state::sys5_tms34061_r)
 	}
 
 	if (ACCESSING_BITS_8_15)
-		data |= tms34061_r(&space, col, row, func) << 8;
+		data |= tms34061_r(space, col, row, func) << 8;
 
 	if (ACCESSING_BITS_0_7)
-		data |= tms34061_r(&space, col | 1, row, func);
+		data |= tms34061_r(space, col | 1, row, func);
 
 	return data;
 }
@@ -223,7 +228,7 @@ VIDEO_START_MEMBER(jpmsys5_state,jpmsys5v)
 	tms34061_start(machine(), &tms34061intf);
 }
 
-static SCREEN_UPDATE_RGB32( jpmsys5v )
+UINT32 jpmsys5_state::screen_update_jpmsys5v(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	int x, y;
 	struct tms34061_display state;
@@ -232,7 +237,7 @@ static SCREEN_UPDATE_RGB32( jpmsys5v )
 
 	if (state.blanked)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
@@ -246,8 +251,8 @@ static SCREEN_UPDATE_RGB32( jpmsys5v )
 			UINT8 pen = src[(x-cliprect.min_x)>>1];
 
 			/* Draw two 4-bit pixels */
-			*dest++ = screen.machine().pens[(pen >> 4) & 0xf];
-			*dest++ = screen.machine().pens[pen & 0xf];
+			*dest++ = machine().pens[(pen >> 4) & 0xf];
+			*dest++ = machine().pens[pen & 0xf];
 		}
 	}
 
@@ -316,7 +321,7 @@ WRITE16_MEMBER(jpmsys5_state::jpm_upd7759_w)
 	{
 		case 0:
 		{
-			upd7759_port_w(device, 0, data & 0xff);
+			upd7759_port_w(device, space, 0, data & 0xff);
 			upd7759_start_w(device, 0);
 			upd7759_start_w(device, 1);
 			break;
@@ -405,10 +410,9 @@ ADDRESS_MAP_END
  *************************************/
 
 /* Serial bit transmission callback */
-static TIMER_CALLBACK( touch_cb )
+TIMER_CALLBACK_MEMBER(jpmsys5_state::touch_cb)
 {
-	jpmsys5_state *state = machine.driver_data<jpmsys5_state>();
-	switch (state->m_touch_state)
+	switch (m_touch_state)
 	{
 		case IDLE:
 		{
@@ -416,38 +420,38 @@ static TIMER_CALLBACK( touch_cb )
 		}
 		case START:
 		{
-			state->m_touch_shift_cnt = 0;
-			state->m_a2_data_in = 0;
-			state->m_touch_state = DATA;
+			m_touch_shift_cnt = 0;
+			m_a2_data_in = 0;
+			m_touch_state = DATA;
 			break;
 		}
 		case DATA:
 		{
-			state->m_a2_data_in = (state->m_touch_data[state->m_touch_data_count] >> (state->m_touch_shift_cnt)) & 1;
+			m_a2_data_in = (m_touch_data[m_touch_data_count] >> (m_touch_shift_cnt)) & 1;
 
-			if (++state->m_touch_shift_cnt == 8)
-				state->m_touch_state = STOP1;
+			if (++m_touch_shift_cnt == 8)
+				m_touch_state = STOP1;
 
 			break;
 		}
 		case STOP1:
 		{
-			state->m_a2_data_in = 1;
-			state->m_touch_state = STOP2;
+			m_a2_data_in = 1;
+			m_touch_state = STOP2;
 			break;
 		}
 		case STOP2:
 		{
-			state->m_a2_data_in = 1;
+			m_a2_data_in = 1;
 
-			if (++state->m_touch_data_count == 3)
+			if (++m_touch_data_count == 3)
 			{
-				state->m_touch_timer->reset();
-				state->m_touch_state = IDLE;
+				m_touch_timer->reset();
+				m_touch_state = IDLE;
 			}
 			else
 			{
-				state->m_touch_state = START;
+				m_touch_state = START;
 			}
 
 			break;
@@ -686,7 +690,7 @@ static ACIA6850_INTERFACE( acia2_if )
 MACHINE_START_MEMBER(jpmsys5_state,jpmsys5v)
 {
 	membank("bank1")->set_base(memregion("maincpu")->base()+0x20000);
-	m_touch_timer = machine().scheduler().timer_alloc(FUNC(touch_cb));
+	m_touch_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(jpmsys5_state::touch_cb),this));
 }
 
 MACHINE_RESET_MEMBER(jpmsys5_state,jpmsys5v)
@@ -723,7 +727,7 @@ static MACHINE_CONFIG_START( jpmsys5v, jpmsys5_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(XTAL_40MHz / 4, 676, 20*4, 147*4, 256, 0, 254)
-	MCFG_SCREEN_UPDATE_STATIC(jpmsys5v)
+	MCFG_SCREEN_UPDATE_DRIVER(jpmsys5_state, screen_update_jpmsys5v)
 
 	MCFG_VIDEO_START_OVERRIDE(jpmsys5_state,jpmsys5v)
 
@@ -742,7 +746,36 @@ static MACHINE_CONFIG_START( jpmsys5v, jpmsys5_state )
 	MCFG_PTM6840_ADD("6840ptm", ptm_intf)
 MACHINE_CONFIG_END
 
+READ16_MEMBER(jpmsys5_state::mux_awp_r)
+{
+	static const char *const portnames[] = { "DSW", "DSW2", "ROTARY", "STROBE0", "STROBE1", "STROBE2", "STROBE3", "STROBE4" };
 
+	if ((offset >0x7f) && (offset <0x8f))
+	{
+		return ioport(portnames[( (offset - 0x80) >>1)])->read();
+	}
+	else
+	{
+		return 0xffff;
+	}
+}
+
+READ16_MEMBER(jpmsys5_state::coins_awp_r)
+{
+	switch (offset)
+	{
+		case 2:
+		{
+			return ioport("COINS")->read() << 8;
+		}
+		break;
+		default:
+		{
+			logerror("coins read offset: %x",offset);
+			return 0xffff;
+		}
+	}
+}
 
 static ADDRESS_MAP_START( 68000_awp_map, AS_PROGRAM, 16, jpmsys5_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM
@@ -802,6 +835,28 @@ static INPUT_PORTS_START( popeye )
 	PORT_DIPSETTING(	0x40, "40%" )
 	PORT_DIPSETTING(	0xc0, "30%" )
 
+	PORT_START("DSW2")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("ROTARY")//not everything has this hooked up, cna be used as a test switch internally
+	PORT_CONFNAME(0x0F, 0x0F, "Rotary Switch")
+	PORT_CONFSETTING(	0x0F, "0")
+	PORT_CONFSETTING(	0x0E, "1")
+	PORT_CONFSETTING(	0x0D, "2")
+	PORT_CONFSETTING(	0x0C, "3")
+	PORT_CONFSETTING(	0x0B, "4")
+	PORT_CONFSETTING(	0x0A, "5")
+	PORT_CONFSETTING(	0x09, "6")
+	PORT_CONFSETTING(	0x08, "7")
+	PORT_CONFSETTING(	0x06, "8")
+	PORT_CONFSETTING(	0x07, "9")
+	PORT_CONFSETTING(	0x05, "10")
+	PORT_CONFSETTING(	0x04, "11")
+	PORT_CONFSETTING(	0x03, "12")
+	PORT_CONFSETTING(	0x02, "13")
+	PORT_CONFSETTING(	0x01, "14")
+	PORT_CONFSETTING(	0x00, "15")
+
 	PORT_START("DIRECT")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("Back door") PORT_CODE(KEYCODE_R) PORT_TOGGLE
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("Cash door") PORT_CODE(KEYCODE_T) PORT_TOGGLE
@@ -829,6 +884,23 @@ static INPUT_PORTS_START( popeye )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN4 ) PORT_NAME("100p")
 	PORT_BIT( 0xc3, IP_ACTIVE_LOW, IPT_UNUSED )
 
+	PORT_START("STROBE0")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("STROBE1")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("STROBE2")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("STROBE3")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("STROBE4")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("STROBE5")
+	PORT_BIT(0xFF, IP_ACTIVE_LOW, IPT_UNKNOWN)
 INPUT_PORTS_END
 
 /*************************************
@@ -879,7 +951,7 @@ static MACHINE_CONFIG_START( jpmsys5, jpmsys5_state )
 
 	/* 6840 PTM */
 	MCFG_PTM6840_ADD("6840ptm", ptm_intf)
-	MCFG_DEFAULT_LAYOUT(layout_awpvid16)
+	MCFG_DEFAULT_LAYOUT(layout_jpmsys5)
 MACHINE_CONFIG_END
 
 /*************************************

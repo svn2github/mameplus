@@ -707,7 +707,7 @@ static MACHINE_CONFIG_START( welltris, welltris_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,20000000/2)	/* 10 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", welltris_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)		/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -719,11 +719,12 @@ static MACHINE_CONFIG_START( welltris, welltris_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(15, 367-1, 8, 248-1)
-	MCFG_SCREEN_UPDATE_STATIC(welltris)
+	MCFG_SCREEN_UPDATE_DRIVER(welltris_state, screen_update_welltris)
 
 	MCFG_GFXDECODE(welltris)
 	MCFG_PALETTE_LENGTH(2048)
 
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

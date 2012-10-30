@@ -91,20 +91,19 @@ WRITE8_MEMBER(buggychl_state::bankswitch_w)
 	membank("bank1")->set_entry(data & 0x07);	// shall we check if data&7 < # banks?
 }
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(buggychl_state::nmi_callback)
 {
-	buggychl_state *state = machine.driver_data<buggychl_state>();
 
-	if (state->m_sound_nmi_enable)
-		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_sound_nmi_enable)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		state->m_pending_nmi = 1;
+		m_pending_nmi = 1;
 }
 
 WRITE8_MEMBER(buggychl_state::sound_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().scheduler().synchronize(FUNC(nmi_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(buggychl_state::nmi_callback),this), data);
 }
 
 WRITE8_MEMBER(buggychl_state::nmi_disable_w)
@@ -352,7 +351,8 @@ static const ay8910_interface ay8910_interface_2 =
 
 static const msm5232_interface msm5232_config =
 {
-	{ 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6 }	/* default 0.39 uF capacitors (not verified) */
+	{ 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6 },	/* default 0.39 uF capacitors (not verified) */
+	DEVCB_NULL
 };
 
 
@@ -393,11 +393,11 @@ static MACHINE_CONFIG_START( buggychl, buggychl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000) /* 4 MHz??? */
 	MCFG_CPU_PROGRAM_MAP(buggychl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", buggychl_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000) /* 4 MHz??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,60*60)	/* irq is timed, tied to the cpu clock and not to vblank */
+	MCFG_CPU_PERIODIC_INT_DRIVER(buggychl_state, irq0_line_hold, 60*60)	/* irq is timed, tied to the cpu clock and not to vblank */
 							/* nmi is caused by the main cpu */
 
 	MCFG_CPU_ADD("mcu", M68705,8000000/2)  /* 4 MHz */
@@ -411,7 +411,7 @@ static MACHINE_CONFIG_START( buggychl, buggychl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(buggychl)
+	MCFG_SCREEN_UPDATE_DRIVER(buggychl_state, screen_update_buggychl)
 
 	MCFG_GFXDECODE(buggychl)
 	MCFG_PALETTE_LENGTH(128+128)

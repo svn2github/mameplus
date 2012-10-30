@@ -125,6 +125,9 @@ public:
 	DECLARE_DRIVER_INIT(fashion);
 	DECLARE_DRIVER_INIT(ciclone);
 	DECLARE_VIDEO_START(tourvisn);
+	UINT32 screen_update_tourvisn(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_brasil(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
 
 
@@ -135,9 +138,8 @@ VIDEO_START_MEMBER(highvdeo_state,tourvisn)
 
 }
 
-static SCREEN_UPDATE_RGB32(tourvisn)
+UINT32 highvdeo_state::screen_update_tourvisn(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	highvdeo_state *state = screen.machine().driver_data<highvdeo_state>();
 	int x,y,count;
 
 	count = (0/2);
@@ -148,15 +150,15 @@ static SCREEN_UPDATE_RGB32(tourvisn)
 		{
 			UINT32 color;
 
-			color = ((state->m_blit_ram[count]) & 0x00ff)>>0;
+			color = ((m_blit_ram[count]) & 0x00ff)>>0;
 
 			if(cliprect.contains((x*2)+0, y))
-				bitmap.pix32(y, (x*2)+0) = screen.machine().pens[color];
+				bitmap.pix32(y, (x*2)+0) = machine().pens[color];
 
-			color = ((state->m_blit_ram[count]) & 0xff00)>>8;
+			color = ((m_blit_ram[count]) & 0xff00)>>8;
 
 			if(cliprect.contains((x*2)+1, y))
-				bitmap.pix32(y, (x*2)+1) = screen.machine().pens[color];
+				bitmap.pix32(y, (x*2)+1) = machine().pens[color];
 
 			count++;
 		}
@@ -166,9 +168,8 @@ static SCREEN_UPDATE_RGB32(tourvisn)
 }
 
 /*Later HW, RGB565 instead of RAM-based pens (+ ramdac).*/
-static SCREEN_UPDATE_RGB32(brasil)
+UINT32 highvdeo_state::screen_update_brasil(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	highvdeo_state *state = screen.machine().driver_data<highvdeo_state>();
 	int x,y,count;
 
 	count = (0/2);
@@ -182,7 +183,7 @@ static SCREEN_UPDATE_RGB32(brasil)
 			UINT32 g;
 			UINT32 r;
 
-			color = (state->m_blit_ram[count]) & 0xffff;
+			color = (m_blit_ram[count]) & 0xffff;
 
 			b = (color & 0x001f) << 3;
 			g = (color & 0x07e0) >> 3;
@@ -266,7 +267,7 @@ WRITE16_MEMBER(highvdeo_state::tv_oki6376_w)
 	if (ACCESSING_BITS_0_7 && okidata != data)
 	{
 		okidata = data;
-		okim6376_w(device, 0, data & ~0x80);
+		okim6376_w(device, space, 0, data & ~0x80);
 		okim6376_st_w (device, data & 0x80);
 	}
 }
@@ -340,7 +341,7 @@ WRITE16_MEMBER(highvdeo_state::tv_ncf_oki6376_w)
 	static int okidata;
 	if (ACCESSING_BITS_0_7 && okidata != data) {
 		okidata = data;
-		okim6376_w(device, 0, data );
+		okim6376_w(device, space, 0, data );
 	}
 }
 
@@ -920,16 +921,16 @@ static INPUT_PORTS_START( fashion )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(highvdeo_state::vblank_irq)
 {
-	device->execute().set_input_line_and_vector(0,HOLD_LINE,0x08/4);
+	device.execute().set_input_line_and_vector(0,HOLD_LINE,0x08/4);
 }
 
 static MACHINE_CONFIG_START( tv_vcf, highvdeo_state )
 	MCFG_CPU_ADD("maincpu", V30, XTAL_12MHz/2 )	// ?
 	MCFG_CPU_PROGRAM_MAP(tv_vcf_map)
 	MCFG_CPU_IO_MAP(tv_vcf_io)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", highvdeo_state,  vblank_irq)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -938,7 +939,7 @@ static MACHINE_CONFIG_START( tv_vcf, highvdeo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(400, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 200-1)
-	MCFG_SCREEN_UPDATE_STATIC(tourvisn)
+	MCFG_SCREEN_UPDATE_DRIVER(highvdeo_state, screen_update_tourvisn)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -988,14 +989,14 @@ static MACHINE_CONFIG_DERIVED( ciclone, tv_tcf )
 	MCFG_CPU_ADD("maincpu", I80186, 20000000/2 )	// ?
 	MCFG_CPU_PROGRAM_MAP(tv_tcf_map)
 	MCFG_CPU_IO_MAP(tv_tcf_io)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", highvdeo_state,  vblank_irq)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( brasil, highvdeo_state )
 	MCFG_CPU_ADD("maincpu", I80186, 20000000 )	// fashion doesn't like 20/2 Mhz
 	MCFG_CPU_PROGRAM_MAP(brasil_map)
 	MCFG_CPU_IO_MAP(brasil_io)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", highvdeo_state,  vblank_irq)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1004,7 +1005,7 @@ static MACHINE_CONFIG_START( brasil, highvdeo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(400, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 400-1, 0, 300-1)
-	MCFG_SCREEN_UPDATE_STATIC(brasil)
+	MCFG_SCREEN_UPDATE_DRIVER(highvdeo_state, screen_update_brasil)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -1200,7 +1201,7 @@ READ16_MEMBER(highvdeo_state::ciclone_status_r)
 
 DRIVER_INIT_MEMBER(highvdeo_state,ciclone)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x0030, 0x0033, read16_delegate(FUNC(highvdeo_state::ciclone_status_r), this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x0030, 0x0033, read16_delegate(FUNC(highvdeo_state::ciclone_status_r), this));
 }
 
 /*
@@ -1270,7 +1271,7 @@ WRITE16_MEMBER(highvdeo_state::fashion_output_w)
 
 DRIVER_INIT_MEMBER(highvdeo_state,fashion)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x0002, 0x0003, write16_delegate(FUNC(highvdeo_state::fashion_output_w), this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x0002, 0x0003, write16_delegate(FUNC(highvdeo_state::fashion_output_w), this));
 }
 
 GAMEL( 2000, tour4000,  0,      tv_vcf,   tv_vcf, driver_device,   0,       ROT0,  "High Video", "Tour 4000",         0, layout_fashion )

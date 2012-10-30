@@ -1068,6 +1068,7 @@ void spc700_set_volume(device_t *device,int volume)
          I/O for DSP
  ***************************/
 
+static DECLARE_READ8_DEVICE_HANDLER( snes_dsp_io_r );
 static READ8_DEVICE_HANDLER( snes_dsp_io_r )
 {
 	snes_sound_state *spc700 = get_safe_token(device);
@@ -1083,6 +1084,7 @@ static READ8_DEVICE_HANDLER( snes_dsp_io_r )
 	return spc700->dsp_regs[offset & 0x7f];
 }
 
+static DECLARE_WRITE8_DEVICE_HANDLER( snes_dsp_io_w );
 static WRITE8_DEVICE_HANDLER( snes_dsp_io_w )
 {
 	snes_sound_state *spc700 = get_safe_token(device);
@@ -1118,12 +1120,12 @@ READ8_DEVICE_HANDLER( spc_io_r )
 		case 0x2:		/* Register address */
 			return spc700->ram[0xf2];
 		case 0x3:		/* Register data */
-			return snes_dsp_io_r(device, spc700->ram[0xf2]);
+			return snes_dsp_io_r(device, space, spc700->ram[0xf2]);
 		case 0x4:		/* Port 0 */
 		case 0x5:		/* Port 1 */
 		case 0x6:		/* Port 2 */
 		case 0x7:		/* Port 3 */
-			// mame_printf_debug("SPC: rd %02x @ %d, PC=%x\n", spc700->port_in[offset - 4], offset - 4, space->device().safe_pc());
+			// mame_printf_debug("SPC: rd %02x @ %d, PC=%x\n", spc700->port_in[offset - 4], offset - 4, space.device().safe_pc());
 			return spc700->port_in[offset - 4];
 		case 0x8: //normal RAM, can be read even if the ram disabled flag ($f0 bit 1) is active
 		case 0x9:
@@ -1186,15 +1188,15 @@ WRITE8_DEVICE_HANDLER( spc_io_w )
 			break;
 		case 0x3:		/* Register data - 0x80-0xff is a read-only mirror of 0x00-0x7f */
 			if (!(spc700->ram[0xf2] & 0x80))
-				snes_dsp_io_w(device, spc700->ram[0xf2] & 0x7f, data);
+				snes_dsp_io_w(device, space, spc700->ram[0xf2] & 0x7f, data);
 			break;
 		case 0x4:		/* Port 0 */
 		case 0x5:		/* Port 1 */
 		case 0x6:		/* Port 2 */
 		case 0x7:		/* Port 3 */
-			// mame_printf_debug("SPC: %02x to APU @ %d (PC=%x)\n", data, offset & 3, space->device().safe_pc());
+			// mame_printf_debug("SPC: %02x to APU @ %d (PC=%x)\n", data, offset & 3, space.device().safe_pc());
 			spc700->port_out[offset - 4] = data;
-			device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
+			space.machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
 			break;
 		case 0xa:		/* Timer 0 */
 		case 0xb:		/* Timer 1 */
@@ -1364,7 +1366,7 @@ snes_sound_device::snes_sound_device(const machine_config &mconfig, const char *
 	: device_t(mconfig, SNES, "SNES Custom DSP (SPC700)", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(snes_sound_state));
+	m_token = global_alloc_clear(snes_sound_state);
 }
 
 //-------------------------------------------------

@@ -122,6 +122,7 @@ public:
 	DECLARE_WRITE8_MEMBER(flipjack_portc_w);
 	virtual void machine_start();
 	virtual void palette_init();
+	UINT32 screen_update_flipjack(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -147,17 +148,16 @@ void flipjack_state::palette_init()
 }
 
 
-static SCREEN_UPDATE_RGB32( flipjack )
+UINT32 flipjack_state::screen_update_flipjack(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	flipjack_state *state = screen.machine().driver_data<flipjack_state>();
 	int x,y,count;
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	// draw playfield
-	if (state->m_layer & 2)
+	if (m_layer & 2)
 	{
-		const UINT8 *blit_data = state->memregion("gfx2")->base();
+		const UINT8 *blit_data = memregion("gfx2")->base();
 
 		count = 0;
 
@@ -179,7 +179,7 @@ static SCREEN_UPDATE_RGB32( flipjack )
 						color = ((pen_r >> (7-xi)) & 1)<<0;
 						color|= ((pen_g >> (7-xi)) & 1)<<1;
 						color|= ((pen_b >> (7-xi)) & 1)<<2;
-						bitmap.pix32(y, x+xi) = screen.machine().pens[color+0x80];
+						bitmap.pix32(y, x+xi) = machine().pens[color+0x80];
 					}
 				}
 
@@ -193,16 +193,16 @@ static SCREEN_UPDATE_RGB32( flipjack )
 	{
 		for (x=0;x<32;x++)
 		{
-			gfx_element *gfx = screen.machine().gfx[0];
-			int tile = state->m_bank << 8 | state->m_vram[x+y*0x100];
-			int color = state->m_cram[x+y*0x100] & 0x3f;
+			gfx_element *gfx = machine().gfx[0];
+			int tile = m_bank << 8 | m_vram[x+y*0x100];
+			int color = m_cram[x+y*0x100] & 0x3f;
 
 			drawgfx_transpen(bitmap, cliprect, gfx, tile, color, 0, 0, x*8, y*8, 0);
 		}
 	}
 
 	// draw framebuffer
-	if (state->m_layer & 4)
+	if (m_layer & 4)
 	{
 		count = 0;
 
@@ -213,7 +213,7 @@ static SCREEN_UPDATE_RGB32( flipjack )
 				UINT32 pen,color;
 				int xi;
 
-				pen = (state->m_fbram[count] & 0xff)>>0;
+				pen = (m_fbram[count] & 0xff)>>0;
 
 				for(xi=0;xi<8;xi++)
 				{
@@ -221,7 +221,7 @@ static SCREEN_UPDATE_RGB32( flipjack )
 					{
 						color = ((pen >> (7-xi)) & 1) ? 0x87 : 0;
 						if(color)
-							bitmap.pix32(y, x+xi) = screen.machine().pens[color];
+							bitmap.pix32(y, x+xi) = machine().pens[color];
 					}
 				}
 
@@ -478,12 +478,12 @@ static MACHINE_CONFIG_START( flipjack, flipjack_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(flipjack_main_map)
 	MCFG_CPU_IO_MAP(flipjack_main_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", flipjack_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(flipjack_sound_map)
 	MCFG_CPU_IO_MAP(flipjack_sound_io_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", flipjack_state,  nmi_line_assert)
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
@@ -491,7 +491,7 @@ static MACHINE_CONFIG_START( flipjack, flipjack_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK, 0x188, 0, 0x100, 0x100, 0, 0xc0) // from crtc
-	MCFG_SCREEN_UPDATE_STATIC(flipjack)
+	MCFG_SCREEN_UPDATE_DRIVER(flipjack_state, screen_update_flipjack)
 
 	MCFG_MC6845_ADD("crtc", HD6845, VIDEO_CLOCK/8, mc6845_intf)
 

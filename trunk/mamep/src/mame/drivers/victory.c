@@ -214,7 +214,7 @@ static MACHINE_CONFIG_START( victory, victory_state )
 	MCFG_CPU_ADD("maincpu", Z80, VICTORY_MAIN_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_io_map)
-	MCFG_CPU_VBLANK_INT("screen", victory_vblank_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", victory_state,  victory_vblank_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -224,7 +224,7 @@ static MACHINE_CONFIG_START( victory, victory_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	/* using the standard Exidy video parameters for now, needs to be confirmed */
 	MCFG_SCREEN_RAW_PARAMS(VICTORY_PIXEL_CLOCK, VICTORY_HTOTAL, VICTORY_HBEND, VICTORY_HBSTART, VICTORY_VTOTAL, VICTORY_VBEND, VICTORY_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(victory)
+	MCFG_SCREEN_UPDATE_DRIVER(victory_state, screen_update_victory)
 
 	MCFG_PALETTE_LENGTH(64)
 

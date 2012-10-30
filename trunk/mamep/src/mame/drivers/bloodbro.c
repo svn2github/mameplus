@@ -436,7 +436,7 @@ static MACHINE_CONFIG_START( bloodbro, bloodbro_state )
 	// basic machine hardware
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_20MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(bloodbro_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bloodbro_state,  irq4_line_hold)
 
 	SEIBU_SOUND_SYSTEM_CPU(XTAL_7_15909MHz/2) /* verified on pcb */
 
@@ -449,7 +449,7 @@ static MACHINE_CONFIG_START( bloodbro, bloodbro_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bloodbro)
+	MCFG_SCREEN_UPDATE_DRIVER(bloodbro_state, screen_update_bloodbro)
 
 	MCFG_GFXDECODE(bloodbro)
 	MCFG_PALETTE_LENGTH(2048)
@@ -463,22 +463,22 @@ static MACHINE_CONFIG_DERIVED( weststry, bloodbro )
 
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(weststry_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bloodbro_state,  irq6_line_hold)
 
 	MCFG_GFXDECODE(weststry)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(weststry)
+	MCFG_SCREEN_UPDATE_DRIVER(bloodbro_state, screen_update_weststry)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( skysmash, bloodbro )
 
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bloodbro_state,  irq2_line_hold)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(skysmash)
+	MCFG_SCREEN_UPDATE_DRIVER(bloodbro_state, screen_update_skysmash)
 MACHINE_CONFIG_END
 
 /* ROMs */

@@ -31,26 +31,24 @@ Atari Orbit Driver
  *
  *************************************/
 
-static TIMER_DEVICE_CALLBACK( nmi_32v )
+TIMER_DEVICE_CALLBACK_MEMBER(orbit_state::nmi_32v)
 {
-	orbit_state *state = timer.machine().driver_data<orbit_state>();
 	int scanline = param;
-	int nmistate = (scanline & 32) && (state->m_misc_flags & 4);
-	state->m_maincpu->set_input_line(INPUT_LINE_NMI, nmistate ? ASSERT_LINE : CLEAR_LINE);
+	int nmistate = (scanline & 32) && (m_misc_flags & 4);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, nmistate ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static TIMER_CALLBACK( irq_off )
+TIMER_CALLBACK_MEMBER(orbit_state::irq_off)
 {
-	orbit_state *state = machine.driver_data<orbit_state>();
-	state->m_maincpu->set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
-static INTERRUPT_GEN( orbit_interrupt )
+INTERRUPT_GEN_MEMBER(orbit_state::orbit_interrupt)
 {
-	device->execute().set_input_line(0, ASSERT_LINE);
-	device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_vblank_end(), FUNC(irq_off));
+	device.execute().set_input_line(0, ASSERT_LINE);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_vblank_end(), timer_expired_delegate(FUNC(orbit_state::irq_off),this));
 }
 
 
@@ -61,9 +59,9 @@ static INTERRUPT_GEN( orbit_interrupt )
  *
  *************************************/
 
-static void update_misc_flags(running_machine &machine, UINT8 val)
+static void update_misc_flags(address_space &space, UINT8 val)
 {
-	orbit_state *state = machine.driver_data<orbit_state>();
+	orbit_state *state = space.machine().driver_data<orbit_state>();
 
 	state->m_misc_flags = val;
 
@@ -76,13 +74,13 @@ static void update_misc_flags(running_machine &machine, UINT8 val)
 	/* BIT6 => HYPER LED    */
 	/* BIT7 => WARNING SND  */
 
-	discrete_sound_w(state->m_discrete, ORBIT_WARNING_EN, BIT(state->m_misc_flags, 7));
+	discrete_sound_w(state->m_discrete, space, ORBIT_WARNING_EN, BIT(state->m_misc_flags, 7));
 
-	set_led_status(machine, 0, BIT(state->m_misc_flags, 3));
-	set_led_status(machine, 1, BIT(state->m_misc_flags, 6));
+	set_led_status(space.machine(), 0, BIT(state->m_misc_flags, 3));
+	set_led_status(space.machine(), 1, BIT(state->m_misc_flags, 6));
 
-	coin_lockout_w(machine, 0, !BIT(state->m_misc_flags, 1));
-	coin_lockout_w(machine, 1, !BIT(state->m_misc_flags, 1));
+	coin_lockout_w(space.machine(), 0, !BIT(state->m_misc_flags, 1));
+	coin_lockout_w(space.machine(), 1, !BIT(state->m_misc_flags, 1));
 }
 
 
@@ -91,9 +89,9 @@ WRITE8_MEMBER(orbit_state::orbit_misc_w)
 	UINT8 bit = offset >> 1;
 
 	if (offset & 1)
-		update_misc_flags(machine(), m_misc_flags | (1 << bit));
+		update_misc_flags(space, m_misc_flags | (1 << bit));
 	else
-		update_misc_flags(machine(), m_misc_flags & ~(1 << bit));
+		update_misc_flags(space, m_misc_flags & ~(1 << bit));
 }
 
 
@@ -114,11 +112,11 @@ static ADDRESS_MAP_START( orbit_map, AS_PROGRAM, 8, orbit_state )
 	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x07ff) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0x3000, 0x33bf) AM_MIRROR(0x0400) AM_RAM_WRITE(orbit_playfield_w) AM_SHARE("playfield_ram")
 	AM_RANGE(0x33c0, 0x33ff) AM_MIRROR(0x0400) AM_RAM AM_SHARE("sprite_ram")
-	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x00ff) AM_DEVWRITE_LEGACY("discrete", orbit_note_w)
-	AM_RANGE(0x3900, 0x3900) AM_MIRROR(0x00ff) AM_DEVWRITE_LEGACY("discrete", orbit_noise_amp_w)
-	AM_RANGE(0x3a00, 0x3a00) AM_MIRROR(0x00ff) AM_DEVWRITE_LEGACY("discrete", orbit_note_amp_w)
+	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x00ff) AM_WRITE(orbit_note_w)
+	AM_RANGE(0x3900, 0x3900) AM_MIRROR(0x00ff) AM_WRITE(orbit_noise_amp_w)
+	AM_RANGE(0x3a00, 0x3a00) AM_MIRROR(0x00ff) AM_WRITE(orbit_note_amp_w)
 	AM_RANGE(0x3c00, 0x3c0f) AM_MIRROR(0x00f0) AM_WRITE(orbit_misc_w)
-	AM_RANGE(0x3e00, 0x3e00) AM_MIRROR(0x00ff) AM_DEVWRITE_LEGACY("discrete", orbit_noise_rst_w)
+	AM_RANGE(0x3e00, 0x3e00) AM_MIRROR(0x00ff) AM_WRITE(orbit_noise_rst_w)
 	AM_RANGE(0x3f00, 0x3f00) AM_MIRROR(0x00ff) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x6000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
@@ -275,7 +273,6 @@ void orbit_state::machine_start()
 {
 
 	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_discrete = machine().device("discrete");
 
 	save_item(NAME(m_misc_flags));
 	save_item(NAME(m_flip_screen));
@@ -283,8 +280,7 @@ void orbit_state::machine_start()
 
 void orbit_state::machine_reset()
 {
-
-	update_misc_flags(machine(), 0);
+	update_misc_flags(generic_space(), 0);
 	m_flip_screen = 0;
 }
 
@@ -300,15 +296,15 @@ static MACHINE_CONFIG_START( orbit, orbit_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6800, MASTER_CLOCK / 16)
 	MCFG_CPU_PROGRAM_MAP(orbit_map)
-	MCFG_CPU_VBLANK_INT("screen", orbit_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", orbit_state,  orbit_interrupt)
 
-	MCFG_TIMER_ADD_SCANLINE("32v", nmi_32v, "screen", 0, 32)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("32v", orbit_state, nmi_32v, "screen", 0, 32)
 
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK*2, 384*2, 0, 256*2, 261*2, 0, 240*2)
-	MCFG_SCREEN_UPDATE_STATIC(orbit)
+	MCFG_SCREEN_UPDATE_DRIVER(orbit_state, screen_update_orbit)
 
 	MCFG_GFXDECODE(orbit)
 	MCFG_PALETTE_LENGTH(2)

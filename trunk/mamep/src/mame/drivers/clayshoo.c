@@ -40,6 +40,8 @@ public:
 	DECLARE_READ8_MEMBER(input_port_r);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_clayshoo(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(reset_analog_bit);
 };
 
 
@@ -99,10 +101,9 @@ READ8_MEMBER(clayshoo_state::input_port_r)
  *
  *************************************/
 
-static TIMER_CALLBACK( reset_analog_bit )
+TIMER_CALLBACK_MEMBER(clayshoo_state::reset_analog_bit)
 {
-	clayshoo_state *state = machine.driver_data<clayshoo_state>();
-	state->m_analog_port_val &= ~param;
+	m_analog_port_val &= ~param;
 }
 
 
@@ -136,8 +137,8 @@ READ8_MEMBER(clayshoo_state::analog_r)
 static void create_analog_timers( running_machine &machine )
 {
 	clayshoo_state *state = machine.driver_data<clayshoo_state>();
-	state->m_analog_timer_1 = machine.scheduler().timer_alloc(FUNC(reset_analog_bit));
-	state->m_analog_timer_2 = machine.scheduler().timer_alloc(FUNC(reset_analog_bit));
+	state->m_analog_timer_1 = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(clayshoo_state::reset_analog_bit),state));
+	state->m_analog_timer_2 = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(clayshoo_state::reset_analog_bit),state));
 }
 
 
@@ -185,17 +186,16 @@ void clayshoo_state::machine_start()
  *
  *************************************/
 
-static SCREEN_UPDATE_RGB32( clayshoo )
+UINT32 clayshoo_state::screen_update_clayshoo(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	clayshoo_state *state = screen.machine().driver_data<clayshoo_state>();
 	offs_t offs;
 
-	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
+	for (offs = 0; offs < m_videoram.bytes(); offs++)
 	{
 		int i;
 		UINT8 x = offs << 3;
 		UINT8 y = ~(offs >> 5);
-		UINT8 data = state->m_videoram[offs];
+		UINT8 data = m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
@@ -331,7 +331,7 @@ static MACHINE_CONFIG_START( clayshoo, clayshoo_state )
 	MCFG_CPU_ADD("maincpu", Z80,5068000/4)		/* 5.068/4 Mhz (divider is a guess) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", clayshoo_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -340,7 +340,7 @@ static MACHINE_CONFIG_START( clayshoo, clayshoo_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 64, 255)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_UPDATE_STATIC(clayshoo)
+	MCFG_SCREEN_UPDATE_DRIVER(clayshoo_state, screen_update_clayshoo)
 
 	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
 	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )

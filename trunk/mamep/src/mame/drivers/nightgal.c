@@ -80,6 +80,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_nightgal(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -95,21 +96,20 @@ void nightgal_state::video_start()
 	save_item(NAME(m_blit_buffer));
 }
 
-static SCREEN_UPDATE_IND16( nightgal )
+UINT32 nightgal_state::screen_update_nightgal(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	nightgal_state *state = screen.machine().driver_data<nightgal_state>();
 	int x, y;
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
-		UINT8 *src = &state->m_blit_buffer[y * 512 / 2 + cliprect.min_x];
+		UINT8 *src = &m_blit_buffer[y * 512 / 2 + cliprect.min_x];
 		UINT16 *dst = &bitmap.pix16(y, cliprect.min_x);
 
 		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			UINT32 srcpix = *src++;
-			*dst++ = screen.machine().pens[srcpix & 0xf];
-			*dst++ = screen.machine().pens[(srcpix >> 4) & 0xf];
+			*dst++ = machine().pens[srcpix & 0xf];
+			*dst++ = machine().pens[(srcpix >> 4) & 0xf];
 		}
 	}
 
@@ -868,7 +868,7 @@ static MACHINE_CONFIG_START( royalqn, nightgal_state )
 	MCFG_CPU_ADD("maincpu", Z80,MASTER_CLOCK / 8)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(royalqn_map)
 	MCFG_CPU_IO_MAP(royalqn_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nightgal_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", NSC8105, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(royalqn_nsc_map)
@@ -883,7 +883,7 @@ static MACHINE_CONFIG_START( royalqn, nightgal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(nightgal)
+	MCFG_SCREEN_UPDATE_DRIVER(nightgal_state, screen_update_nightgal)
 
 	MCFG_PALETTE_LENGTH(0x10)
 
@@ -902,11 +902,11 @@ static MACHINE_CONFIG_DERIVED( sexygal, royalqn )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(sexygal_map)
 	MCFG_CPU_IO_MAP(sexygal_io)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,244)//???
+	MCFG_CPU_PERIODIC_INT_DRIVER(nightgal_state, nmi_line_pulse, 244)//???
 
 	MCFG_CPU_MODIFY("sub")
 	MCFG_CPU_PROGRAM_MAP(sexygal_nsc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nightgal_state,  irq0_line_hold)
 
 	MCFG_DEVICE_REMOVE("aysnd")
 
@@ -919,7 +919,7 @@ static MACHINE_CONFIG_DERIVED( ngalsumr, royalqn )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(royalqn_map)
 	MCFG_CPU_IO_MAP(royalqn_io)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,244)//???
+	MCFG_CPU_PERIODIC_INT_DRIVER(nightgal_state, nmi_line_pulse, 244)//???
 MACHINE_CONFIG_END
 
 /*

@@ -688,9 +688,9 @@ INLINE void log_blit( running_machine &machine, int data )
 #endif
 }
 
-static void blitter_w( address_space *space, int blitter, offs_t offset, UINT8 data, int irq_vector )
+static void blitter_w( address_space &space, int blitter, offs_t offset, UINT8 data, int irq_vector )
 {
-	dynax_state *state = space->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 	int hi_bits;
 
 g_profiler.start(PROFILER_VIDEO);
@@ -720,7 +720,7 @@ g_profiler.start(PROFILER_VIDEO);
 			break;
 
 		case 0x03:
-			ddenlovr_blit_flip_w(space->machine(), data);
+			ddenlovr_blit_flip_w(space.machine(), data);
 			break;
 
 		case 0x04:
@@ -789,57 +789,57 @@ g_profiler.start(PROFILER_VIDEO);
 
 		case 0x24:
 
-			log_blit(space->machine(), data);
+			log_blit(space.machine(), data);
 
 			switch (data)
 			{
-				case 0x04:	blit_fill_xy(space->machine(), 0, 0);
+				case 0x04:	blit_fill_xy(space.machine(), 0, 0);
 							break;
-				case 0x14:	blit_fill_xy(space->machine(), state->m_ddenlovr_blit_x, state->m_ddenlovr_blit_y);
-							break;
-
-				case 0x10:	state->m_ddenlovr_blit_address = blit_draw(space->machine(), state->m_ddenlovr_blit_address, state->m_ddenlovr_blit_x);
+				case 0x14:	blit_fill_xy(space.machine(), state->m_ddenlovr_blit_x, state->m_ddenlovr_blit_y);
 							break;
 
-				case 0x13:	blit_horiz_line(space->machine());
-							break;
-				case 0x1b:	blit_vert_line(space->machine());
+				case 0x10:	state->m_ddenlovr_blit_address = blit_draw(space.machine(), state->m_ddenlovr_blit_address, state->m_ddenlovr_blit_x);
 							break;
 
-				case 0x1c:	blit_rect_xywh(space->machine());
+				case 0x13:	blit_horiz_line(space.machine());
+							break;
+				case 0x1b:	blit_vert_line(space.machine());
+							break;
+
+				case 0x1c:	blit_rect_xywh(space.machine());
 							break;
 
 				// These two are issued one after the other (43 then 8c)
 				// 8c is issued immediately after 43 has finished, without
 				// changing any argument
 				case 0x43:	break;
-				case 0x8c:	blit_rect_yh(space->machine());
+				case 0x8c:	blit_rect_yh(space.machine());
 							break;
 
 				default:
 							;
 				#ifdef MAME_DEBUG
 					popmessage("unknown blitter command %02x", data);
-					logerror("%06x: unknown blitter command %02x\n", space->device().safe_pc(), data);
+					logerror("%06x: unknown blitter command %02x\n", space.device().safe_pc(), data);
 				#endif
 			}
 
 			if (irq_vector)
 				/* quizchq */
-				space->device().execute().set_input_line_and_vector(0, HOLD_LINE, irq_vector);
+				space.device().execute().set_input_line_and_vector(0, HOLD_LINE, irq_vector);
 			else
 			{
 				/* ddenlovr */
 				if (state->m_ddenlovr_blitter_irq_enable)
 				{
 					state->m_ddenlovr_blitter_irq_flag = 1;
-					space->device().execute().set_input_line(1, HOLD_LINE);
+					space.device().execute().set_input_line(1, HOLD_LINE);
 				}
 			}
 			break;
 
 		default:
-			logerror("%06x: Blitter %d reg %02x = %02x\n", space->device().safe_pc(), blitter, state->m_ddenlovr_blit_regs[blitter], data);
+			logerror("%06x: Blitter %d reg %02x = %02x\n", space.device().safe_pc(), blitter, state->m_ddenlovr_blit_regs[blitter], data);
 			break;
 		}
 	}
@@ -1205,13 +1205,13 @@ g_profiler.stop();
 
 WRITE8_MEMBER(dynax_state::rongrong_blitter_w)
 {
-	blitter_w(&space, 0, offset, data, 0xf8);
+	blitter_w(space, 0, offset, data, 0xf8);
 }
 
 WRITE16_MEMBER(dynax_state::ddenlovr_blitter_w)
 {
 	if (ACCESSING_BITS_0_7)
-		blitter_w(&space, 0, offset, data & 0xff, 0);
+		blitter_w(space, 0, offset, data & 0xff, 0);
 }
 
 
@@ -1289,9 +1289,8 @@ static void copylayer(running_machine &machine, bitmap_ind16 &bitmap, const rect
 	}
 }
 
-SCREEN_UPDATE_IND16(ddenlovr)
+UINT32 dynax_state::screen_update_ddenlovr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dynax_state *state = screen.machine().driver_data<dynax_state>();
 
 	static const int order[24][4] =
 	{
@@ -1303,65 +1302,65 @@ SCREEN_UPDATE_IND16(ddenlovr)
 
 	int pri;
 
-	int enab = state->m_ddenlovr_layer_enable;
-	int enab2 = state->m_ddenlovr_layer_enable2;
+	int enab = m_ddenlovr_layer_enable;
+	int enab2 = m_ddenlovr_layer_enable2;
 
 #if 0
 	static int base = 0x0;
-	const UINT8 *gfx = screen.machine().root_device().memregion("blitter")->base();
+	const UINT8 *gfx = machine().root_device().memregion("blitter")->base();
 	int next;
-	memset(state->m_ddenlovr_pixmap[0], 0, 512 * 512);
-	memset(state->m_ddenlovr_pixmap[1], 0, 512 * 512);
-	memset(state->m_ddenlovr_pixmap[2], 0, 512 * 512);
-	memset(state->m_ddenlovr_pixmap[3], 0, 512 * 512);
-	state->m_ddenlovr_dest_layer = 8;
-	state->m_ddenlovr_blit_pen = 0;
-	state->m_ddenlovr_blit_pen_mode = 0;
-	state->m_ddenlovr_blit_y = 5;
-	state->m_ddenlovr_clip_ctrl = 0x0f;
-	next = blit_draw(screen.machine(), base, 0);
+	memset(m_ddenlovr_pixmap[0], 0, 512 * 512);
+	memset(m_ddenlovr_pixmap[1], 0, 512 * 512);
+	memset(m_ddenlovr_pixmap[2], 0, 512 * 512);
+	memset(m_ddenlovr_pixmap[3], 0, 512 * 512);
+	m_ddenlovr_dest_layer = 8;
+	m_ddenlovr_blit_pen = 0;
+	m_ddenlovr_blit_pen_mode = 0;
+	m_ddenlovr_blit_y = 5;
+	m_ddenlovr_clip_ctrl = 0x0f;
+	next = blit_draw(machine(), base, 0);
 	popmessage("GFX %06x", base);
-	if (screen.machine().input().code_pressed(KEYCODE_S)) base = next;
-	if (screen.machine().input().code_pressed_once(KEYCODE_X)) base = next;
-	if (screen.machine().input().code_pressed(KEYCODE_C)) { base--; while ((gfx[base] & 0xf0) != 0x30) base--; }
-	if (screen.machine().input().code_pressed(KEYCODE_V)) { base++; while ((gfx[base] & 0xf0) != 0x30) base++; }
-	if (screen.machine().input().code_pressed_once(KEYCODE_D)) { base--; while ((gfx[base] & 0xf0) != 0x30) base--; }
-	if (screen.machine().input().code_pressed_once(KEYCODE_F)) { base++; while ((gfx[base] & 0xf0) != 0x30) base++; }
+	if (machine().input().code_pressed(KEYCODE_S)) base = next;
+	if (machine().input().code_pressed_once(KEYCODE_X)) base = next;
+	if (machine().input().code_pressed(KEYCODE_C)) { base--; while ((gfx[base] & 0xf0) != 0x30) base--; }
+	if (machine().input().code_pressed(KEYCODE_V)) { base++; while ((gfx[base] & 0xf0) != 0x30) base++; }
+	if (machine().input().code_pressed_once(KEYCODE_D)) { base--; while ((gfx[base] & 0xf0) != 0x30) base--; }
+	if (machine().input().code_pressed_once(KEYCODE_F)) { base++; while ((gfx[base] & 0xf0) != 0x30) base++; }
 #endif
 
-	bitmap.fill(state->m_ddenlovr_bgcolor, cliprect);
+	bitmap.fill(m_ddenlovr_bgcolor, cliprect);
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed(KEYCODE_Z))
+	if (machine().input().code_pressed(KEYCODE_Z))
 	{
 		int mask, mask2;
 
 		mask = 0;
 
-		if (screen.machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
-		if (screen.machine().input().code_pressed(KEYCODE_W))	mask |= 2;
-		if (screen.machine().input().code_pressed(KEYCODE_E))	mask |= 4;
-		if (screen.machine().input().code_pressed(KEYCODE_R))	mask |= 8;
+		if (machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
+		if (machine().input().code_pressed(KEYCODE_W))	mask |= 2;
+		if (machine().input().code_pressed(KEYCODE_E))	mask |= 4;
+		if (machine().input().code_pressed(KEYCODE_R))	mask |= 8;
 
 		mask2 = 0;
 
-		if (state->m_extra_layers)
+		if (m_extra_layers)
 		{
-			if (screen.machine().input().code_pressed(KEYCODE_A))	mask2 |= 1;
-			if (screen.machine().input().code_pressed(KEYCODE_S))	mask2 |= 2;
-			if (screen.machine().input().code_pressed(KEYCODE_D))	mask2 |= 4;
-			if (screen.machine().input().code_pressed(KEYCODE_F))	mask2 |= 8;
+			if (machine().input().code_pressed(KEYCODE_A))	mask2 |= 1;
+			if (machine().input().code_pressed(KEYCODE_S))	mask2 |= 2;
+			if (machine().input().code_pressed(KEYCODE_D))	mask2 |= 4;
+			if (machine().input().code_pressed(KEYCODE_F))	mask2 |= 8;
 		}
 
 		if (mask || mask2)
 		{
-			state->m_ddenlovr_layer_enable &= mask;
-			state->m_ddenlovr_layer_enable2 &= mask2;
+			m_ddenlovr_layer_enable &= mask;
+			m_ddenlovr_layer_enable2 &= mask2;
 		}
 	}
 #endif
 
-	pri = state->m_ddenlovr_priority;
+	pri = m_ddenlovr_priority;
 
 	if (pri >= 24)
 	{
@@ -1369,14 +1368,14 @@ SCREEN_UPDATE_IND16(ddenlovr)
 		pri = 0;
 	}
 
-	copylayer(screen.machine(), bitmap, cliprect, order[pri][0]);
-	copylayer(screen.machine(), bitmap, cliprect, order[pri][1]);
-	copylayer(screen.machine(), bitmap, cliprect, order[pri][2]);
-	copylayer(screen.machine(), bitmap, cliprect, order[pri][3]);
+	copylayer(machine(), bitmap, cliprect, order[pri][0]);
+	copylayer(machine(), bitmap, cliprect, order[pri][1]);
+	copylayer(machine(), bitmap, cliprect, order[pri][2]);
+	copylayer(machine(), bitmap, cliprect, order[pri][3]);
 
-	if (state->m_extra_layers)
+	if (m_extra_layers)
 	{
-		pri = state->m_ddenlovr_priority2;
+		pri = m_ddenlovr_priority2;
 
 		if (pri >= 24)
 		{
@@ -1384,14 +1383,14 @@ SCREEN_UPDATE_IND16(ddenlovr)
 			pri = 0;
 		}
 
-		copylayer(screen.machine(), bitmap, cliprect, order[pri][0] + 4);
-		copylayer(screen.machine(), bitmap, cliprect, order[pri][1] + 4);
-		copylayer(screen.machine(), bitmap, cliprect, order[pri][2] + 4);
-		copylayer(screen.machine(), bitmap, cliprect, order[pri][3] + 4);
+		copylayer(machine(), bitmap, cliprect, order[pri][0] + 4);
+		copylayer(machine(), bitmap, cliprect, order[pri][1] + 4);
+		copylayer(machine(), bitmap, cliprect, order[pri][2] + 4);
+		copylayer(machine(), bitmap, cliprect, order[pri][3] + 4);
 	}
 
-	state->m_ddenlovr_layer_enable = enab;
-	state->m_ddenlovr_layer_enable2 = enab2;
+	m_ddenlovr_layer_enable = enab;
+	m_ddenlovr_layer_enable2 = enab2;
 
 	return 0;
 }
@@ -1525,7 +1524,7 @@ static WRITE16_DEVICE_HANDLER( ddenlovr_oki_bank_w )
 
 static WRITE16_DEVICE_HANDLER( quiz365_oki_bank1_w )
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 
 	if (ACCESSING_BITS_0_7)
 	{
@@ -1537,7 +1536,7 @@ static WRITE16_DEVICE_HANDLER( quiz365_oki_bank1_w )
 
 static WRITE16_DEVICE_HANDLER( quiz365_oki_bank2_w )
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 
 	if (ACCESSING_BITS_0_7)
 	{
@@ -1562,7 +1561,7 @@ READ16_MEMBER(dynax_state::unk16_r)
 
 static WRITE8_DEVICE_HANDLER( ddenlovr_select_w )
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 	state->m_dsw_sel = data;
 }
 
@@ -1599,13 +1598,13 @@ READ8_MEMBER(dynax_state::rongrong_input2_r)
 
 static READ8_DEVICE_HANDLER( quiz365_input_r )
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 
 	if (!BIT(state->m_dsw_sel, 0))	return state->ioport("DSW1")->read();
 	if (!BIT(state->m_dsw_sel, 1))	return state->ioport("DSW2")->read();
 	if (!BIT(state->m_dsw_sel, 2))	return state->ioport("DSW3")->read();
-	if (!BIT(state->m_dsw_sel, 3))	return 0xff;//device->machine().rand();
-	if (!BIT(state->m_dsw_sel, 4))	return 0xff;//device->machine().rand();
+	if (!BIT(state->m_dsw_sel, 3))	return 0xff;//space.machine().rand();
+	if (!BIT(state->m_dsw_sel, 4))	return 0xff;//space.machine().rand();
 	return 0xff;
 }
 
@@ -2080,11 +2079,11 @@ WRITE8_MEMBER(dynax_state::mmpanic_soundlatch_w)
 
 WRITE8_MEMBER(dynax_state::mmpanic_blitter_w)
 {
-	blitter_w(&space, 0, offset, data, 0xdf);	// RST 18
+	blitter_w(space, 0, offset, data, 0xdf);	// RST 18
 }
 WRITE8_MEMBER(dynax_state::mmpanic_blitter2_w)
 {
-	blitter_w(&space, 1, offset, data, 0xdf);	// RST 18
+	blitter_w(space, 1, offset, data, 0xdf);	// RST 18
 }
 
 static void mmpanic_update_leds(running_machine &machine)
@@ -2750,7 +2749,7 @@ WRITE8_MEMBER(dynax_state::mjmyster_coincounter_w)
 
 WRITE8_MEMBER(dynax_state::mjmyster_blitter_w)
 {
-	blitter_w(&space, 0, offset, data, 0xfc);
+	blitter_w(space, 0, offset, data, 0xfc);
 }
 
 static ADDRESS_MAP_START( mjmyster_portmap, AS_IO, 8, dynax_state )
@@ -2813,7 +2812,7 @@ ADDRESS_MAP_END
 
 static READ8_DEVICE_HANDLER( hginga_dsw_r )
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 
 	if (!BIT(state->m_dsw_sel, 0))   return state->ioport("DSW4")->read();
 	if (!BIT(state->m_dsw_sel, 1))   return state->ioport("DSW3")->read();
@@ -2821,7 +2820,7 @@ static READ8_DEVICE_HANDLER( hginga_dsw_r )
 	if (!BIT(state->m_dsw_sel, 3))   return state->ioport("DSW1")->read();
 	if (!BIT(state->m_dsw_sel, 4))   return state->ioport("DSW5")->read();
 
-	logerror("%s: warning, unknown bits read, ddenlovr_select = %02x\n", device->machine().describe_context(), state->m_dsw_sel);
+	logerror("%s: warning, unknown bits read, ddenlovr_select = %02x\n", space.machine().describe_context(), state->m_dsw_sel);
 	return 0xff;
 }
 
@@ -2922,7 +2921,7 @@ WRITE8_MEMBER(dynax_state::hginga_blitter_w)
 				break;
 		}
 	}
-	blitter_w(&space, 0, offset, data, 0xfc);
+	blitter_w(space, 0, offset, data, 0xfc);
 }
 
 static ADDRESS_MAP_START( hginga_portmap, AS_IO, 8, dynax_state )
@@ -2956,10 +2955,10 @@ ADDRESS_MAP_END
                              Hanafuda Hana Gokou
 ***************************************************************************/
 
-static UINT8 hgokou_player_r( address_space *space, int player )
+static UINT8 hgokou_player_r( address_space &space, int player )
 {
-	dynax_state *state = space->machine().driver_data<dynax_state>();
-	UINT8 hopper_bit = ((state->m_hopper && !(space->machine().primary_screen->frame_number() % 10)) ? 0 : (1 << 6));
+	dynax_state *state = space.machine().driver_data<dynax_state>();
+	UINT8 hopper_bit = ((state->m_hopper && !(space.machine().primary_screen->frame_number() % 10)) ? 0 : (1 << 6));
 
 	if (!BIT(state->m_input_sel, 0))   return state->ioport(player ? "KEY5" : "KEY0")->read() | hopper_bit;
 	if (!BIT(state->m_input_sel, 1))   return state->ioport(player ? "KEY6" : "KEY1")->read() | hopper_bit;
@@ -2980,8 +2979,8 @@ READ8_MEMBER(dynax_state::hgokou_input_r)
 	switch (m_dsw_sel)
 	{
 		case 0x20:	return ioport("SYSTEM")->read();
-		case 0x21:	return hgokou_player_r(&space, 1);
-		case 0x22:	return hgokou_player_r(&space, 0);
+		case 0x21:	return hgokou_player_r(space, 1);
+		case 0x22:	return hgokou_player_r(space, 0);
 		case 0x23:	return m_coins;
 	}
 	logerror("%06x: warning, unknown bits read, dsw_sel = %02x\n", space.device().safe_pc(), m_dsw_sel);
@@ -3077,12 +3076,12 @@ READ8_MEMBER(dynax_state::hgokbang_input_r)
 				m_input_sel = 0xfe;
 			return 0;	// discarded
 		case 0xa1:
-			ret = hgokou_player_r(&space, 1);
+			ret = hgokou_player_r(space, 1);
 			m_input_sel <<= 1;		// auto-increment input_sel
 			m_input_sel |= 1;
 			return ret;
 		case 0xa2:
-			ret = hgokou_player_r(&space, 0);
+			ret = hgokou_player_r(space, 0);
 			m_input_sel <<= 1;		// auto-increment input_sel
 			m_input_sel |= 1;
 			return ret;
@@ -3389,7 +3388,7 @@ CUSTOM_INPUT_MEMBER(dynax_state::mjflove_blitter_r)
 
 WRITE8_MEMBER(dynax_state::mjflove_blitter_w)
 {
-	blitter_w(&space, 0, offset, data, 0);
+	blitter_w(space, 0, offset, data, 0);
 }
 
 WRITE8_MEMBER(dynax_state::mjflove_coincounter_w)
@@ -3658,7 +3657,7 @@ WRITE8_MEMBER(dynax_state::seljan2_palette_w)
 
 static READ8_DEVICE_HANDLER( seljan2_dsw_r )
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
+	dynax_state *state = space.machine().driver_data<dynax_state>();
 
 	if (!BIT(state->m_dsw_sel, 0))   return state->ioport("DSW1")->read();
 	if (!BIT(state->m_dsw_sel, 1))   return state->ioport("DSW2")->read();
@@ -3666,7 +3665,7 @@ static READ8_DEVICE_HANDLER( seljan2_dsw_r )
 	if (!BIT(state->m_dsw_sel, 3))   return state->ioport("DSW4")->read();
 	if (!BIT(state->m_dsw_sel, 4))   return state->ioport("DSWTOP")->read();
 
-	logerror("%s: warning, unknown bits read, ddenlovr_select = %02x\n", device->machine().describe_context(), state->m_dsw_sel);
+	logerror("%s: warning, unknown bits read, ddenlovr_select = %02x\n", space.machine().describe_context(), state->m_dsw_sel);
 	return 0xff;
 }
 
@@ -8502,7 +8501,7 @@ static MACHINE_CONFIG_START( ddenlovr, dynax_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000, XTAL_24MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(ddenlovr_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, irq1_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,ddenlovr)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -8513,7 +8512,7 @@ static MACHINE_CONFIG_START( ddenlovr, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 5, 256-16+5-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -8594,9 +8593,8 @@ MACHINE_CONFIG_END
    0xee is vblank
    0xfc is from the 6242RTC
  */
-static INTERRUPT_GEN( quizchq_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::quizchq_irq)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
 //  int scanline = param;
 
 	/* I haven't found a irq ack register, so I need this kludge to
@@ -8605,7 +8603,7 @@ static INTERRUPT_GEN( quizchq_irq )
 //  if (downcast<cpu_device *>(state->m_maincpu)->input_state(0))
 //      return;
 
-	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xee);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xee);
 }
 
 static WRITE_LINE_DEVICE_HANDLER( quizchq_rtc_irq )
@@ -8626,7 +8624,7 @@ static MACHINE_CONFIG_START( quizchq, dynax_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)	/* Verified */
 	MCFG_CPU_PROGRAM_MAP(quizchq_map)
 	MCFG_CPU_IO_MAP(quizchq_portmap)
-	MCFG_CPU_VBLANK_INT("screen",quizchq_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, quizchq_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,rongrong)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -8637,7 +8635,7 @@ static MACHINE_CONFIG_START( quizchq, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 5, 256-16+5-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -8678,9 +8676,8 @@ MACHINE_CONFIG_END
     RST 20 is from the link device?
  */
 
-static INTERRUPT_GEN( mmpanic_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::mmpanic_irq)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
 	//int scanline = param;
 
 	/* I haven't found a irq ack register, so I need this kludge to
@@ -8689,7 +8686,7 @@ static INTERRUPT_GEN( mmpanic_irq )
 	//if (downcast<cpu_device *>(state->m_maincpu)->input_state(0))
 	//  return;
 
-	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xcf); // RST 08, vblank
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xcf); // RST 08, vblank
 }
 
 
@@ -8712,12 +8709,12 @@ static MACHINE_CONFIG_START( mmpanic, dynax_state )
 	MCFG_CPU_ADD("maincpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(mmpanic_map)
 	MCFG_CPU_IO_MAP(mmpanic_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mmpanic_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mmpanic_irq)
 
 	MCFG_CPU_ADD("soundcpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(mmpanic_sound_map)
 	MCFG_CPU_IO_MAP(mmpanic_sound_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	// NMI by main cpu
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, irq0_line_hold)	// NMI by main cpu
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,mmpanic)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -8728,7 +8725,7 @@ static MACHINE_CONFIG_START( mmpanic, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 5, 256-16+5-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -8764,17 +8761,15 @@ MACHINE_CONFIG_END
     0xe2 is from the 6242RTC
  */
 
-static INTERRUPT_GEN( hanakanz_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::hanakanz_irq)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-
 	/* I haven't found a irq ack register, so I need this kludge to
        make sure I don't lose any interrupt generated by the blitter,
        otherwise quizchq would lock up. */
 	//if (downcast<cpu_device *>(state->m_maincpu)->input_state(0))
 	//  return;
 
-	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xe0);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xe0);
 }
 
 static WRITE_LINE_DEVICE_HANDLER(hanakanz_rtc_irq)
@@ -8801,7 +8796,7 @@ static MACHINE_CONFIG_START( hanakanz, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80,8000000)	// TMPZ84C015BF-8
 	MCFG_CPU_PROGRAM_MAP(hanakanz_map)
 	MCFG_CPU_IO_MAP(hanakanz_portmap)
-	MCFG_CPU_VBLANK_INT("screen", hanakanz_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, hanakanz_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hanakanz)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -8812,7 +8807,7 @@ static MACHINE_CONFIG_START( hanakanz, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 5, 256-11-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x200)
 
@@ -8856,17 +8851,15 @@ MACHINE_CONFIG_END
     0xf8 is vblank
     0xfa is from the 6242RTC
  */
-static INTERRUPT_GEN( mjchuuka_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::mjchuuka_irq)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-
 	/* I haven't found a irq ack register, so I need this kludge to
        make sure I don't lose any interrupt generated by the blitter,
        otherwise quizchq would lock up. */
 	//if (downcast<cpu_device *>(state->m_maincpu)->input_state(0))
 	//  return;
 
-	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xf8);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xf8);
 }
 
 static WRITE_LINE_DEVICE_HANDLER(mjchuuka_rtc_irq)
@@ -8893,7 +8886,7 @@ static MACHINE_CONFIG_DERIVED( mjchuuka, hanakanz )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(mjchuuka_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mjchuuka_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mjchuuka_irq)
 
 	MCFG_DEVICE_MODIFY("rtc")
 	MCFG_DEVICE_CONFIG(mjchuuka_rtc_intf)
@@ -8907,7 +8900,7 @@ static MACHINE_CONFIG_DERIVED( funkyfig, mmpanic )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(funkyfig_map)
 	MCFG_CPU_IO_MAP(funkyfig_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mjchuuka_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mjchuuka_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,funkyfig)
 
@@ -8938,22 +8931,21 @@ MACHINE_CONFIG_END
     to trigger the blitter irq every frame.
  */
 
-static TIMER_DEVICE_CALLBACK( mjmyster_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(dynax_state::mjmyster_irq)
 {
-	dynax_state *state = timer.machine().driver_data<dynax_state>();
 	int scanline = param;
 
 	/* I haven't found a irq ack register, so I need this kludge to
        make sure I don't lose any interrupt generated by the blitter,
        otherwise quizchq would lock up. */
-	if (downcast<cpu_device *>(state->m_maincpu)->input_state(0))
+	if (downcast<cpu_device *>(m_maincpu)->input_state(0))
 		return;
 
 	if(scanline == 245)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xf8);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xf8);
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xfa);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xfa);
 }
 
 static const ay8910_interface mjmyster_ay8910_interface =
@@ -8992,7 +8984,7 @@ static MACHINE_CONFIG_DERIVED( mjmyster, quizchq )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)	/* Verified */
 	MCFG_CPU_PROGRAM_MAP(mjmyster_map)
 	MCFG_CPU_IO_MAP(mjmyster_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mjmyster_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dynax_state, mjmyster_irq, "screen", 0, 1)
 
 	MCFG_DEVICE_MODIFY("rtc")
 	MCFG_DEVICE_CONFIG(mjmyster_rtc_intf)
@@ -9014,9 +9006,8 @@ MACHINE_CONFIG_END
     0xfa and/or 0xfc are from the blitter (almost identical)
     0xee triggered by the RTC
  */
-static INTERRUPT_GEN( hginga_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::hginga_irq)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
 //  int scanline = param;
 
 	/* I haven't found a irq ack register, so I need this kludge to
@@ -9025,7 +9016,7 @@ static INTERRUPT_GEN( hginga_irq )
 //  if (downcast<cpu_device *>(state->m_maincpu)->input_state(0))
 //      return;
 
-	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xf8);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xf8);
 }
 
 static const ay8910_interface hginga_ay8910_interface =
@@ -9062,7 +9053,7 @@ static MACHINE_CONFIG_DERIVED( hginga, quizchq )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(hginga_map)
 	MCFG_CPU_IO_MAP(hginga_portmap)
-	MCFG_CPU_VBLANK_INT("screen",hginga_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, hginga_irq)
 
 	MCFG_DEVICE_MODIFY("rtc")
 	MCFG_DEVICE_CONFIG(hginga_rtc_intf)
@@ -9080,7 +9071,7 @@ static MACHINE_CONFIG_DERIVED( hgokou, quizchq )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(hgokou_map)
 	MCFG_CPU_IO_MAP(hgokou_portmap)
-	MCFG_CPU_VBLANK_INT("screen",hginga_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, hginga_irq)
 
 	MCFG_DEVICE_MODIFY("rtc")
 	MCFG_DEVICE_CONFIG(hginga_rtc_intf)
@@ -9116,7 +9107,7 @@ static MACHINE_CONFIG_DERIVED( mjmyuniv, quizchq )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)	/* Verified */
 	MCFG_CPU_PROGRAM_MAP(mjmyster_map)
 	MCFG_CPU_IO_MAP(mjmyster_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mjmyster_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dynax_state, mjmyster_irq, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,mjmyster)
 
@@ -9136,7 +9127,7 @@ static MACHINE_CONFIG_DERIVED( mjmyornt, quizchq )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)	/* Verified */
 	MCFG_CPU_PROGRAM_MAP(quizchq_map)
 	MCFG_CPU_IO_MAP(mjmyster_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mjmyster_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", dynax_state, mjmyster_irq, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,mjmyster)
 
@@ -9149,12 +9140,10 @@ static MACHINE_CONFIG_DERIVED( mjmyornt, quizchq )
 MACHINE_CONFIG_END
 
 
-static INTERRUPT_GEN( mjflove_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::mjflove_irq)
 {
-	dynax_state *state = device->machine().driver_data<dynax_state>();
-
-	state->m_mjflove_irq_cause = 1;
-	state->m_maincpu->set_input_line(0, HOLD_LINE);
+	m_mjflove_irq_cause = 1;
+	m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
 static WRITE_LINE_DEVICE_HANDLER(mjflove_rtc_irq)
@@ -9178,7 +9167,7 @@ static MACHINE_CONFIG_DERIVED( mjflove, quizchq )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_16MHz/2)	/* Verified */
 	MCFG_CPU_PROGRAM_MAP(rongrong_map)
 	MCFG_CPU_IO_MAP(mjflove_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mjflove_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mjflove_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,mjflove)
 
@@ -9193,9 +9182,9 @@ MACHINE_CONFIG_END
 
 /*  It runs in IM 2, thus needs a vector on the data bus:
     0xee is vblank  */
-static INTERRUPT_GEN( hparadis_irq )
+INTERRUPT_GEN_MEMBER(dynax_state::hparadis_irq)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xee);
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xee);
 }
 
 static MACHINE_CONFIG_DERIVED( hparadis, quizchq )
@@ -9204,7 +9193,7 @@ static MACHINE_CONFIG_DERIVED( hparadis, quizchq )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(hparadis_map)
 	MCFG_CPU_IO_MAP(hparadis_portmap)
-	MCFG_CPU_VBLANK_INT("screen", hparadis_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, hparadis_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hparadis)
 MACHINE_CONFIG_END
@@ -9217,7 +9206,7 @@ static MACHINE_CONFIG_START( jongtei, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_20MHz / 2)	// ?
 	MCFG_CPU_PROGRAM_MAP(hanakanz_map)
 	MCFG_CPU_IO_MAP(jongtei_portmap)
-	MCFG_CPU_VBLANK_INT("screen", hanakanz_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, hanakanz_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hanakanz)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -9228,7 +9217,7 @@ static MACHINE_CONFIG_START( jongtei, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 5, 256-11-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x200)
 
@@ -9258,7 +9247,7 @@ static MACHINE_CONFIG_START( sryudens, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_16MHz / 2)	// ?
 	MCFG_CPU_PROGRAM_MAP(sryudens_map)
 	MCFG_CPU_IO_MAP(sryudens_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mjchuuka_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mjchuuka_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,sryudens)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -9269,7 +9258,7 @@ static MACHINE_CONFIG_START( sryudens, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 0+5, 256-12-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -9303,7 +9292,7 @@ static MACHINE_CONFIG_START( janshinp, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_16MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(janshinp_map)
 	MCFG_CPU_IO_MAP(janshinp_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mjchuuka_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mjchuuka_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,hanakanz)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -9314,7 +9303,7 @@ static MACHINE_CONFIG_START( janshinp, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 0+5, 256-12-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -9377,7 +9366,7 @@ static MACHINE_CONFIG_START( seljan2, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_16MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(seljan2_map)
 	MCFG_CPU_IO_MAP(seljan2_portmap)
-	MCFG_CPU_VBLANK_INT("screen",mjchuuka_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, mjchuuka_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,seljan2)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -9388,7 +9377,7 @@ static MACHINE_CONFIG_START( seljan2, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1, 0+5, 256-12-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
@@ -9424,7 +9413,7 @@ static MACHINE_CONFIG_START( daimyojn, dynax_state )
 	MCFG_CPU_ADD("maincpu",Z80, XTAL_20MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(hanakanz_map)
 	MCFG_CPU_IO_MAP(daimyojn_portmap)
-	MCFG_CPU_VBLANK_INT("screen", hanakanz_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dynax_state, hanakanz_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(dynax_state,mjflove)
 	MCFG_MACHINE_RESET_OVERRIDE(dynax_state,ddenlovr)
@@ -9435,7 +9424,7 @@ static MACHINE_CONFIG_START( daimyojn, dynax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(336, 256+22)
 	MCFG_SCREEN_VISIBLE_AREA(0, 336-1-1, 1, 256-15-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddenlovr)
+	MCFG_SCREEN_UPDATE_DRIVER(dynax_state, screen_update_ddenlovr)
 
 	MCFG_PALETTE_LENGTH(0x200)
 
@@ -10132,7 +10121,7 @@ DRIVER_INIT_MEMBER(dynax_state,rongrong)
        version of the game might be a bootleg with the protection
        patched. (both sets need this)
      */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_read(0x60d4, 0x60d4);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_read(0x60d4, 0x60d4);
 }
 
 /***************************************************************************
@@ -11397,7 +11386,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(dynax_state,momotaro)
 {
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0xe0, 0xe0, read8_delegate(FUNC(dynax_state::momotaro_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0xe0, 0xe0, read8_delegate(FUNC(dynax_state::momotaro_protection_r),this));
 }
 
 GAME( 1992, mmpanic,   0,        mmpanic,   mmpanic, driver_device,  0,        ROT0, "Nakanihon / East Technology (Taito license)", "Monkey Mole Panic (USA)",                                         GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )

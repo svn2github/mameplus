@@ -42,18 +42,18 @@ from 2.bin to 9.bin program eproms
 
 static WRITE16_HANDLER( fcrash_soundlatch_w )
 {
-	cps_state *state = space->machine().driver_data<cps_state>();
+	cps_state *state = space.machine().driver_data<cps_state>();
 
 	if (ACCESSING_BITS_0_7)
 	{
-		state->soundlatch_byte_w(*space, 0, data & 0xff);
+		state->soundlatch_byte_w(space, 0, data & 0xff);
 		state->m_audiocpu->set_input_line(0, HOLD_LINE);
 	}
 }
 
 static WRITE8_HANDLER( fcrash_snd_bankswitch_w )
 {
-	cps_state *state = space->machine().driver_data<cps_state>();
+	cps_state *state = space.machine().driver_data<cps_state>();
 
 	state->m_msm_1->set_output_gain(0, (data & 0x08) ? 0.0 : 1.0);
 	state->m_msm_2->set_output_gain(0, (data & 0x10) ? 0.0 : 1.0);
@@ -84,13 +84,13 @@ static void m5205_int2( device_t *device )
 
 static WRITE8_HANDLER( fcrash_msm5205_0_data_w )
 {
-	cps_state *state = space->machine().driver_data<cps_state>();
+	cps_state *state = space.machine().driver_data<cps_state>();
 	state->m_sample_buffer1 = data;
 }
 
 static WRITE8_HANDLER( fcrash_msm5205_1_data_w )
 {
-	cps_state *state = space->machine().driver_data<cps_state>();
+	cps_state *state = space.machine().driver_data<cps_state>();
 	state->m_sample_buffer2 = data;
 }
 
@@ -217,163 +217,161 @@ static void fcrash_build_palette( running_machine &machine )
 	}
 }
 
-static SCREEN_UPDATE_IND16( fcrash )
+UINT32 cps_state::screen_update_fcrash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cps_state *state = screen.machine().driver_data<cps_state>();
 	int layercontrol, l0, l1, l2, l3;
-	int videocontrol = state->m_cps_a_regs[0x22 / 2];
+	int videocontrol = m_cps_a_regs[0x22 / 2];
 
 
-	state->flip_screen_set(videocontrol & 0x8000);
+	flip_screen_set(videocontrol & 0x8000);
 
-	layercontrol = state->m_cps_b_regs[0x20 / 2];
+	layercontrol = m_cps_b_regs[0x20 / 2];
 
 	/* Get video memory base registers */
-	cps1_get_video_base(screen.machine());
+	cps1_get_video_base(machine());
 
 	/* Build palette */
-	fcrash_build_palette(screen.machine());
+	fcrash_build_palette(machine());
 
-	fcrash_update_transmasks(screen.machine());
+	fcrash_update_transmasks(machine());
 
-	state->m_bg_tilemap[0]->set_scrollx(0, state->m_scroll1x - 62);
-	state->m_bg_tilemap[0]->set_scrolly(0, state->m_scroll1y);
+	m_bg_tilemap[0]->set_scrollx(0, m_scroll1x - 62);
+	m_bg_tilemap[0]->set_scrolly(0, m_scroll1y);
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
-		int scrly = -state->m_scroll2y;
+		int scrly = -m_scroll2y;
 		int i;
 		int otheroffs;
 
-		state->m_bg_tilemap[1]->set_scroll_rows(1024);
+		m_bg_tilemap[1]->set_scroll_rows(1024);
 
-		otheroffs = state->m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
+		otheroffs = m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
 
 		for (i = 0; i < 256; i++)
-			state->m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
+			m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, m_scroll2x + m_other[(i + otheroffs) & 0x3ff]);
 	}
 	else
 	{
-		state->m_bg_tilemap[1]->set_scroll_rows(1);
-		state->m_bg_tilemap[1]->set_scrollx(0, state->m_scroll2x - 60);
+		m_bg_tilemap[1]->set_scroll_rows(1);
+		m_bg_tilemap[1]->set_scrollx(0, m_scroll2x - 60);
 	}
-	state->m_bg_tilemap[1]->set_scrolly(0, state->m_scroll2y);
-	state->m_bg_tilemap[2]->set_scrollx(0, state->m_scroll3x - 64);
-	state->m_bg_tilemap[2]->set_scrolly(0, state->m_scroll3y);
+	m_bg_tilemap[1]->set_scrolly(0, m_scroll2y);
+	m_bg_tilemap[2]->set_scrollx(0, m_scroll3x - 64);
+	m_bg_tilemap[2]->set_scrolly(0, m_scroll3y);
 
 
 	/* turn all tilemaps on regardless of settings in get_video_base() */
 	/* write a custom get_video_base for this bootleg hardware? */
-	state->m_bg_tilemap[0]->enable(1);
-	state->m_bg_tilemap[1]->enable(1);
-	state->m_bg_tilemap[2]->enable(1);
+	m_bg_tilemap[0]->enable(1);
+	m_bg_tilemap[1]->enable(1);
+	m_bg_tilemap[2]->enable(1);
 
 	/* Blank screen */
 	bitmap.fill(0xbff, cliprect);
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 	l0 = (layercontrol >> 0x06) & 03;
 	l1 = (layercontrol >> 0x08) & 03;
 	l2 = (layercontrol >> 0x0a) & 03;
 	l3 = (layercontrol >> 0x0c) & 03;
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l0, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l0, 0);
 
 	if (l1 == 0)
-		fcrash_render_high_layer(screen.machine(), bitmap, cliprect, l0);
+		fcrash_render_high_layer(machine(), bitmap, cliprect, l0);
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l1, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l1, 0);
 
 	if (l2 == 0)
-		fcrash_render_high_layer(screen.machine(), bitmap, cliprect, l1);
+		fcrash_render_high_layer(machine(), bitmap, cliprect, l1);
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l2, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l2, 0);
 
 	if (l3 == 0)
-		fcrash_render_high_layer(screen.machine(), bitmap, cliprect, l2);
+		fcrash_render_high_layer(machine(), bitmap, cliprect, l2);
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l3, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l3, 0);
 
 	return 0;
 }
 
 // doesn't have the scroll offsets like fcrash
-static SCREEN_UPDATE_IND16( kodb )
+UINT32 cps_state::screen_update_kodb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cps_state *state = screen.machine().driver_data<cps_state>();
 	int layercontrol, l0, l1, l2, l3;
-	int videocontrol = state->m_cps_a_regs[0x22 / 2];
+	int videocontrol = m_cps_a_regs[0x22 / 2];
 
-	state->flip_screen_set(videocontrol & 0x8000);
+	flip_screen_set(videocontrol & 0x8000);
 
-	layercontrol = state->m_cps_b_regs[0x20 / 2];
+	layercontrol = m_cps_b_regs[0x20 / 2];
 
 	/* Get video memory base registers */
-	cps1_get_video_base(screen.machine());
+	cps1_get_video_base(machine());
 
 	/* Build palette */
-	fcrash_build_palette(screen.machine());
+	fcrash_build_palette(machine());
 
-	fcrash_update_transmasks(screen.machine());
+	fcrash_update_transmasks(machine());
 
-	state->m_bg_tilemap[0]->set_scrollx(0, state->m_scroll1x);
-	state->m_bg_tilemap[0]->set_scrolly(0, state->m_scroll1y);
+	m_bg_tilemap[0]->set_scrollx(0, m_scroll1x);
+	m_bg_tilemap[0]->set_scrolly(0, m_scroll1y);
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
-		int scrly= -state->m_scroll2y;
+		int scrly= -m_scroll2y;
 		int i;
 		int otheroffs;
 
-		state->m_bg_tilemap[1]->set_scroll_rows(1024);
+		m_bg_tilemap[1]->set_scroll_rows(1024);
 
-		otheroffs = state->m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
+		otheroffs = m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
 
 		for (i = 0; i < 256; i++)
-			state->m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
+			m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, m_scroll2x + m_other[(i + otheroffs) & 0x3ff]);
 	}
 	else
 	{
-		state->m_bg_tilemap[1]->set_scroll_rows(1);
-		state->m_bg_tilemap[1]->set_scrollx(0, state->m_scroll2x);
+		m_bg_tilemap[1]->set_scroll_rows(1);
+		m_bg_tilemap[1]->set_scrollx(0, m_scroll2x);
 	}
 
-	state->m_bg_tilemap[1]->set_scrolly(0, state->m_scroll2y);
-	state->m_bg_tilemap[2]->set_scrollx(0, state->m_scroll3x);
-	state->m_bg_tilemap[2]->set_scrolly(0, state->m_scroll3y);
+	m_bg_tilemap[1]->set_scrolly(0, m_scroll2y);
+	m_bg_tilemap[2]->set_scrollx(0, m_scroll3x);
+	m_bg_tilemap[2]->set_scrolly(0, m_scroll3y);
 
 
 	/* turn all tilemaps on regardless of settings in get_video_base() */
 	/* write a custom get_video_base for this bootleg hardware? */
-	state->m_bg_tilemap[0]->enable(1);
-	state->m_bg_tilemap[1]->enable(1);
-	state->m_bg_tilemap[2]->enable(1);
+	m_bg_tilemap[0]->enable(1);
+	m_bg_tilemap[1]->enable(1);
+	m_bg_tilemap[2]->enable(1);
 
 	/* Blank screen */
 	bitmap.fill(0xbff, cliprect);
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 	l0 = (layercontrol >> 0x06) & 03;
 	l1 = (layercontrol >> 0x08) & 03;
 	l2 = (layercontrol >> 0x0a) & 03;
 	l3 = (layercontrol >> 0x0c) & 03;
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l0, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l0, 0);
 
 	if (l1 == 0)
-		fcrash_render_high_layer(screen.machine(), bitmap, cliprect, l0);
+		fcrash_render_high_layer(machine(), bitmap, cliprect, l0);
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l1, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l1, 0);
 
 	if (l2 == 0)
-		fcrash_render_high_layer(screen.machine(), bitmap, cliprect, l1);
+		fcrash_render_high_layer(machine(), bitmap, cliprect, l1);
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l2, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l2, 0);
 
 	if (l3 == 0)
-		fcrash_render_high_layer(screen.machine(), bitmap, cliprect, l2);
+		fcrash_render_high_layer(machine(), bitmap, cliprect, l2);
 
-	fcrash_render_layer(screen.machine(), bitmap, cliprect, l3, 0);
+	fcrash_render_layer(machine(), bitmap, cliprect, l3, 0);
 
 	return 0;
 }
@@ -728,7 +726,7 @@ static MACHINE_CONFIG_START( fcrash, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(fcrash_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_interrupt)
 
 	MCFG_CPU_ADD("soundcpu", Z80, 24000000/6) /* ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -742,8 +740,8 @@ static MACHINE_CONFIG_START( fcrash, cps_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(fcrash)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_fcrash)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(4096)
@@ -779,7 +777,7 @@ static MACHINE_CONFIG_START( kodb, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(kodb_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_interrupt)
 
 //  MCFG_CPU_ADD("soundcpu", Z80, 3579545)
 //  MCFG_CPU_PROGRAM_MAP(sub_map)
@@ -792,8 +790,8 @@ static MACHINE_CONFIG_START( kodb, cps_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(kodb)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_kodb)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(0xc00)
@@ -803,7 +801,7 @@ static MACHINE_CONFIG_START( kodb, cps_state )
 	/* sound hardware */
 //  MCFG_SPEAKER_STANDARD_MONO("mono")
 
-//  MCFG_SOUND_ADD("2151", YM2151, 3579545)
+//  MCFG_YM2151_ADD("2151", 3579545)
 //  MCFG_SOUND_CONFIG(ym2151_config)
 //  MCFG_SOUND_ROUTE(0, "mono", 0.35)
 //  MCFG_SOUND_ROUTE(1, "mono", 0.35)
@@ -935,7 +933,7 @@ static MACHINE_CONFIG_START( sgyxz, cps_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(kodb_map)
-	MCFG_CPU_VBLANK_INT("screen", cps1_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cps_state,  cps1_interrupt)
 
 //  MCFG_CPU_ADD("soundcpu", Z80, 3579545)
 //  MCFG_CPU_PROGRAM_MAP(sub_map)
@@ -948,8 +946,8 @@ static MACHINE_CONFIG_START( sgyxz, cps_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(kodb)
-	MCFG_SCREEN_VBLANK_STATIC(cps1)
+	MCFG_SCREEN_UPDATE_DRIVER(cps_state, screen_update_kodb)
+	MCFG_SCREEN_VBLANK_DRIVER(cps_state, screen_eof_cps1)
 
 	MCFG_GFXDECODE(cps1)
 	MCFG_PALETTE_LENGTH(0xc00)

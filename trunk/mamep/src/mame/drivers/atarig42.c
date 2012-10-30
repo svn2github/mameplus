@@ -31,17 +31,16 @@
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void atarig42_state::update_interrupts()
 {
-	atarig42_state *state = machine.driver_data<atarig42_state>();
-	machine.device("maincpu")->execute().set_input_line(4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(5, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(4, m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(5, m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 MACHINE_START_MEMBER(atarig42_state,atarig42)
 {
-	atarigen_init(machine());
+	atarigen_state::machine_start();
 
 	save_item(NAME(m_analog_data));
 	save_item(NAME(m_sloop_bank));
@@ -53,11 +52,9 @@ MACHINE_START_MEMBER(atarig42_state,atarig42)
 
 MACHINE_RESET_MEMBER(atarig42_state,atarig42)
 {
-
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, update_interrupts);
-	atarigen_scanline_timer_reset(*machine().primary_screen, atarig42_scanline_update, 8);
-	atarijsa_reset();
+	atarigen_state::machine_reset();
+	scanline_timer_reset(*machine().primary_screen, 8);
+	atarijsa_reset(machine());
 }
 
 
@@ -110,7 +107,7 @@ WRITE16_MEMBER(atarig42_state::io_latch_w)
 	{
 		/* bit 4 resets the sound CPU */
 		machine().device("jsa")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
-		if (!(data & 0x10)) atarijsa_reset();
+		if (!(data & 0x10)) atarijsa_reset(machine());
 
 		/* bit 5 is /XRESET, probably related to the ASIC */
 
@@ -343,21 +340,21 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, atarig42_state )
 	AM_RANGE(0xe00010, 0xe00011) AM_READ(special_port2_r)
 	AM_RANGE(0xe00012, 0xe00013) AM_READ_PORT("JSAIII")
 	AM_RANGE(0xe00020, 0xe00027) AM_READWRITE(a2d_data_r, a2d_select_w)
-	AM_RANGE(0xe00030, 0xe00031) AM_READ_LEGACY(atarigen_sound_r)
-	AM_RANGE(0xe00040, 0xe00041) AM_WRITE_LEGACY(atarigen_sound_w)
+	AM_RANGE(0xe00030, 0xe00031) AM_READ8(sound_r, 0x00ff)
+	AM_RANGE(0xe00040, 0xe00041) AM_WRITE8(sound_w, 0x00ff)
 	AM_RANGE(0xe00050, 0xe00051) AM_WRITE(io_latch_w)
-	AM_RANGE(0xe00060, 0xe00061) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
-	AM_RANGE(0xe03000, 0xe03001) AM_WRITE_LEGACY(atarigen_video_int_ack_w)
+	AM_RANGE(0xe00060, 0xe00061) AM_WRITE(eeprom_enable_w)
+	AM_RANGE(0xe03000, 0xe03001) AM_WRITE(video_int_ack_w)
 	AM_RANGE(0xe03800, 0xe03801) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0xe80000, 0xe80fff) AM_RAM
 	AM_RANGE(0xf40000, 0xf40001) AM_READ_LEGACY(asic65_io_r)
 	AM_RANGE(0xf60000, 0xf60001) AM_READ_LEGACY(asic65_r)
 	AM_RANGE(0xf80000, 0xf80003) AM_WRITE_LEGACY(asic65_data_w)
-	AM_RANGE(0xfa0000, 0xfa0fff) AM_READWRITE_LEGACY(atarigen_eeprom_r, atarigen_eeprom_w) AM_SHARE("eeprom")
-	AM_RANGE(0xfc0000, 0xfc0fff) AM_RAM_WRITE_LEGACY(atarigen_666_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xfa0000, 0xfa0fff) AM_READWRITE(eeprom_r, eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0xfc0000, 0xfc0fff) AM_RAM_WRITE(paletteram_666_w) AM_SHARE("paletteram")
 	AM_RANGE(0xff0000, 0xff0fff) AM_DEVREADWRITE_LEGACY("rle", atarirle_spriteram_r, atarirle_spriteram_w)
-	AM_RANGE(0xff2000, 0xff5fff) AM_WRITE_LEGACY(atarigen_playfield_w) AM_SHARE("playfield")
-	AM_RANGE(0xff6000, 0xff6fff) AM_WRITE_LEGACY(atarigen_alpha_w) AM_SHARE("alpha")
+	AM_RANGE(0xff2000, 0xff5fff) AM_WRITE(playfield_w) AM_SHARE("playfield")
+	AM_RANGE(0xff6000, 0xff6fff) AM_WRITE(alpha_w) AM_SHARE("alpha")
 	AM_RANGE(0xff7000, 0xff7001) AM_WRITE(mo_command_w) AM_SHARE("mo_command")
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -551,7 +548,7 @@ static MACHINE_CONFIG_START( atarig42, atarig42_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, ATARI_CLOCK_14MHz)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
+	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
 
 	/* ASIC65 */
 	MCFG_FRAGMENT_ADD(asic65)
@@ -569,8 +566,8 @@ static MACHINE_CONFIG_START( atarig42, atarig42_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(atarig42)
-	MCFG_SCREEN_VBLANK_STATIC(atarig42)
+	MCFG_SCREEN_UPDATE_DRIVER(atarig42_state, screen_update_atarig42)
+	MCFG_SCREEN_VBLANK_DRIVER(atarig42_state, screen_eof_atarig42)
 
 	MCFG_VIDEO_START_OVERRIDE(atarig42_state,atarig42)
 
@@ -786,9 +783,9 @@ DRIVER_INIT_MEMBER(atarig42_state,roadriot)
 
 	m_playfield_base = 0x400;
 
-	address_space *main = machine().device<m68000_device>("maincpu")->space(AS_PROGRAM);
-	m_sloop_base = main->install_readwrite_handler(0x000000, 0x07ffff, read16_delegate(FUNC(atarig42_state::roadriot_sloop_data_r),this), write16_delegate(FUNC(atarig42_state::roadriot_sloop_data_w),this));
-	main->set_direct_update_handler(direct_update_delegate(FUNC(atarig42_state::atarig42_sloop_direct_handler), this));
+	address_space &main = machine().device<m68000_device>("maincpu")->space(AS_PROGRAM);
+	m_sloop_base = main.install_readwrite_handler(0x000000, 0x07ffff, read16_delegate(FUNC(atarig42_state::roadriot_sloop_data_r),this), write16_delegate(FUNC(atarig42_state::roadriot_sloop_data_w),this));
+	main.set_direct_update_handler(direct_update_delegate(FUNC(atarig42_state::atarig42_sloop_direct_handler), this));
 
 	asic65_config(machine(), ASIC65_ROMBASED);
 /*
@@ -824,9 +821,9 @@ DRIVER_INIT_MEMBER(atarig42_state,guardian)
 	/* put an RTS there so we don't die */
 	*(UINT16 *)&memregion("maincpu")->base()[0x80000] = 0x4E75;
 
-	address_space *main = machine().device<m68000_device>("maincpu")->space(AS_PROGRAM);
-	m_sloop_base = main->install_readwrite_handler(0x000000, 0x07ffff, read16_delegate(FUNC(atarig42_state::guardians_sloop_data_r),this), write16_delegate(FUNC(atarig42_state::guardians_sloop_data_w),this));
-	main->set_direct_update_handler(direct_update_delegate(FUNC(atarig42_state::atarig42_sloop_direct_handler), this));
+	address_space &main = machine().device<m68000_device>("maincpu")->space(AS_PROGRAM);
+	m_sloop_base = main.install_readwrite_handler(0x000000, 0x07ffff, read16_delegate(FUNC(atarig42_state::guardians_sloop_data_r),this), write16_delegate(FUNC(atarig42_state::guardians_sloop_data_w),this));
+	main.set_direct_update_handler(direct_update_delegate(FUNC(atarig42_state::atarig42_sloop_direct_handler), this));
 
 	asic65_config(machine(), ASIC65_GUARDIANS);
 /*

@@ -63,11 +63,11 @@ static DEVICE_START( irem_audio )
 
 WRITE8_HANDLER( irem_sound_cmd_w )
 {
-	driver_device *drvstate = space->machine().driver_data<driver_device>();
+	driver_device *drvstate = space.machine().driver_data<driver_device>();
 	if ((data & 0x80) == 0)
-		drvstate->soundlatch_byte_w(*space, 0, data & 0x7f);
+		drvstate->soundlatch_byte_w(space, 0, data & 0x7f);
 	else
-		space->machine().device("iremsound")->execute().set_input_line(0, ASSERT_LINE);
+		space.machine().device("iremsound")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -98,17 +98,17 @@ static WRITE8_DEVICE_HANDLER( m6803_port2_w )
 		{
 			/* PSG 0 or 1? */
 			if (state->m_port2 & 0x08)
-				ay8910_address_w(state->m_ay1, 0, state->m_port1);
+				ay8910_address_w(state->m_ay1, space, 0, state->m_port1);
 			if (state->m_port2 & 0x10)
-				ay8910_address_w(state->m_ay2, 0, state->m_port1);
+				ay8910_address_w(state->m_ay2, space, 0, state->m_port1);
 		}
 		else
 		{
 			/* PSG 0 or 1? */
 			if (state->m_port2 & 0x08)
-				ay8910_data_w(state->m_ay1, 0, state->m_port1);
+				ay8910_data_w(state->m_ay1, space, 0, state->m_port1);
 			if (state->m_port2 & 0x10)
-				ay8910_data_w(state->m_ay2, 0, state->m_port1);
+				ay8910_data_w(state->m_ay2, space, 0, state->m_port1);
 		}
 	}
 	state->m_port2 = data;
@@ -128,9 +128,9 @@ static READ8_DEVICE_HANDLER( m6803_port1_r )
 
 	/* PSG 0 or 1? */
 	if (state->m_port2 & 0x08)
-		return ay8910_r(state->m_ay1, 0);
+		return ay8910_r(state->m_ay1, space, 0);
 	if (state->m_port2 & 0x10)
-		return ay8910_r(state->m_ay2, 0);
+		return ay8910_r(state->m_ay2, space, 0);
 	return 0xff;
 }
 
@@ -181,7 +181,7 @@ static WRITE8_DEVICE_HANDLER( ay8910_1_porta_w )
 
 static WRITE8_HANDLER( sound_irq_ack_w )
 {
-	space->machine().device("iremsound")->execute().set_input_line(0, CLEAR_LINE);
+	space.machine().device("iremsound")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -491,7 +491,7 @@ irem_audio_device::irem_audio_device(const machine_config &mconfig, const char *
 	: device_t(mconfig, IREM_AUDIO, "Irem Audio", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(irem_audio_state));
+	m_token = global_alloc_clear(irem_audio_state);
 }
 
 //-------------------------------------------------

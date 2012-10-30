@@ -1020,7 +1020,7 @@ static MACHINE_CONFIG_START( arkanoid, arkanoid_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(arkanoid_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", arkanoid_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("mcu", M68705, XTAL_12MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
@@ -1036,7 +1036,7 @@ static MACHINE_CONFIG_START( arkanoid, arkanoid_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(arkanoid)
+	MCFG_SCREEN_UPDATE_DRIVER(arkanoid_state, screen_update_arkanoid)
 
 	MCFG_GFXDECODE(arkanoid)
 	MCFG_PALETTE_LENGTH(512)
@@ -1058,7 +1058,7 @@ static MACHINE_CONFIG_START( hexa, arkanoid_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/2)	/* Imported from arkanoid - correct? */
 	MCFG_CPU_PROGRAM_MAP(hexa_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", arkanoid_state,  irq0_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(arkanoid_state,arkanoid)
 	MCFG_MACHINE_RESET_OVERRIDE(arkanoid_state,arkanoid)
@@ -1069,7 +1069,7 @@ static MACHINE_CONFIG_START( hexa, arkanoid_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hexa)
+	MCFG_SCREEN_UPDATE_DRIVER(arkanoid_state, screen_update_hexa)
 
 	MCFG_GFXDECODE(hexa)
 	MCFG_PALETTE_LENGTH(256)
@@ -1100,7 +1100,7 @@ static MACHINE_CONFIG_DERIVED( brixian, arkanoid )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(brixian_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", arkanoid_state,  irq0_line_hold)
 
 	MCFG_DEVICE_REMOVE("mcu")
 MACHINE_CONFIG_END
@@ -1572,10 +1572,10 @@ ROM_END
 static void arkanoid_bootleg_init( running_machine &machine )
 {
 	arkanoid_state *state = machine.driver_data<arkanoid_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf000, 0xf000, read8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_f000_r),state) );
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xf002, 0xf002, read8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_f002_r),state) );
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd018, 0xd018, write8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_d018_w),state) );
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd008, 0xd008, read8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_d008_r),state) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf000, 0xf000, read8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_f000_r),state) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf002, 0xf002, read8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_f002_r),state) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd018, 0xd018, write8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_d018_w),state) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd008, 0xd008, read8_delegate(FUNC(arkanoid_state::arkanoid_bootleg_d008_r),state) );
 }
 
 DRIVER_INIT_MEMBER(arkanoid_state,arkangc)
@@ -1660,7 +1660,7 @@ DRIVER_INIT_MEMBER(arkanoid_state,tetrsark)
 		ROM[x] = ROM[x] ^ 0x94;
 	}
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd008, 0xd008, write8_delegate(FUNC(arkanoid_state::tetrsark_d008_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd008, 0xd008, write8_delegate(FUNC(arkanoid_state::tetrsark_d008_w),this));
 }
 
 
@@ -1705,7 +1705,7 @@ GAME( 1986, arkgcbla,   arkanoid, bootleg,  arkgcbl, arkanoid_state,  arkgcbl,  
 GAME( 1988, paddle2,    arkanoid, bootleg,  paddle2, arkanoid_state,  paddle2,  ROT90, "bootleg", "Paddle 2 (bootleg on Block hardware)", GAME_SUPPORTS_SAVE )
 GAME( 1986, arkatayt,   arkanoid, bootleg,  arkatayt, driver_device, 0,        ROT90, "bootleg (Tayto)", "Arkanoid (Tayto bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1986, arktayt2,   arkanoid, bootleg,  arktayt2, driver_device, 0,        ROT90, "bootleg (Tayto)", "Arkanoid (Tayto bootleg, harder)", GAME_SUPPORTS_SAVE )
-GAME( 1987, arkatour,   arkanoid, arkanoid, arkanoid, driver_device, 0,        ROT90, "Taito America Corporation (Romstar license)", "Tournament Arkanoid (US)", GAME_SUPPORTS_SAVE )
+GAME( 1987, arkatour,   0,        arkanoid, arkanoid, driver_device, 0,        ROT90, "Taito America Corporation (Romstar license)", "Tournament Arkanoid (US)", GAME_SUPPORTS_SAVE )
 GAME( 19??, tetrsark,   0,        bootleg,  tetrsark, arkanoid_state, tetrsark, ROT0,  "D.R. Korea", "Tetris (D.R. Korea)", GAME_SUPPORTS_SAVE )
 GAME( 199?, hexa,       0,        hexa,     hexa, arkanoid_state,     hexa,     ROT0,  "D.R. Korea", "Hexa", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1993, brixian,    0,        brixian,  brixian, driver_device,  0,        ROT0,  "Cheil Computer System", "Brixian", GAME_SUPPORTS_SAVE|GAME_NOT_WORKING )

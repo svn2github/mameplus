@@ -41,21 +41,19 @@ WRITE8_MEMBER(munchmo_state::mnchmobl_nmi_enable_w)
 }
 
 /* trusted thru schematics, NMI and IRQ triggers at vblank, at the same time (!) */
-static INTERRUPT_GEN( mnchmobl_vblank_irq )
+INTERRUPT_GEN_MEMBER(munchmo_state::mnchmobl_vblank_irq)
 {
-	munchmo_state *state = device->machine().driver_data<munchmo_state>();
 
-	if (state->m_nmi_enable)
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enable)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
-	state->m_maincpu->set_input_line(0, HOLD_LINE);
+	m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( mnchmobl_sound_irq )
+INTERRUPT_GEN_MEMBER(munchmo_state::mnchmobl_sound_irq)
 {
-	//munchmo_state *state = device->machine().driver_data<munchmo_state>();
 
-	device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	device.execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(munchmo_state::mnchmobl_soundlatch_w)
@@ -74,14 +72,14 @@ WRITE8_MEMBER(munchmo_state::sound_nmi_ack_w)
 READ8_MEMBER(munchmo_state::munchmo_ay1reset_r)
 {
 	device_t *device = machine().device("ay1");
-	ay8910_reset_w(device,0,0);
+	ay8910_reset_w(device,space,0,0);
 	return 0;
 }
 
 READ8_MEMBER(munchmo_state::munchmo_ay2reset_r)
 {
 	device_t *device = machine().device("ay2");
-	ay8910_reset_w(device,0,0);
+	ay8910_reset_w(device,space,0,0);
 	return 0;
 }
 /*************************************
@@ -330,11 +328,11 @@ static MACHINE_CONFIG_START( mnchmobl, munchmo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_15MHz/4) /* ? */
 	MCFG_CPU_PROGRAM_MAP(mnchmobl_map)
-	MCFG_CPU_VBLANK_INT("screen", mnchmobl_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", munchmo_state,  mnchmobl_vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_15MHz/4) /* ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_VBLANK_INT("screen", mnchmobl_sound_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", munchmo_state,  mnchmobl_sound_irq)
 
 
 	/* video hardware */
@@ -343,7 +341,7 @@ static MACHINE_CONFIG_START( mnchmobl, munchmo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256+32+32, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255+32+32,0, 255-16)
-	MCFG_SCREEN_UPDATE_STATIC(mnchmobl)
+	MCFG_SCREEN_UPDATE_DRIVER(munchmo_state, screen_update_mnchmobl)
 
 	MCFG_GFXDECODE(mnchmobl)
 	MCFG_PALETTE_LENGTH(256)

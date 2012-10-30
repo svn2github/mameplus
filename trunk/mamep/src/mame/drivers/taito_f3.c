@@ -390,15 +390,15 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static TIMER_CALLBACK( f3_interrupt3 )
+TIMER_CALLBACK_MEMBER(taito_f3_state::f3_interrupt3)
 {
-	machine.device("maincpu")->execute().set_input_line(3, HOLD_LINE);	// some signal from video hardware?
+	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);	// some signal from video hardware?
 }
 
-static INTERRUPT_GEN( f3_interrupt2 )
+INTERRUPT_GEN_MEMBER(taito_f3_state::f3_interrupt2)
 {
-	device->execute().set_input_line(2, HOLD_LINE);	// vblank
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(f3_interrupt3));
+	device.execute().set_input_line(2, HOLD_LINE);	// vblank
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taito_f3_state::f3_interrupt3),this));
 }
 
 static SOUND_RESET( f3 )
@@ -429,7 +429,7 @@ static MACHINE_CONFIG_START( f3, taito_f3_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(f3_map)
-	MCFG_CPU_VBLANK_INT("screen", f3_interrupt2)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taito_f3_state,  f3_interrupt2)
 
 	MCFG_MACHINE_START_OVERRIDE(taito_f3_state,f3)
 
@@ -441,8 +441,8 @@ static MACHINE_CONFIG_START( f3, taito_f3_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(624) /* 58.97 Hz, 624us vblank time */)
 	MCFG_SCREEN_SIZE(40*8+48*2, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(46, 40*8-1 + 46, 24, 24+232-1)
-	MCFG_SCREEN_UPDATE_STATIC(f3)
-	MCFG_SCREEN_VBLANK_STATIC(f3)
+	MCFG_SCREEN_UPDATE_DRIVER(taito_f3_state, screen_update_f3)
+	MCFG_SCREEN_VBLANK_DRIVER(taito_f3_state, screen_eof_f3)
 
 	MCFG_GFXDECODE(taito_f3)
 	MCFG_PALETTE_LENGTH(0x2000)
@@ -523,7 +523,7 @@ static MACHINE_CONFIG_START( bubsympb, taito_f3_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(f3_map)
-	MCFG_CPU_VBLANK_INT("screen", f3_interrupt2)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taito_f3_state,  f3_interrupt2)
 
 	MCFG_MACHINE_START_OVERRIDE(taito_f3_state,f3)
 
@@ -535,8 +535,8 @@ static MACHINE_CONFIG_START( bubsympb, taito_f3_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(624) /* 58.97 Hz, 624us vblank time */)
 	MCFG_SCREEN_SIZE(40*8+48*2, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(46, 40*8-1 + 46, 31, 31+224-1)
-	MCFG_SCREEN_UPDATE_STATIC(f3)
-	MCFG_SCREEN_VBLANK_STATIC(f3)
+	MCFG_SCREEN_UPDATE_DRIVER(taito_f3_state, screen_update_f3)
+	MCFG_SCREEN_VBLANK_DRIVER(taito_f3_state, screen_eof_f3)
 
 	MCFG_GFXDECODE(bubsympb)
 	MCFG_PALETTE_LENGTH(8192)
@@ -3885,8 +3885,8 @@ DRIVER_INIT_MEMBER(taito_f3_state,bubsympb)
 		}
 	}
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x4a001c, 0x4a001f, read32_delegate(FUNC(taito_f3_state::bubsympb_oki_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x4a001c, 0x4a001f, write32_delegate(FUNC(taito_f3_state::bubsympb_oki_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x4a001c, 0x4a001f, read32_delegate(FUNC(taito_f3_state::bubsympb_oki_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x4a001c, 0x4a001f, write32_delegate(FUNC(taito_f3_state::bubsympb_oki_w),this));
 }
 
 

@@ -16,15 +16,15 @@
 #include "includes/exedexes.h"
 
 
-static TIMER_DEVICE_CALLBACK( exedexes_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(exedexes_state::exedexes_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 
 	if(scanline == 0) // unknown irq event
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
 }
 
 
@@ -55,8 +55,8 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, exedexes_state )
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
 	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0x8001) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
-	AM_RANGE(0x8002, 0x8002) AM_DEVWRITE("sn1", sn76489_new_device, write)
-	AM_RANGE(0x8003, 0x8003) AM_DEVWRITE("sn2", sn76489_new_device, write)
+	AM_RANGE(0x8002, 0x8002) AM_DEVWRITE("sn1", sn76489_device, write)
+	AM_RANGE(0x8003, 0x8003) AM_DEVWRITE("sn2", sn76489_device, write)
 ADDRESS_MAP_END
 
 
@@ -228,11 +228,11 @@ static MACHINE_CONFIG_START( exedexes, exedexes_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz (?) */
 	MCFG_CPU_PROGRAM_MAP(exedexes_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", exedexes_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", exedexes_state, exedexes_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3000000)	/* 3 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(exedexes_state, irq0_line_hold, 4*60)
 
 
 	/* video hardware */
@@ -243,7 +243,7 @@ static MACHINE_CONFIG_START( exedexes, exedexes_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(exedexes)
+	MCFG_SCREEN_UPDATE_DRIVER(exedexes_state, screen_update_exedexes)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(exedexes)
@@ -256,11 +256,11 @@ static MACHINE_CONFIG_START( exedexes, exedexes_state )
 	MCFG_SOUND_ADD("aysnd", AY8910, 1500000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
-	MCFG_SOUND_ADD("sn1", SN76489_NEW, 3000000)
+	MCFG_SOUND_ADD("sn1", SN76489, 3000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.36)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489_NEW, 3000000)
+	MCFG_SOUND_ADD("sn2", SN76489, 3000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.36)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

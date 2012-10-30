@@ -32,30 +32,26 @@
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void thunderj_state::update_interrupts()
 {
-	thunderj_state *state = machine.driver_data<thunderj_state>();
-	machine.device("maincpu")->execute().set_input_line(4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("extra")->execute().set_input_line(4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(4, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("extra")->execute().set_input_line(4, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(6, m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 MACHINE_START_MEMBER(thunderj_state,thunderj)
 {
-	atarigen_init(machine());
-
+	atarigen_state::machine_start();
 	save_item(NAME(m_alpha_tile_bank));
 }
 
 
 MACHINE_RESET_MEMBER(thunderj_state,thunderj)
 {
-
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_state::machine_reset();
 	atarivc_reset(*machine().primary_screen, m_atarivc_eof_data, 2);
-	atarijsa_reset();
+	atarijsa_reset(machine());
 }
 
 
@@ -149,24 +145,24 @@ WRITE16_MEMBER(thunderj_state::thunderj_atarivc_w)
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, thunderj_state )
 	AM_RANGE(0x000000, 0x09ffff) AM_ROM
-	AM_RANGE(0x0e0000, 0x0e0fff) AM_READWRITE_LEGACY(atarigen_eeprom_r, atarigen_eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0x0e0000, 0x0e0fff) AM_READWRITE(eeprom_r, eeprom_w) AM_SHARE("eeprom")
 	AM_RANGE(0x160000, 0x16ffff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1f0000, 0x1fffff) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
+	AM_RANGE(0x1f0000, 0x1fffff) AM_WRITE(eeprom_enable_w)
 	AM_RANGE(0x260000, 0x26000f) AM_READ_PORT("260000")
 	AM_RANGE(0x260010, 0x260011) AM_READ_PORT("260010")
 	AM_RANGE(0x260012, 0x260013) AM_READ(special_port2_r)
-	AM_RANGE(0x260030, 0x260031) AM_READ_LEGACY(atarigen_sound_r)
+	AM_RANGE(0x260030, 0x260031) AM_READ8(sound_r, 0x00ff)
 	AM_RANGE(0x2e0000, 0x2e0001) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0x360010, 0x360011) AM_WRITE(latch_w)
-	AM_RANGE(0x360020, 0x360021) AM_WRITE_LEGACY(atarigen_sound_reset_w)
-	AM_RANGE(0x360030, 0x360031) AM_WRITE_LEGACY(atarigen_sound_w)
-	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM_WRITE_LEGACY(atarigen_666_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0x360020, 0x360021) AM_WRITE(sound_reset_w)
+	AM_RANGE(0x360030, 0x360031) AM_WRITE8(sound_w, 0x00ff)
+	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM_WRITE(paletteram_666_w) AM_SHARE("paletteram")
 	AM_RANGE(0x3effc0, 0x3effff) AM_READWRITE(thunderj_atarivc_r, thunderj_atarivc_w) AM_SHARE("atarivc_data")
-	AM_RANGE(0x3f0000, 0x3f1fff) AM_RAM_WRITE_LEGACY(atarigen_playfield2_latched_msb_w) AM_SHARE("playfield2")
-	AM_RANGE(0x3f2000, 0x3f3fff) AM_RAM_WRITE_LEGACY(atarigen_playfield_latched_lsb_w) AM_SHARE("playfield")
-	AM_RANGE(0x3f4000, 0x3f5fff) AM_RAM_WRITE_LEGACY(atarigen_playfield_dual_upper_w) AM_SHARE("playfield_up")
+	AM_RANGE(0x3f0000, 0x3f1fff) AM_RAM_WRITE(playfield2_latched_msb_w) AM_SHARE("playfield2")
+	AM_RANGE(0x3f2000, 0x3f3fff) AM_RAM_WRITE(playfield_latched_lsb_w) AM_SHARE("playfield")
+	AM_RANGE(0x3f4000, 0x3f5fff) AM_RAM_WRITE(playfield_dual_upper_w) AM_SHARE("playfield_up")
 	AM_RANGE(0x3f6000, 0x3f7fff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
-	AM_RANGE(0x3f8000, 0x3f8eff) AM_RAM_WRITE_LEGACY(atarigen_alpha_w) AM_SHARE("alpha")
+	AM_RANGE(0x3f8000, 0x3f8eff) AM_RAM_WRITE(alpha_w) AM_SHARE("alpha")
 	AM_RANGE(0x3f8f00, 0x3f8f7f) AM_RAM AM_SHARE("atarivc_eof")
 	AM_RANGE(0x3f8f80, 0x3f8fff) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
 	AM_RANGE(0x3f9000, 0x3fffff) AM_RAM
@@ -187,11 +183,11 @@ static ADDRESS_MAP_START( extra_map, AS_PROGRAM, 16, thunderj_state )
 	AM_RANGE(0x260000, 0x26000f) AM_READ_PORT("260000")
 	AM_RANGE(0x260010, 0x260011) AM_READ_PORT("260010")
 	AM_RANGE(0x260012, 0x260013) AM_READ(special_port2_r)
-	AM_RANGE(0x260030, 0x260031) AM_READ_LEGACY(atarigen_sound_r)
-	AM_RANGE(0x360000, 0x360001) AM_WRITE_LEGACY(atarigen_video_int_ack_w)
+	AM_RANGE(0x260030, 0x260031) AM_READ8(sound_r, 0x00ff)
+	AM_RANGE(0x360000, 0x360001) AM_WRITE(video_int_ack_w)
 	AM_RANGE(0x360010, 0x360011) AM_WRITE(latch_w)
-	AM_RANGE(0x360020, 0x360021) AM_WRITE_LEGACY(atarigen_sound_reset_w)
-	AM_RANGE(0x360030, 0x360031) AM_WRITE_LEGACY(atarigen_sound_w)
+	AM_RANGE(0x360020, 0x360021) AM_WRITE(sound_reset_w)
+	AM_RANGE(0x360030, 0x360031) AM_WRITE8(sound_w, 0x00ff)
 ADDRESS_MAP_END
 
 
@@ -305,7 +301,7 @@ static MACHINE_CONFIG_START( thunderj, thunderj_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses a VAD chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(thunderj)
+	MCFG_SCREEN_UPDATE_DRIVER(thunderj_state, screen_update_thunderj)
 
 	MCFG_VIDEO_START_OVERRIDE(thunderj_state,thunderj)
 

@@ -69,9 +69,9 @@ WRITE8_MEMBER(liberate_state::deco16_bank_w)
 	m_bank = data;
 
 	if (m_bank)
-		m_maincpu->space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
+		m_maincpu->space(AS_PROGRAM).install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
 	else
-		m_maincpu->space(AS_PROGRAM)->install_read_bank(0x8000, 0x800f, "bank1");
+		m_maincpu->space(AS_PROGRAM).install_read_bank(0x8000, 0x800f, "bank1");
 }
 
 READ8_MEMBER(liberate_state::prosoccr_bank_r)
@@ -174,9 +174,9 @@ WRITE8_MEMBER(liberate_state::prosoccr_io_bank_w)
 	m_bank = data & 1;
 
 	if (m_bank)
-		m_maincpu->space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
+		m_maincpu->space(AS_PROGRAM).install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
 	else
-		m_maincpu->space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::prosoccr_charram_r),this));
+		m_maincpu->space(AS_PROGRAM).install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::prosoccr_charram_r),this));
 
 }
 
@@ -760,27 +760,26 @@ GFXDECODE_END
  *
  *************************************/
 
-static INTERRUPT_GEN( deco16_interrupt )
+INTERRUPT_GEN_MEMBER(liberate_state::deco16_interrupt)
 {
-	liberate_state *state = device->machine().driver_data<liberate_state>();
-	int p = ~state->ioport("IN3")->read();
-	if ((p & 0x43) && !state->m_latch)
+	int p = ~ioport("IN3")->read();
+	if ((p & 0x43) && !m_latch)
 	{
-		device->execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
-		state->m_latch = 1;
+		device.execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
+		m_latch = 1;
 	}
 	else
 	{
 		if (!(p & 0x43))
-			state->m_latch = 0;
+			m_latch = 0;
 	}
 }
 
 #if 0
-static INTERRUPT_GEN( prosport_interrupt )
+INTERRUPT_GEN_MEMBER(liberate_state::prosport_interrupt)
 {
 	/* ??? */
-	device->execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
+	device.execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
 }
 #endif
 
@@ -823,11 +822,11 @@ static MACHINE_CONFIG_START( liberate, liberate_state )
 	MCFG_CPU_ADD("maincpu",DECO16, 2000000)
 	MCFG_CPU_PROGRAM_MAP(liberate_map)
 	MCFG_CPU_IO_MAP(deco16_io_map)
-	MCFG_CPU_VBLANK_INT("screen", deco16_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", liberate_state,  deco16_interrupt)
 
 	MCFG_CPU_ADD("audiocpu",M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(liberate_sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,16*60) /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(liberate_state, nmi_line_pulse, 16*60) /* ??? */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
@@ -840,7 +839,7 @@ static MACHINE_CONFIG_START( liberate, liberate_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 529ms Vblank duration?? */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(liberate)
+	MCFG_SCREEN_UPDATE_DRIVER(liberate_state, screen_update_liberate)
 
 	MCFG_GFXDECODE(liberate)
 	MCFG_PALETTE_LENGTH(33)
@@ -863,14 +862,14 @@ static MACHINE_CONFIG_DERIVED( liberatb, liberate )
 	/* basic machine hardware */
 	MCFG_CPU_REPLACE("maincpu", M6502, 2000000)
 	MCFG_CPU_PROGRAM_MAP(liberatb_map)
-	MCFG_CPU_VBLANK_INT("screen", deco16_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", liberate_state,  deco16_interrupt)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( boomrang, liberate )
 
 	MCFG_VIDEO_START_OVERRIDE(liberate_state,boomrang)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(boomrang)
+	MCFG_SCREEN_UPDATE_DRIVER(liberate_state, screen_update_boomrang)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( prosoccr, liberate )
@@ -889,7 +888,7 @@ static MACHINE_CONFIG_DERIVED( prosoccr, liberate )
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(prosoccr)
+	MCFG_SCREEN_UPDATE_DRIVER(liberate_state, screen_update_prosoccr)
 
 	MCFG_GFXDECODE(prosoccr)
 
@@ -902,11 +901,11 @@ static MACHINE_CONFIG_START( prosport, liberate_state )
 	MCFG_CPU_ADD("maincpu", DECO16, 2000000)
 	MCFG_CPU_PROGRAM_MAP(prosport_map)
 	MCFG_CPU_IO_MAP(deco16_io_map)
-	MCFG_CPU_VBLANK_INT("screen", deco16_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", liberate_state,  deco16_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000/2)
 	MCFG_CPU_PROGRAM_MAP(liberate_sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,16*60) /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(liberate_state, nmi_line_pulse, 16*60) /* ??? */
 
 //  MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
@@ -919,7 +918,7 @@ static MACHINE_CONFIG_START( prosport, liberate_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1529) /* 529ms Vblank duration?? */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(prosport)
+	MCFG_SCREEN_UPDATE_DRIVER(liberate_state, screen_update_prosport)
 
 	MCFG_GFXDECODE(prosport)
 	MCFG_PALETTE_LENGTH(256)
@@ -1346,7 +1345,7 @@ ROM_END
 
 static void sound_cpu_decrypt(running_machine &machine)
 {
-	address_space *space = machine.device("audiocpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("audiocpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x4000);
 	UINT8 *rom = machine.root_device().memregion("audiocpu")->base();
 	int i;
@@ -1355,7 +1354,7 @@ static void sound_cpu_decrypt(running_machine &machine)
 	for (i = 0xc000; i < 0x10000; i++)
 		decrypted[i - 0xc000] = ((rom[i] & 0x20) << 1) | ((rom[i] & 0x40) >> 1) | (rom[i] & 0x9f);
 
-	space->set_decrypted_region(0xc000, 0xffff, decrypted);
+	space.set_decrypted_region(0xc000, 0xffff, decrypted);
 }
 
 DRIVER_INIT_MEMBER(liberate_state,prosport)
@@ -1374,17 +1373,17 @@ DRIVER_INIT_MEMBER(liberate_state,yellowcb)
 {
 	DRIVER_INIT_CALL(prosport);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xa000, 0xa000, "IN0");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0xa000, 0xa000, "IN0");
 }
 
 DRIVER_INIT_MEMBER(liberate_state,liberate)
 {
 	int A;
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
 	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
-	space->set_decrypted_region(0x0000, 0xffff, decrypted);
+	space.set_decrypted_region(0x0000, 0xffff, decrypted);
 
 	/* Swap bits for opcodes only, not data */
 	for (A = 0; A < 0x10000; A++) {

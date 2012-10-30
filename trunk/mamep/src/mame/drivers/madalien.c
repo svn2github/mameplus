@@ -69,12 +69,12 @@ READ8_MEMBER(madalien_state::madalien_sound_command_r)
 WRITE8_MEMBER(madalien_state::madalien_portA_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, MADALIEN_8910_PORTA, data);
+	discrete_sound_w(device, space, MADALIEN_8910_PORTA, data);
 }
 WRITE8_MEMBER(madalien_state::madalien_portB_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, MADALIEN_8910_PORTB, data);
+	discrete_sound_w(device, space, MADALIEN_8910_PORTB, data);
 }
 
 
@@ -178,7 +178,7 @@ static MACHINE_CONFIG_START( madalien, madalien_state )
 
 	MCFG_CPU_ADD("audiocpu", M6502, SOUND_CLOCK / 8)		/* 512kHz */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", madalien_state,  nmi_line_pulse)
 
 	/* video hardware */
 	MCFG_FRAGMENT_ADD(madalien_video)

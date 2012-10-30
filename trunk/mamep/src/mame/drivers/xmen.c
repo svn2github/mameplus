@@ -133,7 +133,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, xmen_state )
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank4")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe22f) AM_DEVREADWRITE("k054539", k054539_device, read, write)
-	AM_RANGE(0xe800, 0xe801) AM_MIRROR(0x0400) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xe800, 0xe801) AM_MIRROR(0x0400) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch2_byte_w)
 	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(sound_bankswitch_w)
@@ -349,16 +349,15 @@ static const k053247_interface xmen_k053246_intf =
 	xmen_sprite_callback
 };
 
-static TIMER_DEVICE_CALLBACK( xmen_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(xmen_state::xmen_scanline)
 {
-	xmen_state *state = timer.machine().driver_data<xmen_state>();
 	int scanline = param;
 
-	if(scanline == 240 && state->m_vblank_irq_mask) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+	if(scanline == 240 && m_vblank_irq_mask) // vblank-out irq
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	if(scanline == 0) // sprite DMA irq?
-		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 
 }
 
@@ -369,7 +368,7 @@ static MACHINE_CONFIG_START( xmen, xmen_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", xmen_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", xmen_state, xmen_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -385,7 +384,7 @@ static MACHINE_CONFIG_START( xmen, xmen_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )	/* correct, same issue of TMNT2 */
-	MCFG_SCREEN_UPDATE_STATIC(xmen)
+	MCFG_SCREEN_UPDATE_DRIVER(xmen_state, screen_update_xmen)
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_K052109_ADD("k052109", xmen_k052109_intf)
@@ -395,7 +394,7 @@ static MACHINE_CONFIG_START( xmen, xmen_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_16MHz/4)	/* verified on pcb */
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz/4)	/* verified on pcb */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 
@@ -419,7 +418,7 @@ static MACHINE_CONFIG_START( xmen6p, xmen_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(6p_main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", xmen_scanline, "lscreen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", xmen_state, xmen_scanline, "lscreen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000)	/* verified with M1, guessed but accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -437,15 +436,15 @@ static MACHINE_CONFIG_START( xmen6p, xmen_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(12*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(xmen6p_left)
+	MCFG_SCREEN_UPDATE_DRIVER(xmen_state, screen_update_xmen6p_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(16*8, 52*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(xmen6p_right)
-	MCFG_SCREEN_VBLANK_STATIC(xmen6p)
+	MCFG_SCREEN_UPDATE_DRIVER(xmen_state, screen_update_xmen6p_right)
+	MCFG_SCREEN_VBLANK_DRIVER(xmen_state, screen_eof_xmen6p)
 
 	MCFG_VIDEO_START_OVERRIDE(xmen_state,xmen6p)
 
@@ -456,7 +455,7 @@ static MACHINE_CONFIG_START( xmen6p, xmen_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 

@@ -294,6 +294,20 @@ WRITE16_MEMBER(raiden2_state::cop_dma_size_w)
 	COMBINE_DATA(&cop_dma_size[cop_dma_mode]);
 }
 
+WRITE16_MEMBER(raiden2_state::cop_pal_brightness_val_w)
+{
+	COMBINE_DATA(&pal_brightness_val);
+}
+
+/* RE from Seibu Cup Soccer bootleg */
+static const UINT8 fade_table(int v)
+{
+    int low  = v & 0x001f;
+    int high = v & 0x03e0;
+
+    return (low * (high | (high >> 5)) + 0x210) >> 10;
+}
+
 WRITE16_MEMBER(raiden2_state::cop_dma_trigger_w)
 {
 	//  logerror("COP DMA mode=%x adr=%x size=%x vals=%x %x %x\n", cop_dma_mode, cop_dma_src[cop_dma_mode], cop_dma_size[cop_dma_mode], cop_dma_v1[cop_dma_mode], cop_dma_v2[cop_dma_mode], cop_dma_dst[cop_dma_mode]);
@@ -321,16 +335,35 @@ WRITE16_MEMBER(raiden2_state::cop_dma_trigger_w)
 		UINT32 src,dst,size;
 		int i;
 
-		src = (cop_dma_src[cop_dma_mode] << 6) + (cop_dma_adr_rel * 0x400);
+		src = (cop_dma_src[cop_dma_mode] << 6);
 		dst = (cop_dma_dst[cop_dma_mode] << 6);
 		size = ((cop_dma_size[cop_dma_mode] << 5) - (cop_dma_dst[cop_dma_mode] << 6) + 0x20)/2;
 
 		//printf("%08x %08x %08x\n",src,dst,size);
-		/* TODO: palette brightness */
 
 		for(i = 0;i < size;i++)
 		{
-			space.write_word(dst, space.read_word(src));
+			UINT16 pal_val;
+			int r,g,b;
+			int rt,gt,bt;
+
+			bt = (space.read_word(src + (cop_dma_adr_rel * 0x400)) & 0x7c00) >> 5;
+			bt = fade_table(bt|(pal_brightness_val ^ 0));
+			b = ((space.read_word(src)) & 0x7c00) >> 5;
+			b = fade_table(b|(pal_brightness_val ^ 0x1f));
+			pal_val = ((b + bt) & 0x1f) << 10;
+			gt = (space.read_word(src + (cop_dma_adr_rel * 0x400)) & 0x03e0);
+			gt = fade_table(gt|(pal_brightness_val ^ 0));
+			g = ((space.read_word(src)) & 0x03e0);
+			g = fade_table(g|(pal_brightness_val ^ 0x1f));
+			pal_val |= ((g + gt) & 0x1f) << 5;
+			rt = (space.read_word(src + (cop_dma_adr_rel * 0x400)) & 0x001f) << 5;
+			rt = fade_table(rt|(pal_brightness_val ^ 0));
+			r = ((space.read_word(src)) & 0x001f) << 5;
+			r = fade_table(r|(pal_brightness_val ^ 0x1f));
+			pal_val |= ((r + rt) & 0x1f);
+
+			space.write_word(dst, pal_val);
 			src+=2;
 			dst+=2;
 		}
@@ -497,9 +530,9 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 
 	switch(data) {
 	case 0x0205:   // 0205 0006 ffeb 0000 - 0188 0282 0082 0b8e 098e 0000 0000 0000
-		space.write_dword(cop_regs[0] + 4 + offset*4, space.read_dword(cop_regs[0] + 4 + offset*4) + space.read_dword(cop_regs[0] + 16 + offset*4));
+		space.write_dword(cop_regs[0] + 4 + offset*4, space.read_dword(cop_regs[0] + 4 + offset*4) + space.read_dword(cop_regs[0] + 0x10 + offset*4));
 		/* TODO: check the following, makes Zero Team to crash as soon as this command is triggered. */
-		//space.write_word(cop_regs[0] + 0x1c + offset*4, space.read_word(cop_regs[0] + 0x1c + offset*4) + space.read_word(cop_regs[0] + 16 + offset*4));
+		space.write_dword(cop_regs[0] + 0x1c + offset*4, space.read_dword(cop_regs[0] + 0x1c + offset*4) + space.read_dword(cop_regs[0] + 0x10 + offset*4));
 		break;
 
 	case 0x0904: { /* X Se Dae and Zero Team uses this variant */
@@ -523,33 +556,57 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 			if(dy<0)
 				cop_angle += 0x80;
 		}
-		dx = dx >> 16;
-		dy = dy >> 16;
-		cop_dist = sqrt((double)(dx*dx+dy*dy));
 
 		if(data & 0x0080) {
 			space.write_byte(cop_regs[0]+0x34, cop_angle);
-			space.write_word(cop_regs[0]+0x38, cop_dist);
 		}
 		break;
 	}
 
+	case 0x3b30:
 	case 0x3bb0: { // 3bb0 0004 007f 0038 - 0f9c 0b9c 0b9c 0b9c 0b9c 0b9c 0b9c 099c
-		// called systematically after 130e/138e, no results expected it seems
+		/* TODO: these are actually internally loaded via 0x130e command */
+		int dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
+		int dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
+
+		dx = dx >> 16;
+		dy = dy >> 16;
+		cop_dist = sqrt((double)(dx*dx+dy*dy));
+
+		if(data & 0x0080)
+			space.write_word(cop_regs[0]+0x38, cop_dist);
 		break;
 	}
 
 	case 0x42c2: { // 42c2 0005 fcdd 0040 - 0f9a 0b9a 0b9c 0b9c 0b9c 029c 0000 0000
-		int div = space.read_word(cop_regs[0]+0x36);
+		/* TODO: these are actually internally loaded via 0x130e command */
+		int dx = space.read_dword(cop_regs[1]+4) - space.read_dword(cop_regs[0]+4);
+		int dy = space.read_dword(cop_regs[1]+8) - space.read_dword(cop_regs[0]+8);
+		int div = space.read_word(cop_regs[0]+(0x36));
 		int res;
+		int cop_dist_raw;
+
 		if(!div)
 		{
 			printf("divide by zero?\n");
 			div = 1;
 		}
-		res = space.read_word(cop_regs[0]+(0x38)) / div;
-		res <<= cop_scale + 2; /* TODO: check this */
-		space.write_word(cop_regs[0]+0x38, res);
+
+		/* TODO: calculation of this one should occur at 0x3b30/0x3bb0 I *think* */
+		/* TODO: recheck if cop_scale still masks at 3 with this command */
+		dx >>= 11 + cop_scale;
+		dy >>= 11 + cop_scale;
+		cop_dist_raw = sqrt((double)(dx*dx+dy*dy));
+
+		res = cop_dist_raw;
+		res /= div;
+
+		cop_dist = (1 << (5 - cop_scale)) / div;
+
+		/* TODO: bits 5-6-15 */
+		cop_status = 7;
+
+		space.write_word(cop_regs[0]+(0x38), res);
 		break;
 	}
 
@@ -936,39 +993,38 @@ VIDEO_START_MEMBER(raiden2_state,raiden2)
 
 /* SCREEN_UPDATE_IND16 (move to video file) */
 
-static SCREEN_UPDATE_IND16( raiden2 )
+UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	raiden2_state *state = screen.machine().driver_data<raiden2_state>();
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	//if (!screen.machine().input().code_pressed(KEYCODE_Q))
+	//if (!machine().input().code_pressed(KEYCODE_Q))
 	{
-		if (!(state->raiden2_tilemap_enable & 1))
-			state->background_layer->draw(bitmap, cliprect, 0, 0);
+		if (!(raiden2_tilemap_enable & 1))
+			background_layer->draw(bitmap, cliprect, 0, 0);
 	}
 
-	//if (!screen.machine().input().code_pressed(KEYCODE_W))
+	//if (!machine().input().code_pressed(KEYCODE_W))
 	{
-		if (!(state->raiden2_tilemap_enable & 2))
-			state->midground_layer->draw(bitmap, cliprect, 0, 0);
+		if (!(raiden2_tilemap_enable & 2))
+			midground_layer->draw(bitmap, cliprect, 0, 0);
 	}
 
-	//if (!screen.machine().input().code_pressed(KEYCODE_E))
+	//if (!machine().input().code_pressed(KEYCODE_E))
 	{
-		if (!(state->raiden2_tilemap_enable & 4))
-			state->foreground_layer->draw(bitmap, cliprect, 0, 0);
+		if (!(raiden2_tilemap_enable & 4))
+			foreground_layer->draw(bitmap, cliprect, 0, 0);
 	}
 
-	//if (!screen.machine().input().code_pressed(KEYCODE_S))
+	//if (!machine().input().code_pressed(KEYCODE_S))
 	{
 		//if (!(raiden2_tilemap_enable & 0x10))
-			state->draw_sprites(screen.machine(), bitmap, cliprect, 0);
+			draw_sprites(machine(), bitmap, cliprect, 0);
 	}
 
-	//if (!screen.machine().input().code_pressed(KEYCODE_A))
+	//if (!machine().input().code_pressed(KEYCODE_A))
 	{
-		if (!(state->raiden2_tilemap_enable & 8))
-			state->text_layer->draw(bitmap, cliprect, 0, 0);
+		if (!(raiden2_tilemap_enable & 8))
+			text_layer->draw(bitmap, cliprect, 0, 0);
 	}
 
 	return 0;
@@ -983,9 +1039,9 @@ static SCREEN_UPDATE_IND16( raiden2 )
  *
  *************************************/
 
-static INTERRUPT_GEN( raiden2_interrupt )
+INTERRUPT_GEN_MEMBER(raiden2_state::raiden2_interrupt)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc0/4);	/* VBL */
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xc0/4);	/* VBL */
 }
 
 
@@ -1159,12 +1215,12 @@ MACHINE_RESET_MEMBER(raiden2_state,xsedae)
 
 READ16_MEMBER(raiden2_state::raiden2_sound_comms_r)
 {
-	return seibu_main_word_r(&space,(offset >> 1) & 7,0xffff);
+	return seibu_main_word_r(space,(offset >> 1) & 7,0xffff);
 }
 
 WRITE16_MEMBER(raiden2_state::raiden2_sound_comms_w)
 {
-	seibu_main_word_w(&space,(offset >> 1) & 7,data,0x00ff);
+	seibu_main_word_w(space,(offset >> 1) & 7,data,0x00ff);
 }
 
 WRITE16_MEMBER(raiden2_state::raiden2_bank_w)
@@ -1347,7 +1403,7 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x00454, 0x00455) AM_WRITE(cop_sort_lookup_hi_w)
 	AM_RANGE(0x00456, 0x00457) AM_WRITE(cop_sort_lookup_lo_w)
 	AM_RANGE(0x00458, 0x00459) AM_WRITE(cop_sort_param_w)
-	AM_RANGE(0x0045a, 0x0045b) AM_WRITENOP //palette DMA brightness val, used by X Se Dae / Zero Team
+	AM_RANGE(0x0045a, 0x0045b) AM_WRITE(cop_pal_brightness_val_w) //palette DMA brightness val, used by X Se Dae / Zero Team
 	AM_RANGE(0x0045c, 0x0045d) AM_WRITENOP //palette DMA brightness mode, used by X Se Dae / Zero Team (sets to 5)
 	AM_RANGE(0x00470, 0x00471) AM_READWRITE(cop_tile_bank_2_r,cop_tile_bank_2_w)
 
@@ -1802,7 +1858,7 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V30,XTAL_32MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(raiden2_mem)
-	MCFG_CPU_VBLANK_INT("screen", raiden2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", raiden2_state,  raiden2_interrupt)
 
 	MCFG_MACHINE_RESET_OVERRIDE(raiden2_state,raiden2)
 
@@ -1816,7 +1872,7 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate *//2)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(raiden2)
+	MCFG_SCREEN_UPDATE_DRIVER(raiden2_state, screen_update_raiden2)
 	MCFG_GFXDECODE(raiden2)
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -1858,7 +1914,7 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V30,XTAL_32MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(zeroteam_mem)
-	MCFG_CPU_VBLANK_INT("screen", raiden2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", raiden2_state,  raiden2_interrupt)
 
 	MCFG_MACHINE_RESET_OVERRIDE(raiden2_state,zeroteam)
 
@@ -1868,11 +1924,9 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(55.47)    /* verified on pcb */
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate *//2)
-	MCFG_SCREEN_SIZE(64*8, 64*8)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(raiden2)
+//  MCFG_SCREEN_REFRESH_RATE(55.47)    /* verified on pcb */
+	MCFG_SCREEN_RAW_PARAMS(XTAL_32MHz/4,546,0,40*8,264,0,32*8) /* hand-tuned to match ~55.47 */
+	MCFG_SCREEN_UPDATE_DRIVER(raiden2_state, screen_update_raiden2)
 	MCFG_GFXDECODE(raiden2)
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -3098,4 +3152,4 @@ GAME( 1993, zeroteamd,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  RO
 GAME( 1993, zeroteams,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team Selection", GAME_NOT_WORKING)
 GAME( 1993, zeroteamsr,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,  "Seibu Kaihatsu", "Zero Team Suicide Revival Kit", GAME_NOT_WORKING) // reprograms the sprite decrypt data of the SEI251 only, no game code
 
-GAME( 1995, xsedae,   0,       xsedae,   xsedae, raiden2_state,  xsedae,   ROT0,   "Dream Island",   "X Se Dae Quiz", GAME_NOT_WORKING)
+GAME( 1995, xsedae,   0,       xsedae,   xsedae, raiden2_state,  xsedae,   ROT0,   "Dream Island",   "X Se Dae Quiz (Korea)", GAME_NOT_WORKING)

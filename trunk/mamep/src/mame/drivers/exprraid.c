@@ -446,23 +446,22 @@ static const ym3526_interface ym3526_config =
 };
 
 #if 0
-static INTERRUPT_GEN( exprraid_interrupt )
+INTERRUPT_GEN_MEMBER(exprraid_state::exprraid_interrupt)
 {
-	exprraid_state *state = device->machine().driver_data<exprraid_state>();
 
-	if ((~state->ioport("IN2")->read()) & 0xc0)
+	if ((~ioport("IN2")->read()) & 0xc0)
 	{
-		if (state->m_coin == 0)
+		if (m_coin == 0)
 		{
-			state->m_coin = 1;
-			//device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-			device->execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
+			m_coin = 1;
+			//device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			device.execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
 		}
 	}
 	else
 	{
-		device->execute().set_input_line(DECO16_IRQ_LINE, CLEAR_LINE);
-		state->m_coin = 0;
+		device.execute().set_input_line(DECO16_IRQ_LINE, CLEAR_LINE);
+		m_coin = 0;
 	}
 }
 #endif
@@ -503,7 +502,7 @@ static MACHINE_CONFIG_START( exprraid, exprraid_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(exprraid)
+	MCFG_SCREEN_UPDATE_DRIVER(exprraid_state, screen_update_exprraid)
 
 	MCFG_GFXDECODE(exprraid)
 	MCFG_PALETTE_LENGTH(256)
@@ -806,13 +805,13 @@ DRIVER_INIT_MEMBER(exprraid_state,exprraid)
 
 DRIVER_INIT_MEMBER(exprraid_state,wexpressb2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x3800, 0x3800, read8_delegate(FUNC(exprraid_state::vblank_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x3800, 0x3800, read8_delegate(FUNC(exprraid_state::vblank_r),this));
 	exprraid_gfx_expand(machine());
 }
 
 DRIVER_INIT_MEMBER(exprraid_state,wexpressb3)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xFFC0, 0xFFC0, read8_delegate(FUNC(exprraid_state::vblank_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xFFC0, 0xFFC0, read8_delegate(FUNC(exprraid_state::vblank_r),this));
 	exprraid_gfx_expand(machine());
 }
 

@@ -121,21 +121,19 @@ WRITE8_MEMBER(yiear_state::yiear_VLM5030_control_w)
 	vlm5030_rst(device, (data >> 2) & 1);
 }
 
-static INTERRUPT_GEN( yiear_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(yiear_state::yiear_vblank_interrupt)
 {
-	yiear_state *state = device->machine().driver_data<yiear_state>();
 
-	if (state->m_yiear_irq_enable)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (m_yiear_irq_enable)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 
-static INTERRUPT_GEN( yiear_nmi_interrupt )
+INTERRUPT_GEN_MEMBER(yiear_state::yiear_nmi_interrupt)
 {
-	yiear_state *state = device->machine().driver_data<yiear_state>();
 
-	if (state->m_yiear_nmi_enable)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_yiear_nmi_enable)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -289,8 +287,8 @@ static MACHINE_CONFIG_START( yiear, yiear_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809,XTAL_18_432MHz/12)   /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", yiear_vblank_interrupt)
-	MCFG_CPU_PERIODIC_INT(yiear_nmi_interrupt,480)	/* music tempo (correct frequency unknown) */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", yiear_state,  yiear_vblank_interrupt)
+	MCFG_CPU_PERIODIC_INT_DRIVER(yiear_state, yiear_nmi_interrupt, 480)	/* music tempo (correct frequency unknown) */
 
 
 	/* video hardware */
@@ -299,7 +297,7 @@ static MACHINE_CONFIG_START( yiear, yiear_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(yiear)
+	MCFG_SCREEN_UPDATE_DRIVER(yiear_state, screen_update_yiear)
 
 	MCFG_GFXDECODE(yiear)
 	MCFG_PALETTE_LENGTH(32)
@@ -310,7 +308,7 @@ static MACHINE_CONFIG_START( yiear, yiear_state )
 
 	MCFG_SOUND_ADD("trackfld_audio", TRACKFLD_AUDIO, 0)
 
-	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, XTAL_18_432MHz/12)   /* verified on pcb */
+	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12)   /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 

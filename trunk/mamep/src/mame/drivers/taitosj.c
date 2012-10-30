@@ -1791,7 +1791,7 @@ static MACHINE_CONFIG_START( nomcu, taitosj_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",Z80,8000000/2)      /* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(taitosj_main_nomcu_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitosj_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,6000000/2)    /* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(taitosj_audio_map)
@@ -1799,7 +1799,7 @@ static MACHINE_CONFIG_START( nomcu, taitosj_state )
 			/* - no interrupts synced with vblank */
 			/* - NMI triggered by the main CPU */
 			/* - periodic IRQ, with frequency 6000000/(4*16*16*10*16) = 36.621 Hz, */
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)6000000/(4*16*16*10*16))
+	MCFG_CPU_PERIODIC_INT_DRIVER(taitosj_state, irq0_line_hold,  (double)6000000/(4*16*16*10*16))
 
 
 	/* video hardware */
@@ -1808,7 +1808,7 @@ static MACHINE_CONFIG_START( nomcu, taitosj_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitosj)
+	MCFG_SCREEN_UPDATE_DRIVER(taitosj_state, screen_update_taitosj)
 
 	MCFG_GFXDECODE(taitosj)
 	MCFG_PALETTE_LENGTH(64)
@@ -1859,7 +1859,7 @@ static MACHINE_CONFIG_DERIVED( kikstart, mcu )
 	MCFG_CPU_PROGRAM_MAP(kikstart_main_map)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(kikstart)
+	MCFG_SCREEN_UPDATE_DRIVER(taitosj_state, screen_update_kikstart)
 MACHINE_CONFIG_END
 
 
@@ -2608,7 +2608,7 @@ ROM_START( waterski )
 	ROM_LOAD( "a03-14",       0x1000, 0x1000, CRC(31f991ca) SHA1(82cbaa618ac3de6fce12e9dcbb89ab064773b2bd) )
 
 	ROM_REGION( 0x8000, "gfx1", 0 )       /* graphic ROMs used at runtime */
-	ROM_LOAD( "a03-08",       0x0000, 0x1000, CRC(c206d870) SHA1(0be09b7da28d60bf23a0b87cff28957bb165bec5) )
+	ROM_LOAD( "a03-08",       0x0000, 0x1000, BAD_DUMP CRC(c206d870) SHA1(0be09b7da28d60bf23a0b87cff28957bb165bec5) ) // small glitches in font gfx
 	ROM_LOAD( "a03-09",       0x1000, 0x1000, CRC(48ac912a) SHA1(09d57b5b76a4416f1ee5eb2077bc969d2afbbf11) )
 	ROM_LOAD( "a03-10",       0x2000, 0x1000, CRC(a056defb) SHA1(15b4202b19f7190bfc953d0958c189db2db928cc) )
 	ROM_LOAD( "a03-11",       0x3000, 0x1000, CRC(f06cddd6) SHA1(483a25880a29552f4b70cd5d41de5cfe4ed64475) )
@@ -2765,7 +2765,7 @@ DRIVER_INIT_MEMBER(taitosj_state,spacecr)
 	init_common(machine());
 
 	/* install protection handler */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd48b, 0xd48b, read8_delegate(FUNC(taitosj_state::spacecr_prot_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd48b, 0xd48b, read8_delegate(FUNC(taitosj_state::spacecr_prot_r),this));
 }
 
 DRIVER_INIT_MEMBER(taitosj_state,alpine)
@@ -2773,8 +2773,8 @@ DRIVER_INIT_MEMBER(taitosj_state,alpine)
 	init_common(machine());
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd50f, 0xd50f, write8_delegate(FUNC(taitosj_state::alpine_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd50f, 0xd50f, write8_delegate(FUNC(taitosj_state::alpine_protection_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitosj_state,alpinea)
@@ -2782,8 +2782,8 @@ DRIVER_INIT_MEMBER(taitosj_state,alpinea)
 	init_common(machine());
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd50e, 0xd50e, write8_delegate(FUNC(taitosj_state::alpinea_bankswitch_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd50e, 0xd50e, write8_delegate(FUNC(taitosj_state::alpinea_bankswitch_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitosj_state,junglhbr)
@@ -2791,7 +2791,7 @@ DRIVER_INIT_MEMBER(taitosj_state,junglhbr)
 	init_common(machine());
 
 	/* inverter on bits 0 and 1 */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x9000, 0xbfff, write8_delegate(FUNC(taitosj_state::junglhbr_characterram_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x9000, 0xbfff, write8_delegate(FUNC(taitosj_state::junglhbr_characterram_w),this));
 }
 
 GAME( 1981, spaceskr, 0,        nomcu,    spaceskr, taitosj_state,   taitosj, ROT0,   "Taito Corporation", "Space Seeker", GAME_SUPPORTS_SAVE )
@@ -2817,4 +2817,4 @@ GAME( 1983, waterski, 0,        nomcu,    waterski, taitosj_state,   taitosj, RO
 GAME( 1983, bioatack, 0,        nomcu,    bioatack, taitosj_state,   taitosj, ROT270, "Taito Corporation (Fox Video Games license)", "Bio Attack", GAME_SUPPORTS_SAVE )
 GAME( 1984, sfposeid, 0,        mcu,      sfposeid, taitosj_state,   taitosj, ROT0,   "Taito Corporation", "Sea Fighter Poseidon", GAME_SUPPORTS_SAVE )
 GAME( 1983, hwrace,   0,        nomcu,    hwrace, taitosj_state,     taitosj, ROT270, "Taito Corporation", "High Way Race", GAME_SUPPORTS_SAVE )
-GAME( 1984, kikstart, 0,        kikstart, kikstart, taitosj_state,   taitosj, ROT0,   "Taito Corporation", "Kick Start Wheelie King", GAME_SUPPORTS_SAVE )
+GAME( 1984, kikstart, 0,        kikstart, kikstart, taitosj_state,   taitosj, ROT0,   "Taito Corporation", "Kick Start - Wheelie King", GAME_SUPPORTS_SAVE )

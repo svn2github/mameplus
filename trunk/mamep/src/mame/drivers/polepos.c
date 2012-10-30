@@ -303,8 +303,8 @@ WRITE8_MEMBER(polepos_state::polepos_latch_w)
 			polepos_sound_enable(machine().device("namco"),bit);
 			if (!bit)
 			{
-				polepos_engine_sound_lsb_w(machine().device("polepos"), 0, 0);
-				polepos_engine_sound_msb_w(machine().device("polepos"), 0, 0);
+				polepos_engine_sound_lsb_w(machine().device("polepos"), space, 0, 0);
+				polepos_engine_sound_msb_w(machine().device("polepos"), space, 0, 0);
 			}
 			break;
 
@@ -445,30 +445,29 @@ static const namco_53xx_interface namco_53xx_intf =
 };
 
 
-static TIMER_DEVICE_CALLBACK( polepos_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(polepos_state::polepos_scanline)
 {
-	polepos_state *state = timer.machine().driver_data<polepos_state>();
 	int scanline = param;
 
-	if (((scanline == 64) || (scanline == 192)) && state->m_main_irq_mask)	// 64V
-		timer.machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	if (((scanline == 64) || (scanline == 192)) && m_main_irq_mask)	// 64V
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
-	if (scanline == 240 && state->m_sub_irq_mask)	// VBLANK
+	if (scanline == 240 && m_sub_irq_mask)	// VBLANK
 	{
-		timer.machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
-		timer.machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
+		machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
+		machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
 	}
 }
 
 
 MACHINE_RESET_MEMBER(polepos_state,polepos)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0; i < 8; i++)
-		polepos_latch_w(*space, i, 0);
+		polepos_latch_w(space, i, 0);
 
 	/* set the interrupt vectors (this shouldn't be needed) */
 	machine().device("sub")->execute().set_input_line_vector(0, Z8000_NVI);
@@ -903,12 +902,12 @@ static MACHINE_CONFIG_START( polepos, polepos_state )
 	MCFG_MACHINE_RESET_OVERRIDE(polepos_state,polepos)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_TIMER_ADD_SCANLINE("scantimer", polepos_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", polepos_state, polepos_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 384, 0, 256, 264, 16, 224+16)
-	MCFG_SCREEN_UPDATE_STATIC(polepos)
+	MCFG_SCREEN_UPDATE_DRIVER(polepos_state, screen_update_polepos)
 
 	MCFG_GFXDECODE(polepos)
 	MCFG_PALETTE_LENGTH(0x0f00)
@@ -958,6 +957,11 @@ const namco_06xx_config topracern_namco_06xx_intf =
 	"maincpu", "51xx", NULL, NULL, NULL
 };
 
+static const tms52xx_config tms_intf =
+{
+	DEVCB_NULL
+};
+
 static MACHINE_CONFIG_START( topracern, polepos_state )
 
 	/* basic machine hardware */
@@ -982,12 +986,12 @@ static MACHINE_CONFIG_START( topracern, polepos_state )
 	MCFG_MACHINE_RESET_OVERRIDE(polepos_state,polepos)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_TIMER_ADD_SCANLINE("scantimer", polepos_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", polepos_state, polepos_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 384, 0, 256, 264, 16, 224+16)
-	MCFG_SCREEN_UPDATE_STATIC(polepos)
+	MCFG_SCREEN_UPDATE_DRIVER(polepos_state, screen_update_polepos)
 
 	MCFG_GFXDECODE(polepos)
 	MCFG_PALETTE_LENGTH(0x0f00)
@@ -1026,9 +1030,10 @@ static MACHINE_CONFIG_DERIVED( polepos2bi, topracern )
 	MCFG_CPU_PROGRAM_MAP(sound_z80_bootleg_map)
 	MCFG_CPU_IO_MAP(sound_z80_bootleg_iomap)
 
-	MCFG_SOUND_ADD("tms", TMS5220, 600000)	/* ? Mhz */
+	MCFG_SOUND_ADD("tms", TMS5220N, 600000)	/* ? Mhz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.80)
+	MCFG_SOUND_CONFIG(tms_intf)
 MACHINE_CONFIG_END
 
 
@@ -1990,15 +1995,15 @@ ROM_END
 DRIVER_INIT_MEMBER(polepos_state,topracern)
 {
 	/* extra direct mapped inputs read */
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x02, 0x02, "STEER");
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x03, 0x03, "IN0");
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x04, 0x04, "DSWA");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x02, 0x02, "STEER");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x03, 0x03, "IN0");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x04, 0x04, "DSWA");
 }
 
 DRIVER_INIT_MEMBER(polepos_state,polepos2)
 {
 	/* note that the bootleg version doesn't need this custom IC; it has a hacked ROM in its place */
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_read_handler(0x4000, 0x5fff, read16_delegate(FUNC(polepos_state::polepos2_ic25_r),this));
+	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x4000, 0x5fff, read16_delegate(FUNC(polepos_state::polepos2_ic25_r),this));
 }
 
 

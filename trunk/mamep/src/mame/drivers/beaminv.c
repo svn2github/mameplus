@@ -79,6 +79,8 @@ public:
 	DECLARE_READ8_MEMBER(controller_r);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_beaminv(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_callback);
 };
 
 
@@ -96,27 +98,26 @@ public:
 static const int interrupt_lines[INTERRUPTS_PER_FRAME] = { 0x00, 0x80 };
 
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(beaminv_state::interrupt_callback)
 {
-	beaminv_state *state = machine.driver_data<beaminv_state>();
 	int interrupt_number = param;
 	int next_interrupt_number;
 	int next_vpos;
 
-	state->m_maincpu->set_input_line(0, HOLD_LINE);
+	m_maincpu->set_input_line(0, HOLD_LINE);
 
 	/* set up for next interrupt */
 	next_interrupt_number = (interrupt_number + 1) % INTERRUPTS_PER_FRAME;
 	next_vpos = interrupt_lines[next_interrupt_number];
 
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(next_vpos), next_interrupt_number);
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(next_vpos), next_interrupt_number);
 }
 
 
 static void create_interrupt_timer( running_machine &machine )
 {
 	beaminv_state *state = machine.driver_data<beaminv_state>();
-	state->m_interrupt_timer = machine.scheduler().timer_alloc(FUNC(interrupt_callback));
+	state->m_interrupt_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(beaminv_state::interrupt_callback),state));
 }
 
 
@@ -168,18 +169,17 @@ void beaminv_state::machine_reset()
  *
  *************************************/
 
-static SCREEN_UPDATE_RGB32( beaminv )
+UINT32 beaminv_state::screen_update_beaminv(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	beaminv_state *state = screen.machine().driver_data<beaminv_state>();
 	offs_t offs;
 
-	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
+	for (offs = 0; offs < m_videoram.bytes(); offs++)
 	{
 		int i;
 
 		UINT8 y = offs;
 		UINT8 x = offs >> 8 << 3;
-		UINT8 data = state->m_videoram[offs];
+		UINT8 data = m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
@@ -342,7 +342,7 @@ static MACHINE_CONFIG_START( beaminv, beaminv_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 247, 16, 231)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_UPDATE_STATIC(beaminv)
+	MCFG_SCREEN_UPDATE_DRIVER(beaminv_state, screen_update_beaminv)
 
 MACHINE_CONFIG_END
 

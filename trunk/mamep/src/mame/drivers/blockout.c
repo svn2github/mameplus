@@ -145,7 +145,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, blockout_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -260,16 +260,10 @@ INPUT_PORTS_END
  *************************************/
 
 /* handler called by the 2151 emulator when the internal timers cause an IRQ */
-static void blockout_irq_handler(device_t *device, int irq)
+WRITE_LINE_MEMBER(blockout_state::irq_handler)
 {
-	blockout_state *state = device->machine().driver_data<blockout_state>();
-	state->m_audiocpu->set_input_line_and_vector(0, irq ? ASSERT_LINE : CLEAR_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, state ? ASSERT_LINE : CLEAR_LINE, 0xff);
 }
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(blockout_irq_handler)
-};
 
 
 /*************************************
@@ -293,16 +287,15 @@ void blockout_state::machine_reset()
 	m_color = 0;
 }
 
-static TIMER_DEVICE_CALLBACK( blockout_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(blockout_state::blockout_scanline)
 {
-	blockout_state *state = timer.machine().driver_data<blockout_state>();
 	int scanline = param;
 
 	if(scanline == 248) // vblank-out irq
-		state->m_maincpu->set_input_line(6, ASSERT_LINE);
+		m_maincpu->set_input_line(6, ASSERT_LINE);
 
 	if(scanline == 0) // vblank-in irq or directly tied to coin inputs (TODO: check)
-		state->m_maincpu->set_input_line(5, ASSERT_LINE);
+		m_maincpu->set_input_line(5, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( blockout, blockout_state )
@@ -310,7 +303,7 @@ static MACHINE_CONFIG_START( blockout, blockout_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, MAIN_CLOCK)       /* MRH - 8.76 makes gfx/adpcm samples sync better -- but 10 is correct speed*/
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", blockout_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", blockout_state, blockout_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, AUDIO_CLOCK)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
@@ -322,7 +315,7 @@ static MACHINE_CONFIG_START( blockout, blockout_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 8, 247)
-	MCFG_SCREEN_UPDATE_STATIC(blockout)
+	MCFG_SCREEN_UPDATE_DRIVER(blockout_state, screen_update_blockout)
 
 	MCFG_PALETTE_LENGTH(513)
 
@@ -330,8 +323,8 @@ static MACHINE_CONFIG_START( blockout, blockout_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, AUDIO_CLOCK)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", AUDIO_CLOCK)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(blockout_state,irq_handler))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 
@@ -437,5 +430,5 @@ ROM_END
 GAME( 1989, blockout, 0,        blockout, blockout, driver_device, 0, ROT0, "Technos Japan / California Dreams", "Block Out (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1989, blockout2,blockout, blockout, blockout, driver_device, 0, ROT0, "Technos Japan / California Dreams", "Block Out (set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, blockoutj,blockout, blockout, blockoutj, driver_device,0, ROT0, "Technos Japan / California Dreams", "Block Out (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1991, agress,   0,        agress,   agress, driver_device,   0, ROT0, "Palco", "Agress", GAME_SUPPORTS_SAVE )
-GAME( 2003, agressb,  agress,   agress,   agress, driver_device,   0, ROT0, "bootleg", "Agress (English bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1991, agress,   0,        agress,   agress, driver_device,   0, ROT0, "Palco", "Agress - Missile Daisenryaku (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 2003, agressb,  agress,   agress,   agress, driver_device,   0, ROT0, "bootleg", "Agress - Missile Daisenryaku (English bootleg)", GAME_SUPPORTS_SAVE )

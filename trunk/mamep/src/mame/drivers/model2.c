@@ -176,18 +176,18 @@ static void copro_fifoin_push(device_t *device, UINT32 data)
 
 
 #define COPRO_FIFOOUT_SIZE	32000
-static UINT32 copro_fifoout_pop(address_space *space)
+static UINT32 copro_fifoout_pop(address_space &space)
 {
-	model2_state *state = space->machine().driver_data<model2_state>();
+	model2_state *state = space.machine().driver_data<model2_state>();
 	UINT32 r;
 
 	if (state->m_copro_fifoout_num == 0)
 	{
 		/* Reading from empty FIFO causes the i960 to enter wait state */
-		i960_stall(&space->device());
+		i960_stall(&space.device());
 
 		/* spin the main cpu and let the TGP catch up */
-		space->device().execute().spin_until_time(attotime::from_usec(100));
+		space.device().execute().spin_until_time(attotime::from_usec(100));
 
 		return 0;
 	}
@@ -208,11 +208,11 @@ static UINT32 copro_fifoout_pop(address_space *space)
 	{
 		if (state->m_copro_fifoout_num == COPRO_FIFOOUT_SIZE)
 		{
-			sharc_set_flag_input(space->machine().device("dsp"), 1, ASSERT_LINE);
+			sharc_set_flag_input(space.machine().device("dsp"), 1, ASSERT_LINE);
 		}
 		else
 		{
-			sharc_set_flag_input(space->machine().device("dsp"), 1, CLEAR_LINE);
+			sharc_set_flag_input(space.machine().device("dsp"), 1, CLEAR_LINE);
 		}
 	}
 
@@ -288,22 +288,21 @@ WRITE32_MEMBER(model2_state::timers_w)
 	m_timerrun[offset] = 1;
 }
 
-static TIMER_DEVICE_CALLBACK( model2_timer_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(model2_state::model2_timer_cb)
 {
-	model2_state *state = timer.machine().driver_data<model2_state>();
 	int tnum = (int)(FPTR)ptr;
 	int bit = tnum + 2;
 
-	state->m_timers[tnum]->reset();
+	m_timers[tnum]->reset();
 
-	state->m_intreq |= (1<<bit);
-	if (state->m_intena & (1<<bit))
+	m_intreq |= (1<<bit);
+	if (m_intena & (1<<bit))
 	{
-		timer.machine().device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
 	}
 
-	state->m_timervals[tnum] = 0;
-	state->m_timerrun[tnum] = 0;
+	m_timervals[tnum] = 0;
+	m_timerrun[tnum] = 0;
 }
 
 MACHINE_START_MEMBER(model2_state,model2)
@@ -639,7 +638,7 @@ WRITE32_MEMBER(model2_state::copro_function_port_w)
 READ32_MEMBER(model2_state::copro_fifo_r)
 {
 	//logerror("copro_fifo_r: %08X, %08X\n", offset, mem_mask);
-	return copro_fifoout_pop(&space);
+	return copro_fifoout_pop(space);
 }
 
 WRITE32_MEMBER(model2_state::copro_fifo_w)
@@ -963,33 +962,33 @@ WRITE32_MEMBER(model2_state::model2_irq_w)
 }
 
 
-static int snd_68k_ready_r(address_space *space)
+static int snd_68k_ready_r(address_space &space)
 {
-	int sr = space->machine().device("audiocpu")->state().state_int(M68K_SR);
+	int sr = space.machine().device("audiocpu")->state().state_int(M68K_SR);
 
 	if ((sr & 0x0700) > 0x0100)
 	{
-		space->device().execute().spin_until_time(attotime::from_usec(40));
+		space.device().execute().spin_until_time(attotime::from_usec(40));
 		return 0;	// not ready yet, interrupts disabled
 	}
 
 	return 0xff;
 }
 
-static void snd_latch_to_68k_w(address_space *space, int data)
+static void snd_latch_to_68k_w(address_space &space, int data)
 {
-	model2_state *state = space->machine().driver_data<model2_state>();
+	model2_state *state = space.machine().driver_data<model2_state>();
 	if (!snd_68k_ready_r(space))
 	{
-		space->device().execute().spin_until_time(attotime::from_usec(40));
+		space.device().execute().spin_until_time(attotime::from_usec(40));
 	}
 
 	state->m_to_68k = data;
 
-	space->machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
+	space.machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
 
 	// give the 68k time to notice
-	space->device().execute().spin_until_time(attotime::from_usec(40));
+	space.device().execute().spin_until_time(attotime::from_usec(40));
 }
 
 READ32_MEMBER(model2_state::model2_serial_r)
@@ -1006,7 +1005,7 @@ WRITE32_MEMBER(model2_state::model2o_serial_w)
 {
 	if (mem_mask == 0x0000ffff)
 	{
-		snd_latch_to_68k_w(&space, data&0xff);
+		snd_latch_to_68k_w(space, data&0xff);
 	}
 }
 
@@ -1014,7 +1013,7 @@ WRITE32_MEMBER(model2_state::model2_serial_w)
 {
 	if (ACCESSING_BITS_0_7 && (offset == 0))
 	{
-		scsp_midi_in(machine().device("scsp"), 0, data&0xff, 0);
+		scsp_midi_in(machine().device("scsp"), space, 0, data&0xff, 0);
 
 		// give the 68k time to notice
 		space.device().execute().spin_until_time(attotime::from_usec(40));
@@ -1746,50 +1745,48 @@ static INPUT_PORTS_START( rchase2 )
 	PORT_BIT( 0x00ff, 0x0000, IPT_AD_STICK_Y ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(30) PORT_KEYDELTA(20) PORT_PLAYER(1)
 INPUT_PORTS_END
 
-static TIMER_DEVICE_CALLBACK(model2_interrupt)
+TIMER_DEVICE_CALLBACK_MEMBER(model2_state::model2_interrupt)
 {
-	model2_state *state = timer.machine().driver_data<model2_state>();
 	int scanline = param;
 
 	if(scanline == 0) // 384
 	{
-		state->m_intreq |= (1<<10);
-		if (state->m_intena & (1<<10))
-			state->m_maincpu->set_input_line(I960_IRQ3, ASSERT_LINE);
+		m_intreq |= (1<<10);
+		if (m_intena & (1<<10))
+			m_maincpu->set_input_line(I960_IRQ3, ASSERT_LINE);
 	}
 
 	if(scanline == 384/2)
 	{
-		state->m_intreq |= (1<<0);
-		if (state->m_intena & (1<<0))
-			state->m_maincpu->set_input_line(I960_IRQ0, ASSERT_LINE);
+		m_intreq |= (1<<0);
+		if (m_intena & (1<<0))
+			m_maincpu->set_input_line(I960_IRQ0, ASSERT_LINE);
 	}
 }
 
-static TIMER_DEVICE_CALLBACK(model2c_interrupt)
+TIMER_DEVICE_CALLBACK_MEMBER(model2_state::model2c_interrupt)
 {
-	model2_state *state = timer.machine().driver_data<model2_state>();
 	int scanline = param;
 
 	if(scanline == 0) // 384
 	{
-		state->m_intreq |= (1<<10);
-		if (state->m_intena & (1<<10))
-			state->m_maincpu->set_input_line(I960_IRQ3, ASSERT_LINE);
+		m_intreq |= (1<<10);
+		if (m_intena & (1<<10))
+			m_maincpu->set_input_line(I960_IRQ3, ASSERT_LINE);
 	}
 
 	if(scanline == 256)
 	{
-		state->m_intreq |= (1<<2);
-		if (state->m_intena & (1<<2))
-			state->m_maincpu->set_input_line(I960_IRQ2, ASSERT_LINE);
+		m_intreq |= (1<<2);
+		if (m_intena & (1<<2))
+			m_maincpu->set_input_line(I960_IRQ2, ASSERT_LINE);
 	}
 
 	if(scanline == 128)
 	{
-		state->m_intreq |= (1<<0);
-		if (state->m_intena & (1<<0))
-			state->m_maincpu->set_input_line(I960_IRQ0, ASSERT_LINE);
+		m_intreq |= (1<<0);
+		if (m_intena & (1<<0))
+			m_maincpu->set_input_line(I960_IRQ0, ASSERT_LINE);
 	}
 }
 
@@ -1967,7 +1964,7 @@ static const mb86233_cpu_core tgp_config =
 static MACHINE_CONFIG_START( model2o, model2_state )
 	MCFG_CPU_ADD("maincpu", I960, 25000000)
 	MCFG_CPU_PROGRAM_MAP(model2o_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model2_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model2_state, model2_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(model1_snd)
@@ -1983,13 +1980,13 @@ static MACHINE_CONFIG_START( model2o, model2_state )
 	MCFG_NVRAM_ADD_1FILL("backup1")
 	MCFG_NVRAM_ADD_1FILL("backup2")
 
-	MCFG_TIMER_ADD("timer0", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer0", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)0)
-	MCFG_TIMER_ADD("timer1", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer1", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)1)
-	MCFG_TIMER_ADD("timer2", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer2", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)2)
-	MCFG_TIMER_ADD("timer3", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
@@ -2001,7 +1998,7 @@ static MACHINE_CONFIG_START( model2o, model2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(model2)
+	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -2026,7 +2023,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( model2a, model2_state )
 	MCFG_CPU_ADD("maincpu", I960, 25000000)
 	MCFG_CPU_PROGRAM_MAP(model2a_crx_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model2_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model2_state, model2_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model2_snd)
@@ -2041,13 +2038,13 @@ static MACHINE_CONFIG_START( model2a, model2_state )
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
 
-	MCFG_TIMER_ADD("timer0", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer0", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)0)
-	MCFG_TIMER_ADD("timer1", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer1", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)1)
-	MCFG_TIMER_ADD("timer2", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer2", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)2)
-	MCFG_TIMER_ADD("timer3", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
@@ -2059,7 +2056,7 @@ static MACHINE_CONFIG_START( model2a, model2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(model2)
+	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -2111,7 +2108,7 @@ static MACHINE_CONFIG_DERIVED( srallyc, model2a )
 	MCFG_CPU_ADD("drivecpu", Z80, 16000000/4) //???
 	MCFG_CPU_PROGRAM_MAP(drive_map)
 	MCFG_CPU_IO_MAP(drive_io_map)
-//  MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", model2_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 static const sharc_config sharc_cfg =
@@ -2123,7 +2120,7 @@ static const sharc_config sharc_cfg =
 static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_CPU_ADD("maincpu", I960, 25000000)
 	MCFG_CPU_PROGRAM_MAP(model2b_crx_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model2_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model2_state, model2_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model2_snd)
@@ -2144,13 +2141,13 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
 
-	MCFG_TIMER_ADD("timer0", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer0", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)0)
-	MCFG_TIMER_ADD("timer1", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer1", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)1)
-	MCFG_TIMER_ADD("timer2", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer2", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)2)
-	MCFG_TIMER_ADD("timer3", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
@@ -2162,7 +2159,7 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(model2)
+	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -2180,7 +2177,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( model2c, model2_state )
 	MCFG_CPU_ADD("maincpu", I960, 25000000)
 	MCFG_CPU_PROGRAM_MAP(model2c_crx_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model2c_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model2_state, model2c_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model2_snd)
@@ -2191,13 +2188,13 @@ static MACHINE_CONFIG_START( model2c, model2_state )
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
 
-	MCFG_TIMER_ADD("timer0", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer0", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)0)
-	MCFG_TIMER_ADD("timer1", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer1", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)1)
-	MCFG_TIMER_ADD("timer2", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer2", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)2)
-	MCFG_TIMER_ADD("timer3", model2_timer_cb)
+	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
@@ -2209,7 +2206,7 @@ static MACHINE_CONFIG_START( model2c, model2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(model2)
+	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -5224,7 +5221,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(model2_state,genprot)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 }
 
@@ -5232,7 +5229,7 @@ DRIVER_INIT_MEMBER(model2_state,pltkids)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 
 	// fix bug in program: it destroys the interrupt table and never fixes it
@@ -5243,7 +5240,7 @@ DRIVER_INIT_MEMBER(model2_state,zerogun)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 
 	// fix bug in program: it destroys the interrupt table and never fixes it
@@ -5252,7 +5249,7 @@ DRIVER_INIT_MEMBER(model2_state,zerogun)
 
 DRIVER_INIT_MEMBER(model2_state,daytonam)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x240000, 0x24ffff, read32_delegate(FUNC(model2_state::maxx_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x240000, 0x24ffff, read32_delegate(FUNC(model2_state::maxx_r),this));
 }
 
 /* very crude support for let the game set itself into stand-alone mode */
@@ -5285,8 +5282,8 @@ DRIVER_INIT_MEMBER(model2_state,sgt24h)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
 
 	m_protstate = m_protpos = 0;
 
@@ -5296,7 +5293,7 @@ DRIVER_INIT_MEMBER(model2_state,sgt24h)
 
 DRIVER_INIT_MEMBER(model2_state,overrev)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
 
 	//TODO: cache patch?
 }
@@ -5306,7 +5303,7 @@ DRIVER_INIT_MEMBER(model2_state,doa)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 
 	ROM[0x630/4] = 0x08000004;
@@ -5315,12 +5312,12 @@ DRIVER_INIT_MEMBER(model2_state,doa)
 
 DRIVER_INIT_MEMBER(model2_state,rchase2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::rchase2_devices_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::rchase2_devices_w),this));
 }
 
 DRIVER_INIT_MEMBER(model2_state,srallyc)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::srallyc_devices_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::srallyc_devices_w),this));
 }
 
 

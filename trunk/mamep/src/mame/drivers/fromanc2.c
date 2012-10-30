@@ -31,9 +31,9 @@
  *
  *************************************/
 
-static INTERRUPT_GEN( fromanc2_interrupt )
+INTERRUPT_GEN_MEMBER(fromanc2_state::fromanc2_interrupt)
 {
-	device->execute().set_input_line(1, HOLD_LINE);
+	device.execute().set_input_line(1, HOLD_LINE);
 }
 
 
@@ -546,7 +546,7 @@ static MACHINE_CONFIG_START( fromanc2, fromanc2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,32000000/2)		/* 16.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(fromanc2_main_map)
-	MCFG_CPU_VBLANK_INT("lscreen", fromanc2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", fromanc2_state,  fromanc2_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/4)		/* 8.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(fromanc2_sound_map)
@@ -570,14 +570,14 @@ static MACHINE_CONFIG_START( fromanc2, fromanc2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromanc2_left)
+	MCFG_SCREEN_UPDATE_DRIVER(fromanc2_state, screen_update_fromanc2_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromanc2_right)
+	MCFG_SCREEN_UPDATE_DRIVER(fromanc2_state, screen_update_fromanc2_right)
 
 	MCFG_VIDEO_START_OVERRIDE(fromanc2_state,fromanc2)
 
@@ -596,7 +596,7 @@ static MACHINE_CONFIG_START( fromancr, fromanc2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,32000000/2)		/* 16.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(fromancr_main_map)
-	MCFG_CPU_VBLANK_INT("lscreen", fromanc2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", fromanc2_state,  fromanc2_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/4)		/* 8.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(fromanc2_sound_map)
@@ -620,14 +620,14 @@ static MACHINE_CONFIG_START( fromancr, fromanc2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromanc2_left)
+	MCFG_SCREEN_UPDATE_DRIVER(fromanc2_state, screen_update_fromanc2_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromanc2_right)
+	MCFG_SCREEN_UPDATE_DRIVER(fromanc2_state, screen_update_fromanc2_right)
 
 	MCFG_VIDEO_START_OVERRIDE(fromanc2_state,fromancr)
 
@@ -646,7 +646,7 @@ static MACHINE_CONFIG_START( fromanc4, fromanc2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,32000000/2)		/* 16.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(fromanc4_main_map)
-	MCFG_CPU_VBLANK_INT("lscreen", fromanc2_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", fromanc2_state,  fromanc2_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/4)		/* 8.00 MHz */
 	MCFG_CPU_PROGRAM_MAP(fromanc2_sound_map)
@@ -667,14 +667,14 @@ static MACHINE_CONFIG_START( fromanc4, fromanc2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(2048, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromanc2_left)
+	MCFG_SCREEN_UPDATE_DRIVER(fromanc2_state, screen_update_fromanc2_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(fromanc2_right)
+	MCFG_SCREEN_UPDATE_DRIVER(fromanc2_state, screen_update_fromanc2_right)
 
 	MCFG_VIDEO_START_OVERRIDE(fromanc2_state,fromanc4)
 

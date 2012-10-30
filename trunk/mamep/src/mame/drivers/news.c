@@ -130,7 +130,7 @@ static MACHINE_CONFIG_START( news, news_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,8000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(news_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", news_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -139,7 +139,7 @@ static MACHINE_CONFIG_START( news, news_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(news)
+	MCFG_SCREEN_UPDATE_DRIVER(news_state, screen_update_news)
 
 	MCFG_GFXDECODE(news)
 	MCFG_PALETTE_LENGTH(0x100)

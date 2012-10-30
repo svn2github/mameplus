@@ -297,32 +297,31 @@ static IRQ_CALLBACK( irq_callback )
 	return state->m_irq_adr_table[state->m_last_irq_level];
 }
 
-static TIMER_DEVICE_CALLBACK( vbl_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(taitol_state::vbl_interrupt)
 {
-	taitol_state *state = timer.machine().driver_data<taitol_state>();
 	int scanline = param;
-	state->m_maincpu->set_irq_acknowledge_callback(irq_callback);
+	m_maincpu->set_irq_acknowledge_callback(irq_callback);
 
 	/* kludge to make plgirls boot */
-	if (state->m_maincpu->state_int(Z80_IM) != 2)
+	if (m_maincpu->state_int(Z80_IM) != 2)
 		return;
 
 	// What is really generating interrupts 0 and 1 is still to be found
 
-	if (scanline == 120 && (state->m_irq_enable & 1))
+	if (scanline == 120 && (m_irq_enable & 1))
 	{
-		state->m_last_irq_level = 0;
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
+		m_last_irq_level = 0;
+		m_maincpu->set_input_line(0, HOLD_LINE);
 	}
-	else if (scanline == 0 && (state->m_irq_enable & 2))
+	else if (scanline == 0 && (m_irq_enable & 2))
 	{
-		state->m_last_irq_level = 1;
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
+		m_last_irq_level = 1;
+		m_maincpu->set_input_line(0, HOLD_LINE);
 	}
-	else if (scanline == 240 && (state->m_irq_enable & 4))
+	else if (scanline == 240 && (m_irq_enable & 4))
 	{
-		state->m_last_irq_level = 2;
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
+		m_last_irq_level = 2;
+		m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -433,36 +432,36 @@ READ8_MEMBER(taitol_state::rambankswitch_r)
 	return m_cur_rambank[offset];
 }
 
-static void bank_w(address_space *space, offs_t offset, UINT8 data, int banknum )
+static void bank_w(address_space &space, offs_t offset, UINT8 data, int banknum )
 {
-	taitol_state *state = space->machine().driver_data<taitol_state>();
+	taitol_state *state = space.machine().driver_data<taitol_state>();
 
 	if (state->m_current_base[banknum][offset] != data)
 	{
 		state->m_current_base[banknum][offset] = data;
 		if (state->m_current_notifier[banknum])
-			state->m_current_notifier[banknum](space->machine(), offset);
+			state->m_current_notifier[banknum](space.machine(), offset);
 	}
 }
 
 WRITE8_MEMBER(taitol_state::bank0_w)
 {
-	bank_w(&space, offset, data, 0);
+	bank_w(space, offset, data, 0);
 }
 
 WRITE8_MEMBER(taitol_state::bank1_w)
 {
-	bank_w(&space, offset, data, 1);
+	bank_w(space, offset, data, 1);
 }
 
 WRITE8_MEMBER(taitol_state::bank2_w)
 {
-	bank_w(&space, offset, data, 2);
+	bank_w(space, offset, data, 2);
 }
 
 WRITE8_MEMBER(taitol_state::bank3_w)
 {
-	bank_w(&space, offset, data, 3);
+	bank_w(space, offset, data, 3);
 }
 
 WRITE8_MEMBER(taitol_state::control2_w)
@@ -487,7 +486,7 @@ READ8_MEMBER(taitol_state::extport_select_and_ym2203_r)
 {
 	device_t *device = machine().device("ymsnd");
 	m_extport = (offset >> 1) & 1;
-	return ym2203_r(device, offset & 1);
+	return ym2203_r(device, space, offset & 1);
 }
 
 WRITE8_MEMBER(taitol_state::mcu_data_w)
@@ -1777,7 +1776,7 @@ WRITE8_MEMBER(taitol_state::portA_w)
 		m_cur_bank = data & 0x03;
 		bankaddress = m_cur_bank * 0x4000;
 		membank("bank7")->set_base(&RAM[bankaddress]);
-		//logerror ("YM2203 bank change val=%02x  pc=%04x\n", m_cur_bank, space->device().safe_pc() );
+		//logerror ("YM2203 bank change val=%02x  pc=%04x\n", m_cur_bank, space.device().safe_pc() );
 	}
 }
 
@@ -1844,14 +1843,14 @@ static MACHINE_CONFIG_START( fhawk, taitol_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_13_33056MHz/2)	/* verified freq on pin122 of TC0090LVC cpu */
 	MCFG_CPU_PROGRAM_MAP(fhawk_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", vbl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", taitol_state, vbl_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_12MHz/3)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(fhawk_3_map)
 
 	MCFG_CPU_ADD("slave", Z80, XTAL_12MHz/3)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(fhawk_2_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,3*60) /* fixes slow down problems */
+	MCFG_CPU_PERIODIC_INT_DRIVER(taitol_state, irq0_line_hold, 3*60) /* fixes slow down problems */
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -1864,8 +1863,8 @@ static MACHINE_CONFIG_START( fhawk, taitol_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitol)
-	MCFG_SCREEN_VBLANK_STATIC(taitol)
+	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
+	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
 
 	MCFG_GFXDECODE(2)
 	MCFG_PALETTE_LENGTH(256)
@@ -1939,11 +1938,11 @@ static MACHINE_CONFIG_START( kurikint, taitol_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_13_33056MHz/2)	/* verified freq on pin122 of TC0090LVC cpu */
 	MCFG_CPU_PROGRAM_MAP(kurikint_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", vbl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", taitol_state, vbl_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu",  Z80, XTAL_12MHz/3)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(kurikint_2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitol_state,  irq0_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -1956,8 +1955,8 @@ static MACHINE_CONFIG_START( kurikint, taitol_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitol)
-	MCFG_SCREEN_VBLANK_STATIC(taitol)
+	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
+	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
 
 	MCFG_GFXDECODE(2)
 	MCFG_PALETTE_LENGTH(256)
@@ -1991,7 +1990,7 @@ static MACHINE_CONFIG_START( plotting, taitol_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_13_33056MHz/2)	/* verified freq on pin122 of TC0090LVC cpu */
 	MCFG_CPU_PROGRAM_MAP(plotting_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", vbl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", taitol_state, vbl_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_START_OVERRIDE(taitol_state,taito_l)
 	MCFG_MACHINE_RESET_OVERRIDE(taitol_state,plotting)
@@ -2002,8 +2001,8 @@ static MACHINE_CONFIG_START( plotting, taitol_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitol)
-	MCFG_SCREEN_VBLANK_STATIC(taitol)
+	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
+	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
 
 	MCFG_GFXDECODE(1)
 	MCFG_PALETTE_LENGTH(256)
@@ -2077,12 +2076,12 @@ static MACHINE_CONFIG_START( evilston, taitol_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_13_33056MHz/2)	/* not verified */
 	MCFG_CPU_PROGRAM_MAP(evilston_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", vbl_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", taitol_state, vbl_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_12MHz/3)		/* not verified */
 	MCFG_CPU_PROGRAM_MAP(evilston_2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,60)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitol_state,  irq0_line_hold)
+	MCFG_CPU_PERIODIC_INT_DRIVER(taitol_state, nmi_line_pulse, 60)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -2095,8 +2094,8 @@ static MACHINE_CONFIG_START( evilston, taitol_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(taitol)
-	MCFG_SCREEN_VBLANK_STATIC(taitol)
+	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
+	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
 
 	MCFG_GFXDECODE(2)
 	MCFG_PALETTE_LENGTH(256)

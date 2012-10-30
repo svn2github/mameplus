@@ -69,25 +69,24 @@ void fgoal_state::palette_init()
 }
 
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(fgoal_state::interrupt_callback)
 {
-	fgoal_state *state = machine.driver_data<fgoal_state>();
 	int scanline;
-	int coin = (state->ioport("IN1")->read() & 2);
+	int coin = (ioport("IN1")->read() & 2);
 
-	state->m_maincpu->set_input_line(0, ASSERT_LINE);
+	m_maincpu->set_input_line(0, ASSERT_LINE);
 
-	if (!coin && state->m_prev_coin)
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	if (!coin && m_prev_coin)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
-	state->m_prev_coin = coin;
+	m_prev_coin = coin;
 
-	scanline = machine.primary_screen->vpos() + 128;
+	scanline = machine().primary_screen->vpos() + 128;
 
 	if (scanline > 256)
 		scanline = 0;
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(interrupt_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(fgoal_state::interrupt_callback),this));
 }
 
 
@@ -137,14 +136,14 @@ WRITE8_MEMBER(fgoal_state::fgoal_row_w)
 {
 
 	m_row = data;
-	mb14241_shift_data_w(m_mb14241, 0, 0);
+	mb14241_shift_data_w(m_mb14241, space, 0, 0);
 }
 
 WRITE8_MEMBER(fgoal_state::fgoal_col_w)
 {
 
 	m_col = data;
-	mb14241_shift_count_w(m_mb14241, 0, data);
+	mb14241_shift_count_w(m_mb14241, space, 0, data);
 }
 
 READ8_MEMBER(fgoal_state::fgoal_address_hi_r)
@@ -159,14 +158,14 @@ READ8_MEMBER(fgoal_state::fgoal_address_lo_r)
 
 READ8_MEMBER(fgoal_state::fgoal_shifter_r)
 {
-	UINT8 v = mb14241_shift_result_r(m_mb14241, 0);
+	UINT8 v = mb14241_shift_result_r(m_mb14241, space, 0);
 
 	return BITSWAP8(v, 7, 6, 5, 4, 3, 2, 1, 0);
 }
 
 READ8_MEMBER(fgoal_state::fgoal_shifter_reverse_r)
 {
-	UINT8 v = mb14241_shift_result_r(m_mb14241, 0);
+	UINT8 v = mb14241_shift_result_r(m_mb14241, space, 0);
 
 	return BITSWAP8(v, 0, 1, 2, 3, 4, 5, 6, 7);
 }
@@ -346,7 +345,7 @@ void fgoal_state::machine_start()
 void fgoal_state::machine_reset()
 {
 
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(interrupt_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(fgoal_state::interrupt_callback),this));
 
 	m_xpos = 0;
 	m_ypos = 0;
@@ -372,7 +371,7 @@ static MACHINE_CONFIG_START( fgoal, fgoal_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 263)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 16, 255)
-	MCFG_SCREEN_UPDATE_STATIC(fgoal)
+	MCFG_SCREEN_UPDATE_DRIVER(fgoal_state, screen_update_fgoal)
 
 	MCFG_GFXDECODE(fgoal)
 	MCFG_PALETTE_LENGTH(128 + 16 + 1)

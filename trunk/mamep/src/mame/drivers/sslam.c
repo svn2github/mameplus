@@ -213,38 +213,37 @@ static const UINT8 sslam_snd_loop[8][19] =
 
 
 
-static TIMER_CALLBACK( music_playback )
+TIMER_CALLBACK_MEMBER(sslam_state::music_playback)
 {
-	sslam_state *state = machine.driver_data<sslam_state>();
 	int pattern = 0;
-	okim6295_device *device = machine.device<okim6295_device>("oki");
+	okim6295_device *device = machine().device<okim6295_device>("oki");
 
 	if ((device->read_status() & 0x08) == 0)
 	{
-		state->m_bar += 1;
-		pattern = sslam_snd_loop[state->m_melody][state->m_bar];
+		m_bar += 1;
+		pattern = sslam_snd_loop[m_melody][m_bar];
 
 		if (pattern) {
 			if (pattern == 0xff) {		/* Repeat track from first bar */
-				state->m_bar = 0;
-				pattern = sslam_snd_loop[state->m_melody][state->m_bar];
+				m_bar = 0;
+				pattern = sslam_snd_loop[m_melody][m_bar];
 			}
 			logerror("Changing bar in music track to pattern %02x\n",pattern);
 			device->write_command(0x80 | pattern);
 			device->write_command(0x81);
 		}
 		else if (pattern == 0x00) {		/* Non-looped track. Stop playing it */
-			state->m_track = 0;
-			state->m_melody = 0;
-			state->m_bar = 0;
-			state->m_music_timer->enable(false);
+			m_track = 0;
+			m_melody = 0;
+			m_bar = 0;
+			m_music_timer->enable(false);
 		}
 	}
 
 	if (0)
 	{
-		pattern = sslam_snd_loop[state->m_melody][state->m_bar];
-		popmessage("Music track: %02x, Melody: %02x, Pattern: %02x, Bar:%02d",state->m_track,state->m_melody,pattern,state->m_bar);
+		pattern = sslam_snd_loop[m_melody][m_bar];
+		popmessage("Music track: %02x, Melody: %02x, Pattern: %02x, Bar:%02d",m_track,m_melody,pattern,m_bar);
 	}
 }
 
@@ -707,7 +706,7 @@ static MACHINE_CONFIG_START( sslam, sslam_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(sslam_program_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sslam_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", I8051, 12000000)
 	MCFG_DEVICE_DISABLE()		/* Internal code is not dumped - 2 boards were protected */
@@ -718,7 +717,7 @@ static MACHINE_CONFIG_START( sslam, sslam_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 39*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sslam)
+	MCFG_SCREEN_UPDATE_DRIVER(sslam_state, screen_update_sslam)
 
 	MCFG_GFXDECODE(sslam)
 	MCFG_PALETTE_LENGTH(0x800)
@@ -737,7 +736,7 @@ static MACHINE_CONFIG_START( powerbls, sslam_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(powerbls_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", sslam_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", I80C51, 12000000)		/* 83C751 */
 	MCFG_CPU_IO_MAP(sound_io_map)
@@ -748,7 +747,7 @@ static MACHINE_CONFIG_START( powerbls, sslam_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(powerbls)
+	MCFG_SCREEN_UPDATE_DRIVER(sslam_state, screen_update_powerbls)
 
 	MCFG_GFXDECODE(powerbls)
 	MCFG_PALETTE_LENGTH(0x200)
@@ -926,7 +925,7 @@ DRIVER_INIT_MEMBER(sslam_state,sslam)
 	save_item(NAME(m_bar));
 	save_item(NAME(m_snd_bank));
 
-	m_music_timer = machine().scheduler().timer_alloc(FUNC(music_playback));
+	m_music_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sslam_state::music_playback),this));
 }
 
 DRIVER_INIT_MEMBER(sslam_state,powerbls)

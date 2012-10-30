@@ -278,13 +278,12 @@ void metalmx_state::video_start()
 
 }
 
-static SCREEN_UPDATE_IND16( metalmx )
+UINT32 metalmx_state::screen_update_metalmx(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	/* TODO: TMS34020 should take care of this */
-	metalmx_state *state = screen.machine().driver_data<metalmx_state>();
 
 //  UINT32 *src_base = &gsp_vram[(vreg_base[0x40/4] & 0x40) ? 0x20000 : 0];
-	UINT16 *src_base = state->m_gsp_vram;
+	UINT16 *src_base = m_gsp_vram;
 	int y;
 
 	for (y = 0; y < 384; ++y)
@@ -352,7 +351,7 @@ READ32_MEMBER(metalmx_state::sound_data_r)
 	if (ACCESSING_BITS_0_15)
 		result |= cage_control_r(machine());
 	if (ACCESSING_BITS_16_31)
-		result |= cage_main_r(&space) << 16;
+		result |= cage_main_r(space) << 16;
 	return result;
 }
 
@@ -361,7 +360,7 @@ WRITE32_MEMBER(metalmx_state::sound_data_w)
 	if (ACCESSING_BITS_0_15)
 		cage_control_w(machine(), data);
 	if (ACCESSING_BITS_16_31)
-		cage_main_w(&space, data >> 16);
+		cage_main_w(space, data >> 16);
 }
 
 static void cage_irq_callback(running_machine &machine, int reason)
@@ -444,19 +443,19 @@ READ32_MEMBER(metalmx_state::dsp32c_2_r)
 
 WRITE32_MEMBER(metalmx_state::host_gsp_w)
 {
-	address_space *gsp_space = machine().device("gsp")->memory().space(AS_PROGRAM);
+	address_space &gsp_space = machine().device("gsp")->memory().space(AS_PROGRAM);
 
-	gsp_space->write_word((0xc0000000 + (offset << 5) + 0x10) / 8, data);
-	gsp_space->write_word((0xc0000000 + (offset << 5))/ 8 , data >> 16);
+	gsp_space.write_word((0xc0000000 + (offset << 5) + 0x10) / 8, data);
+	gsp_space.write_word((0xc0000000 + (offset << 5))/ 8 , data >> 16);
 }
 
 READ32_MEMBER(metalmx_state::host_gsp_r)
 {
-	address_space *gsp_space = machine().device("gsp")->memory().space(AS_PROGRAM);
+	address_space &gsp_space = machine().device("gsp")->memory().space(AS_PROGRAM);
 	UINT32 val;
 
-	val  = gsp_space->read_word((0xc0000000 + (offset << 5) + 0x10) / 8);
-	val |= gsp_space->read_word((0xc0000000 + (offset << 5)) / 8) << 16;
+	val  = gsp_space.read_word((0xc0000000 + (offset << 5) + 0x10) / 8);
+	val |= gsp_space.read_word((0xc0000000 + (offset << 5)) / 8) << 16;
 	return val;
 }
 
@@ -756,7 +755,7 @@ static MACHINE_CONFIG_START( metalmx, metalmx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 384)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
-	MCFG_SCREEN_UPDATE_STATIC(metalmx)
+	MCFG_SCREEN_UPDATE_DRIVER(metalmx_state, screen_update_metalmx)
 
 	MCFG_PALETTE_LENGTH(65536)
 	MCFG_PALETTE_INIT(RRRRR_GGGGGG_BBBBB)

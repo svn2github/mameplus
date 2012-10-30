@@ -93,6 +93,7 @@
 #include "includes/jpmimpct.h"
 #include "machine/meters.h"
 #include "machine/nvram.h"
+#include "jpmimpct.lh"
 
 /*************************************
  *
@@ -195,14 +196,13 @@ READ16_MEMBER(jpmimpct_state::m68k_tms_r)
  *  TxDB/TxDB: Data retrieval unit
  */
 
-static TIMER_DEVICE_CALLBACK( duart_1_timer_event )
+TIMER_DEVICE_CALLBACK_MEMBER(jpmimpct_state::duart_1_timer_event)
 {
-	jpmimpct_state *state = timer.machine().driver_data<jpmimpct_state>();
-	state->m_duart_1.tc = 0;
-	state->m_duart_1.ISR |= 0x08;
+	m_duart_1.tc = 0;
+	m_duart_1.ISR |= 0x08;
 
-	state->m_duart_1_irq = 1;
-	update_irqs(timer.machine());
+	m_duart_1_irq = 1;
+	update_irqs(machine());
 }
 
 READ16_MEMBER(jpmimpct_state::duart_1_r)
@@ -476,7 +476,7 @@ WRITE16_MEMBER(jpmimpct_state::upd7759_w)
 	device_t *device = machine().device("upd");
 	if (ACCESSING_BITS_0_7)
 	{
-		upd7759_port_w(device, 0, data);
+		upd7759_port_w(device, space, 0, data);
 		upd7759_start_w(device, 0);
 		upd7759_start_w(device, 1);
 	}
@@ -826,7 +826,7 @@ static MACHINE_CONFIG_START( jpmimpct, jpmimpct_state )
 	MCFG_MACHINE_RESET_OVERRIDE(jpmimpct_state,jpmimpct)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_TIMER_ADD( "duart_1_timer", duart_1_timer_event)
+	MCFG_TIMER_DRIVER_ADD("duart_1_timer", jpmimpct_state, duart_1_timer_event)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(40000000/4, 156*4, 0, 100*4, 328, 0, 300)
@@ -1378,12 +1378,12 @@ static MACHINE_CONFIG_START( impctawp, jpmimpct_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_I8255_ADD( "ppi8255", ppi8255_intf )
-	MCFG_TIMER_ADD( "duart_1_timer", duart_1_timer_event)
+	MCFG_TIMER_DRIVER_ADD("duart_1_timer", jpmimpct_state, duart_1_timer_event)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("upd",UPD7759, UPD7759_STANDARD_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-	MCFG_DEFAULT_LAYOUT(layout_awpvid16)
+	MCFG_DEFAULT_LAYOUT(layout_jpmimpct)
 MACHINE_CONFIG_END
 
 /*************************************
@@ -5008,6 +5008,9 @@ ROM_START( j6ewndg )
 	ROM_LOAD16_BYTE(  "ewn8_8.b16", 0x0000, 0x040000, CRC(674fd826) SHA1(34b17cdc4b8eb67c1100e62dee8bf13c66a5fa82) )
 	ROM_LOAD16_BYTE(  "ewnc1ss.bin", 0x0000, 0x020000, CRC(cc2c4712) SHA1(15729b5bccdb5f0e71bdedbe8817988c186a9d7e) )
 	ROM_LOAD16_BYTE(  "ewncp1.bin", 0x0000, 0x020000, CRC(27b2132a) SHA1(144f491eeaed2b6e0203e31fe5f78280edc41c1e) )
+
+	ROM_REGION( 0x80000, "upd", ROMREGION_ERASE00 )
+	/* missing? */
 ROM_END
 
 

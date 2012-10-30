@@ -179,7 +179,7 @@ static struct sprite_entry {
 	UINT32 adr;
 } sprites[0x100];
 
-static void generate_sprites(address_space *space, UINT32 src, UINT32 spr, int count)
+static void generate_sprites(address_space &space, UINT32 src, UINT32 spr, int count)
 {
 	int i;
 	int scount;
@@ -190,9 +190,9 @@ static void generate_sprites(address_space *space, UINT32 src, UINT32 spr, int c
 	for(i=0; i<count; i++) {
 		UINT32 adr = src + 0x100*i;
 		int pri;
-		if(!space->read_word(adr+2))
+		if(!space.read_word(adr+2))
 			continue;
-		pri = space->read_word(adr+28);
+		pri = space.read_word(adr+28);
 
 		if(pri < 256) {
 			sprites[ecount].pri = pri;
@@ -205,39 +205,39 @@ static void generate_sprites(address_space *space, UINT32 src, UINT32 spr, int c
 	for(i=0; i<ecount; i++) {
 		UINT32 adr = sprites[i].adr;
 		if(adr) {
-			UINT32 set =(space->read_word(adr) << 16)|space->read_word(adr+2);
-			UINT16 glob_x = space->read_word(adr+4);
-			UINT16 glob_y = space->read_word(adr+8);
-			UINT16 flip_x = space->read_word(adr+12) ? 0x1000 : 0x0000;
-			UINT16 flip_y = space->read_word(adr+14) ? 0x2000 : 0x0000;
+			UINT32 set =(space.read_word(adr) << 16)|space.read_word(adr+2);
+			UINT16 glob_x = space.read_word(adr+4);
+			UINT16 glob_y = space.read_word(adr+8);
+			UINT16 flip_x = space.read_word(adr+12) ? 0x1000 : 0x0000;
+			UINT16 flip_y = space.read_word(adr+14) ? 0x2000 : 0x0000;
 			UINT16 glob_f = flip_x | (flip_y ^ 0x2000);
-			UINT16 zoom_x = space->read_word(adr+20);
-			UINT16 zoom_y = space->read_word(adr+22);
+			UINT16 zoom_x = space.read_word(adr+20);
+			UINT16 zoom_y = space.read_word(adr+22);
 			UINT16 color_val    = 0x0000;
 			UINT16 color_mask   = 0xffff;
 			UINT16 color_set    = 0x0000;
 			UINT16 color_rotate = 0x0000;
 			UINT16 v;
 
-			v = space->read_word(adr+24);
+			v = space.read_word(adr+24);
 			if(v & 0x8000) {
 				color_mask = 0xf3ff;
 				color_val |= (v & 3) << 10;
 			}
 
-			v = space->read_word(adr+26);
+			v = space.read_word(adr+26);
 			if(v & 0x8000) {
 				color_mask &= 0xfcff;
 				color_val  |= (v & 3) << 8;
 			}
 
-			v = space->read_word(adr+18);
+			v = space.read_word(adr+18);
 			if(v & 0x8000) {
 				color_mask &= 0xff1f;
 				color_val  |= v & 0xe0;
 			}
 
-			v = space->read_word(adr+16);
+			v = space.read_word(adr+16);
 			if(v & 0x8000)
 				color_set = v & 0x1f;
 			if(v & 0x4000)
@@ -250,14 +250,14 @@ static void generate_sprites(address_space *space, UINT32 src, UINT32 spr, int c
 
 			if(set >= 0x200000 && set < 0xd00000)
 			{
-				UINT16 count2 = space->read_word(set);
+				UINT16 count2 = space.read_word(set);
 				set += 2;
 				while(count2) {
-					UINT16 idx  = space->read_word(set);
-					UINT16 flip = space->read_word(set+2);
-					UINT16 col  = space->read_word(set+4);
-					short y = space->read_word(set+6);
-					short x = space->read_word(set+8);
+					UINT16 idx  = space.read_word(set);
+					UINT16 flip = space.read_word(set+2);
+					UINT16 col  = space.read_word(set+4);
+					short y = space.read_word(set+6);
+					short x = space.read_word(set+8);
 
 					if(idx == 0xffff) {
 						set = (flip<<16) | col;
@@ -292,13 +292,13 @@ static void generate_sprites(address_space *space, UINT32 src, UINT32 spr, int c
 					if(color_rotate)
 						col = (col & 0xffe0) | ((col + color_rotate) & 0x1f);
 
-					space->write_word(spr   , (flip ^ glob_f) | sprites[i].pri);
-					space->write_word(spr+ 2, idx);
-					space->write_word(spr+ 4, y);
-					space->write_word(spr+ 6, x);
-					space->write_word(spr+ 8, zoom_y);
-					space->write_word(spr+10, zoom_x);
-					space->write_word(spr+12, col);
+					space.write_word(spr   , (flip ^ glob_f) | sprites[i].pri);
+					space.write_word(spr+ 2, idx);
+					space.write_word(spr+ 4, y);
+					space.write_word(spr+ 6, x);
+					space.write_word(spr+ 8, zoom_y);
+					space.write_word(spr+10, zoom_x);
+					space.write_word(spr+12, col);
 					spr += 16;
 					scount++;
 					if(scount == 256)
@@ -311,45 +311,45 @@ static void generate_sprites(address_space *space, UINT32 src, UINT32 spr, int c
 		}
 	}
 	while(scount < 256) {
-		space->write_word(spr, scount);
+		space.write_word(spr, scount);
 		scount++;
 		spr += 16;
 	}
 }
 
-static void tkmmpzdm_esc(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
+static void tkmmpzdm_esc(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
-	konamigx_esc_alert(space->machine().driver_data<konamigx_state>()->m_workram, 0x0142, 0x100, 0);
+	konamigx_esc_alert(space.machine().driver_data<konamigx_state>()->m_workram, 0x0142, 0x100, 0);
 }
 
-static void dragoonj_esc(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
+static void dragoonj_esc(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
-	konamigx_esc_alert(space->machine().driver_data<konamigx_state>()->m_workram, 0x5c00, 0x100, 0);
+	konamigx_esc_alert(space.machine().driver_data<konamigx_state>()->m_workram, 0x5c00, 0x100, 0);
 }
 
-static void sal2_esc(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
+static void sal2_esc(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
-	konamigx_esc_alert(space->machine().driver_data<konamigx_state>()->m_workram, 0x1c8c, 0x172, 1);
+	konamigx_esc_alert(space.machine().driver_data<konamigx_state>()->m_workram, 0x1c8c, 0x172, 1);
 }
 
-static void sexyparo_esc(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
+static void sexyparo_esc(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
 	// The d20000 should probably be p3
 	generate_sprites(space, 0xc00604, 0xd20000, 0xfc);
 }
 
-static void tbyahhoo_esc(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
+static void tbyahhoo_esc(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
 	generate_sprites(space, 0xc00000, 0xd20000, 0x100);
 }
 
-static void daiskiss_esc(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
+static void daiskiss_esc(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
 	generate_sprites(space, 0xc00000, 0xd20000, 0x100);
 }
 
 static UINT8 esc_program[4096];
-static void (*esc_cb)(address_space *space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4);
+static void (*esc_cb)(address_space &space, UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4);
 
 WRITE32_MEMBER(konamigx_state::esc_w)
 {
@@ -404,7 +404,7 @@ WRITE32_MEMBER(konamigx_state::esc_w)
 				UINT32 p2 = (space.read_word(params+4)<<16) | space.read_word(params+6);
 				UINT32 p3 = (space.read_word(params+8)<<16) | space.read_word(params+10);
 				UINT32 p4 = (space.read_word(params+12)<<16) | space.read_word(params+14);
-				esc_cb(&space, p1, p2, p3, p4);
+				esc_cb(space, p1, p2, p3, p4);
 			}
 			break;
 		default:
@@ -531,7 +531,7 @@ WRITE32_MEMBER(konamigx_state::control_w)
   waitskip.data = DATA;      \
   waitskip.mask = MASK;      \
   resume_trigger= 1000;      \
-  space->install_legacy_read_handler \
+  space.install_legacy_read_handler \
   ((BASE+START)&~3, (BASE+END)|3, FUNC(waitskip_r));}
 
 static int suspension_active, resume_trigger;
@@ -597,10 +597,10 @@ WRITE32_MEMBER(konamigx_state::ccu_w)
     12Mhz dotclock: 42.7us(clear) / 341.3us(transfer)
 */
 
-static TIMER_CALLBACK( dmaend_callback )
+TIMER_CALLBACK_MEMBER(konamigx_state::dmaend_callback)
 {
 	// foul-proof (CPU0 could be deactivated while we wait)
-	if (resume_trigger && suspension_active) { suspension_active = 0; machine.scheduler().trigger(resume_trigger); }
+	if (resume_trigger && suspension_active) { suspension_active = 0; machine().scheduler().trigger(resume_trigger); }
 
 	// DMA busy flag must be cleared before triggering IRQ 3
 	gx_rdport1_3 &= ~2;
@@ -612,7 +612,7 @@ static TIMER_CALLBACK( dmaend_callback )
 
 		// lower OBJINT-REQ flag and trigger interrupt
 		gx_rdport1_3 &= ~0x80;
-		machine.device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 	}
 }
 
@@ -633,10 +633,10 @@ static void dmastart_callback(int data)
 }
 
 
-static INTERRUPT_GEN(konamigx_vbinterrupt)
+INTERRUPT_GEN_MEMBER(konamigx_state::konamigx_vbinterrupt)
 {
 	// lift idle suspension
-	if (resume_trigger && suspension_active) { suspension_active = 0; device->machine().scheduler().trigger(resume_trigger); }
+	if (resume_trigger && suspension_active) { suspension_active = 0; machine().scheduler().trigger(resume_trigger); }
 
 	// IRQ 1 is the main 60hz vblank interrupt
 	if (gx_syncen & 0x20)
@@ -646,22 +646,21 @@ static INTERRUPT_GEN(konamigx_vbinterrupt)
 		if ((konamigx_wrport1_1 & 0x81) == 0x81 || (gx_syncen & 1))
 		{
 			gx_syncen &= ~1;
-			device->execute().set_input_line(1, HOLD_LINE);
+			device.execute().set_input_line(1, HOLD_LINE);
 		}
 	}
 
 	dmastart_callback(0);
 }
 
-static TIMER_DEVICE_CALLBACK(konamigx_hbinterrupt)
+TIMER_DEVICE_CALLBACK_MEMBER(konamigx_state::konamigx_hbinterrupt)
 {
-	konamigx_state *state = timer.machine().driver_data<konamigx_state>();
 	int scanline = param;
 
 	if (scanline == 240)
 	{
 		// lift idle suspension
-		if (resume_trigger && suspension_active) { suspension_active = 0; timer.machine().scheduler().trigger(resume_trigger); }
+		if (resume_trigger && suspension_active) { suspension_active = 0; machine().scheduler().trigger(resume_trigger); }
 
 		// IRQ 1 is the main 60hz vblank interrupt
 		// the gx_syncen & 0x20 test doesn't work on type 3 or 4 ROM boards, likely because the ROM board
@@ -677,7 +676,7 @@ static TIMER_DEVICE_CALLBACK(konamigx_hbinterrupt)
 			if ((konamigx_wrport1_1 & 0x81) == 0x81 || (gx_syncen & 1))
 			{
 				gx_syncen &= ~1;
-				state->m_maincpu->set_input_line(1, HOLD_LINE);
+				m_maincpu->set_input_line(1, HOLD_LINE);
 
 			}
 		}
@@ -694,7 +693,7 @@ static TIMER_DEVICE_CALLBACK(konamigx_hbinterrupt)
 			if ((konamigx_wrport1_1 & 0x82) == 0x82 || (gx_syncen & 2))
 			{
 				gx_syncen &= ~2;
-				state->m_maincpu->set_input_line(2, HOLD_LINE);
+				m_maincpu->set_input_line(2, HOLD_LINE);
 			}
 		}
 	}
@@ -909,12 +908,12 @@ READ32_MEMBER(konamigx_state::le2_gun_V_r)
 
 READ32_MEMBER(konamigx_state::gx5bppspr_r)
 {
-	return (K055673_rom_word_r(&space, offset*2+1, 0xffff) | K055673_rom_word_r(&space, offset*2, 0xffff)<<16);
+	return (K055673_rom_word_r(space, offset*2+1, 0xffff) | K055673_rom_word_r(space, offset*2, 0xffff)<<16);
 }
 
 READ32_MEMBER(konamigx_state::gx6bppspr_r)
 {
-	return (K055673_GX6bpp_rom_word_r(&space, offset*2+1, 0xffff) | K055673_GX6bpp_rom_word_r(&space, offset*2, 0xffff)<<16);
+	return (K055673_GX6bpp_rom_word_r(space, offset*2+1, 0xffff) | K055673_GX6bpp_rom_word_r(space, offset*2, 0xffff)<<16);
 }
 
 READ32_MEMBER(konamigx_state::type1_roz_r1)
@@ -1251,9 +1250,9 @@ WRITE16_MEMBER(konamigx_state::sndcomm68k_w)
 	sndto020[offset] = data;
 }
 
-static INTERRUPT_GEN(tms_sync)
+INTERRUPT_GEN_MEMBER(konamigx_state::tms_sync)
 {
-	downcast<tms57002_device *>(device)->sync();
+	downcast<tms57002_device *>(&device)->sync();
 }
 
 READ16_MEMBER(konamigx_state::tms57002_data_word_r)
@@ -1761,15 +1760,15 @@ static MACHINE_CONFIG_START( konamigx, konamigx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, 24000000)
 	MCFG_CPU_PROGRAM_MAP(gx_type2_map)
-	MCFG_CPU_VBLANK_INT("screen", konamigx_vbinterrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", konamigx_state,  konamigx_vbinterrupt)
 
 	MCFG_CPU_ADD("soundcpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(gxsndmap)
-	MCFG_CPU_PERIODIC_INT(irq2_line_hold, 480)
+	MCFG_CPU_PERIODIC_INT_DRIVER(konamigx_state, irq2_line_hold,  480)
 
 	MCFG_CPU_ADD("dasp", TMS57002, 12500000)
 	MCFG_CPU_DATA_MAP(gxtmsmap)
-	MCFG_CPU_PERIODIC_INT(tms_sync, 48000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(konamigx_state, tms_sync,  48000)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1920))
 
@@ -1789,7 +1788,7 @@ static MACHINE_CONFIG_START( konamigx, konamigx_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(600))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(24, 24+288-1, 16, 16+224-1)
-	MCFG_SCREEN_UPDATE_STATIC(konamigx)
+	MCFG_SCREEN_UPDATE_DRIVER(konamigx_state, screen_update_konamigx)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -1859,7 +1858,7 @@ static MACHINE_CONFIG_DERIVED( gxtype3, konamigx )
 
 	MCFG_CPU_ADD("maincpu", M68EC020, 24000000)
 	MCFG_CPU_PROGRAM_MAP(gx_type3_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", konamigx_hbinterrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", konamigx_state, konamigx_hbinterrupt, "screen", 0, 1)
 
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_ALWAYS_UPDATE)
@@ -1869,13 +1868,13 @@ static MACHINE_CONFIG_DERIVED( gxtype3, konamigx )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_SIZE(576, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0, 576-1, 16, 32*8-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(konamigx_left)
+	MCFG_SCREEN_UPDATE_DRIVER(konamigx_state, screen_update_konamigx_left)
 
 	MCFG_SCREEN_ADD("screen2", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(6000000, 288+16+32+48, 0, 287, 224+16+8+16, 0, 223)
 	MCFG_SCREEN_SIZE(576, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0, 576-1, 16, 32*8-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(konamigx_right)
+	MCFG_SCREEN_UPDATE_DRIVER(konamigx_state, screen_update_konamigx_right)
 
 	MCFG_GFXDECODE(type34)
 MACHINE_CONFIG_END
@@ -1886,7 +1885,7 @@ static MACHINE_CONFIG_DERIVED( gxtype4, konamigx )
 
 	MCFG_CPU_ADD("maincpu", M68EC020, 24000000)
 	MCFG_CPU_PROGRAM_MAP(gx_type4_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", konamigx_hbinterrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", konamigx_state, konamigx_hbinterrupt, "screen", 0, 1)
 
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_ALWAYS_UPDATE)
@@ -1894,13 +1893,13 @@ static MACHINE_CONFIG_DERIVED( gxtype4, konamigx )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_SIZE(128*8, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 16, 32*8-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(konamigx_left)
+	MCFG_SCREEN_UPDATE_DRIVER(konamigx_state, screen_update_konamigx_left)
 
 	MCFG_SCREEN_ADD("screen2", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(6000000, 288+16+32+48, 0, 287, 224+16+8+16, 0, 223)
 	MCFG_SCREEN_SIZE(128*8, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 16, 32*8-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(konamigx_right)
+	MCFG_SCREEN_UPDATE_DRIVER(konamigx_state, screen_update_konamigx_right)
 
 	MCFG_PALETTE_LENGTH(8192)
 	MCFG_GFXDECODE(type4)
@@ -3729,7 +3728,7 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 	snd020_hack = 0;
 	resume_trigger = 0;
 
-	dmadelay_timer = machine().scheduler().timer_alloc(FUNC(dmaend_callback));
+	dmadelay_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(konamigx_state::dmaend_callback),this));
 	i = match = 0;
 	while ((gameDefs[i].cfgport != -1) && (!match))
 	{
@@ -3743,8 +3742,8 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 			switch (gameDefs[i].special)
 	{
 				case 1:	// LE2 guns
-					machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd44000, 0xd44003, read32_delegate(FUNC(konamigx_state::le2_gun_H_r),this));
-					machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd44004, 0xd44007, read32_delegate(FUNC(konamigx_state::le2_gun_V_r),this));
+					machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd44000, 0xd44003, read32_delegate(FUNC(konamigx_state::le2_gun_H_r),this));
+					machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd44004, 0xd44007, read32_delegate(FUNC(konamigx_state::le2_gun_V_r),this));
 					break;
 
 				case 2:	// tkmmpzdm hack
@@ -3780,7 +3779,7 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 					break;
 
 				case 7:	// install type 4 Xilinx protection for non-type 3/4 games
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xcc0000, 0xcc0007, write32_delegate(FUNC(konamigx_state::type4_prot_w),this));
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xcc0000, 0xcc0007, write32_delegate(FUNC(konamigx_state::type4_prot_w),this));
 					break;
 
 				case 8: // tbyahhoo
@@ -3800,14 +3799,14 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 	switch (readback)
 	{
 		case BPP5:
-			machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx5bppspr_r),this));
+			machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx5bppspr_r),this));
 		break;
 
 		case BPP66:
-			machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xd00000, 0xd01fff, FUNC(K056832_6bpp_rom_long_r));
+			machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xd00000, 0xd01fff, FUNC(K056832_6bpp_rom_long_r));
 
 		case BPP6:
-			machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx6bppspr_r),this));
+			machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx6bppspr_r),this));
 		break;
 	}
 

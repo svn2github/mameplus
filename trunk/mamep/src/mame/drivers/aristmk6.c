@@ -18,6 +18,7 @@ public:
 	UINT8 m_type;
 	DECLARE_READ64_MEMBER(test_r);
 	virtual void video_start();
+	UINT32 screen_update_aristmk6(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -25,51 +26,50 @@ void aristmk6_state::video_start()
 {
 }
 
-SCREEN_UPDATE_RGB32(aristmk6)
+UINT32 aristmk6_state::screen_update_aristmk6(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	aristmk6_state *state = screen.machine().driver_data<aristmk6_state>();
 
 	int x,y,count;
-	const UINT8 *blit_ram = state->memregion("maincpu")->base();
+	const UINT8 *blit_ram = memregion("maincpu")->base();
 
-	if(screen.machine().input().code_pressed(KEYCODE_Z))
-		state->m_test_x++;
+	if(machine().input().code_pressed(KEYCODE_Z))
+		m_test_x++;
 
-	if(screen.machine().input().code_pressed(KEYCODE_X))
-		state->m_test_x--;
+	if(machine().input().code_pressed(KEYCODE_X))
+		m_test_x--;
 
-	if(screen.machine().input().code_pressed(KEYCODE_A))
-		state->m_test_y++;
+	if(machine().input().code_pressed(KEYCODE_A))
+		m_test_y++;
 
-	if(screen.machine().input().code_pressed(KEYCODE_S))
-		state->m_test_y--;
+	if(machine().input().code_pressed(KEYCODE_S))
+		m_test_y--;
 
-	if(screen.machine().input().code_pressed(KEYCODE_Q))
-		state->m_start_offs+=0x2000;
+	if(machine().input().code_pressed(KEYCODE_Q))
+		m_start_offs+=0x2000;
 
-	if(screen.machine().input().code_pressed(KEYCODE_W))
-		state->m_start_offs-=0x2000;
+	if(machine().input().code_pressed(KEYCODE_W))
+		m_start_offs-=0x2000;
 
-	if(screen.machine().input().code_pressed(KEYCODE_E))
-		state->m_start_offs++;
+	if(machine().input().code_pressed(KEYCODE_E))
+		m_start_offs++;
 
-	if(screen.machine().input().code_pressed(KEYCODE_R))
-		state->m_start_offs--;
+	if(machine().input().code_pressed(KEYCODE_R))
+		m_start_offs--;
 
-	if(screen.machine().input().code_pressed_once(KEYCODE_L))
-		state->m_type^=1;
+	if(machine().input().code_pressed_once(KEYCODE_L))
+		m_type^=1;
 
-	popmessage("%d %d %04x %d",state->m_test_x,state->m_test_y,state->m_start_offs,state->m_type);
+	popmessage("%d %d %04x %d",m_test_x,m_test_y,m_start_offs,m_type);
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	count = (state->m_start_offs);
+	count = (m_start_offs);
 
-	for(y=0;y<state->m_test_y;y++)
+	for(y=0;y<m_test_y;y++)
 	{
-		for(x=0;x<state->m_test_x;x++)
+		for(x=0;x<m_test_x;x++)
 		{
-			if(state->m_type)
+			if(m_type)
 			{
 				UINT16 vram;
 				int r,g,b;
@@ -96,7 +96,7 @@ SCREEN_UPDATE_RGB32(aristmk6)
 				color = blit_ram[count];
 
 				if(cliprect.contains(x, y))
-					bitmap.pix32(y, x) = screen.machine().pens[color];
+					bitmap.pix32(y, x) = machine().pens[color];
 
 				count++;
 			}
@@ -143,7 +143,7 @@ static MACHINE_CONFIG_START( aristmk6, aristmk6_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))  /* not accurate */
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 480-1)
-	MCFG_SCREEN_UPDATE_STATIC(aristmk6)
+	MCFG_SCREEN_UPDATE_DRIVER(aristmk6_state, screen_update_aristmk6)
 
 	MCFG_PALETTE_LENGTH(0x1000)
 
@@ -153,6 +153,12 @@ ROM_START( aristmk6 )
 	ROM_REGION( 0x0400000, "maincpu", ROMREGION_ERASEFF)
 	ROM_LOAD32_WORD("15011025.right", 0x0000000, 0x0200000, CRC(bf21a975) SHA1(a251b1a7342387300689cd50fe4ce7975b903ac5) )
 	ROM_LOAD32_WORD("15011025.left",  0x0000002, 0x0200000, CRC(c02e14b0) SHA1(6bf98927813519dfe60e582dbe5be3ccd87f7c91) )
+ROM_END
+
+ROM_START( mk6nsw11 )
+	ROM_REGION( 0x0400000, "maincpu", ROMREGION_ERASEFF)
+	ROM_LOAD32_WORD("11011901.right", 0x0000000, 0x0200000, CRC(73dcb11c) SHA1(69ae4f32a0c9141b2a82ff3935b0cd20333d2964) )
+	ROM_LOAD32_WORD("11011901.left",  0x0000002, 0x0200000, CRC(d3dd2210) SHA1(3548f8cc39859d3f44a55f6bae48966a2d48e0eb) )
 ROM_END
 
 ROM_START( antcleo )
@@ -231,7 +237,8 @@ ROM_START( thaiprin )
 	ROM_LOAD32_WORD("30127721.u72", 0x0800002, 0x0100000, BAD_DUMP CRC(613cea6b) SHA1(f04a3ee53074b7cd84879d752df5dbb80437475e) ) // wrong size?!
 ROM_END
 
-GAME( 200?, aristmk6,  0,          aristmk6,    aristmk6, driver_device,    0, ROT0, "Aristocrat", "Aristocrat MK-6 Base (15011025)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IS_BIOS_ROOT)	// Possibly Malaysia/ASP (Asia/South Pacific)
+GAME( 200?, aristmk6,  0,          aristmk6,    aristmk6, driver_device,    0, ROT0, "Aristocrat", "Aristocrat MK6 Base (15011025, Malaysia)",           GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IS_BIOS_ROOT)
+GAME( 200?, mk6nsw11,  0,          aristmk6,    aristmk6, driver_device,    0, ROT0, "Aristocrat", "Aristocrat MK6 Base (11011901, NSW/ACT)",            GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IS_BIOS_ROOT)
 
 // Dates listed below are for the combination (reel layout), not release dates
 GAME( 2004, antcleo,   aristmk6,   aristmk6,    aristmk6, driver_device,    0, ROT0, "Aristocrat", "Antony and Cleopatra (10177211, Malaysia)",          GAME_NOT_WORKING | GAME_NO_SOUND )	// 754,    B - 12/07/04
@@ -250,6 +257,7 @@ List of known MK6 games, excluding Hyperlink variations
 
 5 Dragons
 5 Koi - Power Pay           Same gameplay as 5 Dragons
+50 Dragons                  Same gameplay as 50 Lions
 50 Lions
 100 Lions
 African Dusk - Mr. Cashman      Black Rhino with a bonus feature
@@ -273,9 +281,12 @@ Black Rhino - Power Pay
 Brazil
 Buccaneer
 Buffalo
+Burning Desire
+Bushranger
 Cactus Corral               Same gameplay as Shaman's Magic
 Canary Riches               Identical to Golden Canaries
 Cash Carousel
+Cashman Tonight             4-in-1 multi-game with a bonus feature and jackpot
 Centurion
 Cheeky Monkey               Same gameplay as Mystic Mermaid
 Choy Sun Doa
@@ -287,6 +298,7 @@ Crystal Springs
 Deep Freeze
 Desert Gold
 Diamond Eyes
+Diamonds Forever
 Diamonds & Hearts - Power Pay
 Dinosaur
 Double Dolphins
@@ -305,6 +317,7 @@ Good Fortune
 Golden Archer
 Golden Canaries II - Lucky Devil
 Golden Incas
+Golden Samurai              Same gameplay as Big Red 2
 Grizzly
 Heart of Gold               Same gameplay as 50 Lions
 Helen of Troy               Same gameplay as Peacock Flutter
@@ -315,18 +328,21 @@ Inca Chief
 Indian Dreaming - Lady Luck
 Indian Princess
 Island Delight
-Jailbird - Mr. Cashman
+Jailbird - Mr. Cashman  K.G. Bird with a bonus feature
+Jailbreak               K.G. Bird style game, updated graphics
 Kakadu Dreaming
 Kenyan Gold             Similar to Show Me The Money
 King Neptune
 King of Asia                Identical to Choy Sun Doa
+King of Asia II         Identical to Fortune King
 King of the Nile
+King Penguin
 Kirin Warriors
 Knight's Challenge          Similar to Queen of the Nile, added jackpot bonus
 L.A. Gator              Same gameplay as 50 Lions
 Ladies Day              Similar to Spring Carnival
 Lady of Fortune
-Let's Go Fish'n
+Let's Go Fish'n         Same gameplay as Where's The Gold
 Line King               Similar to 50 Lions
 Louie's Gold - Mr. Cashman      Loco Loot with a bonus feature
 Love Stuck              Same gameplay as Sun Queen
@@ -354,11 +370,14 @@ Owl Capone
 Paris Lights
 Peacock Magic
 Pelican Pete
+Pharaoh's Fortune
 Phoenix Fantasy             Same gameplay as Tiki Torch
 Pirates
-Player's Choice By Demand       Player's Choice is a series of 4-in-1 multi-game machines
-Player's Choice Platinum
-Player's Choice Super
+Player's Choice - By Demand       Player's Choice is a series of 4-in-1 multi-game machines
+Player's Choice - Favouries
+Player's Choice - Original
+Player's Choice - Platinum
+Player's Choice - Super
 Pompeii                 Same gameplay as Indian Dreaming
 Pride of Africa             Same gameplay as Indian Dreaming
 Prophecy
@@ -371,6 +390,7 @@ Reelin' N Boppin'
 Roamin' Italy
 Roll Up! Roll Up!!          Same gameplay as Spring Carnival
 Ruby Magic              Same gameplay as Wild Ways
+Rumble Reels
 Scatter Magic II
 Seal the Deal               Same gameplay as Helen of Troy
 Shaman's Magic
@@ -382,6 +402,7 @@ Snap Shot
 Spring Carnival
 Spring Festival
 Star Drifter                Same gameplay as 50 Lions
+Star Quest
 Sun & Moon
 Sun Chief
 Sun King
@@ -401,6 +422,7 @@ Tiki Torch
 Timber Wolf
 Torch of the Gods           Identical to Adonis
 Turtle Treasure
+Unicorn Moon                Identical to Unicorn Dreaming
 Viking Riches
 Water Margin
 Whale of a Time             Identical to Whales of Cash
@@ -437,8 +459,8 @@ Dolphin Treasure
 Enchantress
 Flame of Olympus            Identical to Adonis
 Golden Pyramids             Identical to Queen of the Nile
-Inca Sun                Cabinet photo noted, MK6 version never seen in the wild yet
-Indian Dreaming             Two formats exist, Reel Power (243 Ways) and Multi-line (usually 20 lines). Both game types play differenly but feature identicla graphics.
+Inca Sun
+Indian Dreaming             Two formats exist, Reel Power (243 Ways) and Multi-line (usually 20 lines). Both game types play differenly but feature identical graphics.
 Koala Mint
 Money Tree
 Panther Magic
@@ -448,5 +470,5 @@ Return of the Samurai
 Super Bucks III             Only seen in a multi-game system, 'Player's Choice By Demand'
 Sweet Hearts II
 Venetian Nights             MK5 version is possibly rare
-Wicked Winnings             Only seen a Cash Express Hyperlink version so far
+Wicked Winnings             Only seen a Cash Express Hyperlink version so far, not to be confused with the more common 'Wicked Winnings II - Power Pay'
 */

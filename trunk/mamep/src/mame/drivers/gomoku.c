@@ -121,7 +121,7 @@ static MACHINE_CONFIG_START( gomoku, gomoku_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/12)		 /* 1.536 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(gomoku_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gomoku_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -129,7 +129,7 @@ static MACHINE_CONFIG_START( gomoku, gomoku_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(gomoku)
+	MCFG_SCREEN_UPDATE_DRIVER(gomoku_state, screen_update_gomoku)
 
 	MCFG_GFXDECODE(gomoku)
 	MCFG_PALETTE_LENGTH(64)

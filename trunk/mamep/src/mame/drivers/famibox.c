@@ -109,6 +109,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_famibox(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(famicombox_attract_timer_callback);
+	TIMER_CALLBACK_MEMBER(famicombox_gameplay_timer_callback);
 };
 
 /******************************************************
@@ -174,25 +177,25 @@ WRITE8_MEMBER(famibox_state::sprite_dma_w)
 {
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
 	int source = (data & 7);
-	ppu->spriteram_dma(&space, source);
+	ppu->spriteram_dma(space, source);
 }
 
 READ8_MEMBER(famibox_state::psg_4015_r)
 {
 	device_t *device = machine().device("nes");
-	return nes_psg_r(device, 0x15);
+	return nes_psg_r(device, space, 0x15);
 }
 
 WRITE8_MEMBER(famibox_state::psg_4015_w)
 {
 	device_t *device = machine().device("nes");
-	nes_psg_w(device, 0x15, data);
+	nes_psg_w(device, space, 0x15, data);
 }
 
 WRITE8_MEMBER(famibox_state::psg_4017_w)
 {
 	device_t *device = machine().device("nes");
-	nes_psg_w(device, 0x17, data);
+	nes_psg_w(device, space, 0x17, data);
 }
 
 /******************************************************
@@ -281,32 +284,30 @@ static void famicombox_reset(running_machine &machine)
 	machine.device("maincpu")->reset();
 }
 
-static TIMER_CALLBACK(famicombox_attract_timer_callback)
+TIMER_CALLBACK_MEMBER(famibox_state::famicombox_attract_timer_callback)
 {
-	famibox_state *state = machine.driver_data<famibox_state>();
 
-	state->m_attract_timer->adjust(attotime::never, 0, attotime::never);
-	if ( BIT(state->m_exception_mask,1) )
+	m_attract_timer->adjust(attotime::never, 0, attotime::never);
+	if ( BIT(m_exception_mask,1) )
 	{
-		state->m_exception_cause &= ~0x02;
-		famicombox_reset(machine);
+		m_exception_cause &= ~0x02;
+		famicombox_reset(machine());
 	}
 }
 
-static TIMER_CALLBACK(famicombox_gameplay_timer_callback)
+TIMER_CALLBACK_MEMBER(famibox_state::famicombox_gameplay_timer_callback)
 {
-	famibox_state *state = machine.driver_data<famibox_state>();
 
-	if (state->m_coins > 0)
-		state->m_coins--;
+	if (m_coins > 0)
+		m_coins--;
 
-	if (state->m_coins == 0)
+	if (m_coins == 0)
 	{
-		state->m_gameplay_timer->adjust(attotime::never, 0, attotime::never);
-		if ( BIT(state->m_exception_mask,4) )
+		m_gameplay_timer->adjust(attotime::never, 0, attotime::never);
+		if ( BIT(m_exception_mask,4) )
 		{
-			state->m_exception_cause &= ~0x10;
-			famicombox_reset(machine);
+			m_exception_cause &= ~0x10;
+			famicombox_reset(machine());
 		}
 	}
 }
@@ -538,10 +539,10 @@ void famibox_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16( famibox )
+UINT32 famibox_state::screen_update_famibox(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	/* render the ppu */
-	ppu2c0x_device *ppu = screen.machine().device<ppu2c0x_device>("ppu");
+	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
 	ppu->render(bitmap, 0, 0, 0, 0);
 	return 0;
 }
@@ -563,14 +564,14 @@ void famibox_state::machine_start()
 	m_nt_page[2] = m_nt_ram + 0x800;
 	m_nt_page[3] = m_nt_ram + 0xc00;
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(famibox_state::famibox_nt_r), this), write8_delegate(FUNC(famibox_state::famibox_nt_w), this));
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x1fff, "ppubank1");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(famibox_state::famibox_nt_r), this), write8_delegate(FUNC(famibox_state::famibox_nt_w), this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x1fff, "ppubank1");
 
 	famicombox_bankswitch(machine(), 0);
 
 
-	m_attract_timer = machine().scheduler().timer_alloc(FUNC(famicombox_attract_timer_callback));
-	m_gameplay_timer = machine().scheduler().timer_alloc(FUNC(famicombox_gameplay_timer_callback));
+	m_attract_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(famibox_state::famicombox_attract_timer_callback),this));
+	m_gameplay_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(famibox_state::famicombox_gameplay_timer_callback),this));
 	m_exception_cause = 0xff;
 	m_exception_mask = 0;
 	m_attract_timer_period = 0;
@@ -589,7 +590,7 @@ static MACHINE_CONFIG_START( famibox, famibox_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(famibox)
+	MCFG_SCREEN_UPDATE_DRIVER(famibox_state, screen_update_famibox)
 
 	MCFG_GFXDECODE(famibox)
 	MCFG_PALETTE_LENGTH(8*4*16)

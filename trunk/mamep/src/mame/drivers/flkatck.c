@@ -20,12 +20,11 @@
 #include "includes/flkatck.h"
 
 
-static INTERRUPT_GEN( flkatck_interrupt )
+INTERRUPT_GEN_MEMBER(flkatck_state::flkatck_interrupt)
 {
-	flkatck_state *state = device->machine().driver_data<flkatck_state>();
 
-	if (state->m_irq_enabled)
-		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	if (m_irq_enabled)
+		device.execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(flkatck_state::flkatck_bankswitch_w)
@@ -112,7 +111,7 @@ static ADDRESS_MAP_START( flkatck_sound_map, AS_PROGRAM, 8, flkatck_state )
 	AM_RANGE(0x9006, 0x9006) AM_WRITENOP										/* ??? */
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)								/* soundlatch_byte_r */
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("konami", k007232_r, k007232_w)	/* 007232 registers */
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)			/* YM2151 */
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)			/* YM2151 */
 ADDRESS_MAP_END
 
 
@@ -222,7 +221,7 @@ static MACHINE_CONFIG_START( flkatck, flkatck_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309,3000000*4) /* HD63C09EP, 24/8 MHz */
 	MCFG_CPU_PROGRAM_MAP(flkatck_map)
-	MCFG_CPU_VBLANK_INT("screen", flkatck_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", flkatck_state,  flkatck_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,3579545)	/* NEC D780C-1, 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(flkatck_sound_map)
@@ -236,7 +235,7 @@ static MACHINE_CONFIG_START( flkatck, flkatck_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(37*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 35*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(flkatck)
+	MCFG_SCREEN_UPDATE_DRIVER(flkatck_state, screen_update_flkatck)
 
 	MCFG_GFXDECODE(flkatck)
 	MCFG_PALETTE_LENGTH(512)
@@ -247,7 +246,7 @@ static MACHINE_CONFIG_START( flkatck, flkatck_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

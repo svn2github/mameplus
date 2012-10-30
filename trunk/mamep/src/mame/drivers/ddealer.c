@@ -156,6 +156,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_ddealer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(ddealer_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(ddealer_mcu_sim);
 };
 
 
@@ -264,12 +267,11 @@ static void ddealer_draw_video_layer( running_machine &machine, UINT16* vreg_bas
 }
 
 
-static SCREEN_UPDATE_IND16( ddealer )
+UINT32 ddealer_state::screen_update_ddealer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ddealer_state *state = screen.machine().driver_data<ddealer_state>();
-	state->m_back_tilemap->set_scrollx(0, state->m_flipscreen ? -192 : -64);
-	state->m_back_tilemap->set_flip(state->m_flipscreen ? TILEMAP_FLIPY | TILEMAP_FLIPX : 0);
-	state->m_back_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_back_tilemap->set_scrollx(0, m_flipscreen ? -192 : -64);
+	m_back_tilemap->set_flip(m_flipscreen ? TILEMAP_FLIPY | TILEMAP_FLIPX : 0);
+	m_back_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* the fg tilemap handling is a little hacky right now,
        i'm not sure if it should be a single tilemap with
@@ -277,28 +279,28 @@ static SCREEN_UPDATE_IND16( ddealer )
        combined, the flipscreen case makes things more
        difficult to understand */
 
-	if (!state->m_flipscreen)
+	if (!m_flipscreen)
 	{
-		if (state->m_vregs[0xcc / 2] & 0x80)
+		if (m_vregs[0xcc / 2] & 0x80)
 		{
-			ddealer_draw_video_layer(screen.machine(), &state->m_vregs[0x1e0 / 2], state->m_left_fg_vram_top, state->m_left_fg_vram_bottom, bitmap, cliprect, state->m_flipscreen);
-			ddealer_draw_video_layer(screen.machine(), &state->m_vregs[0xcc / 2], state->m_right_fg_vram_top, state->m_right_fg_vram_bottom, bitmap, cliprect, state->m_flipscreen);
+			ddealer_draw_video_layer(machine(), &m_vregs[0x1e0 / 2], m_left_fg_vram_top, m_left_fg_vram_bottom, bitmap, cliprect, m_flipscreen);
+			ddealer_draw_video_layer(machine(), &m_vregs[0xcc / 2], m_right_fg_vram_top, m_right_fg_vram_bottom, bitmap, cliprect, m_flipscreen);
 		}
 		else
 		{
-			ddealer_draw_video_layer(screen.machine(), &state->m_vregs[0x1e0 / 2], state->m_left_fg_vram_top, state->m_left_fg_vram_bottom, bitmap, cliprect, state->m_flipscreen);
+			ddealer_draw_video_layer(machine(), &m_vregs[0x1e0 / 2], m_left_fg_vram_top, m_left_fg_vram_bottom, bitmap, cliprect, m_flipscreen);
 		}
 	}
 	else
 	{
-		if (state->m_vregs[0xcc / 2] & 0x80)
+		if (m_vregs[0xcc / 2] & 0x80)
 		{
-			ddealer_draw_video_layer(screen.machine(), &state->m_vregs[0xcc / 2], state->m_left_fg_vram_top, state->m_left_fg_vram_bottom, bitmap, cliprect, state->m_flipscreen);
-			ddealer_draw_video_layer(screen.machine(), &state->m_vregs[0x1e0 / 2], state->m_right_fg_vram_top, state->m_right_fg_vram_bottom, bitmap, cliprect, state->m_flipscreen);
+			ddealer_draw_video_layer(machine(), &m_vregs[0xcc / 2], m_left_fg_vram_top, m_left_fg_vram_bottom, bitmap, cliprect, m_flipscreen);
+			ddealer_draw_video_layer(machine(), &m_vregs[0x1e0 / 2], m_right_fg_vram_top, m_right_fg_vram_bottom, bitmap, cliprect, m_flipscreen);
 		}
 		else
 		{
-			ddealer_draw_video_layer(screen.machine(), &state->m_vregs[0x1e0 / 2], state->m_left_fg_vram_top, state->m_left_fg_vram_bottom, bitmap, cliprect, state->m_flipscreen);
+			ddealer_draw_video_layer(machine(), &m_vregs[0x1e0 / 2], m_left_fg_vram_top, m_left_fg_vram_bottom, bitmap, cliprect, m_flipscreen);
 		}
 
 	}
@@ -306,69 +308,68 @@ static SCREEN_UPDATE_IND16( ddealer )
 	return 0;
 }
 
-static TIMER_DEVICE_CALLBACK( ddealer_mcu_sim )
+TIMER_DEVICE_CALLBACK_MEMBER(ddealer_state::ddealer_mcu_sim)
 {
-	ddealer_state *state = timer.machine().driver_data<ddealer_state>();
 
 	/*coin/credit simulation*/
 	/*$fe002 is used,might be for multiple coins for one credit settings.*/
-	state->m_coin_input = (~(timer.machine().root_device().ioport("IN0")->read()));
+	m_coin_input = (~(machine().root_device().ioport("IN0")->read()));
 
-	if (state->m_coin_input & 0x01)//coin 1
+	if (m_coin_input & 0x01)//coin 1
 	{
-		if((state->m_input_pressed & 0x01) == 0)
-			state->m_mcu_shared_ram[0x000 / 2]++;
-		state->m_input_pressed = (state->m_input_pressed & 0xfe) | 1;
+		if((m_input_pressed & 0x01) == 0)
+			m_mcu_shared_ram[0x000 / 2]++;
+		m_input_pressed = (m_input_pressed & 0xfe) | 1;
 	}
 	else
-		state->m_input_pressed = (state->m_input_pressed & 0xfe);
+		m_input_pressed = (m_input_pressed & 0xfe);
 
-	if (state->m_coin_input & 0x02)//coin 2
+	if (m_coin_input & 0x02)//coin 2
 	{
-		if ((state->m_input_pressed & 0x02) == 0)
-			state->m_mcu_shared_ram[0x000 / 2]++;
-		state->m_input_pressed = (state->m_input_pressed & 0xfd) | 2;
+		if ((m_input_pressed & 0x02) == 0)
+			m_mcu_shared_ram[0x000 / 2]++;
+		m_input_pressed = (m_input_pressed & 0xfd) | 2;
 	}
 	else
-		state->m_input_pressed = (state->m_input_pressed & 0xfd);
+		m_input_pressed = (m_input_pressed & 0xfd);
 
-	if (state->m_coin_input & 0x04)//service 1
+	if (m_coin_input & 0x04)//service 1
 	{
-		if ((state->m_input_pressed & 0x04) == 0)
-			state->m_mcu_shared_ram[0x000 / 2]++;
-		state->m_input_pressed = (state->m_input_pressed & 0xfb) | 4;
+		if ((m_input_pressed & 0x04) == 0)
+			m_mcu_shared_ram[0x000 / 2]++;
+		m_input_pressed = (m_input_pressed & 0xfb) | 4;
 	}
 	else
-		state->m_input_pressed = (state->m_input_pressed & 0xfb);
+		m_input_pressed = (m_input_pressed & 0xfb);
 
 	/*0x104/2 is some sort of "start-lock",i.e. used on the girl selection.
       Without it,the game "steals" one credit if you press the start button on that.*/
-	if (state->m_mcu_shared_ram[0x000 / 2] > 0 && state->m_work_ram[0x104 / 2] & 1)
+	if (m_mcu_shared_ram[0x000 / 2] > 0 && m_work_ram[0x104 / 2] & 1)
 	{
-		if (state->m_coin_input & 0x08)//start 1
+		if (m_coin_input & 0x08)//start 1
 		{
-			if ((state->m_input_pressed & 0x08) == 0 && (~(state->m_work_ram[0x100 / 2] & 1)))
-				state->m_mcu_shared_ram[0x000 / 2]--;
-			state->m_input_pressed = (state->m_input_pressed & 0xf7) | 8;
+			if ((m_input_pressed & 0x08) == 0 && (~(m_work_ram[0x100 / 2] & 1)))
+				m_mcu_shared_ram[0x000 / 2]--;
+			m_input_pressed = (m_input_pressed & 0xf7) | 8;
 		}
 		else
-			state->m_input_pressed = (state->m_input_pressed & 0xf7);
+			m_input_pressed = (m_input_pressed & 0xf7);
 
-		if (state->m_coin_input & 0x10)//start 2
+		if (m_coin_input & 0x10)//start 2
 		{
-			if((state->m_input_pressed & 0x10) == 0 && (~(state->m_work_ram[0x100 / 2] & 2)))
-				state->m_mcu_shared_ram[0x000 / 2]--;
-			state->m_input_pressed = (state->m_input_pressed & 0xef) | 0x10;
+			if((m_input_pressed & 0x10) == 0 && (~(m_work_ram[0x100 / 2] & 2)))
+				m_mcu_shared_ram[0x000 / 2]--;
+			m_input_pressed = (m_input_pressed & 0xef) | 0x10;
 		}
 		else
-			state->m_input_pressed = (state->m_input_pressed & 0xef);
+			m_input_pressed = (m_input_pressed & 0xef);
 	}
 
 	/*random number generators,controls order of cards*/
-	state->m_mcu_shared_ram[0x10 / 2] = timer.machine().rand() & 0xffff;
-	state->m_mcu_shared_ram[0x12 / 2] = timer.machine().rand() & 0xffff;
-	state->m_mcu_shared_ram[0x14 / 2] = timer.machine().rand() & 0xffff;
-	state->m_mcu_shared_ram[0x16 / 2] = timer.machine().rand() & 0xffff;
+	m_mcu_shared_ram[0x10 / 2] = machine().rand() & 0xffff;
+	m_mcu_shared_ram[0x12 / 2] = machine().rand() & 0xffff;
+	m_mcu_shared_ram[0x14 / 2] = machine().rand() & 0xffff;
+	m_mcu_shared_ram[0x16 / 2] = machine().rand() & 0xffff;
 }
 
 
@@ -618,17 +619,17 @@ void ddealer_state::machine_reset()
 	m_coin_input = 0;
 }
 
-static INTERRUPT_GEN( ddealer_interrupt )
+INTERRUPT_GEN_MEMBER(ddealer_state::ddealer_interrupt)
 {
-	device->execute().set_input_line(4, HOLD_LINE);
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( ddealer, ddealer_state )
 
 	MCFG_CPU_ADD("maincpu" , M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(ddealer)
-	MCFG_CPU_VBLANK_INT("screen", ddealer_interrupt)
-	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 90)//guess,controls music tempo,112 is way too fast
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ddealer_state,  ddealer_interrupt)
+	MCFG_CPU_PERIODIC_INT_DRIVER(ddealer_state, irq1_line_hold,  90)//guess,controls music tempo,112 is way too fast
 
 	// M50747 or NMK-110 8131 MCU
 
@@ -640,12 +641,12 @@ static MACHINE_CONFIG_START( ddealer, ddealer_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ddealer)
+	MCFG_SCREEN_UPDATE_DRIVER(ddealer_state, screen_update_ddealer)
 
 	MCFG_PALETTE_LENGTH(0x400)
 
 
-	MCFG_TIMER_ADD_PERIODIC("coinsim", ddealer_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("coinsim", ddealer_state, ddealer_mcu_sim, attotime::from_hz(10000))
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("ymsnd", YM2203, 6000000 / 4)//guess
@@ -676,7 +677,7 @@ READ16_MEMBER(ddealer_state::ddealer_mcu_r)
 
 DRIVER_INIT_MEMBER(ddealer_state,ddealer)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xfe01c, 0xfe01d, read16_delegate(FUNC(ddealer_state::ddealer_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfe01c, 0xfe01d, read16_delegate(FUNC(ddealer_state::ddealer_mcu_r), this));
 }
 
 ROM_START( ddealer )

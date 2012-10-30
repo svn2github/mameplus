@@ -459,12 +459,12 @@ static MACHINE_CONFIG_START( tbowl, tbowl_state )
 	/* CPU on Board '6206B' */
 	MCFG_CPU_ADD("maincpu", Z80, 8000000) /* NEC D70008AC-8 (Z80 Clone) */
 	MCFG_CPU_PROGRAM_MAP(6206B_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", tbowl_state,  irq0_line_hold)
 
 	/* CPU on Board '6206C' */
 	MCFG_CPU_ADD("sub", Z80, 8000000) /* NEC D70008AC-8 (Z80 Clone) */
 	MCFG_CPU_PROGRAM_MAP(6206C_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", tbowl_state,  irq0_line_hold)
 
 	/* CPU on Board '6206A' */
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000) /* Actual Z80 */
@@ -482,14 +482,14 @@ static MACHINE_CONFIG_START( tbowl, tbowl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tbowl_left)
+	MCFG_SCREEN_UPDATE_DRIVER(tbowl_state, screen_update_tbowl_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tbowl_right)
+	MCFG_SCREEN_UPDATE_DRIVER(tbowl_state, screen_update_tbowl_right)
 
 
 

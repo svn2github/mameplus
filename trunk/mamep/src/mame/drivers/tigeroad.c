@@ -79,12 +79,12 @@ static const int f1dream_2450_lookup[32] = {
 0x0003, 0x0080, 0x0006, 0x0060, 0x0000, 0x00e0, 0x000a, 0x00c0, 0x0003, 0x0080, 0x0006, 0x0060, 0x0000, 0x00e0, 0x000a, 0x00c0,
 0x0003, 0x0080, 0x0006, 0x0060, 0x0000, 0x00e0, 0x000a, 0x00c0, 0x0003, 0x0080, 0x0006, 0x0060, 0x0000, 0x00e0, 0x000a, 0x00c0 };
 
-static void f1dream_protection_w(address_space *space)
+static void f1dream_protection_w(address_space &space)
 {
-	tigeroad_state *state = space->machine().driver_data<tigeroad_state>();
+	tigeroad_state *state = space.machine().driver_data<tigeroad_state>();
 	int indx;
 	int value = 255;
-	int prevpc = space->device().safe_pcbase();
+	int prevpc = space.device().safe_pcbase();
 
 	if (prevpc == 0x244c)
 	{
@@ -139,14 +139,14 @@ static void f1dream_protection_w(address_space *space)
 	else if ((prevpc == 0x27f8) || (prevpc == 0x511a) || (prevpc == 0x5142) || (prevpc == 0x516a))
 	{
 		/* The main CPU stuffs the byte for the soundlatch into 0xfffffd.*/
-		state->soundlatch_byte_w(*space,2,state->m_ram16[0x3ffc/2]);
+		state->soundlatch_byte_w(space,2,state->m_ram16[0x3ffc/2]);
 	}
 }
 
 WRITE16_MEMBER(tigeroad_state::f1dream_control_w)
 {
 	logerror("protection write, PC: %04x  FFE1 Value:%01x\n",space.device().safe_pc(), m_ram16[0x3fe0/2]);
-	f1dream_protection_w(&space);
+	f1dream_protection_w(space);
 }
 
 WRITE16_MEMBER(tigeroad_state::tigeroad_soundcmd_w)
@@ -520,7 +520,7 @@ static MACHINE_CONFIG_START( tigeroad, tigeroad_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_10MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tigeroad_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -536,7 +536,7 @@ static MACHINE_CONFIG_START( tigeroad, tigeroad_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tigeroad)
+	MCFG_SCREEN_UPDATE_DRIVER(tigeroad_state, screen_update_tigeroad)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(tigeroad)
@@ -563,7 +563,7 @@ static MACHINE_CONFIG_DERIVED( toramich, tigeroad )
 	MCFG_CPU_ADD("sample", Z80, 3579545) /* ? */
 	MCFG_CPU_PROGRAM_MAP(sample_map)
 	MCFG_CPU_IO_MAP(sample_port_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4000)	/* ? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(tigeroad_state, irq0_line_hold, 4000)	/* ? */
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("msm", MSM5205, 384000)
@@ -764,12 +764,12 @@ ROM_END
 
 DRIVER_INIT_MEMBER(tigeroad_state,tigeroad)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::tigeroad_soundcmd_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::tigeroad_soundcmd_w),this));
 }
 
 DRIVER_INIT_MEMBER(tigeroad_state,f1dream)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::f1dream_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::f1dream_control_w),this));
 }
 
 

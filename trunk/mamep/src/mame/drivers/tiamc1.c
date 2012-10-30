@@ -120,8 +120,8 @@
 
 void tiamc1_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	tiamc1_bankswitch_w(*space, 0, 0);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	tiamc1_bankswitch_w(space, 0, 0);
 }
 
 WRITE8_MEMBER(tiamc1_state::tiamc1_control_w)
@@ -224,7 +224,7 @@ static MACHINE_CONFIG_START( tiamc1, tiamc1_state )
 	MCFG_CPU_PROGRAM_MAP(tiamc1_map)
 	MCFG_CPU_IO_MAP(tiamc1_io_map)
 
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tiamc1_state,  irq1_line_hold)
 
 
 	/* video hardware */
@@ -233,7 +233,7 @@ static MACHINE_CONFIG_START( tiamc1, tiamc1_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1600))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(tiamc1)
+	MCFG_SCREEN_UPDATE_DRIVER(tiamc1_state, screen_update_tiamc1)
 
 	MCFG_GFXDECODE(tiamc1)
 	MCFG_PALETTE_LENGTH(16)

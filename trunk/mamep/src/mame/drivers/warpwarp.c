@@ -139,12 +139,11 @@ TODO:
 
 
 /* Interrupt Gen */
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(warpwarp_state::vblank_irq)
 {
-	warpwarp_state *state = device->machine().driver_data<warpwarp_state>();
 
-	if(state->m_ball_on)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if(m_ball_on)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -184,7 +183,7 @@ WRITE8_MEMBER(warpwarp_state::geebee_out6_w)
 			/* n.c. */
 			break;
 		case 3:
-			geebee_sound_w(machine().device("geebee"),0,data);
+			geebee_sound_w(machine().device("geebee"),space,0,data);
 			break;
 	}
 }
@@ -268,7 +267,7 @@ WRITE8_MEMBER(warpwarp_state::warpwarp_out0_w)
 			m_ball_v = data;
 			break;
 		case 2:
-			warpwarp_sound_w(machine().device("warpwarp"),0,data);
+			warpwarp_sound_w(machine().device("warpwarp"),space,0,data);
 			break;
 		case 3:
 			watchdog_reset_w(space,0,data);
@@ -732,12 +731,12 @@ static MACHINE_CONFIG_START( geebee, warpwarp_state )
 	MCFG_CPU_ADD("maincpu", I8080, MASTER_CLOCK/9) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(geebee_map)
 	MCFG_CPU_IO_MAP(geebee_port_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", warpwarp_state,  vblank_irq)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 272, 264, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(geebee)
+	MCFG_SCREEN_UPDATE_DRIVER(warpwarp_state, screen_update_geebee)
 
 	MCFG_GFXDECODE(1k)
 	MCFG_PALETTE_LENGTH(4*2)
@@ -767,12 +766,12 @@ static MACHINE_CONFIG_START( bombbee, warpwarp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I8080, MASTER_CLOCK/9)		/* 18.432 MHz / 9 */
 	MCFG_CPU_PROGRAM_MAP(bombbee_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", warpwarp_state,  vblank_irq)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 272, 264, 0, 224)
-	MCFG_SCREEN_UPDATE_STATIC(geebee)
+	MCFG_SCREEN_UPDATE_DRIVER(warpwarp_state, screen_update_geebee)
 
 	MCFG_GFXDECODE(color)
 	MCFG_PALETTE_LENGTH(2*256+1)

@@ -112,6 +112,7 @@ public:
 	DECLARE_WRITE8_MEMBER(jrpacman_interrupt_vector_w);
 	DECLARE_WRITE8_MEMBER(irq_mask_w);
 	DECLARE_DRIVER_INIT(jrpacman);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
 
 
@@ -280,12 +281,11 @@ static const namco_interface namco_config =
  *
  *************************************/
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(jrpacman_state::vblank_irq)
 {
-	jrpacman_state *state = device->machine().driver_data<jrpacman_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( jrpacman, jrpacman_state )
@@ -294,7 +294,7 @@ static MACHINE_CONFIG_START( jrpacman, jrpacman_state )
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(port_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", jrpacman_state,  vblank_irq)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -302,7 +302,7 @@ static MACHINE_CONFIG_START( jrpacman, jrpacman_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pacman)
+	MCFG_SCREEN_UPDATE_DRIVER(jrpacman_state, screen_update_pacman)
 
 	MCFG_GFXDECODE(jrpacman)
 	MCFG_PALETTE_LENGTH(128*4)

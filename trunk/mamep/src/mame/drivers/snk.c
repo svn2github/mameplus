@@ -343,44 +343,43 @@ READ8_MEMBER(snk_state::marvins_sound_nmi_ack_r)
 
 /*********************************************************************/
 
-static TIMER_CALLBACK( sgladiat_sndirq_update_callback )
+TIMER_CALLBACK_MEMBER(snk_state::sgladiat_sndirq_update_callback)
 {
-	snk_state *state = machine.driver_data<snk_state>();
 
 	switch(param)
 	{
 		case CMDIRQ_BUSY_ASSERT:
-			state->m_sound_status |= 8|4;
+			m_sound_status |= 8|4;
 			break;
 
 		case BUSY_CLEAR:
-			state->m_sound_status &= ~4;
+			m_sound_status &= ~4;
 			break;
 
 		case CMDIRQ_CLEAR:
-			state->m_sound_status &= ~8;
+			m_sound_status &= ~8;
 			break;
 	}
 
-	machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, (state->m_sound_status & 0x8) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, (m_sound_status & 0x8) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 WRITE8_MEMBER(snk_state::sgladiat_soundlatch_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), CMDIRQ_BUSY_ASSERT);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sgladiat_sndirq_update_callback),this), CMDIRQ_BUSY_ASSERT);
 }
 
 READ8_MEMBER(snk_state::sgladiat_soundlatch_r)
 {
-	machine().scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), BUSY_CLEAR);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sgladiat_sndirq_update_callback),this), BUSY_CLEAR);
 	return soundlatch_byte_r(space,0);
 }
 
 READ8_MEMBER(snk_state::sgladiat_sound_nmi_ack_r)
 {
-	machine().scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), CMDIRQ_CLEAR);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sgladiat_sndirq_update_callback),this), CMDIRQ_CLEAR);
 	return 0xff;
 }
 
@@ -414,56 +413,56 @@ READ8_MEMBER(snk_state::sgladiat_sound_irq_ack_r)
 
 *********************************************************************/
 
-static TIMER_CALLBACK( sndirq_update_callback )
+TIMER_CALLBACK_MEMBER(snk_state::sndirq_update_callback)
 {
-	snk_state *state = machine.driver_data<snk_state>();
 
 	switch(param)
 	{
 		case YM1IRQ_ASSERT:
-			state->m_sound_status |= 1;
+			m_sound_status |= 1;
 			break;
 
 		case YM1IRQ_CLEAR:
-			state->m_sound_status &= ~1;
+			m_sound_status &= ~1;
 			break;
 
 		case YM2IRQ_ASSERT:
-			state->m_sound_status |= 2;
+			m_sound_status |= 2;
 			break;
 
 		case YM2IRQ_CLEAR:
-			state->m_sound_status &= ~2;
+			m_sound_status &= ~2;
 			break;
 
 		case CMDIRQ_BUSY_ASSERT:
-			state->m_sound_status |= 8|4;
+			m_sound_status |= 8|4;
 			break;
 
 		case BUSY_CLEAR:
-			state->m_sound_status &= ~4;
+			m_sound_status &= ~4;
 			break;
 
 		case CMDIRQ_CLEAR:
-			state->m_sound_status &= ~8;
+			m_sound_status &= ~8;
 			break;
 	}
 
-	machine.device("audiocpu")->execute().set_input_line(0, (state->m_sound_status & 0xb) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, (m_sound_status & 0xb) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 
 static WRITE_LINE_DEVICE_HANDLER( ymirq_callback_1 )
 {
+	snk_state *drvstate = device->machine().driver_data<snk_state>();
 	if (state)
-		device->machine().scheduler().synchronize(FUNC(sndirq_update_callback), YM1IRQ_ASSERT);
+		device->machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),drvstate), YM1IRQ_ASSERT);
 }
 
-static WRITE_LINE_DEVICE_HANDLER( ymirq_callback_2 )
+WRITE_LINE_MEMBER(snk_state::ymirq_callback_2)
 {
 	if (state)
-		device->machine().scheduler().synchronize(FUNC(sndirq_update_callback), YM2IRQ_ASSERT);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), YM2IRQ_ASSERT);
 }
 
 
@@ -474,7 +473,7 @@ static const ym3526_interface ym3526_config_1 =
 
 static const ym3526_interface ym3526_config_2 =
 {
-	DEVCB_LINE(ymirq_callback_2)
+	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_2)
 };
 
 static const ym3812_interface ym3812_config_1 =
@@ -484,7 +483,7 @@ static const ym3812_interface ym3812_config_1 =
 
 static const y8950_interface y8950_config_2 =
 {
-	ymirq_callback_2
+	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_2)
 };
 
 
@@ -492,7 +491,7 @@ static const y8950_interface y8950_config_2 =
 WRITE8_MEMBER(snk_state::snk_soundlatch_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_BUSY_ASSERT);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), CMDIRQ_BUSY_ASSERT);
 }
 
 CUSTOM_INPUT_MEMBER(snk_state::snk_sound_busy)
@@ -512,29 +511,29 @@ READ8_MEMBER(snk_state::snk_sound_status_r)
 WRITE8_MEMBER(snk_state::snk_sound_status_w)
 {
 	if (~data & 0x10)	// ack YM1 irq
-		machine().scheduler().synchronize(FUNC(sndirq_update_callback), YM1IRQ_CLEAR);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), YM1IRQ_CLEAR);
 
 	if (~data & 0x20)	// ack YM2 irq
-		machine().scheduler().synchronize(FUNC(sndirq_update_callback), YM2IRQ_CLEAR);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), YM2IRQ_CLEAR);
 
 	if (~data & 0x40)	// clear busy flag
-		machine().scheduler().synchronize(FUNC(sndirq_update_callback), BUSY_CLEAR);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), BUSY_CLEAR);
 
 	if (~data & 0x80)	// ack command from main cpu
-		machine().scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_CLEAR);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), CMDIRQ_CLEAR);
 }
 
 
 
 READ8_MEMBER(snk_state::tnk3_cmdirq_ack_r)
 {
-	machine().scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_CLEAR);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), CMDIRQ_CLEAR);
 	return 0xff;
 }
 
 READ8_MEMBER(snk_state::tnk3_ymirq_ack_r)
 {
-	machine().scheduler().synchronize(FUNC(sndirq_update_callback), YM1IRQ_CLEAR);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), YM1IRQ_CLEAR);
 	return 0xff;
 }
 
@@ -542,7 +541,7 @@ READ8_MEMBER(snk_state::tnk3_busy_clear_r)
 {
 	// it's uncertain whether the latch should be cleared here or when it's read
 	soundlatch_clear_byte_w(space, 0, 0);
-	machine().scheduler().synchronize(FUNC(sndirq_update_callback), BUSY_CLEAR);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), BUSY_CLEAR);
 	return 0xff;
 }
 
@@ -3625,16 +3624,16 @@ static MACHINE_CONFIG_START( marvins, snk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 3360000)	/* 3.36 MHz */
 	MCFG_CPU_PROGRAM_MAP(marvins_cpuA_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, 3360000)	/* 3.36 MHz */
 	MCFG_CPU_PROGRAM_MAP(marvins_cpuB_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* verified on schematics */
 	MCFG_CPU_PROGRAM_MAP(marvins_sound_map)
 	MCFG_CPU_IO_MAP(marvins_sound_portmap)
-	MCFG_CPU_PERIODIC_INT(nmi_line_assert, 244)	// schematics show a separate 244Hz timer
+	MCFG_CPU_PERIODIC_INT_DRIVER(snk_state, nmi_line_assert,  244)	// schematics show a separate 244Hz timer
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -3645,7 +3644,7 @@ static MACHINE_CONFIG_START( marvins, snk_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(marvins)
+	MCFG_SCREEN_UPDATE_DRIVER(snk_state, screen_update_marvins)
 
 	MCFG_GFXDECODE(marvins)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -3694,16 +3693,16 @@ static MACHINE_CONFIG_START( jcross, snk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 3350000) /* NOT verified */
 	MCFG_CPU_PROGRAM_MAP(jcross_cpuA_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, 3350000) /* NOT verified */
 	MCFG_CPU_PROGRAM_MAP(jcross_cpuB_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000) /* NOT verified */
 	MCFG_CPU_PROGRAM_MAP(jcross_sound_map)
 	MCFG_CPU_IO_MAP(jcross_sound_portmap)
-	MCFG_CPU_PERIODIC_INT(irq0_line_assert, 244)	// Marvin's frequency, sounds ok
+	MCFG_CPU_PERIODIC_INT_DRIVER(snk_state, irq0_line_assert,  244)	// Marvin's frequency, sounds ok
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -3714,7 +3713,7 @@ static MACHINE_CONFIG_START( jcross, snk_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tnk3)
+	MCFG_SCREEN_UPDATE_DRIVER(snk_state, screen_update_tnk3)
 
 	MCFG_GFXDECODE(tnk3)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -3762,7 +3761,7 @@ static MACHINE_CONFIG_DERIVED( hal21, jcross )
 	MCFG_CPU_MODIFY("audiocpu")
 	MCFG_CPU_PROGRAM_MAP(hal21_sound_map)
 	MCFG_CPU_IO_MAP(hal21_sound_portmap)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 220) // music tempo, hand tuned
+	MCFG_CPU_PERIODIC_INT_DRIVER(snk_state, irq0_line_hold,  220) // music tempo, hand tuned
 
 	/* video hardware */
 	MCFG_VIDEO_START_OVERRIDE(snk_state,hal21)
@@ -3774,11 +3773,11 @@ static MACHINE_CONFIG_START( tnk3, snk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(tnk3_cpuA_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(tnk3_cpuB_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(tnk3_YM3526_sound_map)
@@ -3792,7 +3791,7 @@ static MACHINE_CONFIG_START( tnk3, snk_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tnk3)
+	MCFG_SCREEN_UPDATE_DRIVER(snk_state, screen_update_tnk3)
 
 	MCFG_GFXDECODE(tnk3)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -3858,11 +3857,11 @@ static MACHINE_CONFIG_START( ikari, snk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(ikari_cpuA_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(ikari_cpuB_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(YM3526_YM3526_sound_map)
@@ -3876,7 +3875,7 @@ static MACHINE_CONFIG_START( ikari, snk_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ikari)
+	MCFG_SCREEN_UPDATE_DRIVER(snk_state, screen_update_ikari)
 
 	MCFG_GFXDECODE(ikari)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -3915,11 +3914,11 @@ static MACHINE_CONFIG_START( bermudat, snk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(bermudat_cpuA_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(bermudat_cpuB_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map)
@@ -3932,7 +3931,7 @@ static MACHINE_CONFIG_START( bermudat, snk_state )
 	// this visible area matches the psychos pcb
 	MCFG_SCREEN_SIZE(50*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 50*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gwar)
+	MCFG_SCREEN_UPDATE_DRIVER(snk_state, screen_update_gwar)
 
 	MCFG_GFXDECODE(gwar)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -4018,11 +4017,11 @@ static MACHINE_CONFIG_START( tdfever, snk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(tdfever_cpuA_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(tdfever_cpuB_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map)
@@ -4036,7 +4035,7 @@ static MACHINE_CONFIG_START( tdfever, snk_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(50*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 50*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tdfever)
+	MCFG_SCREEN_UPDATE_DRIVER(snk_state, screen_update_tdfever)
 
 	MCFG_GFXDECODE(tdfever)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -6266,7 +6265,7 @@ ROM_END
 DRIVER_INIT_MEMBER(snk_state,countryc)
 {
 	// replace coin counter with trackball select
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc300, 0xc300, write8_delegate(FUNC(snk_state::countryc_trackball_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xc300, 0xc300, write8_delegate(FUNC(snk_state::countryc_trackball_w),this));
 }
 
 

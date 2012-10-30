@@ -173,6 +173,9 @@ public:
 	DECLARE_DRIVER_INIT(dualgame);
 	DECLARE_VIDEO_START(blitz68k);
 	DECLARE_VIDEO_START(blitz68k_addr_factor1);
+	UINT32 screen_update_blitz68k(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_blitz68k_noblit(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(steaser_mcu_sim);
 };
 
 /*************************************************************************************************************
@@ -206,18 +209,17 @@ VIDEO_START_MEMBER(blitz68k_state,blitz68k_addr_factor1)
 	blit.addr_factor = 1;
 }
 
-static SCREEN_UPDATE_RGB32(blitz68k)
+UINT32 blitz68k_state::screen_update_blitz68k(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	blitz68k_state *state = screen.machine().driver_data<blitz68k_state>();
 	int x,y;
 
-	UINT8 *src = state->m_blit_buffer;
+	UINT8 *src = m_blit_buffer;
 
 	for(y = 0; y < 256; y++)
 	{
 		for(x = 0; x < 512; x++)
 		{
-			bitmap.pix32(y, x) = screen.machine().pens[*src++];
+			bitmap.pix32(y, x) = machine().pens[*src++];
 		}
 	}
 
@@ -227,22 +229,21 @@ static SCREEN_UPDATE_RGB32(blitz68k)
 // Blitter-less board (SPI-68K)
 
 
-static SCREEN_UPDATE_RGB32(blitz68k_noblit)
+UINT32 blitz68k_state::screen_update_blitz68k_noblit(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	blitz68k_state *state = screen.machine().driver_data<blitz68k_state>();
 	int x,y;
 
-	UINT16 *src = state->m_frame_buffer;
+	UINT16 *src = m_frame_buffer;
 
 	for(y = 0; y < 256; y++)
 	{
 		for(x = 0; x < 512; )
 		{
 			UINT16 pen = *src++;
-			bitmap.pix32(y, x++) = screen.machine().pens[(pen >>  8) & 0xf];
-			bitmap.pix32(y, x++) = screen.machine().pens[(pen >> 12) & 0xf];
-			bitmap.pix32(y, x++) = screen.machine().pens[(pen >>  0) & 0xf];
-			bitmap.pix32(y, x++) = screen.machine().pens[(pen >>  4) & 0xf];
+			bitmap.pix32(y, x++) = machine().pens[(pen >>  8) & 0xf];
+			bitmap.pix32(y, x++) = machine().pens[(pen >> 12) & 0xf];
+			bitmap.pix32(y, x++) = machine().pens[(pen >>  0) & 0xf];
+			bitmap.pix32(y, x++) = machine().pens[(pen >>  4) & 0xf];
 		}
 	}
 
@@ -1715,14 +1716,14 @@ static RAMDAC_INTERFACE( ramdac_intf )
 static MACHINE_CONFIG_START( ilpag, blitz68k_state )
 	MCFG_CPU_ADD("maincpu", M68000, 11059200 )	// ?
 	MCFG_CPU_PROGRAM_MAP(ilpag_map)
-	MCFG_CPU_VBLANK_INT("screen",irq4_line_hold) //3 & 6 used, mcu comms?
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state, irq4_line_hold) //3 & 6 used, mcu comms?
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1755,33 +1756,32 @@ MACHINE_CONFIG_END
 2008ad = 1 -> hold 5
 */
 
-static TIMER_DEVICE_CALLBACK( steaser_mcu_sim )
+TIMER_DEVICE_CALLBACK_MEMBER(blitz68k_state::steaser_mcu_sim)
 {
-	blitz68k_state *state = timer.machine().driver_data<blitz68k_state>();
 //  static int i;
 	/*first off, signal the "MCU is running" flag*/
-	state->m_nvram[0x932/2] = 0xffff;
+	m_nvram[0x932/2] = 0xffff;
 	/*clear the inputs (they are impulsed)*/
 //  for(i=0;i<8;i+=2)
-//      state->m_nvram[((0x8a0)+i)/2] = 0;
+//      m_nvram[((0x8a0)+i)/2] = 0;
 	/*finally, read the inputs*/
-	state->m_nvram[0x89e/2] = timer.machine().root_device().ioport("MENU")->read() & 0xffff;
-	state->m_nvram[0x8a0/2] = timer.machine().root_device().ioport("STAT")->read() & 0xffff;
-	state->m_nvram[0x8a2/2] = timer.machine().root_device().ioport("BET_DEAL")->read() & 0xffff;
-	state->m_nvram[0x8a4/2] = timer.machine().root_device().ioport("TAKE_DOUBLE")->read() & 0xffff;
-	state->m_nvram[0x8a6/2] = timer.machine().root_device().ioport("SMALL_BIG")->read() & 0xffff;
-	state->m_nvram[0x8a8/2] = timer.machine().root_device().ioport("CANCEL_HOLD1")->read() & 0xffff;
-	state->m_nvram[0x8aa/2] = timer.machine().root_device().ioport("HOLD2_HOLD3")->read() & 0xffff;
-	state->m_nvram[0x8ac/2] = timer.machine().root_device().ioport("HOLD4_HOLD5")->read() & 0xffff;
+	m_nvram[0x89e/2] = machine().root_device().ioport("MENU")->read() & 0xffff;
+	m_nvram[0x8a0/2] = machine().root_device().ioport("STAT")->read() & 0xffff;
+	m_nvram[0x8a2/2] = machine().root_device().ioport("BET_DEAL")->read() & 0xffff;
+	m_nvram[0x8a4/2] = machine().root_device().ioport("TAKE_DOUBLE")->read() & 0xffff;
+	m_nvram[0x8a6/2] = machine().root_device().ioport("SMALL_BIG")->read() & 0xffff;
+	m_nvram[0x8a8/2] = machine().root_device().ioport("CANCEL_HOLD1")->read() & 0xffff;
+	m_nvram[0x8aa/2] = machine().root_device().ioport("HOLD2_HOLD3")->read() & 0xffff;
+	m_nvram[0x8ac/2] = machine().root_device().ioport("HOLD4_HOLD5")->read() & 0xffff;
 }
 
 
 static MACHINE_CONFIG_DERIVED( steaser, ilpag )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(steaser_map)
-	MCFG_CPU_VBLANK_INT("screen",irq5_line_hold) //3, 4 & 6 used, mcu comms?
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state, irq5_line_hold) //3, 4 & 6 used, mcu comms?
 
-	MCFG_TIMER_ADD_PERIODIC("coinsim", steaser_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("coinsim", blitz68k_state, steaser_mcu_sim, attotime::from_hz(10000))
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( cjffruit, blitz68k_state )
@@ -1797,7 +1797,7 @@ static MACHINE_CONFIG_START( cjffruit, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-8-1)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_MC6845_ADD("crtc", R6545_1, XTAL_22_1184MHz/8, mc6845_intf_irq1)
 
@@ -1815,7 +1815,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( bankrob, blitz68k_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_11_0592MHz)
 	MCFG_CPU_PROGRAM_MAP(bankrob_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)	// protection prevents correct irq frequency by crtc
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state,  irq3_line_hold)	// protection prevents correct irq frequency by crtc
 	// irq 2 reads from MCUs
 
 	// MC68HC705C8P (MCU1)
@@ -1829,7 +1829,7 @@ static MACHINE_CONFIG_START( bankrob, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0+4, 256-1-4)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_MC6845_ADD("crtc", H46505, XTAL_11_0592MHz/4, mc6845_intf_irq3)
 
@@ -1847,7 +1847,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( bankroba, blitz68k_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_11_0592MHz )
 	MCFG_CPU_PROGRAM_MAP(bankroba_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)	// protection prevents correct irq frequency by crtc
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state,  irq5_line_hold)	// protection prevents correct irq frequency by crtc
 	// irq 3,4 read from MCUs
 
 	// MC68HC705C8P (MCU)
@@ -1859,7 +1859,7 @@ static MACHINE_CONFIG_START( bankroba, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0+7, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_MC6845_ADD("crtc", H46505, XTAL_11_0592MHz/4, mc6845_intf_irq5)
 
@@ -1888,7 +1888,7 @@ static MACHINE_CONFIG_START( deucesw2, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_MC6845_ADD("crtc", R6545_1, XTAL_22_1184MHz/8, mc6845_intf_irq3)
 
@@ -1906,7 +1906,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( dualgame, blitz68k_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_11_0592MHz )
 	MCFG_CPU_PROGRAM_MAP(dualgame_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold) // lev 2 = MCUs, lev 3 = vblank
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state,  irq2_line_hold) // lev 2 = MCUs, lev 3 = vblank
 
 	// MC68HC705C8P (MCU1)
 
@@ -1919,7 +1919,7 @@ static MACHINE_CONFIG_START( dualgame, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0+4, 256-1-4)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_MC6845_ADD("crtc", H46505, XTAL_11_0592MHz/4, mc6845_intf_irq3)
 
@@ -1937,7 +1937,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( hermit, blitz68k_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_22_1184MHz/2 )
 	MCFG_CPU_PROGRAM_MAP(hermit_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)	// protection prevents correct irq frequency by crtc
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state,  irq1_line_hold)	// protection prevents correct irq frequency by crtc
 
 	// MC68HC705C8P (MCU)
 
@@ -1948,7 +1948,7 @@ static MACHINE_CONFIG_START( hermit, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0+4, 256-1-4)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k)
 
 	MCFG_MC6845_ADD("crtc", H46505, XTAL_22_1184MHz/8, mc6845_intf_irq1)
 
@@ -1966,7 +1966,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_START( maxidbl, blitz68k_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_11_0592MHz)
 	MCFG_CPU_PROGRAM_MAP(maxidbl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold)	// protection prevents correct irq frequency by crtc
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blitz68k_state,  irq3_line_hold)	// protection prevents correct irq frequency by crtc
 	// irq 2 reads from MCUs
 
 	// MC68HC705C8P (MCU1)
@@ -1982,7 +1982,7 @@ static MACHINE_CONFIG_START( maxidbl, blitz68k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(blitz68k_noblit)
+	MCFG_SCREEN_UPDATE_DRIVER(blitz68k_state, screen_update_blitz68k_noblit)
 
 	MCFG_MC6845_ADD("crtc", H46505, XTAL_11_0592MHz/4, mc6845_intf_irq3)
 

@@ -248,7 +248,7 @@ static MACHINE_CONFIG_START( wrally, wrally_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,XTAL_24MHz/2)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(wrally_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", wrally_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("mcu", DS5002FP, XTAL_24MHz/2)	/* verified on pcb */
 	MCFG_CPU_CONFIG(dallas_config)
@@ -263,7 +263,7 @@ static MACHINE_CONFIG_START( wrally, wrally_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(8, 24*16-8-1, 16, 16*16-8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wrally)
+	MCFG_SCREEN_UPDATE_DRIVER(wrally_state, screen_update_wrally)
 
 	MCFG_GFXDECODE(wrally)
 	MCFG_PALETTE_LENGTH(1024*8)

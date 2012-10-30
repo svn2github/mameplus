@@ -11,25 +11,22 @@
   Inputs from US Patent 4093232
   Some clues from PinMAME
 
-ToDo:
-- Better artwork
-- It freezes when F3 pressed or game tilted
-
+  Note: If F3 pressed, or you start the system, it will remember any credits from
+        last time. However, you still need to insert a coin before the start button
+        will work.
 
 ************************************************************************************/
 
-#include "emu.h"
+#include "machine/genpin.h"
 #include "cpu/i4004/i4004.h"
-#include "sound/beep.h"
 #include "flicker.lh"
 
-class flicker_state : public driver_device
+class flicker_state : public genpin_class
 {
 public:
 	flicker_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
-	m_maincpu(*this, "maincpu"),
-	m_beeper(*this, BEEPER_TAG)
+		: genpin_class(mconfig, type, tag),
+	m_maincpu(*this, "maincpu")
 	{ }
 
 	DECLARE_WRITE8_MEMBER(port00_w);
@@ -41,10 +38,9 @@ protected:
 
 	// devices
 	required_device<cpu_device> m_maincpu;
-	required_device<device_t> m_beeper;
 
-	// driver_device overrides
-	virtual void machine_reset();
+private:
+	UINT8 m_out_data;
 };
 
 
@@ -53,7 +49,7 @@ static ADDRESS_MAP_START( flicker_rom, AS_PROGRAM, 8, flicker_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START(flicker_map, AS_DATA, 8, flicker_state )
-	AM_RANGE(0x0000, 0x00FF) AM_RAM
+	AM_RANGE(0x0000, 0x00FF) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( flicker_io, AS_IO, 8, flicker_state )
@@ -161,44 +157,54 @@ WRITE8_MEMBER( flicker_state::port10_w )
     8 = 3000 hole
     9 = knocker
     A = coin counter
-    B = coin acceptor */
-	offset = m_maincpu->state_int(I4004_RAM) & 0x0f; // we need the full address
-	if (data && data != offset)
+    B = coin acceptor
+
+The coin outputs (A and B) don't activate
+
+A large amount of data is continuously flowing through here, even when there is no
+sound to produce. We need to change this to just one pulse per actual sound. */
+
+	if (!data && offset == m_out_data)
+		m_out_data = 0;
+	else
 	{
-		switch (offset)
+		offset = m_maincpu->state_int(I4004_RAM) & 0x0f; // we need the full address
+		if (data != offset)
 		{
-			case 0x01:
-				beep_set_state(m_beeper, 1);
-				beep_set_frequency(m_beeper, 2000);
-				break;
-			case 0x02:
-				beep_set_state(m_beeper, 1);
-				beep_set_frequency(m_beeper, 1500);
-				break;
-			case 0x03:
-				beep_set_state(m_beeper, 1);
-				beep_set_frequency(m_beeper, 800);
-				break;
-			case 0x09:
-				beep_set_state(m_beeper, 1);
-				beep_set_frequency(m_beeper, 200);
-				break;
-			case 0x0a:
-				//coin_counter_w(machine(), 0, 1);
-				//coin_counter_w(machine(), 0, 0);
-				break;
-			default:
-				break;
+			if (data != m_out_data)
+			{
+				m_out_data = data;
+				switch (data)
+				{
+					case 0x01:
+						m_samples->start(1, 1);
+						break;
+					case 0x02:
+						m_samples->start(2, 2);
+						break;
+					case 0x03:
+						m_samples->start(3, 3);
+						break;
+					case 0x04:
+					case 0x05:
+					case 0x06:
+						m_samples->start(0, 0);
+						break;
+					case 0x07:
+					case 0x08:
+						m_samples->start(0, 5);
+						break;
+					case 0x09:
+						m_samples->start(0, 6);
+						break;
+					default:
+						break;
+				}
+			}
 		}
 	}
-	else
-		beep_set_state(m_beeper, 0);
 }
 
-
-void flicker_state::machine_reset()
-{
-}
 
 static MACHINE_CONFIG_START( flicker, flicker_state )
 	/* basic machine hardware */
@@ -206,14 +212,13 @@ static MACHINE_CONFIG_START( flicker, flicker_state )
 	MCFG_CPU_PROGRAM_MAP(flicker_rom)
 	MCFG_CPU_DATA_MAP(flicker_map)
 	MCFG_CPU_IO_MAP(flicker_io)
+	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* Video */
 	MCFG_DEFAULT_LAYOUT(layout_flicker)
 
 	/* Sound */
-	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD(BEEPER_TAG, BEEP, 0)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_FRAGMENT_ADD( genpin_audio )
 MACHINE_CONFIG_END
 
 
@@ -222,5 +227,5 @@ ROM_START(flicker)
 	ROM_LOAD("flicker.rom", 0x0000, 0x0400, CRC(c692e586) SHA1(5cabb28a074d18b589b5b8f700c57e1610071c68))
 ROM_END
 
-//   YEAR    GAME     PARENT  MACHINE   INPUT    CLASS           INIT      ORIENTATION    COMPANY             DESCRIPTION             FLAGS
-GAME(1974,  flicker,  0,      flicker,  flicker, driver_device,  0,        ROT0,        "Nutting Associates", "Flicker (Prototype)", GAME_MECHANICAL )
+//   YEAR    GAME     PARENT  MACHINE   INPUT    CLASS           INIT      ORIENTATION   COMPANY                            DESCRIPTION           FLAGS
+GAME(1974,  flicker,  0,      flicker,  flicker, driver_device,  0,        ROT0,        "Dave Nutting Associates / Bally", "Flicker (prototype)", GAME_MECHANICAL )

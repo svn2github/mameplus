@@ -85,6 +85,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_atvtrack(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 static void logbinary(UINT32 data,int high=31,int low=0)
@@ -318,7 +319,7 @@ void atvtrack_state::video_start()
 {
 }
 
-SCREEN_UPDATE_RGB32(atvtrack)
+UINT32 atvtrack_state::screen_update_atvtrack(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	return 0;
 }
@@ -326,12 +327,11 @@ SCREEN_UPDATE_RGB32(atvtrack)
 void atvtrack_state::machine_start()
 {
 	UINT8 *src, *dst;
-	address_space *as;
 
 	nandaddressstep = 0;
 	nandregion = machine().root_device().memregion("maincpu");
-	as = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	dst = (UINT8 *)(as->get_write_ptr(0x0c7f0000));
+	address_space &as = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	dst = (UINT8 *)(as.get_write_ptr(0x0c7f0000));
 	src = nandregion->base()+0x10;
 	// copy 0x10000 bytes from region "maincpu" offset 0x10 to 0x0c7f0000
 	memcpy(dst, src, 0x10000);
@@ -339,13 +339,11 @@ void atvtrack_state::machine_start()
 
 void atvtrack_state::machine_reset()
 {
-	address_space *as;
-
 	// Probably just after reset the cpu executes some bootsrtap routine from a memory inside the fpga.
 	// The routine initializes the cpu, copies the boot program from the flash memories into the cpu sdram
 	// and finally executes it.
 	// Here there is the setup of the cpu, the boot program is copied in machine_start
-	as = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &as = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	// set cpu PC register to 0x0c7f0000
 	machine().device("maincpu")->state().set_pc(0x0c7f0000);
 	// set BCR2 to 1
@@ -403,7 +401,7 @@ static MACHINE_CONFIG_START( atvtrack, atvtrack_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))  /* not accurate */
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 480-1)
-	MCFG_SCREEN_UPDATE_STATIC(atvtrack)
+	MCFG_SCREEN_UPDATE_DRIVER(atvtrack_state, screen_update_atvtrack)
 
 	MCFG_PALETTE_LENGTH(0x1000)
 

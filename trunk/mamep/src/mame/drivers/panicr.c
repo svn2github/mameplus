@@ -98,6 +98,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_txttile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_panicr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(panicr_scanline);
 };
 
 
@@ -247,15 +249,14 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const re
 	}
 }
 
-static SCREEN_UPDATE_IND16( panicr)
+UINT32 panicr_state::screen_update_panicr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	panicr_state *state = screen.machine().driver_data<panicr_state>();
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	state->m_txttilemap->mark_all_dirty();
-	state->m_bgtilemap->set_scrollx(0, state->m_scrollx);
-	state->m_bgtilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(),bitmap,cliprect);
-	state->m_txttilemap->draw(bitmap, cliprect, 0,0);
+	bitmap.fill(get_black_pen(machine()), cliprect);
+	m_txttilemap->mark_all_dirty();
+	m_bgtilemap->set_scrollx(0, m_scrollx);
+	m_bgtilemap->draw(bitmap, cliprect, 0,0);
+	draw_sprites(machine(),bitmap,cliprect);
+	m_txttilemap->draw(bitmap, cliprect, 0,0);
 
 	return 0;
 }
@@ -311,7 +312,7 @@ WRITE8_MEMBER(panicr_state::panicr_output_w)
 READ8_MEMBER(panicr_state::t5182shared_r)
 {
 	if ((offset & 1) == 0)
-		return t5182_sharedram_r(&space, offset/2);
+		return t5182_sharedram_r(space, offset/2);
 	else
 		return 0;
 }
@@ -319,7 +320,7 @@ READ8_MEMBER(panicr_state::t5182shared_r)
 WRITE8_MEMBER(panicr_state::t5182shared_w)
 {
 	if ((offset & 1) == 0)
-		t5182_sharedram_w(&space, offset/2, data);
+		t5182_sharedram_w(space, offset/2, data);
 }
 
 
@@ -490,21 +491,21 @@ static GFXDECODE_START( panicr )
 GFXDECODE_END
 
 
-static TIMER_DEVICE_CALLBACK( panicr_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(panicr_state::panicr_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc4/4);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc4/4);
 
 	if(scanline == 0) // <unknown>
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);
 }
 
 static MACHINE_CONFIG_START( panicr, panicr_state )
 	MCFG_CPU_ADD("maincpu", V20,MASTER_CLOCK/2) /* Sony 8623h9 CXQ70116D-8 (V20 compatible) */
 	MCFG_CPU_PROGRAM_MAP(panicr_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", panicr_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", panicr_state, panicr_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD(CPUTAG_T5182,Z80,SOUND_CLOCK/4)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(t5182_map)
@@ -515,7 +516,7 @@ static MACHINE_CONFIG_START( panicr, panicr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(panicr)
+	MCFG_SCREEN_UPDATE_DRIVER(panicr_state, screen_update_panicr)
 
 	MCFG_GFXDECODE(panicr)
 	MCFG_PALETTE_LENGTH(256*3)
@@ -524,8 +525,8 @@ static MACHINE_CONFIG_START( panicr, panicr_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, SOUND_CLOCK/4)	/* 3.579545 MHz */
-	MCFG_SOUND_CONFIG(t5182_ym2151_interface)
+	MCFG_YM2151_ADD("ymsnd", SOUND_CLOCK/4)	/* 3.579545 MHz */
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<t5182_ym2151_irq_handler>))
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 

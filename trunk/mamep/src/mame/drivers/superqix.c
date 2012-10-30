@@ -172,33 +172,32 @@ The MCU acts this way:
 
 READ8_MEMBER(superqix_state::in4_mcu_r)
 {
-//  logerror("%04x: in4_mcu_r\n",space->device().safe_pc());
+//  logerror("%04x: in4_mcu_r\n",space.device().safe_pc());
 	return ioport("P2")->read() | (m_from_mcu_pending << 6) | (m_from_z80_pending << 7);
 }
 
 READ8_MEMBER(superqix_state::sqix_from_mcu_r)
 {
-//  logerror("%04x: read mcu answer (%02x)\n",space->device().safe_pc(),m_from_mcu);
+//  logerror("%04x: read mcu answer (%02x)\n",space.device().safe_pc(),m_from_mcu);
 	return m_from_mcu;
 }
 
-static TIMER_CALLBACK( mcu_acknowledge_callback )
+TIMER_CALLBACK_MEMBER(superqix_state::mcu_acknowledge_callback)
 {
-	superqix_state *state = machine.driver_data<superqix_state>();
-	state->m_from_z80_pending = 1;
-	state->m_from_z80 = state->m_portb;
-//  logerror("Z80->MCU %02x\n",state->m_from_z80);
+	m_from_z80_pending = 1;
+	m_from_z80 = m_portb;
+//  logerror("Z80->MCU %02x\n",m_from_z80);
 }
 
 READ8_MEMBER(superqix_state::mcu_acknowledge_r)
 {
-	machine().scheduler().synchronize(FUNC(mcu_acknowledge_callback));
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(superqix_state::mcu_acknowledge_callback),this));
 	return 0;
 }
 
 WRITE8_MEMBER(superqix_state::sqix_z80_mcu_w)
 {
-//  logerror("%04x: sqix_z80_mcu_w %02x\n",space->device().safe_pc(),data);
+//  logerror("%04x: sqix_z80_mcu_w %02x\n",space.device().safe_pc(),data);
 	m_portb = data;
 }
 
@@ -364,22 +363,20 @@ static int read_dial(running_machine &machine, int player)
 
 
 
-static TIMER_CALLBACK( delayed_z80_mcu_w )
+TIMER_CALLBACK_MEMBER(superqix_state::delayed_z80_mcu_w)
 {
-	superqix_state *state = machine.driver_data<superqix_state>();
 //  logerror("Z80 sends command %02x\n",param);
-	state->m_from_z80 = param;
-	state->m_from_mcu_pending = 0;
-	machine.device("mcu")->execute().set_input_line(0, HOLD_LINE);
-	machine.scheduler().boost_interleave(attotime::zero, attotime::from_usec(200));
+	m_from_z80 = param;
+	m_from_mcu_pending = 0;
+	machine().device("mcu")->execute().set_input_line(0, HOLD_LINE);
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(200));
 }
 
-static TIMER_CALLBACK( delayed_mcu_z80_w )
+TIMER_CALLBACK_MEMBER(superqix_state::delayed_mcu_z80_w)
 {
-	superqix_state *state = machine.driver_data<superqix_state>();
 //  logerror("68705 sends answer %02x\n",param);
-	state->m_from_mcu = param;
-	state->m_from_mcu_pending = 1;
+	m_from_mcu = param;
+	m_from_mcu_pending = 1;
 }
 
 
@@ -445,7 +442,7 @@ WRITE8_MEMBER(superqix_state::hotsmash_68705_portC_w)
 				break;
 
 			case 0x5:	// answer to Z80
-				machine().scheduler().synchronize(FUNC(delayed_mcu_z80_w), m_portB_out);
+				machine().scheduler().synchronize(timer_expired_delegate(FUNC(superqix_state::delayed_mcu_z80_w),this), m_portB_out);
 				break;
 
 			case 0x6:
@@ -461,7 +458,7 @@ WRITE8_MEMBER(superqix_state::hotsmash_68705_portC_w)
 
 WRITE8_MEMBER(superqix_state::hotsmash_z80_mcu_w)
 {
-	machine().scheduler().synchronize(FUNC(delayed_z80_mcu_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(superqix_state::delayed_z80_mcu_w),this), data);
 }
 
 READ8_MEMBER(superqix_state::hotsmash_from_mcu_r)
@@ -473,7 +470,7 @@ READ8_MEMBER(superqix_state::hotsmash_from_mcu_r)
 
 READ8_MEMBER(superqix_state::hotsmash_ay_port_a_r)
 {
-//  logerror("%04x: ay_port_a_r and mcu_pending is %d\n",space->device().safe_pc(),m_from_mcu_pending);
+//  logerror("%04x: ay_port_a_r and mcu_pending is %d\n",space.device().safe_pc(),m_from_mcu_pending);
 	return ioport("SYSTEM")->read() | 0x40 | ((m_from_mcu_pending^1) << 7);
 }
 
@@ -515,7 +512,7 @@ READ8_MEMBER(superqix_state::pbillian_from_mcu_r)
 
 READ8_MEMBER(superqix_state::pbillian_ay_port_a_r)
 {
-//  logerror("%04x: ay_port_a_r\n",space->device().safe_pc());
+//  logerror("%04x: ay_port_a_r\n",space.device().safe_pc());
 	/* bits 76------  MCU status bits */
 	return (machine().rand() & 0xc0) | machine().root_device().ioport("BUTTONS")->read();
 }
@@ -982,20 +979,18 @@ static const ay8910_interface bootleg_ay8910_interface_2 =
 	DEVCB_NULL
 };
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(superqix_state::vblank_irq)
 {
-	superqix_state *state = device->machine().driver_data<superqix_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( sqix_timer_irq )
+INTERRUPT_GEN_MEMBER(superqix_state::sqix_timer_irq)
 {
-	superqix_state *state = device->machine().driver_data<superqix_state>();
 
-	if (state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	if (m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 
@@ -1004,7 +999,7 @@ static MACHINE_CONFIG_START( pbillian, superqix_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		 /* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(pbillian_port_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", superqix_state,  vblank_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(superqix_state,pbillian)
 
@@ -1014,7 +1009,7 @@ static MACHINE_CONFIG_START( pbillian, superqix_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pbillian)
+	MCFG_SCREEN_UPDATE_DRIVER(superqix_state, screen_update_pbillian)
 
 	MCFG_GFXDECODE(pbillian)
 	MCFG_PALETTE_LENGTH(512)
@@ -1035,7 +1030,7 @@ static MACHINE_CONFIG_START( hotsmash, superqix_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		 /* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(hotsmash_port_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", superqix_state,  vblank_irq)
 
 	MCFG_CPU_ADD("mcu", M68705, 4000000) /* ???? */
 	MCFG_CPU_PROGRAM_MAP(m68705_map)
@@ -1048,7 +1043,7 @@ static MACHINE_CONFIG_START( hotsmash, superqix_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pbillian)
+	MCFG_SCREEN_UPDATE_DRIVER(superqix_state, screen_update_pbillian)
 
 	MCFG_GFXDECODE(pbillian)
 	MCFG_PALETTE_LENGTH(512)
@@ -1071,7 +1066,7 @@ static MACHINE_CONFIG_START( sqix, superqix_state )
 	MCFG_CPU_ADD("maincpu", Z80, 12000000/2)	/* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(sqix_port_map)
-	MCFG_CPU_PERIODIC_INT(sqix_timer_irq, 4*60) /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(superqix_state, sqix_timer_irq,  4*60) /* ??? */
 
 	MCFG_CPU_ADD("mcu", I8751, 12000000/3)	/* ??? */
 	MCFG_CPU_IO_MAP(bootleg_mcu_io_map)
@@ -1086,7 +1081,7 @@ static MACHINE_CONFIG_START( sqix, superqix_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(superqix)
+	MCFG_SCREEN_UPDATE_DRIVER(superqix_state, screen_update_superqix)
 
 	MCFG_GFXDECODE(sqix)
 	MCFG_PALETTE_LENGTH(256)
@@ -1119,7 +1114,7 @@ static MACHINE_CONFIG_START( sqixbl, superqix_state )
 	MCFG_CPU_ADD("maincpu", Z80, 12000000/2)	/* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(sqix_port_map)
-	MCFG_CPU_PERIODIC_INT(sqix_timer_irq, 4*60) /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(superqix_state, sqix_timer_irq,  4*60) /* ??? */
 
 	MCFG_MACHINE_START_OVERRIDE(superqix_state,superqix)
 
@@ -1129,7 +1124,7 @@ static MACHINE_CONFIG_START( sqixbl, superqix_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(superqix)
+	MCFG_SCREEN_UPDATE_DRIVER(superqix_state, screen_update_superqix)
 
 	MCFG_GFXDECODE(sqix)
 	MCFG_PALETTE_LENGTH(256)

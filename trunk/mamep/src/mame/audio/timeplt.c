@@ -144,7 +144,7 @@ static WRITE8_DEVICE_HANDLER( timeplt_filter_w )
 
 WRITE8_HANDLER( timeplt_sh_irqtrigger_w )
 {
-	device_t *audio = space->machine().device("timeplt_audio");
+	device_t *audio = space.machine().device("timeplt_audio");
 	timeplt_audio_state *state = get_safe_token(audio);
 
 	if (state->m_last_irq_state == 0 && data)
@@ -266,7 +266,7 @@ timeplt_audio_device::timeplt_audio_device(const machine_config &mconfig, const 
 	: device_t(mconfig, TIMEPLT_AUDIO, "Time Pilot Audio", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(timeplt_audio_state));
+	m_token = global_alloc_clear(timeplt_audio_state);
 }
 
 //-------------------------------------------------

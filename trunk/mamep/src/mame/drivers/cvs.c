@@ -156,7 +156,7 @@ READ8_MEMBER(cvs_state::cvs_s2636_0_or_character_ram_r)
 	if (*m_fo_state)
 		return m_character_ram[(0 * 0x800) | 0x400 | m_character_ram_page_start | offset];
 	else
-		return s2636_work_ram_r(m_s2636_0, offset);
+		return s2636_work_ram_r(m_s2636_0, space, offset);
 }
 
 WRITE8_MEMBER(cvs_state::cvs_s2636_0_or_character_ram_w)
@@ -169,7 +169,7 @@ WRITE8_MEMBER(cvs_state::cvs_s2636_0_or_character_ram_w)
 		machine().gfx[1]->mark_dirty((offset / 8) % 256);
 	}
 	else
-		s2636_work_ram_w(m_s2636_0, offset, data);
+		s2636_work_ram_w(m_s2636_0, space, offset, data);
 }
 
 
@@ -179,7 +179,7 @@ READ8_MEMBER(cvs_state::cvs_s2636_1_or_character_ram_r)
 	if (*m_fo_state)
 		return m_character_ram[(1 * 0x800) | 0x400 | m_character_ram_page_start | offset];
 	else
-		return s2636_work_ram_r(m_s2636_1, offset);
+		return s2636_work_ram_r(m_s2636_1, space, offset);
 }
 
 WRITE8_MEMBER(cvs_state::cvs_s2636_1_or_character_ram_w)
@@ -192,7 +192,7 @@ WRITE8_MEMBER(cvs_state::cvs_s2636_1_or_character_ram_w)
 		machine().gfx[1]->mark_dirty((offset / 8) % 256);
 	}
 	else
-		s2636_work_ram_w(m_s2636_1, offset, data);
+		s2636_work_ram_w(m_s2636_1, space, offset, data);
 }
 
 
@@ -202,7 +202,7 @@ READ8_MEMBER(cvs_state::cvs_s2636_2_or_character_ram_r)
 	if (*m_fo_state)
 		return m_character_ram[(2 * 0x800) | 0x400 | m_character_ram_page_start | offset];
 	else
-		return s2636_work_ram_r(m_s2636_2, offset);
+		return s2636_work_ram_r(m_s2636_2, space, offset);
 }
 
 WRITE8_MEMBER(cvs_state::cvs_s2636_2_or_character_ram_w)
@@ -215,7 +215,7 @@ WRITE8_MEMBER(cvs_state::cvs_s2636_2_or_character_ram_w)
 		machine().gfx[1]->mark_dirty((offset / 8) % 256);
 	}
 	else
-		s2636_work_ram_w(m_s2636_2, offset, data);
+		s2636_work_ram_w(m_s2636_2, space, offset, data);
 }
 
 
@@ -226,12 +226,12 @@ WRITE8_MEMBER(cvs_state::cvs_s2636_2_or_character_ram_w)
  *
  *************************************/
 
-static INTERRUPT_GEN( cvs_main_cpu_interrupt )
+INTERRUPT_GEN_MEMBER(cvs_state::cvs_main_cpu_interrupt)
 {
-	device->execute().set_input_line_vector(0, 0x03);
-	generic_pulse_irq_line(device, 0, 1);
+	device.execute().set_input_line_vector(0, 0x03);
+	generic_pulse_irq_line(device.execute(), 0, 1);
 
-	cvs_scroll_stars(device->machine());
+	cvs_scroll_stars(machine());
 }
 
 
@@ -290,19 +290,18 @@ READ8_MEMBER(cvs_state::cvs_393hz_clock_r)
 READ8_MEMBER(cvs_state::tms_clock_r)
 {
 	device_t *device = machine().device("tms");
-	return tms5110_romclk_hack_r(device, 0) ? 0x80 : 0;
+	return tms5110_romclk_hack_r(device, space, 0) ? 0x80 : 0;
 }
 
-static TIMER_CALLBACK( cvs_393hz_timer_cb )
+TIMER_CALLBACK_MEMBER(cvs_state::cvs_393hz_timer_cb)
 {
-	cvs_state *state = machine.driver_data<cvs_state>();
-	state->m_cvs_393hz_clock = !state->m_cvs_393hz_clock;
+	m_cvs_393hz_clock = !m_cvs_393hz_clock;
 
 	/* quasar.c games use this timer but have no dac3! */
-	if (state->m_dac3 != NULL)
+	if (m_dac3 != NULL)
 	{
-		if (state->m_dac3_state[2])
-			state->m_dac3->write_unsigned8(state->m_cvs_393hz_clock * 0xff);
+		if (m_dac3_state[2])
+			m_dac3->write_unsigned8(m_cvs_393hz_clock * 0xff);
 	}
 }
 
@@ -310,7 +309,7 @@ static TIMER_CALLBACK( cvs_393hz_timer_cb )
 static void start_393hz_timer(running_machine &machine)
 {
 	cvs_state *state = machine.driver_data<cvs_state>();
-	state->m_cvs_393hz_timer = machine.scheduler().timer_alloc(FUNC(cvs_393hz_timer_cb));
+	state->m_cvs_393hz_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(cvs_state::cvs_393hz_timer_cb),state));
 	state->m_cvs_393hz_timer->adjust(attotime::from_hz(30*393), 0, attotime::from_hz(30*393));
 }
 
@@ -390,7 +389,7 @@ READ8_MEMBER(cvs_state::cvs_speech_command_r)
 
 	/* FIXME: this was by observation on board ???
      *          -bit 7 is TMS status (active LO) */
-	return ((tms5110_ctl_r(m_tms, 0) ^ 1) << 7) | (soundlatch_byte_r(space, 0) & 0x7f);
+	return ((tms5110_ctl_r(m_tms, space, 0) ^ 1) << 7) | (soundlatch_byte_r(space, 0) & 0x7f);
 }
 
 
@@ -409,7 +408,7 @@ WRITE8_MEMBER(cvs_state::cvs_tms5110_ctl_w)
 		  (m_tms5110_ctl_data[1] << 3);	/* CTL8 */
 
 	LOG(("CVS: Speech CTL = %04x %02x %02x\n",  ctl, offset, data));
-	tms5110_ctl_w(device, 0, ctl);
+	tms5110_ctl_w(device, space, 0, ctl);
 }
 
 
@@ -1042,7 +1041,7 @@ static MACHINE_CONFIG_START( cvs, cvs_state )
 	MCFG_CPU_ADD("maincpu", S2650, 894886.25)
 	MCFG_CPU_PROGRAM_MAP(cvs_main_cpu_map)
 	MCFG_CPU_IO_MAP(cvs_main_cpu_io_map)
-	MCFG_CPU_VBLANK_INT("screen", cvs_main_cpu_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cvs_state,  cvs_main_cpu_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", S2650, 894886.25)
 	MCFG_CPU_PROGRAM_MAP(cvs_dac_cpu_map)
@@ -1068,7 +1067,7 @@ static MACHINE_CONFIG_START( cvs, cvs_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 30*8-1, 1*8, 32*8-1)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1000))
-	MCFG_SCREEN_UPDATE_STATIC(cvs)
+	MCFG_SCREEN_UPDATE_DRIVER(cvs_state, screen_update_cvs)
 
 	MCFG_S2636_ADD("s2636_0", s2636_0_config)
 	MCFG_S2636_ADD("s2636_1", s2636_1_config)

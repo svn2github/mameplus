@@ -30,6 +30,7 @@ public:
 	{
 
 	}
+	UINT32 screen_update_mpu4plasma(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -48,13 +49,12 @@ static ADDRESS_MAP_START( mpu4plasma_map, AS_PROGRAM, 16, mpu4plasma_state )
 	AM_RANGE(0xffff04, 0xffff05) AM_WRITE( mpu4plasma_unk_w )
 ADDRESS_MAP_END
 
-SCREEN_UPDATE_IND16( mpu4plasma )
+UINT32 mpu4plasma_state::screen_update_mpu4plasma(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	// don't know if this really gets drawn straight from ram..
-	mpu4plasma_state *state = screen.machine().driver_data<mpu4plasma_state>();
 	int base = 0x1600 / 2;
 
-	UINT16* rambase = state->m_plasmaram;
+	UINT16* rambase = m_plasmaram;
 	UINT16* dst_bitmap;
 
 	int i,y,x,p;
@@ -87,14 +87,14 @@ SCREEN_UPDATE_IND16( mpu4plasma )
 MACHINE_CONFIG_DERIVED_CLASS( mpu4plasma    , mod2, mpu4plasma_state )
 	MCFG_CPU_ADD("plasmacpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(mpu4plasma_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mpu4plasma_state,  irq4_line_hold)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 128-1, 0*8, 40-1)
-	MCFG_SCREEN_UPDATE_STATIC(mpu4plasma)
+	MCFG_SCREEN_UPDATE_DRIVER(mpu4plasma_state, screen_update_mpu4plasma)
 
 	MCFG_PALETTE_LENGTH(0x200)
 MACHINE_CONFIG_END

@@ -196,6 +196,10 @@ public:
 	DECLARE_DRIVER_INIT(ippatsu);
 	virtual void palette_init();
 	DECLARE_PALETTE_INIT(mjderngr);
+	UINT32 screen_update_royalmah(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(suzume_irq);
+	INTERRUPT_GEN_MEMBER(mjtensin_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(janptr96_interrupt);
 };
 
 
@@ -283,10 +287,9 @@ WRITE8_MEMBER(royalmah_state::mjderngr_palbank_w)
 }
 
 
-static SCREEN_UPDATE_IND16( royalmah )
+UINT32 royalmah_state::screen_update_royalmah(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	royalmah_state *state = screen.machine().driver_data<royalmah_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 
 	offs_t offs;
 
@@ -304,7 +307,7 @@ static SCREEN_UPDATE_IND16( royalmah )
 		{
 			UINT8 pen = ((data2 >> 1) & 0x08) | ((data2 << 2) & 0x04) | ((data1 >> 3) & 0x02) | ((data1 >> 0) & 0x01);
 
-			bitmap.pix16(y, x) = (state->m_palette_base << 4) | pen;
+			bitmap.pix16(y, x) = (m_palette_base << 4) | pen;
 
 			x = x - 1;
 			data1 = data1 >> 1;
@@ -894,7 +897,7 @@ READ8_MEMBER(royalmah_state::mjifb_rom_io_r)
 	{
 		case 0x8000:	return ioport("DSW4")->read();		// dsw 4
 		case 0x8200:	return ioport("DSW3")->read();		// dsw 3
-		case 0x9001:	return ay8910_r(machine().device("aysnd"), 0);	// inputs
+		case 0x9001:	return ay8910_r(machine().device("aysnd"), space, 0);	// inputs
 		case 0x9011:	return ioport("SYSTEM")->read();
 	}
 
@@ -916,8 +919,8 @@ WRITE8_MEMBER(royalmah_state::mjifb_rom_io_w)
 	switch(offset)
 	{
 		case 0x8e00:	m_palette_base = data & 0x1f;	return;
-		case 0x9002:	ay8910_data_w(machine().device("aysnd"),0,data);			return;
-		case 0x9003:	ay8910_address_w(machine().device("aysnd"),0,data);		return;
+		case 0x9002:	ay8910_data_w(machine().device("aysnd"),space,0,data);			return;
+		case 0x9003:	ay8910_address_w(machine().device("aysnd"),space,0,data);		return;
 		case 0x9010:
 			mjifb_coin_counter_w(space,0,data);
 			return;
@@ -1003,7 +1006,7 @@ READ8_MEMBER(royalmah_state::mjdejavu_rom_io_r)
 	{
 		case 0x8000:	return ioport("DSW2")->read();		// dsw 2
 		case 0x8001:	return ioport("DSW1")->read();		// dsw 1
-		case 0x9001:	return ay8910_r(machine().device("aysnd"), 0);	// inputs
+		case 0x9001:	return ay8910_r(machine().device("aysnd"), space, 0);	// inputs
 		case 0x9011:	return ioport("SYSTEM")->read();
 	}
 
@@ -1024,8 +1027,8 @@ WRITE8_MEMBER(royalmah_state::mjdejavu_rom_io_w)
 	switch(offset)
 	{
 		case 0x8802:	m_palette_base = data & 0x1f;					return;
-		case 0x9002:	ay8910_data_w(machine().device("aysnd"),0,data);		return;
-		case 0x9003:	ay8910_address_w(machine().device("aysnd"),0,data);	return;
+		case 0x9002:	ay8910_data_w(machine().device("aysnd"),space,0,data);		return;
+		case 0x9003:	ay8910_address_w(machine().device("aysnd"),space,0,data);	return;
 		case 0x9010:	mjifb_coin_counter_w(space,0,data);		return;
 		case 0x9011:	input_port_select_w(space,0,data);		return;
 		case 0x9013:
@@ -3169,7 +3172,7 @@ static MACHINE_CONFIG_START( royalmah, royalmah_state )
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/6)        /* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(royalmah_map)
 	MCFG_CPU_IO_MAP(royalmah_iomap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  irq0_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -3181,7 +3184,7 @@ static MACHINE_CONFIG_START( royalmah, royalmah_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 247)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_UPDATE_STATIC(royalmah)
+	MCFG_SCREEN_UPDATE_DRIVER(royalmah_state, screen_update_royalmah)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3200,7 +3203,7 @@ static MACHINE_CONFIG_DERIVED( janoh, royalmah )
 	MCFG_CPU_ADD("sub", Z80, 4000000)        /* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(janoh_sub_map)
 	MCFG_CPU_IO_MAP(janoh_sub_iomap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( jansou, royalmah )
@@ -3211,7 +3214,7 @@ static MACHINE_CONFIG_DERIVED( jansou, royalmah )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000) /* 4.000 MHz */
 	MCFG_CPU_PROGRAM_MAP(jansou_sub_map)
 	MCFG_CPU_IO_MAP(jansou_sub_iomap)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4000000/512)
+	MCFG_CPU_PERIODIC_INT_DRIVER(royalmah_state, irq0_line_hold, 4000000/512)
 
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
@@ -3246,17 +3249,16 @@ static MACHINE_CONFIG_DERIVED( ippatsu, dondenmj )
 	MCFG_CPU_IO_MAP(ippatsu_iomap)
 MACHINE_CONFIG_END
 
-static INTERRUPT_GEN( suzume_irq )
+INTERRUPT_GEN_MEMBER(royalmah_state::suzume_irq)
 {
-	royalmah_state *state = device->machine().driver_data<royalmah_state>();
-	if ( state->m_suzume_bank & 0x40 )
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if ( m_suzume_bank & 0x40 )
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( suzume, dondenmj )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(suzume_iomap)
-	MCFG_CPU_VBLANK_INT("screen", suzume_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  suzume_irq)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( tontonb, dondenmj )
@@ -3290,16 +3292,15 @@ static MACHINE_CONFIG_DERIVED( mjderngr, dondenmj )
 MACHINE_CONFIG_END
 
 /* It runs in IM 2, thus needs a vector on the data bus */
-static TIMER_DEVICE_CALLBACK( janptr96_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(royalmah_state::janptr96_interrupt)
 {
-	royalmah_state *state = timer.machine().driver_data<royalmah_state>();
 	int scanline = param;
 
 	if(scanline == 248)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x80);	// vblank
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x80);	// vblank
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x84);	// demo
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x84);	// demo
 }
 
 WRITE_LINE_MEMBER(royalmah_state::janptr96_rtc_irq)
@@ -3318,7 +3319,7 @@ static MACHINE_CONFIG_DERIVED( janptr96, mjderngr )
 	MCFG_CPU_ADD("maincpu",Z80,XTAL_16MHz/2)	/* 8 MHz? */
 	MCFG_CPU_PROGRAM_MAP(janptr96_map)
 	MCFG_CPU_IO_MAP(janptr96_iomap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", janptr96_interrupt, "screen", 0, 1)	/* IM 2 needs a vector on the data bus */
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", royalmah_state, janptr96_interrupt, "screen", 0, 1)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
@@ -3332,7 +3333,7 @@ static MACHINE_CONFIG_DERIVED( mjifb, mjderngr )
 	MCFG_CPU_REPLACE("maincpu",TMP90841, 8000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(mjifb_map)
 	MCFG_CPU_IO_MAP(mjifb_iomap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  irq0_line_hold)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
@@ -3343,18 +3344,17 @@ static MACHINE_CONFIG_DERIVED( mjdejavu, mjderngr )
 	MCFG_CPU_REPLACE("maincpu",TMP90841, 8000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(mjdejavu_map)
 	MCFG_CPU_IO_MAP(mjifb_iomap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  irq0_line_hold)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
 MACHINE_CONFIG_END
 
 
-static INTERRUPT_GEN( mjtensin_interrupt )
+INTERRUPT_GEN_MEMBER(royalmah_state::mjtensin_interrupt)
 {
-	royalmah_state *state = device->machine().driver_data<royalmah_state>();
 
-	state->m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);	// vblank
+	m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);	// vblank
 }
 
 WRITE_LINE_MEMBER(royalmah_state::mjtensin_rtc_irq)
@@ -3373,7 +3373,7 @@ static MACHINE_CONFIG_DERIVED( mjtensin, mjderngr )
 	MCFG_CPU_REPLACE("maincpu",TMP90841, 12000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(mjtensin_map)
 	MCFG_CPU_IO_MAP(mjtensin_iomap)
-	MCFG_CPU_VBLANK_INT("screen", mjtensin_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  mjtensin_interrupt)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
@@ -3386,7 +3386,7 @@ static MACHINE_CONFIG_DERIVED( cafetime, mjderngr )
 	MCFG_CPU_REPLACE("maincpu",TMP90841, 12000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(cafetime_map)
 	MCFG_CPU_IO_MAP(cafetime_iomap)
-	MCFG_CPU_VBLANK_INT("screen", mjtensin_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  mjtensin_interrupt)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
@@ -3399,7 +3399,7 @@ static MACHINE_CONFIG_DERIVED( mjvegasa, mjderngr )
 	MCFG_CPU_REPLACE("maincpu",TMP90841, XTAL_8MHz)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(mjvegasa_map)
 	MCFG_CPU_IO_MAP(mjvegasa_iomap)
-	MCFG_CPU_VBLANK_INT("screen", mjtensin_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", royalmah_state,  mjtensin_interrupt)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
@@ -4727,7 +4727,7 @@ GAME( 1981,  royalmj,  0,        royalmah, royalmah, driver_device, 0,        RO
 GAME( 1981?, openmj,   royalmj,  royalmah, royalmah, driver_device, 0,        ROT0,   "Sapporo Mechanic",           "Open Mahjong [BET] (Japan)",            0 )
 GAME( 1982,  royalmah, royalmj,  royalmah, royalmah, driver_device, 0,        ROT0,   "bootleg",                    "Royal Mahjong (Falcon bootleg, v1.01)", 0 )
 GAME( 1983,  janyoup2, royalmj,  ippatsu,  janyoup2, driver_device, 0,        ROT0,   "Cosmo Denshi",               "Janyou Part II (ver 7.03, July 1 1983)",0 )
-GAME( 1981,  janputer, 0,        royalmah, royalmah, driver_device, 0,        ROT0,   "Public Software Ltd. / Mes", "New Double Bet Mahjong (Japan)",        0 )
+GAME( 1981,  janputer, 0,        royalmah, royalmah, driver_device, 0,        ROT0,   "bootleg (Public Software Ltd. / Mes)", "New Double Bet Mahjong (bootleg of Janputer)", 0 ) // the original Janputer (Sanritsu) is not yet dumped
 GAME( 1984,  janoh,    0,        royalmah, royalmah, driver_device, 0,        ROT0,   "Toaplan",                    "Jan Oh (set 1)",                        GAME_NOT_WORKING )
 GAME( 1984,  janoha,   janoh,    janoh,    royalmah, driver_device, 0,        ROT0,   "Toaplan",                    "Jan Oh (set 2)",                        GAME_NOT_WORKING ) // this one is complete?
 GAME( 1985,  jansou,   0,        jansou,   jansou, driver_device,   0,        ROT180, "Dyna",                       "Jansou (set 1)",                        GAME_NOT_WORKING|GAME_NO_SOUND )

@@ -48,6 +48,7 @@ public:
 	DECLARE_DRIVER_INIT(mwskins);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_mwskins(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -85,22 +86,12 @@ void atlantis_state::machine_reset()
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( mwskins )
+UINT32 atlantis_state::screen_update_mwskins(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	return 0;
 }
 
 
-
-/*************************************
- *
- *  Interrupt handling
- *
- *************************************/
-
-static void ide_interrupt(device_t *device, int state)
-{
-}
 
 /*************************************
  *
@@ -141,13 +132,6 @@ static const mips3_config r4310_config =
 	16384				/* data cache size */
 };
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( mwskins, atlantis_state )
 
 	/* basic machine hardware */
@@ -156,7 +140,7 @@ static MACHINE_CONFIG_START( mwskins, atlantis_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -166,7 +150,7 @@ static MACHINE_CONFIG_START( mwskins, atlantis_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(mwskins)
+	MCFG_SCREEN_UPDATE_DRIVER(atlantis_state, screen_update_mwskins)
 
 	MCFG_PALETTE_INIT(BBBBB_GGGGG_RRRRR)
 	MCFG_PALETTE_LENGTH(32768)

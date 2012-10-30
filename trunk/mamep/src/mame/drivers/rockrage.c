@@ -57,11 +57,10 @@ Notes:
 #include "includes/konamipt.h"
 
 
-static INTERRUPT_GEN( rockrage_interrupt )
+INTERRUPT_GEN_MEMBER(rockrage_state::rockrage_interrupt)
 {
-	rockrage_state *state = device->machine().driver_data<rockrage_state>();
-	if (k007342_is_int_enabled(state->m_k007342))
-		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	if (k007342_is_int_enabled(m_k007342))
+		device.execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(rockrage_state::rockrage_bankswitch_w)
@@ -121,7 +120,7 @@ static ADDRESS_MAP_START( rockrage_sound_map, AS_PROGRAM, 8, rockrage_state )
 	AM_RANGE(0x3000, 0x3000) AM_READ(rockrage_VLM5030_busy_r)			/* VLM5030 */
 	AM_RANGE(0x4000, 0x4000) AM_WRITE(rockrage_speech_w)				/* VLM5030 */
 	AM_RANGE(0x5000, 0x5000) AM_READ(soundlatch_byte_r)								/* soundlatch_byte_r */
-	AM_RANGE(0x6000, 0x6001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)			/* YM 2151 */
+	AM_RANGE(0x6000, 0x6001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)			/* YM 2151 */
 	AM_RANGE(0x7000, 0x77ff) AM_RAM												/* RAM */
 	AM_RANGE(0x8000, 0xffff) AM_ROM												/* ROM */
 ADDRESS_MAP_END
@@ -263,7 +262,7 @@ static MACHINE_CONFIG_START( rockrage, rockrage_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)		/* 24MHz/8 */
 	MCFG_CPU_PROGRAM_MAP(rockrage_map)
-	MCFG_CPU_VBLANK_INT("screen", rockrage_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rockrage_state,  rockrage_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 1500000)		/* 24MHz/16 */
 	MCFG_CPU_PROGRAM_MAP(rockrage_sound_map)
@@ -275,7 +274,7 @@ static MACHINE_CONFIG_START( rockrage, rockrage_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rockrage)
+	MCFG_SCREEN_UPDATE_DRIVER(rockrage_state, screen_update_rockrage)
 
 	MCFG_K007342_ADD("k007342", rockrage_k007342_intf)
 	MCFG_K007420_ADD("k007420", rockrage_k007420_intf)
@@ -287,7 +286,7 @@ static MACHINE_CONFIG_START( rockrage, rockrage_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 

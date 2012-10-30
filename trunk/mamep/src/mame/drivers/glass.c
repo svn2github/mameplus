@@ -18,14 +18,13 @@ WRITE16_MEMBER(glass_state::clr_int_w)
 	m_cause_interrupt = 1;
 }
 
-static INTERRUPT_GEN( glass_interrupt )
+INTERRUPT_GEN_MEMBER(glass_state::glass_interrupt)
 {
-	glass_state *state = device->machine().driver_data<glass_state>();
 
-	if (state->m_cause_interrupt)
+	if (m_cause_interrupt)
 	{
-		device->execute().set_input_line(6, HOLD_LINE);
-		state->m_cause_interrupt = 0;
+		device.execute().set_input_line(6, HOLD_LINE);
+		m_cause_interrupt = 0;
 	}
 }
 
@@ -196,7 +195,7 @@ static MACHINE_CONFIG_START( glass, glass_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,24000000/2)		/* 12 MHz (M680000 P12) */
 	MCFG_CPU_PROGRAM_MAP(glass_map)
-	MCFG_CPU_VBLANK_INT("screen", glass_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", glass_state,  glass_interrupt)
 
 
 	/* video hardware */
@@ -205,7 +204,7 @@ static MACHINE_CONFIG_START( glass, glass_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 368-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(glass)
+	MCFG_SCREEN_UPDATE_DRIVER(glass_state, screen_update_glass)
 
 	MCFG_GFXDECODE(glass)
 	MCFG_PALETTE_LENGTH(1024)
@@ -413,7 +412,7 @@ DRIVER_INIT_MEMBER(glass_state,glass)
 	glass_ROM16_split_gfx(machine(), "gfx2", "gfx1", 0x0200000, 0x0200000, 0x0200000, 0x0300000);
 
 	/* install custom handler over RAM for protection */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec000, 0xfeffff, read16_delegate(FUNC(glass_state::glass_mainram_r), this), write16_delegate(FUNC(glass_state::glass_mainram_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfec000, 0xfeffff, read16_delegate(FUNC(glass_state::glass_mainram_r), this), write16_delegate(FUNC(glass_state::glass_mainram_w),this));
 
 }
 

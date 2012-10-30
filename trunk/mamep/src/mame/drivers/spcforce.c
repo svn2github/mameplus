@@ -253,12 +253,11 @@ static const sn76496_config psg_intf =
 };
 
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(spcforce_state::vblank_irq)
 {
-	spcforce_state *state = device->machine().driver_data<spcforce_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(3, HOLD_LINE);
+	if(m_irq_mask)
+		device.execute().set_input_line(3, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( spcforce, spcforce_state )
@@ -267,7 +266,7 @@ static MACHINE_CONFIG_START( spcforce, spcforce_state )
 	/* FIXME: The 8085A had a max clock of 6MHz, internally divided by 2! */
 	MCFG_CPU_ADD("maincpu", I8085A, 8000000 * 2)        /* 4.00 MHz??? */
 	MCFG_CPU_PROGRAM_MAP(spcforce_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", spcforce_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", I8035, 6144000)		/* divisor ??? */
 	MCFG_CPU_PROGRAM_MAP(spcforce_sound_map)
@@ -279,7 +278,7 @@ static MACHINE_CONFIG_START( spcforce, spcforce_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(spcforce)
+	MCFG_SCREEN_UPDATE_DRIVER(spcforce_state, screen_update_spcforce)
 
 	MCFG_GFXDECODE(spcforce)
 	MCFG_PALETTE_LENGTH(sizeof(colortable_source) / sizeof(colortable_source[0]))
@@ -288,15 +287,15 @@ static MACHINE_CONFIG_START( spcforce, spcforce_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, 2000000)
+	MCFG_SOUND_ADD("sn1", SN76496, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 2000000)
+	MCFG_SOUND_ADD("sn2", SN76496, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496_NEW, 2000000)
+	MCFG_SOUND_ADD("sn3", SN76496, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

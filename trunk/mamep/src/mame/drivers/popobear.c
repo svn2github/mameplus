@@ -95,6 +95,8 @@ public:
 	DECLARE_READ8_MEMBER(popo_620000_r);
 	DECLARE_WRITE8_MEMBER(popobear_irq_ack_w);
 	virtual void video_start();
+	UINT32 screen_update_popobear(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(popobear_irq);
 };
 
 void popobear_state::video_start()
@@ -256,19 +258,18 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const re
 	}
 }
 
-SCREEN_UPDATE_IND16( popobear )
+UINT32 popobear_state::screen_update_popobear(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-//  popobear_state *state = screen.machine().driver_data<popobear_state>();
 
 	bitmap.fill(0, cliprect);
 
-	//popmessage("%04x",state->m_vregs[0/2]);
+	//popmessage("%04x",m_vregs[0/2]);
 
-	draw_layer(screen.machine(),bitmap,cliprect,3);
-	draw_layer(screen.machine(),bitmap,cliprect,2);
-	draw_layer(screen.machine(),bitmap,cliprect,1);
-	draw_layer(screen.machine(),bitmap,cliprect,0);
-	draw_sprites(screen.machine(),bitmap,cliprect);
+	draw_layer(machine(),bitmap,cliprect,3);
+	draw_layer(machine(),bitmap,cliprect,2);
+	draw_layer(machine(),bitmap,cliprect,1);
+	draw_layer(machine(),bitmap,cliprect,0);
+	draw_sprites(machine(),bitmap,cliprect);
 
 	return 0;
 }
@@ -437,35 +438,34 @@ static INPUT_PORTS_START( popobear )
 INPUT_PORTS_END
 
 
-static TIMER_DEVICE_CALLBACK( popobear_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(popobear_state::popobear_irq)
 {
-	popobear_state *state = timer.machine().driver_data<popobear_state>();
 	int scanline = param;
 
 	/* Order is trusted (5 as vblank-out makes the title screen logo spinning to behave wrongly) */
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(3, ASSERT_LINE);
+		m_maincpu->set_input_line(3, ASSERT_LINE);
 
 	if(scanline == 0)
-		state->m_maincpu->set_input_line(5, ASSERT_LINE);
+		m_maincpu->set_input_line(5, ASSERT_LINE);
 
 	/* TODO: actually a timer irq, tied with YM2413 sound chip (controls BGM tempo) */
 	if(scanline == 64 || scanline == 192)
-		state->m_maincpu->set_input_line(2, ASSERT_LINE);
+		m_maincpu->set_input_line(2, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( popobear, popobear_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_42MHz/4)  // XTAL CORRECT, DIVISOR GUESSED
 	MCFG_CPU_PROGRAM_MAP(popobear_mem)
 	// levels 2,3,5 look interesting
-	//MCFG_CPU_VBLANK_INT("screen",irq5_line_assert)
-	//MCFG_CPU_PERIODIC_INT(irq2_line_assert,120)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", popobear_irq, "screen", 0, 1)
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", popobear_state, irq5_line_assert)
+	//MCFG_CPU_PERIODIC_INT_DRIVER(popobear_state, irq2_line_assert, 120)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", popobear_state, popobear_irq, "screen", 0, 1)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
-	MCFG_SCREEN_UPDATE_STATIC(popobear)
+	MCFG_SCREEN_UPDATE_DRIVER(popobear_state, screen_update_popobear)
 
 //  MCFG_GFXDECODE(popobear)
 

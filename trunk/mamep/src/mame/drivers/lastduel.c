@@ -455,18 +455,14 @@ static const ym2203_interface ym2203_config =
 	DEVCB_LINE(irqhandler)
 };
 
-static TIMER_DEVICE_CALLBACK( lastduel_timer_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(lastduel_state::lastduel_timer_cb)
 {
-	lastduel_state *state = timer.machine().driver_data<lastduel_state>();
-
-	state->m_maincpu->set_input_line(4, HOLD_LINE); /* Controls */
+	m_maincpu->set_input_line(4, HOLD_LINE); /* Controls */
 }
 
-static TIMER_DEVICE_CALLBACK( madgear_timer_cb )
+TIMER_DEVICE_CALLBACK_MEMBER(lastduel_state::madgear_timer_cb)
 {
-	lastduel_state *state = timer.machine().driver_data<lastduel_state>();
-
-	state->m_maincpu->set_input_line(6, HOLD_LINE); /* Controls */
+	m_maincpu->set_input_line(6, HOLD_LINE); /* Controls */
 }
 
 MACHINE_START_MEMBER(lastduel_state,lastduel)
@@ -500,8 +496,8 @@ static MACHINE_CONFIG_START( lastduel, lastduel_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000) /* Could be 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(lastduel_map)
-	MCFG_CPU_VBLANK_INT("screen",irq2_line_hold)
-	MCFG_TIMER_ADD_PERIODIC("timer_irq", lastduel_timer_cb, attotime::from_hz(120)) /* control reads?? */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lastduel_state, irq2_line_hold)
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer_irq", lastduel_state, lastduel_timer_cb, attotime::from_hz(120))
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545) /* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -516,7 +512,7 @@ static MACHINE_CONFIG_START( lastduel, lastduel_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(lastduel)
+	MCFG_SCREEN_UPDATE_DRIVER(lastduel_state, screen_update_lastduel)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -543,8 +539,8 @@ static MACHINE_CONFIG_START( madgear, lastduel_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000) /* Accurate */
 	MCFG_CPU_PROGRAM_MAP(madgear_map)
-	MCFG_CPU_VBLANK_INT("screen",irq5_line_hold)
-	MCFG_TIMER_ADD_PERIODIC("timer_irq", madgear_timer_cb, attotime::from_hz(120)) /* control reads?? */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lastduel_state, irq5_line_hold)
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer_irq", lastduel_state, madgear_timer_cb, attotime::from_hz(120))
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(madgear_sound_map)
@@ -559,7 +555,7 @@ static MACHINE_CONFIG_START( madgear, lastduel_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(madgear)
+	MCFG_SCREEN_UPDATE_DRIVER(lastduel_state, screen_update_madgear)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")

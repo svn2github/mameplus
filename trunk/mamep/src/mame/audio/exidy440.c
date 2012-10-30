@@ -38,7 +38,7 @@
 
 
 /* channel_data structure holds info about each 6844 DMA channel */
-struct m6844_channel_data 
+struct m6844_channel_data
 {
 	int active;
 	int address;
@@ -50,7 +50,7 @@ struct m6844_channel_data
 
 
 /* channel_data structure holds info about each active sound channel */
-struct sound_channel_data 
+struct sound_channel_data
 {
 	INT16 *base;
 	int offset;
@@ -59,7 +59,7 @@ struct sound_channel_data
 
 
 /* sound_cache_entry structure contains info on each decoded sample */
-struct sound_cache_entry 
+struct sound_cache_entry
 {
 	struct sound_cache_entry *next;
 	int address;
@@ -71,7 +71,7 @@ struct sound_cache_entry
 
 
 
-struct exidy440_audio_state 
+struct exidy440_audio_state
 {
 	UINT8 sound_command;
 	UINT8 sound_command_ack;
@@ -377,7 +377,7 @@ static READ8_DEVICE_HANDLER( sound_command_r )
 {
 	exidy440_audio_state *state = get_safe_token(device);
 	/* clear the FIRQ that got us here and acknowledge the read to the main CPU */
-	device->machine().device("audiocpu")->execute().set_input_line(1, CLEAR_LINE);
+	space.machine().device("audiocpu")->execute().set_input_line(1, CLEAR_LINE);
 	state->sound_command_ack = 1;
 
 	return state->sound_command;
@@ -436,7 +436,7 @@ static WRITE8_DEVICE_HANDLER( sound_volume_w )
 
 static WRITE8_DEVICE_HANDLER( sound_interrupt_clear_w )
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+	space.machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -995,7 +995,7 @@ exidy440_sound_device::exidy440_sound_device(const machine_config &mconfig, cons
 	: device_t(mconfig, EXIDY440, "Exidy 440 CVSD", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(exidy440_audio_state));
+	m_token = global_alloc_clear(exidy440_audio_state);
 }
 
 //-------------------------------------------------

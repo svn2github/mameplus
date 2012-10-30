@@ -441,16 +441,16 @@ each direction to assign the boundries.
  *
  *************************************/
 
-static TIMER_DEVICE_CALLBACK( generate_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(centiped_state::generate_interrupt)
 {
 	int scanline = param;
 
 	/* IRQ is clocked on the rising edge of 16V, equal to the previous 32V */
 	if (scanline & 16)
-		timer.machine().device("maincpu")->execute().set_input_line(0, ((scanline - 1) & 32) ? ASSERT_LINE : CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, ((scanline - 1) & 32) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* do a partial update now to handle sprite multiplexing (Maze Invaders) */
-	timer.machine().primary_screen->update_partial(scanline);
+	machine().primary_screen->update_partial(scanline);
 }
 
 
@@ -736,15 +736,15 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(centiped_state::caterplr_AY8910_w)
 {
 	device_t *device = machine().device("pokey");
-	ay8910_address_w(device, 0, offset);
-	ay8910_data_w(device, 0, data);
+	ay8910_address_w(device, space, 0, offset);
+	ay8910_data_w(device, space, 0, data);
 }
 
 READ8_MEMBER(centiped_state::caterplr_AY8910_r)
 {
 	device_t *device = machine().device("pokey");
-	ay8910_address_w(device, 0, offset);
-	return ay8910_r(device, 0);
+	ay8910_address_w(device, space, 0, offset);
+	return ay8910_r(device, space, 0);
 }
 
 
@@ -968,7 +968,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( bullsdrt_port_map, AS_IO, 8, centiped_state )
 	AM_RANGE(0x00, 0x00) AM_WRITE(bullsdrt_sprites_bank_w)
 	AM_RANGE(0x20, 0x3f) AM_WRITE(bullsdrt_tilesbank_w) AM_SHARE("bullsdrt_bank")
-	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(bullsdrt_data_port_r) AM_DEVWRITE("snsnd", sn76496_new_device, write)
+	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(bullsdrt_data_port_r) AM_DEVWRITE("snsnd", sn76496_device, write)
 ADDRESS_MAP_END
 
 
@@ -1759,14 +1759,14 @@ static MACHINE_CONFIG_START( centiped_base, centiped_state )
 	MCFG_ATARIVGEAROM_ADD("earom")
 
 	/* timer */
-	MCFG_TIMER_ADD_SCANLINE("32v", generate_interrupt, "screen", 0, 16)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("32v", centiped_state, generate_interrupt, "screen", 0, 16)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(centiped)
+	MCFG_SCREEN_UPDATE_DRIVER(centiped_state, screen_update_centiped)
 
 	MCFG_GFXDECODE(centiped)
 	MCFG_PALETTE_LENGTH(4+4*4*4*4)
@@ -1846,7 +1846,7 @@ static MACHINE_CONFIG_DERIVED( milliped, centiped )
 
 	MCFG_VIDEO_START_OVERRIDE(centiped_state,milliped)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(milliped)
+	MCFG_SCREEN_UPDATE_DRIVER(centiped_state, screen_update_milliped)
 
 	/* sound hardware */
 	MCFG_POKEY_REPLACE("pokey", 12096000/8)
@@ -1883,7 +1883,7 @@ static MACHINE_CONFIG_DERIVED( warlords, centiped )
 	MCFG_PALETTE_INIT_OVERRIDE(centiped_state,warlords)
 	MCFG_VIDEO_START_OVERRIDE(centiped_state,warlords)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(warlords)
+	MCFG_SCREEN_UPDATE_DRIVER(centiped_state, screen_update_warlords)
 
 	/* sound hardware */
 	MCFG_POKEY_REPLACE("pokey", 12096000/8)
@@ -1898,7 +1898,7 @@ static MACHINE_CONFIG_DERIVED( mazeinv, milliped )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(mazeinv_map)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(centiped)
+	MCFG_SCREEN_UPDATE_DRIVER(centiped_state, screen_update_centiped)
 MACHINE_CONFIG_END
 
 
@@ -1916,7 +1916,7 @@ static MACHINE_CONFIG_START( bullsdrt, centiped_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bullsdrt)
+	MCFG_SCREEN_UPDATE_DRIVER(centiped_state, screen_update_bullsdrt)
 
 	MCFG_GFXDECODE(centiped)
 	MCFG_PALETTE_LENGTH(4+4*4*4*4)
@@ -1926,7 +1926,7 @@ static MACHINE_CONFIG_START( bullsdrt, centiped_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76496_NEW, 12096000/8)
+	MCFG_SOUND_ADD("snsnd", SN76496, 12096000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
@@ -2219,4 +2219,4 @@ GAME( 2002, multiped, 0,        multiped, multiped, centiped_state, multiped, RO
 GAME( 1980, warlords, 0,        warlords, warlords, driver_device, 0,        ROT0,   "Atari",   "Warlords", GAME_SUPPORTS_SAVE )
 GAME( 1981, mazeinv,  0,        mazeinv,  mazeinv, driver_device,  0,        ROT270, "Atari",   "Maze Invaders (prototype)", 0 )
 
-GAME( 1985, bullsdrt, 0,        bullsdrt, bullsdrt, centiped_state, bullsdrt, ROT270, "Shinkai Inc. (Magic Eletronics Inc. license)", "Bulls Eye Darts", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
+GAME( 1985, bullsdrt, 0,        bullsdrt, bullsdrt, centiped_state, bullsdrt, ROT270, "Shinkai Inc. (Magic Electronics Inc. license)", "Bulls Eye Darts", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )

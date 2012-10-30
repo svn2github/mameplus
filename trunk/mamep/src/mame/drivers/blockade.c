@@ -58,15 +58,14 @@
 /* Need to check for a coin on the interrupt, */
 /* This will reset the cpu                    */
 
-static INTERRUPT_GEN( blockade_interrupt )
+INTERRUPT_GEN_MEMBER(blockade_state::blockade_interrupt)
 {
-	blockade_state *state = device->machine().driver_data<blockade_state>();
-	device->execute().resume(SUSPEND_ANY_REASON);
+	device.execute().resume(SUSPEND_ANY_REASON);
 
-	if ((state->ioport("IN0")->read() & 0x80) == 0)
+	if ((ioport("IN0")->read() & 0x80) == 0)
 	{
-		state->m_just_been_reset = 1;
-		device->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+		m_just_been_reset = 1;
+		device.execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 	}
 }
 
@@ -127,7 +126,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( main_io_map, AS_IO, 8, blockade_state )
     AM_RANGE(0x01, 0x01) AM_READWRITE(blockade_input_port_0_r, blockade_coin_latch_w)
     AM_RANGE(0x02, 0x02) AM_READ_PORT("IN1")
-    AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("discrete", blockade_sound_freq_w)
+    AM_RANGE(0x02, 0x02) AM_WRITE(blockade_sound_freq_w)
     AM_RANGE(0x04, 0x04) AM_READ_PORT("IN2")
     AM_RANGE(0x04, 0x04) AM_WRITE(blockade_env_on_w)
     AM_RANGE(0x08, 0x08) AM_WRITE(blockade_env_off_w)
@@ -472,7 +471,7 @@ static MACHINE_CONFIG_START( blockade, blockade_state )
 	MCFG_CPU_ADD("maincpu", I8080, MASTER_CLOCK/10)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_io_map)
-	MCFG_CPU_VBLANK_INT("screen", blockade_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", blockade_state,  blockade_interrupt)
 
 
 	/* video hardware */
@@ -481,7 +480,7 @@ static MACHINE_CONFIG_START( blockade, blockade_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(blockade)
+	MCFG_SCREEN_UPDATE_DRIVER(blockade_state, screen_update_blockade)
 
 	MCFG_GFXDECODE(blockade)
 	MCFG_PALETTE_LENGTH(2)

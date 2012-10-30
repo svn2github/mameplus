@@ -245,7 +245,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, qix_state )
 	AM_RANGE(0x8c00, 0x8c00) AM_MIRROR(0x3fe) AM_READWRITE(qix_video_firq_r, qix_video_firq_w)
 	AM_RANGE(0x8c01, 0x8c01) AM_MIRROR(0x3fe) AM_READWRITE(qix_data_firq_ack_r, qix_data_firq_ack_w)
 	AM_RANGE(0x9000, 0x93ff) AM_DEVREADWRITE("sndpia0", pia6821_device, read, write)
-	AM_RANGE(0x9400, 0x97ff) AM_DEVREAD("pia0", pia6821_device, read) AM_DEVWRITE_LEGACY("pia0", qix_pia_w)
+	AM_RANGE(0x9400, 0x97ff) AM_DEVREAD("pia0", pia6821_device, read) AM_WRITE(qix_pia_w)
 	AM_RANGE(0x9800, 0x9bff) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
 	AM_RANGE(0x9c00, 0x9fff) AM_DEVREADWRITE("pia2", pia6821_device, read, write)
 	AM_RANGE(0xa000, 0xffff) AM_ROM
@@ -259,7 +259,7 @@ static ADDRESS_MAP_START( zoo_main_map, AS_PROGRAM, 8, qix_state )
 	AM_RANGE(0x0c00, 0x0c00) AM_MIRROR(0x3fe) AM_READWRITE(qix_video_firq_r, qix_video_firq_w)
 	AM_RANGE(0x0c01, 0x0c01) AM_MIRROR(0x3fe) AM_READWRITE(qix_data_firq_ack_r, qix_data_firq_ack_w)
 	AM_RANGE(0x1000, 0x13ff) AM_DEVREADWRITE("sndpia0", pia6821_device, read, write)
-	AM_RANGE(0x1400, 0x17ff) AM_DEVREAD("pia0", pia6821_device, read) AM_DEVWRITE_LEGACY("pia0", qix_pia_w)
+	AM_RANGE(0x1400, 0x17ff) AM_DEVREAD("pia0", pia6821_device, read) AM_WRITE(qix_pia_w)
 	AM_RANGE(0x1800, 0x1bff) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
 	AM_RANGE(0x1c00, 0x1fff) AM_DEVREADWRITE("pia2", pia6821_device, read, write)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -1256,8 +1256,8 @@ static int kram3_decrypt(int address, int value)
 
 DRIVER_INIT_MEMBER(qix_state,kram3)
 {
-	address_space *mainspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	address_space *videospace = machine().device("videocpu")->memory().space(AS_PROGRAM);
+	address_space &mainspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &videospace = machine().device("videocpu")->memory().space(AS_PROGRAM);
 	//const UINT8 *patch;
 	UINT8 *rom, *decrypted;
 	int i;
@@ -1281,7 +1281,7 @@ DRIVER_INIT_MEMBER(qix_state,kram3)
 	rom = machine().root_device().memregion("maincpu")->base();
 	decrypted = auto_alloc_array(machine(), UINT8, 0x6000);
 
-	mainspace->set_decrypted_region(0xa000, 0xffff, decrypted);
+	mainspace.set_decrypted_region(0xa000, 0xffff, decrypted);
 
 	memcpy(decrypted,&rom[0xa000],0x6000);
 	for (i = 0xa000; i < 0x10000; ++i)
@@ -1294,7 +1294,7 @@ DRIVER_INIT_MEMBER(qix_state,kram3)
 	rom = machine().root_device().memregion("videocpu")->base();
 	decrypted = auto_alloc_array(machine(), UINT8, 0x6000);
 
-	videospace->set_decrypted_region(0xa000, 0xffff, decrypted);
+	videospace.set_decrypted_region(0xa000, 0xffff, decrypted);
 
 	memcpy(decrypted,&rom[0xa000],0x6000);
 	for (i = 0xa000; i < 0x10000; ++i)

@@ -46,12 +46,11 @@ WRITE8_MEMBER(scotrsht_state::ctrl_w)
 	flip_screen_set(data & 0x08);
 }
 
-static INTERRUPT_GEN( scotrsht_interrupt )
+INTERRUPT_GEN_MEMBER(scotrsht_state::scotrsht_interrupt)
 {
-	scotrsht_state *state = device->machine().driver_data<scotrsht_state>();
 
-	if (state->m_irq_enable)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (m_irq_enable)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(scotrsht_state::scotrsht_soundlatch_w)
@@ -185,7 +184,7 @@ static MACHINE_CONFIG_START( scotrsht, scotrsht_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 18432000/6)        /* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(scotrsht_map)
-	MCFG_CPU_VBLANK_INT("screen", scotrsht_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", scotrsht_state,  scotrsht_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 18432000/6)        /* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(scotrsht_sound_map)
@@ -197,7 +196,7 @@ static MACHINE_CONFIG_START( scotrsht, scotrsht_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(scotrsht)
+	MCFG_SCREEN_UPDATE_DRIVER(scotrsht_state, screen_update_scotrsht)
 
 	MCFG_GFXDECODE(scotrsht)
 	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)

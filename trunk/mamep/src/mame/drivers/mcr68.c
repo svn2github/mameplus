@@ -7,7 +7,7 @@
     Games supported:
         * Zwackery (Chip Squeak Deluxe)
         * Xenopohobe (Sounds Good)
-        * Spy Hunter 2 (Sounds Good/Turbo Chip Squeak)
+        * Spy Hunter II (Sounds Good/Turbo Chip Squeak)
         * Blasted (Sounds Good)
         * Arch Rivals
         * Tri-Sports
@@ -124,7 +124,7 @@ WRITE16_MEMBER(mcr68_state::blasted_control_w)
 
 /*************************************
  *
- *  Spy Hunter 2-specific handlers
+ *  Spy Hunter II-specific handlers
  *
  *************************************/
 
@@ -421,7 +421,7 @@ static INPUT_PORTS_START( zwackery )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("DSW")
-	PORT_DIPNAME( 0x07, 0x00, DEF_STR( Coinage ) )
+	PORT_DIPNAME( 0x07, 0x00, DEF_STR( Coinage ) )		PORT_DIPLOCATION("SW1:1,2,3")
 	PORT_DIPSETTING(    0x05, DEF_STR( 6C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 4C_1C ) )
@@ -430,7 +430,7 @@ static INPUT_PORTS_START( zwackery )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x07, DEF_STR( Free_Play ) )
-	PORT_DIPNAME( 0x38, 0x00, "Buy-in" )
+	PORT_DIPNAME( 0x38, 0x00, "Buy-in" )			PORT_DIPLOCATION("SW1:4,5,6")
 	PORT_DIPSETTING(    0x00, "1 coin" )
 	PORT_DIPSETTING(    0x08, "2 coins" )
 	PORT_DIPSETTING(    0x10, "3 coins" )
@@ -439,7 +439,7 @@ static INPUT_PORTS_START( zwackery )
 	PORT_DIPSETTING(    0x28, "6 coins" )
 	PORT_DIPSETTING(    0x30, "7 coins" )
 	PORT_DIPSETTING(    0x38, DEF_STR( None ) )
-	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Difficulty ) )
+	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW1:7,8")
 	PORT_DIPSETTING(    0xc0, DEF_STR( Easier ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Harder ) )
@@ -486,21 +486,22 @@ static INPUT_PORTS_START( xenophob )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START("DSW")
-	PORT_BIT( 0x0003, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Free_Play ) )
+	PORT_START("DSW")	/* There are actually 10 switches, but where do 9 & 10 map to?? (10=Freeze Screen) */
+	PORT_DIPUNUSED_DIPLOC( 0x0001, IP_ACTIVE_LOW, "SW1:1" )
+	PORT_DIPUNUSED_DIPLOC( 0x0002, IP_ACTIVE_LOW, "SW1:2" )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Free_Play ) )	PORT_DIPLOCATION("SW1:3")
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0008, 0x0008, "Coins per Life Unit" )
+	PORT_DIPNAME( 0x0008, 0x0008, "Coins per Life Unit" )	PORT_DIPLOCATION("SW1:4")
 	PORT_DIPSETTING(      0x0008, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
-	PORT_DIPNAME( 0x0010, 0x0010, "Life Unit" )
+	PORT_DIPNAME( 0x0010, 0x0010, "Life Unit" )		PORT_DIPLOCATION("SW1:5")
 	PORT_DIPSETTING(      0x0010, "1000" )
 	PORT_DIPSETTING(      0x0000, "2000" )
-	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Demo_Sounds ) )
+	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW1:6")
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( On ) )
-	PORT_DIPNAME( 0x00c0, 0x0000, DEF_STR( Difficulty ) )
+	PORT_DIPNAME( 0x00c0, 0x0000, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW1:7,8")
 	PORT_DIPSETTING(      0x0040, DEF_STR( Easy ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Medium ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Hard ) )
@@ -540,25 +541,25 @@ static INPUT_PORTS_START( spyhunt2 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_NAME ("P1 R Button")/* Right Button */
 
 	PORT_START("DSW")	/* dipswitches */
-	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Coinage ) )
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:1,2")
 	PORT_DIPSETTING(      0x0002, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x0003, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x0000, "1C/2C (duplicate)" )
-	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Free_Play ) )	PORT_DIPLOCATION("SW1:3")
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0018, 0x0008, "Point Threshholds" )
+	PORT_DIPNAME( 0x0018, 0x0008, "Point Threshholds" )	PORT_DIPLOCATION("SW1:4,5")
 	PORT_DIPSETTING(      0x0008, DEF_STR( Easy ) )
 	PORT_DIPSETTING(      0x0018, DEF_STR( Medium ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( Hard ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Hardest ) )
-	PORT_DIPNAME( 0x0060, 0x0060, "Free Timer After" )
+	PORT_DIPNAME( 0x0060, 0x0060, "Free Timer After" )	PORT_DIPLOCATION("SW1:6,7")
 	PORT_DIPSETTING(      0x0000, "30 sec" )
 	PORT_DIPSETTING(      0x0040, "45 sec" )
 	PORT_DIPSETTING(      0x0060, "60 sec" )
 	PORT_DIPSETTING(      0x0020, "90 sec" )
-	PORT_DIPNAME( 0x0080, 0x0080, "Rack Advance (Cheat)" ) PORT_CODE(KEYCODE_F1)
+	PORT_DIPNAME( 0x0080, 0x0080, "Rack Advance (Cheat)" ) PORT_CODE(KEYCODE_F1)	PORT_DIPLOCATION("SW1:8")
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -605,23 +606,24 @@ static INPUT_PORTS_START( blasted )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("DSW")
-	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Coinage ) )
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:1,2")
 	PORT_DIPSETTING(      0x0002, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x0003, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x0000, "1C/2C (duplicate)" )
-	PORT_DIPNAME( 0x000c, 0x0000, DEF_STR( Difficulty ) )
+	PORT_DIPNAME( 0x000c, 0x0000, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW1:3,4")
 	PORT_DIPSETTING(      0x0008, DEF_STR( Easy ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Medium ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Hard ) )
 	PORT_DIPSETTING(      0x000c, "Medium (duplicate)" )
-	PORT_DIPNAME( 0x0020, 0x0020, "Dollar Receptor" )
+	PORT_DIPUNUSED_DIPLOC( 0x0010, IP_ACTIVE_LOW, "SW1:5" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Dollar Receptor" )	PORT_DIPLOCATION("SW1:6")
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW1:7")
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Rack Advance (Cheat)" ) PORT_CODE(KEYCODE_F1)
+	PORT_DIPNAME( 0x0080, 0x0080, "Rack Advance (Cheat)" ) PORT_CODE(KEYCODE_F1)	PORT_DIPLOCATION("SW1:8")
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -662,30 +664,19 @@ static INPUT_PORTS_START( intlaser )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(4)
 
 	PORT_START("DSW")
-    PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-    PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Unknown ) )
-    PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
-    PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:1,2")
+	PORT_DIPSETTING(      0x0002, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0003, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0000, "1C/1C (duplicate)" )
+	PORT_DIPUNUSED_DIPLOC( 0x0004, IP_ACTIVE_LOW, "SW1:3" )
+	PORT_DIPUNUSED_DIPLOC( 0x0008, IP_ACTIVE_LOW, "SW1:4" )
+	PORT_DIPUNUSED_DIPLOC( 0x0010, IP_ACTIVE_LOW, "SW1:5" )
+	PORT_DIPUNUSED_DIPLOC( 0x0020, IP_ACTIVE_LOW, "SW1:6" )
+	PORT_DIPUNUSED_DIPLOC( 0x0040, IP_ACTIVE_LOW, "SW1:7" )
+	PORT_DIPNAME( 0x0080, 0x0080, "Rack Advance (Cheat)" ) PORT_CODE(KEYCODE_F1)	PORT_DIPLOCATION("SW1:8")
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
@@ -710,13 +701,13 @@ static INPUT_PORTS_START( archrivl )
 	PORT_START("IN1")
 	PORT_BIT( 0xffff, IP_ACTIVE_HIGH, IPT_UNUSED )	/* player 1/2 joysticks go here */
 
-	PORT_START("DSW")
-	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Game_Time ) )
+	PORT_START("DSW")	/* There are actually 10 switches, but where do 9 & 10 map to?? (10=Freeze Screen) */
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Game_Time ) )	PORT_DIPLOCATION("SW1:1,2")
 	PORT_DIPSETTING(      0x0003, "Preset Time" )
 	PORT_DIPSETTING(      0x0002, "Preset + 10sec" )
 	PORT_DIPSETTING(      0x0001, "Preset + 20sec" )
 	PORT_DIPSETTING(      0x0000, "Preset + 30sec" )
-	PORT_DIPNAME( 0x001c, 0x001c, DEF_STR( Coinage ) )
+	PORT_DIPNAME( 0x001c, 0x001c, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:3,4,5")
 	PORT_DIPSETTING(      0x0014, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0018, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x001c, DEF_STR( 1C_1C ) )
@@ -725,13 +716,13 @@ static INPUT_PORTS_START( archrivl )
 	PORT_DIPSETTING(      0x0008, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
-	PORT_DIPNAME( 0x0020, 0x0020, "Team Names" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Team Names" )		PORT_DIPLOCATION("SW1:6")
 	PORT_DIPSETTING(      0x0020, "Default" )
 	PORT_DIPSETTING(      0x0000, "Hometown Heroes" )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW1:7")
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Free_Play ) )	PORT_DIPLOCATION("SW1:8")
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -777,27 +768,27 @@ static INPUT_PORTS_START( pigskin )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNUSED )	/* player 1 joystick goes here */
 
-	PORT_START("DSW")
-	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Game_Time ) )
+	PORT_START("DSW")	/* There are actually 10 switches, but where do 9 & 10 map to?? (10=Freeze Screen) */
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Game_Time ) )	PORT_DIPLOCATION("SW1:1,2")
 	PORT_DIPSETTING(      0x0000, "Shortest" )
 	PORT_DIPSETTING(      0x0002, "Short" )
 	PORT_DIPSETTING(      0x0003, DEF_STR( Medium ) )
 	PORT_DIPSETTING(      0x0001, "Long" )
-	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Coinage ) )
+	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:1,2")
 	PORT_DIPSETTING(      0x0008, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x000c, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )	PORT_DIPLOCATION("SW1:3,4")
 	PORT_DIPSETTING(      0x0004, "Set Your Own" )
-	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Demo_Sounds ) )
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW1:5")
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0020, "Test Switch" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Test Switch" )		PORT_DIPLOCATION("SW1:6")
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, "Coin Chutes" )
+	PORT_DIPNAME( 0x0040, 0x0040, "Coin Chutes" )		PORT_DIPLOCATION("SW1:7")
 	PORT_DIPSETTING(      0x0000, "Individual" )
 	PORT_DIPSETTING(      0x0040, "Common" )
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Joystick ) )
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Joystick ) )	PORT_DIPLOCATION("SW1:8")
 	PORT_DIPSETTING(      0x0080, DEF_STR( Standard ) )
 	PORT_DIPSETTING(      0x0000, "Rotated" )
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNUSED )	/* player 2 joystick goes here */
@@ -834,8 +825,8 @@ static INPUT_PORTS_START( trisport )
 	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNUSED )	/* analog controls go here */
 
-	PORT_START("DSW")
-	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coinage ) )
+	PORT_START("DSW")	/* There are actually 10 switches, but where do 9 & 10 map to?? (10=Freeze Screen) */
+	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:1,2,3")
 	PORT_DIPSETTING(      0x0002, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0003, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0006, DEF_STR( 2C_1C ) )
@@ -844,18 +835,18 @@ static INPUT_PORTS_START( trisport )
 	PORT_DIPSETTING(      0x0004, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(      0x0000, "Battery Options" )
-	PORT_DIPNAME( 0x0018, 0x0018, "Pool Turns" )
+	PORT_DIPNAME( 0x0018, 0x0018, "Pool Turns" )		PORT_DIPLOCATION("SW1:4,5")
 	PORT_DIPSETTING(      0x0010, "5" )
 	PORT_DIPSETTING(      0x0008, "6" )
 	PORT_DIPSETTING(      0x0018, "7" )
 	PORT_DIPSETTING(      0x0000, "8" )
-	PORT_DIPNAME( 0x0020, 0x0020, "Bowling Difficulty" )
+	PORT_DIPNAME( 0x0020, 0x0020, "Bowling Difficulty" )	PORT_DIPLOCATION("SW1:6")
 	PORT_DIPSETTING(      0x0020, DEF_STR( Standard ) )
 	PORT_DIPSETTING(      0x0000, "Advanced" )
-	PORT_DIPNAME( 0x0040, 0x0040, "Shot Timer" )
+	PORT_DIPNAME( 0x0040, 0x0040, "Shot Timer" )		PORT_DIPLOCATION("SW1:7")
 	PORT_DIPSETTING(      0x0000, "Slower" )
 	PORT_DIPSETTING(      0x0040, DEF_STR( Standard ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Golf Holes" )
+	PORT_DIPNAME( 0x0080, 0x0080, "Golf Holes" )		PORT_DIPLOCATION("SW1:8")
 	PORT_DIPSETTING(      0x0080, "3" )
 	PORT_DIPSETTING(      0x0000, "4" )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -949,7 +940,7 @@ GFXDECODE_END
 
         Zwackery:     7652400
         Xenophobe:    7723800
-        Spy Hunter 2: 7723800
+        Spy Hunter II:7723800
         Blasted:      7798800
         Arch Rivals:  7799100
         Pigskin:      9211200
@@ -965,7 +956,7 @@ static MACHINE_CONFIG_START( zwackery, mcr68_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 7652400)	/* should be XTAL_16MHz/2 */
 	MCFG_CPU_PROGRAM_MAP(zwackery_map)
-	MCFG_CPU_VBLANK_INT("screen", mcr68_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mcr68_state,  mcr68_interrupt)
 
 //  MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_MACHINE_START_OVERRIDE(mcr68_state,zwackery)
@@ -981,7 +972,7 @@ static MACHINE_CONFIG_START( zwackery, mcr68_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*16-1, 0, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(zwackery)
+	MCFG_SCREEN_UPDATE_DRIVER(mcr68_state, screen_update_zwackery)
 
 	MCFG_GFXDECODE(zwackery)
 	MCFG_PALETTE_LENGTH(4096)
@@ -1000,7 +991,7 @@ static MACHINE_CONFIG_START( mcr68, mcr68_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 7723800)
 	MCFG_CPU_PROGRAM_MAP(mcr68_map)
-	MCFG_CPU_VBLANK_INT("screen", mcr68_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mcr68_state,  mcr68_interrupt)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_MACHINE_START_OVERRIDE(mcr68_state,mcr68)
@@ -1012,7 +1003,7 @@ static MACHINE_CONFIG_START( mcr68, mcr68_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*16-1, 0, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(mcr68)
+	MCFG_SCREEN_UPDATE_DRIVER(mcr68_state, screen_update_mcr68)
 
 	MCFG_GFXDECODE(mcr68)
 	MCFG_PALETTE_LENGTH(64)
@@ -1571,7 +1562,7 @@ DRIVER_INIT_MEMBER(mcr68_state,xenophob)
 	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* install control port handler */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::xenophobe_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::xenophobe_control_w),this));
 }
 
 
@@ -1579,13 +1570,13 @@ DRIVER_INIT_MEMBER(mcr68_state,spyhunt2)
 {
 	mcr68_common_init(machine(), 0, -6);
 
-	/* Spy Hunter 2 doesn't care too much about this value; currently taken from Blasted */
+	/* Spy Hunter II doesn't care too much about this value; currently taken from Blasted */
 	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* analog port handling is a bit tricky */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::spyhunt2_control_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0d0000, 0x0dffff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_0_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_1_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::spyhunt2_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0d0000, 0x0dffff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_0_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_1_r),this));
 }
 
 
@@ -1599,10 +1590,10 @@ DRIVER_INIT_MEMBER(mcr68_state,blasted)
 	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* handle control writes */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),this));
 
 	/* 6840 is mapped to the lower 8 bits */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),this), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),this), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),this));
 }
 
 DRIVER_INIT_MEMBER(mcr68_state,intlaser)
@@ -1613,7 +1604,7 @@ DRIVER_INIT_MEMBER(mcr68_state,intlaser)
 	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* handle control writes */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),this));
 
 }
 
@@ -1627,13 +1618,13 @@ DRIVER_INIT_MEMBER(mcr68_state,archrivl)
 	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* handle control writes */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::archrivl_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::archrivl_control_w),this));
 
 	/* 49-way joystick handling is a bit tricky */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::archrivl_port_1_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::archrivl_port_1_r),this));
 
 	/* 6840 is mapped to the lower 8 bits */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),this), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),this), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),this));
 }
 
 
@@ -1668,8 +1659,8 @@ DRIVER_INIT_MEMBER(mcr68_state,trisport)
 
 GAME( 1984, zwackery, 0,        zwackery, zwackery, mcr68_state, zwackery, ROT0,   "Bally Midway", "Zwackery", GAME_SUPPORTS_SAVE )
 GAME( 1987, xenophob, 0,        xenophob, xenophob, mcr68_state, xenophob, ROT0,   "Bally Midway", "Xenophobe", GAME_SUPPORTS_SAVE )
-GAME( 1987, spyhunt2, 0,        spyhunt2, spyhunt2, mcr68_state, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter 2 (rev 2)", GAME_SUPPORTS_SAVE )
-GAME( 1987, spyhunt2a,spyhunt2, spyhunt2, spyhunt2, mcr68_state, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter 2 (rev 1)", GAME_SUPPORTS_SAVE )
+GAME( 1987, spyhunt2, 0,        spyhunt2, spyhunt2, mcr68_state, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter II (rev 2)", GAME_SUPPORTS_SAVE )
+GAME( 1987, spyhunt2a,spyhunt2, spyhunt2, spyhunt2, mcr68_state, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter II (rev 1)", GAME_SUPPORTS_SAVE )
 GAME( 1988, blasted,  0,        xenophob, blasted, mcr68_state,  blasted,  ROT0,   "Bally Midway", "Blasted", GAME_SUPPORTS_SAVE )
 GAME( 1987, intlaser, blasted,  intlaser, intlaser, mcr68_state, intlaser, ROT0,   "Bally Midway", "International Team Laser (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1989, archrivl, 0,        archrivl, archrivl, mcr68_state, archrivl, ROT0,   "Bally Midway", "Arch Rivals (rev 4.0 6/29/89)", GAME_SUPPORTS_SAVE )

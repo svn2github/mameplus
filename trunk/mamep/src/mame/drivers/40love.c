@@ -231,19 +231,18 @@ Notes - Has jumper setting for 122HZ or 61HZ)
 #include "machine/buggychl.h"
 #include "includes/40love.h"
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(fortyl_state::nmi_callback)
 {
-	fortyl_state *state = machine.driver_data<fortyl_state>();
-	if (state->m_sound_nmi_enable)
-		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_sound_nmi_enable)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		state->m_pending_nmi = 1;
+		m_pending_nmi = 1;
 }
 
 WRITE8_MEMBER(fortyl_state::sound_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().scheduler().synchronize(FUNC(nmi_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(fortyl_state::nmi_callback),this), data);
 }
 
 WRITE8_MEMBER(fortyl_state::nmi_disable_w)
@@ -968,7 +967,8 @@ static const ay8910_interface ay8910_config =
 
 static const msm5232_interface msm5232_config =
 {
-	{ 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6 }	/* 1.0 uF capacitors (verified on real PCB) */
+	{ 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6 },	/* 1.0 uF capacitors (verified on real PCB) */
+	DEVCB_NULL
 };
 
 /*******************************************************************************/
@@ -1059,11 +1059,11 @@ static MACHINE_CONFIG_START( 40love, fortyl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",Z80,8000000/2) /* OK */
 	MCFG_CPU_PROGRAM_MAP(40love_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fortyl_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu",Z80,8000000/2) /* OK */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)	/* source/number of IRQs is unknown */
+	MCFG_CPU_PERIODIC_INT_DRIVER(fortyl_state, irq0_line_hold, 2*60)	/* source/number of IRQs is unknown */
 
 	MCFG_CPU_ADD("mcu",M68705,18432000/6) /* OK */
 	MCFG_CPU_PROGRAM_MAP(buggychl_mcu_map)
@@ -1079,7 +1079,7 @@ static MACHINE_CONFIG_START( 40love, fortyl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(128,128+255, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fortyl)
+	MCFG_SCREEN_UPDATE_DRIVER(fortyl_state, screen_update_fortyl)
 
 	MCFG_GFXDECODE(40love)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1115,11 +1115,11 @@ static MACHINE_CONFIG_START( undoukai, fortyl_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",Z80,8000000/2)
 	MCFG_CPU_PROGRAM_MAP(undoukai_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fortyl_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu",Z80,8000000/2)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)	/* source/number of IRQs is unknown */
+	MCFG_CPU_PERIODIC_INT_DRIVER(fortyl_state, irq0_line_hold, 2*60)	/* source/number of IRQs is unknown */
 
 //  MCFG_CPU_ADD("mcu",M68705,18432000/6)
 //  MCFG_CPU_PROGRAM_MAP(buggychl_mcu_map)
@@ -1134,7 +1134,7 @@ static MACHINE_CONFIG_START( undoukai, fortyl_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(128,128+255, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fortyl)
+	MCFG_SCREEN_UPDATE_DRIVER(fortyl_state, screen_update_fortyl)
 
 	MCFG_GFXDECODE(40love)
 	MCFG_PALETTE_LENGTH(1024)

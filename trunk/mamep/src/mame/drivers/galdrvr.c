@@ -6382,7 +6382,7 @@ GAME( 1979, galaxianmo, galaxian, galaxian, galaxian, galaxian_state, galaxian, 
 GAME( 1979, galaxiant,  galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "Namco (Taito license)", "Galaxian (Taito)", GAME_SUPPORTS_SAVE )
 
 /* straight Galaxian ripoffs on basic galaxian hardware */
-GAME( 1979, moonaln,  galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "Nichibutsu (Karateco license)", "Moon Alien", GAME_SUPPORTS_SAVE )
+GAME( 1979, moonaln,  galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "Namco / Nichibutsu (Karateco license?)", "Moon Alien", GAME_SUPPORTS_SAVE ) // or bootleg?
 GAME( 1979, superg,   galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "hack", "Super Galaxians (galaxiana hack)", GAME_SUPPORTS_SAVE )
 GAME( 1979, galturbo, galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "hack", "Galaxian Turbo (superg hack)", GAME_SUPPORTS_SAVE )
 GAME( 1979, galapx,   galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "hack", "Galaxian Part X (moonaln hack)", GAME_SUPPORTS_SAVE )
@@ -6392,7 +6392,7 @@ GAME( 1979, swarm,    galaxian, galaxian, swarm, galaxian_state,    galaxian, RO
 GAME( 1979, zerotime, galaxian, galaxian, zerotime, galaxian_state, galaxian, ROT90,  "bootleg? (Petaco S.A.)", "Zero Time", GAME_SUPPORTS_SAVE )
 GAME( 1979, starfght, galaxian, galaxian, swarm, galaxian_state,    galaxian, ROT90,  "bootleg (Jeutel)", "Star Fighter", GAME_SUPPORTS_SAVE )
 GAME( 1979, galaxbsf, galaxian, galaxian, galaxian, galaxian_state, galaxian, ROT90,  "bootleg", "Galaxian (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1980, supergx,  galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "Nichibutsu", "Super GX", GAME_NOT_WORKING | GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
+GAME( 1980, supergx,  galaxian, galaxian, superg, galaxian_state,   galaxian, ROT90,  "Namco / Nichibutsu", "Super GX", GAME_NOT_WORKING | GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
 GAME( 19??, tst_galx, galaxian, galaxian, galaxian, galaxian_state, galaxian, ROT90,  "<unknown>", "Galaxian Test ROM", GAME_SUPPORTS_SAVE )
 
 /* other games on basic galaxian hardware */
@@ -6488,8 +6488,8 @@ GAME( 1980, spcdraga, mooncrst, mooncrst, smooncrs, galaxian_state, mooncrsu, RO
 GAME( 1980, stera,    mooncrst, mooncrst, smooncrs, galaxian_state, mooncrsu, ROT90,  "bootleg", "Steraranger (Moon Cresta bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1980, mooncrgx, mooncrst, galaxian, mooncrgx, galaxian_state, mooncrgx, ROT270, "bootleg", "Moon Cresta (Galaxian hardware)", GAME_SUPPORTS_SAVE )
 GAME( 1980, moonqsr,  0,        mooncrst, moonqsr, galaxian_state,  moonqsr,  ROT90,  "Nichibutsu", "Moon Quasar", GAME_SUPPORTS_SAVE )
-GAME( 1980, moonal2,  galaxian, mooncrst, moonal2, galaxian_state,  galaxian, ROT90,  "Nichibutsu", "Moon Alien Part 2", GAME_SUPPORTS_SAVE )
-GAME( 1980, moonal2b, galaxian, mooncrst, moonal2, galaxian_state,  galaxian, ROT90,  "Nichibutsu", "Moon Alien Part 2 (older version)", GAME_SUPPORTS_SAVE )
+GAME( 1980, moonal2,  galaxian, mooncrst, moonal2, galaxian_state,  galaxian, ROT90,  "Namco / Nichibutsu", "Moon Alien Part 2", GAME_SUPPORTS_SAVE )
+GAME( 1980, moonal2b, galaxian, mooncrst, moonal2, galaxian_state,  galaxian, ROT90,  "Namco / Nichibutsu", "Moon Alien Part 2 (older version)", GAME_SUPPORTS_SAVE )
 
 /* larger romspace, interrupt enable moved */
 GAME( 198?, thepitm,  thepit,   mooncrst, thepitm, galaxian_state,  thepitm,  ROT90,  "bootleg (KZH)", "The Pit (bootleg on Moon Quasar hardware)", GAME_SUPPORTS_SAVE ) // on an original MQ-2FJ pcb, even if the memory map appears closer to Moon Cresta
@@ -6644,7 +6644,7 @@ GAME( 1985, superbon,  0,        scobra,   superbon, galaxian_state,  superbon, 
 //GAME( 1983, ozon1,    0,        ozon1,    ozon1, galaxold_state,    galaxian, ROT90,  "Proma", "Ozon I", GAME_SUPPORTS_SAVE )
 //GAME( 1983, ladybugg, ladybug,  galaxian/*batman2*/,  ladybugg, XXX_CLASS, ladybugg, ROT270, "bootleg", "Lady Bug (bootleg on Galaxian hardware)", GAME_SUPPORTS_SAVE )
 //GAME( 1980, vpool,    hustler,  mooncrst, vpool, galaxian_state,    galaxian, ROT90,  "bootleg", "Video Pool (bootleg on Moon Cresta hardware)", GAME_SUPPORTS_SAVE )
-//GAME( 1984, drivfrcg, drivfrcp, drivfrcg, drivfrcg, galaxold_state, galaxian, ROT90,  "Shinkai Inc. (Magic Eletronics USA license)", "Driving Force (Galaxian conversion)", GAME_SUPPORTS_SAVE )
+//GAME( 1984, drivfrcg, drivfrcp, drivfrcg, drivfrcg, galaxold_state, galaxian, ROT90,  "Shinkai Inc. (Magic Electronics USA license)", "Driving Force (Galaxian conversion)", GAME_SUPPORTS_SAVE )
 //GAME( 1985, drivfrcb, drivfrcp, drivfrcg, drivfrcg, galaxold_state, galaxian, ROT90,  "bootleg", "Driving Force (Galaxian conversion bootleg)", GAME_SUPPORTS_SAVE )
 //GAME( 1983, bongo,    0,        bongo,    bongo, galaxold_state,    galaxian, ROT90,  "Jetsoft", "Bongo", GAME_SUPPORTS_SAVE )
 //GAME( 1983, hunchbkg, hunchbak,   hunchbkg, hunchbkg, galaxold_state, galaxian, ROT90,  "Century Electronics", "Hunchback (Galaxian hardware)", GAME_SUPPORTS_SAVE )
@@ -6695,8 +6695,9 @@ GAME( 1985, superbon,  0,        scobra,   superbon, galaxian_state,  superbon, 
 //GAME( 1982, mimonsco, mimonkey, scobra/*mimonkey*/, mimonsco, XXX_CLASS, mimonsco,     ROT90,  "bootleg", "Mighty Monkey (bootleg on Super Cobra hardware)", GAME_SUPPORTS_SAVE )
 
 /* currently in dambustr.c and should be moved here */
-//GAME( 1981, dambustr, 0,        dambustr, dambustr, dambustr_state, dambustr, ROT90, "South West Research", "Dambusters (US)", 0 )
-//GAME( 1981, dambust,  dambustr, dambustr, dambustr, dambustr_state, dambustr, ROT90, "South West Research", "Dambusters (UK)", 0 )
+//GAME( 1981, dambustr,   0,        dambustr, dambustr, dambustr_state,   dambustr, ROT90, "South West Research", "Dambusters (US, set 1)", 0 )
+//GAME( 1981, dambustra,  dambustr, dambustr, dambustr, dambustr_state,   dambustr, ROT90, "South West Research", "Dambusters (US, set 2)", 0 )
+//GAME( 1981, dambustruk, dambustr, dambustr, dambustruk, dambustr_state, dambustr, ROT90, "South West Research", "Dambusters (UK)", 0 )
 
 /* misc stuff that should eventually be moved here */
 //GAME( 1981, scramblb, scramble, scramblb, scramblb, galaxian_state, galaxian, ROT90,  "bootleg", "Scramble (Galaxian hardware)", GAME_SUPPORTS_SAVE )

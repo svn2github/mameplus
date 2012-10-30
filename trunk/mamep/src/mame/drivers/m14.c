@@ -85,6 +85,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_m14(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(m14_irq);
 };
 
 
@@ -133,11 +135,10 @@ void m14_state::video_start()
 	m_m14_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m14_state::m14_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
-static SCREEN_UPDATE_IND16( m14 )
+UINT32 m14_state::screen_update_m14(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	m14_state *state = screen.machine().driver_data<m14_state>();
 
-	state->m_m14_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_m14_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -313,10 +314,10 @@ static GFXDECODE_START( m14 )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,     0, 0x10 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( m14_irq )
+INTERRUPT_GEN_MEMBER(m14_state::m14_irq)
 {
-	device->execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
-	device->execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
+	device.execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
+	device.execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
 }
 
 void m14_state::machine_start()
@@ -340,7 +341,7 @@ static MACHINE_CONFIG_START( m14, m14_state )
 	MCFG_CPU_ADD("maincpu",I8085A,6000000/2) //guess: 6 Mhz internally divided by 2
 	MCFG_CPU_PROGRAM_MAP(m14_map)
 	MCFG_CPU_IO_MAP(m14_io_map)
-	MCFG_CPU_VBLANK_INT("screen",m14_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", m14_state, m14_irq)
 
 
 	/* video hardware */
@@ -349,7 +350,7 @@ static MACHINE_CONFIG_START( m14, m14_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) //not accurate
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(m14)
+	MCFG_SCREEN_UPDATE_DRIVER(m14_state, screen_update_m14)
 	MCFG_GFXDECODE(m14)
 	MCFG_PALETTE_LENGTH(0x20)
 

@@ -98,6 +98,8 @@ public:
 	TILE_GET_INFO_MEMBER(bgtile_get_info);
 	virtual void machine_start();
 	virtual void video_start();
+	UINT32 screen_update_firefox(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(video_timer_callback);
 };
 
 
@@ -214,17 +216,16 @@ void firefox_state::video_start()
 }
 
 
-static SCREEN_UPDATE_RGB32( firefox )
+UINT32 firefox_state::screen_update_firefox(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	firefox_state *state = screen.machine().driver_data<firefox_state>();
 	int sprite;
 	int gfxtop = screen.visible_area().min_y;
 
-	bitmap.fill(palette_get_color(screen.machine(), 256), cliprect);
+	bitmap.fill(palette_get_color(machine(), 256), cliprect);
 
 	for( sprite = 0; sprite < 32; sprite++ )
 	{
-		UINT8 *sprite_data = state->m_spriteram + ( 0x200 * state->m_sprite_bank ) + ( sprite * 16 );
+		UINT8 *sprite_data = m_spriteram + ( 0x200 * m_sprite_bank ) + ( sprite * 16 );
 		int flags = sprite_data[ 0 ];
 		int y = sprite_data[ 1 ] + ( 256 * ( ( flags >> 0 ) & 1 ) );
 		int x = sprite_data[ 2 ] + ( 256 * ( ( flags >> 1 ) & 1 ) );
@@ -240,21 +241,21 @@ static SCREEN_UPDATE_RGB32( firefox )
 				int flipx = flags & 0x20;
 				int code = sprite_data[ 15 - row ] + ( 256 * ( ( flags >> 6 ) & 3 ) );
 
-				drawgfx_transpen( bitmap, cliprect, screen.machine().gfx[ 1 ], code, color, flipx, flipy, x + 8, gfxtop + 500 - y - ( row * 16 ), 0 );
+				drawgfx_transpen( bitmap, cliprect, machine().gfx[ 1 ], code, color, flipx, flipy, x + 8, gfxtop + 500 - y - ( row * 16 ), 0 );
 			}
 		}
 	}
 
-	state->m_bgtiles->draw(bitmap, cliprect, 0, 0 );
+	m_bgtiles->draw(bitmap, cliprect, 0, 0 );
 
 	return 0;
 }
 
-static TIMER_DEVICE_CALLBACK( video_timer_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(firefox_state::video_timer_callback)
 {
-	timer.machine().primary_screen->update_now();
+	machine().primary_screen->update_now();
 
-	timer.machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE );
+	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE );
 }
 
 static void set_rgba( running_machine &machine, int start, int index, unsigned char *palette_ram )
@@ -701,7 +702,7 @@ static MACHINE_CONFIG_START( firefox, firefox_state )
 	MCFG_CPU_ADD("maincpu", M6809E, MASTER_XTAL/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	/* interrupts count starting at end of VBLANK, which is 44, so add 44 */
-	MCFG_TIMER_ADD_SCANLINE("32v", video_timer_callback, "screen", 96+44, 128)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("32v", firefox_state, video_timer_callback, "screen", 96+44, 128)
 
 	MCFG_CPU_ADD("audiocpu", M6502, MASTER_XTAL/8)
 	MCFG_CPU_PROGRAM_MAP(audio_map)
@@ -716,7 +717,7 @@ static MACHINE_CONFIG_START( firefox, firefox_state )
 
 
 	MCFG_LASERDISC_22VP931_ADD("laserdisc")
-	MCFG_LASERDISC_OVERLAY_STATIC(64*8, 525, firefox)
+	MCFG_LASERDISC_OVERLAY_DRIVER(64*8, 525, firefox_state, screen_update_firefox)
 	MCFG_LASERDISC_OVERLAY_CLIP(7*8, 53*8-1, 44, 480+44)
 
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")

@@ -311,8 +311,10 @@ static ADDRESS_MAP_START( pntnpuzl_map, AS_PROGRAM, 16, pntnpuzl_state )
 	AM_RANGE(0x28001a, 0x28001b) AM_WRITENOP
 
 	/* standard VGA */
-	AM_RANGE(0x3a0000, 0x3bffff) AM_RAM // RAM
-//  AM_RANGE(0x3c0000, 0x3c0fff) AM_RAM // regs
+	AM_RANGE(0x3a0000, 0x3bffff) AM_DEVREADWRITE8("vga", vga_device, mem_r, mem_w, 0xffff)
+	AM_RANGE(0x3c03b0, 0x3c03bf) AM_DEVREADWRITE8("vga", vga_device, port_03b0_r, port_03b0_w, 0xffff)
+	AM_RANGE(0x3c03c0, 0x3c03cf) AM_DEVREADWRITE8("vga", vga_device, port_03c0_r, port_03c0_w, 0xffff)
+	AM_RANGE(0x3c03d0, 0x3c03df) AM_DEVREADWRITE8("vga", vga_device, port_03d0_r, port_03d0_w, 0xffff)
 
 	AM_RANGE(0x400000, 0x407fff) AM_RAM
 ADDRESS_MAP_END
@@ -323,7 +325,7 @@ INPUT_CHANGED_MEMBER(pntnpuzl_state::coin_inserted)
 
 	/* TODO: change this! */
 	if(newval)
-		generic_pulse_irq_line(*m_maincpu, (UINT8)(FPTR)param, 1);
+		generic_pulse_irq_line(m_maincpu, (UINT8)(FPTR)param, 1);
 }
 
 static INPUT_PORTS_START( pntnpuzl )
@@ -356,8 +358,6 @@ static INPUT_PORTS_START( pntnpuzl )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_D)
 INPUT_PORTS_END
 
-static READ8_HANDLER( vga_setting ) { return 0xff; } // hard-code to color
-
 static MACHINE_CONFIG_START( pntnpuzl, pntnpuzl_state )
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)//??
 	MCFG_CPU_PROGRAM_MAP(pntnpuzl_map)
@@ -384,8 +384,6 @@ DRIVER_INIT_MEMBER(pntnpuzl_state,pip)
 //  UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 //  rom[0x2696/2] = 0x4e71;
 //  rom[0x26a0/2] = 0x4e71;
-	pc_vga_init(machine(), vga_setting, NULL);
-	pc_vga_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0x3a0000, machine().device("maincpu")->memory().space(AS_PROGRAM), 0x3c0000);
 
 }
 

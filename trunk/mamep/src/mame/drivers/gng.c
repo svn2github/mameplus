@@ -343,11 +343,11 @@ static MACHINE_CONFIG_START( gng, gng_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, XTAL_12MHz/8)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(gng_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gng_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_12MHz/4)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(gng_state, irq0_line_hold, 4*60)
 
 
 	/* video hardware */
@@ -358,7 +358,7 @@ static MACHINE_CONFIG_START( gng, gng_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gng)
+	MCFG_SCREEN_UPDATE_DRIVER(gng_state, screen_update_gng)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram8_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(gng)
@@ -764,7 +764,7 @@ READ8_MEMBER(gng_state::diamond_hack_r)
 
 DRIVER_INIT_MEMBER(gng_state,diamond)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6000, 0x6000, read8_delegate(FUNC(gng_state::diamond_hack_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6000, 0x6000, read8_delegate(FUNC(gng_state::diamond_hack_r),this));
 }
 
 

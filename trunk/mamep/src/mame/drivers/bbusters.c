@@ -659,11 +659,10 @@ static const ym2610_interface ym2610_config =
 
 /******************************************************************************/
 
-static SCREEN_VBLANK( bbuster )
+void bbusters_state::screen_eof_bbuster(screen_device &screen, bool state)
 {
-	bbusters_state *state = screen.machine().driver_data<bbusters_state>();
-	state->m_spriteram->vblank_copy_rising(screen, vblank_on);
-	state->m_spriteram2->vblank_copy_rising(screen, vblank_on);
+	m_spriteram->vblank_copy_rising(screen, state);
+	m_spriteram2->vblank_copy_rising(screen, state);
 }
 
 static MACHINE_CONFIG_START( bbusters, bbusters_state )
@@ -671,7 +670,7 @@ static MACHINE_CONFIG_START( bbusters, bbusters_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(bbusters_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bbusters_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,4000000) /* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -684,8 +683,8 @@ static MACHINE_CONFIG_START( bbusters, bbusters_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bbuster)
-	MCFG_SCREEN_VBLANK_STATIC(bbuster)
+	MCFG_SCREEN_UPDATE_DRIVER(bbusters_state, screen_update_bbuster)
+	MCFG_SCREEN_VBLANK_DRIVER(bbusters_state, screen_eof_bbuster)
 
 	MCFG_GFXDECODE(bbusters)
 	MCFG_PALETTE_LENGTH(2048)
@@ -711,7 +710,7 @@ static MACHINE_CONFIG_START( mechatt, bbusters_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(mechatt_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bbusters_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,4000000) /* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -722,7 +721,7 @@ static MACHINE_CONFIG_START( mechatt, bbusters_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mechatt)
+	MCFG_SCREEN_UPDATE_DRIVER(bbusters_state, screen_update_mechatt)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(mechatt)

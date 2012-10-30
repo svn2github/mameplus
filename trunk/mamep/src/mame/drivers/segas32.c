@@ -440,18 +440,18 @@ static void signal_v60_irq(running_machine &machine, int which)
 }
 
 
-static TIMER_DEVICE_CALLBACK( signal_v60_irq_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(segas32_state::signal_v60_irq_callback)
 {
-	signal_v60_irq(timer.machine(), param);
+	signal_v60_irq(machine(), param);
 }
 
 
-static void int_control_w(address_space *space, int offset, UINT8 data)
+static void int_control_w(address_space &space, int offset, UINT8 data)
 {
-	segas32_state *state = space->machine().driver_data<segas32_state>();
+	segas32_state *state = space.machine().driver_data<segas32_state>();
 	int duration;
 
-//  logerror("%06X:int_control_w(%X) = %02X\n", space->device().safe_pc(), offset, data);
+//  logerror("%06X:int_control_w(%X) = %02X\n", space.device().safe_pc(), offset, data);
 	switch (offset)
 	{
 		case 0:
@@ -468,12 +468,12 @@ static void int_control_w(address_space *space, int offset, UINT8 data)
 
 		case 6:			/* mask */
 			state->m_v60_irq_control[offset] = data;
-			update_irq_state(space->machine());
+			update_irq_state(space.machine());
 			break;
 
 		case 7:			/* acknowledge */
 			state->m_v60_irq_control[offset] &= data;
-			update_irq_state(space->machine());
+			update_irq_state(space.machine());
 			break;
 
 		case 8:
@@ -502,7 +502,7 @@ static void int_control_w(address_space *space, int offset, UINT8 data)
 		case 13:
 		case 14:
 		case 15:		/* signal IRQ to sound CPU */
-			signal_sound_irq(space->machine(), SOUND_IRQ_V60);
+			signal_sound_irq(space.machine(), SOUND_IRQ_V60);
 			break;
 	}
 }
@@ -529,9 +529,9 @@ READ16_MEMBER(segas32_state::interrupt_control_16_r)
 WRITE16_MEMBER(segas32_state::interrupt_control_16_w)
 {
 	if (ACCESSING_BITS_0_7)
-		int_control_w(&space, offset*2+0, data);
+		int_control_w(space, offset*2+0, data);
 	if (ACCESSING_BITS_8_15)
-		int_control_w(&space, offset*2+1, data >> 8);
+		int_control_w(space, offset*2+1, data >> 8);
 }
 
 
@@ -552,31 +552,30 @@ READ32_MEMBER(segas32_state::interrupt_control_32_r)
 WRITE32_MEMBER(segas32_state::interrupt_control_32_w)
 {
 	if (ACCESSING_BITS_0_7)
-		int_control_w(&space, offset*4+0, data);
+		int_control_w(space, offset*4+0, data);
 	if (ACCESSING_BITS_8_15)
-		int_control_w(&space, offset*4+1, data >> 8);
+		int_control_w(space, offset*4+1, data >> 8);
 	if (ACCESSING_BITS_16_23)
-		int_control_w(&space, offset*4+2, data >> 16);
+		int_control_w(space, offset*4+2, data >> 16);
 	if (ACCESSING_BITS_24_31)
-		int_control_w(&space, offset*4+3, data >> 24);
+		int_control_w(space, offset*4+3, data >> 24);
 }
 
 
-static TIMER_CALLBACK( end_of_vblank_int )
+TIMER_CALLBACK_MEMBER(segas32_state::end_of_vblank_int)
 {
-	signal_v60_irq(machine, MAIN_IRQ_VBSTOP);
-	system32_set_vblank(machine, 0);
+	signal_v60_irq(machine(), MAIN_IRQ_VBSTOP);
+	system32_set_vblank(machine(), 0);
 }
 
 
-static INTERRUPT_GEN( start_of_vblank_int )
+INTERRUPT_GEN_MEMBER(segas32_state::start_of_vblank_int)
 {
-	segas32_state *state = device->machine().driver_data<segas32_state>();
-	signal_v60_irq(device->machine(), MAIN_IRQ_VBSTART);
-	system32_set_vblank(device->machine(), 1);
-	device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(0), FUNC(end_of_vblank_int));
-	if (state->m_system32_prot_vblank)
-		(*state->m_system32_prot_vblank)(device);
+	signal_v60_irq(machine(), MAIN_IRQ_VBSTART);
+	system32_set_vblank(machine(), 1);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(segas32_state::end_of_vblank_int),this));
+	if (m_system32_prot_vblank)
+		(*m_system32_prot_vblank)(&device);
 }
 
 
@@ -587,9 +586,9 @@ static INTERRUPT_GEN( start_of_vblank_int )
  *
  *************************************/
 
-static UINT16 common_io_chip_r(address_space *space, int which, offs_t offset, UINT16 mem_mask)
+static UINT16 common_io_chip_r(address_space &space, int which, offs_t offset, UINT16 mem_mask)
 {
-	segas32_state *state = space->machine().driver_data<segas32_state>();
+	segas32_state *state = space.machine().driver_data<segas32_state>();
 	static const char *const portnames[2][8] =
 			{
 				{ "P1_A", "P2_A", "PORTC_A", "PORTD_A", "SERVICE12_A", "SERVICE34_A", "PORTG_A", "PORTH_A" },
@@ -639,9 +638,9 @@ static UINT16 common_io_chip_r(address_space *space, int which, offs_t offset, U
 }
 
 
-static void common_io_chip_w(address_space *space, int which, offs_t offset, UINT16 data, UINT16 mem_mask)
+static void common_io_chip_w(address_space &space, int which, offs_t offset, UINT16 data, UINT16 mem_mask)
 {
-	segas32_state *state = space->machine().driver_data<segas32_state>();
+	segas32_state *state = space.machine().driver_data<segas32_state>();
 //  UINT8 old;
 
 	/* only LSB matters */
@@ -673,15 +672,15 @@ static void common_io_chip_w(address_space *space, int which, offs_t offset, UIN
 
 			if (which == 0)
 			{
-				eeprom_device *eeprom = space->machine().device<eeprom_device>("eeprom");
+				eeprom_device *eeprom = space.machine().device<eeprom_device>("eeprom");
 				eeprom->write_bit(data & 0x80);
 				eeprom->set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 				eeprom->set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 			}
-/*            coin_lockout_w(space->machine(), 1 + 2*which, data & 0x08);
-            coin_lockout_w(space->machine(), 0 + 2*which, data & 0x04);*/
-			coin_counter_w(space->machine(), 1 + 2*which, data & 0x02);
-			coin_counter_w(space->machine(), 0 + 2*which, data & 0x01);
+/*            coin_lockout_w(space.machine(), 1 + 2*which, data & 0x08);
+            coin_lockout_w(space.machine(), 0 + 2*which, data & 0x04);*/
+			coin_counter_w(space.machine(), 1 + 2*which, data & 0x02);
+			coin_counter_w(space.machine(), 0 + 2*which, data & 0x01);
 			break;
 
 		/* tile banking */
@@ -691,7 +690,7 @@ static void common_io_chip_w(address_space *space, int which, offs_t offset, UIN
 			else
 			{
 				/* multi-32 EEPROM access */
-				eeprom_device *eeprom = space->machine().device<eeprom_device>("eeprom");
+				eeprom_device *eeprom = space.machine().device<eeprom_device>("eeprom");
 				eeprom->write_bit(data & 0x80);
 				eeprom->set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 				eeprom->set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
@@ -702,7 +701,7 @@ static void common_io_chip_w(address_space *space, int which, offs_t offset, UIN
 		case 0x1c/2:
 			state->m_system32_displayenable[which] = (data & 0x02);
 			if (which == 0)
-				space->machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+				space.machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 	}
 }
@@ -710,45 +709,45 @@ static void common_io_chip_w(address_space *space, int which, offs_t offset, UIN
 
 READ16_MEMBER(segas32_state::io_chip_r)
 {
-	return common_io_chip_r(&space, 0, offset, mem_mask);
+	return common_io_chip_r(space, 0, offset, mem_mask);
 }
 
 
 WRITE16_MEMBER(segas32_state::io_chip_w)
 {
-	common_io_chip_w(&space, 0, offset, data, mem_mask);
+	common_io_chip_w(space, 0, offset, data, mem_mask);
 }
 
 
 READ32_MEMBER(segas32_state::io_chip_0_r)
 {
-	return common_io_chip_r(&space, 0, offset*2+0, mem_mask) |
-	      (common_io_chip_r(&space, 0, offset*2+1, mem_mask >> 16) << 16);
+	return common_io_chip_r(space, 0, offset*2+0, mem_mask) |
+	      (common_io_chip_r(space, 0, offset*2+1, mem_mask >> 16) << 16);
 }
 
 
 WRITE32_MEMBER(segas32_state::io_chip_0_w)
 {
 	if (ACCESSING_BITS_0_15)
-		common_io_chip_w(&space, 0, offset*2+0, data, mem_mask);
+		common_io_chip_w(space, 0, offset*2+0, data, mem_mask);
 	if (ACCESSING_BITS_16_31)
-		common_io_chip_w(&space, 0, offset*2+1, data >> 16, mem_mask >> 16);
+		common_io_chip_w(space, 0, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
 
 READ32_MEMBER(segas32_state::io_chip_1_r)
 {
-	return common_io_chip_r(&space, 1, offset*2+0, mem_mask) |
-	      (common_io_chip_r(&space, 1, offset*2+1, mem_mask >> 16) << 16);
+	return common_io_chip_r(space, 1, offset*2+0, mem_mask) |
+	      (common_io_chip_r(space, 1, offset*2+1, mem_mask >> 16) << 16);
 }
 
 
 WRITE32_MEMBER(segas32_state::io_chip_1_w)
 {
 	if (ACCESSING_BITS_0_15)
-		common_io_chip_w(&space, 1, offset*2+0, data, mem_mask);
+		common_io_chip_w(space, 1, offset*2+0, data, mem_mask);
 	if (ACCESSING_BITS_16_31)
-		common_io_chip_w(&space, 1, offset*2+1, data >> 16, mem_mask >> 16);
+		common_io_chip_w(space, 1, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -2193,7 +2192,7 @@ static MACHINE_CONFIG_START( system32, segas32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V60, MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(system32_map)
-	MCFG_CPU_VBLANK_INT("screen", start_of_vblank_int)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", segas32_state,  start_of_vblank_int)
 
 	MCFG_CPU_ADD("soundcpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(system32_sound_map)
@@ -2203,8 +2202,8 @@ static MACHINE_CONFIG_START( system32, segas32_state )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("v60_irq0", signal_v60_irq_callback)
-	MCFG_TIMER_ADD("v60_irq1", signal_v60_irq_callback)
+	MCFG_TIMER_DRIVER_ADD("v60_irq0", segas32_state, signal_v60_irq_callback)
+	MCFG_TIMER_DRIVER_ADD("v60_irq1", segas32_state, signal_v60_irq_callback)
 
 	/* video hardware */
 	MCFG_GFXDECODE(segas32)
@@ -2214,7 +2213,7 @@ static MACHINE_CONFIG_START( system32, segas32_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(52*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(system32)
+	MCFG_SCREEN_UPDATE_DRIVER(segas32_state, screen_update_system32)
 
 	MCFG_VIDEO_START_OVERRIDE(segas32_state,system32)
 
@@ -2252,7 +2251,7 @@ static MACHINE_CONFIG_START( multi32, segas32_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V70, MULTI32_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(multi32_map)
-	MCFG_CPU_VBLANK_INT("lscreen", start_of_vblank_int)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", segas32_state,  start_of_vblank_int)
 
 	MCFG_CPU_ADD("soundcpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(multi32_sound_map)
@@ -2262,8 +2261,8 @@ static MACHINE_CONFIG_START( multi32, segas32_state )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("v60_irq0", signal_v60_irq_callback)
-	MCFG_TIMER_ADD("v60_irq1", signal_v60_irq_callback)
+	MCFG_TIMER_DRIVER_ADD("v60_irq0", segas32_state, signal_v60_irq_callback)
+	MCFG_TIMER_DRIVER_ADD("v60_irq1", segas32_state, signal_v60_irq_callback)
 
 	/* video hardware */
 	MCFG_GFXDECODE(segas32)
@@ -2274,13 +2273,13 @@ static MACHINE_CONFIG_START( multi32, segas32_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(52*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(multi32_left)
+	MCFG_SCREEN_UPDATE_DRIVER(segas32_state, screen_update_multi32_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(52*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(multi32_right)
+	MCFG_SCREEN_UPDATE_DRIVER(segas32_state, screen_update_multi32_right)
 
 	MCFG_VIDEO_START_OVERRIDE(segas32_state,multi32)
 
@@ -3107,10 +3106,43 @@ ROM_END
  **************************************************************************************************************************
     Jurassic Park
     not protected
+     Game: 833-10544 JURASSIC PARK
+   ROM BD: 834-10545
+A/D BD NO: 837-7536-91
 */
 ROM_START( jpark )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
 	ROM_LOAD_x2( "epr-16402a.ic8",     0x000000, 0x80000, CRC(c70db239) SHA1(fd79dfd1ce194fcc8ccb58117bc845cdfe9943b1) )
+	ROM_LOAD16_BYTE( "epr-16395.ic18", 0x100000, 0x80000, CRC(ac5a01d6) SHA1(df6bffdf5723cb8790a9c1c0ab271989a758bdd8) )
+	ROM_LOAD16_BYTE( "epr-16394.ic9",  0x100001, 0x80000, CRC(c08c3a8a) SHA1(923cf256d863656336401fa75103b42298cb3822) )
+
+	ROM_REGION( 0x500000, "soundcpu", 0 ) /* sound CPU */
+	ROM_LOAD_x4( "epr-16399.ic36", 0x100000, 0x040000, CRC(b09b2fe3) SHA1(bf8d646bab65fcc4ece8c2bd9a3df389e5860ed6) )
+	ROM_LOAD( "mpr-16398.ic35",    0x200000, 0x100000, CRC(fa710ca6) SHA1(1fd625070eef5f99d7be07606aeeff9282e32532) )
+	ROM_LOAD( "mpr-16397.ic34",    0x300000, 0x100000, CRC(6e96e0be) SHA1(422b783b72127b80a23043b2dd1c04f5772f436e) )
+	ROM_LOAD( "mpr-16396.ic24",    0x400000, 0x100000, CRC(f69a2dc4) SHA1(3f02b10976852916c58e852f3161a857784fe36b) )
+
+	ROM_REGION( 0x400000, "gfx1", 0 ) /* tiles */
+	ROM_LOAD16_BYTE( "mpr-16404.ic14", 0x000000, 0x200000, CRC(11283807) SHA1(99e465c3fc31e640740b8257a349e203f026754a) )
+	ROM_LOAD16_BYTE( "mpr-16403.ic5",  0x000001, 0x200000, CRC(02530a9b) SHA1(b43e1b47f74c801bfc599cbe893fb8dc13453dd0) )
+
+	ROM_REGION32_BE( 0x1000000, "gfx2", 0 ) /* sprites */
+	ROMX_LOAD( "mpr-16405.ic32", 0x000000, 0x200000, CRC(b425f182) SHA1(66c6bd29dd3450db816b895c4c9c5208a66aae67) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16407.ic30", 0x000002, 0x200000, CRC(bc49ffd9) SHA1(a50ba7ddccfdfd7638c4041978b39c1559afbbb4) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16409.ic28", 0x000004, 0x200000, CRC(fe73660d) SHA1(ec1a3ea5303d2ccb9e327da18476969953626e1c) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16411.ic26", 0x000006, 0x200000, CRC(71cabbc5) SHA1(9760f57ef43eb251488dadd37711d5682d902434) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16406.ic31", 0x800000, 0x200000, CRC(b9ed73d6) SHA1(0dd22e7a21e95d84fc91acd742c737f96529f515) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16408.ic29", 0x800002, 0x200000, CRC(7b2f476b) SHA1(da99a9911982ba8aaef8c9aecc2977c9fd6da094) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16410.ic27", 0x800004, 0x200000, CRC(49c8f952) SHA1(f26b818711910b10bf520e5f849a1478a6b1d6e6) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-16412.ic25", 0x800006, 0x200000, CRC(105dc26e) SHA1(fd2ef8c9fe1a78b4f9cc891a6fbd060184e58a1f) , ROM_SKIP(6)|ROM_GROUPWORD )
+
+	ROM_REGION( 0x10000, "cpu2", 0 ) /* unused */
+	ROM_LOAD( "epr-13908.xx", 0x00000, 0x8000, CRC(6228c1d2) SHA1(bd37fe775534fb94c9af80546948ce5f9c47bbf5) ) /* cabinet movement */
+ROM_END
+
+ROM_START( jparkj )
+	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
+	ROM_LOAD_x2( "epr-16400.ic8",      0x000000, 0x80000, CRC(321c3411) SHA1(c53e7ed5f2e523741a521c9cd271123ab557cc4a) )
 	ROM_LOAD16_BYTE( "epr-16395.ic18", 0x100000, 0x80000, CRC(ac5a01d6) SHA1(df6bffdf5723cb8790a9c1c0ab271989a758bdd8) )
 	ROM_LOAD16_BYTE( "epr-16394.ic9",  0x100001, 0x80000, CRC(c08c3a8a) SHA1(923cf256d863656336401fa75103b42298cb3822) )
 
@@ -4210,14 +4242,14 @@ READ16_MEMBER(segas32_state::arescue_slavebusy_r)
 DRIVER_INIT_MEMBER(segas32_state,arescue)
 {
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00007, read16_delegate(FUNC(segas32_state::arescue_dsp_r),this), write16_delegate(FUNC(segas32_state::arescue_dsp_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa00000, 0xa00007, read16_delegate(FUNC(segas32_state::arescue_dsp_r),this), write16_delegate(FUNC(segas32_state::arescue_dsp_w),this));
 
 	m_dual_pcb_comms = auto_alloc_array(machine(), UINT16, 0x1000/2);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x810000, 0x810001, read16_delegate(FUNC(segas32_state::arescue_handshake_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x81000e, 0x81000f, read16_delegate(FUNC(segas32_state::arescue_slavebusy_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x810000, 0x810001, read16_delegate(FUNC(segas32_state::arescue_handshake_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x81000e, 0x81000f, read16_delegate(FUNC(segas32_state::arescue_slavebusy_r),this));
 
 	m_sw1_output = arescue_sw1_output;
 }
@@ -4228,8 +4260,8 @@ DRIVER_INIT_MEMBER(segas32_state,arabfgt)
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa00100, 0xa0011f, read16_delegate(FUNC(segas32_state::arf_wakeup_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::arabfgt_protection_r),this), write16_delegate(FUNC(segas32_state::arabfgt_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa00100, 0xa0011f, read16_delegate(FUNC(segas32_state::arf_wakeup_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::arabfgt_protection_r),this), write16_delegate(FUNC(segas32_state::arabfgt_protection_w),this));
 }
 
 
@@ -4239,8 +4271,8 @@ DRIVER_INIT_MEMBER(segas32_state,brival)
 
 	/* install protection handlers */
 	m_system32_protram = auto_alloc_array(machine(), UINT16, 0x1000/2);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20ba00, 0x20ba07, read16_delegate(FUNC(segas32_state::brival_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa00000, 0xa00fff, write16_delegate(FUNC(segas32_state::brival_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x20ba00, 0x20ba07, read16_delegate(FUNC(segas32_state::brival_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xa00000, 0xa00fff, write16_delegate(FUNC(segas32_state::brival_protection_w),this));
 }
 
 
@@ -4249,7 +4281,7 @@ DRIVER_INIT_MEMBER(segas32_state,darkedge)
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::darkedge_protection_r),this), write16_delegate(FUNC(segas32_state::darkedge_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::darkedge_protection_r),this), write16_delegate(FUNC(segas32_state::darkedge_protection_w),this));
 	m_system32_prot_vblank = darkedge_fd1149_vblank;
 }
 
@@ -4258,7 +4290,7 @@ DRIVER_INIT_MEMBER(segas32_state,dbzvrvs)
 	segas32_common_init(machine(), read16_delegate(), write16_delegate());
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::dbzvrvs_protection_r),this), write16_delegate(FUNC(segas32_state::dbzvrvs_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::dbzvrvs_protection_r),this), write16_delegate(FUNC(segas32_state::dbzvrvs_protection_w),this));
 }
 
 WRITE16_MEMBER(segas32_state::f1en_comms_echo_w)
@@ -4273,10 +4305,10 @@ DRIVER_INIT_MEMBER(segas32_state,f1en)
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
 
 	m_dual_pcb_comms = auto_alloc_array(machine(), UINT16, 0x1000/2);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x810048, 0x810049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x810048, 0x810049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),this));
 
 	m_sw1_output = radm_sw1_output;
 }
@@ -4289,10 +4321,10 @@ DRIVER_INIT_MEMBER(segas32_state,f1lap)
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
 
 	m_dual_pcb_comms = auto_alloc_array(machine(), UINT16, 0x1000/2);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x800000, 0x800fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x801000, 0x801003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x800000, 0x800fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x801000, 0x801003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
 
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800048, 0x800049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),this));
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800048, 0x800049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),this));
 	m_system32_prot_vblank = f1lap_fd1149_vblank;
 
 	m_sw1_output = f1lap_sw1_output;
@@ -4304,7 +4336,7 @@ DRIVER_INIT_MEMBER(segas32_state,ga2)
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
 	decrypt_ga2_protrom(machine());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::ga2_dpram_r),this), write16_delegate(FUNC(segas32_state::ga2_dpram_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::ga2_dpram_r),this), write16_delegate(FUNC(segas32_state::ga2_dpram_w),this));
 }
 
 
@@ -4364,7 +4396,7 @@ DRIVER_INIT_MEMBER(segas32_state,radr)
 DRIVER_INIT_MEMBER(segas32_state,scross)
 {
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
-	machine().device("soundcpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb0, 0xbf, write8_delegate(FUNC(segas32_state::scross_bank_w),this));
+	machine().device("soundcpu")->memory().space(AS_PROGRAM).install_write_handler(0xb0, 0xbf, write8_delegate(FUNC(segas32_state::scross_bank_w),this));
 
 	m_sw1_output = scross_sw1_output;
 	m_sw2_output = scross_sw2_output;
@@ -4382,7 +4414,7 @@ DRIVER_INIT_MEMBER(segas32_state,sonic)
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::sonic_custom_io_r),this), write16_delegate(FUNC(segas32_state::sonic_custom_io_w),this));
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20E5C4, 0x20E5C5, write16_delegate(FUNC(segas32_state::sonic_level_load_protection),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x20E5C4, 0x20E5C5, write16_delegate(FUNC(segas32_state::sonic_level_load_protection),this));
 }
 
 
@@ -4407,7 +4439,7 @@ DRIVER_INIT_MEMBER(segas32_state,svf)
 DRIVER_INIT_MEMBER(segas32_state,jleague)
 {
 	segas32_common_init(machine(), read16_delegate(), write16_delegate());
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20F700, 0x20F705, write16_delegate(FUNC(segas32_state::jleague_protection_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x20F700, 0x20F705, write16_delegate(FUNC(segas32_state::jleague_protection_w),this));
 }
 
 
@@ -4444,7 +4476,8 @@ GAME( 1992, ga2,      0,        system32_v25, ga2, segas32_state,      ga2,     
 GAME( 1992, ga2u,     ga2,      system32_v25, ga2u, segas32_state,     ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, ga2j,     ga2,      system32_v25, ga2, segas32_state,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, holo,     0,        system32,     holo, segas32_state,     holo,     ORIENTATION_FLIP_Y, "Sega",   "Holosseum (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, jpark,    0,        system32,     jpark, segas32_state,    jpark,    ROT0, "Sega",   "Jurassic Park", GAME_IMPERFECT_GRAPHICS )  /* Released in 02.1994 */
+GAME( 1993, jpark,    0,        system32,     jpark, segas32_state,    jpark,    ROT0, "Sega",   "Jurassic Park (World)", GAME_IMPERFECT_GRAPHICS )  /* Released in 02.1994 */
+GAME( 1993, jparkj,   jpark,    system32,     jpark, segas32_state,    jpark,    ROT0, "Sega",   "Jurassic Park (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, kokoroj2, 0,        system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Kokoroji 2", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING) /* uses an Audio CD */
 GAME( 1990, radm,     0,        system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (World)", GAME_IMPERFECT_GRAPHICS )  /* Released in 02.1991 */
 GAME( 1990, radmu,    radm,     system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (US)", GAME_IMPERFECT_GRAPHICS )

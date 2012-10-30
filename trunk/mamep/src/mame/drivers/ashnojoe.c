@@ -351,7 +351,7 @@ static MACHINE_CONFIG_START( ashnojoe, ashnojoe_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(ashnojoe_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ashnojoe_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -364,7 +364,7 @@ static MACHINE_CONFIG_START( ashnojoe, ashnojoe_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, 50*8-1, 3*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ashnojoe)
+	MCFG_SCREEN_UPDATE_DRIVER(ashnojoe_state, screen_update_ashnojoe)
 
 	MCFG_GFXDECODE(ashnojoe)
 	MCFG_PALETTE_LENGTH(0x1000/2)

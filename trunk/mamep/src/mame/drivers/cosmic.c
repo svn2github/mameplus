@@ -411,7 +411,7 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(cosmic_state::panic_coin_inserted)
 {
-	panic_sound_output_w(*machine().device("maincpu")->memory().space(AS_PROGRAM), 17, newval == 0);
+	panic_sound_output_w(machine().device("maincpu")->memory().space(AS_PROGRAM), 17, newval == 0);
 }
 
 static INPUT_PORTS_START( panic )
@@ -1000,15 +1000,15 @@ static MACHINE_CONFIG_START( cosmic, cosmic_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
 MACHINE_CONFIG_END
 
-static TIMER_DEVICE_CALLBACK( panic_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(cosmic_state::panic_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xd7); /* RST 10h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xd7); /* RST 10h */
 
 	if(scanline == 0) // vblank-in irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf); /* RST 08h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf); /* RST 08h */
 }
 
 
@@ -1017,7 +1017,7 @@ static MACHINE_CONFIG_DERIVED( panic, cosmic )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(panic_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", panic_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", cosmic_state, panic_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_GFXDECODE(panic)
@@ -1025,7 +1025,7 @@ static MACHINE_CONFIG_DERIVED( panic, cosmic )
 
 	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,panic)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(panic)
+	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_panic)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1050,7 +1050,7 @@ static MACHINE_CONFIG_DERIVED( cosmica, cosmic )
 
 	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,cosmica)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(cosmica)
+	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_cosmica)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1083,7 +1083,7 @@ static MACHINE_CONFIG_START( cosmicg, cosmic_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cosmicg)
+	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_cosmicg)
 
 	MCFG_PALETTE_LENGTH(16)
 
@@ -1112,7 +1112,7 @@ static MACHINE_CONFIG_DERIVED( magspot, cosmic )
 
 	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,magspot)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(magspot)
+	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_magspot)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1128,7 +1128,7 @@ static MACHINE_CONFIG_DERIVED( devzone, magspot )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(devzone)
+	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_devzone)
 MACHINE_CONFIG_END
 
 
@@ -1144,7 +1144,7 @@ static MACHINE_CONFIG_DERIVED( nomnlnd, cosmic )
 
 	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,nomnlnd)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(nomnlnd)
+	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_nomnlnd)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1538,17 +1538,17 @@ DRIVER_INIT_MEMBER(cosmic_state,cosmica)
 
 DRIVER_INIT_MEMBER(cosmic_state,devzone)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x4807, 0x4807,write8_delegate(FUNC(cosmic_state::cosmic_background_enable_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x4807, 0x4807,write8_delegate(FUNC(cosmic_state::cosmic_background_enable_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(cosmic_state,nomnlnd)
 {
 	dac_device *dac = machine().device<dac_device>("dac");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x5000, 0x5001, read8_delegate(FUNC(cosmic_state::nomnlnd_port_0_1_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x4800, 0x4800);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x4807, 0x4807, write8_delegate(FUNC(cosmic_state::cosmic_background_enable_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x480a, 0x480a, write8_delegate(FUNC(dac_device::write_unsigned8),dac));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x5000, 0x5001, read8_delegate(FUNC(cosmic_state::nomnlnd_port_0_1_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0x4800, 0x4800);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x4807, 0x4807, write8_delegate(FUNC(cosmic_state::cosmic_background_enable_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x480a, 0x480a, write8_delegate(FUNC(dac_device::write_unsigned8),dac));
 }
 
 DRIVER_INIT_MEMBER(cosmic_state,panic)

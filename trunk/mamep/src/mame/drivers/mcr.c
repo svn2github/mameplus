@@ -377,25 +377,23 @@ READ8_MEMBER(mcr_state::kick_ip1_r)
  *
  *************************************/
 
-TIMER_DEVICE_CALLBACK( dpoker_hopper_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(mcr_state::dpoker_hopper_callback)
 {
-	mcr_state *state = timer.machine().driver_data<mcr_state>();
-
 	if (dpoker_output & 0x40)
 	{
 		// hopper timing is a guesstimate
 		dpoker_coin_status ^= 8;
-		state->m_dpoker_hopper_timer->adjust(attotime::from_msec((dpoker_coin_status & 8) ? 100 : 250));
+		m_dpoker_hopper_timer->adjust(attotime::from_msec((dpoker_coin_status & 8) ? 100 : 250));
 	}
 	else
 	{
 		dpoker_coin_status &= ~8;
 	}
 
-	coin_counter_w(timer.machine(), 3, dpoker_coin_status & 8);
+	coin_counter_w(machine(), 3, dpoker_coin_status & 8);
 }
 
-TIMER_DEVICE_CALLBACK( dpoker_coin_in_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(mcr_state::dpoker_coin_in_callback)
 {
 	dpoker_coin_status &= ~2;
 }
@@ -651,7 +649,7 @@ WRITE8_MEMBER(mcr_state::dotron_op4_w)
  *
  *************************************/
 
-WRITE8_DEVICE_HANDLER( mcr_ipu_sio_transmit )
+WRITE16_MEMBER(mcr_state::mcr_ipu_sio_transmit)
 {
 	logerror("ipu_sio_transmit: %02X\n", data);
 
@@ -1827,7 +1825,7 @@ static MACHINE_CONFIG_START( mcr_90009, mcr_state )
 	MCFG_CPU_CONFIG(mcr_daisy_chain)
 	MCFG_CPU_PROGRAM_MAP(cpu_90009_map)
 	MCFG_CPU_IO_MAP(cpu_90009_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", mcr_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", mcr_state, mcr_interrupt, "screen", 0, 1)
 
 	MCFG_Z80CTC_ADD("ctc", MAIN_OSC_MCR_I/8 /* same as "maincpu" */, mcr_ctc_intf)
 
@@ -1844,7 +1842,7 @@ static MACHINE_CONFIG_START( mcr_90009, mcr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 0*16, 30*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(mcr)
+	MCFG_SCREEN_UPDATE_DRIVER(mcr_state, screen_update_mcr)
 
 	MCFG_GFXDECODE(mcr)
 	MCFG_PALETTE_LENGTH(32)
@@ -1863,8 +1861,8 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( mcr_90009_dp, mcr_90009 )
 
 	/* basic machine hardware */
-	MCFG_TIMER_ADD("dp_coinin", dpoker_coin_in_callback)
-	MCFG_TIMER_ADD("dp_hopper", dpoker_hopper_callback)
+	MCFG_TIMER_DRIVER_ADD("dp_coinin", mcr_state, dpoker_coin_in_callback)
+	MCFG_TIMER_DRIVER_ADD("dp_hopper", mcr_state, dpoker_hopper_callback)
 MACHINE_CONFIG_END
 
 
@@ -1939,7 +1937,7 @@ static MACHINE_CONFIG_DERIVED( mcr_91490_ipu, mcr_91490_snt )
 	MCFG_CPU_PROGRAM_MAP(ipu_91695_map)
 	MCFG_CPU_IO_MAP(ipu_91695_portmap)
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(mcr_ipu_interrupt)
+	MCFG_TIMER_DRIVER_CALLBACK(mcr_state, mcr_ipu_interrupt)
 
 	MCFG_Z80CTC_ADD("ipu_ctc", 7372800/2 /* same as "ipu" */, nflfoot_ctc_intf)
 	MCFG_Z80PIO_ADD("ipu_pio0", 7372800/2, nflfoot_pio_intf)
@@ -2800,17 +2798,17 @@ DRIVER_INIT_MEMBER(mcr_state,dpoker)
 	machine().device<midway_ssio_device>("ssio")->set_custom_input(0, 0x8e, read8_delegate(FUNC(mcr_state::dpoker_ip0_r),this));
 
 	// meter ram, is it battery backed?
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0x8000, 0x81ff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0x8000, 0x81ff);
 
 	// extra I/O
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x24, 0x24, "P24");
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x28, 0x28, "P28");
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x2c, 0x2c, "P2C");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x24, 0x24, "P24");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x28, 0x28, "P28");
+	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x2c, 0x2c, "P2C");
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2c, 0x2c, write8_delegate(FUNC(mcr_state::dpoker_lamps1_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x30, 0x30, write8_delegate(FUNC(mcr_state::dpoker_lamps2_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x34, 0x34, write8_delegate(FUNC(mcr_state::dpoker_output_w),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(mcr_state::dpoker_meters_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x2c, 0x2c, write8_delegate(FUNC(mcr_state::dpoker_lamps1_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x30, 0x30, write8_delegate(FUNC(mcr_state::dpoker_lamps2_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x34, 0x34, write8_delegate(FUNC(mcr_state::dpoker_output_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(mcr_state::dpoker_meters_w),this));
 
 	dpoker_coin_status = 0;
 	dpoker_output = 0;
@@ -2841,7 +2839,7 @@ DRIVER_INIT_MEMBER(mcr_state,twotiger)
 	mcr_init(machine(), 90010, 91399, 90913);
 
 	machine().device<midway_ssio_device>("ssio")->set_custom_output(4, 0xff, write8_delegate(FUNC(mcr_state::twotiger_op4_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xe800, 0xefff, 0, 0x1000, read8_delegate(FUNC(mcr_state::twotiger_videoram_r),this), write8_delegate(FUNC(mcr_state::twotiger_videoram_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xe800, 0xefff, 0, 0x1000, read8_delegate(FUNC(mcr_state::twotiger_videoram_r),this), write8_delegate(FUNC(mcr_state::twotiger_videoram_w),this));
 }
 
 

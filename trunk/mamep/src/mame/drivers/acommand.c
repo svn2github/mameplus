@@ -92,6 +92,10 @@ public:
 	TILE_GET_INFO_MEMBER(ac_get_bg_tile_info);
 	TILE_GET_INFO_MEMBER(ac_get_tx_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_acommand(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(acommand_scanline);
+	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, int priority, int pri_mask);
+	void draw_led(bitmap_ind16 &bitmap, int x, int y,UINT8 value);
 };
 
 
@@ -122,13 +126,12 @@ TILE_GET_INFO_MEMBER(acommand_state::ac_get_tx_tile_info)
 			0);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority, int pri_mask)
+void acommand_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, int priority, int pri_mask)
 {
-	acommand_state *state = machine.driver_data<acommand_state>();
-	UINT16 *spriteram16 = state->m_spriteram;
+	UINT16 *spriteram16 = m_spriteram;
 	int offs;
 
-	for (offs = 0;offs < state->m_spriteram.bytes()/2;offs += 8)
+	for (offs = 0;offs < m_spriteram.bytes()/2;offs += 8)
 	{
 		if (!(spriteram16[offs+0] & 0x1000))
 		{
@@ -145,12 +148,12 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 			int xx,yy,x;
 			int delta = 16;
 
-			flipx ^= state->flip_screen();
-			flipy ^= state->flip_screen();
+			flipx ^= flip_screen();
+			flipy ^= flip_screen();
 
 			if ((pri&pri_mask)!=priority) continue;
 
-			if (state->flip_screen())
+			if (flip_screen())
 			{
 				sx = 368 - sx;
 				sy = 240 - sy;
@@ -164,7 +167,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 				xx = w;
 				do
 				{
-					drawgfx_transpen(bitmap,cliprect,machine.gfx[2],
+					drawgfx_transpen(bitmap,cliprect,machine().gfx[2],
 							code,
 							color,
 							flipx, flipy,
@@ -214,7 +217,7 @@ g & 40
 /*                                    0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f*/
 static const UINT8 led_fill[0x10] = { 0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x00,0x00,0x00,0x00,0x00,0x00};
 
-static void draw_led(bitmap_ind16 &bitmap, int x, int y,UINT8 value)
+void acommand_state::draw_led(bitmap_ind16 &bitmap, int x, int y,UINT8 value)
 {
 	bitmap.plot_box(x, y, 6, 10, 0x00000000);
 
@@ -249,21 +252,20 @@ static void draw_led(bitmap_ind16 &bitmap, int x, int y,UINT8 value)
 }
 
 
-static SCREEN_UPDATE_IND16( acommand )
+UINT32 acommand_state::screen_update_acommand(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	acommand_state *state = screen.machine().driver_data<acommand_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(),bitmap,cliprect,0,0);
-	state->m_tx_tilemap->draw(bitmap, cliprect, 0,0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	draw_sprites(bitmap,cliprect,0,0);
+	m_tx_tilemap->draw(bitmap, cliprect, 0,0);
 
 	/*Order might be wrong,but these for sure are the led numbers tested*/
-	draw_led(bitmap,  0, 20, (state->m_led0 & 0x0f00) >> 8);
-	draw_led(bitmap,  6, 20, (state->m_led0 & 0x00f0) >> 4);
-	draw_led(bitmap, 12, 20, (state->m_led0 & 0x000f));
+	draw_led(bitmap,  0, 20, (m_led0 & 0x0f00) >> 8);
+	draw_led(bitmap,  6, 20, (m_led0 & 0x00f0) >> 4);
+	draw_led(bitmap, 12, 20, (m_led0 & 0x000f));
 
-	draw_led(bitmap, 256-18,20,(state->m_led0 & 0xf000) >> 12);
-	draw_led(bitmap, 256-12,20,(state->m_led1 & 0xf0) >> 4);
-	draw_led(bitmap, 256-6,20, (state->m_led1 & 0xf));
+	draw_led(bitmap, 256-18,20,(m_led0 & 0xf000) >> 12);
+	draw_led(bitmap, 256-12,20,(m_led1 & 0xf0) >> 4);
+	draw_led(bitmap, 256-6,20, (m_led1 & 0xf));
 	return 0;
 }
 
@@ -585,15 +587,15 @@ static GFXDECODE_START( acommand )
 	GFXDECODE_ENTRY( "gfx3", 0, tilelayout, 0x1800, 256 )
 GFXDECODE_END
 
-static TIMER_DEVICE_CALLBACK( acommand_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(acommand_state::acommand_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in irq? (update palette and layers)
-		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( acommand, acommand_state )
@@ -601,7 +603,7 @@ static MACHINE_CONFIG_START( acommand, acommand_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,12000000)
 	MCFG_CPU_PROGRAM_MAP(acommand_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", acommand_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", acommand_state, acommand_scanline, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -609,7 +611,7 @@ static MACHINE_CONFIG_START( acommand, acommand_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(acommand)
+	MCFG_SCREEN_UPDATE_DRIVER(acommand_state, screen_update_acommand)
 
 	MCFG_GFXDECODE(acommand)
 	MCFG_PALETTE_LENGTH(0x4000)

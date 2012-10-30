@@ -58,6 +58,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_berzerk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(irq_callback);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
 };
 
 
@@ -180,9 +183,8 @@ WRITE8_MEMBER(berzerk_state::irq_enable_w)
 }
 
 
-static TIMER_CALLBACK( irq_callback )
+TIMER_CALLBACK_MEMBER(berzerk_state::irq_callback)
 {
-	berzerk_state *state = machine.driver_data<berzerk_state>();
 	int irq_number = param;
 	UINT8 next_counter;
 	UINT8 next_v256;
@@ -190,8 +192,8 @@ static TIMER_CALLBACK( irq_callback )
 	int next_irq_number;
 
 	/* set the IRQ line if enabled */
-	if (state->m_irq_enabled)
-		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfc);
+	if (m_irq_enabled)
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfc);
 
 	/* set up for next interrupt */
 	next_irq_number = (irq_number + 1) % IRQS_PER_FRAME;
@@ -199,14 +201,14 @@ static TIMER_CALLBACK( irq_callback )
 	next_v256 = irq_trigger_v256s[next_irq_number];
 
 	next_vpos = vsync_chain_counter_to_vpos(next_counter, next_v256);
-	state->m_irq_timer->adjust(machine.primary_screen->time_until_pos(next_vpos), next_irq_number);
+	m_irq_timer->adjust(machine().primary_screen->time_until_pos(next_vpos), next_irq_number);
 }
 
 
 static void create_irq_timer(running_machine &machine)
 {
 	berzerk_state *state = machine.driver_data<berzerk_state>();
-	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(irq_callback));
+	state->m_irq_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(berzerk_state::irq_callback),state));
 }
 
 
@@ -260,9 +262,8 @@ READ8_MEMBER(berzerk_state::nmi_disable_r)
 }
 
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(berzerk_state::nmi_callback)
 {
-	berzerk_state *state = machine.driver_data<berzerk_state>();
 	int nmi_number = param;
 	UINT8 next_counter;
 	UINT8 next_v256;
@@ -270,8 +271,8 @@ static TIMER_CALLBACK( nmi_callback )
 	int next_nmi_number;
 
 	/* pulse the NMI line if enabled */
-	if (state->m_nmi_enabled)
-		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enabled)
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	/* set up for next interrupt */
 	next_nmi_number = (nmi_number + 1) % NMIS_PER_FRAME;
@@ -279,14 +280,14 @@ static TIMER_CALLBACK( nmi_callback )
 	next_v256 = nmi_trigger_v256s[next_nmi_number];
 
 	next_vpos = vsync_chain_counter_to_vpos(next_counter, next_v256);
-	state->m_nmi_timer->adjust(machine.primary_screen->time_until_pos(next_vpos), next_nmi_number);
+	m_nmi_timer->adjust(machine().primary_screen->time_until_pos(next_vpos), next_nmi_number);
 }
 
 
 static void create_nmi_timer(running_machine &machine)
 {
 	berzerk_state *state = machine.driver_data<berzerk_state>();
-	state->m_nmi_timer = machine.scheduler().timer_alloc(FUNC(nmi_callback));
+	state->m_nmi_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(berzerk_state::nmi_callback),state));
 }
 
 
@@ -455,20 +456,19 @@ static void get_pens(running_machine &machine, pen_t *pens)
 }
 
 
-static SCREEN_UPDATE_RGB32( berzerk )
+UINT32 berzerk_state::screen_update_berzerk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	berzerk_state *state = screen.machine().driver_data<berzerk_state>();
 	pen_t pens[NUM_PENS];
 	offs_t offs;
 
-	get_pens(screen.machine(), pens);
+	get_pens(machine(), pens);
 
-	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
+	for (offs = 0; offs < m_videoram.bytes(); offs++)
 	{
 		int i;
 
-		UINT8 data = state->m_videoram[offs];
-		UINT8 color = state->m_colorram[((offs >> 2) & 0x07e0) | (offs & 0x001f)];
+		UINT8 data = m_videoram[offs];
+		UINT8 color = m_colorram[((offs >> 2) & 0x07e0) | (offs & 0x001f)];
 
 		UINT8 y = offs >> 5;
 		UINT8 x = offs << 3;
@@ -548,12 +548,12 @@ WRITE8_MEMBER(berzerk_state::berzerk_audio_w)
 
 	/* offset 6 writes to the sfxcontrol latch */
 	case 6:
-		exidy_sfxctrl_w(machine().device("exidy"), data >> 6, data);
+		exidy_sfxctrl_w(machine().device("exidy"), space, data >> 6, data);
 		break;
 
 	/* everything else writes to the 6840 */
 	default:
-		exidy_sh6840_w(machine().device("exidy"), offset, data);
+		exidy_sh6840_w(machine().device("exidy"), space, offset, data);
 		break;
 
 	}
@@ -574,7 +574,7 @@ READ8_MEMBER(berzerk_state::berzerk_audio_r)
 		return 0;
 	/* everything else reads from the 6840 */
 	default:
-		return exidy_sh6840_r(machine().device("exidy"), offset);
+		return exidy_sh6840_r(machine().device("exidy"), space, offset);
 	}
 }
 
@@ -582,10 +582,10 @@ READ8_MEMBER(berzerk_state::berzerk_audio_r)
 
 static SOUND_RESET(berzerk)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_IO);
+	address_space &space = machine.device("maincpu")->memory().space(AS_IO);
 	berzerk_state *state = machine.driver_data<berzerk_state>();
 	/* clears the flip-flop controlling the volume and freq on the speech chip */
-	state->berzerk_audio_w(*space, 4, 0x40);
+	state->berzerk_audio_w(space, 4, 0x40);
 }
 
 
@@ -1092,7 +1092,7 @@ static MACHINE_CONFIG_START( berzerk, berzerk_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(berzerk)
+	MCFG_SCREEN_UPDATE_DRIVER(berzerk_state, screen_update_berzerk)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1234,9 +1234,9 @@ ROM_END
 
 DRIVER_INIT_MEMBER(berzerk_state,moonwarp)
 {
-	address_space *io = machine().device("maincpu")->memory().space(AS_IO);
-	io->install_read_handler (0x48, 0x48, read8_delegate(FUNC(berzerk_state::moonwarp_p1_r), this));
-	io->install_read_handler (0x4a, 0x4a, read8_delegate(FUNC(berzerk_state::moonwarp_p2_r), this));
+	address_space &io = machine().device("maincpu")->memory().space(AS_IO);
+	io.install_read_handler (0x48, 0x48, read8_delegate(FUNC(berzerk_state::moonwarp_p1_r), this));
+	io.install_read_handler (0x4a, 0x4a, read8_delegate(FUNC(berzerk_state::moonwarp_p2_r), this));
 }
 
 /*************************************

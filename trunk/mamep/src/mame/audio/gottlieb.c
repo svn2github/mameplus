@@ -206,7 +206,7 @@ static const char *const reactor_sample_names[] =
 	"fx_39j", /* "45000" */
 	"fx_39k", /* "50000" */
 	"fx_39l", /* "55000" */
-     0	/* end of array */
+	0	/* end of array */
 };
 
 static const char *const qbert_sample_names[] =
@@ -256,7 +256,6 @@ static const char *const qbert_sample_names[] =
 	"fx_23", /* O1 with varying voice clock */
 	"fx_28",
 	"fx_36",
-	"knocker",
 	0	/* end of array */
 };
 
@@ -283,6 +282,49 @@ MACHINE_CONFIG_FRAGMENT( qbert_samples )
 MACHINE_CONFIG_END
 
 #endif
+
+
+
+//**************************************************************************
+//  QBERT MECHANICAL KNOCKER
+//**************************************************************************
+
+//-------------------------------------------------
+//  qbert cabinets have a mechanical knocker near the floor,
+//  MAME simulates this with a sample.
+//  (like all MAME samples, it is optional. If you actually have
+//   a real kicker/knocker, hook it up via output "knocker0")
+//-------------------------------------------------
+
+void gottlieb_state::qbert_knocker(UINT8 knock)
+{
+	output_set_value("knocker0", knock);
+
+	// start sound on rising edge
+	if (knock & ~m_knocker_prev)
+		m_knocker_sample->start(0, 0);
+	m_knocker_prev = knock;
+}
+
+static const char *const qbert_knocker_names[] =
+{
+	"*qbert",
+	"knocker",
+	0	/* end of array */
+};
+
+static const samples_interface qbert_knocker_interface =
+{
+	1,	/* one channel */
+	qbert_knocker_names
+};
+
+MACHINE_CONFIG_FRAGMENT( qbert_knocker )
+	MCFG_SPEAKER_ADD("knocker", 0.0, 0.0, 1.0)
+
+	MCFG_SAMPLES_ADD("knocker_sam", qbert_knocker_interface)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "knocker", 1.0)
+MACHINE_CONFIG_END
 
 
 
@@ -772,9 +814,9 @@ WRITE8_MEMBER( gottlieb_sound_r2_device::speech_control_w )
 			// bit 3 selects which of the two 8913 to enable
 			// bit 4 goes to the 8913 BC1 pin
 			if ((data & 0x08) != 0)
-				ay8910_data_address_w(m_ay1, data >> 4, m_psg_latch);
+				ay8910_data_address_w(m_ay1, space, data >> 4, m_psg_latch);
 			else
-				ay8910_data_address_w(m_ay2, data >> 4, m_psg_latch);
+				ay8910_data_address_w(m_ay2, space, data >> 4, m_psg_latch);
 		}
 	}
 	else
@@ -786,8 +828,8 @@ WRITE8_MEMBER( gottlieb_sound_r2_device::speech_control_w )
 		else
 		{
 			ay8913_device *ay = (data & 0x08) ? m_ay1 : m_ay2;
-			ay8910_address_w(ay, 0, m_psg_latch);
-			ay8910_data_w(ay, 0, m_psg_data_latch);
+			ay8910_address_w(ay, space, 0, m_psg_latch);
+			ay8910_data_w(ay, space, 0, m_psg_data_latch);
 		}
 	}
 
@@ -795,7 +837,7 @@ WRITE8_MEMBER( gottlieb_sound_r2_device::speech_control_w )
 
 	// bit 6 = speech chip DATA PRESENT pin; high then low to make the chip read data
 	if ((previous & 0x40) == 0 && (data & 0x40) != 0)
-		sp0250_w(m_sp0250, 0, m_sp0250_latch);
+		sp0250_w(m_sp0250, space, 0, m_sp0250_latch);
 
 	// bit 7 goes to the speech chip RESET pin
 	if ((previous ^ data) & 0x80)

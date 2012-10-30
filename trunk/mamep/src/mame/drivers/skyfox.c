@@ -211,12 +211,11 @@ GFXDECODE_END
 
 /* Scroll the background on every vblank (guess). */
 
-static INTERRUPT_GEN( skyfox_interrupt )
+INTERRUPT_GEN_MEMBER(skyfox_state::skyfox_interrupt)
 {
-	skyfox_state *state = device->machine().driver_data<skyfox_state>();
 
 	/* Scroll the bg */
-	state->m_bg_pos += (state->m_bg_ctrl >> 1) & 0x7;	// maybe..
+	m_bg_pos += (m_bg_ctrl >> 1) & 0x7;	// maybe..
 }
 
 void skyfox_state::machine_start()
@@ -240,7 +239,7 @@ static MACHINE_CONFIG_START( skyfox, skyfox_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_8MHz/2) /* Verified at 4MHz */
 	MCFG_CPU_PROGRAM_MAP(skyfox_map)
-	MCFG_CPU_VBLANK_INT("screen", skyfox_interrupt)		/* NMI caused by coin insertion */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", skyfox_state,  skyfox_interrupt)		/* NMI caused by coin insertion */
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_14_31818MHz/8) /* Verified at 1.789772MHz */
 	MCFG_CPU_PROGRAM_MAP(skyfox_sound_map)
@@ -252,7 +251,7 @@ static MACHINE_CONFIG_START( skyfox, skyfox_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	// we're using PORT_VBLANK
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0+0x60, 320-1+0x60, 0+16, 256-1-16)	// from $30*2 to $CC*2+8
-	MCFG_SCREEN_UPDATE_STATIC(skyfox)
+	MCFG_SCREEN_UPDATE_DRIVER(skyfox_state, screen_update_skyfox)
 
 	MCFG_GFXDECODE(skyfox)
 	MCFG_PALETTE_LENGTH(256+256)	/* 256 static colors (+256 for the background??) */

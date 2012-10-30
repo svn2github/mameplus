@@ -197,6 +197,7 @@ public:
 	DECLARE_WRITE8_MEMBER(sound_w);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_mpoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -205,20 +206,19 @@ void mpoker_state::video_start()
 
 }
 
-static SCREEN_UPDATE_IND16(mpoker)
+UINT32 mpoker_state::screen_update_mpoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mpoker_state *state = screen.machine().driver_data<mpoker_state>();
 	int y,x;
 	int count;
-	gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = machine().gfx[0];
 
 	count = 0;
 	for (y=0;y<32;y++)
 	{
 		for (x=0;x<32;x++)
 		{
-			UINT16 dat = state->m_video[count];
-			UINT16 col = state->m_video[count+0x400] & 0x7f;
+			UINT16 dat = m_video[count];
+			UINT16 col = m_video[count+0x400] & 0x7f;
 			drawgfx_opaque(bitmap,cliprect,gfx,dat,col,0,0,x*16,y*16);
 			count++;
 		}
@@ -586,7 +586,7 @@ static MACHINE_CONFIG_START( mpoker, mpoker_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,MASTER_CLOCK/6)		 /* 3 MHz? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mpoker_state,  irq0_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -596,7 +596,7 @@ static MACHINE_CONFIG_START( mpoker, mpoker_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(mpoker)
+	MCFG_SCREEN_UPDATE_DRIVER(mpoker_state, screen_update_mpoker)
 
 	MCFG_GFXDECODE(mpoker)
 	MCFG_PALETTE_LENGTH(0x200)

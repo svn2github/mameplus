@@ -9,33 +9,34 @@ Atari Drag Race Driver
 #include "includes/dragrace.h"
 #include "sound/discrete.h"
 
+#include "dragrace.lh"
 
-static TIMER_DEVICE_CALLBACK( dragrace_frame_callback )
+
+TIMER_DEVICE_CALLBACK_MEMBER(dragrace_state::dragrace_frame_callback)
 {
-	dragrace_state *state = timer.machine().driver_data<dragrace_state>();
 	int i;
 	static const char *const portnames[] = { "P1", "P2" };
 
 	for (i = 0; i < 2; i++)
 	{
-		switch (timer.machine().root_device().ioport(portnames[i])->read())
+		switch (machine().root_device().ioport(portnames[i])->read())
 		{
-		case 0x01: state->m_gear[i] = 1; break;
-		case 0x02: state->m_gear[i] = 2; break;
-		case 0x04: state->m_gear[i] = 3; break;
-		case 0x08: state->m_gear[i] = 4; break;
-		case 0x10: state->m_gear[i] = 0; break;
+		case 0x01: m_gear[i] = 1; break;
+		case 0x02: m_gear[i] = 2; break;
+		case 0x04: m_gear[i] = 3; break;
+		case 0x08: m_gear[i] = 4; break;
+		case 0x10: m_gear[i] = 0; break;
 		}
 	}
 
 	/* watchdog is disabled during service mode */
-	timer.machine().watchdog_enable(timer.machine().root_device().ioport("IN0")->read() & 0x20);
+	machine().watchdog_enable(machine().root_device().ioport("IN0")->read() & 0x20);
 }
 
 
-static void dragrace_update_misc_flags( running_machine &machine )
+static void dragrace_update_misc_flags( address_space &space )
 {
-	dragrace_state *state = machine.driver_data<dragrace_state>();
+	dragrace_state *state = space.machine().driver_data<dragrace_state>();
 	/* 0x0900 = set 3SPEED1         0x00000001
      * 0x0901 = set 4SPEED1         0x00000002
      * 0x0902 = set 5SPEED1         0x00000004
@@ -67,29 +68,28 @@ static void dragrace_update_misc_flags( running_machine &machine )
      * 0x091f = set Player 2 Start Lamp 0x80000000
      * 0x0938 = clear 0x0918 - 0x091f
      */
-	set_led_status(machine, 0, state->m_misc_flags & 0x00008000);
-	set_led_status(machine, 1, state->m_misc_flags & 0x80000000);
+	set_led_status(space.machine(), 0, state->m_misc_flags & 0x00008000);
+	set_led_status(space.machine(), 1, state->m_misc_flags & 0x80000000);
 
-	discrete_sound_w(state->m_discrete, DRAGRACE_MOTOR1_DATA,  ~state->m_misc_flags & 0x0000001f);		// Speed1 data*
-	discrete_sound_w(state->m_discrete, DRAGRACE_EXPLODE1_EN, (state->m_misc_flags & 0x00000020) ? 1: 0);	// Explosion1 enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_SCREECH1_EN, (state->m_misc_flags & 0x00000040) ? 1: 0);	// Screech1 enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_KLEXPL1_EN, (state->m_misc_flags & 0x00000200) ? 1: 0);	// KLEXPL1 enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_MOTOR1_EN, (state->m_misc_flags & 0x00000800) ? 1: 0);	// Motor1 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_MOTOR1_DATA,  ~state->m_misc_flags & 0x0000001f);		// Speed1 data*
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_EXPLODE1_EN, (state->m_misc_flags & 0x00000020) ? 1: 0);	// Explosion1 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_SCREECH1_EN, (state->m_misc_flags & 0x00000040) ? 1: 0);	// Screech1 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_KLEXPL1_EN, (state->m_misc_flags & 0x00000200) ? 1: 0);	// KLEXPL1 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_MOTOR1_EN, (state->m_misc_flags & 0x00000800) ? 1: 0);	// Motor1 enable
 
-	discrete_sound_w(state->m_discrete, DRAGRACE_MOTOR2_DATA, (~state->m_misc_flags & 0x001f0000) >> 0x10);	// Speed2 data*
-	discrete_sound_w(state->m_discrete, DRAGRACE_EXPLODE2_EN, (state->m_misc_flags & 0x00200000) ? 1: 0);	// Explosion2 enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_SCREECH2_EN, (state->m_misc_flags & 0x00400000) ? 1: 0);	// Screech2 enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_KLEXPL2_EN, (state->m_misc_flags & 0x02000000) ? 1: 0);	// KLEXPL2 enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_MOTOR2_EN, (state->m_misc_flags & 0x08000000) ? 1: 0);	// Motor2 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_MOTOR2_DATA, (~state->m_misc_flags & 0x001f0000) >> 0x10);	// Speed2 data*
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_EXPLODE2_EN, (state->m_misc_flags & 0x00200000) ? 1: 0);	// Explosion2 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_SCREECH2_EN, (state->m_misc_flags & 0x00400000) ? 1: 0);	// Screech2 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_KLEXPL2_EN, (state->m_misc_flags & 0x02000000) ? 1: 0);	// KLEXPL2 enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_MOTOR2_EN, (state->m_misc_flags & 0x08000000) ? 1: 0);	// Motor2 enable
 
-	discrete_sound_w(state->m_discrete, DRAGRACE_ATTRACT_EN, (state->m_misc_flags & 0x00001000) ? 1: 0);	// Attract enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_LOTONE_EN, (state->m_misc_flags & 0x00002000) ? 1: 0);	// LoTone enable
-	discrete_sound_w(state->m_discrete, DRAGRACE_HITONE_EN, (state->m_misc_flags & 0x20000000) ? 1: 0);	// HiTone enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_ATTRACT_EN, (state->m_misc_flags & 0x00001000) ? 1: 0);	// Attract enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_LOTONE_EN, (state->m_misc_flags & 0x00002000) ? 1: 0);	// LoTone enable
+	discrete_sound_w(state->m_discrete, space, DRAGRACE_HITONE_EN, (state->m_misc_flags & 0x20000000) ? 1: 0);	// HiTone enable
 }
 
 WRITE8_MEMBER(dragrace_state::dragrace_misc_w)
 {
-
 	/* Set/clear individual bit */
 	UINT32 mask = 1 << offset;
 	if (data & 0x01)
@@ -97,17 +97,16 @@ WRITE8_MEMBER(dragrace_state::dragrace_misc_w)
 	else
 		m_misc_flags &= (~mask);
 	logerror("Set   %#6x, Mask=%#10x, Flag=%#10x, Data=%x\n", 0x0900 + offset, mask, m_misc_flags, data & 0x01);
-	dragrace_update_misc_flags(machine());
+	dragrace_update_misc_flags(space);
 }
 
 WRITE8_MEMBER(dragrace_state::dragrace_misc_clear_w)
 {
-
 	/* Clear 8 bits */
 	UINT32 mask = 0xff << (((offset >> 3) & 0x03) * 8);
 	m_misc_flags &= (~mask);
 	logerror("Clear %#6x, Mask=%#10x, Flag=%#10x, Data=%x\n", 0x0920 + offset, mask, m_misc_flags, data & 0x01);
-	dragrace_update_misc_flags(machine());
+	dragrace_update_misc_flags(space);
 }
 
 READ8_MEMBER(dragrace_state::dragrace_input_r)
@@ -312,16 +311,12 @@ void dragrace_state::palette_init()
 
 void dragrace_state::machine_start()
 {
-
-	m_discrete = machine().device("discrete");
-
 	save_item(NAME(m_misc_flags));
 	save_item(NAME(m_gear));
 }
 
 void dragrace_state::machine_reset()
 {
-
 	m_misc_flags = 0;
 	m_gear[0] = 0;
 	m_gear[1] = 0;
@@ -332,18 +327,17 @@ static MACHINE_CONFIG_START( dragrace, dragrace_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6800, XTAL_12_096MHz / 12)
 	MCFG_CPU_PROGRAM_MAP(dragrace_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(dragrace_state, irq0_line_hold,  4*60)
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 
-
-	MCFG_TIMER_ADD_PERIODIC("frame_timer", dragrace_frame_callback, attotime::from_hz(60))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("frame_timer", dragrace_state, dragrace_frame_callback, attotime::from_hz(60))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(dragrace)
+	MCFG_SCREEN_UPDATE_DRIVER(dragrace_state, screen_update_dragrace)
 
 	MCFG_GFXDECODE(dragrace)
 	MCFG_PALETTE_LENGTH(16)
@@ -362,7 +356,7 @@ ROM_START( dragrace )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "8513.c1", 0x1000, 0x0800, CRC(543bbb30) SHA1(646a41d1124c8365f07a93de38af007895d7d263) )
 	ROM_LOAD( "8514.a1", 0x1800, 0x0800, CRC(ad218690) SHA1(08ba5f4fa4c75d8dad1a7162888d44b3349cbbe4) )
-	ROM_RELOAD(          0xF800, 0x0800 )
+	ROM_RELOAD(          0xf800, 0x0800 )
 
 	ROM_REGION( 0x800, "gfx1", 0 )   /* 2 color tiles */
 	ROM_LOAD( "8519dr.j0", 0x000, 0x200, CRC(aa221ba0) SHA1(450acbf349d77a790a25f3e303c31b38cc426a38) )
@@ -377,4 +371,4 @@ ROM_START( dragrace )
 ROM_END
 
 
-GAME( 1977, dragrace, 0, dragrace, dragrace, driver_device, 0, 0, "Atari (Kee Games)", "Drag Race", GAME_SUPPORTS_SAVE )
+GAMEL(1977, dragrace, 0, dragrace, dragrace, driver_device, 0, 0, "Atari (Kee Games)", "Drag Race", GAME_SUPPORTS_SAVE, layout_dragrace )

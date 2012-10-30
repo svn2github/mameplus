@@ -717,40 +717,40 @@ WRITE8_MEMBER(mappy_state::mappy_latch_w)
 
 MACHINE_RESET_MEMBER(mappy_state,superpac)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0; i < 0x10; i += 2)
-		superpac_latch_w(*space,i,0);
+		superpac_latch_w(space,i,0);
 }
 
 MACHINE_RESET_MEMBER(mappy_state,phozon)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0; i < 0x10; i += 2)
-		phozon_latch_w(*space, i, 0);
+		phozon_latch_w(space, i, 0);
 }
 
 MACHINE_RESET_MEMBER(mappy_state,mappy)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0; i < 0x10; i += 2)
-		mappy_latch_w(*space, i, 0);
+		mappy_latch_w(space, i, 0);
 }
 
 /* different games need different interrupt generators & timers because they use different Namco I/O devices */
 
-static TIMER_CALLBACK( superpac_io_run )
+TIMER_CALLBACK_MEMBER(mappy_state::superpac_io_run)
 {
-	device_t *io56xx_1 = machine.device("namcoio_1");
-	device_t *io56xx_2 = machine.device("namcoio_2");
+	device_t *io56xx_1 = machine().device("namcoio_1");
+	device_t *io56xx_2 = machine().device("namcoio_2");
 
 	switch (param)
 	{
@@ -763,26 +763,25 @@ static TIMER_CALLBACK( superpac_io_run )
 	}
 }
 
-static INTERRUPT_GEN( superpac_main_vblank_irq )
+INTERRUPT_GEN_MEMBER(mappy_state::superpac_main_vblank_irq)
 {
-	mappy_state *state = device->machine().driver_data<mappy_state>();
-	device_t *namcoio_1 = device->machine().device("namcoio_1");
-	device_t *namcoio_2 = device->machine().device("namcoio_2");
+	device_t *namcoio_1 = machine().device("namcoio_1");
+	device_t *namcoio_2 = machine().device("namcoio_2");
 
-	if (state->m_main_irq_mask)
-		device->machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	if (m_main_irq_mask)
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(superpac_io_run));
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::superpac_io_run),this));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(superpac_io_run), 1);
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::superpac_io_run),this), 1);
 }
 
-static TIMER_CALLBACK( pacnpal_io_run )
+TIMER_CALLBACK_MEMBER(mappy_state::pacnpal_io_run)
 {
-	device_t *io56xx = machine.device("namcoio_1");
-	device_t *io59xx = machine.device("namcoio_2");
+	device_t *io56xx = machine().device("namcoio_1");
+	device_t *io59xx = machine().device("namcoio_2");
 
 	switch (param)
 	{
@@ -795,26 +794,25 @@ static TIMER_CALLBACK( pacnpal_io_run )
 	}
 }
 
-static INTERRUPT_GEN( pacnpal_main_vblank_irq )
+INTERRUPT_GEN_MEMBER(mappy_state::pacnpal_main_vblank_irq)
 {
-	mappy_state *state = device->machine().driver_data<mappy_state>();
-	device_t *namcoio_1 = device->machine().device("namcoio_1");
-	device_t *namcoio_2 = device->machine().device("namcoio_2");
+	device_t *namcoio_1 = machine().device("namcoio_1");
+	device_t *namcoio_2 = machine().device("namcoio_2");
 
-	if (state->m_main_irq_mask)
-		device->machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	if (m_main_irq_mask)
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(pacnpal_io_run));
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::pacnpal_io_run),this));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(pacnpal_io_run), 1);
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::pacnpal_io_run),this), 1);
 }
 
-static TIMER_CALLBACK( phozon_io_run )
+TIMER_CALLBACK_MEMBER(mappy_state::phozon_io_run)
 {
-	device_t *io58xx = machine.device("namcoio_1");
-	device_t *io56xx = machine.device("namcoio_2");
+	device_t *io58xx = machine().device("namcoio_1");
+	device_t *io56xx = machine().device("namcoio_2");
 
 	switch (param)
 	{
@@ -827,26 +825,25 @@ static TIMER_CALLBACK( phozon_io_run )
 	}
 }
 
-static INTERRUPT_GEN( phozon_main_vblank_irq )
+INTERRUPT_GEN_MEMBER(mappy_state::phozon_main_vblank_irq)
 {
-	mappy_state *state = device->machine().driver_data<mappy_state>();
-	device_t *namcoio_1 = device->machine().device("namcoio_1");
-	device_t *namcoio_2 = device->machine().device("namcoio_2");
+	device_t *namcoio_1 = machine().device("namcoio_1");
+	device_t *namcoio_2 = machine().device("namcoio_2");
 
-	if (state->m_main_irq_mask)
-		device->machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	if (m_main_irq_mask)
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(phozon_io_run));
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::phozon_io_run),this));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(phozon_io_run), 1);
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::phozon_io_run),this), 1);
 }
 
-static TIMER_CALLBACK( mappy_io_run )
+TIMER_CALLBACK_MEMBER(mappy_state::mappy_io_run)
 {
-	device_t *io58xx_1 = machine.device("namcoio_1");
-	device_t *io58xx_2 = machine.device("namcoio_2");
+	device_t *io58xx_1 = machine().device("namcoio_1");
+	device_t *io58xx_2 = machine().device("namcoio_2");
 
 	switch (param)
 	{
@@ -859,36 +856,33 @@ static TIMER_CALLBACK( mappy_io_run )
 	}
 }
 
-static INTERRUPT_GEN( mappy_main_vblank_irq )
+INTERRUPT_GEN_MEMBER(mappy_state::mappy_main_vblank_irq)
 {
-	mappy_state *state = device->machine().driver_data<mappy_state>();
-	device_t *namcoio_1 = device->machine().device("namcoio_1");
-	device_t *namcoio_2 = device->machine().device("namcoio_2");
+	device_t *namcoio_1 = machine().device("namcoio_1");
+	device_t *namcoio_2 = machine().device("namcoio_2");
 
-	if(state->m_main_irq_mask)
-		device->machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	if(m_main_irq_mask)
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(mappy_io_run));
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::mappy_io_run),this));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(mappy_io_run), 1);
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(mappy_state::mappy_io_run),this), 1);
 }
 
-static INTERRUPT_GEN( sub_vblank_irq )
+INTERRUPT_GEN_MEMBER(mappy_state::sub_vblank_irq)
 {
-	mappy_state *state = device->machine().driver_data<mappy_state>();
 
-	if(state->m_sub_irq_mask)
-		device->machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
+	if(m_sub_irq_mask)
+		machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
 }
 
-static INTERRUPT_GEN( sub2_vblank_irq )
+INTERRUPT_GEN_MEMBER(mappy_state::sub2_vblank_irq)
 {
-	mappy_state *state = device->machine().driver_data<mappy_state>();
 
-	if(state->m_sub2_irq_mask)
-		device->machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
+	if(m_sub2_irq_mask)
+		machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 static ADDRESS_MAP_START( superpac_cpu1_map, AS_PROGRAM, 8, mappy_state )
@@ -1631,11 +1625,11 @@ static MACHINE_CONFIG_START( superpac, mappy_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, PIXEL_CLOCK/4)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(superpac_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", superpac_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  superpac_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_CPU_ADD("sub", M6809, PIXEL_CLOCK/4)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(superpac_cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  sub_vblank_irq)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
@@ -1652,7 +1646,7 @@ static MACHINE_CONFIG_START( superpac, mappy_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(superpac)
+	MCFG_SCREEN_UPDATE_DRIVER(mappy_state, screen_update_superpac)
 
 	MCFG_PALETTE_INIT_OVERRIDE(mappy_state,superpac)
 	MCFG_VIDEO_START_OVERRIDE(mappy_state,superpac)
@@ -1669,7 +1663,7 @@ static MACHINE_CONFIG_DERIVED( pacnpal, superpac )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", pacnpal_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  pacnpal_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_DEVICE_REMOVE("namcoio_1")
 	MCFG_DEVICE_REMOVE("namcoio_2")
@@ -1682,7 +1676,7 @@ static MACHINE_CONFIG_DERIVED( grobda, superpac )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", phozon_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  phozon_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_DEVICE_REMOVE("namcoio_1")
 	MCFG_DEVICE_REMOVE("namcoio_2")
@@ -1700,15 +1694,15 @@ static MACHINE_CONFIG_START( phozon, mappy_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809,	PIXEL_CLOCK/4)	/* MAIN CPU */
 	MCFG_CPU_PROGRAM_MAP(phozon_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", phozon_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  phozon_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_CPU_ADD("sub", M6809,	PIXEL_CLOCK/4)	/* SOUND CPU */
 	MCFG_CPU_PROGRAM_MAP(phozon_cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  sub_vblank_irq)
 
 	MCFG_CPU_ADD("sub2", M6809,	PIXEL_CLOCK/4)	/* SUB CPU */
 	MCFG_CPU_PROGRAM_MAP(phozon_cpu3_map)
-	MCFG_CPU_VBLANK_INT("screen", sub2_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  sub2_vblank_irq)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
@@ -1725,7 +1719,7 @@ static MACHINE_CONFIG_START( phozon, mappy_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(phozon)
+	MCFG_SCREEN_UPDATE_DRIVER(mappy_state, screen_update_phozon)
 
 	MCFG_PALETTE_INIT_OVERRIDE(mappy_state,phozon)
 	MCFG_VIDEO_START_OVERRIDE(mappy_state,phozon)
@@ -1744,11 +1738,11 @@ static MACHINE_CONFIG_START( mappy, mappy_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, PIXEL_CLOCK/4)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(mappy_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", mappy_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  mappy_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_CPU_ADD("sub", M6809, PIXEL_CLOCK/4)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(mappy_cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", sub_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  sub_vblank_irq)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
@@ -1765,7 +1759,7 @@ static MACHINE_CONFIG_START( mappy, mappy_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(mappy)
+	MCFG_SCREEN_UPDATE_DRIVER(mappy_state, screen_update_mappy)
 
 	MCFG_PALETTE_INIT_OVERRIDE(mappy_state,mappy)
 	MCFG_VIDEO_START_OVERRIDE(mappy_state,mappy)
@@ -1782,7 +1776,7 @@ static MACHINE_CONFIG_DERIVED( digdug2, mappy )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", phozon_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  phozon_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_WATCHDOG_VBLANK_INIT(0)
 
@@ -1796,7 +1790,7 @@ static MACHINE_CONFIG_DERIVED( todruaga, mappy )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", phozon_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  phozon_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_DEVICE_REMOVE("namcoio_1")
 	MCFG_DEVICE_REMOVE("namcoio_2")
@@ -1812,7 +1806,7 @@ static MACHINE_CONFIG_DERIVED( motos, mappy )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT("screen", superpac_main_vblank_irq)	// also update the custom I/O chips
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mappy_state,  superpac_main_vblank_irq)	// also update the custom I/O chips
 
 	MCFG_DEVICE_REMOVE("namcoio_1")
 	MCFG_DEVICE_REMOVE("namcoio_2")
@@ -2264,13 +2258,13 @@ DRIVER_INIT_MEMBER(mappy_state,grobda)
        However, removing the 15XX from the board causes sound to disappear completely, so
        the DAC might be built-in after all.
       */
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_write_handler(0x0002, 0x0002, write8_delegate(FUNC(mappy_state::grobda_DAC_w),this));
+	machine().device("sub")->memory().space(AS_PROGRAM).install_write_handler(0x0002, 0x0002, write8_delegate(FUNC(mappy_state::grobda_DAC_w),this));
 }
 
 DRIVER_INIT_MEMBER(mappy_state,digdug2)
 {
 	/* appears to not use the watchdog */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x8000, 0x8000);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0x8000, 0x8000);
 }
 
 

@@ -86,7 +86,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, wwfwfest_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xc800, 0xc801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc800, 0xc801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xd800, 0xd800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(oki_bankswitch_w)
@@ -342,7 +342,7 @@ GFXDECODE_END
  Interrupt Function
 *******************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( wwfwfest_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(wwfwfest_state::wwfwfest_scanline)
 {
 	int scanline = param;
 
@@ -350,33 +350,17 @@ static TIMER_DEVICE_CALLBACK( wwfwfest_scanline )
 	if (scanline % 16 == 0)
 	{
 		if (scanline > 0)
-			timer.machine().primary_screen->update_partial(scanline - 1);
-		timer.machine().device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
+			machine().primary_screen->update_partial(scanline - 1);
+		machine().device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
 	}
 
 	/* Vblank is raised on scanline 248 */
 	if (scanline == 248)
 	{
-		timer.machine().primary_screen->update_partial(scanline - 1);
-		timer.machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
+		machine().primary_screen->update_partial(scanline - 1);
+		machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 	}
 }
-
-/*******************************************************************************
- Sound Stuff..
-********************************************************************************
- Straight from Ddragon 3 with some adjusted volumes
-*******************************************************************************/
-
-static void dd3_ymirq_handler(device_t *device, int irq)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0 , irq ? ASSERT_LINE : CLEAR_LINE );
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(dd3_ymirq_handler)
-};
 
 /*******************************************************************************
  Machine Driver(s)
@@ -387,7 +371,7 @@ static MACHINE_CONFIG_START( wwfwfest, wwfwfest_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, CPU_CLOCK)	/* 24 crystal, 12 rated chip */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", wwfwfest_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", wwfwfest_state, wwfwfest_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -397,7 +381,7 @@ static MACHINE_CONFIG_START( wwfwfest, wwfwfest_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 320, 272, 8, 248)	/* HTOTAL and VTOTAL are guessed */
-	MCFG_SCREEN_UPDATE_STATIC(wwfwfest)
+	MCFG_SCREEN_UPDATE_DRIVER(wwfwfest_state, screen_update_wwfwfest)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(wwfwfest)
@@ -407,8 +391,8 @@ static MACHINE_CONFIG_START( wwfwfest, wwfwfest_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.45)
 	MCFG_SOUND_ROUTE(1, "mono", 0.45)
 

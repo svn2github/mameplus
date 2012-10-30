@@ -145,7 +145,7 @@ WRITE8_MEMBER(vendetta_state::vendetta_eeprom_w)
 
 READ8_MEMBER(vendetta_state::vendetta_K052109_r)
 {
-	return k052109_r(m_k052109, offset + 0x2000);
+	return k052109_r(m_k052109, space, offset + 0x2000);
 }
 
 WRITE8_MEMBER(vendetta_state::vendetta_K052109_w)
@@ -156,27 +156,27 @@ WRITE8_MEMBER(vendetta_state::vendetta_K052109_w)
 	// *  Tilemap MASK-ROM Test       (0x1d80<->0x3d80, 0x1e00<->0x3e00, 0x1f00<->0x3f00)  *
 	// *************************************************************************************
 	if ((offset == 0x1d80) || (offset == 0x1e00) || (offset == 0x1f00))
-		k052109_w(m_k052109, offset, data);
-	k052109_w(m_k052109, offset + 0x2000, data);
+		k052109_w(m_k052109, space, offset, data);
+	k052109_w(m_k052109, space, offset + 0x2000, data);
 }
 
 
 static void vendetta_video_banking( running_machine &machine, int select )
 {
 	vendetta_state *state = machine.driver_data<vendetta_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	if (select & 1)
 	{
-		space->install_read_bank(state->m_video_banking_base + 0x2000, state->m_video_banking_base + 0x2fff, "bank4" );
-		space->install_write_handler(state->m_video_banking_base + 0x2000, state->m_video_banking_base + 0x2fff, write8_delegate(FUNC(vendetta_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state) );
-		space->install_legacy_readwrite_handler(*state->m_k053246, state->m_video_banking_base + 0x0000, state->m_video_banking_base + 0x0fff, FUNC(k053247_r), FUNC(k053247_w) );
+		space.install_read_bank(state->m_video_banking_base + 0x2000, state->m_video_banking_base + 0x2fff, "bank4" );
+		space.install_write_handler(state->m_video_banking_base + 0x2000, state->m_video_banking_base + 0x2fff, write8_delegate(FUNC(vendetta_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state) );
+		space.install_legacy_readwrite_handler(*state->m_k053246, state->m_video_banking_base + 0x0000, state->m_video_banking_base + 0x0fff, FUNC(k053247_r), FUNC(k053247_w) );
 		state->membank("bank4")->set_base(state->m_generic_paletteram_8);
 	}
 	else
 	{
-		space->install_readwrite_handler(state->m_video_banking_base + 0x2000, state->m_video_banking_base + 0x2fff, read8_delegate(FUNC(vendetta_state::vendetta_K052109_r),state), write8_delegate(FUNC(vendetta_state::vendetta_K052109_w),state) );
-		space->install_legacy_readwrite_handler(*state->m_k052109, state->m_video_banking_base + 0x0000, state->m_video_banking_base + 0x0fff, FUNC(k052109_r), FUNC(k052109_w) );
+		space.install_readwrite_handler(state->m_video_banking_base + 0x2000, state->m_video_banking_base + 0x2fff, read8_delegate(FUNC(vendetta_state::vendetta_K052109_r),state), write8_delegate(FUNC(vendetta_state::vendetta_K052109_w),state) );
+		space.install_legacy_readwrite_handler(*state->m_k052109, state->m_video_banking_base + 0x0000, state->m_video_banking_base + 0x0fff, FUNC(k052109_r), FUNC(k052109_w) );
 	}
 }
 
@@ -198,17 +198,16 @@ WRITE8_MEMBER(vendetta_state::vendetta_5fe0_w)
 	k053246_set_objcha_line(m_k053246, (data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static TIMER_CALLBACK( z80_nmi_callback )
+TIMER_CALLBACK_MEMBER(vendetta_state::z80_nmi_callback)
 {
-	vendetta_state *state = machine.driver_data<vendetta_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(vendetta_state::z80_arm_nmi_w)
 {
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
-	machine().scheduler().timer_set(attotime::from_usec(25), FUNC(z80_nmi_callback));
+	machine().scheduler().timer_set(attotime::from_usec(25), timer_expired_delegate(FUNC(vendetta_state::z80_nmi_callback),this));
 }
 
 WRITE8_MEMBER(vendetta_state::z80_irq_w)
@@ -225,7 +224,7 @@ READ8_MEMBER(vendetta_state::vendetta_sound_interrupt_r)
 READ8_MEMBER(vendetta_state::vendetta_sound_r)
 {
 	device_t *device = machine().device("k053260");
-	return k053260_r(device, 2 + offset);
+	return k053260_r(device, space, 2 + offset);
 }
 
 /********************************************/
@@ -284,7 +283,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, vendetta_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
-	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xf800, 0xf801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(z80_arm_nmi_w)
 	AM_RANGE(0xfc00, 0xfc2f) AM_DEVREADWRITE_LEGACY("k053260", k053260_r, k053260_w)
 ADDRESS_MAP_END
@@ -404,11 +403,10 @@ INPUT_PORTS_END
 
 ***************************************************************************/
 
-static INTERRUPT_GEN( vendetta_irq )
+INTERRUPT_GEN_MEMBER(vendetta_state::vendetta_irq)
 {
-	vendetta_state *state = device->machine().driver_data<vendetta_state>();
-	if (state->m_irq_enabled)
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (m_irq_enabled)
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 static const k052109_interface vendetta_k052109_intf =
@@ -504,7 +502,7 @@ static MACHINE_CONFIG_START( vendetta, vendetta_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8)	/* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", vendetta_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vendetta_state,  vendetta_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)	/* verified with PCB */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -521,7 +519,7 @@ static MACHINE_CONFIG_START( vendetta, vendetta_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(vendetta)
+	MCFG_SCREEN_UPDATE_DRIVER(vendetta_state, screen_update_vendetta)
 
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -533,7 +531,7 @@ static MACHINE_CONFIG_START( vendetta, vendetta_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)	/* verified with PCB */
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)	/* verified with PCB */
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

@@ -563,9 +563,9 @@ READ32_MEMBER(hng64_state::hng64_sysregs_r)
 }
 
 /* preliminary dma code, dma is used to copy program code -> ram */
-static void hng64_do_dma(address_space *space)
+static void hng64_do_dma(address_space &space)
 {
-	hng64_state *state = space->machine().driver_data<hng64_state>();
+	hng64_state *state = space.machine().driver_data<hng64_state>();
 
 	//printf("Performing DMA Start %08x Len %08x Dst %08x\n", state->m_dma_start, state->m_dma_len, state->m_dma_dst);
 
@@ -573,8 +573,8 @@ static void hng64_do_dma(address_space *space)
 	{
 		UINT32 dat;
 
-		dat = space->read_dword(state->m_dma_start);
-		space->write_dword(state->m_dma_dst, dat);
+		dat = space.read_dword(state->m_dma_start);
+		space.write_dword(state->m_dma_dst, dat);
 		state->m_dma_start += 4;
 		state->m_dma_dst += 4;
 		state->m_dma_len--;
@@ -621,7 +621,7 @@ WRITE32_MEMBER(hng64_state::hng64_sysregs_w)
 		case 0x1214: m_dma_dst = m_sysregs[offset]; break;
 		case 0x1224:
 			m_dma_len = m_sysregs[offset];
-			hng64_do_dma(&space);
+			hng64_do_dma(space);
 			break;
 		//default:
 		//  printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], space.device().safe_pc());
@@ -1757,17 +1757,16 @@ void hng64_state::m_set_irq(UINT32 irq_vector)
 		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( hng64_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(hng64_state::hng64_irq)
 {
-	hng64_state *state = timer.machine().driver_data<hng64_state>();
 	int scanline = param;
 
 	switch(scanline)
 	{
-		case 224*2:	state->m_set_irq(0x0001);  break; // lv 0 vblank irq
-		//case 0*2:   state->m_set_irq(0x0002);  break; // lv 1
-		//case 64*2:  state->m_set_irq(0x0004);  break; // lv 2
-		case 128*2: state->m_set_irq(0x0800);  break; // lv 11 network irq?
+		case 224*2:	m_set_irq(0x0001);  break; // lv 0 vblank irq
+		//case 0*2:   m_set_irq(0x0002);  break; // lv 1
+		//case 64*2:  m_set_irq(0x0004);  break; // lv 2
+		case 128*2: m_set_irq(0x0800);  break; // lv 11 network irq?
 	}
 }
 
@@ -1806,8 +1805,8 @@ void hng64_state::machine_reset()
 
 	KL5C80_virtual_mem_sync(this);
 
-	address_space *space = machine().device<z80_device>("comm")->space(AS_PROGRAM);
-	space->set_direct_update_handler(direct_update_delegate(FUNC(hng64_state::KL5C80_direct_handler), this));
+	address_space &space = machine().device<z80_device>("comm")->space(AS_PROGRAM);
+	space.set_direct_update_handler(direct_update_delegate(FUNC(hng64_state::KL5C80_direct_handler), this));
 
 	machine().device("comm")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);     // reset the CPU and let 'er rip
 //  machine().device("comm")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);     // hold on there pardner...
@@ -1832,7 +1831,7 @@ static MACHINE_CONFIG_START( hng64, hng64_state )
 	MCFG_CPU_ADD("maincpu", VR4300BE, MASTER_CLOCK) 	// actually R4300
 	MCFG_CPU_CONFIG(vr4300_config)
 	MCFG_CPU_PROGRAM_MAP(hng_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", hng64_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", hng64_state, hng64_irq, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", V33, 8000000)				// v53, 16? mhz!
 	MCFG_CPU_PROGRAM_MAP(hng_sound_map)
@@ -1849,11 +1848,11 @@ static MACHINE_CONFIG_START( hng64, hng64_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(hng64)
+	MCFG_SCREEN_UPDATE_DRIVER(hng64_state, screen_update_hng64)
 
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_SCREEN_VBLANK_STATIC(hng64)
+	MCFG_SCREEN_VBLANK_DRIVER(hng64_state, screen_eof_hng64)
 MACHINE_CONFIG_END
 
 

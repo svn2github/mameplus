@@ -298,11 +298,9 @@ Stephh's notes (based on the games M6502 code and some tests) :
 
 
 /* binary counter (1.4MHz update) */
-static TIMER_DEVICE_CALLBACK( sasuke_update_counter )
+TIMER_DEVICE_CALLBACK_MEMBER(snk6502_state::sasuke_update_counter)
 {
-	snk6502_state *state = timer.machine().driver_data<snk6502_state>();
-
-	state->m_sasuke_counter += 0x10;
+	m_sasuke_counter += 0x10;
 }
 
 static void sasuke_start_counter(running_machine &machine)
@@ -740,17 +738,16 @@ GFXDECODE_END
  *
  *************************************/
 
-static INTERRUPT_GEN( satansat_interrupt )
+INTERRUPT_GEN_MEMBER(snk6502_state::satansat_interrupt)
 {
-	snk6502_state *state = device->machine().driver_data<snk6502_state>();
 
-	if(state->m_irq_mask)
-		device->execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);	/* one IRQ per frame */
+	if(m_irq_mask)
+		device.execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);	/* one IRQ per frame */
 }
 
-static INTERRUPT_GEN( snk6502_interrupt )
+INTERRUPT_GEN_MEMBER(snk6502_state::snk6502_interrupt)
 {
-	device->execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);	/* one IRQ per frame */
+	device.execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);	/* one IRQ per frame */
 }
 
 
@@ -824,7 +821,7 @@ static MACHINE_CONFIG_START( sasuke, snk6502_state )
 	// basic machine hardware
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK / 16) // 700 kHz
 	MCFG_CPU_PROGRAM_MAP(sasuke_map)
-	MCFG_CPU_VBLANK_INT("screen",satansat_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk6502_state, satansat_interrupt)
 
 	MCFG_MACHINE_RESET_OVERRIDE(snk6502_state,sasuke)
 
@@ -835,7 +832,7 @@ static MACHINE_CONFIG_START( sasuke, snk6502_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(snk6502)
+	MCFG_SCREEN_UPDATE_DRIVER(snk6502_state, screen_update_snk6502)
 
 	MCFG_GFXDECODE(sasuke)
 	MCFG_PALETTE_LENGTH(32)
@@ -845,7 +842,7 @@ static MACHINE_CONFIG_START( sasuke, snk6502_state )
 
 	MCFG_MC6845_ADD("crtc", MC6845, MASTER_CLOCK / 16, mc6845_intf)
 
-	MCFG_TIMER_ADD_PERIODIC("sasuke_timer", sasuke_update_counter, attotime::from_hz(MASTER_CLOCK / 8))	// 1.4 MHz
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("sasuke_timer", snk6502_state, sasuke_update_counter, attotime::from_hz(MASTER_CLOCK / 8))
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -897,7 +894,7 @@ static MACHINE_CONFIG_START( vanguard, snk6502_state )
 	//MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK / 8)   // 1.4 MHz
 	MCFG_CPU_ADD("maincpu", M6502, 930000)		// adjusted
 	MCFG_CPU_PROGRAM_MAP(vanguard_map)
-	MCFG_CPU_VBLANK_INT("screen",snk6502_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", snk6502_state, snk6502_interrupt)
 
 	MCFG_MACHINE_RESET_OVERRIDE(snk6502_state,vanguard)
 
@@ -908,7 +905,7 @@ static MACHINE_CONFIG_START( vanguard, snk6502_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(snk6502)
+	MCFG_SCREEN_UPDATE_DRIVER(snk6502_state, screen_update_snk6502)
 
 	MCFG_GFXDECODE(vanguard)
 	MCFG_PALETTE_LENGTH(64)

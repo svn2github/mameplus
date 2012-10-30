@@ -22,19 +22,18 @@ TO DO:
 */
 
 
-static TIMER_CALLBACK( nmi_callback )
+TIMER_CALLBACK_MEMBER(msisaac_state::nmi_callback)
 {
-	msisaac_state *state = machine.driver_data<msisaac_state>();
-	if (state->m_sound_nmi_enable)
-		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_sound_nmi_enable)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		state->m_pending_nmi = 1;
+		m_pending_nmi = 1;
 }
 
 WRITE8_MEMBER(msisaac_state::sound_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().scheduler().synchronize(FUNC(nmi_callback), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(msisaac_state::nmi_callback),this), data);
 }
 
 WRITE8_MEMBER(msisaac_state::nmi_disable_w)
@@ -424,7 +423,8 @@ GFXDECODE_END
 
 static const msm5232_interface msm5232_config =
 {
-	{ 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6 }	/* 0.65 (???) uF capacitors (match the sample, not verified) */
+	{ 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6 },	/* 0.65 (???) uF capacitors (match the sample, not verified) */
+	DEVCB_NULL
 };
 
 
@@ -477,11 +477,11 @@ static MACHINE_CONFIG_START( msisaac, msisaac_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(msisaac_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", msisaac_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(msisaac_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* source of IRQs is unknown */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", msisaac_state,  irq0_line_hold)	/* source of IRQs is unknown */
 
 #ifdef USE_MCU
 	MCFG_CPU_ADD("mcu", M68705,8000000/2)  /* 4 MHz */
@@ -496,7 +496,7 @@ static MACHINE_CONFIG_START( msisaac, msisaac_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(msisaac)
+	MCFG_SCREEN_UPDATE_DRIVER(msisaac_state, screen_update_msisaac)
 
 	MCFG_GFXDECODE(msisaac)
 	MCFG_PALETTE_LENGTH(1024)

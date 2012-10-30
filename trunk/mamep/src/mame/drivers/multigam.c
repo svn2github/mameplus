@@ -144,6 +144,8 @@ public:
 	DECLARE_MACHINE_START(multigm3);
 	DECLARE_MACHINE_RESET(multigm3);
 	DECLARE_MACHINE_START(supergm3);
+	UINT32 screen_update_multigam(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(mmc1_resync_callback);
 };
 
 
@@ -236,25 +238,25 @@ WRITE8_MEMBER(multigam_state::sprite_dma_w)
 {
 	int source = (data & 7);
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
-	ppu->spriteram_dma(&space, source);
+	ppu->spriteram_dma(space, source);
 }
 
 READ8_MEMBER(multigam_state::psg_4015_r)
 {
 	device_t *device = machine().device("nes");
-	return nes_psg_r(device, 0x15);
+	return nes_psg_r(device, space, 0x15);
 }
 
 WRITE8_MEMBER(multigam_state::psg_4015_w)
 {
 	device_t *device = machine().device("nes");
-	nes_psg_w(device, 0x15, data);
+	nes_psg_w(device, space, 0x15, data);
 }
 
 WRITE8_MEMBER(multigam_state::psg_4017_w)
 {
 	device_t *device = machine().device("nes");
-	nes_psg_w(device, 0x17, data);
+	nes_psg_w(device, space, 0x17, data);
 }
 
 /******************************************************
@@ -569,7 +571,7 @@ static void multigam_init_mmc3(running_machine &machine, UINT8 *prg_base, int pr
 	memcpy(&dst[0x8000], prg_base + (prg_size - 0x4000), 0x4000);
 	memcpy(&dst[0xc000], prg_base + (prg_size - 0x4000), 0x4000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mmc3_rom_switch_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mmc3_rom_switch_w),state));
 
 	state->m_multigam3_mmc3_banks[0] = 0x1e;
 	state->m_multigam3_mmc3_banks[1] = 0x1f;
@@ -678,7 +680,7 @@ static void multigam_init_mapper02(running_machine &machine, UINT8* prg_base, in
 	ppu2c0x_device *ppu = machine.device<ppu2c0x_device>("ppu");
 	UINT8* mem = state->memregion("maincpu")->base();
 	memcpy(mem + 0x8000, prg_base + prg_size - 0x8000, 0x8000);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mapper02_rom_switch_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mapper02_rom_switch_w),state));
 
 	state->m_mapper02_prg_base = prg_base;
 	state->m_mapper02_prg_size = prg_size;
@@ -692,10 +694,9 @@ static void multigam_init_mapper02(running_machine &machine, UINT8* prg_base, in
 *******************************************************/
 
 
-static TIMER_CALLBACK( mmc1_resync_callback )
+TIMER_CALLBACK_MEMBER(multigam_state::mmc1_resync_callback)
 {
-	multigam_state *state = machine.driver_data<multigam_state>();
-	state->m_mmc1_reg_write_enable = 1;
+	m_mmc1_reg_write_enable = 1;
 }
 
 WRITE8_MEMBER(multigam_state::mmc1_rom_switch_w)
@@ -709,7 +710,7 @@ WRITE8_MEMBER(multigam_state::mmc1_rom_switch_w)
 	else
 	{
 		m_mmc1_reg_write_enable = 0;
-		machine().scheduler().synchronize(FUNC(mmc1_resync_callback));
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(multigam_state::mmc1_resync_callback),this));
 	}
 
 	int reg = (offset >> 13);
@@ -834,7 +835,7 @@ static void multigam_init_mmc1(running_machine &machine, UINT8 *prg_base, int pr
 
 	memcpy(&dst[0x8000], prg_base + (prg_size - 0x8000), 0x8000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::mmc1_rom_switch_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::mmc1_rom_switch_w),state));
 
 	state->m_mmc1_reg_write_enable = 1;
 	state->m_mmc1_rom_mask = (prg_size / 0x4000) - 1;
@@ -879,8 +880,8 @@ static void supergm3_set_bank(running_machine &machine)
 		state->m_supergm3_chr_bank == 0x40 )
 	{
 		// VRAM
-		ppu->space(AS_PROGRAM)->install_read_bank(0x0000, 0x1fff, "bank1");
-		ppu->space(AS_PROGRAM)->install_write_bank(0x0000, 0x1fff, "bank1");
+		ppu->space(AS_PROGRAM).install_read_bank(0x0000, 0x1fff, "bank1");
+		ppu->space(AS_PROGRAM).install_write_bank(0x0000, 0x1fff, "bank1");
 		state->membank("bank1")->set_base(state->m_vram);
 
 		if (state->m_supergm3_chr_bank == 0x40)
@@ -888,15 +889,15 @@ static void supergm3_set_bank(running_machine &machine)
 	}
 	else
 	{
-		ppu->space(AS_PROGRAM)->install_read_bank(0x0000, 0x03ff, "bank2");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x0400, 0x07ff, "bank3");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x0800, 0x0bff, "bank4");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x0c00, 0x0fff, "bank5");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x1000, 0x13ff, "bank6");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x1400, 0x17ff, "bank7");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x1800, 0x1bff, "bank8");
-		ppu->space(AS_PROGRAM)->install_read_bank(0x1c00, 0x1fff, "bank9");
-		ppu->space(AS_PROGRAM)->unmap_write(0x0000, 0x1fff);
+		ppu->space(AS_PROGRAM).install_read_bank(0x0000, 0x03ff, "bank2");
+		ppu->space(AS_PROGRAM).install_read_bank(0x0400, 0x07ff, "bank3");
+		ppu->space(AS_PROGRAM).install_read_bank(0x0800, 0x0bff, "bank4");
+		ppu->space(AS_PROGRAM).install_read_bank(0x0c00, 0x0fff, "bank5");
+		ppu->space(AS_PROGRAM).install_read_bank(0x1000, 0x13ff, "bank6");
+		ppu->space(AS_PROGRAM).install_read_bank(0x1400, 0x17ff, "bank7");
+		ppu->space(AS_PROGRAM).install_read_bank(0x1800, 0x1bff, "bank8");
+		ppu->space(AS_PROGRAM).install_read_bank(0x1c00, 0x1fff, "bank9");
+		ppu->space(AS_PROGRAM).unmap_write(0x0000, 0x1fff);
 
 		set_videorom_bank(machine, 0, 8, 0, 8);
 	}
@@ -1114,10 +1115,10 @@ void multigam_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16( multigam )
+UINT32 multigam_state::screen_update_multigam(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	/* render the ppu */
-	ppu2c0x_device *ppu = screen.machine().device<ppu2c0x_device>("ppu");
+	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
 	ppu->render(bitmap, 0, 0, 0, 0);
 	return 0;
 }
@@ -1138,9 +1139,9 @@ void multigam_state::machine_reset()
 
 MACHINE_RESET_MEMBER(multigam_state,multigm3)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	/* reset the ppu */
-	multigm3_switch_prg_rom(*space, 0, 0x01 );
+	multigm3_switch_prg_rom(space, 0, 0x01 );
 };
 
 void multigam_state::machine_start()
@@ -1151,8 +1152,8 @@ void multigam_state::machine_start()
 	m_nt_page[2] = m_nt_ram + 0x800;
 	m_nt_page[3] = m_nt_ram + 0xc00;
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(multigam_state::multigam_nt_r),this), write8_delegate(FUNC(multigam_state::multigam_nt_w),this));
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x1fff, "bank1");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(multigam_state::multigam_nt_r),this), write8_delegate(FUNC(multigam_state::multigam_nt_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x1fff, "bank1");
 	membank("bank1")->set_base(memregion("gfx1")->base());
 }
 
@@ -1164,16 +1165,16 @@ MACHINE_START_MEMBER(multigam_state,multigm3)
 	m_nt_page[2] = m_nt_ram + 0x800;
 	m_nt_page[3] = m_nt_ram + 0xc00;
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(multigam_state::multigam_nt_r),this), write8_delegate(FUNC(multigam_state::multigam_nt_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(multigam_state::multigam_nt_r),this), write8_delegate(FUNC(multigam_state::multigam_nt_w),this));
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x03ff, "bank2");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0400, 0x07ff, "bank3");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0800, 0x0bff, "bank4");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x0c00, 0x0fff, "bank5");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x1000, 0x13ff, "bank6");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x1400, 0x17ff, "bank7");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x1800, 0x1bff, "bank8");
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_read_bank(0x1c00, 0x1fff, "bank9");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x03ff, "bank2");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0400, 0x07ff, "bank3");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0800, 0x0bff, "bank4");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x0c00, 0x0fff, "bank5");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x1000, 0x13ff, "bank6");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x1400, 0x17ff, "bank7");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x1800, 0x1bff, "bank8");
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_read_bank(0x1c00, 0x1fff, "bank9");
 
 	set_videorom_bank(machine(), 0, 8, 0, 8);
 };
@@ -1186,7 +1187,7 @@ MACHINE_START_MEMBER(multigam_state,supergm3)
 	m_nt_page[2] = m_nt_ram + 0x800;
 	m_nt_page[3] = m_nt_ram + 0xc00;
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(multigam_state::multigam_nt_r),this), write8_delegate(FUNC(multigam_state::multigam_nt_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(multigam_state::multigam_nt_r),this), write8_delegate(FUNC(multigam_state::multigam_nt_w),this));
 
 	m_vram = auto_alloc_array(machine(), UINT8, 0x2000);
 	m_multigmc_mmc3_6000_ram = auto_alloc_array(machine(), UINT8, 0x2000);
@@ -1203,7 +1204,7 @@ static MACHINE_CONFIG_START( multigam, multigam_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(multigam)
+	MCFG_SCREEN_UPDATE_DRIVER(multigam_state, screen_update_multigam)
 
 	MCFG_GFXDECODE(multigam)
 	MCFG_PALETTE_LENGTH(8*4*16)
@@ -1360,8 +1361,8 @@ ROM_END
 
 DRIVER_INIT_MEMBER(multigam_state,multigam)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	multigam_switch_prg_rom(*space, 0x0, 0x01);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	multigam_switch_prg_rom(space, 0x0, 0x01);
 }
 
 static void multigm3_decrypt(UINT8* mem, int memsize, const UINT8* decode_nibble)
@@ -1375,7 +1376,7 @@ static void multigm3_decrypt(UINT8* mem, int memsize, const UINT8* decode_nibble
 
 DRIVER_INIT_MEMBER(multigam_state,multigm3)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	const UINT8 decode[16]  = { 0x09, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x0f, 0x0e, 0x0d, 0x0c, 0x0b, 0x0a };
 
@@ -1384,12 +1385,12 @@ DRIVER_INIT_MEMBER(multigam_state,multigm3)
 
 	m_multigmc_mmc3_6000_ram = auto_alloc_array(machine(), UINT8, 0x2000);
 
-	multigam_switch_prg_rom(*space, 0x0, 0x01);
+	multigam_switch_prg_rom(space, 0x0, 0x01);
 }
 
 DRIVER_INIT_MEMBER(multigam_state,multigmt)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	UINT8* buf = auto_alloc_array(machine(), UINT8, 0x80000);
 	UINT8 *rom;
@@ -1425,7 +1426,7 @@ DRIVER_INIT_MEMBER(multigam_state,multigmt)
 	}
 
 	auto_free(machine(), buf);
-	multigam_switch_prg_rom(*space, 0x0, 0x01);
+	multigam_switch_prg_rom(space, 0x0, 0x01);
 };
 
 GAME( 1992, multigam, 0,        multigam, multigam, multigam_state, multigam, ROT0, "<unknown>", "Multi Game (set 1)", 0 )

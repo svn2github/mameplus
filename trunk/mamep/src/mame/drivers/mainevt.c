@@ -31,11 +31,10 @@ Notes:
 #include "includes/konamipt.h"
 #include "includes/mainevt.h"
 
-static INTERRUPT_GEN( mainevt_interrupt )
+INTERRUPT_GEN_MEMBER(mainevt_state::mainevt_interrupt)
 {
-	mainevt_state *state = device->machine().driver_data<mainevt_state>();
 
-	if (k052109_is_irq_enabled(state->m_k052109))
+	if (k052109_is_irq_enabled(m_k052109))
 		irq0_line_hold(device);
 }
 
@@ -44,11 +43,10 @@ WRITE8_MEMBER(mainevt_state::dv_nmienable_w)
 	m_nmi_enable = data;
 }
 
-static INTERRUPT_GEN( dv_interrupt )
+INTERRUPT_GEN_MEMBER(mainevt_state::dv_interrupt)
 {
-	mainevt_state *state = device->machine().driver_data<mainevt_state>();
 
-	if (state->m_nmi_enable)
+	if (m_nmi_enable)
 		nmi_line_pulse(device);
 }
 
@@ -126,7 +124,7 @@ WRITE8_MEMBER(mainevt_state::dv_sh_bankswitch_w)
 	device_t *device = machine().device("k007232");
 	int bank_A, bank_B;
 
-//logerror("CPU #1 PC: %04x bank switch = %02x\n",space->device().safe_pc(),data);
+//logerror("CPU #1 PC: %04x bank switch = %02x\n",space.device().safe_pc(),data);
 
 	/* bits 0-3 select the 007232 banks */
 	bank_A = (data & 0x3);
@@ -140,25 +138,25 @@ READ8_MEMBER(mainevt_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(mainevt_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 
@@ -227,7 +225,7 @@ static ADDRESS_MAP_START( devstors_sound_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r,k007232_w)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(devstor_sh_irqcontrol_w)
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(dv_sh_bankswitch_w)
 ADDRESS_MAP_END
@@ -433,20 +431,18 @@ void mainevt_state::machine_reset()
 	m_nmi_enable = 0;
 }
 
-static INTERRUPT_GEN( mainevt_sound_timer_irq )
+INTERRUPT_GEN_MEMBER(mainevt_state::mainevt_sound_timer_irq)
 {
-	mainevt_state *state = device->machine().driver_data<mainevt_state>();
 
-	if(state->m_sound_irq_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_sound_irq_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( devstors_sound_timer_irq )
+INTERRUPT_GEN_MEMBER(mainevt_state::devstors_sound_timer_irq)
 {
-	mainevt_state *state = device->machine().driver_data<mainevt_state>();
 
-	if(state->m_sound_irq_mask)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if(m_sound_irq_mask)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( mainevt, mainevt_state )
@@ -454,11 +450,11 @@ static MACHINE_CONFIG_START( mainevt, mainevt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)	/* ?? */
 	MCFG_CPU_PROGRAM_MAP(mainevt_map)
-	MCFG_CPU_VBLANK_INT("screen", mainevt_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mainevt_state,  mainevt_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(mainevt_sound_map)
-	MCFG_CPU_PERIODIC_INT(mainevt_sound_timer_irq,8*60)	/* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(mainevt_state, mainevt_sound_timer_irq, 8*60)	/* ??? */
 
 
 	/* video hardware */
@@ -469,7 +465,7 @@ static MACHINE_CONFIG_START( mainevt, mainevt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(mainevt)
+	MCFG_SCREEN_UPDATE_DRIVER(mainevt_state, screen_update_mainevt)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -512,11 +508,11 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)	/* ?? */
 	MCFG_CPU_PROGRAM_MAP(devstors_map)
-	MCFG_CPU_VBLANK_INT("screen", dv_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mainevt_state,  dv_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(devstors_sound_map)
-	MCFG_CPU_PERIODIC_INT(devstors_sound_timer_irq,4*60) /* ??? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(mainevt_state, devstors_sound_timer_irq, 4*60) /* ??? */
 
 
 	/* video hardware */
@@ -527,7 +523,7 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(dv)
+	MCFG_SCREEN_UPDATE_DRIVER(mainevt_state, screen_update_dv)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -540,7 +536,7 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "mono", 0.30)
 	MCFG_SOUND_ROUTE(1, "mono", 0.30)
 
@@ -558,11 +554,10 @@ MACHINE_CONFIG_END
 
 ***************************************************************************/
 
-/* 4 players - English title screen - No "Warning" message in the ROM */
 
-ROM_START( mainevt )
+ROM_START( mainevt )	/* 4 players - English title screen - No "Warning" message in the ROM */
 	ROM_REGION( 0x40000, "maincpu", 0 )
-	ROM_LOAD( "799c02.k11",   0x10000, 0x08000, CRC(e2e7dbd5) SHA1(80314cd42a9f47f7bb82a2160fb5ef2ddc6dff30) )
+	ROM_LOAD( "799y02.k11",   0x10000, 0x08000, CRC(e2e7dbd5) SHA1(80314cd42a9f47f7bb82a2160fb5ef2ddc6dff30) )
 	ROM_CONTINUE(             0x08000, 0x08000 )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )
@@ -588,12 +583,9 @@ ROM_START( mainevt )
 	ROM_LOAD( "799b06.c22",   0x00000, 0x80000, CRC(2c8c47d7) SHA1(18a899767177ddfd870df9ed156d8bbc04b58a19) )
 ROM_END
 
-
-/* 4 players - English title screen - No "Warning" message in the ROM */
-
-ROM_START( mainevto )
+ROM_START( mainevto )	/* 4 players - English title screen - No "Warning" message in the ROM */
 	ROM_REGION( 0x40000, "maincpu", 0 )
-	ROM_LOAD( "799_02.k11",   0x10000, 0x08000, CRC(c143596b) SHA1(5da7efaf0f7c7a493cc242eae115f278bc9c134b) )
+	ROM_LOAD( "799f02.k11",   0x10000, 0x08000, CRC(c143596b) SHA1(5da7efaf0f7c7a493cc242eae115f278bc9c134b) )
 	ROM_CONTINUE(             0x08000, 0x08000 )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )
@@ -619,10 +611,7 @@ ROM_START( mainevto )
 	ROM_LOAD( "799b06.c22",   0x00000, 0x80000, CRC(2c8c47d7) SHA1(18a899767177ddfd870df9ed156d8bbc04b58a19) )
 ROM_END
 
-
-/* 2 players - English title screen - "Warning" message in the ROM (not displayed) */
-
-ROM_START( mainevt2p )
+ROM_START( mainevt2p )	/* 2 players - English title screen - "Warning" message in the ROM (not displayed) */
 	ROM_REGION( 0x40000, "maincpu", 0 )
 	ROM_LOAD( "799x02.k11",   0x10000, 0x08000, CRC(42cfc650) SHA1(2d1918ebc0d93a2356ad995a6854dbde7c3b8daf) )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -650,10 +639,7 @@ ROM_START( mainevt2p )
 	ROM_LOAD( "799b06.c22",   0x00000, 0x80000, CRC(2c8c47d7) SHA1(18a899767177ddfd870df9ed156d8bbc04b58a19) )
 ROM_END
 
-
-/* 2 players - Japan title screen - "Warning" message in the ROM (displayed) */
-
-ROM_START( ringohja )
+ROM_START( ringohja )	/* 2 players - Japan title screen - "Warning" message in the ROM (displayed) */
 	ROM_REGION( 0x40000, "maincpu", 0 )
 	ROM_LOAD( "799n02.k11",   0x10000, 0x08000, CRC(f9305dd0) SHA1(7135053be9d46ac9c09ab63eca1eb71825a71a13) )
 	ROM_CONTINUE(             0x08000, 0x08000 )
@@ -680,6 +666,7 @@ ROM_START( ringohja )
 	ROM_REGION( 0x80000, "upd", 0 )	/* 512k for the UPD7759C samples */
 	ROM_LOAD( "799b06.c22",   0x00000, 0x80000, CRC(2c8c47d7) SHA1(18a899767177ddfd870df9ed156d8bbc04b58a19) )
 ROM_END
+
 
 ROM_START( devstors )
 	ROM_REGION( 0x40000, "maincpu", 0 )
@@ -733,7 +720,7 @@ ROM_END
 
 ROM_START( devstors3 )
 	ROM_REGION( 0x40000, "maincpu", 0 )
-	ROM_LOAD( "890k02.k11",   0x10000, 0x08000, CRC(52f4ccdd) SHA1(074e526ed170a5f2083c8c0808734291a2ea7403) )
+	ROM_LOAD( "890k02.k11",   0x10000, 0x08000, CRC(52f4ccdd) SHA1(074e526ed170a5f2083c8c0808734291a2ea7403) ) /* Most likely should be 890v02.k11 */
 	ROM_CONTINUE(             0x08000, 0x08000 )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )

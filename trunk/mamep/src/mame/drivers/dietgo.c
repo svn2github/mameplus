@@ -34,7 +34,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, dietgo_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_NOP		/* YM2203 - this board doesn't have one */
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_NOP		/* This board only has 1 oki chip */
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -160,18 +160,6 @@ static GFXDECODE_START( dietgo )
 	GFXDECODE_ENTRY( "gfx2", 0, spritelayout,      512, 16 )	/* Sprites (16x16) */
 GFXDECODE_END
 
-static void sound_irq(device_t *device, int state)
-{
-	dietgo_state *driver_state = device->machine().driver_data<dietgo_state>();
-	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
-
-
 static int dietgo_bank_callback(const int bank)
 {
 	return ((bank >> 4) & 0x7) * 0x1000;
@@ -208,7 +196,7 @@ static MACHINE_CONFIG_START( dietgo, dietgo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_28MHz/2) /* DE102 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(dietgo_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", dietgo_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", H6280, XTAL_32_22MHz/4/3)	/* Custom chip 45; XIN is 32.220MHZ/4, verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -220,7 +208,7 @@ static MACHINE_CONFIG_START( dietgo, dietgo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(dietgo)
+	MCFG_SCREEN_UPDATE_DRIVER(dietgo_state, screen_update_dietgo)
 
 	MCFG_PALETTE_LENGTH(1024)
 	MCFG_GFXDECODE(dietgo)
@@ -235,8 +223,8 @@ static MACHINE_CONFIG_START( dietgo, dietgo_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_32_22MHz/9) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_32_22MHz/9) /* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) /* IRQ 2 */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.45)
 
 	MCFG_OKIM6295_ADD("oki", XTAL_32_22MHz/32, OKIM6295_PIN7_HIGH) /* verified on pcb */

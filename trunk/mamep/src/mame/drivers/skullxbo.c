@@ -31,59 +31,49 @@
  *
  *************************************/
 
-static void update_interrupts(running_machine &machine)
+void skullxbo_state::update_interrupts()
 {
-	skullxbo_state *state = machine.driver_data<skullxbo_state>();
-	machine.device("maincpu")->execute().set_input_line(1, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(2, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine.device("maincpu")->execute().set_input_line(4, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(1, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(2, m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	subdevice("maincpu")->execute().set_input_line(4, m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static TIMER_CALLBACK( irq_gen )
+TIMER_CALLBACK_MEMBER(skullxbo_state::irq_gen)
 {
-	atarigen_scanline_int_gen(machine.device("maincpu"));
+	scanline_int_gen(*subdevice("maincpu"));
 }
 
 
-static void alpha_row_update(screen_device &screen, int scanline)
+void skullxbo_state::scanline_update(screen_device &screen, int scanline)
 {
-	skullxbo_state *state = screen.machine().driver_data<skullxbo_state>();
-	UINT16 *check = &state->m_alpha[(scanline / 8) * 64 + 42];
+	UINT16 *check = &m_alpha[(scanline / 8) * 64 + 42];
 
 	/* check for interrupts in the alpha ram */
 	/* the interrupt occurs on the HBLANK of the 6th scanline following */
-	if (check < &state->m_alpha[0x7c0] && (*check & 0x8000))
+	if (check < &m_alpha[0x7c0] && (*check & 0x8000))
 	{
 		int	width = screen.width();
 		attotime period = screen.time_until_pos(screen.vpos() + 6, width * 0.9);
-		screen.machine().scheduler().timer_set(period, FUNC(irq_gen));
+		machine().scheduler().timer_set(period, timer_expired_delegate(FUNC(skullxbo_state::irq_gen), this));
 	}
 
 	/* update the playfield and motion objects */
-	skullxbo_scanline_update(screen.machine(), scanline);
+	skullxbo_scanline_update(machine(), scanline);
 }
 
 
 WRITE16_MEMBER(skullxbo_state::skullxbo_halt_until_hblank_0_w)
 {
-	atarigen_halt_until_hblank_0(*machine().primary_screen);
-}
-
-
-MACHINE_START_MEMBER(skullxbo_state,skullxbo)
-{
-	atarigen_init(machine());
+	halt_until_hblank_0(space.device(), *machine().primary_screen);
 }
 
 
 MACHINE_RESET_MEMBER(skullxbo_state,skullxbo)
 {
-
-	atarigen_eeprom_reset(this);
-	atarigen_interrupt_reset(this, update_interrupts);
-	atarigen_scanline_timer_reset(*machine().primary_screen, alpha_row_update, 8);
-	atarijsa_reset();
+	atarigen_state::machine_reset();
+	scanline_timer_reset(*machine().primary_screen, 8);
+	atarijsa_reset(machine());
 }
 
 
@@ -98,7 +88,7 @@ READ16_MEMBER(skullxbo_state::special_port1_r)
 {
 	int temp = ioport("FF5802")->read();
 	if (m_cpu_to_sound_ready) temp ^= 0x0040;
-	if (atarigen_get_hblank(*machine().primary_screen)) temp ^= 0x0010;
+	if (get_hblank(*machine().primary_screen)) temp ^= 0x0010;
 	return temp;
 }
 
@@ -127,29 +117,29 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, skullxbo_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0xff0000, 0xff07ff) AM_WRITE_LEGACY(skullxbo_mobmsb_w)
 	AM_RANGE(0xff0800, 0xff0bff) AM_WRITE(skullxbo_halt_until_hblank_0_w)
-	AM_RANGE(0xff0c00, 0xff0fff) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
-	AM_RANGE(0xff1000, 0xff13ff) AM_WRITE_LEGACY(atarigen_video_int_ack_w)
-	AM_RANGE(0xff1400, 0xff17ff) AM_WRITE_LEGACY(atarigen_sound_w)
-	AM_RANGE(0xff1800, 0xff1bff) AM_WRITE_LEGACY(atarigen_sound_reset_w)
+	AM_RANGE(0xff0c00, 0xff0fff) AM_WRITE(eeprom_enable_w)
+	AM_RANGE(0xff1000, 0xff13ff) AM_WRITE(video_int_ack_w)
+	AM_RANGE(0xff1400, 0xff17ff) AM_WRITE8(sound_w, 0x00ff)
+	AM_RANGE(0xff1800, 0xff1bff) AM_WRITE(sound_reset_w)
 	AM_RANGE(0xff1c00, 0xff1c7f) AM_WRITE_LEGACY(skullxbo_playfieldlatch_w)
 	AM_RANGE(0xff1c80, 0xff1cff) AM_WRITE_LEGACY(skullxbo_xscroll_w) AM_SHARE("xscroll")
-	AM_RANGE(0xff1d00, 0xff1d7f) AM_WRITE_LEGACY(atarigen_scanline_int_ack_w)
+	AM_RANGE(0xff1d00, 0xff1d7f) AM_WRITE(scanline_int_ack_w)
 	AM_RANGE(0xff1d80, 0xff1dff) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0xff1e00, 0xff1e7f) AM_WRITE_LEGACY(skullxbo_playfieldlatch_w)
 	AM_RANGE(0xff1e80, 0xff1eff) AM_WRITE_LEGACY(skullxbo_xscroll_w)
-	AM_RANGE(0xff1f00, 0xff1f7f) AM_WRITE_LEGACY(atarigen_scanline_int_ack_w)
+	AM_RANGE(0xff1f00, 0xff1f7f) AM_WRITE(scanline_int_ack_w)
 	AM_RANGE(0xff1f80, 0xff1fff) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0xff2000, 0xff2fff) AM_RAM_WRITE_LEGACY(atarigen_666_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xff2000, 0xff2fff) AM_RAM_WRITE(paletteram_666_w) AM_SHARE("paletteram")
 	AM_RANGE(0xff4000, 0xff47ff) AM_WRITE_LEGACY(skullxbo_yscroll_w) AM_SHARE("yscroll")
 	AM_RANGE(0xff4800, 0xff4fff) AM_WRITE(skullxbo_mobwr_w)
-	AM_RANGE(0xff6000, 0xff6fff) AM_WRITE_LEGACY(atarigen_eeprom_w) AM_SHARE("eeprom")
-	AM_RANGE(0xff5000, 0xff5001) AM_READ_LEGACY(atarigen_sound_r)
+	AM_RANGE(0xff6000, 0xff6fff) AM_WRITE(eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0xff5000, 0xff5001) AM_READ8(sound_r, 0x00ff)
 	AM_RANGE(0xff5800, 0xff5801) AM_READ_PORT("FF5800")
 	AM_RANGE(0xff5802, 0xff5803) AM_READ(special_port1_r)
-	AM_RANGE(0xff6000, 0xff6fff) AM_READ_LEGACY(atarigen_eeprom_r)
-	AM_RANGE(0xff8000, 0xff9fff) AM_RAM_WRITE_LEGACY(atarigen_playfield_latched_lsb_w) AM_SHARE("playfield")
-	AM_RANGE(0xffa000, 0xffbfff) AM_RAM_WRITE_LEGACY(atarigen_playfield_upper_w) AM_SHARE("playfield_up")
-	AM_RANGE(0xffc000, 0xffcf7f) AM_RAM_WRITE_LEGACY(atarigen_alpha_w) AM_SHARE("alpha")
+	AM_RANGE(0xff6000, 0xff6fff) AM_READ(eeprom_r)
+	AM_RANGE(0xff8000, 0xff9fff) AM_RAM_WRITE(playfield_latched_lsb_w) AM_SHARE("playfield")
+	AM_RANGE(0xffa000, 0xffbfff) AM_RAM_WRITE(playfield_upper_w) AM_SHARE("playfield_up")
+	AM_RANGE(0xffc000, 0xffcf7f) AM_RAM_WRITE(alpha_w) AM_SHARE("alpha")
 	AM_RANGE(0xffcf80, 0xffcfff) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
 	AM_RANGE(0xffd000, 0xffdfff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
 	AM_RANGE(0xffe000, 0xffffff) AM_RAM
@@ -257,9 +247,8 @@ static MACHINE_CONFIG_START( skullxbo, skullxbo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, ATARI_CLOCK_14MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
+	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
 
-	MCFG_MACHINE_START_OVERRIDE(skullxbo_state,skullxbo)
 	MCFG_MACHINE_RESET_OVERRIDE(skullxbo_state,skullxbo)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
@@ -272,7 +261,7 @@ static MACHINE_CONFIG_START( skullxbo, skullxbo_state )
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz, 456*2, 0, 336*2, 262, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(skullxbo)
+	MCFG_SCREEN_UPDATE_DRIVER(skullxbo_state, screen_update_skullxbo)
 
 	MCFG_VIDEO_START_OVERRIDE(skullxbo_state,skullxbo)
 

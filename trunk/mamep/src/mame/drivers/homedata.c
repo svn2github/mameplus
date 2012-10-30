@@ -223,16 +223,15 @@ Custom: GX61A01
 #include "sound/dac.h"
 #include "sound/2203intf.h"
 
-static INTERRUPT_GEN( homedata_irq )
+INTERRUPT_GEN_MEMBER(homedata_state::homedata_irq)
 {
-	homedata_state *state = device->machine().driver_data<homedata_state>();
-	state->m_vblank = 1;
-	device->execute().set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
+	m_vblank = 1;
+	device.execute().set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( upd7807_irq )
+INTERRUPT_GEN_MEMBER(homedata_state::upd7807_irq)
 {
-	device->execute().set_input_line(UPD7810_INTF1, HOLD_LINE);
+	device.execute().set_input_line(UPD7810_INTF1, HOLD_LINE);
 }
 
 
@@ -359,10 +358,10 @@ WRITE8_MEMBER(homedata_state::reikaids_upd7807_portc_w)
 	coin_counter_w(machine(), 0, ~data & 0x80);
 
 	if (BIT(m_upd7807_portc, 5) && !BIT(data, 5))	/* write clock 1->0 */
-		ym2203_w(m_ym, BIT(data, 3), m_upd7807_porta);
+		ym2203_w(m_ym, space, BIT(data, 3), m_upd7807_porta);
 
 	if (BIT(m_upd7807_portc, 4) && !BIT(data, 4))	/* read clock 1->0 */
-		m_upd7807_porta = ym2203_r(m_ym, BIT(data, 3));
+		m_upd7807_porta = ym2203_r(m_ym, space, BIT(data, 3));
 
 	m_upd7807_portc = data;
 }
@@ -536,7 +535,7 @@ static ADDRESS_MAP_START( mrokumei_map, AS_PROGRAM, 8, homedata_state )
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(mrokumei_blitter_start_w)	// in some games also ROM bank switch to access service ROM
 	AM_RANGE(0x8001, 0x8001) AM_WRITE(mrokumei_keyboard_select_w)
 	AM_RANGE(0x8002, 0x8002) AM_WRITE(mrokumei_sound_cmd_w)
-	AM_RANGE(0x8003, 0x8003) AM_DEVWRITE("snsnd", sn76489a_new_device, write)
+	AM_RANGE(0x8003, 0x8003) AM_DEVWRITE("snsnd", sn76489a_device, write)
 	AM_RANGE(0x8006, 0x8006) AM_WRITE(homedata_blitter_param_w)
 	AM_RANGE(0x8007, 0x8007) AM_WRITE(mrokumei_blitter_bank_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -1146,7 +1145,7 @@ MACHINE_START_MEMBER(homedata_state,homedata)
 	m_maincpu = machine().device<cpu_device>("maincpu");
 	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_ym = machine().device("ymsnd");
-	m_sn = machine().device<sn76489a_new_device>("snsnd");
+	m_sn = machine().device<sn76489a_device>("snsnd");
 	m_dac = machine().device<dac_device>("dac");
 
 	save_item(NAME(m_visible_page));
@@ -1212,10 +1211,10 @@ MACHINE_RESET_MEMBER(homedata_state,homedata)
 
 MACHINE_RESET_MEMBER(homedata_state,pteacher)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* on reset, ports are set as input (high impedance), therefore 0xff output */
-	pteacher_upd7807_portc_w(*space, 0, 0xff);
+	pteacher_upd7807_portc_w(space, 0, 0xff);
 
 	MACHINE_RESET_CALL_MEMBER(homedata);
 
@@ -1228,10 +1227,10 @@ MACHINE_RESET_MEMBER(homedata_state,pteacher)
 
 MACHINE_RESET_MEMBER(homedata_state,reikaids)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* on reset, ports are set as input (high impedance), therefore 0xff output */
-	reikaids_upd7807_portc_w(*space, 0, 0xff);
+	reikaids_upd7807_portc_w(space, 0, 0xff);
 
 	MACHINE_RESET_CALL_MEMBER(homedata);
 
@@ -1246,7 +1245,7 @@ static MACHINE_CONFIG_START( mrokumei, homedata_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 16000000/4)	/* 4MHz ? */
 	MCFG_CPU_PROGRAM_MAP(mrokumei_map)
-	MCFG_CPU_VBLANK_INT("screen", homedata_irq)	/* also triggered by the blitter */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  homedata_irq)	/* also triggered by the blitter */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 16000000/4)	/* 4MHz ? */
 	MCFG_CPU_PROGRAM_MAP(mrokumei_sound_map)
@@ -1262,8 +1261,8 @@ static MACHINE_CONFIG_START( mrokumei, homedata_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	// visible area can be changed at runtime
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mrokumei)
-	MCFG_SCREEN_VBLANK_STATIC(homedata)
+	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_mrokumei)
+	MCFG_SCREEN_VBLANK_DRIVER(homedata_state, screen_eof_homedata)
 
 	MCFG_GFXDECODE(mrokumei)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1274,7 +1273,7 @@ static MACHINE_CONFIG_START( mrokumei, homedata_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, 16000000/4)     // SN76489AN actually
+	MCFG_SOUND_ADD("snsnd", SN76489A, 16000000/4)     // SN76489AN actually
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -1312,13 +1311,13 @@ static MACHINE_CONFIG_START( reikaids, homedata_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 16000000/4)	/* 4MHz ? */
 	MCFG_CPU_PROGRAM_MAP(reikaids_map)
-	MCFG_CPU_VBLANK_INT("screen", homedata_irq)	/* also triggered by the blitter */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  homedata_irq)	/* also triggered by the blitter */
 
 	MCFG_CPU_ADD("audiocpu", UPD7807, 8000000)	/* ??? MHz (max speed for the 7807 is 12MHz) */
 	MCFG_CPU_CONFIG(upd_config)
 	MCFG_CPU_PROGRAM_MAP(reikaids_upd7807_map)
 	MCFG_CPU_IO_MAP(reikaids_upd7807_io_map)
-	MCFG_CPU_VBLANK_INT("screen", upd7807_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  upd7807_irq)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(30000))	// very high interleave required to sync for startup tests
 
@@ -1331,8 +1330,8 @@ static MACHINE_CONFIG_START( reikaids, homedata_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 16, 256-1-16)
-	MCFG_SCREEN_UPDATE_STATIC(reikaids)
-	MCFG_SCREEN_VBLANK_STATIC(homedata)
+	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_reikaids)
+	MCFG_SCREEN_VBLANK_DRIVER(homedata_state, screen_eof_homedata)
 
 	MCFG_GFXDECODE(reikaids)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1362,13 +1361,13 @@ static MACHINE_CONFIG_START( pteacher, homedata_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 16000000/4)	/* 4MHz ? */
 	MCFG_CPU_PROGRAM_MAP(pteacher_map)
-	MCFG_CPU_VBLANK_INT("screen", homedata_irq)	/* also triggered by the blitter */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  homedata_irq)	/* also triggered by the blitter */
 
 	MCFG_CPU_ADD("audiocpu", UPD7807, 9000000)	/* 9MHz ? */
 	MCFG_CPU_CONFIG(upd_config)
 	MCFG_CPU_PROGRAM_MAP(pteacher_upd7807_map)
 	MCFG_CPU_IO_MAP(pteacher_upd7807_io_map)
-	MCFG_CPU_VBLANK_INT("screen", upd7807_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  upd7807_irq)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	// should be enough
 
@@ -1382,8 +1381,8 @@ static MACHINE_CONFIG_START( pteacher, homedata_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	// visible area can be changed at runtime
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pteacher)
-	MCFG_SCREEN_VBLANK_STATIC(homedata)
+	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_pteacher)
+	MCFG_SCREEN_VBLANK_DRIVER(homedata_state, screen_eof_homedata)
 
 	MCFG_GFXDECODE(pteacher)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -1394,7 +1393,7 @@ static MACHINE_CONFIG_START( pteacher, homedata_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, 16000000/4)     // SN76489AN actually
+	MCFG_SOUND_ADD("snsnd", SN76489A, 16000000/4)     // SN76489AN actually
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -1546,7 +1545,7 @@ static MACHINE_CONFIG_START( mirderby, homedata_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mirderby)
+	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_mirderby)
 
 	MCFG_GFXDECODE(mirderby)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2017,15 +2016,15 @@ DRIVER_INIT_MEMBER(homedata_state,jogakuen)
 	/* it seems that Mahjong Jogakuen runs on the same board as the others,
        but with just these two addresses swapped. Instead of creating a new
        MachineDriver, I just fix them here. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x8007, 0x8007, write8_delegate(FUNC(homedata_state::pteacher_blitter_bank_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x8005, 0x8005, write8_delegate(FUNC(homedata_state::pteacher_gfx_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8007, 0x8007, write8_delegate(FUNC(homedata_state::pteacher_blitter_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8005, 0x8005, write8_delegate(FUNC(homedata_state::pteacher_gfx_bank_w),this));
 }
 
 DRIVER_INIT_MEMBER(homedata_state,mjikaga)
 {
 	/* Mahjong Ikagadesuka is different as well. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x7802, 0x7802, read8_delegate(FUNC(homedata_state::pteacher_snd_r),this));
-	machine().device("audiocpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0123, 0x0123, write8_delegate(FUNC(homedata_state::pteacher_snd_answer_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x7802, 0x7802, read8_delegate(FUNC(homedata_state::pteacher_snd_r),this));
+	machine().device("audiocpu")->memory().space(AS_PROGRAM).install_write_handler(0x0123, 0x0123, write8_delegate(FUNC(homedata_state::pteacher_snd_answer_w),this));
 }
 
 DRIVER_INIT_MEMBER(homedata_state,reikaids)

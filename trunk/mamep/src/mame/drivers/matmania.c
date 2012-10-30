@@ -309,11 +309,11 @@ static MACHINE_CONFIG_START( matmania, matmania_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 1500000)	/* 1.5 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(matmania_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", matmania_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1200000)	/* 1.2 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(matmania_sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,15*60)	/* ???? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(matmania_state, nmi_line_pulse, 15*60)	/* ???? */
 								/* IRQs are caused by the main CPU */
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -325,7 +325,7 @@ static MACHINE_CONFIG_START( matmania, matmania_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(matmania)
+	MCFG_SCREEN_UPDATE_DRIVER(matmania_state, screen_update_matmania)
 
 	MCFG_GFXDECODE(matmania)
 	MCFG_PALETTE_LENGTH(64+16)
@@ -394,7 +394,7 @@ static MACHINE_CONFIG_START( maniach, matmania_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 1500000)	/* 1.5 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(maniach_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", matmania_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 1500000)	/* 1.5 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(maniach_sound_map)
@@ -414,7 +414,7 @@ static MACHINE_CONFIG_START( maniach, matmania_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(maniach)
+	MCFG_SCREEN_UPDATE_DRIVER(matmania_state, screen_update_maniach)
 
 	MCFG_GFXDECODE(maniach)
 	MCFG_PALETTE_LENGTH(64+16)

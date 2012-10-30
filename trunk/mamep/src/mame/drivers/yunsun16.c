@@ -156,7 +156,7 @@ number 0 on each voice. That sample is 00000-00000.
 DRIVER_INIT_MEMBER(yunsun16_state,magicbub)
 {
 //  remove_mem_write16_handler (0, 0x800180, 0x800181 );
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800188, 0x800189, write16_delegate(FUNC(yunsun16_state::magicbub_sound_command_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800188, 0x800189, write16_delegate(FUNC(yunsun16_state::magicbub_sound_command_w),this));
 }
 
 /***************************************************************************
@@ -590,7 +590,7 @@ static MACHINE_CONFIG_START( magicbub, yunsun16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", yunsun16_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -603,7 +603,7 @@ static MACHINE_CONFIG_START( magicbub, yunsun16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x180, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0+0x20, 0x180-1-0x20, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(yunsun16)
+	MCFG_SCREEN_UPDATE_DRIVER(yunsun16_state, screen_update_yunsun16)
 
 	MCFG_GFXDECODE(yunsun16)
 	MCFG_PALETTE_LENGTH(8192)
@@ -632,7 +632,7 @@ static MACHINE_CONFIG_START( shocking, yunsun16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", yunsun16_state,  irq2_line_hold)
 
 
 	/* video hardware */
@@ -641,7 +641,7 @@ static MACHINE_CONFIG_START( shocking, yunsun16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x180, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x180-1-4, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE_STATIC(yunsun16)
+	MCFG_SCREEN_UPDATE_DRIVER(yunsun16_state, screen_update_yunsun16)
 
 	MCFG_GFXDECODE(yunsun16)
 	MCFG_PALETTE_LENGTH(8192)

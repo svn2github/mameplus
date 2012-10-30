@@ -164,6 +164,8 @@ public:
 	DECLARE_DRIVER_INIT(vamphalf);
 	DECLARE_DRIVER_INIT(wyvernwg);
 	DECLARE_DRIVER_INIT(luplup);
+	UINT32 screen_update_common(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_aoh(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 READ16_MEMBER(vamphalf_state::eeprom_r)
@@ -426,8 +428,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( vamphalf_io, AS_IO, 16, vamphalf_state )
 	AM_RANGE(0x0c0, 0x0c1) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x0c2, 0x0c3) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x140, 0x143) AM_DEVWRITE8_LEGACY("ymsnd", ym2151_register_port_w, 0x00ff)
-	AM_RANGE(0x146, 0x147) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
+	AM_RANGE(0x140, 0x143) AM_DEVWRITE8("ymsnd", ym2151_device, register_w, 0x00ff)
+	AM_RANGE(0x146, 0x147) AM_DEVREADWRITE8("ymsnd", ym2151_device, status_r, data_w, 0x00ff)
 	AM_RANGE(0x1c0, 0x1c3) AM_READ(eeprom_r)
 	AM_RANGE(0x240, 0x243) AM_WRITE(flipscreen_w)
 	AM_RANGE(0x600, 0x603) AM_READ_PORT("SYSTEM")
@@ -451,8 +453,8 @@ static ADDRESS_MAP_START( coolmini_io, AS_IO, 16, vamphalf_state )
 	AM_RANGE(0x308, 0x30b) AM_WRITE(eeprom_w)
 	AM_RANGE(0x4c0, 0x4c1) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x4c2, 0x4c3) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x540, 0x543) AM_DEVWRITE8_LEGACY("ymsnd", ym2151_register_port_w, 0x00ff)
-	AM_RANGE(0x544, 0x547) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
+	AM_RANGE(0x540, 0x543) AM_DEVWRITE8("ymsnd", ym2151_device, register_w, 0x00ff)
+	AM_RANGE(0x544, 0x547) AM_DEVREADWRITE8("ymsnd", ym2151_device, status_r, data_w, 0x00ff)
 	AM_RANGE(0x7c0, 0x7c3) AM_READ(eeprom_r)
 ADDRESS_MAP_END
 
@@ -462,8 +464,8 @@ static ADDRESS_MAP_START( suplup_io, AS_IO, 16, vamphalf_state )
 	AM_RANGE(0x060, 0x063) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x080, 0x081) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x082, 0x083) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x0c0, 0x0c3) AM_DEVWRITE8_LEGACY("ymsnd", ym2151_register_port_w, 0x00ff)
-	AM_RANGE(0x0c4, 0x0c7) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
+	AM_RANGE(0x0c0, 0x0c3) AM_DEVWRITE8("ymsnd", ym2151_device, register_w, 0x00ff)
+	AM_RANGE(0x0c4, 0x0c7) AM_DEVREADWRITE8("ymsnd", ym2151_device, status_r, data_w, 0x00ff)
 	AM_RANGE(0x100, 0x103) AM_READ(eeprom_r)
 ADDRESS_MAP_END
 
@@ -481,7 +483,7 @@ static ADDRESS_MAP_START( finalgdr_io, AS_IO, 32, vamphalf_state )
 	AM_RANGE(0x2400, 0x2403) AM_READ(finalgdr_prot_r)
 	AM_RANGE(0x2800, 0x2803) AM_WRITE(finalgdr_backupram_bank_w)
 	AM_RANGE(0x2c00, 0x2dff) AM_READWRITE(finalgdr_backupram_r, finalgdr_backupram_w)
-	AM_RANGE(0x3000, 0x3007) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x0000ff00)
+	AM_RANGE(0x3000, 0x3007) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x0000ff00)
 	AM_RANGE(0x3800, 0x3803) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x3400, 0x3403) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x0000ff00)
 	AM_RANGE(0x3c00, 0x3c03) AM_READ_PORT("SYSTEM")
@@ -502,7 +504,7 @@ static ADDRESS_MAP_START( mrkicker_io, AS_IO, 32, vamphalf_state )
 	AM_RANGE(0x4084, 0x4087) AM_WRITENOP //?
 	AM_RANGE(0x40a0, 0x40a3) AM_WRITE(finalgdr_oki_bank_w)
 	AM_RANGE(0x6400, 0x6403) AM_READ(finalgdr_prot_r)
-	AM_RANGE(0x7000, 0x7007) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x0000ff00)
+	AM_RANGE(0x7000, 0x7007) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x0000ff00)
 	AM_RANGE(0x7400, 0x7403) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x0000ff00)
 	AM_RANGE(0x7800, 0x7803) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x7c00, 0x7c03) AM_READ_PORT("SYSTEM")
@@ -517,8 +519,8 @@ static ADDRESS_MAP_START( jmpbreak_io, AS_IO, 16, vamphalf_state )
 	AM_RANGE(0x440, 0x441) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x442, 0x443) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x540, 0x543) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x680, 0x683) AM_DEVWRITE8_LEGACY("ymsnd", ym2151_register_port_w, 0x00ff)
-	AM_RANGE(0x684, 0x687) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
+	AM_RANGE(0x680, 0x683) AM_DEVWRITE8("ymsnd", ym2151_device, register_w, 0x00ff)
+	AM_RANGE(0x684, 0x687) AM_DEVREADWRITE8("ymsnd", ym2151_device, status_r, data_w, 0x00ff)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mrdig_io, AS_IO, 16, vamphalf_state )
@@ -528,8 +530,8 @@ static ADDRESS_MAP_START( mrdig_io, AS_IO, 16, vamphalf_state )
 	AM_RANGE(0x080, 0x081) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x082, 0x083) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x280, 0x283) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x0c0, 0x0c3) AM_DEVWRITE8_LEGACY("ymsnd", ym2151_register_port_w, 0x00ff)
-	AM_RANGE(0x0c4, 0x0c7) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
+	AM_RANGE(0x0c0, 0x0c3) AM_DEVWRITE8("ymsnd", ym2151_device, register_w, 0x00ff)
+	AM_RANGE(0x0c4, 0x0c7) AM_DEVREADWRITE8("ymsnd", ym2151_device, status_r, data_w, 0x00ff)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( aoh_map, AS_PROGRAM, 32, vamphalf_state )
@@ -545,7 +547,7 @@ static ADDRESS_MAP_START( aoh_io, AS_IO, 32, vamphalf_state )
 	AM_RANGE(0x0480, 0x0483) AM_WRITE(eeprom32_w)
 	AM_RANGE(0x0620, 0x0623) AM_DEVREADWRITE8("oki_2", okim6295_device, read, write, 0x0000ff00)
 	AM_RANGE(0x0660, 0x0663) AM_DEVREADWRITE8("oki_1", okim6295_device, read, write, 0x0000ff00)
-	AM_RANGE(0x0640, 0x0647) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x0000ff00)
+	AM_RANGE(0x0640, 0x0647) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x0000ff00)
 	AM_RANGE(0x0680, 0x0683) AM_WRITE(aoh_oki_bank_w)
 ADDRESS_MAP_END
 
@@ -561,8 +563,8 @@ static ADDRESS_MAP_START( boonggab_io, AS_IO, 16, vamphalf_state )
 	AM_RANGE(0x600, 0x603) AM_WRITE(boonggab_oki_bank_w)
 	AM_RANGE(0x700, 0x701) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x702, 0x703) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x740, 0x743) AM_DEVWRITE8_LEGACY("ymsnd", ym2151_register_port_w, 0x00ff)
-	AM_RANGE(0x744, 0x747) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
+	AM_RANGE(0x740, 0x743) AM_DEVWRITE8("ymsnd", ym2151_device, register_w, 0x00ff)
+	AM_RANGE(0x744, 0x747) AM_DEVREADWRITE8("ymsnd", ym2151_device, status_r, data_w, 0x00ff)
 ADDRESS_MAP_END
 
 /*
@@ -752,7 +754,7 @@ void vamphalf_handle_flipped_visible_area( screen_device &screen )
 }
 
 
-static SCREEN_UPDATE_IND16( common )
+UINT32 vamphalf_state::screen_update_common(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	vamphalf_handle_flipped_visible_area(screen);
 	bitmap.fill(0, cliprect);
@@ -760,7 +762,7 @@ static SCREEN_UPDATE_IND16( common )
 	return 0;
 }
 
-static SCREEN_UPDATE_IND16( aoh )
+UINT32 vamphalf_state::screen_update_aoh(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 //  vamphalf_handle_flipped_visible_area(screen); // not on this?
 	bitmap.fill(0, cliprect);
@@ -983,7 +985,7 @@ static QS1000_INTERFACE( qs1000_intf )
 static MACHINE_CONFIG_START( common, vamphalf_state )
 	MCFG_CPU_ADD("maincpu", E116T, 50000000)	/* 50 MHz */
 	MCFG_CPU_PROGRAM_MAP(common_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -993,7 +995,7 @@ static MACHINE_CONFIG_START( common, vamphalf_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(31, 350, 16, 251)
-	MCFG_SCREEN_UPDATE_STATIC(common)
+	MCFG_SCREEN_UPDATE_DRIVER(vamphalf_state, screen_update_common)
 
 	MCFG_PALETTE_LENGTH(0x8000)
 	MCFG_GFXDECODE(vamphalf)
@@ -1002,7 +1004,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_FRAGMENT( sound_ym_oki )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 28000000/8)
+	MCFG_YM2151_ADD("ymsnd", 28000000/8)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -1014,7 +1016,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_FRAGMENT( sound_suplup )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 14318180/4)
+	MCFG_YM2151_ADD("ymsnd", 14318180/4)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -1043,7 +1045,7 @@ static MACHINE_CONFIG_DERIVED( misncrft, common )
 	MCFG_CPU_REPLACE("maincpu", GMS30C2116, 50000000)	/* 50 MHz */
 	MCFG_CPU_PROGRAM_MAP(common_map)
 	MCFG_CPU_IO_MAP(misncrft_io)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_FRAGMENT_ADD(sound_qs1000)
 MACHINE_CONFIG_END
@@ -1074,7 +1076,7 @@ static MACHINE_CONFIG_DERIVED( mrdig, common )
 	MCFG_CPU_PROGRAM_MAP(common_map)
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(mrdig_io)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_FRAGMENT_ADD(sound_ym_oki)
 MACHINE_CONFIG_END
@@ -1083,7 +1085,7 @@ static MACHINE_CONFIG_DERIVED( wyvernwg, common )
 	MCFG_CPU_REPLACE("maincpu", E132T, 50000000)	/* 50 MHz */
 	MCFG_CPU_PROGRAM_MAP(common_32bit_map)
 	MCFG_CPU_IO_MAP(wyvernwg_io)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_FRAGMENT_ADD(sound_qs1000)
 MACHINE_CONFIG_END
@@ -1092,7 +1094,7 @@ static MACHINE_CONFIG_DERIVED( finalgdr, common )
 	MCFG_CPU_REPLACE("maincpu", E132T, 50000000)	/* 50 MHz */
 	MCFG_CPU_PROGRAM_MAP(common_32bit_map)
 	MCFG_CPU_IO_MAP(finalgdr_io)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1103,7 +1105,7 @@ static MACHINE_CONFIG_DERIVED( mrkicker, common )
 	MCFG_CPU_REPLACE("maincpu", E132T, 50000000)	/* 50 MHz */
 	MCFG_CPU_PROGRAM_MAP(common_32bit_map)
 	MCFG_CPU_IO_MAP(mrkicker_io)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1114,7 +1116,7 @@ static MACHINE_CONFIG_START( aoh, vamphalf_state )
 	MCFG_CPU_ADD("maincpu", E132XN, 20000000*4)	/* 4x internal multiplier */
 	MCFG_CPU_PROGRAM_MAP(aoh_map)
 	MCFG_CPU_IO_MAP(aoh_io)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vamphalf_state,  irq1_line_hold)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -1124,7 +1126,7 @@ static MACHINE_CONFIG_START( aoh, vamphalf_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(64, 511-64, 16, 255-16)
-	MCFG_SCREEN_UPDATE_STATIC(aoh)
+	MCFG_SCREEN_UPDATE_DRIVER(vamphalf_state, screen_update_aoh)
 
 	MCFG_PALETTE_LENGTH(0x8000)
 	MCFG_GFXDECODE(vamphalf)
@@ -1132,7 +1134,7 @@ static MACHINE_CONFIG_START( aoh, vamphalf_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -2207,9 +2209,9 @@ ROM_START( boonggab )
 	ROM_COPY( "user2", 0x0e0000, 0x1e0000, 0x020000)
 ROM_END
 
-static int irq_active(address_space *space)
+static int irq_active(address_space &space)
 {
-	UINT32 FCR = space->device().state().state_int(27);
+	UINT32 FCR = space.device().state().state_int(27);
 	if( !(FCR&(1<<29)) ) // int 2 (irq 4)
 		return 1;
 	else
@@ -2220,7 +2222,7 @@ READ16_MEMBER(vamphalf_state::vamphalf_speedup_r)
 {
 	if(space.device().safe_pc() == 0x82de)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2233,7 +2235,7 @@ READ16_MEMBER(vamphalf_state::vamphafk_speedup_r)
 {
 	if(space.device().safe_pc() == 0x82de)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2246,7 +2248,7 @@ READ16_MEMBER(vamphalf_state::misncrft_speedup_r)
 {
 	if(space.device().safe_pc() == 0xecc8)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2259,7 +2261,7 @@ READ16_MEMBER(vamphalf_state::coolmini_speedup_r)
 {
 	if(space.device().safe_pc() == 0x75f7a)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2272,7 +2274,7 @@ READ16_MEMBER(vamphalf_state::suplup_speedup_r)
 {
 	if(space.device().safe_pc() == 0xaf18a )
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2285,7 +2287,7 @@ READ16_MEMBER(vamphalf_state::luplup_speedup_r)
 {
 	if(space.device().safe_pc() == 0xaefac )
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2298,7 +2300,7 @@ READ16_MEMBER(vamphalf_state::luplup29_speedup_r)
 {
 	if(space.device().safe_pc() == 0xae6c0 )
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2311,7 +2313,7 @@ READ16_MEMBER(vamphalf_state::puzlbang_speedup_r)
 {
 	if(space.device().safe_pc() == 0xae6d2 )
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2326,7 +2328,7 @@ READ32_MEMBER(vamphalf_state::wyvernwg_speedup_r)
 
 	if(pc == 0x10758)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2341,7 +2343,7 @@ READ32_MEMBER(vamphalf_state::wyvernwga_speedup_r)
 
 	if(pc == 0x10758)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2356,7 +2358,7 @@ READ32_MEMBER(vamphalf_state::finalgdr_speedup_r)
 {
 	if(space.device().safe_pc() == 0x1c212)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2370,7 +2372,7 @@ READ32_MEMBER(vamphalf_state::mrkicker_speedup_r)
 	UINT32 pc = space.device().safe_pc();
 	if(pc == 0x469de || pc == 0x46a36)
 	{
-//      if(irq_active(&space))
+//      if(irq_active(space))
 //          space.device().execute().spin_until_interrupt();
 //      else
 			space.device().execute().eat_cycles(50);
@@ -2384,7 +2386,7 @@ READ16_MEMBER(vamphalf_state::dquizgo2_speedup_r)
 {
 	if(space.device().safe_pc() == 0xaa622)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2412,7 +2414,7 @@ READ16_MEMBER(vamphalf_state::jmpbreak_speedup_r)
 {
 	if(space.device().safe_pc() == 0x983c)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2425,7 +2427,7 @@ READ16_MEMBER(vamphalf_state::mrdig_speedup_r)
 {
 	if(space.device().safe_pc() == 0x1710)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 		else
 			space.device().execute().eat_cycles(50);
@@ -2460,7 +2462,7 @@ READ16_MEMBER(vamphalf_state::boonggab_speedup_r)
 {
 	if(space.device().safe_pc() == 0x13198)
 	{
-		if(irq_active(&space))
+		if(irq_active(space))
 			space.device().execute().spin_until_interrupt();
 	}
 
@@ -2469,7 +2471,7 @@ READ16_MEMBER(vamphalf_state::boonggab_speedup_r)
 
 DRIVER_INIT_MEMBER(vamphalf_state,vamphalf)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0004a840, 0x0004a843, read16_delegate(FUNC(vamphalf_state::vamphalf_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0004a840, 0x0004a843, read16_delegate(FUNC(vamphalf_state::vamphalf_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 0x80;
@@ -2477,7 +2479,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,vamphalf)
 
 DRIVER_INIT_MEMBER(vamphalf_state,vamphafk)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0004a6d0, 0x0004a6d3, read16_delegate(FUNC(vamphalf_state::vamphafk_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0004a6d0, 0x0004a6d3, read16_delegate(FUNC(vamphalf_state::vamphafk_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 0x80;
@@ -2485,19 +2487,19 @@ DRIVER_INIT_MEMBER(vamphalf_state,vamphafk)
 
 DRIVER_INIT_MEMBER(vamphalf_state,misncrft)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00072eb4, 0x00072eb7, read16_delegate(FUNC(vamphalf_state::misncrft_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00072eb4, 0x00072eb7, read16_delegate(FUNC(vamphalf_state::misncrft_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 1;
 
 	// Configure the QS1000 ROM banking. Care must be taken not to overlap the 256b internal RAM
-	machine().device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "data");
+	machine().device("qs1000:cpu")->memory().space(AS_IO).install_read_bank(0x0100, 0xffff, "data");
 	membank("qs1000:data")->configure_entries(0, 16, memregion("qs1000:cpu")->base()+0x100, 0x8000-0x100);
 }
 
 DRIVER_INIT_MEMBER(vamphalf_state,coolmini)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x000d2e80, 0x000d2e83, read16_delegate(FUNC(vamphalf_state::coolmini_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x000d2e80, 0x000d2e83, read16_delegate(FUNC(vamphalf_state::coolmini_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 1;
@@ -2505,7 +2507,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,coolmini)
 
 DRIVER_INIT_MEMBER(vamphalf_state,suplup)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0011605c, 0x0011605f, read16_delegate(FUNC(vamphalf_state::suplup_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0011605c, 0x0011605f, read16_delegate(FUNC(vamphalf_state::suplup_speedup_r), this));
 
 	m_palshift = 8;
 	/* no flipscreen */
@@ -2513,7 +2515,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,suplup)
 
 DRIVER_INIT_MEMBER(vamphalf_state,luplup)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00115e84, 0x00115e87, read16_delegate(FUNC(vamphalf_state::luplup_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00115e84, 0x00115e87, read16_delegate(FUNC(vamphalf_state::luplup_speedup_r), this));
 
 	m_palshift = 8;
 	/* no flipscreen */
@@ -2521,7 +2523,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,luplup)
 
 DRIVER_INIT_MEMBER(vamphalf_state,luplup29)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00113f08, 0x00113f0b, read16_delegate(FUNC(vamphalf_state::luplup29_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00113f08, 0x00113f0b, read16_delegate(FUNC(vamphalf_state::luplup29_speedup_r), this));
 
 	m_palshift = 8;
 	/* no flipscreen */
@@ -2529,7 +2531,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,luplup29)
 
 DRIVER_INIT_MEMBER(vamphalf_state,puzlbang)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00113ecc, 0x00113ecf, read16_delegate(FUNC(vamphalf_state::puzlbang_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00113ecc, 0x00113ecf, read16_delegate(FUNC(vamphalf_state::puzlbang_speedup_r), this));
 
 	m_palshift = 8;
 	/* no flipscreen */
@@ -2537,8 +2539,8 @@ DRIVER_INIT_MEMBER(vamphalf_state,puzlbang)
 
 DRIVER_INIT_MEMBER(vamphalf_state,wyvernwg)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00b56fc, 0x00b56ff, read32_delegate(FUNC(vamphalf_state::wyvernwg_speedup_r), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00b74f8, 0x00b74fb, read32_delegate(FUNC(vamphalf_state::wyvernwga_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00b56fc, 0x00b56ff, read32_delegate(FUNC(vamphalf_state::wyvernwg_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00b74f8, 0x00b74fb, read32_delegate(FUNC(vamphalf_state::wyvernwga_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 1;
@@ -2548,7 +2550,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,wyvernwg)
 	m_semicom_prot_data[1] = 1;
 
 	// Configure the QS1000 ROM banking. Care must be taken not to overlap the 256b internal RAM
-	machine().device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "data");
+	machine().device("qs1000:cpu")->memory().space(AS_IO).install_read_bank(0x0100, 0xffff, "data");
 	membank("qs1000:data")->configure_entries(0, 16, memregion("qs1000:cpu")->base()+0x100, 0x8000-0x100);
 }
 
@@ -2556,7 +2558,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,finalgdr)
 {
 	m_finalgdr_backupram_bank = 1;
 	m_finalgdr_backupram = auto_alloc_array(machine(), UINT8, 0x80*0x100);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x005e874, 0x005e877, read32_delegate(FUNC(vamphalf_state::finalgdr_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x005e874, 0x005e877, read32_delegate(FUNC(vamphalf_state::finalgdr_speedup_r), this));
 	machine().device<nvram_device>("nvram")->set_base(m_finalgdr_backupram, 0x80*0x100);
 
 	m_palshift = 0;
@@ -2572,7 +2574,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,mrkicker)
 	// backup ram isn't used
 	m_finalgdr_backupram_bank = 1;
 	m_finalgdr_backupram = auto_alloc_array(machine(), UINT8, 0x80*0x100);
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00701a4, 0x00701a7, read32_delegate(FUNC(vamphalf_state::mrkicker_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00701a4, 0x00701a7, read32_delegate(FUNC(vamphalf_state::mrkicker_speedup_r), this));
 	machine().device<nvram_device>("nvram")->set_base(m_finalgdr_backupram, 0x80*0x100);
 
 	m_palshift = 0;
@@ -2585,7 +2587,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,mrkicker)
 
 DRIVER_INIT_MEMBER(vamphalf_state,dquizgo2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00cde70, 0x00cde73, read16_delegate(FUNC(vamphalf_state::dquizgo2_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00cde70, 0x00cde73, read16_delegate(FUNC(vamphalf_state::dquizgo2_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 1;
@@ -2593,7 +2595,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,dquizgo2)
 
 DRIVER_INIT_MEMBER(vamphalf_state,dtfamily)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xcc2a8, 0xcc2a9, read16_delegate(FUNC(vamphalf_state::dtfamily_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xcc2a8, 0xcc2a9, read16_delegate(FUNC(vamphalf_state::dtfamily_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 1;
@@ -2602,7 +2604,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,dtfamily)
 
 DRIVER_INIT_MEMBER(vamphalf_state,toyland)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x780d8, 0x780d9, read16_delegate(FUNC(vamphalf_state::toyland_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x780d8, 0x780d9, read16_delegate(FUNC(vamphalf_state::toyland_speedup_r), this));
 
 	m_palshift = 0;
 	m_flip_bit = 1;
@@ -2610,7 +2612,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,toyland)
 
 DRIVER_INIT_MEMBER(vamphalf_state,aoh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x028a09c, 0x028a09f, read32_delegate(FUNC(vamphalf_state::aoh_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x028a09c, 0x028a09f, read32_delegate(FUNC(vamphalf_state::aoh_speedup_r), this));
 
 	m_palshift = 0;
 	/* no flipscreen */
@@ -2618,16 +2620,16 @@ DRIVER_INIT_MEMBER(vamphalf_state,aoh)
 
 DRIVER_INIT_MEMBER(vamphalf_state,jmpbreak)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00906fc, 0x00906ff, read16_delegate(FUNC(vamphalf_state::jmpbreak_speedup_r), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00906fc, 0x00906ff, read16_delegate(FUNC(vamphalf_state::jmpbreak_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), this));
 
 	m_palshift = 0;
 }
 
 DRIVER_INIT_MEMBER(vamphalf_state,mrdig)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00a99c, 0x00a99f, read16_delegate(FUNC(vamphalf_state::mrdig_speedup_r), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00a99c, 0x00a99f, read16_delegate(FUNC(vamphalf_state::mrdig_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), this));
 
 	m_palshift = 0;
 }
@@ -2635,7 +2637,7 @@ DRIVER_INIT_MEMBER(vamphalf_state,mrdig)
 
 DRIVER_INIT_MEMBER(vamphalf_state,boonggab)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x000f1b7c, 0x000f1b7f, read16_delegate(FUNC(vamphalf_state::boonggab_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x000f1b7c, 0x000f1b7f, read16_delegate(FUNC(vamphalf_state::boonggab_speedup_r), this));
 
 	m_palshift = 0;
 	m_has_extra_gfx = 1;

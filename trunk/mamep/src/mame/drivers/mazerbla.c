@@ -143,6 +143,12 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_mazerbla(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_test_vcu(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(sound_interrupt);
+	TIMER_CALLBACK_MEMBER(deferred_ls670_0_w);
+	TIMER_CALLBACK_MEMBER(deferred_ls670_1_w);
+	TIMER_CALLBACK_MEMBER(delayed_sound_w);
 };
 
 
@@ -203,85 +209,84 @@ void mazerbla_state::video_start()
 
 #ifdef UNUSED_DEFINITION
 
-SCREEN_UPDATE_IND16( test_vcu )
+UINT32 mazerbla_state::screen_update_test_vcu(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mazerbla_state *state = screen.machine().driver_data<mazerbla_state>();
-	int *planes_enabled = state->m_planes_enabled;
+	int *planes_enabled = m_planes_enabled;
 	char buf[128];
 
 	UINT32 color_base = 0;
 
-	if (state->m_game_id == MAZERBLA)
+	if (m_game_id == MAZERBLA)
 		color_base = 0x80;	/* 0x80 constant: matches Mazer Blazer movie */
 
-	if (state->m_game_id == GREATGUN)
+	if (m_game_id == GREATGUN)
 		color_base = 0x00;
 
 	bitmap.fill(0);
 //  logerror("-->frame\n");
 
 	if (planes_enabled[3])
-		copybitmap(bitmap, state->m_tmpbitmaps[3], 0, 0, 0, 0, cliprect);
+		copybitmap(bitmap, m_tmpbitmaps[3], 0, 0, 0, 0, cliprect);
 
 	if (planes_enabled[2])
-		copybitmap_trans(bitmap, state->m_tmpbitmaps[2], 0, 0, 0, 0,cliprect, color_base);
+		copybitmap_trans(bitmap, m_tmpbitmaps[2], 0, 0, 0, 0,cliprect, color_base);
 
-	state->m_tmpbitmaps[2].fill(color_base);
+	m_tmpbitmaps[2].fill(color_base);
 
 	if (planes_enabled[1])
-		copybitmap_trans(bitmap, state->m_tmpbitmaps[1], 0, 0, 0, 0,cliprect, color_base);
+		copybitmap_trans(bitmap, m_tmpbitmaps[1], 0, 0, 0, 0,cliprect, color_base);
 
-	state->m_tmpbitmaps[1].fill(color_base);
+	m_tmpbitmaps[1].fill(color_base);
 
 	if (planes_enabled[0])
-		copybitmap_trans(bitmap, state->m_tmpbitmaps[0], 0, 0, 0, 0,cliprect, color_base);
+		copybitmap_trans(bitmap, m_tmpbitmaps[0], 0, 0, 0, 0,cliprect, color_base);
 
-	state->m_tmpbitmaps[0].fill(color_base);
+	m_tmpbitmaps[0].fill(color_base);
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_1))	/* plane 1 */
+	if (machine().input().code_pressed_once(KEYCODE_1))	/* plane 1 */
 		planes_enabled[0] ^= 1;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_2))	/* plane 2 */
+	if (machine().input().code_pressed_once(KEYCODE_2))	/* plane 2 */
 		planes_enabled[1] ^= 1;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_3))	/* plane 3 */
+	if (machine().input().code_pressed_once(KEYCODE_3))	/* plane 3 */
 		planes_enabled[2] ^= 1;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_4))	/* plane 4 */
+	if (machine().input().code_pressed_once(KEYCODE_4))	/* plane 4 */
 		planes_enabled[3] ^= 1;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_I))	/* show/hide debug info */
-		state->m_dbg_info = !state->m_dbg_info;
+	if (machine().input().code_pressed_once(KEYCODE_I))	/* show/hide debug info */
+		m_dbg_info = !m_dbg_info;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_G))	/* enable gfx area handling */
-		state->m_dbg_gfx_e = !state->m_dbg_gfx_e;
+	if (machine().input().code_pressed_once(KEYCODE_G))	/* enable gfx area handling */
+		m_dbg_gfx_e = !m_dbg_gfx_e;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_C))	/* enable color area handling */
-		state->m_dbg_clr_e = !state->m_dbg_clr_e;
+	if (machine().input().code_pressed_once(KEYCODE_C))	/* enable color area handling */
+		m_dbg_clr_e = !m_dbg_clr_e;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_V))	/* draw only when vbank==dbg_vbank */
-		state->m_dbg_vbank ^= 1;
+	if (machine().input().code_pressed_once(KEYCODE_V))	/* draw only when vbank==dbg_vbank */
+		m_dbg_vbank ^= 1;
 
-	if (screen.machine().input().code_pressed_once(KEYCODE_L))	/* showlookup ram */
-		state->m_dbg_lookup = (state->m_dbg_lookup + 1) % 5;	//0,1,2,3, 4-off
+	if (machine().input().code_pressed_once(KEYCODE_L))	/* showlookup ram */
+		m_dbg_lookup = (m_dbg_lookup + 1) % 5;	//0,1,2,3, 4-off
 
 
-	if (state->m_dbg_info)
+	if (m_dbg_info)
 	{
 		sprintf(buf,"I-info, G-gfx, C-color, V-vbank, 1-4 enable planes");
-		ui_draw_text(buf, 10, 0 * ui_get_line_height(screen.machine()));
+		ui_draw_text(buf, 10, 0 * ui_get_line_height(machine()));
 
-		sprintf(buf,"g:%1i c:%1i v:%1i vbk=%1i  planes=%1i%1i%1i%1i  ", state->m_dbg_gfx_e&1, state->m_dbg_clr_e&1, state->m_dbg_vbank, vbank&1,
+		sprintf(buf,"g:%1i c:%1i v:%1i vbk=%1i  planes=%1i%1i%1i%1i  ", m_dbg_gfx_e&1, m_dbg_clr_e&1, m_dbg_vbank, vbank&1,
 			planes_enabled[0],
 			planes_enabled[1],
 			planes_enabled[2],
 			planes_enabled[3] );
 
-		ui_draw_text(buf, 10, 1 * ui_get_line_height(screen.machine()));
+		ui_draw_text(buf, 10, 1 * ui_get_line_height(machine()));
 
-		if (state->m_dbg_lookup!=4)
+		if (m_dbg_lookup!=4)
 		{
-			int lookup_offs = (state->m_dbg_lookup)*256; //=0,1,2,3*256
+			int lookup_offs = (m_dbg_lookup)*256; //=0,1,2,3*256
 			int y, x;
 
 			for (y = 0; y < 16; y++)
@@ -292,7 +297,7 @@ SCREEN_UPDATE_IND16( test_vcu )
 				{
 					sprintf(buf + strlen(buf), "%02x ", lookup_ram[lookup_offs + x + y * 16]);
 				}
-				ui_draw_text(buf, 0, (2 + y) * ui_get_line_height(screen.machine()));
+				ui_draw_text(buf, 0, (2 + y) * ui_get_line_height(machine()));
 			}
 		}
 	}
@@ -302,23 +307,22 @@ SCREEN_UPDATE_IND16( test_vcu )
 #endif
 
 
-static SCREEN_UPDATE_IND16( mazerbla )
+UINT32 mazerbla_state::screen_update_mazerbla(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mazerbla_state *state = screen.machine().driver_data<mazerbla_state>();
 //  UINT32 color_base = 0;
 
-	if (state->m_game_id == MAZERBLA)
+	if (m_game_id == MAZERBLA)
 //      color_base = 0x80;  /* 0x80 constant: matches Mazer Blazer movie */
 
-//  if (state->m_game_id == GREATGUN)
+//  if (m_game_id == GREATGUN)
 //      color_base = 0x00;
 
 	//  bitmap.fill(0);
 
-	copybitmap(bitmap, state->m_tmpbitmaps[3], 0, 0, 0, 0, cliprect);
-	copybitmap_trans(bitmap, state->m_tmpbitmaps[2], 0, 0, 0, 0, cliprect, 0);
-	copybitmap_trans(bitmap, state->m_tmpbitmaps[1], 0, 0, 0, 0, cliprect, 0);
-	copybitmap_trans(bitmap, state->m_tmpbitmaps[0], 0, 0, 0, 0, cliprect, 0);
+	copybitmap(bitmap, m_tmpbitmaps[3], 0, 0, 0, 0, cliprect);
+	copybitmap_trans(bitmap, m_tmpbitmaps[2], 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, m_tmpbitmaps[1], 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, m_tmpbitmaps[0], 0, 0, 0, 0, cliprect, 0);
 	return 0;
 }
 
@@ -789,19 +793,18 @@ READ8_MEMBER(mazerbla_state::ls670_0_r)
 	return m_ls670_0[offset];
 }
 
-static TIMER_CALLBACK( deferred_ls670_0_w )
+TIMER_CALLBACK_MEMBER(mazerbla_state::deferred_ls670_0_w)
 {
-	mazerbla_state *state = machine.driver_data<mazerbla_state>();
 	int offset = (param >> 8) & 255;
 	int data = param & 255;
 
-	state->m_ls670_0[offset] = data;
+	m_ls670_0[offset] = data;
 }
 
 WRITE8_MEMBER(mazerbla_state::ls670_0_w)
 {
 	/* do this on a timer to let the CPUs synchronize */
-	machine().scheduler().synchronize(FUNC(deferred_ls670_0_w), (offset << 8) | data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(mazerbla_state::deferred_ls670_0_w),this), (offset << 8) | data);
 }
 
 READ8_MEMBER(mazerbla_state::ls670_1_r)
@@ -813,19 +816,18 @@ READ8_MEMBER(mazerbla_state::ls670_1_r)
 	return m_ls670_1[offset];
 }
 
-static TIMER_CALLBACK( deferred_ls670_1_w )
+TIMER_CALLBACK_MEMBER(mazerbla_state::deferred_ls670_1_w)
 {
-	mazerbla_state *state = machine.driver_data<mazerbla_state>();
 	int offset = (param >> 8) & 255;
 	int data = param & 255;
 
-	state->m_ls670_1[offset] = data;
+	m_ls670_1[offset] = data;
 }
 
 WRITE8_MEMBER(mazerbla_state::ls670_1_w)
 {
 	/* do this on a timer to let the CPUs synchronize */
-	machine().scheduler().synchronize(FUNC(deferred_ls670_1_w), (offset << 8) | data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(mazerbla_state::deferred_ls670_1_w),this), (offset << 8) | data);
 }
 
 
@@ -954,18 +956,17 @@ READ8_MEMBER(mazerbla_state::soundcommand_r)
 	return m_soundlatch;
 }
 
-static TIMER_CALLBACK( delayed_sound_w )
+TIMER_CALLBACK_MEMBER(mazerbla_state::delayed_sound_w)
 {
-	mazerbla_state *state = machine.driver_data<mazerbla_state>();
-	state->m_soundlatch = param;
+	m_soundlatch = param;
 
 	/* cause NMI on sound CPU */
-	state->m_subcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(mazerbla_state::main_sound_w)
 {
-	machine().scheduler().synchronize(FUNC(delayed_sound_w), data & 0xff);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(mazerbla_state::delayed_sound_w),this), data & 0xff);
 }
 
 WRITE8_MEMBER(mazerbla_state::sound_int_clear_w)
@@ -1421,9 +1422,9 @@ static IRQ_CALLBACK(irq_callback)
 }
 
 /* frequency is 14.318 MHz/16/16/16/16 */
-static INTERRUPT_GEN( sound_interrupt )
+INTERRUPT_GEN_MEMBER(mazerbla_state::sound_interrupt)
 {
-	device->execute().set_input_line(0, ASSERT_LINE);
+	device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -1516,7 +1517,7 @@ static MACHINE_CONFIG_START( mazerbla, mazerbla_state )
 	MCFG_CPU_ADD("sub", Z80, MASTER_CLOCK)	/* 4 MHz, NMI, IM1 INT */
 	MCFG_CPU_PROGRAM_MAP(mazerbla_cpu2_map)
 	MCFG_CPU_IO_MAP(mazerbla_cpu2_io_map)
-//  MCFG_CPU_PERIODIC_INT(irq0_line_hold, 400 ) /* frequency in Hz */
+	MCFG_CPU_PERIODIC_INT_DRIVER(mazerbla_state, irq0_line_hold,  400) /* frequency in Hz */
 
 	MCFG_CPU_ADD("sub2", Z80, MASTER_CLOCK)	/* 4 MHz, no  NMI, IM1 INT */
 	MCFG_CPU_PROGRAM_MAP(mazerbla_cpu3_map)
@@ -1525,7 +1526,7 @@ static MACHINE_CONFIG_START( mazerbla, mazerbla_state )
     and cleared on ANY port access.
     but handled differently for now
     */
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mazerbla_state,  irq0_line_hold)
 
 	/* synchronization forced on the fly */
 
@@ -1535,7 +1536,7 @@ static MACHINE_CONFIG_START( mazerbla, mazerbla_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mazerbla)
+	MCFG_SCREEN_UPDATE_DRIVER(mazerbla_state, screen_update_mazerbla)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -1553,7 +1554,7 @@ static MACHINE_CONFIG_START( greatgun, mazerbla_state )
 
 	MCFG_CPU_ADD("sub", Z80, SOUND_CLOCK / 4)	/* 3.579500 MHz, NMI - caused by sound command write, periodic INT */
 	MCFG_CPU_PROGRAM_MAP(greatgun_sound_map)
-	MCFG_CPU_PERIODIC_INT(sound_interrupt, (double)14318180/16/16/16/16 )
+	MCFG_CPU_PERIODIC_INT_DRIVER(mazerbla_state, sound_interrupt,  (double)14318180/16/16/16/16 )
 
 	MCFG_CPU_ADD("sub2", Z80, MASTER_CLOCK)	/* 4 MHz, no  NMI, IM1 INT */
 	MCFG_CPU_PROGRAM_MAP(mazerbla_cpu3_map)
@@ -1562,7 +1563,7 @@ static MACHINE_CONFIG_START( greatgun, mazerbla_state )
     and cleared on ANY port access.
     but handled differently for now
     */
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mazerbla_state,  irq0_line_hold)
 
 
 	/* video hardware */
@@ -1571,7 +1572,7 @@ static MACHINE_CONFIG_START( greatgun, mazerbla_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mazerbla)
+	MCFG_SCREEN_UPDATE_DRIVER(mazerbla_state, screen_update_mazerbla)
 
 	MCFG_PALETTE_LENGTH(256)
 

@@ -231,11 +231,11 @@ static MACHINE_CONFIG_START( firebatl, clshroad_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 3000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(clshroad_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* IRQ, no NMI */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", clshroad_state,  irq0_line_hold)	/* IRQ, no NMI */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(clshroad_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* IRQ, no NMI */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", clshroad_state,  irq0_line_hold)	/* IRQ, no NMI */
 
 
 	/* video hardware */
@@ -244,7 +244,7 @@ static MACHINE_CONFIG_START( firebatl, clshroad_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x120, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x120-1, 0x0+16, 0x100-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(clshroad)
+	MCFG_SCREEN_UPDATE_DRIVER(clshroad_state, screen_update_clshroad)
 
 	MCFG_GFXDECODE(firebatl)
 	MCFG_PALETTE_LENGTH(512+64*4)
@@ -264,11 +264,11 @@ static MACHINE_CONFIG_START( clshroad, clshroad_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_18_432MHz/4)	/* ? real speed unknown. 3MHz is too low and causes problems */
 	MCFG_CPU_PROGRAM_MAP(clshroad_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* IRQ, no NMI */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", clshroad_state,  irq0_line_hold)	/* IRQ, no NMI */
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_18_432MHz/6)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(clshroad_sound_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* IRQ, no NMI */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", clshroad_state,  irq0_line_hold)	/* IRQ, no NMI */
 
 
 	/* video hardware */
@@ -277,7 +277,7 @@ static MACHINE_CONFIG_START( clshroad, clshroad_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x120, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x120-1, 0x0+16, 0x100-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(clshroad)
+	MCFG_SCREEN_UPDATE_DRIVER(clshroad_state, screen_update_clshroad)
 
 	MCFG_GFXDECODE(clshroad)
 	MCFG_PALETTE_LENGTH(256)

@@ -564,7 +564,7 @@ static MACHINE_CONFIG_START( twincobr, twincobr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_28MHz/4)		/* 7MHz - Main board Crystal is 28MHz */
 	MCFG_CPU_PROGRAM_MAP(main_program_map)
-	MCFG_CPU_VBLANK_INT("screen", twincobr_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", twincobr_state,  twincobr_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_28MHz/8)			/* 3.5MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_program_map)
@@ -587,7 +587,7 @@ static MACHINE_CONFIG_START( twincobr, twincobr_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(XTAL_28MHz/4, 446, 0, 320, 286, 0, 240)
-	MCFG_SCREEN_UPDATE_STATIC(toaplan0)
+	MCFG_SCREEN_UPDATE_DRIVER(twincobr_state, screen_update_toaplan0)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram16", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(twincobr)

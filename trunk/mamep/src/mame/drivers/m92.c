@@ -225,23 +225,22 @@ MACHINE_RESET_MEMBER(m92_state,m92)
 
 /*****************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( m92_scanline_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(m92_state::m92_scanline_interrupt)
 {
-	running_machine &machine = timer.machine();
-	m92_state *state = machine.driver_data<m92_state>();
+	m92_state *state = machine().driver_data<m92_state>();
 	int scanline = param;
 
 	/* raster interrupt */
-	if (scanline == state->m_raster_irq_position)
+	if (scanline == m_raster_irq_position)
 	{
-		machine.primary_screen->update_partial(scanline);
+		machine().primary_screen->update_partial(scanline);
 		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M92_IRQ_2);
 	}
 
 	/* VBLANK interrupt */
-	else if (scanline == machine.primary_screen->visible_area().max_y + 1)
+	else if (scanline == machine().primary_screen->visible_area().max_y + 1)
 	{
-		machine.primary_screen->update_partial(scanline);
+		machine().primary_screen->update_partial(scanline);
 		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M92_IRQ_0);
 	}
 }
@@ -405,7 +404,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 16, m92_state )
 	AM_RANGE(0x00000, 0x1ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
 	AM_RANGE(0xa8000, 0xa803f) AM_DEVREADWRITE8_LEGACY("irem", irem_ga20_r, irem_ga20_w, 0x00ff)
-	AM_RANGE(0xa8040, 0xa8043) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0xa8040, 0xa8043) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0xa8044, 0xa8045) AM_READWRITE(m92_soundlatch_r, m92_sound_irq_ack_w)
 	AM_RANGE(0xa8046, 0xa8047) AM_WRITE(m92_sound_status_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM AM_REGION("soundcpu", 0x1fff0)
@@ -910,20 +909,6 @@ GFXDECODE_END
 
 /***************************************************************************/
 
-static void sound_irq(device_t *device, int pinstate)
-{
-	m92_state *state = device->machine().driver_data<m92_state>();
-
-	state->m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP0, pinstate ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
-
-/***************************************************************************/
-
 void m92_sprite_interrupt(running_machine &machine)
 {
 	m92_state *state = machine.driver_data<m92_state>();
@@ -944,7 +929,7 @@ static MACHINE_CONFIG_START( m92, m92_state )
 	MCFG_MACHINE_START_OVERRIDE(m92_state,m92)
 	MCFG_MACHINE_RESET_OVERRIDE(m92_state,m92)
 
-	MCFG_TIMER_ADD_SCANLINE("scantimer", m92_scanline_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", m92_state, m92_scanline_interrupt, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -954,7 +939,7 @@ static MACHINE_CONFIG_START( m92, m92_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
-	MCFG_SCREEN_UPDATE_STATIC(m92)
+	MCFG_SCREEN_UPDATE_DRIVER(m92_state, screen_update_m92)
 
 	MCFG_GFXDECODE(m92)
 	MCFG_PALETTE_LENGTH(2048)
@@ -964,8 +949,8 @@ static MACHINE_CONFIG_START( m92, m92_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_14_31818MHz/4)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_14_31818MHz/4)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("soundcpu", NEC_INPUT_LINE_INTP0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.40)
 	MCFG_SOUND_ROUTE(1, "mono", 0.40)
 
@@ -1030,7 +1015,7 @@ static MACHINE_CONFIG_START( ppan, m92_state )
 	MCFG_MACHINE_START_OVERRIDE(m92_state,m92)
 	MCFG_MACHINE_RESET_OVERRIDE(m92_state,m92)
 
-	MCFG_TIMER_ADD_SCANLINE("scantimer", m92_scanline_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", m92_state, m92_scanline_interrupt, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram") // not really...
@@ -1040,7 +1025,7 @@ static MACHINE_CONFIG_START( ppan, m92_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
-	MCFG_SCREEN_UPDATE_STATIC(ppan)
+	MCFG_SCREEN_UPDATE_DRIVER(m92_state, screen_update_ppan)
 
 	MCFG_GFXDECODE(m92)
 	MCFG_PALETTE_LENGTH(2048)
@@ -2175,7 +2160,6 @@ DRIVER_INIT_MEMBER(m92_state,m92_alt)
 /* different vector base, different address map (no bank1) */
 DRIVER_INIT_MEMBER(m92_state,lethalth)
 {
-
 	m_game_kludge = 0;
 	m_irq_vectorbase = 0x20;
 }
@@ -2186,7 +2170,7 @@ DRIVER_INIT_MEMBER(m92_state,m92_bank)
 	UINT8 *ROM = memregion("maincpu")->base();
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),this));
 
 	m_game_kludge = 0;
 	m_irq_vectorbase = 0x80;
@@ -2198,10 +2182,10 @@ DRIVER_INIT_MEMBER(m92_state,majtitl2)
 	UINT8 *ROM = memregion("maincpu")->base();
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
-	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),this));
 
 	/* This game has an eeprom on the game board */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0000, 0xf3fff, read16_delegate(FUNC(m92_state::m92_eeprom_r),this), write16_delegate(FUNC(m92_state::m92_eeprom_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xf0000, 0xf3fff, read16_delegate(FUNC(m92_state::m92_eeprom_r),this), write16_delegate(FUNC(m92_state::m92_eeprom_w),this));
 
 	m_game_kludge = 2;
 	m_irq_vectorbase = 0x80;
@@ -2228,7 +2212,7 @@ GAME( 1991, lethalth, 0,        lethalth,      lethalth, m92_state, lethalth, RO
 GAME( 1991, thndblst, lethalth, lethalth,      lethalth, m92_state, lethalth, ROT270, "Irem",         "Thunder Blaster (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1992, uccops,   0,        uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (World)", GAME_SUPPORTS_SAVE )
 GAME( 1992, uccopsu,  uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (US)", GAME_SUPPORTS_SAVE )
-GAME( 1992, uccopsar, uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", GAME_SUPPORTS_SAVE )
+GAME( 1992, uccopsar, uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops - Alpha Renewal Version", GAME_SUPPORTS_SAVE )
 GAME( 1992, uccopsj,  uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1992, mysticri, 0,        mysticri,      mysticri, m92_state, m92,      ROT0,   "Irem",         "Mystic Riders (World)", GAME_SUPPORTS_SAVE )
 GAME( 1992, gunhohki, mysticri, mysticri,      mysticri, m92_state, m92,      ROT0,   "Irem",         "Mahou Keibitai Gun Hohki (Japan)", GAME_SUPPORTS_SAVE )
@@ -2251,7 +2235,7 @@ GAME( 1993, kaiteids, inthunt,  inthunt,       inthunt, m92_state,  m92,      RO
 GAME( 1993, nbbatman, 0,        nbbatman,      nbbatman, m92_state, m92_bank, ROT0,   "Irem",         "Ninja Baseball Bat Man (World)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, nbbatmanu,nbbatman, nbbatman,      nbbatman, m92_state, m92_bank, ROT0,   "Irem America", "Ninja Baseball Bat Man (US)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, leaguemn, nbbatman, nbbatman,      nbbatman, m92_state, m92_bank, ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, nbbatman2bl,nbbatman,nbbatman2bl,  nbbatman, m92_state, m92_bank, ROT0,   "bootleg",      "Ninja Baseball Bat Man II (bootleg/hack)", GAME_NO_SOUND | GAME_NOT_WORKING ) // different sprite system, MCU as soundcpu, OKI samples for music/sound
+GAME( 1993, nbbatman2bl,nbbatman,nbbatman2bl,  nbbatman, m92_state, m92_bank, ROT0,   "bootleg",      "Ninja Baseball Bat Man II (bootleg)", GAME_NO_SOUND | GAME_NOT_WORKING ) // different sprite system, MCU as soundcpu, OKI samples for music/sound
 GAME( 1993, ssoldier, 0,        psoldier,      psoldier, m92_state, m92_alt,  ROT0,   "Irem America", "Superior Soldiers (US)", GAME_SUPPORTS_SAVE )
 GAME( 1993, psoldier, ssoldier, psoldier,      psoldier, m92_state, m92_alt,  ROT0,   "Irem",         "Perfect Soldiers (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1994, dsoccr94j,dsoccr94, dsoccr94j,     dsoccr94j, m92_state,m92_bank, ROT0,   "Irem",         "Dream Soccer '94 (Japan, M92 hardware)", GAME_SUPPORTS_SAVE )

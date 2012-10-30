@@ -110,6 +110,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_jackie_reel3_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_jackie(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(jackie_irq);
 };
 
 
@@ -197,41 +199,40 @@ void jackie_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16(jackie)
+UINT32 jackie_state::screen_update_jackie(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jackie_state *state = screen.machine().driver_data<jackie_state>();
 	int i,j;
 	int startclipmin = 0;
 	const rectangle &visarea = screen.visible_area();
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	for (i=0;i < 0x40;i++)
 	{
-		state->m_reel1_tilemap->set_scrolly(i, state->m_bg_scroll[i+0x000]);
-		state->m_reel2_tilemap->set_scrolly(i, state->m_bg_scroll[i+0x040]);
-		state->m_reel3_tilemap->set_scrolly(i, state->m_bg_scroll[i+0x080]);
+		m_reel1_tilemap->set_scrolly(i, m_bg_scroll[i+0x000]);
+		m_reel2_tilemap->set_scrolly(i, m_bg_scroll[i+0x040]);
+		m_reel3_tilemap->set_scrolly(i, m_bg_scroll[i+0x080]);
 	}
 
 	for (j=0; j < 0x100-1; j++)
 	{
 		rectangle clip;
-		int rowenable = state->m_bg_scroll2[j];
+		int rowenable = m_bg_scroll2[j];
 
 		/* draw top of screen */
 		clip.set(visarea.min_x, visarea.max_x, startclipmin, startclipmin+1);
 
 		if (rowenable==0)
 		{
-			state->m_reel1_tilemap->draw(bitmap, clip, 0,0);
+			m_reel1_tilemap->draw(bitmap, clip, 0,0);
 		}
 		else if (rowenable==1)
 		{
-			state->m_reel2_tilemap->draw(bitmap, clip, 0,0);
+			m_reel2_tilemap->draw(bitmap, clip, 0,0);
 		}
 		else if (rowenable==2)
 		{
-			state->m_reel3_tilemap->draw(bitmap, clip, 0,0);
+			m_reel3_tilemap->draw(bitmap, clip, 0,0);
 		}
 		else if (rowenable==3)
 		{
@@ -240,7 +241,7 @@ static SCREEN_UPDATE_IND16(jackie)
 		startclipmin+=1;
 	}
 
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -557,18 +558,17 @@ DRIVER_INIT_MEMBER(jackie_state,jackie)
 	rom[0x7e86] = 0xc3;
 }
 
-static TIMER_DEVICE_CALLBACK( jackie_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(jackie_state::jackie_irq)
 {
-	jackie_state *state = timer.machine().driver_data<jackie_state>();
 	int scanline = param;
 
 	if((scanline % 32) != 0)
 		return;
 
-	if((scanline % 64) == 32 && state->m_irq_enable)
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
-	else if	((scanline % 64) == 0 && state->m_nmi_enable)
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if((scanline % 64) == 32 && m_irq_enable)
+		m_maincpu->set_input_line(0, HOLD_LINE);
+	else if	((scanline % 64) == 0 && m_nmi_enable)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( jackie, jackie_state )
@@ -577,7 +577,7 @@ static MACHINE_CONFIG_START( jackie, jackie_state )
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(jackie_prg_map)
 	MCFG_CPU_IO_MAP(jackie_io_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", jackie_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", jackie_state, jackie_irq, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -586,7 +586,7 @@ static MACHINE_CONFIG_START( jackie, jackie_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jackie)
+	MCFG_SCREEN_UPDATE_DRIVER(jackie_state, screen_update_jackie)
 
 	MCFG_GFXDECODE(jackie)
 	MCFG_PALETTE_LENGTH(2048)

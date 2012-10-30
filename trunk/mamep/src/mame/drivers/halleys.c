@@ -264,6 +264,11 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_halleys(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_benberob(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(blitter_reset);
+	TIMER_DEVICE_CALLBACK_MEMBER(halleys_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(benberob_scanline);
 };
 
 
@@ -1038,10 +1043,9 @@ READ8_MEMBER(halleys_state::blitter_r)
 }
 
 
-static TIMER_CALLBACK( blitter_reset )
+TIMER_CALLBACK_MEMBER(halleys_state::blitter_reset)
 {
-	halleys_state *state = machine.driver_data<halleys_state>();
-	state->m_blitter_busy = 0;
+	m_blitter_busy = 0;
 }
 
 
@@ -1479,45 +1483,43 @@ static void filter_bitmap(running_machine &machine, bitmap_ind16 &bitmap, int ma
 }
 
 
-static SCREEN_UPDATE_IND16( halleys )
+UINT32 halleys_state::screen_update_halleys(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	halleys_state *state = screen.machine().driver_data<halleys_state>();
 	int i, j;
 
-	if (state->m_stars_enabled)
+	if (m_stars_enabled)
 	{
-		copy_scroll_op(bitmap, state->m_render_layer[5], *state->m_scrollx0, *state->m_scrolly0);
-		copy_scroll_xp(bitmap, state->m_render_layer[4], *state->m_scrollx1, *state->m_scrolly1);
+		copy_scroll_op(bitmap, m_render_layer[5], *m_scrollx0, *m_scrolly0);
+		copy_scroll_xp(bitmap, m_render_layer[4], *m_scrollx1, *m_scrolly1);
 	}
 	else
-		bitmap.fill(state->m_bgcolor, cliprect);
+		bitmap.fill(m_bgcolor, cliprect);
 
 #ifdef MAME_DEBUG
-	if (screen.machine().root_device().ioport("DEBUG")->read()) copy_scroll_xp(bitmap, state->m_render_layer[3], *state->m_scrollx0, *state->m_scrolly0); // not used???
+	if (machine().root_device().ioport("DEBUG")->read()) copy_scroll_xp(bitmap, m_render_layer[3], *m_scrollx0, *m_scrolly0); // not used???
 #endif
 
-	copy_scroll_xp(bitmap, state->m_render_layer[2], *state->m_scrollx1, *state->m_scrolly1);
-	copy_fixed_2b (bitmap, state->m_render_layer[1]);
-	copy_fixed_xp (bitmap, state->m_render_layer[0]);
+	copy_scroll_xp(bitmap, m_render_layer[2], *m_scrollx1, *m_scrolly1);
+	copy_fixed_2b (bitmap, m_render_layer[1]);
+	copy_fixed_xp (bitmap, m_render_layer[0]);
 
 	// HALF-HACK: apply RGB filter when the following conditions are met
-	i = state->m_io_ram[0xa0];
-	j = state->m_io_ram[0xa1];
-	if (state->m_io_ram[0x2b] && (i>0xc6 && i<0xfe) && (j==0xc0 || j==0xed)) filter_bitmap(screen.machine(), bitmap, i);
+	i = m_io_ram[0xa0];
+	j = m_io_ram[0xa1];
+	if (m_io_ram[0x2b] && (i>0xc6 && i<0xfe) && (j==0xc0 || j==0xed)) filter_bitmap(machine(), bitmap, i);
 	return 0;
 }
 
 
-static SCREEN_UPDATE_IND16( benberob )
+UINT32 halleys_state::screen_update_benberob(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	halleys_state *state = screen.machine().driver_data<halleys_state>();
-	if (state->m_io_ram[0xa0] & 0x80)
-		copy_scroll_op(bitmap, state->m_render_layer[2], *state->m_scrollx1, *state->m_scrolly1);
+	if (m_io_ram[0xa0] & 0x80)
+		copy_scroll_op(bitmap, m_render_layer[2], *m_scrollx1, *m_scrolly1);
 	else
-		bitmap.fill(state->m_bgcolor, cliprect);
+		bitmap.fill(m_bgcolor, cliprect);
 
-	copy_fixed_xp (bitmap, state->m_render_layer[1]);
-	copy_fixed_xp (bitmap, state->m_render_layer[0]);
+	copy_fixed_xp (bitmap, m_render_layer[1]);
+	copy_fixed_xp (bitmap, m_render_layer[0]);
 	return 0;
 }
 
@@ -1541,9 +1543,8 @@ READ8_MEMBER(halleys_state::debug_r)
 // Interrupt and Hardware Handlers
 
 
-static TIMER_DEVICE_CALLBACK( halleys_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(halleys_state::halleys_scanline)
 {
-	halleys_state *state = timer.machine().driver_data<halleys_state>();
 	int scanline = param;
 
 	/* TODO: fix this */
@@ -1551,29 +1552,28 @@ static TIMER_DEVICE_CALLBACK( halleys_scanline )
 	{
 		case 248:
 			// clear collision list of this frame unconditionally
-			state->m_collision_count = 0;
+			m_collision_count = 0;
 			break;
 
 		// In Halley's Comet, NMI is used exclusively to handle coin input
 		case 56*3:
-			timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			break;
 
 		// FIRQ drives gameplay; we need both types of NMI each frame.
 		case 56*2:
-			state->m_mVectorType = 1; timer.machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
+			m_mVectorType = 1; machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 			break;
 
 		case 56:
-			state->m_mVectorType = 0; timer.machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
+			m_mVectorType = 0; machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 			break;
 	}
 }
 
 
-static TIMER_DEVICE_CALLBACK( benberob_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(halleys_state::benberob_scanline)
 {
-	halleys_state *state = timer.machine().driver_data<halleys_state>();
 	int scanline = param;
 
 	/* TODO: fix this */
@@ -1583,13 +1583,13 @@ static TIMER_DEVICE_CALLBACK( benberob_scanline )
 			break;
 
 		case 56*3:
-			timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			break;
 
 		case 56*2:
 		case 56*1:
 			// FIRQ must not happen when the blitter is being updated or it'll cause serious screen artifacts
-			if (!state->m_blitter_busy) timer.machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE); else state->m_firq_level++;
+			if (!m_blitter_busy) machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE); else m_firq_level++;
 			break;
 	}
 }
@@ -1959,11 +1959,11 @@ static const ay8910_interface ay8910_config =
 static MACHINE_CONFIG_START( halleys, halleys_state )
 	MCFG_CPU_ADD("maincpu", M6809, XTAL_19_968MHz/12) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(halleys_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", halleys_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", halleys_state, halleys_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_6MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)6000000/(4*16*16*10*16))
+	MCFG_CPU_PERIODIC_INT_DRIVER(halleys_state, irq0_line_hold,  (double)6000000/(4*16*16*10*16))
 
 
 	// video hardware
@@ -1973,7 +1973,7 @@ static MACHINE_CONFIG_START( halleys, halleys_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(SCREEN_WIDTH, SCREEN_HEIGHT)
 	MCFG_SCREEN_VISIBLE_AREA(VIS_MINX, VIS_MAXX, VIS_MINY, VIS_MAXY)
-	MCFG_SCREEN_UPDATE_STATIC(halleys)
+	MCFG_SCREEN_UPDATE_DRIVER(halleys_state, screen_update_halleys)
 
 	MCFG_PALETTE_LENGTH(PALETTE_SIZE)
 
@@ -2000,10 +2000,10 @@ static MACHINE_CONFIG_DERIVED( benberob, halleys )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_CLOCK(XTAL_19_968MHz/12) /* not verified but pcb identical to halley's comet */
 	MCFG_TIMER_MODIFY("scantimer")
-	MCFG_TIMER_CALLBACK(benberob_scanline)
+	MCFG_TIMER_DRIVER_CALLBACK(halleys_state, benberob_scanline)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(benberob)
+	MCFG_SCREEN_UPDATE_DRIVER(halleys_state, screen_update_benberob)
 MACHINE_CONFIG_END
 
 
@@ -2238,7 +2238,7 @@ DRIVER_INIT_MEMBER(halleys_state,benberob)
 
 	init_common(machine());
 
-	m_blitter_reset_timer = machine().scheduler().timer_alloc(FUNC(blitter_reset));
+	m_blitter_reset_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(halleys_state::blitter_reset),this));
 }
 
 

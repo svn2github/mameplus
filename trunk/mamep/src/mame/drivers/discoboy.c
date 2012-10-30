@@ -86,6 +86,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_discoboy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -142,9 +143,8 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 }
 
 
-static SCREEN_UPDATE_IND16( discoboy )
+UINT32 discoboy_state::screen_update_discoboy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	discoboy_state *state = screen.machine().driver_data<discoboy_state>();
 	UINT16 x, y;
 	int i;
 	int count = 0;
@@ -153,26 +153,26 @@ static SCREEN_UPDATE_IND16( discoboy )
 	{
 		UINT16 pal;
 		int r, g, b;
-		pal = state->m_ram_1[i] | (state->m_ram_1[i + 1] << 8);
+		pal = m_ram_1[i] | (m_ram_1[i + 1] << 8);
 
 		b = ((pal >> 0) & 0xf) << 4;
 		g = ((pal >> 4) & 0xf) << 4;
 		r = ((pal >> 8) & 0xf) << 4;
 
-		palette_set_color(screen.machine(), i / 2, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i / 2, MAKE_RGB(r, g, b));
 	}
 
 	for (i = 0; i < 0x800; i += 2)
 	{
 		UINT16 pal;
 		int r,g,b;
-		pal = state->m_ram_2[i] | (state->m_ram_2[i + 1] << 8);
+		pal = m_ram_2[i] | (m_ram_2[i + 1] << 8);
 
 		b = ((pal >> 0) & 0xf) << 4;
 		g = ((pal >> 4) & 0xf) << 4;
 		r = ((pal >> 8) & 0xf) << 4;
 
-		palette_set_color(screen.machine(), (i / 2) + 0x400, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), (i / 2) + 0x400, MAKE_RGB(r, g, b));
 	}
 
 	bitmap.fill(0x3ff, cliprect);
@@ -181,22 +181,22 @@ static SCREEN_UPDATE_IND16( discoboy )
 	{
 		for (x = 0; x < 64; x++)
 		{
-			UINT16 tileno = state->m_ram_3[count] | (state->m_ram_3[count + 1] << 8);
+			UINT16 tileno = m_ram_3[count] | (m_ram_3[count + 1] << 8);
 
 			if (tileno > 0x2000)
 			{
-				if ((state->m_gfxbank & 0x40) == 0x40)
+				if ((m_gfxbank & 0x40) == 0x40)
 					tileno = 0x2000 + (tileno & 0x1fff) + 0x2000;
 				else
 					tileno = 0x2000 + (tileno & 0x1fff) + 0x0000;
 			}
 
-			drawgfx_opaque(bitmap, cliprect, screen.machine().gfx[1], tileno, state->m_ram_att[count / 2], 0, 0, x*8, y*8);
+			drawgfx_opaque(bitmap, cliprect, machine().gfx[1], tileno, m_ram_att[count / 2], 0, 0, x*8, y*8);
 			count += 2;
 		}
 	}
 
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 
 	return 0;
 }
@@ -206,7 +206,7 @@ void discoboy_setrombank( running_machine &machine, UINT8 data )
 {
 	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	data &= 0x2f;
-	space->machine().root_device().membank("bank1")->set_base(&ROM[0x6000 + (data * 0x1000)] );
+	space.machine().root_device().membank("bank1")->set_base(&ROM[0x6000 + (data * 0x1000)] );
 }
 #endif
 
@@ -498,11 +498,11 @@ static MACHINE_CONFIG_START( discoboy, discoboy_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)		 /* 6 MHz? */
 	MCFG_CPU_PROGRAM_MAP(discoboy_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", discoboy_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,10000000/2)		 /* 5 MHz? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,32*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(discoboy_state, nmi_line_pulse, 32*60)
 
 
 	/* video hardware */
@@ -511,7 +511,7 @@ static MACHINE_CONFIG_START( discoboy, discoboy_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, 512-1-8*8, 0+8, 256-1-8)
-	MCFG_SCREEN_UPDATE_STATIC(discoboy)
+	MCFG_SCREEN_UPDATE_DRIVER(discoboy_state, screen_update_discoboy)
 
 	MCFG_GFXDECODE(discoboy)
 	MCFG_PALETTE_LENGTH(0x1000)

@@ -85,7 +85,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, darkseal_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r, ym2203_w)
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ym2", ym2151_device, read, write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -222,16 +222,6 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static void sound_irq(device_t *device, int state)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(1, state); /* IRQ 2 */
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
-
 static const deco16ic_interface darkseal_deco16ic_tilegen1_intf =
 {
 	"screen",
@@ -263,7 +253,7 @@ static MACHINE_CONFIG_START( darkseal, darkseal_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,12000000) /* Custom chip 59 */
 	MCFG_CPU_PROGRAM_MAP(darkseal_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)/* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", darkseal_state,  irq6_line_hold)/* VBL */
 
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/4) /* Custom chip 45, Audio section crystal is 32.220 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -274,7 +264,7 @@ static MACHINE_CONFIG_START( darkseal, darkseal_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(darkseal)
+	MCFG_SCREEN_UPDATE_DRIVER(darkseal_state, screen_update_darkseal)
 
 	MCFG_GFXDECODE(darkseal)
 	MCFG_PALETTE_LENGTH(2048)
@@ -297,8 +287,8 @@ static MACHINE_CONFIG_START( darkseal, darkseal_state )
 	MCFG_SOUND_ADD("ym1", YM2203, 32220000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.45)
 
-	MCFG_SOUND_ADD("ym2", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ym2", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) // IRQ2
 	MCFG_SOUND_ROUTE(0, "mono", 0.55)
 	MCFG_SOUND_ROUTE(1, "mono", 0.55)
 

@@ -18,11 +18,10 @@
 /* prototypes */
 static KONAMI_SETLINES_CALLBACK( surpratk_banking );
 
-static INTERRUPT_GEN( surpratk_interrupt )
+INTERRUPT_GEN_MEMBER(surpratk_state::surpratk_interrupt)
 {
-	surpratk_state *state = device->machine().driver_data<surpratk_state>();
-	if (k052109_is_irq_enabled(state->m_k052109))
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (k052109_is_irq_enabled(m_k052109))
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(surpratk_state::bankedram_r)
@@ -36,7 +35,7 @@ READ8_MEMBER(surpratk_state::bankedram_r)
 			return m_generic_paletteram_8[offset];
 	}
 	else if (m_videobank & 0x01)
-		return k053245_r(m_k053244, offset);
+		return k053245_r(m_k053244, space, offset);
 	else
 		return m_ram[offset];
 }
@@ -52,7 +51,7 @@ WRITE8_MEMBER(surpratk_state::bankedram_w)
 			paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space,offset,data);
 	}
 	else if (m_videobank & 0x01)
-		k053245_w(m_k053244, offset, data);
+		k053245_w(m_k053244, space, offset, data);
 	else
 		m_ram[offset] = data;
 }
@@ -98,7 +97,7 @@ static ADDRESS_MAP_START( surpratk_map, AS_PROGRAM, 8, surpratk_state )
 	AM_RANGE(0x5fa0, 0x5faf) AM_DEVREADWRITE_LEGACY("k053244", k053244_r, k053244_w)
 	AM_RANGE(0x5fb0, 0x5fbf) AM_DEVWRITE_LEGACY("k053251", k053251_w)
 	AM_RANGE(0x5fc0, 0x5fc0) AM_READ(watchdog_reset_r) AM_WRITE(surpratk_5fc0_w)
-	AM_RANGE(0x5fd0, 0x5fd1) AM_DEVWRITE_LEGACY("ymsnd", ym2151_w)
+	AM_RANGE(0x5fd0, 0x5fd1) AM_DEVWRITE("ymsnd", ym2151_device, write)
 	AM_RANGE(0x5fc4, 0x5fc4) AM_WRITE(surpratk_videobank_w)
 	AM_RANGE(0x4000, 0x7fff) AM_DEVREADWRITE_LEGACY("k052109", k052109_r, k052109_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROM					/* ROM */
@@ -155,19 +154,6 @@ static INPUT_PORTS_START( surpratk )
 	PORT_SERVICE_DIPLOC( 0x40, IP_ACTIVE_LOW, "SW3:3" )
 	PORT_DIPUNUSED_DIPLOC( 0x80, IP_ACTIVE_LOW, "SW3:4" )
 INPUT_PORTS_END
-
-
-
-static void irqhandler( device_t *device, int linestate )
-{
-	surpratk_state *state = device->machine().driver_data<surpratk_state>();
-	state->m_maincpu->set_input_line(KONAMI_FIRQ_LINE, linestate);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irqhandler)
-};
 
 
 
@@ -230,7 +216,7 @@ static MACHINE_CONFIG_START( surpratk, surpratk_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)	/* 053248 */
 	MCFG_CPU_PROGRAM_MAP(surpratk_map)
-	MCFG_CPU_VBLANK_INT("screen", surpratk_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", surpratk_state,  surpratk_interrupt)
 
 
 	/* video hardware */
@@ -241,7 +227,7 @@ static MACHINE_CONFIG_START( surpratk, surpratk_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(surpratk)
+	MCFG_SCREEN_UPDATE_DRIVER(surpratk_state, screen_update_surpratk)
 
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -252,8 +238,8 @@ static MACHINE_CONFIG_START( surpratk, surpratk_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("maincpu", KONAMI_FIRQ_LINE))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END

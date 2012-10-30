@@ -328,11 +328,11 @@ static MACHINE_CONFIG_START( superchs, superchs_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(superchs_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", superchs_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, XTAL_32MHz/2)
 	MCFG_CPU_PROGRAM_MAP(superchs_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", superchs_state,  irq4_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(480)) /* Need to interleave CPU 1 & 3 */
 
@@ -344,7 +344,7 @@ static MACHINE_CONFIG_START( superchs, superchs_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(superchs)
+	MCFG_SCREEN_UPDATE_DRIVER(superchs_state, screen_update_superchs)
 
 	MCFG_GFXDECODE(superchs)
 	MCFG_PALETTE_LENGTH(8192)
@@ -453,8 +453,8 @@ READ16_MEMBER(superchs_state::sub_cycle_r)
 DRIVER_INIT_MEMBER(superchs_state,superchs)
 {
 	/* Speedup handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x100000, 0x100003, read32_delegate(FUNC(superchs_state::main_cycle_r),this));
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_read_handler(0x80000a, 0x80000b, read16_delegate(FUNC(superchs_state::sub_cycle_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x100000, 0x100003, read32_delegate(FUNC(superchs_state::main_cycle_r),this));
+	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x80000a, 0x80000b, read16_delegate(FUNC(superchs_state::sub_cycle_r),this));
 }
 
 GAMEL( 1992, superchs,         0, superchs, superchs, superchs_state, superchs, ROT0, "Taito America Corporation", "Super Chase - Criminal Termination (US)", 0, layout_superchs )

@@ -51,12 +51,14 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_destroyr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(destroyr_dial_callback);
+	TIMER_CALLBACK_MEMBER(destroyr_frame_callback);
 };
 
 
-static SCREEN_UPDATE_IND16( destroyr )
+UINT32 destroyr_state::screen_update_destroyr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	destroyr_state *state = screen.machine().driver_data<destroyr_state>();
 	int i, j;
 
 	bitmap.fill(0, cliprect);
@@ -64,8 +66,8 @@ static SCREEN_UPDATE_IND16( destroyr )
 	/* draw major objects */
 	for (i = 0; i < 16; i++)
 	{
-		int attr = state->m_major_obj_ram[2 * i + 0] ^ 0xff;
-		int horz = state->m_major_obj_ram[2 * i + 1];
+		int attr = m_major_obj_ram[2 * i + 0] ^ 0xff;
+		int horz = m_major_obj_ram[2 * i + 1];
 
 		int num = attr & 3;
 		int scan = attr & 4;
@@ -82,7 +84,7 @@ static SCREEN_UPDATE_IND16( destroyr )
 				continue;
 		}
 
-		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[2], num, 0, flipx, 0, horz, 16 * i, 0);
+		drawgfx_transpen(bitmap, cliprect, machine().gfx[2], num, 0, flipx, 0, horz, 16 * i, 0);
 	}
 
 	/* draw alpha numerics */
@@ -90,40 +92,39 @@ static SCREEN_UPDATE_IND16( destroyr )
 	{
 		for (j = 0; j < 32; j++)
 		{
-			int num = state->m_alpha_num_ram[32 * i + j];
+			int num = m_alpha_num_ram[32 * i + j];
 
-			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0], num, 0, 0, 0, 8 * j, 8 * i, 0);
+			drawgfx_transpen(bitmap, cliprect, machine().gfx[0], num, 0, 0, 0, 8 * j, 8 * i, 0);
 		}
 	}
 
 	/* draw minor objects */
 	for (i = 0; i < 2; i++)
 	{
-		int num = i << 4 | (state->m_minor_obj_ram[i + 0] & 0xf);
-		int horz = 256 - state->m_minor_obj_ram[i + 2];
-		int vert = 256 - state->m_minor_obj_ram[i + 4];
+		int num = i << 4 | (m_minor_obj_ram[i + 0] & 0xf);
+		int horz = 256 - m_minor_obj_ram[i + 2];
+		int vert = 256 - m_minor_obj_ram[i + 4];
 
-		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1], num, 0, 0, 0, horz, vert, 0);
+		drawgfx_transpen(bitmap, cliprect, machine().gfx[1], num, 0, 0, 0, horz, vert, 0);
 	}
 
 	/* draw waves */
 	for (i = 0; i < 4; i++)
 	{
-		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[3], state->m_wavemod ? 1 : 0, 0, 0, 0, 64 * i, 0x4e, 0);
+		drawgfx_transpen(bitmap, cliprect, machine().gfx[3], m_wavemod ? 1 : 0, 0, 0, 0, 64 * i, 0x4e, 0);
 	}
 
 	/* draw cursor */
 	for (i = 0; i < 256; i++)
 	{
 		if (i & 4)
-			bitmap.pix16(state->m_cursor ^ 0xff, i) = 7;
+			bitmap.pix16(m_cursor ^ 0xff, i) = 7;
 	}
 	return 0;
 }
 
-static TIMER_CALLBACK( destroyr_dial_callback )
+TIMER_CALLBACK_MEMBER(destroyr_state::destroyr_dial_callback)
 {
-	destroyr_state *state = machine.driver_data<destroyr_state>();
 	int dial = param;
 
 	/* Analog inputs come from the player's depth control potentiometer.
@@ -133,31 +134,30 @@ static TIMER_CALLBACK( destroyr_dial_callback )
        computer then reads the VSYNC data functions to tell where the
        cursor should be located. */
 
-	state->m_potsense[dial] = 1;
+	m_potsense[dial] = 1;
 
-	if (state->m_potmask[dial])
+	if (m_potmask[dial])
 	{
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
 
-static TIMER_CALLBACK( destroyr_frame_callback )
+TIMER_CALLBACK_MEMBER(destroyr_state::destroyr_frame_callback)
 {
-	destroyr_state *state = machine.driver_data<destroyr_state>();
-	state->m_potsense[0] = 0;
-	state->m_potsense[1] = 0;
+	m_potsense[0] = 0;
+	m_potsense[1] = 0;
 
 	/* PCB supports two dials, but cab has only got one */
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(state->ioport("PADDLE")->read()), FUNC(destroyr_dial_callback));
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(destroyr_frame_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(ioport("PADDLE")->read()), timer_expired_delegate(FUNC(destroyr_state::destroyr_dial_callback),this));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(destroyr_state::destroyr_frame_callback),this));
 }
 
 
 void destroyr_state::machine_reset()
 {
 
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(destroyr_frame_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(destroyr_state::destroyr_frame_callback),this));
 
 	m_cursor = 0;
 	m_wavemod = 0;
@@ -452,7 +452,7 @@ static MACHINE_CONFIG_START( destroyr, destroyr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6800, XTAL_12_096MHz / 16)
 	MCFG_CPU_PROGRAM_MAP(destroyr_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_assert, 4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(destroyr_state, irq0_line_assert,  4*60)
 
 
 	/* video hardware */
@@ -460,7 +460,7 @@ static MACHINE_CONFIG_START( destroyr, destroyr_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(destroyr)
+	MCFG_SCREEN_UPDATE_DRIVER(destroyr_state, screen_update_destroyr)
 
 	MCFG_GFXDECODE(destroyr)
 	MCFG_PALETTE_LENGTH(8)

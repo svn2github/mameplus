@@ -101,6 +101,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info2);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_pipeline(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(protection_deferred_w);
 };
 
 
@@ -135,11 +137,10 @@ void pipeline_state::video_start()
 	m_tilemap2->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16( pipeline )
+UINT32 pipeline_state::screen_update_pipeline(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	pipeline_state *state = screen.machine().driver_data<pipeline_state>();
-	state->m_tilemap1->draw(bitmap, cliprect, 0,0);
-	state->m_tilemap2->draw(bitmap, cliprect, 0,0);
+	m_tilemap1->draw(bitmap, cliprect, 0,0);
+	m_tilemap2->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
@@ -178,15 +179,14 @@ READ8_MEMBER(pipeline_state::protection_r)
 	return m_fromMCU;
 }
 
-static TIMER_CALLBACK( protection_deferred_w )
+TIMER_CALLBACK_MEMBER(pipeline_state::protection_deferred_w)
 {
-	pipeline_state *state = machine.driver_data<pipeline_state>();
-	state->m_toMCU = param;
+	m_toMCU = param;
 }
 
 WRITE8_MEMBER(pipeline_state::protection_w)
 {
-	machine().scheduler().synchronize(FUNC(protection_deferred_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(pipeline_state::protection_deferred_w),this), data);
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
@@ -391,7 +391,7 @@ static MACHINE_CONFIG_START( pipeline, pipeline_state )
 
 	MCFG_CPU_ADD("maincpu", Z80, 7372800/2)
 	MCFG_CPU_PROGRAM_MAP(cpu0_mem)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pipeline_state,  nmi_line_pulse)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 7372800/2)
 	MCFG_CPU_CONFIG(daisy_chain_sound)
@@ -413,7 +413,7 @@ static MACHINE_CONFIG_START( pipeline, pipeline_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 16, 239)
-	MCFG_SCREEN_UPDATE_STATIC(pipeline)
+	MCFG_SCREEN_UPDATE_DRIVER(pipeline_state, screen_update_pipeline)
 
 	MCFG_GFXDECODE(pipeline)
 

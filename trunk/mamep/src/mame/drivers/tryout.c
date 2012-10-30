@@ -192,7 +192,7 @@ static MACHINE_CONFIG_START( tryout, tryout_state )
 
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(sound_cpu)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,1000) /* controls BGM tempo, 1000 is an hand-tuned value to match a side-by-side video */
+	MCFG_CPU_PERIODIC_INT_DRIVER(tryout_state, nmi_line_pulse, 1000) /* controls BGM tempo, 1000 is an hand-tuned value to match a side-by-side video */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -200,7 +200,7 @@ static MACHINE_CONFIG_START( tryout, tryout_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tryout)
+	MCFG_SCREEN_UPDATE_DRIVER(tryout_state, screen_update_tryout)
 
 	MCFG_GFXDECODE(tryout)
 	MCFG_PALETTE_LENGTH(0x20)

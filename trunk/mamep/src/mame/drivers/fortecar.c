@@ -343,6 +343,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_fortecar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -350,9 +351,8 @@ void fortecar_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16(fortecar)
+UINT32 fortecar_state::screen_update_fortecar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	fortecar_state *state = screen.machine().driver_data<fortecar_state>();
 	int x,y,count;
 	count = 0;
 
@@ -362,14 +362,14 @@ static SCREEN_UPDATE_IND16(fortecar)
 		{
 			int tile,color,bpp;
 
-			tile = (state->m_vram[(count*4)+1] | (state->m_vram[(count*4)+2]<<8)) & 0xfff;
-			color = state->m_vram[(count*4)+3] & 0x1f;
-			bpp = (state->m_vram[(count*4)+3] & 0x20) >> 5;
+			tile = (m_vram[(count*4)+1] | (m_vram[(count*4)+2]<<8)) & 0xfff;
+			color = m_vram[(count*4)+3] & 0x1f;
+			bpp = (m_vram[(count*4)+3] & 0x20) >> 5;
 
 			if(bpp)
 				color&=0x3;
 
-			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[bpp],tile,color,0,0,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,machine().gfx[bpp],tile,color,0,0,x*8,y*8);
 			count++;
 
 		}
@@ -690,7 +690,7 @@ static MACHINE_CONFIG_START( fortecar, fortecar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)		 /* 3 MHz, measured */
 	MCFG_CPU_PROGRAM_MAP(fortecar_map)
 	MCFG_CPU_IO_MAP(fortecar_ports)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fortecar_state,  nmi_line_pulse)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_msec(200))	/* guess */
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -701,7 +701,7 @@ static MACHINE_CONFIG_START( fortecar, fortecar_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(640, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 600-1, 0, 240-1)	/* driven by CRTC */
-	MCFG_SCREEN_UPDATE_STATIC(fortecar)
+	MCFG_SCREEN_UPDATE_DRIVER(fortecar_state, screen_update_fortecar)
 
 
 	MCFG_EEPROM_ADD("eeprom", forte_eeprom_intf)

@@ -148,6 +148,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_vega(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 WRITE8_MEMBER(vega_state::extern_w)
@@ -167,7 +168,7 @@ WRITE8_MEMBER(vega_state::extern_w)
 		case 1: /* 04-07 */
 		{
 			/* AY 3-8910 */
-			ay8910_address_w(m_ay8910, 0, offset);
+			ay8910_address_w(m_ay8910, space, 0, offset);
 		}
 		break;
 
@@ -182,7 +183,7 @@ WRITE8_MEMBER(vega_state::extern_w)
 			else
 			{
 				//register w ?
-				ins8154_w(m_ins8154,offset&0x7f,data);
+				ins8154_w(m_ins8154,space,offset&0x7f,data);
 			}
 		}
 		break;
@@ -296,8 +297,8 @@ READ8_MEMBER(vega_state::extern_r)
 		case 1: /* 04-07 */
 		{
 			/* AY 3-8910 */
-			ay8910_data_w(m_ay8910, 0, offset);
-			return 0xff;//mame_rand(space->machine);
+			ay8910_data_w(m_ay8910, space, 0, offset);
+			return 0xff;//mame_rand(space.machine);
 
 		}
 		break;
@@ -313,7 +314,7 @@ READ8_MEMBER(vega_state::extern_r)
 			else
 			{
 				//register r ?
-				return ins8154_r(m_ins8154,offset&0x7f);
+				return ins8154_r(m_ins8154,space,offset&0x7f);
 			}
 
 		}
@@ -547,26 +548,25 @@ static void draw_tilemap(vega_state *state, screen_device& screen, bitmap_ind16&
 
 }
 
-static SCREEN_UPDATE_IND16( vega )
+UINT32 vega_state::screen_update_vega(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	vega_state *state = screen.machine().driver_data<vega_state>();
-	++state->m_frame_counter;
+	++m_frame_counter;
 
 	bitmap.fill(0, cliprect);
 
-	draw_tilemap(state, screen, bitmap, cliprect);
+	draw_tilemap(this, screen, bitmap, cliprect);
 
 
 	{
 		int x,y;
 		int idx=0;
-		UINT8 *color_lookup = state->memregion("proms")->base() + 0x200;
+		UINT8 *color_lookup = memregion("proms")->base() + 0x200;
 
 		for(y=0;y<25;++y)
 			for(x=0;x<40;++x)
 			{
 
-				int character=state->m_txt_ram[idx];
+				int character=m_txt_ram[idx];
 				//int color=BITSWAP8(color_lookup[character],7,6,5,4,0,1,2,3)>>1;
 				int color=color_lookup[character]&0xf;
 				/*
@@ -582,7 +582,7 @@ static SCREEN_UPDATE_IND16( vega )
 
 			//  if(color==0) color=0xf;
 
-				drawgfx_transpen(bitmap, cliprect,  screen.machine().gfx[0], character, color, 0, 0, x*7, y*10,0);
+				drawgfx_transpen(bitmap, cliprect,  machine().gfx[0], character, color, 0, 0, x*7, y*10,0);
 
 				++idx;
 			}
@@ -593,10 +593,10 @@ static SCREEN_UPDATE_IND16( vega )
 		for(int i=OBJ_0;i<OBJ_PLAYER;++i)
 		{
 
-			int x0=255-state->m_obj[i].m_x;
-			int y0=255-state->m_obj[i].m_y;
-			int num=state->m_obj[i].m_type&7;
-			int flip=state->m_obj[i].m_type&8;
+			int x0=255-m_obj[i].m_x;
+			int y0=255-m_obj[i].m_y;
+			int num=m_obj[i].m_type&7;
+			int flip=m_obj[i].m_type&8;
 
 			num*=4*8;
 			for(int x=0;x<8;++x)
@@ -604,7 +604,7 @@ static SCREEN_UPDATE_IND16( vega )
 			{
 				//for(int x=0;x<4;++x)
 				{
-					drawgfx_transpen(bitmap, cliprect,  screen.machine().gfx[2], num, 0, 1, flip?1:0, x*4+x0, (flip?(3-y):y)*8+y0, 0);
+					drawgfx_transpen(bitmap, cliprect,  machine().gfx[2], num, 0, 1, flip?1:0, x*4+x0, (flip?(3-y):y)*8+y0, 0);
 					++num;
 				}
 			}
@@ -623,20 +623,20 @@ static SCREEN_UPDATE_IND16( vega )
 
 
 	{
-		if(BIT(state->m_obj[OBJ_PLAYER].m_type,5))
+		if(BIT(m_obj[OBJ_PLAYER].m_type,5))
 		{
-			int x0=state->m_obj[OBJ_PLAYER].m_x;
-			int y0=255-state->m_obj[OBJ_PLAYER].m_y-32;
+			int x0=m_obj[OBJ_PLAYER].m_x;
+			int y0=255-m_obj[OBJ_PLAYER].m_y-32;
 
-			UINT8 *sprite_lookup = state->memregion("proms")->base();
+			UINT8 *sprite_lookup = memregion("proms")->base();
 
 
 			for(int x=0;x<16;++x)
 			{
-				int prom_data=sprite_lookup[ ((state->m_obj[OBJ_PLAYER].m_type&0xf)<<2)|((x>>2)&3)|(((state->m_frame_counter>>1)&3)<<6) ];
+				int prom_data=sprite_lookup[ ((m_obj[OBJ_PLAYER].m_type&0xf)<<2)|((x>>2)&3)|(((m_frame_counter>>1)&3)<<6) ];
 
 				int xor_line=( ! (( ! ((BIT(prom_data,1))&(BIT(prom_data,2))&(BIT(prom_data,3))&(BIT(x,2)) ) ) &
-								( (BIT(prom_data,2)) | (BIT(prom_data,3)) | ( BIT(state->m_obj[OBJ_PLAYER].m_type,4)) ) ));
+								( (BIT(prom_data,2)) | (BIT(prom_data,3)) | ( BIT(m_obj[OBJ_PLAYER].m_type,4)) ) ));
 
 				int strip_num=((prom_data)&0x7)|(   ((x&3)^(xor_line?0x3:0))  <<3)|((BIT(prom_data,3))<<5);
 
@@ -645,7 +645,7 @@ static SCREEN_UPDATE_IND16( vega )
 				for(int y=0;y<4;++y)
 				{
 
-					drawgfx_transpen(bitmap, cliprect,  screen.machine().gfx[3], strip_num, 0, !xor_line, 0, x*4+x0, y*8+y0, 0);
+					drawgfx_transpen(bitmap, cliprect,  machine().gfx[3], strip_num, 0, !xor_line, 0, x*4+x0, y*8+y0, 0);
 					++strip_num;
 				}
 			}
@@ -842,7 +842,7 @@ static MACHINE_CONFIG_START( vega, vega_state )
 	MCFG_CPU_ADD("maincpu", I8035, 4000000)
 	MCFG_CPU_PROGRAM_MAP(vega_map)
 	MCFG_CPU_IO_MAP(vega_io_map)
-	MCFG_CPU_VBLANK_INT("screen",irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", vega_state, irq0_line_hold)
 
 
 
@@ -860,7 +860,7 @@ static MACHINE_CONFIG_START( vega, vega_state )
 
 	MCFG_GFXDECODE(test_decode)
 
-	MCFG_SCREEN_UPDATE_STATIC(vega)
+	MCFG_SCREEN_UPDATE_DRIVER(vega_state, screen_update_vega)
 
 	/* sound hardware */
 

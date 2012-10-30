@@ -183,6 +183,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_gstream(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -236,9 +237,9 @@ WRITE32_MEMBER(gstream_state::gstream_vram_w)
 
 	if (ACCESSING_BITS_24_31)
 	{
-		if (offset >= 0x000 / 4 && offset < 0x400 / 4)
+		if (offset < 0x400 / 4)
 		{
-			m_tilemap1->mark_tile_dirty(offset - (0x000 / 4));
+			m_tilemap1->mark_tile_dirty(offset);
 		}
 		else if (offset >= 0x400 / 4 && offset < 0x800 / 4)
 		{
@@ -480,7 +481,7 @@ void gstream_state::video_start()
 	m_tilemap2->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16(gstream)
+UINT32 gstream_state::screen_update_gstream(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	/* The tilemaps and sprite are interleaved together.
        Even Words are tilemap tiles
@@ -496,37 +497,36 @@ static SCREEN_UPDATE_IND16(gstream)
        are being set ?!
    */
 
-	gstream_state *state = screen.machine().driver_data<gstream_state>();
 	int i;
 
-	//popmessage("(1) %08x %08x (2) %08x %08x (3) %08x %08x", state->m_tmap1_scrollx, state->m_tmap1_scrolly, state->m_tmap2_scrollx, state->m_tmap2_scrolly, state->m_tmap3_scrollx, state->m_tmap3_scrolly );
+	//popmessage("(1) %08x %08x (2) %08x %08x (3) %08x %08x", m_tmap1_scrollx, m_tmap1_scrolly, m_tmap2_scrollx, m_tmap2_scrolly, m_tmap3_scrollx, m_tmap3_scrolly );
 
-	state->m_tilemap3->set_scrollx(0, state->m_tmap3_scrollx >> 16);
-	state->m_tilemap3->set_scrolly(0, state->m_tmap3_scrolly >> 16);
+	m_tilemap3->set_scrollx(0, m_tmap3_scrollx >> 16);
+	m_tilemap3->set_scrolly(0, m_tmap3_scrolly >> 16);
 
-	state->m_tilemap1->set_scrollx(0, state->m_tmap1_scrollx >> 16);
-	state->m_tilemap1->set_scrolly(0, state->m_tmap1_scrolly >> 16);
+	m_tilemap1->set_scrollx(0, m_tmap1_scrollx >> 16);
+	m_tilemap1->set_scrolly(0, m_tmap1_scrolly >> 16);
 
-	state->m_tilemap2->set_scrollx(0, state->m_tmap2_scrollx >> 16);
-	state->m_tilemap2->set_scrolly(0, state->m_tmap2_scrolly >> 16);
+	m_tilemap2->set_scrollx(0, m_tmap2_scrollx >> 16);
+	m_tilemap2->set_scrolly(0, m_tmap2_scrolly >> 16);
 
-	state->m_tilemap3->draw(bitmap, cliprect, 0, 0);
-	state->m_tilemap2->draw(bitmap, cliprect, 0, 0);
-	state->m_tilemap1->draw(bitmap, cliprect, 0, 0);
+	m_tilemap3->draw(bitmap, cliprect, 0, 0);
+	m_tilemap2->draw(bitmap, cliprect, 0, 0);
+	m_tilemap1->draw(bitmap, cliprect, 0, 0);
 
 	for (i = 0x0000 / 4; i < 0x4000 / 4; i += 4)
 	{
 		/* Upper bits are used by the tilemaps */
-		int code = state->m_vram[i + 0] & 0xffff;
-		int x = state->m_vram[i + 1] & 0xffff;
-		int y = state->m_vram[i + 2] & 0xffff;
-		int col = state->m_vram[i + 3] & 0x1f;
+		int code = m_vram[i + 0] & 0xffff;
+		int x = m_vram[i + 1] & 0xffff;
+		int y = m_vram[i + 2] & 0xffff;
+		int col = m_vram[i + 3] & 0x1f;
 
 		/* co-ordinates are signed */
 		if (x & 0x8000) x -= 0x10000;
 		if (y & 0x8000) y -= 0x10000;
 
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],code,col,0,0,x-2,y,0);
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],code,col,0,0,x-2,y,0);
 	}
 
 	return 0;
@@ -565,7 +565,7 @@ static MACHINE_CONFIG_START( gstream, gstream_state )
 	MCFG_CPU_ADD("maincpu", E132XT, 16000000*4)	/* 4x internal multiplier */
 	MCFG_CPU_PROGRAM_MAP(gstream_32bit_map)
 	MCFG_CPU_IO_MAP(gstream_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gstream_state,  irq0_line_hold)
 
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
@@ -576,7 +576,7 @@ static MACHINE_CONFIG_START( gstream, gstream_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(gstream)
+	MCFG_SCREEN_UPDATE_DRIVER(gstream_state, screen_update_gstream)
 
 	MCFG_PALETTE_LENGTH(0x1000 + 0x400 + 0x400 + 0x400) // sprites + 3 bg layers
 	MCFG_GFXDECODE(gstream)
@@ -640,7 +640,7 @@ READ32_MEMBER(gstream_state::gstream_speedup_r)
 
 DRIVER_INIT_MEMBER(gstream_state,gstream)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xd1ee0, 0xd1ee3, read32_delegate(FUNC(gstream_state::gstream_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd1ee0, 0xd1ee3, read32_delegate(FUNC(gstream_state::gstream_speedup_r), this));
 }
 
 

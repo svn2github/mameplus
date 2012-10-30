@@ -86,6 +86,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_olibochu(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(olibochu_scanline);
 };
 
 
@@ -226,11 +228,10 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	}
 }
 
-static SCREEN_UPDATE_IND16( olibochu )
+UINT32 olibochu_state::screen_update_olibochu(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	olibochu_state *state = screen.machine().driver_data<olibochu_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }
 
@@ -432,15 +433,15 @@ void olibochu_state::machine_reset()
 	m_cmd = 0;
 }
 
-static TIMER_DEVICE_CALLBACK( olibochu_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(olibochu_state::olibochu_scanline)
 {
 	int scanline = param;
 
 	if(scanline == 248) // vblank-out irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 
 	if(scanline == 0) // sprite buffer irq
-		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
 }
 
 static MACHINE_CONFIG_START( olibochu, olibochu_state )
@@ -448,11 +449,11 @@ static MACHINE_CONFIG_START( olibochu, olibochu_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz ?? */
 	MCFG_CPU_PROGRAM_MAP(olibochu_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", olibochu_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", olibochu_state, olibochu_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ?? */
 	MCFG_CPU_PROGRAM_MAP(olibochu_sound_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,60) //???
+	MCFG_CPU_PERIODIC_INT_DRIVER(olibochu_state, irq0_line_hold, 60) //???
 
 //  MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
@@ -463,7 +464,7 @@ static MACHINE_CONFIG_START( olibochu, olibochu_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(olibochu)
+	MCFG_SCREEN_UPDATE_DRIVER(olibochu_state, screen_update_olibochu)
 
 	MCFG_GFXDECODE(olibochu)
 	MCFG_PALETTE_LENGTH(512)

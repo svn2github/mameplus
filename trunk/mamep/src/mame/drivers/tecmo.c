@@ -633,7 +633,7 @@ static MACHINE_CONFIG_START( rygar, tecmo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_24MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rygar_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tecmo_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80, XTAL_4MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rygar_sound_map)
@@ -644,7 +644,7 @@ static MACHINE_CONFIG_START( rygar, tecmo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tecmo)
+	MCFG_SCREEN_UPDATE_DRIVER(tecmo_state, screen_update_tecmo)
 
 	MCFG_GFXDECODE(tecmo)
 	MCFG_PALETTE_LENGTH(1024)
@@ -692,7 +692,7 @@ static MACHINE_CONFIG_START( backfirt, tecmo_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_24MHz/4)
 	MCFG_CPU_PROGRAM_MAP(rygar_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tecmo_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80, XTAL_8MHz/2)
 	MCFG_CPU_PROGRAM_MAP(rygar_sound_map)
@@ -703,7 +703,7 @@ static MACHINE_CONFIG_START( backfirt, tecmo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tecmo)
+	MCFG_SCREEN_UPDATE_DRIVER(tecmo_state, screen_update_tecmo)
 
 	MCFG_GFXDECODE(tecmo)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1141,9 +1141,9 @@ DRIVER_INIT_MEMBER(tecmo_state,backfirt)
 	m_video_type = 2;
 
 	/* no MSM */
-	machine().device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc000, 0xc000);
-	machine().device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc400, 0xc400);
-	machine().device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xc800);
+	machine().device("soundcpu")->memory().space(AS_PROGRAM).nop_write(0xc000, 0xc000);
+	machine().device("soundcpu")->memory().space(AS_PROGRAM).nop_write(0xc400, 0xc400);
+	machine().device("soundcpu")->memory().space(AS_PROGRAM).nop_write(0xc800, 0xc800);
 }
 
 

@@ -33,13 +33,13 @@ Credits:
 
 
 
-static INTERRUPT_GEN( thief_interrupt )
+INTERRUPT_GEN_MEMBER(thief_state::thief_interrupt)
 {
 	/* SLAM switch causes an NMI if it's pressed */
-	if( (device->machine().root_device().ioport("P2")->read() & 0x10) == 0 )
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if( (machine().root_device().ioport("P2")->read() & 0x10) == 0 )
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		device->execute().set_input_line(0, HOLD_LINE);
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 /**********************************************************/
@@ -439,7 +439,7 @@ static MACHINE_CONFIG_START( sharkatt, thief_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)        /* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(sharkatt_main_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", thief_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thief_state,  thief_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -447,7 +447,7 @@ static MACHINE_CONFIG_START( sharkatt, thief_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 24*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(thief)
+	MCFG_SCREEN_UPDATE_DRIVER(thief_state, screen_update_thief)
 
 	MCFG_TMS9927_ADD("tms", MASTER_CLOCK/4, tms9927_intf)
 
@@ -474,7 +474,7 @@ static MACHINE_CONFIG_START( thief, thief_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000) /* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(thief_main_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", thief_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thief_state,  thief_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -482,7 +482,7 @@ static MACHINE_CONFIG_START( thief, thief_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(thief)
+	MCFG_SCREEN_UPDATE_DRIVER(thief_state, screen_update_thief)
 
 	MCFG_TMS9927_ADD("tms", MASTER_CLOCK/4, tms9927_intf)
 
@@ -509,7 +509,7 @@ static MACHINE_CONFIG_START( natodef, thief_state )
 	MCFG_CPU_ADD("maincpu", Z80, 4000000) /* 4 MHz? */
 	MCFG_CPU_PROGRAM_MAP(thief_main_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", thief_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", thief_state,  thief_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -517,7 +517,7 @@ static MACHINE_CONFIG_START( natodef, thief_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(thief)
+	MCFG_SCREEN_UPDATE_DRIVER(thief_state, screen_update_thief)
 
 	MCFG_TMS9927_ADD("tms", MASTER_CLOCK/4, tms9927_intf)
 

@@ -95,7 +95,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, tecmo16_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xfbff) AM_RAM	/* Sound RAM */
 	AM_RANGE(0xfc00, 0xfc00) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xfc04, 0xfc05) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xfc04, 0xfc05) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xfc08, 0xfc08) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xfc0c, 0xfc0c) AM_NOP
 	AM_RANGE(0xfffe, 0xffff) AM_RAM
@@ -361,24 +361,12 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static void irqhandler(device_t *device, int irq)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irqhandler)
-};
-
-/******************************************************************************/
-
 static MACHINE_CONFIG_START( fstarfrc, tecmo16_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,24000000/2)			/* 12MHz */
 	MCFG_CPU_PROGRAM_MAP(fstarfrc_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", tecmo16_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)			/* 4MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -391,7 +379,7 @@ static MACHINE_CONFIG_START( fstarfrc, tecmo16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tecmo16)
+	MCFG_SCREEN_UPDATE_DRIVER(tecmo16_state, screen_update_tecmo16)
 
 	MCFG_GFXDECODE(tecmo16)
 	MCFG_PALETTE_LENGTH(4096)
@@ -400,8 +388,8 @@ static MACHINE_CONFIG_START( fstarfrc, tecmo16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 8000000/2)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 8000000/2)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 

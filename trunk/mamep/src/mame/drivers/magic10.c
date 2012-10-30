@@ -121,6 +121,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_layer1_tile_info);
 	TILE_GET_INFO_MEMBER(get_layer2_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_magic10(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -197,23 +198,22 @@ void magic10_state::video_start()
 	m_layer2_tilemap->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16( magic10 )
+UINT32 magic10_state::screen_update_magic10(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	magic10_state *state = screen.machine().driver_data<magic10_state>();
 	/*TODO: understand where this comes from. */
-	state->m_layer2_tilemap->set_scrollx(0, state->m_layer2_offset[0]);
-	state->m_layer2_tilemap->set_scrolly(0, state->m_layer2_offset[1]);
+	m_layer2_tilemap->set_scrollx(0, m_layer2_offset[0]);
+	m_layer2_tilemap->set_scrolly(0, m_layer2_offset[1]);
 
 	/*
     4 and 6 are y/x global register writes.
     0 and 2 are y/x writes for the scrolling layer.
     */
-	state->m_layer1_tilemap->set_scrolly(0, (state->m_vregs[0/2] - state->m_vregs[4/2])+0);
-	state->m_layer1_tilemap->set_scrollx(0, (state->m_vregs[2/2] - state->m_vregs[6/2])+4);
+	m_layer1_tilemap->set_scrolly(0, (m_vregs[0/2] - m_vregs[4/2])+0);
+	m_layer1_tilemap->set_scrollx(0, (m_vregs[2/2] - m_vregs[6/2])+4);
 
-	state->m_layer0_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_layer1_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_layer2_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_layer0_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_layer1_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_layer2_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -730,7 +730,7 @@ static MACHINE_CONFIG_START( magic10, magic10_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000) // ?
 	MCFG_CPU_PROGRAM_MAP(magic10_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", magic10_state,  irq1_line_hold)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -739,7 +739,7 @@ static MACHINE_CONFIG_START( magic10, magic10_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 44*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(magic10)
+	MCFG_SCREEN_UPDATE_DRIVER(magic10_state, screen_update_magic10)
 
 	MCFG_PALETTE_LENGTH(0x100)
 	MCFG_GFXDECODE(magic10)
@@ -787,7 +787,7 @@ static MACHINE_CONFIG_DERIVED( sgsafari, magic10 )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(sgsafari_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)	/* L1 interrupts */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", magic10_state,  irq2_line_hold)	/* L1 interrupts */
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 44*8-1, 0*8, 30*8-1)

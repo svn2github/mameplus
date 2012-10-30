@@ -139,11 +139,11 @@ static MACHINE_CONFIG_START( nitedrvr, nitedrvr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_12_096MHz/12) // 1 MHz
 	MCFG_CPU_PROGRAM_MAP(nitedrvr_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", nitedrvr_state,  irq0_line_hold)
 	MCFG_WATCHDOG_VBLANK_INIT(3)
 
 
-	MCFG_TIMER_ADD_PERIODIC("crash_timer", nitedrvr_crash_toggle_callback, PERIOD_OF_555_ASTABLE(RES_K(180), 330, CAP_U(1)))
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("crash_timer", nitedrvr_state, nitedrvr_crash_toggle_callback, PERIOD_OF_555_ASTABLE(RES_K(180), 330, CAP_U(1)))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -151,7 +151,7 @@ static MACHINE_CONFIG_START( nitedrvr, nitedrvr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nitedrvr)
+	MCFG_SCREEN_UPDATE_DRIVER(nitedrvr_state, screen_update_nitedrvr)
 
 	MCFG_GFXDECODE(nitedrvr)
 	MCFG_PALETTE_LENGTH(2)

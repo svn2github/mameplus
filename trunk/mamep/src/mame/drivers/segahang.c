@@ -338,7 +338,7 @@ WRITE16_MEMBER( segahang_state::sharrier_io_w )
 
 
 #if 0
-static TIMER_DEVICE_CALLBACK( hangon_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(segahang_state::hangon_irq)
 {
 	int scanline = param;
 
@@ -437,7 +437,7 @@ void segahang_state::device_timer(emu_timer &timer, device_timer_id id, int para
 
 		// synchronize writes to the 8255 PPI
 		case TID_PPI_WRITE:
-			m_i8255_1->write(*m_maincpu->space(AS_PROGRAM), param >> 8, param & 0xff);
+			m_i8255_1->write(m_maincpu->space(AS_PROGRAM), param >> 8, param & 0xff);
 			break;
 	}
 }
@@ -540,7 +540,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_portmap_2151, AS_IO, 8, segahang_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x40, 0x40) AM_MIRROR(0x3f) AM_READ(sound_data_r)
 ADDRESS_MAP_END
 
@@ -802,11 +802,6 @@ static const ym2203_interface ym2203_config =
 	DEVCB_DRIVER_LINE_MEMBER(segahang_state, sound_irq)
 };
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(segahang_state, sound_irq)
-};
-
 static const sega_pcm_interface segapcm_interface =
 {
 	BANK_512
@@ -959,8 +954,8 @@ static MACHINE_CONFIG_FRAGMENT( sound_board_2151 )
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, MASTER_CLOCK_8MHz/2)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", MASTER_CLOCK_8MHz/2)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("soundcpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.43)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.43)
 
@@ -1791,7 +1786,7 @@ DRIVER_INIT_MEMBER(segahang_state,endurobl)
 	UINT16 *decrypt = auto_alloc_array(machine(), UINT16, 0x40000/2);
 	memcpy(decrypt + 0x00000/2, rom + 0x30000/2, 0x10000);
 	memcpy(decrypt + 0x10000/2, rom + 0x10000/2, 0x20000);
-	m_maincpu->space(AS_PROGRAM)->set_decrypted_region(0x000000, 0x03ffff, decrypt);
+	m_maincpu->space(AS_PROGRAM).set_decrypted_region(0x000000, 0x03ffff, decrypt);
 }
 
 DRIVER_INIT_MEMBER(segahang_state,endurob2)
@@ -1802,7 +1797,7 @@ DRIVER_INIT_MEMBER(segahang_state,endurob2)
 	UINT16 *rom = reinterpret_cast<UINT16 *>(memregion("maincpu")->base());
 	UINT16 *decrypt = auto_alloc_array(machine(), UINT16, 0x40000/2);
 	memcpy(decrypt, rom, 0x30000);
-	m_maincpu->space(AS_PROGRAM)->set_decrypted_region(0x000000, 0x03ffff, decrypt);
+	m_maincpu->space(AS_PROGRAM).set_decrypted_region(0x000000, 0x03ffff, decrypt);
 }
 
 

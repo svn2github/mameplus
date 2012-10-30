@@ -54,8 +54,8 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, kncljoe_state )
 	AM_RANGE(0xd804, 0xd804) AM_READ_PORT("DSWB")
 	AM_RANGE(0xd800, 0xd800) AM_WRITE(sound_cmd_w)
 	AM_RANGE(0xd801, 0xd801) AM_WRITE(kncljoe_control_w)
-	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn1", sn76489_new_device, write)
-	AM_RANGE(0xd803, 0xd803) AM_DEVWRITE("sn2", sn76489_new_device, write)
+	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn1", sn76489_device, write)
+	AM_RANGE(0xd803, 0xd803) AM_DEVWRITE("sn2", sn76489_device, write)
 	AM_RANGE(0xd807, 0xd807) AM_READNOP		/* unknown read */
 	AM_RANGE(0xd817, 0xd817) AM_READNOP		/* unknown read */
 	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("spriteram")
@@ -76,7 +76,7 @@ WRITE8_MEMBER(kncljoe_state::m6803_port2_w)
 	{
 		/* control or data port? */
 		if (m_port2 & 0x08)
-			ay8910_data_address_w(device, m_port2 >> 2, m_port1);
+			ay8910_data_address_w(device, space, m_port2 >> 2, m_port1);
 	}
 	m_port2 = data;
 }
@@ -86,7 +86,7 @@ READ8_MEMBER(kncljoe_state::m6803_port1_r)
 	device_t *device = machine().device("aysnd");
 
 	if (m_port2 & 0x08)
-		return ay8910_r(device, 0);
+		return ay8910_r(device, space, 0);
 	return 0xff;
 }
 
@@ -257,9 +257,9 @@ static const ay8910_interface ay8910_config =
 	DEVCB_DRIVER_MEMBER(kncljoe_state,unused_w)
 };
 
-static INTERRUPT_GEN (sound_nmi)
+INTERRUPT_GEN_MEMBER(kncljoe_state::sound_nmi)
 {
-	device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 void kncljoe_state::machine_start()
@@ -289,12 +289,12 @@ static MACHINE_CONFIG_START( kncljoe, kncljoe_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_6MHz)  /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", kncljoe_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", M6803, XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_portmap)
-	MCFG_CPU_PERIODIC_INT(sound_nmi, (double)3970) //measured 3.970 kHz
+	MCFG_CPU_PERIODIC_INT_DRIVER(kncljoe_state, sound_nmi,  (double)3970) //measured 3.970 kHz
 
 
 	/* video hardware */
@@ -305,7 +305,7 @@ static MACHINE_CONFIG_START( kncljoe, kncljoe_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1500))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(kncljoe)
+	MCFG_SCREEN_UPDATE_DRIVER(kncljoe_state, screen_update_kncljoe)
 
 	MCFG_GFXDECODE(kncljoe)
 	MCFG_PALETTE_LENGTH(16*8+16*8)
@@ -318,11 +318,11 @@ static MACHINE_CONFIG_START( kncljoe, kncljoe_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
-	MCFG_SOUND_ADD("sn1", SN76489_NEW, XTAL_3_579545MHz) /* verified on pcb */
+	MCFG_SOUND_ADD("sn1", SN76489, XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489_NEW, XTAL_3_579545MHz) /* verified on pcb */
+	MCFG_SOUND_ADD("sn2", SN76489, XTAL_3_579545MHz) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

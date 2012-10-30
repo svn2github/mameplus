@@ -112,6 +112,7 @@ public:
 	DECLARE_DRIVER_INIT(cliff);
 	virtual void machine_start();
 	virtual void machine_reset();
+	TIMER_CALLBACK_MEMBER(cliff_irq_callback);
 };
 
 
@@ -172,8 +173,8 @@ WRITE8_MEMBER(cliffhgr_state::cliff_sound_overlay_w)
 {
 	device_t *device = machine().device("discrete");
 	/* audio */
-	discrete_sound_w(device, CLIFF_ENABLE_SND_1, data & 1);
-	discrete_sound_w(device, CLIFF_ENABLE_SND_2, (data >> 1) & 1);
+	discrete_sound_w(device, space, CLIFF_ENABLE_SND_1, data & 1);
+	discrete_sound_w(device, space, CLIFF_ENABLE_SND_2, (data >> 1) & 1);
 
 	// bit 4 (data & 0x10) is overlay related?
 }
@@ -186,32 +187,31 @@ WRITE8_MEMBER(cliffhgr_state::cliff_ldwire_w)
 
 /********************************************************/
 
-static TIMER_CALLBACK( cliff_irq_callback )
+TIMER_CALLBACK_MEMBER(cliffhgr_state::cliff_irq_callback)
 {
-	cliffhgr_state *state = machine.driver_data<cliffhgr_state>();
-	state->m_phillips_code = 0;
+	m_phillips_code = 0;
 
 	switch (param)
 	{
 		case 17:
-			state->m_phillips_code = state->m_laserdisc->get_field_code(LASERDISC_CODE_LINE17, true);
+			m_phillips_code = m_laserdisc->get_field_code(LASERDISC_CODE_LINE17, true);
 			param = 18;
 			break;
 
 		case 18:
-			state->m_phillips_code = state->m_laserdisc->get_field_code(LASERDISC_CODE_LINE18, true);
+			m_phillips_code = m_laserdisc->get_field_code(LASERDISC_CODE_LINE18, true);
 			param = 17;
 			break;
 	}
 
 	/* if we have a valid code, trigger an IRQ */
-	if (state->m_phillips_code & 0x800000)
+	if (m_phillips_code & 0x800000)
 	{
 //      printf("%2d:code = %06X\n", param, phillips_code);
-		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 
-	state->m_irq_timer->adjust(machine.primary_screen->time_until_pos(param * 2), param);
+	m_irq_timer->adjust(machine().primary_screen->time_until_pos(param * 2), param);
 }
 
 WRITE_LINE_MEMBER(cliffhgr_state::vdp_interrupt)
@@ -223,7 +223,7 @@ WRITE_LINE_MEMBER(cliffhgr_state::vdp_interrupt)
 
 void cliffhgr_state::machine_start()
 {
-	m_irq_timer = machine().scheduler().timer_alloc(FUNC(cliff_irq_callback));
+	m_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(cliffhgr_state::cliff_irq_callback),this));
 }
 
 void cliffhgr_state::machine_reset()

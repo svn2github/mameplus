@@ -219,6 +219,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_tilemap1_tile_info);
 	TILE_GET_INFO_MEMBER(get_tilemap2_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_cybertnk_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cybertnk_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 /* tile format
@@ -498,8 +500,8 @@ static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const r
 	return 0;
 }
 
-static SCREEN_UPDATE_IND16( cybertnk_left ) { return update_screen(screen, bitmap, cliprect, 0); }
-static SCREEN_UPDATE_IND16( cybertnk_right ) { return update_screen(screen, bitmap, cliprect, -256); }
+UINT32 cybertnk_state::screen_update_cybertnk_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect){ return update_screen(screen, bitmap, cliprect, 0); }
+UINT32 cybertnk_state::screen_update_cybertnk_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect){ return update_screen(screen, bitmap, cliprect, -256); }
 
 
 WRITE16_MEMBER(cybertnk_state::tilemap0_vram_w)
@@ -821,17 +823,22 @@ GFXDECODE_END
 
 
 static const y8950_interface y8950_config = {
-	0 /* TODO */
+	/* TODO */
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL
 };
 
 static MACHINE_CONFIG_START( cybertnk, cybertnk_state )
 	MCFG_CPU_ADD("maincpu", M68000,XTAL_20MHz/2)
 	MCFG_CPU_PROGRAM_MAP(master_mem)
-	MCFG_CPU_VBLANK_INT("lscreen", irq1_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", cybertnk_state,  irq1_line_assert)
 
 	MCFG_CPU_ADD("slave", M68000,XTAL_20MHz/2)
 	MCFG_CPU_PROGRAM_MAP(slave_mem)
-	MCFG_CPU_VBLANK_INT("lscreen", irq3_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", cybertnk_state,  irq3_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(sound_mem)
@@ -846,14 +853,14 @@ static MACHINE_CONFIG_START( cybertnk, cybertnk_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cybertnk_left)
+	MCFG_SCREEN_UPDATE_DRIVER(cybertnk_state, screen_update_cybertnk_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cybertnk_right)
+	MCFG_SCREEN_UPDATE_DRIVER(cybertnk_state, screen_update_cybertnk_right)
 
 	MCFG_GFXDECODE(cybertnk)
 	MCFG_PALETTE_LENGTH(0x4000)

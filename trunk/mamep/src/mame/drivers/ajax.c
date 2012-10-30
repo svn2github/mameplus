@@ -55,7 +55,7 @@ static ADDRESS_MAP_START( ajax_sound_map, AS_PROGRAM, 8, ajax_state )
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232_2", k007232_r, k007232_w)		/* 007232 registers (chip 2) */
 	AM_RANGE(0xb80c, 0xb80c) AM_WRITE(k007232_extvol_w)			/* extra volume, goes to the 007232 w/ A11 */
 																/* selecting a different latch for the external port */
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)		/* YM2151 */
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)		/* YM2151 */
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)				/* soundlatch_byte_r */
 ADDRESS_MAP_END
 
@@ -210,7 +210,7 @@ static MACHINE_CONFIG_START( ajax, ajax_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, 3000000)	/* 12/4 MHz*/
 	MCFG_CPU_PROGRAM_MAP(ajax_main_map)
-	MCFG_CPU_VBLANK_INT("screen", ajax_interrupt)	/* IRQs triggered by the 051960 */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", ajax_state,  ajax_interrupt)	/* IRQs triggered by the 051960 */
 
 	MCFG_CPU_ADD("sub", M6809, 3000000)	/* ? */
 	MCFG_CPU_PROGRAM_MAP(ajax_sub_map)
@@ -229,7 +229,7 @@ static MACHINE_CONFIG_START( ajax, ajax_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(ajax)
+	MCFG_SCREEN_UPDATE_DRIVER(ajax_state, screen_update_ajax)
 
 	MCFG_PALETTE_LENGTH(2048)
 
@@ -241,7 +241,7 @@ static MACHINE_CONFIG_START( ajax, ajax_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

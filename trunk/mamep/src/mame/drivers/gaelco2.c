@@ -157,7 +157,7 @@ static MACHINE_CONFIG_START( maniacsq, gaelco2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 26000000/2)		/* 13 MHz? */
 	MCFG_CPU_PROGRAM_MAP(maniacsq_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco2_state,  irq6_line_hold)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -167,7 +167,7 @@ static MACHINE_CONFIG_START( maniacsq, gaelco2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(0x0080000)
@@ -222,9 +222,9 @@ static ADDRESS_MAP_START( bang_map, AS_PROGRAM, 16, gaelco2_state )
     AM_RANGE(0x300000, 0x300001) AM_READ_PORT("P1")
     AM_RANGE(0x300002, 0x300003) AM_READNOP 																	/* Random number generator? */
 	AM_RANGE(0x300000, 0x300003) AM_WRITE(gaelco2_coin2_w)														/* Coin Counters */
-	AM_RANGE(0x300008, 0x300009) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_data_w)												/* EEPROM data */
-	AM_RANGE(0x30000a, 0x30000b) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_sk_w)													/* EEPROM serial clock */
-	AM_RANGE(0x30000c, 0x30000d) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_cs_w)													/* EEPROM chip select */
+	AM_RANGE(0x300008, 0x300009) AM_WRITE(gaelco2_eeprom_data_w)												/* EEPROM data */
+	AM_RANGE(0x30000a, 0x30000b) AM_WRITE(gaelco2_eeprom_sk_w)													/* EEPROM serial clock */
+	AM_RANGE(0x30000c, 0x30000d) AM_WRITE(gaelco2_eeprom_cs_w)													/* EEPROM chip select */
     AM_RANGE(0x300010, 0x300011) AM_READ_PORT("P2")
     AM_RANGE(0x300020, 0x300021) AM_READ_PORT("COIN")
     AM_RANGE(0x310000, 0x310001) AM_READ(p1_gun_x) AM_WRITE(bang_clr_gun_int_w)									/* Gun 1P X */ /* CLR INT Gun */
@@ -288,7 +288,7 @@ static MACHINE_CONFIG_START( bang, gaelco2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 30000000/2)			/* 15 MHz */
 	MCFG_CPU_PROGRAM_MAP(bang_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bang_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", gaelco2_state, bang_irq, "screen", 0, 1)
 
 	MCFG_EEPROM_ADD("eeprom", gaelco2_eeprom_interface)
 
@@ -300,7 +300,7 @@ static MACHINE_CONFIG_START( bang, gaelco2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(0x0200000)
@@ -531,7 +531,7 @@ static MACHINE_CONFIG_START( alighunt, gaelco2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 24000000/2)			/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(alighunt_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco2_state,  irq6_line_hold)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -541,7 +541,7 @@ static MACHINE_CONFIG_START( alighunt, gaelco2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(0x0400000)
@@ -773,7 +773,7 @@ static MACHINE_CONFIG_START( touchgo, gaelco2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 32000000/2)			/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(touchgo_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", gaelco2_state,  irq6_line_hold)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -786,14 +786,14 @@ static MACHINE_CONFIG_START( touchgo, gaelco2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 480-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2_left)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.1)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 480-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2_right)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2_right)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_VIDEO_START_OVERRIDE(gaelco2_state,gaelco2_dual)
@@ -913,9 +913,9 @@ static ADDRESS_MAP_START( snowboar_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x218004, 0x218009) AM_RAM AM_SHARE("vregs")																/* Video Registers */
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("P1")
 	AM_RANGE(0x300000, 0x300003) AM_WRITE(gaelco2_coin2_w)																	/* Coin Counters */
-	AM_RANGE(0x300008, 0x300009) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_data_w)															/* EEPROM data */
-	AM_RANGE(0x30000a, 0x30000b) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_sk_w)																/* EEPROM serial clock */
-	AM_RANGE(0x30000c, 0x30000d) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_cs_w)																/* EEPROM chip select */
+	AM_RANGE(0x300008, 0x300009) AM_WRITE(gaelco2_eeprom_data_w)															/* EEPROM data */
+	AM_RANGE(0x30000a, 0x30000b) AM_WRITE(gaelco2_eeprom_sk_w)																/* EEPROM serial clock */
+	AM_RANGE(0x30000c, 0x30000d) AM_WRITE(gaelco2_eeprom_cs_w)																/* EEPROM chip select */
 	AM_RANGE(0x300010, 0x300011) AM_READ_PORT("P2")
 	AM_RANGE(0x300020, 0x300021) AM_READ_PORT("COIN")
 	AM_RANGE(0x310000, 0x31ffff) AM_READWRITE(snowboar_protection_r,snowboar_protection_w) AM_SHARE("snowboar_prot")	/* Protection */
@@ -965,7 +965,7 @@ static MACHINE_CONFIG_START( snowboar, gaelco2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 30000000/2)			/* 15 MHz */
 	MCFG_CPU_PROGRAM_MAP(snowboar_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco2_state,  irq6_line_hold)
 
 	MCFG_EEPROM_ADD("eeprom", gaelco2_eeprom_interface)
 
@@ -977,7 +977,7 @@ static MACHINE_CONFIG_START( snowboar, gaelco2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 	MCFG_GFXDECODE(0x0400000)
@@ -1206,7 +1206,7 @@ static MACHINE_CONFIG_START( wrally2, gaelco2_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 26000000/2)			/* 13 MHz */
 	MCFG_CPU_PROGRAM_MAP(wrally2_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", gaelco2_state,  irq6_line_hold)
 
 	MCFG_EEPROM_ADD("eeprom", gaelco2_eeprom_interface)
 
@@ -1221,14 +1221,14 @@ static MACHINE_CONFIG_START( wrally2, gaelco2_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(384, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2_left)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.1)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(384, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaelco2_right)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco2_state, screen_update_gaelco2_right)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
 
 

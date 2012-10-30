@@ -177,7 +177,7 @@ READ16_MEMBER(darius_state::darius_ioc_r)
 	switch (offset)
 	{
 		case 0x01:
-			return (tc0140syt_comm_r(m_tc0140syt, 0) & 0xff);	/* sound interface read */
+			return (tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff);	/* sound interface read */
 
 		case 0x04:
 			return ioport("P1")->read();
@@ -207,12 +207,12 @@ WRITE16_MEMBER(darius_state::darius_ioc_w)
 	{
 		case 0x00:	/* sound interface write */
 
-			tc0140syt_port_w(m_tc0140syt, 0, data & 0xff);
+			tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
 			return;
 
 		case 0x01:	/* sound interface write */
 
-			tc0140syt_comm_w(m_tc0140syt, 0, data & 0xff);
+			tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
 			return;
 
 		case 0x28:	/* unknown, written by both cpus - always 0? */
@@ -918,14 +918,14 @@ static MACHINE_CONFIG_START( darius, darius_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,16000000/2)	/* 8 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(darius_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", darius_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)	/* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(darius_sound_map)
 
 	MCFG_CPU_ADD("cpub", M68000,16000000/2)	/* 8 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(darius_cpub_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", darius_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("adpcm", Z80,8000000/2) /* 4 MHz ? */	/* ADPCM player using MSM5205 */
 	MCFG_CPU_PROGRAM_MAP(darius_sound2_map)
@@ -944,21 +944,21 @@ static MACHINE_CONFIG_START( darius, darius_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(darius_left)
+	MCFG_SCREEN_UPDATE_DRIVER(darius_state, screen_update_darius_left)
 
 	MCFG_SCREEN_ADD("mscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(darius_middle)
+	MCFG_SCREEN_UPDATE_DRIVER(darius_state, screen_update_darius_middle)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 1*8, 29*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(darius_right)
+	MCFG_SCREEN_UPDATE_DRIVER(darius_state, screen_update_darius_right)
 
 
 	MCFG_PC080SN_ADD("pc080sn", darius_pc080sn_intf)

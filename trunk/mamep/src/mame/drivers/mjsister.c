@@ -60,6 +60,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_mjsister(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(dac_callback);
 };
 
 
@@ -127,35 +129,34 @@ WRITE8_MEMBER(mjsister_state::mjsister_videoram_w)
 	}
 }
 
-static SCREEN_UPDATE_IND16( mjsister )
+UINT32 mjsister_state::screen_update_mjsister(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mjsister_state *state = screen.machine().driver_data<mjsister_state>();
-	int flip = state->m_flip_screen;
+	int flip = m_flip_screen;
 	int i, j;
 
-	if (state->m_screen_redraw)
+	if (m_screen_redraw)
 	{
 		int offs;
 
 		for (offs = 0; offs < 0x8000; offs++)
 		{
-			mjsister_plot0(screen.machine(), offs, state->m_videoram0[offs]);
-			mjsister_plot1(screen.machine(), offs, state->m_videoram1[offs]);
+			mjsister_plot0(machine(), offs, m_videoram0[offs]);
+			mjsister_plot1(machine(), offs, m_videoram1[offs]);
 		}
-		state->m_screen_redraw = 0;
+		m_screen_redraw = 0;
 	}
 
-	if (state->m_video_enable)
+	if (m_video_enable)
 	{
 		for (i = 0; i < 256; i++)
 			for (j = 0; j < 4; j++)
-				bitmap.pix16(i, 256 + j) = state->m_colorbank * 0x20;
+				bitmap.pix16(i, 256 + j) = m_colorbank * 0x20;
 
-		copybitmap(bitmap, *state->m_tmpbitmap0, flip, flip, 0, 0, cliprect);
-		copybitmap_trans(bitmap, *state->m_tmpbitmap1, flip, flip, 2, 0, cliprect, 0);
+		copybitmap(bitmap, *m_tmpbitmap0, flip, flip, 0, 0, cliprect);
+		copybitmap_trans(bitmap, *m_tmpbitmap1, flip, flip, 2, 0, cliprect, 0);
 	}
 	else
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 	return 0;
 }
 
@@ -165,17 +166,16 @@ static SCREEN_UPDATE_IND16( mjsister )
  *
  *************************************/
 
-static TIMER_CALLBACK( dac_callback )
+TIMER_CALLBACK_MEMBER(mjsister_state::dac_callback)
 {
-	mjsister_state *state = machine.driver_data<mjsister_state>();
-	UINT8 *DACROM = state->memregion("samples")->base();
+	UINT8 *DACROM = memregion("samples")->base();
 
-	state->m_dac->write_unsigned8(DACROM[(state->m_dac_bank * 0x10000 + state->m_dac_adr++) & 0x1ffff]);
+	m_dac->write_unsigned8(DACROM[(m_dac_bank * 0x10000 + m_dac_adr++) & 0x1ffff]);
 
-	if (((state->m_dac_adr & 0xff00 ) >> 8) !=  state->m_dac_adr_e)
-		machine.scheduler().timer_set(attotime::from_hz(MCLK) * 1024, FUNC(dac_callback));
+	if (((m_dac_adr & 0xff00 ) >> 8) !=  m_dac_adr_e)
+		machine().scheduler().timer_set(attotime::from_hz(MCLK) * 1024, timer_expired_delegate(FUNC(mjsister_state::dac_callback),this));
 	else
-		state->m_dac_busy = 0;
+		m_dac_busy = 0;
 }
 
 WRITE8_MEMBER(mjsister_state::mjsister_dac_adr_s_w)
@@ -189,7 +189,7 @@ WRITE8_MEMBER(mjsister_state::mjsister_dac_adr_e_w)
 	m_dac_adr = m_dac_adr_s << 8;
 
 	if (m_dac_busy == 0)
-		machine().scheduler().synchronize(FUNC(dac_callback));
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(mjsister_state::dac_callback),this));
 
 	m_dac_busy = 1;
 }
@@ -499,7 +499,7 @@ static MACHINE_CONFIG_START( mjsister, mjsister_state )
 	MCFG_CPU_ADD("maincpu", Z80, MCLK/2) /* 6.000 MHz */
 	MCFG_CPU_PROGRAM_MAP(mjsister_map)
 	MCFG_CPU_IO_MAP(mjsister_io_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(mjsister_state, irq0_line_hold, 2*60)
 
 
 	/* video hardware */
@@ -508,7 +508,7 @@ static MACHINE_CONFIG_START( mjsister, mjsister_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256+4, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255+4, 8, 247)
-	MCFG_SCREEN_UPDATE_STATIC(mjsister)
+	MCFG_SCREEN_UPDATE_DRIVER(mjsister_state, screen_update_mjsister)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MCFG_PALETTE_LENGTH(256)

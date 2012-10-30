@@ -56,6 +56,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_cultures(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(cultures_interrupt);
 };
 
 
@@ -98,32 +100,31 @@ void cultures_state::video_start()
 	m_bg2_tilemap->set_scrolldy(255, 0);
 }
 
-static SCREEN_UPDATE_IND16( cultures )
+UINT32 cultures_state::screen_update_cultures(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cultures_state *state = screen.machine().driver_data<cultures_state>();
 	int attr;
 
 	// tilemaps attributes
-	attr = (state->m_bg0_regs_x[3] & 1 ? TILEMAP_FLIPX : 0) | (state->m_bg0_regs_y[3] & 1 ? TILEMAP_FLIPY : 0);
-	state->m_bg0_tilemap->set_flip(attr);
+	attr = (m_bg0_regs_x[3] & 1 ? TILEMAP_FLIPX : 0) | (m_bg0_regs_y[3] & 1 ? TILEMAP_FLIPY : 0);
+	m_bg0_tilemap->set_flip(attr);
 
-	attr = (state->m_bg1_regs_x[3] & 1 ? TILEMAP_FLIPX : 0) | (state->m_bg1_regs_y[3] & 1 ? TILEMAP_FLIPY : 0);
-	state->m_bg1_tilemap->set_flip(attr);
+	attr = (m_bg1_regs_x[3] & 1 ? TILEMAP_FLIPX : 0) | (m_bg1_regs_y[3] & 1 ? TILEMAP_FLIPY : 0);
+	m_bg1_tilemap->set_flip(attr);
 
-	attr = (state->m_bg2_regs_x[3] & 1 ? TILEMAP_FLIPX : 0) | (state->m_bg2_regs_y[3] & 1 ? TILEMAP_FLIPY : 0);
-	state->m_bg2_tilemap->set_flip(attr);
+	attr = (m_bg2_regs_x[3] & 1 ? TILEMAP_FLIPX : 0) | (m_bg2_regs_y[3] & 1 ? TILEMAP_FLIPY : 0);
+	m_bg2_tilemap->set_flip(attr);
 
 	// tilemaps scrolls
-	state->m_bg0_tilemap->set_scrollx(0, (state->m_bg0_regs_x[2] << 8) + state->m_bg0_regs_x[0]);
-	state->m_bg1_tilemap->set_scrollx(0, (state->m_bg1_regs_x[2] << 8) + state->m_bg1_regs_x[0]);
-	state->m_bg2_tilemap->set_scrollx(0, (state->m_bg2_regs_x[2] << 8) + state->m_bg2_regs_x[0]);
-	state->m_bg0_tilemap->set_scrolly(0, (state->m_bg0_regs_y[2] << 8) + state->m_bg0_regs_y[0]);
-	state->m_bg1_tilemap->set_scrolly(0, (state->m_bg1_regs_y[2] << 8) + state->m_bg1_regs_y[0]);
-	state->m_bg2_tilemap->set_scrolly(0, (state->m_bg2_regs_y[2] << 8) + state->m_bg2_regs_y[0]);
+	m_bg0_tilemap->set_scrollx(0, (m_bg0_regs_x[2] << 8) + m_bg0_regs_x[0]);
+	m_bg1_tilemap->set_scrollx(0, (m_bg1_regs_x[2] << 8) + m_bg1_regs_x[0]);
+	m_bg2_tilemap->set_scrollx(0, (m_bg2_regs_x[2] << 8) + m_bg2_regs_x[0]);
+	m_bg0_tilemap->set_scrolly(0, (m_bg0_regs_y[2] << 8) + m_bg0_regs_y[0]);
+	m_bg1_tilemap->set_scrolly(0, (m_bg1_regs_y[2] << 8) + m_bg1_regs_y[0]);
+	m_bg2_tilemap->set_scrolly(0, (m_bg2_regs_y[2] << 8) + m_bg2_regs_y[0]);
 
-	state->m_bg2_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_bg0_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_bg1_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg2_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg0_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg1_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -362,11 +363,10 @@ static GFXDECODE_START( culture )
 	GFXDECODE_ENTRY("gfx3", 0, gfxlayout, 0x1000, 0x10 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( cultures_interrupt )
+INTERRUPT_GEN_MEMBER(cultures_state::cultures_interrupt)
 {
-	cultures_state *state = device->machine().driver_data<cultures_state>();
-	if (state->m_irq_enable)
-		device->execute().set_input_line(0, HOLD_LINE);
+	if (m_irq_enable)
+		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 void cultures_state::machine_start()
@@ -398,7 +398,7 @@ static MACHINE_CONFIG_START( cultures, cultures_state )
 	MCFG_CPU_ADD("maincpu", Z80, MCLK/2) /* 8.000 MHz */
 	MCFG_CPU_PROGRAM_MAP(cultures_map)
 	MCFG_CPU_IO_MAP(cultures_io_map)
-	MCFG_CPU_VBLANK_INT("screen", cultures_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cultures_state,  cultures_interrupt)
 
 
 	/* video hardware */
@@ -407,7 +407,7 @@ static MACHINE_CONFIG_START( cultures, cultures_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cultures)
+	MCFG_SCREEN_UPDATE_DRIVER(cultures_state, screen_update_cultures)
 
 	MCFG_GFXDECODE(culture)
 	MCFG_PALETTE_LENGTH(0x2000)

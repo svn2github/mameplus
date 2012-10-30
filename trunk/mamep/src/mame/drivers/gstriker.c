@@ -216,7 +216,7 @@ WRITE8_MEMBER(gstriker_state::gs_sh_bankswitch_w)
 	UINT8 *RAM = memregion("audiocpu")->base();
 	int bankaddress;
 
-	bankaddress = 0x10000 + (data & 0x03) * 0x8000;
+	bankaddress = (data & 0x07) * 0x8000;
 	membank("bank1")->set_base(&RAM[bankaddress]);
 }
 
@@ -542,7 +542,7 @@ INPUT_PORTS_END
 static MACHINE_CONFIG_START( gstriker, gstriker_state )
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(gstriker_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gstriker_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -555,10 +555,16 @@ static MACHINE_CONFIG_START( gstriker, gstriker_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(5000) /* hand-tuned, it needs a bit */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gstriker)
+	MCFG_SCREEN_UPDATE_DRIVER(gstriker_state, screen_update_gstriker)
 
 	MCFG_GFXDECODE(gstriker)
 	MCFG_PALETTE_LENGTH(0x800)
+
+	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
+	MCFG_VSYSTEM_SPR_SET_GFXREGION(2)
+	MCFG_VSYSTEM_SPR_SET_PALBASE(0x10)
+	MCFG_VSYSTEM_SPR_SET_PALMASK(0x1f)
+	MCFG_VSYSTEM_SPR_SET_TRANSPEN(0)
 
 	MCFG_VIDEO_START_OVERRIDE(gstriker_state,gstriker)
 
@@ -574,13 +580,17 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( twrldc94, gstriker )
 	MCFG_VIDEO_START_OVERRIDE(gstriker_state, twrldc94 )
+
+	MCFG_DEVICE_MODIFY("vsystem_spr")
+	MCFG_VSYSTEM_SPR_SET_PALBASE(0x60)
+
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_START( vgoal, gstriker_state )
 	MCFG_CPU_ADD("maincpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(vgoal_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gstriker_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,8000000/2)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -593,10 +603,14 @@ static MACHINE_CONFIG_START( vgoal, gstriker_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(5000) /* hand-tuned, it needs a bit */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gstriker)
+	MCFG_SCREEN_UPDATE_DRIVER(gstriker_state, screen_update_gstriker)
 
 	MCFG_GFXDECODE(gstriker)
 	MCFG_PALETTE_LENGTH(0x2000)
+
+	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
+	MCFG_VSYSTEM_SPR_SET_GFXREGION(2)
+	MCFG_VSYSTEM_SPR_SET_PALBASE(0x00)
 
 	MCFG_VIDEO_START_OVERRIDE(gstriker_state,vgoalsoc)
 
@@ -621,7 +635,6 @@ ROM_START( gstriker )
 
 	ROM_REGION( 0x40000, "audiocpu", 0 )
 	ROM_LOAD( "human-3_27c1001.u87",  0x00000, 0x20000, CRC(2f28c01e) SHA1(63829ad7969d197b2f2c87cb88bdb9e9880ed2d6) )
-	ROM_RELOAD(               0x10000, 0x20000 )
 
 	ROM_REGION( 0x20000, "gfx1", 0 ) // score tilemap
 	ROM_LOAD( "human-2_27c1024.u79",  0x00000, 0x20000, CRC(a981993b) SHA1(ed92c7581d2b84a8628744dd5f8a2266c45dcd5b) )
@@ -657,7 +670,6 @@ ROM_START( gstrikera )
 
 	ROM_REGION( 0x40000, "audiocpu", 0 )
 	ROM_LOAD( "human-3_27c1001.u87",  0x00000, 0x20000, CRC(2f28c01e) SHA1(63829ad7969d197b2f2c87cb88bdb9e9880ed2d6) )
-	ROM_RELOAD(               0x10000, 0x20000 )
 
 	ROM_REGION( 0x20000, "gfx1", 0 ) // score tilemap
 	ROM_LOAD( "human-2_27c1024.u79",  0x00000, 0x20000, CRC(a981993b) SHA1(ed92c7581d2b84a8628744dd5f8a2266c45dcd5b) )
@@ -1013,11 +1025,11 @@ static void mcu_init( running_machine &machine )
 	state->m_pending_command = 0;
 	state->m_mcu_data = 0;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20008a, 0x20008b, write16_delegate(FUNC(gstriker_state::twrldc94_mcu_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20008a, 0x20008b, read16_delegate(FUNC(gstriker_state::twrldc94_mcu_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x20008a, 0x20008b, write16_delegate(FUNC(gstriker_state::twrldc94_mcu_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x20008a, 0x20008b, read16_delegate(FUNC(gstriker_state::twrldc94_mcu_r),state));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20008e, 0x20008f, write16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20008e, 0x20008f, read16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x20008e, 0x20008f, write16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x20008e, 0x20008f, read16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_r),state));
 }
 
 DRIVER_INIT_MEMBER(gstriker_state,twrldc94)
@@ -1037,8 +1049,8 @@ DRIVER_INIT_MEMBER(gstriker_state,vgoalsoc)
 	m_gametype = 3;
 	mcu_init( machine() );
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x200090, 0x200091, write16_delegate(FUNC(gstriker_state::vbl_toggle_w),this)); // vblank toggle
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200090, 0x200091, read16_delegate(FUNC(gstriker_state::vbl_toggle_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x200090, 0x200091, write16_delegate(FUNC(gstriker_state::vbl_toggle_w),this)); // vblank toggle
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200090, 0x200091, read16_delegate(FUNC(gstriker_state::vbl_toggle_r),this));
 }
 
 /*** GAME DRIVERS ************************************************************/

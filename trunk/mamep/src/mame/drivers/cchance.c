@@ -221,7 +221,7 @@ static MACHINE_CONFIG_START( cchance, cchance_state )
 
 	MCFG_CPU_ADD("maincpu", Z80,4000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cchance_state,  irq0_line_hold)
 
 	MCFG_MACHINE_START_OVERRIDE(cchance_state,cchance)
 	MCFG_MACHINE_RESET_OVERRIDE(cchance_state,cchance)
@@ -236,8 +236,8 @@ static MACHINE_CONFIG_START( cchance, cchance_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(tnzs)
-	MCFG_SCREEN_VBLANK_STATIC(tnzs)
+	MCFG_SCREEN_UPDATE_DRIVER(cchance_state, screen_update_tnzs)
+	MCFG_SCREEN_VBLANK_DRIVER(cchance_state, screen_eof_tnzs)
 
 	MCFG_PALETTE_LENGTH(512)
 	MCFG_PALETTE_INIT_OVERRIDE(cchance_state,arknoid2)

@@ -108,6 +108,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_reel_3_tile_info);
 	TILE_GET_INFO_MEMBER(get_reel_4_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_skylncr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(skylncr_vblank_interrupt);
 };
 
 
@@ -182,13 +184,12 @@ void skylncr_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( skylncr )
+UINT32 skylncr_state::screen_update_skylncr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	skylncr_state *state = screen.machine().driver_data<skylncr_state>();
 	int i;
 
 	bitmap.fill(0, cliprect);
-	state->m_reel_1_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_reel_1_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	// are these hardcoded, or registers?
 	const rectangle visible1(0*8, (20+48)*8-1,  4*8,  (4+7)*8-1);
@@ -197,17 +198,17 @@ static SCREEN_UPDATE_IND16( skylncr )
 
 	for (i= 0;i < 64;i++)
 	{
-		state->m_reel_2_tilemap->set_scrolly(i, state->m_reelscroll2[i]);
-		state->m_reel_3_tilemap->set_scrolly(i, state->m_reelscroll3[i]);
-		state->m_reel_4_tilemap->set_scrolly(i, state->m_reelscroll4[i]);
+		m_reel_2_tilemap->set_scrolly(i, m_reelscroll2[i]);
+		m_reel_3_tilemap->set_scrolly(i, m_reelscroll3[i]);
+		m_reel_4_tilemap->set_scrolly(i, m_reelscroll4[i]);
 	}
 
-	state->m_reel_2_tilemap->draw(bitmap, visible1, 0, 0);
-	state->m_reel_3_tilemap->draw(bitmap, visible2, 0, 0);
-	state->m_reel_4_tilemap->draw(bitmap, visible3, 0, 0);
+	m_reel_2_tilemap->draw(bitmap, visible1, 0, 0);
+	m_reel_3_tilemap->draw(bitmap, visible2, 0, 0);
+	m_reel_4_tilemap->draw(bitmap, visible3, 0, 0);
 
 
-	state->m_tmap->draw(bitmap, cliprect, 0, 0);
+	m_tmap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -695,10 +696,9 @@ static const ay8910_interface ay8910_config =
 
 
 // It runs in IM 0, thus needs an opcode on the data bus
-static INTERRUPT_GEN( skylncr_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(skylncr_state::skylncr_vblank_interrupt)
 {
-	skylncr_state *state = device->machine().driver_data<skylncr_state>();
-	if (state->m_nmi_enable) device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enable) device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -712,7 +712,7 @@ static MACHINE_CONFIG_START( skylncr, skylncr_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(mem_map_skylncr)
 	MCFG_CPU_IO_MAP(io_map_skylncr)
-	MCFG_CPU_VBLANK_INT("screen", skylncr_vblank_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", skylncr_state,  skylncr_vblank_interrupt)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -726,7 +726,7 @@ static MACHINE_CONFIG_START( skylncr, skylncr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(skylncr)
+	MCFG_SCREEN_UPDATE_DRIVER(skylncr_state, screen_update_skylncr)
 
 	MCFG_GFXDECODE(skylncr)
 	MCFG_PALETTE_LENGTH(0x200)

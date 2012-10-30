@@ -5,6 +5,17 @@ Free Kick  - (c) 1987 Sega / Nihon System (made by Nihon, licensed to Sega)
 Driver by Tomasz Slanina  dox@space.pl
 based on initial work made by David Haywood
 
+Z80 @ 3MHz (12.000/4)
+IRQ frequency 120Hz, low for 4.02us, high for 8.1879ms
+4*SN76489AN @ 3MHz (12.000/4)
+
+12MHz (mclk), 6MHz pixel clock (12.000/2)
+263 scanlines per frame - 224 visible + 39 blanking+sync;
+16 lines bottom border, 7 lines vsync, 16 lines top border
+768 mclks scanline - 512 mclks visible, 256 mclks blanking+sync;
+96 mclks left border, 96 mclks right border, 64 mclks sync
+
+
 Notes:
 - Quite interestingly, Free Kick's sound ROM contains a Z80 program, but
   there isn't a sound CPU and that program isn't executed. Instead, the main
@@ -76,11 +87,10 @@ WRITE8_MEMBER(freekick_state::nmi_enable_w)
 	m_nmi_en = data & 1;
 }
 
-static INTERRUPT_GEN( freekick_irqgen )
+INTERRUPT_GEN_MEMBER(freekick_state::freekick_irqgen)
 {
-	freekick_state *state = device->machine().driver_data<freekick_state>();
-	if (state->m_nmi_en)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_en)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(freekick_state::oigas_5_w)
@@ -169,10 +179,10 @@ static ADDRESS_MAP_START( pbillrd_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("IN1")
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSW1") AM_WRITE(pbillrd_bankswitch_w)
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSW2")
-	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76496_new_device, write)
-	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76496_new_device, write)
-	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76496_new_device, write)
+	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76489a_device, write)
+	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76489a_device, write)
+	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76489a_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( freekickb_map, AS_PROGRAM, 8, freekick_state )
@@ -189,10 +199,10 @@ static ADDRESS_MAP_START( freekickb_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0xf802, 0xf803) AM_WRITE(coin_w)
 	AM_RANGE(0xf804, 0xf804) AM_WRITE(nmi_enable_w)
 	AM_RANGE(0xf806, 0xf806) AM_WRITE(spinner_select_w)
-	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76496_new_device, write)
-	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76496_new_device, write)
-	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76496_new_device, write)
+	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76489a_device, write)
+	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76489a_device, write)
+	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76489a_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gigas_map, AS_PROGRAM, 8, freekick_state )
@@ -208,10 +218,10 @@ static ADDRESS_MAP_START( gigas_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("IN1")
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSW1") AM_WRITENOP //bankswitch ?
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSW2")
-	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76496_new_device, write)
-	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76496_new_device, write)
-	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76496_new_device, write)
-	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76496_new_device, write)
+	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76489a_device, write)
+	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76489a_device, write)
+	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76489a_device, write)
+	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76489a_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gigas_io_map, AS_IO, 8, freekick_state )
@@ -585,7 +595,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(freekick_state,freekick)
 {
-
 	save_item(NAME(m_romaddr));
 	save_item(NAME(m_spinner));
 	save_item(NAME(m_nmi_en));
@@ -594,7 +603,6 @@ MACHINE_START_MEMBER(freekick_state,freekick)
 
 MACHINE_RESET_MEMBER(freekick_state,freekick)
 {
-
 	m_romaddr = 0;
 	m_spinner = 0;
 	m_nmi_en = 0;
@@ -610,7 +618,6 @@ MACHINE_START_MEMBER(freekick_state,pbillrd)
 
 MACHINE_START_MEMBER(freekick_state,oigas)
 {
-
 	save_item(NAME(m_inval));
 	save_item(NAME(m_outval));
 	save_item(NAME(m_cnt));
@@ -620,7 +627,6 @@ MACHINE_START_MEMBER(freekick_state,oigas)
 
 MACHINE_RESET_MEMBER(freekick_state,oigas)
 {
-
 	MACHINE_RESET_CALL_MEMBER(freekick);
 
 	m_inval = 0;
@@ -630,52 +636,51 @@ MACHINE_RESET_MEMBER(freekick_state,oigas)
 
 static MACHINE_CONFIG_START( base, freekick_state )
 
-	MCFG_CPU_ADD("maincpu",Z80, 18432000/6)	//confirmed
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", Z80, XTAL_12MHz/4)
 	MCFG_CPU_PROGRAM_MAP(pbillrd_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 50*3) //??
-	MCFG_CPU_VBLANK_INT("screen", freekick_irqgen)
+	MCFG_CPU_PERIODIC_INT_DRIVER(freekick_state, irq0_line_hold, 120) // measured on PCB
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", freekick_state,  freekick_irqgen)
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_RAW_PARAMS(XTAL_12MHz/2, 768/2, 0, 512/2, 263, 0+16, 224+16)
+	MCFG_SCREEN_UPDATE_DRIVER(freekick_state, screen_update_pbillrd)
 
 	MCFG_GFXDECODE(freekick)
-
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(32*8, 32*8)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pbillrd)
-
 	MCFG_PALETTE_LENGTH(0x200)
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496_NEW, 12000000/4)
+	MCFG_SOUND_ADD("sn1", SN76489A, XTAL_12MHz/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496_NEW, 12000000/4)
+	MCFG_SOUND_ADD("sn2", SN76489A, XTAL_12MHz/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496_NEW, 12000000/4)
+	MCFG_SOUND_ADD("sn3", SN76489A, XTAL_12MHz/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn4", SN76496_NEW, 12000000/4)
+	MCFG_SOUND_ADD("sn4", SN76489A, XTAL_12MHz/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( pbillrd, base )
 
+	/* basic machine hardware */
 	MCFG_MACHINE_START_OVERRIDE(freekick_state,pbillrd)
 	MCFG_MACHINE_RESET_OVERRIDE(freekick_state,freekick)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( freekickb, base )
 
+	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(freekickb_map)
 	MCFG_CPU_IO_MAP(freekickb_io_map)
@@ -686,12 +691,14 @@ static MACHINE_CONFIG_DERIVED( freekickb, base )
 	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
 	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
 
+	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(freekick)
+	MCFG_SCREEN_UPDATE_DRIVER(freekick_state, screen_update_freekick)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( gigas, base )
 
+	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(gigas_map)
 	MCFG_CPU_IO_MAP(gigas_io_map)
@@ -699,11 +706,14 @@ static MACHINE_CONFIG_DERIVED( gigas, base )
 	MCFG_MACHINE_START_OVERRIDE(freekick_state,freekick)
 	MCFG_MACHINE_RESET_OVERRIDE(freekick_state,freekick)
 
+	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(gigas)
+	MCFG_SCREEN_UPDATE_DRIVER(freekick_state, screen_update_gigas)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( oigas, gigas )
+
+	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(oigas_io_map)
 
@@ -1125,8 +1135,8 @@ ROM_END
 
 DRIVER_INIT_MEMBER(freekick_state,gigasb)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0xbfff, machine().root_device().memregion("maincpu")->base() + 0x10000);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space.set_decrypted_region(0x0000, 0xbfff, machine().root_device().memregion("maincpu")->base() + 0x10000);
 }
 
 

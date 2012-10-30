@@ -55,8 +55,8 @@ Known Issues:
 
 
 
-#define CPUA_IRQ_ENABLE (state->m_CPUA_register & 0x20)
-#define CPUB_IRQ_ENABLE (state->m_CPUB_register & 0x02)
+#define CPUA_IRQ_ENABLE (m_CPUA_register & 0x20)
+#define CPUB_IRQ_ENABLE (m_CPUB_register & 0x02)
 
 
 
@@ -229,7 +229,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, twin16_state )
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(twin16_upd_reset_w)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("konami", k007232_r, k007232_w)
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xd000, 0xd000) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(twin16_upd_start_w)
 	AM_RANGE(0xf000, 0xf000) AM_READ(twin16_upd_busy_r)	// miaj writes 0 to it
@@ -685,16 +685,14 @@ static const k007232_interface k007232_config =
 
 /* Interrupt Generators */
 
-static INTERRUPT_GEN( CPUA_interrupt )
+INTERRUPT_GEN_MEMBER(twin16_state::CPUA_interrupt)
 {
-	twin16_state *state = device->machine().driver_data<twin16_state>();
-	if (CPUA_IRQ_ENABLE) device->execute().set_input_line(5, HOLD_LINE);
+	if (CPUA_IRQ_ENABLE) device.execute().set_input_line(5, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( CPUB_interrupt )
+INTERRUPT_GEN_MEMBER(twin16_state::CPUB_interrupt)
 {
-	twin16_state *state = device->machine().driver_data<twin16_state>();
-	if (CPUB_IRQ_ENABLE) device->execute().set_input_line(5, HOLD_LINE);
+	if (CPUB_IRQ_ENABLE) device.execute().set_input_line(5, HOLD_LINE);
 }
 
 /* Machine Drivers */
@@ -722,11 +720,11 @@ static MACHINE_CONFIG_START( twin16, twin16_state )
 	// basic machine hardware
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_18_432MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", CPUA_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", twin16_state,  CPUA_interrupt)
 
 	MCFG_CPU_ADD("sub", M68000, XTAL_18_432MHz/2)
 	MCFG_CPU_PROGRAM_MAP(sub_map)
-	MCFG_CPU_VBLANK_INT("screen", CPUB_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", twin16_state,  CPUB_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -745,8 +743,8 @@ static MACHINE_CONFIG_START( twin16, twin16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2062)) // 32 lines
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(twin16)
-	MCFG_SCREEN_VBLANK_STATIC(twin16)
+	MCFG_SCREEN_UPDATE_DRIVER(twin16_state, screen_update_twin16)
+	MCFG_SCREEN_VBLANK_DRIVER(twin16_state, screen_eof_twin16)
 
 	MCFG_GFXDECODE(twin16)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -756,7 +754,7 @@ static MACHINE_CONFIG_START( twin16, twin16_state )
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 7159160/2)
+	MCFG_YM2151_ADD("ymsnd", 7159160/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -780,7 +778,7 @@ static MACHINE_CONFIG_START( fround, twin16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
 	MCFG_CPU_PROGRAM_MAP(fround_map)
-	MCFG_CPU_VBLANK_INT("screen", CPUA_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", twin16_state,  CPUA_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -799,8 +797,8 @@ static MACHINE_CONFIG_START( fround, twin16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(twin16)
-	MCFG_SCREEN_VBLANK_STATIC(twin16)
+	MCFG_SCREEN_UPDATE_DRIVER(twin16_state, screen_update_twin16)
+	MCFG_SCREEN_VBLANK_DRIVER(twin16_state, screen_eof_twin16)
 
 	MCFG_GFXDECODE(twin16)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -810,7 +808,7 @@ static MACHINE_CONFIG_START( fround, twin16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 7159160/2)
+	MCFG_YM2151_ADD("ymsnd", 7159160/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

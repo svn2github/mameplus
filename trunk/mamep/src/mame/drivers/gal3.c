@@ -129,6 +129,7 @@ better notes (complete chip lists) for each board still needed
 #include "includes/namcos2.h"
 #include "cpu/tms32025/tms32025.h"
 #include "includes/namcoic.h"
+#include "machine/nvram.h"
 #include "sound/c140.h"
 #include "rendlay.h"
 
@@ -138,12 +139,10 @@ class gal3_state : public namcos2_shared_state
 public:
 	gal3_state(const machine_config &mconfig, device_type type, const char *tag)
 		: namcos2_shared_state(mconfig, type, tag) ,
-		m_nvmem(*this, "nvmem"),
 		m_rso_shared_ram(*this, "rso_shared_ram"){ }
 
 	UINT32 *m_mpSharedRAM0;
 	//UINT32 *m_mpSharedRAM1;
-	required_shared_ptr<UINT32> m_nvmem;
 	UINT16 m_namcos21_video_enable;
 	required_shared_ptr<UINT16> m_rso_shared_ram;
 	UINT32 m_led_mst;
@@ -159,6 +158,7 @@ public:
 	DECLARE_READ32_MEMBER(rso_r);
 	DECLARE_WRITE32_MEMBER(rso_w);
 	DECLARE_VIDEO_START(gal3);
+	UINT32 screen_update_gal3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -193,34 +193,33 @@ static void update_palette( running_machine &machine )
 	}
 } /* update_palette */
 
-static SCREEN_UPDATE_RGB32(gal3)
+UINT32 gal3_state::screen_update_gal3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	gal3_state *state = screen.machine().driver_data<gal3_state>();
 	int i;
 	char mst[18], slv[18];
 	static int pivot = 15;
 	int pri;
 
-	update_palette(screen.machine());
+	update_palette(machine());
 
-	if( screen.machine().input().code_pressed_once(KEYCODE_H)&&(pivot<15) )	pivot+=1;
-	if( screen.machine().input().code_pressed_once(KEYCODE_J)&&(pivot>0) )	pivot-=1;
+	if( machine().input().code_pressed_once(KEYCODE_H)&&(pivot<15) )	pivot+=1;
+	if( machine().input().code_pressed_once(KEYCODE_J)&&(pivot>0) )	pivot-=1;
 
 	for( pri=0; pri<pivot; pri++ )
 	{
-		state->c355_obj_draw(bitmap, cliprect, pri);
+		c355_obj_draw(bitmap, cliprect, pri);
 	}
 
 /*  CopyVisiblePolyFrameBuffer( bitmap, cliprect,0,0x7fbf );
 
     for( pri=pivot; pri<15; pri++ )
     {
-        state->c355_obj_draw(bitmap, cliprect, pri);
+        c355_obj_draw(bitmap, cliprect, pri);
     }*/
 
 	// CPU Diag LEDs
 	mst[17]='\0', slv[17]='\0';
-/// printf("mst=0x%x\tslv=0x%x\n", state->m_led_mst, state->m_led_slv);
+/// printf("mst=0x%x\tslv=0x%x\n", m_led_mst, m_led_slv);
 	for(i=16;i<32;i++)
 	{
 		int t;
@@ -230,12 +229,12 @@ static SCREEN_UPDATE_RGB32(gal3)
 			t=i+1;
 		mst[8]=' '; slv[8]=' ';
 
-		if(state->m_led_mst&(1<<i))
+		if(m_led_mst&(1<<i))
 			mst[t-16]='*';
 		else
 			mst[t-16]='O';
 
-		if(state->m_led_slv&(1<<i))
+		if(m_led_slv&(1<<i))
 			slv[t-16]='*';
 		else
 			slv[t-16]='O';
@@ -244,42 +243,6 @@ static SCREEN_UPDATE_RGB32(gal3)
 	popmessage("LED_MST:  %s\nLED_SLV:  %s\n2D Layer: 0-%d (Press H for +, J for -)\n", mst, slv, pivot);
 
 	return 0;
-}
-
-
-static NVRAM_HANDLER( gal3 )
-{
-	gal3_state *state = machine.driver_data<gal3_state>();
-	int i;
-	UINT8 data[4];
-	if( read_or_write )
-	{
-		for( i=0; i<state->m_nvmem.bytes()/4; i++ )
-		{
-			UINT32 dword = state->m_nvmem[i];
-			data[0] = dword>>24;
-			data[1] = (dword&0x00ff0000)>>16;
-			data[2] = (dword&0x0000ff00)>>8;
-			data[3] = dword&0xff;
-			file->write( data, 4 );
-		}
-	}
-	else
-	{
-		if( file )
-		{
-			for( i=0; i<state->m_nvmem.bytes()/4; i++ )
-			{
-				file->read( data, 4 );
-				state->m_nvmem[i] = (data[0]<<24)|(data[1]<<16)|(data[2]<<8)|data[3];
-			}
-		}
-		else
-		{
-			/* fill in the default values */
-			memset( state->m_nvmem, 0x00, state->m_nvmem.bytes() );
-		}
-	}
 }
 
 
@@ -627,15 +590,15 @@ static const c140_interface C140_interface =
 static MACHINE_CONFIG_START( gal3, gal3_state )
 	MCFG_CPU_ADD("cpumst", M68020, 49152000/2)
 	MCFG_CPU_PROGRAM_MAP(cpu_mst_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", gal3_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("cpuslv", M68020, 49152000/2)
 	MCFG_CPU_PROGRAM_MAP(cpu_slv_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", gal3_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("rs_cpu", M68000, 49152000/4)
 	MCFG_CPU_PROGRAM_MAP(rs_cpu_map)
-	MCFG_CPU_VBLANK_INT("lscreen", irq5_line_hold)	/// programmable via 148 IC
+	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", gal3_state,  irq5_line_hold)	/// programmable via 148 IC
 
 	MCFG_CPU_ADD("sound_cpu", M68000, 12000000) // ??
 	MCFG_CPU_PROGRAM_MAP(sound_cpu_map)
@@ -651,21 +614,21 @@ static MACHINE_CONFIG_START( gal3, gal3_state )
 */
 	MCFG_QUANTUM_TIME(attotime::from_hz(60*8000)) /* 8000 CPU slices per frame */
 
-	MCFG_NVRAM_HANDLER(gal3)
+	MCFG_NVRAM_ADD_0FILL("nvmem")
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 512-1)
-	MCFG_SCREEN_UPDATE_STATIC(gal3)
+	MCFG_SCREEN_UPDATE_DRIVER(gal3_state, screen_update_gal3)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 512-1)
-	MCFG_SCREEN_UPDATE_STATIC(gal3)
+	MCFG_SCREEN_UPDATE_DRIVER(gal3_state, screen_update_gal3)
 
 	MCFG_GFXDECODE(namcos21)
 	MCFG_PALETTE_LENGTH(NAMCOS21_NUM_COLORS)

@@ -50,6 +50,7 @@
 *********************************************************************/
 
 #include "emu.h"
+#include "machine/nvram.h"
 #include "cpu/e132xs/e132xs.h"
 
 
@@ -77,12 +78,13 @@ public:
 	DECLARE_DRIVER_INIT(kdynastg);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_dgpix(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
 READ32_MEMBER(dgpix_state::flash_r)
 {
-	UINT32 *ROM = (UINT32 *)machine().root_device().memregion("user1")->base();
+	UINT32 *ROM = (UINT32 *)memregion("flash")->base();
 
 	if(offset >= (0x2000000 - m_flash_roms * 0x400000) / 4)
 	{
@@ -119,7 +121,7 @@ WRITE32_MEMBER(dgpix_state::flash_w)
 		if(data == 0xd0d00000)
 		{
 			// point to game settings
-			UINT8 *rom = (UINT8 *)machine().root_device().memregion("user1")->base() + offset*4;
+			UINT8 *rom = (UINT8 *)memregion("flash")->base() + offset*4;
 
 			// erase one block
 			memset(rom, 0xff, 0x10000);
@@ -137,7 +139,7 @@ WRITE32_MEMBER(dgpix_state::flash_w)
 		}
 		else
 		{
-			UINT16 *rom = (UINT16 *)machine().root_device().memregion("user1")->base();
+			UINT16 *rom = (UINT16 *)memregion("flash")->base();
 
 			// write game settings
 
@@ -208,7 +210,7 @@ static ADDRESS_MAP_START( cpu_map, AS_PROGRAM, 32, dgpix_state )
 	AM_RANGE(0x40000000, 0x4003ffff) AM_READWRITE(vram_r, vram_w)
 	AM_RANGE(0xe0000000, 0xe1ffffff) AM_READWRITE(flash_r, flash_w)
 	AM_RANGE(0xe2000000, 0xe3ffffff) AM_READWRITE(flash_r, flash_w)
-	AM_RANGE(0xffc00000, 0xffffffff) AM_ROM AM_REGION("user1", 0x1c00000)
+	AM_RANGE(0xffc00000, 0xffffffff) AM_ROM AM_REGION("flash", 0x1c00000) AM_SHARE("nvram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( io_map, AS_IO, 32, dgpix_state )
@@ -222,36 +224,6 @@ static ADDRESS_MAP_START( io_map, AS_IO, 32, dgpix_state )
 	AM_RANGE(0x0c84, 0x0c87) AM_READNOP // sound status, checks bit 0x40 and 0x80
 ADDRESS_MAP_END
 
-
-static NVRAM_HANDLER( flashroms )
-{
-	if (read_or_write)
-	{
-		// point to game settings
-		UINT8 *rom = (UINT8 *)machine.root_device().memregion("user1")->base() + 0x1c00000 + 0x360000;
-		UINT8 tmp[0x40000];
-		int i;
-
-		// save the new settings
-		for( i = 0; i < 0x40000; i++ )
-			tmp[i] = rom[WORD_XOR_BE(i)];
-
-		file->write( tmp, 0x40000 );
-	}
-	else if (file)
-	{
-		// point to game settings
-		UINT8 *rom = (UINT8 *)machine.root_device().memregion("user1")->base() + 0x1c00000 + 0x360000;
-		UINT8 tmp[0x40000];
-		int i;
-
-		file->read( tmp, 0x40000 );
-
-		// overlap the default settings with the saved ones
-		for( i = 0; i < 0x40000; i++ )
-			rom[WORD_XOR_BE(i)] = tmp[i];
-	}
-}
 
 static INPUT_PORTS_START( dgpix )
 	PORT_START("VBLANK")
@@ -291,15 +263,14 @@ void dgpix_state::video_start()
 	m_vram = auto_alloc_array(machine(), UINT32, 0x40000*2/4);
 }
 
-static SCREEN_UPDATE_IND16( dgpix )
+UINT32 dgpix_state::screen_update_dgpix(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dgpix_state *state = screen.machine().driver_data<dgpix_state>();
 	int y;
 
 	for (y = 0; y < 240; y++)
 	{
 		int x;
-		UINT32 *src = &state->m_vram[(state->m_vbuffer ? 0 : 0x10000) | (y << 8)];
+		UINT32 *src = &m_vram[(m_vbuffer ? 0 : 0x10000) | (y << 8)];
 		UINT16 *dest = &bitmap.pix16(y);
 
 		for (x = 0; x < 320; x += 2)
@@ -334,7 +305,7 @@ static MACHINE_CONFIG_START( dgpix, dgpix_state )
     running at 16.9MHz
 */
 
-	MCFG_NVRAM_HANDLER(flashroms)
+	MCFG_NVRAM_ADD_NO_FILL("nvram")
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -342,7 +313,7 @@ static MACHINE_CONFIG_START( dgpix, dgpix_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(dgpix)
+	MCFG_SCREEN_UPDATE_DRIVER(dgpix_state, screen_update_dgpix)
 
 	MCFG_PALETTE_INIT(BBBBB_GGGGG_RRRRR)
 	MCFG_PALETTE_LENGTH(32768)
@@ -407,7 +378,7 @@ SEC KM6161002    : Graphics RAM (SOJ44)
 */
 
 ROM_START( xfiles )
-	ROM_REGION32_BE( 0x2000000, "user1", ROMREGION_ERASE00 ) /* Hyperstone CPU Code & Data */
+	ROM_REGION32_BE( 0x2000000, "flash", ROMREGION_ERASE00 ) /* Hyperstone CPU Code & Data */
 	/* 0 - 0x17fffff empty space */
 	ROM_LOAD16_WORD_SWAP( "u8.bin",  0x1800000, 0x400000, CRC(3b2c2bc1) SHA1(1c07fb5bd8a8c9b5fb169e6400fef845f3aee7aa) )
 	ROM_LOAD16_WORD_SWAP( "u9.bin",  0x1c00000, 0x400000, CRC(6ecdd1eb) SHA1(e26c9711e589865cc75ec693d382758fa52528b8) )
@@ -482,7 +453,7 @@ Notes:
 */
 
 ROM_START( kdynastg )
-	ROM_REGION32_BE( 0x2000000, "user1", ROMREGION_ERASE00 )  /* Hyperstone CPU Code & Data */
+	ROM_REGION32_BE( 0x2000000, "flash", ROMREGION_ERASE00 )  /* Hyperstone CPU Code & Data */
 	/* 0 - 0x0ffffff empty space */
 	ROM_LOAD16_WORD_SWAP( "flash.u6",  0x1000000, 0x400000, CRC(280dd64e) SHA1(0e23b227b1183fb5591c3a849b5a5fe7faa23cc8) )
 	ROM_LOAD16_WORD_SWAP( "flash.u7",  0x1400000, 0x400000, CRC(f9125894) SHA1(abaad31f7a02143ea7029e47e6baf2976365f70c) )
@@ -560,7 +531,7 @@ Notes:
 */
 
 ROM_START( fmaniac3 )
-	ROM_REGION32_BE( 0x2000000, "user1", ROMREGION_ERASE00 ) /* Hyperstone CPU Code & Data */
+	ROM_REGION32_BE( 0x2000000, "flash", ROMREGION_ERASE00 ) /* Hyperstone CPU Code & Data */
 	/* 0 - 0x17fffff empty space */
 	ROM_LOAD16_WORD_SWAP( "flash.u8", 0x1800000, 0x400000, CRC(dc08a224) SHA1(4d14145eb84ad13674296f81e90b9d60403fa0de) )
 	ROM_LOAD16_WORD_SWAP( "flash.u9", 0x1c00000, 0x400000, CRC(c1fee95f) SHA1(0ed5ed9fa18e7da9242a6df2c210c46de25a2281) )
@@ -574,7 +545,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(dgpix_state,xfiles)
 {
-	UINT8 *rom = (UINT8 *)memregion("user1")->base() + 0x1c00000;
+	UINT8 *rom = (UINT8 *)memregion("flash")->base() + 0x1c00000;
 
 	rom[BYTE4_XOR_BE(0x3aa92e)] = 3;
 	rom[BYTE4_XOR_BE(0x3aa92f)] = 0;
@@ -584,14 +555,14 @@ DRIVER_INIT_MEMBER(dgpix_state,xfiles)
 	rom[BYTE4_XOR_BE(0x3aa933)] = 0;
 
 //  protection related ?
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_read(0xf0c8b440, 0xf0c8b447);
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).nop_read(0xf0c8b440, 0xf0c8b447);
 
 	m_flash_roms = 2;
 }
 
 DRIVER_INIT_MEMBER(dgpix_state,kdynastg)
 {
-	UINT8 *rom = (UINT8 *)memregion("user1")->base() + 0x1c00000;
+	UINT8 *rom = (UINT8 *)memregion("flash")->base() + 0x1c00000;
 
 	rom[BYTE4_XOR_BE(0x3aaa10)] = 3; // 129f0 - nopped call
 	rom[BYTE4_XOR_BE(0x3aaa11)] = 0;
@@ -604,7 +575,7 @@ DRIVER_INIT_MEMBER(dgpix_state,kdynastg)
 	rom[BYTE4_XOR_BE(0x3a45c9)] = 0;
 
 //  protection related ?
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_read(0x12341234, 0x12341243);
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).nop_read(0x12341234, 0x12341243);
 
 	m_flash_roms = 4;
 }

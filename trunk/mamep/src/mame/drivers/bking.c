@@ -468,7 +468,7 @@ static MACHINE_CONFIG_START( bking, bking_state )
 	MCFG_CPU_ADD("main_cpu", Z80, XTAL_12MHz/4)	/* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(bking_map)
 	MCFG_CPU_IO_MAP(bking_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bking_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_6MHz/2)	/* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(bking_audio_map)
@@ -476,7 +476,7 @@ static MACHINE_CONFIG_START( bking, bking_state )
 	/* - no interrupts synced with vblank */
 	/* - NMI triggered by the main CPU */
 	/* - periodic IRQ, with frequency 6000000/(4*16*16*10*16) = 36.621 Hz, */
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)6000000/(4*16*16*10*16))
+	MCFG_CPU_PERIODIC_INT_DRIVER(bking_state, irq0_line_hold,  (double)6000000/(4*16*16*10*16))
 
 
 	/* video hardware */
@@ -485,8 +485,8 @@ static MACHINE_CONFIG_START( bking, bking_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bking)
-	MCFG_SCREEN_VBLANK_STATIC(bking)
+	MCFG_SCREEN_UPDATE_DRIVER(bking_state, screen_update_bking)
+	MCFG_SCREEN_VBLANK_DRIVER(bking_state, screen_eof_bking)
 
 	MCFG_GFXDECODE(bking)
 	MCFG_PALETTE_LENGTH(4*8+4*4+4*2+4*2)

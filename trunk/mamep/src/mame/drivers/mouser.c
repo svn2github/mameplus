@@ -25,11 +25,10 @@ WRITE8_MEMBER(mouser_state::mouser_nmi_enable_w)
 	m_nmi_enable = data;
 }
 
-static INTERRUPT_GEN( mouser_nmi_interrupt )
+INTERRUPT_GEN_MEMBER(mouser_state::mouser_nmi_interrupt)
 {
-	mouser_state *state = device->machine().driver_data<mouser_state>();
 
-	if (BIT(state->m_nmi_enable, 0))
+	if (BIT(m_nmi_enable, 0))
 		nmi_line_pulse(device);
 }
 
@@ -54,11 +53,10 @@ WRITE8_MEMBER(mouser_state::mouser_sound_nmi_clear_w)
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
-static INTERRUPT_GEN( mouser_sound_nmi_assert )
+INTERRUPT_GEN_MEMBER(mouser_state::mouser_sound_nmi_assert)
 {
-	mouser_state *state = device->machine().driver_data<mouser_state>();
-	if (BIT(state->m_nmi_enable, 0))
-		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	if (BIT(m_nmi_enable, 0))
+		device.execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static ADDRESS_MAP_START( mouser_map, AS_PROGRAM, 8, mouser_state )
@@ -205,12 +203,12 @@ static MACHINE_CONFIG_START( mouser, mouser_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(mouser_map)
-	MCFG_CPU_VBLANK_INT("screen", mouser_nmi_interrupt) /* NMI is masked externally */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mouser_state,  mouser_nmi_interrupt) /* NMI is masked externally */
 
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* ??? */
 	MCFG_CPU_PROGRAM_MAP(mouser_sound_map)
 	MCFG_CPU_IO_MAP(mouser_sound_io_map)
-	MCFG_CPU_PERIODIC_INT(mouser_sound_nmi_assert, 4*60) /* ??? This controls the sound tempo */
+	MCFG_CPU_PERIODIC_INT_DRIVER(mouser_state, mouser_sound_nmi_assert,  4*60) /* ??? This controls the sound tempo */
 
 
 	/* video hardware */
@@ -219,7 +217,7 @@ static MACHINE_CONFIG_START( mouser, mouser_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mouser)
+	MCFG_SCREEN_UPDATE_DRIVER(mouser_state, screen_update_mouser)
 
 	MCFG_GFXDECODE(mouser)
 	MCFG_PALETTE_LENGTH(64)
@@ -289,12 +287,12 @@ DRIVER_INIT_MEMBER(mouser_state,mouser)
 	/* Decode the opcodes */
 
 	offs_t i;
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x6000);
 	UINT8 *table = machine().root_device().memregion("user1")->base();
 
-	space->set_decrypted_region(0x0000, 0x5fff, decrypted);
+	space.set_decrypted_region(0x0000, 0x5fff, decrypted);
 
 	for (i = 0; i < 0x6000; i++)
 	{

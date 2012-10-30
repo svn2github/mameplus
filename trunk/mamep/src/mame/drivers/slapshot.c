@@ -171,17 +171,16 @@ WRITE16_MEMBER(slapshot_state::color_ram_word_w)
                 INTERRUPTS
 ***********************************************************/
 
-static TIMER_CALLBACK( slapshot_interrupt6 )
+TIMER_CALLBACK_MEMBER(slapshot_state::slapshot_interrupt6)
 {
-	slapshot_state *state = machine.driver_data<slapshot_state>();
-	state->m_maincpu->set_input_line(6, HOLD_LINE);
+	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 
-static INTERRUPT_GEN( slapshot_interrupt )
+INTERRUPT_GEN_MEMBER(slapshot_state::slapshot_interrupt)
 {
-	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(slapshot_interrupt6));
-	device->execute().set_input_line(5, HOLD_LINE);
+	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(slapshot_state::slapshot_interrupt6),this));
+	device.execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -198,7 +197,7 @@ READ16_MEMBER(slapshot_state::slapshot_service_input_r)
 				  (ioport("SERVICE")->read() & 0x10))  << 8;	/* IN3 + service switch */
 
 		default:
-			return tc0640fio_r(m_tc0640fio, offset) << 8;
+			return tc0640fio_r(m_tc0640fio, space, offset) << 8;
 	}
 }
 
@@ -259,9 +258,9 @@ WRITE8_MEMBER(slapshot_state::sound_bankswitch_w)
 WRITE16_MEMBER(slapshot_state::slapshot_msb_sound_w)
 {
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, 0, (data >> 8) & 0xff);
+		tc0140syt_port_w(m_tc0140syt, space, 0, (data >> 8) & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, 0, (data >> 8) & 0xff);
+		tc0140syt_comm_w(m_tc0140syt, space, 0, (data >> 8) & 0xff);
 
 #ifdef MAME_DEBUG
 	if (data & 0xff)
@@ -272,7 +271,7 @@ WRITE16_MEMBER(slapshot_state::slapshot_msb_sound_w)
 READ16_MEMBER(slapshot_state::slapshot_msb_sound_r)
 {
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, 0) & 0xff) << 8);
+		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff) << 8);
 	else
 		return 0;
 }
@@ -543,7 +542,7 @@ static MACHINE_CONFIG_START( slapshot, slapshot_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14346000)	/* 28.6860 MHz / 2 ??? */
 	MCFG_CPU_PROGRAM_MAP(slapshot_map)
-	MCFG_CPU_VBLANK_INT("screen", slapshot_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", slapshot_state,  slapshot_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/8)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(opwolf3_z80_sound_map)
@@ -559,8 +558,8 @@ static MACHINE_CONFIG_START( slapshot, slapshot_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(slapshot)
-	MCFG_SCREEN_VBLANK_STATIC(taito_no_buffer)
+	MCFG_SCREEN_UPDATE_DRIVER(slapshot_state, screen_update_slapshot)
+	MCFG_SCREEN_VBLANK_DRIVER(slapshot_state, screen_eof_taito_no_buffer)
 
 	MCFG_GFXDECODE(slapshot)
 	MCFG_PALETTE_LENGTH(8192)
@@ -589,7 +588,7 @@ static MACHINE_CONFIG_START( opwolf3, slapshot_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14346000)	/* 28.6860 MHz / 2 ??? */
 	MCFG_CPU_PROGRAM_MAP(opwolf3_map)
-	MCFG_CPU_VBLANK_INT("screen", slapshot_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", slapshot_state,  slapshot_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/8)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(opwolf3_z80_sound_map)
@@ -605,8 +604,8 @@ static MACHINE_CONFIG_START( opwolf3, slapshot_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(slapshot)
-	MCFG_SCREEN_VBLANK_STATIC(taito_no_buffer)
+	MCFG_SCREEN_UPDATE_DRIVER(slapshot_state, screen_update_slapshot)
+	MCFG_SCREEN_VBLANK_DRIVER(slapshot_state, screen_eof_taito_no_buffer)
 
 	MCFG_GFXDECODE(slapshot)
 	MCFG_PALETTE_LENGTH(8192)

@@ -234,7 +234,7 @@ static MACHINE_CONFIG_START( usg32, usgames_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, 2000000) /* ?? */
 	MCFG_CPU_PROGRAM_MAP(usgames_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,5*60) /* ?? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(usgames_state, irq0_line_hold, 5*60) /* ?? */
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -244,7 +244,7 @@ static MACHINE_CONFIG_START( usg32, usgames_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(7*8, 57*8-1, 0*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(usgames)
+	MCFG_SCREEN_UPDATE_DRIVER(usgames_state, screen_update_usgames)
 
 	MCFG_GFXDECODE(usgames)
 	MCFG_PALETTE_LENGTH(2*256)

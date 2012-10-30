@@ -119,7 +119,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, gotcha_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xc002, 0xc002) AM_DEVREADWRITE("oki", okim6295_device, read, write) AM_MIRROR(1)
 	AM_RANGE(0xc006, 0xc006) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
@@ -238,18 +238,6 @@ GFXDECODE_END
 
 
 
-static void irqhandler( device_t *device, int linestate )
-{
-	gotcha_state *state = device->machine().driver_data<gotcha_state>();
-	state->m_audiocpu->set_input_line(0, linestate);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irqhandler)
-};
-
-
 void gotcha_state::machine_start()
 {
 
@@ -278,11 +266,11 @@ static MACHINE_CONFIG_START( gotcha, gotcha_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,14318180)	/* 14.31818 MHz */
 	MCFG_CPU_PROGRAM_MAP(gotcha_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gotcha_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,6000000)	/* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-//  MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gotcha_state,  nmi_line_pulse)
 
 
 	/* video hardware */
@@ -291,7 +279,7 @@ static MACHINE_CONFIG_START( gotcha, gotcha_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gotcha)
+	MCFG_SCREEN_UPDATE_DRIVER(gotcha_state, screen_update_gotcha)
 
 	MCFG_GFXDECODE(gotcha)
 	MCFG_PALETTE_LENGTH(768)
@@ -306,8 +294,8 @@ static MACHINE_CONFIG_START( gotcha, gotcha_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 14318180/4)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 14318180/4)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.80)
 	MCFG_SOUND_ROUTE(1, "mono", 0.80)
 

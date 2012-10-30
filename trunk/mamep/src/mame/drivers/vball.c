@@ -103,36 +103,35 @@ INLINE int scanline_to_vcount(int scanline)
 		return (vcount - 0x18) | 0x100;
 }
 
-static TIMER_DEVICE_CALLBACK( vball_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(vball_state::vball_scanline)
 {
-	vball_state *state = timer.machine().driver_data<vball_state>();
 	int scanline = param;
-	int screen_height = timer.machine().primary_screen->height();
+	int screen_height = machine().primary_screen->height();
 	int vcount_old = scanline_to_vcount((scanline == 0) ? screen_height - 1 : scanline - 1);
 	int vcount = scanline_to_vcount(scanline);
 
 	/* Update to the current point */
 	if (scanline > 0)
 	{
-		timer.machine().primary_screen->update_partial(scanline - 1);
+		machine().primary_screen->update_partial(scanline - 1);
 	}
 
 	/* IRQ fires every on every 8th scanline */
 	if (!(vcount_old & 8) && (vcount & 8))
 	{
-		timer.machine().device("maincpu")->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
 	}
 
 	/* NMI fires on scanline 248 (VBL) and is latched */
 	if (vcount == 0xf8)
 	{
-		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 
 	/* Save the scroll x register value */
 	if (scanline < 256)
 	{
-		state->m_vb_scrollx[255 - scanline] = (state->m_vb_scrollx_hi + state->m_vb_scrollx_lo + 4);
+		m_vb_scrollx[255 - scanline] = (m_vb_scrollx_hi + m_vb_scrollx_lo + 4);
 	}
 }
 
@@ -227,7 +226,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, vball_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x9800, 0x9803) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xA000, 0xA000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -394,23 +393,12 @@ static GFXDECODE_START( vb )
 GFXDECODE_END
 
 
-static void vball_irq_handler(device_t *device, int irq)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0 , irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(vball_irq_handler)
-};
-
-
 static MACHINE_CONFIG_START( vball, vball_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, CPU_CLOCK)	/* 2 MHz - measured by guru but it makes the game far far too slow ?! */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", vball_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", vball_state, vball_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -419,7 +407,7 @@ static MACHINE_CONFIG_START( vball, vball_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 8, 248)	/* based on ddragon driver */
-	MCFG_SCREEN_UPDATE_STATIC(vb)
+	MCFG_SCREEN_UPDATE_DRIVER(vball_state, screen_update_vb)
 
 	MCFG_GFXDECODE(vb)
 	MCFG_PALETTE_LENGTH(256)
@@ -428,8 +416,8 @@ static MACHINE_CONFIG_START( vball, vball_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3579545)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 3579545)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)
 

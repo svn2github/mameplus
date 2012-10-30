@@ -124,6 +124,7 @@
 
 #include "deadeye.lh"
 #include "gypsyjug.lh"
+#include "minferno.lh"
 
 #define MASTER_CLOCK XTAL_5MHz
 
@@ -209,12 +210,11 @@ INPUT_CHANGED_MEMBER(meadows_state::coin_inserted)
  *
  *************************************/
 
-static INTERRUPT_GEN( meadows_interrupt )
+INTERRUPT_GEN_MEMBER(meadows_state::meadows_interrupt)
 {
-	meadows_state *state = device->machine().driver_data<meadows_state>();
     /* fake something toggling the sense input line of the S2650 */
-	state->m_main_sense_state ^= 1;
-	device->execute().set_input_line(1, state->m_main_sense_state ? ASSERT_LINE : CLEAR_LINE);
+	m_main_sense_state ^= 1;
+	device.execute().set_input_line(1, m_main_sense_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -225,11 +225,10 @@ static INTERRUPT_GEN( meadows_interrupt )
  *
  *************************************/
 
-static INTERRUPT_GEN( minferno_interrupt )
+INTERRUPT_GEN_MEMBER(meadows_state::minferno_interrupt)
 {
-	meadows_state *state = device->machine().driver_data<meadows_state>();
-	state->m_main_sense_state++;
-	device->execute().set_input_line(1, (state->m_main_sense_state & 0x40) ? ASSERT_LINE : CLEAR_LINE );
+	m_main_sense_state++;
+	device.execute().set_input_line(1, (m_main_sense_state & 0x40) ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -307,12 +306,11 @@ READ8_MEMBER(meadows_state::audio_hardware_r)
  *
  *************************************/
 
-static INTERRUPT_GEN( audio_interrupt )
+INTERRUPT_GEN_MEMBER(meadows_state::audio_interrupt)
 {
-	meadows_state *state = device->machine().driver_data<meadows_state>();
     /* fake something toggling the sense input line of the S2650 */
-	state->m_audio_sense_state ^= 1;
-	device->execute().set_input_line(1, state->m_audio_sense_state ? ASSERT_LINE : CLEAR_LINE);
+	m_audio_sense_state ^= 1;
+	device.execute().set_input_line(1, m_audio_sense_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -645,11 +643,11 @@ static MACHINE_CONFIG_START( meadows, meadows_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", S2650, MASTER_CLOCK/8)	/* 5MHz / 8 = 625 kHz */
 	MCFG_CPU_PROGRAM_MAP(meadows_main_map)
-	MCFG_CPU_VBLANK_INT("screen", meadows_interrupt)	/* one interrupt per frame!? */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", meadows_state,  meadows_interrupt)	/* one interrupt per frame!? */
 
 	MCFG_CPU_ADD("audiocpu", S2650, MASTER_CLOCK/8) 	/* 5MHz / 8 = 625 kHz */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
-	MCFG_CPU_PERIODIC_INT(audio_interrupt, (double)5000000/131072)
+	MCFG_CPU_PERIODIC_INT_DRIVER(meadows_state, audio_interrupt,  (double)5000000/131072)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -658,11 +656,10 @@ static MACHINE_CONFIG_START( meadows, meadows_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 30*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(meadows)
+	MCFG_SCREEN_UPDATE_DRIVER(meadows_state, screen_update_meadows)
 
 	MCFG_GFXDECODE(meadows)
 	MCFG_PALETTE_LENGTH(2)
-
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -681,32 +678,33 @@ static MACHINE_CONFIG_START( minferno, meadows_state )
 	MCFG_CPU_ADD("maincpu", S2650, MASTER_CLOCK/24) 	/* 5MHz / 8 / 3 = 208.33 kHz */
 	MCFG_CPU_PROGRAM_MAP(minferno_main_map)
 	MCFG_CPU_IO_MAP(minferno_io_map)
-	MCFG_CPU_VBLANK_INT("screen", minferno_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", meadows_state,  minferno_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 24*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(meadows)
+	MCFG_SCREEN_UPDATE_DRIVER(meadows_state, screen_update_meadows)
 
 	MCFG_GFXDECODE(minferno)
 	MCFG_PALETTE_LENGTH(2)
 
-
 	/* audio hardware */
+	// TODO
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_START( bowl3d, meadows_state )
+
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", S2650, MASTER_CLOCK/8)	/* 5MHz / 8 = 625 kHz */
 	MCFG_CPU_PROGRAM_MAP(bowl3d_main_map)
-	MCFG_CPU_VBLANK_INT("screen", meadows_interrupt)	/* one interrupt per frame!? */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", meadows_state,  meadows_interrupt)	/* one interrupt per frame!? */
 
 	MCFG_CPU_ADD("audiocpu", S2650, MASTER_CLOCK/8) 	/* 5MHz / 8 = 625 kHz */
 	MCFG_CPU_PROGRAM_MAP(audio_map)
-	MCFG_CPU_PERIODIC_INT(audio_interrupt, (double)5000000/131072)
+	MCFG_CPU_PERIODIC_INT_DRIVER(meadows_state, audio_interrupt,  (double)5000000/131072)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -715,11 +713,10 @@ static MACHINE_CONFIG_START( bowl3d, meadows_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 30*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(meadows)
+	MCFG_SCREEN_UPDATE_DRIVER(meadows_state, screen_update_meadows)
 
 	MCFG_GFXDECODE(meadows)
 	MCFG_PALETTE_LENGTH(2)
-
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -730,7 +727,6 @@ static MACHINE_CONFIG_START( bowl3d, meadows_state )
 	MCFG_SAMPLES_ADD("samples", meadows_samples_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	/* audio hardware */
 	MCFG_SAMPLES_ADD("samples2", bowl3d_samples_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
@@ -907,4 +903,4 @@ DRIVER_INIT_MEMBER(meadows_state,minferno)
 GAMEL( 1978, deadeye,  0, meadows,  meadows, driver_device,  0,        ROT0,  "Meadows Games, Inc.", "Dead Eye", 0, layout_deadeye )
 GAME ( 1978, bowl3d,   0, bowl3d,   bowl3d, driver_device,   0,        ROT90, "Meadows Games, Inc.", "3-D Bowling", GAME_NO_SOUND )
 GAMEL( 1978, gypsyjug, 0, meadows,  meadows, meadows_state,  gypsyjug, ROT0,  "Meadows Games, Inc.", "Gypsy Juggler", GAME_IMPERFECT_GRAPHICS, layout_gypsyjug )
-GAME ( 1978, minferno, 0, minferno, minferno, meadows_state, minferno, ROT0,  "Meadows Games, Inc.", "Inferno (Meadows)", GAME_NO_SOUND )
+GAMEL( 1978, minferno, 0, minferno, minferno, meadows_state, minferno, ROT0,  "Meadows Games, Inc.", "Inferno (Meadows)", GAME_NO_SOUND, layout_minferno )

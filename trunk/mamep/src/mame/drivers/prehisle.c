@@ -42,7 +42,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(prehisle_state::D7759_write_port_0_w)
 {
 	device_t *device = machine().device("upd");
-	upd7759_port_w(device, 0, data);
+	upd7759_port_w(device, space, 0, data);
 	upd7759_start_w(device, 0);
 	upd7759_start_w(device, 1);
 }
@@ -210,7 +210,7 @@ static MACHINE_CONFIG_START( prehisle, prehisle_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_18MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(prehisle_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", prehisle_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_4MHz)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(prehisle_sound_map)
@@ -222,7 +222,7 @@ static MACHINE_CONFIG_START( prehisle, prehisle_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(prehisle)
+	MCFG_SCREEN_UPDATE_DRIVER(prehisle_state, screen_update_prehisle)
 
 	MCFG_GFXDECODE(prehisle)
 	MCFG_PALETTE_LENGTH(1024)

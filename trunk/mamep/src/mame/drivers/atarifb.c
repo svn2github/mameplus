@@ -555,7 +555,7 @@ static MACHINE_CONFIG_START( atarifb, atarifb_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 750000)
 	MCFG_CPU_PROGRAM_MAP(atarifb_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(atarifb_state, irq0_line_hold, 4*60)
 
 
 	/* video hardware */
@@ -564,7 +564,7 @@ static MACHINE_CONFIG_START( atarifb, atarifb_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2037)	/* 16.3ms * 1/8 = 2037.5. Is it 1/8th or 3/32nds? (1528?) */)
 	MCFG_SCREEN_SIZE(38*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 38*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(atarifb)
+	MCFG_SCREEN_UPDATE_DRIVER(atarifb_state, screen_update_atarifb)
 
 	MCFG_GFXDECODE(atarifb)
 	MCFG_PALETTE_LENGTH(12)
@@ -595,7 +595,7 @@ static MACHINE_CONFIG_DERIVED( abaseb, atarifb )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(abaseb)
+	MCFG_SCREEN_UPDATE_DRIVER(atarifb_state, screen_update_abaseb)
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("discrete", DISCRETE, 0)
@@ -613,7 +613,7 @@ static MACHINE_CONFIG_DERIVED( soccer, atarifb )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 38*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(soccer)
+	MCFG_SCREEN_UPDATE_DRIVER(atarifb_state, screen_update_soccer)
 	MCFG_GFXDECODE(soccer)
 MACHINE_CONFIG_END
 

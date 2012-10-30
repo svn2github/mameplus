@@ -202,6 +202,8 @@ public:
 		// edfc / fffc alternating (display double buffering?)
 	}
 	virtual void video_start();
+	UINT32 screen_update_littlerb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(littlerb_scanline);
 };
 
 
@@ -302,16 +304,16 @@ static UINT16 littlerb_data_read(running_machine &machine, UINT16 mem_mask)
 {
 	littlerb_state *state = machine.driver_data<littlerb_state>();
 	UINT32 addr = state->m_write_address >> 3; // almost surely raw addresses are actually shifted by 3
-	address_space *vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
+	address_space &vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
 
-	return vdp_space->read_word(addr, mem_mask);
+	return vdp_space.read_word(addr, mem_mask);
 }
 
 static void littlerb_data_write(running_machine &machine, UINT16 data, UINT16 mem_mask)
 {
 	littlerb_state *state = machine.driver_data<littlerb_state>();
 	UINT32 addr = state->m_write_address >> 3; // almost surely raw addresses are actually shifted by 3
-	address_space *vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
+	address_space &vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
 	int mode = state->m_vdp_writemode;
 
 
@@ -322,7 +324,7 @@ static void littlerb_data_write(running_machine &machine, UINT16 data, UINT16 me
 	}
 	else
 	{
-		vdp_space->write_word(addr, data, mem_mask);
+		vdp_space.write_word(addr, data, mem_mask);
 
 		// 2000 is used for palette writes which appears to be a RAMDAC, no auto-inc.
 		//  1ff80806 is our 'spritelist'
@@ -554,41 +556,39 @@ INPUT_PORTS_END
 
 
 /* sprite format / offset could be completely wrong, this is just based on our (currently incorrect) vram access */
-static SCREEN_UPDATE_IND16(littlerb)
+UINT32 littlerb_state::screen_update_littlerb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	littlerb_state *state = screen.machine().driver_data<littlerb_state>();
 	bitmap.fill(0, cliprect);
 
-	copybitmap_trans(bitmap, *state->m_temp_bitmap_sprites_back, 0, 0, 0, 0, cliprect, 0);
-	copybitmap_trans(bitmap, *state->m_temp_bitmap_sprites, 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, *m_temp_bitmap_sprites_back, 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, *m_temp_bitmap_sprites, 0, 0, 0, 0, cliprect, 0);
 
 	return 0;
 }
 
-static TIMER_DEVICE_CALLBACK( littlerb_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(littlerb_state::littlerb_scanline)
 {
-	littlerb_state *state = timer.machine().driver_data<littlerb_state>();
 	int scanline = param;
 
 	if((scanline % 2) == 0)
 	{
 		UINT8 res;
-		UINT8 *sample_rom = state->memregion("samples")->base();
+		UINT8 *sample_rom = memregion("samples")->base();
 
-		res = sample_rom[state->m_sound_pointer_l|(state->m_sound_index_l<<10)|0x40000];
-		state->m_dacl->write_signed8(res);
-		res = sample_rom[state->m_sound_pointer_r|(state->m_sound_index_r<<10)|0x00000];
-		state->m_dacr->write_signed8(res);
-		state->m_sound_pointer_l++;
-		state->m_sound_pointer_l&=0x3ff;
-		state->m_sound_pointer_r++;
-		state->m_sound_pointer_r&=0x3ff;
+		res = sample_rom[m_sound_pointer_l|(m_sound_index_l<<10)|0x40000];
+		m_dacl->write_signed8(res);
+		res = sample_rom[m_sound_pointer_r|(m_sound_index_r<<10)|0x00000];
+		m_dacr->write_signed8(res);
+		m_sound_pointer_l++;
+		m_sound_pointer_l&=0x3ff;
+		m_sound_pointer_r++;
+		m_sound_pointer_r&=0x3ff;
 	}
 
 //  logerror("IRQ\n");
 	if(scanline == 288)
 	{
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 }
 
@@ -612,7 +612,7 @@ static void draw_sprite(running_machine &machine, bitmap_ind16 &bitmap, const re
 {
 	int x,y;
 	fulloffs >>= 3;
-	address_space *vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
+	address_space &vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
 
 	for (y=0;y<ysize;y++)
 	{
@@ -620,7 +620,7 @@ static void draw_sprite(running_machine &machine, bitmap_ind16 &bitmap, const re
 		{
 			int drawxpos, drawypos;
 			// the addresses provided are the same as the offsets as the vdp writes
-			UINT16 pix = vdp_space->read_byte(fulloffs);
+			UINT16 pix = vdp_space.read_byte(fulloffs);
 
 			drawxpos = xpos+x;
 			drawypos = ypos+y;
@@ -827,14 +827,14 @@ static void littlerb_draw_sprites(running_machine &machine)
 static MACHINE_CONFIG_START( littlerb, littlerb_state )
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(littlerb_main)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", littlerb_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", littlerb_state, littlerb_scanline, "screen", 0, 1)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(50) // guess based on high vertical resolution
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(512+22, 312)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 336-1, 0*8, 288-1)
-	MCFG_SCREEN_UPDATE_STATIC(littlerb)
+	MCFG_SCREEN_UPDATE_DRIVER(littlerb_state, screen_update_littlerb)
 
 
 	MCFG_PALETTE_LENGTH(0x100)

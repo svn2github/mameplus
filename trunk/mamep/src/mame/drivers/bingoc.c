@@ -46,6 +46,7 @@ public:
 	DECLARE_WRITE16_MEMBER(main_sound_latch_w);
 	DECLARE_WRITE8_MEMBER(bingoc_play_w);
 	virtual void video_start();
+	UINT32 screen_update_bingoc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -56,7 +57,7 @@ void bingoc_state::video_start()
 
 }
 
-static SCREEN_UPDATE_IND16(bingoc)
+UINT32 bingoc_state::screen_update_bingoc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	return 0;
 }
@@ -126,7 +127,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_io, AS_IO, 8, bingoc_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x40, 0x40) AM_WRITE(bingoc_play_w)
 	AM_RANGE(0x80, 0x80) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
 #if !SOUND_TEST
@@ -145,13 +146,13 @@ static MACHINE_CONFIG_START( bingoc, bingoc_state )
 
 	MCFG_CPU_ADD("maincpu", M68000,8000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bingoc_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80,4000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_io)
 #if SOUND_TEST
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", bingoc_state,  nmi_line_pulse)
 #endif
 
 	/* video hardware */
@@ -160,14 +161,14 @@ static MACHINE_CONFIG_START( bingoc, bingoc_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(bingoc)
+	MCFG_SCREEN_UPDATE_DRIVER(bingoc_state, screen_update_bingoc)
 
 	MCFG_PALETTE_LENGTH(0x100)
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker") //might just be mono...
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 7159160/2)
+	MCFG_YM2151_ADD("ymsnd", 7159160/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 

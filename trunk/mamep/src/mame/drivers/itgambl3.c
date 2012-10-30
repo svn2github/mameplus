@@ -57,6 +57,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_itgambl3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -72,52 +73,51 @@ void itgambl3_state::video_start()
 }
 
 /* (dirty) debug code for looking 8bpps blitter-based gfxs */
-static SCREEN_UPDATE_RGB32( itgambl3 )
+UINT32 itgambl3_state::screen_update_itgambl3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	itgambl3_state *state = screen.machine().driver_data<itgambl3_state>();
 	int x,y,count;
-	const UINT8 *blit_ram = state->memregion("gfx1")->base();
+	const UINT8 *blit_ram = memregion("gfx1")->base();
 
-	if(screen.machine().input().code_pressed(KEYCODE_Z))
-		state->m_test_x++;
+	if(machine().input().code_pressed(KEYCODE_Z))
+		m_test_x++;
 
-	if(screen.machine().input().code_pressed(KEYCODE_X))
-		state->m_test_x--;
+	if(machine().input().code_pressed(KEYCODE_X))
+		m_test_x--;
 
-	if(screen.machine().input().code_pressed(KEYCODE_A))
-		state->m_test_y++;
+	if(machine().input().code_pressed(KEYCODE_A))
+		m_test_y++;
 
-	if(screen.machine().input().code_pressed(KEYCODE_S))
-		state->m_test_y--;
+	if(machine().input().code_pressed(KEYCODE_S))
+		m_test_y--;
 
-	if(screen.machine().input().code_pressed(KEYCODE_Q))
-		state->m_start_offs+=0x200;
+	if(machine().input().code_pressed(KEYCODE_Q))
+		m_start_offs+=0x200;
 
-	if(screen.machine().input().code_pressed(KEYCODE_W))
-		state->m_start_offs-=0x200;
+	if(machine().input().code_pressed(KEYCODE_W))
+		m_start_offs-=0x200;
 
-	if(screen.machine().input().code_pressed(KEYCODE_E))
-		state->m_start_offs++;
+	if(machine().input().code_pressed(KEYCODE_E))
+		m_start_offs++;
 
-	if(screen.machine().input().code_pressed(KEYCODE_R))
-		state->m_start_offs--;
+	if(machine().input().code_pressed(KEYCODE_R))
+		m_start_offs--;
 
-	popmessage("%d %d %04x",state->m_test_x,state->m_test_y,state->m_start_offs);
+	popmessage("%d %d %04x",m_test_x,m_test_y,m_start_offs);
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	count = (state->m_start_offs);
+	count = (m_start_offs);
 
-	for(y=0;y<state->m_test_y;y++)
+	for(y=0;y<m_test_y;y++)
 	{
-		for(x=0;x<state->m_test_x;x++)
+		for(x=0;x<m_test_x;x++)
 		{
 			UINT32 color;
 
 			color = (blit_ram[count] & 0xff)>>0;
 
 			if(cliprect.contains(x, y))
-				bitmap.pix32(y, x) = screen.machine().pens[color];
+				bitmap.pix32(y, x) = machine().pens[color];
 
 			count++;
 		}
@@ -262,7 +262,7 @@ static MACHINE_CONFIG_START( itgambl3, itgambl3_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC( itgambl3 )
+	MCFG_SCREEN_UPDATE_DRIVER(itgambl3_state, screen_update_itgambl3)
 
 
 	MCFG_GFXDECODE(itgambl3)

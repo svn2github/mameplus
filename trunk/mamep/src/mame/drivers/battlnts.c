@@ -25,11 +25,10 @@
  *
  *************************************/
 
-static INTERRUPT_GEN( battlnts_interrupt )
+INTERRUPT_GEN_MEMBER(battlnts_state::battlnts_interrupt)
 {
-	battlnts_state *state = device->machine().driver_data<battlnts_state>();
-	if (k007342_is_int_enabled(state->m_k007342))
-		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	if (k007342_is_int_enabled(m_k007342))
+		device.execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(battlnts_state::battlnts_sh_irqtrigger_w)
@@ -248,7 +247,7 @@ static MACHINE_CONFIG_START( battlnts, battlnts_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, XTAL_24MHz / 2 /* 3000000*4? */)
 	MCFG_CPU_PROGRAM_MAP(battlnts_map)
-	MCFG_CPU_VBLANK_INT("screen", battlnts_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", battlnts_state,  battlnts_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz / 6 /* 3579545? */)
 	MCFG_CPU_PROGRAM_MAP(battlnts_sound_map)
@@ -260,7 +259,7 @@ static MACHINE_CONFIG_START( battlnts, battlnts_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(battlnts)
+	MCFG_SCREEN_UPDATE_DRIVER(battlnts_state, screen_update_battlnts)
 
 	MCFG_GFXDECODE(battlnts)
 	MCFG_PALETTE_LENGTH(128)

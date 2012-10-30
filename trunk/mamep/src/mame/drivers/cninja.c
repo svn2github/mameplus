@@ -56,29 +56,24 @@ Note about version levels using Mutant Fighter as the example:
 
 WRITE16_MEMBER(cninja_state::cninja_sound_w)
 {
-
 	soundlatch_byte_w(space, 0, data & 0xff);
 	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE16_MEMBER(cninja_state::stoneage_sound_w)
 {
-
 	soundlatch_byte_w(space, 0, data & 0xff);
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( interrupt_gen )
+TIMER_DEVICE_CALLBACK_MEMBER(cninja_state::interrupt_gen)
 {
-	cninja_state *state = timer.machine().driver_data<cninja_state>();
-
-	state->m_maincpu->set_input_line((state->m_irq_mask & 0x10) ? 3 : 4, ASSERT_LINE);
-	state->m_raster_irq_timer->reset();
+	m_maincpu->set_input_line((m_irq_mask & 0x10) ? 3 : 4, ASSERT_LINE);
+	m_raster_irq_timer->reset();
 }
 
 READ16_MEMBER(cninja_state::cninja_irq_r)
 {
-
 	switch (offset)
 	{
 
@@ -97,7 +92,6 @@ READ16_MEMBER(cninja_state::cninja_irq_r)
 
 WRITE16_MEMBER(cninja_state::cninja_irq_w)
 {
-
 	switch (offset)
 	{
 	case 0:
@@ -149,14 +143,14 @@ READ16_MEMBER(cninja_state::robocop2_prot_r)
 WRITE16_MEMBER(cninja_state::cninja_pf12_control_w)
 {
 	machine().primary_screen->update_partial(machine().primary_screen->vpos());
-	deco16ic_pf_control_w(m_deco_tilegen1, offset, data, mem_mask);
+	deco16ic_pf_control_w(m_deco_tilegen1, space, offset, data, mem_mask);
 }
 
 
 WRITE16_MEMBER(cninja_state::cninja_pf34_control_w)
 {
 	machine().primary_screen->update_partial(machine().primary_screen->vpos());
-	deco16ic_pf_control_w(m_deco_tilegen2, offset, data, mem_mask);
+	deco16ic_pf_control_w(m_deco_tilegen2, space, offset, data, mem_mask);
 }
 
 
@@ -304,7 +298,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, cninja_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r, ym2203_w)
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ym2", ym2151_device, read, write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -316,7 +310,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map_mutantf, AS_PROGRAM, 8, cninja_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_READNOP AM_WRITENOP
-	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
@@ -328,7 +322,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( stoneage_s_map, AS_PROGRAM, 8, cninja_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 ADDRESS_MAP_END
@@ -709,35 +703,11 @@ GFXDECODE_END
 
 /**********************************************************************************/
 
-static void sound_irq(device_t *device, int state)
-{
-	cninja_state *driver_state = device->machine().driver_data<cninja_state>();
-	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
-}
-
-static void sound_irq2(device_t *device, int state)
-{
-	cninja_state *driver_state = device->machine().driver_data<cninja_state>();
-	driver_state->m_audiocpu->set_input_line(0, state);
-}
-
 WRITE8_MEMBER(cninja_state::sound_bankswitch_w)
 {
-
 	/* the second OKIM6295 ROM is bank switched */
 	m_oki2->set_bank_base((data & 1) * 0x40000);
 }
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq),
-	DEVCB_DRIVER_MEMBER(cninja_state,sound_bankswitch_w)
-};
-
-static const ym2151_interface ym2151_interface2 =
-{
-	DEVCB_LINE(sound_irq2)
-};
 
 /**********************************************************************************/
 
@@ -871,7 +841,6 @@ static const deco16ic_interface mutantf_deco16ic_tilegen2_intf =
 
 void cninja_state::machine_start()
 {
-
 	save_item(NAME(m_scanline));
 	save_item(NAME(m_irq_mask));
 
@@ -880,7 +849,6 @@ void cninja_state::machine_start()
 
 void cninja_state::machine_reset()
 {
-
 	m_scanline = 0;
 	m_irq_mask = 0;
 }
@@ -906,20 +874,20 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(cninja_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cninja_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 
-	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("raster_timer", cninja_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cninja)
+	MCFG_SCREEN_UPDATE_DRIVER(cninja_state, screen_update_cninja)
 
 	MCFG_GFXDECODE(cninja)
 	MCFG_PALETTE_LENGTH(2048)
@@ -941,8 +909,9 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 	MCFG_SOUND_ADD("ym1", YM2203, 32220000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 
-	MCFG_SOUND_ADD("ym2", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ym2", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) // IRQ2
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(cninja_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.45)
 	MCFG_SOUND_ROUTE(1, "mono", 0.45)
 
@@ -953,25 +922,26 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 MACHINE_CONFIG_END
 
+
 static MACHINE_CONFIG_START( stoneage, cninja_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(cninja_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cninja_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(stoneage_s_map)
 
 
-	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("raster_timer", cninja_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cninja)
+	MCFG_SCREEN_UPDATE_DRIVER(cninja_state, screen_update_cninja)
 
 	MCFG_GFXDECODE(cninja)
 	MCFG_PALETTE_LENGTH(2048)
@@ -992,8 +962,8 @@ static MACHINE_CONFIG_START( stoneage, cninja_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_interface2)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.45)
 	MCFG_SOUND_ROUTE(1, "mono", 0.45)
 
@@ -1010,20 +980,20 @@ static MACHINE_CONFIG_START( cninjabl, cninja_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(cninjabl_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cninja_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(stoneage_s_map)
 
 
-	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("raster_timer", cninja_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cninjabl)
+	MCFG_SCREEN_UPDATE_DRIVER(cninja_state, screen_update_cninjabl)
 
 	MCFG_GFXDECODE(cninjabl)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1038,8 +1008,8 @@ static MACHINE_CONFIG_START( cninjabl, cninja_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_interface2)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "mono", 0.45)
 	MCFG_SOUND_ROUTE(1, "mono", 0.45)
 
@@ -1053,20 +1023,20 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(edrandy_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cninja_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 
-	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("raster_timer", cninja_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(edrandy)
+	MCFG_SCREEN_UPDATE_DRIVER(cninja_state, screen_update_edrandy)
 
 	MCFG_GFXDECODE(cninja)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1088,8 +1058,9 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 	MCFG_SOUND_ADD("ym1", YM2203, 32220000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 
-	MCFG_SOUND_ADD("ym2", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ym2", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) // IRQ2
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(cninja_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "mono", 0.45)
 	MCFG_SOUND_ROUTE(1, "mono", 0.45)
 
@@ -1100,25 +1071,26 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 MACHINE_CONFIG_END
 
+
 static MACHINE_CONFIG_START( robocop2, cninja_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(robocop2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq5_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cninja_state,  irq5_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 
-	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
+	MCFG_TIMER_DRIVER_ADD("raster_timer", cninja_state, interrupt_gen)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(robocop2)
+	MCFG_SCREEN_UPDATE_DRIVER(cninja_state, screen_update_robocop2)
 
 	MCFG_GFXDECODE(robocop2)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1141,8 +1113,9 @@ static MACHINE_CONFIG_START( robocop2, cninja_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
-	MCFG_SOUND_ADD("ym2", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ym2", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) // IRQ2
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(cninja_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.45)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.45)
 
@@ -1155,12 +1128,13 @@ static MACHINE_CONFIG_START( robocop2, cninja_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 MACHINE_CONFIG_END
 
+
 static MACHINE_CONFIG_START( mutantf, cninja_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(mutantf_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cninja_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map_mutantf)
@@ -1171,7 +1145,7 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mutantf)
+	MCFG_SCREEN_UPDATE_DRIVER(cninja_state, screen_update_mutantf)
 
 	MCFG_VIDEO_START_OVERRIDE(cninja_state,mutantf)
 
@@ -1196,8 +1170,9 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1)) // IRQ2
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(cninja_state,sound_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.45)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.45)
 
@@ -2053,43 +2028,14 @@ ROM_END
 
 /**********************************************************************************/
 
-static void cninja_patch( running_machine &machine )
-{
-	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
-	int i;
-
-	for (i = 0; i < 0x80000 / 2; i++)
-	{
-		int aword = RAM[i];
-
-		if (aword == 0x66ff || aword == 0x67ff)
-		{
-			UINT16 doublecheck = RAM[i - 4];
-
-			/* Cmpi + btst controlling opcodes */
-			if (doublecheck == 0xc39 || doublecheck == 0x839)
-			{
-				RAM[i]     = 0x4e71;
-				RAM[i - 1] = 0x4e71;
-				RAM[i - 2] = 0x4e71;
-				RAM[i - 3] = 0x4e71;
-				RAM[i - 4] = 0x4e71;
-			}
-		}
-	}
-}
-
-/**********************************************************************************/
-
 DRIVER_INIT_MEMBER(cninja_state,cninja)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x1bc0a8, 0x1bc0a9, write16_delegate(FUNC(cninja_state::cninja_sound_w),this));
-	cninja_patch(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x1bc0a8, 0x1bc0a9, write16_delegate(FUNC(cninja_state::cninja_sound_w),this));
 }
 
 DRIVER_INIT_MEMBER(cninja_state,stoneage)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x1bc0a8, 0x1bc0a9, write16_delegate(FUNC(cninja_state::stoneage_sound_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x1bc0a8, 0x1bc0a9, write16_delegate(FUNC(cninja_state::stoneage_sound_w),this));
 }
 
 DRIVER_INIT_MEMBER(cninja_state,mutantf)

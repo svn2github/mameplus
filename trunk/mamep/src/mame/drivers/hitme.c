@@ -19,6 +19,8 @@
 #include "includes/hitme.h"
 #include "sound/discrete.h"
 
+#include "barricad.lh"
+
 #define MASTER_CLOCK (XTAL_8_945MHz) /* confirmed on schematic */
 
 
@@ -65,11 +67,10 @@ VIDEO_START_MEMBER(hitme_state,barricad)
 }
 
 
-static SCREEN_UPDATE_IND16( hitme )
+UINT32 hitme_state::screen_update_hitme(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	hitme_state *state = screen.machine().driver_data<hitme_state>();
 	/* the card width resistor comes from an input port, scaled to the range 0-25 kOhms */
-	double width_resist = screen.machine().root_device().ioport("WIDTH")->read() * 25000 / 100;
+	double width_resist = machine().root_device().ioport("WIDTH")->read() * 25000 / 100;
 	/* this triggers a oneshot for the following length of time */
 	double width_duration = 0.45 * 1000e-12 * width_resist;
 	/* the dot clock runs at the standard horizontal frequency * 320+16 clocks per scanline */
@@ -80,7 +81,7 @@ static SCREEN_UPDATE_IND16( hitme )
 	offs_t offs = 0;
 
 	/* start by drawing the tilemap */
-	state->m_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* now loop over and invert anything */
 	for (y = 0; y < 19; y++)
@@ -89,7 +90,7 @@ static SCREEN_UPDATE_IND16( hitme )
 		for (inv = x = 0; x < 40; x++, offs++)
 		{
 			/* if the high bit is set, reset the oneshot */
-			if (state->m_videoram[y * 40 + x] & 0x80)
+			if (m_videoram[y * 40 + x] & 0x80)
 				inv = width_pixels;
 
 			/* invert pixels until we run out */
@@ -113,10 +114,9 @@ static SCREEN_UPDATE_IND16( hitme )
 }
 
 
-static SCREEN_UPDATE_IND16( barricad )
+UINT32 hitme_state::screen_update_barricad(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	hitme_state *state = screen.machine().driver_data<hitme_state>();
-	state->m_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -194,16 +194,16 @@ WRITE8_MEMBER(hitme_state::output_port_0_w)
 	attotime duration = attotime(0, ATTOSECONDS_PER_SECOND * 0.45 * 6.8e-6 * resistance * (data + 1));
 	m_timeout_time = machine().time() + duration;
 
-	discrete_sound_w(device, HITME_DOWNCOUNT_VAL, data);
-	discrete_sound_w(device, HITME_OUT0, 1);
+	discrete_sound_w(device, space, HITME_DOWNCOUNT_VAL, data);
+	discrete_sound_w(device, space, HITME_OUT0, 1);
 }
 
 
 WRITE8_MEMBER(hitme_state::output_port_1_w)
 {
 	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, HITME_ENABLE_VAL, data);
-	discrete_sound_w(device, HITME_OUT1, 1);
+	discrete_sound_w(device, space, HITME_ENABLE_VAL, data);
+	discrete_sound_w(device, space, HITME_OUT1, 1);
 }
 
 
@@ -326,7 +326,7 @@ static MACHINE_CONFIG_START( hitme, hitme_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 19*10)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 19*10-1)
-	MCFG_SCREEN_UPDATE_STATIC(hitme)
+	MCFG_SCREEN_UPDATE_DRIVER(hitme_state, screen_update_hitme)
 
 	MCFG_GFXDECODE(hitme)
 	MCFG_PALETTE_LENGTH(2)
@@ -355,7 +355,7 @@ static MACHINE_CONFIG_DERIVED( barricad, hitme )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_SIZE(32*8, 24*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 24*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(barricad)
+	MCFG_SCREEN_UPDATE_DRIVER(hitme_state, screen_update_barricad)
 
 	MCFG_GFXDECODE(barricad)
 
@@ -693,7 +693,7 @@ ROM_END
 
 GAME( 1976, hitme,    0,        hitme,    hitme, driver_device,    0, ROT0, "RamTek", "Hit Me (set 1)",  GAME_SUPPORTS_SAVE )	// 05/1976
 GAME( 1976, hitme1,   hitme,    hitme,    hitme, driver_device,    0, ROT0, "RamTek", "Hit Me (set 2)",  GAME_SUPPORTS_SAVE )
-GAME( 1976, m21,      hitme,    hitme,    hitme, driver_device,    0, ROT0, "Mirco Games",  "21 (Mirco)", GAME_SUPPORTS_SAVE )	// 08/1976, licensed?
-GAME( 1978, super21,  0,        hitme,    super21, driver_device,  0, ROT0, "Mirco Games",  "Super Twenty One", GAME_SUPPORTS_SAVE )
-GAME( 1976, barricad, 0,        barricad, barricad, driver_device, 0, ROT0, "RamTek", "Barricade",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1976, brickyrd, barricad, barricad, barricad, driver_device, 0, ROT0, "RamTek", "Brickyard",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1976, m21,      hitme,    hitme,    hitme, driver_device,    0, ROT0, "Mirco Games", "21 (Mirco)", GAME_SUPPORTS_SAVE )	// 08/1976, licensed?
+GAME( 1978, super21,  0,        hitme,    super21, driver_device,  0, ROT0, "Mirco Games", "Super Twenty One", GAME_SUPPORTS_SAVE )
+GAMEL(1976, barricad, 0,        barricad, barricad, driver_device, 0, ROT0, "RamTek", "Barricade",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_barricad )
+GAMEL(1976, brickyrd, barricad, barricad, barricad, driver_device, 0, ROT0, "RamTek", "Brickyard",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_barricad )

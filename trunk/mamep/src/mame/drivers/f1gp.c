@@ -451,11 +451,11 @@ static MACHINE_CONFIG_START( f1gp, f1gp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,XTAL_20MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(f1gp_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", f1gp_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000,XTAL_20MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(f1gp_cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", f1gp_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_20MHz/4)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -471,10 +471,13 @@ static MACHINE_CONFIG_START( f1gp, f1gp_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(f1gp)
+	MCFG_SCREEN_UPDATE_DRIVER(f1gp_state, screen_update_f1gp)
 
 	MCFG_GFXDECODE(f1gp)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_DEVICE_ADD("vsystem_spr_old", VSYSTEM_SPR2, 0)
+	MCFG_DEVICE_ADD("vsystem_spr_ol2", VSYSTEM_SPR2, 0)
 
 	MCFG_VIDEO_START_OVERRIDE(f1gp_state,f1gp)
 
@@ -497,11 +500,11 @@ static MACHINE_CONFIG_START( f1gpb, f1gp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",M68000,10000000)	/* 10 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(f1gpb_cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", f1gp_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000,10000000)	/* 10 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(f1gpb_cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", f1gp_state,  irq1_line_hold)
 
 	/* NO sound CPU */
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* 100 CPU slices per frame */
@@ -514,7 +517,7 @@ static MACHINE_CONFIG_START( f1gpb, f1gp_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(f1gpb)
+	MCFG_SCREEN_UPDATE_DRIVER(f1gp_state, screen_update_f1gpb)
 
 	MCFG_GFXDECODE(f1gp)
 	MCFG_PALETTE_LENGTH(2048)
@@ -540,7 +543,12 @@ static MACHINE_CONFIG_DERIVED( f1gp2, f1gp )
 	MCFG_GFXDECODE(f1gp2)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(f1gp2)
+	MCFG_SCREEN_UPDATE_DRIVER(f1gp_state, screen_update_f1gp2)
+
+	MCFG_DEVICE_REMOVE("vsystem_spr_old")
+	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
+	MCFG_VSYSTEM_SPR_SET_TILE_INDIRECT( f1gp_state, f1gp2_tile_callback )
+	MCFG_VSYSTEM_SPR_SET_GFXREGION(1)
 
 	MCFG_DEVICE_REMOVE("k053936")
 	MCFG_K053936_ADD("k053936", f1gp2_k053936_intf)

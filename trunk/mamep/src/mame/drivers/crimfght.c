@@ -23,12 +23,11 @@
 /* prototypes */
 static KONAMI_SETLINES_CALLBACK( crimfght_banking );
 
-static INTERRUPT_GEN( crimfght_interrupt )
+INTERRUPT_GEN_MEMBER(crimfght_state::crimfght_interrupt)
 {
-	crimfght_state *state = device->machine().driver_data<crimfght_state>();
 
-	if (k051960_is_irq_enabled(state->m_k051960))
-		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+	if (k051960_is_irq_enabled(m_k051960))
+		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(crimfght_state::crimfght_coin_w)
@@ -60,25 +59,25 @@ READ8_MEMBER(crimfght_state::k052109_051960_r)
 	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, offset - 0x3800);
+			return k051937_r(m_k051960, space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, offset);
+			return k052109_r(m_k052109, space, offset);
 		else
-			return k051960_r(m_k051960, offset - 0x3c00);
+			return k051960_r(m_k051960, space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, offset);
+		return k052109_r(m_k052109, space, offset);
 }
 
 WRITE8_MEMBER(crimfght_state::k052109_051960_w)
 {
 
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, offset - 0x3800, data);
+		k051937_w(m_k051960, space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, offset, data);
+		k052109_w(m_k052109, space, offset, data);
 	else
-		k051960_w(m_k051960, offset - 0x3c00, data);
+		k051960_w(m_k051960, space, offset - 0x3c00, data);
 }
 
 /********************************************/
@@ -104,7 +103,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( crimfght_sound_map, AS_PROGRAM, 8, crimfght_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM									/* ROM 821l01.h4 */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM									/* RAM */
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)		/* YM2151 */
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)		/* YM2151 */
 	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)						/* soundlatch_byte_r */
 	AM_RANGE(0xe000, 0xe00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)	/* 007232 registers */
 ADDRESS_MAP_END
@@ -224,12 +223,6 @@ INPUT_PORTS_END
 
 ***************************************************************************/
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(crimfght_state,crimfght_snd_bankswitch_w)
-};
-
 static void volume_callback( device_t *device, int v )
 {
 	k007232_set_volume(device, 0, (v & 0x0f) * 0x11, 0);
@@ -282,7 +275,7 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8)		/* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(crimfght_map)
-	MCFG_CPU_VBLANK_INT("screen", crimfght_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", crimfght_state,  crimfght_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) 	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(crimfght_sound_map)
@@ -296,7 +289,7 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
-	MCFG_SCREEN_UPDATE_STATIC(crimfght)
+	MCFG_SCREEN_UPDATE_DRIVER(crimfght_state, screen_update_crimfght)
 
 	MCFG_PALETTE_LENGTH(512)
 
@@ -307,8 +300,8 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)	/* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)	/* verified on pcb */
+	MCFG_YM2151_PORT_WRITE_HANDLER(WRITE8(crimfght_state,crimfght_snd_bankswitch_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -408,12 +401,12 @@ static KONAMI_SETLINES_CALLBACK( crimfght_banking )
 	/* bit 5 = select work RAM or palette */
 	if (lines & 0x20)
 	{
-		device->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x03ff, "bank3");
-		device->memory().space(AS_PROGRAM)->install_write_handler(0x0000, 0x03ff, write8_delegate(FUNC(crimfght_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state));
+		device->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x03ff, "bank3");
+		device->memory().space(AS_PROGRAM).install_write_handler(0x0000, 0x03ff, write8_delegate(FUNC(crimfght_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state));
 		state->membank("bank3")->set_base(state->m_generic_paletteram_8);
 	}
 	else
-		device->memory().space(AS_PROGRAM)->install_readwrite_bank(0x0000, 0x03ff, "bank1");								/* RAM */
+		device->memory().space(AS_PROGRAM).install_readwrite_bank(0x0000, 0x03ff, "bank1");								/* RAM */
 
 	/* bit 6 = enable char ROM reading through the video RAM */
 	k052109_set_rmrd_line(state->m_k052109, (lines & 0x40) ? ASSERT_LINE : CLEAR_LINE);

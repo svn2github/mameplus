@@ -34,7 +34,8 @@
 #include "emu.h"
 #include "cpu/m6502/m6502.h"
 #include "cpu/mcs48/mcs48.h"
-#include "machine/decocass.h"
+#include "includes/decocass.h"
+#include "machine/decocass_tape.h"
 #include "sound/ay8910.h"
 
 #define MASTER_CLOCK	XTAL_12MHz
@@ -55,124 +56,116 @@ INLINE int swap_bits_5_6(int data)
 	return (data & 0x9f) | ((data & 0x20) << 1) | ((data & 0x40) >> 1);
 }
 
-static WRITE8_HANDLER( ram_w )
+WRITE8_MEMBER(decocass_state::ram_w)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-	state->m_decrypted[0x0000 + offset] = swap_bits_5_6(data);
-	state->m_rambase[0x0000 + offset] = data;
+	m_decrypted[0x0000 + offset] = swap_bits_5_6(data);
+	m_rambase[0x0000 + offset] = data;
 }
 
-static WRITE8_HANDLER( charram_w )
+WRITE8_MEMBER(decocass_state::charram_w)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-	state->m_decrypted[0x6000 + offset] = swap_bits_5_6(data);
+	m_decrypted[0x6000 + offset] = swap_bits_5_6(data);
 	decocass_charram_w(space, offset, data);
 }
 
-static WRITE8_HANDLER( fgvideoram_w )
+WRITE8_MEMBER(decocass_state::fgvideoram_w)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-	state->m_decrypted[0xc000 + offset] = swap_bits_5_6(data);
+	m_decrypted[0xc000 + offset] = swap_bits_5_6(data);
 	decocass_fgvideoram_w(space, offset, data);
 }
 
-static WRITE8_HANDLER( fgcolorram_w )
+WRITE8_MEMBER(decocass_state::fgcolorram_w)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-	state->m_decrypted[0xc400 + offset] = swap_bits_5_6(data);
+	m_decrypted[0xc400 + offset] = swap_bits_5_6(data);
 	decocass_colorram_w(space, offset, data);
 }
 
-static WRITE8_HANDLER( tileram_w )
+WRITE8_MEMBER(decocass_state::tileram_w)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-	state->m_decrypted[0xd000 + offset] = swap_bits_5_6(data);
+	m_decrypted[0xd000 + offset] = swap_bits_5_6(data);
 	decocass_tileram_w(space, offset, data);
 }
 
-static WRITE8_HANDLER( objectram_w )
+WRITE8_MEMBER(decocass_state::objectram_w)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-	state->m_decrypted[0xd800 + offset] = swap_bits_5_6(data);
+	m_decrypted[0xd800 + offset] = swap_bits_5_6(data);
 	decocass_objectram_w(space, offset, data);
 }
 
-static WRITE8_HANDLER( mirrorvideoram_w ) { offset = ((offset >> 5) & 0x1f) | ((offset & 0x1f) << 5); fgvideoram_w(space, offset, data); }
-static WRITE8_HANDLER( mirrorcolorram_w ) { offset = ((offset >> 5) & 0x1f) | ((offset & 0x1f) << 5); fgcolorram_w(space, offset, data); }
+WRITE8_MEMBER(decocass_state::mirrorvideoram_w) { offset = ((offset >> 5) & 0x1f) | ((offset & 0x1f) << 5); fgvideoram_w(space, offset, data, mem_mask); }
+WRITE8_MEMBER(decocass_state::mirrorcolorram_w) { offset = ((offset >> 5) & 0x1f) | ((offset & 0x1f) << 5); fgcolorram_w(space, offset, data, mem_mask); }
 
-static READ8_HANDLER( mirrorvideoram_r )
+READ8_MEMBER(decocass_state::mirrorvideoram_r)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
 	offset = ((offset >> 5) & 0x1f) | ((offset & 0x1f) << 5);
-	return state->m_fgvideoram[offset];
+	return m_fgvideoram[offset];
 }
 
-static READ8_HANDLER( mirrorcolorram_r )
+READ8_MEMBER(decocass_state::mirrorcolorram_r)
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
 	offset = ((offset >> 5) & 0x1f) | ((offset & 0x1f) << 5);
-	return state->m_colorram[offset];
+	return m_colorram[offset];
 }
 
 
 static ADDRESS_MAP_START( decocass_map, AS_PROGRAM, 8, decocass_state )
-	AM_RANGE(0x0000, 0x5fff) AM_RAM_WRITE_LEGACY(ram_w) AM_SHARE("rambase")
-	AM_RANGE(0x6000, 0xbfff) AM_RAM_WRITE_LEGACY(charram_w) AM_SHARE("charram") /* still RMS3 RAM */
-	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE_LEGACY(fgvideoram_w) AM_SHARE("fgvideoram")  /* DSP3 RAM */
-	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE_LEGACY(fgcolorram_w) AM_SHARE("colorram")
-	AM_RANGE(0xc800, 0xcbff) AM_READWRITE_LEGACY(mirrorvideoram_r, mirrorvideoram_w)
-	AM_RANGE(0xcc00, 0xcfff) AM_READWRITE_LEGACY(mirrorcolorram_r, mirrorcolorram_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE_LEGACY(tileram_w) AM_SHARE("tileram")
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE_LEGACY(objectram_w) AM_SHARE("objectram")
-	AM_RANGE(0xe000, 0xe0ff) AM_RAM_WRITE_LEGACY(decocass_paletteram_w) AM_SHARE("paletteram")
-	AM_RANGE(0xe300, 0xe300) AM_READ_PORT("DSW1") AM_WRITE_LEGACY(decocass_watchdog_count_w)
-	AM_RANGE(0xe301, 0xe301) AM_READ_PORT("DSW2") AM_WRITE_LEGACY(decocass_watchdog_flip_w)
-	AM_RANGE(0xe302, 0xe302) AM_WRITE_LEGACY(decocass_color_missiles_w)
-	AM_RANGE(0xe400, 0xe400) AM_WRITE_LEGACY(decocass_reset_w)
+	AM_RANGE(0x0000, 0x5fff) AM_RAM_WRITE(ram_w) AM_SHARE("rambase")
+	AM_RANGE(0x6000, 0xbfff) AM_RAM_WRITE(charram_w) AM_SHARE("charram") /* still RMS3 RAM */
+	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(fgvideoram_w) AM_SHARE("fgvideoram")  /* DSP3 RAM */
+	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(fgcolorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xc800, 0xcbff) AM_READWRITE(mirrorvideoram_r, mirrorvideoram_w)
+	AM_RANGE(0xcc00, 0xcfff) AM_READWRITE(mirrorcolorram_r, mirrorcolorram_w)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(tileram_w) AM_SHARE("tileram")
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(objectram_w) AM_SHARE("objectram")
+	AM_RANGE(0xe000, 0xe0ff) AM_RAM_WRITE(decocass_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe300, 0xe300) AM_READ_PORT("DSW1") AM_WRITE(decocass_watchdog_count_w)
+	AM_RANGE(0xe301, 0xe301) AM_READ_PORT("DSW2") AM_WRITE(decocass_watchdog_flip_w)
+	AM_RANGE(0xe302, 0xe302) AM_WRITE(decocass_color_missiles_w)
+	AM_RANGE(0xe400, 0xe400) AM_WRITE(decocass_reset_w)
 
 /* BIO-3 board */
-	AM_RANGE(0xe402, 0xe402) AM_WRITE_LEGACY(decocass_mode_set_w)
-	AM_RANGE(0xe403, 0xe403) AM_WRITE_LEGACY(decocass_back_h_shift_w)
-	AM_RANGE(0xe404, 0xe404) AM_WRITE_LEGACY(decocass_back_vl_shift_w)
-	AM_RANGE(0xe405, 0xe405) AM_WRITE_LEGACY(decocass_back_vr_shift_w)
-	AM_RANGE(0xe406, 0xe406) AM_WRITE_LEGACY(decocass_part_h_shift_w)
-	AM_RANGE(0xe407, 0xe407) AM_WRITE_LEGACY(decocass_part_v_shift_w)
+	AM_RANGE(0xe402, 0xe402) AM_WRITE(decocass_mode_set_w)
+	AM_RANGE(0xe403, 0xe403) AM_WRITE(decocass_back_h_shift_w)
+	AM_RANGE(0xe404, 0xe404) AM_WRITE(decocass_back_vl_shift_w)
+	AM_RANGE(0xe405, 0xe405) AM_WRITE(decocass_back_vr_shift_w)
+	AM_RANGE(0xe406, 0xe406) AM_WRITE(decocass_part_h_shift_w)
+	AM_RANGE(0xe407, 0xe407) AM_WRITE(decocass_part_v_shift_w)
 
-	AM_RANGE(0xe410, 0xe410) AM_WRITE_LEGACY(decocass_color_center_bot_w)
-	AM_RANGE(0xe411, 0xe411) AM_WRITE_LEGACY(decocass_center_h_shift_space_w)
-	AM_RANGE(0xe412, 0xe412) AM_WRITE_LEGACY(decocass_center_v_shift_w)
-	AM_RANGE(0xe413, 0xe413) AM_WRITE_LEGACY(decocass_coin_counter_w)
-	AM_RANGE(0xe414, 0xe414) AM_WRITE_LEGACY(decocass_sound_command_w)
-	AM_RANGE(0xe415, 0xe416) AM_WRITE_LEGACY(decocass_quadrature_decoder_reset_w)
-	AM_RANGE(0xe417, 0xe417) AM_WRITE_LEGACY(decocass_nmi_reset_w)
-	AM_RANGE(0xe420, 0xe42f) AM_WRITE_LEGACY(decocass_adc_w)
+	AM_RANGE(0xe410, 0xe410) AM_WRITE(decocass_color_center_bot_w)
+	AM_RANGE(0xe411, 0xe411) AM_WRITE(decocass_center_h_shift_space_w)
+	AM_RANGE(0xe412, 0xe412) AM_WRITE(decocass_center_v_shift_w)
+	AM_RANGE(0xe413, 0xe413) AM_WRITE(decocass_coin_counter_w)
+	AM_RANGE(0xe414, 0xe414) AM_WRITE(decocass_sound_command_w)
+	AM_RANGE(0xe415, 0xe416) AM_WRITE(decocass_quadrature_decoder_reset_w)
+	AM_RANGE(0xe417, 0xe417) AM_WRITE(decocass_nmi_reset_w)
+	AM_RANGE(0xe420, 0xe42f) AM_WRITE(decocass_adc_w)
 
-	AM_RANGE(0xe500, 0xe5ff) AM_READWRITE_LEGACY(decocass_e5xx_r, decocass_e5xx_w)	/* read data from 8041/status */
+	AM_RANGE(0xe500, 0xe5ff) AM_READWRITE(decocass_e5xx_r, decocass_e5xx_w)	/* read data from 8041/status */
 
-	AM_RANGE(0xe600, 0xe6ff) AM_READ_LEGACY(decocass_input_r)		/* inputs */
-	AM_RANGE(0xe700, 0xe700) AM_READ_LEGACY(decocass_sound_data_r)	/* read sound CPU data */
-	AM_RANGE(0xe701, 0xe701) AM_READ_LEGACY(decocass_sound_ack_r)	/* read sound CPU ack status */
+	AM_RANGE(0xe600, 0xe6ff) AM_READ(decocass_input_r)		/* inputs */
+	AM_RANGE(0xe700, 0xe700) AM_READ(decocass_sound_data_r)	/* read sound CPU data */
+	AM_RANGE(0xe701, 0xe701) AM_READ(decocass_sound_ack_r)	/* read sound CPU ack status */
 
 	AM_RANGE(0xf000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( decocass_sound_map, AS_PROGRAM, 8, decocass_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
-	AM_RANGE(0x1000, 0x17ff) AM_READWRITE_LEGACY(decocass_sound_nmi_enable_r, decocass_sound_nmi_enable_w)
-	AM_RANGE(0x1800, 0x1fff) AM_READWRITE_LEGACY(decocass_sound_data_ack_reset_r, decocass_sound_data_ack_reset_w)
+	AM_RANGE(0x1000, 0x17ff) AM_READWRITE(decocass_sound_nmi_enable_r, decocass_sound_nmi_enable_w)
+	AM_RANGE(0x1800, 0x1fff) AM_READWRITE(decocass_sound_data_ack_reset_r, decocass_sound_data_ack_reset_w)
 	AM_RANGE(0x2000, 0x2fff) AM_DEVWRITE_LEGACY("ay1", ay8910_data_w)
 	AM_RANGE(0x4000, 0x4fff) AM_DEVWRITE_LEGACY("ay1", ay8910_address_w)
 	AM_RANGE(0x6000, 0x6fff) AM_DEVWRITE_LEGACY("ay2", ay8910_data_w)
 	AM_RANGE(0x8000, 0x8fff) AM_DEVWRITE_LEGACY("ay2", ay8910_address_w)
-	AM_RANGE(0xa000, 0xafff) AM_READ_LEGACY(decocass_sound_command_r)
-	AM_RANGE(0xc000, 0xcfff) AM_WRITE_LEGACY(decocass_sound_data_w)
+	AM_RANGE(0xa000, 0xafff) AM_READ(decocass_sound_command_r)
+	AM_RANGE(0xc000, 0xcfff) AM_WRITE(decocass_sound_data_w)
 	AM_RANGE(0xf800, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( decocass_mcu_portmap, AS_IO, 8, decocass_state )
-	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_READWRITE_LEGACY(i8041_p1_r, i8041_p1_w)
-	AM_RANGE(MCS48_PORT_P2, MCS48_PORT_P2) AM_READWRITE_LEGACY(i8041_p2_r, i8041_p2_w)
+	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_READWRITE(i8041_p1_r, i8041_p1_w)
+	AM_RANGE(MCS48_PORT_P2, MCS48_PORT_P2) AM_READWRITE(i8041_p2_r, i8041_p2_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( decocass )
@@ -767,7 +760,7 @@ static MACHINE_CONFIG_START( decocass, decocass_state )
 
 	MCFG_CPU_ADD("audiocpu", M6502, HCLK1/3/2)
 	MCFG_CPU_PROGRAM_MAP(decocass_sound_map)
-	MCFG_TIMER_ADD_SCANLINE("audionmi", decocass_audio_nmi_gen, "screen", 0, 8)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("audionmi", decocass_state, decocass_audio_nmi_gen, "screen", 0, 8)
 
 	MCFG_CPU_ADD("mcu", I8041, HCLK)
 	MCFG_CPU_IO_MAP(decocass_mcu_portmap)
@@ -780,7 +773,7 @@ static MACHINE_CONFIG_START( decocass, decocass_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(HCLK, 384, 0*8, 256, 272, 1*8, 248)
-	MCFG_SCREEN_UPDATE_STATIC(decocass)
+	MCFG_SCREEN_UPDATE_DRIVER(decocass_state, screen_update_decocass)
 
 	MCFG_GFXDECODE(decocass)
 	MCFG_PALETTE_LENGTH(32+2*8+2*4)
@@ -1314,11 +1307,21 @@ ROM_END
     (dongle data differs for each game)      */
 
 /* 25 Fishing / Angler Dangler */
+ROM_START( cadanglr ) // version 5-B-0
+	DECOCASS_BIOS_B_ROMS
+
+	ROM_REGION( 0x01000, "dongle", 0 )	  /* dongle data */
+	ROM_LOAD( "dp-1250-a-0.dgl", 0x0000, 0x1000, CRC(92a3b387) SHA1(e17a155d02e9ed806590b23a845dc7806b6720b1) )
+
+	ROM_REGION( 0x10000, "cassette", 0 )	  /* (max) 64k for cassette image */
+	ROM_LOAD( "dt-1255-b-0.cas",   0x0000, 0x7400, CRC(eb985257) SHA1(1285724352a59c96cc4edf4f43e89dd6d8c585b2) )
+ROM_END
+
 ROM_START( cfishing )
 	DECOCASS_BIOS_A_ROMS
 
 	ROM_REGION( 0x01000, "dongle", 0 )	  /* dongle data */
-	ROM_LOAD( "dp-1250-a-0.pro", 0x0000, 0x1000, CRC(92a3b387) SHA1(e17a155d02e9ed806590b23a845dc7806b6720b1) )
+	ROM_LOAD( "dp-1250-a-0.dgl", 0x0000, 0x1000, CRC(92a3b387) SHA1(e17a155d02e9ed806590b23a845dc7806b6720b1) )
 
 	ROM_REGION( 0x10000, "cassette", 0 )	  /* (max) 64k for cassette image */
 	ROM_LOAD( "dt-1250-a-0.cas",   0x0000, 0x7500, CRC(d4a16425) SHA1(25afaabdc8b2217d5e73606a36ea9ba408d7bc4b) )
@@ -1600,15 +1603,15 @@ ROM_END
 
 DRIVER_INIT_MEMBER(decocass_state,decocass)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = memregion("maincpu")->base();
 	int A;
 
 	/* allocate memory and mark all RAM regions with their decrypted pointers */
 	m_decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
-	space->set_decrypted_region(0x0000, 0xc7ff, &m_decrypted[0x0000]);
-	space->set_decrypted_region(0xd000, 0xdbff, &m_decrypted[0xd000]);
-	space->set_decrypted_region(0xf000, 0xffff, &m_decrypted[0xf000]);
+	space.set_decrypted_region(0x0000, 0xc7ff, &m_decrypted[0x0000]);
+	space.set_decrypted_region(0xd000, 0xdbff, &m_decrypted[0xd000]);
+	space.set_decrypted_region(0xf000, 0xffff, &m_decrypted[0xf000]);
 
 	/* Swap bits 5 & 6 for opcodes */
 	for (A = 0xf000; A < 0x10000; A++)
@@ -1617,9 +1620,9 @@ DRIVER_INIT_MEMBER(decocass_state,decocass)
 	save_pointer(NAME(m_decrypted), 0x10000);
 
 	/* Call the state save setup code in machine/decocass.c */
-	decocass_machine_state_save_init(machine());
+	decocass_machine_state_save_init();
 	/* and in video/decocass.c, too */
-	decocass_video_state_save_init(machine());
+	decocass_video_state_save_init();
 }
 
 DRIVER_INIT_MEMBER(decocass_state,decocrom)
@@ -1638,8 +1641,8 @@ DRIVER_INIT_MEMBER(decocass_state,decocrom)
 		m_decrypted2[i] = swap_bits_5_6(rom[i]);
 
 	/* convert charram to a banked ROM */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x6000, 0xafff, "bank1");
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x6000, 0xafff, FUNC(decocass_de0091_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x6000, 0xafff, "bank1");
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x6000, 0xafff, write8_delegate(FUNC(decocass_state::decocass_de0091_w),this));
 	membank("bank1")->configure_entry(0, m_charram);
 	membank("bank1")->configure_entry(1, memregion("user3")->base());
 	membank("bank1")->configure_decrypted_entry(0, &m_decrypted[0x6000]);
@@ -1647,14 +1650,13 @@ DRIVER_INIT_MEMBER(decocass_state,decocrom)
 	membank("bank1")->set_entry(0);
 
 	/* install the bank selector */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xe900, 0xe900, FUNC(decocass_e900_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe900, 0xe900, write8_delegate(FUNC(decocass_state::decocass_e900_w),this));
 
 	save_pointer(NAME(m_decrypted2), romlength);
 }
 
-static READ8_HANDLER( cdsteljn_input_r )
+READ8_MEMBER(decocass_state::cdsteljn_input_r )
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
 	UINT8 res;
 	static const char *const portnames[2][4] = {
 		{"P1_MP0", "P1_MP1", "P1_MP2", "P1_MP3"},
@@ -1663,16 +1665,14 @@ static READ8_HANDLER( cdsteljn_input_r )
 	if(offset & 6)
 		return decocass_input_r(space,offset);
 
-	res = space->machine().root_device().ioport(portnames[offset & 1][state->m_mux_data])->read();
+	res = machine().root_device().ioport(portnames[offset & 1][m_mux_data])->read();
 
 	return res;
 }
 
-static WRITE8_HANDLER( cdsteljn_mux_w )
+WRITE8_MEMBER(decocass_state::cdsteljn_mux_w )
 {
-	decocass_state *state = space->machine().driver_data<decocass_state>();
-
-	state->m_mux_data = (data & 0xc) >> 2;
+	m_mux_data = (data & 0xc) >> 2;
 	/* bit 0 and 1 are p1/p2 lamps */
 
 	if(data & ~0xf)
@@ -1685,8 +1685,8 @@ DRIVER_INIT_MEMBER(decocass_state,cdsteljn)
 	DRIVER_INIT_CALL(decocass);
 
 	/* install custom mahjong panel */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xe413, 0xe413, FUNC(cdsteljn_mux_w));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xe600, 0xe6ff, FUNC(cdsteljn_input_r));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe413, 0xe413, write8_delegate(FUNC(decocass_state::cdsteljn_mux_w), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xe600, 0xe6ff, read8_delegate(FUNC(decocass_state::cdsteljn_input_r), this));
 }
 
 /* -- */ GAME( 1981, decocass,  0,        decocass, decocass, decocass_state, decocass, ROT270, "Data East Corporation", "DECO Cassette System", GAME_IS_BIOS_ROOT )
@@ -1719,8 +1719,8 @@ DRIVER_INIT_MEMBER(decocass_state,cdsteljn)
 /* 22 */ GAME( 1982, cptennis,  decocass, cptennis, decocass, decocass_state, decocass, ROT270, "Data East Corporation", "Pro Tennis (DECO Cassette)", 0 )
 /* 23 */ // 1982.?? 18 Hole Pro Golf
 /* 24 */ // 1982.07 Tsumego Kaisyou
-/* 25 */ // 1982.10 Angler Dangler? (fishing)
-/* 25 */ GAME( 1982, cfishing,  decocass, cfishing, cfishing, decocass_state, decocass, ROT270, "Data East Corporation", "Fishing (DECO Cassette)", 0 )
+/* 25 */ GAME( 1982, cadanglr,  decocass, cfishing, cfishing, decocass_state, decocass, ROT270, "Data East Corporation", "Angler Dangler (DECO Cassette)", 0 )
+/* 25 */ GAME( 1982, cfishing,  cadanglr, cfishing, cfishing, decocass_state, decocass, ROT270, "Data East Corporation", "Fishing (DECO Cassette)", 0 )
 /* 26 */ GAME( 1983, cbtime,    decocass, cbtime,   cbtime, decocass_state,   decocass, ROT270, "Data East Corporation", "Burger Time (DECO Cassette)", 0 )
          GAME( 1982, chamburger,cbtime,   cbtime,   cbtime, decocass_state,   decocass, ROT270, "Data East Corporation", "Hamburger (DECO Cassette, Japan)", 0 )
 /* 27 */ GAME( 1982, cburnrub,  decocass, cburnrub, decocass, decocass_state, decocass, ROT270, "Data East Corporation", "Burnin' Rubber (DECO Cassette, set 1)", 0 )

@@ -634,6 +634,9 @@ Notes:
 #include "machine/nvram.h"
 #include "includes/model1.h"
 
+#include "vr.lh"
+
+
 READ16_MEMBER(model1_state::io_r)
 {
 	static const char *const analognames[] = { "AN0", "AN1", "AN2", "AN3", "AN4", "AN5", "AN6", "AN7" };
@@ -725,23 +728,22 @@ static void irq_init(running_machine &machine)
 	machine.device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 }
 
-static TIMER_DEVICE_CALLBACK( model1_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(model1_state::model1_interrupt)
 {
-	model1_state *state = timer.machine().driver_data<model1_state>();
 	int scanline = param;
 
 	if (scanline == 384)
 	{
-		irq_raise(timer.machine(), 1);
+		irq_raise(machine(), 1);
 	}
 	else if(scanline == 384/2)
 	{
-		irq_raise(timer.machine(), state->m_sound_irq);
+		irq_raise(machine(), m_sound_irq);
 
 		// if the FIFO has something in it, signal the 68k too
-		if (state->m_fifo_rptr != state->m_fifo_wptr)
+		if (m_fifo_rptr != m_fifo_wptr)
 		{
-			timer.machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
+			machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
 		}
 	}
 }
@@ -1271,6 +1273,9 @@ ROM_START( vr )
 	// this is the Daytona TGP program with some modifications needed for Virtua Racing
 	// the real TGP program is an internal ROM and still needs dumping
 	ROM_LOAD("vr-tgp.bin", 0x000000, 0x2000, BAD_DUMP CRC(3de33c7f) SHA1(acecc779c9d8fe39ded6c22492be5b7c25fd52db) )
+
+	ROM_REGION( 0x100, "nvram", 0 ) // default nvram
+	ROM_LOAD( "vr_defaults.nv", 0x000, 0x100, CRC(5ccdc835) SHA1(7e809de470f78fb897b938ca2aee2e12f1c8f3a4) )
 ROM_END
 
 ROM_START( vformula )
@@ -1520,7 +1525,7 @@ static MACHINE_CONFIG_START( model1, model1_state )
 	MCFG_CPU_ADD("maincpu", V60, 16000000)
 	MCFG_CPU_PROGRAM_MAP(model1_mem)
 	MCFG_CPU_IO_MAP(model1_io)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model1_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model1_state, model1_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 10000000)	// verified on real h/w
 	MCFG_CPU_PROGRAM_MAP(model1_snd)
@@ -1535,8 +1540,8 @@ static MACHINE_CONFIG_START( model1, model1_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(XTAL_16MHz, 656, 0/*+69*/, 496/*+69*/, 424, 0/*+25*/, 384/*+25*/)
-	MCFG_SCREEN_UPDATE_STATIC(model1)
-	MCFG_SCREEN_VBLANK_STATIC(model1)
+	MCFG_SCREEN_UPDATE_DRIVER(model1_state, screen_update_model1)
+	MCFG_SCREEN_VBLANK_DRIVER(model1_state, screen_eof_model1)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -1565,7 +1570,7 @@ static MACHINE_CONFIG_START( model1_vr, model1_state )
 	MCFG_CPU_ADD("maincpu", V60, 16000000)
 	MCFG_CPU_PROGRAM_MAP(model1_vr_mem)
 	MCFG_CPU_IO_MAP(model1_vr_io)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", model1_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", model1_state, model1_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 10000000)	// verified on real h/w
 	MCFG_CPU_PROGRAM_MAP(model1_snd)
@@ -1584,8 +1589,8 @@ static MACHINE_CONFIG_START( model1_vr, model1_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(XTAL_16MHz, 656, 0/*+69*/, 496/*+69*/, 424, 0/*+25*/, 384/*+25*/)
-	MCFG_SCREEN_UPDATE_STATIC(model1)
-	MCFG_SCREEN_VBLANK_STATIC(model1)
+	MCFG_SCREEN_UPDATE_DRIVER(model1_state, screen_update_model1)
+	MCFG_SCREEN_VBLANK_DRIVER(model1_state, screen_eof_model1)
 
 	MCFG_PALETTE_LENGTH(8192)
 
@@ -1607,7 +1612,7 @@ static MACHINE_CONFIG_START( model1_vr, model1_state )
 MACHINE_CONFIG_END
 
 GAME( 1993, vf,       0,       model1,    vf, driver_device,       0, ROT0, "Sega", "Virtua Fighter", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, vr,       0,       model1_vr, vr, driver_device,       0, ROT0, "Sega", "Virtua Racing", GAME_IMPERFECT_GRAPHICS )
+GAMEL(1992, vr,       0,       model1_vr, vr, driver_device,       0, ROT0, "Sega", "Virtua Racing", GAME_IMPERFECT_GRAPHICS, layout_vr )
 GAME( 1993, vformula, vr,      model1_vr, vr, driver_device,       0, ROT0, "Sega", "Virtua Formula", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, swa,      0,       swa,       swa, driver_device,      0, ROT0, "Sega", "Star Wars Arcade", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1994, wingwar,  0,       model1,    wingwar, driver_device,  0, ROT0, "Sega", "Wing War (World)", GAME_NOT_WORKING )

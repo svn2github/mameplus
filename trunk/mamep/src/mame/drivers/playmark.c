@@ -1069,7 +1069,7 @@ static MACHINE_CONFIG_START( bigtwin, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(bigtwin_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", PIC16C57, 12000000)	/* 3MHz */
 	/* Program and Data Maps are internal to the MCU */
@@ -1084,7 +1084,7 @@ static MACHINE_CONFIG_START( bigtwin, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bigtwin)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_bigtwin)
 
 	MCFG_GFXDECODE(playmark)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1103,7 +1103,7 @@ static MACHINE_CONFIG_START( bigtwinb, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(bigtwinb_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", PIC16C57, 12000000)	/* 3MHz */
 	/* Program and Data Maps are internal to the MCU */
@@ -1118,7 +1118,7 @@ static MACHINE_CONFIG_START( bigtwinb, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(bigtwinb)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_bigtwinb)
 
 	MCFG_GFXDECODE(bigtwinb)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1137,7 +1137,7 @@ static MACHINE_CONFIG_START( wbeachvl, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(wbeachvl_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state,  irq2_line_hold)
 
 //  MCFG_CPU_ADD("audiocpu", PIC16C57, 12000000)   /* 3MHz */
 	/* Program and Data Maps are internal to the MCU */
@@ -1155,7 +1155,7 @@ static MACHINE_CONFIG_START( wbeachvl, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(wbeachvl)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_wbeachvl)
 
 	MCFG_GFXDECODE(wbeachvl)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1174,7 +1174,7 @@ static MACHINE_CONFIG_START( excelsr, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(excelsr_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", PIC16C57, 12000000)	/* 3MHz */
 	/* Program and Data Maps are internal to the MCU */
@@ -1189,7 +1189,7 @@ static MACHINE_CONFIG_START( excelsr, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(excelsr)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_excelsr)
 
 	MCFG_GFXDECODE(excelsr)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1208,7 +1208,7 @@ static MACHINE_CONFIG_START( hotmind, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(hotmind_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state,  irq2_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", PIC16C57, XTAL_24MHz/2)	/* verified on pcb */
 	/* Program and Data Maps are internal to the MCU */
@@ -1226,7 +1226,7 @@ static MACHINE_CONFIG_START( hotmind, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hrdtimes)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_hrdtimes)
 
 	MCFG_GFXDECODE(hrdtimes)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1245,7 +1245,7 @@ static MACHINE_CONFIG_START( hrdtimes, playmark_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(hrdtimes_main_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", playmark_state,  irq6_line_hold)
 
 //  MCFG_CPU_ADD("audiocpu", PIC16C57, XTAL_24MHz/2)    /* verified on pcb */
 	/* Program and Data Maps are internal to the MCU */
@@ -1260,7 +1260,7 @@ static MACHINE_CONFIG_START( hrdtimes, playmark_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(hrdtimes)
+	MCFG_SCREEN_UPDATE_DRIVER(playmark_state, screen_update_hrdtimes)
 
 	MCFG_GFXDECODE(hrdtimes)
 	MCFG_PALETTE_LENGTH(1024)

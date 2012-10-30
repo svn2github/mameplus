@@ -28,7 +28,7 @@ Year + Game           License       PCB         Tilemaps        Sprites         
 96 Hotdog Storm       Marble        ASTC9501    038 9341EX702   013             Z80
 96 Pac-Slot           Namco         A0442       038 9444WX010   013 9345E7006
 97 Dodonpachi         Atlus         ATC03D2     038             013
-98 Dangan Feveron     Nihon System  CV01        038 9808WX003   013 9807EX004
+98 Dangun Feveron     Nihon System  CV01        038 9808WX003   013 9807EX004
 98 ESP Ra.De.         Atlus         ATC04       038 9841WX002   013 9838EX002
 98 Uo Poko            Jaleco        CV02        038 9749WX001   013 9749EX004
 99 Guwange            Atlus         ATC05       038 9919WX004   013
@@ -113,32 +113,29 @@ static void update_irq_state( running_machine &machine )
 		state->m_maincpu->set_input_line(state->m_irq_level, CLEAR_LINE);
 }
 
-static TIMER_CALLBACK( cave_vblank_end )
+TIMER_CALLBACK_MEMBER(cave_state::cave_vblank_end)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	if (state->m_kludge == 3)	/* mazinger metmqstr */
+	if (m_kludge == 3)	/* mazinger metmqstr */
 	{
-		state->m_unknown_irq = 1;
-		update_irq_state(machine);
+		m_unknown_irq = 1;
+		update_irq_state(machine());
 	}
-	state->m_agallet_vblank_irq = 0;
+	m_agallet_vblank_irq = 0;
 }
 
-static TIMER_DEVICE_CALLBACK( cave_vblank_start )
+TIMER_DEVICE_CALLBACK_MEMBER(cave_state::cave_vblank_start)
 {
-	cave_state *state = timer.machine().driver_data<cave_state>();
-	state->m_vblank_irq = 1;
-	update_irq_state(timer.machine());
-	cave_get_sprite_info(timer.machine());
-	state->m_agallet_vblank_irq = 1;
-	timer.machine().scheduler().timer_set(attotime::from_usec(2000), FUNC(cave_vblank_end));
+	m_vblank_irq = 1;
+	update_irq_state(machine());
+	cave_get_sprite_info(machine());
+	m_agallet_vblank_irq = 1;
+	machine().scheduler().timer_set(attotime::from_usec(2000), timer_expired_delegate(FUNC(cave_state::cave_vblank_end),this));
 }
 
 /* Called once/frame to generate the VBLANK interrupt */
-static INTERRUPT_GEN( cave_interrupt )
+INTERRUPT_GEN_MEMBER(cave_state::cave_interrupt)
 {
-	cave_state *state = device->machine().driver_data<cave_state>();
-	state->m_int_timer->adjust(attotime::from_usec(17376 - state->m_time_vblank_irq));
+	m_int_timer->adjust(attotime::from_usec(17376 - m_time_vblank_irq));
 }
 
 /* Called by the YMZ280B to set the IRQ state */
@@ -429,7 +426,7 @@ static const eeprom_interface eeprom_interface_93C46_pacslot =
     AFAIK)  */
 
 /***************************************************************************
-                                Dangan Feveron
+                                Dangun Feveron
 ***************************************************************************/
 
 static ADDRESS_MAP_START( dfeveron_map, AS_PROGRAM, 16, cave_state )
@@ -809,9 +806,9 @@ READ16_MEMBER(cave_state::pwrinst2_eeprom_r)
 	return ~8 + ((eeprom->read_bit() & 1) ? 8 : 0);
 }
 
-INLINE void vctrl_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask, int GFX)
+INLINE void vctrl_w(address_space &space, offs_t offset, UINT16 data, UINT16 mem_mask, int GFX)
 {
-	cave_state *state = space->machine().driver_data<cave_state>();
+	cave_state *state = space.machine().driver_data<cave_state>();
 	UINT16 *VCTRL = state->m_vctrl[GFX];
 	if (offset == 4 / 2)
 	{
@@ -826,10 +823,10 @@ INLINE void vctrl_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem
 	}
 	COMBINE_DATA(&VCTRL[offset]);
 }
-WRITE16_MEMBER(cave_state::pwrinst2_vctrl_0_w){ vctrl_w(&space, offset, data, mem_mask, 0); }
-WRITE16_MEMBER(cave_state::pwrinst2_vctrl_1_w){ vctrl_w(&space, offset, data, mem_mask, 1); }
-WRITE16_MEMBER(cave_state::pwrinst2_vctrl_2_w){ vctrl_w(&space, offset, data, mem_mask, 2); }
-WRITE16_MEMBER(cave_state::pwrinst2_vctrl_3_w){ vctrl_w(&space, offset, data, mem_mask, 3); }
+WRITE16_MEMBER(cave_state::pwrinst2_vctrl_0_w){ vctrl_w(space, offset, data, mem_mask, 0); }
+WRITE16_MEMBER(cave_state::pwrinst2_vctrl_1_w){ vctrl_w(space, offset, data, mem_mask, 1); }
+WRITE16_MEMBER(cave_state::pwrinst2_vctrl_2_w){ vctrl_w(space, offset, data, mem_mask, 2); }
+WRITE16_MEMBER(cave_state::pwrinst2_vctrl_3_w){ vctrl_w(space, offset, data, mem_mask, 3); }
 
 static ADDRESS_MAP_START( pwrinst2_map, AS_PROGRAM, 16, cave_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM																		// ROM
@@ -1152,7 +1149,7 @@ static ADDRESS_MAP_START( metmqstr_sound_portmap, AS_IO, 8, cave_state )
 	AM_RANGE(0x20, 0x20) AM_READ(soundflags_r)							// Communication
 	AM_RANGE(0x30, 0x30) AM_READ(soundlatch_lo_r)						// From Main CPU
 	AM_RANGE(0x40, 0x40) AM_READ(soundlatch_hi_r)						//
-	AM_RANGE(0x50, 0x51) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	// YM2151
+	AM_RANGE(0x50, 0x51) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)	// YM2151
 	AM_RANGE(0x60, 0x60) AM_DEVWRITE("oki1", okim6295_device, write)				// M6295 #0
 	AM_RANGE(0x70, 0x70) AM_WRITE(metmqstr_okibank0_w)					// Samples Bank #0
 	AM_RANGE(0x80, 0x80) AM_DEVWRITE("oki2", okim6295_device, write)				// M6295 #1
@@ -1244,7 +1241,7 @@ static ADDRESS_MAP_START( sailormn_sound_portmap, AS_IO, 8, cave_state )
 	AM_RANGE(0x20, 0x20) AM_READ(soundflags_r)								// Communication
 	AM_RANGE(0x30, 0x30) AM_READ(soundlatch_lo_r)							// From Main CPU
 	AM_RANGE(0x40, 0x40) AM_READ(soundlatch_hi_r)							//
-	AM_RANGE(0x50, 0x51) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)		// YM2151
+	AM_RANGE(0x50, 0x51) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)		// YM2151
 	AM_RANGE(0x60, 0x60) AM_DEVREADWRITE("oki1", okim6295_device, read, write)	// M6295 #0
 	AM_RANGE(0x70, 0x70) AM_WRITE(sailormn_okibank0_w)						// Samples Bank #0
 	AM_RANGE(0x80, 0x80) AM_DEVREADWRITE("oki2", okim6295_device, read, write)	// M6295 #1
@@ -1637,7 +1634,7 @@ static const gfx_layout layout_sprites =
 #endif
 
 /***************************************************************************
-                                Dangan Feveron
+                                Dangun Feveron
 ***************************************************************************/
 
 static GFXDECODE_START( dfeveron )
@@ -1830,11 +1827,6 @@ static void irqhandler(device_t *device, int irq)
 	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irqhandler)
-};
-
 static const ym2203_interface ym2203_config =
 {
 	{
@@ -1846,7 +1838,7 @@ static const ym2203_interface ym2203_config =
 };
 
 /***************************************************************************
-                                Dangan Feveron
+                                Dangun Feveron
 ***************************************************************************/
 
 static MACHINE_CONFIG_START( dfeveron, cave_state )
@@ -1854,13 +1846,13 @@ static MACHINE_CONFIG_START( dfeveron, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(dfeveron_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1868,7 +1860,7 @@ static MACHINE_CONFIG_START( dfeveron, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(dfeveron)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -1896,13 +1888,13 @@ static MACHINE_CONFIG_START( ddonpach, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(ddonpach_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1910,7 +1902,7 @@ static MACHINE_CONFIG_START( ddonpach, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(ddonpach)
 	MCFG_PALETTE_LENGTH(0x8000 + 0x40*16)	// $400 extra entries for layers 1&2
@@ -1942,13 +1934,13 @@ static MACHINE_CONFIG_START( donpachi, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(donpachi_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1956,7 +1948,7 @@ static MACHINE_CONFIG_START( donpachi, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(donpachi)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -1988,13 +1980,13 @@ static MACHINE_CONFIG_START( esprade, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(esprade_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2002,7 +1994,7 @@ static MACHINE_CONFIG_START( esprade, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(esprade)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2029,12 +2021,12 @@ static MACHINE_CONFIG_START( gaia, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(gaia_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2042,7 +2034,7 @@ static MACHINE_CONFIG_START( gaia, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 224-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(esprade)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2069,13 +2061,13 @@ static MACHINE_CONFIG_START( guwange, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(guwange_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2083,7 +2075,7 @@ static MACHINE_CONFIG_START( guwange, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(esprade)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2109,7 +2101,7 @@ static MACHINE_CONFIG_START( hotdogst, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(hotdogst_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_4MHz)
 	MCFG_CPU_PROGRAM_MAP(hotdogst_sound_map)
@@ -2119,7 +2111,7 @@ static MACHINE_CONFIG_START( hotdogst, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2127,7 +2119,7 @@ static MACHINE_CONFIG_START( hotdogst, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(384, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(hotdogst)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -2165,13 +2157,13 @@ static MACHINE_CONFIG_START( korokoro, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(korokoro_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_8BIT_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2179,7 +2171,7 @@ static MACHINE_CONFIG_START( korokoro, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1-2, 0, 240-1-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(korokoro)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -2213,7 +2205,7 @@ static MACHINE_CONFIG_START( mazinger, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(mazinger_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_4MHz) // Bidirectional communication
 	MCFG_CPU_PROGRAM_MAP(mazinger_sound_map)
@@ -2225,7 +2217,7 @@ static MACHINE_CONFIG_START( mazinger, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2233,7 +2225,7 @@ static MACHINE_CONFIG_START( mazinger, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(384, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 384-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(mazinger)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -2271,7 +2263,7 @@ static MACHINE_CONFIG_START( metmqstr, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_32MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(metmqstr_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_32MHz / 4)
 	MCFG_CPU_PROGRAM_MAP(metmqstr_sound_map)
@@ -2283,7 +2275,7 @@ static MACHINE_CONFIG_START( metmqstr, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)	/* start with the watchdog armed */
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2291,7 +2283,7 @@ static MACHINE_CONFIG_START( metmqstr, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x200, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0x7d, 0x7d + 0x180-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(donpachi)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -2302,8 +2294,8 @@ static MACHINE_CONFIG_START( metmqstr, cave_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_16MHz / 4)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz / 4)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.20)
 
@@ -2330,7 +2322,7 @@ static MACHINE_CONFIG_START( pacslot, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_28MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(pacslot_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
@@ -2338,7 +2330,7 @@ static MACHINE_CONFIG_START( pacslot, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C46_pacslot)
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2346,7 +2338,7 @@ static MACHINE_CONFIG_START( pacslot, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x200, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0x80, 0x80 + 0x140-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(tjumpman)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2384,7 +2376,7 @@ static MACHINE_CONFIG_START( pwrinst2, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(pwrinst2_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_16MHz / 2)	/* 8 MHz */
 	MCFG_CPU_PROGRAM_MAP(pwrinst2_sound_map)
@@ -2394,7 +2386,7 @@ static MACHINE_CONFIG_START( pwrinst2, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2402,7 +2394,7 @@ static MACHINE_CONFIG_START( pwrinst2, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x200, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0x70, 0x70 + 0x140-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(pwrinst2)
 	MCFG_PALETTE_LENGTH(0x8000+0x2800)
@@ -2445,7 +2437,7 @@ static MACHINE_CONFIG_START( sailormn, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(sailormn_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz) // Bidirectional Communication
 	MCFG_CPU_PROGRAM_MAP(sailormn_sound_map)
@@ -2457,7 +2449,7 @@ static MACHINE_CONFIG_START( sailormn, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2465,7 +2457,7 @@ static MACHINE_CONFIG_START( sailormn, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320+1, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0+1, 320+1-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(sailormn)
 	MCFG_PALETTE_LENGTH(0x8000)	/* $8000 palette entries for consistency with the other games */
@@ -2475,8 +2467,8 @@ static MACHINE_CONFIG_START( sailormn, cave_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_16MHz/4)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_16MHz/4)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.30)
 
@@ -2503,7 +2495,7 @@ static MACHINE_CONFIG_START( tjumpman, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_28MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(tjumpman_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
@@ -2511,7 +2503,7 @@ static MACHINE_CONFIG_START( tjumpman, cave_state )
 	MCFG_MACHINE_RESET_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2519,7 +2511,7 @@ static MACHINE_CONFIG_START( tjumpman, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x200, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0x80, 0x80 + 0x140-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(tjumpman)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2547,12 +2539,12 @@ static MACHINE_CONFIG_START( uopoko, cave_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(uopoko_map)
-	MCFG_CPU_VBLANK_INT("screen", cave_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", cave_state,  cave_interrupt)
 
 	MCFG_MACHINE_START_OVERRIDE(cave_state,cave)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_TIMER_ADD("int_timer", cave_vblank_start)
+	MCFG_TIMER_DRIVER_ADD("int_timer", cave_state, cave_vblank_start)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2560,7 +2552,7 @@ static MACHINE_CONFIG_START( uopoko, cave_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(cave)
+	MCFG_SCREEN_UPDATE_DRIVER(cave_state, screen_update_cave)
 
 	MCFG_GFXDECODE(uopoko)
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -2766,7 +2758,7 @@ ROM_END
 
 /***************************************************************************
 
-              Fever SOS (International) / Dangan Feveron (Japan)
+              Fever SOS (International) / Dangun Feveron (Japan)
 
 Board:  CV01
 OSC:    28.0, 16.0, 16.9 MHz
@@ -2800,7 +2792,7 @@ ROM_END
 Fever SOS
 
   The program code checks for 0x05 & 0x19 at the 17th & 18th byte in the EEPROM.  Therefore
-  you cannot convert a Dangan Feveron over to a Fever SOS by changing the 2 program roms
+  you cannot convert a Dangun Feveron over to a Fever SOS by changing the 2 program roms
 
 Jumper JP1:
 INT Version - 2 & 3
@@ -4798,7 +4790,7 @@ GAME( 1996, pacslot,    0,        pacslot,  pacslot, cave_state,  tjumpman, ROT0
 GAME( 1997, ddonpach,   0,        ddonpach, cave, cave_state,     ddonpach, ROT270, "Cave (Atlus license)",                   "DoDonPachi (International, Master Ver. 97/02/05)", GAME_SUPPORTS_SAVE )
 GAME( 1997, ddonpachj,  ddonpach, ddonpach, cave, cave_state,     ddonpach, ROT270, "Cave (Atlus license)",                   "DoDonPachi (Japan, Master Ver. 97/02/05)",         GAME_SUPPORTS_SAVE )
 
-GAME( 1998, dfeveron,   feversos, dfeveron, cave, cave_state,     dfeveron, ROT270, "Cave (Nihon System license)",            "Dangan Feveron (Japan, Ver. 98/09/17)",    GAME_SUPPORTS_SAVE )
+GAME( 1998, dfeveron,   feversos, dfeveron, cave, cave_state,     dfeveron, ROT270, "Cave (Nihon System license)",            "Dangun Feveron (Japan, Ver. 98/09/17)",    GAME_SUPPORTS_SAVE )
 GAME( 1998, feversos,   0,        dfeveron, cave, cave_state,     feversos, ROT270, "Cave (Nihon System license)",            "Fever SOS (International, Ver. 98/09/25)", GAME_SUPPORTS_SAVE )
 
 GAME( 1998, esprade,    0,        esprade,  cave, cave_state,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (International, Ver. 98/04/22)", GAME_SUPPORTS_SAVE )
@@ -4813,10 +4805,10 @@ GAME( 1999, guwanges,   guwange,  guwange,  guwange, cave_state,  guwange,  ROT2
 
 GAME( 1999, gaia,       0,        gaia,     gaia, cave_state,     gaia,     ROT0,   "Noise Factory",                          "Gaia Crusaders", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally
 
-GAME( 2001, theroes,    0,        gaia,     theroes, cave_state,  gaia,     ROT0,   "Primetek Investments",                   "Thunder Heroes",	GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally
-
 GAME( 1999, korokoro,   0,        korokoro, korokoro, cave_state, korokoro, ROT0,   "Takumi",                                 "Koro Koro Quest (Japan)", GAME_SUPPORTS_SAVE )
 
 GAME( 1999, crusherm,   0,        crusherm, korokoro, cave_state, korokoro, ROT0,   "Takumi",                                 "Crusher Makochan (Japan)", GAME_SUPPORTS_SAVE )
 
 GAME( 1999, tjumpman,   0,        tjumpman, tjumpman, cave_state, tjumpman, ROT0,   "Namco",                                  "Tobikose! Jumpman", GAME_SUPPORTS_SAVE )
+
+GAME( 2001, theroes,    0,        gaia,     theroes, cave_state,  gaia,     ROT0,   "Primetek Investments",                   "Thunder Heroes",	GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally

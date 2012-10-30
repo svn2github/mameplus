@@ -208,20 +208,18 @@ static GFXDECODE_START( rollrace )
 	GFXDECODE_ENTRY( "gfx5", 0x0000, spritelayout,	0,	32 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(rollrace_state::vblank_irq)
 {
-	rollrace_state *state = device->machine().driver_data<rollrace_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( sound_timer_irq )
+INTERRUPT_GEN_MEMBER(rollrace_state::sound_timer_irq)
 {
-	rollrace_state *state = device->machine().driver_data<rollrace_state>();
 
-	if(state->m_sound_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_sound_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( rollrace, rollrace_state )
@@ -229,11 +227,11 @@ static MACHINE_CONFIG_START( rollrace, rollrace_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,XTAL_24MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rollrace_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rollrace_state,  vblank_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_24MHz/16) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(rollrace_sound_map)
-	MCFG_CPU_PERIODIC_INT(sound_timer_irq,4*60)
+	MCFG_CPU_PERIODIC_INT_DRIVER(rollrace_state, sound_timer_irq, 4*60)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -241,7 +239,7 @@ static MACHINE_CONFIG_START( rollrace, rollrace_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(16,255,16, 255-16)
-	MCFG_SCREEN_UPDATE_STATIC(rollrace)
+	MCFG_SCREEN_UPDATE_DRIVER(rollrace_state, screen_update_rollrace)
 
 	MCFG_GFXDECODE(rollrace)
 	MCFG_PALETTE_LENGTH(256)

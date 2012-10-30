@@ -234,10 +234,10 @@ void gaplus_state::machine_reset()
 	machine().device("sub")->execute().set_input_line(0, CLEAR_LINE);
 }
 
-static TIMER_CALLBACK( namcoio_run )
+TIMER_CALLBACK_MEMBER(gaplus_state::namcoio_run)
 {
-	device_t *io58xx = machine.device("58xx");
-	device_t *io56xx = machine.device("56xx");
+	device_t *io58xx = machine().device("58xx");
+	device_t *io56xx = machine().device("56xx");
 
 	switch (param)
 	{
@@ -250,37 +250,34 @@ static TIMER_CALLBACK( namcoio_run )
 	}
 }
 
-static INTERRUPT_GEN( gaplus_vblank_main_irq )
+INTERRUPT_GEN_MEMBER(gaplus_state::gaplus_vblank_main_irq)
 {
-	gaplus_state *state = device->machine().driver_data<gaplus_state>();
 
-	device_t *io58xx = device->machine().device("58xx");
-	device_t *io56xx = device->machine().device("56xx");
+	device_t *io58xx = machine().device("58xx");
+	device_t *io56xx = machine().device("56xx");
 
-	if(state->m_main_irq_mask)
-		device->machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	if(m_main_irq_mask)
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(io58xx))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(namcoio_run));
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(gaplus_state::namcoio_run),this));
 
 	if (!namcoio_read_reset_line(io56xx))		/* give the cpu a tiny bit of time to write the command before processing it */
-		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(namcoio_run), 1);
+		machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(gaplus_state::namcoio_run),this), 1);
 }
 
-static INTERRUPT_GEN( gaplus_vblank_sub_irq )
+INTERRUPT_GEN_MEMBER(gaplus_state::gaplus_vblank_sub_irq)
 {
-	gaplus_state *state = device->machine().driver_data<gaplus_state>();
 
-	if(state->m_sub_irq_mask)
-		device->machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
+	if(m_sub_irq_mask)
+		machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
 }
 
-static INTERRUPT_GEN( gaplus_vblank_sub2_irq )
+INTERRUPT_GEN_MEMBER(gaplus_state::gaplus_vblank_sub2_irq)
 {
-	gaplus_state *state = device->machine().driver_data<gaplus_state>();
 
-	if(state->m_sub2_irq_mask)
-		device->machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
+	if(m_sub2_irq_mask)
+		machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -560,15 +557,15 @@ static MACHINE_CONFIG_START( gaplus, gaplus_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809,	24576000/16)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(cpu1_map)
-	MCFG_CPU_VBLANK_INT("screen", gaplus_vblank_main_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaplus_state,  gaplus_vblank_main_irq)
 
 	MCFG_CPU_ADD("sub", M6809,	24576000/16)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(cpu2_map)
-	MCFG_CPU_VBLANK_INT("screen", gaplus_vblank_sub_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaplus_state,  gaplus_vblank_sub_irq)
 
 	MCFG_CPU_ADD("sub2", M6809, 24576000/16)	/* 1.536 MHz */
 	MCFG_CPU_PROGRAM_MAP(cpu3_map)
-	MCFG_CPU_VBLANK_INT("screen", gaplus_vblank_sub2_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaplus_state,  gaplus_vblank_sub2_irq)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* a high value to ensure proper synchronization of the CPUs */
 
@@ -583,8 +580,8 @@ static MACHINE_CONFIG_START( gaplus, gaplus_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(gaplus)
-	MCFG_SCREEN_VBLANK_STATIC(gaplus)
+	MCFG_SCREEN_UPDATE_DRIVER(gaplus_state, screen_update_gaplus)
+	MCFG_SCREEN_VBLANK_DRIVER(gaplus_state, screen_eof_gaplus)
 
 	MCFG_GFXDECODE(gaplus)
 	MCFG_PALETTE_LENGTH(64*4+64*8)

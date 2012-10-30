@@ -292,7 +292,7 @@ static MACHINE_CONFIG_START( himesiki, himesiki_state )
 	MCFG_CPU_ADD("maincpu", Z80, MCLK/2) /* 6.000 MHz */
 	MCFG_CPU_PROGRAM_MAP(himesiki_prm0)
 	MCFG_CPU_IO_MAP(himesiki_iom0)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", himesiki_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("sub", Z80, MCLK/3) /* 4.000 MHz */
 	MCFG_CPU_PROGRAM_MAP(himesiki_prm1)
@@ -305,7 +305,7 @@ static MACHINE_CONFIG_START( himesiki, himesiki_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 24*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(himesiki)
+	MCFG_SCREEN_UPDATE_DRIVER(himesiki_state, screen_update_himesiki)
 
 	MCFG_GFXDECODE(himesiki)
 	MCFG_PALETTE_LENGTH(1024)

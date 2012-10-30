@@ -60,6 +60,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_flyball(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(flyball_joystick_callback);
+	TIMER_CALLBACK_MEMBER(flyball_quarter_callback);
 };
 
 
@@ -99,25 +102,24 @@ void flyball_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( flyball )
+UINT32 flyball_state::screen_update_flyball(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	flyball_state *state = screen.machine().driver_data<flyball_state>();
-	int pitcherx = state->m_pitcher_horz;
-	int pitchery = state->m_pitcher_vert - 31;
+	int pitcherx = m_pitcher_horz;
+	int pitchery = m_pitcher_vert - 31;
 
-	int ballx = state->m_ball_horz - 1;
-	int bally = state->m_ball_vert - 17;
+	int ballx = m_ball_horz - 1;
+	int bally = m_ball_vert - 17;
 
 	int x;
 	int y;
 
-	state->m_tmap->mark_all_dirty();
+	m_tmap->mark_all_dirty();
 
 	/* draw playfield */
-	state->m_tmap->draw(bitmap, cliprect, 0, 0);
+	m_tmap->draw(bitmap, cliprect, 0, 0);
 
 	/* draw pitcher */
-	drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1], state->m_pitcher_pic ^ 0xf, 0, 1, 0, pitcherx, pitchery, 1);
+	drawgfx_transpen(bitmap, cliprect, machine().gfx[1], m_pitcher_pic ^ 0xf, 0, 1, 0, pitcherx, pitchery, 1);
 
 	/* draw ball */
 
@@ -129,42 +131,40 @@ static SCREEN_UPDATE_IND16( flyball )
 }
 
 
-static TIMER_CALLBACK( flyball_joystick_callback )
+TIMER_CALLBACK_MEMBER(flyball_state::flyball_joystick_callback)
 {
-	flyball_state *state = machine.driver_data<flyball_state>();
 	int potsense = param;
 
-	if (potsense & ~state->m_potmask)
-		generic_pulse_irq_line(state->m_maincpu, 0, 1);
+	if (potsense & ~m_potmask)
+		generic_pulse_irq_line(*m_maincpu, 0, 1);
 
-	state->m_potsense |= potsense;
+	m_potsense |= potsense;
 }
 
 
-static TIMER_CALLBACK( flyball_quarter_callback	)
+TIMER_CALLBACK_MEMBER(flyball_state::flyball_quarter_callback)
 {
-	flyball_state *state = machine.driver_data<flyball_state>();
 	int scanline = param;
 	int potsense[64], i;
 
 	memset(potsense, 0, sizeof potsense);
 
-	potsense[state->ioport("STICK1_Y")->read()] |= 1;
-	potsense[state->ioport("STICK1_X")->read()] |= 2;
-	potsense[state->ioport("STICK0_Y")->read()] |= 4;
-	potsense[state->ioport("STICK0_X")->read()] |= 8;
+	potsense[ioport("STICK1_Y")->read()] |= 1;
+	potsense[ioport("STICK1_X")->read()] |= 2;
+	potsense[ioport("STICK0_Y")->read()] |= 4;
+	potsense[ioport("STICK0_X")->read()] |= 8;
 
 	for (i = 0; i < 64; i++)
 		if (potsense[i] != 0)
-			machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline + i), FUNC(flyball_joystick_callback), potsense[i]);
+			machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline + i), timer_expired_delegate(FUNC(flyball_state::flyball_joystick_callback),this), potsense[i]);
 
 	scanline += 0x40;
 	scanline &= 0xff;
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(flyball_quarter_callback), scanline);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(flyball_state::flyball_quarter_callback),this), scanline);
 
-	state->m_potsense = 0;
-	state->m_potmask = 0;
+	m_potsense = 0;
+	m_potmask = 0;
 }
 
 
@@ -398,7 +398,7 @@ void flyball_state::machine_reset()
 
 	machine().device("maincpu")->reset();
 
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(flyball_quarter_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(flyball_state::flyball_quarter_callback),this));
 
 	m_pitcher_vert = 0;
 	m_pitcher_horz = 0;
@@ -415,7 +415,7 @@ static MACHINE_CONFIG_START( flyball, flyball_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK/16)
 	MCFG_CPU_PROGRAM_MAP(flyball_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", flyball_state,  nmi_line_pulse)
 
 
 	/* video hardware */
@@ -423,7 +423,7 @@ static MACHINE_CONFIG_START( flyball, flyball_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(flyball)
+	MCFG_SCREEN_UPDATE_DRIVER(flyball_state, screen_update_flyball)
 
 	MCFG_GFXDECODE(flyball)
 	MCFG_PALETTE_LENGTH(4)

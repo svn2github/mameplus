@@ -65,6 +65,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_t1_tile_info);
 	TILE_GET_INFO_MEMBER(get_t2_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_koftball(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(bmc_interrupt);
 };
 
 
@@ -96,11 +98,10 @@ void koftball_state::video_start()
 	m_tilemap_1->set_transparent_pen(0);
 }
 
-static SCREEN_UPDATE_IND16( koftball )
+UINT32 koftball_state::screen_update_koftball(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	koftball_state *state = screen.machine().driver_data<koftball_state>();
-	state->m_tilemap_2->draw(bitmap, cliprect, 0, 0);
-	state->m_tilemap_1->draw(bitmap, cliprect, 0, 0);
+	m_tilemap_2->draw(bitmap, cliprect, 0, 0);
+	m_tilemap_1->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -209,19 +210,18 @@ static INPUT_PORTS_START( koftball )
 INPUT_PORTS_END
 
 
-static TIMER_DEVICE_CALLBACK( bmc_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(koftball_state::bmc_interrupt)
 {
-	koftball_state *state = timer.machine().driver_data<koftball_state>();
 	int scanline = param;
 
 	if(scanline == 240)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 128)
-		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 	if(scanline == 64)
-		state->m_maincpu->set_input_line(6, HOLD_LINE);
+		m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static const gfx_layout tilelayout =
@@ -243,12 +243,12 @@ GFXDECODE_END
 static MACHINE_CONFIG_START( koftball, koftball_state )
 	MCFG_CPU_ADD("maincpu", M68000, 21477270/2 )
 	MCFG_CPU_PROGRAM_MAP(koftball_mem)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", bmc_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", koftball_state, bmc_interrupt, "screen", 0, 1)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_UPDATE_STATIC(koftball)
+	MCFG_SCREEN_UPDATE_DRIVER(koftball_state, screen_update_koftball)
 
 	MCFG_GFXDECODE(koftball)
 

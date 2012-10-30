@@ -73,18 +73,17 @@ WRITE8_MEMBER(iqblock_state::grndtour_prot_w)
 }
 
 
-static TIMER_DEVICE_CALLBACK( iqblock_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(iqblock_state::iqblock_irq)
 {
-	iqblock_state *state = timer.machine().driver_data<iqblock_state>();
 	int scanline = param;
 
 	if((scanline % 16) != 0)
 		return;
 
 	if((scanline % 32) == 16)
-		state->m_maincpu->set_input_line(0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 	else if	((scanline % 32) == 0)
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -275,7 +274,7 @@ static MACHINE_CONFIG_START( iqblock, iqblock_state )
 	MCFG_CPU_ADD("maincpu", Z80,12000000/2)	/* 6 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", iqblock_irq, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", iqblock_state, iqblock_irq, "screen", 0, 1)
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
@@ -285,7 +284,7 @@ static MACHINE_CONFIG_START( iqblock, iqblock_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(iqblock)
+	MCFG_SCREEN_UPDATE_DRIVER(iqblock_state, screen_update_iqblock)
 
 	MCFG_GFXDECODE(iqblock)
 	MCFG_PALETTE_LENGTH(1024)
@@ -443,7 +442,7 @@ DRIVER_INIT_MEMBER(iqblock_state,iqblock)
 	m_generic_paletteram2_8.set_target(rom + 0x12800, 0x800);
 	m_fgvideoram = rom + 0x16800;
 	m_bgvideoram = rom + 0x17000;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe26, 0xfe26, write8_delegate(FUNC(iqblock_state::iqblock_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xfe26, 0xfe26, write8_delegate(FUNC(iqblock_state::iqblock_prot_w),this));
 	m_video_type=1;
 }
 
@@ -465,7 +464,7 @@ DRIVER_INIT_MEMBER(iqblock_state,grndtour)
 	m_generic_paletteram2_8.set_target(rom + 0x12800, 0x800);
 	m_fgvideoram = rom + 0x16800;
 	m_bgvideoram = rom + 0x17000;
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe39, 0xfe39, write8_delegate(FUNC(iqblock_state::grndtour_prot_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xfe39, 0xfe39, write8_delegate(FUNC(iqblock_state::grndtour_prot_w),this));
 	m_video_type=0;
 }
 

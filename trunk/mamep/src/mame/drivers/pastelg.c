@@ -47,7 +47,7 @@ READ8_MEMBER(pastelg_state::pastelg_sndrom_r)
 {
 	UINT8 *ROM = memregion("voice")->base();
 
-	return ROM[pastelg_blitter_src_addr_r(&space) & 0x7fff];
+	return ROM[pastelg_blitter_src_addr_r(space) & 0x7fff];
 }
 
 static ADDRESS_MAP_START( pastelg_map, AS_PROGRAM, 8, pastelg_state )
@@ -410,7 +410,7 @@ static MACHINE_CONFIG_START( pastelg, pastelg_state )
 	MCFG_CPU_ADD("maincpu", Z80, 19968000/4)	/* unknown divider, galds definitely relies on this for correct voice pitch */
 	MCFG_CPU_PROGRAM_MAP(pastelg_map)
 	MCFG_CPU_IO_MAP(pastelg_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert) // nmiclock not written, chip is 1411M1 instead of 1413M3
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pastelg_state,  irq0_line_assert) // nmiclock not written, chip is 1411M1 instead of 1413M3
 
 	MCFG_MACHINE_RESET(nb1413m3)
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -421,7 +421,7 @@ static MACHINE_CONFIG_START( pastelg, pastelg_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(pastelg)
+	MCFG_SCREEN_UPDATE_DRIVER(pastelg_state, screen_update_pastelg)
 
 	MCFG_PALETTE_LENGTH(32)
 
@@ -466,7 +466,7 @@ static MACHINE_CONFIG_START( threeds, pastelg_state )
 	MCFG_CPU_ADD("maincpu", Z80, 19968000/4)	/* unknown divider, galds definitely relies on this for correct voice pitch */
 	MCFG_CPU_PROGRAM_MAP(pastelg_map)
 	MCFG_CPU_IO_MAP(threeds_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", pastelg_state,  irq0_line_assert)
 
 	MCFG_MACHINE_RESET(nb1413m3)
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -477,7 +477,7 @@ static MACHINE_CONFIG_START( threeds, pastelg_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(pastelg)
+	MCFG_SCREEN_UPDATE_DRIVER(pastelg_state, screen_update_pastelg)
 
 	MCFG_PALETTE_LENGTH(32)
 

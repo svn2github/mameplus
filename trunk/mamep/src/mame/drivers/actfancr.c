@@ -323,7 +323,7 @@ static MACHINE_CONFIG_START( actfancr, actfancr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",H6280,21477200/3) /* Should be accurate */
 	MCFG_CPU_PROGRAM_MAP(actfan_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold) /* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", actfancr_state,  irq0_line_hold) /* VBL */
 
 	MCFG_CPU_ADD("audiocpu",M6502, 1500000) /* Should be accurate */
 	MCFG_CPU_PROGRAM_MAP(dec0_s_map)
@@ -337,7 +337,7 @@ static MACHINE_CONFIG_START( actfancr, actfancr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(actfancr)
+	MCFG_SCREEN_UPDATE_DRIVER(actfancr_state, screen_update_actfancr)
 
 	MCFG_GFXDECODE(actfan)
 	MCFG_PALETTE_LENGTH(768)
@@ -373,7 +373,7 @@ static MACHINE_CONFIG_START( triothep, actfancr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",H6280,XTAL_21_4772MHz/3) /* XIN=21.4772Mhz, verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(triothep_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold) /* VBL */
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", actfancr_state,  irq0_line_hold) /* VBL */
 
 	MCFG_CPU_ADD("audiocpu",M6502, XTAL_12MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(dec0_s_map)
@@ -387,7 +387,7 @@ static MACHINE_CONFIG_START( triothep, actfancr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(actfancr)
+	MCFG_SCREEN_UPDATE_DRIVER(actfancr_state, screen_update_actfancr)
 
 	MCFG_GFXDECODE(triothep)
 	MCFG_PALETTE_LENGTH(768)

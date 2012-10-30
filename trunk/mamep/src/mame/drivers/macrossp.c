@@ -579,7 +579,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	// macrossp_state *state = space->machine().driver_data<macrossp_state>();
+	// macrossp_state *state = space.machine().driver_data<macrossp_state>();
 	logerror("ES5506 irq %d\n", irq);
 
 	/* IRQ lines 1 & 4 on the sound 68000 are definitely triggered by the ES5506,
@@ -623,7 +623,7 @@ static MACHINE_CONFIG_START( macrossp, macrossp_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, 50000000/2)	/* 25 MHz */
 	MCFG_CPU_PROGRAM_MAP(macrossp_map)
-	MCFG_CPU_VBLANK_INT("screen", irq3_line_hold) // there are others ...
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", macrossp_state,  irq3_line_hold) // there are others ...
 
 	MCFG_CPU_ADD("audiocpu", M68000, 32000000/2)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(macrossp_sound_map)
@@ -635,8 +635,8 @@ static MACHINE_CONFIG_START( macrossp, macrossp_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*16, 16*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 24*16-1, 0*16, 15*16-1)
-	MCFG_SCREEN_UPDATE_STATIC(macrossp)
-	MCFG_SCREEN_VBLANK_STATIC(macrossp)
+	MCFG_SCREEN_UPDATE_DRIVER(macrossp_state, screen_update_macrossp)
+	MCFG_SCREEN_VBLANK_DRIVER(macrossp_state, screen_eof_macrossp)
 
 	MCFG_GFXDECODE(macrossp)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -779,13 +779,13 @@ WRITE32_MEMBER(macrossp_state::quizmoon_speedup_w)
 
 DRIVER_INIT_MEMBER(macrossp_state,macrossp)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xf10158, 0xf1015b, write32_delegate(FUNC(macrossp_state::macrossp_speedup_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xf10158, 0xf1015b, write32_delegate(FUNC(macrossp_state::macrossp_speedup_w),this));
 }
 
 DRIVER_INIT_MEMBER(macrossp_state,quizmoon)
 {
 #ifdef UNUSED_FUNCTION
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xf00020, 0xf00023, write32_delegate(FUNC(macrossp_state::quizmoon_speedup_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xf00020, 0xf00023, write32_delegate(FUNC(macrossp_state::quizmoon_speedup_w),this));
 #endif
 }
 

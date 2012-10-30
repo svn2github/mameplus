@@ -225,9 +225,9 @@ WRITE32_MEMBER(undrfire_state::color_ram_w)
                 INTERRUPTS
 ***********************************************************/
 
-static TIMER_CALLBACK( interrupt5 )
+TIMER_CALLBACK_MEMBER(undrfire_state::interrupt5)
 {
-	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -359,7 +359,7 @@ READ32_MEMBER(undrfire_state::unknown_hardware_r)
 WRITE32_MEMBER(undrfire_state::unknown_int_req_w)
 {
 	/* 10000 cycle delay is arbitrary */
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), FUNC(interrupt5));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), timer_expired_delegate(FUNC(undrfire_state::interrupt5),this));
 }
 
 
@@ -464,7 +464,7 @@ WRITE32_MEMBER(undrfire_state::cbombers_adc_w)
 {
 	/* One interrupt per input port (4 per frame, though only 2 used).
         1000 cycle delay is arbitrary */
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(1000), FUNC(interrupt5));
+	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(1000), timer_expired_delegate(FUNC(undrfire_state::interrupt5),this));
 }
 
 /***********************************************************
@@ -697,11 +697,10 @@ GFXDECODE_END
                  MACHINE DRIVERS
 ***********************************************************/
 
-static INTERRUPT_GEN( undrfire_interrupt )
+INTERRUPT_GEN_MEMBER(undrfire_state::undrfire_interrupt)
 {
-	undrfire_state *state = device->machine().driver_data<undrfire_state>();
-	state->m_frame_counter ^= 1;
-	device->execute().set_input_line(4, HOLD_LINE);
+	m_frame_counter ^= 1;
+	device.execute().set_input_line(4, HOLD_LINE);
 }
 
 static const tc0100scn_interface undrfire_tc0100scn_intf =
@@ -729,7 +728,7 @@ static MACHINE_CONFIG_START( undrfire, undrfire_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(undrfire_map)
-	MCFG_CPU_VBLANK_INT("screen", undrfire_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", undrfire_state,  undrfire_interrupt)
 
 	MCFG_EEPROM_ADD("eeprom", undrfire_eeprom_interface)
 
@@ -739,7 +738,7 @@ static MACHINE_CONFIG_START( undrfire, undrfire_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 3*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(undrfire)
+	MCFG_SCREEN_UPDATE_DRIVER(undrfire_state, screen_update_undrfire)
 
 	MCFG_GFXDECODE(undrfire)
 	MCFG_PALETTE_LENGTH(16384)
@@ -758,11 +757,11 @@ static MACHINE_CONFIG_START( cbombers, undrfire_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68EC020, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(cbombers_cpua_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", undrfire_state,  irq4_line_hold)
 
 	MCFG_CPU_ADD("sub", M68000, 16000000)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(cbombers_cpub_map)
-	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", undrfire_state,  irq4_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(480))	/* CPU slices - Need to interleave Cpu's 1 & 3 */
 
@@ -774,7 +773,7 @@ static MACHINE_CONFIG_START( cbombers, undrfire_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 3*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cbombers)
+	MCFG_SCREEN_UPDATE_DRIVER(undrfire_state, screen_update_cbombers)
 
 	MCFG_GFXDECODE(cbombers)
 	MCFG_PALETTE_LENGTH(16384)

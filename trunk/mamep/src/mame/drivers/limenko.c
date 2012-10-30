@@ -87,6 +87,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_md_tile_info);
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_limenko(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -514,31 +515,30 @@ void limenko_state::video_start()
 	m_sprites_bitmap_pri.allocate(384,240);
 }
 
-static SCREEN_UPDATE_IND16( limenko )
+UINT32 limenko_state::screen_update_limenko(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	limenko_state *state = screen.machine().driver_data<limenko_state>();
-	// state->m_videoreg[4] ???? It always has this value: 0xffeffff8 (2 signed bytes? values: -17 and -8 ?)
+	// m_videoreg[4] ???? It always has this value: 0xffeffff8 (2 signed bytes? values: -17 and -8 ?)
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
-	state->m_bg_tilemap->enable(state->m_videoreg[0] & 4);
-	state->m_md_tilemap->enable(state->m_videoreg[0] & 2);
-	state->m_fg_tilemap->enable(state->m_videoreg[0] & 1);
+	m_bg_tilemap->enable(m_videoreg[0] & 4);
+	m_md_tilemap->enable(m_videoreg[0] & 2);
+	m_fg_tilemap->enable(m_videoreg[0] & 1);
 
-	state->m_bg_tilemap->set_scrolly(0, state->m_videoreg[3] & 0xffff);
-	state->m_md_tilemap->set_scrolly(0, state->m_videoreg[2] & 0xffff);
-	state->m_fg_tilemap->set_scrolly(0, state->m_videoreg[1] & 0xffff);
+	m_bg_tilemap->set_scrolly(0, m_videoreg[3] & 0xffff);
+	m_md_tilemap->set_scrolly(0, m_videoreg[2] & 0xffff);
+	m_fg_tilemap->set_scrolly(0, m_videoreg[1] & 0xffff);
 
-	state->m_bg_tilemap->set_scrollx(0, (state->m_videoreg[3] & 0xffff0000) >> 16);
-	state->m_md_tilemap->set_scrollx(0, (state->m_videoreg[2] & 0xffff0000) >> 16);
-	state->m_fg_tilemap->set_scrollx(0, (state->m_videoreg[1] & 0xffff0000) >> 16);
+	m_bg_tilemap->set_scrollx(0, (m_videoreg[3] & 0xffff0000) >> 16);
+	m_md_tilemap->set_scrollx(0, (m_videoreg[2] & 0xffff0000) >> 16);
+	m_fg_tilemap->set_scrollx(0, (m_videoreg[1] & 0xffff0000) >> 16);
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_md_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0,1);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_md_tilemap->draw(bitmap, cliprect, 0,0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0,1);
 
-	if(state->m_videoreg[0] & 8)
-		copy_sprites(screen.machine(), bitmap, state->m_sprites_bitmap, screen.machine().priority_bitmap, cliprect);
+	if(m_videoreg[0] & 8)
+		copy_sprites(machine(), bitmap, m_sprites_bitmap, machine().priority_bitmap, cliprect);
 
 	return 0;
 }
@@ -752,7 +752,7 @@ static MACHINE_CONFIG_START( limenko, limenko_state )
 	MCFG_CPU_ADD("maincpu", E132XN, 20000000*4)	/* 4x internal multiplier */
 	MCFG_CPU_PROGRAM_MAP(limenko_map)
 	MCFG_CPU_IO_MAP(limenko_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", limenko_state,  irq0_line_hold)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -762,7 +762,7 @@ static MACHINE_CONFIG_START( limenko, limenko_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(384, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 383, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(limenko)
+	MCFG_SCREEN_UPDATE_DRIVER(limenko_state, screen_update_limenko)
 
 	MCFG_GFXDECODE(limenko)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -780,7 +780,7 @@ static MACHINE_CONFIG_START( spotty, limenko_state )
 	MCFG_CPU_ADD("maincpu", GMS30C2232, 20000000)	/* 20 MHz, no internal multiplier */
 	MCFG_CPU_PROGRAM_MAP(spotty_map)
 	MCFG_CPU_IO_MAP(spotty_io_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", limenko_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", AT89C4051, 4000000)	/* 4 MHz */
 	MCFG_CPU_IO_MAP(spotty_sound_io_map)
@@ -793,7 +793,7 @@ static MACHINE_CONFIG_START( spotty, limenko_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(384, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 383, 0, 239)
-	MCFG_SCREEN_UPDATE_STATIC(limenko)
+	MCFG_SCREEN_UPDATE_DRIVER(limenko_state, screen_update_limenko)
 
 	MCFG_GFXDECODE(limenko)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -1118,7 +1118,7 @@ DRIVER_INIT_MEMBER(limenko_state,common)
 {
 
 	// Set up the QS1000 program ROM banking, taking care not to overlap the internal RAM
-	machine().device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "bank");
+	machine().device("qs1000:cpu")->memory().space(AS_IO).install_read_bank(0x0100, 0xffff, "bank");
 	membank("qs1000:bank")->configure_entries(0, 8, memregion("qs1000:cpu")->base()+0x100, 0x10000);
 
 	m_spriteram_bit = 1;
@@ -1126,21 +1126,21 @@ DRIVER_INIT_MEMBER(limenko_state,common)
 
 DRIVER_INIT_MEMBER(limenko_state,dynabomb)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xe2784, 0xe2787, read32_delegate(FUNC(limenko_state::dynabomb_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xe2784, 0xe2787, read32_delegate(FUNC(limenko_state::dynabomb_speedup_r), this));
 
 	DRIVER_INIT_CALL(common);
 }
 
 DRIVER_INIT_MEMBER(limenko_state,legendoh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x32ab0, 0x32ab3, read32_delegate(FUNC(limenko_state::legendoh_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x32ab0, 0x32ab3, read32_delegate(FUNC(limenko_state::legendoh_speedup_r), this));
 
 	DRIVER_INIT_CALL(common);
 }
 
 DRIVER_INIT_MEMBER(limenko_state,sb2003)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x135800, 0x135803, read32_delegate(FUNC(limenko_state::sb2003_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x135800, 0x135803, read32_delegate(FUNC(limenko_state::sb2003_speedup_r), this));
 
 	DRIVER_INIT_CALL(common);
 }
@@ -1161,7 +1161,7 @@ DRIVER_INIT_MEMBER(limenko_state,spotty)
 		dst[x+2] = (src[x+1]&0x0f) >> 0;
 	}
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x6626c, 0x6626f, read32_delegate(FUNC(limenko_state::spotty_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x6626c, 0x6626f, read32_delegate(FUNC(limenko_state::spotty_speedup_r), this));
 
 	m_spriteram_bit = 1;
 }

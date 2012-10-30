@@ -44,6 +44,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_pkscramble(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(scanline_callback);
 };
 
 
@@ -214,22 +216,21 @@ TILE_GET_INFO_MEMBER(pkscram_state::get_fg_tile_info)
 	SET_TILE_INFO_MEMBER(0,tile,color,0);
 }
 
-static TIMER_DEVICE_CALLBACK( scanline_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(pkscram_state::scanline_callback)
 {
-	pkscram_state *state = timer.machine().driver_data<pkscram_state>();
 	if (param == interrupt_scanline)
 	{
-    	if (state->m_out & 0x2000)
-    		timer.machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
-		timer.adjust(timer.machine().primary_screen->time_until_pos(param + 1), param+1);
-		state->m_interrupt_line_active = 1;
+    	if (m_out & 0x2000)
+    		machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
+		timer.adjust(machine().primary_screen->time_until_pos(param + 1), param+1);
+		m_interrupt_line_active = 1;
 	}
 	else
 	{
-		if (state->m_interrupt_line_active)
-	    	timer.machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
-		timer.adjust(timer.machine().primary_screen->time_until_pos(interrupt_scanline), interrupt_scanline);
-		state->m_interrupt_line_active = 0;
+		if (m_interrupt_line_active)
+	    	machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
+		timer.adjust(machine().primary_screen->time_until_pos(interrupt_scanline), interrupt_scanline);
+		m_interrupt_line_active = 0;
 	}
 }
 
@@ -243,12 +244,11 @@ void pkscram_state::video_start()
 	m_fg_tilemap->set_transparent_pen(15);
 }
 
-static SCREEN_UPDATE_IND16( pkscramble )
+UINT32 pkscram_state::screen_update_pkscramble(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	pkscram_state *state = screen.machine().driver_data<pkscram_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_md_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_md_tilemap->draw(bitmap, cliprect, 0,0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }
 
@@ -303,12 +303,12 @@ static MACHINE_CONFIG_START( pkscramble, pkscram_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 8000000 )
 	MCFG_CPU_PROGRAM_MAP(pkscramble_map)
-	//MCFG_CPU_VBLANK_INT("screen", irq1_line_hold) /* only valid irq */
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", pkscram_state,  irq1_line_hold) /* only valid irq */
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 
-	MCFG_TIMER_ADD("scan_timer", scanline_callback)
+	MCFG_TIMER_DRIVER_ADD("scan_timer", pkscram_state, scanline_callback)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -316,7 +316,7 @@ static MACHINE_CONFIG_START( pkscramble, pkscram_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 24*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(pkscramble)
+	MCFG_SCREEN_UPDATE_DRIVER(pkscram_state, screen_update_pkscramble)
 
 	MCFG_PALETTE_LENGTH(0x800)
 	MCFG_GFXDECODE(pkscram)

@@ -77,20 +77,22 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack2_w);
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
 	DECLARE_WRITE_LINE_MEMBER(taitowlf_pic8259_1_set_int_line);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 	DECLARE_READ8_MEMBER(get_slave_ack);
 	DECLARE_DRIVER_INIT(taitowlf);
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_taitowlf(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 #if !ENABLE_VGA
-static SCREEN_UPDATE_RGB32( taitowlf )
+UINT32 taitowlf_state::screen_update_taitowlf(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	int x,y,count;
-	const UINT8 *blit_ram = screen.machine().root_device().memregion("user5")->base();
+	const UINT8 *blit_ram = machine().root_device().memregion("user5")->base();
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	count = (0);
 
@@ -103,7 +105,7 @@ static SCREEN_UPDATE_RGB32( taitowlf )
 			color = (blit_ram[count] & 0xff);
 
 			if(cliprect.contains(x+0, y))
-				bitmap.pix32(y, x+0) = screen.machine().pens[color];
+				bitmap.pix32(y, x+0) = machine().pens[color];
 
 			count++;
 		}
@@ -113,19 +115,17 @@ static SCREEN_UPDATE_RGB32( taitowlf )
 }
 #endif
 
-static void ide_interrupt(device_t *device, int state);
-
 
 READ8_MEMBER(taitowlf_state::at_dma8237_2_r)
 {
 	device_t *device = machine().device("dma8237_2");
-	return i8237_r(device, offset / 2);
+	return i8237_r(device, space, offset / 2);
 }
 
 WRITE8_MEMBER(taitowlf_state::at_dma8237_2_w)
 {
 	device_t *device = machine().device("dma8237_2");
-	i8237_w(device, offset / 2, data);
+	i8237_w(device, space, offset / 2, data);
 }
 
 // Intel 82439TX System Controller (MXTC)
@@ -295,26 +295,26 @@ WRITE32_MEMBER(taitowlf_state::pnp_data_w)
 READ32_MEMBER(taitowlf_state::ide_r)
 {
 	device_t *device = machine().device("ide");
-	return ide_controller32_r(device, 0x1f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, space, 0x1f0/4 + offset, mem_mask);
 }
 
 WRITE32_MEMBER(taitowlf_state::ide_w)
 {
 	device_t *device = machine().device("ide");
-	ide_controller32_w(device, 0x1f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, space, 0x1f0/4 + offset, data, mem_mask);
 }
 
 READ32_MEMBER(taitowlf_state::fdc_r)
 {
 	device_t *device = machine().device("ide");
-	return ide_controller32_r(device, 0x3f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, space, 0x3f0/4 + offset, mem_mask);
 }
 
 WRITE32_MEMBER(taitowlf_state::fdc_w)
 {
 	device_t *device = machine().device("ide");
 	//mame_printf_debug("FDC: write %08X, %08X, %08X\n", data, offset, mem_mask);
-	ide_controller32_w(device, 0x3f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, space, 0x3f0/4 + offset, data, mem_mask);
 }
 
 
@@ -454,7 +454,11 @@ static I8237_INTERFACE( dma8237_2_config )
 
 static ADDRESS_MAP_START( taitowlf_map, AS_PROGRAM, 32, taitowlf_state )
 	AM_RANGE(0x00000000, 0x0009ffff) AM_RAM
+	#if ENABLE_VGA
+	AM_RANGE(0x000a0000, 0x000bffff) AM_DEVREADWRITE8("vga", vga_device, mem_r, mem_w, 0xffffffff)
+	#else
 	AM_RANGE(0x000a0000, 0x000bffff) AM_RAM
+	#endif
 	#if ENABLE_VGA
 	AM_RANGE(0x000c0000, 0x000c7fff) AM_RAM AM_REGION("video_bios", 0)
 	#else
@@ -481,6 +485,11 @@ static ADDRESS_MAP_START(taitowlf_io, AS_IO, 32, taitowlf_state )
 	AM_RANGE(0x0300, 0x03af) AM_NOP
 	AM_RANGE(0x03b0, 0x03df) AM_NOP
 	AM_RANGE(0x0278, 0x027b) AM_WRITE(pnp_config_w)
+	#if ENABLE_VGA
+	AM_RANGE(0x03b0, 0x03bf) AM_DEVREADWRITE8("vga", vga_device, port_03b0_r, port_03b0_w, 0xffffffff)
+	AM_RANGE(0x03c0, 0x03cf) AM_DEVREADWRITE8("vga", vga_device, port_03c0_r, port_03c0_w, 0xffffffff)
+	AM_RANGE(0x03d0, 0x03df) AM_DEVREADWRITE8("vga", vga_device, port_03d0_r, port_03d0_w, 0xffffffff)
+	#endif
 	AM_RANGE(0x03f0, 0x03ff) AM_READWRITE(fdc_r, fdc_w)
 	AM_RANGE(0x0a78, 0x0a7b) AM_WRITE(pnp_data_w)
 	AM_RANGE(0x0cf8, 0x0cff) AM_DEVREADWRITE("pcibus", pci_bus_legacy_device, read, write)
@@ -618,13 +627,6 @@ void taitowlf_state::palette_init()
 }
 #endif
 
-static const ide_config ide_intf =
-{
-	ide_interrupt,
-	NULL,
-	0
-};
-
 static MACHINE_CONFIG_START( taitowlf, taitowlf_state )
 
 	/* basic machine hardware */
@@ -642,7 +644,8 @@ static MACHINE_CONFIG_START( taitowlf, taitowlf_state )
 	MCFG_I8237_ADD( "dma8237_2", XTAL_14_31818MHz/3, dma8237_2_config )
 	MCFG_PIC8259_ADD( "pic8259_1", taitowlf_pic8259_1_config )
 	MCFG_PIC8259_ADD( "pic8259_2", taitowlf_pic8259_2_config )
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE(DEVICE_SELF, taitowlf_state, ide_interrupt))
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 
 	/* video hardware */
@@ -656,7 +659,7 @@ static MACHINE_CONFIG_START( taitowlf, taitowlf_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
 	MCFG_PALETTE_LENGTH(256)
-	MCFG_SCREEN_UPDATE_STATIC(taitowlf)
+	MCFG_SCREEN_UPDATE_DRIVER(taitowlf_state, screen_update_taitowlf)
 	#endif
 MACHINE_CONFIG_END
 
@@ -671,10 +674,9 @@ static void keyboard_interrupt(running_machine &machine, int state)
 	pic8259_ir1_w(drvstate->m_pic8259_1, state);
 }
 
-static void ide_interrupt(device_t *device, int state)
+WRITE_LINE_MEMBER(taitowlf_state::ide_interrupt)
 {
-	taitowlf_state *drvstate = device->machine().driver_data<taitowlf_state>();
-	pic8259_ir6_w(drvstate->m_pic8259_2, state);
+	pic8259_ir6_w(m_pic8259_2, state);
 }
 
 static int taitowlf_get_out2(running_machine &machine)
@@ -694,10 +696,6 @@ static void taitowlf_set_keyb_int(running_machine &machine, int state)
 	pic8259_ir1_w(drvstate->m_pic8259_1, state);
 }
 
-#if ENABLE_VGA
-static READ8_HANDLER( vga_setting ) { return 0xff; } // hard-code to color
-#endif
-
 DRIVER_INIT_MEMBER(taitowlf_state,taitowlf)
 {
 	m_bios_ram = auto_alloc_array(machine(), UINT32, 0x10000/4);
@@ -707,10 +705,6 @@ DRIVER_INIT_MEMBER(taitowlf_state,taitowlf)
 	intel82439tx_init(machine());
 
 	kbdc8042_init(machine(), &at8042);
-	#if ENABLE_VGA
-	pc_vga_init(machine(), vga_setting, NULL);
-	pc_vga_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine().device("maincpu")->memory().space(AS_IO), 0x0000);
-	#endif
 }
 
 /*****************************************************************************/

@@ -43,14 +43,14 @@ Notes:
 
 static READ8_HANDLER( trvquest_question_r )
 {
-	gameplan_state *state = space->machine().driver_data<gameplan_state>();
+	gameplan_state *state = space.machine().driver_data<gameplan_state>();
 
 	return state->memregion("questions")->base()[*state->m_trvquest_question * 0x2000 + offset];
 }
 
 static WRITE8_DEVICE_HANDLER( trvquest_coin_w )
 {
-	coin_counter_w(device->machine(), 0, ~data & 1);
+	coin_counter_w(space.machine(), 0, ~data & 1);
 }
 
 static WRITE8_DEVICE_HANDLER( trvquest_misc_w )
@@ -204,18 +204,17 @@ MACHINE_RESET_MEMBER(gameplan_state,trvquest)
 	m_video_data = 0;
 }
 
-static INTERRUPT_GEN( trvquest_interrupt )
+INTERRUPT_GEN_MEMBER(gameplan_state::trvquest_interrupt)
 {
-	gameplan_state *state = device->machine().driver_data<gameplan_state>();
-	state->m_via_2->write_ca1(1);
-	state->m_via_2->write_ca1(0);
+	m_via_2->write_ca1(1);
+	m_via_2->write_ca1(0);
 }
 
 static MACHINE_CONFIG_START( trvquest, gameplan_state )
 
 	MCFG_CPU_ADD("maincpu", M6809,XTAL_6MHz/4)
 	MCFG_CPU_PROGRAM_MAP(cpu_map)
-	MCFG_CPU_VBLANK_INT("screen", trvquest_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gameplan_state, trvquest_interrupt)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 	MCFG_MACHINE_START_OVERRIDE(gameplan_state,trvquest)

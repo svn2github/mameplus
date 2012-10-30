@@ -741,13 +741,13 @@ Notes:
 
 /********************************************************************/
 
-static UINT8 z80_fifoout_pop(address_space *space)
+static UINT8 z80_fifoout_pop(address_space &space)
 {
-	seibuspi_state *state = space->machine().driver_data<seibuspi_state>();
+	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
 	UINT8 r;
 	if (state->m_fifoout_wpos == state->m_fifoout_rpos)
 	{
-		logerror("Sound FIFOOUT underflow at %08X\n", space->device().safe_pc());
+		logerror("Sound FIFOOUT underflow at %08X\n", space.device().safe_pc());
 	}
 	r = state->m_fifoout_data[state->m_fifoout_rpos++];
 	if(state->m_fifoout_rpos == FIFO_SIZE)
@@ -763,9 +763,9 @@ static UINT8 z80_fifoout_pop(address_space *space)
 	return r;
 }
 
-static void z80_fifoout_push(address_space *space, UINT8 data)
+static void z80_fifoout_push(address_space &space, UINT8 data)
 {
-	seibuspi_state *state = space->machine().driver_data<seibuspi_state>();
+	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
 	state->m_fifoout_data[state->m_fifoout_wpos++] = data;
 	if (state->m_fifoout_wpos == FIFO_SIZE)
 	{
@@ -773,19 +773,19 @@ static void z80_fifoout_push(address_space *space, UINT8 data)
 	}
 	if(state->m_fifoout_wpos == state->m_fifoout_rpos)
 	{
-		fatalerror("Sound FIFOOUT overflow at %08X\n", space->device().safe_pc());
+		fatalerror("Sound FIFOOUT overflow at %08X\n", space.device().safe_pc());
 	}
 
 	state->m_fifoout_read_request = 1;
 }
 
-static UINT8 z80_fifoin_pop(address_space *space)
+static UINT8 z80_fifoin_pop(address_space &space)
 {
-	seibuspi_state *state = space->machine().driver_data<seibuspi_state>();
+	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
 	UINT8 r;
 	if (state->m_fifoin_wpos == state->m_fifoin_rpos)
 	{
-		fatalerror("Sound FIFOIN underflow at %08X\n", space->device().safe_pc());
+		fatalerror("Sound FIFOIN underflow at %08X\n", space.device().safe_pc());
 	}
 	r = state->m_fifoin_data[state->m_fifoin_rpos++];
 	if(state->m_fifoin_rpos == FIFO_SIZE)
@@ -801,9 +801,9 @@ static UINT8 z80_fifoin_pop(address_space *space)
 	return r;
 }
 
-static void z80_fifoin_push(address_space *space, UINT8 data)
+static void z80_fifoin_push(address_space &space, UINT8 data)
 {
-	seibuspi_state *state = space->machine().driver_data<seibuspi_state>();
+	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
 	state->m_fifoin_data[state->m_fifoin_wpos++] = data;
 	if(state->m_fifoin_wpos == FIFO_SIZE)
 	{
@@ -811,7 +811,7 @@ static void z80_fifoin_push(address_space *space, UINT8 data)
 	}
 	if(state->m_fifoin_wpos == state->m_fifoin_rpos)
 	{
-		fatalerror("Sound FIFOIN overflow at %08X\n", space->device().safe_pc());
+		fatalerror("Sound FIFOIN overflow at %08X\n", space.device().safe_pc());
 	}
 
 	state->m_fifoin_read_request = 1;
@@ -835,7 +835,7 @@ WRITE8_MEMBER(seibuspi_state::sb_coin_w)
 
 READ32_MEMBER(seibuspi_state::sound_fifo_r)
 {
-	UINT8 r = z80_fifoout_pop(&space);
+	UINT8 r = z80_fifoout_pop(space);
 
 	return r;
 }
@@ -843,7 +843,7 @@ READ32_MEMBER(seibuspi_state::sound_fifo_r)
 WRITE32_MEMBER(seibuspi_state::sound_fifo_w)
 {
 	if( ACCESSING_BITS_0_7 ) {
-		z80_fifoin_push(&space, data & 0xff);
+		z80_fifoin_push(space, data & 0xff);
 	}
 }
 
@@ -955,14 +955,14 @@ CUSTOM_INPUT_MEMBER(seibuspi_state::ejsakura_keyboard_r)
 
 READ8_MEMBER(seibuspi_state::z80_soundfifo_r)
 {
-	UINT8 r = z80_fifoin_pop(&space);
+	UINT8 r = z80_fifoin_pop(space);
 
 	return r;
 }
 
 WRITE8_MEMBER(seibuspi_state::z80_soundfifo_w)
 {
-	z80_fifoout_push(&space, data);
+	z80_fifoout_push(space, data);
 }
 
 READ8_MEMBER(seibuspi_state::z80_soundfifo_status_r)
@@ -1043,10 +1043,10 @@ static ADDRESS_MAP_START( spi_map, AS_PROGRAM, 32, seibuspi_state )
 	AM_RANGE(0x00000680, 0x00000683) AM_WRITE(sound_fifo_w)
 	AM_RANGE(0x00000684, 0x00000687) AM_READ(sound_fifo_status_r)
 	AM_RANGE(0x00000684, 0x00000687) AM_WRITENOP				/* Unknown */
-	AM_RANGE(0x000006d0, 0x000006d3) AM_DEVWRITE8_LEGACY("ds2404", ds2404_1w_reset_w, 0x000000ff)
-	AM_RANGE(0x000006d4, 0x000006d7) AM_DEVWRITE8_LEGACY("ds2404", ds2404_data_w, 0x000000ff)
-	AM_RANGE(0x000006d8, 0x000006db) AM_DEVWRITE8_LEGACY("ds2404", ds2404_clk_w, 0x000000ff)
-	AM_RANGE(0x000006dc, 0x000006df) AM_DEVREAD8_LEGACY("ds2404", ds2404_data_r, 0x000000ff)
+	AM_RANGE(0x000006d0, 0x000006d3) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_1w_reset_w, 0x000000ff)
+	AM_RANGE(0x000006d4, 0x000006d7) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_data_w, 0x000000ff)
+	AM_RANGE(0x000006d8, 0x000006db) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_clk_w, 0x000000ff)
+	AM_RANGE(0x000006dc, 0x000006df) AM_DEVREAD8("ds2404", ds2404_device, ds2404_data_r, 0x000000ff)
 	AM_RANGE(0x00000800, 0x0003ffff) AM_RAM AM_SHARE("spimainram")
 	AM_RANGE(0x00200000, 0x003fffff) AM_ROM AM_SHARE("share2")
 	AM_RANGE(0x00a00000, 0x013fffff) AM_READ(soundrom_r)
@@ -1789,9 +1789,9 @@ static const eeprom_interface eeprom_intf =
 	1				/* reset_delay */
 };
 
-static INTERRUPT_GEN( spi_interrupt )
+INTERRUPT_GEN_MEMBER(seibuspi_state::spi_interrupt)
 {
-	device->execute().set_input_line(0, ASSERT_LINE );
+	device.execute().set_input_line(0, ASSERT_LINE );
 }
 
 static IRQ_CALLBACK(spi_irq_callback)
@@ -1817,9 +1817,9 @@ MACHINE_RESET_MEMBER(seibuspi_state,spi)
 	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE );
 	machine().device("maincpu")->execute().set_irq_acknowledge_callback(spi_irq_callback);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sound_fifo_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00000688, 0x0000068b, write32_delegate(FUNC(seibuspi_state::z80_prg_fifo_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::z80_enable_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sound_fifo_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x00000688, 0x0000068b, write32_delegate(FUNC(seibuspi_state::z80_prg_fifo_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::z80_enable_w),this));
 
 	membank("bank4")->set_base(m_z80_rom);
 	membank("bank5")->set_base(m_z80_rom);
@@ -1847,7 +1847,7 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I386, 50000000/2)	/* Intel 386DX, 25MHz */
 	MCFG_CPU_PROGRAM_MAP(spi_map)
-	MCFG_CPU_VBLANK_INT("screen", spi_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seibuspi_state,  spi_interrupt)
 
 	MCFG_CPU_ADD("soundcpu", Z80, 28636360/4)
 	MCFG_CPU_PROGRAM_MAP(spisound_map)
@@ -1870,7 +1870,7 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(spi)
+	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_spi)
 
 	MCFG_GFXDECODE(spi)
 	MCFG_PALETTE_LENGTH(6144)
@@ -1899,8 +1899,8 @@ MACHINE_RESET_MEMBER(seibuspi_state,sxx2f)
 
 	memcpy(m_z80_rom, rom, 0x40000);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::eeprom_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sb_coin_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::eeprom_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sb_coin_r),this));
 
 	machine().device("maincpu")->execute().set_irq_acknowledge_callback(spi_irq_callback);
 
@@ -2077,28 +2077,28 @@ static void init_spi(running_machine &machine)
 
 DRIVER_INIT_MEMBER(seibuspi_state,rdft)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00298d0, 0x00298d3, read32_delegate(FUNC(seibuspi_state::rdft_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00298d0, 0x00298d3, read32_delegate(FUNC(seibuspi_state::rdft_speedup_r),this));
 
 	init_spi(machine());
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,senkyu)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0018cb4, 0x0018cb7, read32_delegate(FUNC(seibuspi_state::senkyu_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0018cb4, 0x0018cb7, read32_delegate(FUNC(seibuspi_state::senkyu_speedup_r),this));
 
 	init_spi(machine());
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,senkyua)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0018c9c, 0x0018c9f, read32_delegate(FUNC(seibuspi_state::senkyua_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0018c9c, 0x0018c9f, read32_delegate(FUNC(seibuspi_state::senkyua_speedup_r),this));
 
 	init_spi(machine());
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,batlball)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0018db4, 0x0018db7, read32_delegate(FUNC(seibuspi_state::batlball_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0018db4, 0x0018db7, read32_delegate(FUNC(seibuspi_state::batlball_speedup_r),this));
 
 	init_spi(machine());
 }
@@ -2106,21 +2106,21 @@ DRIVER_INIT_MEMBER(seibuspi_state,batlball)
 DRIVER_INIT_MEMBER(seibuspi_state,ejanhs)
 {
 //  idle skip doesn't work properly?
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x002d224, 0x002d227, read32_delegate(FUNC(seibuspi_state::ejanhs_speedup_r),this));
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x002d224, 0x002d227, read32_delegate(FUNC(seibuspi_state::ejanhs_speedup_r),this));
 
 	init_spi(machine());
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,viprp1)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x001e2e0, 0x001e2e3, read32_delegate(FUNC(seibuspi_state::viprp1_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x001e2e0, 0x001e2e3, read32_delegate(FUNC(seibuspi_state::viprp1_speedup_r),this));
 
 	init_spi(machine());
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,viprp1o)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x001d49c, 0x001d49f, read32_delegate(FUNC(seibuspi_state::viprp1o_speedup_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x001d49c, 0x001d49f, read32_delegate(FUNC(seibuspi_state::viprp1o_speedup_r),this));
 
 	init_spi(machine());
 }
@@ -2133,12 +2133,12 @@ static void init_rf2_common(running_machine &machine)
 	state->m_flash[0] = machine.device<intel_e28f008sa_device>("flash0");
 	state->m_flash[1] = machine.device<intel_e28f008sa_device>("flash1");
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0282AC, 0x0282AF, read32_delegate(FUNC(seibuspi_state::rf2_speedup_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0282AC, 0x0282AF, read32_delegate(FUNC(seibuspi_state::rf2_speedup_r),state));
 	seibuspi_rise10_text_decrypt(state->memregion("gfx1")->base());
 	seibuspi_rise10_bg_decrypt(state->memregion("gfx2")->base(), state->memregion("gfx2")->bytes());
 	seibuspi_rise10_sprite_decrypt(state->memregion("gfx3")->base(), 0x600000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),state));
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rdft2)
@@ -2158,12 +2158,12 @@ static void init_rfjet_common(running_machine &machine)
 	state->m_flash[0] = machine.device<intel_e28f008sa_device>("flash0");
 	state->m_flash[1] = machine.device<intel_e28f008sa_device>("flash1");
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x002894c, 0x002894f, read32_delegate(FUNC(seibuspi_state::rfjet_speedup_r),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x002894c, 0x002894f, read32_delegate(FUNC(seibuspi_state::rfjet_speedup_r),state));
 	seibuspi_rise11_text_decrypt(state->memregion("gfx1")->base());
 	seibuspi_rise11_bg_decrypt(state->memregion("gfx2")->base(), state->memregion("gfx2")->bytes());
 	seibuspi_rise11_sprite_decrypt_rfjet(state->memregion("gfx3")->base(), 0x800000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),state));
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rfjet)
@@ -2193,7 +2193,7 @@ static MACHINE_CONFIG_START( seibu386, seibuspi_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I386, 40000000)	/* AMD 386DX, 40MHz */
 	MCFG_CPU_PROGRAM_MAP(seibu386_map)
-	MCFG_CPU_VBLANK_INT("screen", spi_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seibuspi_state,  spi_interrupt)
 
 	MCFG_MACHINE_RESET_OVERRIDE(seibuspi_state,seibu386)
 
@@ -2210,7 +2210,7 @@ static MACHINE_CONFIG_START( seibu386, seibuspi_state )
 	MCFG_PALETTE_LENGTH(6144)
 
 	MCFG_VIDEO_START_OVERRIDE(seibuspi_state,spi)
-	MCFG_SCREEN_UPDATE_STATIC(spi)
+	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_spi)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
@@ -2246,7 +2246,7 @@ static MACHINE_CONFIG_START( sys386f2, seibuspi_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I386, 25000000)	/* 25mhz */
 	MCFG_CPU_PROGRAM_MAP(sys386f2_map)
-	MCFG_CPU_VBLANK_INT("screen", spi_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", seibuspi_state,  spi_interrupt)
 
 	/* no z80? */
 
@@ -2265,7 +2265,7 @@ static MACHINE_CONFIG_START( sys386f2, seibuspi_state )
 	MCFG_PALETTE_LENGTH(8192)
 
 	MCFG_VIDEO_START_OVERRIDE(seibuspi_state,sys386f2)
-	MCFG_SCREEN_UPDATE_STATIC(sys386f2)
+	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_sys386f2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

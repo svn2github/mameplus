@@ -162,36 +162,36 @@ READ16_MEMBER(kaneko16_state::kaneko16_ay1_YM2149_r)
 {
 	device_t *device = machine().device("ay1");
 	/* Each 2149 register is mapped to a different address */
-	ay8910_address_w(device,0,offset);
-	return ay8910_r(device,0);
+	ay8910_address_w(device,space,0,offset);
+	return ay8910_r(device,space,0);
 }
 
 WRITE16_MEMBER(kaneko16_state::kaneko16_ay1_YM2149_w)
 {
 	device_t *device = machine().device("ay1");
 	/* Each 2149 register is mapped to a different address */
-	ay8910_address_w(device,0,offset);
+	ay8910_address_w(device,space,0,offset);
 	/* The registers are mapped to odd addresses, except one! */
-	if (ACCESSING_BITS_0_7)	ay8910_data_w(device,0, data       & 0xff);
-	else				ay8910_data_w(device,0,(data >> 8) & 0xff);
+	if (ACCESSING_BITS_0_7)	ay8910_data_w(device,space,0, data       & 0xff);
+	else				ay8910_data_w(device,space,0,(data >> 8) & 0xff);
 }
 
 READ16_MEMBER(kaneko16_state::kaneko16_ay2_YM2149_r)
 {
 	device_t *device = machine().device("ay2");
 	/* Each 2149 register is mapped to a different address */
-	ay8910_address_w(device,0,offset);
-	return ay8910_r(device,0);
+	ay8910_address_w(device,space,0,offset);
+	return ay8910_r(device,space,0);
 }
 
 WRITE16_MEMBER(kaneko16_state::kaneko16_ay2_YM2149_w)
 {
 	device_t *device = machine().device("ay2");
 	/* Each 2149 register is mapped to a different address */
-	ay8910_address_w(device,0,offset);
+	ay8910_address_w(device,space,0,offset);
 	/* The registers are mapped to odd addresses, except one! */
-	if (ACCESSING_BITS_0_7)	ay8910_data_w(device,0, data       & 0xff);
-	else				ay8910_data_w(device,0,(data >> 8) & 0xff);
+	if (ACCESSING_BITS_0_7)	ay8910_data_w(device,space,0, data       & 0xff);
+	else				ay8910_data_w(device,space,0,(data >> 8) & 0xff);
 }
 
 
@@ -335,7 +335,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::bloodwar_oki_0_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * (data & 0xf) );
-//      logerror("CPU #0 PC %06X : OKI0  bank %08X\n",space->device().safe_pc(),data);
+//      logerror("CPU #0 PC %06X : OKI0  bank %08X\n",space.device().safe_pc(),data);
 	}
 }
 
@@ -346,7 +346,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::bloodwar_oki_1_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * data );
-//      logerror("CPU #0 PC %06X : OKI1  bank %08X\n",space->device().safe_pc(),data);
+//      logerror("CPU #0 PC %06X : OKI1  bank %08X\n",space.device().safe_pc(),data);
 	}
 }
 
@@ -476,7 +476,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::gtmr_oki_0_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base( 0x40000 * (data & 0xF) );
-//      logerror("CPU #0 PC %06X : OKI0 bank %08X\n",space->device().safe_pc(),data);
+//      logerror("CPU #0 PC %06X : OKI0 bank %08X\n",space.device().safe_pc(),data);
 	}
 }
 
@@ -487,7 +487,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::gtmr_oki_1_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base( 0x40000 * (data & 0x1) );
-//      logerror("CPU #0 PC %06X : OKI1 bank %08X\n",space->device().safe_pc(),data);
+//      logerror("CPU #0 PC %06X : OKI1 bank %08X\n",space.device().safe_pc(),data);
 	}
 }
 
@@ -711,7 +711,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( blazeon_soundport, AS_IO, 8, kaneko16_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x06, 0x06) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
@@ -1578,22 +1578,21 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static TIMER_DEVICE_CALLBACK( kaneko16_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(kaneko16_state::kaneko16_interrupt)
 {
-	kaneko16_state *state = timer.machine().driver_data<kaneko16_state>();
 	int scanline = param;
 
 	// main vblank interrupt
 	if(scanline == 224)
-		state->m_maincpu->set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 
 	// each of these 2 int are responsible of translating a part of sprite buffer
 	// from work ram to sprite ram. How these are scheduled is unknown.
 	if(scanline == 64)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 144)
-		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 static const ay8910_interface ay8910_intf_dsw =
@@ -1644,7 +1643,7 @@ static MACHINE_CONFIG_START( berlwall, kaneko16_berlwall_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* MC68000P12 */
 	MCFG_CPU_PROGRAM_MAP(berlwall)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, kaneko16_interrupt, "screen", 0, 1)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)	// mangled sprites otherwise
@@ -1654,7 +1653,7 @@ static MACHINE_CONFIG_START( berlwall, kaneko16_berlwall_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(berlwall)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_berlwall)
 
 	MCFG_GFXDECODE(1x4bit_1x4bit)
 	MCFG_PALETTE_LENGTH(2048 + 32768)	/* 32768 static colors for the bg */
@@ -1695,7 +1694,7 @@ static MACHINE_CONFIG_START( bakubrkr, kaneko16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(bakubrkr)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, kaneko16_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_state,gtmr)
 	MCFG_EEPROM_93C46_ADD("eeprom")
@@ -1708,7 +1707,7 @@ static MACHINE_CONFIG_START( bakubrkr, kaneko16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_2x4bit)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1763,7 +1762,7 @@ static MACHINE_CONFIG_START( blazeon, kaneko16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,12000000)	/* TMP68HC000-12 */
 	MCFG_CPU_PROGRAM_MAP(blazeon)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, kaneko16_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,4000000)	/* D780C-2 */
 	MCFG_CPU_PROGRAM_MAP(blazeon_soundmem)
@@ -1777,7 +1776,7 @@ static MACHINE_CONFIG_START( blazeon, kaneko16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1 -8)
-	MCFG_SCREEN_UPDATE_STATIC(kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_1x4bit)
 	MCFG_PALETTE_LENGTH(2048)
@@ -1797,7 +1796,7 @@ static MACHINE_CONFIG_START( blazeon, kaneko16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
+	MCFG_YM2151_ADD("ymsnd", 4000000)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1823,7 +1822,7 @@ static MACHINE_CONFIG_START( gtmr, kaneko16_gtmr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_16MHz)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(gtmr_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, kaneko16_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_gtmr_state,gtmr)
 
@@ -1837,7 +1836,7 @@ static MACHINE_CONFIG_START( gtmr, kaneko16_gtmr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
 
 	MCFG_GFXDECODE(1x8bit_2x4bit)
 	MCFG_PALETTE_LENGTH(32768)
@@ -1942,7 +1941,7 @@ static MACHINE_CONFIG_START( mgcrystl, kaneko16_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mgcrystl)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, kaneko16_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_state,mgcrystl)
 	MCFG_EEPROM_93C46_ADD("eeprom")
@@ -1955,7 +1954,7 @@ static MACHINE_CONFIG_START( mgcrystl, kaneko16_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_STATIC(kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_2x4bit)
 	MCFG_PALETTE_LENGTH(2048)
@@ -2009,22 +2008,21 @@ MACHINE_CONFIG_END
     other: busy loop
 */
 
-static TIMER_DEVICE_CALLBACK( shogwarr_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(kaneko16_state::shogwarr_interrupt)
 {
-	kaneko16_shogwarr_state *state = timer.machine().driver_data<kaneko16_shogwarr_state>();
 	int scanline = param;
 
 	if(scanline == 224)
 	{
 		// the code for this interrupt is provided by the MCU..
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 
 	if(scanline == 64)
-		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 	if(scanline == 144)
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 /*
@@ -2066,7 +2064,7 @@ static MACHINE_CONFIG_START( shogwarr, kaneko16_shogwarr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_12MHz)
 	MCFG_CPU_PROGRAM_MAP(shogwarr)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", shogwarr_interrupt, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, shogwarr_interrupt, "screen", 0, 1)
 
 	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_shogwarr_state,mgcrystl)
 
@@ -2079,7 +2077,7 @@ static MACHINE_CONFIG_START( shogwarr, kaneko16_shogwarr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(40, 296-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 
@@ -3838,7 +3836,7 @@ DRIVER_INIT_MEMBER( kaneko16_shogwarr_state, shogwarr )
 DRIVER_INIT_MEMBER( kaneko16_shogwarr_state, brapboys )
 {
 	// sample banking is different on brap boys for the music, why? GALs / PALs ?
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe00000, 0xe00001, write16_delegate(FUNC(kaneko16_shogwarr_state::brapboys_oki_bank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe00000, 0xe00001, write16_delegate(FUNC(kaneko16_shogwarr_state::brapboys_oki_bank_w),this));
 
 	// default sample banks
 	kaneko16_common_oki_bank_w(machine(), "bank10", "oki1", 0, 0x30000, 0x10000);

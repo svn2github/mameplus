@@ -1004,6 +1004,7 @@ public:
 	DECLARE_PALETTE_INIT(witchcrd);
 	DECLARE_VIDEO_START(wcrdxtnd);
 	DECLARE_PALETTE_INIT(wcrdxtnd);
+	UINT32 screen_update_goldnpkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -1070,10 +1071,9 @@ VIDEO_START_MEMBER(goldnpkr_state,wcrdxtnd)
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(goldnpkr_state::wcrdxtnd_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
-static SCREEN_UPDATE_IND16( goldnpkr )
+UINT32 goldnpkr_state::screen_update_goldnpkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	goldnpkr_state *state = screen.machine().driver_data<goldnpkr_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -1272,11 +1272,11 @@ WRITE8_MEMBER(goldnpkr_state::wcfalcon_snd_w)
 {
 	if (wcfalcon_flag == 0)
 	{
-		ay8910_data_address_w(machine().device("ay8910"), 0, data);
+		ay8910_data_address_w(machine().device("ay8910"), space, 0, data);
 	}
 	else
 	{
-		ay8910_data_address_w(machine().device("ay8910"), 1, data);
+		ay8910_data_address_w(machine().device("ay8910"), space, 1, data);
 	}
 
 	wcfalcon_flag = wcfalcon_flag ^ 1;
@@ -1361,8 +1361,8 @@ WRITE8_MEMBER(goldnpkr_state::sound_w)
 	logerror("Sound Data: %2x\n",data & 0x0f);
 
 	/* discrete sound is connected to PIA1, portA: bits 0-3 */
-	discrete_sound_w(device, NODE_01, data >> 3 & 0x01);
-	discrete_sound_w(device, NODE_10, data & 0x07);
+	discrete_sound_w(device, space, NODE_01, data >> 3 & 0x01);
+	discrete_sound_w(device, space, NODE_10, data & 0x07);
 }
 
 
@@ -3574,7 +3574,7 @@ static MACHINE_CONFIG_START( goldnpkr_base, goldnpkr_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(goldnpkr_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldnpkr_state,  nmi_line_pulse)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -3587,7 +3587,7 @@ static MACHINE_CONFIG_START( goldnpkr_base, goldnpkr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE((39+1)*8, (31+1)*8)                  /* From MC6845 init, registers 00 & 04 (programmed with value-1). */
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 29*8-1)    /* From MC6845 init, registers 01 & 06. */
-	MCFG_SCREEN_UPDATE_STATIC(goldnpkr)
+	MCFG_SCREEN_UPDATE_DRIVER(goldnpkr_state, screen_update_goldnpkr)
 
 	MCFG_MC6845_ADD("crtc", MC6845, CPU_CLOCK, mc6845_intf)	/* 68B45 or 6845s @ CPU clock */
 

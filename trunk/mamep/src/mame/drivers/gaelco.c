@@ -75,7 +75,7 @@ WRITE16_MEMBER(gaelco_state::gaelco_vram_encrypted_w)
 {
 
 	// mame_printf_debug("gaelco_vram_encrypted_w!!\n");
-	data = gaelco_decrypt(&space, offset, data, 0x0f, 0x4228);
+	data = gaelco_decrypt(space, offset, data, 0x0f, 0x4228);
 	COMBINE_DATA(&m_videoram[offset]);
 
 	m_tilemap[offset >> 11]->mark_tile_dirty(((offset << 1) & 0x0fff) >> 2);
@@ -86,7 +86,7 @@ WRITE16_MEMBER(gaelco_state::gaelco_encrypted_w)
 {
 
 	// mame_printf_debug("gaelco_encrypted_w!!\n");
-	data = gaelco_decrypt(&space, offset, data, 0x0f, 0x4228);
+	data = gaelco_decrypt(space, offset, data, 0x0f, 0x4228);
 	COMBINE_DATA(&m_screen[offset]);
 }
 
@@ -96,7 +96,7 @@ WRITE16_MEMBER(gaelco_state::thoop_vram_encrypted_w)
 {
 
 	// mame_printf_debug("gaelco_vram_encrypted_w!!\n");
-	data = gaelco_decrypt(&space, offset, data, 0x0e, 0x4228);
+	data = gaelco_decrypt(space, offset, data, 0x0e, 0x4228);
 	COMBINE_DATA(&m_videoram[offset]);
 
 	m_tilemap[offset >> 11]->mark_tile_dirty(((offset << 1) & 0x0fff) >> 2);
@@ -106,7 +106,7 @@ WRITE16_MEMBER(gaelco_state::thoop_encrypted_w)
 {
 
 	// mame_printf_debug("gaelco_encrypted_w!!\n");
-	data = gaelco_decrypt(&space, offset, data, 0x0e, 0x4228);
+	data = gaelco_decrypt(space, offset, data, 0x0e, 0x4228);
 	COMBINE_DATA(&m_screen[offset]);
 }
 
@@ -506,7 +506,7 @@ static MACHINE_CONFIG_START( bigkarnk, gaelco_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)	/* MC68000P10, 10 MHz */
 	MCFG_CPU_PROGRAM_MAP(bigkarnk_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", M6809, 8867000/4)	/* 68B09, 2.21675 MHz? */
 	MCFG_CPU_PROGRAM_MAP(bigkarnk_snd_map)
@@ -520,7 +520,7 @@ static MACHINE_CONFIG_START( bigkarnk, gaelco_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(bigkarnk)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco_state, screen_update_bigkarnk)
 
 	MCFG_GFXDECODE(0x100000)
 	MCFG_PALETTE_LENGTH(1024)
@@ -542,7 +542,7 @@ static MACHINE_CONFIG_START( maniacsq, gaelco_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,24000000/2)			/* 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(maniacsq_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco_state,  irq6_line_hold)
 
 
 	/* video hardware */
@@ -551,7 +551,7 @@ static MACHINE_CONFIG_START( maniacsq, gaelco_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(maniacsq)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco_state, screen_update_maniacsq)
 
 	MCFG_GFXDECODE(0x100000)
 	MCFG_PALETTE_LENGTH(1024)
@@ -570,7 +570,7 @@ static MACHINE_CONFIG_START( squash, gaelco_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* MC68000P12, 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(squash_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco_state,  irq6_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -581,7 +581,7 @@ static MACHINE_CONFIG_START( squash, gaelco_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(maniacsq)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco_state, screen_update_maniacsq)
 
 	MCFG_GFXDECODE(0x100000)
 	MCFG_PALETTE_LENGTH(1024)
@@ -600,7 +600,7 @@ static MACHINE_CONFIG_START( thoop, gaelco_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)	/* MC68000P12, 12 MHz */
 	MCFG_CPU_PROGRAM_MAP(thoop_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gaelco_state,  irq6_line_hold)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -611,7 +611,7 @@ static MACHINE_CONFIG_START( thoop, gaelco_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(maniacsq)
+	MCFG_SCREEN_UPDATE_DRIVER(gaelco_state, screen_update_maniacsq)
 
 	MCFG_GFXDECODE(0x100000)
 	MCFG_PALETTE_LENGTH(1024)

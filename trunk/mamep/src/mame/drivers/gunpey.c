@@ -94,6 +94,8 @@ public:
 	DECLARE_DRIVER_INIT(gunpey);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_gunpey(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(gunpey_interrupt);
 };
 
 
@@ -102,10 +104,9 @@ void gunpey_state::video_start()
 	m_blit_buffer = auto_alloc_array(machine(), UINT16, 512*512);
 }
 
-static SCREEN_UPDATE_RGB32( gunpey )
+UINT32 gunpey_state::screen_update_gunpey(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	gunpey_state *state = screen.machine().driver_data<gunpey_state>();
-	UINT16 *blit_buffer = state->m_blit_buffer;
+	UINT16 *blit_buffer = m_blit_buffer;
 	int x,y;
 	int count;
 
@@ -355,9 +356,9 @@ void gunpey_state::palette_init()
 
 }
 
-static INTERRUPT_GEN( gunpey_interrupt )
+INTERRUPT_GEN_MEMBER(gunpey_state::gunpey_interrupt)
 {
-	device->execute().set_input_line_and_vector(0,HOLD_LINE,0x200/4);
+	device.execute().set_input_line_and_vector(0,HOLD_LINE,0x200/4);
 }
 
 /***************************************************************************************/
@@ -367,7 +368,7 @@ static MACHINE_CONFIG_START( gunpey, gunpey_state )
 	MCFG_CPU_ADD("maincpu", V30, 57242400 / 4)
 	MCFG_CPU_PROGRAM_MAP(mem_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", gunpey_interrupt)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", gunpey_state,  gunpey_interrupt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -375,14 +376,14 @@ static MACHINE_CONFIG_START( gunpey, gunpey_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 512-1)
-	MCFG_SCREEN_UPDATE_STATIC(gunpey)
+	MCFG_SCREEN_UPDATE_DRIVER(gunpey_state, screen_update_gunpey)
 
 	MCFG_PALETTE_LENGTH(0x800)
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
 
-	MCFG_OKIM6295_ADD("oki", XTAL_16_9344MHz / 8 / 165, OKIM6295_PIN7_HIGH)
+	MCFG_OKIM6295_ADD("oki", XTAL_16_9344MHz / 8, OKIM6295_PIN7_LOW)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.25)
 

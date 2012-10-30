@@ -201,7 +201,7 @@ static ADDRESS_MAP_START( ncb3_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xf840, 0xf840) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 //  AM_RANGE(0xf850, 0xf850) AM_WRITE_LEGACY(ncb3_p1_flip_w)   // need flip?
 //  AM_RANGE(0xf860, 0xf860) AM_WRITE_LEGACY(ncb3_p2_flip_w)   // need flip?
-	AM_RANGE(0xf870, 0xf870) AM_DEVWRITE("snsnd", sn76489_new_device, write)	/* guess... device is initialized, but doesn't seems to be used.*/
+	AM_RANGE(0xf870, 0xf870) AM_DEVWRITE("snsnd", sn76489_device, write)	/* guess... device is initialized, but doesn't seems to be used.*/
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ncb3_readwriteport, AS_IO, 8, goldstar_state )
@@ -377,7 +377,7 @@ static ADDRESS_MAP_START( lucky8_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xb830, 0xb830) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)
 	AM_RANGE(0xb840, 0xb840) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)	/* no sound... only use both ports for DSWs */
 	AM_RANGE(0xb850, 0xb850) AM_WRITE(lucky8_outport_w)
-	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_new_device, write)	/* sound */
+	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_device, write)	/* sound */
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -422,7 +422,7 @@ static ADDRESS_MAP_START(magodds_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xb840, 0xb840) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)	/* no sound... only use both ports for DSWs */
 	AM_RANGE(0xb850, 0xb850) AM_WRITE(magodds_outb850_w) //lamps
 	AM_RANGE(0xb860, 0xb860) AM_WRITE(magodds_outb860_w) //watchdog
-	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_new_device, write)	/* sound */
+	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_device, write)	/* sound */
 	AM_RANGE(0xc000, 0xffff) AM_ROM AM_REGION("maincpu",0xc000)
 ADDRESS_MAP_END
 
@@ -444,7 +444,7 @@ static ADDRESS_MAP_START( kkotnoli_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xb830, 0xb830) AM_WRITENOP		/* no ay8910 */
 	AM_RANGE(0xb840, 0xb840) AM_WRITENOP		/* no ay8910 */
 	AM_RANGE(0xb850, 0xb850) AM_WRITE(lucky8_outport_w)
-	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_new_device, write)	/* sound */
+	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_device, write)	/* sound */
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -482,7 +482,7 @@ static ADDRESS_MAP_START( ladylinr_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xb830, 0xb830) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)
 	AM_RANGE(0xb840, 0xb840) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)	/* no sound... only use ports */
 	AM_RANGE(0xb850, 0xb850) AM_WRITENOP	/* just turn off the lamps, if exist */
-	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_new_device, write)	/* sound */
+	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_device, write)	/* sound */
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -504,7 +504,7 @@ static ADDRESS_MAP_START( wcat3_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xb830, 0xb830) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)
 	AM_RANGE(0xb840, 0xb840) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)	/* no sound... only use both ports for DSWs */
 	AM_RANGE(0xb850, 0xb850) AM_WRITE(lucky8_outport_w)
-	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_new_device, write)	/* sound */
+	AM_RANGE(0xb870, 0xb870) AM_DEVWRITE("snsnd", sn76489_device, write)	/* sound */
 //  AM_RANGE(0xc000, 0xc003) AM_DEVREADWRITE("ppi8255_3", i8255_device, read, write) /* Other PPI initialized? */
 	AM_RANGE(0xd000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xffff) AM_RAM
@@ -5857,7 +5857,7 @@ static MACHINE_CONFIG_START( goldstar, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(goldstar_map)
 	MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -5865,7 +5865,7 @@ static MACHINE_CONFIG_START( goldstar, goldstar_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(goldstar)
 	MCFG_PALETTE_LENGTH(256)
@@ -5891,7 +5891,7 @@ static MACHINE_CONFIG_START( goldstbl, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(goldstar_map)
 	MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -5899,7 +5899,7 @@ static MACHINE_CONFIG_START( goldstbl, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(bl)
 	MCFG_PALETTE_LENGTH(256)
@@ -5924,7 +5924,7 @@ static MACHINE_CONFIG_START( moonlght, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(goldstar_map)
 	MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -5932,7 +5932,7 @@ static MACHINE_CONFIG_START( moonlght, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(ml)
 	MCFG_PALETTE_LENGTH(256)
@@ -6018,7 +6018,7 @@ static MACHINE_CONFIG_START( chrygld, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(ncb3_map)
 	MCFG_CPU_IO_MAP(ncb3_readwriteport)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", ncb3_ppi8255_0_intf )
@@ -6031,7 +6031,7 @@ static MACHINE_CONFIG_START( chrygld, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(chry10)
 	MCFG_PALETTE_LENGTH(256)
@@ -6043,7 +6043,7 @@ static MACHINE_CONFIG_START( chrygld, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6060,7 +6060,7 @@ static MACHINE_CONFIG_START( cb3c, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(ncb3_map)
 	MCFG_CPU_IO_MAP(ncb3_readwriteport)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", ncb3_ppi8255_0_intf )
@@ -6073,7 +6073,7 @@ static MACHINE_CONFIG_START( cb3c, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(cb3c)
 	MCFG_PALETTE_LENGTH(256)
@@ -6085,7 +6085,7 @@ static MACHINE_CONFIG_START( cb3c, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6101,7 +6101,7 @@ static MACHINE_CONFIG_START( ncb3, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(ncb3_map)
 	MCFG_CPU_IO_MAP(ncb3_readwriteport)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", ncb3_ppi8255_0_intf )
@@ -6114,7 +6114,7 @@ static MACHINE_CONFIG_START( ncb3, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(ncb3)
 	MCFG_PALETTE_LENGTH(256)
@@ -6127,7 +6127,7 @@ static MACHINE_CONFIG_START( ncb3, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6143,7 +6143,7 @@ static MACHINE_CONFIG_START( cm, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(cm_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6155,7 +6155,7 @@ static MACHINE_CONFIG_START( cm, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(cmbitmap)
 	MCFG_PALETTE_LENGTH(256)
@@ -6183,7 +6183,7 @@ static MACHINE_CONFIG_START( cmnobmp, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(cm_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6195,7 +6195,7 @@ static MACHINE_CONFIG_START( cmnobmp, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6218,7 +6218,7 @@ static MACHINE_CONFIG_START( cmast91, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(cmast91_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6230,7 +6230,7 @@ static MACHINE_CONFIG_START( cmast91, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(cmast91)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_cmast91)
 
 	MCFG_GFXDECODE(cmast91)
 	MCFG_PALETTE_LENGTH(256)
@@ -6246,12 +6246,11 @@ static MACHINE_CONFIG_START( cmast91, goldstar_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
-static INTERRUPT_GEN( lucky8_irq )
+INTERRUPT_GEN_MEMBER(goldstar_state::lucky8_irq)
 {
-	goldstar_state *state = device->machine().driver_data<goldstar_state>();
 
-	if(state->m_lucky8_nmi_enable)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_lucky8_nmi_enable)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( lucky8, goldstar_state )
@@ -6260,7 +6259,7 @@ static MACHINE_CONFIG_START( lucky8, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lucky8_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", lucky8_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  lucky8_irq)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", lucky8_ppi8255_0_intf )
@@ -6274,7 +6273,7 @@ static MACHINE_CONFIG_START( lucky8, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(ncb3)
 	MCFG_PALETTE_LENGTH(256)
@@ -6285,7 +6284,7 @@ static MACHINE_CONFIG_START( lucky8, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6300,7 +6299,7 @@ static MACHINE_CONFIG_START( bingowng, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lucky8_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", lucky8_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  lucky8_irq)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", lucky8_ppi8255_0_intf )
@@ -6314,7 +6313,7 @@ static MACHINE_CONFIG_START( bingowng, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
-	MCFG_SCREEN_UPDATE_STATIC(bingowng)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_bingowng)
 
 	MCFG_GFXDECODE(ncb3)
 	MCFG_PALETTE_LENGTH(256)
@@ -6325,7 +6324,7 @@ static MACHINE_CONFIG_START( bingowng, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6340,7 +6339,7 @@ static MACHINE_CONFIG_START( bingownga, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(lucky8_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", lucky8_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  lucky8_irq)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", lucky8_ppi8255_0_intf )
@@ -6354,7 +6353,7 @@ static MACHINE_CONFIG_START( bingownga, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
-	MCFG_SCREEN_UPDATE_STATIC(bingowng)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_bingowng)
 
 	MCFG_GFXDECODE(bingownga)		/* GFX Decode is the only difference with the parent machine */
 	MCFG_PALETTE_LENGTH(256)
@@ -6365,7 +6364,7 @@ static MACHINE_CONFIG_START( bingownga, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6397,7 +6396,7 @@ static MACHINE_CONFIG_START( magodds, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(magodds_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", lucky8_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  lucky8_irq)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", lucky8_ppi8255_0_intf )
@@ -6410,7 +6409,7 @@ static MACHINE_CONFIG_START( magodds, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(magical)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_magical)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,magodds)
 
 	MCFG_GFXDECODE(magodds)
@@ -6422,7 +6421,7 @@ static MACHINE_CONFIG_START( magodds, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.00)  // shut up annoying whine
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6438,7 +6437,7 @@ static MACHINE_CONFIG_START( kkotnoli, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(kkotnoli_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  nmi_line_pulse)
 
 
 	/* 3x 8255 */
@@ -6452,7 +6451,7 @@ static MACHINE_CONFIG_START( kkotnoli, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
 
 	MCFG_GFXDECODE(ncb3)
@@ -6463,7 +6462,7 @@ static MACHINE_CONFIG_START( kkotnoli, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6476,7 +6475,7 @@ static MACHINE_CONFIG_START( ladylinr, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(ladylinr_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  nmi_line_pulse)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", ladylinr_ppi8255_0_intf )
@@ -6488,7 +6487,7 @@ static MACHINE_CONFIG_START( ladylinr, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
 
 	MCFG_GFXDECODE(ncb3)
@@ -6500,7 +6499,7 @@ static MACHINE_CONFIG_START( ladylinr, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")//set up a standard mono speaker called 'mono'
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6516,7 +6515,7 @@ static MACHINE_CONFIG_START( wcat3, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(wcat3_map)
 	//MCFG_CPU_IO_MAP(goldstar_readport)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  nmi_line_pulse)
 
 	/* 3x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", lucky8_ppi8255_0_intf )
@@ -6529,7 +6528,7 @@ static MACHINE_CONFIG_START( wcat3, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
 
 	MCFG_GFXDECODE(ncb3)
@@ -6541,7 +6540,7 @@ static MACHINE_CONFIG_START( wcat3, goldstar_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489_NEW, PSG_CLOCK)
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -6559,7 +6558,7 @@ static MACHINE_CONFIG_START( amcoe1, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(amcoe1_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6571,7 +6570,7 @@ static MACHINE_CONFIG_START( amcoe1, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6598,7 +6597,7 @@ static MACHINE_CONFIG_START( amcoe1a, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(amcoe1_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6610,7 +6609,7 @@ static MACHINE_CONFIG_START( amcoe1a, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amcoe1a)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_amcoe1a)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6637,7 +6636,7 @@ static MACHINE_CONFIG_START( amcoe2, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(amcoe2_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6649,7 +6648,7 @@ static MACHINE_CONFIG_START( amcoe2, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6671,7 +6670,7 @@ static MACHINE_CONFIG_START( nfm, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(nfm_map)
 	MCFG_CPU_IO_MAP(amcoe2_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6683,7 +6682,7 @@ static MACHINE_CONFIG_START( nfm, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(nfm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6705,8 +6704,8 @@ static MACHINE_CONFIG_START( unkch, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(unkch_map)
 	MCFG_CPU_IO_MAP(unkch_portmap)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
-	//MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  nmi_line_pulse)
+	//MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -6714,7 +6713,7 @@ static MACHINE_CONFIG_START( unkch, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(unkch)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_unkch)
 
 	MCFG_GFXDECODE(unkch)
 	MCFG_PALETTE_LENGTH(512)
@@ -6750,7 +6749,7 @@ static MACHINE_CONFIG_START( pkrmast, goldstar_state )
 	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(cm_map)
 	MCFG_CPU_IO_MAP(cm_portmap)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
 
 	/* 2x 8255 */
 	MCFG_I8255A_ADD( "ppi8255_0", cm_ppi8255_0_intf )
@@ -6762,7 +6761,7 @@ static MACHINE_CONFIG_START( pkrmast, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(goldstar)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
 
 	MCFG_GFXDECODE(pkrmast)
 	MCFG_PALETTE_LENGTH(256)
@@ -10314,8 +10313,8 @@ DRIVER_INIT_MEMBER(goldstar_state,schery97)
 
 		ROM[i] = x;
 	}
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x1d, 0x1d, read8_delegate(FUNC(goldstar_state::fixedvala8_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x2a, 0x2a, read8_delegate(FUNC(goldstar_state::fixedvalb4_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x1d, 0x1d, read8_delegate(FUNC(goldstar_state::fixedvala8_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x2a, 0x2a, read8_delegate(FUNC(goldstar_state::fixedvalb4_r),this));
 	/* Oki 6295 at 0x20 */
 }
 
@@ -10343,7 +10342,7 @@ DRIVER_INIT_MEMBER(goldstar_state,schery97a)
 	}
 
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x16, 0x16, read8_delegate(FUNC(goldstar_state::fixedval38_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x16, 0x16, read8_delegate(FUNC(goldstar_state::fixedval38_r),this));
 	/* Oki 6295 at 0x20 */
 }
 
@@ -10369,7 +10368,7 @@ DRIVER_INIT_MEMBER(goldstar_state,skill98)
 
 		ROM[i] = x;
 	}
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x1e, 0x1e, read8_delegate(FUNC(goldstar_state::fixedvalea_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x1e, 0x1e, read8_delegate(FUNC(goldstar_state::fixedvalea_r),this));
 	/* Oki 6295 at 0x20 */
 }
 
@@ -10395,7 +10394,7 @@ DRIVER_INIT_MEMBER(goldstar_state,nfb96_c1)
 		}
 		ROM[i] = x;
 	}
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x31, 0x31, read8_delegate(FUNC(goldstar_state::fixedval68_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x31, 0x31, read8_delegate(FUNC(goldstar_state::fixedval68_r),this));
 
 }
 
@@ -10422,7 +10421,7 @@ DRIVER_INIT_MEMBER(goldstar_state,nfb96_c2)
 
 		ROM[i] = x;
 	}
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x21, 0x21, read8_delegate(FUNC(goldstar_state::fixedval58_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x21, 0x21, read8_delegate(FUNC(goldstar_state::fixedval58_r),this));
 }
 
 READ8_MEMBER(goldstar_state::fixedval80_r)
@@ -10458,11 +10457,11 @@ DRIVER_INIT_MEMBER(goldstar_state,nfb96_d)
 		ROM[i] = x;
 	}
 	// nfb96b needs both of these
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x23, 0x23, read8_delegate(FUNC(goldstar_state::fixedval80_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x5a, 0x5a, read8_delegate(FUNC(goldstar_state::fixedvalaa_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x23, 0x23, read8_delegate(FUNC(goldstar_state::fixedval80_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x5a, 0x5a, read8_delegate(FUNC(goldstar_state::fixedvalaa_r),this));
 
 	// csel96b
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x6e, 0x6e, read8_delegate(FUNC(goldstar_state::fixedval96_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x6e, 0x6e, read8_delegate(FUNC(goldstar_state::fixedval96_r),this));
 
 }
 
@@ -10489,7 +10488,7 @@ DRIVER_INIT_MEMBER(goldstar_state,nfb96_dk)
 		}
 		ROM[i] = x;
 	}
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x2e, 0x2e, read8_delegate(FUNC(goldstar_state::fixedvalbe_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x2e, 0x2e, read8_delegate(FUNC(goldstar_state::fixedvalbe_r),this));
 
 }
 
@@ -10521,8 +10520,8 @@ DRIVER_INIT_MEMBER(goldstar_state,rp35)
 		ROM[i] = x;
 	}
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x5e, 0x5e, read8_delegate(FUNC(goldstar_state::fixedval84_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x36, 0x36, read8_delegate(FUNC(goldstar_state::fixedval90_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x5e, 0x5e, read8_delegate(FUNC(goldstar_state::fixedval84_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x36, 0x36, read8_delegate(FUNC(goldstar_state::fixedval90_r),this));
 }
 
 READ8_MEMBER(goldstar_state::fixedvalb2_r)
@@ -10549,7 +10548,7 @@ DRIVER_INIT_MEMBER(goldstar_state,rp36)
 		ROM[i] = x;
 	}
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x34, 0x34, read8_delegate(FUNC(goldstar_state::fixedvalb2_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x34, 0x34, read8_delegate(FUNC(goldstar_state::fixedvalb2_r),this));
 }
 
 READ8_MEMBER(goldstar_state::fixedval48_r)
@@ -10576,7 +10575,7 @@ DRIVER_INIT_MEMBER(goldstar_state,rp36c3)
 		ROM[i] = x;
 	}
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x17, 0x17, read8_delegate(FUNC(goldstar_state::fixedval48_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x17, 0x17, read8_delegate(FUNC(goldstar_state::fixedval48_r),this));
 }
 
 READ8_MEMBER(goldstar_state::fixedval09_r)
@@ -10608,8 +10607,8 @@ DRIVER_INIT_MEMBER(goldstar_state,po33)
 
 		ROM[i] = x;
 	}
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x32, 0x32, read8_delegate(FUNC(goldstar_state::fixedval74_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x12, 0x12, read8_delegate(FUNC(goldstar_state::fixedval09_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x32, 0x32, read8_delegate(FUNC(goldstar_state::fixedval74_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x12, 0x12, read8_delegate(FUNC(goldstar_state::fixedval09_r),this));
 	/* oki6295 at 0x20 */
 }
 
@@ -10642,8 +10641,8 @@ DRIVER_INIT_MEMBER(goldstar_state,match133)
 		ROM[i] = x;
 	}
 
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x16, 0x16, read8_delegate(FUNC(goldstar_state::fixedvalc7_r),this));
-	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x1a, 0x1a, read8_delegate(FUNC(goldstar_state::fixedvale4_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x16, 0x16, read8_delegate(FUNC(goldstar_state::fixedvalc7_r),this));
+	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x1a, 0x1a, read8_delegate(FUNC(goldstar_state::fixedvale4_r),this));
 }
 
 DRIVER_INIT_MEMBER(goldstar_state,cherrys)
@@ -10708,10 +10707,10 @@ DRIVER_INIT_MEMBER(goldstar_state,unkch4)
 DRIVER_INIT_MEMBER(goldstar_state,tonypok)
 {
 	// the ppi doesn't seem to work properly, so just install the inputs directly
-	address_space *io = machine().device("maincpu")->memory().space(AS_IO);
-	io->install_read_port(0x04, 0x04, "IN0" );
-	io->install_read_port(0x05, 0x05, "IN1" );
-	io->install_read_port(0x06, 0x06, "IN2" );
+	address_space &io = machine().device("maincpu")->memory().space(AS_IO);
+	io.install_read_port(0x04, 0x04, "IN0" );
+	io.install_read_port(0x05, 0x05, "IN1" );
+	io.install_read_port(0x06, 0x06, "IN2" );
 
 }
 

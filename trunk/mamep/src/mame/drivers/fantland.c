@@ -293,13 +293,13 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( fantland_sound_iomap, AS_IO, 8, fantland_state )
 	AM_RANGE( 0x0080, 0x0080 ) AM_READ(soundlatch_byte_r )
-	AM_RANGE( 0x0100, 0x0101 ) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w )
+	AM_RANGE( 0x0100, 0x0101 ) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE( 0x0180, 0x0180 ) AM_DEVWRITE("dac", dac_device, write_unsigned8 )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( galaxygn_sound_iomap, AS_IO, 8, fantland_state )
 	AM_RANGE( 0x0080, 0x0080 ) AM_READ(soundlatch_byte_r )
-	AM_RANGE( 0x0100, 0x0101 ) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w )
+	AM_RANGE( 0x0100, 0x0101 ) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 ADDRESS_MAP_END
 
 
@@ -829,16 +829,15 @@ MACHINE_RESET_MEMBER(fantland_state,fantland)
 	m_nmi_enable = 0;
 }
 
-static INTERRUPT_GEN( fantland_irq )
+INTERRUPT_GEN_MEMBER(fantland_state::fantland_irq)
 {
-	fantland_state *state = device->machine().driver_data<fantland_state>();
-	if (state->m_nmi_enable & 8)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enable & 8)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static INTERRUPT_GEN( fantland_sound_irq )
+INTERRUPT_GEN_MEMBER(fantland_state::fantland_sound_irq)
 {
-	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x80 / 4);
+	device.execute().set_input_line_and_vector(0, HOLD_LINE, 0x80 / 4);
 }
 
 static MACHINE_CONFIG_START( fantland, fantland_state )
@@ -846,12 +845,12 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I8086, 8000000)        // ?
 	MCFG_CPU_PROGRAM_MAP(fantland_map)
-	MCFG_CPU_VBLANK_INT("screen", fantland_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fantland_state,  fantland_irq)
 
 	MCFG_CPU_ADD("audiocpu", I8088, 8000000)        // ?
 	MCFG_CPU_PROGRAM_MAP(fantland_sound_map)
 	MCFG_CPU_IO_MAP(fantland_sound_iomap)
-	MCFG_CPU_PERIODIC_INT(fantland_sound_irq, 8000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(fantland_state, fantland_sound_irq,  8000)
 	// NMI when soundlatch is written
 
 	MCFG_MACHINE_START_OVERRIDE(fantland_state,fantland)
@@ -865,7 +864,7 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(352,256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(fantland)
+	MCFG_SCREEN_UPDATE_DRIVER(fantland_state, screen_update_fantland)
 
 	MCFG_GFXDECODE(fantland)
 	MCFG_PALETTE_LENGTH(256)
@@ -874,7 +873,7 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3000000)
+	MCFG_YM2151_ADD("ymsnd", 3000000)
 	MCFG_SOUND_ROUTE(0, "mono", 0.35)
 	MCFG_SOUND_ROUTE(1, "mono", 0.35)
 
@@ -883,23 +882,17 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 MACHINE_CONFIG_END
 
 
-static void galaxygn_sound_irq( device_t *device, int line )
+WRITE_LINE_MEMBER(fantland_state::galaxygn_sound_irq)
 {
-	fantland_state *state = device->machine().driver_data<fantland_state>();
-	state->m_audio_cpu->execute().set_input_line_and_vector(0, line ? ASSERT_LINE : CLEAR_LINE, 0x80/4);
+	m_audio_cpu->execute().set_input_line_and_vector(0, state ? ASSERT_LINE : CLEAR_LINE, 0x80/4);
 }
-
-static const ym2151_interface galaxygn_ym2151_interface =
-{
-	DEVCB_LINE(galaxygn_sound_irq)
-};
 
 static MACHINE_CONFIG_START( galaxygn, fantland_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", I8088, 8000000)        // ?
 	MCFG_CPU_PROGRAM_MAP(galaxygn_map)
-	MCFG_CPU_VBLANK_INT("screen", fantland_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fantland_state,  fantland_irq)
 
 	MCFG_CPU_ADD("audiocpu", I8088, 8000000)        // ?
 	MCFG_CPU_PROGRAM_MAP(fantland_sound_map)
@@ -915,7 +908,7 @@ static MACHINE_CONFIG_START( galaxygn, fantland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(352,256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(fantland)
+	MCFG_SCREEN_UPDATE_DRIVER(fantland_state, screen_update_fantland)
 
 	MCFG_GFXDECODE(fantland)
 	MCFG_PALETTE_LENGTH(256)
@@ -923,8 +916,8 @@ static MACHINE_CONFIG_START( galaxygn, fantland_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 3000000)
-	MCFG_SOUND_CONFIG(galaxygn_ym2151_interface)
+	MCFG_YM2151_ADD("ymsnd", 3000000)
+	MCFG_YM2151_IRQ_HANDLER(WRITELINE(fantland_state, galaxygn_sound_irq))
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 MACHINE_CONFIG_END
@@ -1005,7 +998,7 @@ static MACHINE_CONFIG_START( borntofi, fantland_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V20, 16000000/2)        // D701080C-8 - NEC D70108C-8 V20 CPU, running at 8.000MHz [16/2]
 	MCFG_CPU_PROGRAM_MAP(borntofi_map)
-	MCFG_CPU_VBLANK_INT("screen", fantland_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fantland_state,  fantland_irq)
 
 	MCFG_CPU_ADD("audiocpu", I8088, 18432000/3)        // 8088 - AMD P8088-2 CPU, running at 6.144MHz [18.432/3]
 	MCFG_CPU_PROGRAM_MAP(borntofi_sound_map)
@@ -1019,7 +1012,7 @@ static MACHINE_CONFIG_START( borntofi, fantland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(352,256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(fantland)
+	MCFG_SCREEN_UPDATE_DRIVER(fantland_state, screen_update_fantland)
 
 	MCFG_GFXDECODE(fantland)
 	MCFG_PALETTE_LENGTH(256)
@@ -1044,7 +1037,7 @@ static MACHINE_CONFIG_START( wheelrun, fantland_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", V20, XTAL_18MHz/2)		// D701080C-8 (V20)
 	MCFG_CPU_PROGRAM_MAP(wheelrun_map)
-	MCFG_CPU_VBLANK_INT("screen", fantland_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", fantland_state,  fantland_irq)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_18MHz/2)		// Z8400BB1 (Z80B)
 	MCFG_CPU_PROGRAM_MAP(wheelrun_sound_map)
@@ -1059,7 +1052,7 @@ static MACHINE_CONFIG_START( wheelrun, fantland_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256,224)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 224-1)
-	MCFG_SCREEN_UPDATE_STATIC(fantland)
+	MCFG_SCREEN_UPDATE_DRIVER(fantland_state, screen_update_fantland)
 
 	MCFG_GFXDECODE(fantland)
 	MCFG_PALETTE_LENGTH(256)

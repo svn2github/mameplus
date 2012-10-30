@@ -126,6 +126,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_hvyunit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_hvyunit(screen_device &screen, bool state);
+	TIMER_DEVICE_CALLBACK_MEMBER(hvyunit_scanline);
 };
 
 
@@ -177,28 +180,26 @@ void hvyunit_state::video_start()
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hvyunit_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 }
 
-static SCREEN_UPDATE_IND16( hvyunit )
+UINT32 hvyunit_state::screen_update_hvyunit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 #define SX_POS	96
 #define SY_POS	0
-	hvyunit_state *state = screen.machine().driver_data<hvyunit_state>();
 
-	state->m_bg_tilemap->set_scrollx(0, ((state->m_port0_data & 0x40) << 2) + state->m_scrollx + SX_POS); // TODO
-	state->m_bg_tilemap->set_scrolly(0, ((state->m_port0_data & 0x80) << 1) + state->m_scrolly + SY_POS); // TODO
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	pandora_update(state->m_pandora, bitmap, cliprect);
+	m_bg_tilemap->set_scrollx(0, ((m_port0_data & 0x40) << 2) + m_scrollx + SX_POS); // TODO
+	m_bg_tilemap->set_scrolly(0, ((m_port0_data & 0x80) << 1) + m_scrolly + SY_POS); // TODO
+	bitmap.fill(get_black_pen(machine()), cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	pandora_update(m_pandora, bitmap, cliprect);
 
 	return 0;
 }
 
-static SCREEN_VBLANK( hvyunit )
+void hvyunit_state::screen_eof_hvyunit(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		hvyunit_state *state = screen.machine().driver_data<hvyunit_state>();
-		pandora_eof(state->m_pandora);
+		pandora_eof(m_pandora);
 	}
 }
 
@@ -624,17 +625,16 @@ GFXDECODE_END
  *************************************/
 
 /* Main Z80 uses IM2 */
-static TIMER_DEVICE_CALLBACK( hvyunit_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(hvyunit_state::hvyunit_scanline)
 {
-	hvyunit_state *state = timer.machine().driver_data<hvyunit_state>();
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		state->m_master_cpu->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
+		m_master_cpu->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
 
 	/* Pandora "sprite end dma" irq? TODO: timing is likely off */
 	if(scanline == 64)
-		state->m_master_cpu->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
+		m_master_cpu->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 static const kaneko_pandora_interface hvyunit_pandora_config =
@@ -656,17 +656,17 @@ static MACHINE_CONFIG_START( hvyunit, hvyunit_state )
 	MCFG_CPU_ADD("master", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(master_memory)
 	MCFG_CPU_IO_MAP(master_io)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", hvyunit_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", hvyunit_state, hvyunit_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("slave", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(slave_memory)
 	MCFG_CPU_IO_MAP(slave_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", hvyunit_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("soundcpu", Z80, 6000000)
 	MCFG_CPU_PROGRAM_MAP(sound_memory)
 	MCFG_CPU_IO_MAP(sound_io)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", hvyunit_state,  irq0_line_hold)
 
 	MCFG_CPU_ADD("mermaid", I80C51, 6000000)
 	MCFG_CPU_IO_MAP(mcu_io)
@@ -679,8 +679,8 @@ static MACHINE_CONFIG_START( hvyunit, hvyunit_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_STATIC(hvyunit)
-	MCFG_SCREEN_VBLANK_STATIC(hvyunit)
+	MCFG_SCREEN_UPDATE_DRIVER(hvyunit_state, screen_update_hvyunit)
+	MCFG_SCREEN_VBLANK_DRIVER(hvyunit_state, screen_eof_hvyunit)
 
 	MCFG_GFXDECODE(hvyunit)
 	MCFG_PALETTE_LENGTH(0x800)

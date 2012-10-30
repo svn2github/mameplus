@@ -59,6 +59,8 @@ protected:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+public:
+	UINT32 screen_update_destiny(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -72,10 +74,9 @@ void destiny_state::video_start()
 	m_led_array[20] = 0;
 }
 
-static SCREEN_UPDATE_IND16( destiny )
+UINT32 destiny_state::screen_update_destiny(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	destiny_state *state = screen.machine().driver_data<destiny_state>();
-	popmessage("%s",state->m_led_array);
+	popmessage("%s",m_led_array);
 	return 0;
 }
 
@@ -252,7 +253,7 @@ void destiny_state::machine_start()
 
 void destiny_state::machine_reset()
 {
-	bank_select_w(*m_maincpu->space(AS_PROGRAM), 0, 0);
+	bank_select_w(m_maincpu->space(AS_PROGRAM), 0, 0);
 }
 
 static MACHINE_CONFIG_START( destiny, destiny_state )
@@ -260,7 +261,7 @@ static MACHINE_CONFIG_START( destiny, destiny_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, XTAL_4MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 60) // timer irq controls update speed, frequency needs to be determined yet (2MHz through three 74LS390)
+	MCFG_CPU_PERIODIC_INT_DRIVER(destiny_state, irq0_line_hold,  60) // timer irq controls update speed, frequency needs to be determined yet (2MHz through three 74LS390)
 
 	/* video hardware (dummy) */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -268,7 +269,7 @@ static MACHINE_CONFIG_START( destiny, destiny_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(48*8, 16*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 16*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(destiny)
+	MCFG_SCREEN_UPDATE_DRIVER(destiny_state, screen_update_destiny)
 	MCFG_PALETTE_LENGTH(16)
 
 

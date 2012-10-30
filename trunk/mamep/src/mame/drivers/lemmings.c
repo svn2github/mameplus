@@ -112,7 +112,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, lemmings_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x0800, 0x0801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0x0800, 0x0801) AM_DEVREADWRITE("ymsnd", ym2151_device,read,write)
 	AM_RANGE(0x1000, 0x1000) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x1800, 0x1800) AM_READ(soundlatch_byte_r) AM_WRITE(lemmings_sound_ack_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -241,17 +241,6 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static void sound_irq( device_t *device, int state )
-{
-	lemmings_state *lemmings = device->machine().driver_data<lemmings_state>();
-	lemmings->m_audiocpu->set_input_line(0, state);
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(sound_irq)
-};
-
 void lemmings_state::machine_start()
 {
 
@@ -263,7 +252,7 @@ static MACHINE_CONFIG_START( lemmings, lemmings_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 14000000)
 	MCFG_CPU_PROGRAM_MAP(lemmings_map)
-	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", lemmings_state,  irq6_line_hold)
 
 	MCFG_CPU_ADD("audiocpu", M6809,32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -278,8 +267,8 @@ static MACHINE_CONFIG_START( lemmings, lemmings_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(lemmings)
-	MCFG_SCREEN_VBLANK_STATIC(lemmings)
+	MCFG_SCREEN_UPDATE_DRIVER(lemmings_state, screen_update_lemmings)
+	MCFG_SCREEN_VBLANK_DRIVER(lemmings_state, screen_eof_lemmings)
 
 	MCFG_GFXDECODE(lemmings)
 	MCFG_PALETTE_LENGTH(1024)
@@ -295,8 +284,8 @@ static MACHINE_CONFIG_START( lemmings, lemmings_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", 32220000/9)
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.45)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.45)
 

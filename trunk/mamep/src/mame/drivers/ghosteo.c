@@ -207,9 +207,9 @@ static int s3c2410_core_pin_r( device_t *device, int pin)
 
 static WRITE8_DEVICE_HANDLER( s3c2410_nand_command_w )
 {
-	ghosteo_state *state = device->machine().driver_data<ghosteo_state>();
+	ghosteo_state *state = space.machine().driver_data<ghosteo_state>();
 	struct nand_t &nand = state->m_nand;
-//  device_t *nand = device->machine().device( "nand");
+//  device_t *nand = space.machine().device( "nand");
 	#if NAND_LOG
 	logerror( "s3c2410_nand_command_w %02X\n", data);
 	#endif
@@ -233,9 +233,9 @@ static WRITE8_DEVICE_HANDLER( s3c2410_nand_command_w )
 
 static WRITE8_DEVICE_HANDLER( s3c2410_nand_address_w )
 {
-	ghosteo_state *state = device->machine().driver_data<ghosteo_state>();
+	ghosteo_state *state = space.machine().driver_data<ghosteo_state>();
 	struct nand_t &nand = state->m_nand;
-//  device_t *nand = device->machine().device( "nand");
+//  device_t *nand = space.machine().device( "nand");
 	#if NAND_LOG
 	logerror( "s3c2410_nand_address_w %02X\n", data);
 	#endif
@@ -269,9 +269,9 @@ static WRITE8_DEVICE_HANDLER( s3c2410_nand_address_w )
 
 static READ8_DEVICE_HANDLER( s3c2410_nand_data_r )
 {
-	ghosteo_state *state = device->machine().driver_data<ghosteo_state>();
+	ghosteo_state *state = space.machine().driver_data<ghosteo_state>();
 	struct nand_t &nand = state->m_nand;
-//  device_t *nand = device->machine().device( "nand");
+//  device_t *nand = space.machine().device( "nand");
 	UINT8 data = 0;
 	switch (nand.mode)
 	{
@@ -282,7 +282,7 @@ static READ8_DEVICE_HANDLER( s3c2410_nand_data_r )
 		break;
 		case NAND_M_READ :
 		{
-			UINT8 *flash = (UINT8 *)device->machine().root_device().memregion( "user1")->base();
+			UINT8 *flash = (UINT8 *)space.machine().root_device().memregion( "user1")->base();
 			if (nand.byte_addr < state->m_rom_pagesize)
 			{
 				data = *(flash + nand.page_addr * state->m_rom_pagesize + nand.byte_addr);
@@ -318,7 +318,7 @@ static READ8_DEVICE_HANDLER( s3c2410_nand_data_r )
 
 static WRITE8_DEVICE_HANDLER( s3c2410_nand_data_w )
 {
-//  device_t *nand = device->machine().device( "nand");
+//  device_t *nand = space.machine().device( "nand");
 	#if NAND_LOG
 	logerror( "s3c2410_nand_data_w %02X\n", data);
 	#endif
@@ -557,7 +557,7 @@ device_t* s3c2410;
 
 READ32_MEMBER(ghosteo_state::bballoon_speedup_r)
 {
-	UINT32 ret = s3c2410_lcd_r(s3c2410, offset+0x10/4, mem_mask);
+	UINT32 ret = s3c2410_lcd_r(s3c2410, space, offset+0x10/4, mem_mask);
 
 
 	int pc = space.device().safe_pc();
@@ -581,7 +581,7 @@ READ32_MEMBER(ghosteo_state::bballoon_speedup_r)
 
 void ghosteo_state::machine_reset()
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x4d000010, 0x4d000013,read32_delegate(FUNC(ghosteo_state::bballoon_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x4d000010, 0x4d000013,read32_delegate(FUNC(ghosteo_state::bballoon_speedup_r), this));
 	s3c2410 = machine().device("s3c2410");
 }
 

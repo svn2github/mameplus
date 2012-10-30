@@ -230,9 +230,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( main_portmap, AS_IO, 8, appoooh_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76489_new_device, write)
-	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76489_new_device, write)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn3", sn76489_new_device, write)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76489_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76489_device, write)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn3", sn76489_device, write)
 	AM_RANGE(0x03, 0x03) AM_READ_PORT("DSW1") AM_WRITE(appoooh_adpcm_w)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("BUTTON3") AM_WRITE(appoooh_out_w)
 	AM_RANGE(0x05, 0x05) AM_WRITE(appoooh_scroll_w) /* unknown */
@@ -429,12 +429,11 @@ void appoooh_state::machine_reset()
 	m_priority = 0;
 }
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(appoooh_state::vblank_irq)
 {
-	appoooh_state *state = device->machine().driver_data<appoooh_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( appoooh_common, appoooh_state )
@@ -443,21 +442,21 @@ static MACHINE_CONFIG_START( appoooh_common, appoooh_state )
 	MCFG_CPU_ADD("maincpu", Z80,18432000/6)	/* ??? the main xtal is 18.432 MHz */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_portmap)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", appoooh_state,  vblank_irq)
 
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489_NEW, 18432000/6)
+	MCFG_SOUND_ADD("sn1", SN76489, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489_NEW, 18432000/6)
+	MCFG_SOUND_ADD("sn2", SN76489, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489_NEW, 18432000/6)
+	MCFG_SOUND_ADD("sn3", SN76489, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_CONFIG(psg_intf)
 
@@ -475,7 +474,7 @@ static MACHINE_CONFIG_DERIVED( appoooh, appoooh_common )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(appoooh)
+	MCFG_SCREEN_UPDATE_DRIVER(appoooh_state, screen_update_appoooh)
 
 	MCFG_GFXDECODE(appoooh)
 	MCFG_PALETTE_LENGTH(32*8+32*8)
@@ -493,7 +492,7 @@ static MACHINE_CONFIG_DERIVED( robowres, appoooh_common )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(robowres)
+	MCFG_SCREEN_UPDATE_DRIVER(appoooh_state, screen_update_robowres)
 
 	MCFG_GFXDECODE(robowres)
 	MCFG_PALETTE_LENGTH(32*8+32*8)
@@ -613,8 +612,8 @@ DRIVER_INIT_MEMBER(appoooh_state,robowres)
 
 DRIVER_INIT_MEMBER(appoooh_state,robowresb)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x1c000);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space.set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x1c000);
 }
 
 

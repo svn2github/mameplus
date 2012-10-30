@@ -1169,7 +1169,7 @@ static MACHINE_CONFIG_START( ampoker2, ampoker2_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/2)		/* 3 MHz */
 	MCFG_CPU_PROGRAM_MAP(ampoker2_map)
 	MCFG_CPU_IO_MAP(ampoker2_io_map)
-	MCFG_CPU_PERIODIC_INT(nmi_line_pulse, 1536)
+	MCFG_CPU_PERIODIC_INT_DRIVER(ampoker2_state, nmi_line_pulse,  1536)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_msec(200))	/* 200 ms, measured */
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
@@ -1182,7 +1182,7 @@ static MACHINE_CONFIG_START( ampoker2, ampoker2_state )
     */
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(20*8, 56*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(ampoker2)
+	MCFG_SCREEN_UPDATE_DRIVER(ampoker2_state, screen_update_ampoker2)
 
 	MCFG_GFXDECODE(ampoker2)
 	MCFG_PALETTE_LENGTH(512)

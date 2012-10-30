@@ -106,7 +106,7 @@ mjkjidai_adpcm_device::mjkjidai_adpcm_device(const machine_config &mconfig, cons
 	: device_t(mconfig, MJKJIDAI, "Custom ADPCM", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(mjkjidai_adpcm_state));
+	m_token = global_alloc_clear(mjkjidai_adpcm_state);
 }
 
 //-------------------------------------------------
@@ -233,8 +233,8 @@ static ADDRESS_MAP_START( mjkjidai_io_map, AS_IO, 8, mjkjidai_state )
 	AM_RANGE(0x10, 0x10) AM_WRITE(mjkjidai_ctrl_w)	// rom bank, coin counter, flip screen etc
 	AM_RANGE(0x11, 0x11) AM_READ_PORT("IN0")
 	AM_RANGE(0x12, 0x12) AM_READ_PORT("IN1")
-	AM_RANGE(0x20, 0x20) AM_DEVWRITE("sn1", sn76489_new_device, write)
-	AM_RANGE(0x30, 0x30) AM_DEVWRITE("sn2", sn76489_new_device, write)
+	AM_RANGE(0x20, 0x20) AM_DEVWRITE("sn1", sn76489_device, write)
+	AM_RANGE(0x30, 0x30) AM_DEVWRITE("sn2", sn76489_device, write)
 	AM_RANGE(0x40, 0x40) AM_WRITE(adpcm_w)
 ADDRESS_MAP_END
 
@@ -414,12 +414,11 @@ static GFXDECODE_START( mjkjidai )
 	GFXDECODE_ENTRY( "gfx1", 0, spritelayout, 0, 16 )
 GFXDECODE_END
 
-static INTERRUPT_GEN( vblank_irq )
+INTERRUPT_GEN_MEMBER(mjkjidai_state::vblank_irq)
 {
-	mjkjidai_state *state = device->machine().driver_data<mjkjidai_state>();
 
-	if(state->m_nmi_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_nmi_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -446,7 +445,7 @@ static MACHINE_CONFIG_START( mjkjidai, mjkjidai_state )
 	MCFG_CPU_ADD("maincpu", Z80,10000000/2)	/* 5 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(mjkjidai_map)
 	MCFG_CPU_IO_MAP(mjkjidai_io_map)
-	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", mjkjidai_state,  vblank_irq)
 
 	MCFG_NVRAM_HANDLER(mjkjidai)
 
@@ -456,7 +455,7 @@ static MACHINE_CONFIG_START( mjkjidai, mjkjidai_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(3*8, 61*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(mjkjidai)
+	MCFG_SCREEN_UPDATE_DRIVER(mjkjidai_state, screen_update_mjkjidai)
 
 	MCFG_GFXDECODE(mjkjidai)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -466,11 +465,11 @@ static MACHINE_CONFIG_START( mjkjidai, mjkjidai_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489_NEW, 10000000/4)
+	MCFG_SOUND_ADD("sn1", SN76489, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489_NEW, 10000000/4)
+	MCFG_SOUND_ADD("sn2", SN76489, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_CONFIG(psg_intf)
 

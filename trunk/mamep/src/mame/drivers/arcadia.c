@@ -122,11 +122,11 @@ WRITE8_MEMBER(arcadia_amiga_state::arcadia_cia_0_porta_w)
 	/* swap the write handlers between ROM and bank 1 based on the bit */
 	if ((data & 1) == 0)
 		/* overlay disabled, map RAM on 0x000000 */
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_bank(0x000000, 0x07ffff, "bank1");
+		machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_bank(0x000000, 0x07ffff, "bank1");
 
 	else
 		/* overlay enabled, map Amiga system ROM on 0x000000 */
-		machine().device("maincpu")->memory().space(AS_PROGRAM)->unmap_write(0x000000, 0x07ffff);
+		machine().device("maincpu")->memory().space(AS_PROGRAM).unmap_write(0x000000, 0x07ffff);
 
 	/* bit 2 = Power Led on Amiga */
 	set_led_status(machine(), 0, (data & 2) ? 0 : 1);
@@ -284,7 +284,7 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const mos6526_interface cia_0_intf =
+static const legacy_mos6526_interface cia_0_intf =
 {
 	DEVCB_LINE(amiga_cia_0_irq),										/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -296,7 +296,7 @@ static const mos6526_interface cia_0_intf =
 	DEVCB_DRIVER_MEMBER(arcadia_amiga_state,arcadia_cia_0_portb_w)	/* port B */
 };
 
-static const mos6526_interface cia_1_intf =
+static const legacy_mos6526_interface cia_1_intf =
 {
 	DEVCB_LINE(amiga_cia_1_irq),										/* irq_func */
 	DEVCB_NULL,	/* pc_func */
@@ -325,7 +325,7 @@ static MACHINE_CONFIG_START( arcadia, arcadia_amiga_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512*2, 262)
 	MCFG_SCREEN_VISIBLE_AREA((129-8)*2, (449+8-1)*2, 44-8, 244+8-1)
-	MCFG_SCREEN_UPDATE_STATIC(amiga)
+	MCFG_SCREEN_UPDATE_DRIVER(amiga_state, screen_update_amiga)
 
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_PALETTE_INIT_OVERRIDE(arcadia_amiga_state,amiga)
@@ -342,8 +342,8 @@ static MACHINE_CONFIG_START( arcadia, arcadia_amiga_state )
 	MCFG_SOUND_ROUTE(3, "lspeaker", 0.50)
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
+	MCFG_LEGACY_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
 
 	/* fdc */
 	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)

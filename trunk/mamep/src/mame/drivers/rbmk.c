@@ -78,6 +78,8 @@ public:
 	DECLARE_WRITE8_MEMBER(mcu_io_mux_w);
 	DECLARE_WRITE16_MEMBER(eeprom_w);
 	virtual void video_start();
+	UINT32 screen_update_rbmk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(mcu_irq);
 };
 
 
@@ -141,7 +143,7 @@ READ8_MEMBER(rbmk_state::rbmk_mcu_io_r)
 {
 	if(m_mux_data & 8)
 	{
-		return ym2151_r(machine().device("ymsnd"), offset & 1);
+		return machine().device<ym2151_device>("ymsnd")->read(space, offset & 1);
 	}
 	else if(m_mux_data & 4)
 	{
@@ -157,7 +159,7 @@ READ8_MEMBER(rbmk_state::rbmk_mcu_io_r)
 
 WRITE8_MEMBER(rbmk_state::rbmk_mcu_io_w)
 {
-	if(m_mux_data & 8) { ym2151_w(machine().device("ymsnd"), offset & 1, data); }
+	if(m_mux_data & 8) { machine().device<ym2151_device>("ymsnd")->write(space, offset & 1, data); }
 	else if(m_mux_data & 4)
 	{
 		//printf("%02x %02x W\n",offset,data);
@@ -497,9 +499,8 @@ void rbmk_state::video_start()
 {
 }
 
-static SCREEN_UPDATE_IND16(rbmk)
+UINT32 rbmk_state::screen_update_rbmk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	rbmk_state *state = screen.machine().driver_data<rbmk_state>();
 	int x,y;
 	int count = 0;
 
@@ -507,8 +508,8 @@ static SCREEN_UPDATE_IND16(rbmk)
 	{
 		for (x=0;x<64;x++)
 		{
-			int tile = state->m_gms_vidram2[count+0x600];
-			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],(tile&0xfff)+((state->m_tilebank&0x10)>>4)*0x1000,tile>>12,0,0,x*8,y*32);
+			int tile = m_gms_vidram2[count+0x600];
+			drawgfx_opaque(bitmap,cliprect,machine().gfx[0],(tile&0xfff)+((m_tilebank&0x10)>>4)*0x1000,tile>>12,0,0,x*8,y*32);
 			count++;
 		}
 	}
@@ -519,28 +520,28 @@ static SCREEN_UPDATE_IND16(rbmk)
 	{
 		for (x=0;x<64;x++)
 		{
-			int tile = state->m_gms_vidram[count];
-			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],(tile&0xfff)+((state->m_tilebank>>1)&3)*0x1000,tile>>12,0,0,x*8,y*8,0);
+			int tile = m_gms_vidram[count];
+			drawgfx_transpen(bitmap,cliprect,machine().gfx[1],(tile&0xfff)+((m_tilebank>>1)&3)*0x1000,tile>>12,0,0,x*8,y*8,0);
 			count++;
 		}
 	}
 	return 0;
 }
 
-static INTERRUPT_GEN( mcu_irq )
+INTERRUPT_GEN_MEMBER(rbmk_state::mcu_irq)
 {
-	device->machine().device("mcu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("mcu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( rbmk, rbmk_state )
 	MCFG_CPU_ADD("maincpu", M68000, 22000000 /2)
 	MCFG_CPU_PROGRAM_MAP(rbmk_mem)
-	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rbmk_state,  irq1_line_hold)
 
 	MCFG_CPU_ADD("mcu", AT89C4051, 22000000 / 4) // frequency isn't right
 	MCFG_CPU_PROGRAM_MAP(rbmk_mcu_mem)
 	MCFG_CPU_IO_MAP(rbmk_mcu_io)
-	MCFG_CPU_VBLANK_INT("screen", mcu_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rbmk_state,  mcu_irq)
 
 	MCFG_GFXDECODE(rbmk)
 
@@ -550,7 +551,7 @@ static MACHINE_CONFIG_START( rbmk, rbmk_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rbmk)
+	MCFG_SCREEN_UPDATE_DRIVER(rbmk_state, screen_update_rbmk)
 
 	MCFG_PALETTE_LENGTH(0x800)
 
@@ -564,7 +565,7 @@ static MACHINE_CONFIG_START( rbmk, rbmk_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.47)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.47)
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, 22000000 / 8)
+	MCFG_YM2151_ADD("ymsnd", 22000000 / 8)
 //  MCFG_SOUND_CONFIG(ym2151_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.60)

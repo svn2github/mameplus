@@ -16,15 +16,15 @@
 #include "includes/konamipt.h"
 #include "includes/fastlane.h"
 
-static TIMER_DEVICE_CALLBACK( fastlane_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(fastlane_state::fastlane_scanline)
 {
-	fastlane_state *state = timer.machine().driver_data<fastlane_state>();
 	int scanline = param;
 
-	if(scanline == 240 && k007121_ctrlram_r(state->m_k007121, 7) & 0x02) // vblank irq
-		state->m_maincpu->set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
-	else if(((scanline % 32) == 0) && k007121_ctrlram_r(state->m_k007121, 7) & 0x01) // timer irq
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	address_space &space = generic_space();
+	if(scanline == 240 && k007121_ctrlram_r(m_k007121, space, 7) & 0x02) // vblank irq
+		m_maincpu->set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
+	else if(((scanline % 32) == 0) && k007121_ctrlram_r(m_k007121, space, 7) & 0x01) // timer irq
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -32,7 +32,7 @@ WRITE8_MEMBER(fastlane_state::k007121_registers_w)
 {
 
 	if (offset < 8)
-		k007121_ctrl_w(m_k007121, offset, data);
+		k007121_ctrl_w(m_k007121, space, offset, data);
 	else	/* scroll registers */
 		m_k007121_regs[offset] = data;
 }
@@ -59,25 +59,25 @@ WRITE8_MEMBER(fastlane_state::fastlane_bankswitch_w)
 READ8_MEMBER(fastlane_state::fastlane_k1_k007232_r)
 {
 	device_t *device = machine().device("konami1");
-	return k007232_r(device, offset ^ 1);
+	return k007232_r(device, space, offset ^ 1);
 }
 
 WRITE8_MEMBER(fastlane_state::fastlane_k1_k007232_w)
 {
 	device_t *device = machine().device("konami1");
-	k007232_w(device, offset ^ 1, data);
+	k007232_w(device, space, offset ^ 1, data);
 }
 
 READ8_MEMBER(fastlane_state::fastlane_k2_k007232_r)
 {
 	device_t *device = machine().device("konami2");
-	return k007232_r(device, offset ^ 1);
+	return k007232_r(device, space, offset ^ 1);
 }
 
 WRITE8_MEMBER(fastlane_state::fastlane_k2_k007232_w)
 {
 	device_t *device = machine().device("konami2");
-	k007232_w(device, offset ^ 1, data);
+	k007232_w(device, space, offset ^ 1, data);
 }
 static ADDRESS_MAP_START( fastlane_map, AS_PROGRAM, 8, fastlane_state )
 	AM_RANGE(0x0000, 0x005f) AM_RAM_WRITE(k007121_registers_w) AM_SHARE("k007121_regs")	/* 007121 registers */
@@ -218,7 +218,7 @@ static MACHINE_CONFIG_START( fastlane, fastlane_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", HD6309, 3000000*4)		/* 24MHz/8? */
 	MCFG_CPU_PROGRAM_MAP(fastlane_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", fastlane_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", fastlane_state, fastlane_scanline, "screen", 0, 1)
 
 
 	/* video hardware */
@@ -227,7 +227,7 @@ static MACHINE_CONFIG_START( fastlane, fastlane_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(37*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 35*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(fastlane)
+	MCFG_SCREEN_UPDATE_DRIVER(fastlane_state, screen_update_fastlane)
 
 	MCFG_GFXDECODE(fastlane)
 	MCFG_PALETTE_LENGTH(1024*16)

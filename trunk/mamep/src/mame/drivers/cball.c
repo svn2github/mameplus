@@ -32,6 +32,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_cball(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_callback);
 };
 
 
@@ -56,37 +58,35 @@ void cball_state::video_start()
 }
 
 
-static SCREEN_UPDATE_IND16( cball )
+UINT32 cball_state::screen_update_cball(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cball_state *state = screen.machine().driver_data<cball_state>();
 
 	/* draw playfield */
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* draw sprite */
-	drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1],
-		state->m_video_ram[0x399] >> 4,
+	drawgfx_transpen(bitmap, cliprect, machine().gfx[1],
+		m_video_ram[0x399] >> 4,
 		0,
 		0, 0,
-		240 - state->m_video_ram[0x390],
-		240 - state->m_video_ram[0x398], 0);
+		240 - m_video_ram[0x390],
+		240 - m_video_ram[0x398], 0);
 	return 0;
 }
 
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(cball_state::interrupt_callback)
 {
-	cball_state *state = machine.driver_data<cball_state>();
 	int scanline = param;
 
-	generic_pulse_irq_line(state->m_maincpu, 0, 1);
+	generic_pulse_irq_line(*m_maincpu, 0, 1);
 
 	scanline = scanline + 32;
 
 	if (scanline >= 262)
 		scanline = 16;
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(interrupt_callback), scanline);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(cball_state::interrupt_callback),this), scanline);
 }
 
 
@@ -97,7 +97,7 @@ void cball_state::machine_start()
 
 void cball_state::machine_reset()
 {
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(16), FUNC(interrupt_callback), 16);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(16), timer_expired_delegate(FUNC(cball_state::interrupt_callback),this), 16);
 }
 
 
@@ -236,7 +236,7 @@ static MACHINE_CONFIG_START( cball, cball_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(256, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 223)
-	MCFG_SCREEN_UPDATE_STATIC(cball)
+	MCFG_SCREEN_UPDATE_DRIVER(cball_state, screen_update_cball)
 
 	MCFG_GFXDECODE(cball)
 	MCFG_PALETTE_LENGTH(6)

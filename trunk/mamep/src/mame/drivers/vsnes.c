@@ -153,14 +153,14 @@ WRITE8_MEMBER(vsnes_state::sprite_dma_0_w)
 {
 	int source = ( data & 7 );
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu1");
-	ppu->spriteram_dma( &space, source );
+	ppu->spriteram_dma( space, source );
 }
 
 WRITE8_MEMBER(vsnes_state::sprite_dma_1_w)
 {
 	int source = ( data & 7 );
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu2");
-	ppu->spriteram_dma( &space, source );
+	ppu->spriteram_dma( space, source );
 }
 
 WRITE8_MEMBER(vsnes_state::vsnes_coin_counter_w)
@@ -196,37 +196,37 @@ WRITE8_MEMBER(vsnes_state::vsnes_coin_counter_1_w)
 READ8_MEMBER(vsnes_state::psg1_4015_r)
 {
 	device_t *device = machine().device("nes1");
-	return nes_psg_r(device, 0x15);
+	return nes_psg_r(device, space, 0x15);
 }
 
 WRITE8_MEMBER(vsnes_state::psg1_4015_w)
 {
 	device_t *device = machine().device("nes1");
-	nes_psg_w(device, 0x15, data);
+	nes_psg_w(device, space, 0x15, data);
 }
 
 WRITE8_MEMBER(vsnes_state::psg1_4017_w)
 {
 	device_t *device = machine().device("nes1");
-	nes_psg_w(device, 0x17, data);
+	nes_psg_w(device, space, 0x17, data);
 }
 
 READ8_MEMBER(vsnes_state::psg2_4015_r)
 {
 	device_t *device = machine().device("nes2");
-	return nes_psg_r(device, 0x15);
+	return nes_psg_r(device, space, 0x15);
 }
 
 WRITE8_MEMBER(vsnes_state::psg2_4015_w)
 {
 	device_t *device = machine().device("nes2");
-	nes_psg_w(device, 0x15, data);
+	nes_psg_w(device, space, 0x15, data);
 }
 
 WRITE8_MEMBER(vsnes_state::psg2_4017_w)
 {
 	device_t *device = machine().device("nes2");
-	nes_psg_w(device, 0x17, data);
+	nes_psg_w(device, space, 0x17, data);
 }
 static ADDRESS_MAP_START( vsnes_cpu1_map, AS_PROGRAM, 8, vsnes_state )
 	AM_RANGE(0x0000, 0x07ff) AM_MIRROR(0x1800) AM_RAM AM_SHARE("work_ram")
@@ -1699,7 +1699,7 @@ static MACHINE_CONFIG_START( vsnes, vsnes_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(vsnes)
+	MCFG_SCREEN_UPDATE_DRIVER(vsnes_state, screen_update_vsnes)
 
 	MCFG_PALETTE_LENGTH(8*4*16)
 
@@ -1763,13 +1763,13 @@ static MACHINE_CONFIG_START( vsdual, vsnes_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(vsnes)
+	MCFG_SCREEN_UPDATE_DRIVER(vsnes_state, screen_update_vsnes)
 
 	MCFG_SCREEN_ADD("screen2", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(vsnes_bottom)
+	MCFG_SCREEN_UPDATE_DRIVER(vsnes_state, screen_update_vsnes_bottom)
 
 	MCFG_PALETTE_INIT_OVERRIDE(vsnes_state,vsdual)
 	MCFG_VIDEO_START_OVERRIDE(vsnes_state,vsdual)
@@ -1839,6 +1839,8 @@ mds-sm4-4 e.1c or 6c CRC32 0x5E3FB550 verified on 3 PCBs / dumped sets
 mds-sm4-4.1c or 6c   CRC32 0x0011FC5A differs by 2 bytes: 0x1634 = 0x0D (vs 0x11) & 0x163B = 0x11 (vs 0x14)
                      Each change is part of a LDA #$ statement IE: A9 0D  LDA #$0D (vs A9 11  LDA #$11)
                      It's unknown if it's an official alt version or hack.
+
+These 2 bytes affect timer speed, making 'suprmrioa' harder.
 */
 
 ROM_START( suprmrio ) /* Vs. Super Mario Bros. (Set E) */
@@ -2700,7 +2702,7 @@ GAME( 1985, machridra,machridr, vsnes,   machridj, vsnes_state, vsnormal, ROT0, 
 GAME( 1986, rbibb,    0,        vsnes,   rbibb, vsnes_state,    rbibb,    ROT0, "Namco",                  "Vs. Atari R.B.I. Baseball (set 1)", 0 )
 GAME( 1986, rbibba,   rbibb,    vsnes,   rbibb, vsnes_state,    rbibb,    ROT0, "Namco",                  "Vs. Atari R.B.I. Baseball (set 2)", 0 )
 GAME( 1986, suprmrio, 0,        vsnes,   suprmrio, vsnes_state, vsnormal, ROT0, "Nintendo",               "Vs. Super Mario Bros. (set SM4-4 E)", 0 )
-GAME( 1986, suprmrioa,suprmrio, vsnes,   suprmrio, vsnes_state, vsnormal, ROT0, "Nintendo",               "Vs. Super Mario Bros. (set ?)", 0 )
+GAME( 1986, suprmrioa,suprmrio, vsnes,   suprmrio, vsnes_state, vsnormal, ROT0, "Nintendo",               "Vs. Super Mario Bros. (set ?, harder)", 0 )
 GAME( 1986, suprmriobl,suprmrio,vsnes,   suprmrio, vsnes_state, vsnormal, ROT0, "bootleg",                "Vs. Super Mario Bros. (bootleg with Z80, set 1)", GAME_NOT_WORKING )
 GAME( 1986, suprmriobl2,suprmrio,vsnes,  suprmrio, vsnes_state, vsnormal, ROT0, "bootleg",                "Vs. Super Mario Bros. (bootleg with Z80, set 2)", GAME_NOT_WORKING )
 GAME( 1988, skatekds, suprmrio, vsnes,   suprmrio, vsnes_state, vsnormal, ROT0, "hack",                   "Vs. Skate Kids. (Graphic hack of Super Mario Bros.)", 0 )

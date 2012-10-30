@@ -92,6 +92,7 @@ public:
 
 static ADDRESS_MAP_START( pcat_map, AS_PROGRAM, 32, su2000_state )
 	AM_RANGE(0x00000000, 0x0009ffff) AM_RAMBANK("mem_bank")
+	AM_RANGE(0x000a0000, 0x000bffff) AM_DEVREADWRITE8("vga", vga_device, mem_r, mem_w, 0xffffffff)
 	AM_RANGE(0x000c0000, 0x000c7fff) AM_ROM
 	AM_RANGE(0x000f0000, 0x000fffff) AM_ROM
 	AM_RANGE(0xffff0000, 0xffffffff) AM_ROM AM_REGION("maincpu", 0x0f0000)
@@ -99,6 +100,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( pcat_io, AS_IO, 32, su2000_state )
 	AM_IMPORT_FROM(pcat32_io_common)
+	AM_RANGE(0x03b0, 0x03bf) AM_DEVREADWRITE8("vga", vga_device, port_03b0_r, port_03b0_w, 0xffffffff)
+	AM_RANGE(0x03c0, 0x03cf) AM_DEVREADWRITE8("vga", vga_device, port_03c0_r, port_03c0_w, 0xffffffff)
+	AM_RANGE(0x03d0, 0x03df) AM_DEVREADWRITE8("vga", vga_device, port_03d0_r, port_03d0_w, 0xffffffff)
 ADDRESS_MAP_END
 
 
@@ -162,18 +166,6 @@ static void ide_interrupt(device_t *device, int state)
 }
 #endif
 
-
-/*************************************************************
- *
- * VGA
- *
- *************************************************************/
-
-static READ8_HANDLER( vga_setting )
-{
-	/* TODO */
-	return 0xff;
-}
 
 /*************************************************************
  *
@@ -260,7 +252,7 @@ static IRQ_CALLBACK( pc_irq_callback )
 
 void su2000_state::machine_start()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	m_pit8254 = machine().device("pit8254");
 	m_pic8259_1 = machine().device("pic8259_1");
@@ -276,8 +268,8 @@ void su2000_state::machine_start()
 
 	/* HMA */
 	offs_t ram_limit = 0x100000 + PC_RAM_SIZE - 0x0a0000;
-	space->install_read_bank(0x100000, ram_limit - 1, "hma_bank");
-	space->install_write_bank(0x100000, ram_limit - 1, "hma_bank");
+	space.install_read_bank(0x100000, ram_limit - 1, "hma_bank");
+	space.install_write_bank(0x100000, ram_limit - 1, "hma_bank");
 	membank("hma_bank")->set_base(m_pc_ram + 0xa0000);
 
 	machine().device("maincpu")->execute().set_irq_acknowledge_callback(pc_irq_callback);
@@ -285,9 +277,6 @@ void su2000_state::machine_start()
 	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, su2000_set_keyb_int);
 
 	kbdc8042_init(machine(), &at8042);
-
-	pc_vga_init(machine(), vga_setting, NULL);
-	pc_vga_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine().device("maincpu")->memory().space(AS_IO), 0x0000);
 }
 
 void su2000_state::machine_reset()

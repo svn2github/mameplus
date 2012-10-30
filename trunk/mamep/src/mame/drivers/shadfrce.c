@@ -307,52 +307,51 @@ WRITE16_MEMBER(shadfrce_state::shadfrce_scanline_w)
 	m_raster_scanline = data;	/* guess, 0 is always written */
 }
 
-static TIMER_DEVICE_CALLBACK( shadfrce_scanline )
+TIMER_DEVICE_CALLBACK_MEMBER(shadfrce_state::shadfrce_scanline)
 {
-	shadfrce_state *state = timer.machine().driver_data<shadfrce_state>();
 	int scanline = param;
 
 	/* Vblank is lowered on scanline 0 */
 	if (scanline == 0)
 	{
-		state->m_vblank = 0;
+		m_vblank = 0;
 	}
 	/* Hack */
 	else if (scanline == (248-1))		/* -1 is an hack needed to avoid deadlocks */
 	{
-		state->m_vblank = 4;
+		m_vblank = 4;
 	}
 
 	/* Raster interrupt - Perform raster effect on given scanline */
-	if (state->m_raster_irq_enable)
+	if (m_raster_irq_enable)
 	{
-		if (scanline == state->m_raster_scanline)
+		if (scanline == m_raster_scanline)
 		{
-			state->m_raster_scanline = (state->m_raster_scanline + 1) % 240;
-			if (state->m_raster_scanline > 0)
-				timer.machine().primary_screen->update_partial(state->m_raster_scanline - 1);
-			timer.machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
+			m_raster_scanline = (m_raster_scanline + 1) % 240;
+			if (m_raster_scanline > 0)
+				machine().primary_screen->update_partial(m_raster_scanline - 1);
+			machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
 		}
 	}
 
 	/* An interrupt is generated every 16 scanlines */
-	if (state->m_irqs_enable)
+	if (m_irqs_enable)
 	{
 		if (scanline % 16 == 0)
 		{
 			if (scanline > 0)
-				timer.machine().primary_screen->update_partial(scanline - 1);
-			timer.machine().device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
+				machine().primary_screen->update_partial(scanline - 1);
+			machine().device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
 		}
 	}
 
 	/* Vblank is raised on scanline 248 */
-	if (state->m_irqs_enable)
+	if (m_irqs_enable)
 	{
 		if (scanline == 248)
 		{
-			timer.machine().primary_screen->update_partial(scanline - 1);
-			timer.machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
+			machine().primary_screen->update_partial(scanline - 1);
+			machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 		}
 	}
 }
@@ -400,7 +399,7 @@ WRITE8_MEMBER(shadfrce_state::oki_bankswitch_w)
 static ADDRESS_MAP_START( shadfrce_sound_map, AS_PROGRAM, 8, shadfrce_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xc800, 0xc801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xc800, 0xc801) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0xd800, 0xd800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(oki_bankswitch_w)
@@ -544,29 +543,19 @@ GFXDECODE_END
 
 /* Machine Driver Bits */
 
-static void irq_handler(device_t *device, int irq)
-{
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE );
-}
-
-static const ym2151_interface ym2151_config =
-{
-	DEVCB_LINE(irq_handler)
-};
-
 static MACHINE_CONFIG_START( shadfrce, shadfrce_state )
 
 	MCFG_CPU_ADD("maincpu", M68000, CPU_CLOCK)			/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(shadfrce_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", shadfrce_scanline, "screen", 0, 1)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", shadfrce_state, shadfrce_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)			/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(shadfrce_sound_map)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 432, 0, 320, 272, 8, 248)	/* HTOTAL and VTOTAL are guessed */
-	MCFG_SCREEN_UPDATE_STATIC(shadfrce)
-	MCFG_SCREEN_VBLANK_STATIC(shadfrce)
+	MCFG_SCREEN_UPDATE_DRIVER(shadfrce_state, screen_update_shadfrce)
+	MCFG_SCREEN_VBLANK_DRIVER(shadfrce_state, screen_eof_shadfrce)
 
 	MCFG_GFXDECODE(shadfrce)
 	MCFG_PALETTE_LENGTH(0x4000)
@@ -575,8 +564,8 @@ static MACHINE_CONFIG_START( shadfrce, shadfrce_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)		/* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_YM2151_ADD("ymsnd", XTAL_3_579545MHz)		/* verified on pcb */
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 

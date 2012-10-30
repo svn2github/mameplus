@@ -273,7 +273,7 @@ WRITE8_MEMBER(rallyx_state::locomotn_latch_w)
 	switch (offset)
 	{
 		case 0x00:	/* SOUNDON */
-			timeplt_sh_irqtrigger_w(&space,0,bit);
+			timeplt_sh_irqtrigger_w(space,0,bit);
 			break;
 
 		case 0x01:	/* INTST */
@@ -888,20 +888,18 @@ MACHINE_RESET_MEMBER(rallyx_state,rallyx)
 	m_stars_enable = 0;
 }
 
-static INTERRUPT_GEN( rallyx_vblank_irq )
+INTERRUPT_GEN_MEMBER(rallyx_state::rallyx_vblank_irq)
 {
-	rallyx_state *state = device->machine().driver_data<rallyx_state>();
 
-	if(state->m_main_irq_mask)
-		device->execute().set_input_line(0, ASSERT_LINE);
+	if(m_main_irq_mask)
+		device.execute().set_input_line(0, ASSERT_LINE);
 }
 
-static INTERRUPT_GEN( jungler_vblank_irq )
+INTERRUPT_GEN_MEMBER(rallyx_state::jungler_vblank_irq)
 {
-	rallyx_state *state = device->machine().driver_data<rallyx_state>();
 
-	if(state->m_main_irq_mask)
-		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if(m_main_irq_mask)
+		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( rallyx, rallyx_state )
@@ -910,7 +908,7 @@ static MACHINE_CONFIG_START( rallyx, rallyx_state )
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(rallyx_map)
 	MCFG_CPU_IO_MAP(io_map)
-	MCFG_CPU_VBLANK_INT("screen", rallyx_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rallyx_state,  rallyx_vblank_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(rallyx_state,rallyx)
 	MCFG_MACHINE_RESET_OVERRIDE(rallyx_state,rallyx)
@@ -923,7 +921,7 @@ static MACHINE_CONFIG_START( rallyx, rallyx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(rallyx)
+	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_rallyx)
 
 	MCFG_GFXDECODE(rallyx)
 	MCFG_PALETTE_LENGTH(64*4+4)
@@ -948,7 +946,7 @@ static MACHINE_CONFIG_START( jungler, rallyx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(jungler_map)
-	MCFG_CPU_VBLANK_INT("screen", jungler_vblank_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", rallyx_state,  jungler_vblank_irq)
 
 	MCFG_MACHINE_START_OVERRIDE(rallyx_state,rallyx)
 	MCFG_MACHINE_RESET_OVERRIDE(rallyx_state,rallyx)
@@ -961,7 +959,7 @@ static MACHINE_CONFIG_START( jungler, rallyx_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(jungler)
+	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_jungler)
 
 	MCFG_GFXDECODE(jungler)
 	MCFG_PALETTE_LENGTH(64*4+4+64)
@@ -981,7 +979,7 @@ static MACHINE_CONFIG_DERIVED( tactcian, jungler )
 	/* video hardware */
 	MCFG_VIDEO_START_OVERRIDE(rallyx_state,locomotn)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(locomotn)
+	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_locomotn)
 MACHINE_CONFIG_END
 
 
@@ -992,7 +990,7 @@ static MACHINE_CONFIG_DERIVED( locomotn, jungler )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(locomotn)
+	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_locomotn)
 	MCFG_VIDEO_START_OVERRIDE(rallyx_state,locomotn)
 MACHINE_CONFIG_END
 
@@ -1004,7 +1002,7 @@ static MACHINE_CONFIG_DERIVED( commsega, jungler )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(locomotn)
+	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_locomotn)
 	MCFG_VIDEO_START_OVERRIDE(rallyx_state,commsega)
 MACHINE_CONFIG_END
 
