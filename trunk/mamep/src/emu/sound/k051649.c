@@ -276,7 +276,7 @@ WRITE8_DEVICE_HANDLER( k051649_test_w )
 READ8_DEVICE_HANDLER ( k051649_test_r )
 {
 	/* reading the test register sets it to $ff! */
-	k051649_test_w(device, offset, 0xff);
+	k051649_test_w(device, space, offset, 0xff);
 	return 0xff;
 }
 
@@ -286,7 +286,7 @@ k051649_device::k051649_device(const machine_config &mconfig, const char *tag, d
 	: device_t(mconfig, K051649, "K051649", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k051649_state));
+	m_token = global_alloc_clear(k051649_state);
 }
 
 //-------------------------------------------------

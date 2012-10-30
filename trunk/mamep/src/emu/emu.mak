@@ -54,7 +54,9 @@ EMUOBJS = \
 	$(EMUOBJ)/crsshair.o \
 	$(EMUOBJ)/debugger.o \
 	$(EMUOBJ)/delegate.o \
+	$(EMUOBJ)/devdelegate.o \
 	$(EMUOBJ)/devcb.o \
+	$(EMUOBJ)/devcb2.o \
 	$(EMUOBJ)/devcpu.o \
 	$(EMUOBJ)/device.o \
 	$(EMUOBJ)/didisasm.o \
@@ -190,6 +192,8 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/ds1302.o		\
 	$(EMUMACHINE)/ds2401.o		\
 	$(EMUMACHINE)/ds2404.o		\
+	$(EMUMACHINE)/ds75160a.o	\
+	$(EMUMACHINE)/ds75161a.o	\
 	$(EMUMACHINE)/e0516.o		\
 	$(EMUMACHINE)/eeprom.o		\
 	$(EMUMACHINE)/er2055.o		\
@@ -233,6 +237,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/mccs1850.o	\
 	$(EMUMACHINE)/mm74c922.o	\
 	$(EMUMACHINE)/microtch.o	\
+	$(EMUMACHINE)/mos6526.o		\
 	$(EMUMACHINE)/mos6529.o		\
 	$(EMUMACHINE)/msm5832.o		\
 	$(EMUMACHINE)/msm58321.o	\
@@ -256,17 +261,19 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/rp5c01.o		\
 	$(EMUMACHINE)/rp5c15.o		\
 	$(EMUMACHINE)/rp5h01.o		\
+	$(EMUMACHINE)/rtc4543.o		\
 	$(EMUMACHINE)/rtc65271.o	\
 	$(EMUMACHINE)/rtc9701.o		\
 	$(EMUMACHINE)/s3c2400.o		\
 	$(EMUMACHINE)/s3c2410.o		\
 	$(EMUMACHINE)/s3c2440.o		\
 	$(EMUMACHINE)/s3520cf.o		\
-	$(EMUMACHINE)/scsicb.o		\
 	$(EMUMACHINE)/scsibus.o		\
+	$(EMUMACHINE)/scsicb.o		\
 	$(EMUMACHINE)/scsicd.o		\
 	$(EMUMACHINE)/scsidev.o		\
 	$(EMUMACHINE)/scsihd.o		\
+	$(EMUMACHINE)/scsihle.o		\
 	$(EMUMACHINE)/secflash.o	\
 	$(EMUMACHINE)/seibu_cop.o	\
 	$(EMUMACHINE)/smc91c9x.o	\
@@ -403,14 +410,6 @@ $(EMUOBJ)/rendlay.o:	$(EMULAYOUT)/dualhovu.lh \
 						$(EMULAYOUT)/triphsxs.lh \
 						$(EMULAYOUT)/quadhsxs.lh \
 						$(EMULAYOUT)/vertical.lh \
-						$(EMULAYOUT)/ho20ffff.lh \
-						$(EMULAYOUT)/ho2eff2e.lh \
-						$(EMULAYOUT)/ho4f893d.lh \
-						$(EMULAYOUT)/ho88ffff.lh \
-						$(EMULAYOUT)/hoa0a0ff.lh \
-						$(EMULAYOUT)/hoffe457.lh \
-						$(EMULAYOUT)/hoffff20.lh \
-						$(EMULAYOUT)/voffff20.lh \
 						$(EMULAYOUT)/lcd.lh \
 						$(EMULAYOUT)/lcd_rot.lh \
 						$(EMULAYOUT)/noscreens.lh \

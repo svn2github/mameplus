@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "scsidev.h"
+#include "machine/scsihle.h"
 #include "harddisk.h"
 #include "imagedev/harddriv.h"
 #include "scsihd.h"
@@ -14,62 +14,41 @@
 const device_type SCSIHD = &device_creator<scsihd_device>;
 
 scsihd_device::scsihd_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: scsidev_device(mconfig, SCSIHD, "SCSIHD", tag, owner, clock)
+	: scsihle_device(mconfig, SCSIHD, "SCSIHD", tag, owner, clock)
 {
 }
 
 scsihd_device::scsihd_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock) :
-	scsidev_device(mconfig, type, name, tag, owner, clock)
+	scsihle_device(mconfig, type, name, tag, owner, clock)
 {
 }
 
 void scsihd_device::device_start()
 {
+	scsihle_device::device_start();
+
 	save_item( NAME( lba ) );
 	save_item( NAME( blocks ) );
 }
 
 void scsihd_device::device_reset()
 {
-	scsidev_device::device_reset();
-
-	is_image_device = true;
-	disk = subdevice<harddisk_image_device>("image")->get_hard_disk_file();
-	if( !disk )
-	{
-		// try to locate the CHD from a DISK_REGION
-		chd_file *handle = get_disk_handle(machine(), tag());
-		if (handle != NULL)
-		{
-			is_image_device = false;
-			disk = hard_disk_open(handle);
-		}
-	}
+	scsihle_device::device_reset();
 
 	lba = 0;
 	blocks = 0;
 	sectorbytes = 512;
 
+	disk = subdevice<harddisk_image_device>("image")->get_hard_disk_file();
 	if (!disk)
 	{
-		logerror("SCSIHD: no HD found!\n");
+		logerror("%s SCSIHD: no HD found!\n", tag());
 	}
 	else
 	{
 		// get hard disk sector size from CHD metadata
 		const hard_disk_info *hdinfo = hard_disk_get_info(disk);
 		sectorbytes = hdinfo->sectorbytes;
-	}
-}
-
-void scsihd_device::device_stop()
-{
-	if (!is_image_device)
-	{
-		if( disk )
-		{
-			hard_disk_close( disk );
-		}
 	}
 }
 
@@ -85,10 +64,6 @@ machine_config_constructor scsihd_device::device_mconfig_additions() const
 // scsihd_exec_command
 void scsihd_device::ExecCommand( int *transferLength )
 {
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
-
 	switch ( command[0] )
 	{
 		case 0x03: // REQUEST SENSE
@@ -174,7 +149,7 @@ void scsihd_device::ExecCommand( int *transferLength )
 			break;
 
 		default:
-			scsidev_device::ExecCommand( transferLength );
+			scsihle_device::ExecCommand( transferLength );
 			break;
 	}
 }
@@ -182,9 +157,6 @@ void scsihd_device::ExecCommand( int *transferLength )
 void scsihd_device::ReadData( UINT8 *data, int dataLength )
 {
 	int i;
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
 
 	// if we're a drive without a disk, return all zeroes
 	if (!disk)
@@ -272,17 +244,13 @@ void scsihd_device::ReadData( UINT8 *data, int dataLength )
 			break;
 
 		default:
-			scsidev_device::ReadData( data, dataLength );
+			scsihle_device::ReadData( data, dataLength );
 			break;
 	}
 }
 
 void scsihd_device::WriteData( UINT8 *data, int dataLength )
 {
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
-
 	if (!disk)
 	{
 		return;
@@ -309,7 +277,7 @@ void scsihd_device::WriteData( UINT8 *data, int dataLength )
 			break;
 
 		default:
-			scsidev_device::WriteData( data, dataLength );
+			scsihle_device::WriteData( data, dataLength );
 			break;
 	}
 }
@@ -323,4 +291,9 @@ void scsihd_device::GetDevice( void **_disk )
 void scsihd_device::SetDevice( void *_disk )
 {
 	disk = (hard_disk_file *)_disk;
+}
+
+int scsihd_device::GetSectorBytes()
+{
+	return sectorbytes;
 }

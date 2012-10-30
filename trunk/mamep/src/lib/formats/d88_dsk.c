@@ -446,7 +446,7 @@ int d88_format::identify(io_generic *io, UINT32 form_factor)
 {
 	int size = io_generic_size(io);
 	UINT8 h[32];
-	
+
 	io_generic_read(io, h, 0, 32);
 	if((LITTLE_ENDIANIZE_INT32(*(UINT32 *)(h+0x1c)) == size) &&
 	   (h[0x1b] == 0x00 || h[0x1b] == 0x10 || h[0x1b] == 0x20 || h[0x1b] == 0x30 || h[0x1b] == 0x40))
@@ -458,7 +458,7 @@ int d88_format::identify(io_generic *io, UINT32 form_factor)
 bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 {
 	UINT8 h[32];
-	
+
 	io_generic_read(io, h, 0, 32);
 
 	int cell_count = 0;
@@ -504,6 +504,7 @@ bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 	if(!head_count)
 		return false;
 
+	UINT32 *track_data = global_alloc_array(UINT32, cell_count+10000);
 	UINT32 track_pos[164];
 	io_generic_read(io, track_pos, 32, 164*4);
 
@@ -513,7 +514,6 @@ bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 			if(!pos)
 				continue;
 
-			UINT32 track_data[210000];
 			UINT8 sect_data[65536];
 			int tpos = 0;
 
@@ -524,16 +524,16 @@ bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 			mfm_w(track_data, tpos, 8, 0xfc);
 			for(int i=0; i<50; i++) mfm_w(track_data, tpos, 8, 0x4e);
 
-			// Updated after reading the first header
+			// Read all sector headers to compute the available and expected size for gap3
 			int sector_count = 1;
 			int gap3 = 84;
+			int etpos = tpos;
+			int rpos = pos;
 			for(int i=0; i<sector_count; i++) {
 				UINT8 hs[16];
-				io_generic_read(io, hs, pos, 16);
+				io_generic_read(io, hs, rpos, 16);
 				UINT16 size = LITTLE_ENDIANIZE_INT16(*(UINT16 *)(hs+14));
-				io_generic_read(io, sect_data, pos+16, size);
-				pos += 16+size;
-
+				rpos += 16+size;
 				if(i == 0) {
 					sector_count = LITTLE_ENDIANIZE_INT16(*(UINT16 *)(hs+4));
 					if(size < 512)
@@ -541,6 +541,22 @@ bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 					else
 						gap3 = form_factor == floppy_image::FF_35 ? 84 : 80;
 				}
+				etpos += (12+3+5+2+22+12+3+1+size+2)*16;
+			}
+
+			if(etpos > cell_count)
+				throw emu_fatalerror("d88_format: Incorrect layout on track %d head %d, expected_size=%d, current_size=%d", track, head, cell_count, etpos);
+
+			if(etpos + gap3*16*(sector_count-1) > cell_count)
+				gap3 = (cell_count - etpos) / 16 / (sector_count-1);
+
+			// Build the track
+			for(int i=0; i<sector_count; i++) {
+				UINT8 hs[16];
+				io_generic_read(io, hs, pos, 16);
+				UINT16 size = LITTLE_ENDIANIZE_INT16(*(UINT16 *)(hs+14));
+				io_generic_read(io, sect_data, pos+16, size);
+				pos += 16+size;
 
 				int cpos;
 				UINT16 crc;
@@ -561,7 +577,7 @@ bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 				for(int j=0; j<12; j++) mfm_w(track_data, tpos, 8, 0x00);
 				cpos = tpos;
 				for(int j=0; j< 3; j++) raw_w(track_data, tpos, 16, 0x4489);
-				mfm_w(track_data, tpos, 8, 0xfb);
+				mfm_w(track_data, tpos, 8, hs[7] ? 0xf8 : 0xfb);
 				for(int j=0; j<size; j++) mfm_w(track_data, tpos, 8, sect_data[j]);
 				crc = calc_crc_ccitt(track_data, cpos, tpos);
 				mfm_w(track_data, tpos, 16, crc);
@@ -570,14 +586,13 @@ bool d88_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 
 			// Gap 4b
 
-			if(tpos > cell_count)
-				throw emu_fatalerror("d88_format: Incorrect layout on track %d head %d, expected_size=%d, current_size=%d", track, head, cell_count, tpos);
 			while(tpos < cell_count-15) mfm_w(track_data, tpos, 8, 0x4e);
 			raw_w(track_data, tpos, cell_count-tpos, 0x9254 >> (16+tpos-cell_count));
 
 			generate_track_from_levels(track, head, track_data, cell_count, 0, image);
 		}
 
+	global_free(track_data);
 	return true;
 }
 

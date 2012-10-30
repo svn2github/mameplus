@@ -42,7 +42,7 @@ static void update(device_t *device, UINT8 new_val, UINT8 mask)
 		UINT8 changed = old_val ^ latch8->value;
 		for (i=0; i<8; i++)
 			if (((changed & (1<<i)) != 0) && latch8->intf->node_map[i] != 0)
-				discrete_sound_w(device->machine().device(latch8->intf->node_device[i]), latch8->intf->node_map[i] , (latch8->value >> i) & 1);
+				discrete_sound_w(device->machine().device(latch8->intf->node_device[i]), device->machine().driver_data()->generic_space(), latch8->intf->node_map[i] , (latch8->value >> i) & 1);
 	}
 }
 
@@ -74,21 +74,21 @@ READ8_DEVICE_HANDLER( latch8_r )
 			if (read_dev != NULL)
 			{
 				res &= ~( 1 << i);
-				res |= ((latch8->intf->devread[i].devread_handler(read_dev, 0) >> latch8->intf->devread[i].from_bit) & 0x01) << i;
+				res |= ((latch8->intf->devread[i].devread_handler(read_dev, device->machine().driver_data()->generic_space(), 0, 0xff) >> latch8->intf->devread[i].from_bit) & 0x01) << i;
 			}
 		}
 	}
 	if (latch8->has_read)
 	{
 		/*  temporary hack until all relevant systems are devices */
-		address_space *space = device->machine().firstcpu->space(AS_PROGRAM);
+		address_space &space = device->machine().driver_data()->generic_space();
 		int i;
 		for (i=0; i<8; i++)
 		{
 			if (latch8->intf->devread[i].read_handler != NULL)
 			{
 				res &= ~( 1 << i);
-				res |= ((latch8->intf->devread[i].read_handler(space, 0) >> latch8->intf->devread[i].from_bit) & 0x01) << i;
+				res |= ((latch8->intf->devread[i].read_handler(space, 0, 0xff) >> latch8->intf->devread[i].from_bit) & 0x01) << i;
 			}
 		}
 	}
@@ -236,7 +236,7 @@ const device_type LATCH8 = &device_creator<latch8_device>;
 latch8_device::latch8_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
        : device_t(mconfig, LATCH8, "8 bit latch", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(latch8_t));
+	m_token = global_alloc_clear(latch8_t);
 	memset((void*)&m_inline_config,0,sizeof(m_inline_config));
 }
 

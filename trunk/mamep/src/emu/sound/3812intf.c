@@ -134,10 +134,10 @@ WRITE8_DEVICE_HANDLER( ym3812_w )
 	ym3812_write(info->chip, offset & 1, data);
 }
 
-READ8_DEVICE_HANDLER( ym3812_status_port_r ) { return ym3812_r(device, 0); }
-READ8_DEVICE_HANDLER( ym3812_read_port_r ) { return ym3812_r(device, 1); }
-WRITE8_DEVICE_HANDLER( ym3812_control_port_w ) { ym3812_w(device, 0, data); }
-WRITE8_DEVICE_HANDLER( ym3812_write_port_w ) { ym3812_w(device, 1, data); }
+READ8_DEVICE_HANDLER( ym3812_status_port_r ) { return ym3812_r(device, space, 0); }
+READ8_DEVICE_HANDLER( ym3812_read_port_r ) { return ym3812_r(device, space, 1); }
+WRITE8_DEVICE_HANDLER( ym3812_control_port_w ) { ym3812_w(device, space, 0, data); }
+WRITE8_DEVICE_HANDLER( ym3812_write_port_w ) { ym3812_w(device, space, 1, data); }
 
 
 const device_type YM3812 = &device_creator<ym3812_device>;
@@ -146,7 +146,7 @@ ym3812_device::ym3812_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, YM3812, "YM3812", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(ym3812_state));
+	m_token = global_alloc_clear(ym3812_state);
 }
 
 //-------------------------------------------------

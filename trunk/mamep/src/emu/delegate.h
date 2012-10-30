@@ -107,6 +107,10 @@
 #ifndef __DELEGATE_H__
 #define __DELEGATE_H__
 
+// standard C++ includes
+#include <exception>
+#include <typeinfo>
+
 
 //**************************************************************************
 //  MACROS
@@ -129,6 +133,10 @@
 //  HELPER CLASSES
 //**************************************************************************
 
+// generic function type
+typedef void (*delegate_generic_function)();
+
+
 // ======================> generic_class
 
 // define a dummy generic class that is just straight single-inheritance
@@ -148,6 +156,19 @@ class delegate_late_bind
 public:
 	delegate_late_bind() { }
 	virtual ~delegate_late_bind() { }
+};
+
+
+// ======================> binding_type_exception
+
+// exception that is thrown when a bind fails the dynamic_cast
+class binding_type_exception : public std::exception
+{
+public:
+	binding_type_exception(const std::type_info &target_type, const std::type_info &actual_type)
+		: m_target_type(target_type), m_actual_type(actual_type) { }
+	const std::type_info &m_target_type;
+	const std::type_info &m_actual_type;
 };
 
 
@@ -216,300 +237,178 @@ struct delegate_traits<_ClassType, _ReturnType, _noparam, _noparam, _noparam, _n
 
 
 //**************************************************************************
-//  COMPATIBLE DELEGATES
+//  DELEGATE MEMBER FUNCTION POINTER WRAPPERS
 //**************************************************************************
 
 #if (USE_DELEGATE_TYPE == DELEGATE_TYPE_COMPATIBLE)
 
-// ======================> delegate_raw_mfp
+// ======================> delegate_mfp
 
-// delegate_raw_mfp is a class that wraps a generic member function pointer
+// delegate_mfp is a class that wraps a generic member function pointer
 // in a static buffer, and can effectively recast itself back for later use;
 // it hides some of the gross details involved in copying artibtrary member
 // function pointers around
-struct delegate_raw_mfp
+class delegate_mfp
 {
-	// for MSVC maximum size is one pointer, plus 3 ints
-	static const int MAX_MFP_SIZE = sizeof(void *) + 3 * sizeof(int);
-
-	// default and copy constructors
-	delegate_raw_mfp() { memset(&m_rawdata, 0, sizeof(m_rawdata)); }
-	delegate_raw_mfp(const delegate_raw_mfp &src) : m_rawdata(src.m_rawdata) { }
-
-	// construct from any member function pointer
-	template<typename _FunctionType>
-	delegate_raw_mfp(_FunctionType mfp)
-	{
-		assert(sizeof(mfp) <= sizeof(m_rawdata));
-		memset(&m_rawdata, 0, sizeof(m_rawdata));
-		*reinterpret_cast<_FunctionType *>(&m_rawdata) = mfp;
-	}
-
-	// assignment operator
-	delegate_raw_mfp &operator=(const delegate_raw_mfp &src)
-	{
-		if (this != &src)
-			m_rawdata = src.m_rawdata;
-		return *this;
-	}
-
-	// comparison operator
-	bool operator==(const delegate_raw_mfp &rhs) const
-	{
-		return (memcmp(&m_rawdata, &rhs.m_rawdata, sizeof(m_rawdata)) == 0);
-	}
-
-	// convert back to a member function pointer
-	template<class _FunctionType>
-	_FunctionType &mfp() const { return *reinterpret_cast<_FunctionType *>(&m_rawdata); }
-
-	// raw buffer to hold the copy of the function pointer
-	mutable struct { UINT8 bytes[MAX_MFP_SIZE]; } m_rawdata;
-};
-
-
-// ======================> delegate_base
-
-// general delegate class template supporting up to 4 parameters
-template<typename _ReturnType, typename _P1Type = _noparam, typename _P2Type = _noparam, typename _P3Type = _noparam, typename _P4Type = _noparam, typename _P5Type = _noparam>
-class delegate_base
-{
-	typedef delegate_generic_class *(*late_bind_func)(delegate_late_bind &object);
-
 public:
-	// define our traits
-	template<class _FunctionClass>
-	struct traits
-	{
-		typedef typename delegate_traits<_FunctionClass, _ReturnType, _P1Type, _P2Type, _P3Type, _P4Type, _P5Type>::member_func_type member_func_type;
-		typedef typename delegate_traits<_FunctionClass, _ReturnType, _P1Type, _P2Type, _P3Type, _P4Type, _P5Type>::static_func_type static_func_type;
-		typedef typename delegate_traits<_FunctionClass, _ReturnType, _P1Type, _P2Type, _P3Type, _P4Type, _P5Type>::static_ref_func_type static_ref_func_type;
-	};
-	typedef typename traits<delegate_generic_class>::static_func_type generic_static_func;
-
-	// generic constructor
-	delegate_base()
-		: m_name(NULL),
-		  m_object(NULL),
-		  m_callobject(NULL),
-		  m_function(NULL),
-		  m_latebinder(NULL) { }
+	// default constructor
+	delegate_mfp()
+		: m_rawdata(s_null_mfp),
+		  m_realobject(NULL),
+		  m_stubfunction(NULL) { }
 
 	// copy constructor
-	delegate_base(const delegate_base &src)
-		: m_name(src.m_name),
-		  m_object(src.m_object),
-		  m_callobject(src.is_mfp() ? reinterpret_cast<delegate_generic_class *>(this) : src.m_object),
-		  m_function(src.m_function),
-		  m_rawfunction(src.m_rawfunction),
-		  m_latebinder(src.m_latebinder) { }
+	delegate_mfp(const delegate_mfp &src)
+		: m_rawdata(src.m_rawdata),
+		  m_realobject(src.m_realobject),
+		  m_stubfunction(src.m_stubfunction) { }
 
-	// copy constructor with late bind
-	delegate_base(const delegate_base &src, delegate_late_bind &object)
-		: m_name(src.m_name),
-		  m_object(src.m_object),
-		  m_callobject(src.is_mfp() ? reinterpret_cast<delegate_generic_class *>(this) : src.m_object),
-		  m_function(src.m_function),
-		  m_rawfunction(src.m_rawfunction),
-		  m_latebinder(src.m_latebinder) { late_bind(object); }
-
-	// construct from member function with object pointer
-	template<class _FunctionClass>
-	delegate_base(typename traits<_FunctionClass>::member_func_type funcptr, const char *name, _FunctionClass *object)
-		: m_name(name),
-		  m_object(NULL),
-		  m_callobject(reinterpret_cast<delegate_generic_class *>(this)),
-		  m_function(&delegate_base::method_stub<_FunctionClass>),
-		  m_rawfunction(funcptr),
-		  m_latebinder(&late_bind_helper<_FunctionClass>) { bind(reinterpret_cast<delegate_generic_class *>(object)); }
-
-	// construct from static function with object pointer
-	template<class _FunctionClass>
-	delegate_base(typename traits<_FunctionClass>::static_func_type funcptr, const char *name, _FunctionClass *object)
-		: m_name(name),
-		  m_object(NULL),
-		  m_callobject(NULL),
-		  m_function(reinterpret_cast<generic_static_func>(funcptr)),
-		  m_latebinder(&late_bind_helper<_FunctionClass>) { bind(reinterpret_cast<delegate_generic_class *>(object)); }
-
-	// construct from static reference function with object pointer
-	template<class _FunctionClass>
-	delegate_base(typename traits<_FunctionClass>::static_ref_func_type funcptr, const char *name, _FunctionClass *object)
-		: m_name(name),
-		  m_object(NULL),
-		  m_callobject(NULL),
-		  m_function(reinterpret_cast<generic_static_func>(funcptr)),
-		  m_latebinder(&late_bind_helper<_FunctionClass>) { bind(reinterpret_cast<delegate_generic_class *>(object)); }
-
-	// copy operator
-	delegate_base &operator=(const delegate_base &src)
+	// construct from any member function pointer
+	template<typename _MemberFunctionType, class _MemberFunctionClass, typename _ReturnType, typename _StaticFunctionType>
+	delegate_mfp(_MemberFunctionType mfp, _MemberFunctionClass *, _ReturnType *, _StaticFunctionType)
+		: m_rawdata(s_null_mfp),
+		  m_realobject(NULL),
+		  m_stubfunction(make_generic<_StaticFunctionType>(&delegate_mfp::method_stub<_MemberFunctionClass, _ReturnType>))
 	{
-		if (this != &src)
-		{
-			m_name = src.m_name;
-			m_object = src.m_object;
-			m_callobject = src.is_mfp() ? reinterpret_cast<delegate_generic_class *>(this) : src.m_object;
-			m_function = src.m_function;
-			m_rawfunction = src.m_rawfunction;
-			m_latebinder = src.m_latebinder;
-		}
-		return *this;
+		assert(sizeof(mfp) <= sizeof(m_rawdata));
+		*reinterpret_cast<_MemberFunctionType *>(&m_rawdata) = mfp;
 	}
 
-	// comparison operator
-	bool operator==(const delegate_base &rhs) const
-	{
-		return (m_object == rhs.m_object && m_function == rhs.m_function && m_rawfunction == rhs.m_rawfunction);
-	}
+	// comparison helpers
+	bool operator==(const delegate_mfp &rhs) const { return (m_rawdata == rhs.m_rawdata); }
+	bool isnull() const { return (m_rawdata == s_null_mfp); }
 
 	// getters
-	bool isnull() const { return (m_function == NULL); }
-	bool has_object() const { return (m_object != NULL); }
-	const char *name() const { return m_name; }
+	delegate_generic_class *real_object(delegate_generic_class *original) const { return m_realobject; }
 
-	// call the function
-	_ReturnType operator()() const { return (*m_function)(m_callobject); }
-	_ReturnType operator()(_P1Type p1) const { return (*m_function)(m_callobject, p1); }
-	_ReturnType operator()(_P1Type p1, _P2Type p2) const { return (*m_function)(m_callobject, p1, p2); }
-	_ReturnType operator()(_P1Type p1, _P2Type p2, _P3Type p3) const { return (*m_function)(m_callobject, p1, p2, p3); }
-	_ReturnType operator()(_P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4) const { return (*m_function)(m_callobject, p1, p2, p3, p4); }
-	_ReturnType operator()(_P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4, _P5Type p5) const { return (*m_function)(m_callobject, p1, p2, p3, p4, p5); }
-
-	// late binding
-	void late_bind(delegate_late_bind &object) { bind((*m_latebinder)(object)); }
-
-protected:
-	// bind the actual object
-	void bind(delegate_generic_class *object)
+	// binding helper
+	template<typename _FunctionType>
+	void update_after_bind(_FunctionType &funcptr, delegate_generic_class *&object)
 	{
-		m_object = object;
-		if (!is_mfp()) m_callobject = m_object;
+		m_realobject = object;
+		object = reinterpret_cast<delegate_generic_class *>(this);
+		funcptr = reinterpret_cast<_FunctionType>(m_stubfunction);
 	}
 
-	// internal helpers
-	bool is_mfp() const { return m_callobject == reinterpret_cast<const delegate_generic_class *>(this); }
-
-	// helper stub that calls the member function; we need one for each parameter count
-	template<class _FunctionClass>
+private:
+	// helper stubs for calling encased member function pointers
+	template<class _FunctionClass, typename _ReturnType>
     static _ReturnType method_stub(delegate_generic_class *object)
     {
+    	delegate_mfp *_this = reinterpret_cast<delegate_mfp *>(object);
     	typedef _ReturnType (_FunctionClass::*mfptype)();
-    	delegate_base *_this = reinterpret_cast<delegate_base *>(object);
-    	mfptype &mfp = _this->m_rawfunction.mfp<mfptype>();
-    	return (reinterpret_cast<_FunctionClass *>(_this->m_object)->*mfp)();
+    	mfptype &mfp = *reinterpret_cast<mfptype *>(&_this->m_rawdata);
+    	return (reinterpret_cast<_FunctionClass *>(_this->m_realobject)->*mfp)();
     }
 
-	template<class _FunctionClass>
+	template<class _FunctionClass, typename _ReturnType, typename _P1Type>
     static _ReturnType method_stub(delegate_generic_class *object, _P1Type p1)
     {
+    	delegate_mfp *_this = reinterpret_cast<delegate_mfp *>(object);
     	typedef _ReturnType (_FunctionClass::*mfptype)(_P1Type p1);
-    	delegate_base *_this = reinterpret_cast<delegate_base *>(object);
-    	mfptype &mfp = _this->m_rawfunction.mfp<mfptype>();
-    	return (reinterpret_cast<_FunctionClass *>(_this->m_object)->*mfp)(p1);
+    	mfptype &mfp = *reinterpret_cast<mfptype *>(&_this->m_rawdata);
+    	return (reinterpret_cast<_FunctionClass *>(_this->m_realobject)->*mfp)(p1);
     }
 
-	template<class _FunctionClass>
+	template<class _FunctionClass, typename _ReturnType, typename _P1Type, typename _P2Type>
     static _ReturnType method_stub(delegate_generic_class *object, _P1Type p1, _P2Type p2)
     {
+    	delegate_mfp *_this = reinterpret_cast<delegate_mfp *>(object);
     	typedef _ReturnType (_FunctionClass::*mfptype)(_P1Type p1, _P2Type p2);
-    	delegate_base *_this = reinterpret_cast<delegate_base *>(object);
-    	mfptype &mfp = _this->m_rawfunction.mfp<mfptype>();
-    	return (reinterpret_cast<_FunctionClass *>(_this->m_object)->*mfp)(p1, p2);
+    	mfptype &mfp = *reinterpret_cast<mfptype *>(&_this->m_rawdata);
+    	return (reinterpret_cast<_FunctionClass *>(_this->m_realobject)->*mfp)(p1, p2);
     }
 
-	template<class _FunctionClass>
+	template<class _FunctionClass, typename _ReturnType, typename _P1Type, typename _P2Type, typename _P3Type>
     static _ReturnType method_stub(delegate_generic_class *object, _P1Type p1, _P2Type p2, _P3Type p3)
     {
+    	delegate_mfp *_this = reinterpret_cast<delegate_mfp *>(object);
     	typedef _ReturnType (_FunctionClass::*mfptype)(_P1Type p1, _P2Type p2, _P3Type p3);
-    	delegate_base *_this = reinterpret_cast<delegate_base *>(object);
-    	mfptype &mfp = _this->m_rawfunction.mfp<mfptype>();
-    	return (reinterpret_cast<_FunctionClass *>(_this->m_object)->*mfp)(p1, p2, p3);
+    	mfptype &mfp = *reinterpret_cast<mfptype *>(&_this->m_rawdata);
+    	return (reinterpret_cast<_FunctionClass *>(_this->m_realobject)->*mfp)(p1, p2, p3);
     }
 
-	template<class _FunctionClass>
+	template<class _FunctionClass, typename _ReturnType, typename _P1Type, typename _P2Type, typename _P3Type, typename _P4Type>
     static _ReturnType method_stub(delegate_generic_class *object, _P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4)
     {
+    	delegate_mfp *_this = reinterpret_cast<delegate_mfp *>(object);
     	typedef _ReturnType (_FunctionClass::*mfptype)(_P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4);
-    	delegate_base *_this = reinterpret_cast<delegate_base *>(object);
-    	mfptype &mfp = _this->m_rawfunction.mfp<mfptype>();
-    	return (reinterpret_cast<_FunctionClass *>(_this->m_object)->*mfp)(p1, p2, p3, p4);
+    	mfptype &mfp = *reinterpret_cast<mfptype *>(&_this->m_rawdata);
+    	return (reinterpret_cast<_FunctionClass *>(_this->m_realobject)->*mfp)(p1, p2, p3, p4);
     }
 
-	template<class _FunctionClass>
+	template<class _FunctionClass, typename _ReturnType, typename _P1Type, typename _P2Type, typename _P3Type, typename _P4Type, typename _P5Type>
     static _ReturnType method_stub(delegate_generic_class *object, _P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4, _P5Type p5)
     {
+    	delegate_mfp *_this = reinterpret_cast<delegate_mfp *>(object);
     	typedef _ReturnType (_FunctionClass::*mfptype)(_P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4, _P5Type p5);
-    	delegate_base *_this = reinterpret_cast<delegate_base *>(object);
-    	mfptype &mfp = _this->m_rawfunction.mfp<mfptype>();
-    	return (reinterpret_cast<_FunctionClass *>(_this->m_object)->*mfp)(p1, p2, p3, p4, p5);
+    	mfptype &mfp = *reinterpret_cast<mfptype *>(&_this->m_rawdata);
+    	return (reinterpret_cast<_FunctionClass *>(_this->m_realobject)->*mfp)(p1, p2, p3, p4, p5);
     }
 
-	// late binding helper
-	template<class _FunctionClass>
-	static delegate_generic_class *late_bind_helper(delegate_late_bind &object)
+	// helper to convert a function of a given type to a generic function, forcing template
+	// instantiation to match the source type
+	template <typename _SourceType>
+	delegate_generic_function make_generic(_SourceType funcptr)
 	{
-		return reinterpret_cast<delegate_generic_class *>(dynamic_cast<_FunctionClass *>(&object));
+		return reinterpret_cast<delegate_generic_function>(funcptr);
 	}
 
+	// for MSVC maximum size is one pointer, plus 3 ints; all other implementations seem to be smaller
+	struct raw_mfp_data
+	{
+		int data[((sizeof(void *) + 3 * sizeof(int)) + (sizeof(int) - 1)) / sizeof(int)];
+		bool operator==(const raw_mfp_data &rhs) const { return (memcmp(data, rhs.data, sizeof(data)) == 0); }
+	};
+
 	// internal state
-	const char *				m_name;				// name string
-	delegate_generic_class *	m_object;			// pointer to the post-cast object
-	delegate_generic_class *	m_callobject;		// pointer to the object used for calling
-	generic_static_func			m_function;			// generic static function pointer
-	delegate_raw_mfp			m_rawfunction;		// copy of raw MFP
-	late_bind_func				m_latebinder;		// late binding helper
+	raw_mfp_data				m_rawdata;			// raw buffer to hold the copy of the function pointer
+	delegate_generic_class *	m_realobject;		// pointer to the object used for calling
+	delegate_generic_function	m_stubfunction;		// pointer to our matching stub function
+	static raw_mfp_data			s_null_mfp;			// NULL mfp
 };
 
-#endif
+#elif (USE_DELEGATE_TYPE == DELEGATE_TYPE_INTERNAL)
 
-
-//**************************************************************************
-//  GCC DELEGATES
-//**************************************************************************
-
-#if (USE_DELEGATE_TYPE == DELEGATE_TYPE_INTERNAL)
-
-// a generic function pointer type and a generic member function pointer type
-typedef void (*delegate_generic_function)();
+// ======================> delegate_mfp
 
 // struct describing the contents of a member function pointer
-struct delegate_internal_mfp
+class delegate_mfp
 {
+public:
 	// default constructor
-	delegate_internal_mfp()
+	delegate_mfp()
 		: m_function(0),
 		  m_this_delta(0) { }
 
 	// copy constructor
-	delegate_internal_mfp(const delegate_internal_mfp &src)
+	delegate_mfp(const delegate_mfp &src)
 		: m_function(src.m_function),
 		  m_this_delta(src.m_this_delta) { }
 
 	// construct from any member function pointer
-	template<typename _FunctionPtr>
-	delegate_internal_mfp(_FunctionPtr funcptr)
+	template<typename _MemberFunctionType, class _MemberFunctionClass, typename _ReturnType, typename _StaticFunctionType>
+	delegate_mfp(_MemberFunctionType mfp, _MemberFunctionClass *, _ReturnType *, _StaticFunctionType)
 	{
-		assert(sizeof(funcptr) == sizeof(*this));
-		*reinterpret_cast<_FunctionPtr *>(this) = funcptr;
+		assert(sizeof(mfp) == sizeof(*this));
+		*reinterpret_cast<_MemberFunctionType *>(this) = mfp;
 	}
 
-	// assignment operator
-	delegate_internal_mfp &operator=(const delegate_internal_mfp &src)
+	// comparison helpers
+	bool operator==(const delegate_mfp &rhs) const { return (m_function == rhs.m_function && m_this_delta == rhs.m_this_delta); }
+	bool isnull() const { return (m_function == 0); }
+
+	// getters
+	delegate_generic_class *real_object(delegate_generic_class *original) const { return original; }
+
+	// binding helper
+	template<typename _FunctionType>
+	void update_after_bind(_FunctionType &funcptr, delegate_generic_class *&object)
 	{
-		if (this != &src)
-		{
-			m_function = src.m_function;
-			m_this_delta = src.m_this_delta;
-		}
-		return *this;
+		funcptr = reinterpret_cast<_FunctionType>(convert_to_generic(object));
 	}
 
-	// comparison operator
-	bool operator==(const delegate_internal_mfp &rhs) const
-	{
-		return (m_function == rhs.m_function && m_this_delta == rhs.m_this_delta);
-	}
-
+private:
 	// extract the generic function and adjust the object pointer
 	delegate_generic_function convert_to_generic(delegate_generic_class *&object) const;
 
@@ -520,14 +419,20 @@ struct delegate_internal_mfp
 	int 					m_this_delta;		// delta to apply to the 'this' pointer
 };
 
+#endif
+
+
+
+//**************************************************************************
+//  COMMON DELEGATE BASE CLASS
+//**************************************************************************
 
 // ======================> delegate_base
 
+// general delegate class template supporting up to 5 parameters
 template<typename _ReturnType, typename _P1Type = _noparam, typename _P2Type = _noparam, typename _P3Type = _noparam, typename _P4Type = _noparam, typename _P5Type = _noparam>
 class delegate_base
 {
-	typedef delegate_generic_class *(*late_bind_func)(delegate_late_bind &object);
-
 public:
 	// define our traits
 	template<class _FunctionClass>
@@ -541,76 +446,94 @@ public:
 
 	// generic constructor
 	delegate_base()
-		: m_name(NULL),
+		: m_function(NULL),
 		  m_object(NULL),
-		  m_function(NULL),
-		  m_latebinder(NULL) { }
+		  m_name(NULL),
+		  m_latebinder(NULL),
+		  m_raw_function(NULL) { }
 
 	// copy constructor
 	delegate_base(const delegate_base &src)
-		: m_name(src.m_name),
-		  m_object(src.m_object),
-		  m_function(src.m_function),
-		  m_rawfunction(src.m_rawfunction),
-		  m_latebinder(src.m_latebinder) { }
+		: m_function(src.m_function),
+		  m_object(NULL),
+		  m_name(src.m_name),
+		  m_latebinder(src.m_latebinder),
+		  m_raw_function(src.m_raw_function),
+		  m_raw_mfp(src.m_raw_mfp)
+	{
+		bind(src.object());
+	}
 
 	// copy constructor with late bind
 	delegate_base(const delegate_base &src, delegate_late_bind &object)
-		: m_name(src.m_name),
-		  m_object(src.m_object),
-		  m_function(src.m_function),
-		  m_rawfunction(src.m_rawfunction),
-		  m_latebinder(src.m_latebinder) { late_bind(object); }
+		: m_function(src.m_function),
+		  m_object(NULL),
+		  m_name(src.m_name),
+		  m_latebinder(src.m_latebinder),
+		  m_raw_function(src.m_raw_function),
+		  m_raw_mfp(src.m_raw_mfp)
+	{
+		late_bind(object);
+	}
 
 	// construct from member function with object pointer
 	template<class _FunctionClass>
 	delegate_base(typename traits<_FunctionClass>::member_func_type funcptr, const char *name, _FunctionClass *object)
-		: m_name(name),
+		: m_function(NULL),
 		  m_object(NULL),
-		  m_function(NULL),
-		  m_rawfunction(funcptr),
-		  m_latebinder(&late_bind_helper<_FunctionClass>) { bind(reinterpret_cast<delegate_generic_class *>(object)); }
+		  m_name(name),
+		  m_latebinder(&late_bind_helper<_FunctionClass>),
+		  m_raw_function(NULL),
+		  m_raw_mfp(funcptr, object, (_ReturnType *)0, (generic_static_func)0)
+	{
+		bind(reinterpret_cast<delegate_generic_class *>(object));
+	}
 
 	// construct from static function with object pointer
 	template<class _FunctionClass>
 	delegate_base(typename traits<_FunctionClass>::static_func_type funcptr, const char *name, _FunctionClass *object)
-		: m_name(name),
+		: m_function(reinterpret_cast<generic_static_func>(funcptr)),
 		  m_object(NULL),
-		  m_function(reinterpret_cast<generic_static_func>(funcptr)),
-		  m_latebinder(&late_bind_helper<_FunctionClass>) { bind(reinterpret_cast<delegate_generic_class *>(object)); }
+		  m_name(name),
+		  m_latebinder(&late_bind_helper<_FunctionClass>),
+		  m_raw_function(reinterpret_cast<generic_static_func>(funcptr))
+	{
+		bind(reinterpret_cast<delegate_generic_class *>(object));
+	}
 
-	// construct from static reference function with object pointer
+	// construct from static reference function with object reference
 	template<class _FunctionClass>
 	delegate_base(typename traits<_FunctionClass>::static_ref_func_type funcptr, const char *name, _FunctionClass *object)
-		: m_name(name),
+		: m_function(reinterpret_cast<generic_static_func>(funcptr)),
 		  m_object(NULL),
-		  m_function(reinterpret_cast<generic_static_func>(funcptr)),
-		  m_latebinder(&late_bind_helper<_FunctionClass>) { bind(reinterpret_cast<delegate_generic_class *>(object)); }
+		  m_name(name),
+		  m_latebinder(&late_bind_helper<_FunctionClass>),
+		  m_raw_function(reinterpret_cast<generic_static_func>(funcptr))
+	{
+		bind(reinterpret_cast<delegate_generic_class *>(object));
+	}
 
 	// copy operator
 	delegate_base &operator=(const delegate_base &src)
 	{
 		if (this != &src)
 		{
-			m_name = src.m_name;
-			m_object = src.m_object;
 			m_function = src.m_function;
-			m_rawfunction = src.m_rawfunction;
+			m_object = NULL;
+			m_name = src.m_name;
 			m_latebinder = src.m_latebinder;
+			m_raw_function = src.m_raw_function;
+			m_raw_mfp = src.m_raw_mfp;
+			bind(src.object());
 		}
 		return *this;
 	}
 
-	// comparison operator
+	// comparison helper
 	bool operator==(const delegate_base &rhs) const
 	{
-		return (m_object == rhs.m_object && m_function == rhs.m_function && m_rawfunction == rhs.m_rawfunction);
+		return (m_raw_function == rhs.m_raw_function && object() == rhs.object() && m_raw_mfp == rhs.m_raw_mfp);
 	}
-
-	// getters
-	bool isnull() const { return (m_function == NULL && m_rawfunction.m_function == 0); }
-	bool has_object() const { return (m_object != NULL); }
-	const char *name() const { return m_name; }
 
 	// call the function
 	_ReturnType operator()() const { return (*m_function)(m_object); }
@@ -620,34 +543,53 @@ public:
 	_ReturnType operator()(_P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4) const { return (*m_function)(m_object, p1, p2, p3, p4); }
 	_ReturnType operator()(_P1Type p1, _P2Type p2, _P3Type p3, _P4Type p4, _P5Type p5) const { return (*m_function)(m_object, p1, p2, p3, p4, p5); }
 
+	// getters
+	bool has_object() const { return (object() != NULL); }
+	const char *name() const { return m_name; }
+
+	// helpers
+	bool isnull() const { return (m_raw_function == NULL && m_raw_mfp.isnull()); }
+	bool is_mfp() const { return !m_raw_mfp.isnull(); }
+
 	// late binding
 	void late_bind(delegate_late_bind &object) { bind((*m_latebinder)(object)); }
 
 protected:
-	// bind the actual object
-	void bind(delegate_generic_class *object)
-	{
-		m_object = object;
-		if (m_object != NULL && m_rawfunction.m_function != 0)
-			m_function = reinterpret_cast<generic_static_func>(m_rawfunction.convert_to_generic(m_object));
-	}
+	// return the actual object (not the one we use for calling)
+	delegate_generic_class *object() const { return is_mfp() ? m_raw_mfp.real_object(m_object) : m_object; }
+
+	// late binding function
+	typedef delegate_generic_class *(*late_bind_func)(delegate_late_bind &object);
 
 	// late binding helper
 	template<class _FunctionClass>
 	static delegate_generic_class *late_bind_helper(delegate_late_bind &object)
 	{
-		return reinterpret_cast<delegate_generic_class *>(dynamic_cast<_FunctionClass *>(&object));
+		_FunctionClass *result = dynamic_cast<_FunctionClass *>(&object);
+		if (result == NULL)
+			throw binding_type_exception(typeid(_FunctionClass), typeid(object));
+		return reinterpret_cast<delegate_generic_class *>(result);
+	}
+
+	// bind the actual object
+	void bind(delegate_generic_class *object)
+	{
+		m_object = object;
+
+		// if we're wrapping a member function pointer, handle special stuff
+		if (m_object != NULL && is_mfp())
+			m_raw_mfp.update_after_bind(m_function, m_object);
 	}
 
 	// internal state
+	generic_static_func			m_function;			// resolved static function pointer
+	delegate_generic_class *	m_object;			// resolved object to the post-cast object
 	const char *				m_name;				// name string
-	delegate_generic_class *	m_object;			// pointer to the post-cast object
-	generic_static_func			m_function;			// generic static function pointer
-	delegate_internal_mfp		m_rawfunction;		// raw member function definition
 	late_bind_func				m_latebinder;		// late binding helper
+	generic_static_func			m_raw_function;		// raw static function pointer
+	delegate_mfp				m_raw_mfp;			// raw member function pointer
 };
 
-#endif
 
 
 //**************************************************************************
@@ -760,9 +702,5 @@ public:
 	template<class _FunctionClass> delegate(typename basetype::template traits<_FunctionClass>::static_ref_func_type funcptr, const char *name, _FunctionClass *object) : basetype(funcptr, name, object) { }
 	delegate &operator=(const basetype &src) { *static_cast<basetype *>(this) = src; return *this; }
 };
-
-// Some useful delegates
-
-typedef delegate<void (bool state)> line_cb_t;
 
 #endif	/* __DELEGATE_H__ */

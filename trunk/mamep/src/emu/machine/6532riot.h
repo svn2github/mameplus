@@ -53,7 +53,7 @@ public:
 	DECLARE_READ8_MEMBER( read );
 	DECLARE_WRITE8_MEMBER( write );
 
-    UINT8 reg_r(UINT8 offset);
+    UINT8 reg_r(UINT8 offset, bool debugger_access = false);
     void reg_w(UINT8 offset, UINT8 data);
 
     void porta_in_set(UINT8 data, UINT8 mask);
@@ -93,8 +93,6 @@ private:
     void update_pa7_state();
     UINT8 get_timer();
 
-    int             m_index;
-
     riot6532_port   m_port[2];
 
     devcb_resolved_write_line   m_irq_func;
@@ -121,8 +119,8 @@ extern const device_type RIOT6532;
     PROTOTYPES
 ***************************************************************************/
 
-READ8_DEVICE_HANDLER( riot6532_r );
-WRITE8_DEVICE_HANDLER( riot6532_w );
+DECLARE_READ8_DEVICE_HANDLER( riot6532_r );
+DECLARE_WRITE8_DEVICE_HANDLER( riot6532_w );
 
 void riot6532_porta_in_set(device_t *device, UINT8 data, UINT8 mask);
 void riot6532_portb_in_set(device_t *device, UINT8 data, UINT8 mask);

@@ -3720,7 +3720,7 @@ static UINT32 register_r(voodoo_state *v, offs_t offset)
 	/* first make sure this register is readable */
 	if (!(v->regaccess[regnum] & REGISTER_READ))
 	{
-		logerror("VOODOO.%d.ERROR:Invalid attempt to read %s\n", v->index, v->regnames[regnum]);
+		logerror("VOODOO.%d.ERROR:Invalid attempt to read %s\n", v->index, regnum < 225 ? v->regnames[regnum] : "unknown register");
 		return 0xffffffff;
 	}
 
@@ -4064,9 +4064,9 @@ READ32_DEVICE_HANDLER( banshee_r )
 		flush_fifos(v, device->machine().time());
 
 	if (offset < 0x80000/4)
-		result = banshee_io_r(device, offset, mem_mask);
+		result = banshee_io_r(device, space, offset, mem_mask);
 	else if (offset < 0x100000/4)
-		result = banshee_agp_r(device, offset, mem_mask);
+		result = banshee_agp_r(device, space, offset, mem_mask);
 	else if (offset < 0x200000/4)
 		logerror("%s:banshee_r(2D:%X)\n", device->machine().describe_context(), (offset*4) & 0xfffff);
 	else if (offset < 0x600000/4)
@@ -4232,13 +4232,13 @@ READ32_DEVICE_HANDLER( banshee_io_r )
 		case io_vgad0:	case io_vgad4:	case io_vgad8:	case io_vgadc:
 			result = 0;
 			if (ACCESSING_BITS_0_7)
-				result |= banshee_vga_r(device, offset*4+0) << 0;
+				result |= banshee_vga_r(device, space, offset*4+0, mem_mask >> 0) << 0;
 			if (ACCESSING_BITS_8_15)
-				result |= banshee_vga_r(device, offset*4+1) << 8;
+				result |= banshee_vga_r(device, space, offset*4+1, mem_mask >> 8) << 8;
 			if (ACCESSING_BITS_16_23)
-				result |= banshee_vga_r(device, offset*4+2) << 16;
+				result |= banshee_vga_r(device, space, offset*4+2, mem_mask >> 16) << 16;
 			if (ACCESSING_BITS_24_31)
-				result |= banshee_vga_r(device, offset*4+3) << 24;
+				result |= banshee_vga_r(device, space, offset*4+3, mem_mask >> 24) << 24;
 			break;
 
 		default:
@@ -4606,9 +4606,9 @@ WRITE32_DEVICE_HANDLER( banshee_w )
 		flush_fifos(v, device->machine().time());
 
 	if (offset < 0x80000/4)
-		banshee_io_w(device, offset, data, mem_mask);
+		banshee_io_w(device, space, offset, data, mem_mask);
 	else if (offset < 0x100000/4)
-		banshee_agp_w(device, offset, data, mem_mask);
+		banshee_agp_w(device, space, offset, data, mem_mask);
 	else if (offset < 0x200000/4)
 		logerror("%s:banshee_w(2D:%X) = %08X & %08X\n", device->machine().describe_context(), (offset*4) & 0xfffff, data, mem_mask);
 	else if (offset < 0x600000/4)
@@ -4756,18 +4756,33 @@ WRITE32_DEVICE_HANDLER( banshee_io_w )
 			break;
 
 		case io_vidScreenSize:
-			/* warning: this is a hack for now! We should really compute the screen size */
-			/* from the CRTC registers */
-			COMBINE_DATA(&v->banshee.io[offset]);
 			if (data & 0xfff)
 				v->fbi.width = data & 0xfff;
 			if (data & 0xfff000)
 				v->fbi.height = (data >> 12) & 0xfff;
-			v->screen->set_visible_area(0, v->fbi.width - 1, 0, v->fbi.height - 1);
+			/* fall through */
+		case io_vidOverlayDudx:
+		case io_vidOverlayDvdy:
+		{
+			/* warning: this is a hack for now! We should really compute the screen size */
+			/* from the CRTC registers */
+			COMBINE_DATA(&v->banshee.io[offset]);
+
+			int width = v->fbi.width;
+			int height = v->fbi.height;
+
+			if (v->banshee.io[io_vidOverlayDudx] != 0)
+				width = (v->fbi.width * v->banshee.io[io_vidOverlayDudx]) / 1048576;
+			if (v->banshee.io[io_vidOverlayDvdy] != 0)
+				height = (v->fbi.height * v->banshee.io[io_vidOverlayDvdy]) / 1048576;
+
+			v->screen->set_visible_area(0, width - 1, 0, height - 1);
+
 			adjust_vblank_timer(v);
 			if (LOG_REGISTERS)
 				logerror("%s:banshee_io_w(%s) = %08X & %08X\n", device->machine().describe_context(), banshee_io_reg_name[offset], data, mem_mask);
 			break;
+		}
 
 		case io_lfbMemoryConfig:
 			v->fbi.lfb_base = (data & 0x1fff) << 10;
@@ -4780,13 +4795,13 @@ WRITE32_DEVICE_HANDLER( banshee_io_w )
 		case io_vgac0:	case io_vgac4:	case io_vgac8:	case io_vgacc:
 		case io_vgad0:	case io_vgad4:	case io_vgad8:	case io_vgadc:
 			if (ACCESSING_BITS_0_7)
-				banshee_vga_w(device, offset*4+0, data >> 0);
+				banshee_vga_w(device, space, offset*4+0, data >> 0, mem_mask >> 0);
 			if (ACCESSING_BITS_8_15)
-				banshee_vga_w(device, offset*4+1, data >> 8);
+				banshee_vga_w(device, space, offset*4+1, data >> 8, mem_mask >> 8);
 			if (ACCESSING_BITS_16_23)
-				banshee_vga_w(device, offset*4+2, data >> 16);
+				banshee_vga_w(device, space, offset*4+2, data >> 16, mem_mask >> 16);
 			if (ACCESSING_BITS_24_31)
-				banshee_vga_w(device, offset*4+3, data >> 24);
+				banshee_vga_w(device, space, offset*4+3, data >> 24, mem_mask >> 24);
 			break;
 
 		default:
@@ -5658,7 +5673,7 @@ static void dump_rasterizer_stats(voodoo_state *v)
 voodoo_device::voodoo_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(voodoo_state));
+	m_token = global_alloc_clear(voodoo_state);
 }
 
 //-------------------------------------------------

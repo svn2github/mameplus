@@ -39,9 +39,11 @@ static ADDRESS_MAP_START( m50458_vram, AS_0, 16, m50458_device )
 ADDRESS_MAP_END
 
 // internal GFX ROM (TODO: GFXs in here should be 12x18, not 16x18)
+// (also note: ROM length CAN'T be 0x1200)
 ROM_START( m50458 )
 	ROM_REGION( 0x1200, "m50458", 0 )
-	ROM_LOAD("m50458_char.bin",     0x0000, 0x1200, BAD_DUMP CRC(011cc342) SHA1(d5b9f32d6e251b4b25945267d7c68c099bd83e96) )
+	ROM_LOAD("m50458-001sp",     0x0000, 0x1200, BAD_DUMP CRC(444f597d) SHA1(96beda6aba3d9f7bb781a3cd0352ed6ae45e2ebe) )
+	ROM_LOAD("m50458_char.bin",  0x0000, 0x1200, BAD_DUMP CRC(011cc342) SHA1(d5b9f32d6e251b4b25945267d7c68c099bd83e96) )
 ROM_END
 
 WRITE16_MEMBER( m50458_device::vreg_120_w)
@@ -148,7 +150,7 @@ const address_space_config *m50458_device::memory_space_config(address_spacenum 
 
 inline UINT16 m50458_device::read_word(offs_t address)
 {
-	return space()->read_word(address << 1);
+	return space().read_word(address << 1);
 }
 
 //-------------------------------------------------
@@ -157,7 +159,7 @@ inline UINT16 m50458_device::read_word(offs_t address)
 
 inline void m50458_device::write_word(offs_t address, UINT16 data)
 {
-	space()->write_word(address << 1, data);
+	space().write_word(address << 1, data);
 }
 
 

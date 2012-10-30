@@ -638,6 +638,7 @@ void mappy_sound_enable(device_t *device, int enable)
 	chip->sound_enable = enable;
 }
 
+static DECLARE_WRITE8_DEVICE_HANDLER( namco_15xx_w );
 static WRITE8_DEVICE_HANDLER( namco_15xx_w )
 {
 	namco_sound *chip = get_safe_token(device);
@@ -704,6 +705,7 @@ static WRITE8_DEVICE_HANDLER( namco_15xx_w )
     0x3c        ch 0    noise sw
 */
 
+static DECLARE_WRITE8_DEVICE_HANDLER( namcos1_sound_w );
 static WRITE8_DEVICE_HANDLER( namcos1_sound_w )
 {
 	namco_sound *chip = get_safe_token(device);
@@ -781,7 +783,7 @@ WRITE8_DEVICE_HANDLER( namcos1_cus30_w )
 		}
 	}
 	else if (offset < 0x140)
-		namcos1_sound_w(device, offset - 0x100,data);
+		namcos1_sound_w(device, space, offset - 0x100,data);
 	else
 		chip->wavedata[offset] = data;
 }
@@ -803,7 +805,7 @@ READ8_DEVICE_HANDLER( namco_snd_sharedram_r )
 WRITE8_DEVICE_HANDLER( namco_snd_sharedram_w )
 {
 	if (offset < 0x40)
-		namco_15xx_w(device, offset, data);
+		namco_15xx_w(device, space, offset, data);
 	else
 	{
 		namco_sound *chip = get_safe_token(device);
@@ -817,14 +819,14 @@ namco_device::namco_device(const machine_config &mconfig, const char *tag, devic
 	: device_t(mconfig, NAMCO, "Namco", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(namco_sound));
+	m_token = global_alloc_clear(namco_sound);
 }
 
 namco_device::namco_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(namco_sound));
+	m_token = global_alloc_clear(namco_sound);
 }
 
 //-------------------------------------------------

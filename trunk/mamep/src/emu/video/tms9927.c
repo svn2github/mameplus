@@ -73,7 +73,7 @@ static void tms9927_state_save_postload(tms9927_state *state)
 }
 
 
-static void generic_access(device_t *device, offs_t offset)
+static void generic_access(device_t *device, address_space &space, offs_t offset)
 {
 	tms9927_state *tms = get_safe_token(device);
 
@@ -86,9 +86,9 @@ static void generic_access(device_t *device, offs_t offset)
 				int cur;
 
 				for (cur = 0; cur < 7; cur++)
-					tms9927_w(device, cur, tms->selfload[cur]);
+					tms9927_w(device, space, cur, tms->selfload[cur]);
 				for (cur = 0; cur < 1; cur++)
-					tms9927_w(device, cur + 0xc, tms->selfload[cur + 7]);
+					tms9927_w(device, space, cur + 0xc, tms->selfload[cur + 7]);
 			}
 			else
 				popmessage("tms9927: self-load initiated with no PROM!");
@@ -149,7 +149,7 @@ mame_printf_debug("Cursor address changed\n");
 			break;
 
 		default:
-			generic_access(device, offset);
+			generic_access(device, space, offset);
 			break;
 	}
 }
@@ -166,7 +166,7 @@ READ8_DEVICE_HANDLER( tms9927_r )
 			return tms->reg[offset - 0x08 + 7];
 
 		default:
-			generic_access(device, offset);
+			generic_access(device, space, offset);
 			break;
 	}
 	return 0xff;
@@ -311,12 +311,12 @@ const device_type TMS9927 = &device_creator<tms9927_device>;
 tms9927_device::tms9927_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TMS9927, "TMS9927", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tms9927_state));
+	m_token = global_alloc_clear(tms9927_state);
 }
 tms9927_device::tms9927_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tms9927_state));
+	m_token = global_alloc_clear(tms9927_state);
 }
 
 //-------------------------------------------------

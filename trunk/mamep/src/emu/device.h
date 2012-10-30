@@ -75,6 +75,16 @@
 	device_t::static_set_input_default(*device, DEVICE_INPUT_DEFAULTS_NAME(_config)); \
 
 
+// macros for defining read_line/write_line functions
+#define READ_LINE_DEVICE_HANDLER(name)		int  name(ATTR_UNUSED device_t *device)
+#define WRITE_LINE_DEVICE_HANDLER(name) 	void name(ATTR_UNUSED device_t *device, ATTR_UNUSED int state)
+
+#define DECLARE_READ_LINE_MEMBER(name)		int  name()
+#define READ_LINE_MEMBER(name)				int  name()
+#define DECLARE_WRITE_LINE_MEMBER(name) 	void name(ATTR_UNUSED int state)
+#define WRITE_LINE_MEMBER(name)				void name(ATTR_UNUSED int state)
+
+
 
 //**************************************************************************
 //  TYPE DEFINITIONS
@@ -404,6 +414,9 @@ public:
 	device_finder(device_t &base, const char *tag)
 		: object_finder_base<_DeviceClass>(base, tag) { }
 
+	// make reference use transparent as well
+	operator _DeviceClass &() { assert(object_finder_base<_DeviceClass>::m_target != NULL); return *object_finder_base<_DeviceClass>::m_target; }
+
 	// finder
 	virtual bool findit()
 	{
@@ -435,7 +448,7 @@ public:
 };
 
 
-// ======================> memregion_finder
+// ======================> memory_region_finder
 
 // device finder template
 template<bool _Required>
@@ -445,6 +458,9 @@ public:
 	// construction/destruction
 	memory_region_finder(device_t &base, const char *tag)
 		: object_finder_base<memory_region>(base, tag) { }
+
+	// make reference use transparent as well
+	operator memory_region &() { assert(object_finder_base<memory_region>::m_target != NULL); return *object_finder_base<memory_region>::m_target; }
 
 	// finder
 	virtual bool findit()
@@ -480,6 +496,9 @@ public:
 	memory_bank_finder(device_t &base, const char *tag)
 		: object_finder_base<memory_bank>(base, tag) { }
 
+	// make reference use transparent as well
+	operator memory_bank &() { assert(object_finder_base<memory_bank>::m_target != NULL); return *object_finder_base<memory_bank>::m_target; }
+
 	// finder
 	virtual bool findit()
 	{
@@ -513,6 +532,9 @@ public:
 	// construction/destruction
 	ioport_finder(device_t &base, const char *tag)
 		: object_finder_base<ioport_port>(base, tag) { }
+
+	// make reference use transparent as well
+	operator ioport_port &() { assert(object_finder_base<ioport_port>::m_target != NULL); return *object_finder_base<ioport_port>::m_target; }
 
 	// finder
 	virtual bool findit()
@@ -972,26 +994,12 @@ inline device_t *device_t::siblingdevice(const char *tag) const
 	// leading caret implies the owner, just skip it
 	if (tag[0] == '^') tag++;
 
-	// query relative to the parent
-	return (m_owner != NULL) ? m_owner->subdevice(tag) : NULL;
-}
+	// query relative to the parent, if we have one
+	if (m_owner != NULL)
+		return m_owner->subdevice(tag);
 
-
-//-------------------------------------------------
-//  bind_relative_to - perform a late binding of
-//  a device_delegate
-//-------------------------------------------------
-
-template<typename _Signature>
-void device_delegate<_Signature>::bind_relative_to(device_t &search_root)
-{
-	if (!basetype::isnull())
-	{
-		device_t *device = search_root.subdevice(m_device_name);
-		if (device == NULL)
-			throw emu_fatalerror("Unable to locate device '%s' relative to '%s'\n", m_device_name, search_root.tag());
-		basetype::late_bind(*device);
-	}
+	// otherwise, it's NULL unless the tag is absolute
+	return (tag[0] == ':') ? subdevice(tag) : NULL;
 }
 
 #endif	/* __DEVINTRF_H__ */

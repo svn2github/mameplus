@@ -382,26 +382,29 @@ static void fill_random(running_machine &machine, UINT8 *base, UINT32 length)
     for missing files
 -------------------------------------------------*/
 
-static void handle_missing_file(romload_private *romdata, const rom_entry *romp)
+static void handle_missing_file(romload_private *romdata, const rom_entry *romp, astring tried_file_names)
 {
+	if(tried_file_names.len() != 0)
+		tried_file_names = " (tried in " + tried_file_names + ")";
+
 	/* optional files are okay */
 	if (ROM_ISOPTIONAL(romp))
 	{
-		romdata->errorstring.catprintf(_("OPTIONAL %s NOT FOUND\n"), ROM_GETNAME(romp));
+		romdata->errorstring.catprintf(_("OPTIONAL %s NOT FOUND%s\n"), ROM_GETNAME(romp), tried_file_names.cstr());
 		romdata->warnings++;
 	}
 
 	/* no good dumps are okay */
 	else if (hash_collection(ROM_GETHASHDATA(romp)).flag(hash_collection::FLAG_NO_DUMP))
 	{
-		romdata->errorstring.catprintf(_("%s NOT FOUND (NO GOOD DUMP KNOWN)\n"), ROM_GETNAME(romp));
+		romdata->errorstring.catprintf(_("%s NOT FOUND (NO GOOD DUMP KNOWN)%s\n"), ROM_GETNAME(romp), tried_file_names.cstr());
 		romdata->knownbad++;
 	}
 
 	/* anything else is bad */
 	else
 	{
-		romdata->errorstring.catprintf(_("%s NOT FOUND\n"), ROM_GETNAME(romp));
+		romdata->errorstring.catprintf(_("%s NOT FOUND%s\n"), ROM_GETNAME(romp), tried_file_names.cstr());
 		romdata->errors++;
 	}
 }
@@ -560,10 +563,11 @@ static void region_post_process(romload_private *romdata, const char *rgntag, bo
     up the parent and loading by checksum
 -------------------------------------------------*/
 
-static int open_rom_file(romload_private *romdata, const char *regiontag, const rom_entry *romp)
+static int open_rom_file(romload_private *romdata, const char *regiontag, const rom_entry *romp, astring &tried_file_names)
 {
 	file_error filerr = FILERR_NOT_FOUND;
 	UINT32 romsize = rom_file_size(romp);
+	tried_file_names = "";
 
 	/* update status display */
 	display_loading_rom_message(romdata, ROM_GETNAME(romp));
@@ -575,18 +579,17 @@ static int open_rom_file(romload_private *romdata, const char *regiontag, const 
 	/* attempt reading up the chain through the parents. It automatically also
      attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
-	for (int drv = driver_list::find(romdata->machine().system()); romdata->file == NULL && drv != -1; drv = driver_list::clone(drv))
-#ifdef USE_IPS
-	{
-#endif /* USE_IPS */
+	for (int drv = driver_list::find(romdata->machine().system()); romdata->file == NULL && drv != -1; drv = driver_list::clone(drv)){
+		if(tried_file_names.len() != 0)
+			tried_file_names += " ";
+		tried_file_names += driver_list::driver(drv).name;
 		filerr = common_process_file(romdata->machine().options(), driver_list::driver(drv).name, has_crc, crc, romp, &romdata->file);
-
 #ifdef USE_IPS
 		romdata->patch = assign_ips_patch(romp);
 		if (romdata->patch)
 			LOG(("ROM %s: has ips\n", ROM_GETNAME(romp)));
-	}
 #endif /* USE_IPS */
+	}
 
 	/* if the region is load by name, load the ROM from there */
 	if (romdata->file == NULL && regiontag != NULL)
@@ -636,21 +639,36 @@ static int open_rom_file(romload_private *romdata, const char *regiontag, const 
 		// - if we are not using lists, we have regiontag only;
 		// - if we are using lists, we have: list/clonename, list/parentname, clonename, parentname
 		if (!is_list)
+		{
+			tried_file_names += " " + tag1;
 			filerr = common_process_file(romdata->machine().options(), tag1.cstr(), has_crc, crc, romp, &romdata->file);
+		}
 		else
 		{
 			// try to load from list/setname
 			if ((romdata->file == NULL) && (tag2.cstr() != NULL))
+			{
+				tried_file_names += " " + tag2;
 				filerr = common_process_file(romdata->machine().options(), tag2.cstr(), has_crc, crc, romp, &romdata->file);
+			}
 			// try to load from list/parentname
 			if ((romdata->file == NULL) && has_parent && (tag3.cstr() != NULL))
+			{
+				tried_file_names += " " + tag3;
 				filerr = common_process_file(romdata->machine().options(), tag3.cstr(), has_crc, crc, romp, &romdata->file);
+			}
 			// try to load from setname
 			if ((romdata->file == NULL) && (tag4.cstr() != NULL))
+			{
+				tried_file_names += " " + tag4;
 				filerr = common_process_file(romdata->machine().options(), tag4.cstr(), has_crc, crc, romp, &romdata->file);
+			}
 			// try to load from parentname
 			if ((romdata->file == NULL) && has_parent && (tag5.cstr() != NULL))
+			{
+				tried_file_names += " " + tag5;
 				filerr = common_process_file(romdata->machine().options(), tag5.cstr(), has_crc, crc, romp, &romdata->file);
+			}
 		}
 	}
 
@@ -906,8 +924,9 @@ static void process_rom_entries(romload_private *romdata, const char *regiontag,
 
 			/* open the file if it is a non-BIOS or matches the current BIOS */
 			LOG(("Opening ROM file: %s\n", ROM_GETNAME(romp)));
-			if (!irrelevantbios && !open_rom_file(romdata, regiontag, romp))
-				handle_missing_file(romdata, romp);
+			astring tried_file_names;
+			if (!irrelevantbios && !open_rom_file(romdata, regiontag, romp, tried_file_names))
+				handle_missing_file(romdata, romp, tried_file_names);
 
 			/* loop until we run out of reloads */
 			do
@@ -1482,14 +1501,14 @@ void rom_init(running_machine &machine)
 
 	/* figure out which BIOS we are using */
 	device_iterator deviter(romdata->machine().config().root_device());
-	for (device_t *device = deviter.first(); device != NULL; device = deviter.next()) {
+	for (device_t *device = deviter.first(); device != NULL; device = deviter.next()) {	
 		if (device->rom_region()) {
 			const char *specbios;
 			astring temp;
 			if (strcmp(device->tag(),":")==0) {
 				specbios = romdata->machine().options().bios();
 			} else {
-				specbios = romdata->machine().options().sub_value(temp,device->owner()->tag()+1,"bios");
+				specbios = romdata->machine().options().sub_value(temp,device->owner()->tag()+1,"bios");				
 			}
 			determine_bios_rom(romdata, device, specbios);
 		}

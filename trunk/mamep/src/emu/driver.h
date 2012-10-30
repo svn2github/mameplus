@@ -166,7 +166,8 @@ typedef void   (*legacy_callback_func)(running_machine &machine);
 // ======================> driver_device
 
 // base class for machine driver-specific devices
-class driver_device : public device_t
+class driver_device : 	public device_t,
+						public device_memory_interface
 {
 public:
 	// construction/destruction
@@ -201,7 +202,33 @@ public:
 		(machine.driver_data<_DriverClass>()->*_Function)();
 	}
 
-	void init_0() {};
+	// member-to-legacy-static wrappers	
+	template<read_line_device_func _Func>
+	DECLARE_READ_LINE_MEMBER( member_wrapper_line ) { return (*_Func)(this); }
+	template<write_line_device_func _Func>
+	DECLARE_WRITE_LINE_MEMBER( member_wrapper_line ) { (*_Func)(this, state); }
+	template<read8_device_func _Func>
+	DECLARE_READ8_MEMBER( member_wrapper8 ) { return (*_Func)(this, space, offset, mem_mask); }
+	template<write8_device_func _Func>
+	DECLARE_WRITE8_MEMBER( member_wrapper8 ) { (*_Func)(this, space, offset, data, mem_mask); }
+	template<read16_device_func _Func>
+	DECLARE_READ16_MEMBER( member_wrapper16 ) { return (*_Func)(this, space, offset, mem_mask); }
+	template<write16_device_func _Func>
+	DECLARE_WRITE16_MEMBER( member_wrapper16 ) { (*_Func)(this, space, offset, data, mem_mask); }
+	template<read32_device_func _Func>
+	DECLARE_READ32_MEMBER( member_wrapper32 ) { return (*_Func)(this, space, offset, mem_mask); }
+	template<write32_device_func _Func>
+	DECLARE_WRITE32_MEMBER( member_wrapper32 ) { (*_Func)(this, space, offset, data, mem_mask); }
+	template<read64_device_func _Func>
+	DECLARE_READ64_MEMBER( member_wrapper64 ) { return (*_Func)(this, space, offset, mem_mask); }
+	template<write64_device_func _Func>
+	DECLARE_WRITE64_MEMBER( member_wrapper64 ) { (*_Func)(this, space, offset, data, mem_mask); }
+
+	// dummy driver_init callbacks
+	void init_0() { }
+	
+	// memory helpers
+	address_space &generic_space() const { return space(AS_PROGRAM); }
 
 	// generic interrupt generators
 	void generic_pulse_irq_line(device_execute_interface &exec, int irqline, int cycles);
@@ -376,8 +403,11 @@ public:
 	DECLARE_WRITE16_MEMBER( paletteram_xbgr_word_be_w );
 
 	// generic input port helpers
-	// custom handler
 	DECLARE_CUSTOM_INPUT_MEMBER( custom_port_read );
+
+	// general fatal error handlers
+	DECLARE_READ8_MEMBER( fatal_generic_read );
+	DECLARE_WRITE8_MEMBER( fatal_generic_write );
 
 protected:
 	// helpers called at startup
@@ -399,6 +429,9 @@ protected:
 	virtual void device_start();
 	virtual void device_reset_after_children();
 
+	// device_memory_interface overrides
+	virtual const address_space_config *memory_space_config(address_spacenum spacenum = AS_0) const;
+
 	// internal helpers
 	inline UINT16 paletteram16_le(offs_t offset) const { return m_generic_paletteram_8[offset & ~1] | (m_generic_paletteram_8[offset |  1] << 8); }
 	inline UINT16 paletteram16_be(offs_t offset) const { return m_generic_paletteram_8[offset |  1] | (m_generic_paletteram_8[offset & ~1] << 8); }
@@ -419,6 +452,9 @@ private:
 	void irq_pulse_clear(void *ptr, INT32 param);
 	void soundlatch_sync_callback(void *ptr, INT32 param);
 	void updateflip();
+
+	// configuration state
+	const address_space_config  m_space_config;
 
 	// internal state
 	const game_driver *		m_system;					// pointer to the game driver

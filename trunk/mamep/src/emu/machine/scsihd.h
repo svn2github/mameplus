@@ -7,10 +7,10 @@
 #ifndef _SCSIHD_H_
 #define _SCSIHD_H_
 
-#include "machine/scsidev.h"
+#include "machine/scsihle.h"
 #include "harddisk.h"
 
-class scsihd_device : public scsidev_device
+class scsihd_device : public scsihle_device
 {
 public:
 	// construction/destruction
@@ -23,19 +23,18 @@ public:
 	virtual void ExecCommand( int *transferLength );
 	virtual void WriteData( UINT8 *data, int dataLength );
 	virtual void ReadData( UINT8 *data, int dataLength );
+	virtual int GetSectorBytes();
 
 protected:
 	// device-level overrides
 	virtual void device_start();
 	virtual void device_reset();
-	virtual void device_stop();
 
 private:
 	UINT32 lba;
 	UINT32 blocks;
 	int sectorbytes;
 	hard_disk_file *disk;
-	bool is_image_device;
 };
 
 // device type definition

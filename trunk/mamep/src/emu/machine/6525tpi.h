@@ -64,6 +64,16 @@ public:
 
 	// access to legacy token
 	void *token() const { assert(m_token != NULL); return m_token; }
+
+	DECLARE_READ8_MEMBER( read );
+	DECLARE_WRITE8_MEMBER( write );
+
+	DECLARE_WRITE_LINE_MEMBER( i0_w );
+	DECLARE_WRITE_LINE_MEMBER( i1_w );
+	DECLARE_WRITE_LINE_MEMBER( i2_w );
+	DECLARE_WRITE_LINE_MEMBER( i3_w );
+	DECLARE_WRITE_LINE_MEMBER( i4_w );
+
 protected:
 	// device-level overrides
 	virtual void device_config_complete();
@@ -86,17 +96,17 @@ extern const device_type TPI6525;
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-READ8_DEVICE_HANDLER( tpi6525_r );
-WRITE8_DEVICE_HANDLER( tpi6525_w );
+DECLARE_READ8_DEVICE_HANDLER( tpi6525_r );
+DECLARE_WRITE8_DEVICE_HANDLER( tpi6525_w );
 
-READ8_DEVICE_HANDLER( tpi6525_porta_r );
-WRITE8_DEVICE_HANDLER( tpi6525_porta_w );
+DECLARE_READ8_DEVICE_HANDLER( tpi6525_porta_r );
+DECLARE_WRITE8_DEVICE_HANDLER( tpi6525_porta_w );
 
-READ8_DEVICE_HANDLER( tpi6525_portb_r );
-WRITE8_DEVICE_HANDLER( tpi6525_portb_w );
+DECLARE_READ8_DEVICE_HANDLER( tpi6525_portb_r );
+DECLARE_WRITE8_DEVICE_HANDLER( tpi6525_portb_w );
 
-READ8_DEVICE_HANDLER( tpi6525_portc_r );
-WRITE8_DEVICE_HANDLER( tpi6525_portc_w );
+DECLARE_READ8_DEVICE_HANDLER( tpi6525_portc_r );
+DECLARE_WRITE8_DEVICE_HANDLER( tpi6525_portc_w );
 
 WRITE_LINE_DEVICE_HANDLER( tpi6525_i0_w );
 WRITE_LINE_DEVICE_HANDLER( tpi6525_i1_w );

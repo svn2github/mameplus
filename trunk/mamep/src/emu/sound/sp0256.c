@@ -1317,7 +1317,7 @@ WRITE16_DEVICE_HANDLER( spb640_w )
 
 	if( offset == 0 )
 	{
-		sp0256_ALD_w( device, 0, data & 0xff );
+		sp0256_ALD_w( device, space, 0, data & 0xff );
 		return;
 	}
 
@@ -1370,7 +1370,7 @@ sp0256_device::sp0256_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, SP0256, "SP0256", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(sp0256_state));
+	m_token = global_alloc_clear(sp0256_state);
 }
 
 //-------------------------------------------------

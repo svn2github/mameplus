@@ -1,69 +1,52 @@
-/***************************************************************************
+/*
 
- scsidev.h
+scsidev.h
 
-***************************************************************************/
+Base class for SCSI devices.
+
+*/
 
 #ifndef _SCSIDEV_H_
 #define _SCSIDEV_H_
 
+#include "emu.h"
+
+#define SCSI_MASK_DATA  ( 0x00000ff )
+#define SCSI_MASK_DATAH ( 0x000ff00 )
+#define SCSI_MASK_DATAP ( 0x0010000 )
+#define SCSI_MASK_BSY   ( 0x0020000 )
+#define SCSI_MASK_SEL   ( 0x0040000 )
+#define SCSI_MASK_CD    ( 0x0080000 )
+#define SCSI_MASK_IO    ( 0x0100000 )
+#define SCSI_MASK_MSG   ( 0x0200000 )
+#define SCSI_MASK_REQ   ( 0x0400000 )
+#define SCSI_MASK_ACK   ( 0x0800000 )
+#define SCSI_MASK_ATN   ( 0x1000000 )
+#define SCSI_MASK_RST   ( 0x2000000 )
+#define SCSI_MASK_ALL   ( 0x3ffffff )
+
+class scsibus_device;
+
 // base handler
 class scsidev_device : public device_t
 {
+	friend class scsibus_device;
+
 public:
 	// construction/destruction
 	scsidev_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock);
-
-	virtual void SetDevice( void *device ) = 0;
-	virtual void GetDevice( void **device ) = 0;
-	virtual void SetCommand( UINT8 *command, int commandLength );
-	virtual void GetCommand( UINT8 **command, int *commandLength );
-	virtual void ExecCommand( int *transferLength );
-	virtual void WriteData( UINT8 *data, int dataLength );
-	virtual void ReadData( UINT8 *data, int dataLength );
-	virtual void SetPhase( int phase );
-	virtual void GetPhase( int *phase );
-	virtual int GetDeviceID();
-
-	// configuration helpers
-	static void static_set_deviceid(device_t &device, int _scsiID);
 
 protected:
 	// device-level overrides
 	virtual void device_start();
 
+	void scsi_out( UINT32 data, UINT32 mask );
+
 private:
-	UINT8 command[16];
-	int commandLength;
-	int phase;
-	int scsiID;
+	virtual void scsi_in( UINT32 data, UINT32 mask ) = 0;
+
+	UINT32 data_out;
+	scsibus_device *m_scsibus;
 };
-
-extern int SCSILengthFromUINT8( UINT8 *length );
-extern int SCSILengthFromUINT16( UINT8 *length );
-
-#define SCSI_PHASE_DATAOUT ( 0 )
-#define SCSI_PHASE_DATAIN ( 1 )
-#define SCSI_PHASE_COMMAND ( 2 )
-#define SCSI_PHASE_STATUS ( 3 )
-#define SCSI_PHASE_MESSAGE_OUT ( 6 )
-#define SCSI_PHASE_MESSAGE_IN ( 7 )
-
-// SCSI IDs
-enum
-{
-	SCSI_ID_0 = 0,
-	SCSI_ID_1,
-	SCSI_ID_2,
-	SCSI_ID_3,
-	SCSI_ID_4,
-	SCSI_ID_5,
-	SCSI_ID_6,
-	SCSI_ID_7
-};
-
-#define MCFG_SCSIDEV_ADD(_tag, _type, _id) \
-	MCFG_DEVICE_ADD(_tag, _type, 0) \
-	scsidev_device::static_set_deviceid(*device, _id);
 
 #endif

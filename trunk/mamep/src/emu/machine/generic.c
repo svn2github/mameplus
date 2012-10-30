@@ -342,10 +342,6 @@ void nvram_load(running_machine &machine)
 
 void nvram_save(running_machine &machine)
 {
-	// mamep: dont save nvram during playback
-	if (machine.ioport().has_playback_file())
-		return;
-
 	if (machine.config().m_nvram_handler != NULL)
 	{
 		astring filename;

@@ -138,10 +138,10 @@ WRITE8_DEVICE_HANDLER( ym3526_w )
 	ym3526_write(info->chip, offset & 1, data);
 }
 
-READ8_DEVICE_HANDLER( ym3526_status_port_r ) { return ym3526_r(device, 0); }
-READ8_DEVICE_HANDLER( ym3526_read_port_r ) { return ym3526_r(device, 1); }
-WRITE8_DEVICE_HANDLER( ym3526_control_port_w ) { ym3526_w(device, 0, data); }
-WRITE8_DEVICE_HANDLER( ym3526_write_port_w ) { ym3526_w(device, 1, data); }
+READ8_DEVICE_HANDLER( ym3526_status_port_r ) { return ym3526_r(device, space, 0); }
+READ8_DEVICE_HANDLER( ym3526_read_port_r ) { return ym3526_r(device, space, 1); }
+WRITE8_DEVICE_HANDLER( ym3526_control_port_w ) { ym3526_w(device, space, 0, data); }
+WRITE8_DEVICE_HANDLER( ym3526_write_port_w ) { ym3526_w(device, space, 1, data); }
 
 
 const device_type YM3526 = &device_creator<ym3526_device>;
@@ -150,7 +150,7 @@ ym3526_device::ym3526_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, YM3526, "YM3526", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(ym3526_state));
+	m_token = global_alloc_clear(ym3526_state);
 }
 
 //-------------------------------------------------

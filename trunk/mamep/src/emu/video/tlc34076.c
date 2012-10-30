@@ -34,7 +34,7 @@ struct tlc34076_state
 	rgb_t pens[0x100];
 };
 
-const tlc34076_config tlc34076_6_bit_intf = 
+const tlc34076_config tlc34076_6_bit_intf =
 {
 	TLC34076_6_BIT
 };
@@ -285,7 +285,7 @@ const device_type TLC34076 = &device_creator<tlc34076_device>;
 tlc34076_device::tlc34076_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TLC34076, "TLC34076", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tlc34076_state));
+	m_token = global_alloc_clear(tlc34076_state);
 }
 
 //-------------------------------------------------

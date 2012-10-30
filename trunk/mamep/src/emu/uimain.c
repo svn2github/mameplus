@@ -153,12 +153,15 @@ void ui_menu_main::populate()
 #endif /* USE_CUSTOM_BUTTON */
 
 	/* add optional input-related menus */
+	if (has_analog)
+		item_append(_("Analog Controls"), NULL, 0, (void *)ANALOG);
 	if (has_dips)
 		item_append(_("Dip Switches"), NULL, 0, (void *)SETTINGS_DIP_SWITCHES);
 	if (has_configs)
-		item_append(_("Driver Configuration"), NULL, 0, (void *)SETTINGS_DRIVER_CONFIG);
-	if (has_analog)
-		item_append(_("Analog Controls"), NULL, 0, (void *)ANALOG);
+	{
+		menu_text.printf(_("%s Configuration"),emulator_info::get_capstartgamenoun());
+		item_append(menu_text.cstr(), NULL, 0, (void *)SETTINGS_DRIVER_CONFIG);
+	}
 
 	/* add bookkeeping menu */
 	item_append(_("Bookkeeping Info"), NULL, 0, (void *)BOOKKEEPING);

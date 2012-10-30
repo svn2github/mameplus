@@ -7,10 +7,10 @@
 #ifndef _SCSICD_H_
 #define _SCSICD_H_
 
-#include "machine/scsidev.h"
+#include "machine/scsihle.h"
 #include "cdrom.h"
 
-class scsicd_device : public scsidev_device
+class scsicd_device : public scsihle_device
 {
 public:
 	// construction/destruction
@@ -23,6 +23,7 @@ public:
 	virtual void ExecCommand( int *transferLength );
 	virtual void WriteData( UINT8 *data, int dataLength );
 	virtual void ReadData( UINT8 *data, int dataLength );
+	virtual int GetSectorBytes();
 
 	static struct cdrom_interface cd_intf;
 
@@ -30,7 +31,6 @@ protected:
 	// device-level overrides
 	virtual void device_start();
 	virtual void device_reset();
-	virtual void device_stop();
 
 private:
 	UINT32 lba;
@@ -41,7 +41,6 @@ private:
 	UINT32 cur_subblock;
 	UINT32 play_err_flag;
 	cdrom_file *cdrom;
-	bool is_file;
 };
 
 // device type definition

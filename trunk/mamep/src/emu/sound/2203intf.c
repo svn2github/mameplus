@@ -175,10 +175,10 @@ WRITE8_DEVICE_HANDLER( ym2203_w )
 }
 
 
-READ8_DEVICE_HANDLER( ym2203_status_port_r ) { return ym2203_r(device, 0); }
-READ8_DEVICE_HANDLER( ym2203_read_port_r ) { return ym2203_r(device, 1); }
-WRITE8_DEVICE_HANDLER( ym2203_control_port_w ) { ym2203_w(device, 0, data); }
-WRITE8_DEVICE_HANDLER( ym2203_write_port_w ) { ym2203_w(device, 1, data); }
+READ8_DEVICE_HANDLER( ym2203_status_port_r ) { return ym2203_r(device, space, 0); }
+READ8_DEVICE_HANDLER( ym2203_read_port_r ) { return ym2203_r(device, space, 1); }
+WRITE8_DEVICE_HANDLER( ym2203_control_port_w ) { ym2203_w(device, space, 0, data); }
+WRITE8_DEVICE_HANDLER( ym2203_write_port_w ) { ym2203_w(device, space, 1, data); }
 
 const device_type YM2203 = &device_creator<ym2203_device>;
 
@@ -186,7 +186,7 @@ ym2203_device::ym2203_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, YM2203, "YM2203", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(ym2203_state));
+	m_token = global_alloc_clear(ym2203_state);
 }
 
 //-------------------------------------------------

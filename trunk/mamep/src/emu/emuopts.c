@@ -444,10 +444,10 @@ bool emu_options::parse_slot_devices(int argc, char *argv[], astring &error_stri
 	int num = 0;
 	do {
 		num = options_count();
-	update_slot_options();
-	while (add_slot_options(false));
+		update_slot_options();
+		while (add_slot_options(false));
 		add_device_options(false);
-	result = core_options::parse_command_line(argc, argv, OPTION_PRIORITY_CMDLINE, error_string);
+		result = core_options::parse_command_line(argc, argv, OPTION_PRIORITY_CMDLINE, error_string);
 	} while(num != options_count());
 
 	return result;

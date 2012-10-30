@@ -109,16 +109,6 @@
 // quad screen layouts
 #include "quadhsxs.lh"
 
-// generic color overlay layouts
-#include "ho20ffff.lh"
-#include "ho2eff2e.lh"
-#include "ho4f893d.lh"
-#include "ho88ffff.lh"
-#include "hoa0a0ff.lh"
-#include "hoffe457.lh"
-#include "voffff20.lh"
-#include "hoffff20.lh"
-
 // LCD screen layouts
 #include "lcd.lh"
 #include "lcd_rot.lh"
@@ -827,7 +817,6 @@ void layout_element::component::draw(running_machine &machine, bitmap_argb32 &de
 			break;
 
 		case CTYPE_REEL:
-
 			draw_reel(machine, dest, bounds, state);
 			break;
 
@@ -852,6 +841,7 @@ void layout_element::component::draw_rect(bitmap_argb32 &dest, const rectangle &
 
 	// iterate over X and Y
 	for (UINT32 y = bounds.min_y; y <= bounds.max_y; y++)
+	{
 		for (UINT32 x = bounds.min_x; x <= bounds.max_x; x++)
 		{
 			UINT32 finalr = r;
@@ -870,6 +860,7 @@ void layout_element::component::draw_rect(bitmap_argb32 &dest, const rectangle &
 			// store the target pixel, dividing the RGBA values by the overall scale factor
 			dest.pix32(y, x) = MAKE_ARGB(0xff, finalr, finalg, finalb);
 		}
+	}
 }
 
 

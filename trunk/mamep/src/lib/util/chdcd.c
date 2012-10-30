@@ -537,15 +537,15 @@ static chd_error chdcd_parse_gdi(const char *tocfname, cdrom_toc &outtoc, chdcd_
 		}
 		outinfo.track[trknum].fname.cpy(path).cat(name);
 
-		sz=get_file_size(outinfo.track[trknum].fname);
+		sz = get_file_size(outinfo.track[trknum].fname);
 
-		outtoc.tracks[trknum].frames=sz/trksize;
+		outtoc.tracks[trknum].frames = sz/trksize;
 		outtoc.tracks[trknum].padframes = 0;
 
-		if(trknum!=0)
+		if (trknum != 0)
 		{
 			int dif=outtoc.tracks[trknum].physframeofs-(outtoc.tracks[trknum-1].frames+outtoc.tracks[trknum-1].physframeofs);
-			outtoc.tracks[trknum-1].frames+=dif;
+			outtoc.tracks[trknum-1].frames += dif;
 			outtoc.tracks[trknum-1].padframes = dif;
 		}
 	}

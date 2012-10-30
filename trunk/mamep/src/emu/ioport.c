@@ -3811,11 +3811,11 @@ time_t ioport_manager::playback_init()
 	// read the header and verify that it is a modern version; if not, print an error
 	UINT8 header[INP_HEADER_SIZE];
 	if (m_playback_file.read(header, sizeof(header)) != sizeof(header))
-		fatalerror("Input file is corrupt or invalid (missing header)\n");
+		fatalerror(_("Input file is corrupt or invalid (missing header)\n"));
 	if (memcmp(header, "MAMEINP\0", 8) != 0)
-		fatalerror("Input file invalid or in an older, unsupported format\n");
+		fatalerror(_("Input file invalid or in an older, unsupported format\n"));
 	if (header[0x10] != INP_HEADER_MAJVERSION)
-		fatalerror("Input file format version mismatch\n");
+		fatalerror(_("Input file format version mismatch\n"));
 
 #ifdef INP_CAPTION
 	if (strlen(filename) > 4)

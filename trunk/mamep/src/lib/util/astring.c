@@ -83,7 +83,9 @@ bool astring::ensure_room(int length)
 	m_text = strcpy(newbuf, m_text);
 	m_len = strlen(m_text);
 	m_alloclen = alloclen;
-	delete[] oldbuf;
+
+	if (oldbuf)
+		delete[] oldbuf;
 
 	return true;
 }

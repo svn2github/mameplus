@@ -154,15 +154,14 @@ void debug_view_memory::enumerate_sources()
 	// first add all the devices' address spaces
 	memory_interface_iterator iter(machine().root_device());
 	for (device_memory_interface *memintf = iter.first(); memintf != NULL; memintf = iter.next())
-		for (address_spacenum spacenum = AS_0; spacenum < ADDRESS_SPACES; spacenum++)
-		{
-			address_space *space = memintf->space(spacenum);
-			if (space != NULL)
-			{
-				name.printf("%s '%s' %s space memory", memintf->device().name(), memintf->device().tag(), space->name());
-				m_source_list.append(*auto_alloc(machine(), debug_view_memory_source(name, *space)));
-			}
-		}
+		if (&memintf->device() != &machine().root_device())
+			for (address_spacenum spacenum = AS_0; spacenum < ADDRESS_SPACES; spacenum++)
+				if (memintf->has_space(spacenum))
+				{
+					address_space &space = memintf->space(spacenum);
+					name.printf("%s '%s' %s space memory", memintf->device().name(), memintf->device().tag(), space.name());
+					m_source_list.append(*auto_alloc(machine(), debug_view_memory_source(name, space)));
+				}
 
 	// then add all the memory regions
 	for (memory_region *region = machine().memory().first_region(); region != NULL; region = region->next())
@@ -181,10 +180,11 @@ void debug_view_memory::enumerate_sources()
 		if (itemname == NULL)
 			break;
 
-		// if this is a single-entry global, add it
-        if (strstr(itemname, "state->"))
+		// add pretty much anything that's not a timer (we may wish to cull other items later)
+        // also, don't trim the front of the name, it's important to know which VIA6522 we're looking at, e.g.
+        if (strncmp(itemname, "timer/", 6))
 		{
-			name.cpy(strrchr(itemname, '/') + 1);
+            name.cpy(itemname);
 			m_source_list.append(*auto_alloc(machine(), debug_view_memory_source(name, base, valsize, valcount)));
 		}
 	}
@@ -627,10 +627,10 @@ bool debug_view_memory::read(UINT8 size, offs_t offs, UINT64 &data)
 		{
 			switch (size)
 			{
-				case 1:	data = debug_read_byte(source.m_space, offs, !m_no_translation); break;
-				case 2:	data = debug_read_word(source.m_space, offs, !m_no_translation); break;
-				case 4:	data = debug_read_dword(source.m_space, offs, !m_no_translation); break;
-				case 8:	data = debug_read_qword(source.m_space, offs, !m_no_translation); break;
+				case 1:	data = debug_read_byte(*source.m_space, offs, !m_no_translation); break;
+				case 2:	data = debug_read_word(*source.m_space, offs, !m_no_translation); break;
+				case 4:	data = debug_read_dword(*source.m_space, offs, !m_no_translation); break;
+				case 8:	data = debug_read_qword(*source.m_space, offs, !m_no_translation); break;
 			}
 		}
 		return ismapped;
@@ -674,10 +674,10 @@ void debug_view_memory::write(UINT8 size, offs_t offs, UINT64 data)
 	{
 		switch (size)
 		{
-			case 1:	debug_write_byte(source.m_space, offs, data, !m_no_translation); break;
-			case 2:	debug_write_word(source.m_space, offs, data, !m_no_translation); break;
-			case 4:	debug_write_dword(source.m_space, offs, data, !m_no_translation); break;
-			case 8:	debug_write_qword(source.m_space, offs, data, !m_no_translation); break;
+			case 1:	debug_write_byte(*source.m_space, offs, data, !m_no_translation); break;
+			case 2:	debug_write_word(*source.m_space, offs, data, !m_no_translation); break;
+			case 4:	debug_write_dword(*source.m_space, offs, data, !m_no_translation); break;
+			case 8:	debug_write_qword(*source.m_space, offs, data, !m_no_translation); break;
 		}
 		return;
 	}

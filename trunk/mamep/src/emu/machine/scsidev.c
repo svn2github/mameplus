@@ -1,11 +1,15 @@
-/***************************************************************************
+/*
 
- scsidev.c - Base class for scsi devices.
+scsidev.c
 
-***************************************************************************/
+Base class for SCSI devices.
 
-#include "emu.h"
-#include "scsidev.h"
+*/
+
+#include "machine/scsibus.h"
+#include "machine/scsidev.h"
+
+#define LOG ( 0 )
 
 scsidev_device::scsidev_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock) :
 	device_t(mconfig, type, name, tag, owner, clock)
@@ -14,111 +18,138 @@ scsidev_device::scsidev_device(const machine_config &mconfig, device_type type, 
 
 void scsidev_device::device_start()
 {
-	save_item( NAME( command ) );
-	save_item( NAME( commandLength ) );
-	save_item( NAME( phase ) );
+	data_out = 0;
 }
 
-void scsidev_device::ExecCommand( int *transferLength )
+void scsidev_device::scsi_out( UINT32 data, UINT32 mask )
 {
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
+#if LOG
+	printf( "%s scsi_out", tag() );
 
-	switch( command[ 0 ] )
+	printf( " rst " );
+	if( ( mask & SCSI_MASK_RST ) != 0 )
 	{
-		case 0x00: // TEST UNIT READY
-			SetPhase( SCSI_PHASE_STATUS );
-			*transferLength = 0;
-			break;
-
-		default:
-			logerror( "%s: SCSIDEV unknown command %02x\n", machine().describe_context(), command[ 0 ] );
-			*transferLength = 0;
-			break;
+		printf( "%d", (int)( ( data & SCSI_MASK_RST ) != 0 ) );
 	}
-}
-
-void scsidev_device::ReadData( UINT8 *data, int dataLength )
-{
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
-
-	switch( command[ 0 ] )
+	else
 	{
-		default:
-			logerror( "%s: SCSIDEV unknown read %02x\n", machine().describe_context(), command[ 0 ] );
-			break;
-	}
-}
-
-void scsidev_device::WriteData( UINT8 *data, int dataLength )
-{
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
-
-	switch( command[ 0 ] )
-	{
-		default:
-			logerror( "%s: SCSIDEV unknown write %02x\n", machine().describe_context(), command[ 0 ] );
-			break;
-	}
-}
-
-void scsidev_device::SetPhase( int _phase )
-{
-	phase = _phase;
-}
-
-void scsidev_device::GetPhase( int *_phase)
-{
-	*_phase = phase;
-}
-
-void scsidev_device::SetCommand( UINT8 *_command, int _commandLength )
-{
-	if( _commandLength > sizeof( command ) )
-	{
-		/// TODO: output an error.
-		return;
+		printf( "-" );
 	}
 
-	memcpy( command, _command, _commandLength );
-	commandLength = _commandLength;
-
-	SetPhase( SCSI_PHASE_COMMAND );
-}
-
-void scsidev_device::GetCommand( UINT8 **_command, int *_commandLength )
-{
-	*_command = command;
-	*_commandLength = commandLength;
-}
-
-int scsidev_device::GetDeviceID()
-{
-	return scsiID;
-}
-
-void scsidev_device::static_set_deviceid( device_t &device, int _scsiID )
-{
-	scsidev_device &scsidev = downcast<scsidev_device &>(device);
-	scsidev.scsiID = _scsiID;
-}
-
-int SCSILengthFromUINT8( UINT8 *length )
-{
-	if( *length == 0 )
+	printf( " atn " );
+	if( ( mask & SCSI_MASK_ATN ) != 0 )
 	{
-		return 256;
+		printf( " %d", (int)( ( data & SCSI_MASK_ATN ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
 	}
 
-	return *length;
-}
+	printf( " ack " );
+	if( ( mask & SCSI_MASK_ACK ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_ACK ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
 
-int SCSILengthFromUINT16( UINT8 *length )
-{
-	return ( *(length) << 8 ) | *(length + 1 );
+	printf( " req " );
+	if( ( mask & SCSI_MASK_REQ ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_REQ ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " msg " );
+	if( ( mask & SCSI_MASK_MSG ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_MSG ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " io " );
+	if( ( mask & SCSI_MASK_IO ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_IO ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " cd " );
+	if( ( mask & SCSI_MASK_CD ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_CD ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " sel " );
+	if( ( mask & SCSI_MASK_SEL ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_SEL ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " bsy " );
+	if( ( mask & SCSI_MASK_BSY ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_BSY ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " p " );
+	if( ( mask & SCSI_MASK_DATAP ) != 0 )
+	{
+		printf( "%d", (int)( ( data & SCSI_MASK_DATAP ) != 0 ) );
+	}
+	else
+	{
+		printf( "-" );
+	}
+
+	printf( " " );
+
+	if( ( mask & SCSI_MASK_DATAH ) != 0 )
+	{
+		printf( "%02x", ( data & SCSI_MASK_DATAH ) >> 8 );
+	}
+	else
+	{
+		printf( "--" );
+	}
+
+	if( ( mask & SCSI_MASK_DATA ) != 0 )
+	{
+		printf( "%02x", data & SCSI_MASK_DATA );
+	}
+	else
+	{
+		printf( "--" );
+	}
+
+	printf( "\n" );
+#endif
+
+	data_out = ( data_out & ~mask ) | ( data & mask );
+
+	m_scsibus->scsi_update();
 }

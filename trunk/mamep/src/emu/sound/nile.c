@@ -77,7 +77,7 @@ WRITE16_DEVICE_HANDLER( nile_sndctrl_w )
 
 	COMBINE_DATA(&info->ctrl);
 
-//  printf("CTRL: %04x -> %04x (PC=%x)\n", ctrl, info->ctrl, space->device().safe_pc());
+//  printf("CTRL: %04x -> %04x (PC=%x)\n", ctrl, info->ctrl, space.device().safe_pc());
 
 	ctrl^=info->ctrl;
 }
@@ -132,7 +132,7 @@ WRITE16_DEVICE_HANDLER( nile_snd_w )
 		info->vpos[v] = info->frac[v] = info->lponce[v] = 0;
 	}
 
-	//printf("v%02d: %04x to reg %02d (PC=%x)\n", v, info->sound_regs[offset], r, space->device().safe_pc());
+	//printf("v%02d: %04x to reg %02d (PC=%x)\n", v, info->sound_regs[offset], r, space.device().safe_pc());
 }
 
 static STREAM_UPDATE( nile_update )
@@ -235,7 +235,7 @@ nile_device::nile_device(const machine_config &mconfig, const char *tag, device_
 	: device_t(mconfig, NILE, "NiLe", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(nile_state));
+	m_token = global_alloc_clear(nile_state);
 }
 
 //-------------------------------------------------

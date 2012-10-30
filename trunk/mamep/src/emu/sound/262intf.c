@@ -124,11 +124,11 @@ WRITE8_DEVICE_HANDLER( ymf262_w )
 	ymf262_write(info->chip, offset & 3, data);
 }
 
-READ8_DEVICE_HANDLER ( ymf262_status_r ) { return ymf262_r(device, 0); }
-WRITE8_DEVICE_HANDLER( ymf262_register_a_w ) { ymf262_w(device, 0, data); }
-WRITE8_DEVICE_HANDLER( ymf262_register_b_w ) { ymf262_w(device, 2, data); }
-WRITE8_DEVICE_HANDLER( ymf262_data_a_w ) { ymf262_w(device, 1, data); }
-WRITE8_DEVICE_HANDLER( ymf262_data_b_w ) { ymf262_w(device, 3, data); }
+READ8_DEVICE_HANDLER ( ymf262_status_r ) { return ymf262_r(device, space, 0); }
+WRITE8_DEVICE_HANDLER( ymf262_register_a_w ) { ymf262_w(device, space, 0, data); }
+WRITE8_DEVICE_HANDLER( ymf262_register_b_w ) { ymf262_w(device, space, 2, data); }
+WRITE8_DEVICE_HANDLER( ymf262_data_a_w ) { ymf262_w(device, space, 1, data); }
+WRITE8_DEVICE_HANDLER( ymf262_data_b_w ) { ymf262_w(device, space, 3, data); }
 
 const device_type YMF262 = &device_creator<ymf262_device>;
 
@@ -136,7 +136,7 @@ ymf262_device::ymf262_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, YMF262, "YMF262", tag, owner, clock),
 	  device_sound_interface(mconfig, *this)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(ymf262_state));
+	m_token = global_alloc_clear(ymf262_state);
 }
 
 //-------------------------------------------------

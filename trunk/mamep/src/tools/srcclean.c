@@ -67,15 +67,28 @@ static UINT8 modified[MAX_FILE_SIZE];
 
 int main(int argc, char *argv[])
 {
-	int removed_tabs = 0, removed_spaces = 0, fixed_mac_style = 0, fixed_nix_style = 0, added_newline = 0;
-	int src = 0, dst = 0, in_c_comment = FALSE, in_cpp_comment = FALSE, in_c_string = FALSE;
+	int removed_tabs = 0;
+	int added_tabs = 0;
+	int removed_spaces = 0;
+	int fixed_mac_style = 0;
+	int fixed_nix_style = 0;
+	int added_newline = 0;
+	int removed_newlines = 0;
+	int src = 0;
+	int dst = 0;
+	bool in_c_comment = false;
+	bool in_cpp_comment = false;
+	int indent_c_comment = 0;
+	int in_c_string = FALSE;
 	int hichars = 0;
-	int is_c_file, is_xml_file;
+	bool is_c_file;
+	bool is_xml_file;
 	const char *ext;
 	FILE *file;
 	int bytes;
 	int col = 0;
 	int escape = 0;
+	const int tab_size = 4;
 
 	/* print usage info */
 	if (argc != 2)
@@ -96,7 +109,7 @@ int main(int argc, char *argv[])
 
 	/* determine if we are a C file */
 	ext = strrchr(argv[1], '.');
-	is_c_file = (ext && (core_stricmp(ext, ".c") == 0 || core_stricmp(ext, ".h") == 0 || core_stricmp(ext, ".cpp") == 0));
+	is_c_file = (ext && (core_stricmp(ext, ".c") == 0 || core_stricmp(ext, ".h") == 0 || core_stricmp(ext, ".cpp") == 0 || core_stricmp(ext, ".lst") == 0));
 	is_xml_file = (ext && core_stricmp(ext, ".xml") == 0);
 
 	/* rip through it */
@@ -133,13 +146,26 @@ int main(int argc, char *argv[])
 
 				/* track whether or not we are within a C-style comment */
 				if (!in_c_comment && ch == '/' && original[src] == '*')
-					in_c_comment = TRUE;
+				{
+					in_c_comment = true;
+					if (col > 0 && modified[dst-1] == 0x09)
+					{
+						indent_c_comment = col;
+					}
+					else
+					{
+						indent_c_comment = 0;
+					}
+				}
 				else if (in_c_comment && ch == '*' && original[src] == '/')
-					in_c_comment = FALSE;
+				{
+					in_c_comment = false;
+					indent_c_comment = 0;
+				}
 
 				/* track whether or not we are within a C++-style comment */
 				else if (!in_c_comment && ch == '/' && original[src] == '/')
-					in_cpp_comment = TRUE;
+					in_cpp_comment = true;
 				else
 					consume = FALSE;
 
@@ -182,7 +208,7 @@ int main(int argc, char *argv[])
 				fixed_mac_style = 1;
 
 			/* we are no longer in a C++-style comment */
-			in_cpp_comment = FALSE;
+			in_cpp_comment = false;
 
 			if (in_c_string)
 			{
@@ -194,27 +220,60 @@ int main(int argc, char *argv[])
 		/* if we hit a tab... */
 		else if (ch == 0x09)
 		{
-			int spaces = 4 - col % 4;
+			int spaces = tab_size - (col % tab_size);
 
-			/* Remove invisible spaces */
-			while ((spaces & 3) != 0 && dst > 0 && modified[dst-1] == ' ')
+			/* convert tabs to spaces, if not used for indenting */
+			if ((in_c_comment && col >= indent_c_comment) || (col != 0 && modified[dst-1] != 0x09))
 			{
-				removed_spaces++;
-				spaces++;
-				col--;
-				dst--;
-			}
-			col += spaces;
+				while (spaces > 0)
+				{
+					modified[dst++] = ' ';
+					col++;
+					spaces--;
+				}
 
-			/* if inside a comment, expand it */
-			if (in_c_comment || in_cpp_comment)
-			{
-				while (spaces--) modified[dst++] = ' ';
 				removed_tabs++;
 			}
 			else
 			{
 				modified[dst++] = ch;
+				col += spaces;
+			}
+		}
+
+		/* if we hit a space... */
+		else if (ch == 0x20)
+		{
+			int spaces = 1;
+
+			while (original[src] == 0x20)
+			{
+				spaces++;
+				src++;
+			}
+
+			/* Remove invisible spaces */
+			if (original[src] == 0x09)
+			{
+				int realign = (col + spaces) % tab_size;
+				removed_spaces += realign;
+				spaces -= realign;
+			}
+
+			/* convert spaces to tabs, if used for indenting */
+			while (spaces > 0 && (!in_c_comment || col < indent_c_comment) && (col == 0 || modified[dst-1] == 0x09))
+			{
+				modified[dst++] = 0x09;
+				spaces -= tab_size;
+				col += tab_size;
+				added_tabs++;
+			}
+
+			while (spaces > 0)
+			{
+				modified[dst++] = ' ';
+				col++;
+				spaces--;
 			}
 		}
 
@@ -233,11 +292,22 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	if (is_c_file && modified[dst - 1] != 0x0a)
+	if (is_c_file)
 	{
-		modified[dst++] = 0x0d;
-		modified[dst++] = 0x0a;
-		added_newline = 1;
+		if (modified[dst - 1] != 0x0a)
+		{
+			modified[dst++] = 0x0d;
+			modified[dst++] = 0x0a;
+			added_newline = 1;
+		}
+		else
+		{
+			while (dst >= 4 && modified[dst - 4] == 0x0d && modified[dst - 3] == 0x0a)
+			{
+				dst -= 2;
+				removed_newlines++;
+			}
+		}
 	}
 
 	/* if the result == original, skip it */
@@ -246,8 +316,10 @@ int main(int argc, char *argv[])
 		/* explain what we did */
 		printf("Cleaned up %s:", argv[1]);
 		if (added_newline) printf(" added newline at end of file");
+		if (removed_newlines) printf(" removed %d newline(s) at end of file", removed_newlines);
 		if (removed_spaces) printf(" removed %d space(s)", removed_spaces);
 		if (removed_tabs) printf(" removed %d tab(s)", removed_tabs);
+		if (added_tabs) printf(" added %d tab(s)", added_tabs);
 		if (hichars) printf(" fixed %d high-ASCII char(s)", hichars);
 		if (fixed_nix_style) printf(" fixed *nix-style line-ends");
 		if (fixed_mac_style) printf(" fixed Mac-style line-ends");
