@@ -32,11 +32,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_pf1_tile_info);
 	TILE_GET_INFO_MEMBER(get_text_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_deadang(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(deadang_main_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(deadang_sub_scanline);
 };
-
-
-/*----------- defined in video/deadang.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( deadang );

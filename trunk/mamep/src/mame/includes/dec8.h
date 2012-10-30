@@ -121,30 +121,22 @@ public:
 	DECLARE_VIDEO_START(oscar);
 	DECLARE_VIDEO_START(srdarwin);
 	DECLARE_VIDEO_START(cobracom);
+	UINT32 screen_update_lastmisn(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_shackled(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_gondo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_garyoret(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_ghostb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_oscar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_srdarwin(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cobracom(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_dec8(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(gondo_interrupt);
+	INTERRUPT_GEN_MEMBER(oscar_interrupt);
+	TIMER_CALLBACK_MEMBER(dec8_i8751_timer_callback);
 };
 
 /*----------- defined in video/dec8.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( cobracom );
-SCREEN_UPDATE_IND16( ghostb );
-SCREEN_UPDATE_IND16( srdarwin );
-SCREEN_UPDATE_IND16( gondo );
-SCREEN_UPDATE_IND16( garyoret );
-SCREEN_UPDATE_IND16( lastmisn );
-SCREEN_UPDATE_IND16( shackled );
-SCREEN_UPDATE_IND16( oscar );
-
-
-
-
-
-
-
-
-
-WRITE8_HANDLER( dec8_bac06_0_w );
-WRITE8_HANDLER( dec8_bac06_1_w );
-WRITE8_HANDLER( dec8_pf1_data_w );
-READ8_HANDLER( dec8_pf1_data_r );
+DECLARE_WRITE8_HANDLER( dec8_bac06_0_w );
+DECLARE_WRITE8_HANDLER( dec8_bac06_1_w );
+DECLARE_WRITE8_HANDLER( dec8_pf1_data_w );
+DECLARE_READ8_HANDLER( dec8_pf1_data_r );

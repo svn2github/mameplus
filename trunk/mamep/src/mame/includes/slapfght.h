@@ -123,6 +123,10 @@ public:
 	DECLARE_MACHINE_RESET(slapfight);
 	DECLARE_VIDEO_START(perfrman);
 	DECLARE_VIDEO_START(slapfight);
+	UINT32 screen_update_perfrman(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_slapfight(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	INTERRUPT_GEN_MEMBER(getstar_interrupt);
 };
 
 
@@ -138,26 +142,4 @@ public:
 #define GS_RESET_REGS m_gs_a = 0; \
                       m_gs_d = 0; \
                       m_gs_e = 0;
-
-
-/*----------- defined in machine/slapfght.c -----------*/
-
-
-
-
-
-
-
-
-
-
-INTERRUPT_GEN( getstar_interrupt );
-
-
-/*----------- defined in video/slapfght.c -----------*/
-
-SCREEN_UPDATE_IND16( slapfight );
-SCREEN_UPDATE_IND16( perfrman );
-
-
 

@@ -115,13 +115,12 @@ public:
 	virtual void video_start();
 	DECLARE_MACHINE_RESET(gaelco3d2);
 	DECLARE_MACHINE_RESET(common);
+	UINT32 screen_update_gaelco3d(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_gen);
+	TIMER_CALLBACK_MEMBER(delayed_sound_w);
+	TIMER_DEVICE_CALLBACK_MEMBER(adsp_autobuffer_irq);
 };
-
 
 /*----------- defined in video/gaelco3d.c -----------*/
 
 void gaelco3d_render(screen_device &screen);
-
-
-
-SCREEN_UPDATE_IND16( gaelco3d );

@@ -41,12 +41,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_gundealr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(gundealr_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(yamyam_mcu_sim);
 };
-
-
-
-/*----------- defined in video/gundealr.c -----------*/
-
-
-SCREEN_UPDATE_IND16( gundealr );
-

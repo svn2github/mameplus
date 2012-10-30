@@ -43,6 +43,7 @@ public:
 	UINT8			m_bank_color_shift[MAX_GFX_ELEMENTS];
 
 	UINT8			m_cur[2][2];
+	virtual void update_interrupts();
 	DECLARE_READ16_MEMBER(joystick_r);
 	DECLARE_WRITE16_MEMBER(joystick_w);
 	DECLARE_READ16_MEMBER(trakball_r);
@@ -64,22 +65,17 @@ public:
 	DECLARE_MACHINE_START(atarisy1);
 	DECLARE_MACHINE_RESET(atarisy1);
 	DECLARE_VIDEO_START(atarisy1);
+	UINT32 screen_update_atarisy1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(delayed_joystick_int);
+	TIMER_DEVICE_CALLBACK_MEMBER(atarisy1_reset_yscroll_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(atarisy1_int3off_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(atarisy1_int3_callback);
 };
 
+DECLARE_READ16_HANDLER( atarisy1_int3state_r );
 
-/*----------- defined in video/atarisy1.c -----------*/
-
-TIMER_DEVICE_CALLBACK( atarisy1_int3_callback );
-TIMER_DEVICE_CALLBACK( atarisy1_int3off_callback );
-TIMER_DEVICE_CALLBACK( atarisy1_reset_yscroll_callback );
-
-READ16_HANDLER( atarisy1_int3state_r );
-
-WRITE16_HANDLER( atarisy1_spriteram_w );
-WRITE16_HANDLER( atarisy1_bankselect_w );
-WRITE16_HANDLER( atarisy1_xscroll_w );
-WRITE16_HANDLER( atarisy1_yscroll_w );
-WRITE16_HANDLER( atarisy1_priority_w );
-
-
-SCREEN_UPDATE_IND16( atarisy1 );
+DECLARE_WRITE16_HANDLER( atarisy1_spriteram_w );
+DECLARE_WRITE16_HANDLER( atarisy1_bankselect_w );
+DECLARE_WRITE16_HANDLER( atarisy1_xscroll_w );
+DECLARE_WRITE16_HANDLER( atarisy1_yscroll_w );
+DECLARE_WRITE16_HANDLER( atarisy1_priority_w );

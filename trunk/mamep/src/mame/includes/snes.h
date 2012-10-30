@@ -544,6 +544,14 @@ public:
 	UINT16 *m_snes_cgram;	/* Palette RAM */
 	UINT8  *m_snes_vram;	/* Video RAM (TODO: Should be 16-bit, but it's easier this way) */
 
+	TIMER_CALLBACK_MEMBER(snes_nmi_tick);
+	TIMER_CALLBACK_MEMBER(snes_hirq_tick_callback);
+	TIMER_CALLBACK_MEMBER(snes_reset_oam_address);
+	TIMER_CALLBACK_MEMBER(snes_reset_hdma);
+	TIMER_CALLBACK_MEMBER(snes_update_io);
+	TIMER_CALLBACK_MEMBER(snes_scanline_tick);
+	TIMER_CALLBACK_MEMBER(snes_hblank_tick);
+	DECLARE_WRITE_LINE_MEMBER(snes_extern_irq_w);
 };
 
 /* Special chips, checked at init and used in memory handlers */
@@ -595,34 +603,31 @@ enum
 extern MACHINE_START( snes );
 extern MACHINE_RESET( snes );
 
-READ8_HANDLER( snes_open_bus_r );
+DECLARE_READ8_HANDLER( snes_open_bus_r );
 
-extern READ8_HANDLER( snes_r_io );
-extern WRITE8_HANDLER( snes_w_io );
+extern DECLARE_READ8_HANDLER( snes_r_io );
+extern DECLARE_WRITE8_HANDLER( snes_w_io );
 
-extern READ8_HANDLER( snes_r_bank1 );
-extern READ8_HANDLER( snes_r_bank2 );
-extern READ8_HANDLER( snes_r_bank3 );
-extern READ8_HANDLER( snes_r_bank4 );
-extern READ8_HANDLER( snes_r_bank5 );
-extern READ8_HANDLER( snes_r_bank6 );
-extern READ8_HANDLER( snes_r_bank7 );
-extern WRITE8_HANDLER( snes_w_bank1 );
-extern WRITE8_HANDLER( snes_w_bank2 );
-extern WRITE8_HANDLER( snes_w_bank4 );
-extern WRITE8_HANDLER( snes_w_bank5 );
-extern WRITE8_HANDLER( snes_w_bank6 );
-extern WRITE8_HANDLER( snes_w_bank7 );
+extern DECLARE_READ8_HANDLER( snes_r_bank1 );
+extern DECLARE_READ8_HANDLER( snes_r_bank2 );
+extern DECLARE_READ8_HANDLER( snes_r_bank3 );
+extern DECLARE_READ8_HANDLER( snes_r_bank4 );
+extern DECLARE_READ8_HANDLER( snes_r_bank5 );
+extern DECLARE_READ8_HANDLER( snes_r_bank6 );
+extern DECLARE_READ8_HANDLER( snes_r_bank7 );
+extern DECLARE_WRITE8_HANDLER( snes_w_bank1 );
+extern DECLARE_WRITE8_HANDLER( snes_w_bank2 );
+extern DECLARE_WRITE8_HANDLER( snes_w_bank4 );
+extern DECLARE_WRITE8_HANDLER( snes_w_bank5 );
+extern DECLARE_WRITE8_HANDLER( snes_w_bank6 );
+extern DECLARE_WRITE8_HANDLER( snes_w_bank7 );
 
-extern READ8_HANDLER( superfx_r_bank1 );
-extern READ8_HANDLER( superfx_r_bank2 );
-extern READ8_HANDLER( superfx_r_bank3 );
-extern WRITE8_HANDLER( superfx_w_bank1 );
-extern WRITE8_HANDLER( superfx_w_bank2 );
-extern WRITE8_HANDLER( superfx_w_bank3 );
-
-WRITE_LINE_DEVICE_HANDLER( snes_extern_irq_w );
-
+extern DECLARE_READ8_HANDLER( superfx_r_bank1 );
+extern DECLARE_READ8_HANDLER( superfx_r_bank2 );
+extern DECLARE_READ8_HANDLER( superfx_r_bank3 );
+extern DECLARE_WRITE8_HANDLER( superfx_w_bank1 );
+extern DECLARE_WRITE8_HANDLER( superfx_w_bank2 );
+extern DECLARE_WRITE8_HANDLER( superfx_w_bank3 );
 
 extern UINT8  *snes_ram;			/* Main memory */
 
@@ -745,7 +750,7 @@ extern void snes_latch_counters(running_machine &machine);
 extern VIDEO_START( snes );
 extern SCREEN_UPDATE_RGB32( snes );
 
-extern READ8_HANDLER( snes_ppu_read );
-extern WRITE8_HANDLER( snes_ppu_write );
+extern DECLARE_READ8_HANDLER( snes_ppu_read );
+extern DECLARE_WRITE8_HANDLER( snes_ppu_write );
 
 #endif /* _SNES_H_ */

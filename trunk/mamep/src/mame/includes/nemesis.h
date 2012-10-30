@@ -84,12 +84,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_nemesis(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(nemesis_interrupt);
+	INTERRUPT_GEN_MEMBER(blkpnthr_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(konamigt_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(gx400_interrupt);
 };
-
-
-/*----------- defined in video/nemesis.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( nemesis );

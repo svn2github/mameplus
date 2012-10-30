@@ -30,6 +30,8 @@ public:
 	UINT16			m_playfield_yscroll;
 
 	device_t *		m_rle;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_WRITE16_MEMBER(mo_control_w);
 	DECLARE_WRITE16_MEMBER(mo_command_w);
 	DECLARE_READ16_MEMBER(special_port0_r);
@@ -49,14 +51,9 @@ public:
 	DECLARE_MACHINE_START(atarig1);
 	DECLARE_MACHINE_RESET(atarig1);
 	DECLARE_VIDEO_START(atarig1);
+	UINT32 screen_update_atarig1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_atarig1(screen_device &screen, bool state);
 };
 
-
 /*----------- defined in video/atarig1.c -----------*/
-
-
-
-SCREEN_VBLANK( atarig1 );
-SCREEN_UPDATE_IND16( atarig1 );
-
 void atarig1_scanline_update(screen_device &screen, int scanline);

@@ -33,8 +33,8 @@
 
 
 /* Internal routines */
-static TIMER_CALLBACK( leland_interrupt_callback );
-static TIMER_CALLBACK( ataxx_interrupt_callback );
+
+
 
 
 
@@ -322,7 +322,7 @@ MACHINE_START_MEMBER(leland_state,leland)
 	m_battery_ram = reinterpret_cast<UINT8 *>(memshare("battery")->ptr());
 
 	/* start scanline interrupts going */
-	m_master_int_timer = machine().scheduler().timer_alloc(FUNC(leland_interrupt_callback));
+	m_master_int_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(leland_state::leland_interrupt_callback),this));
 }
 
 
@@ -332,7 +332,8 @@ MACHINE_RESET_MEMBER(leland_state,leland)
 
 	/* reset globals */
 	m_gfx_control = 0x00;
-	leland_sound_port_w(machine().device("ay8910.1"), 0, 0xff);
+	address_space &space = generic_space();
+	leland_sound_port_w(space, 0, 0xff);
 	m_wcol_enable = 0;
 
 	m_dangerz_x = 512;
@@ -371,7 +372,7 @@ MACHINE_START_MEMBER(leland_state,ataxx)
 	m_extra_tram = auto_alloc_array(machine(), UINT8, ATAXX_EXTRA_TRAM_SIZE);
 
 	/* start scanline interrupts going */
-	m_master_int_timer = machine().scheduler().timer_alloc(FUNC(ataxx_interrupt_callback));
+	m_master_int_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(leland_state::ataxx_interrupt_callback),this));
 }
 
 
@@ -415,41 +416,39 @@ MACHINE_RESET_MEMBER(leland_state,ataxx)
  *
  *************************************/
 
-static TIMER_CALLBACK( leland_interrupt_callback )
+TIMER_CALLBACK_MEMBER(leland_state::leland_interrupt_callback)
 {
-	leland_state *state = machine.driver_data<leland_state>();
 	int scanline = param;
 
 	/* interrupts generated on the VA10 line, which is every */
 	/* 16 scanlines starting with scanline #8 */
-	machine.device("master")->execute().set_input_line(0, HOLD_LINE);
+	machine().device("master")->execute().set_input_line(0, HOLD_LINE);
 
 	/* set a timer for the next one */
 	scanline += 16;
 	if (scanline > 248)
 		scanline = 8;
-	state->m_master_int_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_master_int_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
-static TIMER_CALLBACK( ataxx_interrupt_callback )
+TIMER_CALLBACK_MEMBER(leland_state::ataxx_interrupt_callback)
 {
-	leland_state *state = machine.driver_data<leland_state>();
 	int scanline = param;
 
 	/* interrupts generated according to the interrupt control register */
-	machine.device("master")->execute().set_input_line(0, HOLD_LINE);
+	machine().device("master")->execute().set_input_line(0, HOLD_LINE);
 
 	/* set a timer for the next one */
-	state->m_master_int_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_master_int_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
-INTERRUPT_GEN( leland_master_interrupt )
+INTERRUPT_GEN_MEMBER(leland_state::leland_master_interrupt)
 {
 	/* check for coins here */
-	if ((device->machine().root_device().ioport("IN1")->read() & 0x0e) != 0x0e)
-		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	if ((machine().root_device().ioport("IN1")->read() & 0x0e) != 0x0e)
+		device.execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 
@@ -470,7 +469,7 @@ WRITE8_MEMBER(leland_state::leland_master_alt_bankswitch_w)
 	(*m_update_master_bank)(machine());
 
 	/* sound control is in the rest */
-	leland_80186_control_w(machine().device("custom"), offset, data);
+	leland_80186_control_w(machine().device("custom"), space, offset, data);
 }
 
 
@@ -818,19 +817,19 @@ void ataxx_init_eeprom(running_machine &machine, const UINT16 *data)
  *
  *************************************/
 
-READ8_DEVICE_HANDLER( ataxx_eeprom_r )
+READ8_MEMBER(leland_state::ataxx_eeprom_r)
 {
-	int port = device->machine().root_device().ioport("IN2")->read();
-	if (LOG_EEPROM) logerror("%s:EE read\n", device->machine().describe_context());
+	int port = machine().root_device().ioport("IN2")->read();
+	if (LOG_EEPROM) logerror("%s:EE read\n", machine().describe_context());
 	return port;
 }
 
 
-WRITE8_DEVICE_HANDLER( ataxx_eeprom_w )
+WRITE8_MEMBER(leland_state::ataxx_eeprom_w)
 {
-	if (LOG_EEPROM) logerror("%s:EE write %d%d%d\n", device->machine().describe_context(),
+	if (LOG_EEPROM) logerror("%s:EE write %d%d%d\n", machine().describe_context(),
 			(data >> 6) & 1, (data >> 5) & 1, (data >> 4) & 1);
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
+	eeprom_device *eeprom = downcast<eeprom_device *>(machine().device("eeprom"));
 	eeprom->write_bit     ((data & 0x10) >> 4);
 	eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
 	eeprom->set_cs_line   ((~data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
@@ -1103,7 +1102,7 @@ READ8_MEMBER(leland_state::leland_master_input_r)
 
 		case 0x03:	/* /IGID */
 		case 0x13:
-			result = ay8910_r(machine().device("ay8910.1"), offset);
+			result = ay8910_r(machine().device("ay8910.1"), space, offset);
 			break;
 
 		case 0x10:	/* /GIN0 */
@@ -1145,7 +1144,7 @@ WRITE8_MEMBER(leland_state::leland_master_output_w)
 
 		case 0x0a:	/* /OGIA */
 		case 0x0b:	/* /OGID */
-			ay8910_address_data_w(machine().device("ay8910.1"), offset, data);
+			ay8910_address_data_w(machine().device("ay8910.1"), space, offset, data);
 			break;
 
 		case 0x0c:	/* /BKXL */
@@ -1303,29 +1302,27 @@ READ8_MEMBER(leland_state::ataxx_paletteram_and_misc_r)
  *
  *************************************/
 
-READ8_DEVICE_HANDLER( leland_sound_port_r )
+READ8_MEMBER(leland_state::leland_sound_port_r)
 {
-	leland_state *state = device->machine().driver_data<leland_state>();
-	return state->m_gfx_control;
+	return m_gfx_control;
 }
 
 
-WRITE8_DEVICE_HANDLER( leland_sound_port_w )
+WRITE8_MEMBER(leland_state::leland_sound_port_w)
 {
-	leland_state *state = device->machine().driver_data<leland_state>();
 	/* update the graphics banking */
-	leland_gfx_port_w(device, 0, data);
+	leland_gfx_port_w(space, 0, data);
 
 	/* set the new value */
-	state->m_gfx_control = data;
-	state->m_dac_control = data & 3;
+	m_gfx_control = data;
+	m_dac_control = data & 3;
 
 	/* some bankswitching occurs here */
 	if (LOG_BANKSWITCHING_M)
-		if ((state->m_sound_port_bank ^ data) & 0x24)
-			logerror("%s:sound_port_bank = %02X\n", device->machine().describe_context(), data & 0x24);
-	state->m_sound_port_bank = data & 0x24;
-	(*state->m_update_master_bank)(device->machine());
+		if ((m_sound_port_bank ^ data) & 0x24)
+			logerror("%s:sound_port_bank = %02X\n", machine().describe_context(), data & 0x24);
+	m_sound_port_bank = data & 0x24;
+	(*m_update_master_bank)(machine());
 }
 
 

@@ -20,9 +20,9 @@
 extern const pia6821_interface atarixl_pia_interface;
 
 /* These handlers are needed by MESS Atari 8bit drivers (for their custom pia_interface) */
-READ8_DEVICE_HANDLER(atari_pia_pa_r);
-READ8_DEVICE_HANDLER(atari_pia_pb_r);
-WRITE8_DEVICE_HANDLER(a600xl_pia_pb_w);
+DECLARE_READ8_DEVICE_HANDLER(atari_pia_pa_r);
+DECLARE_READ8_DEVICE_HANDLER(atari_pia_pb_r);
+DECLARE_WRITE8_DEVICE_HANDLER(a600xl_pia_pb_w);
 WRITE_LINE_DEVICE_HANDLER(atari_pia_cb2_w);
 
 
@@ -213,7 +213,7 @@ struct VIDEO {
     UINT16  data[HWIDTH];       /* graphics data buffer (text through chargen) */
 };
 
-typedef void (*atari_renderer_func)(address_space *space, VIDEO *video);
+typedef void (*atari_renderer_func)(address_space &space, VIDEO *video);
 
 struct ANTIC {
 	atari_renderer_func	renderer;	/* current renderer */
@@ -263,11 +263,11 @@ struct ANTIC {
 	bitmap_ind16 *bitmap;
 };
 
-#define RDANTIC(space)		space->read_byte(antic.dpage+antic.doffs)
-#define RDVIDEO(space,o)	space->read_byte(antic.vpage+((antic.voffs+(o))&VOFFS))
-#define RDCHGEN(space,o)	space->read_byte(antic.chbase+(o))
-#define RDPMGFXS(space,o)	space->read_byte(antic.pmbase_s+(o)+(antic.scanline>>1))
-#define RDPMGFXD(space,o)	space->read_byte(antic.pmbase_d+(o)+antic.scanline)
+#define RDANTIC(space)		space.read_byte(antic.dpage+antic.doffs)
+#define RDVIDEO(space,o)	space.read_byte(antic.vpage+((antic.voffs+(o))&VOFFS))
+#define RDCHGEN(space,o)	space.read_byte(antic.chbase+(o))
+#define RDPMGFXS(space,o)	space.read_byte(antic.pmbase_s+(o)+(antic.scanline>>1))
+#define RDPMGFXD(space,o)	space.read_byte(antic.pmbase_d+(o)+antic.scanline)
 
 #define PREPARE()												\
 	UINT32 *dst = (UINT32 *)&antic.cclock[PMOFFSET]
@@ -535,10 +535,10 @@ extern ANTIC antic;
 
 void antic_reset(void);
 
- READ8_HANDLER ( atari_antic_r );
-WRITE8_HANDLER ( atari_antic_w );
+ DECLARE_READ8_HANDLER ( atari_antic_r );
+DECLARE_WRITE8_HANDLER ( atari_antic_w );
 
-#define ANTIC_RENDERER(name) void name(address_space *space, VIDEO *video)
+#define ANTIC_RENDERER(name) void name(address_space &space, VIDEO *video)
 
 ANTIC_RENDERER( antic_mode_0_xx );
 ANTIC_RENDERER( antic_mode_2_32 );

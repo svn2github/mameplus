@@ -10,7 +10,7 @@
 #include "sound/sn76496.h"
 
 extern cpu_device *_svp_cpu;
-extern int segacd_wordram_mapped;
+extern int sega_cd_connected;
 extern timer_device* megadriv_scanline_timer;
 
 
@@ -204,7 +204,7 @@ void sega_genesis_vdp_device::device_start()
 	irq4_on_timer = machine().scheduler().timer_alloc(FUNC(irq4_on_timer_callback), (void*)this);
 	megadriv_render_timer = machine().scheduler().timer_alloc(FUNC(megadriv_render_timer_callback), (void*)this);
 
-	m_space68k = machine().device<legacy_cpu_device>(":maincpu")->space();
+	m_space68k = &machine().device<legacy_cpu_device>(":maincpu")->space();
 	m_cpu68k = machine().device<legacy_cpu_device>(":maincpu");
 }
 
@@ -471,9 +471,9 @@ void sega_genesis_vdp_device::update_m_vdp_code_and_address(void)
                             ((m_vdp_command_part2 & 0x0003) << 14);
 }
 
-UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source, address_space* space68k);
+UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source, address_space& space68k);
 
-UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source, address_space* space68k)
+UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source, address_space & space68k)
 {
 	// should we limit the valid areas here?
 	// how does this behave with the segacd etc?
@@ -490,16 +490,16 @@ UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source
 
 		// likewise segaCD, at least when reading wordram?
 		// we might need to check what mode we're in here..
-		if (segacd_wordram_mapped)
+		if (sega_cd_connected)
 		{
 			source -= 2;
 		}
 
-		return space68k->read_word(source);
+		return space68k.read_word(source);
 	}
 	else if (( source >= 0xe00000 ) && ( source <= 0xffffff ))
 	{
-		return space68k->read_word(source);
+		return space68k.read_word(source);
 	}
 	else
 	{
@@ -574,7 +574,7 @@ void sega_genesis_vdp_device::megadrive_do_insta_68k_to_vram_dma(running_machine
 
 	for (count = 0;count<(length>>1);count++)
 	{
-		vdp_vram_write(vdp_get_word_from_68k_mem(machine, source, m_space68k));
+		vdp_vram_write(vdp_get_word_from_68k_mem(machine, source, *m_space68k));
 		source+=2;
 		if (source>0xffffff) source = 0xe00000;
 	}
@@ -600,7 +600,7 @@ void sega_genesis_vdp_device::megadrive_do_insta_68k_to_cram_dma(running_machine
 	{
 		//if (m_vdp_address>=0x80) return; // abandon
 
-		write_cram_value(machine, (m_vdp_address&0x7e)>>1, vdp_get_word_from_68k_mem(machine, source, m_space68k));
+		write_cram_value(machine, (m_vdp_address&0x7e)>>1, vdp_get_word_from_68k_mem(machine, source, *m_space68k));
 		source+=2;
 
 		if (source>0xffffff) source = 0xfe0000;
@@ -628,7 +628,7 @@ void sega_genesis_vdp_device::megadrive_do_insta_68k_to_vsram_dma(running_machin
 	{
 		if (m_vdp_address>=0x80) return; // abandon
 
-		m_vsram[(m_vdp_address&0x7e)>>1] = vdp_get_word_from_68k_mem(machine, source, m_space68k);
+		m_vsram[(m_vdp_address&0x7e)>>1] = vdp_get_word_from_68k_mem(machine, source, *m_space68k);
 		source+=2;
 
 		if (source>0xffffff) source = 0xfe0000;
@@ -854,9 +854,13 @@ WRITE16_MEMBER( sega_genesis_vdp_device::megadriv_vdp_w )
 		case 0x12:
 		case 0x14:
 		case 0x16:
-			if (ACCESSING_BITS_0_7) sn76496_w(space.machine().device(":snsnd"), 0, data & 0xff);
-			//if (ACCESSING_BITS_8_15) sn76496_w(space->machine().device("snsnd"), 0, (data >>8) & 0xff);
+		{
+			// accessed by either segapsg_device or sn76496_device
+			sn76496_base_device *sn = space.machine().device<sn76496_base_device>(":snsnd");
+			if (ACCESSING_BITS_0_7) sn->write(space, 0, data & 0xff);
+			//if (ACCESSING_BITS_8_15) sn->write(space, 0, (data>>8) & 0xff);
 			break;
+		}
 
 		default:
 		mame_printf_debug("write to unmapped vdp port\n");
@@ -1265,8 +1269,8 @@ READ16_MEMBER( sega_genesis_vdp_device::megadriv_vdp_r )
 		case 0x06:
 		//  if ((!ACCESSING_BITS_8_15) || (!ACCESSING_BITS_0_7)) mame_printf_debug("8-bit VDP read control port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_vdp_ctrl_port_r(space.machine());
-		//  retvalue = space->machine().rand();
-		//  mame_printf_debug("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",space->device().safe_pc(),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
+		//  retvalue = space.machine().rand();
+		//  mame_printf_debug("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",space.device().safe_pc(),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
 			break;
 
 		case 0x08:
@@ -1275,8 +1279,8 @@ READ16_MEMBER( sega_genesis_vdp_device::megadriv_vdp_r )
 		case 0x0e:
 		//  if ((!ACCESSING_BITS_8_15) || (!ACCESSING_BITS_0_7)) mame_printf_debug("8-bit VDP read HV counter port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_read_hv_counters(space.machine());
-		//  retvalue = space->machine().rand();
-		//  mame_printf_debug("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",space->device().safe_pc(),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
+		//  retvalue = space.machine().rand();
+		//  mame_printf_debug("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",space.device().safe_pc(),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
 			break;
 
 		case 0x10:

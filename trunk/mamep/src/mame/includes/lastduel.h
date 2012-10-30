@@ -58,12 +58,8 @@ public:
 	DECLARE_VIDEO_START(lastduel);
 	DECLARE_MACHINE_START(madgear);
 	DECLARE_VIDEO_START(madgear);
+	UINT32 screen_update_lastduel(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_madgear(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(lastduel_timer_cb);
+	TIMER_DEVICE_CALLBACK_MEMBER(madgear_timer_cb);
 };
-
-/*----------- defined in video/lastduel.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( lastduel );
-SCREEN_UPDATE_IND16( madgear );

@@ -21,6 +21,7 @@ public:
 	UINT8 m_bins;
 	UINT8 m_gins;
 	required_shared_ptr<UINT16> m_spriteram;
+	DECLARE_WRITE_LINE_MEMBER(ym2151_irq_gen);
 	DECLARE_WRITE16_MEMBER(sound_command_w);
 	DECLARE_READ8_MEMBER(sound_command_r);
 	DECLARE_READ16_MEMBER(sound_busy_r);
@@ -39,11 +40,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_rpunch(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(sound_command_w_callback);
+	TIMER_CALLBACK_MEMBER(crtc_interrupt_gen);
 };
-
-
-/*----------- defined in video/rpunch.c -----------*/
-
-
-SCREEN_UPDATE_IND16( rpunch );
-

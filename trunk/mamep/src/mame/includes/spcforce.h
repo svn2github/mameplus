@@ -17,9 +17,9 @@ public:
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
 
-	required_device<sn76496_new_device> m_sn1;
-    required_device<sn76496_new_device> m_sn2;
-    required_device<sn76496_new_device> m_sn3;
+	required_device<sn76496_device> m_sn1;
+    required_device<sn76496_device> m_sn2;
+    required_device<sn76496_device> m_sn3;
 
 	int m_sn76496_latch;
 	int m_sn76496_select;
@@ -33,9 +33,6 @@ public:
 	DECLARE_WRITE8_MEMBER(irq_mask_w);
 	DECLARE_WRITE8_MEMBER(spcforce_flip_screen_w);
 	virtual void palette_init();
+	UINT32 screen_update_spcforce(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
-
-/*----------- defined in video/spcforce.c -----------*/
-
-SCREEN_UPDATE_IND16( spcforce );

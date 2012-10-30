@@ -17,6 +17,17 @@ public:
 	DECLARE_READ8_MEMBER(beezer_line_r);
 	DECLARE_DRIVER_INIT(beezer);
 	virtual void machine_start();
+	UINT32 screen_update_beezer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(beezer_interrupt);
+	DECLARE_READ_LINE_MEMBER(b_via_0_ca2_r);
+	DECLARE_READ8_MEMBER(b_via_0_pa_r);
+	DECLARE_READ8_MEMBER(b_via_0_pb_r);
+	DECLARE_WRITE8_MEMBER(b_via_0_pa_w);
+	DECLARE_WRITE8_MEMBER(b_via_0_pb_w);
+	DECLARE_READ8_MEMBER(b_via_1_pa_r);
+	DECLARE_READ8_MEMBER(b_via_1_pb_r);
+	DECLARE_WRITE8_MEMBER(b_via_1_pa_w);
+	DECLARE_WRITE8_MEMBER(b_via_1_pb_w);
 };
 
 
@@ -53,13 +64,10 @@ private:
 extern const device_type BEEZER;
 
 
-READ8_DEVICE_HANDLER( beezer_sh6840_r );
-WRITE8_DEVICE_HANDLER( beezer_sh6840_w );
-WRITE8_DEVICE_HANDLER( beezer_sfxctrl_w );
-WRITE8_DEVICE_HANDLER( beezer_timer1_w );
-READ8_DEVICE_HANDLER( beezer_noise_r );
+DECLARE_READ8_DEVICE_HANDLER( beezer_sh6840_r );
+DECLARE_WRITE8_DEVICE_HANDLER( beezer_sh6840_w );
+DECLARE_WRITE8_DEVICE_HANDLER( beezer_sfxctrl_w );
+DECLARE_WRITE8_DEVICE_HANDLER( beezer_timer1_w );
+DECLARE_READ8_DEVICE_HANDLER( beezer_noise_r );
 
-/*----------- defined in video/beezer.c -----------*/
 
-TIMER_DEVICE_CALLBACK( beezer_interrupt );
-SCREEN_UPDATE_IND16( beezer );

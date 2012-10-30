@@ -37,6 +37,8 @@ protected:
 	virtual void machine_start();
 	virtual void video_start();
 
+	virtual void update_interrupts() { }
+
 	struct planet;
 
 	void init_planet(planet &liberatr_planet, UINT8 *planet_rom);

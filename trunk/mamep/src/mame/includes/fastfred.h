@@ -61,24 +61,22 @@ public:
 	DECLARE_PALETTE_INIT(fastfred);
 	DECLARE_MACHINE_START(imago);
 	DECLARE_VIDEO_START(imago);
+	UINT32 screen_update_fastfred(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_imago(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	INTERRUPT_GEN_MEMBER(sound_timer_irq);
 };
-
 
 /*----------- defined in video/fastfred.c -----------*/
 
+DECLARE_WRITE8_HANDLER( fastfred_videoram_w );
+DECLARE_WRITE8_HANDLER( fastfred_attributes_w );
+DECLARE_WRITE8_HANDLER( fastfred_charbank1_w );
+DECLARE_WRITE8_HANDLER( fastfred_charbank2_w );
+DECLARE_WRITE8_HANDLER( fastfred_colorbank1_w );
+DECLARE_WRITE8_HANDLER( fastfred_colorbank2_w );
+DECLARE_WRITE8_HANDLER( fastfred_flip_screen_x_w );
+DECLARE_WRITE8_HANDLER( fastfred_flip_screen_y_w );
 
-
-WRITE8_HANDLER( fastfred_videoram_w );
-WRITE8_HANDLER( fastfred_attributes_w );
-WRITE8_HANDLER( fastfred_charbank1_w );
-WRITE8_HANDLER( fastfred_charbank2_w );
-WRITE8_HANDLER( fastfred_colorbank1_w );
-WRITE8_HANDLER( fastfred_colorbank2_w );
-WRITE8_HANDLER( fastfred_flip_screen_x_w );
-WRITE8_HANDLER( fastfred_flip_screen_y_w );
-SCREEN_UPDATE_IND16( fastfred );
-
-
-SCREEN_UPDATE_IND16( imago );
-WRITE8_HANDLER( imago_fg_videoram_w );
-WRITE8_HANDLER( imago_charbank_w );
+DECLARE_WRITE8_HANDLER( imago_fg_videoram_w );
+DECLARE_WRITE8_HANDLER( imago_charbank_w );

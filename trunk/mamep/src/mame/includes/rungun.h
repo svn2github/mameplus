@@ -52,15 +52,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_rng(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(rng_interrupt);
+	INTERRUPT_GEN_MEMBER(audio_interrupt);
 };
-
-
-
-
 /*----------- defined in video/rungun.c -----------*/
 
 extern void rng_sprite_callback(running_machine &machine, int *code, int *color, int *priority_mask);
-
-
-
-SCREEN_UPDATE_IND16( rng );

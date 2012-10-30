@@ -43,6 +43,8 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_chqflag(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(chqflag_scanline);
 };
 
 /*----------- defined in video/chqflag.c -----------*/
@@ -50,6 +52,3 @@ public:
 extern void chqflag_sprite_callback(running_machine &machine, int *code,int *color,int *priority,int *shadow);
 extern void chqflag_zoom_callback_0(running_machine &machine, int *code,int *color,int *flags);
 extern void chqflag_zoom_callback_1(running_machine &machine, int *code,int *color,int *flags);
-
-
-SCREEN_UPDATE_IND16( chqflag );

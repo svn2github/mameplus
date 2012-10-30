@@ -254,17 +254,17 @@ public:
 	DECLARE_VIDEO_START(namcos22s);
 	DECLARE_VIDEO_START(namcos22);
 	DECLARE_VIDEO_START(common);
+	UINT32 screen_update_namcos22s(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_namcos22(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(namcos22s_interrupt);
+	INTERRUPT_GEN_MEMBER(namcos22_interrupt);
+	TIMER_CALLBACK_MEMBER(alpine_steplock_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(dsp_master_serial_irq);
+	TIMER_DEVICE_CALLBACK_MEMBER(dsp_slave_serial_irq);
+	TIMER_DEVICE_CALLBACK_MEMBER(mcu_irq);
 };
 
-
 /*----------- defined in video/namcos22.c -----------*/
-
-
-SCREEN_UPDATE_RGB32( namcos22 );
-
-
-SCREEN_UPDATE_RGB32( namcos22s );
-
 void namcos22_draw_direct_poly( running_machine &machine, const UINT16 *pSource );
 UINT32 namcos22_point_rom_r( running_machine &machine, offs_t offs );
 void namcos22_enable_slave_simulation( running_machine &machine, int enable );

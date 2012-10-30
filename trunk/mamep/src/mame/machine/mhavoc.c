@@ -16,25 +16,24 @@
  *
  *************************************/
 
-TIMER_DEVICE_CALLBACK( mhavoc_cpu_irq_clock )
+TIMER_DEVICE_CALLBACK_MEMBER(mhavoc_state::mhavoc_cpu_irq_clock)
 {
-	mhavoc_state *state = timer.machine().driver_data<mhavoc_state>();
 	/* clock the LS161 driving the alpha CPU IRQ */
-	if (state->m_alpha_irq_clock_enable)
+	if (m_alpha_irq_clock_enable)
 	{
-		state->m_alpha_irq_clock++;
-		if ((state->m_alpha_irq_clock & 0x0c) == 0x0c)
+		m_alpha_irq_clock++;
+		if ((m_alpha_irq_clock & 0x0c) == 0x0c)
 		{
-			timer.machine().device("alpha")->execute().set_input_line(0, ASSERT_LINE);
-			state->m_alpha_irq_clock_enable = 0;
+			machine().device("alpha")->execute().set_input_line(0, ASSERT_LINE);
+			m_alpha_irq_clock_enable = 0;
 		}
 	}
 
 	/* clock the LS161 driving the gamma CPU IRQ */
-	if (state->m_has_gamma_cpu)
+	if (m_has_gamma_cpu)
 	{
-		state->m_gamma_irq_clock++;
-		timer.machine().device("gamma")->execute().set_input_line(0, (state->m_gamma_irq_clock & 0x08) ? ASSERT_LINE : CLEAR_LINE);
+		m_gamma_irq_clock++;
+		machine().device("gamma")->execute().set_input_line(0, (m_gamma_irq_clock & 0x08) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -82,7 +81,7 @@ void mhavoc_state::machine_start()
 
 void mhavoc_state::machine_reset()
 {
-	address_space *space = machine().device("alpha")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("alpha")->memory().space(AS_PROGRAM);
 	m_has_gamma_cpu = (machine().device("gamma") != NULL);
 
 	membank("bank1")->configure_entry(0, m_zram0);
@@ -90,8 +89,8 @@ void mhavoc_state::machine_reset()
 	membank("bank2")->configure_entries(0, 4, memregion("alpha")->base() + 0x10000, 0x2000);
 
 	/* reset RAM/ROM banks to 0 */
-	mhavoc_ram_banksel_w(*space, 0, 0);
-	mhavoc_rom_banksel_w(*space, 0, 0);
+	mhavoc_ram_banksel_w(space, 0, 0);
+	mhavoc_rom_banksel_w(space, 0, 0);
 
 	/* reset alpha comm status */
 	m_alpha_data = 0;
@@ -120,26 +119,25 @@ void mhavoc_state::machine_reset()
  *
  *************************************/
 
-static TIMER_CALLBACK( delayed_gamma_w )
+TIMER_CALLBACK_MEMBER(mhavoc_state::delayed_gamma_w)
 {
-	mhavoc_state *state = machine.driver_data<mhavoc_state>();
 	/* mark the data received */
-	state->m_gamma_rcvd = 0;
-	state->m_alpha_xmtd = 1;
-	state->m_alpha_data = param;
+	m_gamma_rcvd = 0;
+	m_alpha_xmtd = 1;
+	m_alpha_data = param;
 
 	/* signal with an NMI pulse */
-	machine.device("gamma")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("gamma")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	/* the sound CPU needs to reply in 250microseconds (according to Neil Bradley) */
-	machine.scheduler().timer_set(attotime::from_usec(250), FUNC_NULL);
+	machine().scheduler().timer_set(attotime::from_usec(250), FUNC_NULL);
 }
 
 
 WRITE8_MEMBER(mhavoc_state::mhavoc_gamma_w)
 {
 	logerror("  writing to gamma processor: %02x (%d %d)\n", data, m_gamma_rcvd, m_alpha_xmtd);
-	machine().scheduler().synchronize(FUNC(delayed_gamma_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(mhavoc_state::delayed_gamma_w),this), data);
 }
 
 
@@ -311,7 +309,7 @@ WRITE8_MEMBER(mhavoc_state::mhavocrv_speech_data_w)
 WRITE8_MEMBER(mhavoc_state::mhavocrv_speech_strobe_w)
 {
 	device_t *tms = machine().device("tms");
-	tms5220_data_w(tms, 0, m_speech_write_buffer);
+	tms5220_data_w(tms, space, 0, m_speech_write_buffer);
 }
 
 /*************************************
@@ -324,6 +322,6 @@ DRIVER_INIT_MEMBER(mhavoc_state,mhavocrv)
 {
 	/* install the speech support that was only optionally stuffed for use */
 	/* in the Return to Vax hack */
-	machine().device("gamma")->memory().space(AS_PROGRAM)->install_write_handler(0x5800, 0x5800, write8_delegate(FUNC(mhavoc_state::mhavocrv_speech_data_w),this));
-	machine().device("gamma")->memory().space(AS_PROGRAM)->install_write_handler(0x5900, 0x5900, write8_delegate(FUNC(mhavoc_state::mhavocrv_speech_strobe_w),this));
+	machine().device("gamma")->memory().space(AS_PROGRAM).install_write_handler(0x5800, 0x5800, write8_delegate(FUNC(mhavoc_state::mhavocrv_speech_data_w),this));
+	machine().device("gamma")->memory().space(AS_PROGRAM).install_write_handler(0x5900, 0x5900, write8_delegate(FUNC(mhavoc_state::mhavocrv_speech_strobe_w),this));
 }

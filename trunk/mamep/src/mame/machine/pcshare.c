@@ -166,7 +166,7 @@ static READ8_HANDLER( pc_dma_read_byte )
 	offs_t page_offset = (((offs_t) dma_offset[0][dma_channel]) << 16)
 		& 0xFF0000;
 
-	return space->read_byte(page_offset + offset);
+	return space.read_byte(page_offset + offset);
 }
 
 
@@ -175,7 +175,7 @@ static WRITE8_HANDLER( pc_dma_write_byte )
 	offs_t page_offset = (((offs_t) dma_offset[0][dma_channel]) << 16)
 		& 0xFF0000;
 
-	space->write_byte(page_offset + offset, data);
+	space.write_byte(page_offset + offset, data);
 }
 
 static READ8_HANDLER(dma_page_select_r)
@@ -267,7 +267,7 @@ static WRITE_LINE_DEVICE_HANDLER( pic8259_1_set_int_line )
 static READ8_DEVICE_HANDLER( get_slave_ack )
 {
 	if (offset==2) { // IRQ = 2
-		return pic8259_acknowledge(device->machine().device("pic8259_2"));
+		return pic8259_acknowledge(space.machine().device("pic8259_2"));
 	}
 	return 0x00;
 }

@@ -114,6 +114,10 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void video_reset();
+	INTERRUPT_GEN_MEMBER(micro3d_vblank);
+	TIMER_CALLBACK_MEMBER(mac_done_callback);
+	TIMER_CALLBACK_MEMBER(adc_done_callback);
+	DECLARE_WRITE8_MEMBER(micro3d_upd7759_w);
 };
 
 struct micro3d_vtx
@@ -129,12 +133,7 @@ UINT8 micro3d_duart_input_r(device_t *device);
 void micro3d_duart_output_w(device_t *device, UINT8 data);
 void micro3d_duart_tx(device_t *device, int channel, UINT8 data);
 
-
-
-
 /*----------- defined in audio/micro3d.c -----------*/
-
-WRITE8_DEVICE_HANDLER( micro3d_upd7759_w );
 
 void micro3d_noise_sh_w(running_machine &machine, UINT8 data);
 
@@ -162,15 +161,6 @@ private:
 
 extern const device_type MICRO3D;
 
-
-
 /*----------- defined in video/micro3d.c -----------*/
-
-
-
-
 void micro3d_tms_interrupt(device_t *device, int state);
 void micro3d_scanline_update(screen_device &screen, bitmap_ind16 &bitmap, int scanline, const tms34010_display_params *params);
-
-
-INTERRUPT_GEN( micro3d_vblank );

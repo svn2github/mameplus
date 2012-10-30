@@ -39,18 +39,16 @@ public:
 	DECLARE_WRITE8_MEMBER(simpsons_k053247_w);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_simpsons(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(simpsons_irq);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
+	TIMER_CALLBACK_MEMBER(dmaend_callback);
+	DECLARE_READ8_MEMBER(simpsons_sound_r);
 };
-
-/*----------- defined in machine/simpsons.c -----------*/
-
-READ8_DEVICE_HANDLER( simpsons_sound_r );
-
 
 
 /*----------- defined in video/simpsons.c -----------*/
-
 void simpsons_video_banking( running_machine &machine, int select );
-SCREEN_UPDATE_IND16( simpsons );
 
 extern void simpsons_tile_callback(running_machine &machine, int layer,int bank,int *code,int *color,int *flags,int *priority);
 extern void simpsons_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);

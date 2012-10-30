@@ -76,13 +76,11 @@ public:
 	DECLARE_VIDEO_START(pbillian);
 	DECLARE_MACHINE_START(superqix);
 	DECLARE_VIDEO_START(superqix);
+	UINT32 screen_update_pbillian(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_superqix(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	INTERRUPT_GEN_MEMBER(sqix_timer_irq);
+	TIMER_CALLBACK_MEMBER(mcu_acknowledge_callback);
+	TIMER_CALLBACK_MEMBER(delayed_z80_mcu_w);
+	TIMER_CALLBACK_MEMBER(delayed_mcu_z80_w);
 };
-
-
-/*----------- defined in video/superqix.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( pbillian );
-
-SCREEN_UPDATE_IND16( superqix );

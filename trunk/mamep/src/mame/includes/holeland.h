@@ -31,13 +31,6 @@ public:
 	TILE_GET_INFO_MEMBER(crzrally_get_tile_info);
 	DECLARE_VIDEO_START(holeland);
 	DECLARE_VIDEO_START(crzrally);
+	UINT32 screen_update_holeland(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_crzrally(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/holeland.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( holeland );
-SCREEN_UPDATE_IND16( crzrally );
-

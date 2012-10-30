@@ -50,6 +50,7 @@ public:
 	DECLARE_READ8_MEMBER(nobb_inport23_r);
 	DECLARE_WRITE8_MEMBER(nobb_outport24_w);
 	DECLARE_READ8_MEMBER(nob_start_r);
+	DECLARE_READ8_MEMBER(shtngmst_gunx_r);
 	DECLARE_WRITE8_MEMBER(system1_videomode_w);
 	DECLARE_READ8_MEMBER(system1_mixer_collision_r);
 	DECLARE_WRITE8_MEMBER(system1_mixer_collision_w);
@@ -63,6 +64,7 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(dakkochn_mux_data_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(dakkochn_mux_status_r);
 	DECLARE_WRITE8_MEMBER(sound_control_w);
+
 	DECLARE_DRIVER_INIT(nobb);
 	DECLARE_DRIVER_INIT(wboy2);
 	DECLARE_DRIVER_INIT(imsorry);
@@ -104,19 +106,12 @@ public:
 	virtual void video_start();
 	DECLARE_MACHINE_START(system2);
 	DECLARE_VIDEO_START(system2);
+	UINT32 screen_update_system1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_system2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_system2_rowscroll(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(mcu_irq_assert);
+	TIMER_DEVICE_CALLBACK_MEMBER(soundirq_gen);
+	TIMER_DEVICE_CALLBACK_MEMBER(mcu_t0_callback);
+	DECLARE_WRITE8_MEMBER(system1_videoram_bank_w);
 };
 
-
-/*----------- defined in video/system1.c -----------*/
-
-
-
-
-
-WRITE8_DEVICE_HANDLER( system1_videoram_bank_w );
-
-
-
-SCREEN_UPDATE_IND16( system1 );
-SCREEN_UPDATE_IND16( system2 );
-SCREEN_UPDATE_IND16( system2_rowscroll );

@@ -134,26 +134,17 @@ public:
 	DECLARE_MACHINE_RESET(model1);
 	DECLARE_VIDEO_START(model1);
 	DECLARE_MACHINE_RESET(model1_vr);
+	UINT32 screen_update_model1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_model1(screen_device &screen, bool state);
+	TIMER_DEVICE_CALLBACK_MEMBER(model1_interrupt);
 };
 
 
 /*----------- defined in machine/model1.c -----------*/
 
 extern const mb86233_cpu_core model1_vr_tgp_config;
-
-
-
 ADDRESS_MAP_EXTERN( model1_vr_tgp_map, 32 );
-
-
 
 void model1_vr_tgp_reset( running_machine &machine );
 void model1_tgp_reset(running_machine &machine, int swa);
-
-
-/*----------- defined in video/model1.c -----------*/
-
-
-SCREEN_UPDATE_RGB32(model1);
-SCREEN_VBLANK(model1);
 

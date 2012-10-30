@@ -55,12 +55,17 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_gridlee(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(irq_off_tick);
+	TIMER_CALLBACK_MEMBER(irq_timer_tick);
+	TIMER_CALLBACK_MEMBER(firq_off_tick);
+	TIMER_CALLBACK_MEMBER(firq_timer_tick);
 };
 
 
 /*----------- defined in audio/gridlee.c -----------*/
 
-WRITE8_DEVICE_HANDLER( gridlee_sound_w );
+DECLARE_WRITE8_DEVICE_HANDLER( gridlee_sound_w );
 
 class gridlee_sound_device : public device_t,
                                   public device_sound_interface
@@ -84,14 +89,3 @@ private:
 };
 
 extern const device_type GRIDLEE;
-
-
-
-/*----------- defined in video/gridlee.c -----------*/
-
-/* video driver data & functions */
-
-
-
-SCREEN_UPDATE_IND16( gridlee );
-

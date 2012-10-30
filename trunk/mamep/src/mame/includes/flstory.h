@@ -114,19 +114,8 @@ public:
 	DECLARE_MACHINE_RESET(rumba);
 	DECLARE_VIDEO_START(rumba);
 	DECLARE_MACHINE_RESET(ta7630);
+	UINT32 screen_update_flstory(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_victnine(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_rumba(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
 };
-
-
-/*----------- defined in machine/flstory.c -----------*/
-
-
-
-/*----------- defined in video/flstory.c -----------*/
-
-
-SCREEN_UPDATE_IND16( flstory );
-
-SCREEN_UPDATE_IND16( victnine );
-
-SCREEN_UPDATE_IND16( rumba );
-

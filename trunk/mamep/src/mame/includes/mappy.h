@@ -49,18 +49,17 @@ public:
 	DECLARE_MACHINE_RESET(mappy);
 	DECLARE_VIDEO_START(mappy);
 	DECLARE_PALETTE_INIT(mappy);
+	UINT32 screen_update_superpac(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_phozon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_mappy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(superpac_main_vblank_irq);
+	INTERRUPT_GEN_MEMBER(pacnpal_main_vblank_irq);
+	INTERRUPT_GEN_MEMBER(phozon_main_vblank_irq);
+	INTERRUPT_GEN_MEMBER(mappy_main_vblank_irq);
+	INTERRUPT_GEN_MEMBER(sub_vblank_irq);
+	INTERRUPT_GEN_MEMBER(sub2_vblank_irq);
+	TIMER_CALLBACK_MEMBER(superpac_io_run);
+	TIMER_CALLBACK_MEMBER(pacnpal_io_run);
+	TIMER_CALLBACK_MEMBER(phozon_io_run);
+	TIMER_CALLBACK_MEMBER(mappy_io_run);
 };
-
-
-/*----------- defined in video/mappy.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( phozon );
-
-
-
-
-
-SCREEN_UPDATE_IND16( superpac );
-SCREEN_UPDATE_IND16( mappy );

@@ -100,13 +100,16 @@ public:
 	DECLARE_MACHINE_RESET(mcr);
 	DECLARE_VIDEO_START(mcr);
 	DECLARE_MACHINE_START(nflfoot);
+	UINT32 screen_update_mcr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(ipu_watchdog_reset);
+	TIMER_DEVICE_CALLBACK_MEMBER(dpoker_hopper_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(dpoker_coin_in_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(mcr_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(mcr_ipu_interrupt);
+	DECLARE_WRITE16_MEMBER(mcr_ipu_sio_transmit);
+	DECLARE_WRITE_LINE_MEMBER(ipu_ctc_interrupt);
+	DECLARE_WRITE8_MEMBER(ipu_break_changed);
 };
-
-
-/*----------- defined in drivers/mcr.c -----------*/
-
-WRITE8_DEVICE_HANDLER( mcr_ipu_sio_transmit );
-
 
 /*----------- defined in machine/mcr.c -----------*/
 
@@ -124,23 +127,7 @@ extern const gfx_layout mcr_sprite_layout;
 extern UINT32 mcr_cpu_board;
 extern UINT32 mcr_sprite_board;
 
-
-
-
-
-TIMER_DEVICE_CALLBACK( mcr_interrupt );
-TIMER_DEVICE_CALLBACK( mcr_ipu_interrupt );
-
-
-
-
 /*----------- defined in video/mcr.c -----------*/
 
 extern INT8 mcr12_sprite_xoffs;
 extern INT8 mcr12_sprite_xoffs_flip;
-
-
-
-
-
-SCREEN_UPDATE_IND16( mcr );

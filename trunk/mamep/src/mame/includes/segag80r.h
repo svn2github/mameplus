@@ -20,8 +20,8 @@ public:
 	required_shared_ptr<UINT8> m_mainram;
 	required_shared_ptr<UINT8> m_videoram;
 
-	optional_device<sn76496_new_device> m_sn1;
-	optional_device<sn76496_new_device> m_sn2;
+	optional_device<sn76496_device> m_sn1;
+	optional_device<sn76496_device> m_sn2;
 
 	UINT8 m_sound_state[2];
 	UINT8 m_sound_rate;
@@ -98,6 +98,18 @@ public:
 	TILE_GET_INFO_MEMBER(bg_get_tile_info);
 	virtual void machine_start();
 	virtual void video_start();
+	UINT32 screen_update_segag80r(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(segag80r_vblank_start);
+	INTERRUPT_GEN_MEMBER(sindbadm_vblank_start);
+	TIMER_CALLBACK_MEMBER(vblank_latch_clear);
+	DECLARE_WRITE8_MEMBER(sega005_sound_a_w);
+	DECLARE_WRITE8_MEMBER(sega005_sound_b_w);
+	DECLARE_WRITE8_MEMBER(monsterb_sound_a_w);
+	DECLARE_WRITE8_MEMBER(monsterb_sound_b_w);
+	DECLARE_READ8_MEMBER(n7751_status_r);
+	DECLARE_WRITE8_MEMBER(n7751_command_w);
+	DECLARE_WRITE8_MEMBER(n7751_rom_control_w);
+	DECLARE_WRITE8_MEMBER(n7751_p2_w);
 };
 
 
@@ -108,9 +120,6 @@ MACHINE_CONFIG_EXTERN( 005_sound_board );
 MACHINE_CONFIG_EXTERN( spaceod_sound_board );
 MACHINE_CONFIG_EXTERN( monsterb_sound_board );
 
-
-
-
 /*----------- defined in video/segag80r.c -----------*/
 
 #define G80_BACKGROUND_NONE			0
@@ -118,21 +127,3 @@ MACHINE_CONFIG_EXTERN( monsterb_sound_board );
 #define G80_BACKGROUND_MONSTERB		2
 #define G80_BACKGROUND_PIGNEWT		3
 #define G80_BACKGROUND_SINDBADM		4
-
-
-INTERRUPT_GEN( segag80r_vblank_start );
-
-
-
-
-SCREEN_UPDATE_IND16( segag80r );
-
-
-
-
-
-
-
-
-INTERRUPT_GEN( sindbadm_vblank_start );
-

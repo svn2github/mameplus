@@ -45,19 +45,12 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_stfight(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(stfight_vb_interrupt);
+	TIMER_CALLBACK_MEMBER(stfight_interrupt_1);
+	DECLARE_WRITE8_MEMBER(stfight_adpcm_control_w);
 };
 
-
 /*----------- defined in machine/stfight.c -----------*/
-
-
-INTERRUPT_GEN( stfight_vb_interrupt );
 void stfight_adpcm_int(device_t *device);
-WRITE8_DEVICE_HANDLER( stfight_adpcm_control_w );
 
-
-/*----------- defined in video/stfight.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( stfight );

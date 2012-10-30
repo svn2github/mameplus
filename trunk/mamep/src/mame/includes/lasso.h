@@ -41,8 +41,8 @@ public:
 	/* devices */
 	cpu_device *m_maincpu;
 	cpu_device *m_audiocpu;
-	optional_device<sn76489_new_device> m_sn_1;
-	optional_device<sn76489_new_device> m_sn_2;
+	optional_device<sn76489_device> m_sn_1;
+	optional_device<sn76489_device> m_sn_2;
 	DECLARE_WRITE8_MEMBER(sound_command_w);
 	DECLARE_WRITE8_MEMBER(pinbo_sound_command_w);
 	DECLARE_READ8_MEMBER(sound_status_r);
@@ -66,19 +66,7 @@ public:
 	DECLARE_VIDEO_START(wwjgtin);
 	DECLARE_PALETTE_INIT(wwjgtin);
 	DECLARE_VIDEO_START(pinbo);
+	UINT32 screen_update_lasso(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_chameleo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_wwjgtin(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/lasso.c -----------*/
-
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( lasso );
-SCREEN_UPDATE_IND16( chameleo );
-SCREEN_UPDATE_IND16( wwjgtin );

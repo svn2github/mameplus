@@ -15,7 +15,7 @@ public:
 	required_shared_ptr<UINT8> m_spriteram;
 	required_shared_ptr<UINT8> m_spriteram2;
 	required_shared_ptr<UINT8> m_videoram;
-	optional_device<sn76489a_new_device> m_sn;
+	optional_device<sn76489a_device> m_sn;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -35,12 +35,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_yiear(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(yiear_vblank_interrupt);
+	INTERRUPT_GEN_MEMBER(yiear_nmi_interrupt);
 };
-
-
-/*----------- defined in video/yiear.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( yiear );

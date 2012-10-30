@@ -125,16 +125,12 @@ public:
 	virtual void video_start();
 	DECLARE_VIDEO_START(gdfs);
 	DECLARE_VIDEO_START(eaglshot);
+	UINT32 screen_update_ssv(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_gdfs(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_eaglshot(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(ssv_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(gdfs_interrupt);
 };
 
 /*----------- defined in video/ssv.c -----------*/
-
 void ssv_enable_video(running_machine &machine, int enable);
-
-
-
-
-
-SCREEN_UPDATE_IND16( ssv );
-SCREEN_UPDATE_IND16( eaglshot );
-SCREEN_UPDATE_IND16( gdfs );

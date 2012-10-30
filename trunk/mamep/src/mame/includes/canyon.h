@@ -22,10 +22,13 @@ class canyon_state : public driver_device
 public:
 	canyon_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram"),
+		m_discrete(*this, "discrete"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
+
+	required_device<discrete_device> m_discrete;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -36,21 +39,13 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_canyon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_WRITE8_MEMBER(canyon_motor_w);
+	DECLARE_WRITE8_MEMBER(canyon_explode_w);
+	DECLARE_WRITE8_MEMBER(canyon_attract_w);
+	DECLARE_WRITE8_MEMBER(canyon_whistle_w);
 };
 
 
 /*----------- defined in audio/canyon.c -----------*/
-
-WRITE8_DEVICE_HANDLER( canyon_motor_w );
-WRITE8_DEVICE_HANDLER( canyon_explode_w );
-WRITE8_DEVICE_HANDLER( canyon_attract_w );
-WRITE8_DEVICE_HANDLER( canyon_whistle_w );
-
 DISCRETE_SOUND_EXTERN( canyon );
-
-
-/*----------- defined in video/canyon.c -----------*/
-
-
-SCREEN_UPDATE_IND16( canyon );
-

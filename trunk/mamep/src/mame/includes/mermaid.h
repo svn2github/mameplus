@@ -77,15 +77,7 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_PALETTE_INIT(rougien);
+	UINT32 screen_update_mermaid(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_mermaid(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
-
-
-/*----------- defined in video/mermaid.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( mermaid );
-SCREEN_VBLANK( mermaid );

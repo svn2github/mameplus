@@ -39,15 +39,6 @@ public:
 	virtual void machine_start();
 	DECLARE_VIDEO_START(bigkarnk);
 	DECLARE_VIDEO_START(maniacsq);
+	UINT32 screen_update_bigkarnk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_maniacsq(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-
-/*----------- defined in video/gaelco.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( bigkarnk );
-SCREEN_UPDATE_IND16( maniacsq );

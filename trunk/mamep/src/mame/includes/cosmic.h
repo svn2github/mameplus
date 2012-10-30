@@ -69,21 +69,11 @@ public:
 	DECLARE_PALETTE_INIT(cosmica);
 	DECLARE_PALETTE_INIT(magspot);
 	DECLARE_PALETTE_INIT(nomnlnd);
+	UINT32 screen_update_cosmicg(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_panic(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cosmica(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_magspot(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_devzone(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_nomnlnd(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(panic_scanline);
 };
-
-
-/*----------- defined in video/cosmic.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( panic );
-SCREEN_UPDATE_IND16( magspot );
-SCREEN_UPDATE_IND16( devzone );
-SCREEN_UPDATE_IND16( cosmica );
-SCREEN_UPDATE_IND16( cosmicg );
-SCREEN_UPDATE_IND16( nomnlnd );

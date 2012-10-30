@@ -40,14 +40,6 @@ public:
 	virtual void palette_init();
 	DECLARE_VIDEO_START(popeye);
 	DECLARE_PALETTE_INIT(popeyebl);
+	UINT32 screen_update_popeye(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(popeye_interrupt);
 };
-
-
-/*----------- defined in video/popeye.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( popeye );

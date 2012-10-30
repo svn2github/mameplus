@@ -13,6 +13,7 @@ public:
 		: atarigen_state(mconfig, type, tag) { }
 
 	UINT8			m_alpha_tile_bank;
+	virtual void update_interrupts();
 	DECLARE_READ16_MEMBER(special_port2_r);
 	DECLARE_WRITE16_MEMBER(latch_w);
 	DECLARE_READ16_MEMBER(thunderj_atarivc_r);
@@ -24,10 +25,5 @@ public:
 	DECLARE_MACHINE_START(thunderj);
 	DECLARE_MACHINE_RESET(thunderj);
 	DECLARE_VIDEO_START(thunderj);
+	UINT32 screen_update_thunderj(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/thunderj.c -----------*/
-
-
-SCREEN_UPDATE_IND16( thunderj );

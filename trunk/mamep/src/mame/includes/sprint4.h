@@ -38,14 +38,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_sprint4(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_sprint4(screen_device &screen, bool state);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
 };
-
-
-/*----------- defined in video/sprint4.c -----------*/
-
-
-
-SCREEN_VBLANK( sprint4 );
-
-SCREEN_UPDATE_IND16( sprint4 );
-

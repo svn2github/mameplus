@@ -53,12 +53,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_djmain(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vb_interrupt);
+	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 };
 
-
 /*----------- defined in video/djmain.c -----------*/
-
-SCREEN_UPDATE_RGB32( djmain );
-
-
 void djmain_tile_callback(running_machine& machine, int layer, int *code, int *color, int *flags);

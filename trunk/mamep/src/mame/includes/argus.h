@@ -80,21 +80,9 @@ public:
 	DECLARE_VIDEO_RESET(valtric);
 	DECLARE_VIDEO_START(butasan);
 	DECLARE_VIDEO_RESET(butasan);
+	UINT32 screen_update_argus(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_valtric(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_butasan(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(argus_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(butasan_scanline);
 };
-
-
-/*----------- defined in video/argus.c -----------*/
-
-
-
-
-
-
-
-SCREEN_UPDATE_RGB32( argus );
-SCREEN_UPDATE_RGB32( valtric );
-SCREEN_UPDATE_RGB32( butasan );
-
-
-
-

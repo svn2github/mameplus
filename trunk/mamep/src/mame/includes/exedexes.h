@@ -48,13 +48,6 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_exedexes(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(exedexes_scanline);
 };
-
-
-
-/*----------- defined in video/exedexes.c -----------*/
-
-
-extern PALETTE_INIT( exedexes );
-extern VIDEO_START( exedexes );
-extern SCREEN_UPDATE_IND16( exedexes );

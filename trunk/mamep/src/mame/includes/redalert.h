@@ -37,20 +37,25 @@ public:
 	DECLARE_WRITE8_MEMBER(demoneye_audio_command_w);
 	DECLARE_VIDEO_START(redalert);
 	DECLARE_VIDEO_START(ww3);
+	UINT32 screen_update_redalert(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_demoneye(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_panther(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(redalert_vblank_interrupt);
+	DECLARE_WRITE8_MEMBER(redalert_analog_w);
+	DECLARE_WRITE8_MEMBER(redalert_AY8910_w);
+	DECLARE_WRITE_LINE_MEMBER(sod_callback);
+	DECLARE_READ_LINE_MEMBER(sid_callback);
+	DECLARE_WRITE8_MEMBER(demoneye_ay8910_latch_1_w);
+	DECLARE_READ8_MEMBER(demoneye_ay8910_latch_2_r);
+	DECLARE_WRITE8_MEMBER(demoneye_ay8910_data_w);
 };
-
-
 /*----------- defined in audio/redalert.c -----------*/
-
-
 
 MACHINE_CONFIG_EXTERN( redalert_audio );
 MACHINE_CONFIG_EXTERN( ww3_audio );
 MACHINE_CONFIG_EXTERN( demoneye_audio );
 
-
 /*----------- defined in video/redalert.c -----------*/
-
 
 MACHINE_CONFIG_EXTERN( ww3_video );
 MACHINE_CONFIG_EXTERN( panther_video );

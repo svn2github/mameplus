@@ -16,11 +16,15 @@ public:
 	UINT8			m_vindctr2_screen_refresh;
 	UINT8			m_playfield_tile_bank;
 	UINT8			m_playfield_color_bank;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_READ16_MEMBER(port4_r);
 	DECLARE_WRITE16_MEMBER(sound_reset_w);
 	DECLARE_READ8_MEMBER(switch_6502_r);
 	DECLARE_WRITE8_MEMBER(sound_ctl_w);
 	DECLARE_WRITE8_MEMBER(mixer_w);
+	void swap_memory(void *ptr1, void *ptr2, int bytes);
+	void common_init(int slapstic, int vindctr2);
 	DECLARE_DRIVER_INIT(gauntlet2);
 	DECLARE_DRIVER_INIT(gaunt2p);
 	DECLARE_DRIVER_INIT(gauntlet);
@@ -30,13 +34,9 @@ public:
 	DECLARE_MACHINE_START(gauntlet);
 	DECLARE_MACHINE_RESET(gauntlet);
 	DECLARE_VIDEO_START(gauntlet);
+	UINT32 screen_update_gauntlet(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
-
 /*----------- defined in video/gauntlet.c -----------*/
-
-WRITE16_HANDLER( gauntlet_xscroll_w );
-WRITE16_HANDLER( gauntlet_yscroll_w );
-
-
-SCREEN_UPDATE_IND16( gauntlet );
+DECLARE_WRITE16_HANDLER( gauntlet_xscroll_w );
+DECLARE_WRITE16_HANDLER( gauntlet_yscroll_w );

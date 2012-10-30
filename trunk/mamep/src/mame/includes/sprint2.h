@@ -64,22 +64,12 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_sprint2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_sprint2(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(sprint2);
 };
 
-
 /*----------- defined in audio/sprint2.c -----------*/
-
 DISCRETE_SOUND_EXTERN( sprint2 );
 DISCRETE_SOUND_EXTERN( sprint1 );
 DISCRETE_SOUND_EXTERN( dominos );
-
-
-/*----------- defined in video/sprint2.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( sprint2 );
-
-SCREEN_VBLANK( sprint2 );
-

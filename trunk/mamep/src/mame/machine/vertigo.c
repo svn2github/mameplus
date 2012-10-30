@@ -17,8 +17,8 @@
  *
  *************************************/
 
-static WRITE_LINE_DEVICE_HANDLER( v_irq4_w );
-static WRITE_LINE_DEVICE_HANDLER( v_irq3_w );
+
+
 
 
 
@@ -43,11 +43,11 @@ const struct pit8253_config vertigo_pit8254_config =
 		{
 			240000,
 			DEVCB_NULL,
-			DEVCB_LINE(v_irq4_w)
+			DEVCB_DRIVER_LINE_MEMBER(vertigo_state,v_irq4_w)
 		}, {
 			240000,
 			DEVCB_NULL,
-			DEVCB_LINE(v_irq3_w)
+			DEVCB_DRIVER_LINE_MEMBER(vertigo_state,v_irq3_w)
 		}, {
 			240000,
 			DEVCB_NULL,
@@ -87,21 +87,20 @@ static void update_irq_encoder(running_machine &machine, int line, int state)
 }
 
 
-static WRITE_LINE_DEVICE_HANDLER( v_irq4_w )
+WRITE_LINE_MEMBER(vertigo_state::v_irq4_w)
 {
-	vertigo_state *drvstate = device->machine().driver_data<vertigo_state>();
-	update_irq_encoder(device->machine(), INPUT_LINE_IRQ4, state);
-	vertigo_vproc(device->machine(), device->machine().device<cpu_device>("maincpu")->attotime_to_cycles(device->machine().time() - drvstate->m_irq4_time), state);
-	drvstate->m_irq4_time = device->machine().time();
+	update_irq_encoder(machine(), INPUT_LINE_IRQ4, state);
+	vertigo_vproc(machine(), machine().device<cpu_device>("maincpu")->attotime_to_cycles(machine().time() - m_irq4_time), state);
+	m_irq4_time = machine().time();
 }
 
 
-static WRITE_LINE_DEVICE_HANDLER( v_irq3_w )
+WRITE_LINE_MEMBER(vertigo_state::v_irq3_w)
 {
 	if (state)
-		device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 
-	update_irq_encoder(device->machine(), INPUT_LINE_IRQ3, state);
+	update_irq_encoder(machine(), INPUT_LINE_IRQ3, state);
 }
 
 
@@ -140,11 +139,11 @@ READ16_MEMBER(vertigo_state::vertigo_coin_r)
 }
 
 
-INTERRUPT_GEN( vertigo_interrupt )
+INTERRUPT_GEN_MEMBER(vertigo_state::vertigo_interrupt)
 {
 	/* Coin inputs cause IRQ6 */
-	if ((device->machine().root_device().ioport("COIN")->read() & 0x7) < 0x7)
-		update_irq_encoder(device->machine(), INPUT_LINE_IRQ6, ASSERT_LINE);
+	if ((machine().root_device().ioport("COIN")->read() & 0x7) < 0x7)
+		update_irq_encoder(machine(), INPUT_LINE_IRQ6, ASSERT_LINE);
 }
 
 
@@ -165,23 +164,22 @@ WRITE16_MEMBER(vertigo_state::vertigo_wsot_w)
 }
 
 
-static TIMER_CALLBACK( sound_command_w )
+TIMER_CALLBACK_MEMBER(vertigo_state::sound_command_w)
 {
-	vertigo_state *state = machine.driver_data<vertigo_state>();
-	exidy440_sound_command(state->m_custom, param);
+	exidy440_sound_command(m_custom, param);
 
 	/* It is important that the sound cpu ACKs the sound command
        quickly. Otherwise the main CPU gives up with sound. Boosting
        the interleave for a while helps. */
 
-	machine.scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 
 WRITE16_MEMBER(vertigo_state::vertigo_audio_w)
 {
 	if (ACCESSING_BITS_0_7)
-		machine().scheduler().synchronize(FUNC(sound_command_w), data & 0xff);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(vertigo_state::sound_command_w),this), data & 0xff);
 }
 
 

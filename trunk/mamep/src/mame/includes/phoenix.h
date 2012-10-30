@@ -35,6 +35,9 @@ public:
 	DECLARE_PALETTE_INIT(phoenix);
 	DECLARE_PALETTE_INIT(survival);
 	DECLARE_PALETTE_INIT(pleiads);
+	UINT32 screen_update_phoenix(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_READ8_MEMBER(survival_protection_r);
+	DECLARE_READ_LINE_MEMBER(survival_sid_callback);
 };
 
 
@@ -55,8 +58,8 @@ public:
 
 DISCRETE_SOUND_EXTERN( phoenix );
 
-WRITE8_DEVICE_HANDLER( phoenix_sound_control_a_w );
-WRITE8_DEVICE_HANDLER( phoenix_sound_control_b_w );
+DECLARE_WRITE8_DEVICE_HANDLER( phoenix_sound_control_a_w );
+DECLARE_WRITE8_DEVICE_HANDLER( phoenix_sound_control_b_w );
 
 class phoenix_sound_device : public device_t,
                                   public device_sound_interface
@@ -80,19 +83,3 @@ private:
 };
 
 extern const device_type PHOENIX;
-
-
-
-/*----------- defined in video/phoenix.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( phoenix );
-
-
-READ8_DEVICE_HANDLER( survival_protection_r );
-
-READ_LINE_DEVICE_HANDLER( survival_sid_callback );
-

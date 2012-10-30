@@ -7,18 +7,24 @@
 
 ***************************************************************************/
 
+#include "video/vsystem_spr2.h"
+
 class fromance_state : public driver_device
 {
 public:
 	fromance_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_videoram(*this, "videoram"),
-		  m_spriteram(*this, "spriteram") { }
+		m_videoram(*this, "videoram"),
+		m_spriteram(*this, "spriteram"),
+		m_spr_old(*this, "vsystem_spr_old")
+	{ }
 
 	/* memory pointers (used by pipedrm) */
 	optional_shared_ptr<UINT8> m_videoram;
 	optional_shared_ptr<UINT8> m_spriteram;
 //  UINT8 *  m_paletteram;    // currently this uses generic palette handling
+
+	optional_device<vsystem_spr2_device> m_spr_old; // only used by pipe dream, split this state up and clean things...
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -84,19 +90,8 @@ public:
 	DECLARE_MACHINE_RESET(pipedrm);
 	DECLARE_VIDEO_START(pipedrm);
 	DECLARE_VIDEO_START(hatris);
+	UINT32 screen_update_fromance(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_pipedrm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(deferred_commanddata_w);
+	TIMER_CALLBACK_MEMBER(crtc_interrupt_gen);
 };
-
-
-/*----------- defined in video/fromance.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( fromance );
-SCREEN_UPDATE_IND16( pipedrm );
-
-
-
-
-

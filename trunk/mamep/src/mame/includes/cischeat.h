@@ -80,19 +80,11 @@ public:
 	DECLARE_VIDEO_START(bigrun);
 	DECLARE_VIDEO_START(f1gpstar);
 	DECLARE_VIDEO_START(cischeat);
+	UINT32 screen_update_bigrun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_scudhamm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cischeat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_f1gpstar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(bigrun_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(scudhamm_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(armchamp2_scanline);
 };
-
-
-/*----------- defined in video/cischeat.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( bigrun );
-SCREEN_UPDATE_IND16( cischeat );
-SCREEN_UPDATE_IND16( f1gpstar );
-SCREEN_UPDATE_IND16( scudhamm );

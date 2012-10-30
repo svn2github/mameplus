@@ -197,6 +197,9 @@ public:
 	DECLARE_MACHINE_RESET(model3_20);
 	DECLARE_MACHINE_START(model3_21);
 	DECLARE_MACHINE_RESET(model3_21);
+	UINT32 screen_update_model3(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(model3_sound_timer_tick);
+	TIMER_DEVICE_CALLBACK_MEMBER(model3_interrupt);
 };
 
 
@@ -215,13 +218,9 @@ void model3_tap_reset(running_machine &machine);
 
 /*----------- defined in video/model3.c -----------*/
 
-
-
-SCREEN_UPDATE_IND16(model3);
-
 void real3d_display_list_end(running_machine &machine);
-void real3d_display_list1_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap);
-void real3d_display_list2_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap);
-void real3d_vrom_texture_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap);
-void real3d_texture_fifo_dma(address_space *space, UINT32 src, int length, int byteswap);
-void real3d_polygon_ram_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap);
+void real3d_display_list1_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap);
+void real3d_display_list2_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap);
+void real3d_vrom_texture_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap);
+void real3d_texture_fifo_dma(address_space &space, UINT32 src, int length, int byteswap);
+void real3d_polygon_ram_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap);

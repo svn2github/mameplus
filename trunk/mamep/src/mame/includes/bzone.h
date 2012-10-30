@@ -5,6 +5,7 @@
 *************************************************************************/
 
 #include "devlegcy.h"
+#include "sound/discrete.h"
 
 #define BZONE_MASTER_CLOCK (XTAL_12_096MHz)
 #define BZONE_CLOCK_3KHZ  (MASTER_CLOCK / 4096)
@@ -13,7 +14,10 @@ class bzone_state : public driver_device
 {
 public:
 	bzone_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_discrete(*this, "discrete") { }
+
+	optional_device<discrete_device> m_discrete;
 
 	UINT8 m_analog_data;
 	UINT8 m_rb_input_select;
@@ -26,18 +30,17 @@ public:
 	DECLARE_DRIVER_INIT(bradley);
 	virtual void machine_start();
 	DECLARE_MACHINE_START(redbaron);
+	INTERRUPT_GEN_MEMBER(bzone_interrupt);
+	DECLARE_WRITE8_MEMBER(bzone_sounds_w);
 };
 
 
 /*----------- defined in audio/bzone.c -----------*/
-
-WRITE8_DEVICE_HANDLER( bzone_sounds_w );
-
 MACHINE_CONFIG_EXTERN( bzone_audio );
 
 /*----------- defined in audio/redbaron.c -----------*/
 
-WRITE8_DEVICE_HANDLER( redbaron_sounds_w );
+DECLARE_WRITE8_DEVICE_HANDLER( redbaron_sounds_w );
 
 class redbaron_sound_device : public device_t,
                                   public device_sound_interface

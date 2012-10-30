@@ -29,6 +29,8 @@ public:
 	UINT16			m_last_write_offset;
 
 	device_t *		m_rle;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_READ32_MEMBER(special_port2_r);
 	DECLARE_READ32_MEMBER(special_port3_r);
 	DECLARE_READ32_MEMBER(a2d_data_r);
@@ -46,15 +48,11 @@ public:
 	DECLARE_MACHINE_START(atarigx2);
 	DECLARE_MACHINE_RESET(atarigx2);
 	DECLARE_VIDEO_START(atarigx2);
+	UINT32 screen_update_atarigx2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_atarigx2(screen_device &screen, bool state);
 };
 
 
 /*----------- defined in video/atarigx2.c -----------*/
-
-
-SCREEN_VBLANK( atarigx2 );
-SCREEN_UPDATE_IND16( atarigx2 );
-
-WRITE16_HANDLER( atarigx2_mo_control_w );
-
+DECLARE_WRITE16_HANDLER( atarigx2_mo_control_w );
 void atarigx2_scanline_update(screen_device &screen, int scanline);

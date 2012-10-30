@@ -51,20 +51,10 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_pitnrun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(pitnrun_nmi_source);
+	TIMER_CALLBACK_MEMBER(pitnrun_mcu_real_data_r);
+	TIMER_CALLBACK_MEMBER(pitnrun_mcu_real_data_w);
+	TIMER_CALLBACK_MEMBER(pitnrun_mcu_data_real_r);
+	TIMER_CALLBACK_MEMBER(pitnrun_mcu_status_real_w);
 };
-
-
-/*----------- defined in machine/pitnrun.c -----------*/
-
-
-
-
-
-
-
-/*----------- defined in video/pitnrun.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16(pitnrun);

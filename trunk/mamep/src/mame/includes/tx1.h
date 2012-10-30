@@ -168,26 +168,30 @@ public:
 	DECLARE_VIDEO_START(buggyboy);
 	DECLARE_PALETTE_INIT(buggyboy);
 	DECLARE_VIDEO_START(buggybjr);
+	UINT32 screen_update_tx1_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tx1_middle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tx1_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_buggyboy_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_buggyboy_middle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_buggyboy_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_buggybjr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_tx1(screen_device &screen, bool state);
+	void screen_eof_buggyboy(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(z80_irq);
+	TIMER_CALLBACK_MEMBER(interrupt_callback);
 };
 
-
-/*----------- defined in machine/tx1.c -----------*/
-
-
-
-
-
 /*----------- defined in audio/tx1.c -----------*/
-READ8_DEVICE_HANDLER( tx1_pit8253_r );
-WRITE8_DEVICE_HANDLER( tx1_pit8253_w );
+DECLARE_READ8_DEVICE_HANDLER( tx1_pit8253_r );
+DECLARE_WRITE8_DEVICE_HANDLER( tx1_pit8253_w );
 
-WRITE8_DEVICE_HANDLER( bb_ym1_a_w );
-WRITE8_DEVICE_HANDLER( bb_ym2_a_w );
-WRITE8_DEVICE_HANDLER( bb_ym2_b_w );
+DECLARE_WRITE8_DEVICE_HANDLER( bb_ym1_a_w );
+DECLARE_WRITE8_DEVICE_HANDLER( bb_ym2_a_w );
+DECLARE_WRITE8_DEVICE_HANDLER( bb_ym2_b_w );
 
 
-WRITE8_DEVICE_HANDLER( tx1_ay8910_a_w );
-WRITE8_DEVICE_HANDLER( tx1_ay8910_b_w );
+DECLARE_WRITE8_DEVICE_HANDLER( tx1_ay8910_a_w );
+DECLARE_WRITE8_DEVICE_HANDLER( tx1_ay8910_b_w );
 
 class tx1_sound_device : public device_t,
                          public device_sound_interface
@@ -231,23 +235,3 @@ private:
 };
 
 extern const device_type BUGGYBOY;
-
-
-/*----------- defined in video/tx1.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( tx1_left );
-SCREEN_UPDATE_IND16( tx1_middle );
-SCREEN_UPDATE_IND16( tx1_right );
-SCREEN_VBLANK( tx1 );
-
-
-
-SCREEN_UPDATE_IND16( buggyboy_left );
-SCREEN_UPDATE_IND16( buggyboy_middle );
-SCREEN_UPDATE_IND16( buggyboy_right );
-SCREEN_VBLANK( buggyboy );
-
-
-SCREEN_UPDATE_IND16( buggybjr );

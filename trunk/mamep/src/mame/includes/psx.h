@@ -25,15 +25,10 @@ public:
 
 // mame/machine/psx.c
 extern void psx_driver_init( running_machine &machine );
-WRITE32_HANDLER( psx_com_delay_w );
-READ32_HANDLER( psx_com_delay_r );
-extern void psx_irq_set( running_machine &, UINT32 );
+DECLARE_WRITE32_HANDLER( psx_com_delay_w );
+DECLARE_READ32_HANDLER( psx_com_delay_r );
 extern void psx_sio_install_handler( running_machine &, int, psx_sio_handler );
 extern void psx_sio_input( running_machine &, int, int, int );
-
-READ32_HANDLER( psx_gpu_r );
-WRITE32_HANDLER( psx_gpu_w );
-extern void psx_lightgun_set( running_machine &, int, int );
 
 // emu/video/psx.c
 PALETTE_INIT( psx );

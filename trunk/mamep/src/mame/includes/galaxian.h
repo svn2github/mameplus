@@ -223,22 +223,15 @@ public:
 	virtual void palette_init();
 	DECLARE_PALETTE_INIT(moonwar);
 	void tenspot_set_game_bank(running_machine& machine, int bank, int from_game);
+	UINT32 screen_update_galaxian(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(interrupt_gen);
+	INTERRUPT_GEN_MEMBER(fakechange_interrupt_gen);
+	TIMER_DEVICE_CALLBACK_MEMBER(checkmaj_irq0_gen);
+	TIMER_DEVICE_CALLBACK_MEMBER(galaxian_stars_blink_timer);
 };
 
 
 /*----------- defined in video/galaxian.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_RGB32( galaxian );
-
-
-
-
-
-TIMER_DEVICE_CALLBACK( galaxian_stars_blink_timer );
 
 /* special purpose background rendering */
 void galaxian_draw_background(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect);

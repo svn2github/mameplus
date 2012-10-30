@@ -103,17 +103,10 @@ public:
 	DECLARE_VIDEO_START(fromancr);
 	DECLARE_MACHINE_START(fromanc4);
 	DECLARE_VIDEO_START(fromanc4);
+	UINT32 screen_update_fromanc2_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_fromanc2_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(fromanc2_interrupt);
 };
 
-
-
-
 /*----------- defined in video/fromanc2.c -----------*/
-
-SCREEN_UPDATE_IND16( fromanc2_left );
-SCREEN_UPDATE_IND16( fromanc2_right );
-
-
-
-
 void fromancr_gfxbank_w(running_machine &machine, int data);

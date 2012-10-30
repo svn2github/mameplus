@@ -87,15 +87,6 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(f1superb);
+	UINT32 screen_update_ms32(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(ms32_interrupt);
 };
-
-
-/*----------- defined in video/ms32.c -----------*/
-
-//extern UINT32 *ms32_fce00000;
-
-
-
-
-
-SCREEN_UPDATE_RGB32( ms32 );

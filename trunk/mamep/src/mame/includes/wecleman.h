@@ -76,15 +76,13 @@ public:
 	DECLARE_VIDEO_START(wecleman);
 	DECLARE_MACHINE_RESET(hotchase);
 	DECLARE_VIDEO_START(hotchase);
+	UINT32 screen_update_wecleman(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_hotchase(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(hotchase_sound_timer);
+	TIMER_DEVICE_CALLBACK_MEMBER(wecleman_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(hotchase_scanline);
 };
 
-
 /*----------- defined in video/wecleman.c -----------*/
-
-SCREEN_UPDATE_RGB32( wecleman );
-
-SCREEN_UPDATE_IND16( hotchase );
-
-
 void hotchase_zoom_callback_0(running_machine &machine, int *code,int *color,int *flags);
 void hotchase_zoom_callback_1(running_machine &machine, int *code,int *color,int *flags);

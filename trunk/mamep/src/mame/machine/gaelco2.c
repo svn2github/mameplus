@@ -186,18 +186,17 @@ WRITE16_MEMBER(gaelco2_state::bang_clr_gun_int_w)
 	m_clr_gun_int = 1;
 }
 
-TIMER_DEVICE_CALLBACK( bang_irq )
+TIMER_DEVICE_CALLBACK_MEMBER(gaelco2_state::bang_irq)
 {
-	gaelco2_state *state = timer.machine().driver_data<gaelco2_state>();
 	int scanline = param;
 
 	if (scanline == 256){
-		state->m_maincpu->set_input_line(2, HOLD_LINE);
-		state->m_clr_gun_int = 0;
+		m_maincpu->set_input_line(2, HOLD_LINE);
+		m_clr_gun_int = 0;
 	}
 
-	if ((scanline % 64) == 0 && state->m_clr_gun_int)
-		state->m_maincpu->set_input_line(4, HOLD_LINE);
+	if ((scanline % 64) == 0 && m_clr_gun_int)
+		m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 /***************************************************************************
@@ -261,24 +260,24 @@ WRITE16_MEMBER(gaelco2_state::wrally2_adc_cs)
 
 ***************************************************************************/
 
-WRITE16_DEVICE_HANDLER( gaelco2_eeprom_cs_w )
+WRITE16_MEMBER(gaelco2_state::gaelco2_eeprom_cs_w)
 {
 	/* bit 0 is CS (active low) */
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
+	eeprom_device *eeprom = downcast<eeprom_device *>(machine().device("eeprom"));
 	eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 }
 
-WRITE16_DEVICE_HANDLER( gaelco2_eeprom_sk_w )
+WRITE16_MEMBER(gaelco2_state::gaelco2_eeprom_sk_w)
 {
 	/* bit 0 is SK (active high) */
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
+	eeprom_device *eeprom = downcast<eeprom_device *>(machine().device("eeprom"));
 	eeprom->set_clock_line((data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
 }
 
-WRITE16_DEVICE_HANDLER( gaelco2_eeprom_data_w )
+WRITE16_MEMBER(gaelco2_state::gaelco2_eeprom_data_w)
 {
 	/* bit 0 is EEPROM data (DIN) */
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
+	eeprom_device *eeprom = downcast<eeprom_device *>(machine().device("eeprom"));
 	eeprom->write_bit(data & 0x01);
 }
 

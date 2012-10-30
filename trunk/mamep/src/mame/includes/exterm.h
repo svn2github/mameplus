@@ -35,15 +35,14 @@ public:
 	DECLARE_WRITE8_MEMBER(ym2151_data_latch_w);
 	DECLARE_WRITE8_MEMBER(sound_slave_dac_w);
 	virtual void palette_init();
+	TIMER_CALLBACK_MEMBER(sound_delayed_w);
+	TIMER_DEVICE_CALLBACK_MEMBER(master_sound_nmi_callback);
 };
 
-
 /*----------- defined in video/exterm.c -----------*/
-
-
 void exterm_scanline_update(screen_device &screen, bitmap_ind16 &bitmap, int scanline, const tms34010_display_params *params);
 
-void exterm_to_shiftreg_master(address_space *space, UINT32 address, UINT16* shiftreg);
-void exterm_from_shiftreg_master(address_space *space, UINT32 address, UINT16* shiftreg);
-void exterm_to_shiftreg_slave(address_space *space, UINT32 address, UINT16* shiftreg);
-void exterm_from_shiftreg_slave(address_space *space, UINT32 address, UINT16* shiftreg);
+void exterm_to_shiftreg_master(address_space &space, UINT32 address, UINT16* shiftreg);
+void exterm_from_shiftreg_master(address_space &space, UINT32 address, UINT16* shiftreg);
+void exterm_to_shiftreg_slave(address_space &space, UINT32 address, UINT16* shiftreg);
+void exterm_from_shiftreg_slave(address_space &space, UINT32 address, UINT16* shiftreg);

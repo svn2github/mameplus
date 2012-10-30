@@ -68,34 +68,19 @@ public:
 	virtual void palette_init();
 	DECLARE_VIDEO_START(razmataz);
 	DECLARE_VIDEO_START(congo);
+	UINT32 screen_update_zaxxon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_futspy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_razmataz(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_congo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_int);
+	DECLARE_WRITE8_MEMBER(zaxxon_sound_a_w);
+	DECLARE_WRITE8_MEMBER(zaxxon_sound_b_w);
+	DECLARE_WRITE8_MEMBER(zaxxon_sound_c_w);
+	DECLARE_WRITE8_MEMBER(congo_sound_b_w);
+	DECLARE_WRITE8_MEMBER(congo_sound_c_w);
 };
 
 
 /*----------- defined in audio/zaxxon.c -----------*/
-
-WRITE8_DEVICE_HANDLER( zaxxon_sound_a_w );
-WRITE8_DEVICE_HANDLER( zaxxon_sound_b_w );
-WRITE8_DEVICE_HANDLER( zaxxon_sound_c_w );
-
-WRITE8_DEVICE_HANDLER( congo_sound_b_w );
-WRITE8_DEVICE_HANDLER( congo_sound_c_w );
-
 MACHINE_CONFIG_EXTERN( zaxxon_samples );
 MACHINE_CONFIG_EXTERN( congo_samples );
-
-
-/*----------- defined in video/zaxxon.c -----------*/
-
-
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( zaxxon );
-SCREEN_UPDATE_IND16( razmataz );
-SCREEN_UPDATE_IND16( congo );
-SCREEN_UPDATE_IND16( futspy );

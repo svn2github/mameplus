@@ -76,36 +76,23 @@ public:
 	DECLARE_MACHINE_RESET(redclash);
 	DECLARE_VIDEO_START(redclash);
 	DECLARE_PALETTE_INIT(redclash);
+	UINT32 screen_update_ladybug(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_sraider(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_redclash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_sraider(screen_device &screen, bool state);
+	void screen_eof_redclash(screen_device &screen, bool state);
 };
-
-
-/*----------- defined in video/ladybug.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( ladybug );
-
-
-
-SCREEN_UPDATE_IND16( sraider );
-SCREEN_VBLANK( sraider );
 
 /*----------- defined in video/redclash.c -----------*/
 
-WRITE8_HANDLER( redclash_videoram_w );
-WRITE8_HANDLER( redclash_gfxbank_w );
-WRITE8_HANDLER( redclash_flipscreen_w );
+DECLARE_WRITE8_HANDLER( redclash_videoram_w );
+DECLARE_WRITE8_HANDLER( redclash_gfxbank_w );
+DECLARE_WRITE8_HANDLER( redclash_flipscreen_w );
 
-WRITE8_HANDLER( redclash_star0_w );
-WRITE8_HANDLER( redclash_star1_w );
-WRITE8_HANDLER( redclash_star2_w );
-WRITE8_HANDLER( redclash_star_reset_w );
-
-
-
-SCREEN_UPDATE_IND16( redclash );
-SCREEN_VBLANK( redclash );
+DECLARE_WRITE8_HANDLER( redclash_star0_w );
+DECLARE_WRITE8_HANDLER( redclash_star1_w );
+DECLARE_WRITE8_HANDLER( redclash_star2_w );
+DECLARE_WRITE8_HANDLER( redclash_star_reset_w );
 
 /* sraider uses the zerohour star generator board */
 void redclash_set_stars_enable(running_machine &machine, UINT8 on);

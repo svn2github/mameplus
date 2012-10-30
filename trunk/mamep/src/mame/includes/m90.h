@@ -40,14 +40,12 @@ public:
 	virtual void video_start();
 	DECLARE_VIDEO_START(bomblord);
 	DECLARE_VIDEO_START(dynablsb);
+	UINT32 screen_update_m90(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_bomblord(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_dynablsb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(fake_nmi);
+	INTERRUPT_GEN_MEMBER(bomblord_fake_nmi);
+	INTERRUPT_GEN_MEMBER(m90_interrupt);
+	INTERRUPT_GEN_MEMBER(dynablsb_interrupt);
+	INTERRUPT_GEN_MEMBER(bomblord_interrupt);
 };
-
-
-/*----------- defined in video/m90.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( m90 );
-SCREEN_UPDATE_IND16( dynablsb );
-SCREEN_UPDATE_IND16( bomblord );

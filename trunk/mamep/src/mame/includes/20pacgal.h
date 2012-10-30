@@ -54,10 +54,11 @@ public:
 	DECLARE_DRIVER_INIT(20pacgal);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_20pacgal(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	void set_bankptr();
 };
 
 
-
 /*----------- defined in video/20pacgal.c -----------*/
-
 MACHINE_CONFIG_EXTERN( 20pacgal_video );

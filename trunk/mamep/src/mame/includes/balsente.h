@@ -192,37 +192,17 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_balsente(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(balsente_update_analog_inputs);
+	TIMER_CALLBACK_MEMBER(irq_off);
+	TIMER_CALLBACK_MEMBER(m6850_data_ready_callback);
+	TIMER_CALLBACK_MEMBER(m6850_w_callback);
+	TIMER_CALLBACK_MEMBER(adc_finished);
+	TIMER_DEVICE_CALLBACK_MEMBER(balsente_interrupt_timer);
+	TIMER_DEVICE_CALLBACK_MEMBER(balsente_counter_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(balsente_clock_counter_0_ff);
 };
 
 
 /*----------- defined in machine/balsente.c -----------*/
-
-TIMER_DEVICE_CALLBACK( balsente_interrupt_timer );
-
-
-
-
 void balsente_noise_gen(device_t *device, int count, short *buffer);
-
-
-
-
-
-
-INTERRUPT_GEN( balsente_update_analog_inputs );
-
-TIMER_DEVICE_CALLBACK( balsente_counter_callback );
-
-
-TIMER_DEVICE_CALLBACK( balsente_clock_counter_0_ff );
-
-
-
-
-
-
-/*----------- defined in video/balsente.c -----------*/
-
-
-SCREEN_UPDATE_IND16( balsente );
-

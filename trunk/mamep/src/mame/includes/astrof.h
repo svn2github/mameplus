@@ -68,6 +68,9 @@ public:
 	DECLARE_MACHINE_RESET(abattle);
 	DECLARE_MACHINE_START(spfghmk2);
 	DECLARE_MACHINE_START(tomahawk);
+	UINT32 screen_update_astrof(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tomahawk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(irq_callback);
 };
 
 /*----------- defined in audio/astrof.c -----------*/

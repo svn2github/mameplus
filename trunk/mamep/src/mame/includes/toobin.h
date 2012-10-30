@@ -17,6 +17,7 @@ public:
 
 	double			m_brightness;
 	bitmap_ind16 m_pfbitmap;
+	virtual void update_interrupts();
 	DECLARE_WRITE16_MEMBER(interrupt_scan_w);
 	DECLARE_READ16_MEMBER(special_port1_r);
 	DECLARE_DRIVER_INIT(toobin);
@@ -25,16 +26,14 @@ public:
 	DECLARE_MACHINE_START(toobin);
 	DECLARE_MACHINE_RESET(toobin);
 	DECLARE_VIDEO_START(toobin);
+	UINT32 screen_update_toobin(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 
 /*----------- defined in video/toobin.c -----------*/
 
-WRITE16_HANDLER( toobin_paletteram_w );
-WRITE16_HANDLER( toobin_intensity_w );
-WRITE16_HANDLER( toobin_xscroll_w );
-WRITE16_HANDLER( toobin_yscroll_w );
-WRITE16_HANDLER( toobin_slip_w );
-
-
-SCREEN_UPDATE_RGB32( toobin );
+DECLARE_WRITE16_HANDLER( toobin_paletteram_w );
+DECLARE_WRITE16_HANDLER( toobin_intensity_w );
+DECLARE_WRITE16_HANDLER( toobin_xscroll_w );
+DECLARE_WRITE16_HANDLER( toobin_yscroll_w );
+DECLARE_WRITE16_HANDLER( toobin_slip_w );

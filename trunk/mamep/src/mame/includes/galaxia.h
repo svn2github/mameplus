@@ -26,15 +26,7 @@ public:
 	DECLARE_PALETTE_INIT(galaxia);
 	DECLARE_VIDEO_START(astrowar);
 	DECLARE_PALETTE_INIT(astrowar);
+	UINT32 screen_update_galaxia(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_astrowar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(galaxia_interrupt);
 };
-
-
-/*----------- defined in video/galaxia.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( galaxia );
-SCREEN_UPDATE_IND16( astrowar );

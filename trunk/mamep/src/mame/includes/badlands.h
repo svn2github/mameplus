@@ -18,6 +18,8 @@ public:
 	UINT8 *			m_bank_source_data;
 
 	UINT8			m_playfield_tile_bank;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_READ16_MEMBER(sound_busy_r);
 	DECLARE_READ16_MEMBER(pedal_0_r);
 	DECLARE_READ16_MEMBER(pedal_1_r);
@@ -30,12 +32,9 @@ public:
 	DECLARE_MACHINE_RESET(badlands);
 	DECLARE_VIDEO_START(badlands);
 	DECLARE_MACHINE_RESET(badlandsb);
+	UINT32 screen_update_badlands(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_int);
 };
 
-
 /*----------- defined in video/badlands.c -----------*/
-
-WRITE16_HANDLER( badlands_pf_bank_w );
-
-
-SCREEN_UPDATE_IND16( badlands );
+DECLARE_WRITE16_HANDLER( badlands_pf_bank_w );

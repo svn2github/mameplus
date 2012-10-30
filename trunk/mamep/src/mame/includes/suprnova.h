@@ -134,19 +134,16 @@ public:
 	DECLARE_MACHINE_RESET(sknsu);
 	DECLARE_MACHINE_RESET(sknse);
 	DECLARE_MACHINE_RESET(sknsk);
+	UINT32 screen_update_skns(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_skns(screen_device &screen, bool state);
+	TIMER_DEVICE_CALLBACK_MEMBER(interrupt_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(skns_irq);
 };
 
-
 /*----------- defined in video/suprnova.c -----------*/
-
 void skns_sprite_kludge(int x, int y);
 void skns_draw_sprites(
 	running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect,
 	UINT32* spriteram_source, size_t spriteram_size,
 	UINT8* gfx_source, size_t gfx_length,
 	UINT32* sprite_regs );
-
-
-
-SCREEN_VBLANK(skns);
-SCREEN_UPDATE_RGB32(skns);

@@ -21,7 +21,8 @@ public:
 	nitedrvr_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
 		m_videoram(*this, "videoram"),
-		m_hvc(*this, "hvc"){ }
+		m_hvc(*this, "hvc"),
+		m_discrete(*this, "discrete"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -43,7 +44,7 @@ public:
 
 	/* devices */
 	cpu_device *m_maincpu;
-	device_t *m_discrete;
+	required_device<discrete_device> m_discrete;
 	DECLARE_READ8_MEMBER(nitedrvr_steering_reset_r);
 	DECLARE_WRITE8_MEMBER(nitedrvr_steering_reset_w);
 	DECLARE_READ8_MEMBER(nitedrvr_in0_r);
@@ -56,25 +57,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_nitedrvr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(nitedrvr_crash_toggle_callback);
 };
 
-
-/*----------- defined in machine/nitedrvr.c -----------*/
-
-
-TIMER_DEVICE_CALLBACK( nitedrvr_crash_toggle_callback );
-
-
-
-
-
 /*----------- defined in audio/nitedrvr.c -----------*/
-
 DISCRETE_SOUND_EXTERN( nitedrvr );
-
-
-/*----------- defined in video/nitedrvr.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( nitedrvr );

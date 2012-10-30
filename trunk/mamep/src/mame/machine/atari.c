@@ -64,12 +64,12 @@ void atari_interrupt_cb(pokey_device *device, int mask)
 
 READ8_DEVICE_HANDLER(atari_pia_pa_r)
 {
-	return device->machine().root_device().ioport("djoy_0_1")->read_safe(0);
+	return space.machine().root_device().ioport("djoy_0_1")->read_safe(0);
 }
 
 READ8_DEVICE_HANDLER(atari_pia_pb_r)
 {
-	return device->machine().root_device().ioport("djoy_2_3")->read_safe(0);
+	return space.machine().root_device().ioport("djoy_2_3")->read_safe(0);
 }
 
 WRITE8_DEVICE_HANDLER(a600xl_pia_pb_w) { a600xl_mmu(device->machine(), data); }
@@ -105,13 +105,13 @@ void a600xl_mmu(running_machine &machine, UINT8 new_mmu)
 	if ( new_mmu & 0x80 )
 	{
 		logerror("%s MMU SELFTEST RAM\n", machine.system().name);
-		machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x5000, 0x57ff);
+		machine.device("maincpu")->memory().space(AS_PROGRAM).nop_readwrite(0x5000, 0x57ff);
 	}
 	else
 	{
 		logerror("%s MMU SELFTEST ROM\n", machine.system().name);
-		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x5000, 0x57ff, "bank2");
-		machine.device("maincpu")->memory().space(AS_PROGRAM)->unmap_write(0x5000, 0x57ff);
+		machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_bank(0x5000, 0x57ff, "bank2");
+		machine.device("maincpu")->memory().space(AS_PROGRAM).unmap_write(0x5000, 0x57ff);
 		machine.root_device().membank("bank2")->set_base(machine.root_device().memregion("maincpu")->base() + 0x5000);
 	}
 }
@@ -275,15 +275,15 @@ static void pokey_reset(running_machine &machine)
 }
 
 
-static UINT8 console_read(address_space *space)
+static UINT8 console_read(address_space &space)
 {
-	return space->machine().root_device().ioport("console")->read();
+	return space.machine().root_device().ioport("console")->read();
 }
 
 
-static void console_write(address_space *space, UINT8 data)
+static void console_write(address_space &space, UINT8 data)
 {
-	dac_device *dac = space->machine().device<dac_device>("dac");
+	dac_device *dac = space.machine().device<dac_device>("dac");
 	if (data & 0x08)
 		dac->write_unsigned8((UINT8)-120);
 	else

@@ -35,12 +35,6 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_ikki(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(ikki_irq);
 };
-
-
-/*----------- defined in video/ikki.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( ikki );

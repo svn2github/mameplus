@@ -81,18 +81,12 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg3_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_senjyo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(senjyo_interrupt);
+	DECLARE_READ8_MEMBER(pio_pa_r);
 };
 
-
 /*----------- defined in audio/senjyo.c -----------*/
-
 extern const z80_daisy_config senjyo_daisy_chain[];
 extern const z80pio_interface senjyo_pio_intf;
 extern const z80ctc_interface senjyo_ctc_intf;
-
-
-/*----------- defined in video/senjyo.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( senjyo );

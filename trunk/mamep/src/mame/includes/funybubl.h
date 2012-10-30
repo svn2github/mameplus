@@ -22,12 +22,5 @@ public:
 	DECLARE_WRITE8_MEMBER(funybubl_oki_bank_sw);
 	virtual void machine_start();
 	virtual void video_start();
+	UINT32 screen_update_funybubl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-
-/*----------- defined in video/funybubl.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16(funybubl);

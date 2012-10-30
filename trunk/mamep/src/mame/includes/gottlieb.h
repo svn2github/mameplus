@@ -239,20 +239,24 @@ public:
 		  m_laserdisc(*this, "laserdisc"),
 		  m_r1_sound(*this, "r1sound"),
 		  m_r2_sound(*this, "r2sound"),
+		  m_knocker_sample(*this, "knocker_sam"),
 		  m_videoram(*this, "videoram"),
 		  m_charram(*this, "charram"),
-		  m_spriteram(*this, "spriteram") { }
+		  m_spriteram(*this, "spriteram")
+	{ }
 
 	// devices
 	required_device<i8088_device> m_maincpu;
 	optional_device<pioneer_pr8210_device> m_laserdisc;
 	optional_device<gottlieb_sound_r1_device> m_r1_sound;
 	optional_device<gottlieb_sound_r2_device> m_r2_sound;
+	optional_device<samples_device> m_knocker_sample;
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_charram;
 	required_shared_ptr<UINT8> m_spriteram;
 
+	UINT8 m_knocker_prev;
 	UINT8 m_joystick_select;
 	UINT8 m_track[2];
 	emu_timer *m_laserdisc_bit_timer;
@@ -275,10 +279,15 @@ public:
 	UINT8 m_transparent0;
 	tilemap_t *m_bg_tilemap;
 	double m_weights[4];
+
+	void qbert_knocker(UINT8 knock);
+
 	DECLARE_WRITE8_MEMBER(gottlieb_analog_reset_w);
 	DECLARE_WRITE8_MEMBER(general_output_w);
 	DECLARE_WRITE8_MEMBER(reactor_output_w);
 	DECLARE_WRITE8_MEMBER(stooges_output_w);
+	DECLARE_WRITE8_MEMBER(qbertqub_output_w);
+	DECLARE_WRITE8_MEMBER(qbert_output_w);
 	DECLARE_READ8_MEMBER(laserdisc_status_r);
 	DECLARE_WRITE8_MEMBER(laserdisc_select_w);
 	DECLARE_WRITE8_MEMBER(laserdisc_command_w);
@@ -295,21 +304,25 @@ public:
 	DECLARE_DRIVER_INIT(vidvince);
 	DECLARE_DRIVER_INIT(ramtiles);
 	DECLARE_DRIVER_INIT(stooges);
+	DECLARE_DRIVER_INIT(qbert);
+	DECLARE_DRIVER_INIT(qbertqub);
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	TILE_GET_INFO_MEMBER(get_screwloo_bg_tile_info);
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(screwloo);
+	UINT32 screen_update_gottlieb(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(gottlieb_interrupt);
+	TIMER_CALLBACK_MEMBER(laserdisc_philips_callback);
+	TIMER_CALLBACK_MEMBER(laserdisc_bit_off_callback);
+	TIMER_CALLBACK_MEMBER(laserdisc_bit_callback);
+	TIMER_CALLBACK_MEMBER(nmi_clear);
 };
 
+/*----------- defined in audio/gottlieb.c -----------*/
 
-/*----------- defined in video/gottlieb.c -----------*/
-
-
-
-
-SCREEN_UPDATE_RGB32( gottlieb );
+MACHINE_CONFIG_EXTERN( qbert_knocker );
 
 #if USE_FAKE_VOTRAX
 MACHINE_CONFIG_EXTERN( reactor_samples );

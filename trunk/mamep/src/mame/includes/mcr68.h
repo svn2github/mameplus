@@ -45,8 +45,7 @@ public:
 	struct counter_state m_m6840_state[3];
 	UINT8 m_v493_irq_state;
 	UINT8 m_v493_irq_vector;
-	timer_expired_func m_v493_callback;
-	const char *m_v493_callback_name;
+	timer_expired_delegate m_v493_callback;
 	UINT8 m_zwackery_sound_data;
 	attotime m_m6840_counter_periods[3];
 	attotime m_m6840_internal_counter_period;
@@ -96,6 +95,20 @@ public:
 	DECLARE_MACHINE_START(mcr68);
 	DECLARE_MACHINE_RESET(mcr68);
 	DECLARE_VIDEO_START(mcr68);
+	UINT32 screen_update_zwackery(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_mcr68(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(mcr68_interrupt);
+	TIMER_CALLBACK_MEMBER(mcr68_493_off_callback);
+	TIMER_CALLBACK_MEMBER(mcr68_493_callback);
+	TIMER_CALLBACK_MEMBER(zwackery_493_off_callback);
+	TIMER_CALLBACK_MEMBER(zwackery_493_callback);
+	TIMER_CALLBACK_MEMBER(counter_fired_callback);
+	DECLARE_READ8_MEMBER(zwackery_port_1_r);
+	DECLARE_READ8_MEMBER(zwackery_port_3_r);
+	DECLARE_WRITE8_MEMBER(zwackery_pia0_w);
+	DECLARE_WRITE8_MEMBER(zwackery_pia1_w);
+	DECLARE_WRITE_LINE_MEMBER(zwackery_ca2_w);
+	DECLARE_WRITE_LINE_MEMBER(zwackery_pia_irq);
 };
 
 /*----------- defined in machine/mcr68.c -----------*/
@@ -103,23 +116,3 @@ public:
 extern const pia6821_interface zwackery_pia0_intf;
 extern const pia6821_interface zwackery_pia1_intf;
 extern const pia6821_interface zwackery_pia2_intf;
-
-
-
-
-
-
-
-
-INTERRUPT_GEN( mcr68_interrupt );
-
-
-/*----------- defined in video/mcr68.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( mcr68 );
-
-
-
-SCREEN_UPDATE_IND16( zwackery );

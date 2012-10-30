@@ -19,6 +19,7 @@ public:
 
 	UINT16 *m_spritecache_count;
 	UINT16 *m_unknown_verify_base;
+	virtual void update_interrupts();
 	DECLARE_READ16_MEMBER(offtwall_atarivc_r);
 	DECLARE_WRITE16_MEMBER(offtwall_atarivc_w);
 	DECLARE_READ16_MEMBER(special_port3_r);
@@ -33,10 +34,5 @@ public:
 	DECLARE_MACHINE_START(offtwall);
 	DECLARE_MACHINE_RESET(offtwall);
 	DECLARE_VIDEO_START(offtwall);
+	UINT32 screen_update_offtwall(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/offtwall.c -----------*/
-
-
-SCREEN_UPDATE_IND16( offtwall );

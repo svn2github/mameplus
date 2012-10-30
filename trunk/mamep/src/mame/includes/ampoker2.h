@@ -23,12 +23,5 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_VIDEO_START(sigma2k);
+	UINT32 screen_update_ampoker2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/ampoker2.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( ampoker2 );

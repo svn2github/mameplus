@@ -92,7 +92,7 @@ WRITE16_DEVICE_HANDLER( nmk112_okibank_lsb_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		nmk112_okibank_w(device, offset, data & 0xff);
+		nmk112_okibank_w(device, space, offset, data & 0xff);
 	}
 }
 
@@ -156,7 +156,7 @@ const device_type NMK112 = &device_creator<nmk112_device>;
 nmk112_device::nmk112_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, NMK112, "NMK 112", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(nmk112_state));
+	m_token = global_alloc_clear(nmk112_state);
 }
 
 //-------------------------------------------------

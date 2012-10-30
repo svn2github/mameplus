@@ -31,6 +31,8 @@
 
 #define MD_CPU_REGION_SIZE (MAX_MD_CART_SIZE + VIRGIN_COPY_GEN)
 
+extern int sega_cd_connected;
+
 
 /*----------- defined in machine/megadriv.c -----------*/
 
@@ -69,12 +71,9 @@ void megatech_set_megadrive_z80_as_megadrive_z80(running_machine &machine, const
 
 
 /* These handlers are needed by megaplay.c */
-extern READ16_HANDLER( megadriv_68k_io_read );
-extern WRITE16_HANDLER( megadriv_68k_io_write );
+extern DECLARE_READ16_HANDLER( megadriv_68k_io_read );
+extern DECLARE_WRITE16_HANDLER( megadriv_68k_io_write );
 
-/* These handlers are needed by puckpkmn.c for his memory map */
-extern READ8_DEVICE_HANDLER( megadriv_68k_YM2612_read);
-extern WRITE8_DEVICE_HANDLER( megadriv_68k_YM2612_write);
 
 /* These are needed to create external input handlers (see e.g. MESS) */
 /* Regs are also used by Megaplay! */
@@ -108,7 +107,9 @@ public:
 	: driver_device(mconfig, type, tag),
 		m_vdp(*this,"gen_vdp"),
 		m_megadrive_ram(*this,"megadrive_ram")
-	{ }
+	{
+		sega_cd_connected = 0;
+	}
 	required_device<sega_genesis_vdp_device> m_vdp;
 	optional_shared_ptr<UINT16> m_megadrive_ram;
 
@@ -118,10 +119,8 @@ public:
 	DECLARE_DRIVER_INIT(megadrij);
 	DECLARE_DRIVER_INIT(mpnew);
 
-	TILE_GET_INFO_MEMBER( get_stampmap_16x16_1x1_tile_info );
-	TILE_GET_INFO_MEMBER( get_stampmap_32x32_1x1_tile_info );
-	TILE_GET_INFO_MEMBER( get_stampmap_16x16_16x16_tile_info );
-	TILE_GET_INFO_MEMBER( get_stampmap_32x32_16x16_tile_info );
+	DECLARE_READ8_MEMBER(megadriv_68k_YM2612_read);
+	DECLARE_WRITE8_MEMBER(megadriv_68k_YM2612_write);
 };
 
 class md_boot_state : public md_base_state
@@ -275,6 +274,7 @@ public:
 	DECLARE_MACHINE_START(segac2);
 	DECLARE_MACHINE_RESET(segac2);
 
+	UINT32 screen_update_segac2_new(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 class mplay_state : public md_base_state
@@ -313,6 +313,9 @@ public:
 	DECLARE_DRIVER_INIT(megaplay);
 	DECLARE_VIDEO_START(megplay);
 	DECLARE_MACHINE_RESET(megaplay);
+
+	UINT32 screen_update_megplay(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_megaplay(screen_device &screen, bool state);
 };
 
 class mtech_state : public md_base_state
@@ -348,6 +351,9 @@ public:
 	DECLARE_DRIVER_INIT(mt_slot);
 	DECLARE_VIDEO_START(mtnew);
 	DECLARE_MACHINE_RESET(mtnew);
+	UINT32 screen_update_mtnew(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_mtnew(screen_device &screen, bool state);
+	UINT32 screen_update_megatech_menu(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 struct megadriv_cart
@@ -447,20 +453,10 @@ class segacd_state : public _32x_state	// use _32x_state as base to make easier 
 {
 public:
 	segacd_state(const machine_config &mconfig, device_type type, const char *tag)
-	: _32x_state(mconfig, type, tag),
-	  m_font_bits(*this,"segacd_font") { }
-
-	required_shared_ptr<UINT16> m_font_bits;
+	: _32x_state(mconfig, type, tag)
+	  { }
 };
 
-extern int sega_cd_connected;
-extern int segacd_wordram_mapped;
-extern cpu_device *_segacd_68k_cpu;
-extern MACHINE_RESET( segacd );
-ADDRESS_MAP_EXTERN( segacd_map, driver_device);
-extern TIMER_DEVICE_CALLBACK( scd_dma_timer_callback );
-extern timer_device* scd_dma_timer;
-extern void segacd_init_main_cpu( running_machine& machine );
 
 /*----------- defined in machine/md_cart.c -----------*/
 
@@ -472,12 +468,12 @@ MACHINE_START( md_sram );
 /*----------- defined in drivers/megadriv.c -----------*/
 
 /* These are needed to handle J-Cart inputs */
-extern WRITE16_HANDLER( jcart_ctrl_w );
-extern READ16_HANDLER( jcart_ctrl_r );
+extern DECLARE_WRITE16_HANDLER( jcart_ctrl_w );
+extern DECLARE_READ16_HANDLER( jcart_ctrl_r );
 
 /* machine/megavdp.c */
-extern UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source, address_space* space);
-extern UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source, address_space* space);
+extern UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source, address_space& space);
+extern UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source, address_space& space);
 extern int megadriv_framerate;
 extern int megadrive_total_scanlines;
 extern int megadrive_vblank_flag;

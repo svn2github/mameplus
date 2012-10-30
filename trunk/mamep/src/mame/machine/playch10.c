@@ -34,10 +34,11 @@ void playch10_state::machine_reset()
 	m_MMC2_bank_latch[0] = m_MMC2_bank_latch[1] = 0xfe;
 
 	/* reset the security chip */
-	rp5h01_enable_w(rp5h01, 0, 0);
-	rp5h01_reset_w(rp5h01, 0, 0);
-	rp5h01_reset_w(rp5h01, 0, 1);
-	rp5h01_enable_w(rp5h01, 0, 1);
+	address_space &space = generic_space();
+	rp5h01_enable_w(rp5h01, space, 0, 0);
+	rp5h01_reset_w(rp5h01, space, 0, 0);
+	rp5h01_reset_w(rp5h01, space, 0, 1);
+	rp5h01_enable_w(rp5h01, space, 0, 1);
 
 	pc10_set_mirroring(m_mirroring);
 }
@@ -50,8 +51,8 @@ void playch10_state::machine_start()
 	/* move to individual boards as documentation of actual boards allows */
 	m_nt_ram = auto_alloc_array(machine(), UINT8, 0x1000);
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0, 0x1fff, read8_delegate(FUNC(playch10_state::pc10_chr_r),this), write8_delegate(FUNC(playch10_state::pc10_chr_w),this));
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(playch10_state::pc10_nt_r),this),write8_delegate(FUNC(playch10_state::pc10_nt_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0, 0x1fff, read8_delegate(FUNC(playch10_state::pc10_chr_r),this), write8_delegate(FUNC(playch10_state::pc10_chr_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(playch10_state::pc10_nt_r),this),write8_delegate(FUNC(playch10_state::pc10_nt_w),this));
 
 	if (NULL != m_vram)
 		set_videoram_bank(machine(), 0, 8, 0, 8);
@@ -73,8 +74,8 @@ MACHINE_START_MEMBER(playch10_state,playch10_hboard)
 
 	m_vram = auto_alloc_array(machine(), UINT8, 0x2000);
 
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0, 0x1fff, read8_delegate(FUNC(playch10_state::pc10_chr_r),this), write8_delegate(FUNC(playch10_state::pc10_chr_w),this));
-	machine().device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(playch10_state::pc10_nt_r),this), write8_delegate(FUNC(playch10_state::pc10_nt_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0, 0x1fff, read8_delegate(FUNC(playch10_state::pc10_chr_r),this), write8_delegate(FUNC(playch10_state::pc10_chr_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(playch10_state::pc10_nt_r),this), write8_delegate(FUNC(playch10_state::pc10_nt_w),this));
 }
 
 /*************************************
@@ -168,10 +169,10 @@ READ8_MEMBER(playch10_state::pc10_prot_r)
 	/* we only support a single cart connected at slot 0 */
 	if (m_cart_sel == 0)
 	{
-		rp5h01_enable_w(rp5h01, 0, 0);
-		data |= ((~rp5h01_counter_r(rp5h01, 0)) << 4) & 0x10;	/* D4 */
-		data |= ((rp5h01_data_r(rp5h01, 0)) << 3) & 0x08;		/* D3 */
-		rp5h01_enable_w(rp5h01, 0, 1);
+		rp5h01_enable_w(rp5h01, space, 0, 0);
+		data |= ((~rp5h01_counter_r(rp5h01, space, 0)) << 4) & 0x10;	/* D4 */
+		data |= ((rp5h01_data_r(rp5h01, space, 0)) << 3) & 0x08;		/* D3 */
+		rp5h01_enable_w(rp5h01, space, 0, 1);
 	}
 	return data;
 }
@@ -182,11 +183,11 @@ WRITE8_MEMBER(playch10_state::pc10_prot_w)
 	/* we only support a single cart connected at slot 0 */
 	if (m_cart_sel == 0)
 	{
-		rp5h01_enable_w(rp5h01, 0, 0);
-		rp5h01_test_w(rp5h01, 0, data & 0x10);		/* D4 */
-		rp5h01_clock_w(rp5h01, 0, data & 0x08);		/* D3 */
-		rp5h01_reset_w(rp5h01, 0, ~data & 0x01);	/* D0 */
-		rp5h01_enable_w(rp5h01, 0, 1);
+		rp5h01_enable_w(rp5h01, space, 0, 0);
+		rp5h01_test_w(rp5h01, space, 0, data & 0x10);		/* D4 */
+		rp5h01_clock_w(rp5h01, space, 0, data & 0x08);		/* D3 */
+		rp5h01_reset_w(rp5h01, space, 0, ~data & 0x01);	/* D0 */
+		rp5h01_enable_w(rp5h01, space, 0, 1);
 
 		/* this thing gets dense at some point                      */
 		/* it wants to jump and execute an opcode at $ffff, wich    */
@@ -580,7 +581,7 @@ WRITE8_MEMBER(playch10_state::aboard_vrom_switch_w)
 DRIVER_INIT_MEMBER(playch10_state,pcaboard)
 {
 	/* switches vrom with writes to the $803e-$8041 area */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0x8fff, write8_delegate(FUNC(playch10_state::aboard_vrom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0x8fff, write8_delegate(FUNC(playch10_state::aboard_vrom_switch_w),this));
 
 	/* common init */
 	DRIVER_INIT_CALL(playch10);
@@ -612,7 +613,7 @@ DRIVER_INIT_MEMBER(playch10_state,pcbboard)
 	memcpy(&prg[0x08000], &prg[0x28000], 0x8000);
 
 	/* Roms are banked at $8000 to $bfff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::bboard_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::bboard_rom_switch_w),this));
 
 	/* common init */
 	DRIVER_INIT_CALL(playch10);
@@ -637,7 +638,7 @@ WRITE8_MEMBER(playch10_state::cboard_vrom_switch_w)
 DRIVER_INIT_MEMBER(playch10_state,pccboard)
 {
 	/* switches vrom with writes to $6000 */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x6000, 0x6000, write8_delegate(FUNC(playch10_state::cboard_vrom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x6000, 0x6000, write8_delegate(FUNC(playch10_state::cboard_vrom_switch_w),this));
 
 	/* we have no vram, make sure switching games doesn't point to an old allocation */
 	m_vram = NULL;
@@ -660,7 +661,7 @@ DRIVER_INIT_MEMBER(playch10_state,pcdboard)
 	m_mmc1_rom_mask = 0x07;
 
 	/* MMC mapper at writes to $8000-$ffff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::mmc1_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::mmc1_rom_switch_w),this));
 
 
 	/* common init */
@@ -676,7 +677,7 @@ DRIVER_INIT_MEMBER(playch10_state,pcdboard)
 DRIVER_INIT_MEMBER(playch10_state,pcdboard_2)
 {
 	/* extra ram at $6000-$7fff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_ram(0x6000, 0x7fff);
+	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x7fff);
 
 	/* common init */
 	DRIVER_INIT_CALL(pcdboard);
@@ -774,13 +775,13 @@ DRIVER_INIT_MEMBER(playch10_state,pceboard)
 	memcpy(&prg[0x08000], &prg[0x28000], 0x8000);
 
 	/* basically a mapper 9 on a nes */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::eboard_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::eboard_rom_switch_w),this));
 
 	/* ppu_latch callback */
 	ppu->set_latch(mapper9_latch);
 
 	/* nvram at $6000-$6fff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_ram(0x6000, 0x6fff);
+	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x6fff);
 
 	/* common init */
 	DRIVER_INIT_CALL(playch10);
@@ -803,7 +804,7 @@ DRIVER_INIT_MEMBER(playch10_state,pcfboard)
 	m_mmc1_rom_mask = 0x07;
 
 	/* MMC mapper at writes to $8000-$ffff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::mmc1_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::mmc1_rom_switch_w),this));
 
 	/* common init */
 	DRIVER_INIT_CALL(playch10);
@@ -814,7 +815,7 @@ DRIVER_INIT_MEMBER(playch10_state,pcfboard)
 DRIVER_INIT_MEMBER(playch10_state,pcfboard_2)
 {
 	/* extra ram at $6000-$6fff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_ram(0x6000, 0x6fff);
+	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x6fff);
 
 	m_vram = NULL;
 
@@ -990,10 +991,10 @@ DRIVER_INIT_MEMBER(playch10_state,pcgboard)
 	memcpy(&prg[0x0c000], &prg[0x4c000], 0x4000);
 
 	/* MMC3 mapper at writes to $8000-$ffff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::gboard_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::gboard_rom_switch_w),this));
 
 	/* extra ram at $6000-$7fff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_ram(0x6000, 0x7fff);
+	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x7fff);
 
 	m_gboard_banks[0] = 0x1e;
 	m_gboard_banks[1] = 0x1f;
@@ -1044,7 +1045,7 @@ DRIVER_INIT_MEMBER(playch10_state,pciboard)
 	memcpy(&prg[0x08000], &prg[0x10000], 0x8000);
 
 	/* Roms are banked at $8000 to $bfff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::iboard_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::iboard_rom_switch_w),this));
 
 	/* common init */
 	DRIVER_INIT_CALL(playch10);
@@ -1111,10 +1112,10 @@ DRIVER_INIT_MEMBER(playch10_state,pchboard)
 	memcpy(&prg[0x0c000], &prg[0x4c000], 0x4000);
 
 	/* Roms are banked at $8000 to $bfff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::hboard_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::hboard_rom_switch_w),this));
 
 	/* extra ram at $6000-$7fff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_ram(0x6000, 0x7fff);
+	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x7fff);
 
 	m_gboard_banks[0] = 0x1e;
 	m_gboard_banks[1] = 0x1f;
@@ -1141,10 +1142,10 @@ DRIVER_INIT_MEMBER(playch10_state,pckboard)
 	m_mmc1_rom_mask = 0x0f;
 
 	/* extra ram at $6000-$7fff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_ram(0x6000, 0x7fff);
+	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x7fff);
 
 	/* Roms are banked at $8000 to $bfff */
-	machine().device("cart")->memory().space(AS_PROGRAM)->install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::mmc1_rom_switch_w),this));
+	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::mmc1_rom_switch_w),this));
 
 	/* common init */
 	DRIVER_INIT_CALL(playch10);

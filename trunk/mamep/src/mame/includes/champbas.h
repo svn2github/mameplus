@@ -60,17 +60,9 @@ public:
 	DECLARE_MACHINE_START(exctsccr);
 	DECLARE_VIDEO_START(exctsccr);
 	DECLARE_PALETTE_INIT(exctsccr);
+	UINT32 screen_update_champbas(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_exctsccr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_champbas(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	TIMER_CALLBACK_MEMBER(exctsccr_fm_callback);
 };
-
-
-/*----------- defined in video/champbas.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( champbas );
-SCREEN_UPDATE_IND16( exctsccr );
-
-

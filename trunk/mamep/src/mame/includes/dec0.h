@@ -62,6 +62,8 @@ public:
 	DECLARE_WRITE16_MEMBER(dec0_paletteram_rg_w);
 	DECLARE_WRITE16_MEMBER(dec0_paletteram_b_w);
 	DECLARE_WRITE16_MEMBER(dec0_priority_w);
+	DECLARE_READ16_MEMBER(ffantasybl_242024_r);
+	DECLARE_READ16_MEMBER(ffantasybl_vblank_r);
 	DECLARE_DRIVER_INIT(robocop);
 	DECLARE_DRIVER_INIT(hippodrm);
 	DECLARE_DRIVER_INIT(hbarrel);
@@ -69,9 +71,17 @@ public:
 	DECLARE_DRIVER_INIT(birdtry);
 	DECLARE_DRIVER_INIT(baddudes);
 	DECLARE_DRIVER_INIT(midresb);
+	DECLARE_DRIVER_INIT(ffantasybl);
 	DECLARE_VIDEO_START(dec0);
 	DECLARE_MACHINE_RESET(slyspy);
 	DECLARE_VIDEO_START(dec0_nodma);
+	UINT32 screen_update_hbarrel(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_baddudes(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_birdtry(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_robocop(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_hippodrm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_slyspy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_midres(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -96,31 +106,13 @@ public:
 	UINT16 m_automat_scroll_regs[4];
 
 	DECLARE_VIDEO_START(automat);
+	UINT32 screen_update_automat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_secretab(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/dec0.c -----------*/
-
-/* Video emulation definitions */
-
-
-
-SCREEN_UPDATE_IND16( hbarrel );
-SCREEN_UPDATE_IND16( baddudes );
-SCREEN_UPDATE_IND16( birdtry );
-SCREEN_UPDATE_IND16( robocop );
-SCREEN_UPDATE_IND16( hippodrm );
-SCREEN_UPDATE_IND16( slyspy );
-SCREEN_UPDATE_IND16( midres );
-
-// bootlegs
-SCREEN_UPDATE_IND16( automat );
-SCREEN_UPDATE_IND16( secretab );
 
 /*----------- defined in machine/dec0.c -----------*/
 
-READ16_HANDLER( slyspy_controls_r );
-
+DECLARE_READ16_HANDLER( slyspy_controls_r );
 
 extern void dec0_i8751_write(running_machine &machine, int data);
 extern void dec0_i8751_reset(running_machine &machine);

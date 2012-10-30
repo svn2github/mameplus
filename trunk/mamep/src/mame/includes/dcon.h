@@ -37,12 +37,6 @@ public:
 	TILE_GET_INFO_MEMBER(get_mid_tile_info);
 	TILE_GET_INFO_MEMBER(get_text_tile_info);
 	virtual void video_start();
+	UINT32 screen_update_dcon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_sdgndmps(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/dcon.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( dcon );
-SCREEN_UPDATE_IND16( sdgndmps );

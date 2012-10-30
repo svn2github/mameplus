@@ -46,12 +46,7 @@ public:
 	DECLARE_DRIVER_INIT(sshooter);
 	DECLARE_DRIVER_INIT(plctr13b);
 	virtual void video_start();
+	UINT32 screen_update_policetr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(irq4_gen);
+	TIMER_CALLBACK_MEMBER(irq5_gen);
 };
-
-
-/*----------- defined in video/policetr.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( policetr );

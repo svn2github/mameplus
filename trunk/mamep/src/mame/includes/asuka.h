@@ -47,21 +47,17 @@ public:
 	DECLARE_WRITE8_MEMBER(asuka_msm5205_stop_w);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_bonzeadv(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_asuka(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_asuka(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(cadash_interrupt);
+	TIMER_CALLBACK_MEMBER(cadash_interrupt5);
 };
-
-
 
 /*----------- defined in machine/bonzeadv.c -----------*/
 
-READ16_HANDLER( bonzeadv_cchip_ctrl_r );
-READ16_HANDLER( bonzeadv_cchip_ram_r );
-WRITE16_HANDLER( bonzeadv_cchip_ctrl_w );
-WRITE16_HANDLER( bonzeadv_cchip_bank_w );
-WRITE16_HANDLER( bonzeadv_cchip_ram_w );
-
-
-/*----------- defined in video/asuka.c -----------*/
-
-
-SCREEN_UPDATE_IND16( asuka );
-SCREEN_UPDATE_IND16( bonzeadv );
+DECLARE_READ16_HANDLER( bonzeadv_cchip_ctrl_r );
+DECLARE_READ16_HANDLER( bonzeadv_cchip_ram_r );
+DECLARE_WRITE16_HANDLER( bonzeadv_cchip_ctrl_w );
+DECLARE_WRITE16_HANDLER( bonzeadv_cchip_bank_w );
+DECLARE_WRITE16_HANDLER( bonzeadv_cchip_ram_w );

@@ -58,11 +58,6 @@ public:
 	DECLARE_DRIVER_INIT(osman);
 	DECLARE_DRIVER_INIT(chainrec);
 	virtual void video_start();
+	UINT32 screen_update_simpl156(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(simpl156_vbl_interrupt);
 };
-
-
-
-/*----------- defined in video/simpl156.c -----------*/
-
-
-SCREEN_UPDATE_IND16( simpl156 );

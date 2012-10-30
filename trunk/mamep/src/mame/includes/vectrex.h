@@ -69,36 +69,34 @@ public:
 	DECLARE_DRIVER_INIT(vectrex);
 	virtual void video_start();
 	DECLARE_VIDEO_START(raaspec);
+	UINT32 screen_update_vectrex(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(vectrex_imager_change_color);
+	TIMER_CALLBACK_MEMBER(update_level);
+	TIMER_CALLBACK_MEMBER(vectrex_imager_eye);
+	TIMER_CALLBACK_MEMBER(lightpen_trigger);
+	TIMER_CALLBACK_MEMBER(vectrex_refresh);
+	TIMER_CALLBACK_MEMBER(vectrex_zero_integrators);
+	TIMER_CALLBACK_MEMBER(update_signal);
+	DECLARE_READ8_MEMBER(vectrex_via_pb_r);
+	DECLARE_READ8_MEMBER(vectrex_via_pa_r);
+	DECLARE_READ8_MEMBER(vectrex_s1_via_pb_r);
+	DECLARE_WRITE8_MEMBER(v_via_pb_w);
+	DECLARE_WRITE8_MEMBER(v_via_pa_w);
+	DECLARE_WRITE8_MEMBER(v_via_ca2_w);
+	DECLARE_WRITE8_MEMBER(v_via_cb2_w);
 };
 
 
 /*----------- defined in machine/vectrex.c -----------*/
 
 DEVICE_IMAGE_LOAD( vectrex_cart );
-
-
-TIMER_CALLBACK(vectrex_imager_eye);
 void vectrex_configuration(running_machine &machine);
-READ8_DEVICE_HANDLER (vectrex_via_pa_r);
-READ8_DEVICE_HANDLER(vectrex_via_pb_r );
 void vectrex_via_irq (device_t *device, int level);
-
-
-/* for spectrum 1+ */
-READ8_DEVICE_HANDLER( vectrex_s1_via_pb_r );
-
 
 /*----------- defined in video/vectrex.c -----------*/
 
 extern const via6522_interface vectrex_via6522_interface;
 extern const via6522_interface spectrum1_via6522_interface;
-
-
-SCREEN_UPDATE_RGB32( vectrex );
-
-
-
-
 
 void vectrex_add_point_stereo (running_machine &machine, int x, int y, rgb_t color, int intensity);
 void vectrex_add_point (running_machine &machine, int x, int y, rgb_t color, int intensity);

@@ -27,12 +27,6 @@ public:
 	TILE_GET_INFO_MEMBER(get_txttile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_darkmist(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(darkmist_scanline);
 };
-
-
-/*----------- defined in video/darkmist.c -----------*/
-
-
-SCREEN_UPDATE_IND16( darkmist );
-
-

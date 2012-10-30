@@ -115,19 +115,12 @@ public:
 	DECLARE_VIDEO_START(poundfor);
 	DECLARE_MACHINE_START(kengo);
 	DECLARE_MACHINE_RESET(kengo);
+	UINT32 screen_update_m72(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_majtitle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(m72_mcu_int);
+	INTERRUPT_GEN_MEMBER(fake_nmi);
+	TIMER_CALLBACK_MEMBER(synch_callback);
+	TIMER_CALLBACK_MEMBER(m72_scanline_interrupt);
+	TIMER_CALLBACK_MEMBER(kengo_scanline_interrupt);
+	TIMER_CALLBACK_MEMBER(delayed_ram16_w);
 };
-
-
-/*----------- defined in video/m72.c -----------*/
-
-
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( m72 );
-SCREEN_UPDATE_IND16( majtitle );

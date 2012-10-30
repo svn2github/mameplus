@@ -42,12 +42,12 @@ public:
 	DECLARE_READ8_MEMBER(overdriv_2_sound_r);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_overdriv(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(cpuB_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(overdriv_cpuA_scanline);
 };
 
 /*----------- defined in video/overdriv.c -----------*/
-
 extern void overdriv_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
 extern void overdriv_zoom_callback_0(running_machine &machine, int *code,int *color,int *flags);
 extern void overdriv_zoom_callback_1(running_machine &machine, int *code,int *color,int *flags);
-
-SCREEN_UPDATE_IND16( overdriv );

@@ -43,11 +43,6 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
 	virtual void video_start();
 	DECLARE_VIDEO_START(wwfwfstb);
+	UINT32 screen_update_wwfwfest(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(wwfwfest_scanline);
 };
-
-
-/*----------- defined in video/wwfwfest.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( wwfwfest );

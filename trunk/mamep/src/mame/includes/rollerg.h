@@ -36,12 +36,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_rollerg(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
 };
 
 /*----------- defined in video/rollerg.c -----------*/
-
 extern void rollerg_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
 extern void rollerg_zoom_callback(running_machine &machine, int *code,int *color,int *flags);
-
-
-SCREEN_UPDATE_IND16( rollerg );

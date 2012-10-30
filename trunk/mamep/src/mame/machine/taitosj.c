@@ -36,10 +36,10 @@ void taitosj_state::machine_start()
 
 void taitosj_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	/* set the default ROM bank (many games only have one bank and */
 	/* never write to the bank selector register) */
-	taitosj_bankswitch_w(*space, 0, 0);
+	taitosj_bankswitch_w(space, 0, 0);
 
 
 	m_zaccept = 1;
@@ -102,18 +102,17 @@ READ8_MEMBER(taitosj_state::taitosj_mcu_data_r)
 }
 
 /* timer callback : */
-static TIMER_CALLBACK( taitosj_mcu_real_data_w )
+TIMER_CALLBACK_MEMBER(taitosj_state::taitosj_mcu_real_data_w)
 {
-	taitosj_state *state = machine.driver_data<taitosj_state>();
-	state->m_zready = 1;
-	machine.device("mcu")->execute().set_input_line(0, ASSERT_LINE);
-	state->m_fromz80 = param;
+	m_zready = 1;
+	machine().device("mcu")->execute().set_input_line(0, ASSERT_LINE);
+	m_fromz80 = param;
 }
 
 WRITE8_MEMBER(taitosj_state::taitosj_mcu_data_w)
 {
 	LOG(("%04x: protection write %02x\n",space.device().safe_pc(),data));
-	machine().scheduler().synchronize(FUNC(taitosj_mcu_real_data_w), data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(taitosj_state::taitosj_mcu_real_data_w),this), data);
 	/* temporarily boost the interleave to sync things up */
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
 }
@@ -168,18 +167,16 @@ READ8_MEMBER(taitosj_state::taitosj_68705_portB_r)
 }
 
 /* timer callback : 68705 is going to read data from the Z80 */
-static TIMER_CALLBACK( taitosj_mcu_data_real_r )
+TIMER_CALLBACK_MEMBER(taitosj_state::taitosj_mcu_data_real_r)
 {
-	taitosj_state *state = machine.driver_data<taitosj_state>();
-	state->m_zready = 0;
+	m_zready = 0;
 }
 
 /* timer callback : 68705 is writing data for the Z80 */
-static TIMER_CALLBACK( taitosj_mcu_status_real_w )
+TIMER_CALLBACK_MEMBER(taitosj_state::taitosj_mcu_status_real_w)
 {
-	taitosj_state *state = machine.driver_data<taitosj_state>();
-	state->m_toz80 = param;
-	state->m_zaccept = 0;
+	m_toz80 = param;
+	m_zaccept = 0;
 }
 
 WRITE8_MEMBER(taitosj_state::taitosj_68705_portB_w)
@@ -193,7 +190,7 @@ WRITE8_MEMBER(taitosj_state::taitosj_68705_portB_w)
 	if (~data & 0x02)
 	{
 		/* 68705 is going to read data from the Z80 */
-		machine().scheduler().synchronize(FUNC(taitosj_mcu_data_real_r));
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(taitosj_state::taitosj_mcu_data_real_r),this));
 		machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
 		m_portA_in = m_fromz80;
 		LOG(("%04x: 68705 <- Z80 %02x\n", space.device().safe_pc(), m_portA_in));
@@ -207,22 +204,22 @@ WRITE8_MEMBER(taitosj_state::taitosj_68705_portB_w)
 		LOG(("%04x: 68705 -> Z80 %02x\n", space.device().safe_pc(), m_portA_out));
 
 		/* 68705 is writing data for the Z80 */
-		machine().scheduler().synchronize(FUNC(taitosj_mcu_status_real_w), m_portA_out);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(taitosj_state::taitosj_mcu_status_real_w),this), m_portA_out);
 	}
 	if (~data & 0x10)
 	{
-		address_space *cpu0space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+		address_space &cpu0space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 		LOG(("%04x: 68705 write %02x to address %04x\n",space.device().safe_pc(), m_portA_out, m_address));
 
-		cpu0space->write_byte(m_address, m_portA_out);
+		cpu0space.write_byte(m_address, m_portA_out);
 
 		/* increase low 8 bits of latched address for burst writes */
 		m_address = (m_address & 0xff00) | ((m_address + 1) & 0xff);
 	}
 	if (~data & 0x20)
 	{
-		address_space *cpu0space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-		m_portA_in = cpu0space->read_byte(m_address);
+		address_space &cpu0space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+		m_portA_in = cpu0space.read_byte(m_address);
 		LOG(("%04x: 68705 read %02x from address %04x\n", space.device().safe_pc(), m_portA_in, m_address));
 	}
 	if (~data & 0x40)

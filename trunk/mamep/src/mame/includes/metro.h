@@ -132,7 +132,7 @@ public:
 	DECLARE_WRITE16_MEMBER(metro_vram_1_w);
 	DECLARE_WRITE16_MEMBER(metro_vram_2_w);
 	DECLARE_WRITE16_MEMBER(metro_window_w);
-	void blt_write( address_space *space, const int tmap, const offs_t offs, const UINT16 data, const UINT16 mask );
+	void blt_write( address_space &space, const int tmap, const offs_t offs, const UINT16 data, const UINT16 mask );
 	DECLARE_CUSTOM_INPUT_MEMBER(custom_soundstatus_r);
 	DECLARE_WRITE16_MEMBER(gakusai_oki_bank_hi_w);
 	DECLARE_WRITE16_MEMBER(gakusai_oki_bank_lo_w);
@@ -161,18 +161,16 @@ public:
 	DECLARE_VIDEO_START(metro_i4300);
 	DECLARE_VIDEO_START(blzntrnd);
 	DECLARE_VIDEO_START(gstrik2);
+	UINT32 screen_update_metro(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(metro_vblank_interrupt);
+	INTERRUPT_GEN_MEMBER(metro_periodic_interrupt);
+	INTERRUPT_GEN_MEMBER(karatour_interrupt);
+	INTERRUPT_GEN_MEMBER(puzzlet_interrupt);
+	TIMER_CALLBACK_MEMBER(karatour_irq_callback);
+	TIMER_CALLBACK_MEMBER(mouja_irq_callback);
+	TIMER_CALLBACK_MEMBER(metro_blit_done);
 };
 
 
 /*----------- defined in video/metro.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( metro );
-
 void metro_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect);

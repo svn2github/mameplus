@@ -163,6 +163,8 @@ public:
 	DECLARE_WRITE8_MEMBER(qsound_banksw_w);
 	DECLARE_WRITE16_MEMBER(dinoh_sound_command_w);
 	DECLARE_READ16_MEMBER(sf2mdt_r);
+	DECLARE_READ16_MEMBER(sf2rb_prot_r);
+	DECLARE_READ16_MEMBER(sf2rb2_prot_r);
 	DECLARE_READ16_MEMBER(cps1_dsw_r);
 	DECLARE_WRITE16_MEMBER(cps1_coinctrl_w);
 	DECLARE_READ16_MEMBER(qsound_sharedram1_r);
@@ -177,6 +179,8 @@ public:
 	DECLARE_WRITE16_MEMBER(cps2_objram1_w);
 	DECLARE_WRITE16_MEMBER(cps2_objram2_w);
 	DECLARE_WRITE8_MEMBER(cps1_oki_pin7_w);
+	DECLARE_DRIVER_INIT(sf2rb);
+	DECLARE_DRIVER_INIT(sf2rb2);
 	DECLARE_DRIVER_INIT(sf2thndr);
 	DECLARE_DRIVER_INIT(dinohunt);
 	DECLARE_DRIVER_INIT(forgottn);
@@ -225,39 +229,30 @@ public:
 	DECLARE_MACHINE_START(qsound);
 	DECLARE_MACHINE_RESET(cps);
 	DECLARE_VIDEO_START(cps);
+	UINT32 screen_update_cps1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_fcrash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_kodb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_cps1(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(cps1_interrupt);
+	INTERRUPT_GEN_MEMBER(cps1_qsound_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(cps2_interrupt);
 };
 
 /*----------- defined in drivers/cps1.c -----------*/
 
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
 
-INTERRUPT_GEN( cps1_interrupt );
-
 GFXDECODE_EXTERN( cps1 );
 
 
 /*----------- defined in video/cps1.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( cps1 );
-SCREEN_VBLANK( cps1 );
-
 void cps1_get_video_base(running_machine &machine);
 void cps2_set_sprite_priorities(running_machine &machine);
 void cps2_objram_latch(running_machine &machine);
 
-
 /*************************************
  *  Encryption
  *************************************/
-
-/*----------- defined in machine/cps2crpt.c -----------*/
-
-
 
 /*----------- defined in machine/kabuki.c -----------*/
 

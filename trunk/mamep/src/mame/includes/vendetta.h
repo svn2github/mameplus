@@ -43,6 +43,9 @@ public:
 	DECLARE_DRIVER_INIT(esckids);
 	virtual void machine_start();
 	virtual void machine_reset();
+	UINT32 screen_update_vendetta(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vendetta_irq);
+	TIMER_CALLBACK_MEMBER(z80_nmi_callback);
 };
 
 /*----------- defined in video/vendetta.c -----------*/
@@ -50,5 +53,3 @@ public:
 extern void vendetta_tile_callback(running_machine &machine, int layer,int bank,int *code,int *color,int *flags,int *priority);
 extern void esckids_tile_callback(running_machine &machine, int layer,int bank,int *code,int *color,int *flags,int *priority);
 extern void vendetta_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
-
-SCREEN_UPDATE_IND16( vendetta );

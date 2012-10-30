@@ -34,14 +34,9 @@ public:
 	DECLARE_DRIVER_INIT(pastelg);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_pastelg(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(blitter_timer_callback);
 };
 
-
 /*----------- defined in video/pastelg.c -----------*/
-
-
-SCREEN_UPDATE_IND16( pastelg );
-
-
-
-int pastelg_blitter_src_addr_r(address_space *space);
+int pastelg_blitter_src_addr_r(address_space &space);

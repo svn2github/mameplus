@@ -23,11 +23,6 @@ public:
 	DECLARE_DRIVER_INIT(hyhoo2);
 	DECLARE_DRIVER_INIT(hyhoo);
 	virtual void video_start();
+	UINT32 screen_update_hyhoo(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(blitter_timer_callback);
 };
-
-
-/*----------- defined in video/hyhoo.c -----------*/
-
-SCREEN_UPDATE_RGB32( hyhoo );
-
-

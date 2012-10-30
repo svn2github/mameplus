@@ -58,26 +58,23 @@ public:
 	DECLARE_READ8_MEMBER(starwars_main_ready_flag_r);
 	DECLARE_WRITE8_MEMBER(starwars_main_wr_w);
 	DECLARE_WRITE8_MEMBER(starwars_soundrst_w);
+	DECLARE_WRITE8_MEMBER(quad_pokeyn_w);
 	DECLARE_DIRECT_UPDATE_MEMBER(esb_setdirect);
 	DECLARE_DRIVER_INIT(esb);
 	DECLARE_DRIVER_INIT(starwars);
 	virtual void machine_reset();
+	TIMER_CALLBACK_MEMBER(math_run_clear);
+	DECLARE_READ8_MEMBER(r6532_porta_r);
+	DECLARE_WRITE8_MEMBER(r6532_porta_w);
+	DECLARE_WRITE_LINE_MEMBER(snd_interrupt);
 };
 
 
 /*----------- defined in machine/starwars.c -----------*/
-
-
 void starwars_mproc_init(running_machine &machine);
 void starwars_mproc_reset(running_machine &machine);
-
-
-
 
 /*----------- defined in audio/starwars.c -----------*/
 
 extern const riot6532_interface starwars_riot6532_intf;
-
 SOUND_START( starwars );
-
-

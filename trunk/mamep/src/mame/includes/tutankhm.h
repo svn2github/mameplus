@@ -31,10 +31,6 @@ public:
 	DECLARE_WRITE8_MEMBER(tutankhm_flip_screen_y_w);
 	DECLARE_MACHINE_START(tutankhm);
 	DECLARE_MACHINE_RESET(tutankhm);
+	UINT32 screen_update_tutankhm(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(tutankhm_interrupt);
 };
-
-
-/*----------- defined in video/tutankhm.c -----------*/
-
-
-SCREEN_UPDATE_RGB32( tutankhm );

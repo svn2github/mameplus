@@ -70,20 +70,9 @@ public:
 	DECLARE_MACHINE_START(ojankoc);
 	DECLARE_VIDEO_START(ojankoc);
 	DECLARE_MACHINE_START(common);
+	UINT32 screen_update_ojankohs(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_ojankoc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
-
 /*----------- defined in video/ojankohs.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( ojankohs );
-SCREEN_UPDATE_IND16( ojankoc );
-
-void ojankoc_flipscreen(address_space *space, int data);
-
+void ojankoc_flipscreen(address_space &space, int data);

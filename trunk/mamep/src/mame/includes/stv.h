@@ -198,6 +198,42 @@ public:
 	DECLARE_VIDEO_START(stv_vdp2);
 	DECLARE_MACHINE_START(stv);
 	DECLARE_MACHINE_RESET(stv);
+	UINT32 screen_update_saturn(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_stv_vdp2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(saturn_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(saturn_slave_scanline);
+
+	void scu_do_transfer(UINT8 event);
+	void scu_test_pending_irq();
+	DECLARE_READ32_MEMBER(saturn_scu_r);
+	DECLARE_WRITE32_MEMBER(saturn_scu_w);
+	TIMER_CALLBACK_MEMBER(dma_lv0_ended);
+	TIMER_CALLBACK_MEMBER(dma_lv1_ended);
+	TIMER_CALLBACK_MEMBER(dma_lv2_ended);
+	void scu_single_transfer(address_space &space, UINT32 src, UINT32 dst,UINT8 *src_shift);
+	void scu_dma_direct(address_space &space, UINT8 dma_ch);
+	void scu_dma_indirect(address_space &space,UINT8 dma_ch);
+	DECLARE_WRITE16_MEMBER(saturn_soundram_w);
+	DECLARE_READ16_MEMBER(saturn_soundram_r);
+	DECLARE_WRITE32_MEMBER(minit_w);
+	DECLARE_WRITE32_MEMBER(sinit_w);
+	DECLARE_READ8_MEMBER(saturn_backupram_r);
+	DECLARE_WRITE8_MEMBER(saturn_backupram_w);
+	DECLARE_READ8_MEMBER(saturn_cart_type_r);
+	TIMER_CALLBACK_MEMBER(stv_rtc_increment);
+	DECLARE_READ32_MEMBER(saturn_null_ram_r);
+	DECLARE_WRITE32_MEMBER(saturn_null_ram_w);
+	DECLARE_READ32_MEMBER(saturn_cart_dram0_r);
+	DECLARE_WRITE32_MEMBER(saturn_cart_dram0_w);
+	DECLARE_READ32_MEMBER(saturn_cart_dram1_r);
+	DECLARE_WRITE32_MEMBER(saturn_cart_dram1_w);
+	DECLARE_READ32_MEMBER(saturn_cs1_r);
+	DECLARE_WRITE32_MEMBER(saturn_cs1_w);
+	WRITE_LINE_MEMBER(scsp_to_main_irq);
+	void saturn_init_driver(int rgn);
+
+	int m_scsp_last_line;
+
 };
 
 #define MASTER_CLOCK_352 57272720
@@ -243,26 +279,26 @@ int stv_vdp1_start ( running_machine &machine );
 void video_update_vdp1(running_machine &machine);
 void stv_vdp2_dynamic_res_change(running_machine &machine);
 
-READ16_HANDLER ( saturn_vdp1_regs_r );
-READ32_HANDLER ( saturn_vdp1_vram_r );
-READ32_HANDLER ( saturn_vdp1_framebuffer0_r );
+DECLARE_READ16_HANDLER ( saturn_vdp1_regs_r );
+DECLARE_READ32_HANDLER ( saturn_vdp1_vram_r );
+DECLARE_READ32_HANDLER ( saturn_vdp1_framebuffer0_r );
 
-WRITE16_HANDLER ( saturn_vdp1_regs_w );
-WRITE32_HANDLER ( saturn_vdp1_vram_w );
-WRITE32_HANDLER ( saturn_vdp1_framebuffer0_w );
+DECLARE_WRITE16_HANDLER ( saturn_vdp1_regs_w );
+DECLARE_WRITE32_HANDLER ( saturn_vdp1_vram_w );
+DECLARE_WRITE32_HANDLER ( saturn_vdp1_framebuffer0_w );
 
 /*----------- defined in video/stvvdp2.c -----------*/
 
-READ32_HANDLER ( saturn_vdp2_vram_r );
-READ32_HANDLER ( saturn_vdp2_cram_r );
-READ16_HANDLER ( saturn_vdp2_regs_r );
+DECLARE_READ32_HANDLER ( saturn_vdp2_vram_r );
+DECLARE_READ32_HANDLER ( saturn_vdp2_cram_r );
+DECLARE_READ16_HANDLER ( saturn_vdp2_regs_r );
 
-WRITE32_HANDLER ( saturn_vdp2_vram_w );
-WRITE32_HANDLER ( saturn_vdp2_cram_w );
-WRITE16_HANDLER ( saturn_vdp2_regs_w );
+DECLARE_WRITE32_HANDLER ( saturn_vdp2_vram_w );
+DECLARE_WRITE32_HANDLER ( saturn_vdp2_cram_w );
+DECLARE_WRITE16_HANDLER ( saturn_vdp2_regs_w );
 
 
-SCREEN_UPDATE_RGB32( stv_vdp2 );
+
 #if NEW_VIDEO_CODE
-SCREEN_UPDATE_RGB32( saturn );
+
 #endif

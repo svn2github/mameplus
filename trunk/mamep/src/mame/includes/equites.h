@@ -104,15 +104,11 @@ public:
 	DECLARE_PALETTE_INIT(equites);
 	DECLARE_VIDEO_START(splndrbt);
 	DECLARE_PALETTE_INIT(splndrbt);
+	UINT32 screen_update_equites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_splndrbt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(equites_nmi_callback);
+	TIMER_CALLBACK_MEMBER(equites_frq_adjuster_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(equites_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(splndrbt_scanline);
+	DECLARE_WRITE_LINE_MEMBER(equites_msm5232_gate);
 };
-
-
-/*----------- defined in video/equites.c -----------*/
-
-
-extern PALETTE_INIT( equites );
-extern VIDEO_START( equites );
-extern SCREEN_UPDATE_IND16( equites );
-extern PALETTE_INIT( splndrbt );
-extern VIDEO_START( splndrbt );
-extern SCREEN_UPDATE_IND16( splndrbt );

@@ -108,14 +108,11 @@ public:
 	DECLARE_VIDEO_START(jpmimpct);
 	DECLARE_MACHINE_START(impctawp);
 	DECLARE_MACHINE_RESET(impctawp);
+	TIMER_DEVICE_CALLBACK_MEMBER(duart_1_timer_event);
 };
 
 
 /*----------- defined in video/jpmimpct.c -----------*/
-
-
-void jpmimpct_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg);
-void jpmimpct_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg);
+void jpmimpct_to_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg);
+void jpmimpct_from_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg);
 void jpmimpct_scanline_update(screen_device &screen, bitmap_rgb32 &bitmap, int scanline, const tms34010_display_params *params);
-
-

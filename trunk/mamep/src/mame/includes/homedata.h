@@ -40,7 +40,7 @@ public:
 	cpu_device *m_audiocpu;
 	dac_device *m_dac;
 	device_t *m_ym;
-	sn76489a_new_device *m_sn;
+	sn76489a_device *m_sn;
 	UINT8 m_prot_data;
 	DECLARE_READ8_MEMBER(mrokumei_keyboard_r);
 	DECLARE_WRITE8_MEMBER(mrokumei_keyboard_select_w);
@@ -120,25 +120,11 @@ public:
 	DECLARE_VIDEO_START(mirderby);
 	DECLARE_PALETTE_INIT(mirderby);
 	DECLARE_VIDEO_START(lemnangl);
+	UINT32 screen_update_mrokumei(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_reikaids(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_pteacher(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_mirderby(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_homedata(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(homedata_irq);
+	INTERRUPT_GEN_MEMBER(upd7807_irq);
 };
-
-
-
-/*----------- defined in video/homedata.c -----------*/
-
-
-
-
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( mrokumei );
-SCREEN_UPDATE_IND16( reikaids );
-SCREEN_UPDATE_IND16( pteacher );
-SCREEN_UPDATE_IND16( mirderby );
-SCREEN_VBLANK( homedata );

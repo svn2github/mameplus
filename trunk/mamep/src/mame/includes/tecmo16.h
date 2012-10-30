@@ -49,14 +49,5 @@ public:
 	virtual void video_start();
 	DECLARE_VIDEO_START(ginkun);
 	DECLARE_VIDEO_START(riot);
+	UINT32 screen_update_tecmo16(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/tecmo16.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_RGB32( tecmo16 );

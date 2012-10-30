@@ -65,26 +65,30 @@ void carpolo_74148_3s_cb(device_t *device)
 
 
 /* the outputs of the flip-flops are connected to the priority encoder */
-WRITE_LINE_DEVICE_HANDLER( carpolo_7474_2s_1_q_cb )
+WRITE_LINE_MEMBER(carpolo_state::carpolo_7474_2s_1_q_cb)
 {
+	device_t *device = machine().device("74148_3s");
 	ttl74148_input_line_w(device, COIN1_PRIORITY_LINE, state);
 	ttl74148_update(device);
 }
 
-WRITE_LINE_DEVICE_HANDLER( carpolo_7474_2s_2_q_cb )
+WRITE_LINE_MEMBER(carpolo_state::carpolo_7474_2s_2_q_cb)
 {
+	device_t *device = machine().device("74148_3s");
 	ttl74148_input_line_w(device, COIN2_PRIORITY_LINE, state);
 	ttl74148_update(device);
 }
 
-WRITE_LINE_DEVICE_HANDLER( carpolo_7474_2u_1_q_cb )
+WRITE_LINE_MEMBER(carpolo_state::carpolo_7474_2u_1_q_cb)
 {
+	device_t *device = machine().device("74148_3s");
 	ttl74148_input_line_w(device, COIN3_PRIORITY_LINE, state);
 	ttl74148_update(device);
 }
 
-WRITE_LINE_DEVICE_HANDLER( carpolo_7474_2u_2_q_cb )
+WRITE_LINE_MEMBER(carpolo_state::carpolo_7474_2u_2_q_cb)
 {
+	device_t *device = machine().device("74148_3s");
 	ttl74148_input_line_w(device, COIN4_PRIORITY_LINE, state);
 	ttl74148_update(device);
 }
@@ -202,27 +206,26 @@ READ8_MEMBER(carpolo_state::carpolo_interrupt_cause_r)
 }
 
 
-INTERRUPT_GEN( carpolo_timer_interrupt )
+INTERRUPT_GEN_MEMBER(carpolo_state::carpolo_timer_interrupt)
 {
-	carpolo_state *state = device->machine().driver_data<carpolo_state>();
 	UINT8 port_value;
 	int player;
 
 
 	/* cause the timer interrupt */
-	ttl74148_input_line_w(state->m_ttl74148_3s, PRI0_PRIORTITY_LINE, 0);
-	state->m_priority_0_extension = TIMER_EXTRA_BITS;
+	ttl74148_input_line_w(m_ttl74148_3s, PRI0_PRIORTITY_LINE, 0);
+	m_priority_0_extension = TIMER_EXTRA_BITS;
 
-	ttl74148_update(state->m_ttl74148_3s);
+	ttl74148_update(m_ttl74148_3s);
 
 
 	/* check the coins here as well - they drive the clock of the flip-flops */
-	port_value = state->ioport("IN0")->read();
+	port_value = ioport("IN0")->read();
 
-	state->m_ttl7474_2s_1->clock_w((port_value & 0x01) >> 0);
-	state->m_ttl7474_2s_2->clock_w((port_value & 0x02) >> 1);
-	state->m_ttl7474_2u_1->clock_w((port_value & 0x04) >> 2);
-	state->m_ttl7474_2u_2->clock_w((port_value & 0x08) >> 3);
+	m_ttl7474_2s_1->clock_w((port_value & 0x01) >> 0);
+	m_ttl7474_2s_2->clock_w((port_value & 0x02) >> 1);
+	m_ttl7474_2u_1->clock_w((port_value & 0x04) >> 2);
+	m_ttl7474_2u_2->clock_w((port_value & 0x08) >> 3);
 
 	/* read the steering controls */
 	for (player = 0; player < 4; player++)
@@ -234,20 +237,20 @@ INTERRUPT_GEN( carpolo_timer_interrupt )
 		switch (player)
 		{
 			default:
-			case 0:	movement_flip_flop = state->m_ttl7474_1f_1;	dir_flip_flop = state->m_ttl7474_1f_2;	break;
-			case 1:	movement_flip_flop = state->m_ttl7474_1d_1;	dir_flip_flop = state->m_ttl7474_1d_2;	break;
-			case 2:	movement_flip_flop = state->m_ttl7474_1c_1;	dir_flip_flop = state->m_ttl7474_1c_2;	break;
-			case 3:	movement_flip_flop = state->m_ttl7474_1a_1;	dir_flip_flop = state->m_ttl7474_1a_2;	break;
+			case 0:	movement_flip_flop = m_ttl7474_1f_1;	dir_flip_flop = m_ttl7474_1f_2;	break;
+			case 1:	movement_flip_flop = m_ttl7474_1d_1;	dir_flip_flop = m_ttl7474_1d_2;	break;
+			case 2:	movement_flip_flop = m_ttl7474_1c_1;	dir_flip_flop = m_ttl7474_1c_2;	break;
+			case 3:	movement_flip_flop = m_ttl7474_1a_1;	dir_flip_flop = m_ttl7474_1a_2;	break;
 		}
 
-		port_value = device->machine().root_device().ioport(portnames[player])->read();
+		port_value = machine().root_device().ioport(portnames[player])->read();
 
-		if (port_value != state->m_last_wheel_value[player])
+		if (port_value != m_last_wheel_value[player])
 		{
 			/* set the movement direction */
-			dir_flip_flop->d_w(((port_value - state->m_last_wheel_value[player]) & 0x80) ? 1 : 0);
+			dir_flip_flop->d_w(((port_value - m_last_wheel_value[player]) & 0x80) ? 1 : 0);
 
-			state->m_last_wheel_value[player] = port_value;
+			m_last_wheel_value[player] = port_value;
 		}
 
 		/* as the wheel moves, both flip-flops are clocked */
@@ -258,7 +261,7 @@ INTERRUPT_GEN( carpolo_timer_interrupt )
 
 
 	/* finally read the accelerator pedals */
-	port_value = device->machine().root_device().ioport("PEDALS")->read();
+	port_value = machine().root_device().ioport("PEDALS")->read();
 
 	for (player = 0; player < 4; player++)
 	{
@@ -266,50 +269,46 @@ INTERRUPT_GEN( carpolo_timer_interrupt )
            how much, resulting in only two different possible levels */
 		if (port_value & 0x01)
 		{
-			ttl74153_input_line_w(state->m_ttl74153_1k, 0, player, 1);
-			ttl74153_input_line_w(state->m_ttl74153_1k, 1, player, 0);
+			ttl74153_input_line_w(m_ttl74153_1k, 0, player, 1);
+			ttl74153_input_line_w(m_ttl74153_1k, 1, player, 0);
 		}
 		else if (port_value & 0x02)
 		{
-			ttl74153_input_line_w(state->m_ttl74153_1k, 0, player, 1);
-			ttl74153_input_line_w(state->m_ttl74153_1k, 1, player, 1);
+			ttl74153_input_line_w(m_ttl74153_1k, 0, player, 1);
+			ttl74153_input_line_w(m_ttl74153_1k, 1, player, 1);
 		}
 		else
 		{
-			ttl74153_input_line_w(state->m_ttl74153_1k, 0, player, 0);
+			ttl74153_input_line_w(m_ttl74153_1k, 0, player, 0);
 			/* the other line is irrelevant */
 		}
 
 		port_value >>= 2;
 	}
 
-	ttl74153_update(state->m_ttl74153_1k);
+	ttl74153_update(m_ttl74153_1k);
 }
 
 // FIXME: Remove trampolines
 
-static WRITE_LINE_DEVICE_HANDLER( coin1_interrupt_clear_w )
+WRITE_LINE_MEMBER(carpolo_state::coin1_interrupt_clear_w)
 {
-	carpolo_state *drvstate = device->machine().driver_data<carpolo_state>();
-	drvstate->m_ttl7474_2s_1->clear_w(state);
+	m_ttl7474_2s_1->clear_w(state);
 }
 
-static WRITE_LINE_DEVICE_HANDLER( coin2_interrupt_clear_w )
+WRITE_LINE_MEMBER(carpolo_state::coin2_interrupt_clear_w)
 {
-	carpolo_state *drvstate = device->machine().driver_data<carpolo_state>();
-	drvstate->m_ttl7474_2s_2->clear_w(state);
+	m_ttl7474_2s_2->clear_w(state);
 }
 
-static WRITE_LINE_DEVICE_HANDLER( coin3_interrupt_clear_w )
+WRITE_LINE_MEMBER(carpolo_state::coin3_interrupt_clear_w)
 {
-	carpolo_state *drvstate = device->machine().driver_data<carpolo_state>();
-	drvstate->m_ttl7474_2u_1->clear_w(state);
+	m_ttl7474_2u_1->clear_w(state);
 }
 
-static WRITE_LINE_DEVICE_HANDLER( coin4_interrupt_clear_w )
+WRITE_LINE_MEMBER(carpolo_state::coin4_interrupt_clear_w)
 {
-	carpolo_state *drvstate = device->machine().driver_data<carpolo_state>();
-	drvstate->m_ttl7474_2u_2->clear_w(state);
+	m_ttl7474_2u_2->clear_w(state);
 }
 
 WRITE8_MEMBER(carpolo_state::carpolo_ball_screen_interrupt_clear_w)
@@ -355,9 +354,8 @@ WRITE8_MEMBER(carpolo_state::carpolo_timer_interrupt_clear_w)
  *
  *************************************/
 
-static WRITE8_DEVICE_HANDLER( pia_0_port_a_w )
+WRITE8_MEMBER(carpolo_state::pia_0_port_a_w)
 {
-	carpolo_state *state = device->machine().driver_data<carpolo_state>();
 	/* bit 0 - Coin counter
        bit 1 - Player 4 crash sound
        bit 2 - Player 3 crash sound
@@ -367,19 +365,18 @@ static WRITE8_DEVICE_HANDLER( pia_0_port_a_w )
        bit 6 - Player 1 crash sound
        bit 7 - Ball hit pulse sound */
 
-	coin_counter_w(device->machine(), 0, data & 0x01);
+	coin_counter_w(machine(), 0, data & 0x01);
 
 
-	state->m_ttl7474_1f_1->clear_w((data & 0x08) >> 3);
-	state->m_ttl7474_1d_1->clear_w((data & 0x08) >> 3);
-	state->m_ttl7474_1c_1->clear_w((data & 0x08) >> 3);
-	state->m_ttl7474_1a_1->clear_w((data & 0x08) >> 3);
+	m_ttl7474_1f_1->clear_w((data & 0x08) >> 3);
+	m_ttl7474_1d_1->clear_w((data & 0x08) >> 3);
+	m_ttl7474_1c_1->clear_w((data & 0x08) >> 3);
+	m_ttl7474_1a_1->clear_w((data & 0x08) >> 3);
 }
 
 
-static WRITE8_DEVICE_HANDLER( pia_0_port_b_w )
+WRITE8_MEMBER(carpolo_state::pia_0_port_b_w)
 {
-	carpolo_state *state = device->machine().driver_data<carpolo_state>();
 	/* bit 0 - Strobe speed bits sound
        bit 1 - Speed bit 0 sound
        bit 2 - Speed bit 1 sound
@@ -387,26 +384,24 @@ static WRITE8_DEVICE_HANDLER( pia_0_port_b_w )
        bit 6 - Select pedal 0
        bit 7 - Select pdeal 1 */
 
-	ttl74153_a_w(state->m_ttl74153_1k, data & 0x40);
-	ttl74153_b_w(state->m_ttl74153_1k, data & 0x80);
+	ttl74153_a_w(m_ttl74153_1k, data & 0x40);
+	ttl74153_b_w(m_ttl74153_1k, data & 0x80);
 
-	ttl74153_update(state->m_ttl74153_1k);
+	ttl74153_update(m_ttl74153_1k);
 }
 
-static READ8_DEVICE_HANDLER( pia_0_port_b_r )
+READ8_MEMBER(carpolo_state::pia_0_port_b_r)
 {
-	carpolo_state *state = device->machine().driver_data<carpolo_state>();
 	/* bit 4 - Pedal bit 0
        bit 5 - Pedal bit 1 */
 
-	return (ttl74153_output_r(state->m_ttl74153_1k, 0) << 5) |
-		   (ttl74153_output_r(state->m_ttl74153_1k, 1) << 4);
+	return (ttl74153_output_r(m_ttl74153_1k, 0) << 5) |
+		   (ttl74153_output_r(m_ttl74153_1k, 1) << 4);
 }
 
 
-static READ8_DEVICE_HANDLER( pia_1_port_a_r )
+READ8_MEMBER(carpolo_state::pia_1_port_a_r)
 {
-	carpolo_state *state = device->machine().driver_data<carpolo_state>();
 	UINT8 ret;
 
 	/* bit 0 - Player 4 steering input (left or right)
@@ -418,19 +413,18 @@ static READ8_DEVICE_HANDLER( pia_1_port_a_r )
        bit 6 - Player 2 forward/reverse input
        bit 7 - Player 1 forward/reverse input */
 
-	ret = (state->m_ttl7474_1a_2->output_r() ? 0x01 : 0x00) |
-		  (state->m_ttl7474_1c_2->output_r() ? 0x02 : 0x00) |
-		  (state->m_ttl7474_1d_2->output_r() ? 0x04 : 0x00) |
-		  (state->m_ttl7474_1f_2->output_r() ? 0x08 : 0x00) |
-		  (state->ioport("IN2")->read() & 0xf0);
+	ret = (m_ttl7474_1a_2->output_r() ? 0x01 : 0x00) |
+		  (m_ttl7474_1c_2->output_r() ? 0x02 : 0x00) |
+		  (m_ttl7474_1d_2->output_r() ? 0x04 : 0x00) |
+		  (m_ttl7474_1f_2->output_r() ? 0x08 : 0x00) |
+		  (ioport("IN2")->read() & 0xf0);
 
 	return ret;
 }
 
 
-static READ8_DEVICE_HANDLER( pia_1_port_b_r )
+READ8_MEMBER(carpolo_state::pia_1_port_b_r)
 {
-	carpolo_state *state = device->machine().driver_data<carpolo_state>();
 	UINT8 ret;
 
 	/* bit 4 - Player 4 steering input (wheel moving or stopped)
@@ -438,10 +432,10 @@ static READ8_DEVICE_HANDLER( pia_1_port_b_r )
        bit 6 - Player 2 steering input (wheel moving or stopped)
        bit 7 - Player 1 steering input (wheel moving or stopped) */
 
-	ret = (state->m_ttl7474_1a_1->output_r() ? 0x10 : 0x00) |
-		  (state->m_ttl7474_1c_1->output_r() ? 0x20 : 0x00) |
-		  (state->m_ttl7474_1d_1->output_r() ? 0x40 : 0x00) |
-		  (state->m_ttl7474_1f_1->output_r() ? 0x80 : 0x00);
+	ret = (m_ttl7474_1a_1->output_r() ? 0x10 : 0x00) |
+		  (m_ttl7474_1c_1->output_r() ? 0x20 : 0x00) |
+		  (m_ttl7474_1d_1->output_r() ? 0x40 : 0x00) |
+		  (m_ttl7474_1f_1->output_r() ? 0x80 : 0x00);
 
 	return ret;
 }
@@ -450,15 +444,15 @@ static READ8_DEVICE_HANDLER( pia_1_port_b_r )
 const pia6821_interface carpolo_pia0_intf =
 {
 	DEVCB_NULL,		/* port A in */
-	DEVCB_HANDLER(pia_0_port_b_r),	/* port B in */
+	DEVCB_DRIVER_MEMBER(carpolo_state,pia_0_port_b_r),	/* port B in */
 	DEVCB_NULL,		/* line CA1 in */
 	DEVCB_NULL,		/* line CB1 in */
 	DEVCB_NULL,		/* line CA2 in */
 	DEVCB_NULL,		/* line CB2 in */
-	DEVCB_HANDLER(pia_0_port_a_w),		/* port A out */
-	DEVCB_HANDLER(pia_0_port_b_w),		/* port B out */
-	DEVCB_LINE(coin1_interrupt_clear_w),		/* line CA2 out */
-	DEVCB_LINE(coin2_interrupt_clear_w),		/* port CB2 out */
+	DEVCB_DRIVER_MEMBER(carpolo_state,pia_0_port_a_w),		/* port A out */
+	DEVCB_DRIVER_MEMBER(carpolo_state,pia_0_port_b_w),		/* port B out */
+	DEVCB_DRIVER_LINE_MEMBER(carpolo_state,coin1_interrupt_clear_w),		/* line CA2 out */
+	DEVCB_DRIVER_LINE_MEMBER(carpolo_state,coin2_interrupt_clear_w),		/* port CB2 out */
 	DEVCB_NULL,		/* IRQA */
 	DEVCB_NULL		/* IRQB */
 };
@@ -466,16 +460,16 @@ const pia6821_interface carpolo_pia0_intf =
 
 const pia6821_interface carpolo_pia1_intf =
 {
-	DEVCB_HANDLER(pia_1_port_a_r),		/* port A in */
-	DEVCB_HANDLER(pia_1_port_b_r),		/* port B in */
+	DEVCB_DRIVER_MEMBER(carpolo_state,pia_1_port_a_r),		/* port A in */
+	DEVCB_DRIVER_MEMBER(carpolo_state,pia_1_port_b_r),		/* port B in */
 	DEVCB_NULL,		/* line CA1 in */
 	DEVCB_NULL,		/* line CB1 in */
 	DEVCB_NULL,		/* line CA2 in */
 	DEVCB_NULL,		/* line CB2 in */
 	DEVCB_NULL,		/* port A out */
 	DEVCB_NULL,		/* port B out */
-	DEVCB_LINE(coin3_interrupt_clear_w),		/* line CA2 out */
-	DEVCB_LINE(coin4_interrupt_clear_w),		/* port CB2 out */
+	DEVCB_DRIVER_LINE_MEMBER(carpolo_state,coin3_interrupt_clear_w),		/* line CA2 out */
+	DEVCB_DRIVER_LINE_MEMBER(carpolo_state,coin4_interrupt_clear_w),		/* port CB2 out */
 	DEVCB_NULL,		/* IRQA */
 	DEVCB_NULL		/* IRQB */
 };

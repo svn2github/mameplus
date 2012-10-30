@@ -15,6 +15,8 @@ public:
 	UINT8			m_playfield_tile_bank;
 	UINT16			m_playfield_xscroll;
 	UINT16			m_playfield_yscroll;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_READ16_MEMBER(port1_r);
 	DECLARE_DRIVER_INIT(vindictr);
 	TILE_GET_INFO_MEMBER(get_alpha_tile_info);
@@ -22,14 +24,12 @@ public:
 	DECLARE_MACHINE_START(vindictr);
 	DECLARE_MACHINE_RESET(vindictr);
 	DECLARE_VIDEO_START(vindictr);
+	UINT32 screen_update_vindictr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
 /*----------- defined in video/vindictr.c -----------*/
 
-WRITE16_HANDLER( vindictr_paletteram_w );
-
-
-SCREEN_UPDATE_IND16( vindictr );
+DECLARE_WRITE16_HANDLER( vindictr_paletteram_w );
 
 void vindictr_scanline_update(screen_device &screen, int scanline);

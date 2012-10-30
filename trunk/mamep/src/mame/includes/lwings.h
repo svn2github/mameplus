@@ -58,14 +58,8 @@ public:
 	virtual void video_start();
 	DECLARE_VIDEO_START(trojan);
 	DECLARE_VIDEO_START(avengers);
+	UINT32 screen_update_lwings(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_trojan(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(lwings_interrupt);
+	INTERRUPT_GEN_MEMBER(avengers_interrupt);
 };
-
-
-/*----------- defined in video/lwings.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( lwings );
-SCREEN_UPDATE_IND16( trojan );

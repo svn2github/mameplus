@@ -34,12 +34,5 @@ public:
 	TILEMAP_MAPPER_MEMBER(get_bg_memory_offset);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_tryout(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/tryout.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( tryout );

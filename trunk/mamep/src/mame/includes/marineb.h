@@ -39,16 +39,11 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_MACHINE_RESET(springer);
+	UINT32 screen_update_marineb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_changes(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_springer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_hoccer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_hopprobo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(marineb_vblank_irq);
+	INTERRUPT_GEN_MEMBER(wanted_vblank_irq);
 };
-
-
-/*----------- defined in video/marineb.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( marineb );
-SCREEN_UPDATE_IND16( changes );
-SCREEN_UPDATE_IND16( springer );
-SCREEN_UPDATE_IND16( hoccer );
-SCREEN_UPDATE_IND16( hopprobo );

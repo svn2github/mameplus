@@ -128,37 +128,22 @@ public:
 	DECLARE_MACHINE_RESET(buckrog);
 	DECLARE_VIDEO_START(buckrog);
 	DECLARE_PALETTE_INIT(buckrog);
+	UINT32 screen_update_turbo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_subroc3d(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_buckrog(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(delayed_i8255_w);
+	DECLARE_WRITE8_MEMBER(turbo_sound_a_w);
+	DECLARE_WRITE8_MEMBER(turbo_sound_b_w);
+	DECLARE_WRITE8_MEMBER(turbo_sound_c_w);
+	DECLARE_WRITE8_MEMBER(subroc3d_sound_a_w);
+	DECLARE_WRITE8_MEMBER(subroc3d_sound_b_w);
+	DECLARE_WRITE8_MEMBER(subroc3d_sound_c_w);
+	DECLARE_WRITE8_MEMBER(buckrog_sound_a_w);
+	DECLARE_WRITE8_MEMBER(buckrog_sound_b_w);
 };
 
 
 /*----------- defined in audio/turbo.c -----------*/
-
 MACHINE_CONFIG_EXTERN( turbo_samples );
 MACHINE_CONFIG_EXTERN( subroc3d_samples );
 MACHINE_CONFIG_EXTERN( buckrog_samples );
-
-WRITE8_DEVICE_HANDLER( turbo_sound_a_w );
-WRITE8_DEVICE_HANDLER( turbo_sound_b_w );
-WRITE8_DEVICE_HANDLER( turbo_sound_c_w );
-
-WRITE8_DEVICE_HANDLER( subroc3d_sound_a_w );
-WRITE8_DEVICE_HANDLER( subroc3d_sound_b_w );
-WRITE8_DEVICE_HANDLER( subroc3d_sound_c_w );
-
-WRITE8_DEVICE_HANDLER( buckrog_sound_a_w );
-WRITE8_DEVICE_HANDLER( buckrog_sound_b_w );
-
-
-/*----------- defined in video/turbo.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( turbo );
-
-
-SCREEN_UPDATE_IND16( subroc3d );
-
-
-
-SCREEN_UPDATE_IND16( buckrog );
-

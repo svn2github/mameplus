@@ -47,8 +47,9 @@ public:
 	DECLARE_MACHINE_RESET(bagman);
 	DECLARE_VIDEO_START(bagman);
 	DECLARE_PALETTE_INIT(bagman);
+	UINT32 screen_update_bagman(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
 
 /*----------- timings -----------*/
 
@@ -69,15 +70,3 @@ public:
  */
 #define VBEND				(0x0f)
 #define VBSTART				(0xef)
-
-/*----------- defined in machine/bagman.c -----------*/
-
-
-
-
-/*----------- defined in video/bagman.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( bagman );

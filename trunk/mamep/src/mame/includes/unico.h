@@ -40,16 +40,6 @@ public:
 	DECLARE_VIDEO_START(unico);
 	DECLARE_MACHINE_RESET(zeropt);
 	DECLARE_VIDEO_START(zeropnt2);
+	UINT32 screen_update_unico(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_zeropnt2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/unico.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( unico );
-
-
-SCREEN_UPDATE_IND16( zeropnt2 );
-

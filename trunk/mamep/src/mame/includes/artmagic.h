@@ -49,15 +49,11 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	TIMER_CALLBACK_MEMBER(irq_off);
 };
 
 
 /*----------- defined in video/artmagic.c -----------*/
-
-
-
-void artmagic_to_shiftreg(address_space *space, offs_t address, UINT16 *data);
-void artmagic_from_shiftreg(address_space *space, offs_t address, UINT16 *data);
-
-
+void artmagic_to_shiftreg(address_space &space, offs_t address, UINT16 *data);
+void artmagic_from_shiftreg(address_space &space, offs_t address, UINT16 *data);
 void artmagic_scanline(screen_device &screen, bitmap_rgb32 &bitmap, int scanline, const tms34010_display_params *params);

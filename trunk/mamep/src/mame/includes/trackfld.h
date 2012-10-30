@@ -27,7 +27,7 @@ public:
 	required_shared_ptr<UINT8> m_scroll2;
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
-	optional_device<sn76496_new_device> m_sn;
+	optional_device<sn76496_device> m_sn;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -65,14 +65,8 @@ public:
 	DECLARE_VIDEO_START(trackfld);
 	DECLARE_PALETTE_INIT(trackfld);
 	DECLARE_VIDEO_START(atlantol);
+	UINT32 screen_update_trackfld(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	INTERRUPT_GEN_MEMBER(vblank_nmi);
+	INTERRUPT_GEN_MEMBER(yieartf_timer_irq);
 };
-
-
-/*----------- defined in video/trackfld.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( trackfld );
-
-

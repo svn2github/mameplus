@@ -495,14 +495,14 @@ interleave.
 *********************************/
 
 /*
-static TIMER_CALLBACK( kludge_callback )
+TIMER_CALLBACK_MEMBER(tnzs_state::kludge_callback)
 {
     tnzs_sharedram[0x0f10] = param;
 }
 
 WRITE8_MEMBER(tnzs_state::tnzs_sync_kludge_w)
 {
-    machine().scheduler().synchronize(FUNC(kludge_callback), data);
+    machine().scheduler().synchronize(timer_expired_delegate(FUNC(tnzs_state::kludge_callback),this), data);
 }
 */
 
@@ -528,7 +528,7 @@ DRIVER_INIT_MEMBER(tnzs_state,drtoppel)
 	m_mcu_type = MCU_DRTOPPEL;
 
 	/* drtoppel writes to the palette RAM area even if it has PROMs! We have to patch it out. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xf800, 0xfbff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xf800, 0xfbff);
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,chukatai)
@@ -540,7 +540,7 @@ DRIVER_INIT_MEMBER(tnzs_state,tnzs)
 {
 	m_mcu_type = MCU_TNZS;
 	/* we need to install a kludge to avoid problems with a bug in the original code */
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,tnzsb)
@@ -548,7 +548,7 @@ DRIVER_INIT_MEMBER(tnzs_state,tnzsb)
 	m_mcu_type = MCU_NONE_TNZSB;
 
 	/* we need to install a kludge to avoid problems with a bug in the original code */
-//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
+//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,kabukiz)
@@ -564,9 +564,9 @@ DRIVER_INIT_MEMBER(tnzs_state,insectx)
 	m_mcu_type = MCU_NONE_INSECTX;
 
 	/* this game has no mcu, replace the handler with plain input port handlers */
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_read_port(0xc000, 0xc000, "IN0" );
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_read_port(0xc001, 0xc001, "IN1" );
-	machine().device("sub")->memory().space(AS_PROGRAM)->install_read_port(0xc002, 0xc002, "IN2" );
+	machine().device("sub")->memory().space(AS_PROGRAM).install_read_port(0xc000, 0xc000, "IN0" );
+	machine().device("sub")->memory().space(AS_PROGRAM).install_read_port(0xc001, 0xc001, "IN1" );
+	machine().device("sub")->memory().space(AS_PROGRAM).install_read_port(0xc002, 0xc002, "IN2" );
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,kageki)
@@ -614,29 +614,28 @@ WRITE8_MEMBER(tnzs_state::tnzs_mcu_w)
 	}
 }
 
-INTERRUPT_GEN( arknoid2_interrupt )
+INTERRUPT_GEN_MEMBER(tnzs_state::arknoid2_interrupt)
 {
-	tnzs_state *state = device->machine().driver_data<tnzs_state>();
 	int coin;
 
-	switch (state->m_mcu_type)
+	switch (m_mcu_type)
 	{
 		case MCU_ARKANOID:
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
 		case MCU_PLUMPOP:
 			coin  = 0;
-			coin |= ((state->ioport("COIN1")->read() & 1) << 0);
-			coin |= ((state->ioport("COIN2")->read() & 1) << 1);
-			coin |= ((state->ioport("IN2")->read() & 3) << 2);
+			coin |= ((ioport("COIN1")->read() & 1) << 0);
+			coin |= ((ioport("COIN2")->read() & 1) << 1);
+			coin |= ((ioport("IN2")->read() & 3) << 2);
 			coin ^= 0x0c;
-			mcu_handle_coins(device->machine(), coin);
+			mcu_handle_coins(machine(), coin);
 			break;
 		default:
 			break;
 	}
 
-	device->execute().set_input_line(0, HOLD_LINE);
+	device.execute().set_input_line(0, HOLD_LINE);
 }
 
 MACHINE_RESET_MEMBER(tnzs_state,tnzs)

@@ -36,12 +36,5 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(untoucha);
+	UINT32 screen_update_hnayayoi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/hnayayoi.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( hnayayoi );
-

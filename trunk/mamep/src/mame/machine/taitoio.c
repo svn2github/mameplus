@@ -112,7 +112,7 @@ READ8_DEVICE_HANDLER( tc0220ioc_r )
 			return tc0220ioc->read_7(0);
 
 		default:
-//logerror("PC %06x: warning - read TC0220IOC address %02x\n",space->device().safe_pc(),offset);
+//logerror("PC %06x: warning - read TC0220IOC address %02x\n",space.device().safe_pc(),offset);
 			return 0xff;
 	}
 }
@@ -126,23 +126,23 @@ WRITE8_DEVICE_HANDLER( tc0220ioc_w )
 	{
 
 		case 0x00:
-			device->machine().watchdog_reset();
+			space.machine().watchdog_reset();
 			break;
 
 		case 0x04:	/* coin counters and lockout, hi nibble irrelevant */
 
-			coin_lockout_w(device->machine(), 0, ~data & 0x01);
-			coin_lockout_w(device->machine(), 1, ~data & 0x02);
-			coin_counter_w(device->machine(), 0, data & 0x04);
-			coin_counter_w(device->machine(), 1, data & 0x08);
+			coin_lockout_w(space.machine(), 0, ~data & 0x01);
+			coin_lockout_w(space.machine(), 1, ~data & 0x02);
+			coin_counter_w(space.machine(), 0, data & 0x04);
+			coin_counter_w(space.machine(), 1, data & 0x08);
 
 //if (data & 0xf0)
-//logerror("PC %06x: warning - write %02x to TC0220IOC address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %02x to TC0220IOC address %02x\n",space.device().safe_pc(),data,offset);
 
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %02x to TC0220IOC address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %02x to TC0220IOC address %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
@@ -162,13 +162,13 @@ WRITE8_DEVICE_HANDLER( tc0220ioc_port_w )
 READ8_DEVICE_HANDLER( tc0220ioc_portreg_r )
 {
 	tc0220ioc_state *tc0220ioc =  tc0220ioc_get_safe_token(device);
-	return tc0220ioc_r(device, tc0220ioc->port);
+	return tc0220ioc_r(device, space, tc0220ioc->port);
 }
 
 WRITE8_DEVICE_HANDLER( tc0220ioc_portreg_w )
 {
 	tc0220ioc_state *tc0220ioc =  tc0220ioc_get_safe_token(device);
-	tc0220ioc_w(device, tc0220ioc->port, data);
+	tc0220ioc_w(device, space, tc0220ioc->port, data);
 }
 
 
@@ -268,7 +268,7 @@ READ8_DEVICE_HANDLER( tc0510nio_r )
 			return tc0510nio->read_7(0);
 
 		default:
-//logerror("PC %06x: warning - read TC0510NIO address %02x\n",space->device().safe_pc(),offset);
+//logerror("PC %06x: warning - read TC0510NIO address %02x\n",space.device().safe_pc(),offset);
 			return 0xff;
 	}
 }
@@ -282,47 +282,47 @@ WRITE8_DEVICE_HANDLER( tc0510nio_w )
 	switch (offset)
 	{
 		case 0x00:
-			device->machine().watchdog_reset();
+			space.machine().watchdog_reset();
 			break;
 
 		case 0x04:	/* coin counters and lockout */
-			coin_lockout_w(device->machine(), 0, ~data & 0x01);
-			coin_lockout_w(device->machine(), 1, ~data & 0x02);
-			coin_counter_w(device->machine(), 0, data & 0x04);
-			coin_counter_w(device->machine(), 1, data & 0x08);
+			coin_lockout_w(space.machine(), 0, ~data & 0x01);
+			coin_lockout_w(space.machine(), 1, ~data & 0x02);
+			coin_counter_w(space.machine(), 0, data & 0x04);
+			coin_counter_w(space.machine(), 1, data & 0x08);
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %02x to TC0510NIO address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %02x to TC0510NIO address %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
 
 READ16_DEVICE_HANDLER( tc0510nio_halfword_r )
 {
-	return tc0510nio_r(device, offset);
+	return tc0510nio_r(device, space, offset);
 }
 
 WRITE16_DEVICE_HANDLER( tc0510nio_halfword_w )
 {
 	if (ACCESSING_BITS_0_7)
-		tc0510nio_w(device, offset, data & 0xff);
+		tc0510nio_w(device, space, offset, data & 0xff);
 	else
 	{
 		/* driftout writes the coin counters here - bug? */
-//logerror("CPU #0 PC %06x: warning - write to MSB of TC0510NIO address %02x\n",space->device().safe_pc(),offset);
-		tc0510nio_w(device, offset, (data >> 8) & 0xff);
+//logerror("CPU #0 PC %06x: warning - write to MSB of TC0510NIO address %02x\n",space.device().safe_pc(),offset);
+		tc0510nio_w(device, space, offset, (data >> 8) & 0xff);
 	}
 }
 
 READ16_DEVICE_HANDLER( tc0510nio_halfword_wordswap_r )
 {
-	return tc0510nio_halfword_r(device, offset ^ 1, mem_mask);
+	return tc0510nio_halfword_r(device, space, offset ^ 1, mem_mask);
 }
 
 WRITE16_DEVICE_HANDLER( tc0510nio_halfword_wordswap_w )
 {
-	tc0510nio_halfword_w(device, offset ^ 1,data, mem_mask);
+	tc0510nio_halfword_w(device, space, offset ^ 1,data, mem_mask);
 }
 
 
@@ -418,7 +418,7 @@ READ8_DEVICE_HANDLER( tc0640fio_r )
 			return tc0640fio->read_7(0);
 
 		default:
-//logerror("PC %06x: warning - read TC0640FIO address %02x\n",space->device().safe_pc(),offset);
+//logerror("PC %06x: warning - read TC0640FIO address %02x\n",space.device().safe_pc(),offset);
 			return 0xff;
 	}
 }
@@ -432,51 +432,51 @@ WRITE8_DEVICE_HANDLER( tc0640fio_w )
 	{
 
 		case 0x00:
-			device->machine().watchdog_reset();
+			space.machine().watchdog_reset();
 			break;
 
 		case 0x04:	/* coin counters and lockout */
-			coin_lockout_w(device->machine(), 0, ~data & 0x01);
-			coin_lockout_w(device->machine(), 1, ~data & 0x02);
-			coin_counter_w(device->machine(), 0, data & 0x04);
-			coin_counter_w(device->machine(), 1, data & 0x08);
+			coin_lockout_w(space.machine(), 0, ~data & 0x01);
+			coin_lockout_w(space.machine(), 1, ~data & 0x02);
+			coin_counter_w(space.machine(), 0, data & 0x04);
+			coin_counter_w(space.machine(), 1, data & 0x08);
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %02x to TC0640FIO address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %02x to TC0640FIO address %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
 
 READ16_DEVICE_HANDLER( tc0640fio_halfword_r )
 {
-	return tc0640fio_r(device, offset);
+	return tc0640fio_r(device, space, offset);
 }
 
 WRITE16_DEVICE_HANDLER( tc0640fio_halfword_w )
 {
 	if (ACCESSING_BITS_0_7)
-		tc0640fio_w(device, offset, data & 0xff);
+		tc0640fio_w(device, space, offset, data & 0xff);
 	else
 	{
-		tc0640fio_w(device, offset, (data >> 8) & 0xff);
-//logerror("CPU #0 PC %06x: warning - write to MSB of TC0640FIO address %02x\n",space->device().safe_pc(),offset);
+		tc0640fio_w(device, space, offset, (data >> 8) & 0xff);
+//logerror("CPU #0 PC %06x: warning - write to MSB of TC0640FIO address %02x\n",space.device().safe_pc(),offset);
 	}
 }
 
 READ16_DEVICE_HANDLER( tc0640fio_halfword_byteswap_r )
 {
-	return tc0640fio_halfword_r(device, offset, mem_mask) << 8;
+	return tc0640fio_halfword_r(device, space, offset, mem_mask) << 8;
 }
 
 WRITE16_DEVICE_HANDLER( tc0640fio_halfword_byteswap_w )
 {
 	if (ACCESSING_BITS_8_15)
-		tc0640fio_w(device, offset, (data >> 8) & 0xff);
+		tc0640fio_w(device, space, offset, (data >> 8) & 0xff);
 	else
 	{
-		tc0640fio_w(device, offset, data & 0xff);
-//logerror("CPU #0 PC %06x: warning - write to LSB of TC0640FIO address %02x\n",space->device().safe_pc(),offset);
+		tc0640fio_w(device, space, offset, data & 0xff);
+//logerror("CPU #0 PC %06x: warning - write to LSB of TC0640FIO address %02x\n",space.device().safe_pc(),offset);
 	}
 }
 
@@ -512,7 +512,7 @@ const device_type TC0220IOC = &device_creator<tc0220ioc_device>;
 tc0220ioc_device::tc0220ioc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0220IOC, "Taito TC0220IOC", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0220ioc_state));
+	m_token = global_alloc_clear(tc0220ioc_state);
 }
 
 //-------------------------------------------------
@@ -549,7 +549,7 @@ const device_type TC0510NIO = &device_creator<tc0510nio_device>;
 tc0510nio_device::tc0510nio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0510NIO, "Taito TC0510NIO", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0510nio_state));
+	m_token = global_alloc_clear(tc0510nio_state);
 }
 
 //-------------------------------------------------
@@ -586,7 +586,7 @@ const device_type TC0640FIO = &device_creator<tc0640fio_device>;
 tc0640fio_device::tc0640fio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0640FIO, "Taito TC0640FIO", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0640fio_state));
+	m_token = global_alloc_clear(tc0640fio_state);
 }
 
 //-------------------------------------------------

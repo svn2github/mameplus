@@ -52,14 +52,5 @@ public:
 	DECLARE_DRIVER_INIT(spacfury);
 	virtual void machine_start();
 	virtual void video_start();
+	UINT32 screen_update_segag80v(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in audio/segag80v.c -----------*/
-
-
-
-/*----------- defined in video/segag80v.c -----------*/
-
-
-SCREEN_UPDATE_RGB32( segag80v );

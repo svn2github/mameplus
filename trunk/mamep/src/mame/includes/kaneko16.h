@@ -63,6 +63,10 @@ public:
 	DECLARE_MACHINE_RESET(gtmr);
 	DECLARE_VIDEO_START(kaneko16);
 	DECLARE_MACHINE_RESET(mgcrystl);
+	UINT32 screen_update_kaneko16(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_common(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(kaneko16_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(shogwarr_interrupt);
 };
 
 class kaneko16_gtmr_state : public kaneko16_state
@@ -112,6 +116,7 @@ public:
 	DECLARE_DRIVER_INIT(berlwall);
 	DECLARE_PALETTE_INIT(berlwall);
 	DECLARE_VIDEO_START(berlwall);
+	UINT32 screen_update_berlwall(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 class kaneko16_shogwarr_state : public kaneko16_state
@@ -131,20 +136,5 @@ public:
 	DECLARE_DRIVER_INIT(shogwarr);
 	DECLARE_DRIVER_INIT(brapboys);
 };
-
-/*----------- defined in drivers/kaneko16.c -----------*/
-
-
-
-/*----------- defined in video/kaneko16.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( kaneko16 );
-SCREEN_UPDATE_IND16( berlwall );
-
 
 #endif

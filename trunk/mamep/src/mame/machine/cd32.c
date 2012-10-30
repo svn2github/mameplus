@@ -174,7 +174,7 @@ static DEVICE_START( akiko )
 	akiko_state *state = get_safe_token(device);
 
 	state->set_machine(machine);
-	state->m_space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	state->m_space = &machine.device("maincpu")->memory().space(AS_PROGRAM);
 	state->m_c2p_input_index = 0;
 	state->m_c2p_output_index = 0;
 
@@ -399,7 +399,7 @@ static void akiko_set_cd_status(akiko_state *state, UINT32 status)
 	if ( state->m_cdrom_status[0] & state->m_cdrom_status[1] )
 	{
 		if (LOG_AKIKO_CD) logerror( "Akiko CD IRQ\n" );
-		amiga_custom_w(state->m_space, REG_INTREQ, 0x8000 | INTENA_PORTS, 0xffff);
+		amiga_custom_w(*state->m_space, REG_INTREQ, 0x8000 | INTENA_PORTS, 0xffff);
 	}
 }
 
@@ -774,18 +774,17 @@ static void akiko_update_cdrom(akiko_state *state)
 READ32_DEVICE_HANDLER( amiga_akiko32_r )
 {
 	akiko_state *state = get_safe_token(device);
-	address_space *space = state->m_space;
 	UINT32		retval;
 
 	if ( LOG_AKIKO && offset < (0x30/4) )
 	{
-		logerror( "Reading AKIKO reg %0x [%s] at PC=%06x\n", offset, get_akiko_reg_name(offset), space->device().safe_pc() );
+		logerror( "Reading AKIKO reg %0x [%s] at PC=%06x\n", offset, get_akiko_reg_name(offset), state->m_space->device().safe_pc() );
 	}
 
 	switch( offset )
 	{
 		case 0x00/4:	/* ID */
-			if ( state->m_cdrom != NULL ) cdda_set_cdrom(space->machine().device("cdda"), state->m_cdrom);
+			if ( state->m_cdrom != NULL ) cdda_set_cdrom(state->m_space->machine().device("cdda"), state->m_cdrom);
 			return 0x0000cafe;
 
 		case 0x04/4:	/* CDROM STATUS 1 */
@@ -838,11 +837,10 @@ READ32_DEVICE_HANDLER( amiga_akiko32_r )
 WRITE32_DEVICE_HANDLER( amiga_akiko32_w )
 {
 	akiko_state *state = get_safe_token(device);
-	address_space *space = state->m_space;
 
 	if ( LOG_AKIKO && offset < (0x30/4) )
 	{
-		logerror( "Writing AKIKO reg %0x [%s] with %08x at PC=%06x\n", offset, get_akiko_reg_name(offset), data, space->device().safe_pc() );
+		logerror( "Writing AKIKO reg %0x [%s] with %08x at PC=%06x\n", offset, get_akiko_reg_name(offset), data, state->m_space->device().safe_pc() );
 	}
 
 	switch( offset )
@@ -918,7 +916,7 @@ const device_type AKIKO = &device_creator<akiko_device>;
 akiko_device::akiko_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, AKIKO, "Akiko", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(akiko_state));
+	m_token = global_alloc_clear(akiko_state);
 }
 
 //-------------------------------------------------

@@ -8,7 +8,9 @@ public:
 		m_bg_rasterram(*this, "bg_rasterram"),
 		m_tx_videoram(*this, "tx_videoram"),
 		m_spriteram1(*this, "spriteram1"),
-		m_spriteram2(*this, "spriteram2"){ }
+		m_spriteram2(*this, "spriteram2"),
+		m_spr(*this, "vsystem_spr")
+	{ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_bg_videoram;
@@ -16,6 +18,7 @@ public:
 	required_shared_ptr<UINT16> m_tx_videoram;
 	required_shared_ptr<UINT16> m_spriteram1;
 	required_shared_ptr<UINT16> m_spriteram2;
+	required_device<vsystem_spr_device> m_spr;
 //      UINT16 *  m_paletteram;    // currently this uses generic palette handling
 
 	/* video-related */
@@ -28,6 +31,8 @@ public:
 	int       m_bg_raster;
 	int       m_bg_palettebank;
 	int       m_tx_palettebank;
+	UINT16*		m_spriteram1_old;
+	UINT32	inufuku_tile_callback( UINT32 code );
 
 	/* misc */
 	UINT16    m_pending_command;
@@ -49,11 +54,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_inufuku(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_inufuku(screen_device &screen, bool state);
+
 };
-
-
-/*----------- defined in video/inufuku.c -----------*/
-
-
-SCREEN_UPDATE_IND16( inufuku );
-

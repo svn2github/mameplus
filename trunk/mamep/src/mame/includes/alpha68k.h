@@ -98,6 +98,13 @@ public:
 	DECLARE_VIDEO_START(alpha68k);
 	DECLARE_MACHINE_START(alpha68k_V);
 	DECLARE_MACHINE_RESET(alpha68k_V);
+	UINT32 screen_update_sstingry(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_kyros(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_alpha68k_I(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_alpha68k_II(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_alpha68k_V(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_alpha68k_V_sb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(alpha68k_sound_nmi);
 };
 
 /* game_id - used to deal with a few game specific situations */
@@ -110,19 +117,5 @@ enum
 
 
 /*----------- defined in video/alpha68k.c -----------*/
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( kyros );
-SCREEN_UPDATE_IND16( sstingry );
-SCREEN_UPDATE_IND16( alpha68k_I );
-SCREEN_UPDATE_IND16( alpha68k_II );
-SCREEN_UPDATE_IND16( alpha68k_V );
-SCREEN_UPDATE_IND16( alpha68k_V_sb );
-
 void alpha68k_V_video_bank_w(running_machine &machine, int bank);
 void alpha68k_flipscreen_w(running_machine &machine, int flip);
-

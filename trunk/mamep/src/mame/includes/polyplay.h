@@ -32,6 +32,10 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_polyplay(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(periodic_interrupt);
+	INTERRUPT_GEN_MEMBER(coin_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(polyplay_timer_callback);
 };
 
 
@@ -42,10 +46,3 @@ void polyplay_set_channel2(running_machine &machine, int active);
 void polyplay_play_channel1(running_machine &machine, int data);
 void polyplay_play_channel2(running_machine &machine, int data);
 SAMPLES_START( polyplay_sh_start );
-
-
-/*----------- defined in video/polyplay.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( polyplay );

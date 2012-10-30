@@ -110,17 +110,11 @@ public:
 	virtual void video_start();
 	DECLARE_VIDEO_START(nbmj9195_1layer);
 	DECLARE_VIDEO_START(nbmj9195_nb22090);
+	UINT32 screen_update_nbmj9195(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(ctc0_trg1);
+	TIMER_CALLBACK_MEMBER(blitter_timer_callback);
 };
 
-
 /*----------- defined in video/nbmj9195.c -----------*/
-
-SCREEN_UPDATE_IND16( nbmj9195 );
-
-
-
-
-
-
-void nbmj9195_clutsel_w(address_space *space, int data);
-void nbmj9195_gfxflag2_w(address_space *space, int data);
+void nbmj9195_clutsel_w(address_space &space, int data);
+void nbmj9195_gfxflag2_w(address_space &space, int data);

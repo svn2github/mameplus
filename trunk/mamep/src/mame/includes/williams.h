@@ -104,6 +104,29 @@ public:
 	DECLARE_VIDEO_START(blaster);
 	DECLARE_MACHINE_START(williams_common);
 	DECLARE_MACHINE_RESET(williams_common);
+	UINT32 screen_update_williams(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_williams2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_blaster(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(williams_count240_off_callback);
+	TIMER_CALLBACK_MEMBER(williams2_endscreen_off_callback);
+	TIMER_CALLBACK_MEMBER(williams_deferred_snd_cmd_w);
+	TIMER_CALLBACK_MEMBER(blaster_deferred_snd_cmd_w);
+	TIMER_CALLBACK_MEMBER(williams2_deferred_snd_cmd_w);
+	TIMER_DEVICE_CALLBACK_MEMBER(williams_va11_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(williams_count240_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(williams2_va11_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(williams2_endscreen_callback);
+	DECLARE_WRITE8_MEMBER(williams_snd_cmd_w);
+	DECLARE_WRITE8_MEMBER(playball_snd_cmd_w);
+	DECLARE_WRITE8_MEMBER(blaster_snd_cmd_w);
+	DECLARE_WRITE8_MEMBER(williams2_snd_cmd_w);
+	DECLARE_WRITE8_MEMBER(williams_port_select_w);
+	DECLARE_READ8_MEMBER(williams_49way_port_0_r);
+	DECLARE_READ8_MEMBER(williams_input_port_49way_0_5_r);
+	DECLARE_WRITE8_MEMBER(lottofun_coin_lock_w);
+	DECLARE_READ8_MEMBER(tshoot_input_port_0_3_r);
+	DECLARE_WRITE8_MEMBER(tshoot_maxvol_w);
+	DECLARE_WRITE8_MEMBER(tshoot_lamp_w);
 };
 
 
@@ -118,12 +141,14 @@ public:
 	DECLARE_DRIVER_INIT(joust2);
 	DECLARE_MACHINE_START(joust2);
 	DECLARE_MACHINE_RESET(joust2);
-
+	TIMER_CALLBACK_MEMBER(joust2_deferred_snd_cmd_w);
+	DECLARE_WRITE8_MEMBER(joust2_pia_3_cb1_w);
+	DECLARE_WRITE8_MEMBER(joust2_snd_cmd_w);
 };
 
 /*----------- defined in drivers/williams.c -----------*/
 
-void defender_install_io_space(address_space *space);
+void defender_install_io_space(address_space &space);
 
 
 /*----------- defined in machine/williams.c -----------*/
@@ -157,29 +182,6 @@ extern const pia6821_interface tshoot_pia_1_intf;
 extern const pia6821_interface tshoot_snd_pia_intf;
 extern const pia6821_interface joust2_pia_1_intf;
 
-/* timer callbacks */
-TIMER_DEVICE_CALLBACK( williams_va11_callback );
-TIMER_DEVICE_CALLBACK( williams_count240_callback );
-TIMER_DEVICE_CALLBACK( williams2_va11_callback );
-TIMER_DEVICE_CALLBACK( williams2_endscreen_callback );
-
-/* initialization */
-
-
-
-
-
-
-
-
-
-
-
-/* banking */
-
-/* Mayday protection */
-
-
 /*----------- defined in video/williams.c -----------*/
 
 #define WILLIAMS_BLITTER_NONE		0		/* no blitter */
@@ -189,14 +191,4 @@ TIMER_DEVICE_CALLBACK( williams2_endscreen_callback );
 #define WILLIAMS_TILEMAP_MYSTICM	0		/* IC79 is a 74LS85 comparator */
 #define WILLIAMS_TILEMAP_TSHOOT		1		/* IC79 is a 74LS157 selector jumpered to be enabled */
 #define WILLIAMS_TILEMAP_JOUST2		2		/* IC79 is a 74LS157 selector jumpered to be disabled */
-
-
-
-
-
-
-SCREEN_UPDATE_RGB32( williams );
-SCREEN_UPDATE_RGB32( blaster );
-SCREEN_UPDATE_RGB32( williams2 );
-
 

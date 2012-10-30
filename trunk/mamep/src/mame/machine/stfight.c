@@ -38,12 +38,12 @@ Encryption PAL 16R4 on CPU board
 
 DRIVER_INIT_MEMBER(stfight_state,empcity)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *rom = memregion("maincpu")->base();
 	int A;
 
 	m_decrypt = auto_alloc_array(machine(), UINT8, 0x8000);
-	space->set_decrypted_region(0x0000, 0x7fff, m_decrypt);
+	space.set_decrypted_region(0x0000, 0x7fff, m_decrypt);
 
 	for (A = 0;A < 0x8000;A++)
 	{
@@ -82,7 +82,7 @@ DRIVER_INIT_MEMBER(stfight_state,stfight)
 
 void stfight_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	m_adpcm_data_offs = m_adpcm_data_end = 0;
 	m_toggle = 0;
 	m_fm_data = 0;
@@ -93,7 +93,7 @@ void stfight_state::machine_reset()
 	m_coin_mech_query = 0;
 
     // initialise rom bank
-    stfight_bank_w(*space, 0, 0 );
+    stfight_bank_w(space, 0, 0 );
 }
 
 // It's entirely possible that this bank is never switched out
@@ -109,17 +109,17 @@ WRITE8_MEMBER(stfight_state::stfight_bank_w)
  *      CPU 1 timed interrupt - 60Hz???
  */
 
-static TIMER_CALLBACK( stfight_interrupt_1 )
+TIMER_CALLBACK_MEMBER(stfight_state::stfight_interrupt_1)
 {
     // Do a RST08
-    machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);
+    machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);
 }
 
-INTERRUPT_GEN( stfight_vb_interrupt )
+INTERRUPT_GEN_MEMBER(stfight_state::stfight_vb_interrupt)
 {
     // Do a RST10
-    device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);
-    device->machine().scheduler().timer_set(attotime::from_hz(120), FUNC(stfight_interrupt_1));
+    device.execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);
+    machine().scheduler().timer_set(attotime::from_hz(120), timer_expired_delegate(FUNC(stfight_state::stfight_interrupt_1),this));
 }
 
 /*
@@ -210,16 +210,15 @@ void stfight_adpcm_int(device_t *device)
 	state->m_toggle ^= 1;
 }
 
-WRITE8_DEVICE_HANDLER( stfight_adpcm_control_w )
+WRITE8_MEMBER(stfight_state::stfight_adpcm_control_w)
 {
-	stfight_state *state = device->machine().driver_data<stfight_state>();
     if( data < 0x08 )
     {
-        state->m_adpcm_data_offs = sampleLimits[data];
-        state->m_adpcm_data_end = sampleLimits[data+1];
+        m_adpcm_data_offs = sampleLimits[data];
+        m_adpcm_data_end = sampleLimits[data+1];
     }
 
-    msm5205_reset_w( device, data & 0x08 ? 1 : 0 );
+    msm5205_reset_w( machine().device("msm"), data & 0x08 ? 1 : 0 );
 }
 
 WRITE8_MEMBER(stfight_state::stfight_e800_w)

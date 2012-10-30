@@ -77,7 +77,7 @@ public:
 	DECLARE_WRITE16_MEMBER(hyprduel_window_w);
 	DECLARE_WRITE16_MEMBER(hyprduel_scrollreg_w);
 	DECLARE_WRITE16_MEMBER(hyprduel_scrollreg_init_w);
-	void blt_write( address_space *space, const int tmap, const offs_t offs, const UINT16 data, const UINT16 mask );
+	void blt_write( address_space &space, const int tmap, const offs_t offs, const UINT16 data, const UINT16 mask );
 	DECLARE_DRIVER_INIT(magerror);
 	DECLARE_DRIVER_INIT(hyprduel);
 	TILE_GET_INFO_MEMBER(get_tile_info_0_8bit);
@@ -89,14 +89,9 @@ public:
 	DECLARE_MACHINE_START(magerror);
 	DECLARE_VIDEO_START(magerror_14220);
 	DECLARE_VIDEO_START(common_14220);
+	UINT32 screen_update_hyprduel(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(vblank_end_callback);
+	TIMER_CALLBACK_MEMBER(magerror_irq_callback);
+	TIMER_CALLBACK_MEMBER(hyprduel_blit_done);
+	TIMER_DEVICE_CALLBACK_MEMBER(hyprduel_interrupt);
 };
-
-
-
-/*----------- defined in video/hyprduel.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( hyprduel );

@@ -89,6 +89,17 @@ public:
 	virtual void video_start();
 	DECLARE_VIDEO_START(slikshot);
 	DECLARE_MACHINE_START(sstrike);
+	UINT32 screen_update_itech8_2layer(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_itech8_grmatch(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_slikshot(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_itech8_2page(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_itech8_2page_large(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(generate_nmi);
+	TIMER_CALLBACK_MEMBER(irq_off);
+	TIMER_CALLBACK_MEMBER(behind_the_beam_update);
+	TIMER_CALLBACK_MEMBER(delayed_sound_data_w);
+	TIMER_CALLBACK_MEMBER(blitter_done);
+	TIMER_DEVICE_CALLBACK_MEMBER(grmatch_palette_update);
 };
 
 
@@ -99,28 +110,10 @@ void itech8_update_interrupts(running_machine &machine, int periodic, int tms340
 
 /*----------- defined in machine/slikshot.c -----------*/
 
-READ8_HANDLER( slikz80_port_r );
-WRITE8_HANDLER( slikz80_port_w );
+DECLARE_READ8_HANDLER( slikz80_port_r );
+DECLARE_WRITE8_HANDLER( slikz80_port_w );
 
-READ8_HANDLER( slikshot_z80_r );
-READ8_HANDLER( slikshot_z80_control_r );
-WRITE8_HANDLER( slikshot_z80_control_w );
+DECLARE_READ8_HANDLER( slikshot_z80_r );
+DECLARE_READ8_HANDLER( slikshot_z80_control_r );
+DECLARE_WRITE8_HANDLER( slikshot_z80_control_w );
 
-
-SCREEN_UPDATE_RGB32( slikshot );
-
-
-/*----------- defined in video/itech8.c -----------*/
-
-
-
-
-
-
-
-TIMER_DEVICE_CALLBACK( grmatch_palette_update );
-
-SCREEN_UPDATE_RGB32( itech8_2layer );
-SCREEN_UPDATE_RGB32( itech8_grmatch );
-SCREEN_UPDATE_RGB32( itech8_2page );
-SCREEN_UPDATE_RGB32( itech8_2page_large );

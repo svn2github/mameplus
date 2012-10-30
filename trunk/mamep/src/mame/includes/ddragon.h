@@ -64,6 +64,7 @@ public:
 	device_t *m_sub_cpu;
 	device_t *m_adpcm_1;
 	device_t *m_adpcm_2;
+	DECLARE_WRITE_LINE_MEMBER(irq_handler);
 	DECLARE_WRITE8_MEMBER(ddragon_bgvideoram_w);
 	DECLARE_WRITE8_MEMBER(ddragon_fgvideoram_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(sub_cpu_busy);
@@ -99,13 +100,7 @@ public:
 	DECLARE_MACHINE_START(ddragon);
 	DECLARE_MACHINE_RESET(ddragon);
 	DECLARE_VIDEO_START(ddragon);
+	UINT32 screen_update_ddragon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(ddragon_scanline);
+	TIMER_DEVICE_CALLBACK_MEMBER(chinagat_scanline);
 };
-
-
-/*----------- defined in video/ddragon.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( ddragon );
-

@@ -79,6 +79,7 @@ public:
 	DECLARE_MACHINE_RESET(armedf);
 	DECLARE_VIDEO_START(terraf);
 	DECLARE_VIDEO_START(armedf);
+	UINT32 screen_update_armedf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 class bigfghtr_state : public armedf_state
@@ -102,10 +103,3 @@ public:
 	DECLARE_MACHINE_START(bigfghtr);
 	DECLARE_MACHINE_RESET(bigfghtr);
 };
-
-/*----------- defined in video/armedf.c -----------*/
-
-SCREEN_UPDATE_IND16( armedf );
-
-
-

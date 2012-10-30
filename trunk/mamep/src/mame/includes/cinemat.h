@@ -64,12 +64,15 @@ public:
 	DECLARE_VIDEO_START(cinemat_64level);
 	DECLARE_VIDEO_START(cinemat_color);
 	DECLARE_VIDEO_START(cinemat_qb3color);
+	UINT32 screen_update_cinemat(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_spacewar(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	DECLARE_READ8_MEMBER(sound_porta_r);
+	DECLARE_READ8_MEMBER(sound_portb_r);
+	DECLARE_WRITE8_MEMBER(sound_portb_w);
+	DECLARE_WRITE8_MEMBER(sound_output_w);
 };
 
-
 /*----------- defined in audio/cinemat.c -----------*/
-
-
 MACHINE_CONFIG_EXTERN( spacewar_sound );
 MACHINE_CONFIG_EXTERN( barrier_sound );
 MACHINE_CONFIG_EXTERN( speedfrk_sound );
@@ -87,16 +90,7 @@ MACHINE_CONFIG_EXTERN( wotwc_sound );
 MACHINE_CONFIG_EXTERN( demon_sound );
 MACHINE_CONFIG_EXTERN( qb3_sound );
 
-
 /*----------- defined in video/cinemat.c -----------*/
 
 void cinemat_vector_callback(device_t *device, INT16 sx, INT16 sy, INT16 ex, INT16 ey, UINT8 shift);
 
-
-
-
-
-
-SCREEN_UPDATE_RGB32( cinemat );
-
-SCREEN_UPDATE_RGB32( spacewar );

@@ -32,20 +32,12 @@ public:
 	INPUT_CHANGED_MEMBER(cchasm_set_coin_flag);
 	DECLARE_WRITE_LINE_MEMBER(cchasm_6840_irq);
 	virtual void video_start();
+	TIMER_CALLBACK_MEMBER(cchasm_refresh_end);
+	DECLARE_WRITE_LINE_MEMBER(ctc_timer_1_w);
+	DECLARE_WRITE_LINE_MEMBER(ctc_timer_2_w);
 };
-
-
-/*----------- defined in machine/cchasm.c -----------*/
-
 
 /*----------- defined in audio/cchasm.c -----------*/
 
 extern const z80ctc_interface cchasm_ctc_intf;
-
 SOUND_START( cchasm );
-
-
-/*----------- defined in video/cchasm.c -----------*/
-
-
-

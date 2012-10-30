@@ -170,19 +170,19 @@ static TIMER_CALLBACK( namco_50xx_readrequest_callback )
 
 static READ8_HANDLER( namco_50xx_K_r )
 {
-	namco_50xx_state *state = get_safe_token(space->device().owner());
+	namco_50xx_state *state = get_safe_token(space.device().owner());
 	return state->m_latched_cmd >> 4;
 }
 
 static READ8_HANDLER( namco_50xx_R0_r )
 {
-	namco_50xx_state *state = get_safe_token(space->device().owner());
+	namco_50xx_state *state = get_safe_token(space.device().owner());
 	return state->m_latched_cmd & 0x0f;
 }
 
 static READ8_HANDLER( namco_50xx_R2_r )
 {
-	namco_50xx_state *state = get_safe_token(space->device().owner());
+	namco_50xx_state *state = get_safe_token(space.device().owner());
 	return state->m_latched_rw & 1;
 }
 
@@ -190,7 +190,7 @@ static READ8_HANDLER( namco_50xx_R2_r )
 
 static WRITE8_HANDLER( namco_50xx_O_w )
 {
-	namco_50xx_state *state = get_safe_token(space->device().owner());
+	namco_50xx_state *state = get_safe_token(space.device().owner());
 	UINT8 out = (data & 0x0f);
 	if (data & 0x10)
 		state->m_portO = (state->m_portO & 0x0f) | (out << 4);
@@ -223,7 +223,7 @@ static void namco_50xx_irq_set(device_t *device)
 
 WRITE8_DEVICE_HANDLER( namco_50xx_write )
 {
-	device->machine().scheduler().synchronize(FUNC(namco_50xx_latch_callback), data, (void *)device);
+	space.machine().scheduler().synchronize(FUNC(namco_50xx_latch_callback), data, (void *)device);
 
 	namco_50xx_irq_set(device);
 }
@@ -296,7 +296,7 @@ const device_type NAMCO_50XX = &device_creator<namco_50xx_device>;
 namco_50xx_device::namco_50xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, NAMCO_50XX, "Namco 50xx", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(namco_50xx_state));
+	m_token = global_alloc_clear(namco_50xx_state);
 }
 
 //-------------------------------------------------

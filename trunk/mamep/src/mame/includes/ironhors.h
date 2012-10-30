@@ -48,14 +48,8 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_VIDEO_START(farwest);
+	UINT32 screen_update_ironhors(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_farwest(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(ironhors_irq);
+	TIMER_DEVICE_CALLBACK_MEMBER(farwest_irq);
 };
-
-
-/*----------- defined in video/ironhors.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( ironhors );
-
-SCREEN_UPDATE_IND16( farwest );

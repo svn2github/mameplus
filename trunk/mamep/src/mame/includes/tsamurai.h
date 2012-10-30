@@ -57,16 +57,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_vsgongf_tile_info);
 	DECLARE_VIDEO_START(tsamurai);
 	DECLARE_VIDEO_START(vsgongf);
+	UINT32 screen_update_tsamurai(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_vsgongf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(samurai_interrupt);
+	INTERRUPT_GEN_MEMBER(vsgongf_sound_interrupt);
 };
-
-
-/*----------- defined in video/tsamurai.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( tsamurai );
-
-
-SCREEN_UPDATE_IND16( vsgongf );

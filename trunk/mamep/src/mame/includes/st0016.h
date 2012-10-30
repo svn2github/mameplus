@@ -37,6 +37,9 @@ public:
 	DECLARE_DRIVER_INIT(mayjisn2);
 	DECLARE_DRIVER_INIT(renju);
 	DECLARE_VIDEO_START(st0016);
+	void st0016_draw_screen(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_st0016(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(st0016_int);
 };
 
 #define ISMACS  (st0016_game&0x80)
@@ -58,17 +61,8 @@ public:
 #define ST0016_CHAR_BANK_MASK (ST0016_MAX_CHAR_BANK-1)
 #define ST0016_PAL_BANK_MASK  (ST0016_MAX_PAL_BANK-1)
 
-/*----------- defined in drivers/st0016.c -----------*/
-
-
-
 /*----------- defined in video/st0016.c -----------*/
 
 extern UINT8 macs_cart_slot;
 extern UINT32 st0016_game;
 extern UINT8 *st0016_charram;
-
-
-void st0016_draw_screen(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-
-SCREEN_UPDATE_IND16(st0016);

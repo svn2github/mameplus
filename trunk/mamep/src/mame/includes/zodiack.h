@@ -67,6 +67,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	DECLARE_PALETTE_INIT(zodiack);
+	INTERRUPT_GEN_MEMBER(zodiack_sound_nmi_gen);
+	TIMER_DEVICE_CALLBACK_MEMBER(zodiack_scanline);
 };
 
 class percuss_state : public zodiack_state
@@ -76,6 +78,3 @@ public:
 		: zodiack_state(mconfig, type, tag)
 	{ m_percuss_hardware = 1; }
 };
-
-// in video/zodiack.c
-

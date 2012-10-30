@@ -164,15 +164,12 @@ public:
 	DECLARE_VIDEO_START(psychos);
 	DECLARE_VIDEO_START(snk_3bpp_shadow);
 	DECLARE_VIDEO_START(snk_4bpp_shadow);
+	UINT32 screen_update_marvins(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tnk3(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_ikari(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_gwar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tdfever(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(sgladiat_sndirq_update_callback);
+	TIMER_CALLBACK_MEMBER(sndirq_update_callback);
+	DECLARE_WRITE_LINE_MEMBER(ymirq_callback_2);
 };
-
-
-/*----------- defined in video/snk.c -----------*/
-extern SCREEN_UPDATE_IND16( marvins );
-extern SCREEN_UPDATE_IND16( tnk3 );
-extern SCREEN_UPDATE_IND16( ikari );
-extern SCREEN_UPDATE_IND16( gwar );
-extern SCREEN_UPDATE_IND16( tdfever );
-
-
-

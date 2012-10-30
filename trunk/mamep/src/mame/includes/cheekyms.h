@@ -35,11 +35,6 @@ public:
 	virtual void machine_start();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_cheekyms(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
-
-/*----------- defined in video/cheekyms.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( cheekyms );

@@ -28,15 +28,9 @@ public:
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	virtual void machine_start();
 	virtual void video_start();
+	UINT32 screen_update_xxmissio(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(xxmissio_interrupt_m);
+	INTERRUPT_GEN_MEMBER(xxmissio_interrupt_s);
+	DECLARE_WRITE8_MEMBER(xxmissio_scroll_x_w);
+	DECLARE_WRITE8_MEMBER(xxmissio_scroll_y_w);
 };
-
-
-/*----------- defined in video/xxmissio.c -----------*/
-
-
-SCREEN_UPDATE_IND16( xxmissio );
-
-WRITE8_DEVICE_HANDLER( xxmissio_scroll_x_w );
-WRITE8_DEVICE_HANDLER( xxmissio_scroll_y_w );
-
-

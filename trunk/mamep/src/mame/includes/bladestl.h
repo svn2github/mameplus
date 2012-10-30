@@ -34,15 +34,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_bladestl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(bladestl_scanline);
 };
 
-
-
 /*----------- defined in video/bladestl.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( bladestl );
-
 void bladestl_tile_callback(running_machine &machine, int layer, int bank, int *code, int *color, int *flags);
 void bladestl_sprite_callback(running_machine &machine, int *code, int *color);

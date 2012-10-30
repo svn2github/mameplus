@@ -16,7 +16,6 @@ public:
 	UINT8 m_drawmode_table[16];
 	DECLARE_READ16_MEMBER(shangha3_prot_r);
 	DECLARE_WRITE16_MEMBER(shangha3_prot_w);
-	DECLARE_READ16_MEMBER(heberpop_gfxrom_r);
 	DECLARE_WRITE16_MEMBER(shangha3_coinctrl_w);
 	DECLARE_WRITE16_MEMBER(heberpop_coinctrl_w);
 	DECLARE_WRITE16_MEMBER(blocken_coinctrl_w);
@@ -24,13 +23,9 @@ public:
 	DECLARE_WRITE16_MEMBER(shangha3_flipscreen_w);
 	DECLARE_WRITE16_MEMBER(shangha3_gfxlist_addr_w);
 	DECLARE_WRITE16_MEMBER(shangha3_blitter_go_w);
+	DECLARE_WRITE16_MEMBER(shangha3_irq_ack_w);
 	DECLARE_DRIVER_INIT(shangha3);
 	DECLARE_DRIVER_INIT(heberpop);
 	virtual void video_start();
+	UINT32 screen_update_shangha3(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/shangha3.c -----------*/
-
-
-SCREEN_UPDATE_IND16( shangha3 );

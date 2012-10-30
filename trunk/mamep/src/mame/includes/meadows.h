@@ -45,6 +45,10 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_meadows(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(meadows_interrupt);
+	INTERRUPT_GEN_MEMBER(minferno_interrupt);
+	INTERRUPT_GEN_MEMBER(audio_interrupt);
 };
 
 
@@ -53,10 +57,3 @@ public:
 SAMPLES_START( meadows_sh_start );
 void meadows_sh_dac_w(running_machine &machine, int data);
 void meadows_sh_update(running_machine &machine);
-
-
-/*----------- defined in video/meadows.c -----------*/
-
-
-SCREEN_UPDATE_IND16( meadows );
-

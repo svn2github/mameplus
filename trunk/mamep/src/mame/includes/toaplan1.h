@@ -138,32 +138,16 @@ public:
 	DECLARE_MACHINE_RESET(zerowing);
 	DECLARE_MACHINE_RESET(demonwld);
 	DECLARE_MACHINE_RESET(vimana);
+	UINT32 screen_update_rallybik(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_toaplan1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_rallybik(screen_device &screen, bool state);
+	void screen_eof_toaplan1(screen_device &screen, bool state);
+	void screen_eof_samesame(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(toaplan1_interrupt);
 };
 
 
 /*----------- defined in machine/toaplan1.c -----------*/
-
-INTERRUPT_GEN( toaplan1_interrupt );
-
-
-
-
-
-
 void toaplan1_driver_savestate(running_machine &machine);
 void demonwld_driver_savestate(running_machine &machine);
 void vimana_driver_savestate(running_machine &machine);
-
-
-/*----------- defined in video/toaplan1.c -----------*/
-
-
-
-
-SCREEN_VBLANK( rallybik );
-SCREEN_VBLANK( toaplan1 );
-SCREEN_VBLANK( samesame );
-
-
-SCREEN_UPDATE_IND16( rallybik );
-SCREEN_UPDATE_IND16( toaplan1 );

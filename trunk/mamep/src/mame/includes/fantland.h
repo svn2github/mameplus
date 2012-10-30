@@ -31,6 +31,7 @@ public:
 	device_t *m_msm4;
 	optional_shared_ptr<UINT8> m_spriteram;
 	optional_shared_ptr<UINT8> m_spriteram2;
+	DECLARE_WRITE_LINE_MEMBER(galaxygn_sound_irq);
 	DECLARE_WRITE8_MEMBER(fantland_nmi_enable_w);
 	DECLARE_WRITE16_MEMBER(fantland_nmi_enable_16_w);
 	DECLARE_WRITE8_MEMBER(fantland_soundlatch_w);
@@ -47,9 +48,7 @@ public:
 	DECLARE_MACHINE_RESET(fantland);
 	DECLARE_MACHINE_START(borntofi);
 	DECLARE_MACHINE_RESET(borntofi);
+	UINT32 screen_update_fantland(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(fantland_irq);
+	INTERRUPT_GEN_MEMBER(fantland_sound_irq);
 };
-
-
-/*----------- defined in video/fantland.c -----------*/
-
-SCREEN_UPDATE_IND16( fantland );

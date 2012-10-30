@@ -63,16 +63,6 @@ public:
 	DECLARE_VIDEO_START(mcrmono);
 	DECLARE_VIDEO_START(spyhunt);
 	DECLARE_PALETTE_INIT(spyhunt);
+	UINT32 screen_update_mcr3(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_spyhunt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/mcr3.c -----------*/
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( mcr3 );
-SCREEN_UPDATE_IND16( spyhunt );

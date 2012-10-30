@@ -38,8 +38,8 @@ public:
 
 	required_shared_ptr<UINT32> m_mo_command;
 
-	void			(*m_protection_w)(address_space *space, offs_t offset, UINT16 data);
-	void			(*m_protection_r)(address_space *space, offs_t offset, UINT16 *data);
+	void			(*m_protection_w)(address_space &space, offs_t offset, UINT16 data);
+	void			(*m_protection_r)(address_space &space, offs_t offset, UINT16 *data);
 
 	UINT8			m_ignore_writes;
 	offs_t			m_protaddr[ADDRSEQ_COUNT];
@@ -48,6 +48,8 @@ public:
 	UINT8			m_protdata[0x800];
 
 	device_t *		m_rle;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_READ32_MEMBER(special_port2_r);
 	DECLARE_READ32_MEMBER(special_port3_r);
 	DECLARE_READ32_MEMBER(analog_port0_r);
@@ -71,15 +73,9 @@ public:
 	DECLARE_MACHINE_START(atarigt);
 	DECLARE_MACHINE_RESET(atarigt);
 	DECLARE_VIDEO_START(atarigt);
+	UINT32 screen_update_atarigt(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_atarigt(screen_device &screen, bool state);
 };
 
-
 /*----------- defined in video/atarigt.c -----------*/
-
-
-
-
-SCREEN_VBLANK( atarigt );
-SCREEN_UPDATE_RGB32( atarigt );
-
 void atarigt_scanline_update(screen_device &screen, int scanline);

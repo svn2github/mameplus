@@ -25,13 +25,14 @@ public:
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_gomoku(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
 /*----------- defined in audio/gomoku.c -----------*/
 
-WRITE8_DEVICE_HANDLER( gomoku_sound1_w );
-WRITE8_DEVICE_HANDLER( gomoku_sound2_w );
+DECLARE_WRITE8_DEVICE_HANDLER( gomoku_sound1_w );
+DECLARE_WRITE8_DEVICE_HANDLER( gomoku_sound2_w );
 
 class gomoku_sound_device : public device_t,
                                   public device_sound_interface
@@ -55,12 +56,3 @@ private:
 };
 
 extern const device_type GOMOKU;
-
-
-
-/*----------- defined in video/gomoku.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( gomoku );
-

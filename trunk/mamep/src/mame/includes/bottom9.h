@@ -46,6 +46,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_bottom9(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(bottom9_interrupt);
+	INTERRUPT_GEN_MEMBER(bottom9_sound_interrupt);
 };
 
 /*----------- defined in video/bottom9.c -----------*/
@@ -53,6 +56,3 @@ public:
 extern void bottom9_tile_callback(running_machine &machine, int layer,int bank,int *code,int *color,int *flags,int *priority);
 extern void bottom9_sprite_callback(running_machine &machine, int *code,int *color,int *priority,int *shadow);
 extern void bottom9_zoom_callback(running_machine &machine, int *code,int *color,int *flags);
-
-
-SCREEN_UPDATE_IND16( bottom9 );

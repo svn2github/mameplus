@@ -46,13 +46,13 @@ public:
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	DECLARE_VIDEO_START(mystston);
 	DECLARE_VIDEO_RESET(mystston);
+	UINT32 screen_update_mystston(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_callback);
 };
-
 
 /*----------- defined in drivers/mystston.c -----------*/
 
 void mystston_on_scanline_interrupt(running_machine &machine);
-
 
 /*----------- defined in video/mystston.c -----------*/
 

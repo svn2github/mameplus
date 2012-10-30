@@ -93,30 +93,18 @@ public:
 	TILE_GET_INFO_MEMBER(fg_get_info5);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_namcos1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_namcos1(screen_device &screen, bool state);
 };
-
 
 /*----------- defined in drivers/namcos1.c -----------*/
 
 void namcos1_init_DACs(running_machine &machine);
 
-
-/*----------- defined in machine/namcos1.c -----------*/
-
-
-
-
-
-
-
 /*----------- defined in video/namcos1.c -----------*/
 
-READ8_HANDLER( namcos1_videoram_r );
-WRITE8_HANDLER( namcos1_videoram_w );
-WRITE8_HANDLER( namcos1_paletteram_w );
-READ8_HANDLER( namcos1_spriteram_r );
-WRITE8_HANDLER( namcos1_spriteram_w );
-
-
-SCREEN_UPDATE_IND16( namcos1 );
-SCREEN_VBLANK( namcos1 );
+DECLARE_READ8_HANDLER( namcos1_videoram_r );
+DECLARE_WRITE8_HANDLER( namcos1_videoram_w );
+DECLARE_WRITE8_HANDLER( namcos1_paletteram_w );
+DECLARE_READ8_HANDLER( namcos1_spriteram_r );
+DECLARE_WRITE8_HANDLER( namcos1_spriteram_w );

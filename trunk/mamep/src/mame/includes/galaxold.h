@@ -31,7 +31,8 @@ public:
 		  m_attributesram(*this,"attributesram"),
 		  m_bulletsram(*this,"bulletsram"),
 		  m_rockclim_videoram(*this,"rockclim_vram"),
-		  m_racknrol_tiles_bank(*this,"racknrol_tbank") { }
+		  m_racknrol_tiles_bank(*this,"racknrol_tbank")
+	{ }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_spriteram;
@@ -85,13 +86,11 @@ public:
 	emu_timer *m_stars_scroll_timer;
 	struct star m_stars[STAR_COUNT];
 
-	UINT8 m_nmi_mask; /* Harem per-game specific */
 	DECLARE_READ8_MEMBER(drivfrcg_port0_r);
 	DECLARE_READ8_MEMBER(scramb2_protection_r);
 	DECLARE_READ8_MEMBER(scramb2_port0_r);
 	DECLARE_READ8_MEMBER(scramb2_port1_r);
 	DECLARE_READ8_MEMBER(scramb2_port2_r);
-	DECLARE_WRITE8_MEMBER(harem_nmi_mask_w);
 	DECLARE_READ8_MEMBER(hexpoola_data_port_r);
 	DECLARE_READ8_MEMBER(bullsdrtg_data_port_r);
 	DECLARE_WRITE8_MEMBER(galaxold_nmi_enable_w);
@@ -176,73 +175,22 @@ public:
 	DECLARE_VIDEO_START(scorpion);
 	DECLARE_VIDEO_START(ad2083);
 	DECLARE_VIDEO_START(dambustr);
+	UINT32 screen_update_galaxold(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_dambustr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(hunchbks_vh_interrupt);
+	TIMER_CALLBACK_MEMBER(stars_blink_callback);
+	TIMER_CALLBACK_MEMBER(stars_scroll_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(galaxold_interrupt_timer);
+	DECLARE_WRITE_LINE_MEMBER(galaxold_7474_9m_2_q_callback);
+	DECLARE_WRITE_LINE_MEMBER(galaxold_7474_9m_1_callback);
+
+
 };
 
-
 /*----------- defined in video/galaxold.c -----------*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void galaxold_init_stars(running_machine &machine, int colors_offset);
 void galaxold_draw_stars(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect);
 
-SCREEN_UPDATE_IND16( galaxold );
-SCREEN_UPDATE_IND16( dambustr );
-
-
-
-/*----------- defined in machine/galaxold.c -----------*/
-
-TIMER_DEVICE_CALLBACK( galaxold_interrupt_timer );
-
-WRITE_LINE_DEVICE_HANDLER( galaxold_7474_9m_2_q_callback );
-WRITE_LINE_DEVICE_HANDLER( galaxold_7474_9m_1_callback );
-
-
-
-
-
-
 #define galaxold_coin_counter_0_w galaxold_coin_counter_w
-
-
-
-INTERRUPT_GEN( hunchbks_vh_interrupt );
 
 #endif

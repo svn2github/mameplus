@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "machine/scsidev.h"
+#include "machine/scsihle.h"
 #include "cdrom.h"
 #include "sound/cdda.h"
 #include "imagedev/chd_cd.h"
@@ -29,7 +29,7 @@ static void phys_frame_to_msf(int phys_frame, int *m, int *s, int *f)
 const device_type GDROM = &device_creator<gdrom_device>;
 
 gdrom_device::gdrom_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: scsidev_device(mconfig, GDROM, "GDROM", tag, owner, clock)
+	: scsihle_device(mconfig, GDROM, "GDROM", tag, owner, clock)
 {
 }
 
@@ -46,7 +46,7 @@ void gdrom_device::device_start()
 
 void gdrom_device::device_reset()
 {
-	scsidev_device::device_reset();
+	scsihle_device::device_reset();
 
 	is_file = TRUE;
 	cdrom = subdevice<cdrom_image_device>("image")->get_cdrom_file();
@@ -103,13 +103,8 @@ machine_config_constructor gdrom_device::device_mconfig_additions() const
 
 void gdrom_device::ExecCommand( int *transferLength )
 {
-	UINT8 *command;
-	int commandLength;
-
 	device_t *cdda;
 	int trk;
-
-	GetCommand( &command, &commandLength );
 
 	switch ( command[0] )
 	{
@@ -434,7 +429,7 @@ void gdrom_device::ExecCommand( int *transferLength )
 			break;
 
 		default:
-			scsidev_device::ExecCommand( transferLength );
+			scsihle_device::ExecCommand( transferLength );
 			break;
 	}
 }
@@ -445,16 +440,11 @@ void gdrom_device::ExecCommand( int *transferLength )
 
 void gdrom_device::ReadData( UINT8 *data, int dataLength )
 {
-	UINT8 *command;
-	int commandLength;
-
 	int i;
 	UINT32 last_phys_frame;
 	UINT32 temp;
 	UINT8 tmp_buffer[2048];
 	device_t *cdda;
-
-	GetCommand( &command, &commandLength );
 
 	switch ( command[0] )
 	{
@@ -786,7 +776,7 @@ void gdrom_device::ReadData( UINT8 *data, int dataLength )
 			break;
 
 		default:
-			scsidev_device::ReadData( data, dataLength );
+			scsihle_device::ReadData( data, dataLength );
 			break;
 	}
 }
@@ -797,10 +787,6 @@ void gdrom_device::ReadData( UINT8 *data, int dataLength )
 
 void gdrom_device::WriteData( UINT8 *data, int dataLength )
 {
-	UINT8 *command;
-	int commandLength;
-	GetCommand( &command, &commandLength );
-
 	switch (command[ 0 ])
 	{
 		case 0x15: // MODE SELECT(6)
@@ -834,7 +820,7 @@ void gdrom_device::WriteData( UINT8 *data, int dataLength )
 			break;
 
 		default:
-			scsidev_device::WriteData( data, dataLength );
+			scsihle_device::WriteData( data, dataLength );
 			break;
 	}
 }
@@ -847,4 +833,9 @@ void gdrom_device::GetDevice( void **_cdrom )
 void gdrom_device::SetDevice( void *_cdrom )
 {
 	cdrom = (cdrom_file *) _cdrom;
+}
+
+int gdrom_device::GetSectorBytes()
+{
+	return bytes_per_sector;
 }

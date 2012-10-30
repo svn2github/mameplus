@@ -39,11 +39,9 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_bishi(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(bishi_scanline);
 };
 
 /*----------- defined in video/bishi.c -----------*/
-
 extern void bishi_tile_callback(running_machine &machine, int layer, int *code, int *color, int *flags);
-
-
-SCREEN_UPDATE_RGB32(bishi);

@@ -114,24 +114,12 @@ public:
 	virtual void palette_init();
 	DECLARE_MACHINE_START(playch10_hboard);
 	DECLARE_VIDEO_START(playch10_hboard);
+	UINT32 screen_update_playch10_top(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_playch10_bottom(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_playch10_single(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(playch10_interrupt);
 };
 
-
-/*----------- defined in machine/playch10.c -----------*/
-
-
-
-
-
-
-
 /*----------- defined in video/playch10.c -----------*/
-
 extern const ppu2c0x_interface playch10_ppu_interface;
 extern const ppu2c0x_interface playch10_ppu_interface_hboard;
-
-
-
-
-SCREEN_UPDATE_IND16( playch10_top );
-SCREEN_UPDATE_IND16( playch10_bottom );

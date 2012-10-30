@@ -132,6 +132,19 @@ public:
 	DECLARE_VIDEO_START(glfgreat);
 	DECLARE_MACHINE_START(prmrsocr);
 	DECLARE_VIDEO_START(prmrsocr);
+	UINT32 screen_update_mia(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tmnt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_punkshot(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_lgtnfght(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_glfgreat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_tmnt2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_thndrx2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_blswhstl(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(cuebrick_interrupt);
+	INTERRUPT_GEN_MEMBER(punkshot_interrupt);
+	INTERRUPT_GEN_MEMBER(lgtnfght_interrupt);
+	INTERRUPT_GEN_MEMBER(tmnt_vblank_irq);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
 };
 
 
@@ -149,22 +162,3 @@ extern void thndrx2_sprite_callback(running_machine &machine, int *code,int *col
 extern void lgtnfght_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
 extern void blswhstl_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
 extern void prmrsocr_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
-
-
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( mia );
-SCREEN_UPDATE_IND16( tmnt );
-SCREEN_UPDATE_IND16( punkshot );
-SCREEN_UPDATE_IND16( lgtnfght );
-SCREEN_UPDATE_IND16( glfgreat );
-SCREEN_UPDATE_IND16( tmnt2 );
-SCREEN_UPDATE_IND16( thndrx2 );
-
-SCREEN_VBLANK( blswhstl );

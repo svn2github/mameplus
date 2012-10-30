@@ -119,13 +119,12 @@ public:
 	DECLARE_MACHINE_RESET(horshoes);
 	DECLARE_MACHINE_RESET(palamed);
 	DECLARE_MACHINE_RESET(cachat);
+	UINT32 screen_update_taitol(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_taitol(screen_device &screen, bool state);
+	TIMER_DEVICE_CALLBACK_MEMBER(vbl_interrupt);
 };
 
 /*----------- defined in video/taito_l.c -----------*/
-
-SCREEN_VBLANK( taitol );
-
-SCREEN_UPDATE_IND16( taitol );
 
 void taitol_chardef14_m(running_machine &machine, int offset);
 void taitol_chardef15_m(running_machine &machine, int offset);
@@ -139,4 +138,3 @@ void taitol_bg18_m(running_machine &machine, int offset);
 void taitol_bg19_m(running_machine &machine, int offset);
 void taitol_char1a_m(running_machine &machine, int offset);
 void taitol_obj1b_m(running_machine &machine, int offset);
-

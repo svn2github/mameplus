@@ -19,22 +19,15 @@ public:
 	DECLARE_READ8_MEMBER(funquiz_ay8910_a_r);
 	DECLARE_READ8_MEMBER(funquiz_ay8910_b_r);
 	DECLARE_DRIVER_INIT(magicd2b);
+	DECLARE_DRIVER_INIT(magicd2c);
 	DECLARE_DRIVER_INIT(saloon);
 	DECLARE_DRIVER_INIT(royalcdc);
 	DECLARE_DRIVER_INIT(multiwin);
 	DECLARE_DRIVER_INIT(soccernw);
 	DECLARE_DRIVER_INIT(tabblue);
-	DECLARE_DRIVER_INIT(magicd2a);
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	DECLARE_VIDEO_START(funworld);
 	DECLARE_PALETTE_INIT(funworld);
 	DECLARE_VIDEO_START(magicrd2);
+	UINT32 screen_update_funworld(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/funworld.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( funworld );

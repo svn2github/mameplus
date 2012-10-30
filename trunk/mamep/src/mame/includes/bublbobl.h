@@ -108,18 +108,8 @@ public:
 	DECLARE_MACHINE_RESET(bub68705);
 	DECLARE_MACHINE_START(common);
 	DECLARE_MACHINE_RESET(common);
+	UINT32 screen_update_bublbobl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(bublbobl_m68705_interrupt);
+	TIMER_CALLBACK_MEMBER(nmi_callback);
+	TIMER_CALLBACK_MEMBER(bublbobl_m68705_irq_ack);
 };
-
-
-
-/*----------- defined in machine/bublbobl.c -----------*/
-
-
-
-// for 68705 bootleg
-INTERRUPT_GEN( bublbobl_m68705_interrupt );
-
-
-/*----------- defined in video/bublbobl.c -----------*/
-
-SCREEN_UPDATE_IND16( bublbobl );

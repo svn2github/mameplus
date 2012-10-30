@@ -23,6 +23,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_n64(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
 /*----------- devices -----------*/
@@ -74,6 +75,10 @@ public:
 	DECLARE_WRITE32_MEMBER( dd_reg_w );
 	DECLARE_READ32_MEMBER( pif_ram_r );
 	DECLARE_WRITE32_MEMBER( pif_ram_w );
+	TIMER_CALLBACK_MEMBER(reset_timer_callback);
+	TIMER_CALLBACK_MEMBER(vi_scanline_callback);
+	TIMER_CALLBACK_MEMBER(ai_timer_callback);
+	TIMER_CALLBACK_MEMBER(pi_dma_callback);
 
 	UINT32 sp_reg_r(UINT32 offset);
 	void sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask);
@@ -234,9 +239,6 @@ extern const device_type N64PERIPH;
 
 /*----------- defined in video/n64.c -----------*/
 
-extern VIDEO_START( n64 );
-extern SCREEN_UPDATE_RGB32( n64 );
-
 #define DACRATE_NTSC	(48681812)
 #define DACRATE_PAL	(49656530)
 #define DACRATE_MPAL	(48628316)
@@ -280,12 +282,9 @@ extern UINT32 *rsp_dmem;
 extern void dp_full_sync(running_machine &machine);
 extern void signal_rcp_interrupt(running_machine &machine, int interrupt);
 
-extern READ32_DEVICE_HANDLER( n64_sp_reg_r );
-extern WRITE32_DEVICE_HANDLER( n64_sp_reg_w );
-extern READ32_DEVICE_HANDLER( n64_dp_reg_r );
-extern WRITE32_DEVICE_HANDLER( n64_dp_reg_w );
-
-
-
+extern DECLARE_READ32_DEVICE_HANDLER( n64_sp_reg_r );
+extern DECLARE_WRITE32_DEVICE_HANDLER( n64_sp_reg_w );
+extern DECLARE_READ32_DEVICE_HANDLER( n64_dp_reg_r );
+extern DECLARE_WRITE32_DEVICE_HANDLER( n64_dp_reg_w );
 
 #endif

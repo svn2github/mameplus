@@ -17,12 +17,6 @@ public:
 	DECLARE_DRIVER_INIT(deco222);
 	DECLARE_DRIVER_INIT(graphics);
 	virtual void palette_init();
+	UINT32 screen_update_pcktgal(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_pcktgalb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/pcktgal.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( pcktgal );
-SCREEN_UPDATE_IND16( pcktgalb );

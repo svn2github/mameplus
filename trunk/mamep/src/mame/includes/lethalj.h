@@ -29,13 +29,8 @@ public:
 	DECLARE_DRIVER_INIT(ripribit);
 	DECLARE_DRIVER_INIT(cclownz);
 	virtual void video_start();
+	TIMER_CALLBACK_MEMBER(gen_ext1_int);
 };
 
-
 /*----------- defined in video/lethalj.c -----------*/
-
-
-
-
-
 void lethalj_scanline_update(screen_device &screen, bitmap_ind16 &bitmap, int scanline, const tms34010_display_params *params);

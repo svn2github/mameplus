@@ -120,34 +120,22 @@ public:
 	virtual void palette_init();
 	DECLARE_VIDEO_START(profpac);
 	DECLARE_PALETTE_INIT(profpac);
+	UINT32 screen_update_astrocde(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_profpac(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(interrupt_off);
+	TIMER_CALLBACK_MEMBER(scanline_callback);
 };
-
-
-/*----------- defined in video/astrocde.c -----------*/
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( astrocde );
-SCREEN_UPDATE_IND16( profpac );
-
-
-
 
 /*----------- defined in audio/wow.c -----------*/
 
 extern const char *const wow_sample_names[];
 
-READ8_HANDLER( wow_speech_r );
+DECLARE_READ8_HANDLER( wow_speech_r );
 CUSTOM_INPUT( wow_speech_status_r );
-
 
 /*----------- defined in audio/gorf.c -----------*/
 
 extern const char *const gorf_sample_names[];
 
-READ8_HANDLER( gorf_speech_r );
+DECLARE_READ8_HANDLER( gorf_speech_r );
 CUSTOM_INPUT( gorf_speech_status_r );

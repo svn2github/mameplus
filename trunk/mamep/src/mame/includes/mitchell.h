@@ -5,6 +5,7 @@
 *************************************************************************/
 
 #include "sound/okim6295.h"
+#include "machine/nvram.h"
 
 class mitchell_state : public driver_device
 {
@@ -14,6 +15,7 @@ public:
 		  m_maincpu(*this, "maincpu"),
 		  m_audiocpu(*this, "audiocpu"),
 		  m_oki(*this, "oki") ,
+		  m_nvram(*this, "nvram"),
 		m_colorram(*this, "colorram"),
 		m_videoram(*this, "videoram"){ }
 
@@ -21,6 +23,7 @@ public:
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_audiocpu;
 	optional_device<okim6295_device> m_oki;
+	optional_device<nvram_device> m_nvram;
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_colorram;
 	required_shared_ptr<UINT8> m_videoram;
@@ -42,9 +45,8 @@ public:
 	int        m_dial_selected;
 	int        m_dir[2];
 	int        m_keymatrix;
+	UINT8		m_dummy_nvram;
 
-	UINT8 *m_nvram;
-	size_t m_nvram_size;
 	UINT8 m_irq_source;
 	DECLARE_READ8_MEMBER(pang_port5_r);
 	DECLARE_WRITE8_MEMBER(pang_bankswitch_w);
@@ -100,13 +102,6 @@ public:
 	DECLARE_MACHINE_START(mitchell);
 	DECLARE_MACHINE_RESET(mitchell);
 	DECLARE_VIDEO_START(pang);
+	UINT32 screen_update_pang(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(mitchell_irq);
 };
-
-
-/*----------- defined in video/mitchell.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( pang );

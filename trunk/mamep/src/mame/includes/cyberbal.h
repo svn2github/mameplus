@@ -28,6 +28,8 @@ public:
 	UINT8			m_sound_data_from_6502;
 	UINT8			m_sound_data_from_68k_ready;
 	UINT8			m_sound_data_from_6502_ready;
+	virtual void update_interrupts();
+	virtual void scanline_update(screen_device &screen, int scanline);
 	DECLARE_READ16_MEMBER(special_port0_r);
 	DECLARE_READ16_MEMBER(special_port2_r);
 	DECLARE_READ16_MEMBER(sound_state_r);
@@ -53,30 +55,21 @@ public:
 	DECLARE_VIDEO_START(cyberbal);
 	DECLARE_MACHINE_RESET(cyberbal2p);
 	DECLARE_VIDEO_START(cyberbal2p);
+	UINT32 screen_update_cyberbal_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cyberbal_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_cyberbal2p(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(cyberbal_sound_68k_irq_gen);
 };
-
-
 
 /*----------- defined in audio/cyberbal.c -----------*/
 
 void cyberbal_sound_reset(running_machine &machine);
 
-INTERRUPT_GEN( cyberbal_sound_68k_irq_gen );
-
-
-
-
 /*----------- defined in video/cyberbal.c -----------*/
 
-READ16_HANDLER( cyberbal_paletteram_0_r );
-READ16_HANDLER( cyberbal_paletteram_1_r );
-WRITE16_HANDLER( cyberbal_paletteram_0_w );
-WRITE16_HANDLER( cyberbal_paletteram_1_w );
-
-
-
-SCREEN_UPDATE_IND16( cyberbal_left );
-SCREEN_UPDATE_IND16( cyberbal_right );
-SCREEN_UPDATE_IND16( cyberbal2p );
+DECLARE_READ16_HANDLER( cyberbal_paletteram_0_r );
+DECLARE_READ16_HANDLER( cyberbal_paletteram_1_r );
+DECLARE_WRITE16_HANDLER( cyberbal_paletteram_0_w );
+DECLARE_WRITE16_HANDLER( cyberbal_paletteram_1_w );
 
 void cyberbal_scanline_update(screen_device &screen, int scanline);

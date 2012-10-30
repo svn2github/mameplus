@@ -28,48 +28,46 @@ static void update_grudge_steering(running_machine &machine);
  *
  *************************************/
 
-static TIMER_CALLBACK( irq_off )
+TIMER_CALLBACK_MEMBER(balsente_state::irq_off)
 {
-	machine.device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 }
 
 
-TIMER_DEVICE_CALLBACK( balsente_interrupt_timer )
+TIMER_DEVICE_CALLBACK_MEMBER(balsente_state::balsente_interrupt_timer)
 {
-	balsente_state *state = timer.machine().driver_data<balsente_state>();
-
 	/* next interrupt after scanline 256 is scanline 64 */
 	if (param == 256)
-		state->m_scanline_timer->adjust(timer.machine().primary_screen->time_until_pos(64), 64);
+		m_scanline_timer->adjust(machine().primary_screen->time_until_pos(64), 64);
 	else
-		state->m_scanline_timer->adjust(timer.machine().primary_screen->time_until_pos(param + 64), param + 64);
+		m_scanline_timer->adjust(machine().primary_screen->time_until_pos(param + 64), param + 64);
 
 	/* IRQ starts on scanline 0, 64, 128, etc. */
-	timer.machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 
 	/* it will turn off on the next HBLANK */
-	timer.machine().scheduler().timer_set(timer.machine().primary_screen->time_until_pos(param, BALSENTE_HBSTART), FUNC(irq_off));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(param, BALSENTE_HBSTART), timer_expired_delegate(FUNC(balsente_state::irq_off),this));
 
 	/* if this is Grudge Match, update the steering */
-	if (state->m_grudge_steering_result & 0x80)
-		update_grudge_steering(timer.machine());
+	if (m_grudge_steering_result & 0x80)
+		update_grudge_steering(machine());
 
 	/* if we're a shooter, we do a little more work */
-	if (state->m_shooter)
+	if (m_shooter)
 	{
 		UINT8 tempx, tempy;
 
 		/* we latch the beam values on the first interrupt after VBLANK */
 		if (param == 64)
 		{
-			state->m_shooter_x = timer.machine().root_device().ioport("FAKEX")->read();
-			state->m_shooter_y = timer.machine().root_device().ioport("FAKEY")->read();
+			m_shooter_x = machine().root_device().ioport("FAKEX")->read();
+			m_shooter_y = machine().root_device().ioport("FAKEY")->read();
 		}
 
 		/* which bits get returned depends on which scanline we're at */
-		tempx = state->m_shooter_x << ((param - 64) / 64);
-		tempy = state->m_shooter_y << ((param - 64) / 64);
-		state->m_nstocker_bits = ((tempx >> 4) & 0x08) | ((tempx >> 1) & 0x04) |
+		tempx = m_shooter_x << ((param - 64) / 64);
+		tempy = m_shooter_y << ((param - 64) / 64);
+		m_nstocker_bits = ((tempx >> 4) & 0x08) | ((tempx >> 1) & 0x04) |
 								((tempy >> 6) & 0x02) | ((tempy >> 3) & 0x01);
 	}
 }
@@ -137,7 +135,7 @@ void balsente_state::machine_start()
 
 void balsente_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int numbanks;
 
 	/* reset counters; counter 2's gate is tied high */
@@ -163,8 +161,8 @@ void balsente_state::machine_reset()
 	m_grudge_steering_result = 0;
 
 	/* reset the 6850 chips */
-	balsente_m6850_w(*space, 0, 3);
-	balsente_m6850_sound_w(*space, 0, 3);
+	balsente_m6850_w(space, 0, 3);
+	balsente_m6850_sound_w(space, 0, 3);
 
 	/* reset the noise generator */
 	memset(m_noise_position, 0, sizeof(m_noise_position));
@@ -456,28 +454,26 @@ READ8_MEMBER(balsente_state::balsente_m6850_r)
 }
 
 
-static TIMER_CALLBACK( m6850_data_ready_callback )
+TIMER_CALLBACK_MEMBER(balsente_state::m6850_data_ready_callback)
 {
-	balsente_state *state = machine.driver_data<balsente_state>();
 
 	/* set the output data byte and indicate that we're ready to go */
-	state->m_m6850_output = param;
-	state->m_m6850_data_ready = 1;
-	m6850_update_io(machine);
+	m_m6850_output = param;
+	m_m6850_data_ready = 1;
+	m6850_update_io(machine());
 }
 
 
-static TIMER_CALLBACK( m6850_w_callback )
+TIMER_CALLBACK_MEMBER(balsente_state::m6850_w_callback)
 {
-	balsente_state *state = machine.driver_data<balsente_state>();
 
 	/* indicate that the transmit buffer is no longer empty and update the I/O state */
-	state->m_m6850_status &= ~0x02;
-	m6850_update_io(machine);
+	m_m6850_status &= ~0x02;
+	m6850_update_io(machine());
 
 	/* set a timer for 500usec later to actually transmit the data */
 	/* (this is very important for several games, esp Snacks'n Jaxson) */
-	machine.scheduler().timer_set(attotime::from_usec(500), FUNC(m6850_data_ready_callback), param);
+	machine().scheduler().timer_set(attotime::from_usec(500), timer_expired_delegate(FUNC(balsente_state::m6850_data_ready_callback),this), param);
 }
 
 
@@ -495,7 +491,7 @@ WRITE8_MEMBER(balsente_state::balsente_m6850_w)
 
 	/* output register is at offset 1; set a timer to synchronize the CPUs */
 	else
-		machine().scheduler().synchronize(FUNC(m6850_w_callback), data);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(balsente_state::m6850_w_callback),this), data);
 }
 
 
@@ -556,9 +552,8 @@ WRITE8_MEMBER(balsente_state::balsente_m6850_sound_w)
  *
  *************************************/
 
-INTERRUPT_GEN( balsente_update_analog_inputs )
+INTERRUPT_GEN_MEMBER(balsente_state::balsente_update_analog_inputs)
 {
-	balsente_state *state = device->machine().driver_data<balsente_state>();
 	int i;
 	static const char *const analog[] = { "AN0", "AN1", "AN2", "AN3" };
 
@@ -567,23 +562,22 @@ INTERRUPT_GEN( balsente_update_analog_inputs )
 	/* ports are read once a frame, just at varying intervals. To get around this, we */
 	/* read all the analog inputs at VBLANK time and just return the cached values. */
 	for (i = 0; i < 4; i++)
-		state->m_analog_input_data[i] = device->machine().root_device().ioport(analog[i])->read();
+		m_analog_input_data[i] = machine().root_device().ioport(analog[i])->read();
 }
 
 
-static TIMER_CALLBACK( adc_finished )
+TIMER_CALLBACK_MEMBER(balsente_state::adc_finished)
 {
-	balsente_state *state = machine.driver_data<balsente_state>();
 	int which = param;
 
 	/* analog controls are read in two pieces; the lower port returns the sign */
 	/* and the upper port returns the absolute value of the magnitude */
-	int val = state->m_analog_input_data[which / 2] << state->m_adc_shift;
+	int val = m_analog_input_data[which / 2] << m_adc_shift;
 
 	/* special case for Stompin'/Shrike Avenger */
-	if (state->m_adc_shift == 32)
+	if (m_adc_shift == 32)
 	{
-		state->m_adc_value = state->m_analog_input_data[which];
+		m_adc_value = m_analog_input_data[which];
 		return;
 	}
 
@@ -598,11 +592,11 @@ static TIMER_CALLBACK( adc_finished )
 
 	/* return the sign */
 	if (!(which & 1))
-		state->m_adc_value = (val < 0) ? 0xff : 0x00;
+		m_adc_value = (val < 0) ? 0xff : 0x00;
 
 	/* return the magnitude */
 	else
-		state->m_adc_value = (val < 0) ? -val : val;
+		m_adc_value = (val < 0) ? -val : val;
 }
 
 
@@ -619,7 +613,7 @@ WRITE8_MEMBER(balsente_state::balsente_adc_select_w)
 	/* set a timer to go off and read the value after 50us */
 	/* it's important that we do this for Mini Golf */
 logerror("adc_select %d\n", offset & 7);
-	machine().scheduler().timer_set(attotime::from_usec(50), FUNC(adc_finished), offset & 7);
+	machine().scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(balsente_state::adc_finished),this), offset & 7);
 }
 
 
@@ -725,18 +719,16 @@ void balsente_state::counter_set_out(int which, int out)
 }
 
 
-TIMER_DEVICE_CALLBACK( balsente_counter_callback )
+TIMER_DEVICE_CALLBACK_MEMBER(balsente_state::balsente_counter_callback)
 {
-	balsente_state *state = timer.machine().driver_data<balsente_state>();
-
 	/* reset the counter and the count */
-	state->m_counter[param].timer_active = 0;
-	state->m_counter[param].count = 0;
+	m_counter[param].timer_active = 0;
+	m_counter[param].count = 0;
 
 	/* set the state of the OUT line */
 	/* mode 0 and 1: when firing, transition OUT to high */
-	if (state->m_counter[param].mode == 0 || state->m_counter[param].mode == 1)
-		state->counter_set_out(param, 1);
+	if (m_counter[param].mode == 0 || m_counter[param].mode == 1)
+		counter_set_out(param, 1);
 
 	/* no other modes handled currently */
 }
@@ -871,7 +863,7 @@ static void set_counter_0_ff(timer_device &timer, int newstate)
 		{
 			state->m_counter[0].count--;
 			if (state->m_counter[0].count == 0)
-				balsente_counter_callback(timer, NULL, 0);
+				state->balsente_counter_callback(timer, NULL, 0);
 		}
 	}
 
@@ -880,12 +872,10 @@ static void set_counter_0_ff(timer_device &timer, int newstate)
 }
 
 
-TIMER_DEVICE_CALLBACK( balsente_clock_counter_0_ff )
+TIMER_DEVICE_CALLBACK_MEMBER(balsente_state::balsente_clock_counter_0_ff)
 {
-	balsente_state *state = timer.machine().driver_data<balsente_state>();
-
 	/* clock the D value through the flip-flop */
-	set_counter_0_ff(timer, (state->m_counter_control >> 3) & 1);
+	set_counter_0_ff(timer, (m_counter_control >> 3) & 1);
 }
 
 

@@ -67,6 +67,12 @@ public:
 	virtual void machine_reset();
 	DECLARE_VIDEO_START(exidy440);
 	DECLARE_VIDEO_START(topsecex);
+	UINT32 screen_update_exidy440(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_topsecex(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(exidy440_vblank_interrupt);
+	TIMER_CALLBACK_MEMBER(delayed_sound_command_w);
+	TIMER_CALLBACK_MEMBER(beam_firq_callback);
+	TIMER_CALLBACK_MEMBER(collide_firq_callback);
 };
 
 
@@ -74,11 +80,7 @@ public:
 
 void exidy440_bank_select(running_machine &machine, UINT8 bank);
 
-
 /*----------- defined in video/exidy440.c -----------*/
-
-INTERRUPT_GEN( exidy440_vblank_interrupt );
-
 
 MACHINE_CONFIG_EXTERN( exidy440_video );
 MACHINE_CONFIG_EXTERN( topsecex_video );

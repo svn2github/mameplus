@@ -49,11 +49,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_toypop(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(toypop_main_vblank_irq);
+	INTERRUPT_GEN_MEMBER(toypop_sound_timer_irq);
+	INTERRUPT_GEN_MEMBER(toypop_m68000_interrupt);
+	TIMER_CALLBACK_MEMBER(namcoio_run);
 };
-
-
-/*----------- defined in video/toypop.c -----------*/
-
-
-SCREEN_UPDATE_IND16( toypop );
-

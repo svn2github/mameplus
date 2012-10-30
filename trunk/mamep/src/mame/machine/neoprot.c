@@ -24,7 +24,7 @@
 
 static READ16_HANDLER( fatfury2_protection_16_r )
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 	UINT16 res = state->m_fatfury2_prot_data >> 24;
 
 	switch (offset)
@@ -42,7 +42,7 @@ static READ16_HANDLER( fatfury2_protection_16_r )
 			return ((res & 0xf0) >> 4) | ((res & 0x0f) << 4);
 
 		default:
-			logerror("unknown protection read at pc %06x, offset %08x\n", space->device().safe_pc(), offset << 1);
+			logerror("unknown protection read at pc %06x, offset %08x\n", space.device().safe_pc(), offset << 1);
 			return 0;
 	}
 }
@@ -50,7 +50,7 @@ static READ16_HANDLER( fatfury2_protection_16_r )
 
 static WRITE16_HANDLER( fatfury2_protection_16_w )
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 
 	switch (offset)
 	{
@@ -89,7 +89,7 @@ static WRITE16_HANDLER( fatfury2_protection_16_w )
 			break;
 
 		default:
-			logerror("unknown protection write at pc %06x, offset %08x, data %02x\n", space->device().safe_pc(), offset, data);
+			logerror("unknown protection write at pc %06x, offset %08x, data %02x\n", space.device().safe_pc(), offset, data);
 			break;
 	}
 }
@@ -101,7 +101,7 @@ void fatfury2_install_protection( running_machine &machine )
 
 	/* the protection involves reading and writing addresses in the */
 	/* 0x2xxxxx range. There are several checks all around the code. */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x200000, 0x2fffff, FUNC(fatfury2_protection_16_r), FUNC(fatfury2_protection_16_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(0x200000, 0x2fffff, FUNC(fatfury2_protection_16_r), FUNC(fatfury2_protection_16_w));
 
 	state->m_fatfury2_prot_data = 0;
 
@@ -119,24 +119,24 @@ void fatfury2_install_protection( running_machine &machine )
 static WRITE16_HANDLER ( kof98_prot_w )
 {
 	/* info from razoola */
-	UINT16* mem16 = (UINT16*)space->machine().root_device().memregion("maincpu")->base();
+	UINT16* mem16 = (UINT16*)space.machine().root_device().memregion("maincpu")->base();
 
 	switch (data)
 	{
 	case 0x0090:
-		logerror ("%06x kof98 - protection 0x0090 old %04x %04x\n", space->device().safe_pc(), mem16[0x100/2], mem16[0x102/2]);
+		logerror ("%06x kof98 - protection 0x0090 old %04x %04x\n", space.device().safe_pc(), mem16[0x100/2], mem16[0x102/2]);
 		mem16[0x100/2] = 0x00c2;
 		mem16[0x102/2] = 0x00fd;
 		break;
 
 	case 0x00f0:
-		logerror ("%06x kof98 - protection 0x00f0 old %04x %04x\n", space->device().safe_pc(), mem16[0x100/2], mem16[0x102/2]);
+		logerror ("%06x kof98 - protection 0x00f0 old %04x %04x\n", space.device().safe_pc(), mem16[0x100/2], mem16[0x102/2]);
 		mem16[0x100/2] = 0x4e45;
 		mem16[0x102/2] = 0x4f2d;
 		break;
 
 	default: // 00aa is written, but not needed?
-		logerror ("%06x kof98 - unknown protection write %04x\n", space->device().safe_pc(), data);
+		logerror ("%06x kof98 - unknown protection write %04x\n", space.device().safe_pc(), data);
 		break;
 	}
 }
@@ -146,43 +146,84 @@ void install_kof98_protection( running_machine &machine )
 {
 	/* when 0x20aaaa contains 0x0090 (word) then 0x100 (normally the neogeo header) should return 0x00c200fd worked out using real hw */
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x20aaaa, 0x20aaab, FUNC(kof98_prot_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x20aaaa, 0x20aaab, FUNC(kof98_prot_w));
 }
 
 
 /************************ Metal Slug X *************************
-  todo: emulate, not patch!
   Special board is used: NEO-MVS PROGEOP (1999.2.2)
   The board has a ALTERA (EPM7128SQC100-15) chip which is tied to 250-P1
   Also found on this special board is a QFP144 labeled with 0103
 ***************************************************************/
 
-void mslugx_install_protection( running_machine &machine )
+static WRITE16_HANDLER( mslugx_protection_16_w )
 {
-	int i;
-	UINT16 *mem16 = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 
-	for (i = 0;i < (0x100000/2) - 4;i++)
+	switch (offset)
 	{
-		if (mem16[i + 0] == 0x0243 &&
-			mem16[i + 1] == 0x0001 &&	/* andi.w  #$1, D3 */
-			mem16[i + 2] == 0x6600)		/* bne xxxx */
-		{
-			mem16[i + 2] = 0x4e71;
-			mem16[i + 3] = 0x4e71;
-		}
-	}
-	mem16[0x3bdc/2] = 0x4e71;
-	mem16[0x3bde/2] = 0x4e71;
-	mem16[0x3be0/2] = 0x4e71;
-	mem16[0x3c0c/2] = 0x4e71;
-	mem16[0x3c0e/2] = 0x4e71;
-	mem16[0x3c10/2] = 0x4e71;
+		case 0x0/2: // start new read?
+			state->m_mslugx_command = 0;
+		break;
 
-	mem16[0x3c36/2] = 0x4e71;
-	mem16[0x3c38/2] = 0x4e71;
+		case 0x2/2: // command? These are pulsed with data and then 0
+		case 0x4/2:
+			state->m_mslugx_command |= data;
+		break;
+
+		case 0x6/2: // finished?
+		break;
+
+		case 0xa/2: // init?
+			state->m_mslugx_counter = 0;
+			state->m_mslugx_command = 0;
+		break;
+
+		default:
+			logerror("unknown protection write at pc %06x, offset %08x, data %02x\n", space.device().safe_pc(), offset << 1, data);
+		break;
+	}
 }
 
+
+static READ16_HANDLER( mslugx_protection_16_r )
+{
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
+
+	UINT16 res = 0;
+
+	switch (state->m_mslugx_command)
+	{
+		case 0x0001: { // $3bdc(?) and $3c30 (Register D7)
+			res = (space.read_byte(0xdedd2 + ((state->m_mslugx_counter >> 3) & 0xfff)) >> (~state->m_mslugx_counter & 0x07)) & 1;
+			state->m_mslugx_counter++;
+		}
+		break;
+
+		case 0x0fff: { // All other accesses (Register D2)
+			INT32 select = space.read_word(0x10f00a) - 1; // How should this be calculated?
+			res = (space.read_byte(0xdedd2 + ((select >> 3) & 0x0fff)) >> (~select & 0x07)) & 1;
+		}
+		break;
+
+		default:
+			logerror("unknown protection read at pc %06x, offset %08x\n", space.device().safe_pc(), offset << 1);
+		break;
+	}
+
+	return res;
+}
+
+
+void mslugx_install_protection( running_machine &machine )
+{
+	neogeo_state *state = machine.driver_data<neogeo_state>();
+
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(0x2fffe0, 0x2fffef, FUNC(mslugx_protection_16_r), FUNC(mslugx_protection_16_w));
+
+	state->save_item(NAME(state->m_mslugx_command));
+	state->save_item(NAME(state->m_mslugx_counter));
+}
 
 
 /************************ SMA Protection************************
@@ -375,7 +416,7 @@ static READ16_HANDLER( prot_9a37_r )
 
 static READ16_HANDLER( sma_random_r )
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 	UINT16 old = state->m_neogeo_rng;
 
 	UINT16 newbit = ((state->m_neogeo_rng >> 2) ^
@@ -405,15 +446,15 @@ static void sma_install_random_read_handler( running_machine &machine, int addr1
 	neogeo_state *state = machine.driver_data<neogeo_state>();
 	state->save_item(NAME(state->m_neogeo_rng));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(addr1, addr1 + 1, FUNC(sma_random_r));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(addr2, addr2 + 1, FUNC(sma_random_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(addr1, addr1 + 1, FUNC(sma_random_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(addr2, addr2 + 1, FUNC(sma_random_r));
 }
 
 
 void kof99_install_protection( running_machine &machine )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x2ffff0, 0x2ffff1, FUNC(kof99_bankswitch_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x2ffff0, 0x2ffff1, FUNC(kof99_bankswitch_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
 
 	sma_install_random_read_handler(machine, 0x2ffff8, 0x2ffffa);
 }
@@ -421,8 +462,8 @@ void kof99_install_protection( running_machine &machine )
 
 void garou_install_protection( running_machine &machine )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x2fffc0, 0x2fffc1, FUNC(garou_bankswitch_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x2fffc0, 0x2fffc1, FUNC(garou_bankswitch_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
 
 	sma_install_random_read_handler(machine, 0x2fffcc, 0x2ffff0);
 }
@@ -430,8 +471,8 @@ void garou_install_protection( running_machine &machine )
 
 void garouh_install_protection( running_machine &machine )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x2fffc0, 0x2fffc1, FUNC(garouh_bankswitch_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x2fffc0, 0x2fffc1, FUNC(garouh_bankswitch_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
 
 	sma_install_random_read_handler(machine, 0x2fffcc, 0x2ffff0);
 }
@@ -439,8 +480,8 @@ void garouh_install_protection( running_machine &machine )
 
 void mslug3_install_protection( running_machine &machine )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x2fffe4, 0x2fffe5, FUNC(mslug3_bankswitch_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x2fffe4, 0x2fffe5, FUNC(mslug3_bankswitch_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
 
 //  sma_install_random_read_handler(machine, 0x2ffff8, 0x2ffffa);
 }
@@ -448,8 +489,8 @@ void mslug3_install_protection( running_machine &machine )
 
 void kof2000_install_protection( running_machine &machine )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x2fffec, 0x2fffed, FUNC(kof2000_bankswitch_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x2fffec, 0x2fffed, FUNC(kof2000_bankswitch_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x2fe446, 0x2fe447, FUNC(prot_9a37_r));
 
 	sma_install_random_read_handler(machine, 0x2fffd8, 0x2fffda);
 }
@@ -500,9 +541,9 @@ static void pvc_prot2( running_machine &machine ) // on writes to e8/e9/ea/eb
 }
 
 
-static void pvc_write_bankswitch( address_space *space )
+static void pvc_write_bankswitch( address_space &space )
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 	UINT32 bankaddress;
 
 	bankaddress = ((state->m_pvc_cartridge_ram[0xff8] >> 8)|(state->m_pvc_cartridge_ram[0xff9] << 8));
@@ -515,20 +556,20 @@ static void pvc_write_bankswitch( address_space *space )
 
 static READ16_HANDLER( pvc_prot_r )
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 	return state->m_pvc_cartridge_ram[offset];
 }
 
 
 static WRITE16_HANDLER( pvc_prot_w )
 {
-	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	neogeo_state *state = space.machine().driver_data<neogeo_state>();
 
 	COMBINE_DATA(&state->m_pvc_cartridge_ram[offset] );
 	if (offset == 0xff0)
-		pvc_prot1(space->machine());
+		pvc_prot1(space.machine());
 	else if(offset >= 0xff4 && offset <= 0xff5)
-		pvc_prot2(space->machine());
+		pvc_prot2(space.machine());
 	else if(offset >= 0xff8)
 		pvc_write_bankswitch(space);
 }
@@ -540,5 +581,5 @@ void install_pvc_protection( running_machine &machine )
 	state->m_pvc_cartridge_ram = auto_alloc_array(machine, UINT16, 0x2000 / 2);
 	state->save_pointer(NAME(state->m_pvc_cartridge_ram), 0x2000 / 2);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x2fe000, 0x2fffff, FUNC(pvc_prot_r), FUNC(pvc_prot_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(0x2fe000, 0x2fffff, FUNC(pvc_prot_r), FUNC(pvc_prot_w));
 }

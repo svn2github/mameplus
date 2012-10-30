@@ -1,3 +1,5 @@
+#include "video/vsystem_spr.h"
+#include "video/vsystem_spr2.h"
 
 class aerofgt_state : public driver_device
 {
@@ -11,7 +13,11 @@ public:
 		m_spriteram1(*this, "spriteram1"),
 		m_spriteram2(*this, "spriteram2"),
 		m_spriteram3(*this, "spriteram3"),
-		m_tx_tilemap_ram(*this, "tx_tilemap_ram"){ }
+		m_tx_tilemap_ram(*this, "tx_tilemap_ram"),
+		m_spr(*this, "vsystem_spr"),
+		m_spr_old(*this, "vsystem_spr_old"),
+		m_spr_old2(*this, "vsystem_spr_ol2")
+	{ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_bg1videoram;
@@ -23,6 +29,12 @@ public:
 	required_shared_ptr<UINT16> m_spriteram3;
 	optional_shared_ptr<UINT16> m_tx_tilemap_ram;
 //  UINT16 *  m_paletteram;   // currently this uses generic palette handling
+
+	/* devices referenced above */
+	optional_device<vsystem_spr_device> m_spr; // only the aerofgt parent uses this chip
+	optional_device<vsystem_spr2_device> m_spr_old; // every other (non-bootleg) uses this
+	optional_device<vsystem_spr2_device> m_spr_old2; //  or a pair of them..
+
 
 	/* video-related */
 	tilemap_t   *m_bg1_tilemap;
@@ -38,12 +50,15 @@ public:
 	int       m_spritepalettebank;
 	int       m_sprite_gfx;
 	int       m_spikes91_lookup;
+	UINT32 aerofgt_tile_callback( UINT32 code );
 
 	/* misc */
 	int       m_pending_command;
 
-	/* devices */
+	/* other devices */
 	cpu_device *m_audiocpu;
+
+	/* handlers */
 	DECLARE_WRITE16_MEMBER(sound_command_w);
 	DECLARE_WRITE16_MEMBER(turbofrc_sound_command_w);
 	DECLARE_WRITE16_MEMBER(aerfboot_soundlatch_w);
@@ -83,25 +98,14 @@ public:
 	DECLARE_VIDEO_START(spinlbrk);
 	DECLARE_VIDEO_START(turbofrc);
 	DECLARE_VIDEO_START(wbbc97);
+	UINT32 screen_update_pspikes(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_spikes91(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_pspikesb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_karatblz(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_spinlbrk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_turbofrc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_aerofgt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_aerfboot(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_aerfboo2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_wbbc97(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/aerofgt.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( pspikes );
-SCREEN_UPDATE_IND16( pspikesb );
-SCREEN_UPDATE_IND16( spikes91 );
-SCREEN_UPDATE_IND16( karatblz );
-SCREEN_UPDATE_IND16( spinlbrk );
-SCREEN_UPDATE_IND16( turbofrc );
-SCREEN_UPDATE_IND16( aerofgt );
-SCREEN_UPDATE_IND16( aerfboot );
-SCREEN_UPDATE_IND16( aerfboo2 );
-SCREEN_UPDATE_RGB32( wbbc97 );

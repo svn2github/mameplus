@@ -7,10 +7,10 @@
 #ifndef _GDROM_H_
 #define _GDROM_H_
 
-#include "machine/scsidev.h"
+#include "machine/scsihle.h"
 
 // Sega GD-ROM handler
-class gdrom_device : public scsidev_device
+class gdrom_device : public scsihle_device
 {
 public:
 	// construction/destruction
@@ -22,6 +22,7 @@ public:
 	virtual void ExecCommand( int *transferLength );
 	virtual void WriteData( UINT8 *data, int dataLength );
 	virtual void ReadData( UINT8 *data, int dataLength );
+	virtual int GetSectorBytes();
 
 	static struct cdrom_interface cd_intf;
 

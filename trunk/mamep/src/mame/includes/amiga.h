@@ -319,6 +319,7 @@ Ernesto Corvi & Mariusz Wojcieszek
 #define AGA_CHIP_RAM_MASK		0x1ffffe
 
 #define FLAGS_AGA_CHIPSET	(1 << 0)
+#define FLAGS_IS_32BIT      (1 << 1)
 
 struct amiga_machine_interface
 {
@@ -340,6 +341,7 @@ struct amiga_machine_interface
 #define IS_AGA(intf) ( intf->chip_ram_mask == AGA_CHIP_RAM_MASK && (( intf->flags & FLAGS_AGA_CHIPSET) != 0))
 #define IS_ECS(intf) ( intf->chip_ram_mask == ECS_CHIP_RAM_MASK && (( intf->flags & FLAGS_AGA_CHIPSET) == 0))
 #define IS_ECS_OR_AGA(intf) ( intf->chip_ram_mask == ECS_CHIP_RAM_MASK)
+#define IS_32BIT(intf) (( intf->flags & FLAGS_IS_32BIT) != 0)
 
 struct amiga_autoconfig_device
 {
@@ -429,11 +431,18 @@ public:
 	DECLARE_DRIVER_INIT(mquake);
 	DECLARE_DRIVER_INIT(amiga);
 	DECLARE_DRIVER_INIT(cdtv);
+	DECLARE_DRIVER_INIT(a3000);
 	DECLARE_MACHINE_RESET(mquake);
 	DECLARE_MACHINE_RESET(amiga);
 	DECLARE_VIDEO_START(amiga);
 	DECLARE_PALETTE_INIT(amiga);
 	DECLARE_VIDEO_START(amiga_aga);
+	UINT32 screen_update_amiga(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_amiga_aga(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(scanline_callback);
+	TIMER_CALLBACK_MEMBER(amiga_irq_proc);
+	TIMER_CALLBACK_MEMBER(amiga_blitter_proc);
+	TIMER_CALLBACK_MEMBER(finish_serial_write);
 };
 
 
@@ -447,18 +456,18 @@ void amiga_machine_config(running_machine &machine, const amiga_machine_interfac
 
 
 
-READ16_HANDLER( amiga_cia_r );
-WRITE16_HANDLER( amiga_cia_w );
+DECLARE_READ16_HANDLER( amiga_cia_r );
+DECLARE_WRITE16_HANDLER( amiga_cia_w );
 
-READ16_HANDLER( amiga_custom_r );
-WRITE16_HANDLER( amiga_custom_w );
+DECLARE_READ16_HANDLER( amiga_custom_r );
+DECLARE_WRITE16_HANDLER( amiga_custom_w );
 
 void amiga_serial_in_w(running_machine &machine, UINT16 data);
 attotime amiga_get_serial_char_period(running_machine &machine);
 
 void amiga_add_autoconfig(running_machine &machine, const amiga_autoconfig_device *device);
-READ16_HANDLER( amiga_autoconfig_r );
-WRITE16_HANDLER( amiga_autoconfig_w );
+DECLARE_READ16_HANDLER( amiga_autoconfig_r );
+DECLARE_WRITE16_HANDLER( amiga_autoconfig_w );
 
 void amiga_cia_0_irq(device_t *device, int state);
 void amiga_cia_1_irq(device_t *device, int state);
@@ -500,10 +509,6 @@ void amiga_audio_data_w(device_t *device, int which, UINT16 data);
 
 extern const UINT16 amiga_expand_byte[256];
 
-
-
-SCREEN_UPDATE_IND16( amiga );
-
 void amiga_copper_setpc(running_machine &machine, UINT32 pc);
 int amiga_copper_execute_next(running_machine &machine, int xpos);
 
@@ -514,9 +519,6 @@ void amiga_sprite_dma_reset(running_machine &machine, int which);
 void amiga_sprite_enable_comparitor(running_machine &machine, int which, int enable);
 
 /*----------- defined in video/amigaaga.c -----------*/
-
-
-SCREEN_UPDATE_RGB32( amiga_aga );
 
 void amiga_aga_render_scanline(running_machine &machine, bitmap_rgb32 &bitmap, int scanline);
 void amiga_aga_palette_write(running_machine &machine, int color_reg, UINT16 data);

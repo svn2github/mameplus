@@ -40,13 +40,14 @@ public:
 	TILE_GET_INFO_MEMBER(get_text_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_flower(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
 /*----------- defined in audio/flower.c -----------*/
 
-WRITE8_DEVICE_HANDLER( flower_sound1_w );
-WRITE8_DEVICE_HANDLER( flower_sound2_w );
+DECLARE_WRITE8_DEVICE_HANDLER( flower_sound1_w );
+DECLARE_WRITE8_DEVICE_HANDLER( flower_sound2_w );
 
 class flower_sound_device : public device_t,
                                   public device_sound_interface
@@ -71,12 +72,4 @@ private:
 };
 
 extern const device_type FLOWER;
-
-
-
-/*----------- defined in video/flower.c -----------*/
-
-
-SCREEN_UPDATE_IND16( flower );
-
 

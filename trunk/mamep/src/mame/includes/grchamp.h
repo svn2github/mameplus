@@ -71,6 +71,10 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_grchamp(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(grchamp_cpu0_interrupt);
+	INTERRUPT_GEN_MEMBER(grchamp_cpu1_interrupt);
+	TIMER_CALLBACK_MEMBER(main_to_sub_comm_sync_w);
 };
 
 /* Discrete Sound Input Nodes */
@@ -87,9 +91,3 @@ public:
 /*----------- defined in audio/grchamp.c -----------*/
 
 DISCRETE_SOUND_EXTERN( grchamp );
-
-/*----------- defined in video/grchamp.c -----------*/
-
-
-
-SCREEN_UPDATE_RGB32( grchamp );

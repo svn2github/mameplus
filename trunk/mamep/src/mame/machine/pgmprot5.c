@@ -32,7 +32,7 @@ READ16_HANDLER( dw2_d80000_r )
 // if(dw2reg<0x20) //NOT SURE!!
 	{
 		//The value at 0x80EECE is computed in the routine at 0x107c18
-		pgm_state *state = space->machine().driver_data<pgm_state>();
+		pgm_state *state = space.machine().driver_data<pgm_state>();
 		UINT16 d = state->m_mainram[0xEECE/2];
 		UINT16 d2 = 0;
 		d = (d >> 8) | (d << 8);
@@ -62,7 +62,7 @@ static void drgwld2_common_init(running_machine &machine)
     select and after failing in the 2nd stage (probably there are other checks
     out there).
     */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xd80000, 0xd80003, FUNC(dw2_d80000_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xd80000, 0xd80003, FUNC(dw2_d80000_r));
 }
 
 DRIVER_INIT_MEMBER(pgm_state,drgw2)
@@ -110,4 +110,3 @@ DRIVER_INIT_MEMBER(pgm_state,drgw2j)
 	mem16[0x130366 / 2] = 0x4e93;
 	mem16[0x1303f6 / 2] = 0x4e93;
 }
-

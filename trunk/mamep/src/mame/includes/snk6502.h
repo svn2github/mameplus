@@ -60,6 +60,10 @@ public:
 	DECLARE_MACHINE_RESET(satansat);
 	DECLARE_MACHINE_RESET(pballoon);
 	DECLARE_VIDEO_START(pballoon);
+	UINT32 screen_update_snk6502(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(satansat_interrupt);
+	INTERRUPT_GEN_MEMBER(snk6502_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(sasuke_update_counter);
 };
 
 
@@ -76,12 +80,12 @@ extern const sn76477_interface vanguard_sn76477_intf_1;
 extern const sn76477_interface vanguard_sn76477_intf_2;
 extern const sn76477_interface fantasy_sn76477_intf;
 
-extern WRITE8_HANDLER( sasuke_sound_w );
-extern WRITE8_HANDLER( satansat_sound_w );
-extern WRITE8_HANDLER( vanguard_sound_w );
-extern WRITE8_HANDLER( vanguard_speech_w );
-extern WRITE8_HANDLER( fantasy_sound_w );
-extern WRITE8_HANDLER( fantasy_speech_w );
+extern DECLARE_WRITE8_HANDLER( sasuke_sound_w );
+extern DECLARE_WRITE8_HANDLER( satansat_sound_w );
+extern DECLARE_WRITE8_HANDLER( vanguard_sound_w );
+extern DECLARE_WRITE8_HANDLER( vanguard_speech_w );
+extern DECLARE_WRITE8_HANDLER( fantasy_sound_w );
+extern DECLARE_WRITE8_HANDLER( fantasy_speech_w );
 
 class snk6502_sound_device : public device_t,
                                   public device_sound_interface
@@ -112,17 +116,4 @@ void snk6502_set_music_freq(running_machine &machine, int freq);
 int snk6502_music0_playing(running_machine &machine);
 
 DISCRETE_SOUND_EXTERN( fantasy );
-
-
-/*----------- defined in video/snk6502.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( snk6502 );
-
-
-
-
-
 

@@ -53,14 +53,12 @@ public:
 	DECLARE_MACHINE_START(moo);
 	DECLARE_MACHINE_RESET(moo);
 	DECLARE_VIDEO_START(moo);
+	UINT32 screen_update_moo(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(moo_interrupt);
+	INTERRUPT_GEN_MEMBER(moobl_interrupt);
+	TIMER_CALLBACK_MEMBER(dmaend_callback);
 };
 
-
-
 /*----------- defined in video/moo.c -----------*/
-
 extern void moo_tile_callback(running_machine &machine, int layer, int *code, int *color, int *flags);
 extern void moo_sprite_callback(running_machine &machine, int *code, int *color, int *priority_mask);
-
-
-SCREEN_UPDATE_RGB32(moo);

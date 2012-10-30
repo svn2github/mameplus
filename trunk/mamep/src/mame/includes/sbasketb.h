@@ -22,7 +22,7 @@ public:
 	required_shared_ptr<UINT8> m_palettebank;
 	required_shared_ptr<UINT8> m_spriteram_select;
 	required_shared_ptr<UINT8> m_scroll;
-	optional_device<sn76489_new_device> m_sn;
+	optional_device<sn76489_device> m_sn;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -42,11 +42,6 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_sbasketb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
-/*----------- defined in video/sbasketb.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( sbasketb );

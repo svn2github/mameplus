@@ -68,13 +68,9 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_VIDEO_START(wgp2);
+	UINT32 screen_update_wgp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(wgp_cpub_interrupt);
+	TIMER_CALLBACK_MEMBER(wgp_interrupt4);
+	TIMER_CALLBACK_MEMBER(wgp_interrupt6);
+	TIMER_CALLBACK_MEMBER(wgp_cpub_interrupt6);
 };
-
-
-/*----------- defined in video/wgp.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( wgp );

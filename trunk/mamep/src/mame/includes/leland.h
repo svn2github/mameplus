@@ -140,6 +140,18 @@ public:
 	DECLARE_MACHINE_RESET(leland);
 	DECLARE_VIDEO_START(leland);
 	DECLARE_VIDEO_START(ataxx);
+	UINT32 screen_update_leland(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_ataxx(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(leland_master_interrupt);
+	TIMER_CALLBACK_MEMBER(leland_interrupt_callback);
+	TIMER_CALLBACK_MEMBER(ataxx_interrupt_callback);
+	TIMER_CALLBACK_MEMBER(scanline_callback);
+	TIMER_CALLBACK_MEMBER(leland_delayed_mvram_w);
+	DECLARE_READ8_MEMBER(ataxx_eeprom_r);
+	DECLARE_WRITE8_MEMBER(ataxx_eeprom_w);
+	DECLARE_READ8_MEMBER(leland_sound_port_r);
+	DECLARE_WRITE8_MEMBER(leland_sound_port_w);
+	DECLARE_WRITE8_MEMBER(leland_gfx_port_w);
 };
 
 
@@ -150,20 +162,6 @@ public:
 #define SERIAL_TYPE_ADD_XOR		2
 #define SERIAL_TYPE_ENCRYPT		3
 #define SERIAL_TYPE_ENCRYPT_XOR	4
-
-
-
-
-
-
-
-
-
-
-
-
-
-INTERRUPT_GEN( leland_master_interrupt );
 
 void cerberus_bankswitch(running_machine &machine);
 void mayhem_bankswitch(running_machine &machine);
@@ -176,18 +174,6 @@ void ataxx_bankswitch(running_machine &machine);
 
 void leland_init_eeprom(running_machine &machine, UINT8 default_val, const UINT16 *data, UINT8 serial_offset, UINT8 serial_type);
 void ataxx_init_eeprom(running_machine &machine, const UINT16 *data);
-
-READ8_DEVICE_HANDLER( ataxx_eeprom_r );
-WRITE8_DEVICE_HANDLER( ataxx_eeprom_w );
-
-
-
-
-
-READ8_DEVICE_HANDLER( leland_sound_port_r );
-WRITE8_DEVICE_HANDLER( leland_sound_port_w );
-
-
 
 void leland_rotate_memory(running_machine &machine, const char *cpuname);
 
@@ -257,12 +243,12 @@ extern const device_type REDLINE_80186;
 
 void leland_dac_update(device_t *device, int dacnum, UINT8 sample);
 
-READ8_DEVICE_HANDLER( leland_80186_response_r );
+DECLARE_READ8_DEVICE_HANDLER( leland_80186_response_r );
 
-WRITE8_DEVICE_HANDLER( leland_80186_control_w );
-WRITE8_DEVICE_HANDLER( leland_80186_command_lo_w );
-WRITE8_DEVICE_HANDLER( leland_80186_command_hi_w );
-WRITE8_DEVICE_HANDLER( ataxx_80186_control_w );
+DECLARE_WRITE8_DEVICE_HANDLER( leland_80186_control_w );
+DECLARE_WRITE8_DEVICE_HANDLER( leland_80186_command_lo_w );
+DECLARE_WRITE8_DEVICE_HANDLER( leland_80186_command_hi_w );
+DECLARE_WRITE8_DEVICE_HANDLER( ataxx_80186_control_w );
 
 ADDRESS_MAP_EXTERN(leland_80186_map_program, 16);
 ADDRESS_MAP_EXTERN(leland_80186_map_io, 16);
@@ -272,10 +258,6 @@ ADDRESS_MAP_EXTERN(ataxx_80186_map_io, 16);
 
 /*----------- defined in video/leland.c -----------*/
 
-WRITE8_DEVICE_HANDLER( leland_gfx_port_w );
-
-
-
-
+DECLARE_WRITE8_DEVICE_HANDLER( leland_gfx_port_w );
 MACHINE_CONFIG_EXTERN( leland_video );
 MACHINE_CONFIG_EXTERN( ataxx_video );

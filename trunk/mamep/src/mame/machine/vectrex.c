@@ -89,7 +89,7 @@ DEVICE_IMAGE_LOAD(vectrex_cart)
 	}
 
 	if (memcmp(mem + 0x06,"SRAM",4)) {
-		image.device().machine().device("maincpu")->memory().space(AS_PROGRAM)->unmap_write(0x0000, 0x7fff);
+		image.device().machine().device("maincpu")->memory().space(AS_PROGRAM).unmap_write(0x0000, 0x7fff);
 	}
 
 	/* If VIA T2 starts, reset refresh timer.
@@ -227,42 +227,39 @@ void vectrex_via_irq(device_t *device, int level)
 }
 
 
-READ8_DEVICE_HANDLER(vectrex_via_pb_r)
+READ8_MEMBER(vectrex_state::vectrex_via_pb_r)
 {
-	vectrex_state *state = device->machine().driver_data<vectrex_state>();
 	int pot;
 	static const char *const ctrlnames[] = { "CONTR1X", "CONTR1Y", "CONTR2X", "CONTR2Y" };
 
-	pot = device->machine().root_device().ioport(ctrlnames[(state->m_via_out[PORTB] & 0x6) >> 1])->read() - 0x80;
+	pot = machine().root_device().ioport(ctrlnames[(m_via_out[PORTB] & 0x6) >> 1])->read() - 0x80;
 
-	if (pot > (signed char)state->m_via_out[PORTA])
-		state->m_via_out[PORTB] |= 0x20;
+	if (pot > (signed char)m_via_out[PORTA])
+		m_via_out[PORTB] |= 0x20;
 	else
-		state->m_via_out[PORTB] &= ~0x20;
+		m_via_out[PORTB] &= ~0x20;
 
-	return state->m_via_out[PORTB];
+	return m_via_out[PORTB];
 }
 
 
-READ8_DEVICE_HANDLER(vectrex_via_pa_r)
+READ8_MEMBER(vectrex_state::vectrex_via_pa_r)
 {
-	vectrex_state *state = device->machine().driver_data<vectrex_state>();
-	if ((!(state->m_via_out[PORTB] & 0x10)) && (state->m_via_out[PORTB] & 0x08))
+	if ((!(m_via_out[PORTB] & 0x10)) && (m_via_out[PORTB] & 0x08))
 		/* BDIR inactive, we can read the PSG. BC1 has to be active. */
 	{
-		device_t *ay = device->machine().device("ay8912");
+		device_t *ay = machine().device("ay8912");
 
-		state->m_via_out[PORTA] = ay8910_r(ay, 0)
-			& ~(state->m_imager_pinlevel & 0x80);
+		m_via_out[PORTA] = ay8910_r(ay, space, 0)
+			& ~(m_imager_pinlevel & 0x80);
 	}
-	return state->m_via_out[PORTA];
+	return m_via_out[PORTA];
 }
 
 
-READ8_DEVICE_HANDLER(vectrex_s1_via_pb_r)
+READ8_MEMBER(vectrex_state::vectrex_s1_via_pb_r)
 {
-	vectrex_state *state = device->machine().driver_data<vectrex_state>();
-	return (state->m_via_out[PORTB] & ~0x40) | (state->ioport("COIN")->read() & 0x40);
+	return (m_via_out[PORTB] & ~0x40) | (ioport("COIN")->read() & 0x40);
 }
 
 
@@ -272,44 +269,42 @@ READ8_DEVICE_HANDLER(vectrex_s1_via_pb_r)
 
 *********************************************************************/
 
-static TIMER_CALLBACK(vectrex_imager_change_color)
+TIMER_CALLBACK_MEMBER(vectrex_state::vectrex_imager_change_color)
 {
-	vectrex_state *state = machine.driver_data<vectrex_state>();
-	state->m_beam_color = param;
+	m_beam_color = param;
 }
 
 
-static TIMER_CALLBACK(update_level)
+TIMER_CALLBACK_MEMBER(vectrex_state::update_level)
 {
 	if (ptr)
 		* (UINT8 *) ptr = param;
 }
 
 
-TIMER_CALLBACK(vectrex_imager_eye)
+TIMER_CALLBACK_MEMBER(vectrex_state::vectrex_imager_eye)
 {
-	vectrex_state *state = machine.driver_data<vectrex_state>();
-	via6522_device *via_0 = machine.device<via6522_device>("via6522_0");
+	via6522_device *via_0 = machine().device<via6522_device>("via6522_0");
 	int coffset;
-	double rtime = (1.0 / state->m_imager_freq);
+	double rtime = (1.0 / m_imager_freq);
 
-	if (state->m_imager_status > 0)
+	if (m_imager_status > 0)
 	{
-		state->m_imager_status = param;
+		m_imager_status = param;
 		coffset = param > 1? 3: 0;
-		machine.scheduler().timer_set (attotime::from_double(rtime * state->m_imager_angles[0]), FUNC(vectrex_imager_change_color), state->m_imager_colors[coffset+2]);
-		machine.scheduler().timer_set (attotime::from_double(rtime * state->m_imager_angles[1]), FUNC(vectrex_imager_change_color), state->m_imager_colors[coffset+1]);
-		machine.scheduler().timer_set (attotime::from_double(rtime * state->m_imager_angles[2]), FUNC(vectrex_imager_change_color), state->m_imager_colors[coffset]);
+		machine().scheduler().timer_set (attotime::from_double(rtime * m_imager_angles[0]), timer_expired_delegate(FUNC(vectrex_state::vectrex_imager_change_color),this), m_imager_colors[coffset+2]);
+		machine().scheduler().timer_set (attotime::from_double(rtime * m_imager_angles[1]), timer_expired_delegate(FUNC(vectrex_state::vectrex_imager_change_color),this), m_imager_colors[coffset+1]);
+		machine().scheduler().timer_set (attotime::from_double(rtime * m_imager_angles[2]), timer_expired_delegate(FUNC(vectrex_state::vectrex_imager_change_color),this), m_imager_colors[coffset]);
 
 		if (param == 2)
 		{
-			machine.scheduler().timer_set (attotime::from_double(rtime * 0.50), FUNC(vectrex_imager_eye), 1);
+			machine().scheduler().timer_set (attotime::from_double(rtime * 0.50), timer_expired_delegate(FUNC(vectrex_state::vectrex_imager_eye),this), 1);
 
 			/* Index hole sensor is connected to IO7 which triggers also CA1 of VIA */
 			via_0->write_ca1(1);
 			via_0->write_ca1(0);
-			state->m_imager_pinlevel |= 0x80;
-			machine.scheduler().timer_set (attotime::from_double(rtime / 360.0), FUNC(update_level), 0, &state->m_imager_pinlevel);
+			m_imager_pinlevel |= 0x80;
+			machine().scheduler().timer_set (attotime::from_double(rtime / 360.0), timer_expired_delegate(FUNC(vectrex_state::update_level),this), 0, &m_imager_pinlevel);
 		}
 	}
 }

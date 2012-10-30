@@ -134,44 +134,21 @@ public:
 	DECLARE_MACHINE_RESET(superabc);
 	DECLARE_VIDEO_START(pengo);
 	DECLARE_VIDEO_START(jrpacman);
+	UINT32 screen_update_pacman(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_s2650games(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
+	INTERRUPT_GEN_MEMBER(vblank_nmi);
+	INTERRUPT_GEN_MEMBER(s2650_interrupt);
 };
 
-
-/*----------- defined in video/pacman.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( pacman );
-
-
-
-
-SCREEN_UPDATE_IND16( s2650games );
-
-
-
-
-
-
 /*----------- defined in machine/pacplus.c -----------*/
-
 void pacplus_decode(running_machine &machine);
 
-
 /*----------- defined in machine/jumpshot.c -----------*/
-
 void jumpshot_decode(running_machine &machine);
 
-
 /*----------- defined in machine/theglobp.c -----------*/
-
-
-
-READ8_HANDLER( theglobp_decrypt_rom );
-
+DECLARE_READ8_HANDLER( theglobp_decrypt_rom );
 
 /*----------- defined in machine/acitya.c -------------*/
-
-
-
-READ8_HANDLER( acitya_decrypt_rom );
+DECLARE_READ8_HANDLER( acitya_decrypt_rom );

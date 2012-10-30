@@ -33,18 +33,6 @@ UINT32 mcr_sprite_board;
 
 static emu_timer *ipu_watchdog_timer;
 
-
-/*************************************
- *
- *  Function prototypes
- *
- *************************************/
-
-static TIMER_CALLBACK( ipu_watchdog_reset );
-static WRITE8_DEVICE_HANDLER( ipu_break_changed );
-
-
-
 /*************************************
  *
  *  Graphics declarations
@@ -132,19 +120,19 @@ Z80PIO_INTERFACE( nflfoot_pio_intf )
 };
 
 
-static WRITE_LINE_DEVICE_HANDLER( ipu_ctc_interrupt )
+WRITE_LINE_MEMBER(mcr_state::ipu_ctc_interrupt)
 {
-	device->machine().device("ipu")->execute().set_input_line(0, state);
+	machine().device("ipu")->execute().set_input_line(0, state);
 }
 
 
 const z80sio_interface nflfoot_sio_intf =
 {
-	ipu_ctc_interrupt,	/* interrupt handler */
-	0,					/* DTR changed handler */
-	0,					/* RTS changed handler */
-	ipu_break_changed,	/* BREAK changed handler */
-	mcr_ipu_sio_transmit/* transmit handler */
+	DEVCB_DRIVER_LINE_MEMBER(mcr_state,ipu_ctc_interrupt),	/* interrupt handler */
+	DEVCB_NULL,					/* DTR changed handler */
+	DEVCB_NULL,					/* RTS changed handler */
+	DEVCB_DRIVER_MEMBER(mcr_state,ipu_break_changed),	/* BREAK changed handler */
+	DEVCB_DRIVER_MEMBER16(mcr_state,mcr_ipu_sio_transmit)/* transmit handler */
 };
 
 
@@ -164,7 +152,7 @@ MACHINE_START_MEMBER(mcr_state,mcr)
 MACHINE_START_MEMBER(mcr_state,nflfoot)
 {
 	/* allocate a timer for the IPU watchdog */
-	ipu_watchdog_timer = machine().scheduler().timer_alloc(FUNC(ipu_watchdog_reset));
+	ipu_watchdog_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(mcr_state::ipu_watchdog_reset),this));
 }
 
 
@@ -182,10 +170,9 @@ MACHINE_RESET_MEMBER(mcr_state,mcr)
  *
  *************************************/
 
-TIMER_DEVICE_CALLBACK( mcr_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(mcr_state::mcr_interrupt)
 {
-	//mcr_state *state = timer.machine().driver_data<mcr_state>();
-	z80ctc_device *ctc = timer.machine().device<z80ctc_device>("ctc");
+	z80ctc_device *ctc = machine().device<z80ctc_device>("ctc");
 	int scanline = param;
 
 	/* CTC line 2 is connected to VBLANK, which is once every 1/2 frame */
@@ -205,10 +192,9 @@ TIMER_DEVICE_CALLBACK( mcr_interrupt )
 	}
 }
 
-TIMER_DEVICE_CALLBACK( mcr_ipu_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(mcr_state::mcr_ipu_interrupt)
 {
-	//mcr_state *state = timer.machine().driver_data<mcr_state>();
-	z80ctc_device *ctc = timer.machine().device<z80ctc_device>("ctc");
+	z80ctc_device *ctc = machine().device<z80ctc_device>("ctc");
 	int scanline = param;
 
 	/* CTC line 3 is connected to 493, which is signalled once every */
@@ -227,14 +213,14 @@ TIMER_DEVICE_CALLBACK( mcr_ipu_interrupt )
  *
  *************************************/
 
-static WRITE8_DEVICE_HANDLER( ipu_break_changed )
+WRITE8_MEMBER(mcr_state::ipu_break_changed)
 {
 	/* channel B is connected to the CED player */
 	if (offset == 1)
 	{
 		logerror("DTR changed -> %d\n", data);
 		if (data == 1)
-			downcast<z80sio_device *>(device)->receive_data(1, 0);
+			downcast<z80sio_device *>(machine().device("ipu_sio"))->receive_data(1, 0);
 	}
 }
 
@@ -250,14 +236,14 @@ WRITE8_MEMBER(mcr_state::mcr_ipu_laserdisk_w)
 }
 
 
-static TIMER_CALLBACK( ipu_watchdog_reset )
+TIMER_CALLBACK_MEMBER(mcr_state::ipu_watchdog_reset)
 {
 	logerror("ipu_watchdog_reset\n");
-	machine.device("ipu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
-	machine.device("ipu_ctc")->reset();
-	machine.device("ipu_pio0")->reset();
-	machine.device("ipu_pio1")->reset();
-	machine.device("ipu_sio")->reset();
+	machine().device("ipu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	machine().device("ipu_ctc")->reset();
+	machine().device("ipu_pio0")->reset();
+	machine().device("ipu_pio1")->reset();
+	machine().device("ipu_sio")->reset();
 }
 
 

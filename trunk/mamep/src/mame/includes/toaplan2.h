@@ -119,24 +119,17 @@ public:
 	DECLARE_VIDEO_START(bgaregga);
 	DECLARE_VIDEO_START(batrider);
 	DECLARE_VIDEO_START(bgareggabl);
+	UINT32 screen_update_toaplan2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_dogyuun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_truxton2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_batsugun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_batrider(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_toaplan2_dual(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_toaplan2_mixed(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void screen_eof_toaplan2(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(toaplan2_vblank_irq1);
+	INTERRUPT_GEN_MEMBER(toaplan2_vblank_irq2);
+	INTERRUPT_GEN_MEMBER(toaplan2_vblank_irq4);
+	INTERRUPT_GEN_MEMBER(bbakraid_snd_interrupt);
+	TIMER_CALLBACK_MEMBER(toaplan2_raise_irq);
 };
-
-/*----------- defined in video/toaplan2.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( toaplan2 );
-SCREEN_UPDATE_IND16( truxton2 );
-SCREEN_UPDATE_IND16( batrider );
-SCREEN_UPDATE_IND16( dogyuun );
-SCREEN_UPDATE_IND16( batsugun );
-
-SCREEN_VBLANK( toaplan2 );
-
-/* non-vdp text layer */
-

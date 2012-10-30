@@ -18,7 +18,7 @@ public:
 	required_shared_ptr<UINT8> m_scroll;
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
-	optional_device<sn76496_new_device> m_sn;
+	optional_device<sn76496_device> m_sn;
 	UINT8 *  m_scroll2;
 	UINT8 *  m_spriteram2;
 
@@ -42,13 +42,6 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_VIDEO_START(roadf);
+	UINT32 screen_update_hyperspt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
-/*----------- defined in video/hyperspt.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( hyperspt );
-
-

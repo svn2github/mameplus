@@ -15,6 +15,7 @@ public:
 	UINT8			m_ym2413_volume;
 	UINT8			m_overall_volume;
 	UINT32			m_adpcm_bank_base;
+	virtual void update_interrupts();
 	DECLARE_READ16_MEMBER(relief_atarivc_r);
 	DECLARE_WRITE16_MEMBER(relief_atarivc_w);
 	DECLARE_READ16_MEMBER(special_port2_r);
@@ -26,10 +27,5 @@ public:
 	DECLARE_MACHINE_START(relief);
 	DECLARE_MACHINE_RESET(relief);
 	DECLARE_VIDEO_START(relief);
+	UINT32 screen_update_relief(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/relief.c -----------*/
-
-
-SCREEN_UPDATE_IND16( relief );

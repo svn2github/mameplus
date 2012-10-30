@@ -25,12 +25,6 @@ public:
 	TILE_GET_INFO_MEMBER(scotrsht_get_bg_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_scotrsht(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(scotrsht_interrupt);
 };
-
-
-/*----------- defined in video/scotrsht.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( scotrsht );

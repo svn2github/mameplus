@@ -66,26 +66,9 @@ public:
 	DECLARE_PALETTE_INIT(yamato);
 	DECLARE_VIDEO_START(toprollr);
 	DECLARE_PALETTE_INIT(toprollr);
+	UINT32 screen_update_cclimber(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_swimmer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_yamato(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_toprollr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
-
-
-/*----------- defined in machine/cclimber.c -----------*/
-
-
-/*----------- defined in video/cclimber.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( cclimber );
-
-
-
-SCREEN_UPDATE_IND16( swimmer );
-
-
-SCREEN_UPDATE_IND16( yamato );
-
-
-
-SCREEN_UPDATE_IND16( toprollr );

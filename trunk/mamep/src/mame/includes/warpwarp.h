@@ -46,23 +46,12 @@ public:
 	DECLARE_PALETTE_INIT(warpwarp);
 	DECLARE_VIDEO_START(navarone);
 	DECLARE_PALETTE_INIT(navarone);
+	UINT32 screen_update_geebee(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(vblank_irq);
 };
 
 
-/*----------- defined in video/warpwarp.c -----------*/
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( geebee );
-
-
-/*----------- defined in audio/geebee.c -----------*/
-
-WRITE8_DEVICE_HANDLER( geebee_sound_w );
+DECLARE_WRITE8_DEVICE_HANDLER( geebee_sound_w );
 
 class geebee_sound_device : public device_t,
                                   public device_sound_interface
@@ -88,12 +77,11 @@ private:
 extern const device_type GEEBEE;
 
 
-
 /*----------- defined in audio/warpwarp.c -----------*/
 
-WRITE8_DEVICE_HANDLER( warpwarp_sound_w );
-WRITE8_DEVICE_HANDLER( warpwarp_music1_w );
-WRITE8_DEVICE_HANDLER( warpwarp_music2_w );
+DECLARE_WRITE8_DEVICE_HANDLER( warpwarp_sound_w );
+DECLARE_WRITE8_DEVICE_HANDLER( warpwarp_music1_w );
+DECLARE_WRITE8_DEVICE_HANDLER( warpwarp_music2_w );
 
 class warpwarp_sound_device : public device_t,
                                   public device_sound_interface

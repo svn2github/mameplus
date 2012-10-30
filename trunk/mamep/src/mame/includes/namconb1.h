@@ -75,13 +75,11 @@ public:
 	DECLARE_MACHINE_START(namconb);
 	DECLARE_VIDEO_START(namconb1);
 	DECLARE_VIDEO_START(namconb2);
+	UINT32 screen_update_namconb1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_namconb2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(namconb1_interrupt);
+	INTERRUPT_GEN_MEMBER(namconb2_interrupt);
+	TIMER_CALLBACK_MEMBER(namconb1_TriggerPOSIRQ);
+	TIMER_CALLBACK_MEMBER(namconb2_TriggerPOSIRQ);
+	TIMER_DEVICE_CALLBACK_MEMBER(mcu_interrupt);
 };
-
-
-/*----------- defined in video/namconb1.c -----------*/
-
-SCREEN_UPDATE_IND16( namconb1 );
-
-
-SCREEN_UPDATE_IND16( namconb2 );
-

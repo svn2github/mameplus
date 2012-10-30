@@ -33,6 +33,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_tiamc1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -62,14 +63,6 @@ private:
 extern const device_type TIAMC1;
 
 
-WRITE8_DEVICE_HANDLER( tiamc1_timer0_w );
-WRITE8_DEVICE_HANDLER( tiamc1_timer1_w );
-WRITE8_DEVICE_HANDLER( tiamc1_timer1_gate_w );
-
-
-/*----------- defined in video/tiamc1.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( tiamc1 );
-
+DECLARE_WRITE8_DEVICE_HANDLER( tiamc1_timer0_w );
+DECLARE_WRITE8_DEVICE_HANDLER( tiamc1_timer1_w );
+DECLARE_WRITE8_DEVICE_HANDLER( tiamc1_timer1_gate_w );

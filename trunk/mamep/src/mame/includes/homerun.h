@@ -43,7 +43,7 @@ public:
 	DECLARE_WRITE8_MEMBER(homerun_scrolly_w);
 	DECLARE_WRITE8_MEMBER(homerun_scrollx_w);
 
-	DECLARE_CUSTOM_INPUT_MEMBER(homerun_40_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(homerun_sprite0_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(homerun_d7756_busy_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(ganjaja_d7756_busy_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(ganjaja_hopper_status_r);
@@ -52,12 +52,6 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_homerun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_WRITE8_MEMBER(homerun_banking_w);
 };
-
-
-/*----------- defined in video/homerun.c -----------*/
-
-WRITE8_DEVICE_HANDLER( homerun_banking_w );
-
-
-SCREEN_UPDATE_IND16(homerun);

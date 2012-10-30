@@ -28,7 +28,7 @@ public:
 	optional_shared_ptr<UINT8> m_soundlatch;
 
 	/* devices */
-	required_device<sn76489a_new_device> m_sn;
+	required_device<sn76489a_device> m_sn;
 
 	/* video-related */
 	tilemap_t * m_bg_tilemap;
@@ -55,13 +55,7 @@ public:
 	DECLARE_MACHINE_RESET(gberet);
 	DECLARE_VIDEO_START(gberet);
 	DECLARE_PALETTE_INIT(gberet);
+	UINT32 screen_update_gberet(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_gberetb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(gberet_interrupt_tick);
 };
-
-
-/*----------- defined in video/gberet.c -----------*/
-
-
-
-
-SCREEN_UPDATE_IND16( gberet );
-SCREEN_UPDATE_IND16( gberetb );

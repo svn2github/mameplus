@@ -119,17 +119,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	DECLARE_MACHINE_RESET(midvplus);
+	UINT32 screen_update_midvunit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(adc_ready);
+	TIMER_CALLBACK_MEMBER(scanline_timer_cb);
 };
-
-
-
-/*----------- defined in video/midvunit.c -----------*/
-
-
-
-
-
-
-
-
-SCREEN_UPDATE_IND16( midvunit );

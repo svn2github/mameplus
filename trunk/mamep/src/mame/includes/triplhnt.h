@@ -50,6 +50,8 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
+	UINT32 screen_update_triplhnt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(triplhnt_hit_callback);
 };
 
 
@@ -57,16 +59,7 @@ public:
 
 void triplhnt_set_collision(running_machine &machine, int data);
 
-
 /*----------- defined in audio/triplhnt.c -----------*/
 
 DISCRETE_SOUND_EXTERN( triplhnt );
 extern const samples_interface triplhnt_samples_interface;
-
-
-/*----------- defined in video/triplhnt.c -----------*/
-
-
-SCREEN_UPDATE_IND16( triplhnt );
-
-

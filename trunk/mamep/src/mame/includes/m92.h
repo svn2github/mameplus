@@ -75,18 +75,11 @@ public:
 	DECLARE_MACHINE_RESET(m92);
 	DECLARE_VIDEO_START(m92);
 	DECLARE_VIDEO_START(ppan);
+	UINT32 screen_update_m92(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_ppan(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(spritebuffer_callback);
+	TIMER_DEVICE_CALLBACK_MEMBER(m92_scanline_interrupt);
 };
 
-
 /*----------- defined in drivers/m92.c -----------*/
-
 extern void m92_sprite_interrupt(running_machine &machine);
-
-
-/*----------- defined in video/m92.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( m92 );
-
-SCREEN_UPDATE_IND16( ppan );

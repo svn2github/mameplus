@@ -52,6 +52,8 @@ public:
 	DECLARE_WRITE8_MEMBER(mhavoc_out_1_w);
 	DECLARE_WRITE8_MEMBER(mhavocrv_speech_data_w);
 	DECLARE_WRITE8_MEMBER(mhavocrv_speech_strobe_w);
+	DECLARE_READ8_MEMBER(quad_pokeyn_r);
+	DECLARE_WRITE8_MEMBER(quad_pokeyn_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(tms5220_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(mhavoc_bit67_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(gamma_rcvd_r);
@@ -62,15 +64,7 @@ public:
 	DECLARE_DRIVER_INIT(mhavocrv);
 	virtual void machine_start();
 	virtual void machine_reset();
+	TIMER_CALLBACK_MEMBER(delayed_gamma_w);
+	TIMER_DEVICE_CALLBACK_MEMBER(mhavoc_cpu_irq_clock);
 };
-
-
-/*----------- defined in machine/mhavoc.c -----------*/
-
-TIMER_DEVICE_CALLBACK( mhavoc_cpu_irq_clock );
-
-
-
-
-
 

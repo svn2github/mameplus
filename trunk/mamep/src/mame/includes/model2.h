@@ -162,12 +162,11 @@ public:
 	DECLARE_MACHINE_RESET(model2c);
 	DECLARE_MACHINE_RESET(model2_common);
 	DECLARE_MACHINE_RESET(model2_scsp);
+	UINT32 screen_update_model2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(model2_timer_cb);
+	TIMER_DEVICE_CALLBACK_MEMBER(model2_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(model2c_interrupt);
 };
 
-
 /*----------- defined in video/model2.c -----------*/
-
-
-SCREEN_UPDATE_RGB32(model2);
-
 void model2_3d_set_zclip( running_machine &machine, UINT8 clip );

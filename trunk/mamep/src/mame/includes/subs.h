@@ -22,10 +22,12 @@ public:
 	subs_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
 		m_spriteram(*this, "spriteram"),
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram"),
+		m_discrete(*this, "discrete"){ }
 
 	required_shared_ptr<UINT8> m_spriteram;
 	required_shared_ptr<UINT8> m_videoram;
+	required_device<discrete_device> m_discrete;
 	int m_steering_buf1;
 	int m_steering_buf2;
 	int m_steering_val1;
@@ -42,28 +44,16 @@ public:
 	DECLARE_WRITE8_MEMBER(subs_invert2_w);
 	virtual void machine_reset();
 	virtual void palette_init();
+	UINT32 screen_update_subs_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_subs_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(subs_interrupt);
+	DECLARE_WRITE8_MEMBER(subs_sonar1_w);
+	DECLARE_WRITE8_MEMBER(subs_sonar2_w);
+	DECLARE_WRITE8_MEMBER(subs_crash_w);
+	DECLARE_WRITE8_MEMBER(subs_explode_w);
+	DECLARE_WRITE8_MEMBER(subs_noise_reset_w);
 };
-
-
-/*----------- defined in machine/subs.c -----------*/
-
-
-INTERRUPT_GEN( subs_interrupt );
-
 
 /*----------- defined in audio/subs.c -----------*/
 
-WRITE8_DEVICE_HANDLER( subs_noise_reset_w );
-WRITE8_DEVICE_HANDLER( subs_sonar2_w );
-WRITE8_DEVICE_HANDLER( subs_sonar1_w );
-WRITE8_DEVICE_HANDLER( subs_crash_w );
-WRITE8_DEVICE_HANDLER( subs_explode_w );
-
 DISCRETE_SOUND_EXTERN( subs );
-
-
-/*----------- defined in video/subs.c -----------*/
-
-SCREEN_UPDATE_IND16( subs_left );
-SCREEN_UPDATE_IND16( subs_right );
-

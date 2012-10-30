@@ -86,15 +86,13 @@ public:
 	DECLARE_VIDEO_START(m10);
 	DECLARE_PALETTE_INIT(m10);
 	DECLARE_VIDEO_START(m15);
+	UINT32 screen_update_m10(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_m15(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	INTERRUPT_GEN_MEMBER(m11_interrupt);
+	INTERRUPT_GEN_MEMBER(m10_interrupt);
+	INTERRUPT_GEN_MEMBER(m15_interrupt);
+	TIMER_CALLBACK_MEMBER(interrupt_callback);
+	DECLARE_WRITE8_MEMBER(ic8j1_output_changed);
+	DECLARE_WRITE8_MEMBER(ic8j2_output_changed);
 };
-
-
-/*----------- defined in video/m10.c -----------*/
-
-
-
-SCREEN_UPDATE_IND16( m10 );
-SCREEN_UPDATE_IND16( m15 );
-
-
 

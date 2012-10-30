@@ -30,13 +30,5 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info_1);
 	virtual void machine_reset();
 	virtual void video_start();
+	UINT32 screen_update_powerins(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
-
-
-/*----------- defined in video/powerins.c -----------*/
-
-
-
-
-
-SCREEN_UPDATE_IND16( powerins );

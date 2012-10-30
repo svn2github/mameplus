@@ -61,6 +61,7 @@ public:
 	device_t *m_deco_tilegen1;
 	device_t *m_deco_tilegen2;
 	UINT8 m_irq_source;
+	DECLARE_WRITE_LINE_MEMBER(sound_irq_nslasher);
 	DECLARE_READ32_MEMBER(deco32_irq_controller_r);
 	DECLARE_WRITE32_MEMBER(deco32_irq_controller_w);
 	DECLARE_WRITE32_MEMBER(deco32_sound_w);
@@ -105,6 +106,13 @@ public:
 	DECLARE_VIDEO_START(captaven);
 	DECLARE_VIDEO_START(fghthist);
 	DECLARE_VIDEO_START(nslasher);
+	UINT32 screen_update_captaven(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_fghthist(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_nslasher(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_captaven(screen_device &screen, bool state);
+	INTERRUPT_GEN_MEMBER(deco32_vbl_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(interrupt_gen);
+	TIMER_DEVICE_CALLBACK_MEMBER(lockload_vbl_irq);
 };
 
 class dragngun_state : public deco32_state
@@ -131,30 +139,12 @@ public:
 	DECLARE_DRIVER_INIT(lockload);
 	DECLARE_VIDEO_START(dragngun);
 	DECLARE_VIDEO_START(lockload);
+	UINT32 screen_update_dragngun(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_dragngun(screen_device &screen, bool state);
 };
 
-
-
 /*----------- defined in video/deco32.c -----------*/
-
-
-
-
-
-
-
-SCREEN_VBLANK( captaven );
-SCREEN_VBLANK( dragngun );
-
-SCREEN_UPDATE_IND16( captaven );
-SCREEN_UPDATE_RGB32( fghthist );
-SCREEN_UPDATE_RGB32( dragngun );
-SCREEN_UPDATE_RGB32( nslasher );
-
-
-WRITE32_HANDLER( deco32_pf1_data_w );
-WRITE32_HANDLER( deco32_pf2_data_w );
-WRITE32_HANDLER( deco32_pf3_data_w );
-WRITE32_HANDLER( deco32_pf4_data_w );
-
-
+DECLARE_WRITE32_HANDLER( deco32_pf1_data_w );
+DECLARE_WRITE32_HANDLER( deco32_pf2_data_w );
+DECLARE_WRITE32_HANDLER( deco32_pf3_data_w );
+DECLARE_WRITE32_HANDLER( deco32_pf4_data_w );

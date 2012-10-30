@@ -16,9 +16,9 @@ UINT32 *rsp_dmem;
 // device type definition
 const device_type N64PERIPH = &device_creator<n64_periphs>;
 
-static TIMER_CALLBACK(ai_timer_callback);
-static TIMER_CALLBACK(pi_dma_callback);
-static TIMER_CALLBACK(vi_scanline_callback);
+
+
+
 
 n64_periphs::n64_periphs(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
     : device_t(mconfig, N64PERIPH, "N64 Periphal Chips", tag, owner, clock)
@@ -26,10 +26,9 @@ n64_periphs::n64_periphs(const machine_config &mconfig, const char *tag, device_
 {
 }
 
-static TIMER_CALLBACK(reset_timer_callback)
+TIMER_CALLBACK_MEMBER(n64_periphs::reset_timer_callback)
 {
-	n64_periphs *periphs = machine.device<n64_periphs>("rcp");
-	periphs->reset_tick();
+	reset_tick();
 }
 
 void n64_periphs::reset_tick()
@@ -63,10 +62,10 @@ void n64_periphs::poll_reset_button(bool button)
 
 void n64_periphs::device_start()
 {
-	ai_timer = machine().scheduler().timer_alloc(FUNC(ai_timer_callback));
-	pi_dma_timer = machine().scheduler().timer_alloc(FUNC(pi_dma_callback));
-	vi_scanline_timer = machine().scheduler().timer_alloc(FUNC(vi_scanline_callback));
-	reset_timer = machine().scheduler().timer_alloc(FUNC(reset_timer_callback));
+	ai_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(n64_periphs::ai_timer_callback),this));
+	pi_dma_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(n64_periphs::pi_dma_callback),this));
+	vi_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(n64_periphs::vi_scanline_callback),this));
+	reset_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(n64_periphs::reset_timer_callback),this));
 }
 
 void n64_periphs::device_reset()
@@ -75,7 +74,7 @@ void n64_periphs::device_reset()
 
 	maincpu = machine().device("maincpu");
 	rspcpu = machine().device("rsp");
-	mem_map = maincpu->memory().space(AS_PROGRAM);
+	mem_map = &maincpu->memory().space(AS_PROGRAM);
 
 	mi_version = 0x01010101;
 	mi_interrupt = 0;
@@ -554,9 +553,9 @@ void n64_periphs::sp_dma(int direction)
 	}
 }
 
-static void sp_set_status(device_t *device, UINT32 status)
+static WRITE32_DEVICE_HANDLER(sp_set_status)
 {
-	device->machine().device<n64_periphs>("rcp")->sp_set_status(status);
+	device->machine().device<n64_periphs>("rcp")->sp_set_status(data);
 }
 
 void n64_periphs::sp_set_status(UINT32 status)
@@ -683,7 +682,7 @@ UINT32 n64_periphs::sp_reg_r(UINT32 offset)
 
 READ32_DEVICE_HANDLER( n64_sp_reg_r )
 {
-	return device->machine().device<n64_periphs>("rcp")->sp_reg_r(offset);
+	return space.machine().device<n64_periphs>("rcp")->sp_reg_r(offset);
 }
 
 void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
@@ -896,7 +895,7 @@ void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 
 WRITE32_DEVICE_HANDLER( n64_sp_reg_w )
 {
-	device->machine().device<n64_periphs>("rcp")->sp_reg_w(offset, data, mem_mask);
+	space.machine().device<n64_periphs>("rcp")->sp_reg_w(offset, data, mem_mask);
 }
 
 // RDP Interface
@@ -908,8 +907,8 @@ void dp_full_sync(running_machine &machine)
 
 READ32_DEVICE_HANDLER( n64_dp_reg_r )
 {
-	n64_state *state = device->machine().driver_data<n64_state>();
-	n64_periphs *periphs = device->machine().device<n64_periphs>("rcp");
+	n64_state *state = space.machine().driver_data<n64_state>();
+	n64_periphs *periphs = space.machine().device<n64_periphs>("rcp");
 	UINT32 ret = 0;
 	switch (offset)
 	{
@@ -944,16 +943,16 @@ READ32_DEVICE_HANDLER( n64_dp_reg_r )
 			break;
 	}
 
-	//printf("%08x dp_reg_r %08x = %08x\n", (UINT32)device->machine().device("rsp")->state().state_int(RSP_PC), offset, ret); fflush(stdout);
+	//printf("%08x dp_reg_r %08x = %08x\n", (UINT32)space.machine().device("rsp")->state().state_int(RSP_PC), offset, ret); fflush(stdout);
 	return ret;
 }
 
 WRITE32_DEVICE_HANDLER( n64_dp_reg_w )
 {
-	n64_state *state = device->machine().driver_data<n64_state>();
-	n64_periphs *periphs = device->machine().device<n64_periphs>("rcp");
+	n64_state *state = space.machine().driver_data<n64_state>();
+	n64_periphs *periphs = space.machine().device<n64_periphs>("rcp");
 
-	//printf("%08x dp_reg_w %08x %08x %08x\n", (UINT32)device->machine().device("rsp")->state().state_int(RSP_PC), offset, data, mem_mask); fflush(stdout);
+	//printf("%08x dp_reg_w %08x %08x %08x\n", (UINT32)space.machine().device("rsp")->state().state_int(RSP_PC), offset, data, mem_mask); fflush(stdout);
 	switch (offset)
 	{
 		case 0x00/4:		// DP_START_REG
@@ -992,16 +991,16 @@ WRITE32_DEVICE_HANDLER( n64_dp_reg_w )
 
 const rsp_config n64_rsp_config =
 {
-	n64_dp_reg_r,
-	n64_dp_reg_w,
-	n64_sp_reg_r,
-	n64_sp_reg_w,
-	sp_set_status
+	DEVCB_DEVICE_HANDLER("rcp",n64_dp_reg_r),
+	DEVCB_DEVICE_HANDLER("rcp",n64_dp_reg_w),
+	DEVCB_DEVICE_HANDLER("rcp",n64_sp_reg_r),
+	DEVCB_DEVICE_HANDLER("rcp",n64_sp_reg_w),
+	DEVCB_DEVICE_HANDLER("rcp",sp_set_status)
 };
 
-static TIMER_CALLBACK(vi_scanline_callback)
+TIMER_CALLBACK_MEMBER(n64_periphs::vi_scanline_callback)
 {
-	machine.device<n64_periphs>("rcp")->vi_scanline_tick();
+	machine().device<n64_periphs>("rcp")->vi_scanline_tick();
 }
 
 void n64_periphs::vi_scanline_tick()
@@ -1304,9 +1303,9 @@ void n64_periphs::ai_dma()
    ai_timer->adjust(period);
 }
 
-static TIMER_CALLBACK(ai_timer_callback)
+TIMER_CALLBACK_MEMBER(n64_periphs::ai_timer_callback)
 {
-	machine.device<n64_periphs>("rcp")->ai_timer_tick();
+	machine().device<n64_periphs>("rcp")->ai_timer_tick();
 }
 
 void n64_periphs::ai_timer_tick()
@@ -1404,10 +1403,10 @@ WRITE32_MEMBER( n64_periphs::ai_reg_w )
 
 // Peripheral Interface
 
-static TIMER_CALLBACK(pi_dma_callback)
+TIMER_CALLBACK_MEMBER(n64_periphs::pi_dma_callback)
 {
-	machine.device<n64_periphs>("rcp")->pi_dma_tick();
-	machine.device("rsp")->execute().yield();
+	machine().device<n64_periphs>("rcp")->pi_dma_tick();
+	machine().device("rsp")->execute().yield();
 }
 
 void n64_periphs::pi_dma_tick()

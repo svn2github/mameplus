@@ -53,9 +53,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	DECLARE_VIDEO_START(crgolf);
+	UINT32 screen_update_crgolf(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	TIMER_CALLBACK_MEMBER(main_to_sound_callback);
+	TIMER_CALLBACK_MEMBER(sound_to_main_callback);
 };
 
 /*----------- defined in video/crgolf.c -----------*/
-
-
 MACHINE_CONFIG_EXTERN( crgolf_video );
