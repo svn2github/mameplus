@@ -57,10 +57,10 @@ VIDEO_START_MEMBER(qdrmfgp_state,qdrmfgp2)
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( qdrmfgp )
+UINT32 qdrmfgp_state::screen_update_qdrmfgp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	device_t *k056832 = screen.machine().device("k056832");
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	device_t *k056832 = machine().device("k056832");
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 3, 0, 1);
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 2, 0, 2);

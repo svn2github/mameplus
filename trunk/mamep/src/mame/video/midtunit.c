@@ -97,6 +97,7 @@ VIDEO_START_MEMBER(midtunit_state,midtunit)
 
 	memset(dma_register, 0, sizeof(dma_register));
 	memset(&dma_state, 0, sizeof(dma_state));
+	dma_state.gfxrom = m_gfxrom->base();
 
 	/* register for state saving */
 	state_save_register_global(machine(), midtunit_control);
@@ -223,13 +224,13 @@ READ16_MEMBER(midtunit_state::midtunit_vram_color_r)
  *
  *************************************/
 
-void midtunit_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+void midtunit_to_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
 	memcpy(shiftreg, &local_videoram[address >> 3], 2 * 512 * sizeof(UINT16));
 }
 
 
-void midtunit_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+void midtunit_from_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
 	memcpy(&local_videoram[address >> 3], shiftreg, 2 * 512 * sizeof(UINT16));
 }
@@ -587,10 +588,10 @@ DECLARE_BLITTER_SET(dma_draw_noskip_noscale,   dma_state.bpp, EXTRACTGEN,   SKIP
  *
  *************************************/
 
-static TIMER_CALLBACK( dma_callback )
+TIMER_CALLBACK_MEMBER(midtunit_state::dma_callback)
 {
 	dma_register[DMA_COMMAND] &= ~0x8000; /* tell the cpu we're done */
-	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -790,7 +791,7 @@ if (LOG_DMA)
 
 	/* signal we're done */
 skipdma:
-	machine().scheduler().timer_set(attotime::from_nsec(41 * pixels), FUNC(dma_callback));
+	machine().scheduler().timer_set(attotime::from_nsec(41 * pixels), timer_expired_delegate(FUNC(midtunit_state::dma_callback),this));
 
 	g_profiler.stop();
 }

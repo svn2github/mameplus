@@ -112,14 +112,13 @@ static void himesiki_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 	}
 }
 
-SCREEN_UPDATE_IND16( himesiki )
+UINT32 himesiki_state::screen_update_himesiki(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	himesiki_state *state = screen.machine().driver_data<himesiki_state>();
-	int x = -(state->m_scrollx[0] << 8 | state->m_scrollx[1]) & 0x1ff;
-	state->m_bg_tilemap->set_scrolldx(x, x);
+	int x = -(m_scrollx[0] << 8 | m_scrollx[1]) & 0x1ff;
+	m_bg_tilemap->set_scrolldx(x, x);
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-	himesiki_draw_sprites(screen.machine(), bitmap, cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	himesiki_draw_sprites(machine(), bitmap, cliprect);
 
 	return 0;
 }

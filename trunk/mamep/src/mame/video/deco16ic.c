@@ -571,7 +571,7 @@ READ16_DEVICE_HANDLER( deco16ic_pf2_data_r )
 WRITE16_DEVICE_HANDLER( deco16ic_pf_control_w )
 {
 	deco16ic_state *deco16ic = get_safe_token(device);
-	device->machine().primary_screen->update_partial(device->machine().primary_screen->vpos());
+	space.machine().primary_screen->update_partial(space.machine().primary_screen->vpos());
 
 	COMBINE_DATA(&deco16ic->pf12_control[offset]);
 }
@@ -585,32 +585,32 @@ READ16_DEVICE_HANDLER( deco16ic_pf_control_r )
 
 READ32_DEVICE_HANDLER ( deco16ic_pf_control_dword_r )
 {
-	return deco16ic_pf_control_r(device, offset, 0xffff)^0xffff0000;
+	return deco16ic_pf_control_r(device, space, offset, 0xffff)^0xffff0000;
 }
 
 WRITE32_DEVICE_HANDLER( deco16ic_pf_control_dword_w )
 {
-	deco16ic_pf_control_w(device, offset, data & 0xffff, mem_mask & 0xffff);
+	deco16ic_pf_control_w(device, space, offset, data & 0xffff, mem_mask & 0xffff);
 }
 
 READ32_DEVICE_HANDLER( deco16ic_pf1_data_dword_r )
 {
-	return deco16ic_pf1_data_r(device, offset, 0xffff)^0xffff0000;
+	return deco16ic_pf1_data_r(device, space, offset, 0xffff)^0xffff0000;
 }
 
 WRITE32_DEVICE_HANDLER( deco16ic_pf1_data_dword_w )
 {
-	deco16ic_pf1_data_w(device, offset, data & 0xffff, mem_mask & 0xffff);
+	deco16ic_pf1_data_w(device, space, offset, data & 0xffff, mem_mask & 0xffff);
 }
 
 READ32_DEVICE_HANDLER( deco16ic_pf2_data_dword_r )
 {
-	return deco16ic_pf2_data_r(device, offset, 0xffff)^0xffff0000;
+	return deco16ic_pf2_data_r(device, space, offset, 0xffff)^0xffff0000;
 }
 
 WRITE32_DEVICE_HANDLER( deco16ic_pf2_data_dword_w )
 {
-	deco16ic_pf2_data_w(device, offset, data & 0xffff, mem_mask & 0xffff);
+	deco16ic_pf2_data_w(device, space, offset, data & 0xffff, mem_mask & 0xffff);
 }
 
 
@@ -903,7 +903,7 @@ const device_type DECO16IC = &device_creator<deco16ic_device>;
 deco16ic_device::deco16ic_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, DECO16IC, "Data East IC 55 / 56 / 74 / 141", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(deco16ic_state));
+	m_token = global_alloc_clear(deco16ic_state);
 }
 
 //-------------------------------------------------

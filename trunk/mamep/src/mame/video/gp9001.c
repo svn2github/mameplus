@@ -400,7 +400,7 @@ static int gp9001_videoram16_r(gp9001vdp_device *vdp, offs_t offset)
 {
 	int offs = vdp->gp9001_voffs;
 	vdp->gp9001_voffs++;
-	return vdp->space()->read_word(offs*2);
+	return vdp->space().read_word(offs*2);
 }
 
 
@@ -408,7 +408,7 @@ static void gp9001_videoram16_w(gp9001vdp_device *vdp, offs_t offset, UINT16 dat
 {
 	int offs = vdp->gp9001_voffs;
 	vdp->gp9001_voffs++;
-	vdp->space()->write_word(offs*2, data, mem_mask);
+	vdp->space().write_word(offs*2, data, mem_mask);
 }
 
 static WRITE16_DEVICE_HANDLER( gp9001_devvoffs_w )
@@ -434,7 +434,7 @@ static WRITE16_DEVICE_HANDLER( gp9001_devvideoram16_w )
 
 static READ16_DEVICE_HANDLER( gp9001_vdpstatus_r )
 {
-	return ((device->machine().primary_screen->vpos() + 15) % 262) >= 245;
+	return ((space.machine().primary_screen->vpos() + 15) % 262) >= 245;
 }
 
 static WRITE16_DEVICE_HANDLER( gp9001_scroll_reg_select_w )
@@ -594,10 +594,10 @@ READ16_DEVICE_HANDLER( gp9001_vdp_r )
 	{
 		case 0x04/2:
 		case 0x06/2:
-			return gp9001_devvideoram16_r(device, offset-0x04/2, mem_mask);
+			return gp9001_devvideoram16_r(device, space, offset-0x04/2, mem_mask);
 
 		case 0x0c/2:
-			return gp9001_vdpstatus_r(device, offset-0x0c/2, mem_mask);
+			return gp9001_vdpstatus_r(device, space, offset-0x0c/2, mem_mask);
 
 		default:
 			logerror("gp9001_vdp_r: read from unhandled offset %04x\n",offset*2);
@@ -611,20 +611,20 @@ WRITE16_DEVICE_HANDLER( gp9001_vdp_w )
 	switch (offset)
 	{
 		case 0x00/2:
-			gp9001_devvoffs_w(device, offset-0x00/2, data, mem_mask);
+			gp9001_devvoffs_w(device, space, offset-0x00/2, data, mem_mask);
 			break;
 
 		case 0x04/2:
 		case 0x06/2:
-			gp9001_devvideoram16_w(device, offset-0x04/2, data, mem_mask);
+			gp9001_devvideoram16_w(device, space, offset-0x04/2, data, mem_mask);
 			break;
 
 		case 0x08/2:
-			gp9001_scroll_reg_select_w(device, offset-0x08/2, data, mem_mask);
+			gp9001_scroll_reg_select_w(device, space, offset-0x08/2, data, mem_mask);
 			break;
 
 		case 0x0c/2:
-			gp9001_scroll_reg_devvdata_w(device, offset-0x0c/2, data, mem_mask);
+			gp9001_scroll_reg_devvdata_w(device, space, offset-0x0c/2, data, mem_mask);
 			break;
 
 		default:
@@ -639,11 +639,11 @@ READ16_DEVICE_HANDLER( gp9001_vdp_alt_r )
 	switch (offset)
 	{
 		case 0x00/2:
-			return gp9001_vdpstatus_r(device, offset-0x0c/2, mem_mask);
+			return gp9001_vdpstatus_r(device, space, offset-0x0c/2, mem_mask);
 
 		case 0x08/2:
 		case 0x0a/2:
-			return gp9001_devvideoram16_r(device, offset-0x04/2, mem_mask);
+			return gp9001_devvideoram16_r(device, space, offset-0x04/2, mem_mask);
 
 
 		default:
@@ -658,20 +658,20 @@ WRITE16_DEVICE_HANDLER( gp9001_vdp_alt_w )
 	switch (offset)
 	{
 		case 0x00/2:
-			gp9001_scroll_reg_devvdata_w(device, offset-0x0c/2, data, mem_mask);
+			gp9001_scroll_reg_devvdata_w(device, space, offset-0x0c/2, data, mem_mask);
 			break;
 
 		case 0x04/2:
-			gp9001_scroll_reg_select_w(device, offset-0x08/2, data, mem_mask);
+			gp9001_scroll_reg_select_w(device, space, offset-0x08/2, data, mem_mask);
 			break;
 
 		case 0x08/2:
 		case 0x0a/2:
-			gp9001_devvideoram16_w(device, offset-0x04/2, data, mem_mask);
+			gp9001_devvideoram16_w(device, space, offset-0x04/2, data, mem_mask);
 			break;
 
 		case 0x0c/2:
-			gp9001_devvoffs_w(device, offset-0x00/2, data, mem_mask);
+			gp9001_devvoffs_w(device, space, offset-0x00/2, data, mem_mask);
 			break;
 
 		default:

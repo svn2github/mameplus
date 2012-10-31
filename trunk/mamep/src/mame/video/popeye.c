@@ -277,12 +277,12 @@ static void draw_background(running_machine &machine, bitmap_ind16 &bitmap, cons
 {
 	popeye_state *state = machine.driver_data<popeye_state>();
 	int offs;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	if (state->m_lastflip != state->flip_screen())
 	{
 		for (offs = 0;offs < popeye_bitmapram_size;offs++)
-			state->popeye_bitmap_w(*space,offs,state->m_bitmapram[offs]);
+			state->popeye_bitmap_w(space,offs,state->m_bitmapram[offs]);
 
 		state->m_lastflip = state->flip_screen();
 	}
@@ -365,11 +365,10 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	}
 }
 
-SCREEN_UPDATE_IND16( popeye )
+UINT32 popeye_state::screen_update_popeye(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	popeye_state *state = screen.machine().driver_data<popeye_state>();
-	draw_background(screen.machine(), bitmap, cliprect);
-	draw_sprites(screen.machine(), bitmap, cliprect);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	draw_background(machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

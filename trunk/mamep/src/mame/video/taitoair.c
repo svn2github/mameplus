@@ -75,6 +75,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
        is always 64 pixels. */
 
 	taitoair_state *state = machine.driver_data<taitoair_state>();
+	address_space &space = machine.driver_data()->generic_space();
 	static const int size[] = { 1, 2, 4, 4 };
 	int x0, y0, x, y, dx, dy, ex, ey, zx, zy;
 	int ysize;
@@ -89,12 +90,12 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		if (offs <  0x01b0 && priority == 0)	continue;
 		if (offs >= 0x01b0 && priority == 1)	continue;
 
-		x0        =  tc0080vco_sprram_r(state->m_tc0080vco, offs + 1, 0xffff) & 0x3ff;
-		y0        =  tc0080vco_sprram_r(state->m_tc0080vco, offs + 0, 0xffff) & 0x3ff;
-		zoomx     = (tc0080vco_sprram_r(state->m_tc0080vco, offs + 2, 0xffff) & 0x7f00) >> 8;
-		zoomy     = (tc0080vco_sprram_r(state->m_tc0080vco, offs + 2, 0xffff) & 0x007f);
-		tile_offs = (tc0080vco_sprram_r(state->m_tc0080vco, offs + 3, 0xffff) & 0x1fff) << 2;
-		ysize     = size[(tc0080vco_sprram_r(state->m_tc0080vco, offs, 0xffff) & 0x0c00) >> 10];
+		x0        =  tc0080vco_sprram_r(state->m_tc0080vco, space, offs + 1, 0xffff) & 0x3ff;
+		y0        =  tc0080vco_sprram_r(state->m_tc0080vco, space, offs + 0, 0xffff) & 0x3ff;
+		zoomx     = (tc0080vco_sprram_r(state->m_tc0080vco, space, offs + 2, 0xffff) & 0x7f00) >> 8;
+		zoomy     = (tc0080vco_sprram_r(state->m_tc0080vco, space, offs + 2, 0xffff) & 0x007f);
+		tile_offs = (tc0080vco_sprram_r(state->m_tc0080vco, space, offs + 3, 0xffff) & 0x1fff) << 2;
+		ysize     = size[(tc0080vco_sprram_r(state->m_tc0080vco, space, offs, 0xffff) & 0x0c00) >> 10];
 
 		if (tile_offs)
 		{
@@ -153,10 +154,10 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 					{
 						int tile, color, flipx, flipy;
 
-						tile  = tc0080vco_cram_0_r(state->m_tc0080vco, tile_offs, 0xffff) & 0x7fff;
-						color = tc0080vco_cram_1_r(state->m_tc0080vco, tile_offs, 0xffff) & 0x001f;
-						flipx = tc0080vco_cram_1_r(state->m_tc0080vco, tile_offs, 0xffff) & 0x0040;
-						flipy = tc0080vco_cram_1_r(state->m_tc0080vco, tile_offs, 0xffff) & 0x0080;
+						tile  = tc0080vco_cram_0_r(state->m_tc0080vco, space, tile_offs, 0xffff) & 0x7fff;
+						color = tc0080vco_cram_1_r(state->m_tc0080vco, space, tile_offs, 0xffff) & 0x001f;
+						flipx = tc0080vco_cram_1_r(state->m_tc0080vco, space, tile_offs, 0xffff) & 0x0040;
+						flipy = tc0080vco_cram_1_r(state->m_tc0080vco, space, tile_offs, 0xffff) & 0x0080;
 
 						if (tc0080vco_flipscreen_r(state->m_tc0080vco))
 						{
@@ -562,11 +563,10 @@ void taitoair_state::video_start()
 	//m_buffer3d = auto_bitmap_ind16_alloc(machine(), width, height);
 }
 
-SCREEN_UPDATE_IND16( taitoair )
+UINT32 taitoair_state::screen_update_taitoair(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	taitoair_state *state = screen.machine().driver_data<taitoair_state>();
 
-	tc0080vco_tilemap_update(state->m_tc0080vco);
+	tc0080vco_tilemap_update(m_tc0080vco);
 
 	bitmap.fill(0, cliprect);
 
@@ -599,21 +599,21 @@ SCREEN_UPDATE_IND16( taitoair )
 		#endif
 	}
 
-	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 0, 0, 0);
+	tc0080vco_tilemap_draw(m_tc0080vco, bitmap, cliprect, 0, 0, 0);
 
-	draw_sprites(screen.machine(), bitmap, cliprect, 0);
+	draw_sprites(machine(), bitmap, cliprect, 0);
 
-	copybitmap_trans(bitmap, *state->m_framebuffer[1], 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, *m_framebuffer[1], 0, 0, 0, 0, cliprect, 0);
 
-	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 1, 0, 0);
+	tc0080vco_tilemap_draw(m_tc0080vco, bitmap, cliprect, 1, 0, 0);
 
-	draw_sprites(screen.machine(), bitmap, cliprect, 1);
+	draw_sprites(machine(), bitmap, cliprect, 1);
 
-	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 2, 0, 0);
+	tc0080vco_tilemap_draw(m_tc0080vco, bitmap, cliprect, 2, 0, 0);
 
 	/* Hacky 3d bitmap */
-	//copybitmap_trans(bitmap, state->m_buffer3d, 0, 0, 0, 0, cliprect, 0);
-	//state->m_buffer3d->fill(0, cliprect);
+	//copybitmap_trans(bitmap, m_buffer3d, 0, 0, 0, 0, cliprect, 0);
+	//m_buffer3d->fill(0, cliprect);
 
 	return 0;
 }

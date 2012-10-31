@@ -31,8 +31,8 @@
  *************************************/
 
 static void init_savestate(running_machine &machine);
-static TIMER_CALLBACK( scanline_callback );
-static TIMER_CALLBACK( interrupt_off );
+
+
 static void init_sparklestar(running_machine &machine);
 
 
@@ -164,9 +164,9 @@ void astrocde_state::video_start()
 {
 
 	/* allocate timers */
-	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(astrocde_state::scanline_callback),this));
 	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(1), 1);
-	m_intoff_timer = machine().scheduler().timer_alloc(FUNC(interrupt_off));
+	m_intoff_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(astrocde_state::interrupt_off),this));
 
 	/* register for save states */
 	init_savestate(machine());
@@ -181,9 +181,9 @@ VIDEO_START_MEMBER(astrocde_state,profpac)
 {
 
 	/* allocate timers */
-	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(astrocde_state::scanline_callback),this));
 	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(1), 1);
-	m_intoff_timer = machine().scheduler().timer_alloc(FUNC(interrupt_off));
+	m_intoff_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(astrocde_state::interrupt_off),this));
 
 	/* allocate videoram */
 	m_profpac_videoram = auto_alloc_array(machine(), UINT16, 0x4000 * 4);
@@ -247,20 +247,19 @@ static void init_savestate(running_machine &machine)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( astrocde )
+UINT32 astrocde_state::screen_update_astrocde(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	astrocde_state *state = screen.machine().driver_data<astrocde_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	UINT32 sparklebase = 0;
-	const int colormask = (state->m_video_config & AC_MONITOR_BW) ? 0 : 0x1f0;
-	int xystep = 2 - state->m_video_mode;
+	const int colormask = (m_video_config & AC_MONITOR_BW) ? 0 : 0x1f0;
+	int xystep = 2 - m_video_mode;
 	int y;
 
 	/* compute the starting point of sparkle for the current frame */
 	int width = screen.width();
 	int height = screen.height();
 
-	if (state->m_video_config & AC_STARS)
+	if (m_video_config & AC_STARS)
 		sparklebase = (screen.frame_number() * (UINT64)(width * height)) % RNG_PERIOD;
 
 	/* iterate over scanlines */
@@ -273,7 +272,7 @@ SCREEN_UPDATE_IND16( astrocde )
 		int x;
 
 		/* compute the star and sparkle offset at the start of this line */
-		if (state->m_video_config & AC_STARS)
+		if (m_video_config & AC_STARS)
 		{
 			staroffs = ((effy < 0) ? (effy + 262) : effy) * width;
 			sparkleoffs = sparklebase + y * width;
@@ -285,12 +284,12 @@ SCREEN_UPDATE_IND16( astrocde )
 		for (x = 0; x < 456/4; x += xystep)
 		{
 			int effx = x - HORZ_OFFSET/4;
-			const UINT8 *colorbase = &state->m_colors[(effx < state->m_colorsplit) ? 4 : 0];
+			const UINT8 *colorbase = &m_colors[(effx < m_colorsplit) ? 4 : 0];
 			UINT8 data;
 			int xx;
 
 			/* select either video data or background data */
-			data = (effx >= 0 && effx < 80 && effy >= 0 && effy < state->m_vblank) ? videoram[offset++] : state->m_bgdata;
+			data = (effx >= 0 && effx < 80 && effy >= 0 && effy < m_vblank) ? videoram[offset++] : m_bgdata;
 
 			/* iterate over the 4 pixels */
 			for (xx = 0; xx < 4; xx++)
@@ -301,14 +300,14 @@ SCREEN_UPDATE_IND16( astrocde )
 				rgb_t color;
 
 				/* handle stars/sparkle */
-				if (state->m_video_config & AC_STARS)
+				if (m_video_config & AC_STARS)
 				{
 					/* if sparkle is enabled for this pixel index and either it is non-zero or a star */
 					/* then adjust the intensity */
-					if (state->m_sparkle[pixdata] == 0)
+					if (m_sparkle[pixdata] == 0)
 					{
-						if (pixdata != 0 || (state->m_sparklestar[staroffs] & 0x10))
-							luma = state->m_sparklestar[sparkleoffs] & 0x0f;
+						if (pixdata != 0 || (m_sparklestar[staroffs] & 0x10))
+							luma = m_sparklestar[sparkleoffs] & 0x0f;
 						else if (pixdata == 0)
 							colordata = luma = 0;
 					}
@@ -333,9 +332,8 @@ SCREEN_UPDATE_IND16( astrocde )
 }
 
 
-SCREEN_UPDATE_IND16( profpac )
+UINT32 astrocde_state::screen_update_profpac(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	astrocde_state *state = screen.machine().driver_data<astrocde_state>();
 	int y;
 
 	/* iterate over scanlines */
@@ -343,7 +341,7 @@ SCREEN_UPDATE_IND16( profpac )
 	{
 		int effy = mame_vpos_to_astrocade_vpos(y);
 		UINT16 *dest = &bitmap.pix16(y);
-		UINT16 offset = state->m_profpac_vispage * 0x4000 + effy * 80;
+		UINT16 offset = m_profpac_vispage * 0x4000 + effy * 80;
 		int x;
 
 		/* star with black */
@@ -354,13 +352,13 @@ SCREEN_UPDATE_IND16( profpac )
 			int effx = x - HORZ_OFFSET/4;
 
 			/* select either video data or background data */
-			UINT16 data = (effx >= 0 && effx < 80 && effy >= 0 && effy < state->m_vblank) ? state->m_profpac_videoram[offset++] : 0;
+			UINT16 data = (effx >= 0 && effx < 80 && effy >= 0 && effy < m_vblank) ? m_profpac_videoram[offset++] : 0;
 
 			/* iterate over the 4 pixels */
-			*dest++ = state->m_profpac_palette[(data >> 12) & 0x0f];
-			*dest++ = state->m_profpac_palette[(data >> 8) & 0x0f];
-			*dest++ = state->m_profpac_palette[(data >> 4) & 0x0f];
-			*dest++ = state->m_profpac_palette[(data >> 0) & 0x0f];
+			*dest++ = m_profpac_palette[(data >> 12) & 0x0f];
+			*dest++ = m_profpac_palette[(data >> 8) & 0x0f];
+			*dest++ = m_profpac_palette[(data >> 4) & 0x0f];
+			*dest++ = m_profpac_palette[(data >> 0) & 0x0f];
 		}
 	}
 
@@ -375,9 +373,9 @@ SCREEN_UPDATE_IND16( profpac )
  *
  *************************************/
 
-static TIMER_CALLBACK( interrupt_off )
+TIMER_CALLBACK_MEMBER(astrocde_state::interrupt_off)
 {
-	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -416,43 +414,42 @@ static void astrocade_trigger_lightpen(running_machine &machine, UINT8 vfeedback
  *
  *************************************/
 
-static TIMER_CALLBACK( scanline_callback )
+TIMER_CALLBACK_MEMBER(astrocde_state::scanline_callback)
 {
-	astrocde_state *state = machine.driver_data<astrocde_state>();
 	int scanline = param;
 	int astrocade_scanline = mame_vpos_to_astrocade_vpos(scanline);
 
 	/* force an update against the current scanline */
 	if (scanline > 0)
-		machine.primary_screen->update_partial(scanline - 1);
+		machine().primary_screen->update_partial(scanline - 1);
 
 	/* generate a scanline interrupt if it's time */
-	if (astrocade_scanline == state->m_interrupt_scanline && (state->m_interrupt_enabl & 0x08) != 0)
+	if (astrocade_scanline == m_interrupt_scanline && (m_interrupt_enabl & 0x08) != 0)
 	{
 		/* bit 2 controls the interrupt mode: mode 0 means assert until acknowledged */
-		if ((state->m_interrupt_enabl & 0x04) == 0)
+		if ((m_interrupt_enabl & 0x04) == 0)
 		{
-			machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_interrupt_vector);
-			machine.scheduler().timer_set(machine.primary_screen->time_until_vblank_end(), FUNC(interrupt_off));
+			machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, m_interrupt_vector);
+			machine().scheduler().timer_set(machine().primary_screen->time_until_vblank_end(), timer_expired_delegate(FUNC(astrocde_state::interrupt_off),this));
 		}
 
 		/* mode 1 means assert for 1 instruction */
 		else
 		{
-			machine.device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, state->m_interrupt_vector);
-			machine.scheduler().timer_set(machine.device<cpu_device>("maincpu")->cycles_to_attotime(1), FUNC(interrupt_off));
+			machine().device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, m_interrupt_vector);
+			machine().scheduler().timer_set(machine().device<cpu_device>("maincpu")->cycles_to_attotime(1), timer_expired_delegate(FUNC(astrocde_state::interrupt_off),this));
 		}
 	}
 
 	/* on some games, the horizontal drive line is conected to the lightpen interrupt */
-	else if (state->m_video_config & AC_LIGHTPEN_INTS)
-		astrocade_trigger_lightpen(machine, astrocade_scanline, 8);
+	else if (m_video_config & AC_LIGHTPEN_INTS)
+		astrocade_trigger_lightpen(machine(), astrocade_scanline, 8);
 
 	/* advance to the next scanline */
 	scanline++;
-	if (scanline >= machine.primary_screen->height())
+	if (scanline >= machine().primary_screen->height())
 		scanline = 0;
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -598,7 +595,7 @@ WRITE8_MEMBER(astrocde_state::astrocade_data_chip_register_w)
 		case 0x17:	/* noise volume register */
 		case 0x18:	/* sound block transfer */
 			if (m_video_config & AC_SOUND_PRESENT)
-				astrocade_sound_w(machine().device("astrocade1"), offset, data);
+				astrocade_sound_w(machine().device("astrocade1"), space, offset, data);
 			break;
 
 		case 0x19:	/* expand register */
@@ -740,9 +737,9 @@ INLINE void increment_dest(astrocde_state *state, UINT8 curwidth)
 }
 
 
-static void execute_blit(address_space *space)
+static void execute_blit(address_space &space)
 {
-	astrocde_state *state = space->machine().driver_data<astrocde_state>();
+	astrocde_state *state = space.machine().driver_data<astrocde_state>();
 	/*
         state->m_pattern_source = counter set U7/U16/U25/U34
         state->m_pattern_dest = counter set U9/U18/U30/U39
@@ -795,7 +792,7 @@ static void execute_blit(address_space *space)
 			if (curwidth == 0 && (state->m_pattern_mode & 0x08) != 0)
 				busdata = 0;
 			else
-				busdata = space->read_byte(busaddr);
+				busdata = space.read_byte(busaddr);
 
 			/* increment the appropriate address */
 			if ((state->m_pattern_mode & 0x01) == 0)
@@ -807,7 +804,7 @@ static void execute_blit(address_space *space)
 
 			/* address is selected between source/dest based on mode.d0 */
 			busaddr = ((state->m_pattern_mode & 0x01) != 0) ? state->m_pattern_source : state->m_pattern_dest;
-			space->write_byte(busaddr, busdata);
+			space.write_byte(busaddr, busdata);
 
 			/* increment the appropriate address */
 			if ((state->m_pattern_mode & 0x01) == 0)
@@ -833,7 +830,7 @@ static void execute_blit(address_space *space)
 	} while (state->m_pattern_height-- != 0);
 
 	/* count cycles we ran the bus */
-	space->device().execute().adjust_icount(-cycles);
+	space.device().execute().adjust_icount(-cycles);
 }
 
 

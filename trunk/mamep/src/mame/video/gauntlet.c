@@ -118,14 +118,14 @@ VIDEO_START_MEMBER(gauntlet_state,gauntlet)
 
 WRITE16_HANDLER( gauntlet_xscroll_w )
 {
-	gauntlet_state *state = space->machine().driver_data<gauntlet_state>();
+	gauntlet_state *state = space.machine().driver_data<gauntlet_state>();
 	UINT16 oldxscroll = *state->m_xscroll;
 	COMBINE_DATA(state->m_xscroll);
 
 	/* if something changed, force a partial update */
 	if (*state->m_xscroll != oldxscroll)
 	{
-		space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
+		space.machine().primary_screen->update_partial(space.machine().primary_screen->vpos());
 
 		/* adjust the scrolls */
 		state->m_playfield_tilemap->set_scrollx(0, *state->m_xscroll);
@@ -143,14 +143,14 @@ WRITE16_HANDLER( gauntlet_xscroll_w )
 
 WRITE16_HANDLER( gauntlet_yscroll_w )
 {
-	gauntlet_state *state = space->machine().driver_data<gauntlet_state>();
+	gauntlet_state *state = space.machine().driver_data<gauntlet_state>();
 	UINT16 oldyscroll = *state->m_yscroll;
 	COMBINE_DATA(state->m_yscroll);
 
 	/* if something changed, force a partial update */
 	if (*state->m_yscroll != oldyscroll)
 	{
-		space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
+		space.machine().primary_screen->update_partial(space.machine().primary_screen->vpos());
 
 		/* if the bank changed, mark all tiles dirty */
 		if (state->m_playfield_tile_bank != (*state->m_yscroll & 3))
@@ -173,15 +173,14 @@ WRITE16_HANDLER( gauntlet_yscroll_w )
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( gauntlet )
+UINT32 gauntlet_state::screen_update_gauntlet(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	gauntlet_state *state = screen.machine().driver_data<gauntlet_state>();
 	atarimo_rect_list rectlist;
 	bitmap_ind16 *mobitmap;
 	int x, y, r;
 
 	/* draw the playfield */
-	state->m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
@@ -200,7 +199,7 @@ SCREEN_UPDATE_IND16( gauntlet )
 					if ((mo[x] & 0x0f) == 1)
 					{
 						/* Vindicators Part II has extra logic here for the bases */
-						if (!state->m_vindctr2_screen_refresh || (mo[x] & 0xf0) != 0)
+						if (!m_vindctr2_screen_refresh || (mo[x] & 0xf0) != 0)
 							pf[x] ^= 0x80;
 					}
 					else
@@ -212,6 +211,6 @@ SCREEN_UPDATE_IND16( gauntlet )
 		}
 
 	/* add the alpha on top */
-	state->m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

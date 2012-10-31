@@ -65,15 +65,14 @@ INLINE void latch_condition(running_machine &machine, int collision)
 }
 
 
-INTERRUPT_GEN( exidy_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(exidy_state::exidy_vblank_interrupt)
 {
-	exidy_state *state = device->machine().driver_data<exidy_state>();
 	/* latch the current condition */
-	latch_condition(device->machine(), 0);
-	state->m_int_condition &= ~0x80;
+	latch_condition(machine(), 0);
+	m_int_condition &= ~0x80;
 
 	/* set the IRQ line */
-	device->execute().set_input_line(0, ASSERT_LINE);
+	device.execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -262,13 +261,13 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 ***************************************************************************/
 
-static TIMER_CALLBACK( collision_irq_callback )
+TIMER_CALLBACK_MEMBER(exidy_state::collision_irq_callback)
 {
 	/* latch the collision bits */
-	latch_condition(machine, param);
+	latch_condition(machine(), param);
 
 	/* set the IRQ line */
-	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -335,7 +334,7 @@ static void check_collision(running_machine &machine)
 
 				/* if we got one, trigger an interrupt */
 				if ((current_collision_mask & state->m_collision_mask) && (count++ < 128))
-					machine.scheduler().timer_set(machine.primary_screen->time_until_pos(org_1_x + sx, org_1_y + sy), FUNC(collision_irq_callback), current_collision_mask);
+					machine.scheduler().timer_set(machine.primary_screen->time_until_pos(org_1_x + sx, org_1_y + sy), timer_expired_delegate(FUNC(exidy_state::collision_irq_callback),state), current_collision_mask);
 			}
 
 			if (state->m_motion_object_2_vid.pix16(sy, sx) != 0xff)
@@ -343,7 +342,7 @@ static void check_collision(running_machine &machine)
 				/* check for background collision (M2CHAR) */
 				if (state->m_background_bitmap.pix16(org_2_y + sy, org_2_x + sx) != 0)
 					if ((state->m_collision_mask & 0x08) && (count++ < 128))
-						machine.scheduler().timer_set(machine.primary_screen->time_until_pos(org_2_x + sx, org_2_y + sy), FUNC(collision_irq_callback), 0x08);
+						machine.scheduler().timer_set(machine.primary_screen->time_until_pos(org_2_x + sx, org_2_y + sy), timer_expired_delegate(FUNC(exidy_state::collision_irq_callback),state), 0x08);
 			}
 		}
 }
@@ -356,21 +355,20 @@ static void check_collision(running_machine &machine)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( exidy )
+UINT32 exidy_state::screen_update_exidy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	exidy_state *state = screen.machine().driver_data<exidy_state>();
 	/* refresh the colors from the palette (static or dynamic) */
-	set_colors(screen.machine());
+	set_colors(machine());
 
 	/* update the background and draw it */
-	draw_background(screen.machine());
-	copybitmap(bitmap, state->m_background_bitmap, 0, 0, 0, 0, cliprect);
+	draw_background(machine());
+	copybitmap(bitmap, m_background_bitmap, 0, 0, 0, 0, cliprect);
 
 	/* draw the sprites */
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 
 	/* check for collision, this will set the appropriate bits in collision_mask */
-	check_collision(screen.machine());
+	check_collision(machine());
 
 	return 0;
 }

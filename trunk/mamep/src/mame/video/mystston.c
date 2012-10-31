@@ -45,19 +45,18 @@
  *
  *************************************/
 
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(mystston_state::interrupt_callback)
 {
-	mystston_state *state = machine.driver_data<mystston_state>();
 	int scanline = param;
 
-	mystston_on_scanline_interrupt(machine);
+	mystston_on_scanline_interrupt(machine());
 
 	scanline = scanline + 16;
 	if (scanline >= VTOTAL)
 		scanline = FIRST_INT_VPOS;
 
 	/* the vertical synch chain is clocked by H256 -- this is probably not important, but oh well */
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(scanline - 1, INT_HPOS), scanline);
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(scanline - 1, INT_HPOS), scanline);
 }
 
 
@@ -224,7 +223,7 @@ VIDEO_START_MEMBER(mystston_state,mystston)
 	m_fg_tilemap->set_transparent_pen(0);
 
 	/* create the interrupt timer */
-	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(interrupt_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(mystston_state::interrupt_callback),this));
 }
 
 
@@ -249,21 +248,20 @@ VIDEO_RESET_MEMBER(mystston_state,mystston)
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( mystston )
+UINT32 mystston_state::screen_update_mystston(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mystston_state *state = screen.machine().driver_data<mystston_state>();
 
-	int flip = (*state->m_video_control & 0x80) ^ ((screen.machine().root_device().ioport("DSW1")->read() & 0x20) << 2);
+	int flip = (*m_video_control & 0x80) ^ ((machine().root_device().ioport("DSW1")->read() & 0x20) << 2);
 
-	set_palette(screen.machine(), state);
+	set_palette(machine(), this);
 
-	screen.machine().tilemap().mark_all_dirty();
-	state->m_bg_tilemap->set_scrolly(0, *state->m_scroll);
-	screen.machine().tilemap().set_flip_all(flip ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+	machine().tilemap().mark_all_dirty();
+	m_bg_tilemap->set_scrolly(0, *m_scroll);
+	machine().tilemap().set_flip_all(flip ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	draw_sprites(bitmap, cliprect, screen.machine().gfx[2], flip);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	draw_sprites(bitmap, cliprect, machine().gfx[2], flip);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -325,5 +323,5 @@ MACHINE_CONFIG_FRAGMENT( mystston_video )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(mystston)
+	MCFG_SCREEN_UPDATE_DRIVER(mystston_state, screen_update_mystston)
 MACHINE_CONFIG_END

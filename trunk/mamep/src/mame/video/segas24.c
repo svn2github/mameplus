@@ -23,16 +23,15 @@ namespace {
 	};
 };
 
-SCREEN_UPDATE_IND16(system24)
+UINT32 segas24_state::screen_update_system24(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	segas24_state *state = screen.machine().driver_data<segas24_state>();
 
-	if(state->vmixer->get_reg(13) & 1) {
-		bitmap.fill(get_black_pen(screen.machine()));
+	if(vmixer->get_reg(13) & 1) {
+		bitmap.fill(get_black_pen(machine()));
 		return 0;
 	}
 
-	screen.machine().priority_bitmap.fill(0);
+	machine().priority_bitmap.fill(0);
 	bitmap.fill(0, cliprect);
 
 	std::vector<int> order;
@@ -40,18 +39,18 @@ SCREEN_UPDATE_IND16(system24)
 	for(int i=0; i<12; i++)
 		order[i] = i;
 
-	std::sort(order.begin(), order.end(), layer_sort(state->vmixer));
+	std::sort(order.begin(), order.end(), layer_sort(vmixer));
 
 	int spri[4];
 	int level = 0;
 	for(int i=0; i<12; i++)
 		if(order[i] < 8)
-			state->vtile->draw(bitmap, cliprect, order[i], level, 0);
+			vtile->draw(bitmap, cliprect, order[i], level, 0);
 		else {
 			spri[order[i]-8] = level;
 			level++;
 		}
 
-	state->vsprite->draw(bitmap, cliprect, spri);
+	vsprite->draw(bitmap, cliprect, spri);
 	return 0;
 }

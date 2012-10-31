@@ -999,13 +999,13 @@ void amiga_render_scanline(running_machine &machine, bitmap_ind16 &bitmap, int s
  *************************************/
 
 /* TODO: alg.c requires that this uses RGB32 */
-SCREEN_UPDATE_IND16( amiga )
+UINT32 amiga_state::screen_update_amiga(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	int y;
 
 	/* render each scanline in the visible region */
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
-		amiga_render_scanline(screen.machine(), bitmap, y);
+		amiga_render_scanline(machine(), bitmap, y);
 
 	return 0;
 }

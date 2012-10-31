@@ -54,13 +54,12 @@ void ultratnk_state::video_start()
 }
 
 
-SCREEN_UPDATE_IND16( ultratnk )
+UINT32 ultratnk_state::screen_update_ultratnk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ultratnk_state *state = screen.machine().driver_data<ultratnk_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int i;
 
-	state->m_playfield->draw(bitmap, cliprect, 0, 0);
+	m_playfield->draw(bitmap, cliprect, 0, 0);
 
 	for (i = 0; i < 4; i++)
 	{
@@ -76,7 +75,7 @@ SCREEN_UPDATE_IND16( ultratnk )
 
 		if (!(attr & 0x80))
 		{
-			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1],
+			drawgfx_transpen(bitmap, cliprect, machine().gfx[1],
 				(code >> 3) | bank,
 				i,
 				0, 0,
@@ -89,16 +88,15 @@ SCREEN_UPDATE_IND16( ultratnk )
 }
 
 
-SCREEN_VBLANK( ultratnk )
+void ultratnk_state::screen_eof_ultratnk(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		ultratnk_state *state = screen.machine().driver_data<ultratnk_state>();
 		int i;
-		UINT16 BG = colortable_entry_get_value(screen.machine().colortable, 0);
-		device_t *discrete = screen.machine().device("discrete");
-		UINT8 *videoram = state->m_videoram;
+		UINT16 BG = colortable_entry_get_value(machine().colortable, 0);
+		device_t *discrete = machine().device("discrete");
+		UINT8 *videoram = m_videoram;
 
 		/* check for sprite-playfield collisions */
 
@@ -117,17 +115,17 @@ SCREEN_VBLANK( ultratnk )
 
 			rect.min_x = horz - 15;
 			rect.min_y = vert - 15;
-			rect.max_x = horz - 15 + screen.machine().gfx[1]->width() - 1;
-			rect.max_y = vert - 15 + screen.machine().gfx[1]->height() - 1;
+			rect.max_x = horz - 15 + machine().gfx[1]->width() - 1;
+			rect.max_y = vert - 15 + machine().gfx[1]->height() - 1;
 
-			rect &= screen.machine().primary_screen->visible_area();
+			rect &= machine().primary_screen->visible_area();
 
-			state->m_playfield->draw(state->m_helper, rect, 0, 0);
+			m_playfield->draw(m_helper, rect, 0, 0);
 
 			if (code & 4)
 				bank = 32;
 
-			drawgfx_transpen(state->m_helper, rect, screen.machine().gfx[1],
+			drawgfx_transpen(m_helper, rect, machine().gfx[1],
 				(code >> 3) | bank,
 				4,
 				0, 0,
@@ -136,14 +134,15 @@ SCREEN_VBLANK( ultratnk )
 
 			for (y = rect.min_y; y <= rect.max_y; y++)
 				for (x = rect.min_x; x <= rect.max_x; x++)
-					if (colortable_entry_get_value(screen.machine().colortable, state->m_helper.pix16(y, x)) != BG)
-						state->m_collision[i] = 1;
+					if (colortable_entry_get_value(machine().colortable, m_helper.pix16(y, x)) != BG)
+						m_collision[i] = 1;
 		}
 
 		/* update sound status */
 
-		discrete_sound_w(discrete, ULTRATNK_MOTOR_DATA_1, videoram[0x391] & 15);
-		discrete_sound_w(discrete, ULTRATNK_MOTOR_DATA_2, videoram[0x393] & 15);
+		address_space &space = machine().driver_data()->generic_space();
+		discrete_sound_w(discrete, space, ULTRATNK_MOTOR_DATA_1, videoram[0x391] & 15);
+		discrete_sound_w(discrete, space, ULTRATNK_MOTOR_DATA_2, videoram[0x393] & 15);
 	}
 }
 

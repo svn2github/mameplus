@@ -81,8 +81,8 @@ void _2xpm_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long
 	unsigned long next_line, next_line_src;	
 	unsigned short int *dst_pixel;
 	unsigned long src_width, src_height;
-	unsigned long complete_line_src, complete_line_dst;	
-	unsigned char auto_blend;
+	unsigned long complete_line_src, complete_line_dst;
+//	unsigned char auto_blend;
 	unsigned short int E[4];
 	unsigned long src_pitch;
 	unsigned char pprev;	
@@ -126,7 +126,7 @@ void _2xpm_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long
 		//if (y == src_height - 1)
 		if (!y)
 			start_addr3 = start_addr2;		
-		auto_blend = 0;
+//		auto_blend = 0;
 		pprev = 1;
 		x = src_width;
 		

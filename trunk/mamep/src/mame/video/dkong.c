@@ -119,13 +119,17 @@ static const res_net_info dkong3_net_info =
     darlington. The blue channel has a pulldown resistor (R8, 0M15) as well.
 */
 
+
+#define TRS_J1	(1)			// (1) = Closed (0) = Open
+
+
 static const res_net_info radarscp_net_info =
 {
 	RES_NET_VCC_5V | RES_NET_VBIAS_TTL | RES_NET_VIN_MB7052 |  RES_NET_MONITOR_SANYO_EZV20,
 	{
-		{ RES_NET_AMP_DARLINGTON, 470,      0, 3, { 1000, 470, 220 } },
-		{ RES_NET_AMP_DARLINGTON, 470,      0, 3, { 1000, 470, 220 } },
-		{ RES_NET_AMP_DARLINGTON, 680, 150000, 2, {  470, 220,   0 } }    /*  radarscp */
+		{ RES_NET_AMP_DARLINGTON, 470 * TRS_J1, 470*(1-TRS_J1), 3, { 1000, 470, 220 } },
+		{ RES_NET_AMP_DARLINGTON, 470 * TRS_J1, 470*(1-TRS_J1), 3, { 1000, 470, 220 } },
+		{ RES_NET_AMP_EMITTER,	  680 * TRS_J1, 680*(1-TRS_J1), 2, {  470, 220,   0 } }    /*  radarscp */
 	}
 };
 
@@ -133,9 +137,9 @@ static const res_net_info radarscp_net_bck_info =
 {
 	RES_NET_VCC_5V | RES_NET_VBIAS_TTL | RES_NET_VIN_MB7052 |  RES_NET_MONITOR_SANYO_EZV20,
 	{
-		{ RES_NET_AMP_DARLINGTON, 470,      0, 0, { 0 } },
-		{ RES_NET_AMP_DARLINGTON, 470,      0, 0, { 0 } },
-		{ RES_NET_AMP_DARLINGTON, 680, 150000, 0, { 0 } }    /*  radarscp */
+		{ RES_NET_AMP_DARLINGTON, 470, 4700, 0, { 0 } },
+		{ RES_NET_AMP_DARLINGTON, 470, 4700, 0, { 0 } },
+		{ RES_NET_AMP_EMITTER,	  470, 4700, 0, { 0 } }    /*  radarscp */
 	}
 };
 
@@ -153,7 +157,7 @@ static const res_net_info radarscp1_net_info =
 	{
 		{ RES_NET_AMP_DARLINGTON, 0,      0, 4, { 39000, 20000, 10000, 4990 } },
 		{ RES_NET_AMP_DARLINGTON, 0,      0, 4, { 39000, 20000, 10000, 4990 } },
-		{ RES_NET_AMP_DARLINGTON, 0,      0, 4, { 39000, 20000, 10000, 4990 } }
+		{ RES_NET_AMP_EMITTER,    0,      0, 4, { 39000, 20000, 10000, 4990 } }
 	}
 };
 
@@ -165,7 +169,7 @@ static const res_net_info radarscp_stars_net_info =
 	{
 		{ RES_NET_AMP_DARLINGTON, 4700, 470, 0, { 0 } },
 		{ RES_NET_AMP_DARLINGTON,    1,   0, 0, { 0 } },	/*  dummy */
-		{ RES_NET_AMP_DARLINGTON,    1,   0, 0, { 0 } },	/*  dummy */
+		{ RES_NET_AMP_EMITTER,       1,   0, 0, { 0 } },	/*  dummy */
 	}
 };
 
@@ -177,7 +181,7 @@ static const res_net_info radarscp_blue_net_info =
 	{
 		{ RES_NET_AMP_DARLINGTON,  470, 4700, 0, { 0 } },	/*  bias/gnd exist in schematics, readable in TKG3 schematics */
 		{ RES_NET_AMP_DARLINGTON,  470, 4700, 0, { 0 } },	/*  bias/gnd exist in schematics, readable in TKG3 schematics */
-		{ RES_NET_AMP_DARLINGTON,    0,    0, 8, { 128,64,32,16,8,4,2,1 } },	/*  dummy */
+		{ RES_NET_AMP_EMITTER,       0,    0, 8, { 128,64,32,16,8,4,2,1 } },	/*  dummy */
 	}
 };
 
@@ -189,7 +193,7 @@ static const res_net_info radarscp_grid_net_info =
 	{
 		{ RES_NET_AMP_DARLINGTON,    0,   0, 1, { 1 } },	/*  dummy */
 		{ RES_NET_AMP_DARLINGTON,    0,   0, 1, { 1 } },	/*  dummy */
-		{ RES_NET_AMP_DARLINGTON,    0,   0, 1, { 1 } },	/*  dummy */
+		{ RES_NET_AMP_EMITTER,       0,   0, 1, { 1 } },	/*  dummy */
 	}
 };
 
@@ -291,7 +295,7 @@ PALETTE_INIT_MEMBER(dkong_state,radarscp)
 	/* Now treat tri-state black background generation */
 
 	for (i=0;i<256;i++)
-		if ( (i & 0x03) == 0x00 )  /*  NOR => CS=1 => Tristate => real black */
+		if ( (m_vidhw != DKONG_RADARSCP_CONVERSION) && ( (i & 0x03) == 0x00 ))  /*  NOR => CS=1 => Tristate => real black */
 		{
 			r = compute_res_net( 1, 0, &radarscp_net_bck_info );
 			g = compute_res_net( 1, 1, &radarscp_net_bck_info );
@@ -708,24 +712,32 @@ static void radarscp_step(running_machine &machine, int line_cnt)
 	double diff;
 	int sig;
 
-	line_cnt += 256;
-	if (line_cnt>511)
-		line_cnt -= VTOTAL;
+	/* vsync is divided by 2 by a LS161
+     * The resulting 30 Hz signal clocks a LFSR (LS164) operating as a
+     * random number generator.
+     */
+
+	if ( line_cnt == 0)
+	{
+		state->m_sig30Hz = (1-state->m_sig30Hz);
+		if (state->m_sig30Hz)
+			state->m_lfsr_5I = (machine.rand() > RAND_MAX/2);
+	}
 
 	/* sound2 mixes in a 30Hz noise signal.
      * With the current model this has no real effect
      * Included for completeness
      */
 
-	line_cnt++;
-	if (line_cnt>=512)
-		line_cnt=512-VTOTAL;
-
-	if ( ( !(line_cnt & 0x40) && ((line_cnt+1) & 0x40) ) && (machine.rand() > RAND_MAX/2))
-		state->m_sig30Hz = (1-state->m_sig30Hz);
-
 	/* Now mix with SND02 (sound 2) line - on 74ls259, bit2 */
-	state->m_rflip_sig = latch8_bit2_r(state->m_dev_6h, 0) & state->m_sig30Hz;
+	address_space &space = machine.driver_data()->generic_space();
+	state->m_rflip_sig = latch8_bit2_r(state->m_dev_6h, space, 0) & state->m_lfsr_5I;
+
+	/* blue background generation */
+
+	line_cnt += (256 - 8) + 1; // offset 8 needed to match monitor pictures
+	if (line_cnt>511)
+		line_cnt -= VTOTAL;
 
 	sig = state->m_rflip_sig ^ ((line_cnt & 0x80)>>7);
 
@@ -735,7 +747,7 @@ static void radarscp_step(running_machine &machine, int line_cnt)
 	if  (sig) /*  128VF */
 		diff = (0.0 - state->m_cv1);
 	else
-		diff = (3.4 - state->m_cv1);
+		diff = (4.8 - state->m_cv1);
 	diff = diff - diff*exp(0.0 - (1.0/RC1 * dt) );
 	state->m_cv1 += diff;
 
@@ -743,23 +755,48 @@ static void radarscp_step(running_machine &machine, int line_cnt)
 	diff = diff - diff*exp(0.0 - (1.0/RC2 * dt) );
 	state->m_cv2 += diff;
 
-	state->m_vg1 = (state->m_cv1 - state->m_cv2)*0.9 + 0.1 * state->m_vg2;
-	state->m_vg2 = 5*CD4049(machine, state->m_vg1/5);
+	// FIXME: use the inverse function
+	// Solve the amplifier by iteration
+	for (int j=1; j<=11; j++)// 11% = 1/75 / (1/75+1/10)
+	{
+		double f = (double) j / 100.0f;
+		state->m_vg1 = (state->m_cv1 - state->m_cv2)*(1-f) + f * state->m_vg2;
+		state->m_vg2 = 5*CD4049(machine, state->m_vg1/5);
+	}
+	// FIXME: use the inverse function
+	// Solve the amplifier by iteration 50% = both resistors equal
+	for (int j=10; j<=20; j++)
+	{
+		double f = (double) j / 40.0f;
+		vg3i = (1.0f-f) * state->m_vg2 + f * state->m_vg3;
+		state->m_vg3 = 5*CD4049(machine, vg3i/5);
+	}
 
-	/* on the real hardware, the gain would be 1.
-     * This will not work here.
-     */
-	vg3i = 0.9*state->m_vg2 + 0.1 * state->m_vg3;
-	state->m_vg3 = 5*CD4049(machine, vg3i/5);
+#define RC17 (33e-6 * 1e3 * (0*4.7+1.0/(1.0/10.0+1.0/20.0+0.0/0.3)))
+	diff = (state->m_vg3 - state->m_vc17);
+	diff = diff - diff*exp(0.0 - (1.0/RC17 * dt) );
+	state->m_vc17 += diff;
 
-	state->m_blue_level = (int)(state->m_vg3/5.0*255);
+	double vo = (state->m_vg3 - state->m_vc17);
+	vo = vo + 20.0 / (20.0+10.0) * 5;
+
+	// Transistor is marked as OMIT in TRS-02 schems.
+	//vo = vo - 0.7;
+
+
+	//double vo = (vg3o - vg3)/4.7 + 5.0/16.0;
+	//vo = vo / (1.0 / 4.7 + 1.0 / 16.0 + 1.0 / 30.0 );
+	//printf("%f %f\n", vg3, vc17);
+
+	state->m_blue_level = (int)(vo/5.0*255);
+	//printf("%d\n", state->m_blue_level);
 
 	/*
      * Grid signal
      *
      * Mixed with ANS line (bit 5) from Port B of 8039
      */
-	if (state->m_grid_on && latch8_bit5_r(state->m_dev_vp2, 0))
+	if (state->m_grid_on && latch8_bit5_r(state->m_dev_vp2, space, 0))
 	{
 		diff = (0.0 - state->m_cv3);
 		diff = diff - diff*exp(0.0 - (1.0/RC32 * dt) );
@@ -775,7 +812,7 @@ static void radarscp_step(running_machine &machine, int line_cnt)
 	diff = diff - diff*exp(0.0 - (1.0/RC4 * dt) );
 	state->m_cv4 += diff;
 
-	if (CD4049(machine, CD4049(machine, state->m_vg2 - state->m_cv4))>2.4/5.0) /* TTL - Level */
+	if (CD4049(machine, CD4049(machine, (state->m_vg2 - state->m_cv4)/5.0))>2.4/5.0) /* TTL - Level */
 		state->m_grid_sig = 0;
 	else
 		state->m_grid_sig = 1;
@@ -854,20 +891,19 @@ static void radarscp_scanline(running_machine &machine, int scanline)
 		state->m_counter++;
 }
 
-static TIMER_CALLBACK( scanline_callback )
+TIMER_CALLBACK_MEMBER(dkong_state::scanline_callback)
 {
-	dkong_state *state = machine.driver_data<dkong_state>();
 	int scanline = param;
 
-	if ((state->m_hardware_type == HARDWARE_TRS02) || (state->m_hardware_type == HARDWARE_TRS01))
-		radarscp_scanline(machine, scanline);
+	if ((m_hardware_type == HARDWARE_TRS02) || (m_hardware_type == HARDWARE_TRS01))
+		radarscp_scanline(machine(), scanline);
 
 	/* update any video up to the current scanline */
-	machine.primary_screen->update_now();
+	machine().primary_screen->update_now();
 
 	scanline = (scanline+1) % VTOTAL;
 	/* come back at the next appropriate scanline */
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 static void check_palette(running_machine &machine)
@@ -885,10 +921,10 @@ static void check_palette(running_machine &machine)
 			state->m_vidhw = newset;
 			switch (newset)
 			{
-				case 0x00:
+				case DKONG_RADARSCP_CONVERSION:
 					state->PALETTE_INIT_CALL_MEMBER(radarscp);
 					break;
-				case 0x01:
+				case DKONG_BOARD:
 					state->PALETTE_INIT_CALL_MEMBER(dkong2b);
 					break;
 			}
@@ -921,7 +957,7 @@ VIDEO_START_MEMBER(dkong_state,dkong)
 
 	VIDEO_START_CALL_MEMBER(dkong_base);
 
-	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dkong_state::scanline_callback),this));
 	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
 
 	switch (m_hardware_type)
@@ -951,27 +987,26 @@ VIDEO_START_MEMBER(dkong_state,dkong)
 	}
 }
 
-SCREEN_UPDATE_IND16( dkong )
+UINT32 dkong_state::screen_update_dkong(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dkong_state *state = screen.machine().driver_data<dkong_state>();
 
-	screen.machine().tilemap().set_flip_all(state->m_flip ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
-	state->m_bg_tilemap->set_scrollx(0, state->m_flip ?  0 : 0);
-	state->m_bg_tilemap->set_scrolly(0, state->m_flip ? -8 : 0);
+	machine().tilemap().set_flip_all(m_flip ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+	m_bg_tilemap->set_scrollx(0, m_flip ?  0 : 0);
+	m_bg_tilemap->set_scrolly(0, m_flip ? -8 : 0);
 
-	switch (state->m_hardware_type)
+	switch (m_hardware_type)
 	{
 		case HARDWARE_TKG02:
 		case HARDWARE_TKG04:
-			check_palette(screen.machine());
-			state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-			draw_sprites(screen.machine(), bitmap, cliprect, 0x40, 1);
+			check_palette(machine());
+			m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+			draw_sprites(machine(), bitmap, cliprect, 0x40, 1);
 			break;
 		case HARDWARE_TRS01:
 		case HARDWARE_TRS02:
-			state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-			draw_sprites(screen.machine(), bitmap, cliprect, 0x40, 1);
-			radarscp_draw_background(screen.machine(), state, bitmap, cliprect);
+			m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+			draw_sprites(machine(), bitmap, cliprect, 0x40, 1);
+			radarscp_draw_background(machine(), this, bitmap, cliprect);
 			break;
 		default:
 			fatalerror("Invalid hardware type in dkong_video_update\n");
@@ -979,35 +1014,33 @@ SCREEN_UPDATE_IND16( dkong )
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( pestplce )
+UINT32 dkong_state::screen_update_pestplce(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dkong_state *state = screen.machine().driver_data<dkong_state>();
 	int offs;
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* Draw the sprites. */
-	for (offs = 0;offs < state->m_sprite_ram.bytes();offs += 4)
+	for (offs = 0;offs < m_sprite_ram.bytes();offs += 4)
 	{
-		if (state->m_sprite_ram[offs])
+		if (m_sprite_ram[offs])
 		{
-			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
-					state->m_sprite_ram[offs + 2],
-					(state->m_sprite_ram[offs + 1] & 0x0f) + 16 * state->m_palette_bank,
-					state->m_sprite_ram[offs + 1] & 0x80,state->m_sprite_ram[offs + 1] & 0x40,
-					state->m_sprite_ram[offs + 3] - 8,240 - state->m_sprite_ram[offs] + 8,0);
+			drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
+					m_sprite_ram[offs + 2],
+					(m_sprite_ram[offs + 1] & 0x0f) + 16 * m_palette_bank,
+					m_sprite_ram[offs + 1] & 0x80,m_sprite_ram[offs + 1] & 0x40,
+					m_sprite_ram[offs + 3] - 8,240 - m_sprite_ram[offs] + 8,0);
 		}
 	}
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( spclforc )
+UINT32 dkong_state::screen_update_spclforc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	dkong_state *state = screen.machine().driver_data<dkong_state>();
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* it uses sprite_ram[offs + 2] & 0x10 for sprite bank */
-	draw_sprites(screen.machine(), bitmap, cliprect, 0x10, 3);
+	draw_sprites(machine(), bitmap, cliprect, 0x10, 3);
 	return 0;
 }

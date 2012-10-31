@@ -294,7 +294,7 @@ WRITE8_MEMBER(phoenix_state::pleiads_videoreg_w)
 	m_pleiads_protection_question = data & 0xfc;
 
 	/* send two bits to sound control C (not sure if they are there) */
-	pleiads_sound_control_c_w(machine().device("cust"), offset, data);
+	pleiads_sound_control_c_w(machine().device("cust"), space, offset, data);
 }
 
 
@@ -424,16 +424,14 @@ READ8_MEMBER(phoenix_state::survival_input_port_0_r)
 	return m_survival_input_latches[0];
 }
 
-READ8_DEVICE_HANDLER( survival_protection_r )
+READ8_MEMBER(phoenix_state::survival_protection_r)
 {
-	phoenix_state *state = device->machine().driver_data<phoenix_state>();
-	return state->m_survival_protection_value;
+	return m_survival_protection_value;
 }
 
-READ_LINE_DEVICE_HANDLER( survival_sid_callback )
+READ_LINE_MEMBER(phoenix_state::survival_sid_callback)
 {
-	phoenix_state *state = device->machine().driver_data<phoenix_state>();
-	return state->m_survival_sid_value;
+	return m_survival_sid_value;
 }
 
 
@@ -443,10 +441,9 @@ READ_LINE_DEVICE_HANDLER( survival_sid_callback )
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( phoenix )
+UINT32 phoenix_state::screen_update_phoenix(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	phoenix_state *state = screen.machine().driver_data<phoenix_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0,0);
 	return 0;
 }

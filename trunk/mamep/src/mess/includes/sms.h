@@ -181,24 +181,25 @@ public:
 	DECLARE_MACHINE_RESET(mess_sms);
 	DECLARE_VIDEO_START(gamegear);
 	DECLARE_VIDEO_START(sms1);
+	UINT32 screen_update_gamegear(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_sms(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	DECLARE_INPUT_CHANGED_MEMBER(lgun1_changed);
+	DECLARE_INPUT_CHANGED_MEMBER(lgun2_changed);
+	TIMER_CALLBACK_MEMBER(rapid_fire_callback);
+	TIMER_CALLBACK_MEMBER(lightgun_tick);
+	TIMER_CALLBACK_MEMBER(lphaser_1_callback);
+	TIMER_CALLBACK_MEMBER(lphaser_2_callback);
+	DECLARE_WRITE_LINE_MEMBER(sms_int_callback);
+	DECLARE_WRITE_LINE_MEMBER(sms_pause_callback);
+	DECLARE_WRITE_LINE_MEMBER(sms_store_int_callback);
 };
 
 
 /*----------- defined in machine/sms.c -----------*/
 
-/* Function prototypes */
-
-INPUT_CHANGED( lgun1_changed );
-INPUT_CHANGED( lgun2_changed );
-
-WRITE_LINE_DEVICE_HANDLER( sms_pause_callback );
-WRITE_LINE_DEVICE_HANDLER( sms_store_int_callback );
-
 DEVICE_START( sms_cart );
 DEVICE_IMAGE_LOAD( sms_cart );
-
-
-
 
 
 #define IO_EXPANSION    (0x80)	/* Expansion slot enable (1= disabled, 0= enabled) */
@@ -207,13 +208,5 @@ DEVICE_IMAGE_LOAD( sms_cart );
 #define IO_WORK_RAM     (0x10)	/* Work RAM disabled (1= disabled, 0= enabled) */
 #define IO_BIOS_ROM     (0x08)	/* BIOS ROM disabled (1= disabled, 0= enabled) */
 #define IO_CHIP         (0x04)	/* I/O chip disabled (1= disabled, 0= enabled) */
-
-
-
-
-
-SCREEN_UPDATE_RGB32( sms1 );
-SCREEN_UPDATE_RGB32( sms );
-SCREEN_UPDATE_RGB32( gamegear );
 
 #endif /* SMS_H_ */

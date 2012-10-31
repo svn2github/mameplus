@@ -102,7 +102,7 @@ PALETTE_INIT_MEMBER(ladybug_state,redclash)
 
 WRITE8_HANDLER( redclash_videoram_w )
 {
-	ladybug_state *state = space->machine().driver_data<ladybug_state>();
+	ladybug_state *state = space.machine().driver_data<ladybug_state>();
 
 	state->m_videoram[offset] = data;
 	state->m_fg_tilemap->mark_tile_dirty(offset);
@@ -110,18 +110,18 @@ WRITE8_HANDLER( redclash_videoram_w )
 
 WRITE8_HANDLER( redclash_gfxbank_w )
 {
-	ladybug_state *state = space->machine().driver_data<ladybug_state>();
+	ladybug_state *state = space.machine().driver_data<ladybug_state>();
 
 	if (state->m_gfxbank != (data & 0x01))
 	{
 		state->m_gfxbank = data & 0x01;
-		space->machine().tilemap().mark_all_dirty();
+		space.machine().tilemap().mark_all_dirty();
 	}
 }
 
 WRITE8_HANDLER( redclash_flipscreen_w )
 {
-	ladybug_state *state = space->machine().driver_data<ladybug_state>();
+	ladybug_state *state = space.machine().driver_data<ladybug_state>();
 	state->flip_screen_set(data & 0x01);
 }
 
@@ -141,31 +141,31 @@ star_speed:
 */
 WRITE8_HANDLER( redclash_star0_w )
 {
-	ladybug_state *state = space->machine().driver_data<ladybug_state>();
+	ladybug_state *state = space.machine().driver_data<ladybug_state>();
 
 	state->m_star_speed = (state->m_star_speed & ~1) | ((data & 1) << 0);
-	redclash_set_stars_speed(space->machine(), state->m_star_speed);
+	redclash_set_stars_speed(space.machine(), state->m_star_speed);
 }
 
 WRITE8_HANDLER( redclash_star1_w )
 {
-	ladybug_state *state = space->machine().driver_data<ladybug_state>();
+	ladybug_state *state = space.machine().driver_data<ladybug_state>();
 
 	state->m_star_speed = (state->m_star_speed & ~2) | ((data & 1) << 1);
-	redclash_set_stars_speed(space->machine(), state->m_star_speed);
+	redclash_set_stars_speed(space.machine(), state->m_star_speed);
 }
 
 WRITE8_HANDLER( redclash_star2_w )
 {
-	ladybug_state *state = space->machine().driver_data<ladybug_state>();
+	ladybug_state *state = space.machine().driver_data<ladybug_state>();
 
 	state->m_star_speed = (state->m_star_speed & ~4) | ((data & 1) << 2);
-	redclash_set_stars_speed(space->machine(), state->m_star_speed);
+	redclash_set_stars_speed(space.machine(), state->m_star_speed);
 }
 
 WRITE8_HANDLER( redclash_star_reset_w )
 {
-	redclash_set_stars_enable(space->machine(), 1);
+	redclash_set_stars_enable(space.machine(), 1);
 }
 
 TILE_GET_INFO_MEMBER(ladybug_state::get_fg_tile_info)
@@ -417,21 +417,20 @@ void redclash_draw_stars( running_machine &machine, bitmap_ind16 &bitmap, const 
 	}
 }
 
-SCREEN_VBLANK( redclash )
+void ladybug_state::screen_eof_redclash(screen_device &screen, bool state)
 {
 	// falling edge
-	if (!vblank_on)
-		redclash_update_stars_state(screen.machine());
+	if (!state)
+		redclash_update_stars_state(machine());
 }
 
-SCREEN_UPDATE_IND16( redclash )
+UINT32 ladybug_state::screen_update_redclash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ladybug_state *state = screen.machine().driver_data<ladybug_state>();
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	redclash_draw_stars(screen.machine(), bitmap, cliprect, 0x60, 0, 0x00, 0xff);
-	draw_sprites(screen.machine(), bitmap, cliprect);
-	draw_bullets(screen.machine(), bitmap, cliprect);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	bitmap.fill(get_black_pen(machine()), cliprect);
+	redclash_draw_stars(machine(), bitmap, cliprect, 0x60, 0, 0x00, 0xff);
+	draw_sprites(machine(), bitmap, cliprect);
+	draw_bullets(machine(), bitmap, cliprect);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

@@ -47,12 +47,12 @@
 
 static READ8_DEVICE_HANDLER( spc_ram_100_r )
 {
-	return spc_ram_r(device, offset + 0x100);
+	return spc_ram_r(device, space, offset + 0x100);
 }
 
 static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
 {
-	spc_ram_w(device, offset + 0x100, data);
+	spc_ram_w(device, space, offset + 0x100, data);
 }
 
 /*************************************
@@ -735,7 +735,7 @@ MACHINE_CONFIG_END
 
 static SUPERFX_CONFIG( snes_superfx_config )
 {
-	DEVCB_LINE(snes_extern_irq_w)	/* IRQ line from cart */
+	DEVCB_DRIVER_LINE_MEMBER(snes_state,snes_extern_irq_w)	/* IRQ line from cart */
 };
 
 static MACHINE_CONFIG_DERIVED( snessfx, snes )
@@ -766,12 +766,14 @@ static MACHINE_CONFIG_DERIVED( snesst11, snes )
 	MCFG_CPU_DATA_MAP(setadsp_data_map)
 MACHINE_CONFIG_END
 
-static MACHINE_CONFIG_DERIVED( snespal, snes )
+static MACHINE_CONFIG_DERIVED( snespal, snes_base )
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_CLOCK( MCLK_PAL )
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_RAW_PARAMS(DOTCLK_PAL, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_PAL, 0, SNES_SCR_HEIGHT_PAL)
+
+	MCFG_FRAGMENT_ADD(snesp_cartslot)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( snespsfx, snespal )

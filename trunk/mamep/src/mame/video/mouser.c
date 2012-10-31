@@ -55,10 +55,9 @@ WRITE8_MEMBER(mouser_state::mouser_flip_screen_y_w)
 	flip_screen_y_set(~data & 1);
 }
 
-SCREEN_UPDATE_IND16( mouser )
+UINT32 mouser_state::screen_update_mouser(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	mouser_state *state = screen.machine().driver_data<mouser_state>();
-	UINT8 *spriteram = state->m_spriteram;
+	UINT8 *spriteram = m_spriteram;
 	int offs;
 	int sx, sy;
 	int flipx, flipy;
@@ -72,12 +71,12 @@ SCREEN_UPDATE_IND16( mouser )
 		sx = offs % 32;
 		sy = offs / 32;
 
-		if (state->flip_screen_x())
+		if (flip_screen_x())
 		{
 			sx = 31 - sx;
 		}
 
-		if (state->flip_screen_y())
+		if (flip_screen_y())
 		{
 			sy = 31 - sy;
 		}
@@ -91,10 +90,10 @@ SCREEN_UPDATE_IND16( mouser )
 		/* Note: this is _not_ dependant on flipping */
 		color_offs = offs % 32 + ((256 + 8 * (offs / 32) - spriteram[offs % 32] )% 256) / 8 * 32;
 
-		drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],
-				state->m_videoram[offs] | (state->m_colorram[color_offs] >> 5) * 256 | ((state->m_colorram[color_offs] >> 4) & 1) * 512,
-				state->m_colorram[color_offs]%16,
-				state->flip_screen_x(),state->flip_screen_y(),
+		drawgfx_opaque(bitmap,cliprect,machine().gfx[0],
+				m_videoram[offs] | (m_colorram[color_offs] >> 5) * 256 | ((m_colorram[color_offs] >> 4) & 1) * 512,
+				m_colorram[color_offs]%16,
+				flip_screen_x(),flip_screen_y(),
 				8*sx,scrolled_y_position);
 	}
 
@@ -109,20 +108,20 @@ SCREEN_UPDATE_IND16( mouser )
 		flipx = BIT(spriteram[offs], 6);
 		flipy = BIT(spriteram[offs], 7);
 
-		if (state->flip_screen_x())
+		if (flip_screen_x())
 		{
 			flipx = !flipx;
 			sx = 240 - sx;
 		}
 
-		if (state->flip_screen_y())
+		if (flip_screen_y())
 		{
 			flipy = !flipy;
 			sy = 238 - sy;
 		}
 
 		if (BIT(spriteram[offs + 1], 4))
-			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1+((spriteram[offs+1]&0x20)>>5)],
+			drawgfx_transpen(bitmap,cliprect,machine().gfx[1+((spriteram[offs+1]&0x20)>>5)],
 					spriteram[offs]&0x3f,
 					spriteram[offs+1]%16,
 					flipx,flipy,
@@ -138,20 +137,20 @@ SCREEN_UPDATE_IND16( mouser )
 		flipx = BIT(spriteram[offs], 6);
 		flipy = BIT(spriteram[offs], 7);
 
-		if (state->flip_screen_x())
+		if (flip_screen_x())
 		{
 			flipx = !flipx;
 			sx = 240 - sx;
 		}
 
-		if (state->flip_screen_y())
+		if (flip_screen_y())
 		{
 			flipy = !flipy;
 			sy = 238 - sy;
 		}
 
 		if (BIT(spriteram[offs + 1], 4))
-			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1+((spriteram[offs+1]&0x20)>>5)],
+			drawgfx_transpen(bitmap,cliprect,machine().gfx[1+((spriteram[offs+1]&0x20)>>5)],
 					spriteram[offs]&0x3f,
 					spriteram[offs+1]%16,
 					flipx,flipy,

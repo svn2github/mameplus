@@ -49,9 +49,9 @@ static void set_pens( running_machine &machine )
 
 TILE_GET_INFO_MEMBER(fastlane_state::get_tile_info0)
 {
-	UINT8 ctrl_3 = k007121_ctrlram_r(m_k007121, 3);
-	UINT8 ctrl_4 = k007121_ctrlram_r(m_k007121, 4);
-	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121, 5);
+	UINT8 ctrl_3 = k007121_ctrlram_r(m_k007121, generic_space(), 3);
+	UINT8 ctrl_4 = k007121_ctrlram_r(m_k007121, generic_space(), 4);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121, generic_space(), 5);
 	int attr = m_videoram1[tile_index];
 	int code = m_videoram1[tile_index + 0x400];
 	int bit0 = (ctrl_5 >> 0) & 0x03;
@@ -77,9 +77,9 @@ TILE_GET_INFO_MEMBER(fastlane_state::get_tile_info0)
 
 TILE_GET_INFO_MEMBER(fastlane_state::get_tile_info1)
 {
-	UINT8 ctrl_3 = k007121_ctrlram_r(m_k007121, 3);
-	UINT8 ctrl_4 = k007121_ctrlram_r(m_k007121, 4);
-	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121, 5);
+	UINT8 ctrl_3 = k007121_ctrlram_r(m_k007121, generic_space(), 3);
+	UINT8 ctrl_4 = k007121_ctrlram_r(m_k007121, generic_space(), 4);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121, generic_space(), 5);
 	int attr = m_videoram2[tile_index];
 	int code = m_videoram2[tile_index + 0x400];
 	int bit0 = (ctrl_5 >> 0) & 0x03;
@@ -151,26 +151,26 @@ WRITE8_MEMBER(fastlane_state::fastlane_vram2_w)
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( fastlane )
+UINT32 fastlane_state::screen_update_fastlane(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	fastlane_state *state = screen.machine().driver_data<fastlane_state>();
-	rectangle finalclip0 = state->m_clip0, finalclip1 = state->m_clip1;
+	rectangle finalclip0 = m_clip0, finalclip1 = m_clip1;
 	int i, xoffs;
 
 	finalclip0 &= cliprect;
 	finalclip1 &= cliprect;
 
-	set_pens(screen.machine());
+	set_pens(machine());
 
 	/* set scroll registers */
-	xoffs = k007121_ctrlram_r(state->m_k007121, 0);
+	address_space &space = machine().driver_data()->generic_space();
+	xoffs = k007121_ctrlram_r(m_k007121, space, 0);
 	for (i = 0; i < 32; i++)
-		state->m_layer0->set_scrollx(i, state->m_k007121_regs[0x20 + i] + xoffs - 40);
+		m_layer0->set_scrollx(i, m_k007121_regs[0x20 + i] + xoffs - 40);
 
-	state->m_layer0->set_scrolly(0, k007121_ctrlram_r(state->m_k007121, 2));
+	m_layer0->set_scrolly(0, k007121_ctrlram_r(m_k007121, space, 2));
 
-	state->m_layer0->draw(bitmap, finalclip0, 0, 0);
-	k007121_sprites_draw(state->m_k007121, bitmap, cliprect, screen.machine().gfx[0], screen.machine().colortable, state->m_spriteram, 0, 40, 0, (UINT32)-1);
-	state->m_layer1->draw(bitmap, finalclip1, 0, 0);
+	m_layer0->draw(bitmap, finalclip0, 0, 0);
+	k007121_sprites_draw(m_k007121, bitmap, cliprect, machine().gfx[0], machine().colortable, m_spriteram, 0, 40, 0, (UINT32)-1);
+	m_layer1->draw(bitmap, finalclip1, 0, 0);
 	return 0;
 }

@@ -27,14 +27,13 @@
 #define LGUN_X_INTERVAL       4
 
 
-static void setup_rom(address_space *space);
+static void setup_rom(address_space &space);
 
 
-static TIMER_CALLBACK( rapid_fire_callback )
+TIMER_CALLBACK_MEMBER(sms_state::rapid_fire_callback)
 {
-	sms_state *state = machine.driver_data<sms_state>();
-	state->m_rapid_fire_state_1 ^= 0xff;
-	state->m_rapid_fire_state_2 ^= 0xff;
+	m_rapid_fire_state_1 ^= 0xff;
+	m_rapid_fire_state_2 ^= 0xff;
 }
 
 
@@ -427,12 +426,12 @@ static UINT8 sms_vdp_hcount( running_machine &machine )
 }
 
 
-static void sms_vdp_hcount_latch( address_space *space )
+static void sms_vdp_hcount_latch( address_space &space )
 {
-	sms_state *state = space->machine().driver_data<sms_state>();
-	UINT8 value = sms_vdp_hcount(space->machine());
+	sms_state *state = space.machine().driver_data<sms_state>();
+	UINT8 value = sms_vdp_hcount(space.machine());
 
-	state->m_vdp->hcount_latch_write(*space, 0, value);
+	state->m_vdp->hcount_latch_write(space, 0, value);
 }
 
 
@@ -487,81 +486,78 @@ static void lphaser2_sensor_check( running_machine &machine )
 
 // at each input port read we check if lightguns are enabled in one of the ports:
 // if so, we turn on crosshair and the lightgun timer
-static TIMER_CALLBACK( lightgun_tick )
+TIMER_CALLBACK_MEMBER(sms_state::lightgun_tick)
 {
-	sms_state *state = machine.driver_data<sms_state>();
 
-	if ((state->ioport("CTRLSEL")->read_safe(0x00) & 0x0f) == 0x01)
+	if ((ioport("CTRLSEL")->read_safe(0x00) & 0x0f) == 0x01)
 	{
 		/* enable crosshair */
-		crosshair_set_screen(machine, 0, CROSSHAIR_SCREEN_ALL);
-		if (!state->m_lphaser_1_timer->enabled())
-			lphaser1_sensor_check(machine);
+		crosshair_set_screen(machine(), 0, CROSSHAIR_SCREEN_ALL);
+		if (!m_lphaser_1_timer->enabled())
+			lphaser1_sensor_check(machine());
 	}
 	else
 	{
 		/* disable crosshair */
-		crosshair_set_screen(machine, 0, CROSSHAIR_SCREEN_NONE);
-		state->m_lphaser_1_timer->enable(0);
+		crosshair_set_screen(machine(), 0, CROSSHAIR_SCREEN_NONE);
+		m_lphaser_1_timer->enable(0);
 	}
 
-	if ((state->ioport("CTRLSEL")->read_safe(0x00) & 0xf0) == 0x10)
+	if ((ioport("CTRLSEL")->read_safe(0x00) & 0xf0) == 0x10)
 	{
 		/* enable crosshair */
-		crosshair_set_screen(machine, 1, CROSSHAIR_SCREEN_ALL);
-		if (!state->m_lphaser_2_timer->enabled())
-			lphaser2_sensor_check(machine);
+		crosshair_set_screen(machine(), 1, CROSSHAIR_SCREEN_ALL);
+		if (!m_lphaser_2_timer->enabled())
+			lphaser2_sensor_check(machine());
 	}
 	else
 	{
 		/* disable crosshair */
-		crosshair_set_screen(machine, 1, CROSSHAIR_SCREEN_NONE);
-		state->m_lphaser_2_timer->enable(0);
+		crosshair_set_screen(machine(), 1, CROSSHAIR_SCREEN_NONE);
+		m_lphaser_2_timer->enable(0);
 	}
 }
 
 
-static TIMER_CALLBACK( lphaser_1_callback )
+TIMER_CALLBACK_MEMBER(sms_state::lphaser_1_callback)
 {
-	lphaser1_sensor_check(machine);
+	lphaser1_sensor_check(machine());
 }
 
 
-static TIMER_CALLBACK( lphaser_2_callback )
+TIMER_CALLBACK_MEMBER(sms_state::lphaser_2_callback)
 {
-	lphaser2_sensor_check(machine);
+	lphaser2_sensor_check(machine());
 }
 
 
-INPUT_CHANGED( lgun1_changed )
+INPUT_CHANGED_MEMBER(sms_state::lgun1_changed)
 {
-	sms_state *state = field.machine().driver_data<sms_state>();
-	if (!state->m_lphaser_1_timer ||
-		(field.machine().root_device().ioport("CTRLSEL")->read_safe(0x00) & 0x0f) != 0x01)
+	if (!m_lphaser_1_timer ||
+		(machine().root_device().ioport("CTRLSEL")->read_safe(0x00) & 0x0f) != 0x01)
 		return;
 
 	if (newval != oldval)
-		lphaser1_sensor_check(field.machine());
+		lphaser1_sensor_check(machine());
 }
 
-INPUT_CHANGED( lgun2_changed )
+INPUT_CHANGED_MEMBER(sms_state::lgun2_changed)
 {
-	sms_state *state = field.machine().driver_data<sms_state>();
-	if (!state->m_lphaser_2_timer ||
-		(field.machine().root_device().ioport("CTRLSEL")->read_safe(0x00) & 0xf0) != 0x10)
+	if (!m_lphaser_2_timer ||
+		(machine().root_device().ioport("CTRLSEL")->read_safe(0x00) & 0xf0) != 0x10)
 		return;
 
 	if (newval != oldval)
-		lphaser2_sensor_check(field.machine());
+		lphaser2_sensor_check(machine());
 }
 
 
-static void sms_get_inputs( address_space *space )
+static void sms_get_inputs( address_space &space )
 {
-	sms_state *state = space->machine().driver_data<sms_state>();
+	sms_state *state = space.machine().driver_data<sms_state>();
 	UINT8 data = 0x00;
-	UINT32 cpu_cycles = downcast<cpu_device *>(&space->device())->total_cycles();
-	running_machine &machine = space->machine();
+	UINT32 cpu_cycles = downcast<cpu_device *>(&space.device())->total_cycles();
+	running_machine &machine = space.machine();
 
 	state->m_input_port0 = 0xff;
 	state->m_input_port1 = 0xff;
@@ -573,7 +569,7 @@ static void sms_get_inputs( address_space *space )
 	}
 
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
-	machine.scheduler().timer_set(attotime::zero, FUNC(lightgun_tick));
+	machine.scheduler().timer_set(attotime::zero, timer_expired_delegate(FUNC(sms_state::lightgun_tick),state));
 
 	/* Player 1 */
 	switch (machine.root_device().ioport("CTRLSEL")->read_safe(0x00) & 0x0f)
@@ -722,7 +718,7 @@ READ8_MEMBER(sms_state::sms_fm_detect_r)
 		}
 		else
 		{
-			sms_get_inputs(&space);
+			sms_get_inputs(space);
 			return m_input_port0;
 		}
 	}
@@ -753,7 +749,7 @@ WRITE8_MEMBER(sms_state::sms_io_control_w)
 
 	if (hcount_latch)
 	{
-		sms_vdp_hcount_latch(&space);
+		sms_vdp_hcount_latch(space);
 	}
 
 	m_ctrl_reg = data;
@@ -774,29 +770,27 @@ READ8_MEMBER(sms_state::sms_count_r)
  Check if the pause button is pressed.
  If the gamegear is in sms mode, check if the start button is pressed.
  */
-WRITE_LINE_DEVICE_HANDLER( sms_pause_callback )
+WRITE_LINE_MEMBER(sms_state::sms_pause_callback)
 {
-	sms_state *driver_state = device->machine().driver_data<sms_state>();
-
-	if (driver_state->m_is_gamegear && !(driver_state->m_cartridge[driver_state->m_current_cartridge].features & CF_GG_SMS_MODE))
+	if (m_is_gamegear && !(m_cartridge[m_current_cartridge].features & CF_GG_SMS_MODE))
 		return;
 
-	if (!(driver_state->ioport(driver_state->m_is_gamegear ? "START" : "PAUSE")->read() & 0x80))
+	if (!(ioport(m_is_gamegear ? "START" : "PAUSE")->read() & 0x80))
 	{
-		if (!driver_state->m_paused)
+		if (!m_paused)
 		{
-			device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
-		driver_state->m_paused = 1;
+		m_paused = 1;
 	}
 	else
 	{
-		driver_state->m_paused = 0;
+		m_paused = 0;
 	}
 
 	/* clear Light Phaser latch flags for next frame */
-	driver_state->m_lphaser_1_latch = 0;
-	driver_state->m_lphaser_2_latch = 0;
+	m_lphaser_1_latch = 0;
+	m_lphaser_2_latch = 0;
 }
 
 READ8_MEMBER(sms_state::sms_input_port_0_r)
@@ -808,7 +802,7 @@ READ8_MEMBER(sms_state::sms_input_port_0_r)
 	}
 	else
 	{
-		sms_get_inputs(&space);
+		sms_get_inputs(space);
 		return m_input_port0;
 	}
 }
@@ -820,7 +814,7 @@ READ8_MEMBER(sms_state::sms_input_port_1_r)
 	if (m_bios_port & IO_CHIP)
 		return 0xff;
 
-	sms_get_inputs(&space);
+	sms_get_inputs(space);
 
 	/* Reset Button */
 	m_input_port1 = (m_input_port1 & 0xef) | (ioport("RESET")->read_safe(0x01) & 0x01) << 4;
@@ -859,7 +853,7 @@ WRITE8_MEMBER(sms_state::sms_ym2413_register_port_0_w)
 {
 
 	if (m_has_fm)
-		ym2413_w(m_ym, 0, (data & 0x3f));
+		ym2413_w(m_ym, space, 0, (data & 0x3f));
 }
 
 
@@ -869,7 +863,7 @@ WRITE8_MEMBER(sms_state::sms_ym2413_data_port_0_w)
 	if (m_has_fm)
 	{
 		logerror("data_port_0_w %x %x\n", offset, data);
-		ym2413_w(m_ym, 1, data);
+		ym2413_w(m_ym, space, 1, data);
 	}
 }
 
@@ -1228,7 +1222,7 @@ WRITE8_MEMBER(sms_state::sms_bios_w)
 
 	logerror("bios write %02x, pc: %04x\n", data, space.device().safe_pc());
 
-	setup_rom(&space);
+	setup_rom(space);
 }
 
 
@@ -1363,9 +1357,9 @@ static void sms_machine_stop( running_machine &machine )
 }
 
 
-static void setup_rom( address_space *space )
+static void setup_rom( address_space &space )
 {
-	sms_state *state = space->machine().driver_data<sms_state>();
+	sms_state *state = space.machine().driver_data<sms_state>();
 
 	/* 1. set up bank pointers to point to nothing */
 	state->membank("bank1")->set_base(state->m_banking_none);
@@ -1928,11 +1922,11 @@ MACHINE_START_MEMBER(sms_state,sms)
 {
 
 	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(sms_machine_stop),&machine()));
-	m_rapid_fire_timer = machine().scheduler().timer_alloc(FUNC(rapid_fire_callback));
+	m_rapid_fire_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sms_state::rapid_fire_callback),this));
 	m_rapid_fire_timer->adjust(attotime::from_hz(10), 0, attotime::from_hz(10));
 
-	m_lphaser_1_timer = machine().scheduler().timer_alloc(FUNC(lphaser_1_callback));
-	m_lphaser_2_timer = machine().scheduler().timer_alloc(FUNC(lphaser_2_callback));
+	m_lphaser_1_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sms_state::lphaser_1_callback),this));
+	m_lphaser_2_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sms_state::lphaser_2_callback),this));
 
 	m_main_cpu = machine().device("maincpu");
 	m_control_cpu = machine().device("control");
@@ -1942,64 +1936,64 @@ MACHINE_START_MEMBER(sms_state,sms)
 	m_main_scr = machine().device("screen");
 	m_left_lcd = machine().device("left_lcd");
 	m_right_lcd = machine().device("right_lcd");
-	m_space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	m_space = &machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
-	machine().scheduler().timer_set(attotime::zero, FUNC(lightgun_tick));
+	machine().scheduler().timer_set(attotime::zero, timer_expired_delegate(FUNC(sms_state::lightgun_tick),this));
 }
 
 MACHINE_RESET_MEMBER(sms_state,mess_sms)
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	m_ctrl_reg = 0xff;
 	if (m_has_fm)
 		m_fm_detect = 0x01;
 
-	m_mapper_ram = (UINT8*)space->get_write_ptr(0xdffc);
+	m_mapper_ram = (UINT8*)space.get_write_ptr(0xdffc);
 
 	m_bios_port = 0;
 
 	if ( m_cartridge[m_current_cartridge].features & CF_CODEMASTERS_MAPPER )
 	{
 		/* Install special memory handlers */
-		space->install_write_handler(0x0000, 0x0000, write8_delegate(FUNC(sms_state::sms_codemasters_page0_w),this));
-		space->install_write_handler(0x4000, 0x4000, write8_delegate(FUNC(sms_state::sms_codemasters_page1_w),this));
+		space.install_write_handler(0x0000, 0x0000, write8_delegate(FUNC(sms_state::sms_codemasters_page0_w),this));
+		space.install_write_handler(0x4000, 0x4000, write8_delegate(FUNC(sms_state::sms_codemasters_page1_w),this));
 	}
 
 	if ( m_cartridge[m_current_cartridge].features & CF_KOREAN_ZEMINA_MAPPER )
 	{
-		space->install_write_handler(0x0000, 0x0003, write8_delegate(FUNC(sms_state::sms_korean_zemina_banksw_w),this));
+		space.install_write_handler(0x0000, 0x0003, write8_delegate(FUNC(sms_state::sms_korean_zemina_banksw_w),this));
 	}
 
 	if ( m_cartridge[m_current_cartridge].features & CF_JANGGUN_MAPPER )
 	{
-		space->install_write_handler(0x4000, 0x4000, write8_delegate(FUNC(sms_state::sms_janggun_bank0_w),this));
-		space->install_write_handler(0x6000, 0x6000, write8_delegate(FUNC(sms_state::sms_janggun_bank1_w),this));
-		space->install_write_handler(0x8000, 0x8000, write8_delegate(FUNC(sms_state::sms_janggun_bank2_w),this));
-		space->install_write_handler(0xA000, 0xA000,write8_delegate(FUNC(sms_state::sms_janggun_bank3_w),this));
+		space.install_write_handler(0x4000, 0x4000, write8_delegate(FUNC(sms_state::sms_janggun_bank0_w),this));
+		space.install_write_handler(0x6000, 0x6000, write8_delegate(FUNC(sms_state::sms_janggun_bank1_w),this));
+		space.install_write_handler(0x8000, 0x8000, write8_delegate(FUNC(sms_state::sms_janggun_bank2_w),this));
+		space.install_write_handler(0xA000, 0xA000,write8_delegate(FUNC(sms_state::sms_janggun_bank3_w),this));
 	}
 
 	if ( m_cartridge[m_current_cartridge].features & CF_4PAK_MAPPER )
 	{
-		space->install_write_handler(0x3ffe, 0x3ffe, write8_delegate(FUNC(sms_state::sms_4pak_page0_w),this));
-		space->install_write_handler(0x7fff, 0x7fff, write8_delegate(FUNC(sms_state::sms_4pak_page1_w),this));
-		space->install_write_handler(0xbfff, 0xbfff, write8_delegate(FUNC(sms_state::sms_4pak_page2_w),this));
+		space.install_write_handler(0x3ffe, 0x3ffe, write8_delegate(FUNC(sms_state::sms_4pak_page0_w),this));
+		space.install_write_handler(0x7fff, 0x7fff, write8_delegate(FUNC(sms_state::sms_4pak_page1_w),this));
+		space.install_write_handler(0xbfff, 0xbfff, write8_delegate(FUNC(sms_state::sms_4pak_page2_w),this));
 	}
 
 	if ( m_cartridge[m_current_cartridge].features & CF_TVDRAW )
 	{
-		space->install_write_handler(0x6000, 0x6000, write8_delegate(FUNC(sms_state::sms_tvdraw_axis_w),this));
-		space->install_read_handler(0x8000, 0x8000, read8_delegate(FUNC(sms_state::sms_tvdraw_status_r),this));
-		space->install_read_handler(0xa000, 0xa000, read8_delegate(FUNC(sms_state::sms_tvdraw_data_r),this));
-		space->nop_write(0xa000, 0xa000);
+		space.install_write_handler(0x6000, 0x6000, write8_delegate(FUNC(sms_state::sms_tvdraw_axis_w),this));
+		space.install_read_handler(0x8000, 0x8000, read8_delegate(FUNC(sms_state::sms_tvdraw_status_r),this));
+		space.install_read_handler(0xa000, 0xa000, read8_delegate(FUNC(sms_state::sms_tvdraw_data_r),this));
+		space.nop_write(0xa000, 0xa000);
 		m_cartridge[m_current_cartridge].m_tvdraw_data = 0;
 	}
 
 	if ( m_cartridge[m_current_cartridge].features & CF_93C46_EEPROM )
 	{
-		space->install_write_handler(0x8000,0x8000, write8_delegate(FUNC(sms_state::sms_93c46_w),this));
-		space->install_read_handler(0x8000,0x8000, read8_delegate(FUNC(sms_state::sms_93c46_r),this));
+		space.install_write_handler(0x8000,0x8000, write8_delegate(FUNC(sms_state::sms_93c46_w),this));
+		space.install_read_handler(0x8000,0x8000, read8_delegate(FUNC(sms_state::sms_93c46_r),this));
 	}
 
 	if (m_cartridge[m_current_cartridge].features & CF_GG_SMS_MODE)
@@ -2061,7 +2055,7 @@ WRITE8_MEMBER(sms_state::sms_store_cart_select_w)
 
 	setup_cart_banks(machine());
 	membank("bank10")->set_base(m_banking_cart[3] + 0x2000);
-	setup_rom(&space);
+	setup_rom(space);
 }
 
 
@@ -2099,10 +2093,9 @@ WRITE8_MEMBER(sms_state::sms_store_control_w)
 	m_store_control = data;
 }
 
-WRITE_LINE_DEVICE_HANDLER( sms_store_int_callback )
+WRITE_LINE_MEMBER(sms_state::sms_store_int_callback)
 {
-	sms_state *driver_state = device->machine().driver_data<sms_state>();
-	(driver_state->m_store_control & 0x01 ? driver_state->m_control_cpu : driver_state->m_main_cpu)->execute().set_input_line(0, state);
+	(m_store_control & 0x01 ? m_control_cpu : m_main_cpu)->execute().set_input_line(0, state);
 }
 
 
@@ -2184,53 +2177,52 @@ VIDEO_START_MEMBER(sms_state,sms1)
 	save_item(NAME(m_prevright_bitmap));
 }
 
-SCREEN_UPDATE_RGB32( sms1 )
+UINT32 sms_state::screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	sms_state *state = screen.machine().driver_data<sms_state>();
 	UINT8 sscope = 0;
 	UINT8 sscope_binocular_hack;
 	UINT8 occluded_view = 0;
 
-	if (&screen != state->m_main_scr)
+	if (&screen != m_main_scr)
 	{
-		sscope = screen.machine().root_device().ioport("SEGASCOPE")->read_safe(0x00);
+		sscope = machine().root_device().ioport("SEGASCOPE")->read_safe(0x00);
 		if (!sscope)
 		{
 			occluded_view = 1;
 		}
-		else if (&screen == state->m_left_lcd)
+		else if (&screen == m_left_lcd)
 		{
 			// with SegaScope, sscope_state 0 = left screen OFF, right screen ON
-			if (!(state->m_sscope_state & 0x01))
+			if (!(m_sscope_state & 0x01))
 				occluded_view = 1;
 		}
 		else // it's right LCD
 		{
 			// with SegaScope, sscope_state 1 = left screen ON, right screen OFF
-			if (state->m_sscope_state & 0x01)
+			if (m_sscope_state & 0x01)
 				occluded_view = 1;
 		}
 	}
 
 	if (!occluded_view)
 	{
-		state->m_vdp->screen_update(screen, bitmap, cliprect);
+		m_vdp->screen_update(screen, bitmap, cliprect);
 
 		// HACK: fake 3D->2D handling (if enabled, it repeats each frame twice on the selected lens)
 		// save a copy of current bitmap for the binocular hack
 		if (sscope)
 		{
-			sscope_binocular_hack = screen.machine().root_device().ioport("SSCOPE_BINOCULAR")->read_safe(0x00);
+			sscope_binocular_hack = machine().root_device().ioport("SSCOPE_BINOCULAR")->read_safe(0x00);
 
-			if (&screen == state->m_left_lcd)
+			if (&screen == m_left_lcd)
 			{
 				if (sscope_binocular_hack & 0x01)
-					copybitmap(state->m_prevleft_bitmap, bitmap, 0, 0, 0, 0, cliprect);
+					copybitmap(m_prevleft_bitmap, bitmap, 0, 0, 0, 0, cliprect);
 			}
 			else // it's right LCD
 			{
 				if (sscope_binocular_hack & 0x02)
-					copybitmap(state->m_prevright_bitmap, bitmap, 0, 0, 0, 0, cliprect);
+					copybitmap(m_prevright_bitmap, bitmap, 0, 0, 0, 0, cliprect);
 			}
 		}
 	}
@@ -2240,13 +2232,13 @@ SCREEN_UPDATE_RGB32( sms1 )
 		// use the copied bitmap for the binocular hack
 		if (sscope)
 		{
-			sscope_binocular_hack = screen.machine().root_device().ioport("SSCOPE_BINOCULAR")->read_safe(0x00);
+			sscope_binocular_hack = machine().root_device().ioport("SSCOPE_BINOCULAR")->read_safe(0x00);
 
-			if (&screen == state->m_left_lcd)
+			if (&screen == m_left_lcd)
 			{
 				if (sscope_binocular_hack & 0x01)
 				{
-					copybitmap(bitmap, state->m_prevleft_bitmap, 0, 0, 0, 0, cliprect);
+					copybitmap(bitmap, m_prevleft_bitmap, 0, 0, 0, 0, cliprect);
 					return 0;
 				}
 			}
@@ -2254,7 +2246,7 @@ SCREEN_UPDATE_RGB32( sms1 )
 			{
 				if (sscope_binocular_hack & 0x02)
 				{
-					copybitmap(bitmap, state->m_prevright_bitmap, 0, 0, 0, 0, cliprect);
+					copybitmap(bitmap, m_prevright_bitmap, 0, 0, 0, 0, cliprect);
 					return 0;
 				}
 			}
@@ -2265,10 +2257,9 @@ SCREEN_UPDATE_RGB32( sms1 )
 	return 0;
 }
 
-SCREEN_UPDATE_RGB32( sms )
+UINT32 sms_state::screen_update_sms(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	sms_state *state = screen.machine().driver_data<sms_state>();
-	state->m_vdp->screen_update(screen, bitmap, cliprect);
+	m_vdp->screen_update(screen, bitmap, cliprect);
 	return 0;
 }
 
@@ -2280,14 +2271,13 @@ VIDEO_START_MEMBER(sms_state,gamegear)
 	save_item(NAME(m_prev_bitmap));
 }
 
-SCREEN_UPDATE_RGB32( gamegear )
+UINT32 sms_state::screen_update_gamegear(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	sms_state *state = screen.machine().driver_data<sms_state>();
 	int width = screen.width();
 	int height = screen.height();
 	int x, y;
 
-	bitmap_rgb32 &vdp_bitmap = state->m_vdp->get_bitmap();
+	bitmap_rgb32 &vdp_bitmap = m_vdp->get_bitmap();
 
 	// HACK: fake LCD persistence effect
 	// (it would be better to generalize this in the core, to be used for all LCD systems)
@@ -2295,7 +2285,7 @@ SCREEN_UPDATE_RGB32( gamegear )
 	{
 		UINT32 *linedst = &bitmap.pix32(y);
 		UINT32 *line0 = &vdp_bitmap.pix32(y);
-		UINT32 *line1 = &state->m_prev_bitmap.pix32(y);
+		UINT32 *line1 = &m_prev_bitmap.pix32(y);
 		for (x = 0; x < width; x++)
 		{
 			UINT32 color0 = line0[x];
@@ -2312,7 +2302,7 @@ SCREEN_UPDATE_RGB32( gamegear )
 			linedst[x] = (r << 16) | (g << 8) | b;
 		}
 	}
-	copybitmap(state->m_prev_bitmap, vdp_bitmap, 0, 0, 0, 0, cliprect);
+	copybitmap(m_prev_bitmap, vdp_bitmap, 0, 0, 0, 0, cliprect);
 
 	return 0;
 }

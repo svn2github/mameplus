@@ -396,13 +396,13 @@ static const _DrawTemplate DrawTile[]=
 	TILENAME(16,1,2),
 };
 
-#define Packet(i) space->read_word(PacketPtr + 2 * i)
+#define Packet(i) space.read_word(PacketPtr + 2 * i)
 
 //Returns TRUE if the operation was a flip (sync or async)
 int vrender0_ProcessPacket(device_t *device, UINT32 PacketPtr, UINT16 *Dest, UINT8 *TEXTURE)
 {
 	vr0video_state *vr0 = get_safe_token(device);
-	address_space *space = vr0->cpu->memory().space(AS_PROGRAM);
+	address_space &space = vr0->cpu->memory().space(AS_PROGRAM);
 	UINT32 Dx = Packet(1) & 0x3ff;
 	UINT32 Dy = Packet(2) & 0x1ff;
 	UINT32 Endx = Packet(3) & 0x3ff;
@@ -605,7 +605,7 @@ const device_type VIDEO_VRENDER0 = &device_creator<vr0video_device>;
 vr0video_device::vr0video_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, VIDEO_VRENDER0, "VRender0", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(vr0video_state));
+	m_token = global_alloc_clear(vr0video_state);
 }
 
 //-------------------------------------------------

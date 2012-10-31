@@ -10,6 +10,7 @@
 #include "includes/jack.h"
 
 
+
 WRITE8_MEMBER(jack_state::jack_videoram_w)
 {
 	m_videoram[offset] = data;
@@ -39,6 +40,9 @@ WRITE8_MEMBER(jack_state::jack_flipscreen_w)
 	flip_screen_set(offset);
 }
 
+
+/**************************************************************************/
+
 TILE_GET_INFO_MEMBER(jack_state::get_bg_tile_info)
 {
 	int code = m_videoram[tile_index] + ((m_colorram[tile_index] & 0x18) << 5);
@@ -60,6 +64,9 @@ void jack_state::video_start()
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jack_state::get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(jack_state::tilemap_scan_cols_flipy),this), 8, 8, 32, 32);
 }
 
+
+/**************************************************************************/
+
 static void jack_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	jack_state *state = machine.driver_data<jack_state>();
@@ -68,14 +75,12 @@ static void jack_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, c
 
 	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
-		int sx, sy, num, color, flipx, flipy;
-
-		sx    = spriteram[offs + 1];
-		sy    = spriteram[offs];
-		num   = spriteram[offs + 2] + ((spriteram[offs + 3] & 0x08) << 5);
-		color = spriteram[offs + 3] & 0x07;
-		flipx = (spriteram[offs + 3] & 0x80);
-		flipy = (spriteram[offs + 3] & 0x40);
+		int sy = spriteram[offs];
+		int sx = spriteram[offs + 1];
+		int code = spriteram[offs + 2] | ((spriteram[offs + 3] & 0x08) << 5);
+		int color = spriteram[offs + 3] & 0x07;
+		int flipx = (spriteram[offs + 3] & 0x80) >> 7;
+		int flipy = (spriteram[offs + 3] & 0x40) >> 6;
 
 		if (state->flip_screen())
 		{
@@ -86,25 +91,59 @@ static void jack_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, c
 		}
 
 		drawgfx_transpen(bitmap,cliprect,machine.gfx[0],
-				num,
+				code,
 				color,
 				flipx,flipy,
 				sx,sy,0);
 	}
 }
 
-SCREEN_UPDATE_IND16( jack )
+UINT32 jack_state::screen_update_jack(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jack_state *state = screen.machine().driver_data<jack_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	jack_draw_sprites(screen.machine(), bitmap, cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	jack_draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }
 
-/*
+
+UINT32 jack_state::screen_update_striv(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+{
+	// no sprites
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	return 0;
+}
+
+
+
+
+
+
+/***************************************************************************
+
    Joinem has a bit different video hardware with proms based palette,
    3bpp gfx and different banking / colors bits
-*/
+
+***************************************************************************/
+
+WRITE8_MEMBER(jack_state::joinem_scroll_w)
+{
+	switch (offset & 3)
+	{
+		// byte 0: column scroll
+		case 0:
+			m_bg_tilemap->set_scrolly(offset >> 2, -data);
+			break;
+
+		// byte 1/2/3: no effect?
+		default:
+			break;
+	}
+
+	m_scrollram[offset] = data;
+}
+
+
+/**************************************************************************/
 
 PALETTE_INIT_MEMBER(jack_state,joinem)
 {
@@ -131,10 +170,11 @@ PALETTE_INIT_MEMBER(jack_state,joinem)
 	}
 }
 
+
 TILE_GET_INFO_MEMBER(jack_state::joinem_get_bg_tile_info)
 {
 	int code = m_videoram[tile_index] + ((m_colorram[tile_index] & 0x03) << 8);
-	int color = (m_colorram[tile_index] & 0x38) >> 3;
+	int color = (m_colorram[tile_index] & 0x38) >> 3 | m_joinem_palette_bank;
 
 	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
@@ -142,7 +182,11 @@ TILE_GET_INFO_MEMBER(jack_state::joinem_get_bg_tile_info)
 VIDEO_START_MEMBER(jack_state,joinem)
 {
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jack_state::joinem_get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(jack_state::tilemap_scan_cols_flipy),this), 8, 8, 32, 32);
+	m_bg_tilemap->set_scroll_cols(32);
 }
+
+
+/**************************************************************************/
 
 static void joinem_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
@@ -152,14 +196,12 @@ static void joinem_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 
 	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
-		int sx, sy, num, color, flipx, flipy;
-
-		sx    = spriteram[offs + 1];
-		sy    = spriteram[offs];
-		num   = spriteram[offs + 2] + ((spriteram[offs + 3] & 0x01) << 8);
-		color = (spriteram[offs + 3] & 0x38) >> 3;
-		flipx = (spriteram[offs + 3] & 0x80);
-		flipy = (spriteram[offs + 3] & 0x40);
+		int sy = spriteram[offs];
+		int sx = spriteram[offs + 1];
+		int code = spriteram[offs + 2] | ((spriteram[offs + 3] & 0x03) << 8);
+		int color = (spriteram[offs + 3] & 0x38) >> 3 | state->m_joinem_palette_bank;
+		int flipx = (spriteram[offs + 3] & 0x80) >> 7;
+		int flipy = (spriteram[offs + 3] & 0x40) >> 6;
 
 		if (state->flip_screen())
 		{
@@ -170,17 +212,16 @@ static void joinem_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 		}
 
 		drawgfx_transpen(bitmap,cliprect,machine.gfx[0],
-				num,
+				code,
 				color,
 				flipx,flipy,
 				sx,sy,0);
 	}
 }
 
-SCREEN_UPDATE_IND16( joinem )
+UINT32 jack_state::screen_update_joinem(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	jack_state *state = screen.machine().driver_data<jack_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	joinem_draw_sprites(screen.machine(), bitmap, cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	joinem_draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }

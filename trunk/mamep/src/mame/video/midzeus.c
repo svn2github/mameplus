@@ -329,17 +329,16 @@ static void exit_handler(running_machine &machine)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( midzeus )
+UINT32 midzeus_state::screen_update_midzeus(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	int x, y;
 
 	poly_wait(poly, "VIDEO_UPDATE");
 
 	/* normal update case */
-	if (!screen.machine().input().code_pressed(KEYCODE_W))
+	if (!machine().input().code_pressed(KEYCODE_W))
 	{
-		midzeus_state *state = screen.machine().driver_data<midzeus_state>();
-		const void *base = waveram1_ptr_from_expanded_addr(state->m_zeusbase[0xcc]);
+		const void *base = waveram1_ptr_from_expanded_addr(m_zeusbase[0xcc]);
 		int xoffs = screen.visible_area().min_x;
 		for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		{
@@ -354,10 +353,10 @@ SCREEN_UPDATE_IND16( midzeus )
 	{
 		const void *base;
 
-		if (screen.machine().input().code_pressed(KEYCODE_DOWN)) yoffs += screen.machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
-		if (screen.machine().input().code_pressed(KEYCODE_UP)) yoffs -= screen.machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
-		if (screen.machine().input().code_pressed(KEYCODE_LEFT) && texel_width > 4) { texel_width >>= 1; while (screen.machine().input().code_pressed(KEYCODE_LEFT)) ; }
-		if (screen.machine().input().code_pressed(KEYCODE_RIGHT) && texel_width < 512) { texel_width <<= 1; while (screen.machine().input().code_pressed(KEYCODE_RIGHT)) ; }
+		if (machine().input().code_pressed(KEYCODE_DOWN)) yoffs += machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
+		if (machine().input().code_pressed(KEYCODE_UP)) yoffs -= machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
+		if (machine().input().code_pressed(KEYCODE_LEFT) && texel_width > 4) { texel_width >>= 1; while (machine().input().code_pressed(KEYCODE_LEFT)) ; }
+		if (machine().input().code_pressed(KEYCODE_RIGHT) && texel_width < 512) { texel_width <<= 1; while (machine().input().code_pressed(KEYCODE_RIGHT)) ; }
 
 		if (yoffs < 0) yoffs = 0;
 		base = waveram0_ptr_from_block_addr(yoffs << 12);

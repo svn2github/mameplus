@@ -72,13 +72,12 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 }
 
 
-SCREEN_UPDATE_IND16(funybubl)
+UINT32 funybubl_state::screen_update_funybubl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	funybubl_state *state = screen.machine().driver_data<funybubl_state>();
 	int x, y, offs;
 	offs = 0;
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
 	/* tilemap .. convert it .. banking makes it slightly more annoying but still easy */
 	for (y = 0; y < 32; y++)
@@ -87,23 +86,23 @@ SCREEN_UPDATE_IND16(funybubl)
 		{
 			int data;
 
-			data = state->m_banked_vram[offs] | (state->m_banked_vram[offs + 1] << 8);
-			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0], data & 0x7fff, (data & 0x8000) ? 2 : 1, 0, 0, x*8, y*8, 0);
+			data = m_banked_vram[offs] | (m_banked_vram[offs + 1] << 8);
+			drawgfx_transpen(bitmap, cliprect, machine().gfx[0], data & 0x7fff, (data & 0x8000) ? 2 : 1, 0, 0, x*8, y*8, 0);
 			offs += 2;
 		}
 	}
 
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 
 #if 0
-	if ( screen.machine().input().code_pressed_once(KEYCODE_W) )
+	if ( machine().input().code_pressed_once(KEYCODE_W) )
 	{
 		FILE *fp;
 
 		fp = fopen("funnybubsprites", "w+b");
 		if (fp)
 		{
-			fwrite(&state->m_banked_vram[0x1000], 0x1000, 1, fp);
+			fwrite(&m_banked_vram[0x1000], 0x1000, 1, fp);
 			fclose(fp);
 		}
 	}

@@ -265,7 +265,7 @@ void ppu2c0x_device::device_start()
 
 inline UINT8 ppu2c0x_device::readbyte(offs_t address)
 {
-	return space()->read_byte(address);
+	return space().read_byte(address);
 }
 
 
@@ -275,7 +275,7 @@ inline UINT8 ppu2c0x_device::readbyte(offs_t address)
 
 inline void ppu2c0x_device::writebyte(offs_t address, UINT8 data)
 {
-	space()->write_byte(address, data);
+	space().write_byte(address, data);
 }
 
 
@@ -1271,19 +1271,19 @@ WRITE8_MEMBER( ppu2c0x_device::write )
  *
  *************************************/
 
-void ppu2c0x_device::spriteram_dma( address_space *space, const UINT8 page )
+void ppu2c0x_device::spriteram_dma( address_space &space, const UINT8 page )
 {
 	int i;
 	int address = page << 8;
 
 	for (i = 0; i < SPRITERAM_SIZE; i++)
 	{
-		UINT8 spriteData = space->read_byte(address + i);
-		space->write_byte(0x2004, spriteData);
+		UINT8 spriteData = space.read_byte(address + i);
+		space.write_byte(0x2004, spriteData);
 	}
 
 	// should last 513 CPU cycles.
-	space->device().execute().adjust_icount(-513);
+	space.device().execute().adjust_icount(-513);
 }
 
 /*************************************

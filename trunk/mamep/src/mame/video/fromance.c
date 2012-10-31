@@ -11,7 +11,7 @@
 #include "includes/fromance.h"
 
 
-static TIMER_CALLBACK( crtc_interrupt_gen );
+
 
 /*************************************
  *
@@ -70,7 +70,7 @@ static void init_common( running_machine &machine )
 	state->m_fg_tilemap->set_transparent_pen(15);
 
 	/* reset the timer */
-	state->m_crtc_timer = machine.scheduler().timer_alloc(FUNC(crtc_interrupt_gen));
+	state->m_crtc_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(fromance_state::crtc_interrupt_gen),state));
 
 	/* state save */
 	state->save_item(NAME(state->m_selected_videoram));
@@ -251,12 +251,11 @@ WRITE8_MEMBER(fromance_state::fromance_scroll_w)
  *
  *************************************/
 
-static TIMER_CALLBACK( crtc_interrupt_gen )
+TIMER_CALLBACK_MEMBER(fromance_state::crtc_interrupt_gen)
 {
-	fromance_state *state = machine.driver_data<fromance_state>();
-	state->m_subcpu->set_input_line(0, HOLD_LINE);
+	m_subcpu->set_input_line(0, HOLD_LINE);
 	if (param != 0)
-		state->m_crtc_timer->adjust(machine.primary_screen->frame_period() / param, 0, machine.primary_screen->frame_period() / param);
+		m_crtc_timer->adjust(machine().primary_screen->frame_period() / param, 0, machine().primary_screen->frame_period() / param);
 }
 
 
@@ -285,123 +284,6 @@ WRITE8_MEMBER(fromance_state::fromance_crtc_register_w)
 
 
 
-/*************************************
- *
- *  Sprite routines (Pipe Dream)
- *
- *************************************/
-
-static void draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int draw_priority )
-{
-	fromance_state *state = screen.machine().driver_data<fromance_state>();
-	static const UINT8 zoomtable[16] = { 0,7,14,20,25,30,34,38,42,46,49,52,54,57,59,61 };
-	const rectangle &visarea = screen.visible_area();
-	UINT8 *spriteram = state->m_spriteram;
-	int offs;
-
-	/* draw the sprites */
-	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 8)
-	{
-		int data2 = spriteram[offs + 4] | (spriteram[offs + 5] << 8);
-		int priority = (data2 >> 4) & 1;
-
-		/* turns out the sprites are the same as in aerofgt.c */
-		if ((data2 & 0x80) && priority == draw_priority)
-		{
-			int data0 = spriteram[offs + 0] | (spriteram[offs + 1] << 8);
-			int data1 = spriteram[offs + 2] | (spriteram[offs + 3] << 8);
-			int data3 = spriteram[offs + 6] | (spriteram[offs + 7] << 8);
-			int code = data3 & 0xfff;
-			int color = data2 & 0x0f;
-			int y = (data0 & 0x1ff) - 6;
-			int x = (data1 & 0x1ff) - 13;
-			int yzoom = (data0 >> 12) & 15;
-			int xzoom = (data1 >> 12) & 15;
-			int zoomed = (xzoom | yzoom);
-			int ytiles = ((data2 >> 12) & 7) + 1;
-			int xtiles = ((data2 >> 8) & 7) + 1;
-			int yflip = (data2 >> 15) & 1;
-			int xflip = (data2 >> 11) & 1;
-			int xt, yt;
-
-			/* compute the zoom factor -- stolen from aerofgt.c */
-			xzoom = 16 - zoomtable[xzoom] / 8;
-			yzoom = 16 - zoomtable[yzoom] / 8;
-
-			/* wrap around */
-			if (x > visarea.max_x)
-				x -= 0x200;
-			if (y > visarea.max_y)
-				y -= 0x200;
-
-			/* flip ? */
-			if (state->m_flipscreen)
-			{
-				y = visarea.max_y - y - 16 * ytiles - 4;
-				x = visarea.max_x - x - 16 * xtiles - 24;
-				xflip=!xflip;
-				yflip=!yflip;
-			}
-
-			/* normal case */
-			if (!xflip && !yflip)
-			{
-				for (yt = 0; yt < ytiles; yt++)
-					for (xt = 0; xt < xtiles; xt++, code++)
-						if (!zoomed)
-							drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 0, 0,
-									x + xt * 16, y + yt * 16, 15);
-						else
-							drawgfxzoom_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 0, 0,
-									x + xt * xzoom, y + yt * yzoom,
-									0x1000 * xzoom, 0x1000 * yzoom, 15);
-			}
-
-			/* xflipped case */
-			else if (xflip && !yflip)
-			{
-				for (yt = 0; yt < ytiles; yt++)
-					for (xt = 0; xt < xtiles; xt++, code++)
-						if (!zoomed)
-							drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 1, 0,
-									x + (xtiles - 1 - xt) * 16, y + yt * 16, 15);
-						else
-							drawgfxzoom_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 1, 0,
-									x + (xtiles - 1 - xt) * xzoom, y + yt * yzoom,
-									0x1000 * xzoom, 0x1000 * yzoom, 15);
-			}
-
-			/* yflipped case */
-			else if (!xflip && yflip)
-			{
-				for (yt = 0; yt < ytiles; yt++)
-					for (xt = 0; xt < xtiles; xt++, code++)
-						if (!zoomed)
-							drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 0, 1,
-									x + xt * 16, y + (ytiles - 1 - yt) * 16, 15);
-						else
-							drawgfxzoom_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 0, 1,
-									x + xt * xzoom, y + (ytiles - 1 - yt) * yzoom,
-									0x1000 * xzoom, 0x1000 * yzoom, 15);
-			}
-
-			/* x & yflipped case */
-			else
-			{
-				for (yt = 0; yt < ytiles; yt++)
-					for (xt = 0; xt < xtiles; xt++, code++)
-						if (!zoomed)
-							drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 1, 1,
-									x + (xtiles - 1 - xt) * 16, y + (ytiles - 1 - yt) * 16, 15);
-						else
-							drawgfxzoom_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, 1, 1,
-									x + (xtiles - 1 - xt) * xzoom, y + (ytiles - 1 - yt) * yzoom,
-									0x1000 * xzoom, 0x1000 * yzoom, 15);
-			}
-		}
-	}
-}
-
 
 
 /*************************************
@@ -410,33 +292,31 @@ static void draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, const rec
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( fromance )
+UINT32 fromance_state::screen_update_fromance(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	fromance_state *state = screen.machine().driver_data<fromance_state>();
 
-	state->m_bg_tilemap->set_scrollx(0, state->m_scrollx[0]);
-	state->m_bg_tilemap->set_scrolly(0, state->m_scrolly[0]);
-	state->m_fg_tilemap->set_scrollx(0, state->m_scrollx[1]);
-	state->m_fg_tilemap->set_scrolly(0, state->m_scrolly[1]);
+	m_bg_tilemap->set_scrollx(0, m_scrollx[0]);
+	m_bg_tilemap->set_scrolly(0, m_scrolly[0]);
+	m_fg_tilemap->set_scrollx(0, m_scrollx[1]);
+	m_fg_tilemap->set_scrolly(0, m_scrolly[1]);
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
 
-SCREEN_UPDATE_IND16( pipedrm )
+UINT32 fromance_state::screen_update_pipedrm(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	fromance_state *state = screen.machine().driver_data<fromance_state>();
 
 	/* there seems to be no logical mapping for the X scroll register -- maybe it's gone */
-	state->m_bg_tilemap->set_scrolly(0, state->m_scrolly[1]);
-	state->m_fg_tilemap->set_scrolly(0, state->m_scrolly[0]);
+	m_bg_tilemap->set_scrolly(0, m_scrolly[1]);
+	m_fg_tilemap->set_scrolly(0, m_scrolly[0]);
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 
-	draw_sprites(screen, bitmap, cliprect, 0);
-	draw_sprites(screen, bitmap, cliprect, 1);
+	m_spr_old->draw_sprites_pipedrm(m_spriteram, m_spriteram.bytes(), m_flipscreen, screen, bitmap, cliprect, 0);
+	m_spr_old->draw_sprites_pipedrm(m_spriteram, m_spriteram.bytes(), m_flipscreen, screen, bitmap, cliprect, 1);
 	return 0;
 }

@@ -290,9 +290,9 @@ VIDEO_START_MEMBER(megasys1_state,megasys1)
 #define TILES_PER_PAGE_Y (0x20)
 #define TILES_PER_PAGE (TILES_PER_PAGE_X * TILES_PER_PAGE_Y)
 
-INLINE void scrollram_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask, int which)
+INLINE void scrollram_w(address_space &space, offs_t offset, UINT16 data, UINT16 mem_mask, int which)
 {
-	megasys1_state *state = space->machine().driver_data<megasys1_state>();
+	megasys1_state *state = space.machine().driver_data<megasys1_state>();
 	COMBINE_DATA(&state->m_scrollram[which][offset]);
 	if (offset < 0x40000/2 && state->m_tmap[which])
 	{
@@ -310,9 +310,9 @@ INLINE void scrollram_w(address_space *space, offs_t offset, UINT16 data, UINT16
 	}
 }
 
-WRITE16_MEMBER(megasys1_state::megasys1_scrollram_0_w){ scrollram_w(&space, offset, data, mem_mask, 0); }
-WRITE16_MEMBER(megasys1_state::megasys1_scrollram_1_w){ scrollram_w(&space, offset, data, mem_mask, 1); }
-WRITE16_MEMBER(megasys1_state::megasys1_scrollram_2_w){ scrollram_w(&space, offset, data, mem_mask, 2); }
+WRITE16_MEMBER(megasys1_state::megasys1_scrollram_0_w){ scrollram_w(space, offset, data, mem_mask, 0); }
+WRITE16_MEMBER(megasys1_state::megasys1_scrollram_1_w){ scrollram_w(space, offset, data, mem_mask, 1); }
+WRITE16_MEMBER(megasys1_state::megasys1_scrollram_2_w){ scrollram_w(space, offset, data, mem_mask, 2); }
 
 
 
@@ -917,13 +917,12 @@ PALETTE_INIT_MEMBER(megasys1_state,megasys1)
 ***************************************************************************/
 
 
-SCREEN_UPDATE_IND16( megasys1 )
+UINT32 megasys1_state::screen_update_megasys1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	megasys1_state *state = screen.machine().driver_data<megasys1_state>();
 	int i,flag,pri,primask;
 	int active_layers;
 
-	if (state->m_hardware_type_z)
+	if (m_hardware_type_z)
 	{
 		/* no layer 2 and fixed layers order? */
 		active_layers = 0x000b;
@@ -934,12 +933,12 @@ SCREEN_UPDATE_IND16( megasys1 )
 		int reallyactive = 0;
 
 		/* get layers order */
-		pri = state->m_layers_order[(state->m_active_layers & 0x0f0f) >> 8];
+		pri = m_layers_order[(m_active_layers & 0x0f0f) >> 8];
 
 #ifdef MAME_DEBUG
 		if (pri == 0xfffff)
 		{
-			popmessage("Pri: %04X - Flag: %04X", state->m_active_layers, state->m_sprite_flag);
+			popmessage("Pri: %04X - Flag: %04X", m_active_layers, m_sprite_flag);
 		}
 #endif
 
@@ -949,24 +948,24 @@ SCREEN_UPDATE_IND16( megasys1 )
 		for (i = 0;i < 5;i++)
 			reallyactive |= 1 << ((pri >> (4*i)) & 0x0f);
 
-		active_layers = state->m_active_layers & reallyactive;
+		active_layers = m_active_layers & reallyactive;
 		active_layers |= 1 << ((pri & 0xf0000) >> 16);	// bottom layer can't be disabled
 	}
 
-	screen.machine().tilemap().set_flip_all((state->m_screen_flag & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0 );
+	machine().tilemap().set_flip_all((m_screen_flag & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0 );
 
 	for (i = 0;i < 3;i++)
 	{
-		if (state->m_tmap[i])
+		if (m_tmap[i])
 		{
-			state->m_tmap[i]->enable(active_layers & (1 << i));
+			m_tmap[i]->enable(active_layers & (1 << i));
 
-			state->m_tmap[i]->set_scrollx(0,state->m_scrollx[i]);
-			state->m_tmap[i]->set_scrolly(0,state->m_scrolly[i]);
+			m_tmap[i]->set_scrollx(0,m_scrollx[i]);
+			m_tmap[i]->set_scrolly(0,m_scrolly[i]);
 		}
 	}
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
 	flag = TILEMAP_DRAW_OPAQUE;
 	primask = 0;
@@ -981,9 +980,9 @@ SCREEN_UPDATE_IND16( megasys1 )
 			case 0:
 			case 1:
 			case 2:
-				if ( (state->m_tmap[layer]) && (active_layers & (1 << layer) ) )
+				if ( (m_tmap[layer]) && (active_layers & (1 << layer) ) )
 				{
-					state->m_tmap[layer]->draw(bitmap, cliprect, flag,primask);
+					m_tmap[layer]->draw(bitmap, cliprect, flag,primask);
 					flag = 0;
 				}
 				break;
@@ -995,7 +994,7 @@ SCREEN_UPDATE_IND16( megasys1 )
 					bitmap.fill(0, cliprect);
 				}
 
-				if (state->m_sprite_flag & 0x100)	/* sprites are split */
+				if (m_sprite_flag & 0x100)	/* sprites are split */
 				{
 					/* following tilemaps will obscure this sprites layer */
 					primask |= 1 << (layer-3);
@@ -1009,23 +1008,22 @@ SCREEN_UPDATE_IND16( megasys1 )
 	}
 
 	if (active_layers & 0x08)
-		draw_sprites(screen.machine(),bitmap,cliprect);
+		draw_sprites(machine(),bitmap,cliprect);
 	return 0;
 }
 
-SCREEN_VBLANK( megasys1 )
+void megasys1_state::screen_eof_megasys1(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		megasys1_state *state = screen.machine().driver_data<megasys1_state>();
 		/* Sprite are TWO frames ahead, like NMK16 HW. */
-	//state->m_objectram
-		memcpy(state->m_buffer2_objectram,state->m_buffer_objectram, 0x2000);
-		memcpy(state->m_buffer_objectram, state->m_objectram, 0x2000);
+	//m_objectram
+		memcpy(m_buffer2_objectram,m_buffer_objectram, 0x2000);
+		memcpy(m_buffer_objectram, m_objectram, 0x2000);
 	//spriteram16
-		memcpy(state->m_buffer2_spriteram16, state->m_buffer_spriteram16, 0x2000);
-		memcpy(state->m_buffer_spriteram16, state->m_spriteram, 0x2000);
+		memcpy(m_buffer2_spriteram16, m_buffer_spriteram16, 0x2000);
+		memcpy(m_buffer_spriteram16, m_spriteram, 0x2000);
 	}
 
 }

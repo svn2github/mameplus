@@ -48,10 +48,10 @@ VO_BORDER_COL
 ---- ---- ---- ---- xxxx xxxx ---- ---- Green
 ---- ---- ---- ---- ---- ---- xxxx xxxx Blue
 */
-#define vo_border_K ((state->pvrta_regs[VO_BORDER_COL] & 0x01000000) >> 24)
-#define vo_border_R ((state->pvrta_regs[VO_BORDER_COL] & 0x00ff0000) >> 16)
-#define vo_border_G ((state->pvrta_regs[VO_BORDER_COL] & 0x0000ff00) >> 8)
-#define vo_border_B ((state->pvrta_regs[VO_BORDER_COL] & 0x000000ff) >> 0)
+#define vo_border_K ((pvrta_regs[VO_BORDER_COL] & 0x01000000) >> 24)
+#define vo_border_R ((pvrta_regs[VO_BORDER_COL] & 0x00ff0000) >> 16)
+#define vo_border_G ((pvrta_regs[VO_BORDER_COL] & 0x0000ff00) >> 8)
+#define vo_border_B ((pvrta_regs[VO_BORDER_COL] & 0x000000ff) >> 0)
 
 /*
 SPG_HBLANK
@@ -92,7 +92,7 @@ VO_CONTROL
 #define spg_pclk_delay   ((state->pvrta_regs[VO_CONTROL] & 0x003f0000) >> 16)
 #define spg_pixel_double ((state->pvrta_regs[VO_CONTROL] & 0x00000100) >> 8)
 #define spg_field_mode   ((state->pvrta_regs[VO_CONTROL] & 0x000000f0) >> 4)
-#define spg_blank_video  ((state->pvrta_regs[VO_CONTROL] & 0x00000008) >> 3)
+#define spg_blank_video  ((pvrta_regs[VO_CONTROL] & 0x00000008) >> 3)
 #define spg_blank_pol    ((state->pvrta_regs[VO_CONTROL] & 0x00000004) >> 2)
 #define spg_vsync_pol    ((state->pvrta_regs[VO_CONTROL] & 0x00000002) >> 1)
 #define spg_hsync_pol    ((state->pvrta_regs[VO_CONTROL] & 0x00000001) >> 0)
@@ -129,7 +129,7 @@ static UINT32 dilated0[15][1024];
 static UINT32 dilated1[15][1024];
 static int dilatechose[64];
 static float wbuffer[480][640];
-static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,int y);
+static void pvr_accumulationbuffer_to_framebuffer(address_space &space, int x,int y);
 
 // the real accumulation buffer is a 32x32x8bpp buffer into which tiles get rendered before they get copied to the framebuffer
 //  our implementation is not currently tile based, and thus the accumulation buffer is screen sized
@@ -981,7 +981,7 @@ INLINE int decode_reg_64(UINT32 offset, UINT64 mem_mask, UINT64 *shift)
 
 READ64_HANDLER( pvr_ta_r )
 {
-	dc_state *state = space->machine().driver_data<dc_state>();
+	dc_state *state = space.machine().driver_data<dc_state>();
 	int reg;
 	UINT64 shift;
 
@@ -993,19 +993,19 @@ READ64_HANDLER( pvr_ta_r )
 		{
 			UINT8 fieldnum,vsync,hsync,blank;
 
-			fieldnum = (space->machine().primary_screen->frame_number() & 1) ? 1 : 0;
+			fieldnum = (space.machine().primary_screen->frame_number() & 1) ? 1 : 0;
 
-			vsync = space->machine().primary_screen->vblank() ? 1 : 0;
+			vsync = space.machine().primary_screen->vblank() ? 1 : 0;
 			if(spg_vsync_pol) { vsync^=1; }
 
-			hsync = space->machine().primary_screen->hblank() ? 1 : 0;
+			hsync = space.machine().primary_screen->hblank() ? 1 : 0;
 			if(spg_hsync_pol) { hsync^=1; }
 
 			/* FIXME: following is just a wild guess */
-			blank = (space->machine().primary_screen->vblank() | space->machine().primary_screen->hblank()) ? 0 : 1;
+			blank = (space.machine().primary_screen->vblank() | space.machine().primary_screen->hblank()) ? 0 : 1;
 			if(spg_blank_pol) { blank^=1; }
 
-			state->pvrta_regs[reg] = (vsync << 13) | (hsync << 12) | (blank << 11) | (fieldnum << 10) | (space->machine().primary_screen->vpos() & 0x3ff);
+			state->pvrta_regs[reg] = (vsync << 13) | (hsync << 12) | (blank << 11) | (fieldnum << 10) | (space.machine().primary_screen->vpos() & 0x3ff);
 			break;
 		}
 	case SPG_TRIGGER_POS:
@@ -1017,14 +1017,14 @@ READ64_HANDLER( pvr_ta_r )
 
 	#if DEBUG_PVRTA_REGS
 	if (reg != 0x43)
-		mame_printf_verbose("PVRTA: [%08x] read %x @ %x (reg %x), mask %" I64FMT "x (PC=%x)\n", 0x5f8000+reg*4, state->pvrta_regs[reg], offset, reg, mem_mask, space->device().safe_pc());
+		mame_printf_verbose("PVRTA: [%08x] read %x @ %x (reg %x), mask %" I64FMT "x (PC=%x)\n", 0x5f8000+reg*4, state->pvrta_regs[reg], offset, reg, mem_mask, space.device().safe_pc());
 	#endif
 	return (UINT64)state->pvrta_regs[reg] << shift;
 }
 
 WRITE64_HANDLER( pvr_ta_w )
 {
-	dc_state *state = space->machine().driver_data<dc_state>();
+	dc_state *state = space.machine().driver_data<dc_state>();
 	int reg;
 	UINT64 shift;
 	UINT32 dat;
@@ -1099,7 +1099,7 @@ WRITE64_HANDLER( pvr_ta_w )
 
 				// we've got a request to draw, so, draw to the accumulation buffer!
 				// this should really be done for each tile!
-				render_to_accumulation_buffer(space->machine(),*fake_accumulationbuffer_bitmap,clip);
+				render_to_accumulation_buffer(space.machine(),*fake_accumulationbuffer_bitmap,clip);
 
 				state->endofrender_timer_isp->adjust(attotime::from_usec(4000) ); // hack, make sure render takes some amount of time
 
@@ -1118,15 +1118,15 @@ WRITE64_HANDLER( pvr_ta_w )
 				{
 					UINT32 st[6];
 
-					st[0]=space->read_dword((0x05000000+offsetra));
-					st[1]=space->read_dword((0x05000004+offsetra)); // Opaque List Pointer
-					st[2]=space->read_dword((0x05000008+offsetra)); // Opaque Modifier Volume List Pointer
-					st[3]=space->read_dword((0x0500000c+offsetra)); // Translucent List Pointer
-					st[4]=space->read_dword((0x05000010+offsetra)); // Translucent Modifier Volume List Pointer
+					st[0]=space.read_dword((0x05000000+offsetra));
+					st[1]=space.read_dword((0x05000004+offsetra)); // Opaque List Pointer
+					st[2]=space.read_dword((0x05000008+offsetra)); // Opaque Modifier Volume List Pointer
+					st[3]=space.read_dword((0x0500000c+offsetra)); // Translucent List Pointer
+					st[4]=space.read_dword((0x05000010+offsetra)); // Translucent Modifier Volume List Pointer
 
 					if (sizera == 6)
 					{
-						st[5] = space->read_dword((0x05000014+offsetra)); // Punch Through List Pointer
+						st[5] = space.read_dword((0x05000014+offsetra)); // Punch Through List Pointer
 						offsetra+=0x18;
 					}
 					else
@@ -1241,7 +1241,7 @@ WRITE64_HANDLER( pvr_ta_w )
 
 		// hack, this interrupt is generated after transfering a set amount of data
 		//state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_YUV;
-		//dc_update_interrupt_status(space->machine());
+		//dc_update_interrupt_status(space.machine());
 
 		break;
 	case TA_YUV_TEX_CTRL:
@@ -1253,8 +1253,8 @@ WRITE64_HANDLER( pvr_ta_w )
 		state->vbin_timer->adjust(attotime::never);
 		state->vbout_timer->adjust(attotime::never);
 
-		state->vbin_timer->adjust(space->machine().primary_screen->time_until_pos(spg_vblank_in_irq_line_num));
-		state->vbout_timer->adjust(space->machine().primary_screen->time_until_pos(spg_vblank_out_irq_line_num));
+		state->vbin_timer->adjust(space.machine().primary_screen->time_until_pos(spg_vblank_in_irq_line_num));
+		state->vbout_timer->adjust(space.machine().primary_screen->time_until_pos(spg_vblank_out_irq_line_num));
 		break;
 	/* TODO: timer adjust for SPG_HBLANK_INT too */
 	case TA_LIST_CONT:
@@ -1273,7 +1273,7 @@ WRITE64_HANDLER( pvr_ta_w )
 	case VO_STARTX:
 	case VO_STARTY:
 		{
-			rectangle visarea = space->machine().primary_screen->visible_area();
+			rectangle visarea = space.machine().primary_screen->visible_area();
 			/* FIXME: right visible area calculations aren't known yet*/
 			visarea.min_x = 0;
 			visarea.max_x = ((spg_hbstart - spg_hbend - vo_horz_start_pos) <= 0x180 ? 320 : 640) - 1;
@@ -1281,7 +1281,7 @@ WRITE64_HANDLER( pvr_ta_w )
 			visarea.max_y = ((spg_vbstart - spg_vbend - vo_vert_start_pos_f1) <= 0x100 ? 240 : 480) - 1;
 
 
-			space->machine().primary_screen->configure(spg_hbstart, spg_vbstart, visarea, space->machine().primary_screen->frame_period().attoseconds );
+			space.machine().primary_screen->configure(spg_hbstart, spg_vbstart, visarea, space.machine().primary_screen->frame_period().attoseconds );
 		}
 		break;
 	}
@@ -1292,44 +1292,39 @@ WRITE64_HANDLER( pvr_ta_w )
 	#endif
 }
 
-static TIMER_CALLBACK( transfer_opaque_list_irq )
+TIMER_CALLBACK_MEMBER(dc_state::transfer_opaque_list_irq)
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_OPLST;
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_OPLST;
+	dc_update_interrupt_status(machine());
 }
 
-static TIMER_CALLBACK( transfer_opaque_modifier_volume_list_irq )
+TIMER_CALLBACK_MEMBER(dc_state::transfer_opaque_modifier_volume_list_irq)
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_OPMV;
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_OPMV;
+	dc_update_interrupt_status(machine());
 }
 
-static TIMER_CALLBACK( transfer_translucent_list_irq )
+TIMER_CALLBACK_MEMBER(dc_state::transfer_translucent_list_irq)
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_TRLST;
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_TRLST;
+	dc_update_interrupt_status(machine());
 }
 
-static TIMER_CALLBACK( transfer_translucent_modifier_volume_list_irq )
+TIMER_CALLBACK_MEMBER(dc_state::transfer_translucent_modifier_volume_list_irq)
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_TRMV;
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_TRMV;
+	dc_update_interrupt_status(machine());
 }
 
-static TIMER_CALLBACK( transfer_punch_through_list_irq )
+TIMER_CALLBACK_MEMBER(dc_state::transfer_punch_through_list_irq)
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= (1 << 21);
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= (1 << 21);
+	dc_update_interrupt_status(machine());
 }
 
 static void process_ta_fifo(running_machine& machine)
@@ -1420,11 +1415,11 @@ static void process_ta_fifo(running_machine& machine)
 		/* FIXME: timing of these */
 		switch (state_ta.tafifo_listtype)
 		{
-		case 0: machine.scheduler().timer_set(attotime::from_usec(100), FUNC(transfer_opaque_list_irq)); break;
-		case 1: machine.scheduler().timer_set(attotime::from_usec(100), FUNC(transfer_opaque_modifier_volume_list_irq)); break;
-		case 2: machine.scheduler().timer_set(attotime::from_usec(100), FUNC(transfer_translucent_list_irq)); break;
-		case 3: machine.scheduler().timer_set(attotime::from_usec(100), FUNC(transfer_translucent_modifier_volume_list_irq)); break;
-		case 4: machine.scheduler().timer_set(attotime::from_usec(100), FUNC(transfer_punch_through_list_irq)); break;
+		case 0: machine.scheduler().timer_set(attotime::from_usec(100), timer_expired_delegate(FUNC(dc_state::transfer_opaque_list_irq),state)); break;
+		case 1: machine.scheduler().timer_set(attotime::from_usec(100), timer_expired_delegate(FUNC(dc_state::transfer_opaque_modifier_volume_list_irq),state)); break;
+		case 2: machine.scheduler().timer_set(attotime::from_usec(100), timer_expired_delegate(FUNC(dc_state::transfer_translucent_list_irq),state)); break;
+		case 3: machine.scheduler().timer_set(attotime::from_usec(100), timer_expired_delegate(FUNC(dc_state::transfer_translucent_modifier_volume_list_irq),state)); break;
+		case 4: machine.scheduler().timer_set(attotime::from_usec(100), timer_expired_delegate(FUNC(dc_state::transfer_punch_through_list_irq),state)); break;
 		}
 		state_ta.tafifo_listtype= -1; // no list being received
 		state_ta.listtype_used |= (2+8);
@@ -1628,7 +1623,7 @@ static void process_ta_fifo(running_machine& machine)
 
 WRITE64_HANDLER( ta_fifo_poly_w )
 {
-	dc_state *state = space->machine().driver_data<dc_state>();
+	dc_state *state = space.machine().driver_data<dc_state>();
 
 	if (mem_mask == U64(0xffffffffffffffff))	// 64 bit
 	{
@@ -1648,13 +1643,13 @@ WRITE64_HANDLER( ta_fifo_poly_w )
 
 	// if the command is complete, process it
 	if (state_ta.tafifo_pos == 0)
-		process_ta_fifo(space->machine());
+		process_ta_fifo(space.machine());
 
 }
 
 WRITE64_HANDLER( ta_fifo_yuv_w )
 {
-	//dc_state *state = space->machine().driver_data<dc_state>();
+	//dc_state *state = space.machine().driver_data<dc_state>();
 
 //  int reg;
 //  UINT64 shift;
@@ -1975,7 +1970,7 @@ static void render_tri(running_machine &machine, bitmap_rgb32 &bitmap, texinfo *
 static void render_to_accumulation_buffer(running_machine &machine,bitmap_rgb32 &bitmap,const rectangle &cliprect)
 {
 	dc_state *state = machine.driver_data<dc_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int cs,rs,ns;
 	UINT32 c;
 #if 0
@@ -1992,7 +1987,7 @@ static void render_to_accumulation_buffer(running_machine &machine,bitmap_rgb32 
 
 	rs=state_ta.renderselect;
 	c=state->pvrta_regs[ISP_BACKGND_T];
-	c=space->read_dword(0x05000000+((c&0xfffff8)>>1)+(3+3)*4);
+	c=space.read_dword(0x05000000+((c&0xfffff8)>>1)+(3+3)*4);
 	bitmap.fill(c, cliprect);
 
 
@@ -2045,9 +2040,9 @@ static void render_to_accumulation_buffer(running_machine &machine,bitmap_rgb32 
 
 */
 
-static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,int y)
+static void pvr_accumulationbuffer_to_framebuffer(address_space &space, int x,int y)
 {
-	dc_state *state = space->machine().driver_data<dc_state>();
+	dc_state *state = space.machine().driver_data<dc_state>();
 
 	// the accumulation buffer is always 8888
 	//
@@ -2083,7 +2078,7 @@ static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,in
 					                ((((data & 0x0000f800) >> 11)) << 5)  |
 									((((data & 0x00f80000) >> 19)) << 10);
 
-					space->write_word(realwriteoffs+xcnt*2, newdat);
+					space.write_word(realwriteoffs+xcnt*2, newdat);
 				}
 			}
 		}
@@ -2107,7 +2102,7 @@ static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,in
 					                ((((data & 0x0000fc00) >> 10)) << 5)  |
 									((((data & 0x00f80000) >> 19)) << 11);
 
-					space->write_word(realwriteoffs+xcnt*2, newdat);
+					space.write_word(realwriteoffs+xcnt*2, newdat);
 				}
 			}
 		}
@@ -2135,7 +2130,7 @@ static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,in
 									((((data & 0x00f80000) >> 19)) << 10);
 					// alpha?
 
-					space->write_word(realwriteoffs+xcnt*2, newdat);
+					space.write_word(realwriteoffs+xcnt*2, newdat);
 				}
 			}
 		}
@@ -2159,7 +2154,7 @@ static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,in
 					                ((((data & 0x0000fc00) >> 10)) << 5)  |
 									((((data & 0x00f80000) >> 19)) << 11);
 
-					space->write_word(realwriteoffs+xcnt*2, newdat);
+					space.write_word(realwriteoffs+xcnt*2, newdat);
 				}
 			}
 		}
@@ -2186,7 +2181,7 @@ static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,in
 					                ((((data & 0x0000fc00) >> 10)) << 5)  |
 									((((data & 0x00f80000) >> 19)) << 11);
 
-					space->write_word(realwriteoffs+xcnt*2, newdat);
+					space.write_word(realwriteoffs+xcnt*2, newdat);
 				}
 			}
 		}
@@ -2498,86 +2493,83 @@ static void pvr_build_parameterconfig(void)
 			pvr_parameterconfig[a] = pvr_parameterconfig[a-1];
 }
 
-static TIMER_CALLBACK(vbin)
+TIMER_CALLBACK_MEMBER(dc_state::vbin)
 {
-	dc_state *state = machine.driver_data<dc_state>();
+	dc_state *state = machine().driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_IN; // V Blank-in interrupt
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_IN; // V Blank-in interrupt
+	dc_update_interrupt_status(machine());
 
-	state->vbin_timer->adjust(machine.primary_screen->time_until_pos(spg_vblank_in_irq_line_num));
+	vbin_timer->adjust(machine().primary_screen->time_until_pos(spg_vblank_in_irq_line_num));
 }
 
-static TIMER_CALLBACK(vbout)
+TIMER_CALLBACK_MEMBER(dc_state::vbout)
 {
-	dc_state *state = machine.driver_data<dc_state>();
+	dc_state *state = machine().driver_data<dc_state>();
 
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_OUT; // V Blank-out interrupt
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_OUT; // V Blank-out interrupt
+	dc_update_interrupt_status(machine());
 
-	state->vbout_timer->adjust(machine.primary_screen->time_until_pos(spg_vblank_out_irq_line_num));
+	vbout_timer->adjust(machine().primary_screen->time_until_pos(spg_vblank_out_irq_line_num));
 }
 
-static TIMER_CALLBACK(hbin)
+TIMER_CALLBACK_MEMBER(dc_state::hbin)
 {
-	dc_state *state = machine.driver_data<dc_state>();
+	dc_state *state = machine().driver_data<dc_state>();
 
 	if(spg_hblank_int_mode & 1)
 	{
-		if(state->scanline == state->next_y)
+		if(scanline == next_y)
 		{
-			state->dc_sysctrl_regs[SB_ISTNRM] |= IST_HBL_IN; // H Blank-in interrupt
-			dc_update_interrupt_status(machine);
-			state->next_y+=spg_line_comp_val;
+			dc_sysctrl_regs[SB_ISTNRM] |= IST_HBL_IN; // H Blank-in interrupt
+			dc_update_interrupt_status(machine());
+			next_y+=spg_line_comp_val;
 		}
 	}
-	else if((state->scanline == spg_line_comp_val) || (spg_hblank_int_mode & 2))
+	else if((scanline == spg_line_comp_val) || (spg_hblank_int_mode & 2))
 	{
-		state->dc_sysctrl_regs[SB_ISTNRM] |= IST_HBL_IN; // H Blank-in interrupt
-		dc_update_interrupt_status(machine);
+		dc_sysctrl_regs[SB_ISTNRM] |= IST_HBL_IN; // H Blank-in interrupt
+		dc_update_interrupt_status(machine());
 	}
 
-//  printf("hbin on state->scanline %d\n",state->scanline);
+//  printf("hbin on scanline %d\n",scanline);
 
-	state->scanline++;
+	scanline++;
 
-	if(state->scanline >= spg_vblank_in_irq_line_num)
+	if(scanline >= spg_vblank_in_irq_line_num)
 	{
-		state->scanline = 0;
-		state->next_y = spg_line_comp_val;
+		scanline = 0;
+		next_y = spg_line_comp_val;
 	}
 
-	state->hbin_timer->adjust(machine.primary_screen->time_until_pos(state->scanline, spg_hblank_in_irq-1));
+	hbin_timer->adjust(machine().primary_screen->time_until_pos(scanline, spg_hblank_in_irq-1));
 }
 
 
 
-static TIMER_CALLBACK(endofrender_video)
+TIMER_CALLBACK_MEMBER(dc_state::endofrender_video)
 {
-	dc_state *state = machine.driver_data<dc_state>();
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOR_VIDEO;// VIDEO end of render
-	dc_update_interrupt_status(machine);
-	state->endofrender_timer_video->adjust(attotime::never);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOR_VIDEO;// VIDEO end of render
+	dc_update_interrupt_status(machine());
+	endofrender_timer_video->adjust(attotime::never);
 }
 
-static TIMER_CALLBACK(endofrender_tsp)
+TIMER_CALLBACK_MEMBER(dc_state::endofrender_tsp)
 {
-	dc_state *state = machine.driver_data<dc_state>();
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOR_TSP;	// TSP end of render
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOR_TSP;	// TSP end of render
+	dc_update_interrupt_status(machine());
 
-	state->endofrender_timer_tsp->adjust(attotime::never);
-	state->endofrender_timer_video->adjust(attotime::from_usec(500) );
+	endofrender_timer_tsp->adjust(attotime::never);
+	endofrender_timer_video->adjust(attotime::from_usec(500) );
 }
 
-static TIMER_CALLBACK(endofrender_isp)
+TIMER_CALLBACK_MEMBER(dc_state::endofrender_isp)
 {
-	dc_state *state = machine.driver_data<dc_state>();
-	state->dc_sysctrl_regs[SB_ISTNRM] |= IST_EOR_ISP;	// ISP end of render
-	dc_update_interrupt_status(machine);
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOR_ISP;	// ISP end of render
+	dc_update_interrupt_status(machine());
 
-	state->endofrender_timer_isp->adjust(attotime::never);
-	state->endofrender_timer_tsp->adjust(attotime::from_usec(500) );
+	endofrender_timer_isp->adjust(attotime::never);
+	endofrender_timer_tsp->adjust(attotime::from_usec(500) );
 }
 
 
@@ -2613,21 +2605,21 @@ void dc_state::video_start()
 
 	computedilated();
 
-	vbout_timer = machine().scheduler().timer_alloc(FUNC(vbout));
+	vbout_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dc_state::vbout),this));
 	vbout_timer->adjust(machine().primary_screen->time_until_pos(spg_vblank_out_irq_line_num_new));
 
-	vbin_timer = machine().scheduler().timer_alloc(FUNC(vbin));
+	vbin_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dc_state::vbin),this));
 	vbin_timer->adjust(machine().primary_screen->time_until_pos(spg_vblank_in_irq_line_num_new));
 
-	hbin_timer = machine().scheduler().timer_alloc(FUNC(hbin));
+	hbin_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dc_state::hbin),this));
 	hbin_timer->adjust(machine().primary_screen->time_until_pos(0, spg_hblank_in_irq_new-1));
 
 	scanline = 0;
 	next_y = 0;
 
-	endofrender_timer_isp = machine().scheduler().timer_alloc(FUNC(endofrender_isp));
-	endofrender_timer_tsp = machine().scheduler().timer_alloc(FUNC(endofrender_tsp));
-	endofrender_timer_video = machine().scheduler().timer_alloc(FUNC(endofrender_video));
+	endofrender_timer_isp = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dc_state::endofrender_isp),this));
+	endofrender_timer_tsp = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dc_state::endofrender_tsp),this));
+	endofrender_timer_video = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(dc_state::endofrender_video),this));
 
 	endofrender_timer_isp->adjust(attotime::never);
 	endofrender_timer_tsp->adjust(attotime::never);
@@ -2637,9 +2629,8 @@ void dc_state::video_start()
 
 }
 
-SCREEN_UPDATE_RGB32(dc)
+UINT32 dc_state::screen_update_dc(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	dc_state *state = screen.machine().driver_data<dc_state>();
 
 	/******************
       MAME note
@@ -2659,7 +2650,7 @@ SCREEN_UPDATE_RGB32(dc)
 //  int y,x;
 
 #if DEBUG_PALRAM
-	debug_paletteram(screen.machine());
+	debug_paletteram(machine());
 #endif
 
 	// copy our fake framebuffer bitmap (where things have been rendered) to the screen
@@ -2678,10 +2669,10 @@ SCREEN_UPDATE_RGB32(dc)
 	bitmap.fill(MAKE_ARGB(0xff,vo_border_R,vo_border_G,vo_border_B), cliprect); //FIXME: Chroma bit?
 
 	if(!spg_blank_video)
-		pvr_drawframebuffer(screen.machine(),bitmap,cliprect);
+		pvr_drawframebuffer(machine(),bitmap,cliprect);
 
 	// update this here so we only do string lookup once per frame
-	state->debug_dip_status = screen.machine().root_device().ioport("MAMEDEBUG")->read();
+	debug_dip_status = machine().root_device().ioport("MAMEDEBUG")->read();
 
 	return 0;
 }
@@ -2741,7 +2732,7 @@ READ32_HANDLER( elan_regs_r )
 		case 0x78/4: // IRQ MASK
 			return 0;
 		default:
-			printf("%08x %08x\n",space->device().safe_pc(),offset*4);
+			printf("%08x %08x\n",space.device().safe_pc(),offset*4);
 			break;
 	}
 
@@ -2753,7 +2744,7 @@ WRITE32_HANDLER( elan_regs_w )
 	switch(offset)
 	{
 		default:
-			printf("%08x %08x %08x W\n",space->device().safe_pc(),offset*4,data);
+			printf("%08x %08x %08x W\n",space.device().safe_pc(),offset*4,data);
 			break;
 	}
 }

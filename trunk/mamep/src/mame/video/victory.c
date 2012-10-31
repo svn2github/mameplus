@@ -80,12 +80,11 @@ static void victory_update_irq(running_machine &machine)
 }
 
 
-INTERRUPT_GEN( victory_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(victory_state::victory_vblank_interrupt)
 {
-	victory_state *state = device->machine().driver_data<victory_state>();
-	state->m_vblank_irq = 1;
+	m_vblank_irq = 1;
 
-	victory_update_irq(device->machine());
+	victory_update_irq(machine());
 }
 
 
@@ -1069,13 +1068,12 @@ static void update_foreground(running_machine &machine)
 }
 
 
-static TIMER_CALLBACK( bgcoll_irq_callback )
+TIMER_CALLBACK_MEMBER(victory_state::bgcoll_irq_callback)
 {
-	victory_state *state = machine.driver_data<victory_state>();
-	state->m_bgcollx = param & 0xff;
-	state->m_bgcolly = param >> 8;
-	state->m_bgcoll = 1;
-	victory_update_irq(machine);
+	m_bgcollx = param & 0xff;
+	m_bgcolly = param >> 8;
+	m_bgcoll = 1;
+	victory_update_irq(machine());
 }
 
 
@@ -1086,36 +1084,35 @@ static TIMER_CALLBACK( bgcoll_irq_callback )
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( victory )
+UINT32 victory_state::screen_update_victory(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	victory_state *state = screen.machine().driver_data<victory_state>();
-	int bgcollmask = (state->m_video_control & 4) ? 4 : 7;
+	int bgcollmask = (m_video_control & 4) ? 4 : 7;
 	int count = 0;
 	int x, y;
 
 	/* copy the palette from palette RAM */
-	set_palette(screen.machine());
+	set_palette(machine());
 
 	/* update the foreground & background */
-	update_foreground(screen.machine());
-	update_background(screen.machine());
+	update_foreground(machine());
+	update_background(machine());
 
 	/* blend the bitmaps and do collision detection */
 	for (y = 0; y < 256; y++)
 	{
 		UINT16 *scanline = &bitmap.pix16(y);
-		UINT8 sy = state->m_scrolly + y;
-		UINT8 *fg = &state->m_fgbitmap[y * 256];
-		UINT8 *bg = &state->m_bgbitmap[sy * 256];
+		UINT8 sy = m_scrolly + y;
+		UINT8 *fg = &m_fgbitmap[y * 256];
+		UINT8 *bg = &m_bgbitmap[sy * 256];
 
 		/* do the blending */
 		for (x = 0; x < 256; x++)
 		{
 			int fpix = *fg++;
-			int bpix = bg[(x + state->m_scrollx) & 255];
+			int bpix = bg[(x + m_scrollx) & 255];
 			scanline[x] = bpix | (fpix << 3);
 			if (fpix && (bpix & bgcollmask) && count++ < 128)
-				screen.machine().scheduler().timer_set(screen.time_until_pos(y, x), FUNC(bgcoll_irq_callback), x | (y << 8));
+				machine().scheduler().timer_set(screen.time_until_pos(y, x), timer_expired_delegate(FUNC(victory_state::bgcoll_irq_callback),this), x | (y << 8));
 		}
 	}
 

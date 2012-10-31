@@ -44,9 +44,8 @@ TILE_GET_INFO_MEMBER(atarig1_state::get_playfield_tile_info)
 
 VIDEO_START_MEMBER(atarig1_state,atarig1)
 {
-
 	/* blend the playfields and free the temporary one */
-	atarigen_blend_gfx(machine(), 0, 2, 0x0f, 0x10);
+	blend_gfx(0, 2, 0x0f, 0x10);
 
 	/* initialize the playfield */
 	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(atarig1_state::get_playfield_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,64);
@@ -78,25 +77,24 @@ VIDEO_START_MEMBER(atarig1_state,atarig1)
 
 WRITE16_HANDLER( atarig1_mo_control_w )
 {
-	atarig1_state *state = space->machine().driver_data<atarig1_state>();
+	atarig1_state *state = space.machine().driver_data<atarig1_state>();
 
-	logerror("MOCONT = %d (scan = %d)\n", data, space->machine().primary_screen->vpos());
+	logerror("MOCONT = %d (scan = %d)\n", data, space.machine().primary_screen->vpos());
 
 	/* set the control value */
 	COMBINE_DATA(&state->m_current_control);
 }
 
 
-void atarig1_scanline_update(screen_device &screen, int scanline)
+void atarig1_state::scanline_update(screen_device &screen, int scanline)
 {
-	atarig1_state *state = screen.machine().driver_data<atarig1_state>();
-	UINT16 *base = &state->m_alpha[(scanline / 8) * 64 + 48];
+	UINT16 *base = &m_alpha[(scanline / 8) * 64 + 48];
 	int i;
 
 	//if (scanline == 0) logerror("-------\n");
 
 	/* keep in range */
-	if (base >= &state->m_alpha[0x800])
+	if (base >= &m_alpha[0x800])
 		return;
 	screen.update_partial(MAX(scanline - 1, 0));
 
@@ -109,12 +107,12 @@ void atarig1_scanline_update(screen_device &screen, int scanline)
 		word = *base++;
 		if (word & 0x8000)
 		{
-			int newscroll = ((word >> 6) + state->m_pfscroll_xoffset) & 0x1ff;
-			if (newscroll != state->m_playfield_xscroll)
+			int newscroll = ((word >> 6) + m_pfscroll_xoffset) & 0x1ff;
+			if (newscroll != m_playfield_xscroll)
 			{
 				screen.update_partial(MAX(scanline + i - 1, 0));
-				state->m_playfield_tilemap->set_scrollx(0, newscroll);
-				state->m_playfield_xscroll = newscroll;
+				m_playfield_tilemap->set_scrollx(0, newscroll);
+				m_playfield_xscroll = newscroll;
 			}
 		}
 
@@ -124,17 +122,17 @@ void atarig1_scanline_update(screen_device &screen, int scanline)
 		{
 			int newscroll = ((word >> 6) - (scanline + i)) & 0x1ff;
 			int newbank = word & 7;
-			if (newscroll != state->m_playfield_yscroll)
+			if (newscroll != m_playfield_yscroll)
 			{
 				screen.update_partial(MAX(scanline + i - 1, 0));
-				state->m_playfield_tilemap->set_scrolly(0, newscroll);
-				state->m_playfield_yscroll = newscroll;
+				m_playfield_tilemap->set_scrolly(0, newscroll);
+				m_playfield_yscroll = newscroll;
 			}
-			if (newbank != state->m_playfield_tile_bank)
+			if (newbank != m_playfield_tile_bank)
 			{
 				screen.update_partial(MAX(scanline + i - 1, 0));
-				state->m_playfield_tilemap->mark_all_dirty();
-				state->m_playfield_tile_bank = newbank;
+				m_playfield_tilemap->mark_all_dirty();
+				m_playfield_tile_bank = newbank;
 			}
 		}
 	}
@@ -148,28 +146,26 @@ void atarig1_scanline_update(screen_device &screen, int scanline)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( atarig1 )
+UINT32 atarig1_state::screen_update_atarig1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	atarig1_state *state = screen.machine().driver_data<atarig1_state>();
 
 	/* draw the playfield */
-	state->m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* copy the motion objects on top */
-	copybitmap_trans(bitmap, *atarirle_get_vram(state->m_rle, 0), 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, *atarirle_get_vram(m_rle, 0), 0, 0, 0, 0, cliprect, 0);
 
 	/* add the alpha on top */
-	state->m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
-SCREEN_VBLANK( atarig1 )
+void atarig1_state::screen_eof_atarig1(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		atarig1_state *state = screen.machine().driver_data<atarig1_state>();
 
-		atarirle_eof(state->m_rle);
+		atarirle_eof(m_rle);
 	}
 }

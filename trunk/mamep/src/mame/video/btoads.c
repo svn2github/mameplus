@@ -123,13 +123,13 @@ WRITE16_MEMBER( btoads_state::scroll1_w )
 
 WRITE16_MEMBER( btoads_state::paletteram_w )
 {
-	tlc34076_w(m_tlc34076, offset/2, data);
+	tlc34076_w(m_tlc34076, space, offset/2, data);
 }
 
 
 READ16_MEMBER( btoads_state::paletteram_r )
 {
-	return tlc34076_r(m_tlc34076, offset/2);
+	return tlc34076_r(m_tlc34076, space, offset/2);
 }
 
 
@@ -257,7 +257,7 @@ void btoads_state::render_sprite_row(UINT16 *sprite_source, UINT32 address)
  *
  *************************************/
 
-void btoads_state::to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+void btoads_state::to_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
 	address &= ~0x40000000;
 
@@ -284,7 +284,7 @@ void btoads_state::to_shiftreg(address_space *space, UINT32 address, UINT16 *shi
 }
 
 
-void btoads_state::from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
+void btoads_state::from_shiftreg(address_space &space, UINT32 address, UINT16 *shiftreg)
 {
 	address &= ~0x40000000;
 

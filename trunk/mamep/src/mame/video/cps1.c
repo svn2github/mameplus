@@ -1547,20 +1547,6 @@ MACHINE_RESET_MEMBER(cps_state,cps)
 		m_game_config = pCFG;
 	}
 
-	if (strcmp(gamename, "sf2rb") == 0)
-	{
-		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
-		rom[0xe5464 / 2] = 0x6012;
-	}
-
-	if (strcmp(gamename, "sf2rb2") == 0)
-	{
-		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
-		rom[0xe5332 / 2] = 0x6014;
-	}
-
 #if 0
 	if (strcmp(gamename, "sf2accp2") == 0)
 	{
@@ -2859,57 +2845,56 @@ static void cps1_render_high_layer( running_machine &machine, bitmap_ind16 &bitm
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( cps1 )
+UINT32 cps_state::screen_update_cps1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	cps_state *state = screen.machine().driver_data<cps_state>();
 	int layercontrol, l0, l1, l2, l3;
-	int videocontrol = state->m_cps_a_regs[CPS1_VIDEOCONTROL];
+	int videocontrol = m_cps_a_regs[CPS1_VIDEOCONTROL];
 
-	state->flip_screen_set(videocontrol & 0x8000);
+	flip_screen_set(videocontrol & 0x8000);
 
-	layercontrol = state->m_cps_b_regs[state->m_game_config->layer_control / 2];
+	layercontrol = m_cps_b_regs[m_game_config->layer_control / 2];
 
 	/* Get video memory base registers */
-	cps1_get_video_base(screen.machine());
+	cps1_get_video_base(machine());
 
 	/* Find the offset of the last sprite in the sprite table */
-	cps1_find_last_sprite(screen.machine());
+	cps1_find_last_sprite(machine());
 
-	if (state->m_cps_version == 2)
+	if (m_cps_version == 2)
 	{
-		cps2_find_last_sprite(screen.machine());
+		cps2_find_last_sprite(machine());
 	}
 
-	cps1_update_transmasks(screen.machine());
+	cps1_update_transmasks(machine());
 
-	state->m_bg_tilemap[0]->set_scrollx(0, state->m_scroll1x);
-	state->m_bg_tilemap[0]->set_scrolly(0, state->m_scroll1y);
+	m_bg_tilemap[0]->set_scrollx(0, m_scroll1x);
+	m_bg_tilemap[0]->set_scrolly(0, m_scroll1y);
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
-		int scrly = -state->m_scroll2y;
+		int scrly = -m_scroll2y;
 		int i;
 		int otheroffs;
 
-		state->m_bg_tilemap[1]->set_scroll_rows(1024);
+		m_bg_tilemap[1]->set_scroll_rows(1024);
 
-		otheroffs = state->m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
+		otheroffs = m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
 
 		for (i = 0; i < 256; i++)
-			state->m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
+			m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, m_scroll2x + m_other[(i + otheroffs) & 0x3ff]);
 	}
 	else
 	{
-		state->m_bg_tilemap[1]->set_scroll_rows(1);
-		state->m_bg_tilemap[1]->set_scrollx(0, state->m_scroll2x);
+		m_bg_tilemap[1]->set_scroll_rows(1);
+		m_bg_tilemap[1]->set_scrollx(0, m_scroll2x);
 	}
-	state->m_bg_tilemap[1]->set_scrolly(0, state->m_scroll2y);
-	state->m_bg_tilemap[2]->set_scrollx(0, state->m_scroll3x);
-	state->m_bg_tilemap[2]->set_scrolly(0, state->m_scroll3y);
+	m_bg_tilemap[1]->set_scrolly(0, m_scroll2y);
+	m_bg_tilemap[2]->set_scrollx(0, m_scroll3x);
+	m_bg_tilemap[2]->set_scrolly(0, m_scroll3y);
 
 
 	/* Blank screen */
-	if (state->m_cps_version == 1)
+	if (m_cps_version == 1)
 	{
 		// CPS1 games use pen 0xbff as background color; this is used in 3wonders,
 		// mtwins (explosion during attract), mercs (intermission).
@@ -2922,7 +2907,7 @@ SCREEN_UPDATE_IND16( cps1 )
 		// Maybe Capcom changed the background handling due to the problems that
 		// it caused on several monitors (because the background extended into the
 		// blanking area instead of going black, causing the monitor to clip).
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 	}
 
 	cps1_render_stars(screen, bitmap, cliprect);
@@ -2932,46 +2917,46 @@ SCREEN_UPDATE_IND16( cps1 )
 	l1 = (layercontrol >> 0x08) & 03;
 	l2 = (layercontrol >> 0x0a) & 03;
 	l3 = (layercontrol >> 0x0c) & 03;
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
-	if (state->m_cps_version == 1)
+	if (m_cps_version == 1)
 	{
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l0, 0);
+		cps1_render_layer(machine(), bitmap, cliprect, l0, 0);
 
 		if (l1 == 0)
-			cps1_render_high_layer(screen.machine(), bitmap, cliprect, l0); /* prepare mask for sprites */
+			cps1_render_high_layer(machine(), bitmap, cliprect, l0); /* prepare mask for sprites */
 
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l1, 0);
+		cps1_render_layer(machine(), bitmap, cliprect, l1, 0);
 
 		if (l2 == 0)
-			cps1_render_high_layer(screen.machine(), bitmap, cliprect, l1); /* prepare mask for sprites */
+			cps1_render_high_layer(machine(), bitmap, cliprect, l1); /* prepare mask for sprites */
 
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l2, 0);
+		cps1_render_layer(machine(), bitmap, cliprect, l2, 0);
 
 		if (l3 == 0)
-			cps1_render_high_layer(screen.machine(), bitmap, cliprect, l2); /* prepare mask for sprites */
+			cps1_render_high_layer(machine(), bitmap, cliprect, l2); /* prepare mask for sprites */
 
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l3, 0);
+		cps1_render_layer(machine(), bitmap, cliprect, l3, 0);
 	}
 	else
 	{
 		int l0pri, l1pri, l2pri, l3pri;
 		int primasks[8], i;
-		l0pri = (state->m_pri_ctrl >> 4 * l0) & 0x0f;
-		l1pri = (state->m_pri_ctrl >> 4 * l1) & 0x0f;
-		l2pri = (state->m_pri_ctrl >> 4 * l2) & 0x0f;
-		l3pri = (state->m_pri_ctrl >> 4 * l3) & 0x0f;
+		l0pri = (m_pri_ctrl >> 4 * l0) & 0x0f;
+		l1pri = (m_pri_ctrl >> 4 * l1) & 0x0f;
+		l2pri = (m_pri_ctrl >> 4 * l2) & 0x0f;
+		l3pri = (m_pri_ctrl >> 4 * l3) & 0x0f;
 
 #if 0
-if (	(cps2_port(screen.machine(), CPS2_OBJ_BASE) != 0x7080 && cps2_port(screen.machine(), CPS2_OBJ_BASE) != 0x7000) ||
-		cps2_port(screen.machine(), CPS2_OBJ_UK1) != 0x807d ||
-		(cps2_port(screen.machine(), CPS2_OBJ_UK2) != 0x0000 && cps2_port(screen.machine(), CPS2_OBJ_UK2) != 0x1101 && cps2_port(screen.machine(), CPS2_OBJ_UK2) != 0x0001))
+if (	(cps2_port(machine(), CPS2_OBJ_BASE) != 0x7080 && cps2_port(machine(), CPS2_OBJ_BASE) != 0x7000) ||
+		cps2_port(machine(), CPS2_OBJ_UK1) != 0x807d ||
+		(cps2_port(machine(), CPS2_OBJ_UK2) != 0x0000 && cps2_port(machine(), CPS2_OBJ_UK2) != 0x1101 && cps2_port(machine(), CPS2_OBJ_UK2) != 0x0001))
 	popmessage("base %04x uk1 %04x uk2 %04x",
-			cps2_port(screen.machine(), CPS2_OBJ_BASE),
-			cps2_port(screen.machine(), CPS2_OBJ_UK1),
-			cps2_port(screen.machine(), CPS2_OBJ_UK2));
+			cps2_port(machine(), CPS2_OBJ_BASE),
+			cps2_port(machine(), CPS2_OBJ_UK1),
+			cps2_port(machine(), CPS2_OBJ_UK2));
 
-if (0 && screen.machine().input().code_pressed(KEYCODE_Z))
+if (0 && machine().input().code_pressed(KEYCODE_Z))
 	popmessage("order: %d (%d) %d (%d) %d (%d) %d (%d)",l0,l0pri,l1,l1pri,l2,l2pri,l3,l3pri);
 #endif
 
@@ -3002,29 +2987,28 @@ if (0 && screen.machine().input().code_pressed(KEYCODE_Z))
 			}
 		}
 
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l0, 1);
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l1, 2);
-		cps1_render_layer(screen.machine(), bitmap, cliprect, l2, 4);
-		cps2_render_sprites(screen.machine(), bitmap, cliprect, primasks);
+		cps1_render_layer(machine(), bitmap, cliprect, l0, 1);
+		cps1_render_layer(machine(), bitmap, cliprect, l1, 2);
+		cps1_render_layer(machine(), bitmap, cliprect, l2, 4);
+		cps2_render_sprites(machine(), bitmap, cliprect, primasks);
 	}
 
 	return 0;
 }
 
-SCREEN_VBLANK( cps1 )
+void cps_state::screen_eof_cps1(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		cps_state *state = screen.machine().driver_data<cps_state>();
 
 		/* Get video memory base registers */
-		cps1_get_video_base(screen.machine());
+		cps1_get_video_base(machine());
 
-		if (state->m_cps_version == 1)
+		if (m_cps_version == 1)
 		{
 			/* CPS1 sprites have to be delayed one frame */
-			memcpy(state->m_buffered_obj, state->m_obj, state->m_obj_size);
+			memcpy(m_buffered_obj, m_obj, m_obj_size);
 		}
 	}
 }

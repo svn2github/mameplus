@@ -122,7 +122,13 @@ class ngp_state : public driver_device
 {
 public:
 	ngp_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag)
+		, m_tlcs900( *this, "maincpu" )
+		, m_z80( *this, "soundcpu" )
+		, m_t6w28( *this, "t6w28" )
+		, m_dac_l( *this, "dac_l" )
+		, m_dac_r( *this, "dac_r" )
+		{ }
 
 	virtual void machine_start();
 	virtual void machine_reset();
@@ -141,11 +147,11 @@ public:
 		UINT8	command[2];
 	} m_flash_chip[2];
 
-	device_t *m_tlcs900;
-	device_t *m_z80;
-	device_t *m_t6w28;
-	dac_device *m_dac_l;
-	dac_device *m_dac_r;
+	required_device<cpu_device> m_tlcs900;
+	required_device<cpu_device> m_z80;
+	required_device<t6w28_device> m_t6w28;
+	required_device<dac_device> m_dac_l;
+	required_device<dac_device> m_dac_r;
 	device_t *m_k1ge;
 
 	DECLARE_READ8_MEMBER( ngp_io_r );
@@ -164,38 +170,40 @@ public:
 	DECLARE_WRITE8_MEMBER( ngp_vblank_pin_w );
 	DECLARE_WRITE8_MEMBER( ngp_hblank_pin_w );
 	DECLARE_WRITE8_MEMBER( ngp_tlcs900_to3 );
+	UINT32 screen_update_ngp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_INPUT_CHANGED_MEMBER(power_callback);
+	TIMER_CALLBACK_MEMBER(ngp_seconds_callback);
 };
 
 
-static TIMER_CALLBACK( ngp_seconds_callback )
+TIMER_CALLBACK_MEMBER(ngp_state::ngp_seconds_callback)
 {
-	ngp_state *state = machine.driver_data<ngp_state>();
 
-	state->m_io_reg[0x16] += 1;
-	if ( ( state->m_io_reg[0x16] & 0x0f ) == 0x0a )
+	m_io_reg[0x16] += 1;
+	if ( ( m_io_reg[0x16] & 0x0f ) == 0x0a )
 	{
-		state->m_io_reg[0x16] += 0x06;
+		m_io_reg[0x16] += 0x06;
 	}
 
-	if ( state->m_io_reg[0x16] >= 0x60 )
+	if ( m_io_reg[0x16] >= 0x60 )
 	{
-		state->m_io_reg[0x16] = 0;
-		state->m_io_reg[0x15] += 1;
-		if ( ( state->m_io_reg[0x15] & 0x0f ) == 0x0a ) {
-			state->m_io_reg[0x15] += 0x06;
+		m_io_reg[0x16] = 0;
+		m_io_reg[0x15] += 1;
+		if ( ( m_io_reg[0x15] & 0x0f ) == 0x0a ) {
+			m_io_reg[0x15] += 0x06;
 		}
 
-		if ( state->m_io_reg[0x15] >= 0x60 )
+		if ( m_io_reg[0x15] >= 0x60 )
 		{
-			state->m_io_reg[0x15] = 0;
-			state->m_io_reg[0x14] += 1;
-			if ( ( state->m_io_reg[0x14] & 0x0f ) == 0x0a ) {
-				state->m_io_reg[0x14] += 0x06;
+			m_io_reg[0x15] = 0;
+			m_io_reg[0x14] += 1;
+			if ( ( m_io_reg[0x14] & 0x0f ) == 0x0a ) {
+				m_io_reg[0x14] += 0x06;
 			}
 
-			if ( state->m_io_reg[0x14] == 0x24 )
+			if ( m_io_reg[0x14] == 0x24 )
 			{
-				state->m_io_reg[0x14] = 0;
+				m_io_reg[0x14] = 0;
 			}
 		}
 	}
@@ -229,7 +237,7 @@ WRITE8_MEMBER( ngp_state::ngp_io_w )
 	case 0x21:		/* t6w28 "left" */
 		if ( m_io_reg[0x38] == 0x55 && m_io_reg[0x39] == 0xAA )
 		{
-			t6w28_w( m_t6w28, 0, data );
+			m_t6w28->write( space, 0, data );
 		}
 		break;
 
@@ -248,8 +256,10 @@ WRITE8_MEMBER( ngp_state::ngp_io_w )
 		switch( data )
 		{
 		case 0x55:		/* Enabled sound */
+			m_t6w28->set_enable( true );
 			break;
 		case 0xAA:		/* Disable sound */
+			m_t6w28->set_enable( false );
 			break;
 		}
 		break;
@@ -258,18 +268,18 @@ WRITE8_MEMBER( ngp_state::ngp_io_w )
 		switch( data )
 		{
 		case 0x55:		/* Enable Z80 */
-			m_z80->execute().resume(SUSPEND_REASON_HALT );
+			m_z80->resume(SUSPEND_REASON_HALT );
 			m_z80->reset();
-			m_z80->execute().set_input_line(0, CLEAR_LINE );
+			m_z80->set_input_line(0, CLEAR_LINE );
 			break;
 		case 0xAA:		/* Disable Z80 */
-			m_z80->execute().suspend(SUSPEND_REASON_HALT, 1 );
+			m_z80->suspend(SUSPEND_REASON_HALT, 1 );
 			break;
 		}
 		break;
 
 	case 0x3a:	/* Trigger Z80 NMI */
-		m_z80->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
+		m_z80->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 		break;
 	}
 	m_io_reg[offset] = data;
@@ -525,13 +535,13 @@ WRITE8_MEMBER( ngp_state::ngp_z80_comm_w )
 
 WRITE8_MEMBER( ngp_state::ngp_z80_signal_main_w )
 {
-	m_tlcs900->execute().set_input_line(TLCS900_INT5, ASSERT_LINE );
+	m_tlcs900->set_input_line(TLCS900_INT5, ASSERT_LINE );
 }
 
 
 static ADDRESS_MAP_START( z80_mem, AS_PROGRAM, 8, ngp_state )
 	AM_RANGE( 0x0000, 0x0FFF )	AM_RAM AM_SHARE("share1")								/* shared with tlcs900 */
-	AM_RANGE( 0x4000, 0x4001 )	AM_DEVWRITE_LEGACY("t6w28", t6w28_w )					/* sound chip (right, left) */
+	AM_RANGE( 0x4000, 0x4001 )	AM_DEVWRITE("t6w28", t6w28_device, write )					/* sound chip (right, left) */
 	AM_RANGE( 0x8000, 0x8000 )	AM_READWRITE( ngp_z80_comm_r, ngp_z80_comm_w )	/* main-sound communication */
 	AM_RANGE( 0xc000, 0xc000 )	AM_WRITE( ngp_z80_signal_main_w )				/* signal irq to main cpu */
 ADDRESS_MAP_END
@@ -539,10 +549,10 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER( ngp_state::ngp_z80_clear_irq )
 {
-	m_z80->execute().set_input_line(0, CLEAR_LINE );
+	m_z80->set_input_line(0, CLEAR_LINE );
 
 	/* I am not exactly sure what causes the maincpu INT5 signal to be cleared. This will do for now. */
-	m_tlcs900->execute().set_input_line(TLCS900_INT5, CLEAR_LINE );
+	m_tlcs900->set_input_line(TLCS900_INT5, CLEAR_LINE );
 }
 
 
@@ -551,14 +561,12 @@ static ADDRESS_MAP_START( z80_io, AS_IO, 8, ngp_state )
 ADDRESS_MAP_END
 
 
-static INPUT_CHANGED( power_callback )
+INPUT_CHANGED_MEMBER(ngp_state::power_callback)
 {
-	ngp_state *state = field.machine().driver_data<ngp_state>();
 
-	if ( state->m_io_reg[0x33] & 0x04 )
+	if ( m_io_reg[0x33] & 0x04 )
 	{
-		state->m_tlcs900->execute().set_input_line(TLCS900_NMI,
-			(field.machine().root_device().ioport("Power")->read() & 0x01 ) ? CLEAR_LINE : ASSERT_LINE );
+		m_tlcs900->set_input_line(TLCS900_NMI, (machine().root_device().ioport("Power")->read() & 0x01 ) ? CLEAR_LINE : ASSERT_LINE );
 	}
 }
 
@@ -575,26 +583,26 @@ static INPUT_PORTS_START( ngp )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START("Power")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_CODE(KEYCODE_Q) PORT_NAME("Power") PORT_CHANGED(power_callback, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_CODE(KEYCODE_Q) PORT_NAME("Power") PORT_CHANGED_MEMBER(DEVICE_SELF, ngp_state, power_callback, NULL)
 INPUT_PORTS_END
 
 
 WRITE8_MEMBER( ngp_state::ngp_vblank_pin_w )
 {
-	m_tlcs900->execute().set_input_line(TLCS900_INT4, data ? ASSERT_LINE : CLEAR_LINE );
+	m_tlcs900->set_input_line(TLCS900_INT4, data ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
 WRITE8_MEMBER( ngp_state::ngp_hblank_pin_w )
 {
-	m_tlcs900->execute().set_input_line(TLCS900_TIO, data ? ASSERT_LINE : CLEAR_LINE );
+	m_tlcs900->set_input_line(TLCS900_TIO, data ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
 WRITE8_MEMBER( ngp_state::ngp_tlcs900_to3 )
 {
 	if ( data && ! m_old_to3 )
-		m_z80->execute().set_input_line(0, ASSERT_LINE );
+		m_z80->set_input_line(0, ASSERT_LINE );
 
 	m_old_to3 = data;
 }
@@ -602,7 +610,7 @@ WRITE8_MEMBER( ngp_state::ngp_tlcs900_to3 )
 
 void ngp_state::machine_start()
 {
-	m_seconds_timer = machine().scheduler().timer_alloc(FUNC(ngp_seconds_callback));
+	m_seconds_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(ngp_state::ngp_seconds_callback),this));
 	m_seconds_timer->adjust( attotime::from_seconds(1), 0, attotime::from_seconds(1) );
 }
 
@@ -610,23 +618,17 @@ void ngp_state::machine_start()
 void ngp_state::machine_reset()
 {
 	m_old_to3 = 0;
-	m_tlcs900 = machine().device( "maincpu" );
-	m_z80 = machine().device( "soundcpu" );
-	m_t6w28 = machine().device( "t6w28" );
-	m_dac_l = machine().device<dac_device>( "dac_l" );
-	m_dac_r = machine().device<dac_device>( "dac_r" );
 	m_k1ge = machine().device( "k1ge" );
 
-	m_z80->execute().suspend(SUSPEND_REASON_HALT, 1 );
-	m_z80->execute().set_input_line(0, CLEAR_LINE );
+	m_z80->suspend(SUSPEND_REASON_HALT, 1 );
+	m_z80->set_input_line(0, CLEAR_LINE );
 }
 
 
-static SCREEN_UPDATE_IND16( ngp )
+UINT32 ngp_state::screen_update_ngp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	ngp_state *state = screen.machine().driver_data<ngp_state>();
 
-	k1ge_update( state->m_k1ge, bitmap, cliprect );
+	k1ge_update( m_k1ge, bitmap, cliprect );
 	return 0;
 }
 
@@ -655,7 +657,7 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 	{
 		filesize = image.length();
 
-		if (filesize != 0x80000 && filesize != 0x100000 && filesize != 0x200000 && filesize != 0x400000)
+		if (filesize != 0x8000 && filesize != 0x80000 && filesize != 0x100000 && filesize != 0x200000 && filesize != 0x400000)
 		{
 			image.seterror(IMAGE_ERROR_UNSPECIFIED, "Incorrect or not support cartridge size");
 			return IMAGE_INIT_FAIL;
@@ -678,6 +680,7 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 	state->m_flash_chip[0].manufacturer_id = 0x98;
 	switch( filesize )
 	{
+	case 0x8000:
 	case 0x80000:
 		state->m_flash_chip[0].device_id = 0xab;
 		break;
@@ -777,7 +780,7 @@ static MACHINE_CONFIG_START( ngp_common, ngp_state )
 
 	MCFG_SCREEN_ADD( "screen", LCD )
 	MCFG_SCREEN_RAW_PARAMS( XTAL_6_144MHz, 515, 0, 160 /*480*/, 199, 0, 152 )
-	MCFG_SCREEN_UPDATE_STATIC( ngp )
+	MCFG_SCREEN_UPDATE_DRIVER(ngp_state, screen_update_ngp)
 
 	MCFG_DEFAULT_LAYOUT(layout_lcd)
 

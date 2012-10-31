@@ -48,12 +48,12 @@ void simpsons_sprite_callback( running_machine &machine, int *code, int *color, 
 
 READ8_MEMBER(simpsons_state::simpsons_k052109_r)
 {
-	return k052109_r(m_k052109, offset + 0x2000);
+	return k052109_r(m_k052109, space, offset + 0x2000);
 }
 
 WRITE8_MEMBER(simpsons_state::simpsons_k052109_w)
 {
-	k052109_w(m_k052109, offset + 0x2000, data);
+	k052109_w(m_k052109, space, offset + 0x2000, data);
 }
 
 READ8_MEMBER(simpsons_state::simpsons_k053247_r)
@@ -93,21 +93,21 @@ WRITE8_MEMBER(simpsons_state::simpsons_k053247_w)
 void simpsons_video_banking( running_machine &machine, int bank )
 {
 	simpsons_state *state = machine.driver_data<simpsons_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	if (bank & 1)
 	{
-		space->install_read_bank(0x0000, 0x0fff, "bank5");
-		space->install_write_handler(0x0000, 0x0fff, write8_delegate(FUNC(simpsons_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state));
+		space.install_read_bank(0x0000, 0x0fff, "bank5");
+		space.install_write_handler(0x0000, 0x0fff, write8_delegate(FUNC(simpsons_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state));
 		state->membank("bank5")->set_base(state->m_generic_paletteram_8);
 	}
 	else
-		space->install_legacy_readwrite_handler(*state->m_k052109, 0x0000, 0x0fff, FUNC(k052109_r), FUNC(k052109_w));
+		space.install_legacy_readwrite_handler(*state->m_k052109, 0x0000, 0x0fff, FUNC(k052109_r), FUNC(k052109_w));
 
 	if (bank & 2)
-		space->install_readwrite_handler(0x2000, 0x3fff, read8_delegate(FUNC(simpsons_state::simpsons_k053247_r),state), write8_delegate(FUNC(simpsons_state::simpsons_k053247_w),state));
+		space.install_readwrite_handler(0x2000, 0x3fff, read8_delegate(FUNC(simpsons_state::simpsons_k053247_r),state), write8_delegate(FUNC(simpsons_state::simpsons_k053247_w),state));
 	else
-		space->install_readwrite_handler(0x2000, 0x3fff, read8_delegate(FUNC(simpsons_state::simpsons_k052109_r),state), write8_delegate(FUNC(simpsons_state::simpsons_k052109_w),state));
+		space.install_readwrite_handler(0x2000, 0x3fff, read8_delegate(FUNC(simpsons_state::simpsons_k052109_r),state), write8_delegate(FUNC(simpsons_state::simpsons_k052109_w),state));
 }
 
 
@@ -118,34 +118,33 @@ void simpsons_video_banking( running_machine &machine, int bank )
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( simpsons )
+UINT32 simpsons_state::screen_update_simpsons(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	simpsons_state *state = screen.machine().driver_data<simpsons_state>();
 	int layer[3], bg_colorbase;
 
-	bg_colorbase = k053251_get_palette_index(state->m_k053251, K053251_CI0);
-	state->m_sprite_colorbase = k053251_get_palette_index(state->m_k053251, K053251_CI1);
-	state->m_layer_colorbase[0] = k053251_get_palette_index(state->m_k053251, K053251_CI2);
-	state->m_layer_colorbase[1] = k053251_get_palette_index(state->m_k053251, K053251_CI3);
-	state->m_layer_colorbase[2] = k053251_get_palette_index(state->m_k053251, K053251_CI4);
+	bg_colorbase = k053251_get_palette_index(m_k053251, K053251_CI0);
+	m_sprite_colorbase = k053251_get_palette_index(m_k053251, K053251_CI1);
+	m_layer_colorbase[0] = k053251_get_palette_index(m_k053251, K053251_CI2);
+	m_layer_colorbase[1] = k053251_get_palette_index(m_k053251, K053251_CI3);
+	m_layer_colorbase[2] = k053251_get_palette_index(m_k053251, K053251_CI4);
 
-	k052109_tilemap_update(state->m_k052109);
+	k052109_tilemap_update(m_k052109);
 
 	layer[0] = 0;
-	state->m_layerpri[0] = k053251_get_priority(state->m_k053251, K053251_CI2);
+	m_layerpri[0] = k053251_get_priority(m_k053251, K053251_CI2);
 	layer[1] = 1;
-	state->m_layerpri[1] = k053251_get_priority(state->m_k053251, K053251_CI3);
+	m_layerpri[1] = k053251_get_priority(m_k053251, K053251_CI3);
 	layer[2] = 2;
-	state->m_layerpri[2] = k053251_get_priority(state->m_k053251, K053251_CI4);
+	m_layerpri[2] = k053251_get_priority(m_k053251, K053251_CI4);
 
-	konami_sortlayers3(layer, state->m_layerpri);
+	konami_sortlayers3(layer, m_layerpri);
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 	bitmap.fill(16 * bg_colorbase, cliprect);
-	k052109_tilemap_draw(state->m_k052109, bitmap, cliprect, layer[0], 0, 1);
-	k052109_tilemap_draw(state->m_k052109, bitmap, cliprect, layer[1], 0, 2);
-	k052109_tilemap_draw(state->m_k052109, bitmap, cliprect, layer[2], 0, 4);
+	k052109_tilemap_draw(m_k052109, bitmap, cliprect, layer[0], 0, 1);
+	k052109_tilemap_draw(m_k052109, bitmap, cliprect, layer[1], 0, 2);
+	k052109_tilemap_draw(m_k052109, bitmap, cliprect, layer[2], 0, 4);
 
-	k053247_sprites_draw(state->m_k053246, bitmap, cliprect);
+	k053247_sprites_draw(m_k053246, bitmap, cliprect);
 	return 0;
 }

@@ -36,7 +36,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "includes/genesis.h"
 #include "includes/segas18.h"
 
 
@@ -127,7 +126,7 @@ void segas18_state::set_vdp_mixing(UINT8 mixing)
 void segas18_state::draw_vdp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority)
 {
 
-	bitmap_ind8 &priority_bitmap = screen.machine().priority_bitmap;
+	bitmap_ind8 &priority_bitmap = machine().priority_bitmap;
 	for (int y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 	//  UINT16 *src = vdp->m_render_line; // can't use this because we're not in RGB32, which we'll need to be if there are palette effects
@@ -274,7 +273,7 @@ UINT32 segas18_state::screen_update(screen_device &screen, bitmap_ind16 &bitmap,
 
 						// otherwise, just add in sprite palette base
 						else
-							dest[x] = 1024 + (pix & 0x3ff);
+							dest[x] = 0x400 | (pix & 0x3ff);
 					}
 				}
 			}

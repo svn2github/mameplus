@@ -702,7 +702,7 @@ READ8_DEVICE_HANDLER ( atari_serin_r )
 
 	if (fdc->serin_count)
 	{
-		pokey_device *pokey = device->machine().device<pokey_device>("pokey");
+		pokey_device *pokey = space.machine().device<pokey_device>("pokey");
 
 		data = fdc->serin_buff[fdc->serin_offs];
 		ser_delay = 2 * 40;
@@ -727,7 +727,7 @@ READ8_DEVICE_HANDLER ( atari_serin_r )
 
 WRITE8_DEVICE_HANDLER ( atari_serout_w )
 {
-	pia6821_device *pia = device->machine().device<pia6821_device>( "pia" );
+	pia6821_device *pia = space.machine().device<pia6821_device>( "pia" );
 	atari_fdc_t *fdc = get_safe_token(device);
 
 	/* ignore serial commands if no floppy image is specified */
@@ -817,7 +817,7 @@ const device_type ATARI_FDC = &device_creator<atari_fdc_device>;
 atari_fdc_device::atari_fdc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, ATARI_FDC, "Atari FDC", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(atari_fdc_t));
+	m_token = global_alloc_clear(atari_fdc_t);
 }
 
 //-------------------------------------------------

@@ -82,20 +82,19 @@ void spdodgeb_state::video_start()
 ***************************************************************************/
 
 
-TIMER_DEVICE_CALLBACK( spdodgeb_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(spdodgeb_state::spdodgeb_interrupt)
 {
-	spdodgeb_state *state = timer.machine().driver_data<spdodgeb_state>();
 	int scanline = param;
 
 	if (scanline == 256)
 	{
-		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-		timer.machine().primary_screen->update_partial(256);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		machine().primary_screen->update_partial(256);
 	}
 	else if ((scanline % 8) == 0)
 	{
-		state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
-		timer.machine().primary_screen->update_partial(scanline+16); /* TODO: pretty off ... */
+		m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
+		machine().primary_screen->update_partial(scanline+16); /* TODO: pretty off ... */
 	}
 }
 
@@ -204,11 +203,10 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 #undef DRAW_SPRITE
 
 
-SCREEN_UPDATE_IND16( spdodgeb )
+UINT32 spdodgeb_state::screen_update_spdodgeb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	spdodgeb_state *state = screen.machine().driver_data<spdodgeb_state>();
-	state->m_bg_tilemap->set_scrollx(0,state->m_lastscroll+5);
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(), bitmap,cliprect);
+	m_bg_tilemap->set_scrollx(0,m_lastscroll+5);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	draw_sprites(machine(), bitmap,cliprect);
 	return 0;
 }

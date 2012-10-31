@@ -380,10 +380,10 @@ WRITE16_MEMBER(m107_state::m107_spritebuffer_w)
 
 /*****************************************************************************/
 
-SCREEN_UPDATE_IND16( m107 )
+UINT32 m107_state::screen_update_m107(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	m107_update_scroll_positions(screen.machine());
-	m107_screenrefresh(screen.machine(), bitmap, cliprect);
+	m107_update_scroll_positions(machine());
+	m107_screenrefresh(machine(), bitmap, cliprect);
 	return 0;
 }
 

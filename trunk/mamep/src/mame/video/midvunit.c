@@ -34,25 +34,24 @@ midvunit_renderer::midvunit_renderer(midvunit_state &state)
  *
  *************************************/
 
-static TIMER_CALLBACK( scanline_timer_cb )
+TIMER_CALLBACK_MEMBER(midvunit_state::scanline_timer_cb)
 {
-	midvunit_state *state = machine.driver_data<midvunit_state>();
 	int scanline = param;
 
 	if (scanline != -1)
 	{
-		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
-		state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(scanline + 1), scanline);
-		machine.scheduler().timer_set(attotime::from_hz(25000000), FUNC(scanline_timer_cb), -1);
+		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+		m_scanline_timer->adjust(machine().primary_screen->time_until_pos(scanline + 1), scanline);
+		machine().scheduler().timer_set(attotime::from_hz(25000000), timer_expired_delegate(FUNC(midvunit_state::scanline_timer_cb),this), -1);
 	}
 	else
-		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
 void midvunit_state::video_start()
 {
-	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_timer_cb));
+	m_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(midvunit_state::scanline_timer_cb),this));
 
 	m_poly = auto_alloc(machine(), midvunit_renderer(*this));
 
@@ -515,24 +514,23 @@ READ32_MEMBER(midvunit_state::midvunit_textureram_r)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( midvunit )
+UINT32 midvunit_state::screen_update_midvunit(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	midvunit_state *state = screen.machine().driver_data<midvunit_state>();
 	int x, y, width, xoffs;
 	UINT32 offset;
 
-	state->m_poly->wait("Refresh Time");
+	m_poly->wait("Refresh Time");
 
 	/* if the video didn't change, indicate as much */
-	if (!state->m_video_changed)
+	if (!m_video_changed)
 		return UPDATE_HAS_NOT_CHANGED;
-	state->m_video_changed = FALSE;
+	m_video_changed = FALSE;
 
 	/* determine the base of the videoram */
 #if WATCH_RENDER
-	offset = (state->m_page_control & 4) ? 0x40000 : 0x00000;
+	offset = (m_page_control & 4) ? 0x40000 : 0x00000;
 #else
-	offset = (state->m_page_control & 1) ? 0x40000 : 0x00000;
+	offset = (m_page_control & 1) ? 0x40000 : 0x00000;
 #endif
 
 	/* determine how many pixels to copy */
@@ -548,7 +546,7 @@ SCREEN_UPDATE_IND16( midvunit )
 	{
 		UINT16 *dest = &bitmap.pix16(y, cliprect.min_x);
 		for (x = 0; x < width; x++)
-			*dest++ = state->m_videoram[offset + x] & 0x7fff;
+			*dest++ = m_videoram[offset + x] & 0x7fff;
 		offset += 512;
 	}
 	return 0;

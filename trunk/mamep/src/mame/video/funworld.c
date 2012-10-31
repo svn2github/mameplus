@@ -1,10 +1,12 @@
 /**********************************************************************************
 
-  FUNWORLD / TAB.
-  Video Hardware.
+  Fun World / Amatic / TAB / Impera.
+  Series 7000 hardware.
 
+  Video Hardware.
   Written by Roberto Fresca.
 
+***********************************************************************************
 
   Games running on this hardware:
 
@@ -18,10 +20,12 @@
   * Jolly Card (Italian, blue TAB board, encrypted),  bootleg,            199?.
   * Jolly Card (Italian, encrypted bootleg),          bootleg,            1990.
   * Super Joly 2000 - 3x,                             M.P.                1985.
-  * Jolly Card (Austrian, Funworld, bootleg),         Inter Games,        1986.
-  * Big Deal (Hungarian, set 1),                      Funworld,           1986.
-  * Big Deal (Hungarian, set 2),                      Funworld,           1986.
-  * Jolly Card (Austrian, Funworld),                  Funworld,           1986.
+  * Jolly Card (Austrian, Fun World, bootleg),        Inter Games,        1986.
+  * Bonus Card (Austrian),                            Fun World,          1986.
+  * Bonus Card (Austrian, ATG Electronic hack),       Fun World,          1986.
+  * Big Deal (Hungarian, set 1),                      Fun World,          1986.
+  * Big Deal (Hungarian, set 2),                      Fun World,          1986.
+  * Power Card (Ver 0263, encrypted),                 Fun World,          1993.
   * Cuore 1 (Italian),                                C.M.C.,             1996.
   * Elephant Family (Italian, new),                   C.M.C.,             1997.
   * Elephant Family (Italian, old),                   C.M.C.,             1996.
@@ -44,22 +48,23 @@
   * Royal Card Professional 2.0,                      Digital Dreams,     1993.
   * Lucky Lady (3x3 deal),                            TAB Austria,        1991.
   * Lucky Lady (4x1 aces),                            TAB Austria,        1991.
-  * Magic Card II (Bulgarian),                        Impera,             1996.
-  * Magic Card II (Green TAB or Impera board),        Impera,             1996.
-  * Magic Card II (Blue TAB board, encrypted),        Impera,             1996.
-  * Royal Vegas Joker Card (Slow deal),               Funworld,           1993.
+  * Magic Card II (Bulgarian hack),                   Impera,             1996.
+  * Magic Card II (Nov, Yugoslavian hack),            Impera,             1996.
+  * Magic Card II (hack, green TAB or Impera board),  Impera,             1996.
+  * Magic Card II (hack, blue TAB board, encrypted),  Impera,             1996.
+  * Royal Vegas Joker Card (Slow deal),               Fun World,          1993.
   * Royal Vegas Joker Card (Fast deal),               Soft Design,        1993.
   * Royal Vegas Joker Card (Fast deal, english gfx),  Soft Design,        1993.
   * Royal Vegas Joker Card (Fast deal, Mile),         Mile,               1993.
   * Jolly Joker (98bet, set 1).                       Impera,             198?.
   * Jolly Joker (98bet, set 2).                       Impera,             198?.
   * Jolly Joker (40bet, croatian hack),               Impera,             198?.
-  * Multi Win (Ver.0167, encrypted),                  Funworld,           1992.
+  * Multi Win (Ver.0167, encrypted),                  Fun World,          1992.
   * Joker Card (Ver.A267BC, encrypted),               Vesely Svet,        1993.
   * Mongolfier New (Italian),                         bootleg,            199?.
   * Soccer New (Italian),                             bootleg,            199?.
   * Saloon (French, encrypted),                       unknown,            199?.
-  * Fun World Quiz (Austrian),                        Funworld,           198?.
+  * Fun World Quiz (Austrian),                        Fun World,          198?.
   * Witch Royal (Export version 2.1),                 Video Klein,        199?.
   * Novo Play Multi Card / Club Card,                 Admiral/Novomatic,  1986.
 
@@ -191,9 +196,8 @@ VIDEO_START_MEMBER(funworld_state,magicrd2)
 }
 
 
-SCREEN_UPDATE_IND16(funworld)
+UINT32 funworld_state::screen_update_funworld(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	funworld_state *state = screen.machine().driver_data<funworld_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

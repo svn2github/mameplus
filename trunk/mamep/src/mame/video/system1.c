@@ -275,10 +275,9 @@ WRITE8_MEMBER(system1_state::system1_videoram_w)
 		machine().primary_screen->update_now();
 }
 
-WRITE8_DEVICE_HANDLER( system1_videoram_bank_w )
+WRITE8_MEMBER(system1_state::system1_videoram_bank_w)
 {
-	system1_state *state = device->machine().driver_data<system1_state>();
-	state->m_videoram_bank = data;
+	m_videoram_bank = data;
 }
 
 
@@ -507,7 +506,7 @@ static void video_update_common(screen_device &screen, bitmap_ind16 &bitmap, con
 		UINT16 *sprbase = &state->m_sprite_bitmap->pix16(y & 0xff);
 		UINT16 *dstbase = &bitmap.pix16(y);
 		int bgy = (y + bgyscroll) & 0x1ff;
-		int bgxscroll = bgrowscroll[y / 8];
+		int bgxscroll = bgrowscroll[y >> 3 & 0x1f];
 		UINT16 *bgbase[2];
 
 		/* get the base of the left and right pixmaps for the effective background Y */
@@ -558,27 +557,26 @@ static void video_update_common(screen_device &screen, bitmap_ind16 &bitmap, con
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( system1 )
+UINT32 system1_state::screen_update_system1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	system1_state *state = screen.machine().driver_data<system1_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	bitmap_ind16 *bgpixmaps[4];
 	int bgrowscroll[32];
 	int xscroll, yscroll;
 	int y;
 
 	/* all 4 background pages are the same, fixed to page 0 */
-	bgpixmaps[0] = bgpixmaps[1] = bgpixmaps[2] = bgpixmaps[3] = &state->m_tilemap_page[0]->pixmap();
+	bgpixmaps[0] = bgpixmaps[1] = bgpixmaps[2] = bgpixmaps[3] = &m_tilemap_page[0]->pixmap();
 
 	/* foreground is fixed to page 1 */
-	bitmap_ind16 &fgpixmap = state->m_tilemap_page[1]->pixmap();
+	bitmap_ind16 &fgpixmap = m_tilemap_page[1]->pixmap();
 
 	/* get fixed scroll offsets */
 	xscroll = (INT16)((videoram[0xffc] | (videoram[0xffd] << 8)) + 28);
 	yscroll = videoram[0xfbd];
 
 	/* adjust for flipping */
-	if (state->flip_screen())
+	if (flip_screen())
 	{
 		xscroll = 640 - (xscroll & 0x1ff);
 		yscroll = 764 - (yscroll & 0x1ff);
@@ -594,10 +592,9 @@ SCREEN_UPDATE_IND16( system1 )
 }
 
 
-SCREEN_UPDATE_IND16( system2 )
+UINT32 system1_state::screen_update_system2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	system1_state *state = screen.machine().driver_data<system1_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	bitmap_ind16 *bgpixmaps[4];
 	int rowscroll[32];
 	int xscroll, yscroll;
@@ -605,16 +602,16 @@ SCREEN_UPDATE_IND16( system2 )
 	int y;
 
 	/* 4 independent background pages */
-	bgpixmaps[0] = &state->m_tilemap_page[videoram[0x740] & 7]->pixmap();
-	bgpixmaps[1] = &state->m_tilemap_page[videoram[0x742] & 7]->pixmap();
-	bgpixmaps[2] = &state->m_tilemap_page[videoram[0x744] & 7]->pixmap();
-	bgpixmaps[3] = &state->m_tilemap_page[videoram[0x746] & 7]->pixmap();
+	bgpixmaps[0] = &m_tilemap_page[videoram[0x740] & 7]->pixmap();
+	bgpixmaps[1] = &m_tilemap_page[videoram[0x742] & 7]->pixmap();
+	bgpixmaps[2] = &m_tilemap_page[videoram[0x744] & 7]->pixmap();
+	bgpixmaps[3] = &m_tilemap_page[videoram[0x746] & 7]->pixmap();
 
 	/* foreground is fixed to page 0 */
-	bitmap_ind16 &fgpixmap = state->m_tilemap_page[0]->pixmap();
+	bitmap_ind16 &fgpixmap = m_tilemap_page[0]->pixmap();
 
 	/* get scroll offsets */
-	if (!state->flip_screen())
+	if (!flip_screen())
 	{
 		xscroll = ((videoram[0x7c0] | (videoram[0x7c1] << 8)) & 0x1ff) - 512 + 10;
 		yscroll = videoram[0x7ba];
@@ -637,10 +634,9 @@ SCREEN_UPDATE_IND16( system2 )
 }
 
 
-SCREEN_UPDATE_IND16( system2_rowscroll )
+UINT32 system1_state::screen_update_system2_rowscroll(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	system1_state *state = screen.machine().driver_data<system1_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	bitmap_ind16 *bgpixmaps[4];
 	int rowscroll[32];
 	int yscroll;
@@ -648,16 +644,16 @@ SCREEN_UPDATE_IND16( system2_rowscroll )
 	int y;
 
 	/* 4 independent background pages */
-	bgpixmaps[0] = &state->m_tilemap_page[videoram[0x740] & 7]->pixmap();
-	bgpixmaps[1] = &state->m_tilemap_page[videoram[0x742] & 7]->pixmap();
-	bgpixmaps[2] = &state->m_tilemap_page[videoram[0x744] & 7]->pixmap();
-	bgpixmaps[3] = &state->m_tilemap_page[videoram[0x746] & 7]->pixmap();
+	bgpixmaps[0] = &m_tilemap_page[videoram[0x740] & 7]->pixmap();
+	bgpixmaps[1] = &m_tilemap_page[videoram[0x742] & 7]->pixmap();
+	bgpixmaps[2] = &m_tilemap_page[videoram[0x744] & 7]->pixmap();
+	bgpixmaps[3] = &m_tilemap_page[videoram[0x746] & 7]->pixmap();
 
 	/* foreground is fixed to page 0 */
-	bitmap_ind16 &fgpixmap = state->m_tilemap_page[0]->pixmap();
+	bitmap_ind16 &fgpixmap = m_tilemap_page[0]->pixmap();
 
 	/* get scroll offsets */
-	if (!state->flip_screen())
+	if (!flip_screen())
 	{
 		for (y = 0; y < 32; y++)
 			rowscroll[y] = ((videoram[0x7c0 + y * 2] | (videoram[0x7c1 + y * 2] << 8)) & 0x1ff) - 512 + 10;

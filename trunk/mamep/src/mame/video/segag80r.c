@@ -19,10 +19,9 @@ enum { spaceod_bg_detect_tile_color = 1 };
  *
  *************************************/
 
-static TIMER_CALLBACK( vblank_latch_clear )
+TIMER_CALLBACK_MEMBER(segag80r_state::vblank_latch_clear)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	state->m_vblank_latch = 0;
+	m_vblank_latch = 0;
 }
 
 
@@ -32,27 +31,26 @@ static void vblank_latch_set(running_machine &machine)
 	/* set a timer to mimic the 555 timer that drives the EDGINT signal */
 	/* the 555 is run in monostable mode with R=56000 and C=1000pF */
 	state->m_vblank_latch = 1;
-	machine.scheduler().timer_set(PERIOD_OF_555_MONOSTABLE(CAP_P(1000), RES_K(56)), FUNC(vblank_latch_clear));
+	machine.scheduler().timer_set(PERIOD_OF_555_MONOSTABLE(CAP_P(1000), RES_K(56)), timer_expired_delegate(FUNC(segag80r_state::vblank_latch_clear),state));
 
 	/* latch the current flip state at the same time */
 	state->m_video_flip = state->m_video_control & 1;
 }
 
 
-INTERRUPT_GEN( segag80r_vblank_start )
+INTERRUPT_GEN_MEMBER(segag80r_state::segag80r_vblank_start)
 {
-	segag80r_state *state = device->machine().driver_data<segag80r_state>();
-	vblank_latch_set(device->machine());
+	vblank_latch_set(machine());
 
 	/* if interrupts are enabled, clock one */
-	if (state->m_video_control & 0x04)
+	if (m_video_control & 0x04)
 		irq0_line_hold(device);
 }
 
 
-INTERRUPT_GEN( sindbadm_vblank_start )
+INTERRUPT_GEN_MEMBER(segag80r_state::sindbadm_vblank_start)
 {
-	vblank_latch_set(device->machine());
+	vblank_latch_set(machine());
 
 	/* interrupts appear to always be enabled, but they have a manual */
 	/* acknowledge rather than an automatic ack; they are also not masked */
@@ -792,18 +790,17 @@ static void draw_background_full_scroll(running_machine &machine, bitmap_ind16 &
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( segag80r )
+UINT32 segag80r_state::screen_update_segag80r(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	segag80r_state *state = screen.machine().driver_data<segag80r_state>();
 	UINT8 transparent_pens[16];
 
-	switch (state->m_background_pcb)
+	switch (m_background_pcb)
 	{
 		/* foreground: opaque */
 		/* background: none */
 		case G80_BACKGROUND_NONE:
 			memset(transparent_pens, 0, 16);
-			draw_videoram(screen.machine(), bitmap, cliprect, transparent_pens);
+			draw_videoram(machine(), bitmap, cliprect, transparent_pens);
 			break;
 
 		/* foreground: visible except where black */
@@ -811,32 +808,32 @@ SCREEN_UPDATE_IND16( segag80r )
 		/* we draw the foreground first, then the background to do collision detection */
 		case G80_BACKGROUND_SPACEOD:
 			memset(transparent_pens, 0, 16);
-			draw_videoram(screen.machine(), bitmap, cliprect, transparent_pens);
-			draw_background_spaceod(screen.machine(), bitmap, cliprect);
+			draw_videoram(machine(), bitmap, cliprect, transparent_pens);
+			draw_background_spaceod(machine(), bitmap, cliprect);
 			break;
 
 		/* foreground: visible except for pen 0 (this disagrees with schematics) */
 		/* background: page-granular scrolling */
 		case G80_BACKGROUND_MONSTERB:
 			memset(transparent_pens, 1, 16);
-			draw_background_page_scroll(screen.machine(), bitmap, cliprect);
-			draw_videoram(screen.machine(), bitmap, cliprect, transparent_pens);
+			draw_background_page_scroll(machine(), bitmap, cliprect);
+			draw_videoram(machine(), bitmap, cliprect, transparent_pens);
 			break;
 
 		/* foreground: visible except for pen 0 */
 		/* background: full scrolling */
 		case G80_BACKGROUND_PIGNEWT:
 			memset(transparent_pens, 1, 16);
-			draw_background_full_scroll(screen.machine(), bitmap, cliprect);
-			draw_videoram(screen.machine(), bitmap, cliprect, transparent_pens);
+			draw_background_full_scroll(machine(), bitmap, cliprect);
+			draw_videoram(machine(), bitmap, cliprect, transparent_pens);
 			break;
 
 		/* foreground: visible except for pen 0 */
 		/* background: page-granular scrolling */
 		case G80_BACKGROUND_SINDBADM:
 			memset(transparent_pens, 1, 16);
-			draw_background_page_scroll(screen.machine(), bitmap, cliprect);
-			draw_videoram(screen.machine(), bitmap, cliprect, transparent_pens);
+			draw_background_page_scroll(machine(), bitmap, cliprect);
+			draw_videoram(machine(), bitmap, cliprect, transparent_pens);
 			break;
 	}
 	return 0;

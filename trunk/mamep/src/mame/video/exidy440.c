@@ -233,12 +233,11 @@ static void exidy440_update_firq(running_machine &machine)
 }
 
 
-INTERRUPT_GEN( exidy440_vblank_interrupt )
+INTERRUPT_GEN_MEMBER(exidy440_state::exidy440_vblank_interrupt)
 {
-	exidy440_state *state = device->machine().driver_data<exidy440_state>();
 	/* set the FIRQ line on a VBLANK */
-	state->m_firq_vblank = 1;
-	exidy440_update_firq(device->machine());
+	m_firq_vblank = 1;
+	exidy440_update_firq(machine());
 }
 
 
@@ -249,39 +248,37 @@ INTERRUPT_GEN( exidy440_vblank_interrupt )
  *
  *************************************/
 
-static TIMER_CALLBACK( beam_firq_callback )
+TIMER_CALLBACK_MEMBER(exidy440_state::beam_firq_callback)
 {
-	exidy440_state *state = machine.driver_data<exidy440_state>();
 	/* generate the interrupt, if we're selected */
-	if (state->m_firq_select && state->m_firq_enable)
+	if (m_firq_select && m_firq_enable)
 	{
-		state->m_firq_beam = 1;
-		exidy440_update_firq(machine);
+		m_firq_beam = 1;
+		exidy440_update_firq(machine());
 	}
 
 	/* round the x value to the nearest byte */
 	param = (param + 1) / 2;
 
 	/* latch the x value; this convolution comes from the read routine */
-	state->m_latched_x = (param + 3) ^ 2;
+	m_latched_x = (param + 3) ^ 2;
 }
 
 
-static TIMER_CALLBACK( collide_firq_callback )
+TIMER_CALLBACK_MEMBER(exidy440_state::collide_firq_callback)
 {
-	exidy440_state *state = machine.driver_data<exidy440_state>();
 	/* generate the interrupt, if we're selected */
-	if (!state->m_firq_select && state->m_firq_enable)
+	if (!m_firq_select && m_firq_enable)
 	{
-		state->m_firq_beam = 1;
-		exidy440_update_firq(machine);
+		m_firq_beam = 1;
+		exidy440_update_firq(machine());
 	}
 
 	/* round the x value to the nearest byte */
 	param = (param + 1) / 2;
 
 	/* latch the x value; this convolution comes from the read routine */
-	state->m_latched_x = (param + 3) ^ 2;
+	m_latched_x = (param + 3) ^ 2;
 }
 
 
@@ -361,7 +358,7 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rect
 
 						/* check the collisions bit */
 						if (check_collision && (palette[2 * pen] & 0x80) && (count++ < 128))
-							screen.machine().scheduler().timer_set(screen.time_until_pos(yoffs, currx), FUNC(collide_firq_callback), currx);
+							screen.machine().scheduler().timer_set(screen.time_until_pos(yoffs, currx), timer_expired_delegate(FUNC(exidy440_state::collide_firq_callback),state), currx);
 					}
 					currx++;
 
@@ -374,7 +371,7 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rect
 
 						/* check the collisions bit */
 						if (check_collision && (palette[2 * pen] & 0x80) && (count++ < 128))
-							screen.machine().scheduler().timer_set(screen.time_until_pos(yoffs, currx), FUNC(collide_firq_callback), currx);
+							screen.machine().scheduler().timer_set(screen.time_until_pos(yoffs, currx), timer_expired_delegate(FUNC(exidy440_state::collide_firq_callback),state), currx);
 					}
 					currx++;
 				}
@@ -423,7 +420,7 @@ static void update_screen(screen_device &screen, bitmap_ind16 &bitmap, const rec
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( exidy440 )
+UINT32 exidy440_state::screen_update_exidy440(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	/* redraw the screen */
 	update_screen(screen, bitmap, cliprect, 0, TRUE);
@@ -433,8 +430,8 @@ static SCREEN_UPDATE_IND16( exidy440 )
 	{
 		int i;
 
-		int beamx = ((screen.machine().root_device().ioport("AN0")->read() & 0xff) * (HBSTART - HBEND)) >> 8;
-		int beamy = ((screen.machine().root_device().ioport("AN1")->read() & 0xff) * (VBSTART - VBEND)) >> 8;
+		int beamx = ((machine().root_device().ioport("AN0")->read() & 0xff) * (HBSTART - HBEND)) >> 8;
+		int beamy = ((machine().root_device().ioport("AN1")->read() & 0xff) * (VBSTART - VBEND)) >> 8;
 
 		/* The timing of this FIRQ is very important. The games look for an FIRQ
             and then wait about 650 cycles, clear the old FIRQ, and wait a
@@ -446,7 +443,7 @@ static SCREEN_UPDATE_IND16( exidy440 )
 		attotime time = screen.time_until_pos(beamy, beamx) - increment * 6;
 		for (i = 0; i <= 12; i++)
 		{
-			screen.machine().scheduler().timer_set(time, FUNC(beam_firq_callback), beamx);
+			machine().scheduler().timer_set(time, timer_expired_delegate(FUNC(exidy440_state::beam_firq_callback),this), beamx);
 			time += increment;
 		}
 	}
@@ -455,11 +452,10 @@ static SCREEN_UPDATE_IND16( exidy440 )
 }
 
 
-static SCREEN_UPDATE_IND16( topsecex )
+UINT32 exidy440_state::screen_update_topsecex(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	exidy440_state *state = screen.machine().driver_data<exidy440_state>();
 	/* redraw the screen */
-	update_screen(screen, bitmap, cliprect, *state->m_topsecex_yscroll, FALSE);
+	update_screen(screen, bitmap, cliprect, *m_topsecex_yscroll, FALSE);
 
 	return 0;
 }
@@ -479,7 +475,7 @@ MACHINE_CONFIG_FRAGMENT( exidy440_video )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(exidy440)
+	MCFG_SCREEN_UPDATE_DRIVER(exidy440_state, screen_update_exidy440)
 MACHINE_CONFIG_END
 
 
@@ -489,5 +485,5 @@ MACHINE_CONFIG_FRAGMENT( topsecex_video )
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, TOPSECEX_VBSTART)
-	MCFG_SCREEN_UPDATE_STATIC(topsecex)
+	MCFG_SCREEN_UPDATE_DRIVER(exidy440_state, screen_update_topsecex)
 MACHINE_CONFIG_END

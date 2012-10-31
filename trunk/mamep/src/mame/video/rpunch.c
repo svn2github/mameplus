@@ -58,12 +58,11 @@ TILE_GET_INFO_MEMBER(rpunch_state::get_bg1_tile_info)
  *
  *************************************/
 
-static TIMER_CALLBACK( crtc_interrupt_gen )
+TIMER_CALLBACK_MEMBER(rpunch_state::crtc_interrupt_gen)
 {
-	rpunch_state *state = machine.driver_data<rpunch_state>();
-	machine.device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 	if (param != 0)
-		state->m_crtc_timer->adjust(machine.primary_screen->frame_period() / param, 0, machine.primary_screen->frame_period() / param);
+		m_crtc_timer->adjust(machine().primary_screen->frame_period() / param, 0, machine().primary_screen->frame_period() / param);
 }
 
 
@@ -80,7 +79,7 @@ void rpunch_state::video_start()
 		memset(m_bitmapram, 0xff, m_bitmapram.bytes());
 
 	/* reset the timer */
-	m_crtc_timer = machine().scheduler().timer_alloc(FUNC(crtc_interrupt_gen));
+	m_crtc_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(rpunch_state::crtc_interrupt_gen),this));
 }
 
 
@@ -263,19 +262,18 @@ static void draw_bitmap(running_machine &machine, bitmap_ind16 &bitmap, const re
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( rpunch )
+UINT32 rpunch_state::screen_update_rpunch(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	rpunch_state *state = screen.machine().driver_data<rpunch_state>();
 	int effbins;
 
 	/* this seems like the most plausible explanation */
-	effbins = (state->m_bins > state->m_gins) ? state->m_gins : state->m_bins;
+	effbins = (m_bins > m_gins) ? m_gins : m_bins;
 
-	state->m_background[0]->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(), bitmap, cliprect, 0, effbins);
-	state->m_background[1]->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(), bitmap, cliprect, effbins, state->m_gins);
-	if (state->m_bitmapram)
-		draw_bitmap(screen.machine(), bitmap, cliprect);
+	m_background[0]->draw(bitmap, cliprect, 0,0);
+	draw_sprites(machine(), bitmap, cliprect, 0, effbins);
+	m_background[1]->draw(bitmap, cliprect, 0,0);
+	draw_sprites(machine(), bitmap, cliprect, effbins, m_gins);
+	if (m_bitmapram)
+		draw_bitmap(machine(), bitmap, cliprect);
 	return 0;
 }

@@ -113,7 +113,7 @@ enum
 //  GLOBALS
 //============================================================
 
-static d3d *				d3dintf; // FIX ME
+static d3d_base *				d3dintf; // FIX ME
 
 static const line_aa_step line_aa_1step[] =
 {
@@ -577,7 +577,7 @@ static int drawd3d_window_draw(win_window_info *window, HDC dc, int update)
 
 mtlog_add("drawd3d_window_draw: begin");
 	result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-	if(result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
+	if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 	d3d->hlsl->record_texture();
 

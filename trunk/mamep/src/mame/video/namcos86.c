@@ -187,9 +187,9 @@ WRITE8_MEMBER(namcos86_state::rthunder_tilebank_select_w)
 	}
 }
 
-static void scroll_w(address_space *space, int offset, int data, int layer)
+static void scroll_w(address_space &space, int offset, int data, int layer)
 {
-	namcos86_state *state = space->machine().driver_data<namcos86_state>();
+	namcos86_state *state = space.machine().driver_data<namcos86_state>();
 	switch (offset)
 	{
 		case 0:
@@ -206,19 +206,19 @@ static void scroll_w(address_space *space, int offset, int data, int layer)
 
 WRITE8_MEMBER(namcos86_state::rthunder_scroll0_w)
 {
-	scroll_w(&space,offset,data,0);
+	scroll_w(space,offset,data,0);
 }
 WRITE8_MEMBER(namcos86_state::rthunder_scroll1_w)
 {
-	scroll_w(&space,offset,data,1);
+	scroll_w(space,offset,data,1);
 }
 WRITE8_MEMBER(namcos86_state::rthunder_scroll2_w)
 {
-	scroll_w(&space,offset,data,2);
+	scroll_w(space,offset,data,2);
 }
 WRITE8_MEMBER(namcos86_state::rthunder_scroll3_w)
 {
-	scroll_w(&space,offset,data,3);
+	scroll_w(space,offset,data,3);
 }
 
 WRITE8_MEMBER(namcos86_state::rthunder_backcolor_w)
@@ -349,23 +349,22 @@ static void set_scroll(running_machine &machine, int layer)
 }
 
 
-SCREEN_UPDATE_IND16( namcos86 )
+UINT32 namcos86_state::screen_update_namcos86(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	namcos86_state *state = screen.machine().driver_data<namcos86_state>();
 	int layer;
 
 	/* flip screen is embedded in the sprite control registers */
-	/* can't use state->flip_screen_set() because the visible area is asymmetrical */
-	state->flip_screen_set_no_update(state->m_spriteram[0x07f6] & 1);
-	screen.machine().tilemap().set_flip_all(state->flip_screen() ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
-	set_scroll(screen.machine(), 0);
-	set_scroll(screen.machine(), 1);
-	set_scroll(screen.machine(), 2);
-	set_scroll(screen.machine(), 3);
+	/* can't use flip_screen_set() because the visible area is asymmetrical */
+	flip_screen_set_no_update(m_spriteram[0x07f6] & 1);
+	machine().tilemap().set_flip_all(flip_screen() ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+	set_scroll(machine(), 0);
+	set_scroll(machine(), 1);
+	set_scroll(machine(), 2);
+	set_scroll(machine(), 3);
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
-	bitmap.fill(screen.machine().gfx[0]->colorbase() + 8*state->m_backcolor+7, cliprect);
+	bitmap.fill(machine().gfx[0]->colorbase() + 8*m_backcolor+7, cliprect);
 
 	for (layer = 0;layer < 8;layer++)
 	{
@@ -373,25 +372,24 @@ SCREEN_UPDATE_IND16( namcos86 )
 
 		for (i = 3;i >= 0;i--)
 		{
-			if (((state->m_xscroll[i] & 0x0e00) >> 9) == layer)
-				state->m_bg_tilemap[i]->draw(bitmap, cliprect, 0,layer,0);
+			if (((m_xscroll[i] & 0x0e00) >> 9) == layer)
+				m_bg_tilemap[i]->draw(bitmap, cliprect, 0,layer,0);
 		}
 	}
 
-	draw_sprites(screen.machine(),bitmap,cliprect);
+	draw_sprites(machine(),bitmap,cliprect);
 	return 0;
 }
 
 
-SCREEN_VBLANK( namcos86 )
+void namcos86_state::screen_eof_namcos86(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		namcos86_state *state = screen.machine().driver_data<namcos86_state>();
-		if (state->m_copy_sprites)
+		if (m_copy_sprites)
 		{
-			UINT8 *spriteram = state->m_spriteram;
+			UINT8 *spriteram = m_spriteram;
 			int i,j;
 
 			for (i = 0;i < 0x800;i += 16)
@@ -400,7 +398,7 @@ SCREEN_VBLANK( namcos86 )
 					spriteram[i+j] = spriteram[i+j - 6];
 			}
 
-			state->m_copy_sprites = 0;
+			m_copy_sprites = 0;
 		}
 	}
 }

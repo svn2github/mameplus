@@ -205,17 +205,15 @@ VIDEO_START_MEMBER(eprom_state,guts)
  *
  *************************************/
 
-void eprom_scanline_update(screen_device &screen, int scanline)
+void eprom_state::scanline_update(screen_device &screen, int scanline)
 {
-	eprom_state *state = screen.machine().driver_data<eprom_state>();
-
 	/* update the playfield */
 	if (scanline == 0)
 	{
-		int xscroll = (state->m_alpha[0x780] >> 7) & 0x1ff;
-		int yscroll = (state->m_alpha[0x781] >> 7) & 0x1ff;
-		state->m_playfield_tilemap->set_scrollx(0, xscroll);
-		state->m_playfield_tilemap->set_scrolly(0, yscroll);
+		int xscroll = (m_alpha[0x780] >> 7) & 0x1ff;
+		int yscroll = (m_alpha[0x781] >> 7) & 0x1ff;
+		m_playfield_tilemap->set_scrollx(0, xscroll);
+		m_playfield_tilemap->set_scrolly(0, yscroll);
 		atarimo_set_xscroll(0, xscroll);
 		atarimo_set_yscroll(0, yscroll);
 	}
@@ -229,23 +227,22 @@ void eprom_scanline_update(screen_device &screen, int scanline)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( eprom )
+UINT32 eprom_state::screen_update_eprom(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	eprom_state *state = screen.machine().driver_data<eprom_state>();
 	atarimo_rect_list rectlist;
 	bitmap_ind16 *mobitmap;
 	int x, y, r;
 
-	if (state->m_video_disable)
+	if (m_video_disable)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
-	update_palette(screen.machine());
+	update_palette(machine());
 
 	/* draw the playfield */
-	state->m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
@@ -354,7 +351,7 @@ SCREEN_UPDATE_IND16( eprom )
 		}
 
 	/* add the alpha on top */
-	state->m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* now go back and process the upper bit of MO priority */
 	rectlist.rect -= rectlist.numrects;
@@ -384,23 +381,22 @@ SCREEN_UPDATE_IND16( eprom )
 }
 
 
-SCREEN_UPDATE_IND16( guts )
+UINT32 eprom_state::screen_update_guts(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	eprom_state *state = screen.machine().driver_data<eprom_state>();
 	atarimo_rect_list rectlist;
 	bitmap_ind16 *mobitmap;
 	int x, y, r;
 
-	if (state->m_video_disable)
+	if (m_video_disable)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
-	update_palette(screen.machine());
+	update_palette(machine());
 
 	/* draw the playfield */
-	state->m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
@@ -428,7 +424,7 @@ SCREEN_UPDATE_IND16( guts )
 		}
 
 	/* add the alpha on top */
-	state->m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* now go back and process the upper bit of MO priority */
 	rectlist.rect -= rectlist.numrects;

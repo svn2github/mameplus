@@ -1376,7 +1376,7 @@ WRITE8_DEVICE_HANDLER( k007121_ctrl_w )
 	case 6:
 		/* palette bank change */
 		if ((k007121->ctrlram[offset] & 0x30) != (data & 0x30))
-			device->machine().tilemap().mark_all_dirty();
+			space.machine().tilemap().mark_all_dirty();
 		break;
 	case 7:
 		k007121->flipscreen = data & 0x08;
@@ -1581,7 +1581,7 @@ const device_type K007121 = &device_creator<k007121_device>;
 k007121_device::k007121_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K007121, "Konami 007121", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k007121_state));
+	m_token = global_alloc_clear(k007121_state);
 }
 
 //-------------------------------------------------
@@ -1702,7 +1702,7 @@ WRITE8_DEVICE_HANDLER( k007342_vreg_w )
 			break;
 		case 0x01:  /* used for banking in Rock'n'Rage */
 			if (data != k007342->regs[1])
-				device->machine().tilemap().mark_all_dirty();
+				space.machine().tilemap().mark_all_dirty();
 		case 0x02:
 			k007342->scrollx[0] = (k007342->scrollx[0] & 0xff) | ((data & 0x01) << 8);
 			k007342->scrollx[1] = (k007342->scrollx[1] & 0xff) | ((data & 0x02) << 7);
@@ -1854,7 +1854,7 @@ const device_type K007342 = &device_creator<k007342_device>;
 k007342_device::k007342_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K007342, "Konami 007342", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k007342_state));
+	m_token = global_alloc_clear(k007342_state);
 }
 
 //-------------------------------------------------
@@ -2187,7 +2187,7 @@ const device_type K007420 = &device_creator<k007420_device>;
 k007420_device::k007420_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K007420, "Konami 007420", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k007420_state));
+	m_token = global_alloc_clear(k007420_state);
 }
 
 //-------------------------------------------------
@@ -2295,7 +2295,7 @@ READ8_DEVICE_HANDLER( k052109_r )
 			else if (offset >= 0x3a00 && offset < 0x3c00)
 			{	/* B x scroll */	}
 //          else
-//logerror("%04x: read from unknown 052109 address %04x\n",space->device().safe_pc(),offset);
+//logerror("%04x: read from unknown 052109 address %04x\n",space.device().safe_pc(),offset);
 		}
 
 		return k052109->ram[offset];
@@ -2314,14 +2314,14 @@ READ8_DEVICE_HANDLER( k052109_r )
 	if (k052109->has_extra_video_ram)
 		code |= color << 8;	/* kludge for X-Men */
 	else
-		k052109->callback(device->machine(), 0, bank, &code, &color, &flags, &priority);
+		k052109->callback(space.machine(), 0, bank, &code, &color, &flags, &priority);
 
 		addr = (code << 5) + (offset & 0x1f);
-		addr &= device->machine().root_device().memregion(k052109->memory_region)->bytes() - 1;
+		addr &= space.machine().root_device().memregion(k052109->memory_region)->bytes() - 1;
 
-//      logerror("%04x: off = %04x sub = %02x (bnk = %x) adr = %06x\n", space->device().safe_pc(), offset, k052109->romsubbank, bank, addr);
+//      logerror("%04x: off = %04x sub = %02x (bnk = %x) adr = %06x\n", space.device().safe_pc(), offset, k052109->romsubbank, bank, addr);
 
-		return device->machine().root_device().memregion(k052109->memory_region)->base()[addr];
+		return space.machine().root_device().memregion(k052109->memory_region)->base()[addr];
 	}
 }
 
@@ -2350,13 +2350,13 @@ WRITE8_DEVICE_HANDLER( k052109_w )
 			if (k052109->scrollctrl != data)
 			{
 //popmessage("scrollcontrol = %02x", data);
-//logerror("%04x: rowscrollcontrol = %02x\n", space->device().safe_pc(), data);
+//logerror("%04x: rowscrollcontrol = %02x\n", space.device().safe_pc(), data);
 				k052109->scrollctrl = data;
 			}
 		}
 		else if (offset == 0x1d00)
 		{
-//logerror("%04x: 052109 register 1d00 = %02x\n", space->device().safe_pc(), data);
+//logerror("%04x: 052109 register 1d00 = %02x\n", space.device().safe_pc(), data);
 			/* bit 2 = irq enable */
 			/* the custom chip can also generate NMI and FIRQ, for use with a 6809 */
 			k052109->irq_enabled = data & 0x04;
@@ -2389,12 +2389,12 @@ WRITE8_DEVICE_HANDLER( k052109_w )
 		}
 		else if (offset == 0x1e00 || offset == 0x3e00) // Surprise Attack uses offset 0x3e00
 		{
-//logerror("%04x: 052109 register 1e00 = %02x\n",space->device().safe_pc(),data);
+//logerror("%04x: 052109 register 1e00 = %02x\n",space.device().safe_pc(),data);
 			k052109->romsubbank = data;
 		}
 		else if (offset == 0x1e80)
 		{
-//if ((data & 0xfe)) logerror("%04x: 052109 register 1e80 = %02x\n",space->device().safe_pc(),data);
+//if ((data & 0xfe)) logerror("%04x: 052109 register 1e80 = %02x\n",space.device().safe_pc(),data);
 			k052109->tilemap[0]->set_flip((data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 			k052109->tilemap[1]->set_flip((data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 			k052109->tilemap[2]->set_flip((data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
@@ -2449,32 +2449,32 @@ WRITE8_DEVICE_HANDLER( k052109_w )
 			k052109->charrombank_2[3] = (data >> 4) & 0x0f;
 		}
 //      else
-//          logerror("%04x: write %02x to unknown 052109 address %04x\n",space->device().safe_pc(),data,offset);
+//          logerror("%04x: write %02x to unknown 052109 address %04x\n",space.device().safe_pc(),data,offset);
 	}
 }
 
 READ16_DEVICE_HANDLER( k052109_word_r )
 {
-	return k052109_r(device, offset + 0x2000) | (k052109_r(device, offset) << 8);
+	return k052109_r(device, space, offset + 0x2000) | (k052109_r(device, space, offset) << 8);
 }
 
 WRITE16_DEVICE_HANDLER( k052109_word_w )
 {
 	if (ACCESSING_BITS_8_15)
-		k052109_w(device, offset, (data >> 8) & 0xff);
+		k052109_w(device, space, offset, (data >> 8) & 0xff);
 	if (ACCESSING_BITS_0_7)
-		k052109_w(device, offset + 0x2000, data & 0xff);
+		k052109_w(device, space, offset + 0x2000, data & 0xff);
 }
 
 READ16_DEVICE_HANDLER( k052109_lsb_r )
 {
-	return k052109_r(device, offset);
+	return k052109_r(device, space, offset);
 }
 
 WRITE16_DEVICE_HANDLER( k052109_lsb_w )
 {
 	if(ACCESSING_BITS_0_7)
-		k052109_w(device, offset, data & 0xff);
+		k052109_w(device, space, offset, data & 0xff);
 }
 
 void k052109_set_rmrd_line( device_t *device, int state )
@@ -2758,7 +2758,7 @@ const device_type K052109 = &device_creator<k052109_device>;
 k052109_device::k052109_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K052109, "Konami 052109", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k052109_state));
+	m_token = global_alloc_clear(k052109_state);
 }
 
 //-------------------------------------------------
@@ -2978,15 +2978,15 @@ WRITE8_DEVICE_HANDLER( k051960_w )
 
 READ16_DEVICE_HANDLER( k051960_word_r )
 {
-	return k051960_r(device, offset * 2 + 1) | (k051960_r(device, offset * 2) << 8);
+	return k051960_r(device, space, offset * 2 + 1) | (k051960_r(device, space, offset * 2) << 8);
 }
 
 WRITE16_DEVICE_HANDLER( k051960_word_w )
 {
 	if (ACCESSING_BITS_8_15)
-		k051960_w(device, offset * 2, (data >> 8) & 0xff);
+		k051960_w(device, space, offset * 2, (data >> 8) & 0xff);
 	if (ACCESSING_BITS_0_7)
-		k051960_w(device, offset * 2 + 1, data & 0xff);
+		k051960_w(device, space, offset * 2 + 1, data & 0xff);
 }
 
 
@@ -3075,15 +3075,15 @@ void k051960_set_sprite_offsets( device_t *device, int dx, int dy )
 
 READ16_DEVICE_HANDLER( k051937_word_r )
 {
-	return k051937_r(device, offset * 2 + 1) | (k051937_r(device, offset * 2) << 8);
+	return k051937_r(device, space, offset * 2 + 1) | (k051937_r(device, space, offset * 2) << 8);
 }
 
 WRITE16_DEVICE_HANDLER( k051937_word_w )
 {
 	if (ACCESSING_BITS_8_15)
-		k051937_w(device, offset * 2,(data >> 8) & 0xff);
+		k051937_w(device, space, offset * 2,(data >> 8) & 0xff);
 	if (ACCESSING_BITS_0_7)
-		k051937_w(device, offset * 2 + 1,data & 0xff);
+		k051937_w(device, space, offset * 2 + 1,data & 0xff);
 }
 
 /*
@@ -3429,7 +3429,7 @@ const device_type K051960 = &device_creator<k051960_device>;
 k051960_device::k051960_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K051960, "Konami 051960", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k051960_state));
+	m_token = global_alloc_clear(k051960_state);
 }
 
 //-------------------------------------------------
@@ -3572,7 +3572,7 @@ INLINE void k053245_update_buffer( device_t *device )
 READ8_DEVICE_HANDLER( k053244_r )
 {
 	k05324x_state *k053244 = k05324x_get_safe_token(device);
-	running_machine &machine = device->machine();
+	running_machine &machine = space.machine();
 
 	if ((k053244->regs[5] & 0x10) && offset >= 0x0c && offset < 0x10)
 	{
@@ -3612,7 +3612,7 @@ WRITE8_DEVICE_HANDLER( k053244_w )
 //          popmessage("053244 reg 05 = %02x",data);
 		/* bit 2 = unknown, Parodius uses it */
 		/* bit 5 = unknown, Rollergames uses it */
-//      logerror("%s: write %02x to 053244 address 5\n", device->machine().describe_context(), data);
+//      logerror("%s: write %02x to 053244 address 5\n", space.machine().describe_context(), data);
 		break;
 
 	case 0x06:
@@ -3624,26 +3624,26 @@ WRITE8_DEVICE_HANDLER( k053244_w )
 
 READ16_DEVICE_HANDLER( k053244_lsb_r )
 {
-	return k053244_r(device, offset);
+	return k053244_r(device, space, offset);
 }
 
 WRITE16_DEVICE_HANDLER( k053244_lsb_w )
 {
 	if (ACCESSING_BITS_0_7)
-		k053244_w(device, offset, data & 0xff);
+		k053244_w(device, space, offset, data & 0xff);
 }
 
 READ16_DEVICE_HANDLER( k053244_word_r )
 {
-	return (k053244_r(device, offset * 2) << 8) | k053244_r(device, offset * 2 + 1);
+	return (k053244_r(device, space, offset * 2) << 8) | k053244_r(device, space, offset * 2 + 1);
 }
 
 WRITE16_DEVICE_HANDLER( k053244_word_w )
 {
 	if (ACCESSING_BITS_8_15)
-		k053244_w(device, offset * 2, (data >> 8) & 0xff);
+		k053244_w(device, space, offset * 2, (data >> 8) & 0xff);
 	if (ACCESSING_BITS_0_7)
-		k053244_w(device, offset * 2 + 1, data & 0xff);
+		k053244_w(device, space, offset * 2 + 1, data & 0xff);
 }
 
 void k053244_bankselect( device_t *device, int bank )
@@ -4260,7 +4260,7 @@ const device_type K053244 = &device_creator<k05324x_device>;
 k05324x_device::k05324x_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K053244, "Konami 053244 & 053245", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k05324x_state));
+	m_token = global_alloc_clear(k05324x_state);
 }
 
 //-------------------------------------------------
@@ -4474,9 +4474,9 @@ WRITE8_DEVICE_HANDLER( k053247_w )
 READ16_DEVICE_HANDLER( k055673_rom_word_r )	// 5bpp
 {
 	k053247_state *k053246 = k053247_get_safe_token(device);
-	UINT8 *ROM8 = (UINT8 *)device->machine().root_device().memregion(k053246->memory_region)->base();
-	UINT16 *ROM = (UINT16 *)device->machine().root_device().memregion(k053246->memory_region)->base();
-	int size4 = (device->machine().root_device().memregion(k053246->memory_region)->bytes() / (1024 * 1024)) / 5;
+	UINT8 *ROM8 = (UINT8 *)space.machine().root_device().memregion(k053246->memory_region)->base();
+	UINT16 *ROM = (UINT16 *)space.machine().root_device().memregion(k053246->memory_region)->base();
+	int size4 = (space.machine().root_device().memregion(k053246->memory_region)->bytes() / (1024 * 1024)) / 5;
 	int romofs;
 
 	size4 *= 4 * 1024 * 1024;	// get offset to 5th bit
@@ -4513,7 +4513,7 @@ READ16_DEVICE_HANDLER( k055673_rom_word_r )	// 5bpp
 READ16_DEVICE_HANDLER( k055673_GX6bpp_rom_word_r )
 {
 	k053247_state *k053246 = k053247_get_safe_token(device);
-	UINT16 *ROM = (UINT16 *)device->machine().root_device().memregion(k053246->memory_region)->base();
+	UINT16 *ROM = (UINT16 *)space.machine().root_device().memregion(k053246->memory_region)->base();
 	int romofs;
 
 	romofs = k053246->kx46_regs[6] << 16 | k053246->kx46_regs[7] << 8 | k053246->kx46_regs[4];
@@ -4538,7 +4538,7 @@ READ16_DEVICE_HANDLER( k055673_GX6bpp_rom_word_r )
 		case 7:
 			return ROM[romofs + 2];
 		default:
-//          LOG(("55673_rom_word_r: Unknown read offset %x (PC=%x)\n", offset, space->device().safe_pc()));
+//          LOG(("55673_rom_word_r: Unknown read offset %x (PC=%x)\n", offset, space.device().safe_pc()));
 			break;
 	}
 
@@ -4553,14 +4553,14 @@ READ8_DEVICE_HANDLER( k053246_r )
 		int addr;
 
 		addr = (k053246->kx46_regs[6] << 17) | (k053246->kx46_regs[7] << 9) | (k053246->kx46_regs[4] << 1) | ((offset & 1) ^ 1);
-		addr &= device->machine().root_device().memregion(k053246->memory_region)->bytes() - 1;
+		addr &= space.machine().root_device().memregion(k053246->memory_region)->bytes() - 1;
 //      if (VERBOSE)
-//          popmessage("%04x: offset %02x addr %06x", space->device().safe_pc(), offset, addr);
-		return device->machine().root_device().memregion(k053246->memory_region)->base()[addr];
+//          popmessage("%04x: offset %02x addr %06x", space.device().safe_pc(), offset, addr);
+		return space.machine().root_device().memregion(k053246->memory_region)->base()[addr];
 	}
 	else
 	{
-//      LOG(("%04x: read from unknown 053246 address %x\n", space->device().safe_pc(), offset));
+//      LOG(("%04x: read from unknown 053246 address %x\n", space.device().safe_pc(), offset));
 		return 0;
 	}
 }
@@ -4574,28 +4574,28 @@ WRITE8_DEVICE_HANDLER( k053246_w )
 READ16_DEVICE_HANDLER( k053246_word_r )
 {
 	offset <<= 1;
-	return k053246_r(device, offset + 1) | (k053246_r(device, offset) << 8);
+	return k053246_r(device, space, offset + 1) | (k053246_r(device, space, offset) << 8);
 }
 
 WRITE16_DEVICE_HANDLER( k053246_word_w )
 {
 	if (ACCESSING_BITS_8_15)
-		k053246_w(device, offset << 1,(data >> 8) & 0xff);
+		k053246_w(device, space, offset << 1,(data >> 8) & 0xff);
 	if (ACCESSING_BITS_0_7)
-		k053246_w(device, (offset << 1) + 1,data & 0xff);
+		k053246_w(device, space, (offset << 1) + 1,data & 0xff);
 }
 
 READ32_DEVICE_HANDLER( k053246_long_r )
 {
 	offset <<= 1;
-	return (k053246_word_r(device, offset + 1, 0xffff) | k053246_word_r(device, offset, 0xffff) << 16);
+	return (k053246_word_r(device, space, offset + 1, 0xffff) | k053246_word_r(device, space, offset, 0xffff) << 16);
 }
 
 WRITE32_DEVICE_HANDLER( k053246_long_w )
 {
 	offset <<= 1;
-	k053246_word_w(device, offset, data >> 16, mem_mask >> 16);
-	k053246_word_w(device, offset + 1, data, mem_mask);
+	k053246_word_w(device, space, offset, data >> 16, mem_mask >> 16);
+	k053246_word_w(device, space, offset + 1, data, mem_mask);
 }
 
 void k053246_set_objcha_line( device_t *device, int state )
@@ -5272,7 +5272,7 @@ const device_type K055673 = &device_creator<k055673_device>;
 k055673_device::k055673_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K055673, "Konami 055673", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k053247_state));
+	m_token = global_alloc_clear(k053247_state);
 }
 
 //-------------------------------------------------
@@ -5308,7 +5308,7 @@ const device_type K053246 = &device_creator<k053247_device>;
 k053247_device::k053247_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K053246, "Konami 053246 & 053247", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k053247_state));
+	m_token = global_alloc_clear(k053247_state);
 }
 
 //-------------------------------------------------
@@ -5438,15 +5438,15 @@ READ8_DEVICE_HANDLER( k051316_rom_r )
 		int addr = offset + (k051316->ctrlram[0x0c] << 11) + (k051316->ctrlram[0x0d] << 19);
 		if (k051316->bpp <= 4)
 			addr /= 2;
-		addr &= device->machine().root_device().memregion(k051316->memory_region)->bytes() - 1;
+		addr &= space.machine().root_device().memregion(k051316->memory_region)->bytes() - 1;
 
-		//  popmessage("%s: offset %04x addr %04x", device->machine().describe_context(), offset, addr);
+		//  popmessage("%s: offset %04x addr %04x", space.machine().describe_context(), offset, addr);
 
-		return device->machine().root_device().memregion(k051316->memory_region)->base()[addr];
+		return space.machine().root_device().memregion(k051316->memory_region)->base()[addr];
 	}
 	else
 	{
-		//logerror("%s: read 051316 ROM offset %04x but reg 0x0c bit 0 not clear\n", device->machine().describe_context(), offset);
+		//logerror("%s: read 051316 ROM offset %04x but reg 0x0c bit 0 not clear\n", space.machine().describe_context(), offset);
 		return 0;
 	}
 }
@@ -5455,7 +5455,7 @@ WRITE8_DEVICE_HANDLER( k051316_ctrl_w )
 {
 	k051316_state *k051316= k051316_get_safe_token(device);
 	k051316->ctrlram[offset] = data;
-	//if (offset >= 0x0c) logerror("%s: write %02x to 051316 reg %x\n", device->machine().describe_context(), data, offset);
+	//if (offset >= 0x0c) logerror("%s: write %02x to 051316 reg %x\n", space.machine().describe_context(), data, offset);
 }
 
 // a few games (ajax, rollerg, ultraman, etc.) can enable and disable wraparound after start
@@ -5541,7 +5541,7 @@ const device_type K051316 = &device_creator<k051316_device>;
 k051316_device::k051316_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K051316, "Konami 051316", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k051316_state));
+	m_token = global_alloc_clear(k051316_state);
 }
 
 //-------------------------------------------------
@@ -5914,7 +5914,7 @@ const device_type K053936 = &device_creator<k053936_device>;
 k053936_device::k053936_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K053936, "Konami 053936", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k053936_state));
+	m_token = global_alloc_clear(k053936_state);
 }
 
 //-------------------------------------------------
@@ -6002,7 +6002,7 @@ WRITE8_DEVICE_HANDLER( k053251_w )
 			}
 
 			if (!k053251->tilemaps_set)
-				device->machine().tilemap().mark_all_dirty();
+				space.machine().tilemap().mark_all_dirty();
 		}
 		else if (offset == 10)
 		{
@@ -6018,7 +6018,7 @@ WRITE8_DEVICE_HANDLER( k053251_w )
 			}
 
 			if (!k053251->tilemaps_set)
-				device->machine().tilemap().mark_all_dirty();
+				space.machine().tilemap().mark_all_dirty();
 		}
 	}
 }
@@ -6026,13 +6026,13 @@ WRITE8_DEVICE_HANDLER( k053251_w )
 WRITE16_DEVICE_HANDLER( k053251_lsb_w )
 {
 	if (ACCESSING_BITS_0_7)
-		k053251_w(device, offset, data & 0xff);
+		k053251_w(device, space, offset, data & 0xff);
 }
 
 WRITE16_DEVICE_HANDLER( k053251_msb_w )
 {
 	if (ACCESSING_BITS_8_15)
-		k053251_w(device, offset, (data >> 8) & 0xff);
+		k053251_w(device, space, offset, (data >> 8) & 0xff);
 }
 
 int k053251_get_priority( device_t *device, int ci )
@@ -6105,7 +6105,7 @@ const device_type K053251 = &device_creator<k053251_device>;
 k053251_device::k053251_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K053251, "Konami 053251", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k053251_state));
+	m_token = global_alloc_clear(k053251_state);
 }
 
 //-------------------------------------------------
@@ -6167,7 +6167,7 @@ WRITE8_DEVICE_HANDLER( k054000_w )
 {
 	k054000_state *k054000 = k054000_get_safe_token(device);
 
-	//logerror("%04x: write %02x to 054000 address %02x\n",space->device().safe_pc(),data,offset);
+	//logerror("%04x: write %02x to 054000 address %02x\n",space.device().safe_pc(),data,offset);
 	k054000->regs[offset] = data;
 }
 
@@ -6177,7 +6177,7 @@ READ8_DEVICE_HANDLER( k054000_r )
 	int Acx, Acy, Aax, Aay;
 	int Bcx, Bcy, Bax, Bay;
 
-	//logerror("%04x: read 054000 address %02x\n", space->device().safe_pc(), offset);
+	//logerror("%04x: read 054000 address %02x\n", space.device().safe_pc(), offset);
 
 	if (offset != 0x18)
 		return 0;
@@ -6216,13 +6216,13 @@ READ8_DEVICE_HANDLER( k054000_r )
 
 READ16_DEVICE_HANDLER( k054000_lsb_r )
 {
-	return k054000_r(device, offset);
+	return k054000_r(device, space, offset);
 }
 
 WRITE16_DEVICE_HANDLER( k054000_lsb_w )
 {
 	if (ACCESSING_BITS_0_7)
-		k054000_w(device, offset, data & 0xff);
+		k054000_w(device, space, offset, data & 0xff);
 }
 
 /*****************************************************************************
@@ -6250,7 +6250,7 @@ const device_type K054000 = &device_creator<k054000_device>;
 k054000_device::k054000_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K054000, "Konami 054000", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k054000_state));
+	m_token = global_alloc_clear(k054000_state);
 }
 
 //-------------------------------------------------
@@ -6313,7 +6313,7 @@ INLINE k051733_state *k051733_get_safe_token( device_t *device )
 WRITE8_DEVICE_HANDLER( k051733_w )
 {
 	k051733_state *k051733= k051733_get_safe_token(device);
-	//logerror("%04x: write %02x to 051733 address %02x\n", space->device().safe_pc(), data, offset);
+	//logerror("%04x: write %02x to 051733 address %02x\n", space.device().safe_pc(), data, offset);
 
 	k051733->ram[offset] = data;
 }
@@ -6438,7 +6438,7 @@ const device_type K051733 = &device_creator<k051733_device>;
 k051733_device::k051733_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K051733, "Konami 051733", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k051733_state));
+	m_token = global_alloc_clear(k051733_state);
 }
 
 //-------------------------------------------------
@@ -6843,7 +6843,7 @@ READ16_DEVICE_HANDLER( k056832_5bpp_rom_word_r )
 		return k056832_rom_read_b(device, offset * 2 + 1, 4, 5, 0)<<16;
 	else
 	{
-		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
+		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space.device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -6860,7 +6860,7 @@ READ32_DEVICE_HANDLER( k056832_5bpp_rom_long_r )
 		return k056832_rom_read_b(device, offset * 4 + 3, 4, 5, 1);
 	else
 	{
-		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
+		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space.device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -6877,7 +6877,7 @@ READ32_DEVICE_HANDLER( k056832_6bpp_rom_long_r )
 		return k056832_rom_read_b(device, offset * 4 + 3, 4, 6, 0);
 	else
 	{
-		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
+		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space.device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -6888,7 +6888,7 @@ READ16_DEVICE_HANDLER( k056832_rom_word_r )
 	int addr = 0x2000 * k056832->cur_gfx_banks + 2 * offset;
 
 	if (!k056832->rombase)
-		k056832->rombase = device->machine().root_device().memregion(k056832->memory_region)->base();
+		k056832->rombase = space.machine().root_device().memregion(k056832->memory_region)->base();
 
 	return k056832->rombase[addr + 1] | (k056832->rombase[addr] << 8);
 }
@@ -6902,7 +6902,7 @@ READ16_DEVICE_HANDLER( k056832_mw_rom_word_r )
 	int addr;
 
 	if (!k056832->rombase)
-		k056832->rombase = device->machine().root_device().memregion(k056832->memory_region)->base();
+		k056832->rombase = space.machine().root_device().memregion(k056832->memory_region)->base();
 
 	if (k056832->regsb[2] & 0x8)
 	{
@@ -6965,7 +6965,7 @@ READ16_DEVICE_HANDLER( k056832_bishi_rom_word_r )
 	int addr = 0x4000 * k056832->cur_gfx_banks + offset;
 
 	if (!k056832->rombase)
-		k056832->rombase = device->machine().root_device().memregion(k056832->memory_region)->base();
+		k056832->rombase = space.machine().root_device().memregion(k056832->memory_region)->base();
 
 	return k056832->rombase[addr + 2] | (k056832->rombase[addr] << 8);
 }
@@ -6976,7 +6976,7 @@ READ16_DEVICE_HANDLER( k056832_rom_word_8000_r )
 	int addr = 0x8000 * k056832->cur_gfx_banks + 2 * offset;
 
 	if (!k056832->rombase)
-		k056832->rombase = device->machine().root_device().memregion(k056832->memory_region)->base();
+		k056832->rombase = space.machine().root_device().memregion(k056832->memory_region)->base();
 
 	return k056832->rombase[addr + 2] | (k056832->rombase[addr] << 8);
 }
@@ -6987,7 +6987,7 @@ READ16_DEVICE_HANDLER( k056832_old_rom_word_r )
 	int addr = 0x2000 * k056832->cur_gfx_banks + 2 * offset;
 
 	if (!k056832->rombase)
-		k056832->rombase = device->machine().root_device().memregion(k056832->memory_region)->base();
+		k056832->rombase = space.machine().root_device().memregion(k056832->memory_region)->base();
 
 	return k056832->rombase[addr + 1] | (k056832->rombase[addr] << 8);
 }
@@ -6995,7 +6995,7 @@ READ16_DEVICE_HANDLER( k056832_old_rom_word_r )
 READ32_DEVICE_HANDLER( k056832_rom_long_r )
 {
 	offset <<= 1;
-	return (k056832_rom_word_r(device, offset + 1, 0xffff) | (k056832_rom_word_r(device, offset, 0xffff) << 16));
+	return (k056832_rom_word_r(device, space, offset + 1, 0xffff) | (k056832_rom_word_r(device, space, offset, 0xffff) << 16));
 }
 
 /* only one page is mapped to videoram at a time through a window */
@@ -7352,8 +7352,8 @@ WRITE32_DEVICE_HANDLER( k056832_long_w )
 	// if (ACCESSING_xxx) trick.  in particular, 8-bit writes
 	// are used to the tilemap bank register.
 	offset <<= 1;
-	k056832_word_w(device, offset, data >> 16, mem_mask >> 16);
-	k056832_word_w(device, offset + 1, data, mem_mask);
+	k056832_word_w(device, space, offset, data >> 16, mem_mask >> 16);
+	k056832_word_w(device, space, offset + 1, data, mem_mask);
 }
 
 WRITE16_DEVICE_HANDLER( k056832_b_word_w )
@@ -7366,11 +7366,11 @@ WRITE8_DEVICE_HANDLER( k056832_w )
 {
 	if (offset & 1)
 	{
-		k056832_word_w(device, (offset >> 1), data, 0x00ff);
+		k056832_word_w(device, space, (offset >> 1), data, 0x00ff);
 	}
 	else
 	{
-		k056832_word_w(device, (offset >> 1), data << 8, 0xff00);
+		k056832_word_w(device, space, (offset >> 1), data << 8, 0xff00);
 	}
 }
 
@@ -7378,11 +7378,11 @@ WRITE8_DEVICE_HANDLER( k056832_b_w )
 {
 	if (offset & 1)
 	{
-		k056832_b_word_w(device, (offset >> 1), data, 0x00ff);
+		k056832_b_word_w(device, space, (offset >> 1), data, 0x00ff);
 	}
 	else
 	{
-		k056832_b_word_w(device, (offset >> 1), data<<8, 0xff00);
+		k056832_b_word_w(device, space, (offset >> 1), data<<8, 0xff00);
 	}
 }
 
@@ -7390,11 +7390,11 @@ WRITE32_DEVICE_HANDLER( k056832_b_long_w )
 {
 	if (ACCESSING_BITS_16_31)
 	{
-		k056832_b_word_w(device, offset << 1, data >> 16, mem_mask >> 16);
+		k056832_b_word_w(device, space, offset << 1, data >> 16, mem_mask >> 16);
 	}
 	if (ACCESSING_BITS_0_15)
 	{
-		k056832_b_word_w(device, (offset << 1) + 1, data, mem_mask);
+		k056832_b_word_w(device, space, (offset << 1) + 1, data, mem_mask);
 	}
 }
 
@@ -8186,7 +8186,7 @@ const device_type K056832 = &device_creator<k056832_device>;
 k056832_device::k056832_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K056832, "Konami 056832", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k056832_state));
+	m_token = global_alloc_clear(k056832_state);
 }
 
 //-------------------------------------------------
@@ -8577,7 +8577,7 @@ const device_type K055555 = &device_creator<k055555_device>;
 k055555_device::k055555_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K055555, "Konami 055555", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k055555_state));
+	m_token = global_alloc_clear(k055555_state);
 }
 
 //-------------------------------------------------
@@ -8661,8 +8661,8 @@ WRITE16_DEVICE_HANDLER( k054338_word_w )
 WRITE32_DEVICE_HANDLER( k054338_long_w )
 {
 	offset <<= 1;
-	k054338_word_w(device, offset, data >> 16, mem_mask >> 16);
-	k054338_word_w(device, offset + 1, data, mem_mask);
+	k054338_word_w(device, space, offset, data >> 16, mem_mask >> 16);
+	k054338_word_w(device, space, offset + 1, data, mem_mask);
 }
 
 // returns a 16-bit '338 register
@@ -8915,7 +8915,7 @@ const device_type K054338 = &device_creator<k054338_device>;
 k054338_device::k054338_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K054338, "Konami 054338", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k054338_state));
+	m_token = global_alloc_clear(k054338_state);
 }
 
 //-------------------------------------------------
@@ -9009,7 +9009,7 @@ READ32_DEVICE_HANDLER( k001006_r )
 		{
 			case 0x0b:		// CG Board ROM read
 			{
-				UINT16 *rom = (UINT16*)device->machine().root_device().memregion(k001006->gfx_region)->base();
+				UINT16 *rom = (UINT16*)space.machine().root_device().memregion(k001006->gfx_region)->base();
 				return rom[k001006->addr / 2] << 16;
 			}
 			case 0x0d:		// Palette RAM read
@@ -9126,7 +9126,7 @@ const device_type K001006 = &device_creator<k001006_device>;
 k001006_device::k001006_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K001006, "Konami 001006", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k001006_state));
+	m_token = global_alloc_clear(k001006_state);
 }
 
 //-------------------------------------------------
@@ -9368,7 +9368,7 @@ READ32_DEVICE_HANDLER( k001005_r )
 			}
 
 		default:
-			//mame_printf_debug("k001005->r: %08X, %08X at %08X\n", offset, mem_mask, space->device().safe_pc());
+			//mame_printf_debug("k001005->r: %08X, %08X at %08X\n", offset, mem_mask, space.device().safe_pc());
 			break;
 	}
 	return 0;
@@ -9401,7 +9401,7 @@ WRITE32_DEVICE_HANDLER( k001005_w )
 				sharc_set_flag_input(k001005->dsp, 1, ASSERT_LINE);
 			}
 
-	    //  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, space->device().safe_pc());
+	    //  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, space.device().safe_pc());
 			k001005->fifo[k001005->fifo_write_ptr] = data;
 			k001005->fifo_write_ptr++;
 			k001005->fifo_write_ptr &= 0x7ff;
@@ -9465,7 +9465,7 @@ WRITE32_DEVICE_HANDLER( k001005_w )
 			break;
 
 		default:
-			//mame_printf_debug("k001005->w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space->device().safe_pc());
+			//mame_printf_debug("k001005->w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space.device().safe_pc());
 			break;
 	}
 
@@ -10089,7 +10089,7 @@ const device_type K001005 = &device_creator<k001005_device>;
 k001005_device::k001005_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K001005, "Konami 001005", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k001005_state));
+	m_token = global_alloc_clear(k001005_state);
 }
 
 //-------------------------------------------------
@@ -10380,8 +10380,8 @@ READ32_DEVICE_HANDLER( k001604_reg_r )
 
 	switch (offset)
 	{
-		case 0x54/4:	return device->machine().rand() << 16;
-		case 0x5c/4:	return device->machine().rand() << 16 | device->machine().rand();
+		case 0x54/4:	return space.machine().rand() << 16;
+		case 0x5c/4:	return space.machine().rand() << 16 | space.machine().rand();
 	}
 
 	return k001604->reg[offset];
@@ -10457,8 +10457,8 @@ WRITE32_DEVICE_HANDLER( k001604_char_w )
 
 	COMBINE_DATA(k001604->char_ram + addr);
 
-	device->machine().gfx[k001604->gfx_index[0]]->mark_dirty(addr / 32);
-	device->machine().gfx[k001604->gfx_index[1]]->mark_dirty(addr / 128);
+	space.machine().gfx[k001604->gfx_index[0]]->mark_dirty(addr / 32);
+	space.machine().gfx[k001604->gfx_index[1]]->mark_dirty(addr / 128);
 }
 
 WRITE32_DEVICE_HANDLER( k001604_reg_w )
@@ -10478,7 +10478,7 @@ WRITE32_DEVICE_HANDLER( k001604_reg_w )
 
 	if (offset != 0x08 && offset != 0x09 && offset != 0x0a /*&& offset != 0x17 && offset != 0x18*/)
 	{
-		//printf("K001604_reg_w (%d), %02X, %08X, %08X at %08X\n", chip, offset, data, mem_mask, space->device().safe_pc());
+		//printf("K001604_reg_w (%d), %02X, %08X, %08X at %08X\n", chip, offset, data, mem_mask, space.device().safe_pc());
 	}
 }
 
@@ -10487,7 +10487,7 @@ const device_type K001604 = &device_creator<k001604_device>;
 k001604_device::k001604_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K001604, "Konami 001604", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k001604_state));
+	m_token = global_alloc_clear(k001604_state);
 }
 
 //-------------------------------------------------
@@ -10750,7 +10750,7 @@ WRITE32_DEVICE_HANDLER( k037122_char_w )
 	UINT32 addr = offset + (bank * (0x40000/4));
 
 	COMBINE_DATA(k037122->char_ram + addr);
-	device->machine().gfx[k037122->gfx_index]->mark_dirty(addr / 32);
+	space.machine().gfx[k037122->gfx_index]->mark_dirty(addr / 32);
 }
 
 READ32_DEVICE_HANDLER( k037122_reg_r )
@@ -10783,7 +10783,7 @@ const device_type K037122 = &device_creator<k037122_device>;
 k037122_device::k037122_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K037122, "Konami 0371222", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(k037122_state));
+	m_token = global_alloc_clear(k037122_state);
 }
 
 //-------------------------------------------------
@@ -10897,19 +10897,19 @@ READ16_DEVICE_HANDLER( k055555_word_r )
 READ32_DEVICE_HANDLER( k056832_long_r )
 {
 	offset <<= 1;
-	return (k056832_word_r(device, offset + 1, 0xffff) | k056832_word_r(device, offset, 0xffff) << 16);
+	return (k056832_word_r(device, space, offset + 1, 0xffff) | k056832_word_r(device, space, offset, 0xffff) << 16);
 }
 
 READ32_DEVICE_HANDLER( k053247_reg_long_r )
 {
 	offset <<= 1;
-	return (k053247_reg_word_r(device, offset + 1, 0xffff) | k053247_reg_word_r(device, offset, 0xffff) << 16);
+	return (k053247_reg_word_r(device, space, offset + 1, 0xffff) | k053247_reg_word_r(device, space, offset, 0xffff) << 16);
 }
 
 READ32_DEVICE_HANDLER( k055555_long_r )
 {
 	offset <<= 1;
-	return (k055555_word_r(device, offset + 1, 0xffff) | k055555_word_r(device, offset, 0xffff) << 16);
+	return (k055555_word_r(device, space, offset + 1, 0xffff) | k055555_word_r(device, space, offset, 0xffff) << 16);
 }
 
 READ16_DEVICE_HANDLER( k053244_reg_word_r )

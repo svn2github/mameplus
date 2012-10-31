@@ -165,7 +165,7 @@ VIDEO_START_MEMBER(digdug_state,digdug)
 
 WRITE8_HANDLER( digdug_videoram_w )
 {
-	digdug_state *state =  space->machine().driver_data<digdug_state>();
+	digdug_state *state =  space.machine().driver_data<digdug_state>();
 
 	state->m_videoram[offset] = data;
 	state->m_fg_tilemap->mark_tile_dirty(offset & 0x3ff);
@@ -173,7 +173,7 @@ WRITE8_HANDLER( digdug_videoram_w )
 
 WRITE8_HANDLER( digdug_PORT_w )
 {
-	digdug_state *state =  space->machine().driver_data<digdug_state>();
+	digdug_state *state =  space.machine().driver_data<digdug_state>();
 
 	switch (offset)
 	{
@@ -308,12 +308,11 @@ static void draw_sprites(running_machine& machine, bitmap_ind16 &bitmap, const r
 }
 
 
-SCREEN_UPDATE_IND16( digdug )
+UINT32 digdug_state::screen_update_digdug(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	digdug_state *state =  screen.machine().driver_data<digdug_state>();
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(screen.machine(),bitmap,cliprect);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0,0);
+	draw_sprites(machine(),bitmap,cliprect);
 	return 0;
 }

@@ -298,37 +298,37 @@ VIDEO_START_MEMBER(segas32_state,multi32)
  *
  *************************************/
 
-static TIMER_CALLBACK( update_sprites )
+TIMER_CALLBACK_MEMBER(segas32_state::update_sprites)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
 	/* if automatic mode is selected, do it every frame (0) or every other frame (1) */
-	if (!(state->m_sprite_control[3] & 2))
+	if (!(m_sprite_control[3] & 2))
 	{
 		/* if we count down to the start, process the automatic swapping, but only after a short delay */
-		if (state->m_sprite_render_count-- == 0)
+		if (m_sprite_render_count-- == 0)
 		{
-			state->m_sprite_control[0] = 3;
-			state->m_sprite_render_count = state->m_sprite_control[3] & 1;
+			m_sprite_control[0] = 3;
+			m_sprite_render_count = m_sprite_control[3] & 1;
 		}
 	}
 
 	/* look for pending commands */
-	if (state->m_sprite_control[0] & 2)
-		sprite_erase_buffer(state);
-	if (state->m_sprite_control[0] & 1)
+	if (m_sprite_control[0] & 2)
+		sprite_erase_buffer(this);
+	if (m_sprite_control[0] & 1)
 	{
-		sprite_swap_buffers(state);
-		sprite_render_list(machine);
+		sprite_swap_buffers(this);
+		sprite_render_list(machine());
 	}
-	state->m_sprite_control[0] = 0;
+	m_sprite_control[0] = 0;
 }
 
 
 void system32_set_vblank(running_machine &machine, int state)
 {
+	segas32_state *drvstate = machine.driver_data<segas32_state>();
 	/* at the end of VBLANK is when automatic sprite rendering happens */
 	if (!state)
-		machine.scheduler().timer_set(attotime::from_usec(50), FUNC(update_sprites), 1);
+		machine.scheduler().timer_set(attotime::from_usec(50), timer_expired_delegate(FUNC(segas32_state::update_sprites),drvstate), 1);
 }
 
 
@@ -370,9 +370,9 @@ INLINE void update_color(running_machine &machine, int offset, UINT16 data)
 }
 
 
-INLINE UINT16 common_paletteram_r(address_space *space, int which, offs_t offset)
+INLINE UINT16 common_paletteram_r(address_space &space, int which, offs_t offset)
 {
-	segas32_state *state = space->machine().driver_data<segas32_state>();
+	segas32_state *state = space.machine().driver_data<segas32_state>();
 	int convert;
 
 	/* the lower half of palette RAM is formatted xBBBBBGGGGGRRRRR */
@@ -389,9 +389,9 @@ INLINE UINT16 common_paletteram_r(address_space *space, int which, offs_t offset
 }
 
 
-static void common_paletteram_w(address_space *space, int which, offs_t offset, UINT16 data, UINT16 mem_mask)
+static void common_paletteram_w(address_space &space, int which, offs_t offset, UINT16 data, UINT16 mem_mask)
 {
-	segas32_state *state = space->machine().driver_data<segas32_state>();
+	segas32_state *state = space.machine().driver_data<segas32_state>();
 	UINT16 value;
 	int convert;
 
@@ -408,7 +408,7 @@ static void common_paletteram_w(address_space *space, int which, offs_t offset, 
 	COMBINE_DATA(&value);
 	if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
 	state->m_system32_paletteram[which][offset] = value;
-	update_color(space->machine(), 0x4000*which + offset, value);
+	update_color(space.machine(), 0x4000*which + offset, value);
 
 	/* if blending is enabled, writes go to both halves of palette RAM */
 	if (state->m_mixer_control[which][0x4e/2] & 0x0880)
@@ -421,7 +421,7 @@ static void common_paletteram_w(address_space *space, int which, offs_t offset, 
 		COMBINE_DATA(&value);
 		if (convert) value = xBGRBBBBGGGGRRRR_to_xBBBBBGGGGGRRRRR(value);
 		state->m_system32_paletteram[which][offset] = value;
-		update_color(space->machine(), 0x4000*which + offset, value);
+		update_color(space.machine(), 0x4000*which + offset, value);
 	}
 }
 
@@ -435,45 +435,45 @@ static void common_paletteram_w(address_space *space, int which, offs_t offset, 
 
 READ16_MEMBER(segas32_state::system32_paletteram_r)
 {
-	return common_paletteram_r(&space, 0, offset);
+	return common_paletteram_r(space, 0, offset);
 }
 
 
 WRITE16_MEMBER(segas32_state::system32_paletteram_w)
 {
-	common_paletteram_w(&space, 0, offset, data, mem_mask);
+	common_paletteram_w(space, 0, offset, data, mem_mask);
 }
 
 
 READ32_MEMBER(segas32_state::multi32_paletteram_0_r)
 {
-	return common_paletteram_r(&space, 0, offset*2+0) |
-	      (common_paletteram_r(&space, 0, offset*2+1) << 16);
+	return common_paletteram_r(space, 0, offset*2+0) |
+	      (common_paletteram_r(space, 0, offset*2+1) << 16);
 }
 
 
 WRITE32_MEMBER(segas32_state::multi32_paletteram_0_w)
 {
 	if (ACCESSING_BITS_0_15)
-		common_paletteram_w(&space, 0, offset*2+0, data, mem_mask);
+		common_paletteram_w(space, 0, offset*2+0, data, mem_mask);
 	if (ACCESSING_BITS_16_31)
-		common_paletteram_w(&space, 0, offset*2+1, data >> 16, mem_mask >> 16);
+		common_paletteram_w(space, 0, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
 
 READ32_MEMBER(segas32_state::multi32_paletteram_1_r)
 {
-	return common_paletteram_r(&space, 1, offset*2+0) |
-	      (common_paletteram_r(&space, 1, offset*2+1) << 16);
+	return common_paletteram_r(space, 1, offset*2+0) |
+	      (common_paletteram_r(space, 1, offset*2+1) << 16);
 }
 
 
 WRITE32_MEMBER(segas32_state::multi32_paletteram_1_w)
 {
 	if (ACCESSING_BITS_0_15)
-		common_paletteram_w(&space, 1, offset*2+0, data, mem_mask);
+		common_paletteram_w(space, 1, offset*2+0, data, mem_mask);
 	if (ACCESSING_BITS_16_31)
-		common_paletteram_w(&space, 1, offset*2+1, data >> 16, mem_mask >> 16);
+		common_paletteram_w(space, 1, offset*2+1, data >> 16, mem_mask >> 16);
 }
 
 
@@ -2404,21 +2404,20 @@ static void print_mixer_data(segas32_state *state, int which)
 	}
 }
 
-SCREEN_UPDATE_RGB32( system32 )
+UINT32 segas32_state::screen_update_system32(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	UINT8 enablemask;
 
 	/* update the visible area */
-	if (state->m_system32_videoram[0x1ff00/2] & 0x8000)
+	if (m_system32_videoram[0x1ff00/2] & 0x8000)
 		screen.set_visible_area(0, 52*8-1, 0, 28*8-1);
 	else
 		screen.set_visible_area(0, 40*8-1, 0, 28*8-1);
 
 	/* if the display is off, punt */
-	if (!state->m_system32_displayenable[0])
+	if (!m_system32_displayenable[0])
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
@@ -2429,20 +2428,20 @@ SCREEN_UPDATE_RGB32( system32 )
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
-	if (screen.machine().input().code_pressed(KEYCODE_Q)) enablemask = 0x01;
-	if (screen.machine().input().code_pressed(KEYCODE_W)) enablemask = 0x02;
-	if (screen.machine().input().code_pressed(KEYCODE_E)) enablemask = 0x04;
-	if (screen.machine().input().code_pressed(KEYCODE_R)) enablemask = 0x08;
-	if (screen.machine().input().code_pressed(KEYCODE_T)) enablemask = 0x10;
-	if (screen.machine().input().code_pressed(KEYCODE_Y)) enablemask = 0x20;
+	if (machine().input().code_pressed(KEYCODE_Q)) enablemask = 0x01;
+	if (machine().input().code_pressed(KEYCODE_W)) enablemask = 0x02;
+	if (machine().input().code_pressed(KEYCODE_E)) enablemask = 0x04;
+	if (machine().input().code_pressed(KEYCODE_R)) enablemask = 0x08;
+	if (machine().input().code_pressed(KEYCODE_T)) enablemask = 0x10;
+	if (machine().input().code_pressed(KEYCODE_Y)) enablemask = 0x20;
 #endif
 
 	/* do the mixing */
 	g_profiler.start(PROFILER_USER3);
-	mix_all_layers(state, 0, 0, bitmap, cliprect, enablemask);
+	mix_all_layers(this, 0, 0, bitmap, cliprect, enablemask);
 	g_profiler.stop();
 
-	if (LOG_SPRITES && screen.machine().input().code_pressed(KEYCODE_L))
+	if (LOG_SPRITES && machine().input().code_pressed(KEYCODE_L))
 	{
 		const rectangle &visarea = screen.visible_area();
 		FILE *f = fopen("sprite.txt", "w");
@@ -2450,7 +2449,7 @@ SCREEN_UPDATE_RGB32( system32 )
 
 		for (y = visarea.min_y; y <= visarea.max_y; y++)
 		{
-			UINT16 *src = get_layer_scanline(state, MIXER_LAYER_SPRITES, y);
+			UINT16 *src = get_layer_scanline(this, MIXER_LAYER_SPRITES, y);
 			for (x = visarea.min_x; x <= visarea.max_x; x++)
 				fprintf(f, "%04X ", *src++);
 			fprintf(f, "\n");
@@ -2460,7 +2459,7 @@ SCREEN_UPDATE_RGB32( system32 )
 		f = fopen("nbg0.txt", "w");
 		for (y = visarea.min_y; y <= visarea.max_y; y++)
 		{
-			UINT16 *src = get_layer_scanline(state, MIXER_LAYER_NBG0, y);
+			UINT16 *src = get_layer_scanline(this, MIXER_LAYER_NBG0, y);
 			for (x = visarea.min_x; x <= visarea.max_x; x++)
 				fprintf(f, "%04X ", *src++);
 			fprintf(f, "\n");
@@ -2470,7 +2469,7 @@ SCREEN_UPDATE_RGB32( system32 )
 		f = fopen("nbg1.txt", "w");
 		for (y = visarea.min_y; y <= visarea.max_y; y++)
 		{
-			UINT16 *src = get_layer_scanline(state, MIXER_LAYER_NBG1, y);
+			UINT16 *src = get_layer_scanline(this, MIXER_LAYER_NBG1, y);
 			for (x = visarea.min_x; x <= visarea.max_x; x++)
 				fprintf(f, "%04X ", *src++);
 			fprintf(f, "\n");
@@ -2480,7 +2479,7 @@ SCREEN_UPDATE_RGB32( system32 )
 		f = fopen("nbg2.txt", "w");
 		for (y = visarea.min_y; y <= visarea.max_y; y++)
 		{
-			UINT16 *src = get_layer_scanline(state, MIXER_LAYER_NBG2, y);
+			UINT16 *src = get_layer_scanline(this, MIXER_LAYER_NBG2, y);
 			for (x = visarea.min_x; x <= visarea.max_x; x++)
 				fprintf(f, "%04X ", *src++);
 			fprintf(f, "\n");
@@ -2490,7 +2489,7 @@ SCREEN_UPDATE_RGB32( system32 )
 		f = fopen("nbg3.txt", "w");
 		for (y = visarea.min_y; y <= visarea.max_y; y++)
 		{
-			UINT16 *src = get_layer_scanline(state, MIXER_LAYER_NBG3, y);
+			UINT16 *src = get_layer_scanline(this, MIXER_LAYER_NBG3, y);
 			for (x = visarea.min_x; x <= visarea.max_x; x++)
 				fprintf(f, "%04X ", *src++);
 			fprintf(f, "\n");
@@ -2503,10 +2502,10 @@ SCREEN_UPDATE_RGB32( system32 )
 	static const char *const layername[] = { "TEXT ", "NBG0 ", "NBG1 ", "NBG2 ", "NBG3 ", "BITMAP " };
 	char temp[100];
 	int count = 0, i;
-	sprintf(temp, "ALPHA(%d):", (state->m_mixer_control[which][0x4e/2] >> 8) & 7);
+	sprintf(temp, "ALPHA(%d):", (m_mixer_control[which][0x4e/2] >> 8) & 7);
 	for (i = 0; i < 6; i++)
 		if (enablemask & (1 << i))
-			if ((state->m_mixer_control[which][0x30/2 + i] & 0x1010) == 0x1010)
+			if ((m_mixer_control[which][0x30/2 + i] & 0x1010) == 0x1010)
 			{
 				count++;
 				strcat(temp, layername[i]);
@@ -2578,7 +2577,7 @@ for (showclip = 0; showclip < 4; showclip++)
 }
 #endif
 
-	if (PRINTF_MIXER_DATA) print_mixer_data(state, 0);
+	if (PRINTF_MIXER_DATA) print_mixer_data(this, 0);
 	return 0;
 }
 
@@ -2645,8 +2644,8 @@ if (PRINTF_MIXER_DATA)
 	return 0;
 }
 
-SCREEN_UPDATE_RGB32( multi32_left ) { return multi32_update(screen, bitmap, cliprect, 0); }
-SCREEN_UPDATE_RGB32( multi32_right ) { return multi32_update(screen, bitmap, cliprect, 1); }
+UINT32 segas32_state::screen_update_multi32_left(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect){ return multi32_update(screen, bitmap, cliprect, 0); }
+UINT32 segas32_state::screen_update_multi32_right(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect){ return multi32_update(screen, bitmap, cliprect, 1); }
 
 /*
 

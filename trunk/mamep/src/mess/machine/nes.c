@@ -3,7 +3,7 @@
 #include "cpu/m6502/m6502.h"
 #include "video/ppu2c0x.h"
 #include "includes/nes.h"
-#include "machine/nes_mmc.h"
+//#include "includes/nes_mmc.h"
 #include "imagedev/cartslot.h"
 #include "imagedev/flopdrv.h"
 #include "hashfile.h"
@@ -23,7 +23,6 @@
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static void init_nes_core(running_machine &machine);
 static void nes_machine_stop(running_machine &machine);
 
 
@@ -33,167 +32,166 @@ static void fds_irq(device_t *device, int scanline, int vblank, int blanked);
     FUNCTIONS
 ***************************************************************************/
 
-static void init_nes_core( running_machine &machine )
+void nes_state::init_nes_core()
 {
-	nes_state *state = machine.driver_data<nes_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	static const char *const bank_names[] = { "bank1", "bank2", "bank3", "bank4" };
-	int prg_banks = (state->m_prg_chunks == 1) ? (2 * 2) : (state->m_prg_chunks * 2);
+	int prg_banks = (m_prg_chunks == 1) ? (2 * 2) : (m_prg_chunks * 2);
 	int i;
 
-	state->m_rom = machine.root_device().memregion("maincpu")->base();
-	state->m_ciram = machine.root_device().memregion("ciram")->base();
+	m_rom = machine().root_device().memregion("maincpu")->base();
+	m_ciram = machine().root_device().memregion("ciram")->base();
 	// other pointers got set in the loading routine
 
 	/* Brutal hack put in as a consequence of the new memory system; we really need to fix the NES code */
-	space->install_readwrite_bank(0x0000, 0x07ff, 0, 0x1800, "bank10");
+	space.install_readwrite_bank(0x0000, 0x07ff, 0, 0x1800, "bank10");
 
-	machine.device("ppu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0, 0x1fff, FUNC(nes_chr_r), FUNC(nes_chr_w));
-	machine.device("ppu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x2000, 0x3eff, FUNC(nes_nt_r), FUNC(nes_nt_w));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0, 0x1fff, read8_delegate(FUNC(nes_state::nes_chr_r),this), write8_delegate(FUNC(nes_state::nes_chr_w),this));
+	machine().device("ppu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x2000, 0x3eff, read8_delegate(FUNC(nes_state::nes_nt_r),this), write8_delegate(FUNC(nes_state::nes_nt_w),this));
 
-	state->membank("bank10")->set_base(state->m_rom);
+	membank("bank10")->set_base(m_rom);
 
 	/* If there is Disk Expansion and no cart has been loaded, setup memory accordingly */
-	if (state->m_disk_expansion && state->m_pcb_id == NO_BOARD)
+	if (m_disk_expansion && m_pcb_id == NO_BOARD)
 	{
-		/* If we are loading a disk we have already filled state->m_fds_data and we don't want to overwrite it,
+		/* If we are loading a disk we have already filled m_fds_data and we don't want to overwrite it,
          if we are loading a cart image identified as mapper 20 (probably wrong mapper...) we need to alloc
          memory for use in nes_fds_r/nes_fds_w. Same goes for allocation of fds_ram (used for bank2)  */
-		if (state->m_fds_data == NULL)
+		if (m_fds_data == NULL)
 		{
-			UINT32 size = (state->m_prg_chunks == 1) ? 2 * 0x4000 : state->m_prg_chunks * 0x4000;
-			state->m_fds_data = auto_alloc_array_clear(machine, UINT8, size);
-			memcpy(state->m_fds_data, state->m_prg, size);	// copy in fds_data the cart PRG
+			UINT32 size = (m_prg_chunks == 1) ? 2 * 0x4000 : m_prg_chunks * 0x4000;
+			m_fds_data = auto_alloc_array_clear(machine(), UINT8, size);
+			memcpy(m_fds_data, m_prg, size);	// copy in fds_data the cart PRG
 		}
-		if (state->m_fds_ram == NULL)
-			state->m_fds_ram = auto_alloc_array(machine, UINT8, 0x8000);
+		if (m_fds_ram == NULL)
+			m_fds_ram = auto_alloc_array(machine(), UINT8, 0x8000);
 
-		space->install_read_handler(0x4030, 0x403f, read8_delegate(FUNC(nes_state::nes_fds_r),state));
-		space->install_read_bank(0x6000, 0xdfff, "bank2");
-		space->install_read_bank(0xe000, 0xffff, "bank1");
+		space.install_read_handler(0x4030, 0x403f, read8_delegate(FUNC(nes_state::nes_fds_r),this));
+		space.install_read_bank(0x6000, 0xdfff, "bank2");
+		space.install_read_bank(0xe000, 0xffff, "bank1");
 
-		space->install_write_handler(0x4020, 0x402f, write8_delegate(FUNC(nes_state::nes_fds_w),state));
-		space->install_write_bank(0x6000, 0xdfff, "bank2");
+		space.install_write_handler(0x4020, 0x402f, write8_delegate(FUNC(nes_state::nes_fds_w),this));
+		space.install_write_bank(0x6000, 0xdfff, "bank2");
 
-		state->membank("bank1")->set_base(&state->m_rom[0xe000]);
-		state->membank("bank2")->set_base(state->m_fds_ram);
+		membank("bank1")->set_base(&m_rom[0xe000]);
+		membank("bank2")->set_base(m_fds_ram);
 		return;
 	}
 
 	/* Set up the mapper callbacks */
-	pcb_handlers_setup(machine);
+	pcb_handlers_setup();
 
 	/* Set up the memory handlers for the mapper */
-	space->install_read_bank(0x8000, 0x9fff, "bank1");
-	space->install_read_bank(0xa000, 0xbfff, "bank2");
-	space->install_read_bank(0xc000, 0xdfff, "bank3");
-	space->install_read_bank(0xe000, 0xffff, "bank4");
-	space->install_readwrite_bank(0x6000, 0x7fff, "bank5");
+	space.install_read_bank(0x8000, 0x9fff, "bank1");
+	space.install_read_bank(0xa000, 0xbfff, "bank2");
+	space.install_read_bank(0xc000, 0xdfff, "bank3");
+	space.install_read_bank(0xe000, 0xffff, "bank4");
+	space.install_readwrite_bank(0x6000, 0x7fff, "bank5");
 
 	/* configure banks 1-4 */
 	for (i = 0; i < 4; i++)
 	{
-		state->membank(bank_names[i])->configure_entries(0, prg_banks, state->m_prg, 0x2000);
+		membank(bank_names[i])->configure_entries(0, prg_banks, m_prg, 0x2000);
 		// some mappers (e.g. MMC5) can map PRG RAM in  0x8000-0xffff as well
-		if (state->m_prg_ram)
-			state->membank(bank_names[i])->configure_entries(prg_banks, state->m_wram_size / 0x2000, state->m_wram, 0x2000);
+		if (m_prg_ram)
+			membank(bank_names[i])->configure_entries(prg_banks, m_wram_size / 0x2000, m_wram, 0x2000);
 		// however, at start we point to PRG ROM
-		state->membank(bank_names[i])->set_entry(i);
-		state->m_prg_bank[i] = i;
+		membank(bank_names[i])->set_entry(i);
+		m_prg_bank[i] = i;
 	}
 
 	/* bank 5 configuration is more delicate, since it can have PRG RAM, PRG ROM or SRAM mapped to it */
-	/* we first map PRG ROM banks, then the battery bank (if a battery is present), and finally PRG RAM (state->m_wram) */
-	state->membank("bank5")->configure_entries(0, prg_banks, state->m_prg, 0x2000);
-	state->m_battery_bank5_start = prg_banks;
-	state->m_prgram_bank5_start = prg_banks;
-	state->m_empty_bank5_start = prg_banks;
+	/* we first map PRG ROM banks, then the battery bank (if a battery is present), and finally PRG RAM (m_wram) */
+	membank("bank5")->configure_entries(0, prg_banks, m_prg, 0x2000);
+	m_battery_bank5_start = prg_banks;
+	m_prgram_bank5_start = prg_banks;
+	m_empty_bank5_start = prg_banks;
 
 	/* add battery ram, but only if there's no trainer since they share overlapping memory. */
-	if (state->m_battery && !state->m_trainer)
+	if (m_battery && !m_trainer)
 	{
-		UINT32 bank_size = (state->m_battery_size > 0x2000) ? 0x2000 : state->m_battery_size;
-		int bank_num = (state->m_battery_size > 0x2000) ? state->m_battery_size / 0x2000 : 1;
-		state->membank("bank5")->configure_entries(prg_banks, bank_num, state->m_battery_ram, bank_size);
-		state->m_prgram_bank5_start += bank_num;
-		state->m_empty_bank5_start += bank_num;
+		UINT32 bank_size = (m_battery_size > 0x2000) ? 0x2000 : m_battery_size;
+		int bank_num = (m_battery_size > 0x2000) ? m_battery_size / 0x2000 : 1;
+		membank("bank5")->configure_entries(prg_banks, bank_num, m_battery_ram, bank_size);
+		m_prgram_bank5_start += bank_num;
+		m_empty_bank5_start += bank_num;
 	}
 	/* add prg ram. */
-	if (state->m_prg_ram)
+	if (m_prg_ram)
 	{
-		state->membank("bank5")->configure_entries(state->m_prgram_bank5_start, state->m_wram_size / 0x2000, state->m_wram, 0x2000);
-		state->m_empty_bank5_start += state->m_wram_size / 0x2000;
+		membank("bank5")->configure_entries(m_prgram_bank5_start, m_wram_size / 0x2000, m_wram, 0x2000);
+		m_empty_bank5_start += m_wram_size / 0x2000;
 	}
 
-	state->membank("bank5")->configure_entry(state->m_empty_bank5_start, state->m_rom + 0x6000);
+	membank("bank5")->configure_entry(m_empty_bank5_start, m_rom + 0x6000);
 
 	/* if we have any additional PRG RAM, point bank5 to its first bank */
-	if (state->m_battery || state->m_prg_ram)
-		state->m_prg_bank[4] = state->m_battery_bank5_start;
+	if (m_battery || m_prg_ram)
+		m_prg_bank[4] = m_battery_bank5_start;
 	else
-		state->m_prg_bank[4] = state->m_empty_bank5_start; // or shall we point to "maincpu" region at 0x6000? point is that we should never access this region if no sram or wram is present!
+		m_prg_bank[4] = m_empty_bank5_start; // or shall we point to "maincpu" region at 0x6000? point is that we should never access this region if no sram or wram is present!
 
-	state->membank("bank5")->set_entry(state->m_prg_bank[4]);
+	membank("bank5")->set_entry(m_prg_bank[4]);
 
-	if (state->m_four_screen_vram)
+	if (m_four_screen_vram)
 	{
-		state->m_extended_ntram = auto_alloc_array_clear(machine, UINT8, 0x2000);
-		state->save_pointer(NAME(state->m_extended_ntram), 0x2000);
+		m_extended_ntram = auto_alloc_array_clear(machine(), UINT8, 0x2000);
+		save_pointer(NAME(m_extended_ntram), 0x2000);
 	}
 
-	if (state->m_four_screen_vram)
-		set_nt_mirroring(machine, PPU_MIRROR_4SCREEN);
+	if (m_four_screen_vram)
+		set_nt_mirroring(PPU_MIRROR_4SCREEN);
 	else
 	{
-		switch (state->m_hard_mirroring)
+		switch (m_hard_mirroring)
 		{
 			case PPU_MIRROR_HORZ:
 			case PPU_MIRROR_VERT:
 			case PPU_MIRROR_HIGH:
 			case PPU_MIRROR_LOW:
-				set_nt_mirroring(machine, state->m_hard_mirroring);
+				set_nt_mirroring(m_hard_mirroring);
 				break;
 			default:
-				set_nt_mirroring(machine, PPU_MIRROR_NONE);
+				set_nt_mirroring(PPU_MIRROR_NONE);
 				break;
 		}
 	}
 
 	// there are still some quirk about writes to bank5... I hope to fix them soon. (mappers 34,45,52,246 have both mid_w and WRAM-->check)
-	if (state->m_mmc_write_mid)
-		space->install_legacy_write_handler(0x6000, 0x7fff, state->m_mmc_write_mid,state->m_mmc_write_mid_name);
-	if (state->m_mmc_write)
-		space->install_legacy_write_handler(0x8000, 0xffff, state->m_mmc_write, state->m_mmc_write_name);
+	if (!m_mmc_write_mid.isnull())
+		space.install_write_handler(0x6000, 0x7fff, m_mmc_write_mid);
+	if (!m_mmc_write.isnull())
+		space.install_write_handler(0x8000, 0xffff, m_mmc_write);
 
 	// In fact, we also allow single pcbs to overwrite the bank read handlers defined above,
 	// because some pcbs (mainly pirate ones) require protection values to be read instead of
 	// the expected ROM banks: these handlers, though, must take care of the ROM access as well
-	if (state->m_mmc_read_mid)
-		space->install_legacy_read_handler(0x6000, 0x7fff, state->m_mmc_read_mid,state->m_mmc_read_mid_name);
-	if (state->m_mmc_read)
-		space->install_legacy_read_handler(0x8000, 0xffff, state->m_mmc_read,state->m_mmc_read_name);
+	if (!m_mmc_read_mid.isnull())
+		space.install_read_handler(0x6000, 0x7fff, m_mmc_read_mid);
+	if (!m_mmc_read.isnull())
+		space.install_read_handler(0x8000, 0xffff, m_mmc_read);
 
 	// install additional handlers
-	if (state->m_pcb_id == BTL_SMB2B || state->m_mapper == 50)
+	if (m_pcb_id == BTL_SMB2B || m_mapper == 50)
 	{
-		space->install_legacy_write_handler(0x4020, 0x403f, FUNC(smb2jb_extra_w));
-		space->install_legacy_write_handler(0x40a0, 0x40bf, FUNC(smb2jb_extra_w));
+		space.install_write_handler(0x4020, 0x403f, write8_delegate(FUNC(nes_state::smb2jb_extra_w),this));
+		space.install_write_handler(0x40a0, 0x40bf, write8_delegate(FUNC(nes_state::smb2jb_extra_w),this));
 	}
 
-	if (state->m_pcb_id == KAISER_KS7017)
+	if (m_pcb_id == KAISER_KS7017)
 	{
-		space->install_legacy_read_handler(0x4030, 0x4030, FUNC(ks7017_extra_r));
-		space->install_legacy_write_handler(0x4020, 0x40ff, FUNC(ks7017_extra_w));
+		space.install_read_handler(0x4030, 0x4030, read8_delegate(FUNC(nes_state::ks7017_extra_r),this));
+		space.install_write_handler(0x4020, 0x40ff, write8_delegate(FUNC(nes_state::ks7017_extra_w),this));
 	}
 
-	if (state->m_pcb_id == UNL_603_5052)
+	if (m_pcb_id == UNL_603_5052)
 	{
-		space->install_legacy_read_handler(0x4020, 0x40ff, FUNC(unl_6035052_extra_r));
-		space->install_legacy_write_handler(0x4020, 0x40ff, FUNC(unl_6035052_extra_w));
+		space.install_read_handler(0x4020, 0x40ff, read8_delegate(FUNC(nes_state::unl_6035052_extra_r),this));
+		space.install_write_handler(0x4020, 0x40ff, write8_delegate(FUNC(nes_state::unl_6035052_extra_w),this));
 	}
 
-	if (state->m_pcb_id == WAIXING_SH2)
-		machine.device("ppu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0, 0x1fff, FUNC(waixing_sh2_chr_r));
+	if (m_pcb_id == WAIXING_SH2)
+		machine().device("ppu")->memory().space(AS_PROGRAM).install_read_handler(0, 0x1fff, read8_delegate(FUNC(nes_state::waixing_sh2_chr_r),this));
 }
 
 // to be probably removed (it does nothing since a long time)
@@ -209,7 +207,7 @@ void nes_state::machine_reset()
 	if (m_disk_expansion && m_pcb_id == NO_BOARD)
 		m_ppu->set_hblank_callback(fds_irq);
 	else
-		nes_pcb_reset(machine());
+		nes_pcb_reset();
 
 	/* Reset the serial input ports */
 	m_in_0.shift = 0;
@@ -218,11 +216,10 @@ void nes_state::machine_reset()
 	machine().device("maincpu")->reset();
 }
 
-static TIMER_CALLBACK( nes_irq_callback )
+TIMER_CALLBACK_MEMBER(nes_state::nes_irq_callback)
 {
-	nes_state *state = machine.driver_data<nes_state>();
-	state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
-	state->m_irq_timer->adjust(attotime::never);
+	m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
+	m_irq_timer->adjust(attotime::never);
 }
 
 static void nes_banks_restore(nes_state *state)
@@ -291,7 +288,7 @@ void nes_state::machine_start()
 {
 
 	m_ppu = machine().device<ppu2c0x_device>("ppu");
-	init_nes_core(machine());
+	init_nes_core();
 	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(nes_machine_stop),&machine()));
 
 	m_maincpu = machine().device<cpu_device>("maincpu");
@@ -311,7 +308,7 @@ void nes_state::machine_start()
 		}
 	}
 
-	m_irq_timer = machine().scheduler().timer_alloc(FUNC(nes_irq_callback));
+	m_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(nes_state::nes_irq_callback),this));
 	nes_state_register(machine());
 }
 
@@ -334,7 +331,7 @@ READ8_MEMBER(nes_state::nes_IN0_r)
 	int cfg = ioport("CTRLSEL")->read();
 	int ret;
 
-	if ((cfg & 0x000f) >= 0x07)	// for now we treat the FC keyboard separately from other inputs!
+	if ((cfg & 0x000f) >= 0x08)	// for now we treat the FC keyboard separately from other inputs!
 	{
 		// here we should have the tape input
 		ret = 0;
@@ -386,14 +383,16 @@ READ8_MEMBER(nes_state::nes_IN0_r)
 static UINT8 nes_read_fc_keyboard_line( running_machine &machine, UINT8 scan, UINT8 mode )
 {
 	static const char *const fc_keyport_names[] = { "FCKEY0", "FCKEY1", "FCKEY2", "FCKEY3", "FCKEY4", "FCKEY5", "FCKEY6", "FCKEY7", "FCKEY8" };
-	return ((machine.root_device().ioport(fc_keyport_names[scan])->read() >> (mode * 4)) & 0x0f) << 1;
+	nes_state *state = machine.driver_data<nes_state>();
+	return ((state->ioport(fc_keyport_names[scan])->read() >> (mode * 4)) & 0x0f) << 1;
 }
 
 static UINT8 nes_read_subor_keyboard_line( running_machine &machine, UINT8 scan, UINT8 mode )
 {
 	static const char *const sub_keyport_names[] = { "SUBKEY0", "SUBKEY1", "SUBKEY2", "SUBKEY3", "SUBKEY4",
 		"SUBKEY5", "SUBKEY6", "SUBKEY7", "SUBKEY8", "SUBKEY9", "SUBKEY10", "SUBKEY11", "SUBKEY12" };
-	return ((machine.root_device().ioport(sub_keyport_names[scan])->read() >> (mode * 4)) & 0x0f) << 1;
+	nes_state *state = machine.driver_data<nes_state>();
+	return ((state->ioport(sub_keyport_names[scan])->read() >> (mode * 4)) & 0x0f) << 1;
 }
 
 READ8_MEMBER(nes_state::nes_IN1_r)
@@ -401,14 +400,14 @@ READ8_MEMBER(nes_state::nes_IN1_r)
 	int cfg = ioport("CTRLSEL")->read();
 	int ret;
 
-	if ((cfg & 0x000f) == 0x07)	// for now we treat the FC keyboard separately from other inputs!
+	if ((cfg & 0x000f) == 0x08)	// for now we treat the FC keyboard separately from other inputs!
 	{
 		if (m_fck_scan < 9)
 			ret = ~nes_read_fc_keyboard_line(machine(), m_fck_scan, m_fck_mode) & 0x1e;
 		else
 			ret = 0x1e;
 	}
-	else if ((cfg & 0x000f) == 0x08)	// for now we treat the Subor keyboard separately from other inputs!
+	else if ((cfg & 0x000f) == 0x09)	// for now we treat the Subor keyboard separately from other inputs!
 	{
 		if (m_fck_scan < 12)
 			ret = ~nes_read_subor_keyboard_line(machine(), m_fck_scan, m_fck_mode) & 0x1e;
@@ -524,28 +523,28 @@ static void nes_read_input_device( running_machine &machine, int cfg, nes_input 
 }
 
 
-static TIMER_CALLBACK( lightgun_tick )
+TIMER_CALLBACK_MEMBER(nes_state::lightgun_tick)
 {
-	if ((machine.root_device().ioport("CTRLSEL")->read() & 0x000f) == 0x0002)
+	if ((machine().root_device().ioport("CTRLSEL")->read() & 0x000f) == 0x0002)
 	{
 		/* enable lightpen crosshair */
-		crosshair_set_screen(machine, 0, CROSSHAIR_SCREEN_ALL);
+		crosshair_set_screen(machine(), 0, CROSSHAIR_SCREEN_ALL);
 	}
 	else
 	{
 		/* disable lightpen crosshair */
-		crosshair_set_screen(machine, 0, CROSSHAIR_SCREEN_NONE);
+		crosshair_set_screen(machine(), 0, CROSSHAIR_SCREEN_NONE);
 	}
 
-	if ((machine.root_device().ioport("CTRLSEL")->read() & 0x00f0) == 0x0030)
+	if ((machine().root_device().ioport("CTRLSEL")->read() & 0x00f0) == 0x0030)
 	{
 		/* enable lightpen crosshair */
-		crosshair_set_screen(machine, 1, CROSSHAIR_SCREEN_ALL);
+		crosshair_set_screen(machine(), 1, CROSSHAIR_SCREEN_ALL);
 	}
 	else
 	{
 		/* disable lightpen crosshair */
-		crosshair_set_screen(machine, 1, CROSSHAIR_SCREEN_NONE);
+		crosshair_set_screen(machine(), 1, CROSSHAIR_SCREEN_NONE);
 	}
 }
 
@@ -554,9 +553,9 @@ WRITE8_MEMBER(nes_state::nes_IN0_w)
 	int cfg = ioport("CTRLSEL")->read();
 
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
-	machine().scheduler().timer_set(attotime::zero, FUNC(lightgun_tick));
+	machine().scheduler().timer_set(attotime::zero, timer_expired_delegate(FUNC(nes_state::lightgun_tick),this));
 
-	if ((cfg & 0x000f) >= 0x07)	// for now we treat the FC keyboard separately from other inputs!
+	if ((cfg & 0x000f) >= 0x08)	// for now we treat the FC keyboard separately from other inputs!
 	{
 		// here we should also have the tape output
 
@@ -1635,7 +1634,7 @@ WRITE8_MEMBER(nes_state::nes_fds_w)
 				m_fds_head_position = 0;
 
 			m_fds_read_mode = BIT(data, 2);
-			set_nt_mirroring(machine(), BIT(data, 3) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
+			set_nt_mirroring(BIT(data, 3) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
 
 			if ((!(data & 0x40)) && (m_fds_write_reg & 0x40))
 				m_fds_head_position -= 2; // ???

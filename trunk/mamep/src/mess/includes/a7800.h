@@ -65,29 +65,20 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	DECLARE_PALETTE_INIT(a7800p);
+	UINT32 screen_update_a7800(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(a7800_interrupt);
+	DECLARE_READ8_MEMBER(riot_joystick_r);
+	DECLARE_READ8_MEMBER(riot_console_button_r);
+	DECLARE_WRITE8_MEMBER(riot_button_pullup_w);
 };
-
-
-/*----------- defined in video/a7800.c -----------*/
-
-
-SCREEN_UPDATE_IND16( a7800 );
-TIMER_DEVICE_CALLBACK( a7800_interrupt );
-
 
 /*----------- defined in machine/a7800.c -----------*/
 
 extern const riot6532_interface a7800_r6532_interface;
 
-
-
-
 void a7800_partialhash(hash_collection &dest, const unsigned char *data, unsigned long length, const char *functions);
 
 DEVICE_START( a7800_cart );
 DEVICE_IMAGE_LOAD( a7800_cart );
-
-
-
 
 #endif /* A7800_H_ */

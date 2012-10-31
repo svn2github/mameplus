@@ -119,7 +119,7 @@
 
 
 
-static TIMER_CALLBACK( scanline_interrupt );
+
 
 
 
@@ -193,7 +193,7 @@ void itech32_state::video_start()
 	/* reset statics */
 	memset(m_video, 0, 0x80);
 
-	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_interrupt));
+	m_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(itech32_state::scanline_interrupt),this));
 	m_enable_latch[0] = 1;
 	m_enable_latch[1] = (m_planes > 1) ? 1 : 0;
 }
@@ -437,18 +437,17 @@ static void update_interrupts(running_machine &machine, int fast)
 }
 
 
-static TIMER_CALLBACK( scanline_interrupt )
+TIMER_CALLBACK_MEMBER(itech32_state::scanline_interrupt)
 {
-	itech32_state *state = machine.driver_data<itech32_state>();
 	/* set timer for next frame */
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(state->VIDEO_INTSCANLINE));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(VIDEO_INTSCANLINE));
 
 	/* set the interrupt bit in the status reg */
-	logerror("-------------- (DISPLAY INT @ %d) ----------------\n", machine.primary_screen->vpos());
-	state->VIDEO_INTSTATE |= VIDEOINT_SCANLINE;
+	logerror("-------------- (DISPLAY INT @ %d) ----------------\n", machine().primary_screen->vpos());
+	VIDEO_INTSTATE |= VIDEOINT_SCANLINE;
 
 	/* update the interrupt state */
-	update_interrupts(machine, 0);
+	update_interrupts(machine(), 0);
 }
 
 
@@ -1409,20 +1408,19 @@ READ32_MEMBER(itech32_state::itech020_video_r)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( itech32 )
+UINT32 itech32_state::screen_update_itech32(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	itech32_state *state = screen.machine().driver_data<itech32_state>();
 	int y;
 
 	/* loop over height */
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *src1 = &state->m_videoplane[0][compute_safe_address(state, state->VIDEO_DISPLAY_XORIGIN1, state->VIDEO_DISPLAY_YORIGIN1 + y)];
+		UINT16 *src1 = &m_videoplane[0][compute_safe_address(this, VIDEO_DISPLAY_XORIGIN1, VIDEO_DISPLAY_YORIGIN1 + y)];
 
 		/* handle multi-plane case */
-		if (state->m_planes > 1)
+		if (m_planes > 1)
 		{
-			UINT16 *src2 = &state->m_videoplane[1][compute_safe_address(state, state->VIDEO_DISPLAY_XORIGIN2 + state->VIDEO_DISPLAY_XSCROLL2, state->VIDEO_DISPLAY_YORIGIN2 + state->VIDEO_DISPLAY_YSCROLL2 + y)];
+			UINT16 *src2 = &m_videoplane[1][compute_safe_address(this, VIDEO_DISPLAY_XORIGIN2 + VIDEO_DISPLAY_XSCROLL2, VIDEO_DISPLAY_YORIGIN2 + VIDEO_DISPLAY_YSCROLL2 + y)];
 			UINT16 scanline[384];
 			int x;
 

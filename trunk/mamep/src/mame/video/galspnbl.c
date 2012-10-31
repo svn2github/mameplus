@@ -101,21 +101,20 @@ static void draw_background( running_machine &machine, bitmap_ind16 &bitmap, con
 }
 
 
-SCREEN_UPDATE_IND16( galspnbl )
+UINT32 galspnbl_state::screen_update_galspnbl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	galspnbl_state *state = screen.machine().driver_data<galspnbl_state>();
 	int offs;
 
-	draw_background(screen.machine(), bitmap, cliprect);
+	draw_background(machine(), bitmap, cliprect);
 
-	draw_sprites(screen.machine(), bitmap, cliprect, 0);
+	draw_sprites(machine(), bitmap, cliprect, 0);
 
 	for (offs = 0; offs < 0x1000 / 2; offs++)
 	{
 		int sx, sy, code, attr, color;
 
-		code = state->m_videoram[offs];
-		attr = state->m_colorram[offs];
+		code = m_videoram[offs];
+		attr = m_colorram[offs];
 		color = (attr & 0x00f0) >> 4;
 		sx = offs % 64;
 		sy = offs / 64;
@@ -123,7 +122,7 @@ SCREEN_UPDATE_IND16( galspnbl )
 		/* What is this? A priority/half transparency marker? */
 		if (!(attr & 0x0008))
 		{
-			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
+			drawgfx_transpen(bitmap,cliprect,machine().gfx[0],
 					code,
 					color,
 					0,0,
@@ -132,6 +131,6 @@ SCREEN_UPDATE_IND16( galspnbl )
 		}
 	}
 
-	draw_sprites(screen.machine(), bitmap, cliprect, 1);
+	draw_sprites(machine(), bitmap, cliprect, 1);
 	return 0;
 }

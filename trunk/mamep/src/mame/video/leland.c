@@ -27,25 +27,24 @@
  *
  *************************************/
 
-static TIMER_CALLBACK( scanline_callback )
+TIMER_CALLBACK_MEMBER(leland_state::scanline_callback)
 {
-	leland_state *state = machine.driver_data<leland_state>();
-	device_t *audio = machine.device("custom");
+	device_t *audio = machine().device("custom");
 	int scanline = param;
 
 	/* update the DACs */
-	if (!(state->m_dac_control & 0x01))
-		leland_dac_update(audio, 0, state->m_video_ram[(state->m_last_scanline) * 256 + 160]);
+	if (!(m_dac_control & 0x01))
+		leland_dac_update(audio, 0, m_video_ram[(m_last_scanline) * 256 + 160]);
 
-	if (!(state->m_dac_control & 0x02))
-		leland_dac_update(audio, 1, state->m_video_ram[(state->m_last_scanline) * 256 + 161]);
+	if (!(m_dac_control & 0x02))
+		leland_dac_update(audio, 1, m_video_ram[(m_last_scanline) * 256 + 161]);
 
-	state->m_last_scanline = scanline;
+	m_last_scanline = scanline;
 
 	scanline = (scanline+1) % 256;
 
 	/* come back at the next appropriate scanline */
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -61,7 +60,7 @@ VIDEO_START_MEMBER(leland_state,leland)
 	m_video_ram = auto_alloc_array_clear(machine(), UINT8, VRAM_SIZE);
 
 	/* scanline timer */
-	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_scanline_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(leland_state::scanline_callback),this));
 	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
 
 }
@@ -116,11 +115,10 @@ WRITE8_MEMBER(leland_state::leland_scroll_w)
 }
 
 
-WRITE8_DEVICE_HANDLER( leland_gfx_port_w )
+WRITE8_MEMBER(leland_state::leland_gfx_port_w)
 {
-	leland_state *state = device->machine().driver_data<leland_state>();
-	device->machine().primary_screen->update_partial(device->machine().primary_screen->vpos());
-	state->m_gfxbank = data;
+	machine().primary_screen->update_partial(machine().primary_screen->vpos());
+	m_gfxbank = data;
 }
 
 
@@ -131,9 +129,9 @@ WRITE8_DEVICE_HANDLER( leland_gfx_port_w )
  *
  *************************************/
 
-static void leland_video_addr_w(address_space *space, int offset, int data, int num)
+static void leland_video_addr_w(address_space &space, int offset, int data, int num)
 {
-	leland_state *drvstate = space->machine().driver_data<leland_state>();
+	leland_state *drvstate = space.machine().driver_data<leland_state>();
 	struct vram_state_data *state = drvstate->m_vram_state + num;
 
 	if (!offset)
@@ -150,9 +148,9 @@ static void leland_video_addr_w(address_space *space, int offset, int data, int 
  *
  *************************************/
 
-static int leland_vram_port_r(address_space *space, int offset, int num)
+static int leland_vram_port_r(address_space &space, int offset, int num)
 {
-	leland_state *drvstate = space->machine().driver_data<leland_state>();
+	leland_state *drvstate = space.machine().driver_data<leland_state>();
 	struct vram_state_data *state = drvstate->m_vram_state + num;
 	int addr = state->m_addr;
 	int inc = (offset >> 2) & 2;
@@ -178,14 +176,14 @@ static int leland_vram_port_r(address_space *space, int offset, int num)
 
 		default:
 			logerror("%s: Warning: Unknown video port %02x read (address=%04x)\n",
-						space->machine().describe_context(), offset, addr);
+						space.machine().describe_context(), offset, addr);
 			ret = 0;
 			break;
 	}
 	state->m_addr = addr;
 
 	if (LOG_COMM && addr >= 0xf000)
-		logerror("%s:%s comm read %04X = %02X\n", space->machine().describe_context(), num ? "slave" : "master", addr, ret);
+		logerror("%s:%s comm read %04X = %02X\n", space.machine().describe_context(), num ? "slave" : "master", addr, ret);
 
 	return ret;
 }
@@ -198,9 +196,9 @@ static int leland_vram_port_r(address_space *space, int offset, int num)
  *
  *************************************/
 
-static void leland_vram_port_w(address_space *space, int offset, int data, int num)
+static void leland_vram_port_w(address_space &space, int offset, int data, int num)
 {
-	leland_state *drvstate = space->machine().driver_data<leland_state>();
+	leland_state *drvstate = space.machine().driver_data<leland_state>();
 	UINT8 *video_ram = drvstate->m_video_ram;
 	struct vram_state_data *state = drvstate->m_vram_state + num;
 	int addr = state->m_addr;
@@ -209,12 +207,12 @@ static void leland_vram_port_w(address_space *space, int offset, int data, int n
 
 	/* don't fully understand why this is needed.  Isn't the
        video RAM just one big RAM? */
-	int scanline = space->machine().primary_screen->vpos();
+	int scanline = space.machine().primary_screen->vpos();
 	if (scanline > 0)
-		space->machine().primary_screen->update_partial(scanline - 1);
+		space.machine().primary_screen->update_partial(scanline - 1);
 
 	if (LOG_COMM && addr >= 0xf000)
-		logerror("%s:%s comm write %04X = %02X\n", space->machine().describe_context(), num ? "slave" : "master", addr, data);
+		logerror("%s:%s comm write %04X = %02X\n", space.machine().describe_context(), num ? "slave" : "master", addr, data);
 
 	/* based on the low 3 bits of the offset, update the destination */
 	switch (offset & 7)
@@ -266,7 +264,7 @@ static void leland_vram_port_w(address_space *space, int offset, int data, int n
 
 		default:
 			logerror("%s:Warning: Unknown video port write (address=%04x value=%02x)\n",
-						space->machine().describe_context(), offset, addr);
+						space.machine().describe_context(), offset, addr);
 			break;
 	}
 
@@ -284,13 +282,13 @@ static void leland_vram_port_w(address_space *space, int offset, int data, int n
 
 WRITE8_MEMBER(leland_state::leland_master_video_addr_w)
 {
-	leland_video_addr_w(&space, offset, data, 0);
+	leland_video_addr_w(space, offset, data, 0);
 }
 
 
-static TIMER_CALLBACK( leland_delayed_mvram_w )
+TIMER_CALLBACK_MEMBER(leland_state::leland_delayed_mvram_w)
 {
-	address_space *space = machine.device("master")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("master")->memory().space(AS_PROGRAM);
 
 	int num = (param >> 16) & 1;
 	int offset = (param >> 8) & 0xff;
@@ -301,13 +299,13 @@ static TIMER_CALLBACK( leland_delayed_mvram_w )
 
 WRITE8_MEMBER(leland_state::leland_mvram_port_w)
 {
-	machine().scheduler().synchronize(FUNC(leland_delayed_mvram_w), 0x00000 | (offset << 8) | data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(leland_state::leland_delayed_mvram_w),this), 0x00000 | (offset << 8) | data);
 }
 
 
 READ8_MEMBER(leland_state::leland_mvram_port_r)
 {
-	return leland_vram_port_r(&space, offset, 0);
+	return leland_vram_port_r(space, offset, 0);
 }
 
 
@@ -320,19 +318,19 @@ READ8_MEMBER(leland_state::leland_mvram_port_r)
 
 WRITE8_MEMBER(leland_state::leland_slave_video_addr_w)
 {
-	leland_video_addr_w(&space, offset, data, 1);
+	leland_video_addr_w(space, offset, data, 1);
 }
 
 
 WRITE8_MEMBER(leland_state::leland_svram_port_w)
 {
-	leland_vram_port_w(&space, offset, data, 1);
+	leland_vram_port_w(space, offset, data, 1);
 }
 
 
 READ8_MEMBER(leland_state::leland_svram_port_r)
 {
-	return leland_vram_port_r(&space, offset, 1);
+	return leland_vram_port_r(space, offset, 1);
 }
 
 
@@ -346,14 +344,14 @@ READ8_MEMBER(leland_state::leland_svram_port_r)
 WRITE8_MEMBER(leland_state::ataxx_mvram_port_w)
 {
 	offset = ((offset >> 1) & 0x07) | ((offset << 3) & 0x08) | (offset & 0x10);
-	machine().scheduler().synchronize(FUNC(leland_delayed_mvram_w), 0x00000 | (offset << 8) | data);
+	machine().scheduler().synchronize(timer_expired_delegate(FUNC(leland_state::leland_delayed_mvram_w),this), 0x00000 | (offset << 8) | data);
 }
 
 
 WRITE8_MEMBER(leland_state::ataxx_svram_port_w)
 {
 	offset = ((offset >> 1) & 0x07) | ((offset << 3) & 0x08) | (offset & 0x10);
-	leland_vram_port_w(&space, offset, data, 1);
+	leland_vram_port_w(space, offset, data, 1);
 }
 
 
@@ -367,14 +365,14 @@ WRITE8_MEMBER(leland_state::ataxx_svram_port_w)
 READ8_MEMBER(leland_state::ataxx_mvram_port_r)
 {
 	offset = ((offset >> 1) & 0x07) | ((offset << 3) & 0x08) | (offset & 0x10);
-	return leland_vram_port_r(&space, offset, 0);
+	return leland_vram_port_r(space, offset, 0);
 }
 
 
 READ8_MEMBER(leland_state::ataxx_svram_port_r)
 {
 	offset = ((offset >> 1) & 0x07) | ((offset << 3) & 0x08) | (offset & 0x10);
-	return leland_vram_port_r(&space, offset, 1);
+	return leland_vram_port_r(space, offset, 1);
 }
 
 
@@ -385,16 +383,15 @@ READ8_MEMBER(leland_state::ataxx_svram_port_r)
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( leland )
+UINT32 leland_state::screen_update_leland(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	leland_state *state = screen.machine().driver_data<leland_state>();
 	int y;
 
-	const UINT8 *bg_prom = screen.machine().root_device().memregion("user1")->base();
-	const UINT8 *bg_gfx = screen.machine().root_device().memregion("gfx1")->base();
-	offs_t bg_gfx_bank_page_size = state->memregion("gfx1")->bytes() / 3;
-	offs_t char_bank = (((state->m_gfxbank >> 4) & 0x03) * 0x2000) & (bg_gfx_bank_page_size - 1);
-	offs_t prom_bank = ((state->m_gfxbank >> 3) & 0x01) * 0x2000;
+	const UINT8 *bg_prom = machine().root_device().memregion("user1")->base();
+	const UINT8 *bg_gfx = machine().root_device().memregion("gfx1")->base();
+	offs_t bg_gfx_bank_page_size = memregion("gfx1")->bytes() / 3;
+	offs_t char_bank = (((m_gfxbank >> 4) & 0x03) * 0x2000) & (bg_gfx_bank_page_size - 1);
+	offs_t prom_bank = ((m_gfxbank >> 3) & 0x01) * 0x2000;
 
 	/* for each scanline in the visible region */
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
@@ -403,14 +400,14 @@ static SCREEN_UPDATE_IND16( leland )
 		UINT8 fg_data = 0;
 
 		UINT16 *dst = &bitmap.pix16(y);
-		UINT8 *fg_src = &state->m_video_ram[y << 8];
+		UINT8 *fg_src = &m_video_ram[y << 8];
 
 		/* for each pixel on the scanline */
 		for (x = 0; x < VIDEO_WIDTH; x++)
 		{
 			/* compute the effective scrolled pixel coordinates */
-			UINT16 sx = (x + state->m_xscroll) & 0x07ff;
-			UINT16 sy = (y + state->m_yscroll) & 0x07ff;
+			UINT16 sx = (x + m_xscroll) & 0x07ff;
+			UINT16 sy = (y + m_yscroll) & 0x07ff;
 
 			/* get the byte address this background pixel comes from */
 			offs_t bg_prom_offs = (sx >> 3) |
@@ -454,13 +451,12 @@ static SCREEN_UPDATE_IND16( leland )
  *
  *************************************/
 
-static SCREEN_UPDATE_IND16( ataxx )
+UINT32 leland_state::screen_update_ataxx(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	leland_state *state = screen.machine().driver_data<leland_state>();
 	int y;
 
-	const UINT8 *bg_gfx = screen.machine().root_device().memregion("gfx1")->base();
-	offs_t bg_gfx_bank_page_size = state->memregion("gfx1")->bytes() / 6;
+	const UINT8 *bg_gfx = machine().root_device().memregion("gfx1")->base();
+	offs_t bg_gfx_bank_page_size = memregion("gfx1")->bytes() / 6;
 	offs_t bg_gfx_offs_mask = bg_gfx_bank_page_size - 1;
 
 	/* for each scanline in the visible region */
@@ -470,14 +466,14 @@ static SCREEN_UPDATE_IND16( ataxx )
 		UINT8 fg_data = 0;
 
 		UINT16 *dst = &bitmap.pix16(y);
-		UINT8 *fg_src = &state->m_video_ram[y << 8];
+		UINT8 *fg_src = &m_video_ram[y << 8];
 
 		/* for each pixel on the scanline */
 		for (x = 0; x < VIDEO_WIDTH; x++)
 		{
 			/* compute the effective scrolled pixel coordinates */
-			UINT16 sx = (x + state->m_xscroll) & 0x07ff;
-			UINT16 sy = (y + state->m_yscroll) & 0x07ff;
+			UINT16 sx = (x + m_xscroll) & 0x07ff;
+			UINT16 sy = (y + m_yscroll) & 0x07ff;
 
 			/* get the byte address this background pixel comes from */
 			offs_t qram_offs = (sx >> 3) |
@@ -485,8 +481,8 @@ static SCREEN_UPDATE_IND16( ataxx )
 							   ((sy << 6) & 0x8000);
 
 			offs_t bg_gfx_offs = ((sy & 0x07) |
-								  (state->m_ataxx_qram[qram_offs] << 3) |
-								  ((state->m_ataxx_qram[0x4000 | qram_offs] & 0x7f) << 11)) & bg_gfx_offs_mask;
+								  (m_ataxx_qram[qram_offs] << 3) |
+								  ((m_ataxx_qram[0x4000 | qram_offs] & 0x7f) << 11)) & bg_gfx_offs_mask;
 
 			/* build the pen, background is d0-d5 */
 			pen_t pen = (((bg_gfx[bg_gfx_offs + (0 * bg_gfx_bank_page_size)] << (sx & 0x07)) & 0x80) >> 7) |	/* d0 */
@@ -531,12 +527,12 @@ MACHINE_CONFIG_FRAGMENT( leland_video )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_UPDATE_STATIC(leland)
+	MCFG_SCREEN_UPDATE_DRIVER(leland_state, screen_update_leland)
 MACHINE_CONFIG_END
 
 
 MACHINE_CONFIG_DERIVED( ataxx_video, leland_video )
 	MCFG_VIDEO_START_OVERRIDE(leland_state,ataxx)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE_STATIC(ataxx)
+	MCFG_SCREEN_UPDATE_DRIVER(leland_state, screen_update_ataxx)
 MACHINE_CONFIG_END

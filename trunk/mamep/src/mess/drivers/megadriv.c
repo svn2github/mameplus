@@ -27,14 +27,14 @@ static TIMER_CALLBACK( mess_io_timeout_timer_callback )
 /* J-Cart controller port */
 WRITE16_HANDLER( jcart_ctrl_w )
 {
-	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	md_cons_state *state = space.machine().driver_data<md_cons_state>();
 	state->m_jcart_io_data[0] = (data & 1) << 6;
 	state->m_jcart_io_data[1] = (data & 1) << 6;
 }
 
 READ16_HANDLER( jcart_ctrl_r )
 {
-	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	md_cons_state *state = space.machine().driver_data<md_cons_state>();
 	UINT16 retdata = 0;
 	UINT8 joy[2];
 
@@ -452,11 +452,25 @@ DRIVER_INIT_MEMBER(md_cons_state,md_jpn)
 
 static MACHINE_CONFIG_DERIVED( ms_32x, genesis_32x )
 	MCFG_FRAGMENT_ADD( _32x_cartslot )
+	MCFG_DEVICE_MODIFY("cart_list")
+	MCFG_SOFTWARE_LIST_FILTER("cart_list","NTSC-U")
+
+	MCFG_NVRAM_HANDLER_CLEAR()
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( ms_32x_jpn, genesis_32x )
+	MCFG_FRAGMENT_ADD( _32x_cartslot )
+	MCFG_DEVICE_MODIFY("cart_list")
+	MCFG_SOFTWARE_LIST_FILTER("cart_list","NTSC-J")
+
 	MCFG_NVRAM_HANDLER_CLEAR()
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( ms_32x_pal, genesis_32x_pal )
 	MCFG_FRAGMENT_ADD( _32x_cartslot )
+	MCFG_DEVICE_MODIFY("cart_list")
+	MCFG_SOFTWARE_LIST_FILTER("cart_list","PAL")
+
 	MCFG_NVRAM_HANDLER_CLEAR()
 MACHINE_CONFIG_END
 
@@ -709,7 +723,7 @@ static UINT16 pico_read_penpos(running_machine &machine, int pen)
 
 static READ16_HANDLER( pico_68k_io_read )
 {
-	pico_state *state = space->machine().driver_data<pico_state>();
+	pico_state *state = space.machine().driver_data<pico_state>();
 	UINT8 retdata = 0;
 
 	switch (offset)
@@ -733,16 +747,16 @@ static READ16_HANDLER( pico_68k_io_read )
               0x2f8 - 0x3f3 (storyware)
            */
 		case 2:
-			retdata = pico_read_penpos(space->machine(), PICO_PENX) >> 8;
+			retdata = pico_read_penpos(space.machine(), PICO_PENX) >> 8;
 			break;
 		case 3:
-			retdata = pico_read_penpos(space->machine(), PICO_PENX) & 0x00ff;
+			retdata = pico_read_penpos(space.machine(), PICO_PENX) & 0x00ff;
 			break;
 		case 4:
-			retdata = pico_read_penpos(space->machine(), PICO_PENY) >> 8;
+			retdata = pico_read_penpos(space.machine(), PICO_PENY) >> 8;
 			break;
 		case 5:
-			retdata = pico_read_penpos(space->machine(), PICO_PENY) & 0x00ff;
+			retdata = pico_read_penpos(space.machine(), PICO_PENY) & 0x00ff;
 			break;
 		case 6:
 	    /* Page register :
@@ -878,9 +892,9 @@ CONS( 1990, mdsvp,      genesis,   0,      ms_megdsvppal,   md, md_cons_state,  
 CONS( 1988, mdsvpj,     genesis,   0,      ms_megdsvp,      md, md_cons_state,     md_jpn,    "Sega",   "Mega Drive (Japan, NTSC, for SVP cart)", 0)
 
 // the 32X plugged in the cart slot, games plugged into the 32x.  Maybe it should be handled as an expansion device?
-CONS( 1994, 32x,        0,         0,      ms_32x,          md, md_cons_state, genesis,      "Sega",   "Genesis with 32X (USA, NTSC)", GAME_NOT_WORKING )
-CONS( 1994, 32xe,       32x,       0,      ms_32x_pal,      md, md_cons_state, md_eur,		 "Sega",   "Mega Drive with 32X (Europe, PAL)", GAME_NOT_WORKING )
-CONS( 1994, 32xj,       32x,       0,      ms_32x,          md, md_cons_state, md_jpn,		 "Sega",   "Mega Drive with 32X (Japan, NTSC)", GAME_NOT_WORKING )
+CONS( 1994, 32x,        0,         0,      ms_32x,          md, md_cons_state,     genesis,   "Sega",   "Genesis with 32X (USA, NTSC)", GAME_NOT_WORKING )
+CONS( 1994, 32xe,       32x,       0,      ms_32x_pal,      md, md_cons_state,     md_eur,    "Sega",   "Mega Drive with 32X (Europe, PAL)", GAME_NOT_WORKING )
+CONS( 1994, 32xj,       32x,       0,      ms_32x_jpn,      md, md_cons_state,     md_jpn,    "Sega",   "Mega Drive with 32X (Japan, NTSC)", GAME_NOT_WORKING )
 
 // the SegaCD plugged into the expansion port..
 CONS( 1992, segacd,     0,         0,      genesis_scd_scd, md, md_cons_state,     genesis,   "Sega",   "Sega CD (USA, NTSC)", GAME_NOT_WORKING )

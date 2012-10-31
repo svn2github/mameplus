@@ -32,9 +32,9 @@
 
 ***************************************************************************/
 
-static void mrokumei_handleblit( address_space *space, int rom_base )
+static void mrokumei_handleblit( address_space &space, int rom_base )
 {
-	homedata_state *state = space->machine().driver_data<homedata_state>();
+	homedata_state *state = space.machine().driver_data<homedata_state>();
 	int i;
 	int dest_param;
 	int source_addr;
@@ -99,7 +99,7 @@ static void mrokumei_handleblit( address_space *space, int rom_base )
 			} /* i!=0 */
 
 			if (data)	/* 00 is a nop */
-				state->mrokumei_videoram_w(*space, base_addr + dest_addr, data);
+				state->mrokumei_videoram_w(space, base_addr + dest_addr, data);
 
 			if (state->m_vreg[1] & 0x80)	/* flip screen */
 			{
@@ -119,9 +119,9 @@ finish:
 	state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 }
 
-static void reikaids_handleblit( address_space *space, int rom_base )
+static void reikaids_handleblit( address_space &space, int rom_base )
 {
-	homedata_state *state = space->machine().driver_data<homedata_state>();
+	homedata_state *state = space.machine().driver_data<homedata_state>();
 	int i;
 	UINT16 dest_param;
 	int flipx;
@@ -202,7 +202,7 @@ static void reikaids_handleblit( address_space *space, int rom_base )
 						addr ^= 0x007c;
 					}
 
-					state->reikaids_videoram_w(*space, addr, dat);
+					state->reikaids_videoram_w(space, addr, dat);
 				}
 			}
 
@@ -217,9 +217,9 @@ finish:
 	state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 }
 
-static void pteacher_handleblit( address_space *space, int rom_base )
+static void pteacher_handleblit( address_space &space, int rom_base )
 {
-	homedata_state *state = space->machine().driver_data<homedata_state>();
+	homedata_state *state = space.machine().driver_data<homedata_state>();
 	int i;
 	int dest_param;
 	int source_addr;
@@ -289,7 +289,7 @@ static void pteacher_handleblit( address_space *space, int rom_base )
 				if ((addr & 0x2080) == 0)
 				{
 					addr = ((addr & 0xc000) >> 2) | ((addr & 0x1f00) >> 1) | (addr & 0x7f);
-					state->mrokumei_videoram_w(*space, addr, data);
+					state->mrokumei_videoram_w(space, addr, data);
 				}
 			}
 
@@ -777,7 +777,7 @@ WRITE8_MEMBER(homedata_state::pteacher_blitter_bank_w)
 WRITE8_MEMBER(homedata_state::mrokumei_blitter_start_w)
 {
 	if (data & 0x80)
-		mrokumei_handleblit(&space, ((m_blitter_bank & 0x04) >> 2) * 0x10000);
+		mrokumei_handleblit(space, ((m_blitter_bank & 0x04) >> 2) * 0x10000);
 
 	/* bit 0 = bank switch; used by hourouki to access the
        optional service mode ROM (not available in current dump) */
@@ -785,12 +785,12 @@ WRITE8_MEMBER(homedata_state::mrokumei_blitter_start_w)
 
 WRITE8_MEMBER(homedata_state::reikaids_blitter_start_w)
 {
-	reikaids_handleblit(&space, (m_blitter_bank & 3) * 0x10000);
+	reikaids_handleblit(space, (m_blitter_bank & 3) * 0x10000);
 }
 
 WRITE8_MEMBER(homedata_state::pteacher_blitter_start_w)
 {
-	pteacher_handleblit(&space, (m_blitter_bank >> 5) * 0x10000 & (machine().root_device().memregion("user1")->bytes() - 1));
+	pteacher_handleblit(space, (m_blitter_bank >> 5) * 0x10000 & (machine().root_device().memregion("user1")->bytes() - 1));
 }
 
 
@@ -801,54 +801,52 @@ WRITE8_MEMBER(homedata_state::pteacher_blitter_start_w)
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( mrokumei )
+UINT32 homedata_state::screen_update_mrokumei(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	homedata_state *state = screen.machine().driver_data<homedata_state>();
 	int flags,width;
 
 	/* blank screen */
-	if (state->m_vreg[0x3] == 0xc1 && state->m_vreg[0x4] == 0xc0 && state->m_vreg[0x5] == 0xff)
+	if (m_vreg[0x3] == 0xc1 && m_vreg[0x4] == 0xc0 && m_vreg[0x5] == 0xff)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
-	flags = (state->m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
-	if (flags != state->m_flipscreen)
+	flags = (m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
+	if (flags != m_flipscreen)
 	{
-		state->m_flipscreen = flags;
-		screen.machine().tilemap().mark_all_dirty();
+		m_flipscreen = flags;
+		machine().tilemap().mark_all_dirty();
 	}
 
-	switch (state->m_vreg[0x3])
+	switch (m_vreg[0x3])
 	{
 		case 0xb7: width = 54; break;	// mjclinic
 		case 0xae: width = 52; break;	// mrokumei
 		case 0x9f: width = 49; break;	// hourouki, mhgaiden, mjhokite
 		case 0x96: width = 49; break;	// mjclinic
 		default:
-			if (state->m_vreg[0x3])
+			if (m_vreg[0x3])
 				popmessage("unknown video control %02x %02x %02x %02x",
-					state->m_vreg[0x3],
-					state->m_vreg[0x4],
-					state->m_vreg[0x5],
-					state->m_vreg[0x6]);
+					m_vreg[0x3],
+					m_vreg[0x4],
+					m_vreg[0x5],
+					m_vreg[0x6]);
 			width = 54;
 			break;
 	}
 	screen.set_visible_area(0*8, width*8-1, 2*8, 30*8-1);
 
-	state->m_bg_tilemap[state->m_visible_page][0]->set_scrollx(0, state->m_vreg[0xc] << 1);
+	m_bg_tilemap[m_visible_page][0]->set_scrollx(0, m_vreg[0xc] << 1);
 
-	state->m_bg_tilemap[state->m_visible_page][0]->draw(bitmap, cliprect, 0, 0);
-	state->m_bg_tilemap[state->m_visible_page][1]->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap[m_visible_page][0]->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap[m_visible_page][1]->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
 #ifdef UNUSED_FUNCTION
-SCREEN_UPDATE_IND16( reikaids )
+UINT32 homedata_state::screen_update_reikaids(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	homedata_state *state = screen.machine().driver_data<homedata_state>();
 	int flags;
 	static const int pritable[8][4] =
 	{
@@ -864,26 +862,25 @@ SCREEN_UPDATE_IND16( reikaids )
 	int pri, i;
 
 
-	flags = (state->m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
-	if (flags != state->m_flipscreen)
+	flags = (m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
+	if (flags != m_flipscreen)
 	{
-		state->m_flipscreen = flags;
-		screen.machine().tilemap().mark_all_dirty();
+		m_flipscreen = flags;
+		machine().tilemap().mark_all_dirty();
 	}
 
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	pri = (state->m_bank & 0x70) >> 4;
+	pri = (m_bank & 0x70) >> 4;
 	for (i = 0; i < 4; i++)
-		state->m_bg_tilemap[state->m_visible_page][pritable[pri][3 - i]]->draw(bitmap, cliprect, 0, 0);
+		m_bg_tilemap[m_visible_page][pritable[pri][3 - i]]->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 #endif
 
-SCREEN_UPDATE_IND16( reikaids )
+UINT32 homedata_state::screen_update_reikaids(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	homedata_state *state = screen.machine().driver_data<homedata_state>();
 	int flags;
 	static const int pritable[2][8][4] =	/* table of priorities derived from the PROM */
 	{
@@ -911,41 +908,40 @@ SCREEN_UPDATE_IND16( reikaids )
 
 	int pri, i;
 
-	flags = (state->m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
-	if (flags != state->m_flipscreen)
+	flags = (m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
+	if (flags != m_flipscreen)
 	{
-		state->m_flipscreen = flags;
-		screen.machine().tilemap().mark_all_dirty();
+		m_flipscreen = flags;
+		machine().tilemap().mark_all_dirty();
 	}
 
 
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	bitmap.fill(get_black_pen(machine()), cliprect);
 
-	pri = (state->m_blitter_bank & 0x70) >> 4;
+	pri = (m_blitter_bank & 0x70) >> 4;
 	for (i = 0; i < 4; i++)
-		state->m_bg_tilemap[state->m_visible_page][pritable[state->m_priority][pri][3 - i]]->draw(bitmap, cliprect, 0, 0);
+		m_bg_tilemap[m_visible_page][pritable[m_priority][pri][3 - i]]->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
 
-SCREEN_UPDATE_IND16( pteacher )
+UINT32 homedata_state::screen_update_pteacher(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	homedata_state *state = screen.machine().driver_data<homedata_state>();
 	int flags, scroll_low, scroll_high;
 
 
 	/* blank screen */
-	if (state->m_vreg[0x3] == 0xc1 && state->m_vreg[0x4] == 0xc0 && state->m_vreg[0x5] == 0xff)
+	if (m_vreg[0x3] == 0xc1 && m_vreg[0x4] == 0xc0 && m_vreg[0x5] == 0xff)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 
-	flags = (state->m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
-	if (flags != state->m_flipscreen)
+	flags = (m_vreg[1] & 0x80) ? (TILE_FLIPX | TILE_FLIPY) : 0;
+	if (flags != m_flipscreen)
 	{
-		state->m_flipscreen = flags;
-		screen.machine().tilemap().mark_all_dirty();
+		m_flipscreen = flags;
+		machine().tilemap().mark_all_dirty();
 	}
 
 	/* bit 2 of blitter_bank stretches characters horizontally by 3/2,
@@ -972,9 +968,9 @@ SCREEN_UPDATE_IND16( pteacher )
        blanked = c1 c0 ff --
       */
 
-	if (state->m_blitter_bank & 0x04)
+	if (m_blitter_bank & 0x04)
 	{
-		if (state->m_vreg[0x4] == 0xae || state->m_vreg[0x4] == 0xb8)
+		if (m_vreg[0x4] == 0xae || m_vreg[0x4] == 0xb8)
 		{
 			/* kludge for mjkinjas */
 			screen.set_visible_area(0*8, 42*8-1, 2*8, 30*8-1);
@@ -982,43 +978,42 @@ SCREEN_UPDATE_IND16( pteacher )
 		}
 		else
 		{
-			if (state->m_vreg[0x3] == 0xa6)
+			if (m_vreg[0x3] == 0xa6)
 				screen.set_visible_area(0*8, 33*8-1, 2*8, 30*8-1);
 			else
 				screen.set_visible_area(0*8, 35*8-1, 2*8, 30*8-1);
-			scroll_low = (11 - (state->m_vreg[0x4] & 0x0f)) * 8 / 12;
+			scroll_low = (11 - (m_vreg[0x4] & 0x0f)) * 8 / 12;
 		}
 	}
 	else
 	{
-		if (state->m_vreg[0x3] == 0xa6)
+		if (m_vreg[0x3] == 0xa6)
 			screen.set_visible_area(0*8, 51*8-1, 2*8, 30*8-1);
 		else
 			screen.set_visible_area(0*8, 54*8-1, 2*8, 30*8-1);
-		scroll_low = 7 - (state->m_vreg[0x4] & 0x0f);
+		scroll_low = 7 - (m_vreg[0x4] & 0x0f);
 	}
-	scroll_high = state->m_vreg[0xb] >> 2;
+	scroll_high = m_vreg[0xb] >> 2;
 
-	state->m_bg_tilemap[state->m_visible_page][0]->set_scrollx(0, scroll_high * 8 + scroll_low);
-	state->m_bg_tilemap[state->m_visible_page][1]->set_scrollx(0, scroll_high * 8 + scroll_low);
+	m_bg_tilemap[m_visible_page][0]->set_scrollx(0, scroll_high * 8 + scroll_low);
+	m_bg_tilemap[m_visible_page][1]->set_scrollx(0, scroll_high * 8 + scroll_low);
 
-	state->m_bg_tilemap[state->m_visible_page][0]->draw(bitmap, cliprect, 0, 0);
-	state->m_bg_tilemap[state->m_visible_page][1]->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap[m_visible_page][0]->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap[m_visible_page][1]->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( mirderby )
+UINT32 homedata_state::screen_update_mirderby(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	return 0;
 }
 
 
-SCREEN_VBLANK( homedata )
+void homedata_state::screen_eof_homedata(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		homedata_state *state = screen.machine().driver_data<homedata_state>();
-		state->m_visible_page ^= 1;
+		m_visible_page ^= 1;
 	}
 }

@@ -1465,45 +1465,44 @@ VIDEO_START_MEMBER(model1_state,model1)
 	state_save_register_global_array(machine(), m_listctl);
 }
 
-SCREEN_UPDATE_RGB32(model1)
+UINT32 model1_state::screen_update_model1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	model1_state *state = screen.machine().driver_data<model1_state>();
-	struct view *view = state->m_view;
+	struct view *view = m_view;
 #if 0
 	{
 		int mod = 0;
 		double delta;
 		delta = 1;
 
-		if(screen.machine().input().code_pressed(KEYCODE_F)) {
+		if(machine().input().code_pressed(KEYCODE_F)) {
 			mod = 1;
 			view->vxx -= delta;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_G)) {
+		if(machine().input().code_pressed(KEYCODE_G)) {
 			mod = 1;
 			view->vxx += delta;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_H)) {
+		if(machine().input().code_pressed(KEYCODE_H)) {
 			mod = 1;
 			view->vyy -= delta;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_J)) {
+		if(machine().input().code_pressed(KEYCODE_J)) {
 			mod = 1;
 			view->vyy += delta;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_K)) {
+		if(machine().input().code_pressed(KEYCODE_K)) {
 			mod = 1;
 			view->vzz -= delta;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_L)) {
+		if(machine().input().code_pressed(KEYCODE_L)) {
 			mod = 1;
 			view->vzz += delta;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_U)) {
+		if(machine().input().code_pressed(KEYCODE_U)) {
 			mod = 1;
 			view->ayy -= 0.05;
 		}
-		if(screen.machine().input().code_pressed(KEYCODE_I)) {
+		if(machine().input().code_pressed(KEYCODE_I)) {
 			mod = 1;
 			view->ayy += 0.05;
 		}
@@ -1515,16 +1514,16 @@ SCREEN_UPDATE_RGB32(model1)
 	view->ayyc = cos(view->ayy);
 	view->ayys = sin(view->ayy);
 
-	screen.machine().priority_bitmap.fill(0);
-	bitmap.fill(screen.machine().pens[0], cliprect);
+	machine().priority_bitmap.fill(0);
+	bitmap.fill(machine().pens[0], cliprect);
 
-	segas24_tile *tile = screen.machine().device<segas24_tile>("tile");
+	segas24_tile *tile = machine().device<segas24_tile>("tile");
 	tile->draw(bitmap, cliprect, 6, 0, 0);
 	tile->draw(bitmap, cliprect, 4, 0, 0);
 	tile->draw(bitmap, cliprect, 2, 0, 0);
 	tile->draw(bitmap, cliprect, 0, 0, 0);
 
-	tgp_render(screen.machine(), bitmap, cliprect);
+	tgp_render(machine(), bitmap, cliprect);
 
 	tile->draw(bitmap, cliprect, 7, 0, 0);
 	tile->draw(bitmap, cliprect, 5, 0, 0);
@@ -1534,13 +1533,13 @@ SCREEN_UPDATE_RGB32(model1)
 	return 0;
 }
 
-SCREEN_VBLANK(model1)
+void model1_state::screen_eof_model1(screen_device &screen, bool state)
 {
 	// on rising edge
-	if (vblank_on)
+	if (state)
 	{
-		tgp_scan(screen.machine());
-		end_frame(screen.machine());
+		tgp_scan(machine());
+		end_frame(machine());
 		LOG_TGP(("TGP: vsync\n"));
 	}
 }

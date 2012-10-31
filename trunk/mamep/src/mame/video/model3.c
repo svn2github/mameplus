@@ -333,17 +333,16 @@ static void copy_screen(running_machine &machine, bitmap_ind16 &bitmap, const re
 }
 #endif
 
-SCREEN_UPDATE_IND16( model3 )
+UINT32 model3_state::screen_update_model3(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	model3_state *state = screen.machine().driver_data<model3_state>();
 #if 0
 	int layer_scroll_x[4], layer_scroll_y[4];
 	UINT32 layer_data[4];
 
-	layer_data[0] = BYTE_REVERSE32((UINT32)(state->m_layer_scroll[0] >> 32));
-	layer_data[1] = BYTE_REVERSE32((UINT32)(state->m_layer_scroll[0] >> 0));
-	layer_data[2] = BYTE_REVERSE32((UINT32)(state->m_layer_scroll[1] >> 32));
-	layer_data[3] = BYTE_REVERSE32((UINT32)(state->m_layer_scroll[1] >> 0));
+	layer_data[0] = BYTE_REVERSE32((UINT32)(m_layer_scroll[0] >> 32));
+	layer_data[1] = BYTE_REVERSE32((UINT32)(m_layer_scroll[0] >> 0));
+	layer_data[2] = BYTE_REVERSE32((UINT32)(m_layer_scroll[1] >> 32));
+	layer_data[3] = BYTE_REVERSE32((UINT32)(m_layer_scroll[1] >> 0));
 	layer_scroll_x[0] = (layer_data[0] & 0x8000) ? (layer_data[0] & 0x1ff) : -(layer_data[0] & 0x1ff);
 	layer_scroll_y[0] = (layer_data[0] & 0x8000) ? (layer_data[0] & 0x1ff) : -(layer_data[0] & 0x1ff);
 	layer_scroll_x[1] = (layer_data[1] & 0x8000) ? (layer_data[1] & 0x1ff) : -(layer_data[1] & 0x1ff);
@@ -353,58 +352,58 @@ SCREEN_UPDATE_IND16( model3 )
 	layer_scroll_x[3] = (layer_data[3] & 0x8000) ? (layer_data[3] & 0x1ff) : -(layer_data[3] & 0x1ff);
 	layer_scroll_y[3] = (layer_data[3] & 0x8000) ? (layer_data[3] & 0x1ff) : -(layer_data[3] & 0x1ff);
 #endif
-	state->m_screen_clip = (rectangle*)&cliprect;
+	m_screen_clip = (rectangle*)&cliprect;
 
-	state->m_clip3d = cliprect;
+	m_clip3d = cliprect;
 
 	/* layer disable debug keys */
-	state->m_tick++;
-	if( state->m_tick >= 5 ) {
-		state->m_tick = 0;
+	m_tick++;
+	if( m_tick >= 5 ) {
+		m_tick = 0;
 
-		if( screen.machine().input().code_pressed(KEYCODE_Y) )
-			state->m_debug_layer_disable ^= 0x1;
-		if( screen.machine().input().code_pressed(KEYCODE_U) )
-			state->m_debug_layer_disable ^= 0x2;
-		if( screen.machine().input().code_pressed(KEYCODE_I) )
-			state->m_debug_layer_disable ^= 0x4;
-		if( screen.machine().input().code_pressed(KEYCODE_O) )
-			state->m_debug_layer_disable ^= 0x8;
-		if( screen.machine().input().code_pressed(KEYCODE_T) )
-			state->m_debug_layer_disable ^= 0x10;
+		if( machine().input().code_pressed(KEYCODE_Y) )
+			m_debug_layer_disable ^= 0x1;
+		if( machine().input().code_pressed(KEYCODE_U) )
+			m_debug_layer_disable ^= 0x2;
+		if( machine().input().code_pressed(KEYCODE_I) )
+			m_debug_layer_disable ^= 0x4;
+		if( machine().input().code_pressed(KEYCODE_O) )
+			m_debug_layer_disable ^= 0x8;
+		if( machine().input().code_pressed(KEYCODE_T) )
+			m_debug_layer_disable ^= 0x10;
 	}
 
 	bitmap.fill(0, cliprect);
 
-	if (!(state->m_debug_layer_disable & 0x8))
-		draw_layer(screen.machine(), bitmap, cliprect, 3, (state->m_layer_enable >> 3) & 0x1);
+	if (!(m_debug_layer_disable & 0x8))
+		draw_layer(machine(), bitmap, cliprect, 3, (m_layer_enable >> 3) & 0x1);
 
-	if (!(state->m_debug_layer_disable & 0x4))
-		draw_layer(screen.machine(), bitmap, cliprect, 2, (state->m_layer_enable >> 2) & 0x1);
+	if (!(m_debug_layer_disable & 0x4))
+		draw_layer(machine(), bitmap, cliprect, 2, (m_layer_enable >> 2) & 0x1);
 
-	if( !(state->m_debug_layer_disable & 0x10) )
+	if( !(m_debug_layer_disable & 0x10) )
 	{
 #if 0
-		if(state->m_real3d_display_list) {
-			state->m_zbuffer.fill(0, cliprect);
-			state->m_bitmap3d.fill(0x8000, cliprect);
-			real3d_traverse_display_list(screen.machine());
+		if(m_real3d_display_list) {
+			m_zbuffer.fill(0, cliprect);
+			m_bitmap3d.fill(0x8000, cliprect);
+			real3d_traverse_display_list(machine());
 		}
 #endif
-		copybitmap_trans(bitmap, state->m_bitmap3d, 0, 0, 0, 0, cliprect, 0x8000);
+		copybitmap_trans(bitmap, m_bitmap3d, 0, 0, 0, 0, cliprect, 0x8000);
 	}
 
-	if (!(state->m_debug_layer_disable & 0x2))
-		draw_layer(screen.machine(), bitmap, cliprect, 1, (state->m_layer_enable >> 1) & 0x1);
+	if (!(m_debug_layer_disable & 0x2))
+		draw_layer(machine(), bitmap, cliprect, 1, (m_layer_enable >> 1) & 0x1);
 
-	if (!(state->m_debug_layer_disable & 0x1))
-		draw_layer(screen.machine(), bitmap, cliprect, 0, (state->m_layer_enable >> 0) & 0x1);
+	if (!(m_debug_layer_disable & 0x1))
+		draw_layer(machine(), bitmap, cliprect, 0, (m_layer_enable >> 0) & 0x1);
 
 	//copy_screen(bitmap, cliprect);
 
 	//draw_texture_sheet(bitmap, cliprect);
 
-	state->m_real3d_display_list = 0;
+	m_real3d_display_list = 0;
 	return 0;
 }
 
@@ -772,68 +771,68 @@ void real3d_display_list_end(running_machine &machine)
 	//state->m_real3d_display_list = 1;
 }
 
-void real3d_display_list1_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap)
+void real3d_display_list1_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap)
 {
-	model3_state *state = space->machine().driver_data<model3_state>();
+	model3_state *state = space.machine().driver_data<model3_state>();
 	int i;
 	int d = (dst & 0xffffff) / 4;
 	for(i=0; i < length; i+=4) {
 		UINT32 w;
 		if (byteswap) {
-			w = BYTE_REVERSE32(space->read_dword(src));
+			w = BYTE_REVERSE32(space.read_dword(src));
 		} else {
-			w = space->read_dword(src);
+			w = space.read_dword(src);
 		}
 		state->m_display_list_ram[d++] = w;
 		src += 4;
 	}
 }
 
-void real3d_display_list2_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap)
+void real3d_display_list2_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap)
 {
-	model3_state *state = space->machine().driver_data<model3_state>();
+	model3_state *state = space.machine().driver_data<model3_state>();
 	int i;
 	int d = (dst & 0xffffff) / 4;
 	for(i=0; i < length; i+=4) {
 		UINT32 w;
 		if (byteswap) {
-			w = BYTE_REVERSE32(space->read_dword(src));
+			w = BYTE_REVERSE32(space.read_dword(src));
 		} else {
-			w = space->read_dword(src);
+			w = space.read_dword(src);
 		}
 		state->m_culling_ram[d++] = w;
 		src += 4;
 	}
 }
 
-void real3d_vrom_texture_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap)
+void real3d_vrom_texture_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap)
 {
-	model3_state *state = space->machine().driver_data<model3_state>();
+	model3_state *state = space.machine().driver_data<model3_state>();
 	if((dst & 0xff) == 0) {
 
 		UINT32 address, header;
 
 		if (byteswap) {
-			address = BYTE_REVERSE32(space->read_dword((src+0)));
-			header = BYTE_REVERSE32(space->read_dword((src+4)));
+			address = BYTE_REVERSE32(space.read_dword((src+0)));
+			header = BYTE_REVERSE32(space.read_dword((src+4)));
 		} else {
-			address = space->read_dword((src+0));
-			header = space->read_dword((src+4));
+			address = space.read_dword((src+0));
+			header = space.read_dword((src+4));
 		}
-		real3d_upload_texture(space->machine(), header, (UINT32*)&state->m_vrom[address]);
+		real3d_upload_texture(space.machine(), header, (UINT32*)&state->m_vrom[address]);
 	}
 }
 
-void real3d_texture_fifo_dma(address_space *space, UINT32 src, int length, int byteswap)
+void real3d_texture_fifo_dma(address_space &space, UINT32 src, int length, int byteswap)
 {
-	model3_state *state = space->machine().driver_data<model3_state>();
+	model3_state *state = space.machine().driver_data<model3_state>();
 	int i;
 	for(i=0; i < length; i+=4) {
 		UINT32 w;
 		if (byteswap) {
-			w = BYTE_REVERSE32(space->read_dword(src));
+			w = BYTE_REVERSE32(space.read_dword(src));
 		} else {
-			w = space->read_dword(src);
+			w = space.read_dword(src);
 		}
 		state->m_texture_fifo[state->m_texture_fifo_pos] = w;
 		state->m_texture_fifo_pos++;
@@ -841,17 +840,17 @@ void real3d_texture_fifo_dma(address_space *space, UINT32 src, int length, int b
 	}
 }
 
-void real3d_polygon_ram_dma(address_space *space, UINT32 src, UINT32 dst, int length, int byteswap)
+void real3d_polygon_ram_dma(address_space &space, UINT32 src, UINT32 dst, int length, int byteswap)
 {
-	model3_state *state = space->machine().driver_data<model3_state>();
+	model3_state *state = space.machine().driver_data<model3_state>();
 	int i;
 	int d = (dst & 0xffffff) / 4;
 	for(i=0; i < length; i+=4) {
 		UINT32 w;
 		if (byteswap) {
-			w = BYTE_REVERSE32(space->read_dword(src));
+			w = BYTE_REVERSE32(space.read_dword(src));
 		} else {
-			w = space->read_dword(src);
+			w = space.read_dword(src);
 		}
 		state->m_polygon_ram[d++] = w;
 		src += 4;

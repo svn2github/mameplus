@@ -109,7 +109,7 @@ VIDEO_START_MEMBER(toobin_state,toobin)
 
 WRITE16_HANDLER( toobin_paletteram_w )
 {
-	toobin_state *state = space->machine().driver_data<toobin_state>();
+	toobin_state *state = space.machine().driver_data<toobin_state>();
 	int newword;
 
 	COMBINE_DATA(&state->m_generic_paletteram_16[offset]);
@@ -124,18 +124,18 @@ WRITE16_HANDLER( toobin_paletteram_w )
 		if (green) green += 38;
 		if (blue) blue += 38;
 
-		palette_set_color(space->machine(), offset & 0x3ff, MAKE_RGB(red, green, blue));
+		palette_set_color(space.machine(), offset & 0x3ff, MAKE_RGB(red, green, blue));
 		if (!(newword & 0x8000))
-			palette_set_pen_contrast(space->machine(), offset & 0x3ff, state->m_brightness);
+			palette_set_pen_contrast(space.machine(), offset & 0x3ff, state->m_brightness);
 		else
-			palette_set_pen_contrast(space->machine(), offset & 0x3ff, 1.0);
+			palette_set_pen_contrast(space.machine(), offset & 0x3ff, 1.0);
 	}
 }
 
 
 WRITE16_HANDLER( toobin_intensity_w )
 {
-	toobin_state *state = space->machine().driver_data<toobin_state>();
+	toobin_state *state = space.machine().driver_data<toobin_state>();
 	int i;
 
 	if (ACCESSING_BITS_0_7)
@@ -144,7 +144,7 @@ WRITE16_HANDLER( toobin_intensity_w )
 
 		for (i = 0; i < 0x400; i++)
 			if (!(state->m_generic_paletteram_16[i] & 0x8000))
-				palette_set_pen_contrast(space->machine(), i, state->m_brightness);
+				palette_set_pen_contrast(space.machine(), i, state->m_brightness);
 	}
 }
 
@@ -158,14 +158,14 @@ WRITE16_HANDLER( toobin_intensity_w )
 
 WRITE16_HANDLER( toobin_xscroll_w )
 {
-	toobin_state *state = space->machine().driver_data<toobin_state>();
+	toobin_state *state = space.machine().driver_data<toobin_state>();
 	UINT16 oldscroll = *state->m_xscroll;
 	UINT16 newscroll = oldscroll;
 	COMBINE_DATA(&newscroll);
 
 	/* if anything has changed, force a partial update */
 	if (newscroll != oldscroll)
-		space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
+		space.machine().primary_screen->update_partial(space.machine().primary_screen->vpos());
 
 	/* update the playfield scrolling - hscroll is clocked on the following scanline */
 	state->m_playfield_tilemap->set_scrollx(0, newscroll >> 6);
@@ -178,14 +178,14 @@ WRITE16_HANDLER( toobin_xscroll_w )
 
 WRITE16_HANDLER( toobin_yscroll_w )
 {
-	toobin_state *state = space->machine().driver_data<toobin_state>();
+	toobin_state *state = space.machine().driver_data<toobin_state>();
 	UINT16 oldscroll = *state->m_yscroll;
 	UINT16 newscroll = oldscroll;
 	COMBINE_DATA(&newscroll);
 
 	/* if anything has changed, force a partial update */
 	if (newscroll != oldscroll)
-		space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
+		space.machine().primary_screen->update_partial(space.machine().primary_screen->vpos());
 
 	/* if bit 4 is zero, the scroll value is clocked in right away */
 	state->m_playfield_tilemap->set_scrolly(0, newscroll >> 6);
@@ -211,7 +211,7 @@ WRITE16_HANDLER( toobin_slip_w )
 
 	/* if the SLIP is changing, force a partial update first */
 	if (oldslip != newslip)
-		space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
+		space.machine().primary_screen->update_partial(space.machine().primary_screen->vpos());
 
 	/* update the data */
 	atarimo_0_slipram_w(space, offset, data, mem_mask);
@@ -225,21 +225,20 @@ WRITE16_HANDLER( toobin_slip_w )
  *
  *************************************/
 
-SCREEN_UPDATE_RGB32( toobin )
+UINT32 toobin_state::screen_update_toobin(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	toobin_state *state = screen.machine().driver_data<toobin_state>();
-	bitmap_ind8 &priority_bitmap = screen.machine().priority_bitmap;
-	const rgb_t *palette = palette_entry_list_adjusted(screen.machine().palette);
+	bitmap_ind8 &priority_bitmap = machine().priority_bitmap;
+	const rgb_t *palette = palette_entry_list_adjusted(machine().palette);
 	atarimo_rect_list rectlist;
 	bitmap_ind16 *mobitmap;
 	int x, y;
 
 	/* draw the playfield */
 	priority_bitmap.fill(0, cliprect);
-	state->m_playfield_tilemap->draw(state->m_pfbitmap, cliprect, 0, 0);
-	state->m_playfield_tilemap->draw(state->m_pfbitmap, cliprect, 1, 1);
-	state->m_playfield_tilemap->draw(state->m_pfbitmap, cliprect, 2, 2);
-	state->m_playfield_tilemap->draw(state->m_pfbitmap, cliprect, 3, 3);
+	m_playfield_tilemap->draw(m_pfbitmap, cliprect, 0, 0);
+	m_playfield_tilemap->draw(m_pfbitmap, cliprect, 1, 1);
+	m_playfield_tilemap->draw(m_pfbitmap, cliprect, 2, 2);
+	m_playfield_tilemap->draw(m_pfbitmap, cliprect, 3, 3);
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
@@ -247,7 +246,7 @@ SCREEN_UPDATE_RGB32( toobin )
 	{
 		UINT32 *dest = &bitmap.pix32(y);
 		UINT16 *mo = &mobitmap->pix16(y);
-		UINT16 *pf = &state->m_pfbitmap.pix16(y);
+		UINT16 *pf = &m_pfbitmap.pix16(y);
 		UINT8 *pri = &priority_bitmap.pix8(y);
 		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
@@ -272,6 +271,6 @@ SCREEN_UPDATE_RGB32( toobin )
 	}
 
 	/* add the alpha on top */
-	state->m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

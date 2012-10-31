@@ -12,8 +12,8 @@
 
 #include "emu.h"
 #include "video/ppu2c0x.h"
-#include "machine/nes_mmc.h"
 #include "includes/nes.h"
+//#include "includes/nes_mmc.h"
 #include "cpu/m6502/m6502.h"
 #include "imagedev/cartslot.h"
 #include "sound/nes_apu.h"
@@ -21,24 +21,27 @@
 #include "formats/nes_dsk.h"
 
 
-static READ8_DEVICE_HANDLER( psg_4015_r )
+READ8_MEMBER(nes_state::psg_4015_r)
 {
-	return nes_psg_r(device, 0x15);
+	device_t *device = machine().device("nessound");
+	return nes_psg_r(device, space, 0x15);
 }
 
-static WRITE8_DEVICE_HANDLER( psg_4015_w )
+WRITE8_MEMBER(nes_state::psg_4015_w)
 {
-	nes_psg_w(device, 0x15, data);
+	device_t *device = machine().device("nessound");
+	nes_psg_w(device, space, 0x15, data);
 }
 
-static WRITE8_DEVICE_HANDLER( psg_4017_w )
+WRITE8_MEMBER(nes_state::psg_4017_w)
 {
-	nes_psg_w(device, 0x17, data);
+	device_t *device = machine().device("nessound");
+	nes_psg_w(device, space, 0x17, data);
 }
 
 WRITE8_MEMBER(nes_state::nes_vh_sprite_dma_w)
 {
-	m_ppu->spriteram_dma(&space, data);
+	m_ppu->spriteram_dma(space, data);
 }
 
 static ADDRESS_MAP_START( nes_map, AS_PROGRAM, 8, nes_state )
@@ -46,11 +49,11 @@ static ADDRESS_MAP_START( nes_map, AS_PROGRAM, 8, nes_state )
 	AM_RANGE(0x2000, 0x3fff) AM_DEVREADWRITE("ppu", ppu2c0x_device, read, write)		/* PPU registers */
 	AM_RANGE(0x4000, 0x4013) AM_DEVREADWRITE_LEGACY("nessound", nes_psg_r, nes_psg_w)		/* PSG primary registers */
 	AM_RANGE(0x4014, 0x4014) AM_WRITE(nes_vh_sprite_dma_w)				/* stupid address space hole */
-	AM_RANGE(0x4015, 0x4015) AM_DEVREADWRITE_LEGACY("nessound", psg_4015_r, psg_4015_w)		/* PSG status / first control register */
+	AM_RANGE(0x4015, 0x4015) AM_READWRITE(psg_4015_r, psg_4015_w)		/* PSG status / first control register */
 	AM_RANGE(0x4016, 0x4016) AM_READWRITE(nes_IN0_r, nes_IN0_w)			/* IN0 - input port 1 */
 	AM_RANGE(0x4017, 0x4017) AM_READ(nes_IN1_r)							/* IN1 - input port 2 */
-	AM_RANGE(0x4017, 0x4017) AM_DEVWRITE_LEGACY("nessound", psg_4017_w)		/* PSG second control register */
-	AM_RANGE(0x4100, 0x5fff) AM_READWRITE_LEGACY(nes_low_mapper_r, nes_low_mapper_w)	/* Perform unholy acts on the machine */
+	AM_RANGE(0x4017, 0x4017) AM_WRITE(psg_4017_w)		/* PSG second control register */
+	AM_RANGE(0x4100, 0x5fff) AM_READWRITE(nes_low_mapper_r, nes_low_mapper_w)	/* Perform unholy acts on the machine */
 ADDRESS_MAP_END
 
 
@@ -468,7 +471,7 @@ static MACHINE_CONFIG_START( nes, nes_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC((113.66/(NTSC_CLOCK/1000000)) * (PPU_VBLANK_LAST_SCANLINE_NTSC-PPU_VBLANK_FIRST_SCANLINE+1+2)))
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(nes)
+	MCFG_SCREEN_UPDATE_DRIVER(nes_state, screen_update_nes)
 
 
 	MCFG_PALETTE_LENGTH(4*16*8)
@@ -544,6 +547,9 @@ static MACHINE_CONFIG_DERIVED( famicom, nes )
 	MCFG_SOFTWARE_LIST_ADD("flop_list","famicom_flop")
 MACHINE_CONFIG_END
 
+//static MACHINE_CONFIG_DERIVED( nes_test, nes )
+//MACHINE_CONFIG_END
+
 
 /* rom regions are just place-holders: they get removed and re-allocated when a cart is loaded */
 ROM_START( nes )
@@ -596,6 +602,8 @@ ROM_START( dendy )
 	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
+//#define rom_nes_test rom_nes
+
 /***************************************************************************
 
   Game driver(s)
@@ -610,3 +618,5 @@ CONS( 1986, famitwin,  nes,    0,     famicom,  famicom, nes_state, famicom, "Sh
 CONS( 198?, m82,       nes,    0,     nes,      nes, driver_device,     0,       "Nintendo",  "M82 Display Unit", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 CONS( 1996, drpcjr,    nes,    0,     famicom,  famicom, nes_state, famicom, "Bung",      "Doctor PC Jr", GAME_IMPERFECT_GRAPHICS )
 CONS( 1992, dendy,     nes,    0,     dendy,    nes, driver_device,     0,       "Steepler",  "Dendy Classic", GAME_IMPERFECT_GRAPHICS )
+
+//CONS( 1985, nes_test,  0,      0,     nes_test, nes, driver_device,     0,       "Nintendo",  "Nintendo Entertainment System (Testdriver)", GAME_IMPERFECT_GRAPHICS )

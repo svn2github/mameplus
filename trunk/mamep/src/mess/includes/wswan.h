@@ -157,6 +157,8 @@ public:
 	virtual void palette_init();
 	DECLARE_MACHINE_START(wscolor);
 	DECLARE_PALETTE_INIT(wscolor);
+	TIMER_CALLBACK_MEMBER(wswan_rtc_callback);
+	TIMER_CALLBACK_MEMBER(wswan_scanline_interrupt);
 };
 
 
@@ -200,6 +202,6 @@ private:
 extern const device_type WSWAN;
 
 
-WRITE8_DEVICE_HANDLER( wswan_sound_port_w );
+DECLARE_WRITE8_DEVICE_HANDLER( wswan_sound_port_w );
 
 #endif /* WSWAN_H_ */

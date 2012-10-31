@@ -973,7 +973,7 @@ const device_type PC080SN = &device_creator<pc080sn_device>;
 pc080sn_device::pc080sn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, PC080SN, "Taito PC080SN", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(pc080sn_state));
+	m_token = global_alloc_clear(pc080sn_state);
 }
 
 //-------------------------------------------------
@@ -1238,7 +1238,7 @@ const device_type PC090OJ = &device_creator<pc090oj_device>;
 pc090oj_device::pc090oj_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, PC090OJ, "Taito PC090OJ", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(pc090oj_state));
+	m_token = global_alloc_clear(pc090oj_state);
 }
 
 //-------------------------------------------------
@@ -1490,7 +1490,7 @@ WRITE16_DEVICE_HANDLER( tc0080vco_word_w )
 
 	if (offset < 0x1000 / 2)
 	{
-		device->machine().gfx[tc0080vco->tx_gfx]->mark_dirty(offset / 8);
+		space.machine().gfx[tc0080vco->tx_gfx]->mark_dirty(offset / 8);
 #if 0
 		if (!tc0080vco->has_tx)
 		{
@@ -1521,7 +1521,7 @@ WRITE16_DEVICE_HANDLER( tc0080vco_word_w )
 
 	else if (offset < 0x11000 / 2)
 	{
-		device->machine().gfx[tc0080vco->tx_gfx]->mark_dirty((offset - 0x10000 / 2) / 8);
+		space.machine().gfx[tc0080vco->tx_gfx]->mark_dirty((offset - 0x10000 / 2) / 8);
 #if 0
 		if (!tc0080vco->has_tx)
 		{
@@ -1550,7 +1550,7 @@ WRITE16_DEVICE_HANDLER( tc0080vco_word_w )
 	else if (offset < 0x20800 / 2)	/* sprite ram */
 	{}
 	else if (offset < 0x20fff / 2)
-		tc0080vco_scrollram_w(device, offset - (0x20800 / 2), tc0080vco->ram[offset], mem_mask);
+		tc0080vco_scrollram_w(device, space, offset - (0x20800 / 2), tc0080vco->ram[offset], mem_mask);
 }
 
 void tc0080vco_tilemap_update( device_t *device )
@@ -1904,7 +1904,7 @@ const device_type TC0080VCO = &device_creator<tc0080vco_device>;
 tc0080vco_device::tc0080vco_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0080VCO, "Taito TC0080VCO", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0080vco_state));
+	m_token = global_alloc_clear(tc0080vco_state);
 }
 
 //-------------------------------------------------
@@ -2246,7 +2246,7 @@ WRITE16_DEVICE_HANDLER( tc0100scn_word_w )
 		else if (offset < 0x3000)
 			tc0100scn->tilemap[2][0]->mark_tile_dirty((offset & 0x0fff));
 		else if (offset < 0x3800)
-			device->machine().gfx[tc0100scn->tx_gfx]->mark_dirty((offset - 0x3000) / 8);
+			space.machine().gfx[tc0100scn->tx_gfx]->mark_dirty((offset - 0x3000) / 8);
 		else if (offset >= 0x4000 && offset < 0x6000)
 			tc0100scn->tilemap[1][0]->mark_tile_dirty((offset & 0x1fff) / 2);
 	}
@@ -2257,7 +2257,7 @@ WRITE16_DEVICE_HANDLER( tc0100scn_word_w )
 		else if (offset >= 0x4000 && offset < 0x8000)
 			tc0100scn->tilemap[1][1]->mark_tile_dirty((offset & 0x3fff) / 2);
 		else if (offset >= 0x8800 && offset < 0x9000)
-			device->machine().gfx[tc0100scn->tx_gfx]->mark_dirty((offset - 0x8800) / 8);
+			space.machine().gfx[tc0100scn->tx_gfx]->mark_dirty((offset - 0x8800) / 8);
 		else if (offset >= 0x9000)
 			tc0100scn->tilemap[2][1]->mark_tile_dirty((offset & 0x0fff));
 	}
@@ -2319,7 +2319,7 @@ WRITE16_DEVICE_HANDLER( tc0100scn_ctrl_word_w )
 				tc0100scn_dirty_tilemaps(device);
 
 				/* reset the pointer to the text characters (and dirty them all) */
-				device->machine().gfx[tc0100scn->tx_gfx]->set_source((UINT8 *)tc0100scn->char_ram);
+				space.machine().gfx[tc0100scn->tx_gfx]->set_source((UINT8 *)tc0100scn->char_ram);
 			}
 
 			break;
@@ -2344,43 +2344,43 @@ WRITE16_DEVICE_HANDLER( tc0100scn_ctrl_word_w )
 
 READ32_DEVICE_HANDLER( tc0100scn_ctrl_long_r )
 {
-	return (tc0100scn_ctrl_word_r(device, offset * 2, 0xffff) << 16) | tc0100scn_ctrl_word_r(device, offset * 2 + 1, 0xffff);
+	return (tc0100scn_ctrl_word_r(device, space, offset * 2, 0xffff) << 16) | tc0100scn_ctrl_word_r(device, space, offset * 2 + 1, 0xffff);
 }
 
 WRITE32_DEVICE_HANDLER( tc0100scn_ctrl_long_w )
 {
 	if (ACCESSING_BITS_16_31)
-		tc0100scn_ctrl_word_w(device, offset * 2, data >> 16, mem_mask >> 16);
+		tc0100scn_ctrl_word_w(device, space, offset * 2, data >> 16, mem_mask >> 16);
 	if (ACCESSING_BITS_0_15)
-		tc0100scn_ctrl_word_w(device, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
+		tc0100scn_ctrl_word_w(device, space, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
 }
 
 READ32_DEVICE_HANDLER( tc0100scn_long_r )
 {
-	return (tc0100scn_word_r(device, offset * 2, 0xffff) << 16) | tc0100scn_word_r(device, offset * 2 + 1, 0xffff);
+	return (tc0100scn_word_r(device, space, offset * 2, 0xffff) << 16) | tc0100scn_word_r(device, space, offset * 2 + 1, 0xffff);
 }
 
 WRITE32_DEVICE_HANDLER( tc0100scn_long_w )
 {
 	if (ACCESSING_BITS_16_31)
 	{
-		int oldword = tc0100scn_word_r(device, offset * 2, 0xffff);
+		int oldword = tc0100scn_word_r(device, space, offset * 2, 0xffff);
 		int newword = data >> 16;
 		if (!ACCESSING_BITS_16_23)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_24_31)
 			newword |= (oldword & 0xff00);
-		tc0100scn_word_w(device, offset * 2, newword, 0xffff);
+		tc0100scn_word_w(device, space, offset * 2, newword, 0xffff);
 	}
 	if (ACCESSING_BITS_0_15)
 	{
-		int oldword = tc0100scn_word_r(device, (offset * 2) + 1, 0xffff);
+		int oldword = tc0100scn_word_r(device, space, (offset * 2) + 1, 0xffff);
 		int newword = data& 0xffff;
 		if (!ACCESSING_BITS_0_7)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_8_15)
 			newword |= (oldword & 0xff00);
-		tc0100scn_word_w(device, (offset * 2) + 1, newword, 0xffff);
+		tc0100scn_word_w(device, space, (offset * 2) + 1, newword, 0xffff);
 	}
 }
 
@@ -2489,7 +2489,7 @@ const device_type TC0100SCN = &device_creator<tc0100scn_device>;
 tc0100scn_device::tc0100scn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0100SCN, "Taito TC0100SCN", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0100scn_state));
+	m_token = global_alloc_clear(tc0100scn_state);
 }
 
 //-------------------------------------------------
@@ -2699,17 +2699,17 @@ WRITE16_DEVICE_HANDLER( tc0280grd_ctrl_word_w )
 
 READ16_DEVICE_HANDLER( tc0430grw_word_r )
 {
-	return tc0280grd_word_r(device, offset, mem_mask);
+	return tc0280grd_word_r(device, space, offset, mem_mask);
 }
 
 WRITE16_DEVICE_HANDLER( tc0430grw_word_w )
 {
-	tc0280grd_word_w(device, offset, data, mem_mask);
+	tc0280grd_word_w(device, space, offset, data, mem_mask);
 }
 
 WRITE16_DEVICE_HANDLER( tc0430grw_ctrl_word_w )
 {
-	tc0280grd_ctrl_word_w(device, offset, data, mem_mask);
+	tc0280grd_ctrl_word_w(device, space, offset, data, mem_mask);
 }
 
 void tc0280grd_tilemap_update( device_t *device, int base_color )
@@ -2777,7 +2777,7 @@ const device_type TC0280GRD = &device_creator<tc0280grd_device>;
 tc0280grd_device::tc0280grd_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0280GRD, "Taito TC0280GRD & TC0430GRW", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0280grd_state));
+	m_token = global_alloc_clear(tc0280grd_state);
 }
 
 //-------------------------------------------------
@@ -2898,7 +2898,7 @@ const device_type TC0360PRI = &device_creator<tc0360pri_device>;
 tc0360pri_device::tc0360pri_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0360PRI, "Taito TC0360PRI", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0360pri_state));
+	m_token = global_alloc_clear(tc0360pri_state);
 }
 
 //-------------------------------------------------
@@ -3126,7 +3126,7 @@ WRITE16_DEVICE_HANDLER( tc0480scp_word_w )
 		}
 		else if (offset <= 0x7fff)
 		{
-			device->machine().gfx[tc0480scp->tx_gfx]->mark_dirty((offset - 0x7000) / 16);
+			space.machine().gfx[tc0480scp->tx_gfx]->mark_dirty((offset - 0x7000) / 16);
 		}
 	}
 	else
@@ -3144,7 +3144,7 @@ WRITE16_DEVICE_HANDLER( tc0480scp_word_w )
 		}
 		else if (offset <= 0x7fff)
 		{
-			device->machine().gfx[tc0480scp->tx_gfx]->mark_dirty((offset - 0x7000) / 16);
+			space.machine().gfx[tc0480scp->tx_gfx]->mark_dirty((offset - 0x7000) / 16);
 		}
 	}
 }
@@ -3276,7 +3276,7 @@ WRITE16_DEVICE_HANDLER( tc0480scp_ctrl_word_w )
 
 READ32_DEVICE_HANDLER( tc0480scp_ctrl_long_r )
 {
-	return (tc0480scp_ctrl_word_r(device, offset * 2, 0xffff) << 16) | tc0480scp_ctrl_word_r(device, offset * 2 + 1, 0xffff);
+	return (tc0480scp_ctrl_word_r(device, space, offset * 2, 0xffff) << 16) | tc0480scp_ctrl_word_r(device, space, offset * 2 + 1, 0xffff);
 }
 
 /* TODO: byte access ? */
@@ -3284,37 +3284,37 @@ READ32_DEVICE_HANDLER( tc0480scp_ctrl_long_r )
 WRITE32_DEVICE_HANDLER( tc0480scp_ctrl_long_w )
 {
 	if (ACCESSING_BITS_16_31)
-		tc0480scp_ctrl_word_w(device, offset * 2, data >> 16, mem_mask >> 16);
+		tc0480scp_ctrl_word_w(device, space, offset * 2, data >> 16, mem_mask >> 16);
 	if (ACCESSING_BITS_0_15)
-		tc0480scp_ctrl_word_w(device, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
+		tc0480scp_ctrl_word_w(device, space, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
 }
 
 READ32_DEVICE_HANDLER( tc0480scp_long_r )
 {
-	return (tc0480scp_word_r(device, offset * 2, 0xffff) << 16) | tc0480scp_word_r(device, offset * 2 + 1, 0xffff);
+	return (tc0480scp_word_r(device, space, offset * 2, 0xffff) << 16) | tc0480scp_word_r(device, space, offset * 2 + 1, 0xffff);
 }
 
 WRITE32_DEVICE_HANDLER( tc0480scp_long_w )
 {
 	if (ACCESSING_BITS_16_31)
 	{
-		int oldword = tc0480scp_word_r(device, offset * 2, 0xffff);
+		int oldword = tc0480scp_word_r(device, space, offset * 2, 0xffff);
 		int newword = data >> 16;
 		if (!ACCESSING_BITS_16_23)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_24_31)
 			newword |= (oldword & 0xff00);
-		tc0480scp_word_w(device, offset * 2, newword, 0xffff);
+		tc0480scp_word_w(device, space, offset * 2, newword, 0xffff);
 	}
 	if (ACCESSING_BITS_0_15)
 	{
-		int oldword = tc0480scp_word_r(device, (offset * 2) + 1, 0xffff);
+		int oldword = tc0480scp_word_r(device, space, (offset * 2) + 1, 0xffff);
 		int newword = data & 0xffff;
 		if (!ACCESSING_BITS_0_7)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_8_15)
 			newword |= (oldword & 0xff00);
-		tc0480scp_word_w(device, (offset * 2) + 1, newword, 0xffff);
+		tc0480scp_word_w(device, space, (offset * 2) + 1, newword, 0xffff);
 	}
 }
 
@@ -3780,7 +3780,7 @@ const device_type TC0480SCP = &device_creator<tc0480scp_device>;
 tc0480scp_device::tc0480scp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0480SCP, "Taito TC0480SCP", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0480scp_state));
+	m_token = global_alloc_clear(tc0480scp_state);
 }
 
 //-------------------------------------------------
@@ -4724,7 +4724,7 @@ const device_type TC0150ROD = &device_creator<tc0150rod_device>;
 tc0150rod_device::tc0150rod_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0150ROD, "Taito TC0150ROD", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0150rod_state));
+	m_token = global_alloc_clear(tc0150rod_state);
 }
 
 //-------------------------------------------------
@@ -4839,7 +4839,7 @@ READ16_DEVICE_HANDLER( tc0110pcr_word_r )
 			return tc0110pcr->ram[tc0110pcr->addr];
 
 		default:
-//logerror("PC %06x: warning - read TC0110PCR address %02x\n",space->device().safe_pc(),offset);
+//logerror("PC %06x: warning - read TC0110PCR address %02x\n",space.device().safe_pc(),offset);
 			return 0xff;
 	}
 }
@@ -4859,11 +4859,11 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_word_w )
 
 		case 1:
 			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(device->machine(), tc0110pcr->addr, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+			palette_set_color_rgb(space.machine(), tc0110pcr->addr, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %04x to TC0110PCR address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %04x to TC0110PCR address %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
@@ -4882,11 +4882,11 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_step1_word_w )
 
 		case 1:
 			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(device->machine(), tc0110pcr->addr + (tc0110pcr->pal_offs << 12), pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+			palette_set_color_rgb(space.machine(), tc0110pcr->addr + (tc0110pcr->pal_offs << 12), pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %04x to TC0110PCR address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %04x to TC0110PCR address %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
@@ -4907,11 +4907,11 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_step1_rbswap_word_w )
 
 		case 1:
 			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(device->machine(), tc0110pcr->addr, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+			palette_set_color_rgb(space.machine(), tc0110pcr->addr, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %04x to TC0110PCR offset %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %04x to TC0110PCR offset %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
@@ -4932,11 +4932,11 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_step1_4bpg_word_w )
 
 		case 1:
 			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(device->machine(), tc0110pcr->addr, pal4bit(data >> 0), pal4bit(data >> 4), pal4bit(data >> 8));
+			palette_set_color_rgb(space.machine(), tc0110pcr->addr, pal4bit(data >> 0), pal4bit(data >> 4), pal4bit(data >> 8));
 			break;
 
 		default:
-//logerror("PC %06x: warning - write %04x to TC0110PCR address %02x\n",space->device().safe_pc(),data,offset);
+//logerror("PC %06x: warning - write %04x to TC0110PCR address %02x\n",space.device().safe_pc(),data,offset);
 			break;
 	}
 }
@@ -4972,7 +4972,7 @@ const device_type TC0110PCR = &device_creator<tc0110pcr_device>;
 tc0110pcr_device::tc0110pcr_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0110PCR, "Taito TC0110PCR", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0110pcr_state));
+	m_token = global_alloc_clear(tc0110pcr_state);
 }
 
 //-------------------------------------------------
@@ -5304,7 +5304,7 @@ const device_type TC0180VCU = &device_creator<tc0180vcu_device>;
 tc0180vcu_device::tc0180vcu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, TC0180VCU, "Taito TC0180VCU", tag, owner, clock)
 {
-	m_token = global_alloc_array_clear(UINT8, sizeof(tc0180vcu_state));
+	m_token = global_alloc_clear(tc0180vcu_state);
 }
 
 //-------------------------------------------------

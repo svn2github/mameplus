@@ -19,9 +19,9 @@ WRITE8_MEMBER(hyhoo_state::hyhoo_blitter_w)
 	switch (offset)
 	{
 		case 0x00:	m_blitter_src_addr = (m_blitter_src_addr & 0xff00) | data;
-					nb1413m3_gfxradr_l_w(&space, 0, data); break;
+					nb1413m3_gfxradr_l_w(space, 0, data); break;
 		case 0x01:	m_blitter_src_addr = (m_blitter_src_addr & 0x00ff) | (data << 8);
-					nb1413m3_gfxradr_h_w(&space, 0, data); break;
+					nb1413m3_gfxradr_h_w(space, 0, data); break;
 		case 0x02:	m_blitter_destx = data; break;
 		case 0x03:	m_blitter_desty = data; break;
 		case 0x04:	m_blitter_sizex = data; break;
@@ -44,7 +44,7 @@ WRITE8_MEMBER(hyhoo_state::hyhoo_romsel_w)
 	int gfxlen = memregion("gfx1")->bytes();
 	m_gfxrom = (((data & 0xc0) >> 4) + (data & 0x03));
 	m_highcolorflag = data;
-	nb1413m3_gfxrombank_w(&space, 0, data);
+	nb1413m3_gfxrombank_w(space, 0, data);
 
 	if ((0x20000 * m_gfxrom) > (gfxlen - 1))
 	{
@@ -56,7 +56,7 @@ WRITE8_MEMBER(hyhoo_state::hyhoo_romsel_w)
 }
 
 
-static TIMER_CALLBACK( blitter_timer_callback )
+TIMER_CALLBACK_MEMBER(hyhoo_state::blitter_timer_callback)
 {
 	nb1413m3_busyflag = 1;
 }
@@ -218,7 +218,7 @@ static void hyhoo_gfxdraw(running_machine &machine)
 	}
 
 	nb1413m3_busyflag = 0;
-	machine.scheduler().timer_set(attotime::from_hz(400000) * nb1413m3_busyctr, FUNC(blitter_timer_callback));
+	machine.scheduler().timer_set(attotime::from_hz(400000) * nb1413m3_busyctr, timer_expired_delegate(FUNC(hyhoo_state::blitter_timer_callback),state));
 }
 
 
@@ -228,11 +228,10 @@ void hyhoo_state::video_start()
 }
 
 
-SCREEN_UPDATE_RGB32( hyhoo )
+UINT32 hyhoo_state::screen_update_hyhoo(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	hyhoo_state *state = screen.machine().driver_data<hyhoo_state>();
-	if (state->m_dispflag)
-		copybitmap(bitmap, state->m_tmpbitmap, state->m_flipscreen, state->m_flipscreen, 0, 0, cliprect);
+	if (m_dispflag)
+		copybitmap(bitmap, m_tmpbitmap, m_flipscreen, m_flipscreen, 0, 0, cliprect);
 	else
 		bitmap.fill(RGB_BLACK, cliprect);
 

@@ -78,14 +78,13 @@ WRITE8_MEMBER(hanaawas_state::hanaawas_colorram_w)
 	m_bg_tilemap->mark_tile_dirty((offset + (flip_screen() ? -1 : 1)) & 0x03ff);
 }
 
-WRITE8_DEVICE_HANDLER( hanaawas_portB_w )
+WRITE8_MEMBER(hanaawas_state::hanaawas_portB_w)
 {
 	/* bit 7 is flip screen */
-	hanaawas_state *state = device->machine().driver_data<hanaawas_state>();
-	if (state->flip_screen() != (~data & 0x80))
+	if (flip_screen() != (~data & 0x80))
 	{
-		state->flip_screen_set(~data & 0x80);
-		device->machine().tilemap().mark_all_dirty();
+		flip_screen_set(~data & 0x80);
+		machine().tilemap().mark_all_dirty();
 	}
 }
 
@@ -106,9 +105,8 @@ void hanaawas_state::video_start()
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hanaawas_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
-SCREEN_UPDATE_IND16( hanaawas )
+UINT32 hanaawas_state::screen_update_hanaawas(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	hanaawas_state *state = screen.machine().driver_data<hanaawas_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

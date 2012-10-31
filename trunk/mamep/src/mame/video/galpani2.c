@@ -25,14 +25,14 @@
 
 
 #ifdef UNUSED_DEFINITION
-INLINE UINT16 galpani2_bg8_regs_r(address_space *space, offs_t offset, int n)
+INLINE UINT16 galpani2_bg8_regs_r(address_space &space, offs_t offset, int n)
 {
-	galpani2_state *state = space->machine().driver_data<galpani2_state>();
+	galpani2_state *state = space.machine().driver_data<galpani2_state>();
 	switch (offset * 2)
 	{
-		case 0x16:	return space->machine().rand() & 1;
+		case 0x16:	return space.machine().rand() & 1;
 		default:
-			logerror("CPU #0 PC %06X : Warning, bg8 #%d screen reg %04X read\n",space->cpu->safe_pc(),_n_,offset*2);
+			logerror("CPU #0 PC %06X : Warning, bg8 #%d screen reg %04X read\n",space.cpu->safe_pc(),_n_,offset*2);
 	}
 	return state->m_bg8_regs[_n_][offset];
 }
@@ -44,9 +44,9 @@ INLINE UINT16 galpani2_bg8_regs_r(address_space *space, offs_t offset, int n)
     c04         0003 flip, 0300 flip?
     c1c/e       01ff scroll, 3000 ?
 */
-INLINE void galpani2_bg8_regs_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
+INLINE void galpani2_bg8_regs_w(address_space &space, offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
 {
-	galpani2_state *state = space->machine().driver_data<galpani2_state>();
+	galpani2_state *state = space.machine().driver_data<galpani2_state>();
 	COMBINE_DATA(&state->m_bg8_regs[_n_][offset]);
 }
 
@@ -57,9 +57,9 @@ WRITE16_HANDLER( galpani2_bg8_regs_0_w ) { galpani2_bg8_regs_w(space, offset, da
 WRITE16_HANDLER( galpani2_bg8_regs_1_w ) { galpani2_bg8_regs_w(space, offset, data, mem_mask, 1); }
 #endif
 
-INLINE void galpani2_bg8_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
+INLINE void galpani2_bg8_w(address_space &space, offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
 {
-	galpani2_state *state = space->machine().driver_data<galpani2_state>();
+	galpani2_state *state = space.machine().driver_data<galpani2_state>();
 	int x,y,pen;
 	UINT16 newword = COMBINE_DATA(&state->m_bg8[_n_][offset]);
 	pen	=	newword & 0xff;
@@ -71,11 +71,11 @@ INLINE void galpani2_bg8_w(address_space *space, offs_t offset, UINT16 data, UIN
 WRITE16_HANDLER( galpani2_bg8_0_w ) { galpani2_bg8_w(space, offset, data, mem_mask, 0); }
 WRITE16_HANDLER( galpani2_bg8_1_w ) { galpani2_bg8_w(space, offset, data, mem_mask, 1); }
 
-INLINE void galpani2_palette_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
+INLINE void galpani2_palette_w(address_space &space, offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
 {
-	galpani2_state *state = space->machine().driver_data<galpani2_state>();
+	galpani2_state *state = space.machine().driver_data<galpani2_state>();
 	UINT16 newword = COMBINE_DATA(&state->m_palette[_n_][offset]);
-	palette_set_color_rgb( space->machine(), offset + 0x4000 + _n_ * 0x100, pal5bit(newword >> 5), pal5bit(newword >> 10), pal5bit(newword >> 0) );
+	palette_set_color_rgb( space.machine(), offset + 0x4000 + _n_ * 0x100, pal5bit(newword >> 5), pal5bit(newword >> 10), pal5bit(newword >> 0) );
 }
 
 WRITE16_HANDLER( galpani2_palette_0_w ) { galpani2_palette_w(space, offset, data, mem_mask, 0); }
@@ -93,7 +93,7 @@ WRITE16_HANDLER( galpani2_palette_1_w ) { galpani2_palette_w(space, offset, data
 /* 8 horizontal pages of 256x256 pixels? */
 WRITE16_HANDLER( galpani2_bg15_w )
 {
-	galpani2_state *state = space->machine().driver_data<galpani2_state>();
+	galpani2_state *state = space.machine().driver_data<galpani2_state>();
 	UINT16 newword = COMBINE_DATA(&state->m_bg15[offset]);
 
 	int x = (offset % 256) + (offset / (256*256)) * 256 ;
@@ -137,31 +137,30 @@ void galpani2_state::video_start()
 
 ***************************************************************************/
 
-SCREEN_UPDATE_IND16( galpani2 )
+UINT32 galpani2_state::screen_update_galpani2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	galpani2_state *state = screen.machine().driver_data<galpani2_state>();
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-if (screen.machine().input().code_pressed(KEYCODE_Z))
+if (machine().input().code_pressed(KEYCODE_Z))
 {
 	int msk = 0;
-	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-	if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+	if (machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
 	bitmap.fill(0, cliprect);
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 
 	if (layers_ctrl & 0x1)
 	{
 		int x = 0;
 		int y = 0;
-		copyscrollbitmap_trans(bitmap, *state->m_bg15_bitmap,
+		copyscrollbitmap_trans(bitmap, *m_bg15_bitmap,
 							   1, &x, 1, &y,
 							   cliprect,0x4200 + 0);
 	}
@@ -174,22 +173,22 @@ if (screen.machine().input().code_pressed(KEYCODE_Z))
 
 	if (layers_ctrl & 0x2)
 	{
-		int x = - ( *state->m_bg8_scrollx[0] + 0x200 - 0x0f5 );
-		int y = - ( *state->m_bg8_scrolly[0] + 0x200 - 0x1be );
-		copyscrollbitmap_trans(bitmap, *state->m_bg8_bitmap[0],
+		int x = - ( *m_bg8_scrollx[0] + 0x200 - 0x0f5 );
+		int y = - ( *m_bg8_scrolly[0] + 0x200 - 0x1be );
+		copyscrollbitmap_trans(bitmap, *m_bg8_bitmap[0],
 							   1, &x, 1, &y,
 							   cliprect,0x4000 + 0);
 	}
 
 	if (layers_ctrl & 0x4)
 	{
-		int x = - ( *state->m_bg8_scrollx[1] + 0x200 - 0x0f5 );
-		int y = - ( *state->m_bg8_scrolly[1] + 0x200 - 0x1be );
-		copyscrollbitmap_trans(bitmap, *state->m_bg8_bitmap[1],
+		int x = - ( *m_bg8_scrollx[1] + 0x200 - 0x0f5 );
+		int y = - ( *m_bg8_scrolly[1] + 0x200 - 0x1be );
+		copyscrollbitmap_trans(bitmap, *m_bg8_bitmap[1],
 							   1, &x, 1, &y,
 							   cliprect,0x4000 + 0);
 	}
 
-	if (layers_ctrl & 0x8) state->m_kaneko_spr->kaneko16_render_sprites(screen.machine(), bitmap, cliprect, state->m_spriteram, state->m_spriteram.bytes());
+	if (layers_ctrl & 0x8) m_kaneko_spr->kaneko16_render_sprites(machine(), bitmap, cliprect, m_spriteram, m_spriteram.bytes());
 	return 0;
 }

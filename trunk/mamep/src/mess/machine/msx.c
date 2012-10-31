@@ -98,52 +98,50 @@ DEVICE_IMAGE_LOAD (msx_cart)
 		/* Load software from software list */
 		/* TODO: Add proper SRAM (size) handling */
 
-		const char *mapper = software_part_get_feature( (software_part*)image.part_entry(), "mapper" );
-		const char *sram = software_part_get_feature( (software_part*)image.part_entry(), "sram" );
-
-		if ( mapper != NULL )
+		const char *mapper = software_part_get_feature((software_part*)image.part_entry(), "mapper");
+		if (mapper != NULL)
 		{
-			/* TODO: Split out the SRAM recognition code and 8KB/16KB bank configuration */
-			static const struct { const char *mapper_name; bool sram_present; int mapper_type; } mapper_types[] =
+			static const struct { const char *mapper_name; int mapper_type; } mapper_types[] =
 			{
-				{ "M60002-0125SP",		false,		SLOT_ASCII8 },
-				{ "M60002-0125SP",		true,		SLOT_ASCII8_SRAM },
-				{ "LZ93A13",			false,		SLOT_ASCII8 },
-				{ "LZ93A13",			true,		SLOT_ASCII8_SRAM },
-				{ "LZ93A13-16",			false,		SLOT_ASCII16 },
-				{ "LZ93A13-16",			true,		SLOT_ASCII16_SRAM },
-				{ "M60002-0125SP-16",	false,		SLOT_ASCII16 },
-				{ "M60002-0125SP-16",	true,		SLOT_ASCII16_SRAM },
-				{ "IREM TAM-S1",		false,		SLOT_RTYPE },
-				{ "MR6401",				false,		SLOT_ASCII16 },
-				{ "NEOS MR6401",		false,		SLOT_ASCII8 },
-				{ "BS6202",				false,		SLOT_ASCII8 },
-				{ "BS6101",				false,		SLOT_ASCII8 },
-				{ "BS6101-16",			false,		SLOT_ASCII16 },
+				{ "NOMAPPER",			SLOT_EMPTY },
+				{ "M60002-0125SP",		SLOT_ASCII8 },
+				{ "LZ93A13",			SLOT_ASCII8 },
+				{ "LZ93A13-16",			SLOT_ASCII16 },
+				{ "M60002-0125SP-16",	SLOT_ASCII16 },
+				{ "IREM TAM-S1",		SLOT_RTYPE },
+				{ "MR6401",				SLOT_ASCII16 },
+				{ "NEOS MR6401",		SLOT_ASCII8 },
+				{ "BS6202",				SLOT_ASCII8 },
+				{ "BS6101",				SLOT_ASCII8 },
+				{ "BS6101-16",			SLOT_ASCII16 },
+				{ "KONAMI-SCC",			SLOT_KONAMI_SCC },
+				{ "KONAMI",				SLOT_KONAMI },
+				{ "SUPERLODE",			SLOT_SUPERLODERUNNER },
+				{ "MAJUTSUSHI",			SLOT_MAJUTSUSHI },
 			};
 
-			for ( int i = 0; i < ARRAY_LENGTH(mapper_types) && type < 0; i++ )
+			for (int i = 0; i < ARRAY_LENGTH(mapper_types) && type < 0; i++)
 			{
-				if ( !mame_stricmp( mapper, mapper_types[i].mapper_name ) )
-				{
-					if ( sram == NULL && ! mapper_types[i].sram_present )
-						type = mapper_types[i].mapper_type;
-
-
-					if ( sram != NULL && mapper_types[i].sram_present )
-						type = mapper_types[i].mapper_type;
-				}
+				if (!mame_stricmp(mapper, mapper_types[i].mapper_name))
+					type = mapper_types[i].mapper_type;
 			}
 
-			if ( -1 == type )
-				logerror( "Mapper '%s' not recognized!\n", mapper );
+			if (-1 == type)
+				logerror("Mapper '%s' not recognized!\n", mapper);
 		}
 
-		UINT8 *rom_region = image.get_software_region( "rom" );
-		size = size_aligned = image.get_software_region_length( "rom" );
+		UINT8 *tmp_sram = image.get_software_region("sram");
+		if (tmp_sram)
+		{
+			if (type == SLOT_ASCII8) type = SLOT_ASCII8_SRAM;
+			if (type == SLOT_ASCII16) type = SLOT_ASCII16_SRAM;
+		}
 
-		mem = auto_alloc_array( image.device().machine(), UINT8, size_aligned );
-		memcpy( mem, rom_region, size_aligned );
+		UINT8 *rom_region = image.get_software_region("rom");
+		size = size_aligned = image.get_software_region_length("rom");
+
+		mem = auto_alloc_array(image.device().machine(), UINT8, size_aligned);
+		memcpy(mem, rom_region, size_aligned);
 	}
 	else
 	{
@@ -469,10 +467,10 @@ static const UINT8 cc_xy[0x100] = {
  4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2,19  +2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2,19  +2, 4+4+2,
  4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2,19  +2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2,19  +2, 4+4+2,
  4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2,19  +2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2, 4+4+2,19  +2, 4+4+2,
- 5+4+2,10+4+2,10+4+2,10+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2,10+4+2,10+4+2, 0  +2,10+4+2,17+4+2, 7+4+2,11+4+2,
- 5+4+2,10+4+2,10+4+2,11+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2, 4+4+2,10+4+2,11+4+2,10+4+2, 4+4+2, 7+4+2,11+4+2,
- 5+4+2,10+4+2,10+4+2,19+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2, 4+4+2,10+4+2, 4+4+2,10+4+2, 4+4+2, 7+4+2,11+4+2,
- 5+4+2,10+4+2,10+4+2, 4+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2, 6+4+2,10+4+2, 4+4+2,10+4+2, 4+4+2, 7+4+2,11+4+2
+ 5+4+2,10+4+2,10+4+2,10+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2,10+4+2,10+4+2, 0    ,10+4+2,17+4+2, 7+4+2,11+4+2,
+ 5+4+2,10+4+2,10+4+2,11+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2, 4+4+2,10+4+2,11+4+2,10+4+2, 4  +1, 7+4+2,11+4+2,
+ 5+4+2,10+4+2,10+4+2,19+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2, 4+4+2,10+4+2, 4+4+2,10+4+2, 4  +1, 7+4+2,11+4+2,
+ 5+4+2,10+4+2,10+4+2, 4+4+2,10+4+2,11+4+2, 7+4+2,11+4+2, 5+4+2, 6+4+2,10+4+2, 4+4+2,10+4+2, 4  +1, 7+4+2,11+4+2
 };
 
 static const UINT8 cc_xycb[0x100] = {
@@ -524,23 +522,21 @@ DRIVER_INIT_MEMBER(msx_state,msx)
 	z80_set_cycle_tables( machine().device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex );
 }
 
-TIMER_DEVICE_CALLBACK( msx2_interrupt )
+TIMER_DEVICE_CALLBACK_MEMBER(msx_state::msx2_interrupt)
 {
-	msx_state *state = timer.machine().driver_data<msx_state>();
-	state->m_v9938->set_sprite_limit(timer.machine().root_device().ioport("DSW")->read() & 0x20);
-	state->m_v9938->set_resolution(timer.machine().root_device().ioport("DSW")->read() & 0x03);
-	state->m_v9938->interrupt();
+	m_v9938->set_sprite_limit(machine().root_device().ioport("DSW")->read() & 0x20);
+	m_v9938->set_resolution(machine().root_device().ioport("DSW")->read() & 0x03);
+	m_v9938->interrupt();
 }
 
-INTERRUPT_GEN( msx_interrupt )
+INTERRUPT_GEN_MEMBER(msx_state::msx_interrupt)
 {
-	msx_state *state = device->machine().driver_data<msx_state>();
 	int i;
 
 	for (i=0; i<2; i++)
 	{
-		state->m_mouse[i] = state->ioport(i ? "MOUSE1" : "MOUSE0")->read();
-		state->m_mouse_stat[i] = -1;
+		m_mouse[i] = ioport(i ? "MOUSE1" : "MOUSE0")->read();
+		m_mouse_stat[i] = -1;
 	}
 }
 
@@ -624,28 +620,28 @@ WRITE8_MEMBER(msx_state::msx_psg_port_b_w)
 	m_psg_b = data;
 }
 
-WRITE8_DEVICE_HANDLER( msx_printer_strobe_w )
+WRITE8_MEMBER(msx_state::msx_printer_strobe_w)
 {
-	device->machine().device<centronics_device>("centronics")->strobe_w(BIT(data, 1));
+	machine().device<centronics_device>("centronics")->strobe_w(BIT(data, 1));
 }
 
-WRITE8_DEVICE_HANDLER( msx_printer_data_w )
+WRITE8_MEMBER(msx_state::msx_printer_data_w)
 {
-	if (device->machine().root_device().ioport("DSW")->read() & 0x80)
+	if (machine().root_device().ioport("DSW")->read() & 0x80)
 		/* SIMPL emulation */
-		device->machine().device<dac_device>("dac")->write_signed8(data);
+		machine().device<dac_device>("dac")->write_signed8(data);
 	else
-		device->machine().device<centronics_device>("centronics")->write(*device->machine().memory().first_space(), 0, data);
+		machine().device<centronics_device>("centronics")->write(machine().driver_data()->generic_space(), 0, data);
 }
 
-READ8_DEVICE_HANDLER( msx_printer_status_r )
+READ8_MEMBER(msx_state::msx_printer_status_r)
 {
 	UINT8 result = 0xfd;
 
-	if (device->machine().root_device().ioport("DSW")->read() & 0x80)
+	if (machine().root_device().ioport("DSW")->read() & 0x80)
 		return 0xff;
 
-	result |= device->machine().device<centronics_device>("centronics")->busy_r() << 1;
+	result |= machine().device<centronics_device>("centronics")->busy_r() << 1;
 
 	return result;
 }
@@ -655,9 +651,9 @@ WRITE8_MEMBER( msx_state::msx_fmpac_w )
 	if (m_opll_active)
 	{
 		if (offset == 1)
-			ym2413_w (m_ym, 1, data);
+			ym2413_w (m_ym, space, 1, data);
 		else
-			ym2413_w (m_ym, 0, data);
+			ym2413_w (m_ym, space, 0, data);
 	}
 }
 
@@ -1021,8 +1017,8 @@ WRITE8_MEMBER( msx_state::msx_page0_w )
 {
 	if ( offset == 0 )
 	{
-		m_superloadrunner_bank = data;
-		if (m_slot[2]->slot_type == SLOT_SUPERLOADRUNNER)
+		m_superloderunner_bank = data;
+		if (m_slot[2]->slot_type == SLOT_SUPERLODERUNNER)
 			m_slot[2]->map (machine(), m_state[2], 2);
 	}
 

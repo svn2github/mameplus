@@ -276,17 +276,16 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 }
 
 
-SCREEN_UPDATE_IND16( pow )
+UINT32 snk68_state::screen_update_pow(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	snk68_state *state = screen.machine().driver_data<snk68_state>();
 
 	bitmap.fill(0x7ff, cliprect);
 
 	/* This appears to be the correct priority order */
-	draw_sprites(screen.machine(), bitmap, cliprect, 2);
-	draw_sprites(screen.machine(), bitmap, cliprect, 3);
-	draw_sprites(screen.machine(), bitmap, cliprect, 1);
+	draw_sprites(machine(), bitmap, cliprect, 2);
+	draw_sprites(machine(), bitmap, cliprect, 3);
+	draw_sprites(machine(), bitmap, cliprect, 1);
 
-	state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }

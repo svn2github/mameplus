@@ -427,32 +427,31 @@ WRITE32_MEMBER(gaelco3d_state::gaelco3d_paletteram_020_w)
  *
  *************************************/
 
-SCREEN_UPDATE_IND16( gaelco3d )
+UINT32 gaelco3d_state::screen_update_gaelco3d(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	gaelco3d_state *state = screen.machine().driver_data<gaelco3d_state>();
 	int ret;
 
 /*
-    if (DISPLAY_TEXTURE && (screen.machine().input().code_pressed(KEYCODE_Z) || screen.machine().input().code_pressed(KEYCODE_X)))
+    if (DISPLAY_TEXTURE && (machine().input().code_pressed(KEYCODE_Z) || machine().input().code_pressed(KEYCODE_X)))
     {
         static int xv = 0, yv = 0x1000;
-        UINT8 *base = state->m_texture;
-        int length = state->m_texture_size;
+        UINT8 *base = m_texture;
+        int length = m_texture_size;
 
-        if (screen.machine().input().code_pressed(KEYCODE_X))
+        if (machine().input().code_pressed(KEYCODE_X))
         {
-            base = state->m_texmask;
-            length = state->m_texmask_size;
+            base = m_texmask;
+            length = m_texmask_size;
         }
 
-        if (screen.machine().input().code_pressed(KEYCODE_LEFT) && xv >= 4)
+        if (machine().input().code_pressed(KEYCODE_LEFT) && xv >= 4)
             xv -= 4;
-        if (screen.machine().input().code_pressed(KEYCODE_RIGHT) && xv < 4096 - 4)
+        if (machine().input().code_pressed(KEYCODE_RIGHT) && xv < 4096 - 4)
             xv += 4;
 
-        if (screen.machine().input().code_pressed(KEYCODE_UP) && yv >= 4)
+        if (machine().input().code_pressed(KEYCODE_UP) && yv >= 4)
             yv -= 4;
-        if (screen.machine().input().code_pressed(KEYCODE_DOWN) && yv < 0x40000)
+        if (machine().input().code_pressed(KEYCODE_DOWN) && yv < 0x40000)
             yv += 4;
 
         for (y = cliprect.min_y; y <= cliprect.max_y; y++)
@@ -471,10 +470,10 @@ SCREEN_UPDATE_IND16( gaelco3d )
     }
     else*/
 	{
-		if (state->m_video_changed)
-			copybitmap(bitmap, state->m_poly->screenbits(), 0,1, 0,0, cliprect);
-		ret = state->m_video_changed;
-		state->m_video_changed = FALSE;
+		if (m_video_changed)
+			copybitmap(bitmap, m_poly->screenbits(), 0,1, 0,0, cliprect);
+		ret = m_video_changed;
+		m_video_changed = FALSE;
 	}
 
 	logerror("---update---\n");

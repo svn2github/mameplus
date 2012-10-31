@@ -100,7 +100,7 @@ public:
 	int m_slot_expanded[4];
 	UINT8 m_primary_slot;
 	UINT8 m_secondary_slot[4];
-	UINT8 m_superloadrunner_bank;
+	UINT8 m_superloderunner_bank;
 	UINT8 m_korean90in1_bank;
 	UINT8 *m_top_page;
 	int m_port_c_old;
@@ -124,6 +124,12 @@ public:
 	DECLARE_MACHINE_RESET(msx);
 	DECLARE_MACHINE_START(msx2);
 	DECLARE_MACHINE_RESET(msx2);
+	INTERRUPT_GEN_MEMBER(msx_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(msx2_interrupt);
+	DECLARE_WRITE8_MEMBER(msx_ay8910_w);
+	DECLARE_WRITE8_MEMBER(msx_printer_strobe_w);
+	DECLARE_WRITE8_MEMBER(msx_printer_data_w);
+	DECLARE_READ8_MEMBER(msx_printer_status_r);
 };
 
 
@@ -132,12 +138,6 @@ public:
 extern const i8255_interface msx_ppi8255_interface;
 extern const wd17xx_interface msx_wd17xx_interface;
 /* start/stop functions */
-extern MACHINE_START( msx );
-extern MACHINE_START( msx2 );
-extern MACHINE_RESET( msx );
-extern MACHINE_RESET( msx2 );
-extern INTERRUPT_GEN( msx_interrupt );
-extern TIMER_DEVICE_CALLBACK( msx2_interrupt );
 
 DEVICE_IMAGE_LOAD( msx_cart );
 DEVICE_IMAGE_UNLOAD( msx_cart );
@@ -145,9 +145,5 @@ DEVICE_IMAGE_UNLOAD( msx_cart );
 void msx_vdp_interrupt(device_t *, v99x8_device &device, int i);
 
 /* I/O functions */
-READ8_DEVICE_HANDLER( msx_printer_status_r );
-WRITE8_DEVICE_HANDLER( msx_printer_strobe_w );
-WRITE8_DEVICE_HANDLER( msx_printer_data_w );
-
 
 #endif /* __MSX_H__ */

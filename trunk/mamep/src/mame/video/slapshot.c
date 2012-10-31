@@ -427,16 +427,15 @@ static void taito_update_sprites_active_area( running_machine &machine )
 	}
 }
 
-SCREEN_VBLANK( taito_no_buffer )
+void slapshot_state::screen_eof_taito_no_buffer(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		slapshot_state *state = screen.machine().driver_data<slapshot_state>();
 
-		taito_update_sprites_active_area(screen.machine());
+		taito_update_sprites_active_area(machine());
 
-		state->m_prepare_sprites = 1;
+		m_prepare_sprites = 1;
 	}
 }
 
@@ -457,51 +456,51 @@ One exception is the "puck" in early attract which is
 a bg layer given priority over some sprites.
 ********************************************************************/
 
-SCREEN_UPDATE_IND16( slapshot )
+UINT32 slapshot_state::screen_update_slapshot(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	slapshot_state *state = screen.machine().driver_data<slapshot_state>();
+	address_space &space = machine().driver_data()->generic_space();
 	UINT8 layer[5];
 	UINT8 tilepri[5];
 	UINT8 spritepri[4];
 	UINT16 priority;
 
 #ifdef MAME_DEBUG
-	if (screen.machine().input().code_pressed_once (KEYCODE_Z))
+	if (machine().input().code_pressed_once (KEYCODE_Z))
 	{
-		state->m_dislayer[0] ^= 1;
-		popmessage("bg0: %01x",state->m_dislayer[0]);
+		m_dislayer[0] ^= 1;
+		popmessage("bg0: %01x",m_dislayer[0]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_X))
+	if (machine().input().code_pressed_once (KEYCODE_X))
 	{
-		state->m_dislayer[1] ^= 1;
-		popmessage("bg1: %01x",state->m_dislayer[1]);
+		m_dislayer[1] ^= 1;
+		popmessage("bg1: %01x",m_dislayer[1]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_C))
+	if (machine().input().code_pressed_once (KEYCODE_C))
 	{
-		state->m_dislayer[2] ^= 1;
-		popmessage("bg2: %01x",state->m_dislayer[2]);
+		m_dislayer[2] ^= 1;
+		popmessage("bg2: %01x",m_dislayer[2]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_V))
+	if (machine().input().code_pressed_once (KEYCODE_V))
 	{
-		state->m_dislayer[3] ^= 1;
-		popmessage("bg3: %01x",state->m_dislayer[3]);
+		m_dislayer[3] ^= 1;
+		popmessage("bg3: %01x",m_dislayer[3]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_B))
+	if (machine().input().code_pressed_once (KEYCODE_B))
 	{
-		state->m_dislayer[4] ^= 1;
-		popmessage("text: %01x",state->m_dislayer[4]);
+		m_dislayer[4] ^= 1;
+		popmessage("text: %01x",m_dislayer[4]);
 	}
 #endif
 
-	taito_handle_sprite_buffering(screen.machine());
+	taito_handle_sprite_buffering(machine());
 
-	tc0480scp_tilemap_update(state->m_tc0480scp);
+	tc0480scp_tilemap_update(m_tc0480scp);
 
-	priority = tc0480scp_get_bg_priority(state->m_tc0480scp);
+	priority = tc0480scp_get_bg_priority(m_tc0480scp);
 
 	layer[0] = (priority & 0xf000) >> 12;	/* tells us which bg layer is bottom */
 	layer[1] = (priority & 0x0f00) >>  8;
@@ -509,41 +508,41 @@ SCREEN_UPDATE_IND16( slapshot )
 	layer[3] = (priority & 0x000f) >>  0;	/* tells us which is top */
 	layer[4] = 4;   /* text layer always over bg layers */
 
-	tilepri[0] = tc0360pri_r(state->m_tc0360pri, 4) & 0x0f;     /* bg0 */
-	tilepri[1] = tc0360pri_r(state->m_tc0360pri, 4) >> 4;       /* bg1 */
-	tilepri[2] = tc0360pri_r(state->m_tc0360pri, 5) & 0x0f;     /* bg2 */
-	tilepri[3] = tc0360pri_r(state->m_tc0360pri, 5) >> 4;       /* bg3 */
+	tilepri[0] = tc0360pri_r(m_tc0360pri, space, 4) & 0x0f;     /* bg0 */
+	tilepri[1] = tc0360pri_r(m_tc0360pri, space, 4) >> 4;       /* bg1 */
+	tilepri[2] = tc0360pri_r(m_tc0360pri, space, 5) & 0x0f;     /* bg2 */
+	tilepri[3] = tc0360pri_r(m_tc0360pri, space, 5) >> 4;       /* bg3 */
 
 /* we actually assume text layer is on top of everything anyway, but FWIW... */
-	tilepri[layer[4]] = tc0360pri_r(state->m_tc0360pri, 7) & 0x0f;    /* fg (text layer) */
+	tilepri[layer[4]] = tc0360pri_r(m_tc0360pri, space, 7) & 0x0f;    /* fg (text layer) */
 
-	spritepri[0] = tc0360pri_r(state->m_tc0360pri, 6) & 0x0f;
-	spritepri[1] = tc0360pri_r(state->m_tc0360pri, 6) >> 4;
-	spritepri[2] = tc0360pri_r(state->m_tc0360pri, 7) & 0x0f;
-	spritepri[3] = tc0360pri_r(state->m_tc0360pri, 7) >> 4;
+	spritepri[0] = tc0360pri_r(m_tc0360pri, space, 6) & 0x0f;
+	spritepri[1] = tc0360pri_r(m_tc0360pri, space, 6) >> 4;
+	spritepri[2] = tc0360pri_r(m_tc0360pri, space, 7) & 0x0f;
+	spritepri[3] = tc0360pri_r(m_tc0360pri, space, 7) >> 4;
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 	bitmap.fill(0, cliprect);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[0]] == 0)
+	if (m_dislayer[layer[0]] == 0)
 #endif
-		tc0480scp_tilemap_draw(state->m_tc0480scp, bitmap, cliprect, layer[0], 0, 1);
+		tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[0], 0, 1);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[1]] == 0)
+	if (m_dislayer[layer[1]] == 0)
 #endif
-		tc0480scp_tilemap_draw(state->m_tc0480scp, bitmap, cliprect, layer[1], 0, 2);
+		tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[1], 0, 2);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[2]] == 0)
+	if (m_dislayer[layer[2]] == 0)
 #endif
-		tc0480scp_tilemap_draw(state->m_tc0480scp, bitmap, cliprect, layer[2], 0, 4);
+		tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[2], 0, 4);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[3]] == 0)
+	if (m_dislayer[layer[3]] == 0)
 #endif
-		tc0480scp_tilemap_draw(state->m_tc0480scp, bitmap, cliprect, layer[3], 0, 8);
+		tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[3], 0, 8);
 
 	{
 		int primasks[4] = {0,0,0,0};
@@ -557,7 +556,7 @@ SCREEN_UPDATE_IND16( slapshot )
 			if (spritepri[i] < tilepri[(layer[3])]) primasks[i] |= 0xff00;
 		}
 
-		draw_sprites(screen.machine(),bitmap,cliprect,primasks,0);
+		draw_sprites(machine(),bitmap,cliprect,primasks,0);
 	}
 
 	/*
@@ -567,9 +566,9 @@ SCREEN_UPDATE_IND16( slapshot )
     */
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[4]] == 0)
+	if (m_dislayer[layer[4]] == 0)
 #endif
-	tc0480scp_tilemap_draw(state->m_tc0480scp, bitmap, cliprect, layer[4], 0, 0);
+	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[4], 0, 0);
 	return 0;
 }
 

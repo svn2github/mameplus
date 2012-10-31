@@ -63,15 +63,11 @@ WRITE8_MEMBER(gottlieb_state::gottlieb_video_control_w)
 		flip_screen_y_set(data & 0x04);
 		machine().tilemap().mark_all_dirty();
 	}
-
-	/* in Q*Bert Qubes only, bit 4 controls the sprite bank */
-	m_spritebank = (data & 0x10) >> 4;
 }
 
 
 WRITE8_MEMBER(gottlieb_state::gottlieb_laserdisc_video_control_w)
 {
-
 	/* bit 0 works like the other games */
 	gottlieb_video_control_w(space, offset, data & 0x01);
 
@@ -240,21 +236,20 @@ static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const r
  *
  *************************************/
 
-SCREEN_UPDATE_RGB32( gottlieb )
+UINT32 gottlieb_state::screen_update_gottlieb(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	gottlieb_state *state = screen.machine().driver_data<gottlieb_state>();
 	/* if the background has lower priority, render it first, else clear the screen */
-	if (!state->m_background_priority)
-		state->m_bg_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	if (!m_background_priority)
+		m_bg_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 	else
-		bitmap.fill(screen.machine().pens[0], cliprect);
+		bitmap.fill(machine().pens[0], cliprect);
 
 	/* draw the sprites */
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 
 	/* if the background has higher priority, render it now */
-	if (state->m_background_priority)
-		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	if (m_background_priority)
+		m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }

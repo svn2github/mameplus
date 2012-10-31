@@ -63,7 +63,7 @@ WRITE8_MEMBER(capbowl_state::capbowl_tms34061_w)
 		col ^= 2;
 
 	/* Row address (RA0-RA8) is not dependent on the offset */
-	tms34061_w(&space, col, *m_rowaddress, func, data);
+	tms34061_w(space, col, *m_rowaddress, func, data);
 }
 
 
@@ -78,7 +78,7 @@ READ8_MEMBER(capbowl_state::capbowl_tms34061_r)
 		col ^= 2;
 
 	/* Row address (RA0-RA8) is not dependent on the offset */
-	return tms34061_r(&space, col, *m_rowaddress, func);
+	return tms34061_r(space, col, *m_rowaddress, func);
 }
 
 
@@ -161,7 +161,7 @@ INLINE rgb_t pen_for_pixel( UINT8 *src, UINT8 pix )
 }
 
 
-SCREEN_UPDATE_RGB32( capbowl )
+UINT32 capbowl_state::screen_update_capbowl(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	struct tms34061_display state;
 	int x, y;
@@ -172,7 +172,7 @@ SCREEN_UPDATE_RGB32( capbowl )
 	/* if we're blanked, just fill with black */
 	if (state.blanked)
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(get_black_pen(machine()), cliprect);
 		return 0;
 	}
 

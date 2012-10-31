@@ -10,6 +10,12 @@
 
 /**************************************************************************/
 
+CUSTOM_INPUT_MEMBER(homerun_state::homerun_sprite0_r)
+{
+	// sprite-0 vs background collision status, similar to NES
+	return (machine().primary_screen->vpos() > (m_spriteram[0] - 15)) ? 1 : 0;
+}
+
 WRITE8_MEMBER(homerun_state::homerun_scrollhi_w)
 {
 	// d0: scroll y high bit
@@ -29,20 +35,19 @@ WRITE8_MEMBER(homerun_state::homerun_scrollx_w)
 	m_scrollx = (m_scrollx & 0xff00) | data;
 }
 
-WRITE8_DEVICE_HANDLER(homerun_banking_w)
+WRITE8_MEMBER(homerun_state::homerun_banking_w)
 {
-	homerun_state *state = device->machine().driver_data<homerun_state>();
 
 	// games do mid-screen gfx bank switching
-	int vpos = device->machine().primary_screen->vpos();
-	device->machine().primary_screen->update_partial(vpos);
+	int vpos = machine().primary_screen->vpos();
+	machine().primary_screen->update_partial(vpos);
 
 	// d0-d1: gfx bank
 	// d2-d4: ?
 	// d5-d7: prg bank
-	state->m_gfx_ctrl = data;
-	state->m_tilemap->mark_all_dirty();
-	state->membank("bank1")->set_entry(data >> 5 & 7);
+	m_gfx_ctrl = data;
+	m_tilemap->mark_all_dirty();
+	membank("bank1")->set_entry(data >> 5 & 7);
 }
 
 WRITE8_MEMBER(homerun_state::homerun_videoram_w)
@@ -113,7 +118,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		int sx = spriteram[offs + 3];
-		int sy = spriteram[offs + 0] - 16;
+		int sy = spriteram[offs + 0] - 15;
 		int code = (spriteram[offs + 1]) | ((spriteram[offs + 2] & 0x8) << 5) | ((state->m_gfx_ctrl & 3) << 9);
 		int color = (spriteram[offs + 2] & 0x07) | 8;
 		int flipx = (spriteram[offs + 2] & 0x40) >> 6;
@@ -134,15 +139,14 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	}
 }
 
-SCREEN_UPDATE_IND16(homerun)
+UINT32 homerun_state::screen_update_homerun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	homerun_state *state = screen.machine().driver_data<homerun_state>();
 
-	state->m_tilemap->set_scrolly(0, state->m_scrolly);
-	state->m_tilemap->set_scrollx(0, state->m_scrollx);
+	m_tilemap->set_scrolly(0, m_scrolly);
+	m_tilemap->set_scrollx(0, m_scrollx);
 
-	state->m_tilemap->draw(bitmap, cliprect, 0, 0);
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	m_tilemap->draw(bitmap, cliprect, 0, 0);
+	draw_sprites(machine(), bitmap, cliprect);
 
 	return 0;
 }

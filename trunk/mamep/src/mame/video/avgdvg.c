@@ -1258,7 +1258,7 @@ WRITE8_HANDLER( avgdvg_go_w )
          */
 		vector_clear_list();
 	}
-	vg_flush(space->machine());
+	vg_flush(space.machine());
 
 	vg_set_halt(0);
 	vg_run_timer->adjust(attotime::zero);

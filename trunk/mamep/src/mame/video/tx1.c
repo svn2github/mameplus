@@ -31,11 +31,10 @@
 /*
     TODO: Check interrupt timing from CRT config. Probably different between games.
 */
-static TIMER_CALLBACK( interrupt_callback )
+TIMER_CALLBACK_MEMBER(tx1_state::interrupt_callback)
 {
-	tx1_state *state = machine.driver_data<tx1_state>();
-	machine.device("main_cpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
+	machine().device("main_cpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 }
 
 
@@ -1113,21 +1112,20 @@ VIDEO_START_MEMBER(tx1_state,tx1)
 	m_rod_bmp = auto_alloc_array(machine(), UINT8, 256 * 3 * 240);
 
 	/* Set a timer to run the interrupts */
-	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(interrupt_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(tx1_state::interrupt_callback),this));
 
 	/* /CUDISP CRTC interrupt */
 	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 }
 
-SCREEN_VBLANK( tx1 )
+void tx1_state::screen_eof_tx1(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		tx1_state *state = screen.machine().driver_data<tx1_state>();
 
 		/* /VSYNC: Update TZ113 */
-		state->m_vregs.slin_val += state->m_vregs.slin_inc;
+		m_vregs.slin_val += m_vregs.slin_inc;
 	}
 }
 
@@ -1182,29 +1180,28 @@ static void tx1_combine_layers(running_machine &machine, bitmap_ind16 &bitmap, i
 	}
 }
 
-SCREEN_UPDATE_IND16( tx1_left )
+UINT32 tx1_state::screen_update_tx1_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
-	memset(state->m_obj_bmp, 0, 768*240);
+	memset(m_obj_bmp, 0, 768*240);
 
-	tx1_draw_char(screen.machine(), state->m_chr_bmp);
-	tx1_draw_road(screen.machine(), state->m_rod_bmp);
-	tx1_draw_objects(screen.machine(), state->m_obj_bmp);
+	tx1_draw_char(machine(), m_chr_bmp);
+	tx1_draw_road(machine(), m_rod_bmp);
+	tx1_draw_objects(machine(), m_obj_bmp);
 
-	tx1_combine_layers(screen.machine(), bitmap, 0);
+	tx1_combine_layers(machine(), bitmap, 0);
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( tx1_middle )
+UINT32 tx1_state::screen_update_tx1_middle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tx1_combine_layers(screen.machine(), bitmap, 1);
+	tx1_combine_layers(machine(), bitmap, 1);
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( tx1_right )
+UINT32 tx1_state::screen_update_tx1_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tx1_combine_layers(screen.machine(), bitmap, 2);
+	tx1_combine_layers(machine(), bitmap, 2);
 	return 0;
 }
 
@@ -3003,7 +3000,7 @@ VIDEO_START_MEMBER(tx1_state,buggyboy)
 	m_rod_bmp = auto_alloc_array(machine(), UINT8, 3 * 256 * 240);
 
 	/* Set a timer to run the interrupts */
-	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(interrupt_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(tx1_state::interrupt_callback),this));
 
 	/* /CUDISP CRTC interrupt */
 	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
@@ -3017,64 +3014,61 @@ VIDEO_START_MEMBER(tx1_state,buggybjr)
 	m_rod_bmp = auto_alloc_array(machine(), UINT8, 256 * 240);
 
 	/* Set a timer to run the interrupts */
-	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(interrupt_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(tx1_state::interrupt_callback),this));
 
 	/* /CUDISP CRTC interrupt */
 	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 }
 
-SCREEN_VBLANK( buggyboy )
+void tx1_state::screen_eof_buggyboy(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		tx1_state *state = screen.machine().driver_data<tx1_state>();
 
 		/* /VSYNC: Update TZ113 @ 219 */
-		state->m_vregs.slin_val += state->m_vregs.slin_inc;
+		m_vregs.slin_val += m_vregs.slin_inc;
 
 		/* /VSYNC: Clear wave LFSR */
-		state->m_vregs.wave_lfsr = 0;
+		m_vregs.wave_lfsr = 0;
 	}
 }
 
 
-SCREEN_UPDATE_IND16( buggyboy_left )
+UINT32 tx1_state::screen_update_buggyboy_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
-	memset(state->m_obj_bmp, 0, 768*240);
-	memset(state->m_rod_bmp, 0, 768*240);
+	memset(m_obj_bmp, 0, 768*240);
+	memset(m_rod_bmp, 0, 768*240);
 
-	buggyboy_draw_char(screen.machine(), state->m_chr_bmp, 1);
-	buggyboy_draw_road(screen.machine(), state->m_rod_bmp);
-	buggyboy_draw_objs(screen.machine(), state->m_obj_bmp, 1);
+	buggyboy_draw_char(machine(), m_chr_bmp, 1);
+	buggyboy_draw_road(machine(), m_rod_bmp);
+	buggyboy_draw_objs(machine(), m_obj_bmp, 1);
 
-	bb_combine_layers(screen.machine(), bitmap, 0);
+	bb_combine_layers(machine(), bitmap, 0);
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( buggyboy_middle )
+UINT32 tx1_state::screen_update_buggyboy_middle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bb_combine_layers(screen.machine(), bitmap, 1);
+	bb_combine_layers(machine(), bitmap, 1);
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( buggyboy_right )
+UINT32 tx1_state::screen_update_buggyboy_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bb_combine_layers(screen.machine(), bitmap, 2);
+	bb_combine_layers(machine(), bitmap, 2);
 	return 0;
 }
 
-SCREEN_UPDATE_IND16( buggybjr )
+UINT32 tx1_state::screen_update_buggybjr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	tx1_state *state = screen.machine().driver_data<tx1_state>();
-	memset(state->m_obj_bmp, 0, 256*240);
+	memset(m_obj_bmp, 0, 256*240);
 
-	buggyboy_draw_char(screen.machine(), state->m_chr_bmp, 0);
-	buggybjr_draw_road(screen.machine(), state->m_rod_bmp, 0);
-	buggyboy_draw_objs(screen.machine(), state->m_obj_bmp, 0);
+	buggyboy_draw_char(machine(), m_chr_bmp, 0);
+	buggybjr_draw_road(machine(), m_rod_bmp, 0);
+	buggyboy_draw_objs(machine(), m_obj_bmp, 0);
 
-	bb_combine_layers(screen.machine(), bitmap, -1);
+	bb_combine_layers(machine(), bitmap, -1);
 	return 0;
 }

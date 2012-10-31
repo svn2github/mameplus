@@ -38,29 +38,28 @@
     6532 RIOT
 ***************************************************************************/
 
-static READ8_DEVICE_HANDLER( riot_joystick_r )
+READ8_MEMBER(a7800_state::riot_joystick_r)
 {
-	return device->machine().root_device().ioport("joysticks")->read();
+	return machine().root_device().ioport("joysticks")->read();
 }
 
-static READ8_DEVICE_HANDLER( riot_console_button_r )
+READ8_MEMBER(a7800_state::riot_console_button_r)
 {
-	return device->machine().root_device().ioport("console_buttons")->read();
+	return machine().root_device().ioport("console_buttons")->read();
 }
 
-static WRITE8_DEVICE_HANDLER( riot_button_pullup_w )
+WRITE8_MEMBER(a7800_state::riot_button_pullup_w)
 {
-	a7800_state *state = device->machine().driver_data<a7800_state>();
-	state->m_p1_one_button = data & 0x04; // pin 6 of the controller port is held high by the riot chip when reading two-button controllers (from schematic)
-	state->m_p2_one_button = data & 0x10;
+	m_p1_one_button = data & 0x04; // pin 6 of the controller port is held high by the riot chip when reading two-button controllers (from schematic)
+	m_p2_one_button = data & 0x10;
 }
 
 const riot6532_interface a7800_r6532_interface =
 {
-	DEVCB_HANDLER(riot_joystick_r),
-	DEVCB_HANDLER(riot_console_button_r),
+	DEVCB_DRIVER_MEMBER(a7800_state,riot_joystick_r),
+	DEVCB_DRIVER_MEMBER(a7800_state,riot_console_button_r),
 	DEVCB_NULL,
-	DEVCB_HANDLER(riot_button_pullup_w),
+	DEVCB_DRIVER_MEMBER(a7800_state,riot_button_pullup_w),
 	DEVCB_NULL
 };
 
@@ -72,7 +71,7 @@ const riot6532_interface a7800_r6532_interface =
 static void a7800_driver_init(running_machine &machine, int ispal, int lines)
 {
 	a7800_state *state = machine.driver_data<a7800_state>();
-	address_space* space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space& space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	state->m_ROM = state->memregion("maincpu")->base();
 	state->m_ispal = ispal;
 	state->m_lines = lines;
@@ -85,9 +84,9 @@ static void a7800_driver_init(running_machine &machine, int ispal, int lines)
 	state->membank("bank7")->set_base(&state->m_ROM[0x2000]);		/* MAINRAM */
 
 	/* Brutal hack put in as a consequence of new memory system; fix this */
-	space->install_readwrite_bank(0x0480, 0x04FF,"bank10");
+	space.install_readwrite_bank(0x0480, 0x04FF,"bank10");
 	state->membank("bank10")->set_base(state->m_ROM + 0x0480);
-	space->install_readwrite_bank(0x1800, 0x27FF, "bank11");
+	space.install_readwrite_bank(0x1800, 0x27FF, "bank11");
 	state->membank("bank11")->set_base(state->m_ROM + 0x1800);
 }
 
@@ -107,7 +106,7 @@ DRIVER_INIT_MEMBER(a7800_state,a7800_pal)
 void a7800_state::machine_reset()
 {
 	UINT8 *memory;
-	address_space* space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space& space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	m_ctrl_lock = 0;
 	m_ctrl_reg = 0;
@@ -124,7 +123,7 @@ void a7800_state::machine_reset()
 	if (m_cart_type & 0x01)
 	{
 		pokey_device *pokey = machine().device<pokey_device>("pokey");
-		space->install_readwrite_handler(0x4000, 0x7FFF, read8_delegate(FUNC(pokey_device::read),pokey), write8_delegate(FUNC(pokey_device::write),pokey));
+		space.install_readwrite_handler(0x4000, 0x7FFF, read8_delegate(FUNC(pokey_device::read),pokey), write8_delegate(FUNC(pokey_device::write),pokey));
 	}
 }
 
@@ -525,6 +524,6 @@ WRITE8_MEMBER(a7800_state::a7800_TIA_w)
 		}
 		break;
 	}
-	tia_sound_w(machine().device("tia"), offset, data);
+	tia_sound_w(machine().device("tia"), space, offset, data);
 	m_ROM[offset] = data;
 }

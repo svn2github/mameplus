@@ -23,7 +23,7 @@ INLINE UINT16 *address_to_vram(artmagic_state *state, offs_t *address)
 {
 	offs_t original = *address;
 	*address = TOWORD(original & 0x001fffff);
-	if (original >= 0x00000000 && original < 0x001fffff)
+	if (original < 0x001fffff)
 		return state->m_vram0;
 	else if (original >= 0x00400000 && original < 0x005fffff)
 		return state->m_vram1;
@@ -57,18 +57,18 @@ void artmagic_state::video_start()
  *
  *************************************/
 
-void artmagic_to_shiftreg(address_space *space, offs_t address, UINT16 *data)
+void artmagic_to_shiftreg(address_space &space, offs_t address, UINT16 *data)
 {
-	artmagic_state *state = space->machine().driver_data<artmagic_state>();
+	artmagic_state *state = space.machine().driver_data<artmagic_state>();
 	UINT16 *vram = address_to_vram(state, &address);
 	if (vram)
 		memcpy(data, &vram[address], TOBYTE(0x2000));
 }
 
 
-void artmagic_from_shiftreg(address_space *space, offs_t address, UINT16 *data)
+void artmagic_from_shiftreg(address_space &space, offs_t address, UINT16 *data)
 {
-	artmagic_state *state = space->machine().driver_data<artmagic_state>();
+	artmagic_state *state = space.machine().driver_data<artmagic_state>();
 	UINT16 *vram = address_to_vram(state, &address);
 	if (vram)
 		memcpy(&vram[address], data, TOBYTE(0x2000));

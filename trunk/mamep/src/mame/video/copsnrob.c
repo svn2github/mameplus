@@ -8,51 +8,50 @@
 #include "includes/copsnrob.h"
 
 
-SCREEN_UPDATE_IND16( copsnrob )
+UINT32 copsnrob_state::screen_update_copsnrob(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	copsnrob_state *state = screen.machine().driver_data<copsnrob_state>();
 	int offs, x, y;
 
 	/* redrawing the entire display is faster in this case */
 
-	for (offs = state->m_videoram.bytes(); offs >= 0; offs--)
+	for (offs = m_videoram.bytes(); offs >= 0; offs--)
 	{
 		int sx,sy;
 
 		sx = 31 - (offs % 32);
 		sy = offs / 32;
 
-		drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],
-				state->m_videoram[offs] & 0x3f,0,
+		drawgfx_opaque(bitmap,cliprect,machine().gfx[0],
+				m_videoram[offs] & 0x3f,0,
 				0,0,
 				8*sx,8*sy);
 	}
 
 
 	/* Draw the cars. Positioning was based on a screen shot */
-	if (state->m_cary[0])
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
-				state->m_carimage[0],0,
+	if (m_cary[0])
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
+				m_carimage[0],0,
 				1,0,
-				0xe4,256 - state->m_cary[0],0);
+				0xe4,256 - m_cary[0],0);
 
-	if (state->m_cary[1])
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
-				state->m_carimage[1],0,
+	if (m_cary[1])
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
+				m_carimage[1],0,
 				1,0,
-				0xc4,256 - state->m_cary[1],0);
+				0xc4,256 - m_cary[1],0);
 
-	if (state->m_cary[2])
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
-				state->m_carimage[2],0,
+	if (m_cary[2])
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
+				m_carimage[2],0,
 				0,0,
-				0x24,256 - state->m_cary[2],0);
+				0x24,256 - m_cary[2],0);
 
-	if (state->m_cary[3])
-		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
-				state->m_carimage[3],0,
+	if (m_cary[3])
+		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
+				m_carimage[3],0,
 				0,0,
-				0x04,256 - state->m_cary[3],0);
+				0x04,256 - m_cary[3],0);
 
 
 	/* Draw the beer truck. Positioning was based on a screen shot.
@@ -70,15 +69,15 @@ SCREEN_UPDATE_IND16( copsnrob )
 		/* y is going up the screen, but the truck window RAM locations
         go down the screen. */
 
-		if (state->m_truckram[255 - y])
+		if (m_truckram[255 - y])
 		{
 			/* The hardware only uses the low 5 bits of the truck image line
             sync register. */
-			if ((state->m_trucky[0] & 0x1f) == ((y + 31) & 0x1f))
+			if ((m_trucky[0] & 0x1f) == ((y + 31) & 0x1f))
 			{
 				/* We've hit a truck's back end, so draw the truck.  The front
                    end may be off the top of the screen, but we don't care. */
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[2],
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[2],
 						0,0,
 						0,0,
 						0x80,256 - (y + 31),0);
@@ -86,11 +85,11 @@ SCREEN_UPDATE_IND16( copsnrob )
                 truck twice. */
 				y += 31;
 			}
-			else if ((state->m_trucky[0] & 0x1f) == (y & 0x1f))
+			else if ((m_trucky[0] & 0x1f) == (y & 0x1f))
 			{
 				/* We missed a truck's back end (it was off the bottom of the
                    screen) but have hit its front end, so draw the truck. */
-				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[2],
+				drawgfx_transpen(bitmap,cliprect,machine().gfx[2],
 						0,0,
 						0,0,
 						0x80,256 - y,0);
@@ -107,7 +106,7 @@ SCREEN_UPDATE_IND16( copsnrob )
 	{
 		int bullet, mask1, mask2, val;
 
-		val = state->m_bulletsram[x];
+		val = m_bulletsram[x];
 
 		// Check for the most common case
 		if (!(val & 0x0f))
@@ -122,7 +121,7 @@ SCREEN_UPDATE_IND16( copsnrob )
 			if (val & mask1)
 			{
 				for (y = cliprect.min_y; y <= cliprect.max_y; y++)
-					if (state->m_bulletsram[y] & mask2)
+					if (m_bulletsram[y] & mask2)
 						bitmap.pix16(y, 256 - x) = 1;
 			}
 

@@ -84,6 +84,13 @@ $(MESSOBJ)/atari.a:				\
 	$(MESS_DRIVERS)/a7800.o		\
 	$(MESS_VIDEO)/a7800.o		\
 	$(MESS_DRIVERS)/a2600.o		\
+	$(MESS_MACHINE)/vcsctrl.o	\
+	$(MESS_MACHINE)/vcs_joy.o	\
+	$(MESS_MACHINE)/vcs_lightpen.o	\
+	$(MESS_MACHINE)/vcs_paddles.o	\
+	$(MESS_MACHINE)/vcs_joybooster.o	\
+	$(MESS_MACHINE)/vcs_wheel.o	\
+	$(MESS_MACHINE)/vcs_keypad.o	\
 
 $(MESSOBJ)/bandai.a:			\
 	$(MESS_DRIVERS)/wswan.o		\

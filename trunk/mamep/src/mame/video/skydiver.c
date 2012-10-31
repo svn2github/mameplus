@@ -11,21 +11,21 @@
 
 void skydiver_state::machine_reset()
 {
-	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* reset all latches */
-	skydiver_start_lamp_1_w(*space, 0, 0);
-	skydiver_start_lamp_2_w(*space, 0, 0);
-	skydiver_lamp_s_w(*space, 0, 0);
-	skydiver_lamp_k_w(*space, 0, 0);
-	skydiver_lamp_y_w(*space, 0, 0);
-	skydiver_lamp_d_w(*space, 0, 0);
+	skydiver_start_lamp_1_w(space, 0, 0);
+	skydiver_start_lamp_2_w(space, 0, 0);
+	skydiver_lamp_s_w(space, 0, 0);
+	skydiver_lamp_k_w(space, 0, 0);
+	skydiver_lamp_y_w(space, 0, 0);
+	skydiver_lamp_d_w(space, 0, 0);
 	output_set_value("lampi", 0);
 	output_set_value("lampv", 0);
 	output_set_value("lampe", 0);
 	output_set_value("lampr", 0);
-	skydiver_width_w(*space, 0, 0);
-	skydiver_coin_lockout_w(*space, 0, 0);
+	skydiver_width_w(space, 0, 0);
+	skydiver_coin_lockout_w(space, 0, 0);
 }
 
 
@@ -144,13 +144,13 @@ WRITE8_MEMBER(skydiver_state::skydiver_2000_201F_w)
 			output_set_value("lampr", bit);
 			break;
 		case (0x0a):
-			discrete_sound_w(discrete, SKYDIVER_OCT1_EN, bit);
+			discrete_sound_w(discrete, space, SKYDIVER_OCT1_EN, bit);
 			break;
 		case (0x0c):
-			discrete_sound_w(discrete, SKYDIVER_OCT2_EN, bit);
+			discrete_sound_w(discrete, space, SKYDIVER_OCT2_EN, bit);
 			break;
 		case (0x0e):
-			discrete_sound_w(discrete, SKYDIVER_NOISE_RST, bit);
+			discrete_sound_w(discrete, space, SKYDIVER_NOISE_RST, bit);
 			break;
 	}
 }
@@ -200,11 +200,10 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 }
 
 
-SCREEN_UPDATE_IND16( skydiver )
+UINT32 skydiver_state::screen_update_skydiver(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	skydiver_state *state = screen.machine().driver_data<skydiver_state>();
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0,0);
 
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 	return 0;
 }

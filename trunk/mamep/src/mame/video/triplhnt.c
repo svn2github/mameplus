@@ -24,9 +24,9 @@ void triplhnt_state::video_start()
 }
 
 
-static TIMER_CALLBACK( triplhnt_hit_callback )
+TIMER_CALLBACK_MEMBER(triplhnt_state::triplhnt_hit_callback)
 {
-	triplhnt_set_collision(machine, param);
+	triplhnt_set_collision(machine(), param);
 }
 
 
@@ -99,22 +99,22 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	}
 
 	if (hit_line != 999 && hit_code != 999)
-		machine.scheduler().timer_set(machine.primary_screen->time_until_pos(hit_line), FUNC(triplhnt_hit_callback), hit_code);
+		machine.scheduler().timer_set(machine.primary_screen->time_until_pos(hit_line), timer_expired_delegate(FUNC(triplhnt_state::triplhnt_hit_callback),state), hit_code);
 }
 
 
-SCREEN_UPDATE_IND16( triplhnt )
+UINT32 triplhnt_state::screen_update_triplhnt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	triplhnt_state *state = screen.machine().driver_data<triplhnt_state>();
-	device_t *discrete = screen.machine().device("discrete");
+	device_t *discrete = machine().device("discrete");
 
-	state->m_bg_tilemap->mark_all_dirty();
+	m_bg_tilemap->mark_all_dirty();
 
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
-	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_sprites(machine(), bitmap, cliprect);
 
-	discrete_sound_w(discrete, TRIPLHNT_BEAR_ROAR_DATA, state->m_playfield_ram[0xfa] & 15);
-	discrete_sound_w(discrete, TRIPLHNT_SHOT_DATA, state->m_playfield_ram[0xfc] & 15);
+	address_space &space = machine().driver_data()->generic_space();
+	discrete_sound_w(discrete, space, TRIPLHNT_BEAR_ROAR_DATA, m_playfield_ram[0xfa] & 15);
+	discrete_sound_w(discrete, space, TRIPLHNT_SHOT_DATA, m_playfield_ram[0xfc] & 15);
 	return 0;
 }

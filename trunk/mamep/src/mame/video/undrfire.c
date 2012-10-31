@@ -346,49 +346,49 @@ static void draw_sprites_cbombers(running_machine &machine, bitmap_ind16 &bitmap
                 SCREEN REFRESH
 **************************************************************/
 
-SCREEN_UPDATE_IND16( undrfire )
+UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	device_t *tc0100scn = screen.machine().device("tc0100scn");
-	device_t *tc0480scp = screen.machine().device("tc0480scp");
+	device_t *tc0100scn = machine().device("tc0100scn");
+	device_t *tc0480scp = machine().device("tc0480scp");
+	address_space &space = machine().driver_data()->generic_space();
 	UINT8 layer[5];
 	UINT8 pivlayer[3];
 	UINT16 priority;
 
 #ifdef MAME_DEBUG
-	undrfire_state *state = screen.machine().driver_data<undrfire_state>();
-	if (screen.machine().input().code_pressed_once (KEYCODE_X))
+	if (machine().input().code_pressed_once (KEYCODE_X))
 	{
-		state->m_dislayer[5] ^= 1;
-		popmessage("piv text: %01x",state->m_dislayer[5]);
+		m_dislayer[5] ^= 1;
+		popmessage("piv text: %01x",m_dislayer[5]);
 	}
-	if (screen.machine().input().code_pressed_once (KEYCODE_C))
+	if (machine().input().code_pressed_once (KEYCODE_C))
 	{
-		state->m_dislayer[0] ^= 1;
-		popmessage("bg0: %01x",state->m_dislayer[0]);
-	}
-
-	if (screen.machine().input().code_pressed_once (KEYCODE_V))
-	{
-		state->m_dislayer[1] ^= 1;
-		popmessage("bg1: %01x",state->m_dislayer[1]);
+		m_dislayer[0] ^= 1;
+		popmessage("bg0: %01x",m_dislayer[0]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_B))
+	if (machine().input().code_pressed_once (KEYCODE_V))
 	{
-		state->m_dislayer[2] ^= 1;
-		popmessage("bg2: %01x",state->m_dislayer[2]);
+		m_dislayer[1] ^= 1;
+		popmessage("bg1: %01x",m_dislayer[1]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_N))
+	if (machine().input().code_pressed_once (KEYCODE_B))
 	{
-		state->m_dislayer[3] ^= 1;
-		popmessage("bg3: %01x",state->m_dislayer[3]);
+		m_dislayer[2] ^= 1;
+		popmessage("bg2: %01x",m_dislayer[2]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_M))
+	if (machine().input().code_pressed_once (KEYCODE_N))
 	{
-		state->m_dislayer[4] ^= 1;
-		popmessage("sprites: %01x",state->m_dislayer[4]);
+		m_dislayer[3] ^= 1;
+		popmessage("bg3: %01x",m_dislayer[3]);
+	}
+
+	if (machine().input().code_pressed_once (KEYCODE_M))
+	{
+		m_dislayer[4] ^= 1;
+		popmessage("sprites: %01x",m_dislayer[4]);
 	}
 #endif
 
@@ -407,7 +407,7 @@ SCREEN_UPDATE_IND16( undrfire )
 	pivlayer[1] = pivlayer[0] ^ 1;
 	pivlayer[2] = 2;
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 	bitmap.fill(0, cliprect);	/* wrong color? */
 
 
@@ -421,44 +421,44 @@ SCREEN_UPDATE_IND16( undrfire )
 	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[1], 0, 0);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[0]]==0)
+	if (m_dislayer[layer[0]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[0], 0, 1);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[1]]==0)
+	if (m_dislayer[layer[1]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[1], 0, 2);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[2]]==0)
+	if (m_dislayer[layer[2]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[2], 0, 4);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[3]]==0)
+	if (m_dislayer[layer[3]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[3], 0, 8);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[4]==0)
+	if (m_dislayer[4]==0)
 #endif
 	/* Sprites have variable priority (we kludge this on road levels) */
 	{
-		if ((tc0480scp_pri_reg_r(tc0480scp, 0) & 0x3) == 3)	/* on road levels kludge sprites up 1 priority */
+		if ((tc0480scp_pri_reg_r(tc0480scp, space, 0) & 0x3) == 3)	/* on road levels kludge sprites up 1 priority */
 		{
 			static const int primasks[4] = {0xfff0, 0xff00, 0x0, 0x0};
-			draw_sprites(screen.machine(), bitmap, cliprect, primasks, 44, -574);
+			draw_sprites(machine(), bitmap, cliprect, primasks, 44, -574);
 		}
 		else
 		{
 			static const int primasks[4] = {0xfffc, 0xfff0, 0xff00, 0x0};
-			draw_sprites(screen.machine(), bitmap, cliprect, primasks, 44, -574);
+			draw_sprites(machine(), bitmap, cliprect, primasks, 44, -574);
 		}
 	}
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[5]==0)
+	if (m_dislayer[5]==0)
 #endif
 	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[2], 0, 0);	/* piv text layer */
 
@@ -467,7 +467,7 @@ SCREEN_UPDATE_IND16( undrfire )
 	/* See if we should draw artificial gun targets */
 	/* (not yet implemented...) */
 
-	if (screen.machine().root_device().ioport("FAKE")->read() & 0x1)	/* Fake DSW */
+	if (machine().root_device().ioport("FAKE")->read() & 0x1)	/* Fake DSW */
 	{
 		popmessage("Gunsights on");
 	}
@@ -480,7 +480,7 @@ SCREEN_UPDATE_IND16( undrfire )
 
 		for (i = 0; i < 8; i += 1)
 		{
-			sprintf (buf, "%02x: %04x", i, state->m_rotate_ctrl[i]);
+			sprintf (buf, "%02x: %04x", i, m_rotate_ctrl[i]);
 			ui_draw_text (buf, 0, i*8);
 		}
 	}
@@ -489,49 +489,49 @@ SCREEN_UPDATE_IND16( undrfire )
 }
 
 
-SCREEN_UPDATE_IND16( cbombers )
+UINT32 undrfire_state::screen_update_cbombers(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	device_t *tc0100scn = screen.machine().device("tc0100scn");
-	device_t *tc0480scp = screen.machine().device("tc0480scp");
+	device_t *tc0100scn = machine().device("tc0100scn");
+	device_t *tc0480scp = machine().device("tc0480scp");
+	address_space &space = machine().driver_data()->generic_space();
 	UINT8 layer[5];
 	UINT8 pivlayer[3];
 	UINT16 priority;
 
 #ifdef MAME_DEBUG
-	undrfire_state *state = screen.machine().driver_data<undrfire_state>();
-	if (screen.machine().input().code_pressed_once (KEYCODE_X))
+	if (machine().input().code_pressed_once (KEYCODE_X))
 	{
-		state->m_dislayer[5] ^= 1;
-		popmessage("piv text: %01x",state->m_dislayer[5]);
+		m_dislayer[5] ^= 1;
+		popmessage("piv text: %01x",m_dislayer[5]);
 	}
-	if (screen.machine().input().code_pressed_once (KEYCODE_C))
+	if (machine().input().code_pressed_once (KEYCODE_C))
 	{
-		state->m_dislayer[0] ^= 1;
-		popmessage("bg0: %01x",state->m_dislayer[0]);
-	}
-
-	if (screen.machine().input().code_pressed_once (KEYCODE_V))
-	{
-		state->m_dislayer[1] ^= 1;
-		popmessage("bg1: %01x",state->m_dislayer[1]);
+		m_dislayer[0] ^= 1;
+		popmessage("bg0: %01x",m_dislayer[0]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_B))
+	if (machine().input().code_pressed_once (KEYCODE_V))
 	{
-		state->m_dislayer[2] ^= 1;
-		popmessage("bg2: %01x",state->m_dislayer[2]);
+		m_dislayer[1] ^= 1;
+		popmessage("bg1: %01x",m_dislayer[1]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_N))
+	if (machine().input().code_pressed_once (KEYCODE_B))
 	{
-		state->m_dislayer[3] ^= 1;
-		popmessage("bg3: %01x",state->m_dislayer[3]);
+		m_dislayer[2] ^= 1;
+		popmessage("bg2: %01x",m_dislayer[2]);
 	}
 
-	if (screen.machine().input().code_pressed_once (KEYCODE_M))
+	if (machine().input().code_pressed_once (KEYCODE_N))
 	{
-		state->m_dislayer[4] ^= 1;
-		popmessage("sprites: %01x",state->m_dislayer[4]);
+		m_dislayer[3] ^= 1;
+		popmessage("bg3: %01x",m_dislayer[3]);
+	}
+
+	if (machine().input().code_pressed_once (KEYCODE_M))
+	{
+		m_dislayer[4] ^= 1;
+		popmessage("sprites: %01x",m_dislayer[4]);
 	}
 #endif
 
@@ -550,7 +550,7 @@ SCREEN_UPDATE_IND16( cbombers )
 	pivlayer[1] = pivlayer[0] ^ 1;
 	pivlayer[2] = 2;
 
-	screen.machine().priority_bitmap.fill(0, cliprect);
+	machine().priority_bitmap.fill(0, cliprect);
 	bitmap.fill(0, cliprect);	/* wrong color? */
 
 
@@ -564,44 +564,44 @@ SCREEN_UPDATE_IND16( cbombers )
 	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[1], 0, 0);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[0]]==0)
+	if (m_dislayer[layer[0]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[0], 0, 1);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[1]]==0)
+	if (m_dislayer[layer[1]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[1], 0, 2);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[2]]==0)
+	if (m_dislayer[layer[2]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[2], 0, 4);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[layer[3]]==0)
+	if (m_dislayer[layer[3]]==0)
 #endif
 	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[3], 0, 8);
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[4]==0)
+	if (m_dislayer[4]==0)
 #endif
 	/* Sprites have variable priority (we kludge this on road levels) */
 	{
-		if ((tc0480scp_pri_reg_r(tc0480scp, 0) & 0x3) == 3)	/* on road levels kludge sprites up 1 priority */
+		if ((tc0480scp_pri_reg_r(tc0480scp, space, 0) & 0x3) == 3)	/* on road levels kludge sprites up 1 priority */
 		{
 			static const int primasks[4] = {0xfff0, 0xff00, 0x0, 0x0};
-			draw_sprites_cbombers(screen.machine(), bitmap, cliprect, primasks, 80, -208);
+			draw_sprites_cbombers(machine(), bitmap, cliprect, primasks, 80, -208);
 		}
 		else
 		{
 			static const int primasks[4] = {0xfffc, 0xfff0, 0xff00, 0x0};
-			draw_sprites_cbombers(screen.machine(), bitmap, cliprect, primasks, 80, -208);
+			draw_sprites_cbombers(machine(), bitmap, cliprect, primasks, 80, -208);
 		}
 	}
 
 #ifdef MAME_DEBUG
-	if (state->m_dislayer[5]==0)
+	if (m_dislayer[5]==0)
 #endif
 	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[2], 0, 0);	/* piv text layer */
 
@@ -615,7 +615,7 @@ SCREEN_UPDATE_IND16( cbombers )
 
 		for (i = 0; i < 8; i += 1)
 		{
-			sprintf (buf, "%02x: %04x", i, state->m_rotate_ctrl[i]);
+			sprintf (buf, "%02x: %04x", i, m_rotate_ctrl[i]);
 			ui_draw_text (buf, 0, i*8);
 		}
 	}

@@ -28,7 +28,8 @@ static void mix_boogwing(running_machine &machine, bitmap_rgb32 &bitmap, const r
 	bitmap_ind16 *sprite_bitmap1, *sprite_bitmap2;
 	bitmap_ind8* priority_bitmap;
 
-	UINT16 priority = decocomn_priority_r(state->m_decocomn, 0, 0xffff);
+	address_space &space = machine.driver_data()->generic_space();
+	UINT16 priority = decocomn_priority_r(state->m_decocomn, space, 0, 0xffff);
 
 	sprite_bitmap1 = &machine.device<decospr_device>("spritegen1")->get_sprite_temp_bitmap();
 	sprite_bitmap2 = &machine.device<decospr_device>("spritegen2")->get_sprite_temp_bitmap();
@@ -177,55 +178,55 @@ static void mix_boogwing(running_machine &machine, bitmap_rgb32 &bitmap, const r
 	}
 }
 
-SCREEN_UPDATE_RGB32( boogwing )
+UINT32 boogwing_state::screen_update_boogwing(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	boogwing_state *state = screen.machine().driver_data<boogwing_state>();
-	UINT16 flip = deco16ic_pf_control_r(state->m_deco_tilegen1, 0, 0xffff);
-	UINT16 priority = decocomn_priority_r(state->m_decocomn, 0, 0xffff);
+	address_space &space = machine().driver_data()->generic_space();
+	UINT16 flip = deco16ic_pf_control_r(m_deco_tilegen1, space, 0, 0xffff);
+	UINT16 priority = decocomn_priority_r(m_decocomn, space, 0, 0xffff);
 
 	/* Draw sprite planes to bitmaps for later mixing */
-	screen.machine().device<decospr_device>("spritegen2")->draw_sprites(bitmap, cliprect, state->m_spriteram2->buffer(), 0x400, true);
-	screen.machine().device<decospr_device>("spritegen1")->draw_sprites(bitmap, cliprect, state->m_spriteram->buffer(), 0x400, true);
+	machine().device<decospr_device>("spritegen2")->draw_sprites(bitmap, cliprect, m_spriteram2->buffer(), 0x400, true);
+	machine().device<decospr_device>("spritegen1")->draw_sprites(bitmap, cliprect, m_spriteram->buffer(), 0x400, true);
 
-	state->flip_screen_set(BIT(flip, 7));
-	deco16ic_pf_update(state->m_deco_tilegen1, state->m_pf1_rowscroll, state->m_pf2_rowscroll);
-	deco16ic_pf_update(state->m_deco_tilegen2, state->m_pf3_rowscroll, state->m_pf4_rowscroll);
+	flip_screen_set(BIT(flip, 7));
+	deco16ic_pf_update(m_deco_tilegen1, m_pf1_rowscroll, m_pf2_rowscroll);
+	deco16ic_pf_update(m_deco_tilegen2, m_pf3_rowscroll, m_pf4_rowscroll);
 
 	/* Draw playfields */
-	bitmap.fill(screen.machine().pens[0x400], cliprect); /* pen not confirmed */
-	screen.machine().priority_bitmap.fill(0);
+	bitmap.fill(machine().pens[0x400], cliprect); /* pen not confirmed */
+	machine().priority_bitmap.fill(0);
 
 	// bit&0x8 is definitely some kind of palette effect
 	// bit&0x4 combines playfields
 	if ((priority & 0x7) == 0x5)
 	{
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen1, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-		deco16ic_tilemap_12_combine_draw(state->m_deco_tilegen2, bitmap, cliprect, 0, 32);
+		deco16ic_tilemap_2_draw(m_deco_tilegen1, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+		deco16ic_tilemap_12_combine_draw(m_deco_tilegen2, bitmap, cliprect, 0, 32);
 	}
 	else if ((priority & 0x7) == 0x1 || (priority & 0x7) == 0x2)
 	{
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen2, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 8);
-		deco16ic_tilemap_1_draw(state->m_deco_tilegen2, bitmap, cliprect, 0, 32);
+		deco16ic_tilemap_2_draw(m_deco_tilegen2, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+		deco16ic_tilemap_2_draw(m_deco_tilegen1, bitmap, cliprect, 0, 8);
+		deco16ic_tilemap_1_draw(m_deco_tilegen2, bitmap, cliprect, 0, 32);
 	}
 	else if ((priority & 0x7) == 0x3)
 	{
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen2, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 8);
+		deco16ic_tilemap_2_draw(m_deco_tilegen2, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+		deco16ic_tilemap_2_draw(m_deco_tilegen1, bitmap, cliprect, 0, 8);
 
 		// This mode uses playfield 3 to shadow sprites & playfield 2 (instead of
 		// regular alpha-blending, the destination is inverted).  Not yet implemented.
-		// deco16ic_tilemap_3_draw(state->m_deco_tilegen1, bitmap, cliprect, TILEMAP_DRAW_ALPHA(0x80), 32);
+		// deco16ic_tilemap_3_draw(m_deco_tilegen1, bitmap, cliprect, TILEMAP_DRAW_ALPHA(0x80), 32);
 	}
 	else
 	{
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen2, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-		deco16ic_tilemap_1_draw(state->m_deco_tilegen2, bitmap, cliprect, 0, 8);
-		deco16ic_tilemap_2_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 32);
+		deco16ic_tilemap_2_draw(m_deco_tilegen2, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+		deco16ic_tilemap_1_draw(m_deco_tilegen2, bitmap, cliprect, 0, 8);
+		deco16ic_tilemap_2_draw(m_deco_tilegen1, bitmap, cliprect, 0, 32);
 	}
 
-	mix_boogwing(screen.machine(), bitmap,cliprect);
+	mix_boogwing(machine(), bitmap,cliprect);
 
-	deco16ic_tilemap_1_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 0);
+	deco16ic_tilemap_1_draw(m_deco_tilegen1, bitmap, cliprect, 0, 0);
 	return 0;
 }

@@ -245,21 +245,20 @@ void sspeedr_state::video_start()
 }
 
 
-SCREEN_UPDATE_IND16( sspeedr )
+UINT32 sspeedr_state::screen_update_sspeedr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	draw_track(screen.machine(), bitmap);
-	draw_drones(screen.machine(), bitmap, cliprect);
-	draw_driver(screen.machine(), bitmap, cliprect);
+	draw_track(machine(), bitmap);
+	draw_drones(machine(), bitmap, cliprect);
+	draw_driver(machine(), bitmap, cliprect);
 	return 0;
 }
 
 
-SCREEN_VBLANK( sspeedr )
+void sspeedr_state::screen_eof_sspeedr(screen_device &screen, bool state)
 {
 	// rising edge
-	if (vblank_on)
+	if (state)
 	{
-		sspeedr_state *state = screen.machine().driver_data<sspeedr_state>();
-		state->m_toggle ^= 1;
+		m_toggle ^= 1;
 	}
 }

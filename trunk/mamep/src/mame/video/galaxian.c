@@ -450,22 +450,21 @@ static void state_save_register(running_machine &machine)
  *
  *************************************/
 
-SCREEN_UPDATE_RGB32( galaxian )
+UINT32 galaxian_state::screen_update_galaxian(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	galaxian_state *state = screen.machine().driver_data<galaxian_state>();
 	/* draw the background layer (including stars) */
-	(*state->m_draw_background_ptr)(screen.machine(), bitmap, cliprect);
+	(*m_draw_background_ptr)(machine(), bitmap, cliprect);
 
 	/* draw the tilemap characters over top */
-	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	/* render the sprites next. Some custom pcbs (eg. zigzag, fantastc) have more than one sprite generator (ideally, this should be rendered in parallel) */
-	for (int i = 0; i < state->m_numspritegens; i++)
-		sprites_draw(screen.machine(), bitmap, cliprect, &state->m_spriteram[0x40 + i * 0x20]);
+	for (int i = 0; i < m_numspritegens; i++)
+		sprites_draw(machine(), bitmap, cliprect, &m_spriteram[0x40 + i * 0x20]);
 
 	/* if we have bullets to draw, render them following */
-	if (state->m_draw_bullet_ptr != NULL)
-		bullets_draw(screen.machine(), bitmap, cliprect, &state->m_spriteram[state->m_bullets_base]);
+	if (m_draw_bullet_ptr != NULL)
+		bullets_draw(machine(), bitmap, cliprect, &m_spriteram[m_bullets_base]);
 
 	return 0;
 }
@@ -847,10 +846,9 @@ static void stars_update_origin(running_machine &machine)
  *
  *************************************/
 
-TIMER_DEVICE_CALLBACK( galaxian_stars_blink_timer )
+TIMER_DEVICE_CALLBACK_MEMBER(galaxian_state::galaxian_stars_blink_timer)
 {
-	galaxian_state *state = timer.machine().driver_data<galaxian_state>();
-	state->m_stars_blink_state++;
+	m_stars_blink_state++;
 }
 
 

@@ -73,8 +73,8 @@ TILEMAP_MAPPER_MEMBER(hcastle_state::tilemap_scan)
 
 TILE_GET_INFO_MEMBER(hcastle_state::get_fg_tile_info)
 {
-	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121_1, 5);
-	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_1, 6);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121_1, generic_space(), 5);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_1, generic_space(), 6);
 	int bit0 = (ctrl_5 >> 0) & 0x03;
 	int bit1 = (ctrl_5 >> 2) & 0x03;
 	int bit2 = (ctrl_5 >> 4) & 0x03;
@@ -97,8 +97,8 @@ TILE_GET_INFO_MEMBER(hcastle_state::get_fg_tile_info)
 
 TILE_GET_INFO_MEMBER(hcastle_state::get_bg_tile_info)
 {
-	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121_2, 5);
-	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_2, 6);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121_2, generic_space(), 5);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_2, generic_space(), 6);
 	int bit0 = (ctrl_5 >> 0) & 0x03;
 	int bit1 = (ctrl_5 >> 2) & 0x03;
 	int bit2 = (ctrl_5 >> 4) & 0x03;
@@ -180,7 +180,7 @@ WRITE8_MEMBER(hcastle_state::hcastle_pf1_control_w)
 	{
 		m_fg_tilemap->set_flip((data & 0x08) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 	}
-	k007121_ctrl_w(m_k007121_1, offset, data);
+	k007121_ctrl_w(m_k007121_1, space, offset, data);
 }
 
 WRITE8_MEMBER(hcastle_state::hcastle_pf2_control_w)
@@ -197,7 +197,7 @@ WRITE8_MEMBER(hcastle_state::hcastle_pf2_control_w)
 	{
 		m_bg_tilemap->set_flip((data & 0x08) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 	}
-	k007121_ctrl_w(m_k007121_2, offset, data);
+	k007121_ctrl_w(m_k007121_2, space, offset, data);
 }
 
 /*****************************************************************************/
@@ -206,7 +206,8 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	hcastle_state *state = machine.driver_data<hcastle_state>();
 	device_t *k007121 = bank ? state->m_k007121_2 : state->m_k007121_1;
-	int base_color = (k007121_ctrlram_r(k007121, 6) & 0x30) * 2;
+	address_space &space = machine.driver_data()->generic_space();
+	int base_color = (k007121_ctrlram_r(k007121, space, 6) & 0x30) * 2;
 	int bank_base = (bank == 0) ? 0x4000 * (state->m_gfx_bank & 1) : 0;
 
 	k007121_sprites_draw(k007121, bitmap, cliprect, machine.gfx[bank], machine.colortable, sbank, base_color, 0, bank_base, (UINT32)-1);
@@ -214,58 +215,58 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 /*****************************************************************************/
 
-SCREEN_UPDATE_IND16( hcastle )
+UINT32 hcastle_state::screen_update_hcastle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	hcastle_state *state = screen.machine().driver_data<hcastle_state>();
+	address_space &space = machine().driver_data()->generic_space();
 
-	UINT8 ctrl_1_0 = k007121_ctrlram_r(state->m_k007121_1, 0);
-	UINT8 ctrl_1_1 = k007121_ctrlram_r(state->m_k007121_1, 1);
-	UINT8 ctrl_1_2 = k007121_ctrlram_r(state->m_k007121_1, 2);
-	UINT8 ctrl_1_3 = k007121_ctrlram_r(state->m_k007121_1, 3);
-	UINT8 ctrl_2_0 = k007121_ctrlram_r(state->m_k007121_2, 0);
-	UINT8 ctrl_2_1 = k007121_ctrlram_r(state->m_k007121_2, 1);
-	UINT8 ctrl_2_2 = k007121_ctrlram_r(state->m_k007121_2, 2);
-	UINT8 ctrl_2_3 = k007121_ctrlram_r(state->m_k007121_2, 3);
+	UINT8 ctrl_1_0 = k007121_ctrlram_r(m_k007121_1, space, 0);
+	UINT8 ctrl_1_1 = k007121_ctrlram_r(m_k007121_1, space, 1);
+	UINT8 ctrl_1_2 = k007121_ctrlram_r(m_k007121_1, space, 2);
+	UINT8 ctrl_1_3 = k007121_ctrlram_r(m_k007121_1, space, 3);
+	UINT8 ctrl_2_0 = k007121_ctrlram_r(m_k007121_2, space, 0);
+	UINT8 ctrl_2_1 = k007121_ctrlram_r(m_k007121_2, space, 1);
+	UINT8 ctrl_2_2 = k007121_ctrlram_r(m_k007121_2, space, 2);
+	UINT8 ctrl_2_3 = k007121_ctrlram_r(m_k007121_2, space, 3);
 
-	set_pens(screen.machine());
+	set_pens(machine());
 
-	state->m_pf1_bankbase = 0x0000;
-	state->m_pf2_bankbase = 0x4000 * ((state->m_gfx_bank & 2) >> 1);
+	m_pf1_bankbase = 0x0000;
+	m_pf2_bankbase = 0x4000 * ((m_gfx_bank & 2) >> 1);
 
 	if (ctrl_1_3 & 0x01)
-		state->m_pf1_bankbase += 0x2000;
+		m_pf1_bankbase += 0x2000;
 	if (ctrl_2_3 & 0x01)
-		state->m_pf2_bankbase += 0x2000;
+		m_pf2_bankbase += 0x2000;
 
-	if (state->m_pf1_bankbase != state->m_old_pf1)
-		state->m_fg_tilemap->mark_all_dirty();
+	if (m_pf1_bankbase != m_old_pf1)
+		m_fg_tilemap->mark_all_dirty();
 
-	if (state->m_pf2_bankbase != state->m_old_pf2)
-		state->m_bg_tilemap->mark_all_dirty();
+	if (m_pf2_bankbase != m_old_pf2)
+		m_bg_tilemap->mark_all_dirty();
 
-	state->m_old_pf1 = state->m_pf1_bankbase;
-	state->m_old_pf2 = state->m_pf2_bankbase;
+	m_old_pf1 = m_pf1_bankbase;
+	m_old_pf2 = m_pf2_bankbase;
 
-	state->m_bg_tilemap->set_scrolly(0, ctrl_2_2);
-	state->m_bg_tilemap->set_scrollx(0, ((ctrl_2_1 << 8) + ctrl_2_0));
-	state->m_fg_tilemap->set_scrolly(0, ctrl_1_2);
-	state->m_fg_tilemap->set_scrollx(0, ((ctrl_1_1 << 8) + ctrl_1_0));
+	m_bg_tilemap->set_scrolly(0, ctrl_2_2);
+	m_bg_tilemap->set_scrollx(0, ((ctrl_2_1 << 8) + ctrl_2_0));
+	m_fg_tilemap->set_scrolly(0, ctrl_1_2);
+	m_fg_tilemap->set_scrollx(0, ((ctrl_1_1 << 8) + ctrl_1_0));
 
 //  /* Sprite priority */
 //  if (ctrl_1_3 & 0x20)
-	if ((state->m_gfx_bank & 0x04) == 0)
+	if ((m_gfx_bank & 0x04) == 0)
 	{
-		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-		draw_sprites(screen.machine(), bitmap, cliprect, state->m_spriteram->buffer(), 0);
-		draw_sprites(screen.machine(), bitmap, cliprect, state->m_spriteram2->buffer(), 1);
-		state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+		m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+		draw_sprites(machine(), bitmap, cliprect, m_spriteram->buffer(), 0);
+		draw_sprites(machine(), bitmap, cliprect, m_spriteram2->buffer(), 1);
+		m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
 	}
 	else
 	{
-		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-		state->m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
-		draw_sprites(screen.machine(), bitmap, cliprect, state->m_spriteram->buffer(), 0);
-		draw_sprites(screen.machine(), bitmap, cliprect, state->m_spriteram2->buffer(), 1);
+		m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+		m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+		draw_sprites(machine(), bitmap, cliprect, m_spriteram->buffer(), 0);
+		draw_sprites(machine(), bitmap, cliprect, m_spriteram2->buffer(), 1);
 	}
 	return 0;
 }
