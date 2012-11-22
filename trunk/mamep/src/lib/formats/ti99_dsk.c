@@ -12,6 +12,12 @@
  * without track data. The first sector of the disk is located at the start of
  * the image, while the last sector is at its end.
  *
+ * There is also a variant of the SDF which adds three sectors at the end
+ * containing a map of bad sectors. This was introduced by a tool to read
+ * real TI floppy disks on a PC. As other emulators tolerate this additional
+ * bad sector map, we just check whether there are 3 more sectors and ignore
+ * them.
+ *
  * The Track Dump Format is also known as pc99 (again, named after the first
  * TI emulator to use this format). It is a contiguous sequence of track
  * contents, containing all information including address marks and CRC, but it
@@ -338,6 +344,14 @@ static int ti99_sdf_guess_geometry(floppy_image_legacy *floppy, UINT64 size,
 	// So that was not consistent. We guess the size from the file size
 	// and assume that the VIB did not contain reliable data. For the
 	// ambiguous case we choose the most common format.
+
+	// Adding support for another sector image format which adds 768 bytes
+	// as a bad sector map
+	if ((file_size / 256) % 10 == 3)
+	{
+		LOG_FORMATS("Stripping map of bad sectors at image end\n");
+		file_size -= 768;
+	}
 
 	switch (file_size)
 	{

@@ -4,27 +4,6 @@
 
 
 
-#ifdef UNUSED_FUNCTION
-READ16_MEMBER(welltris_state::welltris_spriteram_r)
-{
-	return welltris_spriteram[offset];
-}
-#endif
-
-WRITE16_MEMBER(welltris_state::welltris_spriteram_w)
-{
-	int offs;
-
-	COMBINE_DATA(&m_spriteram[offset]);
-
-	/* hack... sprite doesn't work otherwise (quiz18kn) */
-	if ((offset == 0x1fe) &&
-		(m_spriteram[0x01fc] == 0x0000) &&
-		(m_spriteram[0x01fd] == 0x0000) &&
-		(m_spriteram[0x01ff] == 0x0000)) {
-		for (offs = 0; offs < 0x1fc; offs++) m_spriteram[offs] = 0x0000;
-	}
-}
 
 
 void welltris_state::setbank(int num, int bank)
@@ -125,6 +104,6 @@ UINT32 welltris_state::screen_update_welltris(screen_device &screen, bitmap_ind1
 
 	draw_background(machine(), bitmap, cliprect);
 	m_char_tilemap->draw(bitmap, cliprect, 0, 0);
-	m_spr_old->welltris_draw_sprites(m_spriteram, m_spritepalettebank, machine(), bitmap, cliprect);
+	m_spr_old->turbofrc_draw_sprites(m_spriteram, m_spriteram.bytes(), m_spritepalettebank, machine(), bitmap, cliprect, 0);
 	return 0;
 }

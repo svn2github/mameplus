@@ -96,6 +96,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/a5105_dsk.o	\
 	$(LIBOBJ)/formats/ace_tap.o		\
 	$(LIBOBJ)/formats/adam_cas.o	\
+	$(LIBOBJ)/formats/adam_dsk.o	\
 	$(LIBOBJ)/formats/ami_dsk.o		\
 	$(LIBOBJ)/formats/ap2_dsk.o		\
 	$(LIBOBJ)/formats/apf_apt.o		\
@@ -105,6 +106,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/atari_dsk.o	\
 	$(LIBOBJ)/formats/atarist_dsk.o	\
 	$(LIBOBJ)/formats/atom_tap.o	\
+	$(LIBOBJ)/formats/bw2_dsk.o	\
 	$(LIBOBJ)/formats/bw12_dsk.o	\
 	$(LIBOBJ)/formats/cbm_tap.o		\
 	$(LIBOBJ)/formats/cgen_cas.o	\
@@ -172,12 +174,13 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/tvc_cas.o		\
 	$(LIBOBJ)/formats/tzx_cas.o		\
 	$(LIBOBJ)/formats/uef_cas.o		\
-	$(LIBOBJ)/formats/upd765_dsk.o		\
+	$(LIBOBJ)/formats/upd765_dsk.o	\
 	$(LIBOBJ)/formats/vg5k_cas.o	\
 	$(LIBOBJ)/formats/vt_cas.o		\
 	$(LIBOBJ)/formats/vt_dsk.o		\
 	$(LIBOBJ)/formats/vtech1_dsk.o	\
 	$(LIBOBJ)/formats/wavfile.o		\
+	$(LIBOBJ)/formats/wd177x_dsk.o	\
 	$(LIBOBJ)/formats/x07_cas.o		\
 	$(LIBOBJ)/formats/x1_tap.o		\
 	$(LIBOBJ)/formats/xdf_dsk.o		\

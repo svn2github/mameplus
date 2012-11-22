@@ -85,9 +85,12 @@ struct ymz280b_state
 	UINT8 irq_mask;					/* current IRQ mask */
 	UINT8 irq_enable;				/* current IRQ enable */
 	UINT8 keyon_enable;				/* key on enable */
+	UINT8 ext_mem_enable;			/* external memory enable */
 	double master_clock;			/* master clock frequency */
 	void (*irq_callback)(device_t *, int);	/* IRQ callback */
 	struct YMZ280BVoice	voice[8];	/* the 8 voices */
+	UINT32 rom_addr_hi;
+	UINT32 rom_addr_mid;
 	UINT32 rom_readback_addr;		/* where the CPU can read the ROM */
 	devcb_resolved_read8 ext_ram_read;		/* external RAM read handler */
 	devcb_resolved_write8 ext_ram_write;	/* external RAM write handler */
@@ -140,17 +143,22 @@ INLINE ymz280b_state *get_safe_token(device_t *device)
 }
 
 
-INLINE UINT8 ymz280b_read_memory(UINT8 *base, UINT32 size, UINT32 offset)
+INLINE UINT8 ymz280b_read_memory(ymz280b_state *chip, UINT32 offset)
 {
-	if (offset < size)
-		return base[offset];
+	if (chip->ext_ram_read.isnull())
+	{
+		if (offset < chip->region_size)
+			return chip->region_base[offset];
 
-	/* 16MB chip limit (shouldn't happen) */
-	else if (offset > 0xffffff)
-		return base[offset & 0xffffff];
+		/* 16MB chip limit (shouldn't happen) */
+		else if (offset > 0xffffff)
+			return chip->region_base[offset & 0xffffff];
 
+		else
+			return 0;
+	}
 	else
-		return 0;
+		return chip->ext_ram_read(offset);
 }
 
 
@@ -217,8 +225,7 @@ INLINE void update_volumes(struct YMZ280BVoice *voice)
 
 static void YMZ280B_state_save_update_step(ymz280b_state *chip)
 {
-	int j;
-	for (j = 0; j < 8; j++)
+	for (int j = 0; j < 8; j++)
 	{
 		struct YMZ280BVoice *voice = &chip->voice[j];
 		update_step(chip, voice);
@@ -259,10 +266,8 @@ static TIMER_CALLBACK( update_irq_state_timer_7 ) { update_irq_state_timer_commo
 
 static void compute_tables(void)
 {
-	int nib;
-
 	/* loop over all nibbles and compute the difference */
-	for (nib = 0; nib < 16; nib++)
+	for (int nib = 0; nib < 16; nib++)
 	{
 		int value = (nib & 0x07) * 2 + 1;
 		diff_lookup[nib] = (nib & 0x08) ? -value : value;
@@ -277,7 +282,7 @@ static void compute_tables(void)
 
 ***********************************************************************************************/
 
-static int generate_adpcm(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, INT16 *buffer, int samples)
+static int generate_adpcm(ymz280b_state *chip, struct YMZ280BVoice *voice, INT16 *buffer, int samples)
 {
 	int position = voice->position;
 	int signal = voice->signal;
@@ -291,7 +296,7 @@ static int generate_adpcm(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, 
 		while (samples)
 		{
 			/* compute the new amplitude and update the current step */
-			val = ymz280b_read_memory(base, size, position / 2) >> ((~position & 1) << 2);
+			val = ymz280b_read_memory(chip, position / 2) >> ((~position & 1) << 2);
 			signal += (step * diff_lookup[val & 15]) / 8;
 
 			/* clamp to the maximum */
@@ -330,7 +335,7 @@ static int generate_adpcm(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, 
 		while (samples)
 		{
 			/* compute the new amplitude and update the current step */
-			val = ymz280b_read_memory(base, size, position / 2) >> ((~position & 1) << 2);
+			val = ymz280b_read_memory(chip, position / 2) >> ((~position & 1) << 2);
 			signal += (step * diff_lookup[val & 15]) / 8;
 
 			/* clamp to the maximum */
@@ -393,7 +398,7 @@ static int generate_adpcm(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, 
 
 ***********************************************************************************************/
 
-static int generate_pcm8(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, INT16 *buffer, int samples)
+static int generate_pcm8(ymz280b_state *chip, struct YMZ280BVoice *voice, INT16 *buffer, int samples)
 {
 	int position = voice->position;
 	int val;
@@ -405,7 +410,7 @@ static int generate_pcm8(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, I
 		while (samples)
 		{
 			/* fetch the current value */
-			val = ymz280b_read_memory(base, size, position / 2);
+			val = ymz280b_read_memory(chip, position / 2);
 
 			/* output to the buffer, scaling by the volume */
 			*buffer++ = (INT8)val * 256;
@@ -430,7 +435,7 @@ static int generate_pcm8(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, I
 		while (samples)
 		{
 			/* fetch the current value */
-			val = ymz280b_read_memory(base, size, position / 2);
+			val = ymz280b_read_memory(chip, position / 2);
 
 			/* output to the buffer, scaling by the volume */
 			*buffer++ = (INT8)val * 256;
@@ -467,13 +472,10 @@ static int generate_pcm8(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, I
 
 ***********************************************************************************************/
 
-static int generate_pcm16(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, INT16 *buffer, int samples)
+static int generate_pcm16(ymz280b_state *chip, struct YMZ280BVoice *voice, INT16 *buffer, int samples)
 {
 	int position = voice->position;
 	int val;
-
-	/* is it even used in any MAME game? */
-	popmessage("YMZ280B 16-bit PCM contact MAMEDEV");
 
 	/* two cases: first cases is non-looping */
 	if (!voice->looping)
@@ -482,7 +484,7 @@ static int generate_pcm16(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, 
 		while (samples)
 		{
 			/* fetch the current value */
-			val = (INT16)((ymz280b_read_memory(base, size, position / 2 + 0) << 8) + ymz280b_read_memory(base, size, position / 2 + 1));
+			val = (INT16)((ymz280b_read_memory(chip, position / 2 + 0) << 8) + ymz280b_read_memory(chip, position / 2 + 1));
 
 			/* output to the buffer, scaling by the volume */
 			*buffer++ = val;
@@ -507,7 +509,7 @@ static int generate_pcm16(struct YMZ280BVoice *voice, UINT8 *base, UINT32 size, 
 		while (samples)
 		{
 			/* fetch the current value */
-			val = (INT16)((ymz280b_read_memory(base, size, position / 2 + 0) << 8) + ymz280b_read_memory(base, size, position / 2 + 1));
+			val = (INT16)((ymz280b_read_memory(chip, position / 2 + 0) << 8) + ymz280b_read_memory(chip, position / 2 + 1));
 
 			/* output to the buffer, scaling by the volume */
 			*buffer++ = val;
@@ -606,10 +608,10 @@ static STREAM_UPDATE( ymz280b_update )
 		/* generate them into our buffer */
 		switch (voice->playing << 7 | voice->mode)
 		{
-			case 0x81:	samples_left = generate_adpcm(voice, chip->region_base, chip->region_size, chip->scratch, new_samples);		break;
-			case 0x82:	samples_left = generate_pcm8(voice, chip->region_base, chip->region_size, chip->scratch, new_samples);		break;
-			case 0x83:	samples_left = generate_pcm16(voice, chip->region_base, chip->region_size, chip->scratch, new_samples);		break;
-			default:	samples_left = 0; memset(chip->scratch, 0, new_samples * sizeof(chip->scratch[0]));							break;
+			case 0x81:	samples_left = generate_adpcm(chip, voice, chip->scratch, new_samples); break;
+			case 0x82:	samples_left = generate_pcm8(chip, voice, chip->scratch, new_samples); break;
+			case 0x83:	samples_left = generate_pcm16(chip, voice, chip->scratch, new_samples); break;
+			default:	samples_left = 0; memset(chip->scratch, 0, new_samples * sizeof(chip->scratch[0])); break;
 		}
 
 		/* if there are leftovers, ramp back to 0 */
@@ -717,7 +719,10 @@ static DEVICE_START( ymz280b )
 		device->save_item(NAME(chip->irq_mask));
 		device->save_item(NAME(chip->irq_enable));
 		device->save_item(NAME(chip->keyon_enable));
+		device->save_item(NAME(chip->ext_mem_enable));
 		device->save_item(NAME(chip->rom_readback_addr));
+		device->save_item(NAME(chip->rom_addr_hi));
+		device->save_item(NAME(chip->rom_addr_mid));
 		for (j = 0; j < 8; j++)
 		{
 			device->save_item(NAME(chip->voice[j].playing), j);
@@ -767,6 +772,7 @@ static DEVICE_RESET( ymz280b )
 
 	chip->current_register = 0;
 	chip->status_register = 0;
+	chip->rom_readback_addr = 0;
 
 	/* clear other voice parameters */
 	for (i = 0; i < 8; i++)
@@ -909,26 +915,26 @@ static void write_to_register(ymz280b_state *chip, int data)
 				break;
 
 			case 0x84:		/* ROM readback / RAM write (high) */
-				chip->rom_readback_addr &= 0xffff;
-				chip->rom_readback_addr |= (data<<16);
+				chip->rom_addr_hi = data << 16;
 				break;
 
-			case 0x85:		/* ROM readback / RAM write (med) */
-				chip->rom_readback_addr &= 0xff00ff;
-				chip->rom_readback_addr |= (data<<8);
+			case 0x85:		/* ROM readback / RAM write (middle) */
+				chip->rom_addr_mid = data << 8;
 				break;
 
-			case 0x86:		/* ROM readback / RAM write (low) */
-				chip->rom_readback_addr &= 0xffff00;
-				chip->rom_readback_addr |= data;
+			case 0x86:		/* ROM readback / RAM write (low) -> update latch */
+				chip->rom_readback_addr = chip->rom_addr_hi | chip->rom_addr_mid | data;
 				break;
 
 			case 0x87:		/* RAM write */
-				if (!chip->ext_ram_write.isnull())
-					chip->ext_ram_write(chip->rom_readback_addr, data);
-				else
-					logerror("YMZ280B attempted RAM write to %X\n", chip->rom_readback_addr);
-				chip->rom_readback_addr = (chip->rom_readback_addr + 1) & 0xffffff;
+				if (chip->ext_mem_enable)
+				{
+					if (!chip->ext_ram_write.isnull())
+						chip->ext_ram_write(chip->rom_readback_addr, data);
+					else
+						logerror("YMZ280B attempted RAM write to %X\n", chip->rom_readback_addr);
+					chip->rom_readback_addr = (chip->rom_readback_addr + 1) & 0xffffff;
+				}
 				break;
 
 			case 0xfe:		/* IRQ mask */
@@ -937,6 +943,7 @@ static void write_to_register(ymz280b_state *chip, int data)
 				break;
 
 			case 0xff:		/* IRQ enable, test, etc */
+				chip->ext_mem_enable = (data & 0x40) >> 6;
 				chip->irq_enable = (data & 0x10) >> 4;
 				update_irq_state(chip);
 
@@ -980,14 +987,6 @@ static int compute_status(ymz280b_state *chip)
 {
 	UINT8 result;
 
-	/* ROM/RAM readback? */
-	if (chip->current_register == 0x86)
-	{
-		result = ymz280b_read_memory(chip->region_base, chip->region_size, chip->rom_readback_addr);
-		chip->rom_readback_addr = (chip->rom_readback_addr + 1) & 0xffffff;
-		return result;
-	}
-
 	/* force an update */
 	chip->stream->update();
 
@@ -1014,13 +1013,11 @@ READ8_DEVICE_HANDLER( ymz280b_r )
 
 	if ((offset & 1) == 0)
 	{
-		/* read from external memory */
-		UINT8 result;
-		if (!chip->ext_ram_read.isnull())
-			result = chip->ext_ram_read(chip->rom_readback_addr);
-		else
-			result = ymz280b_read_memory(chip->region_base, chip->region_size, chip->rom_readback_addr);
+		if (!chip->ext_mem_enable)
+			return 0xff;
 
+		/* read from external memory */
+		UINT8 result = ymz280b_read_memory(chip, chip->rom_readback_addr);
 		chip->rom_readback_addr = (chip->rom_readback_addr + 1) & 0xffffff;
 		return result;
 	}

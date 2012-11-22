@@ -316,3 +316,4 @@ DRIVER_INIT_MEMBER(pgm_arm_type3_state,happy6)
 	pgm_create_dummy_internal_arm_region(machine());
 }
 
+

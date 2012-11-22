@@ -596,6 +596,48 @@ static ADDRESS_MAP_START( unkch_portmap, AS_IO, 8, goldstar_state )
 ADDRESS_MAP_END
 
 
+static ADDRESS_MAP_START( megaline_map, AS_PROGRAM, 8, goldstar_state )
+/* Reels stuff are there just as placeholder, and obviously in wrong offset */
+	AM_RANGE(0x0000, 0x9fff) AM_ROM
+
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM //AM_SHARE("nvram")
+
+	AM_RANGE(0xd840, 0xd87f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xd880, 0xd8bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xd900, 0xd93f) AM_RAM AM_SHARE("reel3_scroll")
+	AM_RANGE(0xdfc0, 0xdfff) AM_RAM
+
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_SHARE("reel1_ram")
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_SHARE("reel2_ram")
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_SHARE("reel3_ram")
+	AM_RANGE(0xf600, 0xf7ff) AM_RAM
+	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE(unkch_reel1_attrram_w ) AM_SHARE("reel1_attrram")
+	AM_RANGE(0xfa00, 0xfbff) AM_RAM_WRITE(unkch_reel2_attrram_w ) AM_SHARE("reel2_attrram")
+	AM_RANGE(0xfc00, 0xfdff) AM_RAM_WRITE(unkch_reel3_attrram_w ) AM_SHARE("reel3_attrram")
+	AM_RANGE(0xfe00, 0xffff) AM_RAM
+ADDRESS_MAP_END
+
+/* unknown I/O byte R/W
+
+  PSGs:    A0 - C0 - E0
+  AY8910?: 60 - 80
+
+   -----------------
+*/
+static ADDRESS_MAP_START( megaline_portmap, AS_IO, 8, goldstar_state )
+	ADDRESS_MAP_GLOBAL_MASK(0xff)
+	AM_RANGE(0xa0, 0xa0) AM_DEVWRITE("sn1", sn76489_device, write)						/* SN76489 #1 */
+	AM_RANGE(0xc0, 0xc0) AM_DEVWRITE("sn2", sn76489_device, write)						/* SN76489 #2 */
+	AM_RANGE(0xe0, 0xe0) AM_DEVWRITE("sn3", sn76489_device, write)						/* SN76489 #3 */
+	AM_RANGE(0x60, 0x60) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)					/* AY8910 control? */
+	AM_RANGE(0x80, 0x80) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)		/* AY8910 Input? */
+//  AM_RANGE(0x01, 0x01) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
+//  AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
+ADDRESS_MAP_END
+
 
 static INPUT_PORTS_START( cmv801 )
 	PORT_START("IN0")
@@ -5218,6 +5260,163 @@ static INPUT_PORTS_START( magoddsc )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( megaline )
+	PORT_START("IN0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_1) PORT_NAME("IN0-1")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_2) PORT_NAME("IN0-2")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_3) PORT_NAME("IN0-3")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_4) PORT_NAME("IN0-4")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_5) PORT_NAME("IN0-5")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_6) PORT_NAME("IN0-6")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_7) PORT_NAME("IN0-7")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_8) PORT_NAME("IN0-8")
+
+	PORT_START("IN1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_Q) PORT_NAME("IN1-1")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_W) PORT_NAME("IN1-2")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_E) PORT_NAME("IN1-3")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_R) PORT_NAME("IN1-4")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_T) PORT_NAME("IN1-5")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_Y) PORT_NAME("IN1-6")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_U) PORT_NAME("IN1-7")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_I) PORT_NAME("IN1-8")
+
+	PORT_START("IN2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_Q) PORT_NAME("IN2-1")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_W) PORT_NAME("IN2-2")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_E) PORT_NAME("IN2-3")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_R) PORT_NAME("IN2-4")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_T) PORT_NAME("IN2-5")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_Y) PORT_NAME("IN2-6")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_U) PORT_NAME("IN2-7")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_I) PORT_NAME("IN2-8")
+
+	PORT_START("IN3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_Q) PORT_NAME("IN3-1")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_W) PORT_NAME("IN3-2")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_E) PORT_NAME("IN3-3")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_R) PORT_NAME("IN3-4")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_T) PORT_NAME("IN3-5")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_Y) PORT_NAME("IN3-6")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_U) PORT_NAME("IN3-7")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_I) PORT_NAME("IN3-8")
+
+	PORT_START("IN4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_1_PAD) PORT_NAME("IN4-1")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_2_PAD) PORT_NAME("IN4-2")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_3_PAD) PORT_NAME("IN4-3")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_4_PAD) PORT_NAME("IN4-4")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_5_PAD) PORT_NAME("IN4-5")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_6_PAD) PORT_NAME("IN4-6")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_7_PAD) PORT_NAME("IN4-7")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_8_PAD) PORT_NAME("IN4-8")
+
+	PORT_START("DSW1")
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START("DSW2")
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START("DSW3")
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START("DSW4")
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+
 static const gfx_layout charlayout =
 {
 	8,8,    /* 8*8 characters */
@@ -5416,6 +5615,17 @@ static const gfx_layout cb3c_tiles8x32_layout =
 	32*32
 };
 
+static const gfx_layout tiles8x8x4_layout =
+{
+	8, 8,
+	RGN_FRAC(1,4),	/* 4096 tiles */
+	4,
+	{ 0, RGN_FRAC(1,4), RGN_FRAC(2,4), RGN_FRAC(3,4) },	/* bitplanes are separated */
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8	/* every char takes 8 consecutive bytes */
+};
+
 
 static GFXDECODE_START( goldstar )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,   0, 16 )
@@ -5487,6 +5697,11 @@ static GFXDECODE_START( cmasterb )
 	GFXDECODE_ENTRY( "gfx2", 0, tiles8x32x5_layout, 0, 4 )
 GFXDECODE_END
 #endif
+
+static GFXDECODE_START( megaline )
+	GFXDECODE_ENTRY( "gfx1", 0, tiles8x8x4_layout,   0, 16 )
+	GFXDECODE_ENTRY( "gfx2", 0, tiles8x32x4_layout, 128,  8 )
+GFXDECODE_END
 
 
 static const gfx_layout tiles8x32_4bpp_layout =
@@ -5846,6 +6061,16 @@ static const ay8910_interface ladylinr_ay8910_config =
 //-------------------------------------------------
 
 static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+static const sn76496_config psg2_intf =
+{
+    DEVCB_NULL
+};
+
+static const sn76496_config psg3_intf =
 {
     DEVCB_NULL
 };
@@ -6776,6 +7001,57 @@ static MACHINE_CONFIG_START( pkrmast, goldstar_state )
 	MCFG_SOUND_CONFIG(cm_ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_START( megaline, goldstar_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
+	MCFG_CPU_PROGRAM_MAP(megaline_map)
+	MCFG_CPU_IO_MAP(megaline_portmap)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  nmi_line_pulse)
+
+	/* 3x 8255 */
+//  MCFG_I8255A_ADD( "ppi8255_0", lucky8_ppi8255_0_intf )
+//  MCFG_I8255A_ADD( "ppi8255_1", lucky8_ppi8255_1_intf )
+//  MCFG_I8255A_ADD( "ppi8255_2", lucky8_ppi8255_2_intf )
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+//  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
+
+	MCFG_GFXDECODE(megaline)
+	MCFG_PALETTE_LENGTH(256)
+//  MCFG_NVRAM_ADD_1FILL("nvram")
+
+	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
+
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+
+	MCFG_SOUND_ADD("sn1", SN76489, PSG_CLOCK)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+	MCFG_SOUND_CONFIG(psg_intf)
+
+	MCFG_SOUND_ADD("sn2", SN76489, PSG_CLOCK)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+	MCFG_SOUND_CONFIG(psg2_intf)
+
+	MCFG_SOUND_ADD("sn3", SN76489, PSG_CLOCK)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+	MCFG_SOUND_CONFIG(psg3_intf)
+
+	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
+	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+
+MACHINE_CONFIG_END
+
 
 /***************************************************************************
 
@@ -10076,6 +10352,472 @@ ROM_START( cmast97 )
 ROM_END
 
 
+/*****************************************************************************************
+
+  MEGA LINES
+  Fun World.
+
+  CPU:   1x Z80
+
+  Sound: 3x SN76489.
+         1x AY-3-8910.
+
+  ROMs:  1x 27C512 for program.
+         2x 27C512 for fg graphics.
+         2x 27C256 for reels graphics.
+
+  PROMs: 3x TBP24S10N
+         1x N82S123AN
+
+  Clock: 1x Xtal 12.000 MHz.
+
+
+  Other: 1x DIP-40 custom IC silkscreened '06B30P' (I/O?).
+         1x DIP-28 custom IC silkscreened '06B49P' (clock divider).
+         2x DIP-28 custom IC silkscreened '06B53P' (video).
+         1x 3.6V lithium battery.
+         4x 8 DIP switches banks.
+         1x Reset switch.
+
+  Connectors: 1x (2x36) edge connector.
+              1x (2x10) edge connector.
+
+
+  ROMS have Falcon original stickers.
+  PCB is original from WING Co.,Ltd, with Wing license seal,
+  and Eagle & Fun World stickers (serial numbers).
+
+
+  For custom IC's 06B49P, and 06B53P, see the reverse-engineering notes in lucky74.c.
+
+  ------------------------
+
+  IO mapped devices:
+
+  PSGs:   A0 - C0 - E0
+  AY8910: 60 - 80
+
+*****************************************************************************************
+
+   PCB Layout
+
+  .--------------------------------------------------------------------------------------------------------------------------.
+  |                                                                                                    .---------.   .---.   |
+  | .-----------------.  .-----------.   .---------.   .---------.     .-------------------------.     |  3.6 V  |   | o XXXXXX
+  | |M27C512          |  |HD74LS245P | R |HD74LS157|   |HD74LS157|     |    Z8400BB1             |     |         |   '---'   |
+  | |                 |  '-----------'   '---------'   '---------'     |    Z80BCPU              |     | BATTERY |  RESET SW |
+  | |               18|                                                |    29017                |     '---------'       .---'
+  | '-----------------'  .-----------.   .---------.   .---------.     '-------------------------'     .--------.        |
+  |                      |HD74HC245P | P |HD74LS157|   |HD74LS157|                                     |  NEC   |        |
+  | .-----------------.  '-----------'   '---------'   '---------'     .-------------------------.     |uPC1241H|        |
+  | |                 |                                                |    06B30P               |     '++++++++'        '---.
+  | |  HM6264ALP-12   |  .-----------.   .---------.   .---------.     |    062002               |      ||||||||          ---|
+  | |                 |  |HD74HC374P | N |HD74LS157|   |HD74LS157|     |                         |                        ---|
+  | '-----------------'  '-----------'   '---------'   '---------'     '-------------------------'                        ---|
+  |                                                                                                                       ---|
+  | .-----------------.  .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  | |                 |  |HD74HC374P | M |TBP24S10N|   |HD74LS138|     |HD74HC245P |   |   SW1   |                        ---|
+  | |  06B53P         |  '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  | |  9G1            |                                                               ----------- DAN803                  ---|
+  | '-----------------'  .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  |                      |HD74LS273P | L |HD74LS283|   |HD74LS138|     |HD74HC240P |   |   SW2   |                        ---|
+  | .-----------------.  '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  | |M27256ZB         |                                                               ----------- DAN803                  ---|
+  | |                 |  .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  | |               14|  |HD74HC273P | K |HD74LS283|   |HD74LS139|     |HD74LS273P |   |   SW3   |                        ---|
+  | '-----------------'  '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  |                                                                                   ----------- DAN803                  ---|
+  | .-----------------.  .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  | |M27256ZB         |  |HD74HC273P | J | HD7425P |   |N82S123AN|     |HD74LS273P |   |   SW4   |                        ---|
+  | |                 |  '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  | |               13|                                                               ----------- DAN803                  ---|
+  | '-----------------'                                                                                                   ---|
+  |                      .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  | .-----------------.  |HD74HC245P | H |HD74HC02P|   |TBP24S10N|     |HD74HC273P |   |SN76489AN|                        ---|
+  | |                 |  '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  | |  HM6264ALP-12   |                                                                                                   ---|
+  | |                 |                                                                                                   ---|
+  | '-----------------'  .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  |                      |HD74LS273P | F |HD74LS08P|   |TBP24S10N|     |HD74HC273P |   |SN76489AN|                        ---|
+  | .-----------------.  '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  | |                 |                                                                                        2x36 EDGE  ---|
+  | |  06B53P         |                                                                                        CONNECTOR  ---|
+  | |  9G1            |  .-----------.   .---------.   .---------.     .-----------.    ---------.                        ---|
+  | '-----------------'  |HD74HC245P | E |HD74LS32P|   |HD74LS86P|     |HD74HC273P |   |SN76489AN|                        ---|
+  |                      '-----------'   '---------'   '---------'     '-----------'   '---------'                        ---|
+  | .-----------------.                                                                                                   ---|
+  | |HN27512P         |  .-----------.   .---------.   .---------.     .-----------.   .---------.                        ---|
+  | |                 |  |HD74HC273P | D |HD74LS86P|   |HD74LS86P|     |HD74HC240P |   | NE556N  |                        ---|
+  | |               12|  '-----------'   '---------'   '---------'     '-----------'   '---------'                       .---'
+  | '-----------------'                                                                                                  |
+  |                                                                                                                      |
+  | .-----------------.  .-----------.   .---------.   .---------.                                                       |
+  | |HN27512P         |  |HD74HC273P | C |HD74LS86P|   |HD74LS74A|                                                       '---.
+  | |                 |  '-----------'   '---------'   '---------'                                                           |
+  | |               11|                                                                                                      |
+  | '-----------------'  .-----------.   .---------.   .---------.     .----.                                                |
+  |                      |HD74HC244P | B |HD74LS08P|   |HD74LS74A|     |8212|                                                |
+  | .-----------------.  '-----------'   '---------'   '---------'     |CPA |                                                |
+  | |                 |                                .---------.     '----'                                                |
+  | |  06B49P         |  .-----------.   .---------.   |   XTAL  |                          6               7                |
+  | |  8L1            |  |HD74HC240P | A |HD74LS164|   | VX-8111 |                                                           |
+  | '-----------------'  '-----------'   '---------'   |12.000Mhz|                             2x10 EDGE CONN                |
+  |                                                    '---------'                     .-----.                 .-----.       |
+  |          1                 2              3             4               5          |     | | | | | | | | | |     |       |
+  '------------------------------------------------------------------------------------'     '-----------------'     '-------'
+
+
+  IC POSITION (PIN)
+
+                  D1(12)<---+ +--->D1(28)                                  K1(12)<--+ +-->K1(28)
+                D1(11)<---+ | | +--->D1(13)                              K1(11)<--+ | | +-->K1(13)
+             GND<-------+ | | | | +--->D1(15)                          L2(15)<--+ | | | | +-->K1(15)
+           F4(4)<-----+ | | | | | | +--->D1(16)                      J4(13)<--+ | | | | | | +-->K1(16)
+         F4(7)<-----+ | | | | | | | | +--->D1(17)                  J4(12)<--+ | | | | | | | | +--->K1(17)
+       F4(6)<-----+ | | | | | | | | | | +--->D1(18)              J4(11)<--+ | | | | | | | | | | +--->K1(18)
+     F4(5)<-----+ | | | | | | | | | | | | +--->D1(19)          J4(10)<--+ | | | | | | | | | | | | +--->K1(19)
+                | | | | | | | | | | | | | |                             | | | | | | | | | | | | | |
+                | | | | | | | | | | | | | |                             | | | | | | | | | | | | | |
+              +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+              |28                         15|                         |28                         15|
+              |                             |                         |                             |
+              |    [E1]                     |                         |    [M1]                     |
+              |>       06B53P               |                         |>       06B53P               |
+              |                             |                         |                             |
+              |                             |                         |                             |
+              | 1                         14|                         | 1                         14|
+              +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                | | | | | | | | | | | | | |                             | | | | | | | | | | | | | |
+                | | | | | | | | | | | | | |                             | | | | | | | | | | | | | |
+        C3(8)<--+ | | | | | | | | | | | | +-->B1(19)            C3(8)<--+ | | | | | | | | | | | | +-->J1(19)
+          B3(6)<--+ | | | | | | | | | | +-->B1(18)                B3(6)<--+ | | | | | | | | | | +-->J1(18)
+           A2(12)<--+ | | | | | | | | +-->B1(17)                   A2(12)<--+ | | | | | | | | +-->J1(17)
+              A3(6)<--+ | | | | | | +-->B1(16)                        A3(6)<--+ | | | | | | +-->J1(16)
+                B3(2)<--+ | | | | +-->B1(15)                            B3(2)<--+ | | | | +-->J1(15)
+                 B1(11)<--+ | | +-->B1(13)                               J1(11)<--+ | | +-->J1(13)
+                      GND<--+ +-->B1(12)                                    GND<----+ +-->J1(12)
+
+
+  ==========================
+  Custom 06B53P 9G1 - DIP 28
+  ==========================
+  Pinout
+  ======
+
+  Position [E1]    Position [M1]
+  -------------    -------------
+  01 -> C3(08)     01 -> C3(08)
+  02 -> B3(06)     02 -> B3(06)
+  03 -> A2(12)     03 -> A2(12)
+  04 -> A3(06)     04 -> A3(06)
+  05 -> B3(02)     05 -> B3(02)
+  06 -> B1(11)     06 -> J1(11)
+  07 -> GND        07 -> GND
+  08 -> B1(12)     08 -> J1(12)
+  09 -> B1(13)     09 -> J1(13)
+  10 -> B1(15)     10 -> J1(15)
+  11 -> B1(16)     11 -> J1(16)
+  12 -> B1(17)     12 -> J1(17)
+  13 -> B1(18)     13 -> J1(18)
+  14 -> B1(19)     14 -> J1(19)
+  -------------    -------------
+  15 -> D1(19)     15 -> K1(19)
+  16 -> D1(18)     16 -> K1(18)
+  17 -> D1(17)     17 -> K1(17)
+  18 -> D1(16)     18 -> K1(16)
+  19 -> D1(15)     19 -> K1(15)
+  20 -> D1(13)     20 -> K1(13)
+  21 -> D1(28)     21 -> K1(28)
+  22 -> D1(12)     22 -> K1(12)
+  23 -> D1(11)     23 -> K1(11)
+  24 -> GND        24 -> L2(15)
+  25 -> F4(04)     25 -> J4(13)
+  26 -> F4(07)     26 -> J4(12)
+  27 -> F4(06)     27 -> J4(11)
+  28 -> F4(05)     28 -> J4(10)
+
+
+  ======================
+  Custom 06B30P - DIP 40
+  ======================
+  Pinout
+  ======
+
+  Position [N5]
+  ----------------------------
+  01 -> Not Connected
+  02 -> Not Connected
+  03 -> Not Connected
+  04 -> N2(05)
+  05 -> N2(16)
+  06 -> N2(02)
+  07 -> M2(19)
+  08 -> M2(16)
+  09 -> M2(15)
+  10 -> M2(12)
+  11 -> N2(19) -> 10k -> +5V
+  12 -> GND
+  13 -> GND
+  14 -> M2(06)
+  15 -> M2(09)
+  16 -> A2(05)
+  17 -> 100p -> GND
+  18 -> Not Connected
+  19 -> H3(03)
+  20 -> Not Connected
+  ----------------------------
+  21 -> GND
+  22 -> H3(02)
+  23 -> Not Connected
+  24 -> +5V
+  25 -> N2(09)
+  26 -> N2(12)
+  27 -> N2(15)
+  28 -> N2(06)
+  29 -> Not Connected
+  30 -> Not Connected
+  31 -> P2(18)
+  32 -> P2(17)
+  33 -> P2(15)
+  34 -> P2(18)
+  35 -> M2(02)
+  36 -> P2(14)
+  37 -> P2(13)
+  38 -> P2(12)
+  39 -> P2(11)
+  40 -> Z8400(04)
+
+
+  ==========================
+  Custom 06B49P 8L1 - DIP 28
+  ==========================
+  Pinout
+  ======
+
+  Position [A1]
+  --------------------
+  01 -> A2(07)
+  02 -> A2(15)
+  03 -> Not Connected
+  04 -> A2(17)
+  05 -> A3(01)
+  06 -> E4(01)
+  07 -> GND
+  08 -> E4(12)
+  09 -> E4(09)
+  10 -> E4(04)
+  11 -> D4(09)
+  12 -> D4(04)
+  13 -> +5V
+  14 -> GND
+  --------------------
+  15 -> GND
+  16 -> Not Connected
+  17 -> D4(12)
+  18 -> D4(01)
+  19 -> D3(09)
+  20 -> D3(12)
+  21 -> +5V
+  22 -> D3(01)
+  23 -> D3(04)
+  24 -> c3(05)
+  25 -> C3(01)
+  26 -> B3(13)
+  27 -> A2(2)
+  28 -> B2(04)
+
+
+*****************************************************************************************
+
+  ========
+   BPROMS:
+  ========
+
+            GND-------------+ +----------N3(10)
+            GND-----------+ | | +--------N3(06)
+            K5(06)------+ | | | | +------(N/C)
+            +5V-------+ | | | | | | +----L2(13)
+                      | | | | | | | |
+                    +-----------------+
+                    |#################|
+                    |>## 24S10 @M3 ###|
+                    |#################|
+                    +-+-+-+-+-+-+-+-+-+
+                      | | | | | | | |
+            K5(15)----+ | | | | | | +----GND
+            K3(12)------+ | | | | +------D3(03)
+            K3(14)--------+ | | +--------D3(11)
+            D3(06)----------+ +----------D3(08)
+
+
+
+                   J3(10)---+ +----J3(11)
+                 K5(05)---+ | | +----J3(12)
+              H3(05)----+ | | | | +-----J3(13)
+            +5V-------+ | | | | | |
+                      | | | | | | | +-------------------+
+                      | | | | | | | |                   |
+                    +-----------------+                 |
+                    |#################|                 |
+                    |>## 82S123 @J4 ##|                 |
+                    |#################|                 |
+                    +-+-+-+-+-+-+-+-+-+                 |
+                      | | | | | | | |                   |
+                      | | | | | | | +--GND              |
+                      | | | | | | +-------------------+ |
+                      | | | | | +-------------------+ | |
+                      | | | | +-------------------+ | | |
+                      | | | +-------+             | | | |
+                      | | +-------+ |             | | | |
+                      | +-------+ | |             | | | |
+                      +-------+ | | |             | | | |
+      +---------------------+ | | | |             | | | |
+    +-|-------------------+ | | | | |             | | | |
+  +-|-|-----------------+ | | | | | |             | | | |
+  | | |          +5V--+ | | | | | | |             | | | |
+  | | |               | | | | | | | |             | | | |
+  | | |             +-----------------+           | | | |
+  | | |             |#################|           | | | |
+  | | |             |>## 24S10 @H4 ###|           | | | |
+  | | |             |#################|           | | | |
+  | | |             +-+-+-+-+-+-+-+-+-+           | | | |
+  | | |               | | | | | | | |             | | | |
+  | | |   +-----------|-|-+ | | | | +--GND        | | | |
+  | | |   | +---------|-+   | | | +--------+      | | | |
+  | | |   | | +-------+     | | +----------|-+    | | | |
+  | | | +-|-|-|-------------+ +------------|-|-+  | | | |
+  | | | | | | |                            | | |  | | | |
+  | | +-|-|-|-|-------------+ +------------|-|-|--+ | | |
+  | +---|-|-|-|-----------+ | | +----------|-|-|----+ | |
+  +-----|-|-|-|---------+ | | | | +--------|-|-|------+ |
+        | | | |  +5V--+ | | | | | | +------|-|-|--------+
+        | | | |       | | | | | | | |      | | |
+        | | | |     +-----------------+    | | |
+        | | | |     |#################|    | | |
+        | | | |     |>## 24S10 @F4 ###|    | | |
+        | | | |     |#################|    | | |
+        | | | |     +-+-+-+-+-+-+-+-+-+    | | |
+        | | | |       | | | | | | | |      | | |
+        | | | +-------+ | | | | | | +--GND | | |
+        | | +-----------+ | | | | +--------+ | |
+        | +---------------+ | | +------------+ |
+        +-------------------+ +----------------+
+
+
+  ==============
+   DIP SWITCHES:
+  ==============
+                       +----------+--------------------------------------+
+                     +-|----------|-+----------------------------------+ |
+                   +-|-|----------|-|-+------------------------------+ | |
+                 +-|-|-|----------|-|-|-+--------------------------+ | | |
+               +-|-|-|-|----------|-|-|-|-+----------------------+ | | | |
+             +-|-|-|-|-|----------|-|-|-|-|-+------------------+ | | | | |
+           +-|-|-|-|-|-|----------|-|-|-|-|-|-+--------------+ | | | | | |
+         +-|-|-|-|-|-|-|----------|-|-|-|-|-|-|-+----------+ | | | | | | |
+         | | | | | | | |          | | | | | | | |          | | | | | | | |
+         | | | | | | | |      +---+-+-+-+-+-+-+-+---+      | | | | | | | |
+   20| | | | | | | | | |      | 1+---------------+8 |      | | | | | | | |
+   +-+-+-+-+-+-+-+-+-+-+-+    |  | | | | | | | | |  |      | | | | | | | |
+   |#####################|    |  -----------------  |SW1   | | | | | | | |
+   |>#  HD74HC245P @M5  #|    |  |#|#|#|#|#|#|#|#|  |      | | | | | | | |
+   |#####################|    |  +---------------+  |      | | | | | | | |
+   +-+-+-+-+-+-+-+-+-+-+-+    +---+-+-+-+-+-+-+-+---+      | | | | | | | |
+    1| | | | | | | | | |          | | | | | | | |          | | | | | | | |
+             |                  +-+-+-+-+-+-+-+-+-+        | | | | | | | |
+             +------------------+#### DAN803 #####|        | | | | | | | |
+                                +-----------------+        | | | | | | | |
+                                                           | | | | | | | |
+                                  +------------------------|-|-|-|-|-|-|-+
+                                  | +----------------------|-|-|-|-|-|-+ |
+                                  | | +--------------------|-|-|-|-|-+ | |
+                                  | | | +------------------|-|-|-|-+ | | |
+                                  | | | | +----------------|-|-|-+ | | | |
+                                  | | | | | +--------------|-|-+ | | | | |
+                                  | | | | | | +------------|-+ | | | | | |
+                                  | | | | | | | +----------+ | | | | | | |
+                                  | | | | | | | |          | | | | | | | |
+                              +---+-+-+-+-+-+-+-+---+      | | | | | | | |
+                              | 1+---------------+8 |      | | | | | | | |
+                              |  | | | | | | | | |  |      | | | | | | | |
+                              |  -----------------  |SW2   | | | | | | | |
+                              |  |#|#|#|#|#|#|#|#|  |      | | | | | | | |
+                              |  +---------------+  |      | | | | | | | |
+                              +---+-+-+-+-+-+-+-+---+      | | | | | | | |
+                                  | | | | | | | |          | | | | | | | |
+                                +-+-+-+-+-+-+-+-+-+        | | | | | | | |
+                     +----------+#### DAN803 #####|        | | | | | | | |
+                     |          +-----------------+        | | | | | | | |
+   HD74LS139         |                                     | | | | | | | |
+      @K4            |            +------------------------|-|-|-|-|-|-|-+
+                     |            | +----------------------|-|-|-|-|-|-+ |
+   1 +-V-+ 16        |            | | +--------------------|-|-|-|-|-+ | |
+    -|###|-          |            | | | +------------------|-|-|-|-+ | | |
+    -|###|-          |            | | | | +----------------|-|-|-+ | | | |
+    -|###|-          |            | | | | | +--------------|-|-+ | | | | |
+    -|###|-          |            | | | | | | +------------|-+ | | | | | |
+    -|###|-          |            | | | | | | | +----------+ | | | | | | |
+    -|###|-----------+            | | | | | | | |          | | | | | | | |
+    -|###|---------+          +---+-+-+-+-+-+-+-+---+      | | | | | | | |
+    -|###|--+      |          | 1+---------------+8 |      | | | | | | | |
+     +---+  |      |          |  | | | | | | | | |  |      | | | | | | | |
+            |      |          |  -----------------  |SW3   | | | | | | | |
+            |      |          |  |#|#|#|#|#|#|#|#|  |      | | | | | | | |
+            |      |          |  +---------------+  |      | | | | | | | |
+            |      |          +---+-+-+-+-+-+-+-+---+      | | | | | | | |
+            |      |              | | | | | | | |          | | | | | | | |
+            |      |            +-+-+-+-+-+-+-+-+-+        | | | | | | | |
+            |      +------------+#### DAN803 #####|        | | | | | | | |
+            |                   +-----------------+        | | | | | | | |
+            |                                              | | | | | | | |
+            |                     +------------------------|-|-|-|-|-|-|-+
+            |                     | +----------------------|-|-|-|-|-|-+
+            |                     | | +--------------------|-|-|-|-|-+
+            |                     | | | +------------------|-|-|-|-+
+            |                     | | | | +----------------|-|-|-+
+            |                     | | | | | +--------------|-|-+
+            |                     | | | | | | +------------|-+
+            |                     | | | | | | | +----------+
+            |                     | | | | | | | |
+            |                 +---+-+-+-+-+-+-+-+---+
+            |                 | 1+---------------+8 |
+            |                 |  | | | | | | | | |  |
+            |                 |  -----------------  |SW4
+            |                 |  |#|#|#|#|#|#|#|#|  |
+            |                 |  +---------------+  |
+            |                 +---+-+-+-+-+-+-+-+---+
+            |                     | | | | | | | |
+            |                   +-+-+-+-+-+-+-+-+-+
+            +-------------------+#### DAN803 #####|
+                                +-----------------+
+
+
+*****************************************************************************************/
+
+ROM_START( megaline )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "18.r1",	0x00000, 0x10000, CRC(37234cca) SHA1(f991bc55fbfc69594573608ca03a9001ccf2f73b) )
+
+	ROM_REGION( 0x20000, "gfx1", 0 )
+	ROM_LOAD( "11.b1",	0x00000, 0x10000, CRC(6e7810d8) SHA1(16f1331851041b971a62f653f69b8853a2c4f868) )
+	ROM_LOAD( "12.d1",	0x10000, 0x10000, CRC(054c6ee7) SHA1(6e91223c8f6a2dc93a39a1e6453ccd9c731b8b45) )
+
+	ROM_REGION( 0x10000, "gfx2", 0 )
+	ROM_LOAD( "13.j1",	0x0000, 0x8000, CRC(5676ccb3) SHA1(36794c365c0b7490a9046422c0b334a3cdc15b8e) )
+	ROM_LOAD( "14.k1",	0x8000, 0x8000, CRC(81acfc59) SHA1(b6f94ade557a2d3ba5e358d33e83016a210890e7) )
+
+	ROM_REGION( 0x200, "proms", 0 )
+	ROM_LOAD( "tbp24s10.f4", 0x0000, 0x0100, CRC(d864b6f1) SHA1(6edc1941fe49cf53f073bf4acc466cd28b788146) )
+	ROM_LOAD( "tbp24s10.h4", 0x0100, 0x0100, CRC(4acd5887) SHA1(dca1187a74d9f4abc53b77a1590ec726f682dd91) )
+
+	ROM_REGION( 0x100, "proms2", 0 )
+	ROM_LOAD( "n82s123an.j4", 0x0000, 0x0020, CRC(5447e258) SHA1(04057cddb86896500954b9aa6d6508aa081b9645) )
+
+	ROM_REGION( 0x100, "unkprom", 0 )
+	ROM_LOAD( "tbp24s10.m3", 0x0000, 0x0100, CRC(7edb311b) SHA1(8e7f933313dc7a1f2a5e8803c26953ced3f798d0) )
+ROM_END
+
+
 /*********************************************************************************************************************/
 
 DRIVER_INIT_MEMBER(goldstar_state,goldstar)
@@ -10719,40 +11461,40 @@ DRIVER_INIT_MEMBER(goldstar_state,tonypok)
 *                Game Drivers                *
 **********************************************
 
-       YEAR  NAME       PARENT    MACHINE   INPUT     INIT       ROT    COMPANY              FULLNAME                                      FLAGS              LAYOUT */
+       YEAR  NAME       PARENT    MACHINE   INPUT     STATE           INIT       ROT    COMPANY              FULLNAME                                      FLAGS              LAYOUT */
 GAME(  199?, goldstar,  0,        goldstar, goldstar, goldstar_state, goldstar,  ROT0, "IGS",               "Golden Star",                                 0 )
-GAME(  199?, goldstbl,  goldstar, goldstbl, goldstar, driver_device, 0,         ROT0, "IGS",               "Golden Star (Blue version)",                  0 )
-GAME(  199?, moonlght,  goldstar, moonlght, goldstar, driver_device, 0,         ROT0, "bootleg",           "Moon Light (bootleg of Golden Star)",         0 )
-GAME(  199?, chrygld,   0,        chrygld,  chrygld, goldstar_state,  chrygld,   ROT0, "bootleg",           "Cherry Gold I",                               0 )
-GAME(  199?, chry10,    0,        chrygld,  chry10, goldstar_state,   chry10,    ROT0, "bootleg",           "Cherry 10 (bootleg with PIC16F84)",           0 )
+GAME(  199?, goldstbl,  goldstar, goldstbl, goldstar, driver_device,  0,         ROT0, "IGS",               "Golden Star (Blue version)",                  0 )
+GAME(  199?, moonlght,  goldstar, moonlght, goldstar, driver_device,  0,         ROT0, "bootleg",           "Moon Light (bootleg of Golden Star)",         0 )
+GAME(  199?, chrygld,   0,        chrygld,  chrygld,  goldstar_state, chrygld,   ROT0, "bootleg",           "Cherry Gold I",                               0 )
+GAME(  199?, chry10,    0,        chrygld,  chry10,   goldstar_state, chry10,    ROT0, "bootleg",           "Cherry 10 (bootleg with PIC16F84)",           0 )
 
 // are these really dyna, or bootlegs?
-GAME(  199?, ncb3,      0,        ncb3,     ncb3, driver_device,     0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 1)",          0 )
-GAME(  199?, cb3a,      ncb3,     ncb3,     cb3a, driver_device,     0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 2)",          0 )
-GAME(  199?, cb3,       ncb3,     ncb3,     ncb3, goldstar_state,     cb3,       ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, encrypted)",      0 )
-GAME(  199?, cb3b,      ncb3,     cherrys,  ncb3, goldstar_state,     cherrys,   ROT0, "Dyna",              "Cherry Bonus III (alt)",           0 )
-GAME(  199?, cb3c,      ncb3,     cb3c,     chrygld, goldstar_state,  cb3,       ROT0, "bootleg",           "Cherry Bonus III (alt, set 2)", GAME_NOT_WORKING)
-GAME(  199?, cb3d,      ncb3,     ncb3,     ncb3, driver_device,     0,         ROT0, "bootleg",           "Cherry Bonus III (set 3)",  GAME_NOT_WORKING) // fix prom decode
+GAME(  199?, ncb3,      0,        ncb3,     ncb3,     driver_device,  0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 1)",          0 )
+GAME(  199?, cb3a,      ncb3,     ncb3,     cb3a,     driver_device,  0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 2)",          0 )
+GAME(  199?, cb3,       ncb3,     ncb3,     ncb3,     goldstar_state, cb3,       ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, encrypted)",      0 )
+GAME(  199?, cb3b,      ncb3,     cherrys,  ncb3,     goldstar_state, cherrys,   ROT0, "Dyna",              "Cherry Bonus III (alt)",                      0 )
+GAME(  199?, cb3c,      ncb3,     cb3c,     chrygld,  goldstar_state, cb3,       ROT0, "bootleg",           "Cherry Bonus III (alt, set 2)",               GAME_NOT_WORKING)
+GAME(  199?, cb3d,      ncb3,     ncb3,     ncb3,     driver_device,  0,         ROT0, "bootleg",           "Cherry Bonus III (set 3)",                    GAME_NOT_WORKING) // fix prom decode
 
-GAME(  1996, cmast97,   ncb3,     cm97,     chrygld, driver_device,  0,         ROT0, "Dyna",              "Cherry Master '97",         GAME_NOT_WORKING) // fix prom decode
+GAME(  1996, cmast97,   ncb3,     cm97,     chrygld,  driver_device,  0,         ROT0, "Dyna",              "Cherry Master '97",                           GAME_NOT_WORKING) // fix prom decode
 
 // looks like a hack of Cherry Bonus 3
-GAME(  199?, chryangl,  ncb3,     cm,       cmasterb, goldstar_state, cmv4,      ROT0, "<unknown>",              "Cherry Angel",         GAME_NOT_WORKING )
+GAME(  199?, chryangl,  ncb3,     cm,       cmasterb, goldstar_state, cmv4,      ROT0, "<unknown>",         "Cherry Angel",                                GAME_NOT_WORKING )
 
 
 // cherry master hardware has a rather different mem map, but is basically the same
-GAME(  198?, cmv801,    0,        cm,       cmv801, goldstar_state,   cm,        ROT0, "Corsica",           "Cherry Master (Corsica, ver.8.01)",           0 ) /* says ED-96 where the manufacturer is on some games.. */
+GAME(  198?, cmv801,    0,        cm,       cmv801,   goldstar_state, cm,        ROT0, "Corsica",           "Cherry Master (Corsica, ver.8.01)",           0 ) /* says ED-96 where the manufacturer is on some games.. */
 
 
 
 // most of these are almost certainly bootlegs, with added features, hacked payouts etc. identifying which are
 // the original, unmodified dyna versions is almost impossible due to lack of documentation from back in the day,
 // even original boards almost always run modified sets
-GAME(  1992, cmv4,      0,        cm,       cmv4, goldstar_state,     cmv4,      ROT0, "Dyna",              "Cherry Master (ver.4, set 1)",                0 )
-GAME(  1992, cmv4a,     cmv4,     cm,       cmv4, goldstar_state,     cmv4,      ROT0, "Dyna",              "Cherry Master (ver.4, set 2)",                GAME_NOT_WORKING )	/* stealth game? */
-GAME(  199?, cmwm,      cmv4,     cm,       cmv4, goldstar_state,     cmv4,      ROT0, "Dyna",              "Cherry Master (Watermelon bootleg / hack)",   0 )
-GAME(  1995, cmfun,     cmv4,     cm,       cmv4, goldstar_state,     cmv4,      ROT0, "Dyna",              "Cherry Master (Fun USA v2.5 bootleg / hack)", 0 )
-GAME(  1991, cmaster,   0,        cm,       cmaster, driver_device,  0,         ROT0, "Dyna",              "Cherry Master I (ver.1.01, set 1)",           0 )
+GAME(  1992, cmv4,      0,        cm,       cmv4,     goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master (ver.4, set 1)",                0 )
+GAME(  1992, cmv4a,     cmv4,     cm,       cmv4,     goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master (ver.4, set 2)",                GAME_NOT_WORKING )	/* stealth game? */
+GAME(  199?, cmwm,      cmv4,     cm,       cmv4,     goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master (Watermelon bootleg / hack)",   0 )
+GAME(  1995, cmfun,     cmv4,     cm,       cmv4,     goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master (Fun USA v2.5 bootleg / hack)", 0 )
+GAME(  1991, cmaster,   0,        cm,       cmaster,  driver_device,  0,         ROT0, "Dyna",              "Cherry Master I (ver.1.01, set 1)",           0 )
 GAME(  1991, cmasterb,  cmaster,  cm,       cmasterb, goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master I (ver.1.01, set 2)",           0 )
 GAME(  1991, cmezspin,  cmaster,  cm,       cmasterb, goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master I (E-Z Spin bootleg / hack)",   0 )
 GAME(  1991, cmasterc,  cmaster,  cmasterc, cmasterc, goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master I (ver.1.01, set 3)",           0 )
@@ -10762,84 +11504,85 @@ GAME(  1991, cmastere,  cmaster,  cm,       cmasterb, goldstar_state, cmv4,     
 GAME(  1991, cmasterf,  cmaster,  cm,       cmasterb, goldstar_state, cmv4,      ROT0, "Dyna",              "Cherry Master I (ver.1.01, set 7)",           0 )
 
 
-GAME(  1991, tonypok,   0,        cm,       cmv801, goldstar_state,   tonypok,   ROT0, "Corsica",           "Poker Master (Tony-Poker V3.A, hack?)",   0 )
+GAME(  1991, tonypok,   0,        cm,       cmv801,   goldstar_state, tonypok,   ROT0, "Corsica",           "Poker Master (Tony-Poker V3.A, hack?)",       0 )
 GAME(  199?, jkrmast,   0,        pkrmast,  cmasterb, goldstar_state, cmv4,      ROT0, "<unknown>",         "Joker Master",                                GAME_NOT_WORKING ) // encrypted?
 GAME(  199?, pkrmast,   jkrmast,  pkrmast,  cmasterb, goldstar_state, cmv4,      ROT0, "<unknown>",         "Poker Master (set 1)",                        GAME_NOT_WORKING ) // incomplete dump + encrypted?
 GAME(  199?, pkrmasta,  jkrmast,  pkrmast,  cmasterb, goldstar_state, cmv4,      ROT0, "<unknown>",         "Poker Master (set 2)",                        GAME_NOT_WORKING ) // incomplete dump + encrypted?
 
 
-GAME(  1991, cmast91,   0,        cmast91,  cmast91, goldstar_state,  cmast91,   ROT0, "Dyna",              "Cherry Master '91 (ver.1.30)",                0 )
-GAME(  1992, cmast92,   0,        cmast91,  cmast91, goldstar_state,  cmast91,   ROT0, "Dyna",              "Cherry Master '92",                           GAME_NOT_WORKING ) // no gfx roms are dumped
+GAME(  1991, cmast91,   0,        cmast91,  cmast91,  goldstar_state, cmast91,   ROT0, "Dyna",              "Cherry Master '91 (ver.1.30)",                0 )
+GAME(  1992, cmast92,   0,        cmast91,  cmast91,  goldstar_state, cmast91,   ROT0, "Dyna",              "Cherry Master '92",                           GAME_NOT_WORKING ) // no gfx roms are dumped
 
 
-GAMEL( 1989, lucky8,    0,        lucky8,   lucky8, driver_device,   0,         ROT0, "Wing Co., Ltd. / GEI", "New Lucky 8 Lines (set 1, W-4)",                           0,                     layout_lucky8 )
-GAMEL( 1989, lucky8a,   lucky8,   lucky8,   lucky8a, goldstar_state,  lucky8a,   ROT0, "Wing Co., Ltd. / GEI", "New Lucky 8 Lines (set 2, W-4)",                           0,                     layout_lucky8 )
-GAMEL( 1989, lucky8b,   lucky8,   lucky8,   ns8lines, driver_device, 0,         ROT0, "Wing Co., Ltd. / GEI", "New Lucky 8 Lines (set 3, W-4, extended gfx)",             0,                     layout_lucky8 )
-GAMEL( 198?, ns8lines,  0,        lucky8,   ns8lines, driver_device, 0,         ROT0, "<unknown>",            "New Lucky 8 Lines / New Super 8 Lines (W-4)",              0,                     layout_lucky8 )
-GAMEL( 198?, ns8linew,  0,        lucky8,   ns8linew, driver_device, 0,         ROT0, "<unknown>",            "New Lucky 8 Lines / New Super 8 Lines (F-5, Witch Bonus)", 0,                     layout_lucky8 )
-GAMEL( 198?, kkotnoli,  0,        kkotnoli, kkotnoli, driver_device, 0,         ROT0, "hack",                 "Kkot No Li (Kill the Bees)",                               GAME_IMPERFECT_COLORS, layout_lucky8 )
-GAME(  198?, ladylinr,  0,        ladylinr, ladylinr, driver_device, 0,         ROT0, "TAB Austria",          "Lady Liner",                                               0 )
-GAME(  198?, wcat3,     0,        wcat3,    lucky8, driver_device,   0,         ROT0, "E.A.I.",               "Wild Cat 3",                                               GAME_NOT_WORKING )
+GAMEL( 1989, lucky8,    0,        lucky8,   lucky8,   driver_device,  0,         ROT0, "Wing Co., Ltd. / GEI", "New Lucky 8 Lines (set 1, W-4)",                           0,                     layout_lucky8 )
+GAMEL( 1989, lucky8a,   lucky8,   lucky8,   lucky8a,  goldstar_state, lucky8a,   ROT0, "Wing Co., Ltd. / GEI", "New Lucky 8 Lines (set 2, W-4)",                           0,                     layout_lucky8 )
+GAMEL( 1989, lucky8b,   lucky8,   lucky8,   ns8lines, driver_device,  0,         ROT0, "Wing Co., Ltd. / GEI", "New Lucky 8 Lines (set 3, W-4, extended gfx)",             0,                     layout_lucky8 )
+GAMEL( 198?, ns8lines,  0,        lucky8,   ns8lines, driver_device,  0,         ROT0, "<unknown>",            "New Lucky 8 Lines / New Super 8 Lines (W-4)",              0,                     layout_lucky8 )
+GAMEL( 198?, ns8linew,  0,        lucky8,   ns8linew, driver_device,  0,         ROT0, "<unknown>",            "New Lucky 8 Lines / New Super 8 Lines (F-5, Witch Bonus)", 0,                     layout_lucky8 )
+GAMEL( 198?, kkotnoli,  0,        kkotnoli, kkotnoli, driver_device,  0,         ROT0, "hack",                 "Kkot No Li (Kill the Bees)",                               GAME_IMPERFECT_COLORS, layout_lucky8 )
+GAME(  198?, ladylinr,  0,        ladylinr, ladylinr, driver_device,  0,         ROT0, "TAB Austria",          "Lady Liner",                                               0 )
+GAME(  198?, wcat3,     0,        wcat3,    lucky8,   driver_device,  0,         ROT0, "E.A.I.",               "Wild Cat 3",                                               GAME_NOT_WORKING )
 
-GAME(  1985, luckylad,  0,        lucky8,   luckylad, driver_device, 0,         ROT0, "Wing Co., Ltd.",       "Lucky Lady (Wing, encrypted)",                             GAME_NOT_WORKING ) // encrypted (see notes in rom_load)...
+GAME(  1985, luckylad,  0,        lucky8,   luckylad, driver_device,  0,         ROT0, "Wing Co., Ltd.",       "Lucky Lady (Wing, encrypted)",                             GAME_NOT_WORKING ) // encrypted (see notes in rom_load)...
+GAME(  1991, megaline,  0,        megaline, megaline, driver_device,  0,         ROT0, "Fun World",            "Mega Lines",                                               GAME_NOT_WORKING )
 
-GAMEL( 1993, bingowng,  0,        bingowng, bingowng, driver_device, 0,         ROT0, "Wing Co., Ltd.",       "Bingo (set 1)",                                            0,                     layout_bingowng )
-GAMEL( 1993, bingownga, bingowng, bingownga,bingowng, driver_device, 0,         ROT0, "Wing Co., Ltd.",       "Bingo (set 2)",                                            0,                     layout_bingowng )
 
-GAME(  1992, magodds,   0,        magodds,  magodds, driver_device,  0,         ROT0, "Pal Company / Micro Manufacturing Inc.", "Magical Odds (set 1)",                             GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
-GAME(  1992, magoddsa,   magodds, magodds,  magodds, driver_device,  0,         ROT0, "Pal Company / Micro Manufacturing Inc.", "Magical Odds (set 2)",                             GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
-GAME(  1992, magoddsb,   magodds, magodds,  magodds, driver_device,  0,         ROT0, "Pal Company / Micro Manufacturing Inc.", "Magical Odds (set 3)",                             GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
+GAMEL( 1993, bingowng,  0,        bingowng, bingowng, driver_device,  0,         ROT0, "Wing Co., Ltd.",       "Bingo (set 1)",                                            0,                     layout_bingowng )
+GAMEL( 1993, bingownga, bingowng, bingownga,bingowng, driver_device,  0,         ROT0, "Wing Co., Ltd.",       "Bingo (set 2)",                                            0,                     layout_bingowng )
+
+GAME(  1992, magodds,   0,        magodds,  magodds,  driver_device,  0,         ROT0, "Pal Company / Micro Manufacturing Inc.", "Magical Odds (set 1)",                             GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
+GAME(  1992, magoddsa,   magodds, magodds,  magodds,  driver_device,  0,         ROT0, "Pal Company / Micro Manufacturing Inc.", "Magical Odds (set 2)",                             GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
+GAME(  1992, magoddsb,   magodds, magodds,  magodds,  driver_device,  0,         ROT0, "Pal Company / Micro Manufacturing Inc.", "Magical Odds (set 3)",                             GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )
 GAME(  1991, magoddsc,   magodds, magodds,  magoddsc, goldstar_state, magoddsc,  ROT0, "Pal Company",                            "Magical Odds (set 4, custom encrypted CPU block)", GAME_WRONG_COLORS | GAME_NOT_WORKING |GAME_NO_SOUND)
 GAME(  1991, magoddsd,   magodds, magodds,  magoddsc, goldstar_state, magoddsc,  ROT0, "Pal Company",                            "Magical Odds (set 5, custom encrypted CPU block)", GAME_WRONG_COLORS | GAME_NOT_WORKING |GAME_NO_SOUND)
 
 
 /* --- Amcoe games --- */
 
-/*    YEAR  NAME       PARENT    MACHINE   INPUT      INIT       ROT    COMPANY    FULLNAME                                                FLAGS  */
+/*    YEAR  NAME       PARENT    MACHINE   INPUT      STATE           INIT       ROT    COMPANY    FULLNAME                                                FLAGS  */
 
-GAME( 1997, schery97,  0,        amcoe1,   schery97, goldstar_state,  schery97,  ROT0, "Amcoe",   "Skill Cherry '97 (ver. sc3.52)",                        0 )	/* running in CB hardware */
-GAME( 1997, schery97a, schery97, amcoe1,   schery97, goldstar_state,  schery97a, ROT0, "Amcoe",   "Skill Cherry '97 (ver. sc3.52c4)",                      0 )	/* running in C4 hardware */
-GAME( 1998, skill98,   0,        amcoe1,   schery97, goldstar_state,  skill98,   ROT0, "Amcoe",   "Skill '98 (ver. s98-1.33)",                             0 )
-GAME( 1997, pokonl97,  0,        amcoe1,   pokonl97, goldstar_state,  po33,      ROT0, "Amcoe",   "Poker Only '97 (ver. 3.3)",                                        0 )	/* ver. 3.3 */
-GAME( 1998, match98,   0,        amcoe1a,  match98, goldstar_state,   match133,  ROT0, "Amcoe",   "Match '98 (ver. 1.33)",                                 0 )
+GAME( 1997, schery97,  0,        amcoe1,   schery97,  goldstar_state, schery97,  ROT0, "Amcoe",   "Skill Cherry '97 (ver. sc3.52)",                        0 )	/* running in CB hardware */
+GAME( 1997, schery97a, schery97, amcoe1,   schery97,  goldstar_state, schery97a, ROT0, "Amcoe",   "Skill Cherry '97 (ver. sc3.52c4)",                      0 )	/* running in C4 hardware */
+GAME( 1998, skill98,   0,        amcoe1,   schery97,  goldstar_state, skill98,   ROT0, "Amcoe",   "Skill '98 (ver. s98-1.33)",                             0 )
+GAME( 1997, pokonl97,  0,        amcoe1,   pokonl97,  goldstar_state, po33,      ROT0, "Amcoe",   "Poker Only '97 (ver. 3.3)",                                        0 )	/* ver. 3.3 */
+GAME( 1998, match98,   0,        amcoe1a,  match98,   goldstar_state, match133,  ROT0, "Amcoe",   "Match '98 (ver. 1.33)",                                 0 )
 
 /* The Sub-PCB has a printed sticker denoting C1, C2, D or DK for the type of FPGA decryption chip used */
 /* There is known to be a special IOWA version running on the Texas C2 hardware with roms FB96P IA, FB96L IA & FB96H IA with a (c) 2000 Amcoe */
-GAME( 1996, nfb96,     0,        amcoe2,   nfb96, goldstar_state,     nfb96_c1,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.63, C1 PCB)",          0 ) /* ver. 02-3.63 C1 Sub-PCB */
-GAME( 1996, nfb96a,    nfb96,    amcoe2,   nfb96, goldstar_state,     nfb96_c1,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.62, C1 PCB)",          0 ) /* ver. 00-3.62 C1 Sub-PCB  */
-GAME( 1996, nfb96b,    nfb96,    amcoe2,   nfb96, goldstar_state,     nfb96_d,   ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.54, D PCB)",           0 ) /* ver. 00-3.54 D Sub-PCB*/
-GAME( 1996, nfb96c,    nfb96,    amcoe2,   nfb96, goldstar_state,     nfb96_dk,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.62, DK PCB)",          0 ) /* ver. 00-3.62 DK Sub-PCB */
-GAME( 2000, nfb96txt,  nfb96,    amcoe2,   nfb96tx, goldstar_state,   nfb96_c2,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v1.22 Texas XT, C2 PCB)", 0 ) /* ver. tf1.22axt C2 Sub-PCB */
+GAME( 1996, nfb96,     0,        amcoe2,   nfb96,     goldstar_state, nfb96_c1,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.63, C1 PCB)",          0 ) /* ver. 02-3.63 C1 Sub-PCB */
+GAME( 1996, nfb96a,    nfb96,    amcoe2,   nfb96,     goldstar_state, nfb96_c1,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.62, C1 PCB)",          0 ) /* ver. 00-3.62 C1 Sub-PCB  */
+GAME( 1996, nfb96b,    nfb96,    amcoe2,   nfb96,     goldstar_state, nfb96_d,   ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.54, D PCB)",           0 ) /* ver. 00-3.54 D Sub-PCB*/
+GAME( 1996, nfb96c,    nfb96,    amcoe2,   nfb96,     goldstar_state, nfb96_dk,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v3.62, DK PCB)",          0 ) /* ver. 00-3.62 DK Sub-PCB */
+GAME( 2000, nfb96txt,  nfb96,    amcoe2,   nfb96tx,   goldstar_state, nfb96_c2,  ROT0, "Amcoe",   "New Fruit Bonus '96 Special Edition (v1.22 Texas XT, C2 PCB)", 0 ) /* ver. tf1.22axt C2 Sub-PCB */
 
-GAME( 1996, nc96,      0,        amcoe2,   nfb96, goldstar_state,     nfb96_c1,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.63, C1 PCB)",          0 ) /* C1 Sub-PCB */
-GAME( 1996, nc96a,     nc96,     amcoe2,   nfb96, goldstar_state,     nfb96_c1,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.62, C1 PCB)",          0 ) /* C1 Sub-PCB */
-GAME( 1996, nc96b,     nc96,     amcoe2,   nfb96, goldstar_state,     nfb96_d,   ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.54, D PCB)",           0 ) /* D  Sub-PCB */
-GAME( 1996, nc96c,     nc96,     amcoe2,   nfb96, goldstar_state,     nfb96_dk,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.62, DK PCB)",          0 ) /* DK Sub-PCB */
-GAME( 2000, nc96txt,   nc96,     amcoe2,   nfb96tx, goldstar_state,   nfb96_c2,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v1.32 Texas XT, C2 PCB)", 0 ) /* ver. tc1.32axt C2 Sub-PCB */
+GAME( 1996, nc96,      0,        amcoe2,   nfb96,     goldstar_state, nfb96_c1,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.63, C1 PCB)",          0 ) /* C1 Sub-PCB */
+GAME( 1996, nc96a,     nc96,     amcoe2,   nfb96,     goldstar_state, nfb96_c1,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.62, C1 PCB)",          0 ) /* C1 Sub-PCB */
+GAME( 1996, nc96b,     nc96,     amcoe2,   nfb96,     goldstar_state, nfb96_d,   ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.54, D PCB)",           0 ) /* D  Sub-PCB */
+GAME( 1996, nc96c,     nc96,     amcoe2,   nfb96,     goldstar_state, nfb96_dk,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.62, DK PCB)",          0 ) /* DK Sub-PCB */
+GAME( 2000, nc96txt,   nc96,     amcoe2,   nfb96tx,   goldstar_state, nfb96_c2,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v1.32 Texas XT, C2 PCB)", 0 ) /* ver. tc1.32axt C2 Sub-PCB */
 
-GAME( 1996, roypok96,  0,        amcoe2,   roypok96, goldstar_state,  rp35,      ROT0, "Amcoe",   "Royal Poker '96 (set 1)", 0 ) /* ver. 97-3.5 */
-GAME( 1996, roypok96a, roypok96, amcoe2,   roypok96a, goldstar_state, rp36,      ROT0, "Amcoe",   "Royal Poker '96 (set 2)", 0 ) /* ver. 98-3.6 */
-GAME( 1996, roypok96b, roypok96, amcoe2,   roypok96a, goldstar_state, rp36c3,    ROT0, "Amcoe",   "Royal Poker '96 (set 3)", 0 ) /* ver. 98-3.6 ??? */
+GAME( 1996, roypok96,  0,        amcoe2,   roypok96,  goldstar_state, rp35,      ROT0, "Amcoe",   "Royal Poker '96 (set 1)",                                 0 ) /* ver. 97-3.5 */
+GAME( 1996, roypok96a, roypok96, amcoe2,   roypok96a, goldstar_state, rp36,      ROT0, "Amcoe",   "Royal Poker '96 (set 2)",                                 0 ) /* ver. 98-3.6 */
+GAME( 1996, roypok96b, roypok96, amcoe2,   roypok96a, goldstar_state, rp36c3,    ROT0, "Amcoe",   "Royal Poker '96 (set 3)",                                 0 ) /* ver. 98-3.6 ??? */
 
 
 /* these all appear to be graphic hacks of 'New Fruit Bonus '96', they can run with the same program rom
    some sets are messy and appear to have mismatched graphic roms, they needed to be sorted out properly
 */
-/*    YEAR  NAME       PARENT    MACHINE   INPUT      INIT       ROT    COMPANY                 FULLNAME                                                FLAGS  */
-GAME( 1996, nfb96se,   nfb96,    amcoe2,   nfb96bl, driver_device,   0,         ROT0, "bootleg",              "New Fruit Bonus '96 Special Edition (bootleg, set 1)",  0 )
-GAME( 1996, nfb96sea,  nfb96,    amcoe2,   nfb96bl, goldstar_state,   nfb96sea,  ROT0, "bootleg",              "New Fruit Bonus '96 Special Edition (bootleg, set 2)",  GAME_WRONG_COLORS ) // encrypted program
-GAME( 1996, nfb96seb,  nfb96,    amcoe2,   nfb96bl, driver_device,   0,         ROT0, "bootleg",              "New Fruit Bonus '96 Special Edition (bootleg, set 3)",  GAME_WRONG_COLORS )
-GAME( 2002, carb2002,  nfb96,    amcoe2,   nfb96bl, driver_device,   0,         ROT0, "bootleg",              "Carriage Bonus 2002 (bootleg)",                         GAME_WRONG_COLORS )
-GAME( 2003, carb2003,  nfb96,    amcoe2,   nfb96bl, driver_device,   0,         ROT0, "bootleg",              "Carriage Bonus 2003 (bootleg)",                         GAME_WRONG_COLORS )
+/*    YEAR  NAME       PARENT    MACHINE   INPUT      STATE           INIT       ROT    COMPANY    FULLNAME                                                FLAGS  */
+GAME( 1996, nfb96se,   nfb96,    amcoe2,   nfb96bl,   driver_device,  0,         ROT0, "bootleg", "New Fruit Bonus '96 Special Edition (bootleg, set 1)",  0 )
+GAME( 1996, nfb96sea,  nfb96,    amcoe2,   nfb96bl,   goldstar_state, nfb96sea,  ROT0, "bootleg", "New Fruit Bonus '96 Special Edition (bootleg, set 2)",  GAME_WRONG_COLORS ) // encrypted program
+GAME( 1996, nfb96seb,  nfb96,    amcoe2,   nfb96bl,   driver_device,  0,         ROT0, "bootleg", "New Fruit Bonus '96 Special Edition (bootleg, set 3)",  GAME_WRONG_COLORS )
+GAME( 2002, carb2002,  nfb96,    amcoe2,   nfb96bl,   driver_device,  0,         ROT0, "bootleg", "Carriage Bonus 2002 (bootleg)",                         GAME_WRONG_COLORS )
+GAME( 2003, carb2003,  nfb96,    amcoe2,   nfb96bl,   driver_device,  0,         ROT0, "bootleg", "Carriage Bonus 2003 (bootleg)",                         GAME_WRONG_COLORS )
 
-GAME( 2003, nfm,       0,        nfm,      nfb96bl, driver_device,   0,         ROT0, "Ming-Yang Electronic", "New Fruit Machine (Ming-Yang Electronic)",              GAME_NOT_WORKING )
+GAME( 2003, nfm,       0,        nfm,      nfb96bl,   driver_device,  0,         ROT0, "Ming-Yang Electronic", "New Fruit Machine (Ming-Yang Electronic)",              GAME_NOT_WORKING )
 
 // these have 'cherry 1994' in the program roms, but also "Super Cherry / New Cherry Gold '99" probably hacks of a 1994 version of Cherry Bonus / Cherry Master (Super Cherry Master?)
-GAME( 1999, unkch1,   0,         unkch,    unkch, goldstar_state,  unkch1,    ROT0, "bootleg",              "New Cherry Gold '99 (bootleg of Super Cherry Master) (set 1)", GAME_NOT_WORKING|GAME_NO_SOUND )
-GAME( 1999, unkch2,   unkch1,    unkch,    unkch, goldstar_state,  unkch1,    ROT0, "bootleg",              "Super Cherry Gold (bootleg of Super Cherry Master)",           GAME_NOT_WORKING|GAME_NO_SOUND )
-GAME( 1999, unkch3,   unkch1,    unkch,    unkch, goldstar_state,  unkch3,    ROT0, "bootleg",              "New Cherry Gold '99 (bootleg of Super Cherry Master) (set 2)", GAME_NOT_WORKING|GAME_NO_SOUND ) // cards have been hacked to look like barrels, girl removed?
-GAME( 1999, unkch4,   unkch1,    unkch,    unkch, goldstar_state,  unkch4,    ROT0, "bootleg",              "Grand Cherry Master (bootleg of Super Cherry Master)",         GAME_NOT_WORKING|GAME_NO_SOUND ) // by 'toy system' hungary
-
+GAME( 1999, unkch1,   0,         unkch,    unkch,     goldstar_state, unkch1,    ROT0, "bootleg", "New Cherry Gold '99 (bootleg of Super Cherry Master) (set 1)", GAME_NOT_WORKING|GAME_NO_SOUND )
+GAME( 1999, unkch2,   unkch1,    unkch,    unkch,     goldstar_state, unkch1,    ROT0, "bootleg", "Super Cherry Gold (bootleg of Super Cherry Master)",           GAME_NOT_WORKING|GAME_NO_SOUND )
+GAME( 1999, unkch3,   unkch1,    unkch,    unkch,     goldstar_state, unkch3,    ROT0, "bootleg", "New Cherry Gold '99 (bootleg of Super Cherry Master) (set 2)", GAME_NOT_WORKING|GAME_NO_SOUND ) // cards have been hacked to look like barrels, girl removed?
+GAME( 1999, unkch4,   unkch1,    unkch,    unkch,     goldstar_state, unkch4,    ROT0, "bootleg", "Grand Cherry Master (bootleg of Super Cherry Master)",         GAME_NOT_WORKING|GAME_NO_SOUND ) // by 'toy system' hungary
 
 
 /* possible stealth sets:

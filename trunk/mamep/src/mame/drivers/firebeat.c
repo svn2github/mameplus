@@ -106,6 +106,26 @@
           The display list objects seem to be there, but the address is wrong (0x14c400, instead of the correct address)
 
         - The external Yamaha MIDI sound board is not emulated (no keyboard sounds).
+
+
+        - Notes on how the video is supposed to work from Ville / Ian Patterson:
+
+        There are four "display contexts" that are set up via registers 20-4E. They are
+        basically just raw framebuffers. 40-4E sets the base framebuffer pointer, 30-3E
+        sets the size, 20-2E may set the minimum x and y coordinates but I haven't seen
+        them set to something other than 0 yet. One context is set as the one the RAMDAC
+        outputs to the monitor (not sure how this is selected yet, probably the lower
+        bits of register 12). Thestartup test in the popn BIOS checks all of VRAM, so
+        it moves the currentdisplay address around so you don't see crazy colors, which
+        is very helpful in figuring out how this part works.
+
+        The other new part is that there are two VRAM write ports, managed by registers
+        60+68+70 and 64+6A+74, with status read from the lower bits of reg 7A. Each context
+        can either write to VRAM as currently emulated, or the port can be switched in to
+        "immediate mode" via registers 68/6A. Immedate mode can be used to run GCU commands
+        at any point during the frame. It's mainly used to call display lists, which is where
+        the display list addresses come from. Some games use it to send other commands, so
+        it appears to be a 4-dword FIFO or something along those lines.
 */
 
 #include "emu.h"
@@ -562,7 +582,7 @@ static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const r
 
 	bitmap.fill(0, cliprect);
 
-	if (mame_stricmp(screen.machine().system().name, "popn7") == 0)
+	if (mame_strnicmp(screen.machine().system().name, "popn", 4) == 0)
 	{
 		gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x1f80000);
 	}
@@ -709,7 +729,42 @@ static void GCU_w(running_machine &machine, int chip, UINT32 offset, UINT32 data
 			break;
 		}
 
-		case 0x40:		/* ??? */
+		case 0x40:		/* framebuffer config */
+			// HACK: switch display lists at the right times for the ParaParaParadise games until we
+			// do the video emulation properly
+			if (mame_strnicmp(machine.system().name, "pp", 2) == 0)
+			{
+				switch (data)
+				{
+					case 0x00080000:	// post
+						state->m_layer = 0;
+						break;
+
+					case 0x00008400:	// startup tests
+						if (state->m_layer != 2)
+						{
+							state->m_layer = 1;
+						}
+						break;
+
+					case 0x00068400:	// game & svc menu
+						state->m_layer = 2;
+						break;
+				}
+			}
+			else if (mame_strnicmp(machine.system().name, "kbm", 3) == 0)
+			{
+				switch (data)
+				{
+					case 0x00080000:	// post
+						state->m_layer = 0;
+						break;
+
+					case 0x0000c400:	// game & svn menu
+						state->m_layer = 2;
+						break;
+				}
+			}
 			break;
 
 		//case 0x44:    /* ??? */
@@ -1132,8 +1187,17 @@ static void atapi_command_reg_w(running_machine &machine, int reg, UINT16 data)
 				}
 
 				// perform special ATAPI processing of certain commands
+				//if (state->m_atapi_drivesel==1) logerror("!!!ATAPI COMMAND %x\n", state->m_atapi_data[0]&0xff);
 				switch (state->m_atapi_data[0]&0xff)
 				{
+
+                    case 0x55:	// MODE SELECT
+						state->m_atapi_cdata_wait = state->m_atapi_data[4]/2;
+						state->m_atapi_data_ptr = 0;
+						logerror("ATAPI: Waiting for %x bytes of MODE SELECT data\n", state->m_atapi_cdata_wait);
+						break;
+
+
 					case 0xa8:	// READ (12)
 						// indicate data ready: set DRQ and DMA ready, and IO in INTREASON
 						state->m_atapi_regs[ATAPI_REG_CMDSTATUS] = ATAPI_STAT_DRQ | ATAPI_STAT_SERVDSC;
@@ -1145,8 +1209,8 @@ static void atapi_command_reg_w(running_machine &machine, int reg, UINT16 data)
 					case 0x00: // BUS RESET / TEST UNIT READY
 					case 0xbb: // SET CD SPEED
 					case 0xa5: // PLAY AUDIO
-					case 0x1b:
-					case 0x4e:
+					case 0x1b: // START_STOP_UNIT
+					case 0x4e: // STOPPLAY_SCAN
 						state->m_atapi_regs[ATAPI_REG_CMDSTATUS] = 0;
 						break;
 				}
@@ -1802,6 +1866,12 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(firebeat_state::soundram_r)
 {
+	// HACK: firebeat expects first read after setting the address to be dummy.  fixes "YMZ test".
+	if (offset > 0)
+	{
+		offset--;
+	}
+
 	if (offset < 0x200000)
 	{
 		return m_flash[1]->read(offset & 0x1fffff);
@@ -1971,14 +2041,7 @@ INTERRUPT_GEN_MEMBER(firebeat_state::firebeat_interrupt)
 
 MACHINE_RESET_MEMBER(firebeat_state,firebeat)
 {
-	int i;
-	UINT8 *sound = memregion("ymz")->base();
-
-	for (i=0; i < 0x200000; i++)
-	{
-		sound[i] = m_flash[1]->read(i);
-		sound[i+0x200000] = m_flash[2]->read(i);
-	}
+	m_layer = 0;
 }
 
 const rtc65271_interface firebeat_rtc =
@@ -2312,7 +2375,24 @@ ROM_START( ppp )
 	DISK_REGION( "scsi0" )
 	DISK_IMAGE_READONLY( "977jaa01", 0, BAD_DUMP SHA1(59c03d8eb366167feef741d42d9d8b54bfeb3c1e) )
 
-	// TODO: the audio CD is not dumped
+	DISK_REGION( "scsi1" )
+	DISK_IMAGE_READONLY( "977jaa02", 0, SHA1(bd07c25ee3e1edc962997f6a5bb1700897231fb2) )
+ROM_END
+
+ROM_START( ppp1mp )
+	ROM_REGION32_BE(0x80000, "user1", 0)
+	ROM_LOAD16_WORD_SWAP("977jaa03.21e", 0x00000, 0x80000, CRC(7b83362a) SHA1(2857a93be58636c10a8d180dbccf2caeeaaff0e2))
+
+	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
+
+	ROM_REGION(0xc0, "user2", 0)	// Security dongle
+	ROM_LOAD( "gqa11-ja",     0x000000, 0x0000c0, CRC(2ed8e2ae) SHA1(b8c3410dab643111b2d2027068175ba018a0a67e) )
+
+	DISK_REGION( "scsi0" )
+	DISK_IMAGE_READONLY( "a11jaa01", 0, SHA1(539ec6f1c1d198b0d6ce5543eadcbb4d9917fa42) )
+
+	DISK_REGION( "scsi1" )
+	DISK_IMAGE_READONLY( "a11jaa02", 0, SHA1(575069570cb4a2b58b199a1329d45b189a20fcc9) )
 ROM_END
 
 ROM_START( kbm )
@@ -2363,6 +2443,25 @@ ROM_START( kbm3rd )
 	DISK_IMAGE_READONLY( "a12jaa02", 1, BAD_DUMP SHA1(1256ce9d71350d355a256f83c7b319f0e6e84525) )
 ROM_END
 
+ROM_START( popn4 )
+	ROM_REGION32_BE(0x80000, "user1", 0)
+	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
+
+	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
+
+	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)	// Security dongle
+	ROM_LOAD( "gq986-ja", 0x000000, 0x0000c0, CRC(6f8aa811) SHA1(fc970f6b4ada58eee361b3477abe503019b5dfda) ) 
+
+	ROM_REGION(0x80000, "audiocpu", 0)			// SPU 68K program
+	ROM_LOAD16_WORD_SWAP("a02jaa04.3q", 0x00000, 0x80000, CRC(8c6000dd) SHA1(94ab2a66879839411eac6c673b25143d15836683))
+
+	DISK_REGION( "scsi0" )	// program CD-ROM
+	DISK_IMAGE_READONLY( "gq986jaa01", 0, SHA1(e5368ac029b0bdf29943ae66677b5521ae1176e1) )
+
+	DISK_REGION( "scsi1" ) 	// data DVD-ROM
+	DISK_IMAGE( "gq986jaa02", 1, SHA1(53367d3d5f91422fe386c42716492a0ae4332390) )
+ROM_END
+
 ROM_START( popn5 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
         ROM_LOAD16_WORD_SWAP( "a02jaa03.21e", 0x000000, 0x080000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599) )
@@ -2370,6 +2469,7 @@ ROM_START( popn5 )
 	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)	// Security dongle
+	ROM_LOAD( "gca04-ja", 0x000000, 0x0000c0, CRC(7724fdbf) SHA1(b1b2d838d1938d9dc15151b7834502c1668bd31b) ) 
 
 	ROM_REGION(0x80000, "audiocpu", 0)			// SPU 68K program
         ROM_LOAD16_WORD_SWAP( "a02jaa04.3q",  0x000000, 0x080000, CRC(8c6000dd) SHA1(94ab2a66879839411eac6c673b25143d15836683) )
@@ -2381,6 +2481,25 @@ ROM_START( popn5 )
 	DISK_IMAGE_READONLY( "a04jaa02", 1, SHA1(49a017dde76f84829f6e99a678524c40665c3bfd) )
 ROM_END
 
+ROM_START( popn6 )
+	ROM_REGION32_BE(0x80000, "user1", 0)
+	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
+
+	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
+
+	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)	// Security dongle
+	ROM_LOAD( "gqa16-ja", 0x000000, 0x0000c0, CRC(a3393355) SHA1(6b28b972fe375e6ad0c614110c0ae3832cffccff) )
+
+	ROM_REGION(0x80000, "audiocpu", 0)			// SPU 68K program
+	ROM_LOAD16_WORD_SWAP("a02jaa04.3q", 0x00000, 0x80000, CRC(8c6000dd) SHA1(94ab2a66879839411eac6c673b25143d15836683))
+
+	DISK_REGION( "scsi0" )	// program CD-ROM
+	DISK_IMAGE_READONLY( "gqa16jaa01", 0, SHA1(7a7e475d06c74a273f821fdfde0743b33d566e4c) )
+
+	DISK_REGION( "scsi1" ) 	// data DVD-ROM
+	DISK_IMAGE( "gqa16jaa02", 1, SHA1(e39067300e9440ff19cb98c1abc234fa3d5b26d1) )
+ROM_END
+
 ROM_START( popn7 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
@@ -2388,16 +2507,54 @@ ROM_START( popn7 )
 	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)	// Security dongle
-	ROM_LOAD("gcb00-ja", 0x00, 0xc0, BAD_DUMP CRC(cc28625a) SHA1(e7de79ae72fdbd22328c9de74dfa17b5e6ae43b6))
+	ROM_LOAD("gcb00-ja", 0x00, 0xc0, CRC(cc28625a) SHA1(e7de79ae72fdbd22328c9de74dfa17b5e6ae43b6))
 
 	ROM_REGION(0x80000, "audiocpu", 0)			// SPU 68K program
 	ROM_LOAD16_WORD_SWAP("a02jaa04.3q", 0x00000, 0x80000, CRC(8c6000dd) SHA1(94ab2a66879839411eac6c673b25143d15836683))
 
-	DISK_REGION( "scsi0" )
-	DISK_IMAGE_READONLY( "b00jab01", 0, BAD_DUMP SHA1(604fd460befcb5c53ae230155b83dec3a0b668d7) )
+	DISK_REGION( "scsi0" ) // program CD-ROM
+	DISK_IMAGE_READONLY( "b00jab01", 0, SHA1(259c733ca4d30281205b46b7bf8d60c9d01aa818) )
 
-	DISK_REGION( "scsi1" )
-	DISK_IMAGE_READONLY( "b00jaa02", 1, BAD_DUMP SHA1(9e226f6b377ea72514d58dd350578b7dad12a70a) )
+	DISK_REGION( "scsi1" ) // data DVD-ROM
+	DISK_IMAGE_READONLY( "b00jaa02", 1, SHA1(c8ce2f8ee6aeeedef9c110a59e68fcec7b669ad6) )
+ROM_END
+
+ROM_START( popn8 )
+	ROM_REGION32_BE(0x80000, "user1", 0)
+	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
+
+	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
+
+	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)	// Security dongle
+	ROM_LOAD( "gqb30-ja", 0x000000, 0x0000c0, CRC(dbabb51b) SHA1(b53e971f544a654f0811e10eed40bee2e0393855) )
+
+	ROM_REGION(0x80000, "audiocpu", 0)			// SPU 68K program
+	ROM_LOAD16_WORD_SWAP("a02jaa04.3q", 0x00000, 0x80000, CRC(8c6000dd) SHA1(94ab2a66879839411eac6c673b25143d15836683))
+
+	DISK_REGION( "scsi0" ) // program CD-ROM
+	DISK_IMAGE_READONLY( "gqb30jaa01", 0, SHA1(0ff3e40e3717ce23337b3a2438bdaca01cba9e30) )
+
+	DISK_REGION( "scsi1" ) // data DVD-ROM
+	DISK_IMAGE_READONLY( "gqb30jaa02", 1, SHA1(f067d502c23efe0267aada5706f5bc7a54605942) )
+ROM_END
+
+ROM_START( popnanm2 )
+	ROM_REGION32_BE(0x80000, "user1", 0)
+	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
+
+	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
+
+	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)	// Security dongle
+	ROM_LOAD( "gea02-ja", 0x000000, 0x0000c0, CRC(072f8624) SHA1(e869b85a891bf7f9c870fb581a9a2ddd70810e2c) )
+
+	ROM_REGION(0x80000, "audiocpu", 0)			// SPU 68K program
+	ROM_LOAD16_WORD_SWAP("a02jaa04.3q", 0x00000, 0x80000, CRC(8c6000dd) SHA1(94ab2a66879839411eac6c673b25143d15836683))
+
+	DISK_REGION( "scsi0" ) // program CD-ROM
+	DISK_IMAGE_READONLY( "gea02jaa01", 0, SHA1(e81203b6812336c4d00476377193340031ef11b1) )
+
+	DISK_REGION( "scsi1" ) // data DVD-ROM
+	DISK_IMAGE_READONLY( "gea02jaa02", 1, SHA1(7212e399779f37a5dcb8317a8f635a3b3f620aa9) )
 ROM_END
 
 ROM_START( ppd )
@@ -2413,7 +2570,7 @@ ROM_START( ppd )
 	DISK_IMAGE_READONLY( "977kaa01", 0, BAD_DUMP SHA1(7af9f4949ffa10ea5fc18b6c88c2abc710df3cf9) )
 
 	DISK_REGION( "scsi1" )
-	DISK_IMAGE_READONLY( "977kaa02", 1, BAD_DUMP SHA1(cfca3cbc41c6203c3f3b482a6be5f63d33a8a966) )
+	DISK_IMAGE_READONLY( "977kaa02", 1, SHA1(0feb5ac56269ad4a8401fcfe3bb98b01a0169177) )
 ROM_END
 
 ROM_START( ppp11 )
@@ -2426,10 +2583,10 @@ ROM_START( ppp11 )
 	ROM_LOAD("gq977-ja", 0x00, 0xc0, BAD_DUMP CRC(55b5abdb) SHA1(d8da5bac005235480a1815bd0a79c3e8a63ebad1))
 
 	DISK_REGION( "scsi0" )
-	DISK_IMAGE_READONLY( "gc977jaa01", 0, BAD_DUMP SHA1(6b93dd38029ea68f9572126e48d618edce68fbce) )
+	DISK_IMAGE_READONLY( "gc977jaa01", 0, SHA1(7ed1f4b55105c93fec74468436bfb1d540bce944) )
 
 	DISK_REGION( "scsi1" )
-	DISK_IMAGE_READONLY( "gc977jaa02", 1, BAD_DUMP SHA1(b853a6f4edcaceb609fe2a3d6a18d4ac62bd3822) )
+	DISK_IMAGE_READONLY( "gc977jaa02", 1, SHA1(74ce8c90575fd562807def7d561392d0f91f2bc6) )
 ROM_END
 
 /*****************************************************************************/
@@ -2437,8 +2594,13 @@ ROM_END
 GAME( 2000, ppp,      0,       firebeat,      ppp, firebeat_state,    ppp,      ROT0,   "Konami",  "ParaParaParadise", GAME_NOT_WORKING)
 GAME( 2000, ppd,      0,       firebeat,      ppp, firebeat_state,    ppd,      ROT0,   "Konami",  "ParaParaDancing", GAME_NOT_WORKING)
 GAME( 2000, ppp11,    0,       firebeat,      ppp, firebeat_state,    ppp,      ROT0,   "Konami",  "ParaParaParadise v1.1", GAME_NOT_WORKING)
+GAME( 2000, ppp1mp,   ppp,     firebeat,      ppp, firebeat_state,    ppp,      ROT0,   "Konami",  "ParaParaParadise 1st Mix Plus", GAME_NOT_WORKING)
 GAMEL(2000, kbm,      0,       firebeat2,     kbm, firebeat_state,    kbm,    ROT270,   "Konami",  "Keyboardmania", GAME_NOT_WORKING, layout_firebeat)
 GAMEL(2000, kbm2nd,   0,       firebeat2,     kbm, firebeat_state,    kbm,    ROT270,   "Konami",  "Keyboardmania 2nd Mix", GAME_NOT_WORKING, layout_firebeat)
 GAMEL(2001, kbm3rd,   0,       firebeat2,     kbm, firebeat_state,    kbm,    ROT270,   "Konami",  "Keyboardmania 3rd Mix", GAME_NOT_WORKING, layout_firebeat)
+GAME( 2000, popn4,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop n' Music 4", GAME_NOT_WORKING)
 GAME( 2000, popn5,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop n' Music 5", GAME_NOT_WORKING)
+GAME( 2001, popn6,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop n' Music 6", GAME_NOT_WORKING)
 GAME( 2001, popn7,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop n' Music 7", GAME_NOT_WORKING)
+GAME( 2001, popnanm2, 0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop n' Music Animelo 2", GAME_NOT_WORKING)
+GAME( 2002, popn8,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop n' Music 8", GAME_NOT_WORKING)

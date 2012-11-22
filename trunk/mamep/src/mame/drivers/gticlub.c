@@ -1211,10 +1211,10 @@ ROM_END
 
 ROM_START( hangpltu ) /* USA version UAA */
 	ROM_REGION(0x200000, "user1", 0)	/* PowerPC program roms */
-	ROM_LOAD32_BYTE( "685uaa01.21u", 0x000003, 0x080000, BAD_DUMP CRC(c970e5d9) SHA1(cee18cc71161c138ec8150d4ba01d31912482841) ) // calls to bad code, need to verify dump
-	ROM_LOAD32_BYTE( "685uaa02.19u", 0x000002, 0x080000, BAD_DUMP CRC(765906d6) SHA1(9085a2346756b3b628fef91b7afc131aba434654) ) // "
-	ROM_LOAD32_BYTE( "685uaa03.21r", 0x000001, 0x080000, BAD_DUMP CRC(cb0147a3) SHA1(7bcab760c01ea7e24f4ca5793e081aafa97f68a3) ) // "
-	ROM_LOAD32_BYTE( "685uaa04.19r", 0x000000, 0x080000, BAD_DUMP CRC(a5fda56b) SHA1(4d86f488f411ec16fa3be830206a44214941d1fe) ) // "
+	ROM_LOAD32_BYTE( "685uaa01.21u", 0x000003, 0x080000, CRC(83a5b866) SHA1(6859590f212c7debb19924f0174e4cd1bfc011bc) )
+	ROM_LOAD32_BYTE( "685uaa02.19u", 0x000002, 0x080000, CRC(765906d6) SHA1(9085a2346756b3b628fef91b7afc131aba434654) )
+	ROM_LOAD32_BYTE( "685uaa03.21r", 0x000001, 0x080000, CRC(cb0147a3) SHA1(7bcab760c01ea7e24f4ca5793e081aafa97f68a3) )
+	ROM_LOAD32_BYTE( "685uaa04.19r", 0x000000, 0x080000, CRC(a5fda56b) SHA1(4d86f488f411ec16fa3be830206a44214941d1fe) )
 
 	ROM_REGION32_BE(0x400000, "user2", 0)	/* data roms */
 	ROM_LOAD32_WORD_SWAP( "685a05.14u", 0x000000, 0x200000, CRC(ba1c8f40) SHA1(ce4ed641c1d6d44447eaaada16f305f1d7fb9ee2) )
@@ -1232,7 +1232,7 @@ ROM_START( hangpltu ) /* USA version UAA */
 	ROM_LOAD32_WORD( "685a14.12w", 0x000000, 0x400000, CRC(87437739) SHA1(0d45637af40938a54d5efd29c125b0fafd55f9a4) )
 
 	ROM_REGION16_BE( 0x200, "eeprom", 0 )
-	ROM_LOAD( "hangplt.nv", 0x0000, 0x0200, CRC(35f482c8) SHA1(445918156770449dce1a010aab9d310f15670092) )
+	ROM_LOAD( "hangpltu.nv", 0x0000, 0x0200, CRC(8d74baf0) SHA1(297c0a064c6f8f8281d566629d896b49c6e85096) )
 ROM_END
 
 
@@ -1270,7 +1270,9 @@ DRIVER_INIT_MEMBER(gticlub_state,hangpltu)
 	init_hangplt_common();
 
 	// workaround for lock/unlock errors
-	// TODO (game doesn't work yet)
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
+	rom[(0x153d0^4) / 4] = 0x4e800020;
+	rom[(0x15428^4) / 4] = 0x4e800020;
 }
 
 /*************************************************************************/
@@ -1283,4 +1285,4 @@ GAME( 1996, thunderh, 0,        thunderh, thunderh, gticlub_state, gticlub,  ROT
 GAME( 1996, thunderhu,thunderh, thunderh, thunderh, gticlub_state, gticlub,  ROT0, "Konami", "Operation Thunder Hurricane (ver UAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1997, slrasslt, 0,        slrasslt, slrasslt, gticlub_state, gticlub,  ROT0, "Konami", "Solar Assault (ver UAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAMEL(1997, hangplt,  0,        hangplt,  hangplt,  gticlub_state, hangplt,  ROT0, "Konami", "Hang Pilot (ver JAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND, layout_dualhovu )
-GAMEL(1997, hangpltu, hangplt,  hangplt,  hangplt,  gticlub_state, hangpltu, ROT0, "Konami", "Hang Pilot (ver UAA)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND, layout_dualhovu )
+GAMEL(1997, hangpltu, hangplt,  hangplt,  hangplt,  gticlub_state, hangpltu, ROT0, "Konami", "Hang Pilot (ver UAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND, layout_dualhovu )

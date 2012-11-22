@@ -21,6 +21,7 @@
   * Jolly Card (Italian, encrypted bootleg),          bootleg,            1990.
   * Super Joly 2000 - 3x,                             M.P.                1985.
   * Jolly Card (Austrian, Fun World, bootleg),        Inter Games,        1986.
+  * Jolly Card (Spanish, blue TAB board, encrypted),  TAB Austria,        1992.
   * Bonus Card (Austrian),                            Fun World,          1986.
   * Bonus Card (Austrian, ATG Electronic hack),       Fun World,          1986.
   * Big Deal (Hungarian, set 1),                      Fun World,          1986.
@@ -33,6 +34,7 @@
   * Pool 10 (Italian, set 2),                         C.M.C.,             1996.
   * Pool 10 (Italian, set 3),                         C.M.C.,             1996.
   * Pool 10 (Italian, set 4),                         C.M.C.,             1997.
+  * Pool 10 (Italian, Dino 4 hardware, encrypted),    C.M.C.,             1997.
   * Tortuga Family (Italian),                         C.M.C.,             1997.
   * Pot Game (Italian),                               C.M.C.,             1996.
   * Bottle 10 (Italian, set 1),                       C.M.C.,             1996.

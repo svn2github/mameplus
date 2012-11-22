@@ -181,6 +181,55 @@ WRITE8_MEMBER(_8080bw_state::cosmo_sh_port_2_w)
 /*                                                     */
 /*******************************************************/
 
+/*************************************
+ *
+ *  Discrete Sound
+ * (copied from indianbt)
+ *
+ *************************************/
+
+static const discrete_dac_r1_ladder ballbomb_music_dac =
+	{3, {0, RES_K(47), RES_K(12)}, 0, 0, 0, CAP_U(0.1)};
+
+#define BALLBOMB_MUSIC_CLK		(3993.6*2*2*2)
+
+/* Nodes - Inputs */
+#define BALLBOMB_MUSIC_DATA		NODE_01
+/* Nodes - Sounds */
+#define BALLBOMB_MUSIC			NODE_11
+
+DISCRETE_SOUND_START(ballbomb)
+
+	DISCRETE_INPUT_DATA (BALLBOMB_MUSIC_DATA)
+
+/******************************************************************************
+ *
+ * Music Generator
+ *
+ ******************************************************************************/
+	DISCRETE_NOTE(NODE_20, 1, BALLBOMB_MUSIC_CLK, BALLBOMB_MUSIC_DATA, 255, 5, DISC_CLK_IS_FREQ)
+
+	// Convert count to 7492 output
+	DISCRETE_TRANSFORM2(NODE_21, NODE_20, 2, "01>0+")
+
+	DISCRETE_DAC_R1(NODE_22, NODE_21, DEFAULT_TTL_V_LOGIC_1, &ballbomb_music_dac)
+
+/******************************************************************************
+ *
+ * Final Mixing and Output
+ *
+ ******************************************************************************/
+	DISCRETE_CRFILTER(NODE_90, NODE_22, RES_K(10), CAP_U(0.1))
+
+	DISCRETE_OUTPUT(NODE_90, 21000)
+
+DISCRETE_SOUND_END
+
+WRITE8_MEMBER( _8080bw_state::ballbomb_01_w )
+{
+	discrete_sound_w(m_discrete, space, BALLBOMB_MUSIC_DATA, data|0x80);
+}
+
 WRITE8_MEMBER(_8080bw_state::ballbomb_sh_port_1_w)
 {
 	UINT8 rising_bits = data & ~m_port_1_last_extra;
@@ -977,17 +1026,78 @@ WRITE8_MEMBER(_8080bw_state::rollingc_sh_port_w)
 /* Correct samples not available         */
 /*****************************************/
 
+const sn76477_interface lupin3_sn76477_interface =
+{
+	0,			/*  4 noise_res (N/C)        */
+	0,			/*  5 filter_res (N/C)       */
+	0,			/*  6 filter_cap (N/C)       */
+	0,			/*  7 decay_res (N/C)        */
+	0,			/*  8 attack_decay_cap (N/C) */
+	RES_K(100), /* 10 attack_res             */
+	RES_K(56),	/* 11 amplitude_res          */
+	RES_K(10),	/* 12 feedback_res           */
+	0,			/* 16 vco_voltage (N/C)      */
+	CAP_U(0.1),	/* 17 vco_cap                */
+	RES_K(8.2),	/* 18 vco_res                */
+	5.0,		/* 19 pitch_voltage          */
+	RES_K(120),	/* 20 slf_res                */
+	CAP_U(1.0),	/* 21 slf_cap                */
+	0,			/* 23 oneshot_cap (N/C)      */
+	0,			/* 24 oneshot_res (N/C)      */
+	1,			/* 22 vco                    */
+	0,			/* 26 mixer A                */
+	0,			/* 25 mixer B                */
+	0,			/* 27 mixer C                */
+	1,			/* 1  envelope 1             */
+	0,			/* 28 envelope 2             */
+	1			/* 9  enable (variable)      */
+};
+
+static const char *const lupin3_sample_names[] =
+{
+	"*lupin3",
+	"cap",		/* go to jail */
+	"bark",		/* dog barking */
+	"walk1",		/* walk, get money */
+	"walk2",		/* walk, get money */
+	"warp",		/* translocate, deposit money */
+	"extend",		/* bonus man */
+	"kick",		/* lands on top of building, wife kicks man */
+	0
+};
+
+
+const samples_interface lupin3_samples_interface =
+{
+	4,	/* 4 channels */
+	lupin3_sample_names
+};
+
+WRITE8_MEMBER( _8080bw_state::lupin3_00_w )
+{
+	discrete_sound_w(m_discrete, space, INDIANBT_MUSIC_DATA, data);
+}
+
 WRITE8_MEMBER(_8080bw_state::lupin3_sh_port_1_w)
 {
 	UINT8 rising_bits = data & ~m_port_1_last_extra;
+	static UINT8 lupin3_step = 2;
 
-	if (rising_bits & 0x01) m_samples->start(0, 6);		/* Walking, get money */
+	if (rising_bits & 0x01)
+	{
+		m_samples->start(0, lupin3_step);			/* Walking, steal money */
+		lupin3_step ^= 1;
+	}
 
 	sn76477_enable_w(m_sn, data & 0x02 ? 0:1);			/* Helicopter */
 
-	if (rising_bits & 0x04) m_samples->start(0, 7);		/* Translocate */
-	if (rising_bits & 0x08) m_samples->start(0, 1);		/* Jail */
-	if (rising_bits & 0x10) m_samples->start(3, 8);		/* Bonus Man */
+	if (rising_bits & 0x04) m_samples->start(1, 4);		/* Translocate */
+	if (rising_bits & 0x08) m_samples->start(0, 0);		/* Jail */
+	if (rising_bits & 0x10) m_samples->start(2, 5);		/* Bonus Man */
+
+	//machine().sound().system_enable(data & 0x20);
+
+	//coin_lockout_global_w(machine(), data & 0x80);
 
 	m_port_1_last_extra = data;
 }
@@ -996,11 +1106,11 @@ WRITE8_MEMBER(_8080bw_state::lupin3_sh_port_2_w)
 {
 	UINT8 rising_bits = data & ~m_port_2_last_extra;
 
-	if (rising_bits & 0x01) m_samples->start(0, 3);		/* Lands on top of building, wife kicks man */
-	if (rising_bits & 0x02) m_samples->start(1, 2);		/* deposit money, start intermission, end game */
-	if (rising_bits & 0x04) m_samples->start(2, 5);		/* deposit money, start intermission, Slides down rope */
-	if (rising_bits & 0x08) m_samples->start(3, 0);		/* start intermission, end game */
-	//if (rising_bits & 0x10) m_samples->start(3, 9);        /* Dog barking */
+	if (rising_bits & 0x01) m_samples->start(0, 6);		/* Lands on top of building, wife kicks man */
+	//if (rising_bits & 0x02) m_samples->start(3, 7);       /* deposit money, start intermission, end game */
+	//if (rising_bits & 0x04) m_samples->start(4, 7);       /* deposit money, start intermission, Slides down rope */
+	//if (rising_bits & 0x08) m_samples->start(5, 7);       /* start intermission, end game */
+	if (rising_bits & 0x10) m_samples->start(3, 1);        /* Dog barking */
 
 	m_color_map = data & 0x40;
 
@@ -1118,3 +1228,34 @@ WRITE8_MEMBER(_8080bw_state::shuttlei_sh_port_2_w)
 			break;
 	}
 }
+
+WRITE8_MEMBER( _8080bw_state::darthvdr_00_w )
+{
+	m_c8080bw_flip_screen = BIT(data, 0) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
+}
+
+WRITE8_MEMBER( _8080bw_state::darthvdr_08_w )
+{
+	UINT8 rising_bits = data & ~m_port_1_last_extra;
+
+	machine().sound().system_enable(data & 0x01);
+
+	if (rising_bits & 0x02) m_samples->start(0, 0);		/* Shoot */
+	if (rising_bits & 0x04) m_samples->start(3, 7);		/* Hit UFO */
+	if (rising_bits & 0x10) m_samples->start(5, 8);		/* Bonus */
+
+	sn76477_enable_w(m_sn, data & 0x20 ? 0:1);			/* UFO */
+
+	if (rising_bits & 0x40) m_samples->start(1, 1);		/* Death */
+	if (rising_bits & 0x80) m_samples->start(2, 2);		/* Hit */
+
+	if (rising_bits & 0x08)
+	{
+		m_samples->start(4, m_fleet_step);			/* Fleet move in 4 steps */
+		m_fleet_step++;
+		if (m_fleet_step > 6) m_fleet_step = 3;
+	}
+
+	m_port_1_last_extra = data;
+}
+

@@ -273,3 +273,214 @@ FLOPPY_CONSTRUCT( imd_dsk_construct )
 	return FLOPPY_ERROR_SUCCESS;
 }
 
+
+/***************************************************************************
+
+    Copyright Olivier Galibert
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+****************************************************************************/
+
+/*********************************************************************
+
+    formats/imd_dsk.h
+
+    IMD disk images
+
+*********************************************************************/
+
+#include "emu.h"
+#include "imd_dsk.h"
+
+imd_format::imd_format()
+{
+}
+
+const char *imd_format::name() const
+{
+	return "imd";
+}
+
+const char *imd_format::description() const
+{
+	return "IMD disk image";
+}
+
+const char *imd_format::extensions() const
+{
+	return "imd";
+}
+
+void imd_format::fixnum(char *start, char *end) const
+{
+	end--;
+	if(*end != '0')
+		return;
+	while(end > start) {
+		end--;
+		if(*end == ' ')
+			*end = '0';
+		else if(*end != '0')
+			return;
+	};
+}
+
+int imd_format::identify(io_generic *io, UINT32 form_factor)
+{
+	char h[32];
+
+	io_generic_read(io, h, 0, 31);
+	if(h[7] == ':') {
+		h[30] = 0;
+		for(int i=0; i != 30; i++)
+			if(h[i] >= '0' && h[i] <= '9')		\
+				h[i] = '0';
+		
+		fixnum(h+ 9, h+11);
+		fixnum(h+12, h+14);
+		fixnum(h+15, h+19);
+		fixnum(h+20, h+22);
+		fixnum(h+23, h+25);
+		fixnum(h+26, h+28);
+		
+		if(!strcmp(h, "IMD 0.0: 00/00/0000 00:00:00\015\012"))
+			return 100;
+	} else {
+		h[31] = 0;
+		for(int i=0; i != 31; i++)
+			if(h[i] >= '0' && h[i] <= '9')		\
+				h[i] = '0';
+		
+		fixnum(h+10, h+12);
+		fixnum(h+13, h+15);
+		fixnum(h+16, h+20);
+		fixnum(h+21, h+23);
+		fixnum(h+24, h+26);
+		fixnum(h+27, h+29);
+		
+		if(!strcmp(h, "IMD 0.00: 00/00/0000 00:00:00\015\012"))
+			return 100;
+	}
+
+	return 0;
+}
+
+bool imd_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
+{
+	int size = io_generic_size(io);
+	UINT8 *img = global_alloc_array(UINT8, size);
+	io_generic_read(io, img, 0, size);
+
+	int pos;
+	for(pos=0; pos < size && img[pos] != 0x1a; pos++);
+	pos++;
+
+	if(pos >= size)
+		return false;
+
+	while(pos < size) {
+		UINT8 mode = img[pos++];
+		UINT8 track = img[pos++];
+		UINT8 head = img[pos++];
+		UINT8 sector_count = img[pos++];
+		UINT8 ssize = img[pos++];
+
+		if(ssize == 0xff)
+			throw emu_fatalerror("imd_format: Unsupported variable sector size on track %d head %d", track, head);
+
+		UINT32 actual_size = ssize < 7 ? 128 << ssize : 8192;
+
+		static const int rates[3] = { 500000, 300000, 250000 };
+		bool fm = mode < 3;
+		int rate = rates[mode % 3];
+		int rpm = form_factor == floppy_image::FF_8 || (form_factor == floppy_image::FF_525 && rate >= 300000) ? 360 : 300;
+		int cell_count = (fm ? 1 : 2)*rate*60/rpm;
+
+		const UINT8 *snum = img+pos;
+		pos += sector_count;
+		const UINT8 *tnum = head & 0x80 ? img+pos : NULL;
+		if(tnum)
+			pos += sector_count;
+		const UINT8 *hnum = head & 0x40 ? img+pos : NULL;
+		if(hnum)
+			pos += sector_count;
+
+		head &= 0x3f;
+
+		int gap_3 = calc_default_pc_gap3_size(form_factor, actual_size);
+
+		desc_pc_sector sects[256];
+
+		for(int i=0; i<sector_count; i++) {
+			UINT8 stype = img[pos++];
+			sects[i].track       = tnum ? tnum[i] : track;
+			sects[i].head        = hnum ? hnum[i] : head;
+			sects[i].sector      = snum[i];
+			sects[i].size        = ssize;
+			sects[i].actual_size = actual_size;
+
+			if(stype == 0 || stype > 8) {
+				sects[i].data = NULL;
+				
+			} else {
+				sects[i].deleted = stype == 3 || stype == 4 || stype == 7 || stype == 8;
+				sects[i].bad_crc = stype == 5 || stype == 6 || stype == 7 || stype == 8;
+
+				if(stype == 2 || stype == 4 || stype == 6 || stype == 8) {
+					sects[i].data = global_alloc_array(UINT8, actual_size);
+					memset(sects[i].data, img[pos++], actual_size);
+
+				} else {
+					sects[i].data = img + pos;
+					pos += actual_size;
+				}
+			}
+		}
+
+		if(fm)
+			build_pc_track_fm(track, head, image, cell_count, sector_count, sects, gap_3);
+		else
+			build_pc_track_mfm(track, head, image, cell_count, sector_count, sects, gap_3);
+
+		for(int i=0; i<sector_count; i++)
+			if(sects[i].data && (sects[i].data < img || sects[i].data >= img+size))
+				global_free(sects[i].data);
+	}
+
+	global_free(img);
+	return true;
+}
+
+
+bool imd_format::supports_save() const
+{
+	return false;
+}
+
+const floppy_format_type FLOPPY_IMD_FORMAT = &floppy_image_format_creator<imd_format>;

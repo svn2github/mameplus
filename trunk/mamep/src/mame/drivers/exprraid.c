@@ -17,9 +17,9 @@ Main CPU: ( DECO CPU-16 )
 1803-1803 DSW 1
 2100-2100 Sound latch write
 2800-2801 Protection
-3800-3800 VBlank ( bootleg 1 only )
+3800-3800 VBlank ( bootleg 2 only )
 4000-ffff ROM
-ffc0-ffc0 VBlank ( bootleg 2 only )
+ffc0-ffc0 VBlank ( bootleg 3 only )
 
 Sound Cpu: ( 6809 )
 0000-1fff RAM
@@ -57,7 +57,61 @@ sign is intact, however Credit is spelt incorrectly.
 
 Stephh's notes (based on the games M6502 code and some tests) :
 
-1) 'exprraid'
+1) 'exprrada'
+
+  - "@ 1986 DATA EAST CORPORATION" + no code to display the Warning screen (World)
+  - Same way to code number of enemies in "shoot" stages as in 'exprraidu'
+    (code at 5ce4) and same ingame bug :
+
+      5CF4: AD 03 18      lda  $1803
+      5CF7: 49 FF         eor  #$FF
+      5CF9: 4A            lsr  a
+      5CFA: 4A            lsr  a
+      5CFB: 4A            lsr  a
+      5CFC: 29 06         and  #$06
+
+    Correct code shall be :
+
+      5CFC: 29 03         and  #$03
+
+    You'll notice by looking at the tables that there are sometimes
+    more enemies than in 'exprraidu'.
+  - Time for each wagon on "shoot" stage is determined by the level
+    (see code at 0x6834 where location 0x0e is level number-1).
+    This time is also supposed to be determined by "Difficulty"
+    settings (DSW1 bits 3 and 4).
+    There is however an ingame bug that reads DSW1 bits 4 and 5 :
+
+      683B: AD 03 18      lda  $1803
+      683E: 49 FF         eor  #$FF
+      6840: 4A            lsr  a
+      6841: 4A            lsr  a
+      6842: 4A            lsr  a
+      6843: 4A            lsr  a
+      6844: 29 03         and  #$03
+
+    So Time is also determined by "Demo Sound" setting because of
+    extra "lsr a" instruction at 0x6843 !
+    Correct code shall be :
+
+      6843: EA            nop
+
+    Fortunately, table at 0x685f is filled with 0x30 so you'll
+    always have 30 seconds to "clear" the wagon (which is more
+    than the time you have in 'exprraid').
+    For the locomotive, time is always set to 0x20 = 20 seconds
+    (which is again more than the time you have in 'exprraid').
+  - "Bonus lives" routine starts at 0xe49b.
+  - Coinage related stuff starts at 0xe78e.
+    Coinage tables :
+      * 0xe7dc : COIN1 - 0xe7e4 : COIN2 (Mode 1)
+      * 0xe7ec : COIN1 - 0xe7f4 : COIN2 (Mode 2)
+  - At the beginning of each level, you have text in lower case
+    which doesn't give you any hints to pass the level nor advice.
+  - In this version, you always have 5 wagons for the "shoot" stages.
+  - Continue play is always available but score is reset to 0.
+
+2) 'exprraidu'
 
   - "@ 1986 DATA EAST USA, INC." (US)
   - Number of enemies on "shoot" stages is determined by the level
@@ -104,79 +158,11 @@ Stephh's notes (based on the games M6502 code and some tests) :
     for the "shoot" stages instead of 5.
   - Continue play is always available and score is NOT reset to 0.
 
-2) 'exprrada'
-
-  - "@ 1986 DATA EAST CORPORATION" + no code to display the Warning screen (World)
-  - Same way to code number of enemies in "shoot" stages as in 'exprraid'
-    (code at 5ce4) and same ingame bug :
-
-      5CF4: AD 03 18      lda  $1803
-      5CF7: 49 FF         eor  #$FF
-      5CF9: 4A            lsr  a
-      5CFA: 4A            lsr  a
-      5CFB: 4A            lsr  a
-      5CFC: 29 06         and  #$06
-
-    Correct code shall be :
-
-      5CFC: 29 03         and  #$03
-
-    You'll notice by looking at the tables that there are sometimes
-    more enemies than in 'exprraid'.
-  - Time for each wagon on "shoot" stage is determined by the level
-    (see code at 0x6834 where location 0x0e is level number-1).
-    This time is also supposed to be determined by "Difficulty"
-    settings (DSW1 bits 3 and 4).
-    There is however an ingame bug that reads DSW1 bits 4 and 5 :
-
-      683B: AD 03 18      lda  $1803
-      683E: 49 FF         eor  #$FF
-      6840: 4A            lsr  a
-      6841: 4A            lsr  a
-      6842: 4A            lsr  a
-      6843: 4A            lsr  a
-      6844: 29 03         and  #$03
-
-    So Time is also determined by "Demo Sound" setting because of
-    extra "lsr a" instruction at 0x6843 !
-    Correct code shall be :
-
-      6843: EA            nop
-
-    Fortunately, table at 0x685f is filled with 0x30 so you'll
-    always have 30 seconds to "clear" the wagon (which is more
-    than the time you have in 'exprraid').
-    For the locomotive, time is always set to 0x20 = 20 seconds
-    (which is again more than the time you have in 'exprraid').
-  - "Bonus lives" routine starts at 0xe49b.
-  - Coinage related stuff starts at 0xe78e.
-    Coinage tables :
-      * 0xe7dc : COIN1 - 0xe7e4 : COIN2 (Mode 1)
-      * 0xe7ec : COIN1 - 0xe7f4 : COIN2 (Mode 2)
-  - At the beginning of each level, you have text in lower case
-    which doesn't give you any hints to pass the level nor advice.
-  - In this version, you always have 5 wagons for the "shoot" stages.
-  - Continue play is always available but score is reset to 0.
-
-3) 'wexpressb'
-
-  - "@ 1986 DATA EAST CORPORATION" + no code to display the Warning screen (World)
-  - This version is based on 'exprrada' so all comments also fit
-    for this set. The main difference is that reads from 0x2800
-    and 0x2801 (protection) are either discarded (jumps are noped
-    or patched) or changed to read what shall be the correct value
-    (reads from 0x2801 occur almost all the time).
-    So IMO this set looks like a World bootleg .
-
-4) 'wexpressb2'
+3) 'wexpress'
 
   - "@ 1986 DATA EAST CORPORATION" + extra code to display the Warning screen (Japan)
-  - Modified Warning screen
-  - This version is heavily based on 'exprrada' (even if I think
-    that there shall exist a "better" Japan undumped version)
+  - This version is heavily based on 'exprrad'
     so all comments also fit for this set. The main difference is
-    the way protection is bypassed (in a different way than 'wexpress'
-    as reads from 0x2801 only occur when a life is lost).
     The other difference is that you can NOT continue a game.
   - "Bonus lives" routine starts at 0xe4e5.
   - Coinage related stuff starts at 0xe7d8.
@@ -184,28 +170,41 @@ Stephh's notes (based on the games M6502 code and some tests) :
       * 0xe826 : COIN1 - 0xe82e : COIN2 (Mode 1)
       * 0xe836 : COIN1 - 0xe83e : COIN2 (Mode 2)
 
-5) 'wexpressb3'
+4) 'wexpressb1'
+
+  - "@ 1986 DATA EAST CORPORATION" + no code to display the Warning screen (World)
+  - This version is based on 'exprrad' so all comments also fit
+    for this set. The main difference is that reads from 0x2800
+    and 0x2801 (protection) are either discarded (jumps are noped
+    or patched) or changed to read what shall be the correct value
+    (reads from 0x2801 occur almost all the time).
+    So IMO this set looks like a World bootleg .
+
+5) 'wexpressb2'
+
+  - "@ 1986 DATA EAST CORPORATION" + extra code to display the Warning screen (Japan)
+  - Modified Warning screen
+  - This version is based on 'wexpress'
+    so all comments also fit for this set. The main difference is
+    the way protection is bypassed (in a different way than 'wexpressb1'
+    as reads from 0x2801 only occur when a life is lost).
+
+6) 'wexpressb3'
 
   - "@ 1986 DATA EAST CORPORATION" + extra code to display the Warning screen (Japan)
   - Original Warning screen
   - "CREDIT" misspelled to "CRDDIT".
-  - This version is heavily based on 'exprrada' (even if I think
-    that there shall exist a "better" Japan undumped version)
+  - This version is based on 'wexpress'
     so all comments also fit for this set. The main difference is
-    the way protection is bypassed (in a different way than 'wexpress'
-    but also in a different way than 'wexpressb' as reads from 0x2801
+    the way protection is bypassed (in a different way than 'wexpressb1'
+    but also in a different way than 'wexpressb2' as reads from 0x2801
     occur when you lose a life but also on "shoot" stages).
-    The other difference is that you can NOT continue a game as in 'wexpressb'.
-  - "Bonus lives" routine starts at 0xe4e5 (same as 'wexpressb')
-  - Coinage related stuff starts at 0xe7d8 (same as 'wexpressb').
-  - Coinage tables (same as 'wexpressb') :
-      * 0xe826 : COIN1 - 0xe82e : COIN2 (Mode 1)
-      * 0xe836 : COIN1 - 0xe83e : COIN2 (Mode 2)
 
 
 ***************************************************************************/
 
 #include "emu.h"
+#include "cpu/m6502/deco16.h"
 #include "cpu/m6502/m6502.h"
 #include "cpu/m6809/m6809.h"
 #include "sound/2203intf.h"
@@ -535,8 +534,8 @@ MACHINE_CONFIG_END
 
 ROM_START( exprraid )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "cz01-5a.16b", 0x4000, 0x4000, CRC(dc8f9fba) SHA1(cae6af54fc0081d606b6884e8873aed356a37ba9) )
-	ROM_LOAD( "cz00-5.15a",  0x8000, 0x8000, CRC(a81290bc) SHA1(ddb0acda6124427bee691f9926c41fda27ed816e) )
+	ROM_LOAD( "cz01-2e.16b", 0x4000, 0x4000, CRC(a0ae6756) SHA1(7f7ec1efddbb62e9d201c6013bca8ab72c3f75f6) )
+	ROM_LOAD( "cz00-4e.15a", 0x8000, 0x8000, CRC(910f6ccc) SHA1(1dbf164a7add9335d90ee07b6db9a162a28e407b) )
 
 	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the sub cpu */
 	ROM_LOAD( "cz02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
@@ -572,10 +571,10 @@ ROM_START( exprraid )
 	ROM_LOAD( "pal16r4a.5e", 0x0200, 0x0104, CRC(9a8766a7) SHA1(5f84ad9e633daeb14531ef527827ef3d9b269437) )
 ROM_END
 
-ROM_START( exprraida )
+ROM_START( exprraidu )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "cz01-2e.16b", 0x4000, 0x4000, CRC(a0ae6756) SHA1(7f7ec1efddbb62e9d201c6013bca8ab72c3f75f6) )
-	ROM_LOAD( "cz00-4e.15a", 0x8000, 0x8000, CRC(910f6ccc) SHA1(1dbf164a7add9335d90ee07b6db9a162a28e407b) )
+	ROM_LOAD( "cz01-5a.16b", 0x4000, 0x4000, CRC(dc8f9fba) SHA1(cae6af54fc0081d606b6884e8873aed356a37ba9) )
+	ROM_LOAD( "cz00-5.15a",  0x8000, 0x8000, CRC(a81290bc) SHA1(ddb0acda6124427bee691f9926c41fda27ed816e) )
 
 	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the sub cpu */
 	ROM_LOAD( "cz02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
@@ -650,13 +649,13 @@ ROM_START( exprraidi ) /* PCB manufactured in Italy by Gecas under Data East lic
 	ROM_LOAD( "pal16r4a.5e", 0x0200, 0x0104, CRC(9a8766a7) SHA1(5f84ad9e633daeb14531ef527827ef3d9b269437) )
 ROM_END
 
-ROM_START( wexpressb )
+ROM_START( wexpress )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "2.16b", 0x4000, 0x4000, CRC(ea5e5a8f) SHA1(fa92bcb6b97c2966cd330b309eba73f9c059f14e) )
-	ROM_LOAD( "1.15a", 0x8000, 0x8000, CRC(a7daae12) SHA1(a97f4bc05a3ec096d8c717bdf096f4b0e59dc2c2) )
+	ROM_LOAD( "cy01-2.16b", 0x4000, 0x4000, CRC(a0ae6756) SHA1(7f7ec1efddbb62e9d201c6013bca8ab72c3f75f6) )
+	ROM_LOAD( "cy00-4.15a", 0x8000, 0x8000, CRC(c66d4dd3) SHA1(3c354e7379b3c3e709039ee2f3dbad7edddfc517) )
 
 	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the sub cpu */
-	ROM_LOAD( "cz02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
+	ROM_LOAD( "cy02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
 
 	ROM_REGION( 0x04000, "gfx1", 0 )
 	ROM_LOAD( "cz07.5b", 0x00000, 0x4000, CRC(686bac23) SHA1(b6c96ed40e90a8ba32c2e78a65f9589d387b0254) )	/* characters */
@@ -670,13 +669,52 @@ ROM_START( wexpressb )
 	ROM_LOAD( "cz10.11k", 0x28000, 0x8000, CRC(2f611978) SHA1(fb60be573184d2af1dfdd543e68eeec53f2788f2) )
 
 	ROM_REGION( 0x20000, "gfx3", 0 )
-	ROM_LOAD( "4.8e",    0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
+	ROM_LOAD( "cy04.8e", 0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
 	/* Save 0x08000-0x0ffff to expand the previous so we can decode the thing */
-	ROM_LOAD( "cz05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
-	ROM_LOAD( "6.8h",    0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
+	ROM_LOAD( "cy05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
+	ROM_LOAD( "cy06.8h", 0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
 
 	ROM_REGION( 0x8000, "gfx4", 0 )     /* background tilemaps */
-	ROM_LOAD( "3.12d", 0x0000, 0x8000, CRC(242e3e64) SHA1(4fa8e93ef055bfdbe3bd619c53bf2448e1b832f0) )
+	ROM_LOAD( "cy03.12d", 0x0000, 0x8000, CRC(242e3e64) SHA1(4fa8e93ef055bfdbe3bd619c53bf2448e1b832f0) )
+
+	ROM_REGION( 0x0400, "proms", 0 ) /* All 4 proms are Fujitsu MB7114 or compatible */
+	ROM_LOAD( "cy-17.5b", 0x0000, 0x0100, CRC(da31dfbc) SHA1(ac476440864f538918f7bef2e1db82fd19195f89) ) /* red */
+	ROM_LOAD( "cy-16.6b", 0x0100, 0x0100, CRC(51f25b4c) SHA1(bfcca57613fbb22919e00db1f6a8c7ca50faa60b) ) /* green */
+	ROM_LOAD( "cy-15.7b", 0x0200, 0x0100, CRC(a6168d7f) SHA1(0c7b31adcd764ce2631c3fb5c1a968b01f65e741) ) /* blue */
+	ROM_LOAD( "cy-14.9b", 0x0300, 0x0100, CRC(52aad300) SHA1(ff09772b930afa87e28d0628ef85a589a3d149c9) ) /* ??? */
+
+	ROM_REGION( 0x0400, "plds", 0 )
+	ROM_LOAD( "pal16r4a.5c",   0x0000, 0x0104, CRC(d66aaa87) SHA1(dc29b473238ed6a9de2076c79644b613a9ba6924) )
+	ROM_LOAD( "pal16r4a.5e",   0x0200, 0x0104, CRC(9a8766a7) SHA1(5f84ad9e633daeb14531ef527827ef3d9b269437) )
+ROM_END
+
+ROM_START( wexpressb1 )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "2.16b", 0x4000, 0x4000, CRC(ea5e5a8f) SHA1(fa92bcb6b97c2966cd330b309eba73f9c059f14e) )
+	ROM_LOAD( "1.15a", 0x8000, 0x8000, CRC(a7daae12) SHA1(a97f4bc05a3ec096d8c717bdf096f4b0e59dc2c2) )
+
+	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the sub cpu */
+	ROM_LOAD( "cy02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
+
+	ROM_REGION( 0x04000, "gfx1", 0 )
+	ROM_LOAD( "cz07.5b", 0x00000, 0x4000, CRC(686bac23) SHA1(b6c96ed40e90a8ba32c2e78a65f9589d387b0254) )	/* characters */
+
+	ROM_REGION( 0x30000, "gfx2", 0 )
+	ROM_LOAD( "cz09.16h", 0x00000, 0x8000, CRC(1ed250d1) SHA1(c98b0440e4319308e683e857bbfeb6a150c76ff3) )	/* sprites */
+	ROM_LOAD( "cz08.14h", 0x08000, 0x8000, CRC(2293fc61) SHA1(bf81db375f5424396559dcf0e04d34a52f6a020a) )
+	ROM_LOAD( "cz13.16k", 0x10000, 0x8000, CRC(7c3bfd00) SHA1(87b48e09aaeacf78f3260df893b0922e25d10a5d) )
+	ROM_LOAD( "cz12.14k", 0x18000, 0x8000, CRC(ea2294c8) SHA1(bc996351921e68e6237cee2d29fee882931ce0ea) )
+	ROM_LOAD( "cz11.13k", 0x20000, 0x8000, CRC(b7418335) SHA1(e9d08ee651b9221c371e2629a757bceca7b6192b) )
+	ROM_LOAD( "cz10.11k", 0x28000, 0x8000, CRC(2f611978) SHA1(fb60be573184d2af1dfdd543e68eeec53f2788f2) )
+
+	ROM_REGION( 0x20000, "gfx3", 0 )
+	ROM_LOAD( "cy04.8e", 0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
+	/* Save 0x08000-0x0ffff to expand the previous so we can decode the thing */
+	ROM_LOAD( "cy05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
+	ROM_LOAD( "cy06.8h", 0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
+
+	ROM_REGION( 0x8000, "gfx4", 0 )     /* background tilemaps */
+	ROM_LOAD( "cy03.12d", 0x0000, 0x8000, CRC(242e3e64) SHA1(4fa8e93ef055bfdbe3bd619c53bf2448e1b832f0) )
 
 	ROM_REGION( 0x0400, "proms", 0 ) /* All 4 proms are Fujitsu MB7114 or compatible */
 	ROM_LOAD( "cy-17.5b", 0x0000, 0x0100, CRC(da31dfbc) SHA1(ac476440864f538918f7bef2e1db82fd19195f89) ) /* red */
@@ -695,7 +733,7 @@ ROM_START( wexpressb2 )
 	ROM_LOAD( "wexpress.1", 0x8000, 0x8000, CRC(e8466596) SHA1(dbbd3b84d0f017292595fc19f7412b984851221a) )
 
 	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the sub cpu */
-	ROM_LOAD( "cz02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
+	ROM_LOAD( "cy02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
 
 	ROM_REGION( 0x04000, "gfx1", 0 )
 	ROM_LOAD( "cz07.5b", 0x00000, 0x4000, CRC(686bac23) SHA1(b6c96ed40e90a8ba32c2e78a65f9589d387b0254) )	/* characters */
@@ -709,13 +747,13 @@ ROM_START( wexpressb2 )
 	ROM_LOAD( "cz10.11k", 0x28000, 0x8000, CRC(2f611978) SHA1(fb60be573184d2af1dfdd543e68eeec53f2788f2) )
 
 	ROM_REGION( 0x20000, "gfx3", 0 )
-	ROM_LOAD( "4.8e",    0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
+	ROM_LOAD( "cy04.8e", 0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
 	/* Save 0x08000-0x0ffff to expand the previous so we can decode the thing */
-	ROM_LOAD( "cz05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
-	ROM_LOAD( "6.8h",    0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
+	ROM_LOAD( "cy05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
+	ROM_LOAD( "cy06.8h", 0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
 
 	ROM_REGION( 0x8000, "gfx4", 0 )     /* background tilemaps */
-	ROM_LOAD( "3.12d", 0x0000, 0x8000, CRC(242e3e64) SHA1(4fa8e93ef055bfdbe3bd619c53bf2448e1b832f0) )
+	ROM_LOAD( "cy03.12d", 0x0000, 0x8000, CRC(242e3e64) SHA1(4fa8e93ef055bfdbe3bd619c53bf2448e1b832f0) )
 
 	ROM_REGION( 0x0400, "proms", 0 ) /* All 4 proms are Fujitsu MB7114 or compatible */
 	ROM_LOAD( "cy-17.5b", 0x0000, 0x0100, CRC(da31dfbc) SHA1(ac476440864f538918f7bef2e1db82fd19195f89) ) /* red */
@@ -730,7 +768,7 @@ ROM_START( wexpressb3 )
 	ROM_LOAD( "s1.15a", 0x8000, 0x8000, CRC(7c573824) SHA1(f5e4d4f0866c08c88d012a77e8aa2e74a779f986) )
 
 	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the sub cpu */
-	ROM_LOAD( "cz02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
+	ROM_LOAD( "cy02-1.2a", 0x8000, 0x8000, CRC(552e6112) SHA1(f8412a63cab0aa47321d602f69bf534426c6aa5d) )
 
 	ROM_REGION( 0x04000, "gfx1", 0 )
 	ROM_LOAD( "cz07.5b", 0x00000, 0x4000, CRC(686bac23) SHA1(b6c96ed40e90a8ba32c2e78a65f9589d387b0254) )	/* characters */
@@ -744,10 +782,10 @@ ROM_START( wexpressb3 )
 	ROM_LOAD( "cz10.11k", 0x28000, 0x8000, CRC(2f611978) SHA1(fb60be573184d2af1dfdd543e68eeec53f2788f2) )
 
 	ROM_REGION( 0x20000, "gfx3", 0 )
-	ROM_LOAD( "4.8e",    0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
+	ROM_LOAD( "cy04.8e", 0x00000, 0x8000, CRC(f2e93ff0) SHA1(2e631966e1fa0b2699aa782b589d36801072ba03) )	/* tiles */
 	/* Save 0x08000-0x0ffff to expand the previous so we can decode the thing */
-	ROM_LOAD( "cz05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
-	ROM_LOAD( "6.8h",    0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
+	ROM_LOAD( "cy05.8f", 0x10000, 0x8000, CRC(c44570bf) SHA1(3e9b8b6b36c7f5ae016dba3987ea19a29bd5ee5b) )	/* tiles */
+	ROM_LOAD( "cy06.8h", 0x18000, 0x8000, CRC(c3a56de5) SHA1(aefc516c6c69b12291c0bda03729910181a91a17) )	/* tiles */
 
 	ROM_REGION( 0x8000, "gfx4", 0 )     /* background tilemaps */
 	ROM_LOAD( "3.12d", 0x0000, 0x8000, CRC(242e3e64) SHA1(4fa8e93ef055bfdbe3bd619c53bf2448e1b832f0) )
@@ -816,9 +854,10 @@ DRIVER_INIT_MEMBER(exprraid_state,wexpressb3)
 }
 
 
-GAME( 1986, exprraid,  0,        exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East USA",         "Express Raider (US set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1986, exprraida, exprraid, exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East USA",         "Express Raider (US set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1986, exprraidi, exprraid, exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East Corporation", "Express Raider (Italy)",    GAME_SUPPORTS_SAVE )
-GAME( 1986, wexpressb, exprraid, exprraid, exprraid, exprraid_state, wexpressb, ROT0, "bootleg",               "Western Express (bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1986, exprraid,  0,        exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East Corporation", "Express Raider (World, Rev 4)",   GAME_SUPPORTS_SAVE )
+GAME( 1986, exprraidu, exprraid, exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East USA",         "Express Raider (US, rev 5)",      GAME_SUPPORTS_SAVE )
+GAME( 1986, exprraidi, exprraid, exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East Corporation", "Express Raider (Italy)",          GAME_SUPPORTS_SAVE )
+GAME( 1986, wexpress,  exprraid, exprraid, exprraid, exprraid_state, exprraid,  ROT0, "Data East Corporation", "Western Express (Japan, rev 4)",  GAME_SUPPORTS_SAVE )
+GAME( 1986, wexpressb1,exprraid, exprraid, exprraid, exprraid_state, wexpressb, ROT0, "bootleg",               "Western Express (bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1986, wexpressb2,exprraid, exprboot, exprboot, exprraid_state, wexpressb2,ROT0, "bootleg",               "Western Express (bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1986, wexpressb3,exprraid, exprboot, exprboot, exprraid_state, wexpressb3,ROT0, "bootleg",               "Western Express (bootleg set 3)", GAME_SUPPORTS_SAVE )

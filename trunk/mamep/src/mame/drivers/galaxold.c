@@ -404,7 +404,7 @@ READ8_MEMBER(galaxold_state::drivfrcg_port0_r)
 			return 0x01;
 	}
 
-    return 0;
+	return 0;
 }
 
 static ADDRESS_MAP_START( galaxold_map, AS_PROGRAM, 8, galaxold_state )
@@ -447,6 +447,7 @@ static ADDRESS_MAP_START( mooncrst_map, AS_PROGRAM, 8, galaxold_state )
 	AM_RANGE(0x9860, 0x987f) AM_RAM AM_SHARE("bulletsram")
 	AM_RANGE(0x9880, 0x98ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("IN0")
+	AM_RANGE(0xa002, 0xa002) AM_WRITE(galaxold_gfxbank_w)
 	AM_RANGE(0xa003, 0xa003) AM_WRITE(galaxold_coin_counter_w)
 	AM_RANGE(0xa004, 0xa007) AM_DEVWRITE_LEGACY(GAL_AUDIO, galaxian_lfo_freq_w)
 	AM_RANGE(0xa800, 0xa800) AM_READ_PORT("IN1")
@@ -655,6 +656,7 @@ static ADDRESS_MAP_START( bagmanmc_map, AS_PROGRAM, 8, galaxold_state )
 	AM_RANGE(0xa803, 0xa803) AM_DEVWRITE_LEGACY(GAL_AUDIO, galaxian_noise_enable_w)
 	AM_RANGE(0xb000, 0xb000) AM_READ_PORT("DSW")
 	AM_RANGE(0xb001, 0xb001) AM_WRITE(galaxold_nmi_enable_w)
+	AM_RANGE(0xb002, 0xb002) AM_WRITE(galaxold_gfxbank_w)
 	AM_RANGE(0xb006, 0xb006) AM_WRITE(galaxold_flip_screen_x_w)
 	AM_RANGE(0xb007, 0xb007) AM_WRITE(galaxold_flip_screen_y_w)
 	AM_RANGE(0xb800, 0xb800) AM_READ(watchdog_reset_r) AM_DEVWRITE_LEGACY(GAL_AUDIO, galaxian_pitch_w)
@@ -791,6 +793,7 @@ ADDRESS_MAP_END
 
 /* the nmi line seems to be inverted on the cpu plugin board */
 READ8_MEMBER(galaxold_state::ttl7474_trampoline){ device_t *device = machine().device("7474_9m_1"); return downcast<ttl7474_device *>(device)->output_comp_r(); }
+
 static ADDRESS_MAP_START( hunchbkg_io, AS_IO, 8, galaxold_state )
 	AM_RANGE(S2650_DATA_PORT,  S2650_DATA_PORT) AM_READNOP // not used
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ(ttl7474_trampoline)
@@ -865,7 +868,7 @@ READ8_MEMBER(galaxold_state::hexpoola_data_port_r)
 			return 1;
 	}
 
-    return 0;
+	return 0;
 }
 
 static ADDRESS_MAP_START( hexpoola_io, AS_IO, 8, galaxold_state )
@@ -893,7 +896,7 @@ READ8_MEMBER(galaxold_state::bullsdrtg_data_port_r)
 			break;
 	}
 
-    return 0;
+	return 0;
 }
 
 static ADDRESS_MAP_START( bullsdrtg_io_map, AS_IO, 8, galaxold_state )
@@ -1970,17 +1973,6 @@ static const gfx_layout pacmanbl_spritelayout =
 	32*8
 };
 
-static const gfx_layout bagmanmc_charlayout =
-{
-	8,8,
-	512,
-	2,
-	{ 0, 512*8*8 },
-	{ 0, 1, 2, 3, 4, 5, 6, 7 },
-	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
-	8*8
-};
-
 static const gfx_layout _4in1_charlayout =
 {
 	8,8,
@@ -2021,9 +2013,6 @@ static GFXDECODE_START( rockclim )
 	GFXDECODE_ENTRY( "gfx2", 0x0000, rockclim_charlayout, 0, 1 )
 GFXDECODE_END
 
-
-
-
 static GFXDECODE_START( galaxian )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, galaxold_charlayout,   0, 8 )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, galaxold_spritelayout, 0, 8 )
@@ -2032,12 +2021,6 @@ GFXDECODE_END
 static GFXDECODE_START( gmgalax )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, galaxold_charlayout,   0, 16 )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, galaxold_spritelayout, 0, 16 )
-GFXDECODE_END
-
-/* separate character and sprite ROMs */
-static GFXDECODE_START( bagmanmc )
-	GFXDECODE_ENTRY( "gfx1", 0x0000, bagmanmc_charlayout,    0, 8 )
-	GFXDECODE_ENTRY( "gfx1", 0x2000, pacmanbl_spritelayout, 0, 8 )
 GFXDECODE_END
 
 static GFXDECODE_START( _4in1 )
@@ -2059,7 +2042,7 @@ GFXDECODE_END
 
 static const sn76496_config psg_intf =
 {
-    DEVCB_NULL
+	DEVCB_NULL
 };
 
 
@@ -2131,6 +2114,12 @@ static MACHINE_CONFIG_DERIVED( mooncrst, galaxian )
 	MCFG_VIDEO_START_OVERRIDE(galaxold_state,mooncrst)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( porter, mooncrst )
+
+	/* video hardware */
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state, pisces)
+MACHINE_CONFIG_END
+
 
 static MACHINE_CONFIG_DERIVED( scramblb, galaxian )
 
@@ -2182,9 +2171,7 @@ static MACHINE_CONFIG_DERIVED( bagmanmc, galaxian )
 	MCFG_MACHINE_RESET_OVERRIDE(galaxold_state, devilfsg )
 
 	/* video hardware */
-	MCFG_GFXDECODE(bagmanmc)
-
-	MCFG_VIDEO_START_OVERRIDE(galaxold_state,pisces)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state, bagmanmc)
 MACHINE_CONFIG_END
 
 
@@ -2618,7 +2605,7 @@ ROM_START( 4in1 )
 	ROM_CONTINUE(             0x3800, 0x0800 )
 
 	ROM_REGION( 0x0020, "proms", 0 )
-    ROM_LOAD( "6l.bpr",       0x0000, 0x0020, CRC(6a0c7d87) SHA1(140335d85c67c75b65689d4e76d29863c209cf32) )
+	ROM_LOAD( "6l.bpr",       0x0000, 0x0020, CRC(6a0c7d87) SHA1(140335d85c67c75b65689d4e76d29863c209cf32) )
 ROM_END
 
 ROM_START( bagmanmc )
@@ -2630,16 +2617,30 @@ ROM_START( bagmanmc )
 	ROM_LOAD( "b5.bin",       0x4000, 0x1000, CRC(0fe24b8c) SHA1(205a36fd346d49d2dda6911198295e202caae81f) )
 	ROM_LOAD( "b6.bin",       0x5000, 0x1000, CRC(f50390e7) SHA1(b4ebe647458c26e52461750d63856aea4262f110) )
 
-	ROM_REGION( 0x3000, "gfx1", 0 )
-	ROM_LOAD( "g1-u.bin",     0x0000, 0x0800, CRC(b63cfae4) SHA1(3e0cb3dbeec8ad790bc482176ca599721bac31ee) )
-	ROM_CONTINUE(             0x2000, 0x0800 )
-	ROM_LOAD( "g2-u.bin",     0x1000, 0x0800, CRC(a2790089) SHA1(7eb8634f26f6af52fb79bf90ec90b4e258c7c79f) )
-	ROM_CONTINUE(             0x2800, 0x0800 )
-	ROM_LOAD( "g1-l.bin",     0x0800, 0x0800, CRC(2ae6b5ab) SHA1(59bdebf75d28a247293440ec2ad83eaf30e3de00) )
-	ROM_LOAD( "g2-l.bin",     0x1800, 0x0800, CRC(98b37397) SHA1(29914435a10cebbbce04382c45e13a64a0cd18cb) )
+	ROM_REGION( 0x4000, "gfx1", 0 ) // if the gfx roms from bagmanm2 are used, then it works fine
+	ROM_LOAD( "g1-l.bin",     0x0000, 0x0800, BAD_DUMP CRC(2ae6b5ab) SHA1(59bdebf75d28a247293440ec2ad83eaf30e3de00) )
+	ROM_LOAD( "g2-u.bin",     0x1000, 0x1000, CRC(a2790089) SHA1(7eb8634f26f6af52fb79bf90ec90b4e258c7c79f) )
+	ROM_LOAD( "g2-l.bin",     0x2000, 0x0800, BAD_DUMP CRC(98b37397) SHA1(29914435a10cebbbce04382c45e13a64a0cd18cb) )
+	ROM_LOAD( "g1-u.bin",     0x3000, 0x1000, CRC(b63cfae4) SHA1(3e0cb3dbeec8ad790bc482176ca599721bac31ee) )
+	ROM_COPY("gfx1",0x3800,0x2800,0x0800)
+	ROM_COPY("gfx1",0x1800,0x0800,0x0800)
 
-	ROM_REGION( 0x0020, "proms", 0 )
-	ROM_LOAD( "bagmanmc.clr", 0x0000, 0x0020, NO_DUMP )	// missing
+	ROM_REGION( 0x0020, "proms", 0 ) // not dumped, but the standard moon cresta prom works
+	ROM_LOAD( "bagmanmc.clr", 0x0000, 0x0020, BAD_DUMP CRC(6a0c7d87) SHA1(140335d85c67c75b65689d4e76d29863c209cf32) )
+ROM_END
+
+ROM_START( bagmanm2 )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "bagmanm2.1",   0x0000, 0x2000, CRC(53769ebe) SHA1(af5bf808a009a1cf94d0b73d23f7595bf72ba295) )
+	ROM_LOAD( "bagmanm2.2",   0x2000, 0x2000, CRC(9435bb87) SHA1(97fa2dee3cb715ecd418873bc7bb007c3ab72195) )
+	ROM_LOAD( "bagmanm2.3",   0x4000, 0x2000, CRC(f37ba7f6) SHA1(612ae21fbb94afa28dee096094a66a453a398fb2) )
+
+	ROM_REGION( 0x4000, "gfx1", 0 )
+	ROM_LOAD( "bagmanm2.9",   0x0000, 0x2000, CRC(f1e70d9e) SHA1(b804727bba582e2b938811ba32106241b0606f5c) )
+	ROM_LOAD( "bagmanm2.7",   0x2000, 0x2000, CRC(777e48c4) SHA1(7fee7f999bbc6fea3faf8745bf89417626bcca91) )
+
+	ROM_REGION( 0x0020, "proms", 0 ) // not dumped, but the standard moon cresta prom works
+	ROM_LOAD( "bagmanmc.clr", 0x0000, 0x0020, BAD_DUMP CRC(6a0c7d87) SHA1(140335d85c67c75b65689d4e76d29863c209cf32) )
 ROM_END
 
 ROM_START( dkongjrm )
@@ -2785,13 +2786,19 @@ www.andys-arcade.com
 
 */
 
-/* this rom mapping probably isn't quite right */
+/* this rom mapping probably isn't quite right
+2012-11-18 - swapped 0100-03FF with 0500-07FF
+           - rom at 51xx seems to be missing.
+           - needs its own memory map
+           - somehow execution needs to get to 0294 which sets SP and memory */
 ROM_START( vstars )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "c-k2.bin",       0x0000, 0x0400, CRC(b0fcf6c1) SHA1(7dc8a7b99977ea9582c1ed36fa9f1fa502a70c6e) )
+	ROM_LOAD( "c-k2.bin",       0x0000, 0x0100, CRC(b0fcf6c1) SHA1(7dc8a7b99977ea9582c1ed36fa9f1fa502a70c6e) )
+	ROM_CONTINUE(               0x0500, 0x0300)
 	ROM_CONTINUE(               0x0800, 0x0400)
 	ROM_LOAD( "c-k1.bin",       0x0c00, 0x0400, CRC(ea9603b2) SHA1(f72202f17f862c7ea81e556690f8fcb9ee926e7f) )
-	ROM_CONTINUE(               0x0400, 0x0400)
+	ROM_CONTINUE(               0x0400, 0x0100)
+	ROM_CONTINUE(               0x0100, 0x0300)
 	ROM_LOAD( "c-k4.bin",       0x1c00, 0x0400, CRC(f5743990) SHA1(defd1577b935e3597eba74344dca5626ec2993dd) )
 	ROM_CONTINUE(               0x1000, 0x0400)
 	ROM_LOAD( "c-k3.bin",       0x1400, 0x0400, CRC(c4338a77) SHA1(b1ca2d43340b671ef33f3a96ce8e1c286a3e6d80) )
@@ -2800,16 +2807,14 @@ ROM_START( vstars )
 	ROM_CONTINUE(               0x2000, 0x0400)
 	ROM_CONTINUE(               0x2400, 0x0400)
 	ROM_CONTINUE(               0x2800, 0x0400)
-	ROM_LOAD( "c-k7.bin",       0x4c00, 0x0400, CRC(9ddcc06f) SHA1(63bc77d8b3273681ca4e681105a117d19a0f23a5) )
-	ROM_CONTINUE(               0x4000, 0x0400)
-	ROM_CONTINUE(               0x4400, 0x0400)
-	ROM_CONTINUE(               0x4800, 0x0400)
-
-	/* seems to be data, can't rearrange based on the jumps */
 	ROM_LOAD( "c-k5.bin",       0x3c00, 0x0400, CRC(d8df2ec4) SHA1(bef1d4b404cddb8a5f9d4e3f30ee09915c602f56) )
 	ROM_CONTINUE(               0x3000, 0x0400)
 	ROM_CONTINUE(               0x3400, 0x0400)
 	ROM_CONTINUE(               0x3800, 0x0400)
+	ROM_LOAD( "c-k7.bin",       0x4c00, 0x0400, CRC(9ddcc06f) SHA1(63bc77d8b3273681ca4e681105a117d19a0f23a5) )
+	ROM_CONTINUE(               0x4000, 0x0400)
+	ROM_CONTINUE(               0x4400, 0x0400)
+	ROM_CONTINUE(               0x4800, 0x0400)
 
 	/* Crazy Kong gfx?! */
 	ROM_REGION( 0x2000, "gfx1", 0 )
@@ -3064,29 +3069,30 @@ ROM_START( bullsdrtg )
 ROM_END
 
 /* Z80 games */
-GAME( 1981, vpool,    hustler,  mooncrst, vpool, driver_device,    0,        ROT90,  "bootleg", "Video Pool (bootleg on Moon Cresta hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1981, rockclim, 0,        rockclim, rockclim, driver_device, 0,	      ROT180, "Taito", "Rock Climber", GAME_SUPPORTS_SAVE )
-GAME( 1981, ckongg,   ckong,    ckongg,   ckongg, driver_device,   0,        ROT90,  "bootleg", "Crazy Kong (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1981, ckongmc,  ckong,    ckongmc,  ckongmc, driver_device,  0,        ROT90,  "bootleg", "Crazy Kong (bootleg on Moon Cresta hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE ) // set was marked as 'King Kong on Galaxian'
-GAME( 1981, scramblb, scramble, scramblb, scramblb, driver_device, 0,        ROT90,  "bootleg", "Scramble (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1981, scramb2,  scramble, scramb2,  scramb2, driver_device,  0,        ROT90,  "bootleg", "Scramble (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1981, 4in1,     0,        4in1,     4in1, galaxold_state,     4in1,     ROT90,  "Armenia / Food and Fun", "4 Fun in 1", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1982, bagmanmc, bagman,   bagmanmc, bagmanmc, driver_device, 0,        ROT90,  "bootleg", "Bagman (bootleg on Moon Cresta hardware)", GAME_WRONG_COLORS | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1982, dkongjrm, dkongjr,  dkongjrm, dkongjrm, driver_device, 0,        ROT90,  "bootleg", "Donkey Kong Jr. (bootleg on Moon Cresta hardware)", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1982, porter,   dockman,  mooncrst, porter, driver_device,   0,        ROT90,  "bootleg", "Port Man (bootleg on Moon Cresta hardware)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ) // missing GFX bank switch!
-GAME( 1982, tazzmang, tazmania,	tazzmang, tazzmang, driver_device, 0,        ROT90,  "bootleg", "Tazz-Mania (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1983, bongo,    0,        bongo,    bongo, driver_device,    0,	      ROT90,  "Jetsoft", "Bongo", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1983, ozon1,    0,        ozon1,    ozon1, driver_device,    0,	      ROT90,  "Proma", "Ozon I", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1981, vpool,    hustler,  mooncrst, vpool,    driver_device,  0,        ROT90,  "bootleg", "Video Pool (bootleg on Moon Cresta hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1981, rockclim, 0,        rockclim, rockclim, driver_device,  0,        ROT180, "Taito", "Rock Climber", GAME_SUPPORTS_SAVE )
+GAME( 1981, ckongg,   ckong,    ckongg,   ckongg,   driver_device,  0,        ROT90,  "bootleg", "Crazy Kong (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1981, ckongmc,  ckong,    ckongmc,  ckongmc,  driver_device,  0,        ROT90,  "bootleg", "Crazy Kong (bootleg on Moon Cresta hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE ) // set was marked as 'King Kong on Galaxian'
+GAME( 1981, scramblb, scramble, scramblb, scramblb, driver_device,  0,        ROT90,  "bootleg", "Scramble (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1981, scramb2,  scramble, scramb2,  scramb2,  driver_device,  0,        ROT90,  "bootleg", "Scramble (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1981, 4in1,     0,        4in1,     4in1,     galaxold_state, 4in1,     ROT90,  "Armenia / Food and Fun", "4 Fun in 1", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1982, bagmanmc, bagman,   bagmanmc, bagmanmc, driver_device,  0,        ROT90,  "bootleg", "Bagman (bootleg on Moon Cresta hardware, set 1)", GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1984, bagmanm2, bagman,   bagmanmc, bagmanmc, driver_device,  0,        ROT90,  "bootleg (GIB)", "Bagman (bootleg on Moon Cresta hardware, set 2)", GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1982, dkongjrm, dkongjr,  dkongjrm, dkongjrm, driver_device,  0,        ROT90,  "bootleg", "Donkey Kong Jr. (bootleg on Moon Cresta hardware)", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1982, porter,   dockman,  porter,   porter,   driver_device,  0,        ROT90,  "bootleg", "Port Man (bootleg on Moon Cresta hardware)", GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL )
+GAME( 1982, tazzmang, tazmania, tazzmang, tazzmang, driver_device,  0,        ROT90,  "bootleg", "Tazz-Mania (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1983, bongo,    0,        bongo,    bongo,    driver_device,  0,        ROT90,  "Jetsoft", "Bongo", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1983, ozon1,    0,        ozon1,    ozon1,    driver_device,  0,        ROT90,  "Proma", "Ozon I", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
 GAME( 1983, ladybugg, ladybug,  batman2,  ladybugg, galaxold_state, ladybugg, ROT270, "bootleg", "Lady Bug (bootleg on Galaxian hardware)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1982, vstars,   0,        mooncrst, porter, driver_device,   0,        ROT90,  "Competitive Video?", "Video Stars", GAME_NOT_WORKING )
+GAME( 1982, vstars,   0,        mooncrst, porter,   driver_device,  0,        ROT90,  "Competitive Video?", "Video Stars", GAME_NOT_WORKING )
 
 /* S2650 games */
-GAME( 1983, hunchbkg, hunchbak,	hunchbkg, hunchbkg, driver_device, 0,        ROT90,  "Century Electronics", "Hunchback (Galaxian hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1984, drivfrcg, drivfrcp, drivfrcg, drivfrcg, driver_device, 0,        ROT90,  "Shinkai Inc. (Magic Electronics USA license)", "Driving Force (Galaxian conversion)", GAME_SUPPORTS_SAVE )
-GAME( 1984, drivfrct, drivfrcp, drivfrcg, drivfrcg, driver_device, 0,        ROT90,  "bootleg (EMT Germany)", "Top Racer (bootleg of Driving Force)", GAME_SUPPORTS_SAVE ) // Video Klein PCB
-GAME( 1985, drivfrcb, drivfrcp, drivfrcg, drivfrcg, driver_device, 0,        ROT90,  "bootleg (Elsys Software)", "Driving Force (Galaxian conversion bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1986, racknrol, 0,        racknrol, racknrol, driver_device, 0,	      ROT0,   "Senko Industries (Status license from Shinkai Inc.)", "Rack + Roll", GAME_SUPPORTS_SAVE )
-GAME( 1986, hexpool,  racknrol, racknrol, racknrol, driver_device, 0,	      ROT90,  "Senko Industries (Shinkai Inc. license)", "Hex Pool (Shinkai)", GAME_SUPPORTS_SAVE ) // still has Senko logo in gfx rom
-GAME( 1985, hexpoola, racknrol, hexpoola, racknrol, driver_device, 0,	      ROT90,  "Senko Industries", "Hex Pool (Senko)", GAME_SUPPORTS_SAVE )
-GAME( 1985, trvchlng, 0,        racknrol, trvchlng, driver_device, 0,	      ROT90,  "Joyland (Senko license)", "Trivia Challenge", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1983, hunchbkg, hunchbak, hunchbkg, hunchbkg, driver_device,  0,        ROT90,  "Century Electronics", "Hunchback (Galaxian hardware)", GAME_SUPPORTS_SAVE )
+GAME( 1984, drivfrcg, drivfrcp, drivfrcg, drivfrcg, driver_device,  0,        ROT90,  "Shinkai Inc. (Magic Electronics USA license)", "Driving Force (Galaxian conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1984, drivfrct, drivfrcp, drivfrcg, drivfrcg, driver_device,  0,        ROT90,  "bootleg (EMT Germany)", "Top Racer (bootleg of Driving Force)", GAME_SUPPORTS_SAVE ) // Video Klein PCB
+GAME( 1985, drivfrcb, drivfrcp, drivfrcg, drivfrcg, driver_device,  0,        ROT90,  "bootleg (Elsys Software)", "Driving Force (Galaxian conversion bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1986, racknrol, 0,        racknrol, racknrol, driver_device,  0,        ROT0,   "Senko Industries (Status license from Shinkai Inc.)", "Rack + Roll", GAME_SUPPORTS_SAVE )
+GAME( 1986, hexpool,  racknrol, racknrol, racknrol, driver_device,  0,        ROT90,  "Senko Industries (Shinkai Inc. license)", "Hex Pool (Shinkai)", GAME_SUPPORTS_SAVE ) // still has Senko logo in gfx rom
+GAME( 1985, hexpoola, racknrol, hexpoola, racknrol, driver_device,  0,        ROT90,  "Senko Industries", "Hex Pool (Senko)", GAME_SUPPORTS_SAVE )
+GAME( 1985, trvchlng, 0,        racknrol, trvchlng, driver_device,  0,        ROT90,  "Joyland (Senko license)", "Trivia Challenge", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1985, bullsdrtg,bullsdrt, bullsdrtg,racknrol, galaxold_state, bullsdrtg,ROT90,  "Senko Industries", "Bulls Eye Darts (Galaxian conversion)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS )

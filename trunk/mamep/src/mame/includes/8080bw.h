@@ -31,6 +31,7 @@ public:
 	UINT8 m_c8080bw_flip_screen;
 	UINT8 m_color_map;
 	UINT8 m_screen_red;
+	UINT8 m_fleet_step;
 
 	attotime m_schaser_effect_555_time_remain;
 	INT32 m_schaser_effect_555_time_remain_savable;
@@ -56,6 +57,9 @@ public:
 	DECLARE_WRITE8_MEMBER(lrescue_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(lrescue_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(cosmo_sh_port_2_w);
+	DECLARE_WRITE8_MEMBER(darthvdr_00_w);
+	DECLARE_WRITE8_MEMBER(darthvdr_08_w);
+	DECLARE_WRITE8_MEMBER(ballbomb_01_w);
 	DECLARE_WRITE8_MEMBER(ballbomb_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(ballbomb_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(indianbt_sh_port_1_w);
@@ -65,6 +69,7 @@ public:
 	DECLARE_WRITE8_MEMBER(rollingc_sh_port_w);
 	DECLARE_WRITE8_MEMBER(invrvnge_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(invrvnge_sh_port_2_w);
+	DECLARE_WRITE8_MEMBER(lupin3_00_w);
 	DECLARE_WRITE8_MEMBER(lupin3_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(lupin3_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(schasercv_sh_port_1_w);
@@ -119,10 +124,13 @@ public:
 
 /*----------- defined in audio/8080bw.c -----------*/
 extern const samples_interface lrescue_samples_interface;
+extern const samples_interface lupin3_samples_interface;
 
+DISCRETE_SOUND_EXTERN( ballbomb );
 DISCRETE_SOUND_EXTERN( indianbt );
 DISCRETE_SOUND_EXTERN( polaris );
 
+extern const sn76477_interface lupin3_sn76477_interface;
 extern const sn76477_interface schaser_sn76477_interface;
 DISCRETE_SOUND_EXTERN( schaser );
 

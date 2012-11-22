@@ -469,6 +469,21 @@ protected:
 		const UINT8 *data; //!< Data within this sector
 	};
 
+	struct desc_pc_sector {
+		UINT8 track, head, sector, size;
+		int actual_size;
+		UINT8 *data;
+		bool deleted;
+		bool bad_crc;
+	};
+
+	int calc_default_pc_gap3_size(UINT32 form_factor, int sector_size);
+	void build_wd_track_fm(int track, int head, floppy_image *image, int cell_count, int sector_count, const desc_pc_sector *sects, int gap_3, int gap_1, int gap_2);
+	void build_wd_track_mfm(int track, int head, floppy_image *image, int cell_count, int sector_count, const desc_pc_sector *sects, int gap_3, int gap_1, int gap_2=22);
+	void build_pc_track_fm(int track, int head, floppy_image *image, int cell_count, int sector_count, const desc_pc_sector *sects, int gap_3, int gap_4a=40, int gap_1=26, int gap_2=11);
+	void build_pc_track_mfm(int track, int head, floppy_image *image, int cell_count, int sector_count, const desc_pc_sector *sects, int gap_3, int gap_4a=80, int gap_1=50, int gap_2=22);
+
+
 	//! @brief Extract standard sectors from a regenerated bitstream.
 	//! Sectors must point to an array of 256 desc_xs.
 
@@ -510,6 +525,8 @@ protected:
 	UINT16 calc_crc_ccitt(const UINT32 *buffer, int start, int end);
 	//! Write a series of (raw) bits and increment the offset.
 	void raw_w(UINT32 *buffer, int &offset, int n, UINT32 val, UINT32 size = 1000);
+	//! FM-encode and write a series of bits
+	void fm_w(UINT32 *buffer, int &offset, int n, UINT32 val, UINT32 size = 1000);
 	//! MFM-encode and write a series of bits
 	void mfm_w(UINT32 *buffer, int &offset, int n, UINT32 val, UINT32 size = 1000);
 	//! MFM-encode every two bits and write
