@@ -14,7 +14,8 @@ driver by Barry Rodewald
 
 #include "emu.h"
 #include "cpu/i8085/i8085.h"
-
+#include "sound/samples.h"
+#include "sound/sn76477.h"
 
 class rotaryf_state : public driver_device
 {
@@ -22,16 +23,113 @@ public:
 	rotaryf_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram"),
+		m_samples(*this, "samples"),
+		m_sn(*this, "snsnd")
+	{ }
 
+	DECLARE_READ8_MEMBER(port29_r);
+	DECLARE_WRITE8_MEMBER(port28_w);
+	DECLARE_WRITE8_MEMBER(port30_w);
+	bool m_flipscreen;
+	UINT8 m_last;
 	required_device<cpu_device> m_maincpu;
 	required_shared_ptr<UINT8> m_videoram;
+	required_device<samples_device> m_samples;
+	required_device<sn76477_device> m_sn;
 	UINT32 screen_update_rotaryf(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(rotaryf_interrupt);
 };
 
+static const sn76477_interface rotaryf_sn76477_interface =
+{
+	0,			/*  4 noise_res (N/C)        */
+	0,			/*  5 filter_res (N/C)       */
+	0,			/*  6 filter_cap (N/C)       */
+	0,			/*  7 decay_res (N/C)        */
+	0,			/*  8 attack_decay_cap (N/C) */
+	RES_K(100), /* 10 attack_res             */
+	RES_K(56),	/* 11 amplitude_res          */
+	RES_K(10),	/* 12 feedback_res           */
+	0,			/* 16 vco_voltage (N/C)      */
+	CAP_U(0.1),	/* 17 vco_cap                */
+	RES_K(8.2),	/* 18 vco_res                */
+	5.0,		/* 19 pitch_voltage          */
+	RES_K(120),	/* 20 slf_res                */
+	CAP_U(1.0),	/* 21 slf_cap                */
+	0,			/* 23 oneshot_cap (N/C)      */
+	0,			/* 24 oneshot_res (N/C)      */
+	1,			/* 22 vco                    */
+	0,			/* 26 mixer A                */
+	0,			/* 25 mixer B                */
+	0,			/* 27 mixer C                */
+	1,			/* 1  envelope 1             */
+	0,			/* 28 envelope 2             */
+	1			/* 9  enable (variable)      */
+};
 
 
+
+static const char *const rotaryf_sample_names[] =
+{
+	"*invaders",
+	"1",		/* shot/missle */
+	"2",		/* base hit/explosion */
+	"3",		/* invader hit */
+	"4",		/* fleet move 1 */
+	"5",		/* fleet move 2 */
+	"6",		/* fleet move 3 */
+	"7",		/* fleet move 4 */
+	"8",		/* UFO/saucer hit */
+	"9",		/* bonus base */
+	0
+};
+
+
+static const samples_interface rotaryf_samples_interface =
+{
+	6,	/* 6 channels */
+	rotaryf_sample_names
+};
+
+READ8_MEMBER( rotaryf_state::port29_r )
+{
+	UINT8 data = ioport("INPUTS")->read();
+
+	if (m_flipscreen) return data;
+
+	return (data & 0xCD) | ((data & 0x01) << 1) | ((data & 0x0c) << 2);
+}
+
+WRITE8_MEMBER( rotaryf_state::port28_w )
+{
+	UINT8 rising_bits = data & ~m_last;
+
+	if (BIT(rising_bits, 0)) m_samples->start (3, 7);	/* Hit Saucer */
+	if (BIT(rising_bits, 2)) m_samples->start (5, 8);	/* Bonus */
+	if (BIT(rising_bits, 5)) m_samples->start (1, 1);	/* Death */
+	if (BIT(rising_bits, 6)) m_samples->start (2, 2);	/* Hit */
+	if (BIT(rising_bits, 7)) m_samples->start (0, 0);	/* Shoot */
+
+	sn76477_enable_w(m_sn, (data & 3) ? 1 : 0);		/* Saucer Sound */
+
+	if (BIT(rising_bits, 4))
+	{
+		if (BIT(rising_bits, 3))
+			m_samples->start (4, 3);		/* Fleet 1 */
+		else
+			m_samples->start (4, 6);		/* Fleet 2 */
+	}
+
+	m_last = data;
+}
+
+WRITE8_MEMBER( rotaryf_state::port30_w )
+{
+	/* bit 0 = player 2 is playing */
+
+	m_flipscreen = BIT(data, 0) & ioport("COCKTAIL")->read();
+}
 
 
 
@@ -65,22 +163,25 @@ TIMER_DEVICE_CALLBACK_MEMBER(rotaryf_state::rotaryf_interrupt)
 UINT32 rotaryf_state::screen_update_rotaryf(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	offs_t offs;
+	pen_t pens[2];
+	pens[0] = RGB_BLACK;
+	pens[1] = RGB_WHITE;
+	UINT8 i,x,y,data;
 
 	for (offs = 0; offs < m_videoram.bytes(); offs++)
 	{
-		int i;
-
-		UINT8 x = offs << 3;
-		int y = offs >> 5;
-		UINT8 data = m_videoram[offs];
+		x = offs << 3;
+		y = offs >> 5;
+		data = m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
-			pen_t pen = (data & 0x01) ? RGB_WHITE : RGB_BLACK;
-			bitmap.pix32(y, x) = pen;
+			if (m_flipscreen)
+				bitmap.pix32(255-y, 247-(x|i)) = pens[data & 1];
+			else
+				bitmap.pix32(y, x|i) = pens[data & 1];
 
-			data = data >> 1;
-			x = x + 1;
+			data >>= 1;
 		}
 	}
 
@@ -90,33 +191,29 @@ UINT32 rotaryf_state::screen_update_rotaryf(screen_device &screen, bitmap_rgb32 
 
 static ADDRESS_MAP_START( rotaryf_map, AS_PROGRAM, 8, rotaryf_state )
 	AM_RANGE(0x0000, 0x17ff) AM_MIRROR(0x4000) AM_ROM
-//  AM_RANGE(0x6ffb, 0x6ffb) AM_READ_LEGACY(random_r) ??
-//  AM_RANGE(0x6ffd, 0x6ffd) AM_READ_LEGACY(random_r) ??
-//  AM_RANGE(0x6fff, 0x6fff) AM_READ_LEGACY(random_r) ??
-	AM_RANGE(0x7000, 0x73ff) AM_RAM // clears to 1ff ?
+	AM_RANGE(0x7000, 0x73ff) AM_MIRROR(0x0c00) AM_RAM
 	AM_RANGE(0x8000, 0x9fff) AM_MIRROR(0x4000) AM_RAM AM_SHARE("videoram")
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM	/* writes 00, 18, 27, 3C, 7E, FE to A019, A039, A059... A179 */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( rotaryf_io_map, AS_IO, 8, rotaryf_state )
-//  AM_RANGE(0x00, 0x00) AM_READ_PORT("UNK")
 	AM_RANGE(0x21, 0x21) AM_READ_PORT("COIN")
 	AM_RANGE(0x26, 0x26) AM_READ_PORT("DSW")
-	AM_RANGE(0x29, 0x29) AM_READ_PORT("INPUTS")
+	AM_RANGE(0x29, 0x29) AM_READ(port29_r)
+
+	AM_RANGE(0x02, 0x02) AM_WRITENOP
+	AM_RANGE(0x04, 0x04) AM_WRITENOP
+	AM_RANGE(0x07, 0x07) AM_WRITENOP
+	AM_RANGE(0x20, 0x20) AM_WRITENOP
+	AM_RANGE(0x21, 0x21) AM_WRITENOP
+	AM_RANGE(0x28, 0x28) AM_WRITE(port28_w)
+	AM_RANGE(0x2a, 0x2a) AM_WRITENOP
+	AM_RANGE(0x2b, 0x2b) AM_WRITENOP
+	AM_RANGE(0x30, 0x30) AM_WRITE(port30_w)
 ADDRESS_MAP_END
 
 
 static INPUT_PORTS_START( rotaryf )
-	PORT_START("UNK")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-
 	PORT_START("COIN")
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(1)
 
@@ -154,9 +251,6 @@ static INPUT_PORTS_START( rotaryf )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-//  PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(2)
-//  PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT ) PORT_2WAY PORT_PLAYER(2)
-//  PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_2WAY PORT_PLAYER(2)
 
 	PORT_START("COCKTAIL")		/* Dummy port for cocktail mode */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
@@ -180,6 +274,12 @@ static MACHINE_CONFIG_START( rotaryf, rotaryf_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_UPDATE_DRIVER(rotaryf_state, screen_update_rotaryf)
 
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+	MCFG_SOUND_ADD("snsnd", SN76477, 0)
+	MCFG_SOUND_CONFIG(rotaryf_sn76477_interface)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.5)
+	MCFG_SAMPLES_ADD("samples", rotaryf_samples_interface)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
 
@@ -194,4 +294,4 @@ ROM_START( rotaryf )
 ROM_END
 
 
-GAME( 1979, rotaryf, 0, rotaryf, rotaryf, driver_device, 0, ROT270, "Kasco", "Rotary Fighter", GAME_NO_SOUND )
+GAME( 1979, rotaryf, 0, rotaryf, rotaryf, driver_device, 0, ROT270, "Kasco", "Rotary Fighter", GAME_IMPERFECT_SOUND )

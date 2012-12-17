@@ -1741,12 +1741,12 @@ static void OPNWriteMode(FM_OPN *OPN, int r, int v)
 		}
 		else
 		{
-			/* hold LFO waveform in reset state */
+            /* hold LFO waveform in reset state */
 			OPN->lfo_timer_overflow = 0;
-			OPN->lfo_timer = 0;
-			OPN->lfo_cnt   = 0;
-			OPN->LFO_PM    = 0;
-			OPN->LFO_AM    = 126;
+            OPN->lfo_timer = 0;
+            OPN->lfo_cnt   = 0;
+            OPN->LFO_PM    = 0;
+            OPN->LFO_AM    = 126;
 		}
 		break;
 	case 0x24:	/* timer A High 8*/

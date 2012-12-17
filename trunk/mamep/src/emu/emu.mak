@@ -176,6 +176,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/8042kbdc.o	\
 	$(EMUMACHINE)/8237dma.o		\
 	$(EMUMACHINE)/8257dma.o		\
+	$(EMUMACHINE)/aakart.o		\
 	$(EMUMACHINE)/adc0808.o		\
 	$(EMUMACHINE)/adc083x.o		\
 	$(EMUMACHINE)/adc1038.o		\
@@ -198,6 +199,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/eeprom.o		\
 	$(EMUMACHINE)/er2055.o		\
 	$(EMUMACHINE)/f3853.o		\
+	$(EMUMACHINE)/fdc_pll.o		\
 	$(EMUMACHINE)/generic.o		\
 	$(EMUMACHINE)/i2cmem.o		\
 	$(EMUMACHINE)/i8155.o		\
@@ -286,9 +288,11 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/upd1990a.o	\
 	$(EMUMACHINE)/upd4701.o		\
 	$(EMUMACHINE)/upd7201.o		\
+	$(EMUMACHINE)/upd765.o		\
 	$(EMUMACHINE)/v3021.o		\
 	$(EMUMACHINE)/wd17xx.o		\
 	$(EMUMACHINE)/wd33c93.o		\
+	$(EMUMACHINE)/wd_fdc.o		\
 	$(EMUMACHINE)/x2212.o		\
 	$(EMUMACHINE)/x76f041.o		\
 	$(EMUMACHINE)/x76f100.o		\

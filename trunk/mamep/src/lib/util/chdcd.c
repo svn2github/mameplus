@@ -449,6 +449,71 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc &outtoc, chdcd_track_
 }
 
 /*-------------------------------------------------
+    chdcd_parse_iso - parse a .ISO file
+-------------------------------------------------*/
+
+chd_error chdcd_parse_iso(const char *tocfname, cdrom_toc &outtoc, chdcd_track_input_info &outinfo)
+{
+	FILE *infile;
+	astring path = astring(tocfname);
+
+	infile = fopen(tocfname, "rt");
+	path = get_file_path(path);
+
+	if (infile == (FILE *)NULL)
+	{
+		return CHDERR_FILE_NOT_FOUND;
+	}
+
+	/* clear structures */
+	memset(&outtoc, 0, sizeof(outtoc));
+	outinfo.reset();
+
+	fseek(infile, 0, SEEK_END);
+	long size = ftell(infile);
+	fclose(infile);
+
+
+	outtoc.numtrks = 1;
+
+	outinfo.track[0].fname = tocfname;
+	outinfo.track[0].offset = 0;
+	outinfo.track[0].idx0offs = 0;
+	outinfo.track[0].idx1offs = 0;
+
+	if ((size % 2048)==0 ) {
+		outtoc.tracks[0].trktype = CD_TRACK_MODE1;
+		outtoc.tracks[0].frames = size / 2048;
+		outtoc.tracks[0].datasize = 2048;
+		outinfo.track[0].swap = false;
+	} else if ((size % 2352)==0 ) {
+		// 2352 byte mode 2 raw
+		outtoc.tracks[0].trktype = CD_TRACK_MODE2_RAW;
+		outtoc.tracks[0].frames = size / 2352;
+		outtoc.tracks[0].datasize = 2352;
+		outinfo.track[0].swap = false;
+	} else {
+		printf("ERROR: Unrecognized track type\n");
+		return CHDERR_FILE_NOT_FOUND;
+	}
+
+	outtoc.tracks[0].subtype = CD_SUB_NONE;
+	outtoc.tracks[0].subsize = 0;
+
+	outtoc.tracks[0].pregap = 0;
+
+	outtoc.tracks[0].postgap = 0;
+	outtoc.tracks[0].pgtype = 0;
+	outtoc.tracks[0].pgsub = CD_SUB_NONE;
+	outtoc.tracks[0].pgdatasize = 0;
+	outtoc.tracks[0].pgsubsize = 0;
+	outtoc.tracks[0].padframes = 0;
+
+
+	return CHDERR_NONE;
+}
+
+/*-------------------------------------------------
     chdcd_parse_gdi - parse a Sega GD-ROM rip
 -------------------------------------------------*/
 
@@ -550,12 +615,12 @@ static chd_error chdcd_parse_gdi(const char *tocfname, cdrom_toc &outtoc, chdcd_
 		}
 	}
 
-#if 0
+    #if 0
 	for(i=0; i < numtracks; i++)
-	{
-		printf("%s %d %d %d (true %d)\n", outinfo.track[i].fname.cstr(), outtoc.tracks[i].frames, outtoc.tracks[i].padframes, outtoc.tracks[i].physframeofs, outtoc.tracks[i].frames - outtoc.tracks[i].padframes);
-	}
-#endif
+    {
+        printf("%s %d %d %d (true %d)\n", outinfo.track[i].fname.cstr(), outtoc.tracks[i].frames, outtoc.tracks[i].padframes, outtoc.tracks[i].physframeofs, outtoc.tracks[i].frames - outtoc.tracks[i].padframes);
+    }
+    #endif
 
 	/* close the input TOC */
 	fclose(infile);
@@ -859,6 +924,11 @@ chd_error chdcd_parse_toc(const char *tocfname, cdrom_toc &outtoc, chdcd_track_i
 	if (strstr(tocftemp,".nrg"))
 	{
 		return chdcd_parse_nero(tocfname, outtoc, outinfo);
+	}
+
+	if (strstr(tocftemp,".iso") || strstr(tocftemp,".cdr"))
+	{
+		return chdcd_parse_iso(tocfname, outtoc, outinfo);
 	}
 
 	astring path = astring(tocfname);

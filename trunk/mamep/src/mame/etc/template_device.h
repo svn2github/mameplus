@@ -6,8 +6,8 @@ Template for skeleton device
 
 #pragma once
 
-#ifndef __xxxDEV_H__
-#define __xxxDEV_H__
+#ifndef __XXXDEV_H__
+#define __XXXDEV_H__
 
 
 

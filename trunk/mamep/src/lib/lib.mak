@@ -139,6 +139,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/kc85_dsk.o	\
 	$(LIBOBJ)/formats/kim1_cas.o	\
 	$(LIBOBJ)/formats/lviv_lvt.o	\
+	$(LIBOBJ)/formats/m20_dsk.o	\
 	$(LIBOBJ)/formats/m5_dsk.o		\
 	$(LIBOBJ)/formats/mm_dsk.o		\
 	$(LIBOBJ)/formats/msx_dsk.o		\
@@ -152,6 +153,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/p6001_cas.o	\
 	$(LIBOBJ)/formats/pasti_dsk.o	\
 	$(LIBOBJ)/formats/pc_dsk.o		\
+	$(LIBOBJ)/formats/pc98fdi_dsk.o	\
 	$(LIBOBJ)/formats/pmd_cas.o		\
 	$(LIBOBJ)/formats/primoptp.o	\
 	$(LIBOBJ)/formats/pyldin_dsk.o	\
@@ -168,10 +170,12 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/thom_cas.o	\
 	$(LIBOBJ)/formats/thom_dsk.o	\
 	$(LIBOBJ)/formats/ti99_dsk.o	\
+	$(LIBOBJ)/formats/tiki100_dsk.o	\
 	$(LIBOBJ)/formats/trd_dsk.o		\
 	$(LIBOBJ)/formats/trs_cas.o		\
 	$(LIBOBJ)/formats/trs_dsk.o		\
 	$(LIBOBJ)/formats/tvc_cas.o		\
+	$(LIBOBJ)/formats/tvc_dsk.o		\
 	$(LIBOBJ)/formats/tzx_cas.o		\
 	$(LIBOBJ)/formats/uef_cas.o		\
 	$(LIBOBJ)/formats/upd765_dsk.o	\

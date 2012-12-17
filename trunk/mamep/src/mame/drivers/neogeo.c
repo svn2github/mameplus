@@ -357,7 +357,6 @@ static void audio_cpu_assert_nmi(running_machine &machine)
 	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
-
 WRITE8_MEMBER(neogeo_state::audio_cpu_clear_nmi_w)
 {
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
@@ -421,8 +420,8 @@ WRITE16_MEMBER(neogeo_state::io_control_w)
 	switch (offset)
 	{
 	case 0x00: select_controller(machine(), data & 0x00ff); break;
-	case 0x18: set_output_latch(machine(), data & 0x00ff); break;
-	case 0x20: set_output_data(machine(), data & 0x00ff); break;
+	case 0x18: if (m_is_mvs) set_output_latch(machine(), data & 0x00ff); break;
+	case 0x20: if (m_is_mvs) set_output_data(machine(), data & 0x00ff); break;
 	case 0x28: upd4990a_control_16_w(m_upd4990a, space, 0, data, mem_mask); break;
 //  case 0x30: break; // coin counters
 //  case 0x31: break; // coin counters
@@ -434,7 +433,6 @@ WRITE16_MEMBER(neogeo_state::io_control_w)
 		break;
 	}
 }
-
 
 
 /*************************************
@@ -475,6 +473,7 @@ CUSTOM_INPUT_MEMBER(neogeo_state::get_calendar_status)
 {
 	return (upd4990a_databit_r(m_upd4990a, generic_space(), 0) << 1) | upd4990a_testbit_r(m_upd4990a, generic_space(), 0);
 }
+
 
 
 
@@ -584,6 +583,9 @@ WRITE16_MEMBER(neogeo_state::audio_command_w)
 }
 
 
+
+
+
 READ8_MEMBER(neogeo_state::audio_command_r)
 {
 	UINT8 ret = soundlatch_byte_r(space, 0);
@@ -630,7 +632,8 @@ static void _set_main_cpu_vector_table_source( running_machine &machine )
 }
 
 
-static void set_main_cpu_vector_table_source( running_machine &machine, UINT8 data )
+
+void neogeo_set_main_cpu_vector_table_source( running_machine &machine, UINT8 data )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
 	state->m_main_cpu_vector_table_source = data;
@@ -642,6 +645,8 @@ static void set_main_cpu_vector_table_source( running_machine &machine, UINT8 da
 static void _set_main_cpu_bank_address( running_machine &machine )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
+	if (!state->m_is_cartsys) return;
+
 	state->membank(NEOGEO_BANK_CARTRIDGE)->set_base(&state->memregion("maincpu")->base()[state->m_main_cpu_bank_address]);
 }
 
@@ -656,6 +661,7 @@ void neogeo_set_main_cpu_bank_address( address_space &space, UINT32 bank_address
 
 	_set_main_cpu_bank_address(space.machine());
 }
+
 
 
 WRITE16_MEMBER(neogeo_state::main_cpu_bank_select_w)
@@ -680,21 +686,27 @@ WRITE16_MEMBER(neogeo_state::main_cpu_bank_select_w)
 }
 
 
-static void main_cpu_banking_init( running_machine &machine )
+
+
+void neogeo_main_cpu_banking_init( running_machine &machine )
 {
+	neogeo_state *state = machine.driver_data<neogeo_state>();
 	address_space &mainspace = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* create vector banks */
-	machine.root_device().membank(NEOGEO_BANK_VECTORS)->configure_entry(0, machine.root_device().memregion("mainbios")->base());
-	machine.root_device().membank(NEOGEO_BANK_VECTORS)->configure_entry(1, machine.root_device().memregion("maincpu")->base());
+	state->membank(NEOGEO_BANK_VECTORS)->configure_entry(0, machine.root_device().memregion("mainbios")->base());
+	state->membank(NEOGEO_BANK_VECTORS)->configure_entry(1, machine.root_device().memregion("maincpu")->base());
 
-	/* set initial main CPU bank */
-	if (machine.root_device().memregion("maincpu")->bytes() > 0x100000)
-		neogeo_set_main_cpu_bank_address(mainspace, 0x100000);
-	else
-		neogeo_set_main_cpu_bank_address(mainspace, 0x000000);
+	if (state->m_is_cartsys)
+	{
+
+		/* set initial main CPU bank */
+		if (machine.root_device().memregion("maincpu")->bytes() > 0x100000)
+			neogeo_set_main_cpu_bank_address(mainspace, 0x100000);
+		else
+			neogeo_set_main_cpu_bank_address(mainspace, 0x000000);
+	}
 }
-
 
 
 /*************************************
@@ -706,6 +718,9 @@ static void main_cpu_banking_init( running_machine &machine )
 static void set_audio_cpu_banking( running_machine &machine )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
+
+	if (!state->m_has_audio_banking) return;
+
 	int region;
 
 	for (region = 0; region < 4; region++)
@@ -713,9 +728,12 @@ static void set_audio_cpu_banking( running_machine &machine )
 }
 
 
+
 static void audio_cpu_bank_select( address_space &space, int region, UINT8 bank )
 {
 	neogeo_state *state = space.machine().driver_data<neogeo_state>();
+
+	if (!state->m_has_audio_banking) return;
 
 	if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: audio_cpu_bank_select: Region: %d   Bank: %02x\n", space.device().safe_pc(), region, bank);
 
@@ -723,6 +741,7 @@ static void audio_cpu_bank_select( address_space &space, int region, UINT8 bank 
 
 	set_audio_cpu_banking(space.machine());
 }
+
 
 
 READ8_MEMBER(neogeo_state::audio_cpu_bank_select_f000_f7ff_r)
@@ -760,6 +779,7 @@ READ8_MEMBER(neogeo_state::audio_cpu_bank_select_8000_bfff_r)
 static void _set_audio_cpu_rom_source( address_space &space )
 {
 	neogeo_state *state = space.machine().driver_data<neogeo_state>();
+	if (!state->m_has_audio_banking) return;
 
 /*  if (!state->memregion("audiobios")->base())   */
 		state->m_audio_cpu_rom_source = 1;
@@ -773,9 +793,11 @@ static void _set_audio_cpu_rom_source( address_space &space )
 
 		space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 
-		if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: selectign %s ROM\n", space.device().safe_pc(), state->m_audio_cpu_rom_source ? "CARTRIDGE" : "BIOS");
+		if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: selecting %s ROM\n", space.device().safe_pc(), state->m_audio_cpu_rom_source ? "CARTRIDGE" : "BIOS");
 	}
 }
+
+
 
 
 static void set_audio_cpu_rom_source( address_space &space, UINT8 data )
@@ -787,9 +809,14 @@ static void set_audio_cpu_rom_source( address_space &space, UINT8 data )
 }
 
 
-static void audio_cpu_banking_init( running_machine &machine )
+
+
+
+void neogeo_audio_cpu_banking_init( running_machine &machine )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
+	if (!state->m_has_audio_banking) return;
+
 	int region;
 	int bank;
 	UINT8 *rgn;
@@ -828,6 +855,8 @@ static void audio_cpu_banking_init( running_machine &machine )
 
 
 
+
+
 /*************************************
  *
  *  System control register
@@ -844,11 +873,28 @@ WRITE16_MEMBER(neogeo_state::system_control_w)
 		{
 		default:
 		case 0x00: neogeo_set_screen_dark(machine(), bit); break;
-		case 0x01: set_main_cpu_vector_table_source(machine(), bit);
-				   set_audio_cpu_rom_source(space, bit); /* this is a guess */
-				   break;
+		case 0x01:
+					if (m_is_cartsys)
+					{
+						neogeo_set_main_cpu_vector_table_source(machine(), bit); // NeoCD maps the vector swap elsewhere
+					}
+					else
+					{
+#if 0
+						if (bit)
+						{
+							if (m_main_cpu_vector_table_source)
+								neogeo_set_main_cpu_vector_table_source(machine(), 0);
+							else
+								neogeo_set_main_cpu_vector_table_source(machine(), 1);
+						}
+#endif
+						printf("NeoCD: write to regular vector change address? %d\n", bit); // what IS going on with "neocdz doubledr" and why do games write here if it's hooked up to nothing?
+					}
+					if (m_has_audio_banking) set_audio_cpu_rom_source(space, bit); /* this is a guess */
+					break;
 		case 0x05: neogeo_set_fixed_layer_source(machine(), bit); break;
-		case 0x06: set_save_ram_unlock(machine(), bit); break;
+		case 0x06: if (m_is_mvs) set_save_ram_unlock(machine(), bit); break;
 		case 0x07: neogeo_set_palette_bank(machine(), bit); break;
 
 		case 0x02: /* unknown - HC32 middle pin 1 */
@@ -861,7 +907,6 @@ WRITE16_MEMBER(neogeo_state::system_control_w)
 		if (LOG_VIDEO_SYSTEM && ((offset & 0x07) != 0x06)) logerror("PC: %x  System control write.  Offset: %x  Data: %x\n", space.device().safe_pc(), offset & 0x07, bit);
 	}
 }
-
 
 
 /*************************************
@@ -974,14 +1019,21 @@ static void set_output_data( running_machine &machine, UINT8 data )
  *
  *************************************/
 
-static void neogeo_postload(running_machine &machine)
+void neogeo_postload(running_machine &machine)
 {
+	neogeo_state *state = machine.driver_data<neogeo_state>();
+
 	_set_main_cpu_bank_address(machine);
 	_set_main_cpu_vector_table_source(machine);
 	set_audio_cpu_banking(machine);
 	_set_audio_cpu_rom_source(machine.device("maincpu")->memory().space(AS_PROGRAM));
-	set_outputs(machine);
+	if (state->m_is_mvs) set_outputs(machine);
 }
+
+
+
+
+
 
 void neogeo_state::machine_start()
 {
@@ -993,10 +1045,10 @@ void neogeo_state::machine_start()
 	membank(NEOGEO_BANK_BIOS)->set_base(memregion("mainbios")->base());
 
 	/* set the initial main CPU bank */
-	main_cpu_banking_init(machine());
+	neogeo_main_cpu_banking_init(machine());
 
 	/* set the initial audio CPU ROM banks */
-	audio_cpu_banking_init(machine());
+	neogeo_audio_cpu_banking_init(machine());
 
 	create_interrupt_timers(machine());
 
@@ -1109,6 +1161,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, neogeo_state )
 	AM_RANGE(0xd00000, 0xd0ffff) AM_MIRROR(0x0f0000) AM_RAM_WRITE(save_ram_w) AM_SHARE("save_ram")
 	AM_RANGE(0xe00000, 0xffffff) AM_READ(neogeo_unmapped_r)
 ADDRESS_MAP_END
+
 
 
 
@@ -1359,7 +1412,7 @@ DEVICE_IMAGE_LOAD( neo_cartridge )
  *
  *************************************/
 
-static MACHINE_CONFIG_START( neogeo, neogeo_state )
+MACHINE_CONFIG_START( neogeo_base, neogeo_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, NEOGEO_MAIN_CPU_CLOCK)
@@ -1368,11 +1421,6 @@ static MACHINE_CONFIG_START( neogeo, neogeo_state )
 	MCFG_CPU_ADD("audiocpu", Z80, NEOGEO_AUDIO_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 	MCFG_CPU_IO_MAP(audio_io_map)
-
-	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(128762))
-
-	MCFG_NVRAM_ADD_0FILL("saveram")
-	MCFG_MEMCARD_HANDLER(neogeo)
 
 	/* video hardware */
 	MCFG_DEFAULT_LAYOUT(layout_neogeo)
@@ -1395,10 +1443,14 @@ static MACHINE_CONFIG_START( neogeo, neogeo_state )
 	MCFG_UPD4990A_ADD("upd4990a")
 MACHINE_CONFIG_END
 
-static MACHINE_CONFIG_DERIVED( mvs, neogeo )
+static MACHINE_CONFIG_DERIVED( neogeo, neogeo_base )
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(128762))
 
+	MCFG_NVRAM_ADD_0FILL("saveram")
 	MCFG_MEMCARD_HANDLER(neogeo)
+MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( mvs, neogeo )
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_LOAD(neo_cartridge)
 	MCFG_CARTSLOT_INTERFACE("neo_cart")

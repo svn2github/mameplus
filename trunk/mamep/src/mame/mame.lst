@@ -140,6 +140,7 @@ pengob			// bootleg
 penta			// bootleg
 jrpacmbl		// bootleg on Pengo HW
 jrpacman		// (c) 1983 Midway
+jrpacmanf		// speedup hack
 
 // Epos games
 megadon			// (c) 1982
@@ -281,6 +282,7 @@ rockclim		// (c)1981 Taito
 // "Scramble hardware" (and variations) games
 scramble		// GX387 (c) 1981 Konami
 scrambles		// GX387 (c) 1981 Stern
+scrambles2		// GX387 (c) 1981 Stern
 scramblebf		// bootleg
 scramblebb		// bootleg?
 scramblb		// bootleg
@@ -398,6 +400,7 @@ ckongo			// bootleg (Orca)
 ckongalc		// bootleg (Alca)
 bigkong			// bootleg
 monkeyd			// bootleg
+dking			// Crazy Kong Bootleg
 ckongpt2		// (c) 1981 Falcon
 ckongpt2a		// (c) 1981 Falcon
 ckongpt2j		// (c) 1981 Falcon
@@ -793,8 +796,9 @@ skykiddx		// (c) 1986
 skykiddxo		// (c) 1986
 roishtar		// (c) 1986
 genpeitd		// (c) 1986
-rthunder		// (c) 1986 new version
-rthundero		// (c) 1986 old version
+rthunder		// (c) 1986
+rthunder2		// (c) 1986
+rthunder1		// (c) 1986
 wndrmomo		// (c) 1987
 
 // Thunder Ceptor HW
@@ -885,6 +889,7 @@ finalap3		// 92.9  Final Lap 3
 finalap3a		// 92.9  Final Lap 3
 finalap3j		// 92.9  Final Lap 3
 finalap3jc		// (c) 1992
+finalap3bl      // (c) 1992 (bootleg)
 luckywld		// (c) 1992
 luckywldj		// (c) 1992
 suzuka8h		// (c) 1992 (World)
@@ -1373,11 +1378,14 @@ moonbasea		// Zeta - Nichibutsu
 				// 870 - Space Invaders Deluxe cocktail
 searthin		// bootleg
 searthina		// bootleg
+searthie		// bootleg
 invadrmr		// (c) 1978 Model Racing
 claybust		// (c) 1978 Model Racing
 gunchamp		// (c) 1980 Model Racing
+gunchamps		// (c) 1980 Model Racing (sshot.c)
 spaceatt		// (c) 1978 Video Games GMBH
 spaceat2		// (c) 1980 Zenitone-Microsec Ltd
+spacecom		// bootleg
 sinvzen			// Zenitone-Microsec Ltd
 superinv		// bootleg
 invasion		// Sidam
@@ -1415,6 +1423,8 @@ spaceph			// Zilec Games
 galactic		// (c) 19?? Taito
 spacmiss		// bootleg?
 schaser			// RT  Taito
+schasera		// RT  Taito
+schaserb		// RT  Taito
 schasercv		// RT  Taito
 lupin3			// LP  (c) 1980 Taito
 lupin3a			// LP  (c) 1980 Taito
@@ -1602,8 +1612,8 @@ nstocker		// (c) 1986
 nstocker2		// (c) 1986
 sfootbal		// (c) 1986
 spiker			// (c) 1986
-spiker2                 // (c) 1986
-spiker3                 // (c) 1986
+spiker2			// (c) 1986
+spiker3			// (c) 1986
 stompin			// (c) 1986
 rescraid		// (c) 1987
 rescraida		// (c) 1987
@@ -2412,6 +2422,7 @@ pwrshovl		// E74 (c) 1999 Taito
 landhigh		// E82 (c) 1999 Taito
 batlgr2			// E87 (c) 2000 Taito (2.04J)
 batlgr2a		// E87 (c) 2000 Taito (2.01J)
+raizpin			// F14 (c) 2002 Taito
 
 invqix			// F34 (c) 2003 Taito Corporation
 
@@ -2716,6 +2727,7 @@ spdball			// (c) 1985
 alienar			// (c) 1985 Duncan Brown
 alienaru		// (c) 1985 Duncan Brown
 mysticm			// (c) 1983
+mysticmp		// (c) 1983 Prototype
 tshoot			// (c) 1984
 inferno			// (c) 1984
 joust2			// (c) 1986
@@ -2889,6 +2901,7 @@ cawingr1		// 09/10/1990 (c) 1990 (World)
 cawingu			// 12/10/1990 (c) 1990 (USA)
 cawingj			// 12/10/1990 (c) 1990 (Japan)
 cawingbl		// bootleg
+cawingb2		// bootleg
 nemo			// 30/11/1990 (c) 1990 (World)
 nemoj			// 20/11/1990 (c) 1990 (Japan)
 sf2			// 22/05/1991 (c) 1991 (World)
@@ -2896,7 +2909,7 @@ sf2eb			// 14/02/1991 (c) 1991 (World)
 sf2ee			// 28/02/1991 (c) 1991 (World)
 sf2ebbl			// 14/02/1991 (c) 1991 (World, bootleg)
 sf2stt			// bootleg
-sf2unkb			// bootleg
+sf2rk			// bootleg
 sf2ua			// 06/02/1991 (c) 1991 (USA)
 sf2ub			// 14/02/1991 (c) 1991 (USA)
 sf2uc			// 06/03/1991 (c) 1991 (USA)
@@ -2957,16 +2970,18 @@ sf2m4			// hack
 sf2m5			// hack
 sf2m6			// hack
 sf2m7			// hack
+sf2m8			// bootleg
 sf2yyc			// hack
 sf2koryu		// hack
 sf2mdt			// bootleg
+sf2mdta			// bootleg
 cworld2j		// 11/06/1992 (c) 1992 (Japan)
 varth			// 14/07/1992 (c) 1992 (World)
 varthr1			// 12/06/1992 (c) 1992 (World)
 varthu			// 12/06/1992 (c) 1992 (USA)
 varthj			// 14/07/1992 (c) 1992 (Japan)
 qad			// 01/07/1992 (c) 1992 (USA)
-qadj			// 21/09/1994 (c) 1994 (Japan)
+qadjr			// 21/09/1994 (c) 1994 (Japan)
 wof			// 31/10/1992 (c) 1992 (World) (CPS1 + QSound)
 wofr1			// 02/10/1992 (c) 1992 (World) (CPS1 + QSound)
 wofu			// 31/10/1992 (c) 1992 (USA) (CPS1 + QSound)
@@ -2986,6 +3001,7 @@ dinohunt		// bootleg
 punisher		// 22/04/1993 (c) 1993 (World) (CPS1 + QSound)
 punisheru		// 22/04/1993 (c) 1993 (USA) (CPS1 + QSound)
 punisherj		// 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound)
+punisherh		// 22/04/1993 (c) 1993 (Hispanic) (CPS1 + QSound)
 punipic			// bootleg
 punipic2		// bootleg
 punipic3		// bootleg
@@ -3006,6 +3022,7 @@ megaman			// 06/10/1995 (c) 1995 (USA)
 megamana		// 06/10/1995 (c) 1995 (Asia)
 rockmanj		// 22/09/1995 (c) 1995 (Japan)
 fcrash			// bootleg of Final Fight
+ganbare			// 11/04/2000
 
 // Capcom CPS2 games
 // list completed by CPS2Shock
@@ -3069,7 +3086,8 @@ armwaru1		// 20/09/1994 (c) 1994 (USA)
 pgear			// 24/10/1994 (c) 1994 (Japan)
 pgearr1			// 16/09/1994 (c) 1994 (Japan)
 armwara			// 20/09/1994 (c) 1994 (Asia)
-xmcota			// 05/01/1995 (c) 1994 (Euro)
+xmcota			// 31/03/1995 (c) 1994 (Euro)
+xmcotar1		// 05/01/1995 (c) 1994 (Euro)
 xmcotau			// 05/01/1995 (c) 1994 (USA)
 xmcotah			// 31/03/1995 (c) 1994 (Hispanic)
 xmcotahr1		// 05/01/1995 (c) 1994 (Hispanic)
@@ -3254,7 +3272,7 @@ ecofghtrd
 avspd
 dstlku1d
 ringdstd
-xmcotad
+xmcotar1d
 nwarrud
 sfad
 mshud
@@ -3629,6 +3647,7 @@ fbait2bc		// 1998 - Fisherman's Bait 2 - A Bass Challenge (GE865 VER. UAB)
 bassang2		// 1998 - Bass Angler 2 (GE865 VER. JAA)
 hyperbbc		// 1998 - Hyper Bishi Bashi (GQ876 VER. EAA)
 hyperbbca		// 1998 - Hyper Bishi Bashi (GQ876 VER. AAA)
+gchgchmp		// 1999 - Gachaga Champ (GE877 VER. JAB)
 drmn			// 1999 - DrumMania (GQ881 VER. JAD)
 gtrfrks			// 1999 - Guitar Freaks (GQ886 VER. EAC)
 gtrfrksu		// 1999 - Guitar Freaks (GQ886 VER. UAC)
@@ -3855,6 +3874,7 @@ wcbowl140		// (c) 1995 Incredible Technologies
 wcbowl15		// (c) 1995 Incredible Technologies
 wcbowl14		// (c) 1995 Incredible Technologies
 wcbowl13		// (c) 1995 Incredible Technologies
+wcbowl13j		// (c) 1995 IT Inc, Licensed to Excellent System Ltd. for Japan
 wcbowl12		// (c) 1995 Incredible Technologies
 wcbowl11		// (c) 1995 Incredible Technologies
 sftm			// (c) 1995 Capcom/Incredible Technologies
@@ -3935,6 +3955,19 @@ wsf			// (c) 1990 Leland
 indyheat		// (c) 1991 Leland
 brutforc		// (c) 1991 Leland
 asylum			// (c) 1991 Leland
+dlair2			// (c) 1991 Leland
+dlair2_319e		// (c) 1991 Leland
+dlair2_319s		// (c) 1991 Leland
+dlair2_318		// (c) 1991 Leland
+dlair2_316e		// (c) 1991 Leland
+dlair2_315		// (c) 1991 Leland
+dlair2_315s		// (c) 1991 Leland
+dlair2_314		// (c) 1991 Leland
+dlair2_312		// (c) 1991 Leland
+dlair2_300		// (c) 1991 Leland
+dlair2_211		// (c) 1991 Leland
+spacea91		// (c) 1991 Leland
+spacea91_13e		// (c) 1991 Leland
 
 // Gremlin 8080 games
 // the numbers listed are the range of ROM part numbers
@@ -3959,7 +3992,8 @@ sspaceat3		// 155-162 (c) 1979 Sega
 sspaceatc		// 139-146 (c)
 sspacaho		// ? epr00001.bin - epr00008.bin
 headon			// 163-167/192-193 (c) Gremlin
-headonb			// 163-167/192-193 (c) Gremlin
+headon1			// 163-167/192-193 (c) Gremlin
+headonb			// bootleg, headonb.c
 headons			// Sidam bootleg
 headonsa		// Sidam bootleg
 supcrash		// bootleg
@@ -5315,7 +5349,7 @@ discof			// (c) 1982
 sdtennis		// (c) 1983
 mmonkey			// (c) 1982 Technos Japan + Roller Tron
 
-		// cassette system, parent is decocass
+// cassette system, parent is decocass
 decocass
 ctsttape		// ?
 chwy			// 01 1980.12 Highway Chase
@@ -5503,7 +5537,7 @@ wndrplnt		// (c) 1987 Data East Corporation (Japan)
 chelnov			// (c) 1988 Data East USA (World)
 chelnovu		// (c) 1988 Data East USA (US)
 chelnovj		// (c) 1988 Data East Corporation (Japan)
-		// the following ones all run on similar hardware
+// the following ones all run on similar hardware
 hbarrel			// (c) 1987 Data East USA (US)
 hbarrelw		// (c) 1987 Data East Corporation (World)
 baddudes		// EI (c) 1988 Data East USA (US)
@@ -5531,10 +5565,10 @@ midresj			// (c) 1989 Data East Corporation (Japan)
 midresb			// (c) 1989 Data East Corporation (Japan)
 bouldash		// (c) 1990 Data East Corporation (World)
 bouldashj		// (c) 1990 Data East Corporation (Japan)
-		// end of similar hardware
+// end of similar hardware
 stadhero		// (c) 1988 Data East Corporation (Japan)
 madmotor		// (c) [1989] Mitchell
-		// All these games have a unique code stamped on the mask roms
+// All these games have a unique code stamped on the mask roms
 vaportra		// MAA (c) 1989 Data East Corporation (World)
 vaportra3		// MAA (c) 1989 Data East Corporation (World)
 vaportrau		// MAA (c) 1989 Data East Corporation (US)
@@ -6053,6 +6087,7 @@ ssridersubc		// GX064 (c) 1991 (US)
 ssridersabd		// GX064 (c) 1991 (Asia)
 ssridersadd		// GX064 (c) 1991 (Asia)
 ssridersjbd		// GX064 (c) 1991 (Japan)
+ssridersjac		// GX064 (c) 1991 (Japan)
 ssridersb		// bootleg
 ssriders2		// bootleg
 xmen			// GX065 (c) 1992 (US)
@@ -6254,6 +6289,8 @@ popn6			// GQA16 (c) 2001 (Japan)
 popn7			// GCB00 (c) 2001 (Japan)
 popnanm2		// GEA02 (c) 2001 (Japan)
 popn8			// GQB30 (c) 2002 (Japan)
+bm37th          // GCB07 (c) 2002 (Japan JCA)
+bm3final        // GCC01 (c) 2003 (Japan JCA)
 
 // PowerPC based Konami games
 bujutsu			// G?645 (c)1997
@@ -6952,6 +6989,7 @@ prehislek		// A8003 'GT' (c) 1989
 gensitou		// A8003 'GT' (c) 1989
 mechatt			// A8002 'MA' (c) 1989
 mechattu		// A8002 'MA' (c) 1989
+mechattu1		// A8002 'MA' (c) 1989
 bbusters		// A9003 'BB' (c) 1989
 bbustersu		// A9003 'BB' (c) 1989
 
@@ -7865,7 +7903,6 @@ raident			// (c) 1990 Seibu Kaihatsu + Liang HWA Electronics license
 raidenu			// (c) 1990 Seibu Kaihatsu + Fabtek license
 raidenua		// (c) 1990 Seibu Kaihatsu + Fabtek license
 sdgndmps		// (c) Banpresto / Bandai (Japan)
-dcon			// (c) 1992 Success
 sengokmj		// (c) 1991 Sigma
 totmejan		// (c) 1991 Seibu/Tecmo
 goodejan		// (c) 1991 Seibu/Tecmo
@@ -8608,7 +8645,6 @@ ikki			// TVG17 (c) 1985 Sun Electronics (Japan)
 farmer			// TVG17 (c) 1985 Sun Electronics
 shanghai		// (c) 1988 Sunsoft (Sun Electronics)
 shangha2		// (c) 1989 Sunsoft (Sun Electronics)
-kothello		// (c) 1990 Success
 shangha3		// (c) 1993 Sunsoft
 heberpop		// (c) 1994 Sunsoft / Atlus
 blocken			// (c) 1994 KID / Visco
@@ -8849,6 +8885,7 @@ drgnmst			// (c) 1994
 burglarx		// (c) 1997
 zeropnt			// (c) 1998
 zeropnta		// (c) 1998
+zeropntj		// (c) 1998 (Japan)
 zeropnt2		// (c) 1999
 silkroad		// (c) 1999
 aoh			// (c) 2001
@@ -9773,13 +9810,18 @@ dynadice		// ?
 atamanot		// (c) 1983 Yachiyo Denki / Uni Enterprize
 ssingles		// Yachiyo?
 tcl			// (c) 1995 Uniwang
-othello			// (c) 1984 Success
-sothello		// (c) 1986 Success / Fujiwara
-tonton			// 199?, Success.
 quake			// (c) 19?? Lazer-Tron / iD Software
 majorpkr		// (c) 1994 PAL System.
 su2000			// (c) 1993 Virtuality
 boonggab		// (c) 2001 Taff System
+
+// Success
+tonton			// (c) 199? Success / Taiyo Jidoki.
+kurukuru		// (c) 199? Success / Taiyo Jidoki.
+othello			// (c) 1984 Success.
+sothello		// (c) 1986 Success / Fujiwara.
+kothello		// (c) 1990 Success.
+dcon			// (c) 1992 Success.
 
 // Nexus 3D
 acheart
@@ -9831,6 +9873,8 @@ phrcrazeb		// (c) 1986 Merit
 phrcrazec		// (c) 1986 Merit
 phrcrazev		// (c) 1986 Merit
 bigappg			// (c) 1986 Merit
+riviera			// (c) 1987 Merit
+rivieraa		// (c) 1986 Merit
 dodgecty		// (c) 1988 Merit
 dodgectya		// (c) 1986 Merit
 dodgectyb		// (c) 1986 Merit
@@ -9879,7 +9923,8 @@ suprgolf		// (c) 1989 Nasco
 onetwo			// (c) 1997 Barko
 onetwoe			// (c) 1997 Barko
 1945kiii		// (c) 2000 Oriental
-witch			// (c) 1992 Sega / Vic Tokai / Excellent Systems
+witch			// (c) 1992 Excellent System
+witchs			// (c) 1992 Sega / Vic Tokai license
 pbchmp95		// (c) 1995 Veltmeijer Automaten
 cardline		// (c) 199? Veltmeijer
 albatross
@@ -9993,7 +10038,9 @@ poker41			// (c) 1983 Game-A-Tron
 pulltabs		// (c) 1983 Game-A-Tron
 
 vroulet			// (c) 1989 World Game
-rcasino			// (c) 1984 Dyna Electronics
+rcasino			// (c) 1984 Dyna Electronics (D-2608208A1-2)
+rcasino1		// (c) 1984 Dyna Electronics (D-2608208A1-1, Larger Board)
+rcasinoo		// (c) 1984 Dyna Electronics (D-2608208A1-1, Smaller Board)
 ampoker2		// (c) 1990 Novomatic
 piccolop		// (c) 1990 Admiral - Novomatic
 ampkr2b1		// 1990 bootleg
@@ -11047,9 +11094,9 @@ gnome_2			// (c) 2007
 gnome_3			// (c) 2007
 gnome_4			// (c) 2007
 gnome_5			// (c) 2007
-//gnome_6			// (c) 2007
+//gnome_6		// (c) 2007
 gnome_7			// (c) 2007
-//gnome_8			// (c) 2007
+//gnome_8		// (c) 2007
 
 // Sweet Life 2
 sweetl2			// (c) 2007
@@ -11613,6 +11660,173 @@ pong			// (c) 1972 Atari
 pongf			// (c) 1972 Atari - no subcycles
 
 
+// JPM System 5 + Video Expansion 2
+monopoly	// Monopoly (JPM)
+monopolya	// Monopoly (JPM)
+monoplcl	// Monopoly Classic (JPM)
+monopldx	// Monopoly Deluxe (JPM)
+cashcade	// Cashcade (JPM)
+
+// JPM Impact + Video Board
+cluedo			// (c) 1995
+cluedod			// (c) 1995
+cluedo2c		// (c) 1995
+cluedo2			// (c) 1995
+trivialp		// (c) 1996
+trivialpd		// (c) 1996
+trivialpo		// (c) 1996
+scrabble		// (c) 1997
+scrabbled		// (c) 1997
+hngmnjpm		// (c) 1998
+hngmnjpmd		// (c) 1998
+coronatn		// (c) 1999
+coronatnd		// (c) 1999
+tqst			// (c) ACE?
+snlad			// (c) 199?
+buzzundr		// Buzzundrum (Ace)
+monspdr			// Money Spider (Ace)
+
+// Scorpion 1 + Adder Video board
+
+m_tppokr		// (c) 1996 BFM/ELAM,Game Card 95-750-899, uses Adder board for feature gfx
+
+// Cobra Hardware (SC1 expansion?)
+inquiztr		// 1989 BFM
+escounts		// 1990 BFM
+trebltop		// 1991 BFM
+beeline			// 1991 BFM
+quizvadr		// 1991 BFM
+qos				// 1992 BFM
+qosa			// 1992 BFM
+qosb			// 1992 BFM
+
+
+// MPU4 + Video board
+
+/* Barcrest */
+
+v4bios		// MPU4 Video Firmware
+v4cmaze		// The Crystal Maze (v1.3)
+v4cmazedat	//
+v4cmazea	//
+v4cmazeb	//
+v4cmazec	//
+v4cmazed	//
+v4cmaze2	// The New Crystal Maze Featuring Ocean Zone
+v4cmaze2d	//
+v4cmaze2a	//
+v4cmaze2b	//
+v4cmaze2c	//
+v4cmaze3	// The Crystal Maze Team Challenge
+v4cmaze3d	//
+v4cmaze3a	//
+v4cmaze3b	//
+v4cmaze3c	//
+v4turnov	// Turnover
+v4skltrk	// Skill Trek
+v4skltrka	//
+v4sklcsh	// Skill Cash
+v4addlad	// Adders and Ladders
+v4addlad20	//
+v4time		// Time Machine
+v4mate		// The Mating Game
+v4mated		//
+v4strike	// Strike it Lucky
+v4striked	//
+v4strike2	//
+v4strike2d	//
+v4eyedwn	// Eyes Down
+v4eyedwnd	//
+v4quidgr	// Ten Quid Grid
+v4quidgrd	//
+v4quidgr2	//
+v4quidgr2d	//
+v4barqst	// Barquest (v2.6d)
+v4barqs2	// Barquest 2 (v0.3)
+v4wize		// Wize Move (v1.3d)
+v4wizea		// Wize Move
+v4opt3		// Option 3
+v4opt3d		//
+
+/* Bwb */
+
+v4vgpok		// Vegas Poker (prototype release 2)
+v4psi		// Prize Space Invaders
+v4psia		//
+v4psib		//
+v4blox		// Blox
+v4bloxd		//
+v4reno		// Reno Reels
+v4redhtp	// Red Hot Poker
+v4tetrs		// BwB Tetris v 2.2
+v4frfact	// Fruit Factory
+v4bigfrt	// Big Fruits
+v4bubbnk	// Bubbly Bonk
+v4mazbel	// Mazooma Belle
+v4mazbla	//
+v4shpwnd	// Shop Window
+v4big40		// Big 40
+v4bulblx	// Bullion Blox
+v4cshinf	// Cash Inferno
+v4dbltak	// Double Take
+v4gldrsh	// Gold Rush
+v4mdice		// Miami Dice
+v4monte		// Monte Carlo Or Bust
+v4ovrmn3	// Over Moon Pt3
+v4pztet		// Prize Tetris
+v4pzteta	//
+v4rhmaz		// Red Hot Mazooma Belle
+v4sunbst	// Sunburst
+v4timebn	// Time Bandit
+v4sixx		// 6-X
+v4megbuk	// Megabucks Poker
+v4rencas	// Reno Casino
+
+/* Nova (Bwb board) */
+
+v4cybcas	// Cyber Casino
+v4miami		// Miami Dice
+v4missis	// Mississippi Lady
+v4picdil	// Piccadilly Nights
+
+/* Zenitone (custom video board) */
+
+v4dealem	// Deal 'Em
+
+// Scorpion 2 + Adder 2 Video Board
+qntoondo		// 1993
+quintoon		// 1993
+quintond		// 1993
+quintono		// 1993
+qntoond			// 1993
+pokio			// 1994
+slotsnl			// 1995
+paradice		// 1995
+pyramid			// 1996
+sltblgtk		// 1996
+sltblgpo		// 1996
+sltblgp1		// 1996
+gldncrwn		// 1997
+
+// Cobra 3
+
+c3_rtime		// Radio Times
+c3_telly		// Telly Addicts
+c3_totp			// Top of the Pops
+c3_ppays		// The Phrase That Pays
+
+// Maygay 68K based SWP hardware
+
+mg_gbr		// Guinness Book Of Records
+mg_ewg		// Each Way Gambler
+mg_jv		// Jack & Vera
+mg_alad		// Aladdin's Cave
+mg_bb		// Big Break
+mg_lug		// London Underground
+mg_pbw		// Pinball Wizard
+mg_risk		// Risk
+mg_scl		// Super Clue
+mg_kf		// Krypton Factor
 
 
 /* Drivers below are _mostly_ mechanical games, usually with no video display, requiring external artwork to function. */
@@ -11623,7 +11837,7 @@ pongf			// (c) 1972 Atari - no subcycles
 
 // JPM SRU?
 j_ewnud		// Each Way Nudger
-j_ewnda	
+j_ewnda
 j_ewnd20
 j_ews		// Each Way Shifter
 j_ews8a
@@ -11856,6 +12070,7 @@ j2ss		// Supa Stepper (JPM)
 j2nbz		// Nudge Bonanza (JPM)
 j2clbbin	// Club Bingo (Crystal)
 j2sirich	// Strike It Rich? (Maygay?)
+j2siricha	//
 j2hcash		// Hot Cash
 j2sset
 
@@ -11968,7 +12183,6 @@ j5hollye	//
 j5hotdog	// Hot Dogs (JPM),
 j5hotdoga	//
 j5indsum	// Indian Summer (JPM)
-j5indy		// Indy 500 (JPM)
 j5intr		// Intrigue (JPM)
 j5intra		//
 j5intrb		//
@@ -12038,13 +12252,6 @@ j5revoa		//
 j5sizl		// Sizzling (JPM)
 j5hilos		// Hi Lo Silver (JPM)
 
-// JPM System 5 + Video Expansion 2
-monopoly	// Monopoly (JPM)
-monopolya	// Monopoly (JPM)
-monoplcl	// Monopoly Classic (JPM)
-monopldx	// Monopoly Deluxe (JPM)
-cashcade	// Cashcade (JPM)
-
 // JPM Impact
 j6fifth		// 5th Dimension (Ace)
 j6aceclb	// Ace Of Clubs (Crystal)
@@ -12052,237 +12259,971 @@ j6aceclba	//
 j6acehi		// Aces High (Ace)
 j6amdrm		// American Dream (Mdm)
 j6arcade	// Arcadia (JPM)
+j6arcadea	//
+j6arcadeb	//
+j6arcadec	//
+j6arcaded	//
+j6arcadee	//
+j6arcadef	//
+j6arcadeg	//
+j6arcadeh	//
+j6arcadei	//
+j6arcadej	//
+j6arcadek	//
 j6bnkrcl	// Banker Club (JPM)
+j6bnkrcla	//
+j6bnkrclb	//
+j6bnkrclc	//
 j6big50		// Big 50 (JPM)
+j6big50a	//
+j6big50b	//
+j6big50c	//
+j6big50d	//
 j6bigbnk	// Big Banker (JPM)
+j6bigbnka	//
+j6bigbnkb	//
+j6bigbnkc	//
+j6bigbnkd	//
+j6bigbnke	//
+j6bigbnkf	//
+j6bigbnkg	//
+j6bigbnkh	//
+j6bigbnki	//
+j6bigbnkj	//
+j6bigbnkk	//
+j6bigbnkl	//
+j6bigbnkm	//
+j6bigbnkn	//
+j6bigbnko	//
+j6bigbnkp	//
 j6bigbuk	// Big Bucks (JPM)
+j6bigbuka	//
+j6bigbukb	//
+j6bigbukc	//
+j6bigbukd	//
+j6bigbuke	//
+j6bigbukf	//
+j6bigbukg	//
+j6bigbukh	//
+j6bigbuki	//
+j6bigbukj	//
 j6bigcsh	// Big Cash Machine (Empire)
 j6bigpct	// Big Picture (Ace)
+j6bigpcta	//
+j6bigpctb	//
 j6bigtop	// Big Top Club (JPM)
+j6bigtopa	//
+j6bigtopb	//
+j6bigtopc	//
 j6bigwhl	// Big Wheel (JPM)
+j6bigwhla	//
+j6bigwhlb	//
+j6bigwhlc	//
+j6bigwhld	//
+j6bigwhle	//
 j6bnza		// Bonanza (JPM)
+j6bnzaa		//
+j6bnzab		//
+j6bnzac		//
+j6bnzad		//
+j6bnzae		//
+j6bnzaf		//
+j6bnzag		//
+j6bnzah		//
+j6bnzai		//
+j6bnzaj		//
+j6bnzak		//
 j6brkout	// Breakout (JPM)
+j6brkouta	//
 j6bucks		// Bucks Fizz (Ace)
-j6buzz		// Buzzundrum (Ace)
 j6cpclb		// Caesar's Palace Club (JPM)
+j6cpclba	//
+j6cpclbb	//
 j6camelt	// Camelot (JPM)
+j6camelta	//
+j6cameltb	//
+j6cameltc	//
+j6cameltd	//
 j6scarlt	// Captain Scarlet (Ace)
 j6cshbox	// Cash Box Club (Empire)
+j6cshboxa	//
+j6cshboxb	//
 j6cshbeu	// Cash Box Club (Empire) [Euro]
 j6cshbst	// Cash Buster (JPM)
+j6cshbsta	//
+j6cshbstb	//
+j6cshbstc	//
+j6cshbstd	//
 j6cshcnt	// Cash Countdown (JPM)
+j6cshcnta	//
 j6cshrd		// Cash Raider (Ace)
+j6cshrda	//
+j6cshrdb	//
+j6cshrdc	//
+j6cshrdd	//
 j6cshtwr	// Cash Towers (JPM)
 j6cshvgs	// Cash Vegas Strip (JPM)
+j6cshvgsa	//
+j6cshvgsb	//
+j6cshvgsc	//
+j6cshvgsd	//
+j6cshvgse	//
+j6cshvgsf	//
+j6cshvgsg	//
+j6cshvgsh	//
+j6cshvgsi	//
+j6cshvgsj	//
+j6cshvgsk	//
+j6cshvgsl	//
+j6cshvgsm	//
+j6cshvgsn	//
+j6cshvgso	//
+j6cshvgsp	//
+j6cshvgsq	//
+j6cshvgsr	//
 j6cas5		// Casino 5ive Liner (JPM) (IMPACT)
+j6cas5a		//
+j6cas5b		//
+j6cas5c		//
+j6cas5d		//
+j6cas5e		//
+j6cas5f		//
+j6cas5g		//
+j6cas5h		//
+j6cas5i		//
+j6cas5j		//
+j6cas5k		//
+j6cas5l		//
 j6cascz		// Casino Crazy (JPM)
+j6cascza	//
+j6casczb	//
+j6casczc	//
+j6casczd	//
+j6cascze	//
+j6casczf	//
+j6casczg	//
+j6casczh	//
+j6casczi	//
+j6casczj	//
+j6casczk	//
+j6casczl	//
+j6casczm	//
 j6cccla		// Casino Crazy Classic (JPM)
+j6ccclaa	//
+j6ccclab	//
+j6ccclac	//
+j6ccclad	//
+j6ccclae	//
+j6ccclaf	//
+j6ccclag	//
+j6ccclah	//
+j6ccclai	//
+j6ccclaj	//
+j6ccclak	//
 j6cascla	// Casino Crazy Classic Club (JPM)
+j6casclaa	//
+j6casclab	//
+j6casclac	//
+j6casclad	//
+j6casclae	//
+j6casclaf	//
+j6casclag	//
+j6casclah	//
+j6casclai	//
+j6casclaj	//
+j6casclak	//
+j6casclal	//
+j6casclam	//
+j6casclan	//
+j6casclao	//
+j6casclap	//
+j6casclaq	//
+j6casclar	//
+j6casclas	//
+j6casclat	//
 j6casclb	// Casino Crazy Club (JPM)
+j6casclba	//
 j6caslas	// Casino Las Vegas (JPM)
+j6caslasa	//
+j6caslasb	//
+j6caslasc	//
 j6cheque	// Cheque Mate (JPM)
 j6cluclb	// Cluedo Club (JPM)
+j6cluclba	//
+j6cluclbb	//
+j6cluclbc	//
+j6cluclbd	//
+j6cluclbe	//
+j6cluclbf	//
+j6cluclbg	//
+j6cluclbh	//
+j6cluclbi	//
+j6cluclbj	//
+j6cluclbk	//
+j6cluclbl	//
 j6col		// Coliseum (Mdm)
+j6cola		//
+j6colb		//
+j6colc		//
+j6cold		//
+j6cole		//
+j6colf		//
 j6colcsh	// Coliseum Cash (JPM)
+j6colcsha	//
+j6colcshb	//
+j6colcshc	//
+j6colcshd	//
 j6colmon	// Colour Of Money (JPM)
+j6colmona	//
+j6colmonb	//
+j6colmonc	//
+j6colmond	//
+j6colmone	//
+j6colmonf	//
+j6colmong	//
+j6colmonh	//
+j6colmoni	//
+j6colmonj	//
 j6coprob	// Cops 'n' Robbers (Qps)
+j6coproba	//
+j6coprobb	//
+j6coprobc	//
+j6coprobd	//
+j6coprobe	//
 j6crack		// Cracker (JPM)
+j6cracka	//
+j6crackb	//
+j6crackc	//
+j6crackd	//
+j6cracke	//
+j6crackf	//
+j6crackg	//
+j6crackh	//
+j6cracki	//
+j6crackj	//
 j6crzclb	// Crazy Club (JPM)
+j6crzclba	//
+j6crzclbb	//
+j6crzclbc	//
 j6crsfir	// Cross Fire (JPM)
+j6crsfira	//
 j6daygld	// Daytona Gold (JPM)
+j6dayglda	//
+j6daygldb	//
+j6daygldc	//
+j6daygldd	//
+j6dayglde	//
 j6dayml		// Daytona Millennium (JPM)
+j6daymla	//
+j6daymlb	//
 j6dmnjkr	// Demon Jokers (JPM)
+j6dmnjkra	//
+j6dmnjkrb	//
+j6dmnjkrc	//
 j6dmngz		// Diamond Geezer (JPM)
 j6dyfl		// Do You Feel Lucky (JPM)
+j6dyfla		//
+j6dyflb		//
+j6dyflc		//
+j6dyfld		//
+j6dyfle		//
+j6dyflf		//
+j6dyflg		//
+j6dyflh		//
+j6dyfli		//
+j6dyflj		//
 j6drdogh	// Dr Dough (Qps)
 j6euphor	// Euphoria (Ace)
+j6euphora	//
+j6euphorb	//
+j6euphorc	//
+j6euphord	//
+j6euphore	//
+j6euphorf	//
 j6fastfr	// Fast Fruits Club (Qps)
+j6fastfra	//
 j6fasttk	// Fast Trak (JPM)
+j6fasttka	//
+j6fasttkb	//
+j6fasttkc	//
 j6filth		// Filthy Rich Club (JPM)
+j6filtha	//
+j6filthb	//
+j6filthc	//
 j6firbl		// Fireball (JPM)
+j6firbla	//
+j6firblb	//
+j6firblc	//
+j6firbld	//
 j6fireck	// Firecracker (JPM)
+j6firecka	//
+j6fireckb	//
+j6fireckc	//
+j6fireckd	//
+j6firecke	//
 j6firclb	// Firecracker Club (JPM)
+j6firclba	//
+j6firclbb	//
+j6firclbc	//
 j6fivalv	// Five Alive Club (JPM)
+j6fivalva	//
+j6fivalvb	//
 j6fiveln	// Five Liner (JPM)
+j6fivelna	//
+j6fivelnb	//
+j6fivelnc	//
 j6frc10		// Force 10 (JPM)
+j6frc10a	//
+j6frc10b	//
+j6frc10c	//
+j6frc10d	//
 j6framft	// Frame & Fortune Club (JPM)
 j6frtmch	// Fruit Machine, The (JPM)
 j6frtpot	// Fruitpots (Qps)
+j6frtpota	//
+j6frtpotb	//
+j6frtpotc	//
 j6gforce	// G Force (JPM)
-j6gforceb	// G Force (JPM) 15GBP
+j6gforcea	//
+j6gforceb	//
+j6gforcec	//
+j6gforced	// G Force (JPM) 15GBP
 j6gidogh	// G.I. Dough (Ace)
 j6guab		// Give Us A Break (JPM)
+j6guaba		//
+j6guabb		//
+j6guabc		//
+j6guabd		//
+j6guabe		//
+j6guabf		//
 j6guabcl	// Give Us A Break Club (JPM)
+j6guabcla	//
 j6gldclb	// Gladiator Club (JPM)
+j6gldclba	//
+j6gldclbb	//
 j6gogold	// Go For Gold (JPM)
+j6gogolda	//
+j6gogoldb	//
+j6gogoldc	//
 j6gldmin	// Gold Mine (Empire)
-j6gldday	// Golden Day (JPM)
 j6golddm	// Golden Demons (JPM)
+j6golddma	//
 j6goldgl	// Golden Goal (JPM)
+j6goldgla	//
+j6goldglb	//
+j6goldglc	//
+j6goldgld	//
+j6goldgle	//
+j6goldglf	//
+j6goldglg	//
+j6goldglh	//
+j6goldgli	//
+j6goldglj	//
+j6goldglk	//
+j6goldgll	//
 j6hapyhr	// Happy Hour (JPM)
+j6hapyhra	//
+j6hapyhrb	//
 j6hifly		// Hi Flyer (Ace)
 j6impact	// Hi Impact (JPM)
-j6impactb	// Hi Impact (JPM) 15GBP
+j6impacta	//
+j6impactb	//
+j6impactc	// Hi Impact (JPM) 15GBP
 j6hilosv	// Hi Lo Silver (JPM)
+j6hilosva	//
+j6hilosvb	//
+j6hilosvc	//
+j6hilosvd	//
+j6hilosve	//
 j6hirol		// Hi Roller (JPM)
+j6hirola	//
+j6hirolb	//
+j6hirolc	//
+j6hirold	//
 j6hirlcl	// Hi Roller Club (JPM)
+j6hirlcla	//
+j6hirlclb	//
+j6hirlclc	//
 j6histk		// Hi Stakes (Qps)
+j6histka	//
 j6hiphop	// Hip Hopper (Ace)
+j6hiphopa	//
+j6hiphopb	//
+j6hiphopc	//
+j6hiphopd	//
 j6hotsht	// Hot Shot (Ace)
+j6hotshta	//
+j6hotshtb	//
+j6hotshtc	//
+j6hotshtd	//
+j6hotshte	//
+j6hotshtf	//
+j6hotshtg	//
+j6hotshth	//
+j6hotshti	//
+j6hotshtj	//
+j6hotshtk	//
+j6hotshtl	//
 j6impuls	// Impulse (JPM)
+j6impulsa	//
+j6impulsb	//
+j6impulsc	//
+j6impulsd	//
+j6impulse	//
+j6impulsf	//
 j6indy		// Indiana Jones (JPM)
+j6indya		//
+j6indyb		//
+j6indyc		//
+j6indyd		//
+j6indye		//
+j6indyf		//
+j6indyg		//
+j6indyh		//
+j6indyi		//
+j6indyj		//
+j6indyk		//
+j6indyge	//
 j6showtm	// It's Showtime (JPM)
+j6showtma	//
+j6showtmb	//
+j6showtmc	//
+j6showtmd	//
+j6showtme	//
+j6showtmf	//
+j6showtmg	//
+j6showtmh	//
+j6showtmi	//
+j6showtmj	//
+j6showtmk	//
+j6showtml	//
 j6jackjs	// Jackpot Justice (Qps)
+j6jackjsa	//
+j6jackjsb	//
+j6jackjsc	//
 j6jkrgld	// Jokers Gold (JPM)
 j6jkrpls	// Jokers Plus (JPM)
+j6jkrplsa	//
+j6jkrplsb	//
+j6jkrplsc	//
+j6jkrplsd	//
+j6jkrplse	//
 j6jkpldx	// Jokers Plus Deluxe (JPM)
+j6jkpldxa	//
 j6jkwld		// Jokers Wild (JPM)
 j6jungfv	// Jungle Fever (Ace)
 j6kamel		// Kameleon (JPM)
 j6kungfu	// Kung Fu (Ace)
+j6kungfua	//
+j6kungfub	//
+j6kungfuc	//
+j6kungfud	//
 j6luckla	// Lucky Las Vegas (JPM)
+j6lucklaa	//
+j6lucklab	//
 j6magcir	// Magic Circle Club (JPM)
+j6magcira	//
+j6magcirb	//
+j6magcirc	//
+j6magcird	//
 j6mavrk		// Maverick (JPM)
+j6mavrka	//
+j6mavrkb	//
+j6mavrkc	//
+j6mavrkd	//
 j6maxod		// Maximum Overdrive (JPM)
+j6maxoda	//
+j6maxodb	//
+j6maxodc	//
 j6maxcsh	// Maximus Cash (JPM)
 j6medal		// Medallion Job (Qps)
+j6medala	//
+j6medalb	//
+j6medalc	//
+j6medald	//
 j6megbck	// Mega Bucks (JPM)
+j6megbcka	//
+j6megbckb	//
+j6megbckc	//
+j6megbckd	//
 j6monmad	// Money Madness (Ace)
-j6monspd	// Money Spider (Ace)
 j6montlk	// Money Talks (JPM)
+j6montlka	//
+j6montlkb	//
+j6montlkc	//
+j6montlkd	//
+j6montlke	//
+j6montlkf	//
+j6montlkg	//
+j6montlkh	//
 j6mono60	// Monopoly 60th Anniversary Edition (JPM)
 j6mono60a	//
+j6mono60b	//
+j6mono60c	//
+j6mono60d	//
+j6mono60e	//
+j6mono60f	//
+j6mono60g	//
+j6mono60h	//
+j6mono60i	//
+j6mono60j	//
+j6mono60k	//
+j6mono60l	//
 j6monobn	// Monopoly Bingo (JPM)
+j6monobna	//
+j6monobnb	//
 j6outlaw	// Outlaw (JPM)
 j6outlawc	// Outlaw (JPM) Club?
 j6outlawd	// Outlaw (JPM) Protocol
 j6oxo		// Oxo (JPM)
+j6oxoa		//
+j6oxob		//
+j6oxoc		//
+j6oxod		//
+j6oxoe		//
 j6oxobin	// Oxo Bingo (JPM)
+j6oxobina	//
+j6oxobinb	//
+j6oxobinc	//
+j6oxobind	//
+j6oxobine	//
+j6oxobinf	//
 j6pacman	// Pac Man Plus (Qps)
 j6papa		// Paparazzi (Empire)
+j6papaa		//
+j6papab		//
+j6papac		//
+j6papad		//
+j6papae		//
+j6papaf		//
 j6phxgld	// Phoenix Gold (JPM)
+j6phxglda	//
+j6phxgldb	//
+j6phxgldc	//
+j6phxgldd	//
+j6phxglde	//
+j6phxgldf	//
+j6phxgldg	//
 j6pnxgd		// Phoenix Gold De Luxe (JPM)
 j6pnxmil	// Phoenix Millennium (JPM)
+j6pnxmila	//
+j6pnxmilb	//
+j6pnxmilc	//
 j6pinwzd	// Pinball Wizard (JPM)
+j6pinwzda	//
+j6pinwzdb	//
+j6pinwzdc	//
+j6pinwzdd	//
+j6pinwzde	//
+j6pinwzc	// Pinball Wizard (Crystal)
+j6pinwzca	//
+j6pinwzcb	//
 j6pirgld	// Pirates Gold (JPM)
+j6pirglda	//
 j6popoli	// Popeye & Olive (JPM)
+j6popolia	//
 j6pog		// Pot Of Gold (Ace)
+j6poga		//
+j6pogb		//
+j6pogc		//
+j6pogd		//
 j6pogcls	// Pot Of Gold Classic (JPM)
+j6pogclsa	//
+j6pogclsb	//
 j6pwrlin	// Power Lines (JPM)
+j6pwrlina	//
 j6pwrspn	// Powerspin (JPM)
+j6pwrspna	//
+j6pwrspnb	//
+j6pwrspnc	//
+j6pwrspnd	//
+j6pwrspne	//
 j6quantm	// Quantum Leap (JPM)
+j6quantma	//
+j6quantmb	//
+j6quantmc	//
 j6quick		// Quicksilver (RAL)
 j6rager		// Red Alert (JPM) [German]
 j6ra		// Red Alert (JPM)
+j6raa		//
+j6rab		//
+j6rac		//
+j6rad		//
 j6raclb		// Red Alert Club (JPM)
+j6raclba	//
+j6raclbb	//
+j6raclbc	//
+j6raclbd	//
 j6redarw	// Red Arrow (JPM)
+j6redarwa	//
+j6redarwb	//
+j6redarwc	//
+j6redarwd	//
+j6redarwe	//
+j6redarwf	//
+j6redarwg	//
+j6redarwh	//
+j6redarwi	//
+j6redarwj	//
 j6redarww	// Red Arrow (Whitbread / JPM)
 j6reddmn	// Red Demon (JPM)
 j6rh6		// Red Hot 6 (JPM)
+j6rh6a		//
+j6rh6b		//
+j6rh6c		//
+j6rh6d		//
+j6rh6e		//
 j6rhchil	// Red Hot Chili Stepper (Ace)
+j6rhchila	//
+j6rhchilb	//
+j6rhchilc	//
+j6rhchild	//
 j6rh6cl		// Red Hot Six Club (JPM)
+j6rh6cla	//
+j6rh6clb	//
+j6rh6clc	//
+j6rh6cld	//
 j6reelmn	// Reel Money (JPM)
+j6reelmna	//
+j6reelmnb	//
+j6reelmnc	//
+j6reelmnd	//
 j6reelth	// Reel Thing (Ace)
 j6reeltha	//
+j6reelthb	//
 j6richpk	// Rich Pickings (Ace)
 j6rico		// Ricochet (JPM)
+j6ricoa		//
+j6ricob		//
+j6ricoc		//
+j6ricod		//
+j6ricoe		//
 j6robin		// Robin Hood (Ace)
+j6robina	//
+j6robinb	//
+j6robinc	//
 j6roller	// Roller Coaster (JPM)
+j6rollera	//
+j6rollerb	//
+j6rollerc	//
+j6rollerd	//
+j6rollere	//
+j6rollerf	//
+j6rollerg	//
+j6rollerh	//
+j6rolleri	//
+j6rollerj	//
+j6rollerk	//
+j6rollerl	//
+j6rollerm	//
+j6rollern	//
+j6rollero	//
+j6rollerp	//
 j6rccls		// Roller Coaster Classic (JPM)
+j6rcclsa	//
+j6rcclsb	//
 j6royfls	// Royal Flush Club (JPM)
+j6royflsa	//
+j6royflsb	//
+j6royflsc	//
+j6royflsd	//
+j6royflse	//
 j6samur		// Samurai Club (JPM)
+j6samura	//
+j6samurb	//
+j6samurc	//
+j6samurd	//
 j6sidewd	// Sidewinder (JPM)
+j6sidewda	//
+j6sidewdb	//
+j6sidewdc	//
+j6sidewdd	//
+j6sidewde	//
 j6snakes	// Snakes & Ladders (JPM)
+j6snakesa	//
+j6snakesb	//
+j6snakesc	//
+j6snakesd	//
+j6snakese	//
+j6snakesf	//
+j6snakesg	//
 j6sonic		// Sonic The Hedgehog (JPM)
+j6sonica	//
+j6sonicb	//
+j6sonicc	//
+j6sonicd	//
+j6sonice	//
+j6sonicf	//
+j6sonicg	//
+j6sonich	//
 j6spcinv	// Space Invaders (Crystal)
 j6stards	// Stardust (JPM)
+j6stardsa	//
+j6stardsb	//
+j6stardsc	//
 j6start		// Starturn (JPM)
+j6starta	//
 j6strk10	// Strike 10 (Ace)
+j6strk10a	//
+j6strk10b	//
+j6strk10c	//
+j6strk10d	//
+j6strk10e	//
+j6strk10f	//
+j6strk10g	//
+j6strk10h	//
+j6strk10i	//
+j6strk10j	//
+j6strk10k	//
 j6supbrk	// Super Breakout (JPM)
+j6supbrka	//
+j6supbrkb	//
+j6supbrkc	//
+j6supbrkd	//
+j6supbrke	//
+j6supbrkf	//
+j6supbrkg	//
+j6supbrkh	//
+j6supbrki	//
+j6supbrkj	//
 j6swpdrp	// Swop Till Ya Drop (JPM)
 j6bags		// Three Bags Full (JPM)
 j6roof		// Thru' The Roof (Ace)
+j6roofa		//
 j6tbirds	// Thunderbirds
 j6tbirdsa	//
 j6tbirdsb	//
+j6tbirdsc	//
+j6tbirdsd	//
+j6tbirdse	//
+j6tbirdsf	//
+j6tbirdsg	//
+j6tbirdsh	//
+j6tbirdsi	//
+j6tbirdsj	//
+j6tbirdsk	//
+j6tbirdsl	//
+j6tbirdsm	//
+j6tbirdsn	//
+j6tbirdso	//
+j6tbirdsp	//
+j6tbirdsq	//
+j6tbirdsr	//
 j6tbrdcl	// Thunderbirds Club (JPM)
+j6tbrdcla	//
+j6tbrdclb	//
+j6tbrdclc	//
+j6tbrdcld	//
+j6tbrdcle	//
+j6tbrdclf	//
+j6tbrdclg	//
+j6tbrdclh	//
+j6tbrdcli	//
+j6tbrdclj	//
+j6tbrdclk	//
+j6tbrdcll	//
 j6tomb		// Tomb Raider (JPM)
+j6tomba		//
+j6tombb		//
+j6tombc		//
+j6tombd		//
+j6tombe		//
+j6tombf		//
+j6tombg		//
 j6topflg	// Top Flight (Ace)
 j6tutti		// Tutti Frutti (Qps)
 j6twst		// Twister (Ace)
-j6twstd		// Twister (JPM) [Dutch]
+j6twsta		//
+j6twstb		//
+j6twstc		//
+j6twstd		//
+j6twste		//
+j6twstf		//
+j6twstg		//
+j6twsth		//
+j6twsti		//
+j6twstj		//
+j6twstdt	// Twister (JPM) [Dutch]
 j6untch		// Untouchables (JPM)
+j6untcha	//
 j6pompay	// Up Pompay (Ace)
+j6pompaya	//
+j6pompayb	//
+j6pompayc	//
 j6vindal	// Vindaloot (JPM)
 j6vivark	// Viva Rock Vegas (JPM)
+j6vivarka	//
+j6vivarkb	//
+j6vivarkc	//
+j6vivarkd	//
+j6vivarke	//
+j6vivarkf	//
+j6vivarkg	//
+j6vivarkh	//
+j6vivarki	//
+j6vivarkj	//
+j6vivarkk	//
 j6vivrkc	// Viva Rock Vegas Club (JPM)
+j6vivrkca	//
+j6vivrkcb	//
 j6wldkng	// Wild King Club (JPM)
+j6wldknga	//
 j6wthing	// Wild Thing (Empire)
+j6wthinga	//
+j6wthingb	//
 j6wildw		// Wild West (Ace)
+j6wildwa	//
+j6wildwb	//
+j6wildwc	//
+j6wildwd	//
+j6wildwe	//
+j6wildwf	//
+j6wildwg	//
 j6wizard	// Wizard Of Odds (JPM)
+j6wizarda	//
+j6wizardb	//
+j6wizardc	//
+j6wizardd	//
+j6wizarde	//
 j6knight	// Your Lucky Knight (JPM)
+j6knighta	//
+j6knightb	//
+j6knightc	//
+j6knightd	//
+j6knighte	//
 j6svndb		// 7 Deadly Bins (Ace)
 j6ewn		// Each Way Nudger (JPM)
 j6hikar		// Hi Karate (Crystal)
+j6hikara	//
+j6hikarb	//
 j6hisprt	// High Spirits (Empire)
 j6rcclub	// Roller Coaster Club (JPM)
+j6rccluba	//
+j6rcclubb	//
 j6slvgst	// Silver Ghost (JPM)
+j6slvgsta	//
+j6slvgstb	//
+j6slvgstc	//
+j6slvgstd	//
+j6slvgste	//
+j6slvgstf	//
+j6slvgstg	//
 j6footy		// Football Fever (Empire)
+j6footya	//
+j6footyb	//
 j6fbcrz		// Football Crazy (JPM)
 j6h5clb		// High Five Club (JPM)
-
+j6h5clba	//
 j6bbankr	// Big Banker (Crystal)
 j6bmc		// Big Money Club (Crystal)
+j6bmca		//
 j6bno		// Big Nite Out (Crystal)
+j6bnoa		//
+j6bnob		//
+j6bnoc		//
 j6btbw		// Born To Be Wild Club (Crystal)
+j6btbwa		//
+j6btbwb		//
+j6btbwc		//
+j6btbwd		//
 j6cpal		// Caesars Palace (Crystal)
-j6cpala		// Caesars Palace (Crystal)
-j6cpalb		// Caesars Palace (Ace)
+j6cpala		//
+j6cpalb		//
+j6cpalc		//
+j6cpald		//
+j6cpale		//
+j6cpalf		//
+j6cpalg		//
 j6cdivr		// Cash Diver (Crystal)
 j6ccc		// Casino Crazy Club (Crystal)
+j6ccca		//
+j6cccb		//
+j6cccc		//
 j6colic		// Coliseum (Crystal)
+j6colica	//
+j6colicb	//
+j6colicc	//
+j6colicd	//
 j6crakr		// Cracker (Crystal)
+j6crakra	//
+j6crakrb	//
 j6ewndg		// Each Way Nudger (Crystal)
+j6ewndga	//
+j6ewndgb	//
 j6easy		// Easy Money (Crystal)
+j6easya		//
+j6easyb		//
+j6easyc		//
 j6ffc		// Frame & Fortune Club (Crystal)
+j6ffca		//
+j6ffcb		//
+j6ffcc		//
+j6ffcd		//
+j6ffce		//
 j6grc		// Gold Rush Club (Crystal)
+j6grca		//
 j6hdc		// Hot Dogs Club (Crystal)
+j6hdca		//
+j6hdcb		//
+j6hdcc		//
+j6hdcd		//
+j6hdce		//
+j6hdcf		//
+j6hdcg		//
 j6impls		// Impulse (Crystal)
 j6kapang	// Kapang! (Crystal)
+j6kapanga	//
 j6kfc		// Kung Fu Club (Crystal)
+j6kfca		//
+j6kfcb		//
 j6lucklo	// Lucky Lottery Club (Crystal)
+j6luckloa	//
 j6monst		// Monster Cash Club (Crystal)
+j6monsta	//
+j6monstb	//
+j6monstc	//
+j6monstd	//
 j6pinfvr	// Pinball Fever (Crystal)
-j6pinwzdc	// Pinball Wizard (Crystal)
 j6potg		// Pot Of Gold (Crystal)
+j6potga		//
+j6potgb		//
 j6ramese	// Rameses' Riches Club (Crystal)
+j6ramesea	//
+j6rameseb	//
+j6ramesec	//
+j6ramesed	//
+j6ramesee	//
+j6ramesef	//
 j6r2rum		// Ready To Rumble (Crystal)
+j6r2ruma	//
+j6r2rumb	//
+j6r2rumc	//
+j6r2rumd	//
+j6r2rume	//
 j6redal		// Red Alert (Crystal)
+j6redala	//
 j6reelb		// Reel Bingo Classic Club (Crystal)
-j6sl		// Snakes & Ladders (Crystal)
-j6sla		// Snakes & Ladders Slides Again (Crystal)
+j6reelba	//
+j6slagn		// Snakes & Ladders Slides Again (Crystal)
+j6slagna	//
+j6slagnb	//
+j6slagnc	//
+j6slagnd	//
+j6slagne	//
+j6slagnf	//
+j6slagng	//
+j6slagnh	//
 j6thril		// Thriller (Crystal)
+j6thrila	//
 j6tqust		// Treasure Quest (Crystal)
+j6tqusta	//
+j6tqustb	//
+j6tqustc	//
 j6gldpl		// Golden Palace (QPS / Mazooma)
 j6shoot		// ShootOut
 j6milln		// Millionaire / Who Wants To Be A Millionaire (JPM)?
+j6millna	//
 
-// JPM Impact + Video Board
-cluedo			// (c) 1995
-cluedod			// (c) 1995
-cluedo2c		// (c) 1995
-cluedo2			// (c) 1995
-trivialp		// (c) 1996
-trivialpd		// (c) 1996
-trivialpo		// (c) 1996
-scrabble		// (c) 1997
-scrabbled		// (c) 1997
-hngmnjpm		// (c) 1998
-hngmnjpmd		// (c) 1998
-coronatn		// (c) 1999
-coronatnd		// (c) 1999
-tqst			// (c) ACE?
-snlad			// (c) 199?
 
 // Unknown JPM platform
 j7bmagic		// Black Magic (JPM)
@@ -12337,6 +13278,10 @@ b85sngam
 b85cops		// Cops 'n' Robbers (Bellfruit) [Dutch]
 b85koc
 b85koca
+b85disc
+b85cb7p
+b85potp		// Pick Of The Pack (Bellfruit)
+b85dbldlb	// Double Dealer (Bellfruit)?
 
 // Scorpion 1 games
 
@@ -12356,10 +13301,14 @@ sc1btclkb
 sc1calyp
 sc1carro
 sc1cdmp
-sc1cshat
+sc1cshat	// Cash Attraction
 sc1cshata
 sc1cshatb
 sc1cshatc
+sc1cshatf
+sc1cshatg
+sc1cshath
+sc1cshati
 sc1cshcd
 sc1cshcda
 sc1cshcdb
@@ -12368,11 +13317,15 @@ sc1cexpd	// Cash Explosion (Bellfruit) (Dutch)
 sc1cexpl	// Cash Explosion (Bellfruit)
 sc1cexpla
 sc1cexplb
-sc1cexplc
-sc1cexpld
+sc1clbxpa
 sc1cshwz	// Cash Wise (Bellfruit)
 sc1cshwza
 sc1cshwzb
+sc1cshwzc
+sc1cshwzd
+sc1cshwze
+sc1cshwzf
+sc1cshwzg
 sc1cshin	// Cashino (Bellfruit) (Dutch)
 sc1china	// China Town Club (Bellfruit)
 sc1chinap
@@ -12387,12 +13340,13 @@ sc1cl2k		// Club 2000 (Bellfruit)
 sc1cl2k1	// Club 2001 (Bellfruit)
 sc1cl65		// Club 65 Special (Bellfruit)
 sc1cl65a
-sc1cl65ap
+sc1cl65cp
 sc1cl65b
 sc1cl65bp
 sc1cl65c
 sc1cl65d
 sc1cl65dp
+sc1cl65ap
 sc1clbdm	// Club Diamond (Bellfruit)
 sc1clbxp	// Club Explosion (Bellfruit)
 sc1clbrn	// Club Runner (Bellfruit)
@@ -12401,7 +13355,6 @@ sc1clbtm	// Club Temptation (Bellfruit)
 sc1clbtma
 sc1clbw		// Club Wise (Bellfruit)
 sc1clbwa
-sc1clbwb
 sc1cops 	// Cops 'n' Robbers (Bellfruit)
 sc1copsa
 sc1copdd	// Cops 'n' Robbers Deluxe (Bellfruit) [Dutch]
@@ -12410,12 +13363,11 @@ sc1count	// Count Cash Club (Bellfruit)
 sc1countp
 sc1counta
 sc1countap
-sc1countb
 sc1dago		// Dagobert's Vault (Bellfruit)
 sc1disc		// Discovey (Bellfruit)
-sc1disca
 sc1dblch	// Double Chance (Bellfruit)
 sc1dblcha
+sc1dblchb
 sc1dream	// Dream Machine (Bellfruit)
 sc1final	// Final Touch (Bellfruit)
 sc1flash	// Flash (Bellfruit)
@@ -12425,7 +13377,6 @@ sc1frtln	// Fruitlines (Bellfruit)
 sc1funh		// Fun House Club (Bellfruit)
 sc1funhp
 sc1funha
-sc1funhb
 sc1gtime	// Good Times (Bellfruit)
 sc1tiara	// Tiara (Elam)
 sc1gprix	// Grand Prix (Bellfruit)
@@ -12445,7 +13396,6 @@ sc1mist		// Mistral (Bellfruit)
 sc1olym		// Olympia (Bellfruit)
 sc1orac		// Oracle (Bellfruit)
 sc1pwrl		// Power Lines (Bellfruit)
-sc1pwrla
 sc1rain		// Rainbow (Bellfruit)
 sc1re		// Reel Cash (Bellfruit)
 sc1rese		// Reel Cash SE (Bellfruit)
@@ -12483,25 +13433,12 @@ sc1winfl	// Winfalls (Bellfruit)
 sc1winst	// Winning Streak (Bellfruit)
 sc1winstp
 sc1winsta
-sc1winstb
-sc1winstbp
-sc1winstc
-sc1winstcp
-sc1winstd
-sc1winstdp
-sc1winste
-sc1winstep
-sc1winstf
-sc1winstfp
-sc1winstg
 sc1zep		// Zeppelin (Bellfruit)
 sc1wthn		// Wild Thing (Eurocoin)
 sc1days		// All In A Days Work (Global)
 sc1daysa
 sc1cscl		// Cash Classic (Global)
 sc1cscla
-sc1csclb	//Maygay?
-sc1csclc	//Maygay?
 sc1driv		// Driving School (Global)
 sc1driva
 sc1drivb
@@ -12553,25 +13490,11 @@ sc1hfcc		// Hi-Flyer Club (Crystal)
 sc1twice	// Twice As Nice (Associated Leisure)
 sc1chain	// Chain Reaction (Bellfruit)
 sc1chainp
-sc1chaina
-sc1potp		// Pick Of The Pack (Bellfruit)
-sc1potpa	// Double Dealer (Bellfruit)?
 sc1scunk	//
 sc1wud		// What's Up Dr
-
-// Scorpion 1 + Adder Video board
-
-m_tppokr		// (c) 1996 BFM/ELAM,Game Card 95-750-899, uses Adder board for feature gfx
-
-// Cobra Hardware (SC1 expansion?)
-inquiztr		// 1989 BFM
-escounts		// 1990 BFM
-trebltop		// 1991 BFM
-beeline			// 1991 BFM
-quizvadr		// 1991 BFM
-qos				// 1992 BFM
-qosa			// 1992 BFM
-qosb			// 1992 BFM
+sc1goldw
+sc1druby
+sc1drubya
 
 // Scorpion 2 / 3
 
@@ -12586,36 +13509,36 @@ sc2brkfs4	//
 sc2brkfs4p	//
 sc2brkfs5	//
 sc2brkfs5p	//
+sc2brkfs6	//
 sc2brkfsm	//
 sc2brkfsm1	//
 sc2brkfsm2	//
 sc2drwho	// Dr.Who The Timelord
+sc2drwho7	//
+sc2drwho1p	//
+sc2drwhop	//
 sc2drwho1	//
 sc2drwho2	//
-sc2drwho3	//
+sc2drwho4p	//
+sc2drwho7p	//
+sc2drwho5p	//
+sc2drwho6p	//
+sc2drwho3p	//
+sc2drwho2p	//
 sc2drwho4	//
 sc2drwho5	//
 sc2drwho6	//
-sc2drwho7	//
-sc2drwho8	//
-sc2drwho9	//
-sc2drwho10	//
-sc2drwho11	//
-sc2drwho12	//
-sc2drwho13	//
-sc2drwho14	//
-sc2drwho15	//
-sc2drwho16	//
-sc2drwho17	//
-sc2drwho18	// (Mazooma set)
-sc2drwho19	// (Mazooma set)
-sc2drwho20	// (Deluxe)
+sc2drwho3	//
+sc2drwhodx	//
+sc2drwhou	//
+sc2drwhomzp	// (Mazooma set)
+sc2drwhomz	// (Mazooma set)
+sc2drwhodx1	// (Deluxe)
 sc2focus	// Focus (Dutch, Game Card 95-750-347)
 sc2gslam	// Club Grandslam (UK, Game Card 95-750-843)
 sc2gslamp
 sc2gslam1
 sc2gslam1p
-sc2gslam2
 sc2cshcl	// Cashino Club (Bellfruit)
 sc2cshclp
 sc2cshcl1
@@ -12651,7 +13574,8 @@ sc2gsclb4
 sc2gsclb4p
 sc2gsclb5
 sc2gsclb6
-sc2gsclb7p
+sc2gsclb6p
+sc2gsclb7
 sc2suprz	// Surprise Surprize (Bellfruit)
 sc2suprzp
 sc2suprz1
@@ -12680,11 +13604,8 @@ sc2motd5p
 sc2motd6
 sc2motd6p
 sc2motd7
-sc2motd7p
-sc2motd8
 sc2motd8p
 sc2motd9
-sc2motd10p
 sc2easy		// Easy Money (Bellfruit)
 sc2easyp
 sc2easy1
@@ -12692,6 +13613,7 @@ sc2easy1p
 sc2easy2
 sc2easy2p
 sc2majes	// Majestic Bells (Bellfruit)
+sc2majesp
 sc2dels		// Del's Millions (Bellfruit)
 sc2delsp
 sc2dels1
@@ -12722,7 +13644,6 @@ sc2wembl1
 sc2wembl1p
 sc2wembl2
 sc2wembl2p
-sc2wembl3
 sc2wembl4p
 sc2wembl5a
 sc2wembl5ap
@@ -12781,7 +13702,7 @@ sc2mam3
 sc2mam3p
 sc2mam4
 sc2mam4p
-sc2mam5
+sc2mam3a
 sc2mamcl	// Make A Million Club (Bellfruit)
 sc2mamclp
 sc2mamcl1
@@ -12808,7 +13729,6 @@ sc2sstar2
 sc2sstar2p
 sc2sstar3
 sc2sstar3p
-sc2sstar4
 sc2pe1g		// Public Enemy No1 (Bellfruit) [German]
 sc2wwcl		// Wild West Club (Bellfruit)
 sc2wwclp
@@ -12841,7 +13761,7 @@ sc2cnile	// Cash On The Nile Club (Bellfruit)
 sc2cnile1
 sc2cnile2
 sc2cnile2p
-sc2cnile3p
+sc2cnilep
 sc2casr		// Casino Royale (Bellfruit)
 sc2casrp
 sc2casr1
@@ -12876,10 +13796,8 @@ sc2gcclb1
 sc2gcclb1p
 sc2gcclb2
 sc2gcclb2p
-sc2gcclb3
 sc2groul	// Golden Roulette (Bellfruit)
 sc2groulp
-sc2gldsh	// Golden Shot (Bellfruit)
 sc2gtr		// Great Train Robbery (Bellfruit)
 sc2heypr	// Hey Presto (Bellfruit)
 sc2heyprp
@@ -12902,10 +13820,10 @@ sc2relgm1p
 sc2topwk	// Top Wack (Bellfruit)
 sc2topwkp
 sc2cb7		// Casino Bar 7 (Bellfruit)
-sc2cb7p
 sc2cb71
 sc2cb72
 sc2cb72p
+sc2cb7p	
 sc2cgcas	// Club Grand Casino
 sc2cgcasp
 sc2cgcas1
@@ -12928,6 +13846,8 @@ sc2scshxgman // Gamesman hardware
 sc2scshxstar // Starpoint hardware
 sc2scshxcas // Super Casino Cash X (Concept)
 
+
+
 // Scorpion 2 + Dot Matrix Display
 
 sc2luvv		// Luvvly Jubbly (UK Multisite 10/25p, Game Card 95-750-808)
@@ -12936,9 +13856,9 @@ sc2luvv1p
 sc2luvv2
 sc2luvv2p
 sc2luvv4
-sc2luvv5p
+sc2luvvp
 sc2luvv6p
-sc2luvv7p
+sc2luvv4p
 sc2cpe		// Club Public Enemy No.1 (UK, Game Card 95-750-846)
 sc2cpep
 sc2cpe1
@@ -12948,10 +13868,11 @@ sc2cpe2p
 sc2cpe3
 sc2cpe3p
 sc2cpe4
-sc2cpe5p
+sc2cpe4p
 sc2town		// Round The Town (Bellfruit)
 sc2townp
 sc2town1
+sc2town1a
 sc2town1p
 sc2town2
 sc2town3
@@ -12965,7 +13886,7 @@ sc2ofool3
 sc2ofool4
 sc2ptytm	// Party Time (Bellfruit)
 sc2ptytm1
-sc2ptytm1p
+sc2ptytmp
 sc2cops		// Cops 'n' Robbers (Bellfruit)
 sc2copsp
 sc2cops1p
@@ -12978,7 +13899,7 @@ sc2copsc // Casino Cops 'n' Robbers (Bellfruit)
 sc2copscp
 sc2copsc1
 sc2copsc1p
-sc2copsc2
+sc2copsc1pa
 sc2copcl	//
 sc2copclp
 sc2copcl1
@@ -12998,6 +13919,7 @@ sc2copcl9p
 sc2copcl10
 sc2copcl11
 sc2copcl11p
+sc2copcl12
 sc2copdc	// Cops 'n' Robbers Club Deluxe (Bellfruit)
 sc2copdcp
 sc2copdc1
@@ -13012,31 +13934,27 @@ sc2copdc5
 sc2copdc5p
 sc2copdc6
 sc2prem		// Premier Club Manager (Bellfruit)
-sc2premp
 sc2prem1
 sc2prem1p
 sc2prem2
-// Scorpion 2 + Adder 2 Video Board
-qntoondo		// 1993
-quintoon		// 1993
-quintond		// 1993
-quintono		// 1993
-qntoond			// 1993
-pokio			// 1994
-slotsnl			// 1995
-paradice		// 1995
-pyramid			// 1996
-sltblgtk		// 1996
-sltblgpo		// 1996
-sltblgp1		// 1996
-gldncrwn		// 1997
+sc2winstb	// Winning Streak
+sc2winstbp
+sc2winst
+sc2winstp
+sc2winstd
+sc2winstdp
+sc2winste
+sc2winstep
+sc2winstf
+sc2winstfp
+sc2winstg
+sc2cexpl	// Cash Explosion
+sc2cexpla
+sc2cexplb
+sc2cexplc
+sc2cexpld
+sc2cexple
 
-// Cobra 3
-
-c3_rtime		// Radio Times
-c3_telly		// Telly Addicts
-c3_totp			// Top of the Pops
-c3_ppays		// The Phrase That Pays
 
 // Scorpion 4 (& 5 & Adder 5)
 
@@ -13746,10 +14664,10 @@ sc4fevere	//
 sc4feverf	//
 sc4feverg	//
 sc4feverh	//
-sc4feveri	//
-sc4feverj	//
 sc4feverk	//
-sc4feverl	//
+sc4fevdt	// Fever (Dutch)
+sc4fevdta	//
+sc4fevdtb	//
 sc4fpitc	// Fever Pitch (Bellfruit)
 sc4fpitca	//
 sc4fpitcb	//
@@ -13910,8 +14828,7 @@ sc4goldwg	//
 sc4gx		// Golden X (Mazooma)
 sc4gxa		//
 sc4gxb		//
-sc4gxcas	// Golden X Casino (Mazooma)
-sc4gxcasa	//
+sc4gxcasa	// Golden X Casino (Mazooma)
 sc4gxcasb	//
 sc4gxcasc	//
 sc4gxcasd	//
@@ -14277,6 +15194,7 @@ sc4maxccb	//
 sc4maxccc	//
 sc4miljo	// Miljonairs (Bellfruit)
 sc4milja	// Miljonairs Arcade (Bellfruit)
+sc4milro	//
 sc4mbags	// Money Bags (Bellfruit)
 sc4mbagsa	//
 sc4mbagsb	//
@@ -14369,8 +15287,6 @@ sc4mclbb	//
 sc4mclbc	//
 sc4mclbd	//
 sc4mclbe	//
-sc4mdlx		// Monopoly Deluxe (Mazooma)
-sc4mondxg	//
 sc4mont		// Montego Pay (Qps)
 sc4monta	//
 sc4montb	//
@@ -15043,7 +15959,6 @@ sc4wtcd		//
 sc4wtce		//
 sc4wtcf		//
 sc4wspin	// Win Spinner (Qps)
-sc4wspina	//
 sc4wspinb	//
 sc4wspinc	//
 sc4wspind	//
@@ -15077,6 +15992,7 @@ sc4winspw	//
 sc4winspx	//
 sc4winspy	//
 sc4winspz	//
+sc4winsp0	//
 sc4wondw	// Wonder Wheel (Bellfruit)
 sc4wondwa	//
 sc4xmark	// X Marks The Spot (Bellfruit)
@@ -15671,8 +16587,8 @@ sc4hntcsp	//
 sc4hntcsq	//
 sc4hntcsr	//
 sc4hntcss	//
+sc4helld	// Hells Bells (BFG / Eurocoin) (Dutch)
 sc4hellb	// Hells Bells (Bellfruit)
-sc4hellba	//
 sc4hellbb	//
 sc4hellbc	//
 sc4hellbd	//
@@ -15774,6 +16690,8 @@ sc4monoan	//
 sc4monoal	//
 sc4monot	//
 sc4monota	//
+sc4monotb	//
+sc4monotc	//
 sc4monoab	//
 sc4monoac	//
 sc4monog	//
@@ -15787,7 +16705,6 @@ sc4monoao	//
 sc4monoap	//
 sc4monoaq	//
 sc4monoam	//
-sc4monotb	//
 sc4monoah	//
 sc4monoai	//
 sc4monoaj	//
@@ -15798,19 +16715,9 @@ sc4mondxe	//
 sc4mondxb	//
 sc4mondxf	//
 sc4mondxc	//
+sc4mondxg   //
 sc4mcas		// Monopoly Casino (Mazooma)
-sc4mcasa	//
-sc4mcasb	//
-sc4mcasc	//
-sc4mcasd	//
-sc4mcase	//
-sc4mcasf	//
-sc4mcasg	//
-sc4mcash	//
-sc4mcasi	//
-sc4mcasj	//
 sc4mcask	//
-sc4mcasl	//
 sc4mcasm	//
 sc4mcasn	//
 sc4mcaso	//
@@ -15830,6 +16737,16 @@ sc4mcas1	//
 sc4mcas2	//
 sc4mcas3	//
 sc4mcas4	//
+sc4cmon		//
+sc4cmona	//
+sc4cmonb	//
+sc4cmonc	//
+sc4cmond	//
+sc4cmone	//
+sc4cmonf	//
+sc4cmong	//
+sc4cmonh	//
+sc4cmoni	//
 sc4mdm		// Monopoly Double Money (Bellfruit)
 sc4mdma		//
 sc4mhn		// Monopoly Here & Now (Mazooma)
@@ -15849,6 +16766,7 @@ sc4mhpk		//
 sc4mhpl		//
 sc4mhpm		//
 sc4mhpn		//
+sc4mhpo		//
 sc4mmb		// Monopoly Money Bags (Bellfruit)
 sc4mmba		//
 sc4mrh		// Monopoly Red Hot (Mazooma)
@@ -16176,6 +17094,8 @@ sc5adga		// Ant & Dec's Grab The Ads (Bellfruit)
 sc5adgaa	//
 sc5adgab	//
 sc5adgac	//
+sc5adgad	//
+sc5adgae	//
 sc5adgtc	// Ant & Dec's Grab The Cash (Bellfruit)
 sc5adgtca	//
 sc5bjob		// Bank Job (Bellfruit)
@@ -16201,6 +17121,8 @@ sc5bpfpba	//
 sc5btiab	// Bullseye Three In A Bed (Bellfruit)
 sc5btrip	// Bullseye Triple (Bellfruit)
 sc5btripa	//
+sc5btripb	//
+sc5btripc	//
 sc5bunny	// Bunny Money (Mazooma)
 sc5bunnya	//
 sc5cbrun	// Cannonball Run (Bellfruit)
@@ -16249,6 +17171,8 @@ sc5newcm	// Colour Of Money New, The (Bellfruit)
 sc5newcma	//
 sc5newcmb	//
 sc5newcmc	//
+sc5newcmd	//
+sc5newcme	//
 sc5crotr	// Cops 'n' Robbers On The Run (Bellfruit)
 sc5crotra	//
 sc5crsgc	// Cops 'n' Robbers Smash 'n' Grab Club (Bellfruit)
@@ -16259,8 +17183,14 @@ sc5crsgr	// Cops 'n' Robbers Smash 'n' Grab (Bellfruit)
 sc5crsgra	//
 sc5crsgrb	//
 sc5crsgrc	//
+sc5crsgrd	//
+sc5crsgre	//
+sc5crsgrf	//
+sc5crsgrg	//
 sc5corst	// Coronation Street (Bellfruit)
 sc5corsta	//
+sc5corstb	//
+sc5corstc	//
 sc5cfnc		// Crazy Fruit & Nutcase (Bellfruit)
 sc5cfnca	//
 sc5cfcp		// Crazy Fruits Community Party (Bellfruit)
@@ -16269,28 +17199,48 @@ sc5cfcpb	//
 sc5cfcpc	//
 sc5cfcpd	//
 sc5cfcpe	//
+sc5cfcpf	//
+sc5cfcpg	//
+sc5cfcph	//
+sc5cfcpi	//
+sc5cfcpj	//
+sc5cfcpk	//
+sc5cfcpl	//
+sc5cfcpm	//
+sc5cfcpn	//
+sc5cfcpo	//
+sc5cfcpp	//
+sc5cfcpq	//
+sc5cfcpr	//
+sc5cfcps	//
+sc5cfcpt	//
+sc5cfcpu	//
+sc5cfcpv	//
+sc5cfcpw	//
 sc5cfpt		// Crazy Fruits Party Time (Bellfruit)
 sc5cfpta	//
 sc5cfptb	//
-sc5cfptc
-sc5cfptd
-sc5cfptj
-sc5cfpte
-sc5cfptf
-sc5cfptk
-sc5cfptn
-sc5cfpti
-sc5cfpto
-sc5cfptg
-sc5cfptl
-sc5cfpth
-sc5cfptm
-sc5cfptp
-sc5cfptq
-sc5cfptr
-sc5cfpts
+sc5cfptc	//
+sc5cfptd	//
+sc5cfptj	//
+sc5cfpte	//
+sc5cfptf	//
+sc5cfptk	//
+sc5cfptn	//
+sc5cfpti	//
+sc5cfpto	//
+sc5cfptg	//
+sc5cfptl	//
+sc5cfpth	//
+sc5cfptm	//
+sc5cfptp	//
+sc5cfptq	//
+sc5cfptr	//
+sc5cfpts	//
 sc5cknig	// Crazy Knights (Bellfruit)
 sc5ckniga	//
+sc5cknigb	//
+sc5cknigc	//
 sc5cpays	// Crazy Pays (Bellfruit)
 sc5cpaysa	//
 sc5dndbo	// Deal Or No Deal Banker's Bonus (Bellfruit)
@@ -16303,6 +17253,8 @@ sc5dndbof	//
 sc5dndbog	//
 sc5dndboh	//
 sc5dndboi	//
+sc5dndboj	//
+sc5dndbok	//
 sc5dndbl	// Deal Or No Deal Beat The Banker Club (Bellfruit)
 sc5dndbla	//
 sc5dndblb	//
@@ -16319,6 +17271,10 @@ sc5dndbll	//
 sc5dndblm	//
 sc5dndbln	//
 sc5dndblo	//
+sc5dndblp	//
+sc5dndblq	//
+sc5dndblr	//
+sc5dndbls	//
 sc5dndbq	// Deal Or No Deal Beat The Banker (Qps)
 sc5dndbqa	//
 sc5dndbqb	//
@@ -16329,8 +17285,16 @@ sc5dndcr	// Deal Or No Deal Cops 'n' Robbers (Bellfruit)
 sc5dndcra	//
 sc5dndcrb	//
 sc5dndcrc	//
+sc5dndcrd	//
+sc5dndcre	//
 sc5dndde	// Deal Or No Deal Desert Island Deal (Bellfruit)
 sc5dnddea	//
+sc5dnddeb	//
+sc5dnddec	//
+sc5dndded	//
+sc5dnddee	//
+sc5dnddef	//
+sc5dnddeg	//
 sc5dnddi	// Deal Or No Deal Diamond (Bellfruit)
 sc5dnddia	//
 sc5dnddib	//
@@ -16368,6 +17332,8 @@ sc5dndglj	//
 sc5dndglk	//
 sc5dndld	// Deal Or No Deal Live The Dream (Bellfruit)
 sc5dndlda	//
+sc5dndldb	//
+sc5dndldc	//
 sc5dndmb	// Deal Or No Deal Make Or Break (Bellfruit)
 sc5dndmba	//
 sc5dndmbb	//
@@ -16390,6 +17356,8 @@ sc5dndmdf	//
 sc5dndmdg	//
 sc5dndmdh	//
 sc5dndmdi	//
+sc5dndmdj	//
+sc5dndmdk	//
 sc5dndpa	// Deal Or No Deal Play It Again (Bellfruit)
 sc5dndpaa	//
 sc5dndpab	//
@@ -16404,6 +17372,8 @@ sc5dndrr	// Deal Or No Deal Road To Riches (Bellfruit)
 sc5dndrra	//
 sc5dndrrb	//
 sc5dndrrc	//
+sc5dndrrd	//
+sc5dndrre	//
 sc5dndsi	// Deal Or No Deal Simply Deal Or No Deal (Bellfruit)
 sc5dndsia	//
 sc5dndsib	//
@@ -16419,6 +17389,8 @@ sc5dndpd	// Deal Or No Deal The Perfect Deal (Bellfruit)
 sc5dndpda	//
 sc5dndpdb	//
 sc5dndpdc	//
+sc5dndpdd	//
+sc5dndpde	//
 sc5dndpc	// Deal Or No Deal The Players Choice (Bellfruit)
 sc5dndpca	//
 sc5dndtb	// Deal Or No Deal Think Big (Bellfruit)
@@ -16537,6 +17509,8 @@ sc5mogta	// Monopoly Go To Auction (Bellfruit)
 sc5mogtaa	//
 sc5mogtab	//
 sc5mogtac	//
+sc5mogtad	//
+sc5mogtae	//
 sc5momil	// Monopoly Millionaire (Bellfruit)
 sc5momila	//
 sc5momilb	//
@@ -16544,6 +17518,9 @@ sc5momilc	//
 sc5momild	//
 sc5momile	//
 sc5mombc	// Monopoly Money Bags Club (Mazooma)
+sc5mombca	//
+sc5mombcb	//
+sc5mombcc	//
 sc5moms		// Monopoly Money Spinner (Qps)
 sc5momsa	//
 sc5momsb	//
@@ -16554,6 +17531,10 @@ sc5mopl		// Monopoly Property Ladder (Bellfruit)
 sc5mopla	//
 sc5moplb	//
 sc5moplc	//
+sc5mopld	//	
+sc5mople	//
+sc5moplf	//
+sc5moplg	//
 sc5mor2r	// Monopoly Road To Riches (Qps)
 sc5mor2ra	//
 sc5monwa	// Monopoly Win Again (Qps)
@@ -16585,6 +17566,8 @@ sc5potsm	// Pots Of Luck (Mazooma)
 sc5potsma	//
 sc5cpen1	// Public Enemy No1 Club (Bellfruit)
 sc5cpen1a	//
+sc5cpen1b	//	
+sc5cpen1c	//
 sc5qual		// Quality Streak (Bellfruit)
 sc5quala	//
 sc5qualb	//
@@ -16609,6 +17592,8 @@ sc5rhclbb	//
 sc5rhclbc	//
 sc5rhclbd	//
 sc5rhclbe	//
+sc5rhclbf	//
+sc5rhclbg	//
 sc5sharp	// Sharp Shooter (Voodoo)
 sc5sharpa	//
 sc5sfts		// Shoot For The Stars (Bellfruit)
@@ -16678,12 +17663,17 @@ sc5pircl	// The Prize Is Right Club (Bellfruit)
 sc5pircla	//
 sc5pirclb	//
 sc5pirclc	//
+sc5pircld	//
+sc5pircle	//
+sc5pirclf	//
+sc5pirclg	//
 sc5mrrcl	// Monopoly Road To Riches Club (Mazooma)
 sc5mrrcla	//
 sc5mrrclb	//
 sc5mrrclc	//
 sc5crcpt	// Cops 'n' Robbers Community Party (Bellfruit)
 sc5crcpta	//
+sc5crcptb	//
 sc5adjb		// Ant & Dec's Jiggy Bank (Bellfruit)
 sc5adjba	//
 sc5adjbb	//
@@ -16703,6 +17693,8 @@ sc5adjbo	//
 sc5adjbp	//
 sc5adjbq	//
 sc5adjbr	//
+sc5adjbs	//
+sc5adjbt	//
 sc5adwta	// Ant & Dec's Saturday Night Takeaway Win The Ads (Bellfruit)
 sc5adwtaa	//
 sc5a40		// Around The Board In 40 Days (Mazooma)
@@ -16725,6 +17717,8 @@ sc5bobb		//
 sc5bobc		//
 sc5bull		// Bullseye (Bellfruit)
 sc5bulla	//
+sc5bullb	//
+sc5bullc	//
 sc5sbull	//
 sc5sbulla	//
 sc5bull5	//
@@ -16876,6 +17870,9 @@ sc5dndcsg	//
 sc5dndcsh	//
 sc5dndcsi	//
 sc5dndcsj	//
+sc5dndcsk	//
+sc5dndcsl	//
+sc5dndcsm	//
 sc5dndc2	//
 sc5dndc2a	//
 sc5dndc2b	//
@@ -16922,6 +17919,8 @@ sc5dndddd	//
 sc5dnddde	//
 sc5dndddf	//
 sc5dndddg	//
+sc5dndddh	//
+sc5dndddi	//
 sc5dndhf	// Deal Or No Deal Hall Of Fame (Bellfruit)
 sc5dndhfa	//
 sc5dndhfb	//
@@ -16942,6 +17941,8 @@ sc5dndhfp	//
 sc5dndhfq	//
 sc5dndhfr	//
 sc5dndhfs	//
+sc5dndhft	//
+sc5dndhfu	//
 sc5dndys	// Deal Or No Deal It's Your Show (Bellfruit)
 sc5dndysa	//
 sc5dndysb	//
@@ -16950,6 +17951,7 @@ sc5dndysd	//
 sc5dndyse	//
 sc5dndysf	//
 sc5dndysg	//
+sc5dndysh	//
 sc5dndlp	// Deal Or No Deal Let's Play Deal Or No Deal (Bellfruit)
 sc5dndlpa	//
 sc5dndlpb	//
@@ -17053,6 +18055,7 @@ sc5dnddwf	//
 sc5dnddwg	//
 sc5dnddwh	//
 sc5dnddwi	//
+sc5dnddwj	//
 sc5dnddf	// Deal Or No Deal The Dream Factory (Bellfruit)
 sc5dnddfa	//
 sc5dnddfb	//
@@ -17090,6 +18093,8 @@ sc5dndpgr	//
 sc5dndpgs	//
 sc5dndpgt	//
 sc5dndpgu	//
+sc5dndpgv	//
+sc5dndpgw	//
 sc5dndpl	// Deal Or No Deal The Perfect Game Classic (Bellfruit)
 sc5dndpla	//
 sc5dndplb	//
@@ -17116,6 +18121,7 @@ sc5dndtpr	//
 sc5dndtps	//
 sc5dndtpt	//
 sc5dndtpu	//
+sc5dndtpv	//
 sc5dndww	// Deal Or No Deal The Walk Of Wealth (Bellfruit)
 sc5dndwwa	//
 sc5dndwwb	//
@@ -17134,6 +18140,8 @@ sc5dndwwn	//
 sc5dndwwo	//
 sc5dndwwp	//
 sc5dndwwq	//
+sc5dndwwr	//
+sc5dndwws	//
 sc5dndcb	//
 sc5dndcba	//
 sc5dndwc	//
@@ -17218,6 +18226,8 @@ sc5fguyb	//
 sc5fguyc	//
 sc5fguyd	//
 sc5fguye	//
+sc5fguyf	//	
+sc5fguyg	//
 sc5fbspn	// Fat Boy Spin (Bellfruit)
 sc5fbspna	//
 sc5fmj		// Full Metal Jackpot (Mazooma)
@@ -17236,6 +18246,12 @@ sc5gdclbb	//
 sc5gdclbc	//
 sc5gdclbd	//
 sc5gdclbe	//
+sc5gdclbf	//
+sc5gdclbg	//
+sc5gdclbh	//
+sc5gdclbi	//
+sc5gdclbj	//
+sc5gdclbk	//
 sc5gball	// Golden Balls (Bellfruit)
 sc5gballa	//
 sc5gballb	//
@@ -17372,6 +18388,8 @@ sc5manict	//
 sc5manicu	//
 sc5manicv	//
 sc5manicw	//
+sc5manicx	//
+sc5manicy	//
 sc5mmm		// Mental Money Monsters (Mazooma)
 sc5mmma		//
 sc5mmmb		//
@@ -17407,6 +18425,9 @@ sc5mhpf		//
 sc5mhpg		//
 sc5mhph		//
 sc5mhpi		//
+sc5mhpj		//
+sc5mhpk		// 
+sc5mhpl		//
 sc5mmb		// Monopoly Money Bags (Bellfruit)
 sc5mmba		//
 sc5mmbb		//
@@ -17450,6 +18471,7 @@ sc5ppctce	//
 sc5ppctcf	//
 sc5ppctcg	//
 sc5ppctch	//
+sc5ppctci	//
 sc5ppdym	// Pink Panther Double Your Money (Mazooma)
 sc5ppdyma	//
 sc5ppsag	// Pink Panther Strikes Again (Mazooma)
@@ -17463,10 +18485,15 @@ sc5ponya	//
 sc5ponyb	//
 sc5ponyc	//
 sc5ponyd	//
+sc5ponye	//
 sc5popey	// Popeye (Mazooma)
 sc5popeya	//
 sc5popeyb	//
 sc5popeyc	//
+sc5popeyd	//
+sc5popeye	//
+sc5popeyf	//
+sc5popeyg	//
 sc5pog		// Pots Of Gold (Bellfruit)
 sc5poga		//
 sc5pogb		//
@@ -17479,8 +18506,12 @@ sc5potogd	//
 sc5potoge	//
 sc5potogf	//
 sc5potogg	//
+sc5potogh	//
+sc5potogi	//
 sc5pogd		//
 sc5poge		//
+sc5pogf		//
+sc5pogg		//
 sc5pwrpl	// Power Play (Mazooma)
 sc5pwrpla	//
 sc5pwrbl	// Powerball (Bellfruit)
@@ -17534,6 +18565,8 @@ sc5showtn	//
 sc5showto	//
 sc5showtp	//
 sc5showtq	//
+sc5showtr	//
+sc5showts	//
 sc5slad		// Snakes & Ladders (Bellfruit)
 sc5slada	//
 sc5sladb	//
@@ -17611,6 +18644,8 @@ sc5bpbb		//
 sc5bpbc		//
 sc5bpbd		//
 sc5bpbe		//
+sc5bpbf		//
+sc5bpbg		//
 sc5bsp		// Bully's Star Prize (Bellfruit)
 sc5bspa		//
 sc5bspb		//
@@ -17627,6 +18662,8 @@ sc5bspl		//
 sc5bspm		//
 sc5bspn		//
 sc5bspo		//
+sc5bspp		//
+sc5bspq		//
 sc5chain	// Chain Reaction (Bellfruit)
 sc5chaina	//
 sc5chainb	//
@@ -17637,6 +18674,8 @@ sc5clown	// Clown Around (Bellfruit)
 sc5clowna	//
 sc5clownb	//
 sc5clownc	//
+sc5clownd	//
+sc5clowne	//
 sc5copsr	// Cops 'n' Robbers (Bellfruit)
 sc5copsra	//
 sc5copsrb	//
@@ -17689,50 +18728,261 @@ sc5nunsmb	//
 sc5nunsmc	//
 sc5nunsmd	//
 sc5nunsme	//
+sc5dndbe	// Deal Or No Deal Beat The Banker (Bellfruit)
 
 // Adder 5
 
 ad5crcpt	// Cops 'n' Robbers Community Party (Bellfruit)
-ad5bull		// Bullseye (Bellfruit) (AD5)
-ad5crsc		// Cops 'n' Robbers Safe Cracker (Bellfruit)
-ad5dnd		// Deal Or No Deal (Bellfruit) (AD5)
-ad5dndcl	// Deal Or No Deal Club (Bellfruit) (AD5)
-ad5dnddd	// Deal Or No Deal Double Deal Or No Deal (Bellfruit) (AD5)
-ad5dndpg	// Deal Or No Deal The Perfect Game (Bellfruit)
-ad5evol		// Evolution (Qps)
-ad5monop	// Monopoly (Mazooma)
-ad5mr2r		// Monopoly Road To Riches (Mazooma)
-ad5mww		// Monopoly Wonders Of The World (Mazooma)
-ad5pp		// Pink Panther (Mazooma)
-ad5sslam	// Super Slam (Bellfruit)
-ad5copsr	// Cops 'n' Robbers (Bellfruit)
-sc5dndbe	// Deal Or No Deal Beat The Banker (Bellfruit)
-ad5mowow	// Monopoly Wheel Of Wealth (Mazooma)
+ad5crcpta	//
 ad5bpfpm	// Bullseye Pounds For Points (Mazooma)
-ad5btc		// Bullseye Triple Club (Bellfruit)
+ad5bpfpma	//
+ad5bpfpmb	//
+ad5bpfpmc	//
+ad5bpfpmd	//
 ad5cmons	// Crazy Money (Bellfruit)
+ad5cmonsa	//
 ad5dndpl	// Deal Or No Deal Platinum (Bellfruit)
-ad5eyes		// Eyes Down (Mazooma)
-ad5gldmn	// Gold Mine (Bellfruit)
-ad5gldwn	// Golden Winner (Mazooma)
+ad5dndpla	//
+ad5dndplb	//
+ad5dndplc	//
 ad5hir		// Hi Roller (Bellfruit)
+ad5hira		//
+ad5hirb		//
+ad5hirc		//
 ad5hircl	// Hi Roller Club (Bellfruit)
-ad5jckmo	// Jackpot Monopoly (Mazooma)
-ad5mcob		// Monte Carlo Or Bust (Qps)
-ad5ppbtb	// Pink Panther Break The Bank (Mazooma)
-ad5pking	// Poker King (Bellfruit)
-ad5rsnw		// Random Spin 'n' Win (Mazooma)
-ad5rspin	// Random Spinner (Bellfruit)
+ad5hircla	//
+ad5hirclb	//
+ad5dnd		// Deal Or No Deal (Bellfruit) (AD5)
+ad5dnda		//
+ad5dndb		//
+ad5dndc		//
+ad5dndd		//
+ad5dnde		//
+ad5dndf		//
+ad5dndg		//
+ad5dndh		//
+ad5dndi		//
+ad5dndj		//
+ad5dndk		//
+ad5dndl		//
+ad5dndm		//
+ad5dndn		//
+ad5dndo		//
+ad5dndp		//
+ad5dndq		//
+ad5dndr		//
+ad5dndu		//
+ad5dndv		//
+ad5dndcl	// Deal Or No Deal Club (Bellfruit) (AD5)
+ad5dndcla	//
+ad5dndclb	//
+ad5dndclc	//
+ad5dndcld	//
+ad5dndcle	//
+ad5dndclf	//
+ad5dndclg	//
+ad5dnddd	// Deal Or No Deal Double Deal Or No Deal (Bellfruit) (AD5)
+ad5dnddda	//
+ad5dndpg	// Deal Or No Deal The Perfect Game (Bellfruit)
+ad5dndpga	//
+ad5dndpgb	//
+ad5dndpgc	//
+ad5crsc		// Cops 'n' Robbers Safe Cracker (Bellfruit)
+ad5crsca	//
+ad5crscb	//
+ad5crscc	//
+ad5crscd	//
+ad5crsce	//
+ad5crscf	//
+ad5crscg	//
+ad5crsch	//
+ad5copsr	// Cops 'n' Robbers (Bellfruit)
+ad5copsra	//
+ad5copsrb	//
+ad5copsrc	//
+ad5copsrd	//
+ad5copsre	//
+ad5copsrf	//
+ad5copsrg	//
+ad5copsrh	//
+ad5copsri	//
+ad5copsrj	//
+ad5copsrk	//
+ad5copsrl	//
+ad5copsrm	//
+ad5copsrn	//
+ad5copsro	//
+ad5copsrp	//
+ad5copsrq	//
+ad5copsrr	//
+ad5copsrs	//
+ad5copsrt	//
+ad5copsru	//
+ad5copsrv	//
+ad5copsrw	//
+ad5copsrx	//
+ad5copsry	//
+ad5copsrz	//
+ad5copsr0	//
+ad5copsr1	//
+ad5copsr2	//
+ad5copsr3	//
+ad5copsr4	//
+ad5copsr5	//
+ad5copsr6	//
+ad5copsr7	//
+ad5gldmn	// Gold Mine (Bellfruit)
+ad5gldmna	//
+ad5gldmnb	//
+ad5gldmnc	//
+ad5gldmnd	//
+ad5gldmne	//
+ad5gldmnf	//
+ad5gldmng	//
+ad5gldmnh	//
+ad5gldmni	//
+ad5gldmnj	//
+ad5gldmnk	//
+ad5mowow	// Monopoly Wheel Of Wealth (Mazooma)
+ad5mowowa	//
+ad5mowowb	//
+ad5mowowc	//
+ad5mowowd	//
+ad5mowowe	//
+ad5mowowf	//
+ad5mowowg	//
+ad5mowowh	//
+ad5mowowi	//
+ad5mowowj	//
+ad5mowowk	//
+ad5mowowl	//
+ad5mowowm	//
+ad5pp		// Pink Panther (Mazooma)
+ad5ppa		//
+ad5ppb		//
+ad5ppc		//
+ad5ppd		//
+ad5ppe		//
+ad5ppf		//
+ad5ppg		//
+ad5pph		//
+ad5ppi		//
+ad5ppj		//
 ad5rsclb	// Random Spinner Club (Bellfruit)
+ad5rsclba	//
+ad5rsclbb	//
+ad5rsclbc	//
+ad5rsclbd	//
+ad5rsclbe	//
+ad5rsclbf	//
+ad5rsclbg	//
+ad5rsclbh	//
+ad5rsclbi	//
+ad5rsclbj	//
+ad5monop	// Monopoly (Mazooma)
+ad5monopa	//
+ad5monopb	//
+ad5monopc	//
+ad5monopd	//
+ad5monope	//
+ad5monopf	//
+ad5monopg	//
+ad5monoph	//
+ad5monopi	//
+ad5monopj	//
+ad5monopk	//
+ad5rspin	// Random Spinner (Bellfruit)
+ad5rspinb	//
+ad5rspinc	//
+ad5btc		// Bullseye Triple Club (Bellfruit)
+ad5btca		//
+ad5btcb		//
+ad5rsnw		// Random Spin 'n' Win (Mazooma)
+ad5rsnwa	//
+ad5rsnwb	//
+ad5rsnwc	//
+ad5sslam	// Super Slam (Bellfruit)
+ad5sslama	//
+ad5sslamb	//
+ad5sslamc	//
+ad5sslamd	//
+ad5sslame	//
+ad5sslamf	//
+ad5mr2r		// Monopoly Road To Riches (Mazooma)
+ad5mr2ra	//
+ad5mr2rb	//
+ad5mr2rc	//
+ad5mr2rd	//
+ad5mr2re	//
+ad5mr2rf	//
+ad5mr2rg	//
+ad5mr2rh	//
 ad5rwclb	// Random Winner Club (Bellfruit)
+ad5rwclba	//
+ad5rwclbb	//
+ad5rwclbc	//
+ad5rwclbd	//
+ad5rwclbe	//
+ad5gldwn	// Golden Winner (Mazooma)
+ad5gldwna	//
 ad5rapid	// Rapid Pay (Bellfruit)
-ad5rcash	// Reel Cash (Mazooma)
-ad5rroul	// Reel Roulette (Mazooma)
-ad5rsrm		// Ronnie O'Sullivan's Rocket Money (Bellfruit)
-ad5rsrr		// Ronnie O'Sullivan's Rocket Ronnie (Bellfruit)
-ad5tornc	// Tornado Club (Bellfruit)
-ad5vpa		// Video Poker Ace (Bellfruit)
+ad5rapida	//
+ad5jckmo	// Jackpot Monopoly (Mazooma)
+ad5jckmoa	//
+ad5jckmob	//
+ad5jckmoc	//
+ad5jckmod	//
+ad5jckmoe	//
+ad5ppbtb	// Pink Panther Break The Bank (Mazooma)
+ad5ppbtba	//
+ad5ppbtbb	//
+ad5ppbtbc	//
 ad5vlv		// Viva Las Vegas (Bellfruit)
+ad5vlvb		//
+ad5vlvc		//
+ad5vlvd		//
+ad5vlve		//
+ad5vlvf		//
+ad5rroul	// Reel Roulette (Mazooma)
+ad5rroula	//
+ad5rroulb	//
+ad5rroulc	//
+ad5mcob		// Monte Carlo Or Bust (Qps)
+ad5mcoba	//
+ad5mcobb	//
+ad5mcobc	//
+ad5pking	// Poker King (Bellfruit)
+ad5pkinga	//
+ad5vpa		// Video Poker Ace (Bellfruit)
+ad5vpaa		//
+ad5vpab		//
+ad5vpac		//
+ad5tornc	// Tornado Club (Bellfruit)
+ad5tornca	//
+ad5torncb	//
+ad5torncc	//
+ad5torncd	//
+ad5tornce	//
+ad5rcash	// Reel Cash (Mazooma)
+ad5rcasha	//
+ad5mww		// Monopoly Wonders Of The World (Mazooma)
+ad5mwwa		//
+ad5eyes		// Eyes Down (Mazooma)
+ad5eyesa	//
+ad5eyesb	//
+ad5eyesc	//
+ad5eyesd	//
+ad5eyese	//
+ad5eyesf	//
+ad5eyesg	//
+ad5rsrm		// Ronnie O'Sullivan's Rocket Money (Bellfruit)
+ad5rsrma	//
+ad5rsrr		// Ronnie O'Sullivan's Rocket Ronnie (Bellfruit)
+ad5rsrra	//
+
+
+
+		
 
 /* Maygay Machines Ltd. */
 
@@ -17797,7 +19047,6 @@ m1bondi2p
 m1bondi2po
 m1bondi1
 m1bondi1p
-m1bounty	// Bounty Hunter (Maygay)
 m1bountc	// Bounty Hunter Club (Maygay)
 m1bountcp
 m1cik		// Cash Is King (Maygay)
@@ -18003,112 +19252,830 @@ m1dkong21
 m1dkong21p
 m1dkong11
 m1dkong11p
-m1ee		// Eastenders (Bwb)
-m1eea		//
-m1eeb		//
-m1eeqv		// Eastenders - Queen Vic (Maygay - Whitbread)
-m1eeqva		//
+m1eastnd	// Eastenders (Bwb)
+m1eastnda
+m1eastndb
+m1eastndc
+m1eastndd
+m1eastnde
+m1eastndf
+m1eastndg
+m1eastndh
+m1eastndi
+m1eastndj
+m1eastndk
+m1eastndl
+m1eastndn
+m1eastndp
+m1eastndq
+m1eastndr
+m1eastnds
+m1eastndt
+m1eastndu
+m1eastndv
+m1eastndw
+m1eastndx
+m1eastndy
+m1eastndz
+m1eastnd0
+m1eastnd1
+m1eastnd2
+m1eastnd3
+m1eastnd4
+m1eastnd5
+m1eastnd6
+m1eastnd7
+m1eastnd8
+m1eastnd9
+m1eastndaa
+m1eastndab
+m1eastndac
+m1eastndad
+m1eastndae
+m1eastndaf
+m1eastqv	// Eastenders - Queen Vic (Maygay - Whitbread)
+m1eastqva
+m1eastqvb
+m1eastqvc
+m1eastqvd
+m1eastqvf
+m1eastqvg
+m1eastqvh
+m1eastqvi
+m1eastqvj
+m1eastqvk
+m1eastqvl
+m1eastqvm
+m1eastqvn
+m1eastqvo
+m1eastqvp
+m1eastqvq
+m1eastqvr
+m1eastqvs
+m1eastqvt
+m1eastqvu
+m1eastqvv
+m1eastqvw
+m1eastqvx
+m1eastqvy
+m1eastqvz
+m1eastqv0
+m1eastqv1
+m1eastqv2
+m1eastqv3
+m1eastqv5
+m1eastqv6
+m1eastqv7
+m1eastqv8
+m1eastqvaa
 m1expclb	// Explorer Club (Maygay)
+m1expclba
 m1fantfb	// Fantasy Football (Maygay)
+m1fantfba
+m1fantfbb
+m1fantfbc
+m1fantfbd
+m1fantfbf
+m1fantfbg
+m1fantfbh
+m1fantfbj
+m1fantfbk
+m1fantfbl
 m1fight		// Fight Night (Maygay)
+m1fighta
+m1fightb
+m1fightc
+m1fightd
+m1fighte
+m1fightg
+m1fighth
+m1fighti
+m1fightj
+m1fightk
+m1fightl
+m1fightm
+m1fightn
+m1fighto
+m1fightp
+m1fightq
+m1fightr
+m1fights
+m1fightt
+m1fightu
+m1fightv
+m1fightw
+m1fightx
 m1fivest	// Five Star (Maygay)
 m1frexpl	// Fruit Explosion (Maygay)
+m1frexpla
+m1frexplc
+m1frexpld
+m1frexple
+m1frexplg
+m1frexplh
+m1frexpli
+m1frexplj
+m1frexplk
+m1frexpll
+m1frexplm
+m1frexpln
+m1frexplo
+m1frexplp
+m1frexplq
+m1frexplr
+m1frexpls
+m1frexplt
+m1frexplu
+m1frexplv
 m1glad		// Gladiators (Maygay)
-m1glada		// Gladiators Arcade (Maygay)
-m1gladsh	// Gladiators Showcase (Maygay)
+m1glada
+m1gladb
+m1gladc
+m1gladd
+m1glade
+m1gladf
+m1gladg
+m1gladh
+m1gladj
+m1gladk
+m1gladl
+m1gladm
+m1gladn
+m1glado
+m1gladp
+m1gladq
+m1gladr
+m1glads
+m1gladt
+m1gladu
+m1gladv
+m1gladw
+m1gladx
+m1glady
+m1gladz
+m1glad0
+m1glad1
 m1goldsv	// Gold & Silver (Maygay)
+m1goldsva
 m1gold10	// Golden 10 (Maygay)
 m1goldng	// Golden Nugget Club (Maygay)
+m1goldnga
+m1goldngb
+m1goldngc
+m1goldngd
+m1goldnge
 m1gresc		// Great Escape, The (Maygay)
+m1gresca
+m1grescb
+m1grescc
+m1grescd
+m1gresce
+m1grescf
+m1grescg
+m1gresch
+m1gresci
+m1grescj
+m1gresck
+m1grescl
+m1grescm
+m1grescn
+m1gresco
+m1grescp
+m1grescq
 m1guvnor	// The Guvnor (Maygay)
+m1guvnora	
+m1guvnorb
+m1guvnorc
+m1guvnord
+m1guvnore
+m1guvnorf
+m1guvnorg
+m1guvnorh
+m1guvnori
+m1guvnorj
+m1guvnork
+m1guvnorl
+m1guvnorm
+m1guvnorn
+m1guvnoro
+m1guvnorp
+m1guvnorq
+m1guvnorr
+m1guvnors
+m1guvnort
 m1htclb		// Hi Tension Club (Maygay)
+m1htclba
 m1hotpot	// Hot Pots (Maygay)
+m1hotpotd
+m1hotpote
+m1hotpoth
+m1hotpoti
+m1hotpotj
+m1hotpotk
+m1hotpotl
+m1hotpotm
+m1hotpotn
+m1hotpoto
+m1hotpotp
+m1hotpotq
+m1hotpotr
+m1hotpots
+m1hotpott
+m1hotpotu
+m1hotpotv
+m1hotpotw
+m1hotpotx
+m1hotpoty
+m1hotpotz
+m1hotpot0
 m1infern	// Inferno (Maygay)
+m1inferna
+m1infernb
+m1infernc
+m1infernd
+m1inferne
+m1infernf
+m1inferng
+m1infernh
+m1inferni
+m1infernj
+m1infernk
+m1infernl
 m1imclb		// Instant Millionaire Club (Maygay)
+m1imclba
+m1imclbb
 m1inwin		// Instant Win (Maygay)
+m1inwina
+m1inwinb
+m1inwinc
+m1inwinf
+m1inwinh
+m1inwini
+m1inwinj
+m1inwink
+m1inwinl
+m1inwinm
+m1inwinn
+m1inwino
+m1inwinp
+m1inwinq
+m1inwinr
+m1inwins
+m1inwint
+m1inwinu
+m1inwinv
+m1inwinw
+m1inwinx
 m1itsko		// It's A Knockout (Maygay)
+m1itskoa
+m1itskob
+m1itskoc
+m1itskod
+m1itskoe
+m1itskof
+m1itskog
+m1itskoh
+m1itskoi
+m1itskoj
+m1itskok
+m1itskol
+m1itskom
+m1itskon
+m1itskoo
+m1itskop
+m1itskoq
+m1itskor
+m1itskos
+m1itskot
+m1itskou
+m1itskov
+m1itskow
+m1itskox
+m1itskoy
+m1itskoz
+m1itsko0
+m1itsko1
+m1itsko2
+m1itsko3
+m1itsko4
+m1itsko5
+m1itsko6
+m1itsko7
+m1itsko8
 m1itjob		// Italian Job (Maygay)
+m1itjobc
+m1itjobd
+m1itjobe
+m1itjobf
+m1itjobg
+m1itjobh
+m1itjobi
+m1itjobj
+m1itjobk
+m1itjobl
+m1itjobm
+m1itjobn
+m1itjobo
+m1itjobp
+m1itjobq
+m1itjobr
 m1jpmult	// Jackpot Multiplier (Maygay)
+m1jpmulta
 m1jbond		// James Bond (Maygay)
+m1jbonda
+m1jbondb
+m1jbondc
+m1jbondd
+m1jbonde
+m1jbondf
+m1jbondg
+m1jbondh
+m1jbondi
+m1jbondj
+m1jbondk
+m1jbondl
+m1jbondm
+m1jbondn
+m1jbondo
+m1jbondp
+m1jbondq
 m1jdwins	// Jim Davison's Winning Streak (Maygay)
+m1jdwinsa
+m1jdwinsb
+m1jdwinsc
+m1jdwinsd
+m1jdwinse
+m1jdwinsf
+m1jdwinsg
+m1jdwinsh
+m1jdwinsi
+m1jdwinsj
+m1jdwinsk
+m1jdwinsl
+m1jdwinsm
+m1jdwinsn
 m1liveam	// Living In America (Maygay)
-m1liveamp
 m1liveama
+m1liveamb
 m1lotmil	// Lottery Millionaire Club (Maygay)
+m1lotmila
+m1lotmilb
+m1lotmilc
 m1luckno	// Lucky Numbers (Maygay)
+m1lucknoa
+m1lucknob
+m1lucknoc
+m1lucknod
+m1lucknoe
+m1lucknof
+m1lucknog
+m1lucknoh
+m1lucknoi
+m1lucknoj
+m1lucknok
+m1lucknol
+m1lucknom
+m1lucknon
+m1lucknoo
+m1lucknop
+m1lucknoq
+m1lucknor
+m1lucknos
 m1magic		// Magic Squares (Maygay)
+m1magica
+m1magicb
+m1magicc
 m1manhat	// Manhattan Skylines (Maygay)
 m1bignit	// Mike Reid's Big Night Out (Maygay)
+m1bignita
+m1bignitb
+m1bignitc
 m1mongam	// Money Game Club (Maygay)
+m1mongama
+m1mongamb
 m1monmon	// Money Money Money (Maygay)
-m1monod		// Monopoly (Maygay) [Dutch]
+m1monmona
+m1monmonb
+m1monmonc
+m1monmond
+m1monmone
+m1monmonf
+m1monmong
+m1monmonh
+m1monmoni
+m1monmonj
+m1monmonk
+m1monmonl
+m1monmonm
+m1monmonn
+m1monmono
+m1monmonp
+m1monmonq
+m1monmonr
+m1monmons
+m1monmont
+m1monmonu
+m1monmonv
+m1monmonw
+m1monodt	// Monopoly (Maygay) [Dutch]
 m1mono		// Monopoly (Maygay)
+m1monoa
+m1monoc
+m1monod
+m1monoe
+m1monof
+m1monog
+m1monoh
+m1monoi
+m1monok
+m1monol
+m1monom
+m1monon
+m1monoo
+m1monop
+m1monoq
+m1monor
+m1monos
+m1monot
+m1monou
+m1monov
+m1monow
+m1monox
+m1monoy
+m1monoz
+m1mono0
+m1mono1
+m1mono2
+m1mono3
+m1mono4
+m1mono5
+m1mono6
+m1mono7
+m1mono8
+m1mono9
+m1monoaa
 m1moncls	// Monopoly Classic (Maygay)
+m1monclsa
+m1monclsb
+m1monclsc
+m1monclsd
 m1monclb	// Monopoly Club (Maygay)
+m1monclba
+m1monclbb
+m1monclbc
+m1monclbd
+m1monclbe
+m1monclbf
+m1monclbg
+m1monclbh
+m1monclbi
+m1monclbj
+m1monclbk
+m1monclbl
+m1monclbm
 m1monstr	// Monster Cash (Maygay)
+m1monstra
+m1monstrb
+m1monstrc
 m1nhp		// Noel's House Party (Maygay)
+m1nhpa	
+m1nhpb
+m1nhpc
+m1nhpd
+m1nhpe
+m1nhpf
+m1nhpg
+m1nhph
+m1nhpi
+m1nhpj
+m1nhpk
+m1nhpl
+m1nhpm
 m1nudbnk	// Nudge Banker (Maygay)
+m1nudbnka	
+m1nudbnkb
+m1nudbnkc
+m1nudbnkd
+m1nudbnke
+m1nudbnkf
+m1nudbnkg
+m1nudbnkh
+m1nudbnki
+m1nudbnkj
+m1nudbnkk
+m1nudbnkl
+m1nudbnkm
+m1nudbnkn
+m1nudbnko
+m1nudbnkp
+m1nudbnkq
+m1nudbnkr
+m1nudbnks
+m1nudbnkt
+m1nudbnku
+m1nudbnkv
 m1nudunl	// Nudges Unlimited (Maygay)
+m1nudunla
+m1nudunlb
+m1nudunlc
+m1nudunld
+m1nudunle
 m1omega		// Omega (Maygay)
+m1omegaa
 m1onbus		// On The Buses (Maygay)
+m1onbusa
+m1onbusb
+m1onbusc
+m1onbusd
+m1onbuse
+m1onbusf
+m1onbusg
+m1onbush
+m1onbusi
+m1onbusj
+m1onbusk
+m1onbusl
+m1onbusm
+m1onbusn
+m1onbuso
+m1onbusp
 m1ott		// Over The Top (Maygay)
+m1otta
 m1piggy		// Piggy Bank (Maygay)
-m1ppd		// Pink Panther (Maygay) [Dutch]
-m1pp		// Pink Panther (Maygay)
+m1piggya
+m1piggyb
+m1piggyc
+m1ppdt		// Pink Panther (Maygay) [Dutch]
+m1pinkp		// Pink Panther (Maygay)
+m1pinkpa
+m1pinkpb
+m1pinkpc
+m1pinkpd
+m1pinkpe
+m1pinkpf
+m1pinkpg
+m1pinkph
+m1pinkpi
+m1pinkpj
+m1pinkpk
+m1pinkpl
+m1pinkpm
+m1pinkpn
+m1pinkpo
+m1pinkpp
+m1pinkpq
+m1pinkpr
 m1ppc		// Pink Panther Club (Maygay)
+m1ppca
+m1ppcb
 m1przclu	// Prize Cluedo (Maygay)
+m1przclua
+m1przclub
 m1przee		// Prize Eastenders (Maygay)
+m1przeea
+m1przeeb
+m1przeec
 m1reeldm	// Reel Diamonds (Maygay)
+m1reeldma
+m1reeldmb
+m1reeldmc
+m1reeldmd
+m1reeldme
+m1reeldmf
+m1reeldmg
+m1reeldmh
+m1reeldmi
+m1reeldmj
+m1reeldmk
+m1reeldml
+m1reeldmm
+m1reeldmn
+m1reeldmo
 m1retpp		// Return Of The Pink Panther (Maygay)
+m1retppa
+m1retppb
+m1retppc
+m1retppd
 m1search	// Search Light (Maygay)
+m1searcha
+m1searchb
 m1sixspn	// Six Spinner (Maygay)
 m1spid		// Spiderman (Maygay)
-m1spid2		// Spiderman 2 (Maygay)
+m1spida
+m1spidb
 m1sptlgt	// Spotlight (Maygay)
-m1stair		// Stairway To Heaven (Maygay)
+m1sptlgta
+m1sptlgtb
+m1sptlgtc
+m1sptlgtd
+m1sptlgte
 m1sudnim	// Sudden Impact (Maygay)
+m1sudnima
+m1sudnimb
+m1sudnimc
 m1sprnov	// Super Nova (Maygay)
 m1suppot	// Super Pots (Maygay)
+m1suppota
+m1suppotb
+m1suppotc
+m1suppotd
+m1suppote
+m1suppotf
+m1suppotg
+m1suppoti
+m1suppotj
+m1suppotk
+m1suppotl
+m1suppotm
+m1suppotn
+m1suppoto
+m1suppotp
+m1suppotq
+m1suppotr
+m1suppots
+m1suppott
+m1suppotu
+m1suppotv
+m1suppotw
+m1suppotx
+m1suppoty
+m1suppotz
+m1suppot0
 m1taknot	// Take Note (Maygay)
 m1tstunt	// Test Unit (Maygay)
 m1thatlf	// That's Life (Maygay)
+m1thatlfa
+m1thatlfb
+m1thatlfc
+m1thatlfd
 m1topten	// Top Tenner (Maygay)
-m1tp		// Trivial Pursuit (Maygay)
+m1toptena	
+m1trivia	// Trivial Pursuit (Maygay)
+m1triviaa
+m1triviab
+m1triviac
+m1triviad
+m1triviae
+m1triviaf
+m1triviag
+m1triviah
+m1triviai
+m1triviaj
+m1triviak
+m1trivial
+m1trivian
+m1triviap
+m1triviaq
+m1triviar
+m1trivias
+m1triviat
+m1triviau
+m1triviav
+m1triviaw
+m1triviax
+m1triviay
+m1triviaz
 m1tpclb		// Trivial Pursuit Club (Maygay)
+m1tpclba
+m1tpclbb
+m1tpclbc
 m1ultchl	// Ultimate Challenge (Maygay)
+m1ultchla
+m1ultchlb
+m1ultchlc
 m1undsie	// Under Siege (Maygay)
+m1undsiea
+m1undsieb
+m1undsiec
 m1vegas		// Vegas Gambler Club (Maygay)
+m1vegasa
+m1vegasb
 m1wagon		// Wagon Trail (Maygay)
+m1wagona
+m1wagonb
+m1wagonc
 m1wotw		// War Of The Worlds (Maygay)
+m1wotwa
+m1wotwb
 m1wldzne	// Wild Zone (Maygay)
+m1wldznea
+m1wldzneb
+m1wldznec
+m1wldzned
+m1wldznee
+m1wldznef
+m1wldzneg
+m1wldzneh
+m1wldznei
+m1wldznej
+m1wldznek
+m1wldznel
+m1wldznem
+m1wldznen
+m1wldzneo
+m1wldznep
+m1wldzneq
+m1wldzner
+m1wldznes
 m1winenc	// Winners Enclosure (Maygay)
+m1winenca
+m1winencb
+m1winencc
 m1simps		// The Simpsons (Maygay - Bwb)
+m1simpsa
+m1simpsb
+m1simpsc
+m1simpsd
+m1simpse
+m1simpsf
+m1simpsg
 m1bghou		// Big Ghoulies (Gemini)
+m1bghoua
+m1bghoub
+m1bghouc
+m1bghoud
+m1bghoue
+m1bghouf
+m1bghoug
 m1crzco		// Crazy Cobra (Gemini)
+m1crzcoa
+m1crzcob
+m1crzcoc
+m1crzcod
+m1crzcoe
 m1hiloc		// Hi Lo Casino (Global)
+m1hiloca
 m1jtjob		// Just The Job (Global)
+m1jtjoba
+m1jtjobb
+m1jtjobc
+m1jtjobd
+m1jtjobe
 m1kingsw	// King Of The Swingers (Global)
+m1kingswa
+m1kingswb
+m1kingswc
 m1lca		// Lights Camera Action (Global)
+m1lcaa
+m1lcab
+m1lcac
 m1mb		// Monkey Business (Global)
+m1mba		
+m1mbb		
+m1mbc		
 m1mbclb		// Monkey Business Club (Global)
 m1sycc		// Stake Yer Claim Club (Global)
+m1sycca
+m1syccb
 m1thrill	// Thrills 'n' Spills (Global)
+m1thrilla
+m1thrillb
+m1thrillc
 m1trtr		// Trick Or Treat (Global)
+m1trtra
 m1trtrcl	// Trick Or Treat Club (Global)
 m1vegcrw	// Vegetable Crew (Global)
 m1calyps	// Calypso (Maygay)
+m1calypsa
+m1calypsb
 m1cashln	// Cash Lines (Maygay)
 m1races		// A Day At The Races (Maygay)
+m1racesa
+m1racesb
+m1racesc
 m1digdel	// Diggers Delight (Global)
+m1digdela
 m1startr	// Star Trekking (Mdm)
+m1startra
+m1startrb
+m1startrc
+m1startrd
+m1startre
+m1startrf
+m1startrg
+m1startrh
+m1startri
+m1startrj
+m1startrk
+m1startrm
+m1startrn
+m1startro
+m1startrp
+m1startrq
+m1startrr
 m1ttcash	// Tick Tock Cash (Empire)
 m1topstr	// Top Strike (Maygay - Bwb)
 m1sirich	// Strike It Rich
+m1siricha
+m1sirichb
+m1sirichc
 m1gskill	// Greek Skill
 m1luxor		// Luxor Casino
-m1luxor33
-m1luxor32
-m1luxor21
+m1luxora
+m1luxorb
+m1luxorc
+m1cashc		// Cash Classic
+m1cashca
 m1atunk
 
 // Maygay MV1 hardware
@@ -18133,19 +20100,6 @@ mv1sfx		// Special Effects
 mv1sfxa		//
 mv1sfx2
 mv1wc		// World Cup
-
-// Maygay 68K based SWP hardware
-
-mg_gbr		// Guinness Book Of Records
-mg_ewg		// Each Way Gambler
-mg_jv		// Jack & Vera
-mg_alad		// Aladdin's Cave
-mg_bb		// Big Break
-mg_lug		// London Underground
-mg_pbw		// Pinball Wizard
-mg_risk		// Risk
-mg_scl		// Super Clue
-mg_kf		// Krypton Factor
 
 // Maygay EPOCH hardware
 ep_simp		// The Simpsons (Maygay)
@@ -20001,11 +21955,6 @@ m4clbcntc	//
 m4clbcntd	//
 m4clbdbl	// Club Double (Barcrest)
 m4clbshf	// Club Shuffle (Barcrest)
-m4clbtro	// Club Tropicana (Barcrest)
-m4clbtroa	//
-m4clbtrob	//
-m4clbtroc	//
-m4clbtrod	//
 m4clbveg	// Club Vegas (Barcrest)
 m4clbvega	//
 m4clbvegb	//
@@ -22746,7 +24695,6 @@ m4vivalv__5	//
 m4vivalv__6	//
 m4vivalv__7	//
 m4vivalv__8	//
-m4vivasx	// Viva Las Vegas Six (Barcrest)
 m4viz		// Viz (Barcrest)
 m4viz__a	//
 m4viz__b	//
@@ -23373,6 +25321,7 @@ m4ssclas__b	//
 m4ssclas__c	//
 m4ssclas__d	//
 m4ssclas__e	//
+m4ssclas__f	//
 m4sure		// Sure Thing (Bwb)
 m4sure__a	//
 m4sure__b	//
@@ -23636,7 +25585,6 @@ m4haunta	//
 m4hauntb	//
 m4hauntc	//
 m4hauntd	//
-m4haunte	//
 m4hisprt	// High Spirits (Empire)
 m4hisprta	//
 m4hisprtb	//
@@ -24685,98 +26633,7 @@ m4milrou	// Millennium Roulette
 m4milrou__a	//
 m4kingg		// King George
 m4kingg__a	//
-
-// MPU4 + Video board
-
-/* Barcrest */
-
-v4bios		// MPU4 Video Firmware
-v4cmaze		// The Crystal Maze (v1.3)
-v4cmazedat	//
-v4cmazea	//
-v4cmazeb	//
-v4cmazec	//
-v4cmazed	//
-v4cmaze2	// The New Crystal Maze Featuring Ocean Zone
-v4cmaze2d	//
-v4cmaze2a	//
-v4cmaze2b	//
-v4cmaze2c	//
-v4cmaze3	// The Crystal Maze Team Challenge
-v4cmaze3d	//
-v4cmaze3a	//
-v4cmaze3b	//
-v4cmaze3c	//
-v4turnov	// Turnover
-v4skltrk	// Skill Trek
-v4skltrka	//
-v4sklcsh	// Skill Cash
-v4addlad	// Adders and Ladders
-v4addlad20	//
-v4time		// Time Machine
-v4mate		// The Mating Game
-v4mated		//
-v4strike	// Strike it Lucky
-v4striked	//
-v4strike2	//
-v4strike2d	//
-v4eyedwn	// Eyes Down
-v4eyedwnd	//
-v4quidgr	// Ten Quid Grid
-v4quidgrd	//
-v4quidgr2	//
-v4quidgr2d	//
-v4barqst	// Barquest (v2.6d)
-v4barqs2	// Barquest 2 (v0.3)
-v4wize		// Wize Move (v1.3d)
-v4wizea		// Wize Move
-v4opt3		// Option 3
-v4opt3d		//
-
-/* Bwb */
-
-v4vgpok		// Vegas Poker (prototype release 2)
-v4psi		// Prize Space Invaders
-v4psia		//
-v4psib		//
-v4blox		// Blox
-v4bloxd		//
-v4reno		// Reno Reels
-v4redhtp	// Red Hot Poker
-v4tetrs		// BwB Tetris v 2.2
-v4frfact	// Fruit Factory
-v4bigfrt	// Big Fruits
-v4bubbnk	// Bubbly Bonk
-v4mazbel	// Mazooma Belle
-v4mazbla	//
-v4shpwnd	// Shop Window
-v4big40		// Big 40
-v4bulblx	// Bullion Blox
-v4cshinf	// Cash Inferno
-v4dbltak	// Double Take
-v4gldrsh	// Gold Rush
-v4mdice		// Miami Dice
-v4monte		// Monte Carlo Or Bust
-v4ovrmn3	// Over Moon Pt3
-v4pztet		// Prize Tetris
-v4pzteta	//
-v4rhmaz		// Red Hot Mazooma Belle
-v4sunbst	// Sunburst
-v4timebn	// Time Bandit
-v4sixx		// 6-X
-v4megbuk	// Megabucks Poker
-v4rencas	// Reno Casino
-
-/* Nova (Bwb board) */
-
-v4cybcas	// Cyber Casino
-v4miami		// Miami Dice
-v4missis	// Mississippi Lady
-v4picdil	// Piccadilly Nights
-
-/* Zenitone (custom video board) */
-
-v4dealem	// Deal 'Em
+m4funh		// Fun House
 
 // MPU5
 
@@ -25985,6 +27842,9 @@ sp_fivea		//
 sp_crun			// Cash Run (Crystal)
 sp_cruna		//
 sp_crunb		//
+sp_roof			// Thru The Roof (Ace)
+sp_roofa		//
+sp_cpal			// Caesars Palace (Ace)
 
 
 // Project - PROCONN
@@ -26763,9 +28623,16 @@ ec_sumnc	// Casino Super Multi Nudger (Concept/Electrocoin)
 // Pyramid PCB
 
 ec_pyram	// Pyramid (Electrocoin)
+ec_pyrama	//
 ec_sphin	// Sphinx (Electrocoin)
+ec_sphina	//
+ec_sphinb	//
 ec_penni	// Pennies From Heaven (Electrocoin)
+ec_pennia	//
+ec_stair	// Stairway to Heaven
+ec_staira	//
 ec_laby		// Labyrinth (Electrocoin)
+ec_labya	//
 ec_secrt	// Secret Castle (Electrocoin)
 
 
@@ -26812,26 +28679,99 @@ gl_hbhcla
 /* Unknown, Pluto? */
 
 hb_cr		// Cash Raker (QPS)
+hb_cra		//
+hb_crb		//
 hb_bar7		// Bar Seven (Fairgames)
+hb_bar7a	//
 hb_bigx		// Big X (JPM)
+hb_bigxa	//
+hb_bigxb	//
+hb_bigxc	//
+hb_bigxd	//
 hb_ccow		// Cash Cow (Qps)
+hb_ccowa	//
+hb_ccowb	//
 hb_cashc	// Cash Crusade (Qps)
+hb_cashca	//
+hb_cashcb	//
 hb_cashx	// Cash X (Fairgames)
+hb_cashxa	//
 hb_cwf		// Cherry Win Falls (Fairgames)
+hb_cwfa		//
 hb_dac		// Dough & Arrow Club (Qps) [c]
 hb_daca		//
+hb_dacb		//
+hb_dacc		//
+hb_dacd		//
+hb_dace		//
+hb_dacf		//
+hb_dacg		//
+hb_dacz		//
 hb_frtcl	// Fruitopia Club (Qps) [c]
+hb_frtcla	//
+hb_frtclb	//
+hb_frtclc	//
+hb_frtcld	//
+hb_frtcle	//
+hb_frtclf	//
+hb_frtclg	//
+hb_frtclh	//
+hb_frtcli	//
+hb_frtclj	//
+hb_frtclk	//
+hb_frtcll	//
+hb_frtclm	//
+hb_frtcln	//
 hb_gpal		// G' Palace (Qps)
+hb_gpala	//
+hb_gpalb	//
+hb_gpalc	//
+hb_gpald	//
+hb_gpale	//
+hb_gpalf	//
+hb_gpalg	//
+hb_gpalh	//
+hb_gpali	//
 hb_gldpl	// Golden Palace (Mazooma)
+hb_gldpla	//
 hb_gldwn	// Golden Winner (Fairgames)
+hb_gldwna	//
 hb_jailb	// Jail Break (Qps)
+hb_jailba	//
 hb_jkrwl	// Jokers Wild (Fairgames)
+hb_jkrwla	//
 hb_mrmon	// Mr. Money (Qps)
+hb_mrmona	//
+hb_mrmonb	//
+hb_mrmonc	//
 hb_rhv		// Red Hot Voucher (Qps)
+hb_rhva		//
 hb_ringb	// Ring A Bell (JPM)
+hb_ringba	//
+hb_ringbb	//
+hb_ringbc	//
+hb_ringbd	//
+hb_ringbe	//
 hb_rckrl	// Rock 'n' Roll (Qps)
+hb_rckrla	//
+hb_rckrlb	//
+hb_rckrlc	//
+hb_rckrld	//
+hb_rckrle	//
+hb_rckrlf	//
+hb_rckrlg	//
 hb_ydd		// Yabba-Dabba-Dough (Qps)
+hb_ydda		//
 hb_hotst	// Hot Stuff??
+hb_hotsta	//
+hb_hotstb	//
+hb_hotstc	//
+hb_hotstd	//
+hb_hotste	//
+hb_hotstf	//
+hb_hotstg	//
+hb_hotsth	//
+hb_medal	// Medallion Job (Qps)
 
 /* Summit Coin */
 
@@ -28431,4 +30371,5 @@ fruitstb
 // HP Automaten
 bingoman
 bingomana
+
 #endif // !NCP

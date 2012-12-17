@@ -8,18 +8,40 @@
 #define FLOPPY_H
 
 #include "formats/flopimg.h"
+#include "formats/d88_dsk.h"
+#include "formats/dfi_dsk.h"
+#include "formats/hxcmfm_dsk.h"
+#include "formats/imd_dsk.h"
+#include "formats/ipf_dsk.h"
+#include "formats/mfi_dsk.h"
 
-#define MCFG_FLOPPY_DRIVE_ADD(_tag, _slot_intf, _def_slot, _def_inp, _formats)	\
+#define MCFG_FLOPPY_DRIVE_ADD(_tag, _slot_intf, _def_slot, _def_inp, _formats)  \
 	MCFG_DEVICE_ADD(_tag, FLOPPY_CONNECTOR, 0) \
 	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, _def_inp, false) \
 	static_cast<floppy_connector *>(device)->set_formats(_formats);
+
+#define DECLARE_FLOPPY_FORMATS(_name) \
+	static const floppy_format_type _name [];
+
+#define FLOPPY_FORMATS_MEMBER(_member) \
+	const floppy_format_type _member [] = { \
+
+#define FLOPPY_FORMATS_END \
+		, \
+		FLOPPY_D88_FORMAT, \
+		FLOPPY_DFI_FORMAT, \
+		FLOPPY_IMD_FORMAT, \
+		FLOPPY_IPF_FORMAT, \
+		FLOPPY_MFI_FORMAT, \
+		FLOPPY_MFM_FORMAT, \
+		NULL };
 
 
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
 
-class floppy_image_device :	public device_t,
+class floppy_image_device : public device_t,
 							public device_image_interface,
 							public device_slot_card_interface
 {
@@ -27,6 +49,7 @@ public:
 	typedef delegate<int (floppy_image_device *)> load_cb;
 	typedef delegate<void (floppy_image_device *)> unload_cb;
 	typedef delegate<void (floppy_image_device *, int)> index_pulse_cb;
+	typedef delegate<void (floppy_image_device *, int)> ready_cb;
 
 	// construction/destruction
 	floppy_image_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock);
@@ -61,6 +84,7 @@ public:
 	void setup_load_cb(load_cb cb);
 	void setup_unload_cb(unload_cb cb);
 	void setup_index_pulse_cb(index_pulse_cb cb);
+	void setup_ready_cb(ready_cb cb);
 
 	UINT32* get_buffer() { return image->get_buffer(cyl, ss); }
 	UINT32 get_len() { return image->get_track_size(cyl, ss); }
@@ -71,9 +95,10 @@ public:
 
 	bool wpt_r() { return output_format == 0; }
 	int dskchg_r() { return dskchg; }
-	bool trk00_r() { return cyl != 0 || !image; }
+	bool trk00_r() { return cyl != 0; }
 	int idx_r() { return idx; }
 	bool ss_r() { return ss; }
+	bool twosid_r();
 
 	void stp_w(int state);
 	void dir_w(int state) { dir = state; }
@@ -89,6 +114,8 @@ public:
 
 	virtual ui_menu *get_selection_menu(running_machine &machine, class render_container *container);
 
+	static const floppy_format_type default_floppy_formats[];
+
 protected:
 	// device-level overrides
 	virtual void device_config_complete();
@@ -101,8 +128,8 @@ protected:
 	image_device_format   format;
 	floppy_image_format_t *input_format;
 	floppy_image_format_t *output_format;
-	floppy_image		  *image;
-	char				  extension_list[256];
+	floppy_image          *image;
+	char                  extension_list[256];
 	floppy_image_format_t *fif_list;
 	emu_timer             *index_timer;
 
@@ -117,13 +144,14 @@ protected:
 	int stp;  /* step */
 	int wtg;  /* write gate */
 	int mon;  /* motor on */
-	int ss;	/* side select */
+	int ss; /* side select */
 
 	/* state of output lines */
 	int idx;  /* index pulse */
 	int wpt;  /* write protect */
 	int rdy;  /* ready */
-	int dskchg;		/* disk changed */
+	int dskchg;     /* disk changed */
+	bool ready;
 
 	/* rotation per minute => gives index pulse frequency */
 	float rpm;
@@ -133,10 +161,12 @@ protected:
 	int cyl;
 
 	bool image_dirty;
+	int ready_counter;
 
 	load_cb cur_load_cb;
 	unload_cb cur_unload_cb;
 	index_pulse_cb cur_index_pulse_cb;
+	ready_cb cur_ready_cb;
 
 	UINT32 find_position(attotime &base, attotime when);
 	int find_index(UINT32 position, const UINT32 *buf, int buf_size);
@@ -228,6 +258,50 @@ protected:
 	virtual void setup_characteristics();
 };
 
+class floppy_525_sssd_35t : public floppy_image_device {
+public:
+	floppy_525_sssd_35t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	virtual ~floppy_525_sssd_35t();
+	virtual void handled_variants(UINT32 *variants, int &var_count) const;
+	virtual void device_config_complete() { m_shortname = "floppy_525_sssd_35t"; }
+	virtual const char *image_interface() const { return "floppy_5_25"; }
+protected:
+	virtual void setup_characteristics();
+};
+
+class floppy_525_sd_35t : public floppy_image_device {
+public:
+	floppy_525_sd_35t(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	virtual ~floppy_525_sd_35t();
+	virtual void handled_variants(UINT32 *variants, int &var_count) const;
+	virtual void device_config_complete() { m_shortname = "floppy_525_sd_35t"; }
+	virtual const char *image_interface() const { return "floppy_5_25"; }
+protected:
+	virtual void setup_characteristics();
+};
+
+class floppy_525_sssd : public floppy_image_device {
+public:
+	floppy_525_sssd(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	virtual ~floppy_525_sssd();
+	virtual void handled_variants(UINT32 *variants, int &var_count) const;
+	virtual void device_config_complete() { m_shortname = "floppy_525_sssd"; }
+	virtual const char *image_interface() const { return "floppy_5_25"; }
+protected:
+	virtual void setup_characteristics();
+};
+
+class floppy_525_sd : public floppy_image_device {
+public:
+	floppy_525_sd(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	virtual ~floppy_525_sd();
+	virtual void handled_variants(UINT32 *variants, int &var_count) const;
+	virtual void device_config_complete() { m_shortname = "floppy_525_sd"; }
+	virtual const char *image_interface() const { return "floppy_5_25"; }
+protected:
+	virtual void setup_characteristics();
+};
+
 class floppy_525_ssdd : public floppy_image_device {
 public:
 	floppy_525_ssdd(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
@@ -283,6 +357,28 @@ protected:
 	virtual void setup_characteristics();
 };
 
+class floppy_8_dssd : public floppy_image_device {
+public:
+	floppy_8_dssd(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	virtual ~floppy_8_dssd();
+	virtual void handled_variants(UINT32 *variants, int &var_count) const;
+	virtual void device_config_complete() { m_shortname = "floppy_8_dssd"; }
+	virtual const char *image_interface() const { return "floppy_8"; }
+protected:
+	virtual void setup_characteristics();
+};
+
+class floppy_8_ssdd : public floppy_image_device {
+public:
+	floppy_8_ssdd(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	virtual ~floppy_8_ssdd();
+	virtual void handled_variants(UINT32 *variants, int &var_count) const;
+	virtual void device_config_complete() { m_shortname = "floppy_8_ssdd"; }
+	virtual const char *image_interface() const { return "floppy_8"; }
+protected:
+	virtual void setup_characteristics();
+};
+
 class floppy_8_dsdd : public floppy_image_device {
 public:
 	floppy_8_dsdd(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
@@ -321,11 +417,17 @@ extern const device_type FLOPPY_35_DD;
 extern const device_type FLOPPY_35_DD_NOSD;
 extern const device_type FLOPPY_35_HD;
 extern const device_type FLOPPY_35_ED;
+extern const device_type FLOPPY_525_SSSD_35T;
+extern const device_type FLOPPY_525_SD_35T;
+extern const device_type FLOPPY_525_SSSD;
+extern const device_type FLOPPY_525_SD;
 extern const device_type FLOPPY_525_SSDD;
 extern const device_type FLOPPY_525_DD;
 extern const device_type FLOPPY_525_QD;
 extern const device_type FLOPPY_525_HD;
 extern const device_type FLOPPY_8_SSSD;
+extern const device_type FLOPPY_8_DSSD;
+extern const device_type FLOPPY_8_SSDD;
 extern const device_type FLOPPY_8_DSDD;
 
 #endif /* FLOPPY_H */

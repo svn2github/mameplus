@@ -66,12 +66,33 @@ WRITE8_MEMBER(_8080bw_state::invadpt2_sh_port_2_w)
 	if (rising_bits & 0x08) m_samples->start(4, 6);		/* FLEET */
 	if (rising_bits & 0x10) m_samples->start(3, 7);		/* SAUCER HIT */
 
-	m_c8080bw_flip_screen = data & 0x20;
+	m_c8080bw_flip_screen = BIT(data, 5) & ioport(CABINET_PORT_TAG)->read();
 
 	m_port_2_last_extra = data;
 }
 
 
+
+/*******************************************************/
+/*                                                     */
+/* Space Ranger                                        */
+/*                                                     */
+/*******************************************************/
+
+WRITE8_MEMBER(_8080bw_state::spacerng_sh_port_2_w)
+{
+	UINT8 rising_bits = data & ~m_port_2_last_extra;
+
+	if (rising_bits & 0x01) m_samples->start(4, 3);		/* FLEET */
+	if (rising_bits & 0x02) m_samples->start(4, 4);		/* FLEET */
+	if (rising_bits & 0x04) m_samples->start(4, 5);		/* FLEET */
+	if (rising_bits & 0x08) m_samples->start(4, 6);		/* FLEET */
+	if (rising_bits & 0x10) m_samples->start(3, 7);		/* SAUCER HIT */
+
+	m_c8080bw_flip_screen = BIT(~data, 5) & ioport(CABINET_PORT_TAG)->read();
+
+	m_port_2_last_extra = data;
+}
 
 /*******************************************************/
 /*                                                     */
@@ -153,7 +174,7 @@ WRITE8_MEMBER(_8080bw_state::lrescue_sh_port_2_w)
 	if (rising_bits & 0x10) m_samples->start(3, 6);		/* Shooting Star and Rescue Ship sounds */
 	if ((~data & 0x10) && (m_port_2_last_extra & 0x10)) m_samples->stop(3);	/* This makes the rescue ship sound beep on and off */
 
-	m_c8080bw_flip_screen = data & 0x20;
+	m_c8080bw_flip_screen = BIT(data, 5) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
 
 	m_port_2_last_extra = data;
 }
@@ -255,7 +276,7 @@ WRITE8_MEMBER(_8080bw_state::ballbomb_sh_port_2_w)
 	if (data & 0x04) m_samples->start(0, 4);		/* Plane is dropping new balloons at start of level */
 	if (rising_bits & 0x10) m_samples->start(2, 2);		/* Balloon hit and bomb drops */
 
-	m_c8080bw_flip_screen = data & 0x20;
+	m_c8080bw_flip_screen = BIT(data, 5) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
 
 	m_port_2_last_extra = data;
 }
@@ -683,7 +704,7 @@ WRITE8_MEMBER(_8080bw_state::polaris_sh_port_3_w)
 
 	coin_lockout_global_w(machine(), data & 0x04);  /* SX8 */
 
-	m_c8080bw_flip_screen = data & 0x20;		/* SX11 */
+	m_c8080bw_flip_screen = BIT(data, 5) & BIT(ioport(CABINET_PORT_TAG)->read(), 0); /* SX11 */
 
 	/* 0x01 - SX6 - Plane Down */
 	discrete_sound_w(m_discrete, space, POLARIS_SX6_EN, data & 0x01);
@@ -876,14 +897,14 @@ WRITE8_MEMBER(_8080bw_state::schaser_sh_port_1_w)
 			if (!m_schaser_effect_555_is_low)
 			{
 				m_schaser_effect_555_time_remain = m_schaser_effect_555_timer->time_left();
-            		m_schaser_effect_555_time_remain_savable = m_schaser_effect_555_time_remain.as_double();
+				m_schaser_effect_555_time_remain_savable = m_schaser_effect_555_time_remain.as_double();
 				m_schaser_effect_555_timer->adjust(attotime::never);
 			}
 		}
 		m_schaser_last_effect = effect;
 	}
 
-	m_schaser_explosion = (data >> 5) & 0x01;
+	m_schaser_explosion = BIT(data, 5);
 	if (m_schaser_explosion)
 	{
 		sn76477_amplitude_res_w(m_sn, 1.0 / (1.0/RES_K(200) + 1.0/RES_K(68)));
@@ -908,17 +929,17 @@ WRITE8_MEMBER(_8080bw_state::schaser_sh_port_2_w)
 
 	//printf( "schaser_sh_port_2_w: %02x\n", data );
 
-	discrete_sound_w(m_discrete, space, SCHASER_MUSIC_BIT, data & 0x01);
+	discrete_sound_w(m_discrete, space, SCHASER_MUSIC_BIT, BIT(data, 0));
 
-	discrete_sound_w(m_discrete, space, SCHASER_SND_EN, data & 0x02);
-	machine().sound().system_enable(data & 0x02);
+	discrete_sound_w(m_discrete, space, SCHASER_SND_EN, BIT(data, 1));
+	machine().sound().system_enable(BIT(data, 1));
 
-	coin_lockout_global_w(machine(), data & 0x04);
+	coin_lockout_global_w(machine(), BIT(data, 2));
 
-	m_schaser_background_disable = (data >> 3) & 0x01;
-	m_schaser_background_select = (data >> 4) & 0x01;
+	m_schaser_background_disable = BIT(data, 3);
+	m_schaser_background_select = BIT(data, 4);
 
-	m_c8080bw_flip_screen = (data & 0x20) && (ioport(CABINET_PORT_TAG)->read() & 0x01);
+	m_c8080bw_flip_screen = BIT(data, 5) & BIT(ioport("IN2")->read(), 6);
 
 	m_port_2_last_extra = data;
 }
@@ -994,10 +1015,17 @@ WRITE8_MEMBER(_8080bw_state::invrvnge_sh_port_1_w)
 
 WRITE8_MEMBER(_8080bw_state::invrvnge_sh_port_2_w)
 {
-	m_screen_red = data & 0x10;
-	m_c8080bw_flip_screen = (data & 0x20) && (ioport(CABINET_PORT_TAG)->read() & 0x01);
+	/*
+        00 - normal play
+        0A, 0E - alternate during play/attract at about once per second (invrvngegw only) purpose unknown
+        01 - briefly at boot time
+        10 - different colour map (or screen red) when you die
+        20 - flip screen */
 
-	// no sound-related writes?
+	m_screen_red = BIT(data, 4);
+	m_c8080bw_flip_screen = BIT(data, 5) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
+
+        // no sound-related writes?
 }
 
 
@@ -1146,7 +1174,7 @@ WRITE8_MEMBER(_8080bw_state::schasercv_sh_port_2_w)
 
 	machine().sound().system_enable(data & 0x10);
 
-	m_c8080bw_flip_screen = data & 0x20;
+	m_c8080bw_flip_screen = BIT(data, 5) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
 }
 
 
@@ -1231,7 +1259,7 @@ WRITE8_MEMBER(_8080bw_state::shuttlei_sh_port_2_w)
 
 WRITE8_MEMBER( _8080bw_state::darthvdr_00_w )
 {
-	m_c8080bw_flip_screen = BIT(data, 0) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
+	m_invaders_flip_screen = BIT(data, 0) & BIT(ioport(CABINET_PORT_TAG)->read(), 0);
 }
 
 WRITE8_MEMBER( _8080bw_state::darthvdr_08_w )

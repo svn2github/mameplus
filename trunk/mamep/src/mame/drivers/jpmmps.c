@@ -889,9 +889,6 @@ ROM_START( j2nuddud )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "nudgedoubleupdelux1.1", 0x0000, 0x8000, CRC(638321d3) SHA1(d1e5a7debfb957ad4d85e7501ec78a37fe56921d) )
 	ROM_LOAD( "nudgedoubleupdelux1.2", 0x8000, 0x8000, CRC(398eafaa) SHA1(84eb5729cf0a7a387693eda0a7214e0c23ae9bab) )
-
-	ROM_REGION( 0x10000, "altrevs", 0 ) /* split later */
-	ROM_LOAD( "ndudx5-1-5p.p1", 0x0000, 0x1000, CRC(4cfd3c6f) SHA1(06ad825343178a694585ee3b4ff8400caf15dd21) )
 ROM_END
 
 
@@ -2004,6 +2001,11 @@ ROM_START( j2sirich )
 	ROM_LOAD( "strikerich1_1.bin", 0x0000, 0x008000, CRC(8b3295c5) SHA1(2f228575e96e574f28627668cb979cdd58307e12) )
 ROM_END
 
+ROM_START( j2siricha )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "rich2_1.rom", 0x0000, 0x008000, CRC(ee75ebcb) SHA1(968b8a0bff9779681b16456f9399b0d122b1796c) )
+ROM_END
+
 ROM_START( j2wag )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "bwbnwagn.bin", 0x0000, 0x008000, CRC(1163559a) SHA1(9e13b23eae478fd5b5468599b1163d06e189d446) )
@@ -2228,7 +2230,8 @@ GAME(198?, j2nbz	,0			,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "JPM","Nudge B
 
 GAME(198?, j2clbbin	,0			,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "Crystal?","Club Bingo (Crystal) (MPS)",						GAME_IS_SKELETON_MECHANICAL )
 
-GAME(198?, j2sirich	,0			,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "Maygay?","Strike It Rich (Maygay?) (MPS)",						GAME_IS_SKELETON_MECHANICAL ) // I don't think this is MayGay, it was just in a MayGay set with some actual MayGay roms
+GAME(198?, j2sirich	,0			,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "JPM","Strike It Rich (JPM) (MPS) (set 1)",						GAME_IS_SKELETON_MECHANICAL ) // I don't think this is MayGay, it was just in a MayGay set with some actual MayGay roms
+GAME(198?, j2siricha,j2sirich   ,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "JPM","Strike It Rich (JPM) (MPS) (set 2)",						GAME_IS_SKELETON_MECHANICAL ) // I don't think this is MayGay, it was just in a MayGay set with some actual MayGay roms
 
 GAME(198?, j2hcash	,0			,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "<unknown>","Hot Cash (Unk) (MPS)",						GAME_IS_SKELETON_MECHANICAL )
 GAME(198?, j2sset	,0			,jpmmps,jpmmps, jpmmps_state,jpmmps,ROT0,   "<unknown>","Sunset Strip (v2.0) (Unk) (MPS?)",						GAME_IS_SKELETON_MECHANICAL )

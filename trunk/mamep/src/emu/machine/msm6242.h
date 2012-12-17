@@ -13,7 +13,7 @@
 #define __MSM6242DEV_H__
 
 #include "emu.h"
-#include "machine/devhelpr.h"
+#include "dirtc.h"
 
 
 #define MCFG_MSM6242_ADD(_tag, _config) \
@@ -27,20 +27,13 @@
 
 struct msm6242_interface
 {
-	devcb_write_line	m_out_int_cb;
-};
-
-struct rtc_regs_t
-{
-	UINT8 sec, min, hour, day, wday, month;
-	UINT16 year;
+	devcb_write_line	m_out_int_func;
 };
 
 
 // ======================> msm6242_device
 
-class msm6242_device :	public device_t,
-						public msm6242_interface
+class msm6242_device :	public device_t, public device_rtc_interface
 {
 public:
 	// construction/destruction
@@ -49,26 +42,45 @@ public:
 	// I/O operations
 	DECLARE_WRITE8_MEMBER( write );
 	DECLARE_READ8_MEMBER( read );
-	void rtc_timer_callback();
 
 protected:
 	// device-level overrides
-	virtual void device_config_complete();
-	virtual void device_validity_check(validity_checker &valid) const;
 	virtual void device_start();
 	virtual void device_reset();
+	virtual void device_pre_save();
+	virtual void device_post_load();
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
-	static TIMER_CALLBACK( rtc_inc_callback );
+	// rtc overrides
+	virtual void rtc_clock_updated(int year, int month, int day, int day_of_week, int hour, int minute, int second);
 
 private:
-	UINT8 m_reg[3];
-	UINT8 m_irq_flag;
-	UINT8 m_irq_type;
-	UINT16 m_tick;
+	static const int RTC_TICKS = ~0;
 
-	rtc_regs_t m_rtc;
-	rtc_regs_t m_hold;
-	devcb_resolved_write_line	m_out_int_func;
+	static const UINT8 IRQ_64THSECOND = 0;
+	static const UINT8 IRQ_SECOND = 1;
+	static const UINT8 IRQ_MINUTE = 2;
+	static const UINT8 IRQ_HOUR = 3;
+
+	// state
+	UINT8						m_reg[3];
+	UINT8						m_irq_flag;
+	UINT8						m_irq_type;
+	UINT16						m_tick;
+
+	// incidentals
+	devcb_resolved_write_line	m_res_out_int_func;
+	emu_timer *					m_timer;
+	UINT64						m_last_update_time;	// last update time, in clock cycles
+
+	// methods
+	void rtc_timer_callback();
+	UINT64 current_time();
+	void irq(UINT8 irq_type);
+	UINT64 bump(int rtc_register, UINT64 delta, UINT64 register_min, UINT64 register_range);
+	void update_rtc_registers();
+	void update_timer();
+	UINT8 get_clock_nibble(int rtc_register, bool high);
 };
 
 

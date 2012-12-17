@@ -41,20 +41,14 @@
 #include "emu.h"
 #include "includes/amiga.h"
 #include "formats/ami_dsk.h"
-#include "formats/hxcmfm_dsk.h"
-#include "formats/ipf_dsk.h"
-#include "formats/mfi_dsk.h"
-#include "formats/dfi_dsk.h"
 #include "amigafdc.h"
 #include "machine/6526cia.h"
 
 const device_type AMIGA_FDC = &device_creator<amiga_fdc>;
 
-const floppy_format_type amiga_fdc::floppy_formats[] = {
-	FLOPPY_ADF_FORMAT, FLOPPY_MFM_FORMAT, FLOPPY_IPF_FORMAT, FLOPPY_MFI_FORMAT, FLOPPY_DFI_FORMAT,
-	NULL
-};
-
+FLOPPY_FORMATS_MEMBER( amiga_fdc::floppy_formats )
+	FLOPPY_ADF_FORMAT
+FLOPPY_FORMATS_END
 
 amiga_fdc::amiga_fdc(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
 	device_t(mconfig, AMIGA_FDC, "Amiga FDC", tag, owner, clock)
@@ -412,6 +406,7 @@ WRITE8_MEMBER( amiga_fdc::ciaaprb_w )
 		floppy->dir_w((data >> 1) & 1);
 		floppy->stp_w(data & 1);
 		floppy->mon_w((data >> 7) & 1);
+		output_set_value("fdc_led",data & 0x80); // LED directly connected to FDC motor
 	}
 
 	if(floppy) {

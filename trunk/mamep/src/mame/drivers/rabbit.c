@@ -2,7 +2,7 @@
 
                      -= 68020 + Imagetek I5000 Games =-
 
-            driver by   David Haywood ( hazemamewip (at) hotmail.com )
+            driver by   David Haywood
             partly based on metro.c driver by Luca Elia
 
 

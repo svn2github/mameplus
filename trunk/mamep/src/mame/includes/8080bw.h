@@ -50,9 +50,11 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(claybust_gun_on_r);
 
 	DECLARE_READ8_MEMBER(indianbt_r);
+	DECLARE_READ8_MEMBER(polaris_port00_r);
 	DECLARE_WRITE8_MEMBER(steelwkr_sh_port_3_w);
 	DECLARE_WRITE8_MEMBER(invadpt2_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(invadpt2_sh_port_2_w);
+	DECLARE_WRITE8_MEMBER(spacerng_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(spcewars_sh_port_w);
 	DECLARE_WRITE8_MEMBER(lrescue_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(lrescue_sh_port_2_w);
@@ -67,15 +69,19 @@ public:
 	DECLARE_WRITE8_MEMBER(schaser_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(schaser_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(rollingc_sh_port_w);
+	DECLARE_READ8_MEMBER(invrvnge_02_r);
 	DECLARE_WRITE8_MEMBER(invrvnge_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(invrvnge_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(lupin3_00_w);
 	DECLARE_WRITE8_MEMBER(lupin3_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(lupin3_sh_port_2_w);
+	DECLARE_READ8_MEMBER(schasercv_02_r);
 	DECLARE_WRITE8_MEMBER(schasercv_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(schasercv_sh_port_2_w);
 	DECLARE_WRITE8_MEMBER(yosakdon_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(yosakdon_sh_port_2_w);
+	DECLARE_READ8_MEMBER(shuttlei_ff_r);
+	DECLARE_WRITE8_MEMBER(shuttlei_ff_w);
 	DECLARE_WRITE8_MEMBER(shuttlei_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(shuttlei_sh_port_2_w);
 	DECLARE_READ8_MEMBER(claybust_gun_lo_r);
@@ -85,6 +91,7 @@ public:
 	DECLARE_WRITE8_MEMBER(invmulti_bank_w);
 
 	DECLARE_DRIVER_INIT(invmulti);
+	DECLARE_DRIVER_INIT(spacecom);
 	DECLARE_DRIVER_INIT(vortex);
 
 	DECLARE_MACHINE_START(extra_8080bw);
@@ -111,6 +118,7 @@ public:
 	UINT32 screen_update_polaris(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_ballbomb(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_shuttlei(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_spacecom(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 
 	INTERRUPT_GEN_MEMBER(polaris_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(claybust_gun_callback);

@@ -49,9 +49,10 @@ enum
 	XTAL_1MHz   		= 1000000,		/* Used to drive OKI M6295 chips */
 	XTAL_1_75MHz		= 1750000,		/* RCA CDP1861 */
 	XTAL_1_8432MHz		= 1843200,		/* Bondwell 12/14 */
+	XTAL_1_9968MHz		= 1996800,		/* NEC PC-98xx */
 	XTAL_2MHz   		= 2000000,
 	XTAL_2_01216MHz		= 2012160,		/* Cidelsa Draco sound board */
-	XTAL_2_4576MHz		= 2457600,		/* Atari ST MFP */
+	XTAL_2_4576MHz		= 2457600,		/* Atari ST MFP, NEC PC-98xx */
 	XTAL_2_5MHz		= 2500000,		/* Janken Man units */
 	XTAL_3MHz   		= 3000000,		/* Probably only used to drive 68705 or similar MCUs on 80's Taito PCBs */
 	XTAL_3_12MHz		= 3120000,		/* SP0250 clock on Gottlieb games */
@@ -158,7 +159,7 @@ enum
 	XTAL_25_447MHz  	= 25447000,		/* Namco EVA3A (Funcube2) */
 	XTAL_25_590906MHz	= 25590906,		/* Atari Jaguar NTSC */
 	XTAL_25_593900MHz	= 25593900,		/* Atari Jaguar PAL */
-	XTAL_25_601712MHz	= 25601712,		/* Astro Corp.'s Show Hand */
+	XTAL_26_601712MHz	= 26601712,		/* Astro Corp.'s Show Hand, PAL Vtech/Yeno Socrates (6x PAL subcarrier) */
 	XTAL_26_66666MHz	= 26666666,		/* Irem M92 but most use 27MHz */
 	XTAL_26_686MHz		= 26686000,		/* Typically used on 90's Taito PCBs to drive the custom chips */
 	XTAL_27MHz  		= 27000000,		/* Some Banpresto games macrossp, Irem M92 and 90's Toaplan games */

@@ -3,6 +3,7 @@
     MSM6242 / Epson RTC 62421 / 62423 Real Time Clock
 
     TODO:
+    - Stop timer callbacks on every single tick
     - HOLD mechanism
     - IRQs are grossly mapped
     - STOP / RESET mechanism
@@ -12,8 +13,11 @@
 
 #include "emu.h"
 #include "machine/msm6242.h"
-#include "machine/devhelpr.h"
 
+
+//**************************************************************************
+//  CONSTANTS
+//**************************************************************************
 
 enum
 {
@@ -35,6 +39,13 @@ enum
 	MSM6242_REG_CF
 };
 
+#define TIMER_RTC_CALLBACK		1
+
+#define LOG_UNMAPPED			1
+#define LOG_IRQ					1
+
+
+
 //**************************************************************************
 //  GLOBAL VARIABLES
 //**************************************************************************
@@ -48,81 +59,17 @@ const device_type msm6242 = &device_creator<msm6242_device>;
 //**************************************************************************
 
 //-------------------------------------------------
-//  xxx_device - constructor
+//  msm6242_device - constructor
 //-------------------------------------------------
 
 msm6242_device::msm6242_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, msm6242, "msm6242", tag, owner, clock)
+	: device_t(mconfig, msm6242, "msm6242", tag, owner, clock),
+	  device_rtc_interface(mconfig, *this)
 {
 
 }
 
-void msm6242_device::rtc_timer_callback()
-{
-	static const UINT8 dpm[12] = { 0x31, 0x28, 0x31, 0x30, 0x31, 0x30, 0x31, 0x31, 0x30, 0x31, 0x30, 0x31 };
-	int dpm_count;
 
-	m_tick++;
-
-	if(m_irq_flag == 1 && m_irq_type == 0 && ((m_tick % 0x200) == 0)) // 1/64 of second
-	{
-		if ( !m_out_int_func.isnull() )
-			m_out_int_func( ASSERT_LINE );
-	}
-
-	if(m_tick & 0x8000) // 32,768 KHz == 0x8000 ticks
-	{
-		m_tick = 0;
-		m_rtc.sec++;
-
-		if(m_irq_flag == 1 && m_irq_type == 1) // 1 second clock
-			if ( !m_out_int_func.isnull() )
-				m_out_int_func(ASSERT_LINE);
-
-		if(m_rtc.sec >= 60)
-		{
-			m_rtc.min++; m_rtc.sec = 0;
-			if(m_irq_flag == 1 && m_irq_type == 2) // 1 minute clock
-				if ( !m_out_int_func.isnull() )
-					m_out_int_func(ASSERT_LINE);
-		}
-		if(m_rtc.min >= 60)
-		{
-			m_rtc.hour++; m_rtc.min = 0;
-			if(m_irq_flag == 1 && m_irq_type == 3) // 1 hour clock
-				if ( !m_out_int_func.isnull() )
-					m_out_int_func(ASSERT_LINE);
-		}
-		if(m_rtc.hour >= 24)			{ m_rtc.day++; m_rtc.wday++; m_rtc.hour = 0; }
-		if(m_rtc.wday >= 6)				{ m_rtc.wday = 1; }
-
-		/* TODO: crude leap year support */
-		dpm_count = (m_rtc.month)-1;
-
-		if(((m_rtc.year % 4) == 0) && m_rtc.month == 2)
-		{
-			if((m_rtc.day) >= dpm[dpm_count]+1+1)
-				{ m_rtc.month++; m_rtc.day = 0x01; }
-		}
-		else if(m_rtc.day >= dpm[dpm_count]+1)		{ m_rtc.month++; m_rtc.day = 0x01; }
-		if(m_rtc.month >= 0x13)						{ m_rtc.year++; m_rtc.month = 1; }
-		if(m_rtc.year >= 100)						{ m_rtc.year = 0; } //1900-1999 possible timeframe
-	}
-}
-
-TIMER_CALLBACK( msm6242_device::rtc_inc_callback )
-{
-	reinterpret_cast<msm6242_device *>(ptr)->rtc_timer_callback();
-}
-
-//-------------------------------------------------
-//  device_validity_check - perform validity checks
-//  on this device
-//-------------------------------------------------
-
-void msm6242_device::device_validity_check(validity_checker &valid) const
-{
-}
 
 //-------------------------------------------------
 //  device_start - device-specific startup
@@ -130,30 +77,34 @@ void msm6242_device::device_validity_check(validity_checker &valid) const
 
 void msm6242_device::device_start()
 {
-	m_out_int_func.resolve( m_out_int_cb, *this );
+	const msm6242_interface *intf = reinterpret_cast<const msm6242_interface *>(static_config());
+	if (intf != NULL)
+		m_res_out_int_func.resolve(intf->m_out_int_func, *this);
 
-	/* let's call the timer callback every second */
-	machine().scheduler().timer_pulse(attotime::from_hz(clock()), FUNC(rtc_inc_callback), 0, (void *)this);
+	// let's call the timer callback every tick
+	m_timer = timer_alloc(TIMER_RTC_CALLBACK);
+	m_timer->adjust(attotime::zero);
 
-	system_time systime;
-	machine().base_datetime(systime);
+	// get real time from system
+	set_current_time(machine());
 
-	m_rtc.day = (systime.local_time.mday);
-	m_rtc.month = (systime.local_time.month+1);
-	m_rtc.wday = (systime.local_time.weekday);
-	m_rtc.year = (systime.local_time.year % 100);
-	m_rtc.hour = (systime.local_time.hour);
-	m_rtc.min = (systime.local_time.minute);
-	m_rtc.sec = (systime.local_time.second);
+	// set up registers
 	m_tick = 0;
 	m_irq_flag = 0;
 	m_irq_type = 0;
 
-	/* TODO: skns writes 0x4 to D then expects E == 6 and F == 4, perhaps those are actually saved in the RTC CMOS? */
+	// TODO: skns writes 0x4 to D then expects E == 6 and F == 4, perhaps those are actually saved in the RTC CMOS?
 	m_reg[0] = 0;
 	m_reg[1] = 0x6;
 	m_reg[2] = 0x4;
+
+	// save states
+	save_item(NAME(m_reg));
+	save_item(NAME(m_irq_flag));
+	save_item(NAME(m_irq_type));
+	save_item(NAME(m_tick));
 }
+
 
 
 //-------------------------------------------------
@@ -162,57 +113,293 @@ void msm6242_device::device_start()
 
 void msm6242_device::device_reset()
 {
-	if ( !m_out_int_func.isnull() )
-		m_out_int_func( CLEAR_LINE );
+	if (!m_res_out_int_func.isnull())
+		m_res_out_int_func(CLEAR_LINE);
 }
 
 
+
 //-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
+//  device_pre_save - called prior to saving the
+//  state, so that registered variables can be
+//  properly normalized
 //-------------------------------------------------
 
-void msm6242_device::device_config_complete()
+void msm6242_device::device_pre_save()
 {
-	const msm6242_interface *intf = reinterpret_cast<const msm6242_interface *>(static_config());
+	// update the RTC registers so that we can get the right values
+	update_rtc_registers();
+}
 
-	if ( intf != NULL )
+
+
+//-------------------------------------------------
+//  device_post_load - called after the loading a
+//  saved state, so that registered variables can
+//  be expaneded as necessary
+//-------------------------------------------------
+
+void msm6242_device::device_post_load()
+{
+	// this is probably redundant, because the timer state is saved; but it isn't
+	// a terribly bad idea
+	update_timer();
+}
+
+
+
+//-------------------------------------------------
+//  device_timer - called whenever a device timer
+//  fires
+//-------------------------------------------------
+
+void msm6242_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	switch(id)
 	{
-		*static_cast<msm6242_interface *>(this) = *intf;
-	}
-	else
-	{
-		memset(&m_out_int_cb, 0, sizeof(m_out_int_cb));
+		case TIMER_RTC_CALLBACK:
+			rtc_timer_callback();
+			break;
 	}
 }
+
+
+
+//-------------------------------------------------
+//  irq
+//-------------------------------------------------
+
+void msm6242_device::irq(UINT8 irq_type)
+{
+	// are we actually raising this particular IRQ?
+	if (m_irq_flag == 1 && m_irq_type == irq_type)
+	{
+		// log if appropriate
+		if (LOG_IRQ)
+			logerror("%s: MSM6242 logging IRQ #%d\n", machine().describe_context(), (int) irq_type);
+
+		// ...and assert the output line
+		if (!m_res_out_int_func.isnull())
+			m_res_out_int_func(ASSERT_LINE);
+	}
+}
+
+
+
+//-------------------------------------------------
+//  bump
+//-------------------------------------------------
+
+UINT64 msm6242_device::bump(int rtc_register, UINT64 delta, UINT64 register_min, UINT64 register_range)
+{
+	UINT64 carry = 0;
+
+	if (delta > 0)
+	{
+		// get the register value
+		UINT64 register_value = (rtc_register == RTC_TICKS)
+			? m_tick
+			: get_clock_register(rtc_register);
+
+		// increment the value
+		UINT64 new_register_value = ((register_value - register_min + delta) % register_range) + register_min;
+
+		// calculate the cary
+		carry = ((register_value - register_min) + delta) / register_range;
+
+		// store the new register value
+		if (rtc_register == RTC_TICKS)
+			m_tick = (UINT16) new_register_value;
+		else
+			set_clock_register(rtc_register, (int) new_register_value);
+	}
+
+	return carry;
+}
+
+
+
+//-------------------------------------------------
+//  current_time
+//-------------------------------------------------
+
+UINT64 msm6242_device::current_time()
+{
+	return machine().time().as_ticks(clock());
+}
+
+
+
+//-------------------------------------------------
+//  update_rtc_registers
+//-------------------------------------------------
+
+void msm6242_device::update_rtc_registers()
+{
+	// get the absolute current time, in ticks
+	UINT64 curtime = current_time();
+
+	// how long as it been since we last updated?
+	UINT64 delta = curtime - m_last_update_time;
+
+	// set current time
+	m_last_update_time = curtime;
+
+	// no delta?  just return
+	if (delta <= 0)
+		return;
+
+	// ticks
+	if ((m_tick % 200) != ((delta + m_tick) % 0x200))
+		irq(IRQ_64THSECOND);
+	delta = bump(RTC_TICKS, delta, 0, 0x8000);
+	if (delta <= 0)
+		return;
+
+	// seconds
+	irq(IRQ_SECOND);
+	delta = bump(RTC_SECOND, delta, 0, 60);
+	if (delta <= 0)
+		return;
+
+	// minutes
+	irq(IRQ_MINUTE);
+	delta = bump(RTC_MINUTE, delta, 0, 60);
+	if (delta <= 0)
+		return;
+
+	// hours
+	irq(IRQ_HOUR);
+	delta = bump(RTC_HOUR, delta, 0, 24);
+	if (delta <= 0)
+		return;
+
+	// days
+	while(delta--)
+		advance_days();
+}
+
+
+
+//-------------------------------------------------
+//  update_timer
+//-------------------------------------------------
+
+void msm6242_device::update_timer()
+{
+	UINT64 callback_ticks = 0;
+	attotime callback_time = attotime::never;
+
+	// we only need to call back if the IRQ flag is on, and we have a handler
+	if (!m_res_out_int_func.isnull() && m_irq_flag == 1)
+	{
+		switch(m_irq_type)
+		{
+			case IRQ_HOUR:
+				callback_ticks += (59 - get_clock_register(RTC_MINUTE)) * (0x8000 * 60);
+				// fall through
+
+			case IRQ_MINUTE:
+				callback_ticks += (59 - get_clock_register(RTC_SECOND)) * 0x8000;
+				// fall through
+
+			case IRQ_SECOND:
+				callback_ticks += 0x8000 - m_tick;
+				break;
+
+			case IRQ_64THSECOND:
+				callback_ticks += 0x200 - (m_tick % 0x200);
+				break;
+		}
+	}
+
+	// if set, convert ticks to an attotime
+	if (callback_ticks > 0)
+	{
+		callback_time = attotime::from_ticks(callback_ticks, clock()) - machine().time();
+	}
+
+	m_timer->adjust(callback_time);
+}
+
+
+
+//-------------------------------------------------
+//  rtc_clock_updated
+//-------------------------------------------------
+
+void msm6242_device::rtc_clock_updated(int year, int month, int day, int day_of_week, int hour, int minute, int second)
+{
+	m_last_update_time = current_time();
+}
+
+
+
+//-------------------------------------------------
+//  rtc_timer_callback
+//-------------------------------------------------
+
+void msm6242_device::rtc_timer_callback()
+{
+	update_rtc_registers();
+}
+
+
+
+//-------------------------------------------------
+//  get_clock_nibble
+//-------------------------------------------------
+
+UINT8 msm6242_device::get_clock_nibble(int rtc_register, bool high)
+{
+	int value = get_clock_register(rtc_register);
+	value /= high ? 10 : 1;
+	return (UINT8) ((value % 10) & 0x0F);
+}
+
+
 
 //**************************************************************************
 //  READ/WRITE HANDLERS
 //**************************************************************************
 
+//-------------------------------------------------
+//  read
+//-------------------------------------------------
+
 READ8_MEMBER( msm6242_device::read )
 {
-	rtc_regs_t cur_time;
+	int hour, pm;
+	UINT8 result;
 
-	//cur_time = (m_reg[0] & 1) ? m_hold : m_rtc;
-
-	cur_time = m_rtc;
+	// update the registers; they may have changed
+	update_rtc_registers();
 
 	switch(offset)
 	{
-		case MSM6242_REG_S1: return (cur_time.sec % 10) & 0xf;
-		case MSM6242_REG_S10: return (cur_time.sec / 10) & 0xf;
-		case MSM6242_REG_MI1: return (cur_time.min % 10) & 0xf;
-		case MSM6242_REG_MI10: return (cur_time.min / 10) & 0xf;
+		case MSM6242_REG_S1:
+			result = get_clock_nibble(RTC_SECOND, false);
+			break;
+
+		case MSM6242_REG_S10:
+			result = get_clock_nibble(RTC_SECOND, true);
+			break;
+
+		case MSM6242_REG_MI1:
+			result = get_clock_nibble(RTC_MINUTE, false);
+			break;
+
+		case MSM6242_REG_MI10:
+			result = get_clock_nibble(RTC_MINUTE, true);
+			break;
+
 		case MSM6242_REG_H1:
 		case MSM6242_REG_H10:
-		{
-			int	hour = cur_time.hour;
-			int pm = 0;
+			pm = 0;
+			hour = get_clock_register(RTC_HOUR);
 
-			/* check for 12/24 hour mode */
-			if ((m_reg[2] & 0x04) == 0) /* 12 hour mode? */
+			// check for 12/24 hour mode
+			if ((m_reg[2] & 0x04) == 0) // 12 hour mode?
 			{
 				if (hour >= 12)
 					pm = 1;
@@ -224,107 +411,110 @@ READ8_MEMBER( msm6242_device::read )
 			}
 
 			if ( offset == MSM6242_REG_H1 )
-				return hour % 10;
+				result = hour % 10;
+			else
+				result = (hour / 10) | (pm <<2);
+			break;
 
-			return (hour / 10) | (pm <<2);
-		}
+		case MSM6242_REG_D1:
+			result = get_clock_nibble(RTC_DAY, false);
+			break;
 
-		case MSM6242_REG_D1: return (cur_time.day % 10) & 0xf;
-		case MSM6242_REG_D10: return (cur_time.day / 10) & 0xf;
-		case MSM6242_REG_MO1: return (cur_time .month % 10) & 0xf;
-		case MSM6242_REG_MO10: return (cur_time.month / 10) & 0xf;
-		case MSM6242_REG_Y1: return (cur_time.year % 10) & 0xf;
-		case MSM6242_REG_Y10: return ((cur_time.year / 10) % 10) & 0xf;
-		case MSM6242_REG_W: return cur_time.wday;
-		case MSM6242_REG_CD: return m_reg[0];
-		case MSM6242_REG_CE: return m_reg[1];
-		case MSM6242_REG_CF: return m_reg[2];
+		case MSM6242_REG_D10:
+			result = get_clock_nibble(RTC_DAY, true);
+			break;
+
+		case MSM6242_REG_MO1:
+			result = get_clock_nibble(RTC_MONTH, false);
+			break;
+
+		case MSM6242_REG_MO10:
+			result = get_clock_nibble(RTC_MONTH, true);
+			break;
+
+		case MSM6242_REG_Y1:
+			result = get_clock_nibble(RTC_YEAR, false);
+			break;
+
+		case MSM6242_REG_Y10:
+			result = get_clock_nibble(RTC_YEAR, true);
+			break;
+
+		case MSM6242_REG_W:
+			result = (UINT8) (get_clock_register(RTC_DAY_OF_WEEK) - 1);
+			break;
+
+		case MSM6242_REG_CD:
+		case MSM6242_REG_CE:
+		case MSM6242_REG_CF:
+			result = m_reg[offset - MSM6242_REG_CD];
+			break;
+
+		default:
+			result = 0x00;
+			if (LOG_UNMAPPED)
+				logerror("%s: MSM6242 unmapped offset %02x read\n", machine().describe_context(), offset);
+			break;
 	}
 
-	logerror("%s: MSM6242 unmapped offset %02x read\n", machine().describe_context(), offset);
-	return 0;
+	return result;
 }
+
+
+
+//-------------------------------------------------
+//  write
+//-------------------------------------------------
 
 WRITE8_MEMBER( msm6242_device::write )
 {
 	switch(offset)
 	{
 		case MSM6242_REG_CD:
-		{
-			/*
-            x--- 30s ADJ
-            -x-- IRQ FLAG
-            --x- BUSY
-            ---x HOLD
-            */
-
+            //  x--- 30s ADJ
+            //  -x-- IRQ FLAG
+            //  --x- BUSY
+            //  ---x HOLD
 			m_reg[0] = data & 0x0f;
-
-			#if 0
-			if (data & 1)	/* was Hold set? */
-			{
-				m_hold.day = m_rtc.day;
-				m_hold.month = m_rtc.month;
-				m_hold.hour = m_rtc.hour;
-				m_hold.day = m_rtc.day;
-				m_hold.month = m_rtc.month;
-				m_hold.year = m_rtc.year;
-				m_hold.wday = m_rtc.wday;
-			}
-			#endif
-
-			return;
-		}
+			break;
 
 		case MSM6242_REG_CE:
-		{
-			/*
-            xx-- t0,t1 (timing irq)
-            --x- STD
-            ---x MASK
-            */
-
+            //  xx-- t0,t1 (timing irq)
+            //  --x- STD
+            //  ---x MASK
 			m_reg[1] = data & 0x0f;
 			if((data & 3) == 0) // MASK & STD = 0
 			{
 				m_irq_flag = 1;
 				m_irq_type = (data & 0xc) >> 2;
-				//m_std_timer->adjust(attotime::from_msec(timer_param[(data & 0xc) >> 2]), 0, attotime::from_msec(timer_param[(data & 0xc) >> 2]));
 			}
 			else
 			{
 				m_irq_flag = 0;
-				if ( !m_out_int_func.isnull() )
-					m_out_int_func( CLEAR_LINE );
+				if ( !m_res_out_int_func.isnull() )
+					m_res_out_int_func( CLEAR_LINE );
 			}
-
-			return;
-		}
+			break;
 
 		case MSM6242_REG_CF:
-		{
-			/*
-            x--- TEST
-            -x-- 24/12
-            --x- STOP
-            ---x RESET
-            */
+            //  x--- TEST
+            //  -x-- 24/12
+            //  --x- STOP
+            //  ---x RESET
 
-			/* the 12/24 mode bit can only be changed when RESET does a 1 -> 0 transition */
+			// the 12/24 mode bit can only be changed when RESET does a 1 -> 0 transition
 			if (((data & 0x01) == 0x00) && (m_reg[2] & 0x01))
 				m_reg[2] = (m_reg[2] & ~0x04) | (data & 0x04);
 			else
 				m_reg[2] = (data & 0x0b) | (m_reg[2] & 4);
+			break;
 
-			return;
-		}
+		default:
+			if (LOG_UNMAPPED)
+				logerror("%s: MSM6242 unmapped offset %02x written with %02x\n", machine().describe_context(), offset, data);
+			break;
 	}
 
-	logerror("%s: MSM6242 unmapped offset %02x written with %02x\n", machine().describe_context(), offset, data);
+	// update the timer variable in response to potential changes
+	update_timer();
 }
-
-
-
-
-
-

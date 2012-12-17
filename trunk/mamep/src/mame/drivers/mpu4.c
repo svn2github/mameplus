@@ -286,30 +286,7 @@ ROM_END
 
 
 
-ROM_START( m4clbtro )
-	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "tr2s.p1", 0x0000, 0x010000, CRC(6d43375c) SHA1(5be1dc85374c6a1235e0b137b46ebd7a2d7d922a) )
-ROM_END
 
-ROM_START( m4clbtroa )
-	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "tr2f.p1", 0x0000, 0x010000, CRC(fbdcd06f) SHA1(27ccdc83e60a62227d33d8cf3d516fc43908ab99) )
-ROM_END
-
-ROM_START( m4clbtrob )
-	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "tr2d.p1", 0x0000, 0x010000, CRC(0cc23f89) SHA1(a66c8c28073f53381c43e3e597f15f81c5c61479) )
-ROM_END
-
-ROM_START( m4clbtroc )
-	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "tros.p1", 0x0000, 0x010000, CRC(5e86c3fc) SHA1(ce2419991559839a8875060c1afe0f030190010a) )
-ROM_END
-
-ROM_START( m4clbtrod )
-	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "trod.p1", 0x0000, 0x010000, CRC(60c84612) SHA1(84dc8b34e41436331832c1a32ddac0fce269488a) )
-ROM_END
 
 
 
@@ -2380,6 +2357,12 @@ ROM_START( m4sunsetc )
 	ROM_REGION( 0x100000, "msm6376", ROMREGION_ERASE00 )
 ROM_END
 
+ROM_START( m4funh )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "funhouse.bin", 0x00000, 0x10000, CRC(4e342025) SHA1(288125ff5e3da7249d89dfcc3cd0915f791f7d43) )
+	ROM_REGION( 0x200000, "msm6376", ROMREGION_ERASE00 ) // no idea if it uses an OKI
+ROM_END
+
 
 /* Barcrest */
 GAME( 198?, m4tst,        0, mod2    ,   mpu4, mpu4_state,       m4tst,   ROT0, "Barcrest","MPU4 Unit Test (Program 4)",GAME_MECHANICAL )
@@ -2474,11 +2457,6 @@ GAME(199?, m4caliclc,m4calicl	,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,
 GAME(199?, m4calicld,m4calicl	,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","California Club (Barcrest) (MPU4) (set 5)",GAME_FLAGS )
 
 GAME(199?, m4bucks	,0			,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Bucks Fizz Club (Barcrest) (MPU4)",GAME_FLAGS )
-GAME(199?, m4clbtro	,0			,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Club Tropicana (Barcrest) (MPU4) (set 1)",GAME_FLAGS )
-GAME(199?, m4clbtroa,m4clbtro	,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Club Tropicana (Barcrest) (MPU4) (set 2)",GAME_FLAGS )
-GAME(199?, m4clbtrob,m4clbtro	,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Club Tropicana (Barcrest) (MPU4) (set 3)",GAME_FLAGS )
-GAME(199?, m4clbtroc,m4clbtro	,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Club Tropicana (Barcrest) (MPU4) (set 4)",GAME_FLAGS )
-GAME(199?, m4clbtrod,m4clbtro	,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Club Tropicana (Barcrest) (MPU4) (set 5)",GAME_FLAGS )
 
 GAME(199?, m4gldgat	,0			,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","Golden Gate (Barcrest) [DGG, Dutch] (MPU4)",GAME_FLAGS )
 GAME(199?, m4hirise	,0			,mod2   	,mpu4				, mpu4_state,m4altreels			,ROT0,   "Barcrest","High Rise (Barcrest) (MPU4) (set 1)",GAME_FLAGS )
@@ -2747,8 +2725,10 @@ GAME( 199?, m4goldnn	, 0			,  mod4oki		, mpu4		, mpu4_state, m4default		, 0,		 "
 
 
 
+GAME( 198?, m4funh		, 0	        , mod4oki			, mpu4	, mpu4_state, m4default			, 0,       "unknown",      "Fun House (unknown) (MPU4)", GAME_FLAGS ) // TUNE ALARM  (was in the SC1 Fun House set)
 
 
 GAME(199?, m4sunseta	,m4sunset	,mod4oki	,mpu4				, mpu4_state,m4default			,ROT0,   "Barcrest","Sunset Boulevard (Barcrest) (MPU4) (B25 1.2, set 1)",GAME_FLAGS )
 GAME(199?, m4sunsetb	,m4sunset	,mod4oki	,mpu4				, mpu4_state,m4default			,ROT0,   "Barcrest","Sunset Boulevard (Barcrest) (MPU4) (B25 1.2, set 2)",GAME_FLAGS )
 GAME(199?, m4sunsetc	,m4sunset	,mod4oki	,mpu4				, mpu4_state,m4default			,ROT0,   "Barcrest","Sunset Boulevard (Barcrest) (MPU4) (OSB 0.2)",GAME_FLAGS ) // might be a mod 2
+

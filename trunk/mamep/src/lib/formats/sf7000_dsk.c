@@ -61,16 +61,15 @@ const char *sf7000_format::extensions() const
 	return "sf7";
 }
 
-// Unverified gap sizes
-// Drivers says HD, I don't believe it. At all.
 const sf7000_format::format sf7000_format::formats[] = {
 	{
-		floppy_image::FF_525, floppy_image::SSDD,
+    // mfm h=00 n=01 sc=10 gpl=2a d=ff
+		floppy_image::FF_3, floppy_image::SSDD,
 		2000, // 2us, 300rpm
 		16, 40, 1,
 		256, {},
 		1, {},
-		80, 50, 22, 80
+		80, 50, 22, 42
 	},
 	{}
 };

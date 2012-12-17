@@ -1,13 +1,14 @@
 /***************************************************************************
 
- h83002.h : Public constants and function defs for the H8/3002 emulator.
+ h8.h : Public constants and function defs for the H8/300, H8/300H,
+        H8/2000S, and H8/2600S family emulators.
 
 ****************************************************************************/
 
 #pragma once
 
-#ifndef __H83002_H__
-#define __H83002_H__
+#ifndef __H8SERIES_H__
+#define __H8SERIES_H__
 
 
 #define IFLAG  0x80
@@ -86,6 +87,14 @@ enum
 	H8_ADC_2_L,
 	H8_ADC_3_H,
 	H8_ADC_3_L,
+	H8_ADC_4_H,
+	H8_ADC_4_L,
+	H8_ADC_5_H,
+	H8_ADC_5_L,
+	H8_ADC_6_H,
+	H8_ADC_6_L,
+	H8_ADC_7_H,
+	H8_ADC_7_L,
 
 	// serial ports
 	H8_SERIAL_0 = 0x30,
@@ -121,6 +130,9 @@ enum
 #define H8S_IO_ICRB   H8S_IO(0xFEC1)
 #define H8S_IO_ICRC   H8S_IO(0xFEC2)
 
+#define H8S_IO_ISCRH  H8S_IO(0xFF2C)
+#define H8S_IO_ISCRL  H8S_IO(0xFF2D)
+
 // for H8S/2394
 #define H8S_IO_IER    H8S_IO(0xFF2E)
 #define H8S_IO_IFR    H8S_IO(0xFF2F)
@@ -132,6 +144,8 @@ enum
 #define H8S_IO_DTCED  H8S_IO(0xFF33)
 #define H8S_IO_DTCEE  H8S_IO(0xFF34)
 #define H8S_IO_DTCEF  H8S_IO(0xFF35)
+
+#define H8S_IO_SYSCR  H8S_IO(0xFF39)
 
 // port read registers
 #define H8S_IO_PORT1  H8S_IO(0xFF50)
@@ -185,6 +199,19 @@ enum
 #define H8S_IO_SSR2   H8S_IO(0xFF8C)
 #define H8S_IO_RDR2   H8S_IO(0xFF8D)
 #define H8S_IO_SCMR2  H8S_IO(0xFF8E)
+
+// ADC
+#define H8S_IO_ADDRA  H8S_IO(0xFF90)
+#define H8S_IO_ADDRB  H8S_IO(0xFF92)
+#define H8S_IO_ADDRC  H8S_IO(0xFF94)
+#define H8S_IO_ADDRD  H8S_IO(0xFF96)
+#define H8S_IO_ADDRE  H8S_IO(0xFF98)
+#define H8S_IO_ADDRF  H8S_IO(0xFF9A)
+#define H8S_IO_ADDRG  H8S_IO(0xFF9C)
+#define H8S_IO_ADDRH  H8S_IO(0xFF9E)
+#define H8S_IO_ADCSR  H8S_IO(0xFFA0)
+#define H8S_IO_ADCR   H8S_IO(0xFFA1)
+
 // 8-bit timer (channel 0 & 1)
 #define H8S_IO_TCR0   H8S_IO(0xFFB0)
 #define H8S_IO_TCR1   H8S_IO(0xFFB1)
@@ -294,6 +321,8 @@ enum
 #define H8S_IO_DMACR1B H8S_IO(0xFF05)
 #define H8S_IO_DMABCRH H8S_IO(0xFF06)
 #define H8S_IO_DMABCRL H8S_IO(0xFF07)
+
+#define H8S_IO_ADCSR   H8S_IO(0xFFA0)
 
 ///////////
 // PORTS //
@@ -417,5 +446,6 @@ DECLARE_LEGACY_CPU_DEVICE(H8S2241, h8s_2241);
 DECLARE_LEGACY_CPU_DEVICE(H8S2246, h8s_2246);
 DECLARE_LEGACY_CPU_DEVICE(H8S2323, h8s_2323);
 DECLARE_LEGACY_CPU_DEVICE(H8S2394, h8s_2394);
+DECLARE_LEGACY_CPU_DEVICE(H8S2655, h8s_2655);
 
-#endif /* __H83002_H__ */
+#endif /* __H8SERIES_H__ */

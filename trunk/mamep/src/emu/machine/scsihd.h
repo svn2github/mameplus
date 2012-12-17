@@ -25,6 +25,8 @@ public:
 	virtual void ReadData( UINT8 *data, int dataLength );
 	virtual int GetSectorBytes();
 
+	static struct harddisk_interface hd_intf;
+
 protected:
 	// device-level overrides
 	virtual void device_start();
