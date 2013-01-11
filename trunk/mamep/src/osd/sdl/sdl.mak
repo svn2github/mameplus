@@ -4,7 +4,7 @@
 #
 #   SDL-specific makefile
 #
-#   Copyright (c) 1996-2010, Nicola Salmoria and the MAME Team.
+#   Copyright (c) 1996-2013, Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 #   SDLMAME by Olivier Galibert and R. Belmont
@@ -76,6 +76,11 @@ USE_DISPATCH_GL = 1
 # (currently defaults disabled due to causing issues with mouse capture, esp. in MESS)
 NO_USE_XINPUT = 1
 
+# uncomment to try the experimental new Qt debugger
+#USE_QTDEBUG = 1
+
+# uncomment to disable MIDI
+#NO_USE_MIDI = 1
 
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
@@ -183,6 +188,12 @@ ifeq ($(TARGETOS),linux)
 BASE_TARGETOS = unix
 SYNC_IMPLEMENTATION = tc
 SDL_NETWORK = taptun
+
+ifndef NO_USE_MIDI
+INCPATH += `pkg-config --cflags alsa`
+LIBS += `pkg-config --libs alsa`
+endif
+
 endif
 
 ifeq ($(TARGETOS),freebsd)
@@ -196,24 +207,28 @@ CCOMFLAGS += -isystem /usr/local/include
 # No clue here. There is a popmessage(NULL) in uimenu.c which
 # triggers a non-null format warning on FreeBSD only.
 CCOMFLAGS += -Wno-format
+NO_USE_MIDI = 1
 endif
 
 ifeq ($(TARGETOS),openbsd)
 BASE_TARGETOS = unix
 SYNC_IMPLEMENTATION = ntc
 LIBS += -lutil
+NO_USE_MIDI = 1
 endif
 
 ifeq ($(TARGETOS),netbsd)
 BASE_TARGETOS = unix
 SYNC_IMPLEMENTATION = ntc
 LIBS += -lutil
+NO_USE_MIDI = 1
 endif
 
 ifeq ($(TARGETOS),solaris)
 BASE_TARGETOS = unix
 DEFS += -DNO_AFFINITY_NP -UHAVE_VSNPRINTF -DNO_vsnprintf
 SYNC_IMPLEMENTATION = tc
+NO_USE_MIDI = 1
 endif
 
 ifeq ($(TARGETOS),haiku)
@@ -221,13 +236,21 @@ BASE_TARGETOS = unix
 SYNC_IMPLEMENTATION = ntc
 NO_X11 = 1
 NO_USE_XINPUT = 1
+NO_USE_MIDI = 1
 LIBS += -lnetwork -lbsd
 endif
 
 ifeq ($(TARGETOS),macosx)
 BASE_TARGETOS = unix
 DEFS += -DSDLMAME_UNIX -DSDLMAME_MACOSX -DSDLMAME_DARWIN
+
+ifndef NO_USE_MIDI
+LIBS += -framework CoreAudio -framework CoreMIDI
+endif
+
+ifndef USE_QTDEBUG
 DEBUGOBJS = $(SDLOBJ)/debugosx.o
+endif
 SYNC_IMPLEMENTATION = ntc
 SDLMAIN = $(SDLOBJ)/SDLMain_tmpl.o
 SDLUTILMAIN = $(SDLOBJ)/SDLMain_tmpl.o
@@ -238,7 +261,7 @@ NO_USE_XINPUT = 1
 ifdef BIGENDIAN
 ifdef SYMBOLS
 CCOMFLAGS += -mlong-branch
-endif	# SYMBOLS
+endif   # SYMBOLS
 ifeq ($(PTR64),1)
 CCOMFLAGS += -arch ppc64
 LDFLAGS += -arch ppc64
@@ -247,7 +270,7 @@ CCOMFLAGS += -arch ppc
 LDFLAGS += -arch ppc
 endif
 $(OBJ)/emu/cpu/tms57002/tms57002.o : CCOMFLAGS += -O0
-else	# BIGENDIAN
+else    # BIGENDIAN
 ifeq ($(PTR64),1)
 CCOMFLAGS += -arch x86_64
 LDFLAGS += -arch x86_64
@@ -255,7 +278,7 @@ else
 CCOMFLAGS += -m32 -arch i386
 LDFLAGS += -m32 -arch i386
 endif
-endif	# BIGENDIAN
+endif   # BIGENDIAN
 
 endif
 
@@ -273,8 +296,11 @@ SDL_NETWORK = pcap
 
 # do we have GTK ?
 ifndef GTK_INSTALL_ROOT
+ifndef USE_QTDEBUG
 NO_DEBUGGER = 1
+endif
 else
+ifndef USE_QTDEBUG
 DEBUGOBJS = $(SDLOBJ)/debugwin.o $(SDLOBJ)/dview.o $(SDLOBJ)/debug-sup.o $(SDLOBJ)/debug-intf.o
 LIBS += -lgtk-win32-2.0 -lgdk-win32-2.0 -lgmodule-2.0 -lglib-2.0 -lgobject-2.0 \
 	-lpango-1.0 -latk-1.0 -lgdk_pixbuf-2.0
@@ -284,12 +310,29 @@ INCPATH += -I$(GTK_INSTALL_ROOT)/include/gtk-2.0 -I$(GTK_INSTALL_ROOT)/include/g
 	-I$(GTK_INSTALL_ROOT)/include/atk-1.0 \
 	-I$(GTK_INSTALL_ROOT)/lib/glib-2.0/include -I$(GTK_INSTALL_ROOT)/lib/gtk-2.0/include
 LDFLAGS += -L$(GTK_INSTALL_ROOT)/lib
+endif
 endif # GTK_INSTALL_ROOT
 
 # enable UNICODE
 DEFS += -Dmain=utf8_main -DUNICODE -D_UNICODE
 LDFLAGS += -municode
 
+# Qt
+ifdef USE_QTDEBUG
+QT_INSTALL_HEADERS = $(shell qmake -query QT_INSTALL_HEADERS)
+INCPATH += -I$(QT_INSTALL_HEADERS)/QtCore -I$(QT_INSTALL_HEADERS)/QtGui -I$(QT_INSTALL_HEADERS)
+LIBS += -L$(shell qmake -query QT_INSTALL_LIBS) -lqtmain -lQtGui4 -lQtCore4 -lcomdlg32 -loleaut32 -limm32 -lwinspool -lmsimg32 -lole32 -luuid -lws2_32 -lshell32 -lkernel32
+endif
+endif
+
+ifeq ($(TARGETOS),macosx)
+ifdef USE_QTDEBUG
+MOC = @moc
+
+QT_INSTALL_LIBS = $(shell qmake -query QT_INSTALL_LIBS)
+INCPATH += -I$(QT_INSTALL_LIBS)/QtGui.framework/Versions/4/Headers -I$(QT_INSTALL_LIBS)/QtCore.framework/Versions/4/Headers -F$(QT_INSTALL_LIBS)
+LIBS += -L$(QT_INSTALL_LIBS) -F$(QT_INSTALL_LIBS) -framework QtCore -framework QtGui
+endif
 endif
 
 ifeq ($(TARGETOS),os2)
@@ -299,6 +342,7 @@ SYNC_IMPLEMENTATION = os2
 NO_DEBUGGER = 1
 NO_X11 = 1
 NO_USE_XINPUT = 1
+NO_USE_MIDI = 1
 # OS/2 can't have OpenGL (aww)
 NO_OPENGL = 1
 endif
@@ -325,13 +369,13 @@ OBJDIRS += $(SDLOBJ)
 #-------------------------------------------------
 
 OSDCOREOBJS = \
-	$(SDLOBJ)/strconv.o	\
-	$(SDLOBJ)/sdldir.o	\
-	$(SDLOBJ)/sdlfile.o 	\
-	$(SDLOBJ)/sdlptty_$(BASE_TARGETOS).o	\
-	$(SDLOBJ)/sdlsocket.o	\
-	$(SDLOBJ)/sdlmisc_$(BASE_TARGETOS).o	\
-	$(SDLOBJ)/sdlos_$(SDLOS_TARGETOS).o	\
+	$(SDLOBJ)/strconv.o \
+	$(SDLOBJ)/sdldir.o  \
+	$(SDLOBJ)/sdlfile.o     \
+	$(SDLOBJ)/sdlptty_$(BASE_TARGETOS).o    \
+	$(SDLOBJ)/sdlsocket.o   \
+	$(SDLOBJ)/sdlmisc_$(BASE_TARGETOS).o    \
+	$(SDLOBJ)/sdlos_$(SDLOS_TARGETOS).o \
 	$(SDLOBJ)/sdlsync_$(SYNC_IMPLEMENTATION).o     \
 	$(SDLOBJ)/sdlwork.o
 
@@ -346,7 +390,12 @@ OSDOBJS = \
 	$(SDLOBJ)/drawsdl.o \
 	$(SDLOBJ)/window.o \
 	$(SDLOBJ)/output.o \
-	$(SDLOBJ)/watchdog.o
+	$(SDLOBJ)/watchdog.o \
+	$(SDLOBJ)/sdlmidi.o
+
+ifdef NO_USE_MIDI
+DEFS += "-DDISABLE_MIDI=1"
+endif
 
 # Add SDL2.0 support
 
@@ -366,8 +415,14 @@ OSDCLEAN = sdlclean
 # add the debugger includes
 INCPATH += -Isrc/debug
 
+# copy off the include paths before the sdlprefix & sdl-config stuff shows up
+MOCINCPATH := $(INCPATH)
+
 # add the prefix file
 INCPATH += -include $(SDLSRC)/sdlprefix.h
+INCPATH += -I/work/src/m/sdl
+MOCINCPATH += -I/work/src/m/sdl
+
 
 #-------------------------------------------------
 # BASE_TARGETOS specific configurations
@@ -383,6 +438,16 @@ TEST_GCC = $(shell gcc --version)
 
 ifeq ($(findstring 4.7,$(TEST_GCC)),4.7)
 	CCOMFLAGS += -Wno-narrowing -Wno-attributes
+endif
+
+# Ubuntu 12.10 GCC 4.7.2 autodetect
+ifeq ($(findstring 4.7.2-2ubuntu1,$(TEST_GCC)),4.7.2-2ubuntu1)
+GCC46TST = $(shell which g++-4.6 2>/dev/null)
+ifeq '$(GCC46TST)' ''
+	$(error Ubuntu 12.10 detected.  Please install the gcc-4.6 and g++-4.6 packages)
+endif
+CC = @gcc-4.6
+LD = @g++-4.6
 endif
 
 #-------------------------------------------------
@@ -417,8 +482,36 @@ endif   # MACOSX_USE_LIBSDL
 else   # ifeq ($(TARGETOS),macosx)
 
 DEFS += -DSDLMAME_UNIX
+
+ifdef USE_QTDEBUG
+MOCTST = $(shell which moc-qt4 2>/dev/null)
+ifeq '$(MOCTST)' ''
+MOCTST = $(shell which moc 2>/dev/null)
+ifeq '$(MOCTST)' ''
+$(error Qt's Meta Object Compiler (moc) wasn't found!)
+else
+MOC = @$(MOCTST)
+endif
+else
+MOC = @$(MOCTST)
+endif
+# Qt on Linux/UNIX
+QMAKE = $(shell which qmake-qt4 2>/dev/null)
+ifeq '$(QMAKE)' ''
+QMAKE = $(shell which qmake 2>/dev/null)
+ifeq '$(QMAKE)' ''
+$(error qmake wasn't found!)
+endif
+endif
+QT_INSTALL_HEADERS = $(shell $(QMAKE) -query QT_INSTALL_HEADERS)
+INCPATH += -I$(QT_INSTALL_HEADERS)/QtCore -I$(QT_INSTALL_HEADERS)/QtGui -I$(QT_INSTALL_HEADERS)
+LIBS += -L$(shell $(QMAKE) -query QT_INSTALL_LIBS) -lQtGui -lQtCore
+else
 DEBUGOBJS = $(SDLOBJ)/debugwin.o $(SDLOBJ)/dview.o $(SDLOBJ)/debug-sup.o $(SDLOBJ)/debug-intf.o
+endif
+
 LIBGL = -lGL
+
 ifeq ($(NO_X11),1)
 NO_DEBUGGER = 1
 endif
@@ -503,10 +596,15 @@ ifeq ($(findstring 4.4,$(TEST_GCC)),)
 	#if we use new tools
 	LDFLAGS += -static-libstdc++
 endif
+
+ifdef USE_QTDEBUG
+MOC = @moc
+endif
+
 LIBS += -lSDL.dll
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
-endif	# Win32
+endif   # Win32
 
 #-------------------------------------------------
 # OS/2
@@ -522,6 +620,25 @@ endif # OS2
 #-------------------------------------------------
 # Debugging
 #-------------------------------------------------
+
+ifdef USE_QTDEBUG
+$(SDLOBJ)/%.moc.c: $(SDLSRC)/%.h
+	$(MOC) $(MOCINCPATH) $(DEFS) $< -o $@
+
+DEBUGOBJS = \
+	$(SDLOBJ)/debugqt.o \
+	$(SDLOBJ)/debugqtview.o \
+	$(SDLOBJ)/debugqtwindow.o \
+	$(SDLOBJ)/debugqtlogwindow.o \
+	$(SDLOBJ)/debugqtdasmwindow.o \
+	$(SDLOBJ)/debugqtmainwindow.o \
+	$(SDLOBJ)/debugqtmemorywindow.o \
+	$(SDLOBJ)/debugqtwindow.moc.o \
+	$(SDLOBJ)/debugqtlogwindow.moc.o \
+	$(SDLOBJ)/debugqtdasmwindow.moc.o \
+	$(SDLOBJ)/debugqtmainwindow.moc.o \
+	$(SDLOBJ)/debugqtmemorywindow.moc.o
+endif
 
 ifeq ($(NO_DEBUGGER),1)
 DEFS += -DNO_DEBUGGER
@@ -572,6 +689,12 @@ INCPATH += `pkg-config --cflags-only-I gtk+-2.0` `pkg-config --cflags-only-I gco
 CCOMFLAGS += `pkg-config --cflags-only-other gtk+-2.0` `pkg-config --cflags-only-other gconf-2.0`
 LIBS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gconf-2.0`
 #CCOMFLAGS += -DGTK_DISABLE_DEPRECATED
+
+# The newer debugger uses QT
+ifdef USE_QTDEBUG
+INCPATH += `pkg-config QtGui --cflags`
+LIBS += `pkg-config QtGui --libs`
+endif
 
 # some systems still put important things in a different prefix
 LIBS += -L/usr/X11/lib -L/usr/X11R6/lib -L/usr/openwin/lib
@@ -647,6 +770,7 @@ $(LIBOCORE): $(OSDCOREOBJS)
 
 $(LIBOSD): $(OSDOBJS)
 
+
 #-------------------------------------------------
 # Tools
 #-------------------------------------------------
@@ -664,6 +788,8 @@ TESTKEYSOBJS = \
 testkeys$(EXE): $(TESTKEYSOBJS) $(LIBUTIL) $(LIBOCORE) $(SDLUTILMAIN)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+$(SDLOBJ)/sdlmidi.o: $(SRC)/osd/portmedia/pmmidi.c
 
 #-------------------------------------------------
 # clean up

@@ -385,8 +385,9 @@ WRITE8_MEMBER(upd765_family_device::fifo_w)
 		if(cmd == C_INVALID) {
 			logerror("%s: Invalid on %02x\n", tag(), command[0]);
 			main_phase = PHASE_RESULT;
-			result[0] = 0x80;
+			result[0] = ST0_UNK;
 			result_pos = 1;
+			command_pos = 0;
 			return;
 		}
 		start_command(cmd);
@@ -960,9 +961,14 @@ void upd765_family_device::live_run(attotime limit)
 				else if(cur_live.byte_counter < 16) {
 					cur_live.crc = 0xcdb4;
 					live_write_mfm(0xfe);
-				} else if(cur_live.byte_counter < 20)
-					live_write_mfm(fifo_pop(true));
-				else if(cur_live.byte_counter < 22)
+				} else if(cur_live.byte_counter < 20) {
+					UINT8 byte = fifo_pop(true);
+					command[12+cur_live.byte_counter-16] = byte;
+					live_write_mfm(byte);
+					if(cur_live.byte_counter == 19)
+						logerror("%s: formatting sector %02x %02x %02x %02x\n",
+									tag(), command[12], command[13], command[14], command[15]);
+				} else if(cur_live.byte_counter < 22)
 					live_write_mfm(cur_live.crc >> 8);
 				else if(cur_live.byte_counter < 44)
 					live_write_mfm(0x4e);
@@ -991,9 +997,14 @@ void upd765_family_device::live_run(attotime limit)
 				else if(cur_live.byte_counter < 7) {
 					cur_live.crc = 0xffff;
 					live_write_raw(0xf57e);
-				} else if(cur_live.byte_counter < 11)
-					live_write_fm(fifo_pop(true));
-				else if(cur_live.byte_counter < 13)
+				} else if(cur_live.byte_counter < 11) {
+					UINT8 byte = fifo_pop(true);
+					command[12+cur_live.byte_counter-7] = byte;
+					live_write_fm(byte);
+					if(cur_live.byte_counter == 10)
+						logerror("%s: formatting sector %02x %02x %02x %02x\n",
+									tag(), command[12], command[13], command[14], command[15]);
+				} else if(cur_live.byte_counter < 13)
 					live_write_fm(cur_live.crc >> 8);
 				else if(cur_live.byte_counter < 24)
 					live_write_fm(0xff);
@@ -1142,8 +1153,8 @@ void upd765_family_device::start_command(int cmd)
 	switch(cmd) {
 	case C_CONFIGURE:
 		logerror("%s: command configure %02x %02x %02x\n",
-				 tag(),
-				 command[1], command[2], command[3]);
+					tag(),
+					command[1], command[2], command[3]);
 		// byte 1 is ignored, byte 3 is precompensation-related
 		fifocfg = command[2];
 		precomp = command[3];
@@ -1269,8 +1280,8 @@ void upd765_family_device::start_command(int cmd)
 
 	case C_SPECIFY:
 		logerror("%s: command specify %02x %02x\n",
-				 tag(),
-				 command[1], command[2]);
+					tag(),
+					command[1], command[2]);
 		spec = (command[1] << 8) | command[2];
 		main_phase = PHASE_CMD;
 		break;
@@ -1394,22 +1405,22 @@ void upd765_family_device::read_data_start(floppy_info &fi)
 	mfm = command[0] & 0x40;
 
 	logerror("%s: command read%s data%s%s%s%s cmd=%02x sel=%x chrn=(%d, %d, %d, %d) eot=%02x gpl=%02x dtl=%02x rate=%d\n",
-			 tag(),
-			 command[0] & 0x08 ? " deleted" : "",
-			 command[0] & 0x80 ? " mt" : "",
-			 command[0] & 0x40 ? " mfm" : "",
-			 command[0] & 0x20 ? " sk" : "",
-			 fifocfg & 0x40 ? " seek" : "",
-			 command[0],
-			 command[1],
-			 command[2],
-			 command[3],
-			 command[4],
-			 128 << (command[5] & 7),
-			 command[6],
-			 command[7],
-			 command[8],
-			 cur_rate);
+				tag(),
+				command[0] & 0x08 ? " deleted" : "",
+				command[0] & 0x80 ? " mt" : "",
+				command[0] & 0x40 ? " mfm" : "",
+				command[0] & 0x20 ? " sk" : "",
+				fifocfg & 0x40 ? " seek" : "",
+				command[0],
+				command[1],
+				command[2],
+				command[3],
+				command[4],
+				128 << (command[5] & 7),
+				command[6],
+				command[7],
+				command[8],
+				cur_rate);
 
 	fi.st0 = command[1] & 7;
 	st1 = ST1_MA;
@@ -1488,11 +1499,11 @@ void upd765_family_device::read_data_continue(floppy_info &fi)
 				return;
 			}
 			logerror("%s: reading sector %02x %02x %02x %02x\n",
-					 tag(),
-					 cur_live.idbuf[0],
-					 cur_live.idbuf[1],
-					 cur_live.idbuf[2],
-					 cur_live.idbuf[3]);
+						tag(),
+						cur_live.idbuf[0],
+						cur_live.idbuf[1],
+						cur_live.idbuf[2],
+						cur_live.idbuf[3]);
 			sector_size = calc_sector_size(cur_live.idbuf[3]);
 			fifo_expect(sector_size, false);
 			fi.sub_state = SECTOR_READ;
@@ -1572,20 +1583,20 @@ void upd765_family_device::write_data_start(floppy_info &fi)
 	fi.sub_state = HEAD_LOAD_DONE;
 	mfm = command[0] & 0x40;
 	logerror("%s: command write%s data%s%s cmd=%02x sel=%x chrn=(%d, %d, %d, %d) eot=%02x gpl=%02x dtl=%02x rate=%d\n",
-			 tag(),
-			 command[0] & 0x08 ? " deleted" : "",
-			 command[0] & 0x80 ? " mt" : "",
-			 command[0] & 0x40 ? " mfm" : "",
-			 command[0],
-			 command[1],
-			 command[2],
-			 command[3],
-			 command[4],
-			 128 << (command[5] & 7),
-			 command[6],
-			 command[7],
-			 command[8],
-			 cur_rate);
+				tag(),
+				command[0] & 0x08 ? " deleted" : "",
+				command[0] & 0x80 ? " mt" : "",
+				command[0] & 0x40 ? " mfm" : "",
+				command[0],
+				command[1],
+				command[2],
+				command[3],
+				command[4],
+				128 << (command[5] & 7),
+				command[6],
+				command[7],
+				command[8],
+				cur_rate);
 
 	if(fi.dev)
 		fi.dev->ss_w(command[1] & 4 ? 1 : 0);
@@ -1687,18 +1698,18 @@ void upd765_family_device::read_track_start(floppy_info &fi)
 	mfm = command[0] & 0x40;
 
 	logerror("%s: command read track%s cmd=%02x sel=%x chrn=(%d, %d, %d, %d) eot=%02x gpl=%02x dtl=%02x rate=%d\n",
-			 tag(),
-			 command[0] & 0x40 ? " mfm" : "",
-			 command[0],
-			 command[1],
-			 command[2],
-			 command[3],
-			 command[4],
-			 128 << (command[5] & 7),
-			 command[6],
-			 command[7],
-			 command[8],
-			 cur_rate);
+				tag(),
+				command[0] & 0x40 ? " mfm" : "",
+				command[0],
+				command[1],
+				command[2],
+				command[3],
+				command[4],
+				128 << (command[5] & 7),
+				command[6],
+				command[7],
+				command[8],
+				cur_rate);
 
 	if(fi.dev)
 		fi.dev->ss_w(command[1] & 4 ? 1 : 0);
@@ -1808,9 +1819,9 @@ void upd765_family_device::format_track_start(floppy_info &fi)
 	mfm = command[0] & 0x40;
 
 	logerror("%s: command format track %s h=%02x n=%02x sc=%02x gpl=%02x d=%02x\n",
-			 tag(),
-			 command[0] & 0x40 ? "mfm" : "fm",
-			 command[1], command[2], command[3], command[4], command[5]);
+				tag(),
+				command[0] & 0x40 ? "mfm" : "fm",
+				command[1], command[2], command[3], command[4], command[5]);
 
 	if(fi.dev)
 		fi.dev->ss_w(command[1] & 4 ? 1 : 0);
@@ -1864,9 +1875,9 @@ void upd765_family_device::read_id_start(floppy_info &fi)
 	mfm = command[0] & 0x40;
 
 	logerror("%s: command read id%s, rate=%d\n",
-			 tag(),
-			 command[0] & 0x40 ? " mfm" : "",
-			 cur_rate);
+				tag(),
+				command[0] & 0x40 ? " mfm" : "",
+				cur_rate);
 
 	if(fi.dev)
 		fi.dev->ss_w(command[1] & 4 ? 1 : 0);
@@ -2174,8 +2185,8 @@ bool upd765_family_device::sector_matches() const
 {
 	if(0)
 		logerror("%s: matching %02x %02x %02x %02x - %02x %02x %02x %02x\n", tag(),
-				 cur_live.idbuf[0], cur_live.idbuf[1], cur_live.idbuf[2], cur_live.idbuf[3],
-				 command[2], command[3], command[4], command[5]);
+					cur_live.idbuf[0], cur_live.idbuf[1], cur_live.idbuf[2], cur_live.idbuf[3],
+					command[2], command[3], command[4], command[5]);
 	return
 		cur_live.idbuf[0] == command[2] &&
 		cur_live.idbuf[1] == command[3] &&

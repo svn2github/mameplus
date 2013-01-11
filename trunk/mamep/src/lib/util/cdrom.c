@@ -55,7 +55,7 @@
     DEBUGGING
 ***************************************************************************/
 
-#define VERBOSE	(0)
+#define VERBOSE (0)
 #if VERBOSE
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 void CLIB_DECL logerror(const char *text,...);
@@ -69,18 +69,18 @@ void CLIB_DECL logerror(const char *text,...);
     CONSTANTS
 ***************************************************************************/
 
-const int SYNC_OFFSET = 0x000;		// offset within sector
-const int SYNC_NUM_BYTES = 12;		// 12 bytes
+const int SYNC_OFFSET = 0x000;      // offset within sector
+const int SYNC_NUM_BYTES = 12;      // 12 bytes
 
-const int MODE_OFFSET = 0x00f;		// offset within sector
+const int MODE_OFFSET = 0x00f;      // offset within sector
 
-const int ECC_P_OFFSET = 0x81c;		// offset within sector
-const int ECC_P_NUM_BYTES = 86;		// 2 lots of 86
-const int ECC_P_COMP = 24;			// 24 bytes each
+const int ECC_P_OFFSET = 0x81c;     // offset within sector
+const int ECC_P_NUM_BYTES = 86;     // 2 lots of 86
+const int ECC_P_COMP = 24;          // 24 bytes each
 
 const int ECC_Q_OFFSET = ECC_P_OFFSET + 2 * ECC_P_NUM_BYTES;
-const int ECC_Q_NUM_BYTES = 52;		// 2 lots of 52
-const int ECC_Q_COMP = 43;			// 43 bytes each
+const int ECC_Q_NUM_BYTES = 52;     // 2 lots of 52
+const int ECC_Q_COMP = 43;          // 43 bytes each
 
 
 
@@ -90,10 +90,10 @@ const int ECC_Q_COMP = 43;			// 43 bytes each
 
 struct cdrom_file
 {
-	chd_file *			chd;				/* CHD file */
-	cdrom_toc			cdtoc;				/* TOC for the CD */
-	chdcd_track_input_info track_info;		/* track info */
-	core_file *			fhandle[CD_MAX_TRACKS];/* file handle */
+	chd_file *          chd;                /* CHD file */
+	cdrom_toc           cdtoc;              /* TOC for the CD */
+	chdcd_track_input_info track_info;      /* track info */
+	core_file *         fhandle[CD_MAX_TRACKS];/* file handle */
 };
 
 
@@ -124,6 +124,29 @@ INLINE UINT32 physical_to_chd_lba(cdrom_file *file, UINT32 physlba, UINT32 &trac
 	return physlba;
 }
 
+/*-------------------------------------------------
+    logical_to_chd_lba - find the CHD LBA
+    and the track number
+-------------------------------------------------*/
+
+INLINE UINT32 logical_to_chd_lba(cdrom_file *file, UINT32 loglba, UINT32 &tracknum)
+{
+	UINT32 chdlba, physlba;
+	int track;
+
+	/* loop until our current LBA is less than the start LBA of the next track */
+	for (track = 0; track < file->cdtoc.numtrks; track++)
+		if (loglba < file->cdtoc.tracks[track + 1].logframeofs)
+		{
+			// convert to physical and proceed
+			physlba = file->cdtoc.tracks[track].physframeofs + (loglba - file->cdtoc.tracks[track].logframeofs);
+			chdlba = physlba - file->cdtoc.tracks[track].physframeofs + file->cdtoc.tracks[track].chdframeofs;
+			tracknum = track;
+			return chdlba;
+		}
+
+	return loglba;
+}
 
 
 /***************************************************************************
@@ -134,7 +157,7 @@ cdrom_file *cdrom_open(const char *inputfile)
 {
 	int i;
 	cdrom_file *file;
-	UINT32 physofs;
+	UINT32 physofs, logofs;
 
 	/* allocate memory for the CD-ROM file */
 	file = new cdrom_file();
@@ -166,29 +189,41 @@ cdrom_file *cdrom_open(const char *inputfile)
 		}
 	}
 	/* calculate the starting frame for each track, keeping in mind that CHDMAN
-       pads tracks out with extra frames to fit 4-frame size boundries
-    */
-	physofs = 0;
+	   pads tracks out with extra frames to fit 4-frame size boundries
+	*/
+	physofs = logofs = 0;
 	for (i = 0; i < file->cdtoc.numtrks; i++)
 	{
 		file->cdtoc.tracks[i].physframeofs = physofs;
 		file->cdtoc.tracks[i].chdframeofs = 0;
 
-		physofs += file->cdtoc.tracks[i].frames;
+		// pregap counts against this track
+		logofs += file->cdtoc.tracks[i].pregap;
+		file->cdtoc.tracks[i].logframeofs = logofs;
 
-		LOG(("Track %02d is format %d subtype %d datasize %d subsize %d frames %d extraframes %d physofs %d chdofs %d\n", i+1,
+		// postgap counts against the next track
+		logofs += file->cdtoc.tracks[i].postgap;
+
+		physofs += file->cdtoc.tracks[i].frames;
+		logofs  += file->cdtoc.tracks[i].frames;
+
+		LOG(("Track %02d is format %d subtype %d datasize %d subsize %d frames %d extraframes %d pregap %d postgap %d logofs %d physofs %d chdofs %d\n", i+1,
 			file->cdtoc.tracks[i].trktype,
 			file->cdtoc.tracks[i].subtype,
 			file->cdtoc.tracks[i].datasize,
 			file->cdtoc.tracks[i].subsize,
 			file->cdtoc.tracks[i].frames,
 			file->cdtoc.tracks[i].extraframes,
+			file->cdtoc.tracks[i].pregap,
+			file->cdtoc.tracks[i].postgap,
+			file->cdtoc.tracks[i].logframeofs,
 			file->cdtoc.tracks[i].physframeofs,
 			file->cdtoc.tracks[i].chdframeofs));
 	}
 
 	/* fill out dummy entries for the last track to help our search */
 	file->cdtoc.tracks[i].physframeofs = physofs;
+	file->cdtoc.tracks[i].logframeofs = logofs;
 	file->cdtoc.tracks[i].chdframeofs = 0;
 
 	return file;
@@ -203,7 +238,7 @@ cdrom_file *cdrom_open(chd_file *chd)
 {
 	int i;
 	cdrom_file *file;
-	UINT32 physofs, chdofs;
+	UINT32 physofs, chdofs, logofs;
 	chd_error err;
 
 	/* punt if no CHD */
@@ -235,31 +270,43 @@ cdrom_file *cdrom_open(chd_file *chd)
 	LOG(("CD has %d tracks\n", file->cdtoc.numtrks));
 
 	/* calculate the starting frame for each track, keeping in mind that CHDMAN
-       pads tracks out with extra frames to fit 4-frame size boundries
-    */
-	physofs = chdofs = 0;
+	   pads tracks out with extra frames to fit 4-frame size boundries
+	*/
+	physofs = chdofs = logofs = 0;
 	for (i = 0; i < file->cdtoc.numtrks; i++)
 	{
 		file->cdtoc.tracks[i].physframeofs = physofs;
 		file->cdtoc.tracks[i].chdframeofs = chdofs;
 
+		// pregap counts against this track
+		logofs += file->cdtoc.tracks[i].pregap;
+		file->cdtoc.tracks[i].logframeofs = logofs;
+
+		// postgap counts against the next track
+		logofs += file->cdtoc.tracks[i].postgap;
+
 		physofs += file->cdtoc.tracks[i].frames;
 		chdofs  += file->cdtoc.tracks[i].frames;
 		chdofs  += file->cdtoc.tracks[i].extraframes;
+		logofs  += file->cdtoc.tracks[i].frames;
 
-		LOG(("Track %02d is format %d subtype %d datasize %d subsize %d frames %d extraframes %d physofs %d chdofs %d\n", i+1,
+		LOG(("Track %02d is format %d subtype %d datasize %d subsize %d frames %d extraframes %d pregap %d postgap %d logofs %d physofs %d chdofs %d\n", i+1,
 			file->cdtoc.tracks[i].trktype,
 			file->cdtoc.tracks[i].subtype,
 			file->cdtoc.tracks[i].datasize,
 			file->cdtoc.tracks[i].subsize,
 			file->cdtoc.tracks[i].frames,
 			file->cdtoc.tracks[i].extraframes,
+			file->cdtoc.tracks[i].pregap,
+			file->cdtoc.tracks[i].postgap,
+			file->cdtoc.tracks[i].logframeofs,
 			file->cdtoc.tracks[i].physframeofs,
 			file->cdtoc.tracks[i].chdframeofs));
 	}
 
 	/* fill out dummy entries for the last track to help our search */
 	file->cdtoc.tracks[i].physframeofs = physofs;
+	file->cdtoc.tracks[i].logframeofs = logofs;
 	file->cdtoc.tracks[i].chdframeofs = chdofs;
 
 	return file;
@@ -328,17 +375,27 @@ chd_error read_partial_sector(cdrom_file *file, void *dest, UINT32 chdsector, UI
     from a CD-ROM
 -------------------------------------------------*/
 
-UINT32 cdrom_read_data(cdrom_file *file, UINT32 lbasector, void *buffer, UINT32 datatype)
+UINT32 cdrom_read_data(cdrom_file *file, UINT32 lbasector, void *buffer, UINT32 datatype, bool phys)
 {
 	if (file == NULL)
 		return 0;
 
 	// compute CHD sector and tracknumber
 	UINT32 tracknum = 0;
-	UINT32 chdsector = physical_to_chd_lba(file, lbasector, tracknum);
+	UINT32 chdsector;
+
+	if (phys)
+	{
+		chdsector = physical_to_chd_lba(file, lbasector, tracknum);
+	}
+	else
+	{
+		chdsector = logical_to_chd_lba(file, lbasector, tracknum);
+	}
 
 	/* copy out the requested sector */
 	UINT32 tracktype = file->cdtoc.tracks[tracknum].trktype;
+
 	if ((datatype == tracktype) || (datatype == CD_TRACK_RAW_DONTCARE))
 	{
 		return (read_partial_sector(file, buffer, chdsector, tracknum, 0, file->cdtoc.tracks[tracknum].datasize) == CHDERR_NONE);
@@ -362,7 +419,7 @@ UINT32 cdrom_read_data(cdrom_file *file, UINT32 lbasector, void *buffer, UINT32 
 			bufptr[12] = msf>>16;
 			bufptr[13] = msf>>8;
 			bufptr[14] = msf&0xff;
-			bufptr[15] = 1;	// mode 1
+			bufptr[15] = 1; // mode 1
 			LOG(("CDROM: promotion of mode1/form1 sector to mode1 raw is not complete!\n"));
 			return (read_partial_sector(file, bufptr+16, chdsector, tracknum, 0, 2048) == CHDERR_NONE);
 		}
@@ -390,14 +447,24 @@ UINT32 cdrom_read_data(cdrom_file *file, UINT32 lbasector, void *buffer, UINT32 
     a sector
 -------------------------------------------------*/
 
-UINT32 cdrom_read_subcode(cdrom_file *file, UINT32 lbasector, void *buffer)
+UINT32 cdrom_read_subcode(cdrom_file *file, UINT32 lbasector, void *buffer, bool phys)
 {
 	if (file == NULL)
 		return ~0;
 
 	// compute CHD sector and tracknumber
 	UINT32 tracknum = 0;
-	UINT32 chdsector = physical_to_chd_lba(file, lbasector, tracknum);
+	UINT32 chdsector;
+
+	if (phys)
+	{
+		chdsector = physical_to_chd_lba(file, lbasector, tracknum);
+	}
+	else
+	{
+		chdsector = logical_to_chd_lba(file, lbasector, tracknum);
+	}
+
 	if (file->cdtoc.tracks[tracknum].subsize == 0)
 		return 1;
 
@@ -425,7 +492,7 @@ UINT32 cdrom_get_track(cdrom_file *file, UINT32 frame)
 		return ~0;
 
 	/* convert to a CHD sector offset and get track information */
-	physical_to_chd_lba(file, frame, track);
+	logical_to_chd_lba(file, frame, track);
 	return track;
 }
 
@@ -444,10 +511,25 @@ UINT32 cdrom_get_track_start(cdrom_file *file, UINT32 track)
 	if (track == 0xaa)
 		track = file->cdtoc.numtrks;
 
-	return file->cdtoc.tracks[track].physframeofs;
+	return file->cdtoc.tracks[track].logframeofs;
 }
 
+/*-------------------------------------------------
+    cdrom_get_track_start_phys - get the
+    physical frame number that a track starts at
+-------------------------------------------------*/
 
+UINT32 cdrom_get_track_start_phys(cdrom_file *file, UINT32 track)
+{
+	if (file == NULL)
+		return ~0;
+
+	/* handle lead-out specially */
+	if (track == 0xaa)
+		track = file->cdtoc.numtrks;
+
+	return file->cdtoc.tracks[track].physframeofs;
+}
 
 /***************************************************************************
     TOC UTILITIES
@@ -479,10 +561,10 @@ int cdrom_get_adr_control(cdrom_file *file, int track)
 
 	if (track == 0xaa || file->cdtoc.tracks[track].trktype == CD_TRACK_AUDIO)
 	{
-		return 0x10;	// audio track, subchannel is position
+		return 0x10;    // audio track, subchannel is position
 	}
 
-	return 0x14;	// data track, subchannel is position
+	return 0x14;    // data track, subchannel is position
 }
 
 
@@ -674,15 +756,15 @@ const char *cdrom_get_type_string(UINT32 trktype)
 {
 	switch (trktype)
 	{
-		case CD_TRACK_MODE1:			return "MODE1";
-		case CD_TRACK_MODE1_RAW:		return "MODE1_RAW";
-		case CD_TRACK_MODE2:			return "MODE2";
-		case CD_TRACK_MODE2_FORM1:		return "MODE2_FORM1";
-		case CD_TRACK_MODE2_FORM2:		return "MODE2_FORM2";
-		case CD_TRACK_MODE2_FORM_MIX:	return "MODE2_FORM_MIX";
-		case CD_TRACK_MODE2_RAW:		return "MODE2_RAW";
-		case CD_TRACK_AUDIO:			return "AUDIO";
-		default:						return "UNKNOWN";
+		case CD_TRACK_MODE1:            return "MODE1";
+		case CD_TRACK_MODE1_RAW:        return "MODE1_RAW";
+		case CD_TRACK_MODE2:            return "MODE2";
+		case CD_TRACK_MODE2_FORM1:      return "MODE2_FORM1";
+		case CD_TRACK_MODE2_FORM2:      return "MODE2_FORM2";
+		case CD_TRACK_MODE2_FORM_MIX:   return "MODE2_FORM_MIX";
+		case CD_TRACK_MODE2_RAW:        return "MODE2_RAW";
+		case CD_TRACK_AUDIO:            return "AUDIO";
+		default:                        return "UNKNOWN";
 	}
 }
 
@@ -696,9 +778,9 @@ const char *cdrom_get_subtype_string(UINT32 subtype)
 {
 	switch (subtype)
 	{
-		case CD_SUB_NORMAL:				return "RW";
-		case CD_SUB_RAW:				return "RW_RAW";
-		default:						return "NONE";
+		case CD_SUB_NORMAL:             return "RW";
+		case CD_SUB_RAW:                return "RW_RAW";
+		default:                        return "NONE";
 	}
 }
 
@@ -734,7 +816,7 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 		{
 			/* parse the metadata */
 			type[0] = subtype[0] = 0;
-            pgtype[0] = pgsub[0] = 0;
+			pgtype[0] = pgsub[0] = 0;
 			if (sscanf(metadata, CDROM_TRACK_METADATA_FORMAT, &tracknum, type, subtype, &frames) != 4)
 				return CHDERR_INVALID_DATA;
 			if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
@@ -745,36 +827,36 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 		{
 			err = chd->read_metadata(CDROM_TRACK_METADATA2_TAG, toc->numtrks, metadata);
 			if (err == CHDERR_NONE)
-            {
-                /* parse the metadata */
-                type[0] = subtype[0] = 0;
-                pregap = postgap = 0;
-                if (sscanf(metadata, CDROM_TRACK_METADATA2_FORMAT, &tracknum, type, subtype, &frames, &pregap, pgtype, pgsub, &postgap) != 8)
-                    return CHDERR_INVALID_DATA;
-                if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
-                    return CHDERR_INVALID_DATA;
-                track = &toc->tracks[tracknum - 1];
-            }
-            else
-            {
-                err = chd->read_metadata(GDROM_TRACK_METADATA_TAG, toc->numtrks, metadata);
+			{
+				/* parse the metadata */
+				type[0] = subtype[0] = 0;
+				pregap = postgap = 0;
+				if (sscanf(metadata, CDROM_TRACK_METADATA2_FORMAT, &tracknum, type, subtype, &frames, &pregap, pgtype, pgsub, &postgap) != 8)
+					return CHDERR_INVALID_DATA;
+				if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
+					return CHDERR_INVALID_DATA;
+				track = &toc->tracks[tracknum - 1];
+			}
+			else
+			{
+				err = chd->read_metadata(GDROM_TRACK_METADATA_TAG, toc->numtrks, metadata);
 
-                if (err == CHDERR_NONE)
-                {
-                    /* parse the metadata */
-                    type[0] = subtype[0] = 0;
-                    pregap = postgap = 0;
-                    if (sscanf(metadata, GDROM_TRACK_METADATA_FORMAT, &tracknum, type, subtype, &frames, &padframes, &pregap, pgtype, pgsub, &postgap) != 9)
-                        return CHDERR_INVALID_DATA;
-                    if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
-                        return CHDERR_INVALID_DATA;
-                    track = &toc->tracks[tracknum - 1];
-                }
-                else
-                {
-                    break;
-                }
-            }
+				if (err == CHDERR_NONE)
+				{
+					/* parse the metadata */
+					type[0] = subtype[0] = 0;
+					pregap = postgap = 0;
+					if (sscanf(metadata, GDROM_TRACK_METADATA_FORMAT, &tracknum, type, subtype, &frames, &padframes, &pregap, pgtype, pgsub, &postgap) != 9)
+						return CHDERR_INVALID_DATA;
+					if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
+						return CHDERR_INVALID_DATA;
+					track = &toc->tracks[tracknum - 1];
+				}
+				else
+				{
+					break;
+				}
+			}
 		}
 
 		/* extract the track type and determine the data size */
@@ -791,7 +873,7 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 
 		/* set the frames and extra frames data */
 		track->frames = frames;
-        track->padframes = padframes;
+		track->padframes = padframes;
 		int padded = (frames + CD_TRACK_PADDING - 1) / CD_TRACK_PADDING;
 		track->extraframes = padded * CD_TRACK_PADDING - frames;
 
@@ -804,15 +886,15 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 		cdrom_convert_type_string_to_pregap_info(pgtype, track);
 		cdrom_convert_subtype_string_to_pregap_info(pgsub, track);
 
-        /* set the postgap info */
-        track->postgap = postgap;
+		/* set the postgap info */
+		track->postgap = postgap;
 	}
 
 	/* if we got any tracks this way, we're done */
 	if (toc->numtrks > 0)
 		return CHDERR_NONE;
 
-    printf("toc->numtrks = %d?!\n", toc->numtrks);
+	printf("toc->numtrks = %d?!\n", toc->numtrks);
 
 	/* look for old-style metadata */
 	dynamic_buffer oldmetadata;
@@ -872,25 +954,25 @@ chd_error cdrom_write_metadata(chd_file *chd, const cdrom_toc *toc)
 	/* write the metadata */
 	for (i = 0; i < toc->numtrks; i++)
 	{
-        astring metadata;
-        if (!(toc->flags & CD_FLAG_GDROM))
-        {
-            metadata.format(CDROM_TRACK_METADATA2_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
-                    cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].pregap,
-                    cdrom_get_type_string(toc->tracks[i].pgtype), cdrom_get_subtype_string(toc->tracks[i].pgsub),
-                    toc->tracks[i].postgap);
+		astring metadata;
+		if (!(toc->flags & CD_FLAG_GDROM))
+		{
+			metadata.format(CDROM_TRACK_METADATA2_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
+					cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].pregap,
+					cdrom_get_type_string(toc->tracks[i].pgtype), cdrom_get_subtype_string(toc->tracks[i].pgsub),
+					toc->tracks[i].postgap);
 
-            err = chd->write_metadata(CDROM_TRACK_METADATA2_TAG, i, metadata);
-        }
-        else
-        {
-            metadata.format(GDROM_TRACK_METADATA_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
-                    cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].padframes,
-                    toc->tracks[i].pregap, cdrom_get_type_string(toc->tracks[i].pgtype),
-                    cdrom_get_subtype_string(toc->tracks[i].pgsub), toc->tracks[i].postgap);
+			err = chd->write_metadata(CDROM_TRACK_METADATA2_TAG, i, metadata);
+		}
+		else
+		{
+			metadata.format(GDROM_TRACK_METADATA_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
+					cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].padframes,
+					toc->tracks[i].pregap, cdrom_get_type_string(toc->tracks[i].pgtype),
+					cdrom_get_subtype_string(toc->tracks[i].pgsub), toc->tracks[i].postgap);
 
-            err = chd->write_metadata(GDROM_TRACK_METADATA_TAG, i, metadata);
-        }
+			err = chd->write_metadata(GDROM_TRACK_METADATA_TAG, i, metadata);
+		}
 		if (err != CHDERR_NONE)
 			return err;
 	}
@@ -1129,11 +1211,11 @@ void ecc_compute_bytes(const UINT8 *sector, const UINT16 *row, int rowlen, UINT8
 	val1 = val2 = 0;
 	for (int component = 0; component < rowlen; component++)
 	{
-        val1 ^= ecc_source_byte(sector, row[component]);
-        val2 ^= ecc_source_byte(sector, row[component]);
-        val1 = ecclow[val1];
-    }
-    val1 = ecchigh[ecclow[val1] ^ val2];
+		val1 ^= ecc_source_byte(sector, row[component]);
+		val2 ^= ecc_source_byte(sector, row[component]);
+		val1 = ecclow[val1];
+	}
+	val1 = ecchigh[ecclow[val1] ^ val2];
 	val2 ^= val1;
 }
 
@@ -1149,16 +1231,16 @@ bool ecc_verify(const UINT8 *sector)
 	for (int byte = 0; byte < ECC_P_NUM_BYTES; byte++)
 	{
 		UINT8 val1, val2;
-	    ecc_compute_bytes(sector, poffsets[byte], ECC_P_COMP, val1, val2);
+		ecc_compute_bytes(sector, poffsets[byte], ECC_P_COMP, val1, val2);
 		if (sector[ECC_P_OFFSET + byte] != val1 || sector[ECC_P_OFFSET + ECC_P_NUM_BYTES + byte] != val2)
 			return false;
 	}
 
 	// then verify Q bytes
-    for (int byte = 0; byte < ECC_Q_NUM_BYTES; byte++)
+	for (int byte = 0; byte < ECC_Q_NUM_BYTES; byte++)
 	{
 		UINT8 val1, val2;
-	    ecc_compute_bytes(sector, qoffsets[byte], ECC_Q_COMP, val1, val2);
+		ecc_compute_bytes(sector, qoffsets[byte], ECC_Q_COMP, val1, val2);
 		if (sector[ECC_Q_OFFSET + byte] != val1 || sector[ECC_Q_OFFSET + ECC_Q_NUM_BYTES + byte] != val2)
 			return false;
 	}
@@ -1175,11 +1257,11 @@ void ecc_generate(UINT8 *sector)
 {
 	// first verify P bytes
 	for (int byte = 0; byte < ECC_P_NUM_BYTES; byte++)
-	    ecc_compute_bytes(sector, poffsets[byte], ECC_P_COMP, sector[ECC_P_OFFSET + byte], sector[ECC_P_OFFSET + ECC_P_NUM_BYTES + byte]);
+		ecc_compute_bytes(sector, poffsets[byte], ECC_P_COMP, sector[ECC_P_OFFSET + byte], sector[ECC_P_OFFSET + ECC_P_NUM_BYTES + byte]);
 
 	// then verify Q bytes
-    for (int byte = 0; byte < ECC_Q_NUM_BYTES; byte++)
-	    ecc_compute_bytes(sector, qoffsets[byte], ECC_Q_COMP, sector[ECC_Q_OFFSET + byte], sector[ECC_Q_OFFSET + ECC_Q_NUM_BYTES + byte]);
+	for (int byte = 0; byte < ECC_Q_NUM_BYTES; byte++)
+		ecc_compute_bytes(sector, qoffsets[byte], ECC_Q_COMP, sector[ECC_Q_OFFSET + byte], sector[ECC_Q_OFFSET + ECC_Q_NUM_BYTES + byte]);
 }
 
 

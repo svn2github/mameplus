@@ -13,6 +13,7 @@ void cdda_stop_audio(device_t *device);
 void cdda_pause_audio(device_t *device, int pause);
 void cdda_set_volume(device_t *device, int volume);
 void cdda_set_channel_volume(device_t *device, int channel, int volume);
+INT16 cdda_get_channel_volume(device_t *device, int channel);
 
 UINT32 cdda_get_audio_lba(device_t *device);
 int cdda_audio_active(device_t *device);
@@ -20,7 +21,7 @@ int cdda_audio_paused(device_t *device);
 int cdda_audio_ended(device_t *device);
 
 class cdda_device : public device_t,
-                                  public device_sound_interface
+									public device_sound_interface
 {
 public:
 	cdda_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);

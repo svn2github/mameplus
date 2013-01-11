@@ -78,6 +78,8 @@ Known issues:
 #include "machine/i8255.h"
 #include "sound/ay8910.h"
 
+#include "imolagp.lh"
+
 
 #define HLE_COM
 
@@ -363,7 +365,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( imolagp_master, AS_PROGRAM, 8, imolagp_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0x2800, 0x2800) AM_READ_PORT("2800")	/* gas */
+	AM_RANGE(0x2800, 0x2800) AM_READ_PORT("2800")   /* gas */
 	AM_RANGE(0x2802, 0x2802) AM_READ(steerlatch_r) AM_WRITENOP
 	/*  AM_RANGE(0x2803, 0x2803) ? */
 	AM_RANGE(0x3000, 0x3000) AM_WRITE(vreg_control_w)
@@ -371,10 +373,10 @@ static ADDRESS_MAP_START( imolagp_master, AS_PROGRAM, 8, imolagp_state )
 	/*  AM_RANGE(0x37f7, 0x37f7) ? */
 	AM_RANGE(0x3800, 0x3800) AM_WRITE(vreg_data_w)
 	AM_RANGE(0x3810, 0x3810) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
-	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSWA")	/* DSWA */
+	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSWA")   /* DSWA */
 	AM_RANGE(0x5000, 0x50ff) AM_WRITE(imola_ledram_w)
 	AM_RANGE(0x47ff, 0x4800) AM_WRITE(transmit_data_w)
-	AM_RANGE(0x6000, 0x6000) AM_READ_PORT("DSWB")	/* DSWB */
+	AM_RANGE(0x6000, 0x6000) AM_READ_PORT("DSWB")   /* DSWB */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( readport_slave, AS_IO, 8, imolagp_state )
@@ -507,12 +509,12 @@ INTERRUPT_GEN_MEMBER(imolagp_state::vblank_irq)
 
 static I8255A_INTERFACE( ppi8255_intf )
 {
-	DEVCB_NULL,							/* Port A read */
-	DEVCB_NULL,							/* Port A write */
-	DEVCB_NULL,							/* Port B read */
-	DEVCB_NULL,							/* Port B write */
-	DEVCB_NULL,							/* Port C read */
-	DEVCB_NULL,							/* Port C write */
+	DEVCB_NULL,                         /* Port A read */
+	DEVCB_NULL,                         /* Port A write */
+	DEVCB_NULL,                         /* Port B read */
+	DEVCB_NULL,                         /* Port B write */
+	DEVCB_NULL,                         /* Port C read */
+	DEVCB_NULL,                         /* Port C write */
 };
 
 
@@ -584,6 +586,24 @@ MACHINE_CONFIG_END
 
 ROM_START( imolagp )
 	ROM_REGION( 0x10000, "maincpu", 0 ) /* Z80 code */
+	ROM_LOAD( "03.bin",   0x0000, 0x0800, CRC(a8be1c83) SHA1(e3147515f9f44e435192db838ffbb5c592f6e8d7) )
+	ROM_LOAD( "01.bin",   0x0800, 0x0800, CRC(aa6fc1ea) SHA1(3f9c559aaba7b00ffd0210c6977dd4f966451a4b) )
+	ROM_LOAD( "04.bin",   0x1000, 0x0800, CRC(c45c459c) SHA1(e51bbfe79bcd66d80b9179067611ea2029c9fd7a) )
+	ROM_LOAD( "02.bin",   0x1800, 0x0800, CRC(a80e193b) SHA1(b31bf30dfe1bc498a4324719e4a6656fb94b8d96) )
+
+	ROM_REGION( 0x10000, "slave", 0 ) /* Z80 code */
+	ROM_LOAD( "12.bin",   0x0000, 0x0800, CRC(f9658100) SHA1(00fe32ef6b7cd909e8b69f0f8431c78591318aff) )
+	ROM_LOAD( "08.bin",   0x0800, 0x0800, CRC(3a23a90e) SHA1(3a9ce5717147f2cf8c58432dd5ddcf70c2a041aa) )
+	ROM_LOAD( "11.bin",   0x1000, 0x0800, CRC(5252e22e) SHA1(bb032af93f5a027235b35467c8a2c2c6fe6d1461) )
+	ROM_LOAD( "07.bin",   0x1800, 0x0800, CRC(ce3459ff) SHA1(e336f9411cff71d85cdcc30af7405eca02c8c8f8) )
+	ROM_LOAD( "10.bin",   0x2000, 0x0800, CRC(a043ded9) SHA1(0e3b53897da98ef3953622f8bd7dc379916ac0c0) )
+	ROM_LOAD( "06.bin",   0x2800, 0x0800, CRC(3ff5997d) SHA1(95ac9dbda782b94b9b2dc4c9baea86113968077f) )
+	ROM_LOAD( "09.bin",   0x3000, 0x0800, CRC(b5eb210e) SHA1(81340b1797f2401fbf0485091bf3b309c153476a) )
+	ROM_LOAD( "05.bin",   0x3800, 0x0800, CRC(f59e426e) SHA1(ec9bdeed74e2450acb7f00abd13cb5ceb3205016) )
+ROM_END
+
+ROM_START( imolagpo )
+	ROM_REGION( 0x10000, "maincpu", 0 ) /* Z80 code */
 	ROM_LOAD( "yd.bin", 0x0000, 0x800, CRC(5eb61bb7) SHA1(b897ecc7fa9aa1ae4e095d22d16a901b9d439a8e) )
 	ROM_LOAD( "yc.bin", 0x0800, 0x800, CRC(f7468a3b) SHA1(af1664e30b732b3d5321e76659961af3ebeb1237) )
 	ROM_LOAD( "yb.bin", 0x1000, 0x800, CRC(9f21506e) SHA1(6b46ff4815b8a02b190ec13e067f9a6687980774) )
@@ -605,5 +625,6 @@ ROM_START( imolagp )
 ROM_END
 
 
-/*    YEAR, NAME,    PARENT,   MACHINE, INPUT,   INIT,    MONITOR, COMPANY,     FULLNAME */
-GAME( 1981, imolagp, 0,        imolagp, imolagp, driver_device, 0,       ROT90,   "Alberici", "Imola Grand Prix", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
+/*    YEAR,  NAME,     PARENT,  MACHINE, INPUT,    INIT,              MONITOR, COMPANY, FULLNAME, FLAGS */
+GAMEL(1983?, imolagp,  0,       imolagp, imolagp,  driver_device, 0,  ROT90,   "RB Bologna", "Imola Grand Prix (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_SUPPORTS_SAVE, layout_imolagp ) // made by Alberici? year not shown, PCB labels suggests it's from 1983
+GAMEL(1983?, imolagpo, imolagp, imolagp, imolagp,  driver_device, 0,  ROT90,   "RB Bologna", "Imola Grand Prix (set 2)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_SUPPORTS_SAVE, layout_imolagp ) // "

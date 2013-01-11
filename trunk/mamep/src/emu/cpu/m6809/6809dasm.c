@@ -22,25 +22,25 @@
 // Opcode structure
 struct opcodeinfo
 {
-   UINT8	opcode;		// 8-bit opcode value
-   UINT8	length;		// Opcode length in bytes
-   char 	name[6];	// Opcode name
-   UINT8	mode;		// Addressing mode
-   unsigned flags;		// Disassembly flags
+	UINT8   opcode;     // 8-bit opcode value
+	UINT8   length;     // Opcode length in bytes
+	char    name[6];    // Opcode name
+	UINT8   mode;       // Addressing mode
+	unsigned flags;     // Disassembly flags
 };
 
 enum m6809_addressing_modes
 {
-	INH,				// Inherent
-	DIR,				// Direct
-	IND,				// Indexed
-	REL,				// Relative (8 bit)
-	LREL,				// Long relative (16 bit)
-	EXT,				// Extended
-	IMM,				// Immediate
-	IMM_RR,				// Register-to-register
-	PG1,				// Switch to page 1 opcodes
-	PG2 				// Switch to page 2 opcodes
+	INH,                // Inherent
+	DIR,                // Direct
+	IND,                // Indexed
+	REL,                // Relative (8 bit)
+	LREL,               // Long relative (16 bit)
+	EXT,                // Extended
+	IMM,                // Immediate
+	IMM_RR,             // Register-to-register
+	PG1,                // Switch to page 1 opcodes
+	PG2                 // Switch to page 2 opcodes
 };
 
 // Page 0 opcodes (single byte)
@@ -363,14 +363,18 @@ static const char *const m6809_regs_te[16] =
 	"A", "B", "CC", "DP", "inv", "inv", "inv", "inv"
 };
 
-CPU_DISASSEMBLE( m6809 )
+offs_t m6809_disassemble(legacy_cpu_device *device, char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, int options, m6809_base_device *m6809)
 {
 	UINT8 opcode, mode, pb, pbm, reg;
 	const UINT8 *operandarray;
 	unsigned int ea, flags;
 	int numoperands, offset, indirect;
-	const m6809_config *configdata = device ? (const m6809_config *)device->static_config() : NULL;
-	int encrypt_only_first_byte = configdata ? configdata->encrypt_only_first_byte : 0;
+	bool encrypt_only_first_byte = false;
+	if (m6809 != NULL)
+	{
+		m6809_config &config = static_cast<m6809_config &>(*m6809);
+		encrypt_only_first_byte = config.m_encrypt_only_first_byte;
+	}
 
 	int i, p = 0, page = 0, opcode_found = FALSE;
 
@@ -418,28 +422,28 @@ CPU_DISASSEMBLE( m6809 )
 	case INH:
 		switch (opcode)
 		{
-		case 0x34:	// PSHS
-		case 0x36:	// PSHU
+		case 0x34:  // PSHS
+		case 0x36:  // PSHU
 			pb = operandarray[0];
 			if (pb & 0x80)
 				buffer += sprintf(buffer, "PC");
 			if (pb & 0x40)
 				buffer += sprintf(buffer, "%s%s", (pb&0x80)?",":"", (opcode==0x34)?"U":"S");
 			if (pb & 0x20)
-                buffer += sprintf(buffer, "%sY",  (pb&0xc0)?",":"");
+				buffer += sprintf(buffer, "%sY",  (pb&0xc0)?",":"");
 			if (pb & 0x10)
-                buffer += sprintf(buffer, "%sX",  (pb&0xe0)?",":"");
+				buffer += sprintf(buffer, "%sX",  (pb&0xe0)?",":"");
 			if (pb & 0x08)
-                buffer += sprintf(buffer, "%sDP", (pb&0xf0)?",":"");
+				buffer += sprintf(buffer, "%sDP", (pb&0xf0)?",":"");
 			if (pb & 0x04)
-                buffer += sprintf(buffer, "%sB",  (pb&0xf8)?",":"");
+				buffer += sprintf(buffer, "%sB",  (pb&0xf8)?",":"");
 			if (pb & 0x02)
 				buffer += sprintf(buffer, "%sA",  (pb&0xfc)?",":"");
 			if (pb & 0x01)
 				buffer += sprintf(buffer, "%sCC", (pb&0xfe)?",":"");
 			break;
-		case 0x35:	// PULS
-		case 0x37:	// PULU
+		case 0x35:  // PULS
+		case 0x37:  // PULU
 			pb = operandarray[0];
 			if (pb & 0x01)
 				buffer += sprintf(buffer, "CC");
@@ -496,37 +500,37 @@ CPU_DISASSEMBLE( m6809 )
 
 		switch (pbm)
 		{
-		case 0x80:	// ,R+
+		case 0x80:  // ,R+
 			if (indirect)
 				strcpy(buffer, "Illegal Postbyte");
 			else
 				buffer += sprintf(buffer, ",%s+", m6809_regs[reg]);
 			break;
 
-		case 0x81:	// ,R++
+		case 0x81:  // ,R++
 			buffer += sprintf(buffer, ",%s++", m6809_regs[reg]);
 			break;
 
-		case 0x82:	// ,-R
+		case 0x82:  // ,-R
 			if (indirect)
 				strcpy(buffer, "Illegal Postbyte");
 			else
 				buffer += sprintf(buffer, ",-%s", m6809_regs[reg]);
 			break;
 
-		case 0x83:	// ,--R
+		case 0x83:  // ,--R
 			buffer += sprintf(buffer, ",--%s", m6809_regs[reg]);
 			break;
 
-		case 0x84:	// ,R
+		case 0x84:  // ,R
 			buffer += sprintf(buffer, ",%s", m6809_regs[reg]);
 			break;
 
-		case 0x85:	// (+/- B),R
+		case 0x85:  // (+/- B),R
 			buffer += sprintf(buffer, "B,%s", m6809_regs[reg]);
 			break;
 
-		case 0x86:	// (+/- A),R
+		case 0x86:  // (+/- A),R
 			buffer += sprintf(buffer, "A,%s", m6809_regs[reg]);
 			break;
 
@@ -534,14 +538,14 @@ CPU_DISASSEMBLE( m6809 )
 			strcpy(buffer, "Illegal Postbyte");
 			break;
 
-		case 0x88:	// (+/- 7 bit offset),R
+		case 0x88:  // (+/- 7 bit offset),R
 			offset = (INT8)opram[p++];
 			buffer += sprintf(buffer, "%s", (offset < 0) ? "-" : "");
 			buffer += sprintf(buffer, "$%02X,", (offset < 0) ? -offset : offset);
 			buffer += sprintf(buffer, "%s", m6809_regs[reg]);
 			break;
 
-		case 0x89:	// (+/- 15 bit offset),R
+		case 0x89:  // (+/- 15 bit offset),R
 			offset = (INT16)((opram[p+0] << 8) + opram[p+1]);
 			p += 2;
 			buffer += sprintf(buffer, "%s", (offset < 0) ? "-" : "");
@@ -553,17 +557,17 @@ CPU_DISASSEMBLE( m6809 )
 			strcpy(buffer, "Illegal Postbyte");
 			break;
 
-		case 0x8b:	// (+/- D),R
+		case 0x8b:  // (+/- D),R
 			buffer += sprintf(buffer, "D,%s", m6809_regs[reg]);
 			break;
 
-		case 0x8c:	// (+/- 7 bit offset),PC
+		case 0x8c:  // (+/- 7 bit offset),PC
 			offset = (INT8)opram[p++];
 			buffer += sprintf(buffer, "%s", (offset < 0) ? "-" : "");
 			buffer += sprintf(buffer, "$%02X,PC", (offset < 0) ? -offset : offset);
 			break;
 
-		case 0x8d:	// (+/- 15 bit offset),PC
+		case 0x8d:  // (+/- 15 bit offset),PC
 			offset = (INT16)((opram[p+0] << 8) + opram[p+1]);
 			p += 2;
 			buffer += sprintf(buffer, "%s", (offset < 0) ? "-" : "");
@@ -574,13 +578,13 @@ CPU_DISASSEMBLE( m6809 )
 			strcpy(buffer, "Illegal Postbyte");
 			break;
 
-		case 0x8f:	// address
+		case 0x8f:  // address
 			ea = (UINT16)((opram[p+0] << 8) + opram[p+1]);
 			p += 2;
 			buffer += sprintf(buffer, "$%04X", ea);
 			break;
 
-		default:	// (+/- 4 bit offset),R
+		default:    // (+/- 4 bit offset),R
 			offset = pb & 0x1f;
 			if (offset > 15)
 				offset = offset - 32;
@@ -616,4 +620,14 @@ CPU_DISASSEMBLE( m6809 )
 	}
 
 	return p | flags | DASMFLAG_SUPPORTED;
+}
+
+CPU_DISASSEMBLE( m6809 )
+{
+	return m6809_disassemble(device, buffer, pc, oprom, opram, options, NULL);
+}
+
+offs_t m6809_base_device::disassemble(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, int options)
+{
+	return m6809_disassemble(NULL, buffer, pc, oprom, opram, options, this);
 }

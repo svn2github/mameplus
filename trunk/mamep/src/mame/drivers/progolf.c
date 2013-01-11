@@ -54,7 +54,8 @@ Twenty four 8116 rams.
 #include "cpu/m6502/m6502.h"
 #include "sound/ay8910.h"
 #include "video/mc6845.h"
-
+#include "machine/deco222.h"
+#include "machine/decocpu6.h"
 
 class progolf_state : public driver_device
 {
@@ -82,8 +83,6 @@ public:
 	DECLARE_READ8_MEMBER(progolf_videoram_r);
 	DECLARE_WRITE8_MEMBER(progolf_videoram_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
-	DECLARE_DRIVER_INIT(progolfa);
-	DECLARE_DRIVER_INIT(progolf);
 	virtual void video_start();
 	virtual void palette_init();
 	UINT32 screen_update_progolf(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
@@ -356,9 +355,9 @@ INPUT_PORTS_END
 
 static const gfx_layout progolf_charlayout =
 {
-	8,8,			/* 8*8 characters */
+	8,8,            /* 8*8 characters */
 	RGN_FRAC(1,3),  /* 512 characters */
-	3,				/* 3 bits per pixel */
+	3,              /* 3 bits per pixel */
 	{ RGN_FRAC(2,3), RGN_FRAC(1,3), RGN_FRAC(0,3) },  /* the bitplanes are separated */
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
@@ -378,16 +377,16 @@ INTERRUPT_GEN_MEMBER(progolf_state::progolf_interrupt)
 
 static const mc6845_interface mc6845_intf =
 {
-	"screen",	/* screen we are acting on */
-	8,			/* number of pixels per video memory address */
-	NULL,		/* before pixel update callback */
-	NULL,		/* row update callback */
-	NULL,		/* after pixel update callback */
-	DEVCB_NULL,	/* callback for display state changes */
-	DEVCB_NULL,	/* callback for cursor state changes */
-	DEVCB_NULL,	/* HSYNC callback */
-	DEVCB_NULL,	/* VSYNC callback */
-	NULL		/* update address callback */
+	"screen",   /* screen we are acting on */
+	8,          /* number of pixels per video memory address */
+	NULL,       /* before pixel update callback */
+	NULL,       /* row update callback */
+	NULL,       /* after pixel update callback */
+	DEVCB_NULL, /* callback for display state changes */
+	DEVCB_NULL, /* callback for cursor state changes */
+	DEVCB_NULL, /* HSYNC callback */
+	DEVCB_NULL, /* VSYNC callback */
+	NULL        /* update address callback */
 
 };
 
@@ -422,7 +421,7 @@ void progolf_state::palette_init()
 
 static MACHINE_CONFIG_START( progolf, progolf_state )
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M6502, 3000000/2) /* guess, 3 Mhz makes the game to behave worse? */
+	MCFG_CPU_ADD("maincpu", DECO_222, 3000000/2) /* guess, 3 Mhz makes the game to behave worse? */
 	MCFG_CPU_PROGRAM_MAP(main_cpu)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", progolf_state,  progolf_interrupt)
 
@@ -442,7 +441,7 @@ static MACHINE_CONFIG_START( progolf, progolf_state )
 	MCFG_GFXDECODE(progolf)
 	MCFG_PALETTE_LENGTH(32*3)
 
-	MCFG_MC6845_ADD("crtc", MC6845, 3000000/4, mc6845_intf)	/* hand tuned to get ~57 fps */
+	MCFG_MC6845_ADD("crtc", MC6845, 3000000/4, mc6845_intf) /* hand tuned to get ~57 fps */
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -452,6 +451,13 @@ static MACHINE_CONFIG_START( progolf, progolf_state )
 
 	MCFG_SOUND_ADD("ay2", AY8910, 12000000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.23)
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( progolfa, progolf )
+	MCFG_DEVICE_REMOVE("maincpu") /* different encrypted cpu to progolf */
+	MCFG_CPU_ADD("maincpu", DECO_CPU6, 3000000/2) /* guess, 3 Mhz makes the game to behave worse? */
+	MCFG_CPU_PROGRAM_MAP(main_cpu)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", progolf_state,  progolf_interrupt)
 MACHINE_CONFIG_END
 
 
@@ -500,39 +506,10 @@ ROM_START( progolfa )
 ROM_END
 
 
-DRIVER_INIT_MEMBER(progolf_state,progolf)
-{
-	int A;
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
-	UINT8* decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
 
-	space.set_decrypted_region(0x0000,0xffff, decrypted);
 
-	/* Swap bits 5 & 6 for opcodes */
-	for (A = 0xb000 ; A < 0x10000 ; A++)
-		decrypted[A] = BITSWAP8(rom[A],7,5,6,4,3,2,1,0);
-}
 
-DRIVER_INIT_MEMBER(progolf_state,progolfa)
-{
-	int A;
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
-	UINT8* decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
-
-	space.set_decrypted_region(0x0000,0xffff, decrypted);
-
-	/* data is likely to not be encrypted, just the opcodes are. */
-	for (A = 0x0000 ; A < 0x10000 ; A++)
-	{
-		if (A & 1)
-			decrypted[A] = BITSWAP8(rom[A],6,4,7,5,3,2,1,0);
-		else
-			decrypted[A] = rom[A];
-	}
-}
-
-/* Maybe progolf is a bootleg? progolfa uses DECO CPU-6 as custom module CPU (the same as Zoar) */
-GAME( 1981, progolf,  0,       progolf, progolf, progolf_state, progolf,  ROT270, "Data East Corporation", "18 Holes Pro Golf (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
-GAME( 1981, progolfa, progolf, progolf, progolf, progolf_state, progolfa, ROT270, "Data East Corporation", "18 Holes Pro Golf (set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+// this uses DECO222 style encryption
+GAME( 1981, progolf,  0,       progolf, progolf, driver_device, 0,       ROT270, "Data East Corporation", "18 Holes Pro Golf (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+// this uses DECO CPU-6 as custom module CPU (the same as Zoar, are we sure? our Zoar has different encryption, CPU-7 style)
+GAME( 1981, progolfa, progolf, progolfa,progolf, driver_device, 0,       ROT270, "Data East Corporation", "18 Holes Pro Golf (set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )

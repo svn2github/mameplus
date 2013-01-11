@@ -21,19 +21,19 @@
 
 enum
 {
-	FM_NORMAL,	// normal read/write
-	FM_READID,	// read ID
-	FM_READSTATUS,	// read status
-	FM_WRITEPART1,	// first half of programming, awaiting second
-	FM_CLEARPART1,	// first half of clear, awaiting second
-	FM_SETMASTER,	// first half of set master lock, awaiting on/off
-	FM_READAMDID1,	// part 1 of alt ID sequence
-	FM_READAMDID2,	// part 2 of alt ID sequence
-	FM_READAMDID3,	// part 3 of alt ID sequence
-	FM_ERASEAMD1,	// part 1 of AMD erase sequence
-	FM_ERASEAMD2,	// part 2 of AMD erase sequence
-	FM_ERASEAMD3,	// part 3 of AMD erase sequence
-	FM_ERASEAMD4,	// part 4 of AMD erase sequence
+	FM_NORMAL,  // normal read/write
+	FM_READID,  // read ID
+	FM_READSTATUS,  // read status
+	FM_WRITEPART1,  // first half of programming, awaiting second
+	FM_CLEARPART1,  // first half of clear, awaiting second
+	FM_SETMASTER,   // first half of set master lock, awaiting on/off
+	FM_READAMDID1,  // part 1 of alt ID sequence
+	FM_READAMDID2,  // part 2 of alt ID sequence
+	FM_READAMDID3,  // part 3 of alt ID sequence
+	FM_ERASEAMD1,   // part 1 of AMD erase sequence
+	FM_ERASEAMD2,   // part 2 of AMD erase sequence
+	FM_ERASEAMD3,   // part 3 of AMD erase sequence
+	FM_ERASEAMD4,   // part 4 of AMD erase sequence
 	FM_BYTEPROGRAM,
 	FM_BANKSELECT,
 	FM_WRITEPAGEATMEL
@@ -88,6 +88,7 @@ const device_type INTEL_E28F400 = &device_creator<intel_e28f400_device>;
 const device_type MACRONIX_29L001MC = &device_creator<macronix_29l001mc_device>;
 const device_type PANASONIC_MN63F805MNP = &device_creator<panasonic_mn63f805mnp_device>;
 const device_type SANYO_LE26FV10N1TS = &device_creator<sanyo_le26fv10n1ts_device>;
+const device_type SST_28SF040 = &device_creator<sst_28sf040_device>;
 
 const device_type SHARP_LH28F400 = &device_creator<sharp_lh28f400_device>;
 const device_type INTEL_E28F008SA = &device_creator<intel_e28f008sa_device>;
@@ -144,20 +145,20 @@ ADDRESS_MAP_END
 
 intelfsh_device::intelfsh_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, UINT32 variant)
 	: device_t(mconfig, type, name, tag, owner, clock),
-	  device_memory_interface(mconfig, *this),
-	  device_nvram_interface(mconfig, *this),
-	  m_type(variant),
-	  m_size(0),
-	  m_bits(8),
-	  m_device_id(0),
-	  m_maker_id(0),
-	  m_sector_is_4k(false),
-	  m_status(0x80),
-	  m_erase_sector(0),
-	  m_flash_mode(FM_NORMAL),
-	  m_flash_master_lock(false),
-	  m_timer(NULL),
-	  m_bank(0)
+		device_memory_interface(mconfig, *this),
+		device_nvram_interface(mconfig, *this),
+		m_type(variant),
+		m_size(0),
+		m_bits(8),
+		m_device_id(0),
+		m_maker_id(0),
+		m_sector_is_4k(false),
+		m_status(0x80),
+		m_erase_sector(0),
+		m_flash_mode(FM_NORMAL),
+		m_flash_master_lock(false),
+		m_timer(NULL),
+		m_bank(0)
 {
 	address_map_constructor map = NULL;
 
@@ -274,6 +275,13 @@ intelfsh_device::intelfsh_device(const machine_config &mconfig, device_type type
 		m_sector_is_4k = true;
 		map = ADDRESS_MAP_NAME( memory_map8_1Mb );
 		break;
+	case FLASH_SST_28SF040:
+		m_bits = 8;
+		m_size = 0x80000;
+		m_maker_id = MFG_SST;
+		m_device_id = 0x04;
+		map = ADDRESS_MAP_NAME( memory_map8_4Mb );
+		break;
 	}
 
 	int addrbits;
@@ -326,6 +334,9 @@ panasonic_mn63f805mnp_device::panasonic_mn63f805mnp_device(const machine_config 
 
 sanyo_le26fv10n1ts_device::sanyo_le26fv10n1ts_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: intelfsh8_device(mconfig, SANYO_LE26FV10N1TS, "Sanyo LE26FV10N1TS Flash", tag, owner, clock, FLASH_SANYO_LE26FV10N1TS) { }
+
+sst_28sf040_device::sst_28sf040_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: intelfsh8_device(mconfig, SST_28SF040, "SST 28SF040 Flash", tag, owner, clock, FLASH_SST_28SF040) { }
 
 sharp_lh28f400_device::sharp_lh28f400_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: intelfsh16_device(mconfig, SHARP_LH28F400, "Sharp LH28F400 Flash", tag, owner, clock, FLASH_SHARP_LH28F400) { }
@@ -485,7 +496,7 @@ UINT32 intelfsh_device::read_full(UINT32 address)
 			//used in Fujitsu 29DL16X 8bits mode
 			switch (address)
 			{
-				case 0:	data = m_maker_id; break;
+				case 0: data = m_maker_id; break;
 				case 2: data = m_device_id; break;
 				case 4: data = 0; break;
 			}
@@ -494,7 +505,7 @@ UINT32 intelfsh_device::read_full(UINT32 address)
 		{
 			switch (address)
 			{
-				case 0:	data = m_maker_id; break;
+				case 0: data = m_maker_id; break;
 				case 1: data = m_device_id; break;
 				case 2: data = 0; break;
 			}
@@ -505,7 +516,7 @@ UINT32 intelfsh_device::read_full(UINT32 address)
 		{
 			switch (address)
 			{
-				case 0:	data = m_maker_id; break;
+				case 0: data = m_maker_id; break;
 				case 2: data = m_device_id; break;
 				case 4: data = 0; break;
 			}
@@ -514,13 +525,13 @@ UINT32 intelfsh_device::read_full(UINT32 address)
 		{
 			switch (address)
 			{
-			case 0:	// maker ID
+			case 0: // maker ID
 				data = m_maker_id;
 				break;
-			case 1:	// chip ID
+			case 1: // chip ID
 				data = m_device_id;
 				break;
-			case 2:	// block lock config
+			case 2: // block lock config
 				data = 0; // we don't support this yet
 				break;
 			case 3: // master lock config
@@ -588,30 +599,30 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 		switch( data & 0xff )
 		{
 		case 0xf0:
-		case 0xff:	// reset chip mode
+		case 0xff:  // reset chip mode
 			m_flash_mode = FM_NORMAL;
 			break;
-		case 0x90:	// read ID
+		case 0x90:  // read ID
 			m_flash_mode = FM_READID;
 			break;
 		case 0x40:
-		case 0x10:	// program
+		case 0x10:  // program
 			m_flash_mode = FM_WRITEPART1;
 			break;
-		case 0x50:	// clear status reg
+		case 0x50:  // clear status reg
 			m_status = 0x80;
 			m_flash_mode = FM_READSTATUS;
 			break;
-		case 0x20:	// block erase
+		case 0x20:  // block erase
 			m_flash_mode = FM_CLEARPART1;
 			break;
-		case 0x60:	// set master lock
+		case 0x60:  // set master lock
 			m_flash_mode = FM_SETMASTER;
 			break;
-		case 0x70:	// read status
+		case 0x70:  // read status
 			m_flash_mode = FM_READSTATUS;
 			break;
-		case 0xaa:	// AMD ID select part 1
+		case 0xaa:  // AMD ID select part 1
 			if( ( address & 0xfff ) == 0x555 )
 			{
 				m_flash_mode = FM_READAMDID1;
@@ -768,7 +779,7 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 		break;
 	case FM_ERASEAMD3:
 		if( (( address & 0xfff ) == 0x555 && ( data & 0xff ) == 0x10 ) ||
-		    (( address & 0xfff ) == 0xaaa && ( data & 0xff ) == 0x10 ) )
+			(( address & 0xfff ) == 0xaaa && ( data & 0xff ) == 0x10 ) )
 		{
 			// chip erase
 			for (offs_t offs = 0; offs < m_size; offs++)
@@ -846,7 +857,10 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 			break;
 		}
 		m_status = 0x80;
-		m_flash_mode = FM_READSTATUS;
+		if (m_type == FLASH_SST_28SF040)
+			m_flash_mode = FM_NORMAL;
+		else
+			m_flash_mode = FM_READSTATUS;
 		break;
 	case FM_WRITEPAGEATMEL:
 		switch( m_bits )
@@ -876,15 +890,27 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 	case FM_CLEARPART1:
 		if( ( data & 0xff ) == 0xd0 )
 		{
-			// clear the 64k block containing the current address to all 0xffs
-			UINT32 base = address * ((m_bits == 16) ? 2 : 1);
-			for (offs_t offs = 0; offs < 64 * 1024; offs++)
-				m_addrspace[0]->write_byte((base & ~0xffff) + offs, 0xff);
+			if (m_type == FLASH_SST_28SF040)
+			{
+				// clear the 256 bytes block containing the current address to all 0xffs
+				UINT32 base = address * ((m_bits == 16) ? 2 : 1);
+				for (offs_t offs = 0; offs < 256; offs++)
+					m_addrspace[0]->write_byte((base & ~0xff) + offs, 0xff);
+
+				m_timer->adjust( attotime::from_msec( 4 ) );
+			}
+			else
+			{
+				// clear the 64k block containing the current address to all 0xffs
+				UINT32 base = address * ((m_bits == 16) ? 2 : 1);
+				for (offs_t offs = 0; offs < 64 * 1024; offs++)
+					m_addrspace[0]->write_byte((base & ~0xffff) + offs, 0xff);
+
+				m_timer->adjust( attotime::from_seconds( 1 ) );
+			}
 
 			m_status = 0x00;
 			m_flash_mode = FM_READSTATUS;
-
-			m_timer->adjust( attotime::from_seconds( 1 ) );
 			break;
 		}
 		else

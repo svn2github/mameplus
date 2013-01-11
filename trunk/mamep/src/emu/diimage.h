@@ -52,37 +52,37 @@
 
 enum iodevice_t
 {
-    /* List of all supported devices.  Refer to the device by these names only */
-    IO_UNKNOWN,
-    IO_CARTSLOT,    /*  1 - Cartridge Port, as found on most console and on some computers */
-    IO_FLOPPY,      /*  2 - Floppy Disk unit */
-    IO_HARDDISK,    /*  3 - Hard Disk unit */
-    IO_CYLINDER,    /*  4 - Magnetically-Coated Cylinder */
-    IO_CASSETTE,    /*  5 - Cassette Recorder (common on early home computers) */
-    IO_PUNCHCARD,   /*  6 - Card Puncher/Reader */
-    IO_PUNCHTAPE,   /*  7 - Tape Puncher/Reader (reels instead of punchcards) */
-    IO_PRINTER,     /*  8 - Printer device */
-    IO_SERIAL,      /*  9 - Generic Serial Port */
-    IO_PARALLEL,    /* 10 - Generic Parallel Port */
-    IO_SNAPSHOT,    /* 11 - Complete 'snapshot' of the state of the computer */
-    IO_QUICKLOAD,   /* 12 - Allow to load program/data into memory, without matching any actual device */
-    IO_MEMCARD,     /* 13 - Memory card */
-    IO_CDROM,       /* 14 - optical CD-ROM disc */
+	/* List of all supported devices.  Refer to the device by these names only */
+	IO_UNKNOWN,
+	IO_CARTSLOT,    /*  1 - Cartridge Port, as found on most console and on some computers */
+	IO_FLOPPY,      /*  2 - Floppy Disk unit */
+	IO_HARDDISK,    /*  3 - Hard Disk unit */
+	IO_CYLINDER,    /*  4 - Magnetically-Coated Cylinder */
+	IO_CASSETTE,    /*  5 - Cassette Recorder (common on early home computers) */
+	IO_PUNCHCARD,   /*  6 - Card Puncher/Reader */
+	IO_PUNCHTAPE,   /*  7 - Tape Puncher/Reader (reels instead of punchcards) */
+	IO_PRINTER,     /*  8 - Printer device */
+	IO_SERIAL,      /*  9 - Generic Serial Port */
+	IO_PARALLEL,    /* 10 - Generic Parallel Port */
+	IO_SNAPSHOT,    /* 11 - Complete 'snapshot' of the state of the computer */
+	IO_QUICKLOAD,   /* 12 - Allow to load program/data into memory, without matching any actual device */
+	IO_MEMCARD,     /* 13 - Memory card */
+	IO_CDROM,       /* 14 - optical CD-ROM disc */
 	IO_MAGTAPE,     /* 15 - Magentic tape */
-	IO_ROM,			/* 16 - Individual ROM image - the Amstrad CPC has a few applications that were sold on 16kB ROMs */
-    IO_COUNT        /* 17 - Total Number of IO_devices for searching */
+	IO_ROM,         /* 16 - Individual ROM image - the Amstrad CPC has a few applications that were sold on 16kB ROMs */
+	IO_COUNT        /* 17 - Total Number of IO_devices for searching */
 };
 
 enum image_error_t
 {
-    IMAGE_ERROR_SUCCESS,
-    IMAGE_ERROR_INTERNAL,
-    IMAGE_ERROR_UNSUPPORTED,
-    IMAGE_ERROR_OUTOFMEMORY,
-    IMAGE_ERROR_FILENOTFOUND,
-    IMAGE_ERROR_INVALIDIMAGE,
-    IMAGE_ERROR_ALREADYOPEN,
-    IMAGE_ERROR_UNSPECIFIED
+	IMAGE_ERROR_SUCCESS,
+	IMAGE_ERROR_INTERNAL,
+	IMAGE_ERROR_UNSUPPORTED,
+	IMAGE_ERROR_OUTOFMEMORY,
+	IMAGE_ERROR_FILENOTFOUND,
+	IMAGE_ERROR_INVALIDIMAGE,
+	IMAGE_ERROR_ALREADYOPEN,
+	IMAGE_ERROR_UNSPECIFIED
 };
 
 struct image_device_type_info
@@ -94,12 +94,12 @@ struct image_device_type_info
 
 struct image_device_format
 {
-    image_device_format *m_next;
-    int m_index;
-    astring m_name;
-    astring m_description;
-    astring m_extensions;
-    astring m_optspec;
+	image_device_format *m_next;
+	int m_index;
+	astring m_name;
+	astring m_description;
+	astring m_extensions;
+	astring m_optspec;
 };
 
 class device_image_interface;
@@ -117,10 +117,10 @@ typedef void (*device_image_display_info_func)(device_image_interface &image);
 //  MACROS
 //**************************************************************************
 
-#define IMAGE_INIT_PASS		FALSE
-#define IMAGE_INIT_FAIL		TRUE
-#define IMAGE_VERIFY_PASS	FALSE
-#define IMAGE_VERIFY_FAIL	TRUE
+#define IMAGE_INIT_PASS     FALSE
+#define IMAGE_INIT_FAIL     TRUE
+#define IMAGE_VERIFY_PASS   FALSE
+#define IMAGE_VERIFY_FAIL   TRUE
 
 #define DEVICE_IMAGE_LOAD_NAME(name)        device_load_##name
 #define DEVICE_IMAGE_LOAD(name)             int DEVICE_IMAGE_LOAD_NAME(name)(device_image_interface &image)
@@ -343,4 +343,4 @@ protected:
 	virtual void hook_load(astring filename, bool softlist);
 };
 
-#endif	/* __DIIMAGE_H__ */
+#endif  /* __DIIMAGE_H__ */

@@ -94,7 +94,7 @@ void wd_fdc_t::device_reset()
 	sub_state = IDLE;
 	cur_live.state = IDLE;
 	track = 0x00;
-	sector = 0x00;
+	sector = 0x01;
 	status = 0x00;
 	data = 0x00;
 	cmd_buffer = track_buffer = sector_buffer = -1;
@@ -106,6 +106,9 @@ void wd_fdc_t::device_reset()
 	hld = false;
 	intrq_cond = 0;
 	live_abort();
+
+	// restore
+	cmd_w(0x03);
 }
 
 void wd_fdc_t::set_floppy(floppy_image_device *_floppy)
@@ -356,8 +359,8 @@ bool wd_fdc_t::sector_matches() const
 {
 	if(0)
 		logerror("%s: matching %02x %02x %02x %02x - %02x %02x\n", tag(),
-				 cur_live.idbuf[0], cur_live.idbuf[1], cur_live.idbuf[2], cur_live.idbuf[3],
-				 track, sector);
+					cur_live.idbuf[0], cur_live.idbuf[1], cur_live.idbuf[2], cur_live.idbuf[3],
+					track, sector);
 
 	if(cur_live.idbuf[0] != track || cur_live.idbuf[2] != sector)
 		return false;
@@ -1042,10 +1045,10 @@ void wd_fdc_t::gen_w(int reg, UINT8 val)
 UINT8 wd_fdc_t::gen_r(int reg)
 {
 	switch(reg) {
-	case 0: return status_r(); break;
-	case 1: return track_r(); break;
-	case 2: return sector_r(); break;
-	case 3: return data_r(); break;
+	case 0: return status_r();
+	case 1: return track_r();
+	case 2: return sector_r();
+	case 3: return data_r();
 	}
 	return 0xff;
 }
@@ -1383,7 +1386,7 @@ void wd_fdc_t::live_run(attotime limit)
 				cur_live.state = READ_HEADER_BLOCK_HEADER;
 			}
 
-			if(dden && (cur_live.shift_reg == 0xf57e || cur_live.shift_reg == 0xf57e)) {
+			if(dden && (cur_live.shift_reg == 0xf57e || cur_live.shift_reg == 0xf57f)) {
 				cur_live.crc = cur_live.shift_reg == 0xf57e ? 0xef21 : 0xff00;
 				cur_live.data_separator_phase = false;
 				cur_live.bit_counter = 0;
@@ -1508,7 +1511,7 @@ void wd_fdc_t::live_run(attotime limit)
 				}
 
 				if(cur_live.bit_counter >= 11*16 && (cur_live.shift_reg == 0xf56a || cur_live.shift_reg == 0xf56b ||
-													 cur_live.shift_reg == 0xf56e || cur_live.shift_reg == 0xf56f)) {
+														cur_live.shift_reg == 0xf56e || cur_live.shift_reg == 0xf56f)) {
 					cur_live.crc =
 						cur_live.shift_reg == 0xf56a ? 0x8fe7 :
 						cur_live.shift_reg == 0xf56b ? 0x9fc6 :
@@ -1860,8 +1863,7 @@ void wd_fdc_t::live_run(attotime limit)
 					cur_live.byte_counter = 0;
 					cur_live.data_bit_context = cur_live.data_reg & 1;
 					pll_start_writing(cur_live.tm);
-					if(dden)
-						live_write_fm(0x00);
+					live_write_fm(0x00);
 				}
 				break;
 
@@ -1971,7 +1973,7 @@ const int wd_fdc_digital_t::wd_digital_step_times[4] = { 12000, 24000, 40000, 60
 void wd_fdc_digital_t::pll_reset(bool fm, attotime when)
 {
 	cur_pll.reset(when);
-	cur_pll.set_clock(clocks_to_attotime(1));
+	cur_pll.set_clock(clocks_to_attotime(fm ? 2 : 1)); // HACK
 }
 
 void wd_fdc_digital_t::pll_start_writing(attotime tm)

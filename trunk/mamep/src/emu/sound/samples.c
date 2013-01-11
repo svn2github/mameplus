@@ -76,13 +76,13 @@ const device_type SAMPLES = &device_creator<samples_device>;
 
 samples_device::samples_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, SAMPLES, "Samples", tag, owner, clock),
-	  device_sound_interface(mconfig, *this)
+		device_sound_interface(mconfig, *this)
 {
 }
 
 samples_device::samples_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock),
-	  device_sound_interface(mconfig, *this)
+		device_sound_interface(mconfig, *this)
 {
 }
 
@@ -114,11 +114,11 @@ void samples_device::start(UINT8 channel, UINT32 samplenum, bool loop)
 	if (m_sample.count() == 0)
 		return;
 
-    assert(samplenum < m_sample.count());
-    assert(channel < m_channels);
+	assert(samplenum < m_sample.count());
+	assert(channel < m_channels);
 
 	// force an update before we start
-    channel_t &chan = m_channel[channel];
+	channel_t &chan = m_channel[channel];
 	chan.stream->update();
 
 	// update the parameters
@@ -141,10 +141,10 @@ void samples_device::start(UINT8 channel, UINT32 samplenum, bool loop)
 
 void samples_device::start_raw(UINT8 channel, const INT16 *sampledata, UINT32 samples, UINT32 frequency, bool loop)
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    channel_t &chan = m_channel[channel];
+	channel_t &chan = m_channel[channel];
 	chan.stream->update();
 
 	// update the parameters
@@ -166,10 +166,10 @@ void samples_device::start_raw(UINT8 channel, const INT16 *sampledata, UINT32 sa
 
 void samples_device::set_frequency(UINT8 channel, UINT32 freq)
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    channel_t &chan = m_channel[channel];
+	channel_t &chan = m_channel[channel];
 	chan.stream->update();
 	chan.step = (INT64(freq) << FRAC_BITS) / machine().sample_rate();
 }
@@ -182,10 +182,10 @@ void samples_device::set_frequency(UINT8 channel, UINT32 freq)
 
 void samples_device::set_volume(UINT8 channel, float volume)
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    channel_t &chan = m_channel[channel];
+	channel_t &chan = m_channel[channel];
 	chan.stream->set_output_gain(0, volume);
 }
 
@@ -196,10 +196,10 @@ void samples_device::set_volume(UINT8 channel, float volume)
 
 void samples_device::pause(UINT8 channel, bool pause)
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    channel_t &chan = m_channel[channel];
+	channel_t &chan = m_channel[channel];
 	chan.paused = pause;
 }
 
@@ -210,12 +210,12 @@ void samples_device::pause(UINT8 channel, bool pause)
 
 void samples_device::stop(UINT8 channel)
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    channel_t &chan = m_channel[channel];
-    chan.source = NULL;
-    chan.source_num = -1;
+	channel_t &chan = m_channel[channel];
+	chan.source = NULL;
+	chan.source_num = -1;
 }
 
 
@@ -238,10 +238,10 @@ void samples_device::stop_all()
 
 UINT32 samples_device::base_frequency(UINT8 channel) const
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    const channel_t &chan = m_channel[channel];
+	const channel_t &chan = m_channel[channel];
 	chan.stream->update();
 	return chan.basefreq;
 }
@@ -254,10 +254,10 @@ UINT32 samples_device::base_frequency(UINT8 channel) const
 
 bool samples_device::playing(UINT8 channel) const
 {
-    assert(channel < m_channels);
+	assert(channel < m_channels);
 
 	// force an update before we start
-    const channel_t &chan = m_channel[channel];
+	const channel_t &chan = m_channel[channel];
 	chan.stream->update();
 	return (chan.source != NULL);
 }
@@ -283,7 +283,7 @@ void samples_device::device_start()
 	{
 		// initialize channel
 		channel_t &chan = m_channel[channel];
-	    chan.stream = stream_alloc(0, 1, machine().sample_rate());
+		chan.stream = stream_alloc(0, 1, machine().sample_rate());
 		chan.source = NULL;
 		chan.source_num = -1;
 		chan.step = 0;
@@ -291,13 +291,13 @@ void samples_device::device_start()
 		chan.paused = 0;
 
 		// register with the save state system
-        save_item(NAME(chan.source_length), channel);
-        save_item(NAME(chan.source_num), channel);
-        save_item(NAME(chan.pos), channel);
-        save_item(NAME(chan.frac), channel);
-        save_item(NAME(chan.step), channel);
-        save_item(NAME(chan.loop), channel);
-        save_item(NAME(chan.paused), channel);
+		save_item(NAME(chan.source_length), channel);
+		save_item(NAME(chan.source_num), channel);
+		save_item(NAME(chan.pos), channel);
+		save_item(NAME(chan.frac), channel);
+		save_item(NAME(chan.step), channel);
+		save_item(NAME(chan.loop), channel);
+		save_item(NAME(chan.paused), channel);
 	}
 
 	// initialize any custom handlers
@@ -462,14 +462,20 @@ bool samples_device::read_wav_sample(emu_file &file, sample_t &sample)
 	UINT32 filesize;
 	offset += file.read(&filesize, 4);
 	if (offset < 8)
+	{
+		mame_printf_warning("Unexpected size offset %u (%s)\n", offset, file.filename());
 		return false;
+	}
 	filesize = LITTLE_ENDIANIZE_INT32(filesize);
 
 	// read the RIFF file type and make sure it's a WAVE file
 	char buf[32];
 	offset += file.read(buf, 4);
 	if (offset < 12)
+	{
+		mame_printf_warning("Unexpected WAVE offset %u (%s)\n", offset, file.filename());
 		return false;
+	}
 	if (memcmp(&buf[0], "WAVE", 4) != 0)
 		return false;
 
@@ -487,7 +493,10 @@ bool samples_device::read_wav_sample(emu_file &file, sample_t &sample)
 		file.seek(length, SEEK_CUR);
 		offset += length;
 		if (offset >= filesize)
+		{
+			mame_printf_warning("Could not find fmt tag (%s)\n", file.filename());
 			return false;
+		}
 	}
 
 	// read the format -- make sure it is PCM
@@ -495,13 +504,19 @@ bool samples_device::read_wav_sample(emu_file &file, sample_t &sample)
 	offset += file.read(&temp16, 2);
 	temp16 = LITTLE_ENDIANIZE_INT16(temp16);
 	if (temp16 != 1)
+	{
+		mame_printf_warning("unsupported format %u - only PCM is supported (%s)\n", temp16, file.filename());
 		return false;
+	}
 
 	// number of channels -- only mono is supported
 	offset += file.read(&temp16, 2);
 	temp16 = LITTLE_ENDIANIZE_INT16(temp16);
 	if (temp16 != 1)
+	{
+		mame_printf_warning("unsupported number of channels %u - only mono is supported (%s)\n", temp16, file.filename());
 		return false;
+	}
 
 	// sample rate
 	UINT32 rate;
@@ -516,7 +531,10 @@ bool samples_device::read_wav_sample(emu_file &file, sample_t &sample)
 	offset += file.read(&bits, 2);
 	bits = LITTLE_ENDIANIZE_INT16(bits);
 	if (bits != 8 && bits != 16)
+	{
+		mame_printf_warning("unsupported bits/sample %u - only 8 and 16 are supported (%s)\n", bits, file.filename());
 		return false;
+	}
 
 	// seek past any extra data
 	file.seek(length - 16, SEEK_CUR);
@@ -535,12 +553,18 @@ bool samples_device::read_wav_sample(emu_file &file, sample_t &sample)
 		file.seek(length, SEEK_CUR);
 		offset += length;
 		if (offset >= filesize)
+		{
+			mame_printf_warning("Could not find data tag (%s)\n", file.filename());
 			return false;
+		}
 	}
 
 	// if there was a 0 length data block, we're done
 	if (length == 0)
+	{
+		mame_printf_warning("empty data block (%s)\n", file.filename());
 		return false;
+	}
 
 	// fill in the sample data
 	sample.frequency = rate;

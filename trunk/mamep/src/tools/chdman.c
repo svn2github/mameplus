@@ -186,8 +186,8 @@ struct avi_info
 
 struct metadata_index_info
 {
-	chd_metadata_tag	tag;
-	UINT32				index;
+	chd_metadata_tag    tag;
+	UINT32              index;
 };
 
 
@@ -214,8 +214,8 @@ public:
 	// construction/destruction
 	chd_rawfile_compressor(core_file *file, UINT64 offset = 0, UINT64 maxoffset = ~0)
 		: m_file(file),
-		  m_offset(offset),
-		  m_maxoffset(MIN(maxoffset, (file != NULL) ? core_fsize(file) : 0)) { }
+			m_offset(offset),
+			m_maxoffset(MIN(maxoffset, (file != NULL) ? core_fsize(file) : 0)) { }
 
 	// read interface
 	virtual UINT32 read_data(void *dest, UINT64 offset, UINT32 length)
@@ -231,9 +231,9 @@ public:
 
 private:
 	// internal state
-	core_file *		m_file;
-	UINT64			m_offset;
-	UINT64			m_maxoffset;
+	core_file *     m_file;
+	UINT64          m_offset;
+	UINT64          m_maxoffset;
 };
 
 
@@ -245,8 +245,8 @@ public:
 	// construction/destruction
 	chd_chdfile_compressor(chd_file &file, UINT64 offset = 0, UINT64 maxoffset = ~0)
 		: m_file(file),
-		  m_offset(offset),
-		  m_maxoffset(MIN(maxoffset, file.logical_bytes())) { }
+			m_offset(offset),
+			m_maxoffset(MIN(maxoffset, file.logical_bytes())) { }
 
 	// read interface
 	virtual UINT32 read_data(void *dest, UINT64 offset, UINT32 length)
@@ -264,9 +264,9 @@ public:
 
 private:
 	// internal state
-	chd_file &		m_file;
-	UINT64			m_offset;
-	UINT64			m_maxoffset;
+	chd_file &      m_file;
+	UINT64          m_offset;
+	UINT64          m_maxoffset;
 };
 
 
@@ -278,8 +278,8 @@ public:
 	// construction/destruction
 	chd_cd_compressor(cdrom_toc &toc, chdcd_track_input_info &info)
 		: m_file(NULL),
-		  m_toc(toc),
-		  m_info(info) { }
+			m_toc(toc),
+			m_info(info) { }
 
 	~chd_cd_compressor()
 	{
@@ -369,10 +369,10 @@ public:
 
 private:
 	// internal state
-	astring						m_lastfile;
-	core_file *					m_file;
-	cdrom_toc &					m_toc;
-	chdcd_track_input_info &	m_info;
+	astring                     m_lastfile;
+	core_file *                 m_file;
+	cdrom_toc &                 m_toc;
+	chdcd_track_input_info &    m_info;
 };
 
 
@@ -384,12 +384,12 @@ public:
 	// construction/destruction
 	chd_avi_compressor(avi_file &file, avi_info &info, UINT32 first_frame, UINT32 num_frames)
 		: m_file(file),
-		  m_info(info),
-		  m_bitmap(info.width, info.height * (info.interlaced ? 2 : 1)),
-		  m_start_frame(first_frame),
-		  m_frame_count(num_frames),
-		  m_ldframedata(num_frames * VBI_PACKED_BYTES),
-		  m_rawdata(info.bytes_per_frame) { }
+			m_info(info),
+			m_bitmap(info.width, info.height * (info.interlaced ? 2 : 1)),
+			m_start_frame(first_frame),
+			m_frame_count(num_frames),
+			m_ldframedata(num_frames * VBI_PACKED_BYTES),
+			m_rawdata(info.bytes_per_frame) { }
 
 	// getters
 	const dynamic_buffer &ldframedata() const { return m_ldframedata; }
@@ -467,14 +467,14 @@ public:
 
 private:
 	// internal state
-	avi_file &					m_file;
-	avi_info &					m_info;
-	bitmap_yuy16				m_bitmap;
-	UINT32						m_start_frame;
-	UINT32						m_frame_count;
-	dynamic_array<INT16>		m_audio[8];
-	dynamic_buffer				m_ldframedata;
-	dynamic_buffer				m_rawdata;
+	avi_file &                  m_file;
+	avi_info &                  m_info;
+	bitmap_yuy16                m_bitmap;
+	UINT32                      m_start_frame;
+	UINT32                      m_frame_count;
+	dynamic_array<INT16>        m_audio[8];
+	dynamic_buffer              m_ldframedata;
+	dynamic_buffer              m_rawdata;
 };
 
 
@@ -497,32 +497,32 @@ static const chd_codec_type s_default_ld_compression[4] = { CHD_CODEC_AVHUFF };
 // descriptions for each option
 static const option_description s_options[] =
 {
-	{ OPTION_INPUT, 				"i",	true, " <filename>: input file name" },
-	{ OPTION_INPUT_PARENT,			"ip",	true, " <filename>: parent file name for input CHD" },
-	{ OPTION_OUTPUT,				"o",	true, " <filename>: output file name" },
-	{ OPTION_OUTPUT_BIN,			"ob",	true, " <filename>: output file name for binary data" },
-	{ OPTION_OUTPUT_FORCE,			"f",	false, ": force overwriting an existing file" },
-	{ OPTION_OUTPUT_PARENT,			"op",	true, " <filename>: parent file name for output CHD" },
-	{ OPTION_INPUT_START_BYTE,		"isb",	true, " <offset>: starting byte offset within the input" },
-	{ OPTION_INPUT_START_HUNK,		"ish",	true, " <offset>: starting hunk offset within the input" },
-	{ OPTION_INPUT_START_FRAME,		"isf",	true, " <offset>: starting frame within the input" },
-	{ OPTION_INPUT_LENGTH_BYTES,	"ib",	true, " <length>: effective length of input in bytes" },
-	{ OPTION_INPUT_LENGTH_HUNKS,	"ih",	true, " <length>: effective length of input in hunks" },
-	{ OPTION_INPUT_LENGTH_FRAMES,	"if",	true, " <length>: effective length of input in frames" },
-	{ OPTION_HUNK_SIZE,				"hs",	true, " <bytes>: size of each hunk, in bytes" },
-	{ OPTION_UNIT_SIZE,				"us",	true, " <bytes>: size of each unit, in bytes" },
-	{ OPTION_COMPRESSION,			"c",	true, " <none|type1[,type2[,...]]>: which compression codecs to use (up to 4)" },
-	{ OPTION_IDENT,					"id",	true, " <filename>: name of ident file to provide CHS information" },
-	{ OPTION_CHS,					"chs",	true, " <cylinders,heads,sectors>: specifies CHS values directly" },
-	{ OPTION_SECTOR_SIZE,			"ss",	true, " <bytes>: size of each hard disk sector" },
-	{ OPTION_TAG,					"t",	true, " <tag>: 4-character tag for metadata" },
-	{ OPTION_INDEX,					"ix",	true, " <index>: indexed instance of this metadata tag" },
-	{ OPTION_VALUE_TEXT,			"vt",	true, " <text>: text for the metadata" },
-	{ OPTION_VALUE_FILE,			"vf",	true, " <file>: file containing data to add" },
-	{ OPTION_NUMPROCESSORS,			"np",	true, " <processors>: limit the number of processors to use during compression" },
-	{ OPTION_NO_CHECKSUM,			"nocs",	false, ": do not include this metadata information in the overall SHA-1" },
-	{ OPTION_FIX,					"f",	false, ": fix the SHA-1 if it is incorrect" },
-	{ OPTION_VERBOSE,				"v",	false, ": output additional information" },
+	{ OPTION_INPUT,                 "i",    true, " <filename>: input file name" },
+	{ OPTION_INPUT_PARENT,          "ip",   true, " <filename>: parent file name for input CHD" },
+	{ OPTION_OUTPUT,                "o",    true, " <filename>: output file name" },
+	{ OPTION_OUTPUT_BIN,            "ob",   true, " <filename>: output file name for binary data" },
+	{ OPTION_OUTPUT_FORCE,          "f",    false, ": force overwriting an existing file" },
+	{ OPTION_OUTPUT_PARENT,         "op",   true, " <filename>: parent file name for output CHD" },
+	{ OPTION_INPUT_START_BYTE,      "isb",  true, " <offset>: starting byte offset within the input" },
+	{ OPTION_INPUT_START_HUNK,      "ish",  true, " <offset>: starting hunk offset within the input" },
+	{ OPTION_INPUT_START_FRAME,     "isf",  true, " <offset>: starting frame within the input" },
+	{ OPTION_INPUT_LENGTH_BYTES,    "ib",   true, " <length>: effective length of input in bytes" },
+	{ OPTION_INPUT_LENGTH_HUNKS,    "ih",   true, " <length>: effective length of input in hunks" },
+	{ OPTION_INPUT_LENGTH_FRAMES,   "if",   true, " <length>: effective length of input in frames" },
+	{ OPTION_HUNK_SIZE,             "hs",   true, " <bytes>: size of each hunk, in bytes" },
+	{ OPTION_UNIT_SIZE,             "us",   true, " <bytes>: size of each unit, in bytes" },
+	{ OPTION_COMPRESSION,           "c",    true, " <none|type1[,type2[,...]]>: which compression codecs to use (up to 4)" },
+	{ OPTION_IDENT,                 "id",   true, " <filename>: name of ident file to provide CHS information" },
+	{ OPTION_CHS,                   "chs",  true, " <cylinders,heads,sectors>: specifies CHS values directly" },
+	{ OPTION_SECTOR_SIZE,           "ss",   true, " <bytes>: size of each hard disk sector" },
+	{ OPTION_TAG,                   "t",    true, " <tag>: 4-character tag for metadata" },
+	{ OPTION_INDEX,                 "ix",   true, " <index>: indexed instance of this metadata tag" },
+	{ OPTION_VALUE_TEXT,            "vt",   true, " <text>: text for the metadata" },
+	{ OPTION_VALUE_FILE,            "vf",   true, " <file>: file containing data to add" },
+	{ OPTION_NUMPROCESSORS,         "np",   true, " <processors>: limit the number of processors to use during compression" },
+	{ OPTION_NO_CHECKSUM,           "nocs", false, ": do not include this metadata information in the overall SHA-1" },
+	{ OPTION_FIX,                   "f",    false, ": fix the SHA-1 if it is incorrect" },
+	{ OPTION_VERBOSE,               "v",    false, ": output additional information" },
 };
 
 
@@ -1429,10 +1429,10 @@ static void do_info(parameters_t &params)
 				const char *name = "Unknown";
 				switch (comptype)
 				{
-					case CHD_CODEC_NONE:		name = "Uncompressed";					break;
-					case CHD_CODEC_SELF:		name = "Copy from self";				break;
-					case CHD_CODEC_PARENT:		name = "Copy from parent";				break;
-					case CHD_CODEC_MINI:		name = "Legacy 8-byte mini";			break;
+					case CHD_CODEC_NONE:        name = "Uncompressed";                  break;
+					case CHD_CODEC_SELF:        name = "Copy from self";                break;
+					case CHD_CODEC_PARENT:      name = "Copy from parent";              break;
+					case CHD_CODEC_MINI:        name = "Legacy 8-byte mini";            break;
 					default:
 						int index = comptype - 1 - CHD_CODEC_MINI;
 						if (index < 4)
@@ -2055,8 +2055,8 @@ static void do_copy(parameters_t &params)
 		else if (input_chd.read_metadata(AV_METADATA_TAG, 0, metadata) == CHDERR_NONE)
 			memcpy(compression, s_default_ld_compression, sizeof(compression));
 		else if (input_chd.read_metadata(CDROM_OLD_METADATA_TAG, 0, metadata) == CHDERR_NONE ||
-				 input_chd.read_metadata(CDROM_TRACK_METADATA_TAG, 0, metadata) == CHDERR_NONE ||
-				 input_chd.read_metadata(CDROM_TRACK_METADATA2_TAG, 0, metadata) == CHDERR_NONE)
+					input_chd.read_metadata(CDROM_TRACK_METADATA_TAG, 0, metadata) == CHDERR_NONE ||
+					input_chd.read_metadata(CDROM_TRACK_METADATA2_TAG, 0, metadata) == CHDERR_NONE)
 			memcpy(compression, s_default_cd_compression, sizeof(compression));
 		else
 			memcpy(compression, s_default_raw_compression, sizeof(compression));
@@ -2345,8 +2345,8 @@ static void do_extract_cd(parameters_t &params)
 				output_track_metadata(mode, output_toc_file, tracknum, trackinfo, core_filename_extract_base(temp,*output_bin_file_str), discoffs, outputoffs);
 			}
 
-            // If this is bin/cue output and the CHD contains subdata, warn the user and don't include
-            // the subdata size in the buffer calculation.
+			// If this is bin/cue output and the CHD contains subdata, warn the user and don't include
+			// the subdata size in the buffer calculation.
 			UINT32 output_frame_size = trackinfo.datasize + ((trackinfo.subtype != CD_SUB_NONE) ? trackinfo.subsize : 0);
 			if (trackinfo.subtype != CD_SUB_NONE && ((mode == MODE_CUEBIN) || (mode == MODE_GDI)))
 			{
@@ -2366,7 +2366,7 @@ static void do_extract_cd(parameters_t &params)
 				progress(false, "Extracting, %.1f%% complete... \r", 100.0 * double(outputoffs) / double(total_bytes));
 
 				// read the data
-				cdrom_read_data(cdrom, cdrom_get_track_start(cdrom, tracknum) + frame, &buffer[bufferoffs], trackinfo.trktype);
+				cdrom_read_data(cdrom, cdrom_get_track_start_phys(cdrom, tracknum) + frame, &buffer[bufferoffs], trackinfo.trktype, true);
 
 				// for CDRWin, audio tracks must be reversed
 				if ((mode == MODE_CUEBIN) && (trackinfo.trktype == CD_TRACK_AUDIO))
@@ -2382,8 +2382,8 @@ static void do_extract_cd(parameters_t &params)
 				// read the subcode data
 				if (trackinfo.subtype != CD_SUB_NONE && (mode == MODE_NORMAL))
 				{
-                    cdrom_read_subcode(cdrom, cdrom_get_track_start(cdrom, tracknum) + frame, &buffer[bufferoffs]);
-                    bufferoffs += trackinfo.subsize;
+					cdrom_read_subcode(cdrom, cdrom_get_track_start_phys(cdrom, tracknum) + frame, &buffer[bufferoffs], true);
+					bufferoffs += trackinfo.subsize;
 				}
 
 				// write it out if we need to

@@ -55,20 +55,112 @@ Expansion bus stuff:
 
 #include "emu.h"
 #include "includes/3do.h"
+#include "cpu/arm7/arm7core.h"
 
+#define VERBOSE         1
+#define LOG(x) do { if (VERBOSE) printf x; } while (0)
 
+/*
+IRQ0
+0x80000000 Second Priority
+0x40000000 SW irq
+0x20000000 DMA<->EXP
+0x1fff0000 DMA RAM->DSPP *
+0x0000f000 DMA DSPP->RAM *
+0x00000800 DSPP
+0x00000400 Timer  1
+0x00000200 Timer  3 <- needed to surpass current hang point
+0x00000100 Timer  5
+0x00000080 Timer  7
+0x00000040 Timer  9
+0x00000020 Timer 11
+0x00000010 Timer 13
+0x00000008 Timer 15
+0x00000004 Expansion Bus
+0x00000002 Vertical 1
+0x00000001 Vertical 0
 
+---
+IRQ1
+0x00000400 DSPPOVER (Red rev. only)
+0x00000200 DSPPUNDER (Red rev. only)
+0x00000100 BadBits
+0x00000080 DMA<-External
+0x00000040 DMA->External
+0x00000020 DMA<-Uncle
+0x00000010 DMA->Uncle
+0x00000008 DMA RAM->DSPP N
+0x00000004 SlowBus
+0x00000002 Disk Inserted
+0x00000001 DMA Player bus
 
+*/
+void _3do_state::m_3do_request_fiq(UINT32 irq_req, UINT8 type)
+{
+	if(type)
+		m_clio.irq1 |= irq_req;
+	else
+		m_clio.irq0 |= irq_req;
 
+	if(m_clio.irq1)
+		m_clio.irq0 |= 1 << 31; // Second Priority
+	else
+		m_clio.irq0 &= ~(1 << 31);
 
-READ32_MEMBER(_3do_state::_3do_nvarea_r){
-	logerror( "%08X: NVRAM read offset = %08X\n", machine().device("maincpu")->safe_pc(), offset );
-	return 0;
+	if((m_clio.irq0 & m_clio.irq0_enable) || (m_clio.irq1 & m_clio.irq1_enable))
+	{
+		//printf("Go irq %08x & %08x %08x & %08x\n",m_clio.irq0, m_clio.irq0_enable, m_clio.irq1, m_clio.irq1_enable);
+		generic_pulse_irq_line(m_maincpu, ARM7_FIRQ_LINE, 1);
+	}
 }
 
-WRITE32_MEMBER(_3do_state::_3do_nvarea_w){
-	logerror( "%08X: NVRAM write offset = %08X, data = %08X, mask = %08X\n", machine().device("maincpu")->safe_pc(), offset, data, mem_mask );
+/* TODO: timer frequency is unknown, everything else is guesswork. */
+TIMER_DEVICE_CALLBACK_MEMBER( _3do_state::timer_x16_cb )
+{
+	/*
+	    x--- fablode flag (wtf?)
+	    -x-- cascade flag
+	    --x- reload flag
+	    ---x decrement flag (enable)
+	*/
+	UINT8 timer_flag;
+	UINT8 carry_val;
+
+	carry_val = 1;
+
+	for(int i = 0;i < 16; i++)
+	{
+		timer_flag = (m_clio.timer_ctrl >> i*4) & 0xf;
+
+		if(timer_flag & 1)
+		{
+			if(timer_flag & 4)
+				m_clio.timer_count[i]-=carry_val;
+			else
+				m_clio.timer_count[i]--;
+
+			if(m_clio.timer_count[i] == 0xffffffff) // timer hit
+			{
+				if(i & 1) // odd timer irq fires
+					m_3do_request_fiq(8 << (7-(i >> 1)),0);
+
+				carry_val = 1;
+
+				if(timer_flag & 2)
+				{
+					m_clio.timer_count[i] = m_clio.timer_backup[i];
+				}
+				else
+					m_clio.timer_ctrl &= ~(1 << i*4);
+			}
+			else
+				carry_val = 0;
+		}
+	}
 }
+
+READ8_MEMBER(_3do_state::_3do_nvarea_r) { return m_nvram[offset]; }
+WRITE8_MEMBER(_3do_state::_3do_nvarea_w) { m_nvram[offset] = data; }
 
 
 
@@ -103,7 +195,7 @@ READ32_MEMBER(_3do_state::_3do_slow2_r){
 	logerror( "%08X: UNK_318 read offset = %08X\n", machine().device("maincpu")->safe_pc(), offset );
 
 	switch( offset ) {
-	case 0:		/* Boot ROM checks here and expects to read 1, 0, 1, 0 in the lowest bit */
+	case 0:     /* Boot ROM checks here and expects to read 1, 0, 1, 0 in the lowest bit */
 		data = m_slow2.cg_output & 0x00000001;
 		m_slow2.cg_output = m_slow2.cg_output >> 1;
 		m_slow2.cg_w_count = 0;
@@ -118,7 +210,7 @@ WRITE32_MEMBER(_3do_state::_3do_slow2_w)
 
 	switch( offset )
 	{
-		case 0:		/* Boot ROM writes 03180000 here and then starts reading some things */
+		case 0:     /* Boot ROM writes 03180000 here and then starts reading some things */
 		{
 			/* disable ROM overlay */
 			membank("bank1")->set_entry(0);
@@ -133,13 +225,6 @@ WRITE32_MEMBER(_3do_state::_3do_slow2_w)
 }
 
 
-void _3do_slow2_init( running_machine &machine )
-{
-	_3do_state *state = machine.driver_data<_3do_state>();
-	state->m_slow2.cg_input = 0;
-	state->m_slow2.cg_output = 0x00000005 - 1;
-}
-
 
 READ32_MEMBER(_3do_state::_3do_svf_r)
 {
@@ -150,17 +235,17 @@ READ32_MEMBER(_3do_state::_3do_svf_r)
 
 	switch( offset & ( 0xE000 / 4 ) )
 	{
-	case 0x0000/4:		/* SPORT transfer */
+	case 0x0000/4:      /* SPORT transfer */
 		for ( int i = 0; i < 512; i++ )
 		{
 			m_svf.sport[i] = p[i];
 		}
 		break;
-	case 0x2000/4:		/* Write to color register */
+	case 0x2000/4:      /* Write to color register */
 		return m_svf.color;
-	case 0x4000/4:		/* Flash write */
+	case 0x4000/4:      /* Flash write */
 		break;
-	case 0x6000/4:		/* CAS before RAS refresh/reset (CBR). Used to initialize VRAM mode during boot. */
+	case 0x6000/4:      /* CAS before RAS refresh/reset (CBR). Used to initialize VRAM mode during boot. */
 		break;
 	}
 	return 0;
@@ -175,7 +260,7 @@ WRITE32_MEMBER(_3do_state::_3do_svf_w)
 
 	switch( offset & ( 0xe000 / 4 ) )
 	{
-	case 0x0000/4:		/* SPORT transfer */
+	case 0x0000/4:      /* SPORT transfer */
 		{
 			UINT32 keep_bits = data ^ 0xffffffff;
 
@@ -185,10 +270,10 @@ WRITE32_MEMBER(_3do_state::_3do_svf_w)
 			}
 		}
 		break;
-	case 0x2000/4:		/* Write to color register */
+	case 0x2000/4:      /* Write to color register */
 		m_svf.color = data;
 		break;
-	case 0x4000/4:		/* Flash write */
+	case 0x4000/4:      /* Flash write */
 		{
 			UINT32 keep_bits = data ^ 0xffffffff;
 			UINT32 new_bits = m_svf.color & data;
@@ -199,7 +284,7 @@ WRITE32_MEMBER(_3do_state::_3do_svf_w)
 			}
 		}
 		break;
-	case 0x6000/4:		/* CAS before RAS refresh/reset (CBR). Used to initialize VRAM mode during boot. */
+	case 0x6000/4:      /* CAS before RAS refresh/reset (CBR). Used to initialize VRAM mode during boot. */
 		break;
 	}
 }
@@ -210,7 +295,7 @@ READ32_MEMBER(_3do_state::_3do_madam_r){
 	logerror( "%08X: MADAM read offset = %08X\n", machine().device("maincpu")->safe_pc(), offset*4 );
 
 	switch( offset ) {
-	case 0x0000/4:		/* 03300000 - Revision */
+	case 0x0000/4:      /* 03300000 - Revision */
 		return m_madam.revision;
 	case 0x0004/4:
 		return m_madam.msysbits;
@@ -366,12 +451,25 @@ READ32_MEMBER(_3do_state::_3do_madam_r){
 
 
 WRITE32_MEMBER(_3do_state::_3do_madam_w){
-	logerror( "%08X: MADAM write offset = %08X, data = %08X, mask = %08X\n", machine().device("maincpu")->safe_pc(), offset*4, data, mem_mask );
+
+	if(offset == 0)
+	{
+		if(data == 0x0a)
+			logerror( "%08X: MADAM write offset = %08X, data = %08X (\\n), mask = %08X\n", machine().device("maincpu")->safe_pc(), offset*4, data, mem_mask );
+		else
+			logerror( "%08X: MADAM write offset = %08X, data = %08X (%c), mask = %08X\n", machine().device("maincpu")->safe_pc(), offset*4, data, data, mem_mask );
+	}
+	else
+		logerror( "%08X: MADAM write offset = %08X, data = %08X, mask = %08X\n", machine().device("maincpu")->safe_pc(), offset*4, data, mem_mask );
 
 	switch( offset ) {
 	case 0x0000/4:
+		if(data == 0x0a)
+			printf("\n");
+		else
+			printf("%c",data);
 		break;
-	case 0x0004/4:	/* 03300004 - Memory configuration 29 = 2MB DRAM, 1MB VRAM */
+	case 0x0004/4:  /* 03300004 - Memory configuration 29 = 2MB DRAM, 1MB VRAM */
 		m_madam.msysbits = data;
 		break;
 	case 0x0008/4:
@@ -388,20 +486,21 @@ WRITE32_MEMBER(_3do_state::_3do_madam_w){
 		break;
 	case 0x0028/4:
 		m_madam.statbits = data;
+		break; // <- this was a fall-through?
 	case 0x0040/4:
 		m_madam.diag = 1;
 		break;
 
 	/* CEL */
-	case 0x0100/4:	/* 03300100 - SPRSTRT - Start the CEL engine (W) */
-	case 0x0104/4:	/* 03300104 - SPRSTOP - Stop the CEL engine (W) */
-	case 0x0108/4:	/* 03300108 - SPRCNTU - Continue the CEL engine (W) */
-	case 0x010c/4:	/* 0330010c - SPRPAUS - Pause the the CEL engine (W) */
+	case 0x0100/4:  /* 03300100 - SPRSTRT - Start the CEL engine (W) */
+	case 0x0104/4:  /* 03300104 - SPRSTOP - Stop the CEL engine (W) */
+	case 0x0108/4:  /* 03300108 - SPRCNTU - Continue the CEL engine (W) */
+	case 0x010c/4:  /* 0330010c - SPRPAUS - Pause the the CEL engine (W) */
 		break;
-	case 0x0110/4:	/* 03300110 - CCOBCTL0 - CCoB control (RW) */
+	case 0x0110/4:  /* 03300110 - CCOBCTL0 - CCoB control (RW) */
 		m_madam.ccobctl0 = data;
 		break;
-	case 0x0129/4:	/* 03300120 - PPMPC (RW) */
+	case 0x0129/4:  /* 03300120 - PPMPC (RW) */
 		m_madam.ppmpc = data;
 		break;
 
@@ -533,7 +632,7 @@ WRITE32_MEMBER(_3do_state::_3do_madam_w){
 	case 0x07f4/4:
 		m_madam.mult_control &= ~data;
 		break;
-	case 0x07fc/4:	/* Start process */
+	case 0x07fc/4:  /* Start process */
 		break;
 
 	default:
@@ -543,18 +642,34 @@ WRITE32_MEMBER(_3do_state::_3do_madam_w){
 }
 
 
-void _3do_madam_init( running_machine &machine )
-{
-	_3do_state *state = machine.driver_data<_3do_state>();
-	memset( &state->m_madam, 0, sizeof(MADAM) );
-	state->m_madam.revision = 0x01020000;
-	state->m_madam.msysbits = 0x51;
-}
 
 
 READ32_MEMBER(_3do_state::_3do_clio_r)
 {
-	logerror( "%08X: CLIO read offset = %08X\n", machine().device("maincpu")->safe_pc(), offset * 4 );
+	if (!space.debugger_access())
+	{
+		if(offset != 0x200/4 && offset != 0x40/4 && offset != 0x44/4 && offset != 0x48/4 && offset != 0x4c/4 &&
+			offset != 0x118/4 && offset != 0x11c/4)
+		logerror( "%08X: CLIO read offset = %08X\n", machine().device("maincpu")->safe_pc(), offset * 4 );
+	}
+
+	/* TODO: for debug, to be removed once that we write the CPU core */
+	if(offset >= 0x3800/4 && offset <= 0x39ff/4)
+	{
+		UINT32 res = 0;
+		offset &= (0xff/4);
+		res = (m_dspp.EO[(offset<<1)+0] << 16);
+		res |= (m_dspp.EO[(offset<<1)+1] & 0xffff);
+		return res;
+	}
+
+	if(offset >= 0x3c00/4 && offset <= 0x3fff/4)
+	{
+		UINT16 res;
+		offset &= (0x1ff/4);
+		res = m_dspp.EO[offset] & 0xffff;
+		return res;
+	}
 
 	switch( offset )
 	{
@@ -579,6 +694,18 @@ READ32_MEMBER(_3do_state::_3do_clio_r)
 		return m_clio.seed;
 	case 0x003c/4:
 		return m_clio.random;
+	case 0x0040/4:
+	case 0x0044/4:
+		return m_clio.irq0;
+	case 0x0048/4:
+	case 0x004c/4:
+		return m_clio.irq0_enable;
+	case 0x0060/4:
+	case 0x0064/4:
+		return m_clio.irq1;
+	case 0x0068/4:
+	case 0x006c/4:
+		return m_clio.irq1_enable;
 	case 0x0080/4:
 		return m_clio.hdelay;
 	case 0x0084/4:
@@ -586,79 +713,23 @@ READ32_MEMBER(_3do_state::_3do_clio_r)
 	case 0x0088/4:
 		return m_clio.adbctl;
 
-	case 0x0100/4:
-		return m_clio.timer0;
-	case 0x0104/4:
-		return m_clio.timerback0;
-	case 0x0108/4:
-		return m_clio.timer1;
-	case 0x010c/4:
-		return m_clio.timerback1;
-	case 0x0110/4:
-		return m_clio.timer2;
-	case 0x0114/4:
-		return m_clio.timerback2;
-	case 0x0118/4:
-		return m_clio.timer3;
-	case 0x011c/4:
-		return m_clio.timerback3;
-	case 0x0120/4:
-		return m_clio.timer4;
-	case 0x0124/4:
-		return m_clio.timerback4;
-	case 0x0128/4:
-		return m_clio.timer5;
-	case 0x012c/4:
-		return m_clio.timerback5;
-	case 0x0130/4:
-		return m_clio.timer6;
-	case 0x0134/4:
-		return m_clio.timerback6;
-	case 0x0138/4:
-		return m_clio.timer7;
-	case 0x013c/4:
-		return m_clio.timerback7;
-	case 0x0140/4:
-		return m_clio.timer8;
-	case 0x0144/4:
-		return m_clio.timerback8;
-	case 0x0148/4:
-		return m_clio.timer9;
-	case 0x014c/4:
-		return m_clio.timerback9;
-	case 0x0150/4:
-		return m_clio.timer10;
-	case 0x0154/4:
-		return m_clio.timerback10;
-	case 0x0158/4:
-		return m_clio.timer11;
-	case 0x015c/4:
-		return m_clio.timerback11;
-	case 0x0160/4:
-		return m_clio.timer12;
-	case 0x0164/4:
-		return m_clio.timerback12;
-	case 0x0168/4:
-		return m_clio.timer13;
-	case 0x016c/4:
-		return m_clio.timerback13;
-	case 0x0170/4:
-		return m_clio.timer14;
-	case 0x0174/4:
-		return m_clio.timerback14;
-	case 0x0178/4:
-		return m_clio.timer15;
-	case 0x017c/4:
-		return m_clio.timerback15;
+	case 0x0100/4:  case 0x0108/4:  case 0x0110/4:  case 0x0118/4:
+	case 0x0120/4:  case 0x0128/4:  case 0x0130/4:  case 0x0138/4:
+	case 0x0140/4:  case 0x0148/4:  case 0x0150/4:  case 0x0158/4:
+	case 0x0160/4:  case 0x0168/4:  case 0x0170/4:  case 0x0178/4:
+		return m_clio.timer_count[((offset & 0x3f) >> 1)+0];
+	case 0x0104/4:  case 0x010c/4:  case 0x0114/4:  case 0x011c/4:
+	case 0x0124/4:  case 0x012c/4:  case 0x0134/4:  case 0x013c/4:
+	case 0x0144/4:  case 0x014c/4:  case 0x0154/4:  case 0x015c/4:
+	case 0x0164/4:  case 0x016c/4:  case 0x0174/4:  case 0x017c/4:
+		return m_clio.timer_backup[((offset & 0x3f) >> 1)];
 
 	case 0x0200/4:
-		return m_clio.settm0;
 	case 0x0204/4:
-		return m_clio.clrtm0;
+		return m_clio.timer_ctrl;
 	case 0x0208/4:
-		return m_clio.settm1;
 	case 0x020c/4:
-		return m_clio.clrtm1;
+		return m_clio.timer_ctrl >> 32;
 
 	case 0x0220/4:
 		return m_clio.slack;
@@ -693,6 +764,7 @@ READ32_MEMBER(_3do_state::_3do_clio_r)
 		return m_clio.uncle_rom;
 
 	default:
+	if (!space.debugger_access())
 		logerror( "%08X: unhandled CLIO read offset = %08X\n", machine().device("maincpu")->safe_pc(), offset * 4 );
 		break;
 	}
@@ -701,7 +773,40 @@ READ32_MEMBER(_3do_state::_3do_clio_r)
 
 WRITE32_MEMBER(_3do_state::_3do_clio_w)
 {
-	logerror( "%08X: CLIO write offset = %08X, data = %08X, mask = %08X\n", machine().device("maincpu")->safe_pc(), offset*4, data, mem_mask );
+	if(offset != 0x200/4 && offset != 0x40/4 && offset != 0x44/4 && offset != 0x48/4 && offset != 0x4c/4 &&
+		offset != 0x118/4 && offset != 0x11c/4)
+		logerror( "%08X: CLIO write offset = %08X, data = %08X, mask = %08X\n", machine().device("maincpu")->safe_pc(), offset*4, data, mem_mask );
+
+	/* TODO: for debug, to be removed once that we write the CPU core */
+	if(offset >= 0x1800/4 && offset <= 0x1fff/4)
+	{
+		offset &= (0x3ff/4);
+		m_dspp.N[(offset<<1)+0] = data >> 16;
+		m_dspp.N[(offset<<1)+1] = data & 0xffff;
+		return;
+	}
+
+	if(offset >= 0x2000/4 && offset <= 0x2fff/4)
+	{
+		offset &= (0x7ff/4);
+		m_dspp.N[offset] = data & 0xffff;
+		return;
+	}
+
+	if(offset >= 0x3000/4 && offset <= 0x31ff/4)
+	{
+		offset &= (0xff/4);
+		m_dspp.EI[(offset<<1)+0] = data >> 16;
+		m_dspp.EI[(offset<<1)+1] = data & 0xffff;
+		return;
+	}
+
+	if(offset >= 0x3400/4 && offset <= 0x37ff/4)
+	{
+		offset &= (0x1ff/4);
+		m_dspp.EI[offset] = data & 0xffff;
+		return;
+	}
 
 	switch( offset )
 	{
@@ -719,13 +824,13 @@ WRITE32_MEMBER(_3do_state::_3do_clio_w)
 	case 0x0020/4:
 		m_clio.audin = data;
 		break;
-	case 0x0024/4:	/* 03400024 - c0020f0f is written here during boot */
+	case 0x0024/4:  /* 03400024 - c0020f0f is written here during boot */
 		m_clio.audout = data;
 		break;
-	case 0x0028/4:	/* 03400028 - bits 0,1, and 6 are tested (reset source) */
+	case 0x0028/4:  /* 03400028 - bits 0,1, and 6 are tested (reset source) */
 		m_clio.cstatbits = data;
 		break;
-	case 0x002c/4:	/* 0340002C - ?? during boot 0000000B is written here counter reload related?? */
+	case 0x002c/4:  /* 0340002C - ?? during boot 0000000B is written here counter reload related?? */
 		m_clio.wdog = data;
 		break;
 	case 0x0030/4:
@@ -738,16 +843,24 @@ WRITE32_MEMBER(_3do_state::_3do_clio_w)
 		m_clio.seed = data;
 		break;
 	case 0x0040/4:
+		LOG(("%08x PEND0\n",data));
 		m_clio.irq0 |= data;
+		m_3do_request_fiq(0,0);
 		break;
 	case 0x0044/4:
+		//LOG(("%08x PEND0 CLEAR\n",data));
 		m_clio.irq0 &= ~data;
+		m_3do_request_fiq(0,0);
 		break;
 	case 0x0048/4:
+		LOG(("%08x MASK0\n",data));
 		m_clio.irq0_enable |= data;
+		m_3do_request_fiq(0,0);
 		break;
 	case 0x004c/4:
+		LOG(("%08x MASK0 CLEAR\n",data));
 		m_clio.irq0_enable &= ~data;
+		m_3do_request_fiq(0,0);
 		break;
 	case 0x0050/4:
 		m_clio.mode |= data;
@@ -762,16 +875,24 @@ WRITE32_MEMBER(_3do_state::_3do_clio_w)
 		m_clio.spare = data;
 		break;
 	case 0x0060/4:
+		LOG(("%08x PEND1\n",data));
 		m_clio.irq1 |= data;
+		m_3do_request_fiq(0,1);
 		break;
 	case 0x0064/4:
+		LOG(("%08x PEND1 CLEAR\n",data));
 		m_clio.irq1 &= ~data;
+		m_3do_request_fiq(0,1);
 		break;
 	case 0x0068/4:
+		LOG(("%08x MASK1\n",data));
 		m_clio.irq1_enable |= data;
+		m_3do_request_fiq(0,1);
 		break;
 	case 0x006c/4:
+		LOG(("%08x MASK1 CLEAR\n",data));
 		m_clio.irq1_enable &= ~data;
+		m_3do_request_fiq(0,1);
 		break;
 	case 0x0080/4:
 		m_clio.hdelay = data;
@@ -783,118 +904,37 @@ WRITE32_MEMBER(_3do_state::_3do_clio_w)
 		m_clio.adbctl = data;
 		break;
 
-	case 0x0100/4:
-		m_clio.timer0 = data & 0x0000ffff;
+	/* only lower 16-bits can be written */
+	case 0x0100/4:  case 0x0108/4:  case 0x0110/4:  case 0x0118/4:
+	case 0x0120/4:  case 0x0128/4:  case 0x0130/4:  case 0x0138/4:
+	case 0x0140/4:  case 0x0148/4:  case 0x0150/4:  case 0x0158/4:
+	case 0x0160/4:  case 0x0168/4:  case 0x0170/4:  case 0x0178/4:
+		m_clio.timer_count[((offset & 0x3f) >> 1)] = data & 0xffff;
 		break;
-	case 0x0104/4:
-		m_clio.timerback0 = data & 0x0000ffff;
-		break;
-	case 0x0108/4:
-		m_clio.timer1 = data & 0x0000ffff;
-		break;
-	case 0x010c/4:
-		m_clio.timerback1 = data & 0x0000ffff;
-		break;
-	case 0x0110/4:
-		m_clio.timer2 = data & 0x0000ffff;
-		break;
-	case 0x0114/4:
-		m_clio.timerback2 = data & 0x0000ffff;
-		break;
-	case 0x0118/4:
-		m_clio.timer3 = data & 0x0000ffff;
-		break;
-	case 0x011c/4:
-		m_clio.timerback3 = data & 0x0000ffff;
-		break;
-	case 0x0120/4:
-		m_clio.timer4 = data & 0x0000ffff;
-		break;
-	case 0x0124/4:
-		m_clio.timerback4 = data & 0x0000ffff;
-		break;
-	case 0x0128/4:
-		m_clio.timer5 = data & 0x0000ffff;
-		break;
-	case 0x012c/4:
-		m_clio.timerback5 = data & 0x0000ffff;
-		break;
-	case 0x0130/4:
-		m_clio.timer6 = data & 0x0000ffff;
-		break;
-	case 0x0134/4:
-		m_clio.timerback6 = data & 0x0000ffff;
-		break;
-	case 0x0138/4:
-		m_clio.timer7 = data & 0x0000ffff;
-		break;
-	case 0x013c/4:
-		m_clio.timerback7 = data & 0x0000ffff;
-		break;
-	case 0x0140/4:
-		m_clio.timer8 = data & 0x0000ffff;
-		break;
-	case 0x0144/4:
-		m_clio.timerback8 = data & 0x0000ffff;
-		break;
-	case 0x0148/4:
-		m_clio.timer9 = data & 0x0000ffff;
-		break;
-	case 0x014c/4:
-		m_clio.timerback9 = data & 0x0000ffff;
-		break;
-	case 0x0150/4:
-		m_clio.timer10 = data & 0x0000ffff;
-		break;
-	case 0x0154/4:
-		m_clio.timerback10 = data & 0x0000ffff;
-		break;
-	case 0x0158/4:
-		m_clio.timer11 = data & 0x0000ffff;
-		break;
-	case 0x015c/4:
-		m_clio.timerback11 = data & 0x0000ffff;
-		break;
-	case 0x0160/4:
-		m_clio.timer12 = data & 0x0000ffff;
-		break;
-	case 0x0164/4:
-		m_clio.timerback12 = data & 0x0000ffff;
-		break;
-	case 0x0168/4:
-		m_clio.timer13 = data & 0x0000ffff;
-		break;
-	case 0x016c/4:
-		m_clio.timerback13 = data & 0x0000ffff;
-		break;
-	case 0x0170/4:
-		m_clio.timer14 = data & 0x0000ffff;
-		break;
-	case 0x0174/4:
-		m_clio.timerback14 = data & 0x0000ffff;
-		break;
-	case 0x0178/4:
-		m_clio.timer15 = data & 0x0000ffff;
-		break;
-	case 0x017c/4:
-		m_clio.timerback15 = data & 0x0000ffff;
+	case 0x0104/4:  case 0x010c/4:  case 0x0114/4:  case 0x011c/4:
+	case 0x0124/4:  case 0x012c/4:  case 0x0134/4:  case 0x013c/4:
+	case 0x0144/4:  case 0x014c/4:  case 0x0154/4:  case 0x015c/4:
+	case 0x0164/4:  case 0x016c/4:  case 0x0174/4:  case 0x017c/4:
+		m_clio.timer_backup[((offset & 0x3f) >> 1)] = data & 0xffff;
 		break;
 
 	case 0x0200/4:
-		m_clio.settm0 = data;
+		m_clio.timer_ctrl |= (UINT64)data;
 		break;
 	case 0x0204/4:
-		m_clio.clrtm0 = data;
+		m_clio.timer_ctrl &= ~(UINT64)data;
 		break;
 	case 0x0208/4:
-		m_clio.settm0 = data;
+		m_clio.timer_ctrl |= ((UINT64)data << 32);
 		break;
 	case 0x020c/4:
+		m_clio.timer_ctrl &= ~((UINT64)data << 32);
 		break;
 
 	case 0x0220/4:
 		m_clio.slack = data & 0x000003ff;
 		break;
+
 
 	case 0x0308/4:
 		m_clio.dmareqdis = data;
@@ -936,6 +976,24 @@ WRITE32_MEMBER(_3do_state::_3do_clio_w)
 		m_clio.poll = ( m_clio.poll & 0xf8 ) | ( data & 0x07 );
 		break;
 
+	// DSPP operation
+	/*
+	---- x--- DSPPError
+	---- -x-- DSPPReset
+	---- --x- DSPPSleep
+	---- ---x DSPPGW
+	(Red revision)
+	---x ---- DSPPError
+	---- x--- DSPPReset
+	---- -x-- DSPPSleep
+	---- --x- DSPPGW-Step
+	---- ---x DSPPGW
+	*/
+	case 0x17fc/4:
+		/* TODO: DSPP enabled just before enabling DSPP irq! */
+		//printf("%08x\n",data);
+		break;
+
 	case 0xc000/4:
 	case 0xc004/4:
 	case 0xc00c/4:
@@ -951,64 +1009,58 @@ WRITE32_MEMBER(_3do_state::_3do_clio_w)
 }
 
 
-void _3do_clio_init( running_machine &machine, screen_device *screen )
-{
-	_3do_state *state = machine.driver_data<_3do_state>();
-	memset( &state->m_clio, 0, sizeof(CLIO) );
-	state->m_clio.screen = screen;
-	state->m_clio.revision = 0x02022000 /* 0x04000000 */;
-	state->m_clio.cstatbits = 0x01;	/* bit 0 = reset of clio caused by power on */
-	state->m_clio.unclerev = 0x03800000;
-	state->m_clio.expctl = 0x80;	/* ARM has the expansion bus */
-}
-
-
 /* 9 -> 5 bits translation */
 
 VIDEO_START_MEMBER(_3do_state,_3do)
 {
 	/* We only keep the odd bits and get rid of the even bits */
-	for ( int i = 0; i < 512; i++ )
-	{
-		m_video_bits[i] = ( i & 1 ) | ( ( i & 4 ) >> 1 ) | ( ( i & 0x10 ) >> 2 ) | ( ( i & 0x40 ) >> 3 ) | ( ( i & 0x100 ) >> 4 );
-	}
+//  for ( int i = 0; i < 512; i++ )
+//  {
+//      m_video_bits[i] = ( i & 1 ) | ( ( i & 4 ) >> 1 ) | ( ( i & 0x10 ) >> 2 ) | ( ( i & 0x40 ) >> 3 ) | ( ( i & 0x100 ) >> 4 );
+//  }
 }
 
 
-/* This is incorrect! Just testing stuff */
 UINT32 _3do_state::screen_update__3do(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	UINT32 *source_p = m_vram + 0x1c0000 / 4;
 
-	for ( int i = 0; i < 120; i++ )
+	for ( int y = 0; y < 120; y++ )
 	{
-		UINT32	*dest_p0 = &bitmap.pix32(22 + i * 2, 254 );
-		UINT32	*dest_p1 = &bitmap.pix32(22 + i * 2 + 1, 254 );
+		UINT32  *dest_p0 = &bitmap.pix32(22 + y * 2, 254 );
+		UINT32  *dest_p1 = &bitmap.pix32(22 + y * 2 + 1, 254 );
 
-		for ( int j = 0; j < 320; j++ )
+		for ( int x = 0; x < 320; x++ )
 		{
-			/* Odd numbered bits go to lower half, even numbered bits to upper half */
-			UINT32 lower = *source_p & 0x55555555;
-			UINT32 upper = ( *source_p >> 1 ) & 0x55555555;
-			UINT32 rgb = 0;
+			/* Every dword contains two pixels, upper word is top pixel, lower is bottom. */
+			UINT32 lower = *source_p & 0xffff;
+			UINT32 upper = ( *source_p >> 16 ) & 0xffff;
+			int r, g, b;
 
-			rgb = ( ( m_video_bits[upper & 0x1ff] << 3 ) << 8 );
-			rgb |= ( ( m_video_bits[ ( upper >> 10 ) & 0x1ff ] << 3 ) << 0 );
-			rgb |= ( ( m_video_bits[ ( upper >> 20 ) & 0x1ff ] << 3 ) << 16 );
+			/* Format is RGB555 */
+			r = (upper & 0x7c00) >> 10;
+			g = (upper & 0x03e0) >> 5;
+			b = (upper & 0x001f) >> 0;
+			r = (r << 3) | (r & 7);
+			g = (g << 3) | (g & 7);
+			b = (b << 3) | (b & 7);
 
-			dest_p0[0] = rgb;
-			dest_p0[1] = rgb;
-			dest_p0[2] = rgb;
-			dest_p0[3] = rgb;
+			dest_p0[0] = r << 16 | g << 8 | b;
+			dest_p0[1] = r << 16 | g << 8 | b;
+			dest_p0[2] = r << 16 | g << 8 | b;
+			dest_p0[3] = r << 16 | g << 8 | b;
 
-			rgb = ( ( m_video_bits[lower & 0x1ff] << 3 ) << 8 );
-			rgb |= ( ( m_video_bits[ ( lower >> 10 ) & 0x1ff ] << 3 ) << 0 );
-			rgb |= ( ( m_video_bits[ ( lower >> 20 ) & 0x1ff ] << 3 ) << 16 );
+			r = (lower & 0x7c00) >> 10;
+			g = (lower & 0x03e0) >> 5;
+			b = (lower & 0x001f) >> 0;
+			r = (r << 3) | (r & 7);
+			g = (g << 3) | (g & 7);
+			b = (b << 3) | (b & 7);
 
-			dest_p1[0] = rgb;
-			dest_p1[1] = rgb;
-			dest_p1[2] = rgb;
-			dest_p1[3] = rgb;
+			dest_p1[0] = r << 16 | g << 8 | b;
+			dest_p1[1] = r << 16 | g << 8 | b;
+			dest_p1[2] = r << 16 | g << 8 | b;
+			dest_p1[3] = r << 16 | g << 8 | b;
 
 			source_p++;
 			dest_p0 += 4;
@@ -1019,3 +1071,37 @@ UINT32 _3do_state::screen_update__3do(screen_device &screen, bitmap_rgb32 &bitma
 	return 0;
 }
 
+/*
+ *
+ * Machine Inits
+ *
+ */
+
+void _3do_state::m_3do_madam_init( void )
+{
+	memset( &m_madam, 0, sizeof(MADAM) );
+	m_madam.revision = 0x01020000;
+	m_madam.msysbits = 0x51;
+}
+
+void _3do_state::m_3do_slow2_init( void )
+{
+	m_slow2.cg_input = 0;
+	m_slow2.cg_output = 0x00000005 - 1;
+}
+
+void _3do_state::m_3do_clio_init( screen_device *screen )
+{
+	memset( &m_clio, 0, sizeof(CLIO) );
+	m_clio.screen = screen;
+	m_clio.revision = 0x02022000 /* 0x04000000 */;
+	m_clio.unclerev = 0x03800000;
+	m_clio.expctl = 0x80;    /* ARM has the expansion bus */
+	m_dspp.N = auto_alloc_array(machine(), UINT16, 0x800 );
+	m_dspp.EI = auto_alloc_array(machine(), UINT16, 0x200 );
+	m_dspp.EO = auto_alloc_array(machine(), UINT16, 0x200 );
+
+	state_save_register_global_pointer(machine(), m_dspp.N, 0x800);
+	state_save_register_global_pointer(machine(), m_dspp.EI, 0x200);
+	state_save_register_global_pointer(machine(), m_dspp.EO, 0x200);
+}

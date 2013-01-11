@@ -28,15 +28,15 @@ public:
 	required_shared_ptr<UINT8> m_spriteram;
 	required_shared_ptr<UINT8> m_back_color;
 	optional_shared_ptr<UINT8> m_chip_data;
-	optional_shared_ptr<UINT8> m_bitmap_ram;	/* 0x2000 bytes for a 256 x 256 x 1 bitmap */
+	optional_shared_ptr<UINT8> m_bitmap_ram;    /* 0x2000 bytes for a 256 x 256 x 1 bitmap */
 	optional_shared_ptr<UINT8> m_last_colors;
 	optional_shared_ptr<UINT8> m_track_scroll;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
 	tilemap_t  *m_track_tilemap;
-	UINT8    m_gfxbank;		/* used by lasso, chameleo, wwjgtin and pinbo */
-	UINT8    m_track_enable;	/* used by wwjgtin */
+	UINT8    m_gfxbank;     /* used by lasso, chameleo, wwjgtin and pinbo */
+	UINT8    m_track_enable;    /* used by wwjgtin */
 
 	/* devices */
 	cpu_device *m_maincpu;
@@ -44,7 +44,6 @@ public:
 	optional_device<sn76489_device> m_sn_1;
 	optional_device<sn76489_device> m_sn_2;
 	DECLARE_WRITE8_MEMBER(sound_command_w);
-	DECLARE_WRITE8_MEMBER(pinbo_sound_command_w);
 	DECLARE_READ8_MEMBER(sound_status_r);
 	DECLARE_WRITE8_MEMBER(sound_select_w);
 	DECLARE_WRITE8_MEMBER(lasso_videoram_w);

@@ -29,7 +29,7 @@
     CONSTANTS
 ***************************************************************************/
 
-#define TEMPBUFFER_MAX_SIZE		(1024 * 1024 * 1024)
+#define TEMPBUFFER_MAX_SIZE     (1024 * 1024 * 1024)
 
 
 
@@ -45,7 +45,7 @@ class open_chd
 public:
 	open_chd(const char *region)
 		: m_next(NULL),
-		  m_region(region) { }
+			m_region(region) { }
 
 	open_chd *next() const { return m_next; }
 	const char *region() const { return m_region; }
@@ -54,10 +54,10 @@ public:
 	chd_file &diff_chd() { return m_diffchd; }
 
 private:
-	open_chd *			m_next;					/* pointer to next in the list */
-	astring				m_region;				/* disk region we came from */
-	chd_file			m_origchd;				/* handle to the original CHD */
-	chd_file			m_diffchd;				/* handle to the diff CHD */
+	open_chd *          m_next;                 /* pointer to next in the list */
+	astring             m_region;               /* disk region we came from */
+	chd_file            m_origchd;              /* handle to the original CHD */
+	chd_file            m_diffchd;              /* handle to the diff CHD */
 };
 
 
@@ -65,27 +65,27 @@ struct romload_private
 {
 	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
 
-	running_machine *m_machine;			/* machine object where needed */
+	running_machine *m_machine;         /* machine object where needed */
 
-	int				warnings;			/* warning count during processing */
-	int				knownbad;			/* BAD_DUMP/NO_DUMP count during processing */
-	int				errors;				/* error count during processing */
+	int             warnings;           /* warning count during processing */
+	int             knownbad;           /* BAD_DUMP/NO_DUMP count during processing */
+	int             errors;             /* error count during processing */
 
-	int				romsloaded;			/* current ROMs loaded count */
-	int				romstotal;			/* total number of ROMs to read */
-	UINT32			romsloadedsize;		/* total size of ROMs loaded so far */
-	UINT32			romstotalsize;		/* total size of ROMs to read */
+	int             romsloaded;         /* current ROMs loaded count */
+	int             romstotal;          /* total number of ROMs to read */
+	UINT32          romsloadedsize;     /* total size of ROMs loaded so far */
+	UINT32          romstotalsize;      /* total size of ROMs to read */
 
-	emu_file *		file;				/* current file */
+	emu_file *      file;               /* current file */
 #ifdef USE_IPS
-	void *			patch;				/* current ips */
+	void *          patch;              /* current ips */
 #endif /* USE_IPS */
-	simple_list<open_chd> chd_list;		/* disks */
+	simple_list<open_chd> chd_list;     /* disks */
 
-	memory_region *	region;				/* info about current region */
+	memory_region * region;             /* info about current region */
 
-	astring			errorstring;		/* error string */
-	astring			softwarningstring;	/* software warning string */
+	astring         errorstring;        /* error string */
+	astring         softwarningstring;  /* software warning string */
 };
 #endif
 
@@ -577,9 +577,9 @@ static int open_rom_file(romload_private *romdata, const char *regiontag, const 
 	bool has_crc = hash_collection(ROM_GETHASHDATA(romp)).crc(crc);
 
 	/* attempt reading up the chain through the parents. It automatically also
-     attempts any kind of load by checksum supported by the archives. */
+	 attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
-	for (int drv = driver_list::find(romdata->machine().system()); romdata->file == NULL && drv != -1; drv = driver_list::clone(drv)){
+	for (int drv = driver_list::find(romdata->machine().system()); romdata->file == NULL && drv != -1; drv = driver_list::clone(drv)) {
 		if(tried_file_names.len() != 0)
 			tried_file_names += " ";
 		tried_file_names += driver_list::driver(drv).name;
@@ -977,7 +977,7 @@ static void process_rom_entries(romload_private *romdata, const char *regiontag,
 		}
 		else
 		{
-			romp++;	/* something else; skip */
+			romp++; /* something else; skip */
 		}
 	}
 }
@@ -1070,7 +1070,7 @@ int open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_
 			// only for CHD we also try to load from list/
 			if ((filerr != FILERR_NONE) && (tag1.cstr() != NULL))
 			{
-				tag1.del(tag1.len() - 1, 1);	// remove the PATH_SEPARATOR
+				tag1.del(tag1.len() - 1, 1);    // remove the PATH_SEPARATOR
 				filerr = common_process_file(options, tag1.cstr(), ".chd", romp, image_file);
 			}
 		}
@@ -1501,14 +1501,14 @@ void rom_init(running_machine &machine)
 
 	/* figure out which BIOS we are using */
 	device_iterator deviter(romdata->machine().config().root_device());
-	for (device_t *device = deviter.first(); device != NULL; device = deviter.next()) {	
+	for (device_t *device = deviter.first(); device != NULL; device = deviter.next()) {
 		if (device->rom_region()) {
 			const char *specbios;
 			astring temp;
 			if (strcmp(device->tag(),":")==0) {
 				specbios = romdata->machine().options().bios();
 			} else {
-				specbios = romdata->machine().options().sub_value(temp,device->owner()->tag()+1,"bios");				
+				specbios = romdata->machine().options().sub_value(temp,device->owner()->tag()+1,"bios");
 			}
 			determine_bios_rom(romdata, device, specbios);
 		}
@@ -1589,4 +1589,3 @@ int rom_load_knownbad(running_machine &machine)
 {
 	return machine.romload_data->knownbad;
 }
-

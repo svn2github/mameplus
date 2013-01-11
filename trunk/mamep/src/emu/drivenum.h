@@ -90,11 +90,11 @@ protected:
 	static int penalty_compare(const char *source, const char *target);
 
 	// internal state
-	static int							s_driver_count;
+	static int                          s_driver_count;
 #ifdef DRIVER_SWITCH
-	static const game_driver *			s_drivers_sorted[];
+	static const game_driver *          s_drivers_sorted[];
 #else
-	static const game_driver * const	s_drivers_sorted[];
+	static const game_driver * const    s_drivers_sorted[];
 #endif /* DRIVER_SWITCH */
 };
 
@@ -170,19 +170,19 @@ private:
 
 	private:
 		// internal state
-		config_entry *		m_next;
-		machine_config *	m_config;
-		int					m_index;
+		config_entry *      m_next;
+		machine_config *    m_config;
+		int                 m_index;
 	};
 
 	static const int CONFIG_CACHE_COUNT = 100;
 
 	// internal state
-	int					m_current;
-	int					m_filtered_count;
-	emu_options &		m_options;
-	UINT8 *				m_included;
-	machine_config **	m_config;
+	int                 m_current;
+	int                 m_filtered_count;
+	emu_options &       m_options;
+	UINT8 *             m_included;
+	machine_config **   m_config;
 	mutable simple_list<config_entry> m_config_cache;
 };
 

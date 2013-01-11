@@ -37,10 +37,10 @@
 
 
 
-#define VECTOR_WIDTH_DENOM			512
+#define VECTOR_WIDTH_DENOM          512
 
 
-#define MAX_POINTS	10000
+#define MAX_POINTS  10000
 
 #define VECTOR_TEAM \
 	"-* Vector Heads *-\n" \
@@ -57,19 +57,19 @@
 
 #if 0
 
-#define TEXTURE_LENGTH_BUCKETS		32
-#define TEXTURE_INTENSITY_BUCKETS	4
-#define TEXTURE_WIDTH				16
+#define TEXTURE_LENGTH_BUCKETS      32
+#define TEXTURE_INTENSITY_BUCKETS   4
+#define TEXTURE_WIDTH               16
 
-#define MAX_INTENSITY				2
-#define VECTOR_BLEED				(0.25f)
-#define VECTOR_INT_SCALE			(255.0f * 1.5f)
+#define MAX_INTENSITY               2
+#define VECTOR_BLEED                (0.25f)
+#define VECTOR_INT_SCALE            (255.0f * 1.5f)
 
 
 struct vector_texture
 {
-	render_texture *	texture;
-	bitmap_argb32 *		bitmap;
+	render_texture *    texture;
+	bitmap_argb32 *     bitmap;
 };
 
 static vector_texture *vectortex[TEXTURE_INTENSITY_BUCKETS][TEXTURE_LENGTH_BUCKETS];
@@ -255,7 +255,7 @@ void vector_clear_list (void)
 
 SCREEN_UPDATE_RGB32( vector )
 {
-	UINT32 flags = PRIMFLAG_ANTIALIAS(screen.machine().options().antialias() ? 1 : 0) | PRIMFLAG_BLENDMODE(BLENDMODE_ADD);
+	UINT32 flags = PRIMFLAG_ANTIALIAS(screen.machine().options().antialias() ? 1 : 0) | PRIMFLAG_BLENDMODE(BLENDMODE_ADD) | PRIMFLAG_VECTOR(1);
 	const rectangle &visarea = screen.visible_area();
 	float xscale = 1.0f / (65536 * visarea.width());
 	float yscale = 1.0f / (65536 * visarea.height());
@@ -269,7 +269,7 @@ SCREEN_UPDATE_RGB32( vector )
 	curpoint = vector_list;
 
 	screen.container().empty();
-	screen.container().add_rect(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0x00,0x00,0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	screen.container().add_rect(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0x00,0x00,0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA) | PRIMFLAG_VECTORBUF(1));
 
 	clip.x0 = clip.y0 = 0.0f;
 	clip.x1 = clip.y1 = 1.0f;

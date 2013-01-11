@@ -21,8 +21,8 @@ static int eolith_scanline = 0;
 void eolith_speedup_read(address_space &space)
 {
 	/* for debug */
-  //if ((space.device().safe_pc()!=eolith_speedup_address) && (eolith_vblank!=1) )
-  //    printf("%s:eolith speedup_read data %02x\n",space.machine().describe_context(), eolith_vblank);
+	//if ((space.device().safe_pc()!=eolith_speedup_address) && (eolith_vblank!=1) )
+	//    printf("%s:eolith speedup_read data %02x\n",space.machine().describe_context(), eolith_vblank);
 
 	if (eolith_vblank==0 && eolith_scanline < eolith_speedup_resume_scanline)
 	{
@@ -59,6 +59,7 @@ static const struct
 	{ "fort2b",   0x000081e0, -1, 240 },
 	{ "fort2ba",  0x000081e0, -1, 240 },
 	{ "penfan",   0x4001FA66, -1, 240 },
+	{ "penfana",  0x4001FAb6, -1, 240 },
 	{ "candy",    0x4001990C, -1, 240 },
 	/* eolith16.c */
 	{ "klondkp",  0x0001a046, -1, 240 },

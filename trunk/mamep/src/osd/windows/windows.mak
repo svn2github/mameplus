@@ -51,6 +51,9 @@
 # uncomment next line to enable a build using Microsoft tools
 # MSVC_BUILD = 1
 
+# uncomment next line to enable code analysis using Microsoft tools
+# MSVC_ANALYSIS = 1
+
 # uncomment next line to use cygwin compiler
 # CYGWIN_BUILD = 1
 
@@ -59,7 +62,6 @@
 
 # set this to the minimum DirectInput version to support (7 or 8)
 # DIRECTINPUT = 8
-
 
 
 ###########################################################################
@@ -96,7 +98,7 @@ RCFLAGS = -O coff -I $(WINSRC) -I $(WINOBJ)
 
 ifdef CYGWIN_BUILD
 CCOMFLAGS += -mno-cygwin
-LDFLAGS	+= -mno-cygwin
+LDFLAGS += -mno-cygwin
 endif
 
 
@@ -145,6 +147,10 @@ ifeq ($(OPTIMIZE),0)
 CCOMFLAGS += /RTC1
 endif
 
+ifdef MSVC_ANALYSIS
+CCOMFLAGS += /analyze /wd6011 /wd6328 /wd6204 /wd6244 /wd6385 /wd6308 /wd6246 /wd6031 /wd6326 /analyze:stacksize384112
+endif
+
 # enable exception handling for C++
 CPPONLYFLAGS += /EHsc
 
@@ -173,7 +179,7 @@ CCOMFLAGS += /wd4350
 LDFLAGS += /ENTRY:wmainCRTStartup
 
 # add some VC++-specific defines
-DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -Dsnprintf=_snprintf
+DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -Dsnprintf=_snprintf -DWIN32
 
 OSDCLEAN = msvcclean
 
@@ -273,8 +279,8 @@ LIBS += -lcomdlg32
 #-------------------------------------------------
 
 OSDCOREOBJS = \
-	$(WINOBJ)/main.o	\
-	$(WINOBJ)/strconv.o	\
+	$(WINOBJ)/main.o    \
+	$(WINOBJ)/strconv.o \
 	$(WINOBJ)/windir.o \
 	$(WINOBJ)/winfile.o \
 	$(WINOBJ)/winmisc.o \
@@ -285,8 +291,8 @@ OSDCOREOBJS = \
 	$(WINOBJ)/winclip.o \
 	$(WINOBJ)/winsocket.o \
 	$(WINOBJ)/winwork.o \
-	$(WINOBJ)/winptty.o
-
+	$(WINOBJ)/winptty.o \
+	$(WINOBJ)/winmidi.o
 
 
 #-------------------------------------------------
@@ -308,6 +314,7 @@ OSDOBJS = \
 	$(WINOBJ)/winmenu.o \
 	$(WINOBJ)/winmain.o
 
+
 ifdef USE_NETWORK
 OSDOBJS += \
 	$(WINOBJ)/netdev.o \
@@ -321,8 +328,9 @@ OSDOBJS += $(WINOBJ)/d3d8intf.o
 endif
 
 # extra dependencies
-$(WINOBJ)/drawdd.o :	$(SRC)/emu/rendersw.c
-$(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
+$(WINOBJ)/drawdd.o :    $(SRC)/emu/rendersw.c
+$(WINOBJ)/drawgdi.o :   $(SRC)/emu/rendersw.c
+$(WINOBJ)/winmidi.o:    $(SRC)/osd/portmedia/pmmidi.c
 
 # add debug-specific files
 OSDOBJS += \

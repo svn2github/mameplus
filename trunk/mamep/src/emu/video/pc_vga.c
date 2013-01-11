@@ -26,9 +26,10 @@
     per-game issues:
     - The Incredible Machine: fix partial updates
     - MAME 0.01: fix 92 Hz refresh rate bug (uses VESA register?).
-    - Alien Breed, Bio Menace: jerky H scrolling (uses VGA/EGA mode with pel shift)
     - Virtual Pool: ET4k unrecognized;
     - California Chase (calchase): various gfx bugs, CPU related?
+    - Jazz Jackrabbit: status bar is very jerky, but main screen scrolling is fine?
+    - Catacombs: weird resolution (untested)
 
     ROM declarations:
 
@@ -102,10 +103,10 @@ enum
 
 ***************************************************************************/
 
-#define LOG_ACCESSES	0
-#define LOG_REGISTERS	0
+#define LOG_ACCESSES    0
+#define LOG_REGISTERS   0
 
-#define LOG_8514		1
+#define LOG_8514        1
 
 /***************************************************************************
 
@@ -124,62 +125,62 @@ const device_type IBM8514A = &device_creator<ibm8514a_device>;
 const device_type MACH8 = &device_creator<mach8_device>;
 
 vga_device::vga_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
-    : device_t(mconfig, type, name, tag, owner, clock)
+	: device_t(mconfig, type, name, tag, owner, clock)
 {
 }
 
 vga_device::vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : device_t(mconfig, VGA, "VGA", tag, owner, clock)
+	: device_t(mconfig, VGA, "VGA", tag, owner, clock)
 {
 }
 
 svga_device::svga_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
-    : vga_device(mconfig, type, name, tag, owner, clock)
+	: vga_device(mconfig, type, name, tag, owner, clock)
 {
 }
 
 tseng_vga_device::tseng_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : svga_device(mconfig, TSENG_VGA, "TSENG_VGA", tag, owner, clock)
+	: svga_device(mconfig, TSENG_VGA, "TSENG_VGA", tag, owner, clock)
 {
 }
 
 trident_vga_device::trident_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : svga_device(mconfig, TRIDENT_VGA, "TRIDENT_VGA", tag, owner, clock)
+	: svga_device(mconfig, TRIDENT_VGA, "TRIDENT_VGA", tag, owner, clock)
 {
 }
 
 s3_vga_device::s3_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : ati_vga_device(mconfig, S3_VGA, "S3_VGA", tag, owner, clock)
+	: ati_vga_device(mconfig, S3_VGA, "S3_VGA", tag, owner, clock)
 {
 }
 
 gamtor_vga_device::gamtor_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : svga_device(mconfig, GAMTOR_VGA, "GAMTOR_VGA", tag, owner, clock)
+	: svga_device(mconfig, GAMTOR_VGA, "GAMTOR_VGA", tag, owner, clock)
 {
 }
 
 ati_vga_device::ati_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : svga_device(mconfig, ATI_VGA, "ATI_VGA", tag, owner, clock)
+	: svga_device(mconfig, ATI_VGA, "ATI_VGA", tag, owner, clock)
 {
 }
 
 ati_vga_device::ati_vga_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
-    : svga_device(mconfig, type, name, tag, owner, clock)
+	: svga_device(mconfig, type, name, tag, owner, clock)
 {
 }
 
 cirrus_vga_device::cirrus_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : svga_device(mconfig, CIRRUS_VGA, "CIRRUS_VGA", tag, owner, clock)
+	: svga_device(mconfig, CIRRUS_VGA, "CIRRUS_VGA", tag, owner, clock)
 {
 }
 
 ibm8514a_device::ibm8514a_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : device_t(mconfig, IBM8514A, "IBM8514A", tag, owner, clock)
+	: device_t(mconfig, IBM8514A, "IBM8514A", tag, owner, clock)
 {
 }
 
 ibm8514a_device::ibm8514a_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
-    : device_t(mconfig, type, name, tag, owner, clock)
+	: device_t(mconfig, type, name, tag, owner, clock)
 {
 }
 
@@ -191,6 +192,14 @@ mach8_device::mach8_device(const machine_config &mconfig, device_type type, cons
 mach8_device::mach8_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: ibm8514a_device(mconfig, MACH8, "MACH8", tag, owner, clock)
 {
+}
+
+
+/* VBLANK callback, start address definitely updates AT vblank, not before. */
+TIMER_CALLBACK_MEMBER(vga_device::vblank_timer_cb)
+{
+	vga.crtc.start_addr = vga.crtc.start_addr_latch;
+	m_vblank_timer->adjust( machine().primary_screen->time_until_pos(vga.crtc.vert_blank_start) );
 }
 
 void vga_device::device_start()
@@ -211,7 +220,9 @@ void vga_device::device_start()
 	vga.svga_intf.seq_regcount = 0x05;
 	vga.svga_intf.crtc_regcount = 0x19;
 
-	vga.memory	= auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
+	vga.memory  = auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
+
+	m_vblank_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(vga_device::vblank_timer_cb),this));
 }
 
 void svga_device::device_start()
@@ -232,14 +243,15 @@ void cirrus_vga_device::device_start()
 	// Avoid an infinite loop when displaying.  0 is not possible anyway.
 	vga.crtc.maximum_scan_line = 1;
 
-
 	// copy over interfaces
 	vga.read_dipswitch = read8_delegate(); //read_dipswitch;
 	vga.svga_intf.vram_size = 0x200000;
 	vga.svga_intf.seq_regcount = 0x08;
 	vga.svga_intf.crtc_regcount = 0x19;
 
-	vga.memory	= auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
+	vga.memory  = auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
+
+	m_vblank_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(vga_device::vblank_timer_cb),this));
 }
 
 void ati_vga_device::device_start()
@@ -305,7 +317,7 @@ void vga_device::vga_vh_text(bitmap_rgb32 &bitmap, const rectangle &cliprect)
 		vga.cursor.visible = 0;
 
 	for (addr = vga.crtc.start_addr, line = -vga.crtc.preset_row_scan; line < TEXT_LINES;
-		 line += height, addr += TEXT_LINE_LENGTH)
+			line += height, addr += TEXT_LINE_LENGTH)
 	{
 		for (pos = addr, column=0; column<TEXT_COLUMNS; column++, pos++)
 		{
@@ -352,8 +364,8 @@ void vga_device::vga_vh_text(bitmap_rgb32 &bitmap, const rectangle &cliprect)
 			if (vga.cursor.visible&&(pos==vga.crtc.cursor_addr))
 			{
 				for (h=vga.crtc.cursor_scan_start;
-					 (h<=vga.crtc.cursor_scan_end)&&(h<height)&&(line+h<TEXT_LINES);
-					 h++)
+						(h<=vga.crtc.cursor_scan_end)&&(h<height)&&(line+h<TEXT_LINES);
+						h++)
 				{
 					if(!machine().primary_screen->visible_area().contains(column*width, line+h))
 						continue;
@@ -370,16 +382,19 @@ void vga_device::vga_vh_ega(bitmap_rgb32 &bitmap,  const rectangle &cliprect)
 	int height = vga.crtc.maximum_scan_line * (vga.crtc.scan_doubling + 1);
 	UINT32 *bitmapline;
 	pen_t pen;
+	int pel_shift = (vga.attribute.pel_shift & 7);
+
+//  popmessage("%08x %02x",EGA_START_ADDRESS,pel_shift);
 
 	/**/
 	for (addr=EGA_START_ADDRESS, pos=0, line=0; line<LINES;
-		 line += height, addr += EGA_LINE_LENGTH)
+			line += height, addr += EGA_LINE_LENGTH)
 	{
 		for(yi=0;yi<height;yi++)
 		{
 			bitmapline = &bitmap.pix32(line + yi);
 
-			for (pos=addr, c=0, column=0; column<EGA_COLUMNS; column++, c+=8, pos=(pos+1)&0xffff)
+			for (pos=addr, c=0, column=0; column<EGA_COLUMNS+1; column++, c+=8, pos=(pos+1)&0xffff)
 			{
 				int data[4];
 
@@ -391,14 +406,15 @@ void vga_device::vga_vh_ega(bitmap_rgb32 &bitmap,  const rectangle &cliprect)
 				for (i = 7; i >= 0; i--)
 				{
 					pen = vga.pens[(data[0]&1) | (data[1]&2) | (data[2]&4) | (data[3]&8)];
-					if(!machine().primary_screen->visible_area().contains(c+i, line + yi))
-						continue;
-					bitmapline[c+i] = pen;
 
 					data[0]>>=1;
 					data[1]>>=1;
 					data[2]>>=1;
 					data[3]>>=1;
+
+					if(!machine().primary_screen->visible_area().contains(c+i-pel_shift, line + yi))
+						continue;
+					bitmapline[c+i-pel_shift] = pen;
 				}
 			}
 		}
@@ -414,10 +430,12 @@ void vga_device::vga_vh_vga(bitmap_rgb32 &bitmap, const rectangle &cliprect)
 	int height = vga.crtc.maximum_scan_line * (vga.crtc.scan_doubling + 1);
 	int yi;
 	int xi;
-	int pel_shift = 0;//vga.attribute.pel_shift; /* TODO: timing bug with this */
+	int pel_shift = (vga.attribute.pel_shift & 6);
 
 	/* line compare is screen sensitive */
 	mask_comp = 0x3ff; //| (LINES & 0x300);
+
+//  popmessage("%02x %02x",vga.attribute.pel_shift,vga.sequencer.data[4] & 0x08);
 
 	curr_addr = 0;
 	if(!(vga.sequencer.data[4] & 0x08))
@@ -431,16 +449,16 @@ void vga_device::vga_vh_vga(bitmap_rgb32 &bitmap, const rectangle &cliprect)
 				if((line + yi) == (vga.crtc.line_compare & mask_comp))
 					curr_addr = 0;
 				bitmapline = &bitmap.pix32(line + yi);
-				for (pos=curr_addr, c=0, column=0; column<VGA_COLUMNS; column++, c+=8, pos++)
+				for (pos=curr_addr, c=0, column=0; column<VGA_COLUMNS+1; column++, c+=8, pos++)
 				{
 					if(pos > 0x80000/4)
 						return;
 
 					for(xi=0;xi<8;xi++)
 					{
-						if(!machine().primary_screen->visible_area().contains(c+xi-pel_shift, line + yi))
+						if(!machine().primary_screen->visible_area().contains(c+xi-(pel_shift), line + yi))
 							continue;
-						bitmapline[c+xi-pel_shift] = machine().pens[vga.memory[(pos & 0xffff)+((xi >> 1)*0x10000)]];
+						bitmapline[c+xi-(pel_shift)] = machine().pens[vga.memory[(pos & 0xffff)+((xi >> 1)*0x10000)]];
 					}
 				}
 			}
@@ -458,14 +476,14 @@ void vga_device::vga_vh_vga(bitmap_rgb32 &bitmap, const rectangle &cliprect)
 					curr_addr = 0;
 				bitmapline = &bitmap.pix32(line + yi);
 				//addr %= 0x80000;
-				for (pos=curr_addr, c=0, column=0; column<VGA_COLUMNS; column++, c+=0x10, pos+=0x8)
+				for (pos=curr_addr, c=0, column=0; column<VGA_COLUMNS+1; column++, c+=0x10, pos+=0x8)
 				{
 					if(pos + 0x08 > 0x80000)
 						return;
 
 					for(xi=0;xi<0x10;xi++)
 					{
-						if(!machine().primary_screen->visible_area().contains(c+xi-pel_shift, line + yi))
+						if(!machine().primary_screen->visible_area().contains(c+xi-(pel_shift), line + yi))
 							continue;
 						bitmapline[c+xi-pel_shift] = machine().pens[vga.memory[(pos+(xi >> 1)) & 0xffff]];
 					}
@@ -794,8 +812,8 @@ UINT8 vga_device::pc_vga_choosevideomode()
 			{
 				/* TODO: color shifters? */
 				palette_set_color_rgb(machine(), i, (vga.dac.color[i & vga.dac.mask].red & 0x3f) << 2,
-									 (vga.dac.color[i & vga.dac.mask].green & 0x3f) << 2,
-									 (vga.dac.color[i & vga.dac.mask].blue & 0x3f) << 2);
+										(vga.dac.color[i & vga.dac.mask].green & 0x3f) << 2,
+										(vga.dac.color[i & vga.dac.mask].blue & 0x3f) << 2);
 			}
 			vga.dac.dirty = 0;
 		}
@@ -805,7 +823,7 @@ UINT8 vga_device::pc_vga_choosevideomode()
 			for (i=0; i<16;i++)
 			{
 				vga.pens[i] = machine().pens[(vga.attribute.data[i]&0x0f)
-										 |((vga.attribute.data[0x14]&0xf)<<4)];
+											|((vga.attribute.data[0x14]&0xf)<<4)];
 			}
 		}
 		else
@@ -813,7 +831,7 @@ UINT8 vga_device::pc_vga_choosevideomode()
 			for (i=0; i<16;i++)
 			{
 				vga.pens[i]=machine().pens[(vga.attribute.data[i]&0x3f)
-										 |((vga.attribute.data[0x14]&0xc)<<4)];
+											|((vga.attribute.data[0x14]&0xc)<<4)];
 			}
 		}
 
@@ -855,8 +873,8 @@ UINT8 svga_device::pc_vga_choosevideomode()
 			{
 				/* TODO: color shifters? */
 				palette_set_color_rgb(machine(), i, (vga.dac.color[i & vga.dac.mask].red & 0x3f) << 2,
-									 (vga.dac.color[i & vga.dac.mask].green & 0x3f) << 2,
-									 (vga.dac.color[i & vga.dac.mask].blue & 0x3f) << 2);
+										(vga.dac.color[i & vga.dac.mask].green & 0x3f) << 2,
+										(vga.dac.color[i & vga.dac.mask].blue & 0x3f) << 2);
 			}
 			vga.dac.dirty = 0;
 		}
@@ -866,7 +884,7 @@ UINT8 svga_device::pc_vga_choosevideomode()
 			for (i=0; i<16;i++)
 			{
 				vga.pens[i] = machine().pens[(vga.attribute.data[i]&0x0f)
-										 |((vga.attribute.data[0x14]&0xf)<<4)];
+											|((vga.attribute.data[0x14]&0xf)<<4)];
 			}
 		}
 		else
@@ -874,7 +892,7 @@ UINT8 svga_device::pc_vga_choosevideomode()
 			for (i=0; i<16;i++)
 			{
 				vga.pens[i]=machine().pens[(vga.attribute.data[i]&0x3f)
-										 |((vga.attribute.data[0x14]&0xc)<<4)];
+											|((vga.attribute.data[0x14]&0xc)<<4)];
 			}
 		}
 
@@ -939,9 +957,11 @@ UINT32 vga_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap, co
 
 	return 0;
 }
+
 UINT32 svga_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	UINT8 cur_mode = pc_vga_choosevideomode();
+
 	switch(cur_mode)
 	{
 		case SCREEN_OFF:   bitmap.fill  (get_black_pen(machine()), cliprect);break;
@@ -978,11 +998,45 @@ UINT32 s3_vga_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap,
 		int x,y;
 		UINT16 cx = s3.cursor_x & 0x07ff;
 		UINT16 cy = s3.cursor_y & 0x07ff;
+		UINT32 bg_col;
+		UINT32 fg_col;
 
 		if(cur_mode == SCREEN_OFF || cur_mode == TEXT_MODE || cur_mode == MONO_MODE || cur_mode == CGA_MODE || cur_mode == EGA_MODE)
 			return 0;  // cursor only works in VGA or SVGA modes
 
 		src = s3.cursor_start_addr * 1024;  // start address is in units of 1024 bytes
+
+		if(cur_mode == RGB16_MODE)
+		{
+			int r,g,b;
+			UINT16 datax;
+
+			datax = s3.cursor_bg[0]|s3.cursor_bg[1]<<8;
+			r = (datax&0xf800)>>11;
+			g = (datax&0x07e0)>>5;
+			b = (datax&0x001f)>>0;
+			r = (r << 3) | (r & 0x7);
+			g = (g << 2) | (g & 0x3);
+			b = (b << 3) | (b & 0x7);
+			bg_col = (0xff<<24)|(r<<16)|(g<<8)|(b<<0);
+
+			datax = s3.cursor_fg[0]|s3.cursor_fg[1]<<8;
+			r = (datax&0xf800)>>11;
+			g = (datax&0x07e0)>>5;
+			b = (datax&0x001f)>>0;
+			r = (r << 3) | (r & 0x7);
+			g = (g << 2) | (g & 0x3);
+			b = (b << 3) | (b & 0x7);
+			fg_col = (0xff<<24)|(r<<16)|(g<<8)|(b<<0);
+		}
+		else /* TODO: other modes */
+		{
+			bg_col = screen.machine().pens[s3.cursor_bg[0]];
+			fg_col = screen.machine().pens[s3.cursor_fg[0]];
+		}
+
+		//popmessage("%08x %08x",(s3.cursor_bg[0])|(s3.cursor_bg[1]<<8)|(s3.cursor_bg[2]<<16)|(s3.cursor_bg[3]<<24)
+		//                    ,(s3.cursor_fg[0])|(s3.cursor_fg[1]<<8)|(s3.cursor_fg[2]<<16)|(s3.cursor_fg[3]<<24));
 //      for(x=0;x<64;x++)
 //          printf("%08x: %02x %02x %02x %02x\n",src+x*4,vga.memory[src+x*4],vga.memory[src+x*4+1],vga.memory[src+x*4+2],vga.memory[src+x*4+3]);
 		for(y=0;y<64;y++)
@@ -1004,10 +1058,10 @@ UINT32 s3_vga_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap,
 						// no change
 						break;
 					case 0x02:
-						dst[x] = screen.machine().pens[s3.cursor_bg[0]];
+						dst[x] = bg_col;
 						break;
 					case 0x03:
-						dst[x] = screen.machine().pens[s3.cursor_fg[0]];
+						dst[x] = fg_col;
 						break;
 					}
 				}
@@ -1016,10 +1070,10 @@ UINT32 s3_vga_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap,
 					switch(val)
 					{
 					case 0x00:
-						dst[x] = screen.machine().pens[s3.cursor_bg[0]];
+						dst[x] = bg_col;
 						break;
 					case 0x01:
-						dst[x] = screen.machine().pens[s3.cursor_fg[0]];
+						dst[x] = fg_col;
 						break;
 					case 0x02:  // screen data
 						// no change
@@ -1158,7 +1212,7 @@ UINT8 vga_device::crtc_reg_read(UINT8 index)
 			break;
 		case 0x0c:
 		case 0x0d:
-			res  = (vga.crtc.start_addr >> ((index & 1) ^ 1)*8) & 0xff;
+			res  = (vga.crtc.start_addr_latch >> ((index & 1) ^ 1)*8) & 0xff;
 			break;
 		case 0x0e:
 		case 0x0f:
@@ -1231,6 +1285,8 @@ void vga_device::recompute_params_clock(int divisor, int xtal)
 
 	machine().primary_screen->configure((hblank_period), (vblank_period), visarea, refresh );
 //  popmessage("%d %d\n",vga.crtc.horz_total * 8,vga.crtc.vert_total);
+
+	m_vblank_timer->adjust( machine().primary_screen->time_until_pos(vga.crtc.vert_blank_start) );
 }
 
 void vga_device::recompute_params()
@@ -1333,8 +1389,8 @@ void vga_device::crtc_reg_write(UINT8 index, UINT8 data)
 			break;
 		case 0x0c:
 		case 0x0d:
-			vga.crtc.start_addr &= ~(0xff << (((index & 1)^1) * 8));
-			vga.crtc.start_addr |= (data << (((index & 1)^1) * 8));
+			vga.crtc.start_addr_latch &= ~(0xff << (((index & 1)^1) * 8));
+			vga.crtc.start_addr_latch |= (data << (((index & 1)^1) * 8));
 			break;
 		case 0x0e:
 		case 0x0f:
@@ -1398,7 +1454,7 @@ void vga_device::seq_reg_write(UINT8 index, UINT8 data)
 			break;
 		case 0x03:
 			/* --2- 84-- character select A
-               ---2 --84 character select B */
+			   ---2 --84 character select B */
 			vga.sequencer.char_sel.A = (((data & 0xc) >> 2)<<1) | ((data & 0x20) >> 5);
 			vga.sequencer.char_sel.B = (((data & 0x3) >> 0)<<1) | ((data & 0x10) >> 4);
 			if(data)
@@ -2021,13 +2077,13 @@ WRITE8_MEMBER(vga_device::mem_linear_w)
 
 static struct eeprom_interface ati_eeprom_interface =
 {
-	6,		/* address bits */
-	16,		/* data bits */
-	"*110",	/*  read command */
-	"*101",	/* write command */
-	"*111",	/* erase command */
-	"*10000xxxx",	// lock         1 00 00xxxx
-	"*10011xxxx"	// unlock       1 00 11xxxx
+	6,      /* address bits */
+	16,     /* data bits */
+	"*110", /*  read command */
+	"*101", /* write command */
+	"*111", /* erase command */
+	"*10000xxxx",   // lock         1 00 00xxxx
+	"*10011xxxx"    // unlock       1 00 11xxxx
 };
 
 MACHINE_CONFIG_FRAGMENT( pcvideo_vga )
@@ -2045,7 +2101,6 @@ MACHINE_CONFIG_FRAGMENT( pcvideo_trident_vga )
 	MCFG_SCREEN_UPDATE_DEVICE("vga", trident_vga_device, screen_update)
 
 	MCFG_PALETTE_LENGTH(0x100)
-
 	MCFG_DEVICE_ADD("vga", TRIDENT_VGA, 0)
 MACHINE_CONFIG_END
 
@@ -2055,7 +2110,6 @@ MACHINE_CONFIG_FRAGMENT( pcvideo_cirrus_vga )
 	MCFG_SCREEN_UPDATE_DEVICE("vga", cirrus_vga_device, screen_update)
 
 	MCFG_PALETTE_LENGTH(0x100)
-
 	MCFG_DEVICE_ADD("vga", CIRRUS_VGA, 0)
 MACHINE_CONFIG_END
 
@@ -2660,7 +2714,7 @@ UINT8 s3_vga_device::s3_crtc_reg_read(UINT8 index)
 				res = s3.cursor_pattern_y;
 				break;
 			case 0x51:
-				res = (vga.crtc.start_addr & 0x0c0000) >> 18;
+				res = (vga.crtc.start_addr_latch & 0x0c0000) >> 18;
 				break;
 			case 0x55:
 				res = s3.extended_dac_ctrl;
@@ -2669,7 +2723,7 @@ UINT8 s3_vga_device::s3_crtc_reg_read(UINT8 index)
 				res = s3.ext_misc_ctrl_2;
 				break;
 			case 0x69:
-				res = vga.crtc.start_addr >> 16;
+				res = vga.crtc.start_addr_latch >> 16;
 				break;
 			case 0x6a:
 				res = svga.bank_r & 0x7f;
@@ -2781,8 +2835,8 @@ void s3_vga_device::s3_crtc_reg_write(UINT8 index, UINT8 data)
 		{
 			case 0x31: // CR31 Memory Configuration Register
 				s3.memory_config = data;
-				vga.crtc.start_addr &= ~0x30000;
-				vga.crtc.start_addr |= ((data & 0x30) << 12);
+				vga.crtc.start_addr_latch &= ~0x30000;
+				vga.crtc.start_addr_latch |= ((data & 0x30) << 12);
 				//popmessage("%02x",data);
 				s3_define_video_mode();
 				break;
@@ -2930,8 +2984,8 @@ bit  0-5  Pattern Display Start Y-Pixel Position.
 				s3.cursor_pattern_y = data;
 				break;
 			case 0x51:
-				vga.crtc.start_addr &= ~0xc0000;
-				vga.crtc.start_addr |= ((data & 0x3) << 18);
+				vga.crtc.start_addr_latch &= ~0xc0000;
+				vga.crtc.start_addr_latch |= ((data & 0x3) << 18);
 				svga.bank_w = (svga.bank_w & 0xcf) | ((data & 0x0c) << 2);
 				svga.bank_r = svga.bank_r;
 				s3_define_video_mode();
@@ -3022,8 +3076,8 @@ bit    0  Vertical Total bit 10. Bit 10 of the Vertical Total register (3d4h
 				//printf("%02x X\n",data);
 				break;
 			case 0x69:
-				vga.crtc.start_addr &= ~0x1f0000;
-				vga.crtc.start_addr |= ((data & 0x1f) << 16);
+				vga.crtc.start_addr_latch &= ~0x1f0000;
+				vga.crtc.start_addr_latch |= ((data & 0x1f) << 16);
 				s3_define_video_mode();
 				break;
 			case 0x6a:
@@ -3351,7 +3405,7 @@ void ibm8514a_device::ibm8514_write(UINT32 offset, UINT32 src)
 		if((ibm8514.current_cmd & 0x1000) && (data_size != 8))
 		{
 			xfer = ((ibm8514.pixel_xfer & 0x000000ff) << 8) | ((ibm8514.pixel_xfer & 0x0000ff00) >> 8)
-				 | ((ibm8514.pixel_xfer & 0x00ff0000) << 8) | ((ibm8514.pixel_xfer & 0xff000000) >> 8);
+					| ((ibm8514.pixel_xfer & 0x00ff0000) << 8) | ((ibm8514.pixel_xfer & 0xff000000) >> 8);
 		}
 		else
 			xfer = ibm8514.pixel_xfer;
@@ -4535,7 +4589,7 @@ WRITE8_MEMBER(s3_vga_device::mem_w)
 {
 	ibm8514a_device* dev = get_8514();
 	// bit 4 of CR53 enables memory-mapped I/O
-	// 0xA0000-0xA7ffff maps to port 0xE2E8 (pixel transfer)
+	// 0xA0000-0xA7fff maps to port 0xE2E8 (pixel transfer)
 	if(s3.cr53 & 0x10)
 	{
 		if(offset < 0x8000)
@@ -4736,6 +4790,17 @@ WRITE8_MEMBER(s3_vga_device::mem_w)
 		case 0xbee9:
 			s3.mmio_bee8 = (s3.mmio_bee8 & 0x00ff) | (data << 8);
 			dev->ibm8514_multifunc_w(space,0,s3.mmio_bee8,0xffff);
+			break;
+		case 0x96e8:
+			s3.mmio_96e8 = (s3.mmio_96e8 & 0xff00) | data;
+			break;
+		case 0x96e9:
+			s3.mmio_96e8 = (s3.mmio_96e8 & 0x00ff) | (data << 8);
+			dev->ibm8514_width_w(space,0,s3.mmio_96e8,0xffff);
+			break;
+		case 0xe2e8:
+			dev->ibm8514.pixel_xfer = (dev->ibm8514.pixel_xfer & 0xffffff00) | data;
+			dev->ibm8514_wait_draw();
 			break;
 		default:
 			if(LOG_8514) logerror("S3: MMIO offset %05x write %02x\n",offset+0xa0000,data);
@@ -4996,7 +5061,7 @@ WRITE8_MEMBER(ati_vga_device::ati_port_ext_w)
 		switch(ati.ext_reg_select)
 		{
 		case 0x23:
-			vga.crtc.start_addr = (vga.crtc.start_addr & 0xfffdffff) | ((data & 0x10) << 13);
+			vga.crtc.start_addr_latch = (vga.crtc.start_addr_latch & 0xfffdffff) | ((data & 0x10) << 13);
 			vga.crtc.cursor_addr = (vga.crtc.cursor_addr & 0xfffdffff) | ((data & 0x08) << 14);
 			logerror("ATI: ATI23 write %02x\n",data);
 			break;
@@ -5010,7 +5075,7 @@ WRITE8_MEMBER(ati_vga_device::ati_port_ext_w)
 			logerror("ATI: ATI2D (extensions) write %02x\n",data);
 			break;
 		case 0x30:
-			vga.crtc.start_addr = (vga.crtc.start_addr & 0xfffeffff) | ((data & 0x40) << 10);
+			vga.crtc.start_addr_latch = (vga.crtc.start_addr_latch & 0xfffeffff) | ((data & 0x40) << 10);
 			vga.crtc.cursor_addr = (vga.crtc.cursor_addr & 0xfffeffff) | ((data & 0x04) << 14);
 			logerror("ATI: ATI30 write %02x\n",data);
 			break;
@@ -5351,16 +5416,16 @@ void cirrus_vga_device::cirrus_define_video_mode()
 	{
 		switch(vga.sequencer.data[0x07] & 0x0E)
 		{
-			case 0x00:	svga.rgb8_en = 1; break;
-			case 0x02:	svga.rgb16_en = 1; break; //double VCLK
-			case 0x04:	svga.rgb24_en = 1; break;
-			case 0x06:	svga.rgb16_en = 1; break;
-			case 0x08:	svga.rgb32_en = 1; break;
+			case 0x00:  svga.rgb8_en = 1; break;
+			case 0x02:  svga.rgb16_en = 1; break; //double VCLK
+			case 0x04:  svga.rgb24_en = 1; break;
+			case 0x06:  svga.rgb16_en = 1; break;
+			case 0x08:  svga.rgb32_en = 1; break;
 		}
 	}
 }
 
- UINT8 cirrus_vga_device::cirrus_seq_reg_read(UINT8 index)
+	UINT8 cirrus_vga_device::cirrus_seq_reg_read(UINT8 index)
 {
 	UINT8 res;
 

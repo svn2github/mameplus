@@ -75,9 +75,9 @@ const device_type DECO_BAC06 = &device_creator<deco_bac06_device>;
 
 deco_bac06_device::deco_bac06_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, DECO_BAC06, "decbac06_device", tag, owner, clock),
-	  m_gfxregion8x8(0),
-	  m_gfxregion16x16(0),
-	  m_wide(0)
+		m_gfxregion8x8(0),
+		m_gfxregion16x16(0),
+		m_wide(0)
 {
 }
 
@@ -171,6 +171,14 @@ void deco_bac06_device::device_start()
 	m_bppmult = 0x10;
 	m_bppmask = 0x0f;
 	m_rambank = 0;
+
+	save_pointer(NAME(pf_data), 0x4000/2);
+	save_pointer(NAME(pf_rowscroll), 0x2000/2);
+	save_pointer(NAME(pf_colscroll), 0x2000/2);
+	save_pointer(NAME(pf_control_0), 8);
+	save_pointer(NAME(pf_control_1), 8);
+
+	save_item(NAME(m_rambank));
 }
 
 void deco_bac06_device::device_reset()
@@ -222,22 +230,22 @@ void deco_bac06_device::custom_tilemap_draw(running_machine &machine,
 	height_mask = src_bitmap.height() - 1;
 
 	/* Column scroll & row scroll may per applied per pixel, there are
-    shift registers for each which control the granularity of the row/col
-    offset (down to per line level for row, and per 8 lines for column).
+	shift registers for each which control the granularity of the row/col
+	offset (down to per line level for row, and per 8 lines for column).
 
-    Nb:  The row & col selectors are _not_ affected by the shape of the
-    playfield (ie, 256*1024, 512*512 or 1024*256).  So even if the tilemap
-    width is only 256, 'src_x' should not wrap at 256 in the code below (to
-    do so would mean the top half of row RAM would never be accessed which
-    is incorrect).
+	Nb:  The row & col selectors are _not_ affected by the shape of the
+	playfield (ie, 256*1024, 512*512 or 1024*256).  So even if the tilemap
+	width is only 256, 'src_x' should not wrap at 256 in the code below (to
+	do so would mean the top half of row RAM would never be accessed which
+	is incorrect).
 
-    Nb2:  Real hardware exhibits a strange bug with column scroll on 'mode 2'
-    (256*1024) - the first column has a strange additional offset, but
-    curiously the first 'wrap' (at scroll offset 256) does not have this offset,
-    it is displayed as expected.  The bug is confimed to only affect this mode,
-    the other two modes work as expected.  This bug is not emulated, as it
-    doesn't affect any games.
-    */
+	Nb2:  Real hardware exhibits a strange bug with column scroll on 'mode 2'
+	(256*1024) - the first column has a strange additional offset, but
+	curiously the first 'wrap' (at scroll offset 256) does not have this offset,
+	it is displayed as expected.  The bug is confimed to only affect this mode,
+	the other two modes work as expected.  This bug is not emulated, as it
+	doesn't affect any games.
+	*/
 
 	if (machine.driver_data()->flip_screen())
 		src_y = (src_bitmap.height() - 256) - scrolly;
@@ -279,14 +287,14 @@ void deco_bac06_device::deco_bac06_pf_draw(running_machine &machine,bitmap_ind16
 	tilemap_t* tm = 0;
 
 	switch (pf_control_0[3]&0x3) {
-		case 0:	/* 4x1 */
+		case 0: /* 4x1 */
 			if (pf_control_0[0]&0x1)
 				tm = pf8x8_tilemap[0];
 			else
 				tm = pf16x16_tilemap[0];
 			break;
 
-		case 1:	/* 2x2 */
+		case 1: /* 2x2 */
 		default:
 			if (pf_control_0[0]&0x1)
 				tm = pf8x8_tilemap[1];
@@ -294,7 +302,7 @@ void deco_bac06_device::deco_bac06_pf_draw(running_machine &machine,bitmap_ind16
 				tm = pf16x16_tilemap[1];
 			break;
 
-		case 2:	/* 1x4 */
+		case 2: /* 1x4 */
 			if (pf_control_0[0]&0x1)
 				tm = pf8x8_tilemap[2];
 			else

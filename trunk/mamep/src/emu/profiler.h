@@ -84,10 +84,10 @@ enum profile_type
 	//MKCHAMP - INCLUDING THE HISCORE ENGINE TO THE PROFILER
  	PROFILER_HISCORE,
 #endif /* USE_HISCORE */
-	PROFILER_INPUT,				// input.c and inptport.c
-	PROFILER_MOVIE_REC,			// movie recording
-	PROFILER_LOGERROR,			// logerror
-	PROFILER_EXTRA,				// everything else
+	PROFILER_INPUT,             // input.c and inptport.c
+	PROFILER_MOVIE_REC,         // movie recording
+	PROFILER_LOGERROR,          // logerror
+	PROFILER_EXTRA,             // everything else
 
 	// the USER types are available to driver writers to profile
 	// custom sections of the code
@@ -191,16 +191,16 @@ private:
 	// an entry in the FILO
 	struct filo_entry
 	{
-		int				type;						// type of entry
-		osd_ticks_t		start;						// start time
+		int             type;                       // type of entry
+		osd_ticks_t     start;                      // start time
 	};
 
 	// internal state
-	filo_entry *		m_filoptr;					// current FILO index
-	astring				m_text;						// profiler text
-	attotime			m_text_time;				// profiler text last update
-	filo_entry			m_filo[32];					// array of FILO entries
-	osd_ticks_t			m_data[PROFILER_TOTAL + 1];	// array of data
+	filo_entry *        m_filoptr;                  // current FILO index
+	astring             m_text;                     // profiler text
+	attotime            m_text_time;                // profiler text last update
+	filo_entry          m_filo[32];                 // array of FILO entries
+	osd_ticks_t         m_data[PROFILER_TOTAL + 1]; // array of data
 };
 
 
@@ -242,4 +242,4 @@ typedef dummy_profiler_state profiler_state;
 extern profiler_state g_profiler;
 
 
-#endif	/* __PROFILER_H__ */
+#endif  /* __PROFILER_H__ */

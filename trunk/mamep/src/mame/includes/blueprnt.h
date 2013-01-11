@@ -8,13 +8,16 @@ class blueprnt_state : public driver_device
 {
 public:
 	blueprnt_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
+		m_audiocpu(*this, "audiocpu"),
 		m_videoram(*this, "videoram"),
 		m_scrollram(*this, "scrollram"),
 		m_spriteram(*this, "spriteram"),
-		m_colorram(*this, "colorram"){ }
+		m_colorram(*this, "colorram")
+	{ }
 
-	/* memory pointers */
+	/* device/memory pointers */
+	required_device<cpu_device> m_audiocpu;
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_scrollram;
 	required_shared_ptr<UINT8> m_spriteram;
@@ -27,9 +30,8 @@ public:
 	/* misc */
 	int     m_dipsw;
 
-	/* devices */
-	cpu_device *m_audiocpu;
 	DECLARE_READ8_MEMBER(blueprnt_sh_dipsw_r);
+	DECLARE_READ8_MEMBER(grasspin_sh_dipsw_r);
 	DECLARE_WRITE8_MEMBER(blueprnt_sound_command_w);
 	DECLARE_WRITE8_MEMBER(blueprnt_coin_counter_w);
 	DECLARE_WRITE8_MEMBER(blueprnt_videoram_w);
@@ -39,7 +41,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void machine_start();
 	virtual void machine_reset();
-	virtual void video_start();
+	DECLARE_VIDEO_START(blueprnt);
 	virtual void palette_init();
 	UINT32 screen_update_blueprnt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };

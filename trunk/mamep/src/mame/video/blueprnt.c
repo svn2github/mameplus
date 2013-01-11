@@ -32,8 +32,8 @@ void blueprnt_state::palette_init()
 		if (i < 0x200)
 			/* characters */
 			pen = ((i & 0x100) >> 5) |
-				  ((i & 0x002) ? ((i & 0x0e0) >> 5) : 0) |
-				  ((i & 0x001) ? ((i & 0x01c) >> 2) : 0);
+					((i & 0x002) ? ((i & 0x0e0) >> 5) : 0) |
+					((i & 0x001) ? ((i & 0x01c) >> 2) : 0);
 		else
 			/* sprites */
 			pen = i - 0x200;
@@ -48,21 +48,28 @@ void blueprnt_state::palette_init()
 
 WRITE8_MEMBER(blueprnt_state::blueprnt_videoram_w)
 {
-
 	m_videoram[offset] = data;
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
 WRITE8_MEMBER(blueprnt_state::blueprnt_colorram_w)
 {
-
 	m_colorram[offset] = data;
 	m_bg_tilemap->mark_tile_dirty(offset);
+
+	offset-=32;
+	offset &=0x3ff;
+	m_bg_tilemap->mark_tile_dirty(offset);
+
+	offset+=64;
+	offset &=0x3ff;
+	m_bg_tilemap->mark_tile_dirty(offset);
+
+
 }
 
 WRITE8_MEMBER(blueprnt_state::blueprnt_flipscreen_w)
 {
-
 	flip_screen_set(~data & 0x02);
 
 	if (m_gfx_bank != ((data & 0x04) >> 2))
@@ -72,26 +79,50 @@ WRITE8_MEMBER(blueprnt_state::blueprnt_flipscreen_w)
 	}
 }
 
+
+
 TILE_GET_INFO_MEMBER(blueprnt_state::get_bg_tile_info)
 {
 	int attr = m_colorram[tile_index];
-	int code = m_videoram[tile_index] + 256 * m_gfx_bank;
+	int bank;
+
+	// It looks like the upper bank attribute bit (at least) comes from the previous tile read.
+	// Obviously if the screen is flipped the previous tile the hardware would read is different
+	// to the previous tile when it's not flipped hence the if (flip_screen()) logic
+	//
+	// note, one line still ends up darkened in the cocktail mode of grasspin, but on the real
+	// hardware there was no observable brightness difference between any part of the screen so
+	// I'm not convinced the brightness implementation is correct anyway, it might simply be
+	// tied to the use of upper / lower tiles or priority instead?
+	if (flip_screen())
+	{
+		bank = m_colorram[(tile_index+32)&0x3ff] & 0x40;
+	}
+	else
+	{
+		bank = m_colorram[(tile_index-32)&0x3ff] & 0x40;
+	}
+
+	int code = m_videoram[tile_index];
 	int color = attr & 0x7f;
 
 	tileinfo.category = (attr & 0x80) ? 1 : 0;
+	if (bank) code += m_gfx_bank * 0x100;
 
 	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-void blueprnt_state::video_start()
-{
 
+
+VIDEO_START_MEMBER(blueprnt_state,blueprnt)
+{
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(blueprnt_state::get_bg_tile_info),this), TILEMAP_SCAN_COLS_FLIP_X, 8, 8, 32, 32);
 	m_bg_tilemap->set_transparent_pen(0);
 	m_bg_tilemap->set_scroll_cols(32);
 
 	save_item(NAME(m_gfx_bank));
 }
+
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
@@ -104,7 +135,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int sx = state->m_spriteram[offs + 3];
 		int sy = 240 - state->m_spriteram[offs];
 		int flipx = state->m_spriteram[offs + 2] & 0x40;
-		int flipy = state->m_spriteram[offs + 2 - 4] & 0x80;	// -4? Awkward, isn't it?
+		int flipy = state->m_spriteram[offs + 2 - 4] & 0x80;    // -4? Awkward, isn't it?
 
 		if (state->flip_screen())
 		{

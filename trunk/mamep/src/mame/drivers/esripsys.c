@@ -95,7 +95,7 @@ READ8_MEMBER(esripsys_state::uart_r)
 
 READ8_MEMBER(esripsys_state::g_status_r)
 {
-	int bank4 = BIT(get_rip_status(machine().device("video_cpu")), 2);
+	int bank4 = BIT(m_videocpu->get_rip_status(), 2);
 	int vblank = machine().primary_screen->vblank();
 
 	return (!vblank << 7) | (bank4 << 6) | (m_f_status & 0x2f);
@@ -144,7 +144,7 @@ WRITE8_MEMBER(esripsys_state::g_status_w)
 READ8_MEMBER(esripsys_state::f_status_r)
 {
 	int vblank = machine().primary_screen->vblank();
-	UINT8 rip_status = get_rip_status(machine().device("video_cpu"));
+	UINT8 rip_status = m_videocpu->get_rip_status();
 
 	rip_status = (rip_status & 0x18) | (BIT(rip_status, 6) << 1) |  BIT(rip_status, 7);
 
@@ -244,7 +244,7 @@ static UINT8 rip_status_in(running_machine &machine)
 	UINT8 _vblank = !(vpos >= ESRIPSYS_VBLANK_START);
 //  UINT8 _hblank = !machine.primary_screen->hblank();
 
-	return	_vblank
+	return  _vblank
 			| (state->m_hblank << 1)
 			| (state->m_12sel << 2)
 			| (state->m_fbsel << 4)
@@ -569,9 +569,9 @@ WRITE8_MEMBER(esripsys_state::esripsys_dac_w)
 		UINT16 dac_data = (m_dac_msb << 8) | data;
 
 		/*
-            The 8-bit DAC modulates the 10-bit DAC.
-            Shift down to prevent clipping.
-        */
+		    The 8-bit DAC modulates the 10-bit DAC.
+		    Shift down to prevent clipping.
+		*/
 		device->write_signed16((m_dac_vol * dac_data) >> 1);
 	}
 }
@@ -705,7 +705,7 @@ static MACHINE_CONFIG_START( esripsys, esripsys_state )
 
 	MCFG_CPU_ADD("video_cpu", ESRIP, XTAL_40MHz / 4)
 	MCFG_CPU_PROGRAM_MAP(video_cpu_map)
-	MCFG_CPU_CONFIG(rip_config)
+	MCFG_CPU_ESRIP_CONFIG(rip_config)
 
 	MCFG_CPU_ADD("sound_cpu", M6809E, XTAL_8MHz)
 	MCFG_CPU_PROGRAM_MAP(sound_cpu_map)

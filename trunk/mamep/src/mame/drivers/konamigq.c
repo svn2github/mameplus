@@ -49,19 +49,17 @@
 #include "cpu/m68000/m68000.h"
 #include "cpu/psx/psx.h"
 #include "video/psx.h"
-#include "includes/psx.h"
-#include "includes/konamigx.h"
 #include "machine/eeprom.h"
 #include "machine/scsibus.h"
 #include "machine/scsihd.h"
 #include "machine/am53cf96.h"
 #include "sound/k054539.h"
 
-class konamigq_state : public psx_state
+class konamigq_state : public driver_device
 {
 public:
 	konamigq_state(const machine_config &mconfig, device_type type, const char *tag)
-		: psx_state(mconfig, type, tag),
+		: driver_device(mconfig, type, tag),
 		m_am53cf96(*this, "scsi:am53cf96"){ }
 
 	required_device<am53cf96_device> m_am53cf96;
@@ -92,8 +90,6 @@ public:
 
 WRITE32_MEMBER(konamigq_state::soundr3k_w)
 {
-
-
 	if( ACCESSING_BITS_16_31 )
 	{
 		m_sndto000[ ( offset << 1 ) + 1 ] = data >> 16;
@@ -110,7 +106,6 @@ WRITE32_MEMBER(konamigq_state::soundr3k_w)
 
 READ32_MEMBER(konamigq_state::soundr3k_r)
 {
-
 	UINT32 data;
 
 	data = ( m_sndtor3k[ ( offset << 1 ) + 1 ] << 16 ) | m_sndtor3k[ offset << 1 ];
@@ -160,8 +155,6 @@ WRITE32_MEMBER(konamigq_state::eeprom_w)
 
 WRITE32_MEMBER(konamigq_state::pcmram_w)
 {
-
-
 	if( ACCESSING_BITS_0_7 )
 	{
 		m_p_n_pcmram[ offset << 1 ] = data;
@@ -174,21 +167,19 @@ WRITE32_MEMBER(konamigq_state::pcmram_w)
 
 READ32_MEMBER(konamigq_state::pcmram_r)
 {
-
-
 	return ( m_p_n_pcmram[ ( offset << 1 ) + 1 ] << 16 ) | m_p_n_pcmram[ offset << 1 ];
 }
 
 /* Video */
 
 static ADDRESS_MAP_START( konamigq_map, AS_PROGRAM, 32, konamigq_state )
-	AM_RANGE(0x00000000, 0x003fffff) AM_RAM	AM_SHARE("share1") /* ram */
+	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_SHARE("share1") /* ram */
 	AM_RANGE(0x1f000000, 0x1f00001f) AM_DEVREADWRITE8("scsi:am53cf96", am53cf96_device, read, write, 0x00ff00ff)
 	AM_RANGE(0x1f100000, 0x1f10000f) AM_WRITE(soundr3k_w)
 	AM_RANGE(0x1f100010, 0x1f10001f) AM_READ(soundr3k_r)
 	AM_RANGE(0x1f180000, 0x1f180003) AM_WRITE(eeprom_w)
-	AM_RANGE(0x1f198000, 0x1f198003) AM_WRITENOP    		/* cabinet lamps? */
-	AM_RANGE(0x1f1a0000, 0x1f1a0003) AM_WRITENOP    		/* indicates gun trigger */
+	AM_RANGE(0x1f198000, 0x1f198003) AM_WRITENOP            /* cabinet lamps? */
+	AM_RANGE(0x1f1a0000, 0x1f1a0003) AM_WRITENOP            /* indicates gun trigger */
 	AM_RANGE(0x1f200000, 0x1f200003) AM_READ_PORT("GUNX1")
 	AM_RANGE(0x1f208000, 0x1f208003) AM_READ_PORT("GUNY1")
 	AM_RANGE(0x1f210000, 0x1f210003) AM_READ_PORT("GUNX2")
@@ -206,22 +197,17 @@ static ADDRESS_MAP_START( konamigq_map, AS_PROGRAM, 32, konamigq_state )
 	AM_RANGE(0x9fc00000, 0x9fc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
 	AM_RANGE(0xa0000000, 0xa03fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0xbfc00000, 0xbfc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
-	AM_RANGE(0xfffe0130, 0xfffe0133) AM_WRITENOP
 ADDRESS_MAP_END
 
 /* SOUND CPU */
 
 READ16_MEMBER(konamigq_state::sndcomm68k_r)
 {
-
-
 	return m_sndto000[ offset ];
 }
 
 WRITE16_MEMBER(konamigq_state::sndcomm68k_w)
 {
-
-
 	m_sndtor3k[ offset ] = data;
 }
 
@@ -264,9 +250,8 @@ static const k054539_interface k054539_config =
 
 /* SCSI */
 
-static void scsi_dma_read( konamigq_state *state, UINT32 n_address, INT32 n_size )
+static void scsi_dma_read( konamigq_state *state, UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size )
 {
-	UINT32 *p_n_psxram = state->m_p_n_psxram;
 	UINT8 *sector_buffer = state->m_sector_buffer;
 	int i;
 	int n_this;
@@ -299,14 +284,12 @@ static void scsi_dma_read( konamigq_state *state, UINT32 n_address, INT32 n_size
 	}
 }
 
-static void scsi_dma_write( konamigq_state *state, UINT32 n_address, INT32 n_size )
+static void scsi_dma_write( konamigq_state *state, UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size )
 {
 }
 
 DRIVER_INIT_MEMBER(konamigq_state,konamigq)
 {
-	psx_driver_init(machine());
-
 	m_p_n_pcmram = memregion( "shared" )->base() + 0x80000;
 }
 

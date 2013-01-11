@@ -257,19 +257,19 @@ INLINE int is_breakable_char(unicode_char ch)
 		return TRUE;
 
 	/* In the following character sets, any character is breakable:
-        Hiragana (3040-309F)
-        Katakana (30A0-30FF)
-        Bopomofo (3100-312F)
-        Hangul Compatibility Jamo (3130-318F)
-        Kanbun (3190-319F)
-        Bopomofo Extended (31A0-31BF)
-        CJK Strokes (31C0-31EF)
-        Katakana Phonetic Extensions (31F0-31FF)
-        Enclosed CJK Letters and Months (3200-32FF)
-        CJK Compatibility (3300-33FF)
-        CJK Unified Ideographs Extension A (3400-4DBF)
-        Yijing Hexagram Symbols (4DC0-4DFF)
-        CJK Unified Ideographs (4E00-9FFF) */
+	    Hiragana (3040-309F)
+	    Katakana (30A0-30FF)
+	    Bopomofo (3100-312F)
+	    Hangul Compatibility Jamo (3130-318F)
+	    Kanbun (3190-319F)
+	    Bopomofo Extended (31A0-31BF)
+	    CJK Strokes (31C0-31EF)
+	    Katakana Phonetic Extensions (31F0-31FF)
+	    Enclosed CJK Letters and Months (3200-32FF)
+	    CJK Compatibility (3300-33FF)
+	    CJK Unified Ideographs Extension A (3400-4DBF)
+	    Yijing Hexagram Symbols (4DC0-4DFF)
+	    CJK Unified Ideographs (4E00-9FFF) */
 	if (ch >= 0x3040 && ch <= 0x9fff)
 		return TRUE;
 
@@ -428,7 +428,6 @@ static void setup_palette(running_machine &machine)
 /*-------------------------------------------------
     ui_init - set up the user interface
 -------------------------------------------------*/
-
 static const UINT32 mouse_bitmap[] = {
 	0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,
 	0x09a46f30,0x81ac7c43,0x24af8049,0x00ad7d45,0x00a8753a,0x00a46f30,0x009f6725,0x009b611c,0x00985b14,0x0095560d,0x00935308,0x00915004,0x00904e02,0x008f4e01,0x008f4d00,0x008f4d00,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,
@@ -529,7 +528,7 @@ int ui_display_startup_screens(running_machine &machine, int first_time, int sho
 	int state;
 
 	/* disable everything if we are using -str for 300 or fewer seconds, or if we're the empty driver,
-       or if we are debugging */
+	   or if we are debugging */
 	if (!first_time || (str > 0 && str < 60*5) || &machine.system() == &GAME_NAME(___empty) || (machine.debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		show_gameinfo = show_warnings = show_disclaimer = FALSE;
 
@@ -954,7 +953,7 @@ void ui_draw_text_full(render_container *container, const char *origs, float x, 
 			s += scharcount;
 
 			/* if we hit any non-space breakable character, remember the location and width
-               *with* the breakable character */
+			   *with* the breakable character */
 			if (schar != ' ' && is_breakable_char(schar) && curwidth <= wrapwidth)
 			{
 				lastbreak = s;
@@ -1211,9 +1210,9 @@ void ui_draw_text_box_scroll(render_container *container, const char *text, int 
 
 	/* add a box around that */
 	ui_draw_outlined_box(container, target_x - UI_BOX_LR_BORDER,
-					 target_y - UI_BOX_TB_BORDER,
-					 target_x + target_width + UI_BOX_LR_BORDER,
-					 target_y + target_height + UI_BOX_TB_BORDER, backcolor);
+						target_y - UI_BOX_TB_BORDER,
+						target_x + target_width + UI_BOX_LR_BORDER,
+						target_y + target_height + UI_BOX_TB_BORDER, backcolor);
 	ui_draw_text_full_scroll(container, text, target_x, target_y, target_width + 0.00001f, offset,
 				justify, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
 }
@@ -1473,7 +1472,7 @@ static astring &disclaimer_string(running_machine &machine, astring &string)
 
 static astring &warnings_string(running_machine &machine, astring &string)
 {
-#define WARNING_FLAGS (	GAME_NOT_WORKING | \
+#define WARNING_FLAGS ( GAME_NOT_WORKING | \
 						GAME_UNEMULATED_PROTECTION | \
 						GAME_MECHANICAL | \
 						GAME_WRONG_COLORS | \
@@ -1549,13 +1548,13 @@ static astring &warnings_string(running_machine &machine, astring &string)
 				string.cat(_("\nTHIS "));
 				string.cat(emulator_info::get_capgamenoun());
 				string.cat(_(" DOESN'T WORK. The emulation for this game is not yet complete. "
-					 "There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
+						"There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
 			}
 			if (machine.system().flags & GAME_MECHANICAL) {
 				string.cat(_("\nCertain elements of this "));
 				string.cat(emulator_info::get_gamenoun());
 				string.cat(_(" cannot be emulated as it requires actual physical interaction or consists of mechanical devices. "
-					 "It is not possible to fully play this "));
+						"It is not possible to fully play this "));
 				string.cat(emulator_info::get_gamenoun());
 				string.cat(".\n");
 			}
@@ -1658,7 +1657,7 @@ astring &game_info_astring(running_machine &machine, astring &string)
 		{
 			if (sound->device().type() == scan->device().type() && sound->device().clock() == scan->device().clock())
 				if (soundtags.add(scan->device().tag(), 1, FALSE) != TMERR_DUPLICATE)
-			count++;
+					count++;
 		}
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
@@ -2999,7 +2998,6 @@ void ui_set_use_natural_keyboard(running_machine &machine, int use_natural_keybo
 	machine.options().set_value(OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE, error);
 	assert(!error);
 }
-
 
 
 static void build_bgtexture(running_machine &machine)

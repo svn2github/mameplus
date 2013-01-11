@@ -10,35 +10,29 @@
 #include "emu.h"
 #include "audio/dsbz80.h"
 
-#define	Z80_TAG	"mpegcpu"
-#define YMZ770_TAG	"ymz770"
+#define Z80_TAG "mpegcpu"
+#define YMZ770_TAG  "ymz770"
 
 static ADDRESS_MAP_START( dsbz80_map, AS_PROGRAM, 8, dsbz80_device )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM AM_REGION(":mpegcpu", 0)
-    AM_RANGE(0x8000, 0xffff) AM_RAM
+	AM_RANGE(0x8000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dsbz80io_map, AS_IO, 8, dsbz80_device )
-    AM_RANGE(0xe0, 0xe0) AM_MIRROR(0xff00) AM_WRITE(mpeg_trigger_w)
-    AM_RANGE(0xe2, 0xe4) AM_MIRROR(0xff00) AM_READWRITE(mpeg_pos_r, mpeg_start_w)
-    AM_RANGE(0xe5, 0xe7) AM_MIRROR(0xff00) AM_WRITE(mpeg_end_w)
-    AM_RANGE(0xe8, 0xe8) AM_MIRROR(0xff00) AM_WRITE(mpeg_volume_w)
-    AM_RANGE(0xe9, 0xe9) AM_MIRROR(0xff00) AM_WRITE(mpeg_stereo_w)
-    AM_RANGE(0xf0, 0xf0) AM_MIRROR(0xff00) AM_READ(latch_r)
-    AM_RANGE(0xf1, 0xf1) AM_MIRROR(0xff00) AM_READ(status_r)
+	AM_RANGE(0xe0, 0xe0) AM_MIRROR(0xff00) AM_WRITE(mpeg_trigger_w)
+	AM_RANGE(0xe2, 0xe4) AM_MIRROR(0xff00) AM_READWRITE(mpeg_pos_r, mpeg_start_w)
+	AM_RANGE(0xe5, 0xe7) AM_MIRROR(0xff00) AM_WRITE(mpeg_end_w)
+	AM_RANGE(0xe8, 0xe8) AM_MIRROR(0xff00) AM_WRITE(mpeg_volume_w)
+	AM_RANGE(0xe9, 0xe9) AM_MIRROR(0xff00) AM_WRITE(mpeg_stereo_w)
+	AM_RANGE(0xf0, 0xf0) AM_MIRROR(0xff00) AM_READ(latch_r)
+	AM_RANGE(0xf1, 0xf1) AM_MIRROR(0xff00) AM_READ(status_r)
 ADDRESS_MAP_END
 
 
 MACHINE_CONFIG_FRAGMENT( dsbz80 )
-    MCFG_CPU_ADD(Z80_TAG, Z80, 1000000)     /* unknown clock, but probably pretty slow considering the z80 does like nothing */
+	MCFG_CPU_ADD(Z80_TAG, Z80, 4000000)     /* unknown clock, but probably pretty slow considering the z80 does like nothing */
 	MCFG_CPU_PROGRAM_MAP(dsbz80_map)
-    MCFG_CPU_IO_MAP(dsbz80io_map)
-#if 0
-    MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-    MCFG_YMZ770_ADD(YMZ770_TAG, 8000000)    /* clock ignored for this */
-	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
-	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
-#endif
+	MCFG_CPU_IO_MAP(dsbz80io_map)
 MACHINE_CONFIG_END
 
 //**************************************************************************
@@ -67,9 +61,9 @@ machine_config_constructor dsbz80_device::device_mconfig_additions() const
 //-------------------------------------------------
 
 dsbz80_device::dsbz80_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
-    device_t(mconfig, DSBZ80, "Sega Z80-based Digital Sound Board", tag, owner, clock),
-	m_ourcpu(*this, Z80_TAG),
-	m_ymz770(*this, YMZ770_TAG)
+	device_t(mconfig, DSBZ80, "Sega Z80-based Digital Sound Board", tag, owner, clock),
+	device_sound_interface(mconfig, *this),
+	m_ourcpu(*this, Z80_TAG)
 {
 }
 
@@ -79,6 +73,9 @@ dsbz80_device::dsbz80_device(const machine_config &mconfig, const char *tag, dev
 
 void dsbz80_device::device_start()
 {
+	UINT8 *rom_base = machine().root_device().memregion("mpeg")->base();
+	decoder = new mpeg_audio(rom_base, mpeg_audio::L2, false, 0);
+	machine().sound().stream_alloc(*this, 0, 2, 32000, this);
 }
 
 //-------------------------------------------------
@@ -89,52 +86,50 @@ void dsbz80_device::device_reset()
 {
 	m_dsb_latch = 0;
 	status = 1;
-    start = end = 0;
+	start = end = 0;
+	audio_pos = audio_avail = 0;
+	memset(audio_buf, 0, sizeof(audio_buf));
+	mp_state = 0;
 }
 
 WRITE8_MEMBER(dsbz80_device::latch_w)
 {
 	m_ourcpu->set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
-    m_dsb_latch = data;
-    status |= 2;
-//    printf("%02x to DSB latch\n", data);
+	m_dsb_latch = data;
+	status |= 2;
+//  printf("%02x to DSB latch\n", data);
 }
 
 READ8_MEMBER(dsbz80_device::latch_r)
 {
 	m_ourcpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
-//    printf("DSB Z80 read %02x\n", m_dsb_latch);
+//  printf("DSB Z80 read %02x\n", m_dsb_latch);
 	status &= ~2;
-    return m_dsb_latch;
+	return m_dsb_latch;
 }
 
 WRITE8_MEMBER(dsbz80_device::mpeg_trigger_w)
 {
 	mp_state = data;
 
-	if (data == 0)	// stop
+	if (data == 0)  // stop
 	{
-//      MPEG_Stop_Playing();
-//        printf("MPEG stop\n");
+		mp_state = 0;
+		audio_pos = audio_avail = 0;
 	}
-	else if (data == 1)	// play without loop
+	else if (data == 1) // play without loop
 	{
-//      MPEG_Set_Loop(NULL, 0);
-//      MPEG_Play_Memory(ROM + mp_start, mp_end-mp_start);
-//        printf("MPEG start, one-shot from %x\n", mp_start);
+		mp_pos = mp_start*8;
 	}
-	else if (data == 2)	// play with loop
+	else if (data == 2) // play with loop
 	{
-//      MPEG_Play_Memory(ROM + mp_start, mp_end-mp_start);
-//        printf("MPEG start, loop from %x\n", mp_start);
+		mp_pos = mp_start*8;
 	}
 }
 
 READ8_MEMBER(dsbz80_device::mpeg_pos_r)
 {
-	int mp_prg = 0; //MPEG_Get_Progress();  // returns the byte offset currently playing
-
-	mp_prg += mp_start;
+	int mp_prg = mp_pos >> 3;
 
 	switch (offset)
 	{
@@ -229,7 +224,7 @@ WRITE8_MEMBER(dsbz80_device::mpeg_volume_w)
 
 WRITE8_MEMBER(dsbz80_device::mpeg_stereo_w)
 {
-	mp_pan = data & 3;
+	mp_pan = data & 3;  // 0 = stereo, 1 = left on both channels, 2 = right on both channels
 }
 
 READ8_MEMBER(dsbz80_device::status_r)
@@ -239,4 +234,83 @@ READ8_MEMBER(dsbz80_device::status_r)
 	// other bits = ???
 	// SWA requires that status & 0x38 = 0 or else it loops endlessly...
 	return status;
+}
+
+void dsbz80_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	stream_sample_t *out_l = outputs[0];
+	stream_sample_t *out_r = outputs[1];
+
+	for(;;)
+	{
+		while(samples && audio_pos < audio_avail)
+		{
+			switch (mp_pan)
+			{
+				case 0: // stereo
+					*out_l++ = audio_buf[audio_pos*2];
+					*out_r++ = audio_buf[audio_pos*2+1];
+					break;
+
+				case 1: // left only
+					*out_l++ = audio_buf[audio_pos*2];
+					*out_r++ = audio_buf[audio_pos*2];
+					break;
+
+				case 2: // right only
+					*out_l++ = audio_buf[audio_pos*2+1];
+					*out_r++ = audio_buf[audio_pos*2+1];
+					break;
+			}
+			audio_pos++;
+			samples--;
+		}
+
+		if(!samples)
+		{
+			break;
+		}
+
+		if(mp_state == 0)
+		{
+			for(int i=0; i != samples; i++)
+			{
+				*out_l++ = 0;
+				*out_r++ = 0;
+			}
+			break;
+
+		}
+		else
+		{
+			int sample_rate, channel_count;
+			bool ok = decoder->decode_buffer(mp_pos, mp_end*8, audio_buf, audio_avail, sample_rate, channel_count);
+
+			if (ok)
+			{
+				audio_pos = 0;
+			}
+			else
+			{
+				if(mp_state == 2)
+				{
+					if (mp_pos == lp_start*8)
+					{
+						// We're looping on un-decodable crap, abort abort abort
+						mp_state = 0;
+					}
+					mp_pos = lp_start*8;
+
+					if (lp_end)
+					{
+						mp_end = lp_end;
+					}
+				}
+				else
+				{
+					mp_state = 0;
+				}
+			}
+		}
+	}
 }

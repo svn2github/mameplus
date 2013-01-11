@@ -28,7 +28,6 @@ public:
 
 
 	/* misc game specific */
-	UINT8 m_c8080bw_flip_screen;
 	UINT8 m_color_map;
 	UINT8 m_screen_red;
 	UINT8 m_fleet_step;
@@ -58,7 +57,9 @@ public:
 	DECLARE_WRITE8_MEMBER(spcewars_sh_port_w);
 	DECLARE_WRITE8_MEMBER(lrescue_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(lrescue_sh_port_2_w);
+	DECLARE_WRITE8_MEMBER(cosmicmo_05_w);
 	DECLARE_WRITE8_MEMBER(cosmo_sh_port_2_w);
+	DECLARE_READ8_MEMBER(darthvdr_01_r);
 	DECLARE_WRITE8_MEMBER(darthvdr_00_w);
 	DECLARE_WRITE8_MEMBER(darthvdr_08_w);
 	DECLARE_WRITE8_MEMBER(ballbomb_01_w);
@@ -84,6 +85,9 @@ public:
 	DECLARE_WRITE8_MEMBER(shuttlei_ff_w);
 	DECLARE_WRITE8_MEMBER(shuttlei_sh_port_1_w);
 	DECLARE_WRITE8_MEMBER(shuttlei_sh_port_2_w);
+	DECLARE_WRITE8_MEMBER(galactic_07_w);
+	DECLARE_WRITE8_MEMBER(galactic_sh_port_1_w);
+	DECLARE_WRITE8_MEMBER(galactic_sh_port_2_w);
 	DECLARE_READ8_MEMBER(claybust_gun_lo_r);
 	DECLARE_READ8_MEMBER(claybust_gun_hi_r);
 	DECLARE_READ8_MEMBER(invmulti_eeprom_r);
@@ -136,9 +140,9 @@ extern const samples_interface lupin3_samples_interface;
 
 DISCRETE_SOUND_EXTERN( ballbomb );
 DISCRETE_SOUND_EXTERN( indianbt );
+DISCRETE_SOUND_EXTERN( galactic );
 DISCRETE_SOUND_EXTERN( polaris );
 
 extern const sn76477_interface lupin3_sn76477_interface;
 extern const sn76477_interface schaser_sn76477_interface;
 DISCRETE_SOUND_EXTERN( schaser );
-

@@ -148,7 +148,6 @@ char *core_strdup(const char *str)
 	return cpy;
 }
 
-
 #ifdef DRIVER_SWITCH
 /*-------------------------------------------------
     core_strtrim - for get individual driver name
@@ -175,7 +174,6 @@ char *core_strtrim(const char *str)
 	return s;
 }
 #endif /* DRIVER_SWITCH */
-
 
 /*-------------------------------------------------
     core_i64_hex_format - i64 format printf helper

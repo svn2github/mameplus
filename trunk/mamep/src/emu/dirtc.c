@@ -64,14 +64,14 @@ void device_rtc_interface::set_time(bool update, int year, int month, int day, i
 	if (update)
 	{
 		rtc_clock_updated(m_register[RTC_YEAR], m_register[RTC_MONTH], m_register[RTC_DAY], m_register[RTC_DAY_OF_WEEK],
-			m_register[RTC_HOUR], m_register[RTC_MINUTE], m_register[RTC_SECOND]);	
+			m_register[RTC_HOUR], m_register[RTC_MINUTE], m_register[RTC_SECOND]);
 	}
 }
 
 
 //-------------------------------------------------
-//  set_current_time - called to initialize the RTC 
-//	to the current system time
+//  set_current_time - called to initialize the RTC
+//  to the current system time
 //-------------------------------------------------
 
 void device_rtc_interface::set_current_time(running_machine &machine)
@@ -80,7 +80,7 @@ void device_rtc_interface::set_current_time(running_machine &machine)
 	machine.base_datetime(systime);
 
 	set_time(true, systime.local_time.year, systime.local_time.month + 1, systime.local_time.mday, systime.local_time.weekday + 1,
-		systime.local_time.hour, systime.local_time.minute,	systime.local_time.second);
+		systime.local_time.hour, systime.local_time.minute, systime.local_time.second);
 }
 
 
@@ -105,7 +105,7 @@ int device_rtc_interface::bcd_to_integer(UINT8 val)
 
 
 //-------------------------------------------------
-//  set_clock_register - 
+//  set_clock_register -
 //-------------------------------------------------
 
 void device_rtc_interface::set_clock_register(int reg, int value)
@@ -115,7 +115,7 @@ void device_rtc_interface::set_clock_register(int reg, int value)
 
 
 //-------------------------------------------------
-//  get_clock_register - 
+//  get_clock_register -
 //-------------------------------------------------
 
 int device_rtc_interface::get_clock_register(int reg)
@@ -125,13 +125,13 @@ int device_rtc_interface::get_clock_register(int reg)
 
 
 //-------------------------------------------------
-//  clock_updated - 
+//  clock_updated -
 //-------------------------------------------------
 
 void device_rtc_interface::clock_updated()
 {
 	rtc_clock_updated(m_register[RTC_YEAR], m_register[RTC_MONTH], m_register[RTC_DAY], m_register[RTC_DAY_OF_WEEK],
-		m_register[RTC_HOUR], m_register[RTC_MINUTE], m_register[RTC_SECOND]);	
+		m_register[RTC_HOUR], m_register[RTC_MINUTE], m_register[RTC_SECOND]);
 }
 
 

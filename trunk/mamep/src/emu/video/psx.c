@@ -7,7 +7,6 @@
 
 #include "emu.h"
 #include "video/psx.h"
-#include "includes/psx.h"
 
 #define VERBOSE_LEVEL ( 0 )
 
@@ -45,32 +44,32 @@ void psxgpu_device::device_reset( void )
 }
 
 cxd8514q_device::cxd8514q_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : psxgpu_device(mconfig, CXD8514Q, "CXD8514Q", tag, owner, clock)
+	: psxgpu_device(mconfig, CXD8514Q, "CXD8514Q", tag, owner, clock)
 {
 }
 
 cxd8538q_device::cxd8538q_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : psxgpu_device(mconfig, CXD8538Q, "CXD8538Q", tag, owner, clock)
+	: psxgpu_device(mconfig, CXD8538Q, "CXD8538Q", tag, owner, clock)
 {
 }
 
 cxd8561q_device::cxd8561q_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : psxgpu_device(mconfig, CXD8561Q, "CXD8561Q", tag, owner, clock)
+	: psxgpu_device(mconfig, CXD8561Q, "CXD8561Q", tag, owner, clock)
 {
 }
 
 cxd8561bq_device::cxd8561bq_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : psxgpu_device(mconfig, CXD8561BQ, "CXD8561BQ", tag, owner, clock)
+	: psxgpu_device(mconfig, CXD8561BQ, "CXD8561BQ", tag, owner, clock)
 {
 }
 
 cxd8561cq_device::cxd8561cq_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : psxgpu_device(mconfig, CXD8561CQ, "CXD8561CQ", tag, owner, clock)
+	: psxgpu_device(mconfig, CXD8561CQ, "CXD8561CQ", tag, owner, clock)
 {
 }
 
 cxd8654q_device::cxd8654q_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-    : psxgpu_device(mconfig, CXD8654Q, "CXD8654Q", tag, owner, clock)
+	: psxgpu_device(mconfig, CXD8654Q, "CXD8654Q", tag, owner, clock)
 {
 }
 
@@ -835,7 +834,7 @@ void psxgpu_device::decode_tpage( UINT32 tpage )
 	p_n_redtrans = p_n_redaddtrans; \
 	p_n_greentrans = p_n_greenaddtrans; \
 	p_n_bluetrans = p_n_blueaddtrans; \
- \
+	\
 	switch( n_cmd & 0x02 ) \
 	{ \
 	case 0x02: \
@@ -922,7 +921,7 @@ void psxgpu_device::decode_tpage( UINT32 tpage )
 		n_distance = ( n_drawarea_x2 - n_x ) + 1; \
 	} \
 	p_vram = p_p_vram[ n_y ] + n_x; \
- \
+	\
 	switch( n_cmd & 0x02 ) \
 	{ \
 	case 0x00: \
@@ -1054,7 +1053,7 @@ void psxgpu_device::decode_tpage( UINT32 tpage )
 		n_distance = ( n_drawarea_x2 - n_x ) + 1; \
 	} \
 	p_vram = p_p_vram[ n_y ] + n_x; \
- \
+	\
 	if( n_ti != 0 ) \
 	{ \
 		/* interleaved texture */ \
@@ -2938,11 +2937,8 @@ void psxgpu_device::MoveImage( void )
 	}
 }
 
-void psxgpu_device::dma_write( UINT32 n_address, INT32 n_size )
+void psxgpu_device::dma_write( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size )
 {
-	psx_state *p_psx = machine().driver_data<psx_state>();
-	UINT32 *p_n_psxram = p_psx->m_p_n_psxram;
-
 	gpu_write( &p_n_psxram[ n_address / 4 ], n_size );
 }
 
@@ -3578,11 +3574,8 @@ WRITE32_MEMBER( psxgpu_device::write )
 }
 
 
-void psxgpu_device::dma_read( UINT32 n_address, INT32 n_size )
+void psxgpu_device::dma_read( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size )
 {
-	psx_state *p_psx = machine().driver_data<psx_state>();
-	UINT32 *p_n_psxram = p_psx->m_p_n_psxram;
-
 	gpu_read( &p_n_psxram[ n_address / 4 ], n_size );
 }
 

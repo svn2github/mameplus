@@ -118,13 +118,13 @@
 READ32_MEMBER(eolith_state::eolith_custom_r)
 {
 	/*
-        bit 3 = eeprom bit
-        bit 6 = vblank flag
+	    bit 3 = eeprom bit
+	    bit 6 = vblank flag
 
-        Are these used only in landbrka ?
-        bit 8 = ???
-        bit 9 = ???
-    */
+	    Are these used only in landbrka ?
+	    bit 8 = ???
+	    bit 9 = ???
+	*/
 	eolith_speedup_read(space);
 
 	return (ioport("IN0")->read() & ~0x300) | (machine().rand() & 0x300);
@@ -290,18 +290,18 @@ static INPUT_PORTS_START( common )
 	PORT_BIT( 0x00003f80, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x00008000, IP_ACTIVE_LOW )
-	PORT_BIT( 0x00010000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP	) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x00020000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN	) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x00040000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT	) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x00080000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT	) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x00010000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x00020000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x00040000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x00080000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x00100000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
 	PORT_BIT( 0x00200000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
 	PORT_BIT( 0x00400000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00800000, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x01000000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP	) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN	) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT	) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x08000000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT	) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x01000000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x08000000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
 	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
 	PORT_BIT( 0x40000000, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -316,7 +316,7 @@ static INPUT_PORTS_START( common )
 	PORT_DIPUNUSED_DIPLOC( 0x00000020, IP_ACTIVE_LOW, "SW3:2" )
 	PORT_DIPUNUSED_DIPLOC( 0x00000040, IP_ACTIVE_LOW, "SW3:3" )
 	PORT_DIPUNUSED_DIPLOC( 0x00000080, IP_ACTIVE_LOW, "SW3:4" )
-	PORT_BIT( 0xffffff00, IP_ACTIVE_LOW, IPT_UNUSED	)
+	PORT_BIT( 0xffffff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x00000002, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
@@ -529,13 +529,13 @@ INPUT_PORTS_END
 // It's configured for 512 bytes
 static const eeprom_interface eeprom_interface_93C66 =
 {
-	9,				// address bits 9
-	8,				// data bits    8
-	"*110",			// read         110 aaaaaaaaa
-	"*101",			// write        101 aaaaaaaaa dddddddd
-	"*111",			// erase        111 aaaaaaaaa
-	"*10000xxxxxx",	// lock         100 00xxxxxxx
-	"*10011xxxxxx"	// unlock       100 11xxxxxxx
+	9,              // address bits 9
+	8,              // data bits    8
+	"*110",         // read         110 aaaaaaaaa
+	"*101",         // write        101 aaaaaaaaa dddddddd
+	"*111",         // erase        111 aaaaaaaaa
+	"*10000xxxxxx", // lock         100 00xxxxxxx
+	"*10011xxxxxx"  // unlock       100 11xxxxxxx
 };
 
 
@@ -569,7 +569,7 @@ static QS1000_INTERFACE( qs1000_intf )
  *************************************/
 
 static MACHINE_CONFIG_START( eolith45, eolith_state )
-	MCFG_CPU_ADD("maincpu", E132N, 45000000)		 /* 45 MHz */
+	MCFG_CPU_ADD("maincpu", E132N, 45000000)         /* 45 MHz */
 	MCFG_CPU_PROGRAM_MAP(eolith_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", eolith_state, eolith_speedup, "screen", 0, 1)
 
@@ -609,7 +609,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( eolith50, eolith45 )
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_CLOCK(50000000)		 /* 50 MHz */
+	MCFG_CPU_CLOCK(50000000)         /* 50 MHz */
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( ironfort, eolith45 )
@@ -1168,6 +1168,43 @@ ROM_START( penfan )
 ROM_END
 
 
+ROM_START( penfana )
+	ROM_REGION( 0x80000, "maincpu", 0 ) /* Hyperstone CPU Code */
+	ROM_LOAD( "27c040.u43", 0x00000, 0x80000, CRC(a7637f8b) SHA1(aadfaa03b43cd325ddbc04fe7b60ca704a9891a5) ) /* no rom label or sticker */
+
+	ROM_REGION32_BE( 0x2000000, "user1", ROMREGION_ERASEFF ) /* Game Data - banked ROM, swapping necessary */
+	ROM_LOAD32_WORD_SWAP( "00.u5", 0x0000000, 0x200000, CRC(77ce2855) SHA1(715d12db11871750b886406673a6f3934b0b1a57) )
+	ROM_LOAD32_WORD_SWAP( "01.u1", 0x0000002, 0x200000, CRC(a7d7299d) SHA1(e0c4d399ac0d2525d80249d908c72a51b701e9b0) )
+	ROM_LOAD32_WORD_SWAP( "02.u6", 0x0400000, 0x200000, CRC(79b05a66) SHA1(8e6ffa751267147679fde84b5c8b9ef954e4a1d0) )
+	ROM_LOAD32_WORD_SWAP( "03.u2", 0x0400002, 0x200000, CRC(bddd9ad8) SHA1(5ceb9d7162393e83527e9de7599eff7dd978c614) )
+	ROM_LOAD32_WORD_SWAP( "04.u7", 0x0800000, 0x200000, CRC(9fba61bd) SHA1(6605d0a9eb7c9d0c956ca7cfafc5960c78e868de) )
+	ROM_LOAD32_WORD_SWAP( "05.u3", 0x0800002, 0x200000, CRC(ed34befb) SHA1(dde5dfe82789bbe542fb39881bd0eab6597efd9f) )
+	ROM_LOAD32_WORD_SWAP( "06.u8", 0x0c00000, 0x200000, CRC(cc3dff54) SHA1(256f5cc407d5a991afcfc6f97f61bd24904cc412) )
+	ROM_LOAD32_WORD_SWAP( "07.u4", 0x0c00002, 0x200000, CRC(9e33a480) SHA1(74da19dc02e838e6d20ff522611eb6d30e961483) )
+	ROM_LOAD32_WORD_SWAP( "08.u15", 0x1000000, 0x200000, CRC(89449f18) SHA1(820dc480d6e1d11a70eea2ad536f7c1a6a18c863) )
+	ROM_LOAD32_WORD_SWAP( "09.u10", 0x1000002, 0x200000, CRC(2b07cba0) SHA1(1a1fbca6f60482d8255665270cdfc6518b333338) )
+	ROM_LOAD32_WORD_SWAP( "10.u16", 0x1400000, 0x200000, CRC(738abbaa) SHA1(e261baf79e28b0b20dabaea6040cb1064f33baa5) )
+	ROM_LOAD32_WORD_SWAP( "11.u11", 0x1400002, 0x200000, CRC(ddcd2bae) SHA1(c4fa5ebbaf801a7f06222150658033955966fe1b) )
+	ROM_LOAD32_WORD_SWAP( "12.u17", 0x1800000, 0x200000, CRC(2eed0f64) SHA1(3b9e65e41d8699a93ea74225ba12a3f66ecba11d) )
+	ROM_LOAD32_WORD_SWAP( "13.u12", 0x1800002, 0x200000, CRC(cc3068a8) SHA1(0022fad5a4d36678d35e99092c870f2b99d3d8d4) )
+	ROM_LOAD32_WORD_SWAP( "14.u18", 0x1c00000, 0x200000, CRC(20a9a08e) SHA1(fe4071cdf78d362bccaee92cdc70c66f7e30f817) ) // not checked by rom check
+	ROM_LOAD32_WORD_SWAP( "15.u13", 0x1c00002, 0x200000, CRC(872fa9c4) SHA1(4902faa97c9a3a9671cfefc6a711cfcd25f2d6bc) ) // not checked by rom check
+
+	ROM_REGION( 0x008000, "soundcpu", 0 ) /* Sound (80c301) CPU Code */
+	ROM_LOAD( "pfg.u111", 0x0000, 0x8000, CRC(79012474) SHA1(09a2d5705d7bc52cc2d1644c87c1e31ee44813ef) )
+
+	ROM_REGION( 0x080000, "sounddata", 0 ) /* Music data */
+	ROM_LOAD( "pfg.u108", 0x00000, 0x80000, CRC(ac97c23b) SHA1(85319cbff811c84af2a802c2f609bd58cf9e7bc3) )
+
+	ROM_REGION( 0x008000, "qs1000:cpu", 0 ) /* QDSP (8052) Code */
+	ROM_LOAD( "pfg.u107", 0x0000, 0x8000, CRC(afd5263d) SHA1(71ace1b749d8a6b84d08b97185e7e512d04e4b8d) )
+
+	ROM_REGION( 0x1000000, "qs1000", 0 ) /* QDSP sample ROMs */
+	ROM_LOAD( "pfg.u97",     0x00000, 0x80000, CRC(0c713eef) SHA1(4c4ea19fec5af4f0cb983c8b9f71152d05c15047) )
+	ROM_LOAD( "qs1001a.u96", 0x80000, 0x80000, CRC(d13c6407) SHA1(57b14f97c7d4f9b5d9745d3571a0b7115fbe3176) )
+ROM_END
+
+
 ROM_START( stealsee )
 	ROM_REGION( 0x80000, "maincpu", 0 ) /* Hyperstone CPU Code */
 	ROM_LOAD( "ss.u43", 0x00000, 0x80000, CRC(b0a1a965) SHA1(e13f336035a266da66ca8f95b92cac7295323989) )
@@ -1513,7 +1550,8 @@ GAME( 1999, hidctch2a, hidctch2, eolith50, hidnctch, eolith_state,  eolith,   RO
 GAME( 1999, landbrk,   0,        eolith45, landbrk, eolith_state,   landbrk,  ROT0, "Eolith", "Land Breaker (World) / Miss Tang Ja Ru Gi (Korea) (pcb ver 3.02)",  GAME_IMPERFECT_SOUND ) // or Miss Ttang Jjareugi
 GAME( 1999, landbrka,  landbrk,  eolith45, landbrk, eolith_state,   landbrka, ROT0, "Eolith", "Land Breaker (World) / Miss Tang Ja Ru Gi (Korea) (pcb ver 3.03) (AT89c52 protected)",  GAME_IMPERFECT_SOUND ) // or Miss Ttang Jjareugi
 GAME( 1999, nhidctch,  0,        eolith45, hidnctch, eolith_state,  eolith,   ROT0, "Eolith", "New Hidden Catch (World) / New Tul Lin Gu Lim Chat Ki '98 (Korea) (pcb ver 3.02)", GAME_IMPERFECT_SOUND ) // or New Teurrin Geurim Chajgi '98
-GAME( 1999, penfan,    0,        eolith45, landbrk, eolith_state,   eolith,   ROT0, "Eolith", "Penfan Girls - Step1. Mild Mind",  GAME_IMPERFECT_SOUND ) // alt title of Ribbon
+GAME( 1999, penfan,    0,        eolith45, landbrk, eolith_state,   eolith,   ROT0, "Eolith", "Penfan Girls - Step1. Mild Mind (set 1)",  GAME_IMPERFECT_SOUND ) // alt title of Ribbon
+GAME( 1999, penfana,   penfan,   eolith45, landbrk, eolith_state,   eolith,   ROT0, "Eolith", "Penfan Girls - Step1. Mild Mind (set 2)",  GAME_IMPERFECT_SOUND )
 GAME( 2000, stealsee,  0,        eolith45, stealsee, eolith_state,  eolith,   ROT0, "Moov Generation / Eolith", "Steal See (& Get Land)",  GAME_IMPERFECT_SOUND )
 GAME( 2000, hidctch3,  0,        eolith50, hidctch3, eolith_state,  hidctch3, ROT0, "Eolith", "Hidden Catch 3 (ver 1.00 / pcb ver 3.05)", GAME_IMPERFECT_SOUND )
 GAME( 2001, fort2b,    0,        eolith50, common, eolith_state,    eolith,   ROT0, "Eolith", "Fortress 2 Blue Arcade (ver 1.01 / pcb ver 3.05)",  GAME_IMPERFECT_SOUND )

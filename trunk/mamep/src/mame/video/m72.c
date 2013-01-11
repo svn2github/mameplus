@@ -131,10 +131,10 @@ VIDEO_START_MEMBER(m72_state,m72)
 	memset(m_buffered_spriteram,0,m_spriteram.bytes());
 
 	m_fg_tilemap->set_scrolldx(0,0);
-	m_fg_tilemap->set_scrolldy(-128,16);
+	m_fg_tilemap->set_scrolldy(-128,-128);
 
 	m_bg_tilemap->set_scrolldx(0,0);
-	m_bg_tilemap->set_scrolldy(-128,16);
+	m_bg_tilemap->set_scrolldy(-128,-128);
 
 	register_savestate(machine());
 }
@@ -143,8 +143,9 @@ VIDEO_START_MEMBER(m72_state,xmultipl)
 {
 	VIDEO_START_CALL_MEMBER(m72);
 
-	m_fg_tilemap->set_scrolldx(4,0);
+	m_fg_tilemap->set_scrolldx(4,64);
 	m_bg_tilemap->set_scrolldx(6,0);
+	m_fg_tilemap->set_scrolldy(-128, 0);
 }
 
 VIDEO_START_MEMBER(m72_state,rtype2)
@@ -179,14 +180,18 @@ VIDEO_START_MEMBER(m72_state,poundfor)
 
 	m_fg_tilemap->set_scrolldx(6,0);
 	m_bg_tilemap->set_scrolldx(6,0);
+	m_fg_tilemap->set_scrolldy(-128,-128);
+	m_bg_tilemap->set_scrolldy(-128,-128);
 }
 
 VIDEO_START_MEMBER(m72_state,hharryu)
 {
 	VIDEO_START_CALL_MEMBER(rtype2);
 
-	m_fg_tilemap->set_scrolldx(4,0);
+	m_fg_tilemap->set_scrolldx(4,3);
 	m_bg_tilemap->set_scrolldx(6,0);
+	m_fg_tilemap->set_scrolldy(-128,-128);
+	m_bg_tilemap->set_scrolldy(-128,-128);
 }
 
 /* Major Title has a larger background RAM, and rowscroll */
@@ -211,10 +216,10 @@ VIDEO_START_MEMBER(m72_state,majtitle)
 	memset(m_buffered_spriteram,0,m_spriteram.bytes());
 
 	m_fg_tilemap->set_scrolldx(4,0);
-	m_fg_tilemap->set_scrolldy(-128,16);
+	m_fg_tilemap->set_scrolldy(-128,-128);
 
 	m_bg_tilemap->set_scrolldx(4,0);
-	m_bg_tilemap->set_scrolldy(-128,16);
+	m_bg_tilemap->set_scrolldy(-128,-128);
 
 	register_savestate(machine());
 }
@@ -236,8 +241,8 @@ VIDEO_START_MEMBER(m72_state,hharry)
 
 	memset(m_buffered_spriteram,0,m_spriteram.bytes());
 
-	m_fg_tilemap->set_scrolldx(4,0);
-	m_fg_tilemap->set_scrolldy(-128,16);
+	m_fg_tilemap->set_scrolldx(4,3);
+	m_fg_tilemap->set_scrolldy(-128,-128);
 
 	m_bg_tilemap->set_scrolldx(6,0);
 	m_bg_tilemap->set_scrolldy(-128,16);
@@ -257,7 +262,7 @@ READ16_MEMBER(m72_state::m72_palette1_r)
 	/* A9 isn't connected, so 0x200-0x3ff mirrors 0x000-0x1ff etc. */
 	offset &= ~0x100;
 
-	return m_generic_paletteram_16[offset] | 0xffe0;	/* only D0-D4 are connected */
+	return m_generic_paletteram_16[offset] | 0xffe0;    /* only D0-D4 are connected */
 }
 
 READ16_MEMBER(m72_state::m72_palette2_r)
@@ -265,7 +270,7 @@ READ16_MEMBER(m72_state::m72_palette2_r)
 	/* A9 isn't connected, so 0x200-0x3ff mirrors 0x000-0x1ff etc. */
 	offset &= ~0x100;
 
-	return m_generic_paletteram2_16[offset] | 0xffe0;	/* only D0-D4 are connected */
+	return m_generic_paletteram2_16[offset] | 0xffe0;   /* only D0-D4 are connected */
 }
 
 INLINE void changecolor(running_machine &machine,int color,int r,int g,int b)

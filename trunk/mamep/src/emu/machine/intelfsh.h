@@ -46,6 +46,9 @@
 #define MCFG_SANYO_LE26FV10N1TS_ADD(_tag) \
 	MCFG_DEVICE_ADD(_tag, SANYO_LE26FV10N1TS, 0)
 
+#define MCFG_SST_28SF040_ADD(_tag) \
+	MCFG_DEVICE_ADD(_tag, SST_28SF040, 0)
+
 #define MCFG_SHARP_LH28F400_ADD(_tag) \
 	MCFG_DEVICE_ADD(_tag, SHARP_LH28F400, 0)
 
@@ -70,7 +73,7 @@ class intelfsh_device;
 
 // ======================> intelfsh_device
 
-class intelfsh_device :	public device_t,
+class intelfsh_device : public device_t,
 						public device_memory_interface,
 						public device_nvram_interface
 {
@@ -90,6 +93,7 @@ public:
 		FLASH_MACRONIX_29L001MC,
 		FLASH_PANASONIC_MN63F805MNP,
 		FLASH_SANYO_LE26FV10N1TS,
+		FLASH_SST_28SF040,
 
 		// 16-bit variants
 		FLASH_SHARP_LH28F400 = 0x1000,
@@ -121,23 +125,23 @@ protected:
 	void write_full(UINT32 offset, UINT32 data);
 
 	// configuration state
-	address_space_config	m_space_config;
-	UINT32					m_type;
-	INT32					m_size;
-	UINT8					m_bits;
-	UINT8					m_device_id;
-	UINT8					m_maker_id;
-	bool					m_sector_is_4k;
-	UINT8					m_page_size;
+	address_space_config    m_space_config;
+	UINT32                  m_type;
+	INT32                   m_size;
+	UINT8                   m_bits;
+	UINT8                   m_device_id;
+	UINT8                   m_maker_id;
+	bool                    m_sector_is_4k;
+	UINT8                   m_page_size;
 
 	// internal state
-	UINT8					m_status;
-	INT32					m_erase_sector;
-	INT32					m_flash_mode;
-	bool					m_flash_master_lock;
-	emu_timer *				m_timer;
-	INT32					m_bank;
-	UINT8					m_byte_count;
+	UINT8                   m_status;
+	INT32                   m_erase_sector;
+	INT32                   m_flash_mode;
+	bool                    m_flash_master_lock;
+	emu_timer *             m_timer;
+	INT32                   m_bank;
+	UINT8                   m_byte_count;
 };
 
 
@@ -252,6 +256,11 @@ public:
 	sanyo_le26fv10n1ts_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 };
 
+class sst_28sf040_device : public intelfsh8_device
+{
+public:
+	sst_28sf040_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+};
 
 // 16-bit variants
 class sharp_lh28f400_device : public intelfsh16_device
@@ -298,6 +307,7 @@ extern const device_type INTEL_E28F400;
 extern const device_type MACRONIX_29L001MC;
 extern const device_type PANASONIC_MN63F805MNP;
 extern const device_type SANYO_LE26FV10N1TS;
+extern const device_type SST_28SF040;
 
 extern const device_type SHARP_LH28F400;
 extern const device_type INTEL_E28F008SA;

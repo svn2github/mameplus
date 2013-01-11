@@ -27,7 +27,7 @@ Offset  Value   Type    Description
 #include "csw_cas.h"
 
 
-#define CSW_WAV_FREQUENCY	44100
+#define CSW_WAV_FREQUENCY   44100
 
 static const UINT8 CSW_HEADER[] = { "Compressed Square Wave" };
 
@@ -50,11 +50,11 @@ UINT8  Flags;
 UINT8  HeaderExtensionLength;
 UINT8 *gz_ptr = NULL;
 
-int			total_size;
-z_stream	d_stream;
-int 		err;
-UINT8		*in_ptr;
-int 		bsize=0;
+int         total_size;
+z_stream    d_stream;
+int         err;
+UINT8       *in_ptr;
+int         bsize=0;
 
 	if ( memcmp( casdata, CSW_HEADER, sizeof(CSW_HEADER) ) ) {
 		LOG_FORMATS( "csw_cas_to_wav_size: cassette image has incompatible header\n" );
@@ -77,17 +77,17 @@ int 		bsize=0;
 	}
 
 	SampleRate=get_leuint32(casdata+0x19);
-	LOG_FORMATS("Sample rate %d\n",SampleRate);
+	LOG_FORMATS("Sample rate %u\n",SampleRate);
 
 	NumberOfPulses=get_leuint32(casdata+0x1d);
-	LOG_FORMATS("Number Of Pulses %d\n",NumberOfPulses);
+	LOG_FORMATS("Number Of Pulses %u\n",NumberOfPulses);
 
 
 	CompressionType=casdata[0x21];
 	Flags=casdata[0x22];
 	HeaderExtensionLength=casdata[0x23];
 
-	LOG_FORMATS("CompressionType %d   Flast %d   HeaderExtensionLength %d\n",CompressionType,Flags,HeaderExtensionLength);
+	LOG_FORMATS("CompressionType %u   Flast %u   HeaderExtensionLength %u\n",CompressionType,Flags,HeaderExtensionLength);
 
 	mycaslen=caslen;
 	//from here on down for now I am assuming it is compressed csw file.
@@ -178,21 +178,21 @@ UINT8  HeaderExtensionLength;
 INT8   Bit;
 
 UINT8 *gz_ptr = NULL;
-int			total_size;
-z_stream	d_stream;
-int 		err;
-UINT8		*in_ptr;
-int 		bsize=0;
-int		i;
+int         total_size;
+z_stream    d_stream;
+int         err;
+UINT8       *in_ptr;
+int         bsize=0;
+int     i;
 
 
 	LOG_FORMATS("Length %d\n",length);
 
 	SampleRate=get_leuint32(bytes+0x19);
-	LOG_FORMATS("Sample rate %d\n",SampleRate);
+	LOG_FORMATS("Sample rate %u\n",SampleRate);
 
 	NumberOfPulses=get_leuint32(bytes+0x1d);
-	LOG_FORMATS("Number Of Pulses %d\n",NumberOfPulses);
+	LOG_FORMATS("Number Of Pulses %u\n",NumberOfPulses);
 
 	CompressionType=bytes[0x21];
 	Flags=bytes[0x22];
@@ -205,7 +205,7 @@ int		i;
 		Bit=100;
 	}
 
-	LOG_FORMATS("CompressionType %d   Flast %d   HeaderExtensionLength %d\n",CompressionType,Flags,HeaderExtensionLength);
+	LOG_FORMATS("CompressionType %u   Flast %u   HeaderExtensionLength %u\n",CompressionType,Flags,HeaderExtensionLength);
 
 
 	//from here on down for now I am assuming it is compressed csw file.
@@ -295,13 +295,13 @@ int		i;
 
 
 static const struct CassetteLegacyWaveFiller csw_legacy_fill_wave = {
-	csw_cas_fill_wave,		/* fill_wave */
-	-1,						/* chunk_size */
-	0,						/* chunk_samples */
-	csw_cas_to_wav_size,	/* chunk_sample_calc */
-	CSW_WAV_FREQUENCY,		/* sample_frequency */
-	0,						/* header_samples */
-	0						/* trailer_samples */
+	csw_cas_fill_wave,      /* fill_wave */
+	-1,                     /* chunk_size */
+	0,                      /* chunk_samples */
+	csw_cas_to_wav_size,    /* chunk_sample_calc */
+	CSW_WAV_FREQUENCY,      /* sample_frequency */
+	0,                      /* header_samples */
+	0                       /* trailer_samples */
 };
 
 static casserr_t csw_cassette_identify( cassette_image *cassette, struct CassetteOptions *opts ) {

@@ -47,7 +47,7 @@
 
 #define VERBOSE 0
 
-#define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
+#define LOG(x)  do { if (VERBOSE) logerror x; } while (0)
 
 
 
@@ -58,8 +58,8 @@
 // internal trigger IDs
 enum
 {
-	TRIGGER_INT 		= -2000,
-	TRIGGER_YIELDTIME	= -3000,
+	TRIGGER_INT         = -2000,
+	TRIGGER_YIELDTIME   = -3000,
 	TRIGGER_SUSPENDTIME = -4000
 };
 
@@ -75,17 +75,17 @@ enum
 
 emu_timer::emu_timer()
 	: m_machine(NULL),
-	  m_next(NULL),
-	  m_prev(NULL),
-	  m_param(0),
-	  m_ptr(NULL),
-	  m_enabled(false),
-	  m_temporary(false),
-	  m_period(attotime::zero),
-	  m_start(attotime::zero),
-	  m_expire(attotime::never),
-	  m_device(NULL),
-	  m_id(0)
+		m_next(NULL),
+		m_prev(NULL),
+		m_param(0),
+		m_ptr(NULL),
+		m_enabled(false),
+		m_temporary(false),
+		m_period(attotime::zero),
+		m_start(attotime::zero),
+		m_expire(attotime::never),
+		m_device(NULL),
+		m_id(0)
 {
 }
 
@@ -505,7 +505,9 @@ void device_scheduler::timeslice()
 					exec->m_totalcycles += ran;
 
 					// update the local time for this CPU
-					exec->m_localtime += attotime(0, exec->m_attoseconds_per_cycle * ran);
+					attotime delta = attotime(0, exec->m_attoseconds_per_cycle * ran);
+					assert(delta >= attotime::zero);
+					exec->m_localtime += delta;
 					LOG(("         %d ran, %d total, time = %s\n", ran, (INT32)exec->m_totalcycles, exec->m_localtime.as_string()));
 
 					// if the new local CPU time is less than our target, move the target up, but not before the base
@@ -994,5 +996,3 @@ void device_scheduler::dump_timers() const
 		timer->dump();
 	logerror("=============================================\n");
 }
-
-

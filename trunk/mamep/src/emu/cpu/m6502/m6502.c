@@ -456,12 +456,12 @@ void m6502_device::state_string_export(const device_state_entry &entry, astring 
 	case STATE_GENFLAGS:
 	case M6502_P:
 		string.printf("%c%c%c%c%c%c",
-					  P & F_N ? 'N' : '.',
-					  P & F_V ? 'V' : '.',
-					  P & F_D ? 'D' : '.',
-					  P & F_I ? 'I' : '.',
-					  P & F_Z ? 'Z' : '.',
-					  P & F_C ? 'C' : '.');
+						P & F_N ? 'N' : '.',
+						P & F_V ? 'V' : '.',
+						P & F_D ? 'D' : '.',
+						P & F_I ? 'I' : '.',
+						P & F_Z ? 'Z' : '.',
+						P & F_C ? 'C' : '.');
 		break;
 	}
 }
@@ -483,7 +483,7 @@ offs_t m6502_device::disassemble_generic(char *buffer, offs_t pc, const UINT8 *o
 	UINT32 flags = e.flags | DASMFLAG_SUPPORTED;
 	buffer += sprintf(buffer, "%s", e.opcode);
 
-	switch(table[oprom[0]].mode) {
+	switch(e.mode) {
 	case DASM_non:
 		flags |= 1;
 		break;
@@ -602,8 +602,23 @@ offs_t m6502_device::disassemble_generic(char *buffer, offs_t pc, const UINT8 *o
 		flags |= 2;
 		break;
 
+	case DASM_imz:
+		sprintf(buffer, " #$%02x, $%02x", opram[1], opram[2]);
+		flags |= 3;
+		break;
+
+	case DASM_spg:
+		sprintf(buffer, " \\$%02x", opram[1]);
+		flags |= 2;
+		break;
+
+	case DASM_biz:
+		sprintf(buffer, " %d, $%02x", (opram[0] >> 5) & 7, opram[1]);
+		flags |= 2;
+		break;
+
 	default:
-		fprintf(stderr, "Unhandled dasm mode %d\n", table[oprom[0]].mode);
+		fprintf(stderr, "Unhandled dasm mode %d\n", e.mode);
 		abort();
 	}
 	return flags;

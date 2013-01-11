@@ -27,6 +27,7 @@ public:
 	{
 		strobe_amount = 0;
 		strobe_addr = 0;
+		m_percent_mux = 0;
 	}
 
 	required_device<z180_device> m_maincpu;
@@ -38,6 +39,7 @@ public:
 	int strobe_addr;
 	int strobe_amount;
 	int m_optic_pattern;
+	int m_percent_mux;
 
 	DECLARE_READ8_MEMBER(ppi8255_intf_a_read_a) { int ret = 0x00; logerror("%04x - ppi8255_intf_a_read_a %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
 	DECLARE_READ8_MEMBER(ppi8255_intf_a_read_b)
@@ -47,7 +49,12 @@ public:
 		return ret;
 	}
 
-	DECLARE_READ8_MEMBER(ppi8255_intf_a_read_c) { int ret = 0x00; logerror("%04x - ppi8255_intf_a_read_c %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
+	DECLARE_READ8_MEMBER(ppi8255_intf_a_read_c)
+	{
+		int ret = ioport("IN5")->read();
+		logerror("%04x - ppi8255_intf_a_(used)read_c %02x\n", machine().device("maincpu")->safe_pcbase(), ret);
+		return ret;
+	}
 
 	DECLARE_READ8_MEMBER(ppi8255_intf_b_read_a) { int ret = 0x00; logerror("%04x - ppi8255_intf_b_read_a %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
 	DECLARE_READ8_MEMBER(ppi8255_intf_b_read_b) { int ret = 0x00; logerror("%04x - ppi8255_intf_b_read_b %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
@@ -60,10 +67,23 @@ public:
 		logerror("%04x - ppi8255_intf_c_(used)read_b %02x (COINS+TEST)\n", machine().device("maincpu")->safe_pcbase(), ret);
 		return ret;
 	} // changing to 00 gives coin tamper
-	DECLARE_READ8_MEMBER(ppi8255_intf_c_read_c) { int ret = 0x00; logerror("%04x - ppi8255_intf_c_read_c %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
+
+	DECLARE_READ8_MEMBER(ppi8255_intf_c_read_c)
+	{
+		int ret = ioport("IN6")->read();
+		logerror("%04x - ppi8255_intf_c_(used)read_c %02x\n", machine().device("maincpu")->safe_pcbase(), ret);
+		return ret;
+	}
 
 	DECLARE_READ8_MEMBER(ppi8255_intf_d_read_a) { int ret = 0x00; logerror("%04x - ppi8255_intf_d_read_a %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
 	DECLARE_READ8_MEMBER(ppi8255_intf_d_read_b)
+	{
+		int ret = ioport("IN7")->read();
+		logerror("%04x - ppi8255_intf_d_(used)read_b %02x\n", machine().device("maincpu")->safe_pcbase(), ret);
+		return ret;
+	}
+
+	DECLARE_READ8_MEMBER(ppi8255_intf_d_read_c)
 	{
 		// guess, what are the bottom 4 bits, if anything?
 
@@ -74,20 +94,36 @@ public:
 		// | 0x20 = reel 2 fault
 		// | 0x10 = reel 1 fault
 
-		logerror("%04x - ppi8255_intf_d_(used)read_b %02x (Reel Optics)\n", machine().device("maincpu")->safe_pcbase(), ret);
+		logerror("%04x - ppi8255_intf_d_(used)read_c %02x (Reel Optics)\n", machine().device("maincpu")->safe_pcbase(), ret);
 
 		return ret;
 
 
-	} // changing goes from reel 1 error to running something in sphinx
-	DECLARE_READ8_MEMBER(ppi8255_intf_d_read_c) { int ret = 0x00; logerror("%04x - ppi8255_intf_d_read_c %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
+	}
 
 	DECLARE_READ8_MEMBER(ppi8255_intf_e_read_a) { int ret = 0x00; logerror("%04x - ppi8255_intf_e_read_a %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
 	DECLARE_READ8_MEMBER(ppi8255_intf_e_read_b)
 	{   // changing gives no % key error in sphinx
-		int ret = ioport("IN3")->read();
-		logerror("%04x - ppi8255_intf_e_(used)read_b %02x\n", machine().device("maincpu")->safe_pcbase(), ret);
+
+		int ret;
+
+		if (m_percent_mux==1)
+		{
+			ret = ioport("PERKEY")->read();
+			logerror("%04x - ppi8255_intf_e_(used)read_b (PER KEY) %02x\n", machine().device("maincpu")->safe_pcbase(), ret);
+		}
+		else if (m_percent_mux==0x80)
+		{
+			ret = ioport("BUTTONS")->read();
+			logerror("%04x - ppi8255_intf_e_(used)read_b (BUTTONS?) %02x\n", machine().device("maincpu")->safe_pcbase(), ret);
+		}
+		else
+		{
+			ret = 0x00;
+			logerror("%04x - ppi8255_intf_e_(used)read_b (UNK MUX %02x) %02x\n", machine().device("maincpu")->safe_pcbase(), m_percent_mux, ret);
+		}
 		return ret;
+
 	}
 
 	DECLARE_READ8_MEMBER(ppi8255_intf_e_read_c) { int ret = 0x00; logerror("%04x - ppi8255_intf_e_read_c %02x\n", machine().device("maincpu")->safe_pcbase(), ret); return ret; }
@@ -187,7 +223,7 @@ public:
 		awp_draw_reel(1);
 	}
 
-	DECLARE_WRITE8_MEMBER(ppi8255_intf_d_write_a_reel23)
+	DECLARE_WRITE8_MEMBER(ppi8255_intf_d_write_b_reel23)
 	{
 //      logerror("%04x - ppi8255_intf_d_(used)write_b %02x\n", machine().device("maincpu")->safe_pcbase(), data);
 
@@ -207,7 +243,12 @@ public:
 
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_a_alpha_display);
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_b) { logerror("%04x - ppi8255_intf_e_write_b %02x\n", machine().device("maincpu")->safe_pcbase(), data); }
-	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_c) { logerror("%04x - ppi8255_intf_e_write_c %02x\n", machine().device("maincpu")->safe_pcbase(), data); }
+	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_c)
+	{
+		m_percent_mux = data;
+
+		logerror("%04x - ppi8255_intf_e_write_c %02x (INPUT MUX?)\n", machine().device("maincpu")->safe_pcbase(), data);
+	}
 
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_f_write_a) { logerror("%04x - ppi8255_intf_f_write_a %02x\n", machine().device("maincpu")->safe_pcbase(), data); }
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_f_write_b) { logerror("%04x - ppi8255_intf_f_write_b %02x\n", machine().device("maincpu")->safe_pcbase(), data); }
@@ -231,42 +272,42 @@ public:
 
 static I8255_INTERFACE (ppi8255_intf_a)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_write_a_strobedat0),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_write_b_strobedat1),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_write_c_strobe)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_write_a_strobedat0),           /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_write_b_strobedat1),           /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_a_write_c_strobe)            /* Port C write */
 };
 
 static I8255_INTERFACE (ppi8255_intf_b)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_write_a),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_write_b),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_write_c)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_write_a),          /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_write_b),          /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_b_write_c)           /* Port C write */
 };
 
 static I8255_INTERFACE (ppi8255_intf_c)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_write_a),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_write_b),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_write_c)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_write_a),          /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_write_b),          /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_c_write_c)           /* Port C write */
 };
 
 static I8255_INTERFACE (ppi8255_intf_d)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_write_a_reel01),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_write_a_reel23),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_write_c)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_write_a_reel01),           /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_write_b_reel23),           /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_d_write_c)           /* Port C write */
 };
 
 // this is a copy of roc10937charset for now, I don't know what chip we're meant be using here
@@ -332,9 +373,9 @@ static const UINT16 ecoin_charset[]=
 	0x44FF, // 0100 0100 1111 1111 8.
 	0x44BF, // 0100 0100 1011 1111 9.
 	0x0021, // 0000 0000 0010 0001 -
-	        //                     -.
+			//                     -.
 	0x2001, // 0010 0000 0000 0001 -
-		    //                     /.
+			//                     /.
 	0x2430, // 0010 0100 0011 0000 <.
 	0x4430, // 0100 0100 0011 0000 =.
 	0x8830, // 1000 1000 0011 0000 >.
@@ -354,9 +395,13 @@ void ecoinf3_state::update_display()
 	}
 }
 
-
+// is the 2 digit bank display part of this, or multiplexed elsewhere
 WRITE8_MEMBER(ecoinf3_state::ppi8255_intf_e_write_a_alpha_display)
 {
+
+	if ((data>=0x20) && (data<0x5b))  logerror("%04x - ppi8255_intf_e_write_a %02x (alpha) '%c'\n", machine().device("maincpu")->safe_pcbase(), data, data);
+	else logerror("%04x - ppi8255_intf_e_write_a %02x (alpha)\n", machine().device("maincpu")->safe_pcbase(), data);
+
 	static UINT8 send_buffer = 0;
 	static int count = 0;
 	// writes the 'PYRAMID' string from RAM (copied from ROM) here...
@@ -420,42 +465,42 @@ WRITE8_MEMBER(ecoinf3_state::ppi8255_intf_e_write_a_alpha_display)
 
 static I8255_INTERFACE (ppi8255_intf_e)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_read_a),						/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_write_a_alpha_display),		/* Port A write */ /* alpha display characters*/
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_read_b),						/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_write_b),						/* Port B write */	// not written at an appropriate time for it to be a 'send' address for the text
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_read_c),						/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_write_c)						/* Port C write */	// not written at an appropriate time for it to be a 'send' address for the text
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_read_a),                       /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_write_a_alpha_display),        /* Port A write */ /* alpha display characters*/
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_read_b),                       /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_write_b),                      /* Port B write */  // not written at an appropriate time for it to be a 'send' address for the text
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_read_c),                       /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_e_write_c)                       /* Port C write */  // not written at an appropriate time for it to be a 'send' address for the text
 };
 
 static I8255_INTERFACE (ppi8255_intf_f)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_write_a),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_write_b),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_write_c)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_write_a),          /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_write_b),          /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_f_write_c)           /* Port C write */
 };
 
 static I8255_INTERFACE (ppi8255_intf_g)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_write_a),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_write_b),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_write_c)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_write_a),          /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_write_b),          /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_g_write_c)           /* Port C write */
 };
 
 static I8255_INTERFACE (ppi8255_intf_h)
 {
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_read_a),			/* Port A read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_write_a),			/* Port A write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_read_b),			/* Port B read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_write_b),			/* Port B write */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_read_b),			/* Port C read */
-	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_write_c)			/* Port C write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_read_a),           /* Port A read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_write_a),          /* Port A write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_read_b),           /* Port B read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_write_b),          /* Port B write */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_read_c),           /* Port C read */
+	DEVCB_DRIVER_MEMBER(ecoinf3_state,ppi8255_intf_h_write_c)           /* Port C write */
 };
 
 
@@ -513,7 +558,7 @@ static INPUT_PORTS_START( ecoinf3 )
 	PORT_DIPNAME( 0x08, 0x08, "IN1:08" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "Meter Connection (leave on)" )
+	PORT_DIPNAME( 0x10, 0x10, "IN1:18" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, "IN1:20" )
@@ -542,7 +587,7 @@ static INPUT_PORTS_START( ecoinf3 )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
-	PORT_START("IN3")
+	PORT_START("PERKEY")
 	PORT_DIPNAME( 0x0f, 0x00, "% Key?" )
 	PORT_DIPSETTING(    0x00, "0x00" )
 	PORT_DIPSETTING(    0x01, "0x01" )
@@ -560,24 +605,35 @@ static INPUT_PORTS_START( ecoinf3 )
 	PORT_DIPSETTING(    0x0d, "0x0d" )
 	PORT_DIPSETTING(    0x0e, "0x0e" )
 	PORT_DIPSETTING(    0x0f, "None" )
-
-	PORT_DIPNAME( 0x10, 0x00, "IN3:10" )
+	PORT_DIPNAME( 0x10, 0x10, "PER_KEY:10" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, "IN3:20" )
+	PORT_DIPNAME( 0x20, 0x20, "PER_KEY:20" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, "IN3:40" )
+	PORT_DIPNAME( 0x40, 0x40, "PER_KEY:40" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, "IN3:80" )
+	PORT_DIPNAME( 0x80, 0x80, "PER_KEY:80" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
-	PORT_START("IN4")
-	PORT_DIPNAME( 0x01, 0x01, "IN4:01" )
+	PORT_START("BUTTONS")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Nudge / Hold 3") PORT_CODE(KEYCODE_D)
+	PORT_DIPNAME( 0x02, 0x02, "BT:02" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, "BT:04" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Cancel Holds") PORT_CODE(KEYCODE_F)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Nudge / Hold 1") PORT_CODE(KEYCODE_A)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Nudge / Hold 2") PORT_CODE(KEYCODE_S)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 ) // ?? advances through test items, spins the reels
+
+	PORT_START("IN4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON7 ) // causes various spins etc. (but also causes the whole thing to freak out?)
 	PORT_DIPNAME( 0x02, 0x02, "IN4:02" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
@@ -613,7 +669,7 @@ static INPUT_PORTS_START( ecoinf3 )
 	PORT_DIPNAME( 0x08, 0x08, "IN5:08" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "IN5:10" )
+	PORT_DIPNAME( 0x10, 0x10, "Meter Connection (leave on)" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, "IN5:20" )
@@ -625,7 +681,7 @@ static INPUT_PORTS_START( ecoinf3 )
 	PORT_DIPNAME( 0x80, 0x80, "IN5:80" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
-#if 0
+
 	PORT_START("IN6")
 	PORT_DIPNAME( 0x01, 0x01, "IN6:01" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
@@ -677,7 +733,6 @@ static INPUT_PORTS_START( ecoinf3 )
 	PORT_DIPNAME( 0x80, 0x80, "IN7:80" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
-#endif
 INPUT_PORTS_END
 
 MACHINE_START_MEMBER(ecoinf3_state,ecoinf3)
@@ -690,7 +745,7 @@ MACHINE_START_MEMBER(ecoinf3_state,ecoinf3)
 
 static const sn76496_config psg_intf =
 {
-    DEVCB_NULL
+	DEVCB_NULL
 };
 
 
@@ -769,12 +824,12 @@ ROM_END
 
 ROM_START( ec_stair )
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD("sth5.4",		0x0000, 0x010000, CRC(879c8dcb) SHA1(358d9bb567da4b7913434d29dcd8a81c51c5fe2e) )
+	ROM_LOAD("sth5.4",      0x0000, 0x010000, CRC(879c8dcb) SHA1(358d9bb567da4b7913434d29dcd8a81c51c5fe2e) )
 ROM_END
 
 ROM_START( ec_staira )
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD("sth5.8c",	0x0000, 0x010000, CRC(7ce6b760) SHA1(c828689481d7e187c504dd072bd6714222888d33) )
+	ROM_LOAD("sth5.8c", 0x0000, 0x010000, CRC(7ce6b760) SHA1(c828689481d7e187c504dd072bd6714222888d33) )
 ROM_END
 
 
@@ -806,16 +861,16 @@ DRIVER_INIT_MEMBER(ecoinf3_state,ecoinf3_swap)
 	UINT8 table[] =
 	{
 		0x48, 0x4c, 0x49, 0x4d, 0x40, 0x44, 0x41, 0x45,     0x68, 0x78, 0x60, 0x70, 0x6a, 0x7a, 0x62, 0x72,
-		0x08, 0x0c, 0x09, 0x0d, 0x00, 0x04, 0x01, 0x05,		0x6c, 0x7c, 0x64, 0x74, 0x6e, 0x7e, 0x66, 0x76,
-		0x58, 0x5c, 0x59, 0x5d, 0x50, 0x54, 0x51, 0x55,	    0x28, 0x38, 0x20, 0x30, 0x2a, 0x3a, 0x22, 0x32,
-		0x18, 0x1c, 0x19, 0x1d, 0x10, 0x14, 0x11, 0x15,	    0x2c, 0x3c, 0x24, 0x34, 0x2e, 0x3e, 0x26, 0x36,
-		0x56, 0x52, 0x57, 0x53, 0x5e, 0x5a, 0x5f, 0x5b,		0x75, 0x65, 0x7d, 0x6d, 0x77, 0x67, 0x7f ,0x6f,
-		0x16, 0x12, 0x17, 0x13, 0x1e, 0x1a, 0x1f, 0x1b,		0x71, 0x61, 0x79, 0x69, 0x73, 0x63, 0x7b, 0x6b,
+		0x08, 0x0c, 0x09, 0x0d, 0x00, 0x04, 0x01, 0x05,     0x6c, 0x7c, 0x64, 0x74, 0x6e, 0x7e, 0x66, 0x76,
+		0x58, 0x5c, 0x59, 0x5d, 0x50, 0x54, 0x51, 0x55,     0x28, 0x38, 0x20, 0x30, 0x2a, 0x3a, 0x22, 0x32,
+		0x18, 0x1c, 0x19, 0x1d, 0x10, 0x14, 0x11, 0x15,     0x2c, 0x3c, 0x24, 0x34, 0x2e, 0x3e, 0x26, 0x36,
+		0x56, 0x52, 0x57, 0x53, 0x5e, 0x5a, 0x5f, 0x5b,     0x75, 0x65, 0x7d, 0x6d, 0x77, 0x67, 0x7f ,0x6f,
+		0x16, 0x12, 0x17, 0x13, 0x1e, 0x1a, 0x1f, 0x1b,     0x71, 0x61, 0x79, 0x69, 0x73, 0x63, 0x7b, 0x6b,
 		0x46, 0x42, 0x47, 0x43, 0x4e, 0x4a, 0x4f, 0x4b,     0x35, 0x25, 0x3d, 0x2d, 0x37, 0x27, 0x3f ,0x2f,
-	    0x06, 0x02, 0x07, 0x03, 0x0e, 0x0a, 0x0f, 0x0b,     0x31, 0x21, 0x39, 0x29, 0x33, 0x23, 0x3b, 0x2b,
+		0x06, 0x02, 0x07, 0x03, 0x0e, 0x0a, 0x0f, 0x0b,     0x31, 0x21, 0x39, 0x29, 0x33, 0x23, 0x3b, 0x2b,
 	};
 
-	UINT8*	buffer = auto_alloc_array(machine(), UINT8, 0x10000);
+	UINT8*  buffer = auto_alloc_array(machine(), UINT8, 0x10000);
 	UINT8 *rom = memregion( "maincpu" )->base();
 
 
@@ -831,16 +886,15 @@ DRIVER_INIT_MEMBER(ecoinf3_state,ecoinf3_swap)
 
 
 // another hw type (similar to stuff in ecoinf2.c) (watchdog on port 58?)
-GAME( 19??, ec_pyram,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3_swap,	ROT0,  "Electrocoin", "Pyramid (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_pyrama,  ec_pyram , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,    	ROT0,  "Electrocoin", "Pyramid (v6) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_sphin,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3_swap,	ROT0,  "Electrocoin", "Sphinx (v2) (Electrocoin) (set 1)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_sphina,  ec_sphin , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Sphinx (v2) (Electrocoin) (set 2)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_sphinb,  ec_sphin , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Sphinx (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_penni,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Pennies From Heaven (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_pennia,  ec_penni , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Pennies From Heaven (v6) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_stair,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Stairway To Heaven (v11) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_staira,  ec_stair , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Stairway To Heaven (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_laby,    0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Labyrinth (v8) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_labya,   ec_laby  , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Labyrinth (v10) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_secrt,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,		ROT0,  "Electrocoin", "Secret Castle (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-
+GAME( 19??, ec_pyram,   0        , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3_swap,   ROT0,  "Electrocoin", "Pyramid (v1) (Electrocoin)"      , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_pyrama,  ec_pyram , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Pyramid (v6) (Electrocoin)"      , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_sphin,   0        , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3_swap,   ROT0,  "Electrocoin", "Sphinx (v2) (Electrocoin) (set 1)"       , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_sphina,  ec_sphin , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Sphinx (v2) (Electrocoin) (set 2)"       , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_sphinb,  ec_sphin , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Sphinx (v1) (Electrocoin)"       , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_penni,   0        , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Pennies From Heaven (v1) (Electrocoin)"      , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_pennia,  ec_penni , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Pennies From Heaven (v6) (Electrocoin)"      , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_stair,   0        , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Stairway To Heaven (v11) (Electrocoin)"      , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_staira,  ec_stair , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Stairway To Heaven (v1) (Electrocoin)"       , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_laby,    0        , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Labyrinth (v8) (Electrocoin)"        , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_labya,   ec_laby  , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Labyrinth (v10) (Electrocoin)"       , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_secrt,   0        , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,        ROT0,  "Electrocoin", "Secret Castle (v1) (Electrocoin)"        , GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)

@@ -51,8 +51,8 @@
 //  DEBUGGING
 //**************************************************************************
 
-#define VERBOSE						(0)
-#define LOG_PARTIAL_UPDATES(x)		do { if (VERBOSE) logerror x; } while (0)
+#define VERBOSE                     (0)
+#define LOG_PARTIAL_UPDATES(x)      do { if (VERBOSE) logerror x; } while (0)
 
 
 
@@ -65,21 +65,18 @@ const device_type SCREEN = &device_creator<screen_device>;
 
 const attotime screen_device::DEFAULT_FRAME_PERIOD(attotime::from_hz(DEFAULT_FRAME_RATE));
 
-
+UINT32 screen_device::m_id_counter = 0;
 
 #ifdef USE_SCALE_EFFECTS
 //**************************************************************************
 //  scaler dimensions
 //**************************************************************************
-int					use_work_bitmap;
-int					scale_depth;
-int					scale_xsize;
-int					scale_ysize;
-
-int					scale_bank_offset;
+int     use_work_bitmap;
+int     scale_depth;
+int     scale_xsize;
+int     scale_ysize;
+int     scale_bank_offset;
 #endif /* USE_SCALE_EFFECTS */
-
-
 
 //**************************************************************************
 //  SCREEN DEVICE
@@ -299,35 +296,37 @@ void screen_device::texture_set_scale_bitmap(const rectangle &visarea, UINT32 pa
 
 screen_device::screen_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, SCREEN, "Video Screen", tag, owner, clock),
-	  m_type(SCREEN_TYPE_RASTER),
-	  m_oldstyle_vblank_supplied(false),
-	  m_refresh(0),
-	  m_vblank(0),
-	  m_xoffset(0.0f),
-	  m_yoffset(0.0f),
-	  m_xscale(1.0f),
-	  m_yscale(1.0f),
-	  m_container(NULL),
-	  m_width(100),
-	  m_height(100),
-	  m_visarea(0, 99, 0, 99),
-	  m_curbitmap(0),
-	  m_curtexture(0),
-	  m_changed(true),
-	  m_last_partial_scan(0),
-	  m_frame_period(DEFAULT_FRAME_PERIOD.as_attoseconds()),
-	  m_scantime(1),
-	  m_pixeltime(1),
-	  m_vblank_period(0),
-	  m_vblank_start_time(attotime::zero),
-	  m_vblank_end_time(attotime::zero),
-	  m_vblank_begin_timer(NULL),
-	  m_vblank_end_timer(NULL),
-	  m_scanline0_timer(NULL),
-	  m_scanline_timer(NULL),
-	  m_frame_number(0),
-	  m_partial_updates_this_frame(0)
+		m_type(SCREEN_TYPE_RASTER),
+		m_oldstyle_vblank_supplied(false),
+		m_refresh(0),
+		m_vblank(0),
+		m_xoffset(0.0f),
+		m_yoffset(0.0f),
+		m_xscale(1.0f),
+		m_yscale(1.0f),
+		m_container(NULL),
+		m_width(100),
+		m_height(100),
+		m_visarea(0, 99, 0, 99),
+		m_curbitmap(0),
+		m_curtexture(0),
+		m_changed(true),
+		m_last_partial_scan(0),
+		m_frame_period(DEFAULT_FRAME_PERIOD.as_attoseconds()),
+		m_scantime(1),
+		m_pixeltime(1),
+		m_vblank_period(0),
+		m_vblank_start_time(attotime::zero),
+		m_vblank_end_time(attotime::zero),
+		m_vblank_begin_timer(NULL),
+		m_vblank_end_timer(NULL),
+		m_scanline0_timer(NULL),
+		m_scanline_timer(NULL),
+		m_frame_number(0),
+		m_partial_updates_this_frame(0)
 {
+	m_unique_id = m_id_counter;
+	m_id_counter++;
 	memset(m_texture, 0, sizeof(m_texture));
 #ifdef USE_SCALE_EFFECTS
 	memset(m_scale_bitmap, 0, sizeof(m_scale_bitmap));
@@ -518,7 +517,9 @@ void screen_device::device_start()
 
 	// allocate raw textures
 	m_texture[0] = machine().render().texture_alloc();
+	m_texture[0]->set_osd_data((UINT64)((m_unique_id << 1) | 0));
 	m_texture[1] = machine().render().texture_alloc();
+	m_texture[1]->set_osd_data((UINT64)((m_unique_id << 1) | 1));
 
 	// configure the default cliparea
 	render_container::user_settings settings;
@@ -688,7 +689,7 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 	m_pixeltime = frame_period / (height * width);
 
 	// if there has been no VBLANK time specified in the MACHINE_DRIVER, compute it now
-    // from the visible area, otherwise just used the supplied value
+	// from the visible area, otherwise just used the supplied value
 	if (m_vblank == 0 && !m_oldstyle_vblank_supplied)
 		m_vblank_period = m_scantime * (height - visarea.height());
 	else
@@ -916,8 +917,8 @@ bool screen_device::update_partial(int scanline)
 		switch (curbitmap.format())
 		{
 			default:
-			case BITMAP_FORMAT_IND16:	flags = m_screen_update_ind16(*this, curbitmap.as_ind16(), clip);	break;
-			case BITMAP_FORMAT_RGB32:	flags = m_screen_update_rgb32(*this, curbitmap.as_rgb32(), clip);	break;
+			case BITMAP_FORMAT_IND16:   flags = m_screen_update_ind16(*this, curbitmap.as_ind16(), clip);   break;
+			case BITMAP_FORMAT_RGB32:   flags = m_screen_update_rgb32(*this, curbitmap.as_rgb32(), clip);   break;
 		}
 
 		m_partial_updates_this_frame++;
@@ -945,13 +946,13 @@ void screen_device::update_now()
 	int current_hpos = hpos();
 
 	// since we can currently update only at the scanline
-    // level, we are trying to do the right thing by
-    // updating including the current scanline, only if the
-    // beam is past the halfway point horizontally.
-    // If the beam is in the first half of the scanline,
-    // we only update up to the previous scanline.
-    // This minimizes the number of pixels that might be drawn
-    // incorrectly until we support a pixel level granularity
+	// level, we are trying to do the right thing by
+	// updating including the current scanline, only if the
+	// beam is past the halfway point horizontally.
+	// If the beam is in the first half of the scanline,
+	// we only update up to the previous scanline.
+	// This minimizes the number of pixels that might be drawn
+	// incorrectly until we support a pixel level granularity
 	if (current_hpos < (m_width / 2) && current_vpos > 0)
 		current_vpos = current_vpos - 1;
 
@@ -1104,7 +1105,7 @@ void screen_device::register_screen_bitmap(bitmap_t &bitmap)
 
 //-------------------------------------------------
 //  vblank_port_read - custom port handler to
-//	return a VBLANK state
+//  return a VBLANK state
 //-------------------------------------------------
 
 int screen_device::vblank_port_read()

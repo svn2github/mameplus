@@ -67,6 +67,14 @@ READ8_MEMBER(blueprnt_state::blueprnt_sh_dipsw_r)
 	return m_dipsw;
 }
 
+READ8_MEMBER(blueprnt_state::grasspin_sh_dipsw_r)
+{
+	// judging from the disasm, it looks like simple protection was added
+	// d6: small possibility it's for comms? but the fact that there's a Freeze switch on the pcb rules this out
+	// d7: must be set, or is it directly connected to a dipswitch?
+	return (m_dipsw & 0x7f) | 0x80;
+}
+
 WRITE8_MEMBER(blueprnt_state::blueprnt_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
@@ -96,18 +104,30 @@ static ADDRESS_MAP_START( blueprnt_map, AS_PROGRAM, 8, blueprnt_state )
 	AM_RANGE(0xc003, 0xc003) AM_READ(blueprnt_sh_dipsw_r)
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(blueprnt_sound_command_w)
 	AM_RANGE(0xe000, 0xe000) AM_READ(watchdog_reset_r) AM_WRITE(blueprnt_flipscreen_w)
-	AM_RANGE(0xf000, 0xf3ff) AM_RAM_WRITE(blueprnt_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xf000, 0xf3ff) AM_RAM_WRITE(blueprnt_colorram_w) AM_MIRROR(0x400) AM_SHARE("colorram")
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( grasspin_map, AS_PROGRAM, 8, blueprnt_state )
+	AM_RANGE(0xc003, 0xc003) AM_READ(grasspin_sh_dipsw_r)
+	AM_IMPORT_FROM( blueprnt_map )
+ADDRESS_MAP_END
+
+
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, blueprnt_state )
-	AM_RANGE(0x0000, 0x0fff) AM_ROM
-	AM_RANGE(0x2000, 0x2fff) AM_ROM
+	AM_RANGE(0x0000, 0x0fff) AM_ROM AM_MIRROR(0x1000)
+	AM_RANGE(0x2000, 0x2fff) AM_ROM AM_MIRROR(0x1000)
 	AM_RANGE(0x4000, 0x43ff) AM_RAM
 	AM_RANGE(0x6000, 0x6001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
 	AM_RANGE(0x6002, 0x6002) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x8000, 0x8001) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0x8002, 0x8002) AM_DEVREAD_LEGACY("ay2", ay8910_r)
 ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( sound_io, AS_IO, 8, blueprnt_state )
+	ADDRESS_MAP_GLOBAL_MASK(0xff)
+	AM_RANGE(0x02, 0x02) AM_NOP // nmi mask maybe? grasspin writes it 0/1
+ADDRESS_MAP_END
+
 
 
 /*************************************
@@ -138,43 +158,43 @@ static INPUT_PORTS_START( blueprnt )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  ) PORT_8WAY PORT_COCKTAIL
 
 	PORT_START("DILSW1")
-	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "DILSW1:1" )		/* Listed as "Unused" */
-	PORT_DIPNAME( 0x06, 0x02, DEF_STR( Bonus_Life ) )	PORT_DIPLOCATION("DILSW1:2,3")
+	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "DILSW1:1" )     /* Listed as "Unused" */
+	PORT_DIPNAME( 0x06, 0x02, DEF_STR( Bonus_Life ) )   PORT_DIPLOCATION("DILSW1:2,3")
 	PORT_DIPSETTING(    0x00, "20K" )
 	PORT_DIPSETTING(    0x02, "30K" )
 	PORT_DIPSETTING(    0x04, "40K" )
 	PORT_DIPSETTING(    0x06, "50K" )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Free_Play ) )	PORT_DIPLOCATION("DILSW1:4")
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Free_Play ) )    PORT_DIPLOCATION("DILSW1:4")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x00, "Maze Monster Appears In" ) PORT_DIPLOCATION("DILSW1:5")
 	PORT_DIPSETTING(    0x00, "2nd Maze" )
 	PORT_DIPSETTING(    0x10, "3rd Maze" )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Coin_A ) )		PORT_DIPLOCATION("DILSW1:6")
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Coin_A ) )       PORT_DIPLOCATION("DILSW1:6")
 	PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Coin_B ) )		PORT_DIPLOCATION("DILSW1:7") /* Listed as "Unused" */
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Coin_B ) )       PORT_DIPLOCATION("DILSW1:7") /* Listed as "Unused" */
 	PORT_DIPSETTING(    0x40, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_5C ) )
-	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DILSW1:8" )		/* Listed as "Unused" */
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DILSW1:8" )     /* Listed as "Unused" */
 
 	PORT_START("DILSW2")
-	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Lives ) )		PORT_DIPLOCATION("DILSW2:1,2")
+	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Lives ) )        PORT_DIPLOCATION("DILSW2:1,2")
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x01, "3" )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x03, "5" )
-	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "DILSW2:3" )		/* Listed as "Unused" */
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Cabinet ) )		PORT_DIPLOCATION("DILSW2:4")
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "DILSW2:3" )     /* Listed as "Unused" */
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Cabinet ) )      PORT_DIPLOCATION("DILSW2:4")
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("DILSW2:5,6")
+	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Difficulty ) )   PORT_DIPLOCATION("DILSW2:5,6")
 	PORT_DIPSETTING(    0x00, "Level 1" )
 	PORT_DIPSETTING(    0x10, "Level 2" )
 	PORT_DIPSETTING(    0x20, "Level 3" )
 	PORT_DIPSETTING(    0x30, "Level 4" )
-	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "DILSW2:7" )		/* Listed as "Unused" */
-	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DILSW2:8" )		/* Listed as "Unused" */
+	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "DILSW2:7" )     /* Listed as "Unused" */
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DILSW2:8" )     /* Listed as "Unused" */
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( saturn )
@@ -188,14 +208,14 @@ static INPUT_PORTS_START( saturn )
 
 	PORT_MODIFY("DILSW1")
 	PORT_DIPUNKNOWN_DIPLOC( 0x01, 0x01, "DILSW1:1" )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) )		PORT_DIPLOCATION("DILSW1:2")
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) )      PORT_DIPLOCATION("DILSW1:2")
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Cocktail ) )
 	PORT_DIPUNKNOWN_DIPLOC( 0x04, 0x04, "DILSW1:3" )
 	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "DILSW1:4" )
 	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "DILSW1:5" )
 	PORT_DIPUNKNOWN_DIPLOC( 0x20, 0x20, "DILSW1:6" )
-	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Lives ) )		PORT_DIPLOCATION("DILSW1:7,8")
+	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Lives ) )        PORT_DIPLOCATION("DILSW1:7,8")
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x40, "4" )
 	PORT_DIPSETTING(    0x80, "5" )
@@ -203,10 +223,10 @@ static INPUT_PORTS_START( saturn )
 
 	PORT_MODIFY("DILSW2")
 	PORT_DIPUNKNOWN_DIPLOC( 0x01, 0x01, "DILSW2:1" )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Coinage ) )		PORT_DIPLOCATION("DILSW2:2")
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Coinage ) )      PORT_DIPLOCATION("DILSW2:2")
 	PORT_DIPSETTING(    0x02, "A 2/1 B 1/3" )
 	PORT_DIPSETTING(    0x00, "A 1/1 B 1/6" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("DILSW2:3")
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Demo_Sounds ) )  PORT_DIPLOCATION("DILSW2:3")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "DILSW2:4" )
@@ -217,6 +237,60 @@ static INPUT_PORTS_START( saturn )
 INPUT_PORTS_END
 
 
+static INPUT_PORTS_START( grasspin )
+	PORT_START("P1")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  ) PORT_8WAY
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_8WAY
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    ) PORT_8WAY
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  ) PORT_8WAY
+
+	PORT_START("P2")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_COCKTAIL
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_COCKTAIL
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  ) PORT_8WAY PORT_COCKTAIL
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_COCKTAIL
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    ) PORT_8WAY PORT_COCKTAIL
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  ) PORT_8WAY PORT_COCKTAIL
+
+	PORT_START("DILSW1")
+	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "DILSW1:8" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x02, 0x02, "DILSW1:7" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x04, 0x04, "DILSW1:6" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "DILSW1:5" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "DILSW1:4" )
+	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Coinage ) )      PORT_DIPLOCATION("DILSW1:2,3") // 2 should be infinite lives according to pcb
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x80, 0x00, "Freeze" )                PORT_DIPLOCATION("DILSW1:1") // ok
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+
+	PORT_START("DILSW2")
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )        PORT_DIPLOCATION("DILSW2:7,8")
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0x03, "3" )
+	PORT_DIPSETTING(    0x02, "4" )
+	PORT_DIPSETTING(    0x01, "5" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x04, 0x04, "DILSW2:6" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "DILSW2:5" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "DILSW2:4" )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )      PORT_DIPLOCATION("DILSW2:3")
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x40, 0x00, "Freeze" )                PORT_DIPLOCATION("DILSW2:2") // should be flip screen according to pcb
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DILSW2:1" )
+INPUT_PORTS_END
+
 /*************************************
  *
  *  Graphics definitions
@@ -225,14 +299,14 @@ INPUT_PORTS_END
 
 static const gfx_layout spritelayout =
 {
-	8,16,	/* 8*16 sprites */
-	RGN_FRAC(1,3),	/* 256 sprites */
-	3,	/* 3 bits per pixel */
-	{ RGN_FRAC(2,3), RGN_FRAC(1,3), 0 },	/* the bitplanes are separated */
+	8,16,   /* 8*16 sprites */
+	RGN_FRAC(1,3),  /* 256 sprites */
+	3,  /* 3 bits per pixel */
+	{ RGN_FRAC(2,3), RGN_FRAC(1,3), 0 },    /* the bitplanes are separated */
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
-	16*8	/* every sprite takes 16 consecutive bytes */
+	16*8    /* every sprite takes 16 consecutive bytes */
 };
 
 
@@ -277,15 +351,11 @@ static const ay8910_interface ay8910_interface_2 =
 
 void blueprnt_state::machine_start()
 {
-
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-
 	save_item(NAME(m_dipsw));
 }
 
 void blueprnt_state::machine_reset()
 {
-
 	m_gfx_bank = 0;
 	m_dipsw = 0;
 }
@@ -294,15 +364,17 @@ void blueprnt_state::machine_reset()
 static MACHINE_CONFIG_START( blueprnt, blueprnt_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80, 7000000/2)	// 3.5 MHz
+	MCFG_CPU_ADD("maincpu", Z80, 7000000/2) // 3.5 MHz
 	MCFG_CPU_PROGRAM_MAP(blueprnt_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", blueprnt_state,  irq0_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 10000000/2/2/2)	// 1.25 MHz (2H)
+	MCFG_CPU_ADD("audiocpu", Z80, 10000000/2/2/2)   // 1.25 MHz (2H)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(blueprnt_state, irq0_line_hold,  4*60)	// IRQs connected to 32V
+	MCFG_CPU_IO_MAP(sound_io)
+	MCFG_CPU_PERIODIC_INT_DRIVER(blueprnt_state, irq0_line_hold,  4*60) // IRQs connected to 32V
 									// NMIs are caused by the main CPU
 
+	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -310,11 +382,11 @@ static MACHINE_CONFIG_START( blueprnt, blueprnt_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MCFG_VIDEO_START_OVERRIDE(blueprnt_state, blueprnt)
 	MCFG_SCREEN_UPDATE_DRIVER(blueprnt_state, screen_update_blueprnt)
 
 	MCFG_GFXDECODE(blueprnt)
 	MCFG_PALETTE_LENGTH(128*4+8)
-
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -328,6 +400,12 @@ static MACHINE_CONFIG_START( blueprnt, blueprnt_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( grasspin, blueprnt )
+
+	/* basic machine hardware */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(grasspin_map)
+MACHINE_CONFIG_END
 
 /*************************************
  *
@@ -402,6 +480,28 @@ ROM_START( saturnzi )
 	ROM_LOAD( "r13",          0x2000, 0x1000, CRC(8b3e8c32) SHA1(65e2bf4a9f45be39419d85b2ee46b9c5eeff8f57) )
 ROM_END
 
+ROM_START( grasspin )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "prom_1.4b",     0x0000, 0x1000, CRC(6fd50509) SHA1(61bc99d47c15b479dd74147be8d6df2c1320a0d8) )
+	ROM_LOAD( "jaleco-2.4c",   0x1000, 0x1000, CRC(cd319007) SHA1(9c88fd7459bcf2cc6ce308ba1fe717a989ff89a4) )
+	ROM_LOAD( "jaleco-3.4d",   0x2000, 0x1000, CRC(ac73ccc2) SHA1(d732cc5e8a7db4011110527e579232d799159732) )
+	ROM_LOAD( "jaleco-4.4f",   0x3000, 0x1000, CRC(41f6279d) SHA1(dc260cf0a6b19e10ac038069ad3dbb3b6e63e446) )
+	ROM_LOAD( "jaleco-5.4h",   0x4000, 0x1000, CRC(d20aead9) SHA1(78c1c336fbdce312aed66a8b04cbbb2915d7536b) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "jaleco-6.4j",  0x0000, 0x1000, CRC(f58bf3b0) SHA1(a7e30a9bfbd43fb4cc1987ad9fb0f3a023a7735d) )
+	ROM_LOAD( "jaleco-7.4l",  0x2000, 0x1000, CRC(2d587653) SHA1(c2c08fde75a7ebc60edd461ca18d982fb00f43e2) )
+
+	ROM_REGION( 0x2000, "gfx1", 0 )
+	ROM_LOAD( "jaleco-9.4p",   0x0000, 0x1000, CRC(bccca24c) SHA1(95bdd2cfdefb76ca8d3c00b9fe140f97feebdcc1) )
+	ROM_LOAD( "jaleco-8.3p",   0x1000, 0x1000, CRC(9d6185ca) SHA1(4e36810a6a6ba98d796966531d2f32277a8168d0) )
+
+	ROM_REGION( 0x3000, "gfx2", 0 )
+	ROM_LOAD( "jaleco-10.5p",   0x0000, 0x1000, CRC(3a0765c6) SHA1(574fcbca54b8a7e65d4cad29ee381e0536e75f66) )
+	ROM_LOAD( "jaleco-11.6p",   0x1000, 0x1000, CRC(cccfbeb4) SHA1(35555033bb84584fcfd58f9d0782cccb66c54211) )
+	ROM_LOAD( "jaleco-12.7p",   0x2000, 0x1000, CRC(615b3299) SHA1(1c12b456aac99690171b5aa06cbab904f4d16b2e) )
+ROM_END
+
 
 /*************************************
  *
@@ -411,4 +511,5 @@ ROM_END
 
 GAME( 1982, blueprnt,  0,        blueprnt, blueprnt, driver_device, 0, ROT270, "Zilec Electronics / Bally Midway", "Blue Print (Midway)", GAME_SUPPORTS_SAVE )
 GAME( 1982, blueprntj, blueprnt, blueprnt, blueprnt, driver_device, 0, ROT270, "Zilec Electronics / Jaleco",       "Blue Print (Jaleco)", GAME_SUPPORTS_SAVE )
-GAME( 1983, saturnzi,  0,        blueprnt, saturn, driver_device,   0, ROT270, "Zilec Electronics / Jaleco",       "Saturn", GAME_SUPPORTS_SAVE )
+GAME( 1983, saturnzi,  0,        blueprnt, saturn,   driver_device, 0, ROT270, "Zilec Electronics / Jaleco",       "Saturn", GAME_SUPPORTS_SAVE )
+GAME( 1983, grasspin,  0,        grasspin, grasspin, driver_device, 0, ROT270, "Zilec Electronics / Jaleco",       "Grasspin", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS ) // a few issues with dip reading + video hw, but nothing major

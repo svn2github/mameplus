@@ -2,18 +2,6 @@
 
 /*
 
-TODO:
-- goes to la-la-land almost immediately:
-000F4023: sbb     [42F9h],ah
-000F4027: loop    0F4003h
-000F4003: ror     word ptr [si+48B2h],1
-000F4007: cmp     ax,44B2h
-000F400A: retf
-000903D3: add     [bx+si],al
-000903D5: add     [bx+si],al
-(Reads stack from BIOS ROM?)
-
-
 Produttore  STG
 N.revisione
 CPU main PCB is a standard EPIA
@@ -28,6 +16,10 @@ processor speed is 533MHz <- likely to be a Celeron or a Pentium III class CPU -
 
  it's a 2002 era PC at least based on the BIOS,
   almost certainly newer than the standard 'PENTIUM' CPU
+
+- update by Peter Ferrie:
+- split BIOS region into 64kb blocks and implement missing PAM registers
+- VIA Apollo VXPro chipset is not compatible with Intel i430.
 
 */
 
@@ -51,21 +43,16 @@ class queen_state : public driver_device
 public:
 	queen_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_maincpu(*this, "maincpu"),
-		  m_pit8254(*this, "pit8254"),
-		  m_dma8237_1(*this, "dma8237_1"),
-		  m_dma8237_2(*this, "dma8237_2"),
-		  m_pic8259_1(*this, "pic8259_1"),
-		  m_pic8259_2(*this, "pic8259_2")
-		  { }
+			m_maincpu(*this, "maincpu"),
+			m_pit8254(*this, "pit8254"),
+			m_dma8237_1(*this, "dma8237_1"),
+			m_dma8237_2(*this, "dma8237_2"),
+			m_pic8259_1(*this, "pic8259_1"),
+			m_pic8259_2(*this, "pic8259_2")
+			{ }
 
 	UINT32 *m_bios_ram;
-	UINT32 *m_bios_ext1_ram;
-	UINT32 *m_bios_ext2_ram;
-	UINT32 *m_bios_ext3_ram;
-	UINT32 *m_bios_ext4_ram;
-	UINT32 *m_isa_ram1;
-	UINT32 *m_isa_ram2;
+	UINT32 *m_bios_ext_ram;
 	int m_dma_channel;
 	UINT8 m_dma_offset[2][4];
 	UINT8 m_at_pages[0x10];
@@ -82,13 +69,7 @@ public:
 
 	DECLARE_READ8_MEMBER( get_slave_ack );
 
-	DECLARE_WRITE32_MEMBER( isa_ram1_w );
-	DECLARE_WRITE32_MEMBER( isa_ram2_w );
-
-	DECLARE_WRITE32_MEMBER( bios_ext1_ram_w );
-	DECLARE_WRITE32_MEMBER( bios_ext2_ram_w );
-	DECLARE_WRITE32_MEMBER( bios_ext3_ram_w );
-	DECLARE_WRITE32_MEMBER( bios_ext4_ram_w );
+	DECLARE_WRITE32_MEMBER( bios_ext_ram_w );
 
 	DECLARE_WRITE32_MEMBER( bios_ram_w );
 	DECLARE_READ8_MEMBER(at_page8_r);
@@ -128,77 +109,25 @@ static void mxtc_config_w(device_t *busdevice, device_t *device, int function, i
 	printf("MXTC: write %d, %02X, %02X\n",  function, reg, data);
 
 	/*
-    memory banking with North Bridge:
-    0x59 (PAM0) xxxx ---- BIOS area 0xf0000-0xfffff
-                ---- xxxx Reserved
-    0x5a (PAM1) xxxx ---- ISA add-on BIOS 0xc4000 - 0xc7fff
-                ---- xxxx ISA add-on BIOS 0xc0000 - 0xc3fff
-    0x5b (PAM2) xxxx ---- ISA add-on BIOS 0xcc000 - 0xcffff
-                ---- xxxx ISA add-on BIOS 0xc8000 - 0xcbfff
-    0x5c (PAM3) xxxx ---- ISA add-on BIOS 0xd4000 - 0xd7fff
-                ---- xxxx ISA add-on BIOS 0xd0000 - 0xd3fff
-    0x5d (PAM4) xxxx ---- ISA add-on BIOS 0xdc000 - 0xdffff
-                ---- xxxx ISA add-on BIOS 0xd8000 - 0xdbfff
-    0x5e (PAM5) xxxx ---- BIOS extension 0xe4000 - 0xe7fff
-                ---- xxxx BIOS extension 0xe0000 - 0xe3fff
-    0x5f (PAM6) xxxx ---- BIOS extension 0xec000 - 0xeffff
-                ---- xxxx BIOS extension 0xe8000 - 0xebfff
+	memory banking with North Bridge:
+	0x63 (PAM)  xx-- ---- BIOS area 0xf0000-0xfffff
+	            --xx ---- BIOS extension 0xe0000 - 0xeffff
+	            ---- xx-- ISA add-on BIOS 0xd0000 - 0xdffff
+	            ---- --xx ISA add-on BIOS 0xc0000 - 0xcffff
 
-    3210 -> 3 = reserved, 2 = Cache Enable, 1 = Write Enable, 0 = Read Enable
-    */
+	10 -> 1 = Write Enable, 0 = Read Enable
+	*/
 
-	switch(reg)
+	if (reg == 0x63)
 	{
-		case 0x59: // PAM0
-		{
-			if (data & 0x10)		// enable RAM access to region 0xf0000 - 0xfffff
-				state->membank("bios_bank")->set_base(state->m_bios_ram);
-			else					// disable RAM access (reads go to BIOS ROM)
-				state->membank("bios_bank")->set_base(state->memregion("bios")->base() + 0x10000);
-			break;
-		}
-		case 0x5a: // PAM1
-		{
-			if (data & 0x1)
-				state->membank("video_bank1")->set_base(state->m_isa_ram1);
-			else
-				state->membank("video_bank1")->set_base(state->memregion("video_bios")->base() + 0);
-
-			if (data & 0x10)
-				state->membank("video_bank2")->set_base(state->m_isa_ram2);
-			else
-				state->membank("video_bank2")->set_base(state->memregion("video_bios")->base() + 0x4000);
-
-			break;
-		}
-		case 0x5e: // PAM5
-		{
-			if (data & 0x1)
-				state->membank("bios_ext1")->set_base(state->m_bios_ext1_ram);
-			else
-				state->membank("bios_ext1")->set_base(state->memregion("bios")->base() + 0);
-
-			if (data & 0x10)
-				state->membank("bios_ext2")->set_base(state->m_bios_ext2_ram);
-			else
-				state->membank("bios_ext2")->set_base(state->memregion("bios")->base() + 0x4000);
-
-			break;
-		}
-		case 0x5f: // PAM6
-		{
-			if (data & 0x1)
-				state->membank("bios_ext3")->set_base(state->m_bios_ext3_ram);
-			else
-				state->membank("bios_ext3")->set_base(state->memregion("bios")->base() + 0x8000);
-
-			if (data & 0x10)
-				state->membank("bios_ext4")->set_base(state->m_bios_ext4_ram);
-			else
-				state->membank("bios_ext4")->set_base(state->memregion("bios")->base() + 0xc000);
-
-			break;
-		}
+		if (data & 0x20)        // enable RAM access to region 0xf0000 - 0xfffff
+			state->membank("bios_bank")->set_base(state->m_bios_ram);
+		else                    // disable RAM access (reads go to BIOS ROM)
+			state->membank("bios_bank")->set_base(state->memregion("bios")->base() + 0x30000);
+		if (data & 0x80)        // enable RAM access to region 0xe0000 - 0xeffff
+			state->membank("bios_ext")->set_base(state->m_bios_ext_ram);
+		else
+			state->membank("bios_ext")->set_base(state->memregion("bios")->base() + 0x20000);
 	}
 
 	state->m_mxtc_config_reg[reg] = data;
@@ -316,61 +245,18 @@ static void intel82371ab_pci_w(device_t *busdevice, device_t *device, int functi
 }
 
 
-WRITE32_MEMBER(queen_state::isa_ram1_w)
+WRITE32_MEMBER(queen_state::bios_ext_ram_w)
 {
-	if (m_mxtc_config_reg[0x5a] & 0x2)		// write to RAM if this region is write-enabled
+	if (m_mxtc_config_reg[0x63] & 0x40)     // write to RAM if this region is write-enabled
 	{
-		COMBINE_DATA(m_isa_ram1 + offset);
-	}
-}
-
-WRITE32_MEMBER(queen_state::isa_ram2_w)
-{
-	if (m_mxtc_config_reg[0x5a] & 0x2)		// write to RAM if this region is write-enabled
-	{
-		COMBINE_DATA(m_isa_ram2 + offset);
-	}
-}
-
-WRITE32_MEMBER(queen_state::bios_ext1_ram_w)
-{
-	if (m_mxtc_config_reg[0x5e] & 0x2)		// write to RAM if this region is write-enabled
-	{
-		COMBINE_DATA(m_bios_ext1_ram + offset);
-	}
-}
-
-
-WRITE32_MEMBER(queen_state::bios_ext2_ram_w)
-{
-	if (m_mxtc_config_reg[0x5e] & 0x20)		// write to RAM if this region is write-enabled
-	{
-		COMBINE_DATA(m_bios_ext2_ram + offset);
-	}
-}
-
-
-WRITE32_MEMBER(queen_state::bios_ext3_ram_w)
-{
-	if (m_mxtc_config_reg[0x5f] & 0x2)		// write to RAM if this region is write-enabled
-	{
-		COMBINE_DATA(m_bios_ext3_ram + offset);
-	}
-}
-
-
-WRITE32_MEMBER(queen_state::bios_ext4_ram_w)
-{
-	if (m_mxtc_config_reg[0x5f] & 0x20)		// write to RAM if this region is write-enabled
-	{
-		COMBINE_DATA(m_bios_ext4_ram + offset);
+		COMBINE_DATA(m_bios_ext_ram + offset);
 	}
 }
 
 
 WRITE32_MEMBER(queen_state::bios_ram_w)
 {
-	if (m_mxtc_config_reg[0x59] & 0x20)		// write to RAM if this region is write-enabled
+	if (m_mxtc_config_reg[0x63] & 0x10)     // write to RAM if this region is write-enabled
 	{
 		COMBINE_DATA(m_bios_ram + offset);
 	}
@@ -518,15 +404,10 @@ static I8237_INTERFACE( dma8237_2_config )
 static ADDRESS_MAP_START( queen_map, AS_PROGRAM, 32, queen_state )
 	AM_RANGE(0x00000000, 0x0009ffff) AM_RAM
 	AM_RANGE(0x000a0000, 0x000bffff) AM_DEVREADWRITE8("vga", vga_device, mem_r, mem_w, 0xffffffff)
-	AM_RANGE(0x000c0000, 0x000c3fff) AM_ROMBANK("video_bank1") AM_WRITE(isa_ram1_w)
-	AM_RANGE(0x000c4000, 0x000c7fff) AM_ROMBANK("video_bank2") AM_WRITE(isa_ram2_w)
-	AM_RANGE(0x000e0000, 0x000e3fff) AM_ROMBANK("bios_ext1") AM_WRITE(bios_ext1_ram_w)
-	AM_RANGE(0x000e4000, 0x000e7fff) AM_ROMBANK("bios_ext2") AM_WRITE(bios_ext2_ram_w)
-	AM_RANGE(0x000e8000, 0x000ebfff) AM_ROMBANK("bios_ext3") AM_WRITE(bios_ext3_ram_w)
-	AM_RANGE(0x000ec000, 0x000effff) AM_ROMBANK("bios_ext4") AM_WRITE(bios_ext4_ram_w)
+	AM_RANGE(0x000e0000, 0x000effff) AM_ROMBANK("bios_ext") AM_WRITE(bios_ext_ram_w)
 	AM_RANGE(0x000f0000, 0x000fffff) AM_ROMBANK("bios_bank") AM_WRITE(bios_ram_w)
 	AM_RANGE(0x00100000, 0x01ffffff) AM_RAM
-	AM_RANGE(0xfffc0000, 0xffffffff) AM_ROM AM_REGION("bios", 0)	/* System BIOS */
+	AM_RANGE(0xfffc0000, 0xffffffff) AM_ROM AM_REGION("bios", 0)    /* System BIOS */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( queen_io, AS_IO, 32, queen_state )
@@ -535,7 +416,7 @@ static ADDRESS_MAP_START( queen_io, AS_IO, 32, queen_state )
 	AM_RANGE(0x0040, 0x005f) AM_DEVREADWRITE8_LEGACY("pit8254", pit8253_r, pit8253_w, 0xffffffff)
 	AM_RANGE(0x0060, 0x006f) AM_READWRITE8_LEGACY(kbdc8042_8_r, kbdc8042_8_w, 0xffffffff)
 	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE8("rtc", mc146818_device, read, write, 0xffffffff) /* todo: nvram (CMOS Setup Save)*/
-	AM_RANGE(0x0080, 0x009f) AM_READWRITE8(at_page8_r,	at_page8_w, 0xffffffff)
+	AM_RANGE(0x0080, 0x009f) AM_READWRITE8(at_page8_r,  at_page8_w, 0xffffffff)
 	AM_RANGE(0x00a0, 0x00bf) AM_DEVREADWRITE8_LEGACY("pic8259_2", pic8259_r, pic8259_w, 0xffffffff)
 	AM_RANGE(0x00c0, 0x00df) AM_READWRITE8(at_dma8237_2_r, at_dma8237_2_w, 0xffffffff)
 	AM_RANGE(0x00e8, 0x00ef) AM_NOP
@@ -553,15 +434,15 @@ static const struct pit8253_config queen_pit8254_config =
 {
 	{
 		{
-			4772720/4,				/* heartbeat IRQ */
+			4772720/4,              /* heartbeat IRQ */
 			DEVCB_NULL,
 			DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir0_w)
 		}, {
-			4772720/4,				/* dram refresh */
+			4772720/4,              /* dram refresh */
 			DEVCB_NULL,
 			DEVCB_NULL
 		}, {
-			4772720/4,				/* pio port c pin 4, and speaker polling enough */
+			4772720/4,              /* pio port c pin 4, and speaker polling enough */
 			DEVCB_NULL,
 			DEVCB_NULL
 		}
@@ -586,7 +467,7 @@ static const struct pic8259_interface queen_pic8259_1_config =
 {
 	DEVCB_DRIVER_LINE_MEMBER(queen_state,queen_pic8259_1_set_int_line),
 	DEVCB_LINE_VCC,
-	DEVCB_MEMBER(queen_state,get_slave_ack)
+	DEVCB_DRIVER_MEMBER(queen_state,get_slave_ack)
 };
 
 static const struct pic8259_interface queen_pic8259_2_config =
@@ -635,12 +516,7 @@ static IRQ_CALLBACK(irq_callback)
 void queen_state::machine_start()
 {
 	m_bios_ram = auto_alloc_array(machine(), UINT32, 0x10000/4);
-	m_bios_ext1_ram = auto_alloc_array(machine(), UINT32, 0x4000/4);
-	m_bios_ext2_ram = auto_alloc_array(machine(), UINT32, 0x4000/4);
-	m_bios_ext3_ram = auto_alloc_array(machine(), UINT32, 0x4000/4);
-	m_bios_ext4_ram = auto_alloc_array(machine(), UINT32, 0x4000/4);
-	m_isa_ram1 = auto_alloc_array(machine(), UINT32, 0x4000/4);
-	m_isa_ram2 = auto_alloc_array(machine(), UINT32, 0x4000/4);
+	m_bios_ext_ram = auto_alloc_array(machine(), UINT32, 0x10000/4);
 
 	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, queen_set_keyb_int);
 
@@ -653,18 +529,13 @@ void queen_state::machine_start()
 void queen_state::machine_reset()
 {
 	machine().root_device().membank("bios_bank")->set_base(machine().root_device().memregion("bios")->base() + 0x30000);
-	machine().root_device().membank("bios_ext1")->set_base(machine().root_device().memregion("bios")->base() + 0x20000);
-	machine().root_device().membank("bios_ext2")->set_base(machine().root_device().memregion("bios")->base() + 0x24000);
-	machine().root_device().membank("bios_ext3")->set_base(machine().root_device().memregion("bios")->base() + 0x28000);
-	machine().root_device().membank("bios_ext4")->set_base(machine().root_device().memregion("bios")->base() + 0x2c000);
-	machine().root_device().membank("video_bank1")->set_base(machine().root_device().memregion("video_bios")->base() + 0);
-	machine().root_device().membank("video_bank2")->set_base(machine().root_device().memregion("video_bios")->base() + 0x4000);
+	machine().root_device().membank("bios_ext")->set_base(machine().root_device().memregion("bios")->base() + 0x20000);
 }
 
 
 
 static MACHINE_CONFIG_START( queen, queen_state )
-	MCFG_CPU_ADD("maincpu", PENTIUM, 533000000/16) // Celeron or Pentium 3, 533 Mhz
+	MCFG_CPU_ADD("maincpu", PENTIUM3, 533000000/16) // Celeron or Pentium 3, 533 Mhz
 	MCFG_CPU_PROGRAM_MAP(queen_map)
 	MCFG_CPU_IO_MAP(queen_io)
 

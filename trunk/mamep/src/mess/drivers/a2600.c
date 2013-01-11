@@ -20,28 +20,28 @@ TODO:
 #include "machine/vcsctrl.h"
 #include "hashfile.h"
 
-#define CONTROL1_TAG	"joyport1"
-#define CONTROL2_TAG	"joyport2"
+#define CONTROL1_TAG    "joyport1"
+#define CONTROL2_TAG    "joyport2"
 
 struct df_t {
-	UINT8	top;
-	UINT8	bottom;
-	UINT8	low;
-	UINT8	high;
-	UINT8	flag;
-	UINT8	music_mode;		/* Only used by data fetchers 5,6, and 7 */
-	UINT8	osc_clk;		/* Only used by data fetchers 5,6, and 7 */
+	UINT8   top;
+	UINT8   bottom;
+	UINT8   low;
+	UINT8   high;
+	UINT8   flag;
+	UINT8   music_mode;     /* Only used by data fetchers 5,6, and 7 */
+	UINT8   osc_clk;        /* Only used by data fetchers 5,6, and 7 */
 };
 
 struct dpc_t
 {
 	df_t df[8];
-	UINT8	movamt;
-	UINT8	latch_62;
-	UINT8	latch_64;
-	UINT8	dlc;
-	UINT8	shift_reg;
-	emu_timer	*oscillator;
+	UINT8   movamt;
+	UINT8   latch_62;
+	UINT8   latch_64;
+	UINT8   dlc;
+	UINT8   shift_reg;
+	emu_timer   *oscillator;
 };
 
 
@@ -72,6 +72,7 @@ public:
 	unsigned m_modeSS_write_enabled;
 	unsigned m_modeSS_high_ram_enabled;
 	unsigned m_modeSS_diff_adjust;
+	UINT16 m_modeSS_last_address;
 	unsigned m_FVlocked;
 	UINT16 m_current_screen_height;
 	int m_FETimer;
@@ -79,7 +80,6 @@ public:
 	direct_update_delegate m_FE_old_opbase_handler;
 
 	DECLARE_DIRECT_UPDATE_MEMBER(modeF6_opbase);
-	DECLARE_DIRECT_UPDATE_MEMBER(modeSS_opbase);
 	DECLARE_DIRECT_UPDATE_MEMBER(modeDPC_opbase_handler);
 	DECLARE_DIRECT_UPDATE_MEMBER(modeFE_opbase_handler);
 	DECLARE_READ8_MEMBER(modeF8_switch_r);
@@ -150,7 +150,7 @@ protected:
 	void modeFE_switch(UINT16 offset, UINT8 data);
 	void install_banks(int count, unsigned init);
 
-	UINT8	*m_cart;
+	UINT8   *m_cart;
 };
 
 
@@ -158,9 +158,9 @@ protected:
 #define CART machine.root_device().memregion("user1")->base()
 #define CART_MEMBER machine().root_device().memregion("user1")->base()
 
-#define MASTER_CLOCK_NTSC	3579545
-#define MASTER_CLOCK_PAL	3546894
-#define CATEGORY_SELECT		16
+#define MASTER_CLOCK_NTSC   3579545
+#define MASTER_CLOCK_PAL    3546894
+#define CATEGORY_SELECT     16
 
 enum
 {
@@ -888,29 +888,15 @@ DIRECT_UPDATE_MEMBER(a2600_state::modeF6_opbase)
 	return address;
 }
 
-DIRECT_UPDATE_MEMBER(a2600_state::modeSS_opbase)
-{
-	if ( address & 0x1000 )
-	{
-		if ( ! direct.space().debugger_access() )
-		{
-			if ( address & 0x800 )
-			{
-				direct.explicit_configure(( address & 0xf800 ), ( address & 0xf800 ) | 0x7ff, 0x7ff, m_bank_base[2]);
-			}
-			else
-			{
-				direct.explicit_configure(( address & 0xf800 ), ( address & 0xf800 ) | 0x7ff, 0x7ff, m_bank_base[1]);
-			}
-			return ~0;
-		}
-	}
-	return address;
-}
 
 READ8_MEMBER(a2600_state::modeSS_r)
 {
 	UINT8 data = ( offset & 0x800 ) ? m_bank_base[2][offset & 0x7FF] : m_bank_base[1][offset];
+
+	if ( space.debugger_access() )
+	{
+		return data;
+	}
 
 	//logerror("%04X: read from modeSS area offset = %04X\n", machine().device("maincpu")->safe_pc(), offset);
 	/* Check for control register "write" */
@@ -964,6 +950,8 @@ READ8_MEMBER(a2600_state::modeSS_r)
 		}
 		membank("bank1")->set_base(m_bank_base[1] );
 		membank("bank2")->set_base(m_bank_base[2] );
+		// Make sure we do not trigger a spurious RAM write
+		m_modeSS_byte_started -= 5;
 	}
 	else if ( offset == 0xFF9 )
 	{
@@ -978,12 +966,20 @@ READ8_MEMBER(a2600_state::modeSS_r)
 		{
 			data = 0x01;
 		}
+		// Make sure we do not trigger a spurious RAM write
+		m_modeSS_byte_started -= 5;
 	}
 	else
 	{
 		/* Possible RAM write */
 		if ( m_modeSS_write_enabled )
 		{
+			/* Check for dummy read from same address */
+			if ( m_modeSS_last_address == offset )
+			{
+				m_modeSS_diff_adjust += 1;
+			}
+
 			int diff = machine().device<cpu_device>("maincpu")->total_cycles() - m_modeSS_byte_started;
 			//logerror("%04X: offset = %04X, %d\n", machine().device("maincpu")->safe_pc(), offset, diff);
 			if ( diff - m_modeSS_diff_adjust == 5 )
@@ -1007,28 +1003,17 @@ READ8_MEMBER(a2600_state::modeSS_r)
 			{
 				m_modeSS_byte = offset;
 				m_modeSS_byte_started = machine().device<cpu_device>("maincpu")->total_cycles();
-			}
-			/* Check for dummy read from same address */
-			if ( diff == 2 )
-			{
-				m_modeSS_diff_adjust = 1;
-			}
-			else
-			{
 				m_modeSS_diff_adjust = 0;
 			}
+			m_modeSS_last_address = offset;
 		}
 		else if ( offset < 0x0100 )
 		{
 			m_modeSS_byte = offset;
 			m_modeSS_byte_started = machine().device<cpu_device>("maincpu")->total_cycles();
+			m_modeSS_last_address = offset;
+			m_modeSS_diff_adjust = 0;
 		}
-	}
-	/* Because the mame core caches opcode data and doesn't perform reads like normal */
-	/* we have to put in this little hack here to get Suicide Mission to work. */
-	if ( offset != 0xFF8 && ( machine().device("maincpu")->safe_pc() & 0x1FFF ) == 0x1FF8 )
-	{
-		modeSS_r( space, 0xFF8 );
 	}
 	return data;
 }
@@ -1078,7 +1063,7 @@ DIRECT_UPDATE_MEMBER(a2600_state::modeDPC_opbase_handler)
 {
 	if ( ! direct.space().debugger_access() )
 	{
-		UINT8	new_bit;
+		UINT8   new_bit;
 		new_bit = ( m_dpc.shift_reg & 0x80 ) ^ ( ( m_dpc.shift_reg & 0x20 ) << 2 );
 		new_bit = new_bit ^ ( ( ( m_dpc.shift_reg & 0x10 ) << 3 ) ^ ( ( m_dpc.shift_reg & 0x08 ) << 4 ) );
 		new_bit = new_bit ^ 0x80;
@@ -1090,20 +1075,20 @@ DIRECT_UPDATE_MEMBER(a2600_state::modeDPC_opbase_handler)
 READ8_MEMBER(a2600_state::modeDPC_r)
 {
 	static const UINT8 dpc_amplitude[8] = { 0x00, 0x04, 0x05, 0x09, 0x06, 0x0A, 0x0B, 0x0F };
-	UINT8	data_fetcher = offset & 0x07;
-	UINT8	data = 0xFF;
+	UINT8   data_fetcher = offset & 0x07;
+	UINT8   data = 0xFF;
 
 	logerror("%04X: Read from DPC offset $%02X\n", machine().device("maincpu")->safe_pc(), offset);
 	if ( offset < 0x08 )
 	{
 		switch( offset & 0x06 )
 		{
-		case 0x00:		/* Random number generator */
+		case 0x00:      /* Random number generator */
 		case 0x02:
 			return m_dpc.shift_reg;
-		case 0x04:		/* Sound value, MOVAMT value AND'd with Draw Line Carry; with Draw Line Add */
+		case 0x04:      /* Sound value, MOVAMT value AND'd with Draw Line Carry; with Draw Line Add */
 			m_dpc.latch_62 = m_dpc.latch_64;
-		case 0x06:		/* Sound value, MOVAMT value AND'd with Draw Line Carry; without Draw Line Add */
+		case 0x06:      /* Sound value, MOVAMT value AND'd with Draw Line Carry; without Draw Line Add */
 			m_dpc.latch_64 = m_dpc.latch_62 + m_dpc.df[4].top;
 			m_dpc.dlc = ( m_dpc.latch_62 + m_dpc.df[4].top > 0xFF ) ? 1 : 0;
 			data = 0;
@@ -1124,29 +1109,29 @@ READ8_MEMBER(a2600_state::modeDPC_r)
 	}
 	else
 	{
-		UINT8	display_data = memregion("user1")->base()[0x2000 + ( ~ ( ( m_dpc.df[data_fetcher].low | ( m_dpc.df[data_fetcher].high << 8 ) ) ) & 0x7FF ) ];
+		UINT8   display_data = memregion("user1")->base()[0x2000 + ( ~ ( ( m_dpc.df[data_fetcher].low | ( m_dpc.df[data_fetcher].high << 8 ) ) ) & 0x7FF ) ];
 
 		switch( offset & 0x38 )
 		{
-		case 0x08:			/* display data */
+		case 0x08:          /* display data */
 			data = display_data;
 			break;
-		case 0x10:			/* display data AND'd w/flag */
+		case 0x10:          /* display data AND'd w/flag */
 			data = m_dpc.df[data_fetcher].flag ? display_data : 0x00;
 			break;
-		case 0x18:			/* display data AND'd w/flag, nibbles swapped */
+		case 0x18:          /* display data AND'd w/flag, nibbles swapped */
 			data = m_dpc.df[data_fetcher].flag ? BITSWAP8(display_data,3,2,1,0,7,6,5,4) : 0x00;
 			break;
-		case 0x20:			/* display data AND'd w/flag, byte reversed */
+		case 0x20:          /* display data AND'd w/flag, byte reversed */
 			data = m_dpc.df[data_fetcher].flag ? BITSWAP8(display_data,0,1,2,3,4,5,6,7) : 0x00;
 			break;
-		case 0x28:			/* display data AND'd w/flag, rotated right */
+		case 0x28:          /* display data AND'd w/flag, rotated right */
 			data = m_dpc.df[data_fetcher].flag ? ( display_data >> 1 ) : 0x00;
 			break;
-		case 0x30:			/* display data AND'd w/flag, rotated left */
+		case 0x30:          /* display data AND'd w/flag, rotated left */
 			data = m_dpc.df[data_fetcher].flag ? ( display_data << 1 ) : 0x00;
 			break;
-		case 0x38:			/* flag */
+		case 0x38:          /* flag */
 			data = m_dpc.df[data_fetcher].flag ? 0xFF : 0x00;
 			break;
 		}
@@ -1161,20 +1146,20 @@ READ8_MEMBER(a2600_state::modeDPC_r)
 
 WRITE8_MEMBER(a2600_state::modeDPC_w)
 {
-	UINT8	data_fetcher = offset & 0x07;
+	UINT8   data_fetcher = offset & 0x07;
 
 	switch( offset & 0x38 )
 	{
-	case 0x00:			/* Top count */
+	case 0x00:          /* Top count */
 		m_dpc.df[data_fetcher].top = data;
 		m_dpc.df[data_fetcher].flag = 0;
 		modeDPC_check_flag(data_fetcher );
 		break;
-	case 0x08:			/* Bottom count */
+	case 0x08:          /* Bottom count */
 		m_dpc.df[data_fetcher].bottom = data;
 		modeDPC_check_flag(data_fetcher );
 		break;
-	case 0x10:			/* Counter low */
+	case 0x10:          /* Counter low */
 		m_dpc.df[data_fetcher].low = data;
 		if ( data_fetcher == 4 )
 		{
@@ -1186,7 +1171,7 @@ WRITE8_MEMBER(a2600_state::modeDPC_w)
 		}
 		modeDPC_check_flag(data_fetcher );
 		break;
-	case 0x18:			/* Counter high */
+	case 0x18:          /* Counter high */
 		m_dpc.df[data_fetcher].high = data;
 		m_dpc.df[data_fetcher].music_mode = data & 0x10;
 		m_dpc.df[data_fetcher].osc_clk = data & 0x20;
@@ -1196,16 +1181,16 @@ WRITE8_MEMBER(a2600_state::modeDPC_w)
 			modeDPC_check_flag(data_fetcher );
 		}
 		break;
-	case 0x20:			/* Draw line movement value / MOVAMT */
+	case 0x20:          /* Draw line movement value / MOVAMT */
 		m_dpc.movamt = data;
 		break;
-	case 0x28:			/* Not used */
+	case 0x28:          /* Not used */
 		logerror("%04X: Write to unused DPC register $%02X, data $%02X\n", machine().device("maincpu")->safe_pc(), offset, data);
 		break;
-	case 0x30:			/* Random number generator reset */
+	case 0x30:          /* Random number generator reset */
 		m_dpc.shift_reg = 0;
 		break;
-	case 0x38:			/* Not used */
+	case 0x38:          /* Not used */
 		logerror("%04X: Write to unused DPC register $%02X, data $%02X\n", machine().device("maincpu")->safe_pc(), offset, data);
 		break;
 	}
@@ -1227,8 +1212,8 @@ depending on last byte & 0x20 -> 0x00 -> switch to bank #1
 DIRECT_UPDATE_MEMBER(a2600_state::modeFE_opbase_handler)
 {
 	/* Still cheating a bit here by looking bit 13 of the address..., but the high byte of the
-       cpu should be the last byte that was on the data bus and so should determine the bank
-       we should switch in. */
+	   cpu should be the last byte that was on the data bus and so should determine the bank
+	   we should switch in. */
 	m_bank_base[1] = memregion("user1")->base() + 0x1000 * ( ( machine().device("maincpu")->safe_pc() & 0x2000 ) ? 0 : 1 );
 	membank("bank1")->set_base(m_bank_base[1] );
 	/* and restore old opbase handler */
@@ -1240,8 +1225,8 @@ void a2600_state::modeFE_switch(UINT16 offset, UINT8 data)
 {
 	address_space& space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	/* Retrieve last byte read by the cpu (for this mapping scheme this
-       should be the last byte that was on the data bus
-    */
+	   should be the last byte that was on the data bus
+	*/
 	m_FE_old_opbase_handler = space.set_direct_update_handler(direct_update_delegate(FUNC(a2600_state::modeFE_opbase_handler), this));
 }
 
@@ -1355,22 +1340,22 @@ READ16_MEMBER(a2600_state::a2600_read_input_port)
 {
 	switch( offset )
 	{
-	case 0:	/* Left controller port PIN 5 */
+	case 0: /* Left controller port PIN 5 */
 		return m_joy1->pot_x_r();
 
-	case 1:	/* Left controller port PIN 9 */
+	case 1: /* Left controller port PIN 9 */
 		return m_joy1->pot_y_r();
 
-	case 2:	/* Right controller port PIN 5 */
+	case 2: /* Right controller port PIN 5 */
 		return m_joy2->pot_x_r();
 
-	case 3:	/* Right controller port PIN 9 */
+	case 3: /* Right controller port PIN 9 */
 		return m_joy2->pot_y_r();
 
-	case 4:	/* Left controller port PIN 6 */
+	case 4: /* Left controller port PIN 6 */
 		return ( m_joy1->joy_r() & 0x20 ) ? 0xff : 0x7f;
 
-	case 5:	/* Right controller port PIN 6 */
+	case 5: /* Right controller port PIN 6 */
 		return ( m_joy2->joy_r() & 0x20 ) ? 0xff : 0x7f;
 	}
 	return 0xff;
@@ -1387,8 +1372,8 @@ READ16_MEMBER(a2600_state::a2600_read_input_port)
 */
 READ8_MEMBER(a2600_state::a2600_get_databus_contents)
 {
-	UINT16	last_address, prev_address;
-	UINT8	last_byte, prev_byte;
+	UINT16  last_address, prev_address;
+	UINT8   last_byte, prev_byte;
 	address_space& prog_space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	last_address = machine().device("maincpu")->safe_pc() - 1;
@@ -1408,7 +1393,7 @@ READ8_MEMBER(a2600_state::a2600_get_databus_contents)
 	}
 	prev_byte = prog_space.read_byte(prev_address );
 	if ( prev_byte == 0xB1 )
-	{	/* LDA (XX),Y */
+	{   /* LDA (XX),Y */
 		return prog_space.read_byte(last_byte + 1 );
 	}
 	return last_byte;
@@ -1416,10 +1401,10 @@ READ8_MEMBER(a2600_state::a2600_get_databus_contents)
 
 #if 0
 static const rectangle visarea[4] = {
-	{ 26, 26 + 160 + 16, 24, 24 + 192 + 31 },	/* 262 */
-	{ 26, 26 + 160 + 16, 32, 32 + 228 + 31 },	/* 312 */
-	{ 26, 26 + 160 + 16, 45, 45 + 240 + 31 },	/* 328 */
-	{ 26, 26 + 160 + 16, 48, 48 + 240 + 31 }	/* 342 */
+	{ 26, 26 + 160 + 16, 24, 24 + 192 + 31 },   /* 262 */
+	{ 26, 26 + 160 + 16, 32, 32 + 228 + 31 },   /* 312 */
+	{ 26, 26 + 160 + 16, 45, 45 + 240 + 31 },   /* 328 */
+	{ 26, 26 + 160 + 16, 48, 48 + 240 + 31 }    /* 342 */
 };
 #endif
 
@@ -1481,6 +1466,7 @@ MACHINE_START_MEMBER(a2600_state,a2600)
 	m_current_reset_bank_counter = 0xFF;
 	m_dpc.oscillator = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(a2600_state::modeDPC_timer_callback),this));
 	m_cart = CART_MEMBER;
+	m_modeSS_last_address = 0;
 }
 
 
@@ -1632,10 +1618,10 @@ void a2600_state::machine_reset()
 	}
 
 	/* Super chip games:
-       dig dig, crystal castles, millipede, stargate, defender ii, jr. Pac Man,
-       desert falcon, dark chambers, super football, sprintmaster, fatal run,
-       off the wall, shooting arcade, secret quest, radar lock, save mary, klax
-    */
+	   dig dig, crystal castles, millipede, stargate, defender ii, jr. Pac Man,
+	   desert falcon, dark chambers, super football, sprintmaster, fatal run,
+	   off the wall, shooting arcade, secret quest, radar lock, save mary, klax
+	*/
 
 	/* set up ROM banks */
 
@@ -1835,7 +1821,6 @@ void a2600_state::machine_reset()
 		membank("bank2")->set_base(m_bank_base[2] );
 		m_modeSS_write_enabled = 0;
 		m_modeSS_byte_started = 0;
-		space.set_direct_update_handler(direct_update_delegate(FUNC(a2600_state::modeSS_opbase), this));
 		/* The Supercharger has no motor control so just enable it */
 		machine().device<cassette_image_device>(CASSETTE_TAG)->change_state(CASSETTE_MOTOR_ENABLED, CASSETTE_MOTOR_DISABLED );
 		break;
@@ -1852,7 +1837,7 @@ void a2600_state::machine_reset()
 		space.install_read_handler(0x1ff8, 0x1ff9, read8_delegate(FUNC(a2600_state::modeF8_switch_r),this));
 		space.set_direct_update_handler(direct_update_delegate(FUNC(a2600_state::modeDPC_opbase_handler), this));
 		{
-			int	data_fetcher;
+			int data_fetcher;
 			for( data_fetcher = 0; data_fetcher < 8; data_fetcher++ )
 			{
 				m_dpc.df[data_fetcher].osc_clk = 0;
@@ -1948,7 +1933,8 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( a2600, a2600_state )
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK_NTSC / 3)	/* actually M6507 */
+	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK_NTSC / 3)   /* actually M6507 */
+	MCFG_M6502_DISABLE_DIRECT()
 	MCFG_CPU_PROGRAM_MAP(a2600_mem)
 
 	MCFG_MACHINE_START_OVERRIDE(a2600_state,a2600)
@@ -1986,6 +1972,7 @@ static MACHINE_CONFIG_START( a2600p, a2600_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK_PAL / 3)    /* actually M6507 */
 	MCFG_CPU_PROGRAM_MAP(a2600_mem)
+	MCFG_M6502_DISABLE_DIRECT()
 
 	MCFG_MACHINE_START_OVERRIDE(a2600_state,a2600)
 
@@ -2028,5 +2015,5 @@ ROM_END
 #define rom_a2600p rom_a2600
 
 /*    YEAR  NAME    PARENT  COMPAT  MACHINE INPUT   INIT    COMPANY     FULLNAME */
-CONS( 1977,	a2600,	0,		0,		a2600,	a2600, driver_device,	0,		"Atari",	"Atari 2600 (NTSC)" , 0)
-CONS( 1978,	a2600p,	a2600,	0,		a2600p,	a2600, driver_device,	0,		"Atari",    "Atari 2600 (PAL)",   0)
+CONS( 1977, a2600,  0,      0,      a2600,  a2600, driver_device,   0,      "Atari",    "Atari 2600 (NTSC)" , 0)
+CONS( 1978, a2600p, a2600,  0,      a2600p, a2600, driver_device,   0,      "Atari",    "Atari 2600 (PAL)",   0)

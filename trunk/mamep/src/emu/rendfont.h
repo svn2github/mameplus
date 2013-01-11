@@ -81,15 +81,15 @@ private:
 	class glyph
 	{
 	public:
-		INT32				width;				// width from this character to the next
-		INT32				xoffs, yoffs;		// X and Y offset from baseline to top,left of bitmap
-		INT32				bmwidth, bmheight;	// width and height of bitmap
-		const char *		rawdata;			// pointer to the raw data for this one
-		bitmap_argb32		bitmap;				// pointer to the bitmap containing the raw data
-		render_texture *	texture;			// pointer to a texture for rendering and sizing
+		INT32               width;              // width from this character to the next
+		INT32               xoffs, yoffs;       // X and Y offset from baseline to top,left of bitmap
+		INT32               bmwidth, bmheight;  // width and height of bitmap
+		const char *        rawdata;            // pointer to the raw data for this one
+		bitmap_argb32       bitmap;             // pointer to the bitmap containing the raw data
+		render_texture *    texture;            // pointer to a texture for rendering and sizing
 #ifdef UI_COLOR_DISPLAY
 		//mamep: for color glyph
-		int			color;
+		int                 color;
 #endif /* UI_COLOR_DISPLAY */
 	};
 
@@ -112,33 +112,32 @@ private:
 	bool save_cached(const char *filename, UINT32 hash);
 
 	// internal state
-	render_manager &	m_manager;
-	format				m_format;			// format of font data
-	int					m_height;			// height of the font, from ascent to descent
-	int					m_yoffs;			// y offset from baseline to descent
-	float				m_scale;			// 1 / height precomputed
-	glyph *				m_glyphs[256];		// array of glyph subtables
-	const char *		m_rawdata;			// pointer to the raw data for the font
-	UINT64				m_rawsize;			// size of the raw font data
-	osd_font			m_osdfont;			// handle to the OSD font
+	render_manager &    m_manager;
+	format              m_format;           // format of font data
+	int                 m_height;           // height of the font, from ascent to descent
+	int                 m_yoffs;            // y offset from baseline to descent
+	float               m_scale;            // 1 / height precomputed
+	glyph *             m_glyphs[256];      // array of glyph subtables
+	const char *        m_rawdata;          // pointer to the raw data for the font
+	UINT64              m_rawsize;          // size of the raw font data
+	osd_font            m_osdfont;          // handle to the OSD font
 	//mamep: for command glyph
-	int					m_height_cmd;		// height of the font, from ascent to descent
-	int					m_yoffs_cmd;		// y offset from baseline to descent
-	glyph *				m_glyphs_cmd[256];	// array of glyph subtables
-	const char *		m_rawdata_cmd;		// pointer to the raw data for the font
+	int                 m_height_cmd;       // height of the font, from ascent to descent
+	int                 m_yoffs_cmd;        // y offset from baseline to descent
+	glyph *             m_glyphs_cmd[256];  // array of glyph subtables
+	const char *        m_rawdata_cmd;      // pointer to the raw data for the font
 
 	//mamep: allocate command glyph font
 	void render_font_command_glyph();
 
 	// constants
-	static const int CACHED_CHAR_SIZE		= 12;
-	static const int CACHED_HEADER_SIZE		= 16;
-	static const int CACHED_BDF_HASH_SIZE	= 1024;
+	static const int CACHED_CHAR_SIZE       = 12;
+	static const int CACHED_HEADER_SIZE     = 16;
+	static const int CACHED_BDF_HASH_SIZE   = 1024;
 };
 
 
 //mamep: convert command glyph
 void convert_command_glyph(char *s, int buflen);
 
-
-#endif	/* __RENDFONT_H__ */
+#endif  /* __RENDFONT_H__ */

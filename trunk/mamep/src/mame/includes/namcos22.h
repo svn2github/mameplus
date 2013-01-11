@@ -25,7 +25,8 @@ enum
 	NAMCOS22_ALPINE_SURFER,
 	NAMCOS22_TOKYO_WARS,
 	NAMCOS22_AQUA_JET,
-	NAMCOS22_DIRT_DASH
+	NAMCOS22_DIRT_DASH,
+	NAMCOS22_ARMADILLO_RACING
 };
 
 class namcos22_state : public driver_device
@@ -75,7 +76,8 @@ public:
 	optional_shared_ptr<UINT32> m_czram;
 
 	int m_mbEnableDspIrqs;
-
+	attotime m_ar_tb_reload[2];
+	emu_timer *m_ar_tb_interrupt[2];
 	UINT16 m_mMasterBIOZ;
 	UINT32 *m_mpPointRAM;
 	UINT32 m_old_coin_state;
@@ -225,6 +227,7 @@ public:
 	DECLARE_READ8_MEMBER(tokyowar_mcu_adc_r);
 	DECLARE_READ8_MEMBER(aquajet_mcu_adc_r);
 	DECLARE_READ8_MEMBER(airco22_mcu_adc_r);
+	DECLARE_READ8_MEMBER(adillor_mcu_adc_r);
 	DECLARE_READ8_MEMBER(mcu_port4_s22_r);
 	DECLARE_READ16_MEMBER(mcu141_speedup_r);
 	DECLARE_WRITE16_MEMBER(mcu_speedup_w);
@@ -235,6 +238,7 @@ public:
 	void WriteToPointRAM(offs_t offs, UINT32 data );
 	DECLARE_DRIVER_INIT(acedrvr);
 	DECLARE_DRIVER_INIT(aquajet);
+	DECLARE_DRIVER_INIT(adillor);
 	DECLARE_DRIVER_INIT(cybrcyc);
 	DECLARE_DRIVER_INIT(raveracw);
 	DECLARE_DRIVER_INIT(ridger2j);
@@ -251,6 +255,8 @@ public:
 	DECLARE_DRIVER_INIT(alpinesa);
 	TILE_GET_INFO_MEMBER(TextTilemapGetInfo);
 	virtual void machine_reset();
+	virtual void machine_start();
+	DECLARE_MACHINE_START(adillor);
 	DECLARE_VIDEO_START(namcos22s);
 	DECLARE_VIDEO_START(namcos22);
 	DECLARE_VIDEO_START(common);
@@ -258,6 +264,8 @@ public:
 	UINT32 screen_update_namcos22(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(namcos22s_interrupt);
 	INTERRUPT_GEN_MEMBER(namcos22_interrupt);
+	TIMER_DEVICE_CALLBACK_MEMBER(adillor_trackball_update);
+	TIMER_CALLBACK_MEMBER(adillor_trackball_interrupt);
 	TIMER_CALLBACK_MEMBER(alpine_steplock_callback);
 	TIMER_DEVICE_CALLBACK_MEMBER(dsp_master_serial_irq);
 	TIMER_DEVICE_CALLBACK_MEMBER(dsp_slave_serial_irq);

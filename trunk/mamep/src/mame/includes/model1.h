@@ -10,18 +10,18 @@ class model1_state : public driver_device
 public:
 	model1_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-        m_maincpu(*this, "maincpu"),
-        m_audiocpu(*this, "maincpu"),
-        m_dsbz80(*this, DSBZ80_TAG),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "maincpu"),
+		m_dsbz80(*this, DSBZ80_TAG),
 		m_mr2(*this, "mr2"),
 		m_mr(*this, "mr"),
 		m_display_list0(*this, "display_list0"),
 		m_display_list1(*this, "display_list1"),
 		m_color_xlat(*this, "color_xlat"){ }
 
-    required_device<cpu_device> m_maincpu;      // V60
-    required_device<cpu_device> m_audiocpu;     // sound 68000
-    optional_device<dsbz80_device> m_dsbz80;    // Digital Sound Board
+	required_device<cpu_device> m_maincpu;      // V60
+	required_device<cpu_device> m_audiocpu;     // sound 68000
+	optional_device<dsbz80_device> m_dsbz80;    // Digital Sound Board
 
 	required_shared_ptr<UINT16> m_mr2;
 	required_shared_ptr<UINT16> m_mr;
@@ -37,6 +37,8 @@ public:
 	struct quad_m1 **m_quadind;
 	int m_sound_irq;
 	int m_to_68k[8];
+	UINT8 m_last_snd_cmd;
+	int m_snd_cmd_state;
 	int m_fifo_wptr;
 	int m_fifo_rptr;
 	int m_last_irq;
@@ -147,4 +149,3 @@ ADDRESS_MAP_EXTERN( model1_vr_tgp_map, 32 );
 
 void model1_vr_tgp_reset( running_machine &machine );
 void model1_tgp_reset(running_machine &machine, int swa);
-

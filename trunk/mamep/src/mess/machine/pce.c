@@ -2,6 +2,18 @@
 
 PC Engine CD HW notes:
 
+TODO:
+- Dragon Ball Z: ADPCM dies after the first upload;
+- Dragon Slayer - The Legend of Heroes: black screen;
+- Mirai Shonen Conan: dies at new game selection;
+- Snatcher: black screen after Konami logo, tries set up CD-DA
+            while transferring data?
+- Steam Heart's: needs transfer ready irq to get past the
+                 gameplay hang, don't know exactly when it should fire
+- Steam Heart's: bad ADPCM irq, dialogue is cutted due of it;
+
+=============================================================
+
 CD Interface Register 0x00 - CDC status
 x--- ---- busy signal
 -x-- ---- request signal
@@ -62,20 +74,21 @@ CD Interface Register 0x0f - ADPCM fade in/out register
 #include "sound/cdda.h"
 
 
-#define PCE_BRAM_SIZE				0x800
-#define PCE_ADPCM_RAM_SIZE			0x10000
-#define PCE_ACARD_RAM_SIZE			0x200000
-#define PCE_CD_COMMAND_BUFFER_SIZE	0x100
+#define PCE_BRAM_SIZE               0x800
+#define PCE_ADPCM_RAM_SIZE          0x10000
+#define PCE_ACARD_RAM_SIZE          0x200000
+#define PCE_CD_COMMAND_BUFFER_SIZE  0x100
 
-#define PCE_CD_IRQ_TRANSFER_READY		0x40
-#define PCE_CD_IRQ_TRANSFER_DONE		0x20
-#define PCE_CD_IRQ_SAMPLE_FULL_PLAY		0x08
-#define PCE_CD_IRQ_SAMPLE_HALF_PLAY		0x04
+#define PCE_CD_IRQ_TRANSFER_READY       0x40
+#define PCE_CD_IRQ_TRANSFER_DONE        0x20
+#define PCE_CD_IRQ_BRAM                 0x10 /* ??? */
+#define PCE_CD_IRQ_SAMPLE_FULL_PLAY     0x08
+#define PCE_CD_IRQ_SAMPLE_HALF_PLAY     0x04
 
-#define PCE_CD_ADPCM_PLAY_FLAG		0x08
-#define PCE_CD_ADPCM_STOP_FLAG		0x01
+#define PCE_CD_ADPCM_PLAY_FLAG      0x08
+#define PCE_CD_ADPCM_STOP_FLAG      0x01
 
-#define PCE_CD_DATA_FRAMES_PER_SECOND	75
+#define PCE_CD_DATA_FRAMES_PER_SECOND   75
 
 enum {
 	PCE_CD_CDDA_OFF=0,
@@ -89,8 +102,8 @@ enum {
 /* MSM5205 ADPCM decoder definition */
 static void pce_cd_msm5205_int(device_t *device);
 const msm5205_interface pce_cd_msm5205_interface = {
-	pce_cd_msm5205_int,	/* interrupt function */
-	MSM5205_S48_4B		/* 1/48 prescaler, 4bit data */
+	pce_cd_msm5205_int, /* interrupt function */
+	MSM5205_S48_4B      /* 1/48 prescaler, 4bit data */
 };
 
 
@@ -185,7 +198,7 @@ DEVICE_IMAGE_LOAD(pce_cart)
 	{
 		split_rom = 1;
 		/* Mirror the upper 128KB part of the image */
-		memcpy(ROM + 0x060000, ROM + 0x040000, 0x020000);	/* Set up 060000 - 07FFFF mirror */
+		memcpy(ROM + 0x060000, ROM + 0x040000, 0x020000);   /* Set up 060000 - 07FFFF mirror */
 	}
 
 	/* set up the memory for a split rom image */
@@ -197,9 +210,9 @@ DEVICE_IMAGE_LOAD(pce_cart)
 		/* 040000 - 07FFFF : ROM data 000000 - 03FFFF    */
 		/* 080000 - 0BFFFF : ROM data 040000 - 07FFFF    */
 		/* 0C0000 - 0FFFFF : ROM data 040000 - 07FFFF    */
-		memcpy(ROM + 0x080000, ROM + 0x040000, 0x040000);	/* Set up 080000 - 0BFFFF region */
-		memcpy(ROM + 0x0C0000, ROM + 0x040000, 0x040000);	/* Set up 0C0000 - 0FFFFF region */
-		memcpy(ROM + 0x040000, ROM, 0x040000);		/* Set up 040000 - 07FFFF region */
+		memcpy(ROM + 0x080000, ROM + 0x040000, 0x040000);   /* Set up 080000 - 0BFFFF region */
+		memcpy(ROM + 0x0C0000, ROM + 0x040000, 0x040000);   /* Set up 0C0000 - 0FFFFF region */
+		memcpy(ROM + 0x040000, ROM, 0x040000);      /* Set up 040000 - 07FFFF region */
 	}
 	else
 	{
@@ -236,8 +249,8 @@ DEVICE_IMAGE_LOAD(pce_cart)
 	if (!memcmp(ROM + 0x3FFB6, "PC Engine CD-ROM SYSTEM", 23))
 	{
 		/* Check if 192KB additional system card ram should be used */
-		if(!memcmp(ROM + 0x29D1, "VER. 3.", 7)) 		{ state->m_sys3_card = 1; } // JP version
-		else if(!memcmp(ROM + 0x29C4, "VER. 3.", 7 ))	{ state->m_sys3_card = 3; } // US version
+		if(!memcmp(ROM + 0x29D1, "VER. 3.", 7))         { state->m_sys3_card = 1; } // JP version
+		else if(!memcmp(ROM + 0x29C4, "VER. 3.", 7 ))   { state->m_sys3_card = 3; } // US version
 
 		if(state->m_sys3_card)
 		{
@@ -295,7 +308,7 @@ MACHINE_RESET_MEMBER(pce_state,mess_pce)
 	pce_cd.msm_idle = 1;
 
 	/* Note: Arcade Card BIOS contents are the same as System 3, only internal HW differs.
-       We use a category to select between modes (some games can be run in either S-CD or A-CD modes) */
+	   We use a category to select between modes (some games can be run in either S-CD or A-CD modes) */
 	m_acard = machine().root_device().ioport("A_CARD")->read() & 1;
 }
 
@@ -305,28 +318,28 @@ WRITE8_MEMBER(pce_state::mess_pce_joystick_w)
 	int joy_i;
 	UINT8 joy_type = ioport("JOY_TYPE")->read();
 
-	h6280io_set_buffer(&space.device(), data);
+	m_maincpu->io_set_buffer(data);
 
-    /* bump counter on a low-to-high transition of bit 1 */
-    if ((!m_joystick_data_select) && (data & JOY_CLOCK))
-    {
-        m_joystick_port_select = (m_joystick_port_select + 1) & 0x07;
-    }
+	/* bump counter on a low-to-high transition of bit 1 */
+	if ((!m_joystick_data_select) && (data & JOY_CLOCK))
+	{
+		m_joystick_port_select = (m_joystick_port_select + 1) & 0x07;
+	}
 
-    /* do we want buttons or direction? */
-    m_joystick_data_select = data & JOY_CLOCK;
+	/* do we want buttons or direction? */
+	m_joystick_data_select = data & JOY_CLOCK;
 
-    /* clear counter if bit 2 is set */
-    if (data & JOY_RESET)
-    {
+	/* clear counter if bit 2 is set */
+	if (data & JOY_RESET)
+	{
 		m_joystick_port_select = 0;
 
 		for (joy_i = 0; joy_i < 5; joy_i++)
 		{
 			if (((joy_type >> (joy_i*2)) & 3) == 2)
-        		m_joy_6b_packet[joy_i] ^= 1;
+				m_joy_6b_packet[joy_i] ^= 1;
 		}
-    }
+	}
 }
 
 READ8_MEMBER(pce_state::mess_pce_joystick_r)
@@ -349,12 +362,12 @@ READ8_MEMBER(pce_state::mess_pce_joystick_r)
 				break;
 			case 2: //6-buttons pad
 				/*
-                Two packets:
-                1st packet: directions + I, II, Run, Select
-                2nd packet: 6 buttons "header" (high 4 bits active low) + III, IV, V, VI
-                Note that six buttons pad just doesn't work with (almost?) every single 2-button-only games, it's really just an after-thought and it is like this
-                on real HW.
-                */
+				Two packets:
+				1st packet: directions + I, II, Run, Select
+				2nd packet: 6 buttons "header" (high 4 bits active low) + III, IV, V, VI
+				Note that six buttons pad just doesn't work with (almost?) every single 2-button-only games, it's really just an after-thought and it is like this
+				on real HW.
+				*/
 				data = ioport(joyname[2][m_joystick_port_select])->read() >> (m_joy_6b_packet[m_joystick_port_select]*8);
 				break;
 			default:
@@ -452,13 +465,13 @@ static void pce_cd_msm5205_int(device_t *device)
 	}
 }
 
-#define	SCSI_STATUS_OK			0x00
-#define SCSI_CHECK_CONDITION	0x02
+#define SCSI_STATUS_OK          0x00
+#define SCSI_CHECK_CONDITION    0x02
 
 static void pce_cd_reply_status_byte( pce_state *state, UINT8 status )
 {
 	pce_cd_t &pce_cd = state->m_cd;
-logerror("Setting CD in reply_status_byte\n");
+	logerror("Setting CD in reply_status_byte\n");
 	pce_cd.scsi_CD = pce_cd.scsi_IO = pce_cd.scsi_REQ = 1;
 	pce_cd.scsi_MSG = 0;
 	pce_cd.message_after_status = 1;
@@ -497,8 +510,9 @@ static void pce_cd_read_6( running_machine &machine )
 {
 	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = state->m_cd;
-	UINT32 frame = ( ( pce_cd.command_buffer[1] & 0x1F ) << 16 ) | ( pce_cd.command_buffer[2] << 8 ) | pce_cd.command_buffer[3];
+	UINT32 frame = ( ( pce_cd.command_buffer[1] & 0x1f ) << 16 ) | ( pce_cd.command_buffer[2] << 8 ) | pce_cd.command_buffer[3];
 	UINT32 frame_count = pce_cd.command_buffer[4];
+	printf("%08x %08x\n",frame,frame_count);
 
 	/* Check for presence of a CD */
 	if ( ! pce_cd.cd )
@@ -514,6 +528,18 @@ static void pce_cd_read_6( running_machine &machine )
 		pce_cd.end_mark = 0;
 	}
 
+	#if 0 // dirty PoP hack test
+	{
+		static int test;
+
+		if(frame == 0xcf4)
+			test = 1;
+
+		if(test == 1)
+			frame-=0xe1;
+	}
+	#endif
+
 	pce_cd.current_frame = frame;
 	pce_cd.end_frame = frame + frame_count;
 
@@ -527,6 +553,9 @@ static void pce_cd_read_6( running_machine &machine )
 	{
 		pce_cd.data_timer->adjust(attotime::from_hz( PCE_CD_DATA_FRAMES_PER_SECOND ), 0, attotime::from_hz( PCE_CD_DATA_FRAMES_PER_SECOND ));
 	}
+
+	/* TODO: correct place? */
+	pce_cd_set_irq_line( machine, PCE_CD_IRQ_TRANSFER_READY, ASSERT_LINE );
 }
 
 /* 0xD8 - SET AUDIO PLAYBACK START POSITION (NEC) */
@@ -534,7 +563,7 @@ static void pce_cd_nec_set_audio_start_position( running_machine &machine )
 {
 	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = state->m_cd;
-	UINT32	frame = 0;
+	UINT32  frame = 0;
 
 	if ( ! pce_cd.cd )
 	{
@@ -558,12 +587,13 @@ static void pce_cd_nec_set_audio_start_position( running_machine &machine )
 		f = bcd_2_dec( pce_cd.command_buffer[4]);
 
 		frame = f + 75 * (s + m * 60);
-		if(frame >= 525) // TODO: seven seconds gap? O_o
-			frame -= 525;
+		// PCE tries to be clever here and set (start of track + track pregap size) to skip the pregap
+		// (I guess it wants the TOC to have the real start sector for data tracks and the start of the pregap for audio?)
+		frame -= pce_cd.toc->tracks[cdrom_get_track(pce_cd.cd, frame)].pregap;
 		break;
 	}
 	case 0x80:
-		frame = pce_cd.toc->tracks[ bcd_2_dec( pce_cd.command_buffer[2] ) - 1 ].physframeofs;
+		frame = pce_cd.toc->tracks[ bcd_2_dec( pce_cd.command_buffer[2] ) - 1 ].logframeofs;
 		break;
 	default:
 		popmessage("CD-DA set start mode 0xc0, contact MESSdev");
@@ -593,7 +623,7 @@ static void pce_cd_nec_set_audio_start_position( running_machine &machine )
 		else
 		{
 			pce_cd.cdda_status = PCE_CD_CDDA_PLAYING;
-			pce_cd.end_frame = pce_cd.toc->tracks[ cdrom_get_track(pce_cd.cd, pce_cd.current_frame) + 1 ].physframeofs; //get the end of THIS track
+			pce_cd.end_frame = pce_cd.toc->tracks[ cdrom_get_track(pce_cd.cd, pce_cd.current_frame) + 1 ].logframeofs; //get the end of THIS track
 			cdda_start_audio( machine.device( "cdda" ), pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
 			pce_cd.end_mark = 0;
 			pce_cd.cdda_play_mode = 3;
@@ -633,12 +663,12 @@ static void pce_cd_nec_set_audio_stop_position( running_machine &machine )
 		f = bcd_2_dec( pce_cd.command_buffer[4]);
 
 		frame = f + 75 * (s + m * 60);
-		if(frame >= 525) // TODO: seven seconds gap? O_o
-			frame -= 525;
+//      if(frame >= 525) // TODO: seven seconds gap? O_o
+//          frame -= 525;
 		break;
 	}
 	case 0x80:
-		frame = pce_cd.toc->tracks[ bcd_2_dec( pce_cd.command_buffer[2] ) - 1 ].physframeofs;
+		frame = pce_cd.toc->tracks[ bcd_2_dec( pce_cd.command_buffer[2] ) - 1 ].logframeofs;
 		break;
 	default:
 		popmessage("CD-DA set end mode 0xc0, contact MESSdev");
@@ -657,6 +687,7 @@ static void pce_cd_nec_set_audio_stop_position( running_machine &machine )
 		}
 		else
 		{
+			//printf("%08x %08x\n",pce_cd.current_frame,pce_cd.end_frame - pce_cd.current_frame);
 			cdda_start_audio( machine.device( "cdda" ), pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
 			pce_cd.end_mark = 1;
 		}
@@ -738,14 +769,14 @@ static void pce_cd_nec_get_subq( running_machine &machine )
 	msf_rel = lba_to_msf_alt( frame - cdrom_get_track_start( pce_cd.cd, track ) );
 
 	pce_cd.data_buffer[1] = 0x01 | ((cdrom_get_track_type(pce_cd.cd, cdrom_get_track(pce_cd.cd, track+1)) == CD_TRACK_AUDIO) ? 0x00 : 0x40);
-	pce_cd.data_buffer[2] = dec_2_bcd( track+1 );		/* track */
-	pce_cd.data_buffer[3] = 1;							/* index */
+	pce_cd.data_buffer[2] = dec_2_bcd( track+1 );       /* track */
+	pce_cd.data_buffer[3] = 1;                          /* index */
 	pce_cd.data_buffer[4] = dec_2_bcd(( msf_rel >> 16 ) & 0xFF);/* M (relative) */
-	pce_cd.data_buffer[5] = dec_2_bcd(( msf_rel >> 8 ) & 0xFF);	/* S (relative) */
-	pce_cd.data_buffer[6] = dec_2_bcd(msf_rel & 0xFF);			/* F (relative) */
+	pce_cd.data_buffer[5] = dec_2_bcd(( msf_rel >> 8 ) & 0xFF); /* S (relative) */
+	pce_cd.data_buffer[6] = dec_2_bcd(msf_rel & 0xFF);          /* F (relative) */
 	pce_cd.data_buffer[7] = dec_2_bcd(( msf_abs >> 16 ) & 0xFF);/* M (absolute) */
 	pce_cd.data_buffer[8] = dec_2_bcd(( msf_abs >> 8 ) & 0xFF); /* S (absolute) */
-	pce_cd.data_buffer[9] = dec_2_bcd(msf_abs & 0xFF);			/* F (absolute) */
+	pce_cd.data_buffer[9] = dec_2_bcd(msf_abs & 0xFF);          /* F (absolute) */
 	pce_cd.data_buffer_size = 10;
 
 	pce_cd.data_buffer_index = 0;
@@ -760,7 +791,7 @@ static void pce_cd_nec_get_dir_info( running_machine &machine )
 	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = state->m_cd;
 	UINT32 frame, msf, track = 0;
-	const cdrom_toc	*toc;
+	const cdrom_toc *toc;
 	logerror("nec get dir info\n");
 
 	if ( ! pce_cd.cd )
@@ -773,38 +804,38 @@ static void pce_cd_nec_get_dir_info( running_machine &machine )
 
 	switch( pce_cd.command_buffer[1] )
 	{
-	case 0x00:		/* Get first and last track numbers */
+	case 0x00:      /* Get first and last track numbers */
 		pce_cd.data_buffer[0] = dec_2_bcd(1);
 		pce_cd.data_buffer[1] = dec_2_bcd(toc->numtrks);
 		pce_cd.data_buffer_size = 2;
 		break;
-	case 0x01:		/* Get total disk size in MSF format */
-		frame = toc->tracks[toc->numtrks-1].physframeofs;
+	case 0x01:      /* Get total disk size in MSF format */
+		frame = toc->tracks[toc->numtrks-1].logframeofs;
 		frame += toc->tracks[toc->numtrks-1].frames;
 		msf = lba_to_msf( frame + 150 );
 
-		pce_cd.data_buffer[0] = ( msf >> 16 ) & 0xFF;	/* M */
-		pce_cd.data_buffer[1] = ( msf >> 8 ) & 0xFF;	/* S */
-		pce_cd.data_buffer[2] = msf & 0xFF;				/* F */
+		pce_cd.data_buffer[0] = ( msf >> 16 ) & 0xFF;   /* M */
+		pce_cd.data_buffer[1] = ( msf >> 8 ) & 0xFF;    /* S */
+		pce_cd.data_buffer[2] = msf & 0xFF;             /* F */
 		pce_cd.data_buffer_size = 3;
 		break;
-	case 0x02:		/* Get track information */
+	case 0x02:      /* Get track information */
 		if ( pce_cd.command_buffer[2] == 0xAA )
 		{
-			frame = toc->tracks[toc->numtrks-1].physframeofs;
+			frame = toc->tracks[toc->numtrks-1].logframeofs;
 			frame += toc->tracks[toc->numtrks-1].frames;
-			pce_cd.data_buffer[3] = 0x04;	/* correct? */
+			pce_cd.data_buffer[3] = 0x04;   /* correct? */
 		} else
 		{
 			track = MAX( bcd_2_dec( pce_cd.command_buffer[2] ), 1 );
-			frame = toc->tracks[track-1].physframeofs;
+			frame = toc->tracks[track-1].logframeofs;
 			pce_cd.data_buffer[3] = ( toc->tracks[track-1].trktype == CD_TRACK_AUDIO ) ? 0x00 : 0x04;
 		}
 		logerror("track = %d, frame = %d\n", track, frame );
 		msf = lba_to_msf( frame + 150 );
-		pce_cd.data_buffer[0] = ( msf >> 16 ) & 0xFF;	/* M */
-		pce_cd.data_buffer[1] = ( msf >> 8 ) & 0xFF;	/* S */
-		pce_cd.data_buffer[2] = msf & 0xFF;				/* F */
+		pce_cd.data_buffer[0] = ( msf >> 16 ) & 0xFF;   /* M */
+		pce_cd.data_buffer[1] = ( msf >> 8 ) & 0xFF;    /* S */
+		pce_cd.data_buffer[2] = msf & 0xFF;             /* F */
 		pce_cd.data_buffer_size = 4;
 		break;
 	default:
@@ -829,18 +860,18 @@ static void pce_cd_handle_data_output( running_machine &machine )
 	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = state->m_cd;
 	static const struct {
-		UINT8	command_byte;
-		UINT8	command_size;
-		void	(*command_handler)(running_machine &machine);
+		UINT8   command_byte;
+		UINT8   command_size;
+		void    (*command_handler)(running_machine &machine);
 	} pce_cd_commands[] = {
-		{ 0x00, 6, pce_cd_test_unit_ready },				/* TEST UNIT READY */
-		{ 0x08, 6, pce_cd_read_6 },							/* READ (6) */
-		{ 0xD8,10, pce_cd_nec_set_audio_start_position },	/* NEC SET AUDIO PLAYBACK START POSITION */
-		{ 0xD9,10, pce_cd_nec_set_audio_stop_position },	/* NEC SET AUDIO PLAYBACK END POSITION */
-		{ 0xDA,10, pce_cd_nec_pause },						/* NEC PAUSE */
-		{ 0xDD,10, pce_cd_nec_get_subq },					/* NEC GET SUBCHANNEL Q */
-		{ 0xDE,10, pce_cd_nec_get_dir_info },				/* NEC GET DIR INFO */
-		{ 0xFF, 1, pce_cd_end_of_list }						/* end of list marker */
+		{ 0x00, 6, pce_cd_test_unit_ready },                /* TEST UNIT READY */
+		{ 0x08, 6, pce_cd_read_6 },                         /* READ (6) */
+		{ 0xD8,10, pce_cd_nec_set_audio_start_position },   /* NEC SET AUDIO PLAYBACK START POSITION */
+		{ 0xD9,10, pce_cd_nec_set_audio_stop_position },    /* NEC SET AUDIO PLAYBACK END POSITION */
+		{ 0xDA,10, pce_cd_nec_pause },                      /* NEC PAUSE */
+		{ 0xDD,10, pce_cd_nec_get_subq },                   /* NEC GET SUBCHANNEL Q */
+		{ 0xDE,10, pce_cd_nec_get_dir_info },               /* NEC GET DIR INFO */
+		{ 0xFF, 1, pce_cd_end_of_list }                     /* end of list marker */
 	};
 
 	if ( pce_cd.scsi_REQ && pce_cd.scsi_ACK )
@@ -875,6 +906,7 @@ static void pce_cd_handle_data_output( running_machine &machine )
 
 		if ( pce_cd.command_buffer_index == pce_cd_commands[i].command_size )
 		{
+			//printf("%02x command issued\n",pce_cd.command_buffer[0]);
 			(pce_cd_commands[i].command_handler)( machine );
 			pce_cd.command_buffer_index = 0;
 		}
@@ -933,7 +965,7 @@ static void pce_cd_handle_data_input( running_machine &machine )
 			}
 			else
 			{
-				logerror("Transfer byte from offset %d\n", pce_cd.data_buffer_index);
+				logerror("Transfer byte %02x from offset %d %d\n",pce_cd.data_buffer[pce_cd.data_buffer_index] , pce_cd.data_buffer_index, pce_cd.current_frame);
 				pce_cd.regs[0x01] = pce_cd.data_buffer[pce_cd.data_buffer_index];
 				pce_cd.data_buffer_index++;
 				pce_cd.scsi_REQ = 1;
@@ -1016,7 +1048,7 @@ static void pce_cd_update( running_machine &machine )
 	}
 	else
 	{
-		/* Check for data and pessage phases */
+		/* Check for data and message phases */
 		if ( pce_cd.scsi_BSY )
 		{
 			if ( pce_cd.scsi_MSG )
@@ -1064,56 +1096,15 @@ static void pce_cd_set_irq_line( running_machine &machine, int num, int state )
 {
 	pce_state *drvstate = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = drvstate->m_cd;
-	switch( num )
-	{
-	case PCE_CD_IRQ_TRANSFER_DONE:
-		if ( state == ASSERT_LINE )
-		{
-			pce_cd.regs[0x03] |= PCE_CD_IRQ_TRANSFER_DONE;
-		}
-		else
-		{
-			pce_cd.regs[0x03] &= ~ PCE_CD_IRQ_TRANSFER_DONE;
-		}
-		break;
-	case PCE_CD_IRQ_TRANSFER_READY:
-		if ( state == ASSERT_LINE )
-		{
-			pce_cd.regs[0x03] |= PCE_CD_IRQ_TRANSFER_READY;
-		}
-		else
-		{
-			pce_cd.regs[0x03] &= ~ PCE_CD_IRQ_TRANSFER_READY;
-		}
-		break;
-	case PCE_CD_IRQ_SAMPLE_FULL_PLAY:
-		if ( state == ASSERT_LINE )
-		{
-			pce_cd.regs[0x03] |= PCE_CD_IRQ_SAMPLE_FULL_PLAY;
-			//printf("x %02x %02x\n",pce_cd.regs[0x02],pce_cd.regs[0x03]);
-		}
-		else
-		{
-			pce_cd.regs[0x03] &= ~ PCE_CD_IRQ_SAMPLE_FULL_PLAY;
-		}
-		break;
-	case PCE_CD_IRQ_SAMPLE_HALF_PLAY:
-		if ( state == ASSERT_LINE )
-		{
-			pce_cd.regs[0x03] |= PCE_CD_IRQ_SAMPLE_HALF_PLAY;
-			//printf("y %02x %02x\n",pce_cd.regs[0x02],pce_cd.regs[0x03]);
-		}
-		else
-		{
-			pce_cd.regs[0x03] &= ~ PCE_CD_IRQ_SAMPLE_HALF_PLAY;
-		}
-		break;
-	default:
-		break;
-	}
 
-	if ( pce_cd.regs[0x02] & pce_cd.regs[0x03] & ( PCE_CD_IRQ_TRANSFER_DONE | PCE_CD_IRQ_TRANSFER_READY | PCE_CD_IRQ_SAMPLE_HALF_PLAY | PCE_CD_IRQ_SAMPLE_FULL_PLAY) )
+	if(state == ASSERT_LINE)
+		pce_cd.regs[0x03] |= num;
+	else
+		pce_cd.regs[0x03] &= ~num;
+
+	if ( pce_cd.regs[0x02] & pce_cd.regs[0x03] & 0x7c )
 	{
+		//printf("IRQ PEND = %02x MASK = %02x IRQ ENABLE %02X\n",pce_cd.regs[0x02] & pce_cd.regs[0x03] & 0x7c,pce_cd.regs[0x02] & 0x7c,pce_cd.regs[0x03] & 0x7c);
 		machine.device("maincpu")->execute().set_input_line(1, ASSERT_LINE );
 	}
 	else
@@ -1337,53 +1328,52 @@ WRITE8_MEMBER(pce_state::pce_cd_intf_w)
 
 	switch( offset & 0xf )
 	{
-	case 0x00:	/* CDC status */
+	case 0x00:  /* CDC status */
 		/* select device (which bits??) */
 		pce_cd.scsi_SEL = 1;
 		pce_cd_update(machine());
 		pce_cd.scsi_SEL = 0;
 		pce_cd.adpcm_dma_timer->adjust(attotime::never); // stop ADPCM DMA here
 		/* any write here clears CD transfer irqs */
-		pce_cd.regs[0x03] &= ~0x70;
-		machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE );
+		pce_cd_set_irq_line( machine(), 0x70, CLEAR_LINE );
 		break;
-	case 0x01:	/* CDC command / status / data */
+	case 0x01:  /* CDC command / status / data */
 		break;
-	case 0x02:	/* ADPCM / CD control / IRQ enable/disable */
+	case 0x02:  /* ADPCM / CD control / IRQ enable/disable */
 				/* bit 6 - transfer ready irq */
 				/* bit 5 - transfer done irq */
-				/* bit 4 - ?? irq */
-				/* bit 3 - ?? irq */
-				/* bit 2 - ?? irq */
+				/* bit 4 - BRAM irq? */
+				/* bit 3 - ADPCM FULL irq */
+				/* bit 2 - ADPCM HALF irq */
 		pce_cd.scsi_ACK = data & 0x80;
-		/* Update register now otherwise it won't catch the irq enable/disable change */
+		/* Update mask register now otherwise it won't catch the irq enable/disable change */
 		pce_cd.regs[0x02] = data;
 		/* Don't set or reset any irq lines, but just verify the current state */
 		pce_cd_set_irq_line( machine(), 0, 0 );
 		break;
-	case 0x03:	/* BRAM lock / CD status / IRQ - Read Only register */
+	case 0x03:  /* BRAM lock / CD status / IRQ - Read Only register */
 		break;
-	case 0x04:	/* CD reset */
+	case 0x04:  /* CD reset */
 		pce_cd.scsi_RST = data & 0x02;
 		break;
-	case 0x05:	/* Convert PCM data / PCM data */
-	case 0x06:	/* PCM data */
+	case 0x05:  /* Convert PCM data / PCM data */
+	case 0x06:  /* PCM data */
 		break;
-	case 0x07:	/* BRAM unlock / CD status */
+	case 0x07:  /* BRAM unlock / CD status */
 		if ( data & 0x80 )
 		{
 			pce_cd.bram_locked = 0;
 			pce_set_cd_bram(machine());
 		}
 		break;
-	case 0x08:	/* ADPCM address (LSB) / CD data */
+	case 0x08:  /* ADPCM address (LSB) / CD data */
 		break;
-	case 0x09:	/* ADPCM address (MSB) */
+	case 0x09:  /* ADPCM address (MSB) */
 		break;
-	case 0x0A:	/* ADPCM RAM data port */
+	case 0x0A:  /* ADPCM RAM data port */
 		pce_cd_set_adpcm_ram_byte(machine(), data);
 		break;
-	case 0x0B:	/* ADPCM DMA control */
+	case 0x0B:  /* ADPCM DMA control */
 		if ( data & 0x03 )
 		{
 			/* Start CD to ADPCM transfer */
@@ -1391,9 +1381,9 @@ WRITE8_MEMBER(pce_state::pce_cd_intf_w)
 			pce_cd.regs[0x0c] |= 4;
 		}
 		break;
-	case 0x0C:	/* ADPCM status */
+	case 0x0C:  /* ADPCM status */
 		break;
-	case 0x0D:	/* ADPCM address control */
+	case 0x0D:  /* ADPCM address control */
 		if ( ( pce_cd.regs[0x0D] & 0x80 ) && ! ( data & 0x80 ) ) // ADPCM reset
 		{
 			/* Reset ADPCM hardware */
@@ -1442,11 +1432,11 @@ WRITE8_MEMBER(pce_state::pce_cd_intf_w)
 			pce_cd.adpcm_write_buf = data & 1;
 		}
 		break;
-	case 0x0E:	/* ADPCM playback rate */
+	case 0x0E:  /* ADPCM playback rate */
 		pce_cd.adpcm_clock_divider = 0x10 - ( data & 0x0F );
 		msm5205_change_clock_w(machine().device("msm5205"), (PCE_CD_CLOCK / 6) / pce_cd.adpcm_clock_divider);
 		break;
-	case 0x0F:	/* ADPCM and CD audio fade timer */
+	case 0x0F:  /* ADPCM and CD audio fade timer */
 		/* TODO: timers needs HW tests */
 		if(pce_cd.regs[0xf] != data)
 		{
@@ -1522,7 +1512,7 @@ TIMER_CALLBACK_MEMBER(pce_state::pce_cd_clear_ack)
 	pce_cd_update(machine());
 	if ( pce_cd.scsi_CD )
 	{
-		pce_cd.regs[0x0B] &= 0xFE;
+		pce_cd.regs[0x0B] &= 0xFC;
 	}
 }
 
@@ -1602,7 +1592,7 @@ READ8_MEMBER(pce_state::pce_cd_intf_r)
 
 	switch( offset & 0xf )
 	{
-	case 0x00:	/* CDC status */
+	case 0x00:  /* CDC status */
 		data &= 0x07;
 		data |= pce_cd.scsi_BSY ? 0x80 : 0;
 		data |= pce_cd.scsi_REQ ? 0x40 : 0;
@@ -1610,43 +1600,46 @@ READ8_MEMBER(pce_state::pce_cd_intf_r)
 		data |= pce_cd.scsi_CD  ? 0x10 : 0;
 		data |= pce_cd.scsi_IO  ? 0x08 : 0;
 		break;
-	case 0x01:	/* CDC command / status / data */
+	case 0x01:  /* CDC command / status / data */
 		break;
-	case 0x02:	/* ADPCM / CD control */
+	case 0x02:  /* ADPCM / CD control */
 		break;
-	case 0x03:	/* BRAM lock / CD status */
+	case 0x03:  /* BRAM lock / CD status */
 		/* bit 4 set when CD motor is on */
 		/* bit 2 set when less than half of the ADPCM data is remaining ?? */
 		pce_cd.bram_locked = 1;
 		pce_set_cd_bram(machine());
 		data = data & 0x6E;
 		data |= ( pce_cd.cd_motor_on ? 0x10 : 0 );
-		pce_cd.regs[0x03] ^= 0x02;			/* TODO: get rid of this hack */
+		pce_cd.regs[0x03] ^= 0x02;          /* TODO: get rid of this hack */
 		break;
-	case 0x04:	/* CD reset */
+	case 0x04:  /* CD reset */
 		break;
-	case 0x05:	/* Convert PCM data / PCM data */
-	case 0x06:	/* PCM data */
+	case 0x05:  /* Convert PCM data / PCM data */
+		data = cdda_get_channel_volume(machine().device( "cdda" ),(pce_cd.regs[0x03] & 2) ? 0 : 1) & 0xff;
 		break;
-	case 0x07:	/* BRAM unlock / CD status */
+	case 0x06:  /* PCM data */
+		data = cdda_get_channel_volume(machine().device( "cdda" ),(pce_cd.regs[0x03] & 2) ? 0 : 1) >> 8;
+		break;
+	case 0x07:  /* BRAM unlock / CD status */
 		data = ( pce_cd.bram_locked ? ( data & 0x7F ) : ( data | 0x80 ) );
 		break;
-	case 0x08:	/* ADPCM address (LSB) / CD data */
+	case 0x08:  /* ADPCM address (LSB) / CD data */
 		data = pce_cd_get_cd_data_byte(machine());
 		break;
-	case 0x0A:	/* ADPCM RAM data port */
+	case 0x0A:  /* ADPCM RAM data port */
 		data = pce_cd_get_adpcm_ram_byte(machine());
 		break;
-	case 0x0B:	/* ADPCM DMA control */
+	case 0x0B:  /* ADPCM DMA control */
 		break;
-	case 0x0C:	/* ADPCM status */
+	case 0x0C:  /* ADPCM status */
 		break;
-	case 0x0D:	/* ADPCM address control */
+	case 0x0D:  /* ADPCM address control */
 		break;
 	/* These are read-only registers */
-	case 0x09:	/* ADPCM address (MSB) */
-	case 0x0E:	/* ADPCM playback rate */
-	case 0x0F:	/* ADPCM and CD audio fade timer */
+	case 0x09:  /* ADPCM address (MSB) */
+	case 0x0E:  /* ADPCM playback rate */
+	case 0x0F:  /* ADPCM and CD audio fade timer */
 		return 0;
 	default:
 		data = 0xFF;
@@ -1746,7 +1739,7 @@ WRITE8_MEMBER(pce_state::pce_cd_acard_w)
 
 					if(pce_cd.acard_shift_reg != 0)
 					{
-						 pce_cd.acard_shift = (pce_cd.acard_shift_reg < 8) ?
+							pce_cd.acard_shift = (pce_cd.acard_shift_reg < 8) ?
 											(pce_cd.acard_shift << pce_cd.acard_shift_reg)
 											: (pce_cd.acard_shift >> (16 - pce_cd.acard_shift_reg));
 					}
@@ -1783,10 +1776,10 @@ WRITE8_MEMBER(pce_state::pce_cd_acard_w)
 
 				break;
 
-			case 0x02: pce_cd.acard_base_addr[w_num] = (data & 0xff) | (pce_cd.acard_base_addr[w_num] & 0xffff00);	break;
-			case 0x03: pce_cd.acard_base_addr[w_num] = (data << 8) | (pce_cd.acard_base_addr[w_num] & 0xff00ff);		break;
-			case 0x04: pce_cd.acard_base_addr[w_num] = (data << 16) | (pce_cd.acard_base_addr[w_num] & 0x00ffff);	break;
-			case 0x05: pce_cd.acard_addr_offset[w_num] = (data & 0xff) | (pce_cd.acard_addr_offset[w_num] & 0xff00);	break;
+			case 0x02: pce_cd.acard_base_addr[w_num] = (data & 0xff) | (pce_cd.acard_base_addr[w_num] & 0xffff00);  break;
+			case 0x03: pce_cd.acard_base_addr[w_num] = (data << 8) | (pce_cd.acard_base_addr[w_num] & 0xff00ff);        break;
+			case 0x04: pce_cd.acard_base_addr[w_num] = (data << 16) | (pce_cd.acard_base_addr[w_num] & 0x00ffff);   break;
+			case 0x05: pce_cd.acard_addr_offset[w_num] = (data & 0xff) | (pce_cd.acard_addr_offset[w_num] & 0xff00);    break;
 			case 0x06:
 				pce_cd.acard_addr_offset[w_num] = (data << 8) | (pce_cd.acard_addr_offset[w_num] & 0x00ff);
 
@@ -1796,9 +1789,9 @@ WRITE8_MEMBER(pce_state::pce_cd_acard_w)
 					pce_cd.acard_base_addr[w_num] &= 0xffffff;
 				}
 				break;
-			case 0x07: pce_cd.acard_addr_inc[w_num] = (data & 0xff) | (pce_cd.acard_addr_inc[w_num] & 0xff00);		break;
-			case 0x08: pce_cd.acard_addr_inc[w_num] = (data << 8) | (pce_cd.acard_addr_inc[w_num] & 0x00ff);			break;
-			case 0x09: pce_cd.acard_ctrl[w_num] = data & 0x7f;												break;
+			case 0x07: pce_cd.acard_addr_inc[w_num] = (data & 0xff) | (pce_cd.acard_addr_inc[w_num] & 0xff00);      break;
+			case 0x08: pce_cd.acard_addr_inc[w_num] = (data << 8) | (pce_cd.acard_addr_inc[w_num] & 0x00ff);            break;
+			case 0x09: pce_cd.acard_ctrl[w_num] = data & 0x7f;                                              break;
 			case 0x0a:
 				if((pce_cd.acard_ctrl[w_num] & 0x60) == 0x60)
 				{
@@ -1819,4 +1812,3 @@ WRITE8_MEMBER(pce_state::pce_cd_acard_wram_w)
 {
 	pce_cd_intf_w(space,0x200 | (offset & 0x6000) >> 9,data);
 }
-

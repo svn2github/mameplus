@@ -83,7 +83,7 @@
 //  CONSTANTS
 //**************************************************************************
 
-#define INTERNAL_FLAG_CHAR		0x00000001
+#define INTERNAL_FLAG_CHAR      0x00000001
 
 enum
 {
@@ -119,11 +119,11 @@ enum
 // an object_transform is used to track transformations when building an object list
 struct object_transform
 {
-	float				xoffs, yoffs;		// offset transforms
-	float				xscale, yscale;		// scale transforms
-	render_color		color;				// color transform
-	int					orientation;		// orientation transform
-	bool				no_center;			// center the container?
+	float               xoffs, yoffs;       // offset transforms
+	float               xscale, yscale;     // scale transforms
+	render_color        color;              // color transform
+	int                 orientation;        // orientation transform
+	bool                no_center;          // center the container?
 };
 
 
@@ -135,14 +135,14 @@ struct object_transform
 // precomputed UV coordinates for various orientations
 static const render_quad_texuv oriented_texcoords[8] =
 {
-	{ { 0,0 }, { 1,0 }, { 0,1 }, { 1,1 } },		// 0
-	{ { 1,0 }, { 0,0 }, { 1,1 }, { 0,1 } },		// ORIENTATION_FLIP_X
-	{ { 0,1 }, { 1,1 }, { 0,0 }, { 1,0 } },		// ORIENTATION_FLIP_Y
-	{ { 1,1 }, { 0,1 }, { 1,0 }, { 0,0 } },		// ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y
-	{ { 0,0 }, { 0,1 }, { 1,0 }, { 1,1 } },		// ORIENTATION_SWAP_XY
-	{ { 0,1 }, { 0,0 }, { 1,1 }, { 1,0 } },		// ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X
-	{ { 1,0 }, { 1,1 }, { 0,0 }, { 0,1 } },		// ORIENTATION_SWAP_XY | ORIENTATION_FLIP_Y
-	{ { 1,1 }, { 1,0 }, { 0,1 }, { 0,0 } }		// ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y
+	{ { 0,0 }, { 1,0 }, { 0,1 }, { 1,1 } },     // 0
+	{ { 1,0 }, { 0,0 }, { 1,1 }, { 0,1 } },     // ORIENTATION_FLIP_X
+	{ { 0,1 }, { 1,1 }, { 0,0 }, { 1,0 } },     // ORIENTATION_FLIP_Y
+	{ { 1,1 }, { 0,1 }, { 1,0 }, { 0,0 } },     // ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y
+	{ { 0,0 }, { 0,1 }, { 1,0 }, { 1,1 } },     // ORIENTATION_SWAP_XY
+	{ { 0,1 }, { 0,0 }, { 1,1 }, { 1,0 } },     // ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X
+	{ { 1,0 }, { 1,1 }, { 0,0 }, { 0,1 } },     // ORIENTATION_SWAP_XY | ORIENTATION_FLIP_Y
+	{ { 1,1 }, { 1,0 }, { 0,1 }, { 0,0 } }      // ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y
 };
 
 // layer orders
@@ -207,11 +207,11 @@ inline void normalize_bounds(render_bounds &bounds)
 inline item_layer get_layer_and_blendmode(const layout_view &view, int index, int &blendmode)
 {
 	//  if we have multiple backdrop pieces and no overlays, render:
-    //      backdrop (add) + screens (add) + bezels (alpha) + cpanels (alpha) + marquees (alpha)
-    //  else render:
-    //      screens (add) + overlays (RGB multiply) + backdrop (add) + bezels (alpha) + cpanels (alpha) + marquees (alpha)
+	//      backdrop (add) + screens (add) + bezels (alpha) + cpanels (alpha) + marquees (alpha)
+	//  else render:
+	//      screens (add) + overlays (RGB multiply) + backdrop (add) + bezels (alpha) + cpanels (alpha) + marquees (alpha)
 
-    const int *layer_order = layer_order_standard;
+	const int *layer_order = layer_order_standard;
 	if (view.first_item(ITEM_LAYER_BACKDROP) != NULL && view.first_item(ITEM_LAYER_BACKDROP)->next() != NULL && view.first_item(ITEM_LAYER_OVERLAY) == NULL)
 		layer_order = layer_order_alternate;
 
@@ -360,14 +360,14 @@ void render_primitive_list::append_or_return(render_primitive &prim, bool clippe
 
 render_texture::render_texture()
 	: m_manager(NULL),
-	  m_next(NULL),
-	  m_bitmap(NULL),
-	  m_format(TEXFORMAT_ARGB32),
-	  m_bcglookup(NULL),
-	  m_bcglookup_entries(0),
-	  m_scaler(NULL),
-	  m_param(NULL),
-	  m_curseq(0)
+		m_next(NULL),
+		m_bitmap(NULL),
+		m_format(TEXFORMAT_ARGB32),
+		m_bcglookup(NULL),
+		m_bcglookup_entries(0),
+		m_scaler(NULL),
+		m_param(NULL),
+		m_curseq(0)
 {
 	m_sbounds.set(0, -1, 0, -1);
 	memset(m_scaled, 0, sizeof(m_scaled));
@@ -503,6 +503,7 @@ bool render_texture::get_scaled(UINT32 dwidth, UINT32 dheight, render_texinfo &t
 		texinfo.width = swidth;
 		texinfo.height = sheight;
 		texinfo.palette = palbase;
+		texinfo.osddata = m_osddata;
 		texinfo.seqid = ++m_curseq;
 		return true;
 	}
@@ -636,13 +637,13 @@ const rgb_t *render_texture::get_adjusted_palette(render_container &container)
 
 render_container::render_container(render_manager &manager, screen_device *screen)
 	: m_next(NULL),
-	  m_manager(manager),
-	  m_itemlist(manager.machine().respool()),
-	  m_item_allocator(manager.machine().respool()),
-	  m_screen(screen),
-	  m_overlaybitmap(NULL),
-	  m_overlaytexture(NULL),
-	  m_palclient(NULL)
+		m_manager(manager),
+		m_itemlist(manager.machine().respool()),
+		m_item_allocator(manager.machine().respool()),
+		m_screen(screen),
+		m_overlaybitmap(NULL),
+		m_overlaytexture(NULL),
+		m_palclient(NULL)
 {
 	// all palette entries are opaque by default
 	for (int color = 0; color < ARRAY_LENGTH(m_bcglookup); color++)
@@ -892,9 +893,9 @@ void render_container::recompute_lookups()
 		{
 			pen_t newval = adjusted_palette[i];
 			m_bcglookup[i] = (newval & 0xff000000) |
-									  m_bcglookup256[0x200 + RGB_RED(newval)] |
-									  m_bcglookup256[0x100 + RGB_GREEN(newval)] |
-									  m_bcglookup256[0x000 + RGB_BLUE(newval)];
+										m_bcglookup256[0x200 + RGB_RED(newval)] |
+										m_bcglookup256[0x100 + RGB_GREEN(newval)] |
+										m_bcglookup256[0x000 + RGB_BLUE(newval)];
 		}
 	}
 }
@@ -934,9 +935,9 @@ void render_container::update_palette()
 						UINT32 finalentry = entry32 * 32 + entry;
 						rgb_t newval = adjusted_palette[finalentry];
 						m_bcglookup[finalentry] = (newval & 0xff000000) |
-													  m_bcglookup256[0x200 + RGB_RED(newval)] |
-													  m_bcglookup256[0x100 + RGB_GREEN(newval)] |
-													  m_bcglookup256[0x000 + RGB_BLUE(newval)];
+														m_bcglookup256[0x200 + RGB_RED(newval)] |
+														m_bcglookup256[0x100 + RGB_GREEN(newval)] |
+														m_bcglookup256[0x000 + RGB_BLUE(newval)];
 					}
 		}
 	}
@@ -949,13 +950,13 @@ void render_container::update_palette()
 
 render_container::user_settings::user_settings()
 	: m_orientation(0),
-	  m_brightness(1.0f),
-	  m_contrast(1.0f),
-	  m_gamma(1.0f),
-	  m_xscale(1.0f),
-	  m_yscale(1.0f),
-	  m_xoffset(0.0f),
-	  m_yoffset(0.0f)
+		m_brightness(1.0f),
+		m_contrast(1.0f),
+		m_gamma(1.0f),
+		m_xscale(1.0f),
+		m_yscale(1.0f),
+		m_xoffset(0.0f),
+		m_yoffset(0.0f)
 {
 }
 
@@ -971,21 +972,21 @@ render_container::user_settings::user_settings()
 
 render_target::render_target(render_manager &manager, const char *layoutfile, UINT32 flags)
 	: m_next(NULL),
-	  m_manager(manager),
-	  m_curview(NULL),
-	  m_filelist(*auto_alloc(manager.machine(), simple_list<layout_file>(manager.machine().respool()))),
-	  m_flags(flags),
-	  m_listindex(0),
-	  m_width(640),
-	  m_height(480),
-	  m_pixel_aspect(0.0f),
-	  m_max_refresh(0),
-	  m_orientation(0),
-	  m_base_view(NULL),
-	  m_base_orientation(ROT0),
-	  m_maxtexwidth(65536),
-	  m_maxtexheight(65536),
-	  m_debug_containers(manager.machine().respool())
+		m_manager(manager),
+		m_curview(NULL),
+		m_filelist(*auto_alloc(manager.machine(), simple_list<layout_file>(manager.machine().respool()))),
+		m_flags(flags),
+		m_listindex(0),
+		m_width(640),
+		m_height(480),
+		m_pixel_aspect(0.0f),
+		m_max_refresh(0),
+		m_orientation(0),
+		m_base_view(NULL),
+		m_base_orientation(ROT0),
+		m_maxtexwidth(65536),
+		m_maxtexheight(65536),
+		m_debug_containers(manager.machine().respool())
 {
 	// determine the base layer configuration based on options
 	m_base_layerconfig.set_backdrops_enabled(manager.machine().options().use_backdrops());
@@ -1402,7 +1403,7 @@ render_primitive_list &render_target::get_primitives()
 	root_xform.yscale = (float)visheight;
 	root_xform.color.r = root_xform.color.g = root_xform.color.b = root_xform.color.a = 1.0f;
 	root_xform.orientation = m_orientation;
-    root_xform.no_center = false;
+	root_xform.no_center = false;
 
 	// iterate over layers back-to-front, but only if we're running
 	if (m_manager.machine().phase() >= MACHINE_PHASE_RESET)
@@ -1431,7 +1432,7 @@ render_primitive_list &render_target::get_primitives()
 					item_xform.color.b = curitem->color().b * root_xform.color.b;
 					item_xform.color.a = curitem->color().a * root_xform.color.a;
 					item_xform.orientation = orientation_add(curitem->orientation(), root_xform.orientation);
-                    item_xform.no_center = false;
+					item_xform.no_center = false;
 
 					// if there is no associated element, it must be a screen element
 					if (curitem->screen() != NULL)
@@ -1491,7 +1492,7 @@ render_primitive_list &render_target::get_primitives()
 		ui_xform.yscale = (float) m_height;
 		ui_xform.color.r = ui_xform.color.g = ui_xform.color.b = ui_xform.color.a = 1.0f;
 		ui_xform.orientation = m_orientation;
-        ui_xform.no_center = false;
+		ui_xform.no_center = false;
 
 		// add UI elements
 		add_container_primitives(list, ui_xform, m_manager.ui_container(), BLENDMODE_ALPHA);
@@ -1818,6 +1819,7 @@ void render_target::add_container_primitives(render_primitive_list &list, const 
 
 				// set the line type
 				prim->type = render_primitive::LINE;
+				prim->flags |= PRIMFLAG_TYPE_LINE;
 
 				// scale the width by the minimum of X/Y scale factors
 				prim->width = curitem->width() * MIN(container_xform.xscale, container_xform.yscale);
@@ -1830,6 +1832,7 @@ void render_target::add_container_primitives(render_primitive_list &list, const 
 			case CONTAINER_ITEM_QUAD:
 				// set the quad type
 				prim->type = render_primitive::QUAD;
+				prim->flags |= PRIMFLAG_TYPE_QUAD;
 
 				// normalize the bounds
 				normalize_bounds(prim->bounds);
@@ -2492,12 +2495,12 @@ done:
 
 render_manager::render_manager(running_machine &machine)
 	: m_machine(machine),
-	  m_targetlist(machine.respool()),
-	  m_ui_target(NULL),
-	  m_live_textures(0),
-	  m_texture_allocator(machine.respool()),
-	  m_ui_container(auto_alloc(machine, render_container(*this))),
-	  m_screen_container_list(machine.respool())
+		m_targetlist(machine.respool()),
+		m_ui_target(NULL),
+		m_live_textures(0),
+		m_texture_allocator(machine.respool()),
+		m_ui_container(auto_alloc(machine, render_container(*this))),
+		m_screen_container_list(machine.respool())
 {
 	// register callbacks
 	config_register(machine, "video", config_saveload_delegate(FUNC(render_manager::config_load), this), config_saveload_delegate(FUNC(render_manager::config_save), this));

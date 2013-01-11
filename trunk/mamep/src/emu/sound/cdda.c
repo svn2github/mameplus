@@ -9,15 +9,16 @@
 
 struct cdda_info
 {
-	sound_stream *		stream;
-	cdrom_file *		disc;
+	sound_stream *      stream;
+	cdrom_file *        disc;
 
-	INT8				audio_playing, audio_pause, audio_ended_normally;
-	UINT32				audio_lba, audio_length;
+	INT8                audio_playing, audio_pause, audio_ended_normally;
+	UINT32              audio_lba, audio_length;
 
-	UINT8 *				audio_cache;
-	UINT32				audio_samples;
-	UINT32				audio_bptr;
+	UINT8 *             audio_cache;
+	UINT32              audio_samples;
+	UINT32              audio_bptr;
+	INT16               audio_volume[2];
 };
 
 INLINE cdda_info *get_safe_token(device_t *device)
@@ -40,6 +41,8 @@ static STREAM_UPDATE( cdda_update )
 {
 	cdda_info *info = (cdda_info *)param;
 	get_audio_data(info, &outputs[0][0], &outputs[1][0], samples);
+	info->audio_volume[0] = (INT16)outputs[0][0];
+	info->audio_volume[1] = (INT16)outputs[1][0];
 }
 
 
@@ -213,7 +216,7 @@ static void get_audio_data(cdda_info *info, stream_sample_t *bufL, stream_sample
 	INT16 *audio_cache = (INT16 *) info->audio_cache;
 
 	/* if no file, audio not playing, audio paused, or out of disc data,
-       just zero fill */
+	   just zero fill */
 	if (!info->disc || !info->audio_playing || info->audio_pause || (!info->audio_length && !info->audio_samples))
 	{
 		if( info->disc && info->audio_playing && !info->audio_pause && !info->audio_length )
@@ -312,11 +315,24 @@ void cdda_set_channel_volume(device_t *device, int channel, int volume)
 	cdda->stream->set_output_gain(channel,volume / 100.0);
 }
 
+
+/*-------------------------------------------------
+    cdda_get_channel_volume - sets CD-DA volume level
+    for either speaker, used for volume control display
+-------------------------------------------------*/
+
+INT16 cdda_get_channel_volume(device_t *device, int channel)
+{
+	cdda_info *cdda = get_safe_token(device);
+
+	return cdda->audio_volume[channel];
+}
+
 const device_type CDDA = &device_creator<cdda_device>;
 
 cdda_device::cdda_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, CDDA, "CD/DA", tag, owner, clock),
-	  device_sound_interface(mconfig, *this)
+		device_sound_interface(mconfig, *this)
 {
 	m_token = global_alloc_clear(cdda_info);
 }
@@ -349,5 +365,3 @@ void cdda_device::sound_stream_update(sound_stream &stream, stream_sample_t **in
 	// should never get here
 	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
-
-

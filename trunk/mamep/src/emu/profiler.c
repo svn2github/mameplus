@@ -61,7 +61,7 @@
 
 struct profile_string
 {
-	int 		type;
+	int         type;
 	const char *string;
 };
 
@@ -79,7 +79,7 @@ profiler_state g_profiler;
 //  CONSTANTS
 //**************************************************************************
 
-#define TEXT_UPDATE_TIME		0.5
+#define TEXT_UPDATE_TIME        0.5
 
 
 
@@ -153,7 +153,7 @@ const char *real_profiler_state::text(running_machine &machine)
 
 	// we only want to update the text periodically
 	if ((m_text_time == attotime::never) || ((current_time - m_text_time).as_double() >= TEXT_UPDATE_TIME))
-		{
+	{
 		update_text(machine);
 		m_text_time = current_time;
 	}

@@ -7,22 +7,30 @@
 
 #include "machine/decocass_tape.h"
 
+#define T1PROM 1
+#define T1DIRECT 2
+#define T1LATCH 4
+#define T1LATCHINV 8
+
 class decocass_state : public driver_device
 {
 public:
 	decocass_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_maincpu(*this, "maincpu"),
-		  m_audiocpu(*this, "audiocpu"),
-		  m_mcu(*this, "mcu"),
-	      m_cassette(*this, "cassette"),
-		  m_rambase(*this, "rambase"),
-		  m_charram(*this, "charram"),
-		  m_fgvideoram(*this, "fgvideoram"),
-		  m_colorram(*this, "colorram"),
-		  m_tileram(*this, "tileram"),
-		  m_objectram(*this, "objectram"),
-		  m_paletteram(*this, "paletteram") { }
+			m_maincpu(*this, "maincpu"),
+			m_audiocpu(*this, "audiocpu"),
+			m_mcu(*this, "mcu"),
+			m_cassette(*this, "cassette"),
+			m_rambase(*this, "rambase"),
+			m_charram(*this, "charram"),
+			m_fgvideoram(*this, "fgvideoram"),
+			m_colorram(*this, "colorram"),
+			m_tileram(*this, "tileram"),
+			m_objectram(*this, "objectram"),
+			m_paletteram(*this, "paletteram")
+	{
+		m_type1_map = 0;
+	}
 
 	/* devices */
 	required_device<cpu_device> m_maincpu;
@@ -35,7 +43,7 @@ public:
 	required_shared_ptr<UINT8> m_charram;
 	required_shared_ptr<UINT8> m_fgvideoram;
 	required_shared_ptr<UINT8> m_colorram;
-	UINT8 *   m_bgvideoram;	/* shares bits D0-3 with tileram! */
+	UINT8 *   m_bgvideoram; /* shares bits D0-3 with tileram! */
 	required_shared_ptr<UINT8> m_tileram;
 	required_shared_ptr<UINT8> m_objectram;
 	required_shared_ptr<UINT8> m_paletteram;
@@ -61,19 +69,17 @@ public:
 	rectangle m_bg_tilemap_r_clip;
 
 	/* sound-related */
-	UINT8     m_sound_ack;	/* sound latches, ACK status bits and NMI timer */
+	UINT8     m_sound_ack;  /* sound latches, ACK status bits and NMI timer */
 	UINT8     m_audio_nmi_enabled;
 	UINT8     m_audio_nmi_state;
 
 	/* misc */
-	UINT8     *m_decrypted;
-	UINT8     *m_decrypted2;
 	INT32     m_firsttime;
 	UINT8     m_latch1;
 	UINT8     m_decocass_reset;
-	INT32     m_de0091_enable;	/* DE-0091xx daughter board enable */
-	UINT8     m_quadrature_decoder[4];	/* four inputs from the quadrature decoder (H1, V1, H2, V2) */
-	int       m_showmsg;		// for debugging purposes
+	INT32     m_de0091_enable;  /* DE-0091xx daughter board enable */
+	UINT8     m_quadrature_decoder[4];  /* four inputs from the quadrature decoder (H1, V1, H2, V2) */
+	int       m_showmsg;        // for debugging purposes
 
 	/* i8041 */
 	UINT8     m_i8041_p1;
@@ -92,22 +98,22 @@ public:
 	UINT32    m_type1_outmap;
 
 	/* dongle type #2: status of the latches */
-	INT32     m_type2_d2_latch;	/* latched 8041-STATUS D2 value */
-	INT32     m_type2_xx_latch;	/* latched value (D7-4 == 0xc0) ? 1 : 0 */
-	INT32     m_type2_promaddr;	/* latched PROM address A0-A7 */
+	INT32     m_type2_d2_latch; /* latched 8041-STATUS D2 value */
+	INT32     m_type2_xx_latch; /* latched value (D7-4 == 0xc0) ? 1 : 0 */
+	INT32     m_type2_promaddr; /* latched PROM address A0-A7 */
 
 	/* dongle type #3: status and patches */
-	INT32     m_type3_ctrs;		/* 12 bit counter stage */
-	INT32     m_type3_d0_latch;	/* latched 8041-D0 value */
-	INT32     m_type3_pal_19;		/* latched 1 for PAL input pin-19 */
+	INT32     m_type3_ctrs;     /* 12 bit counter stage */
+	INT32     m_type3_d0_latch; /* latched 8041-D0 value */
+	INT32     m_type3_pal_19;       /* latched 1 for PAL input pin-19 */
 	INT32     m_type3_swap;
 
 	/* dongle type #4: status */
-	INT32     m_type4_ctrs;		/* latched PROM address (E5x0 LSB, E5x1 MSB) */
-	INT32     m_type4_latch;		/* latched enable PROM (1100xxxx written to E5x1) */
+	INT32     m_type4_ctrs;     /* latched PROM address (E5x0 LSB, E5x1 MSB) */
+	INT32     m_type4_latch;        /* latched enable PROM (1100xxxx written to E5x1) */
 
 	/* dongle type #5: status */
-	INT32     m_type5_latch;		/* latched enable PROM (1100xxxx written to E5x1) */
+	INT32     m_type5_latch;        /* latched enable PROM (1100xxxx written to E5x1) */
 
 	/* DS Telejan */
 	UINT8     m_mux_data;
@@ -157,9 +163,11 @@ public:
 	DECLARE_MACHINE_RESET(type4);
 	DECLARE_MACHINE_RESET(cbdash);
 	DECLARE_MACHINE_RESET(cflyball);
+	DECLARE_MACHINE_RESET(cmanhat);
 	UINT32 screen_update_decocass(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	DECLARE_WRITE8_MEMBER(decocass_coin_counter_w);
 	DECLARE_WRITE8_MEMBER(decocass_sound_command_w);
+	DECLARE_READ8_MEMBER( decocass_sound_command_main_r );
 	DECLARE_READ8_MEMBER(decocass_sound_data_r);
 	DECLARE_READ8_MEMBER(decocass_sound_ack_r);
 	DECLARE_WRITE8_MEMBER(decocass_sound_data_w);
@@ -211,12 +219,6 @@ public:
 
 	void decocass_video_state_save_init();
 
-	DECLARE_WRITE8_MEMBER(ram_w);
-	DECLARE_WRITE8_MEMBER(charram_w);
-	DECLARE_WRITE8_MEMBER(fgvideoram_w);
-	DECLARE_WRITE8_MEMBER(fgcolorram_w);
-	DECLARE_WRITE8_MEMBER(tileram_w);
-	DECLARE_WRITE8_MEMBER(objectram_w);
 	DECLARE_WRITE8_MEMBER(mirrorvideoram_w);
 	DECLARE_WRITE8_MEMBER(mirrorcolorram_w);
 	DECLARE_READ8_MEMBER(mirrorvideoram_r);
@@ -225,11 +227,7 @@ public:
 	DECLARE_WRITE8_MEMBER(cdsteljn_mux_w);
 	TIMER_DEVICE_CALLBACK_MEMBER(decocass_audio_nmi_gen);
 private:
-	DECLARE_READ8_MEMBER(decocass_type1_latch_26_pass_3_inv_2_r);
-	DECLARE_READ8_MEMBER(decocass_type1_pass_136_r);
-	DECLARE_READ8_MEMBER(decocass_type1_latch_27_pass_3_inv_2_r);
-	DECLARE_READ8_MEMBER(decocass_type1_latch_26_pass_5_inv_2_r);
-	DECLARE_READ8_MEMBER(decocass_type1_latch_16_pass_3_inv_1_r);
+	DECLARE_READ8_MEMBER(decocass_type1_r);
 	DECLARE_READ8_MEMBER(decocass_type2_r);
 	DECLARE_WRITE8_MEMBER(decocass_type2_w);
 	DECLARE_READ8_MEMBER(decocass_type3_r);
@@ -240,6 +238,8 @@ private:
 	DECLARE_WRITE8_MEMBER(decocass_type5_w);
 	DECLARE_READ8_MEMBER(decocass_nodong_r);
 
+	UINT8* m_type1_map;
+	void draw_edge(bitmap_ind16 &bitmap, const rectangle &cliprect, int which, bool opaque);
 	void draw_object(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_center(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void mark_bg_tile_dirty(offs_t offset);
@@ -251,4 +251,3 @@ private:
 					int missile_y_adjust, int missile_y_adjust_flip_screen,
 					UINT8 *missile_ram, int interleave);
 };
-

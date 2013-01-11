@@ -23,10 +23,10 @@
 
 #define LOG 1
 
-#define MAX_TRACKS	180
+#define MAX_TRACKS  180
 
-#define FLAGS_WRITE_PROTECTED	0x01
-#define FLAGS_INDEX_SYNC		0x02
+#define FLAGS_WRITE_PROTECTED   0x01
+#define FLAGS_INDEX_SYNC        0x02
 
 /* media type */
 enum
@@ -55,21 +55,21 @@ static const int TRACKS_PER_INCH[] = { 48, 67, 96, 100, 135, 192 };
 /* high level track types */
 enum
 {
-	TRACK_BLANK = 0,	/* not supported */
-	TRACK_AMIGA_DD,		/* not supported */
-	TRACK_AMIGA_HD,		/* not supported */
-	TRACK_ST_DD_9,		/* not supported */
-	TRACK_ST_DD_10,		/* not supported */
-	TRACK_PC_DD_8,		/* not supported */
-	TRACK_PC_DD_9,		/* not supported */
-	TRACK_PC_HD_15,		/* not supported */
-	TRACK_IBM_HD_18,	/* not supported */
-	TRACK_IBM_ED_36,	/* not supported */
-	TRACK_CBM_1541,		/* not supported */
-	TRACK_APPLE_DOS_32,	/* not supported */
-	TRACK_APPLE_DOS_33,	/* not supported */
-	TRACK_APPLE_GCR,	/* not supported */
-	TRACK_IBM_SD_10		/* not supported */
+	TRACK_BLANK = 0,    /* not supported */
+	TRACK_AMIGA_DD,     /* not supported */
+	TRACK_AMIGA_HD,     /* not supported */
+	TRACK_ST_DD_9,      /* not supported */
+	TRACK_ST_DD_10,     /* not supported */
+	TRACK_PC_DD_8,      /* not supported */
+	TRACK_PC_DD_9,      /* not supported */
+	TRACK_PC_HD_15,     /* not supported */
+	TRACK_IBM_HD_18,    /* not supported */
+	TRACK_IBM_ED_36,    /* not supported */
+	TRACK_CBM_1541,     /* not supported */
+	TRACK_APPLE_DOS_32, /* not supported */
+	TRACK_APPLE_DOS_33, /* not supported */
+	TRACK_APPLE_GCR,    /* not supported */
+	TRACK_IBM_SD_10     /* not supported */
 };
 
 //static const int SECTORS_PER_TRACK[] = { 0, 11, 22, 9, 10, 8, 9, 15, 18, 36, -1, -1, -1, -1, 10 };
@@ -81,9 +81,9 @@ enum
 struct fdidsk_tag
 {
 	int version;
-	int heads;								/* number of physical heads */
-	int tracks;								/* number of physical tracks */
-	UINT32 track_offset[MAX_TRACKS];		/* offset within data for each track */
+	int heads;                              /* number of physical heads */
+	int tracks;                             /* number of physical tracks */
+	UINT32 track_offset[MAX_TRACKS];        /* offset within data for each track */
 	UINT8 track_type[MAX_TRACKS];
 };
 
@@ -261,7 +261,7 @@ FLOPPY_CONSTRUCT( fdi_dsk_construct )
 		UINT8 type = header.track[track].type;
 		int size = header.track[track].size * 256;
 
-		if (LOG) LOG_FORMATS("FDI track %u type %02x size %u offset %u\n", track, type, size, offset);
+		if (LOG) LOG_FORMATS("FDI track %d type %02x size %d offset %d\n", track, type, size, offset);
 
 		tag->track_offset[track] = offset;
 		tag->track_type[track] = type;

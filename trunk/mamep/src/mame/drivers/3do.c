@@ -98,21 +98,22 @@ Part list of Goldstar 3DO Interactive Multiplayer
 #include "cpu/arm7/arm7.h"
 
 
-#define X2_CLOCK_PAL	59000000
-#define X2_CLOCK_NTSC	49090000
-#define X601_CLOCK		XTAL_16_9344MHz
+
+#define X2_CLOCK_PAL    59000000
+#define X2_CLOCK_NTSC   49090000
+#define X601_CLOCK      XTAL_16_9344MHz
 
 
 static ADDRESS_MAP_START( 3do_mem, AS_PROGRAM, 32, _3do_state )
-	AM_RANGE(0x00000000, 0x001FFFFF) AM_RAMBANK("bank1") AM_SHARE("dram")						/* DRAM */
-	AM_RANGE(0x00200000, 0x003FFFFF) AM_RAM	AM_SHARE("vram")									/* VRAM */
-	AM_RANGE(0x03000000, 0x030FFFFF) AM_ROMBANK("bank2")									/* BIOS */
-	AM_RANGE(0x03100000, 0x0313FFFF) AM_RAM													/* Brooktree? */
-	AM_RANGE(0x03140000, 0x0315FFFF) AM_READWRITE(_3do_nvarea_r, _3do_nvarea_w)				/* NVRAM */
-	AM_RANGE(0x03180000, 0x031BFFFF) AM_READWRITE(_3do_slow2_r, _3do_slow2_w)				/* Slow bus - additional expansion */
-	AM_RANGE(0x03200000, 0x0320FFFF) AM_READWRITE(_3do_svf_r, _3do_svf_w)					/* special vram access1 */
-	AM_RANGE(0x03300000, 0x033FFFFF) AM_READWRITE(_3do_madam_r, _3do_madam_w)				/* address decoder */
-	AM_RANGE(0x03400000, 0x034FFFFF) AM_READWRITE(_3do_clio_r, _3do_clio_w)					/* io controller */
+	AM_RANGE(0x00000000, 0x001FFFFF) AM_RAMBANK("bank1") AM_SHARE("dram")                       /* DRAM */
+	AM_RANGE(0x00200000, 0x003FFFFF) AM_RAM AM_SHARE("vram")                                    /* VRAM */
+	AM_RANGE(0x03000000, 0x030FFFFF) AM_ROMBANK("bank2")                                    /* BIOS */
+	AM_RANGE(0x03100000, 0x0313FFFF) AM_RAM                                                 /* Brooktree? */
+	AM_RANGE(0x03140000, 0x0315FFFF) AM_READWRITE8(_3do_nvarea_r, _3do_nvarea_w, 0x000000ff)                /* NVRAM */
+	AM_RANGE(0x03180000, 0x031BFFFF) AM_READWRITE(_3do_slow2_r, _3do_slow2_w)               /* Slow bus - additional expansion */
+	AM_RANGE(0x03200000, 0x0320FFFF) AM_READWRITE(_3do_svf_r, _3do_svf_w)                   /* special vram access1 */
+	AM_RANGE(0x03300000, 0x033FFFFF) AM_READWRITE(_3do_madam_r, _3do_madam_w)               /* address decoder */
+	AM_RANGE(0x03400000, 0x034FFFFF) AM_READWRITE(_3do_clio_r, _3do_clio_w)                 /* io controller */
 ADDRESS_MAP_END
 
 
@@ -128,24 +129,25 @@ static INPUT_PORTS_START( 3do )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 INPUT_PORTS_END
 
-
-void _3do_state::machine_reset()
+void _3do_state::machine_start()
 {
-
-	m_maincpu = downcast<legacy_cpu_device*>( machine().device<cpu_device>("maincpu") );
-
 	membank("bank2")->set_base(memregion("user1")->base());
 
 	/* configure overlay */
 	membank("bank1")->configure_entry(0, m_dram);
 	membank("bank1")->configure_entry(1, memregion("user1")->base());
 
+	m_3do_slow2_init();
+	m_3do_madam_init();
+	m_3do_clio_init( downcast<screen_device *>(machine().device("screen")));
+}
+
+void _3do_state::machine_reset()
+{
 	/* start with overlay enabled */
 	membank("bank1")->set_entry(1);
 
-	_3do_slow2_init(machine());
-	_3do_madam_init(machine());
-	_3do_clio_init(machine(), downcast<screen_device *>(machine().device("screen")));
+	m_clio.cstatbits = 0x01; /* bit 0 = reset of clio caused by power on */
 }
 
 struct cdrom_interface _3do_cdrom =
@@ -154,12 +156,34 @@ struct cdrom_interface _3do_cdrom =
 	NULL
 };
 
+static NVRAM_HANDLER( _3do )
+{
+	_3do_state *state = machine.driver_data<_3do_state>();
+	UINT8 *nvram = state->m_nvram;
+
+	if (read_or_write)
+		file->write(nvram,0x8000);
+	else
+	{
+		if (file)
+			file->read(nvram,0x8000);
+		else
+		{
+			/* fill in the default values */
+			memset(nvram,0xff,0x8000);
+		}
+	}
+}
+
 static MACHINE_CONFIG_START( 3do, _3do_state )
 
 	/* Basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", ARM7_BE, XTAL_50MHz/4 )
 	MCFG_CPU_PROGRAM_MAP( 3do_mem)
 
+	MCFG_NVRAM_HANDLER(_3do)
+
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer_x16", _3do_state, timer_x16_cb, attotime::from_hz(12000)) // TODO: timing
 
 	MCFG_VIDEO_START_OVERRIDE(_3do_state, _3do )
 
@@ -177,12 +201,13 @@ static MACHINE_CONFIG_START( 3do_pal, _3do_state )
 	MCFG_CPU_ADD("maincpu", ARM7_BE, XTAL_50MHz/4 )
 	MCFG_CPU_PROGRAM_MAP( 3do_mem)
 
+	MCFG_NVRAM_HANDLER(_3do)
+
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer_x16", _3do_state, timer_x16_cb, attotime::from_hz(12000)) // TODO: timing
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_RAW_PARAMS( X2_CLOCK_PAL / 2, 1592, 254, 1534, 263, 22, 262 ) // TODO: proper params
 	MCFG_SCREEN_UPDATE_DRIVER(_3do_state, screen_update__3do)
-	MCFG_SCREEN_SIZE( 640, 625 )
-	MCFG_SCREEN_VISIBLE_AREA( 0, 639, 0, 479 )
-	MCFG_SCREEN_REFRESH_RATE( 50 )
 
 	MCFG_CDROM_ADD( "cdrom", _3do_cdrom)
 MACHINE_CONFIG_END
@@ -222,20 +247,20 @@ ROM_START(3dobios)
 ROM_END
 
 ROM_START(3do_pal)
-    ROM_REGION32_BE( 0x200000, "user1", 0 )
-    ROM_SYSTEM_BIOS( 0, "panafz10", "Panasonic FZ-10 R.E.A.L. 3DO Interactive Multiplayer" )
-    ROMX_LOAD( "panafz10.bin", 0x000000, 0x100000, CRC(58242cee) SHA1(3c912300775d1ad730dc35757e279c274c0acaad), ROM_BIOS(1) )
-    ROM_SYSTEM_BIOS( 1, "goldstar", "Goldstar 3DO Interactive Multiplayer v1.01m" )
-    ROMX_LOAD( "goldstar.bin", 0x000000, 0x100000, CRC(b6f5028b) SHA1(c4a2e5336f77fb5f743de1eea2cda43675ee2de7), ROM_BIOS(2) )
-    ROM_SYSTEM_BIOS( 2, "panafz1", "Panasonic FZ-1 R.E.A.L. 3DO Interactive Multiplayer" )
-    ROMX_LOAD( "panafz1.bin", 0x000000, 0x100000, CRC(c8c8ff89) SHA1(34bf189111295f74d7b7dfc1f304d98b8d36325a), ROM_BIOS(3) )
+	ROM_REGION32_BE( 0x200000, "user1", 0 )
+	ROM_SYSTEM_BIOS( 0, "panafz10", "Panasonic FZ-10 R.E.A.L. 3DO Interactive Multiplayer" )
+	ROMX_LOAD( "panafz10.bin", 0x000000, 0x100000, CRC(58242cee) SHA1(3c912300775d1ad730dc35757e279c274c0acaad), ROM_BIOS(1) )
+	ROM_SYSTEM_BIOS( 1, "goldstar", "Goldstar 3DO Interactive Multiplayer v1.01m" )
+	ROMX_LOAD( "goldstar.bin", 0x000000, 0x100000, CRC(b6f5028b) SHA1(c4a2e5336f77fb5f743de1eea2cda43675ee2de7), ROM_BIOS(2) )
+	ROM_SYSTEM_BIOS( 2, "panafz1", "Panasonic FZ-1 R.E.A.L. 3DO Interactive Multiplayer" )
+	ROMX_LOAD( "panafz1.bin", 0x000000, 0x100000, CRC(c8c8ff89) SHA1(34bf189111295f74d7b7dfc1f304d98b8d36325a), ROM_BIOS(3) )
 ROM_END
 
 ROM_START(orbatak)
 	NTSC_BIOS
 
-    DISK_REGION( "cdrom" )
-    DISK_IMAGE_READONLY( "orbatak", 0, SHA1(25cb3b889cf09dbe5faf2b0ca4aae5e03453da00) )
+	DISK_REGION( "cdrom" )
+	DISK_IMAGE_READONLY( "orbatak", 0, SHA1(25cb3b889cf09dbe5faf2b0ca4aae5e03453da00) )
 ROM_END
 
 /***************************************************************************
@@ -245,8 +270,8 @@ ROM_END
 ***************************************************************************/
 
 /*    YEAR  NAME        PARENT  COMPAT  MACHINE     INPUT   INIT    COMPANY FULLNAME        FLAGS */
-CONS( 1991, 3do,        0,      0,      3do,        3do,	driver_device, 0,      "3DO",  "3DO (NTSC)",   GAME_NOT_WORKING | GAME_NO_SOUND )
-CONS( 1991, 3do_pal,    3do,    0,      3do_pal,    3do,	driver_device, 0,      "3DO",  "3DO (PAL)",    GAME_NOT_WORKING | GAME_NO_SOUND )
+CONS( 1991, 3do,        0,      0,      3do,        3do,    driver_device, 0,      "3DO",  "3DO (NTSC)",   GAME_NOT_WORKING | GAME_NO_SOUND )
+CONS( 1991, 3do_pal,    3do,    0,      3do_pal,    3do,    driver_device, 0,      "3DO",  "3DO (PAL)",    GAME_NOT_WORKING | GAME_NO_SOUND )
 
 GAME( 1991, 3dobios,    0,      3do,    3do, driver_device, 0, ROT0,     "3DO",  "3DO Bios",   GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IS_BIOS_ROOT )
 GAME( 199?, orbatak,    3dobios,3do,    3do, driver_device, 0, ROT0,     "<unknown>", "Orbatak (prototype)", GAME_NOT_WORKING | GAME_NO_SOUND )

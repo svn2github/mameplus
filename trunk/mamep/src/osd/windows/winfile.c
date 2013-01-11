@@ -103,6 +103,7 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 		filerr = FILERR_OUT_OF_MEMORY;
 		goto error;
 	}
+	memset(*file, 0x00, sizeof(**file) + sizeof(TCHAR) * _tcslen(t_path));
 
 	if (win_check_socket_path(path))
 	{
@@ -201,8 +202,8 @@ file_error osd_read(osd_file *file, void *buffer, UINT64 offset, UINT32 length, 
 	LONG upper = offset >> 32;
 	DWORD result;
 
-    switch (file->type)
-    {
+	switch (file->type)
+	{
 		case WINFILE_FILE:
 			// attempt to set the file pointer
 			result = SetFilePointer(file->handle, (UINT32)offset, &upper, FILE_BEGIN);
@@ -240,8 +241,8 @@ file_error osd_write(osd_file *file, const void *buffer, UINT64 offset, UINT32 l
 	LONG upper = offset >> 32;
 	DWORD result;
 
-    switch (file->type)
-    {
+	switch (file->type)
+	{
 		case WINFILE_FILE:
 			// attempt to set the file pointer
 			result = SetFilePointer(file->handle, (UINT32)offset, &upper, FILE_BEGIN);
@@ -276,8 +277,8 @@ file_error osd_write(osd_file *file, const void *buffer, UINT64 offset, UINT32 l
 
 file_error osd_close(osd_file *file)
 {
-    switch (file->type)
-    {
+	switch (file->type)
+	{
 		case WINFILE_FILE:
 			// close the file handle and free the file structure
 			CloseHandle(file->handle);

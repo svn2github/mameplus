@@ -10,10 +10,10 @@
 #ifndef __PSXCPU_H__
 #define __PSXCPU_H__
 
-#include "gte.h"
 #include "dma.h"
+#include "gte.h"
+#include "irq.h"
 #include "sio.h"
-#include "includes/psx.h"
 
 //**************************************************************************
 //  CONSTANTS
@@ -26,12 +26,12 @@
 
 // interrupts
 
-#define PSXCPU_IRQ0	( 0 )
-#define PSXCPU_IRQ1	( 1 )
-#define PSXCPU_IRQ2	( 2 )
-#define PSXCPU_IRQ3	( 3 )
-#define PSXCPU_IRQ4	( 4 )
-#define PSXCPU_IRQ5	( 5 )
+#define PSXCPU_IRQ0 ( 0 )
+#define PSXCPU_IRQ1 ( 1 )
+#define PSXCPU_IRQ2 ( 2 )
+#define PSXCPU_IRQ3 ( 3 )
+#define PSXCPU_IRQ4 ( 4 )
+#define PSXCPU_IRQ5 ( 5 )
 
 // register enumeration
 
@@ -142,6 +142,9 @@ public:
 	DECLARE_WRITE32_MEMBER( gpu_w );
 	DECLARE_READ32_MEMBER( gpu_r );
 
+	DECLARE_WRITE32_MEMBER( com_delay_w );
+	DECLARE_READ32_MEMBER( com_delay_r );
+
 	static psxcpu_device *getcpu( device_t &device, const char *cputag );
 
 protected:
@@ -181,7 +184,7 @@ protected:
 	UINT32 m_hi;
 	UINT32 m_lo;
 
-    // internal stuff
+	// internal stuff
 	UINT32 m_op;
 
 	// memory access
@@ -195,7 +198,8 @@ protected:
 	direct_read_data *m_direct;
 
 	// other internal states
-    int m_icount;
+	int m_icount;
+	UINT32 m_com_delay;
 	UINT32 m_delayv;
 	UINT32 m_delayr;
 	UINT32 m_berr;
