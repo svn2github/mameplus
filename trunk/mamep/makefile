@@ -198,6 +198,10 @@ endif
 # (vs. the native framework port).  Normal users should not enable this.
 # MACOSX_USE_LIBSDL = 1
 
+# uncomment and specify path to cppcheck executable to perform
+# static code analysis during compilation
+# CPPCHECK =
+
 
 
 #-------------------------------------------------
@@ -222,6 +226,9 @@ BUILD_FLAC = 1
 
 # uncomment next line to build jpeglib as part of MAME build
 BUILD_JPEGLIB = 1
+
+# uncomment next line to build PortMidi as part of MAME/MESS build
+BUILD_MIDILIB = 1
 
 # uncomment next line to include the symbols
 # SYMBOLS = 1
@@ -315,7 +322,7 @@ LD = @g++
 MD = -mkdir$(EXE)
 RM = @rm -f
 OBJDUMP = @objdump
-
+PYTHON = @python
 
 
 #-------------------------------------------------
@@ -556,18 +563,14 @@ endif
 # add the optimization flag
 CCOMFLAGS += -O$(OPTIMIZE)
 
-# if we are optimizing, include optimization options
-# and make all errors into warnings
-ifneq ($(OPTIMIZE),0)
-ifneq ($(TARGETOS),os2)
+# add the error warning flag
 ifndef NOWERROR
-CCOMFLAGS += -Wno-error -fno-strict-aliasing $(ARCHOPTS)
-else
-CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
+CCOMFLAGS += -Werror
 endif
-else
+
+# if we are optimizing, include optimization options
+ifneq ($(OPTIMIZE),0)
 CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
-endif
 endif
 
 # add a basic set of warnings
@@ -576,6 +579,8 @@ CCOMFLAGS += \
 	-Wcast-align \
 	-Wundef \
 	-Wno-format-security \
+	-Wno-unused-but-set-variable \
+	-Wno-int-to-pointer-cast \
 	-Wwrite-strings \
 	-Wno-sign-compare \
 	-Wno-conversion
@@ -741,6 +746,15 @@ SOFTFLOAT = $(OBJ)/libsoftfloat.a
 # add formats emulation library
 FORMATS_LIB = $(OBJ)/libformats.a
 
+# add PortMidi MIDI library
+ifeq ($(BUILD_MIDILIB),1)
+INCPATH += -I$(SRC)/lib/portmidi
+MIDI_LIB = $(OBJ)/libportmidi.a
+else
+LIBS += -lportmidi
+MIDI_LIB =
+endif
+
 #-------------------------------------------------
 # 'default' target needs to go here, before the 
 # include files which define additional targets
@@ -750,6 +764,12 @@ default: maketree buildtools emulator
 
 all: default tools
 
+# TODO: move to a .mak file in the regtests folder?
+tests: maketree jedutil$(EXE) chdman$(EXE)
+	@echo Running jedutil unittest
+	$(PYTHON) src/regtests/jedutil/jedtest.py
+	@echo Running chdman unittest
+	$(PYTHON) src/regtests/chdman/chdtest.py
 
 7Z_LIB = $(OBJ)/lib7z.a 
 
@@ -771,6 +791,7 @@ BUILDOUT = $(BUILDOBJ)
 include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
+include $(SRC)/build/build.mak
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
 -include $(SRC)/$(TARGET)/osd/$(OSD)/$(OSD).mak
 include $(SRC)/emu/emu.mak
@@ -786,6 +807,8 @@ endif
 CCOMFLAGS += $(INCPATH)
 CDEFS = $(DEFS)
 
+# TODO: -x c++ should not be hard-coded
+CPPCHECKFLAGS = $(CDEFS) $(INCPATH) -x c++ --enable=style
 
 
 #-------------------------------------------------
@@ -795,22 +818,6 @@ CDEFS = $(DEFS)
 emulator: maketree $(BUILD) $(EMULATOR)
 
 buildtools: maketree $(BUILD)
-
-# In order to keep dependencies reasonable, we exclude objects in the base of
-# $(SRC)/emu, as well as all the OSD objects and anything in the $(OBJ) tree
-depend: maketree $(MAKEDEP_TARGET)
-	@echo Rebuilding depend.mak...
-	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... src/$(TARGET) > depend.mak
-
-INCPATH += \
-	-I$(SRC)/$(TARGET) \
-	-I$(OBJ)/$(TARGET)/layout \
-	-I$(SRC)/emu \
-	-I$(OBJ)/emu \
-	-I$(OBJ)/emu/layout \
-	-I$(SRC)/lib/util \
-	-I$(SRC)/osd \
-	-I$(SRC)/osd/$(OSD) \
 
 tools: maketree $(TOOLS)
 
@@ -855,16 +862,18 @@ $(sort $(OBJDIRS)):
 ifndef EXECUTABLE_DEFINED
 
 # always recompile the version string
-$(VERSIONOBJ): $(EMUINFOOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LIBOCORE) $(RESFILE)
+$(VERSIONOBJ): $(EMUINFOOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LIBOCORE) $(MIDI_LIB) $(RESFILE)
 
-$(EMULATOR): $(VERSIONOBJ) $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE) $(RESFILE) $(CLIRESFILE)
+$(EMULATOR): $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE) $(MIDI_LIB) $(RESFILE) $(CLIRESFILE)
+	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(VERSIONOBJ) $^ $(LIBS) -o $@
 
 ifneq ($(WINUI),)
-$(MAMEUIEXE): $(VERSIONOBJ) $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE_NOMAIN) $(RESFILE) $(GUIRESFILE)
+$(MAMEUIEXE): $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE_NOMAIN) $(MIDI_LIB) $(RESFILE) $(GUIRESFILE)
+	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(VERSIONOBJ) $^ $(LIBS) -o $@
 endif
 
 ifeq ($(TARGETOS),win32)
@@ -904,14 +913,30 @@ endif
 $(OBJ)/%.o: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+ifdef CPPCHECK
+	@$(CPPCHECK) $(CPPCHECKFLAGS) $<
+endif
+
+$(OBJ)/%.o: $(OBJ)/%.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+ifdef CPPCHECK
+	@$(CPPCHECK) $(CPPCHECKFLAGS) $<
+endif
 
 $(OBJ)/%.pp: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
+ifdef CPPCHECK
+	@$(CPPCHECK) $(CPPCHECKFLAGS) $<
+endif
 
 $(OBJ)/%.s: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -S $< -o $@
+ifdef CPPCHECK
+	@$(CPPCHECK) $(CPPCHECKFLAGS) $<
+endif
 
 $(OBJ)/%.lh: $(SRC)/%.lay $(FILE2STR_TARGET)
 	@echo Converting $<...
@@ -924,6 +949,9 @@ $(OBJ)/%.fh: $(OBJ)/%.bdc $(FILE2STR_TARGET)
 $(DRIVLISTOBJ): $(DRIVLISTSRC)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+ifdef CPPCHECK
+	@$(CPPCHECK) $(CPPCHECKFLAGS) $<
+endif
 
 $(DRIVLISTSRC): $(DRVLIST) $(MAKELIST_TARGET)
 	@echo Building driver list $<...
@@ -976,4 +1004,4 @@ $(EMUOBJ)/uicmd14.bdc: $(PNG2BDC_TARGET) $(SRC)/emu/font/cmd14.png
 # optional dependencies file
 #-------------------------------------------------
 
--include depend.mak
+-include depend_$(TARGET).mak

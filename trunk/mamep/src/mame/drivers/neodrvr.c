@@ -775,24 +775,21 @@
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) ) \
 	ROM_REGION( 0x90000, "audiocpu", ROMREGION_ERASEFF ) \
 	ROM_REGION( 0x80000, "audiocrypt", 0 ) \
-	ROM_LOAD( name, 0x00000, 0x20000, hash ) \
-
+	ROM_LOAD( name, 0x00000, 0x20000, hash )
 #define NEO_BIOS_AUDIO_ENCRYPTED_256K(name, hash) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x20000, "audiobios", 0 ) \
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) ) \
 	ROM_REGION( 0x90000, "audiocpu", ROMREGION_ERASEFF ) \
 	ROM_REGION( 0x80000, "audiocrypt", 0 ) \
-	ROM_LOAD( name, 0x00000, 0x40000, hash ) \
-
+	ROM_LOAD( name, 0x00000, 0x40000, hash )
 #define NEO_BIOS_AUDIO_ENCRYPTED_512K(name, hash) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x20000, "audiobios", 0 ) \
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) ) \
 	ROM_REGION( 0x90000, "audiocpu", ROMREGION_ERASEFF ) \
 	ROM_REGION( 0x80000, "audiocrypt", 0 ) \
-	ROM_LOAD( name, 	 0x00000, 0x80000, hash ) \
-
+	ROM_LOAD( name,      0x00000, 0x80000, hash )
 
 #define NO_DELTAT_REGION
 
@@ -6285,7 +6282,7 @@ ROM_END
 
 ROM_START( kof99e ) /* Original Version - Encrypted Code & GFX */
 	ROM_REGION( 0x900000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "ka.neo-sma", 0x0c0000, 0x040000, CRC(7766d09e) SHA1(4e0a49d1ad669a62676cb30f527c6590cde80194) )	/* stored in the custom chip */
+	ROM_LOAD16_WORD_SWAP( "ka.neo-sma", 0x0c0000, 0x040000, CRC(7766d09e) SHA1(4e0a49d1ad669a62676cb30f527c6590cde80194) )  /* stored in the custom chip */
 	/* Is the SMA for this set correct? A set with this layout and a SMA.KB is known */
 	ROM_LOAD16_WORD_SWAP( "251-ep1.p1", 0x100000, 0x200000, CRC(1e8d692d) SHA1(eea1aa8c0a17f089ac14831889c36535e559072c) )
 	ROM_LOAD16_WORD_SWAP( "251-ep2.p2", 0x300000, 0x200000, CRC(d6206e5a) SHA1(0e1100d03c40c6d5cfa899d009e319ae73fce6b8) )

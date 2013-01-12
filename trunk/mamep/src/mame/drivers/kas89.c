@@ -268,7 +268,6 @@ void kas89_state::machine_start()
 
 void kas89_state::machine_reset()
 {
-
 	m_main_nmi_enable = 0;
 }
 
