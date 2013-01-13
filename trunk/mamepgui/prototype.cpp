@@ -946,6 +946,8 @@ void MameDat::loadListXmlReadyReadStandardOutput()
 	
 	//mamep: remove windows endl
 	buf.replace(QString("\r"), QString(""));
+	//FIXME: buffer overflow
+	buf.replace(QString("\t"), QString(""));
 	
 	numTotalGames += buf.count("<game name=");
 	mameOutputBuf += buf;
