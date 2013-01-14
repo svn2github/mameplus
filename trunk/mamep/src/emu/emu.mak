@@ -315,6 +315,7 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/crt9021.o       \
 	$(EMUVIDEO)/crt9212.o       \
 	$(EMUVIDEO)/dm9368.o        \
+	$(EMUVIDEO)/ef9340_1.o      \
 	$(EMUVIDEO)/generic.o       \
 	$(EMUVIDEO)/h63484.o        \
 	$(EMUVIDEO)/hd44102.o       \
@@ -361,6 +362,7 @@ EMUIMAGEDEVOBJS = \
 	$(EMUIMAGEDEV)/flopdrv.o    \
 	$(EMUIMAGEDEV)/floppy.o     \
 	$(EMUIMAGEDEV)/harddriv.o   \
+	$(EMUIMAGEDEV)/midiin.o     \
 	$(EMUIMAGEDEV)/printer.o    \
 	$(EMUIMAGEDEV)/serial.o     \
 	$(EMUIMAGEDEV)/snapquik.o   \

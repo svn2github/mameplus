@@ -16,9 +16,9 @@
 typedef unsigned char UINT8;
 
 #define ARRAY_LENGTH(x)     (sizeof(x) / sizeof(x[0]))
-#define BUILD_WINDOWS      (0)
-#define BUILD_WINUI         (1)
-#define BUILD_MESS          (2)
+#define BUILD_MAME          (0)
+#define BUILD_MESS          (1)
+#define BUILD_UME           (2)
 
 //============================================================
 //  TYPE DEFINITIONS
@@ -173,7 +173,7 @@ static int parse_version(char *str, int *version_major, int *version_minor, int 
 //============================================================
 static int usage(char *me)
 {
-	fprintf(stderr, "Usage: %s [-b windows|winui|mess] <filename>\n", me);
+	fprintf(stderr, "Usage: %s [-b mame|mess|ume] <filename>\n", me);
 	return 1;
 }
 
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 	FILE *f;
 
 	memset(&v, 0, sizeof(v));
-	build = BUILD_WINDOWS;
+	build = BUILD_MAME;
 
 	// validate parameters
 	opt = 1;
@@ -201,12 +201,12 @@ int main(int argc, char *argv[])
 		if (!strcmp(argv[opt], "-b"))
 		{
 			char *p = argv[++opt];
-			if (!strcmp(p,"windows"))
-				build = BUILD_WINDOWS;
-			else if (!strcmp(p,"winui"))
-				build = BUILD_WINUI;
+			if (!strcmp(p,"mame"))
+				build = BUILD_MAME;
 			else if (!strcmp(p,"mess"))
 				build = BUILD_MESS;
+			else if (!strcmp(p,"ume"))
+				build = BUILD_UME;
 			else
 				return usage(argv[0]);
 		}
@@ -266,27 +266,27 @@ int main(int argc, char *argv[])
 		v.original_filename = "MESS";
 		v.product_name = "MESS";
 	}
-	else if (build == BUILD_WINUI)
+	else if (build == BUILD_UME)
 	{
-		// MAMEUI
-		v.author = "Christopher Kirmse and the MAMEUI team";
-		v.comments = "Multiple Arcade Machine Emulator with GUI";
-		v.company_name = "MAME Team";
-		v.file_description = "Multiple Arcade Machine Emulator with GUI";
-		v.internal_name = "MAMEUI";
-		v.original_filename = "MAMEUI";
-		v.product_name = "MAMEUI";
+		// UME
+		v.author = "MAME and MESS Team";
+		v.comments = "Universal Machine Emulator";
+		v.company_name = "MAME and MESS Team";
+		v.file_description = "Universal Machine Emulator";
+		v.internal_name = "UME";
+		v.original_filename = "UME";
+		v.product_name = "UME";
 	}
 	else
 	{
-		// MAME
-		v.author = "Nicola Salmoria and the MAME Team";
-		v.comments = "Multiple Arcade Machine Emulator";
+		// MAMEPlus
+		v.author = "MAME Team and MAME Plus! Team";
+		v.comments = "Multiple Arcade Machine Emulator with GUI";
 		v.company_name = "MAME Team";
-		v.file_description = "Multiple Arcade Machine Emulator";
-		v.internal_name = "MAME";
-		v.original_filename = "MAME";
-		v.product_name = "MAME";
+		v.file_description = "Multiple Arcade Machine Emulator With GUI";
+		v.internal_name = "MAME Plus!";
+		v.original_filename = "MAMEPlus";
+		v.product_name = "MAMEPlus";
 	}
 
 	// build legal_copyright string

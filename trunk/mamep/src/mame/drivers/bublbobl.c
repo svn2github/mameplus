@@ -1171,6 +1171,48 @@ ROM_START( bublbobl )
 	ROM_LOAD( "pal16r4.bin",  0x0000, 0x0001, NO_DUMP ) /* Located at IC12 */
 ROM_END
 
+ROM_START( bublcave )
+	ROM_REGION( 0x30000, "maincpu", 0 )
+	ROM_LOAD( "a78-06-1.51",    0x00000, 0x08000, CRC(185cc219) )
+	/* ROMs banked at 8000-bfff */
+	ROM_LOAD( "a78-05-1.52",    0x10000, 0x10000, CRC(b6b02df3) )
+	/* 20000-2ffff empty */
+
+	ROM_REGION( 0x10000, "slave", 0 )	/* 64k for the second CPU */
+	ROM_LOAD( "a78-08.37",    0x0000, 0x08000, CRC(c5d14e62) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )	/* 64k for the third CPU */
+	ROM_LOAD( "a78-07.46",    0x0000, 0x08000, CRC(4f9a26e8) SHA1(3105b34b88a7134493c2b3f584729f8b0407a011) )
+
+	ROM_REGION( 0x10000, "mcu", 0 )	/* 64k for the MCU */
+	ROM_LOAD( "a78-01.17",    0xf000, 0x1000, CRC(b1bfb53d) SHA1(31b8f31acd3aa394acd80db362774749842e1285) )
+
+	ROM_REGION( 0x80000, "gfx1", ROMREGION_INVERT )
+	ROM_LOAD( "a78-09.12",    0x00000, 0x8000, CRC(b90b7eef) )    /* 1st plane */
+	ROM_LOAD( "a78-10.13",    0x08000, 0x8000, CRC(4fb22f05) )
+	ROM_LOAD( "a78-11.14",    0x10000, 0x8000, CRC(9773e512) SHA1(33c1687ee575d66bf0e98add45d06da827813765) )
+	ROM_LOAD( "a78-12.15",    0x18000, 0x8000, CRC(e49eb49e) )
+	ROM_LOAD( "a78-13.16",    0x20000, 0x8000, CRC(61919734) )
+	ROM_LOAD( "a78-14.17",    0x28000, 0x8000, CRC(7e3a13bd) )
+	/* 0x30000-0x3ffff empty */
+	ROM_LOAD( "a78-15.30",    0x40000, 0x8000, CRC(c253c73a) )    /* 2nd plane */
+	ROM_LOAD( "a78-16.31",    0x48000, 0x8000, CRC(e66c92ee) )
+	ROM_LOAD( "a78-17.32",    0x50000, 0x8000, CRC(d69762d5) SHA1(3326fef4e0bd86681a3047dc11886bb171ecb609) )
+	ROM_LOAD( "a78-18.33",    0x58000, 0x8000, CRC(47ee2544) )
+	ROM_LOAD( "a78-19.34",    0x60000, 0x8000, CRC(1ceeb1fa) )
+	ROM_LOAD( "a78-20.35",    0x68000, 0x8000, CRC(64322e24) )
+	/* 0x70000-0x7ffff empty */
+
+	ROM_REGION( 0x0100, "proms", 0 )
+	ROM_LOAD( "a71-25.41",    0x0000, 0x0100, CRC(2d0f8545) SHA1(089c31e2f614145ef2743164f7b52ae35bc06808) )	/* video timing */
+
+	/* Located on CPU/Sound Board */
+	ROM_REGION( 0x0003, "plds", 0 )
+	ROM_LOAD( "pal16l8.bin",  0x0000, 0x0001, NO_DUMP ) /* Located at IC49 */
+	ROM_LOAD( "pal16l8.bin",  0x0000, 0x0001, NO_DUMP ) /* Located at IC43 */
+	ROM_LOAD( "pal16r4.bin",  0x0000, 0x0001, NO_DUMP ) /* Located at IC12 */
+ROM_END
+
 /*
 bublbob1.zip - a78-05.52
 TAITO CORPORATION 1986
@@ -1599,3 +1641,4 @@ GAME( 1986, sboblbob,   bublbobl, boblbobl, sboblbob, bublbobl_state, bublbobl, 
 GAME( 1986, bub68705,   bublbobl, bub68705, bublbobl, bublbobl_state, bublbobl, ROT0,  "bootleg", "Bubble Bobble (bootleg with 68705)", GAME_SUPPORTS_SAVE )
 
 GAME( 1987, dland,      bublbobl, boblbobl, dland, bublbobl_state,    dland,    ROT0,  "bootleg", "Dream Land / Super Dream Land (bootleg of Bubble Bobble)", GAME_SUPPORTS_SAVE )
+GAME( 2012, bublcave,  	bublbobl, bublbobl, bublbobl, bublbobl_state, bublbobl, ROT0,  "hack by Bisboch and Aladar", "Bubble Bobble Lost Cave (Ver 1.1)", GAME_SUPPORTS_SAVE )

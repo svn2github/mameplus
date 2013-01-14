@@ -726,11 +726,11 @@
 	ROM_SYSTEM_BIOS( 21, "uni-bios_3_0","Universe Bios (Hack, Ver. 3.0)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 21, "uni-bios_3_0.rom",  0x00000, 0x020000, CRC(a97c89a9) SHA1(97a5eff3b119062f10e31ad6f04fe4b90d366e7f) ) /* Universe Bios v3.0 (hack) */ \
 	ROM_SYSTEM_BIOS( 22, "debug",      "Debug MVS (Hack?)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 21, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 22, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
 	ROM_SYSTEM_BIOS( 23, "asia-aes",   "Asia AES" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 22, "neo-epo.sp1", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 23, "neo-epo.sp1", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
 	ROM_SYSTEM_BIOS( 24, "japan-aes",   "Japan AES" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 23, "neo-po.sp1", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 24, "neo-po.sp1", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */ \
 
 /*  Note you'll have to modify the last for lines of each block to use the extra bios roms,
     they're hacks / homebrew / console bios roms so MAME doesn't list them by default. */

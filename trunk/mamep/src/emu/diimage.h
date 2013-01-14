@@ -70,7 +70,9 @@ enum iodevice_t
 	IO_CDROM,       /* 14 - optical CD-ROM disc */
 	IO_MAGTAPE,     /* 15 - Magentic tape */
 	IO_ROM,         /* 16 - Individual ROM image - the Amstrad CPC has a few applications that were sold on 16kB ROMs */
-	IO_COUNT        /* 17 - Total Number of IO_devices for searching */
+	IO_MIDIIN,      /* 17 - MIDI In port */
+	IO_MIDIOUT,     /* 18 - MIDI Out port */
+	IO_COUNT        /* 19 - Total Number of IO_devices for searching */
 };
 
 enum image_error_t
@@ -154,6 +156,7 @@ public:
 	virtual void call_display() { }
 	virtual void call_display_info() { }
 	virtual device_image_partialhash_func get_partial_hash() const { return NULL; }
+	virtual bool core_opens_image_file() const { return TRUE; }
 	virtual iodevice_t image_type()  const = 0;
 	virtual bool is_readable()  const = 0;
 	virtual bool is_writeable() const = 0;
