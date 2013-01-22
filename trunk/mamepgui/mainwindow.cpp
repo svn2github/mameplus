@@ -47,7 +47,7 @@ bool isMESS = false;
 
 QStringList validGuiSettings;
 
-#define MPGUI_VER "1.5.5"
+#define MPGUI_VER "1.5.6"
 
 void MainWindow::log(QString message)
 {

@@ -373,7 +373,7 @@ MameDat::MameDat(QObject *parent, int method) :
 
 MameDat::MameDat(const QByteArray &dat)
 {
-	mameOutputBuf = QString(dat);
+	mameOutputBuf = dat;
 
 	parseListXml(1);
 }
@@ -389,7 +389,7 @@ void MameDat::save()
 
 	out << (quint32)MAMEPLUS_SIG; //mameplus signature
 	out << (qint16)S11N_VER; //s11n version
-	out.setVersion(QDataStream::Qt_4_4);
+	out.setVersion(QDataStream::Qt_4_6);
 	out << mameVersion;
 	out << defaultIni;	//default.ini
 	out << games.size();
@@ -616,7 +616,7 @@ int MameDat::load()
 	if (streamVersion < 1)
 		in.setVersion(QDataStream::Qt_4_2);
 	else
-		in.setVersion(QDataStream::Qt_4_4);
+		in.setVersion(QDataStream::Qt_4_6);
 
 	// MAME Version
 	mameVersion = utils->getMameVersion();
@@ -946,11 +946,9 @@ void MameDat::loadListXmlReadyReadStandardOutput()
 	
 	//mamep: remove windows endl
 	buf.replace(QString("\r"), QString(""));
-	//FIXME: buffer overflow
-	buf.replace(QString("\t"), QString(""));
 	
 	numTotalGames += buf.count("<game name=");
-	mameOutputBuf += buf;
+	mameOutputBuf += buf.toUtf8();
 
 	win->logStatus(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
 }

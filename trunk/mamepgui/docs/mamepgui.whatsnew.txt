@@ -13,6 +13,9 @@ take Genesis for example:
 1. 设置rom路径: "选项 - 目录 - MESS 路径 - Genesis extra software"
 2. 在 "家用机 - genesis" 目录按F5
 
+1.5.6
+fixed reading listxml (changed to QByteArray from QString)
+
 1.5.5
 fixed buffer overflow (mamep 0.148 need more fix)
 

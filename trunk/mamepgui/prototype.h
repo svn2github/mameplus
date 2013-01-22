@@ -225,7 +225,7 @@ public:
 private:
 	QProcess *loadProc;
 	int numTotalGames;
-	QString mameOutputBuf;
+	QByteArray mameOutputBuf;
 
 	void parseListXml(int = 0);
 
