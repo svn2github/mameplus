@@ -104,6 +104,7 @@ public:
 	// C string conversion operators and helpers
 	operator const char *() const { return m_text; }
 	const char *cstr() const { return m_text; }
+	char *stringbuffer(int size) { ensure_room(size); return m_text; }
 
 	// buffer management
 	astring &reset() { return cpy(""); }
@@ -117,6 +118,10 @@ public:
 	astring &cpysubstr(const astring &src, int start, int count = -1);
 	astring &cpy(const astring &src) { return cpy(src.cstr(), src.len()); }
 	astring &cpy(const char *src) { return cpy(src, strlen(src)); }
+	astring &cpy(const char *str1, const char *str2) { return cpy(str1).cat(str2); }
+	astring &cpy(const char *str1, const char *str2, const char *str3) { return cpy(str1).cat(str2).cat(str3); }
+	astring &cpy(const char *str1, const char *str2, const char *str3, const char *str4) { return cpy(str1).cat(str2).cat(str3).cat(str4); }
+	astring &cpy(const char *str1, const char *str2, const char *str3, const char *str4, const char *str5) { return cpy(str1).cat(str2).cat(str3).cat(str4).cat(str5); }
 
 	// insertion helpers
 	astring &ins(int insbefore, const char *src, int count);
@@ -130,6 +135,10 @@ public:
 	astring &cat(const astring &src) { return ins(-1, src.cstr(), src.len()); }
 	astring &cat(const char *src) { return ins(-1, src, strlen(src)); }
 	astring &cat(char ch) { return ins(-1, &ch, 1); }
+	astring &cat(const char *str1, const char *str2) { return cat(str1).cat(str2); }
+	astring &cat(const char *str1, const char *str2, const char *str3) { return cat(str1).cat(str2).cat(str3); }
+	astring &cat(const char *str1, const char *str2, const char *str3, const char *str4) { return cat(str1).cat(str2).cat(str3).cat(str4); }
+	astring &cat(const char *str1, const char *str2, const char *str3, const char *str4, const char *str5) { return cat(str1).cat(str2).cat(str3).cat(str4).cat(str5); }
 
 	// substring helpers
 	astring &substr(int start, int count = -1);
@@ -180,10 +189,74 @@ private:
 	void normalize_substr(int &start, int &count, int length) const;
 
 	// internal state
-	char *          m_text;
-	int             m_alloclen;
-	char            m_smallbuf[64];
-	int             m_len;
+	char *			m_text;
+	int				m_alloclen;
+	int 			m_len;
+	char			m_smallbuf[32];
+};
+
+
+// string iterator helper class
+class string_iterator
+{
+public:
+	// simple construction/destruction
+	string_iterator() { copy(""); }
+	string_iterator(const char *str) { copy(str); }
+
+	// copy helpers
+	void copy(const char *str)
+	{
+		/* reset the structure */
+		m_str.reset();
+		m_base = (str != NULL) ? str : "";
+		m_cur = m_base;
+	}
+
+	// character searching helpers
+	int next(int separator, bool duplicate = false)
+	{
+		const char *semi;
+
+		/* if none left, return FALSE to indicate we are done */
+		if (m_index != 0 and *m_cur == 0)
+			return false;
+
+		/* ignore duplicates of the separator */
+		while (duplicate and m_index == 0 and *m_cur == separator)
+			m_cur++;
+
+		if (duplicate and *m_cur == 0)
+			return false;
+
+		/* copy up to the next separator */
+		semi = strchr(m_cur, separator);
+
+		if (semi == NULL)
+			semi = m_cur + strlen(m_cur);
+
+		m_str.cpy(m_cur, semi - m_cur);
+		m_cur = (*semi == 0) ? semi : semi + 1;
+
+		/* ignore duplicates of the separator */
+		while (duplicate and *m_cur and *m_cur == separator)
+			m_cur++;
+
+		/* bump the index and return true */
+		m_index++;
+
+		return true;
+	}
+
+	// C string conversion operators and helpers
+	operator const char *() const { return m_str.cstr(); }
+	const char *cstr() const { return m_str.cstr(); }
+
+private:
+	astring			m_str;
+	const char *	m_base;
+	const char *	m_cur;
+	int				m_index;
 };
 
 

@@ -1,16 +1,16 @@
-# osd/winui/properties.c: 967
+# osd/winui/properties.c: 965
 %d colors 
 %d F 
 
-# osd/winui/layout.c: 210 osd/winui/winui.c: 3656
+# osd/winui/layout.c: 210 osd/winui/winui.c: 3660
 %d games
 %d ƒQ[ƒ€
 
-# osd/winui/properties.c: 878
+# osd/winui/properties.c: 876
 %d x %d (H) %f Hz (%d colors)\n
 %d x %d (‰¡) %f Hz (%d F)\n
 
-# osd/winui/properties.c: 871
+# osd/winui/properties.c: 869
 %d x %d (V) %f Hz (%d colors)\n
 %d x %d (c) %f Hz (%d F)\n
 
@@ -22,27 +22,27 @@
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 935
+# osd/winui/properties.c: 933
 %s (%d player)
 %s (%d ƒvƒŒƒCƒ„[)
 
-# osd/winui/properties.c: 946
+# osd/winui/properties.c: 944
 %s (%d player, %d button)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/winui/properties.c: 944
+# osd/winui/properties.c: 942
 %s (%d player, %d buttons)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/winui/properties.c: 932
+# osd/winui/properties.c: 930
 %s (%d players)
 %s (%d ƒvƒŒƒCƒ„[)
 
-# osd/winui/properties.c: 941
+# osd/winui/properties.c: 939
 %s (%d players, %d button)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/winui/properties.c: 938
+# osd/winui/properties.c: 936
 %s (%d players, %d buttons)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
@@ -210,11 +210,11 @@ MameƒŠƒŠ[ƒXƒm[ƒg(&M)
 &Picture Area\tAlt+P
 ‰æ‘œƒGƒŠƒA(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3819, 7292
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7293
 &Play
 ƒvƒŒƒC(&P)
 
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3869, 7243
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7244
 &Play %s
 ƒvƒŒƒC(&P) %s
 
@@ -298,7 +298,7 @@ MameƒŠƒŠ[ƒXƒm[ƒg(&M)
 &Working
 “®ì‰Â(&W)
 
-# osd/winui/winui.c: 6665
+# osd/winui/winui.c: 6666
 '%s' is not a valid savestate file for game '%s'.
 '%s'‚ÍƒQ[ƒ€'%s'‚É“KØ‚ÈƒXƒe[ƒg‚Å‚Í‚ ‚è‚Ü‚¹‚ñB
 
@@ -314,7 +314,7 @@ MameƒŠƒŠ[ƒXƒm[ƒg(&M)
 <unknown>
 <•s–¾>
 
-# osd/winui/mui_util.c: 258
+# osd/winui/mui_util.c: 277
 A sharing violation occurred.
 ‹¤—Lˆá”½‚ª”­¶‚µ‚Ü‚µ‚½B
 
@@ -322,13 +322,17 @@ A sharing violation occurred.
 A&udit
 ŠÄ¸(&U)
 
-# osd/winui/properties.c: 917 osd/winui/treeview.c: 1392
+# osd/winui/properties.c: 915 osd/winui/treeview.c: 1392
 AD Stick
 ƒAƒiƒƒOƒXƒeƒBƒbƒN
 
 # osd/winui/mameui.rc: 484
 ADStick device
 ADƒXƒeƒBƒbƒNƒfƒoƒCƒX
+
+# osd/winui/mui_opts.c: 283
+APPLICATION OPTIONS
+ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒIƒvƒVƒ‡ƒ“
 
 # osd/winui/winui.c: 775
 About
@@ -366,7 +370,7 @@ All
 All Games
 ‘SƒA[ƒP[ƒh
 
-# osd/winui/winui.c: 6320, 6323, 6326, 6329, 6332, 6336, 6341, 6345, 6348, 6351, 6354, 6357, 6361
+# osd/winui/winui.c: 6321, 6324, 6327, 6330, 6333, 6337, 6342, 6346, 6349, 6352, 6355, 6358, 6362
 All files (*.*)
 ‘S‚Ä‚Ìƒtƒ@ƒCƒ‹ (*.*)
 
@@ -390,7 +394,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 ƒtƒHƒ‹ƒ_‚É‘Î‚µ‚ÄƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ğİ’è‚µ‚Ü‚·
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3623
 Anti-clockwise
 ”½Œv‰ñ‚è
 
@@ -438,15 +442,15 @@ Audit items in this folder
 Audit the selected item
 ‘I‘ğ‚µ‚½€–Ú‚ğŠÄ¸
 
-# osd/winui/properties.c: 378, 409, 2778, 3044, 3050
+# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
 Auto
 ©“®
 
-# osd/winui/properties.c: 3628
+# osd/winui/properties.c: 3626
 Auto anti-clockwise
 ©“®“I‚É”½Œv‰ñ‚è
 
-# osd/winui/properties.c: 3627
+# osd/winui/properties.c: 3625
 Auto clockwise
 ©“®“I‚ÉŒv‰ñ‚è
 
@@ -478,11 +482,11 @@ Available fields:
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1098
+# osd/winui/properties.c: 1096
 BIOS missing
 BIOS‚ª‚ ‚è‚Ü‚¹‚ñ
 
-# osd/winui/properties.c: 1209
+# osd/winui/properties.c: 1207
 BIOS options\nCustom options used by all games in the %s
 ƒOƒ[ƒoƒ‹BIOSƒIƒvƒVƒ‡ƒ“‚Å‚·B\n%s‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
@@ -614,7 +618,7 @@ C&lones
 CPU
 CPU
 
-# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 452
+# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 458
 Cabinet
 â‘Ì
 
@@ -650,7 +654,7 @@ Checking Game %s - %s
 Checking...
 ƒ`ƒFƒbƒN’†...
 
-# osd/winui/properties.c: 3624
+# osd/winui/properties.c: 3622
 Clockwise
 Œv‰ñ‚è
 
@@ -674,11 +678,11 @@ Cocktail
 Coin lockout
 ƒRƒCƒ““Š“ü”‚ğ§ŒÀ‚·‚é
 
-# osd/winui/properties.c: 1001, 1054, 1125
+# osd/winui/properties.c: 999, 1052, 1123
 Colors are completely wrong
 F‚ªÄŒ»‚³‚ê‚È‚¢
 
-# osd/winui/properties.c: 1007, 1060, 1131
+# osd/winui/properties.c: 1005, 1058, 1129
 Colors aren't 100% accurate
 F‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -698,7 +702,7 @@ Config
 Configure for:
 İ’è‘ÎÛ:
 
-# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 423
+# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 440
 Console
 ‰Æ’ë—pƒQ[ƒ€‹@
 
@@ -734,7 +738,7 @@ Contrast Correction
 Control &Panel
 ƒRƒ“ƒpƒl(&P)
 
-# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 455
+# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 461
 Control Panel
 ƒRƒ“ƒpƒl
 
@@ -770,15 +774,15 @@ Controllers
 Correct:
 ³í:
 
-# osd/winui/winui.c: 4793
+# osd/winui/winui.c: 4797
 Could not create '%s'
 '%s' ‚ªì¬‚Å‚«‚Ü‚¹‚ñ
 
-# osd/winui/winui.c: 6566
+# osd/winui/winui.c: 6567
 Could not open '%s' as a valid input file.
 u%sv‚ğ—LŒø‚ÈÄ¶ƒtƒ@ƒCƒ‹‚Æ‚µ‚ÄƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ
 
-# osd/winui/winui.c: 6678
+# osd/winui/winui.c: 6679
 Could not open '%s' as a valid savestate file.
 '%s'‚Í³í‚ÈƒXƒe[ƒg‚Æ‚µ‚ÄŠJ‚¯‚Ü‚¹‚ñB
 
@@ -806,7 +810,7 @@ Cursor text (floating)
 Cursor text (selected)
 ƒJ[ƒ\\ƒ‹•¶š (‘I‘ğ)
 
-# osd/winui/winui.c: 4646, 4674
+# osd/winui/winui.c: 4650, 4678
 Custom
 ƒJƒXƒ^ƒ€
 
@@ -834,7 +838,7 @@ Customize interface options.
 Customize which columns are used in the game list
 ƒQ[ƒ€ƒŠƒXƒg‚É—p‚¢‚é•\\¦€–Ú‚ğİ’è‚µ‚Ü‚·
 
-# osd/winui/mui_opts.c: 270
+# osd/winui/mui_opts.c: 287
 DISPLAY STATE OPTIONS
 ƒfƒBƒXƒvƒŒƒCó‘ÔƒIƒvƒVƒ‡ƒ“
 
@@ -850,11 +854,11 @@ Debugscript
 Decrypted
 ˆÃ†‰ğœ
 
-# osd/winui/properties.c: 3623, 3849, 3879
+# osd/winui/properties.c: 3621, 3847, 3877
 Default
 ƒfƒtƒHƒ‹ƒg
 
-# osd/winui/properties.c: 567
+# osd/winui/properties.c: 565
 Default Game
 •W€‚ÌƒQ[ƒ€
 
@@ -862,7 +866,7 @@ Default Game
 Default Game &Options...
 ƒfƒtƒHƒ‹ƒgƒQ[ƒ€ƒIƒvƒVƒ‡ƒ“(&O)...
 
-# osd/winui/properties.c: 689
+# osd/winui/properties.c: 687
 Default Settings
 ƒfƒtƒHƒ‹ƒgİ’è
 
@@ -878,7 +882,7 @@ Delete
 Details
 Ú×
 
-# osd/winui/properties.c: 919 osd/winui/treeview.c: 1394
+# osd/winui/properties.c: 917 osd/winui/treeview.c: 1394
 Dial
 ƒ_ƒCƒ„ƒ‹
 
@@ -982,23 +986,23 @@ Double Joy 4-Way
 Double Joy 8-Way
 8•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 915
+# osd/winui/properties.c: 913
 Double Joystick 16-Way
 16•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 912
+# osd/winui/properties.c: 910
 Double Joystick 2-Way
 2•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 916
+# osd/winui/properties.c: 914
 Double Joystick 2-Way Vertical
 2•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN c
 
-# osd/winui/properties.c: 913
+# osd/winui/properties.c: 911
 Double Joystick 4-Way
 4•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 914
+# osd/winui/properties.c: 912
 Double Joystick 8-Way
 8•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
@@ -1006,11 +1010,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3589
 Draw every frame
 ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚È‚µ
 
-# osd/winui/properties.c: 1199
+# osd/winui/properties.c: 1197
 Driver options\nCustom options used by all games in the %s
 ƒOƒ[ƒoƒ‹ƒhƒ‰ƒCƒoƒIƒvƒVƒ‡ƒ“‚Å‚·B\n%s‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
@@ -1110,7 +1114,7 @@ Enable the title tab
 Enforce aspect ratio
 •\\¦”ä—¦‚ğŒÅ’è
 
-# osd/winui/mui_audit.c: 102 osd/winui/properties.c: 586, 724, 1990
+# osd/winui/mui_audit.c: 102 osd/winui/properties.c: 584, 722, 1988
 Error
 ƒGƒ‰[
 
@@ -1118,7 +1122,7 @@ Error
 Error finding custom file name to save
 •Û‘¶‚·‚éƒJƒXƒ^ƒ€ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
-# osd/winui/winui.c: 7741
+# osd/winui/winui.c: 7742
 Error searching for custom folder
 ƒJƒXƒ^ƒ€ƒtƒHƒ‹ƒ_‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
@@ -1138,7 +1142,7 @@ Exit the application
 External Folder List
 ŠO•”ƒtƒHƒ‹ƒ_ƒŠƒXƒg
 
-# osd/winui/mui_opts.c: 355
+# osd/winui/mui_opts.c: 372
 FILENAME OPTIONS
 ƒtƒ@ƒCƒ‹–¼ƒIƒvƒVƒ‡ƒ“
 
@@ -1174,7 +1178,7 @@ Flip screen left-right
 Flip screen upside-down
 ã‰º”½“]
 
-# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 451
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 457
 Flyer
 L
 
@@ -1210,7 +1214,7 @@ Full screen contrast
 Full screen gamma
 ƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}’l
 
-# osd/winui/mui_opts.c: 418
+# osd/winui/game_opts.h: 196 osd/winui/mui_opts.c: 435
 GAME STATISTICS
 ƒQ[ƒ€“Œv
 
@@ -1238,19 +1242,19 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 ‰º‹L‚æ‚è‘I‘ğ‚³‚ê‚½€–Ú‚ğƒŠƒXƒgã”ñ•\\¦‚É‚µ‚Ü‚·
 
-# osd/winui/properties.c: 1019, 1072, 1143
+# osd/winui/properties.c: 1017, 1070, 1141
 Game lacks sound
 ƒTƒEƒ“ƒh‚ª–¢‘Î‰
 
-# osd/winui/properties.c: 995, 1048, 1119
+# osd/winui/properties.c: 993, 1046, 1117
 Game protection isn't fully emulated
 ƒvƒƒeƒNƒg‚Ì‚½‚ß“®ì‚ª•sŠ®‘S
 
-# osd/winui/properties.c: 1037, 1090, 1161
+# osd/winui/properties.c: 1035, 1088, 1159
 Game requires external artwork files
 ƒQ[ƒ€‚ÍŠO•”‚ÌƒA[ƒgƒ[ƒNƒtƒ@ƒCƒ‹‚ª•K—v‚Å‚·
 
-# osd/winui/winui.c: 3452
+# osd/winui/winui.c: 3456
 Game search %d%% complete
 ƒQ[ƒ€‚ÌŒŸõ %d%% Š®—¹
 
@@ -1290,7 +1294,7 @@ General
 Global game options\n
 ƒOƒ[ƒoƒ‹ƒQ[ƒ€ƒIƒvƒVƒ‡ƒ“‚Å‚·\n
 
-# osd/winui/properties.c: 1184
+# osd/winui/properties.c: 1182
 Global game options\nDefault options used by all games
 ƒOƒ[ƒoƒ‹ƒQ[ƒ€ƒIƒvƒVƒ‡ƒ“‚Å‚·B\n‘SƒQ[ƒ€‚ÌƒfƒtƒHƒ‹ƒgİ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
@@ -1322,7 +1326,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 ƒnƒCƒXƒRƒA
 
-# osd/winui/mui_opts.c: 457
+# osd/winui/mui_opts.c: 463
 History
 —ğj
 
@@ -1330,11 +1334,11 @@ History
 Homebrew
 ©‰Æ»
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5684
 Horizontal
 ‰¡Œ^
 
-# osd/winui/properties.c: 1193
+# osd/winui/properties.c: 1191
 Horizontal options\nCustom options used by all games in the Horizontal
 ƒOƒ[ƒoƒ‹cŒ^ƒIƒvƒVƒ‡ƒ“‚Å‚·B\ncŒ^‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
@@ -1342,7 +1346,7 @@ Horizontal options\nCustom options used by all games in the Horizontal
 How cheats work
 ƒ`[ƒg‚Ìg—p•û–@‚ğà–¾‚µ‚Ü‚·
 
-# osd/winui/mui_opts.c: 312
+# osd/winui/mui_opts.c: 329
 INTERFACE OPTIONS
 ƒCƒ“ƒ^[ƒtƒF[ƒXƒIƒvƒVƒ‡ƒ“
 
@@ -1358,7 +1362,7 @@ Icons
 Image Enhancement
 ƒCƒ[ƒW‚ğŒüã
 
-# osd/winui/winui.c: 5391
+# osd/winui/winui.c: 5395
 Image Files (*.png)
 ‰æ‘œƒtƒ@ƒCƒ‹ (*.png)
 
@@ -1398,11 +1402,11 @@ INIƒtƒ@ƒCƒ‹
 Input Files (*.inp)
 Ä¶ƒtƒ@ƒCƒ‹ (*.inp)
 
-# osd/winui/winui.c: 6590
+# osd/winui/winui.c: 6591
 Input file format version mismatch
 “ü—Íƒtƒ@ƒCƒ‹‚ÌŒ`®‚ªŠÔˆá‚Á‚Ä‚¢‚Ü‚·
 
-# osd/winui/winui.c: 6579
+# osd/winui/winui.c: 6580
 Input file is corrupt or invalid (missing header)
 “ü—Íƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‚©–³Œø‚Å‚·(ƒwƒbƒ_‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ)
 
@@ -1442,23 +1446,23 @@ Joy 8-Way
 Joystick
 ƒWƒ‡ƒCƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 910
+# osd/winui/properties.c: 908
 Joystick 16-Way
 16•ûŒüƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 907
+# osd/winui/properties.c: 905
 Joystick 2-Way
 2•ûŒüƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 911
+# osd/winui/properties.c: 909
 Joystick 2-Way Vertical
 2•ûŒüƒXƒeƒBƒbƒN c
 
-# osd/winui/properties.c: 908
+# osd/winui/properties.c: 906
 Joystick 4-Way
 4•ûŒüƒXƒeƒBƒbƒN
 
-# osd/winui/properties.c: 909
+# osd/winui/properties.c: 907
 Joystick 8-Way
 8•ûŒüƒXƒeƒBƒbƒN
 
@@ -1490,7 +1494,7 @@ Language Files
 Large Icons
 ‘å‚«‚ÈƒAƒCƒRƒ“
 
-# osd/winui/layout.c: 88 osd/winui/properties.c: 397, 921 osd/winui/treeview.c: 1396
+# osd/winui/layout.c: 88 osd/winui/properties.c: 397, 919 osd/winui/treeview.c: 1396
 Lightgun
 Œõüe
 
@@ -1518,7 +1522,7 @@ GUI‚ÆMAMEƒRƒA‚ÌŒ¾Œê‚ğØ‚è‘Ö‚¦‚Ü‚·
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 MAME‚Í‘Ã“–«ƒ`ƒFƒbƒN‚É¸”s‚µ‚Ü‚µ‚½B  GUI‚Í“®ì‚µ‚Ü‚·‚ªAƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌÀs‚É¸”s‚µ‚Ü‚·B
 
-# osd/winui/winui.c: 6320
+# osd/winui/winui.c: 6321
 MAME input files (*.inp,*.zip)
 MAMEÄ¶ƒtƒ@ƒCƒ‹ (*.inp,*.zip)
 
@@ -1526,7 +1530,7 @@ MAMEÄ¶ƒtƒ@ƒCƒ‹ (*.inp,*.zip)
 MAME release notes
 MAMEƒŠƒŠ[ƒXƒm[ƒg‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/winui/winui.c: 6323
+# osd/winui/winui.c: 6324
 MAME savestate files (*.sta)
 MAMEƒXƒe[ƒgƒtƒ@ƒCƒ‹ (*.sta)
 
@@ -1542,7 +1546,7 @@ MAMEUI ‚ÍAMicrosoft Windows 9x/Me/NT/2000‚ÌOSŠg’£ƒZƒbƒg‚Å‚ ‚éDirectX\r\nƒo[ƒWƒ
 MAMEUI will now reset the following\nto the default settings:\n\n
 MAMEUI‚ÍŒ»İˆÈ‰º‚ğ•W€‚Ìİ’è‚É\nƒŠƒZƒbƒg‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚Ü‚·:\n\n
 
-# osd/winui/mui_opts.c: 307 osd/winui/translate.c: 111
+# osd/winui/mui_opts.c: 324 osd/winui/translate.c: 111
 MS Sans Serif
 ‚l‚r ‚oƒSƒVƒbƒN
 
@@ -1566,7 +1570,7 @@ Manufactured:
 Manufacturer
 »‘¢Œ³
 
-# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 453
+# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 459
 Marquee
 ƒ}[ƒL[
 
@@ -1610,11 +1614,11 @@ Move Item
 Move Up
 ã‚ÉˆÚ“®
 
-# osd/winui/mui_opts.c: 402
+# osd/winui/mui_opts.c: 419
 NAVIGATION JOYSTICK CODES
 ƒiƒrƒQ[ƒVƒ‡ƒ“ƒWƒ‡ƒCƒXƒeƒBƒbƒNƒR[ƒh
 
-# osd/winui/mui_opts.c: 362
+# osd/winui/mui_opts.c: 379
 NAVIGATION KEY CODES
 ƒiƒrƒQ[ƒVƒ‡ƒ“ƒL[ƒR[ƒh
 
@@ -1626,7 +1630,7 @@ NVRAMƒtƒ@ƒCƒ‹
 New game changes
 V‚µ‚¢ƒQ[ƒ€‚Ì•ÏX“_‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5695, 5730
+# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5699, 5733
 No
 ‚¢‚¢‚¦
 
@@ -1642,7 +1646,7 @@ No Dump
 No PCB Info available for this game.
 ‚±‚ÌƒQ[ƒ€‚ÉPCBî•ñ‚ª‚ ‚è‚Ü‚¹‚ñB
 
-# osd/winui/winui.c: 3846
+# osd/winui/winui.c: 3850
 No Selection
 ‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ
 
@@ -1658,7 +1662,7 @@ Non Mechanical
 Non-Wor&king
 “®ì•s‰Â(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 339, 393, 2912, 3626, 3707, 3836, 3845, 3875
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 339, 393, 2910, 3624, 3705, 3834, 3843, 3873
 None
 ‚È‚µ
 
@@ -1674,7 +1678,7 @@ Not Working
 Not found
 Œ©‚Â‚©‚è‚Ü‚¹‚ñ
 
-# osd/winui/properties.c: 989, 1109
+# osd/winui/properties.c: 987, 1107
 Not working
 “®ì•s‰Â
 
@@ -1722,7 +1726,7 @@ P&layback Input...
 PC&B
 PC&B
 
-# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 456
+# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 462
 PCB
 PCB
 
@@ -1738,7 +1742,7 @@ PCBî•ñƒtƒ@ƒCƒ‹
 PCBs
 PCB
 
-# osd/winui/properties.c: 918 osd/winui/treeview.c: 1393
+# osd/winui/properties.c: 916 osd/winui/treeview.c: 1393
 Paddle
 ƒpƒhƒ‹
 
@@ -1758,7 +1762,7 @@ Passed
 Pause Brightness
 ƒ|[ƒY’†‚Ì–¾‚é‚³
 
-# osd/winui/properties.c: 922 osd/winui/treeview.c: 1397
+# osd/winui/properties.c: 920 osd/winui/treeview.c: 1397
 Pedal
 ƒyƒ_ƒ‹
 
@@ -1850,23 +1854,23 @@ Positional device
 Pr&operties
 ƒvƒƒpƒeƒB(&O)
 
-# osd/winui/winui.c: 3880, 7257
+# osd/winui/winui.c: 3884, 7258
 Propert&ies for %s
 %s‚ÌƒvƒƒpƒeƒB(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3826, 7302
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7303
 Propert&ies for Driver
 ƒhƒ‰ƒCƒo‚ÌƒvƒƒpƒeƒB(&I)
 
-# osd/winui/winui.c: 3892, 7271
+# osd/winui/winui.c: 3896, 7272
 Properties &for %s BIOS
 %s BIOS‚ÌƒvƒƒpƒeƒB(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3833, 3898, 7277, 7315
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7278, 7316
 Properties &for BIOS
 BIOS‚ÌƒvƒƒpƒeƒB(&F)
 
-# osd/winui/properties.c: 585, 723
+# osd/winui/properties.c: 583, 721
 Propery Sheet Error %d %X
 ƒvƒƒpƒeƒBƒV[ƒg‚ÌƒGƒ‰[‚Å‚· %d %X
 
@@ -1890,7 +1894,7 @@ ROM check:
 ROMs
 ROM
 
-# osd/winui/properties.c: 1100
+# osd/winui/properties.c: 1098
 ROMs missing
 ROM‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
@@ -1898,11 +1902,11 @@ ROM‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 Randomly select a game.
 ƒQ[ƒ€‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ‚µ‚Ü‚·
 
-# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5724
 Raster
 ƒ‰ƒXƒ^
 
-# osd/winui/winui.c: 3589
+# osd/winui/winui.c: 3593
 Ready
 ‹N“®’†
 
@@ -2018,7 +2022,7 @@ S&mall Icons
 S&tretch screenshot larger than natural size
 ƒXƒNƒŠ[ƒ“ƒVƒ‡ƒbƒg‚ğŠg‘å‚·‚é(&T)
 
-# osd/winui/mui_opts.c: 340
+# osd/winui/mui_opts.c: 357
 SEARCH PATH OPTIONS
 ŒŸõƒpƒXƒIƒvƒVƒ‡ƒ“
 
@@ -2054,7 +2058,7 @@ Scale screen
 Screen
 ‰æ–Ê
 
-# osd/winui/winui.c: 3411
+# osd/winui/winui.c: 3415
 Screen flip support is missing
 ƒJƒNƒeƒ‹ƒ‚[ƒh‚Ì‰æ–Ê”½“]‚É–¢‘Î‰
 
@@ -2062,7 +2066,7 @@ Screen flip support is missing
 Screen flipping in cocktail mode is not supported.\n
 ƒJƒNƒeƒ‹ƒ‚[ƒh‚Ì‰æ–Ê”½“]‚É‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñB\n
 
-# osd/winui/properties.c: 1031, 1084, 1155
+# osd/winui/properties.c: 1029, 1082, 1153
 Screen flipping is not supported
 ƒJƒNƒeƒ‹ƒ‚[ƒh‚Ì‰æ–Ê”½“]‚É–¢‘Î‰
 
@@ -2074,7 +2078,7 @@ Screen setting
 Screen:
 ‰æ–ÊƒTƒCƒY:
 
-# osd/winui/properties.c: 861
+# osd/winui/properties.c: 859
 Screenless Game
 ‰æ–Ê‚È‚µƒQ[ƒ€
 
@@ -2158,7 +2162,7 @@ Select Story tab
 Select Title tab
 ƒ^ƒCƒgƒ‹ƒ^ƒu‚Ì‘I‘ğ
 
-# osd/winui/winui.c: 5400
+# osd/winui/winui.c: 5404
 Select a Background Image
 ”wŒi‰æ‘œ‚ğ‘I‘ğ
 
@@ -2270,43 +2274,43 @@ Show or hide the toolbar
 Show these fields in this order:
 •\\¦İ’èÏ‚İƒtƒB[ƒ‹ƒh:
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3591
 Skip 1 frame
 1ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3611
+# osd/winui/properties.c: 3609
 Skip 10 frames
 10ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3593
 Skip 2 frames
 2ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3595
 Skip 3 frames
 3ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3597
 Skip 4 frames
 4ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3599
 Skip 5 frames
 5ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3601
 Skip 6 frames
 6ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3603
 Skip 7 frames
 7ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3605
 Skip 8 frames
 8ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3607
 Skip 9 frames
 9ƒtƒŒ[ƒ€ƒXƒLƒbƒv
 
@@ -2322,7 +2326,7 @@ Sleep when possible
 Small Icons
 ¬‚³‚ÈƒAƒCƒRƒ“
 
-# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 450
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 456
 Snapshot
 ƒXƒiƒbƒvƒVƒ‡ƒbƒg
 
@@ -2414,7 +2418,7 @@ Sort items by year
 Sound
 ƒTƒEƒ“ƒh
 
-# osd/winui/properties.c: 1025, 1078, 1149
+# osd/winui/properties.c: 1023, 1076, 1147
 Sound emulation isn't 100% accurate
 ‰¹‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -2450,11 +2454,11 @@ Status:
 Stereo
 ƒXƒeƒŒƒI
 
-# osd/winui/mui_opts.c: 459
+# osd/winui/mui_opts.c: 465
 Story
 ƒXƒg[ƒŠ[
 
-# osd/winui/properties.c: 955 osd/winui/treeview.c: 1345
+# osd/winui/properties.c: 953 osd/winui/treeview.c: 1345
 Supported
 ‘Î‰
 
@@ -2494,7 +2498,7 @@ The game lacks sound.\n
 The game requires external artwork files\n
 ƒQ[ƒ€‚ÍŠO•”‚ÌƒA[ƒgƒ[ƒNƒtƒ@ƒCƒ‹‚ª•K—v‚Å‚·\n
 
-# osd/winui/mui_util.c: 238
+# osd/winui/mui_util.c: 257
 The operating system is out of memory or resources.
 ƒƒ‚ƒŠ‚à‚µ‚­‚ÍƒŠƒ\\[ƒX‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·B
 
@@ -2502,11 +2506,11 @@ The operating system is out of memory or resources.
 The sound emulation isn't 100% accurate.\n
 ƒTƒEƒ“ƒhƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ª•sŠ®‘S‚Å‚·B\n
 
-# osd/winui/mui_util.c: 242
+# osd/winui/mui_util.c: 261
 The specified file was not found.
 w’è‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB
 
-# osd/winui/mui_util.c: 254
+# osd/winui/mui_util.c: 273
 The specified path was not found.
 w’è‚³‚ê‚½ƒpƒX‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB
 
@@ -2514,11 +2518,11 @@ The specified path was not found.
 The video emulation isn't 100% accurate.\n
 ƒrƒfƒIƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ª•sŠ®‘S‚Å‚·B\n
 
-# osd/winui/mui_util.c: 246
+# osd/winui/mui_util.c: 265
 There is no application associated with the given filename extension.
 Šg’£q‚ÉŠÖ˜A•t‚¯‚ç‚ê‚½ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ª‚ ‚è‚Ü‚¹‚ñB
 
-# osd/winui/mui_util.c: 250
+# osd/winui/mui_util.c: 269
 There was not enough memory to complete the operation.
 ˆ—‚ğ‘±s‚·‚é‚½‚ß‚Ìƒƒ‚ƒŠ‚ª•s‘«‚µ‚Ü‚µ‚½B
 
@@ -2534,7 +2538,7 @@ Thread priority
 Throttle
 ‘¬“x§ŒÀ‚ğ—LŒø
 
-# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 454
+# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 460
 Title
 ƒ^ƒCƒgƒ‹
 
@@ -2562,7 +2566,7 @@ Toggle full screen mode
 Total:
 ‡Œv:
 
-# osd/winui/layout.c: 87 osd/winui/properties.c: 920 osd/winui/treeview.c: 1395 osd/winui/winui.c: 884
+# osd/winui/layout.c: 87 osd/winui/properties.c: 918 osd/winui/treeview.c: 1395 osd/winui/winui.c: 884
 Trackball
 ƒgƒ‰ƒbƒNƒ{[ƒ‹
 
@@ -2666,15 +2670,15 @@ Unavailable
 Unemulated Protection
 ƒvƒƒeƒNƒg‚ÌÄŒ»‚ª•sŠ®‘S
 
-# osd/winui/mui_audit.c: 511 osd/winui/properties.c: 929, 983 
+# osd/winui/mui_audit.c: 511 osd/winui/properties.c: 927, 981 
 Unknown
 •s–¾
 
-# osd/winui/mui_util.c: 262
+# osd/winui/mui_util.c: 281
 Unknown error.
 Œ´ˆö•s–¾‚ÌƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B
 
-# osd/winui/properties.c: 957 osd/winui/treeview.c: 1346
+# osd/winui/properties.c: 955 osd/winui/treeview.c: 1346
 Unsupported
 –¢‘Î‰
 
@@ -2702,7 +2706,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 ƒ†[ƒUƒCƒ“ƒ^[ƒtƒF[ƒX\n\n
 
-# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5719
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5722
 Vector
 ƒxƒNƒ^
 
@@ -2710,7 +2714,7 @@ Vector
 Vector (H)
 ƒxƒNƒ^ (H)
 
-# osd/winui/properties.c: 853
+# osd/winui/properties.c: 851
 Vector (H) %f Hz (%d colors)
 ƒxƒNƒ^ (‰¡) %f Hz (%d F)
 
@@ -2718,11 +2722,11 @@ Vector (H) %f Hz (%d colors)
 Vector (V)
 ƒxƒNƒ^ (V)
 
-# osd/winui/properties.c: 848
+# osd/winui/properties.c: 846
 Vector (V) %f Hz (%d colors)
 ƒxƒNƒ^ (c) %f Hz (%d F)
 
-# osd/winui/properties.c: 1187
+# osd/winui/properties.c: 1185
 Vector options\nCustom options used by all games in the Vector
 ƒOƒ[ƒoƒ‹ƒxƒNƒ^ƒIƒvƒVƒ‡ƒ“‚Å‚·B\nƒxƒNƒ^‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
@@ -2734,15 +2738,15 @@ Version 8
 Version 9
 ƒo[ƒWƒ‡ƒ“ 9
 
-# osd/winui/layout.c: 81 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5684
 Vertical
 cŒ^
 
-# osd/winui/properties.c: 1190
+# osd/winui/properties.c: 1188
 Vertical options\nCustom options used by all games in the Vertical
 ƒOƒ[ƒoƒ‹‰¡Œ^ƒIƒvƒVƒ‡ƒ“‚Å‚·B\n‰¡Œ^‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
-# osd/winui/properties.c: 1013, 1066, 1137
+# osd/winui/properties.c: 1011, 1064, 1135
 Video emulation isn't 100% accurate
 ƒrƒfƒI‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -2774,7 +2778,7 @@ Vsync‚ğ‘Ò‚Â
 What's new in MAME
 MAME‚ÌV‚µ‚¢‹@”\\‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/winui/layout.c: 70 osd/winui/properties.c: 1042, 1113
+# osd/winui/layout.c: 70 osd/winui/properties.c: 1040, 1111
 Working
 “®ì‰Â
 
@@ -2786,7 +2790,7 @@ Wrong Colors
 Year
 »‘¢”N
 
-# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5693, 5728
+# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5697, 5731
 Yes
 ‚Í‚¢
 
@@ -2862,43 +2866,43 @@ by S&amples
 by T&rackball
 ƒgƒ‰ƒbƒNƒ{[ƒ‹(&R)
 
-# osd/winui/winui.c: 6351
+# osd/winui/winui.c: 6352
 cheats (*.dat)
 ƒ`[ƒgƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6341
+# osd/winui/winui.c: 6342
 gamelists (*.lst)
 ƒQ[ƒ€ƒŠƒXƒg (*.lst)
 
-# osd/winui/winui.c: 6354
+# osd/winui/winui.c: 6355
 history (*.dat)
 —ğjƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6357
+# osd/winui/winui.c: 6358
 mameinfo (*.dat)
 MAMEî•ñƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6345
+# osd/winui/winui.c: 6346
 maps (*.map,*.txt)
 ƒ}ƒbƒvƒtƒ@ƒCƒ‹ (*.map,*.txt)
 
-# osd/winui/winui.c: 6348
+# osd/winui/winui.c: 6349
 scripts (*.txt,*.dat)
 ƒXƒNƒŠƒvƒg (*.txt,*.dat)
 
-# osd/winui/winui.c: 6326
+# osd/winui/winui.c: 6327
 sounds (*.wav)
 ƒTƒEƒ“ƒhƒtƒ@ƒCƒ‹ (*.wav)
 
-# osd/winui/winui.c: 6361
+# osd/winui/winui.c: 6362
 story (*.dat)
 ƒXƒg[ƒŠ[ƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6332
+# osd/winui/winui.c: 6333
 videos (*.avi)
 “®‰æƒtƒ@ƒCƒ‹ (*.avi)
 
-# osd/winui/winui.c: 6329
+# osd/winui/winui.c: 6330
 videos (*.mng)
 “®‰æƒtƒ@ƒCƒ‹ (*.mng)
 
@@ -2914,11 +2918,11 @@ Christopher Kirmse and the MAMEUI team
 Copyright (C) 1997-2011 The MAME Team
 
 
-# osd/winui/winui.c: 6585
+# osd/winui/winui.c: 6586
 Input file invalid or in an older, unsupported format
 
 
-# osd/winui/winui.c: 3509, 3533
+# osd/winui/winui.c: 3513, 3537
 Invalid Button Index
 
 
@@ -2934,7 +2938,7 @@ MAMEUI has detected an old version of comctl32.dll\n\nGame Properties, many conf
 MAMEUI version by
 
 
-# osd/winui/winui.c: 3514
+# osd/winui/winui.c: 3518
 Modify 'The'
 
 

@@ -1242,7 +1242,7 @@ void CreateResolutionFolders(int parent_index)
 		{
 			const rectangle &visarea = screen->visible_area();
 
-			if (isDriverVector(&config))
+			if (DriverIsVector(jj))
 			{
 				if (driver_list::driver(jj).flags & ORIENTATION_SWAP_XY)
 				{

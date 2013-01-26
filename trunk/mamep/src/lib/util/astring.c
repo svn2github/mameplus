@@ -75,13 +75,19 @@ bool astring::ensure_room(int length)
 		return true;
 
 	// allocate a new buffer with some slop
-	int alloclen = length + 256;
+	int alloclen = length + 1;
+	alloclen += (alloclen < 262144) ? alloclen : 262144;;
+
+	// memory alignment, in bytes (must be power of 2)
+	alloclen += 8 - (alloclen % 8);
+
 	char *newbuf = new char[alloclen];
 
 	// swap in the new buffer and free the old one
 	char *oldbuf = (m_text == m_smallbuf) ? NULL : m_text;
-	m_text = strcpy(newbuf, m_text);
-	m_len = strlen(m_text);
+
+	memcpy(newbuf, m_text, m_alloclen);
+	m_text = newbuf;
 	m_alloclen = alloclen;
 
 	if (oldbuf)
@@ -447,7 +453,7 @@ astring &astring::delchr(int ch)
 		if (*src != ch)
 			*dst++ = *src;
 	*dst = 0;
-	m_len = strlen(m_text);
+	m_len = dst - m_text;
 	return *this;
 }
 
@@ -502,13 +508,15 @@ astring &astring::trimspace()
 {
 	// first remove stuff from the end
 	for (char *ptr = m_text + len() - 1; ptr >= m_text && (!(*ptr & 0x80) && isspace(UINT8(*ptr))); ptr--)
+	{
+		m_len--;
 		*ptr = 0;
+	}
 
 	// then count how much to remove from the beginning
 	char *ptr;
 	for (ptr = m_text; *ptr != 0 && (!(*ptr & 0x80) && isspace(UINT8(*ptr))); ptr++) ;
 	if (ptr > m_text)
 		substr(ptr - m_text);
-	m_len = strlen(m_text);
 	return *this;
 }

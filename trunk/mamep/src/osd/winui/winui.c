@@ -2595,8 +2595,6 @@ static void Win32UI_exit()
 	pool_free_lib(mameui_pool);
 	mameui_pool = NULL;
 
-	FreeDriversInfo();
-
 	if (sorted_drivers != NULL)
 	{
 		free(sorted_drivers);
@@ -2759,11 +2757,17 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 				if( wndpl.flags & WPF_RESTORETOMAXIMIZED || state == SW_MAXIMIZE)
 					state = SW_MAXIMIZE;
 				else
-				{
 					state = SW_RESTORE;
-					ShowWindow(hWnd, SW_RESTORE);
-				}
+
+				ShowWindow(hWnd, SW_RESTORE);
 			}
+
+			/* Restore the window before we attempt to save parameters,
+			 * This fixed the lost window on startup problem, among other problems
+			 */
+			if (state == SW_MAXIMIZE)
+				ShowWindow(hWnd, SW_RESTORE);
+
 			for (i = 0; i < GetSplitterCount(); i++)
 				SetSplitterPos(i, nSplitterOffset[i]);
 			SetWindowState(state);
@@ -5714,8 +5718,7 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 		case COLUMN_TYPE:
 			/* Vector/Raster */
 		{
-			machine_config config(driver_list::driver(nItem), MameUIGlobal());
-			if (isDriverVector(&config))
+			if (DriverIsVector(nItem))
 				s = _UIW(TEXT("Vector"));
 			else
 				s = _UIW(TEXT("Raster"));
@@ -6202,9 +6205,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 
 	case COLUMN_TYPE:
 	{
-		machine_config config1(driver_list::driver(index1), MameUIGlobal());
-		machine_config config2(driver_list::driver(index2), MameUIGlobal());
-		value = isDriverVector(&config1) - isDriverVector(&config2);
+		value = DriverIsVector(index1) - DriverIsVector(index2);
 	}
 		break;
 
@@ -8135,6 +8136,11 @@ static void SwitchFullScreenMode(void)
 			ShowWindow(hMain, SW_NORMAL);
 			SetWindowState( SW_MAXIMIZE );
 		}
+		else
+		{
+			SetWindowState( SW_NORMAL );
+		}
+
 		ShowWindow(hMain, SW_MAXIMIZE);
 
 		SetRunFullScreen(TRUE);

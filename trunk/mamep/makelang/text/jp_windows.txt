@@ -2,7 +2,7 @@
 (primary)
 (プライマリ)
 
-# osd/windows/input.c: 1226
+# osd/windows/input.c: 1232
 Assign joystick %s to player %d\n
 ジョイスティック%sをプレイヤー%dに割り当てます\n
 
@@ -14,111 +14,111 @@ Direct3D固有オプション
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
-# osd/windows/drawd3d.c: 1205
+# osd/windows/drawd3d.c: 1247
 Device %s currently in an unsupported mode\n
 デバイス「%s」は現在サポートされていないモードです\n
 
-# osd/windows/drawd3d.c: 1175
+# osd/windows/drawd3d.c: 1217
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: アダプタ#%dを%sに設定しています\n
 
-# osd/windows/drawd3d.c: 747
+# osd/windows/drawd3d.c: 777
 Direct3D: Device created at %dx%d\n
 Direct3D: デバイスを%dx%dで作成しました\n
 
-# osd/windows/drawd3d.c: 593, 2441
+# osd/windows/drawd3d.c: 623, 2488
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: デバイスのbegin_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/d3dhlsl.c: 1283, 1327, 1371, 1403, 1439, 1476, 1505, 1547, 1572, 1595, 1618, 1642, 1671 osd/windows/drawd3d.c: 1708, 2490
+# osd/windows/d3dhlsl.c: 1470, 1514, 1558, 1590, 1626, 1663, 1692, 1733, 1758, 1781, 1804, 1828, 1862 osd/windows/drawd3d.c: 1750, 2537
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: デバイスのdraw_primitive呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 631, 2494
+# osd/windows/drawd3d.c: 661, 2541
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: デバイスのend_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/d3dhlsl.c: 1150 osd/windows/drawd3d.c: 2434
+# osd/windows/d3dhlsl.c: 1279 osd/windows/drawd3d.c: 2481
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: デバイスのget_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 637
+# osd/windows/drawd3d.c: 667
 Direct3D: Error %08X during device present call\n
 Direct3D: デバイスのpresent呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 300, 307, 314, 321
+# osd/windows/drawd3d.c: 299, 306, 313, 320
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: デバイスのset_render_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/d3dhlsl.c: 1272, 1316, 1360, 1394, 1586, 1609, 1633
+# osd/windows/d3dhlsl.c: 1459, 1503, 1547, 1581, 1772, 1795, 1819
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: デバイスのset_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1657, 2488
+# osd/windows/drawd3d.c: 1699, 2535
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: デバイスのset_stream_source呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 222, 2447
+# osd/windows/drawd3d.c: 221, 2494
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 234, 236, 238, 240, 252, 254, 256, 258, 270, 272
+# osd/windows/drawd3d.c: 233, 235, 237, 239, 251, 253, 255, 257, 269, 271
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: デバイスのset_texture_stage_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2422
+# osd/windows/drawd3d.c: 2469
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 960, 962, 964, 966, 981, 995, 1009, 1023, 1049, 1073, 1087, 1100, 1107
+# osd/windows/drawd3d.c: 991, 993, 995, 997, 1012, 1026, 1040, 1054, 1080, 1104, 1118, 1131, 1138
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2401
+# osd/windows/drawd3d.c: 2448
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: テクスチャのget_surface_level呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/d3dhlsl.c: 319, 403 osd/windows/drawd3d.c: 2377
+# osd/windows/d3dhlsl.c: 319, 401 osd/windows/drawd3d.c: 2424
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: テクスチャのunlock_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2451
+# osd/windows/drawd3d.c: 2498
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 頂点バッファのlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1652, 2483
+# osd/windows/drawd3d.c: 1694, 2530
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 頂点バッファのunlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1036
+# osd/windows/drawd3d.c: 1067
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: エラー: デバイスは反転したソ\ースアルファとのアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1031
+# osd/windows/drawd3d.c: 1062
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: エラー: デバイスはアルファブレンド係数1をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1026
+# osd/windows/drawd3d.c: 1057
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: エラー: デバイスはアルファブレンド係数0をサポートしていません\n
 
-# osd/windows/drawd3d.c: 984
+# osd/windows/drawd3d.c: 1015
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: エラー: デバイスは垂直同期を待たないプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 989
+# osd/windows/drawd3d.c: 1020
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: エラー: デバイスは垂直同期を待つプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1017
+# osd/windows/drawd3d.c: 1048
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: エラー: デバイスは色指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1012
+# osd/windows/drawd3d.c: 1043
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: エラー: デバイスはソ\ースアルファで指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1043
+# osd/windows/drawd3d.c: 1074
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: エラー: デバイスはテクスチャのアルファをサポートしていません\n
 
@@ -130,15 +130,15 @@ Direct3D: Direct3D8の初期化中にエラーが発生しました\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9の初期化中にエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 751
+# osd/windows/drawd3d.c: 781
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 最大テクスチャサイズ = %dx%d\n
 
-# osd/windows/drawd3d.c: 1360
+# osd/windows/drawd3d.c: 1402
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1304
+# osd/windows/drawd3d.c: 1346
 Direct3D: Selecting video mode...\n
 Direct3D: 描画モードを選択中です...\n
 
@@ -166,175 +166,175 @@ Direct3D: Direct3D 8を使用しています\n
 Direct3D: Using Direct3D 9\n
 Direct3D: Direct3D 9を使用しています\n
 
-# osd/windows/drawd3d.c: 1109
+# osd/windows/drawd3d.c: 1140
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: プリスケールにStretchRectを使用しています\n
 
-# osd/windows/drawd3d.c: 1103
+# osd/windows/drawd3d.c: 1134
 Direct3D: Using dynamic textures\n
 Direct3D: ダイナミックテクスチャを使用しています\n
 
-# osd/windows/drawd3d.c: 1057
+# osd/windows/drawd3d.c: 1088
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1067
+# osd/windows/drawd3d.c: 1098
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1003
+# osd/windows/drawd3d.c: 1034
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告: デバイスはハードウェアによるラスタライズをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1052
+# osd/windows/drawd3d.c: 1083
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1062
+# osd/windows/drawd3d.c: 1093
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 998
+# osd/windows/drawd3d.c: 1029
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告: デバイスはページフリップ後の描画コマンドキューをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1076
+# osd/windows/drawd3d.c: 1107
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告: デバイスはテクスチャのアドレス固定をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1090
+# osd/windows/drawd3d.c: 1121
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告: デバイスはテクスチャの乗算をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1081
+# osd/windows/drawd3d.c: 1112
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告: デバイスはテクスチャのテクスチャの貼\り付けをサポートしていません\n
 
-# osd/windows/drawd3d.c: 765
+# osd/windows/drawd3d.c: 795
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告: デバイスはフルスクリーンでのガンマ補正をサポートしていません\n
 
-# osd/windows/drawd3d.c: 688
+# osd/windows/drawd3d.c: 718
 Direct3D: YUV format = %s\n
 Direct3D: YUV 形式 = %s\n
 
-# osd/windows/drawd3d.c: 1782
+# osd/windows/drawd3d.c: 1828
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: %dx%dから%dx%dにプリスケールを調整しました\n
 
-# osd/windows/drawd3d.c: 1145
+# osd/windows/drawd3d.c: 1180
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: デバイスのリソ\ース再生成が失敗しました。
 
-# osd/windows/drawd3d.c: 1132
+# osd/windows/drawd3d.c: 1163
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 791
+# osd/windows/drawdd.c: 792
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1128
+# osd/windows/drawdd.c: 1129
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 619
+# osd/windows/drawdd.c: 620
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 502
+# osd/windows/drawdd.c: 503
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1088
+# osd/windows/drawdd.c: 1089
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1055, 1064, 1073, 1082
+# osd/windows/drawdd.c: 1056, 1065, 1074, 1083
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 776
+# osd/windows/drawdd.c: 777
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 817
+# osd/windows/drawdd.c: 818
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 467, 1117
+# osd/windows/drawdd.c: 468, 1118
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1214
+# osd/windows/drawdd.c: 1215
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1333
+# osd/windows/drawdd.c: 1334
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 718
+# osd/windows/drawdd.c: 719
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 492
+# osd/windows/drawdd.c: 493
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 486
+# osd/windows/drawdd.c: 487
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 784
+# osd/windows/drawdd.c: 785
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 551
+# osd/windows/drawdd.c: 552
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1136
+# osd/windows/drawdd.c: 1137
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 360
+# osd/windows/drawdd.c: 361
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 825
+# osd/windows/drawdd.c: 826
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 833
+# osd/windows/drawdd.c: 834
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 433
+# osd/windows/drawdd.c: 434
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 439, 1094
+# osd/windows/drawdd.c: 440, 1095
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 475
+# osd/windows/drawdd.c: 476
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 354
+# osd/windows/drawdd.c: 355
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1334
+# osd/windows/drawdd.c: 1335
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 929
+# osd/windows/drawdd.c: 930
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1331
+# osd/windows/drawdd.c: 1332
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
@@ -350,39 +350,39 @@ DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 389, 425, 1170
+# osd/windows/drawdd.c: 390, 426, 1171
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 232
+# osd/windows/drawdd.c: 233
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 725
+# osd/windows/drawdd.c: 726
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 479
+# osd/windows/drawdd.c: 480
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 602
+# osd/windows/drawdd.c: 603
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1210
+# osd/windows/input.c: 1216
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: ジョイスティックの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1195
+# osd/windows/input.c: 1201
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: キーボードの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1204
+# osd/windows/input.c: 1210
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: マウスの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1184
+# osd/windows/input.c: 1190
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -402,7 +402,7 @@ DirectSoundの作成が出来ません: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 DirectSoundのプライマリバッファを生成出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 819
+# osd/windows/drawd3d.c: 833
 Error creating vertex buffer (%08X)
 頂点バッファの作成でエラーが発生しました(%08X)
 
@@ -410,15 +410,15 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1214
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1125
+# osd/windows/drawdd.c: 1126
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1181
+# osd/windows/drawd3d.c: 1223
 Error getting mode for adapter #%d\n
 アダプタ#%dのモードの取得でエラーが発生しました\n
 
@@ -442,15 +442,15 @@ DirectSoundの初期化に失敗しました: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 674
+# osd/windows/drawd3d.c: 704
 Error: A8R8G8B8 format textures not supported\n
 エラー: A8R8G8B8形式のテクスチャがサポートされていません\n
 
-# osd/windows/drawd3d.c: 664
+# osd/windows/drawd3d.c: 694
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 エラー: デバイスはDirect3D描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawd3d.c: 706
+# osd/windows/drawd3d.c: 736
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
@@ -462,7 +462,7 @@ FULL SCREEN OPTIONS
 Failed to create pause event\n
 ポーズイベントの生成が失敗しました\n
 
-# osd/windows/window.c: 900
+# osd/windows/window.c: 923
 Failed to create window class\n
 ウインドウクラスの生成が失敗しました\n
 
@@ -478,7 +478,7 @@ Failed to create window thread\n
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
-# osd/windows/video.c: 456
+# osd/windows/video.c: 460
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
@@ -486,11 +486,11 @@ Invalid video value %s; reverting to gdi\n
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
-# osd/windows/drawd3d.c: 1233
+# osd/windows/drawd3d.c: 1275
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
-# osd/windows/input.c: 1776
+# osd/windows/input.c: 1782
 RawInput: APIs detected\n
 RawInput: APIが検出されました\n
 
@@ -502,7 +502,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# osd/windows/drawd3d.c: 1954
+# osd/windows/drawd3d.c: 2001
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
@@ -514,11 +514,11 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 キーボードデバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/window.c: 722
+# osd/windows/window.c: 745
 Unable to complete window creation\n
 ウインドウの生成が完了出来ません\n
 
-# osd/windows/drawd3d.c: 743
+# osd/windows/drawd3d.c: 773
 Unable to create the Direct3D device (%08X)\n
 Direct3Dデバイスを作成出来ません(%08X)\n
 
@@ -526,11 +526,11 @@ Direct3Dデバイスを作成出来ません(%08X)\n
 Unable to get network devices: %s\n
 ネットワークデバイスが取得出来ません: %s\n
 
-# osd/windows/drawd3d.c: 404, 472
+# osd/windows/drawd3d.c: 404, 474
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 274
+# osd/windows/drawdd.c: 275
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
@@ -542,7 +542,7 @@ winpcapの読込みに失敗しました: %lx\n
 Unable to open the keyboard device. (error %d)\n
 キーボードデバイスがオープン出来ません。(エラー %d)\n
 
-# osd/windows/drawd3d.c: 2364
+# osd/windows/drawd3d.c: 2411
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
@@ -550,7 +550,7 @@ Unknown texture blendmode=%d format=%d\n
 Use joystick #%d for player %d\n
 ジョイスティック #%d をプレイヤー %d で使用します\n
 
-# osd/windows/video.c: 419
+# osd/windows/video.c: 423
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
@@ -574,15 +574,15 @@ Windows版サウンドオプション
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
-# osd/windows/video.c: 452
+# osd/windows/video.c: 456
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
-# osd/windows/drawd3d.c: 668
+# osd/windows/drawd3d.c: 698
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
-# osd/windows/winmain.c: 662
+# osd/windows/winmain.c: 666
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 警告: プロセッサ数 < 1 は理解できません。 自動と仮定します ...\n
 
@@ -814,51 +814,51 @@ A value for NTSC signal processing
 B value for NTSC signal processing
 
 
-# osd/windows/d3dhlsl.c: 2688
+# osd/windows/d3dhlsl.c: 2666
 Blue Convergence X
 
 
-# osd/windows/d3dhlsl.c: 2689
+# osd/windows/d3dhlsl.c: 2667
 Blue Convergence Y
 
 
-# osd/windows/d3dhlsl.c: 2701
+# osd/windows/d3dhlsl.c: 2679
 Blue DC Offset
 
 
-# osd/windows/d3dhlsl.c: 2710
+# osd/windows/d3dhlsl.c: 2688
 Blue Floor
 
 
-# osd/windows/d3dhlsl.c: 2698
+# osd/windows/d3dhlsl.c: 2676
 Blue Output from Blue Input
 
 
-# osd/windows/d3dhlsl.c: 2697
+# osd/windows/d3dhlsl.c: 2675
 Blue Output from Green Input
 
 
-# osd/windows/d3dhlsl.c: 2696
+# osd/windows/d3dhlsl.c: 2674
 Blue Output from Red Input
 
 
-# osd/windows/d3dhlsl.c: 2713
+# osd/windows/d3dhlsl.c: 2691
 Blue Phosphor Life
 
 
-# osd/windows/d3dhlsl.c: 2682
+# osd/windows/d3dhlsl.c: 2660
 Blue Position Offset X
 
 
-# osd/windows/d3dhlsl.c: 2683
+# osd/windows/d3dhlsl.c: 2661
 Blue Position Offset Y
 
 
-# osd/windows/d3dhlsl.c: 2707
+# osd/windows/d3dhlsl.c: 2685
 Blue Power
 
 
-# osd/windows/d3dhlsl.c: 2704
+# osd/windows/d3dhlsl.c: 2682
 Blue Scale
 
 
@@ -866,59 +866,59 @@ Blue Scale
 Color Carrier frequency for NTSC signal processing
 
 
-# osd/windows/d3dhlsl.c: 2674
+# osd/windows/d3dhlsl.c: 2652
 Defocus X
 
 
-# osd/windows/d3dhlsl.c: 2675
+# osd/windows/d3dhlsl.c: 2653
 Defocus Y
 
 
-# osd/windows/drawd3d.c: 1867
+# osd/windows/drawd3d.c: 1914
 Direct3D: Critical warning: A texture failed to allocate. Expect things to get bad quickly.\n
 
 
-# osd/windows/d3dhlsl.c: 1274, 1318, 1362, 1396, 1432, 1469, 1538, 1563 osd/windows/drawd3d.c: 580
+# osd/windows/d3dhlsl.c: 1461, 1505, 1549, 1583, 1619, 1656, 1724, 1749 osd/windows/drawd3d.c: 599
 Direct3D: Error %08X during device clear call\n
 
 
-# osd/windows/drawd3d.c: 2498
+# osd/windows/drawd3d.c: 2545
 Direct3D: Error %08X during device set_render_target call 2\n
 
 
-# osd/windows/d3dhlsl.c: 1536
+# osd/windows/d3dhlsl.c: 1722
 Direct3D: Error %08X during device set_render_target call 4\n
 
 
-# osd/windows/d3dhlsl.c: 1561
+# osd/windows/d3dhlsl.c: 1747
 Direct3D: Error %08X during device set_render_target call 5\n
 
 
-# osd/windows/d3dhlsl.c: 1430, 1467
+# osd/windows/d3dhlsl.c: 1617, 1654
 Direct3D: Error %08X during device set_render_target call 6\n
 
 
-# osd/windows/d3dhlsl.c: 1498
+# osd/windows/d3dhlsl.c: 1685
 Direct3D: Error %08X during device set_render_target call 7\n
 
 
-# osd/windows/d3dhlsl.c: 708
+# osd/windows/d3dhlsl.c: 1061
 Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n
 
 
-# osd/windows/d3dhlsl.c: 234
+# osd/windows/d3dhlsl.c: 236
 Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n
 
 
-# osd/windows/d3dhlsl.c: 716
+# osd/windows/d3dhlsl.c: 1069
 Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n
 
 
-# osd/windows/d3dhlsl.c: 242
+# osd/windows/d3dhlsl.c: 244
 Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n
 
 
-# osd/windows/drawd3d.c: 975
+# osd/windows/drawd3d.c: 1006
 Direct3D: Warning - Device does not support Pixel Shader 3.0, falling back to non-PS rendering\n
 
 
@@ -930,75 +930,75 @@ Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect renderi
 Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n
 
 
-# osd/windows/input.c: 1612
+# osd/windows/input.c: 1618
 DirectInput: Unable to reset saturation for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1602
+# osd/windows/input.c: 1608
 DirectInput: Unable to set absolute mode for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1507
+# osd/windows/input.c: 1513
 DirectInput: Unable to set relative mode for mouse %d (%s)\n
 
 
-# osd/windows/d3dhlsl.c: 571
+# osd/windows/d3dhlsl.c: 593
 Error creating AVI: %s\n
 
 
-# osd/windows/d3dhlsl.c: 394
+# osd/windows/d3dhlsl.c: 392
 Error generating PNG for HLSL snapshot: png_error = %d\n
 
 
-# osd/windows/drawd3d.c: 827
+# osd/windows/drawd3d.c: 841
 Error setting vertex format (%08X)
 
 
-# osd/windows/d3dhlsl.c: 2686
+# osd/windows/d3dhlsl.c: 2664
 Green Convergence X
 
 
-# osd/windows/d3dhlsl.c: 2687
+# osd/windows/d3dhlsl.c: 2665
 Green Convergence Y
 
 
-# osd/windows/d3dhlsl.c: 2700
+# osd/windows/d3dhlsl.c: 2678
 Green DC Offset
 
 
-# osd/windows/d3dhlsl.c: 2709
+# osd/windows/d3dhlsl.c: 2687
 Green Floor
 
 
-# osd/windows/d3dhlsl.c: 2695
+# osd/windows/d3dhlsl.c: 2673
 Green Output from Blue Input
 
 
-# osd/windows/d3dhlsl.c: 2694
+# osd/windows/d3dhlsl.c: 2672
 Green Output from Green Input
 
 
-# osd/windows/d3dhlsl.c: 2693
+# osd/windows/d3dhlsl.c: 2671
 Green Output from Red Input
 
 
-# osd/windows/d3dhlsl.c: 2712
+# osd/windows/d3dhlsl.c: 2690
 Green Phosphor Life
 
 
-# osd/windows/d3dhlsl.c: 2680
+# osd/windows/d3dhlsl.c: 2658
 Green Position Offset X
 
 
-# osd/windows/d3dhlsl.c: 2681
+# osd/windows/d3dhlsl.c: 2659
 Green Position Offset Y
 
 
-# osd/windows/d3dhlsl.c: 2706
+# osd/windows/d3dhlsl.c: 2684
 Green Power
 
 
-# osd/windows/d3dhlsl.c: 2703
+# osd/windows/d3dhlsl.c: 2681
 Green Scale
 
 
@@ -1034,31 +1034,31 @@ Horizontal scanline duration for NTSC signal processing (in usec)
 I filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/video.c: 490
+# osd/windows/video.c: 494
 Illegal aspect ratio value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2272
+# osd/windows/d3dhlsl.c: 2250
 Illegal double vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2262
+# osd/windows/d3dhlsl.c: 2240
 Illegal quad vector value = %s\n
 
 
-# osd/windows/video.c: 510
+# osd/windows/video.c: 514
 Illegal resolution value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2277
+# osd/windows/d3dhlsl.c: 2255
 Illegal single vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2267
+# osd/windows/d3dhlsl.c: 2245
 Illegal triple vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2667
+# osd/windows/d3dhlsl.c: 2645
 Image Pincushion
 
 
@@ -1074,11 +1074,11 @@ Outgoing Color Carrier phase offset for NTSC signal processing
 Phase Count value for NTSC signal processing
 
 
-# osd/windows/d3dhlsl.c: 2676
+# osd/windows/d3dhlsl.c: 2654
 Phosphor Defocus X
 
 
-# osd/windows/d3dhlsl.c: 2677
+# osd/windows/d3dhlsl.c: 2655
 Phosphor Defocus Y
 
 
@@ -1090,103 +1090,103 @@ Q filter cutoff frequency for NTSC signal processing
 Record Rendered Video
 
 
-# osd/windows/d3dhlsl.c: 2684
+# osd/windows/d3dhlsl.c: 2662
 Red Convergence X
 
 
-# osd/windows/d3dhlsl.c: 2685
+# osd/windows/d3dhlsl.c: 2663
 Red Convergence Y
 
 
-# osd/windows/d3dhlsl.c: 2699
+# osd/windows/d3dhlsl.c: 2677
 Red DC Offset
 
 
-# osd/windows/d3dhlsl.c: 2708
+# osd/windows/d3dhlsl.c: 2686
 Red Floor
 
 
-# osd/windows/d3dhlsl.c: 2692
+# osd/windows/d3dhlsl.c: 2670
 Red Output from Blue Input
 
 
-# osd/windows/d3dhlsl.c: 2691
+# osd/windows/d3dhlsl.c: 2669
 Red Output from Green Input
 
 
-# osd/windows/d3dhlsl.c: 2690
+# osd/windows/d3dhlsl.c: 2668
 Red Output from Red Input
 
 
-# osd/windows/d3dhlsl.c: 2711
+# osd/windows/d3dhlsl.c: 2689
 Red Phosphor Life
 
 
-# osd/windows/d3dhlsl.c: 2678
+# osd/windows/d3dhlsl.c: 2656
 Red Position Offset X
 
 
-# osd/windows/d3dhlsl.c: 2679
+# osd/windows/d3dhlsl.c: 2657
 Red Position Offset Y
 
 
-# osd/windows/d3dhlsl.c: 2705
+# osd/windows/d3dhlsl.c: 2683
 Red Power
 
 
-# osd/windows/d3dhlsl.c: 2702
+# osd/windows/d3dhlsl.c: 2680
 Red Scale
 
 
-# osd/windows/d3dhlsl.c: 1355, 2714
+# osd/windows/d3dhlsl.c: 1542, 2692
 Saturation
 
 
-# osd/windows/d3dhlsl.c: 2671
+# osd/windows/d3dhlsl.c: 2649
 Scanline Brightness
 
 
-# osd/windows/d3dhlsl.c: 2672
+# osd/windows/d3dhlsl.c: 2650
 Scanline Brightness Overdrive
 
 
-# osd/windows/d3dhlsl.c: 2668
+# osd/windows/d3dhlsl.c: 2646
 Scanline Darkness
 
 
-# osd/windows/d3dhlsl.c: 2670
+# osd/windows/d3dhlsl.c: 2648
 Scanline Indiv. Height
 
 
-# osd/windows/d3dhlsl.c: 2673
+# osd/windows/d3dhlsl.c: 2651
 Scanline Jitter
 
 
-# osd/windows/d3dhlsl.c: 2669
+# osd/windows/d3dhlsl.c: 2647
 Scanline Screen Height
 
 
-# osd/windows/d3dhlsl.c: 2666
+# osd/windows/d3dhlsl.c: 2644
 Screen Curvature
 
 
-# osd/windows/d3dhlsl.c: 2661
+# osd/windows/d3dhlsl.c: 2639
 Shadow Mask Darkness
 
 
-# osd/windows/d3dhlsl.c: 2664
+# osd/windows/d3dhlsl.c: 2642
 Shadow Mask Pixel Count X
 
 
-# osd/windows/d3dhlsl.c: 2665
+# osd/windows/d3dhlsl.c: 2643
 Shadow Mask Pixel Count Y
 
 
-# osd/windows/d3dhlsl.c: 2662
+# osd/windows/d3dhlsl.c: 2640
 Shadow Mask X Count
 
 
-# osd/windows/d3dhlsl.c: 2663
+# osd/windows/d3dhlsl.c: 2641
 Shadow Mask Y Count
 
 

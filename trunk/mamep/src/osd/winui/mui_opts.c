@@ -48,6 +48,7 @@
 #include "strconv.h"
 #include "clifront.h"
 #include "translate.h"
+#include "game_opts.h"
 
 #ifdef MESS
 #include "optionsms.h"
@@ -103,8 +104,16 @@ static void remove_all_source_options(void);
     Internal defines
  ***************************************************************************/
 
-#define UI_INI_FILENAME MAMEUINAME ".ini"
-#define DEFAULT_OPTIONS_INI_FILENAME emulator_info::get_configname()
+#define UI_INI_FILENAME							MAMEUINAME ".ini"
+#define DEFAULT_OPTIONS_INI_FILENAME			emulator_info::get_configname()
+
+#ifdef PTR64
+#define GAMEINFO_INI_FILENAME					"GameInfo64.ini"
+#else
+#define GAMEINFO_INI_FILENAME					"GameInfo32.ini"
+#endif
+
+
 
 #define MUIOPTION_LIST_MODE						"list_mode"
 #define MUIOPTION_CHECK_GAME					"check_game"
@@ -161,7 +170,7 @@ static void remove_all_source_options(void);
 #define MUIOPTION_MARQUEE_DIRECTORY				"marquee_directory"
 #define MUIOPTION_TITLE_DIRECTORY				"title_directory"
 #define MUIOPTION_CPANEL_DIRECTORY				"cpanel_directory"
-#define MUIOPTION_PCB_DIRECTORY				    "pcb_directory"
+#define MUIOPTION_PCB_DIRECTORY					"pcb_directory"
 #ifdef USE_VIEW_PCBINFO
 #define MUIOPTION_PCBINFO_DIRECTORY				"pcbinfo_directory"
 #endif /* USE_VIEW_PCBINFO */
@@ -247,6 +256,8 @@ static void remove_all_source_options(void);
 #endif /* STORY_DATAFILE */
 #endif
 
+#define MUIOPTION_VERSION						"version"
+#define MUIOPTION_EXE_NAME						"exe_name"
 
 
 /***************************************************************************
@@ -263,10 +274,20 @@ static winui_options settings;
 
 static windows_options global;			// Global 'default' options
 
+static game_options game_opts;
+
 // UI options in mameui.ini
 const options_entry winui_options::s_option_entries[] =
 {
 	// UI options
+	{ NULL,                                           NULL,                         OPTION_HEADER,     "APPLICATION OPTIONS" },
+	{ MUIOPTION_EXE_NAME,                             "",                           OPTION_STRING,     NULL },
+	{ MUIOPTION_VERSION,                              "",                           OPTION_STRING,     NULL },
+#ifdef DRIVER_SWITCH
+	{ OPTION_DRIVER_CONFIG,                           "all",                        OPTION_STRING,     "switch drivers"},
+	{ OPTION_DISABLE_MECHANICAL_DRIVER,               "0",                          OPTION_BOOLEAN,    "disable mechanical drivers"},
+#endif /* DRIVER_SWITCH */
+
 	{ NULL,                                           NULL,                         OPTION_HEADER,     "DISPLAY STATE OPTIONS" },
 	{ MUIOPTION_DEFAULT_GAME,                         MUIDEFAULT_SELECTION,         OPTION_STRING,     NULL },
 //	{ MUIOPTION_DEFAULT_GAME,                         "puckman",                    OPTION_STRING,     NULL },
@@ -422,17 +443,6 @@ const options_entry winui_options::s_option_entries[] =
 
 #define MESS_MARK_CONSOLE_ONLY	"Console"
 
-static const options_entry perGameOptions[] =
-{
-	// per game options
-	{ "_count",                                       "0",                          OPTION_INTEGER,    NULL },
-	{ "_time",                                        "0",                          OPTION_INTEGER,    NULL },
-	{ "_rom",                                   "-1",                         OPTION_INTEGER,    NULL },
-	{ "_samples",                                    "-1",                          OPTION_INTEGER,    NULL },
-//	{ "_extra",                                        "",                          OPTION_STRING,     MESS_MARK_CONSOLE_ONLY },
-	{ NULL }
-};
-
 static const options_entry filterOptions[] =
 {
 	// filters
@@ -579,29 +589,7 @@ BOOL OptionsInit()
 	//options_add_entries(settings, regSettings);
 
 	// set up per game options
-	{
-		char buffer[128];
-		int i, j;
-		int game_option_count = 0;
-
-		while(perGameOptions[game_option_count].name)
-			game_option_count++;
-
-		for (i = 0; i < driver_list::total(); i++)
-		{
-			for (j = 0; j < game_option_count; j++)
-			{
-				options_entry entry[2] = { { 0 }, { 0 } };
-				snprintf(buffer, ARRAY_LENGTH(buffer), "%s%s", driver_list::driver(i).name, perGameOptions[j].name);
-
-				entry[0].name = core_strdup(buffer);
-				entry[0].defvalue = perGameOptions[j].defvalue;
-				entry[0].flags = perGameOptions[j].flags;
-				entry[0].description = perGameOptions[j].description;
-				settings.add_entries(entry);
-			}
-		}
-	}
+	game_opts.add_entries();
 
 	// set up global options
 	CreateGameOptions(global,OPTIONS_TYPE_GLOBAL);
@@ -1698,54 +1686,40 @@ void ResetAllGameOptions(void)
 	//save_options(OPTIONS_VERTICAL, NULL, 0);
 }
 
-static void GetDriverOptionName(int driver_index, const char *option_name, char *buffer, size_t buffer_len)
-{
-	assert(0 <= driver_index && driver_index < driver_list::total());
-	snprintf(buffer, buffer_len, "%s_%s", driver_list::driver(driver_index).name, option_name);
-}
-
 int GetRomAuditResults(int driver_index)
 {
-	char buffer[128];
-	GetDriverOptionName(driver_index, "rom", buffer, ARRAY_LENGTH(buffer));
-	return settings.int_value(buffer);
+	return game_opts.rom(driver_index);
 }
 
 void SetRomAuditResults(int driver_index, int audit_results)
 {
-	char buffer[128];
-	GetDriverOptionName(driver_index, "rom", buffer, ARRAY_LENGTH(buffer));
-	astring error_string;
-	settings.set_value(buffer, audit_results, OPTION_PRIORITY_CMDLINE, error_string);
-	assert(!error_string);
+	game_opts.rom(driver_index, audit_results);
 }
 
 int  GetSampleAuditResults(int driver_index)
 {
-	char buffer[128];
-	GetDriverOptionName(driver_index, "samples", buffer, ARRAY_LENGTH(buffer));
-	return settings.int_value(buffer);
+	return game_opts.sample(driver_index);
 }
 
 void SetSampleAuditResults(int driver_index, int audit_results)
 {
-	char buffer[128];
-	GetDriverOptionName(driver_index, "samples", buffer, ARRAY_LENGTH(buffer));
-	astring error_string;
-	settings.set_value(buffer, audit_results, OPTION_PRIORITY_CMDLINE, error_string);
-	assert(!error_string);
+	game_opts.sample(driver_index, audit_results);
 }
 
 static void IncrementPlayVariable(int driver_index, const char *play_variable, int increment)
 {
-	char buffer[128];
 	int count;
 
-	GetDriverOptionName(driver_index, play_variable, buffer, ARRAY_LENGTH(buffer));
-	count = settings.int_value(buffer);
-	astring error_string;
-	settings.set_value(buffer, count + increment, OPTION_PRIORITY_CMDLINE, error_string);
-	assert(!error_string);
+	if (strcmp(play_variable, "count") == 0)
+	{
+		count = game_opts.play_count(driver_index);
+		game_opts.play_count(driver_index, count + increment);
+	}
+	else if (strcmp(play_variable, "time") == 0)
+	{
+		count = game_opts.play_time(driver_index);
+		game_opts.play_time(driver_index, count + increment);
+	}
 }
 
 void IncrementPlayCount(int driver_index)
@@ -1755,9 +1729,7 @@ void IncrementPlayCount(int driver_index)
 
 int GetPlayCount(int driver_index)
 {
-	char buffer[128];
-	GetDriverOptionName(driver_index, "count", buffer, ARRAY_LENGTH(buffer));
-	return settings.int_value(buffer);
+	return game_opts.play_count(driver_index);
 }
 
 static void ResetPlayVariable(int driver_index, const char *play_variable)
@@ -1774,11 +1746,10 @@ static void ResetPlayVariable(int driver_index, const char *play_variable)
 	}
 	else
 	{
-		char buffer[128];
-		GetDriverOptionName(driver_index, play_variable, buffer, ARRAY_LENGTH(buffer));
-		astring error_string;
-		settings.set_value(buffer, 0, OPTION_PRIORITY_CMDLINE, error_string);
-		assert(!error_string);
+		if (strcmp(play_variable, "count") == 0)
+			game_opts.play_count(driver_index, 0);
+		else if (strcmp(play_variable, "time") == 0)
+			game_opts.play_time(driver_index, 0);
 	}
 }
 
@@ -1794,9 +1765,7 @@ void ResetPlayTime(int driver_index)
 
 int GetPlayTime(int driver_index)
 {
-	char buffer[128];
-	GetDriverOptionName(driver_index, "time", buffer, ARRAY_LENGTH(buffer));
-	return settings.int_value(buffer);
+	return game_opts.play_time(driver_index);
 }
 
 void IncrementPlayTime(int driver_index,int playtime)
@@ -2773,36 +2742,25 @@ static void TabFlagsDecodeString(const char *str, int *data)
 
 static file_error LoadSettingsFile(winui_options &opts, const char *filename)
 {
-	file_error filerr;
-	core_file *file;
+	emu_file file(OPEN_FLAG_READ);
 
-	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
-	dprintf("waiting for mutex...");
-	WaitForSingleObject(hMutex , INFINITE);
-	dprintf("loading %s...", UI_INI_FILENAME);
-	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
+	file_error filerr = file.open(filename);
 	if (filerr == FILERR_NONE)
 	{
 		astring error_string;
-		opts.parse_ini_file(*file, OPTION_PRIORITY_CMDLINE, OPTION_PRIORITY_CMDLINE, error_string);
-		core_fclose(file);
-		dprintf("%s loaded", UI_INI_FILENAME);
+		opts.parse_ini_file(file, OPTION_PRIORITY_CMDLINE, OPTION_PRIORITY_CMDLINE, error_string);
 	}
-	ReleaseMutex(hMutex);
-	CloseHandle(hMutex);
 	return filerr;
 }
 static file_error LoadSettingsFile(windows_options &opts, const char *filename)
 {
-	file_error filerr;
-	core_file *file;
+	emu_file file(OPEN_FLAG_READ);
 
-	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
+	file_error filerr = file.open(filename);
 	if (filerr == FILERR_NONE)
 	{
 		astring error_string;
-		opts.parse_ini_file(*file, OPTION_PRIORITY_CMDLINE, OPTION_PRIORITY_CMDLINE, error_string);
-		core_fclose(file);
+		opts.parse_ini_file(file, OPTION_PRIORITY_CMDLINE, OPTION_PRIORITY_CMDLINE, error_string);
 	}
 	return filerr;
 }
@@ -2811,61 +2769,58 @@ static file_error LoadSettingsFile(windows_options &opts, const char *filename)
 static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts, const char *filename)
 {
 	file_error filerr;
-	core_file *file;
 
-	//if ((opts != NULL) && ((baseopts == NULL) || !(opts == *baseopts)))
+	//if ((opts != NULL) && ((baseopts == NULL) || !options_equal(opts, baseopts)))
 	{
-		HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
-		dprintf("waiting for mutex...");
-		WaitForSingleObject(hMutex , INFINITE);
-		dprintf("saving %s...", UI_INI_FILENAME);
-		filerr = core_fopen(filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
+		astring inistring;
+		inistring.expand(8 * 1024);
+
+		#ifdef MESS
+		opts.output_ini(inistring);
+		#else
+		opts.output_ini(inistring,baseopts);
+		#endif
+
+		emu_file file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		filerr = file.open(filename);
 		if (filerr == FILERR_NONE)
 		{
-			astring initext;
-#ifdef MESS
-			opts.output_ini(initext);
-#else
-			opts.output_ini(initext, baseopts);
-#endif
-			core_fputs(file, initext);
-			core_fclose(file);
-			dprintf("%s saved", UI_INI_FILENAME);
+			file.puts(inistring);
 		}
-		ReleaseMutex(hMutex);
-		CloseHandle(hMutex);
 	}
 	/*else
-	{
-		filerr = osd_rmfile(filename);
-	}*/
+    {
+        filerr = osd_rmfile(filename);
+    }*/
 
 	return filerr;
 }
 static file_error SaveSettingsFile(windows_options &opts, windows_options *baseopts, const char *filename)
 {
 	file_error filerr;
-	core_file *file;
 
-	//if ((opts != NULL) && ((baseopts == NULL) || !(opts == *baseopts)))
+	//if ((opts != NULL) && ((baseopts == NULL) || !options_equal(opts, baseopts)))
 	{
-		filerr = core_fopen(filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
+		astring inistring;
+		inistring.expand(8 * 1024);
+
+		#ifdef MESS
+		opts.output_ini(inistring);
+		#else
+		opts.output_ini(inistring,baseopts);
+		#endif
+
+		emu_file file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		filerr = file.open(filename);
 		if (filerr == FILERR_NONE)
 		{
-			astring initext;
-#ifdef MESS
-			opts.output_ini(initext);
-#else
-			opts.output_ini(initext, baseopts);
-#endif
-			core_fputs(file, initext);
-			core_fclose(file);
+			file.puts(inistring);
 		}
 	}
 	/*else
-	{
-		filerr = osd_rmfile(filename);
-	}*/
+    {
+        filerr = osd_rmfile(filename);
+    }*/
 
 	return filerr;
 }
@@ -2876,6 +2831,17 @@ static void GetGlobalOptionsFileName(char *filename, size_t filename_size)
 {
 	// always in the current directory.
 	snprintf(filename, filename_size, "%s%s", DEFAULT_OPTIONS_INI_FILENAME, ".ini");
+}
+
+static void GetGameOptionsFileName(char *filename, size_t filename_size)
+{
+	// copy INI directory
+	char *inidir = utf8_from_wstring(GetIniDir());
+	char *s = mame_strdup(GAMEINFO_INI_FILENAME);
+	_strlwr(s);
+	snprintf(filename, filename_size, "%s\\%s", inidir, s);
+	osd_free(inidir);
+	osd_free(s);
 }
 
 static void GetSettingsFileName(char *filename, size_t filename_size)
@@ -2894,13 +2860,26 @@ static void LoadOptionsAndSettings(void)
 {
 	char buffer[MAX_PATH];
 
+	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
+	dprintf("waiting for mutex...");
+	WaitForSingleObject(hMutex , INFINITE);
+	dprintf("loading %s...", UI_INI_FILENAME);
+
 	// parse global options mame.ini
 	GetGlobalOptionsFileName(buffer, ARRAY_LENGTH(buffer));
 	LoadSettingsFile(global, buffer);
 
+	// parse GameInfo.ini - game options.
+	GetGameOptionsFileName(buffer, ARRAY_LENGTH(buffer));
+	game_opts.load_file(buffer);
+
 	// parse ui/mameui.ini
 	GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
 	LoadSettingsFile(settings, buffer);
+
+	dprintf("%s loaded", UI_INI_FILENAME);
+	ReleaseMutex(hMutex);
+	CloseHandle(hMutex);
 
 	astring error_string;
 	global.set_value(OPTION_LANGUAGE, global.value(OPTION_LANGUAGE), OPTION_PRIORITY_CMDLINE, error_string);
@@ -3011,6 +2990,11 @@ void SaveOptions(void)
 {
 	if (save_gui_settings)
 	{
+		HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
+		dprintf("waiting for mutex...");
+		WaitForSingleObject(hMutex , INFINITE);
+		dprintf("saving %s...", UI_INI_FILENAME);
+
 		// Add the folder flag to settings.
 		AddFolderFlags(settings);
 		// Save opts if it is non-null, else save settings.
@@ -3018,6 +3002,14 @@ void SaveOptions(void)
 		char buffer[MAX_PATH];
 		GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
 		SaveSettingsFile(settings, NULL, buffer);
+
+		// Save GameInfo.ini - game options.
+		GetGameOptionsFileName(buffer, ARRAY_LENGTH(buffer));
+		game_opts.save_file(buffer);
+
+		dprintf("%s saved", UI_INI_FILENAME);
+		ReleaseMutex(hMutex);
+		CloseHandle(hMutex);
 	}
 }
 
@@ -3158,11 +3150,8 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 			if (gp!=-1) gparent= &driver_list::driver(gp);
 		}
 
-
-		machine_config config(*driver,opts);
-
 		// parse "vector.ini" for vector games
-		if (isDriverVector(&config))
+		if (DriverIsVector(game_num))
 		{
 			ui_parse_ini_file(opts, "vector");
 		}
@@ -3354,6 +3343,108 @@ static void ResetToDefaults(windows_options &opts, int priority)
 	// iterate through the options setting each one back to the default value.
 	opts.revert(priority);
 }
+
+int GetDriverCache(int driver_index)
+{
+	return game_opts.cache(driver_index);
+}
+
+void SetDriverCache(int driver_index, int val)
+{
+	game_opts.cache(driver_index, val);
+}
+
+int GetDriverCachePlayers(int driver_index)
+{
+	return game_opts.players(driver_index);
+}
+
+void SetDriverCachePlayers(int driver_index, int val)
+{
+	game_opts.players(driver_index, val);
+}
+
+int GetDriverCacheButtons(int driver_index)
+{
+	return game_opts.buttons(driver_index);
+}
+
+void SetDriverCacheButtons(int driver_index, int val)
+{
+	game_opts.buttons(driver_index, val);
+}
+
+int GetDriverCacheParentIndex(int driver_index)
+{
+	return game_opts.parent_index(driver_index);
+}
+
+void SetDriverCacheParentIndex(int driver_index, int val)
+{
+	game_opts.parent_index(driver_index, val);
+}
+
+int GetDriverCacheBiosIndex(int driver_index)
+{
+	return game_opts.bios_index(driver_index);
+}
+
+void SetDriverCacheBiosIndex(int driver_index, int val)
+{
+	game_opts.bios_index(driver_index, val);
+}
+
+int GetDriverCacheUsesController(int driver_index)
+{
+	return game_opts.uses_controler(driver_index);
+}
+
+void SetDriverCacheUsesController(int driver_index, int val)
+{
+	game_opts.uses_controler(driver_index, val);
+}
+
+BOOL RequiredDriverCache(void)
+{
+	bool ret = false;
+
+	WCHAR fname[_MAX_FNAME];
+	char *utf8_filename;
+
+	_wsplitpath(GetCommandLine(), NULL, NULL, fname, NULL);
+	utf8_filename = utf8_from_wstring(fname);
+
+	if ( strcmp(settings.value(MUIOPTION_EXE_NAME), utf8_filename) != 0 )
+		ret = true;
+
+	if ( strcmp(settings.value(MUIOPTION_VERSION), GetVersionString()) != 0 )
+		ret = true;
+
+#ifdef DRIVER_SWITCH
+	if ( strcmp(settings.value(OPTION_DRIVER_CONFIG), global.value(OPTION_DRIVER_CONFIG)) != 0 )
+		ret = true;
+
+	if ( settings.bool_value(OPTION_DISABLE_MECHANICAL_DRIVER) != global.bool_value(OPTION_DISABLE_MECHANICAL_DRIVER) )
+		ret = true;
+#endif /* DRIVER_SWITCH */
+
+	astring error_string;
+	settings.set_value(MUIOPTION_EXE_NAME, utf8_filename, OPTION_PRIORITY_CMDLINE,error_string);
+	assert(!error_string);
+	settings.set_value(MUIOPTION_VERSION, GetVersionString(), OPTION_PRIORITY_CMDLINE,error_string);
+	assert(!error_string);
+#ifdef DRIVER_SWITCH
+	settings.set_value(OPTION_DRIVER_CONFIG, global.value(OPTION_DRIVER_CONFIG), OPTION_PRIORITY_CMDLINE,error_string);
+	assert(!error_string);
+	settings.set_value(OPTION_DISABLE_MECHANICAL_DRIVER, global.value(OPTION_DISABLE_MECHANICAL_DRIVER), OPTION_PRIORITY_CMDLINE,error_string);
+	assert(!error_string);
+#endif /* DRIVER_SWITCH */
+
+	osd_free(utf8_filename);
+
+	return ret;
+}
+
 
 
 #include "strconv.h"

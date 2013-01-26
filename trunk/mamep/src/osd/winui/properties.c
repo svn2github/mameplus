@@ -463,13 +463,13 @@ static int GetSelectedScreen(HWND hWnd)
 
 }
 
-static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
-	const game_driver *gamedrv, UINT *pnMaxPropSheets, BOOL isGame )
+static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, int nDriver, UINT *pnMaxPropSheets )
 {
 	PROPSHEETPAGE *pspages;
 	int maxPropSheets;
 	int possiblePropSheets;
 	int i;
+	BOOL isGame = (nDriver >= 0);
 
 	i = ( isGame ) ? 0 : 2;
 
@@ -490,7 +490,7 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 
 	for (; g_propSheets[i].pfnDlgProc; i++)
 	{
-		if (!gamedrv)
+		if (nDriver == -1)
 		{
 			if (g_propSheets[i].bOnDefaultPage)
 			{
@@ -505,11 +505,9 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 			}
 		}
 		else
-		if ((gamedrv != NULL) || g_propSheets[i].bOnDefaultPage)
+		if ((nDriver >= 0) || g_propSheets[i].bOnDefaultPage)
 		{
-			machine_config config(*gamedrv,pCurrentOpts);
-
-			if (!gamedrv || !g_propSheets[i].pfnFilterProc || g_propSheets[i].pfnFilterProc(&config, gamedrv))
+			if (!g_propSheets[i].pfnFilterProc || g_propSheets[i].pfnFilterProc(nDriver))
 			{
 				pspages[maxPropSheets].dwSize      = sizeof(PROPSHEETPAGE);
 				pspages[maxPropSheets].dwFlags     = 0;
@@ -553,7 +551,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 
 	ZeroMemory(&pshead, sizeof(pshead));
 
-	pspage = CreatePropSheetPages(hInst, TRUE, NULL, &pshead.nPages, FALSE);
+	pspage = CreatePropSheetPages(hInst, -1, &pshead.nPages);
 	if (!pspage)
 		return;
 
@@ -635,7 +633,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 
 	// Copy current_options to original options
 	CreateGameOptions(pOrigOpts, OPTIONS_TYPE_GLOBAL);
-	//pOrigOpts = pCurrentOpts;
+	pOrigOpts = pCurrentOpts;
 
 	// Copy icon to use for the property pages
 	g_hIcon = CopyIcon(hIcon);
@@ -660,12 +658,12 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	// Create the property sheets
 	if( OPTIONS_GAME == opt_type )
 	{
-		pspage = CreatePropSheetPages(hInst, FALSE, &driver_list::driver(game_num), &pshead.nPages, TRUE);
+		pspage = CreatePropSheetPages(hInst, game_num, &pshead.nPages);
 	}
 	else
 	{
 		//mamep: don't show Vector tab for raster properties
-		pspage = CreatePropSheetPages(hInst, FALSE, &driver_list::driver(game_num), &pshead.nPages, FALSE);
+		pspage = CreatePropSheetPages(hInst, -1, &pshead.nPages);
 	}
 	if (!pspage)
 		return;
@@ -840,7 +838,7 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 	screen_device_iterator iter(config.root_device());
 	memset(buf, '\0', 1024);
 
-	if (isDriverVector(&config))
+	if (DriverIsVector(nIndex))
 	{
 		const screen_device *screen = iter.first();
 		if (driver_list::driver(nIndex).flags & ORIENTATION_SWAP_XY)
@@ -1434,7 +1432,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				if (wNotifyCode != BN_CLICKED)
 					break;
 
-				//pCurrentOpts = pOrigOpts;
+				pCurrentOpts = pOrigOpts;
 				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
 
 				g_bUseDefaults = (pCurrentOpts == pDefaultOpts);
@@ -1445,7 +1443,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 			case IDC_USE_DEFAULT:
 				// Copy the pDefaultOpts into pCurrentOpts
-				//pCurrentOpts = pDefaultOpts;
+				pCurrentOpts = pDefaultOpts;
 				// repopulate the controls with the new data
 				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
 
@@ -1576,7 +1574,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
 
 				// Copy current options to orignal options.
-				//pOrigOpts = pCurrentOpts;
+				pOrigOpts = pCurrentOpts;
 
 				// Repopulate the controls?  WTF?  We just read them, they should be fine.
 				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
@@ -1629,7 +1627,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 			case PSN_RESET:
 				// Reset to the original values. Disregard changes
-				//pCurrentOpts = pOrigOpts;
+				pCurrentOpts = pOrigOpts;
 				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, FALSE);
 				break;
 

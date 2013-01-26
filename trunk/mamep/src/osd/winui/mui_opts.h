@@ -519,6 +519,20 @@ void SetRunFullScreen(BOOL fullScreen);
 void ColumnEncodeStringWithCount(const int *value, char *str, int count);
 void ColumnDecodeStringWithCount(const char* str, int *value, int count);
 
+int GetDriverCache(int driver_index);
+void SetDriverCache(int driver_index, int val);
+int GetDriverCachePlayers(int driver_index);
+void SetDriverCachePlayers(int driver_index, int val);
+int GetDriverCacheButtons(int driver_index);
+void SetDriverCacheButtons(int driver_index, int val);
+int GetDriverCacheParentIndex(int driver_index);
+void SetDriverCacheParentIndex(int driver_index, int val);
+int GetDriverCacheBiosIndex(int driver_index);
+void SetDriverCacheBiosIndex(int driver_index, int val);
+int GetDriverCacheUsesController(int driver_index);
+void SetDriverCacheUsesController(int driver_index, int val);
+BOOL RequiredDriverCache(void);
+
 
 /***************************************************************************
     MAME Plus! specific code

@@ -43,6 +43,7 @@
 #endif /* USE_IPS */
 
 #include <shlwapi.h>
+#include <vector>
 
 /***************************************************************************
 	function prototypes
@@ -55,29 +56,47 @@
 /***************************************************************************
 	Internal structures
  ***************************************************************************/
-static struct DriversInfo
+struct DriversInfo
 {
-	BOOL isClone;
-	BOOL isBroken;
-	BOOL isHarddisk;
-	BOOL hasOptionalBIOS;
-	BOOL isStereo;
 	int screenCount;
-	BOOL isVector;
-	BOOL usesRoms;
-	BOOL usesSamples;
-	BOOL usesTrackball;
-	BOOL usesLightGun;
-	BOOL usesMouse;
-	BOOL supportsSaveState;
-	BOOL isVertical;
+	bool isClone;
+	bool isBroken;
+	bool isHarddisk;
+	bool hasOptionalBIOS;
+	bool isStereo;
+	bool isVector;
+	bool usesRoms;
+	bool usesSamples;
+	bool usesTrackball;
+	bool usesLightGun;
+	bool usesMouse;
+	bool supportsSaveState;
+	bool isVertical;
+
 	int numPlayers;
 	int numButtons;
-	BOOL usesController[CONTROLLER_MAX];
+	bool usesController[CONTROLLER_MAX];
 	int parentIndex;
 	int biosIndex;
-} *drivers_info = NULL;
+};
 
+static std::vector<DriversInfo>	drivers_info;
+
+
+enum
+{
+	DRIVER_CACHE_SCREEN		= 0x000F,
+	DRIVER_CACHE_ROMS		= 0x0010,
+	DRIVER_CACHE_CLONE		= 0x0020,
+	DRIVER_CACHE_STEREO		= 0x0040,
+	DRIVER_CACHE_BIOS		= 0x0080,
+	DRIVER_CACHE_TRACKBALL	= 0x0100,
+	DRIVER_CACHE_HARDDISK	= 0x0200,
+	DRIVER_CACHE_SAMPLES	= 0x0400,
+	DRIVER_CACHE_LIGHTGUN	= 0x0800,
+	DRIVER_CACHE_VECTOR		= 0x1000,
+	DRIVER_CACHE_MOUSE		= 0x2000,
+};
 
 /***************************************************************************
 	External functions
@@ -347,7 +366,11 @@ int numberOfScreens(const machine_config *config)
 	return i;
 }
 
-
+int numberOfSpeakers(const machine_config *config)
+{
+	speaker_device_iterator iter(config->root_device());
+	return iter.count();
+}
 struct control_cache_t
 {
 	ioport_constructor ipt;
@@ -517,160 +540,249 @@ static void UpdateController(void)
 	free(cache);
 }
 
-int numberOfSpeakers(const machine_config *config)
+static void SetDriversInfo(void)
 {
-	speaker_device_iterator iter(config->root_device());
-	return iter.count();
+	int ndriver;
+	int cache = -1;
+	int total = driver_list::total();
+	struct DriversInfo *gameinfo = NULL;
+	int i;
+
+	for (ndriver = 0; ndriver < total; ndriver++)
+	{
+		gameinfo = &drivers_info[ndriver];
+		cache    = (gameinfo->screenCount & DRIVER_CACHE_SCREEN);
+		if (gameinfo->isClone)			cache += DRIVER_CACHE_CLONE;
+		if (gameinfo->isHarddisk)		cache += DRIVER_CACHE_HARDDISK;
+		if (gameinfo->hasOptionalBIOS)	cache += DRIVER_CACHE_BIOS;
+		if (gameinfo->isStereo)			cache += DRIVER_CACHE_STEREO;
+		if (gameinfo->isVector)			cache += DRIVER_CACHE_VECTOR;
+		if (gameinfo->usesRoms)			cache += DRIVER_CACHE_ROMS;
+		if (gameinfo->usesSamples)		cache += DRIVER_CACHE_SAMPLES;
+		if (gameinfo->usesTrackball)	cache += DRIVER_CACHE_TRACKBALL;
+		if (gameinfo->usesLightGun)		cache += DRIVER_CACHE_LIGHTGUN;
+		if (gameinfo->usesMouse)		cache += DRIVER_CACHE_MOUSE;
+
+		SetDriverCache(ndriver, cache);
+		
+		SetDriverCachePlayers(ndriver, gameinfo->numPlayers);
+		SetDriverCacheButtons(ndriver, gameinfo->numButtons);
+		SetDriverCacheParentIndex(ndriver, gameinfo->parentIndex);
+		SetDriverCacheBiosIndex(ndriver, gameinfo->biosIndex);
+		
+		cache = 0;
+		for (i = 0; i < CONTROLLER_MAX; i++)
+			if (gameinfo->usesController[i]) cache += 1<<i;
+		SetDriverCacheUsesController(ndriver, cache);
+	}
+}
+
+static void InitDriversInfo(void)
+{
+	int ndriver;
+	int num_speakers;
+	int total = driver_list::total();
+	const game_driver *gamedrv = NULL;
+	struct DriversInfo *gameinfo = NULL;
+	const rom_entry *region, *rom;
+
+	for (ndriver = 0; ndriver < total; ndriver++)
+	{
+		gamedrv = &driver_list::driver(ndriver);
+		gameinfo = &drivers_info[ndriver];
+		machine_config config(*gamedrv, MameUIGlobal());
+
+		gameinfo->isClone = (GetParentRomSetIndex(gamedrv) != -1);
+		gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
+		gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
+		gameinfo->isHarddisk = FALSE;
+		gameinfo->isVertical = (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
+		device_iterator deviter(config.root_device());
+		for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
+			for (region = rom_first_region(*device); region; region = rom_next_region(region))
+				if (ROMREGION_ISDISKDATA(region))
+					gameinfo->isHarddisk = TRUE;
+
+		gameinfo->hasOptionalBIOS = FALSE;
+		if (gamedrv->rom != NULL)
+			for (rom = gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
+				if (ROMENTRY_ISSYSTEM_BIOS(rom))
+					gameinfo->hasOptionalBIOS = TRUE;
+
+		num_speakers = numberOfSpeakers(&config);
+
+		gameinfo->isStereo = (num_speakers > 1);
+		gameinfo->screenCount = numberOfScreens(&config);
+		gameinfo->isVector = isDriverVector(&config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
+		gameinfo->usesRoms = FALSE;
+		for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
+			for (region = rom_first_region(*device); region; region = rom_next_region(region))
+				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+					gameinfo->usesRoms = TRUE;
+
+		gameinfo->usesSamples = FALSE;
+
+		samples_device_iterator iter(config.root_device());
+		if (iter.first() != NULL)
+			gameinfo->usesSamples = TRUE;
+
+		gameinfo->usesTrackball = FALSE;
+		gameinfo->usesLightGun = FALSE;
+		if (gamedrv->ipt != NULL)
+		{
+			ioport_port *port;
+			ioport_list portlist;
+			astring errors;
+			device_iterator iter(config.root_device());
+			for (device_t *cfg = iter.first(); cfg; cfg = iter.next())
+				if (cfg->input_ports())
+					portlist.append(*cfg, errors);
+
+			for (port = portlist.first(); port; port = port->next())
+			{
+				ioport_field *field;
+				for (field = port->first_field(); field; field = field->next())
+				{
+					UINT32 type;
+					type = field->type();
+					if (type == IPT_END)
+						break;
+					if (type == IPT_DIAL || type == IPT_PADDLE ||
+						type == IPT_TRACKBALL_X || type == IPT_TRACKBALL_Y ||
+						type == IPT_AD_STICK_X || type == IPT_AD_STICK_Y)
+						gameinfo->usesTrackball = TRUE;
+					if (type == IPT_LIGHTGUN_X || type == IPT_LIGHTGUN_Y)
+						gameinfo->usesLightGun = TRUE;
+					if (type == IPT_MOUSE_X || type == IPT_MOUSE_Y)
+						gameinfo->usesMouse = TRUE;
+				}
+			}
+		}
+
+		gameinfo->numPlayers = 0;
+		gameinfo->numButtons = 0;
+		memset(gameinfo->usesController, 0, sizeof gameinfo->usesController);
+
+		gameinfo->parentIndex = -1;
+		if (gameinfo->isClone)
+		{
+			for (int i = 0; i < GetNumGames(); i++)
+			{
+				if (GetParentRomSetIndex(gamedrv) == i)
+				{
+					gameinfo->parentIndex = i;
+					break;
+				}
+			}
+		}
+
+		gameinfo->biosIndex = -1;
+		if (DriverIsBios(ndriver))
+			gameinfo->biosIndex = ndriver;
+		else if (gameinfo->hasOptionalBIOS)
+		{
+			int parentIndex;
+
+			if (gameinfo->isClone)
+				parentIndex = gameinfo->parentIndex;
+			else
+				parentIndex = ndriver;
+
+			while (1)
+			{
+				parentIndex = GetGameNameIndex(driver_list::driver(parentIndex).parent);
+				if (parentIndex == -1)
+				{
+					dprintf("bios for %s is not found", driver_list::driver(ndriver).name);
+					break;
+				}
+
+				if (DriverIsBios(parentIndex))
+				{
+					gameinfo->biosIndex = parentIndex;
+					break;
+				}
+			}
+		}
+	}
+	UpdateController();
+
+	SetDriversInfo();
+}
+
+static int InitDriversCache(void)
+{
+	int cache = -1;
+	int total = driver_list::total();
+	const game_driver *gamedrv = NULL;
+	struct DriversInfo *gameinfo = NULL;
+	int ndriver;
+	int i;
+
+	if (RequiredDriverCache())
+	{
+		InitDriversInfo();
+		return 0;
+	}
+
+	for (ndriver = 0; ndriver < total; ndriver++)
+	{
+		gamedrv  = &driver_list::driver(ndriver);
+		gameinfo = &drivers_info[ndriver];
+		cache    = GetDriverCache(ndriver);
+
+		if (cache == -1)
+		{
+			InitDriversInfo();
+			break;
+		}
+
+		gameinfo->isBroken          = ((gamedrv->flags & GAME_NOT_WORKING)   != 0);
+		gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
+		gameinfo->isVertical        =  (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
+		gameinfo->screenCount       =   cache & DRIVER_CACHE_SCREEN;
+		gameinfo->isClone           = ((cache & DRIVER_CACHE_CLONE)     != 0);
+		gameinfo->isHarddisk        = ((cache & DRIVER_CACHE_HARDDISK)  != 0);
+		gameinfo->hasOptionalBIOS   = ((cache & DRIVER_CACHE_BIOS)      != 0);
+		gameinfo->isStereo          = ((cache & DRIVER_CACHE_STEREO)    != 0);
+		gameinfo->isVector          = ((cache & DRIVER_CACHE_VECTOR)    != 0);
+		gameinfo->usesRoms          = ((cache & DRIVER_CACHE_ROMS)      != 0);
+		gameinfo->usesSamples       = ((cache & DRIVER_CACHE_SAMPLES)   != 0);
+		gameinfo->usesTrackball     = ((cache & DRIVER_CACHE_TRACKBALL) != 0);
+		gameinfo->usesLightGun      = ((cache & DRIVER_CACHE_LIGHTGUN)  != 0);
+		gameinfo->usesMouse         = ((cache & DRIVER_CACHE_MOUSE)     != 0);
+
+		gameinfo->numPlayers        = GetDriverCachePlayers(ndriver);
+		gameinfo->numButtons        = GetDriverCacheButtons(ndriver);
+		gameinfo->parentIndex       = GetDriverCacheParentIndex(ndriver);
+		gameinfo->biosIndex         = GetDriverCacheBiosIndex(ndriver);
+
+		cache    = GetDriverCacheUsesController(ndriver);
+		for (i = 0; i < CONTROLLER_MAX; i++)
+			if ((cache || 1<<i) != 0)
+				gameinfo->usesController[i] = true;
+			else
+				gameinfo->usesController[i] = false;
+	}
+
+	return 0;
 }
 
 static struct DriversInfo* GetDriversInfo(int driver_index)
 {
-	if (drivers_info == NULL)
+	static bool bFirst = true;
+
+	if (bFirst)
 	{
-		UINT16 ndriver;
-		drivers_info = (DriversInfo*)malloc(sizeof(struct DriversInfo) * GetNumGames());
-		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
-		{
-			const game_driver *gamedrv = &driver_list::driver(ndriver);
-			struct DriversInfo *gameinfo = &drivers_info[ndriver];
-			const rom_entry *region, *rom;
-			machine_config config(*gamedrv, MameUIGlobal());
+		bFirst = false;
 
-			int num_speakers;
+		drivers_info.clear();
+		drivers_info.reserve(driver_list::total());
 
-			gameinfo->isClone = (GetParentRomSetIndex(gamedrv) != -1);
-			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
-			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
-			gameinfo->isHarddisk = FALSE;
-			gameinfo->isVertical = (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
-			device_iterator deviter(config.root_device());
-			for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
-				for (region = rom_first_region(*device); region; region = rom_next_region(region))
-					if (ROMREGION_ISDISKDATA(region))
-						gameinfo->isHarddisk = TRUE;
-
-			gameinfo->hasOptionalBIOS = FALSE;
-			if (gamedrv->rom != NULL)
-				for (rom = gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
-					if (ROMENTRY_ISSYSTEM_BIOS(rom))
-					{
-						gameinfo->hasOptionalBIOS = TRUE;
-						break;
-					}
-
-			num_speakers = numberOfSpeakers(&config);
-
-			gameinfo->isStereo = (num_speakers > 1);
-			gameinfo->screenCount = numberOfScreens(&config);
-			gameinfo->isVector = isDriverVector(&config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
-			gameinfo->usesRoms = FALSE;
-			for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
-				for (region = rom_first_region(*device); region; region = rom_next_region(region))
-					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-					{
-						gameinfo->usesRoms = TRUE;
-						break;
-					}
-
-			gameinfo->usesSamples = FALSE;
-
-			samples_device_iterator iter(config.root_device());
-			if (iter.first() != NULL)
-				gameinfo->usesSamples = TRUE;
-
-			gameinfo->numPlayers = 0;
-			gameinfo->numButtons = 0;
-			memset(gameinfo->usesController, 0, sizeof gameinfo->usesController);
-
-			gameinfo->parentIndex = -1;
-			if (gameinfo->isClone)
-			{
-				int i;
-
-				for (i = 0; i < GetNumGames(); i++)
-				{
-					if (GetParentRomSetIndex(gamedrv) == i)
-					{
-						gameinfo->parentIndex = i;
-						break;
-					}
-				}
-			}
-
-			gameinfo->biosIndex = -1;
-			if (DriverIsBios(ndriver))
-				gameinfo->biosIndex = ndriver;
-			else if (gameinfo->hasOptionalBIOS)
-			{
-				int parentIndex;
-
-				if (gameinfo->isClone)
-					parentIndex = gameinfo->parentIndex;
-				else
-					parentIndex = ndriver;
-
-				while (1)
-				{
-					parentIndex = GetGameNameIndex(driver_list::driver(parentIndex).parent);
-					if (parentIndex == -1)
-					{
-						dprintf("bios for %s is not found", driver_list::driver(ndriver).name);
-						break;
-					}
-
-					if (DriverIsBios(parentIndex))
-					{
-						gameinfo->biosIndex = parentIndex;
-						break;
-					}
-				}
-			}
-
-			gameinfo->usesTrackball = FALSE;
-			gameinfo->usesLightGun = FALSE;
-			if (gamedrv->ipt != NULL)
-			{
-				ioport_port *port;
-				ioport_list portlist;
-				astring errors;
-				device_iterator iter(config.root_device());
-				for (device_t *cfg = iter.first(); cfg; cfg = iter.next())
-					if (cfg->input_ports())
-						portlist.append(*cfg, errors);
-
-				for (port = portlist.first(); port; port = port->next())
-				{
-					ioport_field *field;
-					for (field = port->first_field(); field; field = field->next())
- 					{
-						UINT32 type;
-						type = field->type();
-						if (type == IPT_END)
-							break;
-						if (type == IPT_DIAL || type == IPT_PADDLE ||
-							type == IPT_TRACKBALL_X || type == IPT_TRACKBALL_Y ||
-							type == IPT_AD_STICK_X || type == IPT_AD_STICK_Y)
-							gameinfo->usesTrackball = TRUE;
-						if (type == IPT_LIGHTGUN_X || type == IPT_LIGHTGUN_Y)
-							gameinfo->usesLightGun = TRUE;
-						if (type == IPT_MOUSE_X || type == IPT_MOUSE_Y)
-							gameinfo->usesMouse = TRUE;
-					}
-				}
-			}
-		}
-		UpdateController();
+		InitDriversCache();
 	}
+
 	return &drivers_info[driver_index];
-}
-
-void FreeDriversInfo(void)
-{
-	if (drivers_info != NULL)
-	{
-		free(drivers_info);
-		drivers_info = NULL;
-	}
 }
 
 BOOL DriverIsClone(int driver_index)

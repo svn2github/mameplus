@@ -58,6 +58,7 @@ LDFLAGSEMULATOR += \
 
 # add UI objs
 OSDOBJS += \
+	$(UIOBJ)/win_options.o \
 	$(UIOBJ)/mui_util.o \
 	$(UIOBJ)/directinput.o \
 	$(UIOBJ)/dijoystick.o \

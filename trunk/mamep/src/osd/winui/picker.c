@@ -35,6 +35,8 @@
 #include "mui_util.h" // For dprintf
 #include "mui_opts.h"
 #include "translate.h"
+#include "bitmask.h"
+#include "treeview.h" // For GetParentFound()
 
 
 // fix warning: cast does not match function type
@@ -1360,6 +1362,13 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		bItemBroken = pPickerInfo->pCallbacks->pfnCheckItemBroken(hWnd, lvi.lParam);
 
 	/* only indent if parent is also in this view */
+#if 1	// minimal listview flickering.
+	if ((nParent >= 0) && bDrawAsChild)
+	{
+		if (GetParentFound(lvi.lParam))
+			bParentFound = TRUE;
+	}
+#else
 	if ((nParent >= 0) && bDrawAsChild)
 	{
 		for (i = 0; i < ListView_GetItemCount(hWnd); i++)
@@ -1375,6 +1384,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 			}
 		}
 	}
+#endif
 
 	if (pPickerInfo->pCallbacks->pfnGetOffsetChildren && pPickerInfo->pCallbacks->pfnGetOffsetChildren())
 	{

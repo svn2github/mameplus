@@ -61,40 +61,40 @@ extern const FOLDERDATA g_folderData[] =
 	{TEXT("CPU"),             "cpu",               FOLDER_CPU,          IDI_CPU,                  0,             0,            CreateCPUFolders },
 	{TEXT("Sound"),           "sound",             FOLDER_SND,          IDI_SND,                  0,             0,            CreateSoundFolders },
 #endif /* USE_MORE_FOLDER_INFO */
-	{TEXT("BIOS"),            "bios",              FOLDER_BIOS,         IDI_BIOS,                 0,             0,            CreateBIOSFolders,          DriverIsBios,  TRUE },
-	{TEXT("CHD"),             "harddisk",          FOLDER_HARDDISK,     IDI_HARDDISK,             0,             0,            NULL,                       DriverIsHarddisk,  TRUE },
-	{TEXT("Samples"),         "samples",           FOLDER_SAMPLES,      IDI_FOLDER,               0,             0,            NULL,                       DriverUsesSamples,  TRUE },
+	{TEXT("BIOS"),            "bios",              FOLDER_BIOS,         IDI_BIOS,                 0,             0,            CreateBIOSFolders,          DriverIsBios,                 TRUE },
+	{TEXT("CHD"),             "harddisk",          FOLDER_HARDDISK,     IDI_HARDDISK,             0,             0,            NULL,                       DriverIsHarddisk,             TRUE },
+	{TEXT("Samples"),         "samples",           FOLDER_SAMPLES,      IDI_FOLDER,               0,             0,            NULL,                       DriverUsesSamples,            TRUE },
 #ifdef USE_MORE_FOLDER_INFO
 	{TEXT("Dumping Status"),  "dumping",           FOLDER_DUMPING,      IDI_FOLDER,               0,             0,            CreateDumpingFolders },
 #endif /* USE_MORE_FOLDER_INFO */
-	{TEXT("Working"),         "working",           FOLDER_WORKING,      IDI_WORKING,              F_WORKING,     F_NONWORKING, NULL,                       DriverIsBroken,    FALSE },
+	{TEXT("Working"),         "working",           FOLDER_WORKING,      IDI_WORKING,              F_WORKING,     F_NONWORKING, NULL,                       DriverIsBroken,               FALSE },
 	{TEXT("Imperfect"),       "imperfect",         FOLDER_DEFICIENCY,   IDI_FOLDER,               0,             0,            CreateDeficiencyFolders },
-	{TEXT("Not Working"),     "nonworking",        FOLDER_NONWORKING,   IDI_NONWORKING,           F_NONWORKING,  F_WORKING,    NULL,                       DriverIsBroken,    TRUE },
-	{TEXT("Originals"),       "originals",         FOLDER_ORIGINAL,     IDI_FOLDER,               F_ORIGINALS,   F_CLONES,     NULL,                       DriverIsClone,     FALSE },
-	{TEXT("Clones"),          "clones",            FOLDER_CLONES,       IDI_FOLDER,               F_CLONES,      F_ORIGINALS,  NULL,                       DriverIsClone,     TRUE },
+	{TEXT("Not Working"),     "nonworking",        FOLDER_NONWORKING,   IDI_NONWORKING,           F_NONWORKING,  F_WORKING,    NULL,                       DriverIsBroken,               TRUE },
+	{TEXT("Originals"),       "originals",         FOLDER_ORIGINAL,     IDI_FOLDER,               F_ORIGINALS,   F_CLONES,     NULL,                       DriverIsClone,                FALSE },
+	{TEXT("Clones"),          "clones",            FOLDER_CLONES,       IDI_FOLDER,               F_CLONES,      F_ORIGINALS,  NULL,                       DriverIsClone,                TRUE },
 	{TEXT("Screens"),         "screens",           FOLDER_SCREENS,      IDI_FOLDER,               0,             0,            CreateScreenFolders },
 #ifdef USE_MORE_FOLDER_INFO
 	{TEXT("Resolution"),      "resolution",        FOLDER_RESOLUTION,   IDI_FOLDER,               0,             0,            CreateResolutionFolders },
 	{TEXT("FPS"),             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
 #endif /* USE_MORE_FOLDER_INFO */
-	{TEXT("Horizontal"),      "horizontal",        FOLDER_HORIZONTAL,   IDI_FOLDER_HORIZONTAL,    F_HORIZONTAL,  F_VERTICAL,   NULL,                       DriverIsVertical,        FALSE },
-	{TEXT("Vertical"),        "vertical",          FOLDER_VERTICAL,     IDI_FOLDER_VERTICAL,      F_VERTICAL,    F_HORIZONTAL, NULL,                       DriverIsVertical,        TRUE },
-	{TEXT("Raster"),          "raster",            FOLDER_RASTER,       IDI_FOLDER,               F_RASTER,      F_VECTOR,     NULL,                       DriverIsVector,    FALSE },
-	{TEXT("Vector"),          "vector",            FOLDER_VECTOR,       IDI_FOLDER,               F_VECTOR,      F_RASTER,     NULL,                       DriverIsVector,    TRUE },
+	{TEXT("Horizontal"),      "horizontal",        FOLDER_HORIZONTAL,   IDI_FOLDER_HORIZONTAL,    F_HORIZONTAL,  F_VERTICAL,   NULL,                       DriverIsVertical,             FALSE },
+	{TEXT("Vertical"),        "vertical",          FOLDER_VERTICAL,     IDI_FOLDER_VERTICAL,      F_VERTICAL,    F_HORIZONTAL, NULL,                       DriverIsVertical,             TRUE },
+	{TEXT("Raster"),          "raster",            FOLDER_RASTER,       IDI_FOLDER,               F_RASTER,      F_VECTOR,     NULL,                       DriverIsVector,               FALSE },
+	{TEXT("Vector"),          "vector",            FOLDER_VECTOR,       IDI_FOLDER,               F_VECTOR,      F_RASTER,     NULL,                       DriverIsVector,               TRUE },
 #ifdef USE_MORE_FOLDER_INFO
 	{TEXT("Control Type"),    "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
 #else /* USE_MORE_FOLDER_INFO */
-	{TEXT("Trackball"),       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
-	{TEXT("Lightgun"),        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },
+	{TEXT("Trackball"),       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,          TRUE },
+	{TEXT("Lightgun"),        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,           TRUE },
 #endif /* USE_MORE_FOLDER_INFO */
-	{TEXT("Stereo"),          "stereo",            FOLDER_STEREO,       IDI_SOUND,                0,             0,            NULL,                       DriverIsStereo,    TRUE },
+	{TEXT("Stereo"),          "stereo",            FOLDER_STEREO,       IDI_SOUND,                0,             0,            NULL,                       DriverIsStereo,               TRUE },
 #ifdef USE_MORE_FOLDER_INFO
 	{TEXT("Save State"),      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            CreateSaveStateFolders },
 #else /* USE_MORE_FOLDER_INFO */
-	{TEXT("Save State"),      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            NULL,                       DriverSupportsSaveState,  TRUE },
+	{TEXT("Save State"),      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            NULL,                       DriverSupportsSaveState,      TRUE },
 #endif /* USE_MORE_FOLDER_INFO */
-	{TEXT("Mechanical"),      "mechanical",        FOLDER_MECHANICAL,   IDI_FOLDER,               0,             0,            NULL,                       DriverIsMechanical,      TRUE },
-	{TEXT("Non Mechanical"),  "nonmechanical",     FOLDER_NONMECHANICAL,IDI_FOLDER,               0,             0,            NULL,                       DriverIsMechanical,      FALSE },
+	{TEXT("Mechanical"),      "mechanical",        FOLDER_MECHANICAL,   IDI_FOLDER,               0,             0,            NULL,                       DriverIsMechanical,           TRUE },
+	{TEXT("Non Mechanical"),  "nonmechanical",     FOLDER_NONMECHANICAL,IDI_FOLDER,               0,             0,            NULL,                       DriverIsMechanical,           FALSE },
 	{ NULL }
 };
 
@@ -123,7 +123,7 @@ extern const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Config"),                GetCfgDir,           SetCfgDir,           FALSE, DIRDLG_CFG },
 	{ TEXT("Snapshots"),             GetImgDir,           SetImgDir,           TRUE,  DIRDLG_IMG },
 	{ TEXT("Input Files (*.inp)"),   GetInpDir,           SetInpDir,           FALSE, DIRDLG_INP },
-	{ TEXT("Cheats"),		 GetCheatDir,         SetCheatDir,         FALSE, DIRDLG_CHEAT },
+	{ TEXT("Cheats"),                GetCheatDir,         SetCheatDir,         FALSE, DIRDLG_CHEAT },
 	{ TEXT("State"),                 GetStateDir,         SetStateDir,         FALSE, 0 },
 	{ TEXT("Artwork"),               GetArtDir,           SetArtDir,           FALSE, 0 },
 	{ TEXT("Memory Card"),           GetMemcardDir,       SetMemcardDir,       FALSE, 0 },
@@ -185,7 +185,7 @@ extern const PROPERTYSHEETINFO g_propSheets[] =
 	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,	GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_MISC,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_DEBUG,			GameOptionsProc },
-	{ TRUE,		PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
+	{ TRUE,		DriverIsVector,			IDD_PROP_VECTOR,		GameOptionsProc },
 	{ FALSE }
 };
 

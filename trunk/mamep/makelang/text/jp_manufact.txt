@@ -726,10 +726,6 @@ Aiky
 Ainsworth Nominees P.L.
 
 
-# Imola Grand Prix
-Alberici
-
-
 # Ace
 Allied Leisure
 
@@ -854,7 +850,7 @@ Astra
 Astro
 
 
-# Wang Pai Dui Jue (China)
+# Stone Age (Astro, Ver. ENG.03.A)
 Astro Corp.
 
 
@@ -872,6 +868,10 @@ Avantime?
 
 # Galaxi (v2.0)
 B.R.L.
+
+
+# Aztec Casino (Dutch) (Bellfruit) (Scorpion 4)
+BFG
 
 
 # Cop The Lot Club (Video) (Bellfruit) (Adder 4) (set 1)
@@ -910,7 +910,7 @@ Bandai
 Barcrest
 
 
-# Hot Stuff (Barcrest?)
+# Each Way Nudger (Barcrest?, set 3, version 20?)
 Barcrest?
 
 
@@ -968,6 +968,10 @@ BrezzaSoft
 
 # Mahjong Nanpa Story (Japan 890712)
 Brooks
+
+
+# Super Bar X (Brunel Research) (set 1)
+Brunel Research
 
 
 # Doctor PC Jr
@@ -1314,7 +1318,7 @@ E.G. Felaco
 EIM
 
 
-# Jokers Wild (Dutch) (System 85)
+# Cops 'n' Robbers (Dutch) (Bellfruit) (System 85)
 ELAM
 
 
@@ -1474,7 +1478,7 @@ Extreme
 F2 System
 
 
-# Bar Seven (Fairgames)
+# Bar Seven (Fairgames) (set 1)
 Fairgames
 
 
@@ -1498,11 +1502,15 @@ Fortex Ltd
 Fujic
 
 
+# Big Deal (Hungarian, set 1)
+Fun World
+
+
 # Super A'Can
 Funtech Entertainment
 
 
-# Big Deal (Hungarian, set 1)
+# Photo Play 2000 (v2.01)
 Funworld
 
 
@@ -1570,7 +1578,7 @@ Gameace
 Gaps Inc.
 
 
-# Big Ghoulies (Gemini) (M1A/B)
+# Big Ghoulies (Gemini) (M1A/B) (set 1)
 Gemini
 
 
@@ -1742,7 +1750,7 @@ Inder
 InfoCube
 
 
-# Jolly Card (Austrian, Funworld, bootleg)
+# Jolly Card (Austrian, Fun World, bootleg)
 Inter Games
 
 
@@ -1780,6 +1788,10 @@ JMK
 
 # Cashcade (JPM) (SYSTEM5 VIDEO)
 JPM
+
+
+# Hot Stuff (JPM?) (set 1)
+JPM?
 
 
 # X'eye (USA, NTSC)
@@ -1826,7 +1838,7 @@ Juegos Populares
 Just&Just
 
 
-# Triple Punch
+# Triple Punch (set 1)
 K.K. International
 
 
@@ -1896,6 +1908,10 @@ Leijac Corporation
 
 # Stake X (Leisurama) (MPU4, set 1)
 Leisurama
+
+
+# Dragon's Lair 2: Time Warp (US v3.19)
+Leland
 
 
 # All American Football (rev E)
@@ -1978,15 +1994,11 @@ Marvelous Ent.
 Matoba
 
 
-# The Phrase That Pays (Bellfruit) (Cobra 3?)
+# Twenty One Club (Maygay) (EPOCH) (3.2, set 1)
 Maygay
 
 
-# Strike It Rich (Maygay?) (MPS)
-Maygay?
-
-
-# Bullseye Pounds For Points (Mazooma) (Scorpion 5, Adder 5)
+# Bullseye Pounds For Points (Mazooma) (Adder 5) (set 1)
 Mazooma
 
 
@@ -2006,7 +2018,7 @@ Meadows Games, Inc.
 Media
 
 
-# Big Apple Games (2131-13)
+# Big Apple Games (2131-13, U5-0)
 Merit
 
 
@@ -2084,6 +2096,10 @@ Min Corp.
 
 # New Fruit Machine (Ming-Yang Electronic)
 Ming-Yang Electronic
+
+
+# Rise of the Robots (prototype)
+Mirage
 
 
 # 21 (Mirco)
@@ -2442,16 +2458,20 @@ Public Software
 Pure Leisure
 
 
-# Cashvania (Qps) (Scorpion 4) (set 1)
+# Club Clouseau (QPS) (Scorpion 4)
 QPS
 
 
-# Evolution (Qps) (Adder 5)
+# Monte Carlo Or Bust (Qps) (Adder 5) (set 1)
 Qps
 
 
 # Quicksilver (RAL) (IMPACT)
 RAL
+
+
+# Imola Grand Prix (set 1)
+RB Bologna
 
 
 # Thayer's Quest (set 1)
@@ -2974,7 +2994,7 @@ Valadon Automation
 Valley
 
 
-# Barrier
+# Speed Freak
 Vectorbeam
 
 
@@ -2984,6 +3004,10 @@ Vektorlogic
 
 # Card Line
 Veltmeijer
+
+
+# Pinball Champ '95
+Veltmeijer Automaten
 
 
 # Meteoroids
@@ -3082,7 +3106,7 @@ Web Picmatic
 Webak Elektronik
 
 
-# Caesars Palace (Whitbread / Crystal) (IMPACT, set 1)
+# Caesars Palace (Whitbread / Crystal) (IMPACT) (set 1)
 Whitbread
 
 
@@ -3182,7 +3206,19 @@ dgPIX Entertainment Inc.
 eic
 
 
+# Bubble Bobble Lost Cave (Ver 1.1)
+hack by Bisboch and Aladar
+
+
+# DoDonPachi Arrange v1.1 (2012/02/12 Arrange Ver.)
+hack by trap15
+
+
 # Adders & Ladders (Bwb / Barcrest) (MPU4) (ADD 1.0C, hack?, set 1)
 hack?
+
+
+# Fun House (unknown) (MPU4)
+unknown
 
 
