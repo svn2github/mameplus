@@ -91,6 +91,9 @@ ifneq ($(USE_UI_COLOR_DISPLAY),)
 OSDOBJS += $(UIOBJ)/paletteedit.o
 endif
 
+# misc dependencies
+$(UIOBJ)/mui_opts.o:	$(UISRC)/game_opts.h
+
 # add our UI resources
 GUIRESFILE += $(UIOBJ)/mameui.res
 
