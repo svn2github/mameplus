@@ -6204,9 +6204,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_TYPE:
-	{
 		value = DriverIsVector(index1) - DriverIsVector(index2);
-	}
 		break;
 
 	case COLUMN_TRACKBALL:

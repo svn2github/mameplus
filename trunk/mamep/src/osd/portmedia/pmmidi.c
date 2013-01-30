@@ -10,13 +10,17 @@
 #include "portmidi/portmidi.h"
 #include "osdcore.h"
 
+static const int RX_EVENT_BUF_SIZE = 512;
+
 struct osd_midi_device
 {
 	#ifndef DISABLE_MIDI
 	PortMidiStream *pmStream;
-	PmEvent rx_evBuf[20];		// up to 20 events
+	PmEvent rx_evBuf[RX_EVENT_BUF_SIZE];
 	#endif
-	UINT8 xmit_in[3]; // Pm_Messages mean we can at most have 3 residue bytes
+	UINT8 xmit_in[4]; // Pm_Messages mean we can at most have 3 residue bytes
+	int xmit_cnt;
+	UINT8 last_status;
 };
 
 void osd_list_midi_devices(void)
@@ -84,7 +88,7 @@ osd_midi_device *osd_open_midi_input(const char *devname)
 
 	if (found_dev >= 0)
 	{
-		if (Pm_OpenInput(&stm, found_dev, NULL, 20, NULL, NULL) == pmNoError)
+		if (Pm_OpenInput(&stm, found_dev, NULL, RX_EVENT_BUF_SIZE, NULL, NULL) == pmNoError)
 		{
 			ret = (osd_midi_device *)osd_malloc(sizeof(osd_midi_device));
 			memset(ret, 0, sizeof(osd_midi_device));
@@ -131,7 +135,7 @@ osd_midi_device *osd_open_midi_output(const char *devname)
 
 	if (found_dev >= 0)
 	{
-		if (Pm_OpenOutput(&stm, found_dev, NULL, 20, NULL, NULL, 0) == pmNoError)
+		if (Pm_OpenOutput(&stm, found_dev, NULL, 100, NULL, NULL, 0) == pmNoError)
 		{
 			ret = (osd_midi_device *)osd_malloc(sizeof(osd_midi_device));
 			memset(ret, 0, sizeof(osd_midi_device));
@@ -174,7 +178,7 @@ bool osd_poll_midi_channel(osd_midi_device *dev)
 int osd_read_midi_channel(osd_midi_device *dev, UINT8 *pOut)
 {
 	#ifndef DISABLE_MIDI
-	int msgsRead = Pm_Read(dev->pmStream, dev->rx_evBuf, 20);
+	int msgsRead = Pm_Read(dev->pmStream, dev->rx_evBuf, RX_EVENT_BUF_SIZE);
 	int bytesOut = 0;
 
 	if (msgsRead <= 0)
@@ -231,6 +235,73 @@ int osd_read_midi_channel(osd_midi_device *dev, UINT8 *pOut)
 	return bytesOut;
 	#else
 	return 0;
+	#endif
+}
+
+void osd_write_midi_channel(osd_midi_device *dev, UINT8 data)
+{
+	#ifndef DISABLE_MIDI
+	int bytes_needed = 0;
+
+	if ((dev->xmit_cnt == 0) && (data & 0x80))
+	{
+		dev->last_status = data;
+	}
+
+	if ((dev->xmit_cnt == 0) && !(data & 0x80))
+	{
+		dev->xmit_in[dev->xmit_cnt++] = dev->last_status;
+		dev->xmit_in[dev->xmit_cnt++] = data;
+	}
+	else
+	{
+		dev->xmit_in[dev->xmit_cnt++] = data;
+	}
+
+	// are we there yet?
+	switch ((dev->xmit_in[0]>>4) & 0xf)
+	{
+		case 0xc:	// 2-byte messages
+		case 0xd:
+			bytes_needed = 2;
+			break;
+
+		case 0xf:	// system common
+			switch (dev->xmit_in[0] & 0xf)
+			{
+				case 0:	// System Exclusive
+					printf("No SEx please!\n");
+					break;
+
+				case 7:	// End of System Exclusive
+					bytes_needed = 1;
+					break;
+
+				case 2:	// song pos
+				case 3:	// song select
+					bytes_needed = 3;
+					break;
+
+				default:	// all other defined Fx messages are 1 byte
+					bytes_needed = 1;
+					break;
+			}
+			break;
+
+		default:
+			bytes_needed = 3;
+			break;
+	}
+
+	if (dev->xmit_cnt == bytes_needed)
+	{
+		PmEvent ev;
+		ev.message = Pm_Message(dev->xmit_in[0], dev->xmit_in[1], dev->xmit_in[2]);
+		ev.timestamp = 0;	// use the current time
+		Pm_Write(dev->pmStream, &ev, 1);
+		dev->xmit_cnt = 0;
+	}
+
 	#endif
 }
 

@@ -436,20 +436,22 @@ SDLOS_TARGETOS = $(BASE_TARGETOS)
 # TEST_GCC for GCC version-specific stuff
 #-------------------------------------------------
 
+# TODO: needs to use $(CC)
 TEST_GCC = $(shell gcc --version)
-
-ifeq ($(findstring 4.7,$(TEST_GCC)),4.7)
-	CCOMFLAGS += -Wno-narrowing -Wno-attributes
-endif
 
 # Ubuntu 12.10 GCC 4.7.2 autodetect
 ifeq ($(findstring 4.7.2-2ubuntu1,$(TEST_GCC)),4.7.2-2ubuntu1)
 GCC46TST = $(shell which g++-4.6 2>/dev/null)
 ifeq '$(GCC46TST)' ''
-	$(error Ubuntu 12.10 detected.  Please install the gcc-4.6 and g++-4.6 packages)
+$(error Ubuntu 12.10 detected.  Please install the gcc-4.6 and g++-4.6 packages)
 endif
 CC = @gcc-4.6
 LD = @g++-4.6
+TEST_GCC = $(shell gcc-4.6 --version)
+endif
+
+ifeq ($(findstring 4.7.,$(TEST_GCC)),4.7.)
+	CCOMFLAGS += -Wno-narrowing -Wno-attributes
 endif
 
 #-------------------------------------------------
@@ -635,6 +637,7 @@ DEBUGOBJS = \
 	$(SDLOBJ)/debugqtdasmwindow.o \
 	$(SDLOBJ)/debugqtmainwindow.o \
 	$(SDLOBJ)/debugqtmemorywindow.o \
+	$(SDLOBJ)/debugqtview.moc.o \
 	$(SDLOBJ)/debugqtwindow.moc.o \
 	$(SDLOBJ)/debugqtlogwindow.moc.o \
 	$(SDLOBJ)/debugqtdasmwindow.moc.o \
