@@ -1310,7 +1310,7 @@ public:
 	void draw_caption(render_container *container);
 #endif /* INP_CAPTION */
 #ifdef USE_AUTOFIRE
-	int auto_pressed(ioport_field *field);
+	bool auto_pressed(ioport_field *field);
 	int get_autofiredelay(int player) { return m_autofiredelay[player]; };
 	void set_autofiredelay(int player, int delay) { m_autofiredelay[player] = delay; };
 #endif /* USE_AUTOFIRE */

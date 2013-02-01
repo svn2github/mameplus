@@ -45,12 +45,10 @@
 #include <tchar.h>
 
 // MAME headers
-#include "emucore.h"
 #include "osdcore.h"
 
 // MAMEOS headers
 #include "winutf8.h"
-#include "strconv.h"
 #include "strconv.h"
 
 

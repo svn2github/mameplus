@@ -42,7 +42,6 @@ DRVLIBS += \
 	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
-	$(MESSOBJ)/capcom.a \
 	$(MESSOBJ)/funtech.a \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \

@@ -153,7 +153,7 @@ int parse_file(const char *srcfile)
 		}
 
 		// mamep: if we hit a preprocesser comment, scan to the end of line
-		if (c == '#' && *srcptr == ' ')
+		if (c == '#' && (*srcptr == ' ' || *srcptr == 'l'))
 		{
 			while (srcptr < endptr && *srcptr != 13 && *srcptr != 10)
 				srcptr++;

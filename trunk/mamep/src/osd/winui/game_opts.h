@@ -32,35 +32,35 @@ public:
 			m_list[i] = option;
 	}
 
-	int  rom(int index)                 { assert(0 <= index and index < driver_list::total()); return m_list[index].rom;        }
-	void rom(int index, int val)        { assert(0 <= index and index < driver_list::total()); m_list[index].rom = val;         }
+	int  rom(int index)                 { assert(0 <= index && index < driver_list::total()); return m_list[index].rom;        }
+	void rom(int index, int val)        { assert(0 <= index && index < driver_list::total()); m_list[index].rom = val;         }
 
-	int  sample(int index)              { assert(0 <= index and index < driver_list::total()); return m_list[index].sample;     }
-	void sample(int index, int val)     { assert(0 <= index and index < driver_list::total()); m_list[index].sample = val;      }
+	int  sample(int index)              { assert(0 <= index && index < driver_list::total()); return m_list[index].sample;     }
+	void sample(int index, int val)     { assert(0 <= index && index < driver_list::total()); m_list[index].sample = val;      }
 
-	int  cache(int index)               { assert(0 <= index and index < driver_list::total()); return m_list[index].cache;      }
-	void cache(int index, int val)      { assert(0 <= index and index < driver_list::total()); m_list[index].cache = val;       }
+	int  cache(int index)               { assert(0 <= index && index < driver_list::total()); return m_list[index].cache;      }
+	void cache(int index, int val)      { assert(0 <= index && index < driver_list::total()); m_list[index].cache = val;       }
 
-	int  play_count(int index)          { assert(0 <= index and index < driver_list::total()); return m_list[index].play_count; }
-	void play_count(int index, int val) { assert(0 <= index and index < driver_list::total()); m_list[index].play_count = val;  }
+	int  play_count(int index)          { assert(0 <= index && index < driver_list::total()); return m_list[index].play_count; }
+	void play_count(int index, int val) { assert(0 <= index && index < driver_list::total()); m_list[index].play_count = val;  }
 
-	int  play_time(int index)           { assert(0 <= index and index < driver_list::total()); return m_list[index].play_time;  }
-	void play_time(int index, int val)  { assert(0 <= index and index < driver_list::total()); m_list[index].play_time = val;   }
+	int  play_time(int index)           { assert(0 <= index && index < driver_list::total()); return m_list[index].play_time;  }
+	void play_time(int index, int val)  { assert(0 <= index && index < driver_list::total()); m_list[index].play_time = val;   }
 
-	int  players(int index)             { assert(0 <= index and index < driver_list::total()); return m_list[index].players;  }
-	void players(int index, int val)    { assert(0 <= index and index < driver_list::total()); m_list[index].players = val;   }
+	int  players(int index)             { assert(0 <= index && index < driver_list::total()); return m_list[index].players;  }
+	void players(int index, int val)    { assert(0 <= index && index < driver_list::total()); m_list[index].players = val;   }
 
-	int  buttons(int index)             { assert(0 <= index and index < driver_list::total()); return m_list[index].buttons;  }
-	void buttons(int index, int val)    { assert(0 <= index and index < driver_list::total()); m_list[index].buttons = val;   }
+	int  buttons(int index)             { assert(0 <= index && index < driver_list::total()); return m_list[index].buttons;  }
+	void buttons(int index, int val)    { assert(0 <= index && index < driver_list::total()); m_list[index].buttons = val;   }
 
-	int  parent_index(int index)          { assert(0 <= index and index < driver_list::total()); return m_list[index].parent_index;  }
-	void parent_index(int index, int val) { assert(0 <= index and index < driver_list::total()); m_list[index].parent_index = val;   }
+	int  parent_index(int index)          { assert(0 <= index && index < driver_list::total()); return m_list[index].parent_index;  }
+	void parent_index(int index, int val) { assert(0 <= index && index < driver_list::total()); m_list[index].parent_index = val;   }
 
-	int  bios_index(int index)          { assert(0 <= index and index < driver_list::total()); return m_list[index].bios_index;  }
-	void bios_index(int index, int val) { assert(0 <= index and index < driver_list::total()); m_list[index].bios_index = val;   }
+	int  bios_index(int index)          { assert(0 <= index && index < driver_list::total()); return m_list[index].bios_index;  }
+	void bios_index(int index, int val) { assert(0 <= index && index < driver_list::total()); m_list[index].bios_index = val;   }
 
-	int  uses_controler(int index)          { assert(0 <= index and index < driver_list::total()); return m_list[index].uses_controler;  }
-	void uses_controler(int index, int val) { assert(0 <= index and index < driver_list::total()); m_list[index].uses_controler = val;   }
+	int  uses_controler(int index)          { assert(0 <= index && index < driver_list::total()); return m_list[index].uses_controler;  }
+	void uses_controler(int index, int val) { assert(0 <= index a&& index < driver_list::total()); m_list[index].uses_controler = val;   }
 
 	void add_entries()
 	{
@@ -133,7 +133,7 @@ public:
 				if ( i == 2 )
 				{
 					int val[5];
-					if (value_str and (sscanf(value_str.cstr(), "%d@%d@%d@%d@%d@%d", &value_int, &val[0], &val[1], &val[2], &val[3], &val[4]) == 6))
+					if (value_str && (sscanf(value_str.cstr(), "%d@%d@%d@%d@%d@%d", &value_int, &val[0], &val[1], &val[2], &val[3], &val[4]) == 6))
 					{
 						m_list[index].cache          = value_int;
 						m_list[index].players        = val[0];
@@ -144,7 +144,7 @@ public:
 					}
 				}
 				else
-				if ( value_str and (sscanf(value_str.cstr(), "%d", &value_int) == 1) )
+				if ( value_str && (sscanf(value_str.cstr(), "%d", &value_int) == 1) )
 				{
 					switch (i)
 					{

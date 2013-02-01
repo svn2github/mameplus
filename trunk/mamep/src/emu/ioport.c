@@ -2237,7 +2237,7 @@ void ioport_field::frame_update(ioport_value &result, bool mouse_down)
 
 	// if the state changed, look for switch down/switch up
 #ifdef USE_AUTOFIRE
-	int curstate = machine().ioport().auto_pressed(this);
+	bool curstate = machine().ioport().auto_pressed(this);
 #else /* USE_AUTOFIRE */
 	bool curstate = mouse_down || machine().input().seq_pressed(seq());
 #endif /* USE_AUTOFIRE */
@@ -3655,7 +3655,7 @@ void ioport_manager::save_game_inputs(xml_data_node *parentnode)
 				{
 					changed |= ((field->live().value & field->mask()) != (field->defvalue() & field->mask()));
 #ifdef USE_AUTOFIRE
-					changed |= field->live().autofire;
+					changed |= (field->live().autofire != 0);
 #endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 					changed |= field->type() >= IPT_CUSTOM1 && field->type() < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS &&
@@ -4918,7 +4918,7 @@ int validate_natural_keyboard_statics(void)
 
 
 #ifdef USE_AUTOFIRE
-int ioport_manager::auto_pressed(ioport_field *field)
+bool ioport_manager::auto_pressed(ioport_field *field)
 {
 /*
 	autofire setting:
@@ -4935,7 +4935,7 @@ int ioport_manager::auto_pressed(ioport_field *field)
 							|| ((field->live().autofire & AUTOFIRE_TOGGLE) \
 							&& m_autofiretoggle[field->player()]))
 
-	int pressed = machine().input().seq_pressed(field->seq(SEQ_TYPE_STANDARD));
+	bool pressed = machine().input().seq_pressed(field->seq(SEQ_TYPE_STANDARD));
 	int is_auto = IS_AUTOKEY(field);
 
 	if (pressed && (field->toggle()))
@@ -4979,7 +4979,7 @@ int ioport_manager::auto_pressed(ioport_field *field)
 			if (field->live().autopressed > m_autofiredelay[field->player()])
 				field->live().autopressed = 0;
 			else if (field->live().autopressed > m_autofiredelay[field->player()] / 2)
-				pressed = 0;
+				pressed = false;
 
 			field->live().autopressed ++;
 		}
