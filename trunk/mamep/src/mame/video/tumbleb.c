@@ -16,7 +16,6 @@ to switch between 8*8 tiles and 16*16 tiles.
 
 #include "emu.h"
 #include "includes/tumbleb.h"
-#include "video/decospr.h"
 
 /******************************************************************************/
 
@@ -212,15 +211,13 @@ TILE_GET_INFO_MEMBER(tumbleb_state::pangpang_get_fg_tile_info)
 }
 
 
-static void tumbleb_tilemap_redraw(running_machine &machine)
+void tumbleb_state::tumbleb_tilemap_redraw()
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-
-	state->m_pf1_tilemap->mark_all_dirty();
-	state->m_pf1_alt_tilemap->mark_all_dirty();
-	state->m_pf2_tilemap->mark_all_dirty();
-	if (state->m_pf2_alt_tilemap)
-		state->m_pf2_alt_tilemap->mark_all_dirty();
+	m_pf1_tilemap->mark_all_dirty();
+	m_pf1_alt_tilemap->mark_all_dirty();
+	m_pf2_tilemap->mark_all_dirty();
+	if (m_pf2_alt_tilemap)
+		m_pf2_alt_tilemap->mark_all_dirty();
 }
 
 VIDEO_START_MEMBER(tumbleb_state,pangpang)
@@ -232,7 +229,7 @@ VIDEO_START_MEMBER(tumbleb_state,pangpang)
 	m_pf1_tilemap->set_transparent_pen(0);
 	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_state::tumbleb_tilemap_redraw), this));
 }
 
 
@@ -245,7 +242,7 @@ VIDEO_START_MEMBER(tumbleb_state,tumblepb)
 	m_pf1_tilemap->set_transparent_pen(0);
 	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_state::tumbleb_tilemap_redraw), this));
 }
 
 VIDEO_START_MEMBER(tumbleb_state,sdfight)
@@ -257,7 +254,7 @@ VIDEO_START_MEMBER(tumbleb_state,sdfight)
 	m_pf1_tilemap->set_transparent_pen(0);
 	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_state::tumbleb_tilemap_redraw), this));
 }
 
 VIDEO_START_MEMBER(tumbleb_state,fncywld)
@@ -269,7 +266,7 @@ VIDEO_START_MEMBER(tumbleb_state,fncywld)
 	m_pf1_tilemap->set_transparent_pen(15);
 	m_pf1_alt_tilemap->set_transparent_pen(15);
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_state::tumbleb_tilemap_redraw), this));
 }
 
 
@@ -281,7 +278,7 @@ VIDEO_START_MEMBER(tumbleb_state,suprtrio)
 
 	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_state::tumbleb_tilemap_redraw), this));
 }
 
 /******************************************************************************/
@@ -434,7 +431,7 @@ UINT32 tumbleb_state::screen_update_sdfight(screen_device &screen, bitmap_ind16 
 
 	tumbleb_draw_common(machine(),bitmap,cliprect, offs2, -16, offs, 0);
 
-	machine().device<decospr_device>("spritegen")->draw_sprites(bitmap, cliprect, m_spriteram, m_spriteram.bytes()/2);
+	m_sprgen->draw_sprites(bitmap, cliprect, m_spriteram, m_spriteram.bytes()/2);
 	return 0;
 }
 
@@ -493,6 +490,6 @@ UINT32 tumbleb_state::screen_update_suprtrio(screen_device &screen, bitmap_ind16
 	m_pf2_tilemap->draw(bitmap, cliprect, 0, 0);
 	m_pf1_alt_tilemap->draw(bitmap, cliprect, 0, 0);
 
-	machine().device<decospr_device>("spritegen")->draw_sprites(bitmap, cliprect, m_spriteram, m_spriteram.bytes()/2);
+	m_sprgen->draw_sprites(bitmap, cliprect, m_spriteram, m_spriteram.bytes()/2);
 	return 0;
 }

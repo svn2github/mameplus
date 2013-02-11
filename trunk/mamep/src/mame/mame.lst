@@ -702,6 +702,7 @@ nrallyx         // (c) 1981 Namco
 nrallyxb        // (c) 1981 Namco
 jungler         // GX327 (c) 1981 Konami
 junglers        // GX327 (c) 1981 Stern
+jackler	        // 1 9 8 2 (Jungler Bootleg)
 savanna         // Olympia (c) 1982 (Jungler bootleg)
 tactcian        // GX335 (c) 1982 Sega
 tactcian2       // GX335 (c) 1981 Sega
@@ -2198,6 +2199,7 @@ spacedxo        // D89 (c) 1994 Taito Corporation (Japan)
 contcirc        // B33 (c) 1987 Taito Corporation Japan (World)
 contcircu       // B33 (c) 1987 Taito America Corporation (US)
 contcircua      // B33 (c) 1987 Taito America Corporation (US)
+contcircj       // B33 (c) 1987 Taito Corporation (Japan)
 chasehq         // B52 (c) 1988 Taito Corporation Japan (World)
 chasehqj        // B52 (c) 1988 Taito Corporation (Japan)
 chasehqu        // B52 (c) 1988 Taito America Corporation (US)
@@ -2975,6 +2977,7 @@ sf2m7           // hack
 sf2m8           // bootleg
 sf2yyc          // hack
 sf2koryu        // hack
+sf2dongb        // hack
 sf2mdt          // bootleg
 sf2mdta         // bootleg
 cworld2j        // 11/06/1992 (c) 1992 (Japan)
@@ -4157,6 +4160,8 @@ wbmljo          // (c) 1987 Sega/Westone (S2)
 wbmljb          // (c) 1987 Sega/Westone (S2)
 wbmlb           // bootleg? (S2)
 wbmlbg          // bootleg (Galaxy Electronics)
+wbmlbge         // bootleg (Gecas)
+wbmlvc          // Virtual Console
 dakkochn        // 836-6483 (S2)
 ufosensi        // 834-6659 (S2)
 ufosensib       // bootleg
@@ -4618,6 +4623,7 @@ pclub2          // 1997.09 Print Club 2
 thunt           // 1997.09 Puzzle & Action Treasure Hunt (Sega (Deniam License))
 thuntk
 winterht        // 1997.10 Winter Heat (Data East)
+pclb297w        // 1997.10 Print Club 2 '97 Winter Ver
 pclub298        // 1997.10 Print Club 2 '98 Spring Ver
 cotton2         // 1997.11 Cotton 2 (Success)
 hanagumi        // 1997.11 Sakura Taisen Hanagumi Taisen Columns
@@ -5637,6 +5643,7 @@ tumblep         // MAP (c) 1991 Data East Corporation (World)
 tumblepj        // MAP (c) 1991 Data East Corporation (Japan)
 tumbleb         // bootleg
 tumbleb2        // bootleg
+tumblepba
 jumpkids        // (c) 1993 Comad
 jumppop         // (c) 2001 ESD
 jumppope        // (c) 2001 Emag Soft (on original ESD 11-09-98 hardware)
@@ -5801,6 +5808,7 @@ wc90b1          // bootleg
 wc90b2          // bootleg
 spbactn         // 9002 - (c) 1991 Tecmo
 spbactnj        // 9002 - (c) 1991 Tecmo
+spbactnp        // prototype
 fstarfrc        // (c) 1992 Tecmo
 fstarfrcj       // (c) 1992 Tecmo
 ginkun          // (c) 1995 Tecmo
@@ -6099,15 +6107,16 @@ ssridersb       // bootleg
 ssriders2       // bootleg
 xmen            // GX065 (c) 1992 (US)
 xmenj           // GX065 (c) 1992 (Japan)
-xmene           // GX065 (c) 1992 (Europe)
+xmene           // GX065 (c) 1992 (World)
 xmena           // GX065 (c) 1992 (Asia)
+xmenaa          // GX065 (c) 1992 (Asia)
 xmen2pe         // GX065 (c) 1992 (World)
 xmen2pa         // GX065 (c) 1992 (Asia)
 xmen2pj         // GX065 (c) 1992 (Japan)
-xmen6p          // GX065 (c) 1992
-xmen6pu         // GX065 (c) 1992
+xmen6p          // GX065 (c) 1992 (World)
+xmen6pu         // GX065 (c) 1992 (US)
 xexex           // GX067 (c) 1991 (World)
-xexexa          // GX067 (c) 1991 (AAA)
+xexexa          // GX067 (c) 1991 (Asia)
 xexexj          // GX067 (c) 1991 (Japan)
 asterix         // GX068 (c) 1992 (World)
 asterixeac      // GX068 (c) 1992 (World)
@@ -7402,9 +7411,10 @@ saiyugou        // TA-0023 (c) 1988 (Japan)
 saiyugoub1      // bootleg
 saiyugoub2      // bootleg
 wwfsstar        // TA-0024 (c) 1989 (Europe)
-wwfsstara       // TA-0024 (c) 1989 (US, newer)
-wwfsstaru       // TA-0024 (c) 1989 (US)
+wwfsstaru       // TA-0024 (c) 1989 (US, newer)
+wwfsstarua      // TA-0024 (c) 1989 (US)
 wwfsstarj       // TA-0024 (c) 1989 (Japan)
+wwfsstarb       // TA-0024 (c) 1989 (Japan)
 vball           // TA-0025 (c) 1988 (US)
 vball2pj        // TA-0025 (c) 1988 (Japan)
 vballb          // bootleg (of US set)
@@ -7818,6 +7828,7 @@ cchasm1         // (c) 1983 Cinematronics / GCE
 roundup         // (c) 1981 Amenip/Centuri
 fitter          // (c) 1981 Taito
 fitterbl        // bootleg
+ttfitter        // bootleg
 thepit          // (c) 1982 Zilec
 thepitu1        // (c) 1982 Centuri (licensed)
 thepitu2        // (c) 1982 Centuri (licensed)
@@ -8289,6 +8300,7 @@ netwars         // (c) 1983 Orca + Esco Trading Co license
 // the name "Orca"
 vastar          // (c) 1983 Sesame Japan
 vastar2         // (c) 1983 Sesame Japan
+vastar3         // (c) 1983 Sesame Japan
 /*
   other Orca games:
   82 Battle Cross                         Kit 2P
@@ -8764,6 +8776,7 @@ wbeachvl2       // (c) 1995
 wbeachvl3       // (c) 1995
 excelsr         // (c) 1995
 hotmind         // (c) 1995
+luckboomh       // (c) 1995
 hrdtimes        // (c) 1994
 hrdtimesa       // (c) 1994
 drtomy          // (c) 1993 no copyright message (1993 on pcb), some code taken from 'Big Karnak'
@@ -9165,7 +9178,7 @@ tarzan          // (c) 1999?
 tarzana         // (c) 1999?
 starzan         // (c) 2000?
 
-// IGS027A Games
+// IGS027A Cpu Games
 bigd2           // (c) 2000
 sdwx            // (c) 2002
 sddz            // (c) 200?
@@ -9177,6 +9190,14 @@ gonefsh2        // (c) 200?
 chessc2         // (c) 200?
 haunthig        // (c) 200?
 fearless        // (c) 2006
+
+// IGS036 Cpu Games
+cjdh2           // (c) 200?
+cjdh2a          // (c) 200?
+cjdh2b          // (c) 200?
+cjdh2c          // (c) 200?
+cjddzsp         // (c) 200?
+igsm312         // (c) 200?
 #endif // !NCP
 
 // IGS PGM System Games
@@ -9242,8 +9263,10 @@ py2k2           // (c) 2001 Photo Y2K2
 pgm3in1         // (c) 2004 Photo Y2K2 3-in-1
 dmnfrnt         // (c) 2002 Demon Front
 dmnfrnta        //
+dmnfrntb        //
 dmnfrntpcb      //
 kovshp          // (c) 200? Knights of Valor Superheroes PLUS
+kovytzy	        // (c) 1999 Knights of Valour: Yi Tong Zhong Yuan
 kovshxas        // bootleg
 kovlsqh         // bootleg
 kovlsqh2        // bootleg
@@ -9833,6 +9856,7 @@ quake           // (c) 19?? Lazer-Tron / iD Software
 majorpkr        // (c) 1994 PAL System.
 su2000          // (c) 1993 Virtuality
 boonggab        // (c) 2001 Taff System
+fresh           // (c) Chain Leisure
 
 // Success
 tonton          // (c) 199? Success / Taiyo Jidoki.
@@ -9991,6 +10015,7 @@ jolyccra        // (c) 1985 TAB-Austria
 jolyccrb        // (c) 1993 Soft Design
 jolycdit        // 199? bootleg
 jolycdib        // 1990 bootleg
+jolycdic        // 1993 bootleg
 sjcd2kx3        // (c) 1985 M.P.
 jolycdab        // (c) 1986 Inter Games
 jolycdsp        // (c) 1992 TAB-Austria
@@ -10159,8 +10184,6 @@ sexyboom        // (c) 1992 Sang Ho Soft
 sfkick          // (c) 1988 Haesung/HJ Corp
 sfkicka         // (c) 198? Haesung
 spinkick        // (c) 1988 Haesung/Seojin
-7mezzo          // (c) 198? Unknown
-magicfly        // (c) 198? P&A GAMES
 dynabomb        // (c) 2000 Limenko
 legendoh        // (c) 2000 Limenko
 sb2003          // (c) 2003 Limenko
@@ -10168,6 +10191,11 @@ sb2003a         // (c) 2003 Limenko
 spotty          // (c) 2001 Prince Co.
 carrera         // (c) 19?? BS Electronics
 chance32        // (c) 19?? PAL Company
+
+// Magic Fly hardware
+magicfly        // (c) 198? P&A GAMES
+7mezzo          // 198? Unknown
+bchance         // 198? Unknown
 
 // Golden Poker / Potten's Poker / Witch Card hardware
 goldnpkr        // (c) 1981 Bonanza
@@ -10429,9 +10457,12 @@ pesadelo        // (c) 1989 Forte II Games
 pengadvb        // (c) 1988 Screen
 spool99         // (c) 1998 Electronic Projects
 spool99a        // (c) 1998 Electronic Projects
+spool99b        // (c) 1998 Electronic Projects
+spool99c        // (c) 1998 Electronic Projects
 vcarn           // (c) 1999 Electronic Projects
 4roses          // (c) 1999 Unknown
 4rosesa         // (c) 1999 Unknown
+rugby           // (c) 1999 C.M.C.
 big10           // (c) 198? Unknown
 bingor1         // (c) 2002 Unknown
 bingor2         // (c) 2002 Unknown
@@ -10496,6 +10527,7 @@ cfever51        // (c) 2000 High Video
 cfever61        // (c) 2000 High Video
 cfever1k        // (c) 2000 High Video
 girotutt        // (c) 2000 High Video
+nyjoker         //
 
 // Sure games
 mil4000         // (c) 2000 Sure Milano
@@ -10628,6 +10660,7 @@ superwng        // (c) 1985 Wing Co. Ltd
 slotcarn        // (c) 1985 Wing Co. Ltd
 lucky74         // (c) 1988 Wing Co. Ltd
 lucky74a        // (c) 1988 Wing Co. Ltd
+lucky74b        // (c) 1988 Wing Co. Ltd
 lucky8          // (c) 1989 Wing Co. Ltd
 lucky8a         // (c) 1989 Wing Co. Ltd
 lucky8b         // (c) 1989 Wing Co. Ltd
@@ -10676,6 +10709,7 @@ nfb96a          // (c) 1996 Amcoe
 nfb96b          // (c) 1996 Amcoe
 nfb96c          // (c) 1996 Amcoe
 nfb96txt        // (c) 2000 Amcoe
+fb2010          // (c) 2009 Amcoe
 nfb96se         // bootleg
 nfb96sea        // bootleg
 nfb96seb        // bootleg
@@ -30402,4 +30436,5 @@ fruitstb
 bingoman
 bingomana
 
+number1    // 1996 San Remo Games
 #endif // !NCP

@@ -17,7 +17,7 @@ const device_type EF9340_1 = &device_creator<ef9340_1_device>;
 
 static const UINT8 bgr2rgb[8] =
 {
-    0x00, 0x04, 0x02, 0x06, 0x01, 0x05, 0x03, 0x07
+	0x00, 0x04, 0x02, 0x06, 0x01, 0x05, 0x03, 0x07
 };
 
 
@@ -100,9 +100,13 @@ UINT16 ef9340_1_device::ef9340_get_c_addr(UINT8 x, UINT8 y)
 void ef9340_1_device::ef9340_inc_c()
 {
 	m_ef9340.X++;
-	if ( m_ef9340.X >= 40 )
+	if ( m_ef9340.X == 40 || m_ef9340.X == 48 || m_ef9340.X == 56 || m_ef9340.X == 64 )
 	{
-		m_ef9340.Y = ( m_ef9340.Y + 1 ) % 24;
+		m_ef9340.Y = ( m_ef9340.Y + 1 ) & 0x1f;
+		if ( m_ef9340.Y == 24 )
+		{
+			m_ef9340.Y = 0;
+		}
 		m_ef9340.X = 0;
 	}
 }
@@ -135,25 +139,32 @@ void ef9340_1_device::ef9341_write( UINT8 command, UINT8 b, UINT8 data )
 			switch( m_ef9341.TB & 0xE0 )
 			{
 			case 0x00:  /* Begin row */
+logerror("begin row\n");
 				m_ef9340.X = 0;
 				m_ef9340.Y = m_ef9341.TA & 0x1F;
 				break;
 			case 0x20:  /* Load Y */
+logerror("load y\n");
 				m_ef9340.Y = m_ef9341.TA & 0x1F;
 				break;
 			case 0x40:  /* Load X */
+logerror("load x\n");
 				m_ef9340.X = m_ef9341.TA & 0x3F;
 				break;
 			case 0x60:  /* INC C */
+logerror("inc c\n");
 				ef9340_inc_c();
 				break;
 			case 0x80:  /* Load M */
+logerror("load m\n");
 				m_ef9340.M = m_ef9341.TA;
 				break;
 			case 0xA0:  /* Load R */
+logerror("load r\n");
 				m_ef9340.R = m_ef9341.TA;
 				break;
 			case 0xC0:  /* Load Y0 */
+logerror("load y0\n");
 				m_ef9340.Y0 = m_ef9341.TA & 0x3F;
 				break;
 			}
@@ -175,6 +186,7 @@ void ef9340_1_device::ef9341_write( UINT8 command, UINT8 b, UINT8 data )
 			switch ( m_ef9340.M & 0xE0 )
 			{
 				case 0x00:  /* Write */
+logerror("%d,%d = %02x, %02x\n", m_ef9340.X, m_ef9340.Y, m_ef9341.TB, m_ef9341.TA);
 					m_ef934x_ram_a[addr] = m_ef9341.TA;
 					m_ef934x_ram_b[addr] = m_ef9341.TB;
 					ef9340_inc_c();
@@ -198,12 +210,15 @@ void ef9340_1_device::ef9341_write( UINT8 command, UINT8 b, UINT8 data )
 
 				case 0x80:  /* Write slice */
 					{
+						UINT8 a = m_ef934x_ram_a[addr];
 						UINT8 b = m_ef934x_ram_b[addr];
 						UINT8 slice = ( m_ef9340.M & 0x0f ) % 10;
 
+logerror("write slice addr=%04x, b=%02x\n", addr, b);
 						if ( b >= 0xa0 )
 						{
-							m_ef934x_ext_char_ram[ external_chargen_address( b, slice ) ] = m_ef9341.TA;
+logerror("write slice external ram %04x\n", external_chargen_address(b,slice));
+							m_ef934x_ext_char_ram[ ( ( a & 0x80 ) << 3 ) | external_chargen_address( b, slice ) ] = BITSWAP8(m_ef9341.TA,0,1,2,3,4,5,6,7);
 						}
 
 						// Increment slice number
@@ -212,6 +227,7 @@ void ef9340_1_device::ef9341_write( UINT8 command, UINT8 b, UINT8 data )
 					break;
 
 				case 0xA0:  /* Read slice */
+				default:
 					fatalerror/*logerror*/("ef9341 unimplemented data action %02X\n", m_ef9340.M & 0xE0 );
 					break;
 			}
@@ -234,7 +250,7 @@ UINT8 ef9340_1_device::ef9341_read( UINT8 command, UINT8 b )
 	{
 		if ( b )
 		{
-			data = 0xFF;
+			data = 0;
 		}
 		else
 		{
@@ -304,19 +320,65 @@ void ef9340_1_device::ef9340_scanline(int vpos)
 			if ( a & 0x80 )
 			{
 				// Graphics
+				if ( b & 0x80 )
+				{
+					if ( b & 0x60 )
+					{
+						// Extension
+						char_data = m_ef934x_ext_char_ram[ 0x400 | external_chargen_address( b & 0x7f, slice ) ];
+						fg = bgr2rgb[ a & 0x07 ];
+						bg = bgr2rgb[ ( a >> 4 ) & 0x07 ];
+					}
+				}
+				else
+				{
+					// Normal
+					char_data = ef9341_char_set[1][b & 0x7f][slice];
+					fg = bgr2rgb[ a & 0x07 ];
+					bg = bgr2rgb[ ( a >> 4 ) & 0x07 ];
+				}
 			}
 			else
 			{
 				// Alphannumeric
 				if ( b & 0x80 )
 				{
-					// Special (DEL or Extension)
+					if ( b & 0x60 )
+					{
+						// Extension
+						char_data = m_ef934x_ext_char_ram[ external_chargen_address( b & 0x7f, slice ) ];
+
+						if ( a & 0x40 )
+						{
+							fg = bg;
+							bg = bgr2rgb[ a & 0x07 ];
+						}
+						else
+						{
+							fg = bgr2rgb[ a & 0x07 ];
+						}
+					}
+					else
+					{
+						// DEL
+						char_data = 0xff;
+						fg = bgr2rgb[ a & 0x07 ];
+					}
 				}
 				else
 				{
 					// Normal
 					char_data = ef9341_char_set[0][b & 0x7f][slice];
-					fg = bgr2rgb[ a & 0x07 ];
+
+					if ( a & 0x40 )
+					{
+						fg = bg;
+						bg = bgr2rgb[ a & 0x07 ];
+					}
+					else
+					{
+						fg = bgr2rgb[ a & 0x07 ];
+					}
 				}
 			}
 
@@ -328,4 +390,3 @@ void ef9340_1_device::ef9340_scanline(int vpos)
 		}
 	}
 }
-

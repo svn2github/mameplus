@@ -313,9 +313,10 @@ WRITE_LINE_MEMBER(merit_state::vsync_changed)
 	machine().device("maincpu")->execute().set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const mc6845_interface mc6845_intf =
+static MC6845_INTERFACE( mc6845_intf )
 {
 	"screen",                   /* screen we are acting on */
+	false,                      /* show border area */
 	8,                          /* number of pixels per video memory address */
 	begin_update,               /* before pixel update callback */
 	update_row,                 /* row update callback */
@@ -571,7 +572,7 @@ static INPUT_PORTS_START( meritpoker )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_DEAL )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT ) PORT_NAME( "Cash Out / Hi-Score" )
 
-	PORT_START("IN1") /* Pins #65 through #58 of J3 in decending order */
+	PORT_START("IN1") /* Pins #57 through #51 of J3 in decending order */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK )
@@ -676,7 +677,7 @@ static INPUT_PORTS_START( pitboss ) /* PCB pinout maps 12 lamp outputs - Where a
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_CODE(KEYCODE_Q) PORT_NAME("P1/P2 Cancel")
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN ) //causes "unauthorized conversion" msg.
 
-	PORT_START("IN1") /* Pins #65 through #58 of J3 in decending order */
+	PORT_START("IN1") /* Pins #57 through #51 of J3 in decending order */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK )
@@ -757,7 +758,7 @@ static INPUT_PORTS_START( casino5 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 ) PORT_NAME("Play")
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )   /* pulling this LOW makes the horse racing game to not work */
 
-	PORT_START("IN1") /* Pins #65 through #58 of J3 in decending order */
+	PORT_START("IN1") /* Pins #57 through #51 of J3 in decending order */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK )

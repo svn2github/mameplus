@@ -117,6 +117,7 @@ public:
 	virtual void machine_stop();
 	virtual void machine_reset();
 	virtual void video_start();
+	virtual void video_reset();
 	virtual void palette_init();
 	UINT32 screen_update_nes(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(nes_irq_callback);
@@ -124,6 +125,10 @@ public:
 	DECLARE_READ8_MEMBER(psg_4015_r);
 	DECLARE_WRITE8_MEMBER(psg_4015_w);
 	DECLARE_WRITE8_MEMBER(psg_4017_w);
+	void nes_banks_restore();
+	DECLARE_DEVICE_IMAGE_LOAD_MEMBER(nes_cart);
+	DECLARE_DEVICE_IMAGE_LOAD_MEMBER(nes_disk);
+	DECLARE_DEVICE_IMAGE_UNLOAD_MEMBER(nes_disk);
 
 	ioport_port       *m_io_ctrlsel;
 	ioport_port       *m_io_fckey[9];
@@ -138,7 +143,7 @@ public:
 	ioport_port       *m_io_zapper2_x;
 	ioport_port       *m_io_zapper2_y;
 	ioport_port       *m_io_paddle;
-	
+
 private:
 	/* devices */
 //  cpu_device        *m_maincpu;
@@ -153,11 +158,6 @@ private:
 
 
 /* protos */
-
-DEVICE_IMAGE_LOAD(nes_cart);
-DEVICE_START(nes_disk);
-DEVICE_IMAGE_LOAD(nes_disk);
-DEVICE_IMAGE_UNLOAD(nes_disk);
 
 int nes_ppu_vidaccess( device_t *device, int address, int data );
 

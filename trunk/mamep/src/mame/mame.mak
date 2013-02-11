@@ -805,6 +805,7 @@ $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/igs011.o \
 	$(DRIVERS)/igs017.o \
 	$(DRIVERS)/igs_m027.o \
+	$(DRIVERS)/igs_m036.o \
 	$(DRIVERS)/iqblock.o $(VIDEO)/iqblock.o \
 	$(DRIVERS)/lordgun.o $(VIDEO)/lordgun.o \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
@@ -1273,9 +1274,7 @@ $(MAMEOBJ)/sega.a: \
 	$(MACHINE)/megacd.o \
 	$(MACHINE)/megacdcd.o \
 	$(MACHINE)/mega32x.o \
-	$(MACHINE)/megasvp.o \
 	$(MACHINE)/megavdp.o \
-	$(MACHINE)/md_cart.o \
 	$(DRIVERS)/megadrvb.o \
 	$(DRIVERS)/megaplay.o \
 	$(DRIVERS)/megatech.o \
@@ -1556,6 +1555,7 @@ $(MAMEOBJ)/technos.a: \
 	$(DRIVERS)/xain.o $(VIDEO)/xain.o \
 
 $(MAMEOBJ)/tehkan.a: \
+	$(VIDEO)/tecmo_spr.o \
 	$(DRIVERS)/bombjack.o $(VIDEO)/bombjack.o \
 	$(DRIVERS)/gaiden.o $(VIDEO)/gaiden.o \
 	$(DRIVERS)/lvcards.o $(VIDEO)/lvcards.o \
@@ -1808,6 +1808,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/flipjack.o \
 	$(DRIVERS)/flower.o $(AUDIO)/flower.o $(VIDEO)/flower.o \
 	$(DRIVERS)/fortecar.o \
+	$(DRIVERS)/fresh.o \
 	$(DRIVERS)/freekick.o $(VIDEO)/freekick.o \
 	$(DRIVERS)/funkball.o \
 	$(DRIVERS)/galaxi.o \
@@ -1914,6 +1915,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/rgum.o \
 	$(DRIVERS)/roul.o \
 	$(DRIVERS)/savquest.o \
+	$(DRIVERS)/sanremo.o \
 	$(DRIVERS)/sfbonus.o \
 	$(DRIVERS)/shangkid.o $(VIDEO)/shangkid.o \
 	$(DRIVERS)/skeetsht.o \
@@ -2282,6 +2284,8 @@ $(DRIVERS)/s11.o:   $(LAYOUT)/s11.lh
 $(DRIVERS)/s11a.o:  $(LAYOUT)/s11a.lh
 $(DRIVERS)/s11b.o:  $(LAYOUT)/s11b.lh
 $(DRIVERS)/s11c.o:  $(LAYOUT)/s11c.lh
+
+$(DRIVERS)/sanremo.o:   $(LAYOUT)/sanremo.lh
 
 $(DRIVERS)/sbrkout.o:   $(LAYOUT)/sbrkout.lh
 

@@ -118,6 +118,8 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/cqm_dsk.o     \
 	$(LIBOBJ)/formats/csw_cas.o     \
 	$(LIBOBJ)/formats/d64_dsk.o     \
+	$(LIBOBJ)/formats/d67_dsk.o     \
+	$(LIBOBJ)/formats/d80_dsk.o     \
 	$(LIBOBJ)/formats/d81_dsk.o     \
 	$(LIBOBJ)/formats/d88_dsk.o     \
 	$(LIBOBJ)/formats/dfi_dsk.o     \
@@ -200,6 +202,10 @@ $(OBJ)/libformats.a: $(FORMATSOBJS)
 # zlib library objects
 #-------------------------------------------------
 
+ifdef DEBUG
+ZLIBOPTS=-Dverbose=-1
+endif
+
 ZLIBOBJS = \
 	$(LIBOBJ)/zlib/adler32.o \
 	$(LIBOBJ)/zlib/compress.o \
@@ -219,7 +225,7 @@ $(OBJ)/libz.a: $(ZLIBOBJS)
 
 $(LIBOBJ)/zlib/%.o: $(LIBSRC)/zlib/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CCOMFLAGS) $(CONLYFLAGS) -c $< -o $@
+	$(CC) $(CDEFS) $(CCOMFLAGS) $(CONLYFLAGS) $(ZLIBOPTS) -c $< -o $@
 
 
 

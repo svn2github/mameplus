@@ -17,12 +17,11 @@
 #include "includes/twincobr.h"
 
 
-static void twincobr_restore_screen(running_machine &machine);
-
 /* 6845 used for video sync signals only */
-const mc6845_interface twincobr_mc6845_intf =
+MC6845_INTERFACE( twincobr_mc6845_intf )
 {
 	"screen",   /* screen we are acting on */
+	false,      /* show border area */
 	2,          /* number of pixels per video memory address */ /* Horizontal Display programmed to 160 characters */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -133,15 +132,13 @@ VIDEO_START_MEMBER(twincobr_state,toaplan0)
 	state_save_register_global(machine(), m_bg_ram_bank);
 	state_save_register_global(machine(), m_flip_screen);
 	state_save_register_global(machine(), m_wardner_sprite_hack);
-	machine().save().register_postload(save_prepost_delegate(FUNC(twincobr_restore_screen), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(twincobr_state::twincobr_restore_screen), this));
 }
 
-static void twincobr_restore_screen(running_machine &machine)
+void twincobr_state::twincobr_restore_screen()
 {
-	twincobr_state *state = machine.driver_data<twincobr_state>();
-
-	twincobr_display(machine, state->m_display_on);
-	twincobr_flipscreen(machine, state->m_flip_screen);
+	twincobr_display(machine(), m_display_on);
+	twincobr_flipscreen(machine(), m_flip_screen);
 }
 
 

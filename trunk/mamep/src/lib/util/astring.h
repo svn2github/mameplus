@@ -189,10 +189,10 @@ private:
 	void normalize_substr(int &start, int &count, int length) const;
 
 	// internal state
-	char *			m_text;
-	int				m_alloclen;
-	int 			m_len;
-	char			m_smallbuf[32];
+	char *          m_text;
+	int             m_alloclen;
+	int             m_len;
+	char		m_smallbuf[32];
 };
 
 

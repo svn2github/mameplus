@@ -23,7 +23,7 @@ TODO:
 - IC13 games on the dev bios doesn't even load the cartridge / crashes the emulation at start-up,
   rom rearrange needed?
 - SCU DSP still has its fair share of issues, it also needs to be converted to CPU structure;
-- Add the RS232c interface (serial port),needed by fhboxers.
+- Add the RS232c interface (serial port), needed by fhboxers.
 - Video emulation bugs: check stvvdp2.c file.
 - Reimplement the idle skip if possible.
 - Properly emulate the protection chips, used by several games (check stvprot.c for more info)
@@ -86,7 +86,6 @@ also has a DSP;
 #include "cpu/m68000/m68000.h"
 #include "machine/eeprom.h"
 #include "cpu/sh2/sh2.h"
-#include "machine/stvcd.h"
 #include "machine/scudsp.h"
 #include "sound/scsp.h"
 #include "sound/cdda.h"
@@ -283,34 +282,34 @@ READ32_MEMBER(saturn_state::saturn_scu_r)
 	{
 		case 0x5c/4:
 		//  Super Major League and Shin Megami Tensei - Akuma Zensho reads from there (undocumented), DMA status mirror?
-			if(LOG_SCU) logerror("(PC=%08x) DMA status reg read\n",space.device().safe_pc());
+			if(LOG_SCU && !space.debugger_access()) logerror("(PC=%08x) DMA status reg read\n",space.device().safe_pc());
 			res = m_scu_regs[0x7c/4];
 			break;
 		case 0x7c/4:
-			if(LOG_SCU) logerror("(PC=%08x) DMA status reg read\n",space.device().safe_pc());
+			if(LOG_SCU && !space.debugger_access()) logerror("(PC=%08x) DMA status reg read\n",space.device().safe_pc());
 			res = m_scu_regs[offset];
 			break;
 		case 0x80/4:
 			res = dsp_prg_ctrl_r(space);
 			break;
 		case 0x8c/4:
-			if(LOG_SCU) logerror( "DSP mem read at %08X\n", m_scu_regs[34]);
+			if(LOG_SCU && !space.debugger_access()) logerror( "DSP mem read at %08X\n", m_scu_regs[34]);
 			res = dsp_ram_addr_r();
 			break;
 		case 0xa0/4:
-			if(LOG_SCU) logerror("(PC=%08x) IRQ mask reg read %08x MASK=%08x\n",space.device().safe_pc(),mem_mask,m_scu_regs[0xa0/4]);
+			if(LOG_SCU && !space.debugger_access()) logerror("(PC=%08x) IRQ mask reg read %08x MASK=%08x\n",space.device().safe_pc(),mem_mask,m_scu_regs[0xa0/4]);
 			res = m_scu.ism;
 			break;
 		case 0xa4/4:
-			if(LOG_SCU) logerror("(PC=%08x) IRQ status reg read %08x MASK=%08x\n",space.device().safe_pc(),mem_mask,m_scu_regs[0xa0/4]);
+			if(LOG_SCU && !space.debugger_access()) logerror("(PC=%08x) IRQ status reg read %08x MASK=%08x\n",space.device().safe_pc(),mem_mask,m_scu_regs[0xa0/4]);
 			res = m_scu.ist;
 			break;
 		case 0xc8/4:
-			logerror("(PC=%08x) SCU version reg read\n",space.device().safe_pc());
+			if(LOG_SCU && !space.debugger_access()) logerror("(PC=%08x) SCU version reg read\n",space.device().safe_pc());
 			res = 0x00000004;/*SCU Version 4, OK? */
 			break;
 		default:
-			if(LOG_SCU) logerror("(PC=%08x) SCU reg read at %d = %08x\n",space.device().safe_pc(),offset,m_scu_regs[offset]);
+			if(LOG_SCU && !space.debugger_access()) logerror("(PC=%08x) SCU reg read at %d = %08x\n",space.device().safe_pc(),offset,m_scu_regs[offset]);
 			res = m_scu_regs[offset];
 			break;
 	}
@@ -386,6 +385,7 @@ WRITE32_MEMBER(saturn_state::saturn_scu_w)
 		case 0xa4/4: /* IRQ control */
 			if(LOG_SCU) logerror("PC=%08x IRQ status reg set:%08x %08x\n",space.device().safe_pc(),m_scu_regs[41],mem_mask);
 			m_scu.ist &= m_scu_regs[offset];
+			scu_test_pending_irq();
 			break;
 		case 0xa8/4: if(LOG_SCU) logerror("A-Bus IRQ ACK %08x\n",m_scu_regs[42]); break;
 		case 0xc4/4: if(LOG_SCU) logerror("SCU SDRAM set: %02x\n",m_scu_regs[49]); break;
@@ -447,7 +447,7 @@ void saturn_state::scu_single_transfer(address_space &space, UINT32 src, UINT32 
 
 void saturn_state::scu_dma_direct(address_space &space, UINT8 dma_ch)
 {
-	UINT32 tmp_src,tmp_dst,tmp_size;
+	UINT32 tmp_src,tmp_dst,total_size;
 	UINT8 cd_transfer_flag;
 
 	if(m_scu.src_add[dma_ch] == 0 || (m_scu.dst_add[dma_ch] != 2 && m_scu.dst_add[dma_ch] != 4))
@@ -468,7 +468,7 @@ void saturn_state::scu_dma_direct(address_space &space, UINT8 dma_ch)
 
 	tmp_src = tmp_dst = 0;
 
-	tmp_size = m_scu.size[dma_ch];
+	total_size = m_scu.size[dma_ch];
 	if(!(DRUP(dma_ch))) tmp_src = m_scu.src[dma_ch];
 	if(!(DWUP(dma_ch))) tmp_dst = m_scu.dst[dma_ch];
 
@@ -512,17 +512,17 @@ void saturn_state::scu_dma_direct(address_space &space, UINT8 dma_ch)
 		}
 	}
 
-	m_scu.size[dma_ch] = tmp_size;
+	m_scu.size[dma_ch] = 0;
 	if(!(DRUP(dma_ch))) m_scu.src[dma_ch] = tmp_src;
 	if(!(DWUP(dma_ch))) m_scu.dst[dma_ch] = tmp_dst;
 
 	{
-		/*TODO: this is completely wrong HW-wise ...  */
+		/*TODO: change DMA into DRQ model. Timing is a guess.  */
 		switch(dma_ch)
 		{
-			case 0: machine().scheduler().timer_set(attotime::from_usec(300), timer_expired_delegate(FUNC(saturn_state::dma_lv0_ended),this)); break;
-			case 1: machine().scheduler().timer_set(attotime::from_usec(300), timer_expired_delegate(FUNC(saturn_state::dma_lv1_ended),this)); break;
-			case 2: machine().scheduler().timer_set(attotime::from_usec(300), timer_expired_delegate(FUNC(saturn_state::dma_lv2_ended),this)); break;
+			case 0: machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(total_size/4), timer_expired_delegate(FUNC(saturn_state::dma_lv0_ended),this)); break;
+			case 1: machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(total_size/4), timer_expired_delegate(FUNC(saturn_state::dma_lv1_ended),this)); break;
+			case 2: machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(total_size/4), timer_expired_delegate(FUNC(saturn_state::dma_lv2_ended),this)); break;
 		}
 	}
 }
@@ -535,6 +535,7 @@ void saturn_state::scu_dma_indirect(address_space &space,UINT8 dma_ch)
 	UINT32 tmp_src;
 	UINT32 indirect_src,indirect_dst;
 	INT32 indirect_size;
+	UINT32 total_size = 0;
 
 	DnMV_1(dma_ch);
 
@@ -581,7 +582,10 @@ void saturn_state::scu_dma_indirect(address_space &space,UINT8 dma_ch)
 			}
 		}
 
-		//if(DRUP(0))   space.write_dword(tmp_src+8,m_scu.src[0]|job_done ? 0x80000000 : 0);
+		/* Guess: Size + data acquire (1 cycle for src/dst/size) */
+		total_size += indirect_size + 3*4;
+
+		//if(DRUP(0)) space.write_dword(tmp_src+8,m_scu.src[0]|job_done ? 0x80000000 : 0);
 		//if(DWUP(0)) space.write_dword(tmp_src+4,m_scu.dst[0]);
 
 		m_scu.index[dma_ch] = tmp_src+0xc;
@@ -589,12 +593,12 @@ void saturn_state::scu_dma_indirect(address_space &space,UINT8 dma_ch)
 	}while(job_done == 0);
 
 	{
-		/*TODO: this is completely wrong HW-wise ...  */
+		/*TODO: change DMA into DRQ model. Timing is a guess.  */
 		switch(dma_ch)
 		{
-			case 0: machine().scheduler().timer_set(attotime::from_usec(300), timer_expired_delegate(FUNC(saturn_state::dma_lv0_ended),this)); break;
-			case 1: machine().scheduler().timer_set(attotime::from_usec(300), timer_expired_delegate(FUNC(saturn_state::dma_lv1_ended),this)); break;
-			case 2: machine().scheduler().timer_set(attotime::from_usec(300), timer_expired_delegate(FUNC(saturn_state::dma_lv2_ended),this)); break;
+			case 0: machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(total_size/4), timer_expired_delegate(FUNC(saturn_state::dma_lv0_ended),this)); break;
+			case 1: machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(total_size/4), timer_expired_delegate(FUNC(saturn_state::dma_lv1_ended),this)); break;
+			case 2: machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(total_size/4), timer_expired_delegate(FUNC(saturn_state::dma_lv2_ended),this)); break;
 		}
 	}
 }
@@ -622,6 +626,7 @@ WRITE32_MEMBER(saturn_state::minit_w)
 	//logerror("cpu %s (PC=%08X) MINIT write = %08x\n", space.device().tag(), space.device().safe_pc(),data);
 	machine().scheduler().boost_interleave(m_minit_boost_timeslice, attotime::from_usec(m_minit_boost));
 	machine().scheduler().trigger(1000);
+	machine().scheduler().synchronize(); // force resync
 	sh2_set_frt_input(m_slave, PULSE_LINE);
 }
 
@@ -629,8 +634,54 @@ WRITE32_MEMBER(saturn_state::sinit_w)
 {
 	//logerror("cpu %s (PC=%08X) SINIT write = %08x\n", space.device().tag(), space.device().safe_pc(),data);
 	machine().scheduler().boost_interleave(m_sinit_boost_timeslice, attotime::from_usec(m_sinit_boost));
+	machine().scheduler().synchronize(); // force resync
 	sh2_set_frt_input(m_maincpu, PULSE_LINE);
 }
+
+/*
+TODO:
+Some games seems to not like either MAME's interleave system and/or SH-2 DRC, causing an hard crash.
+Reported games are:
+Blast Wind (before FMV)
+Choro Q Park (car selection)
+060311E4: MOV.L R14,@-SP ;R14 = 0x60ffba0 / R15 = 0x60ffba0
+060311E6: MOV SP,R14 ;R14 = 0x60ffba0 / R15 = 0x60ffb9c / [0x60ffb9c] <- 0x60ffba0
+060311E8: MOV.L @SP+,R14 ;R14 = 0x60ffb9c / R15 = 0x60ffb9c / [0x60ffb9c] -> R14
+060311EA: RTS ;R14 = 0x60ffba0 / R15 = 0x60ffba0
+060311EC: NOP
+06031734: MULS.W R9, R8 ;R14 = 0x60ffba0 / R15 = 0x60ffba0 / EA = 0x60311E4
+on DRC this becomes:
+R14 0x6031b78 (cause of the crash later on), R15 = 0x60ffba4 and EA = 0
+
+Shinrei Jusatsushi Taromaru (options menu)
+
+*/
+
+WRITE32_MEMBER(saturn_state::saturn_minit_w)
+{
+	//logerror("cpu %s (PC=%08X) MINIT write = %08x\n", space.device().tag(), space.device().safe_pc(),data);
+	if(m_fake_comms->read() & 1)
+		machine().scheduler().synchronize(); // force resync
+	else
+	{
+		machine().scheduler().boost_interleave(m_minit_boost_timeslice, attotime::from_usec(m_minit_boost));
+		machine().scheduler().trigger(1000);
+	}
+
+	sh2_set_frt_input(m_slave, PULSE_LINE);
+}
+
+WRITE32_MEMBER(saturn_state::saturn_sinit_w)
+{
+	//logerror("cpu %s (PC=%08X) SINIT write = %08x\n", space.device().tag(), space.device().safe_pc(),data);
+	if(m_fake_comms->read() & 1)
+		machine().scheduler().synchronize(); // force resync
+	else
+		machine().scheduler().boost_interleave(m_sinit_boost_timeslice, attotime::from_usec(m_sinit_boost));
+
+	sh2_set_frt_input(m_maincpu, PULSE_LINE);
+}
+
 
 READ8_MEMBER(saturn_state::saturn_backupram_r)
 {
@@ -720,32 +771,33 @@ READ8_MEMBER(saturn_state::saturn_cart_type_r)
 
 static ADDRESS_MAP_START( saturn_mem, AS_PROGRAM, 32, saturn_state )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
-	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8_LEGACY(saturn_SMPC_r, saturn_SMPC_w,0xffffffff)
+	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(saturn_SMPC_r, saturn_SMPC_w,0xffffffff)
 	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE8(saturn_backupram_r, saturn_backupram_w,0xffffffff) AM_SHARE("share1")
 	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("workram_l")
-	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
-	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(sinit_w)
+	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(saturn_minit_w)
+	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(saturn_sinit_w)
 	AM_RANGE(0x02000000, 0x023fffff) AM_ROM AM_SHARE("share7") AM_REGION("maincpu", 0x80000)    // cartridge space
 //  AM_RANGE(0x02400000, 0x027fffff) AM_RAM //cart RAM area, dynamically allocated
 //  AM_RANGE(0x04000000, 0x047fffff) AM_RAM //backup RAM area, dynamically allocated
 	AM_RANGE(0x04fffffc, 0x04ffffff) AM_READ8(saturn_cart_type_r,0x000000ff)
-	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE_LEGACY(stvcd_r, stvcd_w)
+	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE(stvcd_r, stvcd_w)
 	/* Sound */
 	AM_RANGE(0x05a00000, 0x05a7ffff) AM_READWRITE16(saturn_soundram_r, saturn_soundram_w,0xffffffff)
 	AM_RANGE(0x05b00000, 0x05b00fff) AM_DEVREADWRITE16_LEGACY("scsp", scsp_r, scsp_w, 0xffffffff)
 	/* VDP1 */
-	AM_RANGE(0x05c00000, 0x05c7ffff) AM_READWRITE_LEGACY(saturn_vdp1_vram_r, saturn_vdp1_vram_w)
-	AM_RANGE(0x05c80000, 0x05cbffff) AM_READWRITE_LEGACY(saturn_vdp1_framebuffer0_r, saturn_vdp1_framebuffer0_w)
-	AM_RANGE(0x05d00000, 0x05d0001f) AM_READWRITE16_LEGACY(saturn_vdp1_regs_r, saturn_vdp1_regs_w,0xffffffff)
-	AM_RANGE(0x05e00000, 0x05efffff) AM_READWRITE_LEGACY(saturn_vdp2_vram_r, saturn_vdp2_vram_w)
-	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE_LEGACY(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
-	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE16_LEGACY(saturn_vdp2_regs_r, saturn_vdp2_regs_w,0xffffffff)
+	AM_RANGE(0x05c00000, 0x05c7ffff) AM_READWRITE(saturn_vdp1_vram_r, saturn_vdp1_vram_w)
+	AM_RANGE(0x05c80000, 0x05cbffff) AM_READWRITE(saturn_vdp1_framebuffer0_r, saturn_vdp1_framebuffer0_w)
+	AM_RANGE(0x05d00000, 0x05d0001f) AM_READWRITE16(saturn_vdp1_regs_r, saturn_vdp1_regs_w,0xffffffff)
+	AM_RANGE(0x05e00000, 0x05e7ffff) AM_MIRROR(0x80000) AM_READWRITE(saturn_vdp2_vram_r, saturn_vdp2_vram_w)
+	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
+	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE16(saturn_vdp2_regs_r, saturn_vdp2_regs_w,0xffffffff)
 	AM_RANGE(0x05fe0000, 0x05fe00cf) AM_READWRITE(saturn_scu_r, saturn_scu_w)
 	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x21f00000) AM_SHARE("workram_h")
 	AM_RANGE(0x20000000, 0x2007ffff) AM_ROM AM_SHARE("share6")  // bios mirror
 	AM_RANGE(0x22000000, 0x24ffffff) AM_ROM AM_SHARE("share7")  // cart mirror
 	AM_RANGE(0x45000000, 0x46ffffff) AM_WRITENOP
-	AM_RANGE(0xc0000000, 0xc00007ff) AM_RAM // cache RAM, Dragon Ball Z sprites needs this
+	AM_RANGE(0x60000000, 0x600003ff) AM_WRITENOP // cache address array
+	AM_RANGE(0xc0000000, 0xc00007ff) AM_RAM // cache data array, Dragon Ball Z sprites relies on this
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32, saturn_state )
@@ -757,17 +809,17 @@ static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32, saturn_state )
 	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
 	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(sinit_w)
 	AM_RANGE(0x02000000, 0x04ffffff) AM_ROM AM_SHARE("share7") AM_REGION("abus", 0) // cartridge
-	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE_LEGACY(stvcd_r, stvcd_w)
+	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE(stvcd_r, stvcd_w)
 	/* Sound */
 	AM_RANGE(0x05a00000, 0x05afffff) AM_READWRITE16(saturn_soundram_r, saturn_soundram_w,0xffffffff)
 	AM_RANGE(0x05b00000, 0x05b00fff) AM_DEVREADWRITE16_LEGACY("scsp", scsp_r, scsp_w, 0xffffffff)
 	/* VDP1 */
-	AM_RANGE(0x05c00000, 0x05c7ffff) AM_READWRITE_LEGACY(saturn_vdp1_vram_r, saturn_vdp1_vram_w)
-	AM_RANGE(0x05c80000, 0x05cbffff) AM_READWRITE_LEGACY(saturn_vdp1_framebuffer0_r, saturn_vdp1_framebuffer0_w)
-	AM_RANGE(0x05d00000, 0x05d0001f) AM_READWRITE16_LEGACY(saturn_vdp1_regs_r, saturn_vdp1_regs_w,0xffffffff)
-	AM_RANGE(0x05e00000, 0x05efffff) AM_READWRITE_LEGACY(saturn_vdp2_vram_r, saturn_vdp2_vram_w)
-	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE_LEGACY(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
-	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE16_LEGACY(saturn_vdp2_regs_r, saturn_vdp2_regs_w,0xffffffff)
+	AM_RANGE(0x05c00000, 0x05c7ffff) AM_READWRITE(saturn_vdp1_vram_r, saturn_vdp1_vram_w)
+	AM_RANGE(0x05c80000, 0x05cbffff) AM_READWRITE(saturn_vdp1_framebuffer0_r, saturn_vdp1_framebuffer0_w)
+	AM_RANGE(0x05d00000, 0x05d0001f) AM_READWRITE16(saturn_vdp1_regs_r, saturn_vdp1_regs_w,0xffffffff)
+	AM_RANGE(0x05e00000, 0x05e7ffff) AM_MIRROR(0x80000) AM_READWRITE(saturn_vdp2_vram_r, saturn_vdp2_vram_w)
+	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
+	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE16(saturn_vdp2_regs_r, saturn_vdp2_regs_w,0xffffffff)
 	AM_RANGE(0x05fe0000, 0x05fe00cf) AM_READWRITE(saturn_scu_r, saturn_scu_w)
 	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x21f00000) AM_SHARE("workram_h")
 	AM_RANGE(0x20000000, 0x2007ffff) AM_ROM AM_SHARE("share6")  // bios mirror
@@ -798,6 +850,7 @@ INPUT_CHANGED_MEMBER(saturn_state::key_stroke)
 	}
 }
 
+/* Note: unused bits must stay high, Bug 2 relies on this. */
 #define SATURN_PAD_P1(_mask_, _val_) \
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
@@ -812,7 +865,7 @@ INPUT_CHANGED_MEMBER(saturn_state::key_stroke)
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P1 Y") PORT_PLAYER(1) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P1 Z") PORT_PLAYER(1) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_NAME("P1 L") PORT_PLAYER(1) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
-	PORT_BIT( 0x0007, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) //read '1' when direct mode is polled
+	PORT_BIT( 0x0007, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_)
 
 #define SATURN_PAD_P2(_mask_, _val_) \
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(2) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
@@ -828,7 +881,7 @@ INPUT_CHANGED_MEMBER(saturn_state::key_stroke)
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P2 Y") PORT_PLAYER(2) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P2 Z") PORT_PLAYER(2) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_NAME("P2 L") PORT_PLAYER(2) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
-	PORT_BIT( 0x0007, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) //read '1' when direct mode is polled
+	PORT_BIT( 0x0007, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_)
 
 #define MD_PAD_P1(_mask_, _val_) \
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1) PORT_CONDITION("INPUT_TYPE", _mask_, EQUALS, _val_) \
@@ -876,13 +929,13 @@ INPUT_CHANGED_MEMBER(saturn_state::nmi_reset)
 INPUT_CHANGED_MEMBER(saturn_state::tray_open)
 {
 	if(newval)
-		stvcd_set_tray_open(machine());
+		stvcd_set_tray_open();
 }
 
 INPUT_CHANGED_MEMBER(saturn_state::tray_close)
 {
 	if(newval)
-		stvcd_set_tray_close(machine());
+		stvcd_set_tray_close();
 }
 
 static INPUT_PORTS_START( saturn )
@@ -1175,6 +1228,11 @@ static INPUT_PORTS_START( saturn )
 	PORT_CONFSETTING(0x70,"Megadrive 6B Pad")
 	PORT_CONFSETTING(0x80,"Saturn Mouse")
 	PORT_CONFSETTING(0x90,"<unconnected>")
+
+	PORT_START("fake")
+	PORT_CONFNAME(0x01,0x00,"Master-Slave Comms")
+	PORT_CONFSETTING(0x00,"Normal (400 cycles)")
+	PORT_CONFSETTING(0x01,"One Shot (Hack)")
 INPUT_PORTS_END
 
 #define STV_PLAYER_INPUTS(_n_, _b1_, _b2_, _b3_,_b4_)                       \
@@ -1517,7 +1575,7 @@ static INPUT_PORTS_START( myfairld )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("IO_TYPE")
-	PORT_CONFNAME( 0x01, 0x00, "I/O Device type" )
+	PORT_CONFNAME( 0x01, 0x01, "I/O Device type" )
 	PORT_CONFSETTING(    0x00, "Mahjong Panel" )
 	PORT_CONFSETTING(    0x01, "Joystick" )
 INPUT_PORTS_END
@@ -1585,13 +1643,6 @@ static GFXDECODE_START( stv )
 	GFXDECODE_ENTRY( NULL, 0, tiles16x16x4_layout, 0x00, (0x80*(2+1))  )
 	GFXDECODE_ENTRY( NULL, 0, tiles8x8x8_layout,   0x00, (0x08*(2+1))  )
 	GFXDECODE_ENTRY( NULL, 0, tiles16x16x8_layout, 0x00, (0x08*(2+1))  )
-
-	/* vdp1 .. pointless for drawing but can help us debug */
-	GFXDECODE_ENTRY( NULL, 0, tiles8x8x4_layout,   0x00, 0x100  )
-	GFXDECODE_ENTRY( NULL, 0, tiles16x16x4_layout, 0x00, 0x100  )
-	GFXDECODE_ENTRY( NULL, 0, tiles8x8x8_layout,   0x00, 0x20  )
-	GFXDECODE_ENTRY( NULL, 0, tiles16x16x8_layout, 0x00, 0x20  )
-
 GFXDECODE_END
 
 static const sh2_cpu_core sh2_conf_master = { 0, NULL };
@@ -1738,7 +1789,7 @@ MACHINE_START_MEMBER(saturn_state,stv)
 
 	stv_register_protection_savestates(machine()); // machine/stvprot.c
 
-	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(stvcd_exit), &machine()));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(saturn_state::stvcd_exit), this));
 
 	m_smpc.rtc_data[0] = DectoBCD(systime.local_time.year /100);
 	m_smpc.rtc_data[1] = DectoBCD(systime.local_time.year %100);
@@ -1783,7 +1834,7 @@ MACHINE_START_MEMBER(saturn_state,saturn)
 	state_save_register_global_array(machine(), m_smpc.SMEM);
 	state_save_register_global_pointer(machine(), m_cart_dram, 0x400000/4);
 
-	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(stvcd_exit), &machine()));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(saturn_state::stvcd_exit), this));
 
 	m_smpc.rtc_data[0] = DectoBCD(systime.local_time.year /100);
 	m_smpc.rtc_data[1] = DectoBCD(systime.local_time.year %100);
@@ -1822,7 +1873,6 @@ TODO:
 
 TIMER_DEVICE_CALLBACK_MEMBER(saturn_state::saturn_scanline)
 {
-	saturn_state *state = machine().driver_data<saturn_state>();
 	int scanline = param;
 	int max_y = machine().primary_screen->height();
 	int y_step,vblank_line;
@@ -1838,7 +1888,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(saturn_state::saturn_scanline)
 
 	if(scanline == (0)*y_step)
 	{
-		video_update_vdp1(machine());
+		video_update_vdp1();
 
 		if(STV_VDP1_VBE)
 			m_vdp1.framebuffer_clear_on_next_frame = 1;
@@ -1994,6 +2044,7 @@ MACHINE_RESET_MEMBER(saturn_state,saturn)
 
 	m_en_68k = 0;
 	m_NMI_reset = 0;
+	m_smpc.slave_on = 0;
 
 	m_scu_regs[31] = 0; //DMA_STATUS = 0;
 
@@ -2003,7 +2054,7 @@ MACHINE_RESET_MEMBER(saturn_state,saturn)
 	machine().device("maincpu")->set_unscaled_clock(MASTER_CLOCK_320/2);
 	machine().device("slave")->set_unscaled_clock(MASTER_CLOCK_320/2);
 
-	stvcd_reset( machine() );
+	stvcd_reset();
 
 	m_cart_type = ioport("CART_AREA")->read() & 7;
 
@@ -2079,7 +2130,7 @@ MACHINE_RESET_MEMBER(saturn_state,stv)
 	machine().device("maincpu")->set_unscaled_clock(MASTER_CLOCK_320/2);
 	machine().device("slave")->set_unscaled_clock(MASTER_CLOCK_320/2);
 
-	stvcd_reset(machine());
+	stvcd_reset();
 
 	m_stv_rtc_timer->adjust(attotime::zero, 0, attotime::from_seconds(1));
 	m_prev_bankswitch = 0xff;
@@ -2102,7 +2153,7 @@ struct cdrom_interface saturn_cdrom =
 
 
 
-static DEVICE_IMAGE_LOAD( sat_cart )
+DEVICE_IMAGE_LOAD_MEMBER( saturn_state, sat_cart )
 {
 	UINT8 *ROM = image.device().machine().root_device().memregion("maincpu")->base()+0x080000;
 	UINT32 length;
@@ -2154,19 +2205,14 @@ static MACHINE_CONFIG_START( saturn, saturn_state )
 
 	MCFG_NVRAM_HANDLER(saturn)
 
-	MCFG_TIMER_ADD("sector_timer", stv_sector_cb)
-	MCFG_TIMER_ADD("sh1_cmd", stv_sh1_sim)
+	MCFG_TIMER_DRIVER_ADD("sector_timer", saturn_state, stv_sector_cb)
+	MCFG_TIMER_DRIVER_ADD("sh1_cmd", saturn_state, stv_sh1_sim)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_320/8, 427, 0, 320, 263, 0, 224)
-	#if NEW_VIDEO_CODE
-	MCFG_SCREEN_UPDATE_DRIVER(saturn_state, screen_update_saturn)
-	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness. (TODO: remove AT LEAST the latter)
-	#else
 	MCFG_SCREEN_UPDATE_DRIVER(saturn_state, screen_update_stv_vdp2)
 	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness.
-	#endif
 
 	MCFG_GFXDECODE(stv)
 
@@ -2191,7 +2237,7 @@ MACHINE_CONFIG_DERIVED( saturnus, saturn )
 
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_INTERFACE("sat_cart")
-	MCFG_CARTSLOT_LOAD(sat_cart)
+	MCFG_CARTSLOT_LOAD(saturn_state, sat_cart)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","sat_cart")
 
 MACHINE_CONFIG_END
@@ -2203,7 +2249,7 @@ MACHINE_CONFIG_DERIVED( saturneu, saturn )
 
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_INTERFACE("sat_cart")
-	MCFG_CARTSLOT_LOAD(sat_cart)
+	MCFG_CARTSLOT_LOAD(saturn_state, sat_cart)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","sat_cart")
 
 MACHINE_CONFIG_END
@@ -2215,7 +2261,7 @@ MACHINE_CONFIG_DERIVED( saturnjp, saturn )
 
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_INTERFACE("sat_cart")
-	MCFG_CARTSLOT_LOAD(sat_cart)
+	MCFG_CARTSLOT_LOAD(saturn_state, sat_cart)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","sat_cart")
 
 MACHINE_CONFIG_END
@@ -2242,20 +2288,15 @@ static MACHINE_CONFIG_START( stv, saturn_state )
 
 	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
 
-	MCFG_TIMER_ADD("sector_timer", stv_sector_cb)
-	MCFG_TIMER_ADD("sh1_cmd", stv_sh1_sim)
+	MCFG_TIMER_DRIVER_ADD("sector_timer", saturn_state, stv_sector_cb)
+	MCFG_TIMER_DRIVER_ADD("sh1_cmd", saturn_state, stv_sh1_sim)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_320/8, 427, 0, 320, 263, 0, 224)
-	#if NEW_VIDEO_CODE
-	MCFG_SCREEN_UPDATE_DRIVER(saturn_state, screen_update_saturn)
-	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness. (TODO: remove AT LEAST the latter)
-	#else
 	MCFG_SCREEN_UPDATE_DRIVER(saturn_state, screen_update_stv_vdp2)
 	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness.
-	#endif
 
 	MCFG_GFXDECODE(stv)
 
@@ -2289,7 +2330,7 @@ static const struct stv_cart_region stv_cart_table[] =
 	{ 0 }
 };
 
-static DEVICE_IMAGE_LOAD( stv_cart )
+DEVICE_IMAGE_LOAD_MEMBER( saturn_state, stv_cart )
 {
 //  saturn_state *state = image.device().machine().driver_data<saturn_state>();
 	const struct stv_cart_region *stv_cart = &stv_cart_table[0], *this_cart;
@@ -2342,7 +2383,7 @@ static DEVICE_IMAGE_LOAD( stv_cart )
 #define MCFG_STV_CARTSLOT_ADD(_tag) \
 	MCFG_CARTSLOT_ADD(_tag) \
 	MCFG_CARTSLOT_INTERFACE("stv_cart") \
-	MCFG_CARTSLOT_LOAD(stv_cart)
+	MCFG_CARTSLOT_LOAD(saturn_state,stv_cart)
 
 MACHINE_CONFIG_FRAGMENT( stv_cartslot )
 	MCFG_STV_CARTSLOT_ADD("cart1")
@@ -2356,6 +2397,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( stv_slot, stv )
 	MCFG_FRAGMENT_ADD( stv_cartslot )
 MACHINE_CONFIG_END
+
 
 
 void saturn_state::saturn_init_driver(int rgn)

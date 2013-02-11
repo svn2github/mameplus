@@ -22,30 +22,18 @@ Known Non-Issues (confirmed on Real Genesis)
 
 
 #include "emu.h"
-#include "coreutil.h"
-#include "cpu/m68000/m68000.h"
-#include "cpu/sh2/sh2.h"
-#include "cpu/sh2/sh2comn.h"
-#include "cpu/z80/z80.h"
-#include "sound/2612intf.h"
-
-#include "sound/dac.h"
-
-#include "sound/sn76496.h"
-#include "imagedev/chd_cd.h"
 #include "includes/megadriv.h"
-#include "machine/nvram.h"
-#include "cpu/ssp1601/ssp1601.h"
-
-#include "machine/megavdp.h"
 
 
+
+MACHINE_CONFIG_EXTERN( megadriv );
 
 
 static cpu_device *_genesis_snd_z80_cpu;
 int genesis_other_hacks = 0; // misc hacks
 
 timer_device* megadriv_scanline_timer;
+cpu_device *_svp_cpu;
 
 struct genesis_z80_vars
 {
@@ -875,47 +863,13 @@ static ADDRESS_MAP_START( md_bootleg_map, AS_PROGRAM, 16, md_base_state )
 	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_MIRROR(0x1f0000) AM_SHARE("megadrive_ram")
 ADDRESS_MAP_END
 
-MACHINE_CONFIG_DERIVED( md_bootleg, megadriv )
+MACHINE_CONFIG_START( md_bootleg, md_base_state )
+	MCFG_FRAGMENT_ADD( md_ntsc )
 
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(md_bootleg_map)
 MACHINE_CONFIG_END
 
-
-
-
-
-INPUT_PORTS_START( megdsvp )
-	PORT_INCLUDE( megadriv )
-
-	PORT_START("MEMORY_TEST") /* special memtest mode */
-	/* Region setting for Console */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Test ) )
-	PORT_DIPSETTING( 0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING( 0x01, DEF_STR( On ) )
-INPUT_PORTS_END
-
-MACHINE_CONFIG_FRAGMENT( md_svp )
-	MCFG_CPU_ADD("svp", SSP1601, MASTER_CLOCK_NTSC / 7 * 3) /* ~23 MHz (guessed) */
-	MCFG_CPU_PROGRAM_MAP(svp_ssp_map)
-	MCFG_CPU_IO_MAP(svp_ext_map)
-MACHINE_CONFIG_END
-
-MACHINE_CONFIG_DERIVED( megdsvp, megadriv )
-
-	MCFG_CPU_ADD("svp", SSP1601, MASTER_CLOCK_NTSC / 7 * 3) /* ~23 MHz (guessed) */
-	MCFG_CPU_PROGRAM_MAP(svp_ssp_map)
-	MCFG_CPU_IO_MAP(svp_ext_map)
-	/* IRQs are not used by this CPU */
-MACHINE_CONFIG_END
-
-MACHINE_CONFIG_DERIVED( megdsvppal, megadpal )
-
-	MCFG_CPU_ADD("svp", SSP1601, MASTER_CLOCK_PAL / 7 * 3) /* ~23 MHz (guessed) */
-	MCFG_CPU_PROGRAM_MAP(svp_ssp_map)
-	MCFG_CPU_IO_MAP(svp_ext_map)
-	/* IRQs are not used by this CPU */
-MACHINE_CONFIG_END
 
 
 
@@ -1030,8 +984,8 @@ void megadriv_stop_scanline_timer(running_machine &machine)
 
 
 
-UINT16* megadriv_backupram;
-int megadriv_backupram_length;
+static UINT16* megadriv_backupram;
+static int megadriv_backupram_length;
 
 static NVRAM_HANDLER( megadriv )
 {
@@ -1091,18 +1045,16 @@ void genesis_vdp_lv4irqline_callback_genesis_68k(running_machine &machine, bool 
 }
 
 /* Callback when the 68k takes an IRQ */
-static IRQ_CALLBACK(genesis_int_callback)
+IRQ_CALLBACK_MEMBER(md_base_state::genesis_int_callback)
 {
-	md_base_state *state = device->machine().driver_data<md_base_state>();
-
 	if (irqline==4)
 	{
-		state->m_vdp->vdp_clear_irq4_pending();
+		m_vdp->vdp_clear_irq4_pending();
 	}
 
 	if (irqline==6)
 	{
-		state->m_vdp->vdp_clear_irq6_pending();
+		m_vdp->vdp_clear_irq6_pending();
 	}
 
 	return (0x60+irqline*4)/4; // vector address
@@ -1192,10 +1144,6 @@ MACHINE_CONFIG_FRAGMENT( md_ntsc )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker",0.25) /* 3.58 MHz */
 MACHINE_CONFIG_END
 
-MACHINE_CONFIG_START( megadriv, md_cons_state )
-	MCFG_FRAGMENT_ADD(md_ntsc)
-MACHINE_CONFIG_END
-
 /************ PAL hardware has a different master clock *************/
 
 MACHINE_CONFIG_FRAGMENT( md_pal )
@@ -1247,133 +1195,51 @@ MACHINE_CONFIG_FRAGMENT( md_pal )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker",0.25) /* 3.58 MHz */
 MACHINE_CONFIG_END
 
-MACHINE_CONFIG_START( megadpal, md_cons_state )
-	MCFG_FRAGMENT_ADD(md_pal)
-MACHINE_CONFIG_END
-
-
-
-
-MACHINE_CONFIG_DERIVED( genesis_32x, megadriv )
-
-	MCFG_DEVICE_ADD("sega32x", SEGA_32X_NTSC, 0)
-
-	// we need to remove and re-add the sound system because the balance is different
-	// due to MAME / MESS having severe issues if the dac output is > 0.40? (sound is corrupted even if DAC is slient?!)
-	MCFG_DEVICE_REMOVE("ymsnd")
-	MCFG_DEVICE_REMOVE("snsnd")
-
-	MCFG_SOUND_ADD("ymsnd", YM2612, MASTER_CLOCK_NTSC/7)
-	MCFG_SOUND_ROUTE(0, "lspeaker", (0.50)/2)
-	MCFG_SOUND_ROUTE(1, "rspeaker", (0.50)/2)
-
-	/* sound hardware */
-	MCFG_SOUND_ADD("snsnd", SEGAPSG, MASTER_CLOCK_NTSC/15)
-	MCFG_SOUND_CONFIG(psg_intf)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", (0.25)/2)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", (0.25)/2)
-
-MACHINE_CONFIG_END
-
-
-MACHINE_CONFIG_DERIVED( genesis_32x_pal, megadpal )
-
-	MCFG_DEVICE_ADD("sega32x", SEGA_32X_PAL, 0)
-
-	// we need to remove and re-add the sound system because the balance is different
-	// due to MAME / MESS having severe issues if the dac output is > 0.40? (sound is corrupted even if DAC is slient?!)
-	MCFG_DEVICE_REMOVE("ymsnd")
-	MCFG_DEVICE_REMOVE("snsnd")
-
-	MCFG_SOUND_ADD("ymsnd", YM2612, MASTER_CLOCK_NTSC/7)
-	MCFG_SOUND_ROUTE(0, "lspeaker", (0.50)/2)
-	MCFG_SOUND_ROUTE(1, "rspeaker", (0.50)/2)
-
-	/* sound hardware */
-	MCFG_SOUND_ADD("snsnd", SEGAPSG, MASTER_CLOCK_NTSC/15)
-	MCFG_SOUND_CONFIG(psg_intf)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", (0.25)/2)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", (0.25)/2)
-
-MACHINE_CONFIG_END
-
-struct cdrom_interface scd_cdrom =
-{
-	"scd_cdrom",
-	NULL
-};
-
-MACHINE_CONFIG_DERIVED( genesis_scd, megadriv )
-	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_US, 0)
-	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
-MACHINE_CONFIG_END
-
-/* Different Softlists for different regions (for now at least) */
-MACHINE_CONFIG_DERIVED( genesis_scd_scd, genesis_scd )
-	MCFG_SOFTWARE_LIST_ADD("cd_list","segacd")
-MACHINE_CONFIG_END
-
-MACHINE_CONFIG_DERIVED( genesis_scd_mcd, genesis_scd )
-	MCFG_SOFTWARE_LIST_ADD("cd_list","megacd")
-MACHINE_CONFIG_END
-
-MACHINE_CONFIG_DERIVED( genesis_scd_mcdj, genesis_scd )
-	MCFG_SOFTWARE_LIST_ADD("cd_list","megacdj")
-MACHINE_CONFIG_END
-
-MACHINE_CONFIG_DERIVED( genesis_32x_scd, genesis_32x )
-
-	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_US, 0)
-	//MCFG_QUANTUM_PERFECT_CPU("32x_master_sh2")
-MACHINE_CONFIG_END
-
-
-
 
 static int megadriv_tas_callback(device_t *device)
 {
 	return 0; // writeback not allowed
 }
 
-static void megadriv_init_common(running_machine &machine)
+void md_base_state::megadriv_init_common()
 {
 	/* Look to see if this system has the standard Sound Z80 */
-	_genesis_snd_z80_cpu = machine.device<cpu_device>("genesis_snd_z80");
+	_genesis_snd_z80_cpu = machine().device<cpu_device>("genesis_snd_z80");
 	if (_genesis_snd_z80_cpu != NULL)
 	{
 		//printf("GENESIS Sound Z80 cpu found '%s'\n", _genesis_snd_z80_cpu->tag() );
 
-		genz80.z80_prgram = auto_alloc_array(machine, UINT8, 0x2000);
-		machine.root_device().membank("bank1")->set_base(genz80.z80_prgram );
+		genz80.z80_prgram = auto_alloc_array(machine(), UINT8, 0x2000);
+		machine().root_device().membank("bank1")->set_base(genz80.z80_prgram );
 	}
 
 	/* Look to see if this system has the 32x Master SH2 */
-	_32x_master_cpu = machine.device<cpu_device>(_32X_MASTER_TAG);
+	_32x_master_cpu = machine().device<cpu_device>(_32X_MASTER_TAG);
 	if (_32x_master_cpu != NULL)
 	{
 		printf("32x MASTER SH2 cpu found '%s'\n", _32x_master_cpu->tag() );
 	}
 
 	/* Look to see if this system has the 32x Slave SH2 */
-	_32x_slave_cpu = machine.device<cpu_device>(_32X_SLAVE_TAG);
+	_32x_slave_cpu = machine().device<cpu_device>(_32X_SLAVE_TAG);
 	if (_32x_slave_cpu != NULL)
 	{
 		printf("32x SLAVE SH2 cpu found '%s'\n", _32x_slave_cpu->tag() );
 	}
 
-	_svp_cpu = machine.device<cpu_device>("svp");
+	_svp_cpu = machine().device<cpu_device>("svp");
 	if (_svp_cpu != NULL)
 	{
-		printf("SVP (cpu) found '%s'\n", _svp_cpu->tag() );
+		printf("SVP (cpu) found '%s'\n", _svp_cpu->tag());
 	}
 
-	machine.device("maincpu")->execute().set_irq_acknowledge_callback(genesis_int_callback);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(md_base_state::genesis_int_callback),this));
 	megadriv_backupram = NULL;
 	megadriv_backupram_length = 0;
 
 	vdp_get_word_from_68k_mem = vdp_get_word_from_68k_mem_default;
 
-	m68k_set_tas_callback(machine.device("maincpu"), megadriv_tas_callback);
+	m68k_set_tas_callback(machine().device("maincpu"), megadriv_tas_callback);
 
 	// the drivers which need 6 buttons pad set this to 1 in their init befare calling the megadrive init
 	if (megadrive_6buttons_pad)
@@ -1394,7 +1260,7 @@ static void megadriv_init_common(running_machine &machine)
 		  some games specify a single address, (start 200001, end 200001)
 		  this usually means there is serial eeprom instead */
 		int i;
-		UINT16 *rom = (UINT16*)machine.root_device().memregion("maincpu")->base();
+		UINT16 *rom = (UINT16*)machine().root_device().memregion("maincpu")->base();
 
 		mame_printf_debug("DEBUG:: Header: Backup RAM string (ignore for games without)\n");
 		for (i=0;i<12;i++)
@@ -1407,14 +1273,6 @@ static void megadriv_init_common(running_machine &machine)
 		}
 		mame_printf_debug("\n");
 	}
-
-	/* if we have an SVP cpu then do some extra initilization for it */
-	if (_svp_cpu != NULL)
-	{
-		svp_init(machine);
-	}
-
-
 }
 
 DRIVER_INIT_MEMBER(md_base_state,megadriv_c2)
@@ -1422,7 +1280,7 @@ DRIVER_INIT_MEMBER(md_base_state,megadriv_c2)
 	genvdp_use_cram = 0;
 	genesis_other_hacks = 0;
 
-	megadriv_init_common(machine());
+	megadriv_init_common();
 	megadriv_framerate = 60;
 }
 
@@ -1433,7 +1291,7 @@ DRIVER_INIT_MEMBER(md_base_state,megadriv)
 	genvdp_use_cram = 1;
 	genesis_other_hacks = 1;
 
-	megadriv_init_common(machine());
+	megadriv_init_common();
 	megadriv_framerate = 60;
 }
 
@@ -1442,7 +1300,7 @@ DRIVER_INIT_MEMBER(md_base_state,megadrij)
 	genvdp_use_cram = 1;
 	genesis_other_hacks = 1;
 
-	megadriv_init_common(machine());
+	megadriv_init_common();
 	megadriv_framerate = 60;
 }
 
@@ -1451,7 +1309,7 @@ DRIVER_INIT_MEMBER(md_base_state,megadrie)
 	genvdp_use_cram = 1;
 	genesis_other_hacks = 1;
 
-	megadriv_init_common(machine());
+	megadriv_init_common();
 	megadriv_framerate = 50;
 }
 

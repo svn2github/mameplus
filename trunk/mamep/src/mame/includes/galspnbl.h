@@ -5,6 +5,8 @@
 
 *************************************************************************/
 
+#include "video/tecmo_spr.h"
+
 class galspnbl_state : public driver_device
 {
 public:
@@ -30,4 +32,5 @@ public:
 	virtual void machine_start();
 	virtual void palette_init();
 	UINT32 screen_update_galspnbl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void draw_background( bitmap_ind16 &bitmap, const rectangle &cliprect );
 };

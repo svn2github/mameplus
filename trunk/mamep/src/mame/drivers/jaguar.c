@@ -348,9 +348,6 @@ Notes:
 #define M68K_CLOCK          XTAL_50MHz
 
 static QUICKLOAD_LOAD( jaguar );
-static DEVICE_START( jaguar_cart );
-static DEVICE_IMAGE_LOAD( jaguar );
-
 
 
 /*************************************
@@ -359,7 +356,7 @@ static DEVICE_IMAGE_LOAD( jaguar );
  *
  *************************************/
 
-static IRQ_CALLBACK(jaguar_irq_callback)
+IRQ_CALLBACK_MEMBER(jaguar_state::jaguar_irq_callback)
 {
 	return (irqline == 6) ? 0x40 : -1;
 }
@@ -375,7 +372,7 @@ static IRQ_CALLBACK(jaguar_irq_callback)
 void jaguar_state::machine_reset()
 {
 	if (!m_is_cojag)
-		m_main_cpu->set_irq_acknowledge_callback(jaguar_irq_callback);
+		m_main_cpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(jaguar_state::jaguar_irq_callback),this));
 
 	m_protection_check = 0;
 
@@ -437,14 +434,14 @@ void jaguar_state::machine_reset()
 *
 ********************************************************************/
 /*
-static emu_file *jaguar_nvram_fopen( running_machine &machine, UINT32 openflags)
+emu_file jaguar_state::*jaguar_nvram_fopen( UINT32 openflags)
 {
-    device_image_interface *image = dynamic_cast<device_image_interface *>(machine.device("cart"));
+    device_image_interface *image = dynamic_cast<device_image_interface *>(machine().device("cart"));
     file_error filerr;
     emu_file *file;
     if (image->exists())
     {
-        astring fname(machine.system().name, PATH_SEPARATOR, image->basename_noext(), ".nv");
+        astring fname(machine().system().name, PATH_SEPARATOR, image->basename_noext(), ".nv");
         filerr = mame_fopen( SEARCHPATH_NVRAM, fname, openflags, &file);
         return (filerr == FILERR_NONE) ? file : NULL;
     }
@@ -452,12 +449,12 @@ static emu_file *jaguar_nvram_fopen( running_machine &machine, UINT32 openflags)
         return NULL;
 }
 
-static void jaguar_nvram_load(running_machine &machine)
+void jaguar_state::jaguar_nvram_load()
 {
     emu_file *nvram_file = NULL;
     device_t *device;
 
-    for (device = machine.m_devicelist.first(); device != NULL; device = device->next())
+    for (device = machine().m_devicelist.first(); device != NULL; device = device->next())
     {
         device_nvram_func nvram = (device_nvram_func)device->get_config_fct(DEVINFO_FCT_NVRAM);
         if (nvram != NULL)
@@ -472,12 +469,12 @@ static void jaguar_nvram_load(running_machine &machine)
 }
 
 
-static void jaguar_nvram_save(running_machine &machine)
+void jaguar_state::jaguar_nvram_save()
 {
     emu_file *nvram_file = NULL;
     device_t *device;
 
-    for (device = machine.m_devicelist.first(); device != NULL; device = device->next())
+    for (device = machine().m_devicelist.first(); device != NULL; device = device->next())
     {
         device_nvram_func nvram = (device_nvram_func)device->get_config_fct(DEVINFO_FCT_NVRAM);
         if (nvram != NULL)
@@ -1545,15 +1542,7 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const r3000_cpu_core r3000_config =
-{
-	0,      /* 1 if we have an FPU, 0 otherwise */
-	4096,   /* code cache size */
-	4096    /* data cache size */
-};
-
-
-static const jaguar_cpu_config gpu_config =
+	static const jaguar_cpu_config gpu_config =
 {
 	&jaguar_state::gpu_cpu_int
 };
@@ -1567,8 +1556,8 @@ static const jaguar_cpu_config dsp_config =
 static MACHINE_CONFIG_START( cojagr3k, jaguar_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", R3041BE, R3000_CLOCK)
-	MCFG_CPU_CONFIG(r3000_config)
+	MCFG_CPU_ADD("maincpu", R3041, R3000_CLOCK)
+	MCFG_R3000_ENDIANNESS(ENDIANNESS_BIG)
 	MCFG_CPU_PROGRAM_MAP(r3000_map)
 
 	MCFG_CPU_ADD("gpu", JAGUARGPU, COJAG_CLOCK/2)
@@ -1652,8 +1641,7 @@ static MACHINE_CONFIG_START( jaguar, jaguar_state )
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_EXTENSION_LIST("j64,rom")
 	MCFG_CARTSLOT_INTERFACE("jaguar_cart")
-	MCFG_CARTSLOT_START(jaguar_cart)
-	MCFG_CARTSLOT_LOAD(jaguar)
+	MCFG_CARTSLOT_LOAD(jaguar_state,jaguar_cart)
 
 	/* software lists */
 	MCFG_SOFTWARE_LIST_ADD("cart_list","jaguar")
@@ -1692,7 +1680,7 @@ DRIVER_INIT_MEMBER(jaguar_state,jaguar)
 {
 	m_hacks_enabled = false;
 	save_item(NAME(m_joystick_data));
-	m_using_cart = false;
+	cart_start();
 
 	for (int i=0;i<0x20000/4;i++) // the cd bios is bigger.. check
 	{
@@ -1778,11 +1766,6 @@ int jaguar_state::quickload(device_image_interface &image, const char *file_type
 	return IMAGE_INIT_PASS;
 }
 
-static DEVICE_START( jaguar_cart )
-{
-	device->machine().driver_data<jaguar_state>()->cart_start();
-}
-
 void jaguar_state::cart_start()
 {
 	/* Initialize for no cartridge present */
@@ -1790,9 +1773,9 @@ void jaguar_state::cart_start()
 	memset( m_cart_base, 0, memshare("cart")->bytes() );
 }
 
-static DEVICE_IMAGE_LOAD( jaguar )
+DEVICE_IMAGE_LOAD_MEMBER( jaguar_state, jaguar_cart )
 {
-	return image.device().machine().driver_data<jaguar_state>()->cart_load(image);
+	return cart_load(image);
 }
 
 int jaguar_state::cart_load(device_image_interface &image)
@@ -2263,7 +2246,7 @@ void jaguar_state::cojag_common_init(UINT16 gpu_jump_offs, UINT16 spin_pc)
 	m_is_cojag = true;
 
 	/* copy over the ROM */
-	m_is_r3000 = (m_main_cpu->type() == R3041BE);
+	m_is_r3000 = (m_main_cpu->type() == R3041);
 
 	/* install synchronization hooks for GPU */
 	if (m_is_r3000)

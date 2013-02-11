@@ -101,6 +101,7 @@ protected:
 	virtual void view_notify(debug_view_notification type);
 	virtual void view_update();
 	virtual void view_char(int chval);
+	virtual void view_click(const int button, const debug_view_xy& pos);
 
 private:
 	struct cursor_pos

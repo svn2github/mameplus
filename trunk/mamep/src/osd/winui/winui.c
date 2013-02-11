@@ -6212,8 +6212,8 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_PLAYED:
-	   value = GetPlayCount(index1) - GetPlayCount(index2);
-	   break;
+		value = GetPlayCount(index1) - GetPlayCount(index2);
+		break;
 
 	case COLUMN_MANUFACTURER:
 		value = mame_stricmp(driver_list::driver(index1).manufacturer, driver_list::driver(index2).manufacturer);

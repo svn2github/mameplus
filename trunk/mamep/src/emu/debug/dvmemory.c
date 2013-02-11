@@ -426,6 +426,32 @@ void debug_view_memory::view_char(int chval)
 
 
 //-------------------------------------------------
+//  view_click - handle a mouse click within the
+//  current view
+//-------------------------------------------------
+
+void debug_view_memory::view_click(const int button, const debug_view_xy& pos)
+{
+	const debug_view_xy origcursor = m_cursor;
+	m_cursor = pos;
+
+	/* cursor popup|toggle */
+	bool cursorVisible = true;
+	if (m_cursor.y == origcursor.y)
+	{
+		cursorVisible = !m_cursor_visible;
+	}
+
+	/* send a cursor changed notification */
+	begin_update();
+	m_cursor_visible = cursorVisible;
+	view_notify(VIEW_NOTIFY_CURSOR_CHANGED);
+	m_update_pending = true;
+	end_update();
+}
+
+
+//-------------------------------------------------
 //  recompute - recompute the internal data and
 //  structure of the memory view
 //-------------------------------------------------

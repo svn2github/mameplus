@@ -278,6 +278,18 @@ $(CPUOBJ)/cubeqcpu/cubeqcpu.o:  $(CPUSRC)/cubeqcpu/cubeqcpu.c \
 								$(CPUSRC)/cubeqcpu/cubeqcpu.h
 
 
+#-------------------------------------------------
+# Ensoniq ES5510 ('ESP') DSP
+#-------------------------------------------------
+
+ifneq ($(filter ES5510,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/es5510
+CPUOBJS += $(CPUOBJ)/es5510/es5510.o
+endif
+
+$(CPUOBJ)/es5510.o: $(CPUSRC)/es5510/es5510.c \
+								$(CPUSRC)/es5510/es5510.h
+
 
 #-------------------------------------------------
 # Entertainment Sciences AM29116-based RIP
@@ -1056,6 +1068,7 @@ CPUOBJS += $(CPUOBJ)/m6502/deco16.o \
 			$(CPUOBJ)/m6502/n2a03.o \
 			$(CPUOBJ)/m6502/r65c02.o \
 			$(CPUOBJ)/m6502/m740.o
+
 DASMOBJS +=
 endif
 

@@ -1152,11 +1152,9 @@ void spu_device::kill_sound()
 //
 //
 
-unsigned short spu_device::read_word(const unsigned int addr)
+READ16_MEMBER( spu_device::read )
 {
-	unsigned short ret=0, *rp=(unsigned short *)(reg+(addr&0x1ff));
-
-	assert((addr&1)==0);
+	unsigned short ret=0, *rp=(unsigned short *)(reg+((offset*2)&0x1ff));
 
 	m_stream->update();
 
@@ -1164,9 +1162,9 @@ unsigned short spu_device::read_word(const unsigned int addr)
 
 	#ifdef debug_spu_registers
 		printf("spu: read word %08x = %04x [%s]\n",
-													addr,
+													offset*2,
 													ret,
-													get_register_name(addr));
+													get_register_name(offset*2));
 	#endif
 
 	return ret;
@@ -1176,38 +1174,18 @@ unsigned short spu_device::read_word(const unsigned int addr)
 //
 //
 
-unsigned char spu_device::read_byte(const unsigned int addr)
-{
-	unsigned char ret=0,
-								*rp=reg+(addr&0x1ff);
-
-	ret=*rp;
-
-	#ifdef debug_spu_registers
-		printf("spu: read byte %08x\n",addr);
-	#endif
-
-	return ret;
-}
-
-//
-//
-//
-
-void spu_device::write_word(const unsigned int addr, const unsigned short data)
+WRITE16_MEMBER( spu_device::write )
 {
 	#ifdef debug_spu_registers
 		printf("spu: write %08x = %04x [%s]\n",
-													addr,
+													offset*2,
 													data,
-													get_register_name(addr));
+													get_register_name(offset*2));
 	#endif
-
-	assert((addr&1)==0);
 
 	m_stream->update();
 
-	const unsigned int a=addr&0x1ff;
+	const unsigned int a=(offset*2)&0x1ff;
 	switch (a)
 	{
 		case spureg_trans_addr:
@@ -1222,7 +1200,7 @@ void spu_device::write_word(const unsigned int addr, const unsigned short data)
 
 		default:
 		{
-			unsigned short *rp=(unsigned short *)(reg+(addr&0x1ff));
+			unsigned short *rp=(unsigned short *)(reg+a);
 
 			if ((a==spureg_irq_addr) ||
 					((a==spureg_ctrl) && ((rp[0]^data)&spuctrl_irq_enable)))
@@ -1251,23 +1229,6 @@ void spu_device::write_word(const unsigned int addr, const unsigned short data)
 	update_vol(a);
 	update_voice_state();
 	update_irq_event();
-}
-
-//
-//
-//
-
-void spu_device::write_byte(const unsigned int addr, const unsigned char data)
-{
-	#ifdef debug_spu_registers
-		printf("spu: write %08x = %02x\n",addr,data);
-	#endif
-
-	const unsigned int a=addr&0x1ff;
-	reg[a]=data;
-	if ((a>spureg_reverb_config) && (a<=spureg_last))
-		dirty_flags|=dirtyflag_reverb;
-	update_key();
 }
 
 //
@@ -2377,11 +2338,11 @@ void spu_device::key_on(const int v)
 void spu_device::set_xa_format(const float _freq, const int channels)
 {
 	// Adjust frequency to compensate for slightly slower/faster frame rate
-	float freq=44100.0; //(_freq*get_adjusted_frame_rate())/ps1hw.rcnt->get_vertical_refresh();
+//  float freq=44100.0; //(_freq*get_adjusted_frame_rate())/ps1hw.rcnt->get_vertical_refresh();
 
-	xa_freq=(unsigned int)((freq/44100.0)*4096.0f);
+	xa_freq=(unsigned int)((_freq/44100.0)*4096.0f);
 	xa_channels=channels;
-	xa_spf=(unsigned int)(freq/60.0)*channels;
+	xa_spf=(unsigned int)(_freq/60.0)*channels;
 }
 
 //
@@ -2416,8 +2377,8 @@ void spu_device::generate_xa(void *ptr, const unsigned int sz)
 
 		int voll=spureg.cdvol_l,
 				volr=spureg.cdvol_r;
-		voll=(voll*xa_voll)>>15;
-		volr=(volr*xa_volr)>>15;
+		voll=(voll*xa_voll)>>14;
+		volr=(volr*xa_volr)>>14;
 
 		// Generate requested number of XA samples
 
@@ -2538,7 +2499,7 @@ void spu_device::generate_cdda(void *ptr, const unsigned int sz)
 		if (! cdda_buffer->get_bytes_in())
 			cdda_playing=false;
 
-		if (n>0) printf("cdda buffer underflow (n=%d cdda_in=%d spf=%d)\n",n,cdda_buffer->get_bytes_in(),cdda_spf);
+//      if (n>0) printf("cdda buffer underflow (n=%d cdda_in=%d spf=%d)\n",n,cdda_buffer->get_bytes_in(),cdda_spf);
 	}
 }
 
@@ -3063,6 +3024,15 @@ bool spu_device::play_cdda(const unsigned int sector, const unsigned char *cdda)
 	signed short *dp=(signed short *)cdda_buffer->add_sector(sector);
 	memcpy(dp,cdda,cdda_sector_size);
 
+	// data coming in in MAME is big endian as stored on the CD
+	unsigned char *flip = (unsigned char *)dp;
+	for (int i = 0; i < cdda_sector_size; i+= 2)
+	{
+		unsigned char temp = flip[i];
+		flip[i] = flip[i+1];
+		flip[i+1] = temp;
+	}
+
 	return true;
 }
 
@@ -3094,28 +3064,4 @@ void spu_device::dma_write( UINT32 *p_n_ram, UINT32 n_address, INT32 n_size )
 //  printf("SPU DMA write from %x, size %x\n", n_address, n_size);
 
 	start_dma(psxram + n_address, true, n_size*4);
-}
-
-READ16_HANDLER( spu_r )
-{
-	spu_device *spu = space.machine().device<spu_device>("spu");
-
-	if (spu == NULL )
-	{
-		return 0;
-	}
-
-	return spu->read_word(offset*2);
-}
-
-WRITE16_HANDLER( spu_w )
-{
-	spu_device *spu = space.machine().device<spu_device>("spu");
-
-	if (spu == NULL)
-	{
-		return;
-	}
-
-	spu->write_word(offset*2, data);
 }

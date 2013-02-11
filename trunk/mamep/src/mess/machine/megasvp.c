@@ -1,11 +1,6 @@
 /* Megadrive SVP emulation (Virtua Racing) */
 
-#include "includes/megadriv.h"
-
-
-
-/* SVP (virtua racing) */
-cpu_device *_svp_cpu;
+#include "includes/md.h"
 
 
 /****************************************** SVP related *****************************************/
@@ -73,7 +68,7 @@ static UINT32 pm_io(address_space &space, int reg, int write, UINT32 d)
 
 	if (reg == 4 || (space.device().state().state_int(SSP_ST) & 0x60))
 	{
-		#define CADDR ((((mode<<16)&0x7f0000)|addr)<<1)
+#define CADDR ((((mode<<16)&0x7f0000)|addr)<<1)
 		UINT16 *dram = (UINT16 *)state->m_dram;
 		if (write)
 		{
@@ -83,14 +78,14 @@ static UINT32 pm_io(address_space &space, int reg, int write, UINT32 d)
 			{
 				int inc = get_inc(mode);
 				if (mode & 0x0400) {
-						overwrite_write(&dram[addr], d);
+					overwrite_write(&dram[addr], d);
 				} else dram[addr] = d;
 				state->m_pmac_write[reg] += inc;
 			}
 			else if ((mode & 0xfbff) == 0x4018) // DRAM, cell inc
 			{
 				if (mode & 0x0400) {
-						overwrite_write(&dram[addr], d);
+					overwrite_write(&dram[addr], d);
 				} else dram[addr] = d;
 				state->m_pmac_write[reg] += (addr&1) ? 31 : 1;
 			}
@@ -103,7 +98,7 @@ static UINT32 pm_io(address_space &space, int reg, int write, UINT32 d)
 			else
 			{
 				logerror("ssp FIXME: PM%i unhandled write mode %04x, [%06x] %04x\n",
-						reg, mode, CADDR, d);
+							reg, mode, CADDR, d);
 			}
 		}
 		else
@@ -125,7 +120,7 @@ static UINT32 pm_io(address_space &space, int reg, int write, UINT32 d)
 			else
 			{
 				logerror("ssp FIXME: PM%i unhandled read  mode %04x, [%06x]\n",
-						reg, mode, CADDR);
+							reg, mode, CADDR);
 				d = 0;
 			}
 		}
@@ -261,10 +256,10 @@ static READ16_HANDLER( svp_68k_io_r )
 	UINT32 d;
 	switch (offset)
 	{
-		// 0xa15000, 0xa15002
+			// 0xa15000, 0xa15002
 		case 0:
 		case 1:  return state->m_XST;
-		// 0xa15004
+			// 0xa15004
 		case 2:  d = state->m_XST2; state->m_XST2 &= ~1; return d;
 		default: logerror("unhandled SVP reg read @ %x\n", offset<<1);
 	}
@@ -276,10 +271,10 @@ static WRITE16_HANDLER( svp_68k_io_w )
 	mdsvp_state *state = space.machine().driver_data<mdsvp_state>();
 	switch (offset)
 	{
-		// 0xa15000, 0xa15002
+			// 0xa15000, 0xa15002
 		case 0:
 		case 1:  state->m_XST = data; state->m_XST2 |= 2; break;
-		// 0xa15006
+			// 0xa15006
 		case 3:  break; // possibly halts SSP1601
 		default: logerror("unhandled SVP reg write %04x @ %x\n", data, offset<<1);
 	}
@@ -320,20 +315,9 @@ ADDRESS_MAP_START( svp_ext_map, AS_IO, 16, driver_device )
 ADDRESS_MAP_END
 
 
-/* emulate testmode plug */
-static UINT8 megadrive_io_read_data_port_svp(running_machine &machine, int portnum)
-{
-	if (portnum == 0 && machine.root_device().ioport("MEMORY_TEST")->read_safe(0x00))
-	{
-		return (megadrive_io_data_regs[0] & 0xc0);
-	}
-	return megadrive_io_read_data_port_3button(machine, portnum);
-}
-
-
 static READ16_HANDLER( svp_speedup_r )
 {
-		space.device().execute().spin_until_time(attotime::from_usec(100));
+	space.device().execute().spin_until_time(attotime::from_usec(100));
 	return 0x0425;
 }
 
@@ -341,7 +325,7 @@ static READ16_HANDLER( svp_speedup_r )
 void svp_init(running_machine &machine)
 {
 	mdsvp_state *state = machine.driver_data<mdsvp_state>();
-	UINT8 *ROM;
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
 	memset(state->m_pmac_read, 0, ARRAY_LENGTH(state->m_pmac_read));
 	memset(state->m_pmac_write, 0, ARRAY_LENGTH(state->m_pmac_write));
@@ -362,11 +346,11 @@ void svp_init(running_machine &machine)
 
 	machine.device("svp")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x438, 0x438, FUNC(svp_speedup_r));
 
+	if (state->m_slotcart->m_cart->get_rom_base() != NULL)
+		memcpy(ROM, state->m_slotcart->m_cart->get_rom_base(), state->m_slotcart->m_cart->get_rom_size());
+
 	state->m_iram = auto_alloc_array(machine, UINT8, 0x800);
 	state->membank("bank3")->set_base(state->m_iram);
 	/* SVP ROM just shares m68k region.. */
-	ROM = state->memregion("maincpu")->base();
 	state->membank("bank4")->set_base(ROM + 0x800);
-
-	megadrive_io_read_data_port_ptr = megadrive_io_read_data_port_svp;
 }

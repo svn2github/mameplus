@@ -1475,7 +1475,7 @@ READ16_MEMBER(taitoz_state::taitoz_msb_sound_r)
 WRITE8_MEMBER(taitoz_state::taitoz_pancontrol)
 {
 	static const char *const fltname[] = { "2610.1.r", "2610.1.l", "2610.2.r", "2610.2.l" };
-	flt_volume_set_volume(machine().device(fltname[offset & 3]), data / 255.0f);
+	dynamic_cast<filter_volume_device*>(machine().device(fltname[offset & 3]))->flt_volume_set_volume(data / 255.0f);
 }
 
 WRITE16_MEMBER(taitoz_state::spacegun_pancontrol)
@@ -3025,10 +3025,10 @@ static const tc0140syt_interface taitoz_tc0140syt_intf =
                    SAVE STATES
 ***********************************************************/
 
-static void taitoz_postload(running_machine &machine)
+void taitoz_state::taitoz_postload()
 {
-	parse_cpu_control(machine);
-	reset_sound_region(machine);
+	parse_cpu_control(machine());
+	reset_sound_region(machine());
 }
 
 MACHINE_START_MEMBER(taitoz_state,bshark)
@@ -3058,7 +3058,7 @@ MACHINE_START_MEMBER(taitoz_state,taitoz)
 
 	machine().root_device().membank("bank10")->configure_entries(0, banks, machine().root_device().memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(taitoz_postload), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(taitoz_state::taitoz_postload), this));
 
 	MACHINE_START_CALL_MEMBER(bshark);
 }
@@ -3122,13 +3122,13 @@ static MACHINE_CONFIG_START( contcirc, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 2.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 2.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rear", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "front", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rear", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "front", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3184,13 +3184,13 @@ static MACHINE_CONFIG_START( chasehq, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 1.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 1.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rear", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "front", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rear", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "front", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3247,13 +3247,13 @@ static MACHINE_CONFIG_START( enforce, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 20.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 20.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3306,13 +3306,13 @@ static MACHINE_CONFIG_START( bshark, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 28.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 28.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3377,13 +3377,13 @@ static MACHINE_CONFIG_START( sci, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 2.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 2.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3441,13 +3441,13 @@ static MACHINE_CONFIG_START( nightstr, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 2.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 2.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rear", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "front", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rear", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "front", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3504,13 +3504,13 @@ static MACHINE_CONFIG_START( aquajack, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 2.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 2.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3563,13 +3563,13 @@ static MACHINE_CONFIG_START( spacegun, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 8.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 8.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3625,13 +3625,13 @@ static MACHINE_CONFIG_START( dblaxle, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 8.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 8.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3687,13 +3687,13 @@ static MACHINE_CONFIG_START( racingb, taitoz_state )
 	MCFG_SOUND_ROUTE(2, "2610.2.l", 8.0)
 	MCFG_SOUND_ROUTE(2, "2610.2.r", 8.0)
 
-	MCFG_SOUND_ADD("2610.1.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.1.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.1.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.r", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.r", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
-	MCFG_SOUND_ADD("2610.2.l", FILTER_VOLUME, 0)
+	MCFG_FILTER_VOLUME_ADD("2610.2.l", 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitoz_tc0140syt_intf)
@@ -3708,12 +3708,12 @@ Contcirc, Dblaxle sound sample rom order is uncertain as sound imperfect
 
 ROM_START( contcirc )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 256K for 68000 code (CPU A) */
-	ROM_LOAD16_BYTE( "ic25", 0x00000, 0x20000, CRC(f5c92e42) SHA1(42dfa1895e601df76d7022b83f05c4e5c843fd12) )
-	ROM_LOAD16_BYTE( "ic26", 0x00001, 0x20000, CRC(e7c1d1fa) SHA1(75e851629a54facb8804ee8a953ab3265633bbf4) )
+	ROM_LOAD16_BYTE( "b33-ww.ic25", 0x00000, 0x20000, CRC(f5c92e42) SHA1(42dfa1895e601df76d7022b83f05c4e5c843fd12) ) /* Needs actual Taito ID number here */
+	ROM_LOAD16_BYTE( "b33-xx.ic26", 0x00001, 0x20000, CRC(e7c1d1fa) SHA1(75e851629a54facb8804ee8a953ab3265633bbf4) ) /* Needs actual Taito ID number here */
 
 	ROM_REGION( 0x40000, "sub", 0 ) /* 256K for 68000 code (CPU B) */
-	ROM_LOAD16_BYTE( "ic35",      0x00000, 0x20000, CRC(16522f2d) SHA1(1d2823d61518936d342df3ed712da5bdfdf6e55a) )
-	ROM_LOAD16_BYTE( "cc_36.bin", 0x00001, 0x20000, CRC(a1732ea5) SHA1(b773add433c20633e7acbc99d5cfeb7ccde83371) )
+	ROM_LOAD16_BYTE( "b33-yy.ic35", 0x00000, 0x20000, CRC(16522f2d) SHA1(1d2823d61518936d342df3ed712da5bdfdf6e55a) ) /* Needs actual Taito ID number here */
+	ROM_LOAD16_BYTE( "cc_36.bin",   0x00001, 0x20000, CRC(a1732ea5) SHA1(b773add433c20633e7acbc99d5cfeb7ccde83371) ) /* Needs actual Taito ID number here */
 
 	ROM_REGION( 0x1c000, "audiocpu", 0 )    /* Z80 sound cpu */
 	ROM_LOAD( "b33-30.11", 0x00000, 0x04000, CRC(d8746234) SHA1(39132eedfe2ff4e3133f8020304da0d04dd757db) )
@@ -3750,12 +3750,12 @@ ROM_END
 
 ROM_START( contcircu )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 256K for 68000 code (CPU A) */
-	ROM_LOAD16_BYTE( "ic25", 0x00000, 0x20000, CRC(f5c92e42) SHA1(42dfa1895e601df76d7022b83f05c4e5c843fd12) )
-	ROM_LOAD16_BYTE( "ic26", 0x00001, 0x20000, CRC(e7c1d1fa) SHA1(75e851629a54facb8804ee8a953ab3265633bbf4) )
+	ROM_LOAD16_BYTE( "b33-ww.ic25", 0x00000, 0x20000, CRC(f5c92e42) SHA1(42dfa1895e601df76d7022b83f05c4e5c843fd12) ) /* Needs actual Taito ID number here */
+	ROM_LOAD16_BYTE( "b33-xx.ic26", 0x00001, 0x20000, CRC(e7c1d1fa) SHA1(75e851629a54facb8804ee8a953ab3265633bbf4) ) /* Needs actual Taito ID number here */
 
 	ROM_REGION( 0x40000, "sub", 0 ) /* 256K for 68000 code (CPU B) */
-	ROM_LOAD16_BYTE( "ic35", 0x00000, 0x20000, CRC(16522f2d) SHA1(1d2823d61518936d342df3ed712da5bdfdf6e55a) )
-	ROM_LOAD16_BYTE( "ic36", 0x00001, 0x20000, CRC(d6741e33) SHA1(8e86789e1664a34ceed85434fd3186f2571f0c4a) )
+	ROM_LOAD16_BYTE( "b33-yy.ic35", 0x00000, 0x20000, CRC(16522f2d) SHA1(1d2823d61518936d342df3ed712da5bdfdf6e55a) ) /* Needs actual Taito ID number here */
+	ROM_LOAD16_BYTE( "b33-zz.ic36", 0x00001, 0x20000, CRC(d6741e33) SHA1(8e86789e1664a34ceed85434fd3186f2571f0c4a) ) /* Needs actual Taito ID number here */
 
 	ROM_REGION( 0x1c000, "audiocpu", 0 )    /* Z80 sound cpu */
 	ROM_LOAD( "b33-30.11", 0x00000, 0x04000, CRC(d8746234) SHA1(39132eedfe2ff4e3133f8020304da0d04dd757db) )
@@ -3796,8 +3796,50 @@ ROM_START( contcircua )
 	ROM_LOAD16_BYTE( "b33-33.ic26", 0x00001, 0x20000, CRC(f539d44b) SHA1(1b77d97376f9bf3bbd728d459f0a0afbadc6d756) )
 
 	ROM_REGION( 0x40000, "sub", 0 ) /* 256K for 68000 code (CPU B) */
-	ROM_LOAD16_BYTE( "21-2.ic35", 0x00000, 0x20000, CRC(2723f9e3) SHA1(18a86e352bb0aeec6ad6c537294ddd0d33823ea6) )
-	ROM_LOAD16_BYTE( "31-1.ic36", 0x00001, 0x20000, CRC(438431f7) SHA1(9be4ac6526d5aee01c3691f189583a2cfdad0e45) )
+	ROM_LOAD16_BYTE( "b33-21-2.ic35", 0x00000, 0x20000, CRC(2723f9e3) SHA1(18a86e352bb0aeec6ad6c537294ddd0d33823ea6) )
+	ROM_LOAD16_BYTE( "b33-31-1.ic36", 0x00001, 0x20000, CRC(438431f7) SHA1(9be4ac6526d5aee01c3691f189583a2cfdad0e45) ) /* Is this really B33 31-2 ?? */
+
+	ROM_REGION( 0x1c000, "audiocpu", 0 )    /* Z80 sound cpu */
+	ROM_LOAD( "b33-30.11", 0x00000, 0x04000, CRC(d8746234) SHA1(39132eedfe2ff4e3133f8020304da0d04dd757db) )
+	ROM_CONTINUE(          0x10000, 0x0c000 )   /* banked stuff */
+
+	ROM_REGION( 0x80000, "gfx1", 0 )
+	ROM_LOAD( "b33-02.57", 0x00000, 0x80000, CRC(f6fb3ba2) SHA1(19b7c4cf33c4737405ebe53e7342578454e6ef95) ) /* SCR 8x8 */
+
+	ROM_REGION( 0x200000, "gfx2", 0 )
+	ROM_LOAD32_BYTE( "b33-06", 0x000000, 0x080000, CRC(2cb40599) SHA1(48b269610f80a42608f563742e5266dcf11638d1) )   /* OBJ 16x8 */
+	ROM_LOAD32_BYTE( "b33-05", 0x000001, 0x080000, CRC(bddf9eea) SHA1(284f4ba3dc107b4e26424963d8206c5ec4882983) )
+	ROM_LOAD32_BYTE( "b33-04", 0x000002, 0x080000, CRC(8df866a2) SHA1(6b87d8e683fe7d31070b16620ebfee4edf7711b8) )
+	ROM_LOAD32_BYTE( "b33-03", 0x000003, 0x080000, CRC(4f6c36d9) SHA1(18b15a991c3daf22b7f3f144edf3bd2abb3917eb) )
+
+	ROM_REGION( 0x80000, "gfx3", 0 )    /* don't dispose */
+	ROM_LOAD( "b33-01.3", 0x00000, 0x80000, CRC(f11f2be8) SHA1(72ae08dc5bf5f6901fbb52d3b1dabcba90929b38) )  /* ROD, road lines */
+
+	ROM_REGION16_LE( 0x80000, "user1", 0 )
+	ROM_LOAD16_WORD( "b33-07.64", 0x00000, 0x80000, CRC(151e1f52) SHA1(118c673d74f27c4e76b321cc0e84f166d9f0d412) )  /* STY spritemap */
+
+	ROM_REGION( 0x100000, "ymsnd", 0 )  /* ADPCM samples */
+	ROM_LOAD( "b33-09.18", 0x00000, 0x80000, CRC(1e6724b5) SHA1(48bb96b648605a9ceb88ff3b175a87226583c3d6) )
+	ROM_LOAD( "b33-10.17", 0x80000, 0x80000, CRC(e9ce03ab) SHA1(17324e8f0422118bc0912eba5750d80469f40b78) )
+
+	ROM_REGION( 0x80000, "ymsnd.deltat", 0 )    /* Delta-T samples */
+	ROM_LOAD( "b33-08.19", 0x00000, 0x80000, CRC(caa1c4c8) SHA1(15ef4f36e56fab793d2249252c456677ca6a85c9) )
+
+	ROM_REGION( 0x10000, "user2", 0 )   /* unused ROMs */
+	ROM_LOAD( "b14-30.97",   0x00000, 0x10000, CRC(dccb0c7f) SHA1(42f0af72f559133b74912a4478e1323062be4b77) )   // sprite vertical zoom
+	ROM_LOAD( "b14-31.50",   0x00000, 0x02000, CRC(5c6b013d) SHA1(6d02d4560076213b6fb6fe856143bb533090603e) )   // sprite horizontal zoom
+	ROM_LOAD( "b33-17.16",   0x00000, 0x00100, CRC(7b7d8ff4) SHA1(18842ed8160739cd2e2ccc2db605153dbed6cc0a) )   // road/sprite priority and palette select
+	ROM_LOAD( "b33-18.17",   0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )   // road A/B internal priority
+ROM_END
+
+ROM_START( contcircj )
+	ROM_REGION( 0x40000, "maincpu", 0 ) /* 256K for 68000 code (CPU A) */
+	ROM_LOAD16_BYTE( "b33-19.ic25", 0x00000, 0x20000, CRC(b85360c8) SHA1(a52550c0889b99453b845dcfab2ed9581f9fdbe8) )
+	ROM_LOAD16_BYTE( "b33-20.ic26", 0x00001, 0x20000, CRC(9f88378b) SHA1(dc4f3dbeb98031ced0591623a2ba7a2653cb6ff4) )
+
+	ROM_REGION( 0x40000, "sub", 0 ) /* 256K for 68000 code (CPU B) */
+	ROM_LOAD16_BYTE( "b33-21-2.ic35", 0x00000, 0x20000, CRC(2723f9e3) SHA1(18a86e352bb0aeec6ad6c537294ddd0d33823ea6) )
+	ROM_LOAD16_BYTE( "b33-22-2.ic36", 0x00001, 0x20000, CRC(da8d604d) SHA1(31a4b686d12511a2522c7047a39aa09c0778f230) )
 
 	ROM_REGION( 0x1c000, "audiocpu", 0 )    /* Z80 sound cpu */
 	ROM_LOAD( "b33-30.11", 0x00000, 0x04000, CRC(d8746234) SHA1(39132eedfe2ff4e3133f8020304da0d04dd757db) )
@@ -5161,6 +5203,7 @@ DRIVER_INIT_MEMBER(taitoz_state,bshark)
 GAMEL(1987, contcirc,   0,        contcirc, contcirc, taitoz_state, taitoz,   ROT0,               "Taito Corporation Japan",   "Continental Circus (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1987, contcircu,  contcirc, contcirc, contcrcu, taitoz_state, taitoz,   ROT0,               "Taito America Corporation", "Continental Circus (US set 1)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1987, contcircua, contcirc, contcirc, contcrcu, taitoz_state, taitoz,   ROT0,               "Taito America Corporation", "Continental Circus (US set 2)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
+GAMEL(1987, contcircj , contcirc, contcirc, contcrcu, taitoz_state, taitoz,   ROT0,               "Taito Corporation",         "Continental Circus (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1988, chasehq,    0,        chasehq,  chasehq, taitoz_state,  taitoz,   ROT0,               "Taito Corporation Japan",   "Chase H.Q. (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1988, chasehqj,   chasehq,  chasehq,  chasehqj, taitoz_state, taitoz,   ROT0,               "Taito Corporation",         "Chase H.Q. (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )
 GAMEL(1988, chasehqu,   chasehq,  chasehq,  chasehq, taitoz_state,  taitoz,   ROT0,               "Taito America Corporation", "Chase H.Q. (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE, layout_contcirc )

@@ -80,14 +80,14 @@ struct d3d_texture_info
 /* d3d_poly_info holds information about a single polygon/d3d primitive */
 struct d3d_poly_info
 {
-	D3DPRIMITIVETYPE        type;                       // type of primitive
-	UINT32                  count;                      // total number of primitives
-	UINT32                  numverts;                   // total number of vertices
-	UINT32                  flags;                      // rendering flags
-	DWORD                   modmode;                    // texture modulation mode
-	d3d_texture_info *      texture;                    // pointer to texture info
-        float                   line_time;                  // used by vectors
-        float                   line_length;                // used by vectors
+		D3DPRIMITIVETYPE        type;                       // type of primitive
+		UINT32                  count;                      // total number of primitives
+		UINT32                  numverts;                   // total number of vertices
+		UINT32                  flags;                      // rendering flags
+		DWORD                   modmode;                    // texture modulation mode
+		d3d_texture_info *      texture;                    // pointer to texture info
+		float                   line_time;                  // used by vectors
+		float                   line_length;                // used by vectors
 };
 
 

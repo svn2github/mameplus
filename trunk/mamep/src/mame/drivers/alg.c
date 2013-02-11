@@ -60,6 +60,7 @@ public:
 	DECLARE_MACHINE_RESET(alg);
 	DECLARE_VIDEO_START(alg);
 	TIMER_CALLBACK_MEMBER(response_timer);
+	void alg_init();
 };
 
 
@@ -232,7 +233,7 @@ CUSTOM_INPUT_MEMBER(alg_state::lightgun_holster_r)
 WRITE8_MEMBER(alg_state::alg_cia_0_porta_w)
 {
 	/* switch banks as appropriate */
-	machine().root_device().membank("bank1")->set_entry(data & 1);
+	m_bank1->set_entry(data & 1);
 
 	/* swap the write handlers between ROM and bank 1 based on the bit */
 	if ((data & 1) == 0)
@@ -333,11 +334,11 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( alg )
 	PORT_START("JOY0DAT")   /* read by Amiga core */
-	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, alg_state,amiga_joystick_convert, "P1JOY")
+	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, alg_state,amiga_joystick_convert, 0)
 	PORT_BIT( 0xfcfc, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("JOY1DAT")   /* read by Amiga core */
-	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, alg_state,amiga_joystick_convert, "P2JOY")
+	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, alg_state,amiga_joystick_convert, 1)
 	PORT_BIT( 0xfcfc, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("POTGO")     /* read by Amiga core */
@@ -687,9 +688,8 @@ ROM_END
  *
  *************************************/
 
-static void alg_init(running_machine &machine)
+void alg_state::alg_init()
 {
-	alg_state *state = machine.driver_data<alg_state>();
 	static const amiga_machine_interface alg_intf =
 	{
 		ANGUS_CHIP_RAM_MASK,
@@ -701,11 +701,11 @@ static void alg_init(running_machine &machine)
 		NULL,
 		0
 	};
-	amiga_machine_config(machine, &alg_intf);
+	amiga_machine_config(machine(), &alg_intf);
 
 	/* set up memory */
-	state->membank("bank1")->configure_entry(0, state->m_chip_ram);
-	state->membank("bank1")->configure_entry(1, machine.root_device().memregion("user1")->base());
+	m_bank1->configure_entry(0, m_chip_ram);
+	m_bank1->configure_entry(1, machine().root_device().memregion("user1")->base());
 }
 
 
@@ -733,7 +733,7 @@ DRIVER_INIT_MEMBER(alg_state,palr1)
 	}
 	auto_free(machine(), original);
 
-	alg_init(machine());
+	alg_init();
 }
 
 DRIVER_INIT_MEMBER(alg_state,palr3)
@@ -752,7 +752,7 @@ DRIVER_INIT_MEMBER(alg_state,palr3)
 	}
 	auto_free(machine(), original);
 
-	alg_init(machine());
+	alg_init();
 }
 
 DRIVER_INIT_MEMBER(alg_state,palr6)
@@ -773,7 +773,7 @@ DRIVER_INIT_MEMBER(alg_state,palr6)
 	}
 	auto_free(machine(), original);
 
-	alg_init(machine());
+	alg_init();
 }
 
 DRIVER_INIT_MEMBER(alg_state,aplatoon)
@@ -793,12 +793,12 @@ DRIVER_INIT_MEMBER(alg_state,aplatoon)
 		memcpy(decrypted + i * 0x1000, rom + shuffle[i] * 0x1000, 0x1000);
 	memcpy(rom, decrypted, 0x40000);
 	logerror("decrypt done\n ");
-	alg_init(machine());
+	alg_init();
 }
 
 DRIVER_INIT_MEMBER(alg_state,none)
 {
-	alg_init(machine());
+	alg_init();
 }
 
 

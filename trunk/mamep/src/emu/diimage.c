@@ -67,8 +67,8 @@ const image_device_type_info device_image_interface::m_device_info_array[] =
 		{ IO_CDROM,     "cdrom",        "cdrm" }, /* 13 */
 		{ IO_MAGTAPE,   "magtape",      "magt" }, /* 14 */
 		{ IO_ROM,       "romimage",     "rom"  }, /* 15 */
-		{ IO_MIDIIN,	"midiin",       "min"  }, /* 16 */
-		{ IO_MIDIOUT,	"midiout",      "mout" }  /* 17 */
+		{ IO_MIDIIN,    "midiin",       "min"  }, /* 16 */
+		{ IO_MIDIOUT,   "midiout",      "mout" }  /* 17 */
 	};
 
 
@@ -970,6 +970,11 @@ bool device_image_interface::load_internal(const char *path, bool is_create, int
 		/* Copy some image information when we have been loaded through a software list */
 		if ( m_software_info_ptr )
 		{
+			// sanitize
+			if (!m_software_info_ptr->longname || !m_software_info_ptr->publisher || !m_software_info_ptr->year)
+				fatalerror("Each entry in an XML list must have all of the following fields: description, publisher, year!\n");
+
+			// store
 			m_longname = m_software_info_ptr->longname;
 			m_manufacturer = m_software_info_ptr->publisher;
 			m_year = m_software_info_ptr->year;

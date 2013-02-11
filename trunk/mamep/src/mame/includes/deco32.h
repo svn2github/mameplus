@@ -1,5 +1,6 @@
 #include "audio/decobsmt.h"
 #include "video/bufsprite.h"
+#include "video/decospr.h"
 
 class deco32_state : public driver_device
 {
@@ -14,7 +15,11 @@ public:
 		m_pf2_rowscroll32(*this, "pf2_rowscroll32"),
 		m_pf3_rowscroll32(*this, "pf3_rowscroll32"),
 		m_pf4_rowscroll32(*this, "pf4_rowscroll32"),
-		m_ace_ram(*this, "ace_ram"){ }
+		m_ace_ram(*this, "ace_ram"),
+		m_sprgen(*this, "spritegen"),
+		m_sprgen1(*this, "spritegen1"),
+		m_sprgen2(*this, "spritegen2")
+	{ }
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<decobsmt_device> m_decobsmt;
@@ -27,6 +32,9 @@ public:
 	required_shared_ptr<UINT32> m_pf4_rowscroll32;
 
 	optional_shared_ptr<UINT32> m_ace_ram;
+	optional_device<decospr_device> m_sprgen;
+	optional_device<decospr_device> m_sprgen1;
+	optional_device<decospr_device> m_sprgen2;
 
 	int m_raster_enable;
 	timer_device *m_raster_irq_timer;
@@ -113,6 +121,8 @@ public:
 	INTERRUPT_GEN_MEMBER(deco32_vbl_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(interrupt_gen);
 	TIMER_DEVICE_CALLBACK_MEMBER(lockload_vbl_irq);
+	void updateAceRam();
+	void mixDualAlphaSprites(bitmap_rgb32 &bitmap, const rectangle &cliprect, gfx_element *gfx0, gfx_element *gfx1, int mixAlphaTilemap);
 };
 
 class dragngun_state : public deco32_state
@@ -141,6 +151,7 @@ public:
 	DECLARE_VIDEO_START(lockload);
 	UINT32 screen_update_dragngun(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void screen_eof_dragngun(screen_device &screen, bool state);
+	void dragngun_draw_sprites( bitmap_rgb32 &bitmap, const rectangle &cliprect, const UINT32 *spritedata);
 };
 
 /*----------- defined in video/deco32.c -----------*/

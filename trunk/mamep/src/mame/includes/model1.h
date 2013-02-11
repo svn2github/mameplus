@@ -97,6 +97,7 @@ public:
 	UINT16 *m_paletteram16;
 	UINT32 *m_poly_rom;
 	UINT32 *m_poly_ram;
+	UINT16 m_lamp_state;
 	DECLARE_READ16_MEMBER(io_r);
 	DECLARE_WRITE16_MEMBER(io_w);
 	DECLARE_READ16_MEMBER(fifoin_status_r);
@@ -139,6 +140,9 @@ public:
 	UINT32 screen_update_model1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void screen_eof_model1(screen_device &screen, bool state);
 	TIMER_DEVICE_CALLBACK_MEMBER(model1_interrupt);
+	void irq_raise(int level);
+	void irq_init();
+	IRQ_CALLBACK_MEMBER(irq_callback);
 };
 
 

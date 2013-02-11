@@ -1337,14 +1337,12 @@ READ8_MEMBER(sms_state::gg_sio_r)
 	return m_gg_sio[offset];
 }
 
-static void sms_machine_stop( running_machine &machine )
+void sms_state::sms_machine_stop()
 {
-	sms_state *state = machine.driver_data<sms_state>();
-
 	/* Does the cartridge have SRAM that should be saved? */
-	if (state->m_cartridge[state->m_current_cartridge].sram_save) {
-		device_image_interface *image = dynamic_cast<device_image_interface *>(machine.device("cart1"));
-		image->battery_save(state->m_cartridge[state->m_current_cartridge].cartSRAM, sizeof(UINT8) * NVRAM_SIZE );
+	if (m_cartridge[m_current_cartridge].sram_save) {
+		device_image_interface *image = dynamic_cast<device_image_interface *>(machine().device("cart1"));
+		image->battery_save(m_cartridge[m_current_cartridge].cartSRAM, sizeof(UINT8) * NVRAM_SIZE );
 	}
 }
 
@@ -1556,34 +1554,33 @@ static int detect_lphaser_xoffset( running_machine &machine, UINT8 *rom )
 }
 
 
-DEVICE_START( sms_cart )
+void sms_state::setup_sms_cart()
 {
-	sms_state *state = device->machine().driver_data<sms_state>();
 	int i;
 
 	for (i = 0; i < MAX_CARTRIDGES; i++)
 	{
-		state->m_cartridge[i].ROM = NULL;
-		state->m_cartridge[i].size = 0;
-		state->m_cartridge[i].features = 0;
-		state->m_cartridge[i].cartSRAM = NULL;
-		state->m_cartridge[i].sram_save = 0;
-		state->m_cartridge[i].cartRAM = NULL;
-		state->m_cartridge[i].ram_size = 0;
-		state->m_cartridge[i].ram_page = 0;
+		m_cartridge[i].ROM = NULL;
+		m_cartridge[i].size = 0;
+		m_cartridge[i].features = 0;
+		m_cartridge[i].cartSRAM = NULL;
+		m_cartridge[i].sram_save = 0;
+		m_cartridge[i].cartRAM = NULL;
+		m_cartridge[i].ram_size = 0;
+		m_cartridge[i].ram_page = 0;
 	}
-	state->m_current_cartridge = 0;
+	m_current_cartridge = 0;
 
-	state->m_bios_port = (IO_EXPANSION | IO_CARTRIDGE | IO_CARD);
-	if (!state->m_is_gamegear && !state->m_has_bios)
+	m_bios_port = (IO_EXPANSION | IO_CARTRIDGE | IO_CARD);
+	if (!m_is_gamegear && !m_has_bios)
 	{
-		state->m_bios_port &= ~(IO_CARTRIDGE);
-		state->m_bios_port |= IO_BIOS_ROM;
+		m_bios_port &= ~(IO_CARTRIDGE);
+		m_bios_port |= IO_BIOS_ROM;
 	}
 }
 
 
-DEVICE_IMAGE_LOAD( sms_cart )
+DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 {
 	running_machine &machine = image.device().machine();
 	sms_state *state = machine.driver_data<sms_state>();
@@ -1908,7 +1905,7 @@ void sms_state::setup_banks()
 
 MACHINE_START_MEMBER(sms_state,sms)
 {
-	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(sms_machine_stop),&machine()));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(sms_state::sms_machine_stop),this));
 	m_rapid_fire_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(sms_state::rapid_fire_callback),this));
 	m_rapid_fire_timer->adjust(attotime::from_hz(10), 0, attotime::from_hz(10));
 
@@ -2108,12 +2105,14 @@ DRIVER_INIT_MEMBER(sms_state,sg1000m3)
 {
 	m_is_region_japan = 1;
 	m_has_fm = 1;
+	setup_sms_cart();
 }
 
 
 DRIVER_INIT_MEMBER(sms_state,sms1)
 {
 	m_has_bios_full = 1;
+	setup_sms_cart();
 }
 
 
@@ -2122,6 +2121,7 @@ DRIVER_INIT_MEMBER(sms_state,smsj)
 	m_is_region_japan = 1;
 	m_has_bios_2000 = 1;
 	m_has_fm = 1;
+	setup_sms_cart();
 }
 
 
@@ -2130,11 +2130,13 @@ DRIVER_INIT_MEMBER(sms_state,sms2kr)
 	m_is_region_japan = 1;
 	m_has_bios_full = 1;
 	m_has_fm = 1;
+	setup_sms_cart();
 }
 
 
 DRIVER_INIT_MEMBER(sms_state,smssdisp)
 {
+	setup_sms_cart();
 }
 
 
@@ -2142,6 +2144,7 @@ DRIVER_INIT_MEMBER(sms_state,gamegear)
 {
 	m_is_gamegear = 1;
 	m_has_bios_0400 = 1;
+	setup_sms_cart();
 }
 
 
@@ -2150,6 +2153,7 @@ DRIVER_INIT_MEMBER(sms_state,gamegeaj)
 	m_is_region_japan = 1;
 	m_is_gamegear = 1;
 	m_has_bios_0400 = 1;
+	setup_sms_cart();
 }
 
 

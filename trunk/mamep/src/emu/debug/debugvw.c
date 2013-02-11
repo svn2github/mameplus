@@ -429,6 +429,17 @@ void debug_view::view_char(int chval)
 }
 
 
+//-------------------------------------------------
+//  view_click - handle a mouse click within the
+//  current view
+//-------------------------------------------------
+
+void debug_view::view_click(const int button, const debug_view_xy& pos)
+{
+	// default does nothing
+}
+
+
 
 //**************************************************************************
 //  DEBUG VIEW MANAGER

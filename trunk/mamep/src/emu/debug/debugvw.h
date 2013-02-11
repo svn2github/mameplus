@@ -97,6 +97,11 @@ const int DCH_CTRLRIGHT     = 11;       // ctrl+right
 const int DCH_CTRLLEFT      = 12;       // ctrl+left
 
 
+// special characters that can be passed to process_click()
+const int DCK_LEFT_CLICK    = 1;        // left instantaneous click
+const int DCK_RIGHT_CLICK   = 2;        // right instantaneous click
+const int DCK_MIDDLE_CLICK  = 3;        // middle instantaneous click
+
 
 //**************************************************************************
 //  TYPE DEFINITIONS
@@ -221,6 +226,7 @@ public:
 	void set_cursor_visible(bool visible = true);
 	void set_source(const debug_view_source &source);
 	void process_char(int character) { view_char(character); }
+	void process_click(int button, debug_view_xy pos) { view_click(button, pos); }
 
 protected:
 	// internal updating helpers
@@ -238,6 +244,7 @@ protected:
 	virtual void view_update() = 0;
 	virtual void view_notify(debug_view_notification type);
 	virtual void view_char(int chval);
+	virtual void view_click(const int button, const debug_view_xy& pos);
 
 protected:
 	// core view data

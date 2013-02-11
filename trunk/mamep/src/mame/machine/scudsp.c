@@ -64,6 +64,19 @@ Changelog:
 - Convert this to cpu structure
 - Disassembler: complete it
 - Add control flags
+- Croc: has a bug somewhere that never allows it to trip the ENDI opcode.
+  Snippet of interest is:
+  08    00823500                                            CLR A     MOV M0,PL
+  09    08040000    OR                                      MOV ALU,A
+  0A    D208000D    JMP NZ,$D
+  0B    00000000    NOP
+  0C    F8000000    ENDI
+  ...
+  40    00863502                                            MOV M0,A  MOV M2,PL
+  41    10003009    ADD                                               MOV ALL,MC0
+  42    D3400042    JMP T0,$42
+  43    00000000    NOP
+  44    D0000007    JMP $7
 
 ******************************************************************************************/
 #include "emu.h"
@@ -418,6 +431,10 @@ static void dsp_operation(address_space &space)
 		case 0x2:   /* OR */
 			i3 = dsp_reg.acl.si | dsp_reg.pl.si;
 			dsp_reg.alu = (UINT64)(UINT32)i3;
+			/* TODO: Croc and some early Psygnosis games wants Z to be 1 when the result of this one is negative.
+			         Needs HW tests ... */
+			if(i3 < 0)
+				i3 = 0;
 			SET_Z(i3 == 0);
 			SET_C(0);
 			SET_S(i3 < 0);

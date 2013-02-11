@@ -4,6 +4,8 @@
 
 *************************************************************************/
 
+#include <sound/flt_vol.h>
+
 #define DARIUS_VOL_MAX    (3*2 + 2)
 #define DARIUS_PAN_MAX    (2 + 2 + 1)   /* FM 2port + PSG 2port + DA 1port */
 
@@ -44,24 +46,24 @@ public:
 	device_t *m_mscreen;
 	device_t *m_rscreen;
 
-	device_t *m_filter0_0l;
-	device_t *m_filter0_0r;
-	device_t *m_filter0_1l;
-	device_t *m_filter0_1r;
-	device_t *m_filter0_2l;
-	device_t *m_filter0_2r;
-	device_t *m_filter0_3l;
-	device_t *m_filter0_3r;
-	device_t *m_filter1_0l;
-	device_t *m_filter1_0r;
-	device_t *m_filter1_1l;
-	device_t *m_filter1_1r;
-	device_t *m_filter1_2l;
-	device_t *m_filter1_2r;
-	device_t *m_filter1_3l;
-	device_t *m_filter1_3r;
-	device_t *m_msm5205_l;
-	device_t *m_msm5205_r;
+	filter_volume_device *m_filter0_0l;
+	filter_volume_device *m_filter0_0r;
+	filter_volume_device *m_filter0_1l;
+	filter_volume_device *m_filter0_1r;
+	filter_volume_device *m_filter0_2l;
+	filter_volume_device *m_filter0_2r;
+	filter_volume_device *m_filter0_3l;
+	filter_volume_device *m_filter0_3r;
+	filter_volume_device *m_filter1_0l;
+	filter_volume_device *m_filter1_0r;
+	filter_volume_device *m_filter1_1l;
+	filter_volume_device *m_filter1_1r;
+	filter_volume_device *m_filter1_2l;
+	filter_volume_device *m_filter1_2r;
+	filter_volume_device *m_filter1_3l;
+	filter_volume_device *m_filter1_3r;
+	filter_volume_device *m_msm5205_l;
+	filter_volume_device *m_msm5205_r;
 	DECLARE_WRITE16_MEMBER(cpua_ctrl_w);
 	DECLARE_WRITE16_MEMBER(darius_watchdog_w);
 	DECLARE_READ16_MEMBER(darius_ioc_r);
@@ -93,4 +95,15 @@ public:
 	UINT32 screen_update_darius_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_darius_middle(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_darius_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void darius_postload();
+	inline void actual_get_fg_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum );
+	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, int primask, int x_offs, int y_offs );
+	UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffs);
+	void parse_control(  )   /* assumes Z80 sandwiched between 68Ks */;
+	void reset_sound_region(  );
+	void update_fm0(  );
+	void update_fm1(  );
+	void update_psg0( int port );
+	void update_psg1( int port );
+	void update_da(  );
 };

@@ -128,7 +128,15 @@ public:
 		, m_t6w28( *this, "t6w28" )
 		, m_dac_l( *this, "dac_l" )
 		, m_dac_r( *this, "dac_r" )
-		{ }
+	{
+		m_flash_chip[0].present = 0;
+		m_flash_chip[0].state = F_READ;
+		m_flash_chip[0].data = NULL;
+
+		m_flash_chip[1].present = 0;
+		m_flash_chip[1].state = F_READ;
+		m_flash_chip[1].data = NULL;
+	}
 
 	virtual void machine_start();
 	virtual void machine_reset();
@@ -173,6 +181,9 @@ public:
 	UINT32 screen_update_ngp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	DECLARE_INPUT_CHANGED_MEMBER(power_callback);
 	TIMER_CALLBACK_MEMBER(ngp_seconds_callback);
+
+	DECLARE_DEVICE_IMAGE_LOAD_MEMBER( ngp_cart);
+	DECLARE_DEVICE_IMAGE_UNLOAD_MEMBER( ngp_cart );
 };
 
 
@@ -608,6 +619,44 @@ WRITE8_MEMBER( ngp_state::ngp_tlcs900_to3 )
 
 void ngp_state::machine_start()
 {
+	UINT8 *cart = memregion("cart")->base();
+
+	m_flash_chip[0].data = cart;
+	m_flash_chip[0].org_data[0] = m_flash_chip[0].data[0];
+	m_flash_chip[0].org_data[1] = m_flash_chip[0].data[1];
+	m_flash_chip[0].org_data[2] = m_flash_chip[0].data[2];
+	m_flash_chip[0].org_data[3] = m_flash_chip[0].data[3];
+	m_flash_chip[0].org_data[4] = m_flash_chip[0].data[0x7c000];
+	m_flash_chip[0].org_data[5] = m_flash_chip[0].data[0x7c001];
+	m_flash_chip[0].org_data[6] = m_flash_chip[0].data[0x7c002];
+	m_flash_chip[0].org_data[7] = m_flash_chip[0].data[0x7c003];
+	m_flash_chip[0].org_data[8] = m_flash_chip[0].data[0xfc000];
+	m_flash_chip[0].org_data[9] = m_flash_chip[0].data[0xfc001];
+	m_flash_chip[0].org_data[10] = m_flash_chip[0].data[0xfc002];
+	m_flash_chip[0].org_data[11] = m_flash_chip[0].data[0xfc003];
+	m_flash_chip[0].org_data[12] = m_flash_chip[0].data[0x1fc000];
+	m_flash_chip[0].org_data[13] = m_flash_chip[0].data[0x1fc001];
+	m_flash_chip[0].org_data[14] = m_flash_chip[0].data[0x1fc002];
+	m_flash_chip[0].org_data[15] = m_flash_chip[0].data[0x1fc003];
+
+	m_flash_chip[1].data = cart + 0x200000;
+	m_flash_chip[1].org_data[0] = m_flash_chip[1].data[0];
+	m_flash_chip[1].org_data[1] = m_flash_chip[1].data[1];
+	m_flash_chip[1].org_data[2] = m_flash_chip[1].data[2];
+	m_flash_chip[1].org_data[3] = m_flash_chip[1].data[3];
+	m_flash_chip[1].org_data[4] = m_flash_chip[1].data[0x7c000];
+	m_flash_chip[1].org_data[5] = m_flash_chip[1].data[0x7c001];
+	m_flash_chip[1].org_data[6] = m_flash_chip[1].data[0x7c002];
+	m_flash_chip[1].org_data[7] = m_flash_chip[1].data[0x7c003];
+	m_flash_chip[1].org_data[8] = m_flash_chip[1].data[0xfc000];
+	m_flash_chip[1].org_data[9] = m_flash_chip[1].data[0xfc001];
+	m_flash_chip[1].org_data[10] = m_flash_chip[1].data[0xfc002];
+	m_flash_chip[1].org_data[11] = m_flash_chip[1].data[0xfc003];
+	m_flash_chip[1].org_data[12] = m_flash_chip[1].data[0x1fc000];
+	m_flash_chip[1].org_data[13] = m_flash_chip[1].data[0x1fc001];
+	m_flash_chip[1].org_data[14] = m_flash_chip[1].data[0x1fc002];
+	m_flash_chip[1].org_data[15] = m_flash_chip[1].data[0x1fc003];
+
 	m_seconds_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(ngp_state::ngp_seconds_callback),this));
 	m_seconds_timer->adjust( attotime::from_seconds(1), 0, attotime::from_seconds(1) );
 }
@@ -630,24 +679,9 @@ UINT32 ngp_state::screen_update_ngp(screen_device &screen, bitmap_ind16 &bitmap,
 }
 
 
-static DEVICE_START( ngp_cart )
+DEVICE_IMAGE_LOAD_MEMBER( ngp_state, ngp_cart )
 {
-	ngp_state *state = device->machine().driver_data<ngp_state>();
-	UINT8 *cart = state->memregion("cart")->base();
-
-	state->m_flash_chip[0].present = 0;
-	state->m_flash_chip[0].state = F_READ;
-	state->m_flash_chip[0].data = cart;
-
-	state->m_flash_chip[1].present = 0;
-	state->m_flash_chip[1].state = F_READ;
-	state->m_flash_chip[1].data = cart + 0x200000;
-}
-
-
-static DEVICE_IMAGE_LOAD( ngp_cart )
-{
-	ngp_state *state = image.device().machine().driver_data<ngp_state>();
+	UINT8 *cart = memregion("cart")->base();
 	UINT32 filesize;
 
 	if (image.software_entry() == NULL)
@@ -660,7 +694,7 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 			return IMAGE_INIT_FAIL;
 		}
 
-		if (image.fread( image.device().machine().root_device().memregion("cart")->base(), filesize) != filesize)
+		if (image.fread( cart, filesize) != filesize)
 		{
 			image.seterror(IMAGE_ERROR_UNSPECIFIED, "Error loading file");
 			return IMAGE_INIT_FAIL;
@@ -669,83 +703,47 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 	else
 	{
 		filesize = image.get_software_region_length("rom");
-		memcpy(image.device().machine().root_device().memregion("cart")->base(), image.get_software_region("rom"), filesize);
+		memcpy(cart, image.get_software_region("rom"), filesize);
 	}
 
 	//printf("%2x%2x - %x - %x\n", (unsigned int) image.device().machine().root_device().memregion("cart")->u8(0x20), (unsigned int) image.device().machine().root_device().memregion("cart")->u8(0x21),
 	//        (unsigned int) image.device().machine().root_device().memregion("cart")->u8(0x22), (unsigned int) image.device().machine().root_device().memregion("cart")->u8(0x23));
-	state->m_flash_chip[0].manufacturer_id = 0x98;
+	m_flash_chip[0].manufacturer_id = 0x98;
 	switch( filesize )
 	{
 	case 0x8000:
 	case 0x80000:
-		state->m_flash_chip[0].device_id = 0xab;
+		m_flash_chip[0].device_id = 0xab;
 		break;
 	case 0x100000:
-		state->m_flash_chip[0].device_id = 0x2c;
+		m_flash_chip[0].device_id = 0x2c;
 		break;
 	case 0x200000:
-		state->m_flash_chip[0].device_id = 0x2f;
+		m_flash_chip[0].device_id = 0x2f;
 		break;
 	case 0x400000:
-		state->m_flash_chip[0].device_id = 0x2f;
-		state->m_flash_chip[1].manufacturer_id = 0x98;
-		state->m_flash_chip[1].device_id = 0x2f;
-		state->m_flash_chip[1].present = 0;
-		state->m_flash_chip[1].state = F_READ;
+		m_flash_chip[0].device_id = 0x2f;
+		m_flash_chip[1].manufacturer_id = 0x98;
+		m_flash_chip[1].device_id = 0x2f;
+		m_flash_chip[1].present = 0;
+		m_flash_chip[1].state = F_READ;
 		break;
 	}
 
-	state->m_flash_chip[0].org_data[0] = state->m_flash_chip[0].data[0];
-	state->m_flash_chip[0].org_data[1] = state->m_flash_chip[0].data[1];
-	state->m_flash_chip[0].org_data[2] = state->m_flash_chip[0].data[2];
-	state->m_flash_chip[0].org_data[3] = state->m_flash_chip[0].data[3];
-	state->m_flash_chip[0].org_data[4] = state->m_flash_chip[0].data[0x7c000];
-	state->m_flash_chip[0].org_data[5] = state->m_flash_chip[0].data[0x7c001];
-	state->m_flash_chip[0].org_data[6] = state->m_flash_chip[0].data[0x7c002];
-	state->m_flash_chip[0].org_data[7] = state->m_flash_chip[0].data[0x7c003];
-	state->m_flash_chip[0].org_data[8] = state->m_flash_chip[0].data[0xfc000];
-	state->m_flash_chip[0].org_data[9] = state->m_flash_chip[0].data[0xfc001];
-	state->m_flash_chip[0].org_data[10] = state->m_flash_chip[0].data[0xfc002];
-	state->m_flash_chip[0].org_data[11] = state->m_flash_chip[0].data[0xfc003];
-	state->m_flash_chip[0].org_data[12] = state->m_flash_chip[0].data[0x1fc000];
-	state->m_flash_chip[0].org_data[13] = state->m_flash_chip[0].data[0x1fc001];
-	state->m_flash_chip[0].org_data[14] = state->m_flash_chip[0].data[0x1fc002];
-	state->m_flash_chip[0].org_data[15] = state->m_flash_chip[0].data[0x1fc003];
-
-	state->m_flash_chip[1].org_data[0] = state->m_flash_chip[1].data[0];
-	state->m_flash_chip[1].org_data[1] = state->m_flash_chip[1].data[1];
-	state->m_flash_chip[1].org_data[2] = state->m_flash_chip[1].data[2];
-	state->m_flash_chip[1].org_data[3] = state->m_flash_chip[1].data[3];
-	state->m_flash_chip[1].org_data[4] = state->m_flash_chip[1].data[0x7c000];
-	state->m_flash_chip[1].org_data[5] = state->m_flash_chip[1].data[0x7c001];
-	state->m_flash_chip[1].org_data[6] = state->m_flash_chip[1].data[0x7c002];
-	state->m_flash_chip[1].org_data[7] = state->m_flash_chip[1].data[0x7c003];
-	state->m_flash_chip[1].org_data[8] = state->m_flash_chip[1].data[0xfc000];
-	state->m_flash_chip[1].org_data[9] = state->m_flash_chip[1].data[0xfc001];
-	state->m_flash_chip[1].org_data[10] = state->m_flash_chip[1].data[0xfc002];
-	state->m_flash_chip[1].org_data[11] = state->m_flash_chip[1].data[0xfc003];
-	state->m_flash_chip[1].org_data[12] = state->m_flash_chip[1].data[0x1fc000];
-	state->m_flash_chip[1].org_data[13] = state->m_flash_chip[1].data[0x1fc001];
-	state->m_flash_chip[1].org_data[14] = state->m_flash_chip[1].data[0x1fc002];
-	state->m_flash_chip[1].org_data[15] = state->m_flash_chip[1].data[0x1fc003];
-
-	state->m_flash_chip[0].present = 1;
-	state->m_flash_chip[0].state = F_READ;
+	m_flash_chip[0].present = 1;
+	m_flash_chip[0].state = F_READ;
 
 	return IMAGE_INIT_PASS;
 }
 
 
-static DEVICE_IMAGE_UNLOAD( ngp_cart )
+DEVICE_IMAGE_UNLOAD_MEMBER( ngp_state, ngp_cart )
 {
-	ngp_state *state = image.device().machine().driver_data<ngp_state>();
+	m_flash_chip[0].present = 0;
+	m_flash_chip[0].state = F_READ;
 
-	state->m_flash_chip[0].present = 0;
-	state->m_flash_chip[0].state = F_READ;
-
-	state->m_flash_chip[1].present = 0;
-	state->m_flash_chip[1].state = F_READ;
+	m_flash_chip[1].present = 0;
+	m_flash_chip[1].state = F_READ;
 }
 
 
@@ -805,10 +803,9 @@ static MACHINE_CONFIG_DERIVED( ngp, ngp_common )
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_EXTENSION_LIST("bin,ngp,npc,ngc")
 	MCFG_CARTSLOT_NOT_MANDATORY
-	MCFG_CARTSLOT_START(ngp_cart)
-	MCFG_CARTSLOT_LOAD(ngp_cart)
+	MCFG_CARTSLOT_LOAD(ngp_state, ngp_cart)
 	MCFG_CARTSLOT_INTERFACE("ngp_cart")
-	MCFG_CARTSLOT_UNLOAD(ngp_cart)
+	MCFG_CARTSLOT_UNLOAD(ngp_state, ngp_cart)
 
 	/* software lists */
 	MCFG_SOFTWARE_LIST_ADD("cart_list","ngp")
@@ -826,10 +823,9 @@ static MACHINE_CONFIG_DERIVED( ngpc, ngp_common )
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_EXTENSION_LIST("bin,ngp,npc,ngc")
 	MCFG_CARTSLOT_NOT_MANDATORY
-	MCFG_CARTSLOT_START(ngp_cart)
-	MCFG_CARTSLOT_LOAD(ngp_cart)
+	MCFG_CARTSLOT_LOAD(ngp_state,ngp_cart)
 	MCFG_CARTSLOT_INTERFACE("ngp_cart")
-	MCFG_CARTSLOT_UNLOAD(ngp_cart)
+	MCFG_CARTSLOT_UNLOAD(ngp_state,ngp_cart)
 
 	/* software lists */
 	MCFG_SOFTWARE_LIST_ADD("cart_list","ngpc")

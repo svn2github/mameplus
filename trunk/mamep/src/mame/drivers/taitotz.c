@@ -616,47 +616,47 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 };
 
-
+/*
 static void taitotz_exit(running_machine &machine)
 {
-	/*
-	taitotz_state *state = machine.driver_data<taitotz_state>();
 
-	FILE *file;
-	int i;
+    taitotz_state *state = machine.driver_data<taitotz_state>();
 
-	file = fopen("screen_ram.bin","wb");
-	for (i=0; i < 0x200000; i++)
-	{
-	    fputc((UINT8)(state->m_screen_ram[i] >> 24), file);
-	    fputc((UINT8)(state->m_screen_ram[i] >> 16), file);
-	    fputc((UINT8)(state->m_screen_ram[i] >> 8), file);
-	    fputc((UINT8)(state->m_screen_ram[i] >> 0), file);
-	}
-	fclose(file);
+    FILE *file;
+    int i;
 
-	file = fopen("frame_ram.bin","wb");
-	for (i=0; i < 0x80000; i++)
-	{
-	    fputc((UINT8)(state->m_frame_ram[i] >> 24), file);
-	    fputc((UINT8)(state->m_frame_ram[i] >> 16), file);
-	    fputc((UINT8)(state->m_frame_ram[i] >> 8), file);
-	    fputc((UINT8)(state->m_frame_ram[i] >> 0), file);
-	}
-	fclose(file);
+    file = fopen("screen_ram.bin","wb");
+    for (i=0; i < 0x200000; i++)
+    {
+        fputc((UINT8)(state->m_screen_ram[i] >> 24), file);
+        fputc((UINT8)(state->m_screen_ram[i] >> 16), file);
+        fputc((UINT8)(state->m_screen_ram[i] >> 8), file);
+        fputc((UINT8)(state->m_screen_ram[i] >> 0), file);
+    }
+    fclose(file);
 
-	file = fopen("texture_ram.bin","wb");
-	for (i=0; i < 0x800000; i++)
-	{
-	    fputc((UINT8)(state->m_texture_ram[i] >> 24), file);
-	    fputc((UINT8)(state->m_texture_ram[i] >> 16), file);
-	    fputc((UINT8)(state->m_texture_ram[i] >> 8), file);
-	    fputc((UINT8)(state->m_texture_ram[i] >> 0), file);
-	}
-	fclose(file);
-	*/
+    file = fopen("frame_ram.bin","wb");
+    for (i=0; i < 0x80000; i++)
+    {
+        fputc((UINT8)(state->m_frame_ram[i] >> 24), file);
+        fputc((UINT8)(state->m_frame_ram[i] >> 16), file);
+        fputc((UINT8)(state->m_frame_ram[i] >> 8), file);
+        fputc((UINT8)(state->m_frame_ram[i] >> 0), file);
+    }
+    fclose(file);
+
+    file = fopen("texture_ram.bin","wb");
+    for (i=0; i < 0x800000; i++)
+    {
+        fputc((UINT8)(state->m_texture_ram[i] >> 24), file);
+        fputc((UINT8)(state->m_texture_ram[i] >> 16), file);
+        fputc((UINT8)(state->m_texture_ram[i] >> 8), file);
+        fputc((UINT8)(state->m_texture_ram[i] >> 0), file);
+    }
+    fclose(file);
+
 }
-
+*/
 void taitotz_state::video_start()
 {
 	int width = machine().primary_screen->width();
@@ -669,7 +669,7 @@ void taitotz_state::video_start()
 	/* create renderer */
 	m_renderer = auto_alloc(machine(), taitotz_renderer(machine(), width, height, m_texture_ram));
 
-	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(taitotz_exit), &machine()));
+	//machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(taitotz_exit), &machine()));
 }
 
 static const float dot3_tex_table[32] =

@@ -5,6 +5,7 @@
 *************************************************************************/
 
 #include <video/k053250.h>
+#include <sound/flt_vol.h>
 
 class xexex_state : public driver_device
 {
@@ -38,10 +39,10 @@ public:
 	cpu_device *m_maincpu;
 	cpu_device *m_audiocpu;
 	device_t *m_k054539;
-	device_t *m_filter1l;
-	device_t *m_filter1r;
-	device_t *m_filter2l;
-	device_t *m_filter2r;
+	filter_volume_device *m_filter1l;
+	filter_volume_device *m_filter1r;
+	filter_volume_device *m_filter2l;
+	filter_volume_device *m_filter2r;
 	device_t *m_k056832;
 	device_t *m_k053246;
 	k053250_t *m_k053250;
@@ -67,6 +68,7 @@ public:
 	UINT32 screen_update_xexex(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(dmaend_callback);
 	TIMER_DEVICE_CALLBACK_MEMBER(xexex_interrupt);
+	void xexex_postload();
 };
 
 /*----------- defined in video/xexex.c -----------*/

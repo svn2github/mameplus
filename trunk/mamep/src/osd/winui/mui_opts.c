@@ -104,95 +104,95 @@ static void remove_all_source_options(void);
     Internal defines
  ***************************************************************************/
 
-#define UI_INI_FILENAME							MAMEUINAME ".ini"
-#define DEFAULT_OPTIONS_INI_FILENAME			emulator_info::get_configname()
+#define UI_INI_FILENAME				MAMEUINAME ".ini"
+#define DEFAULT_OPTIONS_INI_FILENAME		emulator_info::get_configname()
 
 //#ifdef PTR64
-//#define GAMEINFO_INI_FILENAME					"GameInfo64.ini"
+//#define GAMEINFO_INI_FILENAME			"GameInfo64.ini"
 //#else
-//#define GAMEINFO_INI_FILENAME					"GameInfo32.ini"
+//#define GAMEINFO_INI_FILENAME			"GameInfo32.ini"
 //#endif
-#define GAMEINFO_INI_FILENAME					"GameInfo.ini"
+#define GAMEINFO_INI_FILENAME			"GameInfo.ini"
 
 
 
-#define MUIOPTION_LIST_MODE						"list_mode"
-#define MUIOPTION_CHECK_GAME					"check_game"
+#define MUIOPTION_LIST_MODE				"list_mode"
+#define MUIOPTION_CHECK_GAME				"check_game"
 #define MUIOPTION_JOYSTICK_IN_INTERFACE			"joystick_in_interface"
 #define MUIOPTION_KEYBOARD_IN_INTERFACE			"keyboard_in_interface"
-#define MUIOPTION_CYCLE_SCREENSHOT				"cycle_screenshot"
+#define MUIOPTION_CYCLE_SCREENSHOT			"cycle_screenshot"
 #define MUIOPTION_STRETCH_SCREENSHOT_LARGER		"stretch_screenshot_larger"
 #define MUIOPTION_SCREENSHOT_BORDER_SIZE		"screenshot_bordersize"
 #define MUIOPTION_SCREENSHOT_BORDER_COLOR		"screenshot_bordercolor"
-#define MUIOPTION_INHERIT_FILTER				"inherit_filter"
-#define MUIOPTION_OFFSET_CLONES					"offset_clones"
+#define MUIOPTION_INHERIT_FILTER			"inherit_filter"
+#define MUIOPTION_OFFSET_CLONES				"offset_clones"
 #ifdef USE_SHOW_SPLASH_SCREEN
 #define MUIOPTION_DISPLAY_SPLASH_SCREEN			"display_splash_screen"
 #endif /* USE_SHOW_SPLASH_SCREEN */
 #ifdef TREE_SHEET
-#define MUIOPTION_SHOW_TREE_SHEET				"show_tree_sheet"
+#define MUIOPTION_SHOW_TREE_SHEET			"show_tree_sheet"
 #endif /* TREE_SHEET */
 #define MUIOPTION_BROADCAST_GAME_NAME			"broadcast_game_name"
-#define MUIOPTION_RANDOM_BACKGROUND				"random_background"
-#define MUIOPTION_DEFAULT_FOLDER_ID				"default_folder_id"
+#define MUIOPTION_RANDOM_BACKGROUND			"random_background"
+#define MUIOPTION_DEFAULT_FOLDER_ID			"default_folder_id"
 #define MUIOPTION_SHOW_IMAGE_SECTION			"show_image_section"
 #define MUIOPTION_SHOW_FOLDER_SECTION			"show_folder_section"
-#define MUIOPTION_HIDE_FOLDERS					"hide_folders"
-#define MUIOPTION_SHOW_STATUS_BAR				"show_status_bar"
-#define MUIOPTION_SHOW_TABS						"show_tabs"
-#define MUIOPTION_SHOW_TOOLBAR					"show_tool_bar"
-#define MUIOPTION_CURRENT_TAB					"current_tab"
-#define MUIOPTION_WINDOW_X						"window_x"
-#define MUIOPTION_WINDOW_Y						"window_y"
-#define MUIOPTION_WINDOW_WIDTH					"window_width"
-#define MUIOPTION_WINDOW_HEIGHT					"window_height"
-#define MUIOPTION_WINDOW_STATE					"window_state"
-#define MUIOPTION_CUSTOM_COLOR					"custom_color"
-#define MUIOPTION_FOLDER_FLAG					"folder_flag"
-#define MUIOPTION_USE_BROKEN_ICON				"use_broken_icon"
-#define MUIOPTION_LIST_FONT						"list_font"
-#define MUIOPTION_LIST_FONTFACE					"list_fontface"
-#define MUIOPTION_TEXT_COLOR					"text_color"
-#define MUIOPTION_CLONE_COLOR					"clone_color"
-#define MUIOPTION_BROKEN_COLOR					"broken_color"
-#define MUIOPTION_HIDE_TABS						"hide_tabs"
-#define MUIOPTION_HISTORY_TAB					"history_tab"
-#define MUIOPTION_COLUMN_WIDTHS					"column_widths"
-#define MUIOPTION_COLUMN_ORDER					"column_order"
-#define MUIOPTION_COLUMN_SHOWN					"column_shown"
-#define MUIOPTION_SPLITTERS						"splitters"
-#define MUIOPTION_SORT_COLUMN					"sort_column"
-#define MUIOPTION_SORT_REVERSED					"sort_reversed"
+#define MUIOPTION_HIDE_FOLDERS				"hide_folders"
+#define MUIOPTION_SHOW_STATUS_BAR			"show_status_bar"
+#define MUIOPTION_SHOW_TABS				"show_tabs"
+#define MUIOPTION_SHOW_TOOLBAR				"show_tool_bar"
+#define MUIOPTION_CURRENT_TAB				"current_tab"
+#define MUIOPTION_WINDOW_X				"window_x"
+#define MUIOPTION_WINDOW_Y				"window_y"
+#define MUIOPTION_WINDOW_WIDTH				"window_width"
+#define MUIOPTION_WINDOW_HEIGHT				"window_height"
+#define MUIOPTION_WINDOW_STATE				"window_state"
+#define MUIOPTION_CUSTOM_COLOR				"custom_color"
+#define MUIOPTION_FOLDER_FLAG				"folder_flag"
+#define MUIOPTION_USE_BROKEN_ICON			"use_broken_icon"
+#define MUIOPTION_LIST_FONT				"list_font"
+#define MUIOPTION_LIST_FONTFACE				"list_fontface"
+#define MUIOPTION_TEXT_COLOR				"text_color"
+#define MUIOPTION_CLONE_COLOR				"clone_color"
+#define MUIOPTION_BROKEN_COLOR				"broken_color"
+#define MUIOPTION_HIDE_TABS				"hide_tabs"
+#define MUIOPTION_HISTORY_TAB				"history_tab"
+#define MUIOPTION_COLUMN_WIDTHS				"column_widths"
+#define MUIOPTION_COLUMN_ORDER				"column_order"
+#define MUIOPTION_COLUMN_SHOWN				"column_shown"
+#define MUIOPTION_SPLITTERS				"splitters"
+#define MUIOPTION_SORT_COLUMN				"sort_column"
+#define MUIOPTION_SORT_REVERSED				"sort_reversed"
 #if 0 //mamep
-#define MUIOPTION_LANGUAGE						"language"
+#define MUIOPTION_LANGUAGE				"language"
 #endif
-#define MUIOPTION_FLYER_DIRECTORY				"flyer_directory"
-#define MUIOPTION_CABINET_DIRECTORY				"cabinet_directory"
-#define MUIOPTION_MARQUEE_DIRECTORY				"marquee_directory"
-#define MUIOPTION_TITLE_DIRECTORY				"title_directory"
-#define MUIOPTION_CPANEL_DIRECTORY				"cpanel_directory"
-#define MUIOPTION_PCB_DIRECTORY					"pcb_directory"
+#define MUIOPTION_FLYER_DIRECTORY			"flyer_directory"
+#define MUIOPTION_CABINET_DIRECTORY			"cabinet_directory"
+#define MUIOPTION_MARQUEE_DIRECTORY			"marquee_directory"
+#define MUIOPTION_TITLE_DIRECTORY			"title_directory"
+#define MUIOPTION_CPANEL_DIRECTORY			"cpanel_directory"
+#define MUIOPTION_PCB_DIRECTORY				"pcb_directory"
 #ifdef USE_VIEW_PCBINFO
-#define MUIOPTION_PCBINFO_DIRECTORY				"pcbinfo_directory"
+#define MUIOPTION_PCBINFO_DIRECTORY			"pcbinfo_directory"
 #endif /* USE_VIEW_PCBINFO */
-#define MUIOPTION_ICONS_DIRECTORY				"icons_directory"
+#define MUIOPTION_ICONS_DIRECTORY			"icons_directory"
 #define MUIOPTION_BACKGROUND_DIRECTORY			"background_directory"
-#define MUIOPTION_FOLDER_DIRECTORY				"folder_directory"
-#define MUIOPTION_UI_KEY_UP						"ui_key_up"
-#define MUIOPTION_UI_KEY_DOWN					"ui_key_down"
-#define MUIOPTION_UI_KEY_LEFT					"ui_key_left"
-#define MUIOPTION_UI_KEY_RIGHT					"ui_key_right"
-#define MUIOPTION_UI_KEY_START					"ui_key_start"
-#define MUIOPTION_UI_KEY_PGUP					"ui_key_pgup"
-#define MUIOPTION_UI_KEY_PGDWN					"ui_key_pgdwn"
-#define MUIOPTION_UI_KEY_HOME					"ui_key_home"
-#define MUIOPTION_UI_KEY_END					"ui_key_end"
-#define MUIOPTION_UI_KEY_SS_CHANGE				"ui_key_ss_change"
-#define MUIOPTION_UI_KEY_HISTORY_UP				"ui_key_history_up"
+#define MUIOPTION_FOLDER_DIRECTORY			"folder_directory"
+#define MUIOPTION_UI_KEY_UP				"ui_key_up"
+#define MUIOPTION_UI_KEY_DOWN				"ui_key_down"
+#define MUIOPTION_UI_KEY_LEFT				"ui_key_left"
+#define MUIOPTION_UI_KEY_RIGHT				"ui_key_right"
+#define MUIOPTION_UI_KEY_START				"ui_key_start"
+#define MUIOPTION_UI_KEY_PGUP				"ui_key_pgup"
+#define MUIOPTION_UI_KEY_PGDWN				"ui_key_pgdwn"
+#define MUIOPTION_UI_KEY_HOME				"ui_key_home"
+#define MUIOPTION_UI_KEY_END				"ui_key_end"
+#define MUIOPTION_UI_KEY_SS_CHANGE			"ui_key_ss_change"
+#define MUIOPTION_UI_KEY_HISTORY_UP			"ui_key_history_up"
 #define MUIOPTION_UI_KEY_HISTORY_DOWN			"ui_key_history_down"
 #define MUIOPTION_UI_KEY_CONTEXT_FILTERS		"ui_key_context_filters"
 #define MUIOPTION_UI_KEY_SELECT_RANDOM			"ui_key_select_random"
-#define MUIOPTION_UI_KEY_GAME_AUDIT				"ui_key_game_audit"
+#define MUIOPTION_UI_KEY_GAME_AUDIT			"ui_key_game_audit"
 #define MUIOPTION_UI_KEY_GAME_PROPERTIES		"ui_key_game_properties"
 #define MUIOPTION_UI_KEY_HELP_CONTENTS			"ui_key_help_contents"
 #define MUIOPTION_UI_KEY_UPDATE_GAMELIST		"ui_key_update_gamelist"
@@ -210,55 +210,55 @@ static void remove_all_source_options(void);
 #define MUIOPTION_UI_KEY_VIEW_TAB_STORY			"ui_key_view_tab_story"
 #endif /* STORY_DATAFILE */
 #define MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE		"ui_key_view_tab_marquee"
-#define MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT	"ui_key_view_tab_screenshot"
+#define MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT		"ui_key_view_tab_screenshot"
 #define MUIOPTION_UI_KEY_VIEW_TAB_TITLE			"ui_key_view_tab_title"
 #define MUIOPTION_UI_KEY_VIEW_TAB_PCB   		"ui_key_view_tab_pcb"
-#define MUIOPTION_UI_KEY_QUIT					"ui_key_quit"
-#define MUIOPTION_UI_JOY_UP						"ui_joy_up"
-#define MUIOPTION_UI_JOY_DOWN					"ui_joy_down"
-#define MUIOPTION_UI_JOY_LEFT					"ui_joy_left"
-#define MUIOPTION_UI_JOY_RIGHT					"ui_joy_right"
-#define MUIOPTION_UI_JOY_START					"ui_joy_start"
-#define MUIOPTION_UI_JOY_PGUP					"ui_joy_pgup"
-#define MUIOPTION_UI_JOY_PGDWN					"ui_joy_pgdwn"
-#define MUIOPTION_UI_JOY_HOME					"ui_joy_home"
-#define MUIOPTION_UI_JOY_END					"ui_joy_end"
-#define MUIOPTION_UI_JOY_SS_CHANGE				"ui_joy_ss_change"
-#define MUIOPTION_UI_JOY_HISTORY_UP				"ui_joy_history_up"
+#define MUIOPTION_UI_KEY_QUIT				"ui_key_quit"
+#define MUIOPTION_UI_JOY_UP				"ui_joy_up"
+#define MUIOPTION_UI_JOY_DOWN				"ui_joy_down"
+#define MUIOPTION_UI_JOY_LEFT				"ui_joy_left"
+#define MUIOPTION_UI_JOY_RIGHT				"ui_joy_right"
+#define MUIOPTION_UI_JOY_START				"ui_joy_start"
+#define MUIOPTION_UI_JOY_PGUP				"ui_joy_pgup"
+#define MUIOPTION_UI_JOY_PGDWN				"ui_joy_pgdwn"
+#define MUIOPTION_UI_JOY_HOME				"ui_joy_home"
+#define MUIOPTION_UI_JOY_END				"ui_joy_end"
+#define MUIOPTION_UI_JOY_SS_CHANGE			"ui_joy_ss_change"
+#define MUIOPTION_UI_JOY_HISTORY_UP			"ui_joy_history_up"
 #define MUIOPTION_UI_JOY_HISTORY_DOWN			"ui_joy_history_down"
-#define MUIOPTION_UI_JOY_EXEC					"ui_joy_exec"
-#define MUIOPTION_EXEC_COMMAND					"exec_command"
-#define MUIOPTION_EXEC_WAIT						"exec_wait"
-#define MUIOPTION_HIDE_MOUSE					"hide_mouse"
-#define MUIOPTION_FULL_SCREEN					"full_screen"
+#define MUIOPTION_UI_JOY_EXEC				"ui_joy_exec"
+#define MUIOPTION_EXEC_COMMAND				"exec_command"
+#define MUIOPTION_EXEC_WAIT				"exec_wait"
+#define MUIOPTION_HIDE_MOUSE				"hide_mouse"
+#define MUIOPTION_FULL_SCREEN				"full_screen"
 
 #ifdef MESS
 // Options names
-#define MUIOPTION_DEFAULT_GAME					"default_system"
-#define MUIOPTION_HISTORY_FILE					"sysinfo_file"
-#define MUIOPTION_MAMEINFO_FILE					"messinfo_file"
+#define MUIOPTION_DEFAULT_GAME				"default_system"
+#define MUIOPTION_HISTORY_FILE				"sysinfo_file"
+#define MUIOPTION_MAMEINFO_FILE				"messinfo_file"
 // Option values
-#define MUIDEFAULT_SELECTION					"nes"
-#define MUIDEFAULT_SPLITTERS					"152,310,468"
-#define MUIHISTORY_FILE							"sysinfo.dat"
-#define MUIMAMEINFO_FILE						"messinfo.dat"
+#define MUIDEFAULT_SELECTION				"nes"
+#define MUIDEFAULT_SPLITTERS				"152,310,468"
+#define MUIHISTORY_FILE					"sysinfo.dat"
+#define MUIMAMEINFO_FILE				"messinfo.dat"
 #else
 // Options names
-#define MUIOPTION_DEFAULT_GAME					"default_game"
-//#define MUIOPTION_HISTORY_FILE					"history_file"
-//#define MUIOPTION_MAMEINFO_FILE					"mameinfo_file"
+#define MUIOPTION_DEFAULT_GAME				"default_game"
+//#define MUIOPTION_HISTORY_FILE			"history_file"
+//#define MUIOPTION_MAMEINFO_FILE			"mameinfo_file"
 // Options values
-#define MUIDEFAULT_SELECTION					"puckman"
-#define MUIDEFAULT_SPLITTERS					"152,362"
-#define MUIHISTORY_FILE							"history.dat"
-#define MUIMAMEINFO_FILE						"mameinfo.dat"
+#define MUIDEFAULT_SELECTION				"puckman"
+#define MUIDEFAULT_SPLITTERS				"152,362"
+#define MUIHISTORY_FILE					"history.dat"
+#define MUIMAMEINFO_FILE				"mameinfo.dat"
 #ifdef STORY_DATAFILE
-#define MUISTORY_FILE   						"story.dat"
+#define MUISTORY_FILE   				"story.dat"
 #endif /* STORY_DATAFILE */
 #endif
 
-#define MUIOPTION_VERSION						"version"
-#define MUIOPTION_EXE_NAME						"exe_name"
+#define MUIOPTION_VERSION				"version"
+#define MUIOPTION_EXE_NAME				"exe_name"
 
 
 /***************************************************************************
@@ -2776,11 +2776,11 @@ static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts,
 		astring inistring;
 		inistring.expand(8 * 1024);
 
-		#ifdef MESS
+#ifdef MESS
 		opts.output_ini(inistring);
-		#else
+#else
 		opts.output_ini(inistring,baseopts);
-		#endif
+#endif
 
 		emu_file file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		filerr = file.open(filename);
@@ -2805,11 +2805,11 @@ static file_error SaveSettingsFile(windows_options &opts, windows_options *baseo
 		astring inistring;
 		inistring.expand(8 * 1024);
 
-		#ifdef MESS
+#ifdef MESS
 		opts.output_ini(inistring);
-		#else
+#else
 		opts.output_ini(inistring,baseopts);
-		#endif
+#endif
 
 		emu_file file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		filerr = file.open(filename);

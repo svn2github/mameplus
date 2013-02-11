@@ -143,6 +143,9 @@ public:
 	DECLARE_PALETTE_INIT(wscolor);
 	TIMER_CALLBACK_MEMBER(wswan_rtc_callback);
 	TIMER_CALLBACK_MEMBER(wswan_scanline_interrupt);
+	void wswan_machine_stop();
+	DECLARE_DRIVER_INIT( wswan );
+	DECLARE_DEVICE_IMAGE_LOAD_MEMBER( wswan_cart );
 
 protected:
 	/* Interrupt flags */
@@ -173,15 +176,6 @@ protected:
 	void wswan_handle_irqs();
 	void wswan_set_irq_line(int irq);
 };
-
-
-/*----------- defined in machine/wswan.c -----------*/
-
-
-
-
-DEVICE_START(wswan_cart);
-DEVICE_IMAGE_LOAD(wswan_cart);
 
 
 /*----------- defined in video/wswan.c -----------*/

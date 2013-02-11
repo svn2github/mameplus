@@ -5,6 +5,7 @@
 
 **************************************************************************/
 
+#include "video/tlc34076.h"
 #include "video/tms34061.h"
 
 #define YBUFFER_COUNT   15
@@ -14,7 +15,10 @@ class itech8_state : public driver_device
 public:
 	itech8_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+			m_tlc34076(*this, "tlc34076"),
 			m_visarea(0, 0, 0, 0){ }
+
+	required_device<tlc34076_device> m_tlc34076;
 
 	rectangle m_visarea;
 	UINT8 m_grom_bank;
@@ -100,13 +104,13 @@ public:
 	TIMER_CALLBACK_MEMBER(delayed_sound_data_w);
 	TIMER_CALLBACK_MEMBER(blitter_done);
 	TIMER_DEVICE_CALLBACK_MEMBER(grmatch_palette_update);
+	inline UINT8 fetch_next_raw();
+	inline void consume_raw(int count);
+	inline UINT8 fetch_next_rle();
+	inline void consume_rle(int count);
+	void perform_blit(address_space &space);
+	void itech8_update_interrupts(int periodic, int tms34061, int blitter);
 };
-
-
-/*----------- defined in drivers/itech8.c -----------*/
-
-void itech8_update_interrupts(running_machine &machine, int periodic, int tms34061, int blitter);
-
 
 /*----------- defined in machine/slikshot.c -----------*/
 

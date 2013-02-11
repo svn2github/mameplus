@@ -39,104 +39,263 @@
 ******************************************************************************/
 
 // Atari
-a2600			// Atari 2600
-a2600p			// Atari 2600 PAL
-a5200			// Atari 5200
-a7800			// Atari 7800 NTSC
-a7800p			// Atari 7800 PAL
+a2600     // Atari 2600
+a2600p    // Atari 2600 PAL
+a5200     // Atari 5200
+a7800     // Atari 7800 NTSC
+a7800p    // Atari 7800 PAL
 
 // Nintendo
-nes				// Nintendo Entertainment System
-nespal			// Nintendo Entertainment System PAL
-m82				// Nintendo M82 Display Unit
-famicom			// Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on
-famitwin		// Sharp Famicom Twin System
-drpcjr			// Bung Doctor PC Jr
-dendy			// Dendy (Classic russian famiclone)
-gameboy			// Nintendo Game Boy Handheld
-supergb			// Nintendo Super Game Boy SNES Cartridge
-gbpocket		// Nintendo Game Boy Pocket Handheld
-gblight			// Nintendo Game Boy Light Handheld
-gbcolor			// Nintendo Game Boy Color Handheld
-gba				// Nintendo Game Boy Advance Handheld
-snes			// Nintendo Super Nintendo NTSC
-snespal			// Nintendo Super Nintendo PAL
-snessfx			// Nintendo Super Nintendo NTSC w/SuperFX CPU
-snespsfx		// Nintendo Super Nintendo PAL w/SuperFX CPU
-snesdsp			// Nintendo Super Nintendo NTSC w/DSP-x CPU
-snespdsp		// Nintendo Super Nintendo PAL w/DSP-x CPU
-snesst10		// Nintendo Super Nintendo NTSC w/ST-010 CPU
-snesst11		// Nintendo Super Nintendo NTSC w/ST-011 CPU
-snesst			// Nintendo Super Nintendo NTSC w/Sufami Turbo base cart
-snesbsx			// Nintendo Super Nintendo NTSC w/BS-X compatible cart
+nes       // Nintendo Entertainment System
+nespal    // Nintendo Entertainment System PAL
+m82       // Nintendo M82 Display Unit
+famicom   // Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on
+famitwin  // Sharp Famicom Twin System
+drpcjr    // Bung Doctor PC Jr
+dendy     // Dendy (Classic russian famiclone)
+gameboy   // Nintendo Game Boy Handheld
+supergb   // Nintendo Super Game Boy SNES Cartridge
+gbpocket  // Nintendo Game Boy Pocket Handheld
+gblight   // Nintendo Game Boy Light Handheld
+gbcolor   // Nintendo Game Boy Color Handheld
+gba       // Nintendo Game Boy Advance Handheld
+snes      // Nintendo Super Nintendo NTSC
+snespal   // Nintendo Super Nintendo PAL
+snessfx   // Nintendo Super Nintendo NTSC w/SuperFX CPU
+snespsfx  // Nintendo Super Nintendo PAL w/SuperFX CPU
+snesdsp   // Nintendo Super Nintendo NTSC w/DSP-x CPU
+snespdsp  // Nintendo Super Nintendo PAL w/DSP-x CPU
+snesst10  // Nintendo Super Nintendo NTSC w/ST-010 CPU
+snesst11  // Nintendo Super Nintendo NTSC w/ST-011 CPU
+snesst    // Nintendo Super Nintendo NTSC w/Sufami Turbo base cart
+snesbsx   // Nintendo Super Nintendo NTSC w/BS-X compatible cart
 
 megaduck		// Megaduck
 
 // SEGA
-gamegear		// Sega GameGear
-gamegeaj		// Sega GameGear (Japan)
-sms				// Sega Master System II (NTSC)
-sms1			// Sega Master System I (NTSC)
-sms1pal			// Sega Master System I (PAL)
-smspal			// Sega Master System II (PAL)
-smsj			// Sega Master System (Japan) with FM Chip
-sg1000m3		// Sega SG-1000 Mark III (Japan)
-sms2kr			// Samsung Gam*Boy II (Korea)
-smssdisp		// Sega Master System Store Display Unit
+gamegear  // Sega GameGear
+gamegeaj  // Sega GameGear (Japan)
+sms       // Sega Master System II (NTSC)
+sms1      // Sega Master System I (NTSC)
+sms1pal   // Sega Master System I (PAL)
+smspal    // Sega Master System II (PAL)
+smsj      // Sega Master System (Japan) with FM Chip
+sg1000m3  // Sega SG-1000 Mark III (Japan)
+sms2kr    // Samsung Gam*Boy II (Korea)
+smssdisp  // Sega Master System Store Display Unit
 
-megadrij		// 1988 Sega Mega Drive (Japan)
-genesis			// 1989 Sega Genesis (USA)
-gensvp			// 1993 Sega Genesis (USA w/SVP chip)
+megadrij  // 1988 Sega Mega Drive (Japan)
+genesis   // 1989 Sega Genesis (USA)
+gensvp    // 1993 Sega Genesis (USA w/SVP chip)
 mdsvp
 mdsvpj
-megadriv		// 1990 Sega Mega Drive (Europe)
-pico			// 1994 Sega Pico (Europe)
-picou			// 1994 Sega Pico (USA)
-picoj			// 1993 Sega Pico (Japan)
-segacd			// 1992 Sega Sega CD (USA)
-megacd			// 1993 Sega Mega-CD (Europe)
-megacda			// 1993 Sega Mega-CD (Asia)
-megacdj			// 1991 Sega Mega-CD (Japan)
-segacd2			// 1993 Sega Sega CD 2 (USA)
-megacd2			// 1993 Sega Mega-CD 2 (Europe)
-megacd2j		// 1993 Sega Mega-CD 2 (Japan)
-laseract		// 1993 Pioneer LaserActive (USA)
-laseractj		// 1993 Pioneer LaserActive (Japan)
-xeye			// 1993 JVC X'eye (USA)
-wmega			// 1992 Sega Wondermega (Japan)
-wmegam2			// 1993 Victor Wondermega M2 (Japan)
-cdx				// 1994 Sega CDX (USA)
-multmega		// 1994 Sega Multi-Mega (Europe)
-32x				// 1994 Sega 32X (USA)
+megadriv  // 1990 Sega Mega Drive (Europe)
+pico      // 1994 Sega Pico (Europe)
+picou     // 1994 Sega Pico (USA)
+picoj     // 1993 Sega Pico (Japan)
+segacd    // 1992 Sega Sega CD (USA)
+megacd    // 1993 Sega Mega-CD (Europe)
+megacda   // 1993 Sega Mega-CD (Asia)
+megacdj   // 1991 Sega Mega-CD (Japan)
+segacd2   // 1993 Sega Sega CD 2 (USA)
+megacd2   // 1993 Sega Mega-CD 2 (Europe)
+megacd2j  // 1993 Sega Mega-CD 2 (Japan)
+laseract  // 1993 Pioneer LaserActive (USA)
+laseractj // 1993 Pioneer LaserActive (Japan)
+xeye      // 1993 JVC X'eye (USA)
+wmega     // 1992 Sega Wondermega (Japan)
+wmegam2   // 1993 Victor Wondermega M2 (Japan)
+cdx       // 1994 Sega CDX (USA)
+multmega  // 1994 Sega Multi-Mega (Europe)
+32x       // 1994 Sega 32X (USA)
 32xe
 32xj
-32x_scd			// 1994 Sega Sega CD (USA w/32X addon)
+32x_scd   // 1994 Sega Sega CD (USA w/32X addon)
 
 // NEC
-pce				// PC/Engine NEC 1987-1993
-tg16			// Turbo Grafix-16  NEC 1989-1993
-sgx				// SuperGrafX NEC 1989
+pce       // PC/Engine NEC 1987-1993
+tg16      // Turbo Grafix-16  NEC 1989-1993
+sgx       // SuperGrafX NEC 1989
 
 // Capcom
-sfach			// CPS Changer (Street Fighter Alpha)
-sfzbch			// CPS Changer (Street Fighter ZERO Brazil)
-sfzch			// CPS Changer (Street Fighter ZERO)
-wofch			// CPS Changer (Tenchi Wo Kurau II)
+sfach     // CPS Changer (Street Fighter Alpha)
+sfzbch    // CPS Changer (Street Fighter ZERO Brazil)
+sfzch     // CPS Changer (Street Fighter ZERO)
+wofch     // CPS Changer (Tenchi Wo Kurau II)
 
 // BANDAI
-wswan			// Bandai WonderSwan Handheld
-wscolor			// Bandai WonderSwan Color Handheld
+wswan     // Bandai WonderSwan Handheld
+wscolor   // Bandai WonderSwan Color Handheld
 
 // SNK
-ngp				// NeoGeo Pocket
-ngpc			// NeoGeo Pocket Color
+ngp       // NeoGeo Pocket
+ngpc      // NeoGeo Pocket Color
+aes       // NeoGeo AES
+neocd     // NeoGeo CD
+neocdz    // NeoGeo CDZ
+neocdzj   //
 
 //***************COMPUTERS**************************************************
 
 // ASCII & Microsoft
-msx				// 1983 MSX
-msx2			// 1985 MSX2
-msx2p			// 1988 MSX2+ Japan
+msx       // 1983 MSX
+ax170
+canonv10
+canonv20
+dpc100    // 1984 MSX Korea
+dpc180    // 1984 MSX Korea
+dpc200    // 1984 MSX Korea
+gsfc200
+expert10  // 1983 MSX Brazil
+expert11  // 1984 MSX Brazil
+expert13  // 1984 MSX Brazil
+expertdp  // 1985 MSX Brazil
+expertpl  // 1984 MSX Brazil
+jvchc7gb
+mlf80
+mlfx1
+cf1200    // 1984 MSX Japan
+cf2000    // 1983 MSX Japan
+cf2700    // 1984 MSX Japan
+cf3000    // 1984 MSX Japan
+cf3300    // 1985 MSX Japan
+fs1300    // 1985 MSX Japan
+fs4000    // 1985 MSX Japan
+phc2
+phc28
+cf2700g
+nms801
+vg8000
+vg8010
+vg8010f
+vg802000
+vg802020  // 1985 MSX
+vg8020f
+piopx7
+spc800
+mpc64
+mpc100
+phc28l
+phc28s
+mpc10
+hotbit11  // 1985 MSX Brazil
+hotbit12  // 1985 MSX Brazil
+hotbi13b  // 1985 MSX Brazil
+hotbi13p  // 1985 MSX Brazil
+hotbit20  // 1986 MSX2 Brazil
+hb10p
+hb20p
+hb201     // 1985 MSX Japan
+hb201p    // 1985 MSX
+hb501p    // 1984 MSX
+hb55d     // 1983 MSX Germany
+hb55p     // 1983 MSX
+hb75d     // 1983 MSX Germany
+hb75p     // 1983 MSX
+svi728    // 1985 MSX
+svi738    // 1985 MSX
+svi738sw  // 1985 MSX
+svi738pl  // 1985 MSX
+tadpc200
+tadpc20a
+hx10      // 1984 MSX
+hx10s     // 1984 MSX
+hx20      // 1984 MSX
+cx5m
+cx5m128
+cx5m2
+yis303
+yis503
+yis503f
+yis503ii
+y503iir
+y503iir2
+yis503m
+yc64
+mx64
+bruc100
+
+
+msx2      // 1985 MSX2
+ax350
+ax370
+hbf9p     // 1985 MSX2
+hbf9pr
+hbf9s     // 1985 MSX2
+hbf500p   // 1985 MSX2
+hbf700d   // 1985 MSX2 Germany
+hbf700f   // 1985 MSX2
+hbf700p   // 1985 MSX2
+hbf700s   // 1985 MSX2 Spain
+hbg900ap  // 1986 MSX2
+hbg900p   // 1986 MSX2
+nms8220   // 1986 MSX2
+nms8220a  // 1986 MSX2
+vg8230    // 1986 MSX2
+vg8230j
+vg8235    // 1986 MSX2
+vg8235f   // 1986 MSX2
+vg8240    // 1986 MSX2
+nms8245   // 1986 MSX2
+nms8245f  // 1986 MSX2
+nms8250   // 1986 MSX2
+nms8250j
+nms8255   // 1986 MSX2
+nms8280   // 1986 MSX2
+nms8280g  // 1986 MSX2
+tpc310    // 1986 MSX2
+tpp311
+tps312
+hx23      // 1986 MSX2
+hx23f     // 1986 MSX2
+cx7m      // 1986 MSX2
+cx7m128   // 1986 MSX2
+mlg30
+fs5500    // 1985 MSX2 Japan
+fs4500    // 1986 MSX2 Japan
+fs4700    // 1986 MSX2 Japan
+fs5000    // 1986 MSX2 Japan
+fs4600    // 1986 MSX2 Japan
+fsa1      // 1986 MSX2 Japan
+fsa1a     // 1986 MSX2 Japan
+fsa1mk2   // 1987 MSX2 Japan
+fsa1f     // 1987 MSX2 Japan
+fsa1fm    // 1988 MSX2 Japan
+hbf5
+hbf500    // 1986 MSX2 Japan
+hbf900    // 1986 MSX2 Japan
+hbf900a   // 1986 MSX2 Japan
+hbf1      // 1986 MSX2 Japan
+hbf12     // 1987 MSX2 Japan
+hbf1xd    // 1987 MSX2 Japan
+hbf1xdm2  // 1988 MSX2 Japan
+mpc2300
+mpc25fd
+phc23     // 1986 MSX2 Japan
+cpc300    // 1986 MSX2 Korea
+cpc300e   // 1986 MSX2 Korea
+cpc400    // 1986 MSX2 Korea
+cpc400s   // 1986 MSX2 Korea
+expert20  // 1986 MSX2 Korea
+
+msx2p     // 1988 MSX2+ Japan
+expert3i
+expert3t
+expertac
+expertdx
+fsa1fx    // 1988 MSX2+ Japan
+fsa1wx    // 1988 MSX2+ Japan
+fsa1wxa   // 1988 MSX2+ Japan
+fsa1wsx   // 1989 MSX2+ Japan
+hbf1xdj   // 1988 MSX2+ Japan
+hbf1xv    // 1989 MSX2+ Japan
+phc70fd   // 1988 MSX2+ Japan
+phc70fd2  // 1988 MSX2+ Japan
+phc35j    // 1989 MSX2+ Japan
+hbf9sp
+
+fsa1gt
+fsa1st
 
 //********** To sort (mostly skeleton drivers) *****************************
 

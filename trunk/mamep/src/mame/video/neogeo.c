@@ -145,13 +145,12 @@ static pen_t get_pen( running_machine &machine, UINT16 data )
 }
 
 
-static void regenerate_pens(running_machine &machine)
+void neogeo_state::regenerate_pens()
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
 	int i;
 
 	for (i = 0; i < NUM_PENS; i++)
-		state->m_pens[i] = get_pen(machine, state->m_palettes[state->m_palette_bank][i]);
+		m_pens[i] = get_pen(machine(), m_palettes[m_palette_bank][i]);
 }
 
 
@@ -162,7 +161,7 @@ void neogeo_set_palette_bank( running_machine &machine, UINT8 data )
 	{
 		state->m_palette_bank = data;
 
-		regenerate_pens(machine);
+		state->regenerate_pens();
 	}
 }
 
@@ -174,7 +173,7 @@ void neogeo_set_screen_dark( running_machine &machine, UINT8 data )
 	{
 		state->m_screen_dark = data;
 
-		regenerate_pens(machine);
+		state->regenerate_pens();
 	}
 }
 
@@ -265,31 +264,30 @@ void neogeo_set_fixed_layer_source( running_machine &machine, UINT8 data )
 }
 
 
-static void draw_fixed_layer( running_machine &machine, bitmap_rgb32 &bitmap, int scanline )
+void neogeo_state::draw_fixed_layer( bitmap_rgb32 &bitmap, int scanline )
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
 	int x;
 
-	UINT8* gfx_base = state->memregion(state->m_fixed_layer_source ? "fixed" : "fixedbios")->base();
-	UINT32 addr_mask = state->memregion(state->m_fixed_layer_source ? "fixed" : "fixedbios")->bytes() - 1;
-	UINT16 *video_data = &state->m_videoram[0x7000 | (scanline >> 3)];
+	UINT8* gfx_base = m_fixed_layer_source ? m_region_fixed->base() : m_region_fixedbios->base();
+	UINT32 addr_mask = ( m_fixed_layer_source ? m_region_fixed->bytes() : m_region_fixedbios->bytes() ) - 1;
+	UINT16 *video_data = &m_videoram[0x7000 | (scanline >> 3)];
 	UINT32 *pixel_addr = &bitmap.pix32(scanline, NEOGEO_HBEND);
 
 	int garouoffsets[32];
-	int banked = state->m_fixed_layer_source && (addr_mask > 0x1ffff);
+	int banked = m_fixed_layer_source && (addr_mask > 0x1ffff);
 
 	/* thanks to Mr K for the garou & kof2000 banking info */
 	/* Build line banking table for Garou & MS3 before starting render */
-	if (banked && state->m_fixed_layer_bank_type == 1)
+	if (banked && m_fixed_layer_bank_type == 1)
 	{
 		int garoubank = 0;
 		int k = 0;
 		int y = 0;
 		while (y < 32)
 		{
-			if (state->m_videoram[0x7500 + k] == 0x0200 && (state->m_videoram[0x7580 + k] & 0xff00) == 0xff00)
+			if (m_videoram[0x7500 + k] == 0x0200 && (m_videoram[0x7580 + k] & 0xff00) == 0xff00)
 			{
-				garoubank = state->m_videoram[0x7580 + k] & 3;
+				garoubank = m_videoram[0x7580 + k] & 3;
 				garouoffsets[y++] = garoubank;
 			}
 			garouoffsets[y++] = garoubank;
@@ -305,14 +303,14 @@ static void draw_fixed_layer( running_machine &machine, bitmap_rgb32 &bitmap, in
 		if (banked)
 		{
 			int y = scanline >> 3;
-			switch (state->m_fixed_layer_bank_type)
+			switch (m_fixed_layer_bank_type)
 			{
 			case 1:
 				/* Garou, MSlug 3 */
 				code += 0x1000 * (garouoffsets[(y - 2) & 31] ^ 3);
 				break;
 			case 2:
-				code += 0x1000 * (((state->m_videoram[0x7500 + ((y - 1) & 31) + 32 * (x / 6)] >> (5 - (x % 6)) * 2) & 3) ^ 3);
+				code += 0x1000 * (((m_videoram[0x7500 + ((y - 1) & 31) + 32 * (x / 6)] >> (5 - (x % 6)) * 2) & 3) ^ 3);
 				break;
 			}
 		}
@@ -322,7 +320,7 @@ static void draw_fixed_layer( running_machine &machine, bitmap_rgb32 &bitmap, in
 			int i;
 
 			UINT8 *gfx = &gfx_base[((code << 5) | (scanline & 0x07)) & addr_mask];
-			pen_t *char_pens = &state->m_pens[code_and_palette >> 12 << 4];
+			pen_t *char_pens = &m_pens[code_and_palette >> 12 << 4];
 
 			for (i = 0; i < 4; i++)
 			{
@@ -672,10 +670,8 @@ static void start_sprite_line_timer( running_machine &machine )
 }
 
 
-static void optimize_sprite_data( running_machine &machine )
+void neogeo_state::optimize_sprite_data()
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-
 	/* convert the sprite graphics data into a format that
 	   allows faster blitting */
 	int i;
@@ -686,22 +682,22 @@ static void optimize_sprite_data( running_machine &machine )
 
 	/* get mask based on the length rounded up to the nearest
 	   power of 2 */
-	state->m_sprite_gfx_address_mask = 0xffffffff;
+	m_sprite_gfx_address_mask = 0xffffffff;
 
-	len = state->memregion("sprites")->bytes();
+	len = m_region_sprites->bytes();
 
 	for (bit = 0x80000000; bit != 0; bit >>= 1)
 	{
 		if (((len * 2) - 1) & bit)
 			break;
 
-		state->m_sprite_gfx_address_mask >>= 1;
+		m_sprite_gfx_address_mask >>= 1;
 	}
 
-	state->m_sprite_gfx = auto_alloc_array_clear(machine, UINT8, state->m_sprite_gfx_address_mask + 1);
+	m_sprite_gfx = auto_alloc_array_clear(machine(), UINT8, m_sprite_gfx_address_mask + 1);
 
-	src = machine.root_device().memregion("sprites")->base();
-	dest = state->m_sprite_gfx;
+	src = m_region_sprites->base();
+	dest = m_sprite_gfx;
 
 	for (i = 0; i < len; i += 0x80, src += 0x80)
 	{
@@ -778,15 +774,15 @@ static UINT16 get_video_control( running_machine &machine )
 }
 
 
-static void set_video_control( running_machine &machine, UINT16 data )
+void neogeo_state::set_video_control( UINT16 data )
 {
 	/* this does much more than this, but I'm not sure exactly what */
-	if (VERBOSE) logerror("%s: video control write %04x\n", machine.describe_context(), data);
+	if (VERBOSE) logerror("%s: video control write %04x\n", machine().describe_context(), data);
 
-	set_auto_animation_speed(machine, data >> 8);
-	set_auto_animation_disabled(machine, data & 0x0008);
+	set_auto_animation_speed(machine(), data >> 8);
+	set_auto_animation_disabled(machine(), data & 0x0008);
 
-	neogeo_set_display_position_interrupt_control(machine, data & 0x00f0);
+	neogeo_set_display_position_interrupt_control(data & 0x00f0);
 }
 
 
@@ -827,10 +823,10 @@ WRITE16_MEMBER(neogeo_state::neogeo_video_register_w)
 		case 0x00: set_videoram_offset(machine(), data); break;
 		case 0x01: set_videoram_data(machine(), data); break;
 		case 0x02: set_videoram_modulo(machine(), data); break;
-		case 0x03: set_video_control(machine(), data); break;
-		case 0x04: neogeo_set_display_counter_msb(space, data); break;
-		case 0x05: neogeo_set_display_counter_lsb(space, data); break;
-		case 0x06: neogeo_acknowledge_interrupt(machine(), data); break;
+		case 0x03: set_video_control(data); break;
+		case 0x04: neogeo_set_display_counter_msb(data); break;
+		case 0x05: neogeo_set_display_counter_lsb(data); break;
+		case 0x06: neogeo_acknowledge_interrupt(data); break;
 		case 0x07: break; /* unknown, see get_video_control */
 		}
 	}
@@ -861,7 +857,7 @@ void neogeo_state::video_start()
 	compute_rgb_weights(machine());
 	create_sprite_line_timer(machine());
 	create_auto_animation_timer(machine());
-	optimize_sprite_data(machine());
+	optimize_sprite_data();
 
 	/* initialize values that are not modified on a reset */
 	m_videoram_read_buffer = 0;
@@ -887,7 +883,7 @@ void neogeo_state::video_start()
 	save_item(NAME(m_auto_animation_counter));
 	save_item(NAME(m_auto_animation_frame_counter));
 
-	machine().save().register_postload(save_prepost_delegate(FUNC(regenerate_pens), &machine()));
+	machine().save().register_postload(save_prepost_delegate(FUNC(neogeo_state::regenerate_pens), this));
 
 	m_region_zoomy = memregion("zoomy")->base();
 }
@@ -904,7 +900,7 @@ void neogeo_state::video_reset()
 {
 	start_sprite_line_timer(machine());
 	start_auto_animation_timer(machine());
-	optimize_sprite_data(machine());
+	optimize_sprite_data();
 }
 
 
@@ -922,7 +918,7 @@ UINT32 neogeo_state::screen_update_neogeo(screen_device &screen, bitmap_rgb32 &b
 
 	if (m_has_sprite_bus) draw_sprites(machine(), bitmap, cliprect.min_y);
 
-	if (m_has_text_bus) draw_fixed_layer(machine(), bitmap, cliprect.min_y);
+	if (m_has_text_bus) draw_fixed_layer(bitmap, cliprect.min_y);
 
 	return 0;
 }
