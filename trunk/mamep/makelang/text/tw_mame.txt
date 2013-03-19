@@ -1919,8 +1919,8 @@ Load from position %c
 載入位置 %c
 
 # emu/romload.c: 480
-Loading (%d%%)
-正在載入 (%d%%)
+Loading %s (%d%%)
+正在載入 %s (%d%%)
 
 # emu/rendfont.c: 755
 Loading BDF font... (%d characters loaded)\n

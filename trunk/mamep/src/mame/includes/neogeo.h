@@ -295,6 +295,19 @@ public:
 
 	void neogeo_set_main_cpu_bank_address( UINT32 bank_address );
 
+	// protection data
+	UINT16 kof2003_tbl[4096];
+	UINT16 kof10thExtraRAMB[0x01000];
+	const UINT8 *type0_t03;
+	const UINT8 *type0_t12;
+	const UINT8 *type1_t03;
+	const UINT8 *type1_t12;
+	const UINT8 *address_8_15_xor1;
+	const UINT8 *address_8_15_xor2;
+	const UINT8 *address_16_23_xor1;
+	const UINT8 *address_16_23_xor2;
+	const UINT8 *address_0_7_xor;
+
 protected:
 	required_memory_region m_region_maincpu;
 	required_memory_region m_region_sprites;
@@ -323,112 +336,167 @@ protected:
 	void _set_main_cpu_vector_table_source();
 	void optimize_sprite_data();
 	void draw_fixed_layer( bitmap_rgb32 &bitmap, int scanline );
+	void set_videoram_offset( UINT16 data );
+	UINT16 get_videoram_data(  );
+	void set_videoram_data( UINT16 data);
+	void set_videoram_modulo( UINT16 data);
+	UINT16 get_videoram_modulo(  );
+	void compute_rgb_weights(  );
+	pen_t get_pen( UINT16 data );
+	void neogeo_set_palette_bank( UINT8 data );
+	void neogeo_set_screen_dark( UINT8 data );
+	void set_auto_animation_speed( UINT8 data);
+	void set_auto_animation_disabled( UINT8 data);
+	UINT8 neogeo_get_auto_animation_counter(  );
+	void create_auto_animation_timer(  );
+	void start_auto_animation_timer(  );
+	void neogeo_set_fixed_layer_source( UINT8 data );
+	inline int rows_to_height(int rows);
+	inline int sprite_on_scanline(int scanline, int y, int rows);
+	void draw_sprites( bitmap_rgb32 &bitmap, int scanline );
+	void parse_sprites( int scanline );
+	void create_sprite_line_timer(  );
+	void start_sprite_line_timer(  );
+	UINT16 get_video_control(  );
+	void audio_cpu_assert_nmi();
+	void select_controller( UINT8 data );
+	void set_save_ram_unlock( UINT8 data );
+	void set_outputs(  );
+	void set_output_latch( UINT8 data );
+	void set_output_data( UINT8 data );
+	TIMER_CALLBACK_MEMBER( ms5pcb_bios_timer_callback );
+	TIMER_CALLBACK_MEMBER( svcpcb_bios_timer_callback );
+
+	// protections implementation
+	DECLARE_READ16_MEMBER( sbp_lowerrom_r );
+	DECLARE_WRITE16_MEMBER( sbp_lowerrom_w );
+	DECLARE_READ16_MEMBER( fatfury2_protection_16_r );
+	DECLARE_WRITE16_MEMBER( fatfury2_protection_16_w );
+	void fatfury2_install_protection();
+	DECLARE_WRITE16_MEMBER ( kof98_prot_w );
+	void install_kof98_protection();
+	DECLARE_WRITE16_MEMBER( mslugx_protection_16_w );
+	DECLARE_READ16_MEMBER( mslugx_protection_16_r );
+	void mslugx_install_protection();
+	DECLARE_WRITE16_MEMBER( kof99_bankswitch_w );
+	DECLARE_WRITE16_MEMBER( garou_bankswitch_w );
+	DECLARE_WRITE16_MEMBER( garouh_bankswitch_w );
+	DECLARE_WRITE16_MEMBER( mslug3_bankswitch_w );
+	DECLARE_WRITE16_MEMBER( kof2000_bankswitch_w );
+	DECLARE_READ16_MEMBER( prot_9a37_r );
+	DECLARE_READ16_MEMBER( sma_random_r );
+	void neogeo_reset_rng();
+	void sma_install_random_read_handler( int addr1, int addr2 );
+	void kof99_install_protection();
+	void garou_install_protection();
+	void garouh_install_protection();
+	void mslug3_install_protection();
+	void kof2000_install_protection();
+	void pvc_w8( offs_t offset, UINT8 data );
+	UINT8 pvc_r8( offs_t offset );
+	void pvc_prot1();
+	void pvc_prot2(); // on writes to e8/e9/ea/eb
+	void pvc_write_bankswitch( address_space &space );
+	DECLARE_READ16_MEMBER( pvc_prot_r );
+	DECLARE_WRITE16_MEMBER( pvc_prot_w );
+	void install_pvc_protection();
+	void neogeo_bootleg_cx_decrypt();
+	void neogeo_bootleg_sx_decrypt(int value );
+	void kog_px_decrypt();
+	void kof97oro_px_decode();
+	void kof10thBankswitch(address_space &space, UINT16 nBank);
+	DECLARE_READ16_MEMBER( kof10th_RAMB_r );
+	DECLARE_WRITE16_MEMBER( kof10th_custom_w );
+	DECLARE_WRITE16_MEMBER( kof10th_bankswitch_w );
+	void install_kof10th_protection ();
+	void decrypt_kof10th();
+	void decrypt_kf10thep();
+	void kf2k5uni_px_decrypt();
+	void kf2k5uni_sx_decrypt();
+	void kf2k5uni_mx_decrypt();
+	void decrypt_kf2k5uni();
+	void kof2002b_gfx_decrypt(UINT8 *src, int size);
+	void kf2k2mp_decrypt();
+	void kf2k2mp2_px_decrypt();
+	void cthd2003_neogeo_gfx_address_fix_do(int start, int end, int bit3shift, int bit2shift, int bit1shift, int bit0shift);
+	void cthd2003_neogeo_gfx_address_fix(int start, int end);
+	void cthd2003_c(int pow);
+	void decrypt_cthd2003();
+	DECLARE_WRITE16_MEMBER ( cthd2003_bankswitch_w );
+	void patch_cthd2003();
+	void ct2k3sp_sx_decrypt();
+	void decrypt_ct2k3sp();
+	void decrypt_ct2k3sa();
+	void patch_ct2k3sa();
+	void decrypt_kof2k4se_68k();
+	void lans2004_vx_decrypt();
+	void lans2004_decrypt_68k();
+	DECLARE_READ16_MEMBER( mslug5_prot_r );
+	DECLARE_WRITE16_MEMBER ( ms5plus_bankswitch_w );
+	void install_ms5plus_protection();
+	void svcboot_px_decrypt();
+	void svcboot_cx_decrypt();
+	void svcplus_px_decrypt();
+	void svcplus_px_hack();
+	void svcplusa_px_decrypt();
+	void svcsplus_px_decrypt();
+	void svcsplus_px_hack();
+	DECLARE_READ16_MEMBER( kof2003_r);
+	DECLARE_WRITE16_MEMBER( kof2003_w );
+	DECLARE_WRITE16_MEMBER( kof2003p_w );
+	void kf2k3bl_px_decrypt();
+	void kf2k3bl_install_protection();
+	void kf2k3pl_px_decrypt();
+	void kf2k3pl_install_protection();
+	void kf2k3upl_px_decrypt();
+	void kf2k3upl_install_protection();
+	void samsho5b_px_decrypt();
+	void samsho5b_vx_decrypt();
+	void matrimbl_decrypt();
+	void decrypt(UINT8 *r0, UINT8 *r1,UINT8 c0,  UINT8 c1,const UINT8 *table0hi,const UINT8 *table0lo,const UINT8 *table1,int base,int invert);
+	void neogeo_gfx_decrypt(int extra_xor);
+	void neogeo_sfix_decrypt();
+	void kof99_neogeo_gfx_decrypt(int extra_xor);
+	void kof2000_neogeo_gfx_decrypt(int extra_xor);
+	void cmc42_neogeo_gfx_decrypt(int extra_xor);
+	void cmc50_neogeo_gfx_decrypt(int extra_xor);
+	void svcpcb_gfx_decrypt();
+	void svcpcb_s1data_decrypt();
+	void kf2k3pcb_gfx_decrypt();
+	void kf2k3pcb_decrypt_s1data();
+	UINT16 generate_cs16(UINT8 *rom, int size);
+	int m1_address_scramble(int address, UINT16 key);
+	void neogeo_cmc50_m1_decrypt();
+	void kof98_decrypt_68k();
+	void kof99_decrypt_68k();
+	void garou_decrypt_68k();
+	void garouh_decrypt_68k();
+	void mslug3_decrypt_68k();
+	void kof2000_decrypt_68k();
+	void kof2002_decrypt_68k();
+	void matrim_decrypt_68k();
+	void samsho5_decrypt_68k();
+	void samsh5sp_decrypt_68k();
+	void mslug5_decrypt_68k();
+	void svc_px_decrypt();
+	void kf2k3pcb_decrypt_68k();
+	void kof2003_decrypt_68k();
+	void kof2003h_decrypt_68k();
+	void neo_pcm2_snk_1999(int value);
+	void neo_pcm2_swap(int value);
+	void kof2003biosdecode();
+
+	DECLARE_READ16_MEMBER( popbounc_sfix_16_r );
+	void decrypt_matrimbl();
+	void kof96ep_px_decrypt();
+	void kf2k1pa_sx_decrypt();
+	void cthd2k3a_px_decrypt();
+	void kf2k2mp_px_decrypt();
+	void cthd2003_AES_protection();
+	void kof10thu_decrypt_68K();
 };
 
 
 /*----------- defined in drivers/neogeo.c -----------*/
 
 MACHINE_CONFIG_EXTERN( neogeo_base );
-
-/*----------- defined in machine/neocrypt.c -----------*/
-
-void kof99_neogeo_gfx_decrypt(running_machine &machine, int extra_xor);
-void kof2000_neogeo_gfx_decrypt(running_machine &machine, int extra_xor);
-void cmc42_neogeo_gfx_decrypt(running_machine &machine, int extra_xor);
-void cmc50_neogeo_gfx_decrypt(running_machine &machine, int extra_xor);
-void neogeo_cmc50_m1_decrypt(running_machine &machine);
-void neo_pcm2_snk_1999(running_machine &machine, int value);
-void neo_pcm2_swap(running_machine &machine, int value);
-void neogeo_sfix_decrypt(running_machine &machine);
-void kof99_decrypt_68k(running_machine &machine);
-void garou_decrypt_68k(running_machine &machine);
-void garouh_decrypt_68k(running_machine &machine);
-void mslug3_decrypt_68k(running_machine &machine);
-void kof2000_decrypt_68k(running_machine &machine);
-void kof98_decrypt_68k(running_machine &machine);
-void kof2002_decrypt_68k(running_machine &machine);
-void matrim_decrypt_68k(running_machine &machine);
-void mslug5_decrypt_68k(running_machine &machine);
-void svc_px_decrypt(running_machine &machine);
-void svcpcb_gfx_decrypt(running_machine &machine);
-void svcpcb_s1data_decrypt(running_machine &machine);
-void samsho5_decrypt_68k(running_machine &machine);
-void kf2k3pcb_gfx_decrypt(running_machine &machine);
-void kf2k3pcb_decrypt_68k(running_machine &machine);
-void kf2k3pcb_decrypt_s1data(running_machine &machine);
-void kof2003_decrypt_68k(running_machine &machine);
-void kof2003h_decrypt_68k(running_machine &machine);
-void kof2003biosdecode(running_machine &machine);
-void samsh5sp_decrypt_68k(running_machine &machine);
-
-
-/*----------- defined in machine/neoprot.c -----------*/
-
-void neogeo_reset_rng(running_machine &machine);
-void fatfury2_install_protection(running_machine &machine);
-void mslugx_install_protection(running_machine &machine);
-void kof99_install_protection(running_machine &machine);
-void garou_install_protection(running_machine &machine);
-void garouh_install_protection(running_machine &machine);
-void mslug3_install_protection(running_machine &machine);
-void kof2000_install_protection(running_machine &machine);
-void install_kof98_protection(running_machine &machine);
-void install_pvc_protection(running_machine &machine);
-
-
-/*----------- defined in machine/neoboot.c -----------*/
-
-void kog_px_decrypt(running_machine &machine);
-void kof97oro_px_decode( running_machine &machine );
-void neogeo_bootleg_cx_decrypt(running_machine &machine);
-void install_kof10th_protection(running_machine &machine);
-void decrypt_kof10th(running_machine &machine);
-void decrypt_kf10thep(running_machine &machine);
-void decrypt_kf2k5uni(running_machine &machine);
-void neogeo_bootleg_sx_decrypt(running_machine &machine, int value);
-void kof2002b_gfx_decrypt(running_machine &machine, UINT8 *src, int size);
-void kf2k2mp_decrypt(running_machine &machine);
-void kf2k2mp2_px_decrypt(running_machine &machine);
-void decrypt_cthd2003(running_machine &machine);
-void patch_cthd2003(running_machine &machine);
-void decrypt_ct2k3sp(running_machine &machine);
-void decrypt_ct2k3sa(running_machine &machine);
-void patch_ct2k3sa(running_machine &machine);
-void decrypt_kof2k4se_68k(running_machine &machine);
-void lans2004_decrypt_68k(running_machine &machine);
-void lans2004_vx_decrypt(running_machine &machine);
-void install_ms5plus_protection(running_machine &machine);
-void svcboot_px_decrypt(running_machine &machine);
-void svcboot_cx_decrypt(running_machine &machine);
-void svcplus_px_decrypt(running_machine &machine);
-void svcplus_px_hack(running_machine &machine);
-void svcplusa_px_decrypt(running_machine &machine);
-void svcsplus_px_decrypt(running_machine &machine);
-void svcsplus_px_hack(running_machine &machine);
-void kf2k3bl_px_decrypt(running_machine &machine);
-void kf2k3bl_install_protection(running_machine &machine);
-void kf2k3pl_px_decrypt(running_machine &machine);
-void kf2k3upl_px_decrypt(running_machine &machine);
-void kf2k3upl_install_protection(running_machine &machine);
-void kf2k3pl_install_protection(running_machine &machine);
-void samsho5b_px_decrypt(running_machine &machine);
-void samsho5b_vx_decrypt(running_machine &machine);
-void matrimbl_decrypt(running_machine &machine);
-void decrypt_matrimbl(running_machine &machine);
-void kof96ep_px_decrypt(running_machine &machine);
-void kf2k1pa_sx_decrypt(running_machine &machine);
-void cthd2k3a_px_decrypt(running_machine &machine);
-void kf2k2mp_px_decrypt(running_machine &machine);
-void kof2002b_gfx_decrypt(running_machine &machine, UINT8 *src, int size);
-void cthd2003_AES_protection(running_machine &machine);
-void kof10thu_decrypt_68K(running_machine &machine);
-void mvs_install_protection(device_image_interface& image);
-
-/*----------- defined in video/neogeo.c -----------*/
-
-void neogeo_set_palette_bank(running_machine &machine, UINT8 data);
-void neogeo_set_screen_dark(running_machine &machine, UINT8 data);
-
-void neogeo_set_fixed_layer_source(running_machine &machine, UINT8 data);
-
-UINT8 neogeo_get_auto_animation_counter(running_machine &machine);

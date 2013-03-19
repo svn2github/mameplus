@@ -36,13 +36,3 @@ public:
 	UINT32 screen_update_actfancr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void register_savestate(  );
 };
-
-
-/*----------- defined in video/actfancr.c -----------*/
-
-DECLARE_WRITE8_HANDLER( actfancr_pf1_data_w );
-DECLARE_READ8_HANDLER( actfancr_pf1_data_r );
-DECLARE_WRITE8_HANDLER( actfancr_pf1_control_w );
-DECLARE_WRITE8_HANDLER( actfancr_pf2_data_w );
-DECLARE_READ8_HANDLER( actfancr_pf2_data_r );
-DECLARE_WRITE8_HANDLER( actfancr_pf2_control_w );

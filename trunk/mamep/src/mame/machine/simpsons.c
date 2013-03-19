@@ -1,6 +1,6 @@
 #include "emu.h"
 #include "video/konicdev.h"
-#include "cpu/konami/konami.h"
+#include "cpu/m6809/konami.h"
 #include "machine/eeprom.h"
 #include "sound/k053260.h"
 #include "includes/simpsons.h"
@@ -19,7 +19,7 @@ WRITE8_MEMBER(simpsons_state::simpsons_eeprom_w)
 	ioport("EEPROMOUT")->write(data, 0xff);
 
 	m_video_bank = data & 0x03;
-	simpsons_video_banking(machine(), m_video_bank);
+	simpsons_video_banking(m_video_bank);
 
 	m_firq_enabled = data & 0x04;
 }
@@ -68,7 +68,7 @@ static KONAMI_SETLINES_CALLBACK( simpsons_banking )
 
 void simpsons_state::simpsons_postload()
 {
-	simpsons_video_banking(machine(), m_video_bank);
+	simpsons_video_banking(m_video_bank);
 }
 
 void simpsons_state::machine_start()
@@ -111,12 +111,12 @@ void simpsons_state::machine_reset()
 	m_video_bank = 0;
 
 	/* init the default banks */
-	membank("bank1")->configure_entries(0, 64, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x2000);
+	membank("bank1")->configure_entries(0, 64, memregion("maincpu")->base() + 0x10000, 0x2000);
 	membank("bank1")->set_entry(0);
 
-	membank("bank2")->configure_entries(0, 2, machine().root_device().memregion("audiocpu")->base() + 0x10000, 0);
-	membank("bank2")->configure_entries(2, 6, machine().root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
+	membank("bank2")->configure_entries(0, 2, memregion("audiocpu")->base() + 0x10000, 0);
+	membank("bank2")->configure_entries(2, 6, memregion("audiocpu")->base() + 0x10000, 0x4000);
 	membank("bank2")->set_entry(0);
 
-	simpsons_video_banking(machine(), 0);
+	simpsons_video_banking(0);
 }

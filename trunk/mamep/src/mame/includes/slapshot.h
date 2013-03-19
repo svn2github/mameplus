@@ -4,6 +4,8 @@
 
 *************************************************************************/
 
+#include <audio/taitosnd.h>
+
 struct slapshot_tempsprite
 {
 	int gfx;
@@ -49,7 +51,7 @@ public:
 	/* devices */
 	cpu_device *m_maincpu;
 	cpu_device *m_audiocpu;
-	device_t *m_tc0140syt;
+	tc0140syt_device *m_tc0140syt;
 	device_t *m_tc0480scp;
 	device_t *m_tc0360pri;
 	device_t *m_tc0640fio;
@@ -69,4 +71,7 @@ public:
 	INTERRUPT_GEN_MEMBER(slapshot_interrupt);
 	TIMER_CALLBACK_MEMBER(slapshot_interrupt6);
 	void reset_sound_region();
+	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, int *primasks, int y_offset );
+	void taito_handle_sprite_buffering(  );
+	void taito_update_sprites_active_area(  );
 };

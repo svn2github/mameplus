@@ -693,22 +693,19 @@ void cps3_state::cps3_decrypt_bios()
 #endif
 }
 
-static TIMER_CALLBACK( fastboot_timer_callback )
-//TIMER_CALLBACK_MEMBER(cps3_state::fastboot_timer_callback)
+TIMER_CALLBACK_MEMBER(cps3_state::fastboot_timer_callback)
 {
-	cps3_state *state = machine.driver_data<cps3_state>();
-	UINT32 *rom =  (UINT32*)state->m_decrypted_gamerom;//machine->root_device().memregion("user4")->base();
-	if (state->m_altEncryption) rom = (UINT32*)machine.root_device().memregion("user4")->base();
+	UINT32 *rom =  (UINT32*)m_decrypted_gamerom;
+	if (m_altEncryption) rom = (UINT32*)memregion("user4")->base();
 
 	//  printf("fastboot callback %08x %08x", rom[0], rom[1]);
-	machine.device("maincpu")->state().set_state_int(SH2_PC, rom[0]);
-	machine.device("maincpu")->state().set_state_int(SH2_R15, rom[1]);
-	machine.device("maincpu")->state().set_state_int(SH2_VBR, 0x6000000);
+	machine().device("maincpu")->state().set_state_int(SH2_PC, rom[0]);
+	machine().device("maincpu")->state().set_state_int(SH2_R15, rom[1]);
+	machine().device("maincpu")->state().set_state_int(SH2_VBR, 0x6000000);
 }
 
 void cps3_state::init_common(UINT32 key1, UINT32 key2, int altEncryption)
 {
-
 	m_key1 = key1;
 	m_key2 = key2;
 	m_altEncryption = altEncryption;
@@ -1298,7 +1295,7 @@ DIRECT_UPDATE_MEMBER(cps3_state::cps3_direct_handler)
 	/* BIOS ROM */
 	if (address < 0x80000)
 	{
-		direct.explicit_configure(0x00000, 0x7ffff, 0x7ffff, *direct.space().machine().root_device().memregion("user1"));
+		direct.explicit_configure(0x00000, 0x7ffff, 0x7ffff, *memregion("user1"));
 		return ~0;
 	}
 	/* RAM */
@@ -2151,7 +2148,7 @@ static ADDRESS_MAP_START( cps3_map, AS_PROGRAM, 32, cps3_state )
 	AM_RANGE(0x040C0084, 0x040C0087) AM_WRITE(cram_bank_w)
 	AM_RANGE(0x040C0088, 0x040C008b) AM_WRITE(cram_gfxflash_bank_w)
 
-	AM_RANGE(0x040e0000, 0x040e02ff) AM_DEVREADWRITE_LEGACY("cps3", cps3_sound_r, cps3_sound_w)
+	AM_RANGE(0x040e0000, 0x040e02ff) AM_DEVREADWRITE("cps3", cps3_sound_device, cps3_sound_r, cps3_sound_w)
 
 	AM_RANGE(0x04100000, 0x041fffff) AM_READWRITE(cram_data_r, cram_data_w)
 	AM_RANGE(0x04200000, 0x043fffff) AM_READWRITE(cps3_gfxflash_r, cps3_gfxflash_w) // GFX Flash ROMS
@@ -2373,8 +2370,8 @@ void cps3_state::machine_reset()
 	m_current_table_address = -1;
 
 	{
-		UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
-		UINT32 reg_dip = machine().root_device().ioport("REG")->read();
+		UINT32 *rom = (UINT32*)memregion("user1")->base();
+		UINT32 reg_dip = ioport("REG")->read();
 
 		/* switch region */
 		if(rom[0x1fed4/4] == 0x575a442d)
@@ -2392,14 +2389,14 @@ void cps3_state::machine_reset()
 		/* switch version */
 		if(rom[0x1fed4/4] == 0x575a442d)
 		{
-			UINT32 ver_dip = machine().root_device().ioport("VER")->read();
+			UINT32 ver_dip = ioport("VER")->read();
 			if (!ver_dip) ver_dip = rom[0x1fed8/4] & 0x000000f0;
 			rom[0x1fed8/4] &= 0xffffff0f;
 			rom[0x1fed8/4] |= ver_dip;
 		}
 		else if (rom[0x1fec4/4] == 0x4a4a4b2d || rom[0x1fec4/4] == 0x4a4a4d2d)
 		{
-			UINT32 ver_dip = machine().root_device().ioport("VER")->read();
+			UINT32 ver_dip = ioport("VER")->read();
 			if (!ver_dip) ver_dip = rom[0x1fec8/4] & 0x000000f0;
 			rom[0x1fec8/4] &= 0xffffff0f;
 			rom[0x1fec8/4] |= ver_dip;
@@ -2407,7 +2404,7 @@ void cps3_state::machine_reset()
 		/* switch screen mode */
 		if (rom[0x1fec4/4] == 0x5346332d || rom[0x1fec4/4] == 0x3347412d)
 		{
-			UINT32 ws_dip = machine().root_device().ioport("WS")->read();
+			UINT32 ws_dip = ioport("WS")->read();
 			if (!ws_dip) ws_dip = 0x00000000;
 			m_eeprom[0x020/4] &= 0xf0ffffff;
 			m_eeprom[0x050/4] &= 0xf0ffffff;
@@ -2418,8 +2415,8 @@ void cps3_state::machine_reset()
 
 	if (m_use_fastboot)
 	{
-		 m_fastboot_timer = machine().scheduler().timer_alloc(FUNC(fastboot_timer_callback), NULL);
-		 m_fastboot_timer->adjust(attotime::zero);
+		m_fastboot_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(cps3_state::fastboot_timer_callback),this));
+		m_fastboot_timer->adjust(attotime::zero);
 	}
 
 	// copy data from flashroms back into user regions + decrypt into regions we execute/draw from.

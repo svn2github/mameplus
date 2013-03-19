@@ -278,68 +278,68 @@ READ8_MEMBER(gei_state::portC_r)
 
 WRITE8_MEMBER(gei_state::banksel_main_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x8000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x8000);
 }
 WRITE8_MEMBER(gei_state::banksel_1_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x10000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x10000);
 }
 WRITE8_MEMBER(gei_state::banksel_2_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x18000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x18000);
 }
 WRITE8_MEMBER(gei_state::banksel_3_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x20000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x20000);
 }
 WRITE8_MEMBER(gei_state::banksel_4_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x28000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x28000);
 }
 WRITE8_MEMBER(gei_state::banksel_5_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x30000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x30000);
 }
 
 WRITE8_MEMBER(gei_state::banksel_1_1_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x10000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x10000);
 }
 WRITE8_MEMBER(gei_state::banksel_2_1_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x14000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x14000);
 }
 WRITE8_MEMBER(gei_state::banksel_3_1_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x18000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x18000);
 }
 WRITE8_MEMBER(gei_state::banksel_4_1_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x1c000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x1c000);
 }
 WRITE8_MEMBER(gei_state::banksel_5_1_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x20000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x20000);
 }
 WRITE8_MEMBER(gei_state::banksel_1_2_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x12000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x12000);
 }
 WRITE8_MEMBER(gei_state::banksel_2_2_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x16000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x16000);
 }
 WRITE8_MEMBER(gei_state::banksel_3_2_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x1a000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x1a000);
 }
 WRITE8_MEMBER(gei_state::banksel_4_2_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x1e000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x1e000);
 }
 WRITE8_MEMBER(gei_state::banksel_5_2_w)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x22000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x22000);
 }
 
 WRITE8_MEMBER(gei_state::geimulti_bank_w)
@@ -367,36 +367,36 @@ WRITE8_MEMBER(gei_state::geimulti_bank_w)
 	}
 
 	if (bank != -1)
-		membank("bank1")->set_base(machine().root_device().memregion("bank")->base() + bank*0x8000);
+		membank("bank1")->set_base(memregion("bank")->base() + bank*0x8000);
 }
 
 READ8_MEMBER(gei_state::banksel_1_r)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x10000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x10000);
 	return 0x03;
 };
 
 READ8_MEMBER(gei_state::banksel_2_r)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x18000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x18000);
 	return 0x03;
 }
 
 READ8_MEMBER(gei_state::banksel_3_r)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x20000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x20000);
 	return 0x03;
 }
 
 READ8_MEMBER(gei_state::banksel_4_r)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x28000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x28000);
 	return 0x03;
 }
 
 READ8_MEMBER(gei_state::banksel_5_r)
 {
-	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x30000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x30000);
 	return 0x03;
 }
 
@@ -1693,8 +1693,8 @@ ROM_END
 ROM_START( gtsers12 )
 	ROM_REGION( 0x38000, "maincpu", 0 )
 	ROM_LOAD( "prog1_versionc",  0x00000, 0x4000, CRC(340246a4) SHA1(d655e1cf2b1e87a05e87ff6af4b794e6d54a2a52) )
-	ROM_LOAD( "new_science_2",   0x10000, 0x8000, CRC(3bd80fb8) SHA1(9a196595bc5dc6ed5ee5853786839ed4847fa436) ) /* Labeled as NEW SCNE 2* */
-	ROM_LOAD( "adult_sex_4",     0x18000, 0x8000, CRC(9c32730e) SHA1(9d060e49a4c1dd8d978619b1c357c9e8238e5c96) ) /* Labeled as ADULT SEX 4* */
+	ROM_LOAD( "new_science_2+",  0x10000, 0x8000, CRC(3bd80fb8) SHA1(9a196595bc5dc6ed5ee5853786839ed4847fa436) ) /* Labeled as NEW SCNE 2* */
+	ROM_LOAD( "adult_sex_4+",    0x18000, 0x8000, CRC(9c32730e) SHA1(9d060e49a4c1dd8d978619b1c357c9e8238e5c96) ) /* Labeled as ADULT SEX 4* */
 	ROM_LOAD( "cops_&_robbers",  0x20000, 0x8000, CRC(8b367c33) SHA1(013468157bf469c9cf138809fdc45b3ba60a423b) )
 	ROM_LOAD( "famous_quotes",   0x28000, 0x8000, CRC(0a27d8ae) SHA1(427e6ae25e47da7f7f7c3e92a37e330d711da90c) )
 	ROM_LOAD( "vices",           0x30000, 0x8000, CRC(e6069955) SHA1(68f7453f21a4ce1be912141bbe947fbd81d918a3) )
@@ -1726,7 +1726,7 @@ ROM_START( gt103a1 ) /* Need to verify which series these belong to */
 	ROM_REGION( 0x38000, "maincpu", 0 )
 	ROM_LOAD( "prog1_versiona",  0x00000, 0x4000, CRC(537d6566) SHA1(282a33e4a9fc54d34094393c00026bf31ccd6ab5) ) /* Currently unverified Series 13 and or alt ? roms */
 	ROM_LOAD( "history-geog",    0x10000, 0x8000, CRC(c9a70fc3) SHA1(4021e5d702844416e8c798ed0a57c9ecd20b1d4b) )
-	ROM_LOAD( "nfl_football",    0x18000, 0x8000, CRC(d676b7cd) SHA1(d652d2441adb500f7af526d110d0335ea453d75b) )
+	ROM_LOAD( "n.f.l._football", 0x18000, 0x8000, CRC(d676b7cd) SHA1(d652d2441adb500f7af526d110d0335ea453d75b) )
 	ROM_LOAD( "rock_music",      0x20000, 0x8000, CRC(7f11733a) SHA1(d4d0dee75518edf986cb1241ade45ccb4840f088) )
 	ROM_LOAD( "entertainment",   0x28000, 0x8000, CRC(07068c9f) SHA1(1aedc78d071281ec8b08488cd82655d41a77cf6b) )
 	ROM_LOAD( "horrors",         0x30000, 0x8000, CRC(5f7b262a) SHA1(047480d6bf5c6d0603d538b84c996bd226f07f77) )
@@ -1892,12 +1892,12 @@ ROM_END
 
 DRIVER_INIT_MEMBER(gei_state,setbank)
 {
-	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x2000);
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x2000);
 }
 
 DRIVER_INIT_MEMBER(gei_state,geimulti)
 {
-	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("bank")->base() + 0x0000);
+	membank("bank1")->set_base(memregion("bank")->base() + 0x0000);
 }
 
 GAME( 1982, jokpoker, 0,        gselect,  gselect, gei_state,  setbank, ROT0, "Greyhound Electronics", "Joker Poker (Version 16.03B)",            GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

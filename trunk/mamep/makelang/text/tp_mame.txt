@@ -2051,7 +2051,7 @@ Load from position %c
 
 
 # emu/romload.c: 483
-Loading (%d%%)
+Loading %s (%d%%)
 
 
 # emu/rendfont.c: 755

@@ -10,6 +10,20 @@
 
 ************************************************************************/
 
+#include "emu.h"
+#include "cpu/m68000/m68000.h"
+#include "machine/eeprom.h"
+#include "cpu/sh2/sh2.h"
+#include "machine/scudsp.h"
+#include "sound/scsp.h"
+#include "sound/cdda.h"
+#include "machine/stvprot.h"
+#include "machine/smpc.h"
+#include "includes/stv.h"
+#include "imagedev/chd_cd.h"
+#include "imagedev/cartslot.h"
+#include "coreutil.h"
+
 #define FIRST_SPEEDUP_SLOT  (2)         // in case we remove/alter the BIOS speedups later
 
 
@@ -46,7 +60,7 @@ offsets:
     0x001f PORT-AD
 */
 
-READ8_MEMBER(saturn_state::stv_ioga_r)
+READ8_MEMBER(stv_state::stv_ioga_r)
 {
 	UINT8 res;
 
@@ -70,7 +84,7 @@ READ8_MEMBER(saturn_state::stv_ioga_r)
 	return res;
 }
 
-WRITE8_MEMBER(saturn_state::stv_ioga_w)
+WRITE8_MEMBER(stv_state::stv_ioga_w)
 {
 	offset &= 0x1f; // mirror?
 
@@ -90,7 +104,7 @@ WRITE8_MEMBER(saturn_state::stv_ioga_w)
 	}
 }
 
-READ8_MEMBER(saturn_state::critcrsh_ioga_r)
+READ8_MEMBER(stv_state::critcrsh_ioga_r)
 {
 	UINT8 res;
 	const char *const lgnames[] = { "LIGHTX", "LIGHTY" };
@@ -111,7 +125,7 @@ READ8_MEMBER(saturn_state::critcrsh_ioga_r)
 	return res;
 }
 
-READ8_MEMBER(saturn_state::magzun_ioga_r)
+READ8_MEMBER(stv_state::magzun_ioga_r)
 {
 	UINT8 res;
 
@@ -136,7 +150,7 @@ READ8_MEMBER(saturn_state::magzun_ioga_r)
 	return res;
 }
 
-WRITE8_MEMBER(saturn_state::magzun_ioga_w)
+WRITE8_MEMBER(stv_state::magzun_ioga_w)
 {
 	switch(offset)
 	{
@@ -146,7 +160,7 @@ WRITE8_MEMBER(saturn_state::magzun_ioga_w)
 	}
 }
 
-READ8_MEMBER(saturn_state::stvmp_ioga_r)
+READ8_MEMBER(stv_state::stvmp_ioga_r)
 {
 	const char *const mpnames[2][5] = {
 		{"P1_KEY0", "P1_KEY1", "P1_KEY2", "P1_KEY3", "P1_KEY4"},
@@ -178,7 +192,7 @@ READ8_MEMBER(saturn_state::stvmp_ioga_r)
 	return res;
 }
 
-WRITE8_MEMBER(saturn_state::stvmp_ioga_w)
+WRITE8_MEMBER(stv_state::stvmp_ioga_w)
 {
 	switch(offset)
 	{
@@ -189,7 +203,7 @@ WRITE8_MEMBER(saturn_state::stvmp_ioga_w)
 }
 
 /* remaps with a 8-bit handler because MAME can't install r/w handlers with a different bus parallelism than the CPU native one, shrug ... */
-READ32_MEMBER(saturn_state::stv_ioga_r32)
+READ32_MEMBER(stv_state::stv_ioga_r32)
 {
 	UINT32 res;
 
@@ -199,24 +213,26 @@ READ32_MEMBER(saturn_state::stv_ioga_r32)
 	if(ACCESSING_BITS_0_7)
 		res |= stv_ioga_r(space,offset*4+3);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
 
 	return res;
 }
 
-WRITE32_MEMBER(saturn_state::stv_ioga_w32)
+WRITE32_MEMBER(stv_state::stv_ioga_w32)
 {
 	if(ACCESSING_BITS_16_23)
 		stv_ioga_w(space,offset*4+1,data >> 16);
 	if(ACCESSING_BITS_0_7)
 		stv_ioga_w(space,offset*4+3,data);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		printf("Warning: IOGA writes to odd offset %02x (%08x) -> %08x!",offset*4,mem_mask,data);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			printf("Warning: IOGA writes to odd offset %02x (%08x) -> %08x!",offset*4,mem_mask,data);
 
 	return;
 }
 
-READ32_MEMBER(saturn_state::critcrsh_ioga_r32)
+READ32_MEMBER(stv_state::critcrsh_ioga_r32)
 {
 	UINT32 res;
 
@@ -226,13 +242,14 @@ READ32_MEMBER(saturn_state::critcrsh_ioga_r32)
 	if(ACCESSING_BITS_0_7)
 		res |= critcrsh_ioga_r(space,offset*4+3);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		if(!space.debugger_access())
-			printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			if(!space.debugger_access())
+				printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
 
 	return res;
 }
 
-READ32_MEMBER(saturn_state::stvmp_ioga_r32)
+READ32_MEMBER(stv_state::stvmp_ioga_r32)
 {
 	UINT32 res;
 
@@ -242,24 +259,26 @@ READ32_MEMBER(saturn_state::stvmp_ioga_r32)
 	if(ACCESSING_BITS_0_7)
 		res |= stvmp_ioga_r(space,offset*4+3);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		if(!space.debugger_access())
-			printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			if(!space.debugger_access())
+				printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
 
 	return res;
 }
 
-WRITE32_MEMBER(saturn_state::stvmp_ioga_w32)
+WRITE32_MEMBER(stv_state::stvmp_ioga_w32)
 {
 	if(ACCESSING_BITS_16_23)
 		stvmp_ioga_w(space,offset*4+1,data >> 16);
 	if(ACCESSING_BITS_0_7)
 		stvmp_ioga_w(space,offset*4+3,data);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		if(!space.debugger_access())
-			printf("Warning: IOGA writes to odd offset %02x (%08x) -> %08x!",offset*4,mem_mask,data);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			if(!space.debugger_access())
+				printf("Warning: IOGA writes to odd offset %02x (%08x) -> %08x!",offset*4,mem_mask,data);
 }
 
-READ32_MEMBER(saturn_state::magzun_ioga_r32)
+READ32_MEMBER(stv_state::magzun_ioga_r32)
 {
 	UINT32 res;
 
@@ -269,21 +288,23 @@ READ32_MEMBER(saturn_state::magzun_ioga_r32)
 	if(ACCESSING_BITS_0_7)
 		res |= magzun_ioga_r(space,offset*4+3);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		if(!space.debugger_access())
-			printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			if(!space.debugger_access())
+				printf("Warning: IOGA reads from odd offset %02x %08x!\n",offset*4,mem_mask);
 
 	return res;
 }
 
-WRITE32_MEMBER(saturn_state::magzun_ioga_w32)
+WRITE32_MEMBER(stv_state::magzun_ioga_w32)
 {
 	if(ACCESSING_BITS_16_23)
 		magzun_ioga_w(space,offset*4+1,data >> 16);
 	if(ACCESSING_BITS_0_7)
 		magzun_ioga_w(space,offset*4+3,data);
 	if(ACCESSING_BITS_8_15 || ACCESSING_BITS_24_31)
-		if(!space.debugger_access())
-			printf("Warning: IOGA writes to odd offset %02x (%08x) -> %08x!",offset*4,mem_mask,data);
+		if(!(ACCESSING_BITS_16_23 || ACCESSING_BITS_0_7))
+			if(!space.debugger_access())
+				printf("Warning: IOGA writes to odd offset %02x (%08x) -> %08x!",offset*4,mem_mask,data);
 }
 
 /*
@@ -306,7 +327,7 @@ WRITE32_MEMBER(saturn_state::magzun_ioga_w32)
 
 */
 
-void saturn_state::install_stvbios_speedups( void )
+void stv_state::install_stvbios_speedups( void )
 {
 	// flushes 0 & 1 on both CPUs are for the BIOS speedups
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x60154b2);
@@ -316,7 +337,7 @@ void saturn_state::install_stvbios_speedups( void )
 	sh2drc_add_pcflush(machine().device("slave"), 0x6013aee);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,stv)
+DRIVER_INIT_MEMBER(stv_state,stv)
 {
 	system_time systime;
 
@@ -340,17 +361,17 @@ DRIVER_INIT_MEMBER(saturn_state,stv)
 	sh2drc_set_options(machine().device("maincpu"), SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
 	sh2drc_set_options(machine().device("slave"), SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::stv_ioga_r32),this), write32_delegate(FUNC(saturn_state::stv_ioga_w32),this));
-	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::stv_ioga_r32),this), write32_delegate(FUNC(saturn_state::stv_ioga_w32),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::stv_ioga_r32),this), write32_delegate(FUNC(stv_state::stv_ioga_w32),this));
+	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::stv_ioga_r32),this), write32_delegate(FUNC(stv_state::stv_ioga_w32),this));
 
 	m_vdp2.pal = 0;
 }
 
-DRIVER_INIT_MEMBER(saturn_state,critcrsh)
+DRIVER_INIT_MEMBER(stv_state,critcrsh)
 {
 	DRIVER_INIT_CALL(stv);
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::critcrsh_ioga_r32),this), write32_delegate(FUNC(saturn_state::stv_ioga_w32),this));
-	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::critcrsh_ioga_r32),this), write32_delegate(FUNC(saturn_state::stv_ioga_w32),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::critcrsh_ioga_r32),this), write32_delegate(FUNC(stv_state::stv_ioga_w32),this));
+	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::critcrsh_ioga_r32),this), write32_delegate(FUNC(stv_state::stv_ioga_w32),this));
 }
 
 /*
@@ -361,7 +382,7 @@ DRIVER_INIT_MEMBER(saturn_state,critcrsh)
     TODO: game doesn't work if not in debugger?
 */
 
-READ32_MEMBER(saturn_state::magzun_hef_hack_r)
+READ32_MEMBER(stv_state::magzun_hef_hack_r)
 {
 	if(space.device().safe_pc()==0x604bf20) return 0x00000001; //HWEF
 
@@ -370,14 +391,14 @@ READ32_MEMBER(saturn_state::magzun_hef_hack_r)
 	return m_workram_h[0x08e830/4];
 }
 
-READ32_MEMBER(saturn_state::magzun_rx_hack_r)
+READ32_MEMBER(stv_state::magzun_rx_hack_r)
 {
 	if(space.device().safe_pc()==0x604c006) return 0x40;
 
 	return m_workram_h[0x0ff3b4/4];
 }
 
-DRIVER_INIT_MEMBER(saturn_state,magzun)
+DRIVER_INIT_MEMBER(stv_state,magzun)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x604bf20);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x604bfbe);
@@ -385,11 +406,11 @@ DRIVER_INIT_MEMBER(saturn_state,magzun)
 
 	DRIVER_INIT_CALL(stv);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::magzun_ioga_r32),this), write32_delegate(FUNC(saturn_state::magzun_ioga_w32),this));
-	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::magzun_ioga_r32),this), write32_delegate(FUNC(saturn_state::magzun_ioga_w32),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::magzun_ioga_r32),this), write32_delegate(FUNC(stv_state::magzun_ioga_w32),this));
+	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::magzun_ioga_r32),this), write32_delegate(FUNC(stv_state::magzun_ioga_w32),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x608e830, 0x608e833, read32_delegate(FUNC(saturn_state::magzun_hef_hack_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60ff3b4, 0x60ff3b7, read32_delegate(FUNC(saturn_state::magzun_rx_hack_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x608e830, 0x608e833, read32_delegate(FUNC(stv_state::magzun_hef_hack_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60ff3b4, 0x60ff3b7, read32_delegate(FUNC(stv_state::magzun_rx_hack_r),this));
 
 	/* Program ROM patches, don't understand how to avoid these two checks ... */
 	{
@@ -402,15 +423,15 @@ DRIVER_INIT_MEMBER(saturn_state,magzun)
 }
 
 
-DRIVER_INIT_MEMBER(saturn_state,stvmp)
+DRIVER_INIT_MEMBER(stv_state,stvmp)
 {
 	DRIVER_INIT_CALL(stv);
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::stvmp_ioga_r32),this), write32_delegate(FUNC(saturn_state::stvmp_ioga_w32),this));
-	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(saturn_state::stvmp_ioga_r32),this), write32_delegate(FUNC(saturn_state::stvmp_ioga_w32),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::stvmp_ioga_r32),this), write32_delegate(FUNC(stv_state::stvmp_ioga_w32),this));
+	machine().device("slave")->memory().space(AS_PROGRAM).install_readwrite_handler(0x00400000, 0x0040003f, read32_delegate(FUNC(stv_state::stvmp_ioga_r32),this), write32_delegate(FUNC(stv_state::stvmp_ioga_w32),this));
 }
 
 
-DRIVER_INIT_MEMBER(saturn_state,shienryu)
+DRIVER_INIT_MEMBER(stv_state,shienryu)
 {
 	// master
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x60041c6);
@@ -420,7 +441,7 @@ DRIVER_INIT_MEMBER(saturn_state,shienryu)
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,prikura)
+DRIVER_INIT_MEMBER(stv_state,prikura)
 {
 /*
  06018640: MOV.B   @R14,R0  // 60b9228
@@ -441,7 +462,7 @@ DRIVER_INIT_MEMBER(saturn_state,prikura)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,hanagumi)
+DRIVER_INIT_MEMBER(stv_state,hanagumi)
 {
 /*
     06013E1E: NOP
@@ -484,7 +505,7 @@ CPU0: Aids Screen
 
 */
 
-DRIVER_INIT_MEMBER(saturn_state,puyosun)
+DRIVER_INIT_MEMBER(stv_state,puyosun)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6021cf0);
 
@@ -506,7 +527,7 @@ CPU0 Data East Logo:
 
 */
 
-DRIVER_INIT_MEMBER(saturn_state,mausuke)
+DRIVER_INIT_MEMBER(stv_state,mausuke)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x60461A0);
 
@@ -516,7 +537,7 @@ DRIVER_INIT_MEMBER(saturn_state,mausuke)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,cottonbm)
+DRIVER_INIT_MEMBER(stv_state,cottonbm)
 {
 //  sh2drc_add_pcflush(machine().device("maincpu"), 0x6030ee2);
 //  sh2drc_add_pcflush(machine().device("slave"), 0x6032b52);
@@ -526,7 +547,7 @@ DRIVER_INIT_MEMBER(saturn_state,cottonbm)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(10);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,cotton2)
+DRIVER_INIT_MEMBER(stv_state,cotton2)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6031c7a);
 	sh2drc_add_pcflush(machine().device("slave"), 0x60338ea);
@@ -536,7 +557,7 @@ DRIVER_INIT_MEMBER(saturn_state,cotton2)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,dnmtdeka)
+DRIVER_INIT_MEMBER(stv_state,dnmtdeka)
 {
 	// install all 3 speedups on both master and slave
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6027c90);
@@ -550,7 +571,7 @@ DRIVER_INIT_MEMBER(saturn_state,dnmtdeka)
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,diehard)
+DRIVER_INIT_MEMBER(stv_state,diehard)
 {
 	// install all 3 speedups on both master and slave
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6027c98);
@@ -564,7 +585,7 @@ DRIVER_INIT_MEMBER(saturn_state,diehard)
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,fhboxers)
+DRIVER_INIT_MEMBER(stv_state,fhboxers)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x60041c2);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x600bb0a);
@@ -575,7 +596,7 @@ DRIVER_INIT_MEMBER(saturn_state,fhboxers)
 //  m_instadma_hack = 1;
 }
 
-DRIVER_INIT_MEMBER(saturn_state,groovef)
+DRIVER_INIT_MEMBER(stv_state,groovef)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6005e7c);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6005e86);
@@ -589,7 +610,7 @@ DRIVER_INIT_MEMBER(saturn_state,groovef)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,danchih)
+DRIVER_INIT_MEMBER(stv_state,danchih)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6028b28);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6028c8e);
@@ -600,7 +621,7 @@ DRIVER_INIT_MEMBER(saturn_state,danchih)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,danchiq)
+DRIVER_INIT_MEMBER(stv_state,danchiq)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6028b28);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6028c8e);
@@ -611,52 +632,17 @@ DRIVER_INIT_MEMBER(saturn_state,danchiq)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5);
 }
 
-/*
-060011AE: AND     #$0F,R0
-060011B0: MOV     #$5E,R1
-060011B2: ADD     R5,R1
-060011B4: MOV.B   R0,@R1
-060011B6: MOV     R5,R0
-060011B8: ADD     #$70,R0
-
-060011BA: MOV.B   @(R0,R4),R0 <- reads 0x02020000,cause of the crash
-060011BC: RTS
-060011BE: NOP
-060131AA: CMP/EQ  #$01,R0
-060131AC: BT      $0601321C
-060131AE: CMP/EQ  #$02,R0
-060131B0: BT      $0601324A
-
-TODO: understand where it gets 0x02020000,it must be 0x0000000
-
-bp 6001d5a
-bp 6001d22 (60ffef0)
-
-
-(?) wpset 60cf888,4,r
-
-*/
-
-READ32_MEMBER(saturn_state::astrass_hack_r)
-{
-	if(space.device().safe_pc() == 0x60011ba) return 0x00000000;
-
-	return m_workram_h[0x000770/4];
-}
-
-DRIVER_INIT_MEMBER(saturn_state,astrass)
+DRIVER_INIT_MEMBER(stv_state,astrass)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x60011ba);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x605b9da);
-
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x06000770, 0x06000773, read32_delegate(FUNC(saturn_state::astrass_hack_r),this));
 
 	install_astrass_protection(machine());
 
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,thunt)
+DRIVER_INIT_MEMBER(stv_state,thunt)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x602A024);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6013EEA);
@@ -667,7 +653,7 @@ DRIVER_INIT_MEMBER(saturn_state,thunt)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(1);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,sandor)
+DRIVER_INIT_MEMBER(stv_state,sandor)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x602a0f8);
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6013fbe);
@@ -677,7 +663,7 @@ DRIVER_INIT_MEMBER(saturn_state,sandor)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(1);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,grdforce)
+DRIVER_INIT_MEMBER(stv_state,grdforce)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6041e32);
 	sh2drc_add_pcflush(machine().device("slave"), 0x6043aa2);
@@ -687,7 +673,7 @@ DRIVER_INIT_MEMBER(saturn_state,grdforce)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,batmanfr)
+DRIVER_INIT_MEMBER(stv_state,batmanfr)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x60121c0);
 	sh2drc_add_pcflush(machine().device("slave"), 0x60125bc);
@@ -698,7 +684,7 @@ DRIVER_INIT_MEMBER(saturn_state,batmanfr)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,colmns97)
+DRIVER_INIT_MEMBER(stv_state,colmns97)
 {
 	sh2drc_add_pcflush(machine().device("slave"), 0x60298a2);
 
@@ -707,7 +693,7 @@ DRIVER_INIT_MEMBER(saturn_state,colmns97)
 	m_minit_boost = m_sinit_boost = 0;
 }
 
-DRIVER_INIT_MEMBER(saturn_state,winterht)
+DRIVER_INIT_MEMBER(stv_state,winterht)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6098aea);
 	sh2drc_add_pcflush(machine().device("slave"), 0x609ae4e);
@@ -717,7 +703,7 @@ DRIVER_INIT_MEMBER(saturn_state,winterht)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(2);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,seabass)
+DRIVER_INIT_MEMBER(stv_state,seabass)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x602cbfa);
 	sh2drc_add_pcflush(machine().device("slave"), 0x60321ee);
@@ -727,7 +713,7 @@ DRIVER_INIT_MEMBER(saturn_state,seabass)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,vfremix)
+DRIVER_INIT_MEMBER(stv_state,vfremix)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x602c30c);
 	sh2drc_add_pcflush(machine().device("slave"), 0x604c332);
@@ -737,7 +723,7 @@ DRIVER_INIT_MEMBER(saturn_state,vfremix)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(20);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,sss)
+DRIVER_INIT_MEMBER(stv_state,sss)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6026398);
 	sh2drc_add_pcflush(machine().device("slave"), 0x6028cd6);
@@ -749,7 +735,7 @@ DRIVER_INIT_MEMBER(saturn_state,sss)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,othellos)
+DRIVER_INIT_MEMBER(stv_state,othellos)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x602bcbe);
 	sh2drc_add_pcflush(machine().device("slave"), 0x602d92e);
@@ -759,7 +745,7 @@ DRIVER_INIT_MEMBER(saturn_state,othellos)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,sasissu)
+DRIVER_INIT_MEMBER(stv_state,sasissu)
 {
 	sh2drc_add_pcflush(machine().device("slave"), 0x60710be);
 
@@ -768,14 +754,14 @@ DRIVER_INIT_MEMBER(saturn_state,sasissu)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(2);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,gaxeduel)
+DRIVER_INIT_MEMBER(stv_state,gaxeduel)
 {
 //  sh2drc_add_pcflush(machine().device("maincpu"), 0x6012ee4);
 
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,suikoenb)
+DRIVER_INIT_MEMBER(stv_state,suikoenb)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6013f7a);
 
@@ -783,14 +769,14 @@ DRIVER_INIT_MEMBER(saturn_state,suikoenb)
 }
 
 
-DRIVER_INIT_MEMBER(saturn_state,sokyugrt)
+DRIVER_INIT_MEMBER(stv_state,sokyugrt)
 {
 	DRIVER_INIT_CALL(stv);
 
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,znpwfv)
+DRIVER_INIT_MEMBER(stv_state,znpwfv)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6012ec2);
 	sh2drc_add_pcflush(machine().device("slave"), 0x60175a6);
@@ -799,7 +785,7 @@ DRIVER_INIT_MEMBER(saturn_state,znpwfv)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_nsec(500);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,twcup98)
+DRIVER_INIT_MEMBER(stv_state,twcup98)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x605edde);
 	sh2drc_add_pcflush(machine().device("slave"), 0x6062bca);
@@ -810,7 +796,7 @@ DRIVER_INIT_MEMBER(saturn_state,twcup98)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,smleague)
+DRIVER_INIT_MEMBER(stv_state,smleague)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6063bf4);
 	sh2drc_add_pcflush(machine().device("slave"), 0x6062bca);
@@ -818,22 +804,22 @@ DRIVER_INIT_MEMBER(saturn_state,smleague)
 	DRIVER_INIT_CALL(stv);
 
 	/* tight sync to avoid dead locks */
-	m_minit_boost = m_sinit_boost = 0;
+	m_minit_boost = m_sinit_boost = 5000;
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5000);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,finlarch)
+DRIVER_INIT_MEMBER(stv_state,finlarch)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6064d60);
 
 	DRIVER_INIT_CALL(stv);
 
 	/* tight sync to avoid dead locks */
-	m_minit_boost = m_sinit_boost = 0;
+	m_minit_boost = m_sinit_boost = 5000;
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5000);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,maruchan)
+DRIVER_INIT_MEMBER(stv_state,maruchan)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x601ba46);
 	sh2drc_add_pcflush(machine().device("slave"), 0x601ba46);
@@ -843,24 +829,21 @@ DRIVER_INIT_MEMBER(saturn_state,maruchan)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(50);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,pblbeach)
+DRIVER_INIT_MEMBER(stv_state,pblbeach)
 {
-	//sh2drc_add_pcflush(machine().device("maincpu"), 0x605eb78);
+	sh2drc_add_pcflush(machine().device("maincpu"), 0x605eb78);
 
 	DRIVER_INIT_CALL(stv);
-
-//  m_instadma_hack = 1;
-
 }
 
-DRIVER_INIT_MEMBER(saturn_state,shanhigw)
+DRIVER_INIT_MEMBER(stv_state,shanhigw)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6020c5c);
 
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,elandore)
+DRIVER_INIT_MEMBER(stv_state,elandore)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x604eac0);
 	sh2drc_add_pcflush(machine().device("slave"), 0x605340a);
@@ -871,7 +854,7 @@ DRIVER_INIT_MEMBER(saturn_state,elandore)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(0);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,rsgun)
+DRIVER_INIT_MEMBER(stv_state,rsgun)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x6034d04);
 	sh2drc_add_pcflush(machine().device("slave"), 0x6036152);
@@ -883,25 +866,613 @@ DRIVER_INIT_MEMBER(saturn_state,rsgun)
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(20);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,ffreveng)
+DRIVER_INIT_MEMBER(stv_state,ffreveng)
 {
 	install_ffreveng_protection(machine());
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,decathlt)
+DRIVER_INIT_MEMBER(stv_state,decathlt)
 {
 	install_decathlt_protection(machine());
 	DRIVER_INIT_CALL(stv);
 }
 
-DRIVER_INIT_MEMBER(saturn_state,nameclv3)
+DRIVER_INIT_MEMBER(stv_state,nameclv3)
 {
 	sh2drc_add_pcflush(machine().device("maincpu"), 0x601eb4c);
 	sh2drc_add_pcflush(machine().device("slave"), 0x602b80e);
 
 	DRIVER_INIT_CALL(stv);
 }
+
+
+static const sh2_cpu_core sh2_conf_master = { 0, NULL };
+static const sh2_cpu_core sh2_conf_slave  = { 1, NULL };
+
+static const scsp_interface scsp_config =
+{
+	0,
+	scsp_irq,
+	DEVCB_DRIVER_LINE_MEMBER(saturn_state, scsp_to_main_irq)
+};
+
+static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32, stv_state )
+	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
+	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8_LEGACY(stv_SMPC_r, stv_SMPC_w,0xffffffff)
+	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE8(saturn_backupram_r,saturn_backupram_w,0xffffffff) AM_SHARE("share1")
+	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("workram_l")
+//  AM_RANGE(0x00400000, 0x0040001f) AM_READWRITE_LEGACY(stv_ioga_r32, stv_io_w32) AM_SHARE("ioga") AM_MIRROR(0x20) /* installed with per-game specific */
+	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
+	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(sinit_w)
+	AM_RANGE(0x02000000, 0x04ffffff) AM_ROM AM_SHARE("share7") AM_REGION("abus", 0) // cartridge
+	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE(stvcd_r, stvcd_w)
+	/* Sound */
+	AM_RANGE(0x05a00000, 0x05afffff) AM_READWRITE16(saturn_soundram_r, saturn_soundram_w,0xffffffff)
+	AM_RANGE(0x05b00000, 0x05b00fff) AM_DEVREADWRITE16_LEGACY("scsp", scsp_r, scsp_w, 0xffffffff)
+	/* VDP1 */
+	AM_RANGE(0x05c00000, 0x05c7ffff) AM_READWRITE(saturn_vdp1_vram_r, saturn_vdp1_vram_w)
+	AM_RANGE(0x05c80000, 0x05cbffff) AM_READWRITE(saturn_vdp1_framebuffer0_r, saturn_vdp1_framebuffer0_w)
+	AM_RANGE(0x05d00000, 0x05d0001f) AM_READWRITE16(saturn_vdp1_regs_r, saturn_vdp1_regs_w,0xffffffff)
+	AM_RANGE(0x05e00000, 0x05e7ffff) AM_MIRROR(0x80000) AM_READWRITE(saturn_vdp2_vram_r, saturn_vdp2_vram_w)
+	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
+	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE16(saturn_vdp2_regs_r, saturn_vdp2_regs_w,0xffffffff)
+	AM_RANGE(0x05fe0000, 0x05fe00cf) AM_READWRITE(saturn_scu_r, saturn_scu_w)
+	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x21f00000) AM_SHARE("workram_h")
+	AM_RANGE(0x20000000, 0x2007ffff) AM_ROM AM_SHARE("share6")  // bios mirror
+	AM_RANGE(0x22000000, 0x24ffffff) AM_ROM AM_SHARE("share7")  // cart mirror
+	AM_RANGE(0xc0000000, 0xc00007ff) AM_RAM // cache RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 16, stv_state )
+	AM_RANGE(0x000000, 0x0fffff) AM_RAM AM_SHARE("sound_ram")
+	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp", scsp_r, scsp_w)
+ADDRESS_MAP_END
+
+static MACHINE_CONFIG_START( stv, stv_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", SH2, MASTER_CLOCK_352/2) // 28.6364 MHz
+	MCFG_CPU_PROGRAM_MAP(stv_mem)
+	MCFG_CPU_CONFIG(sh2_conf_master)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", stv_state, saturn_scanline, "screen", 0, 1)
+
+	MCFG_CPU_ADD("slave", SH2, MASTER_CLOCK_352/2) // 28.6364 MHz
+	MCFG_CPU_PROGRAM_MAP(stv_mem)
+	MCFG_CPU_CONFIG(sh2_conf_slave)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("slave_scantimer", stv_state, saturn_slave_scanline, "screen", 0, 1)
+
+	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //11.2896 MHz
+	MCFG_CPU_PROGRAM_MAP(sound_mem)
+
+	MCFG_MACHINE_START_OVERRIDE(stv_state,stv)
+	MCFG_MACHINE_RESET_OVERRIDE(stv_state,stv)
+
+	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
+
+	MCFG_TIMER_DRIVER_ADD("sector_timer", stv_state, stv_sector_cb)
+	MCFG_TIMER_DRIVER_ADD("sh1_cmd", stv_state, stv_sh1_sim)
+
+	/* video hardware */
+	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_320/8, 427, 0, 320, 263, 0, 224)
+	MCFG_SCREEN_UPDATE_DRIVER(stv_state, screen_update_stv_vdp2)
+	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness.
+
+	MCFG_GFXDECODE(stv)
+
+	MCFG_VIDEO_START_OVERRIDE(stv_state,stv_vdp2)
+
+	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
+
+	MCFG_SOUND_ADD("scsp", SCSP, 0)
+	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+
+	MCFG_SOUND_ADD("cdda", CDDA, 0)
+	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+MACHINE_CONFIG_END
+
+#define MCFG_STV_CARTSLOT_ADD(_tag) \
+	MCFG_CARTSLOT_ADD(_tag) \
+	MCFG_CARTSLOT_INTERFACE("stv_cart") \
+	MCFG_CARTSLOT_LOAD(stv_state,stv_cart)
+
+MACHINE_CONFIG_FRAGMENT( stv_cartslot )
+	MCFG_STV_CARTSLOT_ADD("cart1")
+	MCFG_STV_CARTSLOT_ADD("cart2")
+	MCFG_STV_CARTSLOT_ADD("cart3")
+	MCFG_STV_CARTSLOT_ADD("cart4")
+
+	MCFG_SOFTWARE_LIST_ADD("cart_list","stv")
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( stv_slot, stv )
+	MCFG_FRAGMENT_ADD( stv_cartslot )
+MACHINE_CONFIG_END
+
+
+struct stv_cart_region
+{
+	const char *tag;
+	int        slot;
+	const char *region;
+};
+
+static const struct stv_cart_region stv_cart_table[] =
+{
+	{ ":cart1", 0, ":game0" },
+	{ ":cart2", 1, ":game1" },
+	{ ":cart3", 2, ":game2" },
+	{ ":cart4", 3, ":game3" },
+	{ 0 }
+};
+
+MACHINE_RESET_MEMBER(stv_state,stv)
+{
+	m_scsp_last_line = 0;
+
+	// don't let the slave cpu and the 68k go anywhere
+	machine().device("slave")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+
+	m_en_68k = 0;
+	m_NMI_reset = 0;
+
+	m_port_sel = m_mux_data = 0;
+
+	machine().device("maincpu")->set_unscaled_clock(MASTER_CLOCK_320/2);
+	machine().device("slave")->set_unscaled_clock(MASTER_CLOCK_320/2);
+
+	stvcd_reset();
+
+	m_stv_rtc_timer->adjust(attotime::zero, 0, attotime::from_seconds(1));
+	m_prev_bankswitch = 0xff;
+
+	scu_reset();
+
+	m_vdp2.old_crmd = -1;
+	m_vdp2.old_tvmd = -1;
+}
+
+DEVICE_IMAGE_LOAD_MEMBER( stv_state, stv_cart )
+{
+	const struct stv_cart_region *stv_cart = &stv_cart_table[0], *this_cart;
+
+	/* First, determine where this cart has to be loaded */
+	while (stv_cart->tag)
+	{
+		if (strcmp(stv_cart->tag, image.device().tag()) == 0)
+			break;
+
+		stv_cart++;
+	}
+
+	this_cart = stv_cart;
+
+	if (image.software_entry() == NULL)
+		return IMAGE_INIT_FAIL;
+
+	UINT8 *ROM = image.device().memregion(this_cart->region)->base();
+	UINT32 length = image.get_software_region_length("rom");
+
+	memcpy(ROM, image.get_software_region("rom"), length);
+
+	/* fix endianess */
+	{
+		UINT8 j[4];
+		int i;
+
+		for(i=0;i<length;i+=4)
+		{
+			j[0] = ROM[i];
+			j[1] = ROM[i+1];
+			j[2] = ROM[i+2];
+			j[3] = ROM[i+3];
+			ROM[i] = j[3];
+			ROM[i+1] = j[2];
+			ROM[i+2] = j[1];
+			ROM[i+3] = j[0];
+		}
+	}
+
+	return IMAGE_INIT_PASS;
+}
+
+
+
+MACHINE_START_MEMBER(stv_state,stv)
+{
+	system_time systime;
+	machine().base_datetime(systime);
+
+	m_maincpu = downcast<legacy_cpu_device*>( machine().device<cpu_device>("maincpu") );
+	m_slave = downcast<legacy_cpu_device*>( machine().device("slave") );
+	m_audiocpu = downcast<legacy_cpu_device*>( machine().device<cpu_device>("audiocpu") );
+
+	scsp_set_ram_base(machine().device("scsp"), m_sound_ram);
+
+	// save states
+	state_save_register_global_pointer(machine(), m_scu_regs, 0x100/4);
+	state_save_register_global_pointer(machine(), m_scsp_regs,  0x1000/2);
+	state_save_register_global(machine(), m_NMI_reset);
+	state_save_register_global(machine(), m_en_68k);
+//  state_save_register_global(machine(), scanline);
+	state_save_register_global(machine(), m_smpc.IOSEL1);
+	state_save_register_global(machine(), m_smpc.IOSEL2);
+	state_save_register_global(machine(), m_smpc.EXLE1);
+	state_save_register_global(machine(), m_smpc.EXLE2);
+	state_save_register_global(machine(), m_smpc.PDR1);
+	state_save_register_global(machine(), m_smpc.PDR2);
+	state_save_register_global(machine(), m_port_sel);
+	state_save_register_global(machine(), m_mux_data);
+	state_save_register_global(machine(), m_scsp_last_line);
+
+	stv_register_protection_savestates(machine()); // machine/stvprot.c
+
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(stv_state::stvcd_exit), this));
+
+	m_smpc.rtc_data[0] = DectoBCD(systime.local_time.year /100);
+	m_smpc.rtc_data[1] = DectoBCD(systime.local_time.year %100);
+	m_smpc.rtc_data[2] = (systime.local_time.weekday << 4) | (systime.local_time.month+1);
+	m_smpc.rtc_data[3] = DectoBCD(systime.local_time.mday);
+	m_smpc.rtc_data[4] = DectoBCD(systime.local_time.hour);
+	m_smpc.rtc_data[5] = DectoBCD(systime.local_time.minute);
+	m_smpc.rtc_data[6] = DectoBCD(systime.local_time.second);
+
+	m_stv_rtc_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(stv_state::stv_rtc_increment),this));
+
+	m68k_set_reset_callback(m_audiocpu, &saturn_state::m68k_reset_callback);
+}
+
+
+#define STV_PLAYER_INPUTS(_n_, _b1_, _b2_, _b3_,_b4_)                       \
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_##_b1_ ) PORT_PLAYER(_n_)            \
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_##_b2_ ) PORT_PLAYER(_n_)            \
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_##_b3_ ) PORT_PLAYER(_n_)            \
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_##_b4_ ) PORT_PLAYER(_n_)            \
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(_n_)     \
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(_n_)       \
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(_n_)    \
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(_n_)
+
+static INPUT_PORTS_START( stv )
+	PORT_START("DSW1")
+	PORT_DIPNAME( 0x01, 0x01, "PDR1" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START("DSW2")
+	PORT_DIPNAME( 0x01, 0x01, "PDR2" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START("PORTA")
+	STV_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
+
+	PORT_START("PORTB")
+	STV_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
+
+	PORT_START("PORTC")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("1P Push Switch") PORT_CODE(KEYCODE_7)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("2P Push Switch") PORT_CODE(KEYCODE_8)
+
+	PORT_START("PORTE")
+	STV_PLAYER_INPUTS(3, BUTTON1, BUTTON2, BUTTON3, START)
+
+	PORT_START("PORTF")
+	STV_PLAYER_INPUTS(4, BUTTON1, BUTTON2, BUTTON3, START)
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( stv6b )
+	PORT_INCLUDE( stv )
+
+	PORT_MODIFY("PORTA")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTB")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTE")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	/* Extra button layout, used by Power Instinct 3, Suikoenbu, Elan Doree, Golden Axe Duel & Astra SuperStars */
+	PORT_MODIFY("PORTF")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( critcrsh )
+	PORT_INCLUDE( stv )
+
+	PORT_MODIFY("PORTA")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTB")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTC")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Hammer Hit")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTE")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTF")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("LIGHTX") /* mask default type                     sens delta min max */
+	PORT_BIT( 0x3f, 0x00, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_MINMAX(0,0x3f) PORT_SENSITIVITY(50) PORT_KEYDELTA(1) PORT_PLAYER(1)
+
+	PORT_START("LIGHTY")
+	PORT_BIT( 0x3f, 0x00, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_MINMAX(0x0,0x3f) PORT_SENSITIVITY(50) PORT_KEYDELTA(1) PORT_PLAYER(1)
+INPUT_PORTS_END
+
+/* Same as the regular one, but with an additional & optional mahjong panel */
+static INPUT_PORTS_START( stvmp )
+	PORT_INCLUDE( stv )
+
+	PORT_MODIFY("PORTE")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTF")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	/* Mahjong panel/player 1 side */
+	PORT_START("P1_KEY0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_KAN )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_E )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_A )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_M )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_I )
+
+	PORT_START("P1_KEY1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_REACH )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_F )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_B )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_N )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_J )
+
+	PORT_START("P1_KEY2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_RON )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_G )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_C )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_CHI )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_K )
+
+	PORT_START("P1_KEY3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_H )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_D )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_PON )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_L )
+
+	PORT_START("P1_KEY4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_FLIP_FLOP )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	/* Mahjong panel/player 2 side */
+	PORT_START("P2_KEY0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_KAN ) PORT_PLAYER(2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_E ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_A ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_M ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_I ) PORT_PLAYER(2)
+
+	PORT_START("P2_KEY1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_REACH ) PORT_PLAYER(2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_F ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_B ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_N ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_J ) PORT_PLAYER(2)
+
+	PORT_START("P2_KEY2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_RON ) PORT_PLAYER(2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_G ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_C ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_CHI ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_K ) PORT_PLAYER(2)
+
+	PORT_START("P2_KEY3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_H ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_D ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_PON ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_L ) PORT_PLAYER(2)
+
+	PORT_START("P2_KEY4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_FLIP_FLOP ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+/* Micronet layout, routes joystick port to the mux! */
+static INPUT_PORTS_START( myfairld )
+	PORT_INCLUDE( stv )
+
+	PORT_MODIFY("PORTA")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTB")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTC")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTE")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("PORTF")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("P1_KEY0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_KAN )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_E )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_A )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_M )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_I )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+
+	PORT_START("P1_KEY1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_REACH )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_MAHJONG_BET )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_F )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_B )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_N )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_J )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+
+	PORT_START("P1_KEY2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_RON )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_G )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_C )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_CHI )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_K )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )  PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+
+	PORT_START("P1_KEY3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_MAHJONG_H ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_MAHJONG_D ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_MAHJONG_PON ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_MAHJONG_L ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+
+	PORT_START("P1_KEY4")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED ) /* F/F is there, but these two games are single player so it isn't connected */
+
+	PORT_START("P2_KEY0")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("P2_KEY1")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("P2_KEY2")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("P2_KEY3")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("P2_KEY4")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("IO_TYPE")
+	PORT_CONFNAME( 0x01, 0x01, "I/O Device type" )
+	PORT_CONFSETTING(    0x00, "Mahjong Panel" )
+	PORT_CONFSETTING(    0x01, "Joystick" )
+INPUT_PORTS_END
 
 
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
@@ -1028,9 +1599,9 @@ by introdon in ST-V ("SG0000000"),and according to the manual it's even wrong! (
 by Sega titles,and this is a Sunsoft game)It's likely to be a left-over...
 */
 
-DRIVER_INIT_MEMBER(saturn_state,sanjeon)
+DRIVER_INIT_MEMBER(stv_state,sanjeon)
 {
-	UINT8 *src    = machine().root_device().memregion       ( "game0" )->base();
+	UINT8 *src    = memregion       ( "game0" )->base();
 	int x;
 
 	for (x=0;x<0x3000000;x++)
@@ -1136,6 +1707,14 @@ ROM_START( decathlt )
 	ROM_LOAD16_WORD_SWAP( "mpr18970.4",    0x0c00000, 0x0400000, CRC(8b7a509e) SHA1(8f4d36a858231764ed09b26a1141d1f055eee092) ) // good (was .3)
 	ROM_LOAD16_WORD_SWAP( "mpr18971.5",    0x1000000, 0x0400000, CRC(c87c443b) SHA1(f2fedb35c80e5c4855c7aebff88186397f4d51bc) ) // good (was .4)
 	ROM_LOAD16_WORD_SWAP( "mpr18972.6",    0x1400000, 0x0400000, CRC(45c64fca) SHA1(ae2f678b9885426ce99b615b7f62a451f9ef83f9) ) // good (was .5)
+
+#if 0
+	// these are VDP2RAM dumps from the JPN Saturn version running in UME, saved from the debugger
+	ROM_REGION32_BE( 0x3000000, "fake0", ROMREGION_ERASE00 )
+	ROM_LOAD( "dec",    0x0000000, 0x80000,  CRC(5c8c4353) SHA1(18f317c8f0beac4ff3c9e56639b8e990e31f53ff) ) // on title screen
+	ROM_REGION( 0x3000000, "fake1", ROMREGION_ERASE00 )
+	ROM_LOAD( "dec2",    0x0000000, 0x80000, CRC(d1e08bc9) SHA1(3c5867de81a380bfc181d57214b86ce891b05f06) ) // on select char screen
+#endif
 ROM_END
 
 ROM_START( decathlto )
@@ -2242,92 +2821,92 @@ ROM_START( pclb2elk ) // set to 1p
 ROM_END
 
 
-GAME( 1996, stvbios,   0,       stv_slot, stv, saturn_state,      stv,        ROT0,   "Sega",                         "ST-V Bios", GAME_IS_BIOS_ROOT )
+GAME( 1996, stvbios,   0,       stv_slot, stv, stv_state,      stv,         ROT0,   "Sega",                         "ST-V Bios", GAME_IS_BIOS_ROOT )
 
 //GAME YEAR, NAME,     PARENT,  MACH, INP, INIT,      MONITOR
 /* Playable */
-GAME( 1998, astrass,   stvbios, stv,      stv6b, saturn_state,    astrass,  ROT0,   "Sunsoft",                      "Astra SuperStars (J 980514 V1.002)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, bakubaku,  stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Baku Baku Animal (J 950407 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, batmanfr,  stvbios, stv,      stv, saturn_state,        batmanfr,   ROT0,   "Acclaim",                      "Batman Forever (JUE 960507 V1.000)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, colmns97,  stvbios, stv,      stv, saturn_state,        colmns97,   ROT0,   "Sega",                         "Columns '97 (JET 961209 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, cotton2,   stvbios, stv,      stv, saturn_state,        cotton2,    ROT0,   "Success",                      "Cotton 2 (JUET 970902 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, cottonbm,  stvbios, stv,      stv, saturn_state,        cottonbm,   ROT0,   "Success",                      "Cotton Boomerang (JUET 980709 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, critcrsh,  stvbios, stv,      critcrsh, saturn_state,   critcrsh,   ROT0,   "Sega",                         "Critter Crusher (EA 951204 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, danchih,   stvbios, stv,      stvmp, saturn_state,  danchih,    ROT0,   "Altron (Tecmo license)",       "Danchi de Hanafuda (J 990607 V1.400)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 2000, danchiq,   stvbios, stv,      stv, saturn_state,        danchiq,    ROT0,   "Altron",                       "Danchi de Quiz Okusan Yontaku Desuyo! (J 001128 V1.200)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, diehard,   stvbios, stv,      stv, saturn_state,        diehard,    ROT0,   "Sega",                         "Die Hard Arcade (UET 960515 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND  )
-GAME( 1996, dnmtdeka,  diehard, stv,      stv, saturn_state,        dnmtdeka,   ROT0,   "Sega",                         "Dynamite Deka (J 960515 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND  )
-GAME( 1995, ejihon,    stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Ejihon Tantei Jimusyo (J 950613 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, fhboxers,  stvbios, stv,      stv, saturn_state,        fhboxers,   ROT0,   "Sega",                         "Funky Head Boxers (JUETBKAL 951218 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, gaxeduel,  stvbios, stv,      stv6b, saturn_state,  gaxeduel,   ROT0,   "Sega",                         "Golden Axe - The Duel (JUETL 950117 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS)
-GAME( 1998, grdforce,  stvbios, stv,      stv, saturn_state,        grdforce,   ROT0,   "Success",                      "Guardian Force (JUET 980318 V0.105)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, groovef,   stvbios, stv,      stv6b, saturn_state,  groovef,    ROT0,   "Atlus",                        "Groove on Fight - Gouketsuji Ichizoku 3 (J 970416 V1.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, hanagumi,  stvbios, stv,      stv, saturn_state,        hanagumi,   ROT0,   "Sega",                         "Hanagumi Taisen Columns - Sakura Wars (J 971007 V1.010)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, introdon,  stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sunsoft / Success",            "Karaoke Quiz Intro Don Don! (J 960213 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, kiwames,   stvbios, stv,      stvmp, saturn_state,  stvmp,      ROT0,   "Athena",                       "Pro Mahjong Kiwame S (J 951020 V1.208)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, maruchan,  stvbios, stv,      stv, saturn_state,        maruchan,   ROT0,   "Sega / Toyosuisan",            "Maru-Chan de Goo! (J 971216 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, mausuke,   stvbios, stv,      stv, saturn_state,        mausuke,    ROT0,   "Data East",                    "Mausuke no Ojama the World (J 960314 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, myfairld,  stvbios, stv,      myfairld, saturn_state,   stvmp,      ROT0,   "Micronet",                     "Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, othellos,  stvbios, stv,      stv, saturn_state,        othellos,   ROT0,   "Success",                      "Othello Shiyouyo (J 980423 V1.002)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, pblbeach,  stvbios, stv,      stv, saturn_state,        pblbeach,   ROT0,   "T&E Soft",                     "Pebble Beach - The Great Shot (JUE 950913 V0.990)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, prikura,   stvbios, stv,      stv, saturn_state,        prikura,    ROT0,   "Atlus",                        "Princess Clara Daisakusen (J 960910 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, puyosun,   stvbios, stv,      stv, saturn_state,        puyosun,    ROT0,   "Compile",                      "Puyo Puyo Sun (J 961115 V0.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, rsgun,     stvbios, stv,      stv, saturn_state,        rsgun,      ROT0,   "Treasure",                     "Radiant Silvergun (JUET 980523 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, sasissu,   stvbios, stv,      stv, saturn_state,        sasissu,    ROT0,   "Sega",                         "Taisen Tanto-R Sashissu!! (J 980216 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sanjeon,   sasissu, stv,      stv, saturn_state,        sanjeon,    ROT0,   "Sega / Deniam",                "DaeJeon! SanJeon SuJeon (AJTUE 990412 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, seabass,   stvbios, stv,      stv, saturn_state,        seabass,    ROT0,   "A wave inc. (Able license)",   "Sea Bass Fishing (JUET 971110 V0.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, shanhigw,  stvbios, stv,      stv, saturn_state,        shanhigw,   ROT0,   "Sunsoft / Activision",         "Shanghai - The Great Wall / Shanghai Triple Threat (JUE 950623 V1.005)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, shienryu,  stvbios, stv,      stv, saturn_state,        shienryu,   ROT270, "Warashi",                      "Shienryu (JUET 961226 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, sss,       stvbios, stv,      stv, saturn_state,        sss,        ROT0,   "Capcom / Cave / Victor",       "Steep Slope Sliders (JUET 981110 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, sandor,    stvbios, stv,      stv, saturn_state,        sandor,     ROT0,   "Sega",                         "Puzzle & Action: Sando-R (J 951114 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, thunt,     sandor,  stv,      stv, saturn_state,        thunt,      ROT0,   "Sega",                         "Puzzle & Action: Treasure Hunt (JUET 970901 V2.00E)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, thuntk,    sandor,  stv,      stv, saturn_state,        sandor,     ROT0,   "Sega / Deniam",                "Puzzle & Action: BoMulEul Chajara (JUET 970125 V2.00K)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, smleague,  stvbios, stv,      stv, saturn_state,        smleague,   ROT0,   "Sega",                         "Super Major League (U 960108 V1.000)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, finlarch,  smleague,stv,      stv, saturn_state,        finlarch,   ROT0,   "Sega",                         "Final Arch (J 950714 V1.001)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, sokyugrt,  stvbios, stv,      stv, saturn_state,        sokyugrt,   ROT0,   "Raizing / Eighting",           "Soukyugurentai / Terra Diver (JUET 960821 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, suikoenb,  stvbios, stv,      stv6b, saturn_state,  suikoenb,   ROT0,   "Data East",                    "Suikoenbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, vfkids,    stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Virtua Fighter Kids (JUET 960319 V0.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, vmahjong,  stvbios, stv,      myfairld, saturn_state,   stvmp,      ROT0,   "Micronet",                     "Virtual Mahjong (J 961214 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, winterht,  stvbios, stv,      stv, saturn_state,        winterht,   ROT0,   "Sega",                         "Winter Heat (JUET 971012 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, znpwfv,    stvbios, stv,      stv, saturn_state,        znpwfv,     ROT0,   "Sega",                         "Zen Nippon Pro-Wrestling Featuring Virtua (J 971123 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, astrass,   stvbios, stv,      stv6b, stv_state,     astrass,    ROT0,   "Sunsoft",                      "Astra SuperStars (J 980514 V1.002)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, bakubaku,  stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Baku Baku Animal (J 950407 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, batmanfr,  stvbios, stv,      stv, stv_state,        batmanfr,   ROT0,   "Acclaim",                      "Batman Forever (JUE 960507 V1.000)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, colmns97,  stvbios, stv,      stv, stv_state,        colmns97,   ROT0,   "Sega",                         "Columns '97 (JET 961209 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, cotton2,   stvbios, stv,      stv, stv_state,        cotton2,    ROT0,   "Success",                      "Cotton 2 (JUET 970902 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, cottonbm,  stvbios, stv,      stv, stv_state,        cottonbm,   ROT0,   "Success",                      "Cotton Boomerang (JUET 980709 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, critcrsh,  stvbios, stv,      critcrsh, stv_state,   critcrsh,   ROT0,   "Sega",                         "Critter Crusher (EA 951204 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, danchih,   stvbios, stv,      stvmp, stv_state,     danchih,    ROT0,   "Altron (Tecmo license)",       "Danchi de Hanafuda (J 990607 V1.400)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 2000, danchiq,   stvbios, stv,      stv, stv_state,        danchiq,    ROT0,   "Altron",                       "Danchi de Quiz Okusan Yontaku Desuyo! (J 001128 V1.200)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, diehard,   stvbios, stv,      stv, stv_state,        diehard,    ROT0,   "Sega",                         "Die Hard Arcade (UET 960515 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND  )
+GAME( 1996, dnmtdeka,  diehard, stv,      stv, stv_state,        dnmtdeka,   ROT0,   "Sega",                         "Dynamite Deka (J 960515 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND  )
+GAME( 1995, ejihon,    stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Ejihon Tantei Jimusyo (J 950613 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, fhboxers,  stvbios, stv,      stv, stv_state,        fhboxers,   ROT0,   "Sega",                         "Funky Head Boxers (JUETBKAL 951218 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, findlove,  stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Daiki / FCF",                  "Zenkoku Seifuku Bishoujo Grand Prix Find Love (J 971212 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, gaxeduel,  stvbios, stv,      stv6b, stv_state,     gaxeduel,   ROT0,   "Sega",                         "Golden Axe - The Duel (JUETL 950117 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS)
+GAME( 1998, grdforce,  stvbios, stv,      stv, stv_state,        grdforce,   ROT0,   "Success",                      "Guardian Force (JUET 980318 V0.105)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, groovef,   stvbios, stv,      stv6b, stv_state,     groovef,    ROT0,   "Atlus",                        "Groove on Fight - Gouketsuji Ichizoku 3 (J 970416 V1.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, hanagumi,  stvbios, stv,      stv, stv_state,        hanagumi,   ROT0,   "Sega",                         "Sakura Taisen - Hanagumi Taisen Columns (J 971007 V1.010)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, introdon,  stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sunsoft / Success",            "Karaoke Quiz Intro Don Don! (J 960213 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, kiwames,   stvbios, stv,      stvmp, stv_state,     stvmp,      ROT0,   "Athena",                       "Pro Mahjong Kiwame S (J 951020 V1.208)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, maruchan,  stvbios, stv,      stv, stv_state,        maruchan,   ROT0,   "Sega / Toyosuisan",            "Maru-Chan de Goo! (J 971216 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, mausuke,   stvbios, stv,      stv, stv_state,        mausuke,    ROT0,   "Data East",                    "Mausuke no Ojama the World (J 960314 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, myfairld,  stvbios, stv,      myfairld, stv_state,   stvmp,      ROT0,   "Micronet",                     "Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, othellos,  stvbios, stv,      stv, stv_state,        othellos,   ROT0,   "Success",                      "Othello Shiyouyo (J 980423 V1.002)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, pblbeach,  stvbios, stv,      stv, stv_state,        pblbeach,   ROT0,   "T&E Soft",                     "Pebble Beach - The Great Shot (JUE 950913 V0.990)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, prikura,   stvbios, stv,      stv, stv_state,        prikura,    ROT0,   "Atlus",                        "Princess Clara Daisakusen (J 960910 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, puyosun,   stvbios, stv,      stv, stv_state,        puyosun,    ROT0,   "Compile",                      "Puyo Puyo Sun (J 961115 V0.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, rsgun,     stvbios, stv,      stv, stv_state,        rsgun,      ROT0,   "Treasure",                     "Radiant Silvergun (JUET 980523 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, sasissu,   stvbios, stv,      stv, stv_state,        sasissu,    ROT0,   "Sega",                         "Taisen Tanto-R Sashissu!! (J 980216 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sanjeon,   sasissu, stv,      stv, stv_state,        sanjeon,    ROT0,   "Sega / Deniam",                "DaeJeon! SanJeon SuJeon (AJTUE 990412 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, seabass,   stvbios, stv,      stv, stv_state,        seabass,    ROT0,   "A wave inc. (Able license)",   "Sea Bass Fishing (JUET 971110 V0.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, shanhigw,  stvbios, stv,      stv, stv_state,        shanhigw,   ROT0,   "Sunsoft / Activision",         "Shanghai - The Great Wall / Shanghai Triple Threat (JUE 950623 V1.005)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, shienryu,  stvbios, stv,      stv, stv_state,        shienryu,   ROT270, "Warashi",                      "Shienryu (JUET 961226 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, sss,       stvbios, stv,      stv, stv_state,        sss,        ROT0,   "Capcom / Cave / Victor",       "Steep Slope Sliders (JUET 981110 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, sandor,    stvbios, stv,      stv, stv_state,        sandor,     ROT0,   "Sega",                         "Puzzle & Action: Sando-R (J 951114 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, thunt,     sandor,  stv,      stv, stv_state,        thunt,      ROT0,   "Sega",                         "Puzzle & Action: Treasure Hunt (JUET 970901 V2.00E)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, thuntk,    sandor,  stv,      stv, stv_state,        sandor,     ROT0,   "Sega / Deniam",                "Puzzle & Action: BoMulEul Chajara (JUET 970125 V2.00K)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, smleague,  stvbios, stv,      stv, stv_state,        smleague,   ROT0,   "Sega",                         "Super Major League (U 960108 V1.000)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, finlarch,  smleague,stv,      stv, stv_state,        finlarch,   ROT0,   "Sega",                         "Final Arch (J 950714 V1.001)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, sokyugrt,  stvbios, stv,      stv, stv_state,        sokyugrt,   ROT0,   "Raizing / Eighting",           "Soukyugurentai / Terra Diver (JUET 960821 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, suikoenb,  stvbios, stv,      stv6b, stv_state,     suikoenb,   ROT0,   "Data East",                    "Suiko Enbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, vfkids,    stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Virtua Fighter Kids (JUET 960319 V0.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, vmahjong,  stvbios, stv,      myfairld, stv_state,   stvmp,      ROT0,   "Micronet",                     "Virtual Mahjong (J 961214 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, winterht,  stvbios, stv,      stv, stv_state,        winterht,   ROT0,   "Sega",                         "Winter Heat (JUET 971012 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, znpwfv,    stvbios, stv,      stv, stv_state,        znpwfv,     ROT0,   "Sega",                         "Zen Nippon Pro-Wrestling Featuring Virtua (J 971123 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 
 /* Almost */
-GAME( 1998, twcup98,   stvbios, stv,      stv, saturn_state,        twcup98,    ROT0,   "Tecmo",                        "Tecmo World Cup '98 (JUET 980410 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // player movement
-GAME( 1998, elandore,  stvbios, stv,      stv6b, saturn_state,  elandore,   ROT0,   "Sai-Mate",                     "Touryuu Densetsu Elan-Doree / Elan Doree - Legend of Dragoon (JUET 980922 V1.006)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, twcup98,   stvbios, stv,      stv, stv_state,        twcup98,    ROT0,   "Tecmo",                        "Tecmo World Cup '98 (JUET 980410 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, elandore,  stvbios, stv,      stv6b, stv_state,     elandore,   ROT0,   "Sai-Mate",                     "Touryuu Densetsu Elan-Doree / Elan Doree - Legend of Dragoon (JUET 980922 V1.006)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 
 /* Unemulated printer / camera devices */
-GAME( 1998, stress,    stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Stress Busters (J 981020 V1.000)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, nclubv3,   stvbios, stv,      stv, saturn_state,        nameclv3,   ROT0,   "Sega",                         "Name Club Ver.3 (J 970723 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1997, pclub2,    stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Atlus",                        "Print Club 2 (U 970921 V1.000)", GAME_NOT_WORKING )
-GAME( 1999, pclub2fc,  pclub2,  stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club 2 Felix The Cat (Rev. A) (J 970415 V1.100)", GAME_NOT_WORKING )
-GAME( 1997, pclb297w,  pclub2,  stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club 2 '97 Winter Ver (J 971017 V1.100)", GAME_NOT_WORKING )
-GAME( 1997, pclub298,  pclub2,  stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club 2 '98 Spring Ver (J 971017 V1.100)", GAME_NOT_WORKING )
-GAME( 1998, pclb298a,  pclub2,  stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club 2 '98 Autumn Ver (J 980827 V1.000)", GAME_NOT_WORKING )
-GAME( 1999, pclubor,   stvbios, stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club Goukakenran (J 991104 V1.000)", GAME_NOT_WORKING )
-GAME( 1999, pclubol,   stvbios, stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club Olive (J 980717 V1.000)", GAME_NOT_WORKING )
-GAME( 1999, pclub2v3,  pclub2,  stv,      stv, saturn_state,        stv,        ROT0,   "Atlus",                        "Print Club 2 Vol. 3 (U 990310 V1.000)", GAME_NOT_WORKING )
-GAME( 1999, pclubpok,  stvbios, stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club Pokemon B (U 991126 V1.000)", GAME_NOT_WORKING )
-GAME( 1997, pclub2kc,  stvbios, stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club Kome Kome Club (J 970203 V1.000)", GAME_NOT_WORKING )
-GAME( 1997, pclb2elk,  stvbios, stv,      stv, saturn_state,      stv,        ROT0,   "Atlus",                        "Print Club 2 Earth Limited Kobe (Print Club Custom) (J 970808 V1.000)", GAME_NOT_WORKING )
+GAME( 1998, stress,    stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Stress Busters (J 981020 V1.000)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, nclubv3,   stvbios, stv,      stv, stv_state,        nameclv3,   ROT0,   "Sega",                         "Name Club Ver.3 (J 970723 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1997, pclub2,    stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Atlus",                        "Print Club 2 (U 970921 V1.000)", GAME_NOT_WORKING )
+GAME( 1999, pclub2fc,  pclub2,  stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club 2 Felix The Cat (Rev. A) (J 970415 V1.100)", GAME_NOT_WORKING )
+GAME( 1997, pclb297w,  pclub2,  stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club 2 '97 Winter Ver (J 971017 V1.100)", GAME_NOT_WORKING )
+GAME( 1997, pclub298,  pclub2,  stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club 2 '98 Spring Ver (J 971017 V1.100)", GAME_NOT_WORKING )
+GAME( 1998, pclb298a,  pclub2,  stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club 2 '98 Autumn Ver (J 980827 V1.000)", GAME_NOT_WORKING )
+GAME( 1999, pclubor,   stvbios, stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club Goukakenran (J 991104 V1.000)", GAME_NOT_WORKING )
+GAME( 1999, pclubol,   stvbios, stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club Olive (J 980717 V1.000)", GAME_NOT_WORKING )
+GAME( 1999, pclub2v3,  pclub2,  stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club 2 Vol. 3 (U 990310 V1.000)", GAME_NOT_WORKING )
+GAME( 1999, pclubpok,  stvbios, stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club Pokemon B (U 991126 V1.000)", GAME_NOT_WORKING )
+GAME( 1997, pclub2kc,  stvbios, stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club Kome Kome Club (J 970203 V1.000)", GAME_NOT_WORKING )
+GAME( 1997, pclb2elk,  stvbios, stv,      stv, stv_state,       stv,        ROT0,   "Atlus",                        "Print Club 2 Earth Limited Kobe (Print Club Custom) (J 970808 V1.000)", GAME_NOT_WORKING )
 
 
 /* Doing something.. but not enough yet */
-GAME( 1995, vfremix,   stvbios, stv,      stv, saturn_state,        vfremix,    ROT0,   "Sega",                         "Virtua Fighter Remix (JUETBKAL 950428 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1997, findlove,  stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Daiki / FCF",                  "Find Love (J 971212 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1996, decathlt,  stvbios, stv,      stv, saturn_state,        decathlt,   ROT0,   "Sega",                         "Decathlete (JUET 960709 V1.001)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAME( 1996, decathlto, decathlt,stv,      stv, saturn_state,        decathlt,   ROT0,   "Sega",                         "Decathlete (JUET 960424 V1.000)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1995, vfremix,   stvbios, stv,      stv, stv_state,        vfremix,    ROT0,   "Sega",                         "Virtua Fighter Remix (JUETBKAL 950428 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1996, decathlt,  stvbios, stv,      stv, stv_state,        decathlt,   ROT0,   "Sega",                         "Decathlete (JUET 960709 V1.001)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1996, decathlto, decathlt,stv,      stv, stv_state,        decathlt,   ROT0,   "Sega",                         "Decathlete (JUET 960424 V1.000)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 
 /* Gives I/O errors */
-GAME( 1996, magzun,    stvbios, stv,      stv, saturn_state,        magzun,     ROT0,   "Sega",                         "Magical Zunou Power (J 961031 V1.000)", GAME_NOT_WORKING )
-GAME( 1997, techbowl,  stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Technical Bowling (J 971212 V1.000)", GAME_NOT_WORKING )
-GAME( 1999, micrombc,  stvbios, stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Microman Battle Charge (J 990326 V1.000)", GAME_NOT_WORKING )
+GAME( 1996, magzun,    stvbios, stv,      stv, stv_state,        magzun,     ROT0,   "Sega",                         "Magical Zunou Power (J 961031 V1.000)", GAME_NOT_WORKING )
+GAME( 1997, techbowl,  stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Technical Bowling (J 971212 V1.000)", GAME_NOT_WORKING )
+GAME( 1999, micrombc,  stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Microman Battle Charge (J 990326 V1.000)", GAME_NOT_WORKING )
 
 /* Black screen */
-GAME( 1999, ffreveng,  stvbios, stv,      stv, saturn_state,        ffreveng,   ROT0,   "Capcom",                       "Final Fight Revenge (JUET 990714 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1999, ffreveng,  stvbios, stv,      stv, stv_state,        ffreveng,   ROT0,   "Capcom",                       "Final Fight Revenge (JUET 990714 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 
 /* CD games */
-GAME( 1995, sfish2,    0,       stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Sport Fishing 2 (UET 951106 V1.10e)", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 1995, sfish2j,   sfish2,  stv,      stv, saturn_state,        stv,        ROT0,   "Sega",                         "Sport Fishing 2 (J 951201 V1.100)", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 1995, sfish2,    0,       stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Sport Fishing 2 (UET 951106 V1.10e)", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 1995, sfish2j,   sfish2,  stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Sport Fishing 2 (J 951201 V1.100)", GAME_NO_SOUND | GAME_NOT_WORKING )
 
 /*
 This is the known list of undumped ST-V games:

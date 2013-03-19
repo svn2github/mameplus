@@ -492,7 +492,12 @@ void duartn68681_device::set_ISR_bits(int mask)
 
 duart68681_channel::duart68681_channel(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, DUART68681CHANNEL, "DUART 68681 channel", tag, owner, clock),
-	device_serial_interface(mconfig, *this)
+	device_serial_interface(mconfig, *this),
+	MR1(0),
+	MR2(0),
+	SR(0),
+	rx_fifo_num(0),
+	tx_enabled(0)
 {
 }
 
@@ -527,6 +532,7 @@ void duart68681_channel::device_reset()
 	write_CR(0x40); // reset errors
 
 	tx_baud_rate = rx_baud_rate = 0;
+	CSR = 0;
 }
 
 // serial device virtual overrides

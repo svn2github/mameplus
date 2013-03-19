@@ -144,6 +144,7 @@ CPUS += HCD62121
 CPUS += PPS4
 CPUS += UPD7725
 CPUS += HD61700
+CPUS += SCUDSP
 
 #-------------------------------------------------
 # specify available sound cores
@@ -656,6 +657,7 @@ $(MAMEOBJ)/dataeast.a: \
 	$(DRIVERS)/decocass.o $(MACHINE)/decocass.o $(MACHINE)/decocass_tape.o $(VIDEO)/decocass.o \
 	$(DRIVERS)/deshoros.o \
 	$(DRIVERS)/dietgo.o $(VIDEO)/dietgo.o \
+	$(DRIVERS)/dreambal.o \
 	$(DRIVERS)/exprraid.o $(VIDEO)/exprraid.o \
 	$(DRIVERS)/firetrap.o $(VIDEO)/firetrap.o \
 	$(DRIVERS)/funkyjet.o $(VIDEO)/funkyjet.o \
@@ -1054,7 +1056,7 @@ $(MAMEOBJ)/midway.a: \
 	$(DRIVERS)/omegrace.o \
 	$(DRIVERS)/seattle.o \
 	$(DRIVERS)/tmaster.o \
-	$(DRIVERS)/vegas.o \
+	$(DRIVERS)/vegas.o $(DRIVERS)/wmg.o \
 	$(DRIVERS)/williams.o $(MACHINE)/williams.o $(AUDIO)/williams.o $(VIDEO)/williams.o \
 	$(MACHINE)/midwayic.o \
 	$(AUDIO)/dcs.o \
@@ -1283,7 +1285,9 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/model2.o $(VIDEO)/model2.o \
 	$(DRIVERS)/model3.o $(VIDEO)/model3.o $(MACHINE)/model3.o \
 	$(DRIVERS)/naomi.o $(MACHINE)/dc.o $(VIDEO)/dc.o $(MACHINE)/naomi.o \
-	$(MACHINE)/naomig1.o $(MACHINE)/naomibd.o $(MACHINE)/naomirom.o $(MACHINE)/naomigd.o $(MACHINE)/naomim1.o $(MACHINE)/naomim2.o $(MACHINE)/naomim4.o $(MACHINE)/awboard.o \
+	$(MACHINE)/naomig1.o $(MACHINE)/naomibd.o $(MACHINE)/naomirom.o $(MACHINE)/naomigd.o \
+	$(MACHINE)/naomicrypt.o $(MACHINE)/naomim1.o $(MACHINE)/naomim2.o $(MACHINE)/naomim4.o \
+	$(MACHINE)/awboard.o \
 	$(MACHINE)/mie.o $(MACHINE)/maple-dc.o $(MACHINE)/mapledev.o $(MACHINE)/dc-ctrl.o $(MACHINE)/jvs13551.o \
 	$(DRIVERS)/triforce.o \
 	$(DRIVERS)/puckpkmn.o \
@@ -1305,7 +1309,8 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segaybd.o $(VIDEO)/segaybd.o \
 	$(DRIVERS)/sg1000a.o \
 	$(DRIVERS)/stactics.o $(VIDEO)/stactics.o \
-	$(DRIVERS)/saturn.o $(MACHINE)/stvprot.o $(MACHINE)/stvcd.o $(MACHINE)/smpc.o $(VIDEO)/stvvdp1.o $(VIDEO)/stvvdp2.o \
+	$(DRIVERS)/stv.o $(MACHINE)/stvprot.o \
+	$(MACHINE)/decathlt.o \
 	$(DRIVERS)/suprloco.o $(VIDEO)/suprloco.o \
 	$(DRIVERS)/system1.o $(VIDEO)/system1.o \
 	$(DRIVERS)/system16.o $(VIDEO)/system16.o \
@@ -1317,7 +1322,6 @@ $(MAMEOBJ)/sega.a: \
 	$(MACHINE)/fd1094.o \
 	$(MACHINE)/fddebug.o \
 	$(MACHINE)/mc8123.o \
-	$(MACHINE)/scudsp.o \
 	$(MACHINE)/segaic16.o \
 	$(AUDIO)/carnival.o \
 	$(AUDIO)/depthch.o \
@@ -1811,6 +1815,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/fresh.o \
 	$(DRIVERS)/freekick.o $(VIDEO)/freekick.o \
 	$(DRIVERS)/funkball.o \
+	$(DRIVERS)/gambl186.o \
 	$(DRIVERS)/galaxi.o \
 	$(DRIVERS)/galgame.o \
 	$(DRIVERS)/gamecstl.o \
@@ -2094,6 +2099,8 @@ $(DRIVERS)/corona.o:    $(LAYOUT)/re800.lh \
 			$(LAYOUT)/luckyrlt.lh
 
 $(DRIVERS)/darius.o:    $(LAYOUT)/darius.lh
+
+$(DRIVERS)/de_2.o:      $(LAYOUT)/de2.lh
 
 $(DRIVERS)/destroyr.o:  $(LAYOUT)/destroyr.lh
 
@@ -2399,17 +2406,6 @@ $(MACHINE)/megacd.o:  $(LAYOUT)/megacd.lh
 
 $(DRIVERS)/galaxian.o:  $(MAMESRC)/drivers/galdrvr.c
 $(DRIVERS)/neogeo.o:    $(MAMESRC)/drivers/neodrvr.c
-$(DRIVERS)/saturn.o:    $(MAMESRC)/drivers/stv.c
-$(MACHINE)/snes.o:      $(MAMESRC)/machine/snesobc1.c \
-			$(MAMESRC)/machine/snescx4.c \
-			$(MAMESRC)/machine/cx4ops.c \
-			$(MAMESRC)/machine/cx4oam.c \
-			$(MAMESRC)/machine/cx4fn.c \
-			$(MAMESRC)/machine/cx4data.c \
-			$(MAMESRC)/machine/snesrtc.c \
-			$(MAMESRC)/machine/snessdd1.c \
-			$(MAMESRC)/machine/snes7110.c \
-			$(MAMESRC)/machine/snesbsx.c
 $(MACHINE)/nes_mmc.o:   $(MAMESRC)/machine/nes_ines.c \
 			$(MAMESRC)/machine/nes_pcb.c \
 			$(MAMESRC)/machine/nes_unif.c

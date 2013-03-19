@@ -2997,8 +2997,8 @@ ROM_START( jolycdib )   /* bootleg PCB, encrypted graphics */
 	ROM_LOAD( "3.bin", 0x8000, 0x8000, CRC(c76fdc79) SHA1(fc75c274d64fa9c99a546d424f38e79f1acf2576) )
 
 	ROM_REGION( 0x10000, "gfx1", 0 )
-	ROM_LOAD( "2.bin", 0x0000, 0x8000, CRC(46805150) SHA1(63687ac44f6ace6d8924b2629536bcc7d3979ed2) )
-	ROM_LOAD( "1.bin", 0x8000, 0x8000, CRC(43bcb2df) SHA1(5022bc3a0b852a7cd433e25c3c90a720e6328261) )
+	ROM_LOAD( "2(__jolycdib).bin", 0x0000, 0x8000, CRC(46805150) SHA1(63687ac44f6ace6d8924b2629536bcc7d3979ed2) )
+	ROM_LOAD( "1(__jolycdib).bin", 0x8000, 0x8000, CRC(43bcb2df) SHA1(5022bc3a0b852a7cd433e25c3c90a720e6328261) )
 
 	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM */
 	ROM_LOAD( "jolycdib_nvram.bin", 0x0000, 0x0800, CRC(038a71fe) SHA1(99d3befbee8f9f86ce7f074de7f16fb25053c077) )
@@ -3032,9 +3032,9 @@ ROM_START( jolycdic )   /* another bootleg PCB, encrypted graphics */
 	ROM_IGNORE(                  0x8000 )   /* Identical halves. Discarding 2nd half */
 
 	ROM_REGION( 0x10000, "gfx1", 0 )
-	ROM_LOAD( "2.bin", 0x0000, 0x8000, CRC(32c24495) SHA1(0d78c4d2743401b5ec9919d09814064eeac8023f) )
+	ROM_LOAD( "2(__jolycdic).bin", 0x0000, 0x8000, CRC(32c24495) SHA1(0d78c4d2743401b5ec9919d09814064eeac8023f) )
 	ROM_IGNORE(                0x8000 )   /* Identical halves. Discarding 2nd half */
-	ROM_LOAD( "1.bin", 0x8000, 0x8000, CRC(91093176) SHA1(b889c617f94161933c35c324c7d84fec182953d8) )
+	ROM_LOAD( "1(__jolycdic).bin", 0x8000, 0x8000, CRC(91093176) SHA1(b889c617f94161933c35c324c7d84fec182953d8) )
 	ROM_IGNORE(                0x8000 )   /* Identical halves. Discarding 2nd half */
 
 	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM */
@@ -3044,7 +3044,7 @@ ROM_START( jolycdic )   /* another bootleg PCB, encrypted graphics */
 	ROM_LOAD( "82s147.bin", 0x0000, 0x0200, CRC(5ebc5659) SHA1(8d59011a181399682ab6e8ed14f83101e9bfa0c6) )
 
 	ROM_REGION( 0x0200, "plds", 0 )
-	ROM_LOAD( "gal16v8b.bin", 0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "gal16v8b(__jolycdic).bin", 0x0000, 0x0117, NO_DUMP )
 ROM_END
 
 
@@ -3533,8 +3533,8 @@ ROM_END
 	ROM_IGNORE(                  0x8000 )   /* Identical halves. Discarding 2nd half */
 
 	ROM_REGION( 0x10000, "gfx1", 0 )
-	ROM_LOAD( "2.u21", 0x0000, 0x8000, CRC(99c8c074) SHA1(f8082b08e895cbcd028a2b7cd961a7a2c8b2762c) )
-	ROM_LOAD( "1.u20", 0x8000, 0x8000, CRC(9abedd0c) SHA1(f184a82e8ec2387069d631bcb77e890acd44b3f5) )
+	ROM_LOAD( "2(__pool10d).u21", 0x0000, 0x8000, CRC(99c8c074) SHA1(f8082b08e895cbcd028a2b7cd961a7a2c8b2762c) )
+	ROM_LOAD( "1(__pool10d).u20", 0x8000, 0x8000, CRC(9abedd0c) SHA1(f184a82e8ec2387069d631bcb77e890acd44b3f5) )
 
 	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM */
 	ROM_LOAD( "pool10d_nvram.bin", 0x0000, 0x0800, CRC(6b5984a0) SHA1(156a94e74e33b1a15222cffff9b62e65f6f5f2f5) )
@@ -3630,8 +3630,8 @@ ROM_START( pool10e )
 	ROM_LOAD( "3_50.u2", 0x8000, 0x8000, CRC(764394bb) SHA1(0defcedc802c468c615560e47ec4064a4f084650) )
 
 	ROM_REGION( 0x10000, "gfx1", 0 )
-	ROM_LOAD( "2.u21", 0x0000, 0x8000, CRC(a0d54044) SHA1(c7be1f12f72095daee32ae41c3554d8ab4f99245) )
-	ROM_LOAD( "1.u20", 0x8000, 0x8000, CRC(55c9fcc8) SHA1(224bdf63ed345b1def4852af3b33f07790fbf123) )
+	ROM_LOAD( "2(__pool10e).u21", 0x0000, 0x8000, CRC(a0d54044) SHA1(c7be1f12f72095daee32ae41c3554d8ab4f99245) )
+	ROM_LOAD( "1(__pool10e).u20", 0x8000, 0x8000, CRC(55c9fcc8) SHA1(224bdf63ed345b1def4852af3b33f07790fbf123) )
 
 	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM */
 	ROM_LOAD( "pool10e_nvram.bin", 0x0000, 0x0800, CRC(e20f9a14) SHA1(617ca53263a971c9f835a95737a66fac5b99780f) )
@@ -4921,7 +4921,7 @@ DRIVER_INIT_MEMBER(funworld_state, tabblue)
 *****************************************************************************************************/
 
 	int x, na, nb, nad, nbd;
-	UINT8 *src = machine().root_device().memregion( "gfx1" )->base();
+	UINT8 *src = memregion( "gfx1" )->base();
 
 
 	for (x=0x0000; x < 0x10000; x++)
@@ -4952,7 +4952,7 @@ DRIVER_INIT_MEMBER(funworld_state, magicd2b)
 
 ******************************************************************/
 {
-	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
 	ROM[0xc1c6] = 0x92;
 }
@@ -4962,8 +4962,8 @@ DRIVER_INIT_MEMBER(funworld_state, magicd2c)
 /*** same as blue TAB PCB, with the magicd2a patch ***/
 {
 	int x, na, nb, nad, nbd;
-	UINT8 *src = machine().root_device().memregion( "gfx1" )->base();
-	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *src = memregion( "gfx1" )->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
 	for (x=0x0000; x < 0x10000; x++)
 	{
@@ -4983,7 +4983,7 @@ DRIVER_INIT_MEMBER(funworld_state, magicd2c)
 DRIVER_INIT_MEMBER(funworld_state, soccernw)
 {
 /* temporary patch to avoid hardware errors for debug purposes */
-	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
 	ROM[0x80b2] = 0xa9;
 	ROM[0x80b3] = 0x00;
@@ -5019,16 +5019,16 @@ DRIVER_INIT_MEMBER(funworld_state, saloon)
 
 *************************************************/
 {
-	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
-	int size = machine().root_device().memregion("maincpu")->bytes();
+	UINT8 *rom = memregion("maincpu")->base();
+	int size = memregion("maincpu")->bytes();
 	int start = 0x8000;
 
-	UINT8 *gfxrom = machine().root_device().memregion("gfx1")->base();
-	int sizeg = machine().root_device().memregion("gfx1")->bytes();
+	UINT8 *gfxrom = memregion("gfx1")->base();
+	int sizeg = memregion("gfx1")->bytes();
 	int startg = 0;
 
-	UINT8 *prom = machine().root_device().memregion("proms")->base();
-	int sizep = machine().root_device().memregion("proms")->bytes();
+	UINT8 *prom = memregion("proms")->base();
+	int sizep = memregion("proms")->bytes();
 	int startp = 0;
 
 	UINT8 *buffer;
@@ -5114,7 +5114,7 @@ DRIVER_INIT_MEMBER(funworld_state, multiwin)
 
 ******************************************************/
 {
-	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	int x;
@@ -5133,7 +5133,7 @@ DRIVER_INIT_MEMBER(funworld_state, multiwin)
 		ROM[x+0x10000] = code;
 	}
 
-	space.set_decrypted_region(0x8000, 0xffff, machine().root_device().memregion("maincpu")->base() + 0x18000);
+	space.set_decrypted_region(0x8000, 0xffff, memregion("maincpu")->base() + 0x18000);
 }
 
 
@@ -5148,7 +5148,7 @@ DRIVER_INIT_MEMBER(funworld_state, royalcdc)
 
 ******************************************************/
 
-	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	int x;
@@ -5187,7 +5187,7 @@ DRIVER_INIT_MEMBER(funworld_state, royalcdc)
 		ROM[x+0x10000] = code;
 	}
 
-	space.set_decrypted_region(0x6000, 0xffff, machine().root_device().memregion("maincpu")->base() + 0x16000);
+	space.set_decrypted_region(0x6000, 0xffff, memregion("maincpu")->base() + 0x16000);
 }
 
 
@@ -5208,12 +5208,12 @@ DRIVER_INIT_MEMBER(funworld_state, dino4)
 
 ******************************************************/
 {
-	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
-	int size = machine().root_device().memregion("maincpu")->bytes();
+	UINT8 *rom = memregion("maincpu")->base();
+	int size = memregion("maincpu")->bytes();
 	int start = 0x8000;
 
-	UINT8 *gfxrom = machine().root_device().memregion("gfx1")->base();
-	int sizeg = machine().root_device().memregion("gfx1")->bytes();
+	UINT8 *gfxrom = memregion("gfx1")->base();
+	int sizeg = memregion("gfx1")->bytes();
 	int startg = 0;
 
 	UINT8 *buffer;
@@ -5272,8 +5272,8 @@ DRIVER_INIT_MEMBER(funworld_state, ctunk)
 
 *********************************************************/
 {
-	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
-	int size = machine().root_device().memregion("maincpu")->bytes();
+	UINT8 *rom = memregion("maincpu")->base();
+	int size = memregion("maincpu")->bytes();
 	int start = 0x8000;
 
 	UINT8 *buffer;
@@ -5299,8 +5299,8 @@ DRIVER_INIT_MEMBER(funworld_state, ctunk)
 	*****************************/
 
 	int x, na, nb, nad, nbd;
-	UINT8 *src = machine().root_device().memregion( "gfx1" )->base();
-	//UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *src = memregion( "gfx1" )->base();
+	//UINT8 *ROM = memregion("maincpu")->base();
 
 	for (x=0x0000; x < 0x10000; x++)
 	{

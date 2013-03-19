@@ -316,6 +316,13 @@ bool emu_options::add_slot_options(bool isfirst)
 			entry[0].description = NULL;
 			entry[0].flags = OPTION_STRING | OPTION_FLAG_DEVICE;
 			entry[0].defvalue = (slot->get_slot_interfaces() != NULL) ? slot->get_default_card() : NULL;
+			if ( entry[0].defvalue )
+			{
+				if ( slot->is_internal_option( entry[0].defvalue ) )
+				{
+					entry[0].flags |= OPTION_FLAG_INTERNAL;
+				}
+			}
 			add_entries(entry, true);
 
 			added = true;
@@ -346,7 +353,11 @@ void emu_options::update_slot_options()
 		if (exists(slot->device().tag()+1)) {
 			if (slot->get_slot_interfaces() != NULL) {
 				const char *def = slot->get_default_card_software(config,*this);
-				if (def) set_default_value(slot->device().tag()+1,def);
+				if (def)
+				{
+					set_default_value(slot->device().tag()+1,def);
+					set_flag(slot->device().tag()+1, ~OPTION_FLAG_INTERNAL, slot->is_internal_option(def) ? OPTION_FLAG_INTERNAL : 0 );
+				}
 			}
 		}
 	}
@@ -549,6 +560,9 @@ void emu_options::parse_standard_inis(astring &error_string)
 #endif /* USE_IPS */
 
 	parse_one_ini(cursystem->name, OPTION_PRIORITY_DRIVER_INI, &error_string);
+
+	// Re-evaluate slot options after loading ini files
+	update_slot_options();
 }
 
 

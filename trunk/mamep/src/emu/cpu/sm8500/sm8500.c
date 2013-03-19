@@ -35,6 +35,11 @@ sm8500_cpu_device::sm8500_cpu_device(const machine_config &mconfig, const char *
 	, m_program_config("program", ENDIANNESS_BIG, 8, 16, 0)
 	, m_dma_func(*this)
 	, m_timer_func(*this)
+	, m_PC(0)
+	, m_SYS(0)
+	, m_SP(0)
+	, m_PS0(0)
+	, m_PS1(0)
 {
 }
 
@@ -336,7 +341,7 @@ void sm8500_cpu_device::process_interrupts()
 offs_t sm8500_cpu_device::disasm_disassemble(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, UINT32 options)
 {
 	extern CPU_DISASSEMBLE( sm8500 );
-	return CPU_DISASSEMBLE_NAME( sm8500 )(NULL, buffer, pc, oprom, opram, 0);
+	return CPU_DISASSEMBLE_NAME(sm8500)(this, buffer, pc, oprom, opram, options);
 }
 
 

@@ -11,7 +11,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "cpu/hd6309/hd6309.h"
+#include "cpu/m6809/hd6309.h"
 #include "cpu/z80/z80.h"
 #include "sound/3812intf.h"
 #include "video/konicdev.h"
@@ -413,7 +413,7 @@ static void shuffle( UINT8 *buf, int len )
 DRIVER_INIT_MEMBER(battlnts_state,rackemup)
 {
 	/* rearrange char ROM */
-	shuffle(machine().root_device().memregion("gfx1")->base(), machine().root_device().memregion("gfx1")->bytes());
+	shuffle(memregion("gfx1")->base(), memregion("gfx1")->bytes());
 }
 
 

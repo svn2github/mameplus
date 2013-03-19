@@ -136,6 +136,33 @@ public:
 		astring             m_action;                   // action
 	};
 
+	// registerpoint class
+	class registerpoint
+	{
+		friend class device_debug;
+
+	public:
+		// construction/destruction
+		registerpoint(symbol_table &symbols, int index, const char *condition, const char *action = NULL);
+
+		// getters
+		registerpoint *next() const { return m_next; }
+		int index() const { return m_index; }
+		bool enabled() const { return m_enabled; }
+		const char *condition() const { return m_condition.original_string(); }
+		const char *action() const { return m_action; }
+
+	private:
+		// internals
+		bool hit();
+
+		registerpoint *    m_next;                     // next in the list
+		int                 m_index;                    // user reported index
+		UINT8               m_enabled;                  // enabled?
+		parsed_expression   m_condition;                // condition
+		astring             m_action;                   // action
+	};
+
 public:
 	// construction/destruction
 	device_debug(device_t &device);
@@ -200,6 +227,14 @@ public:
 	bool watchpoint_enable(int index, bool enable = true);
 	void watchpoint_enable_all(bool enable = true);
 
+	// registerpoints
+	registerpoint *registerpoint_first() const { return m_rplist; }
+	int registerpoint_set(const char *condition, const char *action = NULL);
+	bool registerpoint_clear(int index);
+	void registerpoint_clear_all();
+	bool registerpoint_enable(int index, bool enable = true);
+	void registerpoint_enable_all(bool enable = true );
+
 	// hotspots
 	bool hotspot_tracking_enabled() const { return (m_hotspots != NULL); }
 	void hotspot_track(int numspots, int threshhold);
@@ -244,6 +279,7 @@ private:
 	static UINT64 get_current_pc(symbol_table &table, void *ref);
 	static UINT64 get_cycles(symbol_table &table, void *ref);
 	static UINT64 get_totalcycles(symbol_table &table, void *ref);
+	static UINT64 get_lastinstructioncycles(symbol_table &table, void *ref);
 	static UINT64 get_logunmap(symbol_table &table, void *ref);
 	static void set_logunmap(symbol_table &table, void *ref, UINT64 value);
 	static UINT64 get_state(symbol_table &table, void *ref);
@@ -275,6 +311,8 @@ private:
 	int                     m_stopirq;                  // stop IRQ number for DEBUG_FLAG_STOP_INTERRUPT
 	int                     m_stopexception;            // stop exception number for DEBUG_FLAG_STOP_EXCEPTION
 	attotime                m_endexectime;              // ending time of the current execution
+	UINT64                  m_total_cycles;             // current total cycles
+	UINT64                  m_last_total_cycles;        // last total cycles
 
 	// history
 	offs_t                  m_pc_history[HISTORY_SIZE]; // history of recent PCs
@@ -283,6 +321,7 @@ private:
 	// breakpoints and watchpoints
 	breakpoint *            m_bplist;                   // list of breakpoints
 	watchpoint *            m_wplist[ADDRESS_SPACES];   // watchpoint lists for each address space
+	registerpoint *         m_rplist;                   // list of registerpoints
 
 	// tracing
 	class tracer

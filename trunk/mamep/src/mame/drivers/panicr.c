@@ -100,6 +100,7 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_panicr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(panicr_scanline);
+	void draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect );
 };
 
 
@@ -116,7 +117,7 @@ public:
 
 void panicr_state::palette_init()
 {
-	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
+	const UINT8 *color_prom = memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -175,8 +176,8 @@ TILE_GET_INFO_MEMBER(panicr_state::get_bgtile_info)
 {
 	int code,attr;
 
-	code=machine().root_device().memregion("user1")->base()[tile_index];
-	attr=machine().root_device().memregion("user2")->base()[tile_index];
+	code=memregion("user1")->base()[tile_index];
+	attr=memregion("user2")->base()[tile_index];
 	code+=((attr&7)<<8);
 	SET_TILE_INFO_MEMBER(
 		1,
@@ -189,8 +190,8 @@ TILE_GET_INFO_MEMBER(panicr_state::get_infotile_info)
 {
 	int code,attr;
 
-	code=machine().root_device().memregion("user1")->base()[tile_index];
-	attr=machine().root_device().memregion("user2")->base()[tile_index];
+	code=memregion("user1")->base()[tile_index];
+	attr=memregion("user2")->base()[tile_index];
 	code+=((attr&7)<<8);
 	SET_TILE_INFO_MEMBER(
 		2,
@@ -224,10 +225,9 @@ void panicr_state::video_start()
 	colortable_configure_tilemap_groups(machine().colortable, m_txttilemap, machine().gfx[0], 0);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect )
+void panicr_state::draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect )
 {
-	panicr_state *state = machine.driver_data<panicr_state>();
-	UINT8 *spriteram = state->m_spriteram;
+	UINT8 *spriteram = m_spriteram;
 	int offs,flipx,flipy,x,y,color,sprite;
 
 	for (offs = 0; offs<0x1000; offs+=16)
@@ -239,12 +239,12 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const re
 		if (spriteram[offs+1] & 0x40) x -= 0x100;
 
 		color = spriteram[offs+1] & 0x0f;
-		sprite = spriteram[offs+0] | (*state->m_spritebank << 8);
+		sprite = spriteram[offs+0] | (*m_spritebank << 8);
 
-		drawgfx_transmask(bitmap,cliprect,machine.gfx[3],
+		drawgfx_transmask(bitmap,cliprect,machine().gfx[3],
 				sprite,
 				color,flipx,flipy,x,y,
-				colortable_get_transpen_mask(machine.colortable, machine.gfx[3], color, 0));
+				colortable_get_transpen_mask(machine().colortable, machine().gfx[3], color, 0));
 	}
 }
 
@@ -254,7 +254,7 @@ UINT32 panicr_state::screen_update_panicr(screen_device &screen, bitmap_ind16 &b
 	m_txttilemap->mark_all_dirty();
 	m_bgtilemap->set_scrollx(0, m_scrollx);
 	m_bgtilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(machine(),bitmap,cliprect);
+	draw_sprites(bitmap,cliprect);
 	m_txttilemap->draw(bitmap, cliprect, 0,0);
 
 	return 0;
@@ -620,8 +620,8 @@ DRIVER_INIT_MEMBER(panicr_state,panicr)
 
 	t5182_init(machine());
 
-	rom = machine().root_device().memregion("gfx1")->base();
-	size = machine().root_device().memregion("gfx1")->bytes();
+	rom = memregion("gfx1")->base();
+	size = memregion("gfx1")->bytes();
 
 	// text data lines
 	for (i = 0;i < size/2;i++)
@@ -643,8 +643,8 @@ DRIVER_INIT_MEMBER(panicr_state,panicr)
 	}
 
 
-	rom = machine().root_device().memregion("gfx2")->base();
-	size = machine().root_device().memregion("gfx2")->bytes();
+	rom = memregion("gfx2")->base();
+	size = memregion("gfx2")->bytes();
 
 	// tiles data lines
 	for (i = 0;i < size/4;i++)
@@ -670,8 +670,8 @@ DRIVER_INIT_MEMBER(panicr_state,panicr)
 	}
 
 
-	rom = machine().root_device().memregion("gfx3")->base();
-	size = machine().root_device().memregion("gfx3")->bytes();
+	rom = memregion("gfx3")->base();
+	size = memregion("gfx3")->bytes();
 
 	// sprites data lines
 	for (i = 0;i < size/2;i++)
@@ -695,8 +695,8 @@ DRIVER_INIT_MEMBER(panicr_state,panicr)
 	}
 
 	//rearrange  bg tilemaps a bit....
-	rom = machine().root_device().memregion("user1")->base();
-	size = machine().root_device().memregion("user1")->bytes();
+	rom = memregion("user1")->base();
+	size = memregion("user1")->bytes();
 	memcpy(buf,rom, size);
 
 	for(j=0;j<16;j++)
@@ -707,8 +707,8 @@ DRIVER_INIT_MEMBER(panicr_state,panicr)
 		}
 	}
 
-	rom = machine().root_device().memregion("user2")->base();
-	size = machine().root_device().memregion("user2")->bytes();
+	rom = memregion("user2")->base();
+	size = memregion("user2")->bytes();
 	memcpy(buf,rom, size);
 
 	for(j=0;j<16;j++)

@@ -124,6 +124,10 @@ static void execute_wpset(running_machine &machine, int ref, int params, const c
 static void execute_wpclear(running_machine &machine, int ref, int params, const char **param);
 static void execute_wpdisenable(running_machine &machine, int ref, int params, const char **param);
 static void execute_wplist(running_machine &machine, int ref, int params, const char **param);
+static void execute_rpset(running_machine &machine, int ref, int params, const char **param);
+static void execute_rpclear(running_machine &machine, int ref, int params, const char **param);
+static void execute_rpdisenable(running_machine &machine, int ref, int params, const char **param);
+static void execute_rplist(running_machine &machine, int ref, int params, const char **param);
 static void execute_hotspot(running_machine &machine, int ref, int params, const char **param);
 static void execute_save(running_machine &machine, int ref, int params, const char **param);
 static void execute_load(running_machine &machine, int ref, int params, const char **param);
@@ -266,6 +270,7 @@ void debug_command_init(running_machine &machine)
 	debug_console_register_command(machine, "logerror",  CMDFLAG_NONE, 0, 1, MAX_COMMAND_PARAMS, execute_logerror);
 	debug_console_register_command(machine, "tracelog",  CMDFLAG_NONE, 0, 1, MAX_COMMAND_PARAMS, execute_tracelog);
 	debug_console_register_command(machine, "quit",      CMDFLAG_NONE, 0, 0, 0, execute_quit);
+	debug_console_register_command(machine, "exit",      CMDFLAG_NONE, 0, 0, 0, execute_quit);
 	debug_console_register_command(machine, "do",        CMDFLAG_NONE, 0, 1, 1, execute_do);
 	debug_console_register_command(machine, "step",      CMDFLAG_NONE, 0, 0, 1, execute_step);
 	debug_console_register_command(machine, "s",         CMDFLAG_NONE, 0, 0, 1, execute_step);
@@ -308,6 +313,13 @@ void debug_command_init(running_machine &machine)
 	debug_console_register_command(machine, "wpdisable", CMDFLAG_NONE, 0, 0, 1, execute_wpdisenable);
 	debug_console_register_command(machine, "wpenable",  CMDFLAG_NONE, 1, 0, 1, execute_wpdisenable);
 	debug_console_register_command(machine, "wplist",    CMDFLAG_NONE, 0, 0, 0, execute_wplist);
+
+	debug_console_register_command(machine, "rpset",     CMDFLAG_NONE, 0, 1, 2, execute_rpset);
+	debug_console_register_command(machine, "rp",        CMDFLAG_NONE, 0, 1, 2, execute_rpset);
+	debug_console_register_command(machine, "rpclear",   CMDFLAG_NONE, 0, 0, 1, execute_rpclear);
+	debug_console_register_command(machine, "rpdisable", CMDFLAG_NONE, 0, 0, 1, execute_rpdisenable);
+	debug_console_register_command(machine, "rpenable",  CMDFLAG_NONE, 1, 0, 1, execute_rpdisenable);
+	debug_console_register_command(machine, "rplist",    CMDFLAG_NONE, 0, 0, 0, execute_rplist);
 
 	debug_console_register_command(machine, "hotspot",   CMDFLAG_NONE, 0, 0, 3, execute_hotspot);
 
@@ -1488,6 +1500,145 @@ static void execute_wplist(running_machine &machine, int ref, int params, const 
 
 
 /*-------------------------------------------------
+    execute_rpset - execute the registerpoint set
+    command
+-------------------------------------------------*/
+
+static void execute_rpset(running_machine &machine, int ref, int params, const char *param[])
+{
+	device_t *cpu;
+	const char *action = NULL;
+	int bpnum;
+
+	/* CPU is implicit */
+	if (!debug_command_parameter_cpu(machine, NULL, &cpu))
+		return;
+
+	/* param 1 is the condition */
+	parsed_expression condition(&cpu->debug()->symtable());
+	if (!debug_command_parameter_expression(machine, param[0], condition))
+		return;
+
+	/* param 2 is the action */
+	if (!debug_command_parameter_command(machine, action = param[1]))
+		return;
+
+	/* set the breakpoint */
+	bpnum = cpu->debug()->registerpoint_set(condition.original_string(), action);
+	debug_console_printf(machine, "Registerpoint %X set\n", bpnum);
+}
+
+
+/*-------------------------------------------------
+    execute_rpclear - execute the registerpoint
+    clear command
+-------------------------------------------------*/
+
+static void execute_rpclear(running_machine &machine, int ref, int params, const char *param[])
+{
+	UINT64 rpindex;
+
+	/* if 0 parameters, clear all */
+	if (params == 0)
+	{
+		device_iterator iter(machine.root_device());
+		for (device_t *device = iter.first(); device != NULL; device = iter.next())
+			device->debug()->registerpoint_clear_all();
+		debug_console_printf(machine, "Cleared all registerpoints\n");
+	}
+
+	/* otherwise, clear the specific one */
+	else if (!debug_command_parameter_number(machine, param[0], &rpindex))
+		return;
+	else
+	{
+		device_iterator iter(machine.root_device());
+		bool found = false;
+		for (device_t *device = iter.first(); device != NULL; device = iter.next())
+			if (device->debug()->registerpoint_clear(rpindex))
+				found = true;
+		if (found)
+			debug_console_printf(machine, "Registerpoint %X cleared\n", (UINT32)rpindex);
+		else
+			debug_console_printf(machine, "Invalid registerpoint number %X\n", (UINT32)rpindex);
+	}
+}
+
+
+/*-------------------------------------------------
+    execute_rpdisenable - execute the registerpoint
+    disable/enable commands
+-------------------------------------------------*/
+
+static void execute_rpdisenable(running_machine &machine, int ref, int params, const char *param[])
+{
+	UINT64 rpindex;
+
+	/* if 0 parameters, clear all */
+	if (params == 0)
+	{
+		device_iterator iter(machine.root_device());
+		for (device_t *device = iter.first(); device != NULL; device = iter.next())
+			device->debug()->registerpoint_enable_all(ref);
+		if (ref == 0)
+			debug_console_printf(machine, "Disabled all registerpoints\n");
+		else
+			debug_console_printf(machine, "Enabled all registeroints\n");
+	}
+
+	/* otherwise, clear the specific one */
+	else if (!debug_command_parameter_number(machine, param[0], &rpindex))
+		return;
+	else
+	{
+		device_iterator iter(machine.root_device());
+		bool found = false;
+		for (device_t *device = iter.first(); device != NULL; device = iter.next())
+			if (device->debug()->registerpoint_enable(rpindex, ref))
+				found = true;
+		if (found)
+			debug_console_printf(machine, "Registerpoint %X %s\n", (UINT32)rpindex, ref ? "enabled" : "disabled");
+		else
+			debug_console_printf(machine, "Invalid registerpoint number %X\n", (UINT32)rpindex);
+	}
+}
+
+
+/*-------------------------------------------------
+    execute_rplist - execute the registerpoint list
+    command
+-------------------------------------------------*/
+
+static void execute_rplist(running_machine &machine, int ref, int params, const char *param[])
+{
+	int printed = 0;
+	astring buffer;
+
+	/* loop over all CPUs */
+	device_iterator iter(machine.root_device());
+	for (device_t *device = iter.first(); device != NULL; device = iter.next())
+		if (device->debug()->registerpoint_first() != NULL)
+		{
+			debug_console_printf(machine, "Device '%s' registerpoints:\n", device->tag());
+
+			/* loop over the breakpoints */
+			for (device_debug::registerpoint *rp = device->debug()->registerpoint_first(); rp != NULL; rp = rp->next())
+			{
+				buffer.printf("%c%4X ", rp->enabled() ? ' ' : 'D', rp->index());
+				buffer.catprintf("if %s", rp->condition());
+				if (rp->action() != NULL)
+					buffer.catprintf(" do %s", rp->action());
+				debug_console_printf(machine, "%s\n", buffer.cstr());
+				printed++;
+			}
+		}
+
+	if (printed == 0)
+		debug_console_printf(machine, "No registerpoints currently installed\n");
+}
+
+
+/*-------------------------------------------------
     execute_hotspot - execute the hotspot
     command
 -------------------------------------------------*/
@@ -2378,10 +2529,14 @@ static void execute_dasm(running_machine &machine, int ref, int params, const ch
 
 static void execute_trace_internal(running_machine &machine, int ref, int params, const char *param[], int trace_over)
 {
-	const char *action = NULL, *filename = param[0];
+	const char *action = NULL;
 	device_t *cpu;
 	FILE *f = NULL;
 	const char *mode;
+	astring filename = param[0];
+
+	/* replace macros */
+	filename.replace("{game}", machine.basename());
 
 	/* validate parameters */
 	if (!debug_command_parameter_cpu(machine, (params > 1) ? param[1] : NULL, &cpu))
@@ -2389,12 +2544,8 @@ static void execute_trace_internal(running_machine &machine, int ref, int params
 	if (!debug_command_parameter_command(machine, action = param[2]))
 		return;
 
-	/* further validation */
-	if (mame_stricmp(filename, "off") == 0)
-		filename = NULL;
-
 	/* open the file */
-	if (filename)
+	if (mame_stricmp(filename, "off") != 0)
 	{
 		mode = "w";
 
@@ -2402,7 +2553,7 @@ static void execute_trace_internal(running_machine &machine, int ref, int params
 		if ((filename[0] == '>') && (filename[1] == '>'))
 		{
 			mode = "a";
-			filename += 2;
+			filename = filename.substr(2);
 		}
 
 		f = fopen(filename, mode);
@@ -2416,7 +2567,7 @@ static void execute_trace_internal(running_machine &machine, int ref, int params
 	/* do it */
 	cpu->debug()->trace(f, trace_over, action);
 	if (f)
-		debug_console_printf(machine, "Tracing CPU '%s' to file %s\n", cpu->tag(), filename);
+		debug_console_printf(machine, "Tracing CPU '%s' to file %s\n", cpu->tag(), filename.cstr());
 	else
 		debug_console_printf(machine, "Stopped tracing on CPU '%s'\n", cpu->tag());
 }

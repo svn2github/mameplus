@@ -558,7 +558,7 @@ TIMER_CALLBACK_MEMBER(metro_state::metro_blit_done)
 	update_irq_state();
 }
 
-INLINE int blt_read( const UINT8 *ROM, const int offs )
+inline int metro_state::blt_read( const UINT8 *ROM, const int offs )
 {
 	return ROM[offs];
 }
@@ -1828,7 +1828,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(metro_state::vmetal_control_w)
 {
-	device_t *device = machine().device("essnd");
+	es8712_device *device = machine().device<es8712_device>("essnd");
 	/* Lower nibble is the coin control bits shown in
 	   service mode, but in game mode they're different */
 	coin_counter_w(machine(), 0, data & 0x04);
@@ -1839,12 +1839,12 @@ WRITE8_MEMBER(metro_state::vmetal_control_w)
 	if ((data & 0x40) == 0)
 		device->reset();
 	else
-		es8712_play(device);
+		device->play();
 
 	if (data & 0x10)
-		es8712_set_bank_base(device, 0x100000);
+		device->set_bank_base(0x100000);
 	else
-		es8712_set_bank_base(device, 0x000000);
+		device->set_bank_base(0x000000);
 
 	if (data & 0xa0)
 		logerror("%s: Writing unknown bits %04x to $200000\n",machine().describe_context(),data);
@@ -1882,8 +1882,8 @@ WRITE8_MEMBER(metro_state::vmetal_es8712_w)
 	16   002a 000e 0083 00ee 000f 0069 0069   0e832a-0f69ee
 	*/
 
-	device_t *device = machine().device("essnd");
-	es8712_w(device, space, offset, data);
+	es8712_device *device = machine().device<es8712_device>("essnd");
+	device->es8712_w(space, offset, data);
 	logerror("%s: Writing %04x to ES8712 offset %02x\n", machine().describe_context(), data, offset);
 }
 
@@ -4409,7 +4409,7 @@ static MACHINE_CONFIG_START( vmetal, metro_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("essnd", ES8712, 12000)
+	MCFG_ES8712_ADD("essnd", 12000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
 
@@ -6263,16 +6263,15 @@ ROM_END
 
 ***************************************************************************/
 
-static void metro_common( running_machine &machine )
+void metro_state::metro_common(  )
 {
-	metro_state *state = machine.driver_data<metro_state>();
 
-	memset(state->m_requested_int, 0, ARRAY_LENGTH(state->m_requested_int));
-	state->m_vblank_bit = 0;
-	state->m_blitter_bit = 2;
-	state->m_irq_line = 2;
+	memset(m_requested_int, 0, ARRAY_LENGTH(m_requested_int));
+	m_vblank_bit = 0;
+	m_blitter_bit = 2;
+	m_irq_line = 2;
 
-	*state->m_irq_enable = 0;
+	*m_irq_enable = 0;
 }
 
 
@@ -6280,7 +6279,7 @@ DRIVER_INIT_MEMBER(metro_state,metro)
 {
 	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	metro_common(machine());
+	metro_common();
 
 	m_porta = 0x00;
 	m_portb = 0x00;
@@ -6307,7 +6306,7 @@ DRIVER_INIT_MEMBER(metro_state,daitorid)
 {
 	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	metro_common(machine());
+	metro_common();
 
 	m_porta = 0x00;
 	m_portb = 0x00;
@@ -6333,14 +6332,14 @@ DRIVER_INIT_MEMBER(metro_state,balcube)
 		src   +=  2;
 	}
 
-	metro_common(machine());
+	metro_common();
 	m_irq_line = 1;
 }
 
 
 DRIVER_INIT_MEMBER(metro_state,dharmak)
 {
-	UINT8 *src = machine().root_device().memregion( "gfx1" )->base();
+	UINT8 *src = memregion( "gfx1" )->base();
 	int i;
 
 	for (i = 0; i < 0x200000; i += 4)
@@ -6360,13 +6359,13 @@ DRIVER_INIT_MEMBER(metro_state,dharmak)
 
 DRIVER_INIT_MEMBER(metro_state,blzntrnd)
 {
-	metro_common(machine());
+	metro_common();
 	m_irq_line = 1;
 }
 
 DRIVER_INIT_MEMBER(metro_state,mouja)
 {
-	metro_common(machine());
+	metro_common();
 	m_irq_line = -1;    /* split interrupt handlers */
 	m_vblank_bit = 1;
 	m_mouja_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(metro_state::mouja_irq_callback),this));
@@ -6374,7 +6373,7 @@ DRIVER_INIT_MEMBER(metro_state,mouja)
 
 DRIVER_INIT_MEMBER(metro_state,gakusai)
 {
-	metro_common(machine());
+	metro_common();
 	m_irq_line = -1;
 	m_vblank_bit = 1;
 	m_blitter_bit = 3;
@@ -6382,7 +6381,7 @@ DRIVER_INIT_MEMBER(metro_state,gakusai)
 
 DRIVER_INIT_MEMBER(metro_state,puzzlet)
 {
-	metro_common(machine());
+	metro_common();
 	m_irq_line = 0;
 	m_vblank_bit = 1;
 	m_blitter_bit = 0;

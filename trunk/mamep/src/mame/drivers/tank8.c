@@ -11,12 +11,11 @@ Atari Tank 8 driver
 
 
 
-void tank8_set_collision(running_machine &machine, int index)
+void tank8_state::tank8_set_collision(int index)
 {
-	tank8_state *state = machine.driver_data<tank8_state>();
-	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
-	state->m_collision_index = index;
+	m_collision_index = index;
 }
 
 
@@ -466,10 +465,10 @@ ROM_END
 
 DRIVER_INIT_MEMBER(tank8_state,decode)
 {
-	const UINT8* DECODE = machine().root_device().memregion("user1")->base();
+	const UINT8* DECODE = memregion("user1")->base();
 
-	UINT8* p1 = machine().root_device().memregion("maincpu")->base() + 0x00000;
-	UINT8* p2 = machine().root_device().memregion("maincpu")->base() + 0x10000;
+	UINT8* p1 = memregion("maincpu")->base() + 0x00000;
+	UINT8* p2 = memregion("maincpu")->base() + 0x10000;
 
 	int i;
 

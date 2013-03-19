@@ -211,6 +211,18 @@ void saa5050_device::device_start()
 
 
 //-------------------------------------------------
+//  device_start - device-specific reset
+//-------------------------------------------------
+
+void saa5050_device::device_reset()
+{
+	m_ra = 0;
+	m_double_height_top_row = false;
+	m_double_height_bottom_row = false;
+}
+
+
+//-------------------------------------------------
 //  process_control_character -
 //-------------------------------------------------
 

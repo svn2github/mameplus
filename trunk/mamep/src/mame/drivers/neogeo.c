@@ -173,17 +173,6 @@ static const char *audio_banks[4] =
 	NEOGEO_BANK_AUDIO_CPU_CART_BANK0, NEOGEO_BANK_AUDIO_CPU_CART_BANK1, NEOGEO_BANK_AUDIO_CPU_CART_BANK2, NEOGEO_BANK_AUDIO_CPU_CART_BANK3
 };
 
-
-/*************************************
- *
- *  Forward declerations
- *
- *************************************/
-
-static void set_output_latch(running_machine &machine, UINT8 data);
-static void set_output_data(running_machine &machine, UINT8 data);
-
-
 /*************************************
  *
  *  Main CPU interrupt generation
@@ -335,10 +324,9 @@ static void audio_cpu_irq(device_t *device, int assert)
 }
 
 
-static void audio_cpu_assert_nmi(running_machine &machine)
+void neogeo_state::audio_cpu_assert_nmi()
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(neogeo_state::audio_cpu_clear_nmi_w)
@@ -354,10 +342,9 @@ WRITE8_MEMBER(neogeo_state::audio_cpu_clear_nmi_w)
  *
  *************************************/
 
-static void select_controller( running_machine &machine, UINT8 data )
+void neogeo_state::select_controller( UINT8 data )
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-	state->m_controller_select = data;
+	m_controller_select = data;
 }
 
 
@@ -403,9 +390,9 @@ WRITE16_MEMBER(neogeo_state::io_control_w)
 {
 	switch (offset)
 	{
-	case 0x00: select_controller(machine(), data & 0x00ff); break;
-	case 0x18: if (m_is_mvs) set_output_latch(machine(), data & 0x00ff); break;
-	case 0x20: if (m_is_mvs) set_output_data(machine(), data & 0x00ff); break;
+	case 0x00: select_controller(data & 0x00ff); break;
+	case 0x18: if (m_is_mvs) set_output_latch(data & 0x00ff); break;
+	case 0x20: if (m_is_mvs) set_output_data(data & 0x00ff); break;
 	case 0x28: upd4990a_control_16_w(m_upd4990a, space, 0, data, mem_mask); break;
 //  case 0x30: break; // coin counters
 //  case 0x31: break; // coin counters
@@ -467,10 +454,9 @@ CUSTOM_INPUT_MEMBER(neogeo_state::get_calendar_status)
  *
  *************************************/
 
-static void set_save_ram_unlock( running_machine &machine, UINT8 data )
+void neogeo_state::set_save_ram_unlock( UINT8 data )
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-	state->m_save_ram_unlocked = data;
+	m_save_ram_unlocked = data;
 }
 
 
@@ -556,7 +542,7 @@ WRITE16_MEMBER(neogeo_state::audio_command_w)
 	{
 		soundlatch_byte_w(space, 0, data >> 8);
 
-		audio_cpu_assert_nmi(machine());
+		audio_cpu_assert_nmi();
 
 		/* boost the interleave to let the audio CPU read the command */
 		machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
@@ -668,7 +654,7 @@ WRITE16_MEMBER(neogeo_state::main_cpu_bank_select_w)
 void neogeo_state::neogeo_main_cpu_banking_init()
 {
 	/* create vector banks */
-	m_bank_vectors->configure_entry(0, machine().root_device().memregion("mainbios")->base());
+	m_bank_vectors->configure_entry(0, memregion("mainbios")->base());
 	m_bank_vectors->configure_entry(1, m_region_maincpu->base());
 
 	if (m_is_cartsys)
@@ -838,7 +824,7 @@ WRITE16_MEMBER(neogeo_state::system_control_w)
 		switch (offset & 0x07)
 		{
 		default:
-		case 0x00: neogeo_set_screen_dark(machine(), bit); break;
+		case 0x00: neogeo_set_screen_dark(bit); break;
 		case 0x01:
 					if (m_is_cartsys)
 					{
@@ -859,9 +845,9 @@ WRITE16_MEMBER(neogeo_state::system_control_w)
 					}
 					if (m_has_audio_banking) set_audio_cpu_rom_source(bit); /* this is a guess */
 					break;
-		case 0x05: neogeo_set_fixed_layer_source(machine(), bit); break;
-		case 0x06: if (m_is_mvs) set_save_ram_unlock(machine(), bit); break;
-		case 0x07: neogeo_set_palette_bank(machine(), bit); break;
+		case 0x05: neogeo_set_fixed_layer_source(bit); break;
+		case 0x06: if (m_is_mvs) set_save_ram_unlock(bit); break;
+		case 0x07: neogeo_set_palette_bank(bit); break;
 
 		case 0x02: /* unknown - HC32 middle pin 1 */
 		case 0x03: /* unknown - uPD4990 pin ? */
@@ -926,55 +912,51 @@ WRITE16_MEMBER(neogeo_state::watchdog_w)
  *
  *************************************/
 
-static void set_outputs( running_machine &machine )
+void neogeo_state::set_outputs(  )
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
 	static const UINT8 led_map[0x10] =
 		{ 0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x58,0x4c,0x62,0x69,0x78,0x00 };
 
 	/* EL */
-	output_set_digit_value(0, led_map[state->m_el_value]);
+	output_set_digit_value(0, led_map[m_el_value]);
 
 	/* LED1 */
-	output_set_digit_value(1, led_map[state->m_led1_value >> 4]);
-	output_set_digit_value(2, led_map[state->m_led1_value & 0x0f]);
+	output_set_digit_value(1, led_map[m_led1_value >> 4]);
+	output_set_digit_value(2, led_map[m_led1_value & 0x0f]);
 
 	/* LED2 */
-	output_set_digit_value(3, led_map[state->m_led2_value >> 4]);
-	output_set_digit_value(4, led_map[state->m_led2_value & 0x0f]);
+	output_set_digit_value(3, led_map[m_led2_value >> 4]);
+	output_set_digit_value(4, led_map[m_led2_value & 0x0f]);
 }
 
 
-static void set_output_latch( running_machine &machine, UINT8 data )
+void neogeo_state::set_output_latch( UINT8 data )
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-
 	/* looks like the LEDs are set on the
 	   falling edge */
-	UINT8 falling_bits = state->m_output_latch & ~data;
+	UINT8 falling_bits = m_output_latch & ~data;
 
 	if (falling_bits & 0x08)
-		state->m_el_value = 16 - (state->m_output_data & 0x0f);
+		m_el_value = 16 - (m_output_data & 0x0f);
 
 	if (falling_bits & 0x10)
-		state->m_led1_value = ~state->m_output_data;
+		m_led1_value = ~m_output_data;
 
 	if (falling_bits & 0x20)
-		state->m_led2_value = ~state->m_output_data;
+		m_led2_value = ~m_output_data;
 
 	if (falling_bits & 0xc7)
-		logerror("%s  Unmaped LED write.  Data: %x\n", machine.describe_context(), falling_bits);
+		logerror("%s  Unmaped LED write.  Data: %x\n", machine().describe_context(), falling_bits);
 
-	state->m_output_latch = data;
+	m_output_latch = data;
 
-	set_outputs(machine);
+	set_outputs();
 }
 
 
-static void set_output_data( running_machine &machine, UINT8 data )
+void neogeo_state::set_output_data( UINT8 data )
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
-	state->m_output_data = data;
+	m_output_data = data;
 }
 
 
@@ -991,7 +973,7 @@ void neogeo_state::neogeo_postload()
 	_set_main_cpu_vector_table_source();
 	set_audio_cpu_banking();
 	_set_audio_cpu_rom_source();
-	if (m_is_mvs) set_outputs(machine());
+	if (m_is_mvs) set_outputs();
 }
 
 
@@ -1070,9 +1052,9 @@ void neogeo_state::machine_reset()
 	m_maincpu->reset();
 
 	// mamep: Hack for AES BIOS
-	neogeo_set_fixed_layer_source(machine(), 1);
+	neogeo_set_fixed_layer_source(1);
 
-	neogeo_reset_rng(machine());
+	neogeo_reset_rng();
 
 	start_interrupt_timers();
 
@@ -1319,36 +1301,42 @@ DEVICE_IMAGE_LOAD_MEMBER( neogeo_state, neo_cartridge )
 			size = image.get_software_region_length("audiocpu");
 			machine().memory().region_free(":audiocpu");
 			machine().memory().region_alloc(":audiocpu",size+0x10000,1, ENDIANNESS_LITTLE);
-			memcpy(machine().root_device().memregion("audiocpu")->base(),image.get_software_region("audiocpu"),size);
-			memcpy(machine().root_device().memregion("audiocpu")->base()+0x10000,image.get_software_region("audiocpu"),size); // avoid reloading in XML, should just improve banking instead tho?
+			memcpy(memregion("audiocpu")->base(),image.get_software_region("audiocpu"),size);
+			memcpy(memregion("audiocpu")->base()+0x10000,image.get_software_region("audiocpu"),size); // avoid reloading in XML, should just improve banking instead tho?
 		}
 
 
+		/*
+		    Resetting a sound device causes the core to update() it and generate samples if it's not up to date.
+		    Thus we preemptively reset it here while the old pointers are still valid so it's up to date and
+		    doesn't generate samples below when we reset it for the new pointers.
+		*/
+		ym->reset();
 		size = image.get_software_region_length("ymsnd");
 		machine().memory().region_free(":ymsnd");
 		machine().memory().region_alloc(":ymsnd",size,1, ENDIANNESS_LITTLE);
-		memcpy(machine().root_device().memregion("ymsnd")->base(),image.get_software_region("ymsnd"),size);
+		memcpy(memregion("ymsnd")->base(),image.get_software_region("ymsnd"),size);
 		if(image.get_software_region("ymsnd.deltat") != NULL)
 		{
 			size = image.get_software_region_length("ymsnd.deltat");
 			machine().memory().region_free(":ymsnd.deltat");
 			machine().memory().region_alloc(":ymsnd.deltat",size,1, ENDIANNESS_LITTLE);
-			memcpy(machine().root_device().memregion("ymsnd.deltat")->base(),image.get_software_region("ymsnd.deltat"),size);
+			memcpy(memregion("ymsnd.deltat")->base(),image.get_software_region("ymsnd.deltat"),size);
 		}
 		else
 			machine().memory().region_free(":ymsnd.deltat");  // removing the region will fix sound glitches in non-Delta-T games
-		ym->reset();
+		ym->reset();    // and this makes the new pointers take effect
 		size = image.get_software_region_length("sprites");
 		machine().memory().region_free(":sprites");
 		machine().memory().region_alloc(":sprites",size,1, ENDIANNESS_LITTLE);
-		memcpy(machine().root_device().memregion("sprites")->base(),image.get_software_region("sprites"),size);
+		memcpy(memregion("sprites")->base(),image.get_software_region("sprites"),size);
 		// Reset the reference to the region
 		m_region_sprites.findit();
 		if(image.get_software_region("audiocrypt") != NULL)  // encrypted Z80 code
 		{
 			size = image.get_software_region_length("audiocrypt");
 			machine().memory().region_alloc(":audiocrypt",size,1, ENDIANNESS_LITTLE);
-			memcpy(machine().root_device().memregion("audiocrypt")->base(),image.get_software_region("audiocrypt"),size);
+			memcpy(memregion("audiocrypt")->base(),image.get_software_region("audiocrypt"),size);
 			// allocate the audiocpu region to decrypt data into
 			machine().memory().region_free(":audiocpu");
 			machine().memory().region_alloc(":audiocpu",size+0x10000,1, ENDIANNESS_LITTLE);
@@ -1356,7 +1344,7 @@ DEVICE_IMAGE_LOAD_MEMBER( neogeo_state, neo_cartridge )
 
 		// setup cartridge ROM area
 		m_maincpu->space(AS_PROGRAM).install_read_bank(0x000080,0x0fffff,"cart_rom");
-		machine().root_device().membank("cart_rom")->set_base(m_region_maincpu->base() + 0x80);
+		membank("cart_rom")->set_base(m_region_maincpu->base() + 0x80);
 
 		// handle possible protection
 		mvs_install_protection(image);

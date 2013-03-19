@@ -430,7 +430,7 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 
 	/* set the main banking */
 	prog_space.install_read_bank(0x4000, 0xbfff, "bank1");
-	membank("bank1")->set_base(machine().root_device().memregion("user1")->base() + 0x8000 * bank);
+	membank("bank1")->set_base(memregion("user1")->base() + 0x8000 * bank);
 
 	/* bank 0 reads video RAM in the 4000-7FFF range */
 	if (bank == 0)
@@ -446,7 +446,7 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 		if (bank < 0x28)
 		{
 			prog_space.install_read_bank(0x4000, 0x7fff, "bank2");
-			membank("bank2")->set_base(machine().root_device().memregion("user2")->base() + 0x4000 * bank);
+			membank("bank2")->set_base(memregion("user2")->base() + 0x4000 * bank);
 		}
 		else
 			prog_space.unmap_read(0x4000, 0x7fff);
@@ -676,7 +676,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( port_map_stereo_pattern, AS_IO, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x0019) AM_MIRROR(0xff00) AM_MASK(0xffff) AM_READWRITE(astrocade_data_chip_register_r, astrocade_data_chip_register_w)
-	AM_RANGE(0x0050, 0x0058) AM_MIRROR(0xff00) AM_MASK(0xffff) AM_DEVWRITE_LEGACY("astrocade2", astrocade_sound_w)
+	AM_RANGE(0x0050, 0x0058) AM_MIRROR(0xff00) AM_MASK(0xffff) AM_DEVWRITE("astrocade2", astrocade_device, astrocade_sound_w)
 	AM_RANGE(0x0078, 0x007e) AM_MIRROR(0xff00) AM_WRITE(astrocade_pattern_board_w)
 	AM_RANGE(0xa55b, 0xa55b) AM_WRITE(protected_ram_enable_w)
 ADDRESS_MAP_END
@@ -684,7 +684,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( port_map_16col_pattern, AS_IO, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x0019) AM_MIRROR(0xff00) AM_MASK(0xffff) AM_READWRITE(astrocade_data_chip_register_r, astrocade_data_chip_register_w)
-	AM_RANGE(0x0050, 0x0058) AM_MIRROR(0xff00) AM_MASK(0xffff) AM_DEVWRITE_LEGACY("astrocade2", astrocade_sound_w)
+	AM_RANGE(0x0050, 0x0058) AM_MIRROR(0xff00) AM_MASK(0xffff) AM_DEVWRITE("astrocade2", astrocade_device, astrocade_sound_w)
 	AM_RANGE(0x0078, 0x007e) AM_MIRROR(0xff00) AM_WRITE(astrocade_pattern_board_w)
 	AM_RANGE(0x00bf, 0x00bf) AM_MIRROR(0xff00) AM_WRITE(profpac_page_select_w)
 	AM_RANGE(0x00c3, 0x00c3) AM_MIRROR(0xff00) AM_READ(profpac_intercept_r)
@@ -1325,7 +1325,7 @@ static MACHINE_CONFIG_FRAGMENT( astrocade_mono_sound )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("astrocade1",  ASTROCADE, ASTROCADE_CLOCK/4)
+	MCFG_ASTROCADE_ADD("astrocade1", ASTROCADE_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -1335,10 +1335,10 @@ static MACHINE_CONFIG_FRAGMENT( astrocade_stereo_sound )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("astrocade1",  ASTROCADE, ASTROCADE_CLOCK/4)
+	MCFG_ASTROCADE_ADD("astrocade1", ASTROCADE_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
-	MCFG_SOUND_ADD("astrocade2",  ASTROCADE, ASTROCADE_CLOCK/4)
+	MCFG_ASTROCADE_ADD("astrocade2", ASTROCADE_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
@@ -1441,10 +1441,10 @@ static MACHINE_CONFIG_DERIVED( gorf, astrocade_base )
 	MCFG_SPEAKER_ADD("upper", 0.0, 0.0, 1.0)
 	MCFG_SPEAKER_ADD("lower", 0.0, -0.5, 1.0)
 
-	MCFG_SOUND_ADD("astrocade1",  ASTROCADE, ASTROCADE_CLOCK/4)
+	MCFG_ASTROCADE_ADD("astrocade1", ASTROCADE_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "upper", 1.0)
 
-	MCFG_SOUND_ADD("astrocade2",  ASTROCADE, ASTROCADE_CLOCK/4)
+	MCFG_ASTROCADE_ADD("astrocade2", ASTROCADE_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lower", 1.0)
 
 #if USE_FAKE_VOTRAX

@@ -56,6 +56,7 @@ public:
 
 	// reading and writing
 	virtual DECLARE_READ16_MEMBER(read);
+	virtual DECLARE_WRITE16_MEMBER(write);
 	virtual DECLARE_READ16_MEMBER(read_a13);
 	virtual DECLARE_WRITE16_MEMBER(write_a13);
 };
@@ -70,6 +71,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_ssf2"; }
 
 	// reading and writing
@@ -81,6 +83,27 @@ private:
 	int m_lastoff, m_lastdata;
 };
 
+// ======================> md_rom_cm2in1_device
+
+class md_rom_cm2in1_device : public md_std_rom_device
+{
+public:
+	// construction/destruction
+	md_rom_cm2in1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	// device-level overrides
+	virtual void device_start();
+	virtual void device_reset();
+	virtual void device_config_complete() { m_shortname = "md_rom_cm2in1"; }
+
+	// reading and writing
+	virtual DECLARE_READ16_MEMBER(read);
+
+private:
+	int m_base;
+};
+
+
 // ======================> md_rom_mcpirate_device
 
 class md_rom_mcpirate_device : public md_std_rom_device
@@ -91,6 +114,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_mcpirate"; }
 
 	// reading and writing
@@ -127,6 +151,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_chinf3"; }
 
 	// reading and writing
@@ -207,6 +232,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_lion2"; }
 
 	// reading and writing
@@ -227,6 +253,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_lion3"; }
 
 	// reading and writing
@@ -234,7 +261,7 @@ public:
 	virtual DECLARE_WRITE16_MEMBER(write);
 
 private:
-	UINT8 m_prot_data, m_prot_cmd;
+	UINT8 m_reg[3];
 	UINT16 m_bank;
 };
 
@@ -253,6 +280,21 @@ public:
 	virtual DECLARE_READ16_MEMBER(read);
 };
 
+// ======================> md_rom_pokea_device
+
+class md_rom_pokea_device : public md_std_rom_device
+{
+public:
+	// construction/destruction
+	md_rom_pokea_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	// device-level overrides
+	virtual void device_config_complete() { m_shortname = "md_rom_pokea"; }
+
+	// reading and writing
+	virtual DECLARE_READ16_MEMBER(read_a13);
+};
+
 // ======================> md_rom_pokestad_device
 
 class md_rom_pokestad_device : public md_std_rom_device
@@ -263,6 +305,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_pokestad"; }
 
 	// reading and writing
@@ -283,6 +326,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_realtec"; }
 
 	// reading and writing
@@ -368,6 +412,29 @@ public:
 	virtual DECLARE_READ16_MEMBER(read_a13);
 };
 
+// ======================> md_rom_smw64_device
+
+class md_rom_smw64_device : public md_std_rom_device
+{
+public:
+	// construction/destruction
+	md_rom_smw64_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	// device-level overrides
+	virtual void device_start();
+	virtual void device_reset();
+	virtual void device_config_complete() { m_shortname = "md_rom_smw64"; }
+
+	// reading and writing
+	virtual DECLARE_READ16_MEMBER(read);
+	virtual DECLARE_WRITE16_MEMBER(write);
+
+private:
+	UINT32 m_latch0, m_latch1;
+	UINT16 m_reg[6];
+	UINT16 m_ctrl[3];
+};
+
 // ======================> md_rom_smouse_device
 
 class md_rom_smouse_device : public md_std_rom_device
@@ -409,6 +476,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_squir"; }
 
 	// reading and writing
@@ -429,6 +497,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_topf"; }
 
 	// reading and writing
@@ -450,6 +519,7 @@ public:
 
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "md_rom_radica"; }
 
 	// reading and writing
@@ -460,12 +530,57 @@ private:
 	UINT8 m_bank;
 };
 
+// ======================> md_rom_beggarp_device
+
+class md_rom_beggarp_device : public md_std_rom_device
+{
+public:
+	// construction/destruction
+	md_rom_beggarp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	// device-level overrides
+	virtual void device_start();
+	virtual void device_reset();
+	virtual void device_config_complete() { m_shortname = "md_rom_beggarp"; }
+
+	// reading and writing
+	virtual DECLARE_READ16_MEMBER(read);
+	virtual DECLARE_WRITE16_MEMBER(write);
+	virtual DECLARE_WRITE16_MEMBER(write_a13);
+
+private:
+	UINT8 m_mode, m_lock;
+};
+
+// ======================> md_rom_wukong_device
+
+class md_rom_wukong_device : public md_std_rom_device
+{
+public:
+	// construction/destruction
+	md_rom_wukong_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	// device-level overrides
+	virtual void device_start();
+	virtual void device_reset();
+	virtual void device_config_complete() { m_shortname = "md_rom_wukong"; }
+
+	// reading and writing
+	virtual DECLARE_READ16_MEMBER(read);
+	virtual DECLARE_WRITE16_MEMBER(write);
+	virtual DECLARE_WRITE16_MEMBER(write_a13);
+
+private:
+	UINT8 m_mode;
+};
+
 
 
 // device type definition
 extern const device_type MD_STD_ROM;
 extern const device_type MD_ROM_SRAM;
 extern const device_type MD_ROM_FRAM;
+extern const device_type MD_ROM_CM2IN1;
 extern const device_type MD_ROM_BUGSLIFE;
 extern const device_type MD_ROM_CHINF3;
 extern const device_type MD_ROM_ELFWOR;
@@ -476,6 +591,7 @@ extern const device_type MD_ROM_LION2;
 extern const device_type MD_ROM_LION3;
 extern const device_type MD_ROM_MCPIR;
 extern const device_type MD_ROM_MJLOV;
+extern const device_type MD_ROM_POKEA;
 extern const device_type MD_ROM_POKESTAD;
 extern const device_type MD_ROM_REALTEC;
 extern const device_type MD_ROM_REDCL;
@@ -483,16 +599,14 @@ extern const device_type MD_ROM_RX3;
 extern const device_type MD_ROM_SBUBL;
 extern const device_type MD_ROM_SMB;
 extern const device_type MD_ROM_SMB2;
+extern const device_type MD_ROM_SMW64;
 extern const device_type MD_ROM_SMOUSE;
 extern const device_type MD_ROM_SOULB;
 extern const device_type MD_ROM_SSF2;
 extern const device_type MD_ROM_SQUIR;
 extern const device_type MD_ROM_TOPF;
 extern const device_type MD_ROM_RADICA;
-
-// this are currently unused... protection is directly patched out!
-extern const device_type MD_ROM_MULAN;
-extern const device_type MD_ROM_POKE;
-extern const device_type MD_ROM_POKE2;
+extern const device_type MD_ROM_BEGGARP;
+extern const device_type MD_ROM_WUKONG;
 
 #endif

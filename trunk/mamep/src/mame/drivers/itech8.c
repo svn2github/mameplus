@@ -497,7 +497,7 @@
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
-#include "cpu/hd6309/hd6309.h"
+#include "cpu/m6809/hd6309.h"
 #include "cpu/m6809/m6809.h"
 #include "machine/6821pia.h"
 #include "machine/6522via.h"
@@ -703,7 +703,7 @@ WRITE8_MEMBER(itech8_state::blitter_w)
 {
 	/* bit 0x20 on address 7 controls CPU banking */
 	if (offset / 2 == 7)
-		membank("bank1")->set_base(&machine().root_device().memregion("maincpu")->base()[0x4000 + 0xc000 * ((data >> 5) & 1)]);
+		membank("bank1")->set_base(&memregion("maincpu")->base()[0x4000 + 0xc000 * ((data >> 5) & 1)]);
 
 	/* the rest is handled by the video hardware */
 	itech8_blitter_w(space, offset, data);
@@ -713,7 +713,7 @@ WRITE8_MEMBER(itech8_state::blitter_w)
 WRITE8_MEMBER(itech8_state::rimrockn_bank_w)
 {
 	/* banking is controlled here instead of by the blitter output */
-	membank("bank1")->set_base(&machine().root_device().memregion("maincpu")->base()[0x4000 + 0xc000 * (data & 3)]);
+	membank("bank1")->set_base(&memregion("maincpu")->base()[0x4000 + 0xc000 * (data & 3)]);
 }
 
 
@@ -980,7 +980,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( slikz80_io_map, AS_IO, 8, itech8_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READWRITE_LEGACY(slikz80_port_r, slikz80_port_w)
+	AM_RANGE(0x00, 0x00) AM_READWRITE(slikz80_port_r, slikz80_port_w)
 ADDRESS_MAP_END
 
 
@@ -2636,17 +2636,17 @@ DRIVER_INIT_MEMBER(itech8_state,grmatch)
 
 DRIVER_INIT_MEMBER(itech8_state,slikshot)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x0180, 0x0180, FUNC(slikshot_z80_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x01cf, 0x01cf, FUNC(slikshot_z80_control_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x01cf, 0x01cf, FUNC(slikshot_z80_control_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler (0x0180, 0x0180, read8_delegate(FUNC(itech8_state::slikshot_z80_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler (0x01cf, 0x01cf, read8_delegate(FUNC(itech8_state::slikshot_z80_control_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01cf, 0x01cf, write8_delegate(FUNC(itech8_state::slikshot_z80_control_w),this));
 }
 
 
 DRIVER_INIT_MEMBER(itech8_state,sstrike)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x1180, 0x1180, FUNC(slikshot_z80_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler (0x11cf, 0x11cf, FUNC(slikshot_z80_control_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0x11cf, 0x11cf, FUNC(slikshot_z80_control_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler (0x1180, 0x1180, read8_delegate(FUNC(itech8_state::slikshot_z80_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler (0x11cf, 0x11cf, read8_delegate(FUNC(itech8_state::slikshot_z80_control_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x11cf, 0x11cf, write8_delegate(FUNC(itech8_state::slikshot_z80_control_w),this));
 }
 
 

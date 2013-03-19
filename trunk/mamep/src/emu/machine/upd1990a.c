@@ -57,7 +57,9 @@ enum
 upd1990a_rtc_device::upd1990a_rtc_device(const machine_config &mconfig, device_type type, const char* name, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock),
 		device_rtc_interface(mconfig, *this),
-		m_data_out(0)
+		m_data_out(0),
+		m_c(0),
+		m_clk(0)
 {
 }
 
@@ -136,6 +138,8 @@ void upd1990a_rtc_device::device_start()
 
 void upd1990a_rtc_device::device_reset()
 {
+	m_tp = 0;
+	m_c_unlatched = 0;
 	set_current_time(machine());
 }
 

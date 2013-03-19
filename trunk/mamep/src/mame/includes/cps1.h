@@ -166,7 +166,8 @@ public:
 	msm5205_device *m_msm_2;    // fcrash
 	DECLARE_READ16_MEMBER(cps1_hack_dsw_r);
 	DECLARE_READ16_MEMBER(cps1_in1_r);
-	DECLARE_READ16_MEMBER(cps1_hack_in2_r);
+	DECLARE_READ16_MEMBER(cps1_in2_r);
+	DECLARE_READ16_MEMBER(cps1_in3_r);
 	DECLARE_READ16_MEMBER(forgottn_dial_0_r);
 	DECLARE_READ16_MEMBER(forgottn_dial_1_r);
 	DECLARE_WRITE16_MEMBER(forgottn_dial_0_reset_w);
@@ -262,6 +263,7 @@ public:
 	/* fcrash handlers */
 	DECLARE_DRIVER_INIT(kodb);
 	DECLARE_DRIVER_INIT(cawingbl);
+	DECLARE_DRIVER_INIT(knightsb);
 	DECLARE_DRIVER_INIT(sf2mdt);
 	DECLARE_DRIVER_INIT(sf2mdta);
 	DECLARE_MACHINE_START(fcrash);
@@ -270,6 +272,7 @@ public:
 	DECLARE_MACHINE_START(cawingbl);
 	DECLARE_MACHINE_START(knightsb);
 	DECLARE_MACHINE_START(sf2mdt);
+	DECLARE_MACHINE_START(sgyxz);
 	DECLARE_WRITE16_MEMBER(kodb_layer_w);
 	DECLARE_WRITE16_MEMBER(cawingbl_soundlatch_w);
 	DECLARE_WRITE16_MEMBER(knightsb_layer_w);

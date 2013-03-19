@@ -282,10 +282,10 @@ static MACHINE_START( ms_megadriv )
 		svp_init(machine);
 	else
 	{
-		machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x000000, 0x7fffff, read16_delegate(FUNC(device_md_cart_interface::read),state->m_slotcart->m_cart), write16_delegate(FUNC(device_md_cart_interface::write),state->m_slotcart->m_cart));
-		machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa13000, 0xa130ff, read16_delegate(FUNC(device_md_cart_interface::read_a13),state->m_slotcart->m_cart), write16_delegate(FUNC(device_md_cart_interface::write_a13),state->m_slotcart->m_cart));
-		machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa15000, 0xa150ff, read16_delegate(FUNC(device_md_cart_interface::read_a15),state->m_slotcart->m_cart), write16_delegate(FUNC(device_md_cart_interface::write_a15),state->m_slotcart->m_cart));
-		machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xa14000, 0xa14003, write16_delegate(FUNC(device_md_cart_interface::write_tmss_bank),state->m_slotcart->m_cart));
+		machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x000000, 0x7fffff, read16_delegate(FUNC(base_md_cart_slot_device::read),(base_md_cart_slot_device*)state->m_slotcart), write16_delegate(FUNC(base_md_cart_slot_device::write),(base_md_cart_slot_device*)state->m_slotcart));
+		machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa13000, 0xa130ff, read16_delegate(FUNC(base_md_cart_slot_device::read_a13),(base_md_cart_slot_device*)state->m_slotcart), write16_delegate(FUNC(base_md_cart_slot_device::write_a13),(base_md_cart_slot_device*)state->m_slotcart));
+		machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa15000, 0xa150ff, read16_delegate(FUNC(base_md_cart_slot_device::read_a15),(base_md_cart_slot_device*)state->m_slotcart), write16_delegate(FUNC(base_md_cart_slot_device::write_a15),(base_md_cart_slot_device*)state->m_slotcart));
+		machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xa14000, 0xa14003, write16_delegate(FUNC(base_md_cart_slot_device::write_tmss_bank),(base_md_cart_slot_device*)state->m_slotcart));
 	}
 }
 
@@ -304,7 +304,9 @@ static SLOT_INTERFACE_START(md_cart)
 	SLOT_INTERFACE_INTERNAL("rom_sramsafe",  MD_ROM_SRAM)
 	SLOT_INTERFACE_INTERNAL("rom_fram",  MD_ROM_FRAM)
 	SLOT_INTERFACE_INTERNAL("rom_hardbl95", MD_ROM_SRAM)
-	SLOT_INTERFACE_INTERNAL("rom_beggar",  MD_ROM_SRAM)
+	SLOT_INTERFACE_INTERNAL("rom_xinqig",  MD_ROM_SRAM)
+	SLOT_INTERFACE_INTERNAL("rom_beggarp",  MD_ROM_BEGGARP)
+	SLOT_INTERFACE_INTERNAL("rom_wukong",  MD_ROM_WUKONG)
 // EEPROM handling (not supported fully yet)
 	SLOT_INTERFACE_INTERNAL("rom_eeprom",  MD_STD_EEPROM)
 	SLOT_INTERFACE_INTERNAL("rom_nbajam",  MD_EEPROM_NBAJAM)
@@ -320,6 +322,8 @@ static SLOT_INTERFACE_START(md_cart)
 	SLOT_INTERFACE_INTERNAL("rom_mm96",  MD_SEPROM_MM96)
 // STM95 EEPROM
 	SLOT_INTERFACE_INTERNAL("rom_stm95",  MD_EEPROM_STM95)
+// CodeMasters 2-in-1 (reset based)
+	SLOT_INTERFACE_INTERNAL("rom_cm2in1",  MD_ROM_CM2IN1)
 // unique bankswitch
 	SLOT_INTERFACE_INTERNAL("rom_ssf2",  MD_ROM_SSF2)
 	SLOT_INTERFACE_INTERNAL("rom_radica",  MD_ROM_RADICA)
@@ -334,6 +338,7 @@ static SLOT_INTERFACE_START(md_cart)
 	SLOT_INTERFACE_INTERNAL("rom_lion3",  MD_ROM_LION3)
 	SLOT_INTERFACE_INTERNAL("rom_mcpir",  MD_ROM_MCPIR)
 	SLOT_INTERFACE_INTERNAL("rom_mjlov",  MD_ROM_MJLOV)
+	SLOT_INTERFACE_INTERNAL("rom_pokea",  MD_ROM_POKEA)
 	SLOT_INTERFACE_INTERNAL("rom_pokestad",  MD_ROM_POKESTAD)
 	SLOT_INTERFACE_INTERNAL("rom_realtec",  MD_ROM_REALTEC)
 	SLOT_INTERFACE_INTERNAL("rom_redcl",  MD_ROM_REDCL)
@@ -341,14 +346,11 @@ static SLOT_INTERFACE_START(md_cart)
 	SLOT_INTERFACE_INTERNAL("rom_sbubl",  MD_ROM_SBUBL)
 	SLOT_INTERFACE_INTERNAL("rom_smb",  MD_ROM_SMB)
 	SLOT_INTERFACE_INTERNAL("rom_smb2",  MD_ROM_SMB2)
+	SLOT_INTERFACE_INTERNAL("rom_smw64",  MD_ROM_SMW64)
 	SLOT_INTERFACE_INTERNAL("rom_smouse",  MD_ROM_SMOUSE)
 	SLOT_INTERFACE_INTERNAL("rom_soulb",  MD_ROM_SOULB)
 	SLOT_INTERFACE_INTERNAL("rom_squir",  MD_ROM_SQUIR)
 	SLOT_INTERFACE_INTERNAL("rom_topf",  MD_ROM_TOPF)
-// these have protection patched out, instead of emulated!
-	SLOT_INTERFACE_INTERNAL("rom_mulan",  MD_STD_ROM)
-	SLOT_INTERFACE_INTERNAL("rom_poke",  MD_STD_ROM)
-	SLOT_INTERFACE_INTERNAL("rom_poke2",  MD_STD_ROM)
 SLOT_INTERFACE_END
 
 static MACHINE_CONFIG_START( ms_megadriv, md_cons_state )
@@ -1043,15 +1045,17 @@ INPUT_PORTS_END
 
 static SLOT_INTERFACE_START(pico_cart)
 	SLOT_INTERFACE_INTERNAL("rom",  MD_STD_ROM)
+	SLOT_INTERFACE_INTERNAL("rom_sram",  MD_ROM_SRAM)   // not sure these are needed...
+	SLOT_INTERFACE_INTERNAL("rom_sramsafe",  MD_ROM_SRAM)   // not sure these are needed...
 SLOT_INTERFACE_END
 
 static MACHINE_START(pico)
 {
 	pico_state *state = machine.driver_data<pico_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x000000, 0x7fffff, read16_delegate(FUNC(device_md_cart_interface::read),state->m_picocart->m_cart), write16_delegate(FUNC(device_md_cart_interface::write),state->m_picocart->m_cart));
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa13000, 0xa130ff, read16_delegate(FUNC(device_md_cart_interface::read_a13),state->m_picocart->m_cart), write16_delegate(FUNC(device_md_cart_interface::write_a13),state->m_picocart->m_cart));
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa15000, 0xa150ff, read16_delegate(FUNC(device_md_cart_interface::read_a15),state->m_picocart->m_cart), write16_delegate(FUNC(device_md_cart_interface::write_a15),state->m_picocart->m_cart));
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xa14000, 0xa14003, write16_delegate(FUNC(device_md_cart_interface::write_tmss_bank),state->m_picocart->m_cart));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x000000, 0x7fffff, read16_delegate(FUNC(base_md_cart_slot_device::read),(base_md_cart_slot_device*)state->m_picocart), write16_delegate(FUNC(base_md_cart_slot_device::write),(base_md_cart_slot_device*)state->m_picocart));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa13000, 0xa130ff, read16_delegate(FUNC(base_md_cart_slot_device::read_a13),(base_md_cart_slot_device*)state->m_picocart), write16_delegate(FUNC(base_md_cart_slot_device::write_a13),(base_md_cart_slot_device*)state->m_picocart));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xa15000, 0xa150ff, read16_delegate(FUNC(base_md_cart_slot_device::read_a15),(base_md_cart_slot_device*)state->m_picocart), write16_delegate(FUNC(base_md_cart_slot_device::write_a15),(base_md_cart_slot_device*)state->m_picocart));
+	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xa14000, 0xa14003, write16_delegate(FUNC(base_md_cart_slot_device::write_tmss_bank),(base_md_cart_slot_device*)state->m_picocart));
 }
 
 static MACHINE_CONFIG_START( pico, pico_state )

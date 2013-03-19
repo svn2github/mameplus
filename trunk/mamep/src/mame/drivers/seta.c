@@ -1412,10 +1412,9 @@ TIMER_CALLBACK_MEMBER(seta_state::uPD71054_timer_callback)
 /*------------------------------
     initialize
 ------------------------------*/
-static void uPD71054_timer_init( running_machine &machine )
+void seta_state::uPD71054_timer_init(  )
 {
-	seta_state *state = machine.driver_data<seta_state>();
-	uPD71054_state *uPD71054 = &state->m_uPD71054;
+	uPD71054_state *uPD71054 = &m_uPD71054;
 	int no;
 
 	uPD71054->write_select = 0;
@@ -1424,7 +1423,7 @@ static void uPD71054_timer_init( running_machine &machine )
 		uPD71054->max[no] = 0xffff;
 	}
 	for( no = 0; no < USED_TIMER_NUM; no++ ) {
-		uPD71054->timer[no] = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(seta_state::uPD71054_timer_callback),state));
+		uPD71054->timer[no] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(seta_state::uPD71054_timer_callback),this));
 	}
 }
 
@@ -1579,12 +1578,12 @@ READ16_MEMBER(seta_state::seta_dsw_r)
 
 READ8_MEMBER(seta_state::dsw1_r)
 {
-	return (machine().root_device().ioport("DSW")->read() >> 8) & 0xff;
+	return (ioport("DSW")->read() >> 8) & 0xff;
 }
 
 READ8_MEMBER(seta_state::dsw2_r)
 {
-	return (machine().root_device().ioport("DSW")->read() >> 0) & 0xff;
+	return (ioport("DSW")->read() >> 0) & 0xff;
 }
 
 
@@ -1787,7 +1786,7 @@ WRITE16_MEMBER(seta_state::usclssic_lockout_w)
 			machine().tilemap().mark_all_dirty();
 		m_tiles_offset = tiles_offset;
 
-		seta_coin_lockout_w(machine(), data);
+		seta_coin_lockout_w(data);
 	}
 }
 
@@ -3073,7 +3072,7 @@ WRITE8_MEMBER(seta_state::sub_bankswitch_w)
 WRITE8_MEMBER(seta_state::sub_bankswitch_lockout_w)
 {
 	sub_bankswitch_w(space,offset,data);
-	seta_coin_lockout_w(machine(), data);
+	seta_coin_lockout_w(data);
 }
 
 
@@ -8140,7 +8139,7 @@ INTERRUPT_GEN_MEMBER(seta_state::wrofaero_interrupt)
 	device.execute().set_input_line(2, HOLD_LINE );
 }
 
-MACHINE_START_MEMBER(seta_state,wrofaero){ uPD71054_timer_init(machine()); }
+MACHINE_START_MEMBER(seta_state,wrofaero){ uPD71054_timer_init(); }
 #endif  // __uPD71054_TIMER
 
 
@@ -10760,7 +10759,7 @@ DRIVER_INIT_MEMBER(seta_state,arbalest)
 
 DRIVER_INIT_MEMBER(seta_state,metafox)
 {
-	UINT16 *RAM = (UINT16 *) machine().root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *) memregion("maincpu")->base();
 
 	/* This game uses the 21c000-21ffff area for protection? */
 //  machine().device("maincpu")->memory().space(AS_PROGRAM).nop_readwrite(0x21c000, 0x21ffff);
@@ -10783,7 +10782,7 @@ DRIVER_INIT_MEMBER(seta_state,blandia)
 	rom_size = 0x80000;
 	buf = auto_alloc_array(machine(), UINT8, rom_size);
 
-	rom = machine().root_device().memregion("gfx2")->base() + 0x40000;
+	rom = memregion("gfx2")->base() + 0x40000;
 
 	for (rpos = 0; rpos < rom_size/2; rpos++) {
 		buf[rpos+0x40000] = rom[rpos*2];
@@ -10792,7 +10791,7 @@ DRIVER_INIT_MEMBER(seta_state,blandia)
 
 	memcpy( rom, buf, rom_size );
 
-	rom = machine().root_device().memregion("gfx3")->base() + 0x40000;
+	rom = memregion("gfx3")->base() + 0x40000;
 
 	for (rpos = 0; rpos < rom_size/2; rpos++) {
 		buf[rpos+0x40000] = rom[rpos*2];
@@ -10820,7 +10819,7 @@ DRIVER_INIT_MEMBER(seta_state,zombraid)
 
 DRIVER_INIT_MEMBER(seta_state,kiwame)
 {
-	UINT16 *RAM = (UINT16 *) machine().root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *) memregion("maincpu")->base();
 
 	/* WARNING: This game writes to the interrupt vector
 	   table. Lev 1 routine address is stored at $100 */
@@ -10842,8 +10841,8 @@ DRIVER_INIT_MEMBER(seta_state,wiggie)
 	UINT8 temp[16];
 	int i,j;
 
-	src = machine().root_device().memregion("maincpu")->base();
-	len = machine().root_device().memregion("maincpu")->bytes();
+	src = memregion("maincpu")->base();
+	len = memregion("maincpu")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);

@@ -89,11 +89,6 @@
 #define M6809_XTAL  1000000
 
 
-/*
-    Function prototypes
-*/
-INLINE void z80_bank(running_machine &machine, int num, int data);
-
 
 /***************************************************************************
 
@@ -308,6 +303,10 @@ public:
 	void exec_w_phase(UINT8 data);
 	void init_ram();
 	void command_phase(struct fdc_t &fdc, UINT8 data);
+	inline UINT8* blitter_get_addr(UINT32 addr);
+	inline void z80_bank(int num, int data);
+	UINT8 exec_r_phase(void);
+	UINT8 results_phase(void);
 };
 
 
@@ -434,28 +433,27 @@ UINT32 bfcobra_state::screen_update_bfcobra(screen_device &screen, bitmap_rgb32 
 	return 0;
 }
 
-INLINE UINT8* blitter_get_addr(running_machine &machine, UINT32 addr)
+UINT8* bfcobra_state::blitter_get_addr(UINT32 addr)
 {
-	bfcobra_state *state = machine.driver_data<bfcobra_state>();
 	if (addr < 0x10000)
 	{
 		/* Is this region fixed? */
-		return (UINT8*)(state->memregion("user1")->base() + addr);
+		return (UINT8*)(memregion("user1")->base() + addr);
 	}
 	else if(addr < 0x20000)
 	{
 		addr &= 0xffff;
-		addr += (state->m_bank_data[0] & 1) ? 0x10000 : 0;
+		addr += (m_bank_data[0] & 1) ? 0x10000 : 0;
 
-		return (UINT8*)(machine.root_device().memregion("user1")->base() + addr + ((state->m_bank_data[0] >> 1) * 0x20000));
+		return (UINT8*)(memregion("user1")->base() + addr + ((m_bank_data[0] >> 1) * 0x20000));
 	}
 	else if (addr >= 0x20000 && addr < 0x40000)
 	{
-		return (UINT8*)&state->m_video_ram[addr - 0x20000];
+		return (UINT8*)&m_video_ram[addr - 0x20000];
 	}
 	else
 	{
-		return (UINT8*)&state->m_work_ram[addr - 0x40000];
+		return (UINT8*)&m_work_ram[addr - 0x40000];
 	}
 }
 
@@ -467,7 +465,7 @@ INLINE UINT8* blitter_get_addr(running_machine &machine, UINT32 addr)
 */
 void bfcobra_state::RunBlit(address_space &space)
 {
-#define BLITPRG_READ(x)     blitter.x = *(blitter_get_addr(space.machine(), blitter.program.addr++))
+#define BLITPRG_READ(x)     blitter.x = *(blitter_get_addr(blitter.program.addr++))
 
 	struct blitter_t &blitter = m_blitter;
 	int cycles_used = 0;
@@ -577,7 +575,7 @@ void bfcobra_state::RunBlit(address_space &space)
 						blitter.source.addr0 -=blitter.step;
 					}
 
-					*blitter_get_addr(space.machine(), blitter.dest.addr) = blitter.pattern;
+					*blitter_get_addr( blitter.dest.addr) = blitter.pattern;
 					cycles_used++;
 
 				} while (--innercnt);
@@ -591,7 +589,7 @@ void bfcobra_state::RunBlit(address_space &space)
 
 				if (LOOPTYPE == 3 && innercnt == blitter.innercnt)
 				{
-					srcdata = *(blitter_get_addr(space.machine(), blitter.source.addr & 0xfffff));
+					srcdata = *(blitter_get_addr( blitter.source.addr & 0xfffff));
 					blitter.source.loword++;
 					cycles_used++;
 				}
@@ -601,7 +599,7 @@ void bfcobra_state::RunBlit(address_space &space)
 				{
 					if (LOOPTYPE == 0 || LOOPTYPE == 1)
 					{
-						srcdata = *(blitter_get_addr(space.machine(), blitter.source.addr & 0xfffff));
+						srcdata = *(blitter_get_addr( blitter.source.addr & 0xfffff));
 						cycles_used++;
 
 						if (blitter.modectl & MODE_SSIGN)
@@ -616,7 +614,7 @@ void bfcobra_state::RunBlit(address_space &space)
 				/* Read destination pixel? */
 				if (LOOPTYPE == 0)
 				{
-					dstdata = *blitter_get_addr(space.machine(), blitter.dest.addr & 0xfffff);
+					dstdata = *blitter_get_addr( blitter.dest.addr & 0xfffff);
 					cycles_used++;
 				}
 
@@ -685,10 +683,10 @@ void bfcobra_state::RunBlit(address_space &space)
 						    The existing destination pixel is used as a lookup
 						    into the table and the colours is replaced.
 						*/
-						UINT8 dest = *blitter_get_addr(space.machine(), blitter.dest.addr);
-						UINT8 newcol = *(blitter_get_addr(space.machine(), (blitter.source.addr + dest) & 0xfffff));
+						UINT8 dest = *blitter_get_addr( blitter.dest.addr);
+						UINT8 newcol = *(blitter_get_addr( (blitter.source.addr + dest) & 0xfffff));
 
-						*blitter_get_addr(space.machine(), blitter.dest.addr) = newcol;
+						*blitter_get_addr( blitter.dest.addr) = newcol;
 						cycles_used += 3;
 					}
 					else
@@ -707,7 +705,7 @@ void bfcobra_state::RunBlit(address_space &space)
 						if (blitter.compfunc & CMPFUNC_LOG0)
 							final_result |= ~result & ~dstdata;
 
-						*blitter_get_addr(space.machine(), blitter.dest.addr) = final_result;
+						*blitter_get_addr( blitter.dest.addr) = final_result;
 						cycles_used++;
 					}
 				}
@@ -956,7 +954,7 @@ WRITE8_MEMBER(bfcobra_state::chipset_w)
 
 			data &= 0x3f;
 			m_bank_data[offset] = data;
-			z80_bank(machine(), offset, data);
+			z80_bank(offset, data);
 			break;
 		}
 
@@ -1031,33 +1029,32 @@ WRITE8_MEMBER(bfcobra_state::chipset_w)
 	}
 }
 
-INLINE void z80_bank(running_machine &machine, int num, int data)
+void bfcobra_state::z80_bank(int num, int data)
 {
-	bfcobra_state *state = machine.driver_data<bfcobra_state>();
 	static const char * const bank_names[] = { "bank1", "bank2", "bank3" };
 
 	if (data < 0x08)
 	{
-		UINT32 offset = ((state->m_bank_data[0] >> 1) * 0x20000) + ((0x4000 * data) ^ ((state->m_bank_data[0] & 1) ? 0 : 0x10000));
+		UINT32 offset = ((m_bank_data[0] >> 1) * 0x20000) + ((0x4000 * data) ^ ((m_bank_data[0] & 1) ? 0 : 0x10000));
 
-		state->membank(bank_names[num - 1])->set_base(machine.root_device().memregion("user1")->base() + offset);
+		membank(bank_names[num - 1])->set_base(memregion("user1")->base() + offset);
 	}
 	else if (data < 0x10)
 	{
-		state->membank(bank_names[num - 1])->set_base(&state->m_video_ram[(data - 0x08) * 0x4000]);
+		membank(bank_names[num - 1])->set_base(&m_video_ram[(data - 0x08) * 0x4000]);
 	}
 	else
 	{
-		state->membank(bank_names[num - 1])->set_base(&state->m_work_ram[(data - 0x10) * 0x4000]);
+		membank(bank_names[num - 1])->set_base(&m_work_ram[(data - 0x10) * 0x4000]);
 	}
 }
 
 WRITE8_MEMBER(bfcobra_state::rombank_w)
 {
 	m_bank_data[0] = data;
-	z80_bank(machine(), 1, m_bank_data[1]);
-	z80_bank(machine(), 2, m_bank_data[2]);
-	z80_bank(machine(), 3, m_bank_data[3]);
+	z80_bank(1, m_bank_data[1]);
+	z80_bank(2, m_bank_data[2]);
+	z80_bank(3, m_bank_data[3]);
 }
 
 
@@ -1151,7 +1148,7 @@ READ8_MEMBER(bfcobra_state::fddata_r)
 				}
 
 				fdc.offset = (BPT * fdc.track*2) + (fdc.side ? BPT : 0) + (BPS * (fdc.sector-1)) + fdc.byte_pos++;
-				val = *(machine().root_device().memregion("user2")->base() + fdc.offset);
+				val = *(memregion("user2")->base() + fdc.offset);
 
 				/* Move on to next sector? */
 				if (fdc.byte_pos == 1024)
@@ -1297,7 +1294,7 @@ void bfcobra_state::command_phase(struct fdc_t &fdc, UINT8 data)
 }
 
 #ifdef UNUSED_FUNCTION
-UINT8 exec_r_phase(void)
+UINT8 bfcobra_state::exec_r_phase(void)
 {
 	return 0;
 }
@@ -1308,7 +1305,7 @@ void bfcobra_state::exec_w_phase(UINT8 data)
 }
 
 #ifdef UNUSED_FUNCTION
-UINT8 results_phase(void)
+UINT8 bfcobra_state::results_phase(void)
 {
 	return 0;
 }
@@ -1415,7 +1412,7 @@ WRITE8_MEMBER(bfcobra_state::meter_w)
 		if (changed & (1 << i))
 		{
 			MechMtr_update(i, data & (1 << i) );
-			generic_pulse_irq_line(space.device().execute(), M6809_FIRQ_LINE, 1);
+			space.device().execute().set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 		}
 	}
 }
@@ -1657,7 +1654,7 @@ WRITE_LINE_MEMBER(bfcobra_state::m6809_acia_tx_w)
 
 WRITE_LINE_MEMBER(bfcobra_state::m6809_data_irq)
 {
-	machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, state ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static ACIA6850_INTERFACE( m6809_acia_if )
@@ -1711,7 +1708,7 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 	UINT8 *tmp;
 
 	tmp = auto_alloc_array(machine(), UINT8, 0x8000);
-	rom = machine().root_device().memregion("audiocpu")->base() + 0x8000;
+	rom = memregion("audiocpu")->base() + 0x8000;
 	memcpy(tmp, rom, 0x8000);
 
 	for (i = 0; i < 0x8000; i++)
@@ -1740,7 +1737,7 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 	m_bank_data[3] = 0;
 
 	/* Fixed 16kB ROM region */
-	membank("bank4")->set_base(machine().root_device().memregion("user1")->base());
+	membank("bank4")->set_base(memregion("user1")->base());
 
 	/* TODO: Properly sort out the data ACIA */
 	m_data_r = 1;
@@ -1764,7 +1761,7 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 /* TODO */
 INTERRUPT_GEN_MEMBER(bfcobra_state::timer_irq)
 {
-	generic_pulse_irq_line(device.execute(), M6809_IRQ_LINE, 1);
+	device.execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 /* TODO */
@@ -1782,7 +1779,7 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 
 	MCFG_CPU_ADD("audiocpu", M6809, M6809_XTAL)
 	MCFG_CPU_PROGRAM_MAP(m6809_prog_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(bfcobra_state, timer_irq,  1000)
+	MCFG_CPU_PERIODIC_INT_DRIVER(bfcobra_state, timer_irq, 1000)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 

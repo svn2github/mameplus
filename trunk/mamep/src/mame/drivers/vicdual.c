@@ -135,13 +135,13 @@ INPUT_CHANGED_MEMBER(vicdual_state::coin_changed)
  *
  *************************************/
 
-static int get_vcounter(running_machine &machine)
+int vicdual_state::get_vcounter()
 {
-	int vcounter = machine.primary_screen->vpos();
+	int vcounter = machine().primary_screen->vpos();
 
 	/* the vertical synch counter gets incremented at the end of HSYNC,
 	   compensate for this */
-	if (machine.primary_screen->hpos() >= VICDUAL_HSEND)
+	if (machine().primary_screen->hpos() >= VICDUAL_HSEND)
 		vcounter = (vcounter + 1) % VICDUAL_VTOTAL;
 
 	return vcounter;
@@ -150,13 +150,13 @@ static int get_vcounter(running_machine &machine)
 
 CUSTOM_INPUT_MEMBER(vicdual_state::vicdual_get_64v)
 {
-	return (get_vcounter(machine()) >> 6) & 0x01;
+	return (get_vcounter() >> 6) & 0x01;
 }
 
 
 CUSTOM_INPUT_MEMBER(vicdual_state::vicdual_get_vblank_comp)
 {
-	return (get_vcounter(machine()) < VICDUAL_VBSTART);
+	return (get_vcounter() < VICDUAL_VBSTART);
 }
 
 
@@ -182,9 +182,9 @@ CUSTOM_INPUT_MEMBER(vicdual_state::vicdual_get_timer_value)
 #define COLOR_BW_PORT_TAG       "COLOR_BW"
 
 
-int vicdual_is_cabinet_color(running_machine &machine)
+int vicdual_state::vicdual_is_cabinet_color()
 {
-	return (machine.root_device().ioport(COLOR_BW_PORT_TAG)->read() & 1) ? 0 : 1;
+	return (ioport(COLOR_BW_PORT_TAG)->read_safe(0) & 1) ? 0 : 1;
 }
 
 
@@ -616,6 +616,40 @@ static INPUT_PORTS_START( headon )
 	PORT_COIN_DEFAULT
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( headonmz )
+	PORT_START("IN0")
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x01, "4" )
+	PORT_DIPSETTING(    0x02, "5" )
+	PORT_DIPSETTING(    0x03, "6" )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_4WAY
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  ) PORT_4WAY
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  ) PORT_4WAY
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    ) PORT_4WAY
+
+	PORT_START("IN1")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, vicdual_state,vicdual_get_64v, NULL)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) // protection? (check on startup)
+	PORT_BIT( 0x7a, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, vicdual_state,vicdual_read_coin_status, NULL)
+
+	PORT_CABINET_COLOR_OR_BW
+
+	PORT_COIN_DEFAULT
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( headons )
+	PORT_INCLUDE( headon )
+
+	PORT_MODIFY(COLOR_BW_PORT_TAG)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED ) /* no color/bw option */
+INPUT_PORTS_END
+
 
 static INPUT_PORTS_START( supcrash )
 	PORT_START("IN0")
@@ -641,8 +675,6 @@ static INPUT_PORTS_START( supcrash )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x7a, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, vicdual_state,vicdual_read_coin_status, NULL)
-
-	PORT_CABINET_COLOR_OR_BW
 
 	PORT_COIN_DEFAULT
 INPUT_PORTS_END
@@ -2633,6 +2665,7 @@ ROM_START( headon )
 	ROM_LOAD( "316-0042.u88", 0x0020, 0x0020, CRC(a1506b9d) SHA1(037c3db2ea40eca459e8acba9d1506dd28d72d10) )    /* sequence PROM */
 ROM_END
 
+
 ROM_START( headon1 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "316-163a.u27", 0x0000, 0x0400, CRC(4bb51259) SHA1(43411ffda3fe03b1d694f70791b0bab5786759c0) )
@@ -2651,6 +2684,23 @@ ROM_START( headon1 )
 	ROM_LOAD( "316-0042.u88", 0x0020, 0x0020, CRC(a1506b9d) SHA1(037c3db2ea40eca459e8acba9d1506dd28d72d10) )    /* sequence PROM */
 ROM_END
 
+ROM_START( headonmz )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "0.bin",      0x0000, 0x0400, CRC(1febc85a) SHA1(7cc422d6819d5a2507467bdf91f82e76b0d12643) ) // this ROM was loose from the rest, but should be correct..
+	ROM_LOAD( "1.bin",      0x0400, 0x0400, CRC(aeac8c5f) SHA1(ef9ad63d13076a559ba12c6421ad61de21dd4c90) )
+	ROM_LOAD( "2.bin",      0x0800, 0x0400, CRC(a5d0e0f5) SHA1(025a64a9bd95ceef93009676a0679008c186223b) )
+	ROM_LOAD( "3.bin",      0x0c00, 0x0400, CRC(721f3b03) SHA1(69255d9fd3628c3ab46856aaad3d2203d487a983) )
+	ROM_LOAD( "4.bin",      0x1000, 0x0400, CRC(82c73635) SHA1(210f6868a4b63340d01ad660b202338b9638e422) )
+	ROM_LOAD( "5.bin",      0x1400, 0x0400, CRC(17c04c3a) SHA1(819692f37a25a7fe73cd62d781eaf5432f5d5b8a) )
+	ROM_LOAD( "6.bin",      0x1800, 0x0400, CRC(88e43434) SHA1(b2550f98df3b4a6c2fd6c5621e289367587352f6) )
+
+	// assuming to be the same
+	ROM_REGION( 0x0020, "proms", 0 )
+	ROM_LOAD( "316-0138.u44", 0x0000, 0x0020, CRC(67104ea9) SHA1(26b6bd2a1973b83bb9af4e3385d8cb14cb3f62f2) )
+	ROM_REGION( 0x0040, "user1", 0 )    /* timing PROMs */
+	ROM_LOAD( "10303.3e", 0x0000, 0x0020, CRC(e60a7960) SHA1(b8b8716e859c57c35310efc4594262afedb84823) )    /* control PROM */
+	ROM_LOAD( "10302.2e", 0x0020, 0x0020, CRC(a1506b9d) SHA1(037c3db2ea40eca459e8acba9d1506dd28d72d10) )    /* sequence PROM */
+ROM_END
 
 /*
 Head On (Sidam) Notes
@@ -3402,10 +3452,11 @@ GAME( 1979, sspaceatc,  sspaceat, sspaceat,  sspaceat,  driver_device, 0, ROT270
 GAME( 1979, sspacaho,   0,        sspacaho,  sspacaho,  driver_device, 0, ROT270, "Sega", "Space Attack / Head On", GAME_NO_SOUND )
 GAME( 1979, headon,     0,        headon,    headon,    driver_device, 0, ROT0,   "Gremlin", "Head On (2 players)",  GAME_IMPERFECT_SOUND )
 GAME( 1979, headon1,    headon,   headon,    headon,    driver_device, 0, ROT0,   "Gremlin", "Head On (1 player)",  GAME_IMPERFECT_SOUND )
-GAME( 1979, headons,    headon,   headons,   headon,    driver_device, 0, ROT0,   "bootleg (Sidam)", "Head On (Sidam bootleg, set 1)",  GAME_IMPERFECT_SOUND )
-GAME( 1979, headonsa,   headon,   headons,   headon,    driver_device, 0, ROT0,   "bootleg (Sidam)", "Head On (Sidam bootleg, set 2)",  GAME_NOT_WORKING ) // won't coin up?
+GAME( 1979, headons,    headon,   headons,   headons,   driver_device, 0, ROT0,   "bootleg (Sidam)", "Head On (Sidam bootleg, set 1)",  GAME_IMPERFECT_SOUND )
+GAME( 1979, headonsa,   headon,   headons,   headons,   driver_device, 0, ROT0,   "bootleg (Sidam)", "Head On (Sidam bootleg, set 2)",  GAME_NOT_WORKING ) // won't coin up?
+GAME( 1979, headonmz,   headon,   headon,   headonmz,   driver_device, 0, ROT0,   "bootleg", "Head On (bootleg, alt maze)",  0 )
 GAME( 1979, supcrash,   headon,   headons,   supcrash,  driver_device, 0, ROT0,   "bootleg", "Super Crash (bootleg of Head On)", GAME_NO_SOUND )
-GAME( 1979, hocrash,    headon,   headons,   headon,    driver_device, 0, ROT0,   "bootleg (Fraber)", "Crash (bootleg of Head On)", GAME_IMPERFECT_SOUND )
+GAME( 1979, hocrash,    headon,   headons,   headons,   driver_device, 0, ROT0,   "bootleg (Fraber)", "Crash (bootleg of Head On)", GAME_IMPERFECT_SOUND )
 GAME( 1979, headon2,    0,        headon2,   headon2,   driver_device, 0, ROT0,   "Sega", "Head On 2",  GAME_IMPERFECT_SOUND )
 GAME( 1979, headon2s,   headon2,  headon2bw, car2,      driver_device, 0, ROT0,   "bootleg (Sidam)", "Head On 2 (Sidam bootleg)",  GAME_NOT_WORKING ) // won't coin up?
 GAME( 1979, car2,       headon2,  headon2bw, car2,      driver_device, 0, ROT0,   "bootleg (RZ Bologna)", "Car 2 (bootleg of Head On 2)",  GAME_IMPERFECT_SOUND ) // title still says 'HeadOn 2'

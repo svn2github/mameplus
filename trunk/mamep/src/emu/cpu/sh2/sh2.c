@@ -124,10 +124,8 @@ CPU_DISASSEMBLE( sh2 );
 INLINE sh2_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
-	assert(device->token != NULL);
-	assert(device->type() == CPU);
-	assert(cpu_get_type(device) == CPU_SH1 ||
-			cpu_get_type(device) == CPU_SH2);
+	assert(device->type() == SH1 ||
+			device->type() == SH2);
 	return (sh2_state *)downcast<legacy_cpu_device *>(device)->token();
 }
 
@@ -1575,9 +1573,14 @@ INLINE void SHLR16(sh2_state *sh2, UINT32 n)
 /*  SLEEP */
 INLINE void SLEEP(sh2_state *sh2)
 {
-	sh2->pc -= 2;
+	if(sh2->sleep_mode != 2)
+		sh2->pc -= 2;
 	sh2->icount -= 2;
 	/* Wait_for_exception; */
+	if(sh2->sleep_mode == 0)
+		sh2->sleep_mode = 1;
+	else if(sh2->sleep_mode == 2)
+		sh2->sleep_mode = 0;
 }
 
 /*  STC     SR,Rn */
@@ -2198,6 +2201,7 @@ static CPU_RESET( sh2 )
 	sh2->frc_base = 0;
 	sh2->frt_input = sh2->internal_irq_level = sh2->internal_irq_vector = 0;
 	sh2->dma_timer_active[0] = sh2->dma_timer_active[1] = 0;
+	sh2->dma_irq[0] = sh2->dma_irq[1] = 0;
 
 	sh2->dma_callback_kludge = dma_callback_kludge;
 	sh2->dma_callback_fifo_data_available = dma_callback_fifo_data_available;
@@ -2215,6 +2219,7 @@ static CPU_RESET( sh2 )
 	sh2->pc = RL(sh2, 0);
 	sh2->r[15] = RL(sh2, 4);
 	sh2->sr = I;
+	sh2->sleep_mode = 0;
 
 	sh2->internal_irq_level = -1;
 }

@@ -22,11 +22,18 @@ enum
 	GB_MBC_MBC6,         /*    ?? ROM,  32KB SRAM                         */
 	GB_MBC_MBC7,         /*    ?? ROM,    ?? RAM                          */
 	GB_MBC_WISDOM,       /*    ?? ROM,    ?? RAM - Wisdom tree controller */
-	GB_MBC_MBC1_KOR,     /*   1MB ROM,    ?? RAM - Korean MBC1 variant    */
+	GB_MBC_MBC1_COL,     /*   1MB ROM,    ?? RAM - MBC1 variant for multigame carts    */
 	GB_MBC_YONGYONG,     /*    ?? ROM,    ?? RAM - Appears in Sonic 3D Blast 5 pirate */
 	GB_MBC_LASAMA,       /*    ?? ROM,    ?? RAM - Appears in La Sa Ma */
 	GB_MBC_ATVRACIN,
 	GB_MBC_CAMERA,
+	GB_MBC_SINTAX,
+	GB_MBC_CHONGWU,
+	GB_MBC_DIGIMON,
+	GB_MBC_ROCKMAN8,
+	GB_MBC_SM3SP,
+	GB_MBC_DKONG5,
+	GB_MBC_UNK01,
 	GB_MBC_MEGADUCK,     /* MEGADUCK style banking                        */
 	GB_MBC_UNKNOWN       /* Unknown mapper                                */
 };
@@ -54,24 +61,24 @@ public:
 	virtual DECLARE_READ8_MEMBER(read_ram) { return 0xff; }
 	virtual DECLARE_WRITE8_MEMBER(write_ram) {}
 
-	virtual void rom_alloc(running_machine &machine, UINT32 size);
-	virtual void ram_alloc(running_machine &machine, UINT32 size);
-	virtual UINT8* get_rom_base() { return m_rom; }
-	virtual UINT8* get_ram_base() { return m_ram; }
-	virtual UINT32 get_rom_size() { return m_rom_size; }
-	virtual UINT32 get_ram_size() { return m_ram_size; }
+	void rom_alloc(running_machine &machine, UINT32 size);
+	void ram_alloc(running_machine &machine, UINT32 size);
+	UINT8* get_rom_base() { return m_rom; }
+	UINT8* get_ram_base() { return m_ram; }
+	UINT32 get_rom_size() { return m_rom_size; }
+	UINT32 get_ram_size() { return m_ram_size; }
 
-	virtual void rom_map_setup(UINT32 size);
-	virtual void ram_map_setup(UINT8 banks);
+	void rom_map_setup(UINT32 size);
+	void ram_map_setup(UINT8 banks);
 
-	virtual void set_has_timer(bool val) { has_timer = val; }
-	virtual void set_has_rumble(bool val) { has_rumble = val; }
-	virtual void set_has_battery(bool val) { has_battery = val; }
-	virtual bool get_has_battery() { return has_battery; }
+	void set_has_timer(bool val) { has_timer = val; }
+	void set_has_rumble(bool val) { has_rumble = val; }
+	void set_has_battery(bool val) { has_battery = val; }
+	bool get_has_battery() { return has_battery; }
 
 	// internal state
-	UINT8      *m_rom;
-	UINT8      *m_ram;
+	UINT8  *m_rom;
+	UINT8  *m_ram;
 	UINT32 m_rom_size;
 	UINT32 m_ram_size;
 
@@ -112,19 +119,21 @@ public:
 	virtual void call_unload();
 	virtual bool call_softlist_load(char *swlist, char *swname, rom_entry *start_entry);
 
-	virtual int get_type() { return m_type; }
-	virtual int get_cart_type(UINT8 *ROM, UINT32 len);
-	virtual bool get_mmm01_candidate(UINT8 *ROM, UINT32 len);
+	int get_type() { return m_type; }
+	int get_cart_type(UINT8 *ROM, UINT32 len);
+	bool get_mmm01_candidate(UINT8 *ROM, UINT32 len);
+	// remove me when SGB is properly emulated
+	int get_sgb_hack() { return m_sgb_hack; }
 
-	virtual void setup_ram(UINT8 banks);
-	virtual void internal_header_logging(UINT8 *ROM, UINT32 len);
+	void setup_ram(UINT8 banks);
+	void internal_header_logging(UINT8 *ROM, UINT32 len);
 
 	virtual iodevice_t image_type() const { return IO_CARTSLOT; }
 	virtual bool is_readable()  const { return 1; }
 	virtual bool is_writeable() const { return 0; }
 	virtual bool is_creatable() const { return 0; }
 	virtual bool must_be_loaded() const { return 0; }
-	virtual bool is_reset_on_load() const { return 0; }
+	virtual bool is_reset_on_load() const { return 1; }
 	virtual const option_guide *create_option_guide() const { return NULL; }
 	virtual const char *image_interface() const { return "gameboy_cart"; }
 	virtual const char *file_extensions() const { return "bin,gb,gbc"; }
@@ -138,13 +147,13 @@ public:
 	virtual DECLARE_READ8_MEMBER(read_ram);
 	virtual DECLARE_WRITE8_MEMBER(write_ram);
 
-// FIXME:
-// this should be private, but then there is some problem installing delegates in the driver...
-//private:
 
-	device_gb_cart_interface*       m_cart;
+protected:
+	// Donkey Kong Land 2 + 3 store SGB border tiles differently... this will be hopefully be removed when SGB is properly emulated!
+	int m_sgb_hack;
 
 	int m_type;
+	device_gb_cart_interface*       m_cart;
 };
 
 // ======================> gb_cart_slot_device

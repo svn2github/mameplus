@@ -321,7 +321,7 @@ READ8_MEMBER(superqix_state::nmi_ack_r)
 
 READ8_MEMBER(superqix_state::bootleg_in0_r)
 {
-	return BITSWAP8(machine().root_device().ioport("DSW1")->read(), 0,1,2,3,4,5,6,7);
+	return BITSWAP8(ioport("DSW1")->read(), 0,1,2,3,4,5,6,7);
 }
 
 WRITE8_MEMBER(superqix_state::bootleg_flipscreen_w)
@@ -342,23 +342,22 @@ WRITE8_MEMBER(superqix_state::bootleg_flipscreen_w)
  * connected to the 68705 which acts as a counter.
  */
 
-static int read_dial(running_machine &machine, int player)
+int superqix_state::read_dial(int player)
 {
-	superqix_state *state = machine.driver_data<superqix_state>();
 	int newpos;
 
 	/* get the new position and adjust the result */
-	newpos = state->ioport(player ? "DIAL2" : "DIAL1")->read();
-	if (newpos != state->m_oldpos[player])
+	newpos = ioport(player ? "DIAL2" : "DIAL1")->read();
+	if (newpos != m_oldpos[player])
 	{
-		state->m_sign[player] = ((newpos - state->m_oldpos[player]) & 0x80) >> 7;
-		state->m_oldpos[player] = newpos;
+		m_sign[player] = ((newpos - m_oldpos[player]) & 0x80) >> 7;
+		m_oldpos[player] = newpos;
 	}
 
 	if (player == 0)
-		return ((state->m_oldpos[player] & 1) << 2) | (state->m_sign[player] << 3);
+		return ((m_oldpos[player] & 1) << 2) | (m_sign[player] << 3);
 	else    // player == 1
-		return ((state->m_oldpos[player] & 1) << 3) | (state->m_sign[player] << 2);
+		return ((m_oldpos[player] & 1) << 3) | (m_sign[player] << 2);
 }
 
 
@@ -446,11 +445,11 @@ WRITE8_MEMBER(superqix_state::hotsmash_68705_portC_w)
 				break;
 
 			case 0x6:
-				m_portA_in = read_dial(machine(), 0);
+				m_portA_in = read_dial(0);
 				break;
 
 			case 0x7:
-				m_portA_in = read_dial(machine(), 1);
+				m_portA_in = read_dial(1);
 				break;
 		}
 	}
@@ -513,44 +512,43 @@ READ8_MEMBER(superqix_state::pbillian_ay_port_a_r)
 {
 //  logerror("%04x: ay_port_a_r\n",space.device().safe_pc());
 	/* bits 76------  MCU status bits */
-	return (machine().rand() & 0xc0) | machine().root_device().ioport("BUTTONS")->read();
+	return (machine().rand() & 0xc0) | ioport("BUTTONS")->read();
 }
 
 
-static void machine_init_common(running_machine &machine)
+void superqix_state::machine_init_common()
 {
-	superqix_state *state = machine.driver_data<superqix_state>();
-	state->save_item(NAME(state->m_invert_coin_lockout));
-	state->save_item(NAME(state->m_from_mcu_pending));
-	state->save_item(NAME(state->m_from_z80_pending));
-	state->save_item(NAME(state->m_port1));
-	state->save_item(NAME(state->m_port2));
-	state->save_item(NAME(state->m_port3));
-	state->save_item(NAME(state->m_port3_latch));
-	state->save_item(NAME(state->m_from_mcu));
-	state->save_item(NAME(state->m_from_z80));
-	state->save_item(NAME(state->m_portb));
+	save_item(NAME(m_invert_coin_lockout));
+	save_item(NAME(m_from_mcu_pending));
+	save_item(NAME(m_from_z80_pending));
+	save_item(NAME(m_port1));
+	save_item(NAME(m_port2));
+	save_item(NAME(m_port3));
+	save_item(NAME(m_port3_latch));
+	save_item(NAME(m_from_mcu));
+	save_item(NAME(m_from_z80));
+	save_item(NAME(m_portb));
 
 	// hotsmash ???
-	state->save_item(NAME(state->m_portA_in));
-	state->save_item(NAME(state->m_portB_out));
-	state->save_item(NAME(state->m_portC));
+	save_item(NAME(m_portA_in));
+	save_item(NAME(m_portB_out));
+	save_item(NAME(m_portC));
 }
 
 MACHINE_START_MEMBER(superqix_state,superqix)
 {
 	/* configure the banks */
-	machine().root_device().membank("bank1")->configure_entries(0, 4, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	membank("bank1")->configure_entries(0, 4, memregion("maincpu")->base() + 0x10000, 0x4000);
 
-	machine_init_common(machine());
+	machine_init_common();
 }
 
 MACHINE_START_MEMBER(superqix_state,pbillian)
 {
 	/* configure the banks */
-	machine().root_device().membank("bank1")->configure_entries(0, 2, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	membank("bank1")->configure_entries(0, 2, memregion("maincpu")->base() + 0x10000, 0x4000);
 
-	machine_init_common(machine());
+	machine_init_common();
 }
 
 
@@ -1324,8 +1322,8 @@ DRIVER_INIT_MEMBER(superqix_state,perestro)
 	int i,j;
 
 	/* decrypt program code; the address lines are shuffled around in a non-trivial way */
-	src = machine().root_device().memregion("maincpu")->base();
-	len = machine().root_device().memregion("maincpu")->bytes();
+	src = memregion("maincpu")->base();
+	len = memregion("maincpu")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);
@@ -1344,8 +1342,8 @@ DRIVER_INIT_MEMBER(superqix_state,perestro)
 	}
 
 	/* decrypt gfx ROMs; simple bit swap on the address lines */
-	src = machine().root_device().memregion("gfx1")->base();
-	len = machine().root_device().memregion("gfx1")->bytes();
+	src = memregion("gfx1")->base();
+	len = memregion("gfx1")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);
@@ -1355,8 +1353,8 @@ DRIVER_INIT_MEMBER(superqix_state,perestro)
 		}
 	}
 
-	src = machine().root_device().memregion("gfx2")->base();
-	len = machine().root_device().memregion("gfx2")->bytes();
+	src = memregion("gfx2")->base();
+	len = memregion("gfx2")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);
@@ -1366,8 +1364,8 @@ DRIVER_INIT_MEMBER(superqix_state,perestro)
 		}
 	}
 
-	src = machine().root_device().memregion("gfx3")->base();
-	len = machine().root_device().memregion("gfx3")->bytes();
+	src = memregion("gfx3")->base();
+	len = memregion("gfx3")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);

@@ -741,80 +741,76 @@ Notes:
 
 /********************************************************************/
 
-static UINT8 z80_fifoout_pop(address_space &space)
+UINT8 seibuspi_state::z80_fifoout_pop(address_space &space)
 {
-	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
 	UINT8 r;
-	if (state->m_fifoout_wpos == state->m_fifoout_rpos)
+	if (m_fifoout_wpos == m_fifoout_rpos)
 	{
 		logerror("Sound FIFOOUT underflow at %08X\n", space.device().safe_pc());
 	}
-	r = state->m_fifoout_data[state->m_fifoout_rpos++];
-	if(state->m_fifoout_rpos == FIFO_SIZE)
+	r = m_fifoout_data[m_fifoout_rpos++];
+	if(m_fifoout_rpos == FIFO_SIZE)
 	{
-		state->m_fifoout_rpos = 0;
+		m_fifoout_rpos = 0;
 	}
 
-	if (state->m_fifoout_wpos == state->m_fifoout_rpos)
+	if (m_fifoout_wpos == m_fifoout_rpos)
 	{
-		state->m_fifoout_read_request = 0;
+		m_fifoout_read_request = 0;
 	}
 
 	return r;
 }
 
-static void z80_fifoout_push(address_space &space, UINT8 data)
+void seibuspi_state::z80_fifoout_push(address_space &space, UINT8 data)
 {
-	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
-	state->m_fifoout_data[state->m_fifoout_wpos++] = data;
-	if (state->m_fifoout_wpos == FIFO_SIZE)
+	m_fifoout_data[m_fifoout_wpos++] = data;
+	if (m_fifoout_wpos == FIFO_SIZE)
 	{
-		state->m_fifoout_wpos = 0;
+		m_fifoout_wpos = 0;
 	}
-	if(state->m_fifoout_wpos == state->m_fifoout_rpos)
+	if(m_fifoout_wpos == m_fifoout_rpos)
 	{
 		fatalerror("Sound FIFOOUT overflow at %08X\n", space.device().safe_pc());
 	}
 
-	state->m_fifoout_read_request = 1;
+	m_fifoout_read_request = 1;
 }
 
-static UINT8 z80_fifoin_pop(address_space &space)
+UINT8 seibuspi_state::z80_fifoin_pop(address_space &space)
 {
-	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
 	UINT8 r;
-	if (state->m_fifoin_wpos == state->m_fifoin_rpos)
+	if (m_fifoin_wpos == m_fifoin_rpos)
 	{
 		fatalerror("Sound FIFOIN underflow at %08X\n", space.device().safe_pc());
 	}
-	r = state->m_fifoin_data[state->m_fifoin_rpos++];
-	if(state->m_fifoin_rpos == FIFO_SIZE)
+	r = m_fifoin_data[m_fifoin_rpos++];
+	if(m_fifoin_rpos == FIFO_SIZE)
 	{
-		state->m_fifoin_rpos = 0;
+		m_fifoin_rpos = 0;
 	}
 
-	if (state->m_fifoin_wpos == state->m_fifoin_rpos)
+	if (m_fifoin_wpos == m_fifoin_rpos)
 	{
-		state->m_fifoin_read_request = 0;
+		m_fifoin_read_request = 0;
 	}
 
 	return r;
 }
 
-static void z80_fifoin_push(address_space &space, UINT8 data)
+void seibuspi_state::z80_fifoin_push(address_space &space, UINT8 data)
 {
-	seibuspi_state *state = space.machine().driver_data<seibuspi_state>();
-	state->m_fifoin_data[state->m_fifoin_wpos++] = data;
-	if(state->m_fifoin_wpos == FIFO_SIZE)
+	m_fifoin_data[m_fifoin_wpos++] = data;
+	if(m_fifoin_wpos == FIFO_SIZE)
 	{
-		state->m_fifoin_wpos = 0;
+		m_fifoin_wpos = 0;
 	}
-	if(state->m_fifoin_wpos == state->m_fifoin_rpos)
+	if(m_fifoin_wpos == m_fifoin_rpos)
 	{
 		fatalerror("Sound FIFOIN overflow at %08X\n", space.device().safe_pc());
 	}
 
-	state->m_fifoin_read_request = 1;
+	m_fifoin_read_request = 1;
 }
 
 READ32_MEMBER(seibuspi_state::sb_coin_r)
@@ -875,7 +871,7 @@ WRITE32_MEMBER(seibuspi_state::eeprom_w)
 
 	// tile banks
 	if( ACCESSING_BITS_16_23 ) {
-		rf2_set_layer_banks(machine(), data >> 16);
+		rf2_set_layer_banks(data >> 16);
 
 		eeprom_device *eeprom = downcast<eeprom_device *>(device);
 		eeprom->write_bit((data & 0x800000) ? 1 : 0);
@@ -900,7 +896,7 @@ WRITE32_MEMBER(seibuspi_state::z80_enable_w)
 {
 	// tile banks
 	if( ACCESSING_BITS_16_23 ) {
-		rf2_set_layer_banks(machine(), data >> 16);
+		rf2_set_layer_banks(data >> 16);
 	}
 
 logerror("z80 data = %08x mask = %08x\n",data,mem_mask);
@@ -996,8 +992,8 @@ READ8_MEMBER(seibuspi_state::z80_coin_r)
 
 READ32_MEMBER(seibuspi_state::soundrom_r)
 {
-	UINT8 *sound = (UINT8*)machine().root_device().memregion("user2")->base();
-	UINT16 *sound16 = (UINT16*)machine().root_device().memregion("user2")->base();
+	UINT8 *sound = (UINT8*)memregion("user2")->base();
+	UINT16 *sound16 = (UINT16*)memregion("user2")->base();
 
 	if (mem_mask == 0x000000ff)
 	{
@@ -2063,43 +2059,42 @@ READ32_MEMBER(seibuspi_state::rfjet_speedup_r)
 	return m_spimainram[(0x002894c-0x800)/4];
 }
 
-static void init_spi(running_machine &machine)
+void seibuspi_state::init_spi()
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
-	state->m_flash[0] = machine.device<intel_e28f008sa_device>("flash0");
-	state->m_flash[1] = machine.device<intel_e28f008sa_device>("flash1");
+	m_flash[0] = machine().device<intel_e28f008sa_device>("flash0");
+	m_flash[1] = machine().device<intel_e28f008sa_device>("flash1");
 
-	seibuspi_text_decrypt(state->memregion("gfx1")->base());
-	seibuspi_bg_decrypt(state->memregion("gfx2")->base(), state->memregion("gfx2")->bytes());
-	seibuspi_sprite_decrypt(state->memregion("gfx3")->base(), 0x400000);
+	seibuspi_text_decrypt(memregion("gfx1")->base());
+	seibuspi_bg_decrypt(memregion("gfx2")->base(), memregion("gfx2")->bytes());
+	seibuspi_sprite_decrypt(memregion("gfx3")->base(), 0x400000);
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rdft)
 {
 	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x00298d0, 0x00298d3, read32_delegate(FUNC(seibuspi_state::rdft_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,senkyu)
 {
 	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0018cb4, 0x0018cb7, read32_delegate(FUNC(seibuspi_state::senkyu_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,senkyua)
 {
 	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0018c9c, 0x0018c9f, read32_delegate(FUNC(seibuspi_state::senkyua_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,batlball)
 {
 	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0018db4, 0x0018db7, read32_delegate(FUNC(seibuspi_state::batlball_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,ejanhs)
@@ -2107,79 +2102,77 @@ DRIVER_INIT_MEMBER(seibuspi_state,ejanhs)
 //  idle skip doesn't work properly?
 //  machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x002d224, 0x002d227, read32_delegate(FUNC(seibuspi_state::ejanhs_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,viprp1)
 {
 	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x001e2e0, 0x001e2e3, read32_delegate(FUNC(seibuspi_state::viprp1_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,viprp1o)
 {
 	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x001d49c, 0x001d49f, read32_delegate(FUNC(seibuspi_state::viprp1o_speedup_r),this));
 
-	init_spi(machine());
+	init_spi();
 }
 
 
 
-static void init_rf2_common(running_machine &machine)
+void seibuspi_state::init_rf2_common()
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
-	state->m_flash[0] = machine.device<intel_e28f008sa_device>("flash0");
-	state->m_flash[1] = machine.device<intel_e28f008sa_device>("flash1");
+	m_flash[0] = machine().device<intel_e28f008sa_device>("flash0");
+	m_flash[1] = machine().device<intel_e28f008sa_device>("flash1");
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0282AC, 0x0282AF, read32_delegate(FUNC(seibuspi_state::rf2_speedup_r),state));
-	seibuspi_rise10_text_decrypt(state->memregion("gfx1")->base());
-	seibuspi_rise10_bg_decrypt(state->memregion("gfx2")->base(), state->memregion("gfx2")->bytes());
-	seibuspi_rise10_sprite_decrypt(state->memregion("gfx3")->base(), 0x600000);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0282AC, 0x0282AF, read32_delegate(FUNC(seibuspi_state::rf2_speedup_r),this));
+	seibuspi_rise10_text_decrypt(memregion("gfx1")->base());
+	seibuspi_rise10_bg_decrypt(memregion("gfx2")->base(), memregion("gfx2")->bytes());
+	seibuspi_rise10_sprite_decrypt(memregion("gfx3")->base(), 0x600000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),this));
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rdft2)
 {
-	init_rf2_common(machine());
+	init_rf2_common();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rdft2us)
 {
-	init_rf2_common(machine());
+	init_rf2_common();
 }
 
 
-static void init_rfjet_common(running_machine &machine)
+void seibuspi_state::init_rfjet_common()
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
-	state->m_flash[0] = machine.device<intel_e28f008sa_device>("flash0");
-	state->m_flash[1] = machine.device<intel_e28f008sa_device>("flash1");
+	m_flash[0] = machine().device<intel_e28f008sa_device>("flash0");
+	m_flash[1] = machine().device<intel_e28f008sa_device>("flash1");
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x002894c, 0x002894f, read32_delegate(FUNC(seibuspi_state::rfjet_speedup_r),state));
-	seibuspi_rise11_text_decrypt(state->memregion("gfx1")->base());
-	seibuspi_rise11_bg_decrypt(state->memregion("gfx2")->base(), state->memregion("gfx2")->bytes());
-	seibuspi_rise11_sprite_decrypt_rfjet(state->memregion("gfx3")->base(), 0x800000);
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x002894c, 0x002894f, read32_delegate(FUNC(seibuspi_state::rfjet_speedup_r),this));
+	seibuspi_rise11_text_decrypt(memregion("gfx1")->base());
+	seibuspi_rise11_bg_decrypt(memregion("gfx2")->base(), memregion("gfx2")->bytes());
+	seibuspi_rise11_sprite_decrypt_rfjet(memregion("gfx3")->base(), 0x800000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x560, 0x563, write32_delegate(FUNC(seibuspi_state::sprite_dma_start_w),this));
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rfjet)
 {
-	init_rfjet_common(machine());
+	init_rfjet_common();
 }
 
 /* SYS386 */
 
 DRIVER_INIT_MEMBER(seibuspi_state,rdft22kc)
 {
-	init_rf2_common(machine());
+	init_rf2_common();
 }
 
 DRIVER_INIT_MEMBER(seibuspi_state,rfjet2k)
 {
-	init_rfjet_common(machine());
+	init_rfjet_common();
 }
 
 MACHINE_RESET_MEMBER(seibuspi_state,seibu386)
@@ -2224,11 +2217,11 @@ MACHINE_CONFIG_END
 DRIVER_INIT_MEMBER(seibuspi_state,sys386f2)
 {
 	int i, j;
-	UINT16 *src = (UINT16 *)machine().root_device().memregion("gfx3")->base();
+	UINT16 *src = (UINT16 *)memregion("gfx3")->base();
 	UINT16 tmp[0x40 / 2], Offset;
 
 	// sprite_reorder() only
-	for(i = 0; i < machine().root_device().memregion("gfx3")->bytes() / 0x40; i++)
+	for(i = 0; i < memregion("gfx3")->bytes() / 0x40; i++)
 	{
 		memcpy(tmp, src, 0x40);
 
@@ -3315,9 +3308,9 @@ ROM_END
 ROM_START( rfjeta ) /* SPI Cart, Asia */
 	ROM_REGION32_LE(0x200000, "user1", 0)   /* i386 program */
 	ROM_LOAD32_BYTE("prg0a.u0211", 0x000000, 0x80000, CRC(3418d4f5) SHA1(f8766d7b3708a196de417ee757787220b2a9ced1) )
-	ROM_LOAD32_BYTE("prg1.u0212",  0x000001, 0x80000, CRC(395e6da7) SHA1(736f777cb1b6bf5541832b8ea89594738ca6d829) )
-	ROM_LOAD32_BYTE("prg2.u0221",  0x000002, 0x80000, CRC(82f7a57e) SHA1(5300015e25d5f2f82eda3ed54bc105d645518498) )
-	ROM_LOAD32_BYTE("prg3.u0220",  0x000003, 0x80000, CRC(cbdf100d) SHA1(c9efd11103429f7f36c1652cadb5384d925cb767) )
+	ROM_LOAD32_BYTE("prg1(__rfjeta).u0212",  0x000001, 0x80000, CRC(395e6da7) SHA1(736f777cb1b6bf5541832b8ea89594738ca6d829) )
+	ROM_LOAD32_BYTE("prg2(__rfjeta).u0221",  0x000002, 0x80000, CRC(82f7a57e) SHA1(5300015e25d5f2f82eda3ed54bc105d645518498) )
+	ROM_LOAD32_BYTE("prg3(__rfjeta).u0220",  0x000003, 0x80000, CRC(cbdf100d) SHA1(c9efd11103429f7f36c1652cadb5384d925cb767) )
 
 	ROM_REGION( 0x30000, "gfx1", ROMREGION_ERASEFF)
 	ROM_LOAD24_BYTE("fix0.u0524", 0x000001, 0x10000, CRC(8bc080be) SHA1(ad296fb98242c963072346a8de289e704b445ad4) )
@@ -3378,10 +3371,10 @@ ROM_END
 
 ROM_START( rfjett ) /* SPI Cart, Taiwan */
 	ROM_REGION32_LE(0x200000, "user1", 0)   /* i386 program */
-	ROM_LOAD32_BYTE( "prg0.u0211",   0x000000, 0x080000, CRC(a4734579) SHA1(dfbd8e2a3178c7cfd7bd3698999f14bc80f5212f) )
-	ROM_LOAD32_BYTE( "prg1.u0212",   0x000001, 0x080000, CRC(5e4ad3a4) SHA1(ff66e16f48978b88b298c78e21309208ccb3ff15) )
-	ROM_LOAD32_BYTE( "prg2.u0221",   0x000002, 0x080000, CRC(21c9942e) SHA1(ededa05a4b5dae2dec5c4409f22e9a66d2c8e98e) )
-	ROM_LOAD32_BYTE( "prg3.u0220",   0x000003, 0x080000, CRC(ea3657f4) SHA1(2291e31243af7d2e79ae727d9b5484e8d49cc7d9) )
+	ROM_LOAD32_BYTE( "prg0(__rfjett).u0211",   0x000000, 0x080000, CRC(a4734579) SHA1(dfbd8e2a3178c7cfd7bd3698999f14bc80f5212f) )
+	ROM_LOAD32_BYTE( "prg1(__rfjett).u0212",   0x000001, 0x080000, CRC(5e4ad3a4) SHA1(ff66e16f48978b88b298c78e21309208ccb3ff15) )
+	ROM_LOAD32_BYTE( "prg2(__rfjett).u0221",   0x000002, 0x080000, CRC(21c9942e) SHA1(ededa05a4b5dae2dec5c4409f22e9a66d2c8e98e) )
+	ROM_LOAD32_BYTE( "prg3(__rfjett).u0220",   0x000003, 0x080000, CRC(ea3657f4) SHA1(2291e31243af7d2e79ae727d9b5484e8d49cc7d9) )
 
 	ROM_REGION( 0x30000, "gfx1", ROMREGION_ERASEFF)
 	ROM_LOAD24_BYTE("fix0.u0524", 0x000001, 0x10000, CRC(8bc080be) SHA1(ad296fb98242c963072346a8de289e704b445ad4) )

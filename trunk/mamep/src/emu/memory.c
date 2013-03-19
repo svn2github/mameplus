@@ -1661,7 +1661,7 @@ address_space::address_space(memory_manager &manager, device_memory_interface &m
 
 address_space::~address_space()
 {
-	global_free(&m_direct);
+	auto_free(m_manager.machine(), &m_direct);
 	global_free(m_map);
 }
 
@@ -4429,7 +4429,7 @@ void handler_entry::clear_conflicting_subunits(UINT64 handlermask)
 	// compute the inverse mask
 	m_invsubmask = 0;
 	for (int i = 0; i < m_subunits; i++)
-		m_invsubmask |= m_subunit_infos[i].m_mask << m_subunit_infos[i].m_shift;
+		m_invsubmask |= UINT64(m_subunit_infos[i].m_mask) << m_subunit_infos[i].m_shift;
 	m_invsubmask = ~m_invsubmask;
 }
 

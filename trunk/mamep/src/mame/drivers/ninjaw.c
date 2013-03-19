@@ -325,13 +325,12 @@ rumbling on a subwoofer in the cabinet.)
 
 extern const char layout_darius[];
 
-static void parse_control( running_machine &machine )   /* assumes Z80 sandwiched between 68Ks */
+void ninjaw_state::parse_control(  )   /* assumes Z80 sandwiched between 68Ks */
 {
 	/* bit 0 enables cpu B */
 	/* however this fails when recovering from a save state
 	   if cpu B is disabled !! */
-	ninjaw_state *state = machine.driver_data<ninjaw_state>();
-	state->m_subcpu->set_input_line(INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, (m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
 
 }
 
@@ -341,7 +340,7 @@ WRITE16_MEMBER(ninjaw_state::cpua_ctrl_w)
 		data = data >> 8;
 	m_cpua_ctrl = data;
 
-	parse_control(machine());
+	parse_control();
 
 	logerror("CPU #0 PC %06x: write %04x to cpu control\n", space.device().safe_pc(), data);
 }
@@ -351,24 +350,23 @@ WRITE16_MEMBER(ninjaw_state::cpua_ctrl_w)
             SOUND
 *****************************************/
 
-static void reset_sound_region( running_machine &machine )
+void ninjaw_state::reset_sound_region(  )
 {
-	ninjaw_state *state = machine.driver_data<ninjaw_state>();
-	state->membank("bank10")->set_entry(state->m_banknum);
+	membank("bank10")->set_entry(m_banknum);
 }
 
 WRITE8_MEMBER(ninjaw_state::sound_bankswitch_w)
 {
 	m_banknum = data & 7;
-	reset_sound_region(machine());
+	reset_sound_region();
 }
 
 WRITE16_MEMBER(ninjaw_state::ninjaw_sound_w)
 {
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
+		m_tc0140syt->tc0140syt_port_w(space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
+		m_tc0140syt->tc0140syt_comm_w(space, 0, data & 0xff);
 
 #ifdef MAME_DEBUG
 	if (data & 0xff00)
@@ -379,7 +377,7 @@ WRITE16_MEMBER(ninjaw_state::ninjaw_sound_w)
 READ16_MEMBER(ninjaw_state::ninjaw_sound_r)
 {
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff));
+		return ((m_tc0140syt->tc0140syt_comm_r(space, 0) & 0xff));
 	else
 		return 0;
 }
@@ -491,8 +489,8 @@ static ADDRESS_MAP_START( ninjaw_sound_map, AS_PROGRAM, 8, ninjaw_state )
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r,ym2610_w)
-	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
-	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r,tc0140syt_slave_comm_w)
+	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
+	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r,tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITE(ninjaw_pancontrol) /* pan */
 	AM_RANGE(0xea00, 0xea00) AM_READNOP
 	AM_RANGE(0xee00, 0xee00) AM_WRITENOP /* ? */
@@ -791,8 +789,8 @@ static const tc0140syt_interface ninjaw_tc0140syt_intf =
 
 void ninjaw_state::ninjaw_postload()
 {
-	parse_control(machine());
-	reset_sound_region(machine());
+	parse_control();
+	reset_sound_region();
 }
 
 void ninjaw_state::machine_start()
@@ -802,7 +800,7 @@ void ninjaw_state::machine_start()
 	m_maincpu = machine().device<cpu_device>("maincpu");
 	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_subcpu = machine().device<cpu_device>("sub");
-	m_tc0140syt = machine().device("tc0140syt");
+	m_tc0140syt = machine().device<tc0140syt_device>("tc0140syt");
 	m_tc0100scn_1 = machine().device("tc0100scn_1");
 	m_tc0100scn_2 = machine().device("tc0100scn_2");
 	m_tc0100scn_3 = machine().device("tc0100scn_3");

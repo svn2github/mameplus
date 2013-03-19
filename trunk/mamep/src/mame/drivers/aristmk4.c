@@ -326,6 +326,7 @@ public:
 	TIMER_CALLBACK_MEMBER(coin_input_reset);
 	TIMER_CALLBACK_MEMBER(hopper_reset);
 	TIMER_DEVICE_CALLBACK_MEMBER(aristmk4_pf);
+	inline void uBackgroundColour();
 };
 
 /* Partial Cashcade protocol */
@@ -340,9 +341,8 @@ void aristmk4_state::video_start()
 	}
 }
 
-INLINE void uBackgroundColour(running_machine &machine)
+void aristmk4_state::uBackgroundColour()
 {
-	aristmk4_state *state = machine.driver_data<aristmk4_state>();
 
 	/* SW7 can be set when the main door is open, this allows the colours for the background
 	to be adjusted whilst the machine is running.
@@ -350,27 +350,27 @@ INLINE void uBackgroundColour(running_machine &machine)
 	There are 4 possible combinations for colour select via SW7, colours vary based on software installed.
 	*/
 
-	switch(state->ioport("SW7")->read())
+	switch(ioport("SW7")->read())
 	{
 	case 0x00:
 		// restore defaults
-		memcpy(state->m_shapeRomPtr,state->m_shapeRom, sizeof(state->m_shapeRom)); // restore defaults, both switches off
+		memcpy(m_shapeRomPtr,m_shapeRom, sizeof(m_shapeRom)); // restore defaults, both switches off
 											// OE enabled on both shapes
 		break;
 	case 0x01:
 		// unselect U22 via SW7. OE on U22 is low.
-		memset(&state->m_shapeRomPtr[0x4000],0xff,0x2000);          // fill unused space with 0xff
-		memcpy(&state->m_shapeRomPtr[0xa000],&state->m_shapeRom[0xa000], 0x2000); // restore defaults here
+		memset(&m_shapeRomPtr[0x4000],0xff,0x2000);          // fill unused space with 0xff
+		memcpy(&m_shapeRomPtr[0xa000],&m_shapeRom[0xa000], 0x2000); // restore defaults here
 		break;
 	case 0x02:
 		// unselect U47 via SW7. OE on U47 is low.
-		memcpy(&state->m_shapeRomPtr[0x4000],&state->m_shapeRom[0x4000], 0x2000);
-		memset(&state->m_shapeRomPtr[0xa000],0xff,0x2000);
+		memcpy(&m_shapeRomPtr[0x4000],&m_shapeRom[0x4000], 0x2000);
+		memset(&m_shapeRomPtr[0xa000],0xff,0x2000);
 		break;
 	case 0x03:
 		// unselect U47 & U22 via SW7. Both output enable low.
-		memset(&state->m_shapeRomPtr[0x4000],0xff,0x2000);
-		memset(&state->m_shapeRomPtr[0xa000],0xff,0x2000);
+		memset(&m_shapeRomPtr[0x4000],0xff,0x2000);
+		memset(&m_shapeRomPtr[0xa000],0xff,0x2000);
 		break;
 	}
 }
@@ -393,7 +393,7 @@ UINT32 aristmk4_state::screen_update_aristmk4(screen_device &screen, bitmap_ind1
 		color = ((m_mkiv_vram[count]) & 0xe0) >> 5;
 			tile = (m_mkiv_vram[count+1]|m_mkiv_vram[count]<<8) & 0x3ff;
 			bgtile = (m_mkiv_vram[count+1]|m_mkiv_vram[count]<<8) & 0xff; // first 256 tiles
-			uBackgroundColour(machine());   // read sw7
+			uBackgroundColour();   // read sw7
 			gfx->decode(bgtile);    // force the machine to update only the first 256 tiles.
 								// as we only update the background, not the entire display.
 			flipx = ((m_mkiv_vram[count]) & 0x04);
@@ -1567,12 +1567,12 @@ static MC6845_INTERFACE( mc6845_intf )
 
 READ8_MEMBER(aristmk4_state::pa1_r)
 {
-	return (machine().root_device().ioport("SW3")->read() << 4) + machine().root_device().ioport("SW4")->read();
+	return (ioport("SW3")->read() << 4) + ioport("SW4")->read();
 }
 
 READ8_MEMBER(aristmk4_state::pb1_r)
 {
-	return (machine().root_device().ioport("SW5")->read() << 4) + machine().root_device().ioport("SW6")->read();
+	return (ioport("SW5")->read() << 4) + ioport("SW6")->read();
 }
 
 READ8_MEMBER(aristmk4_state::pc1_r)
@@ -1594,7 +1594,7 @@ static I8255A_INTERFACE( ppi8255_intf )
 /* same as Casino Winner HW */
 void aristmk4_state::palette_init()
 {
-	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
+	const UINT8 *color_prom = memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < machine().total_colors();i++)
@@ -1634,7 +1634,7 @@ void aristmk4_state::machine_start()
 void aristmk4_state::machine_reset()
 {
 	/* mark 4 has a link on the motherboard to switch between 1.5MHz and 3MHz clock speed */
-	switch(machine().root_device().ioport("LK13")->read())  // CPU speed control... 3mhz or 1.5MHz
+	switch(ioport("LK13")->read())  // CPU speed control... 3mhz or 1.5MHz
 	{
 	case 0x00:
 		machine().device("maincpu")->set_unscaled_clock(MAIN_CLOCK/4);  // 3 MHz
@@ -1663,7 +1663,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(aristmk4_state::aristmk4_pf)
 	Note: The use of 1 Hz in the timer is to avoid unintentional triggering the NMI ( ie.. hold down L for at least 1 second )
 	*/
 
-	if(machine().root_device().ioport("powerfail")->read()) // send NMI signal if L pressed
+	if(ioport("powerfail")->read()) // send NMI signal if L pressed
 	{
 	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE );
 	}

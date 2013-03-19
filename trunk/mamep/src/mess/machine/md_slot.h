@@ -5,7 +5,7 @@
  TYPE DEFINITIONS
  ***************************************************************************/
 
-#define MD_ADDR(a)  rom_bank_map[((a) / 0x10000) & 0x3f] * 0x10000 + ((a) & 0xffff)
+#define MD_ADDR(a)  (rom_bank_map[((a << 1) / 0x10000) & 0x3f] * 0x10000 + ((a << 1) & 0xffff))/2
 
 /* PCB */
 enum
@@ -21,7 +21,9 @@ enum
 	// Cart + NVRAM
 	SEGA_SRAM, SEGA_FRAM,
 	HARDBALL95,                  /* Hardball 95 uses different sram start address */
-	BEGGAR,                      /* Xin Qigai Wangzi uses different sram start address and has no valid header */
+	XINQIG,                   /* Xin Qigai Wangzi uses different sram start address and has no valid header */
+	BEGGARP,                     /* Beggar Prince uses different sram start address + bankswitch tricks */
+	WUKONG,                      /* Legend of Wukong uses different sram start address + bankswitch trick for last 128K of ROM */
 
 	// EEPROM
 	SEGA_EEPROM,                 /* Wonder Boy V / Evander Holyfield's Boxing / Greatest Heavyweights of the Ring / Sports Talk Baseball / Megaman */
@@ -40,6 +42,7 @@ enum
 
 	// Various
 	SSF2,                        /* Super Street Fighter 2 */
+	CM_2IN1,                     /* CodeMasters 2in1 : Psycho Pinball + Micro Machines */
 	GAME_KANDUME,                /* Game no Kandume Otokuyou */
 	RADICA,                      /* Radica TV games.. these probably should be a separate driver since they are a separate 'console' */
 
@@ -53,9 +56,7 @@ enum
 	LIONK3,                      /* Lion King 3, Super Donkey Kong 99, Super King Kong 99 */
 	MC_PIRATE,                   /* Super 19 in 1, Super 15 in 1, 12 in 1 and a few more multicarts */
 	MJLOVER,                     /* Mahjong Lover */
-	MULAN,                       /* Hua Mu Lan - Mulan */
-	POKEMON,                     /* Pocket Monster */
-	POKEMON2,                    /* Pocket Monster 2 */
+	POKEMONA,                    /* Pocket Monster Alt Protection */
 	REALTEC,                     /* Whac a Critter/Mallet legend, Defend the Earth, Funnyworld/Ballonboy */
 	REDCLIFF,                    /* Romance of the Three Kingdoms - Battle of Red Cliffs, already decoded from .mdx format */
 	REDCL_EN,                    /* The encoded version... */
@@ -63,6 +64,7 @@ enum
 	SBUBBOB,                     /* Super Bubble Bobble */
 	SMB,                         /* Super Mario Bros. */
 	SMB2,                        /* Super Mario Bros. 2 */
+	SMW64,                       /* Super Mario World 64 */
 	SMOUSE,                      /* Smart Mouse */
 	SOULBLAD,                    /* Soul Blade */
 	SQUIRRELK,                   /* Squirrel King */
@@ -108,8 +110,8 @@ public:
 	virtual UINT32 get_rom_size() { return m_rom_size; };
 	virtual UINT32 get_nvram_size() { return m_nvram_size; };
 
-	virtual void rom_map_setup(UINT32 size);
-	virtual UINT32 get_padded_size(UINT32 size);
+	void rom_map_setup(UINT32 size);
+	UINT32 get_padded_size(UINT32 size);
 
 	int m_nvram_start, m_nvram_end;
 	int m_nvram_active, m_nvram_readonly;
@@ -120,8 +122,8 @@ public:
 	int m_nvram_handlers_installed;
 
 	// internal state
-	UINT16      *m_rom;
-	UINT16      *m_nvram;
+	UINT16 *m_rom;
+	UINT16 *m_nvram;
 	UINT32 m_rom_size;
 	UINT32 m_nvram_size;
 
@@ -150,24 +152,24 @@ public:
 	virtual void call_unload();
 	virtual bool call_softlist_load(char *swlist, char *swname, rom_entry *start_entry);
 
-	virtual int load_list();
-	virtual int load_nonlist();
-	virtual int get_cart_type(UINT8 *ROM, UINT32 len);
-
-
-	virtual void setup_custom_mappers();
-	virtual void setup_nvram();
-
 	virtual iodevice_t image_type() const { return IO_CARTSLOT; }
 	virtual bool is_readable()  const { return 1; }
 	virtual bool is_writeable() const { return 0; }
 	virtual bool is_creatable() const { return 0; }
-	virtual bool must_be_loaded() const { return 1; }
-	virtual bool is_reset_on_load() const { return 0; }
+	virtual bool must_be_loaded() const { return m_must_be_loaded; }
+	virtual bool is_reset_on_load() const { return 1; }
 	virtual const option_guide *create_option_guide() const { return NULL; }
 
 	// slot interface overrides
 	virtual const char * get_default_card_software(const machine_config &config, emu_options &options);
+
+	int load_list();
+	int load_nonlist();
+	int get_cart_type(UINT8 *ROM, UINT32 len);
+
+	void setup_custom_mappers();
+	void setup_nvram();
+	void set_must_be_loaded(bool _must_be_loaded) { m_must_be_loaded = _must_be_loaded; }
 
 	// reading and writing
 	virtual DECLARE_READ16_MEMBER(read);
@@ -176,14 +178,14 @@ public:
 	virtual DECLARE_WRITE16_MEMBER(write_a13);
 	virtual DECLARE_READ16_MEMBER(read_a15);
 	virtual DECLARE_WRITE16_MEMBER(write_a15);
+	virtual DECLARE_WRITE16_MEMBER(write_tmss_bank) { if (m_cart) m_cart->write_tmss_bank(space, offset, data); };
 
-// FIXME:
-// this should be private, but then there is some problem installing delegates in the driver...
+// TODO: this only needs to be public because megasvp copies rom into memory region, so we need to rework that code...
 //private:
 
-	device_md_cart_interface*       m_cart;
-
 	int m_type;
+	device_md_cart_interface*       m_cart;
+	bool                            m_must_be_loaded;
 };
 
 // ======================> md_cart_slot_device
@@ -196,20 +198,6 @@ public:
 	virtual const char *image_interface() const { return "megadriv_cart"; }
 	virtual const char *file_extensions() const { return "smd,bin,md,gen"; }
 };
-
-
-// ======================> md_subcart_slot_device
-
-class md_subcart_slot_device :  public base_md_cart_slot_device
-{
-public:
-	// construction/destruction
-	md_subcart_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	virtual bool must_be_loaded() const { return 0; }
-	virtual const char *image_interface() const { return "megadriv_cart"; }
-	virtual const char *file_extensions() const { return "smd,bin,md,gen"; }
-};
-
 
 // ======================> pico_cart_slot_device
 
@@ -225,7 +213,6 @@ public:
 
 // device type definition
 extern const device_type MD_CART_SLOT;
-extern const device_type MD_SUBCART_SLOT;   // needed to allow S&K pass-through to have non-mandatory cart
 extern const device_type PICO_CART_SLOT;
 
 
@@ -237,13 +224,12 @@ extern const device_type PICO_CART_SLOT;
 	MCFG_DEVICE_ADD(_tag, MD_CART_SLOT, 0) \
 	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, _def_inp, false)
 
-#define MCFG_MDSUB_CARTRIDGE_ADD(_tag,_slot_intf,_def_slot,_def_inp) \
-	MCFG_DEVICE_ADD(_tag, MD_SUBCART_SLOT, 0) \
-	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, _def_inp, false)
-
 #define MCFG_PICO_CARTRIDGE_ADD(_tag,_slot_intf,_def_slot,_def_inp) \
 	MCFG_DEVICE_ADD(_tag, PICO_CART_SLOT, 0) \
 	MCFG_DEVICE_SLOT_INTERFACE(_slot_intf, _def_slot, _def_inp, false)
+
+#define MCFG_MD_CARTRIDGE_NOT_MANDATORY                                     \
+	static_cast<md_cart_slot_device *>(device)->set_must_be_loaded(FALSE);
 
 
 #endif

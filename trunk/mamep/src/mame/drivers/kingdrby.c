@@ -111,6 +111,7 @@ public:
 	DECLARE_PALETTE_INIT(kingdrby);
 	DECLARE_PALETTE_INIT(kingdrbb);
 	UINT32 screen_update_kingdrby(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -183,10 +184,9 @@ static const UINT8 hw_sprite[16] =
 	0x22, 0x22, 0x22, 0x22, 0x22, 0x11, 0x22, 0x22
 };
 
-static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)
+void kingdrby_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	kingdrby_state *state = machine.driver_data<kingdrby_state>();
-	UINT8 *spriteram = state->m_spriteram;
+	UINT8 *spriteram = m_spriteram;
 	int count = 0;
 
 	/*sprites not fully understood.*/
@@ -217,13 +217,13 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		{
 			for(dy=0;dy<h;dy++)
 				for(dx=0;dx<w;dx++)
-					drawgfx_transpen(bitmap,cliprect,machine.gfx[0],spr_offs++,colour,1,0,((x+16*w)-(dx+1)*16),(y+dy*16),0);
+					drawgfx_transpen(bitmap,cliprect,machine().gfx[0],spr_offs++,colour,1,0,((x+16*w)-(dx+1)*16),(y+dy*16),0);
 		}
 		else
 		{
 			for(dy=0;dy<h;dy++)
 				for(dx=0;dx<w;dx++)
-					drawgfx_transpen(bitmap,cliprect,machine.gfx[0],spr_offs++,colour,0,0,(x+dx*16),(y+dy*16),0);
+					drawgfx_transpen(bitmap,cliprect,machine().gfx[0],spr_offs++,colour,0,0,(x+dx*16),(y+dy*16),0);
 		}
 	}
 }
@@ -243,7 +243,7 @@ UINT32 kingdrby_state::screen_update_kingdrby(screen_device &screen, bitmap_ind1
 
 	/*TILEMAP_DRAW_CATEGORY + TILEMAP_DRAW_OPAQUE doesn't suit well?*/
 	m_sc0_tilemap->draw(bitmap, cliprect, 0,0);
-	draw_sprites(machine(),bitmap,cliprect);
+	draw_sprites(bitmap,cliprect);
 	m_sc1_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_CATEGORY(1),0);
 	m_sc0w_tilemap->draw(bitmap, clip, 0,0);
 
@@ -315,8 +315,8 @@ READ8_MEMBER(kingdrby_state::key_matrix_r)
 	UINT16 p1_val,p2_val;
 	UINT8 p1_res,p2_res;
 
-	p1_val = machine().root_device().ioport("KEY_1P")->read();
-	p2_val = machine().root_device().ioport("KEY_2P")->read();
+	p1_val = ioport("KEY_1P")->read();
+	p2_val = ioport("KEY_2P")->read();
 
 	p1_res = 0;
 	p2_res = 0;
@@ -958,7 +958,7 @@ static const ym2203_interface cowrace_ym2203_interface =
 
 PALETTE_INIT_MEMBER(kingdrby_state,kingdrby)
 {
-	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
+	const UINT8 *color_prom = memregion("proms")->base();
 	int bit0, bit1, bit2 , r, g, b;
 	int i;
 
@@ -984,8 +984,8 @@ PALETTE_INIT_MEMBER(kingdrby_state,kingdrby)
 
 PALETTE_INIT_MEMBER(kingdrby_state,kingdrbb)
 {
-	UINT8 *raw_prom = machine().root_device().memregion("raw_prom")->base();
-	UINT8 *prom = machine().root_device().memregion("proms")->base();
+	UINT8 *raw_prom = memregion("raw_prom")->base();
+	UINT8 *prom = memregion("proms")->base();
 	int bit0, bit1, bit2 , r, g, b;
 	int i;
 

@@ -130,6 +130,7 @@ void device_gb_cart_interface::ram_map_setup(UINT8 banks)
 		ram_bank_map[i] = i & mask;
 }
 
+
 //**************************************************************************
 //  LIVE DEVICE
 //**************************************************************************
@@ -141,6 +142,7 @@ base_gb_cart_slot_device::base_gb_cart_slot_device(const machine_config &mconfig
 						device_t(mconfig, type, name, tag, owner, clock),
 						device_image_interface(mconfig, *this),
 						device_slot_interface(mconfig, *this),
+						m_sgb_hack(0),
 						m_type(GB_MBC_UNKNOWN)
 {
 }
@@ -186,7 +188,7 @@ void base_gb_cart_slot_device::device_config_complete()
 
 
 //-------------------------------------------------
-//  MD PCB
+//  GB PCB
 //-------------------------------------------------
 
 
@@ -200,7 +202,7 @@ struct gb_slot
 static const gb_slot slot_list[] =
 {
 	{ GB_MBC_MBC1, "rom_mbc1" },
-	{ GB_MBC_MBC1_KOR, "rom_mbc1k" },
+	{ GB_MBC_MBC1_COL, "rom_mbc1col" },
 	{ GB_MBC_MBC2, "rom_mbc2" },
 	{ GB_MBC_MBC3, "rom_mbc3" },
 	{ GB_MBC_MBC5, "rom_mbc5" },
@@ -214,6 +216,13 @@ static const gb_slot slot_list[] =
 	{ GB_MBC_YONGYONG, "rom_yong" },
 	{ GB_MBC_LASAMA, "rom_lasama" },
 	{ GB_MBC_ATVRACIN, "rom_atvrac" },
+	{ GB_MBC_SINTAX, "rom_sintax" },
+	{ GB_MBC_CHONGWU, "rom_chong" },
+	{ GB_MBC_DIGIMON, "rom_digimon" },
+	{ GB_MBC_ROCKMAN8, "rom_rock8" },
+	{ GB_MBC_SM3SP, "rom_sm3sp" },
+	{ GB_MBC_UNK01, "rom_unk01" },
+	{ GB_MBC_DKONG5, "rom_dkong5" },
 	{ GB_MBC_CAMERA, "rom_camera" }
 };
 
@@ -378,6 +387,12 @@ bool base_gb_cart_slot_device::call_load()
 
 		internal_header_logging(ROM + offset, len);
 
+		// Hack to support Donkey Kong Land 2 + 3 in SGB
+		// For some reason, these store the tile data differently. Hacks will go once it's been figured out
+		if (strncmp((const char*)(ROM + 0x134), "DONKEYKONGLAND 2", 16) == 0 ||
+			strncmp((const char*)(ROM + 0x134), "DONKEYKONGLAND 3", 16) == 0)
+			m_sgb_hack = 1;
+
 		return IMAGE_INIT_PASS;
 	}
 
@@ -415,7 +430,7 @@ bool megaduck_cart_slot_device::call_load()
 
 void base_gb_cart_slot_device::call_unload()
 {
-	if (m_cart->get_ram_size() && m_cart->get_has_battery())
+	if (m_cart && m_cart->get_ram_size() && m_cart->get_has_battery())
 		battery_save(m_cart->get_ram_base(), m_cart->get_ram_size());
 }
 
@@ -520,11 +535,33 @@ int base_gb_cart_slot_device::get_cart_type(UINT8 *ROM, UINT32 len)
 		}
 	}
 
-	/* Check if we're dealing with a Korean variant of the MBC1 mapper */
+	// Check for some unlicensed games
+	if (type == GB_MBC_MBC5)
+	{
+		int count = 0;
+		for (int i = 0x0184; i < 0x0184 + 0x30; i++)
+		{
+			count += ROM[i];
+		}
+		if (count == 4876)
+		{
+//          printf("Niutoude!\n");
+//          type = GB_MBC_NIUTOUDE;
+		}
+		if (count == 4138 || count == 4125)
+		{
+			// Zhi Huan Wang uses 4138
+			// most sintax use 4125
+			printf("Sintax %d!\n", count);
+			type = GB_MBC_SINTAX;
+		}
+	}
+
+	/* Check if we're dealing with the multigame variant of the MBC1 mapper */
 	if (type == GB_MBC_MBC1)
 	{
 		if (ROM[0x13f] == 0x42 && ROM[0x140] == 0x32 && ROM[0x141] == 0x43 && ROM[0x142] == 0x4B)
-			type = GB_MBC_MBC1_KOR;
+			type = GB_MBC_MBC1_COL;
 	}
 
 	return type;
@@ -754,7 +791,7 @@ void base_gb_cart_slot_device::internal_header_logging(UINT8 *ROM, UINT32 len)
 		if (tmp == companies[i].code)
 			break;
 	logerror("\tManufacturer ID:  0x%2X", tmp);
-	logerror(" [%s]\n", (companies[i].name) ? companies[i].name : "?");
+	logerror(" [%s]\n", (i < ARRAY_LENGTH(companies)) ? companies[i].name : "?");
 	logerror("\tVersion Number:   0x%2X\n", ROM[0x014c]);
 	logerror("\tComplement Check: 0x%2X\n", ROM[0x014d]);
 	logerror("\tChecksum:         0x%2X\n", ((ROM[0x014e] << 8) + ROM[0x014f]));

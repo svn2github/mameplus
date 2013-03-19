@@ -449,7 +449,7 @@ static ADDRESS_MAP_START( sound_memmap, AS_PROGRAM, 16, gticlub_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 	AM_RANGE(0x300000, 0x30000f) AM_DEVREADWRITE_LEGACY("k056800", k056800_sound_r, k056800_sound_w)
-	AM_RANGE(0x400000, 0x400fff) AM_DEVREADWRITE_LEGACY("rfsnd", rf5c400_r, rf5c400_w)      /* Ricoh RF5C400 */
+	AM_RANGE(0x400000, 0x400fff) AM_DEVREADWRITE("rfsnd", rf5c400_device, rf5c400_r, rf5c400_w)      /* Ricoh RF5C400 */
 	AM_RANGE(0x580000, 0x580001) AM_WRITENOP
 	AM_RANGE(0x600000, 0x600001) AM_WRITENOP
 ADDRESS_MAP_END
@@ -777,28 +777,32 @@ static const k001604_interface gticlub_k001604_intf =
 {
 	1, 2,   /* gfx index 1 & 2 */
 	1, 1,       /* layer_size, roz_size */
-	0       /* slrasslt hack */
+	0,      /* text layer mem offset */
+	0,      /* roz layer mem offset */
 };
 
 static const k001604_interface slrasslt_k001604_intf =
 {
 	1, 2,   /* gfx index 1 & 2 */
 	0, 0,       /* layer_size, roz_size */
-	1       /* slrasslt hack */
+	16384,  /* text layer mem offset */
+	0,      /* roz layer mem offset */
 };
 
 static const k001604_interface hangplt_k001604_intf_l =
 {
 	1, 2,   /* gfx index 1 & 2 */
 	0, 1,       /* layer_size, roz_size */
-	0       /* slrasslt hack */
+	0,      /* text layer mem offset */
+	16384,  /* roz layer mem offset */
 };
 
 static const k001604_interface hangplt_k001604_intf_r =
 {
 	3, 4,   /* gfx index 1 & 2 */
 	0, 1,       /* layer_size, roz_size */
-	0       /* slrasslt hack */
+	0,      /* text layer mem offset */
+	16384,  /* roz layer mem offset */
 };
 
 
@@ -849,7 +853,7 @@ static MACHINE_CONFIG_START( gticlub, gticlub_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("rfsnd", RF5C400, 33868800/2)
+	MCFG_RF5C400_ADD("rfsnd", 33868800/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -966,7 +970,7 @@ static MACHINE_CONFIG_START( hangplt, gticlub_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("rfsnd", RF5C400, 33868800/2)
+	MCFG_RF5C400_ADD("rfsnd", 33868800/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1260,7 +1264,7 @@ DRIVER_INIT_MEMBER(gticlub_state,hangplt)
 	init_hangplt_common();
 
 	// workaround for lock/unlock errors
-	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	rom[(0x153ac^4) / 4] = 0x4e800020;
 	rom[(0x15428^4) / 4] = 0x4e800020;
 }
@@ -1270,7 +1274,7 @@ DRIVER_INIT_MEMBER(gticlub_state,hangpltu)
 	init_hangplt_common();
 
 	// workaround for lock/unlock errors
-	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	rom[(0x153d0^4) / 4] = 0x4e800020;
 	rom[(0x15428^4) / 4] = 0x4e800020;
 }

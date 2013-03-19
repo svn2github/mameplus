@@ -5,6 +5,7 @@
 *************************************************************************/
 
 #include <sound/flt_vol.h>
+#include <audio/taitosnd.h>
 
 class warriorb_state : public driver_device
 {
@@ -23,7 +24,7 @@ public:
 	/* devices */
 	cpu_device *m_maincpu;
 	cpu_device *m_audiocpu;
-	device_t *m_tc0140syt;
+	tc0140syt_device *m_tc0140syt;
 	device_t *m_tc0100scn_1;
 	device_t *m_tc0100scn_2;
 	device_t *m_lscreen;
@@ -43,4 +44,6 @@ public:
 	UINT32 screen_update_warriorb_left(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_warriorb_right(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void reset_sound_region();
+	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, int x_offs, int y_offs );
+	UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffs, device_t *tc0100scn);
 };

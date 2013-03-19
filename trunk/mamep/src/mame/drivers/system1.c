@@ -394,17 +394,17 @@ void system1_state::machine_reset()
  *
  *************************************/
 
-static void bank44_custom_w(running_machine &machine, UINT8 data, UINT8 prevdata)
+void system1_state::bank44_custom_w(UINT8 data, UINT8 prevdata)
 {
 	/* bank bits are bits 6 and 2 */
-	machine.root_device().membank("bank1")->set_entry(((data & 0x40) >> 5) | ((data & 0x04) >> 2));
+	membank("bank1")->set_entry(((data & 0x40) >> 5) | ((data & 0x04) >> 2));
 }
 
 
-static void bank0c_custom_w(running_machine &machine, UINT8 data, UINT8 prevdata)
+void system1_state::bank0c_custom_w(UINT8 data, UINT8 prevdata)
 {
 	/* bank bits are bits 3 and 2 */
-	machine.root_device().membank("bank1")->set_entry((data & 0x0c) >> 2);
+	membank("bank1")->set_entry((data & 0x0c) >> 2);
 }
 
 
@@ -418,7 +418,7 @@ WRITE8_MEMBER(system1_state::videomode_w)
 
 	/* handle any custom banking or other stuff */
 	if (m_videomode_custom != NULL)
-		(*m_videomode_custom)(machine(), data, m_videomode_prev);
+		(this->*m_videomode_custom)(data, m_videomode_prev);
 	m_videomode_prev = data;
 
 	/* bit 0 is for the coin counters */
@@ -450,15 +450,14 @@ CUSTOM_INPUT_MEMBER(system1_state::dakkochn_mux_status_r)
 }
 
 
-static void dakkochn_custom_w(running_machine &machine, UINT8 data, UINT8 prevdata)
+void system1_state::dakkochn_custom_w(UINT8 data, UINT8 prevdata)
 {
-	system1_state *state = machine.driver_data<system1_state>();
 	/* bit 1 toggling on clocks the mux; we store the previous state in the high bit of dakkochn_mux_data */
 	if ((data & 0x02) && !(prevdata & 0x02))
-		state->m_dakkochn_mux_data = (state->m_dakkochn_mux_data + 1) % 7;
+		m_dakkochn_mux_data = (m_dakkochn_mux_data + 1) % 7;
 
 	/* remaining stuff acts like bank0c */
-	bank0c_custom_w(machine, data, prevdata);
+	bank0c_custom_w(data, prevdata);
 }
 
 
@@ -4677,12 +4676,12 @@ DRIVER_INIT_MEMBER(system1_state,bank00)
 }
 DRIVER_INIT_MEMBER(system1_state,bank44)
 {
-	m_videomode_custom = bank44_custom_w;
+	m_videomode_custom = &system1_state::bank44_custom_w;
 }
 
 DRIVER_INIT_MEMBER(system1_state,bank0c)
 {
-	m_videomode_custom = bank0c_custom_w;
+	m_videomode_custom = &system1_state::bank0c_custom_w;
 }
 
 DRIVER_INIT_MEMBER(system1_state,regulus)   { DRIVER_INIT_CALL(bank00); regulus_decode(machine(), "maincpu"); }
@@ -4715,7 +4714,7 @@ DRIVER_INIT_MEMBER(system1_state,wboysys2)  { DRIVER_INIT_CALL(bank0c); sega_315
 
 DRIVER_INIT_MEMBER(system1_state,dakkochn)
 {
-	m_videomode_custom = dakkochn_custom_w;
+	m_videomode_custom = &system1_state::dakkochn_custom_w;
 
 	mc8123_decrypt_rom(machine(), "maincpu", "key", "bank1", 4);
 
@@ -4736,12 +4735,12 @@ DRIVER_INIT_MEMBER(system1_state,myherok)
 
 	/* additionally to the usual protection, all the program ROMs have data lines */
 	/* D0 and D1 swapped. */
-	rom = machine().root_device().memregion("maincpu")->base();
+	rom = memregion("maincpu")->base();
 	for (A = 0;A < 0xc000;A++)
 		rom[A] = (rom[A] & 0xfc) | ((rom[A] & 1) << 1) | ((rom[A] & 2) >> 1);
 
 	/* the tile gfx ROMs are mangled as well: */
-	rom = machine().root_device().memregion("tiles")->base();
+	rom = memregion("tiles")->base();
 
 	/* the first ROM has data lines D0 and D6 swapped. */
 	for (A = 0x0000;A < 0x4000;A++)
@@ -4801,7 +4800,7 @@ DRIVER_INIT_MEMBER(system1_state,nobb)
 	/* Patch to get PRG ROMS ('T', 'R' and 'S) status as "GOOD" in the "test mode" */
 	/* not really needed */
 
-//  UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+//  UINT8 *ROM = memregion("maincpu")->base();
 
 //  ROM[0x3296] = 0x18;     // 'jr' instead of 'jr z' - 'T' (PRG Main ROM)
 //  ROM[0x32be] = 0x18;     // 'jr' instead of 'jr z' - 'R' (Banked ROM 1)
@@ -4814,7 +4813,7 @@ DRIVER_INIT_MEMBER(system1_state,nobb)
 
 	/* Patch to get sound in later levels(the program enters into a tight loop)*/
 	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
-	UINT8 *ROM2 = machine().root_device().memregion("soundcpu")->base();
+	UINT8 *ROM2 = memregion("soundcpu")->base();
 
 	ROM2[0x02f9] = 0x28;//'jr z' instead of 'jr'
 
@@ -4830,7 +4829,7 @@ DRIVER_INIT_MEMBER(system1_state,nobb)
 DRIVER_INIT_MEMBER(system1_state,bootleg)
 {
 	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space.set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x10000);
+	space.set_decrypted_region(0x0000, 0x7fff, memregion("maincpu")->base() + 0x10000);
 	DRIVER_INIT_CALL(bank00);
 }
 
@@ -4838,14 +4837,14 @@ DRIVER_INIT_MEMBER(system1_state,bootleg)
 DRIVER_INIT_MEMBER(system1_state,bootsys2)
 {
 	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	space.set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x20000);
-	machine().root_device().membank("bank1")->configure_decrypted_entries(0, 4, machine().root_device().memregion("maincpu")->base() + 0x30000, 0x4000);
+	space.set_decrypted_region(0x0000, 0x7fff, memregion("maincpu")->base() + 0x20000);
+	membank("bank1")->configure_decrypted_entries(0, 4, memregion("maincpu")->base() + 0x30000, 0x4000);
 	DRIVER_INIT_CALL(bank0c);
 }
 
 DRIVER_INIT_MEMBER(system1_state,choplift)
 {
-	UINT8 *mcurom = machine().root_device().memregion("mcu")->base();
+	UINT8 *mcurom = memregion("mcu")->base();
 
 	/* the ROM dump we have is bad; the following patches make it work */
 	mcurom[0x100] = 0x55;       /* D5 in current dump */

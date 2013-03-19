@@ -47,6 +47,7 @@ DRVLIBS += \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
 	$(MESSOBJ)/snk.a \
+	$(MESSOBJ)/sony.a \
 
 ifneq ($(MAMEMESS),)
 DRVLIBS += \
@@ -106,10 +107,20 @@ $(MESSOBJ)/nec.a:				\
 
 $(MESSOBJ)/nintendo.a:			\
 	$(MESS_MACHINE)/nes_mmc.o	\
+	$(MESS_MACHINE)/nes_slot.o  \
 	$(MESS_VIDEO)/nes.o			\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
-	$(MESS_MACHINE)/snescart.o	\
+	$(MESS_MACHINE)/snescx4.o   \
+	$(MESS_MACHINE)/sns_slot.o  \
+	$(MESS_MACHINE)/sns_rom.o   \
+	$(MESS_MACHINE)/sns_rom21.o \
+	$(MESS_MACHINE)/sns_bsx.o   \
+	$(MESS_MACHINE)/sns_sdd1.o  \
+	$(MESS_MACHINE)/sns_sfx.o   \
+	$(MESS_MACHINE)/sns_spc7110.o \
+	$(MESS_MACHINE)/sns_sufami.o \
+	$(MESS_MACHINE)/sns_upd.o   \
 	$(MESS_DRIVERS)/snes.o		\
 	$(MESS_AUDIO)/gb.o			\
 	$(MESS_VIDEO)/gb.o			\
@@ -130,6 +141,7 @@ $(MESSOBJ)/sega.a:				\
 	$(MESS_MACHINE)/md_stm95.o   \
 	$(MESS_MACHINE)/megasvp.o \
 	$(MESS_DRIVERS)/megadriv.o  \
+	$(MESS_DRIVERS)/saturn.o    \
 	$(MESS_MACHINE)/sms.o	\
 	$(MESS_DRIVERS)/sms.o	\
 
@@ -142,6 +154,14 @@ $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
 	$(MESS_VIDEO)/k1ge.o		\
 
+$(MESSOBJ)/sony.a:              \
+	$(MESS_DRIVERS)/psx.o       \
+	$(MESS_MACHINE)/psxcport.o  \
+	$(MESS_MACHINE)/psxcd.o     \
+	$(MESS_MACHINE)/psxcddrv.o  \
+	$(MESS_MACHINE)/psxcard.o   \
+	$(MESS_MACHINE)/psxanalog.o \
+	$(MESS_DRIVERS)/pockstat.o  \
 
 
 
@@ -150,16 +170,10 @@ $(MESSOBJ)/snk.a:				\
 # miscellaneous dependencies
 #-------------------------------------------------
 
-$(MAME_MACHINE)/snes.o: $(MAMESRC)/machine/snesobc1.c \
-				$(MAMESRC)/machine/snescx4.c \
-				$(MAMESRC)/machine/cx4ops.c \
-				$(MAMESRC)/machine/cx4oam.c \
-				$(MAMESRC)/machine/cx4fn.c \
-				$(MAMESRC)/machine/cx4data.c \
-				$(MAMESRC)/machine/snesrtc.c \
-				$(MAMESRC)/machine/snessdd1.c \
-				$(MAMESRC)/machine/snes7110.c \
-				$(MAMESRC)/machine/snesbsx.c
+$(MESS_MACHINE)/snescx4.o: $(MESSSRC)/machine/cx4ops.c \
+				$(MESSSRC)/machine/cx4oam.c \
+				$(MESSSRC)/machine/cx4fn.c \
+				$(MESSSRC)/machine/cx4data.c \
 
 $(MESS_VIDEO)/gba.o:		$(MESSSRC)/video/gbamode0.c \
 				$(MESSSRC)/video/gbamode1.c \

@@ -10,6 +10,7 @@
 #include "emu.h"
 #include "debugger.h"
 #include "cosmac.h"
+#include "coreutil.h"
 
 
 /*
@@ -304,6 +305,10 @@ void cosmac_device::device_start()
 
 void cosmac_device::device_reset()
 {
+	m_ie = 0;
+	m_q = 0;
+	m_df = 0;
+	rand_memory(m_r, sizeof(m_r));
 }
 
 
@@ -418,7 +423,7 @@ UINT32 cosmac_device::disasm_max_opcode_bytes() const
 offs_t cosmac_device::disasm_disassemble(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, UINT32 options)
 {
 	extern CPU_DISASSEMBLE( cosmac );
-	return CPU_DISASSEMBLE_NAME(cosmac)(NULL, buffer, pc, oprom, opram, 0);
+	return CPU_DISASSEMBLE_NAME(cosmac)(this, buffer, pc, oprom, opram, options);
 }
 
 

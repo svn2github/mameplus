@@ -422,9 +422,9 @@ DRIVER_INIT_MEMBER(toaplan2_state,fixeight)
 
 DRIVER_INIT_MEMBER(toaplan2_state,fixeightbl)
 {
-	UINT8 *ROM = machine().root_device().memregion("oki")->base();
+	UINT8 *ROM = memregion("oki")->base();
 
-	machine().root_device().membank("bank1")->configure_entries(0, 5, &ROM[0x30000], 0x10000);
+	membank("bank1")->configure_entries(0, 5, &ROM[0x30000], 0x10000);
 }
 
 
@@ -436,7 +436,7 @@ DRIVER_INIT_MEMBER(toaplan2_state,vfive)
 
 DRIVER_INIT_MEMBER(toaplan2_state,pipibibsbl)
 {
-	UINT16 *ROM = (UINT16 *)(machine().root_device().memregion("maincpu")->base());
+	UINT16 *ROM = (UINT16 *)(memregion("maincpu")->base());
 
 	for (int i = 0; i < (0x040000/2); i += 4)
 	{
@@ -450,10 +450,10 @@ DRIVER_INIT_MEMBER(toaplan2_state,pipibibsbl)
 
 DRIVER_INIT_MEMBER(toaplan2_state,bgaregga)
 {
-	UINT8 *Z80 = machine().root_device().memregion("audiocpu")->base();
+	UINT8 *Z80 = memregion("audiocpu")->base();
 
 	// seems to only use banks 0x0a to 0x0f
-	machine().root_device().membank("bank1")->configure_entries(8, 8, Z80, 0x4000);
+	membank("bank1")->configure_entries(8, 8, Z80, 0x4000);
 }
 
 
@@ -482,16 +482,15 @@ TIMER_CALLBACK_MEMBER(toaplan2_state::toaplan2_raise_irq)
 	m_main_cpu->execute().set_input_line(param, HOLD_LINE);
 }
 
-static void toaplan2_vblank_irq(running_machine &machine, int irq_line)
+void toaplan2_state::toaplan2_vblank_irq(int irq_line)
 {
-	toaplan2_state *state = machine.driver_data<toaplan2_state>();
 	// the IRQ appears to fire at line 0xe6
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0xe6), timer_expired_delegate(FUNC(toaplan2_state::toaplan2_raise_irq),state), irq_line);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0xe6), timer_expired_delegate(FUNC(toaplan2_state::toaplan2_raise_irq),this), irq_line);
 }
 
-INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq1){ toaplan2_vblank_irq(machine(), 1); }
-INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq2){ toaplan2_vblank_irq(machine(), 2); }
-INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq4){ toaplan2_vblank_irq(machine(), 4); }
+INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq1){ toaplan2_vblank_irq(1); }
+INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq2){ toaplan2_vblank_irq(2); }
+INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq4){ toaplan2_vblank_irq(4); }
 
 
 READ16_MEMBER(toaplan2_state::video_count_r)

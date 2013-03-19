@@ -70,34 +70,34 @@ DC00      - Selection buttons #2, 9-16 (R)
 
 #include "sms1.lh"
 
-#define MASTER_CLOCK_PAL    53203400    /* This might be a tiny bit too low */
+#define MASTER_CLOCK_PAL    53203425    /* 12 * subcarrier freq. (4.43361875MHz) */
 
 
 static ADDRESS_MAP_START( sms1_mem, AS_PROGRAM, 8, sms_state )
-	AM_RANGE(0x0000, 0x03ff) AM_ROMBANK("bank1")                    /* First 0x0400 part always points to first page */
-	AM_RANGE(0x0400, 0x1fff) AM_ROMBANK("bank2")                    /* switchable rom bank */
-	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank7")                    /* switchable rom bank */
-	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK("bank3")                    /* switchable rom bank */
-	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank4")                    /* switchable rom bank */
+	AM_RANGE(0x0000, 0x03ff) AM_ROMBANK("bank1")                            /* First 0x0400 part always points to first page */
+	AM_RANGE(0x0400, 0x1fff) AM_ROMBANK("bank2")                            /* switchable rom bank */
+	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank7")                            /* switchable rom bank */
+	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK("bank3")                            /* switchable rom bank */
+	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank4")                            /* switchable rom bank */
 	AM_RANGE(0x8000, 0x9fff) AM_READ_BANK("bank5") AM_WRITE(sms_cartram_w)  /* ROM bank / on-cart RAM */
 	AM_RANGE(0xa000, 0xbfff) AM_READ_BANK("bank6") AM_WRITE(sms_cartram2_w) /* ROM bank / on-cart RAM */
 	AM_RANGE(0xc000, 0xdfff) AM_RAM AM_SHARE("mainram")                     /* RAM */
 	AM_RANGE(0xe000, 0xfff7) AM_RAM AM_SHARE("mainram")                     /* RAM (mirror) */
-	AM_RANGE(0xfff8, 0xfffb) AM_READWRITE(sms_sscope_r, sms_sscope_w)   /* 3-D glasses */
-	AM_RANGE(0xfffc, 0xffff) AM_READWRITE(sms_mapper_r, sms_mapper_w)   /* Bankswitch control */
+	AM_RANGE(0xfff8, 0xfffb) AM_READWRITE(sms_sscope_r, sms_sscope_w)       /* 3-D glasses */
+	AM_RANGE(0xfffc, 0xffff) AM_READWRITE(sms_mapper_r, sms_mapper_w)       /* Bankswitch control */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sms_mem, AS_PROGRAM, 8, sms_state )
-	AM_RANGE(0x0000, 0x03ff) AM_ROMBANK("bank1")                    /* First 0x0400 part always points to first page */
-	AM_RANGE(0x0400, 0x1fff) AM_ROMBANK("bank2")                    /* switchable rom bank */
-	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank7")                    /* switchable rom bank */
-	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK("bank3")                    /* switchable rom bank */
-	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank4")                    /* switchable rom bank */
+	AM_RANGE(0x0000, 0x03ff) AM_ROMBANK("bank1")                            /* First 0x0400 part always points to first page */
+	AM_RANGE(0x0400, 0x1fff) AM_ROMBANK("bank2")                            /* switchable rom bank */
+	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank7")                            /* switchable rom bank */
+	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK("bank3")                            /* switchable rom bank */
+	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank4")                            /* switchable rom bank */
 	AM_RANGE(0x8000, 0x9fff) AM_READ_BANK("bank5") AM_WRITE(sms_cartram_w)  /* ROM bank / on-cart RAM */
 	AM_RANGE(0xa000, 0xbfff) AM_READ_BANK("bank6") AM_WRITE(sms_cartram2_w) /* ROM bank / on-cart RAM */
 	AM_RANGE(0xc000, 0xdfff) AM_RAM AM_SHARE("mainram")                     /* RAM */
 	AM_RANGE(0xe000, 0xfffb) AM_RAM AM_SHARE("mainram")                     /* RAM (mirror) */
-	AM_RANGE(0xfffc, 0xffff) AM_READWRITE(sms_mapper_r, sms_mapper_w)   /* Bankswitch control */
+	AM_RANGE(0xfffc, 0xffff) AM_READWRITE(sms_mapper_r, sms_mapper_w)       /* Bankswitch control */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sms_store_mem, AS_PROGRAM, 8, sms_state )

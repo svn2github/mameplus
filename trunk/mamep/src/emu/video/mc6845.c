@@ -1037,6 +1037,7 @@ void mc6845_device::device_start()
 	m_hsync_on_pos = m_vsync_on_pos = 0;
 	m_hsync_off_pos = m_vsync_off_pos = 0;
 	m_vsync = m_hsync = 0;
+	m_cur = 0;
 	m_line_counter = 0;
 	m_horiz_disp = m_vert_disp = 0;
 	m_vert_sync_pos = 0;
@@ -1047,6 +1048,7 @@ void mc6845_device::device_start()
 	m_update_ready_bit = 0;
 	m_line_address = 0;
 	m_current_disp_addr = 0;
+	m_disp_start_addr = 0;
 
 	save_item(NAME(m_show_border_area));
 	save_item(NAME(m_hpixels_per_column));
@@ -1310,6 +1312,10 @@ void mc6845_device::device_reset()
 	m_line_address = 0;
 	m_horiz_disp = 0;
 	m_cursor_x = 0;
+	m_mode_control = 0;
+	m_register_address_latch = 0;
+	m_update_addr = 0;
+	m_light_pen_addr = 0;
 }
 
 

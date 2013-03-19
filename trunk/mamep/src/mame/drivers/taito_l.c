@@ -65,31 +65,30 @@ static const char * const bankname[] = { "bank2", "bank3", "bank4", "bank5" };
 
 static const struct
 {
-	void (*notifier)(running_machine &, int);
+	void (taitol_state::*notifier)(int);
 	UINT32 offset;
 } rambank_modify_notifiers[12] =
 {
-	{ taitol_chardef14_m, 0x0000 }, // 14
-	{ taitol_chardef15_m, 0x1000 }, // 15
-	{ taitol_chardef16_m, 0x2000 }, // 16
-	{ taitol_chardef17_m, 0x3000 }, // 17
+	{ &taitol_state::taitol_chardef14_m, 0x0000 }, // 14
+	{ &taitol_state::taitol_chardef15_m, 0x1000 }, // 15
+	{ &taitol_state::taitol_chardef16_m, 0x2000 }, // 16
+	{ &taitol_state::taitol_chardef17_m, 0x3000 }, // 17
 
-	{ taitol_bg18_m, 0x8000 },      // 18
-	{ taitol_bg19_m, 0x9000 },      // 19
-	{ taitol_char1a_m, 0xa000 },    // 1a
-	{ taitol_obj1b_m, 0xb000 },     // 1b
+	{ &taitol_state::taitol_bg18_m, 0x8000 },      // 18
+	{ &taitol_state::taitol_bg19_m, 0x9000 },      // 19
+	{ &taitol_state::taitol_char1a_m, 0xa000 },    // 1a
+	{ &taitol_state::taitol_obj1b_m, 0xb000 },     // 1b
 
-	{ taitol_chardef1c_m, 0x4000 }, // 1c
-	{ taitol_chardef1d_m, 0x5000 }, // 1d
-	{ taitol_chardef1e_m, 0x6000 }, // 1e
-	{ taitol_chardef1f_m, 0x7000 }, // 1f
+	{ &taitol_state::taitol_chardef1c_m, 0x4000 }, // 1c
+	{ &taitol_state::taitol_chardef1d_m, 0x5000 }, // 1d
+	{ &taitol_state::taitol_chardef1e_m, 0x6000 }, // 1e
+	{ &taitol_state::taitol_chardef1f_m, 0x7000 }, // 1f
 };
 
 
-static void palette_notifier(running_machine &machine, int addr)
+void taitol_state::palette_notifier(int addr)
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
-	UINT8 *p = state->m_palette_ram + (addr & ~1);
+	UINT8 *p = m_palette_ram + (addr & ~1);
 	UINT8 byte0 = *p++;
 	UINT8 byte1 = *p;
 
@@ -97,47 +96,46 @@ static void palette_notifier(running_machine &machine, int addr)
 
 	if (addr > 0x200)
 	{
-		logerror("%s:Large palette ? %03x\n", machine.describe_context(), addr);
+		logerror("%s:Large palette ? %03x\n", machine().describe_context(), addr);
 	}
 	else
 	{
 		//      r = g = b = ((addr & 0x1e) != 0)*255;
-		palette_set_color_rgb(machine, addr / 2, pal4bit(byte0), pal4bit(byte0 >> 4), pal4bit(byte1));
+		palette_set_color_rgb(machine(), addr / 2, pal4bit(byte0), pal4bit(byte0 >> 4), pal4bit(byte1));
 	}
 }
 
 static const UINT8 puzznic_mcu_reply[] = { 0x50, 0x1f, 0xb6, 0xba, 0x06, 0x03, 0x47, 0x05, 0x00 };
 
-static void state_register( running_machine &machine )
+void taitol_state::state_register(  )
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
 
-	state->save_item(NAME(state->m_irq_adr_table));
-	state->save_item(NAME(state->m_irq_enable));
-	state->save_item(NAME(state->m_cur_rambank));
-	state->save_item(NAME(state->m_cur_rombank));
-	state->save_item(NAME(state->m_cur_rombank2));
+	save_item(NAME(m_irq_adr_table));
+	save_item(NAME(m_irq_enable));
+	save_item(NAME(m_cur_rambank));
+	save_item(NAME(m_cur_rombank));
+	save_item(NAME(m_cur_rombank2));
 
-	state->save_item(NAME(state->m_adpcm_pos));
-	state->save_item(NAME(state->m_adpcm_data));
-	state->save_item(NAME(state->m_trackx));
-	state->save_item(NAME(state->m_tracky));
-	state->save_item(NAME(state->m_mux_ctrl));
-	state->save_item(NAME(state->m_extport));
-	state->save_item(NAME(state->m_last_irq_level));
-	state->save_item(NAME(state->m_high));
-	state->save_item(NAME(state->m_high2));
+	save_item(NAME(m_adpcm_pos));
+	save_item(NAME(m_adpcm_data));
+	save_item(NAME(m_trackx));
+	save_item(NAME(m_tracky));
+	save_item(NAME(m_mux_ctrl));
+	save_item(NAME(m_extport));
+	save_item(NAME(m_last_irq_level));
+	save_item(NAME(m_high));
+	save_item(NAME(m_high2));
 
-	state->save_item(NAME(state->m_mcu_pos));
-	state->save_item(NAME(state->m_mcu_reply_len));
-	state->save_item(NAME(state->m_last_data_adr));
-	state->save_item(NAME(state->m_last_data));
-	state->save_item(NAME(state->m_cur_bank));
+	save_item(NAME(m_mcu_pos));
+	save_item(NAME(m_mcu_reply_len));
+	save_item(NAME(m_last_data_adr));
+	save_item(NAME(m_last_data));
+	save_item(NAME(m_cur_bank));
 
-	state->save_item(NAME(state->m_bankc));
-	state->save_item(NAME(state->m_horshoes_gfxbank));
-	state->save_item(NAME(state->m_cur_ctrl));
-	state->save_item(NAME(state->m_flipscreen));
+	save_item(NAME(m_bankc));
+	save_item(NAME(m_horshoes_gfxbank));
+	save_item(NAME(m_cur_ctrl));
+	save_item(NAME(m_flipscreen));
 }
 
 MACHINE_START_MEMBER(taitol_state,taito_l)
@@ -149,58 +147,57 @@ MACHINE_START_MEMBER(taitol_state,taito_l)
 	save_item(NAME(m_palette_ram));
 	save_item(NAME(m_empty_ram));
 
-	state_register(machine());
+	state_register();
 }
 
-static void taito_machine_reset(running_machine &machine)
+void taitol_state::taito_machine_reset()
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
 	int i;
 
 	for (i = 0; i < 3; i++)
-		state->m_irq_adr_table[i] = 0;
+		m_irq_adr_table[i] = 0;
 
-	state->m_irq_enable = 0;
+	m_irq_enable = 0;
 
 	for (i = 0; i < 4; i++)
 	{
-		state->m_cur_rambank[i] = 0x80;
-		state->m_current_notifier[i] = palette_notifier;
-		state->m_current_base[i] = state->m_palette_ram;
-		state->membank(bankname[i])->set_base(state->m_current_base[i]);
+		m_cur_rambank[i] = 0x80;
+		m_current_notifier[i] = &taitol_state::palette_notifier;
+		m_current_base[i] = m_palette_ram;
+		membank(bankname[i])->set_base(m_current_base[i]);
 	}
 
-	state->m_cur_rombank = state->m_cur_rombank2 = 0;
-	state->membank("bank1")->set_base(machine.root_device().memregion("maincpu")->base());
+	m_cur_rombank = m_cur_rombank2 = 0;
+	membank("bank1")->set_base(memregion("maincpu")->base());
 
-	machine.gfx[2]->set_source(state->m_rambanks);
+	machine().gfx[2]->set_source(m_rambanks);
 
-	state->m_adpcm_pos = 0;
-	state->m_adpcm_data = -1;
-	state->m_trackx = state->m_tracky = 0;
-	state->m_mux_ctrl = 0;
-	state->m_extport = 0;
-	state->m_last_irq_level = 0;
-	state->m_high = 0;
-	state->m_high2 = 0;
+	m_adpcm_pos = 0;
+	m_adpcm_data = -1;
+	m_trackx = m_tracky = 0;
+	m_mux_ctrl = 0;
+	m_extport = 0;
+	m_last_irq_level = 0;
+	m_high = 0;
+	m_high2 = 0;
 
-	state->m_mcu_reply = puzznic_mcu_reply;
+	m_mcu_reply = puzznic_mcu_reply;
 
-	state->m_mcu_pos = state->m_mcu_reply_len = 0;
-	state->m_last_data_adr = state->m_last_data = 0;
-	state->m_cur_bank = 1;
+	m_mcu_pos = m_mcu_reply_len = 0;
+	m_last_data_adr = m_last_data = 0;
+	m_cur_bank = 1;
 
 	/* video related */
-	state->m_bankc[0] = state->m_bankc[1] = state->m_bankc[2] = state->m_bankc[3] = 0;
-	state->m_horshoes_gfxbank = 0;
-	state->m_cur_ctrl = 0;
-	state->m_flipscreen = 0;
+	m_bankc[0] = m_bankc[1] = m_bankc[2] = m_bankc[3] = 0;
+	m_horshoes_gfxbank = 0;
+	m_cur_ctrl = 0;
+	m_flipscreen = 0;
 }
 
 
 MACHINE_RESET_MEMBER(taitol_state,fhawk)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = NULL;
 	m_porte1_tag = NULL;
 	m_portf0_tag = NULL;
@@ -209,7 +206,7 @@ MACHINE_RESET_MEMBER(taitol_state,fhawk)
 
 MACHINE_RESET_MEMBER(taitol_state,raimais)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = NULL;
 	m_porte1_tag = NULL;
 	m_portf0_tag = NULL;
@@ -218,7 +215,7 @@ MACHINE_RESET_MEMBER(taitol_state,raimais)
 
 MACHINE_RESET_MEMBER(taitol_state,champwr)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = NULL;
 	m_porte1_tag = NULL;
 	m_portf0_tag = NULL;
@@ -228,7 +225,7 @@ MACHINE_RESET_MEMBER(taitol_state,champwr)
 
 MACHINE_RESET_MEMBER(taitol_state,kurikint)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = NULL;
 	m_porte1_tag = NULL;
 	m_portf0_tag = NULL;
@@ -237,7 +234,7 @@ MACHINE_RESET_MEMBER(taitol_state,kurikint)
 
 MACHINE_RESET_MEMBER(taitol_state,evilston)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = NULL;
 	m_porte1_tag = NULL;
 	m_portf0_tag = NULL;
@@ -246,7 +243,7 @@ MACHINE_RESET_MEMBER(taitol_state,evilston)
 
 MACHINE_RESET_MEMBER(taitol_state,puzznic)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = "DSWA";
 	m_porte1_tag = "DSWB";
 	m_portf0_tag = "IN0";
@@ -255,7 +252,7 @@ MACHINE_RESET_MEMBER(taitol_state,puzznic)
 
 MACHINE_RESET_MEMBER(taitol_state,plotting)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = "DSWA";
 	m_porte1_tag = "DSWB";
 	m_portf0_tag = "IN0";
@@ -264,7 +261,7 @@ MACHINE_RESET_MEMBER(taitol_state,plotting)
 
 MACHINE_RESET_MEMBER(taitol_state,palamed)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = "DSWA";
 	m_porte1_tag = NULL;
 	m_portf0_tag = "DSWB";
@@ -273,7 +270,7 @@ MACHINE_RESET_MEMBER(taitol_state,palamed)
 
 MACHINE_RESET_MEMBER(taitol_state,cachat)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = "DSWA";
 	m_porte1_tag = NULL;
 	m_portf0_tag = "DSWB";
@@ -282,7 +279,7 @@ MACHINE_RESET_MEMBER(taitol_state,cachat)
 
 MACHINE_RESET_MEMBER(taitol_state,horshoes)
 {
-	taito_machine_reset(machine());
+	taito_machine_reset();
 	m_porte0_tag = "DSWA";
 	m_porte1_tag = "DSWB";
 	m_portf0_tag = "IN0";
@@ -362,7 +359,7 @@ WRITE8_MEMBER(taitol_state::rombankswitch_w)
 
 		//logerror("robs %d, %02x (%04x)\n", offset, data, space.device().safe_pc());
 		m_cur_rombank = data;
-		membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x2000 * m_cur_rombank);
+		membank("bank1")->set_base(memregion("maincpu")->base() + 0x2000 * m_cur_rombank);
 	}
 }
 
@@ -381,7 +378,7 @@ WRITE8_MEMBER(taitol_state::rombank2switch_w)
 		//logerror("robs2 %02x (%04x)\n", data, space.device().safe_pc());
 
 		m_cur_rombank2 = data;
-		membank("bank6")->set_base(machine().root_device().memregion("slave")->base() + 0x4000 * m_cur_rombank2);
+		membank("bank6")->set_base(memregion("slave")->base() + 0x4000 * m_cur_rombank2);
 	}
 }
 
@@ -409,7 +406,7 @@ WRITE8_MEMBER(taitol_state::rambankswitch_w)
 		}
 		else if (data == 0x80)
 		{
-			m_current_notifier[offset] = palette_notifier;
+			m_current_notifier[offset] = &taitol_state::palette_notifier;
 			m_current_base[offset] = m_palette_ram;
 		}
 		else
@@ -427,15 +424,13 @@ READ8_MEMBER(taitol_state::rambankswitch_r)
 	return m_cur_rambank[offset];
 }
 
-static void bank_w(address_space &space, offs_t offset, UINT8 data, int banknum )
+void taitol_state::bank_w(address_space &space, offs_t offset, UINT8 data, int banknum )
 {
-	taitol_state *state = space.machine().driver_data<taitol_state>();
-
-	if (state->m_current_base[banknum][offset] != data)
+	if (m_current_base[banknum][offset] != data)
 	{
-		state->m_current_base[banknum][offset] = data;
-		if (state->m_current_notifier[banknum])
-			state->m_current_notifier[banknum](space.machine(), offset);
+		m_current_base[banknum][offset] = data;
+		if (m_current_notifier[banknum])
+			(this->*m_current_notifier[banknum])(offset);
 	}
 }
 
@@ -677,8 +672,8 @@ static ADDRESS_MAP_START( fhawk_2_map, AS_PROGRAM, 8, taitol_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank6")
 	AM_RANGE(0xc000, 0xc000) AM_WRITE(rombank2switch_w)
-	AM_RANGE(0xc800, 0xc800) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_port_w)
-	AM_RANGE(0xc801, 0xc801) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_comm_r, tc0140syt_comm_w)
+	AM_RANGE(0xc800, 0xc800) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_port_w)
+	AM_RANGE(0xc801, 0xc801) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w)
 	AM_RANGE(0xd000, 0xd000) AM_READ_PORT("DSWA") AM_WRITENOP   // Direct copy of input port 0
 	AM_RANGE(0xd001, 0xd001) AM_READ_PORT("DSWB")
 	AM_RANGE(0xd002, 0xd002) AM_READ_PORT("IN0")
@@ -693,8 +688,8 @@ static ADDRESS_MAP_START( fhawk_3_map, AS_PROGRAM, 8, taitol_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank7")
 	AM_RANGE(0x8000, 0x9fff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
-	AM_RANGE(0xe001, 0xe001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
+	AM_RANGE(0xe000, 0xe000) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
+	AM_RANGE(0xe001, 0xe001) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
 ADDRESS_MAP_END
 
@@ -704,8 +699,8 @@ static ADDRESS_MAP_START( raimais_map, AS_PROGRAM, 8, taitol_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x8800, 0x8800) AM_READWRITE(mux_r, mux_w)
 	AM_RANGE(0x8801, 0x8801) AM_WRITE(mux_ctrl_w) AM_READNOP    // Watchdog or interrupt ack (value ignored)
-	AM_RANGE(0x8c00, 0x8c00) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_port_w)
-	AM_RANGE(0x8c01, 0x8c01) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_comm_r, tc0140syt_comm_w)
+	AM_RANGE(0x8c00, 0x8c00) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_port_w)
+	AM_RANGE(0x8c01, 0x8c01) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w)
 	AM_RANGE(0xa000, 0xbfff) AM_RAM
 ADDRESS_MAP_END
 
@@ -729,8 +724,8 @@ static ADDRESS_MAP_START( raimais_3_map, AS_PROGRAM, 8, taitol_state )
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank7")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
-	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
-	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
+	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
+	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITENOP /* pan */
 	AM_RANGE(0xe600, 0xe600) AM_WRITENOP /* ? */
 	AM_RANGE(0xee00, 0xee00) AM_WRITENOP /* ? */
@@ -756,8 +751,8 @@ static ADDRESS_MAP_START( champwr_2_map, AS_PROGRAM, 8, taitol_state )
 	AM_RANGE(0xe004, 0xe004) AM_WRITE(control2_w)
 	AM_RANGE(0xe007, 0xe007) AM_READ_PORT("IN2")
 	AM_RANGE(0xe008, 0xe00f) AM_READNOP
-	AM_RANGE(0xe800, 0xe800) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_port_w)
-	AM_RANGE(0xe801, 0xe801) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_comm_r, tc0140syt_comm_w)
+	AM_RANGE(0xe800, 0xe800) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_port_w)
+	AM_RANGE(0xe801, 0xe801) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w)
 	AM_RANGE(0xf000, 0xf000) AM_READWRITE(rombank2switch_r, rombank2switch_w)
 ADDRESS_MAP_END
 
@@ -766,8 +761,8 @@ static ADDRESS_MAP_START( champwr_3_map, AS_PROGRAM, 8, taitol_state )
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank7")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
 	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
-	AM_RANGE(0xa000, 0xa000) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
-	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
+	AM_RANGE(0xa000, 0xa000) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
+	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xb000, 0xb000) AM_WRITE(champwr_msm5205_hi_w)
 	AM_RANGE(0xc000, 0xc000) AM_WRITE(champwr_msm5205_lo_w)
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(champwr_msm5205_start_w)
@@ -2656,7 +2651,7 @@ DRIVER_INIT_MEMBER(taitol_state,plottinga)
 				v |= 1 << (7 - j);
 		tab[i] = v;
 	}
-	p = machine().root_device().memregion("maincpu")->base();
+	p = memregion("maincpu")->base();
 	for (i = 0; i < 0x10000; i++)
 	{
 		*p = tab[*p];

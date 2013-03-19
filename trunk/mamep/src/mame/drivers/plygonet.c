@@ -111,8 +111,8 @@ READ32_MEMBER(polygonet_state::polygonet_eeprom_r)
 	}
 	else
 	{
-		UINT8 lowInputBits = machine().root_device().ioport("IN1")->read();
-		UINT8 highInputBits = machine().root_device().ioport("IN0")->read();
+		UINT8 lowInputBits = ioport("IN1")->read();
+		UINT8 highInputBits = ioport("IN0")->read();
 		return ((highInputBits << 24) | (lowInputBits << 16));
 	}
 
@@ -136,7 +136,7 @@ WRITE32_MEMBER(polygonet_state::polygonet_eeprom_w)
 READ32_MEMBER(polygonet_state::ttl_rom_r)
 {
 	UINT32 *ROM;
-	ROM = (UINT32 *)machine().root_device().memregion("gfx1")->base();
+	ROM = (UINT32 *)memregion("gfx1")->base();
 
 	return ROM[offset];
 }
@@ -145,7 +145,7 @@ READ32_MEMBER(polygonet_state::ttl_rom_r)
 READ32_MEMBER(polygonet_state::psac_rom_r)
 {
 	UINT32 *ROM;
-	ROM = (UINT32 *)machine().root_device().memregion("gfx2")->base();
+	ROM = (UINT32 *)memregion("gfx2")->base();
 
 	return ROM[offset];
 }
@@ -542,16 +542,15 @@ ADDRESS_MAP_END
 
 /**********************************************************************************/
 
-static void reset_sound_region(running_machine &machine)
+void polygonet_state::reset_sound_region()
 {
-	polygonet_state *state = machine.driver_data<polygonet_state>();
-	state->membank("bank2")->set_base(state->memregion("soundcpu")->base() + 0x10000 + state->m_cur_sound_region*0x4000);
+	membank("bank2")->set_base(memregion("soundcpu")->base() + 0x10000 + m_cur_sound_region*0x4000);
 }
 
 WRITE8_MEMBER(polygonet_state::sound_bankswitch_w)
 {
 	m_cur_sound_region = (data & 0x1f);
-	reset_sound_region(machine());
+	reset_sound_region();
 }
 
 INTERRUPT_GEN_MEMBER(polygonet_state::audio_interrupt)
@@ -726,7 +725,7 @@ DRIVER_INIT_MEMBER(polygonet_state,polygonet)
 {
 	/* Set default bankswitch */
 	m_cur_sound_region = 2;
-	reset_sound_region(machine());
+	reset_sound_region();
 
 	/* Allocate space for the dsp56k banking */
 	memset(m_dsp56k_bank00_ram, 0, sizeof(m_dsp56k_bank00_ram));

@@ -51,7 +51,6 @@
 
 const device_type MD_CART_SLOT = &device_creator<md_cart_slot_device>;
 const device_type PICO_CART_SLOT = &device_creator<pico_cart_slot_device>;
-const device_type MD_SUBCART_SLOT = &device_creator<md_subcart_slot_device>;
 
 
 //**************************************************************************
@@ -141,8 +140,7 @@ void device_md_cart_interface::rom_map_setup(UINT32 size)
 }
 
 //-------------------------------------------------
-//
-//
+// get_padded_size
 //-------------------------------------------------
 
 UINT32 device_md_cart_interface::get_padded_size(UINT32 size)
@@ -170,17 +168,13 @@ base_md_cart_slot_device::base_md_cart_slot_device(const machine_config &mconfig
 						device_t(mconfig, type, name, tag, owner, clock),
 						device_image_interface(mconfig, *this),
 						device_slot_interface(mconfig, *this),
-						m_type(SEGA_STD)
+						m_type(SEGA_STD),
+						m_must_be_loaded(1)
 {
 }
 
 md_cart_slot_device::md_cart_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
 						base_md_cart_slot_device(mconfig, MD_CART_SLOT, "MD Cartridge Slot", tag, owner, clock)
-{
-}
-
-md_subcart_slot_device::md_subcart_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
-						base_md_cart_slot_device(mconfig, MD_SUBCART_SLOT, "MD Cartridge SubSlot", tag, owner, clock)
 {
 }
 
@@ -240,7 +234,9 @@ static const md_slot slot_list[] =
 	{ SEGA_SRAM, "rom_sram" },
 	{ SEGA_FRAM, "rom_fram" },
 	{ HARDBALL95, "rom_hardbl95" },
-	{ BEGGAR, "rom_beggar"},
+	{ XINQIG, "rom_xinqig"},
+	{ BEGGARP, "rom_beggarp"},
+	{ WUKONG, "rom_wukong"},
 
 	{ SEGA_EEPROM, "rom_eeprom" },
 	{ NBA_JAM, "rom_nbajam" },
@@ -257,6 +253,7 @@ static const md_slot slot_list[] =
 	{ PSOLAR, "rom_stm95"},
 
 	{ SSF2, "rom_ssf2" },
+	{ CM_2IN1, "rom_cm2in1" },
 	{ RADICA, "rom_radica" },
 //  { GAME_KANDUME, "rom_gkand" },  // what's needed by this?
 
@@ -270,9 +267,7 @@ static const md_slot slot_list[] =
 	{ LIONK3, "rom_lion3" },
 	{ MC_PIRATE, "rom_mcpir" },
 	{ MJLOVER, "rom_mjlov" },
-	{ MULAN, "rom_mulan"},
-	{ POKEMON, "rom_poke"},
-	{ POKEMON2, "rom_poke2"},
+	{ POKEMONA, "rom_pokea" },
 	{ REALTEC, "rom_realtec" },
 	{ REDCL_EN, "rom_redcl" },
 	{ REDCLIFF, "rom_redcl" },
@@ -280,6 +275,7 @@ static const md_slot slot_list[] =
 	{ SBUBBOB, "rom_sbubl" },
 	{ SMB, "rom_smb" },
 	{ SMB2, "rom_smb2" },
+	{ SMW64, "rom_smw64" },
 	{ SMOUSE, "rom_smouse" },
 	{ SOULBLAD, "rom_soulblad" },
 	{ SQUIRRELK, "rom_squir" },
@@ -541,7 +537,7 @@ int base_md_cart_slot_device::load_nonlist()
 
 void base_md_cart_slot_device::call_unload()
 {
-	if (m_cart->get_nvram_size())
+	if (m_cart && m_cart->get_nvram_size())
 		battery_save(m_cart->get_nvram_base(), m_cart->get_nvram_size());
 }
 
@@ -563,47 +559,6 @@ void base_md_cart_slot_device::setup_custom_mappers()
 			// decrypt
 			for (int x = 0; x < 0x200000/2; x++)
 				ROM16[x] = ROM16[x + 2] ^ 0x4040;
-			break;
-
-		// patch out protection in a bunch of titles...
-		case POKEMON:
-			/*todo: emulate protection instead
-			 0dd19e:47f8
-			 0dd1a0:fff0
-			 0dd1a2:4e63
-			 0dd46e:4ef8
-			 0dd470:0300
-			 0dd49c:6002
-			 */
-			/* you need to return 1 @ 0xa13002 and 0???1f @ 0xa1303e (it does word reads). */
-			ROM16[0x0dd19e/2] = 0x47f8;
-			ROM16[0x0dd1a0/2] = 0xfff0;
-			ROM16[0x0dd1a2/2] = 0x4e63;
-			ROM16[0x0dd46e/2] = 0x4ef8;
-			ROM16[0x0dd470/2] = 0x0300;
-			ROM16[0x0dd49c/2] = 0x6002;
-			break;
-		case POKEMON2:
-			/*todo: emulate protection instead
-			 006036:e000
-			 002540:6026
-			 001ed0:6026
-			 002476:6022
-			 */
-			ROM16[0x06036/2] = 0xe000;
-			ROM16[0x02540/2] = 0x6026;
-			ROM16[0x01ed0/2] = 0x6026;
-			ROM16[0x02476/2] = 0x6022;
-			ROM16[0x7e300/2] = 0x60fe;
-			break;
-		case MULAN:
-			/*todo: emulate protection instead
-			 006036:e000
-			 +more?
-			 */
-			//  ROM16[0x01ed0/2] = 0xe000;
-			//  ROM16[0x02540/2] = 0xe000;
-			ROM16[0x06036/2] = 0xe000;
 			break;
 	}
 }
@@ -675,12 +630,24 @@ void base_md_cart_slot_device::setup_nvram()
 			m_cart->m_nvram_active = 1;
 			m_cart->m_nvram_handlers_installed = 1;
 			break;
-		case BEGGAR:
+		case XINQIG:
 			m_cart->m_nvram_start = 0x400000;
 			m_cart->m_nvram_end = m_cart->m_nvram_start + 0xffff;
 			m_cart->nvram_alloc(machine(), m_cart->m_nvram_end - m_cart->m_nvram_start + 1);
 			m_cart->m_nvram_active = 1;
 			m_cart->m_nvram_handlers_installed = 1;
+			break;
+		case BEGGARP:
+			m_cart->m_nvram_start = 0x400000;
+			m_cart->m_nvram_end = m_cart->m_nvram_start + 0xffff;
+			m_cart->nvram_alloc(machine(), 0x8000); // 32K mirrored
+			m_cart->m_nvram_active = 1;
+			break;
+		case WUKONG:
+			m_cart->m_nvram_start = 0x3c0000;
+			m_cart->m_nvram_end = m_cart->m_nvram_start + 0x3fff;
+			m_cart->nvram_alloc(machine(), m_cart->m_nvram_end - m_cart->m_nvram_start + 1);
+			m_cart->m_nvram_active = 1;
 			break;
 	}
 }

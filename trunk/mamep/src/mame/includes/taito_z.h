@@ -5,6 +5,7 @@
 
 *************************************************************************/
 
+#include <audio/taitosnd.h>
 #include "machine/eeprom.h"
 
 class taitoz_state : public driver_device
@@ -38,7 +39,7 @@ public:
 	device_t *m_tc0150rod;
 	device_t *m_tc0100scn;
 	device_t *m_tc0220ioc;
-	device_t *m_tc0140syt;
+	tc0140syt_device *m_tc0140syt;
 
 	DECLARE_WRITE16_MEMBER(cpua_ctrl_w);
 	DECLARE_WRITE16_MEMBER(chasehq_cpua_ctrl_w);
@@ -89,4 +90,12 @@ public:
 	TIMER_CALLBACK_MEMBER(taitoz_interrupt6);
 	TIMER_CALLBACK_MEMBER(taitoz_cpub_interrupt5);
 	void taitoz_postload();
+	void contcirc_draw_sprites_16x8( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void chasehq_draw_sprites_16x16( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void bshark_draw_sprites_16x8( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void sci_draw_sprites_16x8( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void aquajack_draw_sprites_16x8(bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
+	void spacegun_draw_sprites_16x8(bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
+	void parse_cpu_control(  );
+	void reset_sound_region(  );
 };

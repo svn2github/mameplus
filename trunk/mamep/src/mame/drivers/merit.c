@@ -1163,10 +1163,10 @@ void merit_state::dodge_nvram_init(nvram_device &nvram, void *base, size_t size)
 MACHINE_START_MEMBER(merit_state,casino5)
 {
 	merit_state::machine_start();
-	machine().root_device().membank("bank1")->configure_entries(0, 2, machine().root_device().memregion("maincpu")->base() + 0x2000, 0x2000);
-	machine().root_device().membank("bank2")->configure_entries(0, 2, machine().root_device().memregion("maincpu")->base() + 0x6000, 0x2000);
-	machine().root_device().membank("bank1")->set_entry(0);
-	machine().root_device().membank("bank2")->set_entry(0);
+	membank("bank1")->configure_entries(0, 2, memregion("maincpu")->base() + 0x2000, 0x2000);
+	membank("bank2")->configure_entries(0, 2, memregion("maincpu")->base() + 0x6000, 0x2000);
+	membank("bank1")->set_entry(0);
+	membank("bank2")->set_entry(0);
 }
 
 static MACHINE_CONFIG_START( pitboss, merit_state )
@@ -1868,7 +1868,7 @@ ROM_END
 
 ROM_START( phrcrazeb )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "5281-40_u5-3a.u5", 0x00000, 0x8000, CRC(d04c7657) SHA1(0b59fbf553eb5b68544ee2f94cf8106ab30ff1ed) ) /* 6221-40 U4-3A 100086 */
+	ROM_LOAD( "5281-40_u5-3a.u5", 0x00000, 0x8000, CRC(d04c7657) SHA1(0b59fbf553eb5b68544ee2f94cf8106ab30ff1ed) ) /* 6221-40 U5-3A 100086 */
 
 	ROM_REGION( 0x18000, "gfx1", 0 )
 	ROM_LOAD( "phrz_u37.u37", 0x00000, 0x8000, CRC(237e221a) SHA1(7aa69375c2b9a9e73e0e4ed207bf595368b2deb2) ) /* 1st & 2nd half identical, but correct and verified */
@@ -2024,7 +2024,7 @@ DRIVER_INIT_MEMBER(merit_state,key_7)
 
 DRIVER_INIT_MEMBER(merit_state,couple)
 {
-	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
 	#if 0 //quick rom compare test
 	{
@@ -2044,7 +2044,7 @@ DRIVER_INIT_MEMBER(merit_state,couple)
 	  dumpers it's just the way it is,a.k.a. it's an "hardware" banking.
 	  update 20060118 by f205v: now we have 3 dumps from 3 different boards and they
 	  all behave the same...*/
-	machine().root_device().membank("bank1")->set_base(ROM + 0x10000 + (0x2000 * 2));
+	membank("bank1")->set_base(ROM + 0x10000 + (0x2000 * 2));
 }
 
 DRIVER_INIT_MEMBER(merit_state,dtrvwz5)

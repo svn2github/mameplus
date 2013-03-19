@@ -4,6 +4,8 @@
 
 *************************************************************************/
 
+#include <audio/taitosnd.h>
+
 class wgp_state : public driver_device
 {
 public:
@@ -44,7 +46,7 @@ public:
 	cpu_device *m_audiocpu;
 	cpu_device *m_subcpu;
 	device_t *m_tc0100scn;
-	device_t *m_tc0140syt;
+	tc0140syt_device *m_tc0140syt;
 	DECLARE_READ16_MEMBER(sharedram_r);
 	DECLARE_WRITE16_MEMBER(sharedram_w);
 	DECLARE_WRITE16_MEMBER(cpua_ctrl_w);
@@ -74,4 +76,10 @@ public:
 	TIMER_CALLBACK_MEMBER(wgp_interrupt6);
 	TIMER_CALLBACK_MEMBER(wgp_cpub_interrupt6);
 	void wgp_postload();
+	inline void common_get_piv_tile_info( tile_data &tileinfo, int tile_index, int num );
+	void wgp_core_vh_start( int piv_xoffs, int piv_yoffs );
+	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void wgp_piv_layer_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority );
+	void parse_control();
+	void reset_sound_region(  )  /* assumes Z80 sandwiched between the 68Ks */;
 };

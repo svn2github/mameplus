@@ -17,13 +17,18 @@
 //-------------------------------------------------
 
 const device_type GB_ROM_MBC1 = &device_creator<gb_rom_mbc1_device>;
-const device_type GB_ROM_MBC1K = &device_creator<gb_rom_mbc1k_device>;
+const device_type GB_ROM_MBC1_COL = &device_creator<gb_rom_mbc1col_device>;
 const device_type GB_ROM_MBC2 = &device_creator<gb_rom_mbc2_device>;
 const device_type GB_ROM_MBC3 = &device_creator<gb_rom_mbc3_device>;
 const device_type GB_ROM_MBC5 = &device_creator<gb_rom_mbc5_device>;
 const device_type GB_ROM_MBC6 = &device_creator<gb_rom_mbc6_device>;
 const device_type GB_ROM_MBC7 = &device_creator<gb_rom_mbc7_device>;
 const device_type GB_ROM_MMM01 = &device_creator<gb_rom_mmm01_device>;
+const device_type GB_ROM_SINTAX = &device_creator<gb_rom_sintax_device>;
+const device_type GB_ROM_CHONGWU = &device_creator<gb_rom_chongwu_device>;
+const device_type GB_ROM_DIGIMON = &device_creator<gb_rom_digimon_device>;
+const device_type GB_ROM_ROCKMAN8 = &device_creator<gb_rom_rockman8_device>;
+const device_type GB_ROM_SM3SP = &device_creator<gb_rom_sm3sp_device>;
 
 
 gb_rom_mbc_device::gb_rom_mbc_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
@@ -37,8 +42,8 @@ gb_rom_mbc1_device::gb_rom_mbc1_device(const machine_config &mconfig, const char
 {
 }
 
-gb_rom_mbc1k_device::gb_rom_mbc1k_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-					: gb_rom_mbc_device(mconfig, GB_ROM_MBC1K, "GB MBC1 Korean Carts", tag, owner, clock)
+gb_rom_mbc1col_device::gb_rom_mbc1col_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc_device(mconfig, GB_ROM_MBC1_COL, "GB MBC1 Collection Carts", tag, owner, clock)
 {
 }
 
@@ -49,6 +54,11 @@ gb_rom_mbc2_device::gb_rom_mbc2_device(const machine_config &mconfig, const char
 
 gb_rom_mbc3_device::gb_rom_mbc3_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 					: gb_rom_mbc_device(mconfig, GB_ROM_MBC3, "GB MBC3 Carts", tag, owner, clock)
+{
+}
+
+gb_rom_mbc5_device::gb_rom_mbc5_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc_device(mconfig, type, name, tag, owner, clock)
 {
 }
 
@@ -72,17 +82,38 @@ gb_rom_mmm01_device::gb_rom_mmm01_device(const machine_config &mconfig, const ch
 {
 }
 
-
-void gb_rom_mbc_device::device_start()
+gb_rom_sintax_device::gb_rom_sintax_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc_device(mconfig, GB_ROM_SINTAX, "GB MBC5 Sintax Carts", tag, owner, clock)
 {
-	has_timer = FALSE;
-	has_rumble = FALSE;
+}
 
-	m_latch_bank = 0;
-	m_latch_bank2 = 1;
-	m_ram_enable = 0;
-	m_ram_bank = 0;
-	m_mode = 0;
+gb_rom_chongwu_device::gb_rom_chongwu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc5_device(mconfig, GB_ROM_CHONGWU, "GB Chong Wu Xiao Jing Ling", tag, owner, clock)
+{
+}
+
+gb_rom_digimon_device::gb_rom_digimon_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc5_device(mconfig, GB_ROM_DIGIMON, "GB Digimon", tag, owner, clock)
+{
+}
+
+gb_rom_rockman8_device::gb_rom_rockman8_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc_device(mconfig, GB_ROM_ROCKMAN8, "GB MBC1 Rockman 8", tag, owner, clock)
+{
+}
+
+gb_rom_sm3sp_device::gb_rom_sm3sp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: gb_rom_mbc_device(mconfig, GB_ROM_SM3SP, "GB MBC1 Super Mario 3 Special", tag, owner, clock)
+{
+}
+
+
+//-------------------------------------------------
+//  shared_start
+//-------------------------------------------------
+
+void gb_rom_mbc_device::shared_start()
+{
 	save_item(NAME(m_latch_bank));
 	save_item(NAME(m_latch_bank2));
 	save_item(NAME(m_ram_bank));
@@ -90,109 +121,41 @@ void gb_rom_mbc_device::device_start()
 	save_item(NAME(m_mode));
 }
 
-void gb_rom_mbc1_device::device_start()
-{
-	has_timer = FALSE;
-	has_rumble = FALSE;
+//-------------------------------------------------
+//  shared_reset
+//-------------------------------------------------
 
+void gb_rom_mbc_device::shared_reset()
+{
 	m_latch_bank = 0;
 	m_latch_bank2 = 1;
 	m_ram_bank = 0;
 	m_ram_enable = 0;
 	m_mode = 0;
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_ram_enable));
-	save_item(NAME(m_mode));
-}
 
-void gb_rom_mbc1k_device::device_start()
-{
-	has_timer = FALSE;
 	has_rumble = FALSE;
-
-	m_latch_bank = 0;
-	m_latch_bank2 = 1;
-	m_ram_bank = 0;
-	m_ram_enable = 0;
-	m_mode = 0;
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_ram_enable));
-	save_item(NAME(m_mode));
-}
-
-void gb_rom_mbc2_device::device_start()
-{
 	has_timer = FALSE;
-	has_rumble = FALSE;
-
-	m_latch_bank = 0;
-	m_latch_bank2 = 1;
-	m_ram_bank = 0;
-	m_ram_enable = 0;
-	m_mode = 0;
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_ram_enable));
-	save_item(NAME(m_mode));
+	has_battery = FALSE;
 }
+
+//-------------------------------------------------
+//  mapper specific start/reset
+//-------------------------------------------------
 
 void gb_rom_mbc3_device::device_start()
 {
-	has_timer = FALSE;
-	has_rumble = FALSE;
-
-	m_latch_bank = 0;
-	m_latch_bank2 = 1;
-	m_ram_bank = 0;
-	m_ram_enable = 0;
-	m_mode = 0;
-	memset(m_rtc_map, 0, sizeof(m_rtc_map));
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_ram_enable));
-	save_item(NAME(m_mode));
+	shared_start();
 	save_item(NAME(m_rtc_map));
 }
 
-void gb_rom_mbc5_device::device_start()
+void gb_rom_mbc3_device::device_reset()
 {
-	has_timer = FALSE;
-	has_rumble = FALSE;
-
-	m_latch_bank = 0;
-	m_latch_bank2 = 1;
-	m_ram_bank = 0;
-	m_ram_enable = 0;
-	m_mode = 0;
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_ram_enable));
-	save_item(NAME(m_mode));
+	shared_reset();
+	memset(m_rtc_map, 0, sizeof(m_rtc_map));
 }
 
 void gb_rom_mbc6_device::device_start()
 {
-	has_timer = FALSE;
-	has_rumble = FALSE;
-
-	m_bank_4000 = 2;    // correct default?
-	m_bank_6000 = 3;    // correct default?
-	m_latch1 = 0;   // correct default?
-	m_latch2 = 0;   // correct default?
-
-	m_latch_bank = 2;   // correct default?
-	m_latch_bank2 = 3;  // correct default?
-	m_ram_bank = 0;
-	m_ram_enable = 0;
-	m_mode = 0;
-
 	save_item(NAME(m_bank_4000));
 	save_item(NAME(m_bank_6000));
 	save_item(NAME(m_latch1));
@@ -204,38 +167,70 @@ void gb_rom_mbc6_device::device_start()
 	save_item(NAME(m_mode));
 }
 
-void gb_rom_mbc7_device::device_start()
+void gb_rom_mbc6_device::device_reset()
 {
-	has_timer = FALSE;
-	has_rumble = TRUE;
+	m_bank_4000 = 2;    // correct default?
+	m_bank_6000 = 3;    // correct default?
+	m_latch1 = 0;   // correct default?
+	m_latch2 = 0;   // correct default?
 
-	m_latch_bank = 0;
-	m_latch_bank2 = 1;
+	m_latch_bank = 2;   // correct default?
+	m_latch_bank2 = 3;  // correct default?
 	m_ram_bank = 0;
 	m_ram_enable = 0;
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_ram_enable));
+	m_mode = 0;
 }
 
 void gb_rom_mmm01_device::device_start()
 {
-	has_timer = FALSE;
-	has_rumble = TRUE;
+	shared_start();
+	save_item(NAME(m_bank_mask));
+	save_item(NAME(m_bank));
+	save_item(NAME(m_reg));
+}
 
+void gb_rom_mmm01_device::device_reset()
+{
 	m_latch_bank = 0x200 - 2;
 	m_latch_bank2 = 0x200 - 1;
 	m_ram_bank = 0;
 	m_bank_mask = 0xff;
 	m_bank = 0;
 	m_reg = 0;
-	save_item(NAME(m_latch_bank));
-	save_item(NAME(m_latch_bank2));
-	save_item(NAME(m_ram_bank));
-	save_item(NAME(m_bank_mask));
-	save_item(NAME(m_bank));
-	save_item(NAME(m_reg));
+}
+
+void gb_rom_sintax_device::device_start()
+{
+	shared_start();
+	save_item(NAME(m_sintax_mode));
+	save_item(NAME(m_currentxor));
+	save_item(NAME(m_xor2));
+	save_item(NAME(m_xor3));
+	save_item(NAME(m_xor4));
+	save_item(NAME(m_xor5));
+}
+
+void gb_rom_sintax_device::device_reset()
+{
+	shared_reset();
+	m_sintax_mode = 0;
+	m_currentxor = 0;
+	m_xor2 = 0;
+	m_xor3 = 0;
+	m_xor4 = 0;
+	m_xor5 = 0;
+}
+
+void gb_rom_chongwu_device::device_start()
+{
+	shared_start();
+	save_item(NAME(m_protection_checked));
+}
+
+void gb_rom_chongwu_device::device_reset()
+{
+	shared_reset();
+	m_protection_checked = 0;
 }
 
 
@@ -321,7 +316,7 @@ WRITE8_MEMBER(gb_rom_mbc1_device::write_ram)
 
 // MBC1 Korean variant (used by Bomberman Selection)
 
-READ8_MEMBER(gb_rom_mbc1k_device::read_rom)
+READ8_MEMBER(gb_rom_mbc1col_device::read_rom)
 {
 	if (offset < 0x4000)
 		return m_rom[rom_bank_map[m_latch_bank] * 0x4000 + (offset & 0x3fff)];
@@ -329,7 +324,7 @@ READ8_MEMBER(gb_rom_mbc1k_device::read_rom)
 		return m_rom[rom_bank_map[m_latch_bank2] * 0x4000 + (offset & 0x3fff)];
 }
 
-WRITE8_MEMBER(gb_rom_mbc1k_device::write_bank)
+WRITE8_MEMBER(gb_rom_mbc1col_device::write_bank)
 {
 	if (offset < 0x2000)
 		m_ram_enable = ((data & 0x0f) == 0x0a) ? 1 : 0;
@@ -355,7 +350,7 @@ WRITE8_MEMBER(gb_rom_mbc1k_device::write_bank)
 }
 
 // RAM access is the same as usual MBC1
-READ8_MEMBER(gb_rom_mbc1k_device::read_ram)
+READ8_MEMBER(gb_rom_mbc1col_device::read_ram)
 {
 	if (m_ram && m_ram_enable)
 	{
@@ -366,7 +361,7 @@ READ8_MEMBER(gb_rom_mbc1k_device::read_ram)
 		return 0xff;
 }
 
-WRITE8_MEMBER(gb_rom_mbc1k_device::write_ram)
+WRITE8_MEMBER(gb_rom_mbc1col_device::write_ram)
 {
 	if (m_ram && m_ram_enable)
 	{
@@ -506,15 +501,17 @@ WRITE8_MEMBER(gb_rom_mbc5_device::write_bank)
 {
 	if (offset < 0x2000)
 		m_ram_enable = ((data & 0x0f) == 0x0a) ? 1 : 0;
-	else if (offset < 0x4000)
+	else if (offset < 0x3000)
 	{
 		// MBC5 has a 9 bit bank select
 		// Writing into 2000-2fff sets the lower 8 bits
+		m_latch_bank2 = (m_latch_bank2 & 0x100) | data;
+	}
+	else if (offset < 0x4000)
+	{
+		// MBC5 has a 9 bit bank select
 		// Writing into 3000-3fff sets the 9th bit
-		if (offset & 0x1000)
-			m_latch_bank2 = (m_latch_bank2 & 0xff) | ((data & 0x01) << 8);
-		else
-			m_latch_bank2 = (m_latch_bank2 & 0x100) | data;
+		m_latch_bank2 = (m_latch_bank2 & 0xff) | ((data & 0x01) << 8);
 	}
 	else if (offset < 0x6000)
 	{
@@ -678,7 +675,7 @@ WRITE8_MEMBER(gb_rom_mmm01_device::write_bank)
 		logerror("0x%04X: write 0x%02X to 0x%04X\n", space.device().safe_pc(), data, offset);
 	else
 	{
-		logerror( "0x%04X: write 0x%02X to 0x%04X\n", space.device().safe_pc(), data, offset);
+		logerror("0x%04X: write 0x%02X to 0x%04X\n", space.device().safe_pc(), data, offset);
 		/* Not sure if this is correct, Taito Variety Pack sets these values */
 		/* Momotarou Collection 2 writes 01 and 21 here */
 		switch (data)
@@ -688,4 +685,361 @@ WRITE8_MEMBER(gb_rom_mmm01_device::write_bank)
 			default:    m_bank_mask = 0xff; break;
 		}
 	}
+}
+
+// MBC5 variant used by Chong Wu Xiao Jing Ling (this appears to be a re-release of a Li Cheng / Niutoude game,
+// given that it contains the Niutoude logo, with most protection checks patched out)
+
+READ8_MEMBER(gb_rom_chongwu_device::read_rom)
+{
+	// protection check at the first read here...
+	if (offset == 0x41c3 && !m_protection_checked)
+	{
+		m_protection_checked = 1;
+		return 0x5d;
+	}
+
+	if (offset < 0x4000)
+		return m_rom[rom_bank_map[m_latch_bank] * 0x4000 + (offset & 0x3fff)];
+	else
+		return m_rom[rom_bank_map[m_latch_bank2] * 0x4000 + (offset & 0x3fff)];
+}
+
+// MBC5 variant used by Sintax games
+
+void gb_rom_sintax_device::set_xor_for_bank(UINT8 bank)
+{
+	switch (bank & 0x0f)
+	{
+		case 0x00: case 0x04: case 0x08: case 0x0c:
+			m_currentxor = m_xor2;
+			break;
+		case 0x01: case 0x05: case 0x09: case 0x0d:
+			m_currentxor = m_xor3;
+			break;
+		case 0x02: case 0x06: case 0x0a: case 0x0e:
+			m_currentxor = m_xor4;
+			break;
+		case 0x03: case 0x07: case 0x0b: case 0x0f:
+			m_currentxor = m_xor5;
+			break;
+	}
+}
+
+READ8_MEMBER(gb_rom_sintax_device::read_rom)
+{
+	if (offset < 0x4000)
+		return m_rom[rom_bank_map[m_latch_bank] * 0x4000 + (offset & 0x3fff)];
+	else
+		return m_rom[rom_bank_map[m_latch_bank2] * 0x4000 + (offset & 0x3fff)] ^ m_currentxor;
+}
+
+WRITE8_MEMBER(gb_rom_sintax_device::write_bank)
+{
+	if (offset < 0x2000)
+		m_ram_enable = ((data & 0x0f) == 0x0a) ? 1 : 0;
+	else if (offset < 0x3000)
+	{
+		set_xor_for_bank(data);
+
+		switch (m_sintax_mode & 0x0f)
+		{
+			case 0x0d:
+				data = BITSWAP8(data, 1,0,7,6,5,4,3,2);
+				break;
+			case 0x09:
+				//data = BITSWAP8(data, 3,2,5,4,0,1,6,7); // Monkey..no
+				data = BITSWAP8(data, 4,5,2,3,0,1,6,7);
+				break;
+			case 0x00: // 0x10=lion 0x00 hmmmmm // 1 and 0 unconfirmed
+				data = BITSWAP8(data, 7,0,5,6,3,4,1,2);
+				break;
+			case 0x01:
+				data = BITSWAP8(data, 0,1,6,7,4,5,2,3);
+				break;
+			case 0x05:
+				data = BITSWAP8(data, 7,6,1,0,3,2,5,4); // Not 100% on this one
+				break;
+			case 0x07:
+				data = BITSWAP8(data, 2,0,3,1,5,4,7,6); // 5 and 7 unconfirmed
+				break;
+			case 0x0b:
+				data = BITSWAP8(data, 2,3,0,1,6,7,4,5); // 5 and 6 unconfirmed
+				break;
+		}
+		m_latch_bank2 = (m_latch_bank2 & 0x100) | data;
+	}
+	else if (offset < 0x4000)
+	{
+		m_latch_bank2 = (m_latch_bank2 & 0xff) | ((data & 0x01) << 8);
+	}
+	else if (offset < 0x5000)
+	{
+		data &= 0x0f;
+		if (has_rumble)
+			data &= 0x7;
+		m_ram_bank = data;
+	}
+	else if (offset < 0x6000)
+	{
+		if (!m_sintax_mode)
+		{
+			m_sintax_mode = data;
+			write_bank(space, 0x2000, 1);   //force a fake bank switch
+		}
+//      printf("sintax mode %x\n", m_sintax_mode & 0xf);
+	}
+	else if (offset >= 0x7000)
+	{
+		switch ((offset & 0x00f0) >> 4)
+		{
+			case 2:
+				m_xor2 = data;
+				break;
+			case 3:
+				m_xor3 = data;
+				break;
+			case 4:
+				m_xor4 = data;
+				break;
+			case 5:
+				m_xor5 = data;
+				break;
+		}
+
+		if (m_currentxor == 0)
+			set_xor_for_bank(4);
+	}
+
+}
+
+READ8_MEMBER(gb_rom_sintax_device::read_ram)
+{
+	if (m_ram && m_ram_enable)
+		return m_ram[ram_bank_map[m_ram_bank] * 0x2000 + (offset & 0x1fff)];
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER(gb_rom_sintax_device::write_ram)
+{
+	if (m_ram && m_ram_enable)
+		m_ram[ram_bank_map[m_ram_bank] * 0x2000 + (offset & 0x1fff)] = data;
+}
+
+/*
+
+ Further MBC5 variants to emulate:
+
+ Digimon 2 & Digimon 4 (Yong Yong)
+
+ Digimon 2 writes at $2000 to select latch2 (data must be divided by 2, and 0 becomes 1),
+ then writes to $2400 a series of values that the patched version does not write...
+ Digimon 4 seems to share part of the $2000 behavior, but does not write to $2400...
+
+ */
+
+// MBC5 variant used by Digimon 2 (and maybe 4?)
+
+READ8_MEMBER(gb_rom_digimon_device::read_rom)
+{
+	if (offset < 0x4000)
+		return m_rom[rom_bank_map[m_latch_bank] * 0x4000 + (offset & 0x3fff)];
+	else
+		return m_rom[rom_bank_map[m_latch_bank2] * 0x4000 + (offset & 0x3fff)];
+}
+
+WRITE8_MEMBER(gb_rom_digimon_device::write_bank)
+{
+	if (offset < 0x2000)
+		m_ram_enable = ((data & 0x0f) == 0x0a) ? 1 : 0;
+	else if (offset == 0x2000)
+	{
+//      printf("written $02 %X at %X\n", data, offset);
+		if (!data)
+			data++;
+		m_latch_bank2 = data/2;
+	}
+	else if (offset < 0x3000)
+	{
+//      printf("written $03 %X at %X\n", data, offset);
+	}
+	else if (offset < 0x4000)
+	{
+//      printf("written $04 %X at %X\n", data, offset);
+	}
+	else if (offset < 0x6000)
+	{
+//      printf("written $05-$06 %X at %X\n", data, offset);
+		data &= 0x0f;
+		if (has_rumble)
+			data &= 0x7;
+		m_ram_bank = data;
+	}
+//  else
+//      printf("written $07 %X at %X\n", data, offset);
+}
+
+READ8_MEMBER(gb_rom_digimon_device::read_ram)
+{
+	if (m_ram && m_ram_enable)
+		return m_ram[ram_bank_map[m_ram_bank] * 0x2000 + (offset & 0x1fff)];
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER(gb_rom_digimon_device::write_ram)
+{
+	if (m_ram && m_ram_enable)
+		m_ram[ram_bank_map[m_ram_bank] * 0x2000 + (offset & 0x1fff)] = data;
+}
+
+
+// MBC1 variant used by Yong Yong for Rockman 8
+
+READ8_MEMBER(gb_rom_rockman8_device::read_rom)
+{
+	if (offset < 0x4000)
+		return m_rom[m_latch_bank * 0x4000 + (offset & 0x3fff)];
+	else
+		return m_rom[m_latch_bank2 * 0x4000 + (offset & 0x3fff)];
+}
+
+WRITE8_MEMBER(gb_rom_rockman8_device::write_bank)
+{
+	if (offset < 0x2000)
+		return;
+	else if (offset < 0x4000)
+	{
+		// 5bits only
+		data &= 0x1f;
+		if (data == 0)
+			data = 1;
+		if (data > 0xf)
+			data -= 8;
+
+		m_latch_bank2 = data;
+	}
+}
+
+READ8_MEMBER(gb_rom_rockman8_device::read_ram)
+{
+	if (m_ram)
+		return m_ram[offset];
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER(gb_rom_rockman8_device::write_ram)
+{
+	if (m_ram)
+		m_ram[offset] = data;
+}
+
+// MBC1 variant used by Yong Yong for Super Mario 3 Special
+
+// Mario special seems to be 512k image (mirrored up to 1m or 2m [redump needed to establish this])
+// it consists of 13 unique 16k chunks layed out as follows
+// unique chunk --> bank in bin
+// 1st to 7th   --> 0x00 to 0x06
+// 8th          --> 0x08
+// 9th          --> 0x0b
+// 10th         --> 0x0c
+// 11th         --> 0x0d
+// 12th         --> 0x0f
+// 13th         --> 0x13
+
+// writing data to 0x2000-0x2fff switches bank according to the table below
+// (the value values corresponding to table[0x0f] is not confirmed, choices
+// 0,1,2,3,8,c,f freeze the game, while 4,5,6,7,b,d,0x13 work with glitches)
+static UINT8 smb3_table1[0x20] =
+{
+	0x00,0x04,0x01,0x05, 0x02,0x06,0x03,0x05, 0x08,0x0c,0x03,0x0d, 0x03,0x0b,0x0b,0x08 /* original doc here put 0x0f (i.e. 11th unique bank) */,
+	0x05,0x06,0x0b,0x0d, 0x08,0x06,0x13,0x0b, 0x08,0x05,0x05,0x08, 0x0b,0x0d,0x06,0x05
+};
+
+// according to old doc from Brian Provinciano, writing bit5 in 0x5000-0x5fff should
+// change the bank layout, in the sense that writing to bankswitch acts like if
+// the original rom has a different layout (as if unique chunks were under permutations
+// (24), (365) and (8a9) with 0,1,7,b,c fixed) and the same table above is used
+// however, no such a write ever happen (only bit4 is written, but changing mode with
+// bit4 breaks the gfx...)
+
+READ8_MEMBER(gb_rom_sm3sp_device::read_rom)
+{
+	if (offset < 0x4000)
+		return m_rom[rom_bank_map[0] * 0x4000 + (offset & 0x3fff)];
+	else
+		return m_rom[m_latch_bank2 * 0x4000 + (offset & 0x3fff)];
+}
+
+WRITE8_MEMBER(gb_rom_sm3sp_device::write_bank)
+{
+//  printf("write 0x%x at %x\n", data, offset);
+	if (offset < 0x2000)
+		return;
+	else if (offset < 0x3000)
+	{
+		// Table 1 confirmed...
+		// 0->0, 4->2, 6->3
+		// 1e -> 6 (level 1 bg gfx)
+		// 19 -> 5 (level 2 bg gfx)
+		// 1b -> 8 (level 3 bg gfx)
+		// 1d -> D (level 4 bg gfx)
+		// 1c -> B (bonus house bg gfx)
+		// 1 (9 maybe, or 3)? f (5 maybe)? 2->1?
+		// 16 -> 4-8? b?
+
+		// 5bits only
+		data &= 0x1f;
+
+		m_latch_bank2 = smb3_table1[data];
+		if (m_mode)
+		{
+			switch (m_latch_bank2)
+			{
+				case 0x02:  m_latch_bank2 = 4;  break;
+				case 0x03:  m_latch_bank2 = 6;  break;
+				case 0x04:  m_latch_bank2 = 2;  break;
+				case 0x05:  m_latch_bank2 = 3;  break;
+				case 0x06:  m_latch_bank2 = 5;  break;
+				case 0x0b:  m_latch_bank2 = 0xd;    break;
+				case 0x0c:  m_latch_bank2 = 0xb;    break;
+				case 0x0d:  m_latch_bank2 = 0xc;    break;
+
+				case 0x00:
+				case 0x01:
+				case 0x08:
+				case 0x0f:
+				case 0x13:
+				default:
+					break;
+			}
+		}
+	}
+	else if (offset < 0x5000)
+	{
+//      printf("write $5 %X at %X\n", data, offset);
+		//maybe rumble??
+	}
+	else if (offset < 0x6000)
+	{
+//      printf("write mode %x\n", data);
+		m_mode = BIT(data, 5);
+//      write_bank(space, 0x2000, 1);
+	}
+}
+
+READ8_MEMBER(gb_rom_sm3sp_device::read_ram)
+{
+	if (m_ram)
+		return m_ram[offset];
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER(gb_rom_sm3sp_device::write_ram)
+{
+	if (m_ram)
+		m_ram[offset] = data;
 }

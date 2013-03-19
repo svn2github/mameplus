@@ -76,7 +76,7 @@ enum
 	XTAL_5_911MHz       = 5911000,      /* Philips Videopac Plus G7400 */
 	XTAL_5_9904MHz      = 5990400,      /* Luxor ABC 800 keyboard (Keytronic custom part #48-300-008 is equivalent) */
 	XTAL_6MHz           = 6000000,      /* American Poker II */
-	XTAL_6_144MHz       = 6144000,      /* Used on Alpha Denshi early 80's games sound board */
+	XTAL_6_144MHz       = 6144000,      /* Used on Alpha Denshi early 80's games sound board and Casio FP-200 main CPU */
 	XTAL_6_5MHz         = 6500000,      /* Jupiter Ace */
 	XTAL_7MHz           = 7000000,      /* Jaleco Mega System PCBs */
 	XTAL_7_15909MHz     = 7159090,      /* Blood Bros (2x NTSC subcarrier) */
@@ -130,12 +130,12 @@ enum
 	XTAL_15_36MHz       = 15360000,     /* Visual 1050 */
 	XTAL_15_468MHz      = 15468480,     /* Bank Panic h/w, Sega G80 */
 	XTAL_16MHz          = 16000000,     /* Extremely common, used on 100's of PCBs */
-	XTAL_16_9344MHz     = 16934400,     /* Usually used to drive 90's Yamaha OPL/FM chips */
+	XTAL_16_9344MHz     = 16934400,     /* Usually used to drive 90's Yamaha OPL/FM chips (44100 * 384) */
 	XTAL_17_36MHz       = 17360000,     /* OMTI Series 10 SCSI controller */
 	XTAL_17_73447MHz    = 17734470,     /* (~4x PAL subcarrier) */
 	XTAL_17_734472MHz   = 17734472,     /* actually ~4x PAL subcarrier */
 	XTAL_18MHz          = 18000000,     /* S.A.R, Ikari Warriors 3 */
-	XTAL_18_432MHz      = 18432000,     /* Extremely common, used on 100's of PCBs */
+	XTAL_18_432MHz      = 18432000,     /* Extremely common, used on 100's of PCBs (48000 * 384) */
 	XTAL_18_720MHz      = 18720000,     /* Nokia MikroMikko 1 */
 	XTAL_19_6MHz        = 19600000,     /* Universal Mr. Do - Model 8021 PCB */
 	XTAL_19_6608MHz     = 19660800,     /* Euro League (bootleg), labeled as "UKI 19.6608 20PF" */

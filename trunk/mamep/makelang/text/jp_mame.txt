@@ -1799,8 +1799,8 @@ Load from position %c
 %c ‚©‚ç“Ç‚İ‚İ‚Ü‚µ‚½
 
 # emu/romload.c: 483
-Loading (%d%%)
-“Ç‚İ‚İ’† (%d%%)
+Loading %s (%d%%)
+“Ç‚İ‚İ’† %s (%d%%)
 
 # emu/rendfont.c: 755
 Loading BDF font... (%d characters loaded)\n

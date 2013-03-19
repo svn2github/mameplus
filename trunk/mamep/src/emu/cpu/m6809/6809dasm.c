@@ -18,6 +18,7 @@
 #include "emu.h"
 #include "debugger.h"
 #include "m6809.h"
+#include "m6809inl.h"
 
 // Opcode structure
 struct opcodeinfo
@@ -363,13 +364,14 @@ static const char *const m6809_regs_te[16] =
 	"A", "B", "CC", "DP", "inv", "inv", "inv", "inv"
 };
 
-offs_t m6809_disassemble(legacy_cpu_device *device, char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, int options, m6809_base_device *m6809)
+CPU_DISASSEMBLE( m6809 )
 {
 	UINT8 opcode, mode, pb, pbm, reg;
 	const UINT8 *operandarray;
 	unsigned int ea, flags;
 	int numoperands, offset, indirect;
 	bool encrypt_only_first_byte = false;
+	m6809_base_device *m6809 = static_cast<m6809_base_device *>(device);
 	if (m6809 != NULL)
 	{
 		m6809_config &config = static_cast<m6809_config &>(*m6809);
@@ -620,14 +622,4 @@ offs_t m6809_disassemble(legacy_cpu_device *device, char *buffer, offs_t pc, con
 	}
 
 	return p | flags | DASMFLAG_SUPPORTED;
-}
-
-CPU_DISASSEMBLE( m6809 )
-{
-	return m6809_disassemble(device, buffer, pc, oprom, opram, options, NULL);
-}
-
-offs_t m6809_base_device::disassemble(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, int options)
-{
-	return m6809_disassemble(NULL, buffer, pc, oprom, opram, options, this);
 }

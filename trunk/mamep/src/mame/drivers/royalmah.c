@@ -200,6 +200,8 @@ public:
 	INTERRUPT_GEN_MEMBER(suzume_irq);
 	INTERRUPT_GEN_MEMBER(mjtensin_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(janptr96_interrupt);
+	void mjtensin_update_rombank();
+	void cafetime_update_rombank();
 };
 
 
@@ -208,8 +210,8 @@ public:
 void royalmah_state::palette_init()
 {
 	offs_t i;
-	const UINT8 *prom = machine().root_device().memregion("proms")->base();
-	int len = machine().root_device().memregion("proms")->bytes();
+	const UINT8 *prom = memregion("proms")->base();
+	int len = memregion("proms")->bytes();
 
 	for (i = 0; i < len; i++)
 	{
@@ -243,8 +245,8 @@ void royalmah_state::palette_init()
 PALETTE_INIT_MEMBER(royalmah_state,mjderngr)
 {
 	offs_t i;
-	const UINT8 *prom = machine().root_device().memregion("proms")->base();
-	int len = machine().root_device().memregion("proms")->bytes();
+	const UINT8 *prom = memregion("proms")->base();
+	int len = memregion("proms")->bytes();
 
 	for (i = 0; i < len / 2; i++)
 	{
@@ -427,7 +429,7 @@ WRITE8_MEMBER(royalmah_state::mjapinky_palbank_w)
 READ8_MEMBER(royalmah_state::mjapinky_dsw_r)
 {
 	if (m_rombank == 0x0e)  return ioport("DSW3")->read();
-	else                    return *(machine().root_device().memregion("maincpu")->base() + 0x10000 + 0x8000 * m_rombank);
+	else                    return *(memregion("maincpu")->base() + 0x10000 + 0x8000 * m_rombank);
 }
 
 WRITE8_MEMBER(royalmah_state::tontonb_bank_w)
@@ -889,7 +891,7 @@ WRITE8_MEMBER(royalmah_state::mjifb_coin_counter_w)
 READ8_MEMBER(royalmah_state::mjifb_rom_io_r)
 {
 	if (m_mjifb_rom_enable)
-		return ((UINT8*)(machine().root_device().memregion("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
+		return ((UINT8*)(memregion("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
 
 	offset += 0x8000;
 
@@ -998,7 +1000,7 @@ ADDRESS_MAP_END
 READ8_MEMBER(royalmah_state::mjdejavu_rom_io_r)
 {
 	if (m_mjifb_rom_enable)
-		return ((UINT8*)(machine().root_device().memregion("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
+		return ((UINT8*)(memregion("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
 
 	offset += 0x8000;
 
@@ -1056,20 +1058,19 @@ READ8_MEMBER(royalmah_state::mjtensin_p3_r)
 	return 0xff;
 }
 
-static void mjtensin_update_rombank(running_machine &machine)
+void royalmah_state::mjtensin_update_rombank()
 {
-	royalmah_state *state = machine.driver_data<royalmah_state>();
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x10000 + state->m_rombank * 0x8000 );
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x10000 + m_rombank * 0x8000 );
 }
 WRITE8_MEMBER(royalmah_state::mjtensin_p4_w)
 {
 	m_rombank = (m_rombank & 0xf0) | (data & 0x0f);
-	mjtensin_update_rombank(machine());
+	mjtensin_update_rombank();
 }
 WRITE8_MEMBER(royalmah_state::mjtensin_6ff3_w)
 {
 	m_rombank = (data << 4) | (m_rombank & 0x0f);
-	mjtensin_update_rombank(machine());
+	mjtensin_update_rombank();
 }
 
 static ADDRESS_MAP_START( mjtensin_map, AS_PROGRAM, 8, royalmah_state )
@@ -1098,20 +1099,19 @@ ADDRESS_MAP_END
                                 Mahjong Cafe Time
 ****************************************************************************/
 
-static void cafetime_update_rombank(running_machine &machine)
+void royalmah_state::cafetime_update_rombank()
 {
-	royalmah_state *state = machine.driver_data<royalmah_state>();
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x10000 + state->m_rombank * 0x8000 );
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x10000 + m_rombank * 0x8000 );
 }
 WRITE8_MEMBER(royalmah_state::cafetime_p4_w)
 {
 	m_rombank = (m_rombank & 0xf0) | (data & 0x0f);
-	cafetime_update_rombank(machine());
+	cafetime_update_rombank();
 }
 WRITE8_MEMBER(royalmah_state::cafetime_p3_w)
 {
 	m_rombank = (m_rombank & 0x0f) | ((data & 0x0c) << 2);
-	cafetime_update_rombank(machine());
+	cafetime_update_rombank();
 }
 
 WRITE8_MEMBER(royalmah_state::cafetime_dsw_w)
@@ -4712,7 +4712,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(royalmah_state,ippatsu)
 {
-	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x8000 );
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x8000 );
 }
 
 DRIVER_INIT_MEMBER(royalmah_state,janptr96)

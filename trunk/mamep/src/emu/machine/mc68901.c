@@ -855,6 +855,12 @@ void mc68901_device::device_reset()
 	// Avoid read-before-write
 	m_ipr = m_imr = 0;
 
+	m_next_rsr = 0;
+
+	memset(m_tmc, 0, sizeof(m_tmc));
+	memset(m_ti, 0, sizeof(m_ti));
+	memset(m_to, 0, sizeof(m_to));
+
 	register_w(REGISTER_GPIP, 0);
 	register_w(REGISTER_AER, 0);
 	register_w(REGISTER_DDR, 0);

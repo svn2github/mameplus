@@ -102,7 +102,8 @@ Street Fighter II: The World Warrior (Japan 910214)                90629B-2   ST
 Street Fighter II: The World Warrior (Japan 910306)                90629B-3   STF29            IOB1  90632C-1     CPS-B-12  DL-0411-10007  C632
 Street Fighter II: The World Warrior (Japan 911210)                90629B-?   STF29            IOB1  ?            CPS-B-13  DL-0411-10008  C632
 
-Three Wonders* (World 910520)                                1991  89624B-3   RT24B            IOB1  90630C-4     CPS-B-21  DL-0921-10014          IOC1
+Three Wonders* (World 910513)                                1991  89624B-3   RT24B            IOB1  90630C-4     CPS-B-21  DL-0921-10014          IOC1
+Three Wonders* (World 910520)                                      89624B-3   RT24B            IOB1  90630C-4     CPS-B-21  DL-0921-10014          IOC1
 Three Wonders* (USA 910520)                                        89624B-3   RT24B            IOB1  90630C-4     CPS-B-21  DL-0921-10014          IOC1
 Wonder 3* (Japan 910520)                                           89625B-1   RT22B            IOB1  90630C-4     CPS-B-21  DL-0921-10014          IOC1
 
@@ -467,6 +468,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_QS4 0x2e,0x0c01,  -1,  -1,  -1,  -1,  0x1c,0x1e,0x08,  0x16,{0x00,0x02,0x28,0x2a},0x2c, {0x04,0x08,0x10,0x00,0x00}
 #define CPS_B_21_QS5 0x1e,0x0c02,  -1,  -1,  -1,  -1,  0x0c, -1,  -1,   0x2a,{0x2c,0x2e,0x30,0x32},0x1c, {0x04,0x08,0x10,0x00,0x00}
 #define HACK_B_1      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x14,{0x12,0x10,0x0e,0x0c},0x0a, {0x0e,0x0e,0x0e,0x30,0x30}
+#define HACK_H_3      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x04,{0x12,0x10,0x0e,0x0c},0x0a, {0x02,0xc4,0x18,0x00,0x00}
 #define HACK_B_2      -1,   -1,    -1,  -1,  -1,  -1,  0x08, -1,  -1,   0x20,{0x28,0x2a,0x2c,0x2e},0x2a, {0x02,0x04,0x08,0x00,0x00}
 #define HACK_B_3      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x04,{0x12,0x10,0x0e,0x0c},0x0a, {0xff,0xff,0xff,0x00,0x00}
 #define HACK_B_4      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x30,{0x2e,0x2c,0x2a,0x28},0x26, {0x02,0x04,0x08,0x00,0x00}
@@ -1351,6 +1353,7 @@ static const struct CPS1config cps1_config_table[]=
 	/* from here onwards the CPS-B board has suicide battery and multiply protection */
 
 	{"3wonders",    CPS_B_21_BT1, mapper_RT24B },
+	{"3wondersr1",  CPS_B_21_BT1, mapper_RT24B },
 	{"3wondersu",   CPS_B_21_BT1, mapper_RT24B },
 	{"wonder3",     CPS_B_21_BT1, mapper_RT22B },   // equivalent to RT24B
 	{"3wondersh",   CPS_B_02    , mapper_RT24B },   /* Not 100% sure of the CPS B-ID */
@@ -1371,7 +1374,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knightsu",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsja",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },   // wrong, this set uses KR22B, still not dumped
-	{"knightsb",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },   // wrong, knightsb bootleg doesn't use the KR63B PAL
+	//{"knightsb",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },   // wrong, knightsb bootleg doesn't use the KR63B PAL
 	{"knightsb2",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 4 },
 	{"knightsh",    CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"sf2ce",       CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1394,12 +1397,13 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2dkot2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m1",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 5 },
 	{"sf2m2",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m3",       HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 6 },
+	{"sf2m3",       HACK_H_3,     mapper_S9263B, 0,    0, 0, 1 },
 	{"sf2m4",       HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-//sf2m8 unsupported
+	{"sf2m8",       HACK_H_3,     mapper_S9263B, 0,    0, 0, 1 },
+	{"sf2dongb",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m9",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m10",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m11",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1562,13 +1566,13 @@ MACHINE_RESET_MEMBER(cps_state,cps)
 		   by the cpu core as a 32-bit branch. This branch would make the
 		   game crash (address error, since it would branch to an odd address)
 		   if location 180ca6 (outside ROM space) isn't 0. Protection check? */
-		UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
+		UINT16 *rom = (UINT16 *)memregion("maincpu")->base();
 		rom[0x11756 / 2] = 0x4e71;
 	}
 	else if (strcmp(gamename, "ghouls") == 0)
 	{
 		/* Patch out self-test... it takes forever */
-		UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
+		UINT16 *rom = (UINT16 *)memregion("maincpu")->base();
 		rom[0x61964 / 2] = 0x4ef9;
 		rom[0x61966 / 2] = 0x0000;
 		rom[0x61968 / 2] = 0x0400;

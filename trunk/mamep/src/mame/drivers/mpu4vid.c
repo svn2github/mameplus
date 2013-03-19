@@ -298,6 +298,7 @@ public:
 	DECLARE_WRITE8_MEMBER(vid_o2_callback);
 	DECLARE_WRITE8_MEMBER(vid_o3_callback);
 	DECLARE_READ8_MEMBER(pia_ic5_porta_track_r);
+	void mpu4vid_char_cheat( int address);
 };
 
 
@@ -1409,8 +1410,8 @@ static ADDRESS_MAP_START( mpu4_68k_map, AS_PROGRAM, 16, mpu4vid_state )
 	AM_RANGE(0x000000, 0x7fffff) AM_ROM
 	AM_RANGE(0x800000, 0x80ffff) AM_RAM AM_SHARE("vid_mainram")
 //  AM_RANGE(0x810000, 0x81ffff) AM_RAM /* ? */
-	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8_LEGACY("saa", saa1099_data_w, 0x00ff)
-	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8_LEGACY("saa", saa1099_control_w, 0x00ff)
+	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8("saa", saa1099_device, saa1099_data_w, 0x00ff)
+	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8("saa", saa1099_device, saa1099_control_w, 0x00ff)
 	AM_RANGE(0xa00000, 0xa00003) AM_READWRITE_LEGACY(ef9369_r, ef9369_w)
 /*  AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE_LEGACY(mpu4_vid_unmap_r, mpu4_vid_unmap_w) */
 
@@ -1429,8 +1430,8 @@ static ADDRESS_MAP_START( mpu4oki_68k_map, AS_PROGRAM, 16, mpu4vid_state )
 	AM_RANGE(0x600000, 0x63ffff) AM_RAM /* The Mating Game has an extra 256kB RAM on the program card */
 //  AM_RANGE(0x640000, 0x7fffff) AM_NOP /* Possible bug, reads and writes here */
 	AM_RANGE(0x800000, 0x80ffff) AM_RAM AM_SHARE("vid_mainram")
-	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8_LEGACY("saa", saa1099_data_w, 0x00ff)
-	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8_LEGACY("saa", saa1099_control_w, 0x00ff)
+	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8("saa", saa1099_device, saa1099_data_w, 0x00ff)
+	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8("saa", saa1099_device, saa1099_control_w, 0x00ff)
 	AM_RANGE(0xa00000, 0xa00003) AM_READWRITE_LEGACY(ef9369_r, ef9369_w)
 
 	AM_RANGE(0xb00000, 0xb0000f) AM_DEVREADWRITE("scn2674_vid", scn2674_device, mpu4_vid_scn2674_r, mpu4_vid_scn2674_w)
@@ -1451,8 +1452,8 @@ static ADDRESS_MAP_START( bwbvid_68k_map, AS_PROGRAM, 16, mpu4vid_state )
 	AM_RANGE(0x000000, 0x7fffff) AM_ROM
 	AM_RANGE(0x800000, 0x80ffff) AM_RAM AM_SHARE("vid_mainram")
 	AM_RANGE(0x810000, 0x81ffff) AM_RAM /* ? */
-	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8_LEGACY("saa", saa1099_data_w, 0x00ff)
-	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8_LEGACY("saa", saa1099_control_w, 0x00ff)
+	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8("saa", saa1099_device, saa1099_data_w, 0x00ff)
+	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8("saa", saa1099_device, saa1099_control_w, 0x00ff)
 	AM_RANGE(0xa00000, 0xa00003) AM_READWRITE_LEGACY(ef9369_r, ef9369_w)
 //  AM_RANGE(0xa00000, 0xa0000f) AM_READWRITE_LEGACY(bt471_r,bt471_w) //Some games use this
 /*  AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE_LEGACY(mpu4_vid_unmap_r, mpu4_vid_unmap_w) */
@@ -1469,8 +1470,8 @@ static ADDRESS_MAP_START( bwbvid5_68k_map, AS_PROGRAM, 16, mpu4vid_state )
 	AM_RANGE(0x000000, 0x7fffff) AM_ROM
 	AM_RANGE(0x800000, 0x80ffff) AM_RAM AM_SHARE("vid_mainram")
 	AM_RANGE(0x810000, 0x81ffff) AM_RAM /* ? */
-	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8_LEGACY("saa", saa1099_data_w, 0x00ff)
-	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8_LEGACY("saa", saa1099_control_w, 0x00ff)
+	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8("saa", saa1099_device, saa1099_data_w, 0x00ff)
+	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8("saa", saa1099_device, saa1099_control_w, 0x00ff)
 	AM_RANGE(0xa00000, 0xa00003) AM_READWRITE_LEGACY(ef9369_r, ef9369_w)
 	//AM_RANGE(0xa00000, 0xa00003) AM_READWRITE_LEGACY(bt471_r,bt471_w) Some games use this
 /*  AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE_LEGACY(mpu4_vid_unmap_r, mpu4_vid_unmap_w) */
@@ -1548,7 +1549,7 @@ static MACHINE_CONFIG_START( mpu4_vid, mpu4vid_state )
 	MCFG_PTM6840_ADD("6840ptm_68k", ptm_vid_intf)
 	/* Present on all video cards */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-	MCFG_SOUND_ADD("saa", SAA1099, 8000000)
+	MCFG_SAA1099_ADD("saa", 8000000)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.5)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.5)
 
@@ -2018,41 +2019,40 @@ DRIVER_INIT_MEMBER(mpu4vid_state,prizeinv)
 	m_current_chr_table = prizeinv_data;
 }
 
-void mpu4vid_char_cheat(running_machine& machine, int address)
+void mpu4vid_state::mpu4vid_char_cheat( int address)
 {
-	mpu4_state *state = machine.driver_data<mpu4_state>();
-	UINT8* cheattable = state->memregion( "video" )->base()+address;
-	state->m_current_chr_table = blank_data;
+	UINT8* cheattable = memregion( "video" )->base()+address;
+	m_current_chr_table = blank_data;
 	for (int i=0;i<72;i++)
 	{
-		state->m_current_chr_table[i].response = cheattable++[0];
-		state->m_current_chr_table[i].call = cheattable++[0];
+		m_current_chr_table[i].response = cheattable++[0];
+		m_current_chr_table[i].call = cheattable++[0];
 	}
 }
 
 DRIVER_INIT_MEMBER(mpu4vid_state,v4barqst)
 {
-	mpu4vid_char_cheat(machine(),0x154);
+	mpu4vid_char_cheat(0x154);
 }
 
 DRIVER_INIT_MEMBER(mpu4vid_state,v4barqst2)
 {
-	mpu4vid_char_cheat(machine(),0x15c);
+	mpu4vid_char_cheat(0x15c);
 }
 
 DRIVER_INIT_MEMBER(mpu4vid_state,v4wize)
 {
-	mpu4vid_char_cheat(machine(),0x16c);
+	mpu4vid_char_cheat(0x16c);
 }
 
 DRIVER_INIT_MEMBER(mpu4vid_state,v4cmazeb)
 {
-	mpu4vid_char_cheat(machine(),0x4c6);
+	mpu4vid_char_cheat(0x4c6);
 }
 
 DRIVER_INIT_MEMBER(mpu4vid_state,v4opt3)
 {
-	mpu4vid_char_cheat(machine(),0x164);
+	mpu4vid_char_cheat(0x164);
 }
 
 

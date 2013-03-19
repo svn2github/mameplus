@@ -61,16 +61,8 @@ gbcolor   // Nintendo Game Boy Color Handheld
 gba       // Nintendo Game Boy Advance Handheld
 snes      // Nintendo Super Nintendo NTSC
 snespal   // Nintendo Super Nintendo PAL
-snessfx   // Nintendo Super Nintendo NTSC w/SuperFX CPU
-snespsfx  // Nintendo Super Nintendo PAL w/SuperFX CPU
-snesdsp   // Nintendo Super Nintendo NTSC w/DSP-x CPU
-snespdsp  // Nintendo Super Nintendo PAL w/DSP-x CPU
-snesst10  // Nintendo Super Nintendo NTSC w/ST-010 CPU
-snesst11  // Nintendo Super Nintendo NTSC w/ST-011 CPU
-snesst    // Nintendo Super Nintendo NTSC w/Sufami Turbo base cart
-snesbsx   // Nintendo Super Nintendo NTSC w/BS-X compatible cart
 
-megaduck		// Megaduck
+megaduck  // Megaduck
 
 // SEGA
 gamegear  // Sega GameGear
@@ -112,6 +104,19 @@ multmega  // 1994 Sega Multi-Mega (Europe)
 32xj
 32x_scd   // 1994 Sega Sega CD (USA w/32X addon)
 
+saturnjp  // 1994 Sega Saturn (Japan)
+saturn    // 1995 Sega Saturn (USA)
+saturneu  // 1995 Sega Saturn (Europe)
+vsaturn   // JVC V-Saturn
+hisaturn  // Hitachi HiSaturn
+
+// Sony
+psj    // 1994 Sony PlayStation (Japan)
+psu    // 1995 Sony PlayStation (USA)
+pse    // 1995 Sony PlayStation (Europe)
+psa    // 1995 Sony PlayStation (Asia-Pacific)
+pockstat  // 1999 Sony PocketStation
+
 // NEC
 pce       // PC/Engine NEC 1987-1993
 tg16      // Turbo Grafix-16  NEC 1989-1993
@@ -142,6 +147,7 @@ msx       // 1983 MSX
 ax170
 canonv10
 canonv20
+pv16
 dpc100    // 1984 MSX Korea
 dpc180    // 1984 MSX Korea
 dpc200    // 1984 MSX Korea

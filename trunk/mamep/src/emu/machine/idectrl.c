@@ -327,7 +327,6 @@ void ide_hdd_device::ide_build_features()
 {
 	memset(m_features, 0, IDE_DISK_SECTOR_SIZE);
 	int total_sectors = m_num_cylinders * m_num_heads * m_num_sectors;
-	int sectors_per_track = m_num_heads * m_num_sectors;
 
 	/* basic geometry */
 	m_features[ 0*2+0] = 0x5a;                      /*  0: configuration bits */
@@ -382,13 +381,13 @@ void ide_hdd_device::ide_build_features()
 	m_features[55*2+1] = 0;/*num_heads >> 8;*/
 	m_features[56*2+0] = m_num_sectors & 0xff;  /* 56: number of current logical sectors per track */
 	m_features[56*2+1] = 0;/*num_sectors >> 8;*/
-	m_features[57*2+0] = sectors_per_track & 0xff;  /* 57-58: number of current logical sectors per track */
-	m_features[57*2+1] = sectors_per_track >> 8;
-	m_features[58*2+0] = sectors_per_track >> 16;
-	m_features[58*2+1] = sectors_per_track >> 24;
+	m_features[57*2+0] = total_sectors & 0xff;  /* 57-58: current capacity in sectors (ATA-1 through ATA-5; obsoleted in ATA-6) */
+	m_features[57*2+1] = total_sectors >> 8;
+	m_features[58*2+0] = total_sectors >> 16;
+	m_features[58*2+1] = total_sectors >> 24;
 	m_features[59*2+0] = 0;                         /* 59: multiple sector timing */
 	m_features[59*2+1] = 0;
-	m_features[60*2+0] = total_sectors & 0xff;      /* 60-61: total user addressable sectors */
+	m_features[60*2+0] = total_sectors & 0xff;      /* 60-61: total user addressable sectors for LBA mode (ATA-1 through ATA-7) */
 	m_features[60*2+1] = total_sectors >> 8;
 	m_features[61*2+0] = total_sectors >> 16;
 	m_features[61*2+1] = total_sectors >> 24;
@@ -1733,8 +1732,35 @@ const device_type IDE_CONTROLLER = &device_creator<ide_controller_device>;
 
 ide_controller_device::ide_controller_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
 	device_t(mconfig, IDE_CONTROLLER, "IDE Controller", tag, owner, clock),
+	status(0),
+	adapter_control(0),
+	error(0),
+	command(0),
+	interrupt_pending(0),
+	precomp_offset(0),
+	buffer_offset(0),
+	sector_count(0),
+	block_count(0),
+	sectors_until_int(0),
+	verify_only(0),
+	dma_active(0),
+	dma_space(NULL),
+	dma_address_xor(0),
+	dma_last_buffer(0),
+	dma_address(0),
+	dma_descriptor(0),
+	dma_bytes_left(0),
+	bus_master_command(0),
+	bus_master_status(0),
+	bus_master_descriptor(0),
+	config_unknown(0),
+	config_register_num(0),
+	master_password_enable(0),
+	user_password_enable(0),
 	master_password(NULL),
 	user_password(NULL),
+	gnetreadlock(0),
+	cur_drive(0),
 	m_irq_handler(*this),
 	bmcpu(NULL),
 	bmspace(0)

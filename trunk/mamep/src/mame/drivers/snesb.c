@@ -215,7 +215,7 @@ READ8_MEMBER(snesb_state::sb2b_6a6xxx_r)
 
 READ8_MEMBER(snesb_state::sb2b_7xxx_r)
 {
-	return snes_ram[0xc07000 + offset];
+	return space.read_byte(0xc07000 + offset);
 }
 
 
@@ -237,14 +237,9 @@ READ8_MEMBER(snesb_state::snesb_coin_r)
 
 
 static ADDRESS_MAP_START( snesb_map, AS_PROGRAM, 8, snesb_state )
-	AM_RANGE(0x000000, 0x2fffff) AM_READWRITE_LEGACY(snes_r_bank1, snes_w_bank1)    /* I/O and ROM (repeats for each bank) */
-	AM_RANGE(0x300000, 0x3fffff) AM_READWRITE_LEGACY(snes_r_bank2, snes_w_bank2)    /* I/O and ROM (repeats for each bank) */
-	AM_RANGE(0x400000, 0x5fffff) AM_READ_LEGACY(snes_r_bank3)                       /* ROM (and reserved in Mode 20) */
-	AM_RANGE(0x600000, 0x6fffff) AM_READWRITE_LEGACY(snes_r_bank4, snes_w_bank4)    /* used by Mode 20 DSP-1 */
-	AM_RANGE(0x700000, 0x7dffff) AM_READWRITE_LEGACY(snes_r_bank5, snes_w_bank5)
-	AM_RANGE(0x7e0000, 0x7fffff) AM_RAM                                     /* 8KB Low RAM, 24KB High RAM, 96KB Expanded RAM */
-	AM_RANGE(0x800000, 0xbfffff) AM_READWRITE_LEGACY(snes_r_bank6, snes_w_bank6)    /* Mirror and ROM */
-	AM_RANGE(0xc00000, 0xffffff) AM_READWRITE_LEGACY(snes_r_bank7, snes_w_bank7)    /* Mirror and ROM */
+	AM_RANGE(0x000000, 0x7dffff) AM_READWRITE(snes_r_bank1, snes_w_bank1)
+	AM_RANGE(0x7e0000, 0x7fffff) AM_RAM                 /* 8KB Low RAM, 24KB High RAM, 96KB Expanded RAM */
+	AM_RANGE(0x800000, 0xffffff) AM_READWRITE(snes_r_bank2, snes_w_bank2)    /* Mirror and ROM */
 ADDRESS_MAP_END
 
 READ8_MEMBER(snesb_state::spc_ram_100_r)
@@ -642,11 +637,9 @@ static MACHINE_CONFIG_START( kinstb, snesb_state )
 	MCFG_MACHINE_RESET( snes )
 
 	/* video hardware */
-	MCFG_VIDEO_START( snes )
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
-	MCFG_SCREEN_UPDATE_DRIVER( snes_state, snes_screen_update )
+	MCFG_SCREEN_UPDATE_DRIVER( snes_state, screen_update )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -692,7 +685,7 @@ DRIVER_INIT_MEMBER(snesb_state,kinstb)
 DRIVER_INIT_MEMBER(snesb_state,ffight2b)
 {
 	INT32 i;
-	UINT8 *rom = machine().root_device().memregion("user3")->base();
+	UINT8 *rom = memregion("user3")->base();
 
 	for(i = 0; i < 0x200000; i++)
 	{
@@ -735,7 +728,7 @@ DRIVER_INIT_MEMBER(snesb_state,ffight2b)
 DRIVER_INIT_MEMBER(snesb_state,iron)
 {
 	INT32 i;
-	UINT8 *rom = machine().root_device().memregion("user3")->base();
+	UINT8 *rom = memregion("user3")->base();
 
 	for (i = 0; i < 0x140000; i++)
 	{
@@ -759,7 +752,7 @@ DRIVER_INIT_MEMBER(snesb_state,iron)
 
 DRIVER_INIT_MEMBER(snesb_state,denseib)
 {
-	UINT8 *rom = machine().root_device().memregion("user3")->base();
+	UINT8 *rom = memregion("user3")->base();
 	INT32 i;
 
 	for (i = 0; i < 0x200000; i++)
@@ -808,13 +801,13 @@ static const UINT8  address_substitution_high[] =
 DRIVER_INIT_MEMBER(snesb_state,sblast2b)
 {
 	int i, cipherText, plainText, newAddress;
-	UINT8 *src = machine().root_device().memregion("user7")->base();
-	UINT8 *dst = machine().root_device().memregion("user3")->base();
+	UINT8 *src = memregion("user7")->base();
+	UINT8 *dst = memregion("user3")->base();
 
 	for (i =0; i < 0x80000 * 3; i++)
 	{
-			cipherText = src[i];
-			plainText = data_substitution0[cipherText & 0xf] | data_substitution1[cipherText >> 4];
+		cipherText = src[i];
+		plainText = data_substitution0[cipherText & 0xf] | data_substitution1[cipherText >> 4];
 		newAddress = (address_substitution_high[i >> 15] << 15) | (i & 0x7fc0) | (address_substitution_low[i & 0x3f]);
 
 		if (newAddress < 0x10000)
@@ -858,7 +851,7 @@ DRIVER_INIT_MEMBER(snesb_state,sblast2b)
 DRIVER_INIT_MEMBER(snesb_state,endless)
 {
 	INT32 i;
-	UINT8 *rom = machine().root_device().memregion("user3")->base();
+	UINT8 *rom = memregion("user3")->base();
 
 	/* there is more to this, 0x800 based block swaps? */
 	for (i = 0; i < 0x200000; i++)

@@ -103,6 +103,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	IRQ_CALLBACK_MEMBER(irq_callback);
+	void intel82439tx_init();
 };
 
 // Intel 82439TX System Controller (MXTC)
@@ -185,15 +186,14 @@ static void mxtc_config_w(device_t *busdevice, device_t *device, int function, i
 	state->m_mxtc_config_reg[reg] = data;
 }
 
-static void intel82439tx_init(running_machine &machine)
+void savquest_state::intel82439tx_init()
 {
-	savquest_state *state = machine.driver_data<savquest_state>();
-	state->m_mxtc_config_reg[0x60] = 0x02;
-	state->m_mxtc_config_reg[0x61] = 0x02;
-	state->m_mxtc_config_reg[0x62] = 0x02;
-	state->m_mxtc_config_reg[0x63] = 0x02;
-	state->m_mxtc_config_reg[0x64] = 0x02;
-	state->m_mxtc_config_reg[0x65] = 0x02;
+	m_mxtc_config_reg[0x60] = 0x02;
+	m_mxtc_config_reg[0x61] = 0x02;
+	m_mxtc_config_reg[0x62] = 0x02;
+	m_mxtc_config_reg[0x63] = 0x02;
+	m_mxtc_config_reg[0x64] = 0x02;
+	m_mxtc_config_reg[0x65] = 0x02;
 }
 
 static UINT32 intel82439tx_pci_r(device_t *busdevice, device_t *device, int function, int reg, UINT32 mem_mask)
@@ -623,18 +623,18 @@ void savquest_state::machine_start()
 	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, savquest_set_keyb_int);
 
 	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(savquest_state::irq_callback),this));
-	intel82439tx_init(machine());
+	intel82439tx_init();
 
 	kbdc8042_init(machine(), &at8042);
 }
 
 void savquest_state::machine_reset()
 {
-	machine().root_device().membank("bios_f0000")->set_base(machine().root_device().memregion("bios")->base() + 0x30000);
-	machine().root_device().membank("bios_e0000")->set_base(machine().root_device().memregion("bios")->base() + 0x20000);
-	machine().root_device().membank("bios_e4000")->set_base(machine().root_device().memregion("bios")->base() + 0x24000);
-	machine().root_device().membank("bios_e8000")->set_base(machine().root_device().memregion("bios")->base() + 0x28000);
-	machine().root_device().membank("bios_ec000")->set_base(machine().root_device().memregion("bios")->base() + 0x2c000);
+	membank("bios_f0000")->set_base(memregion("bios")->base() + 0x30000);
+	membank("bios_e0000")->set_base(memregion("bios")->base() + 0x20000);
+	membank("bios_e4000")->set_base(memregion("bios")->base() + 0x24000);
+	membank("bios_e8000")->set_base(memregion("bios")->base() + 0x28000);
+	membank("bios_ec000")->set_base(memregion("bios")->base() + 0x2c000);
 }
 
 static MACHINE_CONFIG_START( savquest, savquest_state )

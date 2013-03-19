@@ -148,8 +148,8 @@ public:
 	DECLARE_WRITE8_MEMBER( port_83_w );
 	DECLARE_WRITE8_MEMBER( snes_map_0_w );
 	DECLARE_WRITE8_MEMBER( snes_map_1_w );
-	DECLARE_MACHINE_START(sfcbox);
-	DECLARE_MACHINE_RESET(sfcbox);
+	virtual void machine_start();
+	virtual void machine_reset();
 	DECLARE_READ8_MEMBER(spc_ram_100_r);
 	DECLARE_WRITE8_MEMBER(spc_ram_100_w);
 };
@@ -161,14 +161,9 @@ UINT32 sfcbox_state::screen_update( screen_device &screen, bitmap_rgb32 &bitmap,
 }
 
 static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8, sfcbox_state )
-	AM_RANGE(0x000000, 0x2fffff) AM_READWRITE_LEGACY(snes_r_bank1, snes_w_bank1)    /* I/O and ROM (repeats for each bank) */
-	AM_RANGE(0x300000, 0x3fffff) AM_READWRITE_LEGACY(snes_r_bank2, snes_w_bank2)    /* I/O and ROM (repeats for each bank) */
-	AM_RANGE(0x400000, 0x5fffff) AM_READ_LEGACY(snes_r_bank3)                       /* ROM (and reserved in Mode 20) */
-	AM_RANGE(0x600000, 0x6fffff) AM_READWRITE_LEGACY(snes_r_bank4, snes_w_bank4)    /* used by Mode 20 DSP-1 */
-	AM_RANGE(0x700000, 0x7dffff) AM_READWRITE_LEGACY(snes_r_bank5, snes_w_bank5)
+	AM_RANGE(0x000000, 0x7dffff) AM_READWRITE(snes_r_bank1, snes_w_bank1)
 	AM_RANGE(0x7e0000, 0x7fffff) AM_RAM                 /* 8KB Low RAM, 24KB High RAM, 96KB Expanded RAM */
-	AM_RANGE(0x800000, 0xbfffff) AM_READWRITE_LEGACY(snes_r_bank6, snes_w_bank6)    /* Mirror and ROM */
-	AM_RANGE(0xc00000, 0xffffff) AM_READWRITE_LEGACY(snes_r_bank7, snes_w_bank7)    /* Mirror and ROM */
+	AM_RANGE(0x800000, 0xffffff) AM_READWRITE(snes_r_bank2, snes_w_bank2)    /* Mirror and ROM */
 ADDRESS_MAP_END
 
 READ8_MEMBER(sfcbox_state::spc_ram_100_r)
@@ -209,9 +204,9 @@ WRITE8_MEMBER( sfcbox_state::port_80_w )
     ---- --x-   SNES Transfer CLOCK to SNES (Bit5 of WRIO/RDIO on SNES side)
     ---- ---x   SNES Transfer STAT to SNES  (Bit2 of WRIO/RDIO on SNES side)
 */
-	snes_ram[WRIO] = ((data & 4) >> 1) | (snes_ram[WRIO] & ~0x02); // DATA
-	snes_ram[WRIO] = ((data & 2) << 4) | (snes_ram[WRIO] & ~0x20); // CLOCK
-	snes_ram[WRIO] = ((data & 1) << 2) | (snes_ram[WRIO] & ~0x04); // STAT
+	SNES_CPU_REG(WRIO) = ((data & 4) >> 1) | (SNES_CPU_REG(WRIO) & ~0x02); // DATA
+	SNES_CPU_REG(WRIO) = ((data & 2) << 4) | (SNES_CPU_REG(WRIO) & ~0x20); // CLOCK
+	SNES_CPU_REG(WRIO) = ((data & 1) << 2) | (SNES_CPU_REG(WRIO) & ~0x04); // STAT
 }
 
 
@@ -234,8 +229,8 @@ READ8_MEMBER( sfcbox_state::port_81_r )
 	res = 0 << 5;
 	res = 0 << 4;
 	res = 0 << 3;
-	res |= ((snes_ram[WRIO] & 0x10) >> 4) << 2; // DATA to main
-	res |= ((snes_ram[WRIO] & 0x08) >> 3) << 1; // ACK to main
+	res |= ((SNES_CPU_REG(WRIO) & 0x10) >> 4) << 2; // DATA to main
+	res |= ((SNES_CPU_REG(WRIO) & 0x08) >> 3) << 1; // ACK to main
 	res = 1 << 0;
 
 	return res;
@@ -438,43 +433,14 @@ static INPUT_PORTS_START( snes )
 #endif
 INPUT_PORTS_END
 
-static MACHINE_CONFIG_START( snes, sfcbox_state )
-
-	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", _5A22, 3580000*6)   /* 2.68Mhz, also 3.58Mhz */
-	MCFG_CPU_PROGRAM_MAP(snes_map)
-
-	MCFG_CPU_ADD("soundcpu", SPC700, 2048000/2) /* 2.048 Mhz, but internal divider */
-	MCFG_CPU_PROGRAM_MAP(spc_mem)
-
-	MCFG_QUANTUM_PERFECT_CPU("maincpu")
-
-	MCFG_MACHINE_START( snes )
-	MCFG_MACHINE_RESET( snes )
-
-	/* video hardware */
-	MCFG_VIDEO_START( snes )
-
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
-	MCFG_SCREEN_UPDATE_DRIVER( snes_state, snes_screen_update )
-
-	/* sound hardware */
-	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-	MCFG_SOUND_ADD("spc700", SNES, 0)
-	MCFG_SOUND_ROUTE(0, "lspeaker", 1.00)
-	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
-MACHINE_CONFIG_END
-
-
-MACHINE_START_MEMBER(sfcbox_state,sfcbox)
+void sfcbox_state::machine_start()
 {
 	MACHINE_START_CALL_LEGACY(snes);
 
 	m_is_sfcbox = 1;
 }
 
-MACHINE_RESET_MEMBER(sfcbox_state,sfcbox)
+void sfcbox_state::machine_reset()
 {
 	MACHINE_RESET_CALL_LEGACY( snes );
 
@@ -483,8 +449,18 @@ MACHINE_RESET_MEMBER(sfcbox_state,sfcbox)
 	m_soundcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
-static MACHINE_CONFIG_DERIVED( sfcbox, snes )
+static MACHINE_CONFIG_START( sfcbox, sfcbox_state )
 
+	/* base snes hardware */
+	MCFG_CPU_ADD("maincpu", _5A22, 3580000*6)   /* 2.68Mhz, also 3.58Mhz */
+	MCFG_CPU_PROGRAM_MAP(snes_map)
+
+	MCFG_CPU_ADD("soundcpu", SPC700, 2048000/2) /* 2.048 Mhz, but internal divider */
+	MCFG_CPU_PROGRAM_MAP(spc_mem)
+
+	MCFG_QUANTUM_PERFECT_CPU("maincpu")
+
+	/* sfcbox hardware */
 	MCFG_CPU_ADD("bios", Z180, XTAL_12MHz / 2)  /* HD64180RF6X */
 	MCFG_CPU_PROGRAM_MAP(sfcbox_map)
 	MCFG_CPU_IO_MAP(sfcbox_io)
@@ -492,12 +468,22 @@ static MACHINE_CONFIG_DERIVED( sfcbox, snes )
 	MCFG_MB90082_ADD("mb90082",XTAL_12MHz / 2) /* TODO: correct clock */
 	MCFG_S3520CF_ADD("s3520cf") /* RTC */
 
-	MCFG_MACHINE_START_OVERRIDE(sfcbox_state, sfcbox )
-	MCFG_MACHINE_RESET_OVERRIDE(sfcbox_state, sfcbox )
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
+	MCFG_SOUND_ADD("spc700", SNES, 0)
+	MCFG_SOUND_ROUTE(0, "lspeaker", 1.00)
+	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
 
+	/* video hardware */
 	/* TODO: the screen should actually superimpose, but for the time being let's just separate outputs */
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 
+	// SNES PPU
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
+	MCFG_SCREEN_UPDATE_DRIVER( snes_state, screen_update )
+
+	// SFCBOX
 	MCFG_SCREEN_ADD("osd", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))

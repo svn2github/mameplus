@@ -97,8 +97,22 @@ class ng_aes_state : public neogeo_state
 {
 public:
 	ng_aes_state(const machine_config &mconfig, device_type type, const char *tag)
-		: neogeo_state(mconfig, type, tag),
-		m_tempcdc(*this,"tempcdc")
+		: neogeo_state(mconfig, type, tag)
+		, m_tempcdc(*this,"tempcdc")
+		, m_io_in2(*this, "IN2")
+		, m_io_in3(*this, "IN3")
+		, m_io_in4(*this, "IN4")
+		, m_io_in0(*this, "IN0")
+		, m_io_in1(*this, "IN1")
+		, m_io_mj01_p1(*this, "MJ01_P1")
+		, m_io_mj02_p1(*this, "MJ02_P1")
+		, m_io_mj03_p1(*this, "MJ03_P1")
+		, m_io_mj04_p1(*this, "MJ04_P1")
+		, m_io_mj01_p2(*this, "MJ01_P2")
+		, m_io_mj02_p2(*this, "MJ02_P2")
+		, m_io_mj03_p2(*this, "MJ03_P2")
+		, m_io_mj04_p2(*this, "MJ04_P2")
+		, m_io_ctrlsel(*this, "CTRLSEL")
 	{
 		NeoCDDMAAddress1 = 0;
 		NeoCDDMAAddress2 = 0;
@@ -180,7 +194,23 @@ public:
 	IRQ_CALLBACK_MEMBER(neocd_int_callback);
 
 protected:
+	required_ioport m_io_in2;
+	required_ioport m_io_in3;
+	required_ioport m_io_in4;
+	required_ioport m_io_in0;
+	required_ioport m_io_in1;
+	required_ioport m_io_mj01_p1;
+	required_ioport m_io_mj02_p1;
+	required_ioport m_io_mj03_p1;
+	required_ioport m_io_mj04_p1;
+	required_ioport m_io_mj01_p2;
+	required_ioport m_io_mj02_p2;
+	required_ioport m_io_mj03_p2;
+	required_ioport m_io_mj04_p2;
+	required_ioport m_io_ctrlsel;
+
 	void common_machine_start();
+	INT32 SekIdle(INT32 nCycles);
 };
 
 
@@ -659,7 +689,7 @@ void ng_aes_state::set_DMA_regs(int offset, UINT16 wordValue)
 
 
 
-static INT32 SekIdle(INT32 nCycles)
+INT32 ng_aes_state::SekIdle(INT32 nCycles)
 {
 	return nCycles;
 }
@@ -959,7 +989,7 @@ if (NeoCDDMAAddress2 == 0x0800)  {
 READ16_MEMBER(ng_aes_state::aes_in0_r)
 {
 	UINT32 ret = 0xffff;
-	UINT32 ctrl = ioport("CTRLSEL")->read();
+	UINT32 ctrl = m_io_ctrlsel->read();
 
 	switch(ctrl & 0x0f)
 	{
@@ -967,17 +997,17 @@ READ16_MEMBER(ng_aes_state::aes_in0_r)
 		ret = 0xffff;
 		break;
 	case 0x01:
-		ret = ioport("IN0")->read();
+		ret = m_io_in0->read();
 		break;
 	case 0x02:
 		switch (m_controller_select)
 		{
-			case 0x09: ret = ioport("MJ01_P1")->read(); break;
-			case 0x12: ret = ioport("MJ02_P1")->read(); break;
-			case 0x1b: ret = ioport("MJ03_P1")->read(); break; /* player 1 normal inputs? */
-			case 0x24: ret = ioport("MJ04_P1")->read(); break;
+			case 0x09: ret = m_io_mj01_p1->read(); break;
+			case 0x12: ret = m_io_mj02_p1->read(); break;
+			case 0x1b: ret = m_io_mj03_p1->read(); break; /* player 1 normal inputs? */
+			case 0x24: ret = m_io_mj04_p1->read(); break;
 			default:
-				ret = ioport("IN0")->read();
+				ret = m_io_in0->read();
 				break;
 		}
 		break;
@@ -989,7 +1019,7 @@ READ16_MEMBER(ng_aes_state::aes_in0_r)
 READ16_MEMBER(ng_aes_state::aes_in1_r)
 {
 	UINT32 ret = 0xffff;
-	UINT32 ctrl = ioport("CTRLSEL")->read();
+	UINT32 ctrl = m_io_ctrlsel->read();
 
 	switch(ctrl & 0xf0)
 	{
@@ -997,17 +1027,17 @@ READ16_MEMBER(ng_aes_state::aes_in1_r)
 		ret = 0xffff;
 		break;
 	case 0x10:
-		ret = ioport("IN1")->read();
+		ret = m_io_in1->read();
 		break;
 	case 0x20:
 		switch (m_controller_select)
 		{
-			case 0x09: ret = ioport("MJ01_P2")->read(); break;
-			case 0x12: ret = ioport("MJ02_P2")->read(); break;
-			case 0x1b: ret = ioport("MJ03_P2")->read(); break; /* player 2 normal inputs? */
-			case 0x24: ret = ioport("MJ04_P2")->read(); break;
+			case 0x09: ret = m_io_mj01_p2->read(); break;
+			case 0x12: ret = m_io_mj02_p2->read(); break;
+			case 0x1b: ret = m_io_mj03_p2->read(); break; /* player 2 normal inputs? */
+			case 0x24: ret = m_io_mj04_p2->read(); break;
 			default:
-				ret = ioport("IN1")->read();
+				ret = m_io_in1->read();
 				break;
 		}
 		break;
@@ -1019,9 +1049,9 @@ READ16_MEMBER(ng_aes_state::aes_in1_r)
 
 READ16_MEMBER(ng_aes_state::aes_in2_r)
 {
-	UINT32 in2 = ioport("IN2")->read();
+	UINT32 in2 = m_io_in2->read();
 	UINT32 ret = in2;
-	UINT32 sel = ioport("CTRLSEL")->read();
+	UINT32 sel = m_io_ctrlsel->read();
 
 	if((sel & 0x02) && (m_controller_select == 0x24))
 		ret ^= 0x0200;
@@ -1146,7 +1176,7 @@ MACHINE_RESET_MEMBER(ng_aes_state,neogeo)
 
 	m_maincpu->reset();
 
-	neogeo_reset_rng(machine());
+	neogeo_reset_rng();
 
 	start_interrupt_timers();
 
@@ -1156,7 +1186,7 @@ MACHINE_RESET_MEMBER(ng_aes_state,neogeo)
 	m_recurse = 0;
 
 	/* AES apparently always uses the cartridge's fixed bank mode */
-	neogeo_set_fixed_layer_source(machine(),1);
+	neogeo_set_fixed_layer_source(1);
 
 	NeoSpriteRAM = memregion("sprites")->base();
 	YM2610ADPCMAROM = memregion("ymsnd")->base();
@@ -1659,8 +1689,24 @@ ROM_START( aes )
 	ROMX_LOAD("neo-po.bin",  0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(1))    /* AES Console (Japan) Bios */
 	ROM_SYSTEM_BIOS( 1, "asia-aes",   "Asia AES" )
 	ROMX_LOAD("neo-epo.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(2))    /* AES Console (Asia?) Bios */
-//  ROM_SYSTEM_BIOS( 2, "uni-bios_2_3","Universe Bios (Hack, Ver. 2.3)" )
-//  ROMX_LOAD( "uni-bios_2_3.rom",  0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(3) ) /* Universe Bios v2.3 (hack) */
+	ROM_SYSTEM_BIOS( 2, "uni-bios23",   "Universe Bios (Ver. 2.3)" )
+	ROMX_LOAD( "uni-bios_2_3.rom",  0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(3) ) /* Universe Bios v2.3 (hack) */
+	ROM_SYSTEM_BIOS( 3, "uni-bios30",   "Universe Bios (Ver. 3.0)" )
+	ROMX_LOAD("uni-bios-30.rom", 0x00000, 0x020000, CRC(a97c89a9) SHA1(97a5eff3b119062f10e31ad6f04fe4b90d366e7f), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(4))    /* Universe Bios v3.0 */
+	ROM_SYSTEM_BIOS( 4, "uni-bios10",   "Universe Bios (Ver. 1.0)" )
+	ROMX_LOAD("uni-bios-10.rom", 0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(5))    /* Universe Bios v1.0 */
+	ROM_SYSTEM_BIOS( 5, "uni-bios11",   "Universe Bios (Ver. 1.1)" )
+	ROMX_LOAD("uni-bios-11.rom", 0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(6))    /* Universe Bios v1.1 */
+	ROM_SYSTEM_BIOS( 6, "uni-bios12",   "Universe Bios (Ver. 1.2)" )
+	ROMX_LOAD("uni-bios-12.rom", 0x00000, 0x020000, CRC(4fa698e9) SHA1(682e13ec1c42beaa2d04473967840c88fd52c75a), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(7))    /* Universe Bios v1.2 */
+	ROM_SYSTEM_BIOS( 7, "uni-bios13",   "Universe Bios (Ver. 1.3)" )
+	ROMX_LOAD("uni-bios-13.rom", 0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(8))    /* Universe Bios v1.3 */
+	ROM_SYSTEM_BIOS( 8, "uni-bios20",   "Universe Bios (Ver. 2.0)" )
+	ROMX_LOAD("uni-bios-20.rom", 0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(9))    /* Universe Bios v2.0 */
+	ROM_SYSTEM_BIOS( 9, "uni-bios21",   "Universe Bios (Ver. 2.1)" )
+	ROMX_LOAD("uni-bios-21.rom", 0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(10))   /* Universe Bios v2.1 */
+	ROM_SYSTEM_BIOS( 10, "uni-bios22",   "Universe Bios (Ver. 2.2)" )
+	ROMX_LOAD("uni-bios-22.rom", 0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(11))   /* Universe Bios v2.2 */
 
 	ROM_REGION( 0x200000, "maincpu", ROMREGION_ERASEFF )
 

@@ -14,7 +14,8 @@ public:
 			m_workram_h(*this, "workram_h"),
 			m_sound_ram(*this, "sound_ram"),
 			m_fake_comms(*this, "fake")
-			{ }
+	{
+	}
 
 	required_shared_ptr<UINT32> m_workram_l;
 	required_shared_ptr<UINT32> m_workram_h;
@@ -47,7 +48,10 @@ public:
 		UINT32    ist;
 		UINT32    ism;
 		UINT32    illegal_factor[3];
+		UINT32    status;
 	}m_scu;
+
+	void scu_reset(void);
 
 	int       m_minit_boost;
 	int       m_sinit_boost;
@@ -135,72 +139,10 @@ public:
 	legacy_cpu_device* m_audiocpu;
 
 	bitmap_rgb32 m_tmpbitmap;
-	DECLARE_READ8_MEMBER(stv_ioga_r);
-	DECLARE_WRITE8_MEMBER(stv_ioga_w);
-	DECLARE_READ8_MEMBER(critcrsh_ioga_r);
-	DECLARE_READ8_MEMBER(magzun_ioga_r);
-	DECLARE_WRITE8_MEMBER(magzun_ioga_w);
-	DECLARE_READ8_MEMBER(stvmp_ioga_r);
-	DECLARE_WRITE8_MEMBER(stvmp_ioga_w);
-	DECLARE_READ32_MEMBER(stv_ioga_r32);
-	DECLARE_WRITE32_MEMBER(stv_ioga_w32);
-	DECLARE_READ32_MEMBER(critcrsh_ioga_r32);
-	DECLARE_READ32_MEMBER(stvmp_ioga_r32);
-	DECLARE_WRITE32_MEMBER(stvmp_ioga_w32);
-	DECLARE_READ32_MEMBER(magzun_ioga_r32);
-	DECLARE_WRITE32_MEMBER(magzun_ioga_w32);
-	DECLARE_READ32_MEMBER(magzun_hef_hack_r);
-	DECLARE_READ32_MEMBER(magzun_rx_hack_r);
-	DECLARE_READ32_MEMBER(astrass_hack_r);
 	DECLARE_INPUT_CHANGED_MEMBER(key_stroke);
 	DECLARE_INPUT_CHANGED_MEMBER(nmi_reset);
 	DECLARE_INPUT_CHANGED_MEMBER(tray_open);
 	DECLARE_INPUT_CHANGED_MEMBER(tray_close);
-	DECLARE_DRIVER_INIT(astrass);
-	DECLARE_DRIVER_INIT(batmanfr);
-	DECLARE_DRIVER_INIT(finlarch);
-	DECLARE_DRIVER_INIT(decathlt);
-	DECLARE_DRIVER_INIT(sanjeon);
-	DECLARE_DRIVER_INIT(puyosun);
-	DECLARE_DRIVER_INIT(winterht);
-	DECLARE_DRIVER_INIT(gaxeduel);
-	DECLARE_DRIVER_INIT(rsgun);
-	DECLARE_DRIVER_INIT(groovef);
-	DECLARE_DRIVER_INIT(sandor);
-	DECLARE_DRIVER_INIT(cottonbm);
-	DECLARE_DRIVER_INIT(smleague);
-	DECLARE_DRIVER_INIT(nameclv3);
-	DECLARE_DRIVER_INIT(danchiq);
-	DECLARE_DRIVER_INIT(hanagumi);
-	DECLARE_DRIVER_INIT(cotton2);
-	DECLARE_DRIVER_INIT(seabass);
-	DECLARE_DRIVER_INIT(stv);
-	DECLARE_DRIVER_INIT(thunt);
-	DECLARE_DRIVER_INIT(critcrsh);
-	DECLARE_DRIVER_INIT(stvmp);
-	DECLARE_DRIVER_INIT(sasissu);
-	DECLARE_DRIVER_INIT(dnmtdeka);
-	DECLARE_DRIVER_INIT(ffreveng);
-	DECLARE_DRIVER_INIT(fhboxers);
-	DECLARE_DRIVER_INIT(pblbeach);
-	DECLARE_DRIVER_INIT(sss);
-	DECLARE_DRIVER_INIT(diehard);
-	DECLARE_DRIVER_INIT(danchih);
-	DECLARE_DRIVER_INIT(shienryu);
-	DECLARE_DRIVER_INIT(elandore);
-	DECLARE_DRIVER_INIT(prikura);
-	DECLARE_DRIVER_INIT(maruchan);
-	DECLARE_DRIVER_INIT(colmns97);
-	DECLARE_DRIVER_INIT(grdforce);
-	DECLARE_DRIVER_INIT(suikoenb);
-	DECLARE_DRIVER_INIT(magzun);
-	DECLARE_DRIVER_INIT(shanhigw);
-	DECLARE_DRIVER_INIT(sokyugrt);
-	DECLARE_DRIVER_INIT(vfremix);
-	DECLARE_DRIVER_INIT(twcup98);
-	DECLARE_DRIVER_INIT(znpwfv);
-	DECLARE_DRIVER_INIT(othellos);
-	DECLARE_DRIVER_INIT(mausuke);
 
 	DECLARE_DRIVER_INIT(saturnus);
 	DECLARE_DRIVER_INIT(saturneu);
@@ -208,8 +150,6 @@ public:
 	DECLARE_MACHINE_START(saturn);
 	DECLARE_MACHINE_RESET(saturn);
 	DECLARE_VIDEO_START(stv_vdp2);
-	DECLARE_MACHINE_START(stv);
-	DECLARE_MACHINE_RESET(stv);
 	UINT32 screen_update_saturn(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_stv_vdp2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(saturn_scanline);
@@ -222,6 +162,7 @@ public:
 	TIMER_CALLBACK_MEMBER(dma_lv0_ended);
 	TIMER_CALLBACK_MEMBER(dma_lv1_ended);
 	TIMER_CALLBACK_MEMBER(dma_lv2_ended);
+	TIMER_CALLBACK_MEMBER(vdp1_draw_end);
 	void scu_single_transfer(address_space &space, UINT32 src, UINT32 dst,UINT8 *src_shift);
 	void scu_dma_direct(address_space &space, UINT8 dma_ch);
 	void scu_dma_indirect(address_space &space,UINT8 dma_ch);
@@ -250,11 +191,11 @@ public:
 
 	UINT8 smpc_direct_mode(UINT8 pad_n);
 	UINT8 smpc_th_control_mode(UINT8 pad_n);
+	TIMER_CALLBACK_MEMBER( smpc_audio_reset_line_pulse );
 	DECLARE_READ8_MEMBER( saturn_SMPC_r );
 	DECLARE_WRITE8_MEMBER( saturn_SMPC_w );
 
 	DECLARE_DEVICE_IMAGE_LOAD_MEMBER( sat_cart );
-	DECLARE_DEVICE_IMAGE_LOAD_MEMBER( stv_cart );
 
 	DECLARE_READ16_MEMBER ( saturn_vdp1_regs_r );
 	DECLARE_READ32_MEMBER ( saturn_vdp1_vram_r );
@@ -272,6 +213,7 @@ public:
 	DECLARE_WRITE32_MEMBER ( saturn_vdp2_cram_w );
 	DECLARE_WRITE16_MEMBER ( saturn_vdp2_regs_w );
 
+	DECLARE_READ32_MEMBER( abus_dummy_r );
 
 	/* VDP1 */
 	void stv_set_framebuffer_config( void );
@@ -373,24 +315,28 @@ public:
 
 	UINT8 get_vblank( void );
 	UINT8 get_hblank( void );
+	int get_hcounter( void );
+	int get_vcounter( void );
 	int get_vblank_duration( void );
 	int get_hblank_duration( void );
 	int get_pixel_clock( void );
 	UINT8 get_odd_bit( void );
 	void stv_vdp2_dynamic_res_change( void );
+	int get_vblank_start_position( void );
+	int get_ystep_count( void );
 
 	void refresh_palette_data( void );
 	int stv_vdp2_window_process(int x,int y);
-	void stv_vdp2_get_window0_coordinates(UINT16 *s_x, UINT16 *e_x, UINT16 *s_y, UINT16 *e_y);
-	void stv_vdp2_get_window1_coordinates(UINT16 *s_x, UINT16 *e_x, UINT16 *s_y, UINT16 *e_y);
-	int get_window_pixel(UINT16 s_x,UINT16 e_x,UINT16 s_y,UINT16 e_y,int x, int y,UINT8 win_num);
+	void stv_vdp2_get_window0_coordinates(int *s_x, int *e_x, int *s_y, int *e_y);
+	void stv_vdp2_get_window1_coordinates(int *s_x, int *e_x, int *s_y, int *e_y);
+	int get_window_pixel(int s_x,int e_x,int s_y,int e_y,int x, int y,UINT8 win_num);
 	int stv_vdp2_apply_window_on_layer(rectangle &cliprect);
 
 	void stv_vdp2_draw_basic_tilemap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void stv_vdp2_draw_basic_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void draw_4bpp_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void draw_8bpp_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
-//  void draw_11bpp_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void draw_11bpp_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void draw_rgb15_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void draw_rgb32_bitmap(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 
@@ -398,6 +344,10 @@ public:
 	void stv_vdp2_drawgfxzoom_rgb555(bitmap_rgb32 &dest_bmp,const rectangle &clip,UINT32 code,UINT32 color,int flipx,int flipy,int sx,int sy,int transparency,int transparent_color,int scalex, int scaley,int sprite_screen_width, int sprite_screen_height, int alpha);
 	void stv_vdp2_drawgfx_rgb555( bitmap_rgb32 &dest_bmp, const rectangle &clip, UINT32 code, int flipx, int flipy, int sx, int sy, int transparency, int alpha);
 	void stv_vdp2_drawgfx_rgb888( bitmap_rgb32 &dest_bmp, const rectangle &clip, UINT32 code, int flipx, int flipy, int sx, int sy, int transparency, int alpha);
+
+	void stv_vdp2_drawgfx_alpha(bitmap_rgb32 &dest_bmp,const rectangle &clip,gfx_element *gfx, UINT32 code,UINT32 color, int flipx,int flipy,int offsx,int offsy, int transparent_color, int alpha);
+	void stv_vdp2_drawgfx_transpen(bitmap_rgb32 &dest_bmp,const rectangle &clip,gfx_element *gfx, UINT32 code,UINT32 color, int flipx,int flipy,int offsx,int offsy, int transparent_color);
+
 
 	void stv_vdp2_draw_rotation_screen(bitmap_rgb32 &bitmap, const rectangle &cliprect, int iRP);
 	void stv_vdp2_check_tilemap_with_linescroll(bitmap_rgb32 &bitmap, const rectangle &cliprect);
@@ -465,7 +415,11 @@ public:
 		UINT8  plane_size;
 		UINT8  colour_ram_address_offset;
 		UINT8  fade_control;
-		UINT8  window_control;
+		struct{
+			UINT8 logic;
+			UINT8 enabled[2];
+			UINT8 area[2];
+		}window_control;
 
 		UINT8  line_screen_enabled;
 		UINT8  mosaic_screen_enabled;
@@ -603,7 +557,9 @@ public:
 	{
 		XFERTYPE32_INVALID,
 		XFERTYPE32_GETSECTOR,
-		XFERTYPE32_GETDELETESECTOR
+		XFERTYPE32_GETDELETESECTOR,
+		XFERTYPE32_PUTSECTOR,
+		XFERTYPE32_MOVESECTOR
 	};
 
 
@@ -612,7 +568,7 @@ public:
 	void stvcd_set_tray_open(void);
 	void stvcd_set_tray_close(void);
 
-	int get_track_index(void);
+	int get_track_index(UINT32 fad);
 	void cr_standard_return(UINT16 cur_status);
 	void cd_free_block(blockT *blktofree);
 	void cd_defragblocks(partitionT *part);
@@ -621,6 +577,7 @@ public:
 	UINT16 cd_readWord(UINT32 addr);
 	void cd_writeWord(UINT32 addr, UINT16 data);
 	UINT32 cd_readLong(UINT32 addr);
+	void cd_writeLong(UINT32 addr, UINT32 data);
 
 	void cd_readTOC(void);
 	void cd_readblock(UINT32 fad, UINT8 *dat);
@@ -665,9 +622,12 @@ public:
 	int cddevicenum;
 
 	UINT16 cr1, cr2, cr3, cr4;
+	UINT16 prev_cr1, prev_cr2, prev_cr3, prev_cr4;
+	UINT8 status_type;
 	UINT16 hirqmask, hirqreg;
 	UINT16 cd_stat;
 	UINT32 cd_curfad;// = 0;
+	UINT32 cd_fad_seek;
 	UINT32 fadstoplay;// = 0;
 	UINT32 in_buffer;// = 0;    // amount of data in the buffer
 	int oddframe;// = 0;
@@ -678,15 +638,94 @@ public:
 	UINT8 cdda_maxrepeat;
 	UINT8 cdda_repeat_count;
 	UINT8 tray_is_closed;
+	int get_timing_command( void );
 
 	direntryT curroot;       // root entry of current filesystem
 	direntryT *curdir;       // current directory
 	int numfiles;            // # of entries in current directory
 	int firstfile;           // first non-directory file
 
+	static void m68k_reset_callback(device_t *device);
+	int DectoBCD(int num);
+};
 
-	// ST-V specific
+class stv_state : public saturn_state
+{
+public:
+	stv_state(const machine_config &mconfig, device_type type, const char *tag)
+		: saturn_state(mconfig, type, tag)
+	{
+	}
+
+	DECLARE_DRIVER_INIT(astrass);
+	DECLARE_DRIVER_INIT(batmanfr);
+	DECLARE_DRIVER_INIT(finlarch);
+	DECLARE_DRIVER_INIT(decathlt);
+	DECLARE_DRIVER_INIT(sanjeon);
+	DECLARE_DRIVER_INIT(puyosun);
+	DECLARE_DRIVER_INIT(winterht);
+	DECLARE_DRIVER_INIT(gaxeduel);
+	DECLARE_DRIVER_INIT(rsgun);
+	DECLARE_DRIVER_INIT(groovef);
+	DECLARE_DRIVER_INIT(sandor);
+	DECLARE_DRIVER_INIT(cottonbm);
+	DECLARE_DRIVER_INIT(smleague);
+	DECLARE_DRIVER_INIT(nameclv3);
+	DECLARE_DRIVER_INIT(danchiq);
+	DECLARE_DRIVER_INIT(hanagumi);
+	DECLARE_DRIVER_INIT(cotton2);
+	DECLARE_DRIVER_INIT(seabass);
+	DECLARE_DRIVER_INIT(stv);
+	DECLARE_DRIVER_INIT(thunt);
+	DECLARE_DRIVER_INIT(critcrsh);
+	DECLARE_DRIVER_INIT(stvmp);
+	DECLARE_DRIVER_INIT(sasissu);
+	DECLARE_DRIVER_INIT(dnmtdeka);
+	DECLARE_DRIVER_INIT(ffreveng);
+	DECLARE_DRIVER_INIT(fhboxers);
+	DECLARE_DRIVER_INIT(pblbeach);
+	DECLARE_DRIVER_INIT(sss);
+	DECLARE_DRIVER_INIT(diehard);
+	DECLARE_DRIVER_INIT(danchih);
+	DECLARE_DRIVER_INIT(shienryu);
+	DECLARE_DRIVER_INIT(elandore);
+	DECLARE_DRIVER_INIT(prikura);
+	DECLARE_DRIVER_INIT(maruchan);
+	DECLARE_DRIVER_INIT(colmns97);
+	DECLARE_DRIVER_INIT(grdforce);
+	DECLARE_DRIVER_INIT(suikoenb);
+	DECLARE_DRIVER_INIT(magzun);
+	DECLARE_DRIVER_INIT(shanhigw);
+	DECLARE_DRIVER_INIT(sokyugrt);
+	DECLARE_DRIVER_INIT(vfremix);
+	DECLARE_DRIVER_INIT(twcup98);
+	DECLARE_DRIVER_INIT(znpwfv);
+	DECLARE_DRIVER_INIT(othellos);
+	DECLARE_DRIVER_INIT(mausuke);
+
+	DECLARE_READ8_MEMBER(stv_ioga_r);
+	DECLARE_WRITE8_MEMBER(stv_ioga_w);
+	DECLARE_READ8_MEMBER(critcrsh_ioga_r);
+	DECLARE_READ8_MEMBER(magzun_ioga_r);
+	DECLARE_WRITE8_MEMBER(magzun_ioga_w);
+	DECLARE_READ8_MEMBER(stvmp_ioga_r);
+	DECLARE_WRITE8_MEMBER(stvmp_ioga_w);
+	DECLARE_READ32_MEMBER(stv_ioga_r32);
+	DECLARE_WRITE32_MEMBER(stv_ioga_w32);
+	DECLARE_READ32_MEMBER(critcrsh_ioga_r32);
+	DECLARE_READ32_MEMBER(stvmp_ioga_r32);
+	DECLARE_WRITE32_MEMBER(stvmp_ioga_w32);
+	DECLARE_READ32_MEMBER(magzun_ioga_r32);
+	DECLARE_WRITE32_MEMBER(magzun_ioga_w32);
+	DECLARE_READ32_MEMBER(magzun_hef_hack_r);
+	DECLARE_READ32_MEMBER(magzun_rx_hack_r);
+
+	DECLARE_DEVICE_IMAGE_LOAD_MEMBER( stv_cart );
+
 	void install_stvbios_speedups( void );
+
+	DECLARE_MACHINE_START(stv);
+	DECLARE_MACHINE_RESET(stv);
 };
 
 #define MASTER_CLOCK_352 57272720
@@ -714,3 +753,6 @@ public:
 #define IRQ_DMAILL     1 << 12
 #define IRQ_VDP1_END   1 << 13
 #define IRQ_ABUS       1 << 15
+
+extern void scsp_irq(device_t *device, int irq);
+GFXDECODE_EXTERN( stv );

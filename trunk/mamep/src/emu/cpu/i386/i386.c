@@ -2715,17 +2715,17 @@ static void report_invalid_opcode(i386_state *cpustate)
 #endif
 }
 
-static void report_unimplemented_opcode(i386_state *cpustate)
+static void report_invalid_modrm(i386_state *cpustate, const char* opcode, UINT8 modrm)
 {
 #ifndef DEBUG_MISSING_OPCODE
-	fatalerror("i386: Unimplemented opcode %02X at %08X\n", cpustate->opcode, cpustate->pc - 1 );
+	logerror("i386: Invalid %s modrm %01X at %08X\n", opcode, modrm, cpustate->pc - 2);
 #else
-	astring errmsg;
-	errmsg.cat("i386: Unimplemented opcode ");
+	logerror("i386: Invalid %s modrm %01X", opcode, modrm);
 	for (int a = 0; a < cpustate->opcode_bytes_length; a++)
-		errmsg.catprintf(" %02X", cpustate->opcode_bytes[a]);
-	errmsg.catprintf(" at %08X", cpustate->opcode_pc );
+		logerror(" %02X", cpustate->opcode_bytes[a]);
+	logerror(" at %08X\n", cpustate->opcode_pc);
 #endif
+	i386_trap(cpustate, 6, 0, 0);
 }
 
 /* Forward declarations */
@@ -3601,6 +3601,19 @@ CPU_GET_INFO( i386 )
 	}
 }
 
+CPU_GET_INFO( i386SX )
+{
+	switch (state)
+	{
+		/* --- the following bits of info are returned as 64-bit signed integers --- */
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:    info->i = 16;                    break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;                  break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:     info->i = 16;                    break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:     info->i = 16;                    break;
+		default:                                        CPU_GET_INFO_CALL(i386);               break;
+	}
+}
+
 /*****************************************************************************/
 /* Intel 486 */
 
@@ -4465,6 +4478,7 @@ CPU_GET_INFO( pentium4 )
 
 
 DEFINE_LEGACY_CPU_DEVICE(I386, i386);
+DEFINE_LEGACY_CPU_DEVICE(I386SX, i386SX);
 DEFINE_LEGACY_CPU_DEVICE(I486, i486);
 DEFINE_LEGACY_CPU_DEVICE(PENTIUM, pentium);
 DEFINE_LEGACY_CPU_DEVICE(MEDIAGX, mediagx);

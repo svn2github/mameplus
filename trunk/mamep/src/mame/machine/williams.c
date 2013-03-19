@@ -628,7 +628,7 @@ CUSTOM_INPUT_MEMBER(williams_state::williams_mux_r)
 READ8_MEMBER(williams_state::williams_49way_port_0_r)
 {
 	static const UINT8 translate49[7] = { 0x0, 0x4, 0x6, 0x7, 0xb, 0x9, 0x8 };
-	return (translate49[machine().root_device().ioport("49WAYX")->read() >> 4] << 4) | translate49[machine().root_device().ioport("49WAYY")->read() >> 4];
+	return (translate49[ioport("49WAYX")->read() >> 4] << 4) | translate49[ioport("49WAYY")->read() >> 4];
 }
 
 
@@ -745,7 +745,7 @@ MACHINE_START_MEMBER(williams_state,defender)
 	MACHINE_START_CALL_MEMBER(williams_common);
 
 	/* configure the banking and make sure it is reset to 0 */
-	machine().root_device().membank("bank1")->configure_entries(0, 9, &machine().root_device().memregion("maincpu")->base()[0x10000], 0x1000);
+	membank("bank1")->configure_entries(0, 9, &memregion("maincpu")->base()[0x10000], 0x1000);
 
 	machine().save().register_postload(save_prepost_delegate(FUNC(williams_state::defender_postload), this));
 }
@@ -865,11 +865,10 @@ MACHINE_RESET_MEMBER(williams_state,blaster)
 }
 
 
-INLINE void update_blaster_banking(running_machine &machine)
+inline void williams_state::update_blaster_banking()
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	state->membank("bank1")->set_entry(state->m_vram_bank * (state->m_blaster_bank + 1));
-	state->membank("bank2")->set_entry(state->m_vram_bank * (state->m_blaster_bank + 1));
+	membank("bank1")->set_entry(m_vram_bank * (m_blaster_bank + 1));
+	membank("bank2")->set_entry(m_vram_bank * (m_blaster_bank + 1));
 }
 
 
@@ -877,7 +876,7 @@ WRITE8_MEMBER(williams_state::blaster_vram_select_w)
 {
 	/* VRAM/ROM banking from bit 0 */
 	m_vram_bank = data & 0x01;
-	update_blaster_banking(machine());
+	update_blaster_banking();
 
 	/* cocktail flip from bit 1 */
 	m_cocktail = data & 0x02;
@@ -890,7 +889,7 @@ WRITE8_MEMBER(williams_state::blaster_vram_select_w)
 WRITE8_MEMBER(williams_state::blaster_bank_select_w)
 {
 	m_blaster_bank = data & 15;
-	update_blaster_banking(machine());
+	update_blaster_banking();
 }
 
 
@@ -917,7 +916,7 @@ WRITE8_MEMBER(williams_state::lottofun_coin_lock_w)
 READ8_MEMBER(williams_state::tshoot_input_port_0_3_r)
 {
 	/* merge in the gun inputs with the standard data */
-	int data = machine().root_device().ioport("IN0")->read();
+	int data = ioport("IN0")->read();
 	int gun = (data & 0x3f) ^ ((data & 0x3f) >> 1);
 	return (data & 0xc0) | gun;
 

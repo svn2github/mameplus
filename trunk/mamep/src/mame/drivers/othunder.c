@@ -249,11 +249,10 @@ TODO:
                 INTERRUPTS
 ***********************************************************/
 
-static void update_irq( running_machine &machine )
+void othunder_state::update_irq(  )
 {
-	othunder_state *state = machine.driver_data<othunder_state>();
-	state->m_maincpu->set_input_line(6, state->m_ad_irq ? ASSERT_LINE : CLEAR_LINE);
-	state->m_maincpu->set_input_line(5, state->m_vblank_irq ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(6, m_ad_irq ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(5, m_vblank_irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE16_MEMBER(othunder_state::irq_ack_w)
@@ -269,19 +268,19 @@ WRITE16_MEMBER(othunder_state::irq_ack_w)
 			break;
 	}
 
-	update_irq(machine());
+	update_irq();
 }
 
 INTERRUPT_GEN_MEMBER(othunder_state::vblank_interrupt)
 {
 	m_vblank_irq = 1;
-	update_irq(machine());
+	update_irq();
 }
 
 TIMER_CALLBACK_MEMBER(othunder_state::ad_interrupt)
 {
 	m_ad_irq = 1;
-	update_irq(machine());
+	update_irq();
 }
 
 
@@ -398,15 +397,15 @@ WRITE8_MEMBER(othunder_state::sound_bankswitch_w)
 WRITE16_MEMBER(othunder_state::othunder_sound_w)
 {
 	if (offset == 0)
-		tc0140syt_port_w(m_tc0140syt, space, 0, data & 0xff);
+		m_tc0140syt->tc0140syt_port_w(space, 0, data & 0xff);
 	else if (offset == 1)
-		tc0140syt_comm_w(m_tc0140syt, space, 0, data & 0xff);
+		m_tc0140syt->tc0140syt_comm_w(space, 0, data & 0xff);
 }
 
 READ16_MEMBER(othunder_state::othunder_sound_r)
 {
 	if (offset == 1)
-		return ((tc0140syt_comm_r(m_tc0140syt, space, 0) & 0xff));
+		return ((m_tc0140syt->tc0140syt_comm_r(space, 0) & 0xff));
 	else
 		return 0;
 }
@@ -467,8 +466,8 @@ static ADDRESS_MAP_START( z80_sound_map, AS_PROGRAM, 8, othunder_state )
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
-	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_slave_port_w)
-	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
+	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
+	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITE(othunder_TC0310FAM_w) /* pan */
 	AM_RANGE(0xe600, 0xe600) AM_WRITENOP /* ? */
 	AM_RANGE(0xea00, 0xea00) AM_READ_PORT(ROTARY_PORT_TAG)  /* rotary input */
@@ -672,7 +671,7 @@ void othunder_state::machine_start()
 	m_tc0220ioc = machine().device("tc0220ioc");
 	m_tc0100scn = machine().device("tc0100scn");
 	m_tc0110pcr = machine().device("tc0110pcr");
-	m_tc0140syt = machine().device("tc0140syt");
+	m_tc0140syt = machine().device<tc0140syt_device>("tc0140syt");
 	m_2610_0l = machine().device<filter_volume_device>("2610.0l");
 	m_2610_0r = machine().device<filter_volume_device>("2610.0r");
 	m_2610_1l = machine().device<filter_volume_device>("2610.1l");

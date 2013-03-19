@@ -316,15 +316,19 @@ public:
 	DECLARE_DRIVER_INIT(mrdrilrg);
 	DECLARE_DRIVER_INIT(chocovdr);
 	DECLARE_MACHINE_RESET(namcos10);
+	void memn_driver_init(  );
 };
 
 
 static ADDRESS_MAP_START( namcos10_map, AS_PROGRAM, 32, namcos10_state )
 	AM_RANGE(0x00000000, 0x00ffffff) AM_RAM AM_SHARE("share1") /* ram */
+	AM_RANGE(0x1f500000, 0x1f5007ff) AM_RAM AM_SHARE("share3") /* ram? stores block numbers */
 	AM_RANGE(0x1fc00000, 0x1fffffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
 	AM_RANGE(0x80000000, 0x80ffffff) AM_RAM AM_SHARE("share1") /* ram mirror */
+	AM_RANGE(0x9f500000, 0x9f5007ff) AM_RAM AM_SHARE("share3") /* ram? stores block numbers */
 	AM_RANGE(0x9fc00000, 0x9fffffff) AM_ROM AM_SHARE("share2") /* bios mirror */
 	AM_RANGE(0xa0000000, 0xa0ffffff) AM_RAM AM_SHARE("share1") /* ram mirror */
+	AM_RANGE(0xbf500000, 0xbf5007ff) AM_RAM AM_SHARE("share3") /* ram? stores block numbers */
 	AM_RANGE(0xbfc00000, 0xbfffffff) AM_ROM AM_SHARE("share2") /* bios mirror */
 ADDRESS_MAP_END
 
@@ -341,6 +345,7 @@ ADDRESS_MAP_END
 WRITE32_MEMBER(namcos10_state::key_w )
 {
 	key = (data >> 15) | (data << 1);
+	logerror("key_w %04x\n", key);
 	cnt = 0;
 }
 
@@ -351,7 +356,7 @@ WRITE32_MEMBER(namcos10_state::bank_w)
 
 READ32_MEMBER(namcos10_state::range_r)
 {
-	UINT32 data32 = ((const UINT32 *)(machine().root_device().memregion("user1")->base()))[offset+bank_base];
+	UINT32 data32 = ((const UINT32 *)(memregion("user1")->base()))[offset+bank_base];
 
 	UINT16 d16;
 	if(ACCESSING_BITS_16_31)
@@ -417,25 +422,25 @@ READ32_MEMBER(namcos10_state::nand_status_r )
 WRITE32_MEMBER(namcos10_state::nand_address1_w )
 {
 	logerror("nand_a1_w %08x (%08x)\n", data, space.device().safe_pc());
-	nand_address = ( nand_address & 0x00ffffff ) | ( ( data & 0xff ) << 24 );
+	//  nand_address = ( nand_address & 0x00ffffff ) | ( ( data & 0xff ) << 24 );
 }
 
 WRITE32_MEMBER(namcos10_state::nand_address2_w )
 {
 	logerror("nand_a2_w %08x (%08x)\n", data, space.device().safe_pc());
-	nand_address = ( nand_address & 0xff00ffff ) | ( ( data & 0xff ) << 16 );
+	nand_address = ( nand_address & 0xffffff00 ) | ( ( data & 0xff ) <<  0 );
 }
 
 WRITE32_MEMBER(namcos10_state::nand_address3_w )
 {
 	logerror("nand_a3_w %08x (%08x)\n", data, space.device().safe_pc());
-	nand_address = ( nand_address & 0xffff00ff ) | ( ( data & 0xff ) << 8 );
+	nand_address = ( nand_address & 0xffff00ff ) | ( ( data & 0xff ) <<  8 );
 }
 
 WRITE32_MEMBER(namcos10_state::nand_address4_w )
 {
-	logerror("nand_a4_w %08x (%08x)\n", data, space.device().safe_pc());
-	nand_address = ( nand_address & 0xffffff00 ) | ( ( data & 0xff ) << 0 );
+	nand_address = ( nand_address & 0xff00ffff ) | ( ( data & 0xff ) << 16 );
+	logerror("nand_a4_w %08x (%08x) -> %08x\n", data, space.device().safe_pc(), nand_address*2);
 }
 
 UINT16 namcos10_state::nand_read( UINT32 address )
@@ -454,7 +459,7 @@ READ32_MEMBER(namcos10_state::nand_data_r )
 {
 	UINT32 data = nand_read2( nand_address * 2 );
 
-	logerror("read %08x = %04x\n", nand_address*2, data);
+	//  logerror("read %08x = %04x\n", nand_address*2, data);
 
 /*  printf( "data<-%08x (%08x)\n", data, nand_address ); */
 	nand_address++;
@@ -487,25 +492,26 @@ WRITE32_MEMBER(namcos10_state::watchdog_w)
 }
 
 static ADDRESS_MAP_START( namcos10_memn_map, AS_PROGRAM, 32, namcos10_state )
+	AM_RANGE(0x1f300000, 0x1f300003) AM_WRITE(key_w)
+
 	AM_RANGE(0x1f400000, 0x1f400003) AM_READ (nand_status_r)
 	AM_RANGE(0x1f410000, 0x1f410003) AM_WRITE(nand_address1_w)
-	AM_RANGE(0x1f420000, 0x1f420003) AM_WRITE(nand_address1_w)
-	AM_RANGE(0x1f430000, 0x1f430003) AM_WRITE(nand_address1_w)
-	AM_RANGE(0x1f440000, 0x1f440003) AM_WRITE(nand_address1_w)
+	AM_RANGE(0x1f420000, 0x1f420003) AM_WRITE(nand_address2_w)
+	AM_RANGE(0x1f430000, 0x1f430003) AM_WRITE(nand_address3_w)
+	AM_RANGE(0x1f440000, 0x1f440003) AM_WRITE(nand_address4_w)
 	AM_RANGE(0x1f450000, 0x1f450003) AM_READ (nand_data_r)
 	AM_RANGE(0x1fb60000, 0x1fb60003) AM_READWRITE(nand_block_r, nand_block_w)
 
 	AM_IMPORT_FROM(namcos10_map)
 ADDRESS_MAP_END
 
-static void memn_driver_init( running_machine &machine )
+void namcos10_state::memn_driver_init(  )
 {
-	namcos10_state *state = machine.driver_data<namcos10_state>();
-	UINT8 *BIOS = (UINT8 *)state->memregion( "user1" )->base();
-	state->nand_base = (UINT8 *)state->memregion( "user2" )->base();
+	UINT8 *BIOS = (UINT8 *)memregion( "user1" )->base();
+	nand_base = (UINT8 *)memregion( "user2" )->base();
 
-	state->nand_copy( (UINT32 *)( BIOS + 0x0000000 ), 0x08000, 0x001c000 );
-	state->nand_copy( (UINT32 *)( BIOS + 0x0020000 ), 0x24000, 0x03e0000 );
+	nand_copy( (UINT32 *)( BIOS + 0x0000000 ), 0x08000, 0x001c000 );
+	nand_copy( (UINT32 *)( BIOS + 0x0020000 ), 0x24000, 0x03e0000 );
 }
 
 static void decrypt_bios( running_machine &machine, const char *regionName, int start, int b15, int b14, int b13, int b12, int b11, int b10, int b9, int b8,
@@ -530,37 +536,37 @@ DRIVER_INIT_MEMBER(namcos10_state,mrdrilr2)
 DRIVER_INIT_MEMBER(namcos10_state,gjspace)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x0, 0x2, 0xe, 0xd, 0xf, 0x6, 0xc, 0x7, 0x5, 0x1, 0x9, 0x8, 0xa, 0x3, 0x4, 0xb );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,mrdrilrg)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x6, 0x4, 0x7, 0x5, 0x2, 0x1, 0x0, 0x3, 0xc, 0xd, 0xe, 0xf, 0x8, 0x9, 0xb, 0xa );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,knpuzzle)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x6, 0x7, 0x4, 0x5, 0x2, 0x0, 0x3, 0x1, 0xc, 0xd, 0xe, 0xf, 0x9, 0xb, 0x8, 0xa );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,startrgn)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x6, 0x5, 0x4, 0x7, 0x1, 0x3, 0x0, 0x2, 0xc, 0xd, 0xe, 0xf, 0x8, 0xb, 0xa, 0x9 );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,gamshara)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x5, 0x4, 0x7, 0x6, 0x0, 0x1, 0x3, 0x2, 0xd, 0xf, 0xc, 0xe, 0x8, 0x9, 0xa, 0xb );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,gunbalna)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x5, 0x4, 0x7, 0x6, 0x0, 0x1, 0x3, 0x2, 0xd, 0xf, 0xc, 0xe, 0x9, 0x8, 0xa, 0xb );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,chocovdr)
@@ -569,19 +575,19 @@ DRIVER_INIT_MEMBER(namcos10_state,chocovdr)
 //                                             BAD? 0 or 9                             1 or 8         0 or 9
 //                         ok!  ok!  ok!  ok!            ok!  ok!  ok!  ok!  ok!  ok!       ok!  ok!
 	decrypt_bios( machine(), "user2", 0x8400, 0x5, 0x4, 0x6, 0x7, 0x1, 0x0, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x8, 0xb, 0xa, 0x9 );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,panikuru)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x6, 0x4, 0x7, 0x5, 0x0, 0x1, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x9, 0x8, 0xb, 0xa );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 DRIVER_INIT_MEMBER(namcos10_state,nflclsfb)
 {
 	decrypt_bios( machine(), "user2", 0x8400, 0x6, 0x5, 0x4, 0x7, 0x1, 0x3, 0x0, 0x2, 0xc, 0xd, 0xe, 0xf, 0x8, 0xb, 0xa, 0x9 );
-	memn_driver_init(machine());
+	memn_driver_init();
 }
 
 

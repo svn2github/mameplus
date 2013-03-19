@@ -1411,7 +1411,7 @@ TIMER_CALLBACK_MEMBER(n64_periphs::pi_dma_callback)
 
 void n64_periphs::pi_dma_tick()
 {
-	UINT16 *cart16 = (UINT16*)machine().root_device().memregion("user2")->base();
+	UINT16 *cart16;
 	UINT16 *dram16 = (UINT16*)rdram;
 
 	UINT32 cart_addr = (pi_cart_addr & 0x0fffffff) >> 1;
@@ -1429,6 +1429,7 @@ void n64_periphs::pi_dma_tick()
 	}
 	else
 	{
+		cart16 = (UINT16*)machine().root_device().memregion("user2")->base();
 		cart_addr &= ((machine().root_device().memregion("user2")->bytes() >> 1) - 1);
 	}
 

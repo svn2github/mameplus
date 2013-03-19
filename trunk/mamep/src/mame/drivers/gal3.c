@@ -159,6 +159,7 @@ public:
 	DECLARE_WRITE32_MEMBER(rso_w);
 	DECLARE_VIDEO_START(gal3);
 	UINT32 screen_update_gal3(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void update_palette(  );
 };
 
 
@@ -173,23 +174,22 @@ VIDEO_START_MEMBER(gal3_state,gal3)
 
 }
 
-static void update_palette( running_machine &machine )
+void gal3_state::update_palette(  )
 {
-	gal3_state *state = machine.driver_data<gal3_state>();
 	int i;
 	INT16 data1,data2;
 	int r,g,b;
 
 	for( i=0; i<NAMCOS21_NUM_COLORS; i++ )
 	{
-		data1 = state->m_generic_paletteram_16[0x00000/2+i];
-		data2 = state->m_generic_paletteram_16[0x10000/2+i];
+		data1 = m_generic_paletteram_16[0x00000/2+i];
+		data2 = m_generic_paletteram_16[0x10000/2+i];
 
 		r = data1>>8;
 		g = data1&0xff;
 		b = data2&0xff;
 
-		palette_set_color( machine,i, MAKE_RGB(r,g,b) );
+		palette_set_color( machine(),i, MAKE_RGB(r,g,b) );
 	}
 } /* update_palette */
 
@@ -200,7 +200,7 @@ UINT32 gal3_state::screen_update_gal3(screen_device &screen, bitmap_rgb32 &bitma
 	static int pivot = 15;
 	int pri;
 
-	update_palette(machine());
+	update_palette();
 
 	if( machine().input().code_pressed_once(KEYCODE_H)&&(pivot<15) )    pivot+=1;
 	if( machine().input().code_pressed_once(KEYCODE_J)&&(pivot>0) ) pivot-=1;
@@ -438,11 +438,11 @@ static ADDRESS_MAP_START( sound_cpu_map, AS_PROGRAM, 16, gal3_state )
 	AM_RANGE(0x110000, 0x113fff) AM_RAM
 /// AM_RANGE(0x120000, 0x120003) AM_RAM //2ieme byte
 /// AM_RANGE(0x200000, 0x20017f) AM_RAM //C140
-	AM_RANGE(0x200000, 0x2037ff) AM_DEVREADWRITE8_LEGACY("c140_16a", c140_r, c140_w, 0x00ff)    //C140///////////
+	AM_RANGE(0x200000, 0x2037ff) AM_DEVREADWRITE8("c140_16a", c140_device, c140_r, c140_w, 0x00ff)    //C140///////////
 /// AM_RANGE(0x201000, 0x20117f) AM_RAM //C140
 /// AM_RANGE(0x202000, 0x20217f) AM_RAM //C140
 /// AM_RANGE(0x203000, 0x20317f) AM_RAM //C140
-	AM_RANGE(0x204000, 0x2047ff) AM_DEVREADWRITE8_LEGACY("c140_16g", c140_r, c140_w, 0x00ff)    //C140
+	AM_RANGE(0x204000, 0x2047ff) AM_DEVREADWRITE8("c140_16g", c140_device, c140_r, c140_w, 0x00ff)    //C140
 /// AM_RANGE(0x090000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -637,12 +637,12 @@ static MACHINE_CONFIG_START( gal3, gal3_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("c140_16g", C140, 8000000/374)
+	MCFG_C140_ADD("c140_16g", 8000000/374)
 	MCFG_SOUND_CONFIG(C140_interface)   //to be verified
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
-	MCFG_SOUND_ADD("c140_16a", C140, 8000000/374)
+	MCFG_C140_ADD("c140_16a", 8000000/374)
 	MCFG_SOUND_CONFIG(C140_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)

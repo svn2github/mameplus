@@ -395,7 +395,7 @@ public:
 	void gfx_write_reg(running_machine &machine, UINT64 data);
 
 	void display(bitmap_rgb32 *bitmap, const rectangle &cliprect);
-
+	inline rgb_t texture_fetch(UINT32 *texture, int u, int v, int width, int format);
 private:
 	bitmap_rgb32 *m_framebuffer;
 	bitmap_rgb32 *m_backbuffer;
@@ -724,6 +724,7 @@ public:
 	UINT32 screen_update_cobra(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(cobra_vblank);
 	void cobra_video_exit();
+	int decode_debug_state_value(int v);
 };
 
 void cobra_renderer::render_color_scan(INT32 scanline, const extent_t &extent, const cobra_polydata &extradata, int threadid)
@@ -772,7 +773,7 @@ void cobra_renderer::render_color_scan(INT32 scanline, const extent_t &extent, c
 	}
 }
 
-INLINE rgb_t texture_fetch(UINT32 *texture, int u, int v, int width, int format)
+rgb_t cobra_renderer::texture_fetch(UINT32 *texture, int u, int v, int width, int format)
 {
 	UINT32 texel = texture[((v * width) + u) / 2];
 
@@ -1020,7 +1021,7 @@ UINT32 cobra_state::screen_update_cobra(screen_device &screen, bitmap_rgb32 &bit
 
 /*****************************************************************************/
 
-static int decode_debug_state_value(int v)
+int cobra_state::decode_debug_state_value(int v)
 {
 	switch (v)
 	{
@@ -1985,7 +1986,7 @@ static ADDRESS_MAP_START( cobra_sub_map, AS_PROGRAM, 32, cobra_state )
 	AM_RANGE(0x00000000, 0x003fffff) AM_MIRROR(0x80000000) AM_RAM                                           // Main RAM
 	AM_RANGE(0x70000000, 0x7003ffff) AM_MIRROR(0x80000000) AM_READWRITE(sub_comram_r, sub_comram_w)         // Double buffered shared RAM between Main and Sub
 //  AM_RANGE(0x78000000, 0x780000ff) AM_MIRROR(0x80000000) AM_NOP                                           // SCSI controller (unused)
-	AM_RANGE(0x78040000, 0x7804ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE16_LEGACY("rfsnd", rf5c400_r, rf5c400_w, 0xffffffff)
+	AM_RANGE(0x78040000, 0x7804ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE16("rfsnd", rf5c400_device, rf5c400_r, rf5c400_w, 0xffffffff)
 	AM_RANGE(0x78080000, 0x7808000f) AM_MIRROR(0x80000000) AM_READWRITE(sub_ata0_r, sub_ata0_w)
 	AM_RANGE(0x780c0010, 0x780c001f) AM_MIRROR(0x80000000) AM_READWRITE(sub_ata1_r, sub_ata1_w)
 	AM_RANGE(0x78200000, 0x782000ff) AM_MIRROR(0x80000000) AM_DEVREADWRITE_LEGACY("k001604", k001604_reg_r, k001604_reg_w)              // PSAC registers
@@ -3250,7 +3251,7 @@ static MACHINE_CONFIG_START( cobra, cobra_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("rfsnd", RF5C400, XTAL_16_9344MHz)
+	MCFG_RF5C400_ADD("rfsnd", XTAL_16_9344MHz)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -3334,7 +3335,7 @@ DRIVER_INIT_MEMBER(cobra_state,bujutsu)
 
 	// rom hacks for sub board...
 	{
-		UINT32 *rom = (UINT32*)machine().root_device().memregion("user2")->base();
+		UINT32 *rom = (UINT32*)memregion("user2")->base();
 
 		rom[0x62094 / 4] = 0x60000000;          // skip hardcheck()...
 	}
@@ -3345,7 +3346,7 @@ DRIVER_INIT_MEMBER(cobra_state,bujutsu)
 		int i;
 		UINT32 sum = 0;
 
-		UINT32 *rom = (UINT32*)machine().root_device().memregion("user3")->base();
+		UINT32 *rom = (UINT32*)memregion("user3")->base();
 
 		rom[(0x022d4^4) / 4] = 0x60000000;      // skip init_raster() for now ...
 
@@ -3366,7 +3367,7 @@ DRIVER_INIT_MEMBER(cobra_state,bujutsu)
 
 	// fill in M48T58 data for now...
 	{
-		UINT8 *rom = (UINT8*)machine().root_device().memregion("m48t58")->base();
+		UINT8 *rom = (UINT8*)memregion("m48t58")->base();
 		rom[0x00] = 0x47;       // G
 		rom[0x01] = 0x4e;       // N        // N = 2-player, Q = 1-player?
 		rom[0x02] = 0x36;       // 6
@@ -3416,7 +3417,7 @@ DRIVER_INIT_MEMBER(cobra_state,racjamdx)
 
 	// rom hacks for sub board...
 	{
-		UINT32 *rom = (UINT32*)machine().root_device().memregion("user2")->base();
+		UINT32 *rom = (UINT32*)memregion("user2")->base();
 
 		rom[0x62094 / 4] = 0x60000000;          // skip hardcheck()...
 		rom[0x62ddc / 4] = 0x60000000;          // skip lanc_hardcheck()
@@ -3442,7 +3443,7 @@ DRIVER_INIT_MEMBER(cobra_state,racjamdx)
 		int i;
 		UINT32 sum = 0;
 
-		UINT32 *rom = (UINT32*)machine().root_device().memregion("user3")->base();
+		UINT32 *rom = (UINT32*)memregion("user3")->base();
 
 		rom[(0x02448^4) / 4] = 0x60000000;      // skip init_raster() for now ...
 
@@ -3464,7 +3465,7 @@ DRIVER_INIT_MEMBER(cobra_state,racjamdx)
 
 	// fill in M48T58 data for now...
 	{
-		UINT8 *rom = (UINT8*)machine().root_device().memregion("m48t58")->base();
+		UINT8 *rom = (UINT8*)memregion("m48t58")->base();
 		rom[0x00] = 0x47;       // G
 		rom[0x01] = 0x59;       // Y
 		rom[0x02] = 0x36;       // 6

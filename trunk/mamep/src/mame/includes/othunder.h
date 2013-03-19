@@ -6,6 +6,7 @@
 
 #include "machine/eeprom.h"
 #include <sound/flt_vol.h>
+#include <audio/taitosnd.h>
 
 struct othunder_tempsprite
 {
@@ -44,7 +45,7 @@ public:
 	device_t *m_tc0220ioc;
 	device_t *m_tc0100scn;
 	device_t *m_tc0110pcr;
-	device_t *m_tc0140syt;
+	tc0140syt_device *m_tc0140syt;
 	filter_volume_device *m_2610_0l;
 	filter_volume_device *m_2610_0r;
 	filter_volume_device *m_2610_1l;
@@ -67,4 +68,6 @@ public:
 	INTERRUPT_GEN_MEMBER(vblank_interrupt);
 	TIMER_CALLBACK_MEMBER(ad_interrupt);
 	void reset_sound_region();
+	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, const int *primasks, int y_offs );
+	void update_irq(  );
 };
