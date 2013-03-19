@@ -60,57 +60,57 @@ endif
 #-------------------------------------------------
 
 $(MESSOBJ)/mame.a: \
-	$(MAME_VIDEO)/tia.o			\
-	$(MAME_MACHINE)/atari.o		\
-	$(MAME_VIDEO)/atari.o		\
-	$(MAME_VIDEO)/antic.o		\
-	$(MAME_DRIVERS)/cps1.o	\
-	$(MAME_VIDEO)/cps1.o	\
+	$(MAME_VIDEO)/tia.o         \
+	$(MAME_MACHINE)/atari.o     \
+	$(MAME_VIDEO)/atari.o       \
+	$(MAME_VIDEO)/antic.o       \
+	$(MAME_DRIVERS)/cps1.o      \
+	$(MAME_VIDEO)/cps1.o        \
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers
 #-------------------------------------------------
 
-$(MESSOBJ)/ascii.a:                     \
-	$(MESS_DRIVERS)/msx.o		\
-	$(MESS_MACHINE)/msx.o		\
-	$(MESS_MACHINE)/msx_slot.o	\
+$(MESSOBJ)/ascii.a:             \
+	$(MESS_DRIVERS)/msx.o       \
+	$(MESS_MACHINE)/msx.o       \
+	$(MESS_MACHINE)/msx_slot.o  \
 
-$(MESSOBJ)/atari.a:				\
-	$(MESS_MACHINE)/ataricrt.o	\
-	$(MESS_MACHINE)/atarifdc.o	\
-	$(MESS_DRIVERS)/atari400.o	\
-	$(MESS_MACHINE)/a7800.o		\
-	$(MESS_DRIVERS)/a7800.o		\
-	$(MESS_VIDEO)/a7800.o		\
-	$(MESS_DRIVERS)/a2600.o		\
-	$(MESS_MACHINE)/vcsctrl.o	\
-	$(MESS_MACHINE)/vcs_joy.o	\
-	$(MESS_MACHINE)/vcs_lightpen.o	\
-	$(MESS_MACHINE)/vcs_paddles.o	\
-	$(MESS_MACHINE)/vcs_joybooster.o	\
-	$(MESS_MACHINE)/vcs_wheel.o	\
-	$(MESS_MACHINE)/vcs_keypad.o	\
+$(MESSOBJ)/atari.a:             \
+	$(MESS_MACHINE)/ataricrt.o  \
+	$(MESS_MACHINE)/atarifdc.o  \
+	$(MESS_DRIVERS)/atari400.o  \
+	$(MESS_MACHINE)/a7800.o     \
+	$(MESS_DRIVERS)/a7800.o     \
+	$(MESS_VIDEO)/a7800.o       \
+	$(MESS_DRIVERS)/a2600.o     \
+	$(MESS_MACHINE)/vcs_joy.o   \
+	$(MESS_MACHINE)/vcs_joybooster.o\
+	$(MESS_MACHINE)/vcs_keypad.o    \
+	$(MESS_MACHINE)/vcs_lightpen.o  \
+	$(MESS_MACHINE)/vcs_paddles.o   \
+	$(MESS_MACHINE)/vcs_wheel.o \
+	$(MESS_MACHINE)/vcsctrl.o   \
 
-$(MESSOBJ)/bandai.a:			\
-	$(MESS_DRIVERS)/wswan.o		\
-	$(MESS_MACHINE)/wswan.o		\
-	$(MESS_VIDEO)/wswan.o		\
-	$(MESS_AUDIO)/wswan.o		\
+$(MESSOBJ)/bandai.a:            \
+	$(MESS_DRIVERS)/wswan.o     \
+	$(MESS_MACHINE)/wswan.o     \
+	$(MESS_VIDEO)/wswan.o       \
+	$(MESS_AUDIO)/wswan.o       \
 
-$(MESSOBJ)/funtech.a:			\
-	$(MESS_DRIVERS)/supracan.o	\
+$(MESSOBJ)/funtech.a:           \
+	$(MESS_DRIVERS)/supracan.o  \
 
-$(MESSOBJ)/nec.a:				\
-	$(MESS_MACHINE)/pce.o		\
-	$(MESS_DRIVERS)/pce.o		\
+$(MESSOBJ)/nec.a:               \
+	$(MESS_MACHINE)/pce.o       \
+	$(MESS_DRIVERS)/pce.o       \
 
-$(MESSOBJ)/nintendo.a:			\
-	$(MESS_MACHINE)/nes_mmc.o	\
+$(MESSOBJ)/nintendo.a:          \
+	$(MESS_MACHINE)/nes_mmc.o   \
 	$(MESS_MACHINE)/nes_slot.o  \
-	$(MESS_VIDEO)/nes.o			\
-	$(MESS_MACHINE)/nes.o		\
-	$(MESS_DRIVERS)/nes.o		\
+	$(MESS_VIDEO)/nes.o         \
+	$(MESS_MACHINE)/nes.o       \
+	$(MESS_DRIVERS)/nes.o       \
 	$(MESS_MACHINE)/snescx4.o   \
 	$(MESS_MACHINE)/sns_slot.o  \
 	$(MESS_MACHINE)/sns_rom.o   \
@@ -119,40 +119,44 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_MACHINE)/sns_sdd1.o  \
 	$(MESS_MACHINE)/sns_sfx.o   \
 	$(MESS_MACHINE)/sns_spc7110.o \
-	$(MESS_MACHINE)/sns_sufami.o \
+	$(MESS_MACHINE)/sns_sufami.o\
 	$(MESS_MACHINE)/sns_upd.o   \
-	$(MESS_DRIVERS)/snes.o		\
-	$(MESS_AUDIO)/gb.o			\
-	$(MESS_VIDEO)/gb.o			\
-	$(MESS_MACHINE)/gb.o		\
+	$(MESS_DRIVERS)/snes.o      \
+	$(MESS_AUDIO)/gb.o          \
+	$(MESS_VIDEO)/gb.o          \
+	$(MESS_MACHINE)/gb.o        \
 	$(MESS_MACHINE)/gb_slot.o   \
 	$(MESS_MACHINE)/gb_rom.o    \
 	$(MESS_MACHINE)/gb_mbc.o    \
-	$(MESS_DRIVERS)/gb.o		\
-	$(MESS_DRIVERS)/gba.o		\
-	$(MESS_VIDEO)/gba.o		\
+	$(MESS_DRIVERS)/gb.o        \
+	$(MESS_DRIVERS)/gba.o       \
+	$(MESS_VIDEO)/gba.o         \
 
-$(MESSOBJ)/sega.a:				\
+$(MESSOBJ)/sega.a:              \
 	$(MESS_MACHINE)/md_slot.o   \
-	$(MESS_MACHINE)/md_rom.o   \
-	$(MESS_MACHINE)/md_sk.o   \
-	$(MESS_MACHINE)/md_eeprom.o   \
-	$(MESS_MACHINE)/md_jcart.o   \
-	$(MESS_MACHINE)/md_stm95.o   \
-	$(MESS_MACHINE)/megasvp.o \
+	$(MESS_MACHINE)/md_rom.o    \
+	$(MESS_MACHINE)/md_sk.o     \
+	$(MESS_MACHINE)/md_eeprom.o \
+	$(MESS_MACHINE)/md_jcart.o  \
+	$(MESS_MACHINE)/md_stm95.o  \
+	$(MESS_MACHINE)/megasvp.o   \
 	$(MESS_DRIVERS)/megadriv.o  \
+	$(MESS_MACHINE)/sat_slot.o  \
+	$(MESS_MACHINE)/sat_rom.o   \
+	$(MESS_MACHINE)/sat_dram.o  \
+	$(MESS_MACHINE)/sat_bram.o  \
 	$(MESS_DRIVERS)/saturn.o    \
-	$(MESS_MACHINE)/sms.o	\
-	$(MESS_DRIVERS)/sms.o	\
+	$(MESS_MACHINE)/sms.o       \
+	$(MESS_DRIVERS)/sms.o       \
 
-$(MESSOBJ)/snk.a:				\
+$(MESSOBJ)/snk.a:               \
 	$(MESS_DRIVERS)/ng_aes.o    \
 	$(MAME_MACHINE)/neocrypt.o  \
 	$(MAME_MACHINE)/neoprot.o   \
 	$(MAME_MACHINE)/neoboot.o   \
 	$(MAME_DRIVERS)/neogeo.o    \
-	$(MESS_DRIVERS)/ngp.o		\
-	$(MESS_VIDEO)/k1ge.o		\
+	$(MESS_DRIVERS)/ngp.o       \
+	$(MESS_VIDEO)/k1ge.o        \
 
 $(MESSOBJ)/sony.a:              \
 	$(MESS_DRIVERS)/psx.o       \
@@ -175,12 +179,12 @@ $(MESS_MACHINE)/snescx4.o: $(MESSSRC)/machine/cx4ops.c \
 				$(MESSSRC)/machine/cx4fn.c \
 				$(MESSSRC)/machine/cx4data.c \
 
-$(MESS_VIDEO)/gba.o:		$(MESSSRC)/video/gbamode0.c \
+$(MESS_VIDEO)/gba.o:        $(MESSSRC)/video/gbamode0.c \
 				$(MESSSRC)/video/gbamode1.c \
 				$(MESSSRC)/video/gbamode2.c \
 				$(MESSSRC)/video/gbam345.c
 
-$(MESS_MACHINE)/nes_mmc.o:	$(MESSSRC)/machine/nes_ines.c \
+$(MESS_MACHINE)/nes_mmc.o:  $(MESSSRC)/machine/nes_ines.c \
 				$(MESSSRC)/machine/nes_pcb.c \
 				$(MESSSRC)/machine/nes_unif.c \
 
@@ -188,8 +192,8 @@ $(MESS_MACHINE)/nes_mmc.o:	$(MESSSRC)/machine/nes_ines.c \
 # layout dependencies
 #-------------------------------------------------
 
-$(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
-$(MESS_DRIVERS)/wswan.o:	$(MESS_LAYOUT)/wswan.lh
+$(MESS_DRIVERS)/sms.o:      $(MESS_LAYOUT)/sms1.lh
+$(MESS_DRIVERS)/wswan.o:    $(MESS_LAYOUT)/wswan.lh
 
 
 #-------------------------------------------------

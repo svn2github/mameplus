@@ -485,8 +485,8 @@ ROM_END
              scpa1h   4h       8h
              3l       7l       x
              2l       6l       x
-     DS1220Y   1l       5l       x
-     sec-scpa  scpa1l   4l       8l
+   DS1220Y   1l       5l       x
+   sec-scpa  scpa1l   4l       8l
 
 Labeled Like this:
 
