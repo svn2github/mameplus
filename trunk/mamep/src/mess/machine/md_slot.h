@@ -95,10 +95,12 @@ public:
 	// reading and writing
 	virtual DECLARE_READ16_MEMBER(read) { return 0xffff; }
 	virtual DECLARE_WRITE16_MEMBER(write) {}
-	virtual DECLARE_READ16_MEMBER(read_a13) { return 0xffff; };
-	virtual DECLARE_WRITE16_MEMBER(write_a13) {};
-	virtual DECLARE_READ16_MEMBER(read_a15) { return 0xffff; };
-	virtual DECLARE_WRITE16_MEMBER(write_a15) {};
+	virtual DECLARE_READ16_MEMBER(read_a13) { return 0xffff; }
+	virtual DECLARE_WRITE16_MEMBER(write_a13) {}
+	virtual DECLARE_READ16_MEMBER(read_a15) { return 0xffff; }
+	virtual DECLARE_WRITE16_MEMBER(write_a15) {}
+	
+	virtual int read_test() { return 0; }	// used by Virtua Racing test
 
 	/* this probably should do more, like make Genesis V2 'die' if the SEGA string is not written promptly */
 	virtual DECLARE_WRITE16_MEMBER(write_tmss_bank) { logerror("Write to TMSS bank: offset %x data %x\n", 0xa14000 + (offset << 1), data); };
@@ -109,6 +111,7 @@ public:
 	virtual UINT16* get_nvram_base() { return m_nvram; };
 	virtual UINT32 get_rom_size() { return m_rom_size; };
 	virtual UINT32 get_nvram_size() { return m_nvram_size; };
+	virtual void set_bank_to_rom(const char *banktag, UINT32 offset) {};
 
 	void rom_map_setup(UINT32 size);
 	UINT32 get_padded_size(UINT32 size);
@@ -163,6 +166,8 @@ public:
 	// slot interface overrides
 	virtual const char * get_default_card_software(const machine_config &config, emu_options &options);
 
+	int get_type() { return m_type; }
+
 	int load_list();
 	int load_nonlist();
 	int get_cart_type(UINT8 *ROM, UINT32 len);
@@ -178,7 +183,9 @@ public:
 	virtual DECLARE_WRITE16_MEMBER(write_a13);
 	virtual DECLARE_READ16_MEMBER(read_a15);
 	virtual DECLARE_WRITE16_MEMBER(write_a15);
-	virtual DECLARE_WRITE16_MEMBER(write_tmss_bank) { if (m_cart) m_cart->write_tmss_bank(space, offset, data); };
+	virtual DECLARE_WRITE16_MEMBER(write_tmss_bank) { if (m_cart) m_cart->write_tmss_bank(space, offset, data, mem_mask); };
+
+	virtual int read_test() { if (m_cart) return m_cart->read_test(); else return 0; }	// used by Virtua Racing test
 
 // TODO: this only needs to be public because megasvp copies rom into memory region, so we need to rework that code...
 //private:

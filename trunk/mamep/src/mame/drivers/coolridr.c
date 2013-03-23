@@ -1097,11 +1097,16 @@ UINT32 coolridr_state::screen_update_coolridr2(screen_device &screen, bitmap_ind
 #define DO_XCLIP_REAL \
 	if (drawx>clipmaxX) { break; } \
 	if (drawx<clipminX) { drawx++; continue; }
-#define DO_XCLIP_NONE
+
+#define DO_XCLIP_NONE \
+	{ \
+	}
+
 
 #define GET_CURRENT_LINESCROLLZOOM \
 	UINT32 dword = object->indirect_zoom[v*16+realy]; \
-	UINT16 hZoomTable = hZoom + (dword>>16); \
+	UINT16 hZoomHere = hZoom + (dword>>16); \
+	if (!hZoomHere) { drawy++; continue; } \
 	/* bit 0x8000 does get set too, but only on some lines, might have another meaning? */ \
 	int linescroll = dword&0x7fff; \
 	if (linescroll & 0x4000) linescroll -= 0x8000; \
@@ -1135,8 +1140,6 @@ UINT32 coolridr_state::screen_update_coolridr2(screen_device &screen, bitmap_ind
 	{ \
 		int realy = ((y*incy)>>21); \
 		GET_CURRENT_LINESCROLLZOOM \
-		UINT16 hZoomHere = hZoomTable; \
-		if (!hZoomHere) { drawy++; continue; } \
 		const int pixelOffsetX = ((hPositionTable) + (h* 16 * hZoomHere)) / 0x40; \
 		const int pixelOffsetnextX = ((hPositionTable) + ((h+1)* 16 * hZoomHere)) / 0x40; \
 		if (drawy>clipmaxY) { break; }; \
@@ -2050,7 +2053,7 @@ void *coolridr_state::draw_object_threaded(void *param, int threadid)
 					const int pixelOffsetnextX = ((hPosition) + ((h+1)* 16 * hZoom)) / 0x40;
 
 					int blockwide = pixelOffsetnextX-pixelOffsetX;
-					UINT32 incx = 0x8000000 / hZoom;
+					UINT32 incx = 0x8000000 / (object->spriteblit[8] & 0x0000ffff);
 
 					if (pixelOffsetX+blockwide < clipminX)
 						continue;

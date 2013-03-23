@@ -28,49 +28,38 @@ Known Non-Issues (confirmed on Real Genesis)
 
 MACHINE_CONFIG_EXTERN( megadriv );
 
-
-static cpu_device *_genesis_snd_z80_cpu;
-int genesis_other_hacks = 0; // misc hacks
-
 timer_device* megadriv_scanline_timer;
-cpu_device *_svp_cpu;
 
-struct genesis_z80_vars
-{
-	int z80_is_reset;
-	int z80_has_bus;
-	UINT32 z80_bank_addr;
-	UINT8* z80_prgram;
-};
-
-genesis_z80_vars genz80;
 
 void megadriv_z80_hold(running_machine &machine)
 {
-	if ((genz80.z80_has_bus == 1) && (genz80.z80_is_reset == 0))
-		machine.device(":genesis_snd_z80")->execute().set_input_line(0, HOLD_LINE);
+	md_base_state *state = machine.driver_data<md_base_state>();
+	if ((state->m_genz80.z80_has_bus == 1) && (state->m_genz80.z80_is_reset == 0))
+		state->m_z80snd->set_input_line(0, HOLD_LINE);
 }
 
 void megadriv_z80_clear(running_machine &machine)
 {
-	machine.device(":genesis_snd_z80")->execute().set_input_line(0, CLEAR_LINE);
+	md_base_state *state = machine.driver_data<md_base_state>();
+	state->m_z80snd->set_input_line(0, CLEAR_LINE);
 }
 
-static void megadriv_z80_bank_w(UINT16 data)
+static void megadriv_z80_bank_w(address_space &space, UINT16 data)
 {
-	genz80.z80_bank_addr = ( ( genz80.z80_bank_addr >> 1 ) | ( data << 23 ) ) & 0xff8000;
+	md_base_state *state = space.machine().driver_data<md_base_state>();
+	state->m_genz80.z80_bank_addr = ((state->m_genz80.z80_bank_addr >> 1) | (data << 23)) & 0xff8000;
 }
 
 static WRITE16_HANDLER( megadriv_68k_z80_bank_write )
 {
 	//logerror("%06x: 68k writing bit to bank register %01x\n", space.device().safe_pc(),data&0x01);
-	megadriv_z80_bank_w(data&0x01);
+	megadriv_z80_bank_w(space, data & 0x01);
 }
 
 static WRITE8_HANDLER(megadriv_z80_z80_bank_w)
 {
 	//logerror("%04x: z80 writing bit to bank register %01x\n", space.device().safe_pc(),data&0x01);
-	megadriv_z80_bank_w(data&0x01);
+	megadriv_z80_bank_w(space, data & 0x01);
 }
 
 
@@ -88,7 +77,7 @@ READ8_MEMBER(md_base_state::megadriv_68k_YM2612_read)
 {
 	device_t *device = machine().device("ymsnd");
 	//mame_printf_debug("megadriv_68k_YM2612_read %02x %04x\n",offset,mem_mask);
-	if ( (genz80.z80_has_bus==0) && (genz80.z80_is_reset==0) )
+	if ((m_genz80.z80_has_bus == 0) && (m_genz80.z80_is_reset == 0))
 	{
 		return ym2612_r(device, space, offset);
 	}
@@ -106,7 +95,7 @@ WRITE8_MEMBER(md_base_state::megadriv_68k_YM2612_write)
 {
 	device_t *device = machine().device("ymsnd");
 	//mame_printf_debug("megadriv_68k_YM2612_write %02x %04x %04x\n",offset,data,mem_mask);
-	if ( (genz80.z80_has_bus==0) && (genz80.z80_is_reset==0) )
+	if ((m_genz80.z80_has_bus == 0) && (m_genz80.z80_is_reset == 0))
 	{
 		ym2612_w(device, space, offset, data);
 	}
@@ -380,6 +369,7 @@ static UINT8 megadrive_io_read_sctrl_port(int portnum)
 
 READ16_HANDLER( megadriv_68k_io_read )
 {
+	md_base_state *state = space.machine().driver_data<md_base_state>();
 	UINT8 retdata;
 
 	retdata = 0;
@@ -399,9 +389,9 @@ READ16_HANDLER( megadriv_68k_io_read )
 	{
 		case 0:
 			logerror("%06x read version register\n", space.device().safe_pc());
-			retdata = megadrive_region_export<<7 | // Export
-						megadrive_region_pal<<6 | // NTSC
-						(sega_cd_connected?0x00:0x20) | // 0x20 = no sega cd
+			retdata = state->m_export << 7 | // Export
+						state->m_pal << 6 | // NTSC or PAL?
+						(state->m_segacd ? 0x00 : 0x20) | // 0x20 = no sega cd
 						0x00 | // Unused (Always 0)
 						0x00 | // Bit 3 of Version Number
 						0x00 | // Bit 2 of Version Number
@@ -572,11 +562,12 @@ ADDRESS_MAP_END
 
 static READ16_HANDLER( megadriv_68k_read_z80_ram )
 {
+	md_base_state *state = space.machine().driver_data<md_base_state>();
 	//mame_printf_debug("read z80 ram %04x\n",mem_mask);
 
-	if ( (genz80.z80_has_bus==0) && (genz80.z80_is_reset==0) )
+	if ((state->m_genz80.z80_has_bus == 0) && (state->m_genz80.z80_is_reset == 0))
 	{
-		return genz80.z80_prgram[(offset<<1)^1] | (genz80.z80_prgram[(offset<<1)]<<8);
+		return state->m_genz80.z80_prgram[(offset<<1)^1] | (state->m_genz80.z80_prgram[(offset<<1)]<<8);
 	}
 	else
 	{
@@ -587,21 +578,22 @@ static READ16_HANDLER( megadriv_68k_read_z80_ram )
 
 static WRITE16_HANDLER( megadriv_68k_write_z80_ram )
 {
+	md_base_state *state = space.machine().driver_data<md_base_state>();
 	//logerror("write z80 ram\n");
 
-	if ((genz80.z80_has_bus==0) && (genz80.z80_is_reset==0))
+	if ((state->m_genz80.z80_has_bus == 0) && (state->m_genz80.z80_is_reset == 0))
 	{
 		if (!ACCESSING_BITS_0_7) // byte (MSB) access
 		{
-			genz80.z80_prgram[(offset<<1)] = (data & 0xff00) >> 8;
+			state->m_genz80.z80_prgram[(offset<<1)] = (data & 0xff00) >> 8;
 		}
 		else if (!ACCESSING_BITS_8_15)
 		{
-			genz80.z80_prgram[(offset<<1)^1] = (data & 0x00ff);
+			state->m_genz80.z80_prgram[(offset<<1)^1] = (data & 0x00ff);
 		}
 		else // for WORD access only the MSB is used, LSB is ignored
 		{
-			genz80.z80_prgram[(offset<<1)] = (data & 0xff00) >> 8;
+			state->m_genz80.z80_prgram[(offset<<1)] = (data & 0xff00) >> 8;
 		}
 	}
 	else
@@ -613,6 +605,7 @@ static WRITE16_HANDLER( megadriv_68k_write_z80_ram )
 
 static READ16_HANDLER( megadriv_68k_check_z80_bus )
 {
+	md_base_state *state = space.machine().driver_data<md_base_state>();
 	UINT16 retvalue;
 
 	/* Double Dragon, Shadow of the Beast, Super Off Road, and Time Killers have buggy
@@ -628,7 +621,7 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
 	/* Check if the 68k has the z80 bus */
 	if (!ACCESSING_BITS_0_7) // byte (MSB) access
 	{
-		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
+		if (state->m_genz80.z80_has_bus || state->m_genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
 		else retvalue = (nextvalue & 0xfeff);
 
 		//logerror("%06x: 68000 check z80 Bus (byte MSB access) returning %04x mask %04x\n", space.device().safe_pc(),retvalue, mem_mask);
@@ -638,7 +631,7 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
 	else if (!ACCESSING_BITS_8_15) // is this valid?
 	{
 		//logerror("%06x: 68000 check z80 Bus (byte LSB access) %04x\n", space.device().safe_pc(),mem_mask);
-		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = 0x0001;
+		if (state->m_genz80.z80_has_bus || state->m_genz80.z80_is_reset) retvalue = 0x0001;
 		else retvalue = 0x0000;
 
 		return retvalue;
@@ -646,7 +639,7 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
 	else
 	{
 		//logerror("%06x: 68000 check z80 Bus (word access) %04x\n", space.device().safe_pc(),mem_mask);
-		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
+		if (state->m_genz80.z80_has_bus || state->m_genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
 		else retvalue = (nextvalue & 0xfeff);
 
 	//  mame_printf_debug("%06x: 68000 check z80 Bus (word access) %04x %04x\n", space.device().safe_pc(),mem_mask, retvalue);
@@ -657,42 +650,40 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
 
 static TIMER_CALLBACK( megadriv_z80_run_state )
 {
+	md_base_state *state = machine.driver_data<md_base_state>();
 	/* Is the z80 RESET line pulled? */
-	if ( genz80.z80_is_reset )
+	if (state->m_genz80.z80_is_reset)
 	{
-		machine.device("genesis_snd_z80" )->reset();
-		machine.device<cpu_device>( "genesis_snd_z80" )->suspend(SUSPEND_REASON_HALT, 1 );
-		machine.device("ymsnd" )->reset();
+		state->m_z80snd->reset();
+		state->m_z80snd->suspend(SUSPEND_REASON_HALT, 1);
+		machine.device("ymsnd")->reset();
 	}
 	else
 	{
 		/* Check if z80 has the bus */
-		if ( genz80.z80_has_bus )
-		{
-			machine.device<cpu_device>( "genesis_snd_z80" )->resume(SUSPEND_REASON_HALT );
-		}
+		if (state->m_genz80.z80_has_bus)
+			state->m_z80snd->resume(SUSPEND_REASON_HALT);
 		else
-		{
-			machine.device<cpu_device>( "genesis_snd_z80" )->suspend(SUSPEND_REASON_HALT, 1 );
-		}
+			state->m_z80snd->suspend(SUSPEND_REASON_HALT, 1);
 	}
 }
 
 
 static WRITE16_HANDLER( megadriv_68k_req_z80_bus )
 {
+	md_base_state *state = space.machine().driver_data<md_base_state>();
 	/* Request the Z80 bus, allows 68k to read/write Z80 address space */
 	if (!ACCESSING_BITS_0_7) // byte access
 	{
 		if (data & 0x0100)
 		{
 			//logerror("%06x: 68000 request z80 Bus (byte MSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_has_bus = 0;
+			state->m_genz80.z80_has_bus = 0;
 		}
 		else
 		{
 			//logerror("%06x: 68000 return z80 Bus (byte MSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_has_bus = 1;
+			state->m_genz80.z80_has_bus = 1;
 		}
 	}
 	else if (!ACCESSING_BITS_8_15) // is this valid?
@@ -700,12 +691,12 @@ static WRITE16_HANDLER( megadriv_68k_req_z80_bus )
 		if (data & 0x0001)
 		{
 			//logerror("%06x: 68000 request z80 Bus (byte LSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_has_bus = 0;
+			state->m_genz80.z80_has_bus = 0;
 		}
 		else
 		{
 			//logerror("%06x: 68000 return z80 Bus (byte LSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_has_bus = 1;
+			state->m_genz80.z80_has_bus = 1;
 		}
 	}
 	else // word access
@@ -713,33 +704,34 @@ static WRITE16_HANDLER( megadriv_68k_req_z80_bus )
 		if (data & 0x0100)
 		{
 			//logerror("%06x: 68000 request z80 Bus (word access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_has_bus = 0;
+			state->m_genz80.z80_has_bus = 0;
 		}
 		else
 		{
 			//logerror("%06x: 68000 return z80 Bus (byte LSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_has_bus = 1;
+			state->m_genz80.z80_has_bus = 1;
 		}
 	}
 
 	/* If the z80 is running, sync the z80 execution state */
-	if ( ! genz80.z80_is_reset )
-		space.machine().scheduler().timer_set( attotime::zero, FUNC(megadriv_z80_run_state ));
+	if (!state->m_genz80.z80_is_reset)
+		space.machine().scheduler().timer_set(attotime::zero, FUNC(megadriv_z80_run_state));
 }
 
 static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 {
+	md_base_state *state = space.machine().driver_data<md_base_state>();
 	if (!ACCESSING_BITS_0_7) // byte access
 	{
 		if (data & 0x0100)
 		{
 			//logerror("%06x: 68000 clear z80 reset (byte MSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_is_reset = 0;
+			state->m_genz80.z80_is_reset = 0;
 		}
 		else
 		{
 			//logerror("%06x: 68000 start z80 reset (byte MSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_is_reset = 1;
+			state->m_genz80.z80_is_reset = 1;
 		}
 	}
 	else if (!ACCESSING_BITS_8_15) // is this valid?
@@ -747,12 +739,12 @@ static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 		if (data & 0x0001)
 		{
 			//logerror("%06x: 68000 clear z80 reset (byte LSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_is_reset = 0;
+			state->m_genz80.z80_is_reset = 0;
 		}
 		else
 		{
 			//logerror("%06x: 68000 start z80 reset (byte LSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_is_reset = 1;
+			state->m_genz80.z80_is_reset = 1;
 		}
 	}
 	else // word access
@@ -760,12 +752,12 @@ static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 		if (data & 0x0100)
 		{
 			//logerror("%06x: 68000 clear z80 reset (word access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_is_reset = 0;
+			state->m_genz80.z80_is_reset = 0;
 		}
 		else
 		{
 			//logerror("%06x: 68000 start z80 reset (byte LSB access) %04x %04x\n", space.device().safe_pc(),data,mem_mask);
-			genz80.z80_is_reset = 1;
+			state->m_genz80.z80_is_reset = 1;
 		}
 	}
 	space.machine().scheduler().timer_set( attotime::zero, FUNC(megadriv_z80_run_state ));
@@ -778,15 +770,17 @@ static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 //   z80 area of the 68k if games misbehave
 static READ8_HANDLER( z80_read_68k_banked_data )
 {
-	address_space &space68k = space.machine().device<legacy_cpu_device>("maincpu")->space();
-	UINT8 ret = space68k.read_byte(genz80.z80_bank_addr+offset);
+	md_base_state *state = space.machine().driver_data<md_base_state>();
+	address_space &space68k = state->m_maincpu->space();
+	UINT8 ret = space68k.read_byte(state->m_genz80.z80_bank_addr+offset);
 	return ret;
 }
 
 static WRITE8_HANDLER( z80_write_68k_banked_data )
 {
-	address_space &space68k = space.machine().device<legacy_cpu_device>("maincpu")->space();
-	space68k.write_byte(genz80.z80_bank_addr+offset,data);
+	md_base_state *state = space.machine().driver_data<md_base_state>();
+	address_space &space68k = state->m_maincpu->space();
+	space68k.write_byte(state->m_genz80.z80_bank_addr+offset,data);
 }
 
 
@@ -843,7 +837,7 @@ ADDRESS_MAP_END
 
 /************************************ Megadrive Bootlegs *************************************/
 
-// smaller ROM region because some bootlegs check for RAM there
+// smaller ROM region because some bootlegs check for RAM there (used by topshoot and hshavoc)
 static ADDRESS_MAP_START( md_bootleg_map, AS_PROGRAM, 16, md_boot_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM /* Cartridge Program Rom */
 	AM_RANGE(0x200000, 0x2023ff) AM_RAM // tested
@@ -869,9 +863,6 @@ MACHINE_CONFIG_START( md_bootleg, md_boot_state )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(md_bootleg_map)
 MACHINE_CONFIG_END
-
-
-
 
 
 
@@ -906,14 +897,6 @@ SCREEN_UPDATE_RGB32(megadriv)
 
 
 
-
-
-
-
-
-
-
-
 /*****************************************************************************************/
 
 
@@ -930,13 +913,13 @@ MACHINE_RESET( megadriv )
 	/* default state of z80 = reset, with bus */
 	mame_printf_debug("Resetting Megadrive / Genesis\n");
 
-	if (machine.device("genesis_snd_z80") != NULL)
+	if (state->m_z80snd)
 	{
-		genz80.z80_is_reset = 1;
-		genz80.z80_has_bus = 1;
-		genz80.z80_bank_addr = 0;
-		genesis_scanline_counter = -1;
-		machine.scheduler().timer_set( attotime::zero, FUNC(megadriv_z80_run_state ));
+		state->m_genz80.z80_is_reset = 1;
+		state->m_genz80.z80_has_bus = 1;
+		state->m_genz80.z80_bank_addr = 0;
+		state->m_vdp->set_scanline_counter(-1);
+		machine.scheduler().timer_set(attotime::zero, FUNC(megadriv_z80_run_state));
 	}
 
 	megadrive_reset_io(machine);
@@ -947,9 +930,8 @@ MACHINE_RESET( megadriv )
 		megadriv_scanline_timer->adjust(attotime::zero);
 	}
 
-	if (genesis_other_hacks)
+	if (state->m_other_hacks)
 	{
-	//  set_refresh_rate(megadriv_framerate);
 	//  machine.device("maincpu")->set_clock_scale(0.9950f); /* Fatal Rewind is very fussy... (and doesn't work now anyway, so don't bother with this) */
 		if (state->m_megadrive_ram)
 			memset(state->m_megadrive_ram,0x00,0x10000);
@@ -958,20 +940,9 @@ MACHINE_RESET( megadriv )
 	megadriv_reset_vdp(machine);
 
 
-
-	/* if any of these extra CPUs exist, pause them until we actually turn them on */
-	if (_32x_master_cpu != NULL)
-	{
-		_32x_master_cpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	}
-
-	if (_32x_slave_cpu != NULL)
-	{
-		_32x_slave_cpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	}
-
-
-
+	// if the system has a 32x, pause the extra CPUs until they are actually turned on
+	if (state->m_32x)
+		state->m_32x->pause_cpu();
 }
 
 void megadriv_stop_scanline_timer(running_machine &machine)
@@ -984,36 +955,11 @@ void megadriv_stop_scanline_timer(running_machine &machine)
 
 
 
-static UINT16* megadriv_backupram;
-static int megadriv_backupram_length;
-
-static NVRAM_HANDLER( megadriv )
-{
-	if (megadriv_backupram!=NULL)
-	{
-		if (read_or_write)
-			file->write(megadriv_backupram, megadriv_backupram_length);
-		else
-		{
-			if (file)
-			{
-				file->read(megadriv_backupram, megadriv_backupram_length);
-			}
-			else
-			{
-				int x;
-				for (x=0;x<megadriv_backupram_length/2;x++)
-					megadriv_backupram[x]=0xffff;//machine.rand(); // dino dini's needs 0xff or game rules are broken
-			}
-		}
-	}
-}
-
-
 // this comes from the VDP on lines 240 (on) 241 (off) and is connected to the z80 irq 0
 void genesis_vdp_sndirqline_callback_genesis_z80(running_machine &machine, bool state)
 {
-	if (machine.device(":genesis_snd_z80") != NULL)
+	md_base_state *md_state = machine.driver_data<md_base_state>();
+	if (md_state->m_z80snd)
 	{
 		if (state == true)
 		{
@@ -1029,19 +975,21 @@ void genesis_vdp_sndirqline_callback_genesis_z80(running_machine &machine, bool 
 // this comes from the vdp, and is connected to 68k irq level 6 (main vbl interrupt)
 void genesis_vdp_lv6irqline_callback_genesis_68k(running_machine &machine, bool state)
 {
-	if (state==true)
-		machine.device("maincpu")->execute().set_input_line(6, HOLD_LINE);
+	md_base_state *md_state = machine.driver_data<md_base_state>();
+	if (state == true)
+		md_state->m_maincpu->set_input_line(6, HOLD_LINE);
 	else
-		machine.device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
+		md_state->m_maincpu->set_input_line(6, CLEAR_LINE);
 }
 
 // this comes from the vdp, and is connected to 68k irq level 4 (raster interrupt)
 void genesis_vdp_lv4irqline_callback_genesis_68k(running_machine &machine, bool state)
 {
-	if (state==true)
-		machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+	md_base_state *md_state = machine.driver_data<md_base_state>();
+	if (state == true)
+		md_state->m_maincpu->set_input_line(4, HOLD_LINE);
 	else
-		machine.device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+		md_state->m_maincpu->set_input_line(4, CLEAR_LINE);
 }
 
 /* Callback when the 68k takes an IRQ */
@@ -1124,8 +1072,6 @@ MACHINE_CONFIG_FRAGMENT( md_ntsc )
 
 	MCFG_TIMER_ADD_SCANLINE("scantimer", megadriv_scanline_timer_callback_alt_timing, "megadriv", 0, 1)
 
-	MCFG_NVRAM_HANDLER(megadriv)
-
 	MCFG_PALETTE_LENGTH(0x200)
 
 	MCFG_VIDEO_START(megadriv)
@@ -1175,8 +1121,6 @@ MACHINE_CONFIG_FRAGMENT( md_pal )
 	MCFG_SCREEN_UPDATE_STATIC(megadriv) /* Copies a bitmap */
 	MCFG_SCREEN_VBLANK_STATIC(megadriv) /* Used to Sync the timing */
 
-	MCFG_NVRAM_HANDLER(megadriv)
-
 	MCFG_PALETTE_LENGTH(0x200)
 
 	MCFG_VIDEO_START(megadriv)
@@ -1201,43 +1145,50 @@ static int megadriv_tas_callback(device_t *device)
 	return 0; // writeback not allowed
 }
 
+// the SVP introduces some kind of DMA 'lag', which we have to compensate for, this is obvious even on gfx DMAd from ROM (the Speedometer)
+// likewise segaCD, at least when reading wordram? we might need to check what mode we're in here..
+UINT16 vdp_get_word_from_68k_mem_delayed(running_machine &machine, UINT32 source, address_space & space68k)
+{
+	if (source <= 0x3fffff)
+	{
+		source -= 2;    // compensate DMA lag
+		return space68k.read_word(source);
+	}
+	else if ((source >= 0xe00000) && (source <= 0xffffff))
+		return space68k.read_word(source);
+	else
+	{
+		printf("DMA Read unmapped %06x\n",source);
+		return machine.rand();
+	}
+}
+
 void md_base_state::megadriv_init_common()
 {
 	/* Look to see if this system has the standard Sound Z80 */
-	_genesis_snd_z80_cpu = machine().device<cpu_device>("genesis_snd_z80");
-	if (_genesis_snd_z80_cpu != NULL)
+	if (machine().device("genesis_snd_z80"))
 	{
-		//printf("GENESIS Sound Z80 cpu found '%s'\n", _genesis_snd_z80_cpu->tag() );
-
-		genz80.z80_prgram = auto_alloc_array(machine(), UINT8, 0x2000);
-		membank("bank1")->set_base(genz80.z80_prgram );
-	}
-
-	/* Look to see if this system has the 32x Master SH2 */
-	_32x_master_cpu = machine().device<cpu_device>(_32X_MASTER_TAG);
-	if (_32x_master_cpu != NULL)
-	{
-		printf("32x MASTER SH2 cpu found '%s'\n", _32x_master_cpu->tag() );
-	}
-
-	/* Look to see if this system has the 32x Slave SH2 */
-	_32x_slave_cpu = machine().device<cpu_device>(_32X_SLAVE_TAG);
-	if (_32x_slave_cpu != NULL)
-	{
-		printf("32x SLAVE SH2 cpu found '%s'\n", _32x_slave_cpu->tag() );
-	}
-
-	_svp_cpu = machine().device<cpu_device>("svp");
-	if (_svp_cpu != NULL)
-	{
-		printf("SVP (cpu) found '%s'\n", _svp_cpu->tag());
+		//printf("GENESIS Sound Z80 cpu found '%s'\n", machine().device("genesis_snd_z80")->tag());
+		m_genz80.z80_prgram = auto_alloc_array(machine(), UINT8, 0x2000);
+		membank("bank1")->set_base(m_genz80.z80_prgram);
 	}
 
 	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(md_base_state::genesis_int_callback),this));
-	megadriv_backupram = NULL;
-	megadriv_backupram_length = 0;
 
 	vdp_get_word_from_68k_mem = vdp_get_word_from_68k_mem_default;
+
+	if (machine().device("sega32x"))
+		printf("32X found 'sega32x'\n");
+	if (machine().device("svp"))
+	{
+		printf("SVP (cpu) found 'svp'\n");
+		vdp_get_word_from_68k_mem = vdp_get_word_from_68k_mem_delayed;
+	}
+	if (machine().device("segacd"))
+	{
+		printf("SegaCD found 'segacd'\n");
+		vdp_get_word_from_68k_mem = vdp_get_word_from_68k_mem_delayed;
+	}
 
 	m68k_set_tas_callback(machine().device("maincpu"), megadriv_tas_callback);
 
@@ -1273,44 +1224,92 @@ void md_base_state::megadriv_init_common()
 		}
 		mame_printf_debug("\n");
 	}
+
+	m_export = 0;
+	m_pal = 0;
 }
 
 DRIVER_INIT_MEMBER(md_base_state,megadriv_c2)
 {
-	genvdp_use_cram = 0;
-	genesis_other_hacks = 0;
+	m_other_hacks = 0;
 
 	megadriv_init_common();
-	megadriv_framerate = 60;
+
+	m_vdp->set_use_cram(0); // C2 uses its own palette ram
+	m_vdp->set_vdp_pal(FALSE);
+	m_vdp->set_framerate(60);
+	m_vdp->set_total_scanlines(313);
 }
 
 
 
 DRIVER_INIT_MEMBER(md_base_state,megadriv)
 {
-	genvdp_use_cram = 1;
-	genesis_other_hacks = 1;
+	m_other_hacks = 1;
 
 	megadriv_init_common();
-	megadriv_framerate = 60;
+
+	// todo: move this to the device interface?
+	m_vdp->set_use_cram(1);
+	m_vdp->set_vdp_pal(FALSE);
+	m_vdp->set_framerate(60);
+	m_vdp->set_total_scanlines(313);
+	if (m_32x)
+	{
+		m_32x->set_framerate(60);
+		m_32x->set_32x_pal(FALSE);
+	}
+	if (m_segacd)
+		m_segacd->set_framerate(60);
+
+	m_export = 1;
+	m_pal = 0;
 }
 
 DRIVER_INIT_MEMBER(md_base_state,megadrij)
 {
-	genvdp_use_cram = 1;
-	genesis_other_hacks = 1;
+	m_other_hacks = 1;
 
 	megadriv_init_common();
-	megadriv_framerate = 60;
+
+	// todo: move this to the device interface?
+	m_vdp->set_use_cram(1);
+	m_vdp->set_vdp_pal(FALSE);
+	m_vdp->set_framerate(60);
+	m_vdp->set_total_scanlines(313);
+	if (m_32x)
+	{
+		m_32x->set_framerate(60);
+		m_32x->set_32x_pal(FALSE);
+	}
+	if (m_segacd)
+		m_segacd->set_framerate(60);
+
+	m_export = 0;
+	m_pal = 0;
 }
 
 DRIVER_INIT_MEMBER(md_base_state,megadrie)
 {
-	genvdp_use_cram = 1;
-	genesis_other_hacks = 1;
+	m_other_hacks = 1;
 
 	megadriv_init_common();
-	megadriv_framerate = 50;
+
+	// todo: move this to the device interface?
+	m_vdp->set_use_cram(1);
+	m_vdp->set_vdp_pal(TRUE);
+	m_vdp->set_framerate(50);
+	m_vdp->set_total_scanlines(262);
+	if (m_32x)
+	{
+		m_32x->set_framerate(50);
+		m_32x->set_32x_pal(TRUE);
+	}
+	if (m_segacd)
+		m_segacd->set_framerate(50);
+
+	m_export = 1;
+	m_pal = 1;
 }
 
 DRIVER_INIT_MEMBER(md_base_state,mpnew)
@@ -1347,6 +1346,7 @@ static WRITE8_HANDLER( z80_unmapped_w )
 /* sets the megadrive z80 to it's normal ports / map */
 void megatech_set_megadrive_z80_as_megadrive_z80(running_machine &machine, const char* tag)
 {
+	md_base_state *state = machine.driver_data<md_base_state>();
 	device_t *ym = machine.device("ymsnd");
 
 	/* INIT THE PORTS *********************************************************************************************/
@@ -1357,9 +1357,9 @@ void megatech_set_megadrive_z80_as_megadrive_z80(running_machine &machine, const
 
 
 	machine.device(tag)->memory().space(AS_PROGRAM).install_readwrite_bank(0x0000, 0x1fff, "bank1");
-	machine.root_device().membank("bank1")->set_base(genz80.z80_prgram );
+	machine.root_device().membank("bank1")->set_base(state->m_genz80.z80_prgram);
 
-	machine.device(tag)->memory().space(AS_PROGRAM).install_ram(0x0000, 0x1fff, genz80.z80_prgram);
+	machine.device(tag)->memory().space(AS_PROGRAM).install_ram(0x0000, 0x1fff, state->m_genz80.z80_prgram);
 
 
 	machine.device(tag)->memory().space(AS_PROGRAM).install_legacy_readwrite_handler(*ym, 0x4000, 0x4003, FUNC(ym2612_r), FUNC(ym2612_w));
@@ -1373,14 +1373,12 @@ void megatech_set_megadrive_z80_as_megadrive_z80(running_machine &machine, const
 
 
 
-
-
 SCREEN_VBLANK(megadriv)
 {
 	md_base_state *state = screen.machine().driver_data<md_base_state>();
 
 	if (screen.ioport(":RESET")->read_safe(0x00) & 0x01)
-		screen.machine().device(":maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 
 	// rising edge
 	if (vblank_on)

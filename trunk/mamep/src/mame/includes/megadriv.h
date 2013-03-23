@@ -25,8 +25,6 @@
 
 #define MD_CPU_REGION_SIZE 0x800000
 
-extern int sega_cd_connected;
-
 
 /*----------- defined in machine/megadriv.c -----------*/
 
@@ -40,8 +38,6 @@ MACHINE_CONFIG_EXTERN( megadriv_timers );
 MACHINE_CONFIG_EXTERN( md_ntsc );
 MACHINE_CONFIG_EXTERN( md_pal );
 MACHINE_CONFIG_EXTERN( md_bootleg );    // for topshoot.c & hshavoc.c
-
-extern cpu_device *_svp_cpu;
 
 extern UINT8 megatech_bios_port_cc_dc_r(running_machine &machine, int offset, int ctrl);
 extern void megadriv_stop_scanline_timer(running_machine &machine);
@@ -79,18 +75,39 @@ extern int megadrive_6buttons_pad;
 #define MP_ROM  0x10
 #define MP_GAME 0
 
+
+struct genesis_z80_vars
+{
+	int z80_is_reset;
+	int z80_has_bus;
+	UINT32 z80_bank_addr;
+	UINT8* z80_prgram;
+};
+
+
 class md_base_state : public driver_device
 {
 public:
 	md_base_state(const machine_config &mconfig, device_type type, const char *tag)
 	: driver_device(mconfig, type, tag),
+		m_maincpu(*this,"maincpu"),
+		m_z80snd(*this,"genesis_snd_z80"),
 		m_vdp(*this,"gen_vdp"),
+		m_32x(*this,"sega32x"),
+		m_segacd(*this,"segacd"),
 		m_megadrive_ram(*this,"megadrive_ram")
-	{
-		sega_cd_connected = 0;
-	}
+	{ }
+	optional_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_z80snd;
 	required_device<sega_genesis_vdp_device> m_vdp;
+	optional_device<sega_32x_device> m_32x;
+	optional_device<sega_segacd_device> m_segacd;
 	optional_shared_ptr<UINT16> m_megadrive_ram;
+
+	int m_other_hacks;	// misc hacks
+	genesis_z80_vars m_genz80;
+	int m_pal;
+	int m_export;
 
 	DECLARE_DRIVER_INIT(megadriv_c2);
 	DECLARE_DRIVER_INIT(megadrie);
@@ -343,32 +360,6 @@ public:
 	UINT32 screen_update_megatech_menu(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 };
 
-struct megadriv_cart
-{
-	int type;
-
-	// SRAM related
-	UINT16 *sram;
-	int last_loaded_image_length;
-	int sram_start, sram_end;
-	int sram_active, sram_readonly;
-	int sram_handlers_installed;
-	int sram_detected;
-
-	// EEPROM related
-	int has_serial_eeprom;
-
-	// I2C related
-	UINT8 i2c_mem, i2c_clk;
-
-	// mapper related (mostly for pirate carts)
-	UINT16 squirrel_king_extra;
-	UINT16 lion2_prot1_data, lion2_prot2_data;
-	UINT16 realtec_bank_addr, realtec_bank_size, realtec_old_bank_addr;
-	UINT16 l3alt_pdat, l3alt_pcmd;
-	int ssf2_lastoff, ssf2_lastdata;
-};
-
 
 UINT8 megadrive_io_read_data_port_3button(running_machine &machine, int portnum);
 
@@ -379,17 +370,6 @@ public:
 	: md_base_state(mconfig, type, tag) { }
 
 };
-
-
-
-extern cpu_device *_32x_master_cpu;
-extern cpu_device *_32x_slave_cpu;
-
-// called from out main scanline timers...
-
-
-
-
 
 class segacd_state : public _32x_state  // use _32x_state as base to make easier the combo 32X + SCD
 {
@@ -403,14 +383,9 @@ public:
 /* machine/megavdp.c */
 extern UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source, address_space& space);
 extern UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source, address_space& space);
-extern int megadriv_framerate;
 extern int megadrive_total_scanlines;
 extern int megadrive_vblank_flag;
-extern int genesis_scanline_counter;
 extern UINT16* megadrive_vdp_palette_lookup;
-
-extern int megadrive_region_export;
-extern int megadrive_region_pal;
 
 /* machine/megadriv.c */
 extern TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback );

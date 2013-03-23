@@ -64,6 +64,17 @@ $(MESSOBJ)/mame.a: \
 	$(MAME_MACHINE)/atari.o     \
 	$(MAME_VIDEO)/atari.o       \
 	$(MAME_VIDEO)/antic.o       \
+	$(MAME_AUDIO)/snes_snd.o    \
+	$(MAME_MACHINE)/snes.o      \
+	$(MAME_VIDEO)/snes.o        \
+	$(MAME_MACHINE)/megadriv.o  \
+	$(MAME_MACHINE)/megacd.o    \
+	$(MAME_MACHINE)/megacdcd.o  \
+	$(MAME_MACHINE)/mega32x.o   \
+	$(MAME_MACHINE)/megavdp.o   \
+	$(MAME_VIDEO)/neogeo.o      \
+	$(MAME_MACHINE)/neoprot.o   \
+	$(MAME_MACHINE)/neocrypt.o  \
 	$(MAME_DRIVERS)/cps1.o      \
 	$(MAME_VIDEO)/cps1.o        \
 
@@ -139,7 +150,7 @@ $(MESSOBJ)/sega.a:              \
 	$(MESS_MACHINE)/md_eeprom.o \
 	$(MESS_MACHINE)/md_jcart.o  \
 	$(MESS_MACHINE)/md_stm95.o  \
-	$(MESS_MACHINE)/megasvp.o   \
+	$(MESS_MACHINE)/md_svp.o    \
 	$(MESS_DRIVERS)/megadriv.o  \
 	$(MESS_MACHINE)/sat_slot.o  \
 	$(MESS_MACHINE)/sat_rom.o   \
