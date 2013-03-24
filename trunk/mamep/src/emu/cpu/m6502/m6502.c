@@ -407,7 +407,7 @@ void m6502_device::execute_run()
 		do_exec_partial();
 
 	while(icount > 0) {
-		if(inst_state < 0x100) {
+		if(inst_state < 0xff00) {
 			PPC = NPC;
 			inst_state = IR | inst_state_base;
 			if(machine().debug_flags & DEBUG_FLAG_ENABLED)
@@ -621,7 +621,7 @@ offs_t m6502_device::disassemble_generic(char *buffer, offs_t pc, const UINT8 *o
 		break;
 
 	case DASM_bzr:
-		sprintf(buffer, " %d, $%02x, $%04x", (opram[0] >> 5) & 7, opram[1], (pc & 0xf0000) | UINT16(pc + 1 + INT8(opram[2])));
+		sprintf(buffer, " %d, $%02x, $%04x", (opram[0] >> 5) & 7, opram[1], (pc & 0xf0000) | UINT16(pc + 3 + INT8(opram[2])));
 		flags |= 3;
 		break;
 
