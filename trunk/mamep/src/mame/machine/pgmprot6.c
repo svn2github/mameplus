@@ -159,10 +159,47 @@ WRITE16_MEMBER(pgm_028_025_state::olds_w )
 					{
 						UINT16 cmd0 = m_sharedprotram[0x3082 / 2];
 						UINT16 val0 = m_sharedprotram[0x3050 / 2];   //CMD_FORMAT
+						UINT16 cmd1 = m_sharedprotram[0x3088 / 2];
+						UINT16 val1 = m_sharedprotram[0x3054 / 2];
 						{
 							if ((cmd0 & 0xff) == 0x2)
 								olds_write_reg(val0, olds_read_reg(val0) + 0x10000);
 						}
+						
+						switch (cmd1)
+						{
+							case 0xd:
+								olds_write_reg(val0,olds_read_reg(val1));
+								break;
+							
+							case 0x0:
+								olds_write_reg(val1,(olds_read_reg(cmd0)) ^ (olds_read_reg(val0)));
+								break;
+								
+							case 0xe:
+								olds_write_reg( val1, olds_read_reg( val1) + 0x10000);
+								break;
+								
+							case 0x2:
+								olds_write_reg(val0,(olds_read_reg(cmd0)) + (olds_read_reg(val1)));
+								break;
+							
+							case 0x6:
+								olds_write_reg(val1,(olds_read_reg(cmd0)) & (olds_read_reg(val0)));
+								break;
+								
+							case 0x1:
+								olds_write_reg( cmd0, olds_read_reg( val0) + 0x10000);
+								break;
+							
+							case 0x7:
+								olds_write_reg(val1,olds_read_reg(val0));
+								break;
+							
+							default:
+								break;
+						}					
+					
 						break;
 					}
 
