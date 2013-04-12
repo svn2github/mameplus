@@ -240,8 +240,10 @@ class gticlub_state : public driver_device
 public:
 	gticlub_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_work_ram(*this, "work_ram")
-	{ }
+		m_work_ram(*this, "work_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_eeprom(*this, "eeprom")  { }
 
 	required_shared_ptr<UINT32> m_work_ram;
 	UINT32 *m_sharc_dataram_0;
@@ -268,6 +270,9 @@ public:
 	DECLARE_MACHINE_RESET(hangplt);
 	INTERRUPT_GEN_MEMBER(gticlub_vblank);
 	TIMER_CALLBACK_MEMBER(irq_off);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<eeprom_device> m_eeprom;
 };
 
 
@@ -346,8 +351,6 @@ READ8_MEMBER(gticlub_state::sysreg_r)
 {
 	static const char *const portnames[] = { "IN0", "IN1", "IN2", "IN3" };
 	device_t *adc1038 = machine().device("adc1038");
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-
 	switch (offset)
 	{
 		case 0:
@@ -366,7 +369,7 @@ READ8_MEMBER(gticlub_state::sysreg_r)
 			// a = ADC readout
 			// e = EEPROM data out
 
-			UINT32 eeprom_bit = (eeprom->read_bit() << 1);
+			UINT32 eeprom_bit = (m_eeprom->read_bit() << 1);
 			UINT32 adc_bit = (adc1038_do_read(adc1038) << 2);
 			return (eeprom_bit | adc_bit);
 		}
@@ -381,8 +384,6 @@ READ8_MEMBER(gticlub_state::sysreg_r)
 WRITE8_MEMBER(gticlub_state::sysreg_w)
 {
 	device_t *adc1038 = machine().device("adc1038");
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-
 	switch (offset)
 	{
 		case 0:
@@ -391,17 +392,17 @@ WRITE8_MEMBER(gticlub_state::sysreg_w)
 			break;
 
 		case 3:
-			eeprom->write_bit((data & 0x01) ? 1 : 0);
-			eeprom->set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
-			eeprom->set_cs_line((data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+			m_eeprom->write_bit((data & 0x01) ? 1 : 0);
+			m_eeprom->set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->set_cs_line((data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 4:
 			if (data & 0x80)    /* CG Board 1 IRQ Ack */
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 
 			if (data & 0x40)    /* CG Board 0 IRQ Ack */
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 
 			adc1038_di_write(adc1038, (data >> 0) & 1);
 			adc1038_clk_write(adc1038, (data >> 1) & 1);
@@ -416,10 +417,10 @@ WRITE8_MEMBER(gticlub_state::sysreg_w)
 MACHINE_START_MEMBER(gticlub_state,gticlub)
 {
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x000fffff, FALSE, m_work_ram);
+	ppcdrc_add_fastram(m_maincpu, 0x00000000, 0x000fffff, FALSE, m_work_ram);
 }
 
 static ADDRESS_MAP_START( gticlub_map, AS_PROGRAM, 32, gticlub_state )
@@ -713,7 +714,7 @@ static const sharc_config sharc_cfg =
 
 TIMER_CALLBACK_MEMBER(gticlub_state::irq_off)
 {
-	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	m_audiocpu->set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )

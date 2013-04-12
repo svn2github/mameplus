@@ -1,15 +1,19 @@
 /* TODO: some variables are per-game specifics */
+#include "sound/okim6295.h"
 
 class cischeat_state : public driver_device
 {
 public:
 	cischeat_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vregs(*this, "vregs"),
 		m_scrollram(*this, "scrollram"),
 		m_ram(*this, "ram"),
 		m_roadram(*this, "roadram"),
-		m_f1gpstr2_ioready(*this, "ioready"){ }
+		m_f1gpstr2_ioready(*this, "ioready"),
+		m_soundcpu(*this, "soundcpu"),
+		m_oki1(*this, "oki1"),
+		m_oki2(*this, "oki2"){ }
 
 	required_shared_ptr<UINT16> m_vregs;
 	optional_shared_ptr_array<UINT16,3> m_scrollram;
@@ -95,4 +99,7 @@ public:
 	void cischeat_draw_sprites(bitmap_ind16 &bitmap , const rectangle &cliprect, int priority1, int priority2);
 	void bigrun_draw_sprites(bitmap_ind16 &bitmap , const rectangle &cliprect, int priority1, int priority2);
 	void cischeat_untangle_sprites(const char *region);
+	optional_device<cpu_device> m_soundcpu;
+	required_device<okim6295_device> m_oki1;
+	required_device<okim6295_device> m_oki2;
 };

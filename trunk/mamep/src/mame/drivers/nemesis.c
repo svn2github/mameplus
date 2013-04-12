@@ -1572,7 +1572,7 @@ static const ay8910_interface ay8910_interface_2 =
 	DEVCB_DEVICE_MEMBER("k007232", k005289_device, k005289_control_B_w)
 };
 
-static void sound_irq(device_t *device, int state)
+WRITE_LINE_MEMBER(nemesis_state::sound_irq)
 {
 /* Interrupts _are_ generated, I wonder where they go.. */
 // nemesis_state *driver_state = device->machine().driver_data<nemesis_state>();
@@ -1581,26 +1581,24 @@ static void sound_irq(device_t *device, int state)
 
 static const ym3812_interface ym3812_config =
 {
-	sound_irq
+	DEVCB_DRIVER_LINE_MEMBER(nemesis_state,sound_irq)
 };
 
-static void volume_callback(device_t *device, int v)
+WRITE8_MEMBER(nemesis_state::volume_callback)
 {
-	k007232_set_volume(device, 0, (v >> 4) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v & 0x0f) * 0x11);
+	k007232_set_volume(machine().device("k007232"), 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(machine().device("k007232"), 1, 0, (data & 0x0f) * 0x11);
 }
 
 static const k007232_interface k007232_config =
 {
-	volume_callback /* external port callback */
+	DEVCB_DRIVER_MEMBER(nemesis_state,volume_callback) /* external port callback */
 };
 
 /******************************************************************************/
 
 void nemesis_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_vlm = machine().device("vlm");
 
 	save_item(NAME(m_irq_on));

@@ -181,8 +181,10 @@ class zr107_state : public driver_device
 {
 public:
 	zr107_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_workram(*this, "workram"){ }
+		: driver_device(mconfig, type, tag),
+		m_workram(*this, "workram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
@@ -210,6 +212,8 @@ public:
 	UINT32 screen_update_jetwave(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(zr107_vblank);
 	TIMER_CALLBACK_MEMBER(irq_off);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };
 
 
@@ -344,7 +348,7 @@ WRITE8_MEMBER(zr107_state::sysreg_w)
 			    0x01 = EEPDI
 			*/
 			ioport("EEPROMOUT")->write(data & 0x07, 0xff);
-			machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+			m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 			mame_printf_debug("System register 0 = %02X\n", data);
 			break;
 
@@ -360,9 +364,9 @@ WRITE8_MEMBER(zr107_state::sysreg_w)
 			    0x01 = ADDSCLK (ADC SCLK)
 			*/
 			if (data & 0x80)    /* CG Board 1 IRQ Ack */
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			if (data & 0x40)    /* CG Board 0 IRQ Ack */
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 			set_cgboard_id((data >> 4) & 3);
 			ioport("OUT4")->write(data, 0xff);
 			mame_printf_debug("System register 1 = %02X\n", data);
@@ -413,12 +417,12 @@ WRITE32_MEMBER(zr107_state::ccu_w)
 void zr107_state::machine_start()
 {
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
 
 	m_sound_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(zr107_state::irq_off),this));
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x000fffff, FALSE, m_workram);
+	ppcdrc_add_fastram(m_maincpu, 0x00000000, 0x000fffff, FALSE, m_workram);
 }
 
 static ADDRESS_MAP_START( zr107_map, AS_PROGRAM, 32, zr107_state )
@@ -685,7 +689,7 @@ static const adc083x_interface zr107_adc_interface = {
 
 TIMER_CALLBACK_MEMBER(zr107_state::irq_off)
 {
-	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	m_audiocpu->set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )

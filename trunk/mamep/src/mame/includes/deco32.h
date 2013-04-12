@@ -1,6 +1,8 @@
 #include "audio/decobsmt.h"
 #include "video/bufsprite.h"
 #include "video/decospr.h"
+#include "machine/eeprom.h"
+#include "sound/okim6295.h"
 
 class deco32_state : public driver_device
 {
@@ -8,6 +10,7 @@ public:
 	deco32_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
 		m_decobsmt(*this, "decobsmt"),
 		m_spriteram(*this, "spriteram"),
 		m_ram(*this, "ram"),
@@ -18,10 +21,14 @@ public:
 		m_ace_ram(*this, "ace_ram"),
 		m_sprgen(*this, "spritegen"),
 		m_sprgen1(*this, "spritegen1"),
-		m_sprgen2(*this, "spritegen2")
+		m_sprgen2(*this, "spritegen2"),
+		m_eeprom(*this, "eeprom"),
+		m_oki1(*this, "oki1"),
+		m_oki2(*this, "oki2")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 	optional_device<decobsmt_device> m_decobsmt;
 	optional_device<buffered_spriteram32_device> m_spriteram;
 	required_shared_ptr<UINT32> m_ram;
@@ -35,6 +42,10 @@ public:
 	optional_device<decospr_device> m_sprgen;
 	optional_device<decospr_device> m_sprgen1;
 	optional_device<decospr_device> m_sprgen2;
+	
+	optional_device<eeprom_device> m_eeprom;
+	optional_device<okim6295_device> m_oki1;
+	optional_device<okim6295_device> m_oki2;
 
 	int m_raster_enable;
 	timer_device *m_raster_irq_timer;

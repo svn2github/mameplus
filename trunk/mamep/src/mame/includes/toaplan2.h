@@ -1,3 +1,4 @@
+#include "machine/eeprom.h"
 /**************** Machine stuff ******************/
 //#define USE_HD64x180          /* Define if CPU support is available */
 //#define TRUXTON2_STEREO       /* Uncomment to hear truxton2 music in stereo */
@@ -7,7 +8,7 @@
 
 // VDP related
 #include "video/gp9001.h"
-
+#include "sound/okim6295.h"
 // Cache the CPUs and VDPs for faster access
 class toaplan2_state : public driver_device
 {
@@ -20,8 +21,12 @@ public:
 		m_txvideoram16_offs(*this, "txvram_offs"),
 		m_txscrollram16(*this, "txscrollram16"),
 		m_tx_gfxram16(*this, "tx_gfxram16"),
-		m_mainram16(*this, "mainram16")
-	{
+		m_mainram16(*this, "mainram16"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_oki(*this, "oki"),
+		m_oki1(*this, "oki1"),
+		m_eeprom(*this, "eeprom") {
 		m_vdp0 = NULL;
 		m_vdp1 = NULL;
 	}
@@ -136,4 +141,11 @@ public:
 	void truxton2_create_tx_tilemap();
 	void register_state_save();
 	void toaplan2_vblank_irq(int irq_line);
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	DECLARE_WRITE_LINE_MEMBER(bbakraid_irqhandler);
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
+	optional_device<okim6295_device> m_oki;
+	optional_device<okim6295_device> m_oki1;
+	optional_device<eeprom_device> m_eeprom;
 };

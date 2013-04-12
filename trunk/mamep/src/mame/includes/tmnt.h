@@ -4,11 +4,13 @@ class tmnt_state : public driver_device
 {
 public:
 	tmnt_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_tmnt2_rom(*this, "tmnt2_rom"),
 		m_sunset_104000(*this, "sunset_104000"),
-		m_tmnt2_1c0800(*this, "tmnt2_1c0800"){ }
+		m_tmnt2_1c0800(*this, "tmnt2_1c0800"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"){ }
 
 	/* memory pointers */
 	optional_shared_ptr<UINT16> m_spriteram;
@@ -47,8 +49,8 @@ public:
 	UINT16     m_cuebrick_nvram[0x400 * 0x20];  // 32k paged in a 1k window
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 	device_t *m_k007232;
 	device_t *m_k053260;
 	device_t *m_k054539;
@@ -148,6 +150,7 @@ public:
 	void sound_nmi_callback( int param );
 	inline UINT32 tmnt2_get_word( UINT32 addr );
 	void tmnt2_put_word( address_space &space, UINT32 addr, UINT16 data );
+	DECLARE_WRITE8_MEMBER(volume_callback);
 };
 
 

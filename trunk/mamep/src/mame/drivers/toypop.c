@@ -64,13 +64,13 @@ WRITE8_MEMBER(toypop_state::toypop_main_interrupt_enable_w)
 WRITE8_MEMBER(toypop_state::toypop_main_interrupt_disable_w)
 {
 	m_main_irq_mask = 0;
-//  machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+//  m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_interrupt_enable_acknowledge_w)
 {
 	m_sound_irq_mask = 1;
-//  machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+//  m_audiocpu->set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_interrupt_disable_w)
@@ -126,31 +126,31 @@ INTERRUPT_GEN_MEMBER(toypop_state::toypop_sound_timer_irq)
 
 WRITE8_MEMBER(toypop_state::toypop_sound_clear_w)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_assert_w)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_m68000_clear_w)
 {
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_m68000_assert_w)
 {
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 void toypop_state::machine_reset()
 {
 	m_main_irq_mask = 0;
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 
 	m_sound_irq_mask = 0;
-	machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 
 	m_interrupt_enable_68k = 0;
 }

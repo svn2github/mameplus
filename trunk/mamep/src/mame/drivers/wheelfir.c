@@ -229,12 +229,13 @@ class wheelfir_state : public driver_device
 {
 public:
 	wheelfir_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "subcpu") { }
 
-	cpu_device *m_maincpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
 	device_t *m_screen;
-	device_t *m_eeprom;
 
 	INT32 *m_zoom_table;
 	UINT16 *m_blitter_data;
@@ -380,7 +381,7 @@ WRITE16_MEMBER(wheelfir_state::wheelfir_blit_w)
 
 	if(offset==0xf && data==0xffff)
 	{
-		machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 		{
 			UINT8 *rom = memregion("gfx1")->base();
@@ -638,7 +639,7 @@ WRITE16_MEMBER(wheelfir_state::wheelfir_7c0000_w)
 WRITE16_MEMBER(wheelfir_state::wheelfir_snd_w)
 {
 	COMBINE_DATA(&m_soundlatch);
-	machine().device("subcpu")->execute().set_input_line(1, HOLD_LINE); /* guess, tested also with periodic interrupts and latch clear*/
+	m_subcpu->set_input_line(1, HOLD_LINE); /* guess, tested also with periodic interrupts and latch clear*/
 	machine().scheduler().synchronize();
 }
 
@@ -742,7 +743,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(wheelfir_state::scanline_timer_callback)
 
 		if(m_scanline_cnt==0) //<=0 ?
 		{
-			machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE); // raster IRQ, changes scroll values for road
+			m_maincpu->set_input_line(5, HOLD_LINE); // raster IRQ, changes scroll values for road
 		}
 
 	}
@@ -751,7 +752,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(wheelfir_state::scanline_timer_callback)
 		if(m_current_scanline==NUM_SCANLINES) /* vblank */
 		{
 			m_toggle_bit = 0x8000;
-			machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+			m_maincpu->set_input_line(3, HOLD_LINE);
 		}
 	}
 }
@@ -763,10 +764,7 @@ void wheelfir_state::machine_reset()
 
 void wheelfir_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>( "maincpu");
-	m_subcpu = machine().device<cpu_device>(  "subcpu");
-	m_screen = machine().device(  "screen");
-	m_eeprom = machine().device(  "eeprom");
+	m_screen = machine().device("screen");
 
 	m_zoom_table = auto_alloc_array(machine(), INT32, ZOOM_TABLE_SIZE);
 	m_blitter_data = auto_alloc_array(machine(), UINT16, 16);

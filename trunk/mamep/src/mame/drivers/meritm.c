@@ -187,7 +187,8 @@ public:
 			m_z80pio_1(*this, "z80pio_1"),
 			m_v9938_0(*this, "v9938_0"),
 			m_v9938_1(*this, "v9938_1"),
-			m_microtouch(*this, "microtouch") { }
+			m_microtouch(*this, "microtouch") ,
+		m_maincpu(*this, "maincpu") { }
 
 	DECLARE_WRITE8_MEMBER(microtouch_tx);
 	UINT8* m_ram;
@@ -251,6 +252,9 @@ public:
 	void meritm_crt250_switch_banks(  );
 	void meritm_switch_banks(  );
 	UINT8 binary_to_BCD(UINT8 data);
+	DECLARE_WRITE_LINE_MEMBER(meritm_vdp0_interrupt);
+	DECLARE_WRITE_LINE_MEMBER(meritm_vdp1_interrupt);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -446,13 +450,13 @@ TIMER_DEVICE_CALLBACK_MEMBER(meritm_state::meritm_interrupt)
 	}
 }
 
-static void meritm_vdp0_interrupt(device_t *, v99x8_device &device, int i)
+WRITE_LINE_MEMBER(meritm_state::meritm_vdp0_interrupt)
 {
 	/* this is not used as the v9938 interrupt callbacks are broken
 	   interrupts seem to be fired quite randomly */
 }
 
-static void meritm_vdp1_interrupt(device_t *, v99x8_device &device, int i)
+WRITE_LINE_MEMBER(meritm_state::meritm_vdp1_interrupt)
 {
 	/* this is not used as the v9938 interrupt callbacks are broken
 	   interrupts seem to be fired quite randomly */
@@ -1189,10 +1193,10 @@ static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 
 	MCFG_V9938_ADD("v9938_0", "screen", 0x20000)
-	MCFG_V99X8_INTERRUPT_CALLBACK_STATIC(meritm_vdp0_interrupt)
+	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(meritm_state,meritm_vdp0_interrupt))
 
 	MCFG_V9938_ADD("v9938_1", "screen", 0x20000)
-	MCFG_V99X8_INTERRUPT_CALLBACK_STATIC(meritm_vdp1_interrupt)
+	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(meritm_state,meritm_vdp1_interrupt))
 
 	MCFG_SCREEN_ADD("screen",RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -2166,7 +2170,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat3te)
 
 	ds1204_init(megat3_ds1204_key, megat3_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
@@ -2196,7 +2200,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat4te)
 
 	ds1204_init(0, megat4te_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
@@ -2207,7 +2211,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat4st)
 
 	ds1204_init(0, megat4te_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
@@ -2227,7 +2231,7 @@ DRIVER_INIT_MEMBER(meritm_state,megat5t)
 
 	ds1204_init(0, megat5_ds1204_nvram);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 }
 

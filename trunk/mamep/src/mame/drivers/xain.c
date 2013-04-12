@@ -189,13 +189,13 @@ TIMER_DEVICE_CALLBACK_MEMBER(xain_state::xain_scanline)
 	/* FIRQ (IMS) fires every on every 8th scanline (except 0) */
 	if (!(vcount_old & 8) && (vcount & 8))
 	{
-		machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
+		m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 	}
 
 	/* NMI fires on scanline 248 (VBL) and is latched */
 	if (vcount == 0xf8)
 	{
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 
 	/* VBLANK input bit is held high from scanlines 248-255 */
@@ -223,7 +223,7 @@ WRITE8_MEMBER(xain_state::xainCPUB_bankswitch_w)
 WRITE8_MEMBER(xain_state::xain_sound_command_w)
 {
 	soundlatch_byte_w(space,offset,data);
-	machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
+	m_audiocpu->set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(xain_state::xain_main_irq_w)
@@ -231,28 +231,28 @@ WRITE8_MEMBER(xain_state::xain_main_irq_w)
 	switch (offset)
 	{
 	case 0: /* 0x3a09 - NMI clear */
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 		break;
 	case 1: /* 0x3a0a - FIRQ clear */
-		machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
+		m_maincpu->set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 		break;
 	case 2: /* 0x3a0b - IRQ clear */
-		machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
+		m_maincpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 		break;
 	case 3: /* 0x3a0c - IRQB assert */
-		machine().device("sub")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+		m_subcpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 		break;
 	}
 }
 
 WRITE8_MEMBER(xain_state::xain_irqA_assert_w)
 {
-	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+	m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(xain_state::xain_irqB_clear_w)
 {
-	machine().device("sub")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
+	m_subcpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 }
 
 READ8_MEMBER(xain_state::xain_68705_r)
@@ -266,8 +266,8 @@ WRITE8_MEMBER(xain_state::xain_68705_w)
 	m_from_main = data;
 	m_mcu_accept = 0;
 
-	if (machine().device("mcu") != NULL)
-		machine().device("mcu")->execute().set_input_line(0, ASSERT_LINE);
+	if (m_mcu != NULL)
+		m_mcu->set_input_line(0, ASSERT_LINE);
 }
 
 CUSTOM_INPUT_MEMBER(xain_state::xain_vblank_r)
@@ -312,7 +312,7 @@ WRITE8_MEMBER(xain_state::xain_68705_port_b_w)
 	else if ((m_ddr_b & 0x02) && (~m_port_b_out & 0x02) && (data & 0x02))
 	{
 		m_mcu_accept = 1;
-		machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
+		m_mcu->set_input_line(0, CLEAR_LINE);
 	}
 
 	/* Rising edge of PB2 */
@@ -356,7 +356,7 @@ CUSTOM_INPUT_MEMBER(xain_state::mcu_status_r)
 {
 	UINT8 res = 0;
 
-	if (machine().device("mcu") != NULL)
+	if (m_mcu != NULL)
 	{
 		if (m_mcu_ready == 1)
 			res |= 0x01;
@@ -376,8 +376,8 @@ READ8_MEMBER(xain_state::mcu_comm_reset_r)
 	m_mcu_ready = 1;
 	m_mcu_accept = 1;
 
-	if (machine().device("mcu") != NULL)
-		machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
+	if (m_mcu != NULL)
+		m_mcu->set_input_line(0, CLEAR_LINE);
 
 	return 0xff;
 }
@@ -550,9 +550,9 @@ GFXDECODE_END
 
 
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(xain_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(M6809_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(M6809_FIRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -562,7 +562,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(xain_state,irqhandler)
 };
 
 void xain_state::machine_start()

@@ -135,7 +135,9 @@ class konamigv_state : public driver_device
 public:
 	konamigv_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_am53cf96(*this, "scsi:am53cf96"){ }
+		m_am53cf96(*this, "scsi:am53cf96"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_device<am53cf96_device> m_am53cf96;
 
@@ -172,17 +174,17 @@ public:
 	DECLARE_MACHINE_START(konamigv);
 	void scsi_dma_read( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
 	void scsi_dma_write( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 };
 
 /* EEPROM handlers */
 
 WRITE32_MEMBER(konamigv_state::eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->write_bit((data&0x01) ? 1 : 0);
-	eeprom->set_clock_line((data&0x04) ? ASSERT_LINE : CLEAR_LINE);
-	eeprom->set_cs_line((data&0x02) ? CLEAR_LINE : ASSERT_LINE);
+	m_eeprom->write_bit((data&0x01) ? 1 : 0);
+	m_eeprom->set_clock_line((data&0x04) ? ASSERT_LINE : CLEAR_LINE);
+	m_eeprom->set_cs_line((data&0x02) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE32_MEMBER(konamigv_state::mb89371_w)
@@ -494,9 +496,9 @@ DRIVER_INIT_MEMBER(konamigv_state,simpbowl)
 	m_flash8[2] = machine().device<fujitsu_29f016a_device>("flash2");
 	m_flash8[3] = machine().device<fujitsu_29f016a_device>("flash3");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::flash_r),this), write32_delegate(FUNC(konamigv_state::flash_w),this) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler     ( 0x1f6800c0, 0x1f6800c7, read32_delegate(FUNC(konamigv_state::trackball_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler     ( 0x1f6800c8, 0x1f6800cb, read32_delegate(FUNC(konamigv_state::unknown_r),this)); /* ?? */
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::flash_r),this), write32_delegate(FUNC(konamigv_state::flash_w),this) );
+	m_maincpu->space(AS_PROGRAM).install_read_handler     ( 0x1f6800c0, 0x1f6800c7, read32_delegate(FUNC(konamigv_state::trackball_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler     ( 0x1f6800c8, 0x1f6800cb, read32_delegate(FUNC(konamigv_state::unknown_r),this)); /* ?? */
 
 	DRIVER_INIT_CALL(konamigv);
 }
@@ -579,9 +581,9 @@ DRIVER_INIT_MEMBER(konamigv_state,btchamp)
 {
 	m_flash16[0] = machine().device<sharp_lh28f400_device>("flash");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::btc_trackball_r),this), write32_delegate(FUNC(konamigv_state::btc_trackball_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write                  ( 0x1f6800e0, 0x1f6800e3);
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this) );
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler( 0x1f680080, 0x1f68008f, read32_delegate(FUNC(konamigv_state::btc_trackball_r),this), write32_delegate(FUNC(konamigv_state::btc_trackball_w),this));
+	m_maincpu->space(AS_PROGRAM).nop_write                  ( 0x1f6800e0, 0x1f6800e3);
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this) );
 
 	DRIVER_INIT_CALL(konamigv);
 }
@@ -634,8 +636,8 @@ WRITE32_MEMBER(konamigv_state::tokimeki_serial_w)
 
 DRIVER_INIT_MEMBER(konamigv_state,tokimosh)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler ( 0x1f680080, 0x1f680083, read32_delegate(FUNC(konamigv_state::tokimeki_serial_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler( 0x1f680090, 0x1f680093, write32_delegate(FUNC(konamigv_state::tokimeki_serial_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler ( 0x1f680080, 0x1f680083, read32_delegate(FUNC(konamigv_state::tokimeki_serial_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler( 0x1f680090, 0x1f680093, write32_delegate(FUNC(konamigv_state::tokimeki_serial_w),this));
 
 	DRIVER_INIT_CALL(konamigv);
 }
@@ -658,13 +660,13 @@ DRIVER_INIT_MEMBER(konamigv_state,kdeadeye)
 {
 	m_flash16[0] = machine().device<sharp_lh28f400_device>("flash");
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f680080, 0x1f680083, "GUNX1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f680090, 0x1f680093, "GUNY1" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f6800a0, 0x1f6800a3, "GUNX2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f6800b0, 0x1f6800b3, "GUNY2" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port  ( 0x1f6800c0, 0x1f6800c3, "BUTTONS" );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler    ( 0x1f6800e0, 0x1f6800e3, write32_delegate(FUNC(konamigv_state::kdeadeye_0_w),this) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_port  ( 0x1f680080, 0x1f680083, "GUNX1" );
+	m_maincpu->space(AS_PROGRAM).install_read_port  ( 0x1f680090, 0x1f680093, "GUNY1" );
+	m_maincpu->space(AS_PROGRAM).install_read_port  ( 0x1f6800a0, 0x1f6800a3, "GUNX2" );
+	m_maincpu->space(AS_PROGRAM).install_read_port  ( 0x1f6800b0, 0x1f6800b3, "GUNY2" );
+	m_maincpu->space(AS_PROGRAM).install_read_port  ( 0x1f6800c0, 0x1f6800c3, "BUTTONS" );
+	m_maincpu->space(AS_PROGRAM).install_write_handler    ( 0x1f6800e0, 0x1f6800e3, write32_delegate(FUNC(konamigv_state::kdeadeye_0_w),this) );
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler( 0x1f380000, 0x1f3fffff, read32_delegate(FUNC(konamigv_state::btcflash_r),this), write32_delegate(FUNC(konamigv_state::btcflash_w),this));
 
 	DRIVER_INIT_CALL(konamigv);
 }

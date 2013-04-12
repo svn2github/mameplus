@@ -95,11 +95,12 @@ class mil4000_state : public driver_device
 {
 public:
 	mil4000_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_sc0_vram(*this, "sc0_vram"),
 		m_sc1_vram(*this, "sc1_vram"),
 		m_sc2_vram(*this, "sc2_vram"),
-		m_sc3_vram(*this, "sc3_vram"){ }
+		m_sc3_vram(*this, "sc3_vram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT16> m_sc0_vram;
 	required_shared_ptr<UINT16> m_sc1_vram;
@@ -123,6 +124,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_sc3_tile_info);
 	virtual void video_start();
 	UINT32 screen_update_mil4000(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 

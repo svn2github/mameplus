@@ -139,11 +139,10 @@ INTERRUPT_GEN_MEMBER(cave_state::cave_interrupt)
 }
 
 /* Called by the YMZ280B to set the IRQ state */
-static void sound_irq_gen( device_t *device, int state )
+WRITE_LINE_MEMBER(cave_state::sound_irq_gen)
 {
-	cave_state *cave = device->machine().driver_data<cave_state>();
-	cave->m_sound_irq = (state != 0);
-	update_irq_state(device->machine());
+	m_sound_irq = (state != 0);
+	update_irq_state(machine());
 }
 
 
@@ -288,7 +287,6 @@ WRITE8_MEMBER(cave_state::soundlatch_ack_w)
 
 WRITE16_MEMBER(cave_state::cave_eeprom_msb_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (data & ~0xfe00)
 		logerror("%s: Unknown EEPROM bit written %04X\n", machine().describe_context(), data);
 
@@ -300,43 +298,39 @@ WRITE16_MEMBER(cave_state::cave_eeprom_msb_w)
 		coin_counter_w(machine(), 0, data & 0x1000);
 
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x0800);
+		m_eeprom->write_bit(data & 0x0800);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->set_clock_line((data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
 WRITE16_MEMBER(cave_state::sailormn_eeprom_msb_w)
 {
-	sailormn_tilebank_w(machine(), data & 0x0100);
+	sailormn_tilebank_w(data & 0x0100);
 	cave_eeprom_msb_w(space, offset, data & ~0x0100, mem_mask);
 }
 
 WRITE16_MEMBER(cave_state::hotdogst_eeprom_msb_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_8_15)  // even address
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x0800);
+		m_eeprom->write_bit(data & 0x0800);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x0400) ? CLEAR_LINE: ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x0400) ? CLEAR_LINE: ASSERT_LINE);
 	}
 }
 
 WRITE16_MEMBER(cave_state::cave_eeprom_lsb_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (data & ~0x00ef)
 		logerror("%s: Unknown EEPROM bit written %04X\n",machine().describe_context(),data);
 
@@ -348,14 +342,13 @@ WRITE16_MEMBER(cave_state::cave_eeprom_lsb_w)
 		coin_counter_w(machine(), 0,  data & 0x0001);
 
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x80);
+		m_eeprom->write_bit(data & 0x80);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -373,7 +366,6 @@ WRITE16_MEMBER(cave_state::gaia_coin_lsb_w)
     - Writing 0xcf00 shouldn't send a 1 bit to the eeprom   */
 WRITE16_MEMBER(cave_state::metmqstr_eeprom_msb_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (data & ~0xff00)
 		logerror("%s: Unknown EEPROM bit written %04X\n", machine().describe_context(), data);
 
@@ -385,14 +377,13 @@ WRITE16_MEMBER(cave_state::metmqstr_eeprom_msb_w)
 		if (~data & 0x0100)
 		{
 			// latch the bit
-			eeprom_device *eeprom = downcast<eeprom_device *>(device);
-			eeprom->write_bit(data & 0x0800);
+			m_eeprom->write_bit(data & 0x0800);
 
 			// reset line asserted: reset.
-			eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE);
+			m_eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE);
 
 			// clock line asserted: write latch or select next bit to read
-			eeprom->set_clock_line((data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->set_clock_line((data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
 		}
 	}
 }
@@ -673,7 +664,6 @@ WRITE16_MEMBER(cave_state::korokoro_leds_w)
 
 WRITE16_MEMBER(cave_state::korokoro_eeprom_msb_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (data & ~0x7000)
 	{
 		logerror("%s: Unknown EEPROM bit written %04X\n",machine().describe_context(),data);
@@ -686,14 +676,13 @@ WRITE16_MEMBER(cave_state::korokoro_eeprom_msb_w)
 		m_hopper = data & 0x0100;   // ???
 
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x4000);
+		m_eeprom->write_bit(data & 0x4000);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_cs_line((data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x2000) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->set_clock_line((data & 0x2000) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -801,9 +790,7 @@ ADDRESS_MAP_END
 
 READ16_MEMBER(cave_state::pwrinst2_eeprom_r)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	return ~8 + ((eeprom->read_bit() & 1) ? 8 : 0);
+	return ~8 + ((m_eeprom->read_bit() & 1) ? 8 : 0);
 }
 
 INLINE void vctrl_w(address_space &space, offs_t offset, UINT16 data, UINT16 mem_mask, int GFX)
@@ -900,21 +887,19 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(cave_state::tjumpman_eeprom_lsb_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (data & ~0x0038)
 		logerror("%s: Unknown EEPROM bit written %04X\n",machine().describe_context(),data);
 
 	if (ACCESSING_BITS_0_7)  // odd address
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x0020);
+		m_eeprom->write_bit(data & 0x0020);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x0008) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_cs_line((data & 0x0008) ? CLEAR_LINE : ASSERT_LINE);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x0010) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->set_clock_line((data & 0x0010) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -1792,8 +1777,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(cave_state,cave)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_soundbuf_len));
 	save_item(NAME(m_soundbuf_data));
@@ -1817,12 +1800,12 @@ MACHINE_RESET_MEMBER(cave_state,cave)
 
 static const ymz280b_interface ymz280b_intf =
 {
-	sound_irq_gen
+	DEVCB_DRIVER_LINE_MEMBER(cave_state,sound_irq_gen)
 };
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(cave_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -1832,7 +1815,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(cave_state,irqhandler)
 };
 
 /***************************************************************************

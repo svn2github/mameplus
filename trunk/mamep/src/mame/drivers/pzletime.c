@@ -23,13 +23,16 @@ class pzletime_state : public driver_device
 {
 public:
 	pzletime_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_video_regs(*this, "video_regs"),
 		m_tilemap_regs(*this, "tilemap_regs"),
 		m_bg_videoram(*this, "bg_videoram"),
 		m_mid_videoram(*this, "mid_videoram"),
 		m_txt_videoram(*this, "txt_videoram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_oki(*this, "oki"),
+		m_eeprom(*this, "eeprom") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_video_regs;
@@ -60,6 +63,9 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	UINT32 screen_update_pzletime(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
+	required_device<okim6295_device> m_oki;
+	required_device<eeprom_device> m_eeprom;
 };
 
 
@@ -163,13 +169,11 @@ WRITE16_MEMBER(pzletime_state::txt_videoram_w)
 
 WRITE16_MEMBER(pzletime_state::eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_0_7)
 	{
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x01);
-		eeprom->set_cs_line((data & 0x02) ? CLEAR_LINE : ASSERT_LINE );
-		eeprom->set_clock_line((data & 0x04) ? ASSERT_LINE : CLEAR_LINE );
+		m_eeprom->write_bit(data & 0x01);
+		m_eeprom->set_cs_line((data & 0x02) ? CLEAR_LINE : ASSERT_LINE );
+		m_eeprom->set_clock_line((data & 0x04) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
@@ -209,8 +213,7 @@ WRITE16_MEMBER(pzletime_state::video_regs_w)
 
 WRITE16_MEMBER(pzletime_state::oki_bank_w)
 {
-	device_t *device = machine().device("oki");
-	downcast<okim6295_device *>(device)->set_bank_base(0x40000 * (data & 0x3));
+	m_oki->set_bank_base(0x40000 * (data & 0x3));
 }
 
 CUSTOM_INPUT_MEMBER(pzletime_state::ticket_status_r)

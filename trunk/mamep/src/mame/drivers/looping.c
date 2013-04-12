@@ -98,10 +98,13 @@ class looping_state : public driver_device
 {
 public:
 	looping_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_dac(*this, "dac") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -145,6 +148,9 @@ public:
 	UINT32 screen_update_looping(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(looping_interrupt);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<dac_device> m_dac;
 };
 
 
@@ -342,34 +348,34 @@ INTERRUPT_GEN_MEMBER(looping_state::looping_interrupt)
 WRITE8_MEMBER(looping_state::level2_irq_set)
 {
 	if (!(data & 1))
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
+		m_maincpu->set_input_line_and_vector(0, ASSERT_LINE, 4);
 }
 
 
 WRITE8_MEMBER(looping_state::main_irq_ack_w)
 {
 	if (data == 0)
-		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
 WRITE8_MEMBER(looping_state::looping_souint_clr)
 {
 	if (data == 0)
-		machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+		m_audiocpu->set_input_line(0, CLEAR_LINE);
 }
 
 
 WRITE_LINE_MEMBER(looping_state::looping_spcint)
 {
-	machine().device("audiocpu")->execute().set_input_line_and_vector(0, !state, 6);
+	m_audiocpu->set_input_line_and_vector(0, !state, 6);
 }
 
 
 WRITE8_MEMBER(looping_state::looping_soundlatch_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().device("audiocpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
+	m_audiocpu->set_input_line_and_vector(0, ASSERT_LINE, 4);
 }
 
 
@@ -382,7 +388,6 @@ WRITE8_MEMBER(looping_state::looping_soundlatch_w)
 
 WRITE8_MEMBER(looping_state::looping_sound_sw)
 {
-	dac_device *device = machine().device<dac_device>("dac");
 	/* this can be improved by adding the missing signals for decay etc. (see schematics)
 
 	    0001 = ASOV
@@ -395,7 +400,7 @@ WRITE8_MEMBER(looping_state::looping_sound_sw)
 	*/
 
 	m_sound[offset + 1] = data ^ 1;
-	device->write_unsigned8(((m_sound[2] << 7) + (m_sound[3] << 6)) * m_sound[7]);
+	m_dac->write_unsigned8(((m_sound[2] << 7) + (m_sound[3] << 6)) * m_sound[7]);
 }
 
 
@@ -915,7 +920,7 @@ DRIVER_INIT_MEMBER(looping_state,looping)
 		rom[i] = BITSWAP8(rom[i], 0,1,2,3,4,5,6,7);
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x7000, 0x7007, read8_delegate(FUNC(looping_state::protection_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x7000, 0x7007, read8_delegate(FUNC(looping_state::protection_r), this));
 }
 
 

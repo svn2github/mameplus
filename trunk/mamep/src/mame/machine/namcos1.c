@@ -578,20 +578,20 @@ WRITE8_MEMBER(namcos1_state::namcos1_cpu_control_w)
 		m_reset = data & 1;
 	}
 
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
-	machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	m_mcu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
 
 WRITE8_MEMBER(namcos1_state::namcos1_watchdog_w)
 {
-	if (&space.device() == machine().device("maincpu"))
+	if (&space.device() == m_maincpu)
 		m_wdog |= 1;
-	else if (&space.device() == machine().device("sub"))
+	else if (&space.device() == m_subcpu)
 		m_wdog |= 2;
-	else if (&space.device() == machine().device("audiocpu"))
+	else if (&space.device() == m_audiocpu)
 		m_wdog |= 4;
 
 	if (m_wdog == 7 || !m_reset)
@@ -743,7 +743,7 @@ WRITE8_MEMBER(namcos1_state::namcos1_bankswitch_w)
 {
 //  logerror("cpu %s: namcos1_bankswitch_w offset %04x data %02x\n", device().tag(), offset, data);
 
-	namcos1_bankswitch(machine(), (&space.device() == machine().device("maincpu")) ? 0 : 1, offset, data);
+	namcos1_bankswitch(machine(), (&space.device() == m_maincpu) ? 0 : 1, offset, data);
 }
 
 /* Sub cpu set start bank port */
@@ -871,10 +871,10 @@ void namcos1_state::machine_reset()
 	namcos1_bankswitch(machine(), 1, 0x0e01, 0xff);
 
 	/* reset Cpu 0 and stop all other CPUs */
-	machine().device("maincpu")->reset();
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_maincpu->reset();
+	m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_mcu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	/* mcu patch data clear */
 	m_mcu_patch_data = 0;
@@ -1216,7 +1216,7 @@ DRIVER_INIT_MEMBER(namcos1_state,tankfrc4)
 	};
 	namcos1_driver_init(machine(), &tankfrce_specific);
 
-	machine().device("mcu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(faceoff_inputs_r));
+	m_mcu->space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(faceoff_inputs_r));
 }
 
 /*******************************************************************************
@@ -1307,7 +1307,7 @@ static READ8_HANDLER( quester_paddle_r )
 DRIVER_INIT_MEMBER(namcos1_state,quester)
 {
 	namcos1_driver_init(machine(), NULL);
-	machine().device("mcu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(quester_paddle_r));
+	m_mcu->space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(quester_paddle_r));
 }
 
 
@@ -1396,7 +1396,7 @@ static READ8_HANDLER( berabohm_buttons_r )
 DRIVER_INIT_MEMBER(namcos1_state,berabohm)
 {
 	namcos1_driver_init(machine(), NULL);
-	machine().device("mcu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(berabohm_buttons_r));
+	m_mcu->space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(berabohm_buttons_r));
 }
 
 
@@ -1466,5 +1466,5 @@ static READ8_HANDLER( faceoff_inputs_r )
 DRIVER_INIT_MEMBER(namcos1_state,faceoff)
 {
 	namcos1_driver_init(machine(), NULL);
-	machine().device("mcu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(faceoff_inputs_r));
+	m_mcu->space(AS_PROGRAM).install_legacy_read_handler(0x1400, 0x1401, FUNC(faceoff_inputs_r));
 }

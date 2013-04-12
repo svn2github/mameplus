@@ -8,11 +8,12 @@ class playch10_state : public driver_device
 {
 public:
 	playch10_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_ram_8w(*this, "ram_8w"),
 		m_videoram(*this, "videoram"),
 		m_timedata(*this, "timedata"),
-		m_work_ram(*this, "work_ram"){ }
+		m_work_ram(*this, "work_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_ram_8w;
 	required_shared_ptr<UINT8> m_videoram;
@@ -121,8 +122,11 @@ public:
 	INTERRUPT_GEN_MEMBER(playch10_interrupt);
 	void pc10_set_videorom_bank( int first, int count, int bank, int size );
 	void set_videoram_bank( int first, int count, int bank, int size );
+	void gboard_scanline_cb( int scanline, int vblank, int blanked );
+	void ppu_irq(int *ppu_regs);
+	void mapper9_latch(offs_t offset);
+	required_device<cpu_device> m_maincpu;
 };
 
 /*----------- defined in video/playch10.c -----------*/
 extern const ppu2c0x_interface playch10_ppu_interface;
-extern const ppu2c0x_interface playch10_ppu_interface_hboard;

@@ -108,11 +108,10 @@ WRITE8_MEMBER(paradise_state::paradise_rombank_w)
 
 WRITE8_MEMBER(paradise_state::paradise_okibank_w)
 {
-	device_t *device = machine().device("oki2");
 	if (data & ~0x02)
 		logerror("%s: unknown oki bank bits %02X\n", machine().describe_context(), data);
 
-	downcast<okim6295_device *>(device)->set_bank_base((data & 0x02) ? 0x40000 : 0);
+	m_oki2->set_bank_base((data & 0x02) ? 0x40000 : 0);
 }
 
 WRITE8_MEMBER(paradise_state::torus_coin_counter_w)
@@ -695,7 +694,7 @@ INTERRUPT_GEN_MEMBER(paradise_state::paradise_irq)
 	if (irq_count<300)
 		irq_count++;
 	else
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( paradise, paradise_state )
@@ -1256,14 +1255,14 @@ DRIVER_INIT_MEMBER(paradise_state,paradise)
 DRIVER_INIT_MEMBER(paradise_state,tgtball)
 {
 	m_sprite_inc = 4;
-	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x2001, 0x2001, write8_delegate(FUNC(paradise_state::tgtball_flipscreen_w),this));
+	m_maincpu->space(AS_IO).install_write_handler(0x2001, 0x2001, write8_delegate(FUNC(paradise_state::tgtball_flipscreen_w),this));
 
 }
 
 DRIVER_INIT_MEMBER(paradise_state,torus)
 {
 	m_sprite_inc = 4;
-	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x2070, 0x2070, write8_delegate(FUNC(paradise_state::torus_coin_counter_w),this));
+	m_maincpu->space(AS_IO).install_write_handler(0x2070, 0x2070, write8_delegate(FUNC(paradise_state::torus_coin_counter_w),this));
 }
 
 

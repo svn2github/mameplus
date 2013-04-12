@@ -61,7 +61,8 @@ class itgambl2_state : public driver_device
 {
 public:
 	itgambl2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	int m_test_x;
 	int m_test_y;
@@ -70,6 +71,7 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	UINT32 screen_update_itgambl2(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -240,7 +242,7 @@ GFXDECODE_END
 void itgambl2_state::machine_reset()
 {
 	/* stop the CPU, we have no code for it anyway */
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 /* default 444 palette for debug purpose*/

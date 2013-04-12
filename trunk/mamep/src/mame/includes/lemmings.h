@@ -6,17 +6,18 @@ class lemmings_state : public driver_device
 public:
 	lemmings_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_bitmap0(2048, 256),
-			m_spriteram(*this, "spriteram"),
-			m_spriteram2(*this, "spriteram2") ,
+		m_bitmap0(2048, 256),
+		m_audiocpu(*this, "audiocpu"),
+		m_spriteram(*this, "spriteram"),
+		m_spriteram2(*this, "spriteram2") ,
 		m_paletteram(*this, "paletteram"),
 		m_control_data(*this, "control_data"),
 		m_vram_data(*this, "vram_data"),
 		m_pixel_0_data(*this, "pixel_0_data"),
 		m_pixel_1_data(*this, "pixel_1_data"),
 		m_sprgen(*this, "spritegen"),
-		m_sprgen2(*this, "spritegen2")
-	{ }
+		m_sprgen2(*this, "spritegen2"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* video-related */
 	bitmap_ind16 m_bitmap0;
@@ -25,7 +26,7 @@ public:
 	UINT16 m_sprite_triple_buffer_1[0x800];
 	UINT8 m_vram_buffer[2048 * 64]; // 64 bytes per VRAM character
 	/* devices */
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_audiocpu;
 	required_device<buffered_spriteram16_device> m_spriteram;
 	required_device<buffered_spriteram16_device> m_spriteram2;
 	/* memory pointers */
@@ -52,4 +53,5 @@ public:
 	UINT32 screen_update_lemmings(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void screen_eof_lemmings(screen_device &screen, bool state);
 	void lemmings_copy_bitmap(bitmap_rgb32& bitmap, bitmap_ind16& srcbitmap, int* xscroll, int* yscroll, const rectangle& cliprect);
+	required_device<cpu_device> m_maincpu;
 };

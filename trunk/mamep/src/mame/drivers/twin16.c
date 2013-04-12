@@ -121,13 +121,13 @@ WRITE16_MEMBER(twin16_state::twin16_CPUA_register_w)
 	if (m_CPUA_register != old)
 	{
 		if ((old & 0x08) == 0 && (m_CPUA_register & 0x08))
-			machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
+			m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 
 		if ((old & 0x40) && (m_CPUA_register & 0x40) == 0)
 			twin16_spriteram_process();
 
 		if ((old & 0x10) == 0 && (m_CPUA_register & 0x10))
-			machine().device("sub")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
+			m_subcpu->set_input_line(M68K_IRQ_6, HOLD_LINE);
 
 		coin_counter_w(machine(), 0, m_CPUA_register & 0x01);
 		coin_counter_w(machine(), 1, m_CPUA_register & 0x02);
@@ -148,7 +148,7 @@ WRITE16_MEMBER(twin16_state::twin16_CPUB_register_w)
 	if( m_CPUB_register!=old )
 	{
 		if ((old & 0x01) == 0 && (m_CPUB_register & 0x01))
-			machine().device("maincpu")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
+			m_maincpu->set_input_line(M68K_IRQ_6, HOLD_LINE);
 	}
 }
 
@@ -164,7 +164,7 @@ WRITE16_MEMBER(twin16_state::fround_CPU_register_w)
 	if (m_CPUA_register != old)
 	{
 		if ((old & 0x08) == 0 && (m_CPUA_register & 0x08))
-			machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
+			m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 
 		coin_counter_w(machine(), 0, m_CPUA_register & 0x01);
 		coin_counter_w(machine(), 1, m_CPUA_register & 0x02);
@@ -671,15 +671,15 @@ GFXDECODE_END
 
 /* Sound Interfaces */
 
-static void volume_callback(device_t *device, int v)
+WRITE8_MEMBER(twin16_state::volume_callback)
 {
-	k007232_set_volume(device,0,(v >> 4) * 0x11,0);
-	k007232_set_volume(device,1,0,(v & 0x0f) * 0x11);
+	k007232_set_volume(machine().device("konami"),0,(data >> 4) * 0x11,0);
+	k007232_set_volume(machine().device("konami"),1,0,(data & 0x0f) * 0x11);
 }
 
 static const k007232_interface k007232_config =
 {
-	volume_callback /* external port callback */
+	DEVCB_DRIVER_MEMBER(twin16_state,volume_callback) /* external port callback */
 };
 
 /* Interrupt Generators */

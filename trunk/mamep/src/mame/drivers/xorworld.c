@@ -46,36 +46,30 @@ EEPROM chip: 93C46
 
 WRITE16_MEMBER(xorworld_state::eeprom_chip_select_w)
 {
-	device_t *device = machine().device("eeprom");
 	/* bit 0 is CS (active low) */
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+	m_eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE16_MEMBER(xorworld_state::eeprom_serial_clock_w)
 {
-	device_t *device = machine().device("eeprom");
 	/* bit 0 is SK (active high) */
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->set_clock_line((data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
+	m_eeprom->set_clock_line((data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE16_MEMBER(xorworld_state::eeprom_data_w)
 {
-	device_t *device = machine().device("eeprom");
 	/* bit 0 is EEPROM data (DIN) */
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->write_bit(data & 0x01);
+	m_eeprom->write_bit(data & 0x01);
 }
 
 WRITE16_MEMBER(xorworld_state::xorworld_irq2_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+	m_maincpu->set_input_line(2, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(xorworld_state::xorworld_irq6_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
+	m_maincpu->set_input_line(6, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( xorworld_map, AS_PROGRAM, 16, xorworld_state )

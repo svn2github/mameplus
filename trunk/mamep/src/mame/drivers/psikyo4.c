@@ -165,13 +165,11 @@ static const eeprom_interface eeprom_interface_93C56 =
 
 WRITE32_MEMBER(psikyo4_state::ps4_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_16_31)
 	{
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit((data & 0x00200000) ? 1 : 0);
-		eeprom->set_cs_line((data & 0x00800000) ? CLEAR_LINE : ASSERT_LINE);
-		eeprom->set_clock_line((data & 0x00400000) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit((data & 0x00200000) ? 1 : 0);
+		m_eeprom->set_cs_line((data & 0x00800000) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x00400000) ? ASSERT_LINE : CLEAR_LINE);
 
 		return;
 	}
@@ -645,21 +643,19 @@ static INPUT_PORTS_START( hotdebut )
 INPUT_PORTS_END
 
 
-static void irqhandler( device_t *device, int linestate )
+WRITE_LINE_MEMBER(psikyo4_state::irqhandler)
 {
-	psikyo4_state *state = device->machine().driver_data<psikyo4_state>();
-	state->m_maincpu->set_input_line(12, linestate ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(12, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf278b_interface ymf278b_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(psikyo4_state,irqhandler)
 };
 
 
 void psikyo4_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	save_item(NAME(m_oldbrt1));
 	save_item(NAME(m_oldbrt2));
@@ -954,7 +950,7 @@ void psikyo4_state::install_hotgmck_pcm_bank()
 	set_hotgmck_pcm_bank(0);
 	set_hotgmck_pcm_bank(1);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x5800008, 0x580000b, write32_delegate(FUNC(psikyo4_state::hotgmck_pcm_bank_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x5800008, 0x580000b, write32_delegate(FUNC(psikyo4_state::hotgmck_pcm_bank_w),this));
 	machine().save().register_postload(save_prepost_delegate(FUNC(psikyo4_state::hotgmck_pcm_bank_postload), this));
 }
 

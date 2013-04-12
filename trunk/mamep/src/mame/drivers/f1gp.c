@@ -390,15 +390,14 @@ GFXDECODE_END
 
 
 
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(f1gp_state::irqhandler)
 {
-	f1gp_state *state = device->machine().driver_data<f1gp_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(f1gp_state,irqhandler)
 };
 
 static const k053936_interface f1gp_k053936_intf =
@@ -427,7 +426,6 @@ MACHINE_START_MEMBER(f1gp_state,f1gp)
 
 	membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x8000);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k053936 = machine().device("k053936");
 
 	MACHINE_START_CALL_MEMBER(f1gpb);

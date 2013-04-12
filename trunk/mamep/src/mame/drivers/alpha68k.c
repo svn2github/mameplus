@@ -1846,15 +1846,14 @@ static const ym2203_interface ym2203_config =
 	DEVCB_NULL
 };
 
-static void YM3812_irq( device_t *device, int param )
+WRITE_LINE_MEMBER(alpha68k_state::ym3812_irq)
 {
-	alpha68k_state *state = device->machine().driver_data<alpha68k_state>();
-	state->m_audiocpu->set_input_line(0, (param) ? HOLD_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, (state) ? HOLD_LINE : CLEAR_LINE);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	YM3812_irq
+	DEVCB_DRIVER_LINE_MEMBER(alpha68k_state,ym3812_irq)
 };
 
 
@@ -1863,7 +1862,6 @@ static const ym3812_interface ym3812_config =
 
 MACHINE_START_MEMBER(alpha68k_state,common)
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_trigstate));
 	save_item(NAME(m_deposits1));
@@ -3144,7 +3142,7 @@ DRIVER_INIT_MEMBER(alpha68k_state,kyros)
 
 DRIVER_INIT_MEMBER(alpha68k_state,jongbou)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x0c0000, 0x0c0001, read16_delegate(FUNC(alpha68k_state::jongbou_inputs_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x0c0000, 0x0c0001, read16_delegate(FUNC(alpha68k_state::jongbou_inputs_r),this));
 	m_invert_controls = 0;
 	m_microcontroller_id = 0x00ff;
 	m_coin_id = 0x23 | (0x24 << 8);

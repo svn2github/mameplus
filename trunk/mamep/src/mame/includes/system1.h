@@ -4,12 +4,15 @@ class system1_state : public driver_device
 {
 public:
 	system1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_ppi8255(*this, "ppi8255"),
 		m_ram(*this, "ram"),
 		m_spriteram(*this, "spriteram"),
 		m_nob_mcu_latch(*this, "nob_mcu_latch"),
-		m_nob_mcu_status(*this, "nob_mcu_status"){ }
+		m_nob_mcu_status(*this, "nob_mcu_status"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_mcu(*this, "mcu") { }
 
 	optional_device<i8255_device>  m_ppi8255;
 	required_shared_ptr<UINT8> m_ram;
@@ -120,4 +123,7 @@ public:
 	void bank44_custom_w(UINT8 data, UINT8 prevdata);
 	void bank0c_custom_w(UINT8 data, UINT8 prevdata);
 	void dakkochn_custom_w(UINT8 data, UINT8 prevdata);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	optional_device<cpu_device> m_mcu;
 };

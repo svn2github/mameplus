@@ -40,9 +40,10 @@ class tomcat_state : public driver_device
 {
 public:
 	tomcat_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_tms(*this, "tms"),
-		m_shared_ram(*this, "shared_ram"){ }
+		m_shared_ram(*this, "shared_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_device<tms5220n_device> m_tms;
 	int m_control_num;
@@ -79,6 +80,7 @@ public:
 	DECLARE_WRITE8_MEMBER(tomcat_nvram_w);
 	DECLARE_WRITE8_MEMBER(soundlatches_w);
 	virtual void machine_start();
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -199,7 +201,7 @@ WRITE16_MEMBER(tomcat_state::tomcat_mresh_w)
 WRITE16_MEMBER(tomcat_state::tomcat_irqclr_w)
 {
 	// Clear IRQ Latch          (Address Strobe)
-	machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
+	m_maincpu->set_input_line(1, CLEAR_LINE);
 }
 
 READ16_MEMBER(tomcat_state::tomcat_inputs2_r)
@@ -220,7 +222,7 @@ READ16_MEMBER(tomcat_state::tomcat_inputs2_r)
 READ16_MEMBER(tomcat_state::tomcat_320bio_r)
 {
 	m_dsp_BIO = 1;
-	machine().device<cpu_device>("maincpu")->suspend(SUSPEND_REASON_SPIN, 1);
+	m_maincpu->suspend(SUSPEND_REASON_SPIN, 1);
 	return 0;
 }
 
@@ -241,7 +243,7 @@ READ16_MEMBER(tomcat_state::dsp_BIO_r)
 		{
 			m_dsp_idle = 0;
 			m_dsp_BIO = 0;
-			machine().device<cpu_device>("maincpu")->resume(SUSPEND_REASON_SPIN );
+			m_maincpu->resume(SUSPEND_REASON_SPIN );
 			return 0;
 		}
 		else

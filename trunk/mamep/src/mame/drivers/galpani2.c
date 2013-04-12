@@ -35,26 +35,22 @@ To Do:
 
 READ16_MEMBER(galpani2_state::galpani2_eeprom_r)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	return (m_eeprom_word & ~1) | (eeprom->read_bit() & 1);
+	return (m_eeprom_word & ~1) | (m_eeprom->read_bit() & 1);
 }
 
 WRITE16_MEMBER(galpani2_state::galpani2_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	COMBINE_DATA( &m_eeprom_word );
 	if ( ACCESSING_BITS_0_7 )
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x02);
+		m_eeprom->write_bit(data & 0x02);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x08) ? CLEAR_LINE : ASSERT_LINE );
+		m_eeprom->set_cs_line((data & 0x08) ? CLEAR_LINE : ASSERT_LINE );
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x04) ? ASSERT_LINE : CLEAR_LINE );
+		m_eeprom->set_clock_line((data & 0x04) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
@@ -106,8 +102,8 @@ static void galpani2_write_kaneko(device_t *device)
 
 WRITE8_MEMBER(galpani2_state::galpani2_mcu_init_w)
 {
-	address_space &srcspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	address_space &dstspace = machine().device("sub")->memory().space(AS_PROGRAM);
+	address_space &srcspace = m_maincpu->space(AS_PROGRAM);
+	address_space &dstspace = m_subcpu->space(AS_PROGRAM);
 	UINT32 mcu_address, mcu_data;
 
 	for ( mcu_address = 0x100010; mcu_address < (0x100010 + 6); mcu_address += 1 )
@@ -115,13 +111,13 @@ WRITE8_MEMBER(galpani2_state::galpani2_mcu_init_w)
 		mcu_data    =   srcspace.read_byte(mcu_address );
 		dstspace.write_byte(mcu_address-0x10, mcu_data);
 	}
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_IRQ7, HOLD_LINE); //MCU Initialised
+	m_subcpu->set_input_line(INPUT_LINE_IRQ7, HOLD_LINE); //MCU Initialised
 }
 
 void galpani2_state::galpani2_mcu_nmi1()
 {
-	address_space &srcspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	address_space &dstspace = machine().device("sub")->memory().space(AS_PROGRAM);
+	address_space &srcspace = m_maincpu->space(AS_PROGRAM);
+	address_space &dstspace = m_subcpu->space(AS_PROGRAM);
 	UINT32 mcu_list, mcu_command, mcu_address, mcu_extra, mcu_src, mcu_dst, mcu_size;
 
 	for ( mcu_list = 0x100021; mcu_list < (0x100021 + 0x40); mcu_list += 4 )
@@ -223,7 +219,7 @@ void galpani2_state::galpani2_mcu_nmi1()
 
 void galpani2_state::galpani2_mcu_nmi2()
 {
-		galpani2_write_kaneko(machine().device("maincpu"));
+		galpani2_write_kaneko(m_maincpu);
 		//logerror("%s : MCU executes CHECKs synchro\n", machine().describe_context());
 }
 
@@ -274,9 +270,7 @@ WRITE8_MEMBER(galpani2_state::galpani2_oki1_bank_w)
 
 WRITE8_MEMBER(galpani2_state::galpani2_oki2_bank_w)
 {
-	device_t *device = machine().device("oki2");
-	okim6295_device *oki = downcast<okim6295_device *>(device);
-	oki->set_bank_base(0x40000 * (data & 0xf) );
+	m_oki2->set_bank_base(0x40000 * (data & 0xf) );
 	logerror("%s : %s bank %08X\n",machine().describe_context(),tag(),data);
 }
 

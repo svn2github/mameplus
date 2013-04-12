@@ -725,12 +725,10 @@ static const sn76496_config psg_intf =
 
 MACHINE_START_MEMBER(ladybug_state,ladybug)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 }
 
 MACHINE_START_MEMBER(ladybug_state,sraider)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	save_item(NAME(m_grid_color));
 	save_item(NAME(m_sound_low));
@@ -1064,7 +1062,7 @@ DRIVER_INIT_MEMBER(ladybug_state,dorodon)
 	/* decode the opcodes */
 
 	offs_t i;
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x6000);
 	UINT8 *rom = memregion("maincpu")->base();
 	UINT8 *table = memregion("user1")->base();

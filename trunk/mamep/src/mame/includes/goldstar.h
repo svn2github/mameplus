@@ -2,7 +2,7 @@ class goldstar_state : public driver_device
 {
 public:
 	goldstar_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_fg_vidram(*this, "fg_vidram"),
 		m_fg_atrram(*this, "fg_atrram"),
 		m_reel1_ram(*this, "reel1_ram"),
@@ -13,7 +13,8 @@ public:
 		m_reel3_scroll(*this, "reel3_scroll"),
 		m_reel1_attrram(*this, "reel1_attrram"),
 		m_reel2_attrram(*this, "reel2_attrram"),
-		m_reel3_attrram(*this, "reel3_attrram"){ }
+		m_reel3_attrram(*this, "reel3_attrram"),
+		m_maincpu(*this, "maincpu") { }
 
 	int m_dataoffset;
 
@@ -154,4 +155,5 @@ public:
 	void dump_to_file( UINT8* ROM);
 	UINT8 decrypt(UINT8 cipherText, UINT16 address);
 	UINT8 chry10_decrypt(UINT8 cipherText);
+	required_device<cpu_device> m_maincpu;
 };

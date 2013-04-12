@@ -8,8 +8,10 @@ class bladestl_state : public driver_device
 {
 public:
 	bladestl_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_paletteram(*this, "paletteram"){ }
+		: driver_device(mconfig, type, tag),
+		m_paletteram(*this, "paletteram"),
+		m_audiocpu(*this, "audiocpu"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_paletteram;
@@ -22,7 +24,7 @@ public:
 	int        m_last_track[4];
 
 	/* devices */
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_k007342;
 	device_t *m_k007420;
 	DECLARE_READ8_MEMBER(trackball_r);
@@ -36,6 +38,7 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_bladestl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(bladestl_scanline);
+	required_device<cpu_device> m_maincpu;
 };
 
 /*----------- defined in video/bladestl.c -----------*/

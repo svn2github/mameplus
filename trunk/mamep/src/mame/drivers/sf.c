@@ -797,15 +797,13 @@ GFXDECODE_END
 
 static const msm5205_interface msm5205_config =
 {
-	0,              /* interrupt function */
+	DEVCB_NULL,              /* interrupt function */
 	MSM5205_SEX_4B  /* 8KHz playback ?    */
 };
 
 void sf_state::machine_start()
 {
 	/* devices */
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_sf_active));
 	save_item(NAME(m_bgscroll));

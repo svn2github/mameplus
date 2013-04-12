@@ -90,10 +90,9 @@ READ16_MEMBER(oneshot_state::oneshot_gun_y_p2_r)
 
 WRITE16_MEMBER(oneshot_state::soundbank_w)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_0_7)
 	{
-		downcast<okim6295_device *>(device)->set_bank_base(0x40000 * ((data & 0x03) ^ 0x03));
+		m_oki->set_bank_base(0x40000 * ((data & 0x03) ^ 0x03));
 	}
 }
 
@@ -327,21 +326,18 @@ static GFXDECODE_START( oneshot )
 	GFXDECODE_ENTRY( "gfx1", 0, oneshot8x8_layout,     0x00, 4  ) /* sprites */
 GFXDECODE_END
 
-static void irq_handler(device_t *device, int irq)
+WRITE_LINE_MEMBER(oneshot_state::irqhandler)
 {
-	oneshot_state *state = device->machine().driver_data<oneshot_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	irq_handler
+	DEVCB_DRIVER_LINE_MEMBER(oneshot_state,irqhandler)
 };
 
 void oneshot_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_gun_x_p1));
 	save_item(NAME(m_gun_y_p1));

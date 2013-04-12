@@ -298,7 +298,7 @@ static int sound_nmi_enabled;
 
 void tmnt_state::sound_nmi_callback( int param )
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ( sound_nmi_enabled ) ? CLEAR_LINE : ASSERT_LINE );
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ( sound_nmi_enabled ) ? CLEAR_LINE : ASSERT_LINE );
 
 	sound_nmi_enabled = 0;
 }
@@ -2010,15 +2010,15 @@ static INPUT_PORTS_START( prmrsocr )
 INPUT_PORTS_END
 
 
-static void volume_callback(device_t *device, int v)
+WRITE8_MEMBER(tmnt_state::volume_callback)
 {
-	k007232_set_volume(device, 0, (v >> 4) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v & 0x0f) * 0x11);
+	k007232_set_volume(m_k007232, 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(m_k007232, 1, 0, (data & 0x0f) * 0x11);
 }
 
 static const k007232_interface k007232_config =
 {
-	volume_callback /* external port callback */
+	DEVCB_DRIVER_MEMBER(tmnt_state,volume_callback) /* external port callback */
 };
 
 static const samples_interface tmnt_samples_interface =
@@ -2171,8 +2171,6 @@ static const k053936_interface prmrsocr_k053936_interface =
 
 MACHINE_START_MEMBER(tmnt_state,common)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k007232 = machine().device("k007232");
 	m_k053260 = machine().device("k053260");
 	m_k054539 = machine().device("k054539");

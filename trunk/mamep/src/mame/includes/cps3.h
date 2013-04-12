@@ -19,7 +19,8 @@ public:
 		m_tilemap40_regs_base(*this, "tmap40_regs"),
 		m_tilemap50_regs_base(*this, "tmap50_regs"),
 		m_fullscreenzoom(*this, "fullscreenzoom"),
-		m_0xc0000000_ram(*this, "0xc0000000_ram"){ }
+		m_0xc0000000_ram(*this, "0xc0000000_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT32> m_mainram;
 	required_shared_ptr<UINT32> m_spriteram;
@@ -124,11 +125,12 @@ public:
 	void cps3_do_alt_char_dma( UINT32 src, UINT32 real_dest, UINT32 real_length );
 	void cps3_process_character_dma(UINT32 address);
 	void copy_from_nvram();
-	inline void cps3_drawgfxzoom(bitmap_rgb32 &dest_bmp,const rectangle &clip,gfx_element *gfx,
-		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
+	inline void cps3_drawgfxzoom(bitmap_rgb32 &dest_bmp, const rectangle &clip, gfx_element *gfx,
+		unsigned int code,unsigned int color, int flipx, int flipy, int sx, int sy,
 		int transparency,int transparent_color,
 		int scalex, int scaley,bitmap_ind8 *pri_buffer,UINT32 pri_mask);
 
+	required_device<cpu_device> m_maincpu;
 	int m_use_fastboot;
 	emu_timer* m_fastboot_timer;
 	TIMER_CALLBACK_MEMBER(fastboot_timer_callback);

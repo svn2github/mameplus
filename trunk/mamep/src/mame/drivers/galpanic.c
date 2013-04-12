@@ -139,11 +139,11 @@ TIMER_DEVICE_CALLBACK_MEMBER(galpanic_state::galpanic_scanline)
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 	/* Pandora "sprite end dma" irq? */
 	if(scanline == 32)
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 
@@ -152,14 +152,14 @@ TIMER_DEVICE_CALLBACK_MEMBER(galpanic_state::galhustl_scanline)
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 	/* Pandora "sprite end dma" irq? */
 	if(scanline == 32)
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0) // timer irq?
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 
@@ -238,11 +238,9 @@ READ16_MEMBER(galpanic_state::comad_timer_r)
 /* a kludge! */
 READ8_MEMBER(galpanic_state::comad_okim6295_r)
 {
-//  device_t *device = machine().device("oki");
 	UINT16 retvalue;
-//  okim6295_device *oki = downcast<okim6295_device *>(device);
 
-//  retvalue = oki->read_status(); // doesn't work, causes lockups when girls change..
+//  retvalue = m_oki->read_status(); // doesn't work, causes lockups when girls change..
 	retvalue = machine().rand();
 
 	return retvalue;

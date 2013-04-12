@@ -86,8 +86,9 @@ class re900_state : public driver_device
 {
 public:
 	re900_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_rom(*this, "rom"){ }
+		: driver_device(mconfig, type, tag),
+		m_rom(*this, "rom"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_rom;
 	UINT8 m_psg_pa;
@@ -105,6 +106,7 @@ public:
 	DECLARE_WRITE8_MEMBER(re_mux_port_B_w);
 	DECLARE_WRITE_LINE_MEMBER(vdp_interrupt);
 	DECLARE_DRIVER_INIT(re900);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -247,7 +249,7 @@ ADDRESS_MAP_END
 
 WRITE_LINE_MEMBER(re900_state::vdp_interrupt)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE );
+	m_maincpu->set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE );
 }
 
 

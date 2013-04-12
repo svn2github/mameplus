@@ -43,7 +43,7 @@ class skylncr_state : public driver_device
 {
 public:
 	skylncr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
 		m_reeltiles_1_ram(*this, "reeltiles_1_ram"),
@@ -57,7 +57,8 @@ public:
 		m_reelscroll1(*this, "reelscroll1"),
 		m_reelscroll2(*this, "reelscroll2"),
 		m_reelscroll3(*this, "reelscroll3"),
-		m_reelscroll4(*this, "reelscroll4"){ }
+		m_reelscroll4(*this, "reelscroll4"),
+		m_maincpu(*this, "maincpu") { }
 
 	tilemap_t *m_tmap;
 	required_shared_ptr<UINT8> m_videoram;
@@ -110,6 +111,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_skylncr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(skylncr_vblank_interrupt);
+	required_device<cpu_device> m_maincpu;
 };
 
 

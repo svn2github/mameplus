@@ -57,12 +57,13 @@ class chanbara_state : public driver_device
 {
 public:
 	chanbara_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
 		m_spriteram(*this, "spriteram"),
 		m_videoram2(*this, "videoram2"),
-		m_colorram2(*this, "colorram2"){ }
+		m_colorram2(*this, "colorram2"),
+		m_maincpu(*this, "maincpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -78,7 +79,7 @@ public:
 	UINT8    m_scrollhi;
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE8_MEMBER(chanbara_videoram_w);
 	DECLARE_WRITE8_MEMBER(chanbara_colorram_w);
 	DECLARE_WRITE8_MEMBER(chanbara_videoram2_w);
@@ -94,6 +95,7 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_chanbara(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
+	DECLARE_WRITE_LINE_MEMBER(sound_irq);
 };
 
 
@@ -361,10 +363,9 @@ WRITE8_MEMBER(chanbara_state::chanbara_ay_out_1_w)
 	//if (data & 0xf8)    printf("chanbara_ay_out_1_w unused bits set %02x\n", data & 0xf8);
 }
 
-static void sound_irq( device_t *device, int linestate )
+WRITE_LINE_MEMBER(chanbara_state::sound_irq)
 {
-	chanbara_state *state = device->machine().driver_data<chanbara_state>();
-	state->m_maincpu->set_input_line(0, linestate);
+	m_maincpu->set_input_line(0, state);
 }
 
 
@@ -378,13 +379,12 @@ static const ym2203_interface ym2203_config =
 			DEVCB_DRIVER_MEMBER(chanbara_state,chanbara_ay_out_0_w),
 			DEVCB_DRIVER_MEMBER(chanbara_state,chanbara_ay_out_1_w),
 	},
-	DEVCB_LINE(sound_irq)
+	DEVCB_DRIVER_LINE_MEMBER(chanbara_state,sound_irq)
 };
 
 
 void chanbara_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	save_item(NAME(m_scroll));
 	save_item(NAME(m_scrollhi));

@@ -106,10 +106,12 @@ class pangofun_state : public driver_device
 {
 public:
 	pangofun_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	DECLARE_DRIVER_INIT(pangofun);
 	virtual void machine_start();
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -196,7 +198,7 @@ static const struct kbdc8042_interface at8042 =
 
 void pangofun_state::machine_start()
 {
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(pcat_irq_callback);
+	m_maincpu->set_irq_acknowledge_callback(pcat_irq_callback);
 	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, pangofun_set_keyb_int);
 	kbdc8042_init(machine(), &at8042);
 }

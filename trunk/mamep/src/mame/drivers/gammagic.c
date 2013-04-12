@@ -76,8 +76,8 @@ class gammagic_state : public driver_device
 {
 public:
 	gammagic_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-			{ }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	int m_dma_channel;
 	UINT8 m_dma_offset[2][4];
@@ -104,6 +104,7 @@ public:
 
 	DECLARE_DRIVER_INIT(gammagic);
 	IRQ_CALLBACK_MEMBER(irq_callback);
+	required_device<cpu_device> m_maincpu;
 };
 
 //static void atapi_irq(running_machine &machine, int state);
@@ -166,7 +167,7 @@ static WRITE8_HANDLER(at_page8_w)
 static WRITE_LINE_DEVICE_HANDLER( pc_dma_hrq_changed )
 {
 	gammagic_state *drvstate = device->machine().driver_data<gammagic_state>();
-	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	drvstate->m_maincpu->set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	drvstate->m_dma8237_1->i8237_hlda_w( state );
@@ -694,7 +695,8 @@ static void atapi_init(running_machine &machine)
 
 static WRITE_LINE_DEVICE_HANDLER( gammagic_pic8259_1_set_int_line )
 {
-	device->machine().device("maincpu")->execute().set_input_line( 0, state ? HOLD_LINE : CLEAR_LINE);
+	gammagic_state *drvstate = device->machine().driver_data<gammagic_state>();
+	drvstate->m_maincpu->set_input_line( 0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 static READ8_DEVICE_HANDLER( get_slave_ack )

@@ -16,7 +16,10 @@ public:
 	itech8_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			m_tlc34076(*this, "tlc34076"),
-			m_visarea(0, 0, 0, 0){ }
+			m_visarea(0, 0, 0, 0),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_device<tlc34076_device> m_tlc34076;
 
@@ -110,6 +113,7 @@ public:
 	inline void consume_rle(int count);
 	void perform_blit(address_space &space);
 	void itech8_update_interrupts(int periodic, int tms34061, int blitter);
+	DECLARE_WRITE_LINE_MEMBER(generate_sound_irq);
 
 	/*----------- defined in machine/slikshot.c -----------*/
 
@@ -131,4 +135,7 @@ public:
 							UINT16 *sens0, UINT16 *sens1, UINT16 *sens2, UINT16 *sens3);
 	void compute_sensors();
 	TIMER_CALLBACK_MEMBER( delayed_z80_control_w );
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	optional_device<cpu_device> m_subcpu;
 };

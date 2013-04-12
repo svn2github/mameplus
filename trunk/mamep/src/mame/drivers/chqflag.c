@@ -31,9 +31,9 @@ TIMER_DEVICE_CALLBACK_MEMBER(chqflag_state::chqflag_scanline)
 	int scanline = param;
 
 	if(scanline == 240 && k051960_is_irq_enabled(m_k051960)) // vblank irq
-		machine().device("maincpu")->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 	else if(((scanline % 32) == 0) && (k051960_is_nmi_enabled(m_k051960))) // timer irq
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(chqflag_state::chqflag_bankswitch_w)
@@ -255,31 +255,30 @@ INPUT_PORTS_END
 
 
 
-static void volume_callback0( device_t *device, int v )
+WRITE8_MEMBER(chqflag_state::volume_callback0)
 {
-	k007232_set_volume(device, 0, (v & 0x0f) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v >> 4) * 0x11);
+	k007232_set_volume(m_k007232_1, 0, (data & 0x0f) * 0x11, 0);
+	k007232_set_volume(m_k007232_1, 1, 0, (data >> 4) * 0x11);
 }
 
 WRITE8_MEMBER(chqflag_state::k007232_extvolume_w)
 {
-	device_t *device = machine().device("k007232_2");
-	k007232_set_volume(device, 1, (data & 0x0f) * 0x11/2, (data >> 4) * 0x11/2);
+	k007232_set_volume(m_k007232_2, 1, (data & 0x0f) * 0x11/2, (data >> 4) * 0x11/2);
 }
 
-static void volume_callback1( device_t *device, int v )
+WRITE8_MEMBER(chqflag_state::volume_callback1)
 {
-	k007232_set_volume(device, 0, (v & 0x0f) * 0x11/2, (v >> 4) * 0x11/2);
+	k007232_set_volume(m_k007232_2, 0, (data & 0x0f) * 0x11/2, (data >> 4) * 0x11/2);
 }
 
 static const k007232_interface k007232_interface_1 =
 {
-	volume_callback0
+	DEVCB_DRIVER_MEMBER(chqflag_state,volume_callback0)
 };
 
 static const k007232_interface k007232_interface_2 =
 {
-	volume_callback1
+	DEVCB_DRIVER_MEMBER(chqflag_state,volume_callback1)
 };
 
 static const k051960_interface chqflag_k051960_intf =
@@ -312,8 +311,6 @@ void chqflag_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k051316_1 = machine().device("k051316_1");
 	m_k051316_2 = machine().device("k051316_2");
 	m_k051960 = machine().device("k051960");

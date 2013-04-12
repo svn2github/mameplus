@@ -1,8 +1,10 @@
+#include "sound/dac.h"
+
 class taitosj_state : public driver_device
 {
 public:
 	taitosj_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram_1(*this, "videoram_1"),
 		m_videoram_2(*this, "videoram_2"),
 		m_videoram_3(*this, "videoram_3"),
@@ -16,7 +18,11 @@ public:
 		m_video_mode(*this, "video_mode"),
 		m_video_priority(*this, "video_priority"),
 		m_collision_reg(*this, "collision_reg"),
-		m_kikstart_scrollram(*this, "kikstart_scroll"){ }
+		m_kikstart_scrollram(*this, "kikstart_scroll"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_mcu(*this, "mcu"),
+		m_dac(*this, "dac") { }
 
 	typedef void (taitosj_state::*copy_layer_func_t)(bitmap_ind16 &,
 									const rectangle &, int, int *, rectangle *);
@@ -114,4 +120,8 @@ public:
 	void copy_layer(bitmap_ind16 &bitmap, const rectangle &cliprect,copy_layer_func_t copy_layer_func, int which, int *sprites_on, rectangle *sprite_areas);
 	void copy_layers(bitmap_ind16 &bitmap, const rectangle &cliprect,copy_layer_func_t copy_layer_func, int *sprites_on, rectangle *sprite_areas);
 	int video_update_common(bitmap_ind16 &bitmap, const rectangle &cliprect, copy_layer_func_t copy_layer_func);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	optional_device<cpu_device> m_mcu;
+	required_device<dac_device> m_dac;
 };

@@ -314,15 +314,14 @@ Stephh's notes (based on the games M68000 code and some tests) :
 
 WRITE16_MEMBER(tumbleb_state::tumblepb_oki_w)
 {
-	okim6295_device *oki = machine().device<okim6295_device>("oki");
 	if (mem_mask == 0xffff)
 	{
-		oki->write(space, 0, data & 0xff);
+		m_oki->write(space, 0, data & 0xff);
 		//printf("tumbleb_oki_w %04x %04x\n", data, mem_mask);
 	}
 	else
 	{
-		oki->write(space, 0, (data >> 8) & 0xff);
+		m_oki->write(space, 0, (data >> 8) & 0xff);
 		//printf("tumbleb_oki_w %04x %04x\n", data, mem_mask);
 	}
 	/* STUFF IN OTHER BYTE TOO..*/
@@ -605,8 +604,6 @@ void tumbleb_state::process_tumbleb2_music_command( okim6295_device *oki, int da
 
 WRITE16_MEMBER(tumbleb_state::tumbleb2_soundmcu_w)
 {
-	device_t *device = machine().device("oki");
-
 	int sound = tumbleb_sound_lookup[data & 0xff];
 
 	if (sound == 0x00)
@@ -616,11 +613,11 @@ WRITE16_MEMBER(tumbleb_state::tumbleb2_soundmcu_w)
 	}
 	else if (sound == -2)
 	{
-		process_tumbleb2_music_command(downcast<okim6295_device *>(device), data);
+		process_tumbleb2_music_command(m_oki, data);
 	}
 	else
 	{
-		tumbleb2_play_sound(downcast<okim6295_device *>(device), sound);
+		tumbleb2_play_sound(m_oki, sound);
 	}
 }
 
@@ -1944,10 +1941,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(tumbleb_state,tumbleb)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_oki = machine().device("oki");
-
 	save_item(NAME(m_music_command));
 	save_item(NAME(m_music_bank));
 	save_item(NAME(m_music_is_playing));
@@ -3256,7 +3249,7 @@ DRIVER_INIT_MEMBER(tumbleb_state,tumbleb2)
 	#if TUMBLEP_HACK
 	tumblepb_patch_code(0x000132);
 	#endif
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x100000, 0x100001, write16_delegate(FUNC(tumbleb_state::tumbleb2_soundmcu_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x100000, 0x100001, write16_delegate(FUNC(tumbleb_state::tumbleb2_soundmcu_w),this));
 
 }
 
@@ -3294,7 +3287,7 @@ READ16_MEMBER(tumbleb_state::bcstory_1a0_read)
 DRIVER_INIT_MEMBER(tumbleb_state,bcstory)
 {
 	tumblepb_gfx_rearrange(1);
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x180008, 0x180009, read16_delegate(FUNC(tumbleb_state::bcstory_1a0_read),this)); // io should be here??
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x180008, 0x180009, read16_delegate(FUNC(tumbleb_state::bcstory_1a0_read),this)); // io should be here??
 }
 
 
@@ -3358,10 +3351,10 @@ DRIVER_INIT_MEMBER(tumbleb_state,chokchok)
 	DRIVER_INIT_CALL(htchctch);
 
 	/* different palette format, closer to tumblep -- is this controlled by a register? the palette was right with the hatch catch trojan */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), this));
 
 	/* slightly different banking */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),this));
 }
 
 DRIVER_INIT_MEMBER(tumbleb_state,wlstar)
@@ -3369,7 +3362,7 @@ DRIVER_INIT_MEMBER(tumbleb_state,wlstar)
 	tumblepb_gfx_rearrange(1);
 
 	/* slightly different banking */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::wlstar_tilebank_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::wlstar_tilebank_w),this));
 
 	m_protbase = 0x0000;
 }

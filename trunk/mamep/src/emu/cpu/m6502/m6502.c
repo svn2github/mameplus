@@ -44,14 +44,14 @@
 const device_type M6502 = &device_creator<m6502_device>;
 
 m6502_device::m6502_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
-	cpu_device(mconfig, M6502, "M6502", tag, owner, clock),
+	cpu_device(mconfig, M6502, "M6502", tag, owner, clock, "m6502", __FILE__),
 	program_config("program", ENDIANNESS_LITTLE, 8, 16)
 {
 	direct_disabled = false;
 }
 
-m6502_device::m6502_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock) :
-	cpu_device(mconfig, type, name, tag, owner, clock),
+m6502_device::m6502_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source) :
+	cpu_device(mconfig, type, name, tag, owner, clock, shortname, source),
 	program_config("program", ENDIANNESS_LITTLE, 8, 16)
 {
 	direct_disabled = false;
@@ -623,6 +623,16 @@ offs_t m6502_device::disassemble_generic(char *buffer, offs_t pc, const UINT8 *o
 	case DASM_bzr:
 		sprintf(buffer, " %d, $%02x, $%04x", (opram[0] >> 5) & 7, opram[1], (pc & 0xf0000) | UINT16(pc + 3 + INT8(opram[2])));
 		flags |= 3;
+		break;
+
+	case DASM_bar:
+		sprintf(buffer, " %d, a, $%04x", (opram[0] >> 5) & 7, (pc & 0xf0000) | UINT16(pc + 3 + INT8(opram[1])));
+		flags |= 2;
+		break;
+
+	case DASM_bac:
+		sprintf(buffer, " %d, a", (opram[0] >> 5) & 7);
+		flags |= 1;
 		break;
 
 	default:

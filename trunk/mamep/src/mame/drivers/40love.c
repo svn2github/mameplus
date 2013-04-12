@@ -974,7 +974,6 @@ static const msm5232_interface msm5232_config =
 
 MACHINE_START_MEMBER(fortyl_state,40love)
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	/* video */
 	save_item(NAME(m_pix1));
@@ -1026,7 +1025,7 @@ MACHINE_RESET_MEMBER(fortyl_state,common)
 
 MACHINE_RESET_MEMBER(fortyl_state,40love)
 {
-	machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
+	m_mcu->set_input_line(0, CLEAR_LINE);
 
 	MACHINE_RESET_CALL_MEMBER(common);
 }

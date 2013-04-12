@@ -60,11 +60,13 @@ class dmndrby_state : public driver_device
 {
 public:
 	dmndrby_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_scroll_ram(*this, "scroll_ram"),
 		m_sprite_ram(*this, "sprite_ram"),
 		m_dderby_vidchars(*this, "vidchars"),
-		m_dderby_vidattribs(*this, "vidattribs"){ }
+		m_dderby_vidattribs(*this, "vidattribs"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	required_shared_ptr<UINT8> m_scroll_ram;
 	required_shared_ptr<UINT8> m_sprite_ram;
@@ -83,13 +85,15 @@ public:
 	UINT32 screen_update_dderby(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(dderby_irq);
 	INTERRUPT_GEN_MEMBER(dderby_timer_irq);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };
 
 
 WRITE8_MEMBER(dmndrby_state::dderby_sound_w)
 {
 	soundlatch_byte_w(space,0,data);
-	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 
@@ -502,12 +506,12 @@ void dmndrby_state::palette_init()
 /*Main Z80 is IM 0,HW-latched irqs. */
 INTERRUPT_GEN_MEMBER(dmndrby_state::dderby_irq)
 {
-	machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7); /* RST 10h */
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xd7); /* RST 10h */
 }
 
 INTERRUPT_GEN_MEMBER(dmndrby_state::dderby_timer_irq)
 {
-	machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf); /* RST 08h */
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xcf); /* RST 08h */
 }
 
 static MACHINE_CONFIG_START( dderby, dmndrby_state )

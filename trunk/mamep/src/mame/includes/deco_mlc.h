@@ -1,14 +1,16 @@
+#include "machine/eeprom.h"
+
 class deco_mlc_state : public driver_device
 {
 public:
 	deco_mlc_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_mlc_ram(*this, "mlc_ram"),
 		m_irq_ram(*this, "irq_ram"),
 		m_mlc_clip_ram(*this, "mlc_clip_ram"),
-		m_mlc_vram(*this, "mlc_vram")
-
-	{ }
+		m_mlc_vram(*this, "mlc_vram"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr<UINT32> m_mlc_ram;
 	required_shared_ptr<UINT32> m_irq_ram;
@@ -60,4 +62,6 @@ public:
 	void blitRaster(bitmap_rgb32 &bitmap, int rasterMode);
 	void draw_sprites( const rectangle &cliprect, int scanline, UINT32* dest);
 	void descramble_sound(  );
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 };

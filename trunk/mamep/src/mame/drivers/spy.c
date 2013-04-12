@@ -447,27 +447,36 @@ INPUT_PORTS_END
 
 
 
-static void volume_callback( device_t *device, int v )
+WRITE8_MEMBER(spy_state::volume_callback0)
 {
-	k007232_set_volume(device, 0, (v >> 4) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v & 0x0f) * 0x11);
+	k007232_set_volume(m_k007232_1, 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(m_k007232_1, 1, 0, (data & 0x0f) * 0x11);
 }
 
-static const k007232_interface spy_k007232_interface =
+static const k007232_interface spy_k007232_interface_1 =
 {
-	volume_callback
+	DEVCB_DRIVER_MEMBER(spy_state,volume_callback0)
 };
 
-
-static void irqhandler( device_t *device, int linestate )
+WRITE8_MEMBER(spy_state::volume_callback1)
 {
-	spy_state *state = device->machine().driver_data<spy_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, linestate);
+	k007232_set_volume(m_k007232_2, 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(m_k007232_2, 1, 0, (data & 0x0f) * 0x11);
+}
+
+static const k007232_interface spy_k007232_interface_2 =
+{
+	DEVCB_DRIVER_MEMBER(spy_state,volume_callback1)
+};
+
+WRITE_LINE_MEMBER(spy_state::irqhandler)
+{
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, state);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(spy_state,irqhandler)
 };
 
 
@@ -496,8 +505,6 @@ void spy_state::machine_start()
 	m_generic_paletteram_8.allocate(0x800);
 	memset(m_pmcram, 0, sizeof(m_pmcram));
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k052109 = machine().device("k052109");
 	m_k051960 = machine().device("k051960");
 	m_k007232_1 = machine().device("k007232_1");
@@ -554,12 +561,12 @@ static MACHINE_CONFIG_START( spy, spy_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MCFG_SOUND_ADD("k007232_1", K007232, 3579545)
-	MCFG_SOUND_CONFIG(spy_k007232_interface)
+	MCFG_SOUND_CONFIG(spy_k007232_interface_1)
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 
 	MCFG_SOUND_ADD("k007232_2", K007232, 3579545)
-	MCFG_SOUND_CONFIG(spy_k007232_interface)
+	MCFG_SOUND_CONFIG(spy_k007232_interface_2)
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 MACHINE_CONFIG_END

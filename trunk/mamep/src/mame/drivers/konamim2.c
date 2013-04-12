@@ -204,8 +204,10 @@ class konamim2_state : public driver_device
 {
 public:
 	konamim2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_main_ram(*this, "main_ram"){ }
+		: driver_device(mconfig, type, tag),
+		m_main_ram(*this, "main_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_shared_ptr<UINT64> m_main_ram;
 	UINT32 m_vdl0_address;
@@ -255,6 +257,8 @@ public:
 	void cde_handle_command();
 	void cde_handle_reports();
 	void cde_dma_transfer(address_space &space, int channel, int next);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
 };
 
 
@@ -376,7 +380,7 @@ WRITE64_MEMBER(konamim2_state::unk4_w)
 		if (data & 0x800000)
 		{
 //          mame_printf_debug("CPU '%s': CPU1 IRQ at %08X\n", device().tag(), space.device().safe_pc());
-			machine().device("sub")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+			m_subcpu->set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 		}
 
 		m_unk20004 = (UINT32)(data);
@@ -470,7 +474,7 @@ WRITE64_MEMBER(konamim2_state::reset_w)
 	{
 		if (data & U64(0x100000000))
 		{
-			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+			m_maincpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 			m_unk3 = 0;
 		}
 	}
@@ -1109,7 +1113,7 @@ READ64_MEMBER(konamim2_state::cpu_r)
 
 	if (ACCESSING_BITS_32_63)
 	{
-		r = (UINT64)((&space.device() != machine().device("maincpu")) ? 0x80000000 : 0);
+		r = (UINT64)((&space.device() != m_maincpu) ? 0x80000000 : 0);
 		//r |= 0x40000000;  // sets Video-LowRes !?
 		return r << 32;
 	}

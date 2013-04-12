@@ -702,6 +702,7 @@ static MACHINE_CONFIG_START( playch10, playch10_state )
 
 
 	MCFG_PPU2C03B_ADD("ppu", playch10_ppu_interface)
+	MCFG_PPU2C0X_SET_NMI(playch10_state, ppu_irq)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1712,7 +1713,7 @@ GAME( 1988, pc_ddrgn, playch10, playch10, playch10, playch10_state, pcfboard, RO
 GAME( 1989, pc_ngaid, playch10, playch10, playch10, playch10_state, pcfboard, ROT0, "Tecmo (Nintendo of America license)",      "Ninja Gaiden (PlayChoice-10)", 0 )
 GAME( 1989, pc_tmnt,  playch10, playch10, playch10, playch10_state, pcfboard, ROT0, "Konami (Nintendo of America license)",     "Teenage Mutant Ninja Turtles (PlayChoice-10)", 0 )
 GAME( 1989, pc_ftqst, playch10, playch10, playch10, playch10_state, pcfboard, ROT0, "Sunsoft (Nintendo of America license)",    "Uncle Fester's Quest: The Addams Family (PlayChoice-10)", 0 )
-GAME( 1989, pc_bstar, playch10, playch10, playch10, playch10_state, pcfboard_2, ROT0, "SNK (Nintendo of America license)",      "Baseball Stars: Be a Champ! (PlayChoice-10)", GAME_IMPERFECT_GRAPHICS)
+GAME( 1989, pc_bstar, playch10, playch10, playch10, playch10_state, pcfboard_2, ROT0, "SNK (Nintendo of America license)",      "Baseball Stars: Be a Champ! (PlayChoice-10)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1989, pc_tbowl, playch10, playch10, playch10, playch10_state, pcfboard, ROT0, "Tecmo (Nintendo of America license)",      "Tecmo Bowl (PlayChoice-10)", 0 )
 GAME( 1990, pc_virus, pc_drmro, playch10, playch10, playch10_state, virus,    ROT0, "Nintendo",                                 "Virus (Dr. Mario prototype, PlayChoice-10)", 0 )
 GAME( 1990, pc_drmro, playch10, playch10, playch10, playch10_state, pcfboard, ROT0, "Nintendo",                                 "Dr. Mario (PlayChoice-10)", 0 )
@@ -1731,11 +1732,11 @@ GAME( 1991, pc_ngai3, playch10, playch10, playch10, playch10_state, pcgboard, RO
 GAME( 1991, pc_pwbld, playch10, playch10, playch10, playch10_state, pcgboard, ROT0, "Taito (Nintendo of America license)",      "Power Blade (PlayChoice-10)", 0 )
 GAME( 1991, pc_rkats, playch10, playch10, playch10, playch10_state, pcgboard, ROT0, "Atlus (Nintendo of America license)",      "Rockin' Kats (PlayChoice-10)", 0 )
 /* variant with 4 screen mirror */
-GAME( 1990, pc_radr2, playch10, playch10, playch10, playch10_state, pcgboard_type2, ROT0, "Square (Nintendo of America license)",           "Rad Racer II (PlayChoice-10)", 0 )
-GAME( 1985, pc_gntlt, playch10, playch10, playch10, playch10_state, pcgboard_type2, ROT0, "Atari / Tengen (Nintendo of America license)",   "Gauntlet (PlayChoice-10)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1990, pc_radr2, playch10, playch10, playch10, playch10_state, pcgboard_type2, ROT0, "Square (Nintendo of America license)", "Rad Racer II (PlayChoice-10)", 0 )
+GAME( 1985, pc_gntlt, playch10, playch10, playch10, playch10_state, pcgboard_type2, ROT0, "Atari / Tengen (Nintendo of America license)", "Gauntlet (PlayChoice-10)", GAME_IMPERFECT_GRAPHICS )
 
 /* H-Board Games */
-GAME( 1988, pc_pinbt, playch10, playch10_hboard, playch10, playch10_state, pchboard, ROT0, "Rare (Nintendo of America license)",            "PinBot (PlayChoice-10)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, pc_pinbt, playch10, playch10_hboard, playch10, playch10_state, pchboard, ROT0, "Rare (Nintendo of America license)", "PinBot (PlayChoice-10)", GAME_IMPERFECT_GRAPHICS )
 
 /* i-Board Games */
 GAME( 1989, pc_cshwk, playch10, playch10, playch10, playch10_state, pciboard, ROT0, "Rare (Nintendo of America license)",       "Captain Sky Hawk (PlayChoice-10)", 0 )

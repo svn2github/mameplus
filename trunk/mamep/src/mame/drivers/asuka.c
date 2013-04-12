@@ -258,20 +258,18 @@ WRITE8_MEMBER(asuka_state::sound_bankswitch_2151_w)
 
 
 
-static void asuka_msm5205_vck( device_t *device )
+WRITE_LINE_MEMBER(asuka_state::asuka_msm5205_vck)
 {
-	asuka_state *state = device->machine().driver_data<asuka_state>();
-
-	if (state->m_adpcm_data != -1)
+	if (m_adpcm_data != -1)
 	{
-		msm5205_data_w(device, state->m_adpcm_data & 0x0f);
-		state->m_adpcm_data = -1;
+		msm5205_data_w(machine().device("msm"), m_adpcm_data & 0x0f);
+		m_adpcm_data = -1;
 	}
 	else
 	{
-		state->m_adpcm_data = device->machine().root_device().memregion("ymsnd")->base()[state->m_adpcm_pos];
-		state->m_adpcm_pos = (state->m_adpcm_pos + 1) & 0xffff;
-		msm5205_data_w(device, state->m_adpcm_data >> 4);
+		m_adpcm_data = machine().root_device().memregion("ymsnd")->base()[m_adpcm_pos];
+		m_adpcm_pos = (m_adpcm_pos + 1) & 0xffff;
+		msm5205_data_w(machine().device("msm"), m_adpcm_data >> 4);
 	}
 }
 
@@ -766,20 +764,20 @@ GFXDECODE_END
                 SOUND
 **************************************************************/
 
-static void irq_handler(device_t *device, int irq)
+WRITE_LINE_MEMBER(asuka_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irq_handler
+	DEVCB_DRIVER_LINE_MEMBER(asuka_state,irqhandler)
 };
 
 
 static const msm5205_interface msm5205_config =
 {
-	asuka_msm5205_vck,  /* VCK function */
+	DEVCB_DRIVER_LINE_MEMBER(asuka_state,asuka_msm5205_vck),  /* VCK function */
 	MSM5205_S48_4B      /* 8 kHz */
 };
 
@@ -826,8 +824,6 @@ static const tc0110pcr_interface asuka_tc0110pcr_intf =
 
 void asuka_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_pc090oj = machine().device("pc090oj");
 	m_tc0100scn = machine().device("tc0100scn");
 

@@ -173,7 +173,7 @@ WRITE16_MEMBER(moo_state::sound_cmd2_w)
 
 WRITE16_MEMBER(moo_state::sound_irq_w)
 {
-	m_audiocpu->set_input_line(0, HOLD_LINE);
+	m_soundcpu->set_input_line(0, HOLD_LINE);
 }
 
 READ16_MEMBER(moo_state::sound_status_r)
@@ -249,10 +249,9 @@ WRITE16_MEMBER(moo_state::moo_prot_w)
 
 WRITE16_MEMBER(moo_state::moobl_oki_bank_w)
 {
-	device_t *device = machine().device("oki");
 	logerror("%x to OKI bank\n", data);
 
-	downcast<okim6295_device *>(device)->set_bank_base((data & 0x0f) * 0x40000);
+	m_oki->set_bank_base((data & 0x0f) * 0x40000);
 }
 
 static ADDRESS_MAP_START( moo_map, AS_PROGRAM, 16, moo_state )
@@ -426,8 +425,6 @@ INPUT_PORTS_END
 
 MACHINE_START_MEMBER(moo_state,moo)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("soundcpu");
 	m_k054539 = machine().device("k054539");
 	m_k053246 = machine().device("k053246");
 	m_k053251 = machine().device("k053251");

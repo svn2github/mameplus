@@ -3,9 +3,11 @@ class taitob_state : public driver_device
 {
 public:
 	taitob_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
-		m_pixelram(*this, "pixelram"){ }
+		m_pixelram(*this, "pixelram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_spriteram;
@@ -30,8 +32,8 @@ public:
 	UINT16        m_realpunc_video_ctrl;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_mb87078;
 	device_t *m_ym;
 	device_t *m_tc0180vcu;
@@ -100,4 +102,5 @@ public:
 	void draw_framebuffer( bitmap_ind16 &bitmap, const rectangle &cliprect, int priority );
 	void ryujin_patch(void);
 	void sbm_patch(void);
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };

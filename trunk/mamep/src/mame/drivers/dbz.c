@@ -66,10 +66,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(dbz_state::dbz_scanline)
 	int scanline = param;
 
 	if(scanline == 256) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, ASSERT_LINE);
+		m_maincpu->set_input_line(M68K_IRQ_2, ASSERT_LINE);
 
 	if(scanline == 0 && k053246_is_irq_enabled(m_k053246)) // vblank-in irq
-		machine().device("maincpu")->execute().set_input_line(M68K_IRQ_4, HOLD_LINE); //auto-acks apparently
+		m_maincpu->set_input_line(M68K_IRQ_4, HOLD_LINE); //auto-acks apparently
 }
 
 #if 0
@@ -319,7 +319,7 @@ static const k053936_interface dbz_k053936_intf =
 
 WRITE_LINE_MEMBER(dbz_state::dbz_irq2_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, CLEAR_LINE);
+	m_maincpu->set_input_line(M68K_IRQ_2, CLEAR_LINE);
 }
 
 
@@ -335,8 +335,6 @@ static const k053252_interface dbz_k053252_intf =
 
 void dbz_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k053936_1 = machine().device("k053936_1");
 	m_k053936_2 = machine().device("k053936_2");
 	m_k056832 = machine().device("k056832");

@@ -204,7 +204,9 @@ class kas89_state : public driver_device
 public:
 	kas89_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_v9938(*this, "v9938")
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_v9938(*this, "v9938")
 		{ }
 
 	UINT8 m_mux_data;
@@ -214,8 +216,8 @@ public:
 	UINT8 m_leds_mux_data;
 	UINT8 m_outdata;            /* Muxed with the sound latch. Output to a sign? */
 
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 
 	required_device<v9938_device> m_v9938;
 	DECLARE_WRITE8_MEMBER(mux_w);
@@ -231,6 +233,7 @@ public:
 	TIMER_DEVICE_CALLBACK_MEMBER(kas89_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(kas89_nmi_cb);
 	TIMER_DEVICE_CALLBACK_MEMBER(kas89_sound_nmi_cb);
+	DECLARE_WRITE_LINE_MEMBER(kas89_vdp_interrupt);
 };
 
 #define VDP_MEM             0x40000
@@ -240,9 +243,9 @@ public:
 *      Interrupt handling & Video      *
 ***************************************/
 
-static void kas89_vdp_interrupt(device_t *, v99x8_device &device, int i)
+WRITE_LINE_MEMBER(kas89_state::kas89_vdp_interrupt)
 {
-	device.machine().device("maincpu")->execute().set_input_line(0, (i ? ASSERT_LINE : CLEAR_LINE));
+	m_maincpu->set_input_line(0, (state ? ASSERT_LINE : CLEAR_LINE));
 }
 
 TIMER_DEVICE_CALLBACK_MEMBER(kas89_state::kas89_interrupt)
@@ -260,8 +263,6 @@ TIMER_DEVICE_CALLBACK_MEMBER(kas89_state::kas89_interrupt)
 
 void kas89_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	output_set_lamp_value(37, 0);   /* turning off the operator led */
 }
@@ -789,7 +790,7 @@ static MACHINE_CONFIG_START( kas89, kas89_state )
 
 	/* video hardware */
 	MCFG_V9938_ADD("v9938", "screen", VDP_MEM)
-	MCFG_V99X8_INTERRUPT_CALLBACK_STATIC(kas89_vdp_interrupt)
+	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(kas89_state,kas89_vdp_interrupt))
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)

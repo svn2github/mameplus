@@ -333,13 +333,13 @@ WRITE16_MEMBER(wecleman_state::irqctrl_w)
 
 		// Bit 0 : SUBINT
 		if ( (m_irqctrl & 1) && (!(data & 1)) ) // 1->0 transition
-			machine().device("sub")->execute().set_input_line(4, HOLD_LINE);
+			m_subcpu->set_input_line(4, HOLD_LINE);
 
 		// Bit 1 : NSUBRST
 		if (data & 2)
-			machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+			m_subcpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		else
-			machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+			m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 		// Bit 2 : SOUND-ON
 		// Bit 3 : SOUNDRST
@@ -584,7 +584,7 @@ WRITE16_MEMBER(wecleman_state::wecleman_soundlatch_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xFF);
-		machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+		m_audiocpu->set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -645,7 +645,7 @@ WRITE16_MEMBER(wecleman_state::hotchase_soundlatch_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xFF);
-		machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
+		m_audiocpu->set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -1029,9 +1029,9 @@ TIMER_DEVICE_CALLBACK_MEMBER(wecleman_state::wecleman_scanline)
 	int scanline = param;
 
 	if(scanline == 232) // vblank irq
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 	else if(((scanline % 64) == 0)) // timer irq TODO: timings
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 TIMER_DEVICE_CALLBACK_MEMBER(wecleman_state::hotchase_scanline)
@@ -1039,9 +1039,9 @@ TIMER_DEVICE_CALLBACK_MEMBER(wecleman_state::hotchase_scanline)
 	int scanline = param;
 
 	if(scanline == 224) // vblank irq
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 	else if(((scanline % 64) == 0)) // timer irq TODO: timings
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 

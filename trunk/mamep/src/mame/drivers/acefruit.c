@@ -19,10 +19,11 @@ class acefruit_state : public driver_device
 {
 public:
 	acefruit_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
@@ -43,6 +44,7 @@ public:
 	INTERRUPT_GEN_MEMBER(acefruit_vblank);
 	TIMER_CALLBACK_MEMBER(acefruit_refresh);
 	void acefruit_update_irq(int vpos);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -60,7 +62,7 @@ void acefruit_state::acefruit_update_irq(int vpos)
 		switch( color )
 		{
 		case 0x0c:
-			machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE );
+			m_maincpu->set_input_line(0, HOLD_LINE );
 			break;
 		}
 	}

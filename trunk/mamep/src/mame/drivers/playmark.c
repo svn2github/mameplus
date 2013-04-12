@@ -157,15 +157,13 @@ READ8_MEMBER(playmark_state::playmark_snd_flag_r)
 
 WRITE8_MEMBER(playmark_state::playmark_oki_banking_w)
 {
-	device_t *device = machine().device("oki");
-
 	if (m_old_oki_bank != (data & 7))
 	{
 		m_old_oki_bank = data & 7;
 
 		if (((m_old_oki_bank - 1) * 0x40000) < memregion("oki")->bytes())
 		{
-			downcast<okim6295_device *>(device)->set_bank_base(0x40000 * (m_old_oki_bank - 1));
+			m_oki->set_bank_base(0x40000 * (m_old_oki_bank - 1));
 		}
 	}
 }
@@ -177,7 +175,7 @@ WRITE8_MEMBER(playmark_state::playmark_oki_w)
 
 WRITE8_MEMBER(playmark_state::playmark_snd_control_w)
 {
-//  address_&space space = device->machine().device("audiocpu")->memory().&space(AS_PROGRAM);
+//  address_&space space = device->m_audiocpu->&space(AS_PROGRAM);
 
 	/*  This port controls communications to and from the 68K, and the OKI
 	    device.
@@ -197,8 +195,7 @@ WRITE8_MEMBER(playmark_state::playmark_snd_control_w)
 	if ((data & 0x38) == 0x18)
 	{
 		// logerror("PC$%03x Writing %02x to OKI1, PortC=%02x, Code=%02x\n",space.device().safe_pcbase(),playmark_oki_command,playmark_oki_control,playmark_snd_command);
-		okim6295_device *oki = machine().device<okim6295_device>("oki");
-		oki->write(space, 0, m_oki_command);
+		m_oki->write(space, 0, m_oki_command);
 	}
 }
 
@@ -1024,9 +1021,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(playmark_state,playmark)
 {
-	m_oki = machine().device<okim6295_device>("oki");
-	m_eeprom = machine().device<eeprom_device>("eeprom");
-
 	save_item(NAME(m_bgscrollx));
 	save_item(NAME(m_bgscrolly));
 	save_item(NAME(m_bg_enable));
@@ -1762,7 +1756,7 @@ DRIVER_INIT_MEMBER(playmark_state,bigtwin)
 			data_lo = playmark_asciitohex((playmark_PICROM_HEX[src_pos + 3]));
 			data |= (data_hi << 12) | (data_lo << 8);
 
-			pic16c5x_set_config(machine().device("audiocpu"), data);
+			pic16c5x_set_config(m_audiocpu, data);
 
 			src_pos = 0x7fff;       /* Force Exit */
 		}

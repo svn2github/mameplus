@@ -155,26 +155,26 @@ GFXDECODE_END
 
 /*****************************************************************************/
 
-static void irqhandler(device_t *device, int linestate)
+WRITE_LINE_MEMBER(hcastle_state::irqhandler)
 {
 //  hcastle_state *state = device->machine().driver_data<hcastle_state>();
 //  state->m_audiocpu.device(0)->execute().set_input_line(linestate);
 }
 
-static void volume_callback(device_t *device, int v)
+WRITE8_MEMBER(hcastle_state::volume_callback)
 {
-	k007232_set_volume(device, 0, (v >> 4) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v & 0x0f) * 0x11);
+	k007232_set_volume(machine().device("konami1"), 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(machine().device("konami1"), 1, 0, (data & 0x0f) * 0x11);
 }
 
 static const k007232_interface k007232_config =
 {
-	volume_callback /* external port callback */
+	DEVCB_DRIVER_MEMBER(hcastle_state,volume_callback) /* external port callback */
 };
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(hcastle_state,irqhandler)
 };
 
 void hcastle_state::machine_start()
@@ -183,7 +183,6 @@ void hcastle_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 16, &ROM[0x10000], 0x2000);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k007121_1 = machine().device("k007121_1");
 	m_k007121_2 = machine().device("k007121_2");
 

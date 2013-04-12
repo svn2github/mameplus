@@ -272,9 +272,8 @@ class namcos10_state : public driver_device
 {
 public:
 	namcos10_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-	{
-	}
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	// memm variant interface
 	DECLARE_WRITE32_MEMBER(key_w);
@@ -317,6 +316,7 @@ public:
 	DECLARE_DRIVER_INIT(chocovdr);
 	DECLARE_MACHINE_RESET(namcos10);
 	void memn_driver_init(  );
+	required_device<cpu_device> m_maincpu;
 };
 
 

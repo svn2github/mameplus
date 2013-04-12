@@ -81,7 +81,9 @@ class gei_state : public driver_device
 {
 public:
 	gei_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_dac(*this, "dac") { }
 
 	virtual void video_start();
 
@@ -135,6 +137,8 @@ public:
 	virtual void palette_init();
 	DECLARE_PALETTE_INIT(quizvid);
 	INTERRUPT_GEN_MEMBER(vblank_irq);
+	required_device<cpu_device> m_maincpu;
+	required_device<dac_device> m_dac;
 };
 
 
@@ -226,7 +230,7 @@ WRITE8_MEMBER(gei_state::sound_w)
 	m_nmi_mask = data & 0x40;
 
 	/* bit 7 goes directly to the sound amplifier */
-	machine().device<dac_device>("dac")->write_unsigned8(((data & 0x80) >> 7) * 255);
+	m_dac->write_unsigned8(((data & 0x80) >> 7) * 255);
 }
 
 WRITE8_MEMBER(gei_state::sound2_w)
@@ -243,7 +247,7 @@ WRITE8_MEMBER(gei_state::sound2_w)
 	set_led_status(machine(), 12,data & 0x20);
 
 	/* bit 7 goes directly to the sound amplifier */
-	machine().device<dac_device>("dac")->write(((data & 0x80) >> 7) * 255);
+	m_dac->write(((data & 0x80) >> 7) * 255);
 }
 
 WRITE8_MEMBER(gei_state::lamps2_w)
@@ -2003,5 +2007,5 @@ GAME( 1991, quiz211,  0,        findout,  quiz, driver_device,     0,       ROT0
 
 GAME( 1992, sexappl,  0,        findout,  sexappl, driver_device,  0,       ROT0, "Grayhound Electronics", "Sex Appeal (Version 6.02)",               GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAME( 1992, geimulti, 0,        geimulti, geimulti, gei_state, geimulti,ROT0, "Grayhound Electronics", "GEI Multi Game",                          GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1992, sprtauth, 0,        sprtauth, sprtauth, gei_state, geimulti,ROT0, "Classic Games",         "Sports Authority",                        GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1992, geimulti, 0,        geimulti, geimulti, gei_state, geimulti,    ROT0, "Grayhound Electronics", "GEI Multi Game",                          GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1992, sprtauth, 0,        sprtauth, sprtauth, gei_state, geimulti,    ROT0, "Classic Games",         "Sports Authority",                        GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

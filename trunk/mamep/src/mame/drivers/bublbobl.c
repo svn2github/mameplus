@@ -696,10 +696,9 @@ GFXDECODE_END
  *************************************/
 
 // handler called by the 2203 emulator when the internal timers cause an IRQ
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(bublbobl_state::irqhandler)
 {
-	bublbobl_state *state = device->machine().driver_data<bublbobl_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -709,7 +708,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(bublbobl_state,irqhandler)
 };
 
 
@@ -722,11 +721,6 @@ static const ym2203_interface ym2203_config =
 
 MACHINE_START_MEMBER(bublbobl_state,common)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_mcu = machine().device("mcu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_slave = machine().device("slave");
-
 	save_item(NAME(m_sound_nmi_enable));
 	save_item(NAME(m_pending_nmi));
 	save_item(NAME(m_sound_status));
@@ -1573,7 +1567,7 @@ ROM_END
  *
  *************************************/
 
-void bublbobl_state::configure_banks()
+void bublbobl_state::configure_banks(  )
 {
 	UINT8 *ROM = memregion("maincpu")->base();
 	membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
@@ -1600,7 +1594,7 @@ DRIVER_INIT_MEMBER(bublbobl_state,tokiob)
 {
 	DRIVER_INIT_CALL(tokio);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfe00, 0xfe00, read8_delegate(FUNC(bublbobl_state::tokiob_mcu_r),this) );
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfe00, 0xfe00, read8_delegate(FUNC(bublbobl_state::tokiob_mcu_r),this) );
 }
 
 DRIVER_INIT_MEMBER(bublbobl_state,dland)

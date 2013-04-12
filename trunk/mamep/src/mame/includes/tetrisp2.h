@@ -18,7 +18,9 @@ public:
 		m_rocknms_sub_vram_bg(*this, "sub_vram_bg"),
 		m_rocknms_sub_scroll_fg(*this, "sub_scroll_fg"),
 		m_rocknms_sub_scroll_bg(*this, "sub_scroll_bg"),
-		m_rocknms_sub_rotregs(*this, "sub_rotregs"){ }
+		m_rocknms_sub_rotregs(*this, "sub_rotregs"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_shared_ptr<UINT16> m_spriteram;
 	optional_shared_ptr<UINT16> m_spriteram2;
@@ -115,6 +117,8 @@ public:
 	TIMER_CALLBACK_MEMBER(rockn_timer_level1_callback);
 	TIMER_CALLBACK_MEMBER(rockn_timer_sub_level1_callback);
 	void init_rockn_timer();
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_subcpu;
 };
 
 class stepstag_state : public tetrisp2_state

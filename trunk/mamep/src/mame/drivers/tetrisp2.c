@@ -565,7 +565,7 @@ WRITE16_MEMBER(stepstag_state::stepstag_soundlatch_word_w)
 
 	state->soundlatch_word_w(space, offset, data, mem_mask);
 
-	machine().device("sub")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
+	m_subcpu->set_input_line(M68K_IRQ_6, HOLD_LINE);
 
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
@@ -1249,23 +1249,23 @@ GFXDECODE_END
 
 TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_level4_callback)
 {
-	machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_sub_level4_callback)
 {
-	machine().device("sub")->execute().set_input_line(4, HOLD_LINE);
+	m_subcpu->set_input_line(4, HOLD_LINE);
 }
 
 
 TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_level1_callback)
 {
-	machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+	m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 TIMER_CALLBACK_MEMBER(tetrisp2_state::rockn_timer_sub_level1_callback)
 {
-	machine().device("sub")->execute().set_input_line(1, HOLD_LINE);
+	m_subcpu->set_input_line(1, HOLD_LINE);
 }
 
 void tetrisp2_state::init_rockn_timer()

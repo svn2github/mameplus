@@ -16,8 +16,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_spriteram(*this, "spriteram"),
-		m_spr_old(*this, "vsystem_spr_old")
-	{ }
+		m_spr_old(*this, "vsystem_spr_old"),
+		m_subcpu(*this, "sub"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers (used by pipedrm) */
 	optional_shared_ptr<UINT8> m_videoram;
@@ -56,7 +57,7 @@ public:
 	UINT8    m_sound_command;
 
 	/* devices */
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_subcpu;
 	DECLARE_READ8_MEMBER(fromance_commanddata_r);
 	DECLARE_WRITE8_MEMBER(fromance_commanddata_w);
 	DECLARE_READ8_MEMBER(fromance_busycheck_main_r);
@@ -93,4 +94,6 @@ public:
 	inline void get_fromance_tile_info( tile_data &tileinfo, int tile_index, int layer );
 	inline void get_nekkyoku_tile_info( tile_data &tileinfo, int tile_index, int layer );
 	void init_common(  );
+	DECLARE_WRITE_LINE_MEMBER(fromance_adpcm_int);
+	required_device<cpu_device> m_maincpu;
 };

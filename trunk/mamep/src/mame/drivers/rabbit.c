@@ -99,8 +99,9 @@ public:
 		m_tilemap_regs(*this, "tilemap_regs"),
 		m_spriteregs(*this, "spriteregs"),
 		m_blitterregs(*this, "blitterregs"),
-		m_spriteram(*this, "spriteram")
-	{ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr<UINT32> m_viewregs0;
 	required_shared_ptr<UINT32> m_viewregs6;
@@ -146,6 +147,8 @@ public:
 	void draw_sprite_bitmap( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void rabbit_drawtilemap( bitmap_ind16 &bitmap, const rectangle &cliprect, int whichtilemap );
 	void rabbit_do_blit();
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 };
 
 
@@ -560,7 +563,7 @@ WRITE32_MEMBER(rabbit_state::rabbit_rombank_w)
 
 TIMER_CALLBACK_MEMBER(rabbit_state::rabbit_blit_done)
 {
-	machine().device("maincpu")->execute().set_input_line(m_bltirqlevel, HOLD_LINE);
+	m_maincpu->set_input_line(m_bltirqlevel, HOLD_LINE);
 }
 
 void rabbit_state::rabbit_do_blit()
@@ -670,20 +673,18 @@ WRITE32_MEMBER(rabbit_state::rabbit_blitter_w)
 
 WRITE32_MEMBER(rabbit_state::rabbit_eeprom_write)
 {
-	device_t *device = machine().device("eeprom");
 	// don't disturb the EEPROM if we're not actually writing to it
 	// (in particular, data & 0x100 here with mask = ffff00ff looks to be the watchdog)
 	if (mem_mask == 0xff000000)
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x01000000);
+		m_eeprom->write_bit(data & 0x01000000);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x04000000) ? CLEAR_LINE : ASSERT_LINE );
+		m_eeprom->set_cs_line((data & 0x04000000) ? CLEAR_LINE : ASSERT_LINE );
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
+		m_eeprom->set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
@@ -870,7 +871,7 @@ GFXDECODE_END
 
 INTERRUPT_GEN_MEMBER(rabbit_state::rabbit_vblank_interrupt)
 {
-	machine().device("maincpu")->execute().set_input_line(m_vblirqlevel, HOLD_LINE);
+	m_maincpu->set_input_line(m_vblirqlevel, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( rabbit, rabbit_state )

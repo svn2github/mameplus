@@ -1,10 +1,16 @@
+#include "sound/dac.h"
+
 class mappy_state : public driver_device
 {
 public:
 	mappy_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub"),
+		m_subcpu2(*this, "sub2"),
+		m_dac(*this, "dac")  { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_spriteram;
@@ -64,4 +70,8 @@ public:
 	TIMER_CALLBACK_MEMBER(mappy_io_run);
 	void mappy_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 *spriteram_base);
 	void phozon_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 *spriteram_base);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
+	optional_device<cpu_device> m_subcpu2;
+	optional_device<dac_device> m_dac;
 };

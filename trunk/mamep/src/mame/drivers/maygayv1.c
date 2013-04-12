@@ -217,7 +217,9 @@ class maygayv1_state : public driver_device
 {
 public:
 	maygayv1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu") { }
 
 	int m_vsync_latch_preset;
 	UINT8 m_p1;
@@ -244,6 +246,10 @@ public:
 	UINT32 screen_update_maygayv1(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void screen_eof_maygayv1(screen_device &screen, bool state);
 	INTERRUPT_GEN_MEMBER(vsync_interrupt);
+	DECLARE_WRITE8_MEMBER(data_from_i8031);
+	DECLARE_READ8_MEMBER(data_to_i8031);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
 };
 
 
@@ -677,7 +683,7 @@ WRITE16_MEMBER(maygayv1_state::vsync_int_ctrl)
 
 	// Active low
 	if (!(m_vsync_latch_preset))
-		machine().device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
+		m_maincpu->set_input_line(3, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, maygayv1_state )
@@ -945,7 +951,7 @@ static void duart_tx(device_t *device, int channel, UINT8 data)
 	if (channel == 0)
 	{
 		state->m_d68681_val = data;
-		device->machine().device("soundcpu")->execute().set_input_line(MCS51_RX_LINE, ASSERT_LINE);  // ?
+		state->m_soundcpu->set_input_line(MCS51_RX_LINE, ASSERT_LINE);  // ?
 	}
 
 };
@@ -959,16 +965,14 @@ static const duart68681_config maygayv1_duart68681_config =
 };
 
 
-static int data_to_i8031(device_t *device)
+READ8_MEMBER(maygayv1_state::data_to_i8031)
 {
-	maygayv1_state *state = device->machine().driver_data<maygayv1_state>();
-	return state->m_d68681_val;
+	return m_d68681_val;
 }
 
-static void data_from_i8031(device_t *device, int data)
+WRITE8_MEMBER(maygayv1_state::data_from_i8031)
 {
-	maygayv1_state *state = device->machine().driver_data<maygayv1_state>();
-	duart68681_rx_data(state->m_duart68681, 0, data);
+	duart68681_rx_data(m_duart68681, 0, data);
 }
 
 READ8_MEMBER(maygayv1_state::b_read)
@@ -1011,8 +1015,8 @@ void maygayv1_state::machine_start()
 
 //  duart_68681_init(DUART_CLOCK, duart_irq_handler, duart_tx);
 
-	i8051_set_serial_tx_callback(machine().device("soundcpu"), data_from_i8031);
-	i8051_set_serial_rx_callback(machine().device("soundcpu"), data_to_i8031);
+	i8051_set_serial_tx_callback(m_soundcpu, write8_delegate(FUNC(maygayv1_state::data_from_i8031),this));
+	i8051_set_serial_rx_callback(m_soundcpu, read8_delegate(FUNC(maygayv1_state::data_to_i8031),this));
 }
 
 void maygayv1_state::machine_reset()
@@ -1028,7 +1032,7 @@ void maygayv1_state::machine_reset()
 INTERRUPT_GEN_MEMBER(maygayv1_state::vsync_interrupt)
 {
 	if (m_vsync_latch_preset)
-		machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
+		m_maincpu->set_input_line(3, ASSERT_LINE);
 }
 
 

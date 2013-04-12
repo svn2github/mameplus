@@ -17,8 +17,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this,"videoram"),
 		m_spriteram(*this,"spriteram"),
-		m_protram(*this,"protram")
-	{ }
+		m_protram(*this,"protram"),
+		m_mcu(*this, "mcu"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -47,7 +48,7 @@ public:
 	UINT8    m_bootleg_cmd;
 
 	/* devices */
-	device_t *m_mcu;
+	optional_device<cpu_device> m_mcu;
 	DECLARE_READ8_MEMBER(arkanoid_Z80_mcu_r);
 	DECLARE_WRITE8_MEMBER(arkanoid_Z80_mcu_w);
 	DECLARE_READ8_MEMBER(arkanoid_68705_port_a_r);
@@ -87,4 +88,5 @@ public:
 	TIMER_CALLBACK_MEMBER(test);
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void arkanoid_bootleg_init(  );
+	required_device<cpu_device> m_maincpu;
 };

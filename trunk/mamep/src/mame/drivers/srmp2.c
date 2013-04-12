@@ -206,38 +206,37 @@ WRITE8_MEMBER(srmp2_state::srmp3_adpcm_code_w)
 }
 
 
-static void srmp2_adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(srmp2_state::srmp2_adpcm_int)
 {
-	srmp2_state *state = device->machine().driver_data<srmp2_state>();
-	UINT8 *ROM = state->memregion("adpcm")->base();
+	UINT8 *ROM = memregion("adpcm")->base();
 
-	if (state->m_adpcm_sptr)
+	if (m_adpcm_sptr)
 	{
-		if (state->m_adpcm_data == -1)
+		if (m_adpcm_data == -1)
 		{
-			state->m_adpcm_data = ROM[state->m_adpcm_sptr];
+			m_adpcm_data = ROM[m_adpcm_sptr];
 
-			if (state->m_adpcm_sptr >= state->m_adpcm_eptr)
+			if (m_adpcm_sptr >= m_adpcm_eptr)
 			{
-				msm5205_reset_w(device, 1);
-				state->m_adpcm_data = 0;
-				state->m_adpcm_sptr = 0;
+				msm5205_reset_w(machine().device("msm"), 1);
+				m_adpcm_data = 0;
+				m_adpcm_sptr = 0;
 			}
 			else
 			{
-				msm5205_data_w(device, ((state->m_adpcm_data >> 4) & 0x0f));
+				msm5205_data_w(machine().device("msm"), ((m_adpcm_data >> 4) & 0x0f));
 			}
 		}
 		else
 		{
-			msm5205_data_w(device, ((state->m_adpcm_data >> 0) & 0x0f));
-			state->m_adpcm_sptr++;
-			state->m_adpcm_data = -1;
+			msm5205_data_w(machine().device("msm"), ((m_adpcm_data >> 0) & 0x0f));
+			m_adpcm_sptr++;
+			m_adpcm_data = -1;
 		}
 	}
 	else
 	{
-		msm5205_reset_w(device, 1);
+		msm5205_reset_w(machine().device("msm"), 1);
 	}
 }
 
@@ -373,12 +372,12 @@ WRITE8_MEMBER(srmp2_state::srmp3_rombank_w)
 
 WRITE8_MEMBER(srmp2_state::srmp2_irq2_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+	m_maincpu->set_input_line(2, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(srmp2_state::srmp2_irq4_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+	m_maincpu->set_input_line(4, CLEAR_LINE);
 }
 
 
@@ -405,13 +404,13 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(srmp2_state::mjyuugi_irq2_ack_r)
 {
-	machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+	m_maincpu->set_input_line(2, CLEAR_LINE);
 	return 0xff; // value returned doesn't matter
 }
 
 READ8_MEMBER(srmp2_state::mjyuugi_irq4_ack_r)
 {
-	machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+	m_maincpu->set_input_line(4, CLEAR_LINE);
 	return 0xff; // value returned doesn't matter
 }
 
@@ -458,7 +457,7 @@ WRITE8_MEMBER(srmp2_state::srmp3_flags_w)
 
 WRITE8_MEMBER(srmp2_state::srmp3_irq_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( srmp3_map, AS_PROGRAM, 8, srmp2_state )
@@ -1129,7 +1128,7 @@ static const ay8910_interface srmp2_ay8910_interface =
 
 static const msm5205_interface msm5205_config =
 {
-	srmp2_adpcm_int,            /* IRQ handler */
+	DEVCB_DRIVER_LINE_MEMBER(srmp2_state,srmp2_adpcm_int),            /* IRQ handler */
 	MSM5205_S48_4B              /* 8 KHz, 4 Bits  */
 };
 

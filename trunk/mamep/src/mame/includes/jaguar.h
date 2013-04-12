@@ -7,6 +7,7 @@
 #include "cpu/jaguar/jaguar.h"
 #include "machine/nvram.h"
 #include "sound/dac.h"
+#include "machine/eeprom.h"
 
 #ifndef ENABLE_SPEEDUP_HACKS
 #define ENABLE_SPEEDUP_HACKS 1
@@ -51,7 +52,9 @@ public:
 			m_main_gpu_wait(NULL),
 			m_joystick_data(0),
 			m_eeprom_bit_count(0),
-			m_protection_check(0) { }
+			m_protection_check(0) ,
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	// devices
 	required_device<cpu_device> m_main_cpu;
@@ -314,4 +317,6 @@ protected:
 	emu_file *jaguar_nvram_fopen( UINT32 openflags);
 	void jaguar_nvram_load();
 	void jaguar_nvram_save();
+	required_device<cpu_device> m_maincpu;
+	optional_device<eeprom_device> m_eeprom;
 };

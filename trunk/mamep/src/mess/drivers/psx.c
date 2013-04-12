@@ -24,9 +24,8 @@ class psx1_state : public driver_device
 {
 public:
 	psx1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-	{
-	}
+		: driver_device(mconfig, type, tag) ,
+		m_maincpu(*this, "maincpu") { }
 
 	UINT8 *m_exe_buffer;
 	int m_exe_size;
@@ -51,6 +50,7 @@ public:
 	int load_psf( cpu_device *cpu, unsigned char *p_n_file, int n_len );
 	void cd_dma_read( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
 	void cd_dma_write( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -436,6 +436,8 @@ DIRECT_UPDATE_MEMBER(psx1_state::psx_setopbase)
 /*          DEBUGGER_BREAK; */
 
 			address = cpu->state_int( PSXCPU_PC );
+			cpu->set_state_int( PSXCPU_DELAYR, PSXCPU_DELAYR_PC );
+			cpu->set_state_int( PSXCPU_DELAYV, address );
 		}
 		else
 		{
@@ -498,12 +500,6 @@ DRIVER_INIT_MEMBER(psx1_state,psx)
 {
 }
 
-struct cdrom_interface psx_cdrom =
-{
-	"psx_cdrom",
-	NULL
-};
-
 static MACHINE_CONFIG_START( psxntsc, psx1_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
@@ -525,7 +521,6 @@ static MACHINE_CONFIG_START( psxntsc, psx1_state )
 	/* quickload */
 	MCFG_QUICKLOAD_ADD("quickload", psx_exe_load, "cpe,exe,psf,psx", 0)
 
-	MCFG_CDROM_ADD("cdrom",psx_cdrom)
 	MCFG_SOFTWARE_LIST_ADD("cd_list","psx")
 
 	MCFG_DEVICE_MODIFY( "maincpu" )
@@ -560,7 +555,6 @@ static MACHINE_CONFIG_START( psxpal, psx1_state )
 	/* quickload */
 	MCFG_QUICKLOAD_ADD("quickload", psx_exe_load, "cpe,exe,psf,psx", 0)
 
-	MCFG_CDROM_ADD("cdrom", psx_cdrom)
 	MCFG_SOFTWARE_LIST_ADD("cd_list","psx")
 
 	MCFG_DEVICE_MODIFY( "maincpu" )

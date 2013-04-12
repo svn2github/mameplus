@@ -572,14 +572,13 @@ GFXDECODE_END
 
 /*** MACHINE DRIVER **********************************************************/
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(macrossp_state::irqhandler)
 {
-	// macrossp_state *state = space.machine().driver_data<macrossp_state>();
-	logerror("ES5506 irq %d\n", irq);
+	logerror("ES5506 irq %d\n", state);
 
 	/* IRQ lines 1 & 4 on the sound 68000 are definitely triggered by the ES5506,
 	but I haven't noticed the ES5506 ever assert the line - maybe only used when developing the game? */
-	//  state->m_audiocpu->set_input_line(1, irq ? ASSERT_LINE : CLEAR_LINE);
+	//  m_audiocpu->set_input_line(1, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const es5506_interface es5506_config =
@@ -588,14 +587,12 @@ static const es5506_interface es5506_config =
 	"ensoniq.1",
 	"ensoniq.2",
 	"ensoniq.3",
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(macrossp_state,irqhandler)
 };
 
 
 void macrossp_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_sndpending));
 	save_item(NAME(m_snd_toggle));
@@ -771,13 +768,13 @@ WRITE32_MEMBER(macrossp_state::quizmoon_speedup_w)
 
 DRIVER_INIT_MEMBER(macrossp_state,macrossp)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xf10158, 0xf1015b, write32_delegate(FUNC(macrossp_state::macrossp_speedup_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xf10158, 0xf1015b, write32_delegate(FUNC(macrossp_state::macrossp_speedup_w),this));
 }
 
 DRIVER_INIT_MEMBER(macrossp_state,quizmoon)
 {
 #ifdef UNUSED_FUNCTION
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xf00020, 0xf00023, write32_delegate(FUNC(macrossp_state::quizmoon_speedup_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xf00020, 0xf00023, write32_delegate(FUNC(macrossp_state::quizmoon_speedup_w),this));
 #endif
 }
 

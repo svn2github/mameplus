@@ -39,36 +39,6 @@ MACHINE_CONFIG_EXTERN( md_ntsc );
 MACHINE_CONFIG_EXTERN( md_pal );
 MACHINE_CONFIG_EXTERN( md_bootleg );    // for topshoot.c & hshavoc.c
 
-extern UINT8 megatech_bios_port_cc_dc_r(running_machine &machine, int offset, int ctrl);
-extern void megadriv_stop_scanline_timer(running_machine &machine);
-
-void megatech_set_megadrive_z80_as_megadrive_z80(running_machine &machine, const char* tag);
-
-
-/* These handlers are needed by megaplay.c */
-extern DECLARE_READ16_HANDLER( megadriv_68k_io_read );
-extern DECLARE_WRITE16_HANDLER( megadriv_68k_io_write );
-
-
-/* These are needed to create external input handlers (see e.g. MESS) */
-/* Regs are also used by Megaplay! */
-extern UINT8 (*megadrive_io_read_data_port_ptr)(running_machine &machine, int offset);
-extern void (*megadrive_io_write_data_port_ptr)(running_machine &machine, int offset, UINT16 data);
-extern UINT8 megadrive_io_data_regs[3];
-extern UINT8 megadrive_io_ctrl_regs[3];
-
-MACHINE_START( megadriv );
-MACHINE_RESET( megadriv );
-VIDEO_START( megadriv );
-SCREEN_UPDATE_RGB32( megadriv );
-SCREEN_VBLANK( megadriv );
-
-
-
-
-
-extern int megadrive_6buttons_pad;
-
 /* Megaplay - Megatech specific */
 /* It might be possible to move the following structs in the drivers */
 
@@ -92,19 +62,25 @@ public:
 	: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
 		m_z80snd(*this,"genesis_snd_z80"),
+		m_ymsnd(*this,"ymsnd"),
 		m_vdp(*this,"gen_vdp"),
 		m_32x(*this,"sega32x"),
 		m_segacd(*this,"segacd"),
 		m_megadrive_ram(*this,"megadrive_ram")
 	{ }
-	optional_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_z80snd;
+	optional_device<device_t> m_ymsnd;
 	required_device<sega_genesis_vdp_device> m_vdp;
 	optional_device<sega_32x_device> m_32x;
 	optional_device<sega_segacd_device> m_segacd;
 	optional_shared_ptr<UINT16> m_megadrive_ram;
 
-	int m_other_hacks;	// misc hacks
+	ioport_port *m_io_reset;
+	ioport_port *m_io_pad_3b[4];
+	ioport_port *m_io_pad_6b[4];
+
+	int m_other_hacks;  // misc hacks
 	genesis_z80_vars m_genz80;
 	int m_pal;
 	int m_export;
@@ -121,6 +97,63 @@ public:
 	void megadriv_init_common();
 
 	DECLARE_DEVICE_IMAGE_LOAD_MEMBER( _32x_cart );
+
+	void megadriv_z80_bank_w(UINT16 data);
+	DECLARE_WRITE16_MEMBER( megadriv_68k_z80_bank_write );
+	DECLARE_WRITE8_MEMBER(megadriv_z80_z80_bank_w);
+	DECLARE_READ16_MEMBER( megadriv_68k_io_read );
+	DECLARE_WRITE16_MEMBER( megadriv_68k_io_write );
+	DECLARE_READ16_MEMBER( megadriv_68k_read_z80_ram );
+	DECLARE_WRITE16_MEMBER( megadriv_68k_write_z80_ram );
+	DECLARE_READ16_MEMBER( megadriv_68k_check_z80_bus );
+	DECLARE_WRITE16_MEMBER( megadriv_68k_req_z80_bus );
+	DECLARE_WRITE16_MEMBER ( megadriv_68k_req_z80_reset );
+	DECLARE_READ8_MEMBER( z80_read_68k_banked_data );
+	DECLARE_WRITE8_MEMBER( z80_write_68k_banked_data );
+	DECLARE_WRITE8_MEMBER( megadriv_z80_vdp_write );
+	DECLARE_READ8_MEMBER( megadriv_z80_vdp_read );
+	DECLARE_READ8_MEMBER( megadriv_z80_unmapped_read );
+	DECLARE_READ8_MEMBER( z80_unmapped_port_r );
+	DECLARE_WRITE8_MEMBER( z80_unmapped_port_w );
+	DECLARE_READ8_MEMBER( z80_unmapped_r );
+	DECLARE_WRITE8_MEMBER( z80_unmapped_w );
+	TIMER_CALLBACK_MEMBER(megadriv_z80_run_state);
+
+	/* Megadrive / Genesis has 3 I/O ports */
+	emu_timer *m_io_timeout[3];
+	int m_io_stage[3];
+	UINT8 m_megadrive_io_data_regs[3];
+	UINT8 m_megadrive_io_ctrl_regs[3];
+	UINT8 m_megadrive_io_tx_regs[3];
+	read8_delegate m_megadrive_io_read_data_port_ptr;
+	write16_delegate m_megadrive_io_write_data_port_ptr;
+
+
+	TIMER_CALLBACK_MEMBER( io_timeout_timer_callback );
+	void megadrive_reset_io();
+	DECLARE_READ8_MEMBER(megadrive_io_read_data_port_6button);
+	DECLARE_READ8_MEMBER(megadrive_io_read_data_port_3button);
+	UINT8 megatech_bios_port_cc_dc_r(int offset, int ctrl);
+	UINT8 megadrive_io_read_ctrl_port(int portnum);
+	UINT8 megadrive_io_read_tx_port(int portnum);
+	UINT8 megadrive_io_read_rx_port(int portnum);
+	UINT8 megadrive_io_read_sctrl_port(int portnum);
+
+	DECLARE_WRITE16_MEMBER(megadrive_io_write_data_port_3button);
+	DECLARE_WRITE16_MEMBER(megadrive_io_write_data_port_6button);
+	void megadrive_io_write_ctrl_port(int portnum, UINT16 data);
+	void megadrive_io_write_tx_port(int portnum, UINT16 data);
+	void megadrive_io_write_rx_port(int portnum, UINT16 data);
+	void megadrive_io_write_sctrl_port(int portnum, UINT16 data);
+
+	void megadriv_stop_scanline_timer();
+
+	DECLARE_MACHINE_START( megadriv );
+	DECLARE_MACHINE_RESET( megadriv );
+	DECLARE_VIDEO_START( megadriv );
+	UINT32 screen_update_megadriv(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	void screen_eof_megadriv(screen_device &screen, bool state);
+
 };
 
 class md_boot_state : public md_base_state
@@ -134,77 +167,6 @@ public:
 
 	int m_protcount;
 
-	// jzth protection
-	DECLARE_WRITE16_MEMBER( bl_710000_w )
-	{
-		int pc = space.device().safe_pc();
-
-		logerror("%06x writing to bl_710000_w %04x %04x\n", pc, data, mem_mask);
-
-		// protection value is read from  0x710000 after a series of writes.. and stored at ff0007
-		// startup
-		/*
-		059ce0 writing to bl_710000_w ff08 ffff
-		059d04 writing to bl_710000_w 000a ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0xe)
-		059ce0 writing to bl_710000_w ff08 ffff
-		059d04 writing to bl_710000_w 000a ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0xe)
-		*/
-		// before lv stage 3
-		/*
-		059ce0 writing to bl_710000_w 0008 ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0x4)
-		*/
-		// start level 3
-		/*
-		059ce0 writing to bl_710000_w ff08 ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000e ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0x5)
-
-		// after end sequence
-		059ce0 writing to bl_710000_w 0008 ffff
-		059d04 writing to bl_710000_w 000a ffff
-		059d04 writing to bl_710000_w 000b ffff
-		059d04 writing to bl_710000_w 000c ffff
-		059d04 writing to bl_710000_w 000f ffff
-		059d1c writing to bl_710000_w ff09 ffff
-		059d2a reading from bl_710000_r  (wants 0xe)
-
-		*/
-		m_protcount++;
-	}
-
-
-	DECLARE_READ16_MEMBER( bl_710000_r )
-	{
-		UINT16 ret;
-		int pc = space.device().safe_pc();
-		logerror("%06x reading from bl_710000_r\n", pc);
-
-		if (m_protcount==6) { ret = 0xe; }
-		else if (m_protcount==5) { ret = 0x5; }
-		else if (m_protcount==4) { ret = 0x4; }
-		else ret = 0xf;
-
-		m_protcount = 0;
-		return ret;
-	}
-
 	DECLARE_DRIVER_INIT(aladmdb);
 	DECLARE_DRIVER_INIT(mk3mdb);
 	DECLARE_DRIVER_INIT(ssf2mdb);
@@ -212,6 +174,18 @@ public:
 	DECLARE_DRIVER_INIT(topshoot);
 	DECLARE_DRIVER_INIT(puckpkmn);
 	DECLARE_DRIVER_INIT(hshavoc);
+	DECLARE_WRITE16_MEMBER( bl_710000_w );
+	DECLARE_READ16_MEMBER( bl_710000_r );
+	DECLARE_WRITE16_MEMBER( aladmdb_w );
+	DECLARE_READ16_MEMBER( aladmdb_r );
+	DECLARE_READ16_MEMBER( mk3mdb_dsw_r );
+	DECLARE_READ16_MEMBER( ssf2mdb_dsw_r );
+	DECLARE_READ16_MEMBER( srmdb_dsw_r );
+	DECLARE_READ16_MEMBER( topshoot_200051_r );
+	DECLARE_READ16_MEMBER(puckpkmna_70001c_r);
+	DECLARE_READ16_MEMBER(puckpkmna_4b2476_r);
+
+	DECLARE_MACHINE_START( md_6button );
 };
 
 
@@ -271,12 +245,29 @@ public:
 	DECLARE_DRIVER_INIT(pclubjv2);
 	DECLARE_DRIVER_INIT(pclubjv4);
 	DECLARE_DRIVER_INIT(pclubjv5);
-	void segac2_common_init(running_machine& machine, int (*func)(int in));
+	void segac2_common_init(int (*func)(int in));
 	DECLARE_VIDEO_START(segac2_new);
 	DECLARE_MACHINE_START(segac2);
 	DECLARE_MACHINE_RESET(segac2);
 
 	UINT32 screen_update_segac2_new(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	int m_segac2_bg_pal_lookup[4];
+	int m_segac2_sp_pal_lookup[4];
+	void recompute_palette_tables();
+
+	DECLARE_WRITE16_MEMBER( segac2_upd7759_w );
+	DECLARE_READ16_MEMBER( palette_r );
+	DECLARE_WRITE16_MEMBER( palette_w );
+	DECLARE_READ16_MEMBER( io_chip_r );
+	DECLARE_WRITE16_MEMBER( io_chip_w );
+	DECLARE_WRITE16_MEMBER( control_w );
+	DECLARE_READ16_MEMBER( prot_r );
+	DECLARE_WRITE16_MEMBER( prot_w );
+	DECLARE_WRITE16_MEMBER( counter_timer_w );
+	DECLARE_READ16_MEMBER( printer_r );
+	DECLARE_WRITE16_MEMBER( print_club_camera_w );
+	DECLARE_READ16_MEMBER(ichirjbl_prot_r);
+	DECLARE_WRITE_LINE_MEMBER(segac2_irq2_interrupt);
 };
 
 class mplay_state : public md_base_state
@@ -318,6 +309,27 @@ public:
 
 	UINT32 screen_update_megplay(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void screen_eof_megaplay(screen_device &screen, bool state);
+
+	DECLARE_READ8_MEMBER( megaplay_bios_banksel_r );
+	DECLARE_WRITE8_MEMBER( megaplay_bios_banksel_w );
+	DECLARE_READ8_MEMBER( megaplay_bios_gamesel_r );
+	DECLARE_WRITE8_MEMBER( megaplay_bios_gamesel_w );
+	DECLARE_WRITE16_MEMBER( megaplay_io_write );
+	DECLARE_READ16_MEMBER( megaplay_io_read );
+	DECLARE_READ8_MEMBER( bank_r );
+	DECLARE_WRITE8_MEMBER( bank_w );
+	DECLARE_READ8_MEMBER( megaplay_bios_6402_r );
+	DECLARE_WRITE8_MEMBER( megaplay_bios_6402_w );
+	DECLARE_READ8_MEMBER( megaplay_bios_6204_r );
+	DECLARE_WRITE8_MEMBER( megaplay_bios_width_w );
+	DECLARE_READ8_MEMBER( megaplay_bios_6404_r );
+	DECLARE_WRITE8_MEMBER( megaplay_bios_6404_w );
+	DECLARE_READ8_MEMBER( megaplay_bios_6600_r );
+	DECLARE_WRITE8_MEMBER( megaplay_bios_6600_w );
+	DECLARE_WRITE8_MEMBER( megaplay_game_w );
+	void mplay_start();
+	DECLARE_READ16_MEMBER( megadriv_68k_read_z80_extra_ram );
+	DECLARE_WRITE16_MEMBER( megadriv_68k_write_z80_extra_ram );
 };
 
 class mtech_state : public md_base_state
@@ -358,10 +370,26 @@ public:
 	UINT32 screen_update_mtnew(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void screen_eof_mtnew(screen_device &screen, bool state);
 	UINT32 screen_update_megatech_menu(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+
+	void megatech_set_megadrive_z80_as_megadrive_z80(const char* tag);
+
+	DECLARE_READ8_MEMBER( megatech_cart_select_r );
+	TIMER_CALLBACK_MEMBER( megatech_z80_run_state );
+	TIMER_CALLBACK_MEMBER( megatech_z80_stop_state );
+	void megatech_select_game(int gameno);
+	DECLARE_WRITE8_MEMBER( megatech_cart_select_w );
+	DECLARE_READ8_MEMBER( bios_ctrl_r );
+	DECLARE_WRITE8_MEMBER( bios_ctrl_w );
+	DECLARE_READ8_MEMBER( megatech_z80_read_68k_banked_data );
+	DECLARE_WRITE8_MEMBER( megatech_z80_write_68k_banked_data );
+	void megatech_z80_bank_w(UINT16 data);
+	DECLARE_WRITE8_MEMBER( mt_z80_bank_w );
+	DECLARE_READ8_MEMBER( megatech_banked_ram_r );
+	DECLARE_WRITE8_MEMBER( megatech_banked_ram_w );
+	DECLARE_WRITE8_MEMBER( megatech_bios_port_ctrl_w );
+	DECLARE_READ8_MEMBER( megatech_bios_joypad_r );
+	DECLARE_WRITE8_MEMBER (megatech_bios_port_7f_w);
 };
-
-
-UINT8 megadrive_io_read_data_port_3button(running_machine &machine, int portnum);
 
 class _32x_state : public md_base_state
 {
@@ -386,7 +414,5 @@ extern UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32
 extern int megadrive_total_scanlines;
 extern int megadrive_vblank_flag;
 extern UINT16* megadrive_vdp_palette_lookup;
-
-/* machine/megadriv.c */
 extern TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback );
 extern timer_device* megadriv_scanline_timer;

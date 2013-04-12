@@ -66,7 +66,7 @@ public:
 		};
 
 		m740_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-		m740_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock);
+		m740_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source);
 
 		virtual void device_start();
 		virtual void device_reset();
@@ -100,10 +100,10 @@ protected:
 	O(ldm_imz);
 	O(jsr_spg);
 	O(reset740);
-	O(seb_biz); O(seb_acc);
-	O(clb_biz); O(clb_acc);
-	O(bbc_bzr); O(bbc_acc);
-	O(bbs_bzr); O(bbs_acc);
+	O(seb_biz); O(seb_bac);
+	O(clb_biz); O(clb_bac);
+	O(bbc_bzr); O(bbc_bar);
+	O(bbs_bzr); O(bbs_bar);
 	O(rrf_zpg);
 	O(bra_rel);
 	O(jmp_zpi);

@@ -685,29 +685,27 @@ DRIVER_INIT_MEMBER(playch10_state,pcdboard_2)
 /* E Board games (Mike Tyson's Punchout) - BROKEN - FIX ME */
 
 /* callback for the ppu_latch */
-static void mapper9_latch( device_t *ppu, offs_t offset )
+void playch10_state::mapper9_latch(offs_t offset )
 {
-	playch10_state *state = ppu->machine().driver_data<playch10_state>();
-
-	if((offset & 0x1ff0) == 0x0fd0 && state->m_MMC2_bank_latch[0] != 0xfd)
+	if((offset & 0x1ff0) == 0x0fd0 && m_MMC2_bank_latch[0] != 0xfd)
 	{
-		state->m_MMC2_bank_latch[0] = 0xfd;
-		state->pc10_set_videorom_bank(0, 4, state->m_MMC2_bank[0], 4);
+		m_MMC2_bank_latch[0] = 0xfd;
+		pc10_set_videorom_bank(0, 4, m_MMC2_bank[0], 4);
 	}
-	else if((offset & 0x1ff0) == 0x0fe0 && state->m_MMC2_bank_latch[0] != 0xfe)
+	else if((offset & 0x1ff0) == 0x0fe0 && m_MMC2_bank_latch[0] != 0xfe)
 	{
-		state->m_MMC2_bank_latch[0] = 0xfe;
-		state->pc10_set_videorom_bank(0, 4, state->m_MMC2_bank[1], 4);
+		m_MMC2_bank_latch[0] = 0xfe;
+		pc10_set_videorom_bank(0, 4, m_MMC2_bank[1], 4);
 	}
-	else if((offset & 0x1ff0) == 0x1fd0 && state->m_MMC2_bank_latch[1] != 0xfd)
+	else if((offset & 0x1ff0) == 0x1fd0 && m_MMC2_bank_latch[1] != 0xfd)
 	{
-		state->m_MMC2_bank_latch[1] = 0xfd;
-		state->pc10_set_videorom_bank(4, 4, state->m_MMC2_bank[2], 4);
+		m_MMC2_bank_latch[1] = 0xfd;
+		pc10_set_videorom_bank(4, 4, m_MMC2_bank[2], 4);
 	}
-	else if((offset & 0x1ff0) == 0x1fe0 && state->m_MMC2_bank_latch[1] != 0xfe)
+	else if((offset & 0x1ff0) == 0x1fe0 && m_MMC2_bank_latch[1] != 0xfe)
 	{
-		state->m_MMC2_bank_latch[1] = 0xfe;
-		state->pc10_set_videorom_bank(4, 4, state->m_MMC2_bank[3], 4);
+		m_MMC2_bank_latch[1] = 0xfe;
+		pc10_set_videorom_bank(4, 4, m_MMC2_bank[3], 4);
 	}
 }
 
@@ -771,7 +769,7 @@ DRIVER_INIT_MEMBER(playch10_state,pceboard)
 	machine().device("cart")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(playch10_state::eboard_rom_switch_w),this));
 
 	/* ppu_latch callback */
-	ppu->set_latch(mapper9_latch);
+	ppu->set_latch(ppu2c0x_latch_delegate(FUNC(playch10_state::mapper9_latch),this));
 
 	/* nvram at $6000-$6fff */
 	machine().device("cart")->memory().space(AS_PROGRAM).install_ram(0x6000, 0x6fff);
@@ -821,21 +819,19 @@ DRIVER_INIT_MEMBER(playch10_state,pcfboard_2)
 /* G Board games (Super Mario Bros. 3) */
 
 
-static void gboard_scanline_cb( device_t *device, int scanline, int vblank, int blanked )
+void playch10_state::gboard_scanline_cb( int scanline, int vblank, int blanked )
 {
-	playch10_state *state = device->machine().driver_data<playch10_state>();
-
 	if (scanline < PPU_BOTTOM_VISIBLE_SCANLINE)
 	{
-		int priorCount = state->m_IRQ_count;
-		if (state->m_IRQ_count == 0)
-			state->m_IRQ_count = state->m_IRQ_count_latch;
+		int priorCount = m_IRQ_count;
+		if (m_IRQ_count == 0)
+			m_IRQ_count = m_IRQ_count_latch;
 		else
-			state->m_IRQ_count--;
+			m_IRQ_count--;
 
-		if (state->m_IRQ_enable && !blanked && (state->m_IRQ_count == 0) && priorCount) // according to blargg the latter should be present as well, but it breaks Rampart and Joe & Mac US: they probably use the alt irq!
+		if (m_IRQ_enable && !blanked && (m_IRQ_count == 0) && priorCount) // according to blargg the latter should be present as well, but it breaks Rampart and Joe & Mac US: they probably use the alt irq!
 		{
-			device->machine().device("cart")->execute().set_input_line(0, HOLD_LINE);
+			machine().device("cart")->execute().set_input_line(0, HOLD_LINE);
 		}
 	}
 }
@@ -1001,7 +997,7 @@ DRIVER_INIT_MEMBER(playch10_state,pcgboard)
 	/* common init */
 	DRIVER_INIT_CALL(playch10);
 
-	ppu->set_scanline_callback(gboard_scanline_cb);
+	ppu->set_scanline_callback(ppu2c0x_scanline_delegate(FUNC(playch10_state::gboard_scanline_cb),this));
 }
 
 DRIVER_INIT_MEMBER(playch10_state,pcgboard_type2)

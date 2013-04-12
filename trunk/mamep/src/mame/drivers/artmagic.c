@@ -118,8 +118,7 @@ WRITE16_MEMBER(artmagic_state::control_w)
 	/* OKI banking here */
 	if (offset == 0)
 	{
-		okim6295_device *oki = machine().device<okim6295_device>("oki");
-		oki->set_bank_base((((data >> 4) & 1) * 0x40000) % oki->region()->bytes());
+		m_oki->set_bank_base((((data >> 4) & 1) * 0x40000) % m_oki->region()->bytes());
 	}
 
 	logerror("%06X:control_w(%d) = %04X\n", space.device().safe_pc(), offset, data);
@@ -1163,7 +1162,7 @@ DRIVER_INIT_MEMBER(artmagic_state,ultennis)
 	m_protection_handler = ultennis_protection;
 
 	/* additional (protection?) hack */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x300000, 0x300001, read16_delegate(FUNC(artmagic_state::ultennis_hack_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x300000, 0x300001, read16_delegate(FUNC(artmagic_state::ultennis_hack_r),this));
 }
 
 

@@ -389,14 +389,14 @@ READ16_MEMBER(jchan_state::jchan_ctrl_r)
 WRITE16_MEMBER(jchan_state::main2sub_cmd_w)
 {
 	COMBINE_DATA(&m_mainsub_shared_ram[0x03ffe/2]);
-	machine().device("sub")->execute().set_input_line(4, HOLD_LINE);
+	m_subcpu->set_input_line(4, HOLD_LINE);
 }
 
 // is this called?
 WRITE16_MEMBER(jchan_state::sub2main_cmd_w)
 {
 	COMBINE_DATA(&m_mainsub_shared_ram[0x0000/2]);
-	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+	m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 /* ram convert for suprnova (requires 32-bit stuff) */
@@ -581,7 +581,7 @@ INPUT_PORTS_END
 
 static const ymz280b_interface ymz280b_intf =
 {
-	0   // irq ?
+	DEVCB_NULL   // irq ?
 };
 
 
@@ -714,8 +714,8 @@ ROM_END
 
 DRIVER_INIT_MEMBER( jchan_state, jchan )
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x403ffe, 0x403fff, write16_delegate(FUNC(jchan_state::main2sub_cmd_w),this));
-	machine().device("sub")->memory().space(AS_PROGRAM).install_write_handler(0x400000, 0x400001, write16_delegate(FUNC(jchan_state::sub2main_cmd_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x403ffe, 0x403fff, write16_delegate(FUNC(jchan_state::main2sub_cmd_w),this));
+	m_subcpu->space(AS_PROGRAM).install_write_handler(0x400000, 0x400001, write16_delegate(FUNC(jchan_state::sub2main_cmd_w),this));
 }
 
 

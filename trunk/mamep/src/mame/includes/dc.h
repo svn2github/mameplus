@@ -16,9 +16,8 @@ class dc_state : public driver_device
 		dc_texture_ram(*this, "dc_texture_ram"),
 		dc_sound_ram(*this, "dc_sound_ram"),
 		dc_ram(*this, "dc_ram"),
-		pvr2_texture_ram(*this, "textureram2"),
-		pvr2_framebuffer_ram(*this, "frameram2"),
-		elan_ram(*this, "elan_ram") { }
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu") { }
 
 	required_shared_ptr<UINT64> dc_framebuffer_ram; // '32-bit access area'
 	required_shared_ptr<UINT64> dc_texture_ram; // '64-bit access area'
@@ -69,30 +68,9 @@ class dc_state : public driver_device
 	int scanline;
 	int next_y;
 
-	/* Naomi 2 specific (To be moved) */
-	optional_shared_ptr<UINT64> pvr2_texture_ram;
-	optional_shared_ptr<UINT64> pvr2_framebuffer_ram;
-	optional_shared_ptr<UINT64> elan_ram;
-	DECLARE_DRIVER_INIT(atomiswave);
-	DECLARE_DRIVER_INIT(naomigd);
-	DECLARE_DRIVER_INIT(ggxx);
-	DECLARE_DRIVER_INIT(ggxxrl);
-	DECLARE_DRIVER_INIT(ggxxsla);
-	DECLARE_DRIVER_INIT(naomi2);
-	DECLARE_DRIVER_INIT(naomi);
-	DECLARE_DRIVER_INIT(naomigd_mp);
-	DECLARE_DRIVER_INIT(sfz3ugd);
-	DECLARE_DRIVER_INIT(hotd2);
-	DECLARE_DRIVER_INIT(qmegamis);
-	DECLARE_DRIVER_INIT(gram2000);
-	DECLARE_DRIVER_INIT(kick4csh);
-	DECLARE_DRIVER_INIT(vf4evoct);
-	DECLARE_DRIVER_INIT(naomi_mp);
-	DECLARE_DRIVER_INIT(mvsc2);
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	DECLARE_MACHINE_RESET(naomi);
 	UINT32 screen_update_dc(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(aica_dma_irq);
 	TIMER_CALLBACK_MEMBER(pvr_dma_irq);
@@ -114,29 +92,30 @@ class dc_state : public driver_device
 	DECLARE_WRITE64_MEMBER(dc_aica_reg_w);
 	DECLARE_READ32_MEMBER(dc_arm_aica_r);
 	DECLARE_WRITE32_MEMBER(dc_arm_aica_w);
+	void wave_dma_execute(address_space &space);
+	void pvr_dma_execute(address_space &space);
+	inline int decode_reg32_64(UINT32 offset, UINT64 mem_mask, UINT64 *shift);
+	inline int decode_reg3216_64(UINT32 offset, UINT64 mem_mask, UINT64 *shift);
+	int dc_compute_interrupt_level();
+	void dc_update_interrupt_status();
+	inline int decode_reg_64(UINT32 offset, UINT64 mem_mask, UINT64 *shift);
+	void rtc_initial_setup();
+	DECLARE_READ64_MEMBER( dc_sysctrl_r );
+	DECLARE_WRITE64_MEMBER( dc_sysctrl_w );
+	DECLARE_READ64_MEMBER( dc_gdrom_r );
+	DECLARE_WRITE64_MEMBER( dc_gdrom_w );
+	DECLARE_READ64_MEMBER( dc_g2_ctrl_r );
+	DECLARE_WRITE64_MEMBER( dc_g2_ctrl_w );
+	DECLARE_READ64_MEMBER( pvr_ctrl_r );
+	DECLARE_WRITE64_MEMBER( pvr_ctrl_w );
+	DECLARE_READ64_MEMBER( dc_modem_r );
+	DECLARE_WRITE64_MEMBER( dc_modem_w );
+	DECLARE_READ64_MEMBER( dc_rtc_r );
+	DECLARE_WRITE64_MEMBER( dc_rtc_w );
+
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
 };
-
-/*----------- defined in machine/dc.c -----------*/
-
-DECLARE_READ64_HANDLER( pvr_ctrl_r );
-DECLARE_WRITE64_HANDLER( pvr_ctrl_w );
-
-DECLARE_READ64_HANDLER( dc_sysctrl_r );
-DECLARE_WRITE64_HANDLER( dc_sysctrl_w );
-DECLARE_READ64_HANDLER( dc_gdrom_r );
-DECLARE_WRITE64_HANDLER( dc_gdrom_w );
-DECLARE_READ64_HANDLER( dc_g1_ctrl_r );
-DECLARE_WRITE64_HANDLER( dc_g1_ctrl_w );
-DECLARE_READ64_HANDLER( dc_g2_ctrl_r );
-DECLARE_WRITE64_HANDLER( dc_g2_ctrl_w );
-DECLARE_READ64_HANDLER( dc_modem_r );
-DECLARE_WRITE64_HANDLER( dc_modem_w );
-DECLARE_READ64_HANDLER( dc_rtc_r );
-DECLARE_WRITE64_HANDLER( dc_rtc_w );
-
-
-int dc_compute_interrupt_level(running_machine &machine);
-void dc_update_interrupt_status(running_machine &machine);
 
 /*--------- Ch2-DMA Control Registers ----------*/
 #define SB_C2DSTAT  ((0x005f6800-0x005f6800)/4)

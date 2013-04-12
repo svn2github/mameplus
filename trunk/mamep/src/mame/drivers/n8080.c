@@ -451,7 +451,7 @@ WRITE_LINE_MEMBER(n8080_state::n8080_inte_callback)
 
 WRITE8_MEMBER(n8080_state::n8080_status_callback)
 {
-	device_t *device = machine().device("maincpu");
+	device_t *device = m_maincpu;
 	if (data & I8085_STATUS_INTA)
 	{
 		/* interrupt acknowledge */
@@ -469,7 +469,6 @@ static I8085_CONFIG( n8080_cpu_config )
 
 MACHINE_START_MEMBER(n8080_state,n8080)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	save_item(NAME(m_shift_data));
 	save_item(NAME(m_shift_bits));

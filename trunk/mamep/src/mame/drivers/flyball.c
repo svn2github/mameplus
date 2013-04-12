@@ -22,9 +22,10 @@ class flyball_state : public driver_device
 {
 public:
 	flyball_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_playfield_ram(*this, "playfield_ram"),
-		m_rombase(*this, "rombase"){ }
+		m_rombase(*this, "rombase"),
+		m_maincpu(*this, "maincpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_playfield_ram;
@@ -43,7 +44,7 @@ public:
 	UINT8    m_potsense;
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	DECLARE_READ8_MEMBER(flyball_input_r);
 	DECLARE_READ8_MEMBER(flyball_scanline_r);
 	DECLARE_READ8_MEMBER(flyball_potsense_r);
@@ -374,7 +375,6 @@ void flyball_state::palette_init()
 
 void flyball_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	save_item(NAME(m_pitcher_vert));
 	save_item(NAME(m_pitcher_horz));
@@ -395,7 +395,7 @@ void flyball_state::machine_reset()
 	for (i = 0; i < 0x1000; i++)
 		m_rombase[i] = ROM[i ^ 0x1ff];
 
-	machine().device("maincpu")->reset();
+	m_maincpu->reset();
 
 	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), timer_expired_delegate(FUNC(flyball_state::flyball_quarter_callback),this));
 

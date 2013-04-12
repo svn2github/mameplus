@@ -81,9 +81,9 @@ TIMER_DEVICE_CALLBACK_MEMBER(overdriv_state::overdriv_cpuA_scanline)
 	/* TODO: irqs routines are TOO slow right now, it ends up firing spurious irqs for whatever reason (shared ram fighting?) */
 	/*       this is a temporary solution to get rid of deprecat lib and the crashes, but also makes the game timer to be too slow */
 	if(scanline == 256 && machine().primary_screen->frame_number() & 1) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 	else if((scanline % 128) == 0) // timer irq
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(overdriv_state::cpuB_interrupt)
@@ -279,9 +279,6 @@ static const k051316_interface overdriv_k051316_intf_2 =
 
 void overdriv_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_subcpu = machine().device<cpu_device>("sub");
 	m_k051316_1 = machine().device("k051316_1");
 	m_k051316_2 = machine().device("k051316_2");
 	m_k053260_1 = machine().device("k053260_1");
@@ -305,7 +302,7 @@ void overdriv_state::machine_reset()
 	m_road_colorbase[1] = 0;
 
 	/* start with cpu B halted */
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 static const k053252_interface overdriv_k053252_intf =

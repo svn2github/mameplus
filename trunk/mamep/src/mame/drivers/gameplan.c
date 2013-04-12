@@ -185,7 +185,7 @@ WRITE_LINE_MEMBER(gameplan_state::r6532_irq)
 
 WRITE8_MEMBER(gameplan_state::r6532_soundlatch_w)
 {
-	address_space &progspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &progspace = m_maincpu->space(AS_PROGRAM);
 	soundlatch_byte_w(progspace, 0, data);
 }
 
@@ -973,8 +973,6 @@ static const ay8910_interface ay8910_config =
 
 MACHINE_START_MEMBER(gameplan_state,gameplan)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_riot = machine().device("riot");
 
 	/* register for save states */

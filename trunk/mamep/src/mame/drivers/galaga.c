@@ -740,13 +740,13 @@ WRITE8_MEMBER(galaga_state::bosco_latch_w)
 		case 0x00:  /* IRQ1 */
 			m_main_irq_mask = data & 1;
 			if (!m_main_irq_mask)
-				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+				m_maincpu->set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x01:  /* IRQ2 */
 			m_sub_irq_mask = data & 1;
 			if (!m_sub_irq_mask)
-				machine().device("sub")->execute().set_input_line(0, CLEAR_LINE);
+				m_subcpu->set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x02:  /* NMION */
@@ -754,8 +754,8 @@ WRITE8_MEMBER(galaga_state::bosco_latch_w)
 			break;
 
 		case 0x03:  /* RESET */
-			machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
-			machine().device("sub2")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			m_subcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			m_subcpu2->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x04:  /* n.c. */
@@ -860,7 +860,7 @@ TIMER_CALLBACK_MEMBER(galaga_state::cpu3_interrupt_callback)
 	int scanline = param;
 
 	if(m_sub2_nmi_mask)
-		nmi_line_pulse(machine().device("sub2")->execute());
+		nmi_line_pulse(m_subcpu2);
 
 	scanline = scanline + 128;
 	if (scanline >= 272)
@@ -884,7 +884,7 @@ MACHINE_START_MEMBER(galaga_state,galaga)
 
 void galaga_state::bosco_latch_reset()
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
@@ -3307,7 +3307,7 @@ DRIVER_INIT_MEMBER(galaga_state,gatsbee)
 	DRIVER_INIT_CALL(galaga);
 
 	/* Gatsbee has a larger character ROM, we need a handler for banking */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x1000, 0x1000, write8_delegate(FUNC(galaga_state::gatsbee_bank_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x1000, 0x1000, write8_delegate(FUNC(galaga_state::gatsbee_bank_w),this));
 }
 
 
@@ -3348,8 +3348,8 @@ DRIVER_INIT_MEMBER(xevious_state,xevios)
 DRIVER_INIT_MEMBER(xevious_state,battles)
 {
 	/* replace the Namco I/O handlers with interface to the 4th CPU */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x7000, 0x700f, read8_delegate(FUNC(xevious_state::battles_customio_data0_r),this), write8_delegate(FUNC(xevious_state::battles_customio_data0_w),this) );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x7100, 0x7100, read8_delegate(FUNC(xevious_state::battles_customio0_r),this), write8_delegate(FUNC(xevious_state::battles_customio0_w),this) );
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x7000, 0x700f, read8_delegate(FUNC(xevious_state::battles_customio_data0_r),this), write8_delegate(FUNC(xevious_state::battles_customio_data0_w),this) );
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x7100, 0x7100, read8_delegate(FUNC(xevious_state::battles_customio0_r),this), write8_delegate(FUNC(xevious_state::battles_customio0_w),this) );
 
 	DRIVER_INIT_CALL(xevious);
 }

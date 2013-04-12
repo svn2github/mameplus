@@ -47,7 +47,10 @@ class sothello_state : public driver_device
 public:
 	sothello_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_v9938(*this, "v9938") { }
+			m_v9938(*this, "v9938") ,
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_device<v9938_device> m_v9938;
 
@@ -72,6 +75,12 @@ public:
 	TIMER_CALLBACK_MEMBER(subcpu_suspend);
 	TIMER_CALLBACK_MEMBER(subcpu_resume);
 	TIMER_DEVICE_CALLBACK_MEMBER(sothello_interrupt);
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	DECLARE_WRITE_LINE_MEMBER(adpcm_int);
+	DECLARE_WRITE_LINE_MEMBER(sothello_vdp_interrupt);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	required_device<cpu_device> m_subcpu;
 };
 
 
@@ -108,7 +117,7 @@ TIMER_CALLBACK_MEMBER(sothello_state::subcpu_suspend)
 TIMER_CALLBACK_MEMBER(sothello_state::subcpu_resume)
 {
 	machine().device<cpu_device>("sub")->resume(SUSPEND_REASON_HALT);
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 READ8_MEMBER(sothello_state::subcpu_halt_set)
@@ -192,7 +201,7 @@ WRITE8_MEMBER(sothello_state::soundcpu_busyflag_reset_w)
 
 WRITE8_MEMBER(sothello_state::soundcpu_int_clear_w)
 {
-	machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE );
+	m_soundcpu->set_input_line(0, CLEAR_LINE );
 }
 
 static ADDRESS_MAP_START( soundcpu_mem_map, AS_PROGRAM, 8, sothello_state )
@@ -308,14 +317,14 @@ static INPUT_PORTS_START( sothello )
 	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(sothello_state::irqhandler)
 {
-	device->machine().device("sub")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_subcpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static void sothello_vdp_interrupt(device_t *, v99x8_device &device, int i)
+WRITE_LINE_MEMBER(sothello_state::sothello_vdp_interrupt)
 {
-	device.machine().device("maincpu")->execute().set_input_line(0, (i ? HOLD_LINE : CLEAR_LINE));
+	m_maincpu->set_input_line(0, (state ? HOLD_LINE : CLEAR_LINE));
 }
 
 TIMER_DEVICE_CALLBACK_MEMBER(sothello_state::sothello_interrupt)
@@ -323,18 +332,17 @@ TIMER_DEVICE_CALLBACK_MEMBER(sothello_state::sothello_interrupt)
 	m_v9938->interrupt();
 }
 
-static void adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(sothello_state::adpcm_int)
 {
-	sothello_state *state = device->machine().driver_data<sothello_state>();
 	/* only 4 bits are used */
-	msm5205_data_w( device, state->m_msm_data & 0x0f );
-	device->machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE );
+	msm5205_data_w(machine().device("msm"), m_msm_data & 0x0f );
+	m_soundcpu->set_input_line(0, ASSERT_LINE );
 }
 
 
 static const msm5205_interface msm_interface =
 {
-	adpcm_int,      /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(sothello_state,adpcm_int),      /* interrupt function */
 	MSM5205_S48_4B  /* changed on the fly */
 };
 
@@ -352,7 +360,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_NULL,
 		DEVCB_NULL,
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(sothello_state,irqhandler)
 };
 
 static MACHINE_CONFIG_START( sothello, sothello_state )
@@ -374,7 +382,7 @@ static MACHINE_CONFIG_START( sothello, sothello_state )
 
 	/* video hardware */
 	MCFG_V9938_ADD("v9938", "screen", VDP_MEM)
-	MCFG_V99X8_INTERRUPT_CALLBACK_STATIC(sothello_vdp_interrupt)
+	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(sothello_state,sothello_vdp_interrupt))
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)

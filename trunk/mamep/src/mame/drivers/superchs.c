@@ -80,8 +80,8 @@ WRITE32_MEMBER(superchs_state::cpua_ctrl_w)
 
 	if (ACCESSING_BITS_8_15)
 	{
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data &0x200) ? CLEAR_LINE : ASSERT_LINE);
-		if (data&0x8000) machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE); /* Guess */
+		m_subcpu->set_input_line(INPUT_LINE_RESET, (data &0x200) ? CLEAR_LINE : ASSERT_LINE);
+		if (data&0x8000) m_maincpu->set_input_line(3, HOLD_LINE); /* Guess */
 	}
 
 	if (ACCESSING_BITS_0_7)
@@ -139,10 +139,9 @@ WRITE32_MEMBER(superchs_state::superchs_input_w)
 
 			if (ACCESSING_BITS_0_7)
 			{
-				eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-				eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-				eeprom->write_bit(data & 0x40);
-				eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+				m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+				m_eeprom->write_bit(data & 0x40);
+				m_eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 				return;
 			}
 
@@ -181,7 +180,7 @@ WRITE32_MEMBER(superchs_state::superchs_stick_w)
 	    different byte in this long word before the RTE.  I assume all but the last
 	    (top) byte cause an IRQ with the final one being an ACK.  (Total guess but it works). */
 	if (mem_mask != 0xff000000)
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 /***********************************************************
@@ -452,8 +451,8 @@ READ16_MEMBER(superchs_state::sub_cycle_r)
 DRIVER_INIT_MEMBER(superchs_state,superchs)
 {
 	/* Speedup handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x100000, 0x100003, read32_delegate(FUNC(superchs_state::main_cycle_r),this));
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x80000a, 0x80000b, read16_delegate(FUNC(superchs_state::sub_cycle_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x100000, 0x100003, read32_delegate(FUNC(superchs_state::main_cycle_r),this));
+	m_subcpu->space(AS_PROGRAM).install_read_handler(0x80000a, 0x80000b, read16_delegate(FUNC(superchs_state::sub_cycle_r),this));
 }
 
 GAMEL( 1992, superchs,         0, superchs, superchs, superchs_state, superchs, ROT0, "Taito America Corporation", "Super Chase - Criminal Termination (US)", 0, layout_superchs )

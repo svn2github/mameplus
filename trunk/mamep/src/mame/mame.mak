@@ -61,6 +61,7 @@ CPUS += V30MZ
 CPUS += V60
 CPUS += MCS48
 CPUS += MCS51
+CPUS += MCS96
 CPUS += M6800
 CPUS += M6805
 CPUS += HD6309
@@ -71,6 +72,9 @@ CPUS += T11
 CPUS += S2650
 CPUS += TMS340X0
 CPUS += TMS9900
+CPUS += TMS9995
+CPUS += TMS9900L
+CPUS += TMS9995L
 CPUS += Z8000
 CPUS += Z8001
 CPUS += TMS32010
@@ -144,6 +148,8 @@ CPUS += HCD62121
 CPUS += PPS4
 CPUS += UPD7725
 CPUS += HD61700
+CPUS += LC8670
+CPUS += ES5510
 CPUS += SCUDSP
 
 #-------------------------------------------------
@@ -250,9 +256,20 @@ SOUNDS += MOS656X
 SOUNDS += S2636
 SOUNDS += ASC
 SOUNDS += MAS3507D
+SOUNDS += SOCRATES
+SOUNDS += TMC0285
+SOUNDS += TMS5200
+SOUNDS += CD2801
+SOUNDS += CD2802
+SOUNDS += M58817
+SOUNDS += TMC0281
+SOUNDS += TMS5100
+SOUNDS += TMS5110A
 SOUNDS += LMC1992
 SOUNDS += AWACS
 SOUNDS += YMZ770
+SOUNDS += T6721A
+SOUNDS += MOS7360
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -2420,8 +2437,8 @@ $(VIDEO)/n64.o:		$(MAMESRC)/video/rdpfiltr.c
 $(DRIVERS)/bfm_sc4.o:   $(MAMESRC)/includes/bfm_sc45.h
 $(DRIVERS)/bfm_sc5.o:   $(MAMESRC)/includes/bfm_sc45.h
 $(DRIVERS)/namcos2.o:   $(MAMESRC)/includes/namcos2.h
-$(MACHINE)/namcos2.o:   $(MAMESRC)/includes/namcos2.h 
-$(VIDEO)/namcos2.o:     $(MAMESRC)/includes/namcos2.h 
+$(MACHINE)/namcos2.o:   $(MAMESRC)/includes/namcos2.h
+$(VIDEO)/namcos2.o:     $(MAMESRC)/includes/namcos2.h
 
 #-------------------------------------------------
 # mamep: driver list dependencies

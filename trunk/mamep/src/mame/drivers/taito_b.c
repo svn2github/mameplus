@@ -1890,15 +1890,14 @@ GFXDECODE_END
 
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(taitob_state::irqhandler)
 {
-	taitob_state *state = device->machine().driver_data<taitob_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(taitob_state,irqhandler)
 };
 
 static const ym2203_interface ym2203_config =
@@ -1911,7 +1910,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_DRIVER_MEMBER(taitob_state, bankswitch_w),
 		DEVCB_NULL,
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(taitob_state,irqhandler)
 };
 
 /*
@@ -2002,8 +2001,6 @@ static const tc0140syt_interface taitob_tc0140syt_intf =
 
 void taitob_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_mb87078 = machine().device("mb87078");
 	m_ym = machine().device("ymsnd");
 	m_tc0180vcu = machine().device("tc0180vcu");

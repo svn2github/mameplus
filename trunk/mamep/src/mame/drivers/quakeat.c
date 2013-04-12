@@ -68,7 +68,8 @@ class quakeat_state : public driver_device
 {
 public:
 	quakeat_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	device_t    *m_pic8259_1;
 	device_t    *m_pic8259_2;
@@ -78,6 +79,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_quake(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	IRQ_CALLBACK_MEMBER(irq_callback);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -121,7 +123,7 @@ ADDRESS_MAP_END
 
 WRITE_LINE_MEMBER(quakeat_state::quakeat_pic8259_1_set_int_line)
 {
-	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(quakeat_state::get_slave_ack)
@@ -160,7 +162,7 @@ IRQ_CALLBACK_MEMBER(quakeat_state::irq_callback)
 
 void quakeat_state::machine_start()
 {
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(quakeat_state::irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(quakeat_state::irq_callback),this));
 
 	m_pic8259_1 = machine().device( "pic8259_1" );
 	m_pic8259_2 = machine().device( "pic8259_2" );

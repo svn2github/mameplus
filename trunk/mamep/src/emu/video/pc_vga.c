@@ -154,6 +154,11 @@ s3_vga_device::s3_vga_device(const machine_config &mconfig, const char *tag, dev
 {
 }
 
+s3_vga_device::s3_vga_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: ati_vga_device(mconfig, type, name, tag, owner, clock)
+{
+}
+
 gamtor_vga_device::gamtor_vga_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: svga_device(mconfig, GAMTOR_VGA, "GAMTOR_VGA", tag, owner, clock)
 {
@@ -216,9 +221,9 @@ void vga_device::device_start()
 
 	// copy over interfaces
 	vga.read_dipswitch = read8_delegate(); //read_dipswitch;
-	vga.svga_intf.vram_size = 0x100000;
 	vga.svga_intf.seq_regcount = 0x05;
 	vga.svga_intf.crtc_regcount = 0x19;
+	vga.svga_intf.vram_size = 0x100000;
 
 	vga.memory  = auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
 
@@ -245,9 +250,9 @@ void cirrus_vga_device::device_start()
 
 	// copy over interfaces
 	vga.read_dipswitch = read8_delegate(); //read_dipswitch;
-	vga.svga_intf.vram_size = 0x200000;
 	vga.svga_intf.seq_regcount = 0x08;
 	vga.svga_intf.crtc_regcount = 0x19;
+	vga.svga_intf.vram_size = 0x200000;
 
 	vga.memory  = auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
 
@@ -273,6 +278,11 @@ void s3_vga_device::device_start()
 		s3.cursor_bg[x] = 0x00;
 	}
 	m_8514 = subdevice<ibm8514a_device>("8514a");
+	// set device ID
+	s3.id_high = 0x88;  // CR2D
+	s3.id_low = 0x11;   // CR2E
+	s3.revision = 0x00; // CR2F
+	s3.id_cr30 = 0xc0;  // CR30
 }
 
 void tseng_vga_device::device_start()
@@ -324,7 +334,7 @@ void vga_device::vga_vh_text(bitmap_rgb32 &bitmap, const rectangle &cliprect)
 			ch   = vga.memory[(pos<<1) + 0];
 			attr = vga.memory[(pos<<1) + 1];
 			font_base = 0x20000+(ch<<5);
-			font_base += ((attr & 8) ? vga.sequencer.char_sel.B : vga.sequencer.char_sel.A)*0x2000;
+			font_base += ((attr & 8) ? vga.sequencer.char_sel.A : vga.sequencer.char_sel.B)*0x2000;
 			blink_en = (vga.attribute.data[0x10]&8&&machine().primary_screen->frame_number() & 0x20) ? attr & 0x80 : 0;
 
 			fore_col = attr & 0xf;
@@ -1282,18 +1292,17 @@ void vga_device::recompute_params_clock(int divisor, int xtal)
 	pixel_clock = xtal / (((vga.sequencer.data[1]&8) >> 3) + 1);
 
 	refresh  = HZ_TO_ATTOSECONDS(pixel_clock) * (hblank_period) * vblank_period;
-
 	machine().primary_screen->configure((hblank_period), (vblank_period), visarea, refresh );
-//  popmessage("%d %d\n",vga.crtc.horz_total * 8,vga.crtc.vert_total);
-
+	//popmessage("%d %d\n",vga.crtc.horz_total * 8,vga.crtc.vert_total);
 	m_vblank_timer->adjust( machine().primary_screen->time_until_pos(vga.crtc.vert_blank_start) );
 }
 
 void vga_device::recompute_params()
 {
-	recompute_params_clock(1, (vga.miscellaneous_output & 0xc) ? XTAL_28_63636MHz : XTAL_25_1748MHz);
 	if(vga.miscellaneous_output & 8)
 		logerror("Warning: VGA external clock latch selected\n");
+	else
+		recompute_params_clock(1, (vga.miscellaneous_output & 0xc) ? XTAL_28_63636MHz : XTAL_25_1748MHz);
 }
 
 void vga_device::crtc_reg_write(UINT8 index, UINT8 data)
@@ -1301,7 +1310,6 @@ void vga_device::crtc_reg_write(UINT8 index, UINT8 data)
 	/* Doom does this */
 //  if(vga.crtc.protect_enable && index <= 0x07)
 //      printf("write to protected address %02x\n",index);
-
 	switch(index)
 	{
 		case 0x00:
@@ -1478,16 +1486,16 @@ UINT8 vga_device::vga_vblank()
 	if(vblank_end > vga.crtc.vert_total)
 	{
 		vblank_end -= vga.crtc.vert_total;
-		if(vpos >= vblank_start || vpos < vblank_end)
+		if(vpos >= vblank_start || vpos <= vblank_end)
 			res = 1;
 	}
 	else
 	{
-		if(vpos >= vblank_start && vpos < vblank_end)
+		if(vpos >= vblank_start && vpos <= vblank_end)
 			res = 1;
 	}
 
-//  popmessage("%d %d %d",vblank_start,vblank_end,vga.crtc.vert_total);
+	//popmessage("%d %d %d - SR1=%02x",vblank_start,vblank_end,vga.crtc.vert_total,vga.sequencer.data[1]);
 
 	return res;
 }
@@ -2651,17 +2659,16 @@ UINT8 s3_vga_device::s3_crtc_reg_read(UINT8 index)
 		switch(index)
 		{
 			case 0x2d:
-				res = 0x88;  // always?
+				res = s3.id_high;
 				break;
 			case 0x2e:
-				res = 0x11;  // Trio64
+				res = s3.id_low;
 				break;
 			case 0x2f:
-				res = 0x00;
+				res = s3.revision;
 				break;
 			case 0x30: // CR30 Chip ID/REV register
-				//res = 0xe1; // BIOS is from a card with the 764 chipset (Trio64), should be 0xe0 or 0xe1, but the Vision 330 driver in win95 doesn't like that
-				res = 0xc0; // But win95 wants this...
+				res = s3.id_cr30;
 				break;
 			case 0x31:
 				res = s3.memory_config;
@@ -2715,6 +2722,7 @@ UINT8 s3_vga_device::s3_crtc_reg_read(UINT8 index)
 				break;
 			case 0x51:
 				res = (vga.crtc.start_addr_latch & 0x0c0000) >> 18;
+				res |= ((svga.bank_w & 0x30) >> 2);
 				break;
 			case 0x55:
 				res = s3.extended_dac_ctrl;
@@ -4822,14 +4830,14 @@ WRITE8_MEMBER(s3_vga_device::mem_w)
 		if(offset & 0x10000)
 			return;
 		if(vga.sequencer.data[4] & 0x8)
-			vga.memory[offset + (svga.bank_w*0x10000)] = data;
+			vga.memory[(offset + (svga.bank_w*0x10000)) % vga.svga_intf.vram_size] = data;
 		else
 		{
 			int i;
 			for(i=0;i<4;i++)
 			{
 				if(vga.sequencer.map_mask & 1 << i)
-					vga.memory[offset*4+i+(svga.bank_w*0x10000)] = data;
+					vga.memory[(offset*4+i+(svga.bank_w*0x10000)) % vga.svga_intf.vram_size] = data;
 			}
 		}
 		return;
@@ -5433,7 +5441,7 @@ void cirrus_vga_device::cirrus_define_video_mode()
 	}
 }
 
-	UINT8 cirrus_vga_device::cirrus_seq_reg_read(UINT8 index)
+UINT8 cirrus_vga_device::cirrus_seq_reg_read(UINT8 index)
 {
 	UINT8 res;
 

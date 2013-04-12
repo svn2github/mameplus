@@ -70,7 +70,7 @@ WRITE8_MEMBER(tbowl_state::shared_w)
 WRITE8_MEMBER(tbowl_state::tbowl_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -123,7 +123,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(tbowl_state::tbowl_trigger_nmi)
 {
 	/* trigger NMI on 6206B's Cpu? (guess but seems to work..) */
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( 6206C_map, AS_PROGRAM, 8, tbowl_state )
@@ -161,25 +161,33 @@ WRITE8_MEMBER(tbowl_state::tbowl_adpcm_vol_w)
 	msm5205_set_volume(adpcm, (data & 0x7f) * 100 / 0x7f);
 }
 
-static void tbowl_adpcm_int(device_t *device)
+void tbowl_state::tbowl_adpcm_int( device_t *device, int num )
 {
-	tbowl_state *state = device->machine().driver_data<tbowl_state>();
-	int num = (strcmp(device->tag(), ":msm1") == 0) ? 0 : 1;
-	if (state->m_adpcm_pos[num] >= state->m_adpcm_end[num] ||
-				state->m_adpcm_pos[num] >= state->memregion("adpcm")->bytes()/2)
+	if (m_adpcm_pos[num] >= m_adpcm_end[num] ||
+				m_adpcm_pos[num] >= memregion("adpcm")->bytes()/2)
 		msm5205_reset_w(device,1);
-	else if (state->m_adpcm_data[num] != -1)
+	else if (m_adpcm_data[num] != -1)
 	{
-		msm5205_data_w(device,state->m_adpcm_data[num] & 0x0f);
-		state->m_adpcm_data[num] = -1;
+		msm5205_data_w(device,m_adpcm_data[num] & 0x0f);
+		m_adpcm_data[num] = -1;
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base() + 0x10000 * num;
+		UINT8 *ROM = machine().root_device().memregion("adpcm")->base() + 0x10000 * num;
 
-		state->m_adpcm_data[num] = ROM[state->m_adpcm_pos[num]++];
-		msm5205_data_w(device,state->m_adpcm_data[num] >> 4);
+		m_adpcm_data[num] = ROM[m_adpcm_pos[num]++];
+		msm5205_data_w(device,m_adpcm_data[num] >> 4);
 	}
+}
+
+WRITE_LINE_MEMBER(tbowl_state::tbowl_adpcm_int_1)
+{
+	tbowl_adpcm_int(machine().device("msm1"), 0);
+}
+
+WRITE_LINE_MEMBER(tbowl_state::tbowl_adpcm_int_2)
+{
+	tbowl_adpcm_int(machine().device("msm2"), 1);
 }
 
 static ADDRESS_MAP_START( 6206A_map, AS_PROGRAM, 8, tbowl_state )
@@ -419,19 +427,25 @@ GFXDECODE_END
 
 */
 
-static void irqhandler(device_t *device, int linestate)
+WRITE_LINE_MEMBER(tbowl_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, linestate);
+	m_audiocpu->set_input_line(0, state);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(tbowl_state,irqhandler)
 };
 
-static const msm5205_interface msm5205_config =
+static const msm5205_interface msm5205_config_1 =
 {
-	tbowl_adpcm_int,    /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(tbowl_state,tbowl_adpcm_int_1),    /* interrupt function */
+	MSM5205_S48_4B      /* 8KHz               */
+};
+
+static const msm5205_interface msm5205_config_2 =
+{
+	DEVCB_DRIVER_LINE_MEMBER(tbowl_state,tbowl_adpcm_int_2),    /* interrupt function */
 	MSM5205_S48_4B      /* 8KHz               */
 };
 
@@ -505,11 +519,11 @@ static MACHINE_CONFIG_START( tbowl, tbowl_state )
 
 	/* something for the samples? */
 	MCFG_SOUND_ADD("msm1", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("msm2", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 

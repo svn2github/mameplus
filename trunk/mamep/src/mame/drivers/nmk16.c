@@ -206,7 +206,7 @@ WRITE16_MEMBER(nmk16_state::ssmissin_sound_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
-		machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+		m_audiocpu->set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -264,7 +264,7 @@ WRITE16_MEMBER(nmk16_state::macross2_sound_reset_w)
 {
 	/* PCB behaviour verified by Corrado Tomaselli at MAME Italia Forum:
 	   every time music changes Z80 is resetted */
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE16_MEMBER(nmk16_state::macross2_sound_command_w)
@@ -303,7 +303,7 @@ WRITE16_MEMBER(nmk16_state::afega_soundlatch_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data&0xff);
-		machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+		m_audiocpu->set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -3501,9 +3501,9 @@ static const ym2203_interface ym2203_nmk004_interface =
 	DEVCB_LINE(NMK004_irq)
 };
 
-static void ym2203_irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(nmk16_state::ym2203_irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -3513,7 +3513,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(ym2203_irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(nmk16_state,ym2203_irqhandler)
 };
 
 TIMER_DEVICE_CALLBACK_MEMBER(nmk16_state::nmk16_scanline)
@@ -3521,12 +3521,12 @@ TIMER_DEVICE_CALLBACK_MEMBER(nmk16_state::nmk16_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	/* This is either vblank-in or sprite dma irq complete, Vandyke definitely relies that irq fires at scanline ~0 instead of 112 (as per previous
 	   cpu_getiloops function implementation), mostly noticeable with sword collisions and related attract mode behaviour. */
 	if(scanline == 0)
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 /* bee-oh board, almost certainly it has different timings */
@@ -3535,11 +3535,11 @@ TIMER_DEVICE_CALLBACK_MEMBER(nmk16_state::manybloc_scanline)
 	int scanline = param;
 
 	if(scanline == 248) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	/* This is either vblank-in or sprite dma irq complete */
 	if(scanline == 0)
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 
@@ -4570,8 +4570,8 @@ DRIVER_INIT_MEMBER(nmk16_state,bjtwin)
 READ16_MEMBER(nmk16_state::vandykeb_r){ return 0x0000; }
 DRIVER_INIT_MEMBER(nmk16_state,vandykeb)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x08000e, 0x08000f, read16_delegate(FUNC(nmk16_state::vandykeb_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0x08001e, 0x08001f);
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x08000e, 0x08000f, read16_delegate(FUNC(nmk16_state::vandykeb_r),this));
+	m_maincpu->space(AS_PROGRAM).nop_write(0x08001e, 0x08001f);
 }
 
 
@@ -4669,11 +4669,10 @@ WRITE16_MEMBER(nmk16_state::twinactn_flipscreen_w)
 ***************************************************************************/
 WRITE8_MEMBER(nmk16_state::spec2k_oki1_banking_w)
 {
-	device_t *device = machine().device("oki2");
 	if(data == 0xfe)
-		downcast<okim6295_device *>(device)->set_bank_base(0);
+		m_oki2->set_bank_base(0);
 	else if(data == 0xff)
-		downcast<okim6295_device *>(device)->set_bank_base(0x40000);
+		m_oki2->set_bank_base(0x40000);
 }
 
 static ADDRESS_MAP_START( afega_sound_cpu, AS_PROGRAM, 8, nmk16_state )
@@ -4699,8 +4698,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(nmk16_state::twinactn_oki_bank_w)
 {
-	device_t *device = machine().device("oki1");
-	downcast<okim6295_device *>(device)->set_bank_base((data & 3) * 0x40000);
+	m_oki1->set_bank_base((data & 3) * 0x40000);
 
 	if (data & (~3))
 		logerror("%s: invalid oki bank %02x\n", machine().describe_context(), data);

@@ -2899,28 +2899,26 @@ Interface B is for games which lack a Z80 (Spacegun, Bshark).
 **************************************************************/
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(taitoz_state::irqhandler)
 {
-	taitoz_state *state = device->machine().driver_data<taitoz_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandlerb(device_t *device, int irq)
+WRITE_LINE_MEMBER(taitoz_state::irqhandlerb)
 {
 	// DG: this is probably specific to Z80 and wrong?
-//  taitoz_state *state = device->machine().driver_data<taitoz_state>();
-//  state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+//  m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(taitoz_state,irqhandler)
 };
 
 static const ym2610_interface ym2610_interfaceb =
 {
-	irqhandlerb
+	DEVCB_DRIVER_LINE_MEMBER(taitoz_state,irqhandlerb)
 };
 
 
@@ -3031,10 +3029,6 @@ void taitoz_state::taitoz_postload()
 
 MACHINE_START_MEMBER(taitoz_state,bshark)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_subcpu = machine().device<cpu_device>("sub");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_eeprom = machine().device<eeprom_device>("eeprom");
 	m_tc0100scn = machine().device("tc0100scn");
 	m_tc0150rod = machine().device("tc0150rod");
 	m_tc0480scp = machine().device("tc0480scp");

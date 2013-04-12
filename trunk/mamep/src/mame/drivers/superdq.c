@@ -33,7 +33,8 @@ public:
 	superdq_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			m_laserdisc(*this, "laserdisc") ,
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_device<pioneer_ldv1000_device> m_laserdisc;
 	UINT8 m_ld_in_latch;
@@ -53,6 +54,7 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_superdq(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(superdq_vblank);
+	required_device<cpu_device> m_maincpu;
 };
 
 TILE_GET_INFO_MEMBER(superdq_state::get_tile_info)
@@ -155,7 +157,7 @@ WRITE8_MEMBER(superdq_state::superdq_io_w)
 	static const UINT8 black_color_entries[] = {7,15,16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
 
 	if ( data & 0x40 ) /* bit 6 = irqack */
-		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 
 	coin_counter_w( machine(), 0, data & 0x08 );
 	coin_counter_w( machine(), 1, data & 0x04 );

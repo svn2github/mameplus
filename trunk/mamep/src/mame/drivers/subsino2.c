@@ -77,10 +77,12 @@ class subsino2_state : public driver_device
 {
 public:
 	subsino2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_outputs16(*this, "outputs16"),
 		m_outputs(*this, "outputs"),
-		m_am188em_regs(*this, "am188em_regs"){ }
+		m_am188em_regs(*this, "am188em_regs"),
+		m_maincpu(*this, "maincpu"),
+		m_oki(*this, "oki") { }
 
 	UINT8 *m_hm86171_colorram;
 	layer_t m_layers[2];
@@ -168,6 +170,8 @@ public:
 	INTERRUPT_GEN_MEMBER(am188em_int0_irq);
 	TIMER_DEVICE_CALLBACK_MEMBER(am188em_timer2_irq);
 	TIMER_DEVICE_CALLBACK_MEMBER(h8_timer_irq);
+	required_device<cpu_device> m_maincpu;
+	optional_device<okim6295_device> m_oki;
 };
 
 
@@ -817,18 +821,14 @@ READ8_MEMBER(subsino2_state::vblank_bit6_r)
 
 WRITE8_MEMBER(subsino2_state::oki_bank_bit0_w)
 {
-	device_t *device = machine().device("oki");
 	// it writes 0x32 or 0x33
-	okim6295_device *oki = downcast<okim6295_device *>(device);
-	oki->set_bank_base((data & 1) * 0x40000);
+	m_oki->set_bank_base((data & 1) * 0x40000);
 }
 
 WRITE8_MEMBER(subsino2_state::oki_bank_bit4_w)
 {
-	device_t *device = machine().device("oki");
 	// it writes 0x23 or 0x33
-	okim6295_device *oki = downcast<okim6295_device *>(device);
-	oki->set_bank_base(((data >> 4) & 1) * 0x40000);
+	m_oki->set_bank_base(((data >> 4) & 1) * 0x40000);
 }
 
 
@@ -874,7 +874,7 @@ INTERRUPT_GEN_MEMBER(subsino2_state::am188em_int0_irq)
 TIMER_DEVICE_CALLBACK_MEMBER(subsino2_state::am188em_timer2_irq)
 {
 	if ((m_am188em_regs[AM188EM_IMASK+0] & 0x01) == 0)  // TMR mask
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x4c/4);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x4c/4);
 }
 
 /***************************************************************************
@@ -884,7 +884,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(subsino2_state::am188em_timer2_irq)
 // To be removed when cpu core is updated
 TIMER_DEVICE_CALLBACK_MEMBER(subsino2_state::h8_timer_irq)
 {
-	machine().device("maincpu")->execute().set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
+	m_maincpu->set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 

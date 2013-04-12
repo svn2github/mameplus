@@ -26,7 +26,7 @@ class backfire_state : public driver_device
 {
 public:
 	backfire_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_mainram(*this, "mainram"),
 		m_left_priority(*this, "left_priority"),
 		m_right_priority(*this, "right_priority"),
@@ -104,6 +104,7 @@ public:
 	required_ioport m_io_in1;
 	required_ioport m_io_in2;
 	required_ioport m_io_in3;
+	DECLARE_WRITE_LINE_MEMBER(sound_irq_gen);
 };
 
 //UINT32 *backfire_180010, *backfire_188010;
@@ -436,14 +437,14 @@ static GFXDECODE_START( backfire )
 GFXDECODE_END
 
 
-static void sound_irq_gen(device_t *device, int state)
+WRITE_LINE_MEMBER(backfire_state::sound_irq_gen)
 {
 	logerror("sound irq\n");
 }
 
 static const ymz280b_interface ymz280b_intf =
 {
-	sound_irq_gen
+	DEVCB_DRIVER_LINE_MEMBER(backfire_state,sound_irq_gen)
 };
 
 INTERRUPT_GEN_MEMBER(backfire_state::deco32_vbl_interrupt)

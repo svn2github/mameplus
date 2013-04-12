@@ -72,8 +72,8 @@ public:
 		m_mainram(*this, "mainram"),
 		m_spriteram(*this, "spriteram"),
 		m_textram(*this, "textram"),
-		m_spritebank(*this, "spritebank")
-	{ }
+		m_spritebank(*this, "spritebank"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_mainram;
 	required_shared_ptr<UINT8> m_spriteram;
@@ -101,6 +101,7 @@ public:
 	UINT32 screen_update_panicr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(panicr_scanline);
 	void draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect );
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -495,10 +496,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(panicr_state::panicr_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc4/4);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xc4/4);
 
 	if(scanline == 0) // <unknown>
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);
 }
 
 static MACHINE_CONFIG_START( panicr, panicr_state )

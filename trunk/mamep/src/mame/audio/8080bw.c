@@ -16,8 +16,6 @@
 
 MACHINE_START_MEMBER(_8080bw_state,extra_8080bw_sh)
 {
-	m_speaker = machine().device("speaker");
-
 	save_item(NAME(m_port_1_last_extra));
 	save_item(NAME(m_port_2_last_extra));
 	save_item(NAME(m_port_3_last_extra));
@@ -991,7 +989,7 @@ MACHINE_START_MEMBER(_8080bw_state,schaser_sh)
 
 MACHINE_RESET_MEMBER(_8080bw_state,schaser_sh)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	m_schaser_effect_555_is_low = 0;
 	m_schaser_effect_555_timer->adjust(attotime::never);

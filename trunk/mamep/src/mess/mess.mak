@@ -132,6 +132,7 @@ $(MESSOBJ)/nintendo.a:          \
 	$(MESS_MACHINE)/sns_spc7110.o \
 	$(MESS_MACHINE)/sns_sufami.o\
 	$(MESS_MACHINE)/sns_upd.o   \
+	$(MESS_MACHINE)/sns_event.o  \
 	$(MESS_DRIVERS)/snes.o      \
 	$(MESS_AUDIO)/gb.o          \
 	$(MESS_VIDEO)/gb.o          \
@@ -173,7 +174,6 @@ $(MESSOBJ)/sony.a:              \
 	$(MESS_DRIVERS)/psx.o       \
 	$(MESS_MACHINE)/psxcport.o  \
 	$(MESS_MACHINE)/psxcd.o     \
-	$(MESS_MACHINE)/psxcddrv.o  \
 	$(MESS_MACHINE)/psxcard.o   \
 	$(MESS_MACHINE)/psxanalog.o \
 	$(MESS_DRIVERS)/pockstat.o  \

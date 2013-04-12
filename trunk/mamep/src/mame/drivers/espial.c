@@ -54,8 +54,6 @@ void espial_state::machine_reset()
 
 void espial_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	//state_save_register_global_array(machine(), mcu_out[1]);
 	save_item(NAME(m_sound_nmi_enabled));
@@ -78,10 +76,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(espial_state::espial_scanline)
 	int scanline = param;
 
 	if(scanline == 240 && m_main_nmi_enabled) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if(scanline == 16) // timer irq, checks soundlatch port then updates some sound related work RAM buffers
-		machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
 

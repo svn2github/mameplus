@@ -331,7 +331,10 @@ public:
 		: driver_device(mconfig, type, tag),
 			m_workram(*this, "workram"),
 			m_sharc_dataram0(*this, "sharc_dataram0"),
-			m_sharc_dataram1(*this, "sharc_dataram1") { }
+			m_sharc_dataram1(*this, "sharc_dataram1") ,
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_eeprom(*this, "eeprom")  { }
 
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
@@ -375,6 +378,9 @@ public:
 	int jvs_encode_data(UINT8 *in, int length);
 	int jvs_decode_data(UINT8 *in, UINT8 *out, int length);
 	void jamma_jvs_cmd_exec();
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<eeprom_device> m_eeprom;
 };
 
 
@@ -473,8 +479,6 @@ READ8_MEMBER(hornet_state::sysreg_r)
 	UINT8 r = 0;
 	static const char *const portnames[] = { "IN0", "IN1", "IN2" };
 	device_t *adc12138 = machine().device("adc12138");
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-
 	switch (offset)
 	{
 		case 0: /* I/O port 0 */
@@ -493,7 +497,7 @@ READ8_MEMBER(hornet_state::sysreg_r)
 			    0x02 = ADDOR (ADC DOR)
 			    0x01 = ADDO (ADC DO)
 			*/
-			r = 0xf0 | (eeprom->read_bit() << 3);
+			r = 0xf0 | (m_eeprom->read_bit() << 3);
 			r |= adc1213x_do_r(adc12138, space, 0) | (adc1213x_eoc_r(adc12138, space, 0) << 2);
 			break;
 
@@ -553,7 +557,7 @@ WRITE8_MEMBER(hornet_state::sysreg_w)
 			adc1213x_di_w(adc12138, space, 0, (data >> 1) & 0x1);
 			adc1213x_sclk_w(adc12138, space, 0, data & 0x1);
 
-			machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
+			m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 			mame_printf_debug("System register 1 = %02X\n", data);
 			break;
 
@@ -588,9 +592,9 @@ WRITE8_MEMBER(hornet_state::sysreg_w)
 			    0x01 = EXRGB
 			*/
 			if (data & 0x80)
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			if (data & 0x40)
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 			set_cgboard_id((data >> 4) & 3);
 			break;
 	}
@@ -892,10 +896,10 @@ void hornet_state::machine_start()
 	m_jvs_sdata = auto_alloc_array_clear(machine(), UINT8, 1024);
 
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x003fffff, FALSE, m_workram);
+	ppcdrc_add_fastram(m_maincpu, 0x00000000, 0x003fffff, FALSE, m_workram);
 
 	state_save_register_global(machine(), m_led_reg0);
 	state_save_register_global(machine(), m_led_reg1);
@@ -939,7 +943,7 @@ static const adc12138_interface hornet_adc_interface = {
 
 TIMER_CALLBACK_MEMBER(hornet_state::irq_off)
 {
-	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	m_audiocpu->set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )
@@ -1166,19 +1170,19 @@ int hornet_state::jvs_encode_data(UINT8 *in, int length)
 		if (b == 0xe0)
 		{
 			sum += 0xd0 + 0xdf;
-			ppc4xx_spu_receive_byte(machine().device("maincpu"), 0xd0);
-			ppc4xx_spu_receive_byte(machine().device("maincpu"), 0xdf);
+			ppc4xx_spu_receive_byte(m_maincpu, 0xd0);
+			ppc4xx_spu_receive_byte(m_maincpu, 0xdf);
 		}
 		else if (b == 0xd0)
 		{
 			sum += 0xd0 + 0xcf;
-			ppc4xx_spu_receive_byte(machine().device("maincpu"), 0xd0);
-			ppc4xx_spu_receive_byte(machine().device("maincpu"), 0xcf);
+			ppc4xx_spu_receive_byte(m_maincpu, 0xd0);
+			ppc4xx_spu_receive_byte(m_maincpu, 0xcf);
 		}
 		else
 		{
 			sum += b;
-			ppc4xx_spu_receive_byte(machine().device("maincpu"), b);
+			ppc4xx_spu_receive_byte(m_maincpu, b);
 		}
 	}
 	return sum;
@@ -1271,11 +1275,11 @@ void hornet_state::jamma_jvs_cmd_exec()
 
 	// write jvs return data
 	sum = 0x00 + (rdata_ptr+1);
-	ppc4xx_spu_receive_byte(machine().device("maincpu"), 0xe0);           // sync
-	ppc4xx_spu_receive_byte(machine().device("maincpu"), 0x00);           // node
-	ppc4xx_spu_receive_byte(machine().device("maincpu"), rdata_ptr + 1);  // num of bytes
+	ppc4xx_spu_receive_byte(m_maincpu, 0xe0);           // sync
+	ppc4xx_spu_receive_byte(m_maincpu, 0x00);           // node
+	ppc4xx_spu_receive_byte(m_maincpu, rdata_ptr + 1);  // num of bytes
 	sum += jvs_encode_data(rdata, rdata_ptr);
-	ppc4xx_spu_receive_byte(machine().device("maincpu"), sum - 1);        // checksum
+	ppc4xx_spu_receive_byte(m_maincpu, sum - 1);        // checksum
 
 	m_jvs_sdata_ptr = 0;
 }
@@ -1290,7 +1294,7 @@ DRIVER_INIT_MEMBER(hornet_state,hornet)
 
 	m_led_reg0 = m_led_reg1 = 0x7f;
 
-	ppc4xx_spu_set_tx_handler(machine().device("maincpu"), jamma_jvs_w);
+	ppc4xx_spu_set_tx_handler(m_maincpu, jamma_jvs_w);
 }
 
 DRIVER_INIT_MEMBER(hornet_state,hornet_2board)
@@ -1301,7 +1305,7 @@ DRIVER_INIT_MEMBER(hornet_state,hornet_2board)
 
 	m_led_reg0 = m_led_reg1 = 0x7f;
 
-	ppc4xx_spu_set_tx_handler(machine().device("maincpu"), jamma_jvs_w);
+	ppc4xx_spu_set_tx_handler(m_maincpu, jamma_jvs_w);
 }
 
 /*****************************************************************************/

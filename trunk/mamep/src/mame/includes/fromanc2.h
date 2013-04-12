@@ -1,9 +1,14 @@
+#include "machine/eeprom.h"
 
 class fromanc2_state : public driver_device
 {
 public:
 	fromanc2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub"),
+		m_eeprom(*this, "eeprom"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	UINT16   *m_paletteram[2];
@@ -26,9 +31,9 @@ public:
 	UINT8    m_datalatch_2l;
 
 	/* devices */
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
-	device_t *m_eeprom;
+	required_device<cpu_device> m_audiocpu;
+	optional_device<cpu_device> m_subcpu;
+	optional_device<eeprom_device> m_eeprom;
 	device_t *m_left_screen;
 	device_t *m_right_screen;
 	DECLARE_WRITE16_MEMBER(fromanc2_sndcmd_w);
@@ -113,4 +118,6 @@ public:
 	inline void fromancr_vram_w(offs_t offset, UINT16 data, UINT16 mem_mask, int layer );
 	void fromancr_gfxbank_w( int data );
 	inline void fromanc4_vram_w( offs_t offset, UINT16 data, UINT16 mem_mask, int layer );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	required_device<cpu_device> m_maincpu;
 };

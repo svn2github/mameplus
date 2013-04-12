@@ -8,8 +8,10 @@ class combatsc_state : public driver_device
 {
 public:
 	combatsc_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_paletteram(*this, "paletteram"){ }
+		: driver_device(mconfig, type, tag),
+		m_paletteram(*this, "paletteram"),
+		m_audiocpu(*this, "audiocpu"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	UINT8 *    m_videoram;
@@ -39,7 +41,7 @@ public:
 
 
 	/* devices */
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_k007121_1;
 	device_t *m_k007121_2;
 	DECLARE_WRITE8_MEMBER(combatsc_vreg_w);
@@ -84,4 +86,5 @@ public:
 	void set_pens(  );
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8 *source, int circuit, UINT32 pri_mask );
 	void bootleg_draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8 *source, int circuit );
+	required_device<cpu_device> m_maincpu;
 };

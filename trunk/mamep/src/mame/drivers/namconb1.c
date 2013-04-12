@@ -288,11 +288,11 @@ TIMER_DEVICE_CALLBACK_MEMBER(namconb1_state::mcu_interrupt)
 
 	/* TODO: real sources of these */
 	if (scanline == 224)
-		machine().device("mcu")->execute().set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
+		m_mcu->set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
 	else if (scanline == 0)
-		machine().device("mcu")->execute().set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
+		m_mcu->set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
 	else if (scanline == 128)
-		machine().device("mcu")->execute().set_input_line(M37710_LINE_ADC, HOLD_LINE);
+		m_mcu->set_input_line(M37710_LINE_ADC, HOLD_LINE);
 }
 
 
@@ -303,7 +303,7 @@ TIMER_CALLBACK_MEMBER(namconb1_state::namconb1_TriggerPOSIRQ)
 
 	machine().primary_screen->update_partial(param);
 	m_pos_irq_active = 1;
-	machine().device("maincpu")->execute().set_input_line(m_namconb_cpureg[0x02] & 0xf, ASSERT_LINE);
+	m_maincpu->set_input_line(m_namconb_cpureg[0x02] & 0xf, ASSERT_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(namconb1_state::namconb1_interrupt)
@@ -364,7 +364,7 @@ TIMER_CALLBACK_MEMBER(namconb1_state::namconb2_TriggerPOSIRQ)
 {
 	machine().primary_screen->update_partial(param);
 	m_pos_irq_active = 1;
-	machine().device("maincpu")->execute().set_input_line(m_namconb_cpureg[0x02], ASSERT_LINE);
+	m_maincpu->set_input_line(m_namconb_cpureg[0x02], ASSERT_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(namconb1_state::namconb2_interrupt)

@@ -106,8 +106,10 @@ class highvdeo_state : public driver_device
 {
 public:
 	highvdeo_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_blit_ram(*this, "blit_ram"){ }
+		: driver_device(mconfig, type, tag),
+		m_blit_ram(*this, "blit_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_okim6376(*this, "oki") { }
 
 	required_shared_ptr<UINT16> m_blit_ram;
 	UINT16 m_vblank_bit;
@@ -141,6 +143,8 @@ public:
 	UINT32 screen_update_tourvisn(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_brasil(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(vblank_irq);
+	required_device<cpu_device> m_maincpu;
+	required_device<okim6376_device> m_okim6376;
 };
 
 
@@ -274,22 +278,20 @@ WRITE16_MEMBER(highvdeo_state::tv_vcf_bankselect_w)
 
 WRITE16_MEMBER(highvdeo_state::tv_oki6376_w)
 {
-	device_t *device = machine().device("oki");
 	static int okidata;
 	if (ACCESSING_BITS_0_7 && okidata != data)
 	{
 		okidata = data;
-		okim6376_w(device, space, 0, data & ~0x80);
-		okim6376_st_w (device, data & 0x80);
+		okim6376_w(m_okim6376, space, 0, data & ~0x80);
+		okim6376_st_w (m_okim6376, data & 0x80);
 	}
 }
 
 READ16_MEMBER(highvdeo_state::tv_oki6376_r)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_0_7)
 	{
-		return okim6376_busy_r(device);
+		return okim6376_busy_r(m_okim6376);
 	}
 	return 0xff;
 }
@@ -349,20 +351,18 @@ READ16_MEMBER(highvdeo_state::tv_ncf_read1_r)
 
 WRITE16_MEMBER(highvdeo_state::tv_ncf_oki6376_w)
 {
-	device_t *device = machine().device("oki");
 	static int okidata;
 	if (ACCESSING_BITS_0_7 && okidata != data) {
 		okidata = data;
-		okim6376_w(device, space, 0, data );
+		okim6376_w(m_okim6376, space, 0, data );
 	}
 }
 
 WRITE16_MEMBER(highvdeo_state::tv_ncf_oki6376_st_w)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6376_st_w(device, (data & 0x80) );
+		okim6376_st_w(m_okim6376, (data & 0x80) );
 	}
 }
 
@@ -1382,7 +1382,7 @@ READ16_MEMBER(highvdeo_state::ciclone_status_r)
 
 DRIVER_INIT_MEMBER(highvdeo_state,ciclone)
 {
-	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x0030, 0x0033, read16_delegate(FUNC(highvdeo_state::ciclone_status_r), this));
+	m_maincpu->space(AS_IO).install_read_handler(0x0030, 0x0033, read16_delegate(FUNC(highvdeo_state::ciclone_status_r), this));
 }
 
 /*
@@ -1452,7 +1452,7 @@ WRITE16_MEMBER(highvdeo_state::fashion_output_w)
 
 DRIVER_INIT_MEMBER(highvdeo_state,fashion)
 {
-	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x0002, 0x0003, write16_delegate(FUNC(highvdeo_state::fashion_output_w), this));
+	m_maincpu->space(AS_IO).install_write_handler(0x0002, 0x0003, write16_delegate(FUNC(highvdeo_state::fashion_output_w), this));
 }
 
 GAMEL( 2000, tour4000,  0,      tv_vcf,   tv_vcf, driver_device,   0,       ROT0,  "High Video", "Tour 4000",         0, layout_fashion )

@@ -230,8 +230,10 @@ class nwktr_state : public driver_device
 {
 public:
 	nwktr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_work_ram(*this, "work_ram"){ }
+		: driver_device(mconfig, type, tag),
+		m_work_ram(*this, "work_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu")  { }
 
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
@@ -257,6 +259,8 @@ public:
 	UINT32 screen_update_nwktr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(irq_off);
 	void lanc2_init();
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };
 
 
@@ -362,9 +366,9 @@ WRITE32_MEMBER(nwktr_state::sysreg_w)
 		if (ACCESSING_BITS_0_7)
 		{
 			if (data & 0x80)    // CG Board 1 IRQ Ack
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			if (data & 0x40)    // CG Board 0 IRQ Ack
-				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+				m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 
 			//set_cgboard_id((data >> 4) & 3);
 		}
@@ -513,16 +517,16 @@ WRITE32_MEMBER(nwktr_state::lanc2_w)
 
 TIMER_CALLBACK_MEMBER(nwktr_state::irq_off)
 {
-	machine().device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+	m_audiocpu->set_input_line(param, CLEAR_LINE);
 }
 
 void nwktr_state::machine_start()
 {
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x003fffff, FALSE, m_work_ram);
+	ppcdrc_add_fastram(m_maincpu, 0x00000000, 0x003fffff, FALSE, m_work_ram);
 
 	m_sound_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(nwktr_state::irq_off),this));
 }

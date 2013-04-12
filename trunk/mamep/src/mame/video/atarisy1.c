@@ -208,7 +208,7 @@ WRITE16_MEMBER( atarisy1_state::atarisy1_bankselect_w )
 	/* sound CPU reset */
 	if (diff & 0x0080)
 	{
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (newselect & 0x0080) ? CLEAR_LINE : ASSERT_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_RESET, (newselect & 0x0080) ? CLEAR_LINE : ASSERT_LINE);
 		if (!(newselect & 0x0080)) sound_cpu_reset();
 	}
 
@@ -365,7 +365,7 @@ WRITE16_MEMBER( atarisy1_state::atarisy1_spriteram_w )
 
 TIMER_DEVICE_CALLBACK_MEMBER(atarisy1_state::atarisy1_int3off_callback)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	/* clear the state */
 	scanline_int_ack_w(space, 0, 0);
@@ -377,7 +377,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(atarisy1_state::atarisy1_int3_callback)
 	int scanline = param;
 
 	/* update the state */
-	scanline_int_gen(*subdevice("maincpu"));
+	scanline_int_gen(m_maincpu);
 
 	/* set a timer to turn it off */
 	m_int3off_timer->adjust(machine().primary_screen->scan_period());

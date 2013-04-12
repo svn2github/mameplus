@@ -49,12 +49,11 @@ Year + Game         PCB             Notes
 ***************************************************************************/
 
 WRITE16_MEMBER(unico_state::burglarx_sound_bank_w)
-{
-	device_t *device = machine().device("oki");
+{	
 	if (ACCESSING_BITS_8_15)
 	{
 		int bank = (data >> 8 ) & 1;
-		downcast<okim6295_device *>(device)->set_bank_base(0x40000 * bank );
+		m_oki->set_bank_base(0x40000 * bank );
 	}
 }
 
@@ -199,21 +198,19 @@ WRITE32_MEMBER(unico_state::zeropnt2_leds_w)
 
 WRITE32_MEMBER(unico_state::zeropnt2_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (data & ~0xfe00000)
 		logerror("%s - Unknown EEPROM bit written %04X\n",machine().describe_context(),data);
 
 	if ( ACCESSING_BITS_24_31 )
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x04000000);
+		m_eeprom->write_bit(data & 0x04000000);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x01000000) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_cs_line((data & 0x01000000) ? CLEAR_LINE : ASSERT_LINE);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
+		m_eeprom->set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 

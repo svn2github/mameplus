@@ -31,12 +31,15 @@ class mlanding_state : public driver_device
 {
 public:
 	mlanding_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_g_ram(*this, "g_ram"),
 		m_ml_tileram(*this, "ml_tileram"),
 		m_dma_ram(*this, "dma_ram"),
 		m_ml_dotram(*this, "ml_dotram"),
-		m_mecha_ram(*this, "mecha_ram"){ }
+		m_mecha_ram(*this, "mecha_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_shared_ptr<UINT16> m_g_ram;
 	required_shared_ptr<UINT16> m_ml_tileram;
@@ -80,6 +83,10 @@ public:
 	UINT32 screen_update_mlanding(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(dma_complete);
 	int start_dma();
+	DECLARE_WRITE_LINE_MEMBER(ml_msm5205_vck);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
 };
 
 
@@ -280,35 +287,33 @@ WRITE8_MEMBER(mlanding_state::sound_bankswitch_w)
 	membank("bank1")->set_base(memregion("audiocpu")->base() + ((data) & 0x03) * 0x4000 + 0x10000 );
 }
 
-static void ml_msm5205_vck(device_t *device)
+WRITE_LINE_MEMBER(mlanding_state::ml_msm5205_vck)
 {
-	mlanding_state *state = device->machine().driver_data<mlanding_state>();
+//  popmessage("%08x",m_adpcm_pos);
 
-//  popmessage("%08x",state->m_adpcm_pos);
-
-	if (state->m_adpcm_pos >= 0x50000  || state->m_adpcm_idle)
+	if (m_adpcm_pos >= 0x50000  || m_adpcm_idle)
 	{
-		//state->m_adpcm_idle = 1;
-		msm5205_reset_w(device,1);
-		state->m_trigger = 0;
+		//m_adpcm_idle = 1;
+		msm5205_reset_w(machine().device("msm"),1);
+		m_trigger = 0;
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base();
+		UINT8 *ROM = machine().root_device().memregion("adpcm")->base();
 
-		state->m_adpcm_data = ((state->m_trigger ? (ROM[state->m_adpcm_pos] & 0x0f) : (ROM[state->m_adpcm_pos] & 0xf0)>>4) );
-		msm5205_data_w(device,state->m_adpcm_data & 0xf);
-		state->m_trigger^=1;
-		if(state->m_trigger == 0)
+		m_adpcm_data = ((m_trigger ? (ROM[m_adpcm_pos] & 0x0f) : (ROM[m_adpcm_pos] & 0xf0)>>4) );
+		msm5205_data_w(machine().device("msm"),m_adpcm_data & 0xf);
+		m_trigger^=1;
+		if(m_trigger == 0)
 		{
-			state->m_adpcm_pos++;
-			//device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			m_adpcm_pos++;
+			//m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			/*TODO: simplify this */
-			if(ROM[state->m_adpcm_pos] == 0x00 && ROM[state->m_adpcm_pos+1] == 0x00 && ROM[state->m_adpcm_pos+2] == 0x00 && ROM[state->m_adpcm_pos+3] == 0x00
-				&& ROM[state->m_adpcm_pos+4] == 0x00 && ROM[state->m_adpcm_pos+5] == 0x00 && ROM[state->m_adpcm_pos+6] == 0x00 && ROM[state->m_adpcm_pos+7] == 0x00
-				&& ROM[state->m_adpcm_pos+8] == 0x00 && ROM[state->m_adpcm_pos+9] == 0x00 && ROM[state->m_adpcm_pos+10] == 0x00 && ROM[state->m_adpcm_pos+11] == 0x00
-				&& ROM[state->m_adpcm_pos+12] == 0x00 && ROM[state->m_adpcm_pos+13] == 0x00 && ROM[state->m_adpcm_pos+14] == 0x00 && ROM[state->m_adpcm_pos+15] == 0x00)
-				state->m_adpcm_idle = 1;
+			if(ROM[m_adpcm_pos] == 0x00 && ROM[m_adpcm_pos+1] == 0x00 && ROM[m_adpcm_pos+2] == 0x00 && ROM[m_adpcm_pos+3] == 0x00
+				&& ROM[m_adpcm_pos+4] == 0x00 && ROM[m_adpcm_pos+5] == 0x00 && ROM[m_adpcm_pos+6] == 0x00 && ROM[m_adpcm_pos+7] == 0x00
+				&& ROM[m_adpcm_pos+8] == 0x00 && ROM[m_adpcm_pos+9] == 0x00 && ROM[m_adpcm_pos+10] == 0x00 && ROM[m_adpcm_pos+11] == 0x00
+				&& ROM[m_adpcm_pos+12] == 0x00 && ROM[m_adpcm_pos+13] == 0x00 && ROM[m_adpcm_pos+14] == 0x00 && ROM[m_adpcm_pos+15] == 0x00)
+				m_adpcm_idle = 1;
 		}
 	}
 }
@@ -333,7 +338,7 @@ WRITE16_MEMBER(mlanding_state::ml_sub_reset_w)
 	}
 
 	if(!(data & 0x40)) // unknown line used
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 
 	//data & 0x20 sound cpu?
 
@@ -351,7 +356,7 @@ WRITE16_MEMBER(mlanding_state::ml_to_sound_w)
 		tc0140syt->tc0140syt_port_w(space, 0, data & 0xff);
 	else if (offset == 1)
 	{
-		//machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		//m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 		tc0140syt->tc0140syt_comm_w(space, 0, data & 0xff);
 	}
 }
@@ -363,7 +368,7 @@ WRITE8_MEMBER(mlanding_state::ml_sound_to_main_w)
 		tc0140syt->tc0140syt_slave_port_w(space, 0, data & 0xff);
 	else if (offset == 1)
 	{
-		//machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+		//m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 		tc0140syt->tc0140syt_slave_comm_w(space, 0, data & 0xff);
 	}
 }
@@ -459,7 +464,7 @@ READ16_MEMBER(mlanding_state::ml_analog3_msb_r)
 
 WRITE16_MEMBER(mlanding_state::ml_nmi_to_sound_w)
 {
-//  machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+//  m_audiocpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 READ16_MEMBER(mlanding_state::ml_mecha_ram_r)
@@ -732,7 +737,7 @@ INPUT_PORTS_END
 
 static const msm5205_interface msm5205_config =
 {
-	ml_msm5205_vck, /* VCK function */
+	DEVCB_DRIVER_LINE_MEMBER(mlanding_state,ml_msm5205_vck), /* VCK function */
 	MSM5205_S48_4B      /* 8 kHz */
 };
 
@@ -743,8 +748,8 @@ static const tc0140syt_interface mlanding_tc0140syt_intf =
 
 void mlanding_state::machine_reset()
 {
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	m_adpcm_pos = 0;
 	m_adpcm_data = -1;

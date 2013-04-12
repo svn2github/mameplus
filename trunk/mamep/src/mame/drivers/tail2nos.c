@@ -176,10 +176,9 @@ GFXDECODE_END
 
 
 
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(tail2nos_state::irqhandler)
 {
-	tail2nos_state *state = device->machine().driver_data<tail2nos_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2608_interface ym2608_config =
@@ -192,7 +191,7 @@ static const ym2608_interface ym2608_config =
 		DEVCB_NULL,
 		DEVCB_DRIVER_MEMBER(tail2nos_state,sound_bankswitch_w)
 	},
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(tail2nos_state,irqhandler)
 };
 
 
@@ -211,8 +210,6 @@ void tail2nos_state::machine_start()
 	membank("bank3")->configure_entries(0, 2, &ROM[0x10000], 0x8000);
 	membank("bank3")->set_entry(0);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k051316 = machine().device("k051316");
 
 	save_item(NAME(m_charbank));

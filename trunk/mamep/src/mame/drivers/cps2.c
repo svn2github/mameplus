@@ -1240,8 +1240,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(cps_state,cps2)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	if (m_audiocpu != NULL) // gigaman2 has no audiocpu
 		membank("bank1")->configure_entries(0, (QSOUND_SIZE - 0x10000) / 0x4000, memregion("audiocpu")->base() + 0x10000, 0x4000);
@@ -8287,7 +8285,7 @@ DRIVER_INIT_MEMBER(cps_state,cps2)
 
 	init_digital_volume();
 
-	machine().device("maincpu")->set_clock_scale(0.7375f); /* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
+	m_maincpu->set_clock_scale(0.7375f); /* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
 }
 
 DRIVER_INIT_MEMBER(cps_state,ssf2tb)
@@ -8310,7 +8308,7 @@ DRIVER_INIT_MEMBER(cps_state,pzloop2)
 
 	save_item(NAME(m_readpaddle));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x804000, 0x804001, read16_delegate(FUNC(cps_state::joy_or_paddle_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x804000, 0x804001, read16_delegate(FUNC(cps_state::joy_or_paddle_r), this));
 }
 
 DRIVER_INIT_MEMBER(cps_state,singbrd)
@@ -8351,7 +8349,7 @@ void cps_state::gigaman2_gfx_reorder()
 
 DRIVER_INIT_MEMBER(cps_state,gigaman2)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	UINT16 *rom = (UINT16 *)memregion("maincpu")->base();
 	int length = memregion("maincpu")->bytes();
 
@@ -8364,7 +8362,7 @@ DRIVER_INIT_MEMBER(cps_state,gigaman2)
 
 	space.install_readwrite_handler(0x618000, 0x619fff, read16_delegate(FUNC(cps_state::gigaman2_dummyqsound_r),this), write16_delegate(FUNC(cps_state::gigaman2_dummyqsound_w), this)); // no qsound..
 	space.set_decrypted_region(0x000000, (length) - 1, &rom[length/4]);
-	m68k_set_encrypted_opcode_range(machine().device("maincpu"), 0, length);
+	m68k_set_encrypted_opcode_range(m_maincpu, 0, length);
 
 	/* no digital volume switches on this? */
 	m_digital_volume_timer->adjust(attotime::never, 0, attotime::never);

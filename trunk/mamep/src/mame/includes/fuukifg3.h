@@ -13,13 +13,15 @@ class fuuki32_state : public driver_device
 {
 public:
 	fuuki32_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vram(*this, "vram"),
 		m_spriteram(*this, "spriteram"),
 		m_paletteram(*this, "paletteram"),
 		m_vregs(*this, "vregs"),
 		m_priority(*this, "priority"),
-		m_tilebank(*this, "tilebank"){ }
+		m_tilebank(*this, "tilebank"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr_array<UINT32,4> m_vram;
@@ -40,8 +42,8 @@ public:
 	UINT8       m_shared_ram[16];
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
 	DECLARE_WRITE32_MEMBER(paletteram32_xRRRRRGGGGGBBBBB_dword_w);
 	DECLARE_READ32_MEMBER(snd_020_r);
 	DECLARE_WRITE32_MEMBER(snd_020_w);
@@ -71,4 +73,5 @@ public:
 	inline void fuuki32_vram_w(offs_t offset, UINT32 data, UINT32 mem_mask, int _N_);
 	void draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void fuuki32_draw_layer( bitmap_ind16 &bitmap, const rectangle &cliprect, int i, int flag, int pri );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };

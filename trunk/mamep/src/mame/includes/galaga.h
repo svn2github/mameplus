@@ -4,13 +4,15 @@ class galaga_state : public driver_device
 {
 public:
 	galaga_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_galaga_ram1(*this, "galaga_ram1"),
 		m_galaga_ram2(*this, "galaga_ram2"),
 		m_galaga_ram3(*this, "galaga_ram3"),
-		m_galaga_starcontrol(*this, "starcontrol")
-		{ }
+		m_galaga_starcontrol(*this, "starcontrol"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub"),
+		m_subcpu2(*this, "sub2") { }
 
 	/* memory pointers */
 	optional_shared_ptr<UINT8> m_videoram;
@@ -71,6 +73,9 @@ public:
 	};
 
 	static struct star m_star_seed_tab[];
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
+	required_device<cpu_device> m_subcpu2;
 };
 
 class xevious_state : public galaga_state

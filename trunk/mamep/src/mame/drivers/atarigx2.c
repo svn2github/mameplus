@@ -35,8 +35,8 @@
 
 void atarigx2_state::update_interrupts()
 {
-	machine().device("maincpu")->execute().set_input_line(4, m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	machine().device("maincpu")->execute().set_input_line(5, m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(4, m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(5, m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -112,7 +112,7 @@ WRITE32_MEMBER(atarigx2_state::latch_w)
 
 	/* lower byte */
 	if (ACCESSING_BITS_16_23)
-		machine().device("jsa")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x100000) ? CLEAR_LINE : ASSERT_LINE);
+		m_jsacpu->set_input_line(INPUT_LINE_RESET, (data & 0x100000) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -2222,7 +2222,7 @@ DRIVER_INIT_MEMBER(atarigx2_state,rrreveng)
 
 	m_playfield_base = 0x000;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xca0fc0, 0xca0fc3, read32_delegate(FUNC(atarigx2_state::rrreveng_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xca0fc0, 0xca0fc3, read32_delegate(FUNC(atarigx2_state::rrreveng_prot_r),this));
 }
 
 

@@ -5,9 +5,12 @@ class homedata_state : public driver_device
 {
 public:
 	homedata_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vreg(*this, "vreg"),
-		m_videoram(*this, "videoram") {}
+		m_videoram(*this, "videoram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_dac(*this, "dac") {}
 
 	/* memory pointers */
 	optional_shared_ptr<UINT8> m_vreg;
@@ -36,9 +39,9 @@ public:
 	int      m_from_cpu;
 
 	/* device */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	dac_device *m_dac;
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
+	optional_device<dac_device> m_dac;
 	device_t *m_ym;
 	sn76489a_device *m_sn;
 	UINT8 m_prot_data;

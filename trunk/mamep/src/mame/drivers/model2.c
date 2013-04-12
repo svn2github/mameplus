@@ -298,7 +298,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(model2_state::model2_timer_cb)
 	m_intreq |= (1<<bit);
 	if (m_intena & (1<<bit))
 	{
-		machine().device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
+		m_maincpu->set_input_line(I960_IRQ2, ASSERT_LINE);
 	}
 
 	m_timervals[tnum] = 0;
@@ -356,7 +356,7 @@ MACHINE_RESET_MEMBER(model2_state,model2_scsp)
 
 	// copy the 68k vector table into RAM
 	memcpy(m_soundram, memregion("audiocpu")->base() + 0x80000, 16);
-	machine().device("audiocpu")->reset();
+	m_audiocpu->reset();
 	scsp_set_ram_base(machine().device("scsp"), m_soundram);
 }
 
@@ -412,11 +412,10 @@ WRITE32_MEMBER(model2_state::ctrl0_w)
 {
 	if(ACCESSING_BITS_0_7)
 	{
-		eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
 		m_ctrlmode = data & 0x01;
-		eeprom->write_bit(data & 0x20);
-		eeprom->set_clock_line((data & 0x80) ? ASSERT_LINE : CLEAR_LINE);
-		eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->write_bit(data & 0x20);
+		m_eeprom->set_clock_line((data & 0x80) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 	}
 }
 
@@ -455,7 +454,7 @@ CUSTOM_INPUT_MEMBER(model2_state::_1c00000_r)
 	else
 	{
 		ret &= ~0x0030;
-		return ret | 0x00d0 | (machine().device<eeprom_device>("eeprom")->read_bit() << 5);
+		return ret | 0x00d0 | (m_eeprom->read_bit() << 5);
 	}
 }
 
@@ -963,7 +962,8 @@ WRITE32_MEMBER(model2_state::model2_irq_w)
 
 static int snd_68k_ready_r(address_space &space)
 {
-	int sr = space.machine().device("audiocpu")->state().state_int(M68K_SR);
+	model2_state *state = space.machine().driver_data<model2_state>();
+	int sr = state->m_audiocpu->state_int(M68K_SR);
 
 	if ((sr & 0x0700) > 0x0100)
 	{
@@ -984,7 +984,7 @@ static void snd_latch_to_68k_w(address_space &space, int data)
 
 	state->m_to_68k = data;
 
-	space.machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
+	state->m_audiocpu->set_input_line(2, HOLD_LINE);
 
 	// give the 68k time to notice
 	space.device().execute().spin_until_time(attotime::from_usec(40));
@@ -1872,22 +1872,21 @@ static ADDRESS_MAP_START( model2_snd, AS_PROGRAM, 16, model2_state )
 ADDRESS_MAP_END
 
 
-static void scsp_irq(device_t *device, int irq)
+WRITE_LINE_MEMBER(model2_state::scsp_irq)
 {
-	model2_state *state = device->machine().driver_data<model2_state>();
-	if (irq > 0)
+	if (state > 0)
 	{
-		state->m_scsp_last_line = irq;
-		device->machine().device("audiocpu")->execute().set_input_line(irq, ASSERT_LINE);
+		m_scsp_last_line = state;
+		m_audiocpu->set_input_line(state, ASSERT_LINE);
 	}
 	else
-		device->machine().device("audiocpu")->execute().set_input_line(-irq, CLEAR_LINE);
+		m_audiocpu->set_input_line(-state, CLEAR_LINE);
 }
 
 static const scsp_interface scsp_config =
 {
 	0,
-	scsp_irq,
+	DEVCB_DRIVER_LINE_MEMBER(model2_state,scsp_irq),
 	DEVCB_NULL
 };
 
@@ -3009,7 +3008,7 @@ USA, Export and Korea versions as well as the Japan version.
 
 */
 
-ROM_START( dynamcop ) /* Dynamite Cop (Export), Model 2A */
+ROM_START( dynamcop ) /* Dynamite Cop (Export), Model 2A, Sega Game ID# 833-11341, ROM board ID# 834-11342 */
 	ROM_REGION( 0x200000, "maincpu", 0 ) // i960 program
 	ROM_LOAD32_WORD("epr-20930.12", 0x000000, 0x080000, CRC(b8fc8ff7) SHA1(53b0f9dc8494effa077170ddced2d95f43a5f134) )
 	ROM_LOAD32_WORD("epr-20931.13", 0x000002, 0x080000, CRC(89d13f88) SHA1(5e266b5e153a0d9a57360cfd1af81e3a58a2fb7d) )
@@ -4843,6 +4842,67 @@ ROM_START( daytona ) /* Daytona USA (Japan, Revision A), Original Model 2 w/Mode
 	ROM_LOAD("epr-14869c.25", 0x000000, 0x010000, CRC(24b68e64) SHA1(c19d044d4c2fe551474492aa51922587394dd371) )
 ROM_END
 
+ROM_START( daytonase ) /* Daytona USA (Japan, Revision A), Original Model 2 w/Model 1 sound board */
+	ROM_REGION( 0x200000, "maincpu", 0 ) // i960 program
+	ROM_LOAD32_WORD("epr-17369a.12", 0x000000, 0x020000, CRC(3bc6ca62) SHA1(16e9fd25670ce4eda378df402066e3d9652210b1) )
+	ROM_LOAD32_WORD("epr-17370a.13", 0x000002, 0x020000, CRC(5d1c74e4) SHA1(26eff5a07f6906e1ad20cd264ce6e25a9068ea2b) )
+
+	ROM_REGION32_LE( 0x2000000, "user1", 0 ) // Data
+	ROM_LOAD32_WORD("mpr-16528.10",   0x000000, 0x200000, CRC(9ce591f6) SHA1(e22fc8a70b533f7a6191f5952c581fb8f9627906) )
+	ROM_LOAD32_WORD("mpr-16529.11",   0x000002, 0x200000, CRC(f7095eaf) SHA1(da3c922f950dd730ea348eae12aa1cb69cee9a58) )
+	ROM_LOAD32_WORD("mpr-16808.8",    0x400000, 0x200000, CRC(44f1f5a0) SHA1(343866a6e2187a8ebc17f6727080f9f2f9ac9200) )
+	ROM_LOAD32_WORD("mpr-16809.9",    0x400002, 0x200000, CRC(37a2dd12) SHA1(8192d8698d6bd52ee11cc28917aff5840c447627) )
+	ROM_LOAD32_WORD("epr-17371.6",    0x800000, 0x080000, CRC(7478f0d2) SHA1(412d4db62436746da8d0d55ccf2016d14c05153c) )
+	ROM_LOAD32_WORD("epr-17372.7",    0x800002, 0x080000, CRC(308a06a9) SHA1(0c7502c2fe5a64db7e6020457b9f8e47f2c9af0e) )
+	ROM_COPY( "user1", 0x800000, 0x900000, 0x100000 ) // rgn,srcoffset,offset,length.
+	ROM_COPY( "user1", 0x800000, 0xa00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xb00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xc00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xd00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xe00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xf00000, 0x100000 )
+
+	ROM_REGION( 0x800000, "tgp", 0 ) // TGP program? (COPRO socket)
+	ROM_LOAD32_WORD("mpr-16537.ic28", 0x000000, 0x200000, CRC(36b7c35a) SHA1(b32fd1d3fc8983fb5f2a7b236b665a8c9b52769f) )
+	ROM_LOAD32_WORD("mpr-16536.ic29", 0x000002, 0x200000, CRC(6d6afed9) SHA1(2018468d7d849854b3d0cfbcd217317e2fc93555) )
+
+	ROM_REGION32_LE( 0x1000000, "user2", 0 ) // Models
+	ROM_LOAD32_WORD("mpr-16523.ic16", 0x000000, 0x200000, CRC(2f484d42) SHA1(0b83a3fc92b7d913a14cfb01d688c63555c17c41) )
+	ROM_LOAD32_WORD("mpr-16518.ic20", 0x000002, 0x200000, CRC(df683bf7) SHA1(16afe5029591f3536b5b75d9cf50a34d0ea72c3d) )
+	ROM_LOAD32_WORD("mpr-16524.ic17", 0x400000, 0x200000, CRC(34658bd7) SHA1(71b47626ffe5b26d1140afe1b830a9a2be86c88f) )
+	ROM_LOAD32_WORD("mpr-16519.ic21", 0x400002, 0x200000, CRC(facd1c81) SHA1(dac8c281a5e9a6c4b60197e6676f3727264ee420) )
+	ROM_LOAD32_WORD("mpr-16525.ic18", 0x800000, 0x200000, CRC(fb517521) SHA1(33f5f37ea2e09fc73eed5388b46fdf1fa9e285e6) )
+	ROM_LOAD32_WORD("mpr-16520.ic22", 0x800002, 0x200000, CRC(d66bd9bd) SHA1(660171674484375a27595630e5e2d2ad76a06d1a) )
+	ROM_LOAD32_WORD("mpr-16772.ic19", 0xc00000, 0x200000, CRC(770ed912) SHA1(1789f35dd403f73f8be18495a0fe4ad1e6841417) )
+	ROM_LOAD32_WORD("mpr-16771.ic23", 0xc00002, 0x200000, CRC(a2205124) SHA1(257a3675e4ef6adbf61285a5daa5954223c28cb2) )
+
+	ROM_REGION16_LE( 0x1000000, "user3", 0 ) // Textures
+	ROM_LOAD32_WORD("mpr-16522.25", 0x000000, 0x200000, CRC(55d39a57) SHA1(abf7b0fc0f111f90da42463d600db9fa32e95efe) )
+	ROM_LOAD32_WORD("mpr-16521.24", 0x000002, 0x200000, CRC(af1934fb) SHA1(a6a21a23cd34d0de6d3e6a5c3c2687f905d0dc2a) )
+	ROM_LOAD32_WORD("mpr-16770.27", 0x800000, 0x200000, CRC(f9fa7bfb) SHA1(8aa933b74d4e05dc49987238705e50b00e5dae73) )
+	ROM_LOAD32_WORD("mpr-16769.26", 0x800002, 0x200000, CRC(e57429e9) SHA1(8c712ab09e61ef510741a55f29b3c4e497471372) )
+
+	ROM_REGION( 0x20000, "cpu3", 0) // Communication program
+	ROM_LOAD( "epr-16726.bin", 0x000000, 0x020000, CRC(c179b8c7) SHA1(86d3e65c77fb53b1d380b629348f4ab5b3d39228) )
+
+	ROM_REGION( 0x80000, "audiocpu", 0 ) // Sound program
+	ROM_LOAD16_WORD_SWAP("epr-16720.7", 0x000000, 0x020000, CRC(8e73cffd) SHA1(9933ccc0757e8c86e0adb938d1c89210b26841ea) )
+	ROM_LOAD16_WORD_SWAP("epr-16721.8", 0x020000, 0x020000, CRC(1bb3b7b7) SHA1(ee2fd1480e535fc37e9932e6fe4e31344559fc87) )
+
+	ROM_REGION( 0x400000, "sega1", 0 ) // Samples
+	ROM_LOAD("mpr-16491.32", 0x000000, 0x200000, CRC(89920903) SHA1(06d1d55470ae99f8de0f8c88c694f34c4eb13668) )
+	ROM_LOAD("mpr-16492.33", 0x200000, 0x200000, CRC(459e701b) SHA1(2054f69cecad677eb00c6a3051f5b5d90885e19b) )
+
+	ROM_REGION( 0x400000, "sega2", 0 ) // Samples
+	ROM_LOAD("mpr-16493.4", 0x000000, 0x200000, CRC(9990db15) SHA1(ea9a8b45a07dccaae62be7cf095532ce7596a70c) )
+	ROM_LOAD("mpr-16494.5", 0x200000, 0x200000, CRC(600e1d6c) SHA1(d4e246fc57a16ff562bbcbccf6a739b706f58696) )
+
+	MODEL2_CPU_BOARD /* Model 2 CPU board extra roms */
+
+	ROM_REGION( 0x10000, "user7", 0 ) // Unknown ROM
+	ROM_LOAD("epr-14869c.25", 0x000000, 0x010000, CRC(24b68e64) SHA1(c19d044d4c2fe551474492aa51922587394dd371) )
+ROM_END
+
 ROM_START( daytona93 ) /* Daytona USA Deluxe '93 version (There is said to be a Deluxe '94 edition) */
 	ROM_REGION( 0x200000, "maincpu", 0 ) // i960 program
 	ROM_LOAD32_WORD("epr-16530a.12", 0x000000, 0x020000, CRC(39e962b5) SHA1(b98a1faabb4f1eff707a94c32224c7820f259874) )
@@ -4966,8 +5026,71 @@ ROM_END
 
 ROM_START( daytonat )/* Daytona USA (Japan, Turbo hack) */
 	ROM_REGION( 0x200000, "maincpu", 0 ) // i960 program
-	ROM_LOAD32_WORD( "turbo1.12", 0x000000, 0x080000, CRC(0b3d5d4e) SHA1(1660959cb383e22f0d6204547c30cf5fe9272b03) )
-	ROM_LOAD32_WORD( "turbo2.13", 0x000002, 0x080000, CRC(f7d4e866) SHA1(c8c43904257f718665f9f7a89838eba14bde9465) )
+//  ROM_LOAD32_WORD( "turbo1.12", 0x000000, 0x080000, CRC(0b3d5d4e) SHA1(1660959cb383e22f0d6204547c30cf5fe9272b03) ) /* 4x overdump?, 0x20000 bytes repeat 4 times */
+//  ROM_LOAD32_WORD( "turbo2.13", 0x000002, 0x080000, CRC(f7d4e866) SHA1(c8c43904257f718665f9f7a89838eba14bde9465) ) /* 4x overdump?, 0x20000 bytes repeat 4 times */
+	ROM_LOAD32_WORD( "turbo1.12", 0x000000, 0x020000, CRC(4b41a341) SHA1(daa75f38a11eb16b04550edf53e11f0eaf55cd3e) )
+	ROM_LOAD32_WORD( "turbo2.13", 0x000002, 0x020000, CRC(6ca580fa) SHA1(102ad6bf5fed4c9c407a9e82d85cff9f15db31c8) )
+
+	ROM_REGION32_LE( 0x2000000, "user1", 0 ) // Data
+	ROM_LOAD32_WORD("mpr-16528.10",   0x000000, 0x200000, CRC(9ce591f6) SHA1(e22fc8a70b533f7a6191f5952c581fb8f9627906) )
+	ROM_LOAD32_WORD("mpr-16529.11",   0x000002, 0x200000, CRC(f7095eaf) SHA1(da3c922f950dd730ea348eae12aa1cb69cee9a58) )
+	ROM_LOAD32_WORD("mpr-16808.8",    0x400000, 0x200000, CRC(44f1f5a0) SHA1(343866a6e2187a8ebc17f6727080f9f2f9ac9200) )
+	ROM_LOAD32_WORD("mpr-16809.9",    0x400002, 0x200000, CRC(37a2dd12) SHA1(8192d8698d6bd52ee11cc28917aff5840c447627) )
+	ROM_LOAD32_WORD("epr-16724a.6",   0x800000, 0x080000, CRC(469f10fd) SHA1(7fad3b8d03960e5e1f7a6cb36509238977e00fcc) )
+	ROM_LOAD32_WORD("epr-16725a.7",   0x800002, 0x080000, CRC(ba0df8db) SHA1(d0c5581c56500b5266cab8e8151db24fcbdea0d7) )
+	ROM_COPY( "user1", 0x800000, 0x900000, 0x100000 ) // rgn,srcoffset,offset,length.
+	ROM_COPY( "user1", 0x800000, 0xa00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xb00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xc00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xd00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xe00000, 0x100000 )
+	ROM_COPY( "user1", 0x800000, 0xf00000, 0x100000 )
+
+	ROM_REGION( 0x800000, "tgp", 0 ) // TGP program? (COPRO socket)
+	ROM_LOAD32_WORD("mpr-16537.ic28", 0x000000, 0x200000, CRC(36b7c35a) SHA1(b32fd1d3fc8983fb5f2a7b236b665a8c9b52769f) )
+	ROM_LOAD32_WORD("mpr-16536.ic29", 0x000002, 0x200000, CRC(6d6afed9) SHA1(2018468d7d849854b3d0cfbcd217317e2fc93555) )
+
+	ROM_REGION( 0x1000000, "user2", 0 ) // Models
+	ROM_LOAD32_WORD("mpr-16523.ic16", 0x000000, 0x200000, CRC(2f484d42) SHA1(0b83a3fc92b7d913a14cfb01d688c63555c17c41) )
+	ROM_LOAD32_WORD("mpr-16518.ic20", 0x000002, 0x200000, CRC(df683bf7) SHA1(16afe5029591f3536b5b75d9cf50a34d0ea72c3d) )
+	ROM_LOAD32_WORD("mpr-16524.ic17", 0x400000, 0x200000, CRC(34658bd7) SHA1(71b47626ffe5b26d1140afe1b830a9a2be86c88f) )
+	ROM_LOAD32_WORD("mpr-16519.ic21", 0x400002, 0x200000, CRC(facd1c81) SHA1(dac8c281a5e9a6c4b60197e6676f3727264ee420) )
+	ROM_LOAD32_WORD("mpr-16525.ic18", 0x800000, 0x200000, CRC(fb517521) SHA1(33f5f37ea2e09fc73eed5388b46fdf1fa9e285e6) )
+	ROM_LOAD32_WORD("mpr-16520.ic22", 0x800002, 0x200000, CRC(d66bd9bd) SHA1(660171674484375a27595630e5e2d2ad76a06d1a) )
+	ROM_LOAD32_WORD("mpr-16772.ic19", 0xc00000, 0x200000, CRC(770ed912) SHA1(1789f35dd403f73f8be18495a0fe4ad1e6841417) )
+	ROM_LOAD32_WORD("mpr-16771.ic23", 0xc00002, 0x200000, CRC(a2205124) SHA1(257a3675e4ef6adbf61285a5daa5954223c28cb2) )
+
+	ROM_REGION( 0x1000000, "user3", 0 ) // Textures
+	ROM_LOAD32_WORD("mpr-16522.25", 0x000000, 0x200000, CRC(55d39a57) SHA1(abf7b0fc0f111f90da42463d600db9fa32e95efe) )
+	ROM_LOAD32_WORD("mpr-16521.24", 0x000002, 0x200000, CRC(af1934fb) SHA1(a6a21a23cd34d0de6d3e6a5c3c2687f905d0dc2a) )
+	ROM_LOAD32_WORD("mpr-16770.27", 0x800000, 0x200000, CRC(f9fa7bfb) SHA1(8aa933b74d4e05dc49987238705e50b00e5dae73) )
+	ROM_LOAD32_WORD("mpr-16769.26", 0x800002, 0x200000, CRC(e57429e9) SHA1(8c712ab09e61ef510741a55f29b3c4e497471372) )
+
+	ROM_REGION( 0x20000, "cpu3", 0) // Communication program
+	ROM_LOAD( "epr-16726.bin", 0x000000, 0x020000, CRC(c179b8c7) SHA1(86d3e65c77fb53b1d380b629348f4ab5b3d39228) )
+
+	ROM_REGION( 0x80000, "audiocpu", 0 ) // Sound program
+	ROM_LOAD16_WORD_SWAP("epr-16720.7", 0x000000, 0x020000, CRC(8e73cffd) SHA1(9933ccc0757e8c86e0adb938d1c89210b26841ea) )
+	ROM_LOAD16_WORD_SWAP("epr-16721.8", 0x020000, 0x020000, CRC(1bb3b7b7) SHA1(ee2fd1480e535fc37e9932e6fe4e31344559fc87) )
+
+	ROM_REGION( 0x400000, "sega1", 0 ) // Samples
+	ROM_LOAD("mpr-16491.32", 0x000000, 0x200000, CRC(89920903) SHA1(06d1d55470ae99f8de0f8c88c694f34c4eb13668) )
+	ROM_LOAD("mpr-16492.33", 0x200000, 0x200000, CRC(459e701b) SHA1(2054f69cecad677eb00c6a3051f5b5d90885e19b) )
+
+	ROM_REGION( 0x400000, "sega2", 0 ) // Samples
+	ROM_LOAD("mpr-16493.4", 0x000000, 0x200000, CRC(9990db15) SHA1(ea9a8b45a07dccaae62be7cf095532ce7596a70c) )
+	ROM_LOAD("mpr-16494.5", 0x200000, 0x200000, CRC(600e1d6c) SHA1(d4e246fc57a16ff562bbcbccf6a739b706f58696) )
+
+	MODEL2_CPU_BOARD /* Model 2 CPU board extra roms */
+
+	ROM_REGION( 0x10000, "user7", 0 ) // Unknown ROM
+	ROM_LOAD("epr-14869c.25", 0x000000, 0x010000, CRC(24b68e64) SHA1(c19d044d4c2fe551474492aa51922587394dd371) )
+ROM_END
+
+ROM_START( daytonata )/* Daytona USA (Japan, Turbo hack) */
+	ROM_REGION( 0x200000, "maincpu", 0 ) // i960 program
+	ROM_LOAD32_WORD( "dayturbo.12", 0x000000, 0x020000, CRC(aec6857a) SHA1(e29261de4344c99d82c9e494467605593cc776d8) )
+	ROM_LOAD32_WORD( "dayturbo.13", 0x000002, 0x020000, CRC(cb657edc) SHA1(90b8f673a4ef88e7c1f6012b80823d3e756f9743) )
 
 	ROM_REGION32_LE( 0x2000000, "user1", 0 ) // Data
 	ROM_LOAD32_WORD("mpr-16528.10",   0x000000, 0x200000, CRC(9ce591f6) SHA1(e22fc8a70b533f7a6191f5952c581fb8f9627906) )
@@ -5229,7 +5352,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(model2_state,genprot)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 }
 
@@ -5237,7 +5360,7 @@ DRIVER_INIT_MEMBER(model2_state,pltkids)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 
 	// fix bug in program: it destroys the interrupt table and never fixes it
@@ -5248,7 +5371,7 @@ DRIVER_INIT_MEMBER(model2_state,zerogun)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 
 	// fix bug in program: it destroys the interrupt table and never fixes it
@@ -5257,7 +5380,7 @@ DRIVER_INIT_MEMBER(model2_state,zerogun)
 
 DRIVER_INIT_MEMBER(model2_state,daytonam)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x240000, 0x24ffff, read32_delegate(FUNC(model2_state::maxx_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x240000, 0x24ffff, read32_delegate(FUNC(model2_state::maxx_r),this));
 }
 
 /* very crude support for let the game set itself into stand-alone mode */
@@ -5290,8 +5413,8 @@ DRIVER_INIT_MEMBER(model2_state,sgt24h)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
 
 	m_protstate = m_protpos = 0;
 
@@ -5301,7 +5424,7 @@ DRIVER_INIT_MEMBER(model2_state,sgt24h)
 
 DRIVER_INIT_MEMBER(model2_state,overrev)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01a10000, 0x01a1ffff, read32_delegate(FUNC(model2_state::jaleco_network_r),this), write32_delegate(FUNC(model2_state::jaleco_network_w),this));
 
 	//TODO: cache patch?
 }
@@ -5311,7 +5434,7 @@ DRIVER_INIT_MEMBER(model2_state,doa)
 {
 	UINT32 *ROM = (UINT32 *)memregion("maincpu")->base();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x01d80000, 0x01dfffff, read32_delegate(FUNC(model2_state::model2_prot_r),this), write32_delegate(FUNC(model2_state::model2_prot_w),this));
 	m_protstate = m_protpos = 0;
 
 	ROM[0x630/4] = 0x08000004;
@@ -5320,20 +5443,22 @@ DRIVER_INIT_MEMBER(model2_state,doa)
 
 DRIVER_INIT_MEMBER(model2_state,rchase2)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::rchase2_devices_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::rchase2_devices_w),this));
 }
 
 DRIVER_INIT_MEMBER(model2_state,srallyc)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::srallyc_devices_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x01c00008, 0x01c0000b, write32_delegate(FUNC(model2_state::srallyc_devices_w),this));
 }
 
 
 // Model 2 (TGPs, Model 1 sound board)
 GAME( 1993, daytona,         0, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA (Japan, Revision A)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, daytonase, daytona, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA Special Edition (Japan, Revision A)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, daytona93, daytona, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA Deluxe '93", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, daytonas,  daytona, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA (With Saturn Adverts)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, daytonat,  daytona, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA (Japan, Turbo hack)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, daytonat,  daytona, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA (Japan, Turbo hack, set 1)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, daytonata, daytona, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Daytona USA (Japan, Turbo hack, set 2)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, daytonam,  daytona, model2o, daytona, model2_state,  daytonam,ROT0, "Sega",   "Daytona USA (Japan, To The MAXX)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, desert,          0, model2o, desert,  driver_device, 0,       ROT0, "Sega / Martin Marietta", "Desert Tank", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, vcop,            0, model2o, daytona, driver_device, 0,       ROT0, "Sega",   "Virtua Cop (Revision B)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )

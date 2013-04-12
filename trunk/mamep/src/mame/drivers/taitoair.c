@@ -626,15 +626,14 @@ GFXDECODE_END
 ************************************************************/
 
 /* Handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(taitoair_state::irqhandler)
 {
-	taitoair_state *state = device->machine().driver_data<taitoair_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface airsys_ym2610_interface =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(taitoair_state,irqhandler)
 };
 
 
@@ -667,7 +666,6 @@ void taitoair_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_dsp = machine().device("dsp");
 	m_tc0080vco = machine().device("tc0080vco");
 

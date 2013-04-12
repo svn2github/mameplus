@@ -5,7 +5,7 @@ class f1gp_state : public driver_device
 {
 public:
 	f1gp_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_sharedram(*this, "sharedram"),
 		m_spr1vram(*this, "spr1vram"),
 		m_spr2vram(*this, "spr2vram"),
@@ -20,8 +20,9 @@ public:
 		m_rozregs(*this, "rozregs"),
 		m_spr_old(*this, "vsystem_spr_old"),
 		m_spr_old2(*this, "vsystem_spr_ol2"),
-		m_spr(*this, "vsystem_spr")
-	{ }
+		m_spr(*this, "vsystem_spr"),
+		m_audiocpu(*this, "audiocpu"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_sharedram;
@@ -61,7 +62,7 @@ public:
 	int       m_pending_command;
 
 	/* devices */
-	cpu_device *m_audiocpu;
+	optional_device<cpu_device> m_audiocpu;
 	device_t *m_k053936;
 	DECLARE_READ16_MEMBER(sharedram_r);
 	DECLARE_WRITE16_MEMBER(sharedram_w);
@@ -93,4 +94,6 @@ public:
 	UINT32 screen_update_f1gpb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_f1gp2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void f1gpb_draw_sprites( bitmap_ind16 &bitmap,const rectangle &cliprect );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	required_device<cpu_device> m_maincpu;
 };

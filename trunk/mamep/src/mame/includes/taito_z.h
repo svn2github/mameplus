@@ -13,7 +13,11 @@ class taitoz_state : public driver_device
 public:
 	taitoz_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_spriteram(*this, "spriteram")
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub"),
+		m_eeprom(*this, "eeprom")
 	{ }
 
 	/* memory pointers */
@@ -31,10 +35,10 @@ public:
 	UINT16      m_eep_latch;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
-	eeprom_device *m_eeprom;
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
+	optional_device<eeprom_device> m_eeprom;
 	device_t *m_tc0480scp;
 	device_t *m_tc0150rod;
 	device_t *m_tc0100scn;
@@ -98,4 +102,6 @@ public:
 	void spacegun_draw_sprites_16x8(bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
 	void parse_cpu_control(  );
 	void reset_sound_region(  );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	DECLARE_WRITE_LINE_MEMBER(irqhandlerb);
 };

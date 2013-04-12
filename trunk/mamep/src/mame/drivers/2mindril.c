@@ -43,7 +43,8 @@ class _2mindril_state : public taito_f3_state
 public:
 	_2mindril_state(const machine_config &mconfig, device_type type, const char *tag)
 		: taito_f3_state(mconfig, type, tag),
-			m_iodata(*this, "iodata") { }
+		m_iodata(*this, "iodata"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_iodata;
@@ -54,7 +55,7 @@ public:
 	UINT16        irq_reg;
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	DECLARE_READ16_MEMBER(drill_io_r);
 	DECLARE_WRITE16_MEMBER(drill_io_w);
 	DECLARE_WRITE16_MEMBER(sensors_w);
@@ -68,6 +69,7 @@ public:
 	TIMER_CALLBACK_MEMBER(shutter_req);
 	TIMER_CALLBACK_MEMBER(defender_req);
 	void tile_decode();
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };
 
 
@@ -184,10 +186,10 @@ WRITE16_MEMBER(_2mindril_state::drill_irq_w)
 	---- ---- -??- -??? connected to the other levels?
 	*/
 	if(((irq_reg & 8) == 0) && data & 8)
-		machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+		m_maincpu->set_input_line(4, CLEAR_LINE);
 
 	if(((irq_reg & 0x10) == 0) && data & 0x10)
-		machine().device("maincpu")->execute().set_input_line(5, CLEAR_LINE);
+		m_maincpu->set_input_line(5, CLEAR_LINE);
 
 	if(data & 0xffe7)
 		printf("%04x\n",data);
@@ -408,21 +410,19 @@ INTERRUPT_GEN_MEMBER(_2mindril_state::drill_device_irq)
 #endif
 
 /* WRONG,it does something with 60000c & 700002,likely to be called when the player throws the ball.*/
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(_2mindril_state::irqhandler)
 {
-//  _2mindril_state *state = machine.driver_data<_2mindril_state>();
-//  state->m_maincpu->set_input_line(5, irq ? ASSERT_LINE : CLEAR_LINE);
+//  m_maincpu->set_input_line(5, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(_2mindril_state,irqhandler)
 };
 
 
 MACHINE_START_MEMBER(_2mindril_state,drill)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	save_item(NAME(m_defender_sensor));
 	save_item(NAME(m_shutter_sensor));

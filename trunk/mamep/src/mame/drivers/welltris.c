@@ -334,7 +334,7 @@ WRITE16_MEMBER(welltris_state::sound_command_w)
 	{
 		m_pending_command = 1;
 		soundlatch_byte_w(space, 0, data & 0xff);
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -671,14 +671,14 @@ GFXDECODE_END
 
 
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(welltris_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(welltris_state,irqhandler)
 };
 
 

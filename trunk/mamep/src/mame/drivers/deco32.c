@@ -278,7 +278,7 @@ static const deco16ic_interface fghthist_deco16ic_tilegen2_intf =
 
 TIMER_DEVICE_CALLBACK_MEMBER(deco32_state::interrupt_gen)
 {
-	machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
+	m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 READ32_MEMBER(deco32_state::deco32_irq_controller_r)
@@ -288,7 +288,7 @@ READ32_MEMBER(deco32_state::deco32_irq_controller_r)
 	switch (offset)
 	{
 	case 2: /* Raster IRQ ACK - value read is not used */
-		machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, CLEAR_LINE);
+		m_maincpu->set_input_line(ARM_IRQ_LINE, CLEAR_LINE);
 		return 0;
 
 	case 3: /* Irq controller
@@ -344,7 +344,7 @@ WRITE32_MEMBER(deco32_state::deco32_irq_controller_w)
 WRITE32_MEMBER(deco32_state::deco32_sound_w)
 {
 	soundlatch_byte_w(space,0,data & 0xff);
-	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ32_MEMBER(deco32_state::deco32_71_r)
@@ -378,7 +378,7 @@ READ32_MEMBER(deco32_state::fghthist_control_r)
 	switch (offset) {
 	case 0: return 0xffff0000 | ioport("IN0")->read();
 	case 1: return 0xffff0000 | ioport("IN1")->read(); //check top bits??
-	case 2: return 0xfffffffe | machine().device<eeprom_device>("eeprom")->read_bit();
+	case 2: return 0xfffffffe | m_eeprom->read_bit();
 	}
 
 	return 0xffffffff;
@@ -387,10 +387,9 @@ READ32_MEMBER(deco32_state::fghthist_control_r)
 WRITE32_MEMBER(deco32_state::fghthist_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7) {
-		eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-		eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-		eeprom->write_bit(data & 0x10);
-		eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit(data & 0x10);
+		m_eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 
 		deco32_pri_w(space,0,data&0x1,0xffffffff); /* Bit 0 - layer priority toggle */
 	}
@@ -457,19 +456,15 @@ WRITE32_MEMBER(dragngun_state::dragngun_lightgun_w)
 
 READ32_MEMBER(deco32_state::dragngun_eeprom_r)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	return 0xfffffffe | eeprom->read_bit();
+	return 0xfffffffe | m_eeprom->read_bit();
 }
 
 WRITE32_MEMBER(deco32_state::dragngun_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_0_7) {
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
-		eeprom->write_bit(data & 0x1);
-		eeprom->set_cs_line((data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit(data & 0x1);
+		m_eeprom->set_cs_line((data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
 		return;
 	}
 	logerror("%s:Write control 1 %08x %08x\n",machine().describe_context(),offset,data);
@@ -504,8 +499,7 @@ WRITE32_MEMBER(deco32_state::tattass_prot_w)
 
 WRITE32_MEMBER(deco32_state::tattass_control_w)
 {
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-	address_space &eeprom_space = eeprom->space();
+	address_space &eeprom_space = m_eeprom->space();
 
 	/* Eprom in low byte */
 	if (mem_mask==0x000000ff) { /* Byte write to low byte only (different from word writing including low byte) */
@@ -640,7 +634,7 @@ READ32_MEMBER(deco32_state::nslasher_prot_r)
 	switch (offset<<1) {
 	case 0x280: return ioport("IN0")->read() << 16| 0xffff; /* IN0 */
 	case 0x4c4: return ioport("IN1")->read() << 16| 0xffff; /* IN1 */
-	case 0x35a: return (machine().device<eeprom_device>("eeprom")->read_bit()<< 16) | 0xffff; // Debug switch in low word??
+	case 0x35a: return (m_eeprom->read_bit()<< 16) | 0xffff; // Debug switch in low word??
 	}
 
 	//logerror("%08x: Read unmapped prot %08x (%08x)\n",space.device().safe_pc(),offset<<1,mem_mask);
@@ -652,10 +646,9 @@ WRITE32_MEMBER(deco32_state::nslasher_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-		eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-		eeprom->write_bit(data & 0x10);
-		eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit(data & 0x10);
+		m_eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 
 		deco32_pri_w(space,0,data&0x3,0xffffffff); /* Bit 0 - layer priority toggle, Bit 1 - BG2/3 Joint mode (8bpp) */
 	}
@@ -671,7 +664,7 @@ WRITE32_MEMBER(deco32_state::nslasher_prot_w)
 		/* bit 1 of nslasher_sound_irq specifies IRQ command writes */
 		soundlatch_byte_w(space,0,(data>>16)&0xff);
 		m_nslasher_sound_irq |= 0x02;
-		machine().device("audiocpu")->execute().set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+		m_audiocpu->set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -1014,7 +1007,7 @@ READ8_MEMBER(deco32_state::latch_r)
 {
 	/* bit 1 of nslasher_sound_irq specifies IRQ command writes */
 	m_nslasher_sound_irq &= ~0x02;
-	machine().device("audiocpu")->execute().set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 	return soundlatch_byte_r(space,0);
 }
 
@@ -1625,15 +1618,13 @@ WRITE_LINE_MEMBER(deco32_state::sound_irq_nslasher)
 		m_nslasher_sound_irq |= 0x01;
 	else
 		m_nslasher_sound_irq &= ~0x01;
-	subdevice("audiocpu")->execute().set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE8_MEMBER(deco32_state::sound_bankswitch_w)
 {
-	okim6295_device *oki1 = machine().device<okim6295_device>("oki1");
-	okim6295_device *oki2 = machine().device<okim6295_device>("oki2");
-	oki1->set_bank_base(((data >> 0)& 1) * 0x40000);
-	oki2->set_bank_base(((data >> 1)& 1) * 0x40000);
+	m_oki1->set_bank_base(((data >> 0)& 1) * 0x40000);
+	m_oki2->set_bank_base(((data >> 1)& 1) * 0x40000);
 }
 
 static const eeprom_interface eeprom_interface_tattass =

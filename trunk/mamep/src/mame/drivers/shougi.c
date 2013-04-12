@@ -91,8 +91,11 @@ class shougi_state : public driver_device
 {
 public:
 	shougi_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_videoram(*this, "videoram"){ }
+		: driver_device(mconfig, type, tag),
+		m_videoram(*this, "videoram"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub"),
+		m_mcu(*this, "mcu") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	int m_nmi_enabled;
@@ -113,6 +116,9 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_shougi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(shougi_vblank_nmi);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
+	required_device<cpu_device> m_mcu;
 };
 
 
@@ -248,13 +254,13 @@ WRITE8_MEMBER(shougi_state::shougi_watchdog_reset_w)
 WRITE8_MEMBER(shougi_state::shougi_mcu_halt_off_w)
 {
 	/* logerror("mcu HALT OFF"); */
-	machine().device("mcu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+	m_mcu->set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(shougi_state::shougi_mcu_halt_on_w)
 {
 	/* logerror("mcu HALT ON"); */
-	machine().device("mcu")->execute().set_input_line(INPUT_LINE_HALT,ASSERT_LINE);
+	m_mcu->set_input_line(INPUT_LINE_HALT,ASSERT_LINE);
 }
 
 
@@ -263,8 +269,8 @@ WRITE8_MEMBER(shougi_state::nmi_disable_and_clear_line_w)
 	m_nmi_enabled = 0; /* disable NMIs */
 
 	/* NMI lines are tied together on both CPUs and connected to the LS74 /Q output */
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(shougi_state::nmi_enable_w)
@@ -277,8 +283,8 @@ INTERRUPT_GEN_MEMBER(shougi_state::shougi_vblank_nmi)
 	if ( m_nmi_enabled == 1 )
 	{
 		/* NMI lines are tied together on both CPUs and connected to the LS74 /Q output */
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 }
 

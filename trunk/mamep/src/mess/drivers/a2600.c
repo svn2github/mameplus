@@ -49,12 +49,12 @@ class a2600_state : public driver_device
 {
 public:
 	a2600_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-		, m_riot_ram(*this, "riot_ram")
-		, m_banking_mode(0xff)
-		, m_joy1(*this, CONTROL1_TAG)
-		, m_joy2(*this, CONTROL2_TAG)
-		{ }
+		: driver_device(mconfig, type, tag),
+		m_riot_ram(*this, "riot_ram"),
+		m_banking_mode(0xff),
+		m_joy1(*this, CONTROL1_TAG),
+		m_joy2(*this, CONTROL2_TAG) ,
+		m_maincpu(*this, "maincpu") { }
 
 	dpc_t m_dpc;
 	memory_region* m_extra_RAM;
@@ -168,6 +168,7 @@ protected:
 	int detect_32K_mode3F();
 	int detect_super_chip();
 	unsigned long detect_2600controllers();
+	required_device<cpu_device> m_maincpu;
 };
 
 

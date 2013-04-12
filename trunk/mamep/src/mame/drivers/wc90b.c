@@ -117,7 +117,7 @@ WRITE8_MEMBER(wc90b_state::wc90b_bankswitch1_w)
 WRITE8_MEMBER(wc90b_state::wc90b_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(wc90b_state::adpcm_control_w)
@@ -324,10 +324,10 @@ GFXDECODE_END
 
 
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(wc90b_state::irqhandler)
 {
 	/* NMI writes to MSM ports *only*! -AS */
-	//device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
+	//m_audiocpu->set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -337,26 +337,24 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(wc90b_state,irqhandler)
 };
 
-static void adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(wc90b_state::adpcm_int)
 {
-	wc90b_state *state = device->machine().driver_data<wc90b_state>();
-
-	state->m_toggle ^= 1;
-	if(state->m_toggle)
+	m_toggle ^= 1;
+	if(m_toggle)
 	{
-		msm5205_data_w(device, (state->m_msm5205next & 0xf0) >> 4);
-		device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		msm5205_data_w(machine().device("msm"), (m_msm5205next & 0xf0) >> 4);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	else
-		msm5205_data_w(device, (state->m_msm5205next & 0x0f) >> 0);
+		msm5205_data_w(machine().device("msm"), (m_msm5205next & 0x0f) >> 0);
 }
 
 static const msm5205_interface msm5205_config =
 {
-	adpcm_int,      /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(wc90b_state,adpcm_int),      /* interrupt function */
 	MSM5205_S96_4B  /* 4KHz 4-bit */
 };
 

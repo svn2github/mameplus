@@ -47,22 +47,20 @@ void micro3d_duart_tx(device_t *device, int channel, UINT8 data)
 	else
 	{
 		state->m_m68681_tx0 = data;
-		device->machine().device("audiocpu")->execute().set_input_line(MCS51_RX_LINE, ASSERT_LINE);
+		state->m_audiocpu->set_input_line(MCS51_RX_LINE, ASSERT_LINE);
 		// TODO: next line should be behind a timer callback which lasts one audiocpu clock cycle
-		device->machine().device("audiocpu")->execute().set_input_line(MCS51_RX_LINE, CLEAR_LINE);
+		state->m_audiocpu->set_input_line(MCS51_RX_LINE, CLEAR_LINE);
 	}
 };
 
-static int data_to_i8031(device_t *device)
+READ8_MEMBER(micro3d_state::data_to_i8031)
 {
-	micro3d_state *state = device->machine().driver_data<micro3d_state>();
-	return state->m_m68681_tx0;
+	return m_m68681_tx0;
 }
 
-static void data_from_i8031(device_t *device, int data)
+WRITE8_MEMBER(micro3d_state::data_from_i8031)
 {
-	micro3d_state *state = device->machine().driver_data<micro3d_state>();
-	duart68681_rx_data(state->m_duart68681, 1, data);
+	duart68681_rx_data(m_duart68681, 1, data);
 }
 
 /*
@@ -584,7 +582,7 @@ READ32_MEMBER(micro3d_state::micro3d_shared_r)
 
 WRITE32_MEMBER(micro3d_state::drmath_int_w)
 {
-	machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+	m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 WRITE32_MEMBER(micro3d_state::drmath_intr2_ack)
@@ -603,8 +601,8 @@ DRIVER_INIT_MEMBER(micro3d_state,micro3d)
 {
 	address_space &space = machine().device("drmath")->memory().space(AS_DATA);
 
-	i8051_set_serial_tx_callback(machine().device("audiocpu"), data_from_i8031);
-	i8051_set_serial_rx_callback(machine().device("audiocpu"), data_to_i8031);
+	i8051_set_serial_tx_callback(m_audiocpu, write8_delegate(FUNC(micro3d_state::data_from_i8031),this));
+	i8051_set_serial_rx_callback(m_audiocpu, read8_delegate(FUNC(micro3d_state::data_to_i8031),this));
 
 	m_duart68681 = machine().device("duart68681");
 
@@ -615,12 +613,12 @@ DRIVER_INIT_MEMBER(micro3d_state,micro3d)
 	/* TODO? BOTSS crashes when starting the final stage because the 68000
 	overwrites memory in use by the Am29000. Slowing down the 68000 slightly
 	avoids this */
-	machine().device("maincpu")->set_clock_scale(0.945f);
+	m_maincpu->set_clock_scale(0.945f);
 }
 
 DRIVER_INIT_MEMBER(micro3d_state,botss)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	/* Required to pass the hardware version check */
 	space.install_read_handler(0x140000, 0x140001, read16_delegate(FUNC(micro3d_state::botss_140000_r),this));
@@ -635,5 +633,5 @@ void micro3d_state::machine_reset()
 
 	machine().device("vgb")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	machine().device("drmath")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }

@@ -42,7 +42,7 @@ public:
 	// devices
 	required_device<duart68681_device> m_duart;
 	required_device<ymz280b_device> m_ymz;
-	required_device<cpu_device> m_maincpu;
+	required_device<legacy_cpu_device> m_maincpu;
 	optional_device<bfm_bda_t> m_vfd0;
 	required_device<nvram_device> m_nvram;
 
@@ -497,6 +497,7 @@ public:
 	DECLARE_MACHINE_START(sc4);
 	DECLARE_MACHINE_RESET(sc4);
 
+	DECLARE_WRITE_LINE_MEMBER(bfm_sc4_irqhandler);
 protected:
 	required_ioport m_io1;
 	required_ioport m_io2;

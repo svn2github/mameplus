@@ -320,15 +320,14 @@ GFXDECODE_END
 
 ******************************************************************************/
 
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(inufuku_state::irqhandler)
 {
-	inufuku_state *state = device->machine().driver_data<inufuku_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(inufuku_state,irqhandler)
 };
 
 
@@ -345,7 +344,6 @@ void inufuku_state::machine_start()
 	membank("bank1")->configure_entries(0, 4, &ROM[0x00000], 0x8000);
 	membank("bank1")->set_entry(0);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_pending_command));
 	save_item(NAME(m_bg_scrollx));

@@ -20,12 +20,14 @@ class triplhnt_state : public driver_device
 {
 public:
 	triplhnt_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_playfield_ram(*this, "playfield_ram"),
 		m_vpos_ram(*this, "vpos_ram"),
 		m_hpos_ram(*this, "hpos_ram"),
 		m_orga_ram(*this, "orga_ram"),
-		m_code_ram(*this, "code_ram"){ }
+		m_code_ram(*this, "code_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_discrete(*this, "discrete") { }
 
 	UINT8 m_cmos[16];
 	UINT8 m_da_latch;
@@ -55,6 +57,8 @@ public:
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void triplhnt_set_collision(int code);
 	void triplhnt_update_misc(address_space &space, int offset);
+	required_device<cpu_device> m_maincpu;
+	required_device<discrete_device> m_discrete;
 };
 
 

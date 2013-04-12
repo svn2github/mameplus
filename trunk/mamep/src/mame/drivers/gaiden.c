@@ -306,7 +306,6 @@ MACHINE_RESET_MEMBER(gaiden_state,raiga)
 
 MACHINE_START_MEMBER(gaiden_state,raiga)
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_prot));
 	save_item(NAME(m_jumpcode));
@@ -738,10 +737,9 @@ static GFXDECODE_START( drgnbowl )
 GFXDECODE_END
 
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(gaiden_state::irqhandler)
 {
-	gaiden_state *state = device->machine().driver_data<gaiden_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -751,7 +749,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(gaiden_state,irqhandler)
 };
 
 static MACHINE_CONFIG_START( shadoww, gaiden_state )
@@ -1490,8 +1488,8 @@ DRIVER_INIT_MEMBER(gaiden_state,wildfang)
 
 	m_prot = 0;
 	m_jumpcode = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::wildfang_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::wildfang_protection_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::wildfang_protection_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::wildfang_protection_w),this));
 }
 
 DRIVER_INIT_MEMBER(gaiden_state,raiga)
@@ -1502,8 +1500,8 @@ DRIVER_INIT_MEMBER(gaiden_state,raiga)
 
 	m_prot = 0;
 	m_jumpcode = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::raiga_protection_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::raiga_protection_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::raiga_protection_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::raiga_protection_w),this));
 }
 
 void gaiden_state::descramble_drgnbowl_gfx()

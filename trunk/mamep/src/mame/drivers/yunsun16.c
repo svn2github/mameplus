@@ -156,7 +156,7 @@ number 0 on each voice. That sample is 00000-00000.
 DRIVER_INIT_MEMBER(yunsun16_state,magicbub)
 {
 //  remove_mem_write16_handler (0, 0x800180, 0x800181 );
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x800188, 0x800189, write16_delegate(FUNC(yunsun16_state::magicbub_sound_command_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x800188, 0x800189, write16_delegate(FUNC(yunsun16_state::magicbub_sound_command_w),this));
 }
 
 /***************************************************************************
@@ -556,7 +556,6 @@ GFXDECODE_END
 
 void yunsun16_state::machine_start()
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_sprites_scrolldx));
 	save_item(NAME(m_sprites_scrolldy));
@@ -572,15 +571,14 @@ void yunsun16_state::machine_reset()
                                 Magic Bubble
 ***************************************************************************/
 
-static void soundirq(device_t *device, int state)
+WRITE_LINE_MEMBER(yunsun16_state::soundirq)
 {
-	yunsun16_state *yunsun16 = device->machine().driver_data<yunsun16_state>();
-	yunsun16->m_audiocpu->set_input_line(0, state);
+	m_audiocpu->set_input_line(0, state);
 }
 
 static const ym3812_interface magicbub_ym3812_intf =
 {
-	soundirq    /* IRQ Line */
+	DEVCB_DRIVER_LINE_MEMBER(yunsun16_state,soundirq)    /* IRQ Line */
 };
 
 static MACHINE_CONFIG_START( magicbub, yunsun16_state )

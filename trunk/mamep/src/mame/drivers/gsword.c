@@ -321,7 +321,7 @@ WRITE8_MEMBER(gsword_state::gsword_adpcm_data_w)
 WRITE8_MEMBER(gsword_state::adpcm_soundcommand_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( cpu1_map, AS_PROGRAM , 8, gsword_state )
@@ -649,7 +649,7 @@ static const ay8910_interface ay8910_config =
 
 static const msm5205_interface msm5205_config =
 {
-	0,              /* interrupt function */
+	DEVCB_NULL,              /* interrupt function */
 	MSM5205_SEX_4B  /* vclk input mode    */
 };
 
@@ -904,7 +904,7 @@ DRIVER_INIT_MEMBER(gsword_state,gsword)
 #endif
 #if 1
 	/* hack for sound protection or time out function */
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x4004, 0x4005, read8_delegate(FUNC(gsword_state::gsword_hack_r),this));
+	m_subcpu->space(AS_PROGRAM).install_read_handler(0x4004, 0x4005, read8_delegate(FUNC(gsword_state::gsword_hack_r),this));
 #endif
 }
 
@@ -919,7 +919,7 @@ DRIVER_INIT_MEMBER(gsword_state,gsword2)
 #endif
 #if 1
 	/* hack for sound protection or time out function */
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x4004, 0x4005, read8_delegate(FUNC(gsword_state::gsword_hack_r),this));
+	m_subcpu->space(AS_PROGRAM).install_read_handler(0x4004, 0x4005, read8_delegate(FUNC(gsword_state::gsword_hack_r),this));
 #endif
 }
 

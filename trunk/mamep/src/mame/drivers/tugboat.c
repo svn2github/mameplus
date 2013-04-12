@@ -32,8 +32,9 @@ class tugboat_state : public driver_device
 {
 public:
 	tugboat_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_ram(*this, "ram"){ }
+		: driver_device(mconfig, type, tag),
+		m_ram(*this, "ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_ram;
 	UINT8 m_hd46505_0_reg[18];
@@ -51,6 +52,7 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_tugboat(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(interrupt_gen);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -205,7 +207,7 @@ static const pia6821_interface pia1_intf =
 
 TIMER_CALLBACK_MEMBER(tugboat_state::interrupt_gen)
 {
-	machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
+	m_maincpu->set_input_line(0, HOLD_LINE);
 	machine().scheduler().timer_set(machine().primary_screen->frame_period(), timer_expired_delegate(FUNC(tugboat_state::interrupt_gen),this));
 }
 

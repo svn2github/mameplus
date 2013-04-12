@@ -19,7 +19,7 @@
 INPUT_CHANGED_MEMBER(madalien_state::coin_inserted)
 {
 	/* coin insertion causes an NMI */
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -54,27 +54,25 @@ WRITE8_MEMBER(madalien_state::madalien_output_w)
 
 WRITE8_MEMBER(madalien_state::madalien_sound_command_w)
 {
-	machine().device("audiocpu")->execute().set_input_line(0, ASSERT_LINE);
+	m_audiocpu->set_input_line(0, ASSERT_LINE);
 	soundlatch_byte_w(space, offset, data);
 }
 
 
 READ8_MEMBER(madalien_state::madalien_sound_command_r)
 {
-	machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return soundlatch_byte_r(space, offset);
 }
 
 
 WRITE8_MEMBER(madalien_state::madalien_portA_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, MADALIEN_8910_PORTA, data);
+	discrete_sound_w(m_discrete, space, MADALIEN_8910_PORTA, data);
 }
 WRITE8_MEMBER(madalien_state::madalien_portB_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, MADALIEN_8910_PORTB, data);
+	discrete_sound_w(m_discrete, space, MADALIEN_8910_PORTB, data);
 }
 
 

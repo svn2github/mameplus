@@ -55,9 +55,10 @@ class safarir_state : public driver_device
 {
 public:
 	safarir_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_bg_scroll(*this, "bg_scroll"),
-		m_ram(*this, "ram") { }
+		m_ram(*this, "ram") ,
+		m_maincpu(*this, "maincpu") { }
 
 	UINT8 *m_ram_1;
 	UINT8 *m_ram_2;
@@ -79,6 +80,7 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	UINT32 screen_update_safarir(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -152,7 +154,7 @@ void safarir_state::palette_init()
 TILE_GET_INFO_MEMBER(safarir_state::get_bg_tile_info)
 {
 	int color;
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	UINT8 code = ram_r(space,tile_index | 0x400);
 
 	if (code & 0x80)
@@ -174,7 +176,7 @@ TILE_GET_INFO_MEMBER(safarir_state::get_bg_tile_info)
 TILE_GET_INFO_MEMBER(safarir_state::get_fg_tile_info)
 {
 	int color, flags;
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	UINT8 code = ram_r(space,tile_index);
 
 	if (code & 0x80)

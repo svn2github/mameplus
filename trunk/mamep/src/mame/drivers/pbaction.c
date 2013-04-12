@@ -256,8 +256,6 @@ INTERRUPT_GEN_MEMBER(pbaction_state::pbaction_interrupt)
 
 void pbaction_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_scroll));
 }
@@ -482,7 +480,7 @@ DRIVER_INIT_MEMBER(pbaction_state,pbactio3)
 	pbaction_decode(machine(), "maincpu");
 
 	/* install a protection (?) workaround */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xc000, 0xc000, read8_delegate(FUNC(pbaction_state::pbactio3_prot_kludge_r),this) );
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xc000, 0xc000, read8_delegate(FUNC(pbaction_state::pbactio3_prot_kludge_r),this) );
 }
 
 DRIVER_INIT_MEMBER(pbaction_state,pbactio4)

@@ -39,7 +39,7 @@ class pinkiri8_state : public driver_device
 {
 public:
 	pinkiri8_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_janshi_back_vram(*this, "back_vram"),
 		m_janshi_vram1(*this, "vram1"),
 		m_janshi_unk1(*this, "unk1"),
@@ -48,7 +48,8 @@ public:
 		m_janshi_vram2(*this, "vram2"),
 		m_janshi_paletteram(*this, "paletteram"),
 		m_janshi_paletteram2(*this, "paletteram2"),
-		m_janshi_crtc_regs(*this, "crtc_regs"){ }
+		m_janshi_crtc_regs(*this, "crtc_regs"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_janshi_back_vram;
 	required_shared_ptr<UINT8> m_janshi_vram1;
@@ -77,6 +78,7 @@ public:
 	DECLARE_DRIVER_INIT(ronjan);
 	virtual void video_start();
 	UINT32 screen_update_pinkiri8(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -422,7 +424,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(pinkiri8_state::output_regs_w)
 {
 	if(data & 0x40)
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	//data & 0x80 is probably NMI mask
 }
 
@@ -1249,9 +1251,9 @@ READ8_MEMBER(pinkiri8_state::ronjan_patched_prot_r)
 
 DRIVER_INIT_MEMBER(pinkiri8_state,ronjan)
 {
-	machine().device("maincpu")->memory().space(AS_IO).install_readwrite_handler(0x90, 0x90, read8_delegate(FUNC(pinkiri8_state::ronjan_prot_r), this), write8_delegate(FUNC(pinkiri8_state::ronjan_prot_w), this));
-	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x66, 0x66, read8_delegate(FUNC(pinkiri8_state::ronjan_prot_status_r), this));
-	machine().device("maincpu")->memory().space(AS_IO).install_read_handler(0x9f, 0x9f, read8_delegate(FUNC(pinkiri8_state::ronjan_patched_prot_r), this));
+	m_maincpu->space(AS_IO).install_readwrite_handler(0x90, 0x90, read8_delegate(FUNC(pinkiri8_state::ronjan_prot_r), this), write8_delegate(FUNC(pinkiri8_state::ronjan_prot_w), this));
+	m_maincpu->space(AS_IO).install_read_handler(0x66, 0x66, read8_delegate(FUNC(pinkiri8_state::ronjan_prot_status_r), this));
+	m_maincpu->space(AS_IO).install_read_handler(0x9f, 0x9f, read8_delegate(FUNC(pinkiri8_state::ronjan_patched_prot_r), this));
 }
 
 GAME( 1992,  janshi,    0,   pinkiri8, janshi, driver_device,    0,      ROT0, "Eagle",         "Janshi",          GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )

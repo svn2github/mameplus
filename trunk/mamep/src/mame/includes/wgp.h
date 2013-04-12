@@ -15,7 +15,10 @@ public:
 		m_spriteram(*this, "spriteram"),
 		m_pivram(*this, "pivram"),
 		m_piv_ctrlram(*this, "piv_ctrlram"),
-		m_sharedram(*this, "sharedram"){ }
+		m_sharedram(*this, "sharedram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_spritemap;
@@ -42,9 +45,9 @@ public:
 	INT32       m_banknum;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
 	device_t *m_tc0100scn;
 	tc0140syt_device *m_tc0140syt;
 	DECLARE_READ16_MEMBER(sharedram_r);
@@ -82,4 +85,5 @@ public:
 	void wgp_piv_layer_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority );
 	void parse_control();
 	void reset_sound_region(  )  /* assumes Z80 sandwiched between the 68Ks */;
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };

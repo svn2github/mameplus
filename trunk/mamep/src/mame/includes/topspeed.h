@@ -12,7 +12,10 @@ public:
 		m_spritemap(*this, "spritemap"),
 		m_raster_ctrl(*this, "raster_ctrl"),
 		m_spriteram(*this, "spriteram"),
-		m_sharedram(*this, "sharedram")
+		m_sharedram(*this, "sharedram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "subcpu")
 	{ }
 
 	/* memory pointers */
@@ -35,9 +38,9 @@ public:
 	INT32      m_banknum;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
 	device_t *m_pc080sn_1;
 	device_t *m_pc080sn_2;
 	device_t *m_tc0220ioc;
@@ -64,4 +67,7 @@ public:
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void parse_control(  )   /* assumes Z80 sandwiched between 68Ks */;
 	void reset_sound_region(  );
+	void topspeed_msm5205_clock(device_t *device, int chip);
+	DECLARE_WRITE_LINE_MEMBER(topspeed_msm5205_vck_1);
+	DECLARE_WRITE_LINE_MEMBER(topspeed_msm5205_vck_2);
 };

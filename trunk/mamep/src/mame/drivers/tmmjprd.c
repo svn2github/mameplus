@@ -41,7 +41,9 @@ public:
 		: driver_device(mconfig, type, tag),
 			m_tilemap_regs(*this, "tilemap_regs"),
 			m_spriteregs(*this, "spriteregs"),
-			m_spriteram(*this, "spriteram") { }
+			m_spriteram(*this, "spriteram") ,
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr_array<UINT32, 4> m_tilemap_regs;
 	required_shared_ptr<UINT32> m_spriteregs;
@@ -75,6 +77,8 @@ public:
 	void ttmjprd_draw_tile(bitmap_ind16 &bitmap, const rectangle &cliprect, int x,int y,int sizex,int sizey, UINT32 tiledata, UINT8* rom);
 	void ttmjprd_draw_tilemap(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT32*tileram, UINT32*tileregs, UINT8*rom );
 	void tmmjprd_do_blit();
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 };
 
 
@@ -385,7 +389,7 @@ READ32_MEMBER(tmmjprd_state::randomtmmjprds)
 #if 0
 TIMER_CALLBACK_MEMBER(tmmjprd_state::tmmjprd_blit_done)
 {
-	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+	m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 void tmmjprd_state::tmmjprd_do_blit()
@@ -497,7 +501,6 @@ WRITE32_MEMBER(tmmjprd_state::tmmjprd_blitter_w)
 
 WRITE32_MEMBER(tmmjprd_state::tmmjprd_eeprom_write)
 {
-	device_t *device = machine().device("eeprom");
 	// don't disturb the EEPROM if we're not actually writing to it
 	// (in particular, data & 0x100 here with mask = ffff00ff looks to be the watchdog)
 	if (mem_mask == 0x000000ff)
@@ -506,14 +509,13 @@ WRITE32_MEMBER(tmmjprd_state::tmmjprd_eeprom_write)
 	if (mem_mask == 0xff000000)
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x01000000);
+		m_eeprom->write_bit(data & 0x01000000);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x04000000) ? CLEAR_LINE : ASSERT_LINE );
+		m_eeprom->set_cs_line((data & 0x04000000) ? CLEAR_LINE : ASSERT_LINE );
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
+		m_eeprom->set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
@@ -739,10 +741,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(tmmjprd_state::tmmjprd_scanline)
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 
 	if(scanline == 736) // blitter irq?
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 }
 

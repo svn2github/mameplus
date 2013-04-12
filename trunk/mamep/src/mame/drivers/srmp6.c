@@ -74,11 +74,12 @@ class srmp6_state : public driver_device
 {
 public:
 	srmp6_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_sprram(*this, "sprram"),
 		m_chrram(*this, "chrram"),
 		m_dmaram(*this, "dmaram"),
-		m_video_regs(*this, "video_regs"){ }
+		m_video_regs(*this, "video_regs"),
+		m_maincpu(*this, "maincpu") { }
 
 	UINT16* m_tileram;
 	required_shared_ptr<UINT16> m_sprram;
@@ -108,6 +109,7 @@ public:
 	UINT32 screen_update_srmp6(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void update_palette();
 	UINT32 process(UINT8 b,UINT32 dst_offset);
+	required_device<cpu_device> m_maincpu;
 };
 
 #define VERBOSE 0
@@ -531,7 +533,7 @@ WRITE16_MEMBER(srmp6_state::paletteram_w)
 
 READ16_MEMBER(srmp6_state::srmp6_irq_ack_r)
 {
-	machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+	m_maincpu->set_input_line(4, CLEAR_LINE);
 	return 0; // value read doesn't matter
 }
 

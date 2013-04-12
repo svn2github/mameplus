@@ -420,7 +420,7 @@ TIMER_CALLBACK_MEMBER(leland_state::leland_interrupt_callback)
 
 	/* interrupts generated on the VA10 line, which is every */
 	/* 16 scanlines starting with scanline #8 */
-	machine().device("master")->execute().set_input_line(0, HOLD_LINE);
+	m_master->set_input_line(0, HOLD_LINE);
 
 	/* set a timer for the next one */
 	scanline += 16;
@@ -435,7 +435,7 @@ TIMER_CALLBACK_MEMBER(leland_state::ataxx_interrupt_callback)
 	int scanline = param;
 
 	/* interrupts generated according to the interrupt control register */
-	machine().device("master")->execute().set_input_line(0, HOLD_LINE);
+	m_master->set_input_line(0, HOLD_LINE);
 
 	/* set a timer for the next one */
 	m_master_int_timer->adjust(machine().primary_screen->time_until_pos(scanline), scanline);
@@ -820,10 +820,9 @@ WRITE8_MEMBER(leland_state::ataxx_eeprom_w)
 {
 	if (LOG_EEPROM) logerror("%s:EE write %d%d%d\n", machine().describe_context(),
 			(data >> 6) & 1, (data >> 5) & 1, (data >> 4) & 1);
-	eeprom_device *eeprom = downcast<eeprom_device *>(machine().device("eeprom"));
-	eeprom->write_bit     ((data & 0x10) >> 4);
-	eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-	eeprom->set_cs_line   ((~data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+	m_eeprom->write_bit     ((data & 0x10) >> 4);
+	m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+	m_eeprom->set_cs_line   ((~data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -1080,13 +1079,13 @@ READ8_MEMBER(leland_state::leland_master_input_r)
 
 		case 0x01:  /* /GIN1 */
 			result = ioport("IN1")->read();
-			if (machine().device("slave")->state().state_int(Z80_HALT))
+			if (m_slave->state_int(Z80_HALT))
 				result ^= 0x01;
 			break;
 
 		case 0x02:  /* /GIN2 */
 		case 0x12:
-			machine().device("master")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+			m_master->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 			break;
 
 		case 0x03:  /* /IGID */
@@ -1113,22 +1112,19 @@ READ8_MEMBER(leland_state::leland_master_input_r)
 
 WRITE8_MEMBER(leland_state::leland_master_output_w)
 {
-	eeprom_device *eeprom;
-
 	switch (offset)
 	{
 		case 0x09:  /* /MCONT */
-			machine().device("slave")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+			m_slave->set_input_line(INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 			m_wcol_enable = (data & 0x02);
-			machine().device("slave")->execute().set_input_line(INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
-			machine().device("slave")->execute().set_input_line(0, (data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
+			m_slave->set_input_line(INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+			m_slave->set_input_line(0, (data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
 
-			eeprom = machine().device<eeprom_device>("eeprom");
 			if (LOG_EEPROM) logerror("%04X:EE write %d%d%d\n", space.device().safe_pc(),
 					(data >> 6) & 1, (data >> 5) & 1, (data >> 4) & 1);
-			eeprom->write_bit     ((data & 0x10) >> 4);
-			eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-			eeprom->set_cs_line   ((~data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->write_bit     ((data & 0x10) >> 4);
+			m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->set_cs_line   ((~data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 			break;
 
 		case 0x0a:  /* /OGIA */
@@ -1162,7 +1158,7 @@ READ8_MEMBER(leland_state::ataxx_master_input_r)
 
 		case 0x07:  /* /SLVBLK */
 			result = ioport("IN1")->read();
-			if (machine().device("slave")->state().state_int(Z80_HALT))
+			if (m_slave->state_int(Z80_HALT))
 				result ^= 0x01;
 			break;
 
@@ -1194,9 +1190,9 @@ WRITE8_MEMBER(leland_state::ataxx_master_output_w)
 			break;
 
 		case 0x05:  /* /SLV0 */
-			machine().device("slave")->execute().set_input_line(0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
-			machine().device("slave")->execute().set_input_line(INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
-			machine().device("slave")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+			m_slave->set_input_line(0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+			m_slave->set_input_line(INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+			m_slave->set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x08:  /*  */

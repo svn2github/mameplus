@@ -277,10 +277,14 @@ static void amiga_m68k_reset(device_t *device)
 	}
 	else
 	{
-		amiga_cia_w(space, 0x1001/2, 1, 0xffff);
+		state->amiga_cia_w(space, 0x1001/2, 1, 0xffff);
 	}
 }
 
+MACHINE_START_MEMBER(amiga_state,amiga)
+{
+	m_maincpu_program_space = &m_maincpu->space(AS_PROGRAM);
+}
 
 MACHINE_RESET_MEMBER(amiga_state,amiga)
 {
@@ -1015,7 +1019,7 @@ static void blitter_setup(address_space &space)
  *
  *************************************/
 
-READ16_HANDLER( amiga_cia_r )
+READ16_MEMBER( amiga_state::amiga_cia_r )
 {
 	amiga_state *state = space.machine().driver_data<amiga_state>();
 	UINT8 data;
@@ -1053,7 +1057,7 @@ READ16_HANDLER( amiga_cia_r )
  *
  *************************************/
 
-WRITE16_HANDLER( amiga_cia_w )
+WRITE16_MEMBER( amiga_state::amiga_cia_w )
 {
 	amiga_state *state = space.machine().driver_data<amiga_state>();
 	device_t *cia;
@@ -1091,19 +1095,15 @@ WRITE16_HANDLER( amiga_cia_w )
  *
  *************************************/
 
-void amiga_cia_0_irq(device_t *device, int state)
+WRITE_LINE_MEMBER(amiga_state::amiga_cia_0_irq)
 {
-	amiga_state *sta = device->machine().driver_data<amiga_state>();
-
-	amiga_custom_w(sta->m_maincpu->space(AS_PROGRAM), REG_INTREQ, (state ? 0x8000 : 0x0000) | INTENA_PORTS, 0xffff);
+	amiga_custom_w(m_maincpu->space(AS_PROGRAM), REG_INTREQ, (state ? 0x8000 : 0x0000) | INTENA_PORTS, 0xffff);
 }
 
 
-void amiga_cia_1_irq(device_t *device, int state)
+WRITE_LINE_MEMBER(amiga_state::amiga_cia_1_irq)
 {
-	amiga_state *sta = device->machine().driver_data<amiga_state>();
-
-	amiga_custom_w(sta->m_maincpu->space(AS_PROGRAM), REG_INTREQ, (state ? 0x8000 : 0x0000) | INTENA_EXTER, 0xffff);
+	amiga_custom_w(m_maincpu->space(AS_PROGRAM), REG_INTREQ, (state ? 0x8000 : 0x0000) | INTENA_EXTER, 0xffff);
 }
 
 
@@ -1153,7 +1153,7 @@ static void custom_reset(running_machine &machine)
  *
  *************************************/
 
-READ16_HANDLER( amiga_custom_r )
+READ16_MEMBER( amiga_state::amiga_custom_r )
 {
 	amiga_state *state = space.machine().driver_data<amiga_state>();
 	UINT16 temp;
@@ -1273,7 +1273,7 @@ TIMER_CALLBACK_MEMBER(amiga_state::finish_serial_write)
 }
 
 
-WRITE16_HANDLER( amiga_custom_w )
+WRITE16_MEMBER( amiga_state::amiga_custom_w )
 {
 	amiga_state *state = space.machine().driver_data<amiga_state>();
 	UINT16 temp;
@@ -1544,7 +1544,7 @@ void amiga_serial_in_w(running_machine &machine, UINT16 data)
 	}
 
 	/* signal an interrupt */
-	amiga_custom_w(space, REG_INTREQ, 0x8000 | INTENA_RBF, 0xffff);
+	state->amiga_custom_w(space, REG_INTREQ, 0x8000 | INTENA_RBF, 0xffff);
 }
 
 
@@ -1618,7 +1618,7 @@ static void autoconfig_reset(running_machine &machine)
  *
  *************************************/
 
-READ16_HANDLER( amiga_autoconfig_r )
+READ16_MEMBER( amiga_state::amiga_autoconfig_r )
 {
 	amiga_state *state = space.machine().driver_data<amiga_state>();
 	autoconfig_device *cur_autoconfig = state->m_cur_autoconfig;
@@ -1757,7 +1757,7 @@ READ16_HANDLER( amiga_autoconfig_r )
  *
  *************************************/
 
-WRITE16_HANDLER( amiga_autoconfig_w )
+WRITE16_MEMBER( amiga_state::amiga_autoconfig_w )
 {
 	amiga_state *state = space.machine().driver_data<amiga_state>();
 	autoconfig_device *cur_autoconfig = state->m_cur_autoconfig;

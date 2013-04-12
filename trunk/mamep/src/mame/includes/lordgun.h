@@ -3,6 +3,8 @@
                       -= IGS Lord Of Gun =-
 
 *************************************************************************/
+#include "sound/okim6295.h"
+#include "machine/eeprom.h"
 
 struct lordgun_gun_data
 {
@@ -20,7 +22,11 @@ public:
 			m_spriteram(*this, "spriteram"),
 			m_vram(*this, "vram"),
 			m_scroll_x(*this, "scroll_x"),
-			m_scroll_y(*this, "scroll_y") { }
+			m_scroll_y(*this, "scroll_y") ,
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_oki(*this, "oki"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr<UINT16> m_priority_ram;
 	required_shared_ptr<UINT16> m_scrollram;
@@ -73,6 +79,11 @@ public:
 	void lorddgun_calc_gun_scr(int i);
 	void lordgun_update_gun(int i);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_WRITE_LINE_MEMBER(soundirq);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	required_device<okim6295_device> m_oki;
+	required_device<eeprom_device> m_eeprom;
 };
 
 /*----------- defined in video/lordgun.c -----------*/

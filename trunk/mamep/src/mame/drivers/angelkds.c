@@ -507,10 +507,9 @@ READ8_MEMBER(angelkds_state::angelkds_sub_sound_r)
 }
 
 
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(angelkds_state::irqhandler)
 {
-	angelkds_state *state = device->machine().driver_data<angelkds_state>();
-	state->m_subcpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_subcpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -520,7 +519,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(angelkds_state,irqhandler)
 };
 
 /*** Graphics Decoding
@@ -570,7 +569,6 @@ GFXDECODE_END
 
 void angelkds_state::machine_start()
 {
-	m_subcpu = machine().device<cpu_device>("sub");
 
 	save_item(NAME(m_layer_ctrl));
 	save_item(NAME(m_txbank));

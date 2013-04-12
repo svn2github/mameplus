@@ -131,7 +131,9 @@ class calchase_state : public driver_device
 public:
 	calchase_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_maincpu(*this, "maincpu")
+			m_maincpu(*this, "maincpu"),
+			m_dac_l(*this, "dac_l"),
+			m_dac_r(*this, "dac_r")
 			{ }
 
 	UINT32 *m_bios_ram;
@@ -183,6 +185,8 @@ public:
 	virtual void machine_reset();
 	IRQ_CALLBACK_MEMBER(irq_callback);
 	void intel82439tx_init();
+	required_device<dac_device> m_dac_l;
+	required_device<dac_device> m_dac_r;
 };
 
 
@@ -243,7 +247,7 @@ WRITE8_MEMBER(calchase_state::at_page8_w)
 
 WRITE_LINE_MEMBER(calchase_state::pc_dma_hrq_changed)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	m_dma8237_1->i8237_hlda_w(state);
@@ -531,14 +535,12 @@ READ16_MEMBER(calchase_state::calchase_iocard5_r)
 
 WRITE16_MEMBER(calchase_state::calchase_dac_l_w)
 {
-	dac_device *device = machine().device<dac_device>("dac_l");
-	device->write_unsigned16((data & 0xfff) << 4);
+	m_dac_l->write_unsigned16((data & 0xfff) << 4);
 }
 
 WRITE16_MEMBER(calchase_state::calchase_dac_r_w)
 {
-	dac_device *device = machine().device<dac_device>("dac_r");
-	device->write_unsigned16((data & 0xfff) << 4);
+	m_dac_r->write_unsigned16((data & 0xfff) << 4);
 }
 
 static ADDRESS_MAP_START( calchase_map, AS_PROGRAM, 32, calchase_state )
@@ -812,7 +814,7 @@ void calchase_state::machine_start()
 	m_bios_ram = auto_alloc_array(machine(), UINT32, 0x10000/4);
 	m_bios_ext_ram = auto_alloc_array(machine(), UINT32, 0x10000/4);
 
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(calchase_state::irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(calchase_state::irq_callback),this));
 
 	m_pit8254 = machine().device( "pit8254" );
 	m_pic8259_1 = machine().device( "pic8259_1" );
@@ -829,7 +831,7 @@ void calchase_state::machine_start()
 
 WRITE_LINE_MEMBER(calchase_state::calchase_pic8259_1_set_int_line)
 {
-	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(calchase_state::get_slave_ack)
@@ -970,7 +972,7 @@ DRIVER_INIT_MEMBER(calchase_state,calchase)
 
 	kbdc8042_init(machine(), &at8042);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_readwrite_handler(0x3f0b160, 0x3f0b163, read32_delegate(FUNC(calchase_state::calchase_idle_skip_r),this), write32_delegate(FUNC(calchase_state::calchase_idle_skip_w),this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x3f0b160, 0x3f0b163, read32_delegate(FUNC(calchase_state::calchase_idle_skip_r),this), write32_delegate(FUNC(calchase_state::calchase_idle_skip_w),this));
 }
 
 ROM_START( calchase )

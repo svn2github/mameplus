@@ -225,11 +225,10 @@ WRITE8_MEMBER( eolith_state::qs1000_p1_w )
  *
  *************************************/
 
-static void soundcpu_to_qs1000(device_t *device, int data)
+WRITE8_MEMBER(eolith_state::soundcpu_to_qs1000)
 {
-	eolith_state *state = device->machine().driver_data<eolith_state>();
-	state->m_qs1000->serial_in(data);
-	device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(250));
+	m_qs1000->serial_in(data);
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(250));
 }
 
 
@@ -1470,7 +1469,7 @@ ROM_END
 
 MACHINE_RESET_MEMBER(eolith_state,eolith)
 {
-	machine().device("soundcpu")->execute().set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
+	m_soundcpu->set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
 }
 
 DRIVER_INIT_MEMBER(eolith_state,eolith)
@@ -1478,7 +1477,7 @@ DRIVER_INIT_MEMBER(eolith_state,eolith)
 	init_eolith_speedup(machine());
 
 	// Sound CPU -> QS1000 CPU serial link
-	i8051_set_serial_tx_callback(machine().device("soundcpu"), soundcpu_to_qs1000);
+	i8051_set_serial_tx_callback(m_soundcpu, write8_delegate(FUNC(eolith_state::soundcpu_to_qs1000),this));
 
 	// Configure the sound ROM banking
 	membank("sound_bank")->configure_entries(0, 16, memregion("sounddata")->base(), 0x8000);
@@ -1515,15 +1514,15 @@ DRIVER_INIT_MEMBER(eolith_state,hidctch2)
 
 DRIVER_INIT_MEMBER(eolith_state,hidctch3)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xfc200000, 0xfc200003); // this generates pens vibration
+	m_maincpu->space(AS_PROGRAM).nop_write(0xfc200000, 0xfc200003); // this generates pens vibration
 
 	// It is not clear why the first reads are needed too
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfce00000, 0xfce00003, read32_delegate(FUNC(eolith_state::hidctch3_pen1_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfce80000, 0xfce80003, read32_delegate(FUNC(eolith_state::hidctch3_pen1_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfce00000, 0xfce00003, read32_delegate(FUNC(eolith_state::hidctch3_pen1_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfce80000, 0xfce80003, read32_delegate(FUNC(eolith_state::hidctch3_pen1_r),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfcf00000, 0xfcf00003, read32_delegate(FUNC(eolith_state::hidctch3_pen2_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfcf80000, 0xfcf80003, read32_delegate(FUNC(eolith_state::hidctch3_pen2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfcf00000, 0xfcf00003, read32_delegate(FUNC(eolith_state::hidctch3_pen2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfcf80000, 0xfcf80003, read32_delegate(FUNC(eolith_state::hidctch3_pen2_r),this));
 
 	DRIVER_INIT_CALL(eolith);
 }

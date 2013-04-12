@@ -3,10 +3,14 @@ class mexico86_state : public driver_device
 {
 public:
 	mexico86_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_objectram(*this, "objectram"),
 		m_protection_ram(*this, "protection_ram"),
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub"),
+		m_mcu(*this, "mcu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_objectram;
@@ -32,10 +36,10 @@ public:
 	int      m_coin_last;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
-	device_t *m_mcu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	optional_device<cpu_device> m_subcpu;
+	optional_device<cpu_device> m_mcu;
 
 	/* queue */
 	UINT8 m_queue[64];

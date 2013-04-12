@@ -2,12 +2,13 @@ class darkmist_state : public driver_device
 {
 public:
 	darkmist_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spritebank(*this, "spritebank"),
 		m_scroll(*this, "scroll"),
 		m_videoram(*this, "videoram"),
 		m_workram(*this, "workram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_spritebank;
 	required_shared_ptr<UINT8> m_scroll;
@@ -32,4 +33,5 @@ public:
 	void set_pens();
 	void decrypt_gfx();
 	void decrypt_snd();
+	required_device<cpu_device> m_maincpu;
 };

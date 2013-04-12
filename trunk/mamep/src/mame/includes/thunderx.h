@@ -8,8 +8,10 @@ class thunderx_state : public driver_device
 {
 public:
 	thunderx_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_ram(*this, "ram"){ }
+		: driver_device(mconfig, type, tag),
+		m_ram(*this, "ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_ram;
@@ -28,8 +30,8 @@ public:
 	int        m_pmcbank;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_k007232;
 	device_t *m_k052109;
 	device_t *m_k051960;
@@ -55,6 +57,7 @@ public:
 	TIMER_CALLBACK_MEMBER(thunderx_firq_callback);
 	void run_collisions( int s0, int e0, int s1, int e1, int cm, int hm );
 	void calculate_collisions(  );
+	DECLARE_WRITE8_MEMBER(volume_callback);
 };
 
 

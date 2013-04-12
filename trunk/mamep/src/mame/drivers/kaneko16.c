@@ -152,7 +152,7 @@ WRITE16_MEMBER(kaneko16_state::kaneko16_soundlatch_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		soundlatch_byte_w(space, 0, (data & 0xff00) >> 8 );
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -267,10 +267,8 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(kaneko16_state::bakubrkr_oki_bank_sw)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_0_7) {
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * (data & 0x7) );
+		m_oki->set_bank_base(0x40000 * (data & 0x7) );
 		logerror("%s:Selecting OKI bank %02X\n",machine().describe_context(),data&0xff);
 	}
 }
@@ -330,22 +328,18 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(kaneko16_gtmr_state::bloodwar_oki_0_bank_w)
 {
-	device_t *device = machine().device("oki1");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * (data & 0xf) );
+		m_oki1->set_bank_base(0x40000 * (data & 0xf) );
 //      logerror("CPU #0 PC %06X : OKI0  bank %08X\n",space.device().safe_pc(),data);
 	}
 }
 
 WRITE16_MEMBER(kaneko16_gtmr_state::bloodwar_oki_1_bank_w)
 {
-	device_t *device = machine().device("oki2");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * data );
+		m_oki2->set_bank_base(0x40000 * data );
 //      logerror("CPU #0 PC %06X : OKI1  bank %08X\n",space.device().safe_pc(),data);
 	}
 }
@@ -398,22 +392,18 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(kaneko16_gtmr_state::bonkadv_oki_0_bank_w)
 {
-	device_t *device = machine().device("oki1");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * (data & 0xF));
+		m_oki1->set_bank_base(0x40000 * (data & 0xF));
 		logerror("%s: OKI0  bank %08X\n",machine().describe_context(),data);
 	}
 }
 
 WRITE16_MEMBER(kaneko16_gtmr_state::bonkadv_oki_1_bank_w)
 {
-	device_t *device = machine().device("oki2");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * data );
+		m_oki2->set_bank_base(0x40000 * data );
 		logerror("%s: OKI1  bank %08X\n",machine().describe_context(),data);
 	}
 }
@@ -471,22 +461,18 @@ READ16_MEMBER(kaneko16_gtmr_state::gtmr_wheel_r)
 
 WRITE16_MEMBER(kaneko16_gtmr_state::gtmr_oki_0_bank_w)
 {
-	device_t *device = machine().device("oki1");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base( 0x40000 * (data & 0xF) );
+		m_oki1->set_bank_base( 0x40000 * (data & 0xF) );
 //      logerror("CPU #0 PC %06X : OKI0 bank %08X\n",space.device().safe_pc(),data);
 	}
 }
 
 WRITE16_MEMBER(kaneko16_gtmr_state::gtmr_oki_1_bank_w)
 {
-	device_t *device = machine().device("oki2");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base( 0x40000 * (data & 0x1) );
+		m_oki2->set_bank_base( 0x40000 * (data & 0x1) );
 //      logerror("CPU #0 PC %06X : OKI1 bank %08X\n",space.device().safe_pc(),data);
 	}
 }
@@ -1609,9 +1595,8 @@ WRITE8_MEMBER(kaneko16_state::kaneko16_eeprom_reset_w)
 {
 	// FIXME: the device line cannot be directly put in the interface due to inverse value!
 	// we might want to define a "reversed" set_cs_line handler
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
 	// reset line asserted: reset.
-	eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE );
+	m_eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE );
 }
 
 static const ay8910_interface ay8910_intf_eeprom =
@@ -3838,7 +3823,7 @@ DRIVER_INIT_MEMBER( kaneko16_shogwarr_state, shogwarr )
 DRIVER_INIT_MEMBER( kaneko16_shogwarr_state, brapboys )
 {
 	// sample banking is different on brap boys for the music, why? GALs / PALs ?
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe00000, 0xe00001, write16_delegate(FUNC(kaneko16_shogwarr_state::brapboys_oki_bank_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xe00000, 0xe00001, write16_delegate(FUNC(kaneko16_shogwarr_state::brapboys_oki_bank_w),this));
 
 	// default sample banks
 	kaneko16_common_oki_bank_w("bank10", "oki1", 0, 0x30000, 0x10000);

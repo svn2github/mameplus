@@ -292,7 +292,7 @@ WRITE8_MEMBER(polepos_state::polepos_latch_w)
 		case 0x00:  /* IRQON */
 			m_main_irq_mask = bit;
 			if (!bit)
-				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+				m_maincpu->set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x01:  /* IOSEL */
@@ -313,11 +313,11 @@ WRITE8_MEMBER(polepos_state::polepos_latch_w)
 			break;
 
 		case 0x04:  /* RESB */
-			machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
+			m_subcpu->set_input_line(INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x05:  /* RESA */
-			machine().device("sub2")->execute().set_input_line(INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
+			m_subcpu2->set_input_line(INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x06:  /* SB0 */
@@ -450,19 +450,19 @@ TIMER_DEVICE_CALLBACK_MEMBER(polepos_state::polepos_scanline)
 	int scanline = param;
 
 	if (((scanline == 64) || (scanline == 192)) && m_main_irq_mask) // 64V
-		machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+		m_maincpu->set_input_line(0, ASSERT_LINE);
 
 	if (scanline == 240 && m_sub_irq_mask)  // VBLANK
 	{
-		machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
-		machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
+		m_subcpu->set_input_line(0, ASSERT_LINE);
+		m_subcpu2->set_input_line(0, ASSERT_LINE);
 	}
 }
 
 
 MACHINE_RESET_MEMBER(polepos_state,polepos)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
@@ -470,8 +470,8 @@ MACHINE_RESET_MEMBER(polepos_state,polepos)
 		polepos_latch_w(space, i, 0);
 
 	/* set the interrupt vectors (this shouldn't be needed) */
-	machine().device("sub")->execute().set_input_line_vector(0, Z8000_NVI);
-	machine().device("sub2")->execute().set_input_line_vector(0, Z8000_NVI);
+	m_subcpu->set_input_line_vector(0, Z8000_NVI);
+	m_subcpu2->set_input_line_vector(0, Z8000_NVI);
 }
 
 
@@ -1995,15 +1995,15 @@ ROM_END
 DRIVER_INIT_MEMBER(polepos_state,topracern)
 {
 	/* extra direct mapped inputs read */
-	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x02, 0x02, "STEER");
-	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x03, 0x03, "IN0");
-	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x04, 0x04, "DSWA");
+	m_maincpu->space(AS_IO).install_read_port(0x02, 0x02, "STEER");
+	m_maincpu->space(AS_IO).install_read_port(0x03, 0x03, "IN0");
+	m_maincpu->space(AS_IO).install_read_port(0x04, 0x04, "DSWA");
 }
 
 DRIVER_INIT_MEMBER(polepos_state,polepos2)
 {
 	/* note that the bootleg version doesn't need this custom IC; it has a hacked ROM in its place */
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_handler(0x4000, 0x5fff, read16_delegate(FUNC(polepos_state::polepos2_ic25_r),this));
+	m_subcpu->space(AS_PROGRAM).install_read_handler(0x4000, 0x5fff, read16_delegate(FUNC(polepos_state::polepos2_ic25_r),this));
 }
 
 

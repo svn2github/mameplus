@@ -18,7 +18,8 @@ class galaxygame_state : public driver_device
 {
 public:
 	galaxygame_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) {}
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	UINT16 m_clk;
 
@@ -50,6 +51,7 @@ public:
 	UINT32 screen_update_galaxygame(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(galaxygame_irq);
 	IRQ_CALLBACK_MEMBER(galaxygame_irq_callback);
+	required_device<cpu_device> m_maincpu;
 };
 
 /*************************************
@@ -317,7 +319,7 @@ void galaxygame_state::machine_reset()
 	m_point_display_list_index = 0;
 	m_interrupt = 0;
 
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(galaxygame_state::galaxygame_irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(galaxygame_state::galaxygame_irq_callback),this));
 }
 
 static const struct t11_setup t11_data =
@@ -395,7 +397,7 @@ static UINT8 read_uint8(UINT8 *pval, int pos, const UINT8* line, int linelen)
 
 DRIVER_INIT_MEMBER(galaxygame_state,galaxygame)
 {
-	address_space &main = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &main = m_maincpu->space(AS_PROGRAM);
 	UINT8 *code = memregion("code")->base();
 
 	int filepos = 0, linepos, linelen;

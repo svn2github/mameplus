@@ -2,11 +2,12 @@ class stfight_state : public driver_device
 {
 public:
 	stfight_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_text_char_ram(*this, "text_char_ram"),
 		m_text_attr_ram(*this, "text_attr_ram"),
 		m_vh_latch_ram(*this, "vh_latch_ram"),
-		m_sprite_ram(*this, "sprite_ram"){ }
+		m_sprite_ram(*this, "sprite_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_text_char_ram;
 	required_shared_ptr<UINT8> m_text_attr_ram;
@@ -51,7 +52,6 @@ public:
 	DECLARE_WRITE8_MEMBER(stfight_adpcm_control_w);
 	void set_pens();
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_WRITE_LINE_MEMBER(stfight_adpcm_int);
+	required_device<cpu_device> m_maincpu;
 };
-
-/*----------- defined in machine/stfight.c -----------*/
-void stfight_adpcm_int(device_t *device);

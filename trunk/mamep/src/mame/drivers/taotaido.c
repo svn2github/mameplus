@@ -85,7 +85,7 @@ WRITE16_MEMBER(taotaido_state::sound_command_w)
 	{
 		m_pending_command = 1;
 		soundlatch_byte_w(space, offset, data & 0xff);
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, taotaido_state )
@@ -320,14 +320,14 @@ static GFXDECODE_START( taotaido )
 	GFXDECODE_ENTRY( "gfx2", 0, taotaido_layout,  0x300, 256  ) /* bg tiles */
 GFXDECODE_END
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(taotaido_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(taotaido_state,irqhandler)
 };
 
 

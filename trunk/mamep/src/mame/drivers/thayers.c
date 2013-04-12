@@ -38,7 +38,8 @@ public:
 	thayers_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			m_pr7820(*this, "laserdisc"),
-			m_ldv1000(*this, "ldv1000") { }
+			m_ldv1000(*this, "ldv1000") ,
+		m_maincpu(*this, "maincpu") { }
 
 	optional_device<pioneer_pr7820_device> m_pr7820;
 	optional_device<pioneer_ldv1000_device> m_ldv1000;
@@ -85,6 +86,7 @@ public:
 	TIMER_CALLBACK_MEMBER(intrq_tick);
 	TIMER_CALLBACK_MEMBER(ssi263_phoneme_tick);
 	void check_interrupt();
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -100,24 +102,24 @@ void thayers_state::check_interrupt()
 {
 	if (!m_timer_int || !m_data_rdy_int || !m_ssi_data_request)
 	{
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 	}
 	else
 	{
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 }
 
 TIMER_CALLBACK_MEMBER(thayers_state::intrq_tick)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(thayers_state::intrq_w)
 {
 	// T = 1.1 * R30 * C53 = 1.1 * 750K * 0.01uF = 8.25 ms
 
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 
 	machine().scheduler().timer_set(attotime::from_usec(8250), timer_expired_delegate(FUNC(thayers_state::intrq_tick),this));
 }
@@ -357,7 +359,7 @@ WRITE8_MEMBER(thayers_state::control2_w)
 
 	if ((!BIT(data, 2)) & m_cart_present)
 	{
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, HOLD_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, HOLD_LINE);
 	}
 }
 

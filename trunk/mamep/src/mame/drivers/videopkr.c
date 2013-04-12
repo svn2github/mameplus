@@ -300,7 +300,10 @@ class videopkr_state : public driver_device
 {
 public:
 	videopkr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_dac(*this, "dac") { }
 
 	UINT8 m_data_ram[0x100];
 	UINT8 m_video_ram[0x0400];
@@ -365,6 +368,9 @@ public:
 	DECLARE_PALETTE_INIT(fortune1);
 	UINT32 screen_update_videopkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(sound_t1_callback);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	required_device<dac_device> m_dac;
 };
 
 
@@ -748,7 +754,7 @@ READ8_MEMBER(videopkr_state::videopkr_t0_latch)
 WRITE8_MEMBER(videopkr_state::prog_w)
 {
 	if (!data)
-		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);   /* clear interrupt FF */
+		m_maincpu->set_input_line(0, CLEAR_LINE);   /* clear interrupt FF */
 }
 
 /*************************
@@ -888,9 +894,8 @@ READ8_MEMBER(videopkr_state::baby_sound_p2_r)
 
 WRITE8_MEMBER(videopkr_state::baby_sound_p2_w)
 {
-	dac_device *device = machine().device<dac_device>("dac");
 	m_sbp2 = data;
-	device->write_unsigned8(data);
+	m_dac->write_unsigned8(data);
 }
 
 READ8_MEMBER(videopkr_state::baby_sound_p3_r)
@@ -939,7 +944,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(videopkr_state::sound_t1_callback)
 
 		if (m_dc_40103 == 0)
 		{
-			machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
+			m_soundcpu->set_input_line(0, ASSERT_LINE);
 		}
 	}
 }

@@ -69,9 +69,10 @@ class trvmadns_state : public driver_device
 {
 public:
 	trvmadns_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_gfxram(*this, "gfxram"),
-		m_tileram(*this, "tileram"){ }
+		m_tileram(*this, "tileram"),
+		m_maincpu(*this, "maincpu") { }
 
 	tilemap_t *m_bg_tilemap;
 	required_shared_ptr<UINT8> m_gfxram;
@@ -87,6 +88,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	UINT32 screen_update_trvmadns(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -204,7 +206,7 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_tileram_w)
 	{
 		if(space.device().safe_pcbase()==0x29e9)// || space.device().safe_pcbase()==0x1b3f) //29f5
 		{
-			machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
+			m_maincpu->set_input_line(0, HOLD_LINE);
 		}
 //      else
 //          logerror("%x \n", space.device().safe_pcbase());

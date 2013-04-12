@@ -397,7 +397,7 @@ D                                                                               
 
 TIMER_CALLBACK_MEMBER(equites_state::equites_nmi_callback)
 {
-	m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 TIMER_CALLBACK_MEMBER(equites_state::equites_frq_adjuster_callback)
@@ -427,17 +427,17 @@ WRITE8_MEMBER(equites_state::equites_c0f8_w)
 	switch (offset)
 	{
 		case 0: // c0f8: NMI ack (written by NMI handler)
-			m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+			m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 			break;
 
 		case 1: // c0f9: RST75 trigger (written by NMI handler)
 			// Note: solder pad CP3 on the pcb would allow to disable this
-			generic_pulse_irq_line(m_audio_cpu->execute(), I8085_RST75_LINE, 1);
+			generic_pulse_irq_line(m_audiocpu, I8085_RST75_LINE, 1);
 			break;
 
 		case 2: // c0fa: INTR trigger (written by NMI handler)
 			// verified on PCB:
-			m_audio_cpu->execute().set_input_line(I8085_INTR_LINE, HOLD_LINE);
+			m_audiocpu->set_input_line(I8085_INTR_LINE, HOLD_LINE);
 			break;
 
 		case 3: // c0fb: n.c.
@@ -577,10 +577,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(equites_state::equites_scanline)
 	int scanline = param;
 
 	if(scanline == 232) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 24) // vblank-in irq
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 TIMER_DEVICE_CALLBACK_MEMBER(equites_state::splndrbt_scanline)
@@ -588,10 +588,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(equites_state::splndrbt_scanline)
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 32) // vblank-in irq
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 WRITE8_MEMBER(equites_state::equites_8155_w)
@@ -686,12 +686,12 @@ WRITE16_MEMBER(equites_state::mcu_w)
 
 WRITE16_MEMBER(equites_state::mcu_halt_assert_w)
 {
-	m_mcu->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	m_mcu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 WRITE16_MEMBER(equites_state::mcu_halt_clear_w)
 {
-	m_mcu->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+	m_mcu->set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 }
 
 
@@ -1184,11 +1184,7 @@ MACHINE_CONFIG_END
 
 MACHINE_START_MEMBER(equites_state,equites)
 {
-	m_mcu = machine().device("mcu");
-	m_audio_cpu = machine().device("audiocpu");
 	m_msm = machine().device<msm5232_device>("msm");
-	m_dac_1 = machine().device<dac_device>("dac1");
-	m_dac_2 = machine().device<dac_device>("dac2");
 
 	save_item(NAME(m_fg_char_bank));
 	save_item(NAME(m_bgcolor));
@@ -1888,8 +1884,8 @@ DRIVER_INIT_MEMBER(equites_state,gekisou)
 	unpack_region("gfx3");
 
 	// install special handlers for unknown device (protection?)
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x580000, 0x580001, write16_delegate(FUNC(equites_state::gekisou_unknown_0_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x5a0000, 0x5a0001, write16_delegate(FUNC(equites_state::gekisou_unknown_1_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x580000, 0x580001, write16_delegate(FUNC(equites_state::gekisou_unknown_0_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x5a0000, 0x5a0001, write16_delegate(FUNC(equites_state::gekisou_unknown_1_w),this));
 }
 
 DRIVER_INIT_MEMBER(equites_state,splndrbt)
@@ -1902,7 +1898,7 @@ DRIVER_INIT_MEMBER(equites_state,hvoltage)
 	unpack_region("gfx3");
 
 #if HVOLTAGE_DEBUG
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0x000038, 0x000039, read16_delegate(FUNC(equites_state::hvoltage_debug_r),this));
+	m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x000038, 0x000039, read16_delegate(FUNC(equites_state::hvoltage_debug_r),this));
 #endif
 }
 

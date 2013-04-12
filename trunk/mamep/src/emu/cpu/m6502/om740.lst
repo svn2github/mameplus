@@ -28,12 +28,12 @@ jsr_spg
 	PC = TMP;
 	prefetch();
 
-clb_acc
+clb_bac
 	read_pc_noinc();
 	A = do_clb(A, (IR>>5) & 7);
 	prefetch();
 
-seb_acc
+seb_bac
 	read_pc_noinc();
 	A = do_seb(A, (IR>>5) & 7);
 	prefetch();
@@ -72,7 +72,7 @@ bbs_bzr
 	}
 	prefetch();
 
-bbc_acc
+bbc_bar
 	TMP = read_pc();
 	read_pc_noinc();
 	if(!(A & (1 << ((IR>>5) & 7)))) {
@@ -80,7 +80,7 @@ bbc_acc
 	}
 	prefetch();
 
-bbs_acc
+bbs_bar
 	TMP = read_pc();
 	read_pc_noinc();
 	if(A & (1 << ((IR>>5) & 7))) {
@@ -197,7 +197,7 @@ adct_idx
 adct_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -287,7 +287,7 @@ andt_idx
 andt_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -367,7 +367,7 @@ cmpt_idx
 cmpt_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -460,7 +460,7 @@ eort_idx
 eort_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -552,7 +552,7 @@ ldt_idx
 ldt_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -639,7 +639,7 @@ ort_idx
 ort_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -715,7 +715,7 @@ sbct_idx
 sbct_idy
 	TMP2 = read_pc();
 	TMP = read(TMP2);
-	TMP = set_h(TMP, read(TMP2+1));
+	TMP = set_h(TMP, read((TMP2+1) & 0xff));
 	if(page_changing(TMP, Y)) {
 		read(set_l(TMP, TMP+Y));
 	}
@@ -747,4 +747,3 @@ sbct_zpx
 	do_sbct(TMP);
 	write(X, TMP2);
 	prefetch();
-

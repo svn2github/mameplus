@@ -8,10 +8,11 @@ class ojankohs_state : public driver_device
 {
 public:
 	ojankohs_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_paletteram(*this, "paletteram"){ }
+		m_paletteram(*this, "paletteram"),
+		m_maincpu(*this, "maincpu"){ }
 
 	/* memory pointers */
 	optional_shared_ptr<UINT8> m_videoram;
@@ -35,7 +36,7 @@ public:
 	int       m_vclk_left;
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	device_t *m_msm;
 	DECLARE_WRITE8_MEMBER(ojankohs_rombank_w);
 	DECLARE_WRITE8_MEMBER(ojankoy_rombank_w);
@@ -73,7 +74,5 @@ public:
 	UINT32 screen_update_ojankohs(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_ojankoc(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void ojankoc_flipscreen( address_space &space, int data );
+	DECLARE_WRITE_LINE_MEMBER(ojankohs_adpcm_int);
 };
-
-/*----------- defined in video/ojankohs.c -----------*/
-void ojankoc_flipscreen(address_space &space, int data);

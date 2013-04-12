@@ -109,16 +109,13 @@ WRITE16_MEMBER(pirates_state::pirates_out_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-
 		/* bits 0-2 control EEPROM */
-		eeprom->write_bit(data & 0x04);
-		eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
-		eeprom->set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit(data & 0x04);
+		m_eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
 
 		/* bit 6 selects oki bank */
-		okim6295_device *oki = machine().device<okim6295_device>("oki");
-		oki->set_bank_base((data & 0x40) ? 0x40000 : 0x00000);
+		m_oki->set_bank_base((data & 0x40) ? 0x40000 : 0x00000);
 
 		/* bit 7 used (function unknown) */
 	}
@@ -459,7 +456,7 @@ DRIVER_INIT_MEMBER(pirates_state,genix)
 
 	/* If this value is increased then something has gone wrong and the protection failed */
 	/* Write-protect it for now */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x109e98, 0x109e9b, read16_delegate(FUNC(pirates_state::genix_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x109e98, 0x109e9b, read16_delegate(FUNC(pirates_state::genix_prot_r),this));
 }
 
 

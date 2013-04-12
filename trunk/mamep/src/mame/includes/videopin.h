@@ -19,8 +19,10 @@ class videopin_state : public driver_device
 {
 public:
 	videopin_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_video_ram(*this, "video_ram"){ }
+		: driver_device(mconfig, type, tag),
+		m_video_ram(*this, "video_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_discrete(*this, "discrete") { }
 
 	attotime m_time_pushed;
 	attotime m_time_released;
@@ -45,6 +47,8 @@ public:
 	TIMER_CALLBACK_MEMBER(interrupt_callback);
 	void update_plunger();
 	double calc_plunger_pos();
+	required_device<cpu_device> m_maincpu;
+	required_device<discrete_device> m_discrete;
 };
 
 /*----------- defined in audio/videopin.c -----------*/

@@ -66,7 +66,8 @@ public:
 			m_blit_transpen(*this, "blit_transpen"),
 			m_leds0(*this, "leds0"),
 			m_leds1(*this, "leds1"),
-			m_leds2(*this, "leds2") { }
+			m_leds2(*this, "leds2") ,
+		m_maincpu(*this, "maincpu") { }
 
 	optional_shared_ptr<UINT16> m_nvram;
 	UINT8 *m_blit_buffer;
@@ -176,6 +177,7 @@ public:
 	UINT32 screen_update_blitz68k(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_blitz68k_noblit(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(steaser_mcu_sim);
+	required_device<cpu_device> m_maincpu;
 };
 
 /*************************************************************************************************************
@@ -583,7 +585,7 @@ READ16_MEMBER(blitz68k_state::test_r)
 WRITE16_MEMBER(blitz68k_state::irq_callback_w)
 {
 //  popmessage("%02x",data);
-	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE );
+	m_maincpu->set_input_line(3, HOLD_LINE );
 }
 
 WRITE16_MEMBER(blitz68k_state::sound_write_w)
@@ -1649,17 +1651,17 @@ static MC6845_ON_UPDATE_ADDR_CHANGED(crtc_addr)
 
 WRITE_LINE_MEMBER(blitz68k_state::crtc_vsync_irq1)
 {
-	machine().device("maincpu")->execute().set_input_line(1, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(1, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(blitz68k_state::crtc_vsync_irq3)
 {
-	machine().device("maincpu")->execute().set_input_line(3, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(3, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(blitz68k_state::crtc_vsync_irq5)
 {
-	machine().device("maincpu")->execute().set_input_line(5, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(5, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 

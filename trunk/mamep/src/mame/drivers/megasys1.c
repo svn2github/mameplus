@@ -1634,9 +1634,9 @@ MACHINE_CONFIG_END
 ***************************************************************************/
 
 
-static void irq_handler(device_t *device, int irq)
+WRITE_LINE_MEMBER(megasys1_state::irqhandler)
 {
-	device->machine().driver_data<megasys1_state>()->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -1647,7 +1647,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irq_handler)
+	DEVCB_DRIVER_LINE_MEMBER(megasys1_state,irqhandler)
 };
 
 static MACHINE_CONFIG_START( system_Z, megasys1_state )
@@ -3842,9 +3842,8 @@ READ16_MEMBER(megasys1_state::edfbl_input_r)
 
 DRIVER_INIT_MEMBER(megasys1_state,edfbl)
 {
-	//device_t *oki1 = machine().device("oki1");
 	m_maincpu->space(AS_PROGRAM).install_read_handler(0xe0000, 0xe000f, read16_delegate(FUNC(megasys1_state::edfbl_input_r),this));
-	//m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(*oki1, 0xe000e, 0xe000f, FUNC(soundlatch_byte_w));
+	//m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(*m_oki1, 0xe000e, 0xe000f, FUNC(soundlatch_byte_w));
 }
 
 DRIVER_INIT_MEMBER(megasys1_state,hayaosi1)

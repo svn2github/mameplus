@@ -524,7 +524,7 @@ DRIVER_INIT_MEMBER(tnzs_state,drtoppel)
 	m_mcu_type = MCU_DRTOPPEL;
 
 	/* drtoppel writes to the palette RAM area even if it has PROMs! We have to patch it out. */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).nop_write(0xf800, 0xfbff);
+	m_maincpu->space(AS_PROGRAM).nop_write(0xf800, 0xfbff);
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,chukatai)
@@ -536,7 +536,7 @@ DRIVER_INIT_MEMBER(tnzs_state,tnzs)
 {
 	m_mcu_type = MCU_TNZS;
 	/* we need to install a kludge to avoid problems with a bug in the original code */
-//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
+//  m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,tnzsb)
@@ -544,7 +544,7 @@ DRIVER_INIT_MEMBER(tnzs_state,tnzsb)
 	m_mcu_type = MCU_NONE_TNZSB;
 
 	/* we need to install a kludge to avoid problems with a bug in the original code */
-//  machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
+//  m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0xef10, 0xef10, FUNC(tnzs_sync_kludge_w));
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,kabukiz)
@@ -560,9 +560,9 @@ DRIVER_INIT_MEMBER(tnzs_state,insectx)
 	m_mcu_type = MCU_NONE_INSECTX;
 
 	/* this game has no mcu, replace the handler with plain input port handlers */
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_port(0xc000, 0xc000, "IN0" );
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_port(0xc001, 0xc001, "IN1" );
-	machine().device("sub")->memory().space(AS_PROGRAM).install_read_port(0xc002, 0xc002, "IN2" );
+	m_subcpu->space(AS_PROGRAM).install_read_port(0xc000, 0xc000, "IN0" );
+	m_subcpu->space(AS_PROGRAM).install_read_port(0xc001, 0xc001, "IN1" );
+	m_subcpu->space(AS_PROGRAM).install_read_port(0xc002, 0xc002, "IN2" );
 }
 
 DRIVER_INIT_MEMBER(tnzs_state,kageki)
@@ -677,9 +677,6 @@ MACHINE_START_MEMBER(tnzs_state,jpopnics)
 	membank("subbank")->configure_entries(0, 4, &SUB[0x08000], 0x2000);
 	membank("subbank")->set_entry(m_bank2);
 
-	m_subcpu = machine().device<cpu_device>("sub");
-	m_mcu = NULL;
-
 	m_bank1 = 2;
 	m_bank2 = 0;
 
@@ -694,9 +691,6 @@ MACHINE_START_MEMBER(tnzs_state,jpopnics)
 MACHINE_START_MEMBER(tnzs_state,tnzs)
 {
 	MACHINE_START_CALL_MEMBER( jpopnics );
-
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_mcu = machine().device("mcu");
 
 	save_item(NAME(m_kageki_csport_sel));
 	save_item(NAME(m_input_select));
@@ -740,7 +734,7 @@ WRITE8_MEMBER(tnzs_state::tnzs_bankswitch1_w)
 				if (data & 0x04)
 				{
 					if (m_mcu != NULL && m_mcu->type() == I8742)
-						m_mcu->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+						m_mcu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 				}
 				/* Coin count and lockout is handled by the i8742 */
 				break;

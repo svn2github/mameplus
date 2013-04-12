@@ -86,7 +86,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_priority_ram(*this, "priority_ram"),
-		m_vbowl_trackball(*this, "vbowl_trackball"){ }
+		m_vbowl_trackball(*this, "vbowl_trackball"),
+		m_oki(*this, "oki"){ }
 
 	required_device<cpu_device> m_maincpu;
 	required_shared_ptr<UINT16> m_priority_ram;
@@ -217,6 +218,7 @@ public:
 	void ryukobou_decrypt();
 	void lhb2_decrypt_gfx();
 	void drgnwrld_gfx_decrypt();
+	optional_device<okim6295_device> m_oki;
 };
 
 
@@ -1054,7 +1056,7 @@ WRITE16_MEMBER(igs011_state::igs011_prot_addr_w)
 
 //  m_prot2 = 0x00;
 
-	address_space &sp = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &sp = m_maincpu->space(AS_PROGRAM);
 	UINT8 *rom = memregion("maincpu")->base();
 
 	// Plug previous address range with ROM access
@@ -1515,8 +1517,7 @@ WRITE16_MEMBER(igs011_state::lhb2_igs003_w)
 			{
 				m_lhb2_pen_hi = data & 0x07;
 
-				okim6295_device *oki = machine().device<okim6295_device>("oki");
-				oki->set_bank_base((data & 0x08) ? 0x40000 : 0);
+				m_oki->set_bank_base((data & 0x08) ? 0x40000 : 0);
 			}
 
 			if ( m_lhb2_pen_hi & ~0xf )
@@ -1650,8 +1651,7 @@ WRITE16_MEMBER(igs011_state::wlcc_igs003_w)
 				coin_counter_w(machine(), 0,    data & 0x01);
 				//  coin out        data & 0x02
 
-				okim6295_device *oki = machine().device<okim6295_device>("oki");
-				oki->set_bank_base((data & 0x10) ? 0x40000 : 0);
+				m_oki->set_bank_base((data & 0x10) ? 0x40000 : 0);
 				m_igs_hopper        =   data & 0x20;
 			}
 
@@ -1964,7 +1964,7 @@ DRIVER_INIT_MEMBER(igs011_state,drgnwrldv21)
 
 	drgnwrld_type2_decrypt();
 	drgnwrld_gfx_decrypt();
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd4c0, 0xd4ff, read16_delegate(FUNC(igs011_state::drgnwrldv21_igs011_prot2_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xd4c0, 0xd4ff, read16_delegate(FUNC(igs011_state::drgnwrldv21_igs011_prot2_r), this));
 /*
     // PROTECTION CHECKS
     // bp 32ee; bp 11ca8; bp 23d5e; bp 23fd0; bp 24170; bp 24348; bp 2454e; bp 246cc; bp 24922; bp 24b66; bp 24de2; bp 2502a; bp 25556; bp 269de; bp 2766a; bp 2a830
@@ -2104,7 +2104,7 @@ DRIVER_INIT_MEMBER(igs011_state,dbc)
 
 	dbc_decrypt();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::dbc_igs011_prot2_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::dbc_igs011_prot2_r), this));
 /*
     // PROTECTION CHECKS
     rom[0x04c42/2]  =   0x602e;     // 004C42: 6604         bne 4c48  (rom test error otherwise)
@@ -2134,7 +2134,7 @@ DRIVER_INIT_MEMBER(igs011_state,ryukobou)
 
 	ryukobou_decrypt();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::ryukobou_igs011_prot2_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x10600, 0x107ff, read16_delegate(FUNC(igs011_state::ryukobou_igs011_prot2_r), this));
 
 	// PROTECTION CHECKS
 //  rom[0x2df68/2]  =   0x4e75;     // 02DF68: 4E56 FE00    link A6, #-$200  (fills palette with pink otherwise)
@@ -2373,11 +2373,9 @@ WRITE16_MEMBER(igs011_state::lhb_irq_enable_w)
 
 WRITE16_MEMBER(igs011_state::lhb_okibank_w)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_8_15)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base((data & 0x200) ? 0x40000 : 0);
+		m_oki->set_bank_base((data & 0x200) ? 0x40000 : 0);
 	}
 
 	if ( data & (~0x200) )

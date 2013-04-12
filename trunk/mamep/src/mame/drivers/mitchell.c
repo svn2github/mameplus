@@ -106,23 +106,17 @@ READ8_MEMBER(mitchell_state::pang_port5_r)
 
 WRITE8_MEMBER(mitchell_state::eeprom_cs_w)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->set_cs_line(data ? CLEAR_LINE : ASSERT_LINE);
+	m_eeprom->set_cs_line(data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(mitchell_state::eeprom_clock_w)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->set_clock_line(data ? CLEAR_LINE : ASSERT_LINE);
+	m_eeprom->set_clock_line(data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(mitchell_state::eeprom_serial_w)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	eeprom->write_bit(data);
+	m_eeprom->write_bit(data);
 }
 
 
@@ -1182,20 +1176,19 @@ GFXDECODE_END
 
 
 
-static void spangbl_adpcm_int( device_t *device )
+WRITE_LINE_MEMBER(mitchell_state::spangbl_adpcm_int)
 {
-	mitchell_state *state = device->machine().driver_data<mitchell_state>();
-	msm5205_data_w(device, state->m_sample_buffer & 0x0f);
-	state->m_sample_buffer >>= 4;
-	state->m_sample_select ^= 1;
-	if(state->m_sample_select == 0)
-		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	msm5205_data_w(machine().device("msm"), m_sample_buffer & 0x0f);
+	m_sample_buffer >>= 4;
+	m_sample_select ^= 1;
+	if(m_sample_select == 0)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
 static const msm5205_interface msm5205_config =
 {
-	spangbl_adpcm_int,  /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(mitchell_state,spangbl_adpcm_int),  /* interrupt function */
 	MSM5205_S48_4B      /* 4KHz 4-bit */
 };
 
@@ -2082,7 +2075,7 @@ ROM_END
 
 void mitchell_state::bootleg_decode(  )
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	space.set_decrypted_region(0x0000, 0x7fff, memregion("maincpu")->base() + 0x50000);
 	membank("bank1")->configure_decrypted_entries(0, 16, memregion("maincpu")->base() + 0x60000, 0x4000);
 }
@@ -2172,8 +2165,8 @@ DRIVER_INIT_MEMBER(mitchell_state,mgakuen)
 {
 	m_input_type = 1;
 	configure_banks();
-	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x03, 0x03, "DSW0");
-	machine().device("maincpu")->memory().space(AS_IO).install_read_port(0x04, 0x04, "DSW1");
+	m_maincpu->space(AS_IO).install_read_port(0x03, 0x03, "DSW0");
+	m_maincpu->space(AS_IO).install_read_port(0x04, 0x04, "DSW1");
 }
 DRIVER_INIT_MEMBER(mitchell_state,mgakuen2)
 {

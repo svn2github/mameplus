@@ -174,8 +174,6 @@ Stephh's notes (based on the games Z80 code and some tests) :
 
 WRITE8_MEMBER(wiz_state::sound_command_w)
 {
-	device_t *discrete = machine().device("discrete");
-
 	switch (offset)
 	{
 		// 0x90 triggers a jump to non-existant address(development system?) and must be filtered
@@ -185,14 +183,14 @@ WRITE8_MEMBER(wiz_state::sound_command_w)
 
 		// explosion sound trigger(analog?)
 		case 0x08:
-			discrete_sound_w(discrete, space, STINGER_BOOM_EN1, m_dsc1);
-			discrete_sound_w(discrete, space, STINGER_BOOM_EN2, m_dsc1^=1);
+			discrete_sound_w(m_discrete, space, STINGER_BOOM_EN1, m_dsc1);
+			discrete_sound_w(m_discrete, space, STINGER_BOOM_EN2, m_dsc1^=1);
 		break;
 
 		// player shot sound trigger(analog?)
 		case 0x0a:
-			discrete_sound_w(discrete, space, STINGER_SHOT_EN1, m_dsc0);
-			discrete_sound_w(discrete, space, STINGER_SHOT_EN2, m_dsc0^=1);
+			discrete_sound_w(m_discrete, space, STINGER_SHOT_EN1, m_dsc0);
+			discrete_sound_w(m_discrete, space, STINGER_SHOT_EN2, m_dsc0^=1);
 		break;
 	}
 }
@@ -1053,7 +1051,7 @@ DRIVER_INIT_MEMBER(wiz_state,stinger)
 		{ 5,3,7, 0x80 },
 		{ 5,7,3, 0x28 }
 	};
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	UINT8 *rom = memregion("maincpu")->base();
 	int size = memregion("maincpu")->bytes();
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, size);
@@ -1090,13 +1088,13 @@ DRIVER_INIT_MEMBER(wiz_state,stinger)
 
 DRIVER_INIT_MEMBER(wiz_state,scion)
 {
-	machine().device("audiocpu")->memory().space(AS_PROGRAM).nop_write(0x4000, 0x4001);
+	m_audiocpu->space(AS_PROGRAM).nop_write(0x4000, 0x4001);
 }
 
 
 DRIVER_INIT_MEMBER(wiz_state,wiz)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd400, 0xd400, read8_delegate(FUNC(wiz_state::wiz_protection_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xd400, 0xd400, read8_delegate(FUNC(wiz_state::wiz_protection_r),this));
 }
 
 

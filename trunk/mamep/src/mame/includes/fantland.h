@@ -4,9 +4,11 @@ class fantland_state : public driver_device
 {
 public:
 	fantland_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram", 0),
-		m_spriteram2(*this, "spriteram2", 0){ }
+		m_spriteram2(*this, "spriteram2", 0),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu")  { }
 
 	/* memory pointers */
 //  UINT8 *    m_spriteram;   // currently directly used in a 16bit map...
@@ -24,7 +26,6 @@ public:
 	int        m_adpcm_nibble[4];
 
 	/* devices */
-	device_t *m_audio_cpu;
 	device_t *m_msm1;
 	device_t *m_msm2;
 	device_t *m_msm3;
@@ -52,4 +53,13 @@ public:
 	INTERRUPT_GEN_MEMBER(fantland_irq);
 	INTERRUPT_GEN_MEMBER(fantland_sound_irq);
 	void draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect);
+	DECLARE_WRITE_LINE_MEMBER(borntofi_adpcm_int_0);
+	DECLARE_WRITE_LINE_MEMBER(borntofi_adpcm_int_1);
+	DECLARE_WRITE_LINE_MEMBER(borntofi_adpcm_int_2);
+	DECLARE_WRITE_LINE_MEMBER(borntofi_adpcm_int_3);
+	void borntofi_adpcm_start( device_t *device, int voice );
+	void borntofi_adpcm_stop( device_t *device, int voice );
+	void borntofi_adpcm_int( device_t *device, int voice );
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };

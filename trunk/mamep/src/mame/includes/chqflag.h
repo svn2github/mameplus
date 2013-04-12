@@ -8,7 +8,9 @@ class chqflag_state : public driver_device
 {
 public:
 	chqflag_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	/* memory pointers */
 	UINT8 *    m_ram;
@@ -26,8 +28,8 @@ public:
 	int        m_wheel;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_k007232_1;
 	device_t *m_k007232_2;
 	device_t *m_k051960;
@@ -45,6 +47,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_chqflag(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(chqflag_scanline);
+	DECLARE_WRITE8_MEMBER(volume_callback0);
+	DECLARE_WRITE8_MEMBER(volume_callback1);
 };
 
 /*----------- defined in video/chqflag.c -----------*/

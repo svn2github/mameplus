@@ -94,11 +94,14 @@ class vcombat_state : public driver_device
 {
 public:
 	vcombat_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_tlc34076(*this, "tlc34076"),
 		m_vid_0_shared_ram(*this, "vid_0_ram"),
 		m_vid_1_shared_ram(*this, "vid_1_ram"),
-		m_framebuffer_ctrl(*this, "fb_control"){ }
+		m_framebuffer_ctrl(*this, "fb_control"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_dac(*this, "dac") { }
 
 	UINT16* m_m68k_framebuffer[2];
 	UINT16* m_i860_framebuffer[2][2];
@@ -128,6 +131,9 @@ public:
 	DECLARE_MACHINE_RESET(shadfgtr);
 	UINT32 screen_update_vcombat_main(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_vcombat_aux(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	required_device<dac_device> m_dac;
 };
 
 static UINT32 update_screen(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, int index)
@@ -262,15 +268,15 @@ WRITE16_MEMBER(vcombat_state::wiggle_i860p1_pins_w)
 READ16_MEMBER(vcombat_state::main_irqiack_r)
 {
 	//fprintf(stderr, "M0: irq iack\n");
-	machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, CLEAR_LINE);
-	//machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+	m_maincpu->set_input_line(M68K_IRQ_1, CLEAR_LINE);
+	//m_maincpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	return 0;
 }
 
 READ16_MEMBER(vcombat_state::sound_resetmain_r)
 {
 	//fprintf(stderr, "M1: reset line to M0\n");
-	//machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	//m_maincpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 	return 0;
 }
 
@@ -335,9 +341,8 @@ WRITE16_MEMBER(vcombat_state::crtc_w)
 
 WRITE16_MEMBER(vcombat_state::vcombat_dac_w)
 {
-	dac_device *device = machine().device<dac_device>("dac");
 	INT16 newval = ((INT16)data - 0x6000) << 2;
-	device->write_signed16(newval + 0x8000);
+	m_dac->write_signed16(newval + 0x8000);
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, vcombat_state )
@@ -563,7 +568,7 @@ INPUT_PORTS_END
 WRITE_LINE_MEMBER(vcombat_state::sound_update)
 {
 	/* Seems reasonable */
-	machine().device("soundcpu")->execute().set_input_line(M68K_IRQ_1, state ? ASSERT_LINE : CLEAR_LINE);
+	m_soundcpu->set_input_line(M68K_IRQ_1, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static MC6845_INTERFACE( mc6845_intf )

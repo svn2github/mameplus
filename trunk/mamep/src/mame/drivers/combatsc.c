@@ -678,7 +678,6 @@ MACHINE_START_MEMBER(combatsc_state,combatsc)
 
 	m_interleave_timer = machine().scheduler().timer_alloc(FUNC_NULL);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k007121_1 = machine().device("k007121_1");
 	m_k007121_2 = machine().device("k007121_2");
 
@@ -702,7 +701,7 @@ MACHINE_START_MEMBER(combatsc_state,combatscb)
 
 void combatsc_state::machine_reset()
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	int i;
 
 	memset(m_io_ram,  0x00, 0x4000);
@@ -770,7 +769,7 @@ MACHINE_CONFIG_END
 
 static const msm5205_interface msm5205_config =
 {
-	0,              /* interrupt function */
+	DEVCB_NULL,              /* interrupt function */
 	MSM5205_SEX_4B  /* 8KHz playback ?    */
 };
 
@@ -986,7 +985,7 @@ ROM_END
 DRIVER_INIT_MEMBER(combatsc_state,combatsc)
 {
 	/* joystick instead of trackball */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_port(0x0404, 0x0404, "IN1");
+	m_maincpu->space(AS_PROGRAM).install_read_port(0x0404, 0x0404, "IN1");
 }
 
 

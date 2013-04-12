@@ -467,7 +467,6 @@ MACHINE_START_MEMBER(astrof_state,astrof)
 	/* the 74175 outputs all HI's if not otherwise set */
 	astrof_set_video_control_2(0xff);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
 	m_samples = machine().device<samples_device>("samples");
 
 	/* register for state saving */
@@ -497,7 +496,6 @@ MACHINE_START_MEMBER(astrof_state,spfghmk2)
 	/* the 74175 outputs all HI's if not otherwise set */
 	spfghmk2_set_video_control_2(0xff);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	/* the red background circuit is disabled */
 	m_red_on = FALSE;
@@ -514,7 +512,6 @@ MACHINE_START_MEMBER(astrof_state,tomahawk)
 	/* the 74175 outputs all HI's if not otherwise set */
 	tomahawk_set_video_control_2(0xff);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
 	m_sn = machine().device("snsnd");
 
 	/* register for state saving */
@@ -1266,8 +1263,8 @@ DRIVER_INIT_MEMBER(astrof_state,abattle)
 		rom[i] = prom[rom[i]];
 
 	/* set up protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
 }
 
 
@@ -1280,8 +1277,8 @@ DRIVER_INIT_MEMBER(astrof_state,afire)
 		rom[i] = ~rom[i];
 
 	/* set up protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::afire_coin_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::afire_coin_prot_r),this));
 }
 
 
@@ -1294,8 +1291,8 @@ DRIVER_INIT_MEMBER(astrof_state,sstarbtl)
 		rom[i] = ~rom[i];
 
 	/* set up protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa003, 0xa003, read8_delegate(FUNC(astrof_state::shoot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa004, 0xa004, read8_delegate(FUNC(astrof_state::abattle_coin_prot_r),this));
 }
 
 

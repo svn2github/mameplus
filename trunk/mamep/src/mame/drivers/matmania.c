@@ -298,9 +298,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(matmania_state,matmania)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_mcu = machine().device("mcu");
 }
 
 static MACHINE_CONFIG_START( matmania, matmania_state )

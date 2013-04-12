@@ -220,7 +220,7 @@ READ32_MEMBER(ms32_state::ms32_read_inputs3)
 WRITE32_MEMBER(ms32_state::ms32_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	// give the Z80 time to respond
 	space.device().execute().spin_until_time(attotime::from_usec(40));
@@ -233,7 +233,7 @@ READ32_MEMBER(ms32_state::ms32_sound_r)
 
 WRITE32_MEMBER(ms32_state::reset_sub_w)
 {
-	if(data) machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE); // 0 too ?
+	if(data) m_audiocpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE); // 0 too ?
 }
 
 
@@ -1288,14 +1288,14 @@ IRQ_CALLBACK_MEMBER(ms32_state::irq_callback)
 void ms32_state::irq_init()
 {
 	m_irqreq = 0;
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(ms32_state::irq_callback),this));
+	m_maincpu->set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(ms32_state::irq_callback),this));
 }
 
 void ms32_state::irq_raise(int level)
 {
 	m_irqreq |= (1<<level);
-	machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	m_maincpu->set_input_line(0, ASSERT_LINE);
 }
 
 /* TODO: fix this arrangement (derived from old deprecat lib) */
@@ -1341,7 +1341,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(ms32_state::ms32_interrupt)
 
 READ8_MEMBER(ms32_state::latch_r)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	return soundlatch_byte_r(space,0)^0xff;
 }
 

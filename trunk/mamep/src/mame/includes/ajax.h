@@ -3,7 +3,10 @@ class ajax_state : public driver_device
 {
 public:
 	ajax_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub") { }
 
 	/* memory pointers */
 //  UINT8 *    m_paletteram;    // currently this uses generic palette handling
@@ -18,9 +21,9 @@ public:
 	int        m_firq_enable;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
 	device_t *m_k007232_1;
 	device_t *m_k007232_2;
 	device_t *m_k052109;
@@ -38,6 +41,9 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_ajax(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(ajax_interrupt);
+	DECLARE_WRITE8_MEMBER(volume_callback0);
+	DECLARE_WRITE8_MEMBER(volume_callback1);
+
 };
 
 /*----------- defined in video/ajax.c -----------*/

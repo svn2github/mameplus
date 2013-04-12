@@ -110,12 +110,12 @@ WRITE32_MEMBER(taito_f3_state::f3_control_w)
 
 WRITE32_MEMBER(taito_f3_state::f3_sound_reset_0_w)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE32_MEMBER(taito_f3_state::f3_sound_reset_1_w)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 WRITE32_MEMBER(taito_f3_state::f3_sound_bankswitch_w)
@@ -392,7 +392,7 @@ GFXDECODE_END
 
 TIMER_CALLBACK_MEMBER(taito_f3_state::f3_interrupt3)
 {
-	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);    // some signal from video hardware?
+	m_maincpu->set_input_line(3, HOLD_LINE);    // some signal from video hardware?
 }
 
 INTERRUPT_GEN_MEMBER(taito_f3_state::f3_interrupt2)
@@ -3742,12 +3742,12 @@ DRIVER_INIT_MEMBER(taito_f3_state,bubsymph)
 
 READ32_MEMBER(taito_f3_state::bubsympb_oki_r)
 {
-	return machine().device<okim6295_device>("oki")->read(space,0);
+	return m_oki->read(space,0);
 }
 WRITE32_MEMBER(taito_f3_state::bubsympb_oki_w)
 {
 	//printf("write %08x %08x\n",data,mem_mask);
-	if (ACCESSING_BITS_0_7) machine().device<okim6295_device>("oki")->write(space, 0,data&0xff);
+	if (ACCESSING_BITS_0_7) m_oki->write(space, 0,data&0xff);
 	//if (mem_mask==0x000000ff) downcast<okim6295_device *>(device)->write(0,data&0xff);
 	if (ACCESSING_BITS_16_23)
 	{
@@ -3787,8 +3787,8 @@ DRIVER_INIT_MEMBER(taito_f3_state,bubsympb)
 		}
 	}
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x4a001c, 0x4a001f, read32_delegate(FUNC(taito_f3_state::bubsympb_oki_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x4a001c, 0x4a001f, write32_delegate(FUNC(taito_f3_state::bubsympb_oki_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x4a001c, 0x4a001f, read32_delegate(FUNC(taito_f3_state::bubsympb_oki_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x4a001c, 0x4a001f, write32_delegate(FUNC(taito_f3_state::bubsympb_oki_w),this));
 }
 
 

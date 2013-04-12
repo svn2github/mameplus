@@ -90,7 +90,7 @@ WRITE16_MEMBER(m107_state::m107_bankswitch_w)
 
 WRITE16_MEMBER(m107_state::m107_soundlatch_w)
 {
-	machine().device("soundcpu")->execute().set_input_line(NEC_INPUT_LINE_INTP1, ASSERT_LINE);
+	m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP1, ASSERT_LINE);
 	soundlatch_byte_w(space, 0, data & 0xff);
 //      logerror("soundlatch_byte_w %02x\n",data);
 }
@@ -102,24 +102,24 @@ READ16_MEMBER(m107_state::m107_sound_status_r)
 
 READ16_MEMBER(m107_state::m107_soundlatch_r)
 {
-	machine().device("soundcpu")->execute().set_input_line(NEC_INPUT_LINE_INTP1, CLEAR_LINE);
+	m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP1, CLEAR_LINE);
 	return soundlatch_byte_r(space, offset) | 0xff00;
 }
 
 WRITE16_MEMBER(m107_state::m107_sound_irq_ack_w)
 {
-	machine().device("soundcpu")->execute().set_input_line(NEC_INPUT_LINE_INTP1, CLEAR_LINE);
+	m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP1, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(m107_state::m107_sound_status_w)
 {
 	COMBINE_DATA(&m_sound_status);
-	machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, M107_IRQ_3);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M107_IRQ_3);
 }
 
 WRITE16_MEMBER(m107_state::m107_sound_reset_w)
 {
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data) ? CLEAR_LINE : ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_RESET, (data) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 /*****************************************************************************/
@@ -961,7 +961,7 @@ DRIVER_INIT_MEMBER(m107_state,dsoccr94)
 	UINT8 *ROM = memregion("maincpu")->base();
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
-	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x06, 0x07, write16_delegate(FUNC(m107_state::m107_bankswitch_w),this));
+	m_maincpu->space(AS_IO).install_write_handler(0x06, 0x07, write16_delegate(FUNC(m107_state::m107_bankswitch_w),this));
 
 	m_irq_vectorbase = 0x80;
 	m_spritesystem = 0;

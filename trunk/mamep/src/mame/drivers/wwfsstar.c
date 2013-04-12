@@ -217,7 +217,7 @@ WRITE16_MEMBER(wwfsstar_state::wwfsstar_scrollwrite)
 WRITE16_MEMBER(wwfsstar_state::wwfsstar_soundwrite)
 {
 	soundlatch_byte_w(space, 1, data & 0xff);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 WRITE16_MEMBER(wwfsstar_state::wwfsstar_flipscreen_w)
@@ -228,10 +228,10 @@ WRITE16_MEMBER(wwfsstar_state::wwfsstar_flipscreen_w)
 WRITE16_MEMBER(wwfsstar_state::wwfsstar_irqack_w)
 {
 	if (offset == 0)
-		machine().device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
+		m_maincpu->set_input_line(6, CLEAR_LINE);
 
 	else
-		machine().device("maincpu")->execute().set_input_line(5, CLEAR_LINE);
+		m_maincpu->set_input_line(5, CLEAR_LINE);
 }
 
 /*
@@ -267,14 +267,14 @@ TIMER_DEVICE_CALLBACK_MEMBER(wwfsstar_state::wwfsstar_scanline)
 	{
 		if (scanline > 0)
 			machine().primary_screen->update_partial(scanline - 1);
-		machine().device("maincpu")->execute().set_input_line(5, ASSERT_LINE);
+		m_maincpu->set_input_line(5, ASSERT_LINE);
 	}
 
 	/* Vblank is raised on scanline 240 */
 	if (scanline == 240)
 	{
 		machine().primary_screen->update_partial(scanline - 1);
-		machine().device("maincpu")->execute().set_input_line(6, ASSERT_LINE);
+		m_maincpu->set_input_line(6, ASSERT_LINE);
 	}
 }
 

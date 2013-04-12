@@ -8,8 +8,11 @@ class gradius3_state : public driver_device
 {
 public:
 	gradius3_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_gfxram(*this, "gfxram"){ }
+		: driver_device(mconfig, type, tag),
+		m_gfxram(*this, "gfxram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_gfxram;
@@ -25,9 +28,9 @@ public:
 	int         m_irqBmask;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
 	device_t *m_k007232;
 	device_t *m_k052109;
 	device_t *m_k051960;
@@ -52,6 +55,7 @@ public:
 	INTERRUPT_GEN_MEMBER(cpuA_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(gradius3_sub_scanline);
 	void gradius3_postload();
+	DECLARE_WRITE8_MEMBER(volume_callback);
 };
 
 /*----------- defined in video/gradius3.c -----------*/

@@ -21,12 +21,14 @@ class lockon_state : public driver_device
 {
 public:
 	lockon_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_char_ram(*this, "char_ram"),
 		m_hud_ram(*this, "hud_ram"),
 		m_scene_ram(*this, "scene_ram"),
 		m_ground_ram(*this, "ground_ram"),
-		m_object_ram(*this, "object_ram"){ }
+		m_object_ram(*this, "object_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_char_ram;
@@ -66,8 +68,8 @@ public:
 	UINT32      m_main_inten;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_ground;
 	device_t *m_object;
 	filter_volume_device *m_f2203_1l;
@@ -114,4 +116,5 @@ public:
 	void objects_draw(  );
 	void rotate_draw( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void hud_draw( bitmap_ind16 &bitmap, const rectangle &cliprect );
+	DECLARE_WRITE_LINE_MEMBER(ym2203_irq);
 };

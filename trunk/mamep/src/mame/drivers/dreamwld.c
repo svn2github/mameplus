@@ -125,13 +125,14 @@ class dreamwld_state : public driver_device
 {
 public:
 	dreamwld_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_paletteram(*this, "paletteram"),
 		m_bg_videoram(*this, "bg_videoram"),
 		m_bg2_videoram(*this, "bg2_videoram"),
 		m_vregs(*this, "vregs"),
-		m_workram(*this, "workram"){ }
+		m_workram(*this, "workram"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT32> m_spriteram;
@@ -166,6 +167,7 @@ public:
 	UINT32 screen_update_dreamwld(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void screen_eof_dreamwld(screen_device &screen, bool state);
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
+	required_device<cpu_device> m_maincpu;
 };
 
 

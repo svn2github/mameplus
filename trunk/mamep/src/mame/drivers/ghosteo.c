@@ -82,10 +82,10 @@ class ghosteo_state : public driver_device
 {
 public:
 	ghosteo_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_system_memory(*this, "systememory"),
-		m_i2cmem(*this, "i2cmem")
-	{ }
+		m_i2cmem(*this, "i2cmem"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT32> m_system_memory;
 	required_device<i2cmem_device> m_i2cmem;
@@ -104,6 +104,7 @@ public:
 	DECLARE_DRIVER_INIT(bballoon);
 	virtual void machine_start();
 	virtual void machine_reset();
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -377,8 +378,7 @@ WRITE32_MEMBER(ghosteo_state::sound_w)
 
 READ32_MEMBER( ghosteo_state::touryuu_port_10000000_r )
 {
-	ghosteo_state *state = machine().driver_data<ghosteo_state>();
-	UINT32 port_g = state->m_bballoon_port[S3C2410_GPIO_PORT_G];
+	UINT32 port_g = m_bballoon_port[S3C2410_GPIO_PORT_G];
 	UINT32 data = 0xFFFFFFFF;
 	switch (port_g)
 	{
@@ -596,7 +596,7 @@ void ghosteo_state::machine_start()
 
 void ghosteo_state::machine_reset()
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x4d000010, 0x4d000013,read32_delegate(FUNC(ghosteo_state::bballoon_speedup_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x4d000010, 0x4d000013,read32_delegate(FUNC(ghosteo_state::bballoon_speedup_r), this));
 	m_s3c2410 = machine().device("s3c2410");
 }
 

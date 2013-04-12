@@ -4,12 +4,12 @@ class yiear_state : public driver_device
 {
 public:
 	yiear_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_spriteram2(*this, "spriteram2"),
 		m_videoram(*this, "videoram"),
-		m_sn(*this, "snsnd")
-	{ }
+		m_sn(*this, "snsnd"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_spriteram;
@@ -39,4 +39,5 @@ public:
 	INTERRUPT_GEN_MEMBER(yiear_vblank_interrupt);
 	INTERRUPT_GEN_MEMBER(yiear_nmi_interrupt);
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
+	required_device<cpu_device> m_maincpu;
 };

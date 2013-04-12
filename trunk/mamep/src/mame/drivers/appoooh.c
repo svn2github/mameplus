@@ -169,29 +169,27 @@ Language
 #include "sound/sn76496.h"
 
 
-static void appoooh_adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(appoooh_state::appoooh_adpcm_int)
 {
-	appoooh_state *state = device->machine().driver_data<appoooh_state>();
-
-	if (state->m_adpcm_address != 0xffffffff)
+	if (m_adpcm_address != 0xffffffff)
 	{
-		if (state->m_adpcm_data == 0xffffffff)
+		if (m_adpcm_data == 0xffffffff)
 		{
-			UINT8 *RAM = state->memregion("adpcm")->base();
+			UINT8 *RAM = memregion("adpcm")->base();
 
-			state->m_adpcm_data = RAM[state->m_adpcm_address++];
-			msm5205_data_w(device, state->m_adpcm_data >> 4);
+			m_adpcm_data = RAM[m_adpcm_address++];
+			msm5205_data_w(machine().device("msm"), m_adpcm_data >> 4);
 
-			if (state->m_adpcm_data == 0x70)
+			if (m_adpcm_data == 0x70)
 			{
-				state->m_adpcm_address = 0xffffffff;
-				msm5205_reset_w(device, 1);
+				m_adpcm_address = 0xffffffff;
+				msm5205_reset_w(machine().device("msm"), 1);
 			}
 		}
 		else
 		{
-			msm5205_data_w(device, state->m_adpcm_data & 0x0f );
-			state->m_adpcm_data = -1;
+			msm5205_data_w(machine().device("msm"), m_adpcm_data & 0x0f );
+			m_adpcm_data = -1;
 		}
 	}
 }
@@ -387,7 +385,7 @@ GFXDECODE_END
 
 static const msm5205_interface msm5205_config =
 {
-	appoooh_adpcm_int,/* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(appoooh_state,appoooh_adpcm_int),/* interrupt function */
 	MSM5205_S64_4B  /* 6KHz               */
 };
 
@@ -608,7 +606,7 @@ DRIVER_INIT_MEMBER(appoooh_state,robowres)
 
 DRIVER_INIT_MEMBER(appoooh_state,robowresb)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	space.set_decrypted_region(0x0000, 0x7fff, memregion("maincpu")->base() + 0x1c000);
 }
 

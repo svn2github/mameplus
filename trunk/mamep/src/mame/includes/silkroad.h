@@ -1,13 +1,17 @@
+#include "sound/okim6295.h"
+
 class silkroad_state : public driver_device
 {
 public:
 	silkroad_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vidram(*this, "vidram"),
 		m_vidram2(*this, "vidram2"),
 		m_vidram3(*this, "vidram3"),
 		m_sprram(*this, "sprram"),
-		m_regs(*this, "regs"){ }
+		m_regs(*this, "regs"),
+		m_maincpu(*this, "maincpu"),
+		m_oki1(*this, "oki1") { }
 
 	required_shared_ptr<UINT32> m_vidram;
 	required_shared_ptr<UINT32> m_vidram2;
@@ -30,4 +34,6 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_silkroad(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
+	required_device<okim6295_device> m_oki1;
 };

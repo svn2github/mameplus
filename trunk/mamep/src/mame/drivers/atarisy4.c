@@ -24,9 +24,10 @@ class atarisy4_state : public driver_device
 {
 public:
 	atarisy4_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_m68k_ram(*this, "m68k_ram"),
-		m_screen_ram(*this, "screen_ram"){ }
+		m_screen_ram(*this, "screen_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	UINT8 m_r_color_table[256];
 	UINT8 m_g_color_table[256];
@@ -66,6 +67,7 @@ public:
 	inline UINT8 hex_to_ascii(UINT8 in);
 	void load_ldafile(address_space &space, const UINT8 *file);
 	void load_hexfile(address_space &space, const UINT8 *file);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -490,7 +492,7 @@ WRITE16_MEMBER(atarisy4_state::gpu_w)
 			gpu.mcr = data;
 
 			if (~data & 0x08)
-				machine().device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
+				m_maincpu->set_input_line(6, CLEAR_LINE);
 
 			break;
 		}
@@ -525,7 +527,7 @@ READ16_MEMBER(atarisy4_state::gpu_r)
 INTERRUPT_GEN_MEMBER(atarisy4_state::vblank_int)
 {
 	if (gpu.mcr & 0x08)
-		machine().device("maincpu")->execute().set_input_line(6, ASSERT_LINE);
+		m_maincpu->set_input_line(6, ASSERT_LINE);
 }
 
 
@@ -969,7 +971,7 @@ next_line:
 
 DRIVER_INIT_MEMBER(atarisy4_state,laststar)
 {
-	address_space &main = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &main = m_maincpu->space(AS_PROGRAM);
 
 	/* Allocate 16kB of shared RAM */
 	m_shared_ram[0] = auto_alloc_array_clear(machine(), UINT16, 0x2000);
@@ -991,7 +993,7 @@ DRIVER_INIT_MEMBER(atarisy4_state,airrace)
 	m_shared_ram[1] = auto_alloc_array_clear(machine(), UINT16, 0x4000);
 
 	/* Populate RAM with data from the HEX files */
-	load_hexfile(machine().device("maincpu")->memory().space(AS_PROGRAM), memregion("code")->base());
+	load_hexfile(m_maincpu->space(AS_PROGRAM), memregion("code")->base());
 
 	/* Set up the first DSP */
 	membank("dsp0_bank0")->set_base(m_shared_ram[0]);

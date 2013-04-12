@@ -478,7 +478,7 @@ READ16_MEMBER(midyunit_state::mkturbo_prot_r)
 DRIVER_INIT_MEMBER(midyunit_state,mkyturbo)
 {
 	/* protection */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfffff400, 0xfffff40f, read16_delegate(FUNC(midyunit_state::mkturbo_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfffff400, 0xfffff40f, read16_delegate(FUNC(midyunit_state::mkturbo_prot_r),this));
 
 	DRIVER_INIT_CALL(mkyunit);
 }
@@ -604,7 +604,7 @@ WRITE16_MEMBER(midyunit_state::midyunit_sound_w)
 
 			case SOUND_YAWDIM:
 				soundlatch_byte_w(space, 0, data);
-				machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+				m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 				break;
 		}
 }

@@ -152,9 +152,10 @@ ADDRESS_MAP_END
 
 
 // internal 128x14 control ROM
+// hand-dumped as little-endian from a die shot
 ROM_START( upd7220 )
 	ROM_REGION( 0x100, "upd7220", 0 )
-	ROM_LOAD( "upd7220.bin", 0x000, 0x100, NO_DUMP )
+	ROM_LOAD( "upd7220.bin", 0x000, 0x100, CRC(3c92b218) SHA1(e154b3106a80c9c98d9f2ee18efcd7f4b4aa7d49) )
 ROM_END
 
 
@@ -679,7 +680,7 @@ inline void upd7220_device::get_graphics_partition(int index, UINT32 *sad, UINT1
 //-------------------------------------------------
 
 upd7220_device::upd7220_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, UPD7220, "uPD7220", tag, owner, clock),
+	: device_t(mconfig, UPD7220, "uPD7220", tag, owner, clock, "upd7220", __FILE__),
 		device_memory_interface(mconfig, *this),
 		m_mask(0),
 		m_pitch(0),
@@ -715,7 +716,6 @@ upd7220_device::upd7220_device(const machine_config &mconfig, const char *tag, d
 		m_bitmap_mod(0),
 		m_space_config("videoram", ENDIANNESS_LITTLE, 8, 18, 0, NULL, *ADDRESS_MAP_NAME(upd7220_vram))
 {
-	m_shortname = "upd7220";
 	for (int i = 0; i < 16; i++)
 	{
 		m_fifo[i] = 0;

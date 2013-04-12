@@ -3,6 +3,7 @@
     Art & Magic hardware
 
 **************************************************************************/
+#include "sound/okim6295.h"
 
 class artmagic_state : public driver_device
 {
@@ -12,7 +13,9 @@ public:
 		m_tlc34076(*this, "tlc34076"),
 		m_control(*this, "control"),
 		m_vram0(*this, "vram0"),
-		m_vram1(*this, "vram1"){ }
+		m_vram1(*this, "vram1"),
+		m_maincpu(*this, "maincpu"),
+		m_oki(*this, "oki")  { }
 
 	required_device<tlc34076_device> m_tlc34076;
 	required_shared_ptr<UINT16> m_control;
@@ -52,6 +55,8 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	TIMER_CALLBACK_MEMBER(irq_off);
+	required_device<cpu_device> m_maincpu;
+	required_device<okim6295_device> m_oki;
 };
 
 

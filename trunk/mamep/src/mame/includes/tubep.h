@@ -2,11 +2,15 @@ class tubep_state : public driver_device
 {
 public:
 	tubep_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_textram(*this, "textram"),
 		m_backgroundram(*this, "backgroundram"),
 		m_sprite_colorsharedram(*this, "sprite_color"),
-		m_rjammer_backgroundram(*this, "rjammer_bgram"){ }
+		m_rjammer_backgroundram(*this, "rjammer_bgram"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_slave(*this, "slave"),
+		m_mcu(*this, "mcu") { }
 
 	UINT8 m_sound_latch;
 	UINT8 m_ls74;
@@ -84,6 +88,11 @@ public:
 	void draw_sprite();
 	void tubep_vblank_end();
 	void tubep_setup_save_state();
+	DECLARE_WRITE_LINE_MEMBER(rjammer_adpcm_vck);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	required_device<cpu_device> m_slave;
+	required_device<cpu_device> m_mcu;
 };
 
 

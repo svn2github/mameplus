@@ -300,7 +300,6 @@ static KONAMI_SETLINES_CALLBACK( k88games_banking )
 
 void _88games_state::machine_start()
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k052109 = machine().device("k052109");
 	m_k051960 = machine().device("k051960");
 	m_k051316 = machine().device("k051316");
@@ -318,7 +317,7 @@ void _88games_state::machine_start()
 
 void _88games_state::machine_reset()
 {
-	konami_configure_set_lines(machine().device("maincpu"), k88games_banking);
+	konami_configure_set_lines(m_maincpu, k88games_banking);
 	m_generic_paletteram_8.set_target(&memregion("maincpu")->base()[0x20000], 0x1000);
 
 	m_videobank = 0;

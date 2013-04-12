@@ -2,12 +2,15 @@ class gsword_state : public driver_device
 {
 public:
 	gsword_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spritetile_ram(*this, "spritetile_ram"),
 		m_spritexy_ram(*this, "spritexy_ram"),
 		m_spriteattrib_ram(*this, "spriteattram"),
 		m_videoram(*this, "videoram"),
-		m_cpu2_ram(*this, "cpu2_ram"){ }
+		m_cpu2_ram(*this, "cpu2_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_shared_ptr<UINT8> m_spritetile_ram;
 	required_shared_ptr<UINT8> m_spritexy_ram;
@@ -49,4 +52,7 @@ public:
 	INTERRUPT_GEN_MEMBER(gsword_snd_interrupt);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	int gsword_coins_in(void);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	optional_device<cpu_device> m_subcpu;
 };

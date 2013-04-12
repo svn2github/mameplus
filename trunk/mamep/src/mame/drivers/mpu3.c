@@ -120,8 +120,8 @@ class mpu3_state : public driver_device
 public:
 	mpu3_state(const machine_config &mconfig, device_type type, const char *tag)
 	: driver_device(mconfig, type, tag),
-			m_vfd(*this, "vfd")
-	{ }
+			m_vfd(*this, "vfd"),
+			m_maincpu(*this, "maincpu") { }
 	optional_device<roc10937_t> m_vfd;
 
 
@@ -194,6 +194,7 @@ emu_timer *m_ic21_timer;
 	void ic21_output(mpu3_state *state,int data);
 	void ic21_setup(mpu3_state *state);
 	void mpu3_config_common();
+	required_device<cpu_device> m_maincpu;
 };
 
 #define DISPLAY_PORT 0
@@ -258,7 +259,7 @@ WRITE_LINE_MEMBER(mpu3_state::cpu0_irq)
 							pia6->irq_a_state() | pia6->irq_b_state() |
 							ptm2->irq_state();
 
-		machine().device("maincpu")->execute().set_input_line(M6800_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
+		m_maincpu->set_input_line(M6800_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
 		LOG(("6808 int%d \n", combined_state));
 }
 
@@ -937,7 +938,7 @@ static const mpu3_chr_table hprvpr_data[64] = {
 
 DRIVER_INIT_MEMBER(mpu3_state,m3hprvpr)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	m_disp_func=METER_PORT;
 	m_current_chr_table = hprvpr_data;

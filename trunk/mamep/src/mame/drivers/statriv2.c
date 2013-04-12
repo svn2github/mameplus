@@ -80,9 +80,10 @@ class statriv2_state : public driver_device
 {
 public:
 	statriv2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_question_offset(*this, "question_offset"){ }
+		m_question_offset(*this, "question_offset"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	tilemap_t *m_tilemap;
@@ -111,6 +112,7 @@ public:
 	DECLARE_VIDEO_START(vertical);
 	UINT32 screen_update_statriv2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(statriv2_interrupt);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -1128,7 +1130,7 @@ WRITE8_MEMBER(statriv2_state::laserdisc_io_w)
 
 DRIVER_INIT_MEMBER(statriv2_state,laserdisc)
 {
-	address_space &iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space &iospace = m_maincpu->space(AS_IO);
 	iospace.install_readwrite_handler(0x28, 0x2b, read8_delegate(FUNC(statriv2_state::laserdisc_io_r), this), write8_delegate(FUNC(statriv2_state::laserdisc_io_w), this));
 }
 

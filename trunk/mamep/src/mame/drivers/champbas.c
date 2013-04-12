@@ -141,20 +141,17 @@ TIMER_CALLBACK_MEMBER(champbas_state::exctsccr_fm_callback)
 // Champion Baseball has only one DAC
 WRITE8_MEMBER(champbas_state::champbas_dac_w)
 {
-	dac_device *device = machine().device<dac_device>("dac");
-	device->write_signed8(data << 2);
+	m_dac->write_signed8(data << 2);
 }
 
 WRITE8_MEMBER(champbas_state::champbas_dac1_w)
 {
-	dac_device *device = machine().device<dac_device>("dac1");
-	device->write_signed8(data << 2);
+	m_dac1->write_signed8(data << 2);
 }
 
 WRITE8_MEMBER(champbas_state::champbas_dac2_w)
 {
-	dac_device *device = machine().device<dac_device>("dac2");
-	device->write_signed8(data << 2);
+	m_dac2->write_signed8(data << 2);
 }
 
 /*************************************
@@ -176,7 +173,7 @@ WRITE8_MEMBER(champbas_state::champbas_mcu_halt_w)
 		return;
 
 	data &= 1;
-	m_mcu->execute().set_input_line(INPUT_LINE_HALT, data ? ASSERT_LINE : CLEAR_LINE);
+	m_mcu->set_input_line(INPUT_LINE_HALT, data ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -574,9 +571,6 @@ GFXDECODE_END
 
 MACHINE_START_MEMBER(champbas_state,champbas)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_mcu = machine().device(CPUTAG_MCU);
-
 	save_item(NAME(m_watchdog_count));
 	save_item(NAME(m_palette_bank));
 	save_item(NAME(m_gfx_bank));
@@ -584,7 +578,6 @@ MACHINE_START_MEMBER(champbas_state,champbas)
 
 MACHINE_START_MEMBER(champbas_state,exctsccr)
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	// FIXME
 	machine().scheduler().timer_pulse(attotime::from_hz(75), timer_expired_delegate(FUNC(champbas_state::exctsccr_fm_callback),this)); /* updates fm */

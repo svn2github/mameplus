@@ -167,19 +167,18 @@ WRITE8_MEMBER(rastan_state::rastan_bankswitch_w)
 }
 
 
-static void rastan_msm5205_vck( device_t *device )
+WRITE_LINE_MEMBER(rastan_state::rastan_msm5205_vck)
 {
-	rastan_state *state = device->machine().driver_data<rastan_state>();
-	if (state->m_adpcm_data != -1)
+	if (m_adpcm_data != -1)
 	{
-		msm5205_data_w(device, state->m_adpcm_data & 0x0f);
-		state->m_adpcm_data = -1;
+		msm5205_data_w(machine().device("msm"), m_adpcm_data & 0x0f);
+		m_adpcm_data = -1;
 	}
 	else
 	{
-		state->m_adpcm_data = device->machine().root_device().memregion("adpcm")->base()[state->m_adpcm_pos];
-		state->m_adpcm_pos = (state->m_adpcm_pos + 1) & 0xffff;
-		msm5205_data_w(device, state->m_adpcm_data >> 4);
+		m_adpcm_data = machine().root_device().memregion("adpcm")->base()[m_adpcm_pos];
+		m_adpcm_pos = (m_adpcm_pos + 1) & 0xffff;
+		msm5205_data_w(machine().device("msm"), m_adpcm_data >> 4);
 	}
 }
 
@@ -340,7 +339,7 @@ GFXDECODE_END
 
 static const msm5205_interface msm5205_config =
 {
-	rastan_msm5205_vck, /* VCK function */
+	DEVCB_DRIVER_LINE_MEMBER(rastan_state,rastan_msm5205_vck), /* VCK function */
 	MSM5205_S48_4B      /* 8 kHz */
 };
 
@@ -351,8 +350,6 @@ void rastan_state::machine_start()
 	membank("bank1")->configure_entry(0, &ROM[0x00000]);
 	membank("bank1")->configure_entries(1, 3, &ROM[0x10000], 0x4000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_pc080sn = machine().device("pc080sn");
 	m_pc090oj = machine().device("pc090oj");
 

@@ -131,7 +131,7 @@ ADDRESS_MAP_END
 INPUT_CHANGED_MEMBER(metlclsh_state::coin_inserted)
 {
 	if (oldval)
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static INPUT_PORTS_START( metlclsh )
@@ -262,8 +262,6 @@ static const ym3526_interface ym3526_config =
 
 void metlclsh_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_subcpu = machine().device<cpu_device>("sub");
 
 	save_item(NAME(m_write_mask));
 	save_item(NAME(m_gfxbank));

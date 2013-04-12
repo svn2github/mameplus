@@ -227,7 +227,7 @@ WRITE32_MEMBER(undrfire_state::color_ram_w)
 
 TIMER_CALLBACK_MEMBER(undrfire_state::interrupt5)
 {
-	machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+	m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 
@@ -287,10 +287,9 @@ WRITE32_MEMBER(undrfire_state::undrfire_input_w)
 
 			if (ACCESSING_BITS_0_7)
 			{
-				eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-				eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-				eeprom->write_bit(data & 0x40);
-				eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+				m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+				m_eeprom->write_bit(data & 0x40);
+				m_eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 				return;
 			}
 
@@ -452,7 +451,7 @@ WRITE32_MEMBER(undrfire_state::cbombers_cpua_ctrl_w)
 	output_set_value("Lamp_6", (data >> 5) & 1 );
 	output_set_value("Wheel_vibration", (data >> 6) & 1 );
 
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_RESET, (data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 READ32_MEMBER(undrfire_state::cbombers_adc_r)

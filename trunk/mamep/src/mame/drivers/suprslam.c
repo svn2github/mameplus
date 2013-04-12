@@ -276,15 +276,14 @@ GFXDECODE_END
 
 /*** MORE SOUND **************************************************************/
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(suprslam_state::irqhandler)
 {
-	suprslam_state *state = device->machine().driver_data<suprslam_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(suprslam_state,irqhandler)
 };
 
 /*** MACHINE DRIVER **********************************************************/
@@ -296,7 +295,6 @@ static const k053936_interface suprslam_k053936_intf =
 
 void suprslam_state::machine_start()
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k053936 = machine().device("k053936");
 
 	save_item(NAME(m_screen_bank));

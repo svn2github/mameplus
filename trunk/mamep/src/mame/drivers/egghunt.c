@@ -49,8 +49,11 @@ class egghunt_state : public driver_device
 {
 public:
 	egghunt_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_atram(*this, "atram"){ }
+		: driver_device(mconfig, type, tag),
+		m_audiocpu(*this, "audiocpu"),
+		m_atram(*this, "atram"),
+		m_maincpu(*this, "maincpu"),
+		m_oki(*this, "oki") { }
 
 	/* video-related */
 	tilemap_t   *m_bg_tilemap;
@@ -61,7 +64,7 @@ public:
 	UINT8     m_gfx_banking;
 
 	/* devices */
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_audiocpu;
 
 	/* memory */
 	required_shared_ptr<UINT8> m_atram;
@@ -81,6 +84,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_egghunt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites( bitmap_ind16 &bitmap,const rectangle &cliprect );
+	required_device<cpu_device> m_maincpu;
+	required_device<okim6295_device> m_oki;
 };
 
 
@@ -214,9 +219,8 @@ READ8_MEMBER(egghunt_state::egghunt_okibanking_r)
 
 WRITE8_MEMBER(egghunt_state::egghunt_okibanking_w)
 {
-	okim6295_device *oki = machine().device<okim6295_device>("oki");
 	m_okibanking = data;
-	oki->set_bank_base((data & 0x10) ? 0x40000 : 0);
+	m_oki->set_bank_base((data & 0x10) ? 0x40000 : 0);
 }
 
 static ADDRESS_MAP_START( egghunt_map, AS_PROGRAM, 8, egghunt_state )
@@ -390,7 +394,6 @@ GFXDECODE_END
 
 void egghunt_state::machine_start()
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_gfx_banking));
 	save_item(NAME(m_okibanking));

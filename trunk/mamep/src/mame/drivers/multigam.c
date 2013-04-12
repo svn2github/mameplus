@@ -76,7 +76,8 @@ class multigam_state : public driver_device
 {
 public:
 	multigam_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	UINT8* m_nt_ram;
 	UINT8* m_vram;
@@ -153,6 +154,9 @@ public:
 	void multigam_init_mmc1(UINT8 *prg_base, int prg_size, int chr_bank_base);
 	void supergm3_set_bank();
 	void multigm3_decrypt(UINT8* mem, int memsize, const UINT8* decode_nibble);
+	void multigam3_mmc3_scanline_cb(int scanline, int vblank, int blanked);
+	void ppu_irq(int *ppu_regs);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -404,15 +408,14 @@ ADDRESS_MAP_END
 *******************************************************/
 
 
-static void multigam3_mmc3_scanline_cb( device_t *device, int scanline, int vblank, int blanked )
+void multigam_state::multigam3_mmc3_scanline_cb( int scanline, int vblank, int blanked )
 {
-	multigam_state *state = device->machine().driver_data<multigam_state>();
 	if (!vblank && !blanked)
 	{
-		if (--state->m_multigam3_mmc3_scanline_counter == -1)
+		if (--m_multigam3_mmc3_scanline_counter == -1)
 		{
-			state->m_multigam3_mmc3_scanline_counter = state->m_multigam3_mmc3_scanline_latch;
-			generic_pulse_irq_line(device->machine().device("maincpu"), 0, 1);
+			m_multigam3_mmc3_scanline_counter = m_multigam3_mmc3_scanline_latch;
+			generic_pulse_irq_line(m_maincpu, 0, 1);
 		}
 	}
 }
@@ -556,11 +559,11 @@ WRITE8_MEMBER(multigam_state::multigam3_mmc3_rom_switch_w)
 		break;
 
 		case 0x6000: /* disable irqs */
-			ppu->set_scanline_callback(0);
+			ppu->set_scanline_callback(ppu2c0x_scanline_delegate());
 		break;
 
 		case 0x6001: /* enable irqs */
-			ppu->set_scanline_callback(multigam3_mmc3_scanline_cb);
+			ppu->set_scanline_callback(ppu2c0x_scanline_delegate(FUNC(multigam_state::multigam3_mmc3_scanline_cb),this));
 		break;
 	}
 }
@@ -576,7 +579,7 @@ void multigam_state::multigam_init_mmc3(UINT8 *prg_base, int prg_size, int chr_b
 	memcpy(&dst[0x8000], prg_base + (prg_size - 0x4000), 0x4000);
 	memcpy(&dst[0xc000], prg_base + (prg_size - 0x4000), 0x4000);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mmc3_rom_switch_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mmc3_rom_switch_w),this));
 
 	m_multigam3_mmc3_banks[0] = 0x1e;
 	m_multigam3_mmc3_banks[1] = 0x1f;
@@ -684,11 +687,11 @@ void multigam_state::multigam_init_mapper02(UINT8* prg_base, int prg_size)
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
 	UINT8* mem = memregion("maincpu")->base();
 	memcpy(mem + 0x8000, prg_base + prg_size - 0x8000, 0x8000);
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mapper02_rom_switch_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::multigam3_mapper02_rom_switch_w),this));
 
 	m_mapper02_prg_base = prg_base;
 	m_mapper02_prg_size = prg_size;
-	ppu->set_scanline_callback(0);
+	ppu->set_scanline_callback(ppu2c0x_scanline_delegate());
 }
 
 /******************************************************
@@ -838,7 +841,7 @@ void multigam_state::multigam_init_mmc1(UINT8 *prg_base, int prg_size, int chr_b
 
 	memcpy(&dst[0x8000], prg_base + (prg_size - 0x8000), 0x8000);
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::mmc1_rom_switch_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x8000, 0xffff, write8_delegate(FUNC(multigam_state::mmc1_rom_switch_w),this));
 
 	m_mmc1_reg_write_enable = 1;
 	m_mmc1_rom_mask = (prg_size / 0x4000) - 1;
@@ -846,7 +849,7 @@ void multigam_state::multigam_init_mmc1(UINT8 *prg_base, int prg_size, int chr_b
 	m_mmc1_prg_size = prg_size;
 	m_mmc1_chr_bank_base = chr_bank_base;
 
-	ppu->set_scanline_callback(0);
+	ppu->set_scanline_callback(ppu2c0x_scanline_delegate());
 };
 
 
@@ -910,7 +913,7 @@ void multigam_state::supergm3_set_bank()
 		// title screen
 		memcpy(mem + 0x8000, mem + 0x18000, 0x8000);
 		membank("bank10")->set_base(mem + 0x6000);
-		ppu->set_scanline_callback(0);
+		ppu->set_scanline_callback(ppu2c0x_scanline_delegate());
 	}
 	else if ((m_supergm3_prg_bank & 0x40) == 0)
 	{
@@ -1094,9 +1097,9 @@ void multigam_state::palette_init()
 	ppu->init_palette(machine(), 0);
 }
 
-static void ppu_irq( device_t *device, int *ppu_regs )
+void multigam_state::ppu_irq(int *ppu_regs)
 {
-	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /* our ppu interface                                            */
@@ -1106,8 +1109,7 @@ static const ppu2c0x_interface ppu_interface =
 	"screen",
 	0,                  /* gfxlayout num */
 	0,                  /* color base */
-	PPU_MIRROR_NONE,    /* mirroring */
-	ppu_irq             /* irq */
+	PPU_MIRROR_NONE     /* mirroring */
 };
 
 void multigam_state::video_start()
@@ -1138,7 +1140,7 @@ void multigam_state::machine_reset()
 
 MACHINE_RESET_MEMBER(multigam_state,multigm3)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	/* reset the ppu */
 	multigm3_switch_prg_rom(space, 0, 0x01 );
 };
@@ -1210,6 +1212,7 @@ static MACHINE_CONFIG_START( multigam, multigam_state )
 
 
 	MCFG_PPU2C04_ADD("ppu", ppu_interface)
+	MCFG_PPU2C0X_SET_NMI(multigam_state, ppu_irq)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1360,7 +1363,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(multigam_state,multigam)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	multigam_switch_prg_rom(space, 0x0, 0x01);
 }
 
@@ -1375,7 +1378,7 @@ void multigam_state::multigm3_decrypt(UINT8* mem, int memsize, const UINT8* deco
 
 DRIVER_INIT_MEMBER(multigam_state,multigm3)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	const UINT8 decode[16]  = { 0x09, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x0f, 0x0e, 0x0d, 0x0c, 0x0b, 0x0a };
 
@@ -1389,7 +1392,7 @@ DRIVER_INIT_MEMBER(multigam_state,multigm3)
 
 DRIVER_INIT_MEMBER(multigam_state,multigmt)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	UINT8* buf = auto_alloc_array(machine(), UINT8, 0x80000);
 	UINT8 *rom;

@@ -286,7 +286,8 @@ class tempest_state : public driver_device
 {
 public:
 	tempest_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	UINT8 m_player_select;
 	DECLARE_WRITE8_MEMBER(wdclr_w);
@@ -298,6 +299,7 @@ public:
 	DECLARE_READ8_MEMBER(input_port_1_bit_r);
 	DECLARE_READ8_MEMBER(input_port_2_bit_r);
 	virtual void machine_start();
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -324,7 +326,7 @@ void tempest_state::machine_start()
 
 WRITE8_MEMBER(tempest_state::wdclr_w)
 {
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 	machine().watchdog_reset();
 }
 
@@ -348,7 +350,7 @@ CUSTOM_INPUT_MEMBER(tempest_state::tempest_buttons_r)
 CUSTOM_INPUT_MEMBER(tempest_state::clock_r)
 {
 	/* Emulate the 3kHz source on bit 7 (divide 1.5MHz by 512) */
-	return (machine().device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
+	return (m_maincpu->total_cycles() & 0x100) ? 1 : 0;
 }
 
 

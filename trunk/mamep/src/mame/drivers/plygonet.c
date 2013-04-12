@@ -103,11 +103,9 @@ static const eeprom_interface eeprom_intf =
 
 READ32_MEMBER(polygonet_state::polygonet_eeprom_r)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_0_15)
 	{
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		return 0x0200 | (eeprom->read_bit() << 8);
+		return 0x0200 | (m_eeprom->read_bit() << 8);
 	}
 	else
 	{
@@ -183,7 +181,7 @@ WRITE32_MEMBER(polygonet_state::sound_w)
 
 WRITE32_MEMBER(polygonet_state::sound_irq_w)
 {
-	machine().device("soundcpu")->execute().set_input_line(0, HOLD_LINE);
+	m_soundcpu->set_input_line(0, HOLD_LINE);
 }
 
 /* DSP communications */

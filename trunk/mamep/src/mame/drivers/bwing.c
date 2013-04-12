@@ -189,12 +189,12 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(bwing_state::coin_inserted)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 INPUT_CHANGED_MEMBER(bwing_state::tilt_pressed)
 {
-	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, newval ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(M6809_FIRQ_LINE, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static INPUT_PORTS_START( bwing )
@@ -331,9 +331,6 @@ GFXDECODE_END
 
 void bwing_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_subcpu = machine().device<cpu_device>("sub");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_palatch));
 	save_item(NAME(m_srbank));

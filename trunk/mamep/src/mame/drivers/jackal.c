@@ -330,9 +330,6 @@ void jackal_state::machine_start()
 	membank("bank1")->configure_entry(1, &ROM[0x14000]);
 	membank("bank1")->set_entry(0);
 
-	m_mastercpu = machine().device<cpu_device>("master");
-	m_slavecpu = machine().device<cpu_device>("slave");
-
 	save_item(NAME(m_irq_enable));
 }
 
@@ -342,7 +339,7 @@ void jackal_state::machine_reset()
 
 	// HACK: running at the nominal clock rate, music stops working
 	// at the beginning of the game. This fixes it.
-	machine().device("slave")->set_clock_scale(1.2f);
+	m_slavecpu->set_clock_scale(1.2f);
 
 	m_rambank = rgn;
 	m_spritebank = rgn;

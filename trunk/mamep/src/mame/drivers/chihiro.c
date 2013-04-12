@@ -387,7 +387,8 @@ class chihiro_state : public driver_device
 {
 public:
 	chihiro_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	DECLARE_READ32_MEMBER( geforce_r );
 	DECLARE_WRITE32_MEMBER( geforce_w );
@@ -421,6 +422,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(chihiro_pit8254_out0_changed);
 	DECLARE_WRITE_LINE_MEMBER(chihiro_pit8254_out2_changed);
 	IRQ_CALLBACK_MEMBER(irq_callback);
+	required_device<cpu_device> m_maincpu;
 };
 
 /*
@@ -2714,7 +2716,6 @@ protected:
 	// device-level overrides
 	virtual void device_start();
 	virtual void device_reset();
-	virtual void device_config_complete() { m_shortname = "ide_baseboard"; }
 };
 
 //**************************************************************************
@@ -2729,7 +2730,7 @@ const device_type IDE_BASEBOARD = &device_creator<ide_baseboard_device>;
 //-------------------------------------------------
 
 ide_baseboard_device::ide_baseboard_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: ide_hdd_device(mconfig, IDE_BASEBOARD, "IDE Baseboard", tag, owner, clock)
+	: ide_hdd_device(mconfig, IDE_BASEBOARD, "IDE Baseboard", tag, owner, clock, "ide_baseboard", __FILE__)
 {
 }
 
@@ -2777,7 +2778,7 @@ int ide_baseboard_device::write_sector(UINT32 lba, const void *buffer)
 
 WRITE_LINE_MEMBER(chihiro_state::chihiro_pic8259_1_set_int_line)
 {
-	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(chihiro_state::get_slave_ack)
@@ -3031,7 +3032,7 @@ void chihiro_state::machine_start()
 	smbus_register_device(0x10,smbus_callback_pic16lc);
 	smbus_register_device(0x45,smbus_callback_cx25871);
 	smbus_register_device(0x54,smbus_callback_eeprom);
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(chihiro_state::irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(chihiro_state::irq_callback),this));
 	chihiro_devs.pic8259_1 = machine().device( "pic8259_1" );
 	chihiro_devs.pic8259_2 = machine().device( "pic8259_2" );
 	chihiro_devs.ide = machine().device( "ide" );

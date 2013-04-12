@@ -6,7 +6,7 @@ class hyprduel_state : public driver_device
 {
 public:
 	hyprduel_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vram_0(*this, "vram_0"),
 		m_vram_1(*this, "vram_1"),
 		m_vram_2(*this, "vram_2"),
@@ -21,7 +21,9 @@ public:
 		m_screenctrl(*this, "screenctrl"),
 		m_videoregs(*this, "videoregs"),
 		m_sharedram1(*this, "sharedram1"),
-		m_sharedram3(*this, "sharedram3"){ }
+		m_sharedram3(*this, "sharedram3"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_vram_0;
@@ -59,8 +61,8 @@ public:
 	int       m_int_num;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
 	DECLARE_READ16_MEMBER(hyprduel_irq_cause_r);
 	DECLARE_WRITE16_MEMBER(hyprduel_irq_cause_w);
 	DECLARE_WRITE16_MEMBER(hyprduel_subcpu_control_w);

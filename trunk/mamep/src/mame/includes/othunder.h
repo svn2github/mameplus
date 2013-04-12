@@ -24,7 +24,10 @@ class othunder_state : public driver_device
 public:
 	othunder_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_spriteram(*this,"spriteram") { }
+		m_spriteram(*this,"spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_spriteram;
@@ -39,9 +42,9 @@ public:
 	int        m_pan[4];
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
-	eeprom_device *m_eeprom;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	optional_device<eeprom_device> m_eeprom;
 	device_t *m_tc0220ioc;
 	device_t *m_tc0100scn;
 	device_t *m_tc0110pcr;
@@ -70,4 +73,5 @@ public:
 	void reset_sound_region();
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, const int *primasks, int y_offs );
 	void update_irq(  );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };

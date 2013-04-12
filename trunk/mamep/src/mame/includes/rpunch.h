@@ -2,10 +2,12 @@ class rpunch_state : public driver_device
 {
 public:
 	rpunch_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_bitmapram(*this, "bitmapram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	required_shared_ptr<UINT16> m_videoram;
 	UINT8 m_sound_data;
@@ -45,4 +47,6 @@ public:
 	TIMER_CALLBACK_MEMBER(crtc_interrupt_gen);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, int start, int stop);
 	void draw_bitmap(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };

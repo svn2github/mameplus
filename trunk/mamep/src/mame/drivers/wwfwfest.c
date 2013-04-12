@@ -101,10 +101,10 @@ ADDRESS_MAP_END
 WRITE16_MEMBER(wwfwfest_state::wwfwfest_irq_ack_w)
 {
 	if (offset == 0)
-		machine().device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
+		m_maincpu->set_input_line(3, CLEAR_LINE);
 
 	else
-		machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+		m_maincpu->set_input_line(2, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(wwfwfest_state::wwfwfest_flipscreen_w)
@@ -158,14 +158,13 @@ WRITE16_MEMBER(wwfwfest_state::wwfwfest_scroll_write)
 
 WRITE8_MEMBER(wwfwfest_state::oki_bankswitch_w)
 {
-	device_t *device = machine().device("oki");
-	downcast<okim6295_device *>(device)->set_bank_base((data & 1) * 0x40000);
+	m_oki->set_bank_base((data & 1) * 0x40000);
 }
 
 WRITE16_MEMBER(wwfwfest_state::wwfwfest_soundwrite)
 {
 	soundlatch_byte_w(space,1,data & 0xff);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 /*******************************************************************************
@@ -360,14 +359,14 @@ TIMER_DEVICE_CALLBACK_MEMBER(wwfwfest_state::wwfwfest_scanline)
 	{
 		if (scanline > 0)
 			machine().primary_screen->update_partial(scanline - 1);
-		machine().device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
+		m_maincpu->set_input_line(2, ASSERT_LINE);
 	}
 
 	/* Vblank is raised on scanline 248 */
 	if (scanline == 248)
 	{
 		machine().primary_screen->update_partial(scanline - 1);
-		machine().device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
+		m_maincpu->set_input_line(3, ASSERT_LINE);
 	}
 }
 

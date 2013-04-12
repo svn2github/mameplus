@@ -117,7 +117,7 @@ class ddealer_state : public driver_device
 {
 public:
 	ddealer_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vregs(*this, "vregs"),
 		m_left_fg_vram_top(*this, "left_fg_vratop"),
 		m_right_fg_vram_top(*this, "right_fg_vratop"),
@@ -125,7 +125,8 @@ public:
 		m_right_fg_vram_bottom(*this, "right_fg_vrabot"),
 		m_back_vram(*this, "back_vram"),
 		m_work_ram(*this, "work_ram"),
-		m_mcu_shared_ram(*this, "mcu_shared_ram"){ }
+		m_mcu_shared_ram(*this, "mcu_shared_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_vregs;
@@ -159,6 +160,7 @@ public:
 	UINT32 screen_update_ddealer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(ddealer_interrupt);
 	TIMER_DEVICE_CALLBACK_MEMBER(ddealer_mcu_sim);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -673,7 +675,7 @@ READ16_MEMBER(ddealer_state::ddealer_mcu_r)
 
 DRIVER_INIT_MEMBER(ddealer_state,ddealer)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xfe01c, 0xfe01d, read16_delegate(FUNC(ddealer_state::ddealer_mcu_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xfe01c, 0xfe01d, read16_delegate(FUNC(ddealer_state::ddealer_mcu_r), this));
 }
 
 ROM_START( ddealer )

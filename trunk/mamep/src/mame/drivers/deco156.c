@@ -30,6 +30,7 @@ public:
 		: driver_device(mconfig, type, tag),
 			m_maincpu(*this, "maincpu"),
 			m_deco_tilegen1(*this, "tilegen1"),
+			m_oki1(*this, "oki1"),
 			m_oki2(*this, "oki2"),
 			m_sprgen(*this, "spritegen")
 	{ }
@@ -37,6 +38,7 @@ public:
 	/* devices */
 	required_device<arm_device> m_maincpu;
 	required_device<deco16ic_device> m_deco_tilegen1;
+	optional_device<okim6295_device> m_oki1;
 	optional_device<okim6295_device> m_oki2;
 	optional_device<decospr_device> m_sprgen;
 
@@ -60,6 +62,7 @@ public:
 	UINT32 screen_update_wcvol95(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(deco32_vbl_interrupt);
 	void descramble_sound( const char *tag );
+	DECLARE_WRITE_LINE_MEMBER(sound_irq_gen);
 };
 
 
@@ -103,9 +106,7 @@ WRITE32_MEMBER(deco156_state::hvysmsh_eeprom_w)
 
 WRITE32_MEMBER(deco156_state::hvysmsh_oki_0_bank_w)
 {
-	device_t *device = machine().device("oki1");
-	okim6295_device *oki = downcast<okim6295_device *>(device);
-	oki->set_bank_base((data & 1) * 0x40000);
+	m_oki1->set_bank_base((data & 1) * 0x40000);
 }
 
 WRITE32_MEMBER(deco156_state::wcvol95_nonbuffered_palette_w)
@@ -308,14 +309,14 @@ GFXDECODE_END
 
 /**********************************************************************************/
 
-static void sound_irq_gen(device_t *device, int state)
+WRITE_LINE_MEMBER(deco156_state::sound_irq_gen)
 {
 	logerror("sound irq\n");
 }
 
 static const ymz280b_interface ymz280b_intf =
 {
-	sound_irq_gen
+	DEVCB_DRIVER_LINE_MEMBER(deco156_state,sound_irq_gen)
 };
 
 INTERRUPT_GEN_MEMBER(deco156_state::deco32_vbl_interrupt)

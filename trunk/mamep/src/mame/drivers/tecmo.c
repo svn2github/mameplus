@@ -68,12 +68,12 @@ WRITE8_MEMBER(tecmo_state::tecmo_bankswitch_w)
 WRITE8_MEMBER(tecmo_state::tecmo_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI,ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_NMI,ASSERT_LINE);
 }
 
 WRITE8_MEMBER(tecmo_state::tecmo_nmi_ack_w)
 {
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI,CLEAR_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_NMI,CLEAR_LINE);
 }
 
 WRITE8_MEMBER(tecmo_state::tecmo_adpcm_start_w)
@@ -94,23 +94,22 @@ WRITE8_MEMBER(tecmo_state::tecmo_adpcm_vol_w)
 	msm5205_set_volume(device,(data & 0x0f) * 100 / 15);
 }
 
-static void tecmo_adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(tecmo_state::tecmo_adpcm_int)
 {
-	tecmo_state *state = device->machine().driver_data<tecmo_state>();
-	if (state->m_adpcm_pos >= state->m_adpcm_end ||
-				state->m_adpcm_pos >= state->memregion("adpcm")->bytes())
-		msm5205_reset_w(device,1);
-	else if (state->m_adpcm_data != -1)
+	if (m_adpcm_pos >= m_adpcm_end ||
+				m_adpcm_pos >= memregion("adpcm")->bytes())
+		msm5205_reset_w(machine().device("msm"),1);
+	else if (m_adpcm_data != -1)
 	{
-		msm5205_data_w(device,state->m_adpcm_data & 0x0f);
-		state->m_adpcm_data = -1;
+		msm5205_data_w(machine().device("msm"),m_adpcm_data & 0x0f);
+		m_adpcm_data = -1;
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base();
+		UINT8 *ROM = machine().root_device().memregion("adpcm")->base();
 
-		state->m_adpcm_data = ROM[state->m_adpcm_pos++];
-		msm5205_data_w(device,state->m_adpcm_data >> 4);
+		m_adpcm_data = ROM[m_adpcm_pos++];
+		msm5205_data_w(machine().device("msm"),m_adpcm_data >> 4);
 	}
 }
 
@@ -604,19 +603,19 @@ GFXDECODE_END
 
 
 
-static void irqhandler(device_t *device, int linestate)
+WRITE_LINE_MEMBER(tecmo_state::irqhandler)
 {
-	device->machine().device("soundcpu")->execute().set_input_line(0, linestate);
+	m_soundcpu->set_input_line(0, state);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(tecmo_state,irqhandler)
 };
 
 static const msm5205_interface msm5205_config =
 {
-	tecmo_adpcm_int,    /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(tecmo_state,tecmo_adpcm_int),    /* interrupt function */
 	MSM5205_S48_4B      /* 8KHz               */
 };
 
@@ -1141,9 +1140,9 @@ DRIVER_INIT_MEMBER(tecmo_state,backfirt)
 	m_video_type = 2;
 
 	/* no MSM */
-	machine().device("soundcpu")->memory().space(AS_PROGRAM).nop_write(0xc000, 0xc000);
-	machine().device("soundcpu")->memory().space(AS_PROGRAM).nop_write(0xc400, 0xc400);
-	machine().device("soundcpu")->memory().space(AS_PROGRAM).nop_write(0xc800, 0xc800);
+	m_soundcpu->space(AS_PROGRAM).nop_write(0xc000, 0xc000);
+	m_soundcpu->space(AS_PROGRAM).nop_write(0xc400, 0xc400);
+	m_soundcpu->space(AS_PROGRAM).nop_write(0xc800, 0xc800);
 }
 
 

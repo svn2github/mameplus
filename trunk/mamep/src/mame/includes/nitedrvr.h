@@ -19,9 +19,10 @@ class nitedrvr_state : public driver_device
 {
 public:
 	nitedrvr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_hvc(*this, "hvc"),
+		m_maincpu(*this, "maincpu"),
 		m_discrete(*this, "discrete"){ }
 
 	/* memory pointers */
@@ -43,7 +44,7 @@ public:
 	INT32 m_last_steering_val;
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	required_device<discrete_device> m_discrete;
 	DECLARE_READ8_MEMBER(nitedrvr_steering_reset_r);
 	DECLARE_WRITE8_MEMBER(nitedrvr_steering_reset_w);

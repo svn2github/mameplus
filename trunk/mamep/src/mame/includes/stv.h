@@ -1,5 +1,6 @@
 /*----------- defined in drivers/stv.c -----------*/
 #include "cdrom.h"
+#include "machine/eeprom.h"
 
 #define MAX_FILTERS (24)
 #define MAX_BLOCKS  (200)
@@ -13,7 +14,11 @@ public:
 			m_workram_l(*this, "workram_l"),
 			m_workram_h(*this, "workram_h"),
 			m_sound_ram(*this, "sound_ram"),
-			m_fake_comms(*this, "fake")
+			m_fake_comms(*this, "fake"),
+			m_maincpu(*this, "maincpu"),
+			m_slave(*this, "slave"),
+			m_audiocpu(*this, "audiocpu"),
+			m_eeprom(*this, "eeprom")
 	{
 	}
 
@@ -134,9 +139,10 @@ public:
 	UINT8     m_system_output;
 	UINT16    m_serial_tx;
 
-	legacy_cpu_device* m_maincpu;
-	legacy_cpu_device* m_slave;
-	legacy_cpu_device* m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_slave;
+	required_device<cpu_device> m_audiocpu;
+	optional_device<eeprom_device> m_eeprom;
 
 	bitmap_rgb32 m_tmpbitmap;
 	DECLARE_VIDEO_START(stv_vdp2);
@@ -165,8 +171,8 @@ public:
 	DECLARE_READ8_MEMBER(saturn_backupram_r);
 	DECLARE_WRITE8_MEMBER(saturn_backupram_w);
 	TIMER_CALLBACK_MEMBER(stv_rtc_increment);
-	WRITE_LINE_MEMBER(scsp_to_main_irq);
-
+	DECLARE_WRITE_LINE_MEMBER(scsp_to_main_irq);
+	DECLARE_WRITE_LINE_MEMBER(scsp_irq);
 	int m_scsp_last_line;
 
 	UINT8 smpc_direct_mode(UINT8 pad_n);

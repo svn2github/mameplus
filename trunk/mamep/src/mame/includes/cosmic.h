@@ -15,9 +15,11 @@ class cosmic_state : public driver_device
 {
 public:
 	cosmic_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_dac(*this, "dac"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -40,7 +42,7 @@ public:
 
 	/* devices */
 	samples_device *m_samples;
-	dac_device *m_dac;
+	required_device<dac_device> m_dac;
 	DECLARE_WRITE8_MEMBER(panic_sound_output_w);
 	DECLARE_WRITE8_MEMBER(panic_sound_output2_w);
 	DECLARE_WRITE8_MEMBER(cosmicg_output_w);
@@ -81,4 +83,5 @@ public:
 	void cosmica_draw_starfield( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void devzone_draw_grid( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void nomnlnd_draw_background( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect );
+	required_device<cpu_device> m_maincpu;
 };

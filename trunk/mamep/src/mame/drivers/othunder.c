@@ -618,15 +618,14 @@ GFXDECODE_END
 **************************************************************/
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(othunder_state::irqhandler)
 {
-	othunder_state *state = device->machine().driver_data<othunder_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(othunder_state,irqhandler)
 };
 
 
@@ -665,9 +664,6 @@ void othunder_state::machine_start()
 {
 	membank("bank10")->configure_entries(0, 4, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_eeprom = machine().device<eeprom_device>("eeprom");
 	m_tc0220ioc = machine().device("tc0220ioc");
 	m_tc0100scn = machine().device("tc0100scn");
 	m_tc0110pcr = machine().device("tc0110pcr");

@@ -83,9 +83,10 @@ class pturn_state : public driver_device
 {
 public:
 	pturn_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	tilemap_t *m_fgmap;
@@ -120,6 +121,7 @@ public:
 	UINT32 screen_update_pturn(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(pturn_sub_intgen);
 	INTERRUPT_GEN_MEMBER(pturn_main_intgen);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -479,7 +481,7 @@ INTERRUPT_GEN_MEMBER(pturn_state::pturn_main_intgen)
 
 void pturn_state::machine_reset()
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	soundlatch_clear_byte_w(space,0,0);
 }
 
@@ -555,8 +557,8 @@ ROM_END
 DRIVER_INIT_MEMBER(pturn_state,pturn)
 {
 	/*
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xc0dd, 0xc0dd, FUNC(pturn_protection_r));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xc0db, 0xc0db, FUNC(pturn_protection2_r));
+	m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xc0dd, 0xc0dd, FUNC(pturn_protection_r));
+	m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xc0db, 0xc0db, FUNC(pturn_protection2_r));
 	*/
 }
 

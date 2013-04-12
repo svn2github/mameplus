@@ -20,7 +20,7 @@ const device_type SNS_LOROM_SUPERFX = &device_creator<sns_rom_superfx_device>;
 
 
 sns_rom_superfx_device::sns_rom_superfx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-			: sns_rom_device(mconfig, SNS_LOROM_SUPERFX, "SNES Cart (LoROM) + SuperFX", tag, owner, clock),
+			: sns_rom_device(mconfig, SNS_LOROM_SUPERFX, "SNES Cart (LoROM) + SuperFX", tag, owner, clock, "sns_rom_superfx", __FILE__),
 			m_superfx(*this, "superfx")
 {
 }
@@ -87,7 +87,7 @@ WRITE_LINE_MEMBER(sns_rom_superfx_device::snes_extern_irq_w)
 
 static SUPERFX_CONFIG( snes_sfx_config )
 {
-	DEVCB_LINE_MEMBER(sns_rom_superfx_device,snes_extern_irq_w)  /* IRQ line from cart */
+	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, sns_rom_superfx_device, snes_extern_irq_w)  /* IRQ line from cart */
 };
 
 

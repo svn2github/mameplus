@@ -5,7 +5,9 @@ class taitol_state : public driver_device
 {
 public:
 	taitol_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	/* memory pointers */
 	UINT8 *       m_shared_ram;
@@ -52,8 +54,8 @@ public:
 	const char *m_portf1_tag;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 
 	/* memory buffers */
 	UINT8         m_rambanks[0x1000 * 12];
@@ -140,4 +142,6 @@ public:
 	void state_register(  );
 	void taito_machine_reset();
 	void bank_w(address_space &space, offs_t offset, UINT8 data, int banknum );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	DECLARE_WRITE_LINE_MEMBER(champwr_msm5205_vck);
 };

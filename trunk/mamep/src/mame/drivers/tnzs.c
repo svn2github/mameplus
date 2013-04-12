@@ -742,10 +742,9 @@ WRITE8_MEMBER(tnzs_state::kabukiz_sound_bank_w)
 
 WRITE8_MEMBER(tnzs_state::kabukiz_sample_w)
 {
-	dac_device *device = machine().device<dac_device>("dac");
 	// to avoid the write when the sound chip is initialized
 	if (data != 0xff)
-		device->write_unsigned8(data);
+		m_dac->write_unsigned8(data);
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, tnzs_state )
@@ -1566,10 +1565,9 @@ static const ym2203_interface ym2203_config =
 
 
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(tnzs_state::irqhandler)
 {
-	tnzs_state *state = device->machine().driver_data<tnzs_state>();
-	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface kageki_ym2203_interface =
@@ -1592,7 +1590,7 @@ static const ym2203_interface ym2203b_interface =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(tnzs_state,irqhandler)
 };
 
 static const ym2203_interface kabukiz_ym2203_interface =
@@ -1605,7 +1603,7 @@ static const ym2203_interface kabukiz_ym2203_interface =
 		DEVCB_DRIVER_MEMBER(tnzs_state,kabukiz_sound_bank_w),
 		DEVCB_DRIVER_MEMBER(tnzs_state,kabukiz_sample_w)
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(tnzs_state,irqhandler)
 };
 
 static const samples_interface tnzs_samples_interface =

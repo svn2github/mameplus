@@ -101,7 +101,7 @@ TIMER_CALLBACK_MEMBER(sprint4_state::nmi_callback)
 	machine().watchdog_enable(ioport("IN0")->read() & 0x40);
 
 	if (ioport("IN0")->read() & 0x40)
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(scanline), timer_expired_delegate(FUNC(sprint4_state::nmi_callback),this), scanline);
 }
@@ -185,45 +185,36 @@ WRITE8_MEMBER(sprint4_state::sprint4_lockout_w)
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_1_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_1, offset & 1);
+	discrete_sound_w(m_discrete, space, SPRINT4_SCREECH_EN_1, offset & 1);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_2_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_2, offset & 1);
+	discrete_sound_w(m_discrete, space, SPRINT4_SCREECH_EN_2, offset & 1);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_3_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_3, offset & 1);
+	discrete_sound_w(m_discrete, space, SPRINT4_SCREECH_EN_3, offset & 1);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_screech_4_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, SPRINT4_SCREECH_EN_4, offset & 1);
+	discrete_sound_w(m_discrete, space, SPRINT4_SCREECH_EN_4, offset & 1);
 }
-
-
-
 
 WRITE8_MEMBER(sprint4_state::sprint4_bang_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, SPRINT4_BANG_DATA, data & 0x0f);
+	discrete_sound_w(m_discrete, space, SPRINT4_BANG_DATA, data & 0x0f);
 }
 
 
 WRITE8_MEMBER(sprint4_state::sprint4_attract_w)
 {
-	device_t *device = machine().device("discrete");
-	discrete_sound_w(device, space, SPRINT4_ATTRACT_EN, data & 1);
+	discrete_sound_w(m_discrete, space, SPRINT4_ATTRACT_EN, data & 1);
 }
 
 

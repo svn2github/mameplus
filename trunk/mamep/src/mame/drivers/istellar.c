@@ -33,7 +33,9 @@ public:
 			m_laserdisc(*this, "laserdisc") ,
 		m_tile_ram(*this, "tile_ram"),
 		m_tile_control_ram(*this, "tile_ctrl_ram"),
-		m_sprite_ram(*this, "sprite_ram"){ }
+		m_sprite_ram(*this, "sprite_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_device<pioneer_ldv1000_device> m_laserdisc;
 	required_shared_ptr<UINT8> m_tile_ram;
@@ -55,6 +57,8 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_istellar(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(vblank_callback_istellar);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
 };
 
 
@@ -112,7 +116,7 @@ WRITE8_MEMBER(istellar_state::z80_0_latch2_write)
 	if (m_z80_2_nmi_enable)
 	{
 		logerror("Executing an NMI on CPU2\n");
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);      /* Maybe this is a ASSERT_LINE, CLEAR_LINE combo? */
+		m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);      /* Maybe this is a ASSERT_LINE, CLEAR_LINE combo? */
 		m_z80_2_nmi_enable = 0;
 	}
 }
@@ -323,7 +327,7 @@ INTERRUPT_GEN_MEMBER(istellar_state::vblank_callback_istellar)
 	device.execute().set_input_line(0, HOLD_LINE);
 
 	/* Interrupt presumably comes from the LDP's status strobe */
-	machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
+	m_subcpu->set_input_line(0, ASSERT_LINE);
 }
 
 

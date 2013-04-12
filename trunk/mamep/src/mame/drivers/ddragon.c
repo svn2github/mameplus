@@ -149,9 +149,6 @@ MACHINE_START_MEMBER(ddragon_state,ddragon)
 	/* configure banks */
 	membank("bank1")->configure_entries(0, 8, memregion("maincpu")->base() + 0x10000, 0x4000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_sub_cpu = machine().device("sub");
-	m_snd_cpu = machine().device("soundcpu");
 	m_adpcm_1 = machine().device("adpcm1");
 	m_adpcm_2 = machine().device("adpcm2");
 
@@ -196,7 +193,7 @@ WRITE8_MEMBER(ddragon_state::ddragon_bankswitch_w)
 	if (data & 0x10)
 		m_dd_sub_cpu_busy = 0;
 	else if (m_dd_sub_cpu_busy == 0)
-		m_sub_cpu->execute().set_input_line(m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
+		m_subcpu->set_input_line(m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 
 	membank("bank1")->set_entry((data & 0xe0) >> 5);
 }
@@ -271,7 +268,7 @@ WRITE8_MEMBER(ddragon_state::darktowr_bankswitch_w)
 	if (data & 0x10)
 		m_dd_sub_cpu_busy = 0;
 	else if (m_dd_sub_cpu_busy == 0)
-		m_sub_cpu->execute().set_input_line(m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
+		m_subcpu->set_input_line(m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 
 	membank("bank1")->set_entry(newbank);
 	if (newbank == 4 && oldbank != 4)
@@ -306,7 +303,7 @@ WRITE8_MEMBER(ddragon_state::ddragon_interrupt_w)
 
 		case 3: /* 380e - SND irq */
 			soundlatch_byte_w(space, 0, data);
-			m_snd_cpu->execute().set_input_line(m_sound_irq, (m_sound_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
+			m_soundcpu->set_input_line(m_sound_irq, (m_sound_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 			break;
 
 		case 4: /* 380f - ? */
@@ -318,7 +315,7 @@ WRITE8_MEMBER(ddragon_state::ddragon_interrupt_w)
 
 WRITE8_MEMBER(ddragon_state::ddragon2_sub_irq_ack_w)
 {
-	m_sub_cpu->execute().set_input_line(m_sprite_irq, CLEAR_LINE );
+	m_subcpu->set_input_line(m_sprite_irq, CLEAR_LINE );
 }
 
 
@@ -330,7 +327,7 @@ WRITE8_MEMBER(ddragon_state::ddragon2_sub_irq_w)
 
 WRITE_LINE_MEMBER(ddragon_state::irq_handler)
 {
-	m_snd_cpu->execute().set_input_line(m_ym_irq , state ? ASSERT_LINE : CLEAR_LINE );
+	m_soundcpu->set_input_line(m_ym_irq , state ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -372,7 +369,7 @@ WRITE8_MEMBER(ddragon_state::ddragon_hd63701_internal_registers_w)
 		if (data & 3)
 		{
 			m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
-			m_sub_cpu->execute().set_input_line(m_sprite_irq, CLEAR_LINE);
+			m_subcpu->set_input_line(m_sprite_irq, CLEAR_LINE);
 		}
 	}
 }
@@ -397,7 +394,7 @@ READ8_MEMBER(ddragon_state::ddragon_spriteram_r)
 
 WRITE8_MEMBER(ddragon_state::ddragon_spriteram_w)
 {
-	if (&space.device() == m_sub_cpu && offset == 0)
+	if (&space.device() == m_subcpu && offset == 0)
 		m_dd_sub_cpu_busy = 1;
 
 	m_spriteram[offset] = data;
@@ -438,29 +435,35 @@ WRITE8_MEMBER(ddragon_state::dd_adpcm_w)
 	}
 }
 
-
-static void dd_adpcm_int( device_t *device )
+void ddragon_state::dd_adpcm_int( device_t *device, int chip )
 {
-	ddragon_state *state = device->machine().driver_data<ddragon_state>();
-	int chip = (device == state->m_adpcm_1) ? 0 : 1;
-
-	if (state->m_adpcm_pos[chip] >= state->m_adpcm_end[chip] || state->m_adpcm_pos[chip] >= 0x10000)
+	if (m_adpcm_pos[chip] >= m_adpcm_end[chip] || m_adpcm_pos[chip] >= 0x10000)
 	{
-		state->m_adpcm_idle[chip] = 1;
+		m_adpcm_idle[chip] = 1;
 		msm5205_reset_w(device, 1);
 	}
-	else if (state->m_adpcm_data[chip] != -1)
+	else if (m_adpcm_data[chip] != -1)
 	{
-		msm5205_data_w(device, state->m_adpcm_data[chip] & 0x0f);
-		state->m_adpcm_data[chip] = -1;
+		msm5205_data_w(device, m_adpcm_data[chip] & 0x0f);
+		m_adpcm_data[chip] = -1;
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base() + 0x10000 * chip;
+		UINT8 *ROM = machine().root_device().memregion("adpcm")->base() + 0x10000 * chip;
 
-		state->m_adpcm_data[chip] = ROM[state->m_adpcm_pos[chip]++];
-		msm5205_data_w(device, state->m_adpcm_data[chip] >> 4);
+		m_adpcm_data[chip] = ROM[m_adpcm_pos[chip]++];
+		msm5205_data_w(device, m_adpcm_data[chip] >> 4);
 	}
+}
+
+WRITE_LINE_MEMBER(ddragon_state::dd_adpcm_int_1)
+{
+	dd_adpcm_int(m_adpcm_1,0);
+}
+
+WRITE_LINE_MEMBER(ddragon_state::dd_adpcm_int_2)
+{
+	dd_adpcm_int(m_adpcm_2,0);
 }
 
 
@@ -553,7 +556,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(ddragon_state::ddragonba_port_w)
 {
 	m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
-	m_sub_cpu->execute().set_input_line(m_sprite_irq, CLEAR_LINE );
+	m_subcpu->set_input_line(m_sprite_irq, CLEAR_LINE );
 }
 
 static ADDRESS_MAP_START( ddragonba_sub_portmap, AS_IO, 8, ddragon_state )
@@ -935,12 +938,17 @@ GFXDECODE_END
  *
  *************************************/
 
-static const msm5205_interface msm5205_config =
+static const msm5205_interface msm5205_config_1 =
 {
-	dd_adpcm_int,   /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(ddragon_state,dd_adpcm_int_1),   /* interrupt function */
 	MSM5205_S48_4B  /* 8kHz */
 };
 
+static const msm5205_interface msm5205_config_2 =
+{
+	DEVCB_DRIVER_LINE_MEMBER(ddragon_state,dd_adpcm_int_2),   /* interrupt function */
+	MSM5205_S48_4B  /* 8kHz */
+};
 
 
 /*************************************
@@ -986,11 +994,11 @@ static MACHINE_CONFIG_START( ddragon, ddragon_state )
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 
 	MCFG_SOUND_ADD("adpcm1", MSM5205, MAIN_CLOCK/32)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("adpcm2", MSM5205, MAIN_CLOCK/32)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1049,11 +1057,11 @@ static MACHINE_CONFIG_START( ddragon6809, ddragon_state )
 	MCFG_SOUND_ROUTE(1, "mono", 0.60)
 
 	MCFG_SOUND_ADD("adpcm1", MSM5205, MAIN_CLOCK/32)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("adpcm2", MSM5205, MAIN_CLOCK/32)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1990,7 +1998,7 @@ DRIVER_INIT_MEMBER(ddragon_state,darktowr)
 	m_sound_irq = M6809_IRQ_LINE;
 	m_ym_irq = M6809_FIRQ_LINE;
 	m_technos_video_hw = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::darktowr_bankswitch_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::darktowr_bankswitch_w),this));
 }
 
 
@@ -2002,7 +2010,7 @@ DRIVER_INIT_MEMBER(ddragon_state,toffy)
 	m_sound_irq = M6809_IRQ_LINE;
 	m_ym_irq = M6809_FIRQ_LINE;
 	m_technos_video_hw = 0;
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::toffy_bankswitch_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x3808, 0x3808, write8_delegate(FUNC(ddragon_state::toffy_bankswitch_w),this));
 
 	/* the program rom has a simple bitswap encryption */
 	rom = memregion("maincpu")->base();

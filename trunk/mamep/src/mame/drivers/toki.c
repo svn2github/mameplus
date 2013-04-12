@@ -46,7 +46,7 @@ for now. Even at 12 this slowdown still happens a little.
 WRITE16_MEMBER(toki_state::tokib_soundcommand16_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ16_MEMBER(toki_state::pip16_r)
@@ -56,16 +56,14 @@ READ16_MEMBER(toki_state::pip16_r)
 
 
 
-static void toki_adpcm_int (device_t *device)
+WRITE_LINE_MEMBER(toki_state::toki_adpcm_int)
 {
-	toki_state *state = device->machine().driver_data<toki_state>();
+	msm5205_data_w (machine().device("msm"), m_msm5205next);
+	m_msm5205next >>= 4;
 
-	msm5205_data_w (device, state->m_msm5205next);
-	state->m_msm5205next >>= 4;
-
-	state->m_toggle ^= 1;
-	if (state->m_toggle)
-		device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_toggle ^= 1;
+	if (m_toggle)
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(toki_state::toki_adpcm_control_w)
@@ -408,7 +406,7 @@ GFXDECODE_END
 
 static const msm5205_interface msm5205_config =
 {
-	toki_adpcm_int, /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(toki_state,toki_adpcm_int), /* interrupt function */
 	MSM5205_S96_4B  /* 4KHz               */
 };
 
@@ -860,7 +858,7 @@ DRIVER_INIT_MEMBER(toki_state,jujuba)
 
 	/* Decrypt data for z80 program */
 	{
-		address_space &space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
+		address_space &space = m_audiocpu->space(AS_PROGRAM);
 		UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0x20000);
 		UINT8 *rom = memregion("audiocpu")->base();
 		int i;

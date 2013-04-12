@@ -419,7 +419,7 @@ GFXDECODE_END
 WRITE_LINE_MEMBER(missb2_state::irqhandler)
 {
 	logerror("YM3526 firing an IRQ\n");
-//  machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+//  m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym3526_interface ym3526_config =
@@ -438,11 +438,6 @@ INTERRUPT_GEN_MEMBER(missb2_state::missb2_interrupt)
 
 MACHINE_START_MEMBER(missb2_state,missb2)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_slave = machine().device("slave");
-	m_mcu = NULL;
-
 	save_item(NAME(m_sound_nmi_enable));
 	save_item(NAME(m_pending_nmi));
 	save_item(NAME(m_sound_status));

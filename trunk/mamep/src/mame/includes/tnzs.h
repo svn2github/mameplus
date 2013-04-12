@@ -1,3 +1,4 @@
+#include "sound/dac.h"
 
 #define MAX_SAMPLES 0x2f        /* max samples */
 
@@ -19,7 +20,12 @@ class tnzs_state : public driver_device
 {
 public:
 	tnzs_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub"),
+		m_mcu(*this, "mcu"),
+		m_maincpu(*this, "maincpu"),
+		m_dac(*this, "dac") { }
 
 	/* memory pointers */
 //  UINT8 *  m_paletteram;    // currently this uses generic palette handling
@@ -52,9 +58,9 @@ public:
 	UINT8*   m_ROM;
 
 	/* devices */
-	cpu_device *m_audiocpu;
-	cpu_device *m_subcpu;
-	device_t *m_mcu;
+	optional_device<cpu_device> m_audiocpu;
+	optional_device<cpu_device> m_subcpu;
+	optional_device<cpu_device> m_mcu;
 	DECLARE_WRITE8_MEMBER(tnzsb_sound_command_w);
 	DECLARE_WRITE8_MEMBER(jpopnics_palette_w);
 	DECLARE_WRITE8_MEMBER(jpopnics_subbankswitch_w);
@@ -103,4 +109,7 @@ public:
 	void tnzs_postload();
 	void mcu_reset(  );
 	void mcu_handle_coins( int coin );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	required_device<cpu_device> m_maincpu;
+	optional_device<dac_device> m_dac;
 };

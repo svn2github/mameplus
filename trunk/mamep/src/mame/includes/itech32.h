@@ -18,7 +18,7 @@ class itech32_state : public driver_device
 {
 public:
 	itech32_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_main_ram(*this, "main_ram", 0),
 		m_nvram(*this, "nvram", 0),
 		m_video(*this, "video", 0),
@@ -26,7 +26,9 @@ public:
 		m_drivedge_zbuf_control(*this, "drivedge_zctl"),
 		m_tms1_boot(*this, "tms1_boot"),
 		m_tms1_ram(*this, "tms1_ram"),
-		m_tms2_ram(*this, "tms2_ram"){ }
+		m_tms2_ram(*this, "tms2_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu") { }
 
 	optional_shared_ptr<UINT16> m_main_ram;
 	optional_shared_ptr<UINT16> m_nvram;
@@ -183,4 +185,6 @@ public:
 	void init_shuffle_bowl_common(int prot_addr);
 	void install_timekeeper();
 	void init_gt_common();
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
 };

@@ -172,7 +172,7 @@ class magicard_state : public driver_device
 {
 public:
 	magicard_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_magicram(*this, "magicram"),
 		m_pcab_vregs(*this, "pcab_vregs"),
 		m_scc68070_ext_irqc_regs(*this, "scc_xirqc_regs"),
@@ -182,7 +182,8 @@ public:
 		m_scc68070_int_irqc_regs(*this, "scc_iirqc_regs"),
 		m_scc68070_dma_ch1_regs(*this, "scc_dma1_regs"),
 		m_scc68070_dma_ch2_regs(*this, "scc_dma2_regs"),
-		m_scc68070_mmu_regs(*this, "scc_mmu_regs"){ }
+		m_scc68070_mmu_regs(*this, "scc_mmu_regs"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT16> m_magicram;
 	required_shared_ptr<UINT16> m_pcab_vregs;
@@ -220,6 +221,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_magicard(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(magicard_irq);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -700,7 +702,7 @@ void magicard_state::machine_reset()
 	UINT16 *src    = (UINT16*)memregion("maincpu" )->base();
 	UINT16 *dst    = m_magicram;
 	memcpy (dst, src, 0x80000);
-	machine().device("maincpu")->reset();
+	m_maincpu->reset();
 }
 
 

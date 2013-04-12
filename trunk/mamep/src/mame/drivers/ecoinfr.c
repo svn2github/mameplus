@@ -52,9 +52,8 @@ class ecoinfr_state : public driver_device
 {
 public:
 	ecoinfr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-	{
-	}
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	int irq_toggle;
 	int m_optic_pattern;
@@ -111,6 +110,7 @@ public:
 	UINT8 m_credsel;
 
 	DECLARE_MACHINE_START(ecoinfr);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -136,11 +136,11 @@ TIMER_DEVICE_CALLBACK_MEMBER(ecoinfr_state::ecoinfr_irq_timer)
 
 	if (irq_toggle==0)
 	{
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xe4);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xe4);
 	}
 	else
 	{
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xe0);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xe0);
 	}
 
 

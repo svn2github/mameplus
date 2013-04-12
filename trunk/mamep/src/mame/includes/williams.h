@@ -17,8 +17,9 @@ public:
 		m_videoram(*this, "videoram"),
 		m_blaster_palette_0(*this, "blaster_pal0"),
 		m_blaster_scanline_control(*this, "blaster_scan"),
-		m_williams2_tileram(*this, "williams2_tile")
-	{ }
+		m_williams2_tileram(*this, "williams2_tile"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu") { }
 
 	required_shared_ptr<UINT8>  m_nvram;
 	UINT8 *m_mayday_protection;
@@ -136,6 +137,18 @@ public:
 	int blitter_core(address_space &space, int sstart, int dstart, int w, int h, int data);
 	inline void update_blaster_banking();
 	void defender_install_io_space(address_space &space);
+
+	/* older-Williams routines */
+	DECLARE_WRITE_LINE_MEMBER(williams_main_irq);
+	DECLARE_WRITE_LINE_MEMBER(williams_main_firq);
+	DECLARE_WRITE_LINE_MEMBER(williams_snd_irq);
+	DECLARE_WRITE_LINE_MEMBER(williams_snd_irq_b);
+
+	/* newer-Williams routines */
+	DECLARE_WRITE_LINE_MEMBER(mysticm_main_irq);
+	DECLARE_WRITE_LINE_MEMBER(tshoot_main_irq);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
 };
 
 

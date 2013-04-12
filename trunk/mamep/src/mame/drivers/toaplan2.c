@@ -369,8 +369,8 @@ To Do / Unknowns:
 
 MACHINE_START_MEMBER(toaplan2_state,toaplan2)
 {
-	m_main_cpu = machine().device("maincpu");
-	m_sub_cpu = machine().device("audiocpu");
+	m_main_cpu = m_maincpu;
+	m_sub_cpu = m_audiocpu;
 
 	save_item(NAME(m_mcu_data));
 	save_item(NAME(m_video_status));
@@ -589,7 +589,7 @@ WRITE16_MEMBER(toaplan2_state::shippumd_coin_word_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		toaplan2_coin_w(space, offset, data & 0xff);
-		machine().device<okim6295_device>("oki")->set_bank_base(((data & 0x10) >> 4) * 0x40000);
+		m_oki->set_bank_base(((data & 0x10) >> 4) * 0x40000);
 	}
 	if (ACCESSING_BITS_8_15 && (data & 0xff00) )
 	{
@@ -746,19 +746,17 @@ WRITE16_MEMBER(toaplan2_state::fixeight_subcpu_ctrl_w)
 
 WRITE16_MEMBER(toaplan2_state::oki_bankswitch_w)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_0_7)
 	{
-		downcast<okim6295_device *>(device)->set_bank_base((data & 1) * 0x40000);
+		m_oki->set_bank_base((data & 1) * 0x40000);
 	}
 }
 
 WRITE16_MEMBER(toaplan2_state::oki1_bankswitch_w)
 {
-	device_t *device = machine().device("oki1");
 	if (ACCESSING_BITS_0_7)
 	{
-		downcast<okim6295_device *>(device)->set_bank_base((data & 1) * 0x40000);
+		m_oki1->set_bank_base((data & 1) * 0x40000);
 	}
 }
 
@@ -967,15 +965,13 @@ static const eeprom_interface bbakraid_93C66_intf =
 
 READ16_MEMBER(toaplan2_state::bbakraid_eeprom_r)
 {
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-
 	// Bit 0x01 returns the status of BUSAK from the Z80.
 	// BUSRQ is activated via bit 0x10 on the EEPROM write port.
 	// These accesses are made when the 68K wants to read the Z80
 	// ROM code. Failure to return the correct status incurrs a Sound Error.
 
 	int data;
-	data  = ((eeprom->read_bit() & 0x01) << 4);
+	data  = ((m_eeprom->read_bit() & 0x01) << 4);
 	data |= ((m_z80_busreq >> 4) & 0x01);   // Loop BUSRQ to BUSAK
 
 	return data;
@@ -2973,21 +2969,19 @@ static GFXDECODE_START( fixeightbl )
 GFXDECODE_END
 
 
-static void irqhandler(device_t *device, int linestate)
+WRITE_LINE_MEMBER(toaplan2_state::irqhandler)
 {
-	toaplan2_state *state = device->machine().driver_data<toaplan2_state>();
-
-	if (state->m_sub_cpu != NULL)       // wouldn't tekipaki have problem without this? "mcu" is not generally added
-		state->m_sub_cpu->execute().set_input_line(0, linestate);
+	if (m_sub_cpu != NULL)       // wouldn't tekipaki have problem without this? "mcu" is not generally added
+		m_sub_cpu->execute().set_input_line(0, state);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(toaplan2_state,irqhandler)
 };
 
 
-static void bbakraid_irqhandler(device_t *device, int state)
+WRITE_LINE_MEMBER(toaplan2_state::bbakraid_irqhandler)
 {
 	// Not used ???  Connected to a test pin (TP082)
 	logerror("YMZ280 is generating an interrupt. State=%08x\n",state);
@@ -2995,7 +2989,7 @@ static void bbakraid_irqhandler(device_t *device, int state)
 
 static const ymz280b_interface ymz280b_config =
 {
-	bbakraid_irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(toaplan2_state,bbakraid_irqhandler)
 };
 
 

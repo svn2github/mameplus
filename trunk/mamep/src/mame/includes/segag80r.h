@@ -11,11 +11,13 @@ class segag80r_state : public driver_device
 {
 public:
 	segag80r_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_mainram(*this, "mainram"),
 		m_videoram(*this, "videoram"),
 		m_sn1(*this, "sn1"),
-		m_sn2(*this, "sn2"){ }
+		m_sn2(*this, "sn2"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	required_shared_ptr<UINT8> m_mainram;
 	required_shared_ptr<UINT8> m_videoram;
@@ -120,6 +122,8 @@ public:
 	offs_t decrypt_offset(address_space &space, offs_t offset);
 	inline UINT8 demangle(UINT8 d7d6, UINT8 d5d4, UINT8 d3d2, UINT8 d1d0);
 	void monsterb_expand_gfx(const char *region);
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 };
 
 

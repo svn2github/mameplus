@@ -177,15 +177,15 @@ static GFXDECODE_START( flkatck )
 	GFXDECODE_ENTRY( "gfx1", 0, gfxlayout, 0, 32 )
 GFXDECODE_END
 
-static void volume_callback0(device_t *device, int v)
+WRITE8_MEMBER(flkatck_state::volume_callback0)
 {
-	k007232_set_volume(device, 0, (v >> 4) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v & 0x0f) * 0x11);
+	k007232_set_volume(machine().device("konami"), 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(machine().device("konami"), 1, 0, (data & 0x0f) * 0x11);
 }
 
 static const k007232_interface k007232_config =
 {
-	volume_callback0    /* external port callback */
+	DEVCB_DRIVER_MEMBER(flkatck_state,volume_callback0)    /* external port callback */
 };
 
 
@@ -195,7 +195,6 @@ void flkatck_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 3, &ROM[0x10000], 0x2000);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k007121 = machine().device("k007121");
 
 	save_item(NAME(m_irq_enabled));

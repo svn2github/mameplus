@@ -327,10 +327,10 @@ WRITE8_MEMBER(nbmj9195_state::tmpz84c011_pio_w)
 				nbmj9195_soundbank_w(space, 0, data);
 				break;
 			case 6:         /* PB_1 */
-				machine().device<dac_device>("dac2")->write_unsigned8(data);
+				m_dac2->write_unsigned8(data);
 				break;
 			case 7:         /* PC_1 */
-				machine().device<dac_device>("dac1")->write_unsigned8(data);
+				m_dac1->write_unsigned8(data);
 				break;
 			case 8:         /* PD_1 */
 				break;
@@ -365,10 +365,10 @@ WRITE8_MEMBER(nbmj9195_state::tmpz84c011_pio_w)
 				nbmj9195_soundbank_w(space, 0, data);
 				break;
 			case 6:         /* PB_1 */
-				machine().device<dac_device>("dac1")->write_unsigned8(data);
+				m_dac1->write_unsigned8(data);
 				break;
 			case 7:         /* PC_1 */
-				machine().device<dac_device>("dac2")->write_unsigned8(data);
+				m_dac2->write_unsigned8(data);
 				break;
 			case 8:         /* PD_1 */
 				break;
@@ -630,7 +630,7 @@ static Z80CTC_INTERFACE( ctc_intf_audio )
 
 void nbmj9195_state::machine_reset()
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	int i;
 
 	// initialize TMPZ84C011 PIO
@@ -643,7 +643,7 @@ void nbmj9195_state::machine_reset()
 
 DRIVER_INIT_MEMBER(nbmj9195_state,nbmj9195)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	UINT8 *ROM = memregion("audiocpu")->base();
 
 	// sound program patch

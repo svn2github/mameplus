@@ -32,12 +32,13 @@ class m10_state : public driver_device
 {
 public:
 	m10_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_memory(*this, "memory"),
 		m_rom(*this, "rom"),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_chargen(*this, "chargen"){ }
+		m_chargen(*this, "chargen"),
+		m_maincpu(*this, "maincpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_memory;
@@ -61,7 +62,7 @@ public:
 	int                 m_last;
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
 	device_t *m_ic8j1;
 	device_t *m_ic8j2;
 	samples_device *m_samples;

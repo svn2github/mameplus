@@ -92,10 +92,11 @@ class cshooter_state : public driver_device
 {
 public:
 	cshooter_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_txram(*this, "txram"),
 		m_mainram(*this, "mainram"),
-		m_spriteram(*this, "spriteram"){ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_txram;
 	tilemap_t *m_txtilemap;
@@ -121,6 +122,7 @@ public:
 	DECLARE_MACHINE_RESET(airraid);
 	UINT32 screen_update_cshooter(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(cshooter_scanline);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -208,10 +210,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(cshooter_state::cshooter_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
 
 	if(scanline == 0) // vblank-in irq
-		machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
 }
 
 
@@ -677,7 +679,7 @@ DRIVER_INIT_MEMBER(cshooter_state,cshooter)
 
 DRIVER_INIT_MEMBER(cshooter_state,cshootere)
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	int A;
 	UINT8 *rom = memregion("maincpu")->base();
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0x8000);

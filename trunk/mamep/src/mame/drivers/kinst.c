@@ -140,11 +140,12 @@ class kinst_state : public driver_device
 {
 public:
 	kinst_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_rambase(*this, "rambase"),
 		m_rambase2(*this, "rambase2"),
 		m_control(*this, "control"),
-		m_rombase(*this, "rombase"){ }
+		m_rombase(*this, "rombase"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT32> m_rambase;
 	required_shared_ptr<UINT32> m_rambase2;
@@ -166,6 +167,7 @@ public:
 	UINT32 screen_update_kinst(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(irq0_start);
 	TIMER_CALLBACK_MEMBER(irq0_stop);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -184,12 +186,12 @@ public:
 void kinst_state::machine_start()
 {
 	/* set the fastest DRC options */
-	mips3drc_set_options(machine().device("maincpu"), MIPS3DRC_FASTEST_OPTIONS);
+	mips3drc_set_options(m_maincpu, MIPS3DRC_FASTEST_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	mips3drc_add_fastram(machine().device("maincpu"), 0x08000000, 0x087fffff, FALSE, m_rambase2);
-	mips3drc_add_fastram(machine().device("maincpu"), 0x00000000, 0x0007ffff, FALSE, m_rambase);
-	mips3drc_add_fastram(machine().device("maincpu"), 0x1fc00000, 0x1fc7ffff, TRUE,  m_rombase);
+	mips3drc_add_fastram(m_maincpu, 0x08000000, 0x087fffff, FALSE, m_rambase2);
+	mips3drc_add_fastram(m_maincpu, 0x00000000, 0x0007ffff, FALSE, m_rambase);
+	mips3drc_add_fastram(m_maincpu, 0x1fc00000, 0x1fc7ffff, TRUE,  m_rombase);
 }
 
 
@@ -280,7 +282,7 @@ UINT32 kinst_state::screen_update_kinst(screen_device &screen, bitmap_ind16 &bit
 
 TIMER_CALLBACK_MEMBER(kinst_state::irq0_stop)
 {
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -293,7 +295,7 @@ INTERRUPT_GEN_MEMBER(kinst_state::irq0_start)
 
 WRITE_LINE_MEMBER(kinst_state::ide_interrupt)
 {
-	machine().device("maincpu")->execute().set_input_line(1, state);
+	m_maincpu->set_input_line(1, state);
 }
 
 

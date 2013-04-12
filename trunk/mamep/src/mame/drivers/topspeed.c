@@ -420,31 +420,30 @@ WRITE8_MEMBER(topspeed_state::sound_bankswitch_w)/* assumes Z80 sandwiched betwe
 WRITE8_MEMBER(topspeed_state::topspeed_tc0140syt_comm_w)
 {
 	tc0140syt_device *device = machine().device<tc0140syt_device>("tc0140syt");
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	device->tc0140syt_comm_w(space, 0, data);
 }
 
-static void topspeed_msm5205_clock( device_t *device, int chip )
+void topspeed_state::topspeed_msm5205_clock( device_t *device, int chip )
 {
-	topspeed_state *state = device->machine().driver_data<topspeed_state>();
-	UINT8 data = state->m_msm_rom[chip][state->m_msm_pos[chip]];
+	UINT8 data = m_msm_rom[chip][m_msm_pos[chip]];
 
-	msm5205_data_w(device, state->m_msm_sel[chip] ? data & 0xf : data >> 4 & 0xf);
-	state->m_msm_pos[chip] += state->m_msm_sel[chip];
-	state->m_msm_sel[chip] ^= 1;
+	msm5205_data_w(device, m_msm_sel[chip] ? data & 0xf : data >> 4 & 0xf);
+	m_msm_pos[chip] += m_msm_sel[chip];
+	m_msm_sel[chip] ^= 1;
 
-	if ((state->m_msm_pos[chip]) == state->m_msm_loop[chip])
-		state->m_msm_pos[chip] = state->m_msm_start[chip];
+	if ((m_msm_pos[chip]) == m_msm_loop[chip])
+		m_msm_pos[chip] = m_msm_start[chip];
 }
 
-static void topspeed_msm5205_vck_1( device_t *device )
+WRITE_LINE_MEMBER(topspeed_state::topspeed_msm5205_vck_1)
 {
-	topspeed_msm5205_clock(device, 0);
+	topspeed_msm5205_clock(m_msm_chip[0], 0);
 }
 
-static void topspeed_msm5205_vck_2( device_t *device )
+WRITE_LINE_MEMBER(topspeed_state::topspeed_msm5205_vck_2)
 {
-	topspeed_msm5205_clock(device, 1);
+	topspeed_msm5205_clock(m_msm_chip[1], 1);
 }
 
 
@@ -655,13 +654,13 @@ GFXDECODE_END
 
 static const msm5205_interface msm5205_config_1 =
 {
-	topspeed_msm5205_vck_1, /* VCK function */
+	DEVCB_DRIVER_LINE_MEMBER(topspeed_state,topspeed_msm5205_vck_1), /* VCK function */
 	MSM5205_S48_4B          /* 8 kHz */
 };
 
 static const msm5205_interface msm5205_config_2 =
 {
-	topspeed_msm5205_vck_2, /* VCK function */
+	DEVCB_DRIVER_LINE_MEMBER(topspeed_state,topspeed_msm5205_vck_2), /* VCK function */
 	MSM5205_S48_4B          /* 8 kHz */
 };
 
@@ -680,9 +679,6 @@ void topspeed_state::machine_start()
 {
 	membank("bank10")->configure_entries(0, 4, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_subcpu = machine().device<cpu_device>("subcpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_tc0220ioc = machine().device("tc0220ioc");
 	m_pc080sn_1 = machine().device("pc080sn_1");
 	m_pc080sn_2 = machine().device("pc080sn_2");

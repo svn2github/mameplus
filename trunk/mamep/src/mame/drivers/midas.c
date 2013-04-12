@@ -61,8 +61,10 @@ class midas_state : public driver_device
 {
 public:
 	midas_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_gfxregs(*this, "gfxregs"){ }
+		: driver_device(mconfig, type, tag),
+		m_gfxregs(*this, "gfxregs"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	UINT16 *m_gfxram;
 	required_shared_ptr<UINT16> m_gfxregs;
@@ -80,6 +82,9 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_midas(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_WRITE_LINE_MEMBER(livequiz_irqhandler);
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 };
 
 
@@ -209,18 +214,16 @@ UINT32 midas_state::screen_update_midas(screen_device &screen, bitmap_ind16 &bit
 
 WRITE16_MEMBER(midas_state::midas_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_0_7)
 	{
 		// latch the bit
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x04);
+		m_eeprom->write_bit(data & 0x04);
 
 		// reset line asserted: reset.
-		eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE );
+		m_eeprom->set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE );
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE );
+		m_eeprom->set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
@@ -686,14 +689,14 @@ static INPUT_PORTS_START( hammer )
 INPUT_PORTS_END
 
 
-static void livequiz_irqhandler(device_t *device, int state)
+WRITE_LINE_MEMBER(midas_state::livequiz_irqhandler)
 {
 	logerror("YMZ280 is generating an interrupt. State=%08x\n",state);
 }
 
 static const ymz280b_interface ymz280b_config =
 {
-	livequiz_irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(midas_state,livequiz_irqhandler)
 };
 
 static MACHINE_CONFIG_START( livequiz, midas_state )

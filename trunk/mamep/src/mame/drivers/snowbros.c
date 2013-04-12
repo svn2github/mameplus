@@ -107,17 +107,17 @@ void snowbros_state::screen_eof_snowbros(screen_device &screen, bool state)
 
 WRITE16_MEMBER(snowbros_state::snowbros_irq4_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+	m_maincpu->set_input_line(4, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(snowbros_state::snowbros_irq3_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
+	m_maincpu->set_input_line(3, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(snowbros_state::snowbros_irq2_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+	m_maincpu->set_input_line(2, CLEAR_LINE);
 }
 
 TIMER_DEVICE_CALLBACK_MEMBER(snowbros_state::snowbros_irq)
@@ -136,8 +136,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(snowbros_state::snowbros_irq)
 
 TIMER_DEVICE_CALLBACK_MEMBER(snowbros_state::snowbros3_irq)
 {
-	okim6295_device *adpcm = machine().device<okim6295_device>("oki");
-	int status = adpcm->read_status();
+	int status = m_oki->read_status();
 	int scanline = param;
 
 	if(scanline == 240)
@@ -153,8 +152,8 @@ TIMER_DEVICE_CALLBACK_MEMBER(snowbros_state::snowbros3_irq)
 	{
 		if ((status&0x08)==0x00)
 		{
-			adpcm->write_command(0x80|m_sb3_music);
-			adpcm->write_command(0x00|0x82);
+			m_oki->write_command(0x80|m_sb3_music);
+			m_oki->write_command(0x00|0x82);
 		}
 
 	}
@@ -162,7 +161,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(snowbros_state::snowbros3_irq)
 	{
 		if ((status&0x08)==0x08)
 		{
-			adpcm->write_command(0x40);     /* Stop playing music */
+			m_oki->write_command(0x40);     /* Stop playing music */
 		}
 	}
 
@@ -182,7 +181,7 @@ WRITE16_MEMBER(snowbros_state::snowbros_68000_sound_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, offset, data & 0xff);
-		machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -328,7 +327,7 @@ WRITE16_MEMBER(snowbros_state::twinadv_68000_sound_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, offset, data & 0xff);
-		machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -351,12 +350,11 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(snowbros_state::twinadv_oki_bank_w)
 {
-	device_t *device = machine().device("oki");
 	int bank = (data &0x02)>>1;
 
 	if (data&0xfd) logerror ("Unused bank bits! %02x\n",data);
 
-	downcast<okim6295_device *>(device)->set_bank_base(bank * 0x40000);
+	m_oki->set_bank_base(bank * 0x40000);
 }
 
 static ADDRESS_MAP_START( twinadv_sound_io_map, AS_IO, 8, snowbros_state )
@@ -471,12 +469,10 @@ void snowbros_state::sb3_play_sound (okim6295_device *oki, int data)
 
 WRITE16_MEMBER(snowbros_state::sb3_sound_w)
 {
-	device_t *device = machine().device("oki");
-	okim6295_device *oki = downcast<okim6295_device *>(device);
 	if (data == 0x00fe)
 	{
 		m_sb3_music_is_playing = 0;
-		oki->write_command(0x78);       /* Stop sounds */
+		m_oki->write_command(0x78);       /* Stop sounds */
 	}
 	else /* the alternating 0x00-0x2f or 0x30-0x5f might be something to do with the channels */
 	{
@@ -484,7 +480,7 @@ WRITE16_MEMBER(snowbros_state::sb3_sound_w)
 
 		if (data <= 0x21)
 		{
-			sb3_play_sound(oki, data);
+			sb3_play_sound(m_oki, data);
 		}
 
 		if (data>=0x22 && data<=0x31)
@@ -494,7 +490,7 @@ WRITE16_MEMBER(snowbros_state::sb3_sound_w)
 
 		if ((data>=0x30) && (data<=0x51))
 		{
-			sb3_play_sound(oki, data-0x30);
+			sb3_play_sound(m_oki, data-0x30);
 		}
 
 		if (data>=0x52 && data<=0x5f)
@@ -1491,16 +1487,16 @@ static GFXDECODE_START( hyperpac )
 GFXDECODE_END
 
 /* handler called by the 3812/2151 emulator when the internal timers cause an IRQ */
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(snowbros_state::irqhandler)
 {
-	device->machine().device("soundcpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_soundcpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 /* SnowBros Sound */
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(snowbros_state,irqhandler)
 };
 
 
@@ -2332,7 +2328,7 @@ DRIVER_INIT_MEMBER(snowbros_state,moremorp)
 //      m_hyperpac_ram[0xf000/2 + i] = PROTDATA[i];
 
 	/* explicit check in the code */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::moremorp_0a_read),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::moremorp_0a_read),this));
 }
 
 
@@ -2731,7 +2727,7 @@ DRIVER_INIT_MEMBER(snowbros_state,4in1boot)
 		memcpy(src,buffer,len);
 		auto_free(machine(), buffer);
 	}
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::_4in1_02_read),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::_4in1_02_read),this));
 }
 
 DRIVER_INIT_MEMBER(snowbros_state,snowbro3)
@@ -2758,7 +2754,7 @@ READ16_MEMBER(snowbros_state::_3in1_read)
 
 DRIVER_INIT_MEMBER(snowbros_state,3in1semi)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::_3in1_read),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::_3in1_read),this));
 }
 
 READ16_MEMBER(snowbros_state::cookbib3_read)
@@ -2768,7 +2764,7 @@ READ16_MEMBER(snowbros_state::cookbib3_read)
 
 DRIVER_INIT_MEMBER(snowbros_state,cookbib3)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::cookbib3_read),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::cookbib3_read),this));
 }
 
 DRIVER_INIT_MEMBER(snowbros_state,pzlbreak)

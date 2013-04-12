@@ -195,7 +195,7 @@ WRITE16_MEMBER(gstriker_state::sound_command_w)
 	{
 		m_pending_command = 1;
 		soundlatch_byte_w(space, offset, data & 0xff);
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -259,17 +259,17 @@ GFXDECODE_END
 
 /*** MORE SOUND RELATED ******************************************************/
 
-static void gs_ym2610_irq(device_t *device, int irq)
+WRITE_LINE_MEMBER(gstriker_state::gs_ym2610_irq)
 {
-	if (irq)
-		device->machine().device("audiocpu")->execute().set_input_line(0, ASSERT_LINE);
+	if (state)
+		m_audiocpu->set_input_line(0, ASSERT_LINE);
 	else
-		device->machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+		m_audiocpu->set_input_line(0, CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	gs_ym2610_irq
+	DEVCB_DRIVER_LINE_MEMBER(gstriker_state,gs_ym2610_irq)
 };
 
 /*** MEMORY LAYOUTS **********************************************************/
@@ -1024,11 +1024,11 @@ void gstriker_state::mcu_init(  )
 	m_pending_command = 0;
 	m_mcu_data = 0;
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x20008a, 0x20008b, write16_delegate(FUNC(gstriker_state::twrldc94_mcu_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x20008a, 0x20008b, read16_delegate(FUNC(gstriker_state::twrldc94_mcu_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x20008a, 0x20008b, write16_delegate(FUNC(gstriker_state::twrldc94_mcu_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x20008a, 0x20008b, read16_delegate(FUNC(gstriker_state::twrldc94_mcu_r),this));
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x20008e, 0x20008f, write16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_w),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x20008e, 0x20008f, read16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x20008e, 0x20008f, write16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x20008e, 0x20008f, read16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_r),this));
 }
 
 DRIVER_INIT_MEMBER(gstriker_state,twrldc94)
@@ -1048,8 +1048,8 @@ DRIVER_INIT_MEMBER(gstriker_state,vgoalsoc)
 	m_gametype = 3;
 	mcu_init();
 
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x200090, 0x200091, write16_delegate(FUNC(gstriker_state::vbl_toggle_w),this)); // vblank toggle
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x200090, 0x200091, read16_delegate(FUNC(gstriker_state::vbl_toggle_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x200090, 0x200091, write16_delegate(FUNC(gstriker_state::vbl_toggle_w),this)); // vblank toggle
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x200090, 0x200091, read16_delegate(FUNC(gstriker_state::vbl_toggle_r),this));
 }
 
 /*** GAME DRIVERS ************************************************************/

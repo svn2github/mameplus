@@ -9,10 +9,12 @@ class cheekyms_state : public driver_device
 {
 public:
 	cheekyms_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_spriteram(*this, "spriteram"),
-		m_port_80(*this, "port_80"){ }
+		m_port_80(*this, "port_80"),
+		m_maincpu(*this, "maincpu"),
+		m_dac(*this, "dac"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -24,8 +26,8 @@ public:
 	bitmap_ind16       *m_bitmap_buffer;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	dac_device *m_dac;
+	required_device<cpu_device> m_maincpu;
+	required_device<dac_device> m_dac;
 
 	UINT8          m_irq_mask;
 	DECLARE_WRITE8_MEMBER(cheekyms_port_40_w);

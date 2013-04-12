@@ -98,9 +98,9 @@ TO DO :
 WRITE8_MEMBER(tehkanwc_state::sub_cpu_halt_w)
 {
 	if (data)
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	else
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 
@@ -141,12 +141,12 @@ WRITE8_MEMBER(tehkanwc_state::tehkanwc_track_1_reset_w)
 WRITE8_MEMBER(tehkanwc_state::sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 TIMER_CALLBACK_MEMBER(tehkanwc_state::reset_callback)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
@@ -188,22 +188,20 @@ WRITE8_MEMBER(tehkanwc_state::msm_reset_w)
 	msm5205_reset_w(device,data ? 0 : 1);
 }
 
-static void tehkanwc_adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(tehkanwc_state::tehkanwc_adpcm_int)
 {
-	tehkanwc_state *state = device->machine().driver_data<tehkanwc_state>();
+	UINT8 *SAMPLES = memregion("adpcm")->base();
+	int msm_data = SAMPLES[m_msm_data_offs & 0x7fff];
 
-	UINT8 *SAMPLES = state->memregion("adpcm")->base();
-	int msm_data = SAMPLES[state->m_msm_data_offs & 0x7fff];
-
-	if (state->m_toggle == 0)
-		msm5205_data_w(device,(msm_data >> 4) & 0x0f);
+	if (m_toggle == 0)
+		msm5205_data_w(machine().device("msm"),(msm_data >> 4) & 0x0f);
 	else
 	{
-		msm5205_data_w(device,msm_data & 0x0f);
-		state->m_msm_data_offs++;
+		msm5205_data_w(machine().device("msm"),msm_data & 0x0f);
+		m_msm_data_offs++;
 	}
 
-	state->m_toggle ^= 1;
+	m_toggle ^= 1;
 }
 
 /* End of MSM with counters emulation */
@@ -633,7 +631,7 @@ static const ay8910_interface ay8910_interface_2 =
 
 static const msm5205_interface msm5205_config =
 {
-	tehkanwc_adpcm_int, /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(tehkanwc_state,tehkanwc_adpcm_int), /* interrupt function */
 	MSM5205_S48_4B      /* 8KHz               */
 };
 

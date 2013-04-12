@@ -86,9 +86,9 @@ class sandscrp_state : public driver_device
 public:
 	sandscrp_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_view2_0(*this, "view2_0")
-	{
-	}
+		m_view2_0(*this, "view2_0"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu")  { }
 
 	optional_device<kaneko_view2_tilemap_device> m_view2_0;
 
@@ -113,6 +113,9 @@ public:
 	void screen_eof_sandscrp(screen_device &screen, bool state);
 	INTERRUPT_GEN_MEMBER(sandscrp_interrupt);
 	void update_irq_state();
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };
 
 
@@ -153,9 +156,9 @@ void sandscrp_state::machine_reset()
 void sandscrp_state::update_irq_state()
 {
 	if (m_vblank_irq || m_sprite_irq || m_unknown_irq)
-		machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
+		m_maincpu->set_input_line(1, ASSERT_LINE);
 	else
-		machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
+		m_maincpu->set_input_line(1, CLEAR_LINE);
 }
 
 
@@ -248,7 +251,7 @@ WRITE16_MEMBER(sandscrp_state::sandscrp_soundlatch_word_w)
 	{
 		m_latch1_full = 1;
 		soundlatch_byte_w(space, 0, data & 0xff);
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		space.device().execute().spin_until_time(attotime::from_usec(100)); // Allow the other cpu to reply
 	}
 }
@@ -460,9 +463,9 @@ GFXDECODE_END
 
 /* YM3014B + YM2203C */
 
-static void irq_handler(device_t *device, int irq)
+WRITE_LINE_MEMBER(sandscrp_state::irqhandler)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_intf_sandscrp =
@@ -475,7 +478,7 @@ static const ym2203_interface ym2203_intf_sandscrp =
 		DEVCB_NULL, /* Port A Write */
 		DEVCB_NULL, /* Port B Write */
 	},
-	DEVCB_LINE(irq_handler) /* IRQ handler */
+	DEVCB_DRIVER_LINE_MEMBER(sandscrp_state,irqhandler) /* IRQ handler */
 };
 
 

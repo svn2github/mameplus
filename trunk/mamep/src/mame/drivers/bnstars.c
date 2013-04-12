@@ -111,7 +111,8 @@ public:
 			m_ms32_tx0_scroll(*this, "tx0_scroll"),
 			m_ms32_bg0_scroll(*this, "bg0_scroll"),
 			m_ms32_tx1_scroll(*this, "tx1_scroll"),
-			m_ms32_bg1_scroll(*this, "bg1_scroll") { }
+			m_ms32_bg1_scroll(*this, "bg1_scroll") ,
+		m_maincpu(*this, "maincpu") { }
 
 	tilemap_t *m_ms32_tx_tilemap[2];
 	tilemap_t *m_ms32_bg_tilemap[2];
@@ -164,6 +165,7 @@ public:
 	void irq_init();
 	void irq_raise(int level);
 	IRQ_CALLBACK_MEMBER(irq_callback);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -1339,14 +1341,14 @@ IRQ_CALLBACK_MEMBER(bnstars_state::irq_callback)
 void bnstars_state::irq_init()
 {
 	m_irqreq = 0;
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(bnstars_state::irq_callback),this));
+	m_maincpu->set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(bnstars_state::irq_callback),this));
 }
 
 void bnstars_state::irq_raise(int level)
 {
 	m_irqreq |= (1<<level);
-	machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
+	m_maincpu->set_input_line(0, ASSERT_LINE);
 }
 
 /* TODO: fix this arrangement (derived from old deprecat lib) */

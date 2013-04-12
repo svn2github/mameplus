@@ -493,14 +493,12 @@ MACHINE_START_MEMBER(pgm_state,pgm)
 {
 //  machine().base_datetime(m_systime);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_soundcpu = machine().device<cpu_device>("soundcpu");
 	m_ics = machine().device("ics");
 }
 
 MACHINE_RESET_MEMBER(pgm_state,pgm)
 {
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 MACHINE_CONFIG_FRAGMENT( pgmbase )

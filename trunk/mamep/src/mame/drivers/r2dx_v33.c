@@ -29,13 +29,14 @@ class r2dx_v33_state : public driver_device
 {
 public:
 	r2dx_v33_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_bg_vram(*this, "bg_vram"),
 		m_md_vram(*this, "md_vram"),
 		m_fg_vram(*this, "fg_vram"),
-		m_tx_vram(*this, "tx_vram")
-		{ }
+		m_tx_vram(*this, "tx_vram"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr<UINT16> m_spriteram;
 	DECLARE_WRITE16_MEMBER(rdx_bg_vram_w);
@@ -73,6 +74,8 @@ public:
 	UINT32 screen_update_rdx_v33(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(rdx_v33_interrupt);
 	void draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect,int pri);
+	required_device<cpu_device> m_maincpu;
+	optional_device<eeprom_device> m_eeprom;
 };
 
 
@@ -232,7 +235,7 @@ UINT32 r2dx_v33_state::screen_update_rdx_v33(screen_device &screen, bitmap_ind16
 	{
 		static UINT32 src_addr = 0x100000;
 		static int frame;
-		address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+		address_space &space = m_maincpu->space(AS_PROGRAM);
 
 		//if(machine().input().code_pressed_once(KEYCODE_A))
 		//  src_addr+=0x800;
@@ -269,13 +272,11 @@ UINT32 r2dx_v33_state::screen_update_rdx_v33(screen_device &screen, bitmap_ind16
 
 WRITE16_MEMBER(r2dx_v33_state::rdx_v33_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_0_7)
 	{
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->set_clock_line((data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
-		eeprom->write_bit(data & 0x20);
-		eeprom->set_cs_line((data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit(data & 0x20);
+		m_eeprom->set_cs_line((data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
 
 		if (data&0xc7) logerror("eeprom_w extra bits used %04x\n",data);
 	}

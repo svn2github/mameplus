@@ -430,6 +430,7 @@ public:
 	INTERRUPT_GEN_MEMBER(system_h1);
 	TIMER_DEVICE_CALLBACK_MEMBER(system_h1_main);
 	TIMER_DEVICE_CALLBACK_MEMBER(system_h1_sub);
+	DECLARE_WRITE_LINE_MEMBER(scsp_irq);
 
 	void sysh1_dma_transfer( address_space &space, UINT16 dma_index );
 
@@ -3536,16 +3537,15 @@ void coolridr_state::machine_reset()
 	m_usethreads = m_io_config->read()&1;
 }
 
-static void scsp_irq(device_t *device, int irq)
+WRITE_LINE_MEMBER(coolridr_state::scsp_irq)
 {
-	coolridr_state *state = device->machine().driver_data<coolridr_state>();
-	if (irq > 0)
+	if (state > 0)
 	{
-		state->m_scsp_last_line = irq;
-		state->m_soundcpu->set_input_line(irq, ASSERT_LINE);
+		m_scsp_last_line = state;
+		m_soundcpu->set_input_line(state, ASSERT_LINE);
 	}
 	else
-		state->m_soundcpu->set_input_line(-irq, CLEAR_LINE);
+		m_soundcpu->set_input_line(-state, CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(coolridr_state::scsp1_to_sh1_irq)
@@ -3569,14 +3569,14 @@ WRITE_LINE_MEMBER(coolridr_state::scsp2_to_sh1_irq)
 static const scsp_interface scsp_config =
 {
 	0,
-	scsp_irq,
+	DEVCB_DRIVER_LINE_MEMBER(coolridr_state,scsp_irq),
 	DEVCB_DRIVER_LINE_MEMBER(coolridr_state, scsp1_to_sh1_irq)
 };
 
 static const scsp_interface scsp2_interface =
 {
 	0,
-	NULL,
+	DEVCB_NULL,
 	DEVCB_DRIVER_LINE_MEMBER(coolridr_state, scsp2_to_sh1_irq)
 };
 
@@ -3723,10 +3723,10 @@ READ32_MEMBER(coolridr_state::coolridr_hack2_r)
 
 DRIVER_INIT_MEMBER(coolridr_state,coolridr)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x60d8894, 0x060d8897, read32_delegate(FUNC(coolridr_state::coolridr_hack2_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x60d8894, 0x060d8897, read32_delegate(FUNC(coolridr_state::coolridr_hack2_r), this));
 
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
-	sh2drc_set_options(machine().device("sub"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_subcpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 GAME( 1995, coolridr,    0, coolridr,    coolridr, coolridr_state,    coolridr, ROT0,  "Sega", "Cool Riders",GAME_IMPERFECT_SOUND) // region is set in test mode, this set is for Japan, USA and Export (all regions)

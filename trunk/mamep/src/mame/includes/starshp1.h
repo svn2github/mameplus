@@ -34,11 +34,13 @@ class starshp1_state : public driver_device
 {
 public:
 	starshp1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_playfield_ram(*this, "playfield_ram"),
 		m_hpos_ram(*this, "hpos_ram"),
 		m_vpos_ram(*this, "vpos_ram"),
-		m_obj_ram(*this, "obj_ram"){ }
+		m_obj_ram(*this, "obj_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_discrete(*this, "discrete") { }
 
 	int m_analog_in_select;
 	int m_attract;
@@ -96,6 +98,8 @@ public:
 	int spaceship_collision(bitmap_ind16 &bitmap, const rectangle &rect);
 	int point_in_circle(int x, int y, int center_x, int center_y, int r);
 	int circle_collision(const rectangle &rect);
+	required_device<cpu_device> m_maincpu;
+	required_device<discrete_device> m_discrete;
 };
 
 /*----------- defined in audio/starshp1.c -----------*/

@@ -8,6 +8,7 @@
 
 #include "sound/dmadac.h"
 #include "video/polynew.h"
+#include "machine/eeprom.h"
 
 #define SOUND_CHANNELS  4
 
@@ -56,7 +57,9 @@ public:
 			m_m68k_ram_base(*this,"m68k_ram_base",0),
 			m_tms_comm_base(*this,"tms_comm_base",0),
 			m_adsp_control_regs(*this,"adsp_regs"),
-			m_adsp_fastram_base(*this,"adsp_fastram") { }
+			m_adsp_fastram_base(*this,"adsp_fastram") ,
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr<UINT32> m_adsp_ram_base;
 	required_shared_ptr<UINT16> m_m68k_ram_base;
@@ -120,4 +123,6 @@ public:
 	TIMER_CALLBACK_MEMBER(delayed_sound_w);
 	TIMER_DEVICE_CALLBACK_MEMBER(adsp_autobuffer_irq);
 	void gaelco3d_render(screen_device &screen);
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 };

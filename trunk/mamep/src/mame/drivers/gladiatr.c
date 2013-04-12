@@ -258,7 +258,7 @@ MACHINE_RESET_MEMBER(gladiatr_state,gladiator)
 	{
 		UINT8 *rom = machine().root_device().memregion("audiocpu")->base() + 0x10000;
 		machine().root_device().membank("bank2")->set_base(rom);
-		machine().device("audiocpu")->reset();
+		m_audiocpu->reset();
 	}
 }
 
@@ -270,10 +270,10 @@ WRITE8_MEMBER(gladiatr_state::gladiator_int_control_w)
 	/* bit 0   : ??                    */
 }
 /* YM2203 IRQ */
-static void gladiator_ym_irq(device_t *device, int irq)
+WRITE_LINE_MEMBER(gladiatr_state::gladiator_ym_irq)
 {
 	/* NMI IRQ is not used by gladiator sound program */
-	device->machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 /*Sound Functions*/
@@ -293,12 +293,12 @@ WRITE8_MEMBER(gladiatr_state::glad_adpcm_w)
 WRITE8_MEMBER(gladiatr_state::glad_cpu_sound_command_w)
 {
 	soundlatch_byte_w(space,0,data);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 READ8_MEMBER(gladiatr_state::glad_cpu_sound_command_r)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	return soundlatch_byte_r(space,0);
 }
 
@@ -312,7 +312,7 @@ WRITE8_MEMBER(gladiatr_state::gladiatr_flipscreen_w)
 /* !!!!! patch to IRQ timming for 2nd CPU !!!!! */
 WRITE8_MEMBER(gladiatr_state::gladiatr_irq_patch_w)
 {
-	machine().device("sub")->execute().set_input_line(0, HOLD_LINE);
+	m_subcpu->set_input_line(0, HOLD_LINE);
 }
 #endif
 
@@ -649,12 +649,12 @@ static const ym2203_interface gladiatr_ym2203_interface =
 		DEVCB_DRIVER_MEMBER(gladiatr_state,gladiator_int_control_w), /* port A write */
 		DEVCB_NULL,
 	},
-	DEVCB_LINE(gladiator_ym_irq)          /* NMI request for 2nd cpu */
+	DEVCB_DRIVER_LINE_MEMBER(gladiatr_state,gladiator_ym_irq)          /* NMI request for 2nd cpu */
 };
 
 static const msm5205_interface msm5205_config =
 {
-	0,              /* interrupt function */
+	DEVCB_NULL,              /* interrupt function */
 	MSM5205_SEX_4B  /* vclk input mode    */
 };
 
@@ -1065,7 +1065,7 @@ DRIVER_INIT_MEMBER(gladiatr_state,ppking)
 			rom[i+2*j*0x2000] = rom[i+j*0x2000];
 		}
 	}
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xf6a3,0xf6a3,read8_delegate(FUNC(gladiatr_state::f6a3_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf6a3,0xf6a3,read8_delegate(FUNC(gladiatr_state::f6a3_r),this));
 }
 
 

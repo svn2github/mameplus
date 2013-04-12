@@ -121,8 +121,8 @@ MACHINE_START_MEMBER(namcos2_shared_state,namcos2)
 
 MACHINE_RESET_MEMBER(namcos2_shared_state,namcos2)
 {
-//  address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	address_space &audio_space = machine().device("audiocpu")->memory().space(AS_PROGRAM);
+//  address_space &space = m_maincpu->space(AS_PROGRAM);
+	address_space &audio_space = m_audiocpu->space(AS_PROGRAM);
 
 	mFinalLapProtCount = 0;
 	namcos2_mcu_analog_ctrl = 0;
@@ -133,7 +133,7 @@ MACHINE_RESET_MEMBER(namcos2_shared_state,namcos2)
 	/* Initialise the bank select in the sound CPU */
 	namcos2_sound_bankselect_w(audio_space, 0, 0); /* Page in bank 0 */
 
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE );
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE );
 
 	/* Place CPU2 & CPU3 into the reset condition */
 	ResetAllSubCPUs( machine(), ASSERT_LINE );
@@ -143,7 +143,7 @@ MACHINE_RESET_MEMBER(namcos2_shared_state,namcos2)
 
 	/* reset POSIRQ timer */
 	namcos2_posirq_timer->adjust(attotime::never);
-	
+
 	m_player_mux = 0;
 }
 
@@ -672,8 +672,8 @@ TIMER_CALLBACK_MEMBER(namcos2_shared_state::namcos2_posirq_tick)
 
 	if (namcos2_68k_master_C148[NAMCOS2_C148_POSIRQ]|namcos2_68k_slave_C148[NAMCOS2_C148_POSIRQ]) {
 		machine().primary_screen->update_partial(param);
-		if (namcos2_68k_master_C148[NAMCOS2_C148_POSIRQ]) machine().device("maincpu")->execute().set_input_line(namcos2_68k_master_C148[NAMCOS2_C148_POSIRQ] , ASSERT_LINE);
-		if (namcos2_68k_slave_C148[NAMCOS2_C148_POSIRQ]) machine().device("slave")->execute().set_input_line(namcos2_68k_slave_C148[NAMCOS2_C148_POSIRQ] , ASSERT_LINE);
+		if (namcos2_68k_master_C148[NAMCOS2_C148_POSIRQ]) m_maincpu->set_input_line(namcos2_68k_master_C148[NAMCOS2_C148_POSIRQ] , ASSERT_LINE);
+		if (namcos2_68k_slave_C148[NAMCOS2_C148_POSIRQ]) m_slave->set_input_line(namcos2_68k_slave_C148[NAMCOS2_C148_POSIRQ] , ASSERT_LINE);
 	}
 }
 
@@ -776,7 +776,7 @@ WRITE8_MEMBER( namcos2_shared_state::namcos2_mcu_analog_ctrl_w )
 		/* If the interrupt enable bit is set trigger an A/D IRQ */
 		if(data & 0x20)
 		{
-			generic_pulse_irq_line(machine().device("mcu")->execute(), HD63705_INT_ADCONV, 1);
+			generic_pulse_irq_line(m_mcu, HD63705_INT_ADCONV, 1);
 		}
 	}
 }

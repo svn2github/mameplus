@@ -318,16 +318,14 @@ WRITE8_MEMBER(firetrap_state::firetrap_sound_bankselect_w)
 	membank("bank2")->set_entry(data & 0x01);
 }
 
-static void firetrap_adpcm_int( device_t *device )
+WRITE_LINE_MEMBER(firetrap_state::firetrap_adpcm_int)
 {
-	firetrap_state *state = device->machine().driver_data<firetrap_state>();
+	msm5205_data_w(machine().device("msm"), m_msm5205next >> 4);
+	m_msm5205next <<= 4;
 
-	msm5205_data_w(device, state->m_msm5205next >> 4);
-	state->m_msm5205next <<= 4;
-
-	state->m_adpcm_toggle ^= 1;
-	if (state->m_sound_irq_enable && state->m_adpcm_toggle)
-		state->m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
+	m_adpcm_toggle ^= 1;
+	if (m_sound_irq_enable && m_adpcm_toggle)
+		m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(firetrap_state::firetrap_adpcm_data_w)
@@ -576,7 +574,7 @@ GFXDECODE_END
 
 static const msm5205_interface msm5205_config =
 {
-	firetrap_adpcm_int, /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(firetrap_state,firetrap_adpcm_int), /* interrupt function */
 	MSM5205_S48_4B      /* 7.8125kHz          */
 };
 
@@ -592,8 +590,6 @@ void firetrap_state::machine_start()
 	UINT8 *MAIN = memregion("maincpu")->base();
 	UINT8 *SOUND = memregion("audiocpu")->base();
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_msm = machine().device("msm");
 
 	membank("bank1")->configure_entries(0, 4, &MAIN[0x10000], 0x4000);

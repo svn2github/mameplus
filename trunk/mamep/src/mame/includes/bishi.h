@@ -11,7 +11,9 @@ class bishi_state : public driver_device
 {
 public:
 	bishi_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	/* memory pointers */
 	UINT8 *    m_ram;
@@ -25,8 +27,8 @@ public:
 	UINT16     m_cur_control2;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 	device_t *m_k007232;
 	device_t *m_k056832;
 	device_t *m_k054338;
@@ -41,6 +43,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_bishi(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(bishi_scanline);
+	DECLARE_WRITE_LINE_MEMBER(sound_irq_gen);
 };
 
 /*----------- defined in video/bishi.c -----------*/

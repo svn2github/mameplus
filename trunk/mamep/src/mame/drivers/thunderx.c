@@ -566,15 +566,15 @@ INPUT_PORTS_END
 
 ***************************************************************************/
 
-static void volume_callback(device_t *device, int v)
+WRITE8_MEMBER(thunderx_state::volume_callback)
 {
-	k007232_set_volume(device, 0, (v >> 4) * 0x11, 0);
-	k007232_set_volume(device, 1, 0, (v & 0x0f) * 0x11);
+	k007232_set_volume(m_k007232, 0, (data >> 4) * 0x11, 0);
+	k007232_set_volume(m_k007232, 1, 0, (data & 0x0f) * 0x11);
 }
 
 static const k007232_interface k007232_config =
 {
-	volume_callback /* external port callback */
+	DEVCB_DRIVER_MEMBER(thunderx_state,volume_callback) /* external port callback */
 };
 
 
@@ -599,8 +599,6 @@ MACHINE_START_MEMBER(thunderx_state,scontra)
 {
 	m_generic_paletteram_8.allocate(0x800);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_k007232 = machine().device("k007232");
 	m_k052109 = machine().device("k052109");
 	m_k051960 = machine().device("k051960");
@@ -638,7 +636,7 @@ MACHINE_RESET_MEMBER(thunderx_state,scontra)
 
 MACHINE_RESET_MEMBER(thunderx_state,thunderx)
 {
-	konami_configure_set_lines(machine().device("maincpu"), thunderx_banking);
+	konami_configure_set_lines(m_maincpu, thunderx_banking);
 
 	MACHINE_RESET_CALL_MEMBER(scontra);
 }

@@ -38,9 +38,10 @@ class rmhaihai_state : public driver_device
 {
 public:
 	rmhaihai_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_colorram(*this, "colorram"),
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram"),
+		m_maincpu(*this, "maincpu") { }
 
 	int m_gfxbank;
 	required_shared_ptr<UINT8> m_colorram;
@@ -60,6 +61,7 @@ public:
 	virtual void video_start();
 	DECLARE_MACHINE_RESET(themj);
 	UINT32 screen_update_rmhaihai(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -194,7 +196,7 @@ logerror("banksw %d\n",bank);
 
 MACHINE_RESET_MEMBER(rmhaihai_state,themj)
 {
-	themj_rombank_w(machine().device("maincpu")->memory().space(AS_IO), 0, 0);
+	themj_rombank_w(m_maincpu->space(AS_IO), 0, 0);
 }
 
 
@@ -457,7 +459,7 @@ static const ay8910_interface ay8910_config =
 
 static const msm5205_interface msm5205_config =
 {
-	0,              /* interrupt function */
+	DEVCB_NULL,              /* interrupt function */
 	MSM5205_SEX_4B  /* vclk input mode    */
 };
 

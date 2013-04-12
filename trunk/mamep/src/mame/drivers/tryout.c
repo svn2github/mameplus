@@ -27,20 +27,20 @@ $208 strikes count
 
 WRITE8_MEMBER(tryout_state::tryout_nmi_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE );
+	m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE );
 }
 
 WRITE8_MEMBER(tryout_state::tryout_sound_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 /*this is actually irq/nmi mask, polls only four values at start up (81->01->81->01) and then
   stays on this state.*/
 WRITE8_MEMBER(tryout_state::tryout_sound_irq_ack_w)
 {
-//  machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+//  m_audiocpu->set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(tryout_state::tryout_bankswitch_w)
@@ -84,7 +84,7 @@ ADDRESS_MAP_END
 INPUT_CHANGED_MEMBER(tryout_state::coin_inserted)
 {
 	if (oldval)
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static INPUT_PORTS_START( tryout )

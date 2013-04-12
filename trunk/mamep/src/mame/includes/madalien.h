@@ -16,7 +16,7 @@ class madalien_state : public driver_device
 {
 public:
 	madalien_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_charram(*this, "charram"),
 		m_video_control(*this, "video_control"),
@@ -26,7 +26,10 @@ public:
 		m_headlight_pos(*this, "headlight_pos"),
 		m_edge1_pos(*this, "edge1_pos"),
 		m_edge2_pos(*this, "edge2_pos"),
-		m_scroll(*this, "scroll"){ }
+		m_scroll(*this, "scroll"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_discrete(*this, "discrete") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_charram;
@@ -68,6 +71,9 @@ public:
 	void draw_headlight(bitmap_ind16 &bitmap, const rectangle &cliprect, int flip);
 	void draw_foreground(bitmap_ind16 &bitmap, const rectangle &cliprect, int flip);
 	inline UINT8 shift_common(UINT8 hi, UINT8 lo);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<discrete_device> m_discrete;
 };
 /*----------- defined in video/madalien.c -----------*/
 

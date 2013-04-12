@@ -43,9 +43,11 @@ class astrocorp_state : public driver_device
 {
 public:
 	astrocorp_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
-		m_paletteram(*this, "paletteram"){ }
+		m_paletteram(*this, "paletteram"),
+		m_maincpu(*this, "maincpu"),
+		m_oki(*this, "oki") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_spriteram;
@@ -70,6 +72,8 @@ public:
 	UINT32 screen_update_astrocorp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(skilldrp_scanline);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
+	required_device<okim6295_device> m_oki;
 };
 
 /***************************************************************************
@@ -188,22 +192,18 @@ WRITE16_MEMBER(astrocorp_state::astrocorp_eeprom_w)
 
 WRITE16_MEMBER(astrocorp_state::astrocorp_sound_bank_w)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_8_15)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * ((data >> 8) & 1));
+		m_oki->set_bank_base(0x40000 * ((data >> 8) & 1));
 //      logerror("CPU #0 PC %06X: OKI bank %08X\n", space.device().safe_pc(), data);
 	}
 }
 
 WRITE16_MEMBER(astrocorp_state::skilldrp_sound_bank_w)
 {
-	device_t *device = machine().device("oki");
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = downcast<okim6295_device *>(device);
-		oki->set_bank_base(0x40000 * (data & 1));
+		m_oki->set_bank_base(0x40000 * (data & 1));
 //      logerror("CPU #0 PC %06X: OKI bank %08X\n", space.device().safe_pc(), data);
 	}
 }
@@ -514,10 +514,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(astrocorp_state::skilldrp_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq. controls sprites, sound, i/o
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in? controls palette
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( skilldrp, astrocorp_state )

@@ -26,7 +26,8 @@ class photoply_state : public driver_device
 {
 public:
 	photoply_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	int m_dma_channel;
 	UINT8 m_dma_offset[2][4];
@@ -58,6 +59,7 @@ public:
 	DECLARE_DRIVER_INIT(photoply);
 	virtual void machine_start();
 	IRQ_CALLBACK_MEMBER(irq_callback);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -69,7 +71,7 @@ DMA8237 Controller
 
 WRITE_LINE_MEMBER(photoply_state::pc_dma_hrq_changed)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	m_dma8237_1->i8237_hlda_w( state );
@@ -202,7 +204,7 @@ WRITE32_MEMBER(photoply_state::fdc_w)
 
 WRITE_LINE_MEMBER(photoply_state::pic8259_1_set_int_line)
 {
-	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(photoply_state::get_slave_ack)
@@ -342,7 +344,7 @@ static void photoply_set_keyb_int(running_machine &machine, int state)
 
 void photoply_state::machine_start()
 {
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(photoply_state::irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(photoply_state::irq_callback),this));
 	m_pit8253 = machine().device( "pit8254" );
 	m_pic8259_1 = machine().device( "pic8259_1" );
 	m_pic8259_2 = machine().device( "pic8259_2" );

@@ -448,7 +448,8 @@ public:
 			m_nvram(*this, "nvram") ,
 		m_workram(*this, "workram"),
 		m_tileram(*this, "tileram"),
-		m_colram(*this, "colram"){ }
+		m_colram(*this, "colram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8>  m_nvram;
 	required_shared_ptr<UINT8> m_workram;
@@ -480,6 +481,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_mastboy(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(mastboy_interrupt);
+	DECLARE_WRITE_LINE_MEMBER(mastboy_adpcm_int);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -667,21 +670,20 @@ WRITE8_MEMBER(mastboy_state::mastboy_msm5205_data_w)
 	m_m5205_next = data;
 }
 
-static void mastboy_adpcm_int(device_t *device)
+WRITE_LINE_MEMBER(mastboy_state::mastboy_adpcm_int)
 {
-	mastboy_state *state = device->machine().driver_data<mastboy_state>();
-	msm5205_data_w(device, state->m_m5205_next);
-	state->m_m5205_next >>= 4;
+	msm5205_data_w(machine().device("msm"), m_m5205_next);
+	m_m5205_next >>= 4;
 
-	state->m_m5205_part ^= 1;
-	if(!state->m_m5205_part)
-		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_m5205_part ^= 1;
+	if(!m_m5205_part)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
 static const msm5205_interface msm5205_config =
 {
-	mastboy_adpcm_int,  /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(mastboy_state,mastboy_adpcm_int),  /* interrupt function */
 	MSM5205_SEX_4B      /* 4KHz 4-bit */
 };
 
@@ -691,7 +693,7 @@ WRITE8_MEMBER(mastboy_state::mastboy_irq0_ack_w)
 {
 	m_irq0_ack = data;
 	if ((data & 1) == 1)
-		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(mastboy_state::mastboy_interrupt)

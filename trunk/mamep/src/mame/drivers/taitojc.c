@@ -12,6 +12,7 @@ Taito custom chips on this hardware:
 - TC0870HVP      : Vertex processor?
 
 TODO:
+- games are running too slow compared to pcb recordings, easily noticeable on sidebs/sidebs2
 - dendego intro object RAM usage has various gfx bugs (check video file)
 - dendego title screen builds up and it shouldn't
 - dendego attract mode train doesn't ride
@@ -19,7 +20,9 @@ TODO:
 - landgear has huge 3d problems on gameplay (CPU comms?)
 - dangcurv DSP program crashes very soon due to undumped rom, so no 3d is currently shown.
 - add idle skips if possible
-- POST has a PCB ID (shown at top of screen) that can't be faked without a proper reference.
+
+BTANB:
+- incorrect perspective textures, visible when close to the camera such as sidebs rear-view mirror
 
 --------------------------------------------------------------------------
 
@@ -274,7 +277,7 @@ Top board: MOTHER PCB-C K11X0838A  M43E0325A
 |                              MC68040RC25            CXD1178Q    TC0640FIO       |
 |424260     TMS320C51          (PGA TYPE)                         (QFP120)        |
 |           (QFP132)                                                              |
-|           labelled                                              TEST_SW         |
+|           marked                                                TEST_SW         |
 |424260     "Taito E07-11"                                      MB3771   RESET_SW |
 |                                  E23-33.53                                      |
 |                                             CY7B991       MB8421-90             |
@@ -283,30 +286,40 @@ Top board: MOTHER PCB-C K11X0838A  M43E0325A
 |           43256        TC0770CMU                          E23-35.110            |
 |4218160                 (QFP208)                                                 |
 |                                    10MHz    MC68EC000     LC321664AJ-80         |
-|E23-27.13  TC0780FPA                                                             |
+|E23-27.13  TC0780FPA  D482445                                                    |
 |           (QFP240)                                        ENSONIC               |
 |                      D482445                TC51832       ESPR6 ES5510          |
 |                                             TC51832                             |
-|4218160               D482445                                                    |
+|4218160                                                                          |
 |                                 TC0840GLU                 MC33274   TDA1543     |
-|                      D482445    (QFP144)                                        |
-|4218160                                      16MHz         MB87078               |
-|           TC0780FPA  D482445           30.4761MHz                               |
-|           (QFP240)              ENSONIC                                         |
+|                                 (QFP144)                                        |
+|4218160               D482445                16MHz         MB87078               |
+|           TC0780FPA                    30.4761MHz                               |
+|           (QFP240)   D482445    ENSONIC                                         |
 |E23-28.18                        OTISR2                                          |
 |                                                                                 |
 |---------------------------------------------------------------------------------|
 
 Notes:
-      All 3K files are PALs type PALCE 16V8 and saved in Jedec format.
-      CY7B991 : Programmable Skew Clock Buffer (PLCC32)
-      4218160 : 2M x8 / 1M x16 DRAM
-      424210  : 256K x16 DRAM
-      424260  : 256K x16 DRAM
-      43256   : 32K x8 SRAM
-      D482445 : DRAM?
-      LC321664: 64K x16 DRAM
-      TC51832 : 32K x8 SRAM
+      All 3k files are PALs type PALCE 16V8 and saved in Jedec format.
+      CY7B991 - Programmable Skew Clock Buffer (PLCC32)
+      4218160 - 2M x8 / 1M x16 DRAM. Compatible with NEC 4218160 & Toshiba TC5118160
+      424210  - 256k x16 DRAM
+      424260  - 256k x16 DRAM
+      43256   - 32k x8 SRAM
+      D482445 - 256k x16 Video DRAM. Compatible with Toshiba TC524165/TC52V4165 (also used on Namco System 11 CPU boards)
+      LC321664- 64k x16 DRAM
+      TC51832 - 32k x8 SRAM
+      MB8422  - 16k-bit (2kbytes) Dual Port SRAM
+
+      Measurements:
+                   HSync  - 24.639kHz / 24.690kHz (alternates between the two frequencies slowly every ~2 seconds)
+                   VSync  - 55.6795Hz
+                   68040  - 20.000MHz (10MHz*2, source = CY7C991)
+                   68000  - 15.23805MHz (30.4761/2)
+                   320C51 - 40.000MHz (pin96 X2/CLKIN. 10MHz*4, source = CY7C991)
+                   OTISR2 - 3.80950MHz (pin12)
+                   ES5510 - 2.22MHz, 2.666MHz, 3.8095125MHz (30.4761/8), 8.000MHz (16/2)
 
 
 Bottom board: JCG DAUGHTERL PCB-C K9100633A J9100434A (Sticker K91J0633A)
@@ -345,8 +358,8 @@ Bottom board: JCG DAUGHTERL PCB-C K9100633A J9100434A (Sticker K91J0633A)
 |---------------------------------------------------------------------------------|
 
 Notes:
-      All 3K files are PALs type PALCE 16V8 and saved in Jedec format.
-      6264: 8K x8 SRAM
+      All 3k files are PALs type PALCE 16V8 and saved in Jedec format.
+      6264: 8k x8 SRAM
       SMC_COM20020I: Network communmication IC
       ROMs .36-.39 are 27C4001, main program.
       ROMs .5-.12, .18-.25 are 16M MASK, graphics.
@@ -354,6 +367,9 @@ Notes:
       ROMs .30-.31 are 27C2001, sound program.
       ROM  .65 is 27C512, linked to 68HC11 MCU
       *    Unpopulated socket.
+
+      Measurements:
+                   68HC11 - 8.000MHz (16/2 on pin74)
 
 */
 
@@ -369,6 +385,21 @@ Notes:
 #include "includes/taitojc.h"
 
 #include "dendego.lh"
+
+
+// hmm, what is the pixel clock? let's assume it's same as the 68040
+// 54MHz(/4) or 16MHz would make HTOTAL unrealistically short
+#define PIXEL_CLOCK         (10000000*2)
+
+// VSync - 55.6795Hz
+// HSync - 24.639kHz / 24.690kHz
+#define HTOTAL              (811)
+#define HBEND               (0)
+#define HBSTART             (512)
+
+#define VTOTAL              (443) /* H/V - 442.51 / 443.43 total lines */
+#define VBEND               (0)
+#define VBSTART             (400)
 
 
 /***************************************************************************
@@ -695,7 +726,9 @@ WRITE32_MEMBER(taitojc_state::snd_share_w)
 READ8_MEMBER(taitojc_state::jc_pcbid_r)
 {
 	static const char pcb_id[0x40] =
-	{ "Needs proper PCB ID here!"};
+	{ "DEV=TC0870HVP   SYS=CG  VER=1.0"};
+	// - any more data after "VER=1."?
+	// - can we assume it comes from the TC0870HVP chip?
 
 	return pcb_id[offset];
 }
@@ -704,7 +737,7 @@ READ8_MEMBER(taitojc_state::jc_pcbid_r)
 /*
 
 Some games (Dangerous Curves, Side by Side, Side by Side 2) were released as Twin cabinets,
-allowing 2 players to compete eachother via a SMSC COM20020I network IC
+allowing 2 players to compete each other via a SMSC COM20020I network IC
 
 Not emulated yet...
 
@@ -930,7 +963,7 @@ READ16_MEMBER(taitojc_state::dsp_math_unk_r)
 
 READ16_MEMBER(taitojc_state::dsp_rom_r)
 {
-	//assert (m_dsp_rom_pos < 0x800000); // never happens
+	assert (m_dsp_rom_pos < 0x800000); // never happens
 	return ((UINT16*)m_gfx2->base())[m_dsp_rom_pos++];
 }
 
@@ -984,7 +1017,7 @@ WRITE16_MEMBER(taitojc_state::dsp_texaddr_w)
 
 WRITE16_MEMBER(taitojc_state::dsp_polygon_fifo_w)
 {
-	//assert (m_polygon_fifo_ptr < TAITOJC_POLYGON_FIFO_SIZE); // never happens
+	assert (m_polygon_fifo_ptr < TAITOJC_POLYGON_FIFO_SIZE); // never happens
 	m_polygon_fifo[m_polygon_fifo_ptr++] = data;
 }
 
@@ -1231,22 +1264,22 @@ static const hc11_config taitojc_hc11_config =
 };
 
 static MACHINE_CONFIG_START( taitojc, taitojc_state )
+
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68040, 25000000)
+	MCFG_CPU_ADD("maincpu", M68040, XTAL_10MHz*2) // 20MHz, clock source = CY7C991
 	MCFG_CPU_PROGRAM_MAP(taitojc_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitojc_state,  taitojc_vblank)
 
-	MCFG_CPU_ADD("sub", MC68HC11, 4000000) // MC68HC11M0
+	MCFG_CPU_ADD("sub", MC68HC11, XTAL_16MHz/2) // 8MHz, MC68HC11M0
 	MCFG_CPU_PROGRAM_MAP(hc11_pgm_map)
 	MCFG_CPU_IO_MAP(hc11_io_map)
 	MCFG_CPU_CONFIG(taitojc_hc11_config)
 
-	MCFG_CPU_ADD("dsp", TMS32051, 50000000)
+	MCFG_CPU_ADD("dsp", TMS32051, XTAL_10MHz*4) // 40MHz, clock source = CY7C991
 	MCFG_CPU_PROGRAM_MAP(tms_program_map)
 	MCFG_CPU_DATA_MAP(tms_data_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
-
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -1254,20 +1287,17 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_SIZE(512, 400)
-	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 399)
+	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(taitojc_state, screen_update_taitojc)
 
 	MCFG_PALETTE_LENGTH(32768)
-
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(taito_en_sound)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dendego, taitojc )
+
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(dendego_map)
@@ -1339,7 +1369,49 @@ DRIVER_INIT_MEMBER(taitojc_state,dangcurv)
 
 /**************************************************************************/
 
-ROM_START( sidebs )
+ROM_START( sidebs ) /* Side by Side ver 2.7 J */
+	ROM_REGION(0x200000, "maincpu", 0)      /* 68040 code */
+	ROM_LOAD32_BYTE( "e23-47.ic36", 0x000000, 0x80000, CRC(c67dc173) SHA1(fb16f75683b42cafc28c50d6c823d0987b09cd00) )
+	ROM_LOAD32_BYTE( "e23-48.ic37", 0x000001, 0x80000, CRC(e3da7652) SHA1(a872e8d26e3e376786762f2571f75f282e2481f1) )
+	ROM_LOAD32_BYTE( "e23-49.ic38", 0x000002, 0x80000, CRC(b2fdded3) SHA1(8e0f2d2d967a2e6b7d1954548941bc6257799d2d) )
+	ROM_LOAD32_BYTE( "e23-50.ic39", 0x000003, 0x80000, CRC(76510731) SHA1(b8b9836fa121d2028e0218f4d439af0d7dae295e) )
+
+	ROM_REGION( 0x180000, "audiocpu", 0 )       /* 68000 Code */
+	ROM_LOAD16_BYTE( "e23-23.ic30", 0x100001, 0x40000, CRC(cffbffe5) SHA1(c01ac44390dacab4b49bb066a46d81a184b07a1e) )
+	ROM_LOAD16_BYTE( "e23-24.ic31", 0x100000, 0x40000, CRC(64bae246) SHA1(f929f664881487615b1259db43a0721135830274) )
+
+	ROM_REGION( 0x010000, "sub", 0 )        /* MC68HC11M0 code */
+	ROM_LOAD( "e17-23.ic65",  0x000000, 0x010000, CRC(80ac1428) SHA1(5a2a1e60a11ecdb8743c20ddacfb61f9fd00f01c) )
+
+	ROM_REGION( 0x4000, "dsp", ROMREGION_ERASE00 ) /* TMS320C51 internal rom */
+	ROM_LOAD16_WORD( "e07-11.ic29", 0x0000, 0x4000, NO_DUMP )
+
+	ROM_REGION( 0x1800000, "gfx1", 0 )
+	ROM_LOAD32_WORD( "e23-05.ic9",   0x0800002, 0x200000, CRC(6e5d11ec) SHA1(e5c39d80577bf8ae9fc6162dc54571c6c8421160) )
+	ROM_LOAD32_WORD( "e23-12.ic22",  0x0800000, 0x200000, CRC(7365333c) SHA1(4f7b75088799ea37f714bc7e5c5b276a7e5d933f) )
+	ROM_LOAD32_WORD( "e23-06.ic10",  0x0c00002, 0x200000, CRC(ffcfd153) SHA1(65fa486cf0156e2988bd6e7060d66f87f765a123) )
+	ROM_LOAD32_WORD( "e23-13.ic23",  0x0c00000, 0x200000, CRC(16982d37) SHA1(134370f7dfadb1886f1e5e5dd16f8b72ad08fc68) )
+	ROM_LOAD32_WORD( "e23-07.ic12",  0x1400002, 0x200000, CRC(90f2a87c) SHA1(770bb89fa42cb2a1d5a58525b8d72ed7df3f93ed) )
+	ROM_LOAD32_WORD( "e23-14.ic25",  0x1400000, 0x200000, CRC(1bc5a914) SHA1(92f82a4e2fbac73dbb3293726fc09022bd11a8fe) )
+
+	ROM_REGION( 0x1000000, "gfx2", 0 )      /* only accessible to the TMS */
+	ROM_LOAD( "e23-01.ic5",   0x0000000, 0x200000, CRC(2cbe4bbd) SHA1(ed6fe4344c86d50914b5ddbc720dd15544f4d07f) )
+	ROM_LOAD( "e23-02.ic6",   0x0200000, 0x200000, CRC(7ebada03) SHA1(d75c992aa33dd7f71de6a6d09aac471012b0daa3) )
+	ROM_LOAD( "e23-03.ic7",   0x0400000, 0x200000, CRC(5bf1f30b) SHA1(6e0c07b9f92962eec55ee444732a10ac78f8b050) )
+	ROM_LOAD( "e23-04.ic8",   0x0600000, 0x200000, CRC(0f860fb5) SHA1(47c0db4ec6d02e10d8abfacd1fa332f7af3976dd) )
+	ROM_LOAD( "e23-08.ic18",  0x0800000, 0x200000, CRC(bceea63e) SHA1(eeec1e2306aa37431c5ba69bdb9c5524ab7b7ba4) )
+	ROM_LOAD( "e23-09.ic19",  0x0a00000, 0x200000, CRC(3917c12f) SHA1(e3a568f638bb6b0cd6237c9fee5fc350983ea1e7) )
+	ROM_LOAD( "e23-10.ic20",  0x0c00000, 0x200000, CRC(038370d9) SHA1(c02f68a25121d2d5aae62c419522b25cd6ec32b6) )
+	ROM_LOAD( "e23-11.ic21",  0x0e00000, 0x200000, CRC(91fab03d) SHA1(1865d8b679faa6f2b3c14db2c6c461c00afd547c) )
+
+	ROM_REGION16_BE( 0x1000000, "ensoniq.0", ROMREGION_ERASE00  )
+	ROM_LOAD16_BYTE( "e23-15.ic32",  0x000000, 0x200000, CRC(8955b7c7) SHA1(767626bd5cf6810b0368ee85e487c12ef7e8a23d) )
+	ROM_LOAD16_BYTE( "e23-16.ic33",  0x400000, 0x200000, CRC(1d63d785) SHA1(0cf74bb433e9c453e35f7a552fdf9e22084b2f49) )
+	ROM_LOAD16_BYTE( "e23-17.ic34",  0x800000, 0x200000, CRC(1c54021a) SHA1(a1efbdb02d23a5d32ebd25cb8e99dface3178ebd) )
+	ROM_LOAD16_BYTE( "e23-18.ic35",  0xc00000, 0x200000, CRC(1816f38a) SHA1(6451bdb4b4297aaf4987451bc0ddd97b0072e113) )
+ROM_END
+
+ROM_START( sidebsja ) /* Side by Side ver 2.5 J */
 	ROM_REGION(0x200000, "maincpu", 0)      /* 68040 code */
 	ROM_LOAD32_BYTE( "e23-19.ic36", 0x000000, 0x80000, CRC(7b75481b) SHA1(47332e045f92b31e4f35c38e6880a7287b9a5c2c) )
 	ROM_LOAD32_BYTE( "e23-20.ic37", 0x000001, 0x80000, CRC(cbd857dd) SHA1(ae33ad8b0c3559a3a9096351e9aa07782d3cb841) )
@@ -1447,12 +1519,12 @@ ROM_START( sidebs2 )
 	*/
 ROM_END
 
-ROM_START( sidebs2j )
+ROM_START( sidebs2j ) /* This version has the sub-title of "Evoluzione" */
 	ROM_REGION(0x200000, "maincpu", 0)      /* 68040 code */
-	ROM_LOAD32_BYTE( "e38-23.ic36", 0x000000, 0x80000, CRC(b3d8e2d9) SHA1(6de6a51c3d9ace532fa03517bab93101b5a3eaae) )
-	ROM_LOAD32_BYTE( "e38-24.ic37", 0x000001, 0x80000, CRC(2a47d80d) SHA1(41b889e4a1397c7f0d4f6ef136ed8abfd7e1ed86) )
-	ROM_LOAD32_BYTE( "e38-25.ic38", 0x000002, 0x80000, CRC(f1a8a4df) SHA1(e4cf75969fb0503df2290522194b097f5cb983a3) )
-	ROM_LOAD32_BYTE( "e38-26.ic39", 0x000003, 0x80000, CRC(b550fbf2) SHA1(a0a461af7e71c6ad6468cfdee2bc7161ae31bbfb) )
+	ROM_LOAD32_BYTE( "e38-23+.ic36", 0x000000, 0x80000, CRC(b3d8e2d9) SHA1(6de6a51c3d9ace532fa03517bab93101b5a3eaae) ) /* Actual label E38-23* */
+	ROM_LOAD32_BYTE( "e38-24+.ic37", 0x000001, 0x80000, CRC(2a47d80d) SHA1(41b889e4a1397c7f0d4f6ef136ed8abfd7e1ed86) ) /* Actual label E38-24* */
+	ROM_LOAD32_BYTE( "e38-25+.ic38", 0x000002, 0x80000, CRC(f1a8a4df) SHA1(e4cf75969fb0503df2290522194b097f5cb983a3) ) /* Actual label E38-25* */
+	ROM_LOAD32_BYTE( "e38-26+.ic39", 0x000003, 0x80000, CRC(b550fbf2) SHA1(a0a461af7e71c6ad6468cfdee2bc7161ae31bbfb) ) /* Actual label E38-26* */
 
 	ROM_REGION( 0x180000, "audiocpu", 0 )       /* 68000 Code */
 	ROM_LOAD16_BYTE( "e38-19.ic30", 0x100001, 0x040000, CRC(3f50cb7b) SHA1(76af65c9b74ede843a3182f79cecda8c3e3febe6) )
@@ -1981,10 +2053,11 @@ GAME( 1995, landgear,  0,        taitojc, landgear, taitojc_state, taitojc,  ROT
 GAME( 1995, landgearj, landgear, taitojc, landgear, taitojc_state, taitojc,  ROT0, "Taito", "Landing Gear (Ver 4.2 J)",                             GAME_IMPERFECT_GRAPHICS )                 // LANDING GEAR           VER 4.2 J   Feb  8 1996  09:46:22
 GAME( 1995, landgeara, landgear, taitojc, landgear, taitojc_state, taitojc,  ROT0, "Taito", "Landing Gear (Ver 3.1 O)",                             GAME_IMPERFECT_GRAPHICS )                 // LANDING GEAR           VER 3.1 O   Feb  8 1996  09:46:22
 GAME( 1995, landgearja,landgear, taitojc, landgear, taitojc_state, taitojc,  ROT0, "Taito", "Landing Gear (Ver 3.0 J)",                             GAME_IMPERFECT_GRAPHICS )                 // LANDING GEAR           VER 3.0 J   Feb  8 1996  09:46:22
-GAME( 1996, sidebs,    0,        taitojc, sidebs, taitojc_state,   taitojc,  ROT0, "Taito", "Side by Side (Ver 2.5 J)",                             GAME_IMPERFECT_GRAPHICS )                 // SIDE BY SIDE           VER 2.5 J   1996/ 6/20   18:13:14
+GAME( 1996, sidebs,    0,        taitojc, sidebs, taitojc_state,   taitojc,  ROT0, "Taito", "Side by Side (Ver 2.7 J)",                             GAME_IMPERFECT_GRAPHICS )                 // SIDE BY SIDE           VER 2.7 J   1996/10/11   14:54:10
+GAME( 1996, sidebsja,  sidebs,   taitojc, sidebs, taitojc_state,   taitojc,  ROT0, "Taito", "Side by Side (Ver 2.5 J)",                             GAME_IMPERFECT_GRAPHICS )                 // SIDE BY SIDE           VER 2.5 J   1996/ 6/20   18:13:14
 GAMEL(1996, dendego,   0,        dendego, dendego, taitojc_state,  taitojc,  ROT0, "Taito", "Densha de GO! (Ver 2.2 J)",                            GAME_IMPERFECT_GRAPHICS, layout_dendego ) // DENSYA DE GO           VER 2.2 J   1997/ 2/ 4   12:00:28
 GAMEL(1996, dendegox,  dendego,  dendego, dendego, taitojc_state,  taitojc,  ROT0, "Taito", "Densha de GO! EX (Ver 2.4 J)",                         GAME_IMPERFECT_GRAPHICS, layout_dendego ) // DENSYA DE GO           VER 2.4 J   1997/ 4/18   13:38:34
 GAME( 1997, sidebs2,   0,        taitojc, sidebs, taitojc_state,   taitojc,  ROT0, "Taito", "Side by Side 2 (Ver 2.6 A)",                           GAME_IMPERFECT_GRAPHICS )                 // SIDE BY SIDE2          VER 2.6 A   1997/ 6/19   09:39:22
-GAME( 1997, sidebs2j,  sidebs2,  taitojc, sidebs, taitojc_state,   taitojc,  ROT0, "Taito", "Side by Side 2 (Ver 2.4 J)",                           GAME_IMPERFECT_GRAPHICS )                 // SIDE BY SIDE2          VER 2.4 J   1997/ 5/26   13:06:37
+GAME( 1997, sidebs2j,  sidebs2,  taitojc, sidebs, taitojc_state,   taitojc,  ROT0, "Taito", "Side by Side 2 Evoluzione (Ver 2.4 J)",                GAME_IMPERFECT_GRAPHICS )                 // SIDE BY SIDE2          VER 2.4 J   1997/ 5/26   13:06:37
 GAMEL(1998, dendego2,  0,        dendego, dendego, taitojc_state,  dendego2, ROT0, "Taito", "Densha de GO! 2 Kousoku-hen (Ver 2.5 J)",              GAME_IMPERFECT_GRAPHICS, layout_dendego ) // DENSYA DE GO2          VER 2.5 J   1998/ 3/ 2   15:30:55
 GAMEL(1998, dendego23k,dendego2, dendego, dendego, taitojc_state,  dendego2, ROT0, "Taito", "Densha de GO! 2 Kousoku-hen 3000-bandai (Ver 2.20 J)", GAME_IMPERFECT_GRAPHICS, layout_dendego ) // DENSYA DE GO! 2 3000   VER 2.20 J  1998/ 7/15   17:42:38

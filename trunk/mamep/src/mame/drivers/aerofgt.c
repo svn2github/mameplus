@@ -113,19 +113,15 @@ WRITE8_MEMBER(aerofgt_state::aerofgt_sh_bankswitch_w)
 
 WRITE16_MEMBER(aerofgt_state::pspikesb_oki_banking_w)
 {
-	device_t *device = machine().device("oki");
-	okim6295_device *oki = downcast<okim6295_device *>(device);
-	oki->set_bank_base(0x40000 * (data & 3));
+	m_oki->set_bank_base(0x40000 * (data & 3));
 }
 
 /*TODO: sound banking. */
 WRITE16_MEMBER(aerofgt_state::aerfboo2_okim6295_banking_w)
 {
-//  device_t *device = machine().device("oki");
 //  if(ACCESSING_BITS_8_15)
 //  {
-//      okim6295_device *oki = downcast<okim6295_device *>(device);
-//      oki->set_bank_base(0x40000 * ((data & 0xf00)>>8));
+//      m_oki->set_bank_base(0x40000 * ((data & 0xf00)>>8));
 //  }
 }
 
@@ -1275,26 +1271,24 @@ static GFXDECODE_START( wbbc97 )
 	GFXDECODE_ENTRY( "gfx2", 0, wbbc97_spritelayout, 1024, 64 ) /* colors 1024-2047 in 4 banks */
 GFXDECODE_END
 
-static void irqhandler( device_t *device, int irq )
+WRITE_LINE_MEMBER(aerofgt_state::irqhandler)
 {
-	aerofgt_state *state = device->machine().driver_data<aerofgt_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(aerofgt_state,irqhandler)
 };
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler  /* IRQ Line */
+	DEVCB_DRIVER_LINE_MEMBER(aerofgt_state,irqhandler)  /* IRQ Line */
 };
 
 
 MACHINE_START_MEMBER(aerofgt_state,common)
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	save_item(NAME(m_pending_command));
 }
 

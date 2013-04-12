@@ -28,6 +28,7 @@ public:
 	seta_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
+		m_audiocpu(*this, "audiocpu"),
 		m_subcpu(*this,"sub"),
 		m_sharedram(*this,"sharedram"),
 		m_workram(*this,"workram"),
@@ -43,6 +44,7 @@ public:
 		m_inttoote_700000(*this,"inttoote_700000") { }
 
 	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 	optional_device<cpu_device> m_subcpu;
 
 	optional_shared_ptr<UINT8> m_sharedram;
@@ -217,4 +219,5 @@ public:
 	void draw_tilemap_palette_effect(bitmap_ind16 &bitmap, const rectangle &cliprect, tilemap_t *tilemap, int scrollx, int scrolly, int gfxnum, int flipscreen);
 	void seta_layers_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int sprite_bank_size, int sprite_setac );
 	void uPD71054_timer_init(  );
+	DECLARE_WRITE_LINE_MEMBER(utoukond_ym3438_interrupt);
 };

@@ -76,7 +76,6 @@ C004      76489 #4 trigger
 
 void tp84_state::machine_start()
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 
@@ -119,7 +118,7 @@ WRITE8_MEMBER(tp84_state::tp84_filter_w)
 
 WRITE8_MEMBER(tp84_state::tp84_sh_irqtrigger_w)
 {
-	machine().device("audiocpu")->execute().set_input_line_and_vector(0,HOLD_LINE,0xff);
+	m_audiocpu->set_input_line_and_vector(0,HOLD_LINE,0xff);
 }
 
 

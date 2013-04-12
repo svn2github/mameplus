@@ -482,15 +482,14 @@ GFXDECODE_END
  *
  *************************************/
 
-static void irqhandler(device_t *device, int irq)
+WRITE_LINE_MEMBER(fromanc2_state::irqhandler)
 {
-	fromanc2_state *state = device->machine().driver_data<fromanc2_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(fromanc2_state,irqhandler)
 };
 
 
@@ -502,9 +501,6 @@ static const ym2610_interface ym2610_config =
 
 MACHINE_START_MEMBER(fromanc2_state,fromanc4)
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_subcpu = machine().device<cpu_device>("sub");
-	m_eeprom = machine().device("eeprom");
 	m_left_screen = machine().device("lscreen");
 	m_right_screen = machine().device("rscreen");
 

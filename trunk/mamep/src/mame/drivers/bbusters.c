@@ -252,7 +252,7 @@ WRITE16_MEMBER(bbusters_state::sound_cpu_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data&0xff);
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -633,9 +633,9 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static void sound_irq( device_t *device, int irq )
+WRITE_LINE_MEMBER(bbusters_state::sound_irq)
 {
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2608_interface ym2608_config =
@@ -645,12 +645,12 @@ static const ym2608_interface ym2608_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	sound_irq
+	DEVCB_DRIVER_LINE_MEMBER(bbusters_state,sound_irq)
 };
 
 static const ym2610_interface ym2610_config =
 {
-	sound_irq
+	DEVCB_DRIVER_LINE_MEMBER(bbusters_state,sound_irq)
 };
 
 /******************************************************************************/

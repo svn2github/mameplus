@@ -41,7 +41,7 @@
 
 void rampart_state::update_interrupts()
 {
-	subdevice("maincpu")->execute().set_input_line(4, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(4, m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -49,7 +49,7 @@ void rampart_state::scanline_update(screen_device &screen, int scanline)
 {
 	/* generate 32V signals */
 	if ((scanline & 32) == 0)
-		scanline_int_gen(*subdevice("maincpu"));
+		scanline_int_gen(m_maincpu);
 }
 
 
@@ -106,7 +106,7 @@ WRITE16_MEMBER(rampart_state::latch_w)
 	{
 		set_oki6295_volume((data & 0x0020) ? 100 : 0);
 		if (!(data & 0x0010))
-			machine().device("oki")->reset();
+			m_oki->reset();
 		set_ym2413_volume(((data >> 1) & 7) * 100 / 7);
 		if (!(data & 0x0001))
 			machine().device("ymsnd")->reset();
@@ -470,7 +470,7 @@ DRIVER_INIT_MEMBER(rampart_state,rampart)
 	UINT8 *rom = memregion("maincpu")->base();
 
 	memcpy(&rom[0x140000], &rom[0x40000], 0x8000);
-	slapstic_configure(*machine().device<cpu_device>("maincpu"), 0x140000, 0x438000, 118);
+	slapstic_configure(*m_maincpu, 0x140000, 0x438000, 118);
 }
 
 

@@ -1,15 +1,18 @@
-
+#include "sound/okim6295.h"
 
 class fuuki16_state : public driver_device
 {
 public:
 	fuuki16_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vram(*this, "vram"),
 		m_spriteram(*this, "spriteram"),
 		m_vregs(*this, "vregs"),
 		m_unknown(*this, "unknown"),
-		m_priority(*this, "priority"){ }
+		m_priority(*this, "priority"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_oki(*this, "oki"){ }
 
 	/* memory pointers */
 	required_shared_ptr_array<UINT16,4> m_vram;
@@ -26,8 +29,8 @@ public:
 	emu_timer   *m_raster_interrupt_timer;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	DECLARE_WRITE16_MEMBER(fuuki16_vregs_w);
 	DECLARE_WRITE16_MEMBER(fuuki16_sound_command_w);
 	DECLARE_WRITE8_MEMBER(fuuki16_sound_rombank_w);
@@ -51,4 +54,6 @@ public:
 	inline void fuuki16_vram_w(offs_t offset, UINT16 data, UINT16 mem_mask, int _N_);
 	void draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void fuuki16_draw_layer( bitmap_ind16 &bitmap, const rectangle &cliprect, int i, int flag, int pri );
+	DECLARE_WRITE_LINE_MEMBER(soundirq);
+	required_device<okim6295_device> m_oki;
 };

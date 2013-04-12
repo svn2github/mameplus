@@ -53,7 +53,7 @@ public:
 	};
 
 	m6502_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
-	m6502_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock);
+	m6502_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source);
 
 	UINT64 get_cycle();
 	bool get_sync() const { return sync; }
@@ -126,9 +126,11 @@ protected:
 		DASM_zpx,    /* zero page + X */
 		DASM_zpy,    /* zero page + Y */
 		DASM_imz,    /* load immediate byte, store to zero page address (M740) */
-		DASM_spg,    /* "special page": implied FF00 plus immediate value (M740)*/
+		DASM_spg,    /* "special page": implied FF00 OR immediate value (M740)*/
 		DASM_biz,    /* bit, zero page (M740) */
-		DASM_bzr     /* bit, zero page, relative offset (M740) */
+		DASM_bzr,    /* bit, zero page, relative offset (M740) */
+		DASM_bar,    /* bit, accumulator, relative offset (M740) */
+		DASM_bac     /* bit, accumulator (M740) */
 	};
 
 	enum {

@@ -169,7 +169,7 @@ WRITE8_MEMBER(bking_state::bking3_68705_port_b_w)
 	if (~data & 0x02)
 	{
 		m_port_a_in = from_main;
-		if (main_sent) machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
+		if (main_sent) m_mcu->set_input_line(0, CLEAR_LINE);
 		main_sent = 0;
 	}
 
@@ -390,7 +390,6 @@ static const ay8910_interface ay8910_config =
 
 void bking_state::machine_start()
 {
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	/* video */
 	save_item(NAME(m_pc3259_output));
@@ -449,7 +448,7 @@ void bking_state::machine_reset()
 
 MACHINE_RESET_MEMBER(bking_state,bking3)
 {
-	machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
+	m_mcu->set_input_line(0, CLEAR_LINE);
 
 	bking_state::machine_reset();
 

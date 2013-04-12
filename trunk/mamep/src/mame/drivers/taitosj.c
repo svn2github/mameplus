@@ -179,7 +179,7 @@ WRITE8_MEMBER(taitosj_state::taitosj_sndnmi_msk_w)
 WRITE8_MEMBER(taitosj_state::taitosj_soundcommand_w)
 {
 	soundlatch_byte_w(space,offset,data);
-	if (!m_sndnmi_disable) machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (!m_sndnmi_disable) m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -1731,16 +1731,14 @@ static const UINT8 voltable[256] =
 
 WRITE8_MEMBER(taitosj_state::dac_out_w)
 {
-	dac_device *device = machine().device<dac_device>("dac");
 	m_dac_out = data - 0x80;
-	device->write_signed16(m_dac_out * m_dac_vol + 0x8000);
+	m_dac->write_signed16(m_dac_out * m_dac_vol + 0x8000);
 }
 
 WRITE8_MEMBER(taitosj_state::dac_vol_w)
 {
-	dac_device *device = machine().device<dac_device>("dac");
 	m_dac_vol = voltable[data];
-	device->write_signed16(m_dac_out * m_dac_vol + 0x8000);
+	m_dac->write_signed16(m_dac_out * m_dac_vol + 0x8000);
 }
 
 
@@ -2763,7 +2761,7 @@ DRIVER_INIT_MEMBER(taitosj_state,spacecr)
 	init_common();
 
 	/* install protection handler */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd48b, 0xd48b, read8_delegate(FUNC(taitosj_state::spacecr_prot_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xd48b, 0xd48b, read8_delegate(FUNC(taitosj_state::spacecr_prot_r),this));
 }
 
 DRIVER_INIT_MEMBER(taitosj_state,alpine)
@@ -2771,8 +2769,8 @@ DRIVER_INIT_MEMBER(taitosj_state,alpine)
 	init_common();
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd50f, 0xd50f, write8_delegate(FUNC(taitosj_state::alpine_protection_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xd50f, 0xd50f, write8_delegate(FUNC(taitosj_state::alpine_protection_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitosj_state,alpinea)
@@ -2780,8 +2778,8 @@ DRIVER_INIT_MEMBER(taitosj_state,alpinea)
 	init_common();
 
 	/* install protection handlers */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xd50e, 0xd50e, write8_delegate(FUNC(taitosj_state::alpinea_bankswitch_w),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xd40b, 0xd40b, read8_delegate(FUNC(taitosj_state::alpine_port_2_r),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xd50e, 0xd50e, write8_delegate(FUNC(taitosj_state::alpinea_bankswitch_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitosj_state,junglhbr)
@@ -2789,7 +2787,7 @@ DRIVER_INIT_MEMBER(taitosj_state,junglhbr)
 	init_common();
 
 	/* inverter on bits 0 and 1 */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0x9000, 0xbfff, write8_delegate(FUNC(taitosj_state::junglhbr_characterram_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x9000, 0xbfff, write8_delegate(FUNC(taitosj_state::junglhbr_characterram_w),this));
 }
 
 GAME( 1981, spaceskr, 0,        nomcu,    spaceskr, taitosj_state,   taitosj, ROT0,   "Taito Corporation", "Space Seeker", GAME_SUPPORTS_SAVE )

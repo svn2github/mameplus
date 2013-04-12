@@ -25,7 +25,11 @@ public:
 			m_fo_state(*this, "fo_state"),
 			m_cvs_4_bit_dac_data(*this, "4bit_dac"),
 			m_tms5110_ctl_data(*this, "tms5110_ctl"),
-			m_dac3_state(*this, "dac3_state") { }
+			m_dac3_state(*this, "dac3_state"),
+			m_maincpu(*this, "maincpu"),
+			m_audiocpu(*this, "audiocpu"),
+			m_dac2(*this, "dac2"),
+			m_dac3(*this, "dac3") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_video_ram;
@@ -55,10 +59,11 @@ public:
 	UINT16     m_speech_rom_bit_address;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	optional_device<cpu_device> m_audiocpu;
 	device_t *m_speech;
-	dac_device *m_dac3;
+	optional_device<dac_device> m_dac2;
+	optional_device<dac_device> m_dac3;
 	device_t *m_tms;
 	device_t *m_s2636_0;
 	device_t *m_s2636_1;

@@ -163,8 +163,8 @@ public:
 		m_galsnew_fg_pixram(*this, "galsnew_fgram"),
 		m_view2_0(*this, "view2_0"),
 		m_kaneko_spr(*this, "kan_spr"),
-		m_spriteram(*this, "spriteram")
-	{ }
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu") { }
 
 	optional_shared_ptr<UINT16> m_galsnew_bg_pixram;
 	optional_shared_ptr<UINT16> m_galsnew_fg_pixram;
@@ -184,6 +184,7 @@ public:
 	virtual void palette_init();
 	UINT32 screen_update_galsnew(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(expro02_scanline);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -501,11 +502,11 @@ TIMER_DEVICE_CALLBACK_MEMBER(expro02_state::expro02_scanline)
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 	else if(scanline == 0) // vblank-in irq?
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 	else if(scanline == 112) // VDP end task? (controls sprite colors in gameplay)
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 void expro02_state::machine_reset()

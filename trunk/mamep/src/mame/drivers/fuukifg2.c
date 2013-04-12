@@ -122,14 +122,12 @@ WRITE8_MEMBER(fuuki16_state::fuuki16_sound_rombank_w)
 
 WRITE8_MEMBER(fuuki16_state::fuuki16_oki_banking_w)
 {
-	device_t *device = machine().device("oki");
 	/*
 	    data & 0x06 is always equals to data & 0x60
 	    data & 0x10 is always set
 	*/
 
-	okim6295_device *oki = downcast<okim6295_device *>(device);
-	oki->set_bank_base(((data & 6) >> 1) * 0x40000);
+	m_oki->set_bank_base(((data & 6) >> 1) * 0x40000);
 }
 
 static ADDRESS_MAP_START( fuuki16_sound_map, AS_PROGRAM, 8, fuuki16_state )
@@ -391,15 +389,14 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static void soundirq( device_t *device, int state )
+WRITE_LINE_MEMBER(fuuki16_state::soundirq)
 {
-	fuuki16_state *fuuki16 = device->machine().driver_data<fuuki16_state>();
-	fuuki16->m_audiocpu->set_input_line(0, state);
+	m_audiocpu->set_input_line(0, state);
 }
 
 static const ym3812_interface fuuki16_ym3812_intf =
 {
-	soundirq    /* IRQ Line */
+	DEVCB_DRIVER_LINE_MEMBER(fuuki16_state,soundirq)    /* IRQ Line */
 };
 
 /*
@@ -442,8 +439,6 @@ void fuuki16_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 3, &ROM[0x10000], 0x8000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	m_raster_interrupt_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(fuuki16_state::raster_interrupt_callback),this));
 }

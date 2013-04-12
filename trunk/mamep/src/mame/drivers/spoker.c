@@ -26,10 +26,11 @@ class spoker_state : public driver_device
 {
 public:
 	spoker_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_bg_tile_ram(*this, "bg_tile_ram"),
 		m_fg_tile_ram(*this, "fg_tile_ram"),
-		m_fg_color_ram(*this, "fg_color_ram"){ }
+		m_fg_color_ram(*this, "fg_color_ram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT8> m_bg_tile_ram;
 	tilemap_t *m_bg_tilemap;
@@ -60,6 +61,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_spoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(spoker_interrupt);
+	required_device<cpu_device> m_maincpu;
 };
 
 WRITE8_MEMBER(spoker_state::bg_tile_w)
@@ -140,7 +142,7 @@ WRITE8_MEMBER(spoker_state::spoker_nmi_and_coins_w)
 	set_led_status(machine(), 6,        data & 0x40);   // led for coin out / hopper active
 
 	if(((m_nmi_ack & 0x80) == 0) && data & 0x80)
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
 	m_nmi_ack = data & 0x80;     // nmi acknowledge, 0 -> 1
 

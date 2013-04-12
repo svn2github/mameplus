@@ -74,7 +74,9 @@ public:
 			m_pit8253(*this,"pit8253"),
 			m_pic8259_1(*this,"pic8259_1"),
 			m_pic8259_2(*this,"pic8259_2"),
-			m_dma8237_1(*this,"dma8237_1") { }
+			m_dma8237_1(*this,"dma8237_1") ,
+		m_maincpu(*this, "maincpu"),
+		m_speaker(*this, "speaker") { }
 
 	UINT8 m_bg_bank;
 	int m_bank;
@@ -129,6 +131,8 @@ public:
 	UINT8 pcxt_speaker_get_spk();
 	void pcxt_speaker_set_spkrdata(UINT8 data);
 	void pcxt_speaker_set_input(UINT8 data);
+	required_device<cpu_device> m_maincpu;
+	required_device<speaker_sound_device> m_speaker;
 };
 
 UINT32 pcxt_state::screen_update_tetriskr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
@@ -245,16 +249,14 @@ UINT8 pcxt_state::pcxt_speaker_get_spk()
 
 void pcxt_state::pcxt_speaker_set_spkrdata(UINT8 data)
 {
-	device_t *speaker = machine().device("speaker");
 	m_pc_spkrdata = data ? 1 : 0;
-	speaker_level_w( speaker, pcxt_speaker_get_spk() );
+	speaker_level_w( m_speaker, pcxt_speaker_get_spk() );
 }
 
 void pcxt_state::pcxt_speaker_set_input(UINT8 data)
 {
-	device_t *speaker = machine().device("speaker");
 	m_pc_input = data ? 1 : 0;
-	speaker_level_w( speaker, pcxt_speaker_get_spk() );
+	speaker_level_w( m_speaker, pcxt_speaker_get_spk() );
 }
 
 
@@ -300,7 +302,7 @@ READ8_MEMBER(pcxt_state::port_a_r)
 	}
 	else//keyboard emulation
 	{
-		//machine().device("maincpu")->execute().set_input_line(1, PULSE_LINE);
+		//m_maincpu->set_input_line(1, PULSE_LINE);
 		return 0x00;//Keyboard is disconnected
 		//return 0xaa;//Keyboard code
 	}
@@ -353,7 +355,7 @@ WRITE8_MEMBER(pcxt_state::wss_2_w)
 
 WRITE8_MEMBER(pcxt_state::sys_reset_w)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 static I8255A_INTERFACE( ppi8255_0_intf )
@@ -423,7 +425,7 @@ DMA8237 Controller
 
 WRITE_LINE_MEMBER(pcxt_state::pc_dma_hrq_changed)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	m_dma8237_1->i8237_hlda_w( state );
@@ -517,7 +519,7 @@ static I8237_INTERFACE( dma8237_1_config )
 
 WRITE_LINE_MEMBER(pcxt_state::pic8259_1_set_int_line)
 {
-	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(pcxt_state::get_slave_ack)
@@ -713,15 +715,14 @@ GFXDECODE_END
 
 void pcxt_state::machine_reset()
 {
-	device_t *speaker = machine().device("speaker");
 	m_bank = -1;
 	m_lastvalue = -1;
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(pcxt_state::irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(pcxt_state::irq_callback),this));
 
 	m_pc_spkrdata = 0;
 	m_pc_input = 0;
 	m_wss2_data = 0;
-	speaker_level_w( speaker, 0 );
+	speaker_level_w( m_speaker, 0 );
 }
 
 static MACHINE_CONFIG_START( filetto, pcxt_state )

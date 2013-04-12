@@ -2,13 +2,15 @@ class splash_state : public driver_device
 {
 public:
 	splash_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_pixelram(*this, "pixelram"),
 		m_videoram(*this, "videoram"),
 		m_vregs(*this, "vregs"),
 		m_spriteram(*this, "spriteram"),
 		m_protdata(*this, "protdata"),
-		m_bitmap_mode(*this, "bitmap_mode"){ }
+		m_bitmap_mode(*this, "bitmap_mode"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu")  { }
 
 	required_shared_ptr<UINT16> m_pixelram;
 	required_shared_ptr<UINT16> m_videoram;
@@ -69,4 +71,10 @@ public:
 	void splash_draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect);
 	void funystrp_draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect);
 	void roldfrog_update_irq(  );
+	DECLARE_WRITE_LINE_MEMBER(splash_msm5205_int);
+	DECLARE_WRITE_LINE_MEMBER(ym_irq);
+	DECLARE_WRITE_LINE_MEMBER(adpcm_int1);
+	DECLARE_WRITE_LINE_MEMBER(adpcm_int2);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };

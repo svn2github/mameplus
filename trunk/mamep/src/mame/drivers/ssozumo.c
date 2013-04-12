@@ -17,7 +17,7 @@ Driver by Takahiro Nogi (nogi@kt.rim.or.jp) 1999/10/04
 WRITE8_MEMBER(ssozumo_state::ssozumo_sh_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	machine().device("audiocpu")->execute().set_input_line(M6502_IRQ_LINE, HOLD_LINE);
+	m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 }
 
 
@@ -58,7 +58,7 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(ssozumo_state::coin_inserted)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static INPUT_PORTS_START( ssozumo )

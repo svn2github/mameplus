@@ -416,7 +416,7 @@ WRITE32_MEMBER(konamigx_state::esc_w)
 		if (konamigx_wrport1_1 & 0x10)
 		{
 			gx_rdport1_3 &= ~8;
-			machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+			m_maincpu->set_input_line(4, HOLD_LINE);
 		}
 	}
 	else
@@ -506,13 +506,13 @@ WRITE32_MEMBER(konamigx_state::control_w)
 		{
 			// enable 68k
 			// clear the halt condition and reset the 68000
-			machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
-			machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+			m_soundcpu->set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+			m_soundcpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 		}
 		else
 		{
 			// disable 68k
-			machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+			m_soundcpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 		}
 
 		K053246_set_OBJCHA_line((data&0x100000) ? ASSERT_LINE : CLEAR_LINE);
@@ -575,14 +575,14 @@ WRITE32_MEMBER(konamigx_state::ccu_w)
 		// vblank interrupt ACK
 		if (ACCESSING_BITS_24_31)
 		{
-			machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
+			m_maincpu->set_input_line(1, CLEAR_LINE);
 			gx_syncen |= 0x20;
 		}
 
 		// hblank interrupt ACK
 		if (ACCESSING_BITS_8_15)
 		{
-			machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+			m_maincpu->set_input_line(2, CLEAR_LINE);
 			gx_syncen |= 0x40;
 		}
 	}
@@ -612,7 +612,7 @@ TIMER_CALLBACK_MEMBER(konamigx_state::dmaend_callback)
 
 		// lower OBJINT-REQ flag and trigger interrupt
 		gx_rdport1_3 &= ~0x80;
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 	}
 }
 
@@ -1127,7 +1127,7 @@ WRITE32_MEMBER(konamigx_state::type4_prot_w)
 				if (konamigx_wrport1_1 & 0x10)
 				{
 					gx_rdport1_3 &= ~8;
-					machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+					m_maincpu->set_input_line(4, HOLD_LINE);
 				}
 
 				// don't accidentally do a phony command
@@ -3643,7 +3643,7 @@ MACHINE_RESET_MEMBER(konamigx_state,konamigx)
 	memset(sndto020, 0, 16);
 
 	// sound CPU initially disabled?
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 	machine().device("dasp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	if (!strcmp(machine().system().name, "tkmmpzdm"))
@@ -3745,8 +3745,8 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 			switch (gameDefs[i].special)
 	{
 				case 1: // LE2 guns
-					machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd44000, 0xd44003, read32_delegate(FUNC(konamigx_state::le2_gun_H_r),this));
-					machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd44004, 0xd44007, read32_delegate(FUNC(konamigx_state::le2_gun_V_r),this));
+					m_maincpu->space(AS_PROGRAM).install_read_handler(0xd44000, 0xd44003, read32_delegate(FUNC(konamigx_state::le2_gun_H_r),this));
+					m_maincpu->space(AS_PROGRAM).install_read_handler(0xd44004, 0xd44007, read32_delegate(FUNC(konamigx_state::le2_gun_V_r),this));
 					break;
 
 				case 2: // tkmmpzdm hack
@@ -3782,7 +3782,7 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 					break;
 
 				case 7: // install type 4 Xilinx protection for non-type 3/4 games
-		machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xcc0000, 0xcc0007, write32_delegate(FUNC(konamigx_state::type4_prot_w),this));
+		m_maincpu->space(AS_PROGRAM).install_write_handler(0xcc0000, 0xcc0007, write32_delegate(FUNC(konamigx_state::type4_prot_w),this));
 					break;
 
 				case 8: // tbyahhoo
@@ -3802,14 +3802,14 @@ DRIVER_INIT_MEMBER(konamigx_state,konamigx)
 	switch (readback)
 	{
 		case BPP5:
-			machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx5bppspr_r),this));
+			m_maincpu->space(AS_PROGRAM).install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx5bppspr_r),this));
 		break;
 
 		case BPP66:
-			machine().device("maincpu")->memory().space(AS_PROGRAM).install_legacy_read_handler(0xd00000, 0xd01fff, FUNC(K056832_6bpp_rom_long_r));
+			m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xd00000, 0xd01fff, FUNC(K056832_6bpp_rom_long_r));
 
 		case BPP6:
-			machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx6bppspr_r),this));
+			m_maincpu->space(AS_PROGRAM).install_read_handler(0xd4a000, 0xd4a00f, read32_delegate(FUNC(konamigx_state::gx6bppspr_r),this));
 		break;
 	}
 

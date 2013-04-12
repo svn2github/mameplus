@@ -8,7 +8,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_hyperpac_ram(*this, "hyperpac_ram"),
 		m_bootleg_spriteram16(*this, "spriteram16b"),
-		m_maincpu(*this,"maincpu"){ }
+		m_maincpu(*this,"maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_oki(*this, "oki"){ }
 
 	optional_shared_ptr<UINT16> m_hyperpac_ram;
 	int m_sb3_music_is_playing;
@@ -54,4 +56,7 @@ public:
 	TIMER_DEVICE_CALLBACK_MEMBER(snowbros3_irq);
 	void sb3_play_music(int data);
 	void sb3_play_sound (okim6295_device *oki, int data);
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	optional_device<cpu_device> m_soundcpu;
+	optional_device<okim6295_device> m_oki;
 };

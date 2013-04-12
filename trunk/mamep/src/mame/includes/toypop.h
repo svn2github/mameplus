@@ -2,11 +2,14 @@ class toypop_state : public driver_device
 {
 public:
 	toypop_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_spriteram(*this, "spriteram"),
 		m_m68000_sharedram(*this, "m68k_shared"),
-		m_bg_image(*this, "bg_image"){ }
+		m_bg_image(*this, "bg_image"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_subcpu(*this, "sub") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_spriteram;
@@ -56,4 +59,7 @@ public:
 	TIMER_CALLBACK_MEMBER(namcoio_run);
 	void draw_background(bitmap_ind16 &bitmap);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 *spriteram_base);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_subcpu;
 };

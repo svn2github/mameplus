@@ -361,7 +361,6 @@ void buggychl_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 6, &ROM[0x10000], 0x2000);
 
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	save_item(NAME(m_sound_nmi_enable));
 	save_item(NAME(m_pending_nmi));
@@ -375,7 +374,7 @@ void buggychl_state::machine_start()
 
 void buggychl_state::machine_reset()
 {
-	machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
+	m_mcu->set_input_line(0, CLEAR_LINE);
 
 	m_sound_nmi_enable = 0;
 	m_pending_nmi = 0;

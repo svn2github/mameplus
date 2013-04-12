@@ -70,12 +70,12 @@ void vertigo_update_irq(device_t *device)
 {
 	vertigo_state *state = device->machine().driver_data<vertigo_state>();
 	if (state->m_irq_state < 7)
-		device->machine().device("maincpu")->execute().set_input_line(state->m_irq_state ^ 7, CLEAR_LINE);
+		state->m_maincpu->set_input_line(state->m_irq_state ^ 7, CLEAR_LINE);
 
 	state->m_irq_state = ttl74148_output_r(device);
 
 	if (state->m_irq_state < 7)
-		device->machine().device("maincpu")->execute().set_input_line(state->m_irq_state ^ 7, ASSERT_LINE);
+		state->m_maincpu->set_input_line(state->m_irq_state ^ 7, ASSERT_LINE);
 }
 
 
@@ -89,7 +89,7 @@ void vertigo_state::update_irq_encoder(int line, int state)
 WRITE_LINE_MEMBER(vertigo_state::v_irq4_w)
 {
 	update_irq_encoder(INPUT_LINE_IRQ4, state);
-	vertigo_vproc(machine().device<cpu_device>("maincpu")->attotime_to_cycles(machine().time() - m_irq4_time), state);
+	vertigo_vproc(m_maincpu->attotime_to_cycles(machine().time() - m_irq4_time), state);
 	m_irq4_time = machine().time();
 }
 
@@ -97,7 +97,7 @@ WRITE_LINE_MEMBER(vertigo_state::v_irq4_w)
 WRITE_LINE_MEMBER(vertigo_state::v_irq3_w)
 {
 	if (state)
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 
 	update_irq_encoder(INPUT_LINE_IRQ3, state);
 }
@@ -157,9 +157,9 @@ WRITE16_MEMBER(vertigo_state::vertigo_wsot_w)
 {
 	/* Reset sound cpu */
 	if ((data & 2) == 0)
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	else
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 

@@ -167,7 +167,6 @@ WRITE8_MEMBER(lordgun_state::fake2_w)
 
 WRITE8_MEMBER(lordgun_state::lordgun_eeprom_w)
 {
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
 	int i;
 
 	if (data & ~0xfd)
@@ -184,13 +183,13 @@ WRITE8_MEMBER(lordgun_state::lordgun_eeprom_w)
 			lordgun_update_gun(i);
 
 	// latch the bit
-	eeprom->write_bit(data & 0x40);
+	m_eeprom->write_bit(data & 0x40);
 
 	// reset line asserted: reset.
-	eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE );
+	m_eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE );
 
 	// clock line asserted: write latch or select next bit to read
-	eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE );
+	m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE );
 
 	m_whitescreen = data & 0x80;
 
@@ -199,8 +198,6 @@ WRITE8_MEMBER(lordgun_state::lordgun_eeprom_w)
 
 WRITE8_MEMBER(lordgun_state::aliencha_eeprom_w)
 {
-	eeprom_device *eeprom = machine().device<eeprom_device>("eeprom");
-
 	if (~data & ~0xf8)
 	{
 //      popmessage("EE: %02x", data);
@@ -214,13 +211,13 @@ WRITE8_MEMBER(lordgun_state::aliencha_eeprom_w)
 	coin_counter_w(machine(), 1, data & 0x10);
 
 	// latch the bit
-	eeprom->write_bit(data & 0x80);
+	m_eeprom->write_bit(data & 0x80);
 
 	// reset line asserted: reset.
-	eeprom->set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE );
+	m_eeprom->set_cs_line((data & 0x20) ? CLEAR_LINE : ASSERT_LINE );
 
 	// clock line asserted: write latch or select next bit to read
-	eeprom->set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE );
+	m_eeprom->set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -275,7 +272,7 @@ WRITE16_MEMBER(lordgun_state::lordgun_soundlatch_w)
 	if (ACCESSING_BITS_0_7)     soundlatch_byte_w (space, 0, (data >> 0) & 0xff);
 	if (ACCESSING_BITS_8_15)    soundlatch2_byte_w(space, 0, (data >> 8) & 0xff);
 
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( lordgun_map, AS_PROGRAM, 16, lordgun_state )
@@ -351,8 +348,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(lordgun_state::lordgun_okibank_w)
 {
-	device_t *device = machine().device("oki");
-	downcast<okim6295_device *>(device)->set_bank_base((data & 2) ? 0x40000 : 0);
+	m_oki->set_bank_base((data & 2) ? 0x40000 : 0);
 	if (data & ~3)  logerror("%s: unknown okibank bits %02x\n", machine().describe_context(), data);
 //  popmessage("OKI %x", data);
 }
@@ -664,14 +660,14 @@ static I8255A_INTERFACE( aliencha_ppi8255_1_intf )
 };
 
 
-static void soundirq(device_t *device, int state)
+WRITE_LINE_MEMBER(lordgun_state::soundirq)
 {
-	device->machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_IRQ0, state);
+	m_soundcpu->set_input_line(INPUT_LINE_IRQ0, state);
 }
 
 static const ym3812_interface lordgun_ym3812_interface =
 {
-	soundirq
+	DEVCB_DRIVER_LINE_MEMBER(lordgun_state,soundirq)
 };
 
 static MACHINE_CONFIG_START( lordgun, lordgun_state )
@@ -712,7 +708,7 @@ MACHINE_CONFIG_END
 
 static const ymf278b_interface ymf278b_config =
 {
-	soundirq
+	DEVCB_DRIVER_LINE_MEMBER(lordgun_state,soundirq)
 };
 
 static MACHINE_CONFIG_START( aliencha, lordgun_state )

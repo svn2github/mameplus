@@ -30,15 +30,14 @@ class fresh_state : public driver_device
 {
 public:
 	fresh_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_bg_videoram(*this, "bg_videoram"),
 		m_bg_2_videoram(*this, "bg_videoram_2"),
 		m_attr_videoram(*this, "attr_videoram"),
 		m_attr_2_videoram(*this, "attr_videoram_2"),
 		m_paletteram_1(*this, "paletteram_1"),
-		m_paletteram_2(*this, "paletteram_2")
-
-	{ }
+		m_paletteram_2(*this, "paletteram_2"),
+		m_maincpu(*this, "maincpu") { }
 
 	tilemap_t *m_bg_tilemap;
 	tilemap_t *m_bg_2_tilemap;
@@ -100,6 +99,7 @@ public:
 
 	virtual void video_start();
 	UINT32 screen_update_fresh(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -589,22 +589,22 @@ TIMER_DEVICE_CALLBACK_MEMBER(fresh_state::fake_scanline)
 	if(scanline == 0)
 	{
 		logerror("new frame\n");
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 
 	}
 
 //  if(scanline == 32)
-//      machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+//      m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 64)
-		machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+		m_maincpu->set_input_line(5, HOLD_LINE);
 
 //  if(scanline == 96)
-//      machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
+//      m_maincpu->set_input_line(5, HOLD_LINE);
 
 
 	if(scanline == 200) // vbl?
-		machine().device("maincpu")->execute().set_input_line(6, HOLD_LINE);
+		m_maincpu->set_input_line(6, HOLD_LINE);
 
 }
 

@@ -37,14 +37,15 @@ class gstriker_state : public driver_device
 {
 public:
 	gstriker_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_MB60553_vram(*this, "mb60553_vram"),
 		m_CG10103_vram(*this, "cg10103_vram"),
 		m_VS920A_vram(*this, "vs920a_vram"),
 		m_work_ram(*this, "work_ram"),
 		m_lineram(*this, "lineram"),
-		m_spr(*this, "vsystem_spr")
-	{ }
+		m_spr(*this, "vsystem_spr"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	virtual void machine_start()
 	{
@@ -110,6 +111,9 @@ public:
 	void MB60553_draw(int numchip, bitmap_ind16& screen, const rectangle &cliprect, int priority);
 	tilemap_t* MB60553_get_tilemap(int numchip);
 	void mcu_init(  );
+	DECLARE_WRITE_LINE_MEMBER(gs_ym2610_irq);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };
 
 #endif

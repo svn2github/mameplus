@@ -758,10 +758,12 @@ grobda2         // (c) 1984
 grobda3         // (c) 1984
 gaplus          // (c) 1984
 gaplusa         // (c) 1984
-gapluso         // (c) 1984
+gaplusd         // (c) 1984
 galaga3         // (c) 1984
-galaga3m        // (c) 1984
 galaga3a        // (c) 1984
+galaga3b        // (c) 1984
+galaga3c        // (c) 1984
+galaga3m        // (c) 1984
 // Libble Rabble board (first Japanese game using a 68000)
 liblrabl        // (c) 1983
 toypop          // (c) 1986
@@ -1004,6 +1006,8 @@ adillor         // (c) 1997
 finfurl         // July 1997
 motoxgo         // November 1997
 motoxgoa        // November 1997
+motoxgob        // November 1997
+motoxgoc        // November 1997
 rapidrvr        // December 1997
 rapidrvr2       // December 1997
 rapidrvrp       // December 1997 (prototype)
@@ -2410,13 +2414,14 @@ landgear        // 1996.?? E17 (c) 1995 Taito Corporation Japan (World) - Ver 4.
 landgeara       // 1996.?? E17 (c) 1995 Taito Corporation Japan (World) - Ver 3.1 O
 landgearj       // 1996.?? E17 (c) 1996 Taito Corporation (Japan) - Ver 4.2 J
 landgearja      // 1996.03 E17 (c) 1996 Taito Corporation (Japan) - Ver 3.0 J
-sidebs          // 1996.07 E23 (c) 1996 Taito Corporation (Japan)
-dendego         // 1997.03 E35 (c) 1996 Taito Corporation (Japan)
-sidebs2j        // 1997.07 E38 (c) 1997 Taito Corporation (Japan)
-sidebs2         // 1997.?? E38 (c) 1997 Taito Corporation (Japan)
-dendegox        // 1997.09 E35 (c) 1996 Taito Corporation (Japan)
-dendego2        // 1998.03 E52 (c) 1998 Taito Corporation (Japan)
-dendego23k      // 1998.08 E52 (c) 1998 Taito Corporation (Japan)
+sidebs          // 1996.07 E23 (c) 1996 Taito Corporation (Japan) - Ver 2.7 J
+sidebsja        // 1996.07 E23 (c) 1996 Taito Corporation (Japan) - Ver 2.5 J
+dendego         // 1997.03 E35 (c) 1996 Taito Corporation (Japan) - Ver 2.2 J
+sidebs2         // 1997.?? E38 (c) 1997 Taito Corporation (US) - Ver 2.6 A
+sidebs2j        // 1997.07 E38 (c) 1997 Taito Corporation (Japan) - Ver 2.4 J
+dendegox        // 1997.09 E35 (c) 1996 Taito Corporation (Japan) - Ver 2.4 J
+dendego2        // 1998.03 E52 (c) 1998 Taito Corporation (Japan) - Ver 2.5 J
+dendego23k      // 1998.08 E52 (c) 1998 Taito Corporation (Japan) - Ver 2.20 J
 
 // Taito "Wolf" System
 pf2012          // E59 (c) 1997 Taito
@@ -2863,6 +2868,7 @@ forgottn        //  7/1988 (c) 1988 (World)
 forgottnu       //  7/1988 (c) 1988 (USA)
 forgottnu1      //  7/1988 (c) 1988 (USA)
 forgottnua      //  7/1988 (c) 1988 (USA)
+forgottnuaa     //  7/1988 (c) 1988 (USA)
 lostwrld        //  7/1988 (c) 1988 (Japan)
 lostwrldo       //  7/1988 (c) 1988 (Japan)
 ghouls          // 12/1988 (c) 1988 (World)
@@ -3021,6 +3027,7 @@ punipic3        // bootleg
 punisherbz      // bootleg
 slammast        // 13/07/1993 (c) 1993 (World) (CPS1 + QSound)
 slammastu       // 13/07/1993 (c) 1993 (USA) (CPS1 + QSound)
+slampic         // bootleg
 mbomberj        // 13/07/1993 (c) 1993 (Japan) (CPS1 + QSound)
 mbombrd         // 06/12/1993 (c) 1993 (World) (CPS1 + QSound)
 mbombrdj        // 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound)
@@ -4233,6 +4240,7 @@ endurob2        // (c) 1985 (Beta bootleg)
 endurobl        // (c) 1985 (Herb bootleg)
 hangon          // (c) 1985 (Rev A)
 hangon1         // (c) 1985
+hangon2         // (c) 1985
 sharrier        // (c) 1985
 sharrier1       // (c) 1985
 shangonro       // (c) 1987 (FD1094, decrypted)
@@ -4393,7 +4401,8 @@ lghost          // 1990.?? Laser Ghost (World, FD1094, decrypted)
 lghostu         // 1991.01 Laser Ghost (US, FD1094, decrypted)
 cltchitr        // 1991.02 Clutch Hitter (US, FD1094, decrypted)
 cltchitrj       // 1991.05 Clutch Hitter (Japan, FD1094, decrypted)
-ddcrewj         // 1991.07 D.D.Crew (Japan, FD1094, decrypted)
+ddcrewj         // 1991.07 D.D.Crew (Japan, FD1094, encrypted - CPU data not dump)
+ddcrewj2        // 1991.07 D.D.Crew (Japan, FD1094, decrypted)
 ddcrewu         // 1991.09 D.D.Crew (US, FD1094, decrypted)
 ddcrew          // 1991.?? D.D.Crew (World, FD1094, decrypted)
 ddcrew2         // 1991.?? D.D.Crew (World, FD1094, decrypted)
@@ -4668,9 +4677,11 @@ danchiq         // 2000.12 Danchi de Quiz Okusan Yontaku Desuyo! (Altron)
 
 // Model 2 (TGPs, Model 1 sound board)
 daytona         // 1994.03 Daytona USA (Japan, Revision A)
+daytonase       // 1994    Daytona USA Special Edition (Japan, Revision A)
 daytona93
 daytonas
 daytonat        // 1993, hack
+daytonata       // 1993, hack
 daytonam        // 1993, hack
 desert          // 1994.07 Desert Tank
 vcop            // 1994.09 Virtua Cop (Revision B)
@@ -4982,7 +4993,7 @@ derbyoc         // 1999.10 Derby Owners Club (Rev B)
 doa2            // 1999.11 Dead or Alive 2
 dybb99          // 1999.11 Dynamite Baseball '99 (Rev B)
 otrigger        // 1999.11 OutTrigger
-				// 1999.12 Mars TV
+marstv          // 1999.12 Mars TV
 puyoda          // 1999.12 Puyo Puyo Da!
 samba           // 1999.12 Samba de Amigo (Rev B)
 vtennis         // 1999.12 Virtua Tennis / Power Smash (cartridge)
@@ -5010,6 +5021,7 @@ derbyo2k        // 2000.06 Derby Owners Club 2000 Ver.2 (Rev A)
 vonot           // 2000.06 Virtual-on Oratorio Tangram M.S.B.S. Ver.5.66 2000 Edition
 ggx             // 2000.07 Guilty Gear X
 slasho          // 2000.07 Slashout
+capsnkb         // 2000.08 Capcom vs. SNK Millennium Fight 2000
 capsnka         // 2000.08 Capcom vs. SNK Millennium Fight 2000 (Rev A)
 				// 2000.08 Tokyo Bus Tour / Tokyo Bus Annai
 capsnk          // 2000.09 Capcom vs. SNK Millennium Fight 2000 (Rev C)
@@ -5044,7 +5056,7 @@ dygolf          // 2001.04 Dynamic Golf / Virtua Golf (Rev A)
 monkeyba        // 2001.05 Monkey Ball
 zerogu2         // 2001.05 Zero Gunner 2
 cvsgd           // 2001.06 Capcom Vs. SNK Millennium Fight 2000 Pro
-				// 2001.06 Crackin' DJ Part 2
+crakndj2        // 2001.06 Crackin' DJ Part 2
 hmgeo           // 2001.06 Heavy Metal Geomatrix (Rev A)
 wsbbgd          // 2001.06 Super Major League / World Series Baseball
 starseek        // 2001.07 Dokidoki Idol Star Seeker
@@ -5558,6 +5570,7 @@ oscarj2         // (c) 1987 Data East Corporation (Japan)
 
 // Data East 16-bit games
 karnov          // (c) 1987 Data East USA (US)
+karnova         // (c) 1987 Data East USA (US)
 karnovj         // (c) 1987 Data East Corporation (Japan)
 wndrplnt        // (c) 1987 Data East Corporation (Japan)
 chelnov         // (c) 1988 Data East USA (World)
@@ -8015,6 +8028,7 @@ rfjetu          // (c) 1998 Seibu Kaihatsu (Fabtek license)
 rfjeta          // (c) 1998 Seibu Kaihatsu (Dream Island license)
 rfjetj          // (c) 1998 Seibu Kaihatsu
 rfjets          // (c) 1998 Seibu Kaihatsu
+rfjetsa         // (c) 1998 Seibu Kaihatsu
 rfjett          // (c) 1998 Seibu Kaihatsu (Taiwan license)
 rfjet2kc        // (c) 2000 Seibu Kaihatsu
 
@@ -8571,6 +8585,7 @@ deerhunte       // (c) 2000 Sammy USA Corporation
 turkhunt        // (c) 2001 Sammy USA Corporation
 wschamp         // (c) 2001 Sammy USA Corporation
 wschampa        // (c) 2001 Sammy USA Corporation
+wschampb        // (c) 2001 Sammy USA Corporation
 funcube         // (c) 2000 Namco
 funcube2        // (c) 2001 Namco
 funcube3        // (c) 2001 Namco
@@ -9056,6 +9071,7 @@ mjtensin        // "100" 1995 Dynax
 hparadis        // "101" (c) 1994 Nakanihon
 nettoqc         // "103" (c) 1995 Nakanihon
 ultrchmp        // "104" (c) 1995 Nakanihon
+ultrchmph       // "114" (c) 1995 Nakanihon
 majrjhdx        // "105" 1996 Dynax
 hgokou          // "108" (c) 1995 Dynax (Alba license)
 mjdchuka        // "111" (c) 1995 Nakanihon
@@ -9343,12 +9359,13 @@ actionhw        // (c) 1995
 
 // U.S. Games games
 usg32           // (c) 1987
-usg82           // (c) 1988
-usg83           // (c) 1988
+superten        // (c) 1988
 usg83x          // (c) 1988
+usg82           // (c) 1988
+usgames         // (c) 1992
+usg187c         // (c) 1991
+usg185          // (c) 1990
 usg182          // (c) 1989
-usg185          // (c) 1991
-usg252          // (c) 1992
 
 // Sanritsu games
 mermaid         // (c) 1982 Rock-ola,  made by Sanritsu
@@ -9463,6 +9480,7 @@ apache3a        // (c) 1988 Tatsumi + Kana Corporation license
 roundup5        // (c) 1989 Tatsumi
 // Round Up 5 cockpit
 cyclwarr        // (c) 1991 Tatsumi
+cyclwarra       // (c) 1991 Tatsumi
 bigfight        // (c) 1992 Tatsumi
 // Life         // (c) 1997 Tatsumi
 
@@ -9490,9 +9508,10 @@ ar_airh2        // (c) 1988
 ar_bowl         // (c) 1988
 ar_dart         // (c) 1987
 ar_dart2        // (c) 1987
-ar_fast         // (c) 1988
-ar_ldrb         // (c) 1988
-ar_ldrba        // (c) 1988
+ar_fast         // (c) 1988 v2.8
+ar_fasta        // (c) 1988 v2.7
+ar_ldrb         // (c) 1988 v2.5
+ar_ldrba        // (c) 1988 v2.4
 ar_ldrbb        // (c) 1988
 ar_ninj         // (c) 1987
 ar_ninj2        // (c) 1987
@@ -9913,6 +9932,7 @@ popobear        // (c) 2000 BMC
 mpoker          // (c) 1983 Merit
 pitboss         // (c) 1983 Merit
 pitbossa        // (c) 1983 Merit
+pitbossa1       // (c) 1983 Merit
 pitbossb        // (c) 1983 Merit
 pitbossc        // (c) 1983 Merit
 casino5         // (c) 1983 Merit
@@ -9938,6 +9958,7 @@ phrcrazev       // (c) 1986 Merit
 bigappg         // (c) 1986 Merit
 riviera         // (c) 1987 Merit
 rivieraa        // (c) 1986 Merit
+rivierab        // (c) 1986 Merit
 dodgecty        // (c) 1988 Merit
 dodgectya       // (c) 1986 Merit
 dodgectyb       // (c) 1986 Merit
@@ -10095,6 +10116,7 @@ witchryl        // (c) 199? Video Klein
 novoplay        // (c) 1986 Novomatic
 photoply
 supercrd        // (c) 1992 Fun World
+fruitstr        // (c) 1992 Fun World
 
 // Sandii'
 snookr10        // (c) 1998 Sandii'
@@ -11017,6 +11039,7 @@ dphla           // unknown
 dphljp          // unknown
 kimbldhl        // (c) 198?, Kimble Ireland
 gtipoker        // (c) 1983 GTI Inc
+gtipokra        // (c) 1983 GTI Inc
 smshilo         // (c) 1983 SMS Manufacturing Corp.
 drhl            // (c) 1986 Drew, Inc.
 drhla           // (c) 1986 Drew, Inc.
@@ -11058,29 +11081,29 @@ mfish_6         // (c) 2002
 //mfish_7       // (c) 2002
 mfish_8         // (c) 2002
 //mfish_9       // (c) 2002
-//mfish_10          // (c) 2002
+//mfish_10      // (c) 2002
 mfish_11        // (c) 2002
 mfish_12        // (c) 2002
 mfish_13        // (c) 2002
 
 // Crazy Monkey
 //crzmon        // (c) 2003
-//crzmon_2      // (c) 2003
-//crzmon_3      // (c) 2003
-//crzmon_4      // (c) 2003
-//crzmon_5      // (c) 2003
-//crzmon_6      // (c) 2003
-crzmon_5        // (c) 2003
-crzmon_7        // (c) 2003
-crzmon_8        // (c) 2003
-crzmon_9        // (c) 2003
-//crzmon_10     // (c) 2003
-//crzmon_11     // (c) 2003
-//crzmon_12     // (c) 2003
-crzmon13        // (c) 2003
-//crzmon_14     // (c) 2003
-crzmon_15       // (c) 2003
-crzmon_16       // (c) 2003
+//czmon_2       // (c) 2003
+//czmon_3       // (c) 2003
+//czmon_4       // (c) 2003
+//czmon_5       // (c) 2003
+//czmon_6       // (c) 2003
+czmon_5         // (c) 2003
+czmon_7         // (c) 2003
+czmon_8         // (c) 2003
+czmon_9         // (c) 2003
+//czmon_10      // (c) 2003
+//czmon_11      // (c) 2003
+//czmon_12      // (c) 2003
+czmon_13        // (c) 2003
+//czmon_14      // (c) 2003
+czmon_15        // (c) 2003
+czmon_16        // (c) 2003
 
 // Fruit Cocktail
 //fcockt        // (c) 2003
@@ -11221,17 +11244,17 @@ crzmon2_3   // (c) 2010
 
 mfish_3a        // bootleg - Multifish
 mfish_12a       // bootleg
-crzmon_7a       // bootleg - Crazy Monkey
-crzmon_7b       // bootleg
-crzmon_8a       // bootleg
-crzmon_8b       // bootleg
-crzmon_8c       // bootleg
-crzmon_8d       // bootleg
-crzmon_8e       // bootleg
-crzmon_8f       // bootleg
-crzmon_9a       // bootleg
-crzmon_9b       // bootleg
-crzmon_9c       // bootleg
+czmon_7a        // bootleg - Crazy Monkey
+czmon_7b        // bootleg
+czmon_8a        // bootleg
+czmon_8b        // bootleg
+czmon_8c        // bootleg
+czmon_8d        // bootleg
+czmon_8e        // bootleg
+czmon_8f        // bootleg
+czmon_9a        // bootleg
+czmon_9b        // bootleg
+czmon_9c        // bootleg
 fcockt_6a       // bootleg - Fruit Cocktail
 fcockt_6b       // bootleg
 fcockt_6c       // bootleg
@@ -11911,6 +11934,10 @@ sltblgtk        // 1996
 sltblgpo        // 1996
 sltblgp1        // 1996
 gldncrwn        // 1997
+
+// RasterSpeed
+rotr        // 1994
+fbcrazy     // 1997
 
 // Cobra 3
 
@@ -13601,10 +13628,6 @@ sc1wud      // What's Up Dr
 sc1goldw
 sc1druby
 sc1drubya
-
-// RasterSpeed
-rotr        // 1994
-fbcrazy     // 1997
 
 // Scorpion 2 / 3
 

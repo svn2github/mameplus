@@ -26,27 +26,27 @@ public:
 
 public:
 	sms_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-		, m_main_cpu(*this, "maincpu")
-		, m_control_cpu(*this, "control")
-		, m_vdp(*this, "sms_vdp")
-		, m_main_scr(*this, "screen")
-		, m_is_gamegear(0)
-		, m_is_region_japan(0)
-		, m_has_bios_0400(0)
-		, m_has_bios_2000(0)
-		, m_has_bios_full(0)
-		, m_has_bios(0)
-		, m_has_fm(0)
-		, m_mainram(*this, "mainram")
-	{
-	}
+		: driver_device(mconfig, type, tag),
+		m_main_cpu(*this, "maincpu"),
+		m_control_cpu(*this, "control"),
+		m_vdp(*this, "sms_vdp"),
+		m_eeprom(*this, "eeprom"),
+		m_main_scr(*this, "screen"),
+		m_is_gamegear(0),
+		m_is_region_japan(0),
+		m_has_bios_0400(0),
+		m_has_bios_2000(0),
+		m_has_bios_full(0),
+		m_has_bios(0),
+		m_has_fm(0),
+		m_mainram(*this, "mainram") ,
+		m_maincpu(*this, "maincpu") { }
 
 	// device_ts
 	required_device<cpu_device> m_main_cpu;
 	optional_device<cpu_device> m_control_cpu;
 	required_device<sega315_5124_device> m_vdp;
-	eeprom_device *m_eeprom;
+	optional_device<eeprom_device> m_eeprom;
 	device_t *m_ym;
 	required_device<screen_device> m_main_scr;
 	device_t *m_left_lcd;
@@ -226,6 +226,7 @@ protected:
 	void setup_cart_banks();
 	void setup_banks();
 	void sms_get_inputs(address_space &space);
+	required_device<cpu_device> m_maincpu;
 };
 
 

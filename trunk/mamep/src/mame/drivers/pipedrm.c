@@ -186,6 +186,7 @@ public:
 	DECLARE_WRITE8_MEMBER( pending_command_clear_w );
 	DECLARE_READ8_MEMBER( pending_command_r );
 	DECLARE_READ8_MEMBER( sound_command_r );
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };
 
 
@@ -574,10 +575,9 @@ GFXDECODE_END
  *
  *************************************/
 
-static void irqhandler(device_t *device, int irq )
+WRITE_LINE_MEMBER(pipedrm_state::irqhandler)
 {
-	pipedrm_state *state = device->machine().driver_data<pipedrm_state>();
-	state->m_subcpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_subcpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -588,13 +588,13 @@ static const ym2608_interface ym2608_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(pipedrm_state,irqhandler)
 };
 
 
 static const ym2610_interface ym2610_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(pipedrm_state,irqhandler)
 };
 
 
@@ -607,7 +607,6 @@ static const ym2610_interface ym2610_config =
 
 MACHINE_START_MEMBER(pipedrm_state,pipedrm)
 {
-	m_subcpu = machine().device<cpu_device>("sub");
 
 	/* initialize main Z80 bank */
 	membank("bank1")->configure_entries(0, 8, memregion("maincpu")->base() + 0x10000, 0x2000);
@@ -897,14 +896,14 @@ DRIVER_INIT_MEMBER(pipedrm_state,pipedrm)
 {
 	/* sprite RAM lives at the end of palette RAM */
 	m_spriteram.set_target(&m_generic_paletteram_8[0xc00], 0x400);
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_ram(0xcc00, 0xcfff, m_spriteram);
+	m_maincpu->space(AS_PROGRAM).install_ram(0xcc00, 0xcfff, m_spriteram);
 }
 
 
 DRIVER_INIT_MEMBER(pipedrm_state,hatris)
 {
-	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x20, 0x20, write8_delegate(FUNC(pipedrm_state::sound_command_nonmi_w),this));
-	machine().device("maincpu")->memory().space(AS_IO).install_write_handler(0x21, 0x21, write8_delegate(FUNC(pipedrm_state::fromance_gfxreg_w),this));
+	m_maincpu->space(AS_IO).install_write_handler(0x20, 0x20, write8_delegate(FUNC(pipedrm_state::sound_command_nonmi_w),this));
+	m_maincpu->space(AS_IO).install_write_handler(0x21, 0x21, write8_delegate(FUNC(pipedrm_state::fromance_gfxreg_w),this));
 }
 
 

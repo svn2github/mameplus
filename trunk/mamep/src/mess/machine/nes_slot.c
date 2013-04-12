@@ -299,10 +299,10 @@ bool nes_cart_slot_device::call_load()
 						mapper = mapint1;
 						local_options = mapint2 & 0x0f;
 						m_crc_hack = (mapint2 & 0xf0) >> 4; // this is used to differentiate among variants of the same Mapper (see below)
-						prg_size = mapint3 * 0x4000;
+						prg16k = (mapint3 == 1);
+						prg_size = prg16k ? 2 * 0x4000 : mapint3 * 0x4000;
 						vrom_size = mapint4 * 0x2000;
 						logerror("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
-//                  mame_printf_error("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
 					}
 					else
 					{
@@ -1147,7 +1147,7 @@ bool nes_cart_slot_device::call_softlist_load(char *swlist, char *swname, rom_en
 
 const char * nes_cart_slot_device::get_default_card_software(const machine_config &config, emu_options &options)
 {
-	return software_get_default_slot(config, options, this, "rom");
+	return "rom";
 }
 
 
@@ -1212,13 +1212,13 @@ WRITE8_MEMBER(nes_cart_slot_device::write_h)
 const device_type NES_ROM = &device_creator<nes_rom_device>;
 
 nes_rom_device::nes_rom_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-					: device_t(mconfig, NES_ROM, "NES ROM", tag, owner, clock),
+					: device_t(mconfig, NES_ROM, "NES ROM", tag, owner, clock, "nes_rom", __FILE__),
 					device_nes_cart_interface( mconfig, *this )
 {
 }
 
-nes_rom_device::nes_rom_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
-					: device_t(mconfig, type, name, tag, owner, clock),
+nes_rom_device::nes_rom_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
+					: device_t(mconfig, type, name, tag, owner, clock, shortname, source),
 					device_nes_cart_interface( mconfig, *this )
 {
 }

@@ -230,13 +230,16 @@ class nmg5_state : public driver_device
 {
 public:
 	nmg5_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_scroll_ram(*this, "scroll_ram"),
 		m_bg_videoram(*this, "bg_videoram"),
 		m_fg_videoram(*this, "fg_videoram"),
 		m_bitmap(*this, "bitmap"),
-		m_sprgen(*this, "spritegen")
+		m_sprgen(*this, "spritegen"),
+		m_maincpu(*this, "maincpu"),
+		m_soundcpu(*this, "soundcpu"),
+		m_oki(*this, "oki")
 	{ }
 
 	/* memory pointers */
@@ -259,8 +262,9 @@ public:
 	UINT8 m_gfx_bank;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_soundcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
+	required_device<okim6295_device> m_oki;
 	DECLARE_WRITE16_MEMBER(fg_videoram_w);
 	DECLARE_WRITE16_MEMBER(bg_videoram_w);
 	DECLARE_WRITE16_MEMBER(nmg5_soundlatch_w);
@@ -280,6 +284,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_nmg5(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_bitmap( bitmap_ind16 &bitmap );
+	DECLARE_WRITE_LINE_MEMBER(soundirq);
 };
 
 
@@ -334,8 +339,7 @@ WRITE16_MEMBER(nmg5_state::priority_reg_w)
 
 WRITE8_MEMBER(nmg5_state::oki_banking_w)
 {
-	device_t *device = machine().device("oki");
-	downcast<okim6295_device *>(device)->set_bank_base((data & 1) ? 0x40000 : 0);
+	m_oki->set_bank_base((data & 1) ? 0x40000 : 0);
 }
 
 /*******************************************************************
@@ -971,21 +975,18 @@ static GFXDECODE_START( pclubys )
 GFXDECODE_END
 
 
-static void soundirq( device_t *device, int state )
+WRITE_LINE_MEMBER(nmg5_state::soundirq)
 {
-	nmg5_state *driver_state = device->machine().driver_data<nmg5_state>();
-	driver_state->m_soundcpu->set_input_line(0, state);
+	m_soundcpu->set_input_line(0, state);
 }
 
 static const ym3812_interface ym3812_intf =
 {
-	soundirq    /* IRQ Line */
+	DEVCB_DRIVER_LINE_MEMBER(nmg5_state,soundirq)    /* IRQ Line */
 };
 
 void nmg5_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_soundcpu = machine().device<cpu_device>("soundcpu");
 
 	save_item(NAME(m_gfx_bank));
 	save_item(NAME(m_priority_reg));

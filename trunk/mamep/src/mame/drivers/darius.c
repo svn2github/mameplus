@@ -484,17 +484,15 @@ static ADDRESS_MAP_START( darius_sound2_map, AS_PROGRAM, 8, darius_state )
 ADDRESS_MAP_END
 
 
-static void darius_adpcm_int( device_t *device )
+WRITE_LINE_MEMBER(darius_state::darius_adpcm_int)
 {
-	darius_state *state = device->machine().driver_data<darius_state>();
-
-	if (state->m_nmi_enable)
-		state->m_adpcm->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	if (m_nmi_enable)
+		m_adpcm->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static const msm5205_interface msm5205_config =
 {
-	darius_adpcm_int,   /* interrupt function */
+	DEVCB_DRIVER_LINE_MEMBER(darius_state,darius_adpcm_int),   /* interrupt function */
 	MSM5205_S48_4B      /* 8KHz   */
 };
 
@@ -765,10 +763,9 @@ GFXDECODE_END
 **************************************************************/
 
 /* handler called by the YM2203 emulator when the internal timers cause an IRQ */
-static void irqhandler( device_t *device, int irq ) /* assumes Z80 sandwiched between 68Ks */
+WRITE_LINE_MEMBER(darius_state::irqhandler) /* assumes Z80 sandwiched between 68Ks */
 {
-	darius_state *state = device->machine().driver_data<darius_state>();
-	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_interface_1 =
@@ -781,7 +778,7 @@ static const ym2203_interface ym2203_interface_1 =
 		DEVCB_DRIVER_MEMBER(darius_state,darius_write_portA0),  /* portA write */
 		DEVCB_DRIVER_MEMBER(darius_state,darius_write_portB0),  /* portB write */
 	},
-	DEVCB_LINE(irqhandler)
+	DEVCB_DRIVER_LINE_MEMBER(darius_state,irqhandler)
 };
 
 static const ym2203_interface ym2203_interface_2 =
@@ -825,8 +822,6 @@ void darius_state::machine_start()
 	membank("bank1")->configure_entry(4, memregion("audiocpu")->base());
 	membank("bank1")->set_entry(4);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_cpub = machine().device("cpub");
 	m_adpcm = machine().device("adpcm");
 	m_pc080sn = machine().device("pc080sn");

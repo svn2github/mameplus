@@ -425,11 +425,6 @@ void mexico86_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 6, &ROM[0x10000], 0x4000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
-	m_subcpu = machine().device<cpu_device>("sub");
-	m_mcu = machine().device("mcu");
-
 	save_item(NAME(m_port_a_in));
 	save_item(NAME(m_port_a_out));
 	save_item(NAME(m_ddr_a));
@@ -449,8 +444,8 @@ void mexico86_state::machine_start()
 void mexico86_state::machine_reset()
 {
 	/*TODO: check the PCB and see how the halt / reset lines are connected. */
-	if (machine().device("sub") != NULL)
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (ioport("DSW1")->read() & 0x80) ? ASSERT_LINE : CLEAR_LINE);
+	if (m_subcpu != NULL)
+		m_subcpu->set_input_line(INPUT_LINE_RESET, (ioport("DSW1")->read() & 0x80) ? ASSERT_LINE : CLEAR_LINE);
 
 	m_port_a_in = 0;
 	m_port_a_out = 0;

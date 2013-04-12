@@ -8,10 +8,12 @@ class _88games_state : public driver_device
 {
 public:
 	_88games_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_banked_rom(*this, "banked_rom"),
 		m_paletteram_1000(*this, "paletteram_1000"),
-		m_ram(*this, "ram"){ }
+		m_ram(*this, "ram"),
+		m_audiocpu(*this, "audiocpu"),
+		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_banked_rom;
@@ -30,7 +32,7 @@ public:
 	int          m_speech_chip;
 
 	/* devices */
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_audiocpu;
 	device_t *m_k052109;
 	device_t *m_k051960;
 	device_t *m_k051316;
@@ -48,6 +50,7 @@ public:
 	virtual void machine_reset();
 	UINT32 screen_update_88games(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(k88games_interrupt);
+	required_device<cpu_device> m_maincpu;
 };
 
 /*----------- defined in video/88games.c -----------*/

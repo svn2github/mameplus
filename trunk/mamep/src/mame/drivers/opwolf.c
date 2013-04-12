@@ -428,8 +428,6 @@ ADDRESS_MAP_END
 
 void opwolf_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 	m_pc080sn = machine().device("pc080sn");
 	m_pc090oj = machine().device("pc090oj");
 	m_msm1 = machine().device("msm1");
@@ -459,23 +457,29 @@ MACHINE_RESET_MEMBER(opwolf_state,opwolf)
 	msm5205_reset_w(machine().device("msm2"), 1);
 }
 
-static void opwolf_msm5205_vck( device_t *device )
+void opwolf_state::opwolf_msm5205_vck(device_t *device,int chip)
 {
-	opwolf_state *state = device->machine().driver_data<opwolf_state>();
-	int chip = (strcmp(device->tag(), ":msm1") == 0) ? 0 : 1;
-	if (state->m_adpcm_data[chip] != -1)
+	if (m_adpcm_data[chip] != -1)
 	{
-		msm5205_data_w(device, state->m_adpcm_data[chip] & 0x0f);
-		state->m_adpcm_data[chip] = -1;
-		if (state->m_adpcm_pos[chip] == state->m_adpcm_end[chip])
+		msm5205_data_w(device, m_adpcm_data[chip] & 0x0f);
+		m_adpcm_data[chip] = -1;
+		if (m_adpcm_pos[chip] == m_adpcm_end[chip])
 			msm5205_reset_w(device, 1);
 	}
 	else
 	{
-		state->m_adpcm_data[chip] = device->machine().root_device().memregion("adpcm")->base()[state->m_adpcm_pos[chip]];
-		state->m_adpcm_pos[chip] = (state->m_adpcm_pos[chip] + 1) & 0x7ffff;
-		msm5205_data_w(device, state->m_adpcm_data[chip] >> 4);
+		m_adpcm_data[chip] = machine().root_device().memregion("adpcm")->base()[m_adpcm_pos[chip]];
+		m_adpcm_pos[chip] = (m_adpcm_pos[chip] + 1) & 0x7ffff;
+		msm5205_data_w(device, m_adpcm_data[chip] >> 4);
 	}
+}
+WRITE_LINE_MEMBER(opwolf_state::opwolf_msm5205_vck_1)
+{
+	opwolf_msm5205_vck(machine().device("msm1"),0);
+}
+WRITE_LINE_MEMBER(opwolf_state::opwolf_msm5205_vck_2)
+{
+	opwolf_msm5205_vck(machine().device("msm2"),1);
 }
 
 WRITE8_MEMBER(opwolf_state::opwolf_adpcm_b_w)
@@ -684,12 +688,17 @@ GFXDECODE_END
                  YM2151 (SOUND)
 **************************************************************/
 
-static const msm5205_interface msm5205_config =
+static const msm5205_interface msm5205_config_1 =
 {
-	opwolf_msm5205_vck, /* VCK function */
+	DEVCB_DRIVER_LINE_MEMBER(opwolf_state,opwolf_msm5205_vck_1), /* VCK function */
 	MSM5205_S48_4B      /* 8 kHz */
 };
 
+static const msm5205_interface msm5205_config_2 =
+{
+	DEVCB_DRIVER_LINE_MEMBER(opwolf_state,opwolf_msm5205_vck_2), /* VCK function */
+	MSM5205_S48_4B      /* 8 kHz */
+};
 
 
 /***********************************************************
@@ -750,12 +759,12 @@ static MACHINE_CONFIG_START( opwolf, opwolf_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
 	MCFG_SOUND_ADD("msm1", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
 	MCFG_SOUND_ADD("msm2", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
@@ -804,12 +813,12 @@ static MACHINE_CONFIG_START( opwolfb, opwolf_state ) /* OSC clocks unknown for t
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
 	MCFG_SOUND_ADD("msm1", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
 	MCFG_SOUND_ADD("msm2", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_SOUND_CONFIG(msm5205_config_2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 

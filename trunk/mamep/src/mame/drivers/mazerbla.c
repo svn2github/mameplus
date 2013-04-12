@@ -52,9 +52,11 @@ class mazerbla_state : public driver_device
 {
 public:
 	mazerbla_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_cfb_ram(*this, "cfb_ram"){ }
+		m_cfb_ram(*this, "cfb_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_subcpu(*this, "sub"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -98,8 +100,8 @@ public:
 	UINT8 m_soundlatch;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_subcpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
 
 #if 0
 	int m_dbg_info;
@@ -1427,8 +1429,6 @@ INTERRUPT_GEN_MEMBER(mazerbla_state::sound_interrupt)
 
 void mazerbla_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_subcpu = machine().device<cpu_device>("sub");
 
 	save_item(NAME(m_vcu_video_reg));
 	save_item(NAME(m_vcu_gfx_addr));
@@ -1493,7 +1493,7 @@ void mazerbla_state::machine_reset()
 
 	memset(m_lookup_ram, 0, ARRAY_LENGTH(m_lookup_ram));
 
-	machine().device("maincpu")->execute().set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(mazerbla_state::irq_callback),this));
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(mazerbla_state::irq_callback),this));
 }
 
 

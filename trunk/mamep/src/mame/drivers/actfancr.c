@@ -275,23 +275,20 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static void sound_irq(device_t *device, int linestate)
+WRITE_LINE_MEMBER(actfancr_state::sound_irq)
 {
-	actfancr_state *state = device->machine().driver_data<actfancr_state>();
-	state->m_audiocpu->set_input_line(0, linestate); /* IRQ */
+	m_audiocpu->set_input_line(0, state); /* IRQ */
 }
 
 static const ym3812_interface ym3812_config =
 {
-	sound_irq
+	DEVCB_DRIVER_LINE_MEMBER(actfancr_state,sound_irq)
 };
 
 /******************************************************************************/
 
 MACHINE_START_MEMBER(actfancr_state,actfancr)
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 MACHINE_START_MEMBER(actfancr_state,triothep)

@@ -1,4 +1,5 @@
 #include "video/bufsprite.h"
+#include "machine/eeprom.h"
 
 #define MASTER_CLOCK 57272700   // main oscillator frequency
 
@@ -27,7 +28,9 @@ public:
 		m_paletteram(*this, "paletteram"),
 		m_zoomram(*this, "zoomram"),
 		m_vidregs(*this, "vidregs"),
-		m_ram(*this, "ram"){ }
+		m_ram(*this, "ram"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom"){ }
 
 	/* memory pointers */
 	required_device<buffered_spriteram32_device> m_spriteram;
@@ -45,7 +48,8 @@ public:
 	UINT8          m_alphatable[256];
 
 	/* devices */
-	cpu_device *m_maincpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 
 	DECLARE_WRITE32_MEMBER(psikyosh_irqctrl_w);
 	DECLARE_WRITE32_MEMBER(paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w);
@@ -80,4 +84,5 @@ public:
 	void psikyosh_drawgfxzoom( bitmap_rgb32 &dest_bmp,const rectangle &clip,gfx_element *gfx,
 			UINT32 code,UINT32 color,int flipx,int flipy,int offsx,int offsy,
 			int alpha, int zoomx, int zoomy, int wide, int high, UINT32 z);
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };

@@ -210,9 +210,11 @@ class halleys_state : public driver_device
 {
 public:
 	halleys_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_blitter_ram(*this, "blitter_ram"),
-		m_io_ram(*this, "io_ram"){ }
+		m_io_ram(*this, "io_ram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	UINT16 *m_render_layer[MAX_LAYERS];
 	UINT8 m_sound_fifo[MAX_SOUNDS];
@@ -276,6 +278,8 @@ public:
 	void copy_fixed_2b(bitmap_ind16 &bitmap, UINT16 *source);
 	void filter_bitmap(bitmap_ind16 &bitmap, int mask);
 	void init_common();
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };
 
 
@@ -1069,7 +1073,7 @@ WRITE8_MEMBER(halleys_state::blitter_w)
 		if (i==0 || (i==4 && !data))
 		{
 			m_blitter_busy = 0;
-			if (m_firq_level) machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE); // make up delayed FIRQ's
+			if (m_firq_level) m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE); // make up delayed FIRQ's
 		}
 		else
 		{
@@ -1560,16 +1564,16 @@ TIMER_DEVICE_CALLBACK_MEMBER(halleys_state::halleys_scanline)
 
 		// In Halley's Comet, NMI is used exclusively to handle coin input
 		case 56*3:
-			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			break;
 
 		// FIRQ drives gameplay; we need both types of NMI each frame.
 		case 56*2:
-			m_mVectorType = 1; machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
+			m_mVectorType = 1; m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 			break;
 
 		case 56:
-			m_mVectorType = 0; machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
+			m_mVectorType = 0; m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 			break;
 	}
 }
@@ -1586,13 +1590,13 @@ TIMER_DEVICE_CALLBACK_MEMBER(halleys_state::benberob_scanline)
 			break;
 
 		case 56*3:
-			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			break;
 
 		case 56*2:
 		case 56*1:
 			// FIRQ must not happen when the blitter is being updated or it'll cause serious screen artifacts
-			if (!m_blitter_busy) machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE); else m_firq_level++;
+			if (!m_blitter_busy) m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE); else m_firq_level++;
 			break;
 	}
 }
@@ -1609,7 +1613,7 @@ WRITE8_MEMBER(halleys_state::firq_ack_w)
 	m_io_ram[0x9c] = data;
 
 	if (m_firq_level) m_firq_level--;
-	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
+	m_maincpu->set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -1623,7 +1627,7 @@ WRITE8_MEMBER(halleys_state::soundcommand_w)
 {
 	m_io_ram[0x8a] = data;
 	soundlatch_byte_w(space,offset,data);
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 

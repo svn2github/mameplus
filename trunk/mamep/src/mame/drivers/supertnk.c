@@ -109,7 +109,8 @@ class supertnk_state : public driver_device
 {
 public:
 	supertnk_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu") { }
 
 	UINT8 *m_videoram[3];
 	UINT8 m_rom_bank;
@@ -127,6 +128,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_supertnk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(supertnk_interrupt);
+	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -177,7 +179,7 @@ INTERRUPT_GEN_MEMBER(supertnk_state::supertnk_interrupt)
 
 WRITE8_MEMBER(supertnk_state::supertnk_interrupt_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -285,7 +287,7 @@ UINT32 supertnk_state::screen_update_supertnk(screen_device &screen, bitmap_rgb3
 
 void supertnk_state::machine_reset()
 {
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 	supertnk_bankswitch_0_w(space, 0, 0);
 	supertnk_bankswitch_1_w(space, 0, 0);
 

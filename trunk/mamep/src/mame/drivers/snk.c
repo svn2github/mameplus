@@ -275,28 +275,28 @@ READ8_MEMBER(snk_state::snk_cpuA_nmi_trigger_r)
 {
 	if(!space.debugger_access())
 	{
-		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 	return 0xff;
 }
 
 WRITE8_MEMBER(snk_state::snk_cpuA_nmi_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 READ8_MEMBER(snk_state::snk_cpuB_nmi_trigger_r)
 {
 	if(!space.debugger_access())
 	{
-		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 	return 0xff;
 }
 
 WRITE8_MEMBER(snk_state::snk_cpuB_nmi_ack_w)
 {
-	machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 /*********************************************************************/
@@ -318,7 +318,7 @@ WRITE8_MEMBER(snk_state::marvins_soundlatch_w)
 {
 	m_marvins_sound_busy_flag = 1;
 	soundlatch_byte_w(space, offset, data);
-	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(snk_state::marvins_soundlatch_r)
@@ -334,7 +334,7 @@ CUSTOM_INPUT_MEMBER(snk_state::marvins_sound_busy)
 
 READ8_MEMBER(snk_state::marvins_sound_nmi_ack_r)
 {
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	return 0xff;
 }
 
@@ -357,7 +357,7 @@ TIMER_CALLBACK_MEMBER(snk_state::sgladiat_sndirq_update_callback)
 			break;
 	}
 
-	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, (m_sound_status & 0x8) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, (m_sound_status & 0x8) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -381,7 +381,7 @@ READ8_MEMBER(snk_state::sgladiat_sound_nmi_ack_r)
 
 READ8_MEMBER(snk_state::sgladiat_sound_irq_ack_r)
 {
-	machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return 0xff;
 }
 
@@ -442,16 +442,15 @@ TIMER_CALLBACK_MEMBER(snk_state::sndirq_update_callback)
 			break;
 	}
 
-	machine().device("audiocpu")->execute().set_input_line(0, (m_sound_status & 0xb) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, (m_sound_status & 0xb) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 
-static WRITE_LINE_DEVICE_HANDLER( ymirq_callback_1 )
+WRITE_LINE_MEMBER(snk_state::ymirq_callback_1 )
 {
-	snk_state *drvstate = device->machine().driver_data<snk_state>();
 	if (state)
-		device->machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),drvstate), YM1IRQ_ASSERT);
+		machine().scheduler().synchronize(timer_expired_delegate(FUNC(snk_state::sndirq_update_callback),this), YM1IRQ_ASSERT);
 }
 
 WRITE_LINE_MEMBER(snk_state::ymirq_callback_2)
@@ -463,7 +462,7 @@ WRITE_LINE_MEMBER(snk_state::ymirq_callback_2)
 
 static const ym3526_interface ym3526_config_1 =
 {
-	DEVCB_LINE(ymirq_callback_1)
+	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_1)
 };
 
 static const ym3526_interface ym3526_config_2 =
@@ -473,7 +472,7 @@ static const ym3526_interface ym3526_config_2 =
 
 static const ym3812_interface ym3812_config_1 =
 {
-	ymirq_callback_1
+	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_1)
 };
 
 static const y8950_interface y8950_config_2 =
@@ -6252,7 +6251,7 @@ ROM_END
 DRIVER_INIT_MEMBER(snk_state,countryc)
 {
 	// replace coin counter with trackball select
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xc300, 0xc300, write8_delegate(FUNC(snk_state::countryc_trackball_w),this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xc300, 0xc300, write8_delegate(FUNC(snk_state::countryc_trackball_w),this));
 }
 
 

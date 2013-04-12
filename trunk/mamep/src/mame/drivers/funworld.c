@@ -53,10 +53,10 @@
   * Royal Card Professional 2.0,                      Digital Dreams,     1993.
   * Lucky Lady (3x3 deal),                            TAB Austria,        1991.
   * Lucky Lady (4x1 aces),                            TAB Austria,        1991.
-  * Magic Card II (Bulgarian hack),                   Impera,             1996.
-  * Magic Card II (Nov, Yugoslavian hack),            Impera,             1996.
-  * Magic Card II (hack, green TAB or Impera board),  Impera,             1996.
-  * Magic Card II (hack, blue TAB board, encrypted),  Impera,             1996.
+  * Magic Card II (Bulgarian),                        Impera,             1996.
+  * Magic Card II (Nov, Yugoslavian),                 Impera,             1996.
+  * Magic Card II (green TAB or Impera board),        Impera,             1996.
+  * Magic Card II (blue TAB board, encrypted),        Impera,             1996.
   * Royal Vegas Joker Card (Slow deal),               Fun World,          1993.
   * Royal Vegas Joker Card (Fast deal),               Soft Design,        1993.
   * Royal Vegas Joker Card (Fast deal, english gfx),  Soft Design,        1993.
@@ -819,6 +819,14 @@
     'normal' mode. The game could pay through regular hopper, or
      through manual switch/button, discharging the credits one
      by one.
+
+  [2013/04/09]
+  - Added default NVRAM to magicrd2b, magicrd2c and royalcrdp,
+     allowing to boot them. Promoted to working state.
+  - Removed the 'hack' in the Magic Card 2 sets description...
+     Almost all the sets on this driver were hacked in different
+     degrees. Not proof that these were released as originals,
+     or just a hack.
 
 
   *** TO DO ***
@@ -4011,6 +4019,9 @@ ROM_START( royalcrdp )
 	ROM_REGION( 0x0200, "proms", 0 )
 	ROM_LOAD( "n82s147a.bin",     0x0000, 0x0200, CRC(8bc86f48) SHA1(4c677ab9314a1f571e35104b22659e6811aeb194) )
 
+	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM */
+	ROM_LOAD( "royalcrdp_nvram.bin", 0x0000, 0x0800, BAD_DUMP CRC(553f8c66) SHA1(d2c21786d715f81c537d860d8515fda6d766f630) )
+
 	ROM_REGION( 0x0200, "plds", 0 ) /* correct PAL dump */
 	ROM_LOAD( "palce16v8h_1.bin", 0x0000, 0x0117, CRC(c89d2f52) SHA1(f9d52d9c42ef95b7b85bbf6d09888ebdeac11fd3) )
 ROM_END
@@ -4128,6 +4139,9 @@ ROM_START( magicrd2b )  /* Imatic Yugoslavian hack for green TAB or Impera board
 	ROM_LOAD( "mc2gr2.bin",   0x0000, 0x8000, CRC(733da697) SHA1(45122c64d5a371ec91cecc67b7faf179078e714d) )
 	ROM_LOAD( "mc2gr1.bin",   0x8000, 0x8000, CRC(2406b8d2) SHA1(e9d7a25562fd5adee351d7ef6ba02fff6aab021a) )
 
+	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM (passed protection) */
+	ROM_LOAD( "mc2_v1-v2_nvram.bin", 0x0000, 0x0800, BAD_DUMP CRC(f88c493d) SHA1(8a5352b46ab68164cd7adaaad6f15f04327b7451) )
+
 	ROM_REGION( 0x0200, "proms", 0 )
 	ROM_LOAD( "mc2-82s147.bin", 0x0000, 0x0200, CRC(aa91cc35) SHA1(79f9a755441500e618c4183f524f969fffd44100) )
 
@@ -4144,6 +4158,9 @@ ROM_START( magicrd2c )  /* Imatic Yugoslavian hack for blue TAB board (encrypted
 	ROM_REGION( 0x10000, "gfx1", 0 )
 	ROM_LOAD( "mc2gr1b.bin",  0x0000, 0x8000, CRC(ce2629a7) SHA1(84767ed5da8dcee44a210255537e10372bcc264b) )
 	ROM_LOAD( "mc2gr2b.bin",  0x8000, 0x8000, CRC(d2bf8bde) SHA1(975b8f43a0396c09e357b96d5ae7381b12152b9e) )
+
+	ROM_REGION( 0x0800, "nvram", 0 )    /* default NVRAM (passed protection) */
+	ROM_LOAD( "mc2_v1-v2_nvram.bin", 0x0000, 0x0800, BAD_DUMP CRC(f88c493d) SHA1(8a5352b46ab68164cd7adaaad6f15f04327b7451) )
 
 	ROM_REGION( 0x0200, "proms", 0 )
 	ROM_LOAD( "mc2-82s147.bin", 0x0000, 0x0200, CRC(aa91cc35) SHA1(79f9a755441500e618c4183f524f969fffd44100) )
@@ -5115,7 +5132,7 @@ DRIVER_INIT_MEMBER(funworld_state, multiwin)
 ******************************************************/
 {
 	UINT8 *ROM = memregion("maincpu")->base();
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	int x;
 
@@ -5149,7 +5166,7 @@ DRIVER_INIT_MEMBER(funworld_state, royalcdc)
 ******************************************************/
 
 	UINT8 *ROM = memregion("maincpu")->base();
-	address_space &space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	int x;
 
@@ -5366,7 +5383,7 @@ GAMEL( 1991, royalcrdd, royalcrd, royalcd1, royalcrd,  driver_device,  0,       
 GAMEL( 1991, royalcrde, royalcrd, royalcd1, royalcrd,  driver_device,  0,        ROT0, "TAB Austria",     "Royal Card (Austrian, set 6)",                    0,                       layout_jollycrd )
 GAMEL( 1991, royalcrdt, royalcrd, royalcd1, royalcrd,  driver_device,  0,        ROT0, "TAB Austria",     "Royal Card (TAB original)",                       0,                       layout_jollycrd )
 GAME(  1991, royalcrdf, royalcrd, royalcd1, royalcrd,  funworld_state, royalcdc, ROT0, "Evona Electronic","Royal Card (Slovak, encrypted)",                  GAME_NOT_WORKING )
-GAME(  1993, royalcrdp, royalcrd, cuoreuno, royalcrd,  driver_device,  0,        ROT0, "Digital Dreams",  "Royal Card v2.0 Professional",                    GAME_NOT_WORKING )
+GAME(  1993, royalcrdp, royalcrd, cuoreuno, royalcrd,  driver_device,  0,        ROT0, "Digital Dreams",  "Royal Card v2.0 Professional",                    0 )
 GAMEL( 199?, witchryl,  0,        witchryl, witchryl,  driver_device,  0,        ROT0, "Video Klein",     "Witch Royal (Export version 2.1)",                0,                       layout_jollycrd )
 
 // Lucky Lady based...
@@ -5374,10 +5391,10 @@ GAMEL( 1991, lluck3x3,  royalcrd, cuoreuno, royalcrd,  driver_device,  0,       
 GAMEL( 1991, lluck4x1,  royalcrd, royalcd1, royalcrd,  driver_device,  0,        ROT0, "TAB Austria",     "Lucky Lady (4x1 aces)",                           0,                       layout_jollycrd )
 
 // Magic Card 2 based...
-GAMEL( 1996, magicrd2,  0,        magicrd2, magicrd2,  driver_device,  0,        ROT0, "Impera",          "Magic Card II (Bulgarian hack)",                  0,                       layout_jollycrd )
-GAMEL( 1996, magicrd2a, magicrd2, magicrd2, magicrd2,  driver_device,  0,        ROT0, "Impera",          "Magic Card II (Nov, Yugoslavian hack)",           0,                       layout_jollycrd )
-GAME(  1996, magicrd2b, magicrd2, magicrd2, magicrd2,  funworld_state, magicd2b, ROT0, "Impera",          "Magic Card II (hack, green TAB or Impera board)", GAME_NOT_WORKING )
-GAME(  1996, magicrd2c, magicrd2, magicrd2, magicrd2,  funworld_state, magicd2c, ROT0, "Impera",          "Magic Card II (hack, blue TAB board, encrypted)", GAME_NOT_WORKING )
+GAMEL( 1996, magicrd2,  0,        magicrd2, magicrd2,  driver_device,  0,        ROT0, "Impera",          "Magic Card II (Bulgarian)",                       0,                       layout_jollycrd )
+GAMEL( 1996, magicrd2a, magicrd2, magicrd2, magicrd2,  driver_device,  0,        ROT0, "Impera",          "Magic Card II (Nov, Yugoslavian)",                0,                       layout_jollycrd )
+GAME(  1996, magicrd2b, magicrd2, magicrd2, magicrd2,  funworld_state, magicd2b, ROT0, "Impera",          "Magic Card II (green TAB or Impera board)",       0 )
+GAME(  1996, magicrd2c, magicrd2, magicrd2, magicrd2,  funworld_state, magicd2c, ROT0, "Impera",          "Magic Card II (blue TAB board, encrypted)",       0 )
 
 // Joker Card based...
 GAMEL( 1993, vegasslw,  0,        fw2ndpal, vegasslw,  driver_device,  0,        ROT0, "Fun World",       "Royal Vegas Joker Card (slow deal)",              0,                       layout_jollycrd )

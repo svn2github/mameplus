@@ -9,12 +9,17 @@ class equites_state : public driver_device
 {
 public:
 	equites_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_bg_videoram(*this, "bg_videoram"),
 		m_spriteram(*this, "spriteram"),
 		m_workram(*this, "workram"),
 		m_spriteram_2(*this, "spriteram_2"),
-		m_mcu_ram(*this, "mcu_ram"){ }
+		m_mcu_ram(*this, "mcu_ram"),
+		m_mcu(*this, "mcu"),
+		m_dac_1(*this, "dac1"),
+		m_dac_2(*this, "dac2"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_bg_videoram;
@@ -54,11 +59,10 @@ public:
 #endif
 
 	/* devices */
-	device_t *m_mcu;
-	device_t *m_audio_cpu;
+	optional_device<cpu_device> m_mcu;
 	msm5232_device *m_msm;
-	dac_device *m_dac_1;
-	dac_device *m_dac_2;
+	required_device<dac_device> m_dac_1;
+	required_device<dac_device> m_dac_2;
 	DECLARE_WRITE8_MEMBER(equites_c0f8_w);
 	DECLARE_WRITE8_MEMBER(equites_cymbal_ctrl_w);
 	DECLARE_WRITE8_MEMBER(equites_dac_latch_w);
@@ -118,4 +122,6 @@ public:
 	void equites_update_dac(  );
 	void unpack_block( const char *region, int offset, int size );
 	void unpack_region( const char *region );
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 };

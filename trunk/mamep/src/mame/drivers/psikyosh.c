@@ -321,13 +321,11 @@ static const eeprom_interface eeprom_interface_93C56 =
 
 WRITE32_MEMBER(psikyosh_state::psh_eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if (ACCESSING_BITS_24_31)
 	{
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit((data & 0x20000000) ? 1 : 0);
-		eeprom->set_cs_line((data & 0x80000000) ? CLEAR_LINE : ASSERT_LINE);
-		eeprom->set_clock_line((data & 0x40000000) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->write_bit((data & 0x20000000) ? 1 : 0);
+		m_eeprom->set_cs_line((data & 0x80000000) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->set_clock_line((data & 0x40000000) ? ASSERT_LINE : CLEAR_LINE);
 
 		return;
 	}
@@ -782,21 +780,19 @@ static INPUT_PORTS_START( mjgtaste )
 INPUT_PORTS_END
 
 
-static void irqhandler(device_t *device, int linestate)
+WRITE_LINE_MEMBER(psikyosh_state::irqhandler)
 {
-	psikyosh_state *state = device->machine().driver_data<psikyosh_state>();
-	state->m_maincpu->set_input_line(12, linestate ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(12, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf278b_interface ymf278b_config =
 {
-	irqhandler
+	DEVCB_DRIVER_LINE_MEMBER(psikyosh_state,irqhandler)
 };
 
 
 void psikyosh_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	membank("bank2")->configure_entries(0, 0x1000, memregion("gfx1")->base(), 0x20000);
 }
@@ -1205,60 +1201,60 @@ ROM_END
 
 DRIVER_INIT_MEMBER(psikyosh_state,soldivid)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,s1945ii)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,daraku)
 {
 	UINT8 *RAM = memregion("maincpu")->base();
 	membank("bank1")->set_base(&RAM[0x100000]);
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,sbomberb)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,gunbird2)
 {
 	UINT8 *RAM = memregion("maincpu")->base();
 	membank("bank1")->set_base(&RAM[0x100000]);
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,s1945iii)
 {
 	UINT8 *RAM = memregion("maincpu")->base();
 	membank("bank1")->set_base(&RAM[0x100000]);
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,dragnblz)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,gnbarich)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,tgm2)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 }
 
 DRIVER_INIT_MEMBER(psikyosh_state,mjgtaste)
 {
-	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(m_maincpu, SH2DRC_FASTEST_OPTIONS);
 	/* needs to install mahjong controls too (can select joystick in test mode tho) */
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_read_handler(0x03000000, 0x03000003, read32_delegate(FUNC(psikyosh_state::mjgtaste_input_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x03000000, 0x03000003, read32_delegate(FUNC(psikyosh_state::mjgtaste_input_r),this));
 }
 
 

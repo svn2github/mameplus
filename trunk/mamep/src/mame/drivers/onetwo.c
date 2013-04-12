@@ -50,10 +50,12 @@ class onetwo_state : public driver_device
 {
 public:
 	onetwo_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_paletteram(*this, "paletteram"),
 		m_paletteram2(*this, "paletteram2"),
-		m_fgram(*this, "fgram"){ }
+		m_fgram(*this, "fgram"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_paletteram;
@@ -64,8 +66,8 @@ public:
 	tilemap_t *m_fg_tilemap;
 
 	/* devices */
-	cpu_device *m_maincpu;
-	cpu_device *m_audiocpu;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	DECLARE_WRITE8_MEMBER(onetwo_fgram_w);
 	DECLARE_WRITE8_MEMBER(onetwo_cpubank_w);
 	DECLARE_WRITE8_MEMBER(onetwo_coin_counters_w);
@@ -77,6 +79,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_onetwo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void set_color(int offset);
+	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 };
 
 
@@ -329,15 +332,14 @@ GFXDECODE_END
  *
  *************************************/
 
-static void irqhandler(device_t *device, int linestate)
+WRITE_LINE_MEMBER(onetwo_state::irqhandler)
 {
-	onetwo_state *state = device->machine().driver_data<onetwo_state>();
-	state->m_audiocpu->set_input_line(0, linestate);
+	m_audiocpu->set_input_line(0, state);
 }
 
 static const ym3812_interface ym3812_config =
 {
-	irqhandler  /* IRQ Line */
+	DEVCB_DRIVER_LINE_MEMBER(onetwo_state,irqhandler)  /* IRQ Line */
 };
 
 /*************************************
@@ -352,8 +354,6 @@ void onetwo_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
-	m_maincpu = machine().device<cpu_device>("maincpu");
-	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 static MACHINE_CONFIG_START( onetwo, onetwo_state )

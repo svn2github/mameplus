@@ -113,10 +113,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(bishi_state::bishi_scanline)
 	if (m_cur_control & 0x800)
 	{
 		if(scanline == 240) // vblank-out irq
-			machine().device("maincpu")->execute().set_input_line(M68K_IRQ_3, HOLD_LINE);
+			m_maincpu->set_input_line(M68K_IRQ_3, HOLD_LINE);
 
 		if(scanline == 0) // vblank-in irq
-			machine().device("maincpu")->execute().set_input_line(M68K_IRQ_4, HOLD_LINE);
+			m_maincpu->set_input_line(M68K_IRQ_4, HOLD_LINE);
 	}
 }
 
@@ -358,16 +358,14 @@ static INPUT_PORTS_START( bishi2p )
 INPUT_PORTS_END
 
 
-static void sound_irq_gen(device_t *device, int state)
+WRITE_LINE_MEMBER(bishi_state::sound_irq_gen)
 {
-	bishi_state *bishi = device->machine().driver_data<bishi_state>();
-
-	bishi->m_maincpu->set_input_line(M68K_IRQ_1, (state) ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(M68K_IRQ_1, (state) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymz280b_interface ymz280b_intf =
 {
-	sound_irq_gen
+	DEVCB_DRIVER_LINE_MEMBER(bishi_state,sound_irq_gen)
 };
 
 
@@ -389,7 +387,6 @@ static const k054338_interface bishi_k054338_intf =
 
 void bishi_state::machine_start()
 {
-	m_maincpu = machine().device<cpu_device>("maincpu");
 	m_k056832 = machine().device("k056832");
 	m_k054338 = machine().device("k054338");
 	m_k055555 = machine().device("k055555");

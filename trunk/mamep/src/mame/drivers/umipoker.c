@@ -26,12 +26,13 @@ class umipoker_state : public driver_device
 {
 public:
 	umipoker_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_vram_0(*this, "vra0"),
 		m_vram_1(*this, "vra1"),
 		m_vram_2(*this, "vra2"),
 		m_vram_3(*this, "vra3"),
-		m_z80_wram(*this, "z80_wram"){ }
+		m_z80_wram(*this, "z80_wram"),
+		m_maincpu(*this, "maincpu") { }
 
 	required_shared_ptr<UINT16> m_vram_0;
 	required_shared_ptr<UINT16> m_vram_1;
@@ -68,6 +69,7 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	UINT32 screen_update_umipoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	required_device<cpu_device> m_maincpu;
 };
 
 TILE_GET_INFO_MEMBER(umipoker_state::get_tile_info_0)
@@ -172,7 +174,7 @@ WRITE8_MEMBER(umipoker_state::z80_shared_ram_w)
 
 WRITE16_MEMBER(umipoker_state::umipoker_irq_ack_w)
 {
-	machine().device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
+	m_maincpu->set_input_line(6, CLEAR_LINE);
 
 	/* shouldn't happen */
 	if(data)
@@ -738,13 +740,13 @@ ROM_END
 
 DRIVER_INIT_MEMBER(umipoker_state,umipoker)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe00010, 0xe00011, write16_delegate(FUNC(umipoker_state::umi_counters_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xe00010, 0xe00011, write16_delegate(FUNC(umipoker_state::umi_counters_w), this));
 }
 
 DRIVER_INIT_MEMBER(umipoker_state,saiyukip)
 {
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe00010, 0xe00011, write16_delegate(FUNC(umipoker_state::saiyu_counters_w), this));
-	machine().device("maincpu")->memory().space(AS_PROGRAM).install_write_handler(0xe0000c, 0xe0000d, write16_delegate(FUNC(umipoker_state::lamps_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xe00010, 0xe00011, write16_delegate(FUNC(umipoker_state::saiyu_counters_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0xe0000c, 0xe0000d, write16_delegate(FUNC(umipoker_state::lamps_w), this));
 }
 
 

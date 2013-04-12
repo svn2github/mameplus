@@ -3,12 +3,13 @@
     tecmosys protection simulation
 
 ***************************************************************************/
+#include "machine/eeprom.h"
 
 class tecmosys_state : public driver_device
 {
 public:
 	tecmosys_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_tilemap_paletteram16(*this, "tmap_palette"),
 		m_bg2tilemap_ram(*this, "bg2tilemap_ram"),
@@ -22,7 +23,10 @@ public:
 		m_b00000regs(*this, "b00000regs"),
 		m_c00000regs(*this, "c00000regs"),
 		m_c80000regs(*this, "c80000regs"),
-		m_880000regs(*this, "880000regs"){ }
+		m_880000regs(*this, "880000regs"),
+		m_maincpu(*this, "maincpu"),
+		m_audiocpu(*this, "audiocpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	required_shared_ptr<UINT16> m_spriteram;
 	required_shared_ptr<UINT16> m_tilemap_paletteram16;
@@ -87,4 +91,8 @@ public:
 	void tecmosys_tilemap_copy_to_compose(UINT16 pri);
 	void tecmosys_do_final_mix(bitmap_rgb32 &bitmap);
 	void tecmosys_descramble();
+	DECLARE_WRITE_LINE_MEMBER(sound_irq);
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<eeprom_device> m_eeprom;
 };

@@ -208,7 +208,7 @@ WRITE16_MEMBER(tecmosys_state::sound_w)
 	{
 		machine().scheduler().synchronize();
 		soundlatch_byte_w(space, 0x00, data & 0xff);
-		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -269,20 +269,16 @@ READ16_MEMBER(tecmosys_state::unk880000_r)
 
 READ16_MEMBER(tecmosys_state::eeprom_r)
 {
-	device_t *device = machine().device("eeprom");
-	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		return ((eeprom->read_bit() & 0x01) << 11);
+	return ((m_eeprom->read_bit() & 0x01) << 11);
 }
 
 WRITE16_MEMBER(tecmosys_state::eeprom_w)
 {
-	device_t *device = machine().device("eeprom");
 	if ( ACCESSING_BITS_8_15 )
 	{
-		eeprom_device *eeprom = downcast<eeprom_device *>(device);
-		eeprom->write_bit(data & 0x0800);
-		eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE );
-		eeprom->set_clock_line((data & 0x0400) ? CLEAR_LINE: ASSERT_LINE );
+		m_eeprom->write_bit(data & 0x0800);
+		m_eeprom->set_cs_line((data & 0x0200) ? CLEAR_LINE : ASSERT_LINE );
+		m_eeprom->set_clock_line((data & 0x0400) ? CLEAR_LINE: ASSERT_LINE );
 	}
 }
 
@@ -436,15 +432,15 @@ GFXDECODE_END
 
 
 
-static void sound_irq(device_t *device, int irq)
+WRITE_LINE_MEMBER(tecmosys_state::sound_irq)
 {
 	/* IRQ */
-	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf262_interface tecmosys_ymf262_interface =
 {
-	sound_irq       /* irq */
+	DEVCB_DRIVER_LINE_MEMBER(tecmosys_state,sound_irq)       /* irq */
 };
 
 void tecmosys_state::machine_start()

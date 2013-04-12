@@ -5,18 +5,20 @@
     driver by Nicola Salmoria
 
 ***************************************************************************/
-
+#include "machine/eeprom.h"
 
 class _20pacgal_state : public driver_device
 {
 public:
 	_20pacgal_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_video_ram(*this, "video_ram"),
 		m_char_gfx_ram(*this, "char_gfx_ram"),
 		m_stars_seed(*this, "stars_seed"),
 		m_stars_ctrl(*this, "stars_ctrl"),
-		m_flip(*this, "flip"){ }
+		m_flip(*this, "flip"),
+		m_maincpu(*this, "maincpu"),
+		m_eeprom(*this, "eeprom") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_video_ram;
@@ -29,8 +31,8 @@ public:
 	UINT8 m_game_selected;  /* 0 = Ms. Pac-Man, 1 = Galaga */
 
 	/* devices */
-	cpu_device *m_maincpu;
-	device_t *m_eeprom;
+	required_device<cpu_device> m_maincpu;
+	required_device<eeprom_device> m_eeprom;
 
 	/* memory */
 	UINT8 m_sprite_gfx_ram[0x2000];
