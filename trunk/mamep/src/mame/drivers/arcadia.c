@@ -77,7 +77,7 @@ public:
 	DECLARE_DRIVER_INIT(rdwr);
 	DECLARE_DRIVER_INIT(ninj);
 	DECLARE_DRIVER_INIT(airh);
-	DECLARE_DRIVER_INIT(ldrba);
+	DECLARE_DRIVER_INIT(ldrb);
 	DECLARE_DRIVER_INIT(socc);
 	void arcadia_init();
 	inline void generic_decode(const char *tag, int bit7, int bit6, int bit5, int bit4, int bit3, int bit2, int bit1, int bit0);
@@ -519,7 +519,7 @@ ROM_START( ar_fast )
 	ROM_LOAD16_BYTE( "fast-v28_8-lo.u32", 0x0e0001, 0x10000, CRC(82603f68) SHA1(8affe73e97b966b8e63bff2c7914fb5ead7b60ff) )
 
 	ROM_REGION( 0x0200, "plds", 0 )
-	ROM_LOAD( "pal16l8-sec-scpa.bin", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-sec-scpa.u8", 0x0000, 0x0104, CRC(3a4df3aa) SHA1(d0e64af4e1602347af60cd97c6b5b1a9d65cb270) ) /* PAL is read protected */
 ROM_END
 
 
@@ -546,7 +546,7 @@ ROM_START( ar_fasta )
 	ROM_LOAD16_BYTE( "fast-v27_8-lo.u32", 0x0e0001, 0x10000, CRC(2d55af35) SHA1(5a6a3b12c222d16c30bc7f2a7904433614448e10) )
 
 	ROM_REGION( 0x0200, "plds", 0 )
-	ROM_LOAD( "pal16l8-sec-scpa.bin", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-sec-scpa.u8", 0x0000, 0x0104, CRC(3a4df3aa) SHA1(d0e64af4e1602347af60cd97c6b5b1a9d65cb270) )
 ROM_END
 
 
@@ -571,6 +571,9 @@ ROM_START( ar_ldrb )
 	ROM_LOAD16_BYTE( "leader_board_07-lo_v2.5.u21", 0xc0001, 0x10000, CRC(1afa9a4f) SHA1(3e5ca56e03d693a72424b9ad0717494ea8eb561e) )
 	ROM_LOAD16_BYTE( "leader_board_08-hi_v2.5.u28", 0xe0000, 0x10000, CRC(fbdca9af) SHA1(9612eb777a00ba4153f40eaefd162ca5b5efdb54) )
 	ROM_LOAD16_BYTE( "leader_board_08-lo_v2.5.u32", 0xe0001, 0x10000, CRC(322f52eb) SHA1(3033eb753fb8b3bf56b152377bf567b06a0c8144) )
+
+	ROM_REGION( 0x0200, "plds", 0 )
+	ROM_LOAD( "pal16l8-sec-scpa.u8", 0x0000, 0x0104, CRC(3a4df3aa) SHA1(d0e64af4e1602347af60cd97c6b5b1a9d65cb270) )
 ROM_END
 
 
@@ -595,6 +598,9 @@ ROM_START( ar_ldrba )
 	ROM_LOAD16_BYTE( "leader_board_07-lo_v2.4.u21", 0xc0001, 0x10000, CRC(c62dae9f) SHA1(59b8e1c2469edd57024a4f3ca4222811442fa077) )
 	ROM_LOAD16_BYTE( "leader_board_08-hi_v2.4.u28", 0xe0000, 0x10000, CRC(b5911807) SHA1(b2995b308b2618f312005f130048e73c151311ae) )
 	ROM_LOAD16_BYTE( "leader_board_08-lo_v2.4.u32", 0xe0001, 0x10000, CRC(1f1ea828) SHA1(4af463bc6d58d64d4f082971c71654a6bb0c26bc) )
+
+	ROM_REGION( 0x0200, "plds", 0 )
+	ROM_LOAD( "pal16l8-sec-scpa.u8", 0x0000, 0x0104, CRC(3a4df3aa) SHA1(d0e64af4e1602347af60cd97c6b5b1a9d65cb270) )
 ROM_END
 
 /* Arcadia LEADER BOARD v 2.6?  on PIGGYBACK 1.5 MBYTE ROM BOARD REV ? */
@@ -618,6 +624,9 @@ ROM_START( ar_ldrbb ) /* Later then v2.5?? as 7H & 7L match v2.5 and are newer t
 	ROM_LOAD16_BYTE( "ldrb_7l.u21", 0xc0001, 0x10000, CRC(1afa9a4f) SHA1(3e5ca56e03d693a72424b9ad0717494ea8eb561e) ) /* matches v2.5 */
 	ROM_LOAD16_BYTE( "ldrb_8h.u28", 0xe0000, 0x10000, CRC(701f50ba) SHA1(4ea6be00aa2d32d739fa6ec70ec8bce470b28f90) )
 	ROM_LOAD16_BYTE( "ldrb_8l.u32", 0xe0001, 0x10000, CRC(80642c1d) SHA1(fc2101b749db3ebb3499c8870026c05acf46fa4d) )
+
+	ROM_REGION( 0x0200, "plds", 0 )
+	ROM_LOAD( "pal16l8-sec-scpa.u8", 0x0000, 0x0104, CRC(3a4df3aa) SHA1(d0e64af4e1602347af60cd97c6b5b1a9d65cb270) )
 ROM_END
 
 /* NINJ V 2.5 */
@@ -871,17 +880,17 @@ void arcadia_amiga_state::arcadia_init()
  *
  *************************************/
 
-DRIVER_INIT_MEMBER(arcadia_amiga_state,none)   { arcadia_init(); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,airh)   { arcadia_init(); generic_decode("user3", 5, 0, 2, 4, 7, 6, 1, 3); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,bowl)   { arcadia_init(); generic_decode("user3", 7, 6, 0, 1, 2, 3, 4, 5); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,dart)   { arcadia_init(); generic_decode("user3", 4, 0, 7, 6, 3, 1, 2, 5); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,ldrba)  { arcadia_init(); generic_decode("user3", 2, 3, 4, 1, 0, 7, 5, 6); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,ninj)   { arcadia_init(); generic_decode("user3", 1, 6, 5, 7, 4, 2, 0, 3); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,rdwr)   { arcadia_init(); generic_decode("user3", 3, 1, 6, 4, 0, 5, 2, 7); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,sdwr)   { arcadia_init(); generic_decode("user3", 6, 3, 4, 5, 2, 1, 0, 7); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,socc)   { arcadia_init(); generic_decode("user3", 0, 7, 1, 6, 5, 4, 3, 2); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,sprg)   { arcadia_init(); generic_decode("user3", 4, 7, 3, 0, 6, 5, 2, 1); }
-DRIVER_INIT_MEMBER(arcadia_amiga_state,xeon)   { arcadia_init(); generic_decode("user3", 3, 1, 2, 4, 0, 5, 6, 7); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,none) { arcadia_init(); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,airh) { arcadia_init(); generic_decode("user3", 5, 0, 2, 4, 7, 6, 1, 3); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,bowl) { arcadia_init(); generic_decode("user3", 7, 6, 0, 1, 2, 3, 4, 5); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,dart) { arcadia_init(); generic_decode("user3", 4, 0, 7, 6, 3, 1, 2, 5); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,ldrb) { arcadia_init(); generic_decode("user3", 2, 3, 4, 1, 0, 7, 5, 6); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,ninj) { arcadia_init(); generic_decode("user3", 1, 6, 5, 7, 4, 2, 0, 3); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,rdwr) { arcadia_init(); generic_decode("user3", 3, 1, 6, 4, 0, 5, 2, 7); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,sdwr) { arcadia_init(); generic_decode("user3", 6, 3, 4, 5, 2, 1, 0, 7); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,socc) { arcadia_init(); generic_decode("user3", 0, 7, 1, 6, 5, 4, 3, 2); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,sprg) { arcadia_init(); generic_decode("user3", 4, 7, 3, 0, 6, 5, 2, 1); }
+DRIVER_INIT_MEMBER(arcadia_amiga_state,xeon) { arcadia_init(); generic_decode("user3", 3, 1, 2, 4, 0, 5, 6, 7); }
 
 /*************************************
  *
@@ -904,8 +913,8 @@ GAME( 1987, ar_dart2,   ar_dart, arcadia, arcadia, arcadia_amiga_state, dart,  R
 GAME( 1988, ar_fast,    ar_bios, arcadia, arcadia, arcadia_amiga_state, none,  ROT0, "Arcadia Systems", "Magic Johnson's Fast Break (Arcadia, V 2.8)", 0 )
 GAME( 1988, ar_fasta,   ar_fast, arcadia, arcadia, arcadia_amiga_state, none,  ROT0, "Arcadia Systems", "Magic Johnson's Fast Break (Arcadia, V 2.7)", 0 )
 
-GAME( 1988, ar_ldrb,    ar_bios, arcadia, arcadia, arcadia_amiga_state, none,  ROT0, "Arcadia Systems", "Leader Board (Arcadia, set 1, V 2.5)", 0 )
-GAME( 1988, ar_ldrba,   ar_ldrb, arcadia, arcadia, arcadia_amiga_state, ldrba, ROT0, "Arcadia Systems", "Leader Board (Arcadia, set 2, V 2.4)", 0 )
+GAME( 1988, ar_ldrb,    ar_bios, arcadia, arcadia, arcadia_amiga_state, ldrb,  ROT0, "Arcadia Systems", "Leader Board (Arcadia, set 1, V 2.5)", 0 )
+GAME( 1988, ar_ldrba,   ar_ldrb, arcadia, arcadia, arcadia_amiga_state, none,  ROT0, "Arcadia Systems", "Leader Board (Arcadia, set 2, V 2.4)", 0 )
 GAME( 1988, ar_ldrbb,   ar_ldrb, arcadia, arcadia, arcadia_amiga_state, none,  ROT0, "Arcadia Systems", "Leader Board (Arcadia, set 3)", 0 )
 
 GAME( 1987, ar_ninj,    ar_bios, arcadia, arcadia, arcadia_amiga_state, ninj,  ROT0, "Arcadia Systems", "Ninja Mission (Arcadia, set 1, V 2.5)", 0 )

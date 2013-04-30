@@ -204,7 +204,7 @@ static ADDRESS_MAP_START( msisaac_map, AS_PROGRAM, 8, msisaac_state )
 	AM_RANGE(0xf400, 0xf7ff) AM_RAM_WRITE(msisaac_fg_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xf800, 0xfbff) AM_RAM_WRITE(msisaac_bg2_videoram_w) AM_SHARE("videoram3")
 	AM_RANGE(0xfc00, 0xffff) AM_RAM_WRITE(msisaac_bg_videoram_w) AM_SHARE("videoram2")
-//  AM_RANGE(0xf801, 0xf801) AM_WRITE_LEGACY(msisaac_bgcolor_w)
+//  AM_RANGE(0xf801, 0xf801) AM_WRITE(msisaac_bgcolor_w)
 //  AM_RANGE(0xfc00, 0xfc00) AM_WRITE(flip_screen_w)
 //  AM_RANGE(0xfc03, 0xfc04) AM_WRITE(msisaac_coin_counter_w)
 ADDRESS_MAP_END
@@ -236,20 +236,17 @@ MACHINE_RESET_MEMBER(msisaac_state,ta7630)
 
 WRITE8_MEMBER(msisaac_state::sound_control_0_w)
 {
-	device_t *device = machine().device("msm");
 	m_snd_ctrl0 = data & 0xff;
 	//popmessage("SND0 0=%2x 1=%2x", m_snd_ctrl0, m_snd_ctrl1);
 
-	device_sound_interface *sound;
-	device->interface(sound);
-	sound->set_output_gain(0, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
-	sound->set_output_gain(1, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
-	sound->set_output_gain(2, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
-	sound->set_output_gain(3, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
-	sound->set_output_gain(4, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
-	sound->set_output_gain(5, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
-	sound->set_output_gain(6, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
-	sound->set_output_gain(7, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
+	m_msm->set_output_gain(0, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
+	m_msm->set_output_gain(1, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
+	m_msm->set_output_gain(2, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
+	m_msm->set_output_gain(3, m_vol_ctrl[m_snd_ctrl0 & 15] / 100.0);    /* group1 from msm5232 */
+	m_msm->set_output_gain(4, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
+	m_msm->set_output_gain(5, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
+	m_msm->set_output_gain(6, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
+	m_msm->set_output_gain(7, m_vol_ctrl[(m_snd_ctrl0 >> 4) & 15] / 100.0); /* group2 from msm5232 */
 }
 WRITE8_MEMBER(msisaac_state::sound_control_1_w)
 {
@@ -432,7 +429,6 @@ static const msm5232_interface msm5232_config =
 
 void msisaac_state::machine_start()
 {
-
 	/* video */
 	save_item(NAME(m_bg2_textbank));
 	/* sound */

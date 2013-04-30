@@ -87,7 +87,8 @@ class chinagat_state : public ddragon_state
 {
 public:
 	chinagat_state(const machine_config &mconfig, device_type type, const char *tag)
-		: ddragon_state(mconfig, type, tag) { };
+		: ddragon_state(mconfig, type, tag),
+		m_adpcm(*this, "adpcm") { };
 
 	TIMER_DEVICE_CALLBACK_MEMBER(chinagat_scanline);
 	DECLARE_DRIVER_INIT(chinagat);
@@ -106,6 +107,7 @@ public:
 	DECLARE_READ8_MEMBER( saiyugoub1_m5205_irq_r );
 	DECLARE_WRITE_LINE_MEMBER(saiyugoub1_m5205_irq_w);
 	DECLARE_WRITE_LINE_MEMBER(chinagat_irq_handler);
+	optional_device<msm5205_device> m_adpcm;
 };
 
 
@@ -200,12 +202,12 @@ WRITE8_MEMBER(chinagat_state::chinagat_video_ctrl_w )
 
 WRITE8_MEMBER(chinagat_state::chinagat_bankswitch_w )
 {
-	space.machine().root_device().membank("bank1")->set_entry(data & 0x07); // shall we check (data & 7) < 6 (# of banks)?
+	membank("bank1")->set_entry(data & 0x07); // shall we check (data & 7) < 6 (# of banks)?
 }
 
 WRITE8_MEMBER(chinagat_state::chinagat_sub_bankswitch_w )
 {
-	space.machine().root_device().membank("bank4")->set_entry(data & 0x07); // shall we check (data & 7) < 6 (# of banks)?
+	membank("bank4")->set_entry(data & 0x07); // shall we check (data & 7) < 6 (# of banks)?
 }
 
 READ8_MEMBER(chinagat_state::saiyugoub1_mcu_command_r )
@@ -213,7 +215,7 @@ READ8_MEMBER(chinagat_state::saiyugoub1_mcu_command_r )
 #if 0
 	if (m_mcu_command == 0x78)
 	{
-		space.machine().device<cpu_device>("mcu")->suspend(SUSPEND_REASON_HALT, 1); /* Suspend (speed up) */
+		m_mcu->suspend(SUSPEND_REASON_HALT, 1); /* Suspend (speed up) */
 	}
 #endif
 	return m_mcu_command;
@@ -225,7 +227,7 @@ WRITE8_MEMBER(chinagat_state::saiyugoub1_mcu_command_w )
 #if 0
 	if (data != 0x78)
 	{
-		space.machine().device<cpu_device>("mcu")->resume(SUSPEND_REASON_HALT); /* Wake up */
+		m_mcu->resume(SUSPEND_REASON_HALT); /* Wake up */
 	}
 #endif
 }
@@ -238,7 +240,6 @@ WRITE8_MEMBER(chinagat_state::saiyugoub1_adpcm_rom_addr_w )
 
 WRITE8_MEMBER(chinagat_state::saiyugoub1_adpcm_control_w )
 {
-	device_t *device = machine().device("adpcm");
 	/* i8748 Port 2 write */
 	UINT8 *saiyugoub1_adpcm_rom = memregion("adpcm")->base();
 
@@ -246,7 +247,7 @@ WRITE8_MEMBER(chinagat_state::saiyugoub1_adpcm_control_w )
 	{
 		logerror("ADPCM output disabled\n");
 		m_pcm_nibble = 0x0f;
-		msm5205_reset_w(device, 1);
+		msm5205_reset_w(m_adpcm, 1);
 	}
 	else
 	{
@@ -275,7 +276,7 @@ WRITE8_MEMBER(chinagat_state::saiyugoub1_adpcm_control_w )
 
 		if (((m_i8748_P2 & 0xc) >= 8) && ((data & 0xc) == 4))
 		{
-			msm5205_data_w (device, m_pcm_nibble);
+			msm5205_data_w (m_adpcm, m_pcm_nibble);
 			logerror("Writing %02x to m5205\n", m_pcm_nibble);
 		}
 		logerror("$ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%1x  PCM_data=%02x\n", m_adpcm_addr, m_i8748_P1, data, m_i8748_P2, m_pcm_shift, m_pcm_nibble);
@@ -291,15 +292,14 @@ WRITE8_MEMBER(chinagat_state::saiyugoub1_m5205_clk_w )
 
 	/* Actually, T0 output clk mode is not supported by the i8048 core */
 #if 0
-	device_t *device = machine().device("adpcm");
 	m_m5205_clk++;
 	if (m_m5205_clk == 8)
 	{
-		msm5205_vclk_w(device, 1);      /* ??? */
+		msm5205_vclk_w(m_adpcm, 1);      /* ??? */
 		m_m5205_clk = 0;
 	}
 	else
-		msm5205_vclk_w(device, 0);      /* ??? */
+		msm5205_vclk_w(m_adpcm, 0);      /* ??? */
 #endif
 }
 

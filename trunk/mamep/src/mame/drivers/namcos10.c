@@ -321,13 +321,10 @@ public:
 
 
 static ADDRESS_MAP_START( namcos10_map, AS_PROGRAM, 32, namcos10_state )
-	AM_RANGE(0x00000000, 0x00ffffff) AM_RAM AM_SHARE("share1") /* ram */
 	AM_RANGE(0x1f500000, 0x1f5007ff) AM_RAM AM_SHARE("share3") /* ram? stores block numbers */
 	AM_RANGE(0x1fc00000, 0x1fffffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
-	AM_RANGE(0x80000000, 0x80ffffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x9f500000, 0x9f5007ff) AM_RAM AM_SHARE("share3") /* ram? stores block numbers */
 	AM_RANGE(0x9fc00000, 0x9fffffff) AM_ROM AM_SHARE("share2") /* bios mirror */
-	AM_RANGE(0xa0000000, 0xa0ffffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0xbf500000, 0xbf5007ff) AM_RAM AM_SHARE("share3") /* ram? stores block numbers */
 	AM_RANGE(0xbfc00000, 0xbfffffff) AM_ROM AM_SHARE("share2") /* bios mirror */
 ADDRESS_MAP_END
@@ -600,6 +597,9 @@ static MACHINE_CONFIG_START( namcos10_memm, namcos10_state )
 	MCFG_CPU_ADD( "maincpu", CXD8606BQ, XTAL_101_4912MHz )
 	MCFG_CPU_PROGRAM_MAP( namcos10_memm_map )
 
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("16M")
+
 	MCFG_MACHINE_RESET_OVERRIDE(namcos10_state, namcos10 )
 
 	/* video hardware */
@@ -613,6 +613,9 @@ static MACHINE_CONFIG_START( namcos10_memn, namcos10_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8606BQ, XTAL_101_4912MHz )
 	MCFG_CPU_PROGRAM_MAP( namcos10_memn_map )
+
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("16M")
 
 	MCFG_MACHINE_RESET_OVERRIDE(namcos10_state, namcos10 )
 

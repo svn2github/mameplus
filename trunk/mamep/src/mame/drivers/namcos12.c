@@ -1044,9 +1044,12 @@ class namcos12_state : public driver_device
 public:
 	namcos12_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_rtc(*this, "rtc"),
-			m_sharedram(*this, "sharedram") ,
-		m_maincpu(*this, "maincpu") { }
+		m_rtc(*this, "rtc"),
+		m_sharedram(*this, "sharedram") ,
+		m_maincpu(*this, "maincpu"),
+		m_ram(*this, "maincpu:ram")
+	{
+	}
 
 	required_device<rtc4543_device> m_rtc;
 	required_shared_ptr<UINT32> m_sharedram;
@@ -1101,7 +1104,8 @@ public:
 	void namcos12_rom_read( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
 	void namcos12_sub_irq( screen_device &screen, bool vblank_state );
 	void system11gun_install(  );
-	required_device<cpu_device> m_maincpu;
+	required_device<psxcpu_device> m_maincpu;
+	required_device<ram_device> m_ram;
 };
 
 inline void ATTR_PRINTF(3,4) namcos12_state::verboselog( int n_level, const char *s_fmt, ... )
@@ -1193,7 +1197,7 @@ void namcos12_state::namcos12_rom_read( UINT32 *p_n_psxram, UINT32 n_address, IN
 	INT32 n_ramleft;
 
 	// TODO: the check for going past the end of ram should be in dma.c
-	UINT32 m_n_psxramsize = memshare("share1")->bytes();
+	UINT32 m_n_psxramsize = m_ram->size();
 
 	if(m_has_tektagt_dma && !m_n_dmaoffset)
 	{
@@ -1255,7 +1259,6 @@ WRITE32_MEMBER(namcos12_state::s12_dma_bias_w)
 }
 
 static ADDRESS_MAP_START( namcos12_map, AS_PROGRAM, 32, namcos12_state )
-	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_SHARE("share1") /* ram */
 	AM_RANGE(0x1f000000, 0x1f000003) AM_READNOP AM_WRITE(bankoffset_w)          /* banking */
 	AM_RANGE(0x1f080000, 0x1f083fff) AM_READWRITE(sharedram_r, sharedram_w) AM_SHARE("sharedram") /* shared ram?? */
 	AM_RANGE(0x1f140000, 0x1f140fff) AM_DEVREADWRITE8_LEGACY("at28c16", at28c16_r, at28c16_w, 0x00ff00ff) /* eeprom */
@@ -1263,9 +1266,7 @@ static ADDRESS_MAP_START( namcos12_map, AS_PROGRAM, 32, namcos12_state )
 	AM_RANGE(0x1f700000, 0x1f70ffff) AM_WRITE(dmaoffset_w)  /* dma */
 	AM_RANGE(0x1fa00000, 0x1fbfffff) AM_ROMBANK("bank1") /* banked roms */
 	AM_RANGE(0x1fc00000, 0x1fffffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
-	AM_RANGE(0x80000000, 0x803fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x9fc00000, 0x9fffffff) AM_ROM AM_SHARE("share2") /* bios mirror */
-	AM_RANGE(0xa0000000, 0xa03fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0xbfc00000, 0xbfffffff) AM_ROM AM_SHARE("share2") /* bios mirror */
 ADDRESS_MAP_END
 
@@ -1625,6 +1626,9 @@ static MACHINE_CONFIG_START( coh700, namcos12_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8661R, XTAL_100MHz )
 	MCFG_CPU_PROGRAM_MAP( namcos12_map)
+
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("4M")
 
 	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( namcos12_state::namcos12_rom_read ), (namcos12_state *) owner ) )
 
@@ -2771,7 +2775,7 @@ GAME( 1996, tekken3aa, tekken3,  coh700,   namcos12, namcos12_state, namcos12, R
 GAME( 1996, tekken3ja, tekken3,  coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco",           "Tekken 3 (Japan, TET1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* KC014 */
 GAME( 1997, lbgrande,  0,        coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco",           "Libero Grande (Asia, LG2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* KC014 */
 GAME( 1997, lbgrandeja,lbgrande, coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco",           "Libero Grande (Japan, LG1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* KC014 */
-GAME( 1997, toukon3,   0,        coh700,   namcos12, namcos12_state, namcos12, ROT0, "Tomy / Namco",    "Shin Nihon Pro Wrestling Toukon Retsuden 3 Arcade Edition (Japan, TR1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* KC019 */
+GAME( 1997, toukon3,   0,        coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco / Tomy",    "Shin Nihon Pro Wrestling Toukon Retsuden 3 Arcade Edition (Japan, TR1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* KC019 */
 GAME( 1998, soulclbr,  0,        coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco",           "Soul Calibur (World, SOC14/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, soulclbruc,soulclbr, coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco",           "Soul Calibur (US, SOC13/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, soulclbrjc,soulclbr, coh700,   namcos12, namcos12_state, namcos12, ROT0, "Namco",           "Soul Calibur (Japan, SOC11/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* KC020 */

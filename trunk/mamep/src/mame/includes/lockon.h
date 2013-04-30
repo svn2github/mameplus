@@ -4,7 +4,7 @@
 
 *************************************************************************/
 
-#include <sound/flt_vol.h>
+#include "sound/flt_vol.h"
 
 /* Calculated from CRT controller writes */
 #define PIXEL_CLOCK            (XTAL_21MHz / 3)
@@ -28,7 +28,15 @@ public:
 		m_ground_ram(*this, "ground_ram"),
 		m_object_ram(*this, "object_ram"),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu"){ }
+		m_audiocpu(*this, "audiocpu"),
+		m_ground(*this, "ground"),
+		m_object(*this, "object"),
+		m_f2203_1l(*this, "f2203.1l"),
+		m_f2203_2l(*this, "f2203.2l"),
+		m_f2203_3l(*this, "f2203.3l"),
+		m_f2203_1r(*this, "f2203.1r"),
+		m_f2203_2r(*this, "f2203.2r"),
+		m_f2203_3r(*this, "f2203.3r") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_char_ram;
@@ -70,14 +78,14 @@ public:
 	/* devices */
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
-	device_t *m_ground;
-	device_t *m_object;
-	filter_volume_device *m_f2203_1l;
-	filter_volume_device *m_f2203_2l;
-	filter_volume_device *m_f2203_3l;
-	filter_volume_device *m_f2203_1r;
-	filter_volume_device *m_f2203_2r;
-	filter_volume_device *m_f2203_3r;
+	required_device<cpu_device> m_ground;
+	required_device<cpu_device> m_object;
+	required_device<filter_volume_device> m_f2203_1l;
+	required_device<filter_volume_device> m_f2203_2l;
+	required_device<filter_volume_device> m_f2203_3l;
+	required_device<filter_volume_device> m_f2203_1r;
+	required_device<filter_volume_device> m_f2203_2r;
+	required_device<filter_volume_device> m_f2203_3r;
 	DECLARE_READ16_MEMBER(lockon_crtc_r);
 	DECLARE_WRITE16_MEMBER(lockon_crtc_w);
 	DECLARE_WRITE16_MEMBER(lockon_char_w);

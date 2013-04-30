@@ -1732,7 +1732,7 @@ ROM_START( ddcrewj )
 	ROM_LOAD16_BYTE( "mpr-14141.a7", 0x80001, 0x40000, CRC(080a494b) SHA1(64522dccbf6ed856ab80aa185454183df87d7ae9) )
 
 	ROM_REGION( 0x2000, "maincpu:key", 0 )  // decryption key
-	ROM_LOAD( "317-0185.key", 0x0000, 0x2000, NO_DUMP )
+	ROM_LOAD( "317-0185.key", 0x0000, 0x2000, CRC(a650b506) SHA1(05ab361114f26576d69c3477943b42f7957fb879) )
 
 	ROM_REGION( 0xc0000, "gfx1", 0 ) // tiles
 	ROM_LOAD( "epr-14127.c1", 0x00000, 0x40000, CRC(2228cd88) SHA1(5774bb6a401c3da05c5f3c9d3996b20bb3713cb2) )
@@ -2331,7 +2331,7 @@ DRIVER_INIT_MEMBER(segas18_state,wwally)
  *
  *************************************/
 
-//    YEAR, NAME,      PARENT,   MACHINE,              INPUT,    INIT,                             MONITOR,COMPANY,FULLNAME,FLAGS
+//    YEAR, NAME,      PARENT,   MACHINE,              INPUT,    INIT,                       MONITOR,COMPANY,FULLNAME,FLAGS
 GAME( 1990, astorm,    0,        system18_fd1094,      astorm2p, segas18_state,generic_5874, ROT0,   "Sega", "Alien Storm (World, 2 Players, FD1094 317-0154)", 0 )
 GAME( 1990, astorm3,   astorm,   system18_fd1094,      astorm,   segas18_state,generic_5874, ROT0,   "Sega", "Alien Storm (World, 3 Players, FD1094 317-0148)", 0 )
 GAME( 1990, astormu,   astorm,   system18_fd1094,      astorm,   segas18_state,generic_5874, ROT0,   "Sega", "Alien Storm (US, 3 Players, FD1094 317-0147)", 0 )
@@ -2345,14 +2345,14 @@ GAME( 1991, ddcrew,    0,        system18_fd1094,      ddcrew,   segas18_state,d
 GAME( 1991, ddcrewu,   ddcrew,   system18_fd1094,      ddcrew,   segas18_state,ddcrew,       ROT0,   "Sega", "D. D. Crew (US, 4 Players, FD1094 317-0186)", 0 )
 GAME( 1991, ddcrew2,   ddcrew,   system18_fd1094,      ddcrew2p, segas18_state,ddcrew,       ROT0,   "Sega", "D. D. Crew (World, 2 Players, FD1094 317-0184)", 0 )
 GAME( 1991, ddcrew1,   ddcrew,   system18_fd1094,      ddcrew,   segas18_state,ddcrew,       ROT0,   "Sega", "D. D. Crew (World, 4 Players, FD1094 317-0187)", 0 )
-GAME( 1991, ddcrewj,   ddcrew,   system18_fd1094,      ddcrew,   segas18_state,ddcrew,       ROT0,   "Sega", "D. D. Crew (Japan, 4 Players, FD1094 317-0185)", GAME_NOT_WORKING )
+GAME( 1991, ddcrewj,   ddcrew,   system18_fd1094,      ddcrew,   segas18_state,ddcrew,       ROT0,   "Sega", "D. D. Crew (Japan, 4 Players, FD1094 317-0185)", 0 )
 GAME( 1991, ddcrewj2,  ddcrew,   system18_fd1094,      ddcrew2p, segas18_state,ddcrew,       ROT0,   "Sega", "D. D. Crew (Japan, 2 Players, FD1094 317-0182)", 0 )
 GAME( 1990, lghost,    0,        system18_fd1094,      lghost,   segas18_state,lghost,       ROT0,   "Sega", "Laser Ghost (World, FD1094 317-0166)", 0 )
 GAME( 1990, lghostu,   lghost,   system18_fd1094,      lghost,   segas18_state,lghost,       ROT0,   "Sega", "Laser Ghost (US, FD1094 317-0165)", 0 )
 GAME( 1990, mwalk,     0,        system18_fd1094_i8751,mwalk,    segas18_state,generic_5874, ROT0,   "Sega", "Michael Jackson's Moonwalker (World, FD1094/8751 317-0159)", 0 )
 GAME( 1990, mwalku,    mwalk,    system18_fd1094_i8751,mwalka,   segas18_state,generic_5874, ROT0,   "Sega", "Michael Jackson's Moonwalker (US, FD1094/8751 317-0158)", 0 )
 GAME( 1990, mwalkj,    mwalk,    system18_fd1094_i8751,mwalk,    segas18_state,generic_5874, ROT0,   "Sega", "Michael Jackson's Moonwalker (Japan, FD1094/8751 317-0157)", 0 )
-GAME( 1989, pontoon,   0,        system18,             shdancer, segas18_state,generic_5874, ROT0,   "Sega", "Pontoon", GAME_NOT_WORKING )
+GAME( 1989, pontoon,   0,        system18_fd1094,      shdancer, segas18_state,generic_5874, ROT0,   "Sega", "Pontoon (FD1094 317-0153)", GAME_NOT_WORKING ) // satellite/networked gambling game?
 GAME( 1989, shdancer,  0,        system18,             shdancer, segas18_state,generic_shad, ROT0,   "Sega", "Shadow Dancer (World)", 0 )
 GAME( 1989, shdancerj, shdancer, system18,             shdancer, segas18_state,generic_shad, ROT0,   "Sega", "Shadow Dancer (Japan)", 0 )
 GAME( 1989, shdancer1, shdancer, system18,             shdancer, segas18_state,generic_shad, ROT0,   "Sega", "Shadow Dancer (US)", 0 )

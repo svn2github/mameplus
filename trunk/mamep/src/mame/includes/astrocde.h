@@ -3,7 +3,7 @@
     Bally Astrocade-based hardware
 
 ***************************************************************************/
-
+#include "sound/samples.h"
 #define ASTROCADE_CLOCK     (XTAL_14_31818MHz/2)
 
 #define AC_SOUND_PRESENT    (0x01)
@@ -22,7 +22,8 @@ public:
 		m_videoram(*this, "videoram"),
 		m_protected_ram(*this, "protected_ram"),
 		m_maincpu(*this, "maincpu"),
-		m_subcpu(*this, "sub") { }
+		m_subcpu(*this, "sub"),
+		m_samples(*this, "samples") { }
 
 	optional_shared_ptr<UINT8> m_videoram;
 	UINT8 m_video_config;
@@ -134,8 +135,10 @@ public:
 	inline void increment_dest(UINT8 curwidth);
 	void execute_blit(address_space &space);
 	void init_sparklestar();
+	virtual void machine_start();
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_subcpu;
+	optional_device<samples_device> m_samples;
 };
 
 /*----------- defined in audio/wow.c -----------*/

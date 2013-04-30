@@ -1530,13 +1530,13 @@ TIMER_DEVICE_CALLBACK_MEMBER(cischeat_state::bigrun_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		machine().device("cpu1")->execute().set_input_line(4, HOLD_LINE);
+		m_cpu1->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 154)
-		machine().device("cpu1")->execute().set_input_line(2, HOLD_LINE);
+		m_cpu1->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 69)
-		machine().device("cpu1")->execute().set_input_line(1, HOLD_LINE);
+		m_cpu1->set_input_line(1, HOLD_LINE);
 }
 
 
@@ -1688,10 +1688,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(cischeat_state::scudhamm_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
+		m_maincpu->set_input_line(3, HOLD_LINE);
 
 	if(scanline == 120) // timer irq (clears a flag, presumably sprite DMA end)
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( scudhamm, cischeat_state )
@@ -1738,10 +1738,10 @@ TIMER_DEVICE_CALLBACK_MEMBER(cischeat_state::armchamp2_scanline)
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
+		m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 120) // timer irq (TODO: timing)
-		machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
+		m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( armchmp2, scudhamm )
@@ -2473,7 +2473,7 @@ ROM_END
 
 DRIVER_INIT_MEMBER(cischeat_state,wildplt)
 {
-	machine().device("cpu1")->memory().space(AS_PROGRAM).install_read_handler(0x080000, 0x087fff, read16_delegate(FUNC(cischeat_state::wildplt_vregs_r),this));
+	m_cpu1->space(AS_PROGRAM).install_read_handler(0x080000, 0x087fff, read16_delegate(FUNC(cischeat_state::wildplt_vregs_r),this));
 
 	DRIVER_INIT_CALL(f1gpstar);
 }

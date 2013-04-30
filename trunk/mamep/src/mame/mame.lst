@@ -42,7 +42,7 @@
 
 // "Pacman hardware" games
 puckman         // (c) 1980 Namco
-puckmana        // (c) 1980 Namco
+puckmanb        // bootleg
 puckmanf        // hack
 puckmanh        // hack
 pacman          // (c) 1980 Midway
@@ -920,6 +920,7 @@ fghtatck        // (c) 1992 (US)
 fa              // (c) 1992 (Japan)
 knckhead        // (c) 1992 (World)
 knckheadj       // (c) 1992 (Japan)
+knckheadjp      // (c) 1992 (Japan)
 swcourt         // (c) 1992 (Japan)
 swcourtj        // (c) 1992 (Japan)
 emeralda        // (c) 1993 (Japan)
@@ -2246,7 +2247,8 @@ ainferno        // C45 (c) 1990 Taito America Corporation (US)
 gunbustr        // D27 (c) 1992 Taito Corporation Japan (World)
 gunbustru       // D27 (c) 1992 Taito America Corporation (US)
 gunbustrj       // D27 (c) 1992 Taito Corporation (Japan)
-superchs        // D46 (c) 1992 Taito America Corporation (US)
+superchs        // D46 (c) 1992 Taito Corporation Japan (World)
+superchsu       // D46 (c) 1992 Taito America Corporation (US)
 superchsj       // D46 (c) 1992 Taito Corporation (Japan)
 groundfx        // D51 (c) 1992 Taito Coporation
 undrfire        // D67 (c) 1993 Taito Coporation Japan (World)
@@ -2391,7 +2393,8 @@ cleopatr        // 1996.10 E28 (c) 1996 Taito Corporation (Japan)
 pbobble3        // 1996.?? E29 (c) 1996 Taito Corporation (World)
 pbobble3u       // 1996.11 E29 (c) 1996 Taito Corporation (US)
 pbobble3j       // 1996.11 E29 (c) 1996 Taito Corporation (Japan)
-arkretrn        // 1997.03 E36 (c) 1997 Taito Corporation (Japan)
+arkretrn        // 1997.03 E36 (c) 1997 Taito Corporation (World)
+arkretrnj       // 1997.03 E36 (c) 1997 Taito Corporation (Japan)
 kirameki        // 1997.09 E44 (c) 1997 Taito Corporation (Japan)
 puchicar        // 1997.?? E46 (c) 1997 Taito Corporation (World)
 puchicarj       // 1997.12 E46 (c) 1997 Taito Corporation (Japan)
@@ -2507,7 +2510,8 @@ wintbob         // bootleg
 honeydol        // (c) 1995 Barko Corp
 twinadv         // (c) 1995 Barko Corp
 twinadvk        // (c) 1995 Barko Corp
-snowbros3       // (c) 2002 Syrmex
+snowbro3        // (c) 2002 Syrmex
+ballboy         // bootleg
 // SemiCom games on "SnowBros"-like hardware
 finalttr        // (c) 1993 Jeil Computer System
 hyperpac        // (c) 1995 SemiCom
@@ -3939,9 +3943,12 @@ gt2kp100        // (c) 2000 Incredible Technologies
 gt2ks100        // (c) 2000 Incredible Technologies
 gt2kt500        // (c) 2000 Incredible Technologies
 gtsupreme       // (c) 2000 Incredible Technologies
+iteagle         // (c) 2000 Incredible Technologies
 gtclassc        // (c) 2001 Incredible Technologies
 gtclasscp       // (c) 2001 Incredible Technologies
 gtclasscs       // (c) 2001 Incredible Technologies
+gtfore04        // (c) 2003 Incredible Technologies
+gtfore05        // (c) 2004 Incredible Technologies
 
 // Leland games
 cerberus        // (c) 1985 Cinematronics
@@ -4401,7 +4408,7 @@ lghost          // 1990.?? Laser Ghost (World, FD1094, decrypted)
 lghostu         // 1991.01 Laser Ghost (US, FD1094, decrypted)
 cltchitr        // 1991.02 Clutch Hitter (US, FD1094, decrypted)
 cltchitrj       // 1991.05 Clutch Hitter (Japan, FD1094, decrypted)
-ddcrewj         // 1991.07 D.D.Crew (Japan, FD1094, encrypted - CPU data not dump)
+ddcrewj         // 1991.07 D.D.Crew (Japan, FD1094, decrypted)
 ddcrewj2        // 1991.07 D.D.Crew (Japan, FD1094, decrypted)
 ddcrewu         // 1991.09 D.D.Crew (US, FD1094, decrypted)
 ddcrew          // 1991.?? D.D.Crew (World, FD1094, decrypted)
@@ -5080,7 +5087,7 @@ drbyocwc        // 2001.?? Derby Owners Club World Edition (Rev. C)
 derbyocw        // 2001.?? Derby Owners Club World Edition (Rev. D)
 shootplm        // 2001.?? Shootout Pool Medal
 				// 2001.?? Star Horse 2001
-				// 2001.?? Shakatto Tambourine 2K1 SPR
+shaktmsp        // 2001.?? Shakatto Tambourine 2K1 SPR
 vathlete        // 2002.03 Virtua Athletics / Virtua Athlete
 luptype         // 2002.04 Lupin The Third - The Typing (Rev A)
 cleoftp         // 2002.05 Cleopatra Fortune Plus
@@ -7800,6 +7807,11 @@ tm8k902         // (c) 2000 Midway Games
 galgbios        // (c) 1998 Creative Electronics & Software (CES)
 galgame2        // (c) 1998 Creative Electronics & Software (CES) / Namco
 
+// Williams/Bally/Midway Pinball 2000
+swe1pb
+rfmpb
+rfmpbr2
+
 // Creative Electronics & Software
 tapatune
 hrclass
@@ -8735,6 +8747,7 @@ brickznv4       // (c) 1992 SunA
 bestbest        // (c) 1994 SunA
 sunaq           // (c) 1994 SunA
 bssoccer        // (c) 1996 SunA
+bssoccera       // (c) 1996 SunA
 uballoon        // (c) 1996 SunA
 go2000          // (c) 2000 SA
 
@@ -9273,6 +9286,7 @@ puzlstar        // (c) 1999 Puzzle Star
 olds            // (c) 1999 Oriental Legend Super / Special
 olds100         //
 olds100a        //
+olds103t        //
 kov2            // (c) 2000 Knights of Valor 2
 kov2106         //
 kov2103         //
@@ -9282,8 +9296,23 @@ kov2100         //
 kov2p           // (c) 2000 Knights of Valor 2 Nine Dragons
 kov2p205        //
 ddp2            // (c) 2001 DoDonPachi 2 - Bee Storm
-ddp2100         //
 ddp2101         //
+ddp2100         //
+ddp2hk          //
+ddp2101hk       //
+ddp2100hk       //
+ddp2k           //
+ddp2101k        //
+ddp2100k        //
+ddp2j           //
+ddp2101j        //
+ddp2100j        //
+ddp2t           //
+ddp2101t        //
+ddp2100t        //
+ddp2c           //
+ddp2101c        //
+ddp2100c        //
 puzzli2         // (c) 1999 Puzzli 2
 puzzli2s        // (c) 2001 Puzzli 2 Super
 martmast        // (c) 2001 Martial Masters
@@ -10924,6 +10953,7 @@ version4d3      // (c) 2006 Amcoe
 version4v3      // (c) 2006 Amcoe
 version4o       // (c) 2006 Amcoe
 spooky          // (c) 200? Amcoe - Spooky Night (2nd Edition)
+spookyo         // (c) 200? Amcoe - Spooky Night
 fb3g            // (c) 200? Amcoe - Fruit Bonus 3G
 getrich         // (c) 200? Amcoe - Get Rich
 bugfever        // (c) 2006 Amcoe - Bug Fever
@@ -11683,6 +11713,9 @@ bhead2ka        // Beach Head 2000 Install - 09/16/01
 bhead2k2        // Beach Head 2002 Install - 05/27/03
 bhead2k3        // Beach Head 2003 Desert War Install - 05/27/03
 nfsug           // Need For Speed: Underground Install (2 Discs) (v1.1)
+
+// unknown
+fruitpc         // ???
 
 // Leisure Ent.
 roul            // (c) 1990
@@ -30515,4 +30548,5 @@ bingoman
 bingomana
 
 number1    // 1996 San Remo Games
+gluck2     // 1992 Yung Yu / CYE
 #endif // !NCP

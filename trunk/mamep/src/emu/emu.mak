@@ -245,6 +245,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/mc6854.o      \
 	$(EMUMACHINE)/mc68901.o     \
 	$(EMUMACHINE)/mccs1850.o    \
+	$(EMUMACHINE)/mcf5206e.o    \
 	$(EMUMACHINE)/microtch.o    \
 	$(EMUMACHINE)/mm58274c.o    \
 	$(EMUMACHINE)/mm74c922.o    \
@@ -267,6 +268,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/pc16552d.o    \
 	$(EMUMACHINE)/pcf8593.o     \
 	$(EMUMACHINE)/pci.o         \
+	$(EMUMACHINE)/pckeybrd.o    \
 	$(EMUMACHINE)/pd4990a.o     \
 	$(EMUMACHINE)/pic8259.o     \
 	$(EMUMACHINE)/pit8253.o     \
@@ -294,7 +296,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/secflash.o    \
 	$(EMUMACHINE)/seibu_cop.o   \
 	$(EMUMACHINE)/smc91c9x.o    \
-	$(EMUMACHINE)/smpc.o      \
+	$(EMUMACHINE)/smpc.o        \
 	$(EMUMACHINE)/stvcd.o       \
 	$(EMUMACHINE)/tc009xlvc.o   \
 	$(EMUMACHINE)/timekpr.o     \

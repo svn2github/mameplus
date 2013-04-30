@@ -37,16 +37,14 @@ keyboard trick;
 #include "video/pc_vga.h"
 
 
-class pcat_dyn_state : public driver_device
+class pcat_dyn_state : public pcat_base_state
 {
 public:
 	pcat_dyn_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		: pcat_base_state(mconfig, type, tag) { }
 
 	DECLARE_DRIVER_INIT(pcat_dyn);
 	virtual void machine_start();
-	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -109,36 +107,9 @@ static INPUT_PORTS_START( pcat_dyn )
 	PORT_START("pc_keyboard_7")
 INPUT_PORTS_END
 
-static void pcat_dyn_set_keyb_int(running_machine &machine, int state)
-{
-	pic8259_ir1_w(machine.device("pic8259_1"), state);
-}
-
-static void set_gate_a20(running_machine &machine, int a20)
-{
-	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_A20, a20);
-}
-
-static void keyboard_interrupt(running_machine &machine, int state)
-{
-	pic8259_ir1_w(machine.device("pic8259_1"), state);
-}
-
-static int pcat_dyn_get_out2(running_machine &machine) {
-	return pit8253_get_output(machine.device("pit8254"), 2 );
-}
-
-
-static const struct kbdc8042_interface at8042 =
-{
-	KBDC8042_AT386, set_gate_a20, keyboard_interrupt, NULL, pcat_dyn_get_out2
-};
-
 void pcat_dyn_state::machine_start()
 {
-	m_maincpu->set_irq_acknowledge_callback(pcat_irq_callback);
-	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, pcat_dyn_set_keyb_int);
-	kbdc8042_init(machine(), &at8042);
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(pcat_dyn_state::irq_callback),this));
 }
 
 static MACHINE_CONFIG_START( pcat_dyn, pcat_dyn_state )

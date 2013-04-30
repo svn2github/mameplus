@@ -171,14 +171,14 @@ WRITE_LINE_MEMBER(rastan_state::rastan_msm5205_vck)
 {
 	if (m_adpcm_data != -1)
 	{
-		msm5205_data_w(machine().device("msm"), m_adpcm_data & 0x0f);
+		msm5205_data_w(m_msm, m_adpcm_data & 0x0f);
 		m_adpcm_data = -1;
 	}
 	else
 	{
-		m_adpcm_data = machine().root_device().memregion("adpcm")->base()[m_adpcm_pos];
+		m_adpcm_data = memregion("adpcm")->base()[m_adpcm_pos];
 		m_adpcm_pos = (m_adpcm_pos + 1) & 0xffff;
-		msm5205_data_w(machine().device("msm"), m_adpcm_data >> 4);
+		msm5205_data_w(m_msm, m_adpcm_data >> 4);
 	}
 }
 
@@ -189,14 +189,12 @@ WRITE8_MEMBER(rastan_state::rastan_msm5205_address_w)
 
 WRITE8_MEMBER(rastan_state::rastan_msm5205_start_w)
 {
-	device_t *device = machine().device("msm");
-	msm5205_reset_w(device, 0);
+	msm5205_reset_w(m_msm, 0);
 }
 
 WRITE8_MEMBER(rastan_state::rastan_msm5205_stop_w)
 {
-	device_t *device = machine().device("msm");
-	msm5205_reset_w(device, 1);
+	msm5205_reset_w(m_msm, 1);
 	m_adpcm_pos &= 0xff00;
 }
 
@@ -349,9 +347,6 @@ void rastan_state::machine_start()
 
 	membank("bank1")->configure_entry(0, &ROM[0x00000]);
 	membank("bank1")->configure_entries(1, 3, &ROM[0x10000], 0x4000);
-
-	m_pc080sn = machine().device("pc080sn");
-	m_pc090oj = machine().device("pc090oj");
 
 	save_item(NAME(m_sprite_ctrl));
 	save_item(NAME(m_sprites_flipscreen));

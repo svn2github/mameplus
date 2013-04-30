@@ -153,7 +153,7 @@ reg: 0->1 (main->2nd) /     : (1->0) 2nd->main :
 int ::gsword_coins_in(void)
 {
 	/* emulate 8741 coin slot */
-	if (machine().root_device().ioport("IN4")->read() & 0xc0)
+	if (ioport("IN4")->read() & 0xc0)
 	{
 		logerror("Coin In\n");
 		return 0x80;
@@ -312,10 +312,9 @@ READ8_MEMBER(gsword_state::gsword_fake_1_r)
 
 WRITE8_MEMBER(gsword_state::gsword_adpcm_data_w)
 {
-	device_t *device = machine().device("msm");
-	msm5205_data_w (device,data & 0x0f); /* bit 0..3 */
-	msm5205_reset_w(device,(data>>5)&1); /* bit 5    */
-	msm5205_vclk_w(device,(data>>4)&1);  /* bit 4    */
+	msm5205_data_w (m_msm,data & 0x0f); /* bit 0..3 */
+	msm5205_reset_w(m_msm,(data>>5)&1); /* bit 5    */
+	msm5205_vclk_w(m_msm,(data>>4)&1);  /* bit 4    */
 }
 
 WRITE8_MEMBER(gsword_state::adpcm_soundcommand_w)
@@ -896,7 +895,7 @@ ROM_END
 DRIVER_INIT_MEMBER(gsword_state,gsword)
 {
 #if 0
-	UINT8 *ROM2 = machine().root_device().memregion("sub")->base();
+	UINT8 *ROM2 = memregion("sub")->base();
 	ROM2[0x1da] = 0xc3; /* patch for rom self check */
 
 	ROM2[0x71e] = 0;    /* patch for sound protection or time out function */
@@ -911,7 +910,7 @@ DRIVER_INIT_MEMBER(gsword_state,gsword)
 DRIVER_INIT_MEMBER(gsword_state,gsword2)
 {
 #if 0
-	UINT8 *ROM2 = machine().root_device().memregion("sub")->base();
+	UINT8 *ROM2 = memregion("sub")->base();
 
 	ROM2[0x1da] = 0xc3; /* patch for rom self check */
 	ROM2[0x726] = 0;    /* patch for sound protection or time out function */

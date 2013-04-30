@@ -116,12 +116,14 @@ public:
 	supracan_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			m_maincpu(*this, "maincpu"),
+			m_soundcpu(*this, "soundcpu"),
 			m_soundram(*this, "soundram")
 	{
 		m_m6502_reset = 0;
 	}
 
 	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_soundcpu;
 	DECLARE_READ16_MEMBER(supracan_68k_soundram_r);
 	DECLARE_WRITE16_MEMBER(supracan_68k_soundram_w);
 	DECLARE_READ8_MEMBER(supracan_6502_soundmem_r);
@@ -412,8 +414,8 @@ void supracan_state::video_start()
 {
 	m_sprite_final_bitmap.allocate(1024, 1024, BITMAP_FORMAT_IND16);
 
-	m_vram = (UINT16*)(*machine().root_device().memregion("ram_gfx"));
-	m_vram_swapped = (UINT16*)(*machine().root_device().memregion("ram_gfx2"));
+	m_vram = (UINT16*)(*memregion("ram_gfx"));
+	m_vram_swapped = (UINT16*)(*memregion("ram_gfx2"));
 	m_vram_addr_swapped = (UINT8*)(*memregion("ram_gfx3")); // hack for 1bpp layer at startup
 
 	m_tilemap_sizes[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
@@ -1138,11 +1140,11 @@ READ8_MEMBER( supracan_state::supracan_6502_soundmem_r )
 			{
 				if(m_sound_irq_enable_reg & m_sound_irq_source_reg)
 				{
-					machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
+					m_soundcpu->set_input_line(0, ASSERT_LINE);
 				}
 				else
 				{
-					machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
+					m_soundcpu->set_input_line(0, CLEAR_LINE);
 				}
 			}
 			break;
@@ -1152,7 +1154,7 @@ READ8_MEMBER( supracan_state::supracan_6502_soundmem_r )
 			if(!mem.debugger_access()) verboselog(m_hack_68k_to_6502_access ? "maincpu" : "soundcpu", 3, "supracan_soundreg_r: IRQ source: %04x\n", data);
 			if(!mem.debugger_access())
 			{
-				machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
+				m_soundcpu->set_input_line(0, CLEAR_LINE);
 			}
 			break;
 		case 0x420:
@@ -1416,7 +1418,7 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 	switch ( offset )
 	{
 		case 0x000a/2:  /* Sound cpu IRQ request. */
-			machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
+			m_soundcpu->set_input_line(0, ASSERT_LINE);
 			break;
 		case 0x001c/2:  /* Sound cpu control. Bit 0 tied to sound cpu RESET line */
 			if(data & 0x01)
@@ -1425,8 +1427,8 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 				{
 					/* Reset and enable the sound cpu */
 #if !(SOUNDCPU_BOOT_HACK)
-					machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
-					machine().device("soundcpu")->reset();
+					m_soundcpu->set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+					m_soundcpu->reset();
 #endif
 				}
 				m_m6502_reset = data & 0x01;
@@ -1434,7 +1436,7 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 			else
 			{
 				/* Halt the sound cpu */
-				machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+				m_soundcpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 			}
 			verboselog("maincpu", 0, "sound cpu ctrl: %04x\n", data);
 			break;
@@ -1728,7 +1730,7 @@ WRITE16_MEMBER( supracan_state::supracan_video_w )
 
 DEVICE_IMAGE_LOAD_MEMBER( supracan_state, supracan_cart )
 {
-	UINT8 *cart = image.device().machine().root_device().memregion("cart")->base();
+	UINT8 *cart = memregion("cart")->base();
 	UINT32 size = 0;
 
 	if (image.software_entry() == NULL)
@@ -1768,7 +1770,7 @@ void supracan_state::machine_start()
 
 void supracan_state::machine_reset()
 {
-	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 
 	m_video_timer->adjust( machine().primary_screen->time_until_pos( 0, 0 ) );
 	m_irq_mask = 0;
@@ -1873,11 +1875,11 @@ INTERRUPT_GEN_MEMBER(supracan_state::supracan_sound_irq)
 
 	if(m_sound_irq_enable_reg & m_sound_irq_source_reg)
 	{
-		machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
+		m_soundcpu->set_input_line(0, ASSERT_LINE);
 	}
 	else
 	{
-		machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
+		m_soundcpu->set_input_line(0, CLEAR_LINE);
 	}
 }
 

@@ -233,7 +233,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_work_ram(*this, "work_ram"),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu")  { }
+		m_audiocpu(*this, "audiocpu"),
+		m_dsp(*this, "dsp"),
+		m_k001604(*this, "k001604")  { }
 
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
@@ -253,6 +255,7 @@ public:
 	DECLARE_WRITE32_MEMBER(lanc2_w);
 	DECLARE_READ32_MEMBER(dsp_dataram_r);
 	DECLARE_WRITE32_MEMBER(dsp_dataram_w);
+	DECLARE_WRITE_LINE_MEMBER(voodoo_vblank_0);
 	DECLARE_DRIVER_INIT(nwktr);
 	virtual void machine_start();
 	virtual void machine_reset();
@@ -261,6 +264,8 @@ public:
 	void lanc2_init();
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_dsp;
+	required_device<k001604_device> m_k001604;
 };
 
 
@@ -274,16 +279,15 @@ WRITE32_MEMBER(nwktr_state::paletteram32_w)
 	palette_set_color_rgb(machine(), offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 }
 
-static void voodoo_vblank_0(device_t *device, int param)
+WRITE_LINE_MEMBER(nwktr_state::voodoo_vblank_0)
 {
-	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, param);
+	m_maincpu->set_input_line(INPUT_LINE_IRQ0, state);
 }
 
 
 UINT32 nwktr_state::screen_update_nwktr(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	device_t *voodoo = machine().device("voodoo");
-	device_t *k001604 = machine().device("k001604");
 
 	bitmap.fill(machine().pens[0], cliprect);
 
@@ -292,7 +296,7 @@ UINT32 nwktr_state::screen_update_nwktr(screen_device &screen, bitmap_rgb32 &bit
 	const rectangle &visarea = screen.visible_area();
 	const rectangle tilemap_rect(visarea.min_x, visarea.max_x, visarea.min_y+16, visarea.max_y);
 
-	k001604_draw_front_layer(k001604, bitmap, tilemap_rect);
+	k001604_draw_front_layer(m_k001604, bitmap, tilemap_rect);
 
 	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
 	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
@@ -681,7 +685,7 @@ static void sound_irq_callback(running_machine &machine, int irq)
 	nwktr_state *state = machine.driver_data<nwktr_state>();
 	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
 
-	machine.device("audiocpu")->execute().set_input_line(line, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(line, ASSERT_LINE);
 	state->m_sound_irq_timer->adjust(attotime::from_usec(5), line);
 }
 
@@ -711,7 +715,7 @@ static const k001604_interface thrilld_k001604_intf =
 
 void nwktr_state::machine_reset()
 {
-	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_dsp->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 static const voodoo_config voodoo_intf =
@@ -721,8 +725,8 @@ static const voodoo_config voodoo_intf =
 	2,//                tmumem1;
 	"screen",//         screen;
 	"dsp",//            cputag;
-	voodoo_vblank_0,//  vblank;
-	NULL,//             stall;
+	DEVCB_DRIVER_LINE_MEMBER(nwktr_state,voodoo_vblank_0),//  vblank;
+	DEVCB_NULL//             stall;
 };
 
 static MACHINE_CONFIG_START( nwktr, nwktr_state )

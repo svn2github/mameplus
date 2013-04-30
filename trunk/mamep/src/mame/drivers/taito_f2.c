@@ -1019,7 +1019,7 @@ static ADDRESS_MAP_START( yesnoj_map, AS_PROGRAM, 16, taitof2_state )
 	AM_RANGE(0x500000, 0x50ffff) AM_DEVREADWRITE_LEGACY("tc0100scn", tc0100scn_word_r, tc0100scn_word_w)    /* tilemaps */
 	AM_RANGE(0x520000, 0x52000f) AM_DEVREADWRITE_LEGACY("tc0100scn", tc0100scn_ctrl_word_r, tc0100scn_ctrl_word_w)
 	AM_RANGE(0x600000, 0x601fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
-//  AM_RANGE(0x700000, 0x70000b) AM_READ_LEGACY(yesnoj_unknown_r)   /* what's this? */
+//  AM_RANGE(0x700000, 0x70000b) AM_READ(yesnoj_unknown_r)   /* what's this? */
 	AM_RANGE(0x800000, 0x800001) AM_DEVWRITE8("tc0140syt", tc0140syt_device, tc0140syt_port_w, 0xff00)
 	AM_RANGE(0x800002, 0x800003) AM_DEVREADWRITE8("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w, 0xff00)
 	AM_RANGE(0x900002, 0x900003) AM_WRITENOP   /* lots of similar writes */
@@ -1173,7 +1173,7 @@ static ADDRESS_MAP_START( cameltrya_sound_map, AS_PROGRAM, 8, taitof2_state )
 	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
-//  AM_RANGE(0xb000, 0xb000) AM_WRITE_LEGACY(unknown_w)    // probably controlling sample player?
+//  AM_RANGE(0xb000, 0xb000) AM_WRITE(unknown_w)    // probably controlling sample player?
 	AM_RANGE(0xb000, 0xb001) AM_MIRROR(0x0001) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 ADDRESS_MAP_END
 
@@ -3011,13 +3011,6 @@ static const tc0140syt_interface taitof2_tc0140syt_intf =
 
 MACHINE_START_MEMBER(taitof2_state,common)
 {
-	m_tc0100scn = machine().device("tc0100scn");;
-	m_tc0100scn_1 = machine().device("tc0100scn_1");;
-	m_tc0100scn_2 = machine().device("tc0100scn_2");;
-	m_tc0360pri = machine().device("tc0360pri");;
-	m_tc0280grd = machine().device("tc0280grd");;
-	m_tc0430grw = machine().device("tc0430grw");;
-	m_tc0480scp = machine().device("tc0480scp");;
 }
 
 MACHINE_START_MEMBER(taitof2_state,f2)

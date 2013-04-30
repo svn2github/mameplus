@@ -237,7 +237,7 @@ WRITE16_MEMBER(taitoair_state::system_control_w)
 
 	m_dsp_hold_signal = (data & 4) ? CLEAR_LINE : ASSERT_LINE;
 
-	m_dsp->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	m_dsp->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 
 	logerror("68K:%06x writing %04x to TMS32025.  %s HOLD , %s RESET\n", space.device().safe_pcbase(), data, ((data & 4) ? "Clear" : "Assert"), ((data & 1) ? "Clear" : "Assert"));
 }
@@ -467,10 +467,10 @@ static ADDRESS_MAP_START( DSP_map_data, AS_DATA, 16, taitoair_state )
 	AM_RANGE(0x3409, 0x3409) AM_WRITE(dsp_y_eyecoord_w)
 	AM_RANGE(0x340a, 0x340a) AM_WRITE(dsp_rasterize_w)      /* Just a (lame) guess */
 	AM_RANGE(0x340b, 0x340b) AM_READ(dsp_y_return_r)
-//  AM_RANGE(0x3418, 0x341a) AM_WRITE_LEGACY(dsp_sqrt_w)
-//  AM_RANGE(0x341b, 0x341b) AM_WRITE_LEGACY(dsp_sqrt_r)
-//  AM_RANGE(0x341c, 0x341c) AM_READ_LEGACY(dsp_sqrt_flags1_r)
-//  AM_RANGE(0x341d, 0x341d) AM_READ_LEGACY(dsp_sqrt_flags2_r)
+//  AM_RANGE(0x3418, 0x341a) AM_WRITE(dsp_sqrt_w)
+//  AM_RANGE(0x341b, 0x341b) AM_WRITE(dsp_sqrt_r)
+//  AM_RANGE(0x341c, 0x341c) AM_READ(dsp_sqrt_flags1_r)
+//  AM_RANGE(0x341d, 0x341d) AM_READ(dsp_sqrt_flags2_r)
 	AM_RANGE(0x4000, 0x7fff) AM_READWRITE(lineram_r, lineram_w)
 	AM_RANGE(0x8000, 0xffff) AM_READWRITE(dspram_r, dspram_w)
 ADDRESS_MAP_END
@@ -495,7 +495,7 @@ static INPUT_PORTS_START( topland )
 
 	/* 0xa00202 -> 0x0c0d7e (-$7283,A5) */
 	PORT_START("DSWB")
-	TAITO_DIFFICULTY_LOC(SWA)
+	TAITO_DIFFICULTY_LOC(SWB)
 	PORT_DIPUNUSED_DIPLOC( 0x04, IP_ACTIVE_LOW, "SWB:3" )
 	PORT_DIPUNUSED_DIPLOC( 0x08, IP_ACTIVE_LOW, "SWB:4" )
 	PORT_DIPUNUSED_DIPLOC( 0x10, IP_ACTIVE_LOW, "SWB:5" )
@@ -550,7 +550,7 @@ static INPUT_PORTS_START( ainferno )
 
 	/* 0xa00202 -> 0x0c0004.b (-$7ffc,A5) */
 	PORT_START("DSWB")
-	TAITO_DIFFICULTY_LOC(SWA)
+	TAITO_DIFFICULTY_LOC(SWB)
 	PORT_DIPNAME( 0x0c, 0x0c, "Timer Length" )      PORT_DIPLOCATION("SWB:3,4")
 	PORT_DIPSETTING(    0x08, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x0c, DEF_STR( Medium ) )
@@ -665,9 +665,6 @@ void taitoair_state::machine_start()
 	int i;
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
-
-	m_dsp = machine().device("dsp");
-	m_tc0080vco = machine().device("tc0080vco");
 
 	save_item(NAME(m_banknum));
 	save_item(NAME(m_q.col));

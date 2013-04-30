@@ -1422,7 +1422,7 @@ void sms_state::setup_rom()
 }
 
 
-static int sms_verify_cart( UINT8 *magic, int size )
+int sms_state::sms_verify_cart( UINT8 *magic, int size )
 {
 	int retval;
 
@@ -1464,7 +1464,7 @@ static int sms_verify_cart( UINT8 *magic, int size )
 
 The Korean game Jang Pung II also seems to use a codemasters style mapper.
  */
-static int detect_codemasters_mapper( UINT8 *rom )
+int sms_state::detect_codemasters_mapper( UINT8 *rom )
 {
 	static const UINT8 jang_pung2[16] = { 0x00, 0xba, 0x38, 0x0d, 0x00, 0xb8, 0x38, 0x0c, 0x00, 0xb6, 0x38, 0x0b, 0x00, 0xb4, 0x38, 0x0a };
 
@@ -1478,7 +1478,7 @@ static int detect_codemasters_mapper( UINT8 *rom )
 }
 
 
-static int detect_korean_mapper( UINT8 *rom )
+int sms_state::detect_korean_mapper( UINT8 *rom )
 {
 	static const UINT8 signatures[2][16] =
 	{
@@ -1499,7 +1499,7 @@ static int detect_korean_mapper( UINT8 *rom )
 #endif
 
 
-static int detect_tvdraw( UINT8 *rom )
+int sms_state::detect_tvdraw( UINT8 *rom )
 {
 	static const UINT8 terebi_oekaki[7] = { 0x61, 0x6e, 0x6e, 0x61, 0x6b, 0x6d, 0x6e }; // "annakmn"
 
@@ -1510,10 +1510,8 @@ static int detect_tvdraw( UINT8 *rom )
 }
 
 
-static int detect_lphaser_xoffset( running_machine &machine, UINT8 *rom )
+int sms_state::detect_lphaser_xoffset( UINT8 *rom )
 {
-	sms_state *state = machine.driver_data<sms_state>();
-
 	static const UINT8 signatures[6][16] =
 	{
 		/* Spacegun */
@@ -1530,7 +1528,7 @@ static int detect_lphaser_xoffset( running_machine &machine, UINT8 *rom )
 		{ 0x54, 0x4d, 0x52, 0x20, 0x53, 0x45, 0x47, 0x41, 0xff, 0xff, 0x9f, 0x74, 0x34, 0x70, 0x00, 0x40 },
 	};
 
-	if (!(state->m_bios_port & IO_CARTRIDGE) && state->m_cartridge[state->m_current_cartridge].size >= 0x8000)
+	if (!(m_bios_port & IO_CARTRIDGE) && m_cartridge[m_current_cartridge].size >= 0x8000)
 	{
 		if (!memcmp(&rom[0x7ff0], signatures[0], 16) || !memcmp(&rom[0x7ff0], signatures[1], 16))
 			return 40;
@@ -1580,8 +1578,6 @@ void sms_state::setup_sms_cart()
 
 DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 {
-	running_machine &machine = image.device().machine();
-	sms_state *state = machine.driver_data<sms_state>();
 	int size, index = 0, offset = 0;
 
 	if (strcmp(image.device().tag(), ":cart1") == 0)
@@ -1617,7 +1613,7 @@ DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 	if (strcmp(image.device().tag(), ":cart16") == 0)
 		index = 15;
 
-	state->m_cartridge[index].features = 0;
+	m_cartridge[index].features = 0;
 
 	if (image.software_entry() == NULL)
 	{
@@ -1641,21 +1637,21 @@ DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 
 	/* Create a new memory region to hold the ROM. */
 	/* Make sure the region holds only complete (0x4000) rom banks */
-	state->m_cartridge[index].size = (size & 0x3fff) ? (((size >> 14) + 1) << 14) : size;
-	state->m_cartridge[index].ROM = auto_alloc_array(machine, UINT8, state->m_cartridge[index].size);
-	state->m_cartridge[index].cartSRAM = auto_alloc_array(machine, UINT8, NVRAM_SIZE);
+	m_cartridge[index].size = (size & 0x3fff) ? (((size >> 14) + 1) << 14) : size;
+	m_cartridge[index].ROM = auto_alloc_array(machine(), UINT8, m_cartridge[index].size);
+	m_cartridge[index].cartSRAM = auto_alloc_array(machine(), UINT8, NVRAM_SIZE);
 
 	/* Load ROM banks */
 	if (image.software_entry() == NULL)
 	{
 		image.fseek(offset, SEEK_SET);
 
-		if (image.fread( state->m_cartridge[index].ROM, size) != size)
+		if (image.fread( m_cartridge[index].ROM, size) != size)
 			return IMAGE_INIT_FAIL;
 	}
 	else
 	{
-		memcpy(state->m_cartridge[index].ROM, image.get_software_region("rom") + offset, size);
+		memcpy(m_cartridge[index].ROM, image.get_software_region("rom") + offset, size);
 
 		const char *pcb = image.get_feature("pcb");
 		const char *mapper = image.get_feature("mapper");
@@ -1665,62 +1661,62 @@ DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 		// Check for special mappers (or lack of mappers)
 		if ( pcb && !strcmp(pcb, "korean_nobank"))
 		{
-			state->m_cartridge[index].features |= CF_KOREAN_NOBANK_MAPPER;
+			m_cartridge[index].features |= CF_KOREAN_NOBANK_MAPPER;
 		}
 
 		if ( mapper )
 		{
 			if ( ! strcmp( mapper, "codemasters" ) )
 			{
-				state->m_cartridge[index].features |= CF_CODEMASTERS_MAPPER;
+				m_cartridge[index].features |= CF_CODEMASTERS_MAPPER;
 			}
 			else if ( ! strcmp( mapper, "korean" ) )
 			{
-				state->m_cartridge[index].features |= CF_KOREAN_MAPPER;
+				m_cartridge[index].features |= CF_KOREAN_MAPPER;
 			}
 			else if ( ! strcmp( mapper, "zemina" ) )
 			{
-				state->m_cartridge[index].features |= CF_KOREAN_ZEMINA_MAPPER;
+				m_cartridge[index].features |= CF_KOREAN_ZEMINA_MAPPER;
 			}
 			else if ( ! strcmp( mapper, "nemesis" ) )
 			{
-				state->m_cartridge[index].features |= CF_KOREAN_ZEMINA_MAPPER;
-				state->m_cartridge[index].features |= CF_KOREAN_ZEMINA_NEMESIS;
+				m_cartridge[index].features |= CF_KOREAN_ZEMINA_MAPPER;
+				m_cartridge[index].features |= CF_KOREAN_ZEMINA_NEMESIS;
 			}
 			else if ( ! strcmp( mapper, "4pak" ) )
 			{
-				state->m_cartridge[index].features |= CF_4PAK_MAPPER;
+				m_cartridge[index].features |= CF_4PAK_MAPPER;
 			}
 			else if ( ! strcmp( mapper, "janggun" ) )
 			{
-				state->m_cartridge[index].features |= CF_JANGGUN_MAPPER;
+				m_cartridge[index].features |= CF_JANGGUN_MAPPER;
 			}
 		}
 
 		// Check for gamegear cartridges with PIN 42 set to SMS mode
 		if ( pin_42 && ! strcmp(pin_42, "sms_mode"))
 		{
-			state->m_cartridge[index].features |= CF_GG_SMS_MODE;
+			m_cartridge[index].features |= CF_GG_SMS_MODE;
 		}
 
 		// Check for presence of 93c46 eeprom
 		if ( eeprom && ! strcmp( eeprom, "93c46" ) )
 		{
-			state->m_cartridge[index].features |= CF_93C46_EEPROM;
+			m_cartridge[index].features |= CF_93C46_EEPROM;
 		}
 	}
 
 	/* check the image */
-	if (!state->m_has_bios)
+	if (!m_has_bios)
 	{
-		if (sms_verify_cart(state->m_cartridge[index].ROM, size) == IMAGE_VERIFY_FAIL)
+		if (sms_verify_cart(m_cartridge[index].ROM, size) == IMAGE_VERIFY_FAIL)
 		{
 			logerror("Warning loading image: sms_verify_cart failed\n");
 		}
 	}
 
 	// If no mapper bits are set attempt to autodetect the mapper
-	if ( ! ( state->m_cartridge[index].features & CF_MAPPER_BITS ) )
+	if ( ! ( m_cartridge[index].features & CF_MAPPER_BITS ) )
 	{
 		/* If no extrainfo information is available try to find special information out on our own */
 		/* Check for special cartridge features (new routine, courtesy of Omar Cornut, from MEKA)  */
@@ -1729,9 +1725,9 @@ DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 			int c0002 = 0, c8000 = 0, cA000 = 0, cFFFF = 0, c3FFE = 0, c4000 = 0, c6000 = 0, i;
 			for (i = 0; i < 0x8000; i++)
 			{
-				if (state->m_cartridge[index].ROM[i] == 0x32) // Z80 opcode for: LD (xxxx), A
+				if (m_cartridge[index].ROM[i] == 0x32) // Z80 opcode for: LD (xxxx), A
 				{
-					UINT16 addr = (state->m_cartridge[index].ROM[i + 2] << 8) | state->m_cartridge[index].ROM[i + 1];
+					UINT16 addr = (m_cartridge[index].ROM[i + 2] << 8) | m_cartridge[index].ROM[i + 1];
 					if (addr == 0xFFFF)
 					{ i += 2; cFFFF++; continue; }
 					if (addr == 0x0002 || addr == 0x0003 || addr == 0x0004)
@@ -1754,64 +1750,64 @@ DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 			// 2 is a security measure, although tests on existing ROM showed it was not needed
 			if (c0002 > cFFFF + 2 || (c0002 > 0 && cFFFF == 0))
 			{
-				UINT8 *rom = state->m_cartridge[index].ROM;
+				UINT8 *rom = m_cartridge[index].ROM;
 
-				state->m_cartridge[index].features |= CF_KOREAN_ZEMINA_MAPPER;
+				m_cartridge[index].features |= CF_KOREAN_ZEMINA_MAPPER;
 				// Check for special bank 0 signature
 				if ( size == 0x20000 && rom[0] == 0x00 && rom[1] == 0x00 && rom[2] == 0x00 &&
 						rom[0x1e000] == 0xF3 && rom[0x1e001] == 0xED && rom[0x1e002] == 0x56 )
 				{
-					state->m_cartridge[index].features |= CF_KOREAN_ZEMINA_NEMESIS;
+					m_cartridge[index].features |= CF_KOREAN_ZEMINA_NEMESIS;
 				}
 			}
 			else if (c8000 > cFFFF + 2 || (c8000 > 0 && cFFFF == 0))
 			{
-				state->m_cartridge[index].features |= CF_CODEMASTERS_MAPPER;
+				m_cartridge[index].features |= CF_CODEMASTERS_MAPPER;
 			}
 			else if (cA000 > cFFFF + 2 || (cA000 > 0 && cFFFF == 0))
 			{
-				state->m_cartridge[index].features |= CF_KOREAN_MAPPER;
+				m_cartridge[index].features |= CF_KOREAN_MAPPER;
 			}
 			else if ( c3FFE > cFFFF + 2 || (c3FFE > 0) )
 			{
-				state->m_cartridge[index].features |= CF_4PAK_MAPPER;
+				m_cartridge[index].features |= CF_4PAK_MAPPER;
 			}
 			else if ( c4000 > 0 && c6000 > 0 && c8000 > 0 && cA000 > 0 )
 			{
-				state->m_cartridge[index].features |= CF_JANGGUN_MAPPER;
+				m_cartridge[index].features |= CF_JANGGUN_MAPPER;
 			}
 		}
 	}
 
-	if (state->m_cartridge[index].features & CF_CODEMASTERS_MAPPER)
+	if (m_cartridge[index].features & CF_CODEMASTERS_MAPPER)
 	{
-		state->m_cartridge[index].ram_size = 0x10000;
-		state->m_cartridge[index].cartRAM = auto_alloc_array(machine, UINT8, state->m_cartridge[index].ram_size);
-		state->m_cartridge[index].ram_page = 0;
+		m_cartridge[index].ram_size = 0x10000;
+		m_cartridge[index].cartRAM = auto_alloc_array(machine(), UINT8, m_cartridge[index].ram_size);
+		m_cartridge[index].ram_page = 0;
 	}
 
 	/* For Light Phaser games, we have to detect the x offset */
-	state->m_lphaser_x_offs = detect_lphaser_xoffset(machine, state->m_cartridge[index].ROM);
+	m_lphaser_x_offs = detect_lphaser_xoffset(m_cartridge[index].ROM);
 
 	/* Terebi Oekaki (TV Draw) is a SG1000 game with special input device which is compatible with SG1000 Mark III */
-	if ((detect_tvdraw(state->m_cartridge[index].ROM)) && state->m_is_region_japan)
+	if ((detect_tvdraw(m_cartridge[index].ROM)) && m_is_region_japan)
 	{
-		state->m_cartridge[index].features |= CF_TVDRAW;
+		m_cartridge[index].features |= CF_TVDRAW;
 	}
 
-	if (state->m_cartridge[index].features & CF_JANGGUN_MAPPER)
+	if (m_cartridge[index].features & CF_JANGGUN_MAPPER)
 	{
 		// Reverse bytes when bit 6 in the mapper is set
 
-		if ( state->m_cartridge[index].size <= 0x40 * 0x4000 )
+		if ( m_cartridge[index].size <= 0x40 * 0x4000 )
 		{
-			UINT8 *new_rom = auto_alloc_array(machine, UINT8, 0x80 * 0x4000);
+			UINT8 *new_rom = auto_alloc_array(machine(), UINT8, 0x80 * 0x4000);
 			UINT32 dest = 0;
 
 			while ( dest < 0x40 * 0x4000 )
 			{
-				memcpy( new_rom + dest, state->m_cartridge[index].ROM, state->m_cartridge[index].size );
-				dest += state->m_cartridge[index].size;
+				memcpy( new_rom + dest, m_cartridge[index].ROM, m_cartridge[index].size );
+				dest += m_cartridge[index].size;
 			}
 
 			for ( dest = 0; dest < 0x40 * 0x4000; dest++ )
@@ -1819,15 +1815,15 @@ DEVICE_IMAGE_LOAD_MEMBER( sms_state, sms_cart )
 				new_rom[ 0x40 * 0x4000 + dest ] = BITSWAP8( new_rom[ dest ], 0, 1, 2, 3, 4, 5, 6, 7);
 			}
 
-			state->m_cartridge[index].ROM = new_rom;
-			state->m_cartridge[index].size = 0x80 * 0x4000;
+			m_cartridge[index].ROM = new_rom;
+			m_cartridge[index].size = 0x80 * 0x4000;
 		}
 	}
 
-	LOG(("Cart Features: %x\n", state->m_cartridge[index].features));
+	LOG(("Cart Features: %x\n", m_cartridge[index].features));
 
 	/* Load battery backed RAM, if available */
-	image.battery_load(state->m_cartridge[index].cartSRAM, sizeof(UINT8) * NVRAM_SIZE, 0x00);
+	image.battery_load(m_cartridge[index].cartSRAM, sizeof(UINT8) * NVRAM_SIZE, 0x00);
 
 	return IMAGE_INIT_PASS;
 }

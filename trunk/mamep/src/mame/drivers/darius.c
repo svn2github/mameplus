@@ -144,7 +144,7 @@ void darius_state::parse_control(  )   /* assumes Z80 sandwiched between 68Ks */
 	/* bit 0 enables cpu B */
 	/* however this fails when recovering from a save state
 	   if cpu B is disabled !! */
-	m_cpub->execute().set_input_line(INPUT_LINE_RESET, (m_cpua_ctrl & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+	m_cpub->set_input_line(INPUT_LINE_RESET, (m_cpua_ctrl & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE16_MEMBER(darius_state::cpua_ctrl_w)
@@ -487,7 +487,7 @@ ADDRESS_MAP_END
 WRITE_LINE_MEMBER(darius_state::darius_adpcm_int)
 {
 	if (m_nmi_enable)
-		m_adpcm->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_adpcm->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static const msm5205_interface msm5205_config =
@@ -526,9 +526,8 @@ WRITE8_MEMBER(darius_state::adpcm_nmi_enable)
 
 WRITE8_MEMBER(darius_state::adpcm_data_w)
 {
-	device_t *device = machine().device("msm");
-	msm5205_data_w(device, data);
-	msm5205_reset_w(device, !(data & 0x20));    /* my best guess, but it could be output enable as well */
+	msm5205_data_w(m_msm, data);
+	msm5205_reset_w(m_msm, !(data & 0x20));    /* my best guess, but it could be output enable as well */
 }
 
 static ADDRESS_MAP_START( darius_sound2_io_map, AS_IO, 8, darius_state )
@@ -821,36 +820,6 @@ void darius_state::machine_start()
 	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000, 0x8000);
 	membank("bank1")->configure_entry(4, memregion("audiocpu")->base());
 	membank("bank1")->set_entry(4);
-
-	m_cpub = machine().device("cpub");
-	m_adpcm = machine().device("adpcm");
-	m_pc080sn = machine().device("pc080sn");
-	m_tc0140syt = machine().device<tc0140syt_device>("tc0140syt");
-
-	m_lscreen = machine().device("lscreen");
-	m_mscreen = machine().device("mscreen");
-	m_rscreen = machine().device("rscreen");
-
-	m_filter0_0l = machine().device<filter_volume_device>("filter0.0l");
-	m_filter0_0r = machine().device<filter_volume_device>("filter0.0r");
-	m_filter0_1l = machine().device<filter_volume_device>("filter0.1l");
-	m_filter0_1r = machine().device<filter_volume_device>("filter0.1r");
-	m_filter0_2l = machine().device<filter_volume_device>("filter0.2l");
-	m_filter0_2r = machine().device<filter_volume_device>("filter0.2r");
-	m_filter0_3l = machine().device<filter_volume_device>("filter0.3l");
-	m_filter0_3r = machine().device<filter_volume_device>("filter0.3r");
-
-	m_filter1_0l = machine().device<filter_volume_device>("filter1.0l");
-	m_filter1_0r = machine().device<filter_volume_device>("filter1.0r");
-	m_filter1_1l = machine().device<filter_volume_device>("filter1.1l");
-	m_filter1_1r = machine().device<filter_volume_device>("filter1.1r");
-	m_filter1_2l = machine().device<filter_volume_device>("filter1.2l");
-	m_filter1_2r = machine().device<filter_volume_device>("filter1.2r");
-	m_filter1_3l = machine().device<filter_volume_device>("filter1.3l");
-	m_filter1_3r = machine().device<filter_volume_device>("filter1.3r");
-
-	m_msm5205_l = machine().device<filter_volume_device>("msm5205.l");
-	m_msm5205_r = machine().device<filter_volume_device>("msm5205.r");
 
 	save_item(NAME(m_cpua_ctrl));
 	save_item(NAME(m_coin_word));

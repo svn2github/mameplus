@@ -7,9 +7,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "video/ppu2c0x.h"
 #include "includes/nes.h"
-//#include "includes/nes_mmc.h"
 
 void nes_state::video_reset()
 {
@@ -39,10 +37,10 @@ UINT32 nes_state::screen_update_nes(screen_device &screen, bitmap_ind16 &bitmap,
 	m_ppu->render(bitmap, 0, 0, 0, 0);
 
 	/* if this is a disk system game, check for the flip-disk key */
-	if (m_disk_expansion && m_pcb_id == NO_BOARD)
+	if (m_disk_expansion && m_cartslot && !m_cartslot->m_cart)
 	{
 		// latch this input so it doesn't go at warp speed
-		if ((machine().root_device().ioport("FLIPDISK")->read() & 0x01) && (!m_last_frame_flip))
+		if ((ioport("FLIPDISK")->read() & 0x01) && (!m_last_frame_flip))
 		{
 			m_last_frame_flip = 1;
 			m_fds_current_side++;
@@ -55,7 +53,7 @@ UINT32 nes_state::screen_update_nes(screen_device &screen, bitmap_ind16 &bitmap,
 				popmessage("Disk set to side %d", m_fds_current_side);
 		}
 
-		if (!(machine().root_device().ioport("FLIPDISK")->read() & 0x01))
+		if (!(ioport("FLIPDISK")->read() & 0x01))
 			m_last_frame_flip = 0;
 	}
 	return 0;

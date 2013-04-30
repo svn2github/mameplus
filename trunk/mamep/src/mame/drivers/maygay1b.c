@@ -479,7 +479,8 @@ void maygay1b_state::machine_reset()
 // IRQ from Duart (hopper?)
 static void duart_irq_handler(device_t *device, int state, UINT8 vector)
 {
-	device->machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE,  state?ASSERT_LINE:CLEAR_LINE);
+	maygay1b_state *drvstate = device->machine().driver_data<maygay1b_state>();
+	drvstate->m_maincpu->set_input_line(M6809_IRQ_LINE,  state?ASSERT_LINE:CLEAR_LINE);
 	LOG(("6809 irq%d \n",state));
 }
 
@@ -488,7 +489,7 @@ READ8_MEMBER( maygay1b_state::m1_firq_trg_r )
 {
 	static int i = 0xff;
 	i ^= 0xff;
-	space.machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
+	m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 	LOG(("6809 firq\n"));
 	return i;
 }
@@ -775,23 +776,20 @@ WRITE8_MEMBER(maygay1b_state::m1_latch_w)
 
 WRITE8_MEMBER(maygay1b_state::latch_ch2_w)
 {
-	device_t *msm6376 = machine().device("msm6376");
-	okim6376_w(msm6376, space, 0, data&0x7f);
-	okim6376_ch2_w(msm6376,data&0x80);
+	okim6376_w(m_msm6376, space, 0, data&0x7f);
+	okim6376_ch2_w(m_msm6376,data&0x80);
 }
 
 //A strange setup this, the address lines are used to move st to the right level
 READ8_MEMBER(maygay1b_state::latch_st_hi)
 {
-	device_t *msm6376 = machine().device("msm6376");
-	okim6376_st_w(msm6376,1);
+	okim6376_st_w(m_msm6376,1);
 	return 0;
 }
 
 READ8_MEMBER(maygay1b_state::latch_st_lo)
 {
-	device_t *msm6376 = machine().device("msm6376");
-	okim6376_st_w(msm6376,0);
+	okim6376_st_w(m_msm6376,0);
 	return 0;
 }
 

@@ -417,13 +417,6 @@ WRITE8_MEMBER(topspeed_state::sound_bankswitch_w)/* assumes Z80 sandwiched betwe
 	reset_sound_region();
 }
 
-WRITE8_MEMBER(topspeed_state::topspeed_tc0140syt_comm_w)
-{
-	tc0140syt_device *device = machine().device<tc0140syt_device>("tc0140syt");
-	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-	device->tc0140syt_comm_w(space, 0, data);
-}
-
 void topspeed_state::topspeed_msm5205_clock( device_t *device, int chip )
 {
 	UINT8 data = m_msm_rom[chip][m_msm_pos[chip]];
@@ -502,7 +495,7 @@ static ADDRESS_MAP_START( topspeed_map, AS_PROGRAM, 16, topspeed_state )
 	AM_RANGE(0x500000, 0x503fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x600002, 0x600003) AM_WRITE(cpua_ctrl_w)
 	AM_RANGE(0x7e0000, 0x7e0001) AM_READNOP AM_DEVWRITE8("tc0140syt", tc0140syt_device, tc0140syt_port_w, 0x00ff)
-	AM_RANGE(0x7e0002, 0x7e0003) AM_DEVREAD8("tc0140syt", tc0140syt_device, tc0140syt_comm_r, 0x00ff) AM_WRITE8(topspeed_tc0140syt_comm_w, 0x00ff)
+	AM_RANGE(0x7e0002, 0x7e0003) AM_DEVREADWRITE8("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w, 0x00ff)
 	AM_RANGE(0x800000, 0x8003ff) AM_RAM AM_SHARE("raster_ctrl")
 	AM_RANGE(0x800400, 0x80ffff) AM_RAM
 	AM_RANGE(0xa00000, 0xa0ffff) AM_DEVREADWRITE_LEGACY("pc080sn_1", pc080sn_word_r, pc080sn_word_w)
@@ -679,12 +672,8 @@ void topspeed_state::machine_start()
 {
 	membank("bank10")->configure_entries(0, 4, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	m_tc0220ioc = machine().device("tc0220ioc");
-	m_pc080sn_1 = machine().device("pc080sn_1");
-	m_pc080sn_2 = machine().device("pc080sn_2");
-
-	m_msm_chip[0] = machine().device("msm1");
-	m_msm_chip[1] = machine().device("msm2");
+	m_msm_chip[0] = m_msm1;
+	m_msm_chip[1] = m_msm2;
 	m_msm_rom[0] = memregion("adpcm")->base();
 	m_msm_rom[1] = memregion("adpcm")->base() + 0x10000;
 

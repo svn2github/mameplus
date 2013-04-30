@@ -82,14 +82,13 @@ WRITE8_MEMBER(mainevt_state::mainevt_sh_irqtrigger_w)
 
 READ8_MEMBER(mainevt_state::mainevt_sh_busy_r)
 {
-	device_t *device = machine().device("upd");
-	return upd7759_busy_r(device);
+	return upd7759_busy_r(m_upd7759);
 }
 
 WRITE8_MEMBER(mainevt_state::mainevt_sh_irqcontrol_w)
 {
-	upd7759_reset_w(m_upd, data & 2);
-	upd7759_start_w(m_upd, data & 1);
+	upd7759_reset_w(m_upd7759, data & 2);
+	upd7759_start_w(m_upd7759, data & 1);
 
 	m_sound_irq_mask = data & 4;
 }
@@ -111,12 +110,11 @@ WRITE8_MEMBER(mainevt_state::mainevt_sh_bankswitch_w)
 	k007232_set_bank(m_k007232, bank_A, bank_B);
 
 	/* bits 4-5 select the UPD7759 bank */
-	upd7759_set_bank_base(m_upd, ((data >> 4) & 0x03) * 0x20000);
+	upd7759_set_bank_base(m_upd7759, ((data >> 4) & 0x03) * 0x20000);
 }
 
 WRITE8_MEMBER(mainevt_state::dv_sh_bankswitch_w)
 {
-	device_t *device = machine().device("k007232");
 	int bank_A, bank_B;
 
 //logerror("CPU #1 PC: %04x bank switch = %02x\n",space.device().safe_pc(),data);
@@ -124,7 +122,7 @@ WRITE8_MEMBER(mainevt_state::dv_sh_bankswitch_w)
 	/* bits 0-3 select the 007232 banks */
 	bank_A = (data & 0x3);
 	bank_B = ((data >> 2) & 0x3);
-	k007232_set_bank(device, bank_A, bank_B);
+	k007232_set_bank(m_k007232, bank_A, bank_B);
 }
 
 READ8_MEMBER(mainevt_state::k052109_051960_r)
@@ -407,11 +405,6 @@ void mainevt_state::machine_start()
 	UINT8 *ROM = memregion("maincpu")->base();
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
-
-	m_upd = machine().device("upd");
-	m_k007232 = machine().device("k007232");
-	m_k052109 = machine().device("k052109");
-	m_k051960 = machine().device("k051960");
 
 	save_item(NAME(m_nmi_enable));
 }

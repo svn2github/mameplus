@@ -102,16 +102,14 @@ Arcade Version (Coin-Op) by InfoCube (Pisa, Italy)
 #include "video/pc_vga.h"
 
 
-class pangofun_state : public driver_device
+class pangofun_state : public pcat_base_state
 {
 public:
 	pangofun_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		: pcat_base_state(mconfig, type, tag) { }
 
 	DECLARE_DRIVER_INIT(pangofun);
 	virtual void machine_start();
-	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -171,38 +169,10 @@ static INPUT_PORTS_START( pangofun )
 	PORT_START("pc_keyboard_7")
 INPUT_PORTS_END
 
-static void pangofun_set_keyb_int(running_machine &machine, int state)
-{
-	pic8259_ir1_w(machine.device("pic8259_1"), state);
-}
-
-static void set_gate_a20(running_machine &machine, int a20)
-{
-	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_A20, a20);
-}
-
-static void keyboard_interrupt(running_machine &machine, int state)
-{
-	pic8259_ir1_w(machine.device("pic8259_1"), state);
-}
-
-static int pcat_dyn_get_out2(running_machine &machine) {
-	return pit8253_get_output(machine.device("pit8254"), 2 );
-}
-
-
-static const struct kbdc8042_interface at8042 =
-{
-	KBDC8042_AT386, set_gate_a20, keyboard_interrupt, NULL, pcat_dyn_get_out2
-};
-
 void pangofun_state::machine_start()
 {
-	m_maincpu->set_irq_acknowledge_callback(pcat_irq_callback);
-	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, pangofun_set_keyb_int);
-	kbdc8042_init(machine(), &at8042);
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(pangofun_state::irq_callback),this));
 }
-
 
 static MACHINE_CONFIG_START( pangofun, pangofun_state )
 	/* basic machine hardware */

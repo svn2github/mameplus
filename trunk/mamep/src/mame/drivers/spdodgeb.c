@@ -76,7 +76,7 @@ void spdodgeb_state::spd_adpcm_int( device_t *device, int chip )
 	}
 	else
 	{
-		UINT8 *ROM = machine().root_device().memregion("adpcm")->base() + 0x10000 * chip;
+		UINT8 *ROM = memregion("adpcm")->base() + 0x10000 * chip;
 
 		m_adpcm_data[chip] = ROM[m_adpcm_pos[chip]++];
 		msm5205_data_w(device,m_adpcm_data[chip] >> 4);
@@ -85,12 +85,12 @@ void spdodgeb_state::spd_adpcm_int( device_t *device, int chip )
 
 WRITE_LINE_MEMBER(spdodgeb_state::spd_adpcm_int_1)
 {
-	spd_adpcm_int(machine().device("msm1"), 0);
+	spd_adpcm_int(m_msm1, 0);
 }
 
 WRITE_LINE_MEMBER(spdodgeb_state::spd_adpcm_int_2)
 {
-	spd_adpcm_int(machine().device("msm2"), 1);
+	spd_adpcm_int(m_msm2, 1);
 }
 
 #if 0   // default - more sensitive (state change and timing measured on real board?)

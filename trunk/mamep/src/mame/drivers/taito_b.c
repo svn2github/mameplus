@@ -717,7 +717,7 @@ static ADDRESS_MAP_START( realpunc_map, AS_PROGRAM, 16, taitob_state )
 	AM_RANGE(0x280000, 0x281fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x300000, 0x300001) AM_DEVREADWRITE_LEGACY("hd63484", hd63484_status_r, hd63484_address_w)
 	AM_RANGE(0x300002, 0x300003) AM_DEVREADWRITE_LEGACY("hd63484", hd63484_data_r, hd63484_data_w)
-//  AM_RANGE(0x320000, 0x320001) AM_READ_LEGACY(SMH_NOP) // ?
+//  AM_RANGE(0x320000, 0x320001) AM_NOP // ?
 	AM_RANGE(0x320002, 0x320003) AM_READNOP AM_DEVWRITE8("tc0140syt", tc0140syt_device, tc0140syt_comm_w, 0xff00)
 ADDRESS_MAP_END
 
@@ -2003,9 +2003,6 @@ void taitob_state::machine_start()
 {
 	m_mb87078 = machine().device("mb87078");
 	m_ym = machine().device("ymsnd");
-	m_tc0180vcu = machine().device("tc0180vcu");
-	m_tc0640fio = machine().device("tc0640fio");
-	m_tc0220ioc = machine().device("tc0220ioc");
 
 	save_item(NAME(m_eep_latch));
 	save_item(NAME(m_coin_word));

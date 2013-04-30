@@ -330,16 +330,6 @@ Donkey Kong Junior Notes
 
 #define COMBINE_TYPE_PC(_tyn, _pc) ((_tyn)<<16 | (_pc))
 
-/*************************************
- *
- *  Prototypes
- *
- *************************************/
-
-
-
-
-
 
 /*************************************
  *
@@ -347,16 +337,25 @@ Donkey Kong Junior Notes
  *
  *************************************/
 
-static UINT8 memory_read_byte(address_space &space, offs_t address, UINT8 mem_mask) { return space.read_byte(address); }
-static void memory_write_byte(address_space &space, offs_t address, UINT8 data, UINT8 mem_mask) { space.write_byte(address, data); }
+READ8_MEMBER(dkong_state::memory_read_byte)
+{
+	address_space& prog_space = m_maincpu->space(AS_PROGRAM);
+	return prog_space.read_byte(offset);
+}
+
+WRITE8_MEMBER(dkong_state::memory_write_byte)
+{
+	address_space& prog_space = m_maincpu->space(AS_PROGRAM);
+	return prog_space.write_byte(offset, data);
+}
 
 static Z80DMA_INTERFACE( dk3_dma )
 {
 	DEVCB_CPU_INPUT_LINE("maincpu", INPUT_LINE_HALT),
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, memory_read_byte),
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, memory_write_byte),
+	DEVCB_DRIVER_MEMBER(dkong_state, memory_read_byte),
+	DEVCB_DRIVER_MEMBER(dkong_state, memory_write_byte),
 	DEVCB_NULL,
 	DEVCB_NULL
 };
@@ -366,8 +365,8 @@ static I8257_INTERFACE( dk_dma )
 	DEVCB_CPU_INPUT_LINE("maincpu", INPUT_LINE_HALT),
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, memory_read_byte),
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, memory_write_byte),
+	DEVCB_DRIVER_MEMBER(dkong_state, memory_read_byte),
+	DEVCB_DRIVER_MEMBER(dkong_state, memory_write_byte),
 	{ DEVCB_NULL, DEVCB_DRIVER_MEMBER(dkong_state,p8257_ctl_r), DEVCB_NULL, DEVCB_NULL },
 	{ DEVCB_DRIVER_MEMBER(dkong_state,p8257_ctl_w), DEVCB_NULL, DEVCB_NULL, DEVCB_NULL }
 };
@@ -402,8 +401,6 @@ INTERRUPT_GEN_MEMBER(dkong_state::s2650_interrupt)
 
 void dkong_state::dkong_init_device_driver_data(  )
 {
-	m_dev_n2a03a = machine().device("n2a03a");
-	m_dev_n2a03b = machine().device("n2a03b");
 	m_dev_6h = machine().device("ls259.6h");
 	m_dev_vp2 = machine().device("virtual_p2");
 }
@@ -697,13 +694,13 @@ WRITE8_MEMBER(dkong_state::dkong3_2a03_reset_w)
 {
 	if (data & 1)
 	{
-		m_dev_n2a03a->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
-		m_dev_n2a03b->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		m_dev_n2a03a->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		m_dev_n2a03b->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	}
 	else
 	{
-		m_dev_n2a03a->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-		m_dev_n2a03b->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+		m_dev_n2a03a->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+		m_dev_n2a03b->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	}
 }
 

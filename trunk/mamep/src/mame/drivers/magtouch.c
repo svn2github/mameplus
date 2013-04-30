@@ -78,17 +78,19 @@ video card
 #include "machine/pcshare.h"
 #include "machine/ins8250.h"
 #include "machine/microtch.h"
+#include "machine/8042kbdc.h"
+#include "machine/pckeybrd.h"
+#include "machine/pit8253.h"
 #include "video/pc_vga.h"
 
 
-class magtouch_state : public driver_device
+class magtouch_state : public pcat_base_state
 {
 public:
 	magtouch_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
+		: pcat_base_state(mconfig, type, tag),
 			m_uart(*this, "ns16450_0"),
-			m_microtouch(*this, "microtouch"),
-			m_maincpu(*this, "maincpu") { }
+			m_microtouch(*this, "microtouch"){ }
 
 	required_device<ns16450_device> m_uart;
 	required_device<microtouch_serial_device> m_microtouch;
@@ -100,7 +102,6 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(at_com_interrupt_1);
 	DECLARE_DRIVER_INIT(magtouch);
 	virtual void machine_start();
-	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -195,16 +196,9 @@ static INPUT_PORTS_START( magtouch )
 	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN3) PORT_IMPULSE(1)
 INPUT_PORTS_END
 
-static void magtouch_set_keyb_int(running_machine &machine, int state)
-{
-	pic8259_ir1_w(machine.device("pic8259_1"), state);
-}
-
 void magtouch_state::machine_start()
 {
-	m_maincpu->set_irq_acknowledge_callback(pcat_irq_callback);
-
-	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, magtouch_set_keyb_int);
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(magtouch_state::irq_callback),this));
 
 	membank("rombank")->configure_entries(0, 0x80, memregion("game_prg")->base(), 0x8000 );
 	membank("rombank")->set_entry(0);

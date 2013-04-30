@@ -39,7 +39,9 @@ public:
 		m_znsec1(*this,"maincpu:sio0:znsec1"),
 		m_zndip(*this,"maincpu:sio0:zndip"),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu") {
+		m_audiocpu(*this, "audiocpu"),
+		m_ram(*this, "maincpu:ram")
+	{
 	}
 
 	required_device<psxgpu_device> m_gpu;
@@ -135,6 +137,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_audiocpu;
+	required_device<ram_device> m_ram;
 };
 
 inline void ATTR_PRINTF(3,4) zn_state::verboselog( int n_level, const char *s_fmt, ... )
@@ -359,14 +362,29 @@ READ32_MEMBER(zn_state::boardconfig_r)
 	111----- rev=5
 	*/
 
+	int boardconfig = 64 | 32;
+
 	if( machine().primary_screen->height() == 1024 )
 	{
-		return 64|32|8;
+		boardconfig |= 8;
 	}
-	else
+
+	switch( m_ram->size() )
 	{
-		return 64|32;
+	case 0x400000:
+		boardconfig |= 1;
+		break;
+
+	case 0x800000:
+		boardconfig |= 2;
+		break;
+
+	case 0x1000000:
+		boardconfig |= 3;
+		break;
 	}
+
+	return boardconfig;
 }
 
 READ32_MEMBER(zn_state::unknown_r)
@@ -390,8 +408,6 @@ WRITE32_MEMBER(zn_state::coin_w)
 }
 
 static ADDRESS_MAP_START( zn_map, AS_PROGRAM, 32, zn_state )
-	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_SHARE("share1") /* ram */
-	AM_RANGE(0x00400000, 0x007fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x1fa00000, 0x1fa00003) AM_READ_PORT("P1")
 	AM_RANGE(0x1fa00100, 0x1fa00103) AM_READ_PORT("P2")
 	AM_RANGE(0x1fa00200, 0x1fa00203) AM_READ_PORT("SERVICE")
@@ -407,10 +423,7 @@ static ADDRESS_MAP_START( zn_map, AS_PROGRAM, 32, zn_state )
 	AM_RANGE(0x1faf0000, 0x1faf07ff) AM_DEVREADWRITE8_LEGACY("at28c16", at28c16_r, at28c16_w, 0xffffffff) /* eeprom */
 	AM_RANGE(0x1fb20000, 0x1fb20007) AM_READ(unknown_r)
 	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
-	AM_RANGE(0x80000000, 0x803fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
-	AM_RANGE(0x80400000, 0x807fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x9fc00000, 0x9fc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
-	AM_RANGE(0xa0000000, 0xa03fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0xbfc00000, 0xbfc7ffff) AM_WRITENOP AM_ROM AM_SHARE("share2") /* bios mirror */
 ADDRESS_MAP_END
 
@@ -440,6 +453,9 @@ static MACHINE_CONFIG_START( zn1_1mb_vram, zn_state )
 	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
 	MCFG_CPU_PROGRAM_MAP( zn_map)
 
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("4M")
+
 	MCFG_DEVICE_ADD("maincpu:sio0:znsec0", ZNSEC, 0)
 	MCFG_DEVICE_ADD("maincpu:sio0:znsec1", ZNSEC, 0)
 	MCFG_DEVICE_ADD("maincpu:sio0:zndip", ZNDIP, 0)
@@ -466,6 +482,9 @@ static MACHINE_CONFIG_START( zn2, zn_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8661R, XTAL_100MHz )
 	MCFG_CPU_PROGRAM_MAP( zn_map)
+
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("4M")
 
 	MCFG_DEVICE_ADD("maincpu:sio0:znsec0", ZNSEC, 0)
 	MCFG_DEVICE_ADD("maincpu:sio0:znsec1", ZNSEC, 0)
@@ -644,15 +663,15 @@ DRIVER_INIT_MEMBER(zn_state,coh1000c)
 		/* disable:
 		    the QSound CPU for glpracr as it doesn't have any roms &
 		    the link cpu for glprac2l as the h/w is not emulated yet. */
-		machine().device<cpu_device>( "audiocpu" )->suspend(SUSPEND_REASON_DISABLE, 1 );
+		m_audiocpu->suspend(SUSPEND_REASON_DISABLE, 1 );
 	}
 }
 
 MACHINE_RESET_MEMBER(zn_state,coh1000c)
 {
-	membank( "bank1" )->set_base( memregion( "user2" )->base() ); /* fixed game rom */
-	membank( "bank2" )->set_base( memregion( "user2" )->base() + 0x400000 ); /* banked game rom */
-	membank( "bank3" )->set_base( memregion( "user3" )->base() ); /* country rom */
+	membank("bank1")->set_base(memregion("user2")->base()); /* fixed game rom */
+	membank("bank2")->set_base(memregion("user2")->base()+ 0x400000 ); /* banked game rom */
+	membank("bank3")->set_base(memregion("user3")->base()); /* country rom */
 }
 
 static ADDRESS_MAP_START( qsound_map, AS_PROGRAM, 8, zn_state )
@@ -1368,12 +1387,11 @@ void zn_state::atpsx_dma_read( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_siz
 {
 	device_t *ide = machine().device("ide");
 
-	logerror("DMA read: %d bytes (%d words) to %08x\n", n_size<<2, n_size, n_address);
+//  logerror("DMA read: %d bytes (%d words) to %08x\n", n_size<<2, n_size, n_address);
 
-	if (n_address < 0xe0000)
+	if (n_address < 0x10000)
 	{
-		// protect kernel+program space (what should we really do here?)
-		logerror( "skip read to low memory\n" );
+		logerror( "skip read to BIOS area\n" );
 		return;
 	}
 
@@ -1414,6 +1432,9 @@ MACHINE_RESET_MEMBER(zn_state,coh1000w)
 }
 
 static MACHINE_CONFIG_DERIVED( coh1000w, zn1_2mb_vram )
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("8M")
+
 	MCFG_MACHINE_RESET_OVERRIDE(zn_state, coh1000w )
 
 	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)

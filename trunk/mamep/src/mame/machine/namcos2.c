@@ -85,14 +85,14 @@ ResetAllSubCPUs( running_machine &machine, int state )
 {
 	namcos2_shared_state *s2state = machine.driver_data<namcos2_shared_state>();
 
-	machine.device("slave")->execute().set_input_line(INPUT_LINE_RESET, state);
+	s2state->m_slave->set_input_line(INPUT_LINE_RESET, state);
 	if (s2state->m_c68)
 	{
-		machine.device("c68")->execute().set_input_line(INPUT_LINE_RESET, state);
+		s2state->m_c68->set_input_line(INPUT_LINE_RESET, state);
 	}
 	else
 	{
-		machine.device("mcu")->execute().set_input_line(INPUT_LINE_RESET, state);
+		s2state->m_mcu->set_input_line(INPUT_LINE_RESET, state);
 	}
 	switch( machine.driver_data<namcos2_shared_state>()->m_gametype )
 	{
@@ -100,8 +100,8 @@ ResetAllSubCPUs( running_machine &machine, int state )
 	case NAMCOS21_STARBLADE:
 	case NAMCOS21_AIRCOMBAT:
 	case NAMCOS21_CYBERSLED:
-		machine.device("dspmaster")->execute().set_input_line(INPUT_LINE_RESET, state);
-		machine.device("dspslave")->execute().set_input_line(INPUT_LINE_RESET, state);
+		s2state->m_dspmaster->set_input_line(INPUT_LINE_RESET, state);
+		s2state->m_dspslave->set_input_line(INPUT_LINE_RESET, state);
 		break;
 
 //  case NAMCOS21_WINRUN91:
@@ -711,10 +711,10 @@ INTERRUPT_GEN_MEMBER(namcos2_shared_state::namcos2_68k_gpu_vblank)
 
 WRITE8_MEMBER( namcos2_shared_state::namcos2_sound_bankselect_w )
 {
-	UINT8 *RAM= machine().root_device().memregion("audiocpu")->base();
-	UINT32 max = (machine().root_device().memregion("audiocpu")->bytes() - 0x10000) / 0x4000;
+	UINT8 *RAM= memregion("audiocpu")->base();
+	UINT32 max = (memregion("audiocpu")->bytes() - 0x10000) / 0x4000;
 	int bank = ( data >> 4 ) % max; /* 991104.CAB */
-	machine().root_device().membank(BANKED_SOUND_ROM)->set_base(&RAM[ 0x10000 + ( 0x4000 * bank ) ] );
+	membank(BANKED_SOUND_ROM)->set_base(&RAM[ 0x10000 + ( 0x4000 * bank ) ] );
 }
 
 /**************************************************************/
@@ -738,28 +738,28 @@ WRITE8_MEMBER( namcos2_shared_state::namcos2_mcu_analog_ctrl_w )
 		switch((data>>2) & 0x07)
 		{
 		case 0:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN0")->read();
+			namcos2_mcu_analog_data=ioport("AN0")->read();
 			break;
 		case 1:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN1")->read();
+			namcos2_mcu_analog_data=ioport("AN1")->read();
 			break;
 		case 2:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN2")->read();
+			namcos2_mcu_analog_data=ioport("AN2")->read();
 			break;
 		case 3:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN3")->read();
+			namcos2_mcu_analog_data=ioport("AN3")->read();
 			break;
 		case 4:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN4")->read();
+			namcos2_mcu_analog_data=ioport("AN4")->read();
 			break;
 		case 5:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN5")->read();
+			namcos2_mcu_analog_data=ioport("AN5")->read();
 			break;
 		case 6:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN6")->read();
+			namcos2_mcu_analog_data=ioport("AN6")->read();
 			break;
 		case 7:
-			namcos2_mcu_analog_data=machine().root_device().ioport("AN7")->read();
+			namcos2_mcu_analog_data=ioport("AN7")->read();
 			break;
 		default:
 			output_set_value("anunk",data);
@@ -817,14 +817,14 @@ READ8_MEMBER( namcos2_shared_state::namcos2_mcu_port_d_r )
 	int data = 0;
 
 	/* Read/convert the bits one at a time */
-	if(machine().root_device().ioport("AN0")->read() > threshold) data |= 0x01;
-	if(machine().root_device().ioport("AN1")->read() > threshold) data |= 0x02;
-	if(machine().root_device().ioport("AN2")->read() > threshold) data |= 0x04;
-	if(machine().root_device().ioport("AN3")->read() > threshold) data |= 0x08;
-	if(machine().root_device().ioport("AN4")->read() > threshold) data |= 0x10;
-	if(machine().root_device().ioport("AN5")->read() > threshold) data |= 0x20;
-	if(machine().root_device().ioport("AN6")->read() > threshold) data |= 0x40;
-	if(machine().root_device().ioport("AN7")->read() > threshold) data |= 0x80;
+	if(ioport("AN0")->read() > threshold) data |= 0x01;
+	if(ioport("AN1")->read() > threshold) data |= 0x02;
+	if(ioport("AN2")->read() > threshold) data |= 0x04;
+	if(ioport("AN3")->read() > threshold) data |= 0x08;
+	if(ioport("AN4")->read() > threshold) data |= 0x10;
+	if(ioport("AN5")->read() > threshold) data |= 0x20;
+	if(ioport("AN6")->read() > threshold) data |= 0x40;
+	if(ioport("AN7")->read() > threshold) data |= 0x80;
 
 	/* Return the result */
 	return data;

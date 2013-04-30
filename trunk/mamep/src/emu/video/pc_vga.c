@@ -226,6 +226,10 @@ void vga_device::device_start()
 	vga.svga_intf.vram_size = 0x100000;
 
 	vga.memory  = auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
+	save_pointer(vga.memory,"Video RAM",vga.svga_intf.vram_size);
+	save_pointer(vga.crtc.data,"CRTC Registers",0x100);
+	save_pointer(vga.sequencer.data,"Sequencer Registers",0x100);
+	save_pointer(vga.attribute.data,"Attribute Registers", 0x15);
 
 	m_vblank_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(vga_device::vblank_timer_cb),this));
 }
@@ -255,6 +259,10 @@ void cirrus_vga_device::device_start()
 	vga.svga_intf.vram_size = 0x200000;
 
 	vga.memory  = auto_alloc_array_clear(machine(), UINT8, vga.svga_intf.vram_size);
+	save_pointer(vga.memory,"Video RAM",vga.svga_intf.vram_size);
+	save_pointer(vga.crtc.data,"CRTC Registers",0x100);
+	save_pointer(vga.sequencer.data,"Sequencer Registers",0x100);
+	save_pointer(vga.attribute.data,"Attribute Registers", 0x15);
 
 	m_vblank_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(vga_device::vblank_timer_cb),this));
 }
@@ -294,6 +302,8 @@ void tseng_vga_device::device_start()
 void ibm8514a_device::device_start()
 {
 	memset(&ibm8514, 0, sizeof(ibm8514));
+	ibm8514.read_mask = 0x00000000;
+	ibm8514.write_mask = 0xffffffff;
 }
 
 void ibm8514a_device::device_config_complete()
@@ -1420,7 +1430,8 @@ void vga_device::crtc_reg_write(UINT8 index, UINT8 data)
 			recompute_params();
 			break;
 		case 0x13:
-			vga.crtc.offset = data & 0xff;
+			vga.crtc.offset &= ~0xff;
+			vga.crtc.offset |= data & 0xff;
 			break;
 		case 0x14:
 			vga.crtc.dw = (data & 0x40) >> 6;
@@ -2685,6 +2696,9 @@ UINT8 s3_vga_device::s3_crtc_reg_read(UINT8 index)
 			case 0x42: // CR42 Mode Control
 				res = s3.cr42 & 0x0f;  // bit 5 set if interlaced, leave it unset for now.
 				break;
+			case 0x43:
+				res = s3.cr43;
+				break;
 			case 0x45:
 				res = s3.cursor_mode;
 				break;
@@ -2874,6 +2888,11 @@ void s3_vga_device::s3_crtc_reg_write(UINT8 index, UINT8 data)
 			case 0x42:
 				s3.cr42 = data;  // bit 5 = interlace, bits 0-3 = dot clock (seems to be undocumented)
 				break;
+			case 0x43:
+				s3.cr43 = data;  // bit 2 = bit 8 of offset register, but only if bits 4-5 of CR51 are 00h.
+				vga.crtc.offset = (vga.crtc.offset & 0x00ff) | ((data & 0x04) << 6);
+				s3_define_video_mode();
+				break;
 /*
 3d4h index 45h (R/W):  CR45 Hardware Graphics Cursor Mode
 bit    0  HWGC ENB. Hardware Graphics Cursor Enable. Set to enable the
@@ -3002,6 +3021,10 @@ bit  0-5  Pattern Display Start Y-Pixel Position.
 				vga.crtc.start_addr_latch |= ((data & 0x3) << 18);
 				svga.bank_w = (svga.bank_w & 0xcf) | ((data & 0x0c) << 2);
 				svga.bank_r = svga.bank_w;
+				if((data & 0x30) != 0x00)
+					vga.crtc.offset = (vga.crtc.offset & 0x00ff) | ((data & 0x30) << 4);
+				else
+					vga.crtc.offset = (vga.crtc.offset & 0x00ff) | ((s3.cr43 & 0x04) << 6);
 				s3_define_video_mode();
 				break;
 			case 0x53:
@@ -3236,8 +3259,14 @@ void ibm8514a_device::ibm8514_write_fg(UINT32 offset)
 	UINT8 src = 0;
 
 	// check clipping rectangle
-	if(ibm8514.curr_x < ibm8514.scissors_left || ibm8514.curr_x > ibm8514.scissors_right || ibm8514.curr_y < ibm8514.scissors_top || ibm8514.curr_y > ibm8514.scissors_bottom)
-		return;  // do nothing
+	if((ibm8514.current_cmd & 0xe000) == 0xc000)  // BitBLT writes to the destination X/Y, so check that instead
+	{
+		if(ibm8514.dest_x < ibm8514.scissors_left || ibm8514.dest_x > ibm8514.scissors_right || ibm8514.dest_y < ibm8514.scissors_top || ibm8514.dest_y > ibm8514.scissors_bottom)
+			return;  // do nothing
+	}
+	else
+		if(ibm8514.curr_x < ibm8514.scissors_left || ibm8514.curr_x > ibm8514.scissors_right || ibm8514.curr_y < ibm8514.scissors_top || ibm8514.curr_y > ibm8514.scissors_bottom)
+			return;  // do nothing
 
 	// determine source
 	switch(ibm8514.fgmix & 0x0060)
@@ -3270,7 +3299,7 @@ void ibm8514a_device::ibm8514_write_fg(UINT32 offset)
 		m_vga->mem_linear_w(space,offset,0xff,0xff);
 		break;
 	case 0x0003:
-		// change nothing, pixel is unchanged
+		m_vga->mem_linear_w(space,offset,dst,0xff);
 		break;
 	case 0x0004:
 		m_vga->mem_linear_w(space,offset,~src,0xff);
@@ -3319,8 +3348,14 @@ void ibm8514a_device::ibm8514_write_bg(UINT32 offset)
 	UINT8 src = 0;
 
 	// check clipping rectangle
-	if(ibm8514.curr_x < ibm8514.scissors_left || ibm8514.curr_x > ibm8514.scissors_right || ibm8514.curr_y < ibm8514.scissors_top || ibm8514.curr_y > ibm8514.scissors_bottom)
-		return;  // do nothing
+	if((ibm8514.current_cmd & 0xe000) == 0xc000)  // BitBLT writes to the destination X/Y, so check that instead
+	{
+		if(ibm8514.dest_x < ibm8514.scissors_left || ibm8514.dest_x > ibm8514.scissors_right || ibm8514.dest_y < ibm8514.scissors_top || ibm8514.dest_y > ibm8514.scissors_bottom)
+			return;  // do nothing
+	}
+	else
+		if(ibm8514.curr_x < ibm8514.scissors_left || ibm8514.curr_x > ibm8514.scissors_right || ibm8514.curr_y < ibm8514.scissors_top || ibm8514.curr_y > ibm8514.scissors_bottom)
+			return;  // do nothing
 
 	// determine source
 	switch(ibm8514.bgmix & 0x0060)
@@ -3353,7 +3388,7 @@ void ibm8514a_device::ibm8514_write_bg(UINT32 offset)
 		m_vga->mem_linear_w(space,offset,0xff,0xff);
 		break;
 	case 0x0003:
-		// change nothing, pixel is unchanged
+		m_vga->mem_linear_w(space,offset,dst,0xff);
 		break;
 	case 0x0004:
 		m_vga->mem_linear_w(space,offset,~src,0xff);
@@ -3403,9 +3438,6 @@ void ibm8514a_device::ibm8514_write(UINT32 offset, UINT32 src)
 	switch(ibm8514.pixel_control & 0x00c0)
 	{
 	case 0x0000:  // Foreground Mix only
-		// check clipping rectangle
-		if(ibm8514.curr_x < ibm8514.scissors_left || ibm8514.curr_x > ibm8514.scissors_right || ibm8514.curr_y < ibm8514.scissors_top || ibm8514.curr_y > ibm8514.scissors_bottom)
-			return;  // do nothing
 		ibm8514_write_fg(offset);
 		break;
 	case 0x0040:  // fixed pattern (?)
@@ -3636,6 +3668,7 @@ WRITE16_MEMBER(ibm8514a_device::ibm8514_cmd_w)
 	int x,y;
 	int pattern_x,pattern_y;
 	UINT32 off,src;
+	UINT8 readmask;
 
 	ibm8514.current_cmd = data;
 	ibm8514.src_x = 0;
@@ -3769,14 +3802,31 @@ WRITE16_MEMBER(ibm8514a_device::ibm8514_cmd_w)
 		src = 0;
 		src += (IBM8514_LINE_LENGTH * ibm8514.curr_y);
 		src += ibm8514.curr_x;
+		readmask = ((ibm8514.read_mask & 0x01) << 7) | ((ibm8514.read_mask & 0xfe) >> 1);
 		for(y=0;y<=ibm8514.rect_height;y++)
 		{
 			for(x=0;x<=ibm8514.rect_width;x++)
 			{
-				if(data & 0x0020)
-					m_vga->mem_linear_w(space,(off+x),m_vga->mem_linear_r(space,(src+x),0xff),0xff);
+				if((ibm8514.pixel_control & 0xc0) == 0xc0)
+				{
+					// only check read mask if Mix Select is set to 11 (VRAM determines mix)
+					if(m_vga->mem_linear_r(space,(src+x),0xff) & ~readmask)
+					{
+						// presumably every program is going to be smart enough to set the FG mix to use VRAM (0x6x)
+						if(data & 0x0020)
+							ibm8514_write(off+x,src+x);
+						else
+							ibm8514_write(off-x,src-x);
+					}
+				}
 				else
-					m_vga->mem_linear_w(space,(off-x),m_vga->mem_linear_r(space,(src-x),0xff),0xff);
+				{
+					// presumably every program is going to be smart enough to set the FG mix to use VRAM (0x6x)
+					if(data & 0x0020)
+						ibm8514_write(off+x,src+x);
+					else
+						ibm8514_write(off-x,src-x);
+				}
 				if(ibm8514.current_cmd & 0x0020)
 				{
 					ibm8514.curr_x++;
@@ -3817,6 +3867,8 @@ WRITE16_MEMBER(ibm8514a_device::ibm8514_cmd_w)
 		}
 		ibm8514.state = IBM8514_IDLE;
 		ibm8514.gpbusy = false;
+		ibm8514.curr_x = ibm8514.prev_x;
+		ibm8514.curr_y = ibm8514.prev_y;
 		break;
 	case 0xe000:  // Pattern Fill
 		if(LOG_8514) logerror("8514/A: Command (%04x) - Pattern Fill - source %i,%i  dest %i,%i  Width: %i Height: %i\n",ibm8514.current_cmd,
@@ -4231,6 +4283,49 @@ WRITE16_MEMBER(ibm8514a_device::ibm8514_bgcolour_w)
 	if(LOG_8514) logerror("8514/A: Background Colour write %04x\n",data);
 }
 
+/*
+AEE8h W(R/W):  Read Mask Register (RD_MASK)
+bit   0-7  (911/924) Read Mask affects the following commands: CMD_RECT,
+            CMD_BITBLT and reading data in Across Plane Mode.
+            Each bit set prevents the plane from being read.
+     0-15  (801/5) Readmask. See above.
+     0-31  (928 +) Readmask. See above. In 32 bits per pixel modes there are
+            two 16bit registers at this address. BEE8h index 0Eh bit 4 selects
+            which 16 bits are accessible and each access toggles to the other
+            16 bits.
+ */
+READ16_MEMBER(ibm8514a_device::ibm8514_read_mask_r)
+{
+	return ibm8514.read_mask & 0xffff;
+}
+
+WRITE16_MEMBER(ibm8514a_device::ibm8514_read_mask_w)
+{
+	ibm8514.read_mask = (ibm8514.read_mask & 0xffff0000) | data;
+	if(LOG_8514) logerror("8514/A: Read Mask (Low) write = %08x\n",ibm8514.read_mask);
+}
+
+/*
+AAE8h W(R/W):  Write Mask Register (WRT_MASK)
+bit   0-7  (911/924) Writemask. A plane can only be modified if the
+            corresponding bit is set.
+     0-15  (801/5) Writemask. See above.
+     0-31  (928 +) Writemask. See above. In 32 bits per pixel modes there are
+            two 16bit registers at this address. BEE8h index 0Eh bit 4 selects
+            which 16 bits are accessible and each access toggles to the other
+            16 bits.
+ */
+READ16_MEMBER(ibm8514a_device::ibm8514_write_mask_r)
+{
+	return ibm8514.write_mask & 0xffff;
+}
+
+WRITE16_MEMBER(ibm8514a_device::ibm8514_write_mask_w)
+{
+	ibm8514.write_mask = (ibm8514.write_mask & 0xffff0000) | data;
+	if(LOG_8514) logerror("8514/A: Write Mask (Low) write = %08x\n",ibm8514.write_mask);
+}
+
 READ16_MEMBER(ibm8514a_device::ibm8514_multifunc_r )
 {
 	switch(ibm8514.multifunc_sel)
@@ -4316,6 +4411,10 @@ BIT     2  (911-928) Pack Data. If set image read data is a monochrome bitmap,
 	case 0xa000:
 		ibm8514.pixel_control = data;
 		if(LOG_8514) logerror("S3: Pixel control write %04x\n",data);
+		break;
+	case 0xe000:
+		ibm8514.multifunc_misc = data;
+		if(LOG_8514) logerror("S3: Multifunction Miscellaneous write %04x\n",data);
 		break;
 /*
 BEE8h index 0Fh W(W):  Read Register Select Register (READ_SEL)    (801/5,928)
@@ -4718,6 +4817,22 @@ WRITE8_MEMBER(s3_vga_device::mem_w)
 		case 0x8125:
 		case 0xa6e9:
 			dev->ibm8514.fgcolour = (dev->ibm8514.fgcolour & 0x00ff) | (data << 8);
+			break;
+		case 0x8128:
+		case 0xaae8:
+			dev->ibm8514.write_mask = (dev->ibm8514.write_mask & 0xff00) | data;
+			break;
+		case 0x8129:
+		case 0xaae9:
+			dev->ibm8514.write_mask = (dev->ibm8514.write_mask & 0x00ff) | (data << 8);
+			break;
+		case 0x812c:
+		case 0xaee8:
+			dev->ibm8514.read_mask = (dev->ibm8514.read_mask & 0xff00) | data;
+			break;
+		case 0x812d:
+		case 0xaee9:
+			dev->ibm8514.read_mask = (dev->ibm8514.read_mask & 0x00ff) | (data << 8);
 			break;
 		case 0xb6e8:
 		case 0x8134:
@@ -5360,6 +5475,26 @@ WRITE16_MEMBER(mach8_device::mach8_linedraw_w)
 		break;
 	}
 	logerror("ATI: Linedraw register write %04x, mode %i\n",data,mach8.linedraw);
+}
+
+READ16_MEMBER(mach8_device::mach8_sourcex_r)
+{
+	return ibm8514.dest_x;
+}
+
+READ16_MEMBER(mach8_device::mach8_sourcey_r)
+{
+	return ibm8514.dest_y;
+}
+
+WRITE16_MEMBER(mach8_device::mach8_ext_leftscissor_w)
+{
+	// TODO
+}
+
+WRITE16_MEMBER(mach8_device::mach8_ext_topscissor_w)
+{
+	// TODO
 }
 
 READ16_MEMBER(mach8_device::mach8_scratch0_r)

@@ -444,7 +444,7 @@ READ8_MEMBER(mplay_state::bank_r )
 		}
 		else
 		{
-			return machine().root_device().memregion("maincpu")->base()[fulladdress ^ 1];
+			return memregion("maincpu")->base()[fulladdress ^ 1];
 		}
 	}
 	else if (fulladdress >= 0xa10000 && fulladdress <= 0xa1001f) // IO Acess
@@ -820,9 +820,9 @@ ROM_END
 
 void mplay_state::mplay_start()
 {
-	UINT8 *src = machine().root_device().memregion("mtbios")->base();
-	UINT8 *instruction_rom = machine().root_device().memregion("user1")->base();
-	UINT8 *game_rom = machine().root_device().memregion("maincpu")->base();
+	UINT8 *src = memregion("mtbios")->base();
+	UINT8 *instruction_rom = memregion("user1")->base();
+	UINT8 *game_rom = memregion("maincpu")->base();
 	int offs;
 
 	memmove(src + 0x10000, src + 0x8000, 0x18000); // move bios..
@@ -875,7 +875,7 @@ DRIVER_INIT_MEMBER(mplay_state,megaplay)
 	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xa10000, 0xa1001f, read16_delegate(FUNC(mplay_state::megaplay_io_read),this), write16_delegate(FUNC(mplay_state::megaplay_io_write),this));
 
 	/* megaplay has ram shared with the bios cpu here */
-	machine().device("genesis_snd_z80")->memory().space(AS_PROGRAM).install_ram(0x2000, 0x3fff, &m_ic36_ram[0]);
+	m_z80snd->space(AS_PROGRAM).install_ram(0x2000, 0x3fff, &m_ic36_ram[0]);
 
 	/* instead of a RAM mirror the 68k sees the extra ram of the 2nd z80 too */
 	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xa02000, 0xa03fff, read16_delegate(FUNC(mplay_state::megadriv_68k_read_z80_extra_ram),this), write16_delegate(FUNC(mplay_state::megadriv_68k_write_z80_extra_ram),this));

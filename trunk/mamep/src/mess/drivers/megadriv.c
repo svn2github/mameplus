@@ -59,7 +59,7 @@ public:
 	UINT8 m_page_register;
 
 	UINT16 pico_read_penpos(int pen);
-	DECLARE_READ16_HANDLER(pico_68k_io_read);
+	DECLARE_READ16_MEMBER(pico_68k_io_read);
 	DECLARE_WRITE16_MEMBER(pico_68k_io_write);
 	DECLARE_MACHINE_START(pico);
 };
@@ -518,31 +518,31 @@ DEVICE_IMAGE_LOAD_MEMBER( md_base_state, _32x_cart )
 	if (image.software_entry() == NULL)
 	{
 		length = image.length();
-		temp_copy = auto_alloc_array(image.device().machine(), UINT8, length);
+		temp_copy = auto_alloc_array(machine(), UINT8, length);
 		image.fread(temp_copy, length);
 	}
 	else
 	{
 		length = image.get_software_region_length("rom");
-		temp_copy = auto_alloc_array(image.device().machine(), UINT8, length);
+		temp_copy = auto_alloc_array(machine(), UINT8, length);
 		memcpy(temp_copy, image.get_software_region("rom"), length);
 	}
 
 	/* Copy the cart image in the locations the driver expects */
 	// Notice that, by using pick_integer, we are sure the code works on both LE and BE machines
-	ROM16 = (UINT16 *) image.device().machine().root_device().memregion("gamecart")->base();
+	ROM16 = (UINT16 *) memregion("gamecart")->base();
 	for (i = 0; i < length; i += 2)
 		ROM16[i / 2] = pick_integer_be(temp_copy, i, 2);
 
-	ROM32 = (UINT32 *) image.device().machine().root_device().memregion("gamecart_sh2")->base();
+	ROM32 = (UINT32 *) memregion("gamecart_sh2")->base();
 	for (i = 0; i < length; i += 4)
 		ROM32[i / 4] = pick_integer_be(temp_copy, i, 4);
 
-	ROM16 = (UINT16 *) image.device().machine().root_device().memregion("maincpu")->base();
+	ROM16 = (UINT16 *) memregion("maincpu")->base();
 	for (i = 0x00; i < length; i += 2)
 		ROM16[i / 2] = pick_integer_be(temp_copy, i, 2);
 
-	auto_free(image.device().machine(), temp_copy);
+	auto_free(machine(), temp_copy);
 
 	return IMAGE_INIT_PASS;
 }
@@ -952,7 +952,7 @@ UINT16 pico_state::pico_read_penpos(int pen)
 	return penpos;
 }
 
-READ16_HANDLER(pico_state::pico_68k_io_read )
+READ16_MEMBER(pico_state::pico_68k_io_read )
 {
 	UINT8 retdata = 0;
 

@@ -178,7 +178,7 @@ static ADDRESS_MAP_START( rungun_map, AS_PROGRAM, 16, rungun_state )
 	AM_RANGE(0x000000, 0x2fffff) AM_ROM                                         // main program + data
 	AM_RANGE(0x300000, 0x3007ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x380000, 0x39ffff) AM_RAM                                         // work RAM
-	AM_RANGE(0x400000, 0x43ffff) AM_READNOP // AM_READ_LEGACY(K053936_0_rom_r )       // '936 ROM readback window
+	AM_RANGE(0x400000, 0x43ffff) AM_READNOP // AM_READ(K053936_0_rom_r )       // '936 ROM readback window
 	AM_RANGE(0x480000, 0x48001f) AM_READWRITE(rng_sysregs_r, rng_sysregs_w) AM_SHARE("sysreg")
 	AM_RANGE(0x4c0000, 0x4c001f) AM_DEVREADWRITE8_LEGACY("k053252", k053252_r, k053252_w,0x00ff)                        // CCU (for scanline and vblank polling)
 	AM_RANGE(0x540000, 0x540001) AM_WRITE(sound_irq_w)
@@ -361,12 +361,6 @@ void rungun_state::machine_start()
 
 	membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
-	m_k053936 = machine().device("k053936");
-	m_k055673 = machine().device("k055673");
-	m_k053252 = machine().device("k053252");
-	m_k054539_1 = machine().device("k054539_1");
-	m_k054539_2 = machine().device("k054539_2");
-
 	save_item(NAME(m_z80_control));
 	save_item(NAME(m_sound_status));
 	save_item(NAME(m_ttl_vram));
@@ -374,7 +368,7 @@ void rungun_state::machine_start()
 
 void rungun_state::machine_reset()
 {
-	machine().device<k054539_device>("k054539_1")->init_flags(k054539_device::REVERSE_STEREO);
+	m_k054539_1->init_flags(k054539_device::REVERSE_STEREO);
 
 	memset(m_sysreg, 0, 0x20);
 	memset(m_ttl_vram, 0, 0x1000 * sizeof(UINT16));

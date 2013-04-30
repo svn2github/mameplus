@@ -322,20 +322,17 @@ WRITE8_MEMBER(combatsc_state::combatsc_sh_irqtrigger_w)
 
 READ8_MEMBER(combatsc_state::combatsc_busy_r)
 {
-	device_t *device = machine().device("upd");
-	return upd7759_busy_r(device) ? 1 : 0;
+	return upd7759_busy_r(m_upd7759) ? 1 : 0;
 }
 
 WRITE8_MEMBER(combatsc_state::combatsc_play_w)
 {
-	device_t *device = machine().device("upd");
-	upd7759_start_w(device, data & 2);
+	upd7759_start_w(m_upd7759, data & 2);
 }
 
 WRITE8_MEMBER(combatsc_state::combatsc_voice_reset_w)
 {
-	device_t *device = machine().device("upd");
-	upd7759_reset_w(device,data & 1);
+	upd7759_reset_w(m_upd7759,data & 1);
 }
 
 WRITE8_MEMBER(combatsc_state::combatsc_portA_w)
@@ -402,16 +399,15 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(combatsc_state::combatscb_dac_w)
 {
-	device_t *device = machine().device("msm5205");
 	if(data & 0x60)
 		printf("%02x\n",data);
 
 	membank("bl_abank")->set_entry((data & 0x80) >> 7);
 
-	//msm5205_reset_w(device, (data >> 4) & 1);
-	msm5205_data_w(device, (data & 0x0f));
-	msm5205_vclk_w(device, 1);
-	msm5205_vclk_w(device, 0);
+	//msm5205_reset_w(m_msm5205, (data >> 4) & 1);
+	msm5205_data_w(m_msm5205, (data & 0x0f));
+	msm5205_vclk_w(m_msm5205, 1);
+	msm5205_vclk_w(m_msm5205, 0);
 }
 
 static ADDRESS_MAP_START( combatscb_sound_map, AS_PROGRAM, 8, combatsc_state )
@@ -677,9 +673,6 @@ MACHINE_START_MEMBER(combatsc_state,combatsc)
 	m_page[1] = MEM + 0x6000;
 
 	m_interleave_timer = machine().scheduler().timer_alloc(FUNC_NULL);
-
-	m_k007121_1 = machine().device("k007121_1");
-	m_k007121_2 = machine().device("k007121_2");
 
 	membank("bank1")->configure_entries(0, 10, memregion("maincpu")->base() + 0x10000, 0x4000);
 

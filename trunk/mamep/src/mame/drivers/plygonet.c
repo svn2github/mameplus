@@ -250,16 +250,16 @@ WRITE32_MEMBER(polygonet_state::dsp_w_lines)
 	if ((data >> 24) & 0x01)
 	{
 //      logerror("RESET CLEARED\n");
-		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_RESET, CLEAR_LINE);
+		m_dsp->set_input_line(DSP56K_IRQ_RESET, CLEAR_LINE);
 	}
 	else
 	{
 //      logerror("RESET ASSERTED\n");
-		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_RESET, ASSERT_LINE);
+		m_dsp->set_input_line(DSP56K_IRQ_RESET, ASSERT_LINE);
 
 		/* A little hacky - I can't seem to set these lines anywhere else where reset is asserted, so i do it here */
-		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODA, ASSERT_LINE);
-		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODB, CLEAR_LINE);
+		m_dsp->set_input_line(DSP56K_IRQ_MODA, ASSERT_LINE);
+		m_dsp->set_input_line(DSP56K_IRQ_MODB, CLEAR_LINE);
 	}
 
 	/* 0x04000000 is the COMBNK line - it switches who has access to the shared RAM - the dsp or the 68020 */
@@ -561,9 +561,9 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, polygonet_state )
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
 	AM_RANGE(0x0000, 0xbfff) AM_WRITENOP
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe22f) AM_DEVREADWRITE("konami1", k054539_device, read, write)
+	AM_RANGE(0xe000, 0xe22f) AM_DEVREADWRITE("k054539_1", k054539_device, read, write)
 	AM_RANGE(0xe230, 0xe3ff) AM_RAM
-	AM_RANGE(0xe400, 0xe62f) AM_DEVREADWRITE("konami2", k054539_device, read, write)
+	AM_RANGE(0xe400, 0xe62f) AM_DEVREADWRITE("k054539_2", k054539_device, read, write)
 	AM_RANGE(0xe630, 0xe7ff) AM_RAM
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_byte_w)
 	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
@@ -604,9 +604,9 @@ void polygonet_state::machine_start()
 	/* It's presumed the hardware has hard-wired operating mode 1 (MODA = 1, MODB = 0) */
 	/* TODO: This should work, but the MAME core appears to do something funny.
 	         Not a big deal - it's hacked in dsp_w_lines. */
-	//machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
-	//machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODA, ASSERT_LINE);
-	//machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODB, CLEAR_LINE);
+	//m_dsp->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	//m_dsp->set_input_line(DSP56K_IRQ_MODA, ASSERT_LINE);
+	//m_dsp->set_input_line(DSP56K_IRQ_MODB, CLEAR_LINE);
 }
 
 static const k053936_interface polygonet_k053936_intf =
@@ -652,11 +652,11 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("konami1", 48000, k054539_config)
+	MCFG_K054539_ADD("k054539_1", 48000, k054539_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_K054539_ADD("konami2", 48000, k054539_config)
+	MCFG_K054539_ADD("k054539_2", 48000, k054539_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 MACHINE_CONFIG_END

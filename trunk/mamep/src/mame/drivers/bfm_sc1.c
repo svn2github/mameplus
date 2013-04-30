@@ -109,8 +109,10 @@ class bfm_sc1_state : public driver_device
 public:
 	bfm_sc1_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_vfd0(*this, "vfd0"),
-			m_maincpu(*this, "maincpu") { }
+		m_vfd0(*this, "vfd0"),
+		m_maincpu(*this, "maincpu"),
+		m_upd7759(*this, "upd"),
+		m_adder2(*this, "adder2") { }
 
 	optional_device<bfm_bd1_t> m_vfd0;
 
@@ -185,6 +187,8 @@ public:
 	int Scorpion1_GetSwitchState(int strobe, int data);
 	int sc1_find_project_string( );
 	required_device<cpu_device> m_maincpu;
+	optional_device<upd7759_device> m_upd7759;
+	optional_device<cpu_device> m_adder2;
 };
 
 #define VFD_RESET  0x20
@@ -609,10 +613,9 @@ WRITE8_MEMBER(bfm_sc1_state::nec_reset_w)
 /////////////////////////////////////////////////////////////////////////////////////
 WRITE8_MEMBER(bfm_sc1_state::nec_latch_w)
 {
-	device_t *device = machine().device("upd");
-	upd7759_port_w (device, space, 0, data&0x3F);   // setup sample
-	upd7759_start_w(device, 0);
-	upd7759_start_w(device, 1);         // start
+	upd7759_port_w (m_upd7759, space, 0, data&0x3F);   // setup sample
+	upd7759_start_w(m_upd7759, 0);
+	upd7759_start_w(m_upd7759, 1);         // start
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -620,7 +623,7 @@ WRITE8_MEMBER(bfm_sc1_state::nec_latch_w)
 WRITE8_MEMBER(bfm_sc1_state::vid_uart_tx_w)
 {
 	adder2_send(data);
-	machine().device("adder2")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE );//HOLD_LINE);// trigger IRQ
+	m_adder2->set_input_line(M6809_IRQ_LINE, ASSERT_LINE );//HOLD_LINE);// trigger IRQ
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -256,8 +256,8 @@ MACHINE_RESET_MEMBER(gladiatr_state,gladiator)
 	TAITO8741_start(&gladiator_8741interface);
 	/* 6809 bank memory set */
 	{
-		UINT8 *rom = machine().root_device().memregion("audiocpu")->base() + 0x10000;
-		machine().root_device().membank("bank2")->set_base(rom);
+		UINT8 *rom = memregion("audiocpu")->base() + 0x10000;
+		membank("bank2")->set_base(rom);
 		m_audiocpu->reset();
 	}
 }
@@ -279,15 +279,14 @@ WRITE_LINE_MEMBER(gladiatr_state::gladiator_ym_irq)
 /*Sound Functions*/
 WRITE8_MEMBER(gladiatr_state::glad_adpcm_w)
 {
-	device_t *device = machine().device("msm");
-	UINT8 *rom = machine().root_device().memregion("audiocpu")->base() + 0x10000;
+	UINT8 *rom = memregion("audiocpu")->base() + 0x10000;
 
 	/* bit6 = bank offset */
-	machine().root_device().membank("bank2")->set_base(rom + ((data & 0x40) ? 0xc000 : 0));
+	membank("bank2")->set_base(rom + ((data & 0x40) ? 0xc000 : 0));
 
-	msm5205_data_w(device,data);         /* bit0..3  */
-	msm5205_reset_w(device,(data>>5)&1); /* bit 5    */
-	msm5205_vclk_w (device,(data>>4)&1); /* bit4     */
+	msm5205_data_w(m_msm,data);         /* bit0..3  */
+	msm5205_reset_w(m_msm,(data>>5)&1); /* bit 5    */
+	msm5205_vclk_w (m_msm,(data>>4)&1); /* bit4     */
 }
 
 WRITE8_MEMBER(gladiatr_state::glad_cpu_sound_command_w)
@@ -999,7 +998,7 @@ DRIVER_INIT_MEMBER(gladiatr_state,gladiatr)
 	UINT8 *rom;
 	int i,j;
 
-	rom = machine().root_device().memregion("gfx2")->base();
+	rom = memregion("gfx2")->base();
 	// unpack 3bpp graphics
 	for (j = 3; j >= 0; j--)
 	{
@@ -1013,7 +1012,7 @@ DRIVER_INIT_MEMBER(gladiatr_state,gladiatr)
 	swap_block(rom + 0x14000, rom + 0x18000, 0x4000);
 
 
-	rom = machine().root_device().memregion("gfx3")->base();
+	rom = memregion("gfx3")->base();
 	// unpack 3bpp graphics
 	for (j = 5; j >= 0; j--)
 	{
@@ -1030,8 +1029,8 @@ DRIVER_INIT_MEMBER(gladiatr_state,gladiatr)
 	swap_block(rom + 0x24000, rom + 0x28000, 0x4000);
 
 	/* make sure bank is valid in cpu-reset */
-	rom = machine().root_device().memregion("audiocpu")->base() + 0x10000;
-	machine().root_device().membank("bank2")->set_base(rom);
+	rom = memregion("audiocpu")->base() + 0x10000;
+	membank("bank2")->set_base(rom);
 }
 
 
@@ -1048,14 +1047,14 @@ DRIVER_INIT_MEMBER(gladiatr_state,ppking)
 	UINT8 *rom;
 	int i,j;
 
-	rom = machine().root_device().memregion("gfx2")->base();
+	rom = memregion("gfx2")->base();
 	// unpack 3bpp graphics
 	for (i = 0; i < 0x2000; i++)
 	{
 		rom[i+0x2000] = rom[i] >> 4;
 	}
 
-	rom = machine().root_device().memregion("gfx3")->base();
+	rom = memregion("gfx3")->base();
 	// unpack 3bpp graphics
 	for (j = 1; j >= 0; j--)
 	{

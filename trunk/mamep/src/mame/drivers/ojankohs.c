@@ -57,11 +57,10 @@ WRITE8_MEMBER(ojankohs_state::ojankoy_rombank_w)
 
 WRITE8_MEMBER(ojankohs_state::ojankohs_adpcm_reset_w)
 {
-	device_t *device = machine().device("msm");
 	m_adpcm_reset = BIT(data, 0);
 	m_vclk_left = 0;
 
-	msm5205_reset_w(device, !m_adpcm_reset);
+	msm5205_reset_w(m_msm, !m_adpcm_reset);
 }
 
 WRITE8_MEMBER(ojankohs_state::ojankohs_msm5205_w)
@@ -79,7 +78,7 @@ WRITE_LINE_MEMBER(ojankohs_state::ojankohs_adpcm_int)
 	/* clock the data through */
 	if (m_vclk_left)
 	{
-		msm5205_data_w(machine().device("msm"), (m_adpcm_data >> 4));
+		msm5205_data_w(m_msm, (m_adpcm_data >> 4));
 		m_adpcm_data <<= 4;
 		m_vclk_left--;
 	}
@@ -152,21 +151,19 @@ READ8_MEMBER(ojankohs_state::ojankoc_keymatrix_r)
 READ8_MEMBER(ojankohs_state::ojankohs_ay8910_0_r)
 {
 	// DIPSW 1
-	device_t &root = machine().root_device();
-	return (((root.ioport("DSW1")->read() & 0x01) << 7) | ((root.ioport("DSW1")->read() & 0x02) << 5) |
-			((root.ioport("DSW1")->read() & 0x04) << 3) | ((root.ioport("DSW1")->read() & 0x08) << 1) |
-			((root.ioport("DSW1")->read() & 0x10) >> 1) | ((root.ioport("DSW1")->read() & 0x20) >> 3) |
-			((root.ioport("DSW1")->read() & 0x40) >> 5) | ((root.ioport("DSW1")->read() & 0x80) >> 7));
+	return (((ioport("DSW1")->read() & 0x01) << 7) | ((ioport("DSW1")->read() & 0x02) << 5) |
+			((ioport("DSW1")->read() & 0x04) << 3) | ((ioport("DSW1")->read() & 0x08) << 1) |
+			((ioport("DSW1")->read() & 0x10) >> 1) | ((ioport("DSW1")->read() & 0x20) >> 3) |
+			((ioport("DSW1")->read() & 0x40) >> 5) | ((ioport("DSW1")->read() & 0x80) >> 7));
 }
 
 READ8_MEMBER(ojankohs_state::ojankohs_ay8910_1_r)
 {
 	// DIPSW 1
-	device_t &root = machine().root_device();
-	return (((root.ioport("DSW2")->read() & 0x01) << 7) | ((root.ioport("DSW2")->read() & 0x02) << 5) |
-			((root.ioport("DSW2")->read() & 0x04) << 3) | ((root.ioport("DSW2")->read() & 0x08) << 1) |
-			((root.ioport("DSW2")->read() & 0x10) >> 1) | ((root.ioport("DSW2")->read() & 0x20) >> 3) |
-			((root.ioport("DSW2")->read() & 0x40) >> 5) | ((root.ioport("DSW2")->read() & 0x80) >> 7));
+	return (((ioport("DSW2")->read() & 0x01) << 7) | ((ioport("DSW2")->read() & 0x02) << 5) |
+			((ioport("DSW2")->read() & 0x04) << 3) | ((ioport("DSW2")->read() & 0x08) << 1) |
+			((ioport("DSW2")->read() & 0x10) >> 1) | ((ioport("DSW2")->read() & 0x20) >> 3) |
+			((ioport("DSW2")->read() & 0x40) >> 5) | ((ioport("DSW2")->read() & 0x80) >> 7));
 }
 
 READ8_MEMBER(ojankohs_state::ccasino_dipsw3_r)
@@ -787,8 +784,6 @@ static const msm5205_interface msm5205_config =
 
 MACHINE_START_MEMBER(ojankohs_state,common)
 {
-	m_msm = machine().device("msm");
-
 	save_item(NAME(m_gfxreg));
 	save_item(NAME(m_flipscreen));
 	save_item(NAME(m_flipscreen_old));

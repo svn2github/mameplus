@@ -78,7 +78,7 @@ WRITE16_MEMBER(tumblep_state::tumblep_sound_w)
 WRITE16_MEMBER(tumblep_state::jumppop_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	m_audiocpu.device(0)->execute().set_input_line(ASSERT_LINE );
+	m_audiocpu->set_input_line(ASSERT_LINE );
 }
 #endif
 
@@ -285,7 +285,6 @@ static const deco16ic_interface tumblep_deco16ic_tilegen1_intf =
 
 void tumblep_state::machine_start()
 {
-	m_deco_tilegen1 = machine().device("tilegen1");
 }
 
 static MACHINE_CONFIG_START( tumblep, tumblep_state )

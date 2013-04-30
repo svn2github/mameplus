@@ -3,6 +3,8 @@
     Rastan
 
 *************************************************************************/
+#include "sound/msm5205.h"
+#include "video/taitoic.h"
 
 class rastan_state : public driver_device
 {
@@ -10,7 +12,10 @@ public:
 	rastan_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu") { }
+		m_audiocpu(*this, "audiocpu"),
+		m_msm(*this, "msm"),
+		m_pc080sn(*this, "pc080sn"),
+		m_pc090oj(*this, "pc090oj") { }
 
 	/* memory pointers */
 //  UINT16 *    paletteram; // this currently uses generic palette handlers
@@ -26,8 +31,9 @@ public:
 	/* devices */
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
-	device_t *m_pc090oj;
-	device_t *m_pc080sn;
+	required_device<msm5205_device> m_msm;
+	required_device<pc080sn_device> m_pc080sn;
+	required_device<pc090oj_device> m_pc090oj;
 	DECLARE_WRITE8_MEMBER(rastan_msm5205_address_w);
 	DECLARE_WRITE16_MEMBER(rastan_spritectrl_w);
 	DECLARE_WRITE8_MEMBER(rastan_bankswitch_w);

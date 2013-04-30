@@ -35,18 +35,18 @@ TIMER_DEVICE_CALLBACK_MEMBER(xevious_state::battles_nmi_generate)
 	{
 		if( m_battles_customio_command_count == 0 )
 		{
-			machine().device("sub3")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			m_subcpu3->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
 		else
 		{
 			m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-			machine().device("sub3")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			m_subcpu3->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
 	}
 	else
 	{
 		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-		machine().device("sub3")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_subcpu3->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	m_battles_customio_command_count++;
 }
@@ -148,12 +148,11 @@ WRITE8_MEMBER( xevious_state::battles_noise_sound_w )
 {
 	logerror("CPU3 %04x: 50%02x Write = %02x\n",space.device().safe_pc(),offset,data);
 	if( (m_battles_sound_played == 0) && (data == 0xFF) ){
-		samples_device *samples = machine().device<samples_device>("samples");
 		if( m_customio[0] == 0x40 ){
-			samples->start(0, 0);
+			m_samples->start(0, 0);
 		}
 		else{
-			samples->start(0, 1);
+			m_samples->start(0, 1);
 		}
 	}
 	m_battles_sound_played = data;

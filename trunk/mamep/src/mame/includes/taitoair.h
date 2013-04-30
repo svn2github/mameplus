@@ -3,6 +3,7 @@
     Taito Air System
 
 *************************************************************************/
+#include "video/taitoic.h"
 
 enum { TAITOAIR_FRAC_SHIFT = 16, TAITOAIR_POLY_MAX_PT = 16 };
 
@@ -27,6 +28,8 @@ public:
 			m_dsp_ram(*this, "dsp_ram"),
 			m_paletteram(*this, "paletteram"),
 			m_audiocpu(*this, "audiocpu"),
+			m_dsp(*this, "dsp"),
+		m_tc0080vco(*this, "tc0080vco"),
 			m_gradram(*this, "gradram"),
 			m_backregs(*this, "backregs") ,
 		m_maincpu(*this, "maincpu") { }
@@ -46,8 +49,8 @@ public:
 
 	/* devices */
 	required_device<cpu_device> m_audiocpu;
-	device_t *m_dsp;
-	device_t *m_tc0080vco;
+	required_device<cpu_device> m_dsp;
+	required_device<tc0080vco_device> m_tc0080vco;
 
 	required_shared_ptr<UINT16> m_gradram;
 	required_shared_ptr<UINT16> m_backregs;

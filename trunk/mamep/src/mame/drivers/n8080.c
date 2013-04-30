@@ -451,11 +451,10 @@ WRITE_LINE_MEMBER(n8080_state::n8080_inte_callback)
 
 WRITE8_MEMBER(n8080_state::n8080_status_callback)
 {
-	device_t *device = m_maincpu;
 	if (data & I8085_STATUS_INTA)
 	{
 		/* interrupt acknowledge */
-		device->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 }
 
@@ -469,7 +468,6 @@ static I8085_CONFIG( n8080_cpu_config )
 
 MACHINE_START_MEMBER(n8080_state,n8080)
 {
-
 	save_item(NAME(m_shift_data));
 	save_item(NAME(m_shift_bits));
 	save_item(NAME(m_inte));

@@ -127,7 +127,7 @@ protected:
 			UINT32 start_addr_latch;
 	/**/    UINT8 protect_enable;
 	/**/    UINT8 bandwidth;
-	/**/    UINT8 offset;
+	/**/    UINT16 offset;
 	/**/    UINT8 word_mode;
 	/**/    UINT8 dw;
 	/**/    UINT8 div4;
@@ -277,6 +277,10 @@ public:
 	WRITE16_MEMBER(ibm8514_foremix_w);
 	READ16_MEMBER(ibm8514_pixel_xfer_r);
 	WRITE16_MEMBER(ibm8514_pixel_xfer_w);
+	READ16_MEMBER(ibm8514_read_mask_r);
+	WRITE16_MEMBER(ibm8514_read_mask_w);
+	READ16_MEMBER(ibm8514_write_mask_r);
+	WRITE16_MEMBER(ibm8514_write_mask_w);
 	void ibm8514_wait_draw();
 	struct
 	{
@@ -319,6 +323,9 @@ public:
 		UINT16 pixel_control;
 		UINT8 bus_size;
 		UINT8 multifunc_sel;
+		UINT16 multifunc_misc;
+		UINT32 read_mask;
+		UINT32 write_mask;
 
 		int state;
 		UINT8 wait_vector_len;
@@ -384,6 +391,10 @@ public:
 	WRITE16_MEMBER(mach8_scratch1_w);
 	READ16_MEMBER(mach8_config1_r);
 	READ16_MEMBER(mach8_config2_r);
+	READ16_MEMBER(mach8_sourcex_r);
+	READ16_MEMBER(mach8_sourcey_r);
+	WRITE16_MEMBER(mach8_ext_leftscissor_w);
+	WRITE16_MEMBER(mach8_ext_topscissor_w);
 protected:
 	virtual void device_start();
 	struct

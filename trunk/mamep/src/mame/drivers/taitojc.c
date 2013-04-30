@@ -12,10 +12,11 @@ Taito custom chips on this hardware:
 - TC0870HVP      : Vertex processor?
 
 TODO:
-- games are running too slow compared to pcb recordings, easily noticeable on sidebs/sidebs2
+- games are running at wrong speed(unthrottled?) compared to pcb recordings, easily noticeable on sidebs/sidebs2,
+  for example the selection screens are too fast, and the driving is almost twice as slow
 - dendego intro object RAM usage has various gfx bugs (check video file)
 - dendego title screen builds up and it shouldn't
-- dendego attract mode train doesn't ride
+- dendego attract mode train doesn't ride, demo mode doesn't set the throttle, but it does set the brake pressure
 - landgear has some weird crashes (after playing one round, after a couple of loops in attract mode) (needs testing -AS)
 - landgear has huge 3d problems on gameplay (CPU comms?)
 - dangcurv DSP program crashes very soon due to undumped rom, so no 3d is currently shown.
@@ -387,6 +388,48 @@ Notes:
 #include "dendego.lh"
 
 
+// lookup tables for densha de go analog controls/meters
+static const int dendego_odometer_table[0x100] =
+{
+		0,    3,    7,   10,   14,   17,   21,   24,   28,   31,   34,   38,   41,   45,   48,   52,
+		55,   59,   62,   66,   69,   72,   76,   79,   83,   86,   90,   93,   97,  100,  105,  111,
+		116,  121,  126,  132,  137,  142,  147,  153,  158,  163,  168,  174,  179,  184,  189,  195,
+		200,  206,  211,  217,  222,  228,  233,  239,  244,  250,  256,  261,  267,  272,  278,  283,
+		289,  294,  300,  306,  311,  317,  322,  328,  333,  339,  344,  350,  356,  361,  367,  372,
+		378,  383,  389,  394,  400,  406,  412,  418,  424,  429,  435,  441,  447,  453,  459,  465,
+		471,  476,  482,  488,  494,  500,  505,  511,  516,  521,  526,  532,  537,  542,  547,  553,
+		558,  563,  568,  574,  579,  584,  589,  595,  600,  607,  613,  620,  627,  633,  640,  647,
+		653,  660,  667,  673,  680,  687,  693,  700,  705,  711,  716,  721,  726,  732,  737,  742,
+		747,  753,  758,  763,  768,  774,  779,  784,  789,  795,  800,  806,  812,  818,  824,  829,
+		835,  841,  847,  853,  859,  865,  871,  876,  882,  888,  894,  900,  906,  911,  917,  922,
+		928,  933,  939,  944,  950,  956,  961,  967,  972,  978,  983,  989,  994, 1000, 1005, 1011,
+	1016, 1021, 1026, 1032, 1037, 1042, 1047, 1053, 1058, 1063, 1068, 1074, 1079, 1084, 1089, 1095,
+	1100, 1107, 1113, 1120, 1127, 1133, 1140, 1147, 1153, 1160, 1167, 1173, 1180, 1187, 1193, 1200,
+	1203, 1206, 1209, 1212, 1216, 1219, 1222, 1225, 1228, 1231, 1234, 1238, 1241, 1244, 1247, 1250,
+	1253, 1256, 1259, 1262, 1266, 1269, 1272, 1275, 1278, 1281, 1284, 1288, 1291, 1294, 1297, 1300,
+};
+
+static const int dendego_pressure_table[0x100] =
+{
+		0,    0,    0,    0,    5,   10,   14,   19,   24,   29,   33,   38,   43,   48,   52,   57,
+		62,   67,   71,   76,   81,   86,   90,   95,  100,  106,  112,  119,  125,  131,  138,  144,
+		150,  156,  162,  169,  175,  181,  188,  194,  200,  206,  212,  219,  225,  231,  238,  244,
+		250,  256,  262,  269,  275,  281,  288,  294,  300,  306,  312,  318,  324,  329,  335,  341,
+		347,  353,  359,  365,  371,  376,  382,  388,  394,  400,  407,  413,  420,  427,  433,  440,
+		447,  453,  460,  467,  473,  480,  487,  493,  500,  507,  514,  521,  529,  536,  543,  550,
+		557,  564,  571,  579,  586,  593,  600,  607,  614,  621,  629,  636,  643,  650,  657,  664,
+		671,  679,  686,  693,  700,  706,  712,  719,  725,  731,  738,  744,  750,  756,  762,  769,
+		775,  781,  788,  794,  800,  807,  814,  821,  829,  836,  843,  850,  857,  864,  871,  879,
+		886,  893,  900,  907,  914,  921,  929,  936,  943,  950,  957,  964,  971,  979,  986,  993,
+	1000, 1008, 1015, 1023, 1031, 1038, 1046, 1054, 1062, 1069, 1077, 1085, 1092, 1100, 1108, 1115,
+	1123, 1131, 1138, 1146, 1154, 1162, 1169, 1177, 1185, 1192, 1200, 1207, 1214, 1221, 1229, 1236,
+	1243, 1250, 1257, 1264, 1271, 1279, 1286, 1293, 1300, 1307, 1314, 1321, 1329, 1336, 1343, 1350,
+	1357, 1364, 1371, 1379, 1386, 1393, 1400, 1407, 1414, 1421, 1429, 1436, 1443, 1450, 1457, 1464,
+	1471, 1479, 1486, 1493, 1500, 1504, 1507, 1511, 1515, 1519, 1522, 1526, 1530, 1533, 1537, 1541,
+	1544, 1548, 1552, 1556, 1559, 1563, 1567, 1570, 1574, 1578, 1581, 1585, 1589, 1593, 1596, 1600,
+};
+
+
 // hmm, what is the pixel clock? let's assume it's same as the 68040
 // 54MHz(/4) or 16MHz would make HTOTAL unrealistically short
 #define PIXEL_CLOCK         (10000000*2)
@@ -567,9 +610,6 @@ WRITE32_MEMBER(taitojc_state::dsp_shared_w)
 	}
 #endif
 
-	if (offset == 0x1ff8/4)
-		m_maincpu->set_input_line(6, CLEAR_LINE);
-
 	if (offset == 0x1ffc/4)
 	{
 		if ((data & 0x80000) == 0)
@@ -599,99 +639,40 @@ WRITE32_MEMBER(taitojc_state::dsp_shared_w)
 
 
 
-UINT8 taitojc_state::mcu_comm_reg_r(address_space &space, int reg)
+READ8_MEMBER(taitojc_state::mcu_comm_r)
 {
-	UINT8 r = 0;
-
-	switch (reg)
+	switch (offset)
 	{
 		case 0x03:
-		{
-			r = m_mcu_data_main;
-			break;
-		}
+			return m_mcu_data_main;
+
 		case 0x04:
-		{
-			r = m_mcu_comm_main | 0x14;
-			break;
-		}
+			return m_mcu_comm_main | 0x14;
+
 		default:
-		{
-			//mame_printf_debug("hc11_reg_r: %02X at %08X\n", reg, space.device().safe_pc());
+			logerror("mcu_comm_r: %02X at %08X\n", offset, space.device().safe_pc());
 			break;
-		}
 	}
 
-	return r;
+	return 0;
 }
 
-void taitojc_state::mcu_comm_reg_w(address_space &space, int reg, UINT8 data)
+WRITE8_MEMBER(taitojc_state::mcu_comm_w)
 {
-	switch (reg)
+	switch (offset)
 	{
 		case 0x00:
-		{
 			m_mcu_data_hc11 = data;
 			m_mcu_comm_hc11 &= ~0x04;
 			m_mcu_comm_main &= ~0x20;
 			break;
-		}
+
 		case 0x04:
-		{
 			break;
-		}
+
 		default:
-		{
-			//mame_printf_debug("hc11_reg_w: %02X, %02X at %08X\n", reg, data, space.device().safe_pc());
+			logerror("mcu_comm_w: %02X, %02X at %08X\n", offset, data, space.device().safe_pc());
 			break;
-		}
-	}
-}
-
-READ32_MEMBER(taitojc_state::mcu_comm_r)
-{
-	UINT32 r = 0;
-	int reg = offset * 4;
-
-	if (ACCESSING_BITS_24_31)
-	{
-		r |= mcu_comm_reg_r(space, reg + 0) << 24;
-	}
-	if (ACCESSING_BITS_16_23)
-	{
-		r |= mcu_comm_reg_r(space, reg + 1) << 16;
-	}
-	if (ACCESSING_BITS_8_15)
-	{
-		r |= mcu_comm_reg_r(space, reg + 2) << 8;
-	}
-	if (ACCESSING_BITS_0_7)
-	{
-		r |= mcu_comm_reg_r(space, reg + 3) << 0;
-	}
-
-	return r;
-}
-
-WRITE32_MEMBER(taitojc_state::mcu_comm_w)
-{
-	int reg = offset * 4;
-
-	if (ACCESSING_BITS_24_31)
-	{
-		mcu_comm_reg_w(space, reg + 0, (data >> 24) & 0xff);
-	}
-	if (ACCESSING_BITS_16_23)
-	{
-		mcu_comm_reg_w(space, reg + 1, (data >> 16) & 0xff);
-	}
-	if (ACCESSING_BITS_8_15)
-	{
-		mcu_comm_reg_w(space, reg + 2, (data >> 8) & 0xff);
-	}
-	if (ACCESSING_BITS_0_7)
-	{
-		mcu_comm_reg_w(space, reg + 3, (data >> 0) & 0xff);
 	}
 }
 
@@ -734,6 +715,14 @@ READ8_MEMBER(taitojc_state::jc_pcbid_r)
 }
 
 
+WRITE8_MEMBER(taitojc_state::jc_irq_ack_w)
+{
+	// gets written to at the end of irq6 routine
+	// writes $02 or $06, depending on a value in DSP RAM, what does it mean?
+	m_maincpu->set_input_line(6, CLEAR_LINE);
+}
+
+
 /*
 
 Some games (Dangerous Curves, Side by Side, Side by Side 2) were released as Twin cabinets,
@@ -761,11 +750,11 @@ static ADDRESS_MAP_START( taitojc_map, AS_PROGRAM, 32, taitojc_state )
 	AM_RANGE(0x040fc000, 0x040fefff) AM_READWRITE(taitojc_char_r, taitojc_char_w)
 	AM_RANGE(0x040ff000, 0x040fffff) AM_RAM AM_SHARE("objlist")
 	AM_RANGE(0x05800000, 0x0580003f) AM_READ8(jc_pcbid_r, 0xffffffff)
-	AM_RANGE(0x05900000, 0x05900007) AM_READWRITE(mcu_comm_r, mcu_comm_w)
+	AM_RANGE(0x05900000, 0x05900007) AM_READWRITE8(mcu_comm_r, mcu_comm_w, 0xffffffff)
 	AM_RANGE(0x06400000, 0x0641ffff) AM_READWRITE(taitojc_palette_r, taitojc_palette_w) AM_SHARE("palette_ram")
 	AM_RANGE(0x06600000, 0x0660001f) AM_DEVREADWRITE8_LEGACY("tc0640fio", tc0640fio_r, tc0640fio_w, 0xff000000)
 	AM_RANGE(0x0660004c, 0x0660004f) AM_WRITE_PORT("EEPROMOUT")
-	AM_RANGE(0x06800000, 0x06800003) AM_WRITENOP // irq mask/ack? a watchdog?
+	AM_RANGE(0x06800000, 0x06800003) AM_WRITE8(jc_irq_ack_w, 0x00ff0000)
 	AM_RANGE(0x06a00000, 0x06a01fff) AM_READWRITE(snd_share_r, snd_share_w) AM_SHARE("snd_shared")
 	AM_RANGE(0x06c00000, 0x06c0001f) AM_READWRITE8(jc_lan_r, jc_lan_w, 0x00ff0000)
 	AM_RANGE(0x08000000, 0x080fffff) AM_RAM AM_SHARE("main_ram")
@@ -987,11 +976,8 @@ WRITE16_MEMBER(taitojc_state::dsp_texture_w)
 	int x, y;
 	//mame_printf_debug("texture write %08X, %04X\n", dsp_addr1, data);
 
-	x = (m_dsp_tex_offset >> 0) & 0x1f;
-	y = (m_dsp_tex_offset >> 5) & 0x1f;
-
-	x += (m_dsp_tex_offset & 0x400) ? 0x20 : 0;
-	y += (m_dsp_tex_offset & 0x800) ? 0x20 : 0;
+	x = (m_dsp_tex_offset >> 0 & 0x1f) | (m_dsp_tex_offset >> 5 & 0x20);
+	y = (m_dsp_tex_offset >> 5 & 0x1f) | (m_dsp_tex_offset >> 6 & 0x20);
 
 	index = (((m_texture_y * 32) + y) * 2048) + ((m_texture_x * 32) + x);
 	m_texture[index] = data & 0xff;
@@ -1039,7 +1025,7 @@ READ16_MEMBER(taitojc_state::dsp_to_main_r)
 
 WRITE16_MEMBER(taitojc_state::dsp_to_main_w)
 {
-	m_maincpu->set_input_line(6, ASSERT_LINE);
+	m_maincpu->set_input_line(6, ASSERT_LINE); // probably not correct to do it here
 
 	COMBINE_DATA(&m_dsp_shared_ram[0x7fe]);
 }
@@ -1090,7 +1076,9 @@ static INPUT_PORTS_START( common )
 
 	PORT_START("COINS")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_DIPNAME( 0x02, 0x02, "Dev Skip RAM Test" ) // skips mainram test on page 1 of POST
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1115,7 +1103,9 @@ static INPUT_PORTS_START( common )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED ) // debug related in dendego/sidebs
+	PORT_DIPNAME( 0x40, 0x40, "Dev Debug" ) // debug related in dendego/sidebs
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("BUTTONS")
@@ -1133,6 +1123,9 @@ static INPUT_PORTS_START( common )
 	PORT_BIT( 0x08000000, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
 	PORT_BIT( 0x10000000, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
 INPUT_PORTS_END
+
+// Mascon must always be in a defined state, Densha de Go 2 in particular returns black screen if the Mascon input is undefined
+static const ioport_value dendego_mascon_table[6] = { 0x76, 0x67, 0x75, 0x57, 0x73, 0x37 };
 
 static INPUT_PORTS_START( dendego )
 	PORT_INCLUDE( common )
@@ -1247,7 +1240,7 @@ void taitojc_state::machine_reset()
 
 INTERRUPT_GEN_MEMBER(taitojc_state::taitojc_vblank)
 {
-	device.execute().set_input_line_and_vector(2, HOLD_LINE, 130);
+	device.execute().set_input_line_and_vector(2, HOLD_LINE, 0x82); // where does it come from?
 }
 
 static const tc0640fio_interface taitojc_io_intf =
@@ -1268,7 +1261,7 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68040, XTAL_10MHz*2) // 20MHz, clock source = CY7C991
 	MCFG_CPU_PROGRAM_MAP(taitojc_map)
-	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitojc_state,  taitojc_vblank)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", taitojc_state, taitojc_vblank)
 
 	MCFG_CPU_ADD("sub", MC68HC11, XTAL_16MHz/2) // 8MHz, MC68HC11M0
 	MCFG_CPU_PROGRAM_MAP(hc11_pgm_map)
@@ -1349,14 +1342,14 @@ DRIVER_INIT_MEMBER(taitojc_state,taitojc)
 
 	m_has_dsp_hack = 1;
 
-	machine().device("dsp")->memory().space(AS_DATA).install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::taitojc_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
+	m_dsp->space(AS_DATA).install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::taitojc_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitojc_state,dendego2)
 {
 	DRIVER_INIT_CALL(taitojc);
 
-	machine().device("dsp")->memory().space(AS_DATA).install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::dendego2_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
+	m_dsp->space(AS_DATA).install_readwrite_handler(0x7ff0, 0x7ff0, read16_delegate(FUNC(taitojc_state::dendego2_dsp_idle_skip_r),this), write16_delegate(FUNC(taitojc_state::dsp_idle_skip_w),this));
 }
 
 DRIVER_INIT_MEMBER(taitojc_state,dangcurv)

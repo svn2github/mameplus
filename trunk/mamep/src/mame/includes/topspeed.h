@@ -3,6 +3,8 @@
     Top Speed / Full Throttle
 
 *************************************************************************/
+#include "sound/msm5205.h"
+#include "machine/taitoio.h"
 
 class topspeed_state : public driver_device
 {
@@ -15,8 +17,12 @@ public:
 		m_sharedram(*this, "sharedram"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
-		m_subcpu(*this, "subcpu")
-	{ }
+		m_subcpu(*this, "subcpu"),
+		m_msm1(*this, "msm1"),
+		m_msm2(*this, "msm2"),
+		m_pc080sn_1(*this, "pc080sn_1"),
+		m_pc080sn_2(*this, "pc080sn_2"),
+		m_tc0220ioc(*this, "tc0220ioc") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_spritemap;
@@ -41,9 +47,11 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<cpu_device> m_subcpu;
-	device_t *m_pc080sn_1;
-	device_t *m_pc080sn_2;
-	device_t *m_tc0220ioc;
+	required_device<msm5205_device> m_msm1;
+	required_device<msm5205_device> m_msm2;
+	required_device<pc080sn_device> m_pc080sn_1;
+	required_device<pc080sn_device> m_pc080sn_2;
+	required_device<tc0220ioc_device> m_tc0220ioc;
 
 	UINT8 m_dislayer[5];
 	DECLARE_READ16_MEMBER(sharedram_r);
@@ -62,7 +70,6 @@ public:
 	INTERRUPT_GEN_MEMBER(topspeed_cpub_interrupt);
 	TIMER_CALLBACK_MEMBER(topspeed_interrupt6);
 	TIMER_CALLBACK_MEMBER(topspeed_cpub_interrupt6);
-	DECLARE_WRITE8_MEMBER(topspeed_tc0140syt_comm_w);
 	void topspeed_postload();
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void parse_control(  )   /* assumes Z80 sandwiched between 68Ks */;

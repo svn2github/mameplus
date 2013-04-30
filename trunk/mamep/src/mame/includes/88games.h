@@ -3,6 +3,7 @@
     88 Games
 
 *************************************************************************/
+#include "sound/upd7759.h"
 
 class _88games_state : public driver_device
 {
@@ -13,6 +14,11 @@ public:
 		m_paletteram_1000(*this, "paletteram_1000"),
 		m_ram(*this, "ram"),
 		m_audiocpu(*this, "audiocpu"),
+		m_k052109(*this, "k052109"),
+		m_k051960(*this, "k051960"),
+		m_k051316(*this, "k051316"),
+		m_upd7759_1(*this, "upd1"),
+		m_upd7759_2(*this, "upd2"),
 		m_maincpu(*this, "maincpu") { }
 
 	/* memory pointers */
@@ -33,11 +39,11 @@ public:
 
 	/* devices */
 	required_device<cpu_device> m_audiocpu;
-	device_t *m_k052109;
-	device_t *m_k051960;
-	device_t *m_k051316;
-	device_t *m_upd_1;
-	device_t *m_upd_2;
+	required_device<k052109_device> m_k052109;
+	required_device<k051960_device> m_k051960;
+	required_device<k051316_device> m_k051316;
+	required_device<upd7759_device> m_upd7759_1;
+	required_device<upd7759_device> m_upd7759_2;
 	DECLARE_READ8_MEMBER(bankedram_r);
 	DECLARE_WRITE8_MEMBER(bankedram_w);
 	DECLARE_WRITE8_MEMBER(k88games_5f84_w);

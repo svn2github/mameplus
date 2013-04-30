@@ -1,8 +1,91 @@
+/***********************************************************************************************************
+
+
+ Nintendo NES/FC cart emulation
+ (through slot devices)
+
+ The driver exposes address ranges
+ 0x4100-0x5fff to read_l/write_l
+ 0x6000-0x7fff to read_m/write_m (here are *usually* installed NVRAM & WRAM, if any)
+ 0x8000-0xffff to write_h (reads are directed to 4 x 8K PRG banks)
+ Default implementations of these handlers are available here, to be rewritten by PCB-specific ones when needed.
+
+ Additional handlers are available, but have to be manually installed at machine_start
+ * read_ex/write_ex for address range 0x4020-0x40ff
+ * read_h for address range 0x8000-0xffff when a cart does some protection or address scramble before reading ROM
+
+ PPU exposes address ranges
+ 0x0000-0x1fff to chr_r/chr_w
+ 0x2000-0x3eff to nt_r/nt_w
+ Default implementations of these handlers are available here, to be rewritten by PCB-specific ones when needed.
+
+ Plus a few of latch functions are available: ppu_latch (see MMC2), hblank_irq and scanline_irq (see e.g. MMC3),
+ but these might be subject to future changes when the PPU is revisited.
+
+ Notes:
+ - Differently from later systems (like SNES or MD), it is uncommon to find PRG ROMs of NES games which are not a
+   power of 2K, so we do not perform any mirroring by default.
+   A bunch of pcb types, though, come with 1.5MB of PRG (some Waixing translations) or with multiple PRG chips
+   having peculiar size (32K + 16K, 32K + 8K, 32K + 2K). Hence, if such a configuration is detected, we provide
+   a m_prg_bank_map array to handle internally PRG mirroring up to the next power of 2K, as long as the size is
+   a multiple of 8K (i.e. the unit chunk for standard PRG).
+   For the case of PRG chips which are not-multiple of 8K (e.g. UNL-MARIO2-MALEE pcb), the handling has to be
+   handled in the pcb-specific code!
+ - Our open bus emulation is very sketchy, by simply returning the higher 8bits of the accessed address. This seems
+   enough for most games (only two sets have issues with this). A slightly better implementation is almost ready
+   to fix these two remaining cases, but I plan to revisit the whole implementation in an accurate way at a later
+   stage
+ - Bus conflict is implemented based on latest tests by Blargg. There is some uncertainty about AxROM behavior
+   (some AOROM pcbs suffers from bus conflict, some do not... since no AOROM game is known to glitch due to lack
+   of bus conflict it seems safe to emulate the board without bus conflict, but eventually it would be good to
+   differentiate the real variants)
+
+
+ Many information about the mappers/pcbs come from the wonderful doc written by Disch.
+ Current info (when used) are based on v0.6.1 of his docs.
+ You can find the latest version of the doc at http://www.romhacking.net/docs/362/
+
+ A lot of details have been based on the researches carried on at NesDev forums (by Blargg, Quietust and many more)
+ and collected on the NesDev Wiki http://wiki.nesdev.com/
+
+ Particular thanks go to
+ - Martin Freij for his work on NEStopia
+ - Cah4e3 for his efforts on FCEUMM and the reverse engineering of pirate boards
+ - BootGod, lidnariq and naruko for the PCB tests which made possible
+
+
+ ***********************************************************************************************************/
+
+/*****************************************************************************************
+
+ A few Mappers suffer of hardware conflict: original dumpers have used the same mapper number for more than
+ a kind of boards. In these cases (and only in these cases) we exploit nes.hsi to set up accordingly
+ emulation. Games which requires this hack are the following:
+ * 032 - Major League needs hardwired mirroring (missing windows and glitched field in top view, otherwise)
+ * 034 - Impossible Mission II is not like BxROM games (it writes to 0x7ffd-0x7fff, instead of 0x8000). It is still
+ unplayable though (see above)
+ * 071 - Fire Hawk is different from other Camerica games (no hardwired mirroring). Without crc_hack no helicopter graphics
+ * 078 - Cosmo Carrier needs a different mirroring than Holy Diver
+ * 113 - HES 6-in-1 requires mirroring (check Bookyman playfield), while other games break with this (check AV Soccer)
+ * 153 - Famicom Jump II uses a different board (or the same in a very different way)
+ * 242 - DQ8 has no mirroring (missing graphics is due to other reasons though)
+
+ crc_hacks have been added also to handle a few wiring settings which would require submappers:
+ * CHR protection pins for mapper 185
+ * VRC-2, VRC-4 and VRC-6 line wiring
+
+ Remember that the MMC # does not equal the mapper #. In particular, Mapper 4 is
+ in fact MMC3, Mapper 9 is MMC2 and Mapper 10 is MMC4. Makes perfect sense, right?
+
+ ****************************************************************************************/
+
+
 #include "emu.h"
 #include "hashfile.h"
 #include "machine/nes_slot.h"
 
 #define NES_BATTERY_SIZE 0x2000
+
 
 //**************************************************************************
 //  GLOBAL VARIABLES
@@ -26,15 +109,33 @@ device_nes_cart_interface::device_nes_cart_interface(const machine_config &mconf
 						m_vrom(NULL),
 						m_vram(NULL),
 						m_battery(NULL),
-						m_mapper_ram(NULL),
-						m_mapper_bram(NULL),
+						m_ciram(NULL),
 						m_prg_size(0),
 						m_prgram_size(0),
 						m_vrom_size(0),
 						m_vram_size(0),
 						m_battery_size(0),
-						m_mapper_ram_size(0),
-						m_mapper_bram_size(0)
+						m_mapper_sram(NULL),
+						m_ext_ntram(NULL),
+						m_mapper_sram_size(0),
+						m_ext_ntram_size(0),
+						m_ce_mask(0),
+						m_ce_state(0),
+						m_vrc_ls_prg_a(0),
+						m_vrc_ls_prg_b(0),
+						m_vrc_ls_chr(0),
+						m_mirroring(PPU_MIRROR_NONE),
+						m_pcb_ctrl_mirror(FALSE),
+						m_four_screen_vram(FALSE),
+						m_has_trainer(FALSE),
+						m_x1_005_alt_mirroring(FALSE),
+						m_bus_conflict(TRUE),
+						m_prg_chunks(0),
+						m_prg_mask(0xffff),
+						m_chr_source(CHRRAM),
+						m_vrom_chunks(0),
+						m_vram_chunks(0),
+						m_prg_bank_map(NULL)
 {
 }
 
@@ -55,8 +156,66 @@ void device_nes_cart_interface::prg_alloc(running_machine &machine, size_t size)
 {
 	if (m_prg == NULL)
 	{
-		m_prg = auto_alloc_array(machine, UINT8, size);
+		m_prg = auto_alloc_array_clear(machine, UINT8, size);
 		m_prg_size = size;
+		m_prg_chunks = size / 0x4000;
+		if (size % 0x2000)
+		{
+			// A few pirate carts have PRG made of 32K + 2K or some weird similar config
+			// in this case we treat the banking as if this 'extra' PRG is not present and
+			// the pcb code has to handle it by accessing directly m_prg!
+			printf("Warning! The loaded PRG has size not a multiple of 8KB (0x%X)\n", (UINT32)size);
+			m_prg_chunks--;
+		}
+
+		m_prg_mask = ((m_prg_chunks << 1) - 1);
+
+//      printf("first mask %x!\n", m_prg_mask);
+		if ((m_prg_chunks << 1) & m_prg_mask)
+		{
+			int mask_bits = 0, temp = (m_prg_chunks << 1), mapsize;
+			// contrary to what happens with later systems, like e.g. SNES or MD,
+			// only half a dozen of NES carts have PRG which is not a power of 2
+			// so we use this bank_map only as an exception
+//          printf("uneven rom!\n");
+
+			// 1. redefine mask as (next power of 2)-1
+			for (; temp; )
+			{
+				mask_bits++;
+				temp >>= 1;
+			}
+			m_prg_mask = (1 << mask_bits) - 1;
+//          printf("new mask %x!\n", m_prg_mask);
+			mapsize = (1 << mask_bits)/2;
+
+			// 2. create a bank_map for banks in the range mask/2 -> mask
+			m_prg_bank_map = auto_alloc_array_clear(machine, UINT16, mapsize);
+
+			// 3. fill the bank_map accounting for mirrors
+			int j;
+			for (j = mapsize; j < (m_prg_chunks << 1); j++)
+				m_prg_bank_map[j - mapsize] = j;
+
+			while (j % mapsize)
+			{
+				int k = 0, repeat_banks;
+				while ((j % (mapsize >> k)) && k < mask_bits)
+					k++;
+				repeat_banks = j % (mapsize >> (k - 1));
+				for (int l = 0; l < repeat_banks; l++)
+					m_prg_bank_map[(j - mapsize) + l] = m_prg_bank_map[(j - mapsize) + l - repeat_banks];
+				j += repeat_banks;
+			}
+
+			// check bank map!
+//          for (int i = 0; i < mapsize; i++)
+//          {
+//              printf("bank %3d = %3d\t", i, m_prg_bank_map[i]);
+//              if ((i%8) == 7)
+//                  printf("\n");
+//          }
+		}
 	}
 }
 
@@ -64,7 +223,7 @@ void device_nes_cart_interface::prgram_alloc(running_machine &machine, size_t si
 {
 	if (m_prgram == NULL)
 	{
-		m_prgram = auto_alloc_array(machine, UINT8, size);
+		m_prgram = auto_alloc_array_clear(machine, UINT8, size);
 		m_prgram_size = size;
 	}
 }
@@ -73,8 +232,9 @@ void device_nes_cart_interface::vrom_alloc(running_machine &machine, size_t size
 {
 	if (m_vrom == NULL)
 	{
-		m_vrom = auto_alloc_array(machine, UINT8, size);
+		m_vrom = auto_alloc_array_clear(machine, UINT8, size);
 		m_vrom_size = size;
+		m_vrom_chunks = size / 0x2000;
 	}
 }
 
@@ -82,8 +242,9 @@ void device_nes_cart_interface::vram_alloc(running_machine &machine, size_t size
 {
 	if (m_vram == NULL)
 	{
-		m_vram = auto_alloc_array(machine, UINT8, size);
+		m_vram = auto_alloc_array_clear(machine, UINT8, size);
 		m_vram_size = size;
+		m_vram_chunks = size / 0x2000;
 	}
 }
 
@@ -91,27 +252,532 @@ void device_nes_cart_interface::battery_alloc(running_machine &machine, size_t s
 {
 	if (m_battery == NULL)
 	{
-		m_battery = auto_alloc_array(machine, UINT8, size);
+		m_battery = auto_alloc_array_clear(machine, UINT8, size);
 		m_battery_size = size;
 	}
 }
 
-void device_nes_cart_interface::mapper_ram_alloc(running_machine &machine, size_t size)
+
+//-------------------------------------------------
+//  PRG helpers
+//-------------------------------------------------
+
+inline int device_nes_cart_interface::prg_8k_bank_num(int bank_8k)
 {
-	if (m_mapper_ram == NULL)
+	if (m_prg_mask == ((m_prg_chunks << 1) - 1))
+		return bank_8k & m_prg_mask;
+
+	// only a few pirate games (less than a dozen) have PRG which is not power of 2
+	// so we treat it here separately, rather than forcing all games to use m_prg_bank_map
+
+	// case 1: if we are accessing a bank before the end of the image, just return that bank
+	if (bank_8k < ((m_prg_chunks << 1) - 1))
+		return bank_8k;
+
+	// case 2: otherwise return a mirror using the bank_map!
+//  UINT8 temp = bank_8k;
+	bank_8k &= m_prg_mask;
+	bank_8k -= (m_prg_mask/2 + 1);
+//  printf("bank: accessed %x (top: %x), returned %x\n", temp, (m_prg_chunks << 1) - 1, m_prg_bank_map[bank_8k]);
+	return m_prg_bank_map[bank_8k];
+}
+
+inline void device_nes_cart_interface::update_prg_banks(int prg_bank_start, int prg_bank_end)
+{
+	for (int prg_bank = prg_bank_start; prg_bank <= prg_bank_end; prg_bank++)
 	{
-		m_mapper_ram = auto_alloc_array(machine, UINT8, size);
-		m_mapper_ram_size = size;
+		assert(prg_bank >= 0);
+		assert(prg_bank < ARRAY_LENGTH(m_prg_bank));
+		assert(prg_bank < ARRAY_LENGTH(m_prg_bank_mem));
+
+		m_prg_bank_mem[prg_bank]->set_entry(m_prg_bank[prg_bank]);
 	}
 }
 
-void device_nes_cart_interface::mapper_bram_alloc(running_machine &machine, size_t size)
+void device_nes_cart_interface::prg32(int bank)
 {
-	if (m_mapper_bram == NULL)
+	/* if there is only 16k PRG, return */
+	if (!(m_prg_chunks >> 1))
+		return;
+
+	/* assumes that bank references a 32k chunk */
+	bank = prg_8k_bank_num(bank * 4);
+
+	m_prg_bank[0] = bank + 0;
+	m_prg_bank[1] = bank + 1;
+	m_prg_bank[2] = bank + 2;
+	m_prg_bank[3] = bank + 3;
+	update_prg_banks(0, 3);
+}
+
+void device_nes_cart_interface::prg16_89ab(int bank)
+{
+	/* assumes that bank references a 16k chunk */
+	bank = prg_8k_bank_num(bank * 2);
+
+	m_prg_bank[0] = bank + 0;
+	m_prg_bank[1] = bank + 1;
+	update_prg_banks(0, 1);
+}
+
+void device_nes_cart_interface::prg16_cdef(int bank)
+{
+	/* assumes that bank references a 16k chunk */
+	bank = prg_8k_bank_num(bank * 2);
+
+	m_prg_bank[2] = bank + 0;
+	m_prg_bank[3] = bank + 1;
+	update_prg_banks(2, 3);
+}
+
+void device_nes_cart_interface::prg8_89(int bank)
+{
+	/* assumes that bank references an 8k chunk */
+	bank = prg_8k_bank_num(bank);
+
+	m_prg_bank[0] = bank;
+	update_prg_banks(0, 0);
+}
+
+void device_nes_cart_interface::prg8_ab(int bank)
+{
+	/* assumes that bank references an 8k chunk */
+	bank = prg_8k_bank_num(bank);
+
+	m_prg_bank[1] = bank;
+	update_prg_banks(1, 1);
+}
+
+void device_nes_cart_interface::prg8_cd(int bank)
+{
+	/* assumes that bank references an 8k chunk */
+	bank = prg_8k_bank_num(bank);
+
+	m_prg_bank[2] = bank;
+	update_prg_banks(2, 2);
+}
+
+void device_nes_cart_interface::prg8_ef(int bank)
+{
+	/* assumes that bank references an 8k chunk */
+	bank = prg_8k_bank_num(bank);
+
+	m_prg_bank[3] = bank;
+	update_prg_banks(3, 3);
+}
+
+/* We also define an additional helper to map 8k PRG-ROM to one of the banks (passed as parameter) */
+void device_nes_cart_interface::prg8_x(int start, int bank)
+{
+	assert(start < 4);
+
+	/* assumes that bank references an 8k chunk */
+	bank = prg_8k_bank_num(bank);
+
+	m_prg_bank[start] = bank;
+	update_prg_banks(start, start);
+}
+
+//-------------------------------------------------
+//  CHR helpers
+//-------------------------------------------------
+
+inline void device_nes_cart_interface::chr_sanity_check( int source )
+{
+	if (source == CHRRAM && m_vram == NULL)
+		fatalerror("CHRRAM bankswitch with no VRAM\n");
+
+	if (source == CHRROM && m_vrom == NULL)
+		fatalerror("CHRROM bankswitch with no VROM\n");
+}
+
+void device_nes_cart_interface::chr8(int bank, int source)
+{
+	chr_sanity_check(source);
+
+	if (source == CHRRAM)
 	{
-		m_mapper_bram = auto_alloc_array(machine, UINT8, size);
-		m_mapper_bram_size = size;
+		bank &= (m_vram_chunks - 1);
+		for (int i = 0; i < 8; i++)
+		{
+			m_chr_src[i] = source;
+			m_chr_orig[i] = (bank * 0x2000) + (i * 0x400); // for save state uses!
+			m_chr_access[i] = &m_vram[m_chr_orig[i]];
+		}
 	}
+	else
+	{
+		bank &= (m_vrom_chunks - 1);
+		for (int i = 0; i < 8; i++)
+		{
+			m_chr_src[i] = source;
+			m_chr_orig[i] = (bank * 0x2000) + (i * 0x400); // for save state uses!
+			m_chr_access[i] = &m_vrom[m_chr_orig[i]];
+		}
+	}
+}
+
+void device_nes_cart_interface::chr4_x(int start, int bank, int source)
+{
+	chr_sanity_check(source);
+
+	if (source == CHRRAM)
+	{
+		bank &= ((m_vram_chunks << 1) - 1);
+		for (int i = 0; i < 4; i++)
+		{
+			m_chr_src[i + start] = source;
+			m_chr_orig[i + start] = (bank * 0x1000) + (i * 0x400); // for save state uses!
+			m_chr_access[i + start] = &m_vram[m_chr_orig[i + start]];
+		}
+	}
+	else
+	{
+		bank &= ((m_vrom_chunks << 1) - 1);
+		for (int i = 0; i < 4; i++)
+		{
+			m_chr_src[i + start] = source;
+			m_chr_orig[i + start] = (bank * 0x1000) + (i * 0x400); // for save state uses!
+			m_chr_access[i + start] = &m_vrom[m_chr_orig[i + start]];
+		}
+	}
+}
+
+void device_nes_cart_interface::chr2_x(int start, int bank, int source)
+{
+	chr_sanity_check(source);
+
+	if (source == CHRRAM)
+	{
+		bank &= ((m_vram_chunks << 2) - 1);
+		for (int i = 0; i < 2; i++)
+		{
+			m_chr_src[i + start] = source;
+			m_chr_orig[i + start] = (bank * 0x800) + (i * 0x400); // for save state uses!
+			m_chr_access[i + start] = &m_vram[m_chr_orig[i + start]];
+		}
+	}
+	else
+	{
+		bank &= ((m_vrom_chunks << 2) - 1);
+		for (int i = 0; i < 2; i++)
+		{
+			m_chr_src[i + start] = source;
+			m_chr_orig[i + start] = (bank * 0x800) + (i * 0x400); // for save state uses!
+			m_chr_access[i + start] = &m_vrom[m_chr_orig[i + start]];
+		}
+	}
+}
+
+void device_nes_cart_interface::chr1_x(int start, int bank, int source)
+{
+	chr_sanity_check(source);
+
+	if (source == CHRRAM)
+	{
+		bank &= ((m_vram_chunks << 3) - 1);
+		m_chr_src[start] = source;
+		m_chr_orig[start] = (bank * 0x400); // for save state uses!
+		m_chr_access[start] = &m_vram[m_chr_orig[start]];
+	}
+	else
+	{
+		bank &= ((m_vrom_chunks << 3) - 1);
+		m_chr_src[start] = source;
+		m_chr_orig[start] = (bank * 0x400); // for save state uses!
+		m_chr_access[start] = &m_vrom[m_chr_orig[start]];
+	}
+}
+
+//-------------------------------------------------
+//  NT & Mirroring helpers
+//-------------------------------------------------
+
+void device_nes_cart_interface::set_nt_page(int page, int source, int bank, int writable)
+{
+	UINT8* base_ptr;
+
+	switch (source)
+	{
+		case CART_NTRAM:
+			base_ptr = m_ext_ntram;
+			break;
+		case MMC5FILL:
+			base_ptr = NULL;
+			break;
+		case VROM:
+			bank &= ((m_vrom_chunks << 3) - 1);
+			base_ptr = m_vrom;
+			break;
+		case EXRAM:
+			base_ptr = m_mapper_sram;
+			break;
+		case CIRAM:
+		default:
+			base_ptr = m_ciram;
+			break;
+	}
+
+	page &= 3; /* mask down to the 4 logical pages */
+	m_nt_src[page] = source;
+
+	if (base_ptr != NULL)
+	{
+		m_nt_orig[page] = bank * 0x400;
+		m_nt_access[page] = base_ptr + m_nt_orig[page];
+	}
+
+	m_nt_writable[page] = writable;
+}
+
+void device_nes_cart_interface::set_nt_mirroring(int mirroring)
+{
+	/* setup our videomem handlers based on mirroring */
+	switch (mirroring)
+	{
+		case PPU_MIRROR_VERT:
+			set_nt_page(0, CIRAM, 0, 1);
+			set_nt_page(1, CIRAM, 1, 1);
+			set_nt_page(2, CIRAM, 0, 1);
+			set_nt_page(3, CIRAM, 1, 1);
+			break;
+
+		case PPU_MIRROR_HORZ:
+			set_nt_page(0, CIRAM, 0, 1);
+			set_nt_page(1, CIRAM, 0, 1);
+			set_nt_page(2, CIRAM, 1, 1);
+			set_nt_page(3, CIRAM, 1, 1);
+			break;
+
+		case PPU_MIRROR_HIGH:
+			set_nt_page(0, CIRAM, 1, 1);
+			set_nt_page(1, CIRAM, 1, 1);
+			set_nt_page(2, CIRAM, 1, 1);
+			set_nt_page(3, CIRAM, 1, 1);
+			break;
+
+		case PPU_MIRROR_LOW:
+			set_nt_page(0, CIRAM, 0, 1);
+			set_nt_page(1, CIRAM, 0, 1);
+			set_nt_page(2, CIRAM, 0, 1);
+			set_nt_page(3, CIRAM, 0, 1);
+			break;
+
+		case PPU_MIRROR_4SCREEN:
+			if (!m_ext_ntram) fatalerror("4-screen mirroring without on-cart NTRAM!\n");
+			set_nt_page(0, CART_NTRAM, 0, 1);
+			set_nt_page(1, CART_NTRAM, 1, 1);
+			set_nt_page(2, CART_NTRAM, 2, 1);
+			set_nt_page(3, CART_NTRAM, 3, 1);
+			break;
+
+		case PPU_MIRROR_NONE:
+		default:
+			set_nt_page(0, CIRAM, 0, 1);
+			set_nt_page(1, CIRAM, 0, 1);
+			set_nt_page(2, CIRAM, 1, 1);
+			set_nt_page(3, CIRAM, 1, 1);
+			break;
+	}
+}
+
+//-------------------------------------------------
+//  Other helpers
+//-------------------------------------------------
+
+// Helper function for the few mappers reading from 0x8000-0xffff for protection
+// so that they can access the ROM after the protection handling (which overwrites
+// the memory banks)
+UINT8 device_nes_cart_interface::hi_access_rom(UINT32 offset)
+{
+	int bank = (offset & 0x6000) >> 13;
+	return m_prg[m_prg_bank[bank] * 0x2000 + (offset & 0x1fff)];
+}
+
+// Helper function for the few mappers subject to bus conflict at write.
+// Tests by blargg showed that in many of the boards suffering of CPU/ROM
+// conflicts the behaviour can be accurately emulated by writing not the
+// original data, but data & rom[offset]
+UINT8 device_nes_cart_interface::account_bus_conflict(UINT32 offset, UINT8 data)
+{
+	// pirate variants of boards subject to bus conflict are often not subject to it
+	// so we allow to set m_bus_conflict to FALSE at loading time when necessary
+	if (m_bus_conflict)
+		return data & hi_access_rom(offset);
+	else
+		return data;
+}
+
+
+//-------------------------------------------------
+//  PPU accessors
+//-------------------------------------------------
+
+WRITE8_MEMBER(device_nes_cart_interface::chr_w)
+{
+	int bank = offset >> 10;
+
+	if (m_chr_src[bank] == CHRRAM)
+		m_chr_access[bank][offset & 0x3ff] = data;
+}
+
+READ8_MEMBER(device_nes_cart_interface::chr_r)
+{
+	int bank = offset >> 10;
+	return m_chr_access[bank][offset & 0x3ff];
+}
+
+
+WRITE8_MEMBER(device_nes_cart_interface::nt_w)
+{
+	int page = ((offset & 0xc00) >> 10);
+
+	if (!m_nt_writable[page])
+		return;
+
+	m_nt_access[page][offset & 0x3ff] = data;
+}
+
+READ8_MEMBER(device_nes_cart_interface::nt_r)
+{
+	int page = ((offset & 0xc00) >> 10);
+	return m_nt_access[page][offset & 0x3ff];
+}
+
+
+//-------------------------------------------------
+//  Base memory accessors (emulating open bus
+//  behaviour and/or WRAM accesses)
+//  Open bus emulation is defective, but it should
+//  be enough for the few cases known to rely on
+//  this (more in the comments at the top of the
+//  source)
+//-------------------------------------------------
+
+READ8_MEMBER(device_nes_cart_interface::read_l)
+{
+	return ((offset + 0x4100) & 0xff00) >> 8;   // open bus
+}
+
+READ8_MEMBER(device_nes_cart_interface::read_m)
+{
+	if (m_battery)
+		return m_battery[offset & (m_battery_size - 1)];
+	if (m_prgram)
+		return m_prgram[offset & (m_prgram_size - 1)];
+
+	return ((offset + 0x6000) & 0xff00) >> 8;   // open bus
+}
+
+WRITE8_MEMBER(device_nes_cart_interface::write_l)
+{
+}
+
+WRITE8_MEMBER(device_nes_cart_interface::write_m)
+{
+	if (m_battery)
+		m_battery[offset & (m_battery_size - 1)] = data;
+	if (m_prgram)
+		m_prgram[offset & (m_prgram_size - 1)] = data;
+}
+
+WRITE8_MEMBER(device_nes_cart_interface::write_h)
+{
+}
+
+
+void device_nes_cart_interface::pcb_start(running_machine &machine, UINT8 *ciram_ptr)
+{
+	// Setup PRG
+	m_prg_bank_mem[0] = machine.root_device().membank("prg0");
+	m_prg_bank_mem[1] = machine.root_device().membank("prg1");
+	m_prg_bank_mem[2] = machine.root_device().membank("prg2");
+	m_prg_bank_mem[3] = machine.root_device().membank("prg3");
+	for (int i = 0; i < 4; i++)
+	{
+		int next_bank = m_prg_size / 0x2000;
+		m_prg_bank_mem[i]->configure_entries(0, m_prg_size / 0x2000, m_prg, 0x2000);
+		// MMC5 (and a few other PCBs) can also map WRAM/BWRAM in these banks, so we add here 4x8K banks for each RAM chip
+		if (m_battery)
+		{
+			if (m_battery_size / 0x2000 == 4)
+			{
+				m_prg_bank_mem[i]->configure_entries(next_bank, 4, m_battery, 0x2000);
+			}
+			if (m_battery_size / 0x2000 == 2)
+			{
+				m_prg_bank_mem[i]->configure_entries(next_bank + 0, 2, m_battery, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 2, 2, m_battery, 0x2000);
+			}
+			if (m_battery_size / 0x2000 == 1)
+			{
+				m_prg_bank_mem[i]->configure_entries(next_bank + 0, 1, m_battery, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 1, 1, m_battery, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 2, 1, m_battery, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 3, 1, m_battery, 0x2000);
+			}
+			next_bank += 4;
+		}
+		if (m_prgram)
+		{
+			if (m_prgram_size / 0x2000 == 4)
+			{
+				m_prg_bank_mem[i]->configure_entries(next_bank, 4, m_prgram, 0x2000);
+			}
+			if (m_prgram_size / 0x2000 == 2)
+			{
+				m_prg_bank_mem[i]->configure_entries(next_bank + 0, 2, m_prgram, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 2, 2, m_prgram, 0x2000);
+			}
+			if (m_prgram_size / 0x2000 == 1)
+			{
+				m_prg_bank_mem[i]->configure_entries(next_bank + 0, 1, m_prgram, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 1, 1, m_prgram, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 2, 1, m_prgram, 0x2000);
+				m_prg_bank_mem[i]->configure_entries(next_bank + 3, 1, m_prgram, 0x2000);
+			}
+			next_bank += 4;
+		}
+
+		// ...but we always map the banks to PRG at start
+		m_prg_bank_mem[i]->set_entry(i);
+		m_prg_bank[i] = i;
+	}
+
+	// Setup CHR
+	m_chr_source = m_vrom_chunks ? CHRROM : CHRRAM;
+	chr8(0, m_chr_source);
+
+	// Setup NT
+	m_ciram = ciram_ptr;
+
+	if (m_four_screen_vram)
+	{
+		m_ext_ntram_size = 0x2000;
+		m_ext_ntram = auto_alloc_array_clear(machine, UINT8, m_ext_ntram_size);
+	}
+
+	// at loading time we have configured m_mirroring, now setup NT pages
+	set_nt_mirroring(m_mirroring);
+}
+
+void device_nes_cart_interface::pcb_reg_postload(running_machine &machine)
+{
+	machine.save().register_postload(save_prepost_delegate(FUNC(device_nes_cart_interface::nes_banks_restore), this));
+}
+
+void device_nes_cart_interface::nes_banks_restore()
+{
+	for (int i = 0; i < 4; i++)
+		m_prg_bank_mem[i]->set_entry(m_prg_bank[i]);
+
+	for (int i = 0; i < 8; i++)
+		chr1_x(i, m_chr_orig[i] / 0x400, m_chr_src[i]);
+
+	for (int i = 0; i < 4; i++)
+		set_nt_page(i, m_nt_src[i], m_nt_orig[i] / 0x400, m_nt_writable[i]);
+
+	set_nt_mirroring(m_mirroring);
 }
 
 
@@ -126,13 +792,8 @@ nes_cart_slot_device::nes_cart_slot_device(const machine_config &mconfig, const 
 						device_t(mconfig, NES_CART_SLOT, "NES Cartridge Slot", tag, owner, clock),
 						device_image_interface(mconfig, *this),
 						device_slot_interface(mconfig, *this),
-						m_chr_open_bus(0),
-						m_ce_mask(0),
-						m_ce_state(0),
-						m_vrc_ls_prg_a(0),
-						m_vrc_ls_prg_b(0),
-						m_vrc_ls_chr(0),
 						m_crc_hack(0),
+						m_pcb_id(NO_BOARD),
 						m_must_be_loaded(1)
 {
 }
@@ -162,759 +823,89 @@ void nes_cart_slot_device::device_start()
 
 void nes_cart_slot_device::device_config_complete()
 {
-	// inherit a copy of the static data
-//  const nes_cart_interface *intf = reinterpret_cast<const nes_cart_interface *>(static_config());
-//  if (intf != NULL)
-//  {
-//      *static_cast<nes_cart_interface *>(this) = *intf;
-//  }
-
 	// set brief and instance name
 	update_names();
 }
 
 
-//-------------------------------------------------
-//  device_timer - handler timer events
-//-------------------------------------------------
+void nes_cart_slot_device::pcb_start(UINT8 *ciram_ptr)
+{
+	if (m_cart)
+		m_cart->pcb_start(machine(), ciram_ptr);
+}
+
+void nes_cart_slot_device::pcb_reset()
+{
+	if (m_cart)
+		m_cart->pcb_reset();
+}
 
 /*-------------------------------------------------
  call load
  -------------------------------------------------*/
 
 
-struct nes_cart_lines
-{
-	const char *tag;
-	int line;
-};
+/*-------------------------------------------------
 
-static const struct nes_cart_lines nes_cart_lines_table[] =
-{
-	{ "PRG A0",    0 },
-	{ "PRG A1",    1 },
-	{ "PRG A2",    2 },
-	{ "PRG A3",    3 },
-	{ "PRG A4",    4 },
-	{ "PRG A5",    5 },
-	{ "PRG A6",    6 },
-	{ "PRG A7",    7 },
-	{ "CHR A10",  10 },
-	{ "CHR A11",  11 },
-	{ "CHR A12",  12 },
-	{ "CHR A13",  13 },
-	{ "CHR A14",  14 },
-	{ "CHR A15",  15 },
-	{ "CHR A16",  16 },
-	{ "CHR A17",  17 },
-	{ "NC",      127 },
-	{ 0 }
-};
+ Load from xml list and identify the required slot device
 
-static int nes_cart_get_line( const char *feature )
-{
-	const struct nes_cart_lines *nes_line = &nes_cart_lines_table[0];
+ -------------------------------------------------*/
 
-	if (feature == NULL)
-		return 128;
+/* Include emulation of NES PCBs for softlist */
+#include "machine/nes_pcb.c"
 
-	while (nes_line->tag)
-	{
-		if (strcmp(nes_line->tag, feature) == 0)
-			break;
 
-		nes_line++;
-	}
+/*-------------------------------------------------
 
-	return nes_line->line;
-}
+ Load .unf files (UNIF boards) and identify the required slot device
 
-/* Set to generate prg & chr files when the cart is loaded */
-#define SPLIT_PRG   0
-#define SPLIT_CHR   0
+ -------------------------------------------------*/
+
+/* Include emulation of UNIF Boards for .unf files */
+#include "machine/nes_unif.c"
+
+
+/*-------------------------------------------------
+
+ Load .nes files (iNES mappers) and identify the required slot devices
+
+ -------------------------------------------------*/
+
+/* Include emulation of iNES Mappers for .nes files */
+#include "machine/nes_ines.c"
+
 
 bool nes_cart_slot_device::call_load()
 {
 	if (m_cart)
 	{
-		UINT32 vram_size = 0, prgram_size = 0, battery_size = 0, mapper_ram_size = 0, mapper_bram_size = 0; // helper for regions to alloc at the end
-
 		if (software_entry() == NULL)
 		{
-			const char *mapinfo = NULL;
-			int mapint1 = 0, mapint2 = 0, mapint3 = 0, mapint4 = 0;
 			char magic[4];
 
 			/* Check first 4 bytes of the image to decide if it is UNIF or iNES */
 			/* Unfortunately, many .unf files have been released as .nes, so we cannot rely on extensions only */
-			memset(magic, '\0', sizeof(magic));
 			fread(magic, 4);
 
 			if ((magic[0] == 'N') && (magic[1] == 'E') && (magic[2] == 'S'))    /* If header starts with 'NES' it is iNES */
 			{
-				UINT32 prg_size, vrom_size;
-				UINT8 header[0x10];
-				UINT8 mapper, local_options;
-				bool ines20 = FALSE, has_trainer = FALSE, prg16k;
-
-				// check if the image is recognized by nes.hsi
-				mapinfo = hashfile_extrainfo(*this);
-
-				// image_extrainfo() resets the file position back to start.
-				fseek(0, SEEK_SET);
-				// read out the header
-				fread(&header, 0x10);
-
-				// SETUP step 1: getting PRG, VROM, VRAM sizes
-				prg16k = (header[4] == 1);
-				prg_size = prg16k ? 2 * 0x4000 : header[4] * 0x4000;
-				vrom_size = header[5] * 0x2000;
-				vram_size = 0x4000;
-
-				// SETUP step 2: getting PCB and other settings
-				mapper = (header[6] & 0xf0) >> 4;
-				local_options = header[6] & 0x0f;
-
-				switch (header[7] & 0xc)
+				if (length() <= 0x10)
 				{
-					case 0x4:
-					case 0xc:
-						// probably the header got corrupted: don't trust upper bits for mapper
-						break;
-
-					case 0x8:   // it's iNES 2.0 format
-						ines20 = TRUE;
-					case 0x0:
-					default:
-						mapper |= header[7] & 0xf0;
-						break;
+					logerror("%s only contains the iNES header and no data.\n", filename());
+					return IMAGE_INIT_FAIL;
 				}
 
-				// use info from nes.hsi if available!
-				if (mapinfo)
-				{
-					if (4 == sscanf(mapinfo,"%d %d %d %d", &mapint1, &mapint2, &mapint3, &mapint4))
-					{
-						/* image is present in nes.hsi: overwrite the header settings with these */
-						mapper = mapint1;
-						local_options = mapint2 & 0x0f;
-						m_crc_hack = (mapint2 & 0xf0) >> 4; // this is used to differentiate among variants of the same Mapper (see below)
-						prg16k = (mapint3 == 1);
-						prg_size = prg16k ? 2 * 0x4000 : mapint3 * 0x4000;
-						vrom_size = mapint4 * 0x2000;
-						logerror("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
-					}
-					else
-					{
-						logerror("NES: [%s], Invalid mapinfo found\n", mapinfo);
-					}
-				}
-				else
-				{
-					logerror("NES: No extrainfo found\n");
-				}
-
-				// use extended iNES2.0 info if available!
-				if (ines20)
-				{
-					mapper |= (header[8] & 0x0f) << 8;
-					// header[8] & 0xf0 is used for submappers, but I haven't found any specific image to implement this
-					prg_size += ((header[9] & 0x0f) << 8) * 0x4000;
-					vrom_size += ((header[9] & 0xf0) << 4) * 0x2000;
-				}
-
-				// SETUP step 3: storing the info needed for emulation
-				m_pcb_id = nes_get_mmc_id(machine(), mapper);
-				m_cart->set_mirroring(BIT(local_options, 0) ? PPU_MIRROR_VERT : PPU_MIRROR_HORZ);
-				if (BIT(local_options, 1))
-					battery_size = NES_BATTERY_SIZE; // with original iNES format we can only support 8K WRAM battery
-				has_trainer = BIT(local_options, 2) ? TRUE : FALSE;
-				m_cart->set_four_screen_vram(BIT(local_options, 3));
-
-				if (ines20)
-				{
-					// PRGRAM/BWRAM (not fully supported, also due to lack of 2.0 files)
-					if ((header[10] & 0x0f) > 0)
-						prgram_size = 0x80 << ((header[10] & 0x0f) - 1);
-					if ((header[10] & 0xf0) > 0)
-						battery_size = 0x80 << ((header[10] & 0xf0) - 5);
-					// VRAM
-					vram_size = 0;
-					if ((header[11] & 0x0f) > 0)
-						vram_size = 0x80 << ((header[11] & 0x0f) - 1);
-					// header[11] & 0xf0 is the size of battery backed VRAM, found so far in Racermate II only and not supported yet
-				}
-				else
-				{
-					// always map PRGRAM/WRAM in bank5 (eventually, this should be enabled only for some mappers)
-					// and save it depending on has_battery
-
-					// PRGRAM size is 8k for most games, but pirate carts often use different sizes,
-					// so its size has been added recently to the iNES format spec, but almost no image uses it
-					prgram_size = header[8] ? header[8] * 0x2000 : 0x2000;
-				}
-
-				// a few mappers correspond to multiple PCBs, so we need a few additional checks and tweaks
-				switch (m_pcb_id)
-				{
-					case STD_CNROM:
-						if (mapper == 185)
-						{
-							switch (m_crc_hack)
-							{
-								case 0x0: // pin26: CE, pin27: CE (B-Wings, Bird Week)
-									m_ce_mask = 0x03;
-									m_ce_state = 0x03;
-									break;
-								case 0x4: // pin26: CE, pin27: /CE (Mighty Bomb Jack, Spy Vs. Spy)
-									m_ce_mask = 0x03;
-									m_ce_state = 0x01;
-									break;
-								case 0x8: // pin26: /CE, pin27: CE (Sansu 1, 2, 3 Nen)
-									m_ce_mask = 0x03;
-									m_ce_state = 0x02;
-									break;
-								case 0xc: // pin26: /CE, pin27: /CE (Seicross v2.0)
-									m_ce_mask = 0x03;
-									m_ce_state = 0x00;
-									break;
-							}
-						}
-						break;
-					case KONAMI_VRC2:
-						if (mapper == 22)
-						{
-							m_vrc_ls_prg_a = 0;
-							m_vrc_ls_prg_b = 1;
-							m_vrc_ls_chr = 1;
-						}
-						if (mapper == 23 && !m_crc_hack)
-						{
-							m_vrc_ls_prg_a = 1;
-							m_vrc_ls_prg_b = 0;
-							m_vrc_ls_chr = 0;
-						}
-						if (mapper == 23 && m_crc_hack)
-						{
-							// here there are also Akumajou Special, Crisis Force, Parodius da!, Tiny Toons which are VRC-4
-							m_vrc_ls_prg_a = 3;
-							m_vrc_ls_prg_b = 2;
-							m_pcb_id = KONAMI_VRC4; // this allows for konami_irq to be installed at reset
-						}
-						break;
-					case KONAMI_VRC4:
-						if (mapper == 21)
-						{
-							// Wai Wai World 2 & Ganbare Goemon Gaiden 2 (the latter with crc_hack)
-							m_vrc_ls_prg_a = m_crc_hack ? 7 : 2;
-							m_vrc_ls_prg_b = m_crc_hack ? 6 : 1;
-						}
-						if (mapper == 25)   // here there is also Ganbare Goemon Gaiden which is VRC-2
-						{
-							m_vrc_ls_prg_a = m_crc_hack ? 2 : 0;
-							m_vrc_ls_prg_b = m_crc_hack ? 3 : 1;
-						}
-						break;
-					case KONAMI_VRC6:
-						if (mapper == 24)
-						{
-							m_vrc_ls_prg_a = 1;
-							m_vrc_ls_prg_b = 0;
-						}
-						if (mapper == 26)
-						{
-							m_vrc_ls_prg_a = 0;
-							m_vrc_ls_prg_b = 1;
-						}
-						break;
-					case IREM_G101:
-						if (m_crc_hack)
-							m_cart->set_mirroring(PPU_MIRROR_HIGH); // Major League has hardwired mirroring
-						break;
-					case DIS_74X161X161X32:
-						if (mapper == 70)
-							m_cart->set_mirroring(PPU_MIRROR_VERT); // only hardwired mirroring makes different mappers 70 & 152
-						break;
-					case SUNSOFT_2:
-						if (mapper == 93)
-							m_cart->set_mirroring(PPU_MIRROR_VERT); // only hardwired mirroring makes different mappers 89 & 93
-						break;
-					case STD_BXROM:
-						if (m_crc_hack)
-							m_pcb_id = AVE_NINA01; // Mapper 34 is used for 2 diff boards
-						break;
-					case BANDAI_LZ93:
-						if (m_crc_hack)
-							m_pcb_id = BANDAI_JUMP2;   // Mapper 153 is used for 2 diff boards
-						break;
-					case IREM_HOLYDIV:
-						if (m_crc_hack)
-							m_pcb_id = JALECO_JF16;    // Mapper 78 is used for 2 diff boards
-						break;
-					case CAMERICA_BF9093:
-						if (m_crc_hack)
-							m_pcb_id = CAMERICA_BF9097;    // Mapper 71 is used for 2 diff boards
-						break;
-					case HES_BOARD:
-						if (m_crc_hack)
-							m_pcb_id = HES6IN1_BOARD;  // Mapper 113 is used for 2 diff boards
-						break;
-					case WAIXING_ZS:
-						if (m_crc_hack)
-							m_pcb_id = WAIXING_DQ8;    // Mapper 242 is used for 2 diff boards
-						break;
-					case BMC_GOLD_7IN1:
-						if (m_crc_hack)
-							m_pcb_id = BMC_MARIOPARTY_7IN1;    // Mapper 52 is used for 2 diff boards
-						break;
-					case STD_EXROM:
-						mapper_ram_size = 0x400;
-						break;
-					case TAITO_X1_017:
-						mapper_ram_size = 0x1400;
-						break;
-					case TAITO_X1_005:
-					case TAITO_X1_005_A:
-						mapper_ram_size = 0x80;
-						break;
-					case NAMCOT_163:
-						mapper_ram_size = 0x2000;
-						break;
-					case FUKUTAKE_BOARD:
-						mapper_ram_size = 2816;
-						break;
-						//FIXME: we also have to fix Action 52 PRG loading somewhere...
-				}
-
-				// SETUP step 4: logging what we have found
-				if (!ines20)
-				{
-					logerror("Loaded game in iNES format:\n");
-					logerror("-- Mapper %d\n", mapper);
-					logerror("-- PRG 0x%x (%d x 16k chunks)\n", prg_size, prg_size / 0x4000);
-					logerror("-- VROM 0x%x (%d x 8k chunks)\n", vrom_size, vrom_size / 0x2000);
-					logerror("-- VRAM 0x%x (%d x 8k chunks)\n", vram_size, vram_size / 0x2000);
-					if (battery_size)
-						logerror("-- Battery found\n");
-					if (has_trainer)
-						logerror("-- Trainer found\n");
-					if (m_cart->get_four_screen_vram())
-						logerror("-- 4-screen VRAM\n");
-					logerror("-- TV System: %s\n", ((header[10] & 3) == 0) ? "NTSC" : (header[10] & 1) ? "Both NTSC and PAL" : "PAL");
-				}
-				else
-				{
-					logerror("Loaded game in Extended iNES format:\n");
-					logerror("-- Mapper: %d\n", mapper);
-					logerror("-- Submapper: %d\n", (header[8] & 0xf0) >> 4);
-					logerror("-- PRG 0x%x (%d x 16k chunks)\n", prg_size, prg_size / 0x4000);
-					logerror("-- VROM 0x%x (%d x 8k chunks)\n", vrom_size, vrom_size / 0x2000);
-					logerror("-- VRAM 0x%x (%d x 8k chunks)\n", vram_size, vram_size / 0x2000);
-					logerror("-- PRG NVWRAM: %d\n", header[10] & 0x0f);
-					logerror("-- PRG WRAM: %d\n", (header[10] & 0xf0) >> 4);
-					logerror("-- CHR NVWRAM: %d\n", header[11] & 0x0f);
-					logerror("-- CHR WRAM: %d\n", (header[11] & 0xf0) >> 4);
-					logerror("-- TV System: %s\n", (header[12] & 2) ? "Both NTSC and PAL" : (header[12] & 1) ? "PAL" : "NTSC");
-				}
-
-				// SETUP step 5: allocate pointers for PRG/VROM
-				if (prg_size)
-					m_cart->prg_alloc(machine(), prg_size);
-				if (vrom_size)
-					m_cart->vrom_alloc(machine(), vrom_size);
-
-				if (has_trainer)
-					fread(&m_cart->m_prgram[0x1000], 0x200);
-
-
-				// SETUP step 6: at last load the data!
-				// Read in the program chunks
-				if (prg16k)
-				{
-					fread(m_cart->get_prg_base(), 0x4000);
-					memcpy(m_cart->get_prg_base() + 0x4000, m_cart->get_prg_base(), 0x4000);
-				}
-				else
-					fread(m_cart->get_prg_base(), m_cart->get_prg_size());
-#if SPLIT_PRG
-				{
-					FILE *prgout;
-					char outname[255];
-
-					sprintf(outname, "%s.prg", filename());
-					prgout = fopen(outname, "wb");
-					if (prgout)
-					{
-						fwrite(m_cart->get_prg_base(), 1, 0x4000 * m_cart->get_prg_size(), prgout);
-						mame_printf_error("Created PRG chunk\n");
-					}
-
-					fclose(prgout);
-				}
-#endif
-
-				// Read in any chr chunks
-				if (m_cart->get_vrom_size())
-					fread(m_cart->get_vrom_base(), m_cart->get_vrom_size());
-
-#if SPLIT_CHR
-				if (state->m_chr_chunks > 0)
-				{
-					FILE *chrout;
-					char outname[255];
-
-					sprintf(outname, "%s.chr", filename());
-					chrout= fopen(outname, "wb");
-					if (chrout)
-					{
-						fwrite(m_cart->get_vrom_base(), 1, m_cart->get_vrom_size(), chrout);
-						mame_printf_error("Created CHR chunk\n");
-					}
-					fclose(chrout);
-				}
-#endif
+				call_load_ines();
 			}
 			else if ((magic[0] == 'U') && (magic[1] == 'N') && (magic[2] == 'I') && (magic[3] == 'F')) /* If header starts with 'UNIF' it is UNIF */
 			{
-				// SETUP step 1: running through the file and getting PRG, VROM sizes
-				UINT32 unif_ver = 0, chunk_length = 0, read_length = 0x20;
-				UINT32 prg_start = 0, chr_start = 0;
-				UINT32 size = length(), prg_size = 0, vrom_size = 0;
-				UINT8 buffer[4], mirror = 0;
-				char magic2[4];
-				char unif_mapr[32]; // here we should store MAPR chunks
-				bool mapr_chunk_found = FALSE, small_prg = FALSE;
-
-				// allocate space to temporarily store PRG & CHR banks
-				UINT8 *temp_prg = auto_alloc_array(machine(), UINT8, 256 * 0x4000);
-				UINT8 *temp_chr = auto_alloc_array(machine(), UINT8, 256 * 0x2000);
-				UINT8 temp_byte = 0;
-
-				fread(&buffer, 4);
-				unif_ver = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-				logerror("Loaded game in UNIF format, version %d\n", unif_ver);
-
-				if (size <= 0x20)
+				if (length() <= 0x20)
 				{
 					logerror("%s only contains the UNIF header and no data.\n", filename());
 					return IMAGE_INIT_FAIL;
 				}
 
-				do
-				{
-					fseek(read_length, SEEK_SET);
-
-					memset(magic2, '\0', sizeof(magic2));
-					fread(&magic2, 4);
-
-					/* We first run through the whole image to find a [MAPR] chunk. This is needed
-					 because, unfortunately, the MAPR chunk is not always the first chunk (see
-					 Super 24-in-1). When such a chunk is found, we set mapr_chunk_found=1 and
-					 we go back to load other chunks! */
-					if (!mapr_chunk_found)
-					{
-						if ((magic2[0] == 'M') && (magic2[1] == 'A') && (magic2[2] == 'P') && (magic2[3] == 'R'))
-						{
-							mapr_chunk_found = TRUE;
-							logerror("[MAPR] chunk found: ");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							if (chunk_length <= 0x20)
-								fread(&unif_mapr, chunk_length);
-							logerror("%s\n", unif_mapr);
-
-							/* now that we found the MAPR chunk, we can go back to load other chunks */
-							fseek(0x20, SEEK_SET);
-							read_length = 0x20;
-						}
-						else
-						{
-							logerror("Skip this chunk. We need a [MAPR] chunk before anything else.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-					}
-					else
-					{
-						/* What kind of chunk do we have here? */
-						if ((magic2[0] == 'M') && (magic2[1] == 'A') && (magic2[2] == 'P') && (magic2[3] == 'R'))
-						{
-							/* The [MAPR] chunk has already been read, so we skip it */
-							/* TO DO: it would be nice to check if more than one MAPR chunk is present */
-							logerror("[MAPR] chunk found (in the 2nd run). Already loaded.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'R') && (magic2[1] == 'E') && (magic2[2] == 'A') && (magic2[3] == 'D'))
-						{
-							logerror("[READ] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'N') && (magic2[1] == 'A') && (magic2[2] == 'M') && (magic2[3] == 'E'))
-						{
-							logerror("[NAME] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'W') && (magic2[1] == 'R') && (magic2[2] == 'T') && (magic2[3] == 'R'))
-						{
-							logerror("[WRTR] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'T') && (magic2[1] == 'V') && (magic2[2] == 'C') && (magic2[3] == 'I'))
-						{
-							logerror("[TVCI] chunk found.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							fread(&temp_byte, 1);
-							logerror("Television Standard : %s\n", (temp_byte == 0) ? "NTSC" : (temp_byte == 1) ? "PAL" : "Does not matter");
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'T') && (magic2[1] == 'V') && (magic2[2] == 'S') && (magic2[3] == 'C')) // is this the same as TVCI??
-						{
-							logerror("[TVSC] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'D') && (magic2[1] == 'I') && (magic2[2] == 'N') && (magic2[3] == 'F'))
-						{
-							logerror("[DINF] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'C') && (magic2[1] == 'T') && (magic2[2] == 'R') && (magic2[3] == 'L'))
-						{
-							logerror("[CTRL] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'B') && (magic2[1] == 'A') && (magic2[2] == 'T') && (magic2[3] == 'R'))
-						{
-							logerror("[BATR] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'V') && (magic2[1] == 'R') && (magic2[2] == 'O') && (magic2[3] == 'R'))
-						{
-							logerror("[VROR] chunk found. No support yet.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'M') && (magic2[1] == 'I') && (magic2[2] == 'R') && (magic2[3] == 'R'))
-						{
-							logerror("[MIRR] chunk found.\n");
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							fread(&mirror, 1);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'P') && (magic2[1] == 'C') && (magic2[2] == 'K'))
-						{
-							logerror("[PCK%c] chunk found. No support yet.\n", magic2[3]);
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'C') && (magic2[1] == 'C') && (magic2[2] == 'K'))
-						{
-							logerror("[CCK%c] chunk found. No support yet.\n", magic2[3]);
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'P') && (magic2[1] == 'R') && (magic2[2] == 'G'))
-						{
-							logerror("[PRG%c] chunk found. ", magic2[3]);
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-							prg_size += chunk_length;
-
-							if (chunk_length / 0x4000)
-								logerror("It consists of %d 16K-blocks.\n", chunk_length / 0x4000);
-							else
-							{
-								small_prg = TRUE;
-								logerror("This chunk is smaller than 16K: the emulation might have issues. Please report this file to the MESS forums.\n");
-							}
-
-							/* Read in the program chunks */
-							fread(&temp_prg[prg_start], chunk_length);
-
-							prg_start += chunk_length;
-							read_length += (chunk_length + 8);
-						}
-						else if ((magic2[0] == 'C') && (magic2[1] == 'H') && (magic2[2] == 'R'))
-						{
-							logerror("[CHR%c] chunk found. ", magic2[3]);
-							fread(&buffer, 4);
-							chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-							vrom_size += chunk_length;
-
-							logerror("It consists of %d 8K-blocks.\n", chunk_length / 0x2000);
-
-							/* Read in the vrom chunks */
-							fread(&temp_chr[chr_start], chunk_length);
-
-							chr_start += chunk_length;
-							read_length += (chunk_length + 8);
-						}
-						else
-						{
-							logerror("Unsupported UNIF chunk or corrupted header. Please report the problem at MESS Board.\n");
-							read_length = size;
-						}
-					}
-				} while (size > read_length);
-
-				if (!mapr_chunk_found)
-				{
-					auto_free(machine(), temp_prg);
-					auto_free(machine(), temp_chr);
-					fatalerror("UNIF should have a [MAPR] chunk to work. Check if your image has been corrupted\n");
-				}
-
-				if (!prg_start)
-				{
-					auto_free(machine(), temp_prg);
-					auto_free(machine(), temp_chr);
-					fatalerror("No PRG found. Please report the problem at MESS Board.\n");
-				}
-
-				// SETUP step 2: getting PCB and other settings
-				int pcb_id = 0, battery = 0, prgram = 0, vram_chunks = 0;
-				unif_mapr_setup(unif_mapr, &pcb_id, &battery, &prgram, &vram_chunks);
-
-				// SETUP step 3: storing the info needed for emulation
-				m_pcb_id = pcb_id;
-				if (battery)
-					battery_size = NES_BATTERY_SIZE; // we should allow for smaller battery!
-				prgram_size = prgram * 0x2000;
-				vram_size = vram_chunks * 0x2000;
-
-				m_cart->set_four_screen_vram(0);
-				switch (mirror)
-				{
-					case 0: // Horizontal Mirroring (Hard Wired)
-						m_cart->set_mirroring(PPU_MIRROR_HORZ);
-						break;
-					case 1: // Vertical Mirroring (Hard Wired)
-						m_cart->set_mirroring(PPU_MIRROR_VERT);
-						break;
-					case 2: // Mirror All Pages From $2000 (Hard Wired)
-						m_cart->set_mirroring(PPU_MIRROR_LOW);
-						break;
-					case 3: // Mirror All Pages From $2400 (Hard Wired)
-						m_cart->set_mirroring(PPU_MIRROR_HIGH);
-						break;
-					case 4: // Four Screens of VRAM (Hard Wired)
-						m_cart->set_four_screen_vram(1);
-						break;
-					case 5: // Mirroring Controlled By Mapper Hardware
-						logerror("Mirroring handled by the board hardware.\n");
-						// default to horizontal at start
-						m_cart->set_mirroring(PPU_MIRROR_HORZ);
-						break;
-					default:
-						logerror("Undocumented mirroring value.\n");
-						// default to horizontal
-						m_cart->set_mirroring(PPU_MIRROR_HORZ);
-						break;
-				}
-
-				// SETUP step 4: logging what we have found
-				logerror("-- Board %s\n", unif_mapr);
-				logerror("-- PRG 0x%x (%d x 16k chunks)\n", prg_size, prg_size / 0x4000);
-				logerror("-- VROM 0x%x (%d x 8k chunks)\n", vrom_size, vrom_size / 0x2000);
-				logerror("-- VRAM 0x%x (%d x 8k chunks)\n", vram_size, vram_size / 0x2000);
-
-				// SETUP steps 5/6: allocate pointers for PRG/VROM and load the data!
-				if (prg_size == 0x4000)
-				{
-					m_cart->prg_alloc(machine(), 0x8000);
-					memcpy(m_cart->get_prg_base(), temp_prg, 0x4000);
-					memcpy(m_cart->get_prg_base() + 0x4000, m_cart->get_prg_base(), 0x4000);
-				}
-				else
-				{
-					m_cart->prg_alloc(machine(), prg_size);
-					memcpy(m_cart->get_prg_base(), temp_prg, prg_size);
-				}
-
-				if (small_prg)  // This is not supported yet, so warn users about this
-					mame_printf_error("Loaded UNIF file with non-16k PRG chunk. This is not supported in MESS yet.");
-
-				if (vrom_size)
-				{
-					m_cart->vrom_alloc(machine(), vrom_size);
-					memcpy(m_cart->get_vrom_base(), temp_chr, vrom_size);
-				}
-
-#if SPLIT_PRG
-				{
-					FILE *prgout;
-					char outname[255];
-
-					sprintf(outname, "%s.prg", filename());
-					prgout = fopen(outname, "wb");
-					if (prgout)
-					{
-						fwrite(m_cart->get_prg_base(), 1, 0x4000 * m_cart->get_prg_size(), prgout);
-						mame_printf_error("Created PRG chunk\n");
-					}
-
-					fclose(prgout);
-				}
-#endif
-
-#if SPLIT_CHR
-				if (state->m_chr_chunks > 0)
-				{
-					FILE *chrout;
-					char outname[255];
-
-					sprintf(outname, "%s.chr", filename());
-					chrout= fopen(outname, "wb");
-					if (chrout)
-					{
-						fwrite(m_cart->get_vrom_base(), 1, m_cart->get_vrom_size(), chrout);
-						mame_printf_error("Created CHR chunk\n");
-					}
-					fclose(chrout);
-				}
-#endif
-				// free the temporary copy of PRG/CHR
-				auto_free(machine(), temp_prg);
-				auto_free(machine(), temp_chr);
-				logerror("UNIF support is only very preliminary.\n");
+				call_load_unif();
 			}
 			else
 			{
@@ -923,183 +914,7 @@ bool nes_cart_slot_device::call_load()
 			}
 		}
 		else
-		{
-			// SETUP step 1: getting PRG, VROM, VRAM sizes
-			UINT32 prg_size = get_software_region_length("prg");
-			UINT32 vrom_size = get_software_region_length("chr");
-			UINT32 vram_size = get_software_region_length("vram");
-			vram_size += get_software_region_length("vram2");
-
-			// validate the xml fields
-			if (!prg_size)
-				fatalerror("No PRG entry for this software! Please check if the xml list got corrupted\n");
-			if (prg_size < 0x8000)
-				fatalerror("PRG entry is too small! Please check if the xml list got corrupted\n");
-
-			// SETUP step 2: getting PCB and other settings
-			if (get_feature("pcb"))
-				m_pcb_id = nes_get_pcb_id(machine(), get_feature("pcb"));
-			else
-				m_pcb_id = NO_BOARD;
-
-			// SETUP step 3: storing the info needed for emulation
-			if (m_pcb_id == STD_TVROM || m_pcb_id == STD_DRROM || m_pcb_id == IREM_LROG017)
-				m_cart->set_four_screen_vram(1);
-			else
-				m_cart->set_four_screen_vram(0);
-
-			if (get_software_region("bwram") != NULL)
-				battery_size = get_software_region_length("bwram");
-
-			if (m_pcb_id == BANDAI_LZ93EX)
-			{
-				// allocate the 24C01 or 24C02 EEPROM
-				battery_size += 0x2000;
-			}
-
-			if (m_pcb_id == BANDAI_DATACH)
-			{
-				// allocate the 24C01 and 24C02 EEPROM
-				battery_size += 0x4000;
-			}
-
-			if (get_software_region("wram") != NULL)
-				prgram_size = get_software_region_length("wram");
-			if (get_software_region("mapper_ram") != NULL)
-				mapper_ram_size = get_software_region_length("mapper_ram");
-			if (get_software_region("mapper_bram") != NULL)
-				mapper_bram_size = get_software_region_length("mapper_bram");
-
-			if (get_feature("mirroring"))
-			{
-				const char *mirroring = get_feature("mirroring");
-				if (!strcmp(mirroring, "horizontal"))
-					m_cart->set_mirroring(PPU_MIRROR_HORZ);
-				if (!strcmp(mirroring, "vertical"))
-					m_cart->set_mirroring(PPU_MIRROR_VERT);
-				if (!strcmp(mirroring, "high"))
-					m_cart->set_mirroring(PPU_MIRROR_HIGH);
-				if (!strcmp(mirroring, "low"))
-					m_cart->set_mirroring(PPU_MIRROR_LOW);
-			}
-			else
-				m_cart->set_mirroring(PPU_MIRROR_NONE);
-
-			/* Check for pins in specific boards which require them */
-			if (m_pcb_id == STD_CNROM)
-			{
-				if (get_feature("chr-pin26") != NULL)
-				{
-					m_ce_mask |= 0x01;
-					m_ce_state |= !strcmp(get_feature("chr-pin26"), "CE") ? 0x01 : 0;
-				}
-				if (get_feature("chr-pin27") != NULL)
-				{
-					m_ce_mask |= 0x02;
-					m_ce_state |= !strcmp(get_feature("chr-pin27"), "CE") ? 0x02 : 0;
-				}
-			}
-
-			if (m_pcb_id == TAITO_X1_005 && get_feature("x1-pin17") != NULL && get_feature("x1-pin31") != NULL)
-			{
-				if (!strcmp(get_feature("x1-pin17"), "CIRAM A10") && !strcmp(get_feature("x1-pin31"), "NC"))
-					m_pcb_id = TAITO_X1_005_A;
-			}
-
-			if (m_pcb_id == KONAMI_VRC2)
-			{
-				m_vrc_ls_prg_a = nes_cart_get_line(get_feature("vrc2-pin3"));
-				m_vrc_ls_prg_b = nes_cart_get_line(get_feature("vrc2-pin4"));
-				m_vrc_ls_chr = (nes_cart_get_line(get_feature("vrc2-pin21")) != 10) ? 1 : 0;
-//          mame_printf_error("VRC-2, pin3: A%d, pin4: A%d, pin21: %s\n", state->m_vrc_ls_prg_a, state->m_vrc_ls_prg_b, state->m_vrc_ls_chr ? "NC" : "A10");
-			}
-
-			if (m_pcb_id == KONAMI_VRC4)
-			{
-				m_vrc_ls_prg_a = nes_cart_get_line(get_feature("vrc4-pin3"));
-				m_vrc_ls_prg_b = nes_cart_get_line(get_feature("vrc4-pin4"));
-//          mame_printf_error("VRC-4, pin3: A%d, pin4: A%d\n", state->m_vrc_ls_prg_a, state->m_vrc_ls_prg_b);
-			}
-
-			if (m_pcb_id == KONAMI_VRC6)
-			{
-				m_vrc_ls_prg_a = nes_cart_get_line(get_feature("vrc6-pin9"));
-				m_vrc_ls_prg_b = nes_cart_get_line(get_feature("vrc6-pin10"));
-//          mame_printf_error("VRC-6, pin9: A%d, pin10: A%d\n", state->m_vrc_ls_prg_a, state->m_vrc_ls_prg_b);
-			}
-
-			/* Check for other misc board variants */
-			if (m_pcb_id == STD_SOROM)
-			{
-				if (get_feature("mmc1_type") != NULL && !strcmp(get_feature("mmc1_type"), "MMC1A"))
-					m_pcb_id = STD_SOROM_A;    // in MMC1-A PRG RAM is always enabled
-			}
-
-			if (m_pcb_id == STD_SXROM)
-			{
-				if (get_feature("mmc1_type") != NULL && !strcmp(get_feature("mmc1_type"), "MMC1A"))
-					m_pcb_id = STD_SXROM_A;    // in MMC1-A PRG RAM is always enabled
-			}
-
-			if (m_pcb_id == STD_NXROM || m_pcb_id == SUNSOFT_DCS)
-			{
-				if (get_software_region("minicart") != NULL)    // check for dual minicart
-				{
-					m_pcb_id = SUNSOFT_DCS;
-					// we shall load somewhere the minicart, but we still do not support this
-				}
-			}
-
-			// SETUP step 4: logging what we have found
-			logerror("Loaded game from softlist:\n");
-			logerror("-- PCB: %s", get_feature("pcb"));
-			if (m_pcb_id == UNSUPPORTED_BOARD)
-				logerror(" (currently not supported by MESS)");
-			logerror("\n-- PRG 0x%x (%d x 16k chunks)\n", prg_size, prg_size / 0x4000);
-			logerror("-- VROM 0x%x (%d x 8k chunks)\n", vrom_size, vrom_size / 0x2000);
-			logerror("-- VRAM 0x%x (%d x 8k chunks)\n", vram_size, vram_size / 0x2000);
-			logerror("-- PRG NVWRAM: %d\n", m_cart->get_battery_size());
-			logerror("-- PRG WRAM: %d\n",  m_cart->get_prgram_size());
-
-			// SETUP steps 5/6: allocate pointers for PRG/VROM and load the data!
-			m_cart->prg_alloc(machine(), prg_size);
-			memcpy(m_cart->get_prg_base(), get_software_region("prg"), prg_size);
-			if (vrom_size)
-			{
-				m_cart->vrom_alloc(machine(), vrom_size);
-				memcpy(m_cart->get_vrom_base(), get_software_region("chr"), vrom_size);
-			}
-		}
-
-		// Allocate the remaining pointer, when needed
-		if (vram_size)
-			m_cart->vram_alloc(machine(), vram_size);
-		if (prgram_size)
-			m_cart->prgram_alloc(machine(), prgram_size);
-		if (mapper_ram_size)
-			m_cart->mapper_ram_alloc(machine(), mapper_ram_size);
-
-		// Attempt to load a battery file for this ROM
-		// A few boards have internal RAM with a battery (MMC6, Taito X1-005 & X1-017, etc.)
-		if (battery_size || mapper_bram_size)
-		{
-			UINT32 tot_size = battery_size + mapper_bram_size;
-			UINT8 *temp_nvram = auto_alloc_array(machine(), UINT8, tot_size);
-			battery_load(temp_nvram, tot_size, 0x00);
-			if (battery_size)
-			{
-				m_cart->battery_alloc(machine(), battery_size);
-				memcpy(m_cart->get_battery_base(), temp_nvram, battery_size);
-			}
-			if (mapper_bram_size)
-			{
-				m_cart->mapper_bram_alloc(machine(), mapper_bram_size);
-				memcpy(m_cart->get_mapper_bram_base(), temp_nvram + battery_size, mapper_bram_size);
-			}
-
-			if (temp_nvram)
-				auto_free(machine(), temp_nvram);
-		}
+			call_load_pcb();
 	}
 
 	return IMAGE_INIT_PASS;
@@ -1114,14 +929,14 @@ void nes_cart_slot_device::call_unload()
 {
 	if (m_cart)
 	{
-		if (m_cart->get_battery_size() || m_cart->get_mapper_bram_size())
+		if (m_cart->get_battery_size() || m_cart->get_mapper_sram_size())
 		{
-			UINT32 tot_size = m_cart->get_battery_size() + m_cart->get_mapper_bram_size();
+			UINT32 tot_size = m_cart->get_battery_size() + m_cart->get_mapper_sram_size();
 			UINT8 *temp_nvram = auto_alloc_array(machine(), UINT8, tot_size);
 			if (m_cart->get_battery_size())
 				memcpy(temp_nvram, m_cart->get_battery_base(), m_cart->get_battery_size());
-			if (m_cart->get_mapper_bram_size())
-				memcpy(temp_nvram + m_cart->get_battery_size(), m_cart->get_mapper_bram_base(), m_cart->get_mapper_bram_size());
+			if (m_cart->get_mapper_sram_size())
+				memcpy(temp_nvram + m_cart->get_battery_size(), m_cart->get_mapper_sram_base(), m_cart->get_mapper_sram_size());
 
 			battery_save(temp_nvram, tot_size);
 			if (temp_nvram)
@@ -1147,7 +962,27 @@ bool nes_cart_slot_device::call_softlist_load(char *swlist, char *swname, rom_en
 
 const char * nes_cart_slot_device::get_default_card_software(const machine_config &config, emu_options &options)
 {
-	return "rom";
+	if (open_image_file(options))
+	{
+		const char *slot_string = "nrom";
+		UINT32 len = core_fsize(m_file);
+		UINT8 *ROM = global_alloc_array(UINT8, len);
+
+		core_fread(m_file, ROM, len);
+
+		if ((ROM[0] == 'N') && (ROM[1] == 'E') && (ROM[2] == 'S'))
+			slot_string = get_default_card_ines(ROM, len);
+
+		if ((ROM[0] == 'U') && (ROM[1] == 'N') && (ROM[2] == 'I') && (ROM[3] == 'F'))
+			slot_string = get_default_card_unif(ROM, len);
+
+		global_free(ROM);
+		clear();
+
+		return slot_string;
+	}
+	else
+		return software_get_default_slot(config, options, this, "nrom");
 }
 
 
@@ -1179,6 +1014,14 @@ READ8_MEMBER(nes_cart_slot_device::read_h)
 		return 0xff;
 }
 
+READ8_MEMBER(nes_cart_slot_device::read_ex)
+{
+	if (m_cart)
+		return m_cart->read_ex(space, offset);
+	else
+		return 0xff;
+}
+
 
 /*-------------------------------------------------
  write
@@ -1202,31 +1045,22 @@ WRITE8_MEMBER(nes_cart_slot_device::write_h)
 		m_cart->write_h(space, offset, data);
 }
 
-
-// CART DEVICE [TO BE MOVED TO SEPARATE SOURCE LATER]
-
-//-------------------------------------------------
-//  nes_rom_device - constructor
-//-------------------------------------------------
-
-const device_type NES_ROM = &device_creator<nes_rom_device>;
-
-nes_rom_device::nes_rom_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-					: device_t(mconfig, NES_ROM, "NES ROM", tag, owner, clock, "nes_rom", __FILE__),
-					device_nes_cart_interface( mconfig, *this )
+WRITE8_MEMBER(nes_cart_slot_device::write_ex)
 {
+	if (m_cart)
+		m_cart->write_ex(space, offset, data);
 }
 
-nes_rom_device::nes_rom_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
-					: device_t(mconfig, type, name, tag, owner, clock, shortname, source),
-					device_nes_cart_interface( mconfig, *this )
-{
-}
 
 //-------------------------------------------------
-//  device_start - device-specific startup
+//  partial hash function to be used by
+//  device_image_partialhash_func
 //-------------------------------------------------
 
-void nes_rom_device::device_start()
+void nes_partialhash(hash_collection &dest, const unsigned char *data,
+						unsigned long length, const char *functions)
 {
+	if (length <= 16)
+		return;
+	dest.compute(&data[16], length - 16, functions);
 }

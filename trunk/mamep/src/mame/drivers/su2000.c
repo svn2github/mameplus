@@ -64,12 +64,11 @@
  *
  *************************************/
 
-class su2000_state : public driver_device
+class su2000_state : public pcat_base_state
 {
 public:
 	su2000_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		: pcat_base_state(mconfig, type, tag){ }
 
 	device_t    *m_pit8254;
 	device_t    *m_pic8259_1;
@@ -82,8 +81,6 @@ public:
 	DECLARE_READ8_MEMBER(get_slave_ack);
 	virtual void machine_start();
 	virtual void machine_reset();
-	IRQ_CALLBACK_MEMBER(irq_callback);
-	required_device<cpu_device> m_maincpu;
 };
 
 
@@ -114,45 +111,6 @@ ADDRESS_MAP_END
  *  Inputs
  *
  *************************************/
-
-
-/*************************************************************
- *
- * Keyboard
- *
- *************************************************************/
-
-static void su2000_set_keyb_int(running_machine &machine, int state)
-{
-	su2000_state *drv_state = machine.driver_data<su2000_state>();
-	pic8259_ir1_w(drv_state->m_pic8259_1, state);
-}
-
-static void set_gate_a20(running_machine &machine, int a20)
-{
-	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_A20, a20);
-}
-
-static void keyboard_interrupt(running_machine &machine, int state)
-{
-	su2000_state *drv_state = machine.driver_data<su2000_state>();
-	pic8259_ir1_w(drv_state->m_pic8259_1, state);
-}
-
-static int pcat_get_out2(running_machine &machine)
-{
-	su2000_state *state = machine.driver_data<su2000_state>();
-	return pit8253_get_output(state->m_pit8254, 2);
-}
-
-static const struct kbdc8042_interface at8042 =
-{
-	KBDC8042_AT386,
-	set_gate_a20,
-	keyboard_interrupt,
-	NULL,
-	pcat_get_out2,
-};
 
 
 /*************************************************************
@@ -232,19 +190,6 @@ static const struct pit8253_config su2000_pit8254_config =
 	}
 };
 
-
-/*************************************
- *
- *  Interrupt Generation
- *
- *************************************/
-
-IRQ_CALLBACK_MEMBER(su2000_state::irq_callback)
-{
-	return pic8259_acknowledge(m_pic8259_1);
-}
-
-
 /*************************************
  *
  *  Initialization
@@ -274,10 +219,6 @@ void su2000_state::machine_start()
 	membank("hma_bank")->set_base(m_pc_ram + 0xa0000);
 
 	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(su2000_state::irq_callback),this));
-
-	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, su2000_set_keyb_int);
-
-	kbdc8042_init(machine(), &at8042);
 }
 
 void su2000_state::machine_reset()

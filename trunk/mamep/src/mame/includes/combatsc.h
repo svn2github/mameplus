@@ -3,6 +3,8 @@
     Combat School
 
 *************************************************************************/
+#include "sound/upd7759.h"
+#include "sound/msm5205.h"
 
 class combatsc_state : public driver_device
 {
@@ -11,7 +13,11 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_paletteram(*this, "paletteram"),
 		m_audiocpu(*this, "audiocpu"),
-		m_maincpu(*this, "maincpu") { }
+		m_k007121_1(*this, "k007121_1"),
+		m_k007121_2(*this, "k007121_2"),
+		m_maincpu(*this, "maincpu"),
+		m_upd7759(*this, "upd"),
+		m_msm5205(*this, "msm5205") { }
 
 	/* memory pointers */
 	UINT8 *    m_videoram;
@@ -42,8 +48,8 @@ public:
 
 	/* devices */
 	required_device<cpu_device> m_audiocpu;
-	device_t *m_k007121_1;
-	device_t *m_k007121_2;
+	optional_device<k007121_device> m_k007121_1;
+	optional_device<k007121_device> m_k007121_2;
 	DECLARE_WRITE8_MEMBER(combatsc_vreg_w);
 	DECLARE_WRITE8_MEMBER(combatscb_sh_irqtrigger_w);
 	DECLARE_READ8_MEMBER(combatscb_io_r);
@@ -87,4 +93,6 @@ public:
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8 *source, int circuit, UINT32 pri_mask );
 	void bootleg_draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8 *source, int circuit );
 	required_device<cpu_device> m_maincpu;
+	optional_device<upd7759_device> m_upd7759;
+	optional_device<msm5205_device> m_msm5205;
 };

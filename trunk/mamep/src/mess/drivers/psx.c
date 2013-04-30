@@ -25,7 +25,10 @@ class psx1_state : public driver_device
 public:
 	psx1_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_ram(*this, "maincpu:ram")
+	{
+	}
 
 	UINT8 *m_exe_buffer;
 	int m_exe_size;
@@ -50,7 +53,9 @@ public:
 	int load_psf( cpu_device *cpu, unsigned char *p_n_file, int n_len );
 	void cd_dma_read( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
 	void cd_dma_write( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_size );
-	required_device<cpu_device> m_maincpu;
+	DECLARE_QUICKLOAD_LOAD_MEMBER( psx_exe_load );
+	required_device<psxcpu_device> m_maincpu;
+	required_device<ram_device> m_ram;
 };
 
 
@@ -112,13 +117,6 @@ int psx1_state::load_psxexe( cpu_device *cpu, unsigned char *p_n_file, int n_len
 	if( n_len >= sizeof( struct PSXEXE_HEADER ) &&
 		memcmp( psxexe_header->id, "PS-X EXE", 8 ) == 0 )
 	{
-		UINT8 *p_ram;
-		UINT8 *p_psxexe;
-		UINT32 n_stack;
-		UINT32 n_ram;
-		UINT32 n_address;
-		UINT32 n_size;
-
 		psxexe_conv32( &psxexe_header->text );
 		psxexe_conv32( &psxexe_header->data );
 		psxexe_conv32( &psxexe_header->pc0 );
@@ -145,14 +143,13 @@ int psx1_state::load_psxexe( cpu_device *cpu, unsigned char *p_n_file, int n_len
 		logerror( "psx_exe_load: sp    %08x\n", psxexe_header->s_addr );
 		logerror( "psx_exe_load: len   %08x\n", psxexe_header->s_size );
 
-		memory_share *share = cpu->machine().root_device().memshare("share1");
-		p_ram = (UINT8 *)share->ptr();
-		n_ram = share->bytes();
+		UINT8 *p_ram = m_ram->pointer();
+		UINT32 n_ram = m_ram->size();
 
-		p_psxexe = p_n_file + sizeof( struct PSXEXE_HEADER );
+		UINT8 *p_psxexe = p_n_file + sizeof( struct PSXEXE_HEADER );
 
-		n_address = psxexe_header->t_addr;
-		n_size = psxexe_header->t_size;
+		UINT32 n_address = psxexe_header->t_addr;
+		UINT32 n_size = psxexe_header->t_size;
 		while( n_size != 0 )
 		{
 			p_ram[ BYTE4_XOR_LE( n_address ) % n_ram ] = *( p_psxexe );
@@ -163,7 +160,7 @@ int psx1_state::load_psxexe( cpu_device *cpu, unsigned char *p_n_file, int n_len
 
 		cpu->set_state_int( PSXCPU_PC, psxexe_header->pc0 );
 		cpu->set_state_int( PSXCPU_R28, psxexe_header->gp0 );
-		n_stack = psxexe_header->s_addr + psxexe_header->s_size;
+		UINT32 n_stack = psxexe_header->s_addr + psxexe_header->s_size;
 		if( n_stack != 0 )
 		{
 			cpu->set_state_int( PSXCPU_R29, n_stack );
@@ -249,9 +246,8 @@ int psx1_state::load_cpe( cpu_device *cpu, unsigned char *p_n_file, int n_len )
 						( (int)p_n_file[ n_offset + 6 ] << 16 ) |
 						( (int)p_n_file[ n_offset + 7 ] << 24 );
 
-					memory_share *share = cpu->machine().root_device().memshare("share1");
-					UINT8 *p_ram = (UINT8 *)share->ptr();
-					UINT32 n_ram = share->bytes();
+					UINT8 *p_ram = m_ram->pointer();
+					UINT32 n_ram = m_ram->size();
 
 					n_offset += 8;
 
@@ -425,19 +421,17 @@ DIRECT_UPDATE_MEMBER(psx1_state::psx_setopbase)
 {
 	if( address == 0x80030000 )
 	{
-		cpu_device *cpu = machine().device<cpu_device>("maincpu");
+		m_maincpu->space(AS_PROGRAM).set_direct_update_handler(direct_update_delegate(FUNC(psx1_state::psx_default), this));
 
-		cpu->space(AS_PROGRAM).set_direct_update_handler(direct_update_delegate(FUNC(psx1_state::psx_default), this));
-
-		if( load_psxexe( cpu, m_exe_buffer, m_exe_size ) ||
-			load_cpe( cpu, m_exe_buffer, m_exe_size ) ||
-			load_psf( cpu, m_exe_buffer, m_exe_size ) )
+		if( load_psxexe( m_maincpu, m_exe_buffer, m_exe_size ) ||
+			load_cpe( m_maincpu, m_exe_buffer, m_exe_size ) ||
+			load_psf( m_maincpu, m_exe_buffer, m_exe_size ) )
 		{
 /*          DEBUGGER_BREAK; */
 
-			address = cpu->state_int( PSXCPU_PC );
-			cpu->set_state_int( PSXCPU_DELAYR, PSXCPU_DELAYR_PC );
-			cpu->set_state_int( PSXCPU_DELAYV, address );
+			address = m_maincpu->state_int( PSXCPU_PC );
+			m_maincpu->set_state_int( PSXCPU_DELAYR, PSXCPU_DELAYR_PC );
+			m_maincpu->set_state_int( PSXCPU_DELAYV, address );
 		}
 		else
 		{
@@ -450,25 +444,24 @@ DIRECT_UPDATE_MEMBER(psx1_state::psx_setopbase)
 	return address;
 }
 
-static QUICKLOAD_LOAD( psx_exe_load )
+QUICKLOAD_LOAD_MEMBER( psx1_state, psx_exe_load )
 {
-	psx1_state *state = image.device().machine().driver_data<psx1_state>();
-	address_space &space = image.device().machine().device( "maincpu")->memory().space( AS_PROGRAM );
+	address_space &space = m_maincpu->space( AS_PROGRAM );
 
-	state->m_exe_size = 0;
-	state->m_exe_buffer = (UINT8*)malloc( quickload_size );
-	if( state->m_exe_buffer == NULL )
+	m_exe_size = 0;
+	m_exe_buffer = (UINT8*)malloc( quickload_size );
+	if( m_exe_buffer == NULL )
 	{
 		logerror( "psx_exe_load: out of memory\n" );
 		return IMAGE_INIT_FAIL;
 	}
-	if( image.fread( state->m_exe_buffer, quickload_size ) != quickload_size )
+	if( image.fread( m_exe_buffer, quickload_size ) != quickload_size )
 	{
-		free( state->m_exe_buffer );
+		free( m_exe_buffer );
 		return IMAGE_INIT_FAIL;
 	}
-	state->m_exe_size = quickload_size;
-	space.set_direct_update_handler(direct_update_delegate(FUNC(psx1_state::psx_setopbase), state));
+	m_exe_size = quickload_size;
+	space.set_direct_update_handler(direct_update_delegate(FUNC(psx1_state::psx_setopbase), this));
 
 	return IMAGE_INIT_PASS;
 }
@@ -488,11 +481,8 @@ void psx1_state::cd_dma_write( UINT32 *p_n_psxram, UINT32 n_address, INT32 n_siz
 }
 
 static ADDRESS_MAP_START( psx_map, AS_PROGRAM, 32, psx1_state )
-	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_MIRROR(0x00600000) AM_SHARE("share1") /* ram */
 	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
-	AM_RANGE(0x80000000, 0x801fffff) AM_RAM AM_MIRROR(0x00600000) AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x9fc00000, 0x9fc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
-	AM_RANGE(0xa0000000, 0xa01fffff) AM_RAM AM_MIRROR(0x00600000) AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0xbfc00000, 0xbfc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
 ADDRESS_MAP_END
 
@@ -504,6 +494,9 @@ static MACHINE_CONFIG_START( psxntsc, psx1_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
 	MCFG_CPU_PROGRAM_MAP( psx_map )
+
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("2M")
 
 	MCFG_DEVICE_ADD("maincpu:sio0:controllers", PSXCONTROLLERPORTS, 0)
 	MCFG_PSX_CTRL_PORT_ADD("port1", psx_controllers, "digital_pad", NULL)
@@ -519,7 +512,7 @@ static MACHINE_CONFIG_START( psxntsc, psx1_state )
 	MCFG_SOUND_ROUTE( 1, "rspeaker", 1.00 )
 
 	/* quickload */
-	MCFG_QUICKLOAD_ADD("quickload", psx_exe_load, "cpe,exe,psf,psx", 0)
+	MCFG_QUICKLOAD_ADD("quickload", psx1_state, psx_exe_load, "cpe,exe,psf,psx", 0)
 
 	MCFG_SOFTWARE_LIST_ADD("cd_list","psx")
 
@@ -538,6 +531,9 @@ static MACHINE_CONFIG_START( psxpal, psx1_state )
 	MCFG_CPU_ADD( "maincpu", CXD8530AQ, XTAL_67_7376MHz )
 	MCFG_CPU_PROGRAM_MAP( psx_map)
 
+	MCFG_RAM_MODIFY("maincpu:ram")
+	MCFG_RAM_DEFAULT_SIZE("2M")
+
 	MCFG_DEVICE_ADD("maincpu:sio0:controllers", PSXCONTROLLERPORTS, 0)
 	MCFG_PSX_CTRL_PORT_ADD("port1", psx_controllers, "digital_pad", NULL)
 	MCFG_PSX_CTRL_PORT_ADD("port2", psx_controllers, "digital_pad", NULL)
@@ -553,7 +549,7 @@ static MACHINE_CONFIG_START( psxpal, psx1_state )
 	MCFG_SOUND_ROUTE( 1, "rspeaker", 1.00 )
 
 	/* quickload */
-	MCFG_QUICKLOAD_ADD("quickload", psx_exe_load, "cpe,exe,psf,psx", 0)
+	MCFG_QUICKLOAD_ADD("quickload", psx1_state, psx_exe_load, "cpe,exe,psf,psx", 0)
 
 	MCFG_SOFTWARE_LIST_ADD("cd_list","psx")
 

@@ -90,16 +90,16 @@ Smitdogg
 #include "machine/microtch.h"
 #include "video/pc_vga.h"
 #include "machine/nvram.h"
+#include "machine/8042kbdc.h"
+#include "machine/pit8253.h"
 
-
-class pcat_nit_state : public driver_device
+class pcat_nit_state : public pcat_base_state
 {
 public:
 	pcat_nit_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
+		: pcat_base_state(mconfig, type, tag),
 			m_uart(*this, "ns16450_0"),
-			m_microtouch(*this, "microtouch"),
-			m_maincpu(*this, "maincpu") { }
+			m_microtouch(*this, "microtouch") { }
 
 	UINT8 *m_banked_nvram;
 	required_device<ns16450_device> m_uart;
@@ -112,7 +112,6 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(at_com_interrupt_1);
 	DECLARE_DRIVER_INIT(pcat_nit);
 	virtual void machine_start();
-	required_device<cpu_device> m_maincpu;
 };
 
 WRITE_LINE_MEMBER(pcat_nit_state::microtouch_out)
@@ -226,16 +225,9 @@ static INPUT_PORTS_START( pcat_nit )
 	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN3) PORT_IMPULSE(1)
 INPUT_PORTS_END
 
-static void streetg2_set_keyb_int(running_machine &machine, int state)
-{
-	pic8259_ir1_w(machine.device("pic8259_1"), state);
-}
-
 void pcat_nit_state::machine_start()
 {
-	m_maincpu->set_irq_acknowledge_callback(pcat_irq_callback);
-
-	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, streetg2_set_keyb_int);
+	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(pcat_nit_state::irq_callback),this));
 
 	membank("rombank")->configure_entries(0, 0x80, memregion("game_prg")->base(), 0x8000 );
 	membank("rombank")->set_entry(0);
@@ -264,7 +256,6 @@ static MACHINE_CONFIG_START( pcat_nit, pcat_nit_state )
 	MCFG_MICROTOUCH_SERIAL_ADD( "microtouch", pcat_nit_microtouch_interface, 9600 ) // rate?
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-
 MACHINE_CONFIG_END
 
 /***************************************

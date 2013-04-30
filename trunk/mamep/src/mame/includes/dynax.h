@@ -3,7 +3,7 @@
       Dynax hardware
 
 ***************************************************************************/
-
+#include "sound/msm5205.h"
 #include "sound/okim6295.h"
 
 class dynax_state : public driver_device
@@ -13,10 +13,11 @@ public:
 		: driver_device(mconfig, type, tag),
 			m_dsw_sel16(*this, "dsw_sel16"),
 			m_protection1(*this, "protection1"),
-			m_protection2(*this, "protection2"),						
+			m_protection2(*this, "protection2"),
 			m_maincpu(*this, "maincpu"),
 			m_soundcpu(*this, "soundcpu"),
-			m_oki(*this, "oki")
+			m_oki(*this, "oki"),
+			m_msm(*this, "msm")
 		{ }
 
 	// up to 8 layers, 2 images per layer (interleaved on screen)
@@ -162,6 +163,7 @@ public:
 	device_t *m_rtc;
 	device_t *m_ymsnd;
 	optional_device<okim6295_device> m_oki;
+	optional_device<msm5205_device> m_msm;
 	device_t *m_top_scr;
 	device_t *m_bot_scr;
 	DECLARE_WRITE8_MEMBER(dynax_vblank_ack_w);
