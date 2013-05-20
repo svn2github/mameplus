@@ -102,6 +102,11 @@ public:
 	DECLARE_WRITE16_MEMBER(bioship_bank_w);
 	DECLARE_WRITE8_MEMBER(spec2k_oki1_banking_w);
 	DECLARE_WRITE8_MEMBER(twinactn_oki_bank_w);
+	DECLARE_READ16_MEMBER( atombjt_unkr_r )
+	{
+		return 0x0000;
+	}
+
 	DECLARE_DRIVER_INIT(nmk);
 	DECLARE_DRIVER_INIT(vandykeb);
 	DECLARE_DRIVER_INIT(tdragonb);
@@ -112,6 +117,7 @@ public:
 	DECLARE_DRIVER_INIT(bubl2000);
 	DECLARE_DRIVER_INIT(grdnstrm);
 	DECLARE_DRIVER_INIT(spec2k);
+	DECLARE_DRIVER_INIT(redfoxwp2a);
 	DECLARE_DRIVER_INIT(bjtwin);
 	TILEMAP_MAPPER_MEMBER(afega_tilemap_scan_pages);
 	TILE_GET_INFO_MEMBER(macross_get_bg0_tile_info);

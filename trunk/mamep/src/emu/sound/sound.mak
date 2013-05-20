@@ -444,7 +444,7 @@ SOUNDOBJS += $(SOUNDOBJ)/qs1000.o
 #-------------------------------------------------
 
 ifneq ($(filter QSOUND,$(SOUNDS)),)
-SOUNDOBJS += $(SOUNDOBJ)/qsound.o
+SOUNDOBJS += $(SOUNDOBJ)/qsound.o $(CPUOBJ)/dsp16/dsp16.o $(CPUOBJ)/dsp16/dsp16dis.o
 endif
 
 
@@ -644,7 +644,7 @@ $(SOUNDOBJ)/tms5110.o:  $(SOUNDSRC)/tms5110r.c
 # Texas Instruments TMS5200-series speech synthesizers
 #-------------------------------------------------
 ifneq ($(filter TMS5220,$(SOUNDS)),)
-SOUNDOBJS += $(SOUNDOBJ)/tms5220.o
+SOUNDOBJS += $(SOUNDOBJ)/tms5220.o $(EMUMACHINE)/spchrom.o
 endif
 
 $(SOUNDOBJ)/tms5220.o:  $(SOUNDSRC)/tms5110r.c

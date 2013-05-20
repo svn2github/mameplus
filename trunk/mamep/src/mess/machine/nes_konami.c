@@ -29,7 +29,6 @@
 #include "machine/nes_konami.h"
 
 #include "cpu/m6502/m6502.h"
-#include "sound/2413intf.h"
 
 #ifdef NES_PCB_DEBUG
 #define VERBOSE 1
@@ -85,7 +84,8 @@ nes_konami_vrc6_device::nes_konami_vrc6_device(const machine_config &mconfig, co
 }
 
 nes_konami_vrc7_device::nes_konami_vrc7_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-					: nes_konami_vrc4_device(mconfig, NES_VRC7, "NES Cart Konami VRC-7 PCB", tag, owner, clock, "nes_vrc7", __FILE__)
+					: nes_konami_vrc4_device(mconfig, NES_VRC7, "NES Cart Konami VRC-7 PCB", tag, owner, clock, "nes_vrc7", __FILE__),
+					m_ym2413(*this, "ym")
 {
 }
 
@@ -196,8 +196,6 @@ void nes_konami_vrc6_device::device_start()
 
 void nes_konami_vrc7_device::device_start()
 {
-	m_ym2413 = device().subdevice("ym");
-
 	common_start();
 	irq_timer = timer_alloc(TIMER_IRQ);
 	irq_timer->adjust(attotime::zero, 0, machine().device<cpu_device>("maincpu")->cycles_to_attotime(1));
@@ -295,7 +293,7 @@ READ8_MEMBER(nes_konami_vrc2_device::read_m)
 	else if (m_prgram)
 		return m_prgram[offset & (m_prgram_size - 1)];
 	else    // sort of protection? it returns open bus in $7000-$7fff and (open bus & 0xfe) | m_latch in $6000-$6fff
-		return (offset < 0x1000) ? ((((offset + 0x8000) & 0xfe00) >> 8) | (m_latch & 1)) : (((offset + 0x8000) & 0xff00) >> 8);
+		return (offset < 0x1000) ? ((m_open_bus & 0xfe) | (m_latch & 1)) : m_open_bus;
 }
 
 WRITE8_MEMBER(nes_konami_vrc2_device::write_m)
@@ -602,9 +600,7 @@ WRITE8_MEMBER(nes_konami_vrc6_device::write_h)
 				}
 			}
 			else    // saw
-			{
 				m_vrc6snd->write(space, (add_lines>>8) | 0x200, data);
-			}
 			break;
 		case 0x5000:
 		case 0x6000:
@@ -693,11 +689,11 @@ WRITE8_MEMBER(nes_konami_vrc7_device::write_h)
 
 		case 0x1010:
 		case 0x1018:
-			ym2413_register_port_w(m_ym2413, space, 0, data);
+			m_ym2413->register_port_w(space, 0, data);
 			break;
 		case 0x1030:
 		case 0x1038:
-			ym2413_data_port_w(m_ym2413, space, 0, data);
+			m_ym2413->data_port_w(space, 0, data);
 			break;
 
 		case 0x2000:

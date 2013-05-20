@@ -841,7 +841,7 @@ static ADDRESS_MAP_START( srider_map, AS_PROGRAM, 8, subsino_state )
 
 	AM_RANGE( 0x0d00c, 0x0d00c ) AM_READ_PORT( "INC" )
 
-	AM_RANGE( 0x0d016, 0x0d017 ) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w )
+	AM_RANGE( 0x0d016, 0x0d017 ) AM_DEVWRITE("ymsnd", ym3812_device, write)
 
 	AM_RANGE( 0x0d018, 0x0d018 ) AM_DEVWRITE("oki", okim6295_device, write)
 
@@ -868,7 +868,7 @@ static ADDRESS_MAP_START( sharkpy_map, AS_PROGRAM, 8, subsino_state )
 
 	AM_RANGE( 0x0900c, 0x0900c ) AM_READ_PORT( "INC" )
 
-	AM_RANGE( 0x09016, 0x09017 ) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w )
+	AM_RANGE( 0x09016, 0x09017 ) AM_DEVWRITE("ymsnd", ym3812_device, write)
 
 	AM_RANGE( 0x09018, 0x09018 ) AM_DEVWRITE("oki", okim6295_device, write)
 
@@ -904,7 +904,7 @@ static ADDRESS_MAP_START( victor21_map, AS_PROGRAM, 8, subsino_state )
 
 //  AM_RANGE( 0x0900c, 0x0900c ) AM_DEVWRITE("oki", okim6295_device, write)
 
-	AM_RANGE( 0x0900e, 0x0900f ) AM_DEVWRITE_LEGACY("ymsnd", ym2413_w )
+	AM_RANGE( 0x0900e, 0x0900f ) AM_DEVWRITE("ymsnd", ym2413_device, write)
 
 	AM_RANGE( 0x0900d, 0x0900d ) AM_WRITE(subsino_tiles_offset_w )
 
@@ -998,7 +998,7 @@ static ADDRESS_MAP_START( crsbingo_map, AS_PROGRAM, 8, subsino_state )
 	AM_RANGE( 0x09010, 0x09010 ) AM_READWRITE(flash_r, flash_w )
 //  AM_RANGE( 0x09011, 0x09011 ) //"flash" status, bit 0
 //  AM_RANGE( 0x0900c, 0x0900c ) AM_READ_PORT( "INC" )
-	AM_RANGE( 0x0900c, 0x0900d ) AM_DEVWRITE_LEGACY("ymsnd", ym2413_w )
+	AM_RANGE( 0x0900c, 0x0900d ) AM_DEVWRITE("ymsnd", ym2413_device, write)
 
 //  AM_RANGE( 0x09018, 0x09018 ) AM_DEVWRITE("oki", okim6295_device, write)
 
@@ -1047,7 +1047,7 @@ static ADDRESS_MAP_START( tisub_map, AS_PROGRAM, 8, subsino_state )
 
 	AM_RANGE( 0x0900c, 0x0900c ) AM_READ_PORT( "INC" )
 
-	AM_RANGE( 0x09016, 0x09017 ) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w )
+	AM_RANGE( 0x09016, 0x09017 ) AM_DEVWRITE("ymsnd", ym3812_device, write)
 
 //  AM_RANGE( 0x0900c, 0x0900c ) AM_DEVWRITE("oki", okim6295_device, write)
 
@@ -1172,7 +1172,7 @@ static ADDRESS_MAP_START( stisub_map, AS_PROGRAM, 8, subsino_state )
 
 	AM_RANGE( 0x0d010, 0x0d013 ) AM_WRITE(colordac_w)
 
-	AM_RANGE( 0x0d016, 0x0d017 ) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w )
+	AM_RANGE( 0x0d016, 0x0d017 ) AM_DEVWRITE("ymsnd", ym3812_device, write)
 
 //  AM_RANGE( 0x0d01b, 0x0d01b ) AM_WRITE(subsino_tiles_offset_w )
 
@@ -1213,7 +1213,7 @@ static ADDRESS_MAP_START( mtrainnv_map, AS_PROGRAM, 8, subsino_state )
 
 //  AM_RANGE( 0x0d012, 0x0d012 ) AM_WRITE
 
-	AM_RANGE( 0x0d016, 0x0d017 ) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w )
+	AM_RANGE( 0x0d016, 0x0d017 ) AM_DEVWRITE("ymsnd", ym3812_device, write)
 
 //  AM_RANGE( 0x0d018, 0x0d018 ) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 

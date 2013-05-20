@@ -227,7 +227,7 @@ static void InitializeSkippingUI(HWND hwnd);
 static void InitializeRotateUI(HWND hwnd);
 static void UpdateSelectScreenUI(HWND hwnd);
 static void InitializeSelectScreenUI(HWND hwnd);
-static void InitializeD3DVersionUI(HWND hwnd);
+//static void InitializeD3DVersionUI(HWND hwnd);
 static void InitializeVideoUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
@@ -343,6 +343,7 @@ static struct ComboBoxVideo
 };
 #define NUMVIDEO ARRAY_LENGTH(g_ComboBoxVideo)
 
+/*
 static struct ComboBoxD3DVersion
 {
 	const WCHAR*	m_pText;
@@ -354,6 +355,7 @@ static struct ComboBoxD3DVersion
 };
 
 #define NUMD3DVERSIONS ARRAY_LENGTH(g_ComboBoxD3DVersion)
+*/
 
 static struct ComboBoxSelectScreen
 {
@@ -2452,9 +2454,9 @@ static void SetPropEnabledControls(HWND hWnd)
 	// HLSL - only enable if D3D selected, and Version 9 selected
 	if (d3d)
 	{
-		d3d_version = pCurrentOpts.int_value(WINOPTION_D3DVERSION);
+		//d3d_version = pCurrentOpts.int_value(WINOPTION_D3DVERSION);
 
-		if (d3d_version >= 9)
+		//if (d3d_version >= 9)
 			hlsl_on = pCurrentOpts.bool_value(WINOPTION_HLSL_ENABLE);
 	}
 
@@ -3503,7 +3505,7 @@ static void InitializeOptions(HWND hDlg)
 	InitializeSelectScreenUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
-	InitializeD3DVersionUI(hDlg);
+//	InitializeD3DVersionUI(hDlg);
 	InitializeVideoUI(hDlg);
 	//mamep: use standard combobox
 	InitializeEffectUI(hDlg);
@@ -3645,6 +3647,7 @@ static void InitializeVideoUI(HWND hwnd)
 }
 
 /* Populate the D3D Version drop down */
+/*
 static void InitializeD3DVersionUI(HWND hwnd)
 {
 	HWND hCtrl = GetDlgItem(hwnd, IDC_D3D_VERSION);
@@ -3658,6 +3661,7 @@ static void InitializeD3DVersionUI(HWND hwnd)
 		}
 	}
 }
+*/
 
 static void UpdateSelectScreenUI(HWND hwnd)
 {

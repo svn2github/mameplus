@@ -422,7 +422,7 @@ static void funkball_config_reg_w(device_t *device, UINT8 data)
 
 READ8_MEMBER(funkball_state::io20_r)
 {
-	device_t *device = machine().device("pic8259_1");
+	pic8259_device *device = machine().device<pic8259_device>("pic8259_1");
 	UINT8 r = 0;
 
 	// 0x22, 0x23, Cyrix configuration registers
@@ -435,14 +435,14 @@ READ8_MEMBER(funkball_state::io20_r)
 	}
 	else
 	{
-		r = pic8259_r(device, space, offset);
+		r = device->read(space, offset);
 	}
 	return r;
 }
 
 WRITE8_MEMBER(funkball_state::io20_w)
 {
-	device_t *device = machine().device("pic8259_1");
+	pic8259_device *device = machine().device<pic8259_device>("pic8259_1");
 
 	// 0x22, 0x23, Cyrix configuration registers
 	if (offset == 0x02)
@@ -455,7 +455,7 @@ WRITE8_MEMBER(funkball_state::io20_w)
 	}
 	else
 	{
-		pic8259_w(device, space, offset, data);
+		device->write(space, offset, data);
 	}
 }
 
@@ -592,7 +592,7 @@ static ADDRESS_MAP_START(funkball_io, AS_IO, 32, funkball_state)
 	AM_RANGE(0x0060, 0x006f) AM_DEVREADWRITE8("kbdc", kbdc8042_device, data_r, data_w, 0xffffffff)
 	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE8("rtc", mc146818_device, read, write, 0xffffffff) /* todo: nvram (CMOS Setup Save)*/
 	AM_RANGE(0x0080, 0x009f) AM_READWRITE8(at_page8_r,at_page8_w, 0xffffffff)
-	AM_RANGE(0x00a0, 0x00bf) AM_DEVREADWRITE8_LEGACY("pic8259_2", pic8259_r, pic8259_w, 0xffffffff)
+	AM_RANGE(0x00a0, 0x00bf) AM_DEVREADWRITE8("pic8259_2", pic8259_device, read, write, 0xffffffff)
 	AM_RANGE(0x00c0, 0x00df) AM_READWRITE8(at_dma8237_2_r, at_dma8237_2_w, 0xffffffff)
 	AM_RANGE(0x00e8, 0x00ef) AM_NOP
 
@@ -1018,7 +1018,7 @@ static const struct pit8253_config funkball_pit8254_config =
 		{
 			4772720/4,              /* heartbeat IRQ */
 			DEVCB_NULL,
-			DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir0_w)
+			DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir0_w)
 		}, {
 			4772720/4,              /* dram refresh */
 			DEVCB_NULL,
@@ -1040,24 +1040,10 @@ READ8_MEMBER( funkball_state::get_slave_ack )
 {
 	if (offset==2) { // IRQ = 2
 		logerror("pic8259_slave_ACK!\n");
-		return pic8259_acknowledge(m_pic8259_2);
+		return m_pic8259_2->acknowledge();
 	}
 	return 0x00;
 }
-
-static const struct pic8259_interface funkball_pic8259_1_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(funkball_state,funkball_pic8259_1_set_int_line),
-	DEVCB_LINE_VCC,
-	DEVCB_DRIVER_MEMBER(funkball_state,get_slave_ack)
-};
-
-static const struct pic8259_interface funkball_pic8259_2_config =
-{
-	DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir2_w),
-	DEVCB_LINE_GND,
-	DEVCB_NULL
-};
 
 READ8_MEMBER(funkball_state::get_out2)
 {
@@ -1078,7 +1064,7 @@ static const struct kbdc8042_interface at8042 =
 
 IRQ_CALLBACK_MEMBER(funkball_state::irq_callback)
 {
-	return pic8259_acknowledge(m_pic8259_1);
+	return m_pic8259_1->acknowledge();
 }
 
 void funkball_state::machine_start()
@@ -1131,8 +1117,8 @@ static MACHINE_CONFIG_START( funkball, funkball_state )
 	MCFG_PIT8254_ADD( "pit8254", funkball_pit8254_config )
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
 	MCFG_I8237_ADD( "dma8237_2", XTAL_14_31818MHz/3, dma8237_2_config )
-	MCFG_PIC8259_ADD( "pic8259_1", funkball_pic8259_1_config )
-	MCFG_PIC8259_ADD( "pic8259_2", funkball_pic8259_2_config )
+	MCFG_PIC8259_ADD( "pic8259_1", WRITELINE(funkball_state,funkball_pic8259_1_set_int_line), VCC, READ8(funkball_state,get_slave_ack) )
+	MCFG_PIC8259_ADD( "pic8259_2", DEVWRITELINE("pic8259_1", pic8259_device, ir2_w), GND, NULL )
 
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 

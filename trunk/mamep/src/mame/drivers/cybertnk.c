@@ -319,7 +319,7 @@ static void draw_road(screen_device &screen, bitmap_ind16 &bitmap, const rectang
 static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int screen_shift)
 {
 	cybertnk_state *state = screen.machine().driver_data<cybertnk_state>();
-	const UINT32 *sprrom = (UINT32*)screen.memregion("spr_gfx")->base();
+	const UINT32 *sprrom = (UINT32*)screen.memregion(":spr_gfx")->base();
 	const pen_t *paldata = screen.machine().pens;
 
 	int miny = cliprect.min_y;
@@ -634,12 +634,12 @@ static ADDRESS_MAP_START( slave_mem, AS_PROGRAM, 16, cybertnk_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 8, cybertnk_state )
-	AM_RANGE(0x0000, 0x7fff ) AM_ROM
-	AM_RANGE(0x8000, 0x9fff ) AM_RAM
-	AM_RANGE(0xa001, 0xa001 ) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xa005, 0xa006 ) AM_NOP
-	AM_RANGE(0xa000, 0xa001 ) AM_DEVREADWRITE_LEGACY("ym1", y8950_r, y8950_w)
-	AM_RANGE(0xc000, 0xc001 ) AM_DEVREADWRITE_LEGACY("ym2", y8950_r, y8950_w)
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0x8000, 0x9fff) AM_RAM
+	AM_RANGE(0xa001, 0xa001) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xa005, 0xa006) AM_NOP
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ym1", y8950_device, read, write)
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ym2", y8950_device, read, write)
 ADDRESS_MAP_END
 
 // Player 1 controls the Driving and the Cannons
@@ -825,15 +825,6 @@ GFXDECODE_END
 */
 
 
-static const y8950_interface y8950_config = {
-	/* TODO */
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
 static MACHINE_CONFIG_START( cybertnk, cybertnk_state )
 	MCFG_CPU_ADD("maincpu", M68000,XTAL_20MHz/2)
 	MCFG_CPU_PROGRAM_MAP(master_mem)
@@ -873,12 +864,10 @@ static MACHINE_CONFIG_START( cybertnk, cybertnk_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ym1", Y8950, XTAL_3_579545MHz)
-	MCFG_SOUND_CONFIG(y8950_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 
 	MCFG_SOUND_ADD("ym2", Y8950, XTAL_3_579545MHz)
-	MCFG_SOUND_CONFIG(y8950_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END

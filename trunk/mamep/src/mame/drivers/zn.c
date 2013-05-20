@@ -420,11 +420,8 @@ static ADDRESS_MAP_START( zn_map, AS_PROGRAM, 32, zn_state )
 	AM_RANGE(0x1fa30000, 0x1fa30003) AM_NOP /* ?? */
 	AM_RANGE(0x1fa40000, 0x1fa40003) AM_READNOP /* ?? */
 	AM_RANGE(0x1fa60000, 0x1fa60003) AM_READNOP /* ?? */
-	AM_RANGE(0x1faf0000, 0x1faf07ff) AM_DEVREADWRITE8_LEGACY("at28c16", at28c16_r, at28c16_w, 0xffffffff) /* eeprom */
+	AM_RANGE(0x1faf0000, 0x1faf07ff) AM_DEVREADWRITE8("at28c16", at28c16_device, read, write, 0xffffffff) /* eeprom */
 	AM_RANGE(0x1fb20000, 0x1fb20007) AM_READ(unknown_r)
-	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
-	AM_RANGE(0x9fc00000, 0x9fc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
-	AM_RANGE(0xbfc00000, 0xbfc7ffff) AM_WRITENOP AM_ROM AM_SHARE("share2") /* bios mirror */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( link_map, AS_PROGRAM, 8, zn_state )
@@ -1169,7 +1166,7 @@ static ADDRESS_MAP_START( fx1a_sound_map, AS_PROGRAM, 8, zn_state )
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")   /* Fallthrough */
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
+	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
 	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITENOP /* pan */
@@ -1184,11 +1181,6 @@ WRITE_LINE_MEMBER(zn_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2610_interface ym2610_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(zn_state,irqhandler)
-};
-
 static const tc0140syt_interface coh1000ta_tc0140syt_intf =
 {
 	"maincpu", "audiocpu"
@@ -1202,7 +1194,7 @@ static MACHINE_CONFIG_DERIVED( coh1000ta, zn1_1mb_vram )
 	MCFG_NVRAM_ADD_0FILL("eeprom1")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 16000000/2)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(zn_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.25)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.0)
@@ -1622,7 +1614,7 @@ MACHINE_RESET_MEMBER(zn_state,coh1002e)
 static ADDRESS_MAP_START( psarc_snd_map, AS_PROGRAM, 16, zn_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x080000, 0x0fffff) AM_RAM
-	AM_RANGE(0x100000, 0x10001f) AM_DEVREADWRITE8_LEGACY("ymf", ymf271_r, ymf271_w, 0x00ff )
+	AM_RANGE(0x100000, 0x10001f) AM_DEVREADWRITE8("ymf", ymf271_device, read, write, 0x00ff )
 	AM_RANGE(0x180008, 0x180009) AM_READ8(soundlatch_byte_r, 0x00ff )
 	AM_RANGE(0x000000, 0x07ffff) AM_WRITENOP
 	AM_RANGE(0x100020, 0xffffff) AM_WRITENOP
@@ -2514,7 +2506,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cbaj_z80_port_map, AS_IO, 8, zn_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE( 0x84, 0x85 ) AM_DEVREADWRITE_LEGACY("ymz", ymz280b_r, ymz280b_w )
+	AM_RANGE( 0x84, 0x85 ) AM_DEVREADWRITE("ymz", ymz280b_device, read, write )
 	AM_RANGE( 0x90, 0x90 ) AM_READWRITE(cbaj_z80_latch_r, cbaj_z80_latch_w )
 	AM_RANGE( 0x91, 0x91 ) AM_READ(cbaj_z80_ready_r )
 ADDRESS_MAP_END
@@ -2725,7 +2717,7 @@ INPUT_PORTS_END
 /* Capcom ZN1 */
 
 #define CPZN1_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1000c.353", 0x0000000, 0x080000, CRC(50033af6) SHA1(486d92ff6c7f1e54f8e0ef41cd9116eca0e10e1a) )
 
 ROM_START( cpzn1 )
@@ -3039,7 +3031,7 @@ ROM_END
 /* Capcom ZN2 */
 
 #define CPZN2_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-3002c.353", 0x0000000, 0x080000, CRC(e860ea8b) SHA1(66e7e1d4e426466b8f48a2ba055a91b475569504) )
 
 ROM_START( cpzn2 )
@@ -3582,7 +3574,7 @@ ROM_END
 /* Tecmo */
 
 #define TPS_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1002m.353", 0x0000000, 0x080000, CRC(69ffbcb4) SHA1(03eb2febfab3fcde716defff291babd9392de965) )
 
 ROM_START( tps )
@@ -3831,7 +3823,7 @@ ROM_END
 /* video system */
 
 #define KN_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1002v.353", 0x0000000, 0x080000, CRC(5ff165f3) SHA1(8f59314c1093446b9bcb06d232244da6df78e206) )
 
 ROM_START( vspsx )
@@ -3882,7 +3874,7 @@ ROM_END
 /* Taito FX1a/FX1b */
 
 #define TAITOFX1_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1000t.353", 0x0000000, 0x080000, CRC(e3f23b6e) SHA1(e18907cf8c6ba54d96edba0a9a00487a90219e0d) )
 
 ROM_START( taitofx1 )
@@ -4249,7 +4241,7 @@ ROM_END
 /* Eighting/Raizing */
 
 #define PSARC95_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1002e.353", 0x000000, 0x080000, CRC(910f3a8b) SHA1(cd68532967a25f476a6d73473ec6b6f4df2e1689) )
 
 ROM_START( psarc95 )
@@ -4516,7 +4508,7 @@ ROM_END
 /* Atari PSX */
 
 #define TW_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1000w.353", 0x000000, 0x080000, CRC(45e8a4b4) SHA1(815488d8563c85f97fbc3384ff21f08e4c88b7b7) )
 
 ROM_START( atpsx )
@@ -4540,7 +4532,7 @@ ROM_END
 /* Acclaim PSX */
 
 #define AC_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1000a.353", 0x0000000, 0x080000, CRC(8d8d0764) SHA1(7ee83d317190bb1cef2f8f01c81eaaae47150ebb) )
 
 ROM_START( acpsx )
@@ -4603,7 +4595,7 @@ ROM_END
 /* Atlus */
 
 #define ATLUS_BIOS \
-	ROM_REGION32_LE( 0x080000, "user1", 0 ) \
+	ROM_REGION32_LE( 0x080000, "maincpu:rom", 0 ) \
 	ROM_LOAD( "coh-1001l.353", 0x000000, 0x080000, CRC(6721146b) SHA1(9511d24bfe25eb180fb2db0835b131cb4a12730e) )
 
 ROM_START( atluspsx )

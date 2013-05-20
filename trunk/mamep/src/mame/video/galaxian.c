@@ -406,19 +406,21 @@ void galaxian_state::video_start()
 
 void galaxian_state::state_save_register()
 {
-	state_save_register_global(machine(), m_flipscreen_x);
-	state_save_register_global(machine(), m_flipscreen_y);
-	state_save_register_global(machine(), m_background_enable);
-	state_save_register_global(machine(), m_background_red);
-	state_save_register_global(machine(), m_background_green);
-	state_save_register_global(machine(), m_background_blue);
+	save_item(NAME(m_flipscreen_x));
+	save_item(NAME(m_flipscreen_y));
+	save_item(NAME(m_background_enable));
+	save_item(NAME(m_background_red));
+	save_item(NAME(m_background_green));
+	save_item(NAME(m_background_blue));
 
-	state_save_register_global_array(machine(), m_gfxbank);
+	save_item(NAME(m_sprites_base));
+	save_item(NAME(m_bullets_base));
+	save_item(NAME(m_gfxbank));
 
-	state_save_register_global(machine(), m_stars_enabled);
-	state_save_register_global(machine(), m_star_rng_origin);
-	state_save_register_global(machine(), m_star_rng_origin_frame);
-	state_save_register_global(machine(), m_stars_blink_state);
+	save_item(NAME(m_stars_enabled));
+	save_item(NAME(m_star_rng_origin));
+	save_item(NAME(m_star_rng_origin_frame));
+	save_item(NAME(m_stars_blink_state));
 }
 
 
@@ -439,7 +441,7 @@ UINT32 galaxian_state::screen_update_galaxian(screen_device &screen, bitmap_rgb3
 
 	/* render the sprites next. Some custom pcbs (eg. zigzag, fantastc) have more than one sprite generator (ideally, this should be rendered in parallel) */
 	for (int i = 0; i < m_numspritegens; i++)
-		sprites_draw(bitmap, cliprect, &m_spriteram[0x40 + i * 0x20]);
+		sprites_draw(bitmap, cliprect, &m_spriteram[m_sprites_base + i * 0x20]);
 
 	/* if we have bullets to draw, render them following */
 	if (m_draw_bullet_ptr != NULL)

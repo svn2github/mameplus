@@ -95,7 +95,7 @@ enum
 	UNL_8237, UNL_CC21, UNL_AX5705, UNL_KOF97, UNL_KS7057,
 	UNL_N625092, UNL_SC127, UNL_SMB2J, UNL_T230, UNL_MMALEE,
 	UNL_UXROM, UNL_MK2, UNL_XIAOZY, UNL_KOF96,
-	UNL_SF3, UNL_RACERMATE, UNL_EDU2K, UNL_LH32, UNL_LH10,
+	UNL_SF3, UNL_RACERMATE, UNL_EDU2K, UNL_LH53, UNL_LH32, UNL_LH10,
 	UNL_STUDYNGAME, UNL_603_5052, UNL_H2288, UNL_2708,
 	UNL_MALISB, UNL_BB, UNL_AC08, UNL_A9746, UNL_WORLDHERO,
 	UNL_43272, UNL_TF1201, UNL_CITYFIGHT,
@@ -107,7 +107,8 @@ enum
 	OPENCORP_DAOU306, HES_BOARD, SVISION16_BOARD, RUMBLESTATION_BOARD, JYCOMPANY_A, JYCOMPANY_B, JYCOMPANY_C,
 	MAGICSERIES_MD, KASING_BOARD, FUTUREMEDIA_BOARD, FUKUTAKE_BOARD, SOMARI_SL12,
 	HENGG_SRICH, HENGG_XHZS, HENGG_SHJY3, SUBOR_TYPE0, SUBOR_TYPE1,
-	KAISER_KS7058, KAISER_KS7032, KAISER_KS7022, KAISER_KS7017, KAISER_KS7012, KAISER_KS7013B, KAISER_KS202,
+	KAISER_KS7058, KAISER_KS7032, KAISER_KS7022, KAISER_KS7017,
+	KAISER_KS7012, KAISER_KS7013B, KAISER_KS202, KAISER_KS7031,
 	CNE_DECATHLON, CNE_FSB, CNE_SHLZ, CONY_BOARD, YOKO_BOARD,
 	RCM_GS2015, RCM_GS2004, RCM_GS2013, RCM_TF9IN1, RCM_3DBLOCK,
 	WAIXING_TYPE_A, WAIXING_TYPE_A1, WAIXING_TYPE_B, WAIXING_TYPE_C, WAIXING_TYPE_D,
@@ -192,6 +193,7 @@ public:
 	void set_vrc_lines(int PRG_A, int PRG_B, int CHR) { m_vrc_ls_prg_a = PRG_A; m_vrc_ls_prg_b = PRG_B; m_vrc_ls_chr = CHR; }
 	void set_x1_005_alt(bool val) { m_x1_005_alt_mirroring = val; }
 	void set_bus_conflict(bool val) { m_bus_conflict = val; }
+	void set_open_bus(UINT8 val) { m_open_bus = val; }
 
 	UINT8* get_prg_base() { return m_prg; }
 	UINT8* get_prgram_base() { return m_prgram; }
@@ -252,6 +254,7 @@ protected:
 	bool m_pcb_ctrl_mirror, m_four_screen_vram, m_has_trainer;
 	bool m_x1_005_alt_mirroring;    // temp hack for two kind of mirroring in Taito X1-005 boards (to be replaced with pin checking)
 	bool m_bus_conflict;
+	UINT8 m_open_bus;
 
 	// PRG
 	inline int prg_8k_bank_num(int bank);

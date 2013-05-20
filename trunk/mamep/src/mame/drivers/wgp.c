@@ -439,27 +439,25 @@ WRITE16_MEMBER(wgp_state::cpua_ctrl_w)/* assumes Z80 sandwiched between 68Ks */
                         INTERRUPTS
 ***********************************************************/
 
-/* 68000 A */
-
-#ifdef UNUSED_FUNCTION
-TIMER_CALLBACK_MEMBER(wgp_state::wgp_interrupt4)
+void wgp_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_maincpu->set_input_line(4, HOLD_LINE);
+	switch (id)
+	{
+	/* 68000 A */
+	case TIMER_WGP_INTERRUPT4:
+		m_maincpu->set_input_line(4, HOLD_LINE);
+		break;
+	case TIMER_WGP_INTERRUPT6:
+		m_maincpu->set_input_line(6, HOLD_LINE);
+		break;
+	/* 68000 B */
+	case TIMER_WGP_CPUB_INTERRUPT6:
+		m_subcpu->set_input_line(6, HOLD_LINE); /* assumes Z80 sandwiched between the 68Ks */
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in wgp_state::device_timer");
+	}
 }
-#endif
-
-TIMER_CALLBACK_MEMBER(wgp_state::wgp_interrupt6)
-{
-	m_maincpu->set_input_line(6, HOLD_LINE);
-}
-
-/* 68000 B */
-
-TIMER_CALLBACK_MEMBER(wgp_state::wgp_cpub_interrupt6)
-{
-	m_subcpu->set_input_line(6, HOLD_LINE); /* assumes Z80 sandwiched between the 68Ks */
-}
-
 
 
 /***** Routines for particular games *****/
@@ -469,7 +467,7 @@ TIMER_CALLBACK_MEMBER(wgp_state::wgp_cpub_interrupt6)
 
 INTERRUPT_GEN_MEMBER(wgp_state::wgp_cpub_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000-500), timer_expired_delegate(FUNC(wgp_state::wgp_cpub_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000-500), TIMER_WGP_CPUB_INTERRUPT6);
 	device.execute().set_input_line(4, HOLD_LINE);
 }
 
@@ -592,7 +590,7 @@ WRITE16_MEMBER(wgp_state::wgp_adinput_w)
 	   hardware has got the next a/d conversion ready. We set a token
 	   delay of 10000 cycles although our inputs are always ready. */
 
-	machine().scheduler().timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), timer_expired_delegate(FUNC(wgp_state::wgp_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&space.device())->cycles_to_attotime(10000), TIMER_WGP_INTERRUPT6);
 }
 
 
@@ -670,7 +668,7 @@ static ADDRESS_MAP_START( z80_sound_map, AS_PROGRAM, 8, wgp_state )
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")   /* Fallthrough */
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
+	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
 	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITENOP /* pan */
@@ -893,11 +891,6 @@ WRITE_LINE_MEMBER(wgp_state::irqhandler) // assumes Z80 sandwiched between 68Ks
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2610_interface ym2610_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(wgp_state,irqhandler)
-};
-
 
 /***********************************************************
                       MACHINE DRIVERS
@@ -1010,7 +1003,7 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 16000000/2)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(wgp_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.25)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  1.0)

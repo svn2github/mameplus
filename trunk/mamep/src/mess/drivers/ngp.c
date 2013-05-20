@@ -168,7 +168,7 @@ public:
 	required_device<dac_device> m_dac_l;
 	required_device<dac_device> m_dac_r;
 	required_shared_ptr<UINT8> m_mainram;
-	required_device<device_t> m_k1ge;
+	required_device<k1ge_device> m_k1ge;
 
 	DECLARE_READ8_MEMBER( ngp_io_r );
 	DECLARE_WRITE8_MEMBER( ngp_io_w );
@@ -183,8 +183,8 @@ public:
 
 	DECLARE_WRITE8_MEMBER( ngp_z80_clear_irq );
 
-	DECLARE_WRITE8_MEMBER( ngp_vblank_pin_w );
-	DECLARE_WRITE8_MEMBER( ngp_hblank_pin_w );
+	DECLARE_WRITE_LINE_MEMBER( ngp_vblank_pin_w );
+	DECLARE_WRITE_LINE_MEMBER( ngp_hblank_pin_w );
 	DECLARE_WRITE8_MEMBER( ngp_tlcs900_to3 );
 	UINT32 screen_update_ngp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	DECLARE_INPUT_CHANGED_MEMBER(power_callback);
@@ -541,8 +541,8 @@ static ADDRESS_MAP_START( ngp_mem, AS_PROGRAM, 8, ngp_state )
 	AM_RANGE( 0x000080, 0x0000bf )  AM_READWRITE(ngp_io_r, ngp_io_w)                            /* ngp/c specific i/o */
 	AM_RANGE( 0x004000, 0x006fff )  AM_RAM AM_SHARE("mainram")                                  /* work ram */
 	AM_RANGE( 0x007000, 0x007fff )  AM_RAM AM_SHARE("share1")                                   /* shared with sound cpu */
-	AM_RANGE( 0x008000, 0x0087ff )  AM_DEVREADWRITE_LEGACY("k1ge", k1ge_r, k1ge_w)              /* video registers */
-	AM_RANGE( 0x008800, 0x00bfff )  AM_RAM AM_REGION("vram", 0x800 )                            /* Video RAM area */
+	AM_RANGE( 0x008000, 0x0087ff )  AM_DEVREADWRITE("k1ge", k1ge_device, reg_read, reg_write)   /* video registers */
+	AM_RANGE( 0x008800, 0x00bfff )  AM_DEVREADWRITE("k1ge", k1ge_device, vram_read, vram_write) /* Video RAM area */
 	AM_RANGE( 0x200000, 0x3fffff )  AM_ROM AM_WRITE(flash0_w) AM_REGION("cart", 0)              /* cart area #1 */
 	AM_RANGE( 0x800000, 0x9fffff )  AM_ROM AM_WRITE(flash1_w) AM_REGION("cart", 0x200000)       /* cart area #2 */
 	AM_RANGE( 0xff0000, 0xffffff )  AM_ROM AM_REGION("maincpu", 0)                              /* system rom */
@@ -614,15 +614,15 @@ static INPUT_PORTS_START( ngp )
 INPUT_PORTS_END
 
 
-WRITE8_MEMBER( ngp_state::ngp_vblank_pin_w )
+WRITE_LINE_MEMBER( ngp_state::ngp_vblank_pin_w )
 {
-	m_tlcs900->set_input_line(TLCS900_INT4, data ? ASSERT_LINE : CLEAR_LINE );
+	m_tlcs900->set_input_line(TLCS900_INT4, state ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
-WRITE8_MEMBER( ngp_state::ngp_hblank_pin_w )
+WRITE_LINE_MEMBER( ngp_state::ngp_hblank_pin_w )
 {
-	m_tlcs900->set_input_line(TLCS900_TIO, data ? ASSERT_LINE : CLEAR_LINE );
+	m_tlcs900->set_input_line(TLCS900_TIO, state ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -677,6 +677,22 @@ void ngp_state::machine_start()
 
 	m_seconds_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(ngp_state::ngp_seconds_callback),this));
 	m_seconds_timer->adjust( attotime::from_seconds(1), 0, attotime::from_seconds(1) );
+
+	save_item(NAME(m_io_reg));
+	save_item(NAME(m_old_to3));
+	// TODO: check if these are handled correctly...
+	save_item(NAME(m_flash_chip[0].present));
+	save_item(NAME(m_flash_chip[0].manufacturer_id));
+	save_item(NAME(m_flash_chip[0].device_id));
+	save_item(NAME(m_flash_chip[0].org_data));
+	save_item(NAME(m_flash_chip[0].state));
+	save_item(NAME(m_flash_chip[0].command));
+	save_item(NAME(m_flash_chip[1].present));
+	save_item(NAME(m_flash_chip[1].manufacturer_id));
+	save_item(NAME(m_flash_chip[1].device_id));
+	save_item(NAME(m_flash_chip[1].org_data));
+	save_item(NAME(m_flash_chip[1].state));
+	save_item(NAME(m_flash_chip[1].command));
 }
 
 
@@ -684,8 +700,8 @@ void ngp_state::machine_reset()
 {
 	m_old_to3 = 0;
 
-	m_z80->suspend(SUSPEND_REASON_HALT, 1 );
-	m_z80->set_input_line(0, CLEAR_LINE );
+	m_z80->suspend(SUSPEND_REASON_HALT, 1);
+	m_z80->set_input_line(0, CLEAR_LINE);
 
 	if ( m_nvram_loaded )
 	{
@@ -696,7 +712,7 @@ void ngp_state::machine_reset()
 
 UINT32 ngp_state::screen_update_ngp(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	k1ge_update( m_k1ge, bitmap, cliprect );
+	m_k1ge->update( bitmap, cliprect );
 	return 0;
 }
 
@@ -787,15 +803,6 @@ void ngp_state::nvram_write(emu_file &file)
 }
 
 
-static const k1ge_interface ngp_k1ge_interface =
-{
-	"screen",
-	"vram",
-	DEVCB_DRIVER_MEMBER( ngp_state, ngp_vblank_pin_w ),
-	DEVCB_DRIVER_MEMBER( ngp_state, ngp_hblank_pin_w )
-};
-
-
 static const tlcs900_interface ngp_tlcs900_interface =
 {
 	DEVCB_NULL,
@@ -838,7 +845,7 @@ static MACHINE_CONFIG_DERIVED( ngp, ngp_common )
 	MCFG_PALETTE_LENGTH( 8 )
 	MCFG_PALETTE_INIT( k1ge )
 
-	MCFG_K1GE_ADD( "k1ge", XTAL_6_144MHz, ngp_k1ge_interface )
+	MCFG_K1GE_ADD( "k1ge", XTAL_6_144MHz, "screen", WRITELINE( ngp_state, ngp_vblank_pin_w ), WRITELINE( ngp_state, ngp_hblank_pin_w ) )
 
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_EXTENSION_LIST("bin,ngp,npc,ngc")
@@ -858,7 +865,7 @@ static MACHINE_CONFIG_DERIVED( ngpc, ngp_common )
 	MCFG_PALETTE_LENGTH( 4096 )
 	MCFG_PALETTE_INIT( k2ge )
 
-	MCFG_K2GE_ADD( "k1ge", XTAL_6_144MHz, ngp_k1ge_interface )
+	MCFG_K2GE_ADD( "k1ge", XTAL_6_144MHz, "screen", WRITELINE( ngp_state, ngp_vblank_pin_w ), WRITELINE( ngp_state, ngp_hblank_pin_w ) )
 
 	MCFG_CARTSLOT_ADD("cart")
 	MCFG_CARTSLOT_EXTENSION_LIST("bin,ngp,npc,ngc")
@@ -877,8 +884,6 @@ ROM_START( ngp )
 	ROM_REGION( 0x10000, "maincpu" , 0 )
 	ROM_LOAD( "ngp_bios.ngp", 0x0000, 0x10000, CRC(6232df8d) SHA1(2f6429b68446536d8b03f35d02f1e98beb6460a0) )
 
-	ROM_REGION( 0x4000, "vram", ROMREGION_ERASE00 )
-
 	ROM_REGION( 0x400000, "cart", ROMREGION_ERASEFF )
 ROM_END
 
@@ -886,8 +891,6 @@ ROM_END
 ROM_START( ngpc )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "ngpcbios.rom", 0x0000, 0x10000, CRC(6eeb6f40) SHA1(edc13192054a59be49c6d55f83b70e2510968e86) )
-
-	ROM_REGION( 0x4000, "vram", ROMREGION_ERASE00 )
 
 	ROM_REGION( 0x400000, "cart", ROMREGION_ERASEFF )
 ROM_END

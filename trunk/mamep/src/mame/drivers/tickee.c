@@ -31,6 +31,13 @@
 class tickee_state : public driver_device
 {
 public:
+	enum
+	{
+		TIMER_TRIGGER_GUN_INTERRUPT,
+		TIMER_CLEAR_GUN_INTERRUPT,
+		TIMER_SETUP_GUN_INTERRUPTS
+	};
+
 	tickee_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_tlc34076(*this, "tlc34076"),
@@ -65,6 +72,9 @@ public:
 	TIMER_CALLBACK_MEMBER(setup_gun_interrupts);
 	required_device<cpu_device> m_maincpu;
 	optional_device<okim6295_device> m_oki;
+
+protected:
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };
 
 
@@ -94,6 +104,25 @@ INLINE void get_crosshair_xy(running_machine &machine, int player, int *x, int *
  *  Light gun interrupts
  *
  *************************************/
+
+void tickee_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	switch (id)
+	{
+	case TIMER_TRIGGER_GUN_INTERRUPT:
+		trigger_gun_interrupt(ptr, param);
+		break;
+	case TIMER_CLEAR_GUN_INTERRUPT:
+		clear_gun_interrupt(ptr, param);
+		break;
+	case TIMER_SETUP_GUN_INTERRUPTS:
+		setup_gun_interrupts(ptr, param);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in tickee_state::device_timer");
+	}
+}
+
 
 TIMER_CALLBACK_MEMBER(tickee_state::trigger_gun_interrupt)
 {
@@ -129,13 +158,13 @@ TIMER_CALLBACK_MEMBER(tickee_state::setup_gun_interrupts)
 
 	/* generate interrupts for player 1's gun */
 	get_crosshair_xy(machine(), 0, &beamx, &beamy);
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd, beamx + m_beamxadd), timer_expired_delegate(FUNC(tickee_state::trigger_gun_interrupt),this), 0);
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd + 1, beamx + m_beamxadd), timer_expired_delegate(FUNC(tickee_state::clear_gun_interrupt),this), 0);
+	timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd, beamx + m_beamxadd), TIMER_TRIGGER_GUN_INTERRUPT, 0);
+	timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd + 1, beamx + m_beamxadd), TIMER_CLEAR_GUN_INTERRUPT, 0);
 
 	/* generate interrupts for player 2's gun */
 	get_crosshair_xy(machine(), 1, &beamx, &beamy);
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd, beamx + m_beamxadd), timer_expired_delegate(FUNC(tickee_state::trigger_gun_interrupt),this), 1);
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd + 1, beamx + m_beamxadd), timer_expired_delegate(FUNC(tickee_state::clear_gun_interrupt),this), 1);
+	timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd, beamx + m_beamxadd), TIMER_TRIGGER_GUN_INTERRUPT, 1);
+	timer_set(machine().primary_screen->time_until_pos(beamy + m_beamyadd + 1, beamx + m_beamxadd), TIMER_CLEAR_GUN_INTERRUPT, 1);
 }
 
 
@@ -149,7 +178,7 @@ TIMER_CALLBACK_MEMBER(tickee_state::setup_gun_interrupts)
 VIDEO_START_MEMBER(tickee_state,tickee)
 {
 	/* start a timer going on the first scanline of every frame */
-	m_setup_gun_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(tickee_state::setup_gun_interrupts),this));
+	m_setup_gun_timer = timer_alloc(TIMER_SETUP_GUN_INTERRUPTS);
 	m_setup_gun_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
@@ -394,10 +423,10 @@ static ADDRESS_MAP_START( tickee_map, AS_PROGRAM, 16, tickee_state )
 	AM_RANGE(0x02000000, 0x02ffffff) AM_ROM AM_REGION("user1", 0)
 	AM_RANGE(0x04000000, 0x04003fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x04100000, 0x041000ff) AM_DEVREADWRITE8("tlc34076", tlc34076_device, read, write, 0x00ff)
-	AM_RANGE(0x04200000, 0x0420000f) AM_DEVREAD8_LEGACY("ym1", ay8910_r, 0x00ff)
-	AM_RANGE(0x04200000, 0x0420001f) AM_DEVWRITE8_LEGACY("ym1", ay8910_address_data_w, 0x00ff)
-	AM_RANGE(0x04200100, 0x0420010f) AM_DEVREAD8_LEGACY("ym2", ay8910_r, 0x00ff)
-	AM_RANGE(0x04200100, 0x0420011f) AM_DEVWRITE8_LEGACY("ym2", ay8910_address_data_w, 0x00ff)
+	AM_RANGE(0x04200000, 0x0420000f) AM_DEVREAD8("ym1", ay8910_device, data_r, 0x00ff)
+	AM_RANGE(0x04200000, 0x0420001f) AM_DEVWRITE8("ym1", ay8910_device, address_data_w, 0x00ff)
+	AM_RANGE(0x04200100, 0x0420010f) AM_DEVREAD8("ym2", ay8910_device, data_r, 0x00ff)
+	AM_RANGE(0x04200100, 0x0420011f) AM_DEVWRITE8("ym2", ay8910_device, address_data_w, 0x00ff)
 	AM_RANGE(0x04400000, 0x0440007f) AM_WRITE(tickee_control_w) AM_SHARE("control")
 	AM_RANGE(0x04400040, 0x0440004f) AM_READ_PORT("IN2")
 	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, tms34010_io_register_w)
@@ -412,10 +441,10 @@ static ADDRESS_MAP_START( ghoshunt_map, AS_PROGRAM, 16, tickee_state )
 	AM_RANGE(0x02000000, 0x02ffffff) AM_ROM AM_REGION("user1", 0)
 	AM_RANGE(0x04100000, 0x04103fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x04200000, 0x042000ff) AM_DEVREADWRITE8("tlc34076", tlc34076_device, read, write, 0x00ff)
-	AM_RANGE(0x04300000, 0x0430000f) AM_DEVREAD8_LEGACY("ym1", ay8910_r, 0x00ff)
-	AM_RANGE(0x04300000, 0x0430001f) AM_DEVWRITE8_LEGACY("ym1", ay8910_address_data_w, 0x00ff)
-	AM_RANGE(0x04300100, 0x0430010f) AM_DEVREAD8_LEGACY("ym2", ay8910_r, 0x00ff)
-	AM_RANGE(0x04300100, 0x0430011f) AM_DEVWRITE8_LEGACY("ym2", ay8910_address_data_w, 0x00ff)
+	AM_RANGE(0x04300000, 0x0430000f) AM_DEVREAD8("ym1", ay8910_device, data_r, 0x00ff)
+	AM_RANGE(0x04300000, 0x0430001f) AM_DEVWRITE8("ym1", ay8910_device, address_data_w, 0x00ff)
+	AM_RANGE(0x04300100, 0x0430010f) AM_DEVREAD8("ym2", ay8910_device, data_r, 0x00ff)
+	AM_RANGE(0x04300100, 0x0430011f) AM_DEVWRITE8("ym2", ay8910_device, address_data_w, 0x00ff)
 	AM_RANGE(0x04500000, 0x0450007f) AM_WRITE(tickee_control_w) AM_SHARE("control")
 	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, tms34010_io_register_w)
 	AM_RANGE(0xc0000240, 0xc000025f) AM_WRITENOP        /* seems to be a bug in their code */
@@ -428,8 +457,8 @@ static ADDRESS_MAP_START( mouseatk_map, AS_PROGRAM, 16, tickee_state )
 	AM_RANGE(0x02000000, 0x02ffffff) AM_ROM AM_REGION("user1", 0)
 	AM_RANGE(0x04000000, 0x04003fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x04100000, 0x041000ff) AM_DEVREADWRITE8("tlc34076", tlc34076_device, read, write, 0x00ff)
-	AM_RANGE(0x04200000, 0x0420000f) AM_DEVREAD8_LEGACY("ym", ay8910_r, 0x00ff)
-	AM_RANGE(0x04200000, 0x0420000f) AM_DEVWRITE8_LEGACY("ym", ay8910_address_data_w, 0x00ff)
+	AM_RANGE(0x04200000, 0x0420000f) AM_DEVREAD8("ym", ay8910_device, data_r, 0x00ff)
+	AM_RANGE(0x04200000, 0x0420000f) AM_DEVWRITE8("ym", ay8910_device, address_data_w, 0x00ff)
 	AM_RANGE(0x04200100, 0x0420010f) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x04400000, 0x0440007f) AM_WRITE(tickee_control_w) AM_SHARE("control")
 	AM_RANGE(0x04400040, 0x0440004f) AM_READ_PORT("IN2") // ?

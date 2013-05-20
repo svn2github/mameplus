@@ -925,7 +925,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound2203_map, AS_PROGRAM, 8, itech8_state )
 	AM_RANGE(0x0000, 0x0000) AM_WRITENOP
 	AM_RANGE(0x1000, 0x1000) AM_READ(sound_data_r)
-	AM_RANGE(0x2000, 0x2001) AM_MIRROR(0x0002) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
+	AM_RANGE(0x2000, 0x2001) AM_MIRROR(0x0002) AM_DEVREADWRITE("ymsnd", ym2203_device, read, write)
 	AM_RANGE(0x3000, 0x37ff) AM_RAM
 	AM_RANGE(0x4000, 0x4000) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -936,7 +936,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound2608b_map, AS_PROGRAM, 8, itech8_state )
 	AM_RANGE(0x1000, 0x1000) AM_WRITENOP
 	AM_RANGE(0x2000, 0x2000) AM_READ(sound_data_r)
-	AM_RANGE(0x4000, 0x4003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2608_r, ym2608_w)
+	AM_RANGE(0x4000, 0x4003) AM_DEVREADWRITE("ymsnd", ym2608_device, read, write)
 	AM_RANGE(0x6000, 0x67ff) AM_RAM
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -946,7 +946,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound3812_map, AS_PROGRAM, 8, itech8_state )
 	AM_RANGE(0x0000, 0x0000) AM_WRITENOP
 	AM_RANGE(0x1000, 0x1000) AM_READ(sound_data_r)
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ymsnd", ym3812_device, read, write)
 	AM_RANGE(0x3000, 0x37ff) AM_RAM
 	AM_RANGE(0x4000, 0x4000) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x5000, 0x5003) AM_DEVREADWRITE("pia", pia6821_device, read, write)
@@ -958,7 +958,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound3812_external_map, AS_PROGRAM, 8, itech8_state )
 	AM_RANGE(0x0000, 0x0000) AM_WRITENOP
 	AM_RANGE(0x1000, 0x1000) AM_READ(sound_data_r)
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ymsnd", ym3812_device, read, write)
 	AM_RANGE(0x3000, 0x37ff) AM_RAM
 	AM_RANGE(0x4000, 0x4000) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x5000, 0x500f) AM_DEVREADWRITE("via6522_0", via6522_device, read, write)
@@ -1635,37 +1635,14 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const ym2203_interface ym2203_config =
+static const ay8910_interface ay8910_config =
 {
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_NULL,
-		DEVCB_NULL,
-		DEVCB_NULL,
-		DEVCB_DRIVER_MEMBER(itech8_state,ym2203_portb_out)
-	},
-	DEVCB_DRIVER_LINE_MEMBER(itech8_state,generate_sound_irq)
-};
-
-
-static const ym2608_interface ym2608b_config =
-{
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_NULL,
-		DEVCB_NULL,
-		DEVCB_NULL,
-		DEVCB_DRIVER_MEMBER(itech8_state,ym2203_portb_out),
-	},
-	DEVCB_DRIVER_LINE_MEMBER(itech8_state,generate_sound_irq)
-};
-
-
-static const ym3812_interface ym3812_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(itech8_state,generate_sound_irq)
+	AY8910_LEGACY_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_DRIVER_MEMBER(itech8_state,ym2203_portb_out),
 };
 
 
@@ -1722,7 +1699,8 @@ static MACHINE_CONFIG_FRAGMENT( itech8_sound_ym2203 )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ymsnd", YM2203, CLOCK_8MHz/2)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_IRQ_HANDLER(WRITELINE(itech8_state, generate_sound_irq))
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.07)
 	MCFG_SOUND_ROUTE(1, "mono", 0.07)
 	MCFG_SOUND_ROUTE(2, "mono", 0.07)
@@ -1741,7 +1719,8 @@ static MACHINE_CONFIG_FRAGMENT( itech8_sound_ym2608b )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ymsnd", YM2608, CLOCK_8MHz)
-	MCFG_SOUND_CONFIG(ym2608b_config)
+	MCFG_YM2608_IRQ_HANDLER(WRITELINE(itech8_state, generate_sound_irq))
+	MCFG_YM2608_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -1756,7 +1735,7 @@ static MACHINE_CONFIG_FRAGMENT( itech8_sound_ym3812 )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ymsnd", YM3812, CLOCK_8MHz/2)
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(itech8_state, generate_sound_irq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 
 	MCFG_OKIM6295_ADD("oki", CLOCK_8MHz/8, OKIM6295_PIN7_HIGH) // was /128, not /132, so unsure so pin 7 not verified
@@ -1772,7 +1751,7 @@ static MACHINE_CONFIG_FRAGMENT( itech8_sound_ym3812_external )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ymsnd", YM3812, CLOCK_8MHz/2)
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(itech8_state, generate_sound_irq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 
 	MCFG_OKIM6295_ADD("oki", CLOCK_8MHz/8, OKIM6295_PIN7_HIGH) // was /128, not /132, so unsure so pin 7 not verified

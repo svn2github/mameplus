@@ -67,15 +67,15 @@ static void m68k_gen_int(device_t *device, int state)
 
 void artmagic_state::machine_start()
 {
-	state_save_register_global(machine(), m_tms_irq);
-	state_save_register_global(machine(), m_hack_irq);
-	state_save_register_global(machine(), m_prot_input_index);
-	state_save_register_global(machine(), m_prot_output_index);
-	state_save_register_global(machine(), m_prot_output_bit);
-	state_save_register_global(machine(), m_prot_bit_index);
-	state_save_register_global(machine(), m_prot_save);
-	state_save_register_global_array(machine(), m_prot_input);
-	state_save_register_global_array(machine(), m_prot_output);
+	save_item(NAME(m_tms_irq));
+	save_item(NAME(m_hack_irq));
+	save_item(NAME(m_prot_input_index));
+	save_item(NAME(m_prot_output_index));
+	save_item(NAME(m_prot_output_bit));
+	save_item(NAME(m_prot_bit_index));
+	save_item(NAME(m_prot_save));
+	save_item(NAME(m_prot_input));
+	save_item(NAME(m_prot_output));
 }
 
 void artmagic_state::machine_reset()
@@ -132,11 +132,19 @@ WRITE16_MEMBER(artmagic_state::control_w)
  *
  *************************************/
 
-TIMER_CALLBACK_MEMBER(artmagic_state::irq_off)
+void artmagic_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_hack_irq = 0;
-	update_irq_state(machine());
+	switch (id)
+	{
+	case TIMER_IRQ_OFF:
+		m_hack_irq = 0;
+		update_irq_state(machine());
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in artmagic_state::device_timer");
+	}
 }
+
 
 READ16_MEMBER(artmagic_state::ultennis_hack_r)
 {
@@ -146,7 +154,7 @@ READ16_MEMBER(artmagic_state::ultennis_hack_r)
 	{
 		m_hack_irq = 1;
 		update_irq_state(machine());
-		machine().scheduler().timer_set(attotime::from_usec(1), timer_expired_delegate(FUNC(artmagic_state::irq_off),this));
+		timer_set(attotime::from_usec(1), TIMER_IRQ_OFF);
 	}
 	return ioport("300000")->read();
 }

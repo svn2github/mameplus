@@ -189,10 +189,10 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 							return 0x0000;//space.machine().rand();;
 
 						case 0x1244:
-							return ymz280b_r(m_ymz,space,0);
+							return m_ymz->read(space,0);
 
 						case 0x1246:
-							return ymz280b_r(m_ymz,space,1);
+							return m_ymz->read(space,1);
 
 						default:
 							logerror("%08x maincpu read access offset %08x mem_mask %04x cs %d (LAMPS etc.)\n", pc, offset*2, mem_mask, cs);
@@ -234,7 +234,7 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 
 static DECLARE_WRITE8_HANDLER( bfm_sc4_reel4_w );
 
-WRITE8_MEMBER(sc4_state::mux_output_w)
+WRITE8_MEMBER(bfm_sc45_state::mux_output_w)
 {
 	int i;
 	int off = offset<<3;
@@ -246,7 +246,7 @@ WRITE8_MEMBER(sc4_state::mux_output_w)
 	output_set_indexed_value("matrix", off+i, ((data & (1 << i)) != 0));
 }
 
-WRITE8_MEMBER(sc4_state::mux_output2_w)
+WRITE8_MEMBER(bfm_sc45_state::mux_output2_w)
 {
 	int i;
 	int off = offset<<3;
@@ -332,11 +332,11 @@ WRITE16_MEMBER(sc4_state::sc4_mem_w)
 							break;
 
 						case 0x1248:
-							ymz280b_w(m_ymz,space,0, data & 0xff);
+							m_ymz->write(space,0, data & 0xff);
 							break;
 
 						case 0x124a:
-							ymz280b_w(m_ymz,space,1, data & 0xff);
+							m_ymz->write(space,1, data & 0xff);
 							break;
 
 						case 0x1330:
@@ -444,15 +444,15 @@ ADDRESS_MAP_END
 
 void bfm_sc4_reset_serial_vfd(running_machine &machine)
 {
-	sc4_state *state = machine.driver_data<sc4_state>();
+	bfm_sc45_state *state = machine.driver_data<bfm_sc45_state>();
 
 	state->m_vfd0->reset();
 	state->vfd_old_clock = false;
 }
 
-void bfm_sc4_write_serial_vfd(running_machine &machine, bool cs, bool clock, bool data)
+void bfm_sc45_write_serial_vfd(running_machine &machine, bool cs, bool clock, bool data)
 {
-	sc4_state *state = machine.driver_data<sc4_state>();
+	bfm_sc45_state *state = machine.driver_data<bfm_sc45_state>();
 
 	// if we're turned on
 	if ( cs )
@@ -555,7 +555,7 @@ void bfm_sc4_68307_portb_w(address_space &space, bool dedicated, UINT16 data, UI
 		// serial output to the VFD at least..
 		logerror("%08x bfm_sc4_68307_portb_w %04x %04x\n", pc, data, line_mask);
 
-		bfm_sc4_write_serial_vfd(space.machine(), (data & 0x4000)?1:0, (data & 0x1000)?1:0, !(data & 0x2000)?1:0);
+		bfm_sc45_write_serial_vfd(space.machine(), (data & 0x4000)?1:0, (data & 0x1000)?1:0, !(data & 0x2000)?1:0);
 
 		bfm_sc4_reel3_w(space, 0, (data&0x0f00)>>8, 0xff);
 	}
@@ -624,11 +624,6 @@ WRITE_LINE_MEMBER(sc4_state::bfm_sc4_irqhandler)
 {
 	logerror("YMZ280 is generating an interrupt. State=%08x\n",state);
 }
-
-static const ymz280b_interface ymz280b_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(sc4_state,bfm_sc4_irqhandler)
-};
 
 
 
@@ -760,7 +755,7 @@ MACHINE_CONFIG_START( sc4, sc4_state )
 	MCFG_DEFAULT_LAYOUT(layout_bfm_sc4)
 
 	MCFG_SOUND_ADD("ymz", YMZ280B, 16000000) // ?? Mhz
-	MCFG_SOUND_CONFIG(ymz280b_config)
+	MCFG_YMZ280B_IRQ_HANDLER(WRITELINE(sc4_state, bfm_sc4_irqhandler))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

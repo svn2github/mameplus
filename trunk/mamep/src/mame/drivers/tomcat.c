@@ -46,7 +46,7 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_dsp(*this, "dsp") { }
 
-	required_device<tms5220n_device> m_tms;
+	required_device<tms5220_device> m_tms;
 	int m_control_num;
 	required_shared_ptr<UINT16> m_shared_ram;
 	UINT8 m_nvram[0x800];
@@ -306,7 +306,7 @@ static ADDRESS_MAP_START( tomcat_map, AS_PROGRAM, 16, tomcat_state )
 	AM_RANGE(0x800000, 0x803fff) AM_RAM AM_SHARE("vectorram")
 	AM_RANGE(0xffa000, 0xffbfff) AM_READWRITE(tomcat_shared_ram_r, tomcat_shared_ram_w)
 	AM_RANGE(0xffc000, 0xffcfff) AM_RAM
-	AM_RANGE(0xffd000, 0xffdfff) AM_DEVREADWRITE8_LEGACY("m48t02", timekeeper_r, timekeeper_w, 0xff00)
+	AM_RANGE(0xffd000, 0xffdfff) AM_DEVREADWRITE8("m48t02", timekeeper_device, read, write, 0xff00)
 	AM_RANGE(0xffd000, 0xffdfff) AM_READWRITE8(tomcat_nvram_r, tomcat_nvram_w, 0x00ff)
 ADDRESS_MAP_END
 
@@ -400,11 +400,6 @@ static const riot6532_interface tomcat_riot6532_intf =
 	DEVCB_NULL  // connected to IRQ line of 6502
 };
 
-static const tms52xx_config tms_intf =
-{
-	DEVCB_NULL
-};
-
 static MACHINE_CONFIG_START( tomcat, tomcat_state )
 	MCFG_CPU_ADD("maincpu", M68010, XTAL_12MHz / 2)
 	MCFG_CPU_PROGRAM_MAP(tomcat_map)
@@ -444,10 +439,9 @@ static MACHINE_CONFIG_START( tomcat, tomcat_state )
 	MCFG_POKEY_ADD("pokey2", XTAL_14_31818MHz / 8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.20)
 
-	MCFG_SOUND_ADD("tms", TMS5220N, 325000)
+	MCFG_SOUND_ADD("tms", TMS5220, 325000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
-	MCFG_SOUND_CONFIG(tms_intf)
 
 	MCFG_YM2151_ADD("ymsnd", XTAL_14_31818MHz / 4)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)

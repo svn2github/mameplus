@@ -98,11 +98,12 @@ CPU_DISASSEMBLE( arm7thumb_be );
 CPU_DISASSEMBLE( asap );
 CPU_DISASSEMBLE( avr8 );
 CPU_DISASSEMBLE( ccpu );
+CPU_DISASSEMBLE( cdp1801 );
+CPU_DISASSEMBLE( cdp1802 );
 CPU_DISASSEMBLE( coldfire );
 CPU_DISASSEMBLE( cop410 );
 CPU_DISASSEMBLE( cop420 );
 CPU_DISASSEMBLE( cop444 );
-CPU_DISASSEMBLE( cosmac );
 CPU_DISASSEMBLE( cp1610 );
 CPU_DISASSEMBLE( cquestlin );
 CPU_DISASSEMBLE( cquestrot );
@@ -134,6 +135,7 @@ CPU_DISASSEMBLE( i80c51 );
 CPU_DISASSEMBLE( i80c52 );
 CPU_DISASSEMBLE( i860 );
 CPU_DISASSEMBLE( i960 );
+CPU_DISASSEMBLE( ie15 );
 CPU_DISASSEMBLE( jaguardsp );
 CPU_DISASSEMBLE( jaguargpu );
 CPU_DISASSEMBLE( konami );
@@ -240,11 +242,12 @@ static const dasm_table_entry dasm_table[] =
 	{ "asap",       _32le,  0, CPU_DISASSEMBLE_NAME(asap) },
 	{ "avr8",       _16le,  0, CPU_DISASSEMBLE_NAME(avr8) },
 	{ "ccpu",       _8bit,  0, CPU_DISASSEMBLE_NAME(ccpu) },
+	{ "cdp1801",    _8bit,  0, CPU_DISASSEMBLE_NAME(cdp1801) },
+	{ "cdp1802",    _8bit,  0, CPU_DISASSEMBLE_NAME(cdp1802) },
 	{ "coldfire",   _16be,  0, CPU_DISASSEMBLE_NAME(coldfire) },
 	{ "cop410",     _8bit,  0, CPU_DISASSEMBLE_NAME(cop410) },
 	{ "cop420",     _8bit,  0, CPU_DISASSEMBLE_NAME(cop420) },
 	{ "cop444",     _8bit,  0, CPU_DISASSEMBLE_NAME(cop444) },
-	{ "cosmac",     _8bit,  0, CPU_DISASSEMBLE_NAME(cosmac) },
 	{ "cp1610",     _16be, -1, CPU_DISASSEMBLE_NAME(cp1610) },
 	{ "cquestlin",  _64be, -3, CPU_DISASSEMBLE_NAME(cquestlin) },
 	{ "cquestrot",  _64be, -3, CPU_DISASSEMBLE_NAME(cquestrot) },
@@ -276,6 +279,7 @@ static const dasm_table_entry dasm_table[] =
 	{ "i80c52",     _8bit,  0, CPU_DISASSEMBLE_NAME(i80c52) },
 	{ "i860",       _64le,  0, CPU_DISASSEMBLE_NAME(i860) },
 	{ "i960",       _32le,  0, CPU_DISASSEMBLE_NAME(i960) },
+	{ "ie15",       _8bit,  0, CPU_DISASSEMBLE_NAME(ie15) },
 	{ "jaguardsp",  _16be,  0, CPU_DISASSEMBLE_NAME(jaguardsp) },
 	{ "jaguargpu",  _16be,  0, CPU_DISASSEMBLE_NAME(jaguargpu) },
 	{ "konami",     _8bit,  0, CPU_DISASSEMBLE_NAME(konami) },

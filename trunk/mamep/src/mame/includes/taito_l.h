@@ -1,4 +1,5 @@
 #include "sound/msm5205.h"
+#include "sound/2203intf.h"
 
 #define TAITOL_SPRITERAM_SIZE 0x400
 
@@ -9,7 +10,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
-		m_msm(*this, "msm") { }
+		m_msm(*this, "msm")
+	{
+	}
 
 	/* memory pointers */
 	UINT8 *       m_shared_ram;

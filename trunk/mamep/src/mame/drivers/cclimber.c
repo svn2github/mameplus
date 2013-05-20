@@ -382,8 +382,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cclimber_portmap, AS_IO, 8, cclimber_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x08, 0x09) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
-	AM_RANGE(0x0c, 0x0c) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
+	AM_RANGE(0x08, 0x09) AM_DEVWRITE("aysnd", ay8910_device, address_data_w)
+	AM_RANGE(0x0c, 0x0c) AM_DEVREAD("aysnd", ay8910_device, data_r)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( yamato_portmap, AS_IO, 8, cclimber_state )
@@ -408,14 +408,14 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( swimmer_audio_portmap, AS_IO, 8, cclimber_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
-	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("ay2", ay8910_data_address_w)
+	AM_RANGE(0x00, 0x01) AM_DEVWRITE("ay1", ay8910_device, data_address_w)
+	AM_RANGE(0x80, 0x81) AM_DEVWRITE("ay2", ay8910_device, data_address_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( yamato_audio_portmap, AS_IO, 8, cclimber_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
-	AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
+	AM_RANGE(0x00, 0x01) AM_DEVWRITE("ay1", ay8910_device, address_data_w)
+	AM_RANGE(0x02, 0x03) AM_DEVWRITE("ay2", ay8910_device, address_data_w)
 	AM_RANGE(0x04, 0x04) AM_READ(yamato_p0_r)   /* ??? */
 	AM_RANGE(0x08, 0x08) AM_READ(yamato_p1_r)   /* ??? */
 ADDRESS_MAP_END
@@ -1243,6 +1243,39 @@ ROM_START( ccboot2 )
 	ROM_REGION( 0x2000, "samples", 0 )  /* samples */
 	ROM_LOAD( "cc13j.bin",    0x0000, 0x1000, CRC(5f0bcdfb) SHA1(7f79bf6de117348f606696ed7ea1937bbf926612) )
 	ROM_LOAD( "cc12j.bin",    0x1000, 0x1000, CRC(9003ffbd) SHA1(fd016056aabc23957643f37230f03842294f795e) )
+ROM_END
+
+ROM_START( ccbootmr )  /* Model Racing bootleg */
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "211.k4",       0x0000, 0x1000, CRC(b2b17e24) SHA1(1242d64242b3a6fe099457d155ebc508e5482818) )
+	ROM_LOAD( "210.j4",       0x1000, 0x1000, CRC(8382bc0f) SHA1(2390ee2ec08a074c7bc4b9c7750b979a1d3a8a67) )
+	ROM_LOAD( "209.f4",       0x2000, 0x1000, CRC(26489069) SHA1(9be4d4a22dd334e619416e6c846a05003c0d687e) )
+	ROM_LOAD( "208.e4",       0x3000, 0x1000, CRC(e3c542d6) SHA1(645cc4c94d1b1601c0083b156de67ec47fe2449f) )
+	ROM_LOAD( "207.c4",       0x4000, 0x1000, CRC(fbc9626c) SHA1(32be2d06321b2943718d0bec77ec9ebb806e4b93) )
+
+	ROM_REGION( 0x4000, "gfx1", 0 )
+	ROM_LOAD( "cc06",         0x0000, 0x0800, CRC(481b64cc) SHA1(3f35c545fc784ed4f969aba2d7be6e13a5ae32b7) ) // 206.n6
+	/* 0x0800-0x0fff - empty */
+	ROM_LOAD( "cc05",         0x1000, 0x0800, CRC(2c33b760) SHA1(2edea8fe13376fbd51a5586d97aba3b30d78e94b) ) // 205.l6
+	/* 0x1800-0xffff - empty */
+	ROM_LOAD( "cc04",         0x2000, 0x0800, CRC(332347cb) SHA1(4115ca32af73f1791635b7d9e093bf77088a8222) ) // 204.k6
+	/* 0x2800-0x2fff - empty */
+	ROM_LOAD( "cc03",         0x3000, 0x0800, CRC(4e4b3658) SHA1(0d39a8cb5cd6cf06008be60707f9b277a8a32a2d) ) // 203.h6
+	/* 0x3800-0x3fff - empty */
+
+	ROM_REGION( 0x1000, "gfx2", 0 )
+	ROM_LOAD( "202.c6",       0x0000, 0x0800, CRC(5ec87c50) SHA1(68317533800a06abb0454303443cdcd913866977) )
+	ROM_LOAD( "201.a6",       0x0800, 0x0800, CRC(76d6d9a4) SHA1(3071dd65d5fe996b1b3a29e9a22d5c005cfd348d) )
+
+	ROM_REGION( 0x0160, "proms", 0 )
+	ROM_LOAD( "cclimber.pr1", 0x0000, 0x0020, CRC(751c3325) SHA1(edce2bc883996c1d72dc6c1c9f62799b162d415a) ) // 199-74288.n9
+	ROM_LOAD( "cclimber.pr2", 0x0020, 0x0020, CRC(ab1940fa) SHA1(8d98e05cbaa6f55770c12e0a9a8ed9c73cc54423) ) // 210-74288.n9
+	ROM_LOAD( "198-74288.c9", 0x0040, 0x0020, CRC(b4e827a5) SHA1(31a5a5ad54417a474d22bb16c473415d99a2b6f1) )
+	ROM_LOAD( "214-74187.cpu",0x0060, 0x0100, CRC(9e11550d) SHA1(b8cba8e16e10e23fba1f11551102ab77b680bdf0) )    /* decryption table (not used) */
+
+	ROM_REGION( 0x2000, "samples", 0 )  /* samples */
+	ROM_LOAD( "213.r4",       0x0000, 0x1000, CRC(5f0bcdfb) SHA1(7f79bf6de117348f606696ed7ea1937bbf926612) )
+	ROM_LOAD( "212.n4 ",      0x1000, 0x1000, CRC(9003ffbd) SHA1(fd016056aabc23957643f37230f03842294f795e) )
 ROM_END
 
 /* Sets below are Crazy Kong Part II and have an extra screen in attract mode, showing a caged Kong and copyright */
@@ -2286,6 +2319,7 @@ GAME( 1980, cclimber,    0,        cclimber, cclimber, cclimber_state, cclimber,
 GAME( 1980, cclimberj,   cclimber, cclimber, cclimberj, cclimber_state,cclimberj,ROT0,   "Nichibutsu", "Crazy Climber (Japan)", 0 )
 GAME( 1980, ccboot,      cclimber, cclimber, cclimber, cclimber_state, cclimberj,ROT0,   "bootleg", "Crazy Climber (bootleg set 1)", 0 )
 GAME( 1980, ccboot2,     cclimber, cclimber, cclimber, cclimber_state, cclimberj,ROT0,   "bootleg", "Crazy Climber (bootleg set 2)", 0 )
+GAME( 1980, ccbootmr,    cclimber, cclimber, cclimber, cclimber_state, cclimberj,ROT0,   "bootleg (Model Racing)", "Crazy Climber (Model Racing bootleg)", 0 )
 
 /* these sets have ugly colours, no extra attract screen, and no graphics for the extra attract screen in the BG roms
   - there is a Falcon logo in the text roms which is unused

@@ -2007,6 +2007,10 @@ MACHINE_CONFIG_END
 /*******************************************************/
 /*                                                     */
 /* Taito  "Indian battle"                              */
+/* In "indianbtbr", the "number of animals" dipswitch  */
+/*  is ineffective because they compare for 8 kills at */
+/*  0x811, which is not possible. This byte should be  */
+/*  0x03.                                              */
 /*                                                     */
 /*******************************************************/
 
@@ -2037,6 +2041,46 @@ static INPUT_PORTS_START( indianbt )
 	PORT_DIPNAME(0x80,  0x00, "Invulnerability (Cheat)")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+
+	/* Dummy port for cocktail mode */
+	INVADERS_CAB_TYPE_PORT
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( indianbtbr )
+	PORT_START("IN0")
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x01, "4" )
+	PORT_DIPSETTING(    0x02, "5" )
+	PORT_DIPSETTING(    0x03, "6" )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN ) //Enable color map to be in C400-DFFF
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN ) //Length of manufacturer's logo (0x11 or 0x16)
+
+	PORT_START("IN1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT ) PORT_2WAY
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_2WAY
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+
+	PORT_START("IN2")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_DIPNAME(0x08,  0x00, "Invulnerability (Cheat)")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT ) PORT_2WAY PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_2WAY PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
 	/* Dummy port for cocktail mode */
 	INVADERS_CAB_TYPE_PORT
@@ -2075,6 +2119,13 @@ READ8_MEMBER(_8080bw_state::indianbt_r)
 	return machine().rand();
 }
 
+READ8_MEMBER(_8080bw_state::indianbtbr_01_r)
+{
+	UINT8 data = ioport("IN1")->read();
+	if (!m_flip_screen) return data;
+	return (data & 0x8f) | (ioport("IN2")->read() & 0x70);
+}
+
 static ADDRESS_MAP_START( indianbt_io_map, AS_IO, 8, _8080bw_state )
 	AM_RANGE(0x00, 0x00) AM_READ(indianbt_r)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
@@ -2082,8 +2133,19 @@ static ADDRESS_MAP_START( indianbt_io_map, AS_IO, 8, _8080bw_state )
 	AM_RANGE(0x03, 0x03) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r) AM_WRITE(indianbt_sh_port_1_w)
 	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x05, 0x05) AM_WRITE(indianbt_sh_port_2_w)
-	AM_RANGE(0x06, 0x06) AM_WRITENOP /* sound ? */
+	AM_RANGE(0x06, 0x06) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(indianbt_sh_port_3_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( indianbtbr_io_map, AS_IO, 8, _8080bw_state )
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
+	AM_RANGE(0x01, 0x01) AM_READ(indianbtbr_01_r)
+	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN2") AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x03, 0x03) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r) AM_WRITE(indianbtbr_sh_port_1_w)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE(indianbtbr_sh_port_2_w)
+	AM_RANGE(0x06, 0x06) AM_WRITE(watchdog_reset_w)
+	AM_RANGE(0x07, 0x07) AM_WRITENOP
 ADDRESS_MAP_END
 
 
@@ -2107,6 +2169,25 @@ static MACHINE_CONFIG_DERIVED_CLASS( indianbt, mw8080bw_root, _8080bw_state )
 	MCFG_SOUND_ADD("discrete", DISCRETE, 0)
 	MCFG_SOUND_CONFIG_DISCRETE(indianbt)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED_CLASS( indianbtbr, mw8080bw_root, _8080bw_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(schaser_map)
+	MCFG_CPU_IO_MAP(indianbtbr_io_map)
+	MCFG_MACHINE_START_OVERRIDE(_8080bw_state,extra_8080bw)
+
+	/* add shifter */
+	MCFG_MB14241_ADD("mb14241")
+
+	/* video hardware */
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE_DRIVER(_8080bw_state, screen_update_indianbt)
+
+	/* sound hardware */
+	MCFG_FRAGMENT_ADD(invaders_samples_audio)
 MACHINE_CONFIG_END
 
 
@@ -3791,6 +3872,21 @@ ROM_START( lrescuem )
 	ROM_LOAD( "cv02-7643.1c",   0x0400, 0x0400, CRC(2bdf83a0) SHA1(01ffbd43964c41987e7d44816271308f9a70802b) )
 ROM_END
 
+ROM_START( lrescuem2 )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "0.bin",    0x0000, 0x0800, CRC(27d37ad6) SHA1(18b2de9f9c022a31187b2a4049573e7f204e84c9) )
+	ROM_LOAD( "1.bin",    0x0800, 0x0800, CRC(d8ed56f0) SHA1(d3f02d43f59d8ee83b4ed94f58f1bd25dca1a8de) )
+	ROM_LOAD( "2.bin",    0x1000, 0x0800, CRC(3aed9788) SHA1(1be3c2f9f3a0f7d187a6faa2b020979027fa60e9) )
+	ROM_LOAD( "3.bin",    0x1800, 0x0800, CRC(fa121b92) SHA1(2753b8b93d69d49e85075765630958038aa21ce3) )
+	ROM_LOAD( "4.bin",    0x4000, 0x0800, CRC(535b4a78) SHA1(dd5613f47a3c7e15701c5d1dbac4a2228b9c28f2) )
+	ROM_LOAD( "5.bin",    0x4800, 0x0800, CRC(0613a977) SHA1(47b85efdc436b39f8fb12355f9b87cb791f2d3b1) )
+	ROM_LOAD( "6.bin",    0x5000, 0x0800, CRC(8fe51cc0) SHA1(1a98044ab95a1559362813a3961c1436267dcf63) )
+
+	ROM_REGION( 0x0800, "proms", 0 )        /* color maps player 1/player 2 - these don't really fit this game, but were on the PCB */
+	ROM_LOAD( "cv01-7643.2c",   0x0000, 0x0400, CRC(aac24f34) SHA1(ad110e776547fb48baac568bb50d61854537ca34) )
+	ROM_LOAD( "cv02-7643.1c",   0x0400, 0x0400, CRC(2bdf83a0) SHA1(01ffbd43964c41987e7d44816271308f9a70802b) )
+ROM_END
+
 
 /*
 Cosmo
@@ -4267,6 +4363,22 @@ ROM_START( indianbt )
 	ROM_LOAD( "mb7054.2",   0x0400, 0x0400, CRC(62cb3419) SHA1(3df65062945589f1df37359dbd3e30ae4b23f469) )
 ROM_END
 
+ROM_START( indianbtbr )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "1(__indianbtbr).36", 0x0000, 0x0800, CRC(5cf6316b) SHA1(9812fbb7139d6f33a832a2485f9cd6422146d1ae) )
+	ROM_LOAD( "2(__indianbtbr).35", 0x0800, 0x0800, CRC(882c7421) SHA1(b2cc15c8693bd1fc74dddfcf52bf08984423f4bf) )
+	ROM_LOAD( "3.34",               0x1000, 0x0800, CRC(5c51675d) SHA1(1313e8794ee6cd0252452b96d42cff7907eeaa21) )
+	ROM_LOAD( "4.33",               0x1800, 0x0800, CRC(70ebec95) SHA1(f6e1e7a28033d89e49b88c559ea8926b1b4ff21b) )
+	ROM_LOAD( "5(__indianbtbr).32", 0x4000, 0x0800, CRC(aa12dbae) SHA1(083425b82cfdc0f037afcf293ad03b98fc6af3e5) )
+	ROM_LOAD( "6(__indianbtbr).31", 0x4800, 0x0800, CRC(d9cb1691) SHA1(c13cd8479914ba6719427b408ed589c9892f832c) )
+	ROM_LOAD( "7.42",               0x5000, 0x0800, CRC(7060ba0b) SHA1(366ce02b7b0a3391afef23b8b41cd98a91034830) )
+	ROM_LOAD( "8(__indianbtbr).41", 0x5800, 0x0800, CRC(e96699d6) SHA1(701d370ae28608221fb4d00e12877d30122c848e) )
+
+	ROM_REGION( 0x0800, "proms", 0 )        /* color maps player 1/player 2 */
+	ROM_LOAD( "mb7054.1",   0x0000, 0x0400, CRC(4acf4db3) SHA1(842a6c9f91806b424b7cc437670b4fe0bd57dff1) )
+	ROM_LOAD( "mb7054.2",   0x0400, 0x0400, CRC(62cb3419) SHA1(3df65062945589f1df37359dbd3e30ae4b23f469) )
+ROM_END
+
 ROM_START( shuttlei )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "1.13c",      0x0000, 0x0400, CRC(b6d4f0cd) SHA1(f855a793e78ff6283288c815b59e6942513ab4f8) )
@@ -4407,7 +4519,8 @@ GAME( 1979, spcewarl,   spclaser, invadpt2,  spclaser,  driver_device, 0, ROT270
 GAME( 1979, lrescue,    0,        lrescue,   lrescue,   driver_device, 0, ROT270, "Taito", "Lunar Rescue", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 GAME( 1979, grescue,    lrescue,  lrescue,   lrescue,   driver_device, 0, ROT270, "Taito (Universal license?)", "Galaxy Rescue", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 GAME( 1980, mlander,    lrescue,  lrescue,   lrescue,   driver_device, 0, ROT270, "bootleg (Leisure Time Electronics)", "Moon Lander (bootleg of Lunar Rescue)", GAME_SUPPORTS_SAVE )
-GAME( 1978, lrescuem,   lrescue,  lrescue,   lrescue,   driver_device, 0, ROT270, "bootleg (Model Racing)", "Lunar Rescue (Model Racing bootleg)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
+GAME( 1979, lrescuem,   lrescue,  lrescue,   lrescue,   driver_device, 0, ROT270, "bootleg (Model Racing)", "Lunar Rescue (Model Racing bootleg, set 1)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
+GAME( 1979, lrescuem2,  lrescue,  lrescue,   lrescue,   driver_device, 0, ROT270, "bootleg (Model Racing)", "Lunar Rescue (Model Racing bootleg, set 2)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 GAME( 1979, desterth,   lrescue,  lrescue,   lrescue,   driver_device, 0, ROT270, "bootleg", "Destination Earth (bootleg of Lunar Rescue)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 GAME( 1979, schaser,    0,        schaser,   schaser,   driver_device, 0, ROT270, "Taito", "Space Chaser (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1979, schasera,   schaser,  schaser,   schaser,   driver_device, 0, ROT270, "Taito", "Space Chaser (set 2)", GAME_SUPPORTS_SAVE )
@@ -4422,6 +4535,7 @@ GAME( 1980, polariso,   polaris,  polaris,   polaris,   driver_device, 0, ROT270
 GAME( 1981, polarisbr,  polaris,  polaris,   polaris,   driver_device, 0, ROT270, "Taito do Brasil", "Polaris (Brazil)", GAME_SUPPORTS_SAVE )
 GAME( 1980, ballbomb,   0,        ballbomb,  ballbomb,  driver_device, 0, ROT270, "Taito", "Balloon Bomber", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )  /* missing clouds */
 GAME( 1980, indianbt,   0,        indianbt,  indianbt,  driver_device, 0, ROT270, "Taito", "Indian Battle", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
+GAME( 1983, indianbtbr, indianbt, indianbtbr,indianbtbr,driver_device, 0, ROT270, "Taito do Brasil", "Indian Battle (Brazil)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 GAME( 1980, steelwkr,   0,        steelwkr,  steelwkr,  driver_device, 0, ROT0  , "Taito", "Steel Worker", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND )
 GAMEL(1980?,galactic,   0,        galactic,  galactic,  driver_device, 0, ROT270, "Taito do Brasil", "Galactica - Batalha Espacial", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND, layout_galactic )
 GAMEL(1980?,spacmiss,   galactic, galactic,  galactic,  driver_device, 0, ROT270, "bootleg?", "Space Missile - Space Fighting Game", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND, layout_galactic )

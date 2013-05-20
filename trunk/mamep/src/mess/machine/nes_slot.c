@@ -130,6 +130,7 @@ device_nes_cart_interface::device_nes_cart_interface(const machine_config &mconf
 						m_has_trainer(FALSE),
 						m_x1_005_alt_mirroring(FALSE),
 						m_bus_conflict(TRUE),
+						m_open_bus(0),
 						m_prg_chunks(0),
 						m_prg_mask(0xffff),
 						m_chr_source(CHRRAM),
@@ -656,7 +657,7 @@ READ8_MEMBER(device_nes_cart_interface::nt_r)
 
 READ8_MEMBER(device_nes_cart_interface::read_l)
 {
-	return ((offset + 0x4100) & 0xff00) >> 8;   // open bus
+	return m_open_bus;
 }
 
 READ8_MEMBER(device_nes_cart_interface::read_m)
@@ -666,7 +667,7 @@ READ8_MEMBER(device_nes_cart_interface::read_m)
 	if (m_prgram)
 		return m_prgram[offset & (m_prgram_size - 1)];
 
-	return ((offset + 0x6000) & 0xff00) >> 8;   // open bus
+	return m_open_bus;
 }
 
 WRITE8_MEMBER(device_nes_cart_interface::write_l)
@@ -755,10 +756,19 @@ void device_nes_cart_interface::pcb_start(running_machine &machine, UINT8 *ciram
 	{
 		m_ext_ntram_size = 0x2000;
 		m_ext_ntram = auto_alloc_array_clear(machine, UINT8, m_ext_ntram_size);
+		state_save_register_item_pointer(machine, "NES_CART", NULL, 0, m_ext_ntram, m_ext_ntram_size);
 	}
 
 	// at loading time we have configured m_mirroring, now setup NT pages
 	set_nt_mirroring(m_mirroring);
+
+	// save the on-cart RAM pointers
+	if (m_prgram_size)
+		state_save_register_item_pointer(machine, "NES_CART", NULL, 0, m_prgram, m_prgram_size);
+	if (m_vram_size)
+		state_save_register_item_pointer(machine, "NES_CART", NULL, 0, m_vram, m_vram_size);
+	if (m_battery_size)
+		state_save_register_item_pointer(machine, "NES_CART", NULL, 0, m_battery, m_battery_size);
 }
 
 void device_nes_cart_interface::pcb_reg_postload(running_machine &machine)
@@ -993,7 +1003,12 @@ const char * nes_cart_slot_device::get_default_card_software(const machine_confi
 READ8_MEMBER(nes_cart_slot_device::read_l)
 {
 	if (m_cart)
-		return m_cart->read_l(space, offset);
+	{
+		UINT8 val = m_cart->read_l(space, offset);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x4100) & 0xff00) >> 8);
+		return val;
+	}
 	else
 		return 0xff;
 }
@@ -1001,7 +1016,12 @@ READ8_MEMBER(nes_cart_slot_device::read_l)
 READ8_MEMBER(nes_cart_slot_device::read_m)
 {
 	if (m_cart)
-		return m_cart->read_m(space, offset);
+	{
+		UINT8 val = m_cart->read_m(space, offset);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x6000) & 0xff00) >> 8);
+		return val;
+	}
 	else
 		return 0xff;
 }
@@ -1009,7 +1029,12 @@ READ8_MEMBER(nes_cart_slot_device::read_m)
 READ8_MEMBER(nes_cart_slot_device::read_h)
 {
 	if (m_cart)
-		return m_cart->read_h(space, offset);
+	{
+		UINT8 val = m_cart->read_h(space, offset);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x8000) & 0xff00) >> 8);
+		return val;
+	}
 	else
 		return 0xff;
 }
@@ -1017,7 +1042,12 @@ READ8_MEMBER(nes_cart_slot_device::read_h)
 READ8_MEMBER(nes_cart_slot_device::read_ex)
 {
 	if (m_cart)
-		return m_cart->read_ex(space, offset);
+	{
+		UINT8 val = m_cart->read_ex(space, offset);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x4020) & 0xff00) >> 8);
+		return val;
+	}
 	else
 		return 0xff;
 }
@@ -1030,25 +1060,41 @@ READ8_MEMBER(nes_cart_slot_device::read_ex)
 WRITE8_MEMBER(nes_cart_slot_device::write_l)
 {
 	if (m_cart)
+	{
 		m_cart->write_l(space, offset, data);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x4100) & 0xff00) >> 8);
+	}
 }
 
 WRITE8_MEMBER(nes_cart_slot_device::write_m)
 {
 	if (m_cart)
+	{
 		m_cart->write_m(space, offset, data);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x6000) & 0xff00) >> 8);
+	}
 }
 
 WRITE8_MEMBER(nes_cart_slot_device::write_h)
 {
 	if (m_cart)
+	{
 		m_cart->write_h(space, offset, data);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x8000) & 0xff00) >> 8);
+	}
 }
 
 WRITE8_MEMBER(nes_cart_slot_device::write_ex)
 {
 	if (m_cart)
+	{
 		m_cart->write_ex(space, offset, data);
+		// update open bus
+		m_cart->set_open_bus(((offset + 0x4020) & 0xff00) >> 8);
+	}
 }
 
 

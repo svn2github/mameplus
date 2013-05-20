@@ -455,8 +455,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_io_map, AS_IO, 8, kingdrby_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x40, 0x40) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
-	AM_RANGE(0x40, 0x41) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
+	AM_RANGE(0x40, 0x40) AM_DEVREAD("aysnd", ay8910_device, data_r)
+	AM_RANGE(0x40, 0x41) AM_DEVWRITE("aysnd", ay8910_device, data_address_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cowrace_sound_map, AS_PROGRAM, 8, kingdrby_state )
@@ -466,7 +466,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cowrace_sound_io, AS_IO, 8, kingdrby_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x40, 0x41) AM_DEVWRITE_LEGACY("aysnd", ym2203_w)
+	AM_RANGE(0x40, 0x41) AM_DEVWRITE("aysnd", ym2203_device, write)
 ADDRESS_MAP_END
 
 
@@ -945,17 +945,14 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL /* discrete write? */
 };
 
-static const ym2203_interface cowrace_ym2203_interface =
+static const ay8910_interface cowrace_ay8910_config =
 {
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_DRIVER_MEMBER(kingdrby_state,sound_cmd_r),                                    // read A
-		DEVCB_DEVICE_MEMBER("oki", okim6295_device, read),          // read B
-		DEVCB_NULL,                                                 // write A
-		DEVCB_DEVICE_MEMBER("oki", okim6295_device, write)          // write B
-	},
-	DEVCB_NULL
+	AY8910_LEGACY_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_DRIVER_MEMBER(kingdrby_state,sound_cmd_r),                                    // read A
+	DEVCB_DEVICE_MEMBER("oki", okim6295_device, read),          // read B
+	DEVCB_NULL,                                                 // write A
+	DEVCB_DEVICE_MEMBER("oki", okim6295_device, write)          // write B
 };
 
 PALETTE_INIT_MEMBER(kingdrby_state,kingdrby)
@@ -1084,7 +1081,7 @@ static MACHINE_CONFIG_DERIVED( cowrace, kingdrbb )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
 	MCFG_SOUND_REPLACE("aysnd", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(cowrace_ym2203_interface)
+	MCFG_YM2203_AY8910_INTF(&cowrace_ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 

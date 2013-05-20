@@ -523,7 +523,7 @@ static void pce_cd_read_6( running_machine &machine )
 	if ( pce_cd.cdda_status != PCE_CD_CDDA_OFF )
 	{
 		pce_cd.cdda_status = PCE_CD_CDDA_OFF;
-		cdda_stop_audio( machine.device( "cdda" ) );
+		machine.device<cdda_device>("cdda")->stop_audio();
 		pce_cd.end_mark = 0;
 	}
 
@@ -593,7 +593,7 @@ static void pce_cd_nec_set_audio_start_position( running_machine &machine )
 	if ( pce_cd.cdda_status == PCE_CD_CDDA_PAUSED )
 	{
 		pce_cd.cdda_status = PCE_CD_CDDA_OFF;
-		cdda_stop_audio( machine.device( "cdda" ) );
+		machine.device<cdda_device>("cdda")->stop_audio();
 		pce_cd.end_frame = pce_cd.last_frame;
 		pce_cd.end_mark = 0;
 	}
@@ -603,7 +603,7 @@ static void pce_cd_nec_set_audio_start_position( running_machine &machine )
 		{
 			pce_cd.cdda_status = PCE_CD_CDDA_PLAYING;
 			pce_cd.end_frame = pce_cd.last_frame; //get the end of the CD
-			cdda_start_audio( machine.device( "cdda" ), pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
+			machine.device<cdda_device>("cdda")->start_audio( pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
 			pce_cd.cdda_play_mode = (pce_cd.command_buffer[1] & 0x02) ? 2 : 3; // mode 2 sets IRQ at end
 			pce_cd.end_mark =  (pce_cd.command_buffer[1] & 0x02) ? 1 : 0;
 		}
@@ -611,7 +611,7 @@ static void pce_cd_nec_set_audio_start_position( running_machine &machine )
 		{
 			pce_cd.cdda_status = PCE_CD_CDDA_PLAYING;
 			pce_cd.end_frame = pce_cd.toc->tracks[ cdrom_get_track(pce_cd.cd, pce_cd.current_frame) + 1 ].logframeofs; //get the end of THIS track
-			cdda_start_audio( machine.device( "cdda" ), pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
+			machine.device<cdda_device>("cdda")->start_audio( pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
 			pce_cd.end_mark = 0;
 			pce_cd.cdda_play_mode = 3;
 		}
@@ -670,12 +670,12 @@ static void pce_cd_nec_set_audio_stop_position( running_machine &machine )
 	{
 		if ( pce_cd.cdda_status == PCE_CD_CDDA_PAUSED )
 		{
-			cdda_pause_audio( machine.device( "cdda" ), 0 );
+			machine.device<cdda_device>("cdda")->pause_audio( 0 );
 		}
 		else
 		{
 			//printf("%08x %08x\n",pce_cd.current_frame,pce_cd.end_frame - pce_cd.current_frame);
-			cdda_start_audio( machine.device( "cdda" ), pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
+			machine.device<cdda_device>("cdda")->start_audio( pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame );
 			pce_cd.end_mark = 1;
 		}
 		pce_cd.cdda_status = PCE_CD_CDDA_PLAYING;
@@ -683,7 +683,7 @@ static void pce_cd_nec_set_audio_stop_position( running_machine &machine )
 	else
 	{
 		pce_cd.cdda_status = PCE_CD_CDDA_OFF;
-		cdda_stop_audio( machine.device( "cdda" ) );
+		machine.device<cdda_device>("cdda")->stop_audio();
 		pce_cd.end_frame = pce_cd.last_frame;
 		pce_cd.end_mark = 0;
 //      assert( NULL == pce_cd_nec_set_audio_stop_position );
@@ -714,8 +714,8 @@ static void pce_cd_nec_pause( running_machine &machine )
 	}
 
 	pce_cd.cdda_status = PCE_CD_CDDA_PAUSED;
-	pce_cd.current_frame = cdda_get_audio_lba( machine.device( "cdda" ) );
-	cdda_pause_audio( machine.device( "cdda" ), 1 );
+	pce_cd.current_frame = machine.device<cdda_device>("cdda")->get_audio_lba();
+	machine.device<cdda_device>("cdda")->pause_audio( 1 );
 	pce_cd_reply_status_byte( state, SCSI_STATUS_OK );
 }
 
@@ -740,11 +740,11 @@ static void pce_cd_nec_get_subq( running_machine &machine )
 	{
 	case PCE_CD_CDDA_PAUSED:
 		pce_cd.data_buffer[0] = 2;
-		frame = cdda_get_audio_lba( machine.device( "cdda" ) );
+		frame = machine.device<cdda_device>("cdda")->get_audio_lba();
 		break;
 	case PCE_CD_CDDA_PLAYING:
 		pce_cd.data_buffer[0] = 0;
-		frame = cdda_get_audio_lba( machine.device( "cdda" ) );
+		frame = machine.device<cdda_device>("cdda")->get_audio_lba();
 		break;
 	default:
 		pce_cd.data_buffer[0] = 3;
@@ -816,6 +816,11 @@ static void pce_cd_nec_get_dir_info( running_machine &machine )
 		{
 			track = MAX( bcd_2_dec( pce_cd.command_buffer[2] ), 1 );
 			frame = toc->tracks[track-1].logframeofs;
+			// PCE wants the start sector for data tracks to *not* include the pregap
+			if (toc->tracks[track-1].trktype != CD_TRACK_AUDIO)
+			{
+				frame += toc->tracks[track-1].pregap;
+			}
 			pce_cd.data_buffer[3] = ( toc->tracks[track-1].trktype == CD_TRACK_AUDIO ) ? 0x00 : 0x04;
 		}
 		logerror("track = %d, frame = %d\n", track, frame );
@@ -1003,7 +1008,7 @@ static void pce_cd_update( running_machine &machine )
 			pce_cd.cd_motor_on = 0;
 			pce_cd.selected = 0;
 			pce_cd.cdda_status = PCE_CD_CDDA_OFF;
-			cdda_stop_audio( machine.device( "cdda" ) );
+			machine.device<cdda_device>("cdda")->stop_audio();
 			pce_cd.adpcm_dma_timer->adjust(attotime::never); // stop ADPCM DMA here
 		}
 		pce_cd.scsi_last_RST = pce_cd.scsi_RST;
@@ -1068,11 +1073,11 @@ static void pce_cd_update( running_machine &machine )
 	}
 
 	/* FIXME: presumably CD-DA needs an irq interface for this */
-	if(cdda_audio_ended(machine.device("cdda")) && pce_cd.end_mark == 1)
+	if(machine.device<cdda_device>("cdda")->audio_ended() && pce_cd.end_mark == 1)
 	{
 		switch(pce_cd.cdda_play_mode & 3)
 		{
-			case 1: cdda_start_audio( machine.device( "cdda" ), pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame ); pce_cd.end_mark = 1; break; //play with repeat
+			case 1: machine.device<cdda_device>("cdda")->start_audio( pce_cd.current_frame, pce_cd.end_frame - pce_cd.current_frame ); pce_cd.end_mark = 1; break; //play with repeat
 			case 2: pce_cd_set_irq_line( machine, PCE_CD_IRQ_TRANSFER_DONE, ASSERT_LINE ); pce_cd.end_mark = 0; break; //irq when finished
 			case 3: pce_cd.end_mark = 0; break; //play without repeat
 		}
@@ -1182,7 +1187,7 @@ static void pce_cd_init( running_machine &machine )
 		if ( pce_cd.cd )
 		{
 			pce_cd.toc = cdrom_get_toc( pce_cd.cd );
-			cdda_set_cdrom( machine.device("cdda"), pce_cd.cd );
+			machine.device<cdda_device>("cdda")->set_cdrom( pce_cd.cd );
 			pce_cd.last_frame = cdrom_get_track_start( pce_cd.cd, cdrom_get_last_track( pce_cd.cd ) - 1 );
 			pce_cd.last_frame += pce_cd.toc->tracks[ cdrom_get_last_track( pce_cd.cd ) - 1 ].frames;
 			pce_cd.end_frame = pce_cd.last_frame;
@@ -1238,12 +1243,12 @@ TIMER_CALLBACK_MEMBER(pce_state::pce_cd_cdda_fadeout_callback)
 	if(pce_cd.cdda_volume <= 0)
 	{
 		pce_cd.cdda_volume = 0.0;
-		cdda_set_volume(machine().device("cdda"), 0.0);
+		machine().device<cdda_device>("cdda")->set_volume(0.0);
 		pce_cd.cdda_fadeout_timer->adjust(attotime::never);
 	}
 	else
 	{
-		cdda_set_volume(machine().device("cdda"), pce_cd.cdda_volume);
+		machine().device<cdda_device>("cdda")->set_volume(pce_cd.cdda_volume);
 		pce_cd.cdda_fadeout_timer->adjust(attotime::from_usec(param), param);
 	}
 }
@@ -1256,12 +1261,12 @@ TIMER_CALLBACK_MEMBER(pce_state::pce_cd_cdda_fadein_callback)
 	if(pce_cd.cdda_volume >= 100.0)
 	{
 		pce_cd.cdda_volume = 100.0;
-		cdda_set_volume(machine().device("cdda"), 100.0);
+		machine().device<cdda_device>("cdda")->set_volume(100.0);
 		pce_cd.cdda_fadein_timer->adjust(attotime::never);
 	}
 	else
 	{
-		cdda_set_volume(machine().device("cdda"), pce_cd.cdda_volume);
+		machine().device<cdda_device>("cdda")->set_volume(pce_cd.cdda_volume);
 		pce_cd.cdda_fadein_timer->adjust(attotime::from_usec(param), param);
 	}
 }
@@ -1603,10 +1608,10 @@ READ8_MEMBER(pce_state::pce_cd_intf_r)
 	case 0x04:  /* CD reset */
 		break;
 	case 0x05:  /* Convert PCM data / PCM data */
-		data = cdda_get_channel_volume(machine().device( "cdda" ),(pce_cd.regs[0x03] & 2) ? 0 : 1) & 0xff;
+		data = machine().device<cdda_device>("cdda")->get_channel_volume((pce_cd.regs[0x03] & 2) ? 0 : 1) & 0xff;
 		break;
 	case 0x06:  /* PCM data */
-		data = cdda_get_channel_volume(machine().device( "cdda" ),(pce_cd.regs[0x03] & 2) ? 0 : 1) >> 8;
+		data = machine().device<cdda_device>("cdda")->get_channel_volume((pce_cd.regs[0x03] & 2) ? 0 : 1) >> 8;
 		break;
 	case 0x07:  /* BRAM unlock / CD status */
 		data = ( pce_cd.bram_locked ? ( data & 0x7F ) : ( data | 0x80 ) );

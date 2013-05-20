@@ -277,10 +277,17 @@ INTERRUPT_GEN_MEMBER(othunder_state::vblank_interrupt)
 	update_irq();
 }
 
-TIMER_CALLBACK_MEMBER(othunder_state::ad_interrupt)
+void othunder_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_ad_irq = 1;
-	update_irq();
+	switch (id)
+	{
+	case TIMER_AD_INTERRUPT:
+		m_ad_irq = 1;
+		update_irq();
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in othunder_state::device_timer");
+	}
 }
 
 
@@ -374,7 +381,7 @@ WRITE16_MEMBER(othunder_state::othunder_lightgun_w)
 	   The ADC60808 clock is 512kHz. Conversion takes between 0 and 8 clock
 	   cycles, so would end in a maximum of 15.625us. We'll use 10. */
 
-	machine().scheduler().timer_set(attotime::from_usec(10), timer_expired_delegate(FUNC(othunder_state::ad_interrupt),this));
+	timer_set(attotime::from_usec(10), TIMER_AD_INTERRUPT);
 }
 
 
@@ -465,7 +472,7 @@ static ADDRESS_MAP_START( z80_sound_map, AS_PROGRAM, 8, othunder_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
+	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
 	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITE(othunder_TC0310FAM_w) /* pan */
@@ -623,11 +630,6 @@ WRITE_LINE_MEMBER(othunder_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2610_interface ym2610_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(othunder_state,irqhandler)
-};
-
 
 
 /***********************************************************
@@ -713,7 +715,7 @@ static MACHINE_CONFIG_START( othunder, othunder_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 16000000/2)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(othunder_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "2610.0l", 0.25)
 	MCFG_SOUND_ROUTE(0, "2610.0r", 0.25)
 	MCFG_SOUND_ROUTE(1, "2610.1l", 1.0)

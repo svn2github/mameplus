@@ -20,7 +20,7 @@
     1989  Bloxeed (USA)              Sega / Elorg      317-0140         C      171-5880B
     1990  Columns                    Sega              317-0149         C      171-5880B
     1990  Columns II                 Sega              317-0160         C
-    1990  ThunderForce AC            Sega / Technosoft 317-0172         C2
+    1990  Thunder Force AC           Sega / Technosoft 317-0172         C2
     1990  Borench                    Sega              317-0173         C2
     1991  Twin Squash                Sega              317-0193         C2
     1992  Ribbit!                    Sega              317-0178         C2
@@ -99,9 +99,9 @@
 
 MACHINE_START_MEMBER(segac2_state,segac2)
 {
-	state_save_register_global_array(machine(), m_misc_io_data);
-	state_save_register_global(machine(), m_prot_write_buf);
-	state_save_register_global(machine(), m_prot_read_buf);
+	save_item(NAME(m_misc_io_data));
+	save_item(NAME(m_prot_write_buf));
+	save_item(NAME(m_prot_read_buf));
 }
 
 
@@ -599,7 +599,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, segac2_state )
 	AM_RANGE(0x800000, 0x800001) AM_MIRROR(0x13fdfe) AM_READWRITE(prot_r, prot_w)
 	AM_RANGE(0x800200, 0x800201) AM_MIRROR(0x13fdfe) AM_WRITE(control_w)
 	AM_RANGE(0x840000, 0x84001f) AM_MIRROR(0x13fee0) AM_READWRITE(io_chip_r, io_chip_w)
-	AM_RANGE(0x840100, 0x840107) AM_MIRROR(0x13fef8) AM_DEVREADWRITE8_LEGACY("ymsnd", ym3438_r, ym3438_w, 0x00ff)
+	AM_RANGE(0x840100, 0x840107) AM_MIRROR(0x13fef8) AM_DEVREADWRITE8("ymsnd", ym3438_device, read, write, 0x00ff)
 	AM_RANGE(0x880100, 0x880101) AM_MIRROR(0x13fefe) AM_WRITE(counter_timer_w)
 	AM_RANGE(0x8c0000, 0x8c0fff) AM_MIRROR(0x13f000) AM_READWRITE(palette_r, palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc00000, 0xc0001f) AM_MIRROR(0x18ff00) AM_DEVREADWRITE("gen_vdp", sega_genesis_vdp_device, megadriv_vdp_r,megadriv_vdp_w)
@@ -1225,10 +1225,6 @@ WRITE_LINE_MEMBER(segac2_state::segac2_irq2_interrupt)
 	//printf("sound irq %d\n", state);
 	m_maincpu->set_input_line(2, state ? ASSERT_LINE : CLEAR_LINE);
 }
-static const ym3438_interface ym3438_intf =
-{
-	DEVCB_DRIVER_LINE_MEMBER(segac2_state,segac2_irq2_interrupt)      /* IRQ handler */
-};
 
 
 /******************************************************************************
@@ -1387,7 +1383,7 @@ static MACHINE_CONFIG_START( segac, segac2_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3438, XL2_CLOCK/7)
-	MCFG_SOUND_CONFIG(ym3438_intf)
+	MCFG_YM2612_IRQ_HANDLER(WRITELINE(segac2_state, segac2_irq2_interrupt))
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	/* right channel not connected */
 
@@ -1511,7 +1507,7 @@ ROM_START( borench ) /* Borench  (c)1990 Sega */
 ROM_END
 
 
-ROM_START( tfrceac ) /* ThunderForce AC  (c)1990 Technosoft / Sega */
+ROM_START( tfrceac ) /* Thunder Force AC  (c)1990 Technosoft / Sega */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "epr-13675.ic32", 0x000000, 0x040000, CRC(95ecf202) SHA1(92b0f351f2bee7d59873a4991615f14f1afe4da7) )
 	ROM_LOAD16_BYTE( "epr-13674.ic31", 0x000001, 0x040000, CRC(e63d7f1a) SHA1(a40d0a5a96f379a467048dc8fddd8aaaeb94da1d) )
@@ -1523,7 +1519,7 @@ ROM_START( tfrceac ) /* ThunderForce AC  (c)1990 Technosoft / Sega */
 	ROM_LOAD( "epr-13655.ic4", 0x000000, 0x040000, CRC(e09961f6) SHA1(e109b5f41502b765d191f22e3bbcff97d6defaa1) )
 ROM_END
 
-ROM_START( tfrceacj ) /* ThunderForce AC (Jpn)  (c)1990 Technosoft / Sega */
+ROM_START( tfrceacj ) /* Thunder Force AC (Jpn)  (c)1990 Technosoft / Sega */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "epr-13657.ic32", 0x000000, 0x040000, CRC(a0f38ffd) SHA1(da548e7f61aed0e82a460553a119941da8857bc4) )
 	ROM_LOAD16_BYTE( "epr-13656.ic31", 0x000001, 0x040000, CRC(b9438d1e) SHA1(598209c9fec3527fde720af09e5bebd7379f5b2b) )
@@ -1535,7 +1531,7 @@ ROM_START( tfrceacj ) /* ThunderForce AC (Jpn)  (c)1990 Technosoft / Sega */
 	ROM_LOAD( "epr-13655.ic4", 0x000000, 0x040000, CRC(e09961f6) SHA1(e109b5f41502b765d191f22e3bbcff97d6defaa1) )
 ROM_END
 
-ROM_START( tfrceacb ) /* ThunderForce AC (Bootleg)  (c)1990 Technosoft / Sega */
+ROM_START( tfrceacb ) /* Thunder Force AC (Bootleg)  (c)1990 Technosoft / Sega */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "4.bin",    0x000000, 0x040000, CRC(eba059d3) SHA1(7bc04401f9a138fa151ac09a528b70acfb2021e3) )
 	ROM_LOAD16_BYTE( "3.bin",    0x000001, 0x040000, CRC(3e5dc542) SHA1(4a66dc842afaa145dab82b232738eea107bdf0f8) )
@@ -2247,16 +2243,16 @@ GAME( 1990, columns2,  0,        segac,  columns2, segac2_state, columns2, ROT0,
 GAME( 1990, column2j,  columns2, segac,  columns2, segac2_state, columns2, ROT0,   "Sega", "Columns II: The Voyage Through Time (Japan)", 0 )
 
 /* System C-2 Games */
-GAME( 1990, tfrceac,   0,        segac2, tfrceac, segac2_state,  tfrceac,  ROT0,   "Sega / Technosoft", "ThunderForce AC", 0 )
-GAME( 1990, tfrceacj,  tfrceac,  segac2, tfrceac, segac2_state,  tfrceac,  ROT0,   "Sega / Technosoft", "ThunderForce AC (Japan)", 0 )
-GAME( 1990, tfrceacb,  tfrceac,  segac2, tfrceac, segac2_state,  tfrceacb, ROT0,   "bootleg", "ThunderForce AC (bootleg)", 0 )
+GAME( 1990, tfrceac,   0,        segac2, tfrceac, segac2_state,  tfrceac,  ROT0,   "Technosoft / Sega", "Thunder Force AC", 0 )
+GAME( 1990, tfrceacj,  tfrceac,  segac2, tfrceac, segac2_state,  tfrceac,  ROT0,   "Technosoft / Sega", "Thunder Force AC (Japan)", 0 )
+GAME( 1990, tfrceacb,  tfrceac,  segac2, tfrceac, segac2_state,  tfrceacb, ROT0,   "bootleg", "Thunder Force AC (bootleg)", 0 )
 GAME( 1990, borench,   0,        segac2, borench, segac2_state,  borench,  ROT0,   "Sega", "Borench", 0 )
 GAME( 1991, twinsqua,  0,        segac2, twinsqua, segac2_state, twinsqua, ROT0,   "Sega", "Twin Squash", 0 )
 GAME( 1991, ribbit,    0,        segac2, ribbit, segac2_state,   ribbit,   ROT0,   "Sega", "Ribbit!", 0 )
-GAME( 1992, puyo,      0,        segac2, puyo, segac2_state,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (World)", 0 )
+GAME( 1992, puyo,      0,        segac2, puyo, segac2_state,     puyo,     ROT0,   "Compile / Sega", "Puyo Puyo (World)", 0 )
 GAME( 1992, puyobl,    puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "bootleg", "Puyo Puyo (World, bootleg)", 0 )
-GAME( 1992, puyoj,     puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (Japan, Rev B)", 0 )
-GAME( 1992, puyoja,    puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (Japan, Rev A)", 0 )
+GAME( 1992, puyoj,     puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "Compile / Sega", "Puyo Puyo (Japan, Rev B)", 0 )
+GAME( 1992, puyoja,    puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "Compile / Sega", "Puyo Puyo (Japan, Rev A)", 0 )
 GAME( 1992, tantr,     0,        segac2, ichir, segac2_state,    tantr,    ROT0,   "Sega", "Puzzle & Action: Tant-R (Japan)", 0 )
 GAME( 1993, tantrkor,  tantr,    segac2, ichir, segac2_state,    tantrkor, ROT0,   "Sega", "Puzzle & Action: Tant-R (Korea)", 0 )
 GAME( 1992, tantrbl,   tantr,    segac2, ichir, segac2_state,    c2boot,   ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 1)", 0 )

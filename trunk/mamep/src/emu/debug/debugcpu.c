@@ -1663,7 +1663,9 @@ device_debug::device_debug(device_t &device)
 		m_track_pc_set(),
 		m_track_pc(false),
 		m_comment_set(),
-		m_comment_change(0)
+		m_comment_change(0),
+		m_track_mem_set(),
+		m_track_mem(false)
 {
 	memset(m_pc_history, 0, sizeof(m_pc_history));
 	memset(m_wplist, 0, sizeof(m_wplist));
@@ -2023,6 +2025,15 @@ void device_debug::memory_read_hook(address_space &space, offs_t address, UINT64
 
 void device_debug::memory_write_hook(address_space &space, offs_t address, UINT64 data, UINT64 mem_mask)
 {
+	if (m_track_mem)
+	{
+		dasm_memory_access newAccess(space.spacenum(), address, data, history_pc(0));
+		if (!m_track_mem_set.insert(newAccess))
+		{
+			m_track_mem_set.remove(newAccess);
+			m_track_mem_set.insert(newAccess);
+		}
+	}
 	watchpoint_check(space, WATCHPOINT_WRITE, address, data, mem_mask);
 }
 
@@ -2627,6 +2638,25 @@ void device_debug::set_track_pc_visited(const offs_t& pc)
 {
 	const UINT32 crc = compute_opcode_crc32(pc);
 	m_track_pc_set.insert(dasm_pc_tag(pc, crc));
+}
+
+
+//-------------------------------------------------
+//  track_mem_pc_from_address_data - returns the pc that
+//  wrote the data to this address or (offs_t)(-1) for
+//  'not available'.
+//-------------------------------------------------
+
+offs_t device_debug::track_mem_pc_from_space_address_data(const address_spacenum& space,
+															const offs_t& address,
+															const UINT64& data) const
+{
+	const offs_t missing = (offs_t)(-1);
+	if (m_track_mem_set.empty())
+		return missing;
+	dasm_memory_access* mem_access = m_track_mem_set.find(dasm_memory_access(space, address, data, 0));
+	if (mem_access == NULL) return missing;
+	return mem_access->m_pc;
 }
 
 
@@ -3524,6 +3554,21 @@ void device_debug::tracer::flush()
 device_debug::dasm_pc_tag::dasm_pc_tag(const offs_t& address, const UINT32& crc)
 	: m_address(address),
 		m_crc(crc)
+{
+}
+
+//-------------------------------------------------
+//  dasm_memory_access - constructor
+//-------------------------------------------------
+
+device_debug::dasm_memory_access::dasm_memory_access(const address_spacenum& address_space,
+														const offs_t& address,
+														const UINT64& data,
+														const offs_t& pc)
+	: m_address_space(address_space),
+		m_address(address),
+		m_data(data),
+		m_pc(pc)
 {
 }
 

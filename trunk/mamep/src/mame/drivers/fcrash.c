@@ -804,8 +804,8 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, cps_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xd800, 0xd801) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r, ym2203_w)
-	AM_RANGE(0xdc00, 0xdc01) AM_DEVREADWRITE_LEGACY("ym2", ym2203_r, ym2203_w)
+	AM_RANGE(0xd800, 0xd801) AM_DEVREADWRITE("ym1", ym2203_device, read, write)
+	AM_RANGE(0xdc00, 0xdc01) AM_DEVREADWRITE("ym2", ym2203_device, read, write)
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(fcrash_snd_bankswitch_w)
 	AM_RANGE(0xe400, 0xe400) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(fcrash_msm5205_0_data_w)
@@ -1712,6 +1712,27 @@ ROM_START( fcrash )
 	ROM_REGION( 0x8000, "gfx2", 0 )
 	ROM_COPY( "gfx", 0x000000, 0x000000, 0x8000 )   /* stars */
 ROM_END
+
+ROM_START( ffightbl )
+	ROM_REGION( 0x400000, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_BYTE( "fg-e.bin",  0x00000, 0x80000, CRC(f8ccf27e) SHA1(08ff445d946da81e7dc0cc021f686b5968fa34ab) )
+	ROM_LOAD16_BYTE( "fg-f.bin",  0x00001, 0x80000, CRC(d96c76b2) SHA1(3f9ca4625491cab07cf4a1bf001f1325dc3652a3) )
+
+	ROM_REGION( 0x30000, "audiocpu", 0 ) /* Audio CPU + Sample Data */
+	ROM_LOAD( "ff1.bin",   0x00000, 0x20000, CRC(5b276c14) SHA1(73e53c077d4e3c1b919eee28b29e34176ee204f8) )
+	ROM_RELOAD(          0x10000, 0x20000 )
+
+	ROM_REGION( 0x200000, "gfx", 0 )
+	ROMX_LOAD( "fg-d.bin",     0x000000, 0x80000, CRC(4303f863) SHA1(72a3246e14f9c4d1fb4712bd67d087db42d722d9) , ROM_SKIP(3) )
+	ROMX_LOAD( "fg-c.bin",     0x000001, 0x80000, CRC(d1dfcd2d) SHA1(8796db70459e1e6232a75f5c3f4bf8b227b16f46) , ROM_SKIP(3) )
+	ROMX_LOAD( "fg-b.bin",     0x000002, 0x80000, CRC(22f2c097) SHA1(bbf2d30d31c5a7802b7f7f164dd51a4584511936) , ROM_SKIP(3) )
+	ROMX_LOAD( "fg-a.bin",     0x000003, 0x80000, CRC(16a89b2c) SHA1(4d0e1ec6ae9a2bd31fa77140532bbce64d3874e9) , ROM_SKIP(3) )
+
+	ROM_REGION( 0x8000, "gfx2", 0 )
+	ROM_COPY( "gfx", 0x000000, 0x000000, 0x8000 )   /* stars */
+ROM_END
+
+
 
 
 
@@ -2677,6 +2698,7 @@ GAME( 1990, cawingb2,  cawing,   cawingbl,  cawingbl, cps_state, cawingbl, ROT0,
 GAME( 1993, dinopic,   dino,     dinopic,   dino,     cps_state, dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // 930201 ETC
 GAME( 1993, dinopic2,  dino,     dinopic,   dino,     cps_state, dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // 930201 ETC
 GAME( 1990, fcrash,    ffight,   fcrash,    fcrash,   cps_state, cps1,     ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_SUPPORTS_SAVE )
+GAME( 1990, ffightbl,  ffight,   fcrash,    fcrash,   cps_state, cps1,     ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1991, kodb,      kod,      kodb,      kodb,     cps_state, kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // 910731  "ETC"
 GAME( 1991, knightsb,  knights,  knightsb,  knights,  cps_state, dinopic,  ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )    // 911127 - based on World version
 GAME( 1993, punipic,   punisher, punipic,   punisher, cps_state, punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // 930422 ETC

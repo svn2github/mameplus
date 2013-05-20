@@ -248,7 +248,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( galkoku_io_map, AS_IO, 8, nbmj8991_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ_LEGACY(nb1413m3_sndrom_r) AM_WRITE(nbmj8991_blitter_w)
-	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("fmsnd", ym3812_w)
+	AM_RANGE(0x80, 0x81) AM_DEVWRITE("fmsnd", ym3812_device, write)
 	AM_RANGE(0x90, 0x90) AM_READ_LEGACY(nb1413m3_inputport0_r)
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
@@ -262,8 +262,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( hyouban_io_map, AS_IO, 8, nbmj8991_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ_LEGACY(nb1413m3_sndrom_r) AM_WRITE(nbmj8991_blitter_w)
-	AM_RANGE(0x81, 0x81) AM_DEVREAD_LEGACY("fmsnd", ay8910_r)
-	AM_RANGE(0x82, 0x83) AM_DEVWRITE_LEGACY("fmsnd", ay8910_data_address_w)
+	AM_RANGE(0x81, 0x81) AM_DEVREAD("fmsnd", ay8910_device, data_r)
+	AM_RANGE(0x82, 0x83) AM_DEVWRITE("fmsnd", ay8910_device, data_address_w)
 	AM_RANGE(0x90, 0x90) AM_READ_LEGACY(nb1413m3_inputport0_r)
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
@@ -314,7 +314,7 @@ static ADDRESS_MAP_START( nbmj8991_sound_io_map, AS_IO, 8, nbmj8991_state )
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE("dac2", dac_device, write_unsigned8)
 	AM_RANGE(0x04, 0x04) AM_WRITE(nbmj8991_soundbank_w)
 	AM_RANGE(0x06, 0x06) AM_WRITENOP
-	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("fmsnd", ym3812_w)
+	AM_RANGE(0x80, 0x81) AM_DEVWRITE("fmsnd", ym3812_device, write)
 ADDRESS_MAP_END
 
 

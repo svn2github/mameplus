@@ -70,7 +70,7 @@ public:
 	{ }
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_z80snd;
-	optional_device<device_t> m_ymsnd;
+	optional_device<ym2612_device> m_ymsnd;
 	required_device<sega_genesis_vdp_device> m_vdp;
 	optional_device<sega_32x_device> m_32x;
 	optional_device<sega_segacd_device> m_segacd;
@@ -337,6 +337,12 @@ public:
 class mtech_state : public md_base_state
 {
 public:
+	enum
+	{
+		TIMER_Z80_RUN_STATE,
+		TIMER_Z80_STOP_STATE
+	};
+
 	mtech_state(const machine_config &mconfig, device_type type, const char *tag)
 	: md_base_state(mconfig, type, tag),
 		m_vdp1(*this, "vdp1"),
@@ -391,6 +397,9 @@ public:
 	DECLARE_WRITE8_MEMBER( megatech_bios_port_ctrl_w );
 	DECLARE_READ8_MEMBER( megatech_bios_joypad_r );
 	DECLARE_WRITE8_MEMBER (megatech_bios_port_7f_w);
+
+protected:
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };
 
 class _32x_state : public md_base_state

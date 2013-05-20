@@ -372,12 +372,12 @@ WRITE8_MEMBER(midway_ssio_device::portb1_w)
 
 void midway_ssio_device::update_volumes()
 {
-	ay8910_set_volume(m_ay0, 0, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[0][0]]);
-	ay8910_set_volume(m_ay0, 1, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[0][1]]);
-	ay8910_set_volume(m_ay0, 2, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[0][2]]);
-	ay8910_set_volume(m_ay1, 0, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][0]]);
-	ay8910_set_volume(m_ay1, 1, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][1]]);
-	ay8910_set_volume(m_ay1, 2, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][2]]);
+	m_ay0->set_volume(0, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[0][0]]);
+	m_ay0->set_volume(1, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[0][1]]);
+	m_ay0->set_volume(2, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[0][2]]);
+	m_ay1->set_volume(0, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][0]]);
+	m_ay1->set_volume(1, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][1]]);
+	m_ay1->set_volume(2, m_mute ? 0 : m_ayvolume_lookup[m_duty_cycle[1][2]]);
 }
 
 
@@ -416,12 +416,12 @@ static ADDRESS_MAP_START( ssio_map, AS_PROGRAM, 8, midway_ssio_device )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x0c00) AM_RAM
 	AM_RANGE(0x9000, 0x9003) AM_MIRROR(0x0ffc) AM_READ(data_r)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ay0", ay8910_address_w)
-	AM_RANGE(0xa001, 0xa001) AM_MIRROR(0x0ffc) AM_DEVREAD_LEGACY("ay0", ay8910_r)
-	AM_RANGE(0xa002, 0xa002) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ay0", ay8910_data_w)
-	AM_RANGE(0xb000, 0xb000) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ay1", ay8910_address_w)
-	AM_RANGE(0xb001, 0xb001) AM_MIRROR(0x0ffc) AM_DEVREAD_LEGACY("ay1", ay8910_r)
-	AM_RANGE(0xb002, 0xb002) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ay1", ay8910_data_w)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x0ffc) AM_DEVWRITE("ay0", ay8910_device, address_w)
+	AM_RANGE(0xa001, 0xa001) AM_MIRROR(0x0ffc) AM_DEVREAD("ay0", ay8910_device, data_r)
+	AM_RANGE(0xa002, 0xa002) AM_MIRROR(0x0ffc) AM_DEVWRITE("ay0", ay8910_device, data_w)
+	AM_RANGE(0xb000, 0xb000) AM_MIRROR(0x0ffc) AM_DEVWRITE("ay1", ay8910_device, address_w)
+	AM_RANGE(0xb001, 0xb001) AM_MIRROR(0x0ffc) AM_DEVREAD("ay1", ay8910_device, data_r)
+	AM_RANGE(0xb002, 0xb002) AM_MIRROR(0x0ffc) AM_DEVWRITE("ay1", ay8910_device, data_w)
 	AM_RANGE(0xc000, 0xcfff) AM_READNOP AM_WRITE(status_w)
 	AM_RANGE(0xd000, 0xdfff) AM_WRITENOP    // low bit controls yellow LED
 	AM_RANGE(0xe000, 0xefff) AM_READ(irq_clear)
@@ -1198,7 +1198,7 @@ WRITE8_MEMBER(midway_squawk_n_talk_device::portb2_w)
 	// write strobe -- pass the current command to the TMS5200
 	if (((data ^ m_tms_strobes) & 0x02) && !(data & 0x02))
 	{
-		tms5220_data_w(m_tms5200, space, offset, m_tms_command);
+		m_tms5200->data_w(space, offset, m_tms_command);
 
 		// DoT expects the ready line to transition on a command/write here, so we oblige
 		m_pia1->ca2_w(1);
@@ -1208,7 +1208,7 @@ WRITE8_MEMBER(midway_squawk_n_talk_device::portb2_w)
 	// read strobe -- read the current status from the TMS5200
 	else if (((data ^ m_tms_strobes) & 0x01) && !(data & 0x01))
 	{
-		m_pia1->porta_w(tms5220_status_r(m_tms5200, space, offset));
+		m_pia1->porta_w(m_tms5200->status_r(space, offset));
 
 		// DoT expects the ready line to transition on a command/write here, so we oblige
 		m_pia1->ca2_w(1);

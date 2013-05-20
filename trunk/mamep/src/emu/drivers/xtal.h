@@ -130,6 +130,7 @@ enum
 	XTAL_15_36MHz       = 15360000,     /* Visual 1050 */
 	XTAL_15_468MHz      = 15468480,     /* Bank Panic h/w, Sega G80 */
 	XTAL_16MHz          = 16000000,     /* Extremely common, used on 100's of PCBs */
+	XTAL_16_384MHz      = 16384000,
 	XTAL_16_9344MHz     = 16934400,     /* Usually used to drive 90's Yamaha OPL/FM chips (44100 * 384) */
 	XTAL_17_36MHz       = 17360000,     /* OMTI Series 10 SCSI controller */
 	XTAL_17_73447MHz    = 17734470,     /* (~4x PAL subcarrier) */
@@ -172,6 +173,7 @@ enum
 	XTAL_28_63636MHz    = 28636363,     /* Later Leland games and Atari GT, Amiga NTSC, Raiden2 h/w (8x NTSC subcarrier)*/
 	XTAL_30MHz          = 30000000,     /* Impera Magic Card */
 	XTAL_30_4761MHz     = 30476100,     /* Taito JC */
+	XTAL_30_8MHz        = 30800000,     /* 15IE-00-013 */
 	XTAL_32MHz          = 32000000,
 	XTAL_32_22MHz       = 32220000,     /* Typically used on 90's Data East PCBs */
 	XTAL_32_5304MHz     = 32530400,     /* Seta 2 */

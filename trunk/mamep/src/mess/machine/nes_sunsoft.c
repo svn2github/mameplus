@@ -443,7 +443,7 @@ READ8_MEMBER(nes_sunsoft_4_device::read_m)
 	if (m_prgram && m_wram_enable)
 		return m_prgram[offset & (m_prgram_size - 1)];
 
-	return ((offset + 0x6000) & 0xff00) >> 8;   // open bus
+	return m_open_bus;   // open bus
 }
 
 /*-------------------------------------------------
@@ -564,7 +564,7 @@ READ8_MEMBER(nes_sunsoft_fme7_device::read_m)
 			return m_prgram[((bank * 0x2000) + offset) & (m_prgram_size - 1)];
 	}
 
-	return ((offset + 0x6000) & 0xff00) >> 8;   // open bus
+	return m_open_bus;   // open bus
 }
 
 
@@ -585,10 +585,10 @@ WRITE8_MEMBER(nes_sunsoft_5_device::write_h)
 	switch (offset & 0x6000)
 	{
 		case 0x4000:
-			ay8910_address_w(m_ym2149, space, 0, data & 0x0f);
+			m_ym2149->address_w(space, 0, data & 0x0f);
 			break;
 		case 0x6000:
-			ay8910_data_w(m_ym2149, space, 0, data);
+			m_ym2149->data_w(space, 0, data);
 			break;
 		default:
 			fme7_write(space, offset, data, mem_mask);

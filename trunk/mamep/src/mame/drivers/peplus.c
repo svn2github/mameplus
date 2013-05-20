@@ -178,6 +178,11 @@ Stephh's log (2007.11.28) :
 class peplus_state : public driver_device
 {
 public:
+	enum
+	{
+		TIMER_ASSERT_LP
+	};
+
 	peplus_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			m_cmos_ram(*this, "cmos") ,
@@ -268,10 +273,12 @@ public:
 	virtual void video_start();
 	virtual void palette_init();
 	UINT32 screen_update_peplus(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	TIMER_CALLBACK_MEMBER(assert_lp_cb);
 	void peplus_load_superdata(const char *bank_name);
 	void peplus_init();
 	required_device<cpu_device> m_maincpu;
+
+protected:
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };
 
 static const UINT8  id_022[8] = { 0x00, 0x01, 0x04, 0x09, 0x13, 0x16, 0x18, 0x00 };
@@ -377,10 +384,18 @@ WRITE8_MEMBER(peplus_state::peplus_crtc_mode_w)
 	/* Reset timing logic */
 }
 
-TIMER_CALLBACK_MEMBER(peplus_state::assert_lp_cb)
+void peplus_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	downcast<mc6845_device *>((device_t*)ptr)->assert_light_pen_input();
+	switch (id)
+	{
+	case TIMER_ASSERT_LP:
+		downcast<mc6845_device *>((device_t*)ptr)->assert_light_pen_input();
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in peplus_state::device_timer");
+	}
 }
+
 
 static void handle_lightpen( device_t *device )
 {
@@ -393,7 +408,7 @@ static void handle_lightpen( device_t *device )
 	xt = x_val * vis_area.width() / 1024 + vis_area.min_x;
 	yt = y_val * vis_area.height() / 1024 + vis_area.min_y;
 
-		device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(yt, xt), timer_expired_delegate(FUNC(peplus_state::assert_lp_cb),state), 0, device);
+	state->timer_set(device->machine().primary_screen->time_until_pos(yt, xt), peplus_state::TIMER_ASSERT_LP, 0, device);
 }
 
 WRITE_LINE_MEMBER(peplus_state::crtc_vsync)
@@ -1051,8 +1066,8 @@ static ADDRESS_MAP_START( peplus_iomap, AS_IO, 8, peplus_state )
 	AM_RANGE(0x3000, 0x3fff) AM_READWRITE(peplus_s3000_r, peplus_s3000_w) AM_SHARE("s3000_ram")
 
 	// Sound and Dipswitches
-	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
-	AM_RANGE(0x4004, 0x4004) AM_READ_PORT("SW1")/* likely ay8910 input port, not direct */ AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
+	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE("aysnd", ay8910_device, address_w)
+	AM_RANGE(0x4004, 0x4004) AM_READ_PORT("SW1")/* likely ay8910 input port, not direct */ AM_DEVWRITE("aysnd", ay8910_device, data_w)
 
 	// Superboard Data
 	AM_RANGE(0x5000, 0x5fff) AM_READWRITE(peplus_s5000_r, peplus_s5000_w) AM_SHARE("s5000_ram")

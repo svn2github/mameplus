@@ -774,8 +774,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( alpha68k_I_s_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xe000, 0xe000) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w)
-	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_status_port_r, ym3812_control_port_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ymsnd", ym3812_write_port_w)
+	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE("ymsnd", ym3812_device, status_port_r, control_port_w)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("ymsnd", ym3812_device, write_port_w)
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xfc00, 0xfc00) AM_RAM // unknown port
 ADDRESS_MAP_END
@@ -791,32 +791,32 @@ static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w)
 	AM_RANGE(0x08, 0x08) AM_DEVWRITE("dac", dac_device, write_signed8)
-	AM_RANGE(0x0a, 0x0b) AM_DEVWRITE_LEGACY("ym2", ym2413_w)
-	AM_RANGE(0x0c, 0x0d) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
+	AM_RANGE(0x0a, 0x0b) AM_DEVWRITE("ym2", ym2413_device, write)
+	AM_RANGE(0x0c, 0x0d) AM_DEVWRITE("ym1", ym2203_device, write)
 	AM_RANGE(0x0e, 0x0e) AM_WRITE(sound_bank_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( kyros_sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x10, 0x11) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
-	AM_RANGE(0x80, 0x80) AM_DEVWRITE_LEGACY("ym2", ym2203_write_port_w)
-	AM_RANGE(0x81, 0x81) AM_DEVWRITE_LEGACY("ym2", ym2203_control_port_w)
-	AM_RANGE(0x90, 0x90) AM_DEVWRITE_LEGACY("ym3", ym2203_write_port_w)
-	AM_RANGE(0x91, 0x91) AM_DEVWRITE_LEGACY("ym3", ym2203_control_port_w)
+	AM_RANGE(0x10, 0x11) AM_DEVWRITE("ym1", ym2203_device, write)
+	AM_RANGE(0x80, 0x80) AM_DEVWRITE("ym2", ym2203_device, write_port_w)
+	AM_RANGE(0x81, 0x81) AM_DEVWRITE("ym2", ym2203_device, control_port_w)
+	AM_RANGE(0x90, 0x90) AM_DEVWRITE("ym3", ym2203_device, write_port_w)
+	AM_RANGE(0x91, 0x91) AM_DEVWRITE("ym3", ym2203_device, control_port_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jongbou_sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
-	AM_RANGE(0x01, 0x01) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)
+	AM_RANGE(0x00, 0x00) AM_DEVWRITE("aysnd", ay8910_device, address_w)
+	AM_RANGE(0x01, 0x01) AM_DEVREADWRITE("aysnd", ay8910_device, data_r, data_w)
 	AM_RANGE(0x02, 0x02) AM_WRITE(soundlatch_clear_byte_w)
 	AM_RANGE(0x06, 0x06) AM_WRITENOP
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tnextspc_sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_status_port_r, ym3812_control_port_w)
-	AM_RANGE(0x20, 0x20) AM_DEVWRITE_LEGACY("ymsnd", ym3812_write_port_w)
+	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("ymsnd", ym3812_device, status_port_r, control_port_w)
+	AM_RANGE(0x20, 0x20) AM_DEVWRITE("ymsnd", ym3812_device, write_port_w)
 	AM_RANGE(0x3b, 0x3b) AM_READNOP // unknown read port
 	AM_RANGE(0x3d, 0x3d) AM_READNOP // unknown read port
 	AM_RANGE(0x7b, 0x7b) AM_READNOP // unknown read port
@@ -1833,16 +1833,13 @@ WRITE8_MEMBER(alpha68k_state::porta_w)
 	m_sound_pa_latch = data & 1;
 }
 
-static const ym2203_interface ym2203_config =
+static const ay8910_interface ym2203_ay8910_config =
 {
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
-		DEVCB_NULL,
-		DEVCB_DRIVER_MEMBER(alpha68k_state, porta_w),
-		DEVCB_NULL
-	},
+	AY8910_LEGACY_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
+	DEVCB_NULL,
+	DEVCB_DRIVER_MEMBER(alpha68k_state, porta_w),
 	DEVCB_NULL
 };
 
@@ -1850,11 +1847,6 @@ WRITE_LINE_MEMBER(alpha68k_state::ym3812_irq)
 {
 	m_audiocpu->set_input_line(0, (state) ? HOLD_LINE : CLEAR_LINE);
 }
-
-static const ym3812_interface ym3812_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(alpha68k_state,ym3812_irq)
-};
 
 
 /******************************************************************************/
@@ -2104,7 +2096,7 @@ static MACHINE_CONFIG_START( alpha68k_I, alpha68k_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, 4000000)
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(alpha68k_state, ym3812_irq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -2146,7 +2138,7 @@ static MACHINE_CONFIG_START( alpha68k_II, alpha68k_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_AY8910_INTF(&ym2203_ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)
 
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
@@ -2195,7 +2187,7 @@ static MACHINE_CONFIG_START( alpha68k_II_gm, alpha68k_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_AY8910_INTF(&ym2203_ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)
 
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
@@ -2238,7 +2230,7 @@ static MACHINE_CONFIG_START( alpha68k_V, alpha68k_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_AY8910_INTF(&ym2203_ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)
 
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
@@ -2280,7 +2272,7 @@ static MACHINE_CONFIG_START( alpha68k_V_sb, alpha68k_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_AY8910_INTF(&ym2203_ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)
 
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
@@ -2321,7 +2313,7 @@ static MACHINE_CONFIG_START( tnextspc, alpha68k_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, 4000000)
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(alpha68k_state, ym3812_irq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -2755,17 +2747,11 @@ ROM_START( skysoldr )
 	ROM_LOAD( "ss.17",          0x1a0000, 0x20000, CRC(a7f524e0) SHA1(97e3e637d754a8c8c25c9b8bf8f67b1f8776e460) )
 	ROM_LOAD( "ss.21",          0x1c0000, 0x20000, CRC(cb7bf5fe) SHA1(8ded0be6b7d3ac4478234df9e72e6cad95f36d21) )
 	ROM_LOAD( "ss.25",          0x1e0000, 0x20000, CRC(65138016) SHA1(871b0ba39710b1094519cd808339e80ea366a016) )
-
-	ROM_REGION16_BE( 0x80000, "user1", 0 ) /* Reload the code here for upper bank */
-	ROM_LOAD16_BYTE( "ss.3",      0x00000, 0x10000, CRC(7b88aa2e) SHA1(17ed682fb67e8fa05a1309e87ac29c09adcd7474) )
-	ROM_CONTINUE   ( 0x40000,     0x10000 )
-	ROM_LOAD16_BYTE( "ss.4",      0x00001, 0x10000, CRC(f0283d43) SHA1(bfbc7235c9ff52b9ab269247e9c4a9d574ba25e2) )
-	ROM_CONTINUE   ( 0x40001,     0x10000 )
-	ROM_LOAD16_BYTE( "ss.1",      0x20000, 0x10000, CRC(20e9dbc7) SHA1(632e5c7348a88620b85f968501a33609cc993972) )
-	ROM_CONTINUE   ( 0x60000,     0x10000 )
-	ROM_LOAD16_BYTE( "ss.2",      0x20001, 0x10000, CRC(486f3432) SHA1(56b6c74031001bccb98e73f228e697556e8111d4) )
-	ROM_CONTINUE   ( 0x60001,     0x10000 )
 ROM_END
+
+
+
+
 
 ROM_START( goldmedl )
 	ROM_REGION( 0x40000, "maincpu", 0 )
@@ -3077,7 +3063,7 @@ ROM_START( sbasebal )
 	ROM_LOAD( "kcbchr0.bin",     0x1e0000, 0x80000, CRC(b8a1a088) SHA1(cb21a04387431b1810130abd86a2ebf78cf09a3b) )
 ROM_END
 
-ROM_START( tnextspc )
+ROM_START( tnextspc ) /* MASKROM for gfx */
 	ROM_REGION( 0x40000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "ns_4.bin", 0x00000, 0x20000, CRC(4617cba3) SHA1(615a1e67fc1c76d2be004b19a965f423b8daaf5c) )
 	ROM_LOAD16_BYTE( "ns_3.bin", 0x00001, 0x20000, CRC(a6c47fef) SHA1(b7e4a0fffd5c44ed0b138c1ad04c3b6644ec463b) )
@@ -3090,6 +3076,35 @@ ROM_START( tnextspc )
 
 	ROM_REGION( 0x8000, "user1", 0 )
 	ROM_LOAD( "ns_2.bin",    0x0000,  0x8000,  CRC(05771d48) SHA1(9e9376b1449679f554eabf8cea023714dd1ed487) ) /* Colour lookup */
+
+	ROM_REGION( 0x1000, "proms", 0 ) //AT: corrected PROM order
+	ROM_LOAD( "2.p2",        0x0000,  0x0100,  CRC(1f388d48) SHA1(5e7dc37b4e177483f4fc65b801dca8ef132ac282) ) /* R */
+	ROM_LOAD( "3.p3",        0x0100,  0x0100,  CRC(0254533a) SHA1(d0ec0d03ed78482cd9344661eab3305640e85682) ) /* G */
+	ROM_LOAD( "1.p1",        0x0200,  0x0100,  CRC(488fd0e9) SHA1(cde18e9ca0b320ded821bea537c88424b02e8910) ) /* B */
+	ROM_LOAD( "5.p5",        0x0300,  0x0400,  CRC(9c8527bf) SHA1(6b52ab37ea6c07a4814ed33deadd59d137b5fd4d) ) /* Clut high nibble */
+	ROM_LOAD( "4.p4",        0x0700,  0x0400,  CRC(cc9ff769) SHA1(e9de0371fd8bae7f08924891d78799ace97902b1) ) /* Clut low nibble */
+ROM_END
+
+ROM_START( tnextspc2 ) /* EPROMs for gfx */
+	ROM_REGION( 0x40000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "ns_4.bin", 0x00000, 0x20000, CRC(4617cba3) SHA1(615a1e67fc1c76d2be004b19a965f423b8daaf5c) ) /* b18.ic13 */
+	ROM_LOAD16_BYTE( "ns_3.bin", 0x00001, 0x20000, CRC(a6c47fef) SHA1(b7e4a0fffd5c44ed0b138c1ad04c3b6644ec463b) ) /* b17.ic11 */
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )   /* Sound CPU */
+	ROM_LOAD( "ns_1.bin",    0x000000, 0x10000, CRC(fc26853c) SHA1(0118b048046a6125bba20dec081b936486eb1597) ) /* b1.ic129 */
+
+	ROM_REGION( 0x080000, "gfx1", 0 )   /* Graphics are odd/even interleaved */
+	ROM_LOAD16_BYTE( "b3.ic49", 0x00000, 0x10000, CRC(2bddf94d) SHA1(e064f48d0e3bb089753c1b59c863bb46bfa2bcee) )
+	ROM_LOAD16_BYTE( "b7.ic53", 0x00001, 0x10000, CRC(a8b13a9a) SHA1(2f808c17e97a272be14099c53b287e665dd90b14) )
+	ROM_LOAD16_BYTE( "b4.ic50", 0x20000, 0x10000, CRC(80c6c841) SHA1(ab0aa4cad6dcadae62f849e53c3c5cd909f77971) )
+	ROM_LOAD16_BYTE( "b8.ic54", 0x20001, 0x10000, CRC(bf0762a0) SHA1(2fe32b1bf08dfc78668d7a12a7a67e6b2c0a2c48) )
+	ROM_LOAD16_BYTE( "b5.ic51", 0x40000, 0x10000, CRC(e487750b) SHA1(f01d15f6624822dc78ff7e1cd2fdce54568ab5dc) )
+	ROM_LOAD16_BYTE( "b9.ic55", 0x40001, 0x10000, CRC(45d730b9) SHA1(cb05942b12589e76afbbbac94cba0e8284bb3deb) )
+	ROM_LOAD16_BYTE( "b6.ic52", 0x60000, 0x10000, CRC(0618cf49) SHA1(fad33b316613b82231f8372d0faf8cf1c669ac98) )
+	ROM_LOAD16_BYTE( "b10.ic56", 0x60001, 0x10000, CRC(f48819df) SHA1(86d688590379316638ef4c3094c11629931cd69e) )
+
+	ROM_REGION( 0x8000, "user1", 0 )
+	ROM_LOAD( "ns_2.bin",    0x0000,  0x8000,  CRC(05771d48) SHA1(9e9376b1449679f554eabf8cea023714dd1ed487) ) /* b2.ic90 - Colour lookup */
 
 	ROM_REGION( 0x1000, "proms", 0 ) //AT: corrected PROM order
 	ROM_LOAD( "2.p2",        0x0000,  0x0100,  CRC(1f388d48) SHA1(5e7dc37b4e177483f4fc65b801dca8ef132ac282) ) /* R */
@@ -3189,7 +3204,7 @@ DRIVER_INIT_MEMBER(alpha68k_state,btlfieldb)
 
 DRIVER_INIT_MEMBER(alpha68k_state,skysoldr)
 {
-	membank("bank8")->set_base((memregion("user1")->base()) + 0x40000);
+	membank("bank8")->set_base((memregion("maincpu")->base()) + 0x40000);
 	m_invert_controls = 0;
 	m_microcontroller_id = 0;
 	m_coin_id = 0x22 | (0x22 << 8);
@@ -3316,5 +3331,6 @@ GAME( 1989, gangwarsu, gangwars, alpha68k_V,     gangwarsu, alpha68k_state,gangw
 
 GAME( 1989, sbasebal,  0,        alpha68k_V_sb,  sbasebal, alpha68k_state, sbasebal, ROT0,  "Alpha Denshi Co. (SNK of America license)",         "Super Champion Baseball (US)", GAME_SUPPORTS_SAVE | GAME_UNEMULATED_PROTECTION )
 
-GAME( 1989, tnextspc,  0,        tnextspc,       tnextspc, alpha68k_state, tnextspc, ROT90, "SNK",                                               "The Next Space", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, tnextspc,  0,        tnextspc,       tnextspc, alpha68k_state, tnextspc, ROT90, "SNK",                                               "The Next Space (set 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, tnextspc2, tnextspc, tnextspc,       tnextspc, alpha68k_state, tnextspc, ROT90, "SNK",                                               "The Next Space (set 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
 GAME( 1989, tnextspcj, tnextspc, tnextspc,       tnextspc, alpha68k_state, tnextspc, ROT90, "SNK (Pasadena International Corp. license)",        "The Next Space (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )

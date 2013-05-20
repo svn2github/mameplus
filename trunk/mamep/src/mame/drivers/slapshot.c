@@ -171,15 +171,22 @@ WRITE16_MEMBER(slapshot_state::color_ram_word_w)
                 INTERRUPTS
 ***********************************************************/
 
-TIMER_CALLBACK_MEMBER(slapshot_state::slapshot_interrupt6)
+void slapshot_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_maincpu->set_input_line(6, HOLD_LINE);
+	switch (id)
+	{
+	case TIMER_SLAPSHOT_INTERRUPT6:
+		m_maincpu->set_input_line(6, HOLD_LINE);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in slapshot_state::device_timer");
+	}
 }
 
 
 INTERRUPT_GEN_MEMBER(slapshot_state::slapshot_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(slapshot_state::slapshot_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), TIMER_SLAPSHOT_INTERRUPT6);
 	device.execute().set_input_line(5, HOLD_LINE);
 }
 
@@ -283,7 +290,7 @@ static ADDRESS_MAP_START( slapshot_map, AS_PROGRAM, 16, slapshot_state )
 	AM_RANGE(0x800000, 0x80ffff) AM_DEVREADWRITE_LEGACY("tc0480scp", tc0480scp_word_r, tc0480scp_word_w)    /* tilemaps */
 	AM_RANGE(0x830000, 0x83002f) AM_DEVREADWRITE_LEGACY("tc0480scp", tc0480scp_ctrl_word_r, tc0480scp_ctrl_word_w)
 	AM_RANGE(0x900000, 0x907fff) AM_READWRITE(color_ram_word_r, color_ram_word_w) AM_SHARE("color_ram") /* 8bpg palette */
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE8_LEGACY("mk48t08", timekeeper_r, timekeeper_w, 0xff00) /* nvram (only low bytes used) */
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE8("mk48t08", timekeeper_device, read, write, 0xff00) /* nvram (only low bytes used) */
 	AM_RANGE(0xb00000, 0xb0001f) AM_DEVWRITE8_LEGACY("tc0360pri", tc0360pri_w, 0xff00)  /* priority chip */
 	AM_RANGE(0xc00000, 0xc0000f) AM_DEVREADWRITE_LEGACY("tc0640fio", tc0640fio_halfword_byteswap_r, tc0640fio_halfword_byteswap_w)
 	AM_RANGE(0xc00020, 0xc0002f) AM_READ(slapshot_service_input_r)  /* service mirror */
@@ -298,7 +305,7 @@ static ADDRESS_MAP_START( opwolf3_map, AS_PROGRAM, 16, slapshot_state )
 	AM_RANGE(0x800000, 0x80ffff) AM_DEVREADWRITE_LEGACY("tc0480scp", tc0480scp_word_r, tc0480scp_word_w)    /* tilemaps */
 	AM_RANGE(0x830000, 0x83002f) AM_DEVREADWRITE_LEGACY("tc0480scp", tc0480scp_ctrl_word_r, tc0480scp_ctrl_word_w)
 	AM_RANGE(0x900000, 0x907fff) AM_READWRITE(color_ram_word_r, color_ram_word_w) AM_SHARE("color_ram") /* 8bpg palette */
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE8_LEGACY("mk48t08", timekeeper_r, timekeeper_w, 0xff00) /* nvram (only low bytes used) */
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE8("mk48t08", timekeeper_device, read, write, 0xff00) /* nvram (only low bytes used) */
 	AM_RANGE(0xb00000, 0xb0001f) AM_DEVWRITE8_LEGACY("tc0360pri", tc0360pri_w, 0xff00)  /* priority chip */
 	AM_RANGE(0xc00000, 0xc0000f) AM_DEVREADWRITE_LEGACY("tc0640fio", tc0640fio_halfword_byteswap_r, tc0640fio_halfword_byteswap_w)
 	AM_RANGE(0xc00020, 0xc0002f) AM_READ(slapshot_service_input_r)   /* service mirror */
@@ -313,7 +320,7 @@ static ADDRESS_MAP_START( opwolf3_z80_sound_map, AS_PROGRAM, 8, slapshot_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank10")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r,ym2610_w)
+	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
 	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITENOP /* pan */
@@ -481,11 +488,6 @@ WRITE_LINE_MEMBER(slapshot_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2610_interface ym2610_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(slapshot_state,irqhandler)
-};
-
 
 /***********************************************************
                  MACHINE DRIVERS
@@ -557,7 +559,7 @@ static MACHINE_CONFIG_START( slapshot, slapshot_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 16000000/2)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(slapshot_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.25)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  1.0)
@@ -603,7 +605,7 @@ static MACHINE_CONFIG_START( opwolf3, slapshot_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 16000000/2)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(slapshot_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.25)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  1.0)

@@ -39,7 +39,7 @@ void skullxbo_state::update_interrupts()
 }
 
 
-TIMER_CALLBACK_MEMBER(skullxbo_state::irq_gen)
+TIMER_DEVICE_CALLBACK_MEMBER(skullxbo_state::scanline_timer)
 {
 	scanline_int_gen(m_maincpu);
 }
@@ -55,7 +55,7 @@ void skullxbo_state::scanline_update(screen_device &screen, int scanline)
 	{
 		int width = screen.width();
 		attotime period = screen.time_until_pos(screen.vpos() + 6, width * 0.9);
-		machine().scheduler().timer_set(period, timer_expired_delegate(FUNC(skullxbo_state::irq_gen), this));
+		m_scanline_timer->adjust(period);
 	}
 
 	/* update the playfield and motion objects */
@@ -249,6 +249,7 @@ static MACHINE_CONFIG_START( skullxbo, skullxbo_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
 
+	MCFG_TIMER_DRIVER_ADD("scan_timer", skullxbo_state, scanline_timer)
 	MCFG_MACHINE_RESET_OVERRIDE(skullxbo_state,skullxbo)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 

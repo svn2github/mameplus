@@ -30,7 +30,6 @@
 #include "machine/6840ptm.h"
 #include "machine/nvram.h"
 #include "sound/dac.h"
-#include "sound/tms5220.h"
 #include "includes/esripsys.h"
 
 
@@ -521,10 +520,10 @@ READ8_MEMBER(esripsys_state::tms5220_r)
 	if (offset == 0)
 	{
 		/* TMS5220 core returns status bits in D7-D6 */
-		UINT8 status = tms5220_status_r(m_tms, space, 0);
+		UINT8 status = m_tms->status_r(space, 0);
 
 		status = ((status & 0x80) >> 5) | ((status & 0x40) >> 5) | ((status & 0x20) >> 5);
-		return (tms5220_readyq_r(m_tms) << 7) | (tms5220_intq_r(m_tms) << 6) | status;
+		return (m_tms->readyq_r() << 7) | (m_tms->intq_r() << 6) | status;
 	}
 
 	return 0xff;
@@ -536,12 +535,12 @@ WRITE8_MEMBER(esripsys_state::tms5220_w)
 	if (offset == 0)
 	{
 		m_tms_data = data;
-		tms5220_data_w(m_tms, space, 0, m_tms_data);
+		m_tms->data_w(space, 0, m_tms_data);
 	}
 #if 0
 	if (offset == 1)
 	{
-		tms5220_data_w(m_tms, space, 0, m_tms_data);
+		m_tms->data_w(space, 0, m_tms_data);
 	}
 #endif
 }
@@ -652,34 +651,34 @@ DRIVER_INIT_MEMBER(esripsys_state,esripsys)
 	membank("bank4")->set_base(&rom[0x8000]);
 
 	/* Register stuff for state saving */
-	state_save_register_global_pointer(machine(), m_fdt_a, FDT_RAM_SIZE);
-	state_save_register_global_pointer(machine(), m_fdt_b, FDT_RAM_SIZE);
-	state_save_register_global_pointer(machine(), m_cmos_ram, CMOS_RAM_SIZE);
+	save_pointer(NAME(m_fdt_a), FDT_RAM_SIZE);
+	save_pointer(NAME(m_fdt_b), FDT_RAM_SIZE);
+	save_pointer(NAME(m_cmos_ram), CMOS_RAM_SIZE);
 
-	state_save_register_global(machine(), m_g_iodata);
-	state_save_register_global(machine(), m_g_ioaddr);
-	state_save_register_global(machine(), m_coin_latch);
-	state_save_register_global(machine(), m_keypad_status);
-	state_save_register_global(machine(), m_g_status);
-	state_save_register_global(machine(), m_f_status);
-	state_save_register_global(machine(), m_io_firq_status);
-	state_save_register_global(machine(), m_cmos_ram_a2_0);
-	state_save_register_global(machine(), m_cmos_ram_a10_3);
+	save_item(NAME(m_g_iodata));
+	save_item(NAME(m_g_ioaddr));
+	save_item(NAME(m_coin_latch));
+	save_item(NAME(m_keypad_status));
+	save_item(NAME(m_g_status));
+	save_item(NAME(m_f_status));
+	save_item(NAME(m_io_firq_status));
+	save_item(NAME(m_cmos_ram_a2_0));
+	save_item(NAME(m_cmos_ram_a10_3));
 
-	state_save_register_global(machine(), m_u56a);
-	state_save_register_global(machine(), m_u56b);
-	state_save_register_global(machine(), m_g_to_s_latch1);
-	state_save_register_global(machine(), m_g_to_s_latch2);
-	state_save_register_global(machine(), m_s_to_g_latch1);
-	state_save_register_global(machine(), m_s_to_g_latch2);
-	state_save_register_global(machine(), m_dac_msb);
-	state_save_register_global(machine(), m_dac_vol);
-	state_save_register_global(machine(), m_tms_data);
+	save_item(NAME(m_u56a));
+	save_item(NAME(m_u56b));
+	save_item(NAME(m_g_to_s_latch1));
+	save_item(NAME(m_g_to_s_latch2));
+	save_item(NAME(m_s_to_g_latch1));
+	save_item(NAME(m_s_to_g_latch2));
+	save_item(NAME(m_dac_msb));
+	save_item(NAME(m_dac_vol));
+	save_item(NAME(m_tms_data));
 
 	m_fasel = 0;
 	m_fbsel = 1;
-	state_save_register_global(machine(), m_fasel);
-	state_save_register_global(machine(), m_fbsel);
+	save_item(NAME(m_fasel));
+	save_item(NAME(m_fbsel));
 }
 
 static const esrip_config rip_config =

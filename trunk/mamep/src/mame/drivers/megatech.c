@@ -213,6 +213,21 @@ READ8_MEMBER(mtech_state::megatech_cart_select_r )
 }
 
 
+void mtech_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	switch (id)
+	{
+	case TIMER_Z80_RUN_STATE:
+		megatech_z80_run_state(ptr, param);
+		break;
+	case TIMER_Z80_STOP_STATE:
+		megatech_z80_stop_state(ptr, param);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in mtech_state::device_timer");
+	}
+}
+
 
 TIMER_CALLBACK_MEMBER(mtech_state::megatech_z80_run_state )
 {
@@ -266,7 +281,7 @@ TIMER_CALLBACK_MEMBER(mtech_state::megatech_z80_stop_state )
 	if (game_region)
 	{
 		{
-			machine().scheduler().timer_set(attotime::zero, timer_expired_delegate(FUNC(mtech_state::megatech_z80_run_state),this), param);
+			timer_set(attotime::zero, TIMER_Z80_RUN_STATE, param);
 		}
 	}
 	else
@@ -281,7 +296,7 @@ TIMER_CALLBACK_MEMBER(mtech_state::megatech_z80_stop_state )
 
 void mtech_state::megatech_select_game(int gameno)
 {
-	machine().scheduler().timer_set(attotime::zero, timer_expired_delegate(FUNC(mtech_state::megatech_z80_stop_state),this), gameno);
+	timer_set(attotime::zero, TIMER_Z80_STOP_STATE, gameno);
 }
 
 WRITE8_MEMBER(mtech_state::megatech_cart_select_w )
@@ -775,8 +790,8 @@ ROM_START( mt_aftrb ) /* Afterburner */
 ROM_END
 
 
-/* Game 11 - Thunder Force 2 */
-ROM_START( mt_tfor2 ) /* Thunder Force 2 */
+/* Game 11 - Thunder Force II */
+ROM_START( mt_tfor2 ) /* Thunder Force II */
 	MEGATECH_BIOS
 
 	ROM_REGION16_BE( 0x400000, "game0", ROMREGION_ERASE00 )
@@ -1256,7 +1271,7 @@ ROM_END
 /* 08 */ GAME( 1987, mt_shnbi, megatech, megatech, megatech, mtech_state, mt_crt, ROT0, "Sega",                  "Shinobi (Mega-Tech, SMS based)", GAME_NOT_WORKING) /* sms */
 /* 09 */ GAME( 1987, mt_fz,    megatech, megatech, megatech, mtech_state, mt_crt, ROT0, "Sega",                  "Fantasy Zone (Mega-Tech, SMS based)", GAME_NOT_WORKING) /* sms */
 /* 10 */ GAME( 1987, mt_aftrb, megatech, megatech, megatech, mtech_state, mt_crt, ROT0, "Sega",                  "After Burner (Mega-Tech, SMS based)", GAME_NOT_WORKING) /* sms */
-/* 11 */ GAME( 1989, mt_tfor2, megatech, megatech, megatech, mtech_state, mt_crt, ROT0, "Tecno Soft / Sega",     "Thunder Force II MD (Mega-Tech)", GAME_NOT_WORKING )
+/* 11 */ GAME( 1989, mt_tfor2, megatech, megatech, megatech, mtech_state, mt_crt, ROT0, "Techno Soft / Sega",    "Thunder Force II MD (Mega-Tech)", GAME_NOT_WORKING )
 /* 12 */ // unknown
 /* 13 */ GAME( 1986, mt_astro, megatech, megatech, megatech, mtech_state, mt_crt, ROT0, "Sega",                  "Astro Warrior (Mega-Tech, SMS based)", GAME_NOT_WORKING ) /* sms! */
 /* 14 */ // unknown

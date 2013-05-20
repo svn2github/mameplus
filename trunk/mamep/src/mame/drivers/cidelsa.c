@@ -64,15 +64,15 @@ WRITE8_MEMBER( draco_state::sound_g_w )
 	switch (data)
 	{
 	case 0x01:
-		ay8910_data_w(m_psg, space, 0, m_psg_latch);
+		m_psg->data_w(space, 0, m_psg_latch);
 		break;
 
 	case 0x02:
-		m_psg_latch = ay8910_r(m_psg, space, 0);
+		m_psg_latch = m_psg->data_r(space, 0);
 		break;
 
 	case 0x03:
-		ay8910_address_w(m_psg, space, 0, m_psg_latch);
+		m_psg->address_w(space, 0, m_psg_latch);
 		break;
 	}
 }
@@ -424,9 +424,16 @@ INPUT_PORTS_END
 
 /* Machine Start */
 
-TIMER_CALLBACK_MEMBER(cidelsa_state::set_cpu_mode)
+void cidelsa_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_reset = 1;
+	switch (id)
+	{
+	case TIMER_SET_CPU_MODE:
+		m_reset = 1;
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in cidelsa_state::device_timer");
+	}
 }
 
 void cidelsa_state::machine_start()
@@ -453,14 +460,14 @@ void cidelsa_state::machine_reset()
 {
 	/* reset the CPU */
 	m_reset = 0;
-	machine().scheduler().timer_set(attotime::from_msec(200), timer_expired_delegate(FUNC(cidelsa_state::set_cpu_mode),this));
+	timer_set(attotime::from_msec(200), TIMER_SET_CPU_MODE);
 }
 
 /* Machine Drivers */
 
 static MACHINE_CONFIG_START( destryer, cidelsa_state )
 	/* basic system hardware */
-	MCFG_CPU_ADD(CDP1802_TAG, COSMAC, DESTRYER_CHR1)
+	MCFG_CPU_ADD(CDP1802_TAG, CDP1802, DESTRYER_CHR1)
 	MCFG_CPU_PROGRAM_MAP(destryer_map)
 	MCFG_CPU_IO_MAP(destryer_io_map)
 	MCFG_CPU_CONFIG(cidelsa_cdp1802_config)
@@ -472,7 +479,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( destryera, cidelsa_state )
 	/* basic system hardware */
-	MCFG_CPU_ADD(CDP1802_TAG, COSMAC, DESTRYER_CHR1)
+	MCFG_CPU_ADD(CDP1802_TAG, CDP1802, DESTRYER_CHR1)
 	MCFG_CPU_PROGRAM_MAP(destryera_map)
 	MCFG_CPU_IO_MAP(destryer_io_map)
 	MCFG_CPU_CONFIG(cidelsa_cdp1802_config)
@@ -484,7 +491,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( altair, cidelsa_state )
 	/* basic system hardware */
-	MCFG_CPU_ADD(CDP1802_TAG, COSMAC, ALTAIR_CHR1)
+	MCFG_CPU_ADD(CDP1802_TAG, CDP1802, ALTAIR_CHR1)
 	MCFG_CPU_PROGRAM_MAP(altair_map)
 	MCFG_CPU_IO_MAP(altair_io_map)
 	MCFG_CPU_CONFIG(cidelsa_cdp1802_config)
@@ -502,7 +509,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( draco, draco_state )
 	/* basic system hardware */
-	MCFG_CPU_ADD(CDP1802_TAG, COSMAC, DRACO_CHR1)
+	MCFG_CPU_ADD(CDP1802_TAG, CDP1802, DRACO_CHR1)
 	MCFG_CPU_PROGRAM_MAP(draco_map)
 	MCFG_CPU_IO_MAP(draco_io_map)
 	MCFG_CPU_CONFIG(cidelsa_cdp1802_config)

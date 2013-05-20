@@ -180,6 +180,11 @@ Check gticlub.c for details on the bottom board.
 class zr107_state : public driver_device
 {
 public:
+	enum
+	{
+		TIMER_IRQ_OFF
+	};
+
 	zr107_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_workram(*this, "workram"),
@@ -214,12 +219,14 @@ public:
 	UINT32 screen_update_zr107(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_jetwave(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(zr107_vblank);
-	TIMER_CALLBACK_MEMBER(irq_off);
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<cpu_device> m_dsp;
 	optional_device<k001604_device> m_k001604;
 	optional_device<k056832_device> m_k056832;
+
+protected:
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };
 
 
@@ -420,7 +427,7 @@ void zr107_state::machine_start()
 	/* set conservative DRC options */
 	ppcdrc_set_options(m_maincpu, PPCDRC_COMPATIBLE_OPTIONS);
 
-	m_sound_irq_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(zr107_state::irq_off),this));
+	m_sound_irq_timer = timer_alloc(TIMER_IRQ_OFF);
 
 	/* configure fast RAM regions for DRC */
 	ppcdrc_add_fastram(m_maincpu, 0x00000000, 0x000fffff, FALSE, m_workram);
@@ -531,13 +538,13 @@ static INPUT_PORTS_START( zr107 )
 
 	PORT_START("IN2")
 	PORT_BIT( 0x7f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("adc0838", adc083x_do_read)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("adc0838", adc083x_device, do_read)
 
 	PORT_START("IN4")
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* PARAACK */
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("adc0838",adc083x_sars_read)
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom",eeprom_device,read_bit)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("adc0838", adc083x_device, sars_read)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 
 	PORT_START("EEPROMOUT")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
@@ -545,9 +552,9 @@ static INPUT_PORTS_START( zr107 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
 
 	PORT_START("OUT4")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("adc0838", adc083x_cs_write)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("adc0838", adc083x_di_write)
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("adc0838", adc083x_clk_write)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("adc0838", adc083x_device, cs_write)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("adc0838", adc083x_device, di_write)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("adc0838", adc083x_device, clk_write)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( midnrun )
@@ -688,9 +695,16 @@ static const adc083x_interface zr107_adc_interface = {
 };
 
 
-TIMER_CALLBACK_MEMBER(zr107_state::irq_off)
+void zr107_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_audiocpu->set_input_line(param, CLEAR_LINE);
+	switch (id)
+	{
+	case TIMER_IRQ_OFF:
+		m_audiocpu->set_input_line(param, CLEAR_LINE);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in zr107_state::device_timer");
+	}
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )
@@ -699,7 +713,7 @@ static void sound_irq_callback( running_machine &machine, int irq )
 	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
 
 	state->m_audiocpu->set_input_line(line, ASSERT_LINE);
-	machine.scheduler().timer_set(attotime::from_usec(5), timer_expired_delegate(FUNC(zr107_state::irq_off),state), line);
+	state->timer_set(attotime::from_usec(5), zr107_state::TIMER_IRQ_OFF, line);
 }
 
 static const k056800_interface zr107_k056800_interface =

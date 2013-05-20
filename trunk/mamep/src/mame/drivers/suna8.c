@@ -1176,10 +1176,10 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( hardhead_sound_map, AS_PROGRAM, 8, suna8_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM // ROM
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
-	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w      )
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym3812_device, read, write)
+	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE("aysnd", ay8910_device, address_data_w)
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM // RAM
-	AM_RANGE(0xc800, 0xc800) AM_DEVREAD_LEGACY("ymsnd", ym3812_status_port_r)   // ? unsure
+	AM_RANGE(0xc800, 0xc800) AM_DEVREAD("ymsnd", ym3812_device, status_port_r)   // ? unsure
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(soundlatch2_byte_w                )   //
 	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_byte_r              )   // From Main CPU
 ADDRESS_MAP_END
@@ -1197,8 +1197,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( rranger_sound_map, AS_PROGRAM, 8, suna8_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM // ROM
-	AM_RANGE(0xa000, 0xa001) AM_DEVWRITE_LEGACY("ym1", ym2203_w         )   // Samples + Music
-	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE_LEGACY("ym2", ym2203_w         )   // Music + FX
+	AM_RANGE(0xa000, 0xa001) AM_DEVWRITE("ym1", ym2203_device, write)   // Samples + Music
+	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE("ym2", ym2203_device, write)   // Music + FX
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM // RAM
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(soundlatch2_byte_w                )   // To Sound CPU
 	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_byte_r                  )   // From Main CPU
@@ -1211,8 +1211,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( brickzn_sound_map, AS_PROGRAM, 8, suna8_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM // ROM
-	AM_RANGE(0xc000, 0xc001) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w   )
-	AM_RANGE(0xc002, 0xc003) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w      )
+	AM_RANGE(0xc000, 0xc001) AM_DEVWRITE("ymsnd", ym3812_device, write)
+	AM_RANGE(0xc002, 0xc003) AM_DEVWRITE("aysnd", ay8910_device, address_data_w)
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM // RAM
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch2_byte_w                )   // To PCM CPU
 	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_byte_r                  )   // From Main CPU
@@ -1845,17 +1845,14 @@ MACHINE_CONFIG_END
 
 /* 1 x 24 MHz crystal */
 
-static const ym2203_interface rranger_ym2203_interface =
+static const ay8910_interface ay8910_config =
 {
-	{
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_DRIVER_MEMBER(suna8_state, rranger_play_samples_w),
 	DEVCB_DRIVER_MEMBER(suna8_state, suna8_samples_number_w),
-	},
-	DEVCB_NULL
 };
 
 /* 2203 + 8910 */
@@ -1888,7 +1885,7 @@ static MACHINE_CONFIG_START( rranger, suna8_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ym1", YM2203, SUNA8_MASTER_CLOCK / 6)
-	MCFG_SOUND_CONFIG(rranger_ym2203_interface)
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.90)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.90)
 
@@ -1907,11 +1904,6 @@ MACHINE_CONFIG_END
 ***************************************************************************/
 
 /* 1 x 24 MHz crystal */
-
-static const ym3812_interface brickzn_ym3812_interface =
-{
-	DEVCB_DRIVER_LINE_MEMBER(suna8_state,soundirq)    /* IRQ Line */
-};
 
 MACHINE_RESET_MEMBER(suna8_state,brickzn)
 {
@@ -1953,7 +1945,7 @@ static MACHINE_CONFIG_START( brickzn, suna8_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, SUNA8_MASTER_CLOCK / 6)
-	MCFG_SOUND_CONFIG(brickzn_ym3812_interface)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(suna8_state, soundirq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 

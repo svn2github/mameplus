@@ -134,9 +134,9 @@ static ADDRESS_MAP_START( shangha3_map, AS_PROGRAM, 16, shangha3_state )
 	AM_RANGE(0x200008, 0x200009) AM_WRITE(shangha3_blitter_go_w)
 	AM_RANGE(0x20000a, 0x20000b) AM_WRITE(shangha3_irq_ack_w)
 	AM_RANGE(0x20000c, 0x20000d) AM_WRITE(shangha3_coinctrl_w)
-	AM_RANGE(0x20001e, 0x20001f) AM_DEVREAD8_LEGACY("aysnd", ay8910_r, 0x00ff)
-	AM_RANGE(0x20002e, 0x20002f) AM_DEVWRITE8_LEGACY("aysnd", ay8910_data_w, 0x00ff)
-	AM_RANGE(0x20003e, 0x20003f) AM_DEVWRITE8_LEGACY("aysnd", ay8910_address_w, 0x00ff)
+	AM_RANGE(0x20001e, 0x20001f) AM_DEVREAD8("aysnd", ay8910_device, data_r, 0x00ff)
+	AM_RANGE(0x20002e, 0x20002f) AM_DEVWRITE8("aysnd", ay8910_device, data_w, 0x00ff)
+	AM_RANGE(0x20003e, 0x20003f) AM_DEVWRITE8("aysnd", ay8910_device, address_w, 0x00ff)
 	AM_RANGE(0x20004e, 0x20004f) AM_READWRITE(shangha3_prot_r,shangha3_prot_w)
 	AM_RANGE(0x20006e, 0x20006f) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x300000, 0x30ffff) AM_RAM AM_SHARE("ram") /* gfx & work ram */
@@ -184,7 +184,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( heberpop_sound_io_map, AS_IO, 8, shangha3_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym3438_r, ym3438_w)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ymsnd", ym3438_device, read, write)
 	AM_RANGE(0x80, 0x80) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xc0, 0xc0) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -470,11 +470,6 @@ WRITE_LINE_MEMBER(shangha3_state::irqhandler)
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, state);
 }
 
-static const ym3438_interface ym3438_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(shangha3_state,irqhandler)
-};
-
 
 static MACHINE_CONFIG_START( shangha3, shangha3_state )
 
@@ -542,7 +537,7 @@ static MACHINE_CONFIG_START( heberpop, shangha3_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3438, MASTER_CLOCK/6) /* 8 MHz? */
-	MCFG_SOUND_CONFIG(ym3438_config)
+	MCFG_YM2612_IRQ_HANDLER(WRITELINE(shangha3_state,irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.40)
 	MCFG_SOUND_ROUTE(1, "mono", 0.40)
 
@@ -582,7 +577,7 @@ static MACHINE_CONFIG_START( blocken, shangha3_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3438, MASTER_CLOCK/6) /* 8 MHz? */
-	MCFG_SOUND_CONFIG(ym3438_config)
+	MCFG_YM2612_IRQ_HANDLER(WRITELINE(shangha3_state,irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.40)
 	MCFG_SOUND_ROUTE(1, "mono", 0.40)
 
@@ -676,4 +671,4 @@ DRIVER_INIT_MEMBER(shangha3_state,heberpop)
 
 GAME( 1993, shangha3, 0, shangha3, shangha3, shangha3_state, shangha3, ROT0, "Sunsoft", "Shanghai III (Japan)", 0 )
 GAME( 1994, heberpop, 0, heberpop, heberpop, shangha3_state, heberpop, ROT0, "Sunsoft / Atlus", "Hebereke no Popoon (Japan)", 0 )
-GAME( 1994, blocken,  0, blocken,  blocken, shangha3_state,  heberpop, ROT0, "KID / Visco", "Blocken (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, blocken,  0, blocken,  blocken,  shangha3_state, heberpop, ROT0, "Visco / KID", "Blocken (Japan)", GAME_IMPERFECT_GRAPHICS )

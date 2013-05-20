@@ -572,14 +572,21 @@ driftout  8000 0000/8  0000 0000    The first control changes from 8000 to 0000 
 
 ******************************************************************/
 
-TIMER_CALLBACK_MEMBER(taitof2_state::taitof2_interrupt6)
+void taitof2_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_maincpu->set_input_line(6, HOLD_LINE);
+	switch (id)
+	{
+	case TIMER_TAITOF2_INTERRUPT6:
+		m_maincpu->set_input_line(6, HOLD_LINE);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in taitof2_state::device_timer");
+	}
 }
 
 INTERRUPT_GEN_MEMBER(taitof2_state::taitof2_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(500), timer_expired_delegate(FUNC(taitof2_state::taitof2_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(500), TIMER_TAITOF2_INTERRUPT6);
 	device.execute().set_input_line(5, HOLD_LINE);
 }
 
@@ -1154,7 +1161,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, taitof2_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank2")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
+	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
 	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITENOP /* pan */
@@ -1170,7 +1177,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cameltrya_sound_map, AS_PROGRAM, 8, taitof2_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM     // I can't see a bank control, but there ARE some bytes past 0x8000
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2203_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 //  AM_RANGE(0xb000, 0xb000) AM_WRITE(unknown_w)    // probably controlling sample player?
@@ -2807,28 +2814,20 @@ WRITE_LINE_MEMBER(taitof2_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2610_interface ym2610_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(taitof2_state,irqhandler)
-};
-
 
 WRITE8_MEMBER(taitof2_state::cameltrya_porta_w)
 {
 	// Implement //
 }
 
-static const ym2203_interface ym2203_config =
+static const ay8910_interface ay8910_config =
 {
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_NULL,             /* portA read */
-		DEVCB_NULL,
-		DEVCB_DRIVER_MEMBER(taitof2_state,cameltrya_porta_w),   /* portA write - not implemented */
-		DEVCB_NULL,             /* portB write */
-	},
-	DEVCB_DRIVER_LINE_MEMBER(taitof2_state,irqhandler)
+	AY8910_LEGACY_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_NULL,             /* portA read */
+	DEVCB_NULL,
+	DEVCB_DRIVER_MEMBER(taitof2_state,cameltrya_porta_w),   /* portA write - not implemented */
+	DEVCB_NULL,             /* portB write */
 };
 
 
@@ -3048,7 +3047,7 @@ static MACHINE_CONFIG_START( taito_f2, taitof2_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 24000000/3) /* Was 16000000/2, but only a 24Mhz OSC */
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitof2_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "lspeaker",  0.25)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "lspeaker",  1.0)
@@ -3612,7 +3611,8 @@ static MACHINE_CONFIG_START( cameltrya, taitof2_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 24000000/8) /* verified on pcb  */
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_IRQ_HANDLER(WRITELINE(taitof2_state, irqhandler))
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 	MCFG_SOUND_ROUTE(2, "mono", 0.20)

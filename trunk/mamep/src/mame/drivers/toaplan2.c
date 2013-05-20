@@ -473,16 +473,22 @@ DRIVER_INIT_MEMBER(toaplan2_state,bbakraid)
   Toaplan games
 ***************************************************************************/
 
-
-TIMER_CALLBACK_MEMBER(toaplan2_state::toaplan2_raise_irq)
+void toaplan2_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_maincpu->set_input_line(param, HOLD_LINE);
+	switch (id)
+	{
+	case TIMER_RAISE_IRQ:
+		m_maincpu->set_input_line(param, HOLD_LINE);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in toaplan2_state::device_timer");
+	}
 }
 
 void toaplan2_state::toaplan2_vblank_irq(int irq_line)
 {
 	// the IRQ appears to fire at line 0xe6
-	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0xe6), timer_expired_delegate(FUNC(toaplan2_state::toaplan2_raise_irq),this), irq_line);
+	timer_set(machine().primary_screen->time_until_pos(0xe6), TIMER_RAISE_IRQ, irq_line);
 }
 
 INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq1){ toaplan2_vblank_irq(1); }
@@ -1367,7 +1373,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( pipibibs_sound_z80_mem, AS_PROGRAM, 8, toaplan2_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("shared_ram")
-	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
+	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE("ymsnd", ym3812_device, read, write)
 ADDRESS_MAP_END
 
 
@@ -1431,7 +1437,7 @@ static ADDRESS_MAP_START( bbakraid_sound_z80_port, AS_IO, 8, toaplan2_state )
 	AM_RANGE(0x46, 0x46) AM_WRITE(batrider_clear_nmi_w)
 	AM_RANGE(0x48, 0x48) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x4a, 0x4a) AM_READ(soundlatch2_byte_r)
-	AM_RANGE(0x80, 0x81) AM_DEVREADWRITE_LEGACY("ymz", ymz280b_r, ymz280b_w)
+	AM_RANGE(0x80, 0x81) AM_DEVREADWRITE("ymz", ymz280b_device, read, write)
 ADDRESS_MAP_END
 
 
@@ -2972,22 +2978,11 @@ WRITE_LINE_MEMBER(toaplan2_state::irqhandler)
 		m_audiocpu->set_input_line(0, state);
 }
 
-static const ym3812_interface ym3812_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(toaplan2_state,irqhandler)
-};
-
-
 WRITE_LINE_MEMBER(toaplan2_state::bbakraid_irqhandler)
 {
 	// Not used ???  Connected to a test pin (TP082)
 	logerror("YMZ280 is generating an interrupt. State=%08x\n",state);
 }
-
-static const ymz280b_interface ymz280b_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(toaplan2_state,bbakraid_irqhandler)
-};
 
 
 static MACHINE_CONFIG_START( tekipaki, toaplan2_state )
@@ -3026,7 +3021,7 @@ static MACHINE_CONFIG_START( tekipaki, toaplan2_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_27MHz/8)
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(toaplan2_state, irqhandler))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -3330,7 +3325,7 @@ static MACHINE_CONFIG_START( pipibibs, toaplan2_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_27MHz/8)           /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(toaplan2_state, irqhandler))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -3371,7 +3366,7 @@ static MACHINE_CONFIG_START( pipibibsbl, toaplan2_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_27MHz/8)
-	MCFG_SOUND_CONFIG(ym3812_config)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(toaplan2_state, irqhandler))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -3845,7 +3840,7 @@ static MACHINE_CONFIG_START( bbakraid, toaplan2_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymz", YMZ280B, XTAL_16_9344MHz)
-	MCFG_SOUND_CONFIG(ymz280b_config)
+	MCFG_YMZ280B_IRQ_HANDLER(WRITELINE(toaplan2_state, bbakraid_irqhandler))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

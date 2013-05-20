@@ -179,7 +179,8 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 		m_save(*this),
 		m_memory(*this),
 		m_ioport(*this),
-		m_scheduler(*this)
+		m_scheduler(*this),
+		m_lua_engine(*this)
 {
 	memset(gfx, 0, sizeof(gfx));
 	memset(&m_base_time, 0, sizeof(m_base_time));
@@ -243,6 +244,18 @@ const char *running_machine::describe_context()
 	return m_context;
 }
 
+TIMER_CALLBACK_MEMBER(running_machine::autoboot_callback)
+{
+	if (strlen(options().autoboot_script())!=0) {
+		m_lua_engine.execute(options().autoboot_script());
+	}
+	if (strlen(options().autoboot_command())!=0) {
+		astring cmd = astring(options().autoboot_command());
+		cmd.replace("'","\\'");
+		astring val = astring("emu.keypost('",cmd,"')");
+		m_lua_engine.execute_string(val);
+	}
+}
 
 //-------------------------------------------------
 //  start - initialize the emulated machine
@@ -332,6 +345,12 @@ void running_machine::start()
 
 	// set up the cheat engine
 	m_cheat = auto_alloc(*this, cheat_manager(*this));
+
+	// allocate autoboot timer
+	m_autoboot_timer = scheduler().timer_alloc(timer_expired_delegate(FUNC(running_machine::autoboot_callback), this));
+
+	// initialize lua
+	m_lua_engine.initialize();
 
 #ifdef USE_HISCORE
 	//MKCHAMP - INITIALIZING THE HISCORE ENGINE
@@ -584,6 +603,24 @@ void running_machine::schedule_save(const char *filename)
 
 
 //-------------------------------------------------
+//  immediate_save - save state.
+//-------------------------------------------------
+
+void running_machine::immediate_save(const char *filename)
+{
+	// specify the filename to save or load
+	set_saveload_filename(filename);
+
+	// set up some parameters for handle_saveload()
+	m_saveload_schedule = SLS_SAVE;
+	m_saveload_schedule_time = this->time();
+
+	// jump right into the save, anonymous timers can't hurt us!
+	handle_saveload();
+}
+
+
+//-------------------------------------------------
 //  schedule_load - schedule a load to occur as
 //  soon as possible
 //-------------------------------------------------
@@ -599,6 +636,24 @@ void running_machine::schedule_load(const char *filename)
 
 	// we can't be paused since we need to clear out anonymous timers
 	resume();
+}
+
+
+//-------------------------------------------------
+//  immediate_load - load state.
+//-------------------------------------------------
+
+void running_machine::immediate_load(const char *filename)
+{
+	// specify the filename to save or load
+	set_saveload_filename(filename);
+
+	// set up some parameters for handle_saveload()
+	m_saveload_schedule = SLS_LOAD;
+	m_saveload_schedule_time = this->time();
+
+	// jump right into the load, anonymous timers can't hurt us
+	handle_saveload();
 }
 
 
@@ -856,6 +911,9 @@ void running_machine::soft_reset(void *ptr, INT32 param)
 
 	// call all registered reset callbacks
 	call_notifiers(MACHINE_NOTIFY_RESET);
+
+	// setup autoboot if needed
+	m_autoboot_timer->adjust(attotime(options().autoboot_delay(),0),0);
 
 	// now we're running
 	m_current_phase = MACHINE_PHASE_RUNNING;

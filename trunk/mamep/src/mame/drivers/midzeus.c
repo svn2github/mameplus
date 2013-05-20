@@ -31,7 +31,6 @@ The Grid         v1.2   10/18/2000
 #include "cpu/pic16c5x/pic16c5x.h"
 #include "includes/midzeus.h"
 #include "machine/midwayic.h"
-#include "machine/timekpr.h"
 #include "audio/dcs.h"
 #include "machine/nvram.h"
 
@@ -76,12 +75,12 @@ MACHINE_START_MEMBER(midzeus_state,midzeus)
 	gun_timer[0] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(midzeus_state::invasn_gun_callback),this));
 	gun_timer[1] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(midzeus_state::invasn_gun_callback),this));
 
-	state_save_register_global(machine(), gun_control);
-	state_save_register_global(machine(), gun_irq_state);
-	state_save_register_global_array(machine(), gun_x);
-	state_save_register_global_array(machine(), gun_y);
-	state_save_register_global(machine(), crusnexo_leds_select);
-	state_save_register_global(machine(), keypad_select);
+	save_item(NAME(gun_control));
+	save_item(NAME(gun_irq_state));
+	save_item(NAME(gun_x));
+	save_item(NAME(gun_y));
+	save_item(NAME(crusnexo_leds_select));
+	save_item(NAME(keypad_select));
 }
 
 
@@ -153,16 +152,13 @@ WRITE32_MEMBER(midzeus_state::cmos_protect_w)
 
 READ32_MEMBER(midzeus_state::zeus2_timekeeper_r)
 {
-	device_t *device = machine().device("m48t35");
-	return timekeeper_r(device, space, offset) | 0xffffff00;
+	return m_m48t35->read(space, offset, 0xff) | 0xffffff00;
 }
-
 
 WRITE32_MEMBER(midzeus_state::zeus2_timekeeper_w)
 {
-	device_t *device = machine().device("m48t35");
 	if (bitlatch[2] && !cmos_protected)
-		timekeeper_w(device, space, offset, data);
+		m_m48t35->write(space, offset, data, 0xff);
 	else
 		logerror("%s:zeus2_timekeeper_w with bitlatch[2] = %d, cmos_protected = %d\n", machine().describe_context(), bitlatch[2], cmos_protected);
 	cmos_protected = TRUE;

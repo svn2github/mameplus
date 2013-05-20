@@ -58,9 +58,8 @@ the main program is 9th October 1990.
 #include "cpu/i86/i86.h"
 #include "machine/pit8253.h"
 #include "machine/i8255.h"
-#include "machine/8237dma.h"
+#include "machine/am9517a.h"
 #include "machine/pic8259.h"
-#include "machine/mc146818.h"
 #include "sound/hc55516.h"
 #include "sound/speaker.h"
 #include "video/pc_cga.h"
@@ -73,7 +72,6 @@ public:
 		: driver_device(mconfig, type, tag),
 			m_pit8253(*this,"pit8253"),
 			m_pic8259_1(*this,"pic8259_1"),
-			m_pic8259_2(*this,"pic8259_2"),
 			m_dma8237_1(*this,"dma8237_1") ,
 		m_maincpu(*this, "maincpu"),
 		m_speaker(*this, "speaker") { }
@@ -94,15 +92,14 @@ public:
 
 	required_device<pit8253_device> m_pit8253;
 	required_device<pic8259_device> m_pic8259_1;
-	required_device<pic8259_device> m_pic8259_2;
-	required_device<i8237_device> m_dma8237_1;
+	required_device<am9517a_device> m_dma8237_1;
 
 	DECLARE_READ8_MEMBER(disk_iobank_r);
 	DECLARE_WRITE8_MEMBER(disk_iobank_w);
 	DECLARE_READ8_MEMBER(fdc765_status_r);
 	DECLARE_READ8_MEMBER(fdc765_data_r);
 	DECLARE_WRITE8_MEMBER(fdc765_data_w);
-	DECLARE_WRITE8_MEMBER(drive_selection_w);
+	DECLARE_WRITE8_MEMBER(fdc_dor_w);
 	DECLARE_READ8_MEMBER(pc_dma_read_byte);
 	DECLARE_WRITE8_MEMBER(pc_dma_write_byte);
 	DECLARE_READ8_MEMBER(dma_page_select_r);
@@ -121,8 +118,6 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack1_w);
 	DECLARE_WRITE_LINE_MEMBER(pc_dack2_w);
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
-	DECLARE_WRITE_LINE_MEMBER(pic8259_1_set_int_line);
-	DECLARE_READ8_MEMBER(get_slave_ack);
 	DECLARE_DRIVER_INIT(tetriskr);
 	DECLARE_DRIVER_INIT(filetto);
 	virtual void machine_reset();
@@ -272,7 +267,7 @@ static const struct pit8253_config pc_pit8253_config =
 		{
 			XTAL_14_31818MHz/12,                /* heartbeat IRQ */
 			DEVCB_NULL,
-			DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir0_w)
+			DEVCB_DEVICE_LINE_MEMBER("pic8259_1", pic8259_device, ir0_w)
 		}, {
 			XTAL_14_31818MHz/12,                /* dram refresh */
 			DEVCB_NULL,
@@ -403,6 +398,7 @@ READ8_MEMBER(pcxt_state::fdc765_status_r)
 READ8_MEMBER(pcxt_state::fdc765_data_r)
 {
 	m_status = (FDC_READ);
+	m_pic8259_1->ir6_w(0);
 	return 0xc0;
 }
 
@@ -412,10 +408,10 @@ WRITE8_MEMBER(pcxt_state::fdc765_data_w)
 }
 
 
-WRITE8_MEMBER(pcxt_state::drive_selection_w)
+WRITE8_MEMBER(pcxt_state::fdc_dor_w)
 {
 	/* TODO: properly hook-up upd765 FDC there */
-	pic8259_ir6_w(machine().device("pic8259_1"), 1);
+	m_pic8259_1->ir6_w(1);
 }
 
 /******************
@@ -428,7 +424,7 @@ WRITE_LINE_MEMBER(pcxt_state::pc_dma_hrq_changed)
 	m_maincpu->set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
-	m_dma8237_1->i8237_hlda_w( state );
+	m_dma8237_1->hack_w( state );
 }
 
 
@@ -517,36 +513,9 @@ static I8237_INTERFACE( dma8237_1_config )
 8259 IRQ controller
 ******************/
 
-WRITE_LINE_MEMBER(pcxt_state::pic8259_1_set_int_line)
-{
-	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
-}
-
-READ8_MEMBER(pcxt_state::get_slave_ack)
-{
-	if (offset==2) { // IRQ = 2
-		return pic8259_acknowledge(m_pic8259_2);
-	}
-	return 0x00;
-}
-
-static const struct pic8259_interface pic8259_1_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(pcxt_state,pic8259_1_set_int_line),
-	DEVCB_LINE_VCC,
-	DEVCB_DRIVER_MEMBER(pcxt_state,get_slave_ack)
-};
-
-static const struct pic8259_interface pic8259_2_config =
-{
-	DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir2_w),
-	DEVCB_LINE_GND,
-	DEVCB_NULL
-};
-
 IRQ_CALLBACK_MEMBER(pcxt_state::irq_callback)
 {
-	return pic8259_acknowledge(m_pic8259_1);
+	return m_pic8259_1->acknowledge();
 }
 
 static ADDRESS_MAP_START( filetto_map, AS_PROGRAM, 8, pcxt_state )
@@ -559,19 +528,17 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( pcxt_io_common, AS_IO, 8, pcxt_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3ff)
-	AM_RANGE(0x0000, 0x000f) AM_DEVREADWRITE("dma8237_1", i8237_device, i8237_r, i8237_w ) //8237 DMA Controller
-	AM_RANGE(0x0020, 0x002f) AM_DEVREADWRITE_LEGACY("pic8259_1", pic8259_r, pic8259_w ) //8259 Interrupt control
+	AM_RANGE(0x0000, 0x000f) AM_DEVREADWRITE("dma8237_1", am9517a_device, read, write ) //8237 DMA Controller
+	AM_RANGE(0x0020, 0x002f) AM_DEVREADWRITE("pic8259_1", pic8259_device, read, write ) //8259 Interrupt control
 	AM_RANGE(0x0040, 0x0043) AM_DEVREADWRITE_LEGACY("pit8253", pit8253_r, pit8253_w)    //8253 PIT
 	AM_RANGE(0x0060, 0x0063) AM_DEVREADWRITE("ppi8255_0", i8255_device, read, write)  //PPI 8255
 	AM_RANGE(0x0064, 0x0066) AM_DEVREADWRITE("ppi8255_1", i8255_device, read, write)  //PPI 8255
-	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE("rtc", mc146818_device, read, write)
 	AM_RANGE(0x0080, 0x0087) AM_READWRITE(dma_page_select_r,dma_page_select_w)
-	AM_RANGE(0x00a0, 0x00af) AM_DEVREADWRITE_LEGACY("pic8259_2", pic8259_r, pic8259_w )
 	AM_RANGE(0x0278, 0x027f) AM_RAM //printer (parallel) port latch
 	AM_RANGE(0x02f8, 0x02ff) AM_RAM //Modem port
 	AM_RANGE(0x0378, 0x037f) AM_RAM //printer (parallel) port
 	AM_RANGE(0x03bc, 0x03bf) AM_RAM //printer port
-	AM_RANGE(0x03f2, 0x03f2) AM_WRITE(drive_selection_w)
+	AM_RANGE(0x03f2, 0x03f2) AM_WRITE(fdc_dor_w)
 	AM_RANGE(0x03f4, 0x03f4) AM_READ(fdc765_status_r) //765 Floppy Disk Controller (FDC) Status
 	AM_RANGE(0x03f5, 0x03f5) AM_READWRITE(fdc765_data_r,fdc765_data_w)//FDC Data
 	AM_RANGE(0x03f8, 0x03ff) AM_RAM //rs232c (serial) port
@@ -738,11 +705,7 @@ static MACHINE_CONFIG_START( filetto, pcxt_state )
 
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
 
-	MCFG_PIC8259_ADD( "pic8259_1", pic8259_1_config )
-
-	MCFG_PIC8259_ADD( "pic8259_2", pic8259_2_config )
-
-	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
+	MCFG_PIC8259_ADD( "pic8259_1", INPUTLINE("maincpu", 0), VCC, NULL )
 
 	MCFG_FRAGMENT_ADD( pcvideo_cga )
 	MCFG_GFXDECODE(pcxt)

@@ -1485,8 +1485,8 @@ static ADDRESS_MAP_START( m6809_prog_map, AS_PROGRAM, 8, bfcobra_state )
 	AM_RANGE(0x2800, 0x2800) AM_RAM     // W
 	AM_RANGE(0x2A00, 0x2A02) AM_READWRITE(latch_r, latch_w)
 	AM_RANGE(0x2E00, 0x2E00) AM_READ(int_latch_r)
-	AM_RANGE(0x3001, 0x3001) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
-	AM_RANGE(0x3201, 0x3201) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
+	AM_RANGE(0x3001, 0x3001) AM_DEVWRITE("aysnd", ay8910_device, data_w)
+	AM_RANGE(0x3201, 0x3201) AM_DEVWRITE("aysnd", ay8910_device, address_w)
 	AM_RANGE(0x3404, 0x3404) AM_DEVREADWRITE("acia6850_1", acia6850_device, status_read, control_write)
 	AM_RANGE(0x3405, 0x3405) AM_DEVREADWRITE("acia6850_1", acia6850_device, data_read, data_write)
 	AM_RANGE(0x3406, 0x3406) AM_DEVREADWRITE("acia6850_2", acia6850_device, status_read, control_write)
@@ -1747,19 +1747,19 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 	m_data_r = 1;
 
 	/* Finish this */
-	state_save_register_global(machine(), m_z80_m6809_line);
-	state_save_register_global(machine(), m_m6809_z80_line);
-	state_save_register_global(machine(), m_data_r);
-	state_save_register_global(machine(), m_data_t);
-	state_save_register_global(machine(), m_h_scroll);
-	state_save_register_global(machine(), m_v_scroll);
-	state_save_register_global(machine(), m_flip_8);
-	state_save_register_global(machine(), m_flip_22);
-	state_save_register_global(machine(), m_z80_int);
-	state_save_register_global(machine(), m_z80_inten);
-	state_save_register_global_array(machine(), m_bank_data);
-	state_save_register_global_pointer(machine(), m_work_ram, 0xc0000);
-	state_save_register_global_pointer(machine(), m_video_ram, 0x20000);
+	save_item(NAME(m_z80_m6809_line));
+	save_item(NAME(m_m6809_z80_line));
+	save_item(NAME(m_data_r));
+	save_item(NAME(m_data_t));
+	save_item(NAME(m_h_scroll));
+	save_item(NAME(m_v_scroll));
+	save_item(NAME(m_flip_8));
+	save_item(NAME(m_flip_22));
+	save_item(NAME(m_z80_int));
+	save_item(NAME(m_z80_inten));
+	save_item(NAME(m_bank_data));
+	save_pointer(NAME(m_work_ram), 0xc0000);
+	save_pointer(NAME(m_video_ram), 0x20000);
 }
 
 /* TODO */

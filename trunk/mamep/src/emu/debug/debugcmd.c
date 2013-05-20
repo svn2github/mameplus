@@ -129,6 +129,8 @@ static void execute_rpclear(running_machine &machine, int ref, int params, const
 static void execute_rpdisenable(running_machine &machine, int ref, int params, const char **param);
 static void execute_rplist(running_machine &machine, int ref, int params, const char **param);
 static void execute_hotspot(running_machine &machine, int ref, int params, const char **param);
+static void execute_statesave(running_machine &machine, int ref, int params, const char **param);
+static void execute_stateload(running_machine &machine, int ref, int params, const char **param);
 static void execute_save(running_machine &machine, int ref, int params, const char **param);
 static void execute_load(running_machine &machine, int ref, int params, const char **param);
 static void execute_dump(running_machine &machine, int ref, int params, const char **param);
@@ -143,6 +145,8 @@ static void execute_traceover(running_machine &machine, int ref, int params, con
 static void execute_traceflush(running_machine &machine, int ref, int params, const char **param);
 static void execute_history(running_machine &machine, int ref, int params, const char **param);
 static void execute_trackpc(running_machine &machine, int ref, int params, const char **param);
+static void execute_trackmem(running_machine &machine, int ref, int params, const char **param);
+static void execute_pcatmem(running_machine &machine, int ref, int params, const char **param);
 static void execute_snap(running_machine &machine, int ref, int params, const char **param);
 static void execute_source(running_machine &machine, int ref, int params, const char **param);
 static void execute_map(running_machine &machine, int ref, int params, const char **param);
@@ -292,10 +296,10 @@ void debug_command_init(running_machine &machine)
 	debug_console_register_command(machine, "ignore",    CMDFLAG_NONE, 0, 0, MAX_COMMAND_PARAMS, execute_ignore);
 	debug_console_register_command(machine, "observe",   CMDFLAG_NONE, 0, 0, MAX_COMMAND_PARAMS, execute_observe);
 
-	debug_console_register_command(machine, "comadd",   CMDFLAG_NONE, 0, 1, 2, execute_comment);
+	debug_console_register_command(machine, "comadd",    CMDFLAG_NONE, 0, 1, 2, execute_comment);
 	debug_console_register_command(machine, "//",        CMDFLAG_NONE, 0, 1, 2, execute_comment);
-	debug_console_register_command(machine, "comdelete",    CMDFLAG_NONE, 0, 1, 1, execute_comment_del);
-	debug_console_register_command(machine, "comsave",  CMDFLAG_NONE, 0, 0, 0, execute_comment_save);
+	debug_console_register_command(machine, "comdelete", CMDFLAG_NONE, 0, 1, 1, execute_comment_del);
+	debug_console_register_command(machine, "comsave",   CMDFLAG_NONE, 0, 0, 0, execute_comment_save);
 
 	debug_console_register_command(machine, "bpset",     CMDFLAG_NONE, 0, 1, 3, execute_bpset);
 	debug_console_register_command(machine, "bp",        CMDFLAG_NONE, 0, 1, 3, execute_bpset);
@@ -323,6 +327,11 @@ void debug_command_init(running_machine &machine)
 	debug_console_register_command(machine, "rplist",    CMDFLAG_NONE, 0, 0, 0, execute_rplist);
 
 	debug_console_register_command(machine, "hotspot",   CMDFLAG_NONE, 0, 0, 3, execute_hotspot);
+
+	debug_console_register_command(machine, "statesave", CMDFLAG_NONE, 0, 1, 1, execute_statesave);
+	debug_console_register_command(machine, "ss",        CMDFLAG_NONE, 0, 1, 1, execute_statesave);
+	debug_console_register_command(machine, "stateload", CMDFLAG_NONE, 0, 1, 1, execute_stateload);
+	debug_console_register_command(machine, "sl",        CMDFLAG_NONE, 0, 1, 1, execute_stateload);
 
 	debug_console_register_command(machine, "save",      CMDFLAG_NONE, AS_PROGRAM, 3, 4, execute_save);
 	debug_console_register_command(machine, "saved",     CMDFLAG_NONE, AS_DATA, 3, 4, execute_save);
@@ -369,26 +378,31 @@ void debug_command_init(running_machine &machine)
 	debug_console_register_command(machine, "history",   CMDFLAG_NONE, 0, 0, 2, execute_history);
 	debug_console_register_command(machine, "trackpc",   CMDFLAG_NONE, 0, 0, 3, execute_trackpc);
 
+	debug_console_register_command(machine, "trackmem",  CMDFLAG_NONE, 0, 0, 3, execute_trackmem);
+	debug_console_register_command(machine, "pcatmemp",  CMDFLAG_NONE, AS_PROGRAM, 1, 2, execute_pcatmem);
+	debug_console_register_command(machine, "pcatmemd",  CMDFLAG_NONE, AS_DATA,    1, 2, execute_pcatmem);
+	debug_console_register_command(machine, "pcatmemi",  CMDFLAG_NONE, AS_IO,      1, 2, execute_pcatmem);
+
 	debug_console_register_command(machine, "snap",      CMDFLAG_NONE, 0, 0, 1, execute_snap);
 
 	debug_console_register_command(machine, "source",    CMDFLAG_NONE, 0, 1, 1, execute_source);
 
-	debug_console_register_command(machine, "map",      CMDFLAG_NONE, AS_PROGRAM, 1, 1, execute_map);
-	debug_console_register_command(machine, "mapd",     CMDFLAG_NONE, AS_DATA, 1, 1, execute_map);
-	debug_console_register_command(machine, "mapi",     CMDFLAG_NONE, AS_IO, 1, 1, execute_map);
-	debug_console_register_command(machine, "memdump",  CMDFLAG_NONE, 0, 0, 1, execute_memdump);
+	debug_console_register_command(machine, "map",       CMDFLAG_NONE, AS_PROGRAM, 1, 1, execute_map);
+	debug_console_register_command(machine, "mapd",      CMDFLAG_NONE, AS_DATA, 1, 1, execute_map);
+	debug_console_register_command(machine, "mapi",      CMDFLAG_NONE, AS_IO, 1, 1, execute_map);
+	debug_console_register_command(machine, "memdump",   CMDFLAG_NONE, 0, 0, 1, execute_memdump);
 
-	debug_console_register_command(machine, "symlist",  CMDFLAG_NONE, 0, 0, 1, execute_symlist);
+	debug_console_register_command(machine, "symlist",   CMDFLAG_NONE, 0, 0, 1, execute_symlist);
 
-	debug_console_register_command(machine, "softreset",    CMDFLAG_NONE, 0, 0, 1, execute_softreset);
-	debug_console_register_command(machine, "hardreset",    CMDFLAG_NONE, 0, 0, 1, execute_hardreset);
+	debug_console_register_command(machine, "softreset", CMDFLAG_NONE, 0, 0, 1, execute_softreset);
+	debug_console_register_command(machine, "hardreset", CMDFLAG_NONE, 0, 0, 1, execute_hardreset);
 
-	debug_console_register_command(machine, "images",   CMDFLAG_NONE, 0, 0, 0, execute_images);
-	debug_console_register_command(machine, "mount",    CMDFLAG_NONE, 0, 2, 2, execute_mount);
-	debug_console_register_command(machine, "unmount",  CMDFLAG_NONE, 0, 1, 1, execute_unmount);
+	debug_console_register_command(machine, "images",    CMDFLAG_NONE, 0, 0, 0, execute_images);
+	debug_console_register_command(machine, "mount",     CMDFLAG_NONE, 0, 2, 2, execute_mount);
+	debug_console_register_command(machine, "unmount",   CMDFLAG_NONE, 0, 1, 1, execute_unmount);
 
-	debug_console_register_command(machine, "input",    CMDFLAG_NONE, 0, 1, 1, execute_input);
-	debug_console_register_command(machine, "dumpkbd",  CMDFLAG_NONE, 0, 0, 1, execute_dumpkbd);
+	debug_console_register_command(machine, "input",     CMDFLAG_NONE, 0, 1, 1, execute_input);
+	debug_console_register_command(machine, "dumpkbd",   CMDFLAG_NONE, 0, 0, 1, execute_dumpkbd);
 
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(debug_command_exit), &machine));
 
@@ -1688,6 +1702,38 @@ static void execute_hotspot(running_machine &machine, int ref, int params, const
 
 
 /*-------------------------------------------------
+    execute_statesave - execute the statesave command
+-------------------------------------------------*/
+
+static void execute_statesave(running_machine &machine, int ref, int params, const char *param[])
+{
+	astring filename(param[0]);
+	machine.immediate_save(filename);
+	debug_console_printf(machine, "State save attempted.  Please refer to window message popup for results.\n");
+}
+
+
+/*-------------------------------------------------
+    execute_stateload - execute the stateload command
+-------------------------------------------------*/
+
+static void execute_stateload(running_machine &machine, int ref, int params, const char *param[])
+{
+	astring filename(param[0]);
+	machine.immediate_load(filename);
+
+	// Clear all PC & memory tracks
+	device_iterator iter(machine.root_device());
+	for (device_t *device = iter.first(); device != NULL; device = iter.next())
+	{
+		device->debug()->track_pc_data_clear();
+		device->debug()->track_mem_data_clear();
+	}
+	debug_console_printf(machine, "State load attempted.  Please refer to window message popup for results.\n");
+}
+
+
+/*-------------------------------------------------
     execute_save - execute the save command
 -------------------------------------------------*/
 
@@ -2691,6 +2737,82 @@ static void execute_trackpc(running_machine &machine, int ref, int params, const
 
 	if (clear)
 		cpu->debug()->track_pc_data_clear();
+}
+
+
+/*-------------------------------------------------
+    execute_trackmem - execute the trackmem command
+-------------------------------------------------*/
+
+static void execute_trackmem(running_machine &machine, int ref, int params, const char *param[])
+{
+	// Gather the on/off switch (if present)
+	UINT64 turnOn = true;
+	if (!debug_command_parameter_number(machine, param[0], &turnOn))
+		return;
+
+	// Gather the cpu id (if present)
+	device_t *cpu = NULL;
+	if (!debug_command_parameter_cpu(machine, (params > 1) ? param[1] : NULL, &cpu))
+		return;
+
+	// Should we clear the existing data?
+	UINT64 clear = false;
+	if (!debug_command_parameter_number(machine, param[2], &clear))
+		return;
+
+	// Get the address space for the given cpu
+	address_space *space;
+	if (!debug_command_parameter_cpu_space(machine, (params > 1) ? param[1] : NULL, AS_PROGRAM, space))
+		return;
+
+	// Inform the CPU it's time to start tracking memory writes
+	cpu->debug()->set_track_mem(turnOn);
+
+	// Use the watchpoint system to catch memory writes
+	space->enable_write_watchpoints(true);
+
+	// Clear out the existing data if requested
+	if (clear)
+		space->device().debug()->track_mem_data_clear();
+}
+
+
+/*-------------------------------------------------
+    execute_pcatmem - execute the pcatmem command
+-------------------------------------------------*/
+
+static void execute_pcatmem(running_machine &machine, int ref, int params, const char *param[])
+{
+	// Gather the required address parameter
+	UINT64 address;
+	if (!debug_command_parameter_number(machine, param[0], &address))
+		return;
+
+	// Gather the cpu id (if present)
+	device_t *cpu = NULL;
+	if (!debug_command_parameter_cpu(machine, (params > 1) ? param[1] : NULL, &cpu))
+		return;
+
+	// Get the address space for the given cpu
+	address_space *space;
+	if (!debug_command_parameter_cpu_space(machine, (params > 1) ? param[1] : NULL, ref, space))
+		return;
+
+	// Get the value of memory at the address
+	const int nativeDataWidth = space->data_width() / 8;
+	const UINT64 data = debug_read_memory(*space,
+											space->address_to_byte(address),
+											nativeDataWidth,
+											true);
+
+	// Recover the pc & print
+	const address_spacenum spaceNum = (address_spacenum)ref;
+	const offs_t result = space->device().debug()->track_mem_pc_from_space_address_data(spaceNum, address, data);
+	if (result != (offs_t)(-1))
+		debug_console_printf(machine, "%02x\n", result);
+	else
+		debug_console_printf(machine, "UNKNOWN PC\n");
 }
 
 

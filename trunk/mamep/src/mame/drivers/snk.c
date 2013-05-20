@@ -468,27 +468,6 @@ WRITE_LINE_MEMBER(snk_state::ymirq_callback_2)
 }
 
 
-static const ym3526_interface ym3526_config_1 =
-{
-	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_1)
-};
-
-static const ym3526_interface ym3526_config_2 =
-{
-	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_2)
-};
-
-static const ym3812_interface ym3812_config_1 =
-{
-	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_1)
-};
-
-static const y8950_interface y8950_config_2 =
-{
-	DEVCB_DRIVER_LINE_MEMBER(snk_state,ymirq_callback_2)
-};
-
-
 
 WRITE8_MEMBER(snk_state::snk_soundlatch_w)
 {
@@ -1380,9 +1359,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( marvins_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x4000) AM_READ(marvins_soundlatch_r)
-	AM_RANGE(0x8000, 0x8001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
+	AM_RANGE(0x8000, 0x8001) AM_DEVWRITE("ay1", ay8910_device, address_data_w)
 	AM_RANGE(0x8002, 0x8007) AM_DEVWRITE("wave", snkwave_device, snkwave_w)
-	AM_RANGE(0x8008, 0x8009) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
+	AM_RANGE(0x8008, 0x8009) AM_DEVWRITE("ay2", ay8910_device, address_data_w)
 	AM_RANGE(0xa000, 0xa000) AM_READ(marvins_sound_nmi_ack_r)
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM
 ADDRESS_MAP_END
@@ -1398,9 +1377,9 @@ static ADDRESS_MAP_START( jcross_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(sgladiat_soundlatch_r)
 	AM_RANGE(0xc000, 0xc000) AM_READ(sgladiat_sound_nmi_ack_r)
-	AM_RANGE(0xe000, 0xe001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
+	AM_RANGE(0xe000, 0xe001) AM_DEVWRITE("ay1", ay8910_device, address_data_w)
 	AM_RANGE(0xe002, 0xe003) AM_WRITENOP    // ? always FFFF, snkwave leftover?
-	AM_RANGE(0xe004, 0xe005) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
+	AM_RANGE(0xe004, 0xe005) AM_DEVWRITE("ay2", ay8910_device, address_data_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jcross_sound_portmap, AS_IO, 8, snk_state )
@@ -1414,9 +1393,9 @@ static ADDRESS_MAP_START( hal21_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(sgladiat_soundlatch_r)
 	AM_RANGE(0xc000, 0xc000) AM_READ(sgladiat_sound_nmi_ack_r)
-	AM_RANGE(0xe000, 0xe001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
+	AM_RANGE(0xe000, 0xe001) AM_DEVWRITE("ay1", ay8910_device, address_data_w)
 //  AM_RANGE(0xe002, 0xe002) AM_WRITENOP    // bitfielded(0-5) details unknown. Filter enable?
-	AM_RANGE(0xe008, 0xe009) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
+	AM_RANGE(0xe008, 0xe009) AM_DEVWRITE("ay2", ay8910_device, address_data_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( hal21_sound_portmap, AS_IO, 8, snk_state )
@@ -1430,7 +1409,7 @@ static ADDRESS_MAP_START( tnk3_YM3526_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xc000) AM_READ(tnk3_busy_clear_r)
-	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE_LEGACY("ym1", ym3526_r, ym3526_w)
+	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE("ym1", ym3526_device, read, write)
 	AM_RANGE(0xe004, 0xe004) AM_READ(tnk3_cmdirq_ack_r)
 	AM_RANGE(0xe006, 0xe006) AM_READ(tnk3_ymirq_ack_r)
 ADDRESS_MAP_END
@@ -1440,7 +1419,7 @@ static ADDRESS_MAP_START( aso_YM3526_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe000, 0xe000) AM_READ(tnk3_busy_clear_r)
-	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ym1", ym3526_r, ym3526_w)
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("ym1", ym3526_device, read, write)
 //  AM_RANGE(0xf002, 0xf002) AM_READNOP unknown
 	AM_RANGE(0xf004, 0xf004) AM_READ(tnk3_cmdirq_ack_r)
 	AM_RANGE(0xf006, 0xf006) AM_READ(tnk3_ymirq_ack_r)
@@ -1450,10 +1429,10 @@ static ADDRESS_MAP_START( YM3526_YM3526_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3526_status_port_r, ym3526_control_port_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3526_write_port_w)
-	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", ym3526_status_port_r, ym3526_control_port_w)
-	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("ym2", ym3526_write_port_w)
+	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE("ym1", ym3526_device, status_port_r, control_port_w)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("ym1", ym3526_device, write_port_w)
+	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE("ym2", ym3526_device, status_port_r, control_port_w)
+	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE("ym2", ym3526_device, write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
 ADDRESS_MAP_END
 
@@ -1461,8 +1440,8 @@ static ADDRESS_MAP_START( YM3812_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3812_status_port_r, ym3812_control_port_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3812_write_port_w)
+	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE("ym1", ym3812_device, status_port_r, control_port_w)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("ym1", ym3812_device, write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
 ADDRESS_MAP_END
 
@@ -1470,10 +1449,10 @@ static ADDRESS_MAP_START( YM3526_Y8950_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3526_status_port_r, ym3526_control_port_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3526_write_port_w)
-	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", y8950_status_port_r, y8950_control_port_w)
-	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("ym2", y8950_write_port_w)
+	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE("ym1", ym3526_device, status_port_r, control_port_w)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("ym1", ym3526_device, write_port_w)
+	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE("ym2", y8950_device, status_port_r, control_port_w)
+	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE("ym2", y8950_device, write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
 ADDRESS_MAP_END
 
@@ -1481,10 +1460,10 @@ static ADDRESS_MAP_START( YM3812_Y8950_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3812_status_port_r, ym3812_control_port_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3812_write_port_w)
-	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", y8950_status_port_r, y8950_control_port_w)
-	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("ym2", y8950_write_port_w)
+	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE("ym1", ym3812_device, status_port_r, control_port_w)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("ym1", ym3812_device, write_port_w)
+	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE("ym2", y8950_device, status_port_r, control_port_w)
+	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE("ym2", y8950_device, write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
 ADDRESS_MAP_END
 
@@ -1492,8 +1471,8 @@ static ADDRESS_MAP_START( Y8950_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", y8950_status_port_r, y8950_control_port_w)
-	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("ym2", y8950_write_port_w)
+	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE("ym2", y8950_device, status_port_r, control_port_w)
+	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE("ym2", y8950_device, write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
 ADDRESS_MAP_END
 
@@ -3808,7 +3787,7 @@ static MACHINE_CONFIG_START( tnk3, snk_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM3526, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3526_config_1)
+	MCFG_YM3526_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_1))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 MACHINE_CONFIG_END
 
@@ -3838,7 +3817,7 @@ static MACHINE_CONFIG_DERIVED( athena, tnk3 )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ym2", YM3526, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3526_config_2)
+	MCFG_YM3526_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_2))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 MACHINE_CONFIG_END
 
@@ -3852,7 +3831,7 @@ static MACHINE_CONFIG_DERIVED( fitegolf, tnk3 )
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("ym1", YM3812, XTAL_4MHz) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3812_config_1)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_1))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 MACHINE_CONFIG_END
 
@@ -3892,11 +3871,11 @@ static MACHINE_CONFIG_START( ikari, snk_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM3526, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3526_config_1)
+	MCFG_YM3526_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_1))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 
 	MCFG_SOUND_ADD("ym2", YM3526, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3526_config_2)
+	MCFG_YM3526_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_2))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 MACHINE_CONFIG_END
 
@@ -3909,7 +3888,7 @@ static MACHINE_CONFIG_DERIVED( victroad, ikari )
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("ym2", Y8950, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(y8950_config_2)
+	MCFG_Y8950_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_2))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 MACHINE_CONFIG_END
 
@@ -3948,11 +3927,11 @@ static MACHINE_CONFIG_START( bermudat, snk_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM3526, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym3526_config_1)
+	MCFG_YM3526_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_1))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 
 	MCFG_SOUND_ADD("ym2", Y8950, XTAL_8MHz/2) /* verified on pcb */
-	MCFG_SOUND_CONFIG(y8950_config_2)
+	MCFG_Y8950_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_2))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
 MACHINE_CONFIG_END
 
@@ -4004,7 +3983,7 @@ static MACHINE_CONFIG_DERIVED( chopper1, bermudat )
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("ym1", YM3812, 4000000)
-	MCFG_SOUND_CONFIG(ym3812_config_1)
+	MCFG_YM3812_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_1))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -4052,11 +4031,11 @@ static MACHINE_CONFIG_START( tdfever, snk_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ym1", YM3526, 4000000)
-	MCFG_SOUND_CONFIG(ym3526_config_1)
+	MCFG_YM3526_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_1))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MCFG_SOUND_ADD("ym2", Y8950, 4000000)
-	MCFG_SOUND_CONFIG(y8950_config_2)
+	MCFG_Y8950_IRQ_HANDLER(WRITELINE(snk_state, ymirq_callback_2))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

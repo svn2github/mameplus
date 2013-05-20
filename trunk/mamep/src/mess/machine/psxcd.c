@@ -121,6 +121,28 @@ void psxcd_device::device_start()
 		m_timers[i] = timer_alloc(i);
 		m_timerinuse[i] = false;
 	}
+
+	save_item(NAME(cmdbuf));
+	save_item(NAME(mode));
+	save_item(NAME(secbuf));
+	save_item(NAME(filter_file));
+	save_item(NAME(filter_channel));
+	save_item(NAME(lastsechdr));
+	save_item(NAME(status));
+	save_item(NAME(rdp));
+	save_item(NAME(m_cursec));
+	save_item(NAME(sectail));
+	save_item(NAME(m_transcurr));
+	save_item(NAME(m_transbuf));
+	save_item(NAME(loc.w));
+	save_item(NAME(curpos.w));
+	save_item(NAME(open));
+	save_item(NAME(m_mute));
+	save_item(NAME(m_dmaload));
+	save_item(NAME(next_read_event));
+	save_item(NAME(next_sector_t));
+	save_item(NAME(autopause_sector));
+	save_item(NAME(m_param_count));
 }
 
 void psxcd_device::device_reset()
@@ -693,7 +715,8 @@ void psxcd_device::cdcmd_test()
 	switch(cmdbuf[0])
 	{
 		case 0x20:
-			static unsigned char data[4]=
+		{
+			static UINT8 data[4]=
 			{
 				0x95,
 				0x07,
@@ -703,6 +726,7 @@ void psxcd_device::cdcmd_test()
 
 			send_result(intr_complete,data,4);
 			break;
+		}
 
 		default:
 			verboselog(machine(), 0, "psxcd: unimplemented test cmd %02x\n", cmdbuf[0]);

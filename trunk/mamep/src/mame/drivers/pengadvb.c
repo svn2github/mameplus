@@ -167,8 +167,8 @@ static ADDRESS_MAP_START( io_mem, AS_IO, 8, pengadvb_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x98, 0x98) AM_DEVREADWRITE( "tms9928a", tms9928a_device, vram_read, vram_write )
 	AM_RANGE(0x99, 0x99) AM_DEVREADWRITE( "tms9928a", tms9928a_device, register_read, register_write )
-	AM_RANGE(0xa0, 0xa1) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
-	AM_RANGE(0xa2, 0xa2) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
+	AM_RANGE(0xa0, 0xa1) AM_DEVWRITE("aysnd", ay8910_device, address_data_w)
+	AM_RANGE(0xa2, 0xa2) AM_DEVREAD("aysnd", ay8910_device, data_r)
 	AM_RANGE(0xa8, 0xab) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
 ADDRESS_MAP_END
 
@@ -255,9 +255,9 @@ void pengadvb_state::pengadvb_postload()
 
 void pengadvb_state::machine_start()
 {
-	state_save_register_global_pointer(machine(), m_main_mem, 0x4000);
-	state_save_register_global(machine(), m_mem_map);
-	state_save_register_global_array(machine(), m_mem_banks);
+	save_pointer(NAME(m_main_mem), 0x4000);
+	save_item(NAME(m_mem_map));
+	save_item(NAME(m_mem_banks));
 	machine().save().register_postload(save_prepost_delegate(FUNC(pengadvb_state::pengadvb_postload), this));
 }
 

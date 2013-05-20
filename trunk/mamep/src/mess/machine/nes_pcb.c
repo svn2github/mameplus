@@ -161,8 +161,9 @@ static const nes_pcb pcb_list[] =
 	{ "ks7022",           KAISER_KS7022 }, // mapper 175
 	{ "ks7017",           KAISER_KS7017 },
 	{ "ks7032",           KAISER_KS7032 },  //  mapper 142
-	{ "ks7012",           STD_NROM /*KAISER_KS7012*/ },     // used in Zanac (FDS Conversion },  - UNSUPPORTED
-	{ "ks7013b",          STD_NROM /*KAISER_KS7013B*/ },    // used in Highway Star (FDS Conversion },  - UNSUPPORTED
+	{ "ks7031",           KAISER_KS7031 },  //  used in Dracula II (FDS Conversion)
+	{ "ks7012",           KAISER_KS7012 },     // used in Zanac (FDS Conversion)
+	{ "ks7013b",          KAISER_KS7013B },    // used in Highway Star (FDS Conversion)
 	{ "gs2015",           RCM_GS2015 },
 	{ "gs2004",           RCM_GS2004 },
 	{ "gs2013",           RCM_GS2013 },
@@ -284,13 +285,11 @@ static const nes_pcb pcb_list[] =
 	{ "tek90",            JYCOMPANY_A },
 	{ "sa9602b",          SACHEN_SA9602B },
 	{ "unl_shero",        SACHEN_SHERO },
-	{ "ks7012",           KAISER_KS7012 },
-	{ "ks7013b",          KAISER_KS7013B },
 	{ "mmalee2",          UNL_MMALEE },
 	{ "unl_2708",         UNL_2708 },
-	{ "a9746",            UNL_A9746 },
 	{ "unl_lh10",         UNL_LH10 },
 	{ "unl_lh32",         UNL_LH32 },
+	{ "unl_lh53",         UNL_LH53 },
 	{ "unl_ac08",         UNL_AC08 },
 	{ "unl_bb",           UNL_BB },
 	{ "unl_malisb",       UNL_MALISB },
@@ -307,6 +306,7 @@ static const nes_pcb pcb_list[] =
 	{ "unl_dance",        UNSUPPORTED_BOARD },
 	{ "bmc_hik_kof",      UNSUPPORTED_BOARD },
 	{ "onebus",           UNSUPPORTED_BOARD },
+	{ "a9746",            UNSUPPORTED_BOARD },
 	{ "test",             TEST_BOARD },
 	{ "unknown",          UNKNOWN_BOARD }  //  a few pirate dumps uses the wrong mapper...
 };

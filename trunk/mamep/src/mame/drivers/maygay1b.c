@@ -795,8 +795,8 @@ READ8_MEMBER(maygay1b_state::latch_st_lo)
 
 READ8_MEMBER(maygay1b_state::m1_meter_r)
 {
-	device_t *ay8910 = machine().device("aysnd");
-	return ~ay8910_read_ym(ay8910);
+	ay8910_device *ay8910 = machine().device<ay8910_device>("aysnd");
+	return ~ay8910->data_r(space, offset);
 }
 
 static ADDRESS_MAP_START( m1_memmap, AS_PROGRAM, 8, maygay1b_state )
@@ -813,7 +813,7 @@ static ADDRESS_MAP_START( m1_memmap, AS_PROGRAM, 8, maygay1b_state )
 
 	AM_RANGE(0x2070, 0x207f) AM_DEVREADWRITE_LEGACY("duart68681", duart68681_r, duart68681_w )
 
-	AM_RANGE(0x2090, 0x2091) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
+	AM_RANGE(0x2090, 0x2091) AM_DEVWRITE("aysnd", ay8910_device, address_data_w)
 	AM_RANGE(0x20B0, 0x20B0) AM_READ(m1_meter_r)
 
 	AM_RANGE(0x20A0, 0x20A3) AM_DEVWRITE("pia", pia6821_device, write)
@@ -821,7 +821,7 @@ static ADDRESS_MAP_START( m1_memmap, AS_PROGRAM, 8, maygay1b_state )
 
 	AM_RANGE(0x20C0, 0x20C7) AM_WRITE(m1_latch_w)
 
-	AM_RANGE(0x2400, 0x2401) AM_DEVWRITE_LEGACY("ymsnd", ym2413_w ) // 2149F??
+	AM_RANGE(0x2400, 0x2401) AM_DEVWRITE("ymsnd", ym2413_device, write) // 2149F??
 	AM_RANGE(0x2404, 0x2405) AM_READ(latch_st_lo)
 	AM_RANGE(0x2406, 0x2407) AM_READ(latch_st_hi)
 

@@ -319,32 +319,35 @@ WRITE16_MEMBER(topspeed_state::cpua_ctrl_w)
                         INTERRUPTS
 ***********************************************************/
 
-/* 68000 A */
-
-TIMER_CALLBACK_MEMBER(topspeed_state::topspeed_interrupt6)
+void topspeed_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_maincpu->set_input_line(6, HOLD_LINE);
-}
-
-/* 68000 B */
-
-TIMER_CALLBACK_MEMBER(topspeed_state::topspeed_cpub_interrupt6)
-{
-	m_subcpu->set_input_line(6, HOLD_LINE); /* assumes Z80 sandwiched between the 68Ks */
+	switch (id)
+	{
+	/* 68000 A */
+	case TIMER_TOPSPEED_INTERRUPT6:
+		m_maincpu->set_input_line(6, HOLD_LINE);
+		break;
+	/* 68000 B */
+	case TIMER_TOPSPEED_CPUB_INTERRUPT6:
+		m_subcpu->set_input_line(6, HOLD_LINE); /* assumes Z80 sandwiched between the 68Ks */
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in topspeed_state::device_timer");
+	}
 }
 
 
 INTERRUPT_GEN_MEMBER(topspeed_state::topspeed_interrupt)
 {
 	/* Unsure how many int6's per frame */
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(topspeed_state::topspeed_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), TIMER_TOPSPEED_INTERRUPT6);
 	device.execute().set_input_line(5, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(topspeed_state::topspeed_cpub_interrupt)
 {
 	/* Unsure how many int6's per frame */
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), timer_expired_delegate(FUNC(topspeed_state::topspeed_cpub_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(200000 - 500), TIMER_TOPSPEED_CPUB_INTERRUPT6);
 	device.execute().set_input_line(5, HOLD_LINE);
 }
 
@@ -583,7 +586,7 @@ static INPUT_PORTS_START( topspeed )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_TILT )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE2 ) PORT_NAME("Calibrate") // ?
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_NAME("Shifter") PORT_TOGGLE
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_BUTTON4 ) PORT_NAME("Shifter") PORT_TOGGLE
 	PORT_BIT( 0xe0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, topspeed_state, topspeed_pedal_r, "GAS") PORT_CONDITION("DSWA", 0x03, NOTEQUALS, 0x02)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_BUTTON1 ) PORT_NAME("Gas Switch") PORT_CONDITION("DSWA", 0x03, EQUALS, 0x02)
 

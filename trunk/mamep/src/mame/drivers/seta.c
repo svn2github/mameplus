@@ -1492,11 +1492,6 @@ WRITE_LINE_MEMBER(seta_state::utoukond_ym3438_interrupt)
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, state);
 }
 
-static const ym3438_interface utoukond_ym3438_intf =
-{
-	DEVCB_DRIVER_LINE_MEMBER(seta_state,utoukond_ym3438_interrupt)   // IRQ handler
-};
-
 /***************************************************************************
 
 
@@ -2909,7 +2904,7 @@ static ADDRESS_MAP_START( crazyfgt_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x620000, 0x620003) AM_WRITENOP    // protection
 	AM_RANGE(0x630000, 0x630003) AM_READ(seta_dsw_r)
 	AM_RANGE(0x640400, 0x640fff) AM_WRITEONLY AM_SHARE("paletteram")    // Palette
-	AM_RANGE(0x650000, 0x650003) AM_DEVWRITE8_LEGACY("ymsnd", ym3812_w, 0x00ff)
+	AM_RANGE(0x650000, 0x650003) AM_DEVWRITE8("ymsnd", ym3812_device, write, 0x00ff)
 	AM_RANGE(0x658000, 0x658001) AM_DEVWRITE8("oki", okim6295_device, write, 0x00ff)
 	AM_RANGE(0x670000, 0x670001) AM_READNOP     // watchdog?
 	AM_RANGE(0x800000, 0x803fff) AM_WRITE(seta_vram_2_w) AM_SHARE("vram_2") // VRAM 2
@@ -3091,8 +3086,8 @@ static ADDRESS_MAP_START( tndrcade_sub_map, AS_PROGRAM, 8, seta_state )
 	AM_RANGE(0x1000, 0x1000) AM_WRITE(sub_bankswitch_lockout_w) // ROM Bank + Coin Lockout
 	AM_RANGE(0x1001, 0x1001) AM_READ_PORT("P2")                 // P2
 	AM_RANGE(0x1002, 0x1002) AM_READ_PORT("COINS")              // Coins
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r,ym2203_w)
-	AM_RANGE(0x3000, 0x3001) AM_DEVWRITE_LEGACY("ym2", ym3812_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ym1", ym2203_device, read, write)
+	AM_RANGE(0x3000, 0x3001) AM_DEVWRITE("ym2", ym3812_device, write)
 	AM_RANGE(0x5000, 0x57ff) AM_RAM AM_SHARE("sharedram")       // Shared RAM
 	AM_RANGE(0x6000, 0x7fff) AM_ROM                             // ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")                        // Banked ROM
@@ -3217,7 +3212,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( utoukond_sound_io_map, AS_IO, 8, seta_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym3438_r, ym3438_w)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ymsnd", ym3438_device, read, write)
 	AM_RANGE(0x80, 0x80) AM_WRITENOP //?
 	AM_RANGE(0xc0, 0xc0) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -7439,16 +7434,13 @@ TIMER_DEVICE_CALLBACK_MEMBER(seta_state::seta_sub_interrupt)
                                 Thundercade
 ***************************************************************************/
 
-static const ym2203_interface tndrcade_ym2203_interface =
+static const ay8910_interface ay8910_config =
 {
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_DRIVER_MEMBER(seta_state,dsw1_r),     /* input A: DSW 1 */
-		DEVCB_DRIVER_MEMBER(seta_state,dsw2_r),     /* input B: DSW 2 */
-		DEVCB_NULL,
-		DEVCB_NULL
-	},
+	AY8910_LEGACY_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_DRIVER_MEMBER(seta_state,dsw1_r),     /* input A: DSW 1 */
+	DEVCB_DRIVER_MEMBER(seta_state,dsw2_r),     /* input B: DSW 2 */
+	DEVCB_NULL,
 	DEVCB_NULL
 };
 
@@ -7494,7 +7486,7 @@ static MACHINE_CONFIG_START( tndrcade, seta_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ym1", YM2203, 16000000/4)   /* 4 MHz */
-	MCFG_SOUND_CONFIG(tndrcade_ym2203_interface)
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.35)
 
@@ -8912,7 +8904,7 @@ static MACHINE_CONFIG_START( utoukond, seta_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
 	MCFG_SOUND_ADD("ymsnd", YM3438, 16000000/4) /* 4 MHz */
-	MCFG_SOUND_CONFIG(utoukond_ym3438_intf)
+	MCFG_YM2612_IRQ_HANDLER(WRITELINE(seta_state, utoukond_ym3438_interrupt))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.30)
 MACHINE_CONFIG_END

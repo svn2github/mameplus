@@ -228,6 +228,20 @@ IRQ line connected to CPU
  1000-FFFF | R | D D D D D D D D | ROM (can be bank switched by 0x850 in 8 banks of 64 k ) (NV)
 -----------+---+-----------------+--------------------------------------------------------------------------
 
+Additional Notes:
+
+Games from around the era of Road Hog and Chase Invaders had sufficient additional space to store three sets of reel
+start/stop sounds.
+
+To change between them, follow these instructions:
+
+1) Load the game.
+2) Open the cashbox door and insert the refill key.
+3) Use Hi/Lo to adjust volume
+4) Use Hold 1/2/3 to choose between "Default", "Standard" and "Alternative" sound sets
+5) Use Cancel/collect to test the sounds.
+6) To return to the game, remove the refill key and close the door
+
 TODO: - Distinguish door switches using manual
       - Complete stubs for hoppers (needs slightly better 68681 emulation, and new 'hoppers' device emulation)
       - It seems that the MPU4 core program relies on some degree of persistence when switching strobes and handling
@@ -1143,8 +1157,8 @@ static void update_ay(device_t *device, address_space &space)
 			case 0x02:
 			{/* CA2 = 0 CB2 = 1? : Write to selected PSG register and write data to Port A */
 				pia6821_device *pia_ic6 = device->machine().device<pia6821_device>("pia_ic6");
-				device_t *ay = device->machine().device("ay8913");
-				ay8910_data_w(ay, space, 0, pia_ic6->a_output());
+				ay8910_device *ay8910 = device->machine().device<ay8910_device>("ay8913");
+				ay8910->data_w(space, 0, pia_ic6->a_output());
 				LOG(("AY Chip Write \n"));
 				break;
 			}
@@ -1152,8 +1166,8 @@ static void update_ay(device_t *device, address_space &space)
 			{/* CA2 = 1 CB2 = 1? : The register will now be selected and the user can read from or write to it.
              The register will remain selected until another is chosen.*/
 				pia6821_device *pia_ic6 = device->machine().device<pia6821_device>("pia_ic6");
-				device_t *ay = device->machine().device("ay8913");
-				ay8910_address_w(ay, space, 0, pia_ic6->a_output());
+				ay8910_device *ay8910 = device->machine().device<ay8910_device>("ay8913");
+				ay8910->address_w(space, 0, pia_ic6->a_output());
 				LOG(("AY Chip Select \n"));
 				break;
 			}
@@ -2059,6 +2073,10 @@ However, a final 8 byte row, that controls the lamp matrix is not tested - to da
 how this is generated, and currently trial and error is the only sensible method. It is noted that the default,
 of all 00, is sometimes the correct answer, particularly in non-Barcrest use of the CHR chip, though when used normally,
 there are again fixed call values.
+
+Apparently, just before the characteriser is checked bit 1 at 0x61DF is checked and if zero the characteriser
+check is bypassed. This may be something to look at for prototype ROMs and hacks.
+
 */
 
 
@@ -2282,14 +2300,14 @@ READ8_MEMBER(mpu4_state::bwb_characteriser_r)
 
 WRITE8_MEMBER(mpu4_state::mpu4_ym2413_w)
 {
-	device_t *ym = machine().device("ym2413");
-	if (ym) ym2413_w(ym,space,offset,data);
+	ym2413_device *ym2413 = machine().device<ym2413_device>("ym2413");
+	if (ym2413) ym2413->write(space,offset,data);
 }
 
 READ8_MEMBER(mpu4_state::mpu4_ym2413_r)
 {
-//  device_t *ym = machine().device("ym2413");
-//  return ym2413_read(ym,offset);
+//  ym2413_device *ym2413 = machine().device<ym2413_device>("ym2413");
+//  if (ym2413) return ym2413->read(space,offset);
 	return 0xff;
 }
 

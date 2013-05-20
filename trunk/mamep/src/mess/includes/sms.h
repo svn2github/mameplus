@@ -31,6 +31,7 @@ public:
 		m_control_cpu(*this, "control"),
 		m_vdp(*this, "sms_vdp"),
 		m_eeprom(*this, "eeprom"),
+		m_ym(*this, "ym2413"),
 		m_main_scr(*this, "screen"),
 		m_is_gamegear(0),
 		m_is_region_japan(0),
@@ -47,7 +48,7 @@ public:
 	optional_device<cpu_device> m_control_cpu;
 	required_device<sega315_5124_device> m_vdp;
 	optional_device<eeprom_device> m_eeprom;
-	device_t *m_ym;
+	optional_device<ym2413_device> m_ym;
 	required_device<screen_device> m_main_scr;
 	device_t *m_left_lcd;
 	device_t *m_right_lcd;
@@ -215,14 +216,12 @@ protected:
 	required_shared_ptr<UINT8> m_mainram;
 
 	void setup_rom();
-	void vdp_hcount_lphaser(int hpos);
+	void lphaser_hcount_latch(int hpos);
 	void lphaser1_sensor_check();
 	void lphaser2_sensor_check();
 	UINT16 screen_hpos_nonscaled(int scaled_hpos);
 	UINT16 screen_vpos_nonscaled(int scaled_vpos);
 	int lgun_bright_aim_area(emu_timer *timer, int lgun_x, int lgun_y);
-	void sms_vdp_hcount_latch(address_space &space);
-	UINT8 sms_vdp_hcount();
 	void setup_cart_banks();
 	void setup_banks();
 	void sms_get_inputs(address_space &space);

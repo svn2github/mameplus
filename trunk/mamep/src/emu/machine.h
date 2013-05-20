@@ -264,6 +264,10 @@ public:
 	void add_logerror_callback(logerror_callback callback);
 	void set_ui_active(bool active) { m_ui_active = active; }
 
+	// TODO: Do saves and loads still require scheduling?
+	void immediate_save(const char *filename);
+	void immediate_load(const char *filename);
+
 	// scheduled operations
 	void schedule_exit();
 	void schedule_hard_reset();
@@ -332,6 +336,8 @@ private:
 	void stop_all_devices();
 	void presave_all_devices();
 	void postload_all_devices();
+
+	TIMER_CALLBACK_MEMBER(autoboot_callback);
 
 	// internal state
 	const machine_config &  m_config;               // reference to the constructed machine_config
@@ -418,6 +424,8 @@ private:
 	memory_manager          m_memory;               // memory manager
 	ioport_manager          m_ioport;               // I/O port manager
 	device_scheduler        m_scheduler;            // scheduler object
+	emu_timer               *m_autoboot_timer;      // autoboot timer
+	lua_engine              m_lua_engine;           // LUA engine
 };
 
 

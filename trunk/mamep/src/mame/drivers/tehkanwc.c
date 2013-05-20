@@ -144,9 +144,16 @@ WRITE8_MEMBER(tehkanwc_state::sound_command_w)
 	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-TIMER_CALLBACK_MEMBER(tehkanwc_state::reset_callback)
+void tehkanwc_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_audiocpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	switch (id)
+	{
+	case TIMER_RESET:
+		m_audiocpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in tehkanwc_state::device_timer");
+	}
 }
 
 WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
@@ -155,7 +162,7 @@ WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
 
 	/* in Gridiron, the sound CPU goes in a tight loop after the self test, */
 	/* probably waiting to be reset by a watchdog */
-	if (space.device().safe_pc() == 0x08bc) machine().scheduler().timer_set(attotime::from_seconds(1), timer_expired_delegate(FUNC(tehkanwc_state::reset_callback),this));
+	if (space.device().safe_pc() == 0x08bc) timer_set(attotime::from_seconds(1), TIMER_RESET);
 }
 
 
@@ -259,10 +266,10 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_port, AS_IO, 8, tehkanwc_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVREAD_LEGACY("ay1", ay8910_r)
-	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
-	AM_RANGE(0x02, 0x02) AM_DEVREAD_LEGACY("ay2", ay8910_r)
-	AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("ay2", ay8910_data_address_w)
+	AM_RANGE(0x00, 0x00) AM_DEVREAD("ay1", ay8910_device, data_r)
+	AM_RANGE(0x00, 0x01) AM_DEVWRITE("ay1", ay8910_device, data_address_w)
+	AM_RANGE(0x02, 0x02) AM_DEVREAD("ay2", ay8910_device, data_r)
+	AM_RANGE(0x02, 0x03) AM_DEVWRITE("ay2", ay8910_device, data_address_w)
 ADDRESS_MAP_END
 
 

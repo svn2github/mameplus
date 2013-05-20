@@ -1092,20 +1092,20 @@ MACHINE_START_MEMBER(stv_state,stv)
 	scsp_set_ram_base(machine().device("scsp"), m_sound_ram);
 
 	// save states
-	state_save_register_global_pointer(machine(), m_scu_regs, 0x100/4);
-	state_save_register_global_pointer(machine(), m_scsp_regs,  0x1000/2);
-	state_save_register_global(machine(), m_NMI_reset);
-	state_save_register_global(machine(), m_en_68k);
-//  state_save_register_global(machine(), scanline);
-	state_save_register_global(machine(), m_smpc.IOSEL1);
-	state_save_register_global(machine(), m_smpc.IOSEL2);
-	state_save_register_global(machine(), m_smpc.EXLE1);
-	state_save_register_global(machine(), m_smpc.EXLE2);
-	state_save_register_global(machine(), m_smpc.PDR1);
-	state_save_register_global(machine(), m_smpc.PDR2);
-	state_save_register_global(machine(), m_port_sel);
-	state_save_register_global(machine(), m_mux_data);
-	state_save_register_global(machine(), m_scsp_last_line);
+	save_pointer(NAME(m_scu_regs), 0x100/4);
+	save_pointer(NAME(m_scsp_regs), 0x1000/2);
+	save_item(NAME(m_NMI_reset));
+	save_item(NAME(m_en_68k));
+//  save_item(NAME(scanline));
+	save_item(NAME(m_smpc.IOSEL1));
+	save_item(NAME(m_smpc.IOSEL2));
+	save_item(NAME(m_smpc.EXLE1));
+	save_item(NAME(m_smpc.EXLE2));
+	save_item(NAME(m_smpc.PDR1));
+	save_item(NAME(m_smpc.PDR2));
+	save_item(NAME(m_port_sel));
+	save_item(NAME(m_mux_data));
+	save_item(NAME(m_scsp_last_line));
 
 	stv_register_protection_savestates(machine()); // machine/stvprot.c
 
@@ -2500,7 +2500,7 @@ ROM_START( sfish2 )
 	ROM_LOAD16_WORD_SWAP( "mpr-18275.ic4",    0x0c00000, 0x0200000, CRC(7691deca) SHA1(aabb6b098963caf51f66aefa0a97aed7eb86c308) ) // good
 
 	DISK_REGION( "cdrom" )
-	DISK_IMAGE( "sfish2", 0, BAD_DUMP SHA1(a10073d83bbbe16e16f69ad48565821576557d61) )
+	DISK_IMAGE( "cdp-00428", 0, SHA1(166cb5518fa5e0ab15d40dade70fa8913089dcd2) )
 
 	ROM_REGION32_BE( 0x3000000, "abus", ROMREGION_ERASE00 ) /* SH2 code */ \
 ROM_END
@@ -2521,7 +2521,7 @@ ROM_START( sfish2j )
 	ROM_LOAD16_WORD_SWAP( "mpr-18274.ic3",    0x0800000, 0x0400000, CRC(a6d76d23) SHA1(eee8c824eff4485d1b3af93a4fd5b21262eec803) ) // good
 
 	DISK_REGION( "cdrom" )
-	DISK_IMAGE( "sfish2", 0, BAD_DUMP SHA1(a10073d83bbbe16e16f69ad48565821576557d61) )
+	DISK_IMAGE( "cdp-00386b", 0, SHA1(2cb357a930bb7fa668949717ec6daaad2669d137) )
 
 	ROM_REGION32_BE( 0x3000000, "abus", ROMREGION_ERASE00 ) /* SH2 code */
 ROM_END

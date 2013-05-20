@@ -196,128 +196,112 @@ WRITE8_MEMBER(taitob_state::bankswitch_w)
 	membank("bank1")->set_entry((data - 1) & 3);
 }
 
-TIMER_CALLBACK_MEMBER(taitob_state::rsaga2_interrupt2)
+void taitob_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	m_maincpu->set_input_line(2, HOLD_LINE);
+	switch (id)
+	{
+	case RSAGA2_INTERRUPT2:
+		m_maincpu->set_input_line(2, HOLD_LINE);
+		break;
+	case CRIMEC_INTERRUPT3:
+		m_maincpu->set_input_line(3, HOLD_LINE);
+		break;
+	case HITICE_INTERRUPT6:
+		m_maincpu->set_input_line(6, HOLD_LINE);
+		break;
+	case RAMBO3_INTERRUPT1:
+		m_maincpu->set_input_line(1, HOLD_LINE);
+		break;
+	case PBOBBLE_INTERRUPT5:
+		m_maincpu->set_input_line(5, HOLD_LINE);
+		break;
+	case VIOFIGHT_INTERRUPT1:
+		m_maincpu->set_input_line(1, HOLD_LINE);
+		break;
+	case MASTERW_INTERRUPT4:
+		m_maincpu->set_input_line(4, HOLD_LINE);
+		break;
+	case SILENTD_INTERRUPT4:
+		m_maincpu->set_input_line(4, HOLD_LINE);
+		break;
+	case SELFEENA_INTERRUPT4:
+		m_maincpu->set_input_line(4, HOLD_LINE);
+		break;
+	case SBM_INTERRUPT5:
+		m_maincpu->set_input_line(5, HOLD_LINE);
+		break;
+	case REALPUNC_INTERRUPT3:
+		m_maincpu->set_input_line(3, HOLD_LINE);
+		break;
+	default:
+		assert_always(FALSE, "Unknown id in taitob_state::device_timer");
+	}
 }
+
 
 INTERRUPT_GEN_MEMBER(taitob_state::rastansaga2_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::rsaga2_interrupt2),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), RSAGA2_INTERRUPT2);
 	device.execute().set_input_line(4, HOLD_LINE);
-}
-
-
-TIMER_CALLBACK_MEMBER(taitob_state::crimec_interrupt3)
-{
-	m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::crimec_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::crimec_interrupt3),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), CRIMEC_INTERRUPT3);
 	device.execute().set_input_line(5, HOLD_LINE);
-}
-
-
-TIMER_CALLBACK_MEMBER(taitob_state::hitice_interrupt6)
-{
-	m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::hitice_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::hitice_interrupt6),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), HITICE_INTERRUPT6);
 	device.execute().set_input_line(4, HOLD_LINE);
-}
-
-
-TIMER_CALLBACK_MEMBER(taitob_state::rambo3_interrupt1)
-{
-	m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::rambo3_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::rambo3_interrupt1),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), RAMBO3_INTERRUPT1);
 	device.execute().set_input_line(6, HOLD_LINE);
-}
-
-
-TIMER_CALLBACK_MEMBER(taitob_state::pbobble_interrupt5)
-{
-	m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::pbobble_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::pbobble_interrupt5),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), PBOBBLE_INTERRUPT5);
 	device.execute().set_input_line(3, HOLD_LINE);
-}
-
-TIMER_CALLBACK_MEMBER(taitob_state::viofight_interrupt1)
-{
-	m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::viofight_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::viofight_interrupt1),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), VIOFIGHT_INTERRUPT1);
 	device.execute().set_input_line(4, HOLD_LINE);
-}
-
-TIMER_CALLBACK_MEMBER(taitob_state::masterw_interrupt4)
-{
-	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::masterw_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::masterw_interrupt4),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), MASTERW_INTERRUPT4);
 	device.execute().set_input_line(5, HOLD_LINE);
-}
-
-TIMER_CALLBACK_MEMBER(taitob_state::silentd_interrupt4)
-{
-	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::silentd_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::silentd_interrupt4),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), SILENTD_INTERRUPT4);
 	device.execute().set_input_line(6, HOLD_LINE);
-}
-
-TIMER_CALLBACK_MEMBER(taitob_state::selfeena_interrupt4)
-{
-	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::selfeena_interrupt)
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), timer_expired_delegate(FUNC(taitob_state::selfeena_interrupt4),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(5000), SELFEENA_INTERRUPT4);
 	device.execute().set_input_line(6, HOLD_LINE);
-}
-
-TIMER_CALLBACK_MEMBER(taitob_state::sbm_interrupt5)//4
-{
-	m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::sbm_interrupt)//5
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taitob_state::sbm_interrupt5),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), SBM_INTERRUPT5);
 	device.execute().set_input_line(4, HOLD_LINE);
-}
-
-TIMER_CALLBACK_MEMBER(taitob_state::realpunc_interrupt3)//3
-{
-	m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 INTERRUPT_GEN_MEMBER(taitob_state::realpunc_interrupt)//2
 {
-	machine().scheduler().timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), timer_expired_delegate(FUNC(taitob_state::realpunc_interrupt3),this));
+	timer_set(downcast<cpu_device *>(&device)->cycles_to_attotime(10000), REALPUNC_INTERRUPT3);
 	device.execute().set_input_line(2, HOLD_LINE);
 }
 
@@ -725,7 +709,7 @@ static ADDRESS_MAP_START( masterw_sound_map, AS_PROGRAM, 8, taitob_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2203_device, read, write)
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 ADDRESS_MAP_END
@@ -734,7 +718,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, taitob_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
+	AM_RANGE(0xe000, 0xe003) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
 	AM_RANGE(0xe200, 0xe200) AM_READNOP AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xe201, 0xe201) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
 	AM_RANGE(0xe400, 0xe403) AM_WRITENOP /* pan */
@@ -749,7 +733,7 @@ static ADDRESS_MAP_START( viofight_sound_map, AS_PROGRAM, 8, taitob_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
+	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE("ymsnd", ym2203_device, read, write)
 	AM_RANGE(0xb000, 0xb001) AM_DEVREADWRITE("oki", okim6295_device, read, write)       /* yes, both addresses for the same chip */
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_port_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREADWRITE("tc0140syt", tc0140syt_device, tc0140syt_slave_comm_r, tc0140syt_slave_comm_w)
@@ -1895,22 +1879,14 @@ WRITE_LINE_MEMBER(taitob_state::irqhandler)
 	m_audiocpu->set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2610_interface ym2610_config =
+static const ay8910_interface ay8910_config =
 {
-	DEVCB_DRIVER_LINE_MEMBER(taitob_state,irqhandler)
-};
-
-static const ym2203_interface ym2203_config =
-{
-	{
-		AY8910_LEGACY_OUTPUT,
-		AY8910_DEFAULT_LOADS,
-		DEVCB_NULL,
-		DEVCB_NULL,
-		DEVCB_DRIVER_MEMBER(taitob_state, bankswitch_w),
-		DEVCB_NULL,
-	},
-	DEVCB_DRIVER_LINE_MEMBER(taitob_state,irqhandler)
+	AY8910_LEGACY_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_DRIVER_MEMBER(taitob_state, bankswitch_w),
+	DEVCB_NULL,
 };
 
 /*
@@ -2049,7 +2025,7 @@ static MACHINE_CONFIG_START( rastsag2, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2093,7 +2069,7 @@ static MACHINE_CONFIG_START( ashura, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2137,7 +2113,7 @@ static MACHINE_CONFIG_START( crimec, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2181,7 +2157,7 @@ static MACHINE_CONFIG_START( tetrist, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2224,7 +2200,8 @@ static MACHINE_CONFIG_START( tetrista, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 0.25)
 	MCFG_SOUND_ROUTE(2, "mono", 0.25)
@@ -2269,7 +2246,8 @@ static MACHINE_CONFIG_START( hitice, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 0.25)
 	MCFG_SOUND_ROUTE(2, "mono", 0.25)
@@ -2317,7 +2295,7 @@ static MACHINE_CONFIG_START( rambo3p, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, XTAL_16MHz/2)   /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2361,7 +2339,7 @@ static MACHINE_CONFIG_START( rambo3, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, XTAL_16MHz/2)   /* verified on pcb */
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2408,7 +2386,7 @@ static MACHINE_CONFIG_START( pbobble, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2456,7 +2434,7 @@ static MACHINE_CONFIG_START( spacedx, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2500,7 +2478,7 @@ static MACHINE_CONFIG_START( spacedxo, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2548,7 +2526,7 @@ static MACHINE_CONFIG_START( qzshowby, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2592,7 +2570,8 @@ static MACHINE_CONFIG_START( viofight, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 0.25)
 	MCFG_SOUND_ROUTE(2, "mono", 0.25)
@@ -2639,7 +2618,8 @@ static MACHINE_CONFIG_START( masterw, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2203, 3000000)
-	MCFG_SOUND_CONFIG(ym2203_config)
+	MCFG_YM2203_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
+	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 0.25)
 	MCFG_SOUND_ROUTE(2, "mono", 0.25)
@@ -2684,7 +2664,7 @@ static MACHINE_CONFIG_START( silentd, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2728,7 +2708,7 @@ static MACHINE_CONFIG_START( selfeena, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2781,7 +2761,7 @@ static MACHINE_CONFIG_START( ryujin, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2832,7 +2812,7 @@ static MACHINE_CONFIG_START( sbm, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)
@@ -2884,7 +2864,7 @@ static MACHINE_CONFIG_START( realpunc, taitob_state )
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ymsnd", YM2610B, 8000000)
-	MCFG_SOUND_CONFIG(ym2610_config)
+	MCFG_YM2610_IRQ_HANDLER(WRITELINE(taitob_state, irqhandler))
 	MCFG_SOUND_ROUTE(0, "mono", 0.25)
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)

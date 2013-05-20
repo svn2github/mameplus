@@ -614,14 +614,14 @@ VIDEO_START_MEMBER(subsino2_state,subsino2)
 	m_ss9601_reelrects[2].set(0, 0, 0x10*8, 256-16-1);
 
 /*
-    state_save_register_global_pointer(machine(), m_ss9601_reelrams[VRAM_HI], 0x2000);
-    state_save_register_global_pointer(machine(), m_ss9601_reelrams[VRAM_LO], 0x2000);
+    save_pointer(NAME(m_ss9601_reelrams[VRAM_HI]), 0x2000);
+    save_pointer(NAME(m_ss9601_reelrams[VRAM_LO]), 0x2000);
 
-    state_save_register_global_pointer(machine(), m_layers[0].scrollrams[VRAM_HI], 0x200);
-    state_save_register_global_pointer(machine(), m_layers[0].scrollrams[VRAM_LO], 0x200);
+    save_pointer(NAME(m_layers[0].scrollrams[VRAM_HI]), 0x200);
+    save_pointer(NAME(m_layers[0].scrollrams[VRAM_LO]), 0x200);
 
-    state_save_register_global_pointer(machine(), m_layers[1].scrollrams[VRAM_HI], 0x200);
-    state_save_register_global_pointer(machine(), m_layers[1].scrollrams[VRAM_LO], 0x200);
+    save_pointer(NAME(m_layers[1].scrollrams[VRAM_HI]), 0x200);
+    save_pointer(NAME(m_layers[1].scrollrams[VRAM_LO]), 0x200);
 */
 }
 
@@ -1232,7 +1232,7 @@ static ADDRESS_MAP_START( saklove_io, AS_IO, 8, subsino2_state )
 	AM_RANGE(0x0000, 0x0000) AM_WRITE(ss9601_scrollctrl_w )
 
 	AM_RANGE(0x0020, 0x0020) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0x0040, 0x0041) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w )
+	AM_RANGE(0x0040, 0x0041) AM_DEVWRITE("ymsnd", ym3812_device, write)
 
 	AM_RANGE(0x0060, 0x0063) AM_WRITE(hm86171_colorram_w )
 
