@@ -60,7 +60,7 @@ public:
 	void bios_index(int index, int val) { assert(0 <= index && index < driver_list::total()); m_list[index].bios_index = val;   }
 
 	int  uses_controler(int index)          { assert(0 <= index && index < driver_list::total()); return m_list[index].uses_controler;  }
-	void uses_controler(int index, int val) { assert(0 <= index a&& index < driver_list::total()); m_list[index].uses_controler = val;   }
+	void uses_controler(int index, int val) { assert(0 <= index && index < driver_list::total()); m_list[index].uses_controler = val;   }
 
 	void add_entries()
 	{
