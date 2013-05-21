@@ -3,14 +3,10 @@
  Stunt Air by Nuova Videotron 1983
 
   driver todo: (SOME OF THIS WILL NEED PCB REFERENCES / MEASUREMENTS)
-
-
   - correct colour PROM decoding (resistor values?)
   - correct FG colour handling (currently use a hardcoded white)
   - correct sound (need interrupt frequencies at least)
   - correct remaining GFX / sprite issues (flicker sometimes, might need better vblank timing?)
-  - clean up input ports (identify unknown dips, unused ports)
-  - clean up driver
 
 
 Hardware info (complete):
@@ -96,12 +92,7 @@ public:
 		m_bgram(*this, "bgram"),
 		m_bgattrram(*this, "bgattrram"),
 		m_sprram(*this, "sprram")
-	{
-		m_bg_xscroll = 0;
-		m_nmienable = 0;
-		m_spritebank0 = 0;
-		m_spritebank1 = 0;
-	}
+	{ }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
@@ -114,113 +105,223 @@ public:
 	tilemap_t *m_bg_tilemap;
 
 	UINT8 m_bg_xscroll;
-	UINT8 m_nmienable;
+	UINT8 m_nmi_enable;
 	UINT8 m_spritebank0;
 	UINT8 m_spritebank1;
-	UINT8 m_soundlatch;
 
-	DECLARE_WRITE8_MEMBER(stuntair_fgram_w);
 	TILE_GET_INFO_MEMBER(get_stuntair_fg_tile_info);
-
+	TILE_GET_INFO_MEMBER(get_stuntair_bg_tile_info);
+	DECLARE_WRITE8_MEMBER(stuntair_fgram_w);
 	DECLARE_WRITE8_MEMBER(stuntair_bgram_w);
 	DECLARE_WRITE8_MEMBER(stuntair_bgattrram_w);
-	TILE_GET_INFO_MEMBER(get_stuntair_bg_tile_info);
-
 	DECLARE_WRITE8_MEMBER(stuntair_bgxscroll_w);
-
-	DECLARE_WRITE8_MEMBER(stuntair_unk_w)
-	{
-		printf("unk %02x\n", data);
-	}
-
-	DECLARE_WRITE8_MEMBER(stuntair_f001_w)
-	{
-		m_nmienable = data&0x01; // guess
-
-		if (data&~0x01) printf("stuntair_f001_w %02x\n", data);
-	}
-
-	DECLARE_WRITE8_MEMBER(stuntair_spritebank0_w)
-	{
-		m_spritebank0 = data&0x01;
-
-		if (data&~0x01) printf("stuntair_spritebank0_w %02x\n", data);
-	}
-
-	DECLARE_WRITE8_MEMBER(stuntair_spritebank1_w)
-	{
-		m_spritebank1 = data&0x01;
-
-		if (data&~0x01) printf("stuntair_spritebank1_w %02x\n", data);
-	}
-
-	DECLARE_WRITE8_MEMBER(stuntair_coin_w)
-	{
-		// lower 2 bits are coin counters
-		if (data&~0x3) printf("stuntair_coin_w %02x\n", data);
-	}
-
-	DECLARE_WRITE8_MEMBER(stuntair_sound_w)
-	{
-		m_soundlatch = data;
-		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-
-	}
-
-
+	DECLARE_WRITE8_MEMBER(stuntair_nmienable_w);
+	DECLARE_WRITE8_MEMBER(stuntair_spritebank0_w);
+	DECLARE_WRITE8_MEMBER(stuntair_spritebank1_w);
+	DECLARE_WRITE8_MEMBER(stuntair_coin_w);
+	DECLARE_WRITE8_MEMBER(stuntair_sound_w);
+	DECLARE_WRITE8_MEMBER(ay8910_portb_w);
 	INTERRUPT_GEN_MEMBER(stuntair_irq);
-
-	INTERRUPT_GEN_MEMBER(stuntair_sound_irq)
-	{
-		m_audiocpu->set_input_line(0, HOLD_LINE);
-	}
-
-	DECLARE_READ8_MEMBER(ay8910_in0_r)
-	{
-		return m_soundlatch;
-	}
-
-	DECLARE_READ8_MEMBER(ay8910_in1_r)
-	{
-		printf("ay8910_in1_r\n");
-		return 0x00;//m_soundlatch;
-
-	}
-
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
+	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_stuntair(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
+
+/***************************************************************************
+
+  Video
+
+***************************************************************************/
+
+PALETTE_INIT( stuntair )
+{
+	/* need resistor weights etc. */
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+
+	for (int i = 0; i < 0x100; i++)
+	{
+		UINT8 data = color_prom[i];
+
+		int b = (data&0xc0)>>6;
+		int g = (data&0x38)>>3;
+		int r = (data&0x07)>>0;
+		
+		palette_set_color(machine,i,MAKE_RGB(r<<5,g<<5,b<<6));
+	}
+
+	// just set the FG layer to black and white
+	palette_set_color(machine,0x100,MAKE_RGB(0x00,0x00,0x00));
+	palette_set_color(machine,0x101,MAKE_RGB(0xff,0xff,0xff));
+}
+
+
+TILE_GET_INFO_MEMBER(stuntair_state::get_stuntair_fg_tile_info)
+{
+	int tileno = m_fgram[tile_index];
+	int opaque = tileno & 0x80;
+
+	// where does the FG palette come from? it's a 1bpp layer..
+
+	SET_TILE_INFO_MEMBER(0, tileno&0x7f, 0, opaque?TILE_FORCE_LAYER0 : TILE_FORCE_LAYER1);
+}
+
+TILE_GET_INFO_MEMBER(stuntair_state::get_stuntair_bg_tile_info)
+{
+	int tileno = m_bgram[tile_index];
+	tileno |= (m_bgattrram[tile_index] & 0x08)<<5;
+	int colour = (m_bgattrram[tile_index] & 0x07);
+
+	SET_TILE_INFO_MEMBER(1, tileno, colour, 0);
+}
+
+
+void stuntair_state::video_start()
+{
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap->set_transparent_pen(0);
+
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+}
+
+
+void stuntair_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
+{
+	gfx_element *gfx = machine().gfx[2];
+
+	/* there seem to be 2 spritelists with something else (fixed values) between them.. is that significant? */
+	for (int i=0;i<0x400;i+=16)
+	{
+		// +2, +3, +4(high bits): always 00
+		// +6 to +15: unused
+		int x      = m_sprram[i+5];
+		int y      = m_sprram[i+0];
+		int colour = m_sprram[i+4] & 0x7;
+		int tile   = m_sprram[i+1] & 0x3f;
+		int flipy = (m_sprram[i+1] & 0x80)>>7; // used
+//      int flipx = (m_sprram[i+1] & 0x40)>>6; // guessed , wrong
+		int flipx = 0;
+
+		if (m_spritebank1) tile |= 0x40;
+		if (m_spritebank0) tile |= 0x80;
+
+		y = 240 - y;
+
+		drawgfx_transpen(bitmap,cliprect,gfx,tile,colour,flipx,flipy,x,y,0);
+	}
+}
+
+UINT32 stuntair_state::screen_update_stuntair(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+{
+	m_bg_tilemap->set_scrollx(0, m_bg_xscroll);
+
+	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_fg_tilemap->draw(bitmap, cliprect, 0, TILEMAP_PIXEL_LAYER0);
+
+	draw_sprites(bitmap, cliprect);
+
+	m_fg_tilemap->draw(bitmap, cliprect, 0, TILEMAP_PIXEL_LAYER1|TILEMAP_DRAW_OPAQUE);
+
+	return 0;
+}
+
+
+
+/***************************************************************************
+
+  Memory Maps, I/O
+
+***************************************************************************/
+
+WRITE8_MEMBER(stuntair_state::stuntair_bgattrram_w)
+{
+	m_bgattrram[offset] = data;
+	m_bg_tilemap->mark_tile_dirty(offset);
+}
+
+WRITE8_MEMBER(stuntair_state::stuntair_bgram_w)
+{
+	m_bgram[offset] = data;
+	m_bg_tilemap->mark_tile_dirty(offset);
+}
+
+WRITE8_MEMBER(stuntair_state::stuntair_fgram_w)
+{
+	m_fgram[offset] = data;
+	m_fg_tilemap->mark_tile_dirty(offset);
+}
+
+
+WRITE8_MEMBER( stuntair_state::stuntair_bgxscroll_w )
+{
+	m_bg_xscroll = data;
+}
+
+
+WRITE8_MEMBER(stuntair_state::stuntair_spritebank0_w)
+{
+	m_spritebank0 = data&0x01;
+	// other bits are unused
+}
+
+WRITE8_MEMBER(stuntair_state::stuntair_spritebank1_w)
+{
+	m_spritebank1 = data&0x01;
+	// other bits are unused
+}
+
+
+WRITE8_MEMBER(stuntair_state::stuntair_nmienable_w)
+{
+	m_nmi_enable = data&0x01;
+	if (!m_nmi_enable)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	// other bits are unused
+}
+
+WRITE8_MEMBER(stuntair_state::stuntair_coin_w)
+{
+	// lower 2 bits are coin counters, excluding 1st coin(?)
+	coin_counter_w(machine(), 0, data >> 0 & 1);
+	coin_counter_w(machine(), 1, data >> 1 & 1);
+
+	// other bits: unknown
+	if (data & 0xfc)
+		logerror("stuntair_coin_w %02x\n", data);
+}
+
+
+WRITE8_MEMBER(stuntair_state::stuntair_sound_w)
+{
+	soundlatch_byte_w(space, 0, data);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+}
+
+// main Z80
 static ADDRESS_MAP_START( stuntair_map, AS_PROGRAM, 8, stuntair_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(stuntair_bgattrram_w) AM_SHARE("bgattrram")  // bg attr
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(stuntair_bgram_w) AM_SHARE("bgram") // bg
+	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(stuntair_bgattrram_w) AM_SHARE("bgattrram")
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(stuntair_bgram_w) AM_SHARE("bgram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("sprram")
-
 	AM_RANGE(0xe000, 0xe000) AM_READ_PORT("DSWB") AM_WRITE(stuntair_coin_w)
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("DSWA") AM_WRITE(stuntair_bgxscroll_w)
-
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("IN2")
-	AM_RANGE(0xf001, 0xf001) AM_WRITE(stuntair_f001_w)  // might be nmi enable
+	AM_RANGE(0xf001, 0xf001) AM_WRITE(stuntair_nmienable_w)
 	AM_RANGE(0xf002, 0xf002) AM_READ_PORT("IN3")
-	AM_RANGE(0xf003, 0xf003) AM_READ_PORT("IN4") AM_WRITE(stuntair_spritebank1_w)
+	AM_RANGE(0xf003, 0xf003) AM_READNOP AM_WRITE(stuntair_spritebank1_w)
 //  AM_RANGE(0xf004, 0xf004) AM_WRITENOP
 	AM_RANGE(0xf005, 0xf005) AM_WRITE(stuntair_spritebank0_w)
 //  AM_RANGE(0xf006, 0xf006) AM_WRITENOP
 //  AM_RANGE(0xf007, 0xf007) AM_WRITENOP
-
-
 	AM_RANGE(0xf800, 0xfbff) AM_RAM_WRITE(stuntair_fgram_w) AM_SHARE("fgram")
-
-
 	AM_RANGE(0xfc03, 0xfc03) AM_WRITE(stuntair_sound_w)
-
 ADDRESS_MAP_END
 
+// sound Z80
 static ADDRESS_MAP_START( stuntair_sound_map, AS_PROGRAM, 8, stuntair_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_RAM
@@ -230,69 +331,60 @@ static ADDRESS_MAP_START( stuntair_sound_portmap, AS_IO, 8, stuntair_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x03, 0x03) AM_DEVWRITE("ay2", ay8910_device, address_w)
 	AM_RANGE(0x07, 0x07) AM_DEVWRITE("ay2", ay8910_device, data_w)
-
 	AM_RANGE(0x0c, 0x0d) AM_DEVREADWRITE("ay1", ay8910_device, data_r, address_data_w)
 ADDRESS_MAP_END
 
 
-static INPUT_PORTS_START( stuntair )
-	PORT_START("DSWB") // the bit order logic doesn't seem to match the info in the text.. must be wired up in an odd way, might be better to do a bitswap in the read port handler
-	PORT_DIPNAME( 0x18, 0x00, DEF_STR( Coin_A ) ) // SW 1   2
-	PORT_DIPSETTING(    0x00, "0" )
-	PORT_DIPSETTING(    0x08, "1" )
-	PORT_DIPSETTING(    0x10, "2" )
-	PORT_DIPSETTING(    0x18, "3" )
-	PORT_DIPNAME( 0x24, 0x00,  DEF_STR( Coin_B ) ) // SW 3   4
-	PORT_DIPSETTING(    0x00, "0" )
-	PORT_DIPSETTING(    0x04, "1" )
-	PORT_DIPSETTING(    0x20, "2" )
-	PORT_DIPSETTING(    0x24, "3" )
-	PORT_DIPNAME( 0x42, 0x40, DEF_STR( Bonus_Life ) ) // SW 5   6
-	PORT_DIPSETTING(    0x00, "10000" )
-	PORT_DIPSETTING(    0x40, "20000" )
-	PORT_DIPSETTING(    0x02, "30000" )
-	PORT_DIPSETTING(    0x42, "50000" )
-	PORT_DIPNAME( 0x81, 0x81, "Lives" ) // SW 7   8
-	PORT_DIPSETTING(    0x00, "0" )
-	PORT_DIPSETTING(    0x01, "1" )
-	PORT_DIPSETTING(    0x80, "2" )
-	PORT_DIPSETTING(    0x81, "3" )
 
-	PORT_START("DSWA")
-	PORT_DIPNAME( 0x10, 0x10, "DSWA:1" )  // SW1
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "DSWA:2" ) // SW 2
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, "DSWA:3" ) // SW 3
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, "Infinite Lives" ) // SW 4
+/***************************************************************************
+
+  Inputs
+
+***************************************************************************/
+
+static INPUT_PORTS_START( stuntair )
+	PORT_START("DSWB") // the bit order is scrambled, but this matches the text above
+	PORT_DIPNAME( 0x18, 0x00, DEF_STR( Coin_A ) )        PORT_DIPLOCATION("SWB:2,1")
+	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x18, "1 Coin/1 Credit - 2 Coins/3 Credits" )
+	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x24, 0x00, DEF_STR( Coin_B ) )        PORT_DIPLOCATION("SWB:4,3")
+	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x24, "1 Coin/1 Credit - 2 Coins/3 Credits" )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x42, 0x40, DEF_STR( Bonus_Life ) )    PORT_DIPLOCATION("SWB:6,5")
+	PORT_DIPSETTING(    0x00, "10000 20000" )
+	PORT_DIPSETTING(    0x40, "20000 30000" )
+	PORT_DIPSETTING(    0x02, "30000 50000" )
+	PORT_DIPSETTING(    0x42, "50000 100000" )
+	PORT_DIPNAME( 0x81, 0x80, "Lives" )                  PORT_DIPLOCATION("SWB:8,7")
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPSETTING(    0x80, "3" )
+	PORT_DIPSETTING(    0x01, "4" )
+	PORT_DIPSETTING(    0x81, "5" )
+
+	PORT_START("DSWA") // the bit order is scrambled, not sure if the dip locations are correct
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "SWA:1" ) // test related? $05c7
+	PORT_DIPNAME( 0x28, 0x08, DEF_STR( Difficulty ) )    PORT_DIPLOCATION("SWA:2,3") // $298f
+	PORT_DIPSETTING(    0x00, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Normal ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( Hardest ) )
+	PORT_DIPNAME( 0x04, 0x00, "Infinite Lives (Cheat)" ) PORT_DIPLOCATION("SWA:4") // $3f49
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "DSWA:5" )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "DSWA:6" )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "DSWA:7" )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x01, 0x01, "DSWA:8" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SWA:5" ) // not accessed in game code
+	PORT_DIPUNUSED_DIPLOC( 0x02, 0x02, "SWA:6" ) // "
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "SWA:7" ) // "
+	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "SWA:8" ) // "
 
 	PORT_START("IN2")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_DIPNAME( 0x04, 0x04, "IN2:2" )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "IN2:3" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
@@ -306,43 +398,18 @@ static INPUT_PORTS_START( stuntair )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_DIPNAME( 0x20, 0x20, "IN3:5" )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "IN3:6" )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "IN3:7" )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START("IN4")
-	PORT_DIPNAME( 0x01, 0x01, "IN4:0" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "IN4:1" )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, "IN4:2" )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "IN4:3" )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "IN4:4" )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, "IN4:5" )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "IN4:6" )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "IN4:7" )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
+
+
+
+/***************************************************************************
+
+  GFX Layouts
+
+***************************************************************************/
 
 static const gfx_layout tiles8x8_layout =
 {
@@ -386,125 +453,28 @@ GFXDECODE_END
 
 
 
-void stuntair_state::machine_start()
+/***************************************************************************
+
+  AY8910 Config
+
+***************************************************************************/
+
+WRITE8_MEMBER(stuntair_state::ay8910_portb_w)
 {
+	// it writes $e8 and $f0 for music drums
+	// possibly to discrete sound circuitry?
+	logerror("ay8910_portb_w: %02x\n", data);
 }
-
-void stuntair_state::machine_reset()
-{
-}
-
-
-TILE_GET_INFO_MEMBER(stuntair_state::get_stuntair_fg_tile_info)
-{
-	int tileno = m_fgram[tile_index];
-	int opaque = tileno & 0x80;
-
-	// where does the FG palette come from? it's a 1bpp layer..
-
-	SET_TILE_INFO_MEMBER(0, tileno&0x7f, 0, opaque?TILE_FORCE_LAYER0 : TILE_FORCE_LAYER1);
-}
-
-WRITE8_MEMBER(stuntair_state::stuntair_fgram_w)
-{
-	m_fgram[offset] = data;
-	m_fg_tilemap->mark_tile_dirty(offset);
-}
-
-/* Back Layer */
-
-WRITE8_MEMBER( stuntair_state::stuntair_bgxscroll_w )
-{
-	m_bg_xscroll = data;
-}
-
-WRITE8_MEMBER(stuntair_state::stuntair_bgram_w)
-{
-	m_bgram[offset] = data;
-	m_bg_tilemap->mark_tile_dirty(offset);
-}
-
-TILE_GET_INFO_MEMBER(stuntair_state::get_stuntair_bg_tile_info)
-{
-	int tileno = m_bgram[tile_index];
-	tileno |= (m_bgattrram[tile_index] & 0x08)<<5;
-	int colour = (m_bgattrram[tile_index] & 0x07);
-
-	SET_TILE_INFO_MEMBER(1, tileno, colour, 0);
-}
-
-
-WRITE8_MEMBER(stuntair_state::stuntair_bgattrram_w)
-{
-	m_bgattrram[offset] = data;
-	m_bg_tilemap->mark_tile_dirty(offset);
-}
-
-
-void stuntair_state::video_start()
-{
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
-	m_fg_tilemap->set_transparent_pen(0);
-
-
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
-}
-
-UINT32 stuntair_state::screen_update_stuntair(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
-{
-	m_bg_tilemap->set_scrollx(0, m_bg_xscroll);
-
-
-	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	m_fg_tilemap->draw(bitmap, cliprect, 0, TILEMAP_PIXEL_LAYER0);
-
-	gfx_element *gfx = machine().gfx[2];
-
-	/* there seem to be 2 spritelists with something else (fixed values) between them.. is that significant? */
-	for (int i=0;i<0x400/16;i++)
-	{
-		int x      = m_sprram[(i*16)+5];
-		int y      = m_sprram[(i*16)+0];
-		int colour = m_sprram[(i*16)+4] & 0x7;
-		int tile   = m_sprram[(i*16)+1] & 0x3f;
-		int flipy = (m_sprram[(i*16)+1] & 0x80)>>7; // used
-//      int flipx = (m_sprram[(i*16)+1] & 0x40)>>6; // guessed , wrong
-		int flipx = 0;
-
-		if (m_spritebank1) tile |= 0x40;
-		if (m_spritebank0) tile |= 0x80;
-
-		y = 240 - y;
-
-		drawgfx_transpen(bitmap,cliprect,gfx,tile,colour,flipx,flipy,x,y,0);
-	}
-
-	m_fg_tilemap->draw(bitmap, cliprect, 0, TILEMAP_PIXEL_LAYER1|TILEMAP_DRAW_OPAQUE);
-
-
-	return 0;
-}
-
-INTERRUPT_GEN_MEMBER(stuntair_state::stuntair_irq)
-{
-	if(m_nmienable)
-		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
-}
-
-
-
-
 
 static const ay8910_interface ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(stuntair_state,ay8910_in0_r),
-	DEVCB_DRIVER_MEMBER(stuntair_state,ay8910_in1_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 	DEVCB_NULL,
-	DEVCB_NULL
+	DEVCB_NULL,
+	DEVCB_DRIVER_MEMBER(stuntair_state, ay8910_portb_w)
 };
-
 
 static const ay8910_interface ay8910_2_config =
 {
@@ -516,45 +486,48 @@ static const ay8910_interface ay8910_2_config =
 	DEVCB_NULL
 };
 
-PALETTE_INIT( stuntair )
+
+
+/***************************************************************************
+
+  Machine Config
+
+***************************************************************************/
+
+INTERRUPT_GEN_MEMBER(stuntair_state::stuntair_irq)
 {
-	/* need resistor weights etc. */
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base()+0x100;
-	const UINT8 *color_prom2 = machine.root_device().memregion("proms")->base();
-
-	int i;
-
-	for (i = 0; i < 0x100; i++)
-	{
-		UINT8 data = color_prom[i] | (color_prom2[i]<<4);
-
-
-		int b = (data&0xc0)>>6;
-		int g = (data&0x38)>>2;
-		int r = (data&0x07)>>0;
-
-
-		palette_set_color(machine,i,MAKE_RGB(r<<5,g<<5,b<<6));
-	}
-
-	// just set the FG layer to black and white
-	palette_set_color(machine,0x100,MAKE_RGB(0x00,0x00,0x00));
-	palette_set_color(machine,0x101,MAKE_RGB(0xff,0xff,0xff));
-
+	if(m_nmi_enable)
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
+void stuntair_state::machine_start()
+{
+	m_bg_xscroll = 0;
+	m_nmi_enable = 0;
+	m_spritebank0 = 0;
+	m_spritebank1 = 0;
+
+	save_item(NAME(m_bg_xscroll));
+	save_item(NAME(m_nmi_enable));
+	save_item(NAME(m_spritebank0));
+	save_item(NAME(m_spritebank1));
+}
+
+void stuntair_state::machine_reset()
+{
+}
 
 static MACHINE_CONFIG_START( stuntair, stuntair_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", Z80,  XTAL_18_432MHz/4)         /* ? MHz */
+	MCFG_CPU_ADD("maincpu", Z80,  XTAL_18_432MHz/6)         /* 3 MHz? */
 	MCFG_CPU_PROGRAM_MAP(stuntair_map)
-	MCFG_CPU_VBLANK_INT_DRIVER("screen", stuntair_state,  stuntair_irq)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", stuntair_state, stuntair_irq)
 
-	MCFG_CPU_ADD("audiocpu", Z80,  XTAL_18_432MHz/4)         /* ? MHz */
+	MCFG_CPU_ADD("audiocpu", Z80,  XTAL_18_432MHz/6)         /* 3 MHz? */
 	MCFG_CPU_PROGRAM_MAP(stuntair_sound_map)
 	MCFG_CPU_IO_MAP(stuntair_sound_portmap)
-	MCFG_CPU_PERIODIC_INT_DRIVER(stuntair_state, stuntair_sound_irq, 60*8) // guessed, probably wrong ?? drives music tempo..
+	MCFG_CPU_PERIODIC_INT_DRIVER(stuntair_state, irq0_line_hold, 60*8) // timing guessed, probably wrong ?? drives music tempo.. and where is irq ack?
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -583,6 +556,12 @@ MACHINE_CONFIG_END
 
 
 
+/***************************************************************************
+
+  Game drivers
+
+***************************************************************************/
+
 ROM_START( stuntair )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "stuntair.a0", 0x0000, 0x2000, CRC(f61c4a1d) SHA1(29a227b447866e27e7619a0a676c9ad66364c323) )
@@ -605,13 +584,11 @@ ROM_START( stuntair )
 	ROM_LOAD( "stuntair.a13", 0x0000, 0x2000, CRC(bfdc0d38) SHA1(ea0a22971e9cf1b1682c35facc9c4e30607faed7) )
 	ROM_LOAD( "stuntair.a15", 0x2000, 0x2000, CRC(4531cab5) SHA1(35271555377ec3454a5d74bf8c21d7e8acc05782) )
 
-	ROM_REGION( 0x200, "proms", 0 ) // only the last few entries are used?
-	ROM_LOAD( "dm74s287n.11l", 0x000, 0x100, CRC(6c98f964) SHA1(abf7bdeccd33e62fa106d2056d1949cf278483a7) )
-	ROM_LOAD( "dm74s287n.11m", 0x100, 0x100, CRC(d330ff90) SHA1(e223935464109a3c4c7b29641b3736484c22c47a) )
-
-	ROM_REGION( 0x020, "miscprom", 0 )
-	ROM_LOAD( "dm74s288n.7a",  0x000, 0x020, CRC(5779e751) SHA1(89c955ef8635ad3e9d699f33ec0e4d6c9205d01c) )
+	ROM_REGION( 0x120, "proms", 0 )
+	ROM_LOAD_NIB_LOW ( "dm74s287n.11m", 0x000, 0x100, CRC(d330ff90) SHA1(e223935464109a3c4c7b29641b3736484c22c47a) ) // only the last few entries are used?
+	ROM_LOAD_NIB_HIGH( "dm74s287n.11l", 0x000, 0x100, CRC(6c98f964) SHA1(abf7bdeccd33e62fa106d2056d1949cf278483a7) ) // "
+	ROM_LOAD_NIB_LOW ( "dm74s288n.7a",  0x100, 0x020, CRC(5779e751) SHA1(89c955ef8635ad3e9d699f33ec0e4d6c9205d01c) ) // ?
 ROM_END
 
 
-GAME( 1983, stuntair,  0,    stuntair, stuntair, driver_device,  0, ROT90, "Nuova Videotron", "Stunt Air",  GAME_IMPERFECT_COLORS | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1983, stuntair,  0,    stuntair, stuntair, driver_device,  0, ROT90, "Nuova Videotron", "Stunt Air",  GAME_SUPPORTS_SAVE | GAME_IMPERFECT_COLORS | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

@@ -743,10 +743,8 @@ BEGIN
     GROUPBOX        "Video output method",IDC_STATIC,4,45,124,82
     COMBOBOX        IDC_VIDEO_MODE,10,58,112,100,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_VIDEO_MODE
-/*
     COMBOBOX        IDC_D3D_VERSION,10,77,112,100,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_D3D_VERSION
-*/
     CONTROL         "Bilinear filtering",IDC_D3D_FILTER,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,96,113,10,0,HIDC_D3D_FILTER
     CONTROL         "Hardware stretching",IDC_HWSTRETCH,"Button",
