@@ -394,13 +394,13 @@ const options_entry windows_options::s_option_entries[] =
 	/* Vector simulation below this line */
 	{ NULL,                                                     NULL,        OPTION_HEADER,     "VECTOR POST-PROCESSING OPTIONS" },
 	{ WINOPTION_VECTOR_TIME_SCALE";vectime",                    "0.0",       OPTION_FLOAT,      "How much the fade rate affects vector fade" },
-	{ WINOPTION_VECTOR_TIME_PERIOD";vecperiod",                 "0.1",       OPTION_FLOAT,      "Vector fade rate versus screen refresh rate" },
-	{ WINOPTION_VECTOR_LENGTH_SCALE";veclength",                "0.9",       OPTION_FLOAT,      "How much length affects vector fade" },
-	{ WINOPTION_VECTOR_LENGTH_RATIO";vecsize",                  "4.0",       OPTION_FLOAT,      "Vector fade length (4.0 - vectors fade the most at and above 4 pixels, etc.)" },
+	{ WINOPTION_VECTOR_TIME_PERIOD";vecperiod",                 "0.0",       OPTION_FLOAT,      "Vector fade rate versus screen refresh rate" },
+	{ WINOPTION_VECTOR_LENGTH_SCALE";veclength",                "0.8",       OPTION_FLOAT,      "How much length affects vector fade" },
+	{ WINOPTION_VECTOR_LENGTH_RATIO";vecsize",                  "500.0",     OPTION_FLOAT,      "Vector fade length (4.0 - vectors fade the most at and above 4 pixels, etc.)" },
 	/* Bloom below this line */
 	{ NULL,                                                     NULL,        OPTION_HEADER,     "BLOOM POST-PROCESSING OPTIONS" },
 	{ WINOPTION_VECTOR_BLOOM_SCALE,                             "0.3",       OPTION_FLOAT,      "Intensity factor for vector bloom" },
-	{ WINOPTION_RASTER_BLOOM_SCALE,                             "0.25",      OPTION_FLOAT,      "Intensity factor for raster bloom" },
+	{ WINOPTION_RASTER_BLOOM_SCALE,                             "0.225",     OPTION_FLOAT,      "Intensity factor for raster bloom" },
 	{ WINOPTION_BLOOM_LEVEL0_WEIGHT,                            "1.0",       OPTION_FLOAT,      "Bloom level 0  (full-size target) weight" },
 	{ WINOPTION_BLOOM_LEVEL1_WEIGHT,                            "0.21",      OPTION_FLOAT,      "Bloom level 1  (half-size target) weight" },
 	{ WINOPTION_BLOOM_LEVEL2_WEIGHT,                            "0.19",      OPTION_FLOAT,      "Bloom level 2  (quarter-size target) weight" },
