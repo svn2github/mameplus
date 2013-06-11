@@ -18,6 +18,11 @@
   256 steps total level and 16 steps panpot can be set
   Voice signal is output in stereo 16-bit 2's complement MSB-first format
 
+  TODO:
+  - Is memory handling 100% correct? At the moment, Konami firebeat.c is the only
+    hardware currently emulated that uses external handlers.
+    It also happens to be the only one using 16-bit PCM.
+
 */
 
 
@@ -51,12 +56,12 @@ UINT8 ymz280b_device::ymz280b_read_memory(UINT32 offset)
 {
 	if (m_ext_read_handler.isnull())
 	{
-		if (offset < m_region_size)
-			return m_region_base[offset];
+		if (offset < m_mem_size)
+			return m_mem_base[offset];
 
 		/* 16MB chip limit (shouldn't happen) */
 		else if (offset > 0xffffff)
-			return m_region_base[offset & 0xffffff];
+			return m_mem_base[offset & 0xffffff];
 
 		else
 			return 0;
@@ -377,7 +382,7 @@ int ymz280b_device::generate_pcm16(struct YMZ280BVoice *voice, INT16 *buffer, in
 		while (samples)
 		{
 			/* fetch the current value */
-			val = (INT16)((ymz280b_read_memory(position / 2 + 0) << 8) + ymz280b_read_memory(position / 2 + 1));
+			val = (INT16)((ymz280b_read_memory(position / 2 + 1) << 8) + ymz280b_read_memory(position / 2 + 0));
 
 			/* output to the buffer, scaling by the volume */
 			*buffer++ = val;
@@ -402,7 +407,7 @@ int ymz280b_device::generate_pcm16(struct YMZ280BVoice *voice, INT16 *buffer, in
 		while (samples)
 		{
 			/* fetch the current value */
-			val = (INT16)((ymz280b_read_memory(position / 2 + 0) << 8) + ymz280b_read_memory(position / 2 + 1));
+			val = (INT16)((ymz280b_read_memory(position / 2 + 1) << 8) + ymz280b_read_memory(position / 2 + 0));
 
 			/* output to the buffer, scaling by the volume */
 			*buffer++ = val;
@@ -583,8 +588,8 @@ void ymz280b_device::device_start()
 
 	/* initialize the rest of the structure */
 	m_master_clock = (double)clock() / 384.0;
-	m_region_base = *region();
-	m_region_size = region()->bytes();
+	m_mem_base = *region();
+	m_mem_size = region()->bytes();
 	m_irq_handler.resolve();
 
 	for (int i = 0; i < 8; i++)
@@ -607,9 +612,10 @@ void ymz280b_device::device_start()
 	save_item(NAME(m_irq_enable));
 	save_item(NAME(m_keyon_enable));
 	save_item(NAME(m_ext_mem_enable));
-	save_item(NAME(m_rom_readback_addr));
-	save_item(NAME(m_rom_addr_hi));
-	save_item(NAME(m_rom_addr_mid));
+	save_item(NAME(m_ext_mem_address));
+	save_item(NAME(m_ext_readlatch));
+	save_item(NAME(m_ext_mem_address_hi));
+	save_item(NAME(m_ext_mem_address_mid));
 	for (int j = 0; j < 8; j++)
 	{
 		save_item(NAME(m_voice[j].playing), j);
@@ -657,7 +663,7 @@ void ymz280b_device::device_reset()
 
 	m_current_register = 0;
 	m_status_register = 0;
-	m_rom_readback_addr = 0;
+	m_ext_mem_address = 0;
 
 	/* clear other voice parameters */
 	for (int i = 0; i < 8; i++)
@@ -674,7 +680,10 @@ void ymz280b_device::device_reset()
 
 void ymz280b_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-	update_irq_state_timer_common( param );
+	if (id < 8)
+		update_irq_state_timer_common( id );
+	else
+		assert_always(FALSE, "Unknown id in ymz280b_device::device_timer");
 }
 
 
@@ -805,25 +814,25 @@ void ymz280b_device::write_to_register(int data)
 				break;
 
 			case 0x84:      /* ROM readback / RAM write (high) */
-				m_rom_addr_hi = data << 16;
+				m_ext_mem_address_hi = data << 16;
 				break;
 
 			case 0x85:      /* ROM readback / RAM write (middle) */
-				m_rom_addr_mid = data << 8;
+				m_ext_mem_address_mid = data << 8;
 				break;
 
 			case 0x86:      /* ROM readback / RAM write (low) -> update latch */
-				m_rom_readback_addr = m_rom_addr_hi | m_rom_addr_mid | data;
+				m_ext_mem_address = m_ext_mem_address_hi | m_ext_mem_address_mid | data;
 				break;
 
 			case 0x87:      /* RAM write */
 				if (m_ext_mem_enable)
 				{
 					if (!m_ext_write_handler.isnull())
-						m_ext_write_handler(m_rom_readback_addr, data);
+						m_ext_write_handler(m_ext_mem_address, data);
 					else
-						logerror("YMZ280B attempted RAM write to %X\n", m_rom_readback_addr);
-					m_rom_readback_addr = (m_rom_readback_addr + 1) & 0xffffff;
+						logerror("YMZ280B attempted RAM write to %X\n", m_ext_mem_address);
+					m_ext_mem_address = (m_ext_mem_address + 1) & 0xffffff;
 				}
 				break;
 
@@ -905,9 +914,10 @@ READ8_MEMBER( ymz280b_device::read )
 			return 0xff;
 
 		/* read from external memory */
-		UINT8 result = ymz280b_read_memory(m_rom_readback_addr);
-		m_rom_readback_addr = (m_rom_readback_addr + 1) & 0xffffff;
-		return result;
+		UINT8 ret = m_ext_readlatch;
+		m_ext_readlatch = ymz280b_read_memory(m_ext_mem_address);
+		m_ext_mem_address = (m_ext_mem_address + 1) & 0xffffff;
+		return ret;
 	}
 	else
 		return compute_status();
@@ -940,9 +950,10 @@ ymz280b_device::ymz280b_device(const machine_config &mconfig, const char *tag, d
 		m_irq_enable(0),
 		m_keyon_enable(0),
 		m_ext_mem_enable(0),
-		m_rom_addr_hi(0),
-		m_rom_addr_mid(0),
-		m_rom_readback_addr(0),
+		m_ext_readlatch(0),
+		m_ext_mem_address_hi(0),
+		m_ext_mem_address_mid(0),
+		m_ext_mem_address(0),
 		m_irq_handler(*this),
 		m_ext_read_handler(*this),
 		m_ext_write_handler(*this)

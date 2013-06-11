@@ -37,8 +37,10 @@
 #include "machine/sns_rom.h"
 #include "machine/sns_rom21.h"
 #include "machine/sns_bsx.h"
+#include "machine/sns_sa1.h"
 #include "machine/sns_sdd1.h"
 #include "machine/sns_sfx.h"
+#include "machine/sns_sgb.h"
 #include "machine/sns_spc7110.h"
 #include "machine/sns_sufami.h"
 #include "machine/sns_upd.h"
@@ -48,6 +50,11 @@
 class snes_console_state : public snes_state
 {
 public:
+	enum
+	{
+		TIMER_LIGHTGUN_TICK = TIMER_SNES_LAST
+	};
+
 	snes_console_state(const machine_config &mconfig, device_type type, const char *tag)
 			: snes_state(mconfig, type, tag)
 			, m_cartslot(*this, "snsslot")
@@ -65,6 +72,10 @@ public:
 	DECLARE_READ8_MEMBER( snessfx_lo_r );
 	DECLARE_WRITE8_MEMBER( snessfx_hi_w );
 	DECLARE_WRITE8_MEMBER( snessfx_lo_w );
+	DECLARE_READ8_MEMBER( snessa1_hi_r );
+	DECLARE_READ8_MEMBER( snessa1_lo_r );
+	DECLARE_WRITE8_MEMBER( snessa1_hi_w );
+	DECLARE_WRITE8_MEMBER( snessa1_lo_w );
 	DECLARE_READ8_MEMBER( snes7110_hi_r );
 	DECLARE_READ8_MEMBER( snes7110_lo_r );
 	DECLARE_WRITE8_MEMBER( snes7110_hi_w );
@@ -77,6 +88,10 @@ public:
 	DECLARE_WRITE8_MEMBER( snesbsx_hi_w );
 	DECLARE_READ8_MEMBER( snesbsx_lo_r );
 	DECLARE_WRITE8_MEMBER( snesbsx_lo_w );
+	DECLARE_READ8_MEMBER( snessgb_hi_r );
+	DECLARE_READ8_MEMBER( snessgb_lo_r );
+	DECLARE_WRITE8_MEMBER( snessgb_hi_w );
+	DECLARE_WRITE8_MEMBER( snessgb_lo_w );
 	DECLARE_READ8_MEMBER( pfest94_hi_r );
 	DECLARE_WRITE8_MEMBER( pfest94_hi_w );
 	DECLARE_READ8_MEMBER( pfest94_lo_r );
@@ -99,6 +114,9 @@ public:
 	virtual void machine_reset();
 	int m_type;
 	optional_device<sns_cart_slot_device> m_cartslot;
+
+protected:
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };
 
 
@@ -112,12 +130,12 @@ public:
 
 READ8_MEMBER(snes_console_state::spc_ram_100_r )
 {
-	return spc_ram_r(m_spc700, space, offset + 0x100);
+	return m_spc700->spc_ram_r(space, offset + 0x100);
 }
 
 WRITE8_MEMBER(snes_console_state::spc_ram_100_w )
 {
-	spc_ram_w(m_spc700, space, offset + 0x100, data);
+	m_spc700->spc_ram_w(space, offset + 0x100, data);
 }
 
 // Memory access for the various types of carts
@@ -507,6 +525,93 @@ WRITE8_MEMBER( snes_console_state::snessfx_lo_w )
 }
 
 //---------------------------------------------------------------------------------
+// LoROM + SA-1
+//---------------------------------------------------------------------------------
+
+READ8_MEMBER( snes_console_state::snessa1_hi_r )
+{
+	UINT16 address = offset & 0xffff;
+
+	if (offset < 0x400000)
+	{
+		if (address < 0x2000)
+			return space.read_byte(0x7e0000 + address);
+		else if (address < 0x6000)
+		{
+			if (address >= 0x2200 && address < 0x2400)
+				return m_cartslot->chip_read(space, offset);    // SA-1 Regs
+			else if (address >= 0x3000 && address < 0x3800)
+				return m_cartslot->chip_read(space, offset);    // Internal SA-1 RAM (2K)
+			else
+				return snes_r_io(space, address);
+		}
+		else if (address < 0x8000)
+			return m_cartslot->chip_read(space, offset);        // SA-1 BWRAM
+		else
+			return m_cartslot->read_h(space, offset);
+	}
+	else
+		return m_cartslot->read_h(space, offset);
+}
+
+READ8_MEMBER( snes_console_state::snessa1_lo_r )
+{
+	UINT16 address = offset & 0xffff;
+
+	if (offset < 0x400000)
+	{
+		if (address < 0x2000)
+			return space.read_byte(0x7e0000 + address);
+		else if (address < 0x6000)
+		{
+			if (address >= 0x2200 && address < 0x2400)
+				return m_cartslot->chip_read(space, offset);    // SA-1 Regs
+			else if (address >= 0x3000 && address < 0x3800)
+				return m_cartslot->chip_read(space, offset);    // Internal SA-1 RAM (2K)
+			else
+				return snes_r_io(space, address);
+		}
+		else if (address < 0x8000)
+			return m_cartslot->chip_read(space, offset);        // SA-1 BWRAM
+		else
+			return m_cartslot->read_l(space, offset);
+	}
+	else if (offset < 0x500000)
+		return m_cartslot->chip_read(space, offset);        // SA-1 BWRAM (not mirrored above!)
+	else
+		return snes_r_io(space, address);                   // nothing mapped here!
+}
+
+WRITE8_MEMBER( snes_console_state::snessa1_hi_w )
+{
+	UINT16 address = offset & 0xffff;
+	if (offset < 0x400000)
+	{
+		if (address < 0x2000)
+			space.write_byte(0x7e0000 + address, data);
+		else if (address < 0x6000)
+		{
+			if (address >= 0x2200 && address < 0x2400)
+				m_cartslot->chip_write(space, offset, data);    // SA-1 Regs
+			else if (address >= 0x3000 && address < 0x3800)
+				m_cartslot->chip_write(space, offset, data);    // Internal SA-1 RAM (2K)
+			else
+				snes_w_io(space, address, data);
+		}
+		else if (address < 0x8000)
+			m_cartslot->chip_write(space, offset, data);        // SA-1 BWRAM
+	}
+}
+
+WRITE8_MEMBER( snes_console_state::snessa1_lo_w )
+{
+	if (offset >= 0x400000 && offset < 0x500000)
+		m_cartslot->chip_write(space, offset, data);        // SA-1 BWRAM (not mirrored above!)
+	else
+		snessfx_hi_w(space, offset, data, 0xff);
+}
+
+//---------------------------------------------------------------------------------
 // HiROM + SPC-7110
 //---------------------------------------------------------------------------------
 
@@ -775,6 +880,55 @@ WRITE8_MEMBER( snes_console_state::snesbsx_lo_w )
 
 
 //---------------------------------------------------------------------------------
+// LoROM + SuperGB
+//---------------------------------------------------------------------------------
+
+READ8_MEMBER( snes_console_state::snessgb_hi_r )
+{
+	UINT16 address = offset & 0xffff;
+
+	if (offset < 0x400000)
+	{
+		if (address < 0x2000)
+			return space.read_byte(0x7e0000 + address);
+		else if (address < 0x6000)
+			return snes_r_io(space, address);
+		else if (address < 0x8000)
+			return m_cartslot->chip_read(space, offset);
+		else
+			return m_cartslot->read_h(space, offset);
+	}
+	else if (address >= 0x8000)
+		return m_cartslot->read_h(space, offset);
+
+	return snes_open_bus_r(space, 0);
+}
+
+READ8_MEMBER( snes_console_state::snessgb_lo_r )
+{
+	return snessgb_hi_r(space, offset, 0xff);
+}
+
+WRITE8_MEMBER( snes_console_state::snessgb_hi_w )
+{
+	UINT16 address = offset & 0xffff;
+	if (offset < 0x400000)
+	{
+		if (address < 0x2000)
+			space.write_byte(0x7e0000 + address, data);
+		else if (address < 0x6000)
+			snes_w_io(space, address, data);
+		else if (address < 0x8000)
+			m_cartslot->chip_write(space, offset, data);
+	}
+}
+
+WRITE8_MEMBER( snes_console_state::snessgb_lo_w )
+{
+	snessgb_hi_w(space, offset, data, 0xff);
+}
+
+//---------------------------------------------------------------------------------
 // Powerfest '94 event cart
 //---------------------------------------------------------------------------------
 
@@ -872,8 +1026,8 @@ static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8, snes_console_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( spc_map, AS_PROGRAM, 8, snes_console_state )
-	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_r, spc_ram_w) /* lower 32k ram */
-	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE_LEGACY("spc700", spc_io_r, spc_io_w)   /* spc io */
+	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE("spc700", snes_sound_device, spc_ram_r, spc_ram_w) /* lower 32k ram */
+	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE("spc700", snes_sound_device, spc_io_r, spc_io_w)   /* spc io */
 	AM_RANGE(0x0100, 0xffff) AM_READWRITE(spc_ram_100_r, spc_ram_100_w)
 ADDRESS_MAP_END
 
@@ -917,6 +1071,19 @@ CUSTOM_INPUT_MEMBER( snes_console_state::snes_superscope_offscreen_input )
 		m_scope[port].offscreen = 0;
 
 	return m_scope[port].offscreen;
+}
+
+void snes_console_state::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	switch (id)
+	{
+	case TIMER_LIGHTGUN_TICK:
+		lightgun_tick(ptr, param);
+		break;
+	default:
+		snes_state::device_timer(timer, id, param, ptr);
+		break;
+	}
 }
 
 TIMER_CALLBACK_MEMBER( snes_console_state::lightgun_tick )
@@ -1313,7 +1480,7 @@ WRITE8_MEMBER(snes_console_state::snes_input_read)
 	UINT8 ctrl2 = (ioport("CTRLSEL")->read() & 0xf0) >> 4;
 
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
-	machine().scheduler().timer_set(attotime::zero, timer_expired_delegate(FUNC(snes_console_state::lightgun_tick),this));
+	timer_set(attotime::zero, TIMER_LIGHTGUN_TICK);
 
 	switch (ctrl1)
 	{
@@ -1463,10 +1630,10 @@ static SLOT_INTERFACE_START(snes_cart)
 	SLOT_INTERFACE_INTERNAL("lorom_dsp",     SNS_LOROM_NECDSP)
 	SLOT_INTERFACE_INTERNAL("lorom_dsp4",    SNS_LOROM_NECDSP)
 	SLOT_INTERFACE_INTERNAL("lorom_obc1",    SNS_LOROM_OBC1)
-	SLOT_INTERFACE_INTERNAL("lorom_sa1",     SNS_LOROM) // Cart + SA1 - unsupported
+	SLOT_INTERFACE_INTERNAL("lorom_sa1",     SNS_LOROM_SA1) // Cart + SA1 - unsupported
 	SLOT_INTERFACE_INTERNAL("lorom_sdd1",    SNS_LOROM_SDD1)
 	SLOT_INTERFACE_INTERNAL("lorom_sfx",     SNS_LOROM_SUPERFX)
-	SLOT_INTERFACE_INTERNAL("lorom_sgb",     SNS_LOROM) // SuperGB base cart - unsupported
+	SLOT_INTERFACE_INTERNAL("lorom_sgb",     SNS_LOROM_SUPERGB) // SuperGB base cart - unsupported
 	SLOT_INTERFACE_INTERNAL("lorom_st010",   SNS_LOROM_SETA10)
 	SLOT_INTERFACE_INTERNAL("lorom_st011",   SNS_LOROM_SETA11)
 	SLOT_INTERFACE_INTERNAL("lorom_st018",   SNS_LOROM) // Cart + ST018 - unsupported
@@ -1514,9 +1681,17 @@ void snes_console_state::machine_start()
 		case SNES_CX4:      // this still uses the old simulation instead of emulating the CPU
 		case SNES_ST010:    // this requires two diff kinds of chip access, so we handle it in snes20_lo/hi_r/w
 		case SNES_ST011:    // this requires two diff kinds of chip access, so we handle it in snes20_lo/hi_r/w
-		case SNES_SA1:      // still unemulated
 		case SNES_ST018:    // still unemulated
-		case SNES_Z80GB:    // still unemulated
+			break;
+		case SNES_Z80GB:      // skeleton support
+			m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x000000, 0x7dffff, read8_delegate(FUNC(snes_console_state::snessgb_lo_r),this), write8_delegate(FUNC(snes_console_state::snessgb_lo_w),this));
+			m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x800000, 0xffffff, read8_delegate(FUNC(snes_console_state::snessgb_hi_r),this), write8_delegate(FUNC(snes_console_state::snessgb_hi_w),this));
+			set_5a22_map(m_maincpu);
+			break;
+		case SNES_SA1:      // skeleton support
+			m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x000000, 0x7dffff, read8_delegate(FUNC(snes_console_state::snessa1_lo_r),this), write8_delegate(FUNC(snes_console_state::snessa1_lo_w),this));
+			m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x800000, 0xffffff, read8_delegate(FUNC(snes_console_state::snessa1_hi_r),this), write8_delegate(FUNC(snes_console_state::snessa1_hi_w),this));
+			set_5a22_map(m_maincpu);
 			break;
 		case SNES_DSP:
 			m_maincpu->space(AS_PROGRAM).install_read_handler(0x208000, 0x20ffff, 0, 0x9f0000, read8_delegate(FUNC(base_sns_cart_slot_device::chip_read),(base_sns_cart_slot_device*)m_cartslot));
@@ -1644,7 +1819,7 @@ static MACHINE_CONFIG_START( snes, snes_console_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.00)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
 
-	MCFG_SNS_CARTRIDGE_ADD("snsslot", snes_cart, NULL, NULL)
+	MCFG_SNS_CARTRIDGE_ADD("snsslot", snes_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","snes")
 	MCFG_SOFTWARE_LIST_ADD("bsx_list","snes_bspack")
 	MCFG_SOFTWARE_LIST_ADD("st_list","snes_strom")
@@ -1682,5 +1857,5 @@ ROM_END
  *************************************/
 
 /*    YEAR  NAME       PARENT  COMPAT MACHINE    INPUT                 INIT  COMPANY     FULLNAME                                      FLAGS */
-CONS( 1989, snes,      0,      0,     snes,      snes, driver_device,  0,    "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-CONS( 1991, snespal,   snes,   0,     snespal,   snes, driver_device,  0,    "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1989, snes,      0,      0,     snes,      snes, driver_device,  0,    "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+CONS( 1991, snespal,   snes,   0,     snespal,   snes, driver_device,  0,    "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

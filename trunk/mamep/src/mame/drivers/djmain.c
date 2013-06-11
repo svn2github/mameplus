@@ -271,47 +271,6 @@ WRITE32_MEMBER(djmain_state::turntable_select_w)
 
 //---------
 
-#define IDE_STD_OFFSET  (0x1f0/2)
-#define IDE_ALT_OFFSET  (0x3f6/2)
-
-READ32_MEMBER(djmain_state::ide_std_r)
-{
-	device_t *device = machine().device("ide");
-	if (ACCESSING_BITS_0_7)
-		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset, 0xff00) >> 8;
-	else
-		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset, 0xffff) << 16;
-}
-
-WRITE32_MEMBER(djmain_state::ide_std_w)
-{
-	device_t *device = machine().device("ide");
-	if (ACCESSING_BITS_0_7)
-		ide_controller16_w(device, space, IDE_STD_OFFSET + offset, data << 8, 0xff00);
-	else
-		ide_controller16_w(device, space, IDE_STD_OFFSET + offset, data >> 16, 0xffff);
-}
-
-
-READ32_MEMBER(djmain_state::ide_alt_r)
-{
-	device_t *device = machine().device("ide");
-	if (offset == 0)
-		return ide_controller16_r(device, space, IDE_ALT_OFFSET, 0x00ff) << 24;
-
-	return 0;
-}
-
-WRITE32_MEMBER(djmain_state::ide_alt_w)
-{
-	device_t *device = machine().device("ide");
-	if (offset == 0 && ACCESSING_BITS_16_23)
-		ide_controller16_w(device, space, IDE_ALT_OFFSET, data >> 24, 0x00ff);
-}
-
-
-//---------
-
 // light/coin blocker control
 
 /*
@@ -457,11 +416,11 @@ static ADDRESS_MAP_START( memory_map, AS_PROGRAM, 32, djmain_state )
 	AM_RANGE(0x803800, 0x803fff) AM_READ(obj_rom_r)                     // OBJECT ROM readthrough (for POST)
 	AM_RANGE(0xc00000, 0xc01fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_long_r, k056832_ram_long_w)  // VIDEO RAM (tilemap) (beatmania)
 	AM_RANGE(0xc02000, 0xc02047) AM_WRITE(unknownc02000_w)                  // ??
-	AM_RANGE(0xd00000, 0xd0000f) AM_READWRITE(ide_std_r, ide_std_w)             // IDE control regs (hiphopmania)
-	AM_RANGE(0xd4000c, 0xd4000f) AM_READWRITE(ide_alt_r, ide_alt_w)             // IDE status control reg (hiphopmania)
+	AM_RANGE(0xd00000, 0xd0000f) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs0, write_cs0, 0xffffffff) // IDE control regs (hiphopmania)
+	AM_RANGE(0xd40000, 0xd4000f) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs1, write_cs1, 0xffffffff) // IDE status control reg (hiphopmania)
 	AM_RANGE(0xe00000, 0xe01fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_long_r, k056832_ram_long_w)  // VIDEO RAM (tilemap) (hiphopmania)
-	AM_RANGE(0xf00000, 0xf0000f) AM_READWRITE(ide_std_r, ide_std_w)             // IDE control regs (beatmania)
-	AM_RANGE(0xf4000c, 0xf4000f) AM_READWRITE(ide_alt_r, ide_alt_w)             // IDE status control reg (beatmania)
+	AM_RANGE(0xf00000, 0xf0000f) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs0, write_cs0, 0xffffffff) // IDE control regs (beatmania)
+	AM_RANGE(0xf40000, 0xf4000f) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs1, write_cs1, 0xffffffff) // IDE status control reg (beatmania)
 ADDRESS_MAP_END
 
 
@@ -1395,12 +1354,10 @@ static const k054539_interface k054539_config =
 
 void djmain_state::machine_start()
 {
-	ide_controller_device *ide = (ide_controller_device *) machine().device("ide");
-
-	if (ide != NULL && m_ide_master_password != NULL)
-		ide->ide_set_master_password(m_ide_master_password);
-	if (ide != NULL && m_ide_user_password != NULL)
-		ide->ide_set_user_password(m_ide_user_password);
+	if (m_ide_master_password != NULL)
+		m_ide->ide_set_master_password(m_ide_master_password);
+	if (m_ide_user_password != NULL)
+		m_ide->ide_set_user_password(m_ide_user_password);
 
 	save_item(NAME(m_sndram_bank));
 	save_item(NAME(m_pending_vb_int));
@@ -1418,7 +1375,7 @@ void djmain_state::machine_reset()
 	sndram_set_bank();
 
 	/* reset the IDE controller */
-	machine().device("ide")->reset();
+	m_ide->reset();
 
 	/* reset LEDs */
 	set_led_status(machine(), 0, 1);

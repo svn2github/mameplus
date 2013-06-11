@@ -94,7 +94,7 @@ DEVICE_IMAGE_LOAD_MEMBER(msx_state,msx_cart)
 		/* Load software from software list */
 		/* TODO: Add proper SRAM (size) handling */
 
-		const char *mapper = software_part_get_feature((software_part*)image.part_entry(), "mapper");
+		const char *mapper = image.get_feature("mapper");
 		if (mapper != NULL)
 		{
 			static const struct { const char *mapper_name; int mapper_type; } mapper_types[] =
@@ -858,6 +858,20 @@ void msx_state::msx_memory_init()
 
 			size = layout->size;
 			option = layout->option;
+
+			if (layout->type != SLOT_CARTRIDGE1 && layout->type != SLOT_CARTRIDGE2)
+			{
+				int size_tmp = 0;
+				if (size < 0x4000)
+					size_tmp = 0x4000;
+				else if (size > 0x10000)
+					size_tmp = 0x10000;
+				else
+					size_tmp = size;
+				int extent_tmp = size_tmp / 0x4000;
+				if (extent_tmp != extent)
+					fatalerror("incorrect MSX_LAYOUT_SLOT configuration - expected extent %d but found %d\n", extent, extent_tmp);
+			}
 
 			if (VERBOSE)
 			{

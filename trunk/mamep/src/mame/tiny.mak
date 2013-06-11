@@ -75,6 +75,22 @@ SOUNDS += YM3812
 SOUNDS += CEM3394
 
 
+#-------------------------------------------------
+# specify available video cores
+#-------------------------------------------------
+
+#-------------------------------------------------
+# specify available machine cores
+#-------------------------------------------------
+
+MACHINES += 6821PIA
+MACHINES += TTL74148
+MACHINES += TTL74153
+MACHINES += TTL7474
+MACHINES += RIOT6532
+MACHINES += PIT8253
+MACHINES += Z80CTC
+MACHINES += 68681
 
 #-------------------------------------------------
 # This is the list of files that are necessary
@@ -86,7 +102,6 @@ DRVLIST += \
 	$(MAMEOBJ)/tiny.lst \
 
 DRVLIBS = \
-	$(EMUDRIVERS)/emudummy.o \
 	$(MACHINE)/ticket.o \
 	$(DRIVERS)/carpolo.o $(MACHINE)/carpolo.o $(VIDEO)/carpolo.o \
 	$(DRIVERS)/circus.o $(AUDIO)/circus.o $(VIDEO)/circus.o \

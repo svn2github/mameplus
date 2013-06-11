@@ -49,7 +49,7 @@ Tekken Ver.C                          (C) Namco, 1995
 Tekken II Ver.C                       (C) Namco, 1995
 Kosodate Quiz My Angel 3 (KQT1/VER.B) (C) Namco, 1998
 
-If you can help with the remaining undumped S11 games, please contact http://guru.mameworld.info/
+If you can help with the remaining undumped S11 games, please contact http://members.iinet.net.au/~lantra9jp1/gurudumps/
 
 
 The Namco System 11 system comprises 3 PCB's....
@@ -672,38 +672,12 @@ static INPUT_PORTS_START( namcos11 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_DIPNAME( 0x02, 0x02, "DIP1 (Test)" )
+	PORT_DIPNAME( 0x02, 0x02, "DIP1 (Test)" ) PORT_DIPLOCATION( "DIP SW2:1" )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x01, 0x01, "DIP2 (Freeze)" )
+	PORT_DIPNAME( 0x01, 0x01, "DIP2 (Freeze)" ) PORT_DIPLOCATION( "DIP SW2:2" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START( "TEST" )
-	PORT_DIPNAME( 0x80, 0x00, "TDIP8" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, "TDIP7" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, "TDIP6" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, "TDIP5" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, "TDIP4" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, "TDIP3" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, "TDIP2" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x01, 0x00, "TDIP1" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
 
 	PORT_START( "PLAYER1" )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY

@@ -92,7 +92,7 @@ Games on this system include....
 | |Sega Golf Club Network Pro Tour 2005               | Sega, 2005      |
 +-+---------------------------------------------------+-----------------+
 If you can help with the undumped games or know of missing Chihiro games, please contact...
-http://guru.mameworld.info/  or  http://www.mamedev.org
+http://members.iinet.net.au/~lantra9jp1/gurudumps/ or http://www.mamedev.org
 
 A Chihiro system consists of several boards.
 The system is in 2 separate metal boxes that fit together to form one box.
@@ -394,8 +394,6 @@ public:
 	DECLARE_WRITE32_MEMBER( geforce_w );
 	DECLARE_READ32_MEMBER( usbctrl_r );
 	DECLARE_WRITE32_MEMBER( usbctrl_w );
-	DECLARE_READ32_MEMBER( ide_r );
-	DECLARE_WRITE32_MEMBER( ide_w );
 	DECLARE_READ32_MEMBER( smbus_r );
 	DECLARE_WRITE32_MEMBER( smbus_w );
 	DECLARE_READ32_MEMBER( dummy_r );
@@ -412,7 +410,7 @@ public:
 	struct chihiro_devices {
 		pic8259_device    *pic8259_1;
 		pic8259_device    *pic8259_2;
-		device_t    *ide;
+		bus_master_ide_controller_device *ide;
 	} chihiro_devs;
 
 	nv2a_renderer *nvidia_nv2a;
@@ -2648,58 +2646,6 @@ WRITE32_MEMBER( chihiro_state::dummy_w )
 {
 }
 
-/*
- * IDE
- */
-
-INLINE int convert_to_offset_and_size32(offs_t *offset, UINT32 mem_mask)
-{
-	int size = 4;
-
-	/* determine which real offset */
-	if (!ACCESSING_BITS_0_7)
-	{
-		(*offset)++, size = 3;
-		if (!ACCESSING_BITS_8_15)
-		{
-			(*offset)++, size = 2;
-			if (!ACCESSING_BITS_16_23)
-				(*offset)++, size = 1;
-		}
-	}
-
-	/* determine the real size */
-	if (ACCESSING_BITS_24_31)
-		return size;
-	size--;
-	if (ACCESSING_BITS_16_23)
-		return size;
-	size--;
-	if (ACCESSING_BITS_8_15)
-		return size;
-	size--;
-	return size;
-}
-
-READ32_MEMBER( chihiro_state::ide_r )
-{
-	int size;
-
-	offset *= 4;
-	size = convert_to_offset_and_size32(&offset, mem_mask);
-	return ide_controller_r(chihiro_devs.ide, offset+0x01f0, size) << ((offset & 3) * 8);
-}
-
-WRITE32_MEMBER( chihiro_state::ide_w )
-{
-	int size;
-
-	offset *= 4;
-	size = convert_to_offset_and_size32(&offset, mem_mask);
-	data = data >> ((offset & 3) * 8);
-	ide_controller_w(chihiro_devs.ide, offset+0x01f0, size, data);
-}
-
 // ======================> ide_baseboard_device
 
 class ide_baseboard_device : public ide_hdd_device
@@ -2813,7 +2759,7 @@ WRITE_LINE_MEMBER(chihiro_state::chihiro_pit8254_out2_changed)
 	//chihiro_speaker_set_input( state ? 1 : 0 );
 }
 
-static const struct pit8253_config chihiro_pit8254_config =
+static const struct pit8253_interface chihiro_pit8254_config =
 {
 	{
 		{
@@ -2997,13 +2943,13 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START(xbox_map_io, AS_IO, 32, chihiro_state )
 	AM_RANGE(0x0020, 0x0023) AM_DEVREADWRITE8("pic8259_1", pic8259_device, read, write, 0xffffffff)
-	AM_RANGE(0x0040, 0x0043) AM_DEVREADWRITE8_LEGACY("pit8254", pit8253_r, pit8253_w, 0xffffffff)
+	AM_RANGE(0x0040, 0x0043) AM_DEVREADWRITE8("pit8254", pit8254_device, read, write, 0xffffffff)
 	AM_RANGE(0x00a0, 0x00a3) AM_DEVREADWRITE8("pic8259_2", pic8259_device, read, write, 0xffffffff)
-	AM_RANGE(0x01f0, 0x01f7) AM_READWRITE(ide_r, ide_w)
+	AM_RANGE(0x01f0, 0x01f7) AM_DEVREADWRITE16("ide", bus_master_ide_controller_device, read_cs0_pc, write_cs0_pc, 0xffffffff)
 	AM_RANGE(0x0cf8, 0x0cff) AM_DEVREADWRITE("pcibus", pci_bus_legacy_device, read, write)
 	AM_RANGE(0x8000, 0x80ff) AM_READWRITE(dummy_r, dummy_w)
 	AM_RANGE(0xc000, 0xc0ff) AM_READWRITE(smbus_r, smbus_w)
-	AM_RANGE(0xff60, 0xff67) AM_DEVREADWRITE_LEGACY("ide", ide_bus_master32_r, ide_bus_master32_w)
+	AM_RANGE(0xff60, 0xff67) AM_DEVREADWRITE("ide", bus_master_ide_controller_device, ide_bus_master32_r, ide_bus_master32_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( chihiro )
@@ -3021,7 +2967,7 @@ void chihiro_state::machine_start()
 	m_maincpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(chihiro_state::irq_callback),this));
 	chihiro_devs.pic8259_1 = machine().device<pic8259_device>( "pic8259_1" );
 	chihiro_devs.pic8259_2 = machine().device<pic8259_device>( "pic8259_2" );
-	chihiro_devs.ide = machine().device( "ide" );
+	chihiro_devs.ide = machine().device<bus_master_ide_controller_device>( "ide" );
 	if (machine().debug_flags & DEBUG_FLAG_ENABLED)
 		debug_console_register_command(machine(),"chihiro",CMDFLAG_NONE,0,1,4,chihiro_debug_commands);
 }
@@ -3051,9 +2997,9 @@ static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 	MCFG_PIC8259_ADD( "pic8259_1", WRITELINE(chihiro_state, chihiro_pic8259_1_set_int_line), VCC, READ8(chihiro_state,get_slave_ack) )
 	MCFG_PIC8259_ADD( "pic8259_2", DEVWRITELINE("pic8259_1", pic8259_device, ir2_w), GND, NULL )
 	MCFG_PIT8254_ADD( "pit8254", chihiro_pit8254_config )
-	MCFG_IDE_CONTROLLER_ADD( "ide", ide_baseboard, NULL, "bb", true)
+	MCFG_BUS_MASTER_IDE_CONTROLLER_ADD( "ide", ide_baseboard, NULL, "bb", true)
 	MCFG_IDE_CONTROLLER_IRQ_HANDLER(DEVWRITELINE("pic8259_2", pic8259_device, ir6_w))
-	MCFG_IDE_CONTROLLER_BUS_MASTER("maincpu", AS_PROGRAM)
+	MCFG_BUS_MASTER_IDE_CONTROLLER_SPACE("maincpu", AS_PROGRAM)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3069,7 +3015,7 @@ static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( chihirogd, chihiro_base )
-	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", ":gdrom", "pic", NULL, "maincpu", NULL)
+	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", ":gdrom", "pic", NULL, NOOP)
 MACHINE_CONFIG_END
 
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \

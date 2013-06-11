@@ -1219,6 +1219,8 @@ void upd765_family_device::start_command(int cmd)
 		break;
 
 	case C_SEEK:
+		other_irq = false;
+		check_irq();
 		seek_start(flopi[command[1] & 3]);
 		main_phase = PHASE_CMD;
 		break;
@@ -1311,8 +1313,10 @@ void upd765_family_device::command_end(floppy_info &fi, bool data_completion)
 	if(data_completion)
 		data_irq = true;
 	else
+	{
 		other_irq = true;
-	fi.st0_filled = true;
+		fi.st0_filled = true;
+	}
 	check_irq();
 }
 

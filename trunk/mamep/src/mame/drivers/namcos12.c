@@ -91,7 +91,7 @@ Some kind of music game similar to Konami's Keyboard Mania series
 Um Jammer Lammy                         (C) Namco,        1999
 http://www.wailee.com/sys/lpic/UM_Jammer_Lammy.jpg
 
-If you can help with the remaining undumped S12 games, please contact me at http://guru.mameworld.info/
+If you can help with the remaining undumped S12 games, please contact me at http://members.iinet.net.au/~lantra9jp1/gurudumps/
 Note that this list above may not be 100% complete. Alternative versions are also welcome :-)
 
 The Namco System 12 system comprises 3 mandatory PCB's....
@@ -1655,10 +1655,10 @@ MACHINE_CONFIG_END
 
 static INPUT_PORTS_START( namcos12 )
 	PORT_START("DSW")
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR(Service_Mode) )
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR(Service_Mode) ) PORT_DIPLOCATION( "DIP SW2:1" )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" )
+	PORT_DIPNAME( 0x0040, 0x0040, "Freeze" ) PORT_DIPLOCATION( "DIP SW2:2" )
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BIT( 0xff3f, IP_ACTIVE_LOW, IPT_UNKNOWN )

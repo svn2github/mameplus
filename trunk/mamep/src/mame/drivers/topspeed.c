@@ -359,7 +359,7 @@ INTERRUPT_GEN_MEMBER(topspeed_state::topspeed_cpub_interrupt)
 
 READ8_MEMBER(topspeed_state::topspeed_input_bypass_r)
 {
-	UINT8 port = tc0220ioc_port_r(m_tc0220ioc, space, 0);   /* read port number */
+	UINT8 port = m_tc0220ioc->port_r(space, 0);   /* read port number */
 	UINT16 steer = 0xff80 + ioport("STEER")->read_safe(0);
 
 	switch (port)
@@ -371,7 +371,7 @@ READ8_MEMBER(topspeed_state::topspeed_input_bypass_r)
 			return steer >> 8;
 
 		default:
-			return tc0220ioc_portreg_r(m_tc0220ioc, space, offset);
+			return m_tc0220ioc->portreg_r(space, offset);
 	}
 }
 
@@ -420,11 +420,12 @@ WRITE8_MEMBER(topspeed_state::sound_bankswitch_w)/* assumes Z80 sandwiched betwe
 	reset_sound_region();
 }
 
-void topspeed_state::topspeed_msm5205_clock( device_t *device, int chip )
+void topspeed_state::topspeed_msm5205_clock( int chip )
 {
 	UINT8 data = m_msm_rom[chip][m_msm_pos[chip]];
+	msm5205_device *msm = chip ? m_msm2 : m_msm1;
 
-	msm5205_data_w(device, m_msm_sel[chip] ? data & 0xf : data >> 4 & 0xf);
+	msm->data_w(m_msm_sel[chip] ? data & 0xf : data >> 4 & 0xf);
 	m_msm_pos[chip] += m_msm_sel[chip];
 	m_msm_sel[chip] ^= 1;
 
@@ -434,18 +435,19 @@ void topspeed_state::topspeed_msm5205_clock( device_t *device, int chip )
 
 WRITE_LINE_MEMBER(topspeed_state::topspeed_msm5205_vck_1)
 {
-	topspeed_msm5205_clock(m_msm_chip[0], 0);
+	topspeed_msm5205_clock(0);
 }
 
 WRITE_LINE_MEMBER(topspeed_state::topspeed_msm5205_vck_2)
 {
-	topspeed_msm5205_clock(m_msm_chip[1], 1);
+	topspeed_msm5205_clock(1);
 }
 
 
 WRITE8_MEMBER(topspeed_state::topspeed_msm5205_command_w)
 {
 	int chip = offset >> 12 & 1;
+	msm5205_device *msm = chip ? m_msm2 : m_msm1;
 
 	// disable 2nd chip for now... it doesn't work yet
 	if (chip == 1) return;
@@ -457,7 +459,7 @@ WRITE8_MEMBER(topspeed_state::topspeed_msm5205_command_w)
 			m_msm_start[chip] = data << 8;
 			m_msm_pos[chip] = m_msm_start[chip];
 			m_msm_sel[chip] = 0;
-			msm5205_reset_w(m_msm_chip[chip], 0);
+			msm->reset_w(0);
 			break;
 
 		// $b400 / $c400: apply volume now
@@ -467,7 +469,7 @@ WRITE8_MEMBER(topspeed_state::topspeed_msm5205_command_w)
 
 		// $b800 / $c800: stop?
 		case 0x08:
-			msm5205_reset_w(m_msm_chip[chip], 1);
+			msm->reset_w(1);
 			break;
 
 		// $bc00 / $cc00: set loop?
@@ -516,8 +518,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( topspeed_cpub_map, AS_PROGRAM, 16, topspeed_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM
 	AM_RANGE(0x400000, 0X40ffff) AM_READWRITE(sharedram_r, sharedram_w) AM_SHARE("sharedram")
-	AM_RANGE(0x880000, 0x880001) AM_READ8(topspeed_input_bypass_r, 0x00ff) AM_DEVWRITE8_LEGACY("tc0220ioc", tc0220ioc_portreg_w, 0x00ff)
-	AM_RANGE(0x880002, 0x880003) AM_DEVREADWRITE8_LEGACY("tc0220ioc", tc0220ioc_port_r, tc0220ioc_port_w, 0x00ff)
+	AM_RANGE(0x880000, 0x880001) AM_READ8(topspeed_input_bypass_r, 0x00ff) AM_DEVWRITE8("tc0220ioc", tc0220ioc_device, portreg_w, 0x00ff)
+	AM_RANGE(0x880002, 0x880003) AM_DEVREADWRITE8("tc0220ioc", tc0220ioc_device, port_r, port_w, 0x00ff)
 	AM_RANGE(0x900000, 0x9003ff) AM_READWRITE(topspeed_motor_r, topspeed_motor_w)   /* motor CPU */
 ADDRESS_MAP_END
 
@@ -675,8 +677,6 @@ void topspeed_state::machine_start()
 {
 	membank("bank10")->configure_entries(0, 4, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	m_msm_chip[0] = m_msm1;
-	m_msm_chip[1] = m_msm2;
 	m_msm_rom[0] = memregion("adpcm")->base();
 	m_msm_rom[1] = memregion("adpcm")->base() + 0x10000;
 
@@ -692,8 +692,8 @@ void topspeed_state::machine_reset()
 	m_ioc220_port = 0;
 	m_banknum = -1;
 
-	msm5205_reset_w(m_msm_chip[0], 1);
-	msm5205_reset_w(m_msm_chip[1], 1);
+	m_msm1->reset_w(1);
+	m_msm2->reset_w(1);
 	m_msm_loop[0] = 0;
 	m_msm_loop[1] = 0;
 }

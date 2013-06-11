@@ -40,6 +40,7 @@ const device_type MD_ROM_KOF98 = &device_creator<md_rom_kof98_device>;
 const device_type MD_ROM_KOF99 = &device_creator<md_rom_kof99_device>;
 const device_type MD_ROM_SOULB = &device_creator<md_rom_soulb_device>;
 const device_type MD_ROM_CHINF3 = &device_creator<md_rom_chinf3_device>;
+const device_type MD_ROM_16MJ2 = &device_creator<md_rom_16mj2_device>;
 const device_type MD_ROM_ELFWOR = &device_creator<md_rom_elfwor_device>;
 const device_type MD_ROM_YASECH = &device_creator<md_rom_yasech_device>;
 const device_type MD_ROM_LION2 = &device_creator<md_rom_lion2_device>;
@@ -50,6 +51,7 @@ const device_type MD_ROM_POKESTAD = &device_creator<md_rom_pokestad_device>;
 const device_type MD_ROM_REALTEC = &device_creator<md_rom_realtec_device>;
 const device_type MD_ROM_REDCL = &device_creator<md_rom_redcl_device>;
 const device_type MD_ROM_SQUIR = &device_creator<md_rom_squir_device>;
+const device_type MD_ROM_TEKKENSP = &device_creator<md_rom_tekkensp_device>;
 const device_type MD_ROM_TOPF = &device_creator<md_rom_topf_device>;
 const device_type MD_ROM_RADICA = &device_creator<md_rom_radica_device>;
 const device_type MD_ROM_BEGGARP = &device_creator<md_rom_beggarp_device>;
@@ -153,6 +155,11 @@ md_rom_chinf3_device::md_rom_chinf3_device(const machine_config &mconfig, const 
 {
 }
 
+md_rom_16mj2_device::md_rom_16mj2_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: md_std_rom_device(mconfig, MD_ROM_16MJ2, "MD 16 Mahjong Tiles II", tag, owner, clock, "md_rom_16mj2", __FILE__)
+{
+}
+
 md_rom_elfwor_device::md_rom_elfwor_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 					: md_std_rom_device(mconfig, MD_ROM_ELFWOR, "MD Linghuan Daoshi Super Magician / Elf Wor", tag, owner, clock, "md_rom_elfwor", __FILE__)
 {
@@ -195,6 +202,11 @@ md_rom_redcl_device::md_rom_redcl_device(const machine_config &mconfig, const ch
 
 md_rom_squir_device::md_rom_squir_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 					: md_std_rom_device(mconfig, MD_ROM_SQUIR, "MD Squirrel King", tag, owner, clock, "md_rom_squir", __FILE__)
+{
+}
+
+md_rom_tekkensp_device::md_rom_tekkensp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+					: md_std_rom_device(mconfig, MD_ROM_TEKKENSP, "MD Tekken Special", tag, owner, clock, "md_rom_tekkensp", __FILE__)
 {
 }
 
@@ -343,6 +355,16 @@ void md_rom_smw64_device::device_reset()
 	m_latch1 = 0xf;
 	memset(m_reg, 0, sizeof(m_reg));
 	memset(m_ctrl, 0, sizeof(m_ctrl));
+}
+
+void md_rom_tekkensp_device::device_start()
+{
+	save_item(NAME(m_reg));
+}
+
+void md_rom_tekkensp_device::device_reset()
+{
+	m_reg = 0;
 }
 
 void md_rom_topf_device::device_start()
@@ -642,6 +664,21 @@ WRITE16_MEMBER(md_rom_chinf3_device::write)
 		else
 			logerror("%06x chifi3, bankw? %04x %04x\n", space.device().safe_pc(), offset, data);
 	}
+}
+
+/*-------------------------------------------------
+ 16 MAHJONG II
+ -------------------------------------------------*/
+
+READ16_MEMBER(md_rom_16mj2_device::read)
+{
+	if (offset == 0x400004/2)   return 0xc900;
+
+	// non-protection accesses
+	if (offset < 0x400000/2)
+		return m_rom[MD_ADDR(offset)];
+	else
+		return 0xffff;
 }
 
 /*-------------------------------------------------
@@ -1136,6 +1173,52 @@ WRITE16_MEMBER(md_rom_smw64_device::write)
 			if (m_ctrl[1] & 0x80)
 				m_latch0 = 8 + ((data & 0x1c) >> 2);    // ROM BANKSWITCH $60
 		}
+	}
+}
+
+/*-------------------------------------------------
+ TEKKEN SPECIAL
+ -------------------------------------------------*/
+
+READ16_MEMBER(md_rom_tekkensp_device::read)
+{
+	if (offset < 0x400000/2)
+		return m_rom[MD_ADDR(offset)];
+	else if ((offset & 0x07) == 1 && m_reg)
+		return (m_reg - 1) << 8;
+	else
+		return 0xffff;
+}
+
+WRITE16_MEMBER(md_rom_tekkensp_device::write)
+{
+	if (offset < 0x400000/2)
+		return;
+
+	// thanks to EkeEke for the documentation
+	switch (offset & 0x07)
+	{
+		case 0x00:
+			// data output reset ? (game writes $FF before & after protection check)
+			m_reg = 0;
+			break;
+		case 0x01:
+			// read only ?
+			break;
+		case 0x06:
+			// data output mode bit 0 ? (game writes $01)
+			break;
+		case 0x07:
+			// data output mode bit 1 ? (never written by game)
+			break;
+		default:
+			if (data & 0x100)   // data input (only connected to D0 ?)
+			{
+				// 4-bit hardware register ($400004 corresponds to bit0, $400006 to bit1, etc)
+				int shift = (offset - 2) & 3;
+				m_reg |= (1 << shift);
+			}
+			break;
 	}
 }
 

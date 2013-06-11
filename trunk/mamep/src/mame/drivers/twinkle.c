@@ -39,7 +39,7 @@ beatmania IIDX 8th Style       - Konami 2002     C44 JA A01       ?            C
 ? = Undumped pieces.
 # = Dumped but code unknown.
 * = Came with beatmania IIDX main board but might be for 8th Style (i.e. game C44)?
-If you can help, please contact us at http://guru.mameworld.info or http://mamedev.org/contact.html
+If you can help, please contact us at http://members.iinet.net.au/~lantra9jp1/gurudumps/ or http://mamedev.org/contact.html
 
 
 The Konami Twinkle hardware basically consists of the following parts....
@@ -247,7 +247,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_am53cf96(*this, "scsi:am53cf96"),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu") { }
+		m_audiocpu(*this, "audiocpu")
+	{
+	}
 
 	required_device<am53cf96_device> m_am53cf96;
 
@@ -270,8 +272,6 @@ public:
 	DECLARE_WRITE16_MEMBER(twinkle_waveram_w);
 	DECLARE_READ16_MEMBER(shared_68k_r);
 	DECLARE_WRITE16_MEMBER(shared_68k_w);
-	DECLARE_READ16_MEMBER(twinkle_ide_r);
-	DECLARE_WRITE16_MEMBER(twinkle_ide_w);
 	DECLARE_WRITE_LINE_MEMBER(ide_interrupt);
 	DECLARE_DRIVER_INIT(twinkle);
 	required_device<cpu_device> m_maincpu;
@@ -643,25 +643,6 @@ WRITE_LINE_MEMBER(twinkle_state::ide_interrupt)
 	}
 }
 
-READ16_MEMBER(twinkle_state::twinkle_ide_r)
-{
-	device_t *device = machine().device("ide");
-	if (offset == 0)
-	{
-		return ide_controller_r(device, offset+0x1f0, 2);
-	}
-	else
-	{
-		return ide_controller_r(device, offset+0x1f0, 1);
-	}
-}
-
-WRITE16_MEMBER(twinkle_state::twinkle_ide_w)
-{
-	device_t *device = machine().device("ide");
-	ide_controller_w(device, offset+0x1f0, 1, data);
-}
-
 /*
     System control register (Konami always has one)
 
@@ -732,7 +713,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 16, twinkle_state )
 	// 250000 = write to initiate DMA?
 	// 260000 = ???
 	AM_RANGE(0x280000, 0x280fff) AM_READWRITE(shared_68k_r, shared_68k_w )
-	AM_RANGE(0x300000, 0x30000f) AM_READWRITE(twinkle_ide_r, twinkle_ide_w)
+	AM_RANGE(0x300000, 0x30000f) AM_DEVREADWRITE("ide", ide_controller_device, read_cs0, write_cs0)
 	// 34000E = ???
 	AM_RANGE(0x400000, 0x400fff) AM_DEVREADWRITE("rfsnd", rf5c400_device, rf5c400_r, rf5c400_w)
 	AM_RANGE(0x800000, 0xffffff) AM_READWRITE(twinkle_waveram_r, twinkle_waveram_w )    // 8 MB window wave RAM

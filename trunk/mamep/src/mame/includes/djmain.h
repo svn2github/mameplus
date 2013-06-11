@@ -1,3 +1,5 @@
+#include "machine/idectrl.h"
+
 class djmain_state : public driver_device
 {
 public:
@@ -6,7 +8,10 @@ public:
 		m_obj_ram(*this, "obj_ram"),
 		m_maincpu(*this, "maincpu"),
 		m_k056832(*this, "k056832"),
-		m_k055555(*this, "k055555") { }
+		m_k055555(*this, "k055555"),
+		m_ide(*this, "ide")
+	{
+	}
 
 	int m_sndram_bank;
 	UINT8 *m_sndram;
@@ -37,10 +42,6 @@ public:
 	DECLARE_WRITE32_MEMBER(unknown590000_w);
 	DECLARE_WRITE32_MEMBER(unknown802000_w);
 	DECLARE_WRITE32_MEMBER(unknownc02000_w);
-	DECLARE_READ32_MEMBER(ide_std_r);
-	DECLARE_WRITE32_MEMBER(ide_std_w);
-	DECLARE_READ32_MEMBER(ide_alt_r);
-	DECLARE_WRITE32_MEMBER(ide_alt_w);
 	DECLARE_DRIVER_INIT(bm7thmix);
 	DECLARE_DRIVER_INIT(bm6thmix);
 	DECLARE_DRIVER_INIT(hmcompmx);
@@ -64,6 +65,7 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<k056832_device> m_k056832;
 	required_device<k055555_device> m_k055555;
+	required_device<ide_controller_device> m_ide;
 };
 
 /*----------- defined in video/djmain.c -----------*/

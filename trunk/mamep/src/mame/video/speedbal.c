@@ -1,10 +1,10 @@
-	/****************************************************************************
-	*                                                                           *
-	* video.c                                                                 *
-	*                                                                           *
-	* Functions to emulate the video hardware of the machine.                   *
-	*                                                                           *
-	****************************************************************************/
+/****************************************************************************
+ *                                                                          *
+ *  Speed Ball                                                              *
+ *                                                                          *
+ *  Functions to emulate the video hardware of the machine.                 *
+ *                                                                          *
+ ****************************************************************************/
 
 #include "emu.h"
 #include "includes/speedbal.h"
@@ -94,7 +94,7 @@ void speedbal_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 		x = 243 - spriteram[offset + 3];
 		y = 239 - spriteram[offset + 0];
 
-		code = BITSWAP8(spriteram[offset + 1],0,1,2,3,4,5,6,7) | ((spriteram[offset + 2] & 0x40) << 2);
+		code = (spriteram[offset + 1]) | ((spriteram[offset + 2] & 0x40) << 2);
 
 		color = spriteram[offset + 2] & 0x0f;
 

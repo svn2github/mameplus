@@ -9,8 +9,6 @@
 #ifndef __UPD4701_H__
 #define __UPD4701_H__
 
-#include "devlegcy.h"
-
 /***************************************************************************
     MACROS / CONSTANTS
 ***************************************************************************/
@@ -29,7 +27,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER( ul_w );
 	DECLARE_WRITE_LINE_MEMBER( resetx_w );
 	DECLARE_WRITE_LINE_MEMBER( resety_w );
-	
+
 	DECLARE_READ16_MEMBER( d_r );
 	DECLARE_READ_LINE_MEMBER( cf_r );
 	DECLARE_READ_LINE_MEMBER( sf_r );

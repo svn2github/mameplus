@@ -103,7 +103,7 @@ void device_md_cart_interface::nvram_alloc(running_machine &machine, size_t size
 	{
 		m_nvram = auto_alloc_array_clear(machine, UINT16, size/sizeof(UINT16));
 		m_nvram_size = size;
-		state_save_register_item_pointer(machine, "MD_CART", NULL, 0, m_nvram, m_nvram_size);
+		state_save_register_item_pointer(machine, "MD_CART", this->device().tag(), 0, m_nvram, m_nvram_size/sizeof(UINT16));
 	}
 }
 
@@ -257,6 +257,7 @@ static const md_slot slot_list[] =
 	{ RADICA, "rom_radica" },
 //  { GAME_KANDUME, "rom_gkand" },  // what's needed by this?
 
+	{ TILESMJ2, "rom_16mj2" },
 	{ BUGSLIFE, "rom_bugs" },
 	{ CHINFIGHT3, "rom_chinf3" },
 	{ ELFWOR, "rom_elfwor" },
@@ -279,6 +280,7 @@ static const md_slot slot_list[] =
 	{ SMOUSE, "rom_smouse" },
 	{ SOULBLAD, "rom_soulblad" },
 	{ SQUIRRELK, "rom_squir" },
+	{ TEKKENSP, "rom_tekkesp" },
 	{ TOPFIGHTER, "rom_topf" },
 
 	{ SEGA_SRAM_FULLPATH, "rom_sram" },

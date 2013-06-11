@@ -40,7 +40,8 @@ protected:
 private:
 	struct YMF271Slot
 	{
-		INT8  extout;
+		INT8  ext_en;
+		INT8  ext_out;
 		UINT8 lfoFreq;
 		INT8  lfowave;
 		INT8  pms, ams;
@@ -63,6 +64,7 @@ private:
 		UINT32 startaddr;
 		UINT32 loopaddr;
 		UINT32 endaddr;
+		INT8   altloop;
 		INT8   fs, srcnote, srcb;
 
 		INT64 step;
@@ -107,8 +109,7 @@ private:
 	void write_register(int slotnum, int reg, int data);
 	void ymf271_write_fm(int grp, int adr, int data);
 	void ymf271_write_pcm(int data);
-	UINT8 ymf271_read_ext_memory(UINT32 address);
-	void ymf271_write_ext_memory(UINT32 address, UINT8 data);
+	UINT8 ymf271_read_memory(UINT32 offset);
 	void ymf271_write_timer(int data);
 
 	// internal state
@@ -117,8 +118,6 @@ private:
 
 	INT32 m_timerA;
 	INT32 m_timerB;
-	INT32 m_timerAVal;
-	INT32 m_timerBVal;
 	INT32 m_irqstate;
 	INT8  m_status;
 	INT8  m_enable;
@@ -130,9 +129,11 @@ private:
 	INT8  m_pcmreg;
 	INT8  m_timerreg;
 	UINT32 m_ext_address;
-	UINT8 m_ext_read;
+	UINT8 m_ext_rw;
+	UINT8 m_ext_readlatch;
 
-	const UINT8 *m_rom;
+	UINT8 *m_mem_base;
+	UINT32 m_mem_size;
 	UINT32 m_clock;
 
 	emu_timer *m_timA, *m_timB;

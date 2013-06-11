@@ -174,6 +174,7 @@ swarm           // hack
 zerotime        // hack
 starfght        // hack
 galaxbsf        // hack
+galaxianbl      // bootleg
 kamakazi3       // Video Games (UK) Ltd., hack or bootleg?
 tst_galx        // Galaxian Test ROM
 gmgalax         // bootleg
@@ -186,6 +187,7 @@ gteikokb        // bootleg
 gteikob2        // bootleg
 galemp          // (c) Taito do Brasil
 asideral        // bootleg
+pajaroes        // bootleg
 spacbatt        // bootleg
 spacbat2        // bootleg
 spacempr        // bootleg
@@ -245,6 +247,7 @@ eagle2          // [1980] Centuri
 eagle3          // [1980] Centuri
 spctbird        // (c) Fortrek
 mooncptc        // bootleg (Petaco S.A.)
+mooncrsl        // bootleg (Laguna S.A.)
 fantastc        // (c) Taito (Brazil) - rewrite of Galaga
 timefgtr        // (c) Taito (Brazil) - rewrite of Time Pilot
 kong            // (c) Taito (Brazil) - rewrite of Donkey Kong
@@ -285,6 +288,7 @@ ckongmc         // 1981 bootleg
 porter          // 1982 bootleg (Arcade TV Game List - P.98, Left, 15 from bottom)
 vstars          // 19?? Competitive Video?
 tdpgal          // 1983 Design Labs / Thomas Automatics
+guttangt
 
 // Has some similarities with Moon Cresta but Board is very different
 rockclim        // (c)1981 Taito
@@ -297,8 +301,11 @@ scramblebf      // bootleg
 scramblebb      // bootleg?
 scramblb        // bootleg
 scramb2         // bootleg
+scrambler       // bootleg
 explorer        // bootleg
 strfbomb        // bootleg
+scrambp         // bootleg (Billport S.A.)
+scrampt         // bootleg (Petaco S.A.)
 atlantis        // (c) 1981 Comsoft
 atlantis2       // (c) 1981 Comsoft
 theend          // (c) 1980 Konami
@@ -406,6 +413,7 @@ cclimberj       // (c) 1980 Nichibutsu
 ccboot          // bootleg
 ccboot2         // bootleg
 ccbootmr        // Model Racing bootleg
+cclimbroper     // Operamatic bootleg
 ckong           // (c) 1981 (Kyoei)
 ckongo          // bootleg (Orca)
 ckongalc        // bootleg (Alca)
@@ -673,6 +681,7 @@ vautourz        // bootleg
 griffon         // bootleg (Videotron)
 nextfase        // bootleg
 phoenixs        // bootleg (Sonic)
+avefenix        //
 pleiads         // (c) 1981 Tehkan
 pleiadsb2       // bootleg
 pleiadbl        // bootleg
@@ -914,6 +923,7 @@ sws             // (c) 1992 (Japan)
 sws92           // (c) 1992 (Japan)
 sws92g          // (c) 1992 (Japan)
 suzuk8h2        // (c) 1993 (World)
+suzuk8h2j       // (c) 1993 (Japan)
 sws93           // (c) 1993 (Japan)
 
 // Namco FL games
@@ -1018,16 +1028,16 @@ adillor         // (c) 1997
 // Namco System 23
 finfurl         // July 1997
 motoxgo         // November 1997
-motoxgoa        // November 1997
-motoxgob        // November 1997
-motoxgoc        // November 1997
+motoxgov2a      // November 1997
+motoxgov1a      // November 1997
+motoxgov1a2     // November 1997
 rapidrvr        // December 1997
-rapidrvr2       // December 1997
+rapidrvrv2c     // December 1997
 rapidrvrp       // December 1997 (prototype)
 downhill        // March 1998
 timecrs2        // April 1998
-timecrs2b       // April 1998
-timecrs2c       // April 1998
+timecrs2v2b     // April 1998
+timecrs2v4a     // April 1998
 panicprk        // May 1998
 raceon          // Race On - September 1998
 gunwars         // September 1998
@@ -1037,9 +1047,11 @@ finfurl2        // March 1999
 finfurl2j       // March 1999
 				// Guitar Jam - July 1999
 crszone         // Crisis Zone - December 1999
-crszonea        // Crisis Zone - December 1999
-crszoneb        // Crisis Zone - December 1999
-crszonec        // Crisis Zone - December 1999
+crszonev4a      // Crisis Zone - December 1999
+crszonev3b      // Crisis Zone - December 1999
+crszonev3b2     // Crisis Zone - December 1999
+crszonev3a      // Crisis Zone - December 1999
+crszonev2a      // Crisis Zone - December 1999
 
 // Namco System 246
 sys246
@@ -1449,6 +1461,7 @@ spacmiss        // bootleg?
 schaser         // RT  Taito
 schasera        // RT  Taito
 schaserb        // RT  Taito
+schaserc        // RT  Taito
 schasercv       // RT  Taito
 lupin3          // LP  (c) 1980 Taito
 lupin3a         // LP  (c) 1980 Taito
@@ -1481,6 +1494,7 @@ yosakdona       // (c) 1979 Yosaku To Donbei
 spceking        // (c) 1978 Leijac Corporation (Konami)
 spcewars        // (c) 1978 Sanritsu
 astropal        // (c) 19?? Sidam
+attackfc        // (c) 1979? E.G.S.
 cosmo           // TDS & Mints
 darthvdr        // bootleg
 ultrainv
@@ -2258,6 +2272,7 @@ racingb         // C84 (c) 1991 Taito Coropration ..
 mlanding        // ??? (c) 1987 Taito America Corporation (US)
 topland         // B62 (c) 1988 Taito Coporation Japan (World)
 ainferno        // C45 (c) 1990 Taito America Corporation (US)
+ainfernoj       // C45 (c) 1990 Taito America Corporation (US)
 
 // enhanced Z-System hardware games
 gunbustr        // D27 (c) 1992 Taito Corporation Japan (World)
@@ -2737,6 +2752,7 @@ startrkd        // bootleg
 mayday          // bootleg
 maydaya         // bootleg
 maydayb         // bootleg
+batlzone        // bootleg?
 colony7         // (c) 1981 Taito
 colony7a        // (c) 1981 Taito
 jin             // Falcon bootleg/hack
@@ -2791,6 +2807,7 @@ commando        //  5/1985 (c) 1985 (World)
 commandou       //  5/1985 (c) 1985 + Data East license (US)
 commandoj       //  5/1985 (c) 1985 (Japan)
 commandob       // bootleg
+commandob2      // bootleg 2
 sinvasn         // Europe original?
 sinvasnb        // bootleg
 gng             //  9/1985 (c) 1985
@@ -4073,6 +4090,7 @@ brdrline        // (c) 1980 Sega
 starrkr         // (c) 1981 Sega
 brdrlins        // Sidam bootleg
 brdrlinb        // Karateco bootleg
+brdrlinet       // (c) 1981 Sega
 digger          // 684-691 no copyright notice
 pulsar          // 790-805 (c) 1981 Sega
 heiankyo        // (c) [1979?] Denki Onkyo
@@ -4169,6 +4187,7 @@ imsorry         // 834-5707 (c) 1985 Coreland / Sega (S1)
 imsorryj        // 834-5707 (c) 1985 Coreland / Sega (S1)
 teddybb         // 834-5712 (c) 1985 (S1)
 teddybbo        // 834-5712 (c) 1985 (S1)
+teddybbobl      // bootleg
 hvymetal        // 834-5745 (c) 1985 (S2?)
 myhero          // 834-5755 (c) 1985 (S1)
 sscandal        // 834-5755 (c) 1985 Coreland / Sega (S1)
@@ -5413,6 +5432,7 @@ brubber         // (c) 1982
 bnj             // (c) 1982
 bnjm            // (c) 1982 + Midway
 caractn         // bootleg
+caractn2        // bootleg
 disco           // (c) 1982
 discof          // (c) 1982
 sdtennis        // (c) 1983
@@ -5447,7 +5467,7 @@ csweetht        // 19         Sweet Heart
 ctornado        // 20 1982.05 Tornado
 cmissnx         // 21 1982.04 Mission-X/Zoar
 cptennis        // 22 1982.06 Pro Tennis
-				// 23 1982.?? 18 Hole Pro Golf
+cprogolf18      // 23 1982.?? 18 Hole Pro Golf
 				// 24 1982.07 Tsumego Kaisyou
 cadanglr        // 25 1982.10 Angler Dangler
 cfishing        // 25 1982.10 Fishing
@@ -5967,11 +5987,13 @@ ddribble        // GX690 (c) 1986
 ddribblep       // GX690 (c) 1986
 contra          // GX633 (c) 1987
 contra1         // GX633 (c) 1987
-contrab         // bootleg
 contraj         // GX633 (c) 1987 (Japan)
-contrajb        // bootleg
+contraj1        // GX633 (c) 1987 (Japan)
 gryzor          // GX633 (c) 1987
-gryzora         // GX633 (c) 1987
+gryzor1         // GX633 (c) 1987
+contrab         // bootleg
+contrabj        // bootleg
+contrabj1       // bootleg
 combatsc        // GX611 (c) 1988
 combatsct       // GX611 (c) 1987
 combatscj       // GX611 (c) 1987 (Japan)
@@ -6557,6 +6579,7 @@ asteroid        // 035127-035145    (c) 1979
 asteroid2       // 035127-035145    (c) 1979
 asteroid1       // 035127-035145    no copyright notice
 asteroidb       // (bootleg)
+aerolitos       // Rodmar Elec. bootleg
 asterock        // Sidam bootleg    (c) 1979
 asterockv       // Videotron bootleg(c) 1979
 hyperspc        // Rumiano bootleg  (c) 1979
@@ -6898,6 +6921,7 @@ klaxd           // 136075           (c) 1989 (Germany)
 klaxp1          // prototype
 klaxp2          // prototype
 thunderj        // 136076           (c) 1990
+thunderja       // 136076           (c) 1990
 hydra           // 136079           (c) 1990
 hydrap          // (proto)          (c) 1990
 hydrap2         // (proto)          (c) 1990
@@ -6974,6 +6998,7 @@ sasuke          // [1980] Shin Nihon Kikaku (SNK)
 satansat        // (c) 1981 SNK
 satansata       // (c) 1981 SNK
 zarzon          // (c) 1981 Taito, gameplay says SNK
+satansatind     // bootleg
 vanguard        // (c) 1981 SNK
 vanguardc       // (c) 1981 SNK + Centuri
 vanguardj       // (c) 1981 SNK
@@ -7411,6 +7436,7 @@ timesold1       // Alpha-68K96II 'BT' (c) 1987
 btlfield        // Alpha-68K96II 'BT' (c) 1987
 btlfieldb       // bootleg
 skysoldr        // Alpha-68K96II 'SS' (c) 1988 SNK (Romstar with dip switch)
+skysoldrbl      // bootleg
 goldmedl        // Alpha-68K96II 'GM' (c) 1988 SNK
 goldmedla       // Alpha-68K96II 'GM' (c) 1988 SNK
 goldmedlb       // Alpha-68K96II bootleg
@@ -7435,6 +7461,7 @@ tagteam         // TA-0007 (c) 1983 + Data East license
 ssozumo         // TA-0008 (c) 1984
 mystston        // TA-0010 (c) 1984
 myststono       // TA-0010 (c) 1984
+myststonoi      // PCB manufactured by Itisa
 dogfgt          // TA-0011 (c) 1984
 dogfgtu         // TA-0011 (c) 1985 Data East USA, Inc.
 dogfgtj         // TA-0011 (c) 1984
@@ -7732,6 +7759,7 @@ umk3r11         // (c) 1994 Midway
 umk3r10         // (c) 1994 Midway
 wwfmania        // (c) 1995 Midway
 wwfmaniab       // (c) 1995 Midway
+wwfmaniac       // (c) 1995 Midway
 openice         // (c) 1995 Midway
 nbahangt        // (c) 1996 Midway
 nbamht          // (c) 1996 Midway
@@ -8877,6 +8905,7 @@ mrflea          // (c) 1982
 
 // Tecfri games
 ambush          // (c) 1983
+ambushh         // (c) 1983
 ambushj         // (c) 1983 Nippon Amuse license
 ambushv         // (c) 1983 Volt Electronics license
 holeland        // (c) 1984
@@ -8884,6 +8913,7 @@ crzrally        // (c) 1985
 crzrallya       // (c) 1985
 crzrallyg       // (c) 1985
 speedbal        // (c) 1987
+musicbal        // (c) 1987
 sauro           // (c) 1987
 saurop          // (c) 1987
 trckydoc        // (c) 1987
@@ -9895,6 +9925,7 @@ dquizgo2        // (c) 2000 Semicom
 dtfamily        // (c) 2001 Semicom
 toyland         // (c) 2001 Semicom
 misncrft        // (c) 2000 Sun
+misncrfta       // (c) 2000 Sun
 mrdig           // (c) 2000 Sun
 hidnctch        // (c) 1998 Eolith
 linkypip        // (c) 1998 Eolith
@@ -10665,6 +10696,7 @@ mil4000         // (c) 2000 Sure Milano
 mil4000a        // (c) 2000 Sure Milano
 mil4000b        // (c) 2000 Sure Milano
 mil4000c        // (c) 2000 Sure Milano
+top21           // (c) 200? Assogiochi Assago (Mi)
 
 // Mitsubishi/Renesas M16/62A italian gambling games
 ejollyx5        // (c) 200? Solar Games
@@ -12059,6 +12091,9 @@ j_ewnd20
 j_ews       // Each Way Shifter
 j_ews8a
 j_luckac    // Lucky Aces
+j_nuddup    // Nudge Double Up
+j_nuddup2
+j_unk
 j_super2    // Super 2
 j_plus2     // Plus 2
 j_luck2     // Lucky Twos
@@ -20785,6 +20820,7 @@ ep_tortra   //
 ep_trail    // Trailblazer (Maygay - Impulse)
 ep_traila   //
 ep_trailb   //
+ep_treas    // Treasure Hunt (Global)
 ep_tree     // Tree Amigos (Maygay)
 ep_treea    //
 ep_trics    // Triple Cash (Maygay - Union)
@@ -21012,6 +21048,7 @@ ep_redl     // Red Line (Unk)
 ep_redla    //
 ep_rchik    // Rich Chics Club (Unk)
 ep_rchika   //
+ep_rlgdt    // Reel Good Time Rebuild (Global)
 ep_royrc    // Royal Roulette Club (Unk)
 ep_royrca   //
 ep_snbev    // Saturday Night Beaver (Global)

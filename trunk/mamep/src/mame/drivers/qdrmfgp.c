@@ -181,67 +181,25 @@ WRITE16_MEMBER(qdrmfgp_state::sndram_w)
 
 /*************/
 
-#define IDE_STD_OFFSET  (0x1f0/2)
-#define IDE_ALT_OFFSET  (0x3f6/2)
-
-READ16_MEMBER(qdrmfgp_state::ide_std_r)
-{
-	device_t *device = machine().device("ide");
-	if (offset & 0x01)
-		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset/2, 0xff00) >> 8;
-	else
-		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset/2, 0xffff);
-}
-
-WRITE16_MEMBER(qdrmfgp_state::ide_std_w)
-{
-	device_t *device = machine().device("ide");
-	if (offset & 0x01)
-		ide_controller16_w(device, space, IDE_STD_OFFSET + offset/2, data << 8, 0xff00);
-	else
-		ide_controller16_w(device, space, IDE_STD_OFFSET + offset/2, data, 0xffff);
-}
-
-READ16_MEMBER(qdrmfgp_state::ide_alt_r)
-{
-	device_t *device = machine().device("ide");
-	if (offset == 0)
-		return ide_controller16_r(device, space, IDE_ALT_OFFSET, 0x00ff);
-
-	return 0;
-}
-
-WRITE16_MEMBER(qdrmfgp_state::ide_alt_w)
-{
-	device_t *device = machine().device("ide");
-	if (offset == 0)
-		ide_controller16_w(device, space, IDE_ALT_OFFSET, data, 0x00ff);
-}
-
 
 READ16_MEMBER(qdrmfgp_state::gp2_ide_std_r)
 {
-	device_t *device = machine().device("ide");
-	if (offset & 0x01)
+	if (offset == 0x07)
 	{
-		if (offset == 0x07)
+		switch (space.device().safe_pcbase())
 		{
-			switch (space.device().safe_pcbase())
-			{
-				case 0xdb4c:
-					if ((m_workram[0x5fa4/2] - space.device().state().state_int(M68K_D0)) <= 0x10)
-						m_gp2_irq_control = 1;
-					break;
-				case 0xdec2:
+			case 0xdb4c:
+				if ((m_workram[0x5fa4/2] - space.device().state().state_int(M68K_D0)) <= 0x10)
 					m_gp2_irq_control = 1;
-				default:
-					break;
-			}
+				break;
+			case 0xdec2:
+				m_gp2_irq_control = 1;
+			default:
+				break;
 		}
-		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset/2, 0xff00) >> 8;
-	} else {
-		return ide_controller16_r(device, space, IDE_STD_OFFSET + offset/2, 0xffff);
 	}
+
+	return m_ide->read_cs0(space, offset, mem_mask);
 }
 
 
@@ -333,8 +291,8 @@ static ADDRESS_MAP_START( qdrmfgp_map, AS_PROGRAM, 16, qdrmfgp_state )
 	AM_RANGE(0x880000, 0x881fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)          /* vram */
 	AM_RANGE(0x882000, 0x883fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)          /* vram (mirror) */
 	AM_RANGE(0x900000, 0x901fff) AM_READ(v_rom_r)                                               /* gfxrom through */
-	AM_RANGE(0xa00000, 0xa0000f) AM_READWRITE(ide_std_r,ide_std_w)                  /* IDE control regs */
-	AM_RANGE(0xa4000c, 0xa4000f) AM_READWRITE(ide_alt_r,ide_alt_w)                  /* IDE status control reg */
+	AM_RANGE(0xa00000, 0xa0000f) AM_DEVREADWRITE("ide", ide_controller_device, read_cs0, write_cs0) /* IDE control regs */
+	AM_RANGE(0xa40000, 0xa4000f) AM_DEVREADWRITE("ide", ide_controller_device, read_cs1, write_cs1) /* IDE status control reg */
 	AM_RANGE(0xc00000, 0xcbffff) AM_READWRITE(sndram_r, sndram_w)                               /* sound ram */
 ADDRESS_MAP_END
 
@@ -356,8 +314,8 @@ static ADDRESS_MAP_START( qdrmfgp2_map, AS_PROGRAM, 16, qdrmfgp_state )
 	AM_RANGE(0x880000, 0x881fff) AM_READWRITE(gp2_vram_r, gp2_vram_w)                           /* vram */
 	AM_RANGE(0x89f000, 0x8a0fff) AM_READWRITE(gp2_vram_mirror_r, gp2_vram_mirror_w)             /* vram (mirror) */
 	AM_RANGE(0x900000, 0x901fff) AM_READ(v_rom_r)                                               /* gfxrom through */
-	AM_RANGE(0xa00000, 0xa0000f) AM_READ(gp2_ide_std_r) AM_WRITE(ide_std_w)         /* IDE control regs */
-	AM_RANGE(0xa4000c, 0xa4000f) AM_READWRITE(ide_alt_r,ide_alt_w)                  /* IDE status control reg */
+	AM_RANGE(0xa00000, 0xa0000f) AM_READ(gp2_ide_std_r) AM_DEVWRITE("ide", ide_controller_device, write_cs0) /* IDE control regs */
+	AM_RANGE(0xa40000, 0xa4000f) AM_DEVREADWRITE("ide", ide_controller_device, read_cs1, write_cs1) /* IDE status control reg */
 	AM_RANGE(0xc00000, 0xcbffff) AM_READWRITE(sndram_r,sndram_w)                                /* sound ram */
 ADDRESS_MAP_END
 
@@ -638,7 +596,7 @@ void qdrmfgp_state::machine_reset()
 
 	/* reset the IDE controller */
 	m_gp2_irq_control = 0;
-	machine().device("ide")->reset();
+	m_ide->reset();
 }
 
 

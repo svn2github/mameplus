@@ -47,7 +47,7 @@ Games on this system include....
 +-+------+----------------------------------------------------------+------------------+-----------------+--------------+
 * denotes these games are archived.
 If you can help with the undumped games or know of missing Triforce games, please contact...
-http://guru.mameworld.info/
+http://members.iinet.net.au/~lantra9jp1/gurudumps/
 
 
 PCB Layouts
@@ -547,7 +547,7 @@ static MACHINE_CONFIG_START( triforce_base, triforce_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( triforcegd, triforce_base )
-	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", ":gdrom", "picreturn", NULL, "maincpu", NULL)
+	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", ":gdrom", "picreturn", NULL, NOOP)
 MACHINE_CONFIG_END
 
 

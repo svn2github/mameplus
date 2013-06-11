@@ -704,7 +704,7 @@ static MACHINE_CONFIG_START( gameboy, gb_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
 	/* cartslot */
-	MCFG_GB_CARTRIDGE_ADD("gbslot", gb_cart, NULL, NULL)
+	MCFG_GB_CARTRIDGE_ADD("gbslot", gb_cart, NULL)
 
 	MCFG_SOFTWARE_LIST_ADD("cart_list","gameboy")
 	MCFG_SOFTWARE_LIST_COMPATIBLE_ADD("gbc_list","gbcolor")
@@ -793,7 +793,7 @@ static MACHINE_CONFIG_START( megaduck, megaduck_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
-	MCFG_MEGADUCK_CARTRIDGE_ADD("duckslot", megaduck_cart, NULL, NULL)
+	MCFG_MEGADUCK_CARTRIDGE_ADD("duckslot", megaduck_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list", "megaduck")
 MACHINE_CONFIG_END
 
@@ -835,13 +835,13 @@ ROM_START( megaduck )
 ROM_END
 
 /*    YEAR  NAME      PARENT   COMPAT   MACHINE   INPUT    INIT  COMPANY     FULLNAME */
-CONS( 1990, gameboy,  0,       0,       gameboy,  gameboy, driver_device, 0,    "Nintendo", "Game Boy", 0)
-CONS( 1994, supergb,  gameboy, 0,       supergb,  gameboy, driver_device, 0,    "Nintendo", "Super Game Boy", 0)
-CONS( 1996, gbpocket, gameboy, 0,       gbpocket, gameboy, driver_device, 0,    "Nintendo", "Game Boy Pocket", 0)
-CONS( 1997, gblight,  gameboy, 0,       gbpocket, gameboy, driver_device, 0,    "Nintendo", "Game Boy Light", 0)
-CONS( 1998, gbcolor,  gameboy, 0,       gbcolor,  gameboy, driver_device, 0,    "Nintendo", "Game Boy Color", GAME_IMPERFECT_GRAPHICS)
+CONS( 1990, gameboy,  0,       0,       gameboy,  gameboy, driver_device, 0,    "Nintendo", "Game Boy", GAME_SUPPORTS_SAVE )
+CONS( 1994, supergb,  gameboy, 0,       supergb,  gameboy, driver_device, 0,    "Nintendo", "Super Game Boy", GAME_SUPPORTS_SAVE )
+CONS( 1996, gbpocket, gameboy, 0,       gbpocket, gameboy, driver_device, 0,    "Nintendo", "Game Boy Pocket", GAME_SUPPORTS_SAVE )
+CONS( 1997, gblight,  gameboy, 0,       gbpocket, gameboy, driver_device, 0,    "Nintendo", "Game Boy Light", GAME_SUPPORTS_SAVE )
+CONS( 1998, gbcolor,  gameboy, 0,       gbcolor,  gameboy, driver_device, 0,    "Nintendo", "Game Boy Color", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 /* Sound is not 100% yet, it generates some sounds which could be ok. Since we're lacking a real
    system there's no way to verify. Same goes for the colors of the LCD. We are no using the default
    Game Boy green colors */
-CONS( 1993, megaduck, 0,       0,       megaduck, gameboy, driver_device, 0,    "Creatronic/Videojet/Timlex/Cougar",  "MegaDuck/Cougar Boy" , 0)
+CONS( 1993, megaduck, 0,       0,       megaduck, gameboy, driver_device, 0,    "Creatronic/Videojet/Timlex/Cougar",  "MegaDuck/Cougar Boy" , GAME_SUPPORTS_SAVE )

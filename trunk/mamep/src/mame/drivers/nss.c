@@ -352,19 +352,17 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(nss_state::spc_ram_100_r)
 {
-	device_t *device = machine().device("spc700");
-	return spc_ram_r(device, space, offset + 0x100);
+	return m_spc700->spc_ram_r(space, offset + 0x100);
 }
 
 WRITE8_MEMBER(nss_state::spc_ram_100_w)
 {
-	device_t *device = machine().device("spc700");
-	spc_ram_w(device, space, offset + 0x100, data);
+	m_spc700->spc_ram_w(space, offset + 0x100, data);
 }
 
 static ADDRESS_MAP_START( spc_mem, AS_PROGRAM, 8, nss_state )
-	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_r, spc_ram_w) /* lower 32k ram */
-	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE_LEGACY("spc700", spc_io_r, spc_io_w)   /* spc io */
+	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE("spc700", snes_sound_device, spc_ram_r, spc_ram_w) /* lower 32k ram */
+	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE("spc700", snes_sound_device, spc_io_r, spc_io_w)   /* spc io */
 	AM_RANGE(0x0100, 0xffff) AM_READWRITE(spc_ram_100_r, spc_ram_100_w)
 ADDRESS_MAP_END
 
@@ -465,13 +463,13 @@ READ8_MEMBER(nss_state::nss_prot_r)
 
 	if (m_cart_sel == 0)
 	{
-		rp5h01_enable_w(m_rp5h01, space, 0, 0);
-		data |= ((~rp5h01_counter_r(m_rp5h01, space, 0)) << 4) & 0x10;  /* D4 */
-		data |= ((rp5h01_data_r(m_rp5h01, space, 0)) << 3) & 0x08;      /* D3 */
-		rp5h01_enable_w(m_rp5h01, space, 0, 1);
+		m_rp5h01->enable_w(space, 0, 0);
+		data |= ((~m_rp5h01->counter_r(space, 0)) << 4) & 0x10;  /* D4 */
+		data |= ((m_rp5h01->data_r(space, 0)) << 3) & 0x08;      /* D3 */
+		m_rp5h01->enable_w(space, 0, 1);
 	}
 	else
-		rp5h01_enable_w(m_rp5h01, space, 0, 1);
+		m_rp5h01->enable_w(space, 0, 1);
 
 	return data;
 }
@@ -480,14 +478,14 @@ WRITE8_MEMBER(nss_state::nss_prot_w)
 {
 	if (m_cart_sel == 0)
 	{
-		rp5h01_enable_w(m_rp5h01, space, 0, 0);
-		rp5h01_test_w(m_rp5h01, space, 0, data & 0x10);     /* D4 */
-		rp5h01_clock_w(m_rp5h01, space, 0, data & 0x08);        /* D3 */
-		rp5h01_cs_w(m_rp5h01, space, 0, ~data & 0x01);
-		rp5h01_enable_w(m_rp5h01, space, 0, 1);
+		m_rp5h01->enable_w(space, 0, 0);
+		m_rp5h01->test_w(space, 0, data & 0x10);     /* D4 */
+		m_rp5h01->clock_w(space, 0, data & 0x08);        /* D3 */
+		m_rp5h01->cs_w(space, 0, ~data & 0x01);
+		m_rp5h01->enable_w(space, 0, 1);
 	}
 	else
-		rp5h01_enable_w(m_rp5h01, space, 0, 1);
+		m_rp5h01->enable_w(space, 0, 1);
 
 	ioport("EEPROMOUT")->write(data, 0xff);
 }
@@ -553,8 +551,8 @@ WRITE8_MEMBER(nss_state::port_01_w)
     ---- --x- Maybe SNES CPU pause?  (cleared on deposit coin to continue) (1=Run)
     ---- ---x Maybe SNES CPU/PPU reset?   (0=Reset, 1=Run)
 */
-	m_input_disabled = ((data & 0x80) >> 7) ^ 1;
-	spc700_set_volume(machine().device("spc700"),data & 0x20 ? 0.0 : 100.0);
+	m_input_disabled = BIT(data, 7) ^ 1;
+	m_spc700->set_volume((data & 0x20) ? 0.0 : 100.0);
 
 	m_cart_sel = (data & 0xc) >> 2;
 
@@ -563,8 +561,8 @@ WRITE8_MEMBER(nss_state::port_01_w)
 	m_maincpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 	m_soundcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 	/* also reset the device */
-	if((data & 1) == 0)
-		spc700_reset(machine().device("spc700"));
+	if (!(data & 1))
+		m_spc700->reset();
 }
 
 WRITE8_MEMBER(nss_state::port_02_w)

@@ -9,15 +9,6 @@
     'Ralph Browns Interrupt List'
     Release 52, Last Change 20oct96
 
-    TODO:
-    clean up (maybe split) the different pieces of hardware
-    PIC, PIT, DMA... add support for LPT, COM (almost done)
-    emulation of a serial mouse on a COM port (almost done)
-    support for Game Controller port at 0x0201
-    support for XT harddisk (under the way, see machine/pc_hdc.c)
-    whatever 'hardware' comes to mind,
-    maybe SoundBlaster? EGA? VGA?
-
 ***************************************************************************/
 
 #include "emu.h"
@@ -26,19 +17,29 @@
 #include "machine/pckeybrd.h"
 #include "machine/8042kbdc.h"
 #include "machine/mc146818.h"
+#include "machine/idectrl.h"
 
 
 /******************
 DMA8237 Controller
 ******************/
 
+READ8_MEMBER(pcat_base_state::at_dma8237_2_r)
+{
+	return m_dma8237_2->read(space, offset / 2);
+}
+
+WRITE8_MEMBER(pcat_base_state::at_dma8237_2_w)
+{
+	m_dma8237_2->write(space, offset / 2, data);
+}
 
 WRITE_LINE_MEMBER( pcat_base_state::pc_dma_hrq_changed )
 {
 	m_maincpu->set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
-	m_dma8237_1->i8237_hlda_w( state );
+	m_dma8237_1->hack_w( state );
 }
 
 
@@ -158,10 +159,7 @@ IRQ_CALLBACK_MEMBER(pcat_base_state::irq_callback)
 
 WRITE_LINE_MEMBER( pcat_base_state::at_pit8254_out0_changed )
 {
-	if (m_pic8259_1 )
-	{
-		m_pic8259_1->ir0_w(state);
-	}
+	m_pic8259_1->ir0_w(state);
 }
 
 
@@ -171,7 +169,7 @@ WRITE_LINE_MEMBER( pcat_base_state::at_pit8254_out2_changed )
 }
 
 
-static const struct pit8253_config at_pit8254_config =
+static const struct pit8253_interface at_pit8254_config =
 {
 	{
 		{
@@ -198,7 +196,7 @@ static const struct pit8253_config at_pit8254_config =
 
 READ8_MEMBER(pcat_base_state::get_out2)
 {
-	return pit8253_get_output( m_pit8254, 2 );
+	return m_pit8254->get_output(2);
 }
 
 static const struct kbdc8042_interface at8042 =
@@ -213,16 +211,20 @@ static const struct kbdc8042_interface at8042 =
 	DEVCB_DRIVER_MEMBER(pcat_base_state,get_out2)
 };
 
+static const struct mc146818_interface at_mc146818_config =
+{
+	DEVCB_DEVICE_LINE_MEMBER("pic8259_2", pic8259_device, ir0_w)
+};
 
 ADDRESS_MAP_START( pcat32_io_common, AS_IO, 32, pcat_base_state )
-	AM_RANGE(0x0000, 0x001f) AM_DEVREADWRITE8("dma8237_1", i8237_device, i8237_r, i8237_w, 0xffffffff)
+	AM_RANGE(0x0000, 0x001f) AM_DEVREADWRITE8("dma8237_1", am9517a_device, read, write, 0xffffffff)
 	AM_RANGE(0x0020, 0x003f) AM_DEVREADWRITE8("pic8259_1", pic8259_device, read, write, 0xffffffff)
-	AM_RANGE(0x0040, 0x005f) AM_DEVREADWRITE8_LEGACY("pit8254", pit8253_r, pit8253_w, 0xffffffff)
+	AM_RANGE(0x0040, 0x005f) AM_DEVREADWRITE8("pit8254", pit8254_device, read, write, 0xffffffff)
 	AM_RANGE(0x0060, 0x006f) AM_DEVREADWRITE8("kbdc", kbdc8042_device, data_r, data_w, 0xffffffff)
-	AM_RANGE(0x0070, 0x007f) AM_RAM //AM_DEVREADWRITE8("rtc", mc146818_device, read, write, 0xffffffff)
+	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE8("rtc", mc146818_device, read, write, 0xffffffff)
 	AM_RANGE(0x0080, 0x009f) AM_READWRITE8(dma_page_select_r,dma_page_select_w, 0xffffffff)//TODO
 	AM_RANGE(0x00a0, 0x00bf) AM_DEVREADWRITE8("pic8259_2", pic8259_device, read, write, 0xffffffff)
-	AM_RANGE(0x00c0, 0x00df) AM_DEVREADWRITE8("dma8237_2", i8237_device, i8237_r, i8237_w, 0xffff)
+	AM_RANGE(0x00c0, 0x00df) AM_READWRITE8(at_dma8237_2_r, at_dma8237_2_w, 0xffffffff)
 ADDRESS_MAP_END
 
 MACHINE_CONFIG_FRAGMENT(pcat_common)
@@ -231,7 +233,7 @@ MACHINE_CONFIG_FRAGMENT(pcat_common)
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
 	MCFG_I8237_ADD( "dma8237_2", XTAL_14_31818MHz/3, dma8237_2_config )
 	MCFG_PIT8254_ADD( "pit8254", at_pit8254_config )
-//  MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
+	MCFG_MC146818_IRQ_ADD( "rtc", MC146818_STANDARD, at_mc146818_config)
 
 	MCFG_KBDC8042_ADD("kbdc", at8042)
 MACHINE_CONFIG_END

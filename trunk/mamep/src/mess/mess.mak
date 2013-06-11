@@ -114,6 +114,9 @@ $(MESSOBJ)/funtech.a:           \
 
 $(MESSOBJ)/nec.a:               \
 	$(MESS_MACHINE)/pce.o       \
+	$(MESS_MACHINE)/pce_slot.o  \
+	$(MESS_MACHINE)/pce_rom.o  \
+	$(MESS_MACHINE)/pce_cd.o    \
 	$(MESS_DRIVERS)/pce.o       \
 
 $(MESSOBJ)/nintendo.a:          \
@@ -169,8 +172,10 @@ $(MESSOBJ)/nintendo.a:          \
 	$(MESS_MACHINE)/sns_rom.o   \
 	$(MESS_MACHINE)/sns_rom21.o \
 	$(MESS_MACHINE)/sns_bsx.o   \
+	$(MESS_MACHINE)/sns_sa1.o   \
 	$(MESS_MACHINE)/sns_sdd1.o  \
 	$(MESS_MACHINE)/sns_sfx.o   \
+	$(MESS_MACHINE)/sns_sgb.o   \
 	$(MESS_MACHINE)/sns_spc7110.o \
 	$(MESS_MACHINE)/sns_sufami.o\
 	$(MESS_MACHINE)/sns_upd.o   \
@@ -183,6 +188,8 @@ $(MESSOBJ)/nintendo.a:          \
 	$(MESS_MACHINE)/gb_rom.o    \
 	$(MESS_MACHINE)/gb_mbc.o    \
 	$(MESS_DRIVERS)/gb.o        \
+	$(MESS_MACHINE)/gba_slot.o  \
+	$(MESS_MACHINE)/gba_rom.o   \
 	$(MESS_DRIVERS)/gba.o       \
 	$(MESS_VIDEO)/gba.o         \
 
@@ -201,6 +208,8 @@ $(MESSOBJ)/sega.a:              \
 	$(MESS_MACHINE)/sat_bram.o  \
 	$(MESS_DRIVERS)/saturn.o    \
 	$(MESS_MACHINE)/sms.o       \
+	$(MESS_MACHINE)/sega8_slot.o \
+	$(MESS_MACHINE)/sega8_rom.o \
 	$(MESS_DRIVERS)/sms.o       \
 
 $(MESSOBJ)/snk.a:               \
@@ -232,11 +241,6 @@ $(MESS_MACHINE)/snescx4.o: $(MESSSRC)/machine/cx4ops.c \
 				$(MESSSRC)/machine/cx4oam.c \
 				$(MESSSRC)/machine/cx4fn.c \
 				$(MESSSRC)/machine/cx4data.c \
-
-$(MESS_VIDEO)/gba.o:        $(MESSSRC)/video/gbamode0.c \
-				$(MESSSRC)/video/gbamode1.c \
-				$(MESSSRC)/video/gbamode2.c \
-				$(MESSSRC)/video/gbam345.c
 
 $(MESS_MACHINE)/nes_slot.o:  $(MESSSRC)/machine/nes_ines.c \
 				$(MESSSRC)/machine/nes_pcb.c \

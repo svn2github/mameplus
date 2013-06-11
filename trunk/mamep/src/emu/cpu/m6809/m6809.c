@@ -115,35 +115,11 @@ m6809_base_device::m6809_base_device(const machine_config &mconfig, const char *
 
 
 //-------------------------------------------------
-//  static_set_config - set the configuration
-//  structure
-//-------------------------------------------------
-
-void m6809_base_device::static_set_config(device_t &device, const m6809_config &config)
-{
-	m6809_base_device &m6809 = downcast<m6809_base_device &>(device);
-	static_cast<m6809_config &>(m6809) = config;
-	static_set_static_config(device, &config);
-}
-
-
-//-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
 
 void m6809_base_device::device_start()
 {
-	// default configuration
-	static const m6809_config default_config =
-	{
-		false
-	};
-
-	if (!static_config())
-	{
-		static_set_config(*this, default_config);
-	}
-
 	m_program = &space(AS_PROGRAM);
 	m_direct = &m_program->direct();
 

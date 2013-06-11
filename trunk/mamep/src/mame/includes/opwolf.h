@@ -9,6 +9,12 @@
 class opwolf_state : public driver_device
 {
 public:
+	enum
+	{
+		TIMER_OPWOLF,
+		TIMER_CCHIP
+	};
+
 	opwolf_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_cchip_ram(*this, "cchip_ram"),
@@ -85,7 +91,10 @@ public:
 	TIMER_CALLBACK_MEMBER(cchip_timer);
 	void updateDifficulty( int mode );
 	void opwolf_cchip_init(  );
-	void opwolf_msm5205_vck(device_t *device, int chip);
+	void opwolf_msm5205_vck(msm5205_device *device, int chip);
 	DECLARE_WRITE_LINE_MEMBER(opwolf_msm5205_vck_1);
 	DECLARE_WRITE_LINE_MEMBER(opwolf_msm5205_vck_2);
+
+protected:
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 };

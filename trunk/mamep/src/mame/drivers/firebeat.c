@@ -8,7 +8,8 @@
 
     GQ972 PWB(A2) 0000070609 Main board
     -----------------------------------
-        IBM PowerPC 403GCX at 66MHz
+        OSC 64.00MHz
+        IBM PowerPC 403GCX at 64MHz
         (2x) Konami 0000057714 (2D object processor)
         Yamaha YMZ280B (ADPCM sound chip)
         Epson RTC65271 RTC/NVRAM
@@ -134,7 +135,8 @@
 #include "machine/intelfsh.h"
 #include "machine/scsicd.h"
 #include "machine/rtc65271.h"
-#include "machine/pc16552d.h"
+#include "machine/ins8250.h"
+#include "machine/midikbd.h"
 #include "sound/ymz280b.h"
 #include "sound/cdda.h"
 #include "cdrom.h"
@@ -168,13 +170,30 @@ class firebeat_state : public driver_device
 public:
 	firebeat_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+		m_maincpu(*this, "maincpu"),
 		m_work_ram(*this, "work_ram"),
-		m_maincpu(*this, "maincpu") { }
+		m_flash_main(*this, "flash_main"),
+		m_flash_snd1(*this, "flash_snd1"),
+		m_flash_snd2(*this, "flash_snd2"),
+		m_duart_midi(*this, "duart_midi"),
+		m_duart_com(*this, "duart_com"),
+		m_kbd0(*this, "kbd0"),
+		m_kbd1(*this, "kbd1")
+	{ }
+
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT32> m_work_ram;
+	required_device<fujitsu_29f016a_device> m_flash_main;
+	required_device<fujitsu_29f016a_device> m_flash_snd1;
+	required_device<fujitsu_29f016a_device> m_flash_snd2;
+	optional_device<pc16552_device> m_duart_midi;
+	required_device<pc16552_device> m_duart_com;
+	optional_device<midi_keyboard_device> m_kbd0;
+	optional_device<midi_keyboard_device> m_kbd1;
 
 	UINT8 m_extend_board_irq_enable;
 	UINT8 m_extend_board_irq_active;
-	emu_timer *m_keyboard_timer;
-	fujitsu_29f016a_device *m_flash[3];
+//  emu_timer *m_keyboard_timer;
 	GCU_REGS m_gcu[2];
 	int m_tick;
 	int m_layer;
@@ -190,9 +209,8 @@ public:
 	UINT8 m_temp_data[64*1024];
 	int m_cab_data_ptr;
 	const int * m_cur_cab_data;
-	int m_keyboard_state[2];
+//  int m_keyboard_state[2];
 	UINT8 m_spu_shared_ram[0x400];
-	required_shared_ptr<UINT32> m_work_ram;
 	IBUTTON m_ibutton;
 	int m_ibutton_state;
 	int m_ibutton_read_subkey_ptr;
@@ -221,12 +239,12 @@ public:
 	DECLARE_WRITE32_MEMBER(atapi_command_w);
 	DECLARE_READ32_MEMBER(atapi_control_r);
 	DECLARE_WRITE32_MEMBER(atapi_control_w);
-	DECLARE_READ32_MEMBER(comm_uart_r);
-	DECLARE_WRITE32_MEMBER(comm_uart_w);
+//  DECLARE_READ32_MEMBER(comm_uart_r);
+//  DECLARE_WRITE32_MEMBER(comm_uart_w);
 	DECLARE_READ32_MEMBER(cabinet_r);
 	DECLARE_READ32_MEMBER(keyboard_wheel_r);
-	DECLARE_READ32_MEMBER(midi_uart_r);
-	DECLARE_WRITE32_MEMBER(midi_uart_w);
+	DECLARE_READ8_MEMBER(midi_uart_r);
+	DECLARE_WRITE8_MEMBER(midi_uart_w);
 	DECLARE_READ32_MEMBER(extend_board_irq_r);
 	DECLARE_WRITE32_MEMBER(extend_board_irq_w);
 	DECLARE_WRITE32_MEMBER(lamp_output_w);
@@ -239,7 +257,7 @@ public:
 	DECLARE_READ32_MEMBER(ppc_spu_share_r);
 	DECLARE_WRITE32_MEMBER(ppc_spu_share_w);
 	DECLARE_READ16_MEMBER(spu_unk_r);
-	TIMER_CALLBACK_MEMBER(keyboard_timer_callback);
+//  TIMER_CALLBACK_MEMBER(keyboard_timer_callback);
 	void gcu_draw_object(bitmap_ind16 &bitmap, const rectangle &cliprect, int chip, UINT32 *cmd);
 	void gcu_fill_rect(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT32 *cmd);
 	void gcu_draw_character(bitmap_ind16 &bitmap, const rectangle &cliprect, int chip, UINT32 *cmd);
@@ -261,7 +279,8 @@ public:
 	void init_firebeat();
 	void init_keyboard();
 	DECLARE_WRITE_LINE_MEMBER(sound_irq_callback);
-	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE_LINE_MEMBER(midi_uart_ch0_irq_callback);
+	DECLARE_WRITE_LINE_MEMBER(midi_uart_ch1_irq_callback);
 };
 
 
@@ -871,19 +890,19 @@ READ32_MEMBER(firebeat_state::flashram_r)
 	UINT32 r = 0;
 	if (ACCESSING_BITS_24_31)
 	{
-		r |= (m_flash[0]->read((offset*4)+0) & 0xff) << 24;
+		r |= (m_flash_main->read((offset*4)+0) & 0xff) << 24;
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		r |= (m_flash[0]->read((offset*4)+1) & 0xff) << 16;
+		r |= (m_flash_main->read((offset*4)+1) & 0xff) << 16;
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		r |= (m_flash[0]->read((offset*4)+2) & 0xff) << 8;
+		r |= (m_flash_main->read((offset*4)+2) & 0xff) << 8;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		r |= (m_flash[0]->read((offset*4)+3) & 0xff) << 0;
+		r |= (m_flash_main->read((offset*4)+3) & 0xff) << 0;
 	}
 	return r;
 }
@@ -892,19 +911,19 @@ WRITE32_MEMBER(firebeat_state::flashram_w)
 {
 	if (ACCESSING_BITS_24_31)
 	{
-		m_flash[0]->write((offset*4)+0, (data >> 24) & 0xff);
+		m_flash_main->write((offset*4)+0, (data >> 24) & 0xff);
 	}
 	if (ACCESSING_BITS_16_23)
 	{
-		m_flash[0]->write((offset*4)+1, (data >> 16) & 0xff);
+		m_flash_main->write((offset*4)+1, (data >> 16) & 0xff);
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		m_flash[0]->write((offset*4)+2, (data >> 8) & 0xff);
+		m_flash_main->write((offset*4)+2, (data >> 8) & 0xff);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		m_flash[0]->write((offset*4)+3, (data >> 0) & 0xff);
+		m_flash_main->write((offset*4)+3, (data >> 0) & 0xff);
 	}
 }
 
@@ -914,11 +933,11 @@ READ32_MEMBER(firebeat_state::soundflash_r)
 	fujitsu_29f016a_device *chip;
 	if (offset < 0x200000/4)
 	{
-		chip = m_flash[1];
+		chip = m_flash_snd1;
 	}
 	else
 	{
-		chip = m_flash[2];
+		chip = m_flash_snd2;
 	}
 
 	offset &= 0x7ffff;
@@ -947,11 +966,11 @@ WRITE32_MEMBER(firebeat_state::soundflash_w)
 	fujitsu_29f016a_device *chip;
 	if (offset < 0x200000/4)
 	{
-		chip = m_flash[1];
+		chip = m_flash_snd1;
 	}
 	else
 	{
-		chip = m_flash[2];
+		chip = m_flash_snd2;
 	}
 
 	offset &= 0x7ffff;
@@ -1382,56 +1401,76 @@ WRITE32_MEMBER(firebeat_state::atapi_control_w )
 
 
 /*****************************************************************************/
-
+/*
 READ32_MEMBER(firebeat_state::comm_uart_r )
 {
-	UINT32 r = 0;
+    UINT32 r = 0;
 
-	if (ACCESSING_BITS_24_31)
-	{
-		r |= pc16552d_0_r(space, (offset*4)+0) << 24;
-	}
-	if (ACCESSING_BITS_16_23)
-	{
-		r |= pc16552d_0_r(space, (offset*4)+1) << 16;
-	}
-	if (ACCESSING_BITS_8_15)
-	{
-		r |= pc16552d_0_r(space, (offset*4)+2) << 8;
-	}
-	if (ACCESSING_BITS_0_7)
-	{
-		r |= pc16552d_0_r(space, (offset*4)+3) << 0;
-	}
+    if (ACCESSING_BITS_24_31)
+    {
+        r |= pc16552d_0_r(space, (offset*4)+0) << 24;
+    }
+    if (ACCESSING_BITS_16_23)
+    {
+        r |= pc16552d_0_r(space, (offset*4)+1) << 16;
+    }
+    if (ACCESSING_BITS_8_15)
+    {
+        r |= pc16552d_0_r(space, (offset*4)+2) << 8;
+    }
+    if (ACCESSING_BITS_0_7)
+    {
+        r |= pc16552d_0_r(space, (offset*4)+3) << 0;
+    }
 
-	return r;
+    return r;
 }
 
 WRITE32_MEMBER(firebeat_state::comm_uart_w )
 {
-	if (ACCESSING_BITS_24_31)
-	{
-		pc16552d_0_w(space, (offset*4)+0, (data >> 24) & 0xff);
-	}
-	if (ACCESSING_BITS_16_23)
-	{
-		pc16552d_0_w(space, (offset*4)+1, (data >> 16) & 0xff);
-	}
-	if (ACCESSING_BITS_8_15)
-	{
-		pc16552d_0_w(space, (offset*4)+2, (data >> 8) & 0xff);
-	}
-	if (ACCESSING_BITS_0_7)
-	{
-		pc16552d_0_w(space, (offset*4)+3, (data >> 0) & 0xff);
-	}
+    if (ACCESSING_BITS_24_31)
+    {
+        pc16552d_0_w(space, (offset*4)+0, (data >> 24) & 0xff);
+    }
+    if (ACCESSING_BITS_16_23)
+    {
+        pc16552d_0_w(space, (offset*4)+1, (data >> 16) & 0xff);
+    }
+    if (ACCESSING_BITS_8_15)
+    {
+        pc16552d_0_w(space, (offset*4)+2, (data >> 8) & 0xff);
+    }
+    if (ACCESSING_BITS_0_7)
+    {
+        pc16552d_0_w(space, (offset*4)+3, (data >> 0) & 0xff);
+    }
 }
 
 static void comm_uart_irq_callback(running_machine &machine, int channel, int value)
 {
-	// TODO
-	//m_maincpu->set_input_line(INPUT_LINE_IRQ2, ASSERT_LINE);
+    // TODO
+    //m_maincpu->set_input_line(INPUT_LINE_IRQ2, ASSERT_LINE);
 }
+*/
+static const ins8250_interface firebeat_com0_interface =
+{
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL
+};
+
+static const ins8250_interface firebeat_com1_interface =
+{
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL
+};
 
 /*****************************************************************************/
 
@@ -1476,124 +1515,130 @@ READ32_MEMBER(firebeat_state::keyboard_wheel_r )
 	return 0;
 }
 
-READ32_MEMBER(firebeat_state::midi_uart_r )
+READ8_MEMBER(firebeat_state::midi_uart_r )
 {
-	UINT32 r = 0;
-
-	if (ACCESSING_BITS_24_31)
-	{
-		r |= pc16552d_1_r(space, offset >> 6) << 24;
-	}
-
-	return r;
+	return m_duart_midi->read(space, offset >> 6);
 }
 
-WRITE32_MEMBER(firebeat_state::midi_uart_w )
+WRITE8_MEMBER(firebeat_state::midi_uart_w )
 {
-	if (ACCESSING_BITS_24_31)
-	{
-		pc16552d_1_w(space, offset >> 6, (data >> 24) & 0xff);
-	}
+	m_duart_midi->write(space, offset >> 6, data);
 }
 
-static void midi_uart_irq_callback(running_machine &machine, int channel, int value)
+WRITE_LINE_MEMBER(firebeat_state::midi_uart_ch0_irq_callback)
 {
-	firebeat_state *state = machine.driver_data<firebeat_state>();
-	if (channel == 0)
+	if ((m_extend_board_irq_enable & 0x02) == 0 && state != CLEAR_LINE)
 	{
-		if ((state->m_extend_board_irq_enable & 0x02) == 0 && value != CLEAR_LINE)
-		{
-			state->m_extend_board_irq_active |= 0x02;
-			state->m_maincpu->set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
-		}
-		else
-			state->m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
+		m_extend_board_irq_active |= 0x02;
+		m_maincpu->set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 	}
 	else
-	{
-		if ((state->m_extend_board_irq_enable & 0x01) == 0 && value != CLEAR_LINE)
-		{
-			state->m_extend_board_irq_active |= 0x01;
-			state->m_maincpu->set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
-		}
-		else
-			state->m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
-	}
+		m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 }
 
+WRITE_LINE_MEMBER(firebeat_state::midi_uart_ch1_irq_callback)
+{
+	if ((m_extend_board_irq_enable & 0x01) == 0 && state != CLEAR_LINE)
+	{
+		m_extend_board_irq_active |= 0x01;
+		m_maincpu->set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
+	}
+	else
+		m_maincpu->set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
+}
 
+static const ins8250_interface firebeat_midi0_interface =
+{
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_DRIVER_LINE_MEMBER(firebeat_state, midi_uart_ch0_irq_callback),
+	DEVCB_NULL,
+	DEVCB_NULL
+};
+
+static const ins8250_interface firebeat_midi1_interface =
+{
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_DRIVER_LINE_MEMBER(firebeat_state, midi_uart_ch1_irq_callback),
+	DEVCB_NULL,
+	DEVCB_NULL
+};
+/*
 static const int keyboard_notes[24] =
 {
-	0x3c,   // C1
-	0x3d,   // C1#
-	0x3e,   // D1
-	0x3f,   // D1#
-	0x40,   // E1
-	0x41,   // F1
-	0x42,   // F1#
-	0x43,   // G1
-	0x44,   // G1#
-	0x45,   // A1
-	0x46,   // A1#
-	0x47,   // B1
-	0x48,   // C2
-	0x49,   // C2#
-	0x4a,   // D2
-	0x4b,   // D2#
-	0x4c,   // E2
-	0x4d,   // F2
-	0x4e,   // F2#
-	0x4f,   // G2
-	0x50,   // G2#
-	0x51,   // A2
-	0x52,   // A2#
-	0x53,   // B2
+    0x3c,   // C1
+    0x3d,   // C1#
+    0x3e,   // D1
+    0x3f,   // D1#
+    0x40,   // E1
+    0x41,   // F1
+    0x42,   // F1#
+    0x43,   // G1
+    0x44,   // G1#
+    0x45,   // A1
+    0x46,   // A1#
+    0x47,   // B1
+    0x48,   // C2
+    0x49,   // C2#
+    0x4a,   // D2
+    0x4b,   // D2#
+    0x4c,   // E2
+    0x4d,   // F2
+    0x4e,   // F2#
+    0x4f,   // G2
+    0x50,   // G2#
+    0x51,   // A2
+    0x52,   // A2#
+    0x53,   // B2
 };
 
 TIMER_CALLBACK_MEMBER(firebeat_state::keyboard_timer_callback)
 {
-	static const int kb_uart_channel[2] = { 1, 0 };
-	static const char *const keynames[] = { "KEYBOARD_P1", "KEYBOARD_P2" };
-	int keyboard;
-	int i;
+    static const int kb_uart_channel[2] = { 1, 0 };
+    static const char *const keynames[] = { "KEYBOARD_P1", "KEYBOARD_P2" };
+    int keyboard;
+    int i;
 
-	for (keyboard=0; keyboard < 2; keyboard++)
-	{
-		UINT32 kbstate = ioport(keynames[keyboard])->read();
-		int uart_channel = kb_uart_channel[keyboard];
+    for (keyboard=0; keyboard < 2; keyboard++)
+    {
+        UINT32 kbstate = ioport(keynames[keyboard])->read();
+        int uart_channel = kb_uart_channel[keyboard];
 
-		if (kbstate != m_keyboard_state[keyboard])
-		{
-			for (i=0; i < 24; i++)
-			{
-				int kbnote = keyboard_notes[i];
+        if (kbstate != m_keyboard_state[keyboard])
+        {
+            for (i=0; i < 24; i++)
+            {
+                int kbnote = keyboard_notes[i];
 
-				if ((m_keyboard_state[keyboard] & (1 << i)) != 0 && (kbstate & (1 << i)) == 0)
-				{
-					// key was on, now off -> send Note Off message
-					pc16552d_rx_data(machine(), 1, uart_channel, 0x80);
-					pc16552d_rx_data(machine(), 1, uart_channel, kbnote);
-					pc16552d_rx_data(machine(), 1, uart_channel, 0x7f);
-				}
-				else if ((m_keyboard_state[keyboard] & (1 << i)) == 0 && (kbstate & (1 << i)) != 0)
-				{
-					// key was off, now on -> send Note On message
-					pc16552d_rx_data(machine(), 1, uart_channel, 0x90);
-					pc16552d_rx_data(machine(), 1, uart_channel, kbnote);
-					pc16552d_rx_data(machine(), 1, uart_channel, 0x7f);
-				}
-			}
-		}
-		else
-		{
-			// no messages, send Active Sense message instead
-			pc16552d_rx_data(machine(), 1, uart_channel, 0xfe);
-		}
+                if ((m_keyboard_state[keyboard] & (1 << i)) != 0 && (kbstate & (1 << i)) == 0)
+                {
+                    // key was on, now off -> send Note Off message
+                    pc16552d_rx_data(machine(), 1, uart_channel, 0x80);
+                    pc16552d_rx_data(machine(), 1, uart_channel, kbnote);
+                    pc16552d_rx_data(machine(), 1, uart_channel, 0x7f);
+                }
+                else if ((m_keyboard_state[keyboard] & (1 << i)) == 0 && (kbstate & (1 << i)) != 0)
+                {
+                    // key was off, now on -> send Note On message
+                    pc16552d_rx_data(machine(), 1, uart_channel, 0x90);
+                    pc16552d_rx_data(machine(), 1, uart_channel, kbnote);
+                    pc16552d_rx_data(machine(), 1, uart_channel, 0x7f);
+                }
+            }
+        }
+        else
+        {
+            // no messages, send Active Sense message instead
+            pc16552d_rx_data(machine(), 1, uart_channel, 0xfe);
+        }
 
-		m_keyboard_state[keyboard] = kbstate;
-	}
+        m_keyboard_state[keyboard] = kbstate;
+    }
 }
-
+*/
 // Extend board IRQs
 // 0x01: MIDI UART channel 2
 // 0x02: MIDI UART channel 1
@@ -1837,15 +1882,11 @@ MACHINE_START_MEMBER(firebeat_state,firebeat)
 
 	/* configure fast RAM regions for DRC */
 	ppcdrc_add_fastram(m_maincpu, 0x00000000, 0x01ffffff, FALSE, m_work_ram);
-
-	m_flash[0] = machine().device<fujitsu_29f016a_device>("flash0");
-	m_flash[1] = machine().device<fujitsu_29f016a_device>("flash1");
-	m_flash[2] = machine().device<fujitsu_29f016a_device>("flash2");
 }
 
 static ADDRESS_MAP_START( firebeat_map, AS_PROGRAM, 32, firebeat_state )
 	AM_RANGE(0x00000000, 0x01ffffff) AM_RAM AM_SHARE("work_ram")
-	AM_RANGE(0x70000000, 0x70000fff) AM_READWRITE(midi_uart_r, midi_uart_w)
+	AM_RANGE(0x70000000, 0x70000fff) AM_READWRITE8(midi_uart_r, midi_uart_w, 0xff000000)
 	AM_RANGE(0x70006000, 0x70006003) AM_WRITE(extend_board_irq_w)
 	AM_RANGE(0x70008000, 0x7000800f) AM_READ(keyboard_wheel_r)
 	AM_RANGE(0x7000a000, 0x7000a003) AM_READ(extend_board_irq_r)
@@ -1856,7 +1897,7 @@ static ADDRESS_MAP_START( firebeat_map, AS_PROGRAM, 32, firebeat_state )
 	AM_RANGE(0x7d000800, 0x7d000803) AM_READ(input_r)
 	AM_RANGE(0x7d400000, 0x7d5fffff) AM_READWRITE(flashram_r, flashram_w)
 	AM_RANGE(0x7d800000, 0x7dbfffff) AM_READWRITE(soundflash_r, soundflash_w)
-	AM_RANGE(0x7dc00000, 0x7dc0000f) AM_READWRITE(comm_uart_r, comm_uart_w)
+	AM_RANGE(0x7dc00000, 0x7dc0000f) AM_DEVREADWRITE8("duart_com", pc16552_device, read, write, 0xffffffff)
 	AM_RANGE(0x7e000000, 0x7e00003f) AM_DEVREADWRITE8("rtc", rtc65271_device, rtc_r, rtc_w, 0xffffffff)
 	AM_RANGE(0x7e000100, 0x7e00013f) AM_DEVREADWRITE8("rtc", rtc65271_device, xram_r, xram_w, 0xffffffff)
 	AM_RANGE(0x7e800000, 0x7e8000ff) AM_READWRITE(gcu0_r, gcu0_w)
@@ -1876,21 +1917,11 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(firebeat_state::soundram_r)
 {
-	// HACK: firebeat expects first read after setting the address to be dummy.  fixes "YMZ test".
-	if (offset > 0)
-	{
-		offset--;
-	}
-
+	offset &= 0x3fffff;
 	if (offset < 0x200000)
-	{
-		return m_flash[1]->read(offset & 0x1fffff);
-	}
-	else if (offset >= 0x200000 && offset < 0x400000)
-	{
-		return m_flash[2]->read(offset & 0x1fffff);
-	}
-	return 0;
+		return m_flash_snd1->read(offset);
+	else
+		return m_flash_snd2->read(offset & 0x1fffff);
 }
 
 WRITE_LINE_MEMBER(firebeat_state::sound_irq_callback)
@@ -1952,58 +1983,59 @@ static INPUT_PORTS_START(kbm)
 	PORT_START("WHEEL_P2")          // Keyboard modulation wheel (P2)
 	PORT_BIT( 0xff, 0x80, IPT_PADDLE_V ) PORT_MINMAX(0xff, 0x00) PORT_SENSITIVITY(30) PORT_KEYDELTA(10)
 
-	PORT_START("KEYBOARD_P1")
-	PORT_BIT( 0x000001, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C1") PORT_CODE(KEYCODE_Q)
-	PORT_BIT( 0x000002, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C1#") PORT_CODE(KEYCODE_W)
-	PORT_BIT( 0x000004, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D1") PORT_CODE(KEYCODE_E)
-	PORT_BIT( 0x000008, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D1#") PORT_CODE(KEYCODE_R)
-	PORT_BIT( 0x000010, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 E1") PORT_CODE(KEYCODE_T)
-	PORT_BIT( 0x000020, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F1") PORT_CODE(KEYCODE_Y)
-	PORT_BIT( 0x000040, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F1#") PORT_CODE(KEYCODE_U)
-	PORT_BIT( 0x000080, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G1") PORT_CODE(KEYCODE_I)
-	PORT_BIT( 0x000100, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G1#") PORT_CODE(KEYCODE_O)
-	PORT_BIT( 0x000200, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A1") PORT_CODE(KEYCODE_A)
-	PORT_BIT( 0x000400, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A1#") PORT_CODE(KEYCODE_S)
-	PORT_BIT( 0x000800, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 B1") PORT_CODE(KEYCODE_D)
-	PORT_BIT( 0x001000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C2") PORT_CODE(KEYCODE_F)
-	PORT_BIT( 0x002000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C2#") PORT_CODE(KEYCODE_G)
-	PORT_BIT( 0x004000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D2") PORT_CODE(KEYCODE_H)
-	PORT_BIT( 0x008000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D2#") PORT_CODE(KEYCODE_J)
-	PORT_BIT( 0x010000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 E2") PORT_CODE(KEYCODE_K)
-	PORT_BIT( 0x020000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F2") PORT_CODE(KEYCODE_L)
-	PORT_BIT( 0x040000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F2#") PORT_CODE(KEYCODE_Z)
-	PORT_BIT( 0x080000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G2") PORT_CODE(KEYCODE_X)
-	PORT_BIT( 0x100000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G2#") PORT_CODE(KEYCODE_C)
-	PORT_BIT( 0x200000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A2") PORT_CODE(KEYCODE_V)
-	PORT_BIT( 0x400000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A2#") PORT_CODE(KEYCODE_B)
-	PORT_BIT( 0x800000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 B2") PORT_CODE(KEYCODE_N)
+/*
+    PORT_START("KEYBOARD_P1")
+    PORT_BIT( 0x000001, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C1") PORT_CODE(KEYCODE_Q)
+    PORT_BIT( 0x000002, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C1#") PORT_CODE(KEYCODE_W)
+    PORT_BIT( 0x000004, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D1") PORT_CODE(KEYCODE_E)
+    PORT_BIT( 0x000008, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D1#") PORT_CODE(KEYCODE_R)
+    PORT_BIT( 0x000010, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 E1") PORT_CODE(KEYCODE_T)
+    PORT_BIT( 0x000020, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F1") PORT_CODE(KEYCODE_Y)
+    PORT_BIT( 0x000040, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F1#") PORT_CODE(KEYCODE_U)
+    PORT_BIT( 0x000080, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G1") PORT_CODE(KEYCODE_I)
+    PORT_BIT( 0x000100, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G1#") PORT_CODE(KEYCODE_O)
+    PORT_BIT( 0x000200, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A1") PORT_CODE(KEYCODE_A)
+    PORT_BIT( 0x000400, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A1#") PORT_CODE(KEYCODE_S)
+    PORT_BIT( 0x000800, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 B1") PORT_CODE(KEYCODE_D)
+    PORT_BIT( 0x001000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C2") PORT_CODE(KEYCODE_F)
+    PORT_BIT( 0x002000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 C2#") PORT_CODE(KEYCODE_G)
+    PORT_BIT( 0x004000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D2") PORT_CODE(KEYCODE_H)
+    PORT_BIT( 0x008000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 D2#") PORT_CODE(KEYCODE_J)
+    PORT_BIT( 0x010000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 E2") PORT_CODE(KEYCODE_K)
+    PORT_BIT( 0x020000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F2") PORT_CODE(KEYCODE_L)
+    PORT_BIT( 0x040000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 F2#") PORT_CODE(KEYCODE_Z)
+    PORT_BIT( 0x080000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G2") PORT_CODE(KEYCODE_X)
+    PORT_BIT( 0x100000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 G2#") PORT_CODE(KEYCODE_C)
+    PORT_BIT( 0x200000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A2") PORT_CODE(KEYCODE_V)
+    PORT_BIT( 0x400000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 A2#") PORT_CODE(KEYCODE_B)
+    PORT_BIT( 0x800000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 B2") PORT_CODE(KEYCODE_N)
 
-	PORT_START("KEYBOARD_P2")
-	PORT_BIT( 0x000001, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C1") PORT_CODE(KEYCODE_Q)
-	PORT_BIT( 0x000002, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C1#") PORT_CODE(KEYCODE_W)
-	PORT_BIT( 0x000004, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D1") PORT_CODE(KEYCODE_E)
-	PORT_BIT( 0x000008, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D1#") PORT_CODE(KEYCODE_R)
-	PORT_BIT( 0x000010, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 E1") PORT_CODE(KEYCODE_T)
-	PORT_BIT( 0x000020, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F1") PORT_CODE(KEYCODE_Y)
-	PORT_BIT( 0x000040, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F1#") PORT_CODE(KEYCODE_U)
-	PORT_BIT( 0x000080, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G1") PORT_CODE(KEYCODE_I)
-	PORT_BIT( 0x000100, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G1#") PORT_CODE(KEYCODE_O)
-	PORT_BIT( 0x000200, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A1") PORT_CODE(KEYCODE_A)
-	PORT_BIT( 0x000400, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A1#") PORT_CODE(KEYCODE_S)
-	PORT_BIT( 0x000800, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 B1") PORT_CODE(KEYCODE_D)
-	PORT_BIT( 0x001000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C2") PORT_CODE(KEYCODE_F)
-	PORT_BIT( 0x002000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C2#") PORT_CODE(KEYCODE_G)
-	PORT_BIT( 0x004000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D2") PORT_CODE(KEYCODE_H)
-	PORT_BIT( 0x008000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D2#") PORT_CODE(KEYCODE_J)
-	PORT_BIT( 0x010000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 E2") PORT_CODE(KEYCODE_K)
-	PORT_BIT( 0x020000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F2") PORT_CODE(KEYCODE_L)
-	PORT_BIT( 0x040000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F2#") PORT_CODE(KEYCODE_Z)
-	PORT_BIT( 0x080000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G2") PORT_CODE(KEYCODE_X)
-	PORT_BIT( 0x100000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G2#") PORT_CODE(KEYCODE_C)
-	PORT_BIT( 0x200000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A2") PORT_CODE(KEYCODE_V)
-	PORT_BIT( 0x400000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A2#") PORT_CODE(KEYCODE_B)
-	PORT_BIT( 0x800000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 B2") PORT_CODE(KEYCODE_N)
-
+    PORT_START("KEYBOARD_P2")
+    PORT_BIT( 0x000001, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C1") PORT_CODE(KEYCODE_Q)
+    PORT_BIT( 0x000002, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C1#") PORT_CODE(KEYCODE_W)
+    PORT_BIT( 0x000004, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D1") PORT_CODE(KEYCODE_E)
+    PORT_BIT( 0x000008, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D1#") PORT_CODE(KEYCODE_R)
+    PORT_BIT( 0x000010, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 E1") PORT_CODE(KEYCODE_T)
+    PORT_BIT( 0x000020, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F1") PORT_CODE(KEYCODE_Y)
+    PORT_BIT( 0x000040, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F1#") PORT_CODE(KEYCODE_U)
+    PORT_BIT( 0x000080, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G1") PORT_CODE(KEYCODE_I)
+    PORT_BIT( 0x000100, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G1#") PORT_CODE(KEYCODE_O)
+    PORT_BIT( 0x000200, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A1") PORT_CODE(KEYCODE_A)
+    PORT_BIT( 0x000400, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A1#") PORT_CODE(KEYCODE_S)
+    PORT_BIT( 0x000800, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 B1") PORT_CODE(KEYCODE_D)
+    PORT_BIT( 0x001000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C2") PORT_CODE(KEYCODE_F)
+    PORT_BIT( 0x002000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 C2#") PORT_CODE(KEYCODE_G)
+    PORT_BIT( 0x004000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D2") PORT_CODE(KEYCODE_H)
+    PORT_BIT( 0x008000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 D2#") PORT_CODE(KEYCODE_J)
+    PORT_BIT( 0x010000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 E2") PORT_CODE(KEYCODE_K)
+    PORT_BIT( 0x020000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F2") PORT_CODE(KEYCODE_L)
+    PORT_BIT( 0x040000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 F2#") PORT_CODE(KEYCODE_Z)
+    PORT_BIT( 0x080000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G2") PORT_CODE(KEYCODE_X)
+    PORT_BIT( 0x100000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 G2#") PORT_CODE(KEYCODE_C)
+    PORT_BIT( 0x200000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A2") PORT_CODE(KEYCODE_V)
+    PORT_BIT( 0x400000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 A2#") PORT_CODE(KEYCODE_B)
+    PORT_BIT( 0x800000, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P2 B2") PORT_CODE(KEYCODE_N)
+*/
 INPUT_PORTS_END
 
 static INPUT_PORTS_START(popn)
@@ -2056,7 +2088,7 @@ const rtc65271_interface firebeat_rtc =
 static MACHINE_CONFIG_START( firebeat, firebeat_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", PPC403GCX, 66000000)
+	MCFG_CPU_ADD("maincpu", PPC403GCX, XTAL_64MHz)
 	MCFG_CPU_PROGRAM_MAP(firebeat_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", firebeat_state,  firebeat_interrupt)
 
@@ -2065,9 +2097,9 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 
 	MCFG_RTC65271_ADD("rtc", firebeat_rtc)
 
-	MCFG_FUJITSU_29F016A_ADD("flash0")
-	MCFG_FUJITSU_29F016A_ADD("flash1")
-	MCFG_FUJITSU_29F016A_ADD("flash2")
+	MCFG_FUJITSU_29F016A_ADD("flash_main")
+	MCFG_FUJITSU_29F016A_ADD("flash_snd1")
+	MCFG_FUJITSU_29F016A_ADD("flash_snd2")
 
 	MCFG_DEVICE_ADD("scsi0", SCSICD, 0)
 	MCFG_DEVICE_ADD("scsi1", SCSICD, 0)
@@ -2098,12 +2130,14 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_SOUND_ROUTE(0, "^^lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "^^rspeaker", 1.0)
 
+	MCFG_PC16552D_ADD("duart_com", firebeat_com0_interface, firebeat_com1_interface, XTAL_19_6608MHz) // pgmd to 9600baud
+	MCFG_PC16552D_ADD("duart_midi", firebeat_midi0_interface, firebeat_midi1_interface, XTAL_24MHz) // in all memory maps, pgmd to 31250baud
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", PPC403GCX, 66000000)
+	MCFG_CPU_ADD("maincpu", PPC403GCX, XTAL_64MHz)
 	MCFG_CPU_PROGRAM_MAP(firebeat_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("lscreen", firebeat_state,  firebeat_interrupt)
 
@@ -2112,9 +2146,9 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 
 	MCFG_RTC65271_ADD("rtc", firebeat_rtc)
 
-	MCFG_FUJITSU_29F016A_ADD("flash0")
-	MCFG_FUJITSU_29F016A_ADD("flash1")
-	MCFG_FUJITSU_29F016A_ADD("flash2")
+	MCFG_FUJITSU_29F016A_ADD("flash_main")
+	MCFG_FUJITSU_29F016A_ADD("flash_snd1")
+	MCFG_FUJITSU_29F016A_ADD("flash_snd2")
 
 	MCFG_DEVICE_ADD("scsi0", SCSICD, 0)
 	MCFG_DEVICE_ADD("scsi1", SCSICD, 0)
@@ -2152,13 +2186,17 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SOUND_ROUTE(0, "^^lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "^^rspeaker", 1.0)
 
+	MCFG_PC16552D_ADD("duart_com", firebeat_com0_interface, firebeat_com1_interface, XTAL_19_6608MHz)
+	MCFG_PC16552D_ADD("duart_midi", firebeat_midi0_interface, firebeat_midi1_interface, XTAL_24MHz)
+	MCFG_MIDI_KBD_ADD("kbd0", DEVWRITELINE("duart_midi:chan0", ins8250_uart_device, rx_w), 31250)
+	MCFG_MIDI_KBD_ADD("kbd1", DEVWRITELINE("duart_midi:chan1", ins8250_uart_device, rx_w), 31250)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( firebeat_spu, firebeat )
 
+	/* basic machine hardware */
 	MCFG_CPU_ADD("audiocpu", M68000, 16000000)
 	MCFG_CPU_PROGRAM_MAP(spu_map)
-
 MACHINE_CONFIG_END
 
 /*****************************************************************************/
@@ -2317,8 +2355,8 @@ void firebeat_state::init_firebeat()
 
 	atapi_init();
 
-	pc16552d_init(machine(), 0, 19660800, comm_uart_irq_callback, 0);     // Network UART
-	pc16552d_init(machine(), 1, 24000000, midi_uart_irq_callback, 0);     // MIDI UART
+//  pc16552d_init(machine(), 0, 19660800, comm_uart_irq_callback, 0);     // Network UART
+//  pc16552d_init(machine(), 1, 24000000, midi_uart_irq_callback, 0);     // MIDI UART
 
 	m_extend_board_irq_enable = 0x3f;
 	m_extend_board_irq_active = 0x00;
@@ -2349,8 +2387,8 @@ DRIVER_INIT_MEMBER(firebeat_state,ppd)
 void firebeat_state::init_keyboard()
 {
 	// set keyboard timer
-	m_keyboard_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(firebeat_state::keyboard_timer_callback),this));
-	m_keyboard_timer->adjust(attotime::from_msec(10), 0, attotime::from_msec(10));
+//  m_keyboard_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(firebeat_state::keyboard_timer_callback),this));
+//  m_keyboard_timer->adjust(attotime::from_msec(10), 0, attotime::from_msec(10));
 }
 
 DRIVER_INIT_MEMBER(firebeat_state,kbm)
@@ -2370,8 +2408,6 @@ ROM_START( ppp )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("977jaa03.21e", 0x00000, 0x80000, CRC(7b83362a) SHA1(2857a93be58636c10a8d180dbccf2caeeaaff0e2))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", 0)    // Security dongle
 	ROM_LOAD("gq977-ja", 0x00, 0xc0, BAD_DUMP CRC(55b5abdb) SHA1(d8da5bac005235480a1815bd0a79c3e8a63ebad1))
 
@@ -2385,8 +2421,6 @@ ROM_END
 ROM_START( ppp1mp )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("977jaa03.21e", 0x00000, 0x80000, CRC(7b83362a) SHA1(2857a93be58636c10a8d180dbccf2caeeaaff0e2))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", 0)    // Security dongle
 	ROM_LOAD( "gqa11-ja",     0x000000, 0x0000c0, CRC(2ed8e2ae) SHA1(b8c3410dab643111b2d2027068175ba018a0a67e) )
@@ -2402,8 +2436,6 @@ ROM_START( kbm )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("974a03.21e", 0x00000, 0x80000, CRC(ef9a932d) SHA1(6299d3b9823605e519dbf1f105b59a09197df72f))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD("gq974-ja", 0x00, 0xc0, BAD_DUMP CRC(4578f29b) SHA1(faaeaf6357c1e86e898e7017566cfd2fc7ee3d6f))
 
@@ -2417,8 +2449,6 @@ ROM_END
 ROM_START( kbm2nd )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("974a03.21e", 0x00000, 0x80000, CRC(ef9a932d) SHA1(6299d3b9823605e519dbf1f105b59a09197df72f))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD("gca01-ja", 0x00, 0xc0, BAD_DUMP CRC(2bda339d) SHA1(031cb3f44e7a89cd62a9ba948f3d19d53a325abd))
@@ -2434,8 +2464,6 @@ ROM_START( kbm3rd )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("974a03.21e", 0x00000, 0x80000, CRC(ef9a932d) SHA1(6299d3b9823605e519dbf1f105b59a09197df72f))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", 0)    // Security dongle
 	ROM_LOAD("gca12-ja", 0x00, 0xc0, BAD_DUMP CRC(cf01dc15) SHA1(da8d208233487ebe65a0a9826fc72f1f459baa26))
 
@@ -2449,8 +2477,6 @@ ROM_END
 ROM_START( popn4 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gq986-ja", 0x000000, 0x0000c0, CRC(6f8aa811) SHA1(fc970f6b4ada58eee361b3477abe503019b5dfda) )
@@ -2469,8 +2495,6 @@ ROM_START( popn5 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP( "a02jaa03.21e", 0x000000, 0x080000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599) )
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gca04-ja", 0x000000, 0x0000c0, CRC(7724fdbf) SHA1(b1b2d838d1938d9dc15151b7834502c1668bd31b) )
 
@@ -2487,8 +2511,6 @@ ROM_END
 ROM_START( popn6 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gqa16-ja", 0x000000, 0x0000c0, CRC(a3393355) SHA1(6b28b972fe375e6ad0c614110c0ae3832cffccff) )
@@ -2507,8 +2529,6 @@ ROM_START( popn7 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD("gcb00-ja", 0x00, 0xc0, CRC(cc28625a) SHA1(e7de79ae72fdbd22328c9de74dfa17b5e6ae43b6))
 
@@ -2525,8 +2545,6 @@ ROM_END
 ROM_START( popn8 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gqb30-ja", 0x000000, 0x0000c0, CRC(dbabb51b) SHA1(b53e971f544a654f0811e10eed40bee2e0393855) )
@@ -2545,8 +2563,6 @@ ROM_START( popnanm2 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gea02-ja", 0x000000, 0x0000c0, CRC(072f8624) SHA1(e869b85a891bf7f9c870fb581a9a2ddd70810e2c) )
 
@@ -2564,8 +2580,6 @@ ROM_START( ppd )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("977jaa03.21e", 0x00000, 0x80000, CRC(7b83362a) SHA1(2857a93be58636c10a8d180dbccf2caeeaaff0e2))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD("gq977-ko", 0x00, 0xc0, BAD_DUMP CRC(ee743323) SHA1(2042e45879795557ad3cc21b37962f6bf54da60d))
 
@@ -2579,8 +2593,6 @@ ROM_END
 ROM_START( ppp11 )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("977jaa03.21e", 0x00000, 0x80000, CRC(7b83362a) SHA1(2857a93be58636c10a8d180dbccf2caeeaaff0e2))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD("gq977-ja", 0x00, 0xc0, BAD_DUMP CRC(55b5abdb) SHA1(d8da5bac005235480a1815bd0a79c3e8a63ebad1))
@@ -2596,8 +2608,6 @@ ROM_END
 ROM_START( bm37th )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, BAD_DUMP CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
-
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
 
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gcb07-jc", 0x000000, 0x0000c0, CRC(16115b6a) SHA1(dcb2a3346973941a946b2cdfd31a5a761f666ca3) )
@@ -2616,8 +2626,6 @@ ROM_START( bm3final )
 	ROM_REGION32_BE(0x80000, "user1", 0)
 	ROM_LOAD16_WORD_SWAP("a02jaa03.21e", 0x00000, 0x80000, BAD_DUMP CRC(43ecc093) SHA1(637df5b546cf7409dd4752dc471674fe2a046599))
 
-	ROM_REGION(0x400000, "ymz", ROMREGION_ERASE00)
-
 	ROM_REGION(0xc0, "user2", ROMREGION_ERASE00)    // Security dongle
 	ROM_LOAD( "gcc01-jc", 0x000000, 0x0000c0, CRC(9c49fed8) SHA1(212b87c1d25763117611ffb2a36ed568d429d2f4) )
 
@@ -2633,18 +2641,18 @@ ROM_END
 
 /*****************************************************************************/
 
-GAME( 2000, ppp,      0,       firebeat,      ppp, firebeat_state,    ppp,      ROT0,   "Konami",  "ParaParaParadise", GAME_NOT_WORKING)
-GAME( 2000, ppd,      0,       firebeat,      ppp, firebeat_state,    ppd,      ROT0,   "Konami",  "ParaParaDancing", GAME_NOT_WORKING)
-GAME( 2000, ppp11,    0,       firebeat,      ppp, firebeat_state,    ppp,      ROT0,   "Konami",  "ParaParaParadise v1.1", GAME_NOT_WORKING)
-GAME( 2000, ppp1mp,   ppp,     firebeat,      ppp, firebeat_state,    ppp,      ROT0,   "Konami",  "ParaParaParadise 1st Mix Plus", GAME_NOT_WORKING)
-GAMEL(2000, kbm,      0,       firebeat2,     kbm, firebeat_state,    kbm,    ROT270,   "Konami",  "Keyboardmania", GAME_NOT_WORKING, layout_firebeat)
-GAMEL(2000, kbm2nd,   0,       firebeat2,     kbm, firebeat_state,    kbm,    ROT270,   "Konami",  "Keyboardmania 2nd Mix", GAME_NOT_WORKING, layout_firebeat)
-GAMEL(2001, kbm3rd,   0,       firebeat2,     kbm, firebeat_state,    kbm,    ROT270,   "Konami",  "Keyboardmania 3rd Mix", GAME_NOT_WORKING, layout_firebeat)
-GAME( 2000, popn4,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop'n Music 4", GAME_NOT_WORKING)
-GAME( 2000, popn5,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop'n Music 5", GAME_NOT_WORKING)
-GAME( 2001, popn6,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop'n Music 6", GAME_NOT_WORKING)
-GAME( 2001, popn7,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop'n Music 7", GAME_NOT_WORKING)
-GAME( 2001, popnanm2, 0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop'n Music Animelo 2", GAME_NOT_WORKING)
-GAME( 2002, popn8,    0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Pop'n Music 8", GAME_NOT_WORKING)
-GAME( 2002, bm37th,   0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Beatmania III Append 7th Mix", GAME_NOT_WORKING)
-GAME( 2003, bm3final, 0,       firebeat_spu,  popn, firebeat_state,   ppp,      ROT0,   "Konami",  "Beatmania III The Final", GAME_NOT_WORKING)
+GAME( 2000, ppp,      0,       firebeat,      ppp,  firebeat_state,   ppp,    ROT0,   "Konami",  "ParaParaParadise", GAME_NOT_WORKING)
+GAME( 2000, ppd,      0,       firebeat,      ppp,  firebeat_state,   ppd,    ROT0,   "Konami",  "ParaParaDancing", GAME_NOT_WORKING)
+GAME( 2000, ppp11,    0,       firebeat,      ppp,  firebeat_state,   ppp,    ROT0,   "Konami",  "ParaParaParadise v1.1", GAME_NOT_WORKING)
+GAME( 2000, ppp1mp,   ppp,     firebeat,      ppp,  firebeat_state,   ppp,    ROT0,   "Konami",  "ParaParaParadise 1st Mix Plus", GAME_NOT_WORKING)
+GAMEL(2000, kbm,      0,       firebeat2,     kbm,  firebeat_state,   kbm,    ROT270, "Konami",  "Keyboardmania", GAME_NOT_WORKING, layout_firebeat)
+GAMEL(2000, kbm2nd,   0,       firebeat2,     kbm,  firebeat_state,   kbm,    ROT270, "Konami",  "Keyboardmania 2nd Mix", GAME_NOT_WORKING, layout_firebeat)
+GAMEL(2001, kbm3rd,   0,       firebeat2,     kbm,  firebeat_state,   kbm,    ROT270, "Konami",  "Keyboardmania 3rd Mix", GAME_NOT_WORKING, layout_firebeat)
+GAME( 2000, popn4,    0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Pop'n Music 4", GAME_NOT_WORKING)
+GAME( 2000, popn5,    0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Pop'n Music 5", GAME_NOT_WORKING)
+GAME( 2001, popn6,    0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Pop'n Music 6", GAME_NOT_WORKING)
+GAME( 2001, popn7,    0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Pop'n Music 7", GAME_NOT_WORKING)
+GAME( 2001, popnanm2, 0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Pop'n Music Animelo 2", GAME_NOT_WORKING)
+GAME( 2002, popn8,    0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Pop'n Music 8", GAME_NOT_WORKING)
+GAME( 2002, bm37th,   0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Beatmania III Append 7th Mix", GAME_NOT_WORKING)
+GAME( 2003, bm3final, 0,       firebeat_spu,  popn, firebeat_state,   ppp,    ROT0,   "Konami",  "Beatmania III The Final", GAME_NOT_WORKING)

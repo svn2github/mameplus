@@ -22,6 +22,10 @@
 
 driver by Bryan McPhail
 
+TODO:
+- hcrash: coin insertion isn't always recognized.
+- hcrash: Konami GT-type inputs doesn't work properly.
+
 modified by Hau
 03/27/2009
  spthx to Unagi,rassy,hina,nori,Tobikage,Tommy,Crimson,yasuken,cupmen,zoo
@@ -1355,7 +1359,7 @@ static INPUT_PORTS_START( hcrash )
 	/* "Invalid" = both coin slots disabled */
 
 	PORT_START("DSW1")
-	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Cabinet ) )      PORT_DIPLOCATION("SW2:1,2")
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Cabinet ) )      PORT_DIPLOCATION("SW2:1,2")
 	PORT_DIPSETTING(    0x03, "Konami GT without brake" )
 	PORT_DIPSETTING(    0x02, "WEC Le Mans 24 Upright" )
 	PORT_DIPSETTING(    0x01, "Konami GT with brake" )
@@ -1385,7 +1389,7 @@ static INPUT_PORTS_START( hcrash )
 
 	/* Konami GT specific control */
 	PORT_START("PADDLE")
-	PORT_BIT( 0x7f, 0x40, IPT_PADDLE ) PORT_SENSITIVITY(25) PORT_KEYDELTA(10)
+	PORT_BIT( 0x7f, 0x40, IPT_PADDLE ) PORT_SENSITIVITY(25) PORT_KEYDELTA(10) PORT_CONDITION("DSW1", 0x03, NOTEQUALS, 0x02)
 
 	PORT_START("IN3")
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_CONDITION("DSW1", 0x03, EQUALS, 0x01)        // only in Konami GT cabinet with brake
@@ -1395,10 +1399,10 @@ static INPUT_PORTS_START( hcrash )
 
 	/* WEC Le Mans 24 specific control */
 	PORT_START("ACCEL")     /* Accelerator */
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_MINMAX(0,0x80) PORT_SENSITIVITY(30) PORT_KEYDELTA(10)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_MINMAX(0,0x80) PORT_SENSITIVITY(30) PORT_KEYDELTA(10) PORT_CONDITION("DSW1", 0x03, EQUALS, 0x02)
 
 	PORT_START("WHEEL")     /* Steering Wheel */
-	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(50) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(50) PORT_KEYDELTA(5) PORT_CONDITION("DSW1", 0x03, EQUALS, 0x02)
 INPUT_PORTS_END
 
 /******************************************************************************/

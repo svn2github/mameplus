@@ -32,15 +32,15 @@ Each ini contains a complete option set.
 Priority order for option sets (Lowest to Highest):
 
 built-in defaults
-program    ini (executable root filename ini)
-debug      ini (if running a debug build)
-vector     ini (really is vector.ini!)
-vertical     ini (really is vertical.ini!)
-horizont     ini (really is horizont.ini!)
-driver     ini (source code root filename in which this driver is found)
+program     ini (executable root filename ini)
+debug       ini (if running a debug build)
+vector      ini (really is vector.ini!)
+vertical    ini (really is vertical.ini!)
+horizont    ini (really is horizont.ini!)
+driver      ini (source code root filename in which this driver is found)
 grandparent ini (grandparent, not sure these exist, but it is possible)
-parent     ini (where parent is the name of the parent driver)
-game       ini (where game is the driver name for this game)
+parent      ini (where parent is the name of the parent driver)
+game        ini (where game is the driver name for this game)
 
 To determine which option set to use, start at the top level (lowest
 priority), and overlay all higher priority ini's until the desired level
@@ -291,7 +291,7 @@ static int  g_nPropertyMode    = 0;
 static BOOL g_bUseDefaults     = FALSE;
 static BOOL g_bReset           = FALSE;
 static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE};
-static BOOL  g_bAutoSnapSize = FALSE;
+static BOOL g_bAutoSnapSize = FALSE;
 static HICON g_hIcon = NULL;
 
 #ifdef TREE_SHEET
@@ -301,7 +301,7 @@ static RECT rcTabCtrl;
 static HWND hSheetTreeCtrl = NULL;
 static HINSTANCE hSheetInstance = 0;
 static WNDPROC pfnOldSheetProc = NULL;
-static  BOOL bPageTreeSelChangedActive = FALSE;
+static BOOL bPageTreeSelChangedActive = FALSE;
 #endif /* TREE_SHEET */
 
 /* Property sheets */

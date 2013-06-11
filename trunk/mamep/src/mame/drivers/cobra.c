@@ -608,14 +608,17 @@ public:
 		m_subcpu(*this, "subcpu"),
 		m_gfxcpu(*this, "gfxcpu"),
 		m_gfx_pagetable(*this, "pagetable"),
-		m_k001604(*this, "k001604")
-	{ }
+		m_k001604(*this, "k001604"),
+		m_ide(*this, "ide")
+	{
+	}
 
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_subcpu;
 	required_device<cpu_device> m_gfxcpu;
 	required_shared_ptr<UINT64> m_gfx_pagetable;
 	required_device<k001604_device> m_k001604;
+	required_device<ide_controller_device> m_ide;
 
 	DECLARE_READ64_MEMBER(main_comram_r);
 	DECLARE_WRITE64_MEMBER(main_comram_w);
@@ -636,10 +639,10 @@ public:
 	DECLARE_WRITE32_MEMBER(sub_config_w);
 	DECLARE_READ32_MEMBER(sub_mainbd_r);
 	DECLARE_WRITE32_MEMBER(sub_mainbd_w);
-	DECLARE_READ32_MEMBER(sub_ata0_r);
-	DECLARE_WRITE32_MEMBER(sub_ata0_w);
-	DECLARE_READ32_MEMBER(sub_ata1_r);
-	DECLARE_WRITE32_MEMBER(sub_ata1_w);
+	DECLARE_READ16_MEMBER(sub_ata0_r);
+	DECLARE_WRITE16_MEMBER(sub_ata0_w);
+	DECLARE_READ16_MEMBER(sub_ata1_r);
+	DECLARE_WRITE16_MEMBER(sub_ata1_w);
 	DECLARE_READ32_MEMBER(sub_psac2_r);
 	DECLARE_WRITE32_MEMBER(sub_psac2_w);
 	DECLARE_WRITE32_MEMBER(sub_psac_palette_w);
@@ -1812,74 +1815,39 @@ WRITE32_MEMBER(cobra_state::sub_config_w)
 {
 }
 
-READ32_MEMBER(cobra_state::sub_ata0_r)
+READ16_MEMBER(cobra_state::sub_ata0_r)
 {
-	device_t *device = machine().device("ide");
-	UINT32 r = 0;
+	mem_mask = ( mem_mask << 8 ) | ( mem_mask >> 8 );
 
-	if (ACCESSING_BITS_16_31)
-	{
-		UINT16 v = ide_bus_r(device, 0, (offset << 1) + 0);
-		r |= ((v << 8) | (v >> 8)) << 16;
-	}
-	if (ACCESSING_BITS_0_15)
-	{
-		UINT16 v = ide_bus_r(device, 0, (offset << 1) + 1);
-		r |= ((v << 8) | (v >> 8)) << 0;
-	}
+	UINT32 data = m_ide->read_cs0(space, offset, mem_mask);
+	data = ( data << 8 ) | ( data >> 8 );
 
-	return r;
+	return data;
 }
 
-WRITE32_MEMBER(cobra_state::sub_ata0_w)
+WRITE16_MEMBER(cobra_state::sub_ata0_w)
 {
-	device_t *device = machine().device("ide");
+	mem_mask = ( mem_mask << 8 ) | ( mem_mask >> 8 );
+	data = ( data << 8 ) | ( data >> 8 );
 
-	if (ACCESSING_BITS_16_31)
-	{
-		UINT16 d = ((data >> 24) & 0xff) | ((data >> 8) & 0xff00);
-		ide_bus_w(device, 0, (offset << 1) + 0, d);
-	}
-	if (ACCESSING_BITS_0_15)
-	{
-		UINT16 d = ((data >> 8) & 0xff) | ((data << 8) & 0xff00);
-		ide_bus_w(device, 0, (offset << 1) + 1, d);
-	}
+	m_ide->write_cs0(space, offset, data, mem_mask);
 }
 
-READ32_MEMBER(cobra_state::sub_ata1_r)
+READ16_MEMBER(cobra_state::sub_ata1_r)
 {
-	device_t *device = machine().device("ide");
-	UINT32 r = 0;
+	mem_mask = ( mem_mask << 8 ) | ( mem_mask >> 8 );
 
-	if (ACCESSING_BITS_16_31)
-	{
-		UINT16 v = ide_bus_r(device, 1, (offset << 1) + 0);
-		r |= ((v << 8) | (v >> 8)) << 16;
-	}
-	if (ACCESSING_BITS_0_15)
-	{
-		UINT16 v = ide_bus_r(device, 1, (offset << 1) + 1);
-		r |= ((v << 8) | (v >> 8)) << 0;
-	}
+	UINT32 data = m_ide->read_cs1(space, offset, mem_mask);
 
-	return r;
+	return ( data << 8 ) | ( data >> 8 );
 }
 
-WRITE32_MEMBER(cobra_state::sub_ata1_w)
+WRITE16_MEMBER(cobra_state::sub_ata1_w)
 {
-	device_t *device = machine().device("ide");
+	mem_mask = ( mem_mask << 8 ) | ( mem_mask >> 8 );
+	data = ( data << 8 ) | ( data >> 8 );
 
-	if (ACCESSING_BITS_16_31)
-	{
-		UINT16 d = ((data >> 24) & 0xff) | ((data >> 8) & 0xff00);
-		ide_bus_w(device, 1, (offset << 1) + 0, d);
-	}
-	if (ACCESSING_BITS_0_15)
-	{
-		UINT16 d = ((data >> 8) & 0xff) | ((data << 8) & 0xff00);
-		ide_bus_w(device, 1, (offset << 1) + 1, d);
-	}
+	m_ide->write_cs1(space, offset, data, mem_mask);
 }
 
 READ32_MEMBER(cobra_state::sub_comram_r)
@@ -1987,8 +1955,8 @@ static ADDRESS_MAP_START( cobra_sub_map, AS_PROGRAM, 32, cobra_state )
 	AM_RANGE(0x70000000, 0x7003ffff) AM_MIRROR(0x80000000) AM_READWRITE(sub_comram_r, sub_comram_w)         // Double buffered shared RAM between Main and Sub
 //  AM_RANGE(0x78000000, 0x780000ff) AM_MIRROR(0x80000000) AM_NOP                                           // SCSI controller (unused)
 	AM_RANGE(0x78040000, 0x7804ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE16("rfsnd", rf5c400_device, rf5c400_r, rf5c400_w, 0xffffffff)
-	AM_RANGE(0x78080000, 0x7808000f) AM_MIRROR(0x80000000) AM_READWRITE(sub_ata0_r, sub_ata0_w)
-	AM_RANGE(0x780c0010, 0x780c001f) AM_MIRROR(0x80000000) AM_READWRITE(sub_ata1_r, sub_ata1_w)
+	AM_RANGE(0x78080000, 0x7808000f) AM_MIRROR(0x80000000) AM_READWRITE16(sub_ata0_r, sub_ata0_w, 0xffffffff)
+	AM_RANGE(0x780c0010, 0x780c001f) AM_MIRROR(0x80000000) AM_READWRITE16(sub_ata1_r, sub_ata1_w, 0xffffffff)
 	AM_RANGE(0x78200000, 0x782000ff) AM_MIRROR(0x80000000) AM_DEVREADWRITE_LEGACY("k001604", k001604_reg_r, k001604_reg_w)              // PSAC registers
 	AM_RANGE(0x78210000, 0x78217fff) AM_MIRROR(0x80000000) AM_RAM_WRITE(sub_psac_palette_w) AM_SHARE("paletteram")                      // PSAC palette RAM
 	AM_RANGE(0x78220000, 0x7823ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE_LEGACY("k001604", k001604_tile_r, k001604_tile_w)            // PSAC tile RAM
@@ -3195,8 +3163,7 @@ void cobra_state::machine_reset()
 {
 	m_sub_interrupt = 0xff;
 
-	ide_controller_device *ide = (ide_controller_device *) machine().device("ide");
-	UINT8 *ide_features = ide->ide_get_features(0);
+	UINT8 *ide_features = m_ide->ide_get_features(0);
 
 	// Cobra expects these settings or the BIOS fails
 	ide_features[51*2+0] = 0;           /* 51: PIO data transfer cycle timing mode */

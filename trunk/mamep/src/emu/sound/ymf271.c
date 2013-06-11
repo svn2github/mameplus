@@ -10,6 +10,16 @@
     MAME and properly licensed derivatives, it is available under the
     terms of the GNU Lesser General Public License (LGPL), version 2.1.
     You may read the LGPL at http://www.gnu.org/licenses/lgpl.html
+
+    TODO:
+    - A/L bit (alternate loop)
+    - EN and EXT Out bits
+    - Src B and Src NOTE bits
+    - statusreg Busy and End bits
+    - timer register 0x11
+    - Is memory handling 100% correct? At the moment, seibuspi.c is the only
+      hardware currently emulated that uses external handlers.
+    - oh, and a lot more...
 */
 
 #include "emu.h"
@@ -455,15 +465,15 @@ void ymf271_device::update_pcm(int slotnum, INT32 *mixp, int length)
 		if (slot->bits == 8)
 		{
 			// 8bit
-			sample = m_rom[slot->startaddr + (slot->stepptr>>16)]<<8;
+			sample = ymf271_read_memory(slot->startaddr + (slot->stepptr>>16))<<8;
 		}
 		else
 		{
 			// 12bit
 			if (slot->stepptr & 0x10000)
-				sample = m_rom[slot->startaddr + (slot->stepptr>>17)*3 + 2]<<8 | ((m_rom[slot->startaddr + (slot->stepptr>>17)*3 + 1] << 4) & 0xf0);
+				sample = ymf271_read_memory(slot->startaddr + (slot->stepptr>>17)*3 + 2)<<8 | ((ymf271_read_memory(slot->startaddr + (slot->stepptr>>17)*3 + 1) << 4) & 0xf0);
 			else
-				sample = m_rom[slot->startaddr + (slot->stepptr>>17)*3]<<8 | (m_rom[slot->startaddr + (slot->stepptr>>17)*3 + 1] & 0xf0);
+				sample = ymf271_read_memory(slot->startaddr + (slot->stepptr>>17)*3)<<8 | (ymf271_read_memory(slot->startaddr + (slot->stepptr>>17)*3 + 1) & 0xf0);
 		}
 
 		update_envelope(slot);
@@ -1004,7 +1014,8 @@ void ymf271_device::write_register(int slotnum, int reg, int data)
 	{
 		case 0:
 		{
-			slot->extout = (data>>3)&0xf;
+			slot->ext_en = (data & 0x80) ? 1 : 0;
+			slot->ext_out = (data>>3)&0xf;
 
 			if (data & 1)
 			{
@@ -1024,7 +1035,6 @@ void ymf271_device::write_register(int slotnum, int reg, int data)
 			{
 				if (slot->active)
 				{
-					//slot->active = 0;
 					slot->env_state = ENV_RELEASE;
 				}
 			}
@@ -1088,8 +1098,6 @@ void ymf271_device::write_register(int slotnum, int reg, int data)
 		{
 			slot->fns &= ~0xff;
 			slot->fns |= data;
-
-			calculate_step(slot);
 			break;
 		}
 
@@ -1128,6 +1136,9 @@ void ymf271_device::write_register(int slotnum, int reg, int data)
 			slot->ch3_level = data & 0xf;
 			break;
 		}
+
+		default:
+			break;
 	}
 }
 
@@ -1254,7 +1265,8 @@ void ymf271_device::ymf271_write_pcm(int data)
 			break;
 		case 2:
 			slot->startaddr &= ~0xff0000;
-			slot->startaddr |= data<<16;
+			slot->startaddr |= (data & 0x7f)<<16;
+			slot->altloop = (data & 0x80) ? 1 : 0;
 			break;
 		case 3:
 			slot->endaddr &= ~0xff;
@@ -1266,7 +1278,7 @@ void ymf271_device::ymf271_write_pcm(int data)
 			break;
 		case 5:
 			slot->endaddr &= ~0xff0000;
-			slot->endaddr |= data<<16;
+			slot->endaddr |= (data & 0x7f)<<16;
 			break;
 		case 6:
 			slot->loopaddr &= ~0xff;
@@ -1278,13 +1290,15 @@ void ymf271_device::ymf271_write_pcm(int data)
 			break;
 		case 8:
 			slot->loopaddr &= ~0xff0000;
-			slot->loopaddr |= data<<16;
+			slot->loopaddr |= (data & 0x7f)<<16;
 			break;
 		case 9:
 			slot->fs = data & 0x3;
 			slot->bits = (data & 0x4) ? 12 : 8;
 			slot->srcnote = (data >> 3) & 0x3;
 			slot->srcb = (data >> 5) & 0x7;
+			break;
+		default:
 			break;
 	}
 }
@@ -1296,52 +1310,59 @@ void ymf271_device::device_timer(emu_timer &timer, device_timer_id id, int param
 	case 0:
 		m_status |= 1;
 
+		// assert IRQ
 		if (m_enable & 4)
 		{
 			m_irqstate |= 1;
-			if (!m_irq_handler.isnull()) m_irq_handler(1);
+
+			if (!m_irq_handler.isnull())
+				m_irq_handler(1);
 		}
+
+		// reload timer
+		m_timA->adjust(attotime::from_hz(m_clock) * (384 * 4 * (256 - m_timerA)), 0);
 		break;
 
 	case 1:
 		m_status |= 2;
 
+		// assert IRQ
 		if (m_enable & 8)
 		{
 			m_irqstate |= 2;
-			if (!m_irq_handler.isnull()) m_irq_handler(1);
+
+			if (!m_irq_handler.isnull())
+				m_irq_handler(1);
 		}
+
+		// reload timer
+		m_timB->adjust(attotime::from_hz(m_clock) * (384 * 16 * (256 - m_timerB)), 0);
 		break;
 	}
 }
 
-UINT8 ymf271_device::ymf271_read_ext_memory(UINT32 address)
+UINT8 ymf271_device::ymf271_read_memory(UINT32 offset)
 {
-	if( !m_ext_read_handler.isnull() )
+	if (m_ext_read_handler.isnull())
 	{
-		return m_ext_read_handler(address);
+		if (offset < m_mem_size)
+			return m_mem_base[offset];
+
+		/* 8MB chip limit (shouldn't happen) */
+		else if (offset > 0x7fffff)
+			return m_mem_base[offset & 0x7fffff];
+
+		else
+			return 0;
 	}
 	else
-	{
-		if( address < 0x800000)
-			return m_rom[address];
-	}
-	return 0xff;
-}
-
-void ymf271_device::ymf271_write_ext_memory(UINT32 address, UINT8 data)
-{
-	if( !m_ext_write_handler.isnull() )
-	{
-		m_ext_write_handler(address, data);
-	}
+		return m_ext_read_handler(offset);
 }
 
 void ymf271_device::ymf271_write_timer(int data)
 {
 	int slotnum;
 	YMF271Group *group;
-	attotime period;
 
 	slotnum = fm_tab[m_timerreg & 0xf];
 	group = &m_groups[slotnum];
@@ -1356,19 +1377,14 @@ void ymf271_device::ymf271_write_timer(int data)
 		switch (m_timerreg)
 		{
 			case 0x10:
-				m_timerA &= ~0xff;
-				m_timerA |= data;
+				m_timerA = data;
 				break;
 
 			case 0x11:
-				if (!(data & 0xfc))
-				{
-					m_timerA &= 0x00ff;
-					if ((data & 0x3) != 0x3)
-					{
-						m_timerA |= (data & 0xff)<<8;
-					}
-				}
+				// According to Yamaha's documentation, this sets timer A upper 2 bits
+				// (it says timer A is 10 bits). But, PCB audio recordings proves
+				// otherwise: it doesn't affect timer A frequency. (see ms32.c tetrisp)
+				// Does this register have another function regarding timer A/B?
 				break;
 
 			case 0x12:
@@ -1376,48 +1392,41 @@ void ymf271_device::ymf271_write_timer(int data)
 				break;
 
 			case 0x13:
-				if (data & 1)
-				{   // timer A load
-					m_timerAVal = m_timerA;
-				}
-				if (data & 2)
-				{   // timer B load
-					m_timerBVal = m_timerB;
-				}
-				if (data & 4)
+				// timer A load
+				if (~m_enable & data & 1)
 				{
-					// timer A IRQ enable
-					m_enable |= 4;
+					attotime period = attotime::from_hz(m_clock) * (384 * 4 * (256 - m_timerA));
+					m_timA->adjust((data & 1) ? period : attotime::never, 0);
 				}
-				if (data & 8)
+
+				// timer B load
+				if (~m_enable & data & 2)
 				{
-					// timer B IRQ enable
-					m_enable |= 8;
+					attotime period = attotime::from_hz(m_clock) * (384 * 16 * (256 - m_timerB));
+					m_timB->adjust((data & 2) ? period : attotime::never, 0);
 				}
+
+				// timer A reset
 				if (data & 0x10)
-				{   // timer A reset
+				{
 					m_irqstate &= ~1;
 					m_status &= ~1;
-					m_timerAVal |= 0x300;
 
-					if (!m_irq_handler.isnull()) m_irq_handler(0);
-
-					period = attotime::from_hz(m_clock) * (384 * 4 * (1024 - m_timerAVal));
-
-					m_timA->adjust(period, 0, period);
+					if (!m_irq_handler.isnull() && ~m_irqstate & 2)
+						m_irq_handler(0);
 				}
+
+				// timer B reset
 				if (data & 0x20)
-				{   // timer B reset
+				{
 					m_irqstate &= ~2;
 					m_status &= ~2;
 
-					if (!m_irq_handler.isnull()) m_irq_handler(0);
-
-					period = attotime::from_hz(m_clock) * (384 * 16 * (256 - m_timerBVal));
-
-					m_timB->adjust(period, 0, period);
+					if (!m_irq_handler.isnull() && ~m_irqstate & 1)
+						m_irq_handler(0);
 				}
 
+				m_enable = data;
 				break;
 
 			case 0x14:
@@ -1431,13 +1440,15 @@ void ymf271_device::ymf271_write_timer(int data)
 			case 0x16:
 				m_ext_address &= ~0xff0000;
 				m_ext_address |= (data & 0x7f) << 16;
-				m_ext_read = (data & 0x80) ? 1 : 0;
-				if( !m_ext_read )
-					m_ext_address = (m_ext_address + 1) & 0x7fffff;
+				m_ext_rw = (data & 0x80) ? 1 : 0;
 				break;
 			case 0x17:
-				ymf271_write_ext_memory( m_ext_address, data );
 				m_ext_address = (m_ext_address + 1) & 0x7fffff;
+				if (!m_ext_rw && !m_ext_write_handler.isnull())
+					m_ext_write_handler(m_ext_address, data);
+				break;
+
+			default:
 				break;
 		}
 	}
@@ -1445,6 +1456,8 @@ void ymf271_device::ymf271_write_timer(int data)
 
 WRITE8_MEMBER( ymf271_device::write )
 {
+	m_stream->update();
+
 	switch (offset)
 	{
 		case 0:
@@ -1483,22 +1496,28 @@ WRITE8_MEMBER( ymf271_device::write )
 		case 0xd:
 			ymf271_write_timer(data);
 			break;
+		default:
+			break;
 	}
 }
 
 READ8_MEMBER( ymf271_device::read )
 {
-	UINT8 value;
-
 	switch(offset)
 	{
 		case 0:
 			return m_status;
 
 		case 2:
-			value = ymf271_read_ext_memory( m_ext_address );
+		{
+			if (!m_ext_rw)
+				return 0xff;
+
+			UINT8 ret = m_ext_readlatch;
 			m_ext_address = (m_ext_address + 1) & 0x7fffff;
-			return value;
+			m_ext_readlatch = ymf271_read_memory(m_ext_address);
+			return ret;
+		}
 	}
 
 	return 0;
@@ -1596,7 +1615,8 @@ void ymf271_device::init_state()
 
 	for (i = 0; i < ARRAY_LENGTH(m_slots); i++)
 	{
-		save_item(NAME(m_slots[i].extout), i);
+		save_item(NAME(m_slots[i].ext_en), i);
+		save_item(NAME(m_slots[i].ext_out), i);
 		save_item(NAME(m_slots[i].lfoFreq), i);
 		save_item(NAME(m_slots[i].pms), i);
 		save_item(NAME(m_slots[i].ams), i);
@@ -1622,6 +1642,7 @@ void ymf271_device::init_state()
 		save_item(NAME(m_slots[i].startaddr), i);
 		save_item(NAME(m_slots[i].loopaddr), i);
 		save_item(NAME(m_slots[i].endaddr), i);
+		save_item(NAME(m_slots[i].altloop), i);
 		save_item(NAME(m_slots[i].fs), i);
 		save_item(NAME(m_slots[i].srcnote), i);
 		save_item(NAME(m_slots[i].srcb), i);
@@ -1650,8 +1671,6 @@ void ymf271_device::init_state()
 
 	save_item(NAME(m_timerA));
 	save_item(NAME(m_timerB));
-	save_item(NAME(m_timerAVal));
-	save_item(NAME(m_timerBVal));
 	save_item(NAME(m_irqstate));
 	save_item(NAME(m_status));
 	save_item(NAME(m_enable));
@@ -1662,7 +1681,8 @@ void ymf271_device::init_state()
 	save_item(NAME(m_pcmreg));
 	save_item(NAME(m_timerreg));
 	save_item(NAME(m_ext_address));
-	save_item(NAME(m_ext_read));
+	save_item(NAME(m_ext_rw));
+	save_item(NAME(m_ext_readlatch));
 }
 
 //-------------------------------------------------
@@ -1678,7 +1698,8 @@ void ymf271_device::device_start()
 	m_timA = timer_alloc(0);
 	m_timB = timer_alloc(1);
 
-	m_rom = *region();
+	m_mem_base = *region();
+	m_mem_size = region()->bytes();
 	m_irq_handler.resolve();
 
 	m_ext_read_handler.resolve();
@@ -1716,6 +1737,17 @@ void ymf271_device::device_reset()
 		m_slots[i].active = 0;
 		m_slots[i].volume = 0;
 	}
+
+	// reset timers and IRQ
+	m_timA->reset();
+	m_timB->reset();
+
+	m_irqstate = 0;
+	m_status = 0;
+	m_enable = 0;
+
+	if (!m_irq_handler.isnull())
+		m_irq_handler(0);
 }
 
 const device_type YMF271 = &device_creator<ymf271_device>;
@@ -1725,8 +1757,6 @@ ymf271_device::ymf271_device(const machine_config &mconfig, const char *tag, dev
 		device_sound_interface(mconfig, *this),
 		m_timerA(0),
 		m_timerB(0),
-		m_timerAVal(0),
-		m_timerBVal(0),
 		m_irqstate(0),
 		m_status(0),
 		m_enable(0),
@@ -1737,7 +1767,8 @@ ymf271_device::ymf271_device(const machine_config &mconfig, const char *tag, dev
 		m_pcmreg(0),
 		m_timerreg(0),
 		m_ext_address(0),
-		m_ext_read(0),
+		m_ext_rw(0),
+		m_ext_readlatch(0),
 		m_irq_handler(*this),
 		m_ext_read_handler(*this),
 		m_ext_write_handler(*this)

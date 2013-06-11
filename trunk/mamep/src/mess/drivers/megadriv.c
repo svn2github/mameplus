@@ -395,6 +395,7 @@ static SLOT_INTERFACE_START(md_cart)
 	SLOT_INTERFACE_INTERNAL("rom_ssf2",  MD_ROM_SSF2)
 	SLOT_INTERFACE_INTERNAL("rom_radica",  MD_ROM_RADICA)
 // pirate mappers (protection and/or bankswitch)
+	SLOT_INTERFACE_INTERNAL("rom_16mj2",  MD_ROM_16MJ2)
 	SLOT_INTERFACE_INTERNAL("rom_bugs",  MD_ROM_BUGSLIFE)
 	SLOT_INTERFACE_INTERNAL("rom_chinf3",  MD_ROM_CHINF3)
 	SLOT_INTERFACE_INTERNAL("rom_elfwor",  MD_ROM_ELFWOR)
@@ -417,6 +418,7 @@ static SLOT_INTERFACE_START(md_cart)
 	SLOT_INTERFACE_INTERNAL("rom_smouse",  MD_ROM_SMOUSE)
 	SLOT_INTERFACE_INTERNAL("rom_soulb",  MD_ROM_SOULB)
 	SLOT_INTERFACE_INTERNAL("rom_squir",  MD_ROM_SQUIR)
+	SLOT_INTERFACE_INTERNAL("rom_tekkensp",  MD_ROM_TEKKENSP)
 	SLOT_INTERFACE_INTERNAL("rom_topf",  MD_ROM_TOPF)
 SLOT_INTERFACE_END
 
@@ -426,7 +428,7 @@ static MACHINE_CONFIG_START( ms_megadriv, md_cons_state )
 	MCFG_MACHINE_START_OVERRIDE( md_cons_state, ms_megadriv )
 	MCFG_MACHINE_RESET_OVERRIDE( md_cons_state, ms_megadriv )
 
-	MCFG_MD_CARTRIDGE_ADD("mdslot", md_cart, NULL, NULL)
+	MCFG_MD_CARTRIDGE_ADD("mdslot", md_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","megadriv")
 MACHINE_CONFIG_END
 
@@ -436,7 +438,7 @@ static MACHINE_CONFIG_START( ms_megadpal, md_cons_state )
 	MCFG_MACHINE_START_OVERRIDE( md_cons_state, ms_megadriv )
 	MCFG_MACHINE_RESET_OVERRIDE( md_cons_state, ms_megadriv )
 
-	MCFG_MD_CARTRIDGE_ADD("mdslot", md_cart, NULL, NULL)
+	MCFG_MD_CARTRIDGE_ADD("mdslot", md_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","megadriv")
 MACHINE_CONFIG_END
 
@@ -1089,7 +1091,7 @@ static MACHINE_CONFIG_START( pico, pico_state )
 	MCFG_MACHINE_START_OVERRIDE( pico_state, pico )
 	MCFG_MACHINE_RESET_OVERRIDE( pico_state, ms_megadriv )
 
-	MCFG_PICO_CARTRIDGE_ADD("picoslot", pico_cart, NULL, NULL)
+	MCFG_PICO_CARTRIDGE_ADD("picoslot", pico_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","pico")
 MACHINE_CONFIG_END
 
@@ -1104,7 +1106,7 @@ static MACHINE_CONFIG_START( picopal, pico_state )
 	MCFG_MACHINE_START_OVERRIDE( pico_state, pico )
 	MCFG_MACHINE_RESET_OVERRIDE( pico_state, ms_megadriv )
 
-	MCFG_PICO_CARTRIDGE_ADD("picoslot", pico_cart, NULL, NULL)
+	MCFG_PICO_CARTRIDGE_ADD("picoslot", pico_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","pico")
 MACHINE_CONFIG_END
 
@@ -1132,9 +1134,9 @@ ROM_END
 ***************************************************************************/
 
 /*    YEAR  NAME        PARENT     COMPAT  MACHINE          INPUT   INIT       COMPANY   FULLNAME */
-CONS( 1989, genesis,    0,         0,      ms_megadriv,     md, md_cons_state,     genesis,   "Sega",   "Genesis (USA, NTSC)", 0)
-CONS( 1990, megadriv,   genesis,   0,      ms_megadpal,     md, md_cons_state,     md_eur,    "Sega",   "Mega Drive (Europe, PAL)", 0)
-CONS( 1988, megadrij,   genesis,   0,      ms_megadriv,     md, md_cons_state,     md_jpn,    "Sega",   "Mega Drive (Japan, NTSC)", 0)
+CONS( 1989, genesis,    0,         0,      ms_megadriv,     md, md_cons_state,     genesis,   "Sega",   "Genesis (USA, NTSC)",  GAME_SUPPORTS_SAVE )
+CONS( 1990, megadriv,   genesis,   0,      ms_megadpal,     md, md_cons_state,     md_eur,    "Sega",   "Mega Drive (Europe, PAL)", GAME_SUPPORTS_SAVE )
+CONS( 1988, megadrij,   genesis,   0,      ms_megadriv,     md, md_cons_state,     md_jpn,    "Sega",   "Mega Drive (Japan, NTSC)", GAME_SUPPORTS_SAVE )
 
 // the 32X plugged in the cart slot, games plugged into the 32x.  Maybe it should be handled as an expansion device?
 CONS( 1994, 32x,        0,         0,      genesis_32x,     md, md_cons_state,     genesis,   "Sega",   "Genesis with 32X (USA, NTSC)", GAME_NOT_WORKING )
@@ -1145,7 +1147,7 @@ CONS( 1994, 32xj,       32x,       0,      mdj_32x,         md, md_cons_state,  
 CONS( 1992, segacd,     0,         0,      genesis_scd,     md, md_cons_state,     genesis,   "Sega",   "Sega CD (USA, NTSC)", GAME_NOT_WORKING )
 CONS( 1993, megacd,     segacd,    0,      md_scd,          md, md_cons_state,     md_eur,    "Sega",   "Mega-CD (Europe, PAL)", GAME_NOT_WORKING )
 CONS( 1991, megacdj,    segacd,    0,      mdj_scd,         md, md_cons_state,     md_jpn,    "Sega",   "Mega-CD (Japan, NTSC)", GAME_NOT_WORKING ) // this bios doesn't work with our ram interleave needed by a few games?!
-CONS( 1991, megacda,    segacd,    0,      mdj_scd,         md, md_cons_state,     md_eur,    "Sega",   "Mega-CD (Asia, PAL)", GAME_NOT_WORKING )
+CONS( 1991, megacda,    segacd,    0,      md_scd,          md, md_cons_state,     md_eur,    "Sega",   "Mega-CD (Asia, PAL)", GAME_NOT_WORKING )
 CONS( 1993, segacd2,    0,         0,      genesis_scd,     md, md_cons_state,     genesis,   "Sega",   "Sega CD 2 (USA, NTSC)", GAME_NOT_WORKING )
 CONS( 1993, megacd2,    segacd2,   0,      md_scd,          md, md_cons_state,     md_eur,    "Sega",   "Mega-CD 2 (Europe, PAL)", GAME_NOT_WORKING )
 CONS( 1993, megacd2j,   segacd2,   0,      mdj_scd,         md, md_cons_state,     md_jpn,    "Sega",   "Mega-CD 2 (Japan, NTSC)", GAME_NOT_WORKING )

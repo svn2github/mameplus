@@ -35,6 +35,8 @@ public:
 	void mode1(UINT8 init, UINT8 *ROM, UINT32 len);
 	void mode2(UINT8 init, UINT8 *ROM, UINT32 len);
 
+private:
+
 	UINT8 dataread(UINT8 *ROM, UINT32 len);
 	UINT8 probability(UINT32 n);
 	UINT8 next_lps(UINT32 n);
@@ -60,8 +62,21 @@ public:
 	UINT32 m_morton16[2][256];
 	UINT32 m_morton32[4][256];
 
+	// mode 0 vars
+	UINT8 m_m0_val, m_m0_in, m_m0_span;
+	INT32 m_m0_out, m_m0_inverts, m_m0_lps, m_m0_in_count;
 
-private:
+	// mode 1 vars
+	INT32 m_m1_pixelorder[4], m_m1_realorder[4];
+	UINT8 m_m1_in, m_m1_val, m_m1_span;
+	INT32 m_m1_out, m_m1_inverts, m_m1_lps, m_m1_in_count;
+
+	// mode 2 vars
+	INT32 m_m2_pixelorder[16], m_m2_realorder[16];
+	UINT8 m_m2_bitplanebuffer[16], m_m2_buffer_index;
+	UINT8 m_m2_in, m_m2_val, m_m2_span;
+	INT32 m_m2_out0, m_m2_out1, m_m2_inverts, m_m2_lps, m_m2_in_count;
+
 	running_machine& m_machine;
 	//UINT32 m_rom_size;
 };
@@ -179,8 +194,6 @@ public:
 
 	//this is now allocated in the main snes cart class, to allow saving to nvram
 	//UINT8 m_rtc_ram[16];  // 0-12 secs, min, hrs, etc.; 13-14-15 control registers
-
-	UINT8 m_ram[0x2000];
 };
 
 // ======================> sns_rom_spc7110_device

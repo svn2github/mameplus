@@ -1,6 +1,25 @@
 /***********************************************************************************************************
 
 
+ Sega 8-bit cart emulation
+ (through slot devices)
+
+ Master System (Mark III) and Game Gear memory map can access 3 x 16K banks of ROM in
+ 0x0000-0xbfff memory range. These banks can however point to different ROM or RAM area
+ of the cart (or to BIOS banks, but these are handled directly in SMS emulation).
+
+ Hence, carts can interface with the main system through the following handlers
+ * read_cart : to read from ROM/RAM in memory range [0000-bfff]
+ * write_cart : to write to ROM/RAM in memory range [0000-bfff]
+ * write_mapper : to write to range [fffc-ffff] (called by the handler accessing those
+ same addresses in sms.c)
+
+ Note about Sega Card / MyCard: the data contained in these matches the data in carts, it's only
+ the connector to be different. We emulate this with a variant of the slot having different media
+ switch and different interface (the latter not implemented yet)
+
+ TODO:
+ - investigate SG-1000 carts so to reduce duplicated code and to add full .sg support to sg1000m3
 
  ***********************************************************************************************************/
 
@@ -17,6 +36,7 @@
 //**************************************************************************
 
 const device_type SEGA8_CART_SLOT = &device_creator<sega8_cart_slot_device>;
+const device_type SEGA8_CARD_SLOT = &device_creator<sega8_card_slot_device>;
 
 
 //**************************************************************************
@@ -35,6 +55,7 @@ device_sega8_cart_interface::device_sega8_cart_interface(const machine_config &m
 		m_ram_size(0),
 		m_rom_page_count(0),
 		has_battery(FALSE),
+		m_late_battery_enable(FALSE),
 		m_lphaser_xoffs(0),
 		m_sms_mode(0)
 {
@@ -60,6 +81,8 @@ void device_sega8_cart_interface::rom_alloc(running_machine &machine, UINT32 siz
 		m_rom = auto_alloc_array_clear(machine, UINT8, size);
 		m_rom_size = size;
 		m_rom_page_count = size / 0x4000;
+		if (!m_rom_page_count)
+			m_rom_page_count = 1;   // we compute rom pages through (XXX % m_rom_page_count)!
 		late_bank_setup();
 	}
 }
@@ -75,7 +98,7 @@ void device_sega8_cart_interface::ram_alloc(running_machine &machine, UINT32 siz
 	{
 		m_ram = auto_alloc_array_clear(machine, UINT8, size);
 		m_ram_size = size;
-		state_save_register_item_pointer(machine, "SEGA8_CART", NULL, 0, m_ram, m_ram_size);
+		state_save_register_item_pointer(machine, "SEGA8_CART", this->device().tag(), 0, m_ram, m_ram_size);
 	}
 }
 
@@ -89,14 +112,32 @@ void device_sega8_cart_interface::ram_alloc(running_machine &machine, UINT32 siz
 //  sega8_cart_slot_device - constructor
 //-------------------------------------------------
 
-sega8_cart_slot_device::sega8_cart_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
-						device_t(mconfig, SEGA8_CART_SLOT, "Sega Master System / Game Gear / SG1000 Cartridge Slot", tag, owner, clock),
+sega8_cart_slot_device::sega8_cart_slot_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, bool is_card) :
+						device_t(mconfig, type, name, tag, owner, clock),
 						device_image_interface(mconfig, *this),
 						device_slot_interface(mconfig, *this),
 						m_type(SEGA8_BASE_ROM),
 						m_must_be_loaded(FALSE),
 						m_interface("sms_cart"),
 						m_extensions("bin")
+{
+	m_is_card = is_card;
+}
+
+sega8_cart_slot_device::sega8_cart_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
+						device_t(mconfig, SEGA8_CART_SLOT, "Sega Master System / Game Gear / SG1000 Cartridge Slot", tag, owner, clock),
+						device_image_interface(mconfig, *this),
+						device_slot_interface(mconfig, *this),
+						m_type(SEGA8_BASE_ROM),
+						m_must_be_loaded(FALSE),
+						m_is_card(FALSE),
+						m_interface("sms_cart"),
+						m_extensions("bin")
+{
+}
+
+sega8_card_slot_device::sega8_card_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
+						sega8_cart_slot_device(mconfig, SEGA8_CARD_SLOT, "Sega Master System / Game Gear / SG1000 Card Slot", tag, owner, clock, TRUE)
 {
 }
 
@@ -117,19 +158,6 @@ void sega8_cart_slot_device::device_start()
 {
 	m_cart = dynamic_cast<device_sega8_cart_interface *>(get_card_device());
 }
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void sega8_cart_slot_device::device_config_complete()
-{
-	// set brief and instance name
-	update_names();
-}
-
 
 //-------------------------------------------------
 //  SMS PCB
@@ -154,7 +182,13 @@ static const sega8_slot slot_list[] =
 	{ SEGA8_NEMESIS, "nemesis" },
 	{ SEGA8_JANGGUN, "janggun" },
 	{ SEGA8_KOREAN, "korean" },
-	{ SEGA8_KOREAN_NOBANK, "korean_nobank" }
+	{ SEGA8_KOREAN_NOBANK, "korean_nb" },
+	{ SEGA8_OTHELLO, "othello" },
+	{ SEGA8_CASTLE, "castle" },
+	{ SEGA8_BASIC_L3, "level3" },
+	{ SEGA8_MUSIC_EDITOR, "music_editor" },
+	{ SEGA8_DAHJEE_TYPEA, "dahjee_typea" },
+	{ SEGA8_DAHJEE_TYPEB, "dahjee_typeb" }
 };
 
 static int sega8_get_pcb_id(const char *slot)
@@ -187,14 +221,14 @@ static const char *sega8_get_slot(int type)
 int sega8_cart_slot_device::verify_cart( UINT8 *magic, int size )
 {
 	int retval = IMAGE_VERIFY_FAIL;
-	
+
 	// Verify the file is a valid image - check $7ff0 for "TMR SEGA"
 	if (size >= 0x8000)
 	{
 		if (!strncmp((char*)&magic[0x7ff0], "TMR SEGA", 8))
-			retval = IMAGE_VERIFY_PASS;		
+			retval = IMAGE_VERIFY_PASS;
 	}
-	
+
 	return retval;
 }
 
@@ -222,24 +256,86 @@ void sega8_cart_slot_device::set_lphaser_xoffset( UINT8 *rom, int size )
 	{
 		if (!memcmp(&rom[0x7ff0], signatures[0], 16) || !memcmp(&rom[0x7ff0], signatures[1], 16))
 			xoff = 41;
-		
+
 		if (!memcmp(&rom[0x7ff0], signatures[2], 16))
 			xoff = 50;
-		
+
 		if (!memcmp(&rom[0x7ff0], signatures[3], 16))
 			xoff = 48;
-		
+
 		if (!memcmp(&rom[0x7ff0], signatures[4], 16))
 			xoff = 45;
-		
+
 		if (!memcmp(&rom[0x7ff0], signatures[5], 16))
 			xoff = 54;
-		
+
 	}
 
 	m_cart->set_lphaser_xoffs(xoff);
 }
 
+void sega8_cart_slot_device::setup_ram()
+{
+	if (software_entry() == NULL)
+	{
+		if (m_type == SEGA8_CASTLE)
+		{
+			m_cart->ram_alloc(machine(), 0x2000);
+			m_cart->set_has_battery(FALSE);
+		}
+		else if (m_type == SEGA8_OTHELLO)
+		{
+			m_cart->ram_alloc(machine(), 0x800);
+			m_cart->set_has_battery(FALSE);
+		}
+		else if (m_type == SEGA8_BASIC_L3)
+		{
+			m_cart->ram_alloc(machine(), 0x8000);
+			m_cart->set_has_battery(FALSE);
+		}
+		else if (m_type == SEGA8_MUSIC_EDITOR)
+		{
+			m_cart->ram_alloc(machine(), 0x2800);
+			m_cart->set_has_battery(FALSE);
+		}
+		else if (m_type == SEGA8_DAHJEE_TYPEA)
+		{
+			m_cart->ram_alloc(machine(), 0x2400);
+			m_cart->set_has_battery(FALSE);
+		}
+		else if (m_type == SEGA8_DAHJEE_TYPEB)
+		{
+			m_cart->ram_alloc(machine(), 0x2000);
+			m_cart->set_has_battery(FALSE);
+		}
+		else if (m_type == SEGA8_CODEMASTERS)
+		{
+			// Codemasters cart can have 64KB of RAM (Ernie Els Golf? or 8KB?) and no battery
+			m_cart->ram_alloc(machine(), 0x10000);
+			m_cart->set_has_battery(FALSE);
+		}
+		else
+		{
+			// for generic carts loaded from fullpath we have no way to know exactly if there was RAM,
+			// how much RAM was in the cart and if there was a battery so we always alloc 32KB and
+			// we save its content only if the game enable the RAM
+			m_cart->set_late_battery(TRUE);
+			m_cart->ram_alloc(machine(), 0x08000);
+		}
+	}
+	else
+	{
+		// from softlist we rely on the xml to only allocate the correct amount of RAM and to save it only if a battery was present
+		const char *battery = get_feature("battery");
+		m_cart->set_late_battery(FALSE);
+
+		if (get_software_region_length("ram"))
+			m_cart->ram_alloc(machine(), get_software_region_length("ram"));
+
+		if (battery && !strcmp(battery, "yes"))
+			m_cart->set_has_battery(TRUE);
+	}
+}
 
 bool sega8_cart_slot_device::call_load()
 {
@@ -248,21 +344,27 @@ bool sega8_cart_slot_device::call_load()
 		UINT32 len = (software_entry() == NULL) ? length() : get_software_region_length("rom");
 		UINT32 offset = 0;
 		UINT8 *ROM;
-		
+
+		if (m_is_card && len > 0x8000)
+		{
+			seterror(IMAGE_ERROR_UNSPECIFIED, "Attempted loading a card larger than 32KB");
+			return IMAGE_INIT_FAIL;
+		}
+
 		// check for header
 		if ((len % 0x4000) == 512)
 		{
 			offset = 512;
 			len -= 512;
 		}
-		
+
 		// make sure that we only get complete (0x4000) rom banks
 		if (len & 0x3fff)
 			len = ((len >> 14) + 1) << 14;
-		
+
 		m_cart->rom_alloc(machine(), len);
 		ROM = m_cart->get_rom_base();
-		
+
 		if (software_entry() == NULL)
 		{
 			fseek(offset, SEEK_SET);
@@ -270,7 +372,7 @@ bool sega8_cart_slot_device::call_load()
 		}
 		else
 			memcpy(ROM, get_software_region("rom") + offset, len);
-		
+
 		/* check the image */
 		if (verify_cart(ROM, len) == IMAGE_VERIFY_FAIL)
 			logerror("Warning loading image: verify_cart failed\n");
@@ -280,22 +382,10 @@ bool sega8_cart_slot_device::call_load()
 		else
 			m_type = get_cart_type(ROM, len);
 
-
-		if (m_type == SEGA8_CODEMASTERS)
-		{
-			m_cart->ram_alloc(machine(), 0x10000);
-			m_cart->set_has_battery(FALSE);
-		}
-		else
-		{
-			// for now
-			m_cart->ram_alloc(machine(), 0x08000);
-			m_cart->set_has_battery(TRUE);
-		}
-		
 		set_lphaser_xoffset(ROM, len);
 
-		
+		setup_ram();
+
 		// Check for gamegear cartridges with PIN 42 set to SMS mode
 		if (software_entry() != NULL)
 		{
@@ -304,14 +394,15 @@ bool sega8_cart_slot_device::call_load()
 				m_cart->set_sms_mode(1);
 		}
 
-		// for now we always attempt to load a battery, but we only save it if ram is actually accessed
-		if (m_cart->get_ram_size() /*&& m_cart->get_has_battery()*/)
+		// when loading from fullpath m_late_battery_enable can be TRUE and in that case
+		// we attempt to load a battery because the game might have it!
+		if (m_cart->get_ram_size() && (m_cart->get_has_battery() || m_cart->get_late_battery()))
 			battery_load(m_cart->get_ram_base(), m_cart->get_ram_size(), 0x00);
-		
+
 		//printf("Type: %s\n", sega8_get_slot(type));
-		
-		internal_header_logging(ROM + offset, len);
-		
+
+		internal_header_logging(ROM + offset, len, m_cart->get_ram_size());
+
 		return IMAGE_INIT_PASS;
 	}
 
@@ -361,19 +452,19 @@ bool sega8_cart_slot_device::call_softlist_load(char *swlist, char *swname, rom_
  - gamegear Pete Sampras Tennis
  - gamegear S.S. Lucifer
  - 95 - gamegear Micro Machines 2 - Turbo Tournament
- 
+
  The Korean game Jang Pung II also seems to use a codemasters style mapper.
  */
 int sms_state::detect_codemasters_mapper( UINT8 *rom )
 {
 	static const UINT8 jang_pung2[16] = { 0x00, 0xba, 0x38, 0x0d, 0x00, 0xb8, 0x38, 0x0c, 0x00, 0xb6, 0x38, 0x0b, 0x00, 0xb4, 0x38, 0x0a };
-	
+
 	if (((rom[0x7fe0] & 0x0f ) <= 9) && (rom[0x7fe3] == 0x93 || rom[0x7fe3] == 0x94 || rom[0x7fe3] == 0x95) &&  rom[0x7fef] == 0x00)
 		return 1;
-	
+
 	if (!memcmp(&rom[0x7ff0], jang_pung2, 16))
 		return 1;
-	
+
 	return 0;
 }
 
@@ -386,7 +477,7 @@ int sms_state::detect_korean_mapper( UINT8 *rom )
 		{ 0x41, 0x48, 0x37, 0x37, 0x44, 0x37, 0x4e, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x20 }, /* Sangokushi 3 */
 	};
 	int i;
-	
+
 	for (i = 0; i < 2; i++)
 	{
 		if (!memcmp(&rom[0x7ff0], signatures[i], 16))
@@ -401,9 +492,8 @@ int sms_state::detect_korean_mapper( UINT8 *rom )
 int sega8_cart_slot_device::get_cart_type(UINT8 *ROM, UINT32 len)
 {
 	int type = SEGA8_BASE_ROM;
-	static const UINT8 terebi_oekaki[7] = { 0x61, 0x6e, 0x6e, 0x61, 0x6b, 0x6d, 0x6e }; // "annakmn"
 
-	/* Check for special cartridge features (new routine, courtesy of Omar Cornut, from MEKA)  */
+	// Check for special cartridge features (new routine, courtesy of Omar Cornut, from MEKA)
 	if (len >= 0x8000)
 	{
 		int _0002 = 0, _8000 = 0, _a000 = 0, _ffff = 0, _3ffe = 0, _4000 = 0, _6000 = 0;
@@ -428,9 +518,9 @@ int sega8_cart_slot_device::get_cart_type(UINT8 *ROM, UINT32 len)
 				{ i += 2; _6000++; continue; }
 			}
 		}
-		
+
 		LOG(("Mapper test: _0002 = %d, _8000 = %d, _a000 = %d, _ffff = %d\n", _0002, _8000, _a000, _ffff));
-		
+
 		// 2 is a security measure, although tests on existing ROM showed it was not needed
 		if (_0002 > _ffff + 2 || (_0002 > 0 && _ffff == 0))
 		{
@@ -451,10 +541,65 @@ int sega8_cart_slot_device::get_cart_type(UINT8 *ROM, UINT32 len)
 			type = SEGA8_JANGGUN;
 	}
 
-	// Terebi Oekaki (TV Draw) is a SG1000 game with special input device which is compatible with SG1000 Mark III
-	if (!memcmp(&ROM[0x13b3], terebi_oekaki, 7))
+	// Try to detect Dahjee RAM Expansions
+	if (len >= 0x8000)
+	{
+		int x2000_3000 = 0, xd000_e000_f000 = 0, x2000_ff = 0;
+
+		for (int i = 0; i < 0x8000; i++)
+		{
+			if (ROM[i] == 0x32)
+			{
+				UINT16 addr = ROM[i + 1] | (ROM[i + 2] << 8);
+
+				switch (addr & 0xf000)
+				{
+					case 0x2000:
+					case 0x3000:
+						i += 2;
+						x2000_3000++;
+						break;
+
+					case 0xd000:
+					case 0xe000:
+					case 0xf000:
+						i += 2;
+						xd000_e000_f000++;
+						break;
+				}
+			}
+		}
+		for (int i = 0x2000; i < 0x4000; i++)
+		{
+			if (ROM[i] == 0xff)
+				x2000_ff++;
+		}
+		if (x2000_ff == 0x2000 && (xd000_e000_f000 > 10 || x2000_3000 > 10))
+		{
+			if (xd000_e000_f000 > x2000_3000)
+				type = SEGA8_DAHJEE_TYPEB;
+			else
+				type = SEGA8_DAHJEE_TYPEA;
+		}
+	}
+
+	// Terebi Oekaki (TV Draw)
+	if (!strncmp((const char *)&ROM[0x13b3], "annakmn", 7))
 		type = SEGA8_TEREBIOEKAKI;
-	
+
+	// The Castle (ROM+RAM)
+	if (!strncmp((const char *)&ROM[0x1cc3], "ASCII 1986", 10))
+		type = SEGA8_CASTLE;
+
+	// BASIC Level 3
+	if (!strncmp((const char *)&ROM[0x6a20], "SC-3000 BASIC Level 3 ver 1.0", 29))
+		type = SEGA8_BASIC_L3;
+
+	// Music Editor
+	if (!strncmp((const char *)&ROM[0x0841], "PIANO", 5) || !strncmp((const char *)&ROM[0x0841], "music", 5))
+		type = SEGA8_MUSIC_EDITOR;
+
+
 	return type;
 }
 /*-------------------------------------------------
@@ -502,6 +647,14 @@ READ8_MEMBER(sega8_cart_slot_device::read_cart)
 		return 0xff;
 }
 
+READ8_MEMBER(sega8_cart_slot_device::read_ram)
+{
+	if (m_cart)
+		return m_cart->read_ram(space, offset);
+	else
+		return 0xff;
+}
+
 
 /*-------------------------------------------------
  write
@@ -519,11 +672,148 @@ WRITE8_MEMBER(sega8_cart_slot_device::write_cart)
 		m_cart->write_cart(space, offset, data);
 }
 
+WRITE8_MEMBER(sega8_cart_slot_device::write_ram)
+{
+	if (m_cart)
+		m_cart->write_ram(space, offset, data);
+}
+
 
 /*-------------------------------------------------
  Internal header logging
  -------------------------------------------------*/
 
-void sega8_cart_slot_device::internal_header_logging(UINT8 *ROM, UINT32 len)
+void sega8_cart_slot_device::internal_header_logging(UINT8 *ROM, UINT32 len, UINT32 nvram_len)
 {
+	static const char *const system_region[] =
+	{
+		"",
+		"",
+		"",
+		"Master System Japan",
+		"Master System Export",
+		"Game Gear Japan",
+		"Game Gear Export",
+		"Game Gear International",
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+		"",
+		""
+	};
+
+	static int csum_length[] =
+	{
+		0x40000,
+		0x80000,
+		0x100000,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0x1ff0,
+		0x3ff0,
+		0x7ff0,
+		0xcff0,
+		0x10000,
+		0x20000,
+	};
+
+	char reserved[10];
+	UINT8 version, csum_size, region, serial[3];
+	UINT16 checksum, csum = 0;
+	UINT32 csum_end = 0;
+
+	// LOG FILE DETAILS
+	logerror("FILE DETAILS\n" );
+	logerror("============\n" );
+	logerror("Name: %s\n", basename());
+	logerror("File Size: 0x%" I64FMT "x\n", (software_entry() == NULL) ? length() : get_software_region_length("rom"));
+	logerror("Detected type: %s\n", sega8_get_slot(m_type));
+	logerror("ROM (Allocated) Size: 0x%X\n", len);
+	logerror("RAM: %s\n", nvram_len ? "Yes" : "No");
+	if (nvram_len)
+		logerror("RAM (Allocated) Size: 0x%X - Battery: %s\n", nvram_len, m_cart->get_has_battery() ? "Yes" : "No");
+	logerror("\n" );
+
+
+	// LOG HEADER DETAILS
+	if (len < 0x8000)
+		return;
+
+	for (int i = 0; i < 10; i++)
+		reserved[i] = ROM[0x7ff0 + i];
+
+	checksum = ROM[0x7ffa] | (ROM[0x7ffb] << 8);
+
+	for (int i = 0; i < 3; i++)
+		serial[i] = ROM[0x7ffc + i];
+	serial[2] &= 0x0f;
+
+	version = (ROM[0x7ffe] & 0xf0) >> 4;
+
+	csum_size = ROM[0x7fff] & 0x0f;
+	csum_end = csum_length[csum_size];
+	if (!csum_end || csum_end > len)
+		csum_end = len;
+
+	region = (ROM[0x7fff] & 0xf0) >> 4;
+
+	// compute cart checksum to compare with expected one
+	for (int i = 0; i < csum_end; i++)
+	{
+		if (i < 0x7ff0 || i >= 0x8000)
+		{
+			csum += ROM[i];
+			csum &= 0xffff;
+		}
+	}
+
+	logerror("INTERNAL HEADER\n" );
+	logerror("===============\n" );
+	logerror("Reserved String: %.10s\n", reserved);
+	logerror("Region: %s\n", system_region[region]);
+	logerror("Checksum: (Expected) 0x%x - (Computed) 0x%x\n", checksum, csum);
+	logerror("   [checksum over 0x%X bytes]\n", csum_length[csum_size]);
+	logerror("Serial String: %X\n", serial[0] | (serial[1] << 8) | (serial[2] << 16));
+	logerror("Software Revision: %x\n", version);
+	logerror("\n" );
+
+
+	if (m_type == SEGA8_CODEMASTERS)
+	{
+		UINT8 day, month, year, hour, minute;
+		csum = 0;
+
+		day = ROM[0x7fe1];
+		month = ROM[0x7fe2];
+		year = ROM[0x7fe3];
+		hour = ROM[0x7fe4];
+		minute = ROM[0x7fe5];
+		checksum = ROM[0x7fe6] | (ROM[0x7fe7] << 8);
+		csum_size = ROM[0x7fe0];
+
+		// compute cart checksum to compare with expected one
+		for (int i = 0; i < len; i += 2)
+		{
+			if (i < 0x7ff0 || i >= 0x8000)
+			{
+				csum += (ROM[i] | (ROM[i + 1] << 8));
+				csum &= 0xffff;
+			}
+		}
+
+		logerror("CODEMASTERS HEADER\n" );
+		logerror("==================\n" );
+		logerror("Build date & time: %x/%x/%x %.2x:%.2x\n", day, month, year, hour, minute);
+		logerror("Checksum: (Expected) 0x%x - (Computed) 0x%x\n", checksum, csum);
+		logerror("   [checksum over 0x%X bytes]\n", csum_size * 0x4000);
+		logerror("\n" );
+	}
 }

@@ -1,3 +1,5 @@
+#define NO_MEM_TRACKING
+
 #include "debugqtdasmwindow.h"
 
 #include "debug/debugcon.h"
@@ -99,6 +101,11 @@ DasmWindow::DasmWindow(running_machine* machine, QWidget* parent) :
 	optionsMenu->addAction(runToCursorAct);
 	optionsMenu->addSeparator();
 	optionsMenu->addActions(rightBarGroup->actions());
+}
+
+
+DasmWindow::~DasmWindow()
+{
 }
 
 

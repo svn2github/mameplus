@@ -517,7 +517,7 @@ static MACHINE_CONFIG_START( nes, nes_state )
 	MCFG_SOUND_CONFIG(nes_apu_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 
-	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_crt_interface, nes_cart, NULL, NULL)
+	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_crt_interface, nes_cart, NULL)
 	MCFG_SOFTWARE_LIST_ADD("cart_list","nes")
 	MCFG_SOFTWARE_LIST_ADD("ntb_list","nes_ntbrom") // Nantettate Baseball mini_carts
 MACHINE_CONFIG_END
@@ -568,7 +568,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( famicom, nes )
 	MCFG_DEVICE_REMOVE("nes_slot")
-	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_crt_interface, nes_cart, NULL, NULL)
+	MCFG_NES_CARTRIDGE_ADD("nes_slot", nes_crt_interface, nes_cart, NULL)
 	MCFG_NES_CARTRIDGE_NOT_MANDATORY
 
 	MCFG_LEGACY_FLOPPY_DRIVE_ADD(FLOPPY_0, nes_floppy_interface)
@@ -624,10 +624,10 @@ ROM_END
 ***************************************************************************/
 
 /*     YEAR  NAME      PARENT  COMPAT MACHINE   INPUT    INIT    COMPANY       FULLNAME */
-CONS( 1985, nes,       0,      0,     nes,      nes, driver_device,     0,       "Nintendo",  "Nintendo Entertainment System / Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS )
-CONS( 1987, nespal,    nes,    0,     nespal,   nes, driver_device,     0,       "Nintendo",  "Nintendo Entertainment System (PAL)", GAME_IMPERFECT_GRAPHICS )
-CONS( 1983, famicom,   nes,    0,     famicom,  famicom, nes_state, famicom, "Nintendo",  "Famicom (w/ Disk System add-on)", GAME_IMPERFECT_GRAPHICS )
-CONS( 1986, famitwin,  nes,    0,     famicom,  famicom, nes_state, famicom, "Sharp",     "Famicom Twin", GAME_IMPERFECT_GRAPHICS )
-CONS( 198?, m82,       nes,    0,     nes,      nes, driver_device,     0,       "Nintendo",  "M82 Display Unit", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-CONS( 1996, drpcjr,    nes,    0,     famicom,  famicom, nes_state, famicom, "Bung",      "Doctor PC Jr", GAME_IMPERFECT_GRAPHICS )
-CONS( 1992, dendy,     nes,    0,     dendy,    nes, driver_device,     0,       "Steepler",  "Dendy Classic", GAME_IMPERFECT_GRAPHICS )
+CONS( 1985, nes,       0,      0,     nes,      nes, driver_device,     0,       "Nintendo",  "Nintendo Entertainment System / Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+CONS( 1987, nespal,    nes,    0,     nespal,   nes, driver_device,     0,       "Nintendo",  "Nintendo Entertainment System (PAL)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+CONS( 1983, famicom,   nes,    0,     famicom,  famicom, nes_state, famicom, "Nintendo",  "Famicom (w/ Disk System add-on)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+CONS( 1986, famitwin,  nes,    0,     famicom,  famicom, nes_state, famicom, "Sharp",     "Famicom Twin", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+CONS( 198?, m82,       nes,    0,     nes,      nes, driver_device,     0,       "Nintendo",  "M82 Display Unit", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+CONS( 1996, drpcjr,    nes,    0,     famicom,  famicom, nes_state, famicom, "Bung",      "Doctor PC Jr", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+CONS( 1992, dendy,     nes,    0,     dendy,    nes, driver_device,     0,       "Steepler",  "Dendy Classic", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

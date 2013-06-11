@@ -108,10 +108,10 @@ vsaturn   // JVC V-Saturn
 hisaturn  // Hitachi HiSaturn
 
 // Sony
-psj    // 1994 Sony PlayStation (Japan)
-psu    // 1995 Sony PlayStation (USA)
-pse    // 1995 Sony PlayStation (Europe)
-psa    // 1995 Sony PlayStation (Asia-Pacific)
+psj       // 1994 Sony PlayStation (Japan)
+psu       // 1995 Sony PlayStation (USA)
+pse       // 1995 Sony PlayStation (Europe)
+psa       // 1995 Sony PlayStation (Asia-Pacific)
 pockstat  // 1999 Sony PocketStation
 
 // NEC

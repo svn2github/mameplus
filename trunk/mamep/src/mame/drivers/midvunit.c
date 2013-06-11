@@ -132,12 +132,6 @@ READ32_MEMBER(midvunit_state::midvunit_adc_r)
 }
 
 
-TIMER_CALLBACK_MEMBER(midvunit_state::adc_ready)
-{
-	m_maincpu->set_input_line(3, ASSERT_LINE);
-}
-
-
 WRITE32_MEMBER(midvunit_state::midvunit_adc_w)
 {
 	static const char *const adcnames[] = { "WHEEL", "ACCEL", "BRAKE" };
@@ -148,7 +142,7 @@ WRITE32_MEMBER(midvunit_state::midvunit_adc_w)
 		if (which < 0 || which > 2)
 			logerror("adc_w: unexpected which = %02X\n", which + 4);
 		m_adc_data = ioport(adcnames[which])->read_safe(0);
-		machine().scheduler().timer_set(attotime::from_msec(1), timer_expired_delegate(FUNC(midvunit_state::adc_ready),this));
+		timer_set(attotime::from_msec(1), TIMER_ADC_READY);
 	}
 	else
 		logerror("adc_w without enabling writes!\n");
@@ -514,7 +508,7 @@ static ADDRESS_MAP_START( midvplus_map, AS_PROGRAM, 32, midvunit_state )
 	AM_RANGE(0x990000, 0x99000f) AM_READWRITE_LEGACY(midway_ioasic_r, midway_ioasic_w)
 	AM_RANGE(0x994000, 0x994000) AM_WRITE(midvunit_control_w)
 	AM_RANGE(0x995020, 0x995020) AM_WRITE(midvunit_cmos_protect_w)
-	AM_RANGE(0x9a0000, 0x9a0007) AM_DEVREADWRITE_LEGACY("ide", midway_ide_asic_r, midway_ide_asic_w)
+	AM_RANGE(0x9a0000, 0x9a0007) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs0, write_cs0, 0x0000ffff)
 	AM_RANGE(0x9c0000, 0x9c7fff) AM_RAM_WRITE(midvunit_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x9d0000, 0x9d000f) AM_READWRITE(midvplus_misc_r, midvplus_misc_w) AM_SHARE("midvplus_misc")
 	AM_RANGE(0xa00000, 0xbfffff) AM_READWRITE(midvunit_textureram_r, midvunit_textureram_w) AM_SHARE("textureram")

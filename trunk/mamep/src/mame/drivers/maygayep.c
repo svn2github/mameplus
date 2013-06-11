@@ -2319,13 +2319,18 @@ ROM_START( ep_cdspna )
 ROM_END
 
 
+#define EP_COSC_SOUND \
+	ROM_REGION( 0x100000, "ymz", 0 ) \
+	ROM_LOAD( "cosc.s0", 0x0000, 0x080000, CRC(4282b495) SHA1(7cdec8e8219a892c26311608ebd8953b381ecc70) ) \
+	ROM_LOAD( "cosc.s1", 0x0000, 0x080000, CRC(ad191be1) SHA1(1d0934cf0d39ad842d68eeea5c91ddd8637644e6) )
+
 ROM_START( ep_cosc )
 	ROM_REGION( 0x080000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "msa02142.g0", 0x000000, 0x020000, CRC(110c9b28) SHA1(5aca3ad3fc79ec288a47c294bf32c841a9c2a9c7) )
 	ROM_LOAD16_BYTE( "msa02142.g1", 0x000001, 0x020000, CRC(3bea853f) SHA1(5752a11abe666da01d7f66b995d5274dc24c2403) )
 	ROM_LOAD16_BYTE( "msa02142.g2", 0x040000, 0x020000, CRC(64584ab4) SHA1(08817c5d68099f316850947ada95fb864da9ae7c) )
 	ROM_LOAD16_BYTE( "msa02142.g3", 0x040001, 0x020000, CRC(2a3ad9a8) SHA1(06c1df7e1c658c614098ee1939fb9af014927f28) )
-	MISSING_SOUND
+	EP_COSC_SOUND
 ROM_END
 
 ROM_START( ep_cosca )
@@ -2334,30 +2339,34 @@ ROM_START( ep_cosca )
 	ROM_LOAD16_BYTE( "msa02143.g1", 0x000001, 0x020000, CRC(a346b9be) SHA1(d43e328127a6c02739b47dc663a12f9b558b92dd) )
 	ROM_LOAD16_BYTE( "msa02143.g2", 0x040000, 0x020000, CRC(64584ab4) SHA1(08817c5d68099f316850947ada95fb864da9ae7c) )
 	ROM_LOAD16_BYTE( "msa02143.g3", 0x040001, 0x020000, CRC(2a3ad9a8) SHA1(06c1df7e1c658c614098ee1939fb9af014927f28) )
-	MISSING_SOUND
+	EP_COSC_SOUND
 ROM_END
 
+#define EP_CAHOY_SOUND \
+	ROM_REGION( 0x100000, "ymz", 0 ) \
+	ROM_LOAD( "cahoy.s0", 0x0000, 0x080000, CRC(28512eb3) SHA1(60b34bcbd840740fab45d16f9ac9784a917a6c5d) ) \
+	ROM_LOAD( "cahoy.s1", 0x0000, 0x080000, CRC(bc70d9c3) SHA1(b2b66956e5cbb53999386429bd32ddac32980289) )
 
-
+//Sound ROMs taken from this set...
 ROM_START( ep_cahoy )
 	ROM_REGION( 0x080000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "cahoyg0.bin", 0x000000, 0x020000, CRC(b7aed7c8) SHA1(6aaf9fbb0b4d845d12d4a949aa794f958154e7d8) )
 	ROM_LOAD16_BYTE( "cahoyg1.bin", 0x000001, 0x020000, CRC(35dc24f6) SHA1(32eb669ba61e683aea31231a3a2139abe5a4dba1) )
-	MISSING_SOUND
+	EP_CAHOY_SOUND
 ROM_END
 
 ROM_START( ep_cahoya )
 	ROM_REGION( 0x080000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "c_ahoy.g0", 0x000000, 0x020000, CRC(20be6dfc) SHA1(abda6674c7663f3136d270fbec5b214f3d7e33ee) )
 	ROM_LOAD16_BYTE( "c_ahoy.g1", 0x000001, 0x020000, CRC(a363f246) SHA1(3c609d803e6f9b43717e38e7c9264d6a1a115837) )
-	MISSING_SOUND
+	EP_CAHOY_SOUND
 ROM_END
 
 ROM_START( ep_cahoyb )
 	ROM_REGION( 0x080000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "c_ahoy 5pound.g0", 0x000000, 0x020000, CRC(dc7a5c0d) SHA1(d6068e72ab3025c601752f18f144917a6da1d5df) )
 	ROM_LOAD16_BYTE( "c_ahoy 5pound.g1", 0x000001, 0x020000, CRC(fb92b892) SHA1(3cfe1486ee6b312259efda4a1eeb4d415b0c9dc1) )
-	MISSING_SOUND
+	EP_CAHOY_SOUND
 ROM_END
 
 
@@ -6286,6 +6295,17 @@ ROM_START( ep_lla )
 ROM_END
 
 
+#define EP_RLGDT_SOUND \
+	ROM_REGION( 0x200000, "ymz", 0 ) \
+	ROM_LOAD( "rlgdt1_0.s0", 0x000000, 0x100000, CRC(f20867b8) SHA1(13bd978dca616599b3768da482a75fc524c147ce) ) \
+	ROM_LOAD( "rlgdt1_0.s1", 0x080000, 0x100000, CRC(54969491) SHA1(b689da0ec62a7eefa2d9758cddae67a5bdf0c4c7) )
+
+ROM_START( ep_rlgdt )
+	ROM_REGION( 0x080000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "rlgdt1_0.g0", 0x000000, 0x020000, CRC(3133ed91) SHA1(62d665a7ad58686c2b9d6486118dce92de7cbd0d) )
+	ROM_LOAD16_BYTE( "rlgdt1_0.g1", 0x000001, 0x020000, CRC(7f08a205) SHA1(5166d3ff781b645fa02fb7be96a926c65e5b2a93) )
+	EP_RLGDT_SOUND
+ROM_END
 
 
 
@@ -6582,7 +6602,18 @@ ROM_START( ep_snseta ) // why are these larger?
 ROM_END
 
 
+#define EP_TREAS_SOUND \
+	ROM_REGION( 0x100000, "ymz", 0 ) \
+	ROM_LOAD( "treas1_6.s0", 0x000000, 0x080000, CRC(df792dc0) SHA1(96647eb579a3a60f1a4a2bea53d7a13030838437) )
 
+ROM_START( ep_treas )
+	ROM_REGION( 0x080000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "treas1_6.g0", 0x000000, 0x020000, CRC(5b8bab5d) SHA1(a44254d468309f536a1e1e35536328bf3bc02704) )
+	ROM_LOAD16_BYTE( "treas1_6.g1", 0x000001, 0x020000, CRC(752117ed) SHA1(3c8ddf8acd1307749a03e90bd2d76f0b81d6e388) )
+	ROM_LOAD16_BYTE( "treas1_6.g2", 0x040000, 0x020000, CRC(d4f61c7e) SHA1(4f62fca291fcc4b24c3e3bbbbd6b0f5216f3e0ef) )
+	ROM_LOAD16_BYTE( "treas1_6.g3", 0x040001, 0x020000, CRC(8c287556) SHA1(e5c9dc34381c94d3ef4474f47fef119066ee380b) )
+	EP_TREAS_SOUND
+ROM_END
 
 ROM_START( ep_twarp )
 	ROM_REGION( 0x080000, "maincpu", 0 )
@@ -7549,7 +7580,7 @@ GAME( 199?, ep_wipeoe,  ep_wipeo,   maygayep,  maygayep, maygayep_state,  maygay
 GAME( 199?, ep_bbonz,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Maygay",        "Bingo Bonanza (Maygay - Union) (EPOCH) (set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_bbonza,  ep_bbonz,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Maygay",        "Bingo Bonanza (Maygay - Union) (EPOCH) (set 2)",GAME_IS_SKELETON_MECHANICAL )
 
-GAME( 199?, ep_cahoy,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Maygay",        "Cash Ahoy (Maygay) (EPOCH) (set 1)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, ep_cahoy,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Maygay - Eclipse?",        "Cash Ahoy (Maygay - Eclipse?) (EPOCH) (set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_cahoya,  ep_cahoy,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Maygay",        "Cash Ahoy (Maygay) (EPOCH) (set 2)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_cahoyb,  ep_cahoy,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Maygay",        "Cash Ahoy (Maygay) (EPOCH) (set 3)",GAME_IS_SKELETON_MECHANICAL )
 
@@ -7893,6 +7924,8 @@ GAME( 199?, ep_mummyd,  ep_mummy,   maygayep,  maygayep, maygayep_state,  maygay
 GAME( 199?, ep_mummye,  ep_mummy,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Impulse",       "Mummy Talks (Impulse) (EPOCH) (set 6)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_mummyf,  ep_mummy,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Impulse",       "Mummy Talks (Impulse) (EPOCH) (set 7)",GAME_IS_SKELETON_MECHANICAL )
 
+GAME( 199?, ep_rlgdt,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Global",        "Reel Good Time (Rebuild) (Global) (Version 1.0) (EPOCH)",GAME_IS_SKELETON_MECHANICAL )
+
 GAME( 199?, ep_rchik,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Global",        "Rich Chics Club (Global) (EPOCH) (set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_rchika,  ep_rchik,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Global",        "Rich Chics Club (Global) (EPOCH) (set 2)",GAME_IS_SKELETON_MECHANICAL )
 
@@ -8030,11 +8063,14 @@ GAME( 199?, ep_cyce,    ep_cyc,     maygayep,  maygayep, maygayep_state,  maygay
 GAME( 199?, ep_ll,      0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Lucky Ladders (Extreme) (EPOCH) (LULA 0.3, set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_lla,     ep_ll,      maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Lucky Ladders (Extreme) (EPOCH) (LULA 0.3, set 2)",GAME_IS_SKELETON_MECHANICAL )
 
+
 GAME( 199?, ep_redl,    0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Red Line (Extreme) (EPOCH) (RELI 0.1, set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_redla,   ep_redl,    maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Red Line (Extreme) (EPOCH) (RELI 0.1, set 2)",GAME_IS_SKELETON_MECHANICAL )
 
 GAME( 199?, ep_snset,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Sunset Strip (Extreme) (EPOCH) (SUST 0.1, set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_snseta,  ep_snset,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Sunset Strip (Extreme) (EPOCH) (SUST 0.1, set 2)",GAME_IS_SKELETON_MECHANICAL )
+
+GAME( 199?, ep_treas,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Global",        "Treasure Hunt (Global) (EPOCH) (Version 1.6)",GAME_IS_SKELETON_MECHANICAL )
 
 GAME( 199?, ep_twarp,   0,          maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Time Warp (Extreme) (EPOCH) (TWRP 0.1, set 1)",GAME_IS_SKELETON_MECHANICAL )
 GAME( 199?, ep_twarpa,  ep_twarp,   maygayep,  maygayep, maygayep_state,  maygayep, ROT0, "Extreme",       "Time Warp (Extreme) (EPOCH) (TWRP 0.1, set 2)",GAME_IS_SKELETON_MECHANICAL )

@@ -1127,6 +1127,17 @@ ROM_START( cprogolfj ) // version 1-A
 	ROM_LOAD( "dt-113_a.cas",   0x0000, 0x8000, CRC(8408248f) SHA1(8b78c379bf6879916bc9b284d7a0956edfac78be) )
 ROM_END
 
+// version number is DT-1134-A-0 (Japanese, version 4 of Pro Golf, no revision number)
+ROM_START( cprogolf18 )
+	DECOCASS_BIOS_A_ROMS
+
+	ROM_REGION( 0x00020, "dongle", 0 )    /* dongle data */
+	ROM_LOAD( "de-0061-a-0.rom",   0x0000, 0x0020, CRC(1bc9fccb) SHA1(ffc59c7660d5c87a8deca294f80260b6bc7c3027) )
+
+	ROM_REGION( 0x10000, "cassette", 0 )      /* (max) 64k for cassette image */
+	ROM_LOAD( "progolf18.cas",   0x0000, 0x6700, CRC(3024396c) SHA1(c49d878bae46bf8bf0b0b098a5d94d9ec68b526d) )
+ROM_END
+
 /* 14 */
 ROM_START( cdsteljn ) // version 4-A-3
 	DECOCASS_BIOS_A_ROMS
@@ -1659,7 +1670,7 @@ DRIVER_INIT_MEMBER(decocass_state,cdsteljn)
 /* 20 */ GAME( 1982, ctornado,  decocass, ctornado, ctornado, decocass_state, decocass, ROT270, "Data East Corporation", "Tornado (DECO Cassette)", 0 )
 /* 21 */ GAME( 1982, cmissnx,   decocass, cmissnx,  cmissnx, decocass_state,  decocass, ROT270, "Data East Corporation", "Mission-X (DECO Cassette)", 0 )
 /* 22 */ GAME( 1982, cptennis,  decocass, cptennis, decocass, decocass_state, decocass, ROT270, "Data East Corporation", "Pro Tennis (DECO Cassette)", 0 )
-/* 23 */ // 1982.?? 18 Hole Pro Golf
+/* 23 */ GAME( 1982, cprogolf18,cprogolf, cprogolfj,cprogolf, decocass_state, decocass, ROT270, "Data East Corporation", "18 Challenge Pro Golf (DECO Cassette, Japan)", 0 ) // 1982.?? 18 Hole Pro Golf
 /* 24 */ // 1982.07 Tsumego Kaisyou
 /* 25 */ GAME( 1982, cadanglr,  decocass, cfishing, cfishing, decocass_state, decocass, ROT270, "Data East Corporation", "Angler Dangler (DECO Cassette)", 0 )
 /* 25 */ GAME( 1982, cfishing,  cadanglr, cfishing, cfishing, decocass_state, decocass, ROT270, "Data East Corporation", "Fishing (DECO Cassette)", 0 )

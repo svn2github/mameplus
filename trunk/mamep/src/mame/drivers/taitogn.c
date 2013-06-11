@@ -318,16 +318,18 @@ Type 3 (PCMCIA Compact Flash Adaptor + Compact Flash card, sealed together with 
 */
 
 #include "emu.h"
+#include "audio/taito_zm.h"
 #include "cpu/psx/psx.h"
-#include "video/psx.h"
 #include "machine/at28c16.h"
+#include "machine/ataflash.h"
+#include "machine/bankdev.h"
 #include "machine/intelfsh.h"
+#include "machine/mb3773.h"
+#include "machine/rf5c296.h"
 #include "machine/znsec.h"
 #include "machine/zndip.h"
-#include "machine/idectrl.h"
-#include "machine/mb3773.h"
 #include "sound/spu.h"
-#include "audio/taito_zm.h"
+#include "video/psx.h"
 
 class taitogn_state : public driver_device
 {
@@ -337,38 +339,13 @@ public:
 		m_znsec0(*this,"maincpu:sio0:znsec0"),
 		m_znsec1(*this,"maincpu:sio0:znsec1"),
 		m_zndip(*this,"maincpu:sio0:zndip"),
-		m_card(*this,"card"),
 		m_maincpu(*this, "maincpu"),
-		m_mn10200(*this, "mn10200") {
+		m_mn10200(*this, "mn10200"),
+		m_flashbank(*this, "flashbank"),
+		m_mb3773(*this, "mb3773")
+	{
 	}
 
-	required_device<znsec_device> m_znsec0;
-	required_device<znsec_device> m_znsec1;
-	required_device<zndip_device> m_zndip;
-	required_device<ide_controller_device> m_card;
-
-	intel_te28f160_device *m_biosflash;
-	intel_e28f400_device *m_pgmflash;
-	intel_te28f160_device *m_sndflash[3];
-
-	unsigned char m_cis[512];
-	int m_locked;
-
-	unsigned char m_rf5c296_reg;
-
-	UINT8 m_control;
-	UINT16 m_control2;
-	UINT8 m_control3;
-	int m_v;
-
-	UINT8 m_n_znsecsel;
-
-	UINT8 m_coin_info;
-	UINT32 m_mux_data;
-	DECLARE_WRITE16_MEMBER(rf5c296_io_w);
-	DECLARE_READ16_MEMBER(rf5c296_io_r);
-	DECLARE_READ16_MEMBER(rf5c296_mem_r);
-	DECLARE_WRITE16_MEMBER(rf5c296_mem_w);
 	DECLARE_READ8_MEMBER(control_r);
 	DECLARE_WRITE8_MEMBER(control_w);
 	DECLARE_WRITE16_MEMBER(control2_w);
@@ -383,136 +360,30 @@ public:
 	DECLARE_WRITE8_MEMBER(coin_w);
 	DECLARE_READ8_MEMBER(coin_r);
 	DECLARE_READ8_MEMBER(gnet_mahjong_panel_r);
-	DECLARE_DRIVER_INIT(coh3002t_mp);
-	DECLARE_DRIVER_INIT(coh3002t);
 	DECLARE_MACHINE_RESET(coh3002t);
-	void rf5c296_reg_w(ATTR_UNUSED UINT8 reg, UINT8 data);
-	UINT8 rf5c296_reg_r(ATTR_UNUSED UINT8 reg);
-	void install_handlers(int mode);
+
+protected:
+	virtual void driver_start();
+
+private:
+	UINT8 m_control;
+	UINT16 m_control2;
+	UINT8 m_control3;
+	int m_v;
+
+	UINT8 m_n_znsecsel;
+
+	UINT8 m_coin_info;
+
+	required_device<znsec_device> m_znsec0;
+	required_device<znsec_device> m_znsec1;
+	required_device<zndip_device> m_zndip;
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_mn10200;
+	required_device<address_map_bank_device> m_flashbank;
+	required_device<mb3773_device> m_mb3773;
 };
 
-
-// rf5c296 is very inaccurate at that point, it hardcodes the gnet config
-
-void taitogn_state::rf5c296_reg_w(ATTR_UNUSED UINT8 reg, UINT8 data)
-{
-	//  fprintf(stderr, "rf5c296_reg_w %02x, %02x (%s)\n", reg, data, machine().describe_context());
-	switch (reg)
-	{
-		// Interrupt and General Control Register
-		case 0x03:
-			// Check for card reset
-			if (!(data & 0x40))
-			{
-				m_card->reset();
-				m_locked = 0x1ff;
-				m_card->ide_set_gnet_readlock(1);
-			}
-		break;
-
-		default:
-		break;
-	}
-}
-
-UINT8 taitogn_state::rf5c296_reg_r(ATTR_UNUSED UINT8 reg)
-{
-	//  fprintf(stderr, "rf5c296_reg_r %02x (%s)\n", reg, machine().describe_context());
-	return 0x00;
-}
-
-WRITE16_MEMBER(taitogn_state::rf5c296_io_w)
-{
-	if(offset < 4) {
-		ide_controller16_pcmcia_w(m_card, space, offset, data, mem_mask);
-		return;
-	}
-
-	if(offset == 0x3e0/2)
-	{
-		if(ACCESSING_BITS_0_7)
-			m_rf5c296_reg = data;
-		if(ACCESSING_BITS_8_15)
-			rf5c296_reg_w(m_rf5c296_reg, data >> 8);
-	}
-}
-
-READ16_MEMBER(taitogn_state::rf5c296_io_r)
-{
-	if(offset < 4)
-		return ide_controller16_pcmcia_r(m_card, space, offset, mem_mask);
-
-	offset *= 2;
-
-	if(offset == 0x3e0/2)
-	{
-		UINT32 res = 0x0000;
-		if(ACCESSING_BITS_0_7)
-			res |= m_rf5c296_reg;
-		if(ACCESSING_BITS_8_15)
-			res |= rf5c296_reg_r(m_rf5c296_reg) << 8;
-		return res;
-	}
-
-	return 0xffff;
-}
-
-// Hardcoded to reach the pcmcia CIS
-
-READ16_MEMBER(taitogn_state::rf5c296_mem_r)
-{
-	if(offset < 0x100)
-		return m_cis[offset];
-
-	switch(offset) {
-	case 0x100: return 0x0041;
-	case 0x101: return 0x0080;
-	case 0x102: return 0x002e;
-	case 0x201: return m_locked ? 0x0001 : 0;
-	default:
-		return 0;
-	}
-}
-
-WRITE16_MEMBER(taitogn_state::rf5c296_mem_w)
-{
-	if(offset >= 0x280 && offset <= 0x288) {
-		dynamic_buffer key(get_disk_handle(machine(), ":drive_0")->hunk_bytes());
-
-		int pos = offset - 0x280;
-		UINT8 v = data, k;
-		get_disk_handle(machine(), ":drive_0")->read_metadata(HARD_DISK_KEY_METADATA_TAG, 0, key);
-		k = pos < key.count() ? key[pos] : 0;
-		if(v == k)
-			m_locked &= ~(1 << pos);
-		else
-			m_locked |= 1 << pos;
-		if (!m_locked)
-		{
-			m_card->ide_set_gnet_readlock(0);
-		}
-	}
-}
-
-void taitogn_state::install_handlers(int mode)
-{
-	address_space &a = m_maincpu->space(AS_PROGRAM);
-	if(mode == 0) {
-		// Mode 0 has access to the subbios, the mn102 flash and the rf5c296 mem zone
-		a.install_readwrite_handler(0x1f000000, 0x1f1fffff, read16_delegate(FUNC(intelfsh16_device::read),m_biosflash), write16_delegate(FUNC(intel_te28f160_device::write),m_biosflash), 0xffffffff);
-		a.install_readwrite_handler(0x1f200000, 0x1f2fffff, read16_delegate(FUNC(taitogn_state::rf5c296_mem_r),this), write16_delegate(FUNC(taitogn_state::rf5c296_mem_w),this), 0xffffffff);
-		a.install_readwrite_handler(0x1f300000, 0x1f37ffff, read16_delegate(FUNC(intelfsh16_device::read),m_pgmflash), write16_delegate(FUNC(intelfsh16_device::write),m_pgmflash), 0xffffffff);
-		a.nop_readwrite(0x1f380000, 0x1f5fffff);
-
-	} else {
-		// Mode 1 has access to the 3 samples flashes
-		a.install_readwrite_handler(0x1f000000, 0x1f1fffff, read16_delegate(FUNC(intelfsh16_device::read),m_sndflash[0]), write16_delegate(FUNC(intelfsh16_device::write),m_sndflash[0]), 0xffffffff);
-		a.install_readwrite_handler(0x1f200000, 0x1f3fffff, read16_delegate(FUNC(intelfsh16_device::read),m_sndflash[1]), write16_delegate(FUNC(intelfsh16_device::write),m_sndflash[1]), 0xffffffff);
-		a.install_readwrite_handler(0x1f400000, 0x1f5fffff, read16_delegate(FUNC(intelfsh16_device::read),m_sndflash[2]), write16_delegate(FUNC(intelfsh16_device::write),m_sndflash[2]), 0xffffffff);
-	}
-}
 
 // Misc. controls
 
@@ -527,15 +398,9 @@ WRITE8_MEMBER(taitogn_state::control_w)
 	// 20 = watchdog
 	// 04 = select bank
 
-	// According to the rom code, bits 1-0 may be part of the bank
-	// selection too, but they're always 0.
-
-	UINT32 p = m_control;
-	device_t *mb3773 = machine().device("mb3773");
-
 	COMBINE_DATA(&m_control);
 
-	mb3773_set_ck(mb3773, (m_control & 0x20) >> 5);
+	m_mb3773->write_line_ck((data & 0x20) >> 5);
 
 #if 0
 	if((p ^ control) & ~0x20)
@@ -550,8 +415,9 @@ WRITE8_MEMBER(taitogn_state::control_w)
 				machine().describe_context());
 #endif
 
-	if((p ^ m_control) & 0x04)
-		install_handlers(m_control & 4 ? 1 : 0);
+	// According to the rom code, bits 1-0 may be part of the bank
+	// selection too, but they're always 0.
+	m_flashbank->set_bank(m_control & 4);
 }
 
 WRITE16_MEMBER(taitogn_state::control2_w)
@@ -665,10 +531,7 @@ READ8_MEMBER(taitogn_state::coin_r)
 /* mahjong panel handler (for Usagi & Mahjong Oh) */
 READ8_MEMBER(taitogn_state::gnet_mahjong_panel_r)
 {
-	m_mux_data = m_coin_info;
-	m_mux_data &= 0xcc;
-
-	switch(m_mux_data)
+	switch(m_coin_info & 0xcc)
 	{
 		case 0x04: return ioport("KEY0")->read();
 		case 0x08: return ioport("KEY1")->read();
@@ -682,46 +545,22 @@ READ8_MEMBER(taitogn_state::gnet_mahjong_panel_r)
 
 // Init and reset
 
-DRIVER_INIT_MEMBER(taitogn_state,coh3002t)
+void taitogn_state::driver_start()
 {
-	m_biosflash = machine().device<intel_te28f160_device>("biosflash");
-	m_pgmflash = machine().device<intel_e28f400_device>("pgmflash");
-	m_sndflash[0] = machine().device<intel_te28f160_device>("sndflash0");
-	m_sndflash[1] = machine().device<intel_te28f160_device>("sndflash1");
-	m_sndflash[2] = machine().device<intel_te28f160_device>("sndflash2");
-
 	m_znsec0->init(tt10);
 	m_znsec1->init(tt16);
-
-	UINT32 metalength;
-	memset(m_cis, 0xff, 512);
-	if (get_disk_handle(machine(), ":drive_0") != NULL)
-		get_disk_handle(machine(), ":drive_0")->read_metadata(PCMCIA_CIS_METADATA_TAG, 0, m_cis, 512, metalength);
-}
-
-DRIVER_INIT_MEMBER(taitogn_state,coh3002t_mp)
-{
-	DRIVER_INIT_CALL(coh3002t);
-	m_maincpu->space(AS_PROGRAM).install_read_handler(0x1fa10100, 0x1fa10103, read8_delegate(FUNC(taitogn_state::gnet_mahjong_panel_r),this), 0x000000ff);
 }
 
 MACHINE_RESET_MEMBER(taitogn_state,coh3002t)
 {
-	m_locked = 0x1ff;
-	install_handlers(0);
 	m_control = 0;
-
-	m_card->reset();
-	m_card->ide_set_gnet_readlock(1);
 
 	// halt sound CPU since it has no valid program at start
 	m_mn10200->set_input_line(INPUT_LINE_RESET,ASSERT_LINE); /* MCU */
 }
 
 static ADDRESS_MAP_START( taitogn_map, AS_PROGRAM, 32, taitogn_state )
-//  AM_RANGE(0x1f000000, 0x1f1fffff) AM_DEVREADWRITE16("sndflash0", intelfsh16_device, read, write, 0xffffffff)
-//  AM_RANGE(0x1f200000, 0x1f3fffff) AM_DEVREADWRITE16("sndflash1", intelfsh16_device, read, write, 0xffffffff)
-//  AM_RANGE(0x1f400000, 0x1f5fffff) AM_DEVREADWRITE16("sndflash2", intelfsh16_device, read, write, 0xffffffff)
+	AM_RANGE(0x1f000000, 0x1f7fffff) AM_DEVICE16("flashbank", address_map_bank_device, amap16, 0xffffffff)
 	AM_RANGE(0x1fa00000, 0x1fa00003) AM_READ_PORT("P1")
 	AM_RANGE(0x1fa00100, 0x1fa00103) AM_READ_PORT("P2")
 	AM_RANGE(0x1fa00200, 0x1fa00203) AM_READ_PORT("SERVICE")
@@ -735,13 +574,33 @@ static ADDRESS_MAP_START( taitogn_map, AS_PROGRAM, 32, taitogn_state )
 	AM_RANGE(0x1fa51c00, 0x1fa51dff) AM_READNOP // systematic read at spu_address + 250000, result dropped, maybe other accesses
 	AM_RANGE(0x1fa60000, 0x1fa60003) AM_READ16(hack1_r, 0xffffffff)
 	AM_RANGE(0x1faf0000, 0x1faf07ff) AM_DEVREADWRITE8("at28c16", at28c16_device, read, write, 0xffffffff) /* eeprom */
-	AM_RANGE(0x1fb00000, 0x1fb0ffff) AM_READWRITE16(rf5c296_io_r, rf5c296_io_w, 0xffffffff)
+	AM_RANGE(0x1fb00000, 0x1fb0ffff) AM_DEVREADWRITE16("rf5c296", rf5c296_device, io_r, io_w, 0xffffffff)
 	AM_RANGE(0x1fb40000, 0x1fb40003) AM_READWRITE8(control_r, control_w, 0x000000ff)
 	AM_RANGE(0x1fb60000, 0x1fb60003) AM_WRITE16(control2_w, 0x0000ffff)
 	AM_RANGE(0x1fb70000, 0x1fb70003) AM_READWRITE16(gn_1fb70000_r, gn_1fb70000_w, 0x0000ffff)
 	AM_RANGE(0x1fbe0000, 0x1fbe01ff) AM_RAM // 256 bytes com zone with the mn102, low bytes of words only, with additional comm at 1fb80000
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( flashbank_map, AS_PROGRAM, 16, taitogn_state )
+	// Bank 0 has access to the subbios, the mn102 flash and the rf5c296 mem zone
+	AM_RANGE(0x00000000, 0x001fffff) AM_DEVREADWRITE("biosflash", intelfsh16_device, read, write)
+	AM_RANGE(0x00200000, 0x002fffff) AM_DEVREADWRITE("rf5c296", rf5c296_device, mem_r, mem_w )
+	AM_RANGE(0x00300000, 0x0037ffff) AM_DEVREADWRITE("pgmflash", intelfsh16_device, read, write)
+
+	// Bank 1 has access to the 3 samples flashes
+	AM_RANGE(0x08000000, 0x081fffff) AM_DEVREADWRITE("sndflash0", intelfsh16_device, read, write)
+	AM_RANGE(0x08200000, 0x083fffff) AM_DEVREADWRITE("sndflash1", intelfsh16_device, read, write)
+	AM_RANGE(0x08400000, 0x085fffff) AM_DEVREADWRITE("sndflash2", intelfsh16_device, read, write)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( taitogn_mp_map, AS_PROGRAM, 32, taitogn_state )
+	AM_RANGE(0x1fa10100, 0x1fa10103) AM_READ8(gnet_mahjong_panel_r, 0x000000ff)
+	AM_IMPORT_FROM(taitogn_map)
+ADDRESS_MAP_END
+
+SLOT_INTERFACE_START(slot_ataflash)
+	SLOT_INTERFACE("ataflash", ATA_FLASH_PCCARD)
+SLOT_INTERFACE_END
 
 static MACHINE_CONFIG_START( coh3002t, taitogn_state )
 	/* basic machine hardware */
@@ -769,7 +628,11 @@ static MACHINE_CONFIG_START( coh3002t, taitogn_state )
 	MCFG_MACHINE_RESET_OVERRIDE(taitogn_state, coh3002t )
 
 	MCFG_AT28C16_ADD( "at28c16", 0 )
-	MCFG_IDE_CONTROLLER_ADD( "card", ide_devices, "hdd", NULL, true)
+	MCFG_DEVICE_ADD("rf5c296", RF5C296, 0)
+	MCFG_RF5C296_SLOT(":pccard")
+
+	MCFG_DEVICE_ADD("pccard", PCCARD_SLOT, 0)
+	MCFG_DEVICE_SLOT_INTERFACE(slot_ataflash, "ataflash", false)
 
 	MCFG_MB3773_ADD("mb3773")
 
@@ -779,7 +642,18 @@ static MACHINE_CONFIG_START( coh3002t, taitogn_state )
 	MCFG_INTEL_TE28F160_ADD("sndflash1")
 	MCFG_INTEL_TE28F160_ADD("sndflash2")
 
+	MCFG_DEVICE_ADD("flashbank", ADDRESS_MAP_BANK, 0)
+	MCFG_DEVICE_PROGRAM_MAP(flashbank_map)
+	MCFG_ADDRESS_MAP_BANK_ENDIANNESS(ENDIANNESS_LITTLE)
+	MCFG_ADDRESS_MAP_BANK_DATABUS_WIDTH(16)
+	MCFG_ADDRESS_MAP_BANK_STRIDE(0x2000000)
+
 	MCFG_FRAGMENT_ADD( taito_zoom_sound )
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( coh3002t_mp, coh3002t )
+	MCFG_CPU_MODIFY( "maincpu" )
+	MCFG_CPU_PROGRAM_MAP(taitogn_mp_map)
 MACHINE_CONFIG_END
 
 static INPUT_PORTS_START( coh3002t )
@@ -921,7 +795,7 @@ ROM_END
 ROM_START(raycris)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "raycris", 0, SHA1(015cb0e6c4421cc38809de28c4793b4491386aee))
 ROM_END
 
@@ -929,28 +803,28 @@ ROM_END
 ROM_START(gobyrc)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "gobyrc", 0, SHA1(0bee1f495fc8b033fd56aad9260ae94abb35eb58))
 ROM_END
 
 ROM_START(rcdego)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "rcdego", 0, SHA1(9e177f2a3954cfea0c8c5a288e116324d10f5dd1))
 ROM_END
 
 ROM_START(chaoshea)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "chaosheat", 0, SHA1(c13b7d7025eee05f1f696d108801c7bafb3f1356))
 ROM_END
 
 ROM_START(chaosheaj)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "chaosheatj", 0, SHA1(2f211ac08675ea8ec33c7659a13951db94eaa627))
 ROM_END
 
@@ -958,7 +832,7 @@ ROM_END
 ROM_START(flipmaze)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "flipmaze", 0, SHA1(423b6c06f4f2d9a608ce20b61a3ac11687d22c40) )
 ROM_END
 
@@ -966,42 +840,42 @@ ROM_END
 ROM_START(spuzbobl)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "spuzbobl", 0, SHA1(1b1c72fb7e5656021485fefaef8f2ba48e2b4ea8))
 ROM_END
 
 ROM_START(spuzboblj)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "spuzbobj", 0, SHA1(dac433cf88543d2499bf797d7406b82ae4338726))
 ROM_END
 
 ROM_START(soutenry)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "soutenry", 0, SHA1(9204d0be833d29f37b8cd3fbdf09da69b622254b))
 ROM_END
 
 ROM_START(shanghss)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "shanghss", 0, SHA1(7964f71ec5c81d2120d83b63a82f97fbad5a8e6d))
 ROM_END
 
 ROM_START(sianniv)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "sianniv", 0, SHA1(1e08b813190a9e1baf29bc16884172d6c8da7ae3))
 ROM_END
 
 ROM_START(kollon)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "kollon", 0, SHA1(d8ea5b5b0ee99004b16ef89883e23de6c7ddd7ce))
 ROM_END
 
@@ -1009,14 +883,14 @@ ROM_START(kollonc)
 	TAITOGNET_BIOS
 	ROM_DEFAULT_BIOS( "v2" )
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "kollonc", 0, SHA1(ce62181659701cfb8f7c564870ab902be4d8e060)) /* Original Taito Compact Flash version */
 ROM_END
 
 ROM_START(shikigam)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "shikigam", 0, SHA1(fa49a0bc47f5cb7c30d7e49e2c3696b21bafb840))
 ROM_END
 
@@ -1026,7 +900,7 @@ ROM_END
 ROM_START(otenamih)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "otenamih", 0, SHA1(b3babe3a1876c43745616ee1e7d87276ce7dad0b) )
 ROM_END
 
@@ -1034,28 +908,28 @@ ROM_END
 ROM_START(psyvaria)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "psyvaria", 0,  SHA1(b981a42a10069322b77f7a268beae1d409b4156d))
 ROM_END
 
 ROM_START(psyvarrv)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "psyvarrv", 0, SHA1(277c4f52502bcd7acc1889840962ec80d56465f3))
 ROM_END
 
 ROM_START(zooo)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "zooo", 0, SHA1(e275b3141b2bc49142990e6b497a5394a314a30b))
 ROM_END
 
 ROM_START(zokuoten)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "zokuoten", 0, SHA1(5ce13db00518f96af64935176c71ec68d2a51938))
 ROM_END
 
@@ -1063,7 +937,7 @@ ROM_START(otenamhf)
 	TAITOGNET_BIOS
 	ROM_DEFAULT_BIOS( "v2" )
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "otenamhf", 0, SHA1(5b15c33bf401e5546d78e905f538513d6ffcf562)) /* Original Taito Compact Flash version */
 ROM_END
 
@@ -1075,14 +949,14 @@ ROM_END
 ROM_START(nightrai)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "nightrai", 0, SHA1(74d0458f851cbcf10453c5cc4c47bb4388244cdf))
 ROM_END
 
 ROM_START(otenki)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "otenki", 0, SHA1(7e745ca4c4570215f452fd09cdd56a42c39caeba))
 ROM_END
 
@@ -1091,21 +965,21 @@ ROM_END
 ROM_START(usagi)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "usagi", 0, SHA1(edf9dd271957f6cb06feed238ae21100514bef8e))
 ROM_END
 
 ROM_START(mahjngoh)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "mahjngoh", 0, SHA1(3ef1110d15582d7c0187438d7ad61765dd121cff))
 ROM_END
 
 ROM_START(shangtou)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "shanghaito", 0, SHA1(9901db5a9aae77e3af4157aa2c601eaab5b7ca85) )
 ROM_END
 
@@ -1115,7 +989,7 @@ ROM_END
 ROM_START(xiistag)
 	TAITOGNET_BIOS
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "pccard:ataflash:drive_0" )
 	DISK_IMAGE( "xiistag", 0, SHA1(586e37c8d926293b2bd928e5f0d693910cfb05a2))
 ROM_END
 
@@ -1123,35 +997,35 @@ ROM_END
 /* A dummy driver, so that the bios can be debugged, and to serve as */
 /* parent for the coh-3002t.353 file, so that we do not have to include */
 /* it in every zip file */
-GAME( 1997, taitogn,  0,        coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Taito GNET", GAME_IS_BIOS_ROOT )
+GAME( 1997, taitogn,  0,        coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Taito GNET", GAME_IS_BIOS_ROOT )
 
-GAME( 1998, chaoshea, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Chaos Heat (V2.09O)", GAME_IMPERFECT_SOUND )
-GAME( 1998, chaosheaj,chaoshea, coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Chaos Heat (V2.08J)", GAME_IMPERFECT_SOUND )
-GAME( 1998, raycris,  taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Ray Crisis (V2.03J)", GAME_IMPERFECT_SOUND )
-GAME( 1999, spuzbobl, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Super Puzzle Bobble (V2.05O)", GAME_IMPERFECT_SOUND )
-GAME( 1999, spuzboblj,spuzbobl, coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Super Puzzle Bobble (V2.04J)", GAME_IMPERFECT_SOUND )
-GAME( 1999, gobyrc,   taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Go By RC (V2.03O)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // custom inputs need calibrating
-GAME( 1999, rcdego,   gobyrc,   coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "RC De Go (V2.03J)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // custom inputs need calibrating
-GAME( 1999, flipmaze, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito / Moss", "Flip Maze (V2.04J)", GAME_IMPERFECT_SOUND )
-GAME( 2001, shikigam, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT270, "Alfa System / Taito", "Shikigami no Shiro (V2.03J)", GAME_IMPERFECT_SOUND )
-GAME( 2003, sianniv,  taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT270, "Taito", "Space Invaders Anniversary (V2.02J)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // IRQ at the wrong time
-GAME( 2003, kollon,   taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Kollon (V2.04J)", GAME_IMPERFECT_SOUND )
-GAME( 2003, kollonc,  kollon,   coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Taito", "Kollon (V2.04JC)", GAME_IMPERFECT_SOUND )
+GAME( 1998, chaoshea, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Chaos Heat (V2.09O)", GAME_IMPERFECT_SOUND )
+GAME( 1998, chaosheaj,chaoshea, coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Chaos Heat (V2.08J)", GAME_IMPERFECT_SOUND )
+GAME( 1998, raycris,  taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Ray Crisis (V2.03J)", GAME_IMPERFECT_SOUND )
+GAME( 1999, spuzbobl, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Super Puzzle Bobble (V2.05O)", GAME_IMPERFECT_SOUND )
+GAME( 1999, spuzboblj,spuzbobl, coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Super Puzzle Bobble (V2.04J)", GAME_IMPERFECT_SOUND )
+GAME( 1999, gobyrc,   taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Go By RC (V2.03O)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // custom inputs need calibrating
+GAME( 1999, rcdego,   gobyrc,   coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "RC De Go (V2.03J)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // custom inputs need calibrating
+GAME( 1999, flipmaze, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito / Moss", "Flip Maze (V2.04J)", GAME_IMPERFECT_SOUND )
+GAME( 2001, shikigam, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT270, "Alfa System / Taito", "Shikigami no Shiro (V2.03J)", GAME_IMPERFECT_SOUND )
+GAME( 2003, sianniv,  taitogn,  coh3002t, coh3002t, driver_device, 0, ROT270, "Taito", "Space Invaders Anniversary (V2.02J)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // IRQ at the wrong time
+GAME( 2003, kollon,   taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Kollon (V2.04J)", GAME_IMPERFECT_SOUND )
+GAME( 2003, kollonc,  kollon,   coh3002t, coh3002t, driver_device, 0, ROT0,   "Taito", "Kollon (V2.04JC)", GAME_IMPERFECT_SOUND )
 
-GAME( 1999, otenamih, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Success", "Otenami Haiken (V2.04J)", GAME_IMPERFECT_SOUND )
-GAME( 2005, otenamhf, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Success / Warashi", "Otenami Haiken Final (V2.07JC)", GAME_IMPERFECT_SOUND )
-GAME( 2000, psyvaria, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT270, "Success", "Psyvariar -Medium Unit- (V2.04J)", GAME_IMPERFECT_SOUND )
-GAME( 2000, psyvarrv, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT270, "Success", "Psyvariar -Revision- (V2.04J)", GAME_IMPERFECT_SOUND )
-GAME( 2000, zokuoten, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Success", "Zoku Otenamihaiken (V2.03J)", GAME_IMPERFECT_SOUND )
-GAME( 2004, zooo,     taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Success", "Zooo (V2.01J)", GAME_IMPERFECT_SOUND )
+GAME( 1999, otenamih, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Success", "Otenami Haiken (V2.04J)", GAME_IMPERFECT_SOUND )
+GAME( 2005, otenamhf, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Success / Warashi", "Otenami Haiken Final (V2.07JC)", GAME_IMPERFECT_SOUND )
+GAME( 2000, psyvaria, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT270, "Success", "Psyvariar -Medium Unit- (V2.04J)", GAME_IMPERFECT_SOUND )
+GAME( 2000, psyvarrv, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT270, "Success", "Psyvariar -Revision- (V2.04J)", GAME_IMPERFECT_SOUND )
+GAME( 2000, zokuoten, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Success", "Zoku Otenamihaiken (V2.03J)", GAME_IMPERFECT_SOUND )
+GAME( 2004, zooo,     taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Success", "Zooo (V2.01J)", GAME_IMPERFECT_SOUND )
 
-GAME( 1999, mahjngoh, taitogn,  coh3002t, coh3002t_mp, taitogn_state, coh3002t_mp, ROT0, "Warashi / Mahjong Kobo / Taito", "Mahjong Oh (V2.06J)", GAME_IMPERFECT_SOUND )
-GAME( 2001, usagi,    taitogn,  coh3002t, coh3002t_mp, taitogn_state, coh3002t_mp, ROT0, "Warashi / Mahjong Kobo / Taito", "Usagi (V2.02J)", GAME_IMPERFECT_SOUND )
-GAME( 2000, soutenry, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Warashi", "Soutenryu (V2.07J)", GAME_IMPERFECT_SOUND )
-GAME( 2000, shanghss, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Warashi", "Shanghai Shoryu Sairin (V2.03J)", GAME_IMPERFECT_SOUND )
-GAME( 2002, shangtou, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Warashi / Sunsoft / Taito", "Shanghai Sangokuhai Tougi (Ver 2.01J)", GAME_IMPERFECT_SOUND )
+GAME( 1999, mahjngoh, taitogn,  coh3002t_mp, coh3002t_mp, driver_device, 0, ROT0, "Warashi / Mahjong Kobo / Taito", "Mahjong Oh (V2.06J)", GAME_IMPERFECT_SOUND )
+GAME( 2001, usagi,    taitogn,  coh3002t_mp, coh3002t_mp, driver_device, 0, ROT0, "Warashi / Mahjong Kobo / Taito", "Usagi (V2.02J)", GAME_IMPERFECT_SOUND )
+GAME( 2000, soutenry, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Warashi", "Soutenryu (V2.07J)", GAME_IMPERFECT_SOUND )
+GAME( 2000, shanghss, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Warashi", "Shanghai Shoryu Sairin (V2.03J)", GAME_IMPERFECT_SOUND )
+GAME( 2002, shangtou, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Warashi / Sunsoft / Taito", "Shanghai Sangokuhai Tougi (Ver 2.01J)", GAME_IMPERFECT_SOUND )
 
-GAME( 2001, nightrai, taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Takumi", "Night Raid (V2.03J)", GAME_IMPERFECT_SOUND )
-GAME( 2001, otenki,   taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT0,   "Takumi", "Otenki Kororin (V2.01J)", GAME_IMPERFECT_SOUND )
+GAME( 2001, nightrai, taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Takumi", "Night Raid (V2.03J)", GAME_IMPERFECT_SOUND )
+GAME( 2001, otenki,   taitogn,  coh3002t, coh3002t, driver_device, 0, ROT0,   "Takumi", "Otenki Kororin (V2.01J)", GAME_IMPERFECT_SOUND )
 
-GAME( 2002, xiistag,  taitogn,  coh3002t, coh3002t, taitogn_state, coh3002t, ROT270, "Triangle Service", "XII Stag (V2.01J)", GAME_IMPERFECT_SOUND )
+GAME( 2002, xiistag,  taitogn,  coh3002t, coh3002t, driver_device, 0, ROT270, "Triangle Service", "XII Stag (V2.01J)", GAME_IMPERFECT_SOUND )

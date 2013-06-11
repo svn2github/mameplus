@@ -250,9 +250,16 @@ public:
 		m_audiocpu(*this, "audiocpu"),
 		m_dsp(*this, "dsp"),
 		m_dsp2(*this, "dsp2"),
+		m_adc1038(*this, "adc1038"),
 		m_eeprom(*this, "eeprom")  { }
 
 	required_shared_ptr<UINT32> m_work_ram;
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device<cpu_device> m_dsp;
+	optional_device<cpu_device> m_dsp2;
+	required_device<adc1038_device> m_adc1038;
+	required_device<eeprom_device> m_eeprom;
 	UINT32 *m_sharc_dataram_0;
 	UINT32 *m_sharc_dataram_1;
 	DECLARE_WRITE32_MEMBER(paletteram32_w);
@@ -278,11 +285,6 @@ public:
 	DECLARE_MACHINE_RESET(gticlub);
 	DECLARE_MACHINE_RESET(hangplt);
 	INTERRUPT_GEN_MEMBER(gticlub_vblank);
-	required_device<cpu_device> m_maincpu;
-	required_device<cpu_device> m_audiocpu;
-	required_device<cpu_device> m_dsp;
-	optional_device<cpu_device> m_dsp2;
-	required_device<eeprom_device> m_eeprom;
 
 protected:
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
@@ -363,7 +365,6 @@ static const eeprom_interface eeprom_intf =
 READ8_MEMBER(gticlub_state::sysreg_r)
 {
 	static const char *const portnames[] = { "IN0", "IN1", "IN2", "IN3" };
-	device_t *adc1038 = machine().device("adc1038");
 	switch (offset)
 	{
 		case 0:
@@ -372,7 +373,7 @@ READ8_MEMBER(gticlub_state::sysreg_r)
 			return ioport(portnames[offset])->read();
 
 		case 2:
-			return adc1038_sars_read(adc1038) << 7;
+			return m_adc1038->sars_read() << 7;
 
 		case 4:
 		{
@@ -383,7 +384,7 @@ READ8_MEMBER(gticlub_state::sysreg_r)
 			// e = EEPROM data out
 
 			UINT32 eeprom_bit = (m_eeprom->read_bit() << 1);
-			UINT32 adc_bit = (adc1038_do_read(adc1038) << 2);
+			UINT32 adc_bit = (m_adc1038->do_read() << 2);
 			return (eeprom_bit | adc_bit);
 		}
 
@@ -396,7 +397,6 @@ READ8_MEMBER(gticlub_state::sysreg_r)
 
 WRITE8_MEMBER(gticlub_state::sysreg_w)
 {
-	device_t *adc1038 = machine().device("adc1038");
 	switch (offset)
 	{
 		case 0:
@@ -417,8 +417,8 @@ WRITE8_MEMBER(gticlub_state::sysreg_w)
 			if (data & 0x40)    /* CG Board 0 IRQ Ack */
 				m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 
-			adc1038_di_write(adc1038, (data >> 0) & 1);
-			adc1038_clk_write(adc1038, (data >> 1) & 1);
+			m_adc1038->di_write((data >> 0) & 1);
+			m_adc1038->clk_write((data >> 1) & 1);
 
 			set_cgboard_id((data >> 4) & 0x3);
 			break;
@@ -835,14 +835,14 @@ MACHINE_RESET_MEMBER(gticlub_state,gticlub)
 static MACHINE_CONFIG_START( gticlub, gticlub_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", PPC403GA, 64000000/2)   /* PowerPC 403GA 32MHz */
+	MCFG_CPU_ADD("maincpu", PPC403GA, XTAL_64MHz/2)   /* PowerPC 403GA 32MHz */
 	MCFG_CPU_PROGRAM_MAP(gticlub_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", gticlub_state,  gticlub_vblank)
 
-	MCFG_CPU_ADD("audiocpu", M68000, 64000000/4)    /* 16MHz */
+	MCFG_CPU_ADD("audiocpu", M68000, XTAL_64MHz/4)    /* 16MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
-	MCFG_CPU_ADD("dsp", ADSP21062, 36000000)
+	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(sharc_map)
 
@@ -870,11 +870,11 @@ static MACHINE_CONFIG_START( gticlub, gticlub_state )
 
 	MCFG_K001604_ADD("k001604_1", gticlub_k001604_intf)
 
-	MCFG_K056800_ADD("k056800", gticlub_k056800_interface, 64000000/4)
+	MCFG_K056800_ADD("k056800", gticlub_k056800_interface, XTAL_64MHz/4)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_RF5C400_ADD("rfsnd", 33868800/2)
+	MCFG_RF5C400_ADD("rfsnd", XTAL_33_8688MHz/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -939,17 +939,17 @@ static const voodoo_config voodoo_r_intf =
 static MACHINE_CONFIG_START( hangplt, gticlub_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", PPC403GA, 64000000/2)   /* PowerPC 403GA 32MHz */
+	MCFG_CPU_ADD("maincpu", PPC403GA, XTAL_64MHz/2)   /* PowerPC 403GA 32MHz */
 	MCFG_CPU_PROGRAM_MAP(gticlub_map)
 
-	MCFG_CPU_ADD("audiocpu", M68000, 64000000/4)    /* 16MHz */
+	MCFG_CPU_ADD("audiocpu", M68000, XTAL_64MHz/4)    /* 16MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
-	MCFG_CPU_ADD("dsp", ADSP21062, 36000000)
+	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(hangplt_sharc0_map)
 
-	MCFG_CPU_ADD("dsp2", ADSP21062, 36000000)
+	MCFG_CPU_ADD("dsp2", ADSP21062, XTAL_36MHz)
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(hangplt_sharc1_map)
 
@@ -987,11 +987,11 @@ static MACHINE_CONFIG_START( hangplt, gticlub_state )
 	MCFG_K001604_ADD("k001604_1", hangplt_k001604_intf_l)
 	MCFG_K001604_ADD("k001604_2", hangplt_k001604_intf_r)
 
-	MCFG_K056800_ADD("k056800", gticlub_k056800_interface, 64000000/4)
+	MCFG_K056800_ADD("k056800", gticlub_k056800_interface, XTAL_64MHz/4)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_RF5C400_ADD("rfsnd", 33868800/2)
+	MCFG_RF5C400_ADD("rfsnd", XTAL_33_8688MHz/2)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END

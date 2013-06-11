@@ -7,7 +7,6 @@
 #include "emu.h"
 #include "debugger.h"
 #include "midwayic.h"
-#include "machine/idectrl.h"
 #include "audio/cage.h"
 #include "audio/dcs.h"
 
@@ -1046,47 +1045,4 @@ WRITE32_HANDLER( midway_ioasic_w )
 		default:
 			break;
 	}
-}
-
-
-
-/*************************************
- *
- *  The IDE ASIC was used on War Gods
- *  and Killer Instinct to map the IDE
- *  registers
- *
- *************************************/
-
-READ32_DEVICE_HANDLER( midway_ide_asic_r )
-{
-	/* convert to standard IDE offsets */
-	offs_t ideoffs = 0x1f0/4 + (offset >> 2);
-	UINT8 shift = 8 * (offset & 3);
-	UINT32 result;
-
-	/* offset 0 is a special case */
-	if (offset == 0)
-		result = ide_controller32_r(device, space, ideoffs, 0x0000ffff);
-
-	/* everything else is byte-sized */
-	else
-		result = ide_controller32_r(device, space, ideoffs, 0xff << shift) >> shift;
-	return result;
-}
-
-
-WRITE32_DEVICE_HANDLER( midway_ide_asic_w )
-{
-	/* convert to standard IDE offsets */
-	offs_t ideoffs = 0x1f0/4 + (offset >> 2);
-	UINT8 shift = 8 * (offset & 3);
-
-	/* offset 0 is a special case */
-	if (offset == 0)
-		ide_controller32_w(device, space, ideoffs, data, 0x0000ffff);
-
-	/* everything else is byte-sized */
-	else
-		ide_controller32_w(device, space, ideoffs, data << shift, 0xff << shift);
 }

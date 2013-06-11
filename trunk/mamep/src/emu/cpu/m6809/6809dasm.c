@@ -370,22 +370,11 @@ CPU_DISASSEMBLE( m6809 )
 	const UINT8 *operandarray;
 	unsigned int ea, flags;
 	int numoperands, offset, indirect;
-	bool encrypt_only_first_byte = false;
-	m6809_base_device *m6809 = static_cast<m6809_base_device *>(device);
-	if (m6809 != NULL)
-	{
-		m6809_config &config = static_cast<m6809_config &>(*m6809);
-		encrypt_only_first_byte = config.m_encrypt_only_first_byte;
-	}
-
 	int i, p = 0, page = 0, opcode_found = FALSE;
 
 	do
 	{
-		if (encrypt_only_first_byte)
-			opcode = page == 0 ? oprom[p++] :  opram[p++];
-		else
-			opcode = oprom[p++];
+		opcode = oprom[p++];
 
 		for (i = 0; i < m6809_numops[page]; i++)
 			if (m6809_pgpointers[page][i].opcode == opcode)

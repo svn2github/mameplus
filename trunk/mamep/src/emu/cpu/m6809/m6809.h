@@ -13,25 +13,10 @@
 
 
 //**************************************************************************
-//  INTERFACE CONFIGURATION MACROS
-//**************************************************************************
-
-#define MCFG_CPU_M6809_CONFIG(_config) \
-	m6809_base_device::static_set_config(*device, _config);
-
-
-//**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
 
 class m6809_device;
-
-// ======================> m6809_config
-
-struct m6809_config
-{
-	bool m_encrypt_only_first_byte;
-};
 
 
 // device type definition
@@ -41,15 +26,11 @@ extern const device_type M6809E;
 // ======================> m6809_base_device
 
 // Used by core CPU interface
-class m6809_base_device : public cpu_device,
-							public m6809_config
+class m6809_base_device : public cpu_device
 {
 public:
 	// construction/destruction
 	m6809_base_device(const machine_config &mconfig, const char *name, const char *tag, device_t *owner, UINT32 clock, const device_type type, int divider);
-
-	// inline configuration helpers
-	static void static_set_config(device_t &device, const m6809_config &config);
 
 	DECLARE_WRITE_LINE_MEMBER( irq_line );
 	DECLARE_WRITE_LINE_MEMBER( firq_line );
