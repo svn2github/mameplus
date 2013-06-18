@@ -459,6 +459,13 @@ ifneq ($(BUILD_JPEGLIB),1)
 DEFS += -DUSE_SYSTEM_JPEGLIB
 endif
 
+# disable initialization of memory in malloc overload
+ifdef SANITIZE
+ifneq (,$(findstring memory,$(SANITIZE)))
+DEFS += -DNO_MEMORY_INITIALIZATION
+endif
+endif
+
 ifneq ($(USE_UI_COLOR_DISPLAY),)
 DEFS += -DUI_COLOR_DISPLAY
 endif
@@ -518,7 +525,6 @@ endif
 ifneq ($(USE_HISCORE),)
 DEFS += -DUSE_HISCORE
 endif
-
 
 
 #-------------------------------------------------
@@ -617,6 +623,11 @@ CCOMFLAGS += -fsanitize=$(SANITIZE)
 ifneq (,$(findstring thread,$(SANITIZE)))
 CCOMFLAGS += -fPIE
 endif
+ifneq (,$(findstring memory,$(SANITIZE)))
+ifneq (,$(findstring clang,$(CC)))
+CCOMFLAGS += -fsanitize-memory-track-origins
+endif
+endif
 endif
 
 #-------------------------------------------------
@@ -706,11 +717,8 @@ OBJDIRS = $(OBJ)
 #-------------------------------------------------
 
 LIBEMU = $(OBJ)/libemu.a
-LIBCPU = $(OBJ)/libcpu.a
+LIBOPTIONAL = $(OBJ)/liboptional.a
 LIBDASM = $(OBJ)/libdasm.a
-LIBSOUND = $(OBJ)/libsound.a
-LIBVIDEO = $(OBJ)/libvideo.a
-LIBMACHINE = $(OBJ)/libmachine.a
 LIBUTIL = $(OBJ)/libutil.a
 LIBOCORE = $(OBJ)/libocore.a
 LIBOSD = $(OBJ)/libosd.a
@@ -798,8 +806,6 @@ default: maketree buildtools emulator
 
 all: default tools
 
-tests: maketree jedutil$(EXE) chdman$(EXE)
-
 7Z_LIB = $(OBJ)/lib7z.a 
 
 #-------------------------------------------------
@@ -860,6 +866,7 @@ clean: $(OSDCLEAN)
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
 	@echo Deleting dependencies...
+	$(RM) depend_emu.mak
 	$(RM) depend_mame.mak
 	$(RM) depend_mess.mak
 	$(RM) depend_ume.mak
@@ -897,15 +904,15 @@ $(sort $(OBJDIRS)):
 ifndef EXECUTABLE_DEFINED
 
 # always recompile the version string
-$(VERSIONOBJ): $(EMUINFOOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBMACHINE) $(LIBEMU) $(LIBSOUND) $(LIBVIDEO) $(LIBUTIL) $(EXPAT) $(ZLIB) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(LUA_LIB) $(FORMATS_LIB) $(LIBOCORE) $(MIDI_LIB) $(RESFILE)
+$(VERSIONOBJ): $(EMUINFOOBJ) $(DRVLIBS) $(LIBOSD) $(LIBOPTIONAL) $(LIBEMU) $(LIBUTIL) $(EXPAT) $(ZLIB) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(LUA_LIB) $(FORMATS_LIB) $(LIBOCORE) $(MIDI_LIB) $(RESFILE)
 
-$(EMULATOR): $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBMACHINE) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBVIDEO) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LUA_LIB) $(ZLIB) $(LIBOCORE) $(MIDI_LIB) $(RESFILE) $(CLIRESFILE)
+$(EMULATOR): $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBOPTIONAL) $(LIBEMU) $(LIBDASM) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LUA_LIB) $(ZLIB) $(LIBOCORE) $(MIDI_LIB) $(RESFILE) $(CLIRESFILE)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(VERSIONOBJ) $^ $(LIBS) -o $@
 
 ifneq ($(WINUI),)
-$(MAMEUIEXE): $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBMACHINE) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBVIDEO) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LUA_LIB) $(ZLIB) $(LIBOCORE_NOMAIN) $(MIDI_LIB) $(RESFILE) $(GUIRESFILE)
+$(MAMEUIEXE): $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBOPTIONAL) $(LIBEMU) $(LIBDASM) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LUA_LIB) $(ZLIB) $(LIBOCORE_NOMAIN) $(MIDI_LIB) $(RESFILE) $(GUIRESFILE)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(VERSIONOBJ) $^ $(LIBS) -o $@
@@ -1051,4 +1058,5 @@ $(EMUOBJ)/uicmd14.bdc: $(PNG2BDC_TARGET) $(SRC)/emu/font/cmd14.png
 # optional dependencies file
 #-------------------------------------------------
 
+-include depend_emu.mak
 -include depend_$(TARGET).mak
