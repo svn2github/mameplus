@@ -13,8 +13,10 @@ ifeq ($(TARGET),mame)
 # In order to keep dependencies reasonable, we exclude objects in the base of
 # $(SRC)/emu, as well as all the OSD objects and anything in the $(OBJ) tree
 depend: maketree $(MAKEDEP_TARGET)
+	@echo Rebuilding depend_emu.mak...
+	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... $(SRC)/emu > depend_emu.mak
 	@echo Rebuilding depend_$(TARGET).mak...
-	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... src/$(TARGET) > depend_$(TARGET).mak
+	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... $(SRC)/$(TARGET) > depend_$(TARGET).mak
 
 INCPATH += \
 	-I$(SRC)/$(TARGET) \
@@ -27,6 +29,10 @@ INCPATH += \
 	-I$(SRC)/osd/$(OSD) \
 
 endif
+
+mak: maketree $(MAKEMAK_TARGET)
+	@echo Rebuilding $(SUBTARGET).mak...
+	$(MAKEMAK) $(SRC)/$(TARGET)/$(SUBTARGET).lst -I. $(INCPATH) -I$(SRC)/$(TARGET)/layout -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... $(SRC)/$(TARGET)/drivers > $(SUBTARGET).mak
 
 MAMESRC = $(SRC)/mame
 MAMEOBJ = $(OBJ)/mame
@@ -495,6 +501,9 @@ MACHINES += PCCARD
 
 DRVLIST += \
 	$(MAMEOBJ)/mame.lst \
+	$(MAMEOBJ)/arcade.lst \
+	$(MAMEOBJ)/fruit.lst \
+	$(MAMEOBJ)/pinball.lst \
 	$(MAMEOBJ)/mameplus.lst \
 	$(MAMEOBJ)/mamehb.lst \
 	$(MAMEOBJ)/mamedecrypted.lst \
@@ -612,6 +621,7 @@ $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/segacrp2.o \
 	$(MACHINE)/ticket.o \
 	$(VIDEO)/avgdvg.o \
+	$(AUDIO)/decobsmt.o \
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers
@@ -885,7 +895,6 @@ $(MAMEOBJ)/dataeast.a: \
 	$(DRIVERS)/deco_mlc.o $(VIDEO)/deco_mlc.o \
 	$(DRIVERS)/deco156.o $(MACHINE)/deco156.o \
 	$(DRIVERS)/deco32.o $(VIDEO)/deco32.o $(VIDEO)/dvi.o \
-	$(AUDIO)/decobsmt.o \
 	$(DRIVERS)/decocass.o $(MACHINE)/decocass.o $(MACHINE)/decocass_tape.o $(VIDEO)/decocass.o \
 	$(DRIVERS)/deshoros.o \
 	$(DRIVERS)/dietgo.o $(VIDEO)/dietgo.o \
@@ -1395,7 +1404,7 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/playch10.o $(MACHINE)/playch10.o $(VIDEO)/playch10.o \
 	$(DRIVERS)/popeye.o $(VIDEO)/popeye.o \
 	$(DRIVERS)/punchout.o $(VIDEO)/punchout.o \
-        $(DRIVERS)/famibox.o \
+	$(DRIVERS)/famibox.o \
 	$(DRIVERS)/sfcbox.o \
 	$(DRIVERS)/snesb.o \
 	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o \
@@ -1905,7 +1914,6 @@ $(MAMEOBJ)/pinball.a: \
 	$(DRIVERS)/by68701.o  \
 	$(DRIVERS)/byvid.o  \
 	$(DRIVERS)/capcom.o  \
-	$(DRIVERS)/de_1.o  \
 	$(DRIVERS)/de_2.o  \
 	$(DRIVERS)/de_3.o  \
 	$(DRIVERS)/de_3b.o  \
@@ -2342,7 +2350,8 @@ $(DRIVERS)/corona.o:    $(LAYOUT)/re800.lh \
 
 $(DRIVERS)/darius.o:    $(LAYOUT)/darius.lh
 
-$(DRIVERS)/de_2.o:      $(LAYOUT)/de2.lh
+$(DRIVERS)/de_2.o:      $(LAYOUT)/de2.lh \
+			$(LAYOUT)/de2a3.lh
 
 $(DRIVERS)/destroyr.o:  $(LAYOUT)/destroyr.lh
 
@@ -2646,16 +2655,16 @@ $(MACHINE)/megacd.o:  $(LAYOUT)/megacd.lh
 # misc dependencies
 #-------------------------------------------------
 
-$(DRIVERS)/galaxian.o:  $(MAMESRC)/drivers/galdrvr.c
-$(DRIVERS)/neogeo.o:    $(MAMESRC)/drivers/neodrvr.c
-$(VIDEO)/jaguar.o:	$(MAMESRC)/video/jagobj.c \
-			$(MAMESRC)/video/jagblit.c
+$(DRIVERS)/galaxian.o:  $(MAMESRC)/drivers/galaxian.inc
+$(DRIVERS)/neogeo.o:    $(MAMESRC)/drivers/neogeo.inc
+$(VIDEO)/jaguar.o:      $(MAMESRC)/video/jagobj.inc \
+			$(MAMESRC)/video/jagblit.inc
 $(DRIVERS)/model1.o:	$(MAMESRC)/includes/model1.h $(MAMESRC)/audio/dsbz80.h
 $(VIDEO)/model1.o:	$(MAMESRC)/includes/model1.h $(MAMESRC)/audio/dsbz80.h
 $(MACHINE)/model1.o:	$(MAMESRC)/includes/model1.h $(MAMESRC)/audio/dsbz80.h
-$(VIDEO)/model2.o:	$(MAMESRC)/video/model2rd.c
-$(VIDEO)/model3.o:	$(MAMESRC)/video/m3raster.c
-$(VIDEO)/n64.o:		$(MAMESRC)/video/rdpfiltr.c
+$(VIDEO)/model2.o:      $(MAMESRC)/video/model2rd.inc
+$(VIDEO)/model3.o:      $(MAMESRC)/video/m3raster.inc
+$(VIDEO)/n64.o:         $(MAMESRC)/video/rdpfiltr.inc
 $(DRIVERS)/bfm_sc4.o:   $(MAMESRC)/includes/bfm_sc45.h
 $(DRIVERS)/bfm_sc5.o:   $(MAMESRC)/includes/bfm_sc45.h
 $(DRIVERS)/namcos2.o:   $(MAMESRC)/includes/namcos2.h
@@ -2664,7 +2673,11 @@ $(VIDEO)/namcos2.o:     $(MAMESRC)/includes/namcos2.h
 
 #-------------------------------------------------
 # mamep: driver list dependencies
+#  list in emu\drivenum.c .h
 #-------------------------------------------------
+#$(DRIVLISTSRC): $(MAMESRC)/arcade.lst
+#$(DRIVLISTSRC): $(MAMESRC)/pinball.lst 
+#$(DRIVLISTSRC): $(MAMESRC)/fruit.lst
 
 #FIXME
 $(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst

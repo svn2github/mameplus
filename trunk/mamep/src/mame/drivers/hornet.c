@@ -329,11 +329,12 @@ class hornet_state : public driver_device
 public:
 	hornet_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_workram(*this, "workram"),
-			m_sharc_dataram0(*this, "sharc_dataram0"),
-			m_sharc_dataram1(*this, "sharc_dataram1") ,
+		m_workram(*this, "workram"),
+		m_sharc_dataram0(*this, "sharc_dataram0"),
+		m_sharc_dataram1(*this, "sharc_dataram1"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
+		m_k056800(*this, "k056800"),
 		m_gn680(*this, "gn680"),
 		m_dsp(*this, "dsp"),
 		m_dsp2(*this, "dsp2"),
@@ -349,6 +350,7 @@ public:
 	optional_shared_ptr<UINT32> m_sharc_dataram1;
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	required_device<k056800_device> m_k056800;
 	optional_device<cpu_device> m_gn680;
 	required_device<cpu_device> m_dsp;
 	optional_device<cpu_device> m_dsp2;
@@ -657,7 +659,7 @@ static ADDRESS_MAP_START( hornet_map, AS_PROGRAM, 32, hornet_state )
 	AM_RANGE(0x7d000000, 0x7d00ffff) AM_READ8(sysreg_r, 0xffffffff)
 	AM_RANGE(0x7d010000, 0x7d01ffff) AM_WRITE8(sysreg_w, 0xffffffff)
 	AM_RANGE(0x7d020000, 0x7d021fff) AM_DEVREADWRITE8("m48t58", timekeeper_device, read, write, 0xffffffff)  /* M48T58Y RTC/NVRAM */
-	AM_RANGE(0x7d030000, 0x7d030007) AM_DEVREADWRITE_LEGACY("k056800", k056800_host_r, k056800_host_w)
+	AM_RANGE(0x7d030000, 0x7d030007) AM_DEVREADWRITE("k056800", k056800_device, host_r, host_w)
 	AM_RANGE(0x7d042000, 0x7d043fff) AM_RAM             /* COMM BOARD 0 */
 	AM_RANGE(0x7d044000, 0x7d044007) AM_READ(comm0_unk_r)
 	AM_RANGE(0x7d048000, 0x7d048003) AM_WRITE(comm1_w)
@@ -674,7 +676,7 @@ static ADDRESS_MAP_START( sound_memmap, AS_PROGRAM, 16, hornet_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM     /* Work RAM */
 	AM_RANGE(0x200000, 0x200fff) AM_DEVREADWRITE("rfsnd", rf5c400_device, rf5c400_r, rf5c400_w)      /* Ricoh RF5C400 */
-	AM_RANGE(0x300000, 0x30000f) AM_DEVREADWRITE_LEGACY("k056800", k056800_sound_r, k056800_sound_w)
+	AM_RANGE(0x300000, 0x30000f) AM_DEVREADWRITE("k056800", k056800_device, sound_r, sound_w)
 	AM_RANGE(0x480000, 0x480001) AM_WRITENOP
 	AM_RANGE(0x4c0000, 0x4c0001) AM_WRITENOP
 	AM_RANGE(0x500000, 0x500001) AM_WRITENOP
@@ -938,8 +940,8 @@ static double adc12138_input_callback( device_t *device, UINT8 input )
 	int value = 0;
 	switch (input)
 	{
-		case 0:     value = device->machine().root_device().ioport("ANALOG1")->read(); break;
-		case 1:     value = device->machine().root_device().ioport("ANALOG2")->read(); break;
+		case 0: value = device->machine().root_device().ioport("ANALOG1")->read(); break;
+		case 1: value = device->machine().root_device().ioport("ANALOG2")->read(); break;
 	}
 
 	return (double)(value) / 2047.0;
@@ -1007,14 +1009,14 @@ static const voodoo_config hornet_voodoo_intf =
 static MACHINE_CONFIG_START( hornet, hornet_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", PPC403GA, 64000000/2)   /* PowerPC 403GA 32MHz */
+	MCFG_CPU_ADD("maincpu", PPC403GA, XTAL_64MHz/2)   /* PowerPC 403GA 32MHz */
 	MCFG_CPU_PROGRAM_MAP(hornet_map)
 	MCFG_CPU_PERIODIC_INT_DRIVER(hornet_state, irq1_line_assert,  1000)
 
-	MCFG_CPU_ADD("audiocpu", M68000, 64000000/4)    /* 16MHz */
+	MCFG_CPU_ADD("audiocpu", M68000, XTAL_64MHz/4)    /* 16MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
-	MCFG_CPU_ADD("dsp", ADSP21062, 36000000)
+	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(sharc0_map)
 
@@ -1038,11 +1040,11 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 
 	MCFG_K037122_ADD("k037122_1", hornet_k037122_intf)
 
-	MCFG_K056800_ADD("k056800", hornet_k056800_interface, 64000000/4)
+	MCFG_K056800_ADD("k056800", hornet_k056800_interface, XTAL_64MHz/4)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_RF5C400_ADD("rfsnd", 16934400)  // value from Guru readme, gives 44100 Hz sample rate
+	MCFG_RF5C400_ADD("rfsnd", XTAL_16_9344MHz)  // value from Guru readme, gives 44100 Hz sample rate
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -1096,7 +1098,7 @@ static const voodoo_config voodoo_r_intf =
 
 static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 
-	MCFG_CPU_ADD("dsp2", ADSP21062, 36000000)
+	MCFG_CPU_ADD("dsp2", ADSP21062, XTAL_36MHz)
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(sharc1_map)
 
@@ -1133,7 +1135,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( terabrst, hornet_2board )
 
-	MCFG_CPU_ADD("gn680", M68000, 32000000/2)   /* 16MHz */
+	MCFG_CPU_ADD("gn680", M68000, XTAL_32MHz/2)   /* 16MHz */
 	MCFG_CPU_PROGRAM_MAP(gn680_memmap)
 MACHINE_CONFIG_END
 

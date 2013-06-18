@@ -482,16 +482,12 @@ READ8_MEMBER(mediagx_state::io20_r)
 	UINT8 r = 0;
 
 	// 0x22, 0x23, Cyrix configuration registers
-	if (offset == 0x02)
+	if (offset == 0x00)
 	{
 	}
-	else if (offset == 0x03)
+	else if (offset == 0x01)
 	{
 		r = m_mediagx_config_regs[m_mediagx_config_reg_sel];
-	}
-	else
-	{
-		r = m_pic8259_1->read(space, offset);
 	}
 	return r;
 }
@@ -499,17 +495,13 @@ READ8_MEMBER(mediagx_state::io20_r)
 WRITE8_MEMBER(mediagx_state::io20_w)
 {
 	// 0x22, 0x23, Cyrix configuration registers
-	if (offset == 0x02)
+	if (offset == 0x00)
 	{
 		m_mediagx_config_reg_sel = data;
 	}
-	else if (offset == 0x03)
+	else if (offset == 0x01)
 	{
 		m_mediagx_config_regs[m_mediagx_config_reg_sel] = data;
-	}
-	else
-	{
-		m_pic8259_1->write(space, offset, data);
 	}
 }
 
@@ -755,12 +747,12 @@ static ADDRESS_MAP_START( mediagx_map, AS_PROGRAM, 32, mediagx_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START(mediagx_io, AS_IO, 32, mediagx_state )
+	AM_RANGE(0x0020, 0x0023) AM_READWRITE8(io20_r, io20_w, 0xffff0000)
 	AM_IMPORT_FROM(pcat32_io_common)
-	AM_RANGE(0x0020, 0x003f) AM_READWRITE8(io20_r, io20_w, 0xffffffff)
 	AM_RANGE(0x00e8, 0x00eb) AM_NOP     // I/O delay port
 	AM_RANGE(0x01f0, 0x01f7) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs0_pc, write_cs0_pc, 0xffffffff)
 	AM_RANGE(0x0378, 0x037b) AM_READWRITE(parallel_port_r, parallel_port_w)
-	AM_RANGE(0x03f0, 0x03ff) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs1_pc, write_cs1_pc, 0xffffffff)
+	AM_RANGE(0x03f0, 0x03f7) AM_DEVREADWRITE16("ide", ide_controller_device, read_cs1_pc, write_cs1_pc, 0xffffffff)
 	AM_RANGE(0x0400, 0x04ff) AM_READWRITE(ad1847_r, ad1847_w)
 	AM_RANGE(0x0cf8, 0x0cff) AM_DEVREADWRITE("pcibus", pci_bus_legacy_device, read, write)
 ADDRESS_MAP_END
@@ -1022,7 +1014,7 @@ ROM_START( a51site4 )
 	ROM_REGION(0x08100, "gfx1", 0)
 	ROM_LOAD("cga.chr",     0x00000, 0x01000, CRC(42009069) SHA1(ed08559ce2d7f97f68b9f540bddad5b6295294dd))
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "ide:0:hdd" )
 	DISK_IMAGE( "a51site4-2_01", 0, SHA1(48496666d1613700ae9274f9a5361ea5bbaebea0) ) /* Happ replacement drive "A-22509", sticker on drive shows REV 2.01 and Test Mode screen shows the date September 7, 1998 */
 ROM_END
 
@@ -1036,7 +1028,7 @@ ROM_START( a51site4a ) /* When dumped connected straight to IDE the cylinders we
 	ROM_REGION(0x08100, "gfx1", 0)
 	ROM_LOAD("cga.chr",     0x00000, 0x01000, CRC(42009069) SHA1(ed08559ce2d7f97f68b9f540bddad5b6295294dd))
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "ide:0:hdd" )
 	DISK_IMAGE( "a51site4-2_0", 0, SHA1(4de421e4d1708ecbdfb50730000814a1ea36a044) ) /* Stock drive, sticker on drive shows REV 2.0 and Test Mode screen shows the date September 11, 1998 */
 ROM_END
 

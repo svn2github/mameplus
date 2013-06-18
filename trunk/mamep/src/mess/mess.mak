@@ -10,8 +10,10 @@ ifeq ($(TARGET),mess)
 # In order to keep dependencies reasonable, we exclude objects in the base of
 # $(SRC)/emu, as well as all the OSD objects and anything in the $(OBJ) tree
 depend: maketree $(MAKEDEP_TARGET)
+	@echo Rebuilding depend_emu.mak...
+	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... $(SRC)/emu > depend_emu.mak
 	@echo Rebuilding depend_$(TARGET).mak...
-	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... src/$(TARGET) > depend_$(TARGET).mak
+	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... $(SRC)/$(TARGET) > depend_$(TARGET).mak
 
 INCPATH += \
 	-I$(SRC)/$(TARGET) \
@@ -237,14 +239,14 @@ $(MESSOBJ)/sony.a:              \
 # miscellaneous dependencies
 #-------------------------------------------------
 
-$(MESS_MACHINE)/snescx4.o: $(MESSSRC)/machine/cx4ops.c \
-				$(MESSSRC)/machine/cx4oam.c \
-				$(MESSSRC)/machine/cx4fn.c \
-				$(MESSSRC)/machine/cx4data.c \
+$(MESS_MACHINE)/snescx4.o: $(MESSSRC)/machine/cx4ops.inc \
+				$(MESSSRC)/machine/cx4oam.inc \
+				$(MESSSRC)/machine/cx4fn.inc \
+				$(MESSSRC)/machine/cx4data.inc \
 
-$(MESS_MACHINE)/nes_slot.o:  $(MESSSRC)/machine/nes_ines.c \
-				$(MESSSRC)/machine/nes_pcb.c \
-				$(MESSSRC)/machine/nes_unif.c \
+$(MESS_MACHINE)/nes_slot.o:  $(MESSSRC)/machine/nes_ines.inc \
+				$(MESSSRC)/machine/nes_pcb.inc \
+				$(MESSSRC)/machine/nes_unif.inc \
 
 #-------------------------------------------------
 # layout dependencies

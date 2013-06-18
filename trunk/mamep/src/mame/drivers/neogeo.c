@@ -1406,4 +1406,4 @@ DRIVER_INIT_MEMBER(neogeo_state,neogeo)
 }
 
 
-#include "neodrvr.c"
+#include "neogeo.inc"

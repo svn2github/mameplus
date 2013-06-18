@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import hashlib
 
 def runProcess(cmd):
 	process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -8,8 +9,8 @@ def runProcess(cmd):
 	return process.returncode, stdout, stderr
 	
 def compareInfo(info1, info2):
-	lines1 = info1.splitlines();
-	lines2 = info2.splitlines();
+	lines1 = info1.splitlines()
+	lines2 = info2.splitlines()
 	if not len(lines1) == len(lines2):
 		return False
 	
@@ -24,6 +25,15 @@ def compareInfo(info1, info2):
 			print lines1[i] + " - " + lines2[i]
 	
 	return mismatch == False
+
+def sha1sum(path):
+	if not os.path.exists(path):
+		return ""
+	sha1 = hashlib.sha1()
+	f = open(path, 'r')
+	sha1.update(f.read())
+	f.close()
+	return sha1.hexdigest()
 
 currentDirectory = os.path.dirname(os.path.realpath(__file__))
 inputPath = os.path.join(currentDirectory, 'input')
@@ -53,31 +63,39 @@ for root, dirs, files in os.walk(inputPath):
 		if d.startswith("."):
 			continue
 	
+		command = ext = d.split("_", 2)[0]			
 		inFile = os.path.join(root, d, "in")
 		# TODO: make this better
 		outFile = os.path.join(root, d, "out.chd").replace("input", "output")
 		tempFilePath = os.path.join(tempPath, d)
 		tempFile = os.path.join(tempFilePath, "out.chd")
-		cmd = []
-		if not os.path.exists(tempFilePath):
-			os.makedirs(tempFilePath)
-		if d.startswith("createcd"):
-			ext = d.split("_", 2)[1]
-			inFile += "." + ext
-			cmd = [chdmanBin, "createcd", "-f", "-i", inFile, "-o", tempFile]
-		elif d.startswith("createhd"):
-			inFile += ".params"
-			f = open(inFile, 'r')
+		inParams = inFile + ".params"
+		params = []
+		if os.path.exists(inParams):
+			f = open(inParams, 'r')
 			paramsstr = f.read()
 			f.close()
 			params = paramsstr.split(" ")
-			cmd = [chdmanBin, "createhd", "-f", "-o", tempFile] + params
-		elif d.startswith("copy"):
+		if not os.path.exists(tempFilePath):
+			os.makedirs(tempFilePath)
+		if command == "createcd":
+			ext = d.split("_", 2)[1]
+			inFile += "." + ext
+		elif command == "createhd":
+			ext = d.split("_", 2)[1]
+			inFile += "." + ext
+		elif command == "createld":
+			ext = d.split("_", 2)[1]
+			inFile += "." + ext
+		elif command == "copy":
 			inFile += ".chd"
-			cmd = [chdmanBin, "copy", "-f", "-i", inFile, "-o", tempFile]
 		else:
 			print "unsupported mode"
 			continue
+		if os.path.exists(inFile):
+			cmd = [chdmanBin, command, "-f", "-i", inFile, "-o", tempFile] + params
+		else:
+			cmd = [chdmanBin, command, "-f", "-o", tempFile] + params
 		exitcode, stdout, stderr = runProcess(cmd)
 		if not exitcode == 0:
 			print d + " - command failed with " + str(exitcode) + " (" + stderr + ")"
@@ -86,7 +104,7 @@ for root, dirs, files in os.walk(inputPath):
 		if not exitcode == 0:
 			print d + " - verify failed with " + str(exitcode) + " (" + stderr + ")"
 			failure = True
-		# TODO: store exected output of reference file as well and compare
+		# TODO: store expected output of reference file as well and compare
 		exitcode, info1, stderr = runProcess([chdmanBin, "info", "-v", "-i", tempFile])
 		if not exitcode == 0:
 			print d + " - info (temp) failed with " + str(exitcode) + " (" + stderr + ")"
@@ -97,6 +115,11 @@ for root, dirs, files in os.walk(inputPath):
 			failure = True
 		if not compareInfo(info1, info2):
 			print d + " - info output differs"
+			failure = True
+		sha1_1 = sha1sum(tempFile)
+		sha1_2 = sha1sum(outFile)
+		if not sha1_1 == sha1_2:
+			print "SHA1 mismatch - expected: " + sha1_2 + " found: " + sha1_1
 			failure = True
 		# TODO: extract and compare
 

@@ -1755,6 +1755,8 @@ float nv2a_renderer::combiner_map_input_select(int code,int index)
 			return combiner.variable_EF[index];
 		break;
 	}
+
+	return 0;
 }
 
 float *nv2a_renderer::combiner_map_input_select3(int code)
@@ -1804,6 +1806,8 @@ float *nv2a_renderer::combiner_map_input_select3(int code)
 			return combiner.variable_EF;
 		break;
 	}
+
+	return 0;
 }
 
 float *nv2a_renderer::combiner_map_output_select3(int code)
@@ -1853,6 +1857,8 @@ float *nv2a_renderer::combiner_map_output_select3(int code)
 			return 0;
 		break;
 	}
+
+	return 0;
 }
 
 float nv2a_renderer::combiner_map_input_function(int code,float value)
@@ -1887,6 +1893,8 @@ float nv2a_renderer::combiner_map_input_function(int code,float value)
 			return -value;
 		break;
 	}
+
+	return 0;
 }
 
 void nv2a_renderer::combiner_map_input_function3(int code,float *data)
@@ -2648,7 +2656,7 @@ WRITE32_MEMBER( chihiro_state::dummy_w )
 
 // ======================> ide_baseboard_device
 
-class ide_baseboard_device : public ide_hdd_device
+class ide_baseboard_device : public ide_mass_storage_device
 {
 public:
 	// construction/destruction
@@ -2656,8 +2664,6 @@ public:
 
 	virtual int  read_sector(UINT32 lba, void *buffer);
 	virtual int  write_sector(UINT32 lba, const void *buffer);
-	virtual bool is_ready() { return true; }
-	virtual void read_key(UINT8 key[]) { }
 protected:
 	// device-level overrides
 	virtual void device_start();
@@ -2676,7 +2682,7 @@ const device_type IDE_BASEBOARD = &device_creator<ide_baseboard_device>;
 //-------------------------------------------------
 
 ide_baseboard_device::ide_baseboard_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: ide_hdd_device(mconfig, IDE_BASEBOARD, "IDE Baseboard", tag, owner, clock, "ide_baseboard", __FILE__)
+	: ide_mass_storage_device(mconfig, IDE_BASEBOARD, "IDE Baseboard", tag, owner, clock, "ide_baseboard", __FILE__)
 {
 }
 
@@ -2697,7 +2703,7 @@ void ide_baseboard_device::device_reset()
 	m_num_cylinders=65535;
 	m_num_sectors=255;
 	m_num_heads=255;
-	ide_build_features();
+	ide_build_identify_device();
 }
 
 int ide_baseboard_device::read_sector(UINT32 lba, void *buffer)

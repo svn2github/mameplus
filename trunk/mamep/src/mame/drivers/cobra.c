@@ -3163,13 +3163,13 @@ void cobra_state::machine_reset()
 {
 	m_sub_interrupt = 0xff;
 
-	UINT8 *ide_features = m_ide->ide_get_features(0);
+	UINT8 *identify_device = m_ide->identify_device_buffer(0);
 
 	// Cobra expects these settings or the BIOS fails
-	ide_features[51*2+0] = 0;           /* 51: PIO data transfer cycle timing mode */
-	ide_features[51*2+1] = 2;
-	ide_features[67*2+0] = 0xe0;        /* 67: minimum PIO transfer cycle time without flow control */
-	ide_features[67*2+1] = 0x01;
+	identify_device[51*2+0] = 0;           /* 51: PIO data transfer cycle timing mode */
+	identify_device[51*2+1] = 2;
+	identify_device[67*2+0] = 0xe0;        /* 67: minimum PIO transfer cycle time without flow control */
+	identify_device[67*2+1] = 0x01;
 
 	m_renderer->gfx_reset(machine());
 
@@ -3487,7 +3487,7 @@ ROM_START(bujutsu)
 
 	ROM_REGION(0x1000000, "rfsnd", ROMREGION_ERASE00)
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "ide:0:hdd" )
 	DISK_IMAGE_READONLY( "645c04", 0, SHA1(c0aabe69f6eb4e4cf748d606ae50674297af6a04) )
 ROM_END
 
@@ -3506,7 +3506,7 @@ ROM_START(racjamdx)
 
 	ROM_REGION(0x1000000, "rfsnd", ROMREGION_ERASE00)
 
-	DISK_REGION( "drive_0" )
+	DISK_REGION( "ide:0:hdd" )
 	DISK_IMAGE_READONLY( "676a04", 0, SHA1(8e89d3e5099e871b99fccba13adaa3cf8a6b71f0) )
 ROM_END
 
