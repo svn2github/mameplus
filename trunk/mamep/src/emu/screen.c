@@ -295,7 +295,7 @@ void screen_device::texture_set_scale_bitmap(const rectangle &visarea, UINT32 pa
 //-------------------------------------------------
 
 screen_device::screen_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, SCREEN, "Video Screen", tag, owner, clock),
+	: device_t(mconfig, SCREEN, "Video Screen", tag, owner, clock, "screen", __FILE__),
 		m_type(SCREEN_TYPE_RASTER),
 		m_oldstyle_vblank_supplied(false),
 		m_refresh(0),
@@ -912,7 +912,6 @@ bool screen_device::update_partial(int scanline)
 		g_profiler.start(PROFILER_VIDEO);
 		LOG_PARTIAL_UPDATES(("updating %d-%d\n", clip.min_y, clip.max_y));
 
-		flags = 0;
 		screen_bitmap &curbitmap = m_bitmap[m_curbitmap];
 		switch (curbitmap.format())
 		{

@@ -30,10 +30,6 @@ INCPATH += \
 
 endif
 
-mak: maketree $(MAKEMAK_TARGET)
-	@echo Rebuilding $(SUBTARGET).mak...
-	$(MAKEMAK) $(SRC)/$(TARGET)/$(SUBTARGET).lst -I. $(INCPATH) -I$(SRC)/$(TARGET)/layout -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... $(SRC)/$(TARGET)/drivers > $(SUBTARGET).mak
-
 MAMESRC = $(SRC)/mame
 MAMEOBJ = $(OBJ)/mame
 
@@ -290,7 +286,7 @@ VIDEOS += BUFSPRITE
 #VIDEOS += CRT9021
 #VIDEOS += CRT9212
 #VIDEOS += DL1416
-#VIDEOS += DM9368
+VIDEOS += DM9368
 #VIDEOS += EF9340_1
 VIDEOS += H63484
 #VIDEOS += HD44102
@@ -501,9 +497,6 @@ MACHINES += PCCARD
 
 DRVLIST += \
 	$(MAMEOBJ)/mame.lst \
-	$(MAMEOBJ)/arcade.lst \
-	$(MAMEOBJ)/fruit.lst \
-	$(MAMEOBJ)/pinball.lst \
 	$(MAMEOBJ)/mameplus.lst \
 	$(MAMEOBJ)/mamehb.lst \
 	$(MAMEOBJ)/mamedecrypted.lst \
@@ -1748,6 +1741,7 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/taitopjc.o $\
 	$(DRIVERS)/taitosj.o $(MACHINE)/taitosj.o $(VIDEO)/taitosj.o \
 	$(DRIVERS)/taitotz.o \
+	$(DRIVERS)/taitotx.o \
 	$(DRIVERS)/taitowlf.o \
 	$(DRIVERS)/tnzs.o $(MACHINE)/tnzs.o $(VIDEO)/tnzs.o \
 	$(DRIVERS)/topspeed.o $(VIDEO)/topspeed.o \
@@ -1916,6 +1910,8 @@ $(MAMEOBJ)/pinball.a: \
 	$(DRIVERS)/capcom.o  \
 	$(DRIVERS)/de_2.o  \
 	$(DRIVERS)/de_3.o  \
+	$(VIDEO)/decodmd1.o \
+	$(VIDEO)/decodmd2.o \
 	$(DRIVERS)/de_3b.o  \
 	$(DRIVERS)/flicker.o  \
 	$(DRIVERS)/g627.o  \
@@ -2551,6 +2547,8 @@ $(DRIVERS)/sderby.o:    $(LAYOUT)/sderby.lh \
 			$(LAYOUT)/spacewin.lh \
 			$(LAYOUT)/pmroulet.lh
 
+$(DRIVERS)/seabattl.o:  $(LAYOUT)/seabattl.lh
+
 $(DRIVERS)/segaorun.o:  $(LAYOUT)/outrun.lh
 
 $(DRIVERS)/segas32.o:   $(LAYOUT)/radr.lh
@@ -2673,11 +2671,7 @@ $(VIDEO)/namcos2.o:     $(MAMESRC)/includes/namcos2.h
 
 #-------------------------------------------------
 # mamep: driver list dependencies
-#  list in emu\drivenum.c .h
 #-------------------------------------------------
-#$(DRIVLISTSRC): $(MAMESRC)/arcade.lst
-#$(DRIVLISTSRC): $(MAMESRC)/pinball.lst 
-#$(DRIVLISTSRC): $(MAMESRC)/fruit.lst
 
 #FIXME
 $(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst

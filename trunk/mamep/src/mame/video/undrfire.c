@@ -1,5 +1,4 @@
 #include "emu.h"
-#include "video/taitoic.h"
 #include "includes/undrfire.h"
 
 
@@ -346,8 +345,6 @@ void undrfire_state::draw_sprites_cbombers(bitmap_ind16 &bitmap,const rectangle 
 
 UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	device_t *tc0100scn = machine().device("tc0100scn");
-	device_t *tc0480scp = machine().device("tc0480scp");
 	address_space &space = machine().driver_data()->generic_space();
 	UINT8 layer[5];
 	UINT8 pivlayer[3];
@@ -390,10 +387,10 @@ UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind1
 	}
 #endif
 
-	tc0100scn_tilemap_update(tc0100scn);
-	tc0480scp_tilemap_update(tc0480scp);
+	m_tc0100scn->tilemap_update();
+	m_tc0480scp->tilemap_update();
 
-	priority = tc0480scp_get_bg_priority(tc0480scp);
+	priority = m_tc0480scp->get_bg_priority();
 
 	layer[0] = (priority & 0xf000) >> 12;   /* tells us which bg layer is bottom */
 	layer[1] = (priority & 0x0f00) >>  8;
@@ -401,7 +398,7 @@ UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind1
 	layer[3] = (priority & 0x000f) >>  0;   /* tells us which is top */
 	layer[4] = 4;   /* text layer always over bg layers */
 
-	pivlayer[0] = tc0100scn_bottomlayer(tc0100scn);
+	pivlayer[0] = m_tc0100scn->bottomlayer();
 	pivlayer[1] = pivlayer[0] ^ 1;
 	pivlayer[2] = 2;
 
@@ -415,35 +412,35 @@ UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind1
    pointless - it's always hidden by other layers. Does it
    serve some blending pupose ? */
 
-	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[1], 0, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, pivlayer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, pivlayer[1], 0, 0);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[0]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[0], 0, 1);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[0], 0, 1);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[1]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[1], 0, 2);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[1], 0, 2);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[2]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[3]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[3], 0, 8);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[3], 0, 8);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[4]==0)
 #endif
 	/* Sprites have variable priority (we kludge this on road levels) */
 	{
-		if ((tc0480scp_pri_reg_r(tc0480scp, space, 0) & 0x3) == 3)  /* on road levels kludge sprites up 1 priority */
+		if ((m_tc0480scp->pri_reg_r(space, 0) & 0x3) == 3)  /* on road levels kludge sprites up 1 priority */
 		{
 			static const int primasks[4] = {0xfff0, 0xff00, 0x0, 0x0};
 			draw_sprites(bitmap, cliprect, primasks, 44, -574);
@@ -458,9 +455,9 @@ UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind1
 #ifdef MAME_DEBUG
 	if (m_dislayer[5]==0)
 #endif
-	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[2], 0, 0); /* piv text layer */
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, pivlayer[2], 0, 0); /* piv text layer */
 
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[4], 0, 0);    /* TC0480SCP text layer */
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[4], 0, 0);    /* TC0480SCP text layer */
 
 	/* See if we should draw artificial gun targets */
 	/* (not yet implemented...) */
@@ -489,8 +486,6 @@ UINT32 undrfire_state::screen_update_undrfire(screen_device &screen, bitmap_ind1
 
 UINT32 undrfire_state::screen_update_cbombers(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	device_t *tc0100scn = machine().device("tc0100scn");
-	device_t *tc0480scp = machine().device("tc0480scp");
 	address_space &space = machine().driver_data()->generic_space();
 	UINT8 layer[5];
 	UINT8 pivlayer[3];
@@ -533,10 +528,10 @@ UINT32 undrfire_state::screen_update_cbombers(screen_device &screen, bitmap_ind1
 	}
 #endif
 
-	tc0100scn_tilemap_update(tc0100scn);
-	tc0480scp_tilemap_update(tc0480scp);
+	m_tc0100scn->tilemap_update();
+	m_tc0480scp->tilemap_update();
 
-	priority = tc0480scp_get_bg_priority(tc0480scp);
+	priority = m_tc0480scp->get_bg_priority();
 
 	layer[0] = (priority & 0xf000) >> 12;   /* tells us which bg layer is bottom */
 	layer[1] = (priority & 0x0f00) >>  8;
@@ -544,7 +539,7 @@ UINT32 undrfire_state::screen_update_cbombers(screen_device &screen, bitmap_ind1
 	layer[3] = (priority & 0x000f) >>  0;   /* tells us which is top */
 	layer[4] = 4;   /* text layer always over bg layers */
 
-	pivlayer[0] = tc0100scn_bottomlayer(tc0100scn);
+	pivlayer[0] = m_tc0100scn->bottomlayer();
 	pivlayer[1] = pivlayer[0] ^ 1;
 	pivlayer[2] = 2;
 
@@ -558,35 +553,35 @@ UINT32 undrfire_state::screen_update_cbombers(screen_device &screen, bitmap_ind1
    pointless - it's always hidden by other layers. Does it
    serve some blending pupose ? */
 
-	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[1], 0, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, pivlayer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, pivlayer[1], 0, 0);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[0]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[0], 0, 1);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[0], 0, 1);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[1]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[1], 0, 2);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[1], 0, 2);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[2]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[layer[3]]==0)
 #endif
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[3], 0, 8);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[3], 0, 8);
 
 #ifdef MAME_DEBUG
 	if (m_dislayer[4]==0)
 #endif
 	/* Sprites have variable priority (we kludge this on road levels) */
 	{
-		if ((tc0480scp_pri_reg_r(tc0480scp, space, 0) & 0x3) == 3)  /* on road levels kludge sprites up 1 priority */
+		if ((m_tc0480scp->pri_reg_r(space, 0) & 0x3) == 3)  /* on road levels kludge sprites up 1 priority */
 		{
 			static const int primasks[4] = {0xfff0, 0xff00, 0x0, 0x0};
 			draw_sprites_cbombers(bitmap, cliprect, primasks, 80, -208);
@@ -601,9 +596,9 @@ UINT32 undrfire_state::screen_update_cbombers(screen_device &screen, bitmap_ind1
 #ifdef MAME_DEBUG
 	if (m_dislayer[5]==0)
 #endif
-	tc0100scn_tilemap_draw(tc0100scn, bitmap, cliprect, pivlayer[2], 0, 0); /* piv text layer */
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, pivlayer[2], 0, 0); /* piv text layer */
 
-	tc0480scp_tilemap_draw(tc0480scp, bitmap, cliprect, layer[4], 0, 0);    /* TC0480SCP text layer */
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[4], 0, 0);    /* TC0480SCP text layer */
 
 /* Enable this to see rotation (?) control words */
 #if 0

@@ -202,9 +202,6 @@ private:
 	// internal state
 #ifndef TINY_BUILD
 	static const game_driver * const mamedrivers[];
-	static const game_driver * const arcadedrivers[];
-	static const game_driver * const fruitdrivers[];
-	static const game_driver * const pinballdrivers[];
 	static const game_driver * const mameplusdrivers[];
 	static const game_driver * const mamehbdrivers[];
 	static const game_driver * const mamedecrypteddrivers[];

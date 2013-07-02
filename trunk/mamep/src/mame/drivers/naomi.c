@@ -19,6 +19,12 @@
 
 Sega Naomi is Dreamcast based Arcade hardware.
 
+Compatibility list (as per 26-jun-2013)
+- sfz3ugd: currently dies at disclaimer screen (regression);
+- sprtjam: garbage on initial attract mode screen (regression).
+- puyofev: hangs after pressing start.
+- vtennisg: crashes after stage screen.
+
 TODO (general):
     - all games that uses YUV just updates one frame then dies, why?
     - Some SH to ARM sound streaming doesn't work (used by ADX compression system)
@@ -2492,10 +2498,7 @@ static MACHINE_CONFIG_START( naomi_aw_base, naomi_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_SIZE(640, 480)
-	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 480-1)
+	MCFG_SCREEN_RAW_PARAMS(CPU_CLOCK/2/4, 820, 0, 640, 532, 0, 480) /* TODO: PVR is clocked at 100 MHz, pixel clock is guessed to be /4 so ~57 fps. */
 	MCFG_SCREEN_UPDATE_DEVICE("powervr2", powervr2_device, screen_update)
 	MCFG_PALETTE_LENGTH(0x1000)
 	MCFG_POWERVR2_ADD("powervr2", WRITE8(dc_state, pvr_irq))
@@ -7146,6 +7149,24 @@ ROM_START( ngdup23e )
 	// PIC and sticker unknown
 	ROM_LOAD("317-unk-jpn.pic", 0x00, 0x4000, NO_DUMP )
 ROM_END
+
+/*
+0C03F492: MOV     R5,R0
+0C03F494: MOV     R0,R5
+0C03F496: CMP/EQ  R5,R4
+0C03F498: BF      $0C03F4A6
+0C03F4A6: MOV.L   @($28,R14),R0
+0C03F4A8: TST     R0,R0
+0C03F4AA: BT      $0C03F4C4
+0C03F4AC: BRA     $0C03F4BC
+0C03F4BA: BT      $0C03F4C4
+0C03F4BC: MOV.L   @($28,R14),R3
+0C03F4BE: MOV     #$FD,R5
+0C03F4C0: JSR     R3
+0C03F134: NOP
+0C03F136: BRA     $0C03F136
+0C03F134: NOP
+*/
 
 ROM_START( puyofev )
 	NAOMIGD_BIOS

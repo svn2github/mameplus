@@ -369,7 +369,7 @@ NAME = $(TARGET)$(EXTRA_SUFFIX)$(SUBTARGET)
 endif
 
 # fullname is prefix+name+suffix+suffix64+suffixdebug
-FULLNAME = $(PREFIX)$(PREFIXSDL)$(NAME)$(SUFFIX)$(SUFFIX64)$(SUFFIXDEBUG)$(SUFFIXPROFILE)
+FULLNAME ?= $(PREFIX)$(PREFIXSDL)$(NAME)$(SUFFIX)$(SUFFIX64)$(SUFFIXDEBUG)$(SUFFIXPROFILE)
 ifneq ($(WINUI),)
 ifeq ($(TARGET),$(SUBTARGET))
 MAMEUINAME = $(TARGET)$(EXTRA_SUFFIX)ui
@@ -457,13 +457,6 @@ endif
 # define USE_SYSTEM_JPEGLIB if library shipped with MAME is not used
 ifneq ($(BUILD_JPEGLIB),1)
 DEFS += -DUSE_SYSTEM_JPEGLIB
-endif
-
-# disable initialization of memory in malloc overload
-ifdef SANITIZE
-ifneq (,$(findstring memory,$(SANITIZE)))
-DEFS += -DNO_MEMORY_INITIALIZATION
-endif
 endif
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
@@ -625,7 +618,7 @@ CCOMFLAGS += -fPIE
 endif
 ifneq (,$(findstring memory,$(SANITIZE)))
 ifneq (,$(findstring clang,$(CC)))
-CCOMFLAGS += -fsanitize-memory-track-origins
+CCOMFLAGS += -fsanitize-memory-track-origins -fPIE
 endif
 endif
 endif
@@ -698,6 +691,9 @@ endif
 ifdef SANITIZE
 LDFLAGS += -fsanitize=$(SANITIZE)
 ifneq (,$(findstring thread,$(SANITIZE)))
+LDFLAGS += -pie
+endif
+ifneq (,$(findstring memory,$(SANITIZE)))
 LDFLAGS += -pie
 endif
 endif
@@ -887,6 +883,10 @@ checkautodetect:
 
 tests: $(REGTESTS)
 
+mak: maketree $(MAKEMAK_TARGET)
+	@echo Rebuilding $(SUBTARGET).mak...
+	$(MAKEMAK) $(SRC)/targets/$(SUBTARGET).lst -I$(SRC)/emu -I$(SRC)/mame -I$(SRC)/mame/layout -I$(SRC)/mess -I$(SRC)/mess/layout $(SRC) > $(SUBTARGET).mak
+	$(MAKEMAK) $(SRC)/targets/$(SUBTARGET).lst > $(SUBTARGET).lst
 
 #-------------------------------------------------
 # directory targets

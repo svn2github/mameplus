@@ -1,4 +1,6 @@
 #include "emu.h"
+#include "atadev.h"
+#include "harddisk.h"
 #include "imagedev/harddriv.h"
 
 #define IDE_DISK_SECTOR_SIZE            512
@@ -42,43 +44,12 @@
 #define IDE_DEVICE_HEAD_DRV  0x10
 #define IDE_DEVICE_HEAD_L    0x40
 
-// ======================> ide_device_interface
-
-class ide_device_interface
-{
-public:
-	ide_device_interface(const machine_config &mconfig, device_t &device);
-	virtual ~ide_device_interface() {}
-
-	virtual UINT16 read_dma() = 0;
-	virtual DECLARE_READ16_MEMBER(read_cs0) = 0;
-	virtual DECLARE_READ16_MEMBER(read_cs1) = 0;
-
-	virtual void write_dma(UINT16 data) = 0;
-	virtual DECLARE_WRITE16_MEMBER(write_cs0) = 0;
-	virtual DECLARE_WRITE16_MEMBER(write_cs1) = 0;
-	virtual DECLARE_WRITE_LINE_MEMBER(write_dmack) = 0;
-	virtual DECLARE_WRITE_LINE_MEMBER(write_csel) = 0;
-	virtual DECLARE_WRITE_LINE_MEMBER(write_dasp) = 0;
-
-	virtual bool is_ready() { return true; }
-	virtual UINT8 *identify_device_buffer() = 0;
-
-	UINT8           m_master_password_enable;
-	UINT8           m_user_password_enable;
-	const UINT8 *   m_master_password;
-	const UINT8 *   m_user_password;
-
-	devcb2_write_line m_irq_handler;
-	devcb2_write_line m_dmarq_handler;
-};
-
-class ide_mass_storage_device : public device_t,
-	public ide_device_interface,
+class ata_mass_storage_device : public device_t,
+	public ata_device_interface,
 	public device_slot_card_interface
 {
 public:
-	ide_mass_storage_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock,const char *shortname = "", const char *source = __FILE__);
+	ata_mass_storage_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock,const char *shortname, const char *source);
 
 	virtual UINT16 read_dma();
 	virtual DECLARE_READ16_MEMBER(read_cs0);
@@ -90,28 +61,45 @@ public:
 	virtual DECLARE_WRITE_LINE_MEMBER(write_csel);
 	virtual DECLARE_WRITE_LINE_MEMBER(write_dasp);
 	virtual DECLARE_WRITE_LINE_MEMBER(write_dmack);
+	virtual DECLARE_WRITE_LINE_MEMBER(write_pdiag);
 
-	virtual UINT8 *identify_device_buffer() { return m_identify_device; }
-	
+	UINT8 *identify_device_buffer() { return m_identify_device; }
+
+	void set_master_password(const UINT8 *password)
+	{
+		m_master_password = password;
+		m_master_password_enable = (password != NULL);
+	}
+
+
+	void set_user_password(const UINT8 *password)
+	{
+		m_user_password = password;
+		m_user_password_enable = (password != NULL);
+	}
+
 protected:
 	virtual void device_start();
 	virtual void device_reset();
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
+	virtual bool is_ready() { return true; }
 	virtual int read_sector(UINT32 lba, void *buffer) = 0;
 	virtual int write_sector(UINT32 lba, const void *buffer) = 0;
 
 	int dev() { return (m_device_head & IDE_DEVICE_HEAD_DRV) >> 4; }
 	bool device_selected() { return m_csel == dev(); }
-	bool single_device() { return m_csel == 0 && m_dasp == 0; }
 
 	void set_irq(int state);
 	void set_dmarq(int state);
+	void set_dasp(int state);
+	void set_pdiag(int state);
 	void ide_build_identify_device();
 
 	virtual bool process_command();
 	virtual void process_buffer();
 	virtual void fill_buffer();
+	virtual void finished_busy(int param);
 
 	UINT8           m_buffer[IDE_DISK_SECTOR_SIZE];
 	UINT16          m_buffer_offset;
@@ -146,24 +134,40 @@ private:
 	void read_buffer_empty();
 	void write_buffer_full();
 	void update_irq();
+	void start_busy(attotime time, int param);
+	void stop_busy();
+	void soft_reset();
+	void perform_diagnostic();
+	void finished_diagnostic();
 
 	int m_csel;
-	int m_dasp;
+	int m_daspin;
+	int m_daspout;
 	int m_dmack;
 	int m_dmarq;
 	int m_irq;
+	int m_pdiagin;
+	int m_pdiagout;
+
+	bool m_resetting;
+	bool m_single_device;
 
 	UINT32          m_cur_lba;
 	UINT16          m_block_count;
 	UINT16          m_sectors_until_int;
 
+	UINT8           m_master_password_enable;
+	UINT8           m_user_password_enable;
+	const UINT8 *   m_master_password;
+	const UINT8 *   m_user_password;
+
 	emu_timer *     m_last_status_timer;
-	emu_timer *     m_reset_timer;
+	emu_timer *     m_busy_timer;
 };
 
 // ======================> ide_hdd_device
 
-class ide_hdd_device : public ide_mass_storage_device
+class ide_hdd_device : public ata_mass_storage_device
 {
 public:
 	// construction/destruction
@@ -182,6 +186,9 @@ protected:
 
 	chd_file       *m_handle;
 	hard_disk_file *m_disk;
+
+private:
+	required_device<harddisk_image_device> m_image;
 };
 
 // device type definition

@@ -1368,7 +1368,7 @@ WRITE32_MEMBER( powervr2_device::ta_list_init_w )
 		grab[grabsel].valid=1;
 		grab[grabsel].verts_size=0;
 		grab[grabsel].strips_size=0;
-		
+
 		g_profiler.stop();
 	}
 }
@@ -2982,7 +2982,7 @@ void powervr2_device::pvr_dma_execute(address_space &space)
 }
 
 powervr2_device::powervr2_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, POWERVR2, "PowerVR 2", tag, owner, clock),
+	: device_t(mconfig, POWERVR2, "PowerVR 2", tag, owner, clock, "powervr2", __FILE__),
 		irq_cb(*this)
 {
 }

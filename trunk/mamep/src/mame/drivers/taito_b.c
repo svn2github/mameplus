@@ -474,11 +474,11 @@ WRITE16_MEMBER(taitob_state::realpunc_output_w)
 
 
 #define TC0180VCU_MEMRW( ADDR )                                         \
-	AM_RANGE(ADDR+0x00000, ADDR+0x0ffff) AM_DEVREADWRITE_LEGACY("tc0180vcu", tc0180vcu_word_r, tc0180vcu_word_w)    \
+	AM_RANGE(ADDR+0x00000, ADDR+0x0ffff) AM_DEVREADWRITE("tc0180vcu", tc0180vcu_device, word_r, word_w)    \
 	AM_RANGE(ADDR+0x10000, ADDR+0x1197f) AM_RAM AM_SHARE("spriteram")   \
 	AM_RANGE(ADDR+0x11980, ADDR+0x137ff) AM_RAM                 \
-	AM_RANGE(ADDR+0x13800, ADDR+0x13fff) AM_DEVREADWRITE_LEGACY("tc0180vcu", tc0180vcu_scroll_r, tc0180vcu_scroll_w)    \
-	AM_RANGE(ADDR+0x18000, ADDR+0x1801f) AM_DEVREADWRITE_LEGACY("tc0180vcu", tc0180vcu_ctrl_r, tc0180vcu_ctrl_w)        \
+	AM_RANGE(ADDR+0x13800, ADDR+0x13fff) AM_DEVREADWRITE("tc0180vcu", tc0180vcu_device, scroll_r, scroll_w)    \
+	AM_RANGE(ADDR+0x18000, ADDR+0x1801f) AM_DEVREADWRITE("tc0180vcu", tc0180vcu_device, ctrl_r, ctrl_w)        \
 	AM_RANGE(ADDR+0x40000, ADDR+0x7ffff) AM_READWRITE(tc0180vcu_framebuffer_word_r, tc0180vcu_framebuffer_word_w)
 
 
@@ -3640,8 +3640,8 @@ GAME( 1989, rambo3p,  rambo3,  rambo3p,  rambo3p, taitob_state,  taito_b, ROT0, 
 GAME( 1989, crimec,   0,       crimec,   crimec, taitob_state,   taito_b, ROT0,   "Taito Corporation Japan", "Crime City (World)", GAME_SUPPORTS_SAVE )
 GAME( 1989, crimecu,  crimec,  crimec,   crimecu, taitob_state,  taito_b, ROT0,   "Taito America Corporation", "Crime City (US)", GAME_SUPPORTS_SAVE )
 GAME( 1989, crimecj,  crimec,  crimec,   crimecj, taitob_state,  taito_b, ROT0,   "Taito Corporation", "Crime City (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, tetrist,  tetris,  tetrist,  tetrist, taitob_state,  taito_b, ROT0,   "Sega", "Tetris (Japan, B-System, YM2610)", GAME_SUPPORTS_SAVE )
-GAME( 1989, tetrista, tetris,  tetrista, tetrist, taitob_state,  taito_b, ROT0,   "Sega", "Tetris (Japan, B-System, YM2203)", GAME_SUPPORTS_SAVE )
+GAME( 1988, tetrist,  tetris,  tetrist,  tetrist, taitob_state,  taito_b, ROT0,   "Sega", "Tetris (Japan, Taito B-System, YM2610)", GAME_SUPPORTS_SAVE )
+GAME( 1988, tetrista, tetris,  tetrista, tetrist, taitob_state,  taito_b, ROT0,   "Sega", "Tetris (Japan, Taito B-System, YM2203)", GAME_SUPPORTS_SAVE )
 GAME( 1989, viofight, 0,       viofight, viofight, taitob_state, taito_b, ROT0,   "Taito Corporation Japan", "Violence Fight (World)", GAME_SUPPORTS_SAVE )
 GAME( 1989, viofightu,viofight,viofight, viofightu, taitob_state,taito_b, ROT0,   "Taito America Corporation", "Violence Fight (US)", GAME_SUPPORTS_SAVE )
 GAME( 1989, viofightj,viofight,viofight, viofightj, taitob_state,taito_b, ROT0,   "Taito Corporation", "Violence Fight (Japan)", GAME_SUPPORTS_SAVE )

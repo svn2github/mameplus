@@ -549,7 +549,12 @@ INLINE void taitoic_drawscanline( bitmap_ind16 &bitmap, const rectangle &cliprec
 const device_type PC080SN = &device_creator<pc080sn_device>;
 
 pc080sn_device::pc080sn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, PC080SN, "Taito PC080SN", tag, owner, clock)
+	: device_t(mconfig, PC080SN, "Taito PC080SN", tag, owner, clock, "pc080sn", __FILE__),
+	m_ram(NULL)
+	//m_bg_ram[0](NULL),
+	//m_bg_ram[1](NULL),
+	//m_bgscroll_ram[0](NULL),
+	//m_bgscroll_ram[1](NULL)
 {
 }
 
@@ -1005,7 +1010,11 @@ void pc080sn_device::restore_scroll()
 const device_type PC090OJ = &device_creator<pc090oj_device>;
 
 pc090oj_device::pc090oj_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, PC090OJ, "Taito PC090OJ", tag, owner, clock)
+	: device_t(mconfig, PC090OJ, "Taito PC090OJ", tag, owner, clock, "pc090oj", __FILE__),
+	m_ctrl(0),
+	m_sprite_ctrl(0),
+	m_ram(NULL),
+	m_ram_buffered(0)
 {
 }
 
@@ -1163,62 +1172,128 @@ void pc090oj_device::draw_sprites( bitmap_ind16 &bitmap, const rectangle &clipre
 /*                                                                         */
 /***************************************************************************/
 
-struct tc0080vco_state
-{
-	UINT16 *       ram;
-	UINT16 *       bg0_ram_0;
-	UINT16 *       bg0_ram_1;
-	UINT16 *       bg1_ram_0;
-	UINT16 *       bg1_ram_1;
-	UINT16 *       tx_ram_0;
-	UINT16 *       tx_ram_1;
-	UINT16 *       char_ram;
-	UINT16 *       bgscroll_ram;
-
-/* FIXME: This sprite related stuff still needs to be accessed in
-   video/taito_h */
-	UINT16 *       chain_ram_0;
-	UINT16 *       chain_ram_1;
-	UINT16 *       spriteram;
-	UINT16 *       scroll_ram;
-
-	UINT16         bg0_scrollx;
-	UINT16         bg0_scrolly;
-	UINT16         bg1_scrollx;
-	UINT16         bg1_scrolly;
-
-	tilemap_t        *tilemap[3];
-
-	int            bg_gfx, tx_gfx;
-	int            bg_xoffs, bg_yoffs;
-	int            bg_flip_yoffs;
-
-	INT32          flipscreen;
-	int            has_tx;
-};
-
 #define TC0080VCO_RAM_SIZE 0x21000
 #define TC0080VCO_CHAR_RAM_SIZE 0x2000
 #define TC0080VCO_TOTAL_CHARS 256
 
+
 /*****************************************************************************
-    INLINE FUNCTIONS
+    DEVICE INTERFACE
 *****************************************************************************/
 
-INLINE tc0080vco_state *tc0080vco_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert(device->type() == TC0080VCO);
 
-	return (tc0080vco_state *)downcast<tc0080vco_device *>(device)->token();
+const device_type TC0080VCO = &device_creator<tc0080vco_device>;
+
+tc0080vco_device::tc0080vco_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0080VCO, "Taito TC0080VCO", tag, owner, clock, "tc0080vco", __FILE__),
+	m_ram(NULL),
+	m_bg0_ram_0(NULL),
+	m_bg0_ram_1(NULL),
+	m_bg1_ram_0(NULL),
+	m_bg1_ram_1(NULL),
+	m_tx_ram_0(NULL),
+	m_tx_ram_1(NULL),
+	m_char_ram(NULL),
+	m_bgscroll_ram(NULL),
+    m_chain_ram_0(NULL),
+	m_chain_ram_1(NULL),
+	m_spriteram(NULL),
+	m_scroll_ram(NULL),
+    m_bg0_scrollx(0),
+    m_bg0_scrolly(0),
+    m_bg1_scrollx(0),
+    m_bg1_scrolly(0),
+    m_flipscreen(0)
+{
 }
 
-INLINE const tc0080vco_interface *tc0080vco_get_interface( device_t *device )
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tc0080vco_device::device_config_complete()
 {
-	assert(device != NULL);
-	assert((device->type() == TC0080VCO));
-	return (const tc0080vco_interface *) device->static_config();
+	// inherit a copy of the static data
+	const tc0080vco_interface *intf = reinterpret_cast<const tc0080vco_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0080vco_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
 }
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tc0080vco_device::device_start()
+{
+	/* Is this endian-correct ??? */
+
+	#define XOR(a) WORD_XOR_BE(a)
+
+	static const gfx_layout charlayout =
+	{ 
+	8, 8,   /* 8x8 pixels */
+	256,    /* 256 chars */
+	3,      /* 3 bits per pixel */
+	{ 0x10000*8 + XOR(2)*4, XOR(0)*4, XOR(2)*4 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 16*0, 16*1, 16*2, 16*3, 16*4, 16*5, 16*6, 16*7 },
+	16*8
+	};
+	
+	m_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0080vco_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
+	m_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0080vco_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
+
+	m_tilemap[0]->set_transparent_pen(0);
+	m_tilemap[1]->set_transparent_pen(0);
+
+	m_tilemap[0]->set_scrolldx(m_bg_xoffs, 512);
+	m_tilemap[1]->set_scrolldx(m_bg_xoffs, 512);
+	m_tilemap[0]->set_scrolldy(m_bg_yoffs, m_bg_flip_yoffs);
+	m_tilemap[1]->set_scrolldy(m_bg_yoffs, m_bg_flip_yoffs);
+
+	/* bg0 tilemap scrollable per pixel row */
+	m_tilemap[0]->set_scroll_rows(512);
+
+	/* Perform extra initialisations for text layer */
+	m_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0080vco_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+
+	m_tilemap[2]->set_scrolldx(0, 0);
+	m_tilemap[2]->set_scrolldy(48, -448);
+
+	m_tilemap[2]->set_transparent_pen(0);
+
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0080VCO_RAM_SIZE / 2);
+
+	m_char_ram      = m_ram + 0x00000 / 2;    /* continues at +0x10000 */
+	m_tx_ram_0      = m_ram + 0x01000 / 2;
+	m_chain_ram_0   = m_ram + 0x00000 / 2;    /* only used from +0x2000 */
+
+	m_bg0_ram_0     = m_ram + 0x0c000 / 2;
+	m_bg1_ram_0     = m_ram + 0x0e000 / 2;
+
+	m_tx_ram_1      = m_ram + 0x11000 / 2;
+	m_chain_ram_1   = m_ram + 0x10000 / 2;    /* only used from +0x12000 */
+
+	m_bg0_ram_1     = m_ram + 0x1c000 / 2;
+	m_bg1_ram_1     = m_ram + 0x1e000 / 2;
+	m_bgscroll_ram  = m_ram + 0x20000 / 2;
+	m_spriteram     = m_ram + 0x20400 / 2;
+	m_scroll_ram    = m_ram + 0x20800 / 2;
+
+	/* create the char set (gfx will then be updated dynamically from RAM) */
+	machine().gfx[m_txnum] = auto_alloc_clear(machine(), gfx_element(machine(), charlayout, (UINT8 *)m_char_ram, 64, 0));
+
+	save_pointer(NAME(m_ram), TC0080VCO_RAM_SIZE / 2);
+	machine().save().register_postload(save_prepost_delegate(FUNC(tc0080vco_device::postload), this));
+}
+
 
 /*****************************************************************************
     DEVICE HANDLERS
@@ -1242,118 +1317,98 @@ static const int tc0080vco_zoomy_conv_table[] =
 #endif
 
 
-TILE_GET_INFO_MEMBER(tc0080vco_device::tc0080vco_get_bg0_tile_info)
+TILE_GET_INFO_MEMBER(tc0080vco_device::get_bg0_tile_info)
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(this);
 	int color, tile;
 
-	color = tc0080vco->bg0_ram_1[tile_index] & 0x001f;
-	tile  = tc0080vco->bg0_ram_0[tile_index] & 0x7fff;
+	color = m_bg0_ram_1[tile_index] & 0x001f;
+	tile  = m_bg0_ram_0[tile_index] & 0x7fff;
 
 	tileinfo.category = 0;
 
 	SET_TILE_INFO_MEMBER(
-			tc0080vco->bg_gfx,
+			m_gfxnum,
 			tile,
 			color,
-			TILE_FLIPYX((tc0080vco->bg0_ram_1[tile_index] & 0x00c0) >> 6));
+			TILE_FLIPYX((m_bg0_ram_1[tile_index] & 0x00c0) >> 6));
 }
 
-TILE_GET_INFO_MEMBER(tc0080vco_device::tc0080vco_get_bg1_tile_info)
+TILE_GET_INFO_MEMBER(tc0080vco_device::get_bg1_tile_info)
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(this);
 	int color, tile;
 
-	color = tc0080vco->bg1_ram_1[tile_index] & 0x001f;
-	tile  = tc0080vco->bg1_ram_0[tile_index] & 0x7fff;
+	color = m_bg1_ram_1[tile_index] & 0x001f;
+	tile  = m_bg1_ram_0[tile_index] & 0x7fff;
 
 	tileinfo.category = 0;
 
 	SET_TILE_INFO_MEMBER(
-			tc0080vco->bg_gfx,
+			m_gfxnum,
 			tile,
 			color,
-			TILE_FLIPYX((tc0080vco->bg1_ram_1[tile_index] & 0x00c0) >> 6));
+			TILE_FLIPYX((m_bg1_ram_1[tile_index] & 0x00c0) >> 6));
 }
 
-TILE_GET_INFO_MEMBER(tc0080vco_device::tc0080vco_get_tx_tile_info)
+TILE_GET_INFO_MEMBER(tc0080vco_device::get_tx_tile_info)
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(this);
 	int tile;
 
-	if (!tc0080vco->flipscreen)
+	if (!m_flipscreen)
 	{
 		if ((tile_index & 1))
-			tile = (tc0080vco->tx_ram_0[tile_index >> 1] & 0x00ff);
+			tile = (m_tx_ram_0[tile_index >> 1] & 0x00ff);
 		else
-			tile = (tc0080vco->tx_ram_0[tile_index >> 1] & 0xff00) >> 8;
+			tile = (m_tx_ram_0[tile_index >> 1] & 0xff00) >> 8;
 		tileinfo.category = 0;
 	}
 	else
 	{
 		if ((tile_index & 1))
-			tile = (tc0080vco->tx_ram_0[tile_index >> 1] & 0xff00) >> 8;
+			tile = (m_tx_ram_0[tile_index >> 1] & 0xff00) >> 8;
 		else
-			tile = (tc0080vco->tx_ram_0[tile_index >> 1] & 0x00ff);
+			tile = (m_tx_ram_0[tile_index >> 1] & 0x00ff);
 		tileinfo.category = 0;
 	}
 
 	SET_TILE_INFO_MEMBER(
-			tc0080vco->tx_gfx,
+			m_txnum,
 			tile,
 			0x40,
 			0);     /* 0x20<<1 as 3bpp */
 }
 
 
-/* Is this endian-correct ??? */
-
-#define XOR(a) WORD_XOR_BE(a)
-
-static const gfx_layout tc0080vco_charlayout =
+WRITE16_MEMBER( tc0080vco_device::scrollram_w )
 {
-	8, 8,   /* 8x8 pixels */
-	256,    /* 256 chars */
-	3,      /* 3 bits per pixel */
-	{ 0x10000*8 + XOR(2)*4, XOR(0)*4, XOR(2)*4 },
-	{ 0, 1, 2, 3, 4, 5, 6, 7 },
-	{ 16*0, 16*1, 16*2, 16*3, 16*4, 16*5, 16*6, 16*7 },
-	16*8
-};
-
-static WRITE16_DEVICE_HANDLER( tc0080vco_scrollram_w )
-{
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-
 	switch (offset)
 	{
 		case 0x00:          /* screen invert control */
-			tc0080vco->flipscreen = tc0080vco->scroll_ram[0] & 0x0c00;
+			m_flipscreen = m_scroll_ram[0] & 0x0c00;
 
-			tc0080vco->tilemap[0]->set_flip(tc0080vco->flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
-			tc0080vco->tilemap[1]->set_flip(tc0080vco->flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
-			tc0080vco->tilemap[2]->set_flip(tc0080vco->flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+			m_tilemap[0]->set_flip(m_flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+			m_tilemap[1]->set_flip(m_flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+			m_tilemap[2]->set_flip(m_flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
 
-			tc0080vco->bg0_scrollx = tc0080vco->scroll_ram[1] & 0x03ff;
-			tc0080vco->bg1_scrollx = tc0080vco->scroll_ram[2] & 0x03ff;
-			tc0080vco->bg0_scrolly = tc0080vco->scroll_ram[3] & 0x03ff;
-			tc0080vco->bg1_scrolly = tc0080vco->scroll_ram[4] & 0x03ff;
+			m_bg0_scrollx = m_scroll_ram[1] & 0x03ff;
+			m_bg1_scrollx = m_scroll_ram[2] & 0x03ff;
+			m_bg0_scrolly = m_scroll_ram[3] & 0x03ff;
+			m_bg1_scrolly = m_scroll_ram[4] & 0x03ff;
 			break;
 
 		case 0x01:          /* BG0 scroll X */
-			tc0080vco->bg0_scrollx = data & 0x03ff;
+			m_bg0_scrollx = data & 0x03ff;
 			break;
 
 		case 0x02:          /* BG1 scroll X */
-			tc0080vco->bg1_scrollx = data & 0x03ff;
+			m_bg1_scrollx = data & 0x03ff;
 			break;
 
 		case 0x03:          /* BG0 scroll Y */
-			tc0080vco->bg0_scrolly = data & 0x03ff;
+			m_bg0_scrolly = data & 0x03ff;
 			break;
 
 		case 0x04:          /* BG1 scroll Y */
-			tc0080vco->bg1_scrolly = data & 0x03ff;
+			m_bg1_scrolly = data & 0x03ff;
 			break;
 
 		default:
@@ -1361,39 +1416,36 @@ static WRITE16_DEVICE_HANDLER( tc0080vco_scrollram_w )
 	}
 }
 
-READ16_DEVICE_HANDLER( tc0080vco_word_r )
+READ16_MEMBER( tc0080vco_device::word_r )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	return tc0080vco->ram[offset];
+	return m_ram[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0080vco_word_w )
+WRITE16_MEMBER( tc0080vco_device::word_w )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-
-	COMBINE_DATA(&tc0080vco->ram[offset]);
+	COMBINE_DATA(&m_ram[offset]);
 
 	/* A lot of tc0080vco writes require no action... */
 
 	if (offset < 0x1000 / 2)
 	{
-		space.machine().gfx[tc0080vco->tx_gfx]->mark_dirty(offset / 8);
+		space.machine().gfx[m_txnum]->mark_dirty(offset / 8);
 #if 0
-		if (!tc0080vco->has_tx)
+		if (!m_has_fg0)
 		{
-			if (tc0080vco->ram[offset])
+			if (m_ram[offset])
 			popmessage("Write non-zero to tc0080vco char ram\nPlease report to MAMEDEV");
 		}
 #endif
 	}
 	else if (offset < 0x2000 / 2)   /* fg0 (text layer) */
 	{
-		tc0080vco->tilemap[2]->mark_tile_dirty((offset & 0x07ff) * 2);
-		tc0080vco->tilemap[2]->mark_tile_dirty((offset & 0x07ff) * 2 + 1);
+		m_tilemap[2]->mark_tile_dirty((offset & 0x07ff) * 2);
+		m_tilemap[2]->mark_tile_dirty((offset & 0x07ff) * 2 + 1);
 #if 0
-		if (!tc0080vco->has_tx)
+		if (!m_has_fg0)
 		{
-			if (tc0080vco->ram[offset])
+			if (m_ram[offset])
 			popmessage("Write non-zero to tc0080vco fg0\nPlease report to MAMEDEV");
 		}
 #endif
@@ -1401,18 +1453,18 @@ WRITE16_DEVICE_HANDLER( tc0080vco_word_w )
 	else if (offset < 0xc000 / 2)   /* chain ram */
 	{}
 	else if (offset < 0xe000 / 2)   /* bg0 (0) */
-		tc0080vco->tilemap[0]->mark_tile_dirty((offset & 0xfff));
+		m_tilemap[0]->mark_tile_dirty((offset & 0xfff));
 
 	else if (offset < 0x10000 / 2)  /* bg1 (0) */
-		tc0080vco->tilemap[1]->mark_tile_dirty((offset & 0xfff));
+		m_tilemap[1]->mark_tile_dirty((offset & 0xfff));
 
 	else if (offset < 0x11000 / 2)
 	{
-		space.machine().gfx[tc0080vco->tx_gfx]->mark_dirty((offset - 0x10000 / 2) / 8);
+		space.machine().gfx[m_txnum]->mark_dirty((offset - 0x10000 / 2) / 8);
 #if 0
-		if (!tc0080vco->has_tx)
+		if (!m_has_fg0)
 		{
-			if (tc0080vco->ram[offset])
+			if (m_ram[offset])
 			popmessage("Write non-zero to tc0080vco char-hi ram\nPlease report to MAMEDEV");
 		}
 #endif
@@ -1420,56 +1472,54 @@ WRITE16_DEVICE_HANDLER( tc0080vco_word_w )
 	else if (offset < 0x12000 / 2)  /* unknown/unused */
 	{
 #if 1
-		if (tc0080vco->ram[offset])
+		if (m_ram[offset])
 		popmessage("Write non-zero to mystery tc0080vco area\nPlease report to MAMEDEV");
 #endif
 	}
 	else if (offset < 0x1c000 / 2)  /* chain ram */
 	{}
 	else if (offset < 0x1e000 / 2)  /* bg0 (1) */
-		tc0080vco->tilemap[0]->mark_tile_dirty((offset & 0xfff));
+		m_tilemap[0]->mark_tile_dirty((offset & 0xfff));
 
 	else if (offset < 0x20000 / 2)  /* bg1 (1) */
-		tc0080vco->tilemap[1]->mark_tile_dirty((offset & 0xfff));
+		m_tilemap[1]->mark_tile_dirty((offset & 0xfff));
 
 	else if (offset < 0x20400 / 2)  /* bg0 rowscroll */
 	{}
 	else if (offset < 0x20800 / 2)  /* sprite ram */
 	{}
 	else if (offset < 0x20fff / 2)
-		tc0080vco_scrollram_w(device, space, offset - (0x20800 / 2), tc0080vco->ram[offset], mem_mask);
+		scrollram_w(space, offset - (0x20800 / 2), m_ram[offset], mem_mask);
 }
 
-void tc0080vco_tilemap_update( device_t *device )
+void tc0080vco_device::tilemap_update( )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
 	int j;
 
-	if (!tc0080vco->flipscreen)
+	if (!m_flipscreen)
 	{
 		for (j = 0; j < 0x400; j++)
-			tc0080vco->tilemap[0]->set_scrollx((j + 0) & 0x3ff, -tc0080vco->bg0_scrollx - tc0080vco->bgscroll_ram[j & 0x1ff]);
+			m_tilemap[0]->set_scrollx((j + 0) & 0x3ff, -m_bg0_scrollx - m_bgscroll_ram[j & 0x1ff]);
 	}
 	else
 	{
 		for (j = 0; j < 0x400; j++)
-			tc0080vco->tilemap[0]->set_scrollx((j + 0) & 0x3ff, -tc0080vco->bg0_scrollx + tc0080vco->bgscroll_ram[j & 0x1ff]);
+			m_tilemap[0]->set_scrollx((j + 0) & 0x3ff, -m_bg0_scrollx + m_bgscroll_ram[j & 0x1ff]);
 	}
 
-	tc0080vco->tilemap[0]->set_scrolly(0,  tc0080vco->bg0_scrolly);
-	tc0080vco->tilemap[1]->set_scrollx(0, -tc0080vco->bg1_scrollx);
-	tc0080vco->tilemap[1]->set_scrolly(0,  tc0080vco->bg1_scrolly);
-	tc0080vco->tilemap[2]->set_scrollx(0, 0);   /* no scroll (maybe) */
-	tc0080vco->tilemap[2]->set_scrolly(0, 0);
+	m_tilemap[0]->set_scrolly(0,  m_bg0_scrolly);
+	m_tilemap[1]->set_scrollx(0, -m_bg1_scrollx);
+	m_tilemap[1]->set_scrolly(0,  m_bg1_scrolly);
+	m_tilemap[2]->set_scrollx(0, 0);   /* no scroll (maybe) */
+	m_tilemap[2]->set_scrolly(0, 0);
 }
 
 
 /* NB: orientation_flipx code in following routine has not been tested */
 
-static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
+void tc0080vco_device::bg0_tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	UINT16 zoom = tc0080vco->scroll_ram[6];
+	UINT16 zoom = m_scroll_ram[6];
 	int zx, zy;
 
 	zx = (zoom & 0xff00) >> 8;
@@ -1477,22 +1527,22 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 
 	if (zx == 0x3f && zy == 0x7f)       /* normal size */
 	{
-		tc0080vco->tilemap[0]->draw(bitmap, cliprect, flags, priority);
+		m_tilemap[0]->draw(bitmap, cliprect, flags, priority);
 	}
 	else        /* zoom + rowscroll = custom draw routine */
 	{
 		UINT16 *dst16, *src16;
 		UINT8 *tsrc;
 		UINT16 scanline[512];
-		bitmap_ind16 &srcbitmap = tc0080vco->tilemap[0]->pixmap();
-		bitmap_ind8 &flagsbitmap = tc0080vco->tilemap[0]->flagsmap();
+		bitmap_ind16 &srcbitmap = m_tilemap[0]->pixmap();
+		bitmap_ind8 &flagsbitmap = m_tilemap[0]->flagsmap();
 
 		int sx, zoomx, zoomy;
 		int dx, ex, dy, ey;
 		int i, y, y_index, src_y_index, row_index;
 		int x_index, x_step;
 
-		int flip = tc0080vco->flipscreen;
+		int flip = m_flipscreen;
 		int machine_flip = 0;   /* for  ROT 180 ? */
 
 		int min_x = cliprect.min_x;
@@ -1539,16 +1589,16 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 
 		if (!flip)
 		{
-			sx = (-tc0080vco->scroll_ram[1] - 1) << 16;
-			y_index = (( tc0080vco->scroll_ram[3] - 1) << 16) + min_y * zoomy;
+			sx = (-m_scroll_ram[1] - 1) << 16;
+			y_index = (( m_scroll_ram[3] - 1) << 16) + min_y * zoomy;
 		}
 		else
 		{
 			/* adjustment for zx is entirely speculative */
-			sx =  (( 0x200 + tc0080vco->scroll_ram[1]) << 16) - (max_x + min_x) * (zoomx - 0x10000);
+			sx =  (( 0x200 + m_scroll_ram[1]) << 16) - (max_x + min_x) * (zoomx - 0x10000);
 
 			/* 0x130 correct for Dleague. Syvalion correct with 0x1f0. min_y is 0x20 and 0x30; max_y is 0x10f and 0x1bf; max_y + min_y seems a good bet... */
-			y_index = ((-tc0080vco->scroll_ram[3] - 2) << 16) + min_y * zoomy - (max_y + min_y) * (zoomy - 0x10000);
+			y_index = ((-m_scroll_ram[3] - 2) << 16) + min_y * zoomy - (max_y + min_y) * (zoomy - 0x10000);
 		}
 
 		if (!machine_flip)
@@ -1565,7 +1615,7 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 			if (flip)
 				row_index = 0x1ff - row_index;
 
-			x_index = sx - ((tc0080vco->bgscroll_ram[row_index] << 16));
+			x_index = sx - ((m_bgscroll_ram[row_index] << 16));
 
 			src16 = &srcbitmap.pix16(src_y_index);
 			tsrc  = &flagsbitmap.pix8(src_y_index);
@@ -1593,7 +1643,7 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 				}
 			}
 
-			taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, (flags & TILEMAP_DRAW_OPAQUE) ? 0 : 1 , ROT0, device->machine().priority_bitmap, priority);
+			taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, (flags & TILEMAP_DRAW_OPAQUE) ? 0 : 1 , ROT0, machine().priority_bitmap, priority);
 
 			y_index += zoomy;
 
@@ -1618,11 +1668,10 @@ do                                                                              
 	}                                                                               \
 }                                                                                   \
 while (0)
-static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
+void tc0080vco_device::bg1_tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
 	UINT8 layer = 1;
-	UINT16 zoom = tc0080vco->scroll_ram[6 + layer];
+	UINT16 zoom = m_scroll_ram[6 + layer];
 	int min_x = cliprect.min_x;
 	int max_x = cliprect.max_x;
 	int min_y = cliprect.min_y;
@@ -1634,7 +1683,7 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 
 	if (zoomx == 0x3f && zoomy == 0x7f)     /* normal size */
 	{
-		tc0080vco->tilemap[layer]->draw(bitmap, cliprect, flags, priority);
+		m_tilemap[layer]->draw(bitmap, cliprect, flags, priority);
 	}
 	else        /* zoomed */
 	{
@@ -1642,7 +1691,7 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 		int sx,sy;
 
 		/* shouldn't we set no_clip before doing this (see TC0480SCP) ? */
-		bitmap_ind16 &srcbitmap = tc0080vco->tilemap[layer]->pixmap();
+		bitmap_ind16 &srcbitmap = m_tilemap[layer]->pixmap();
 
 		if (zoomx < 63)
 		{
@@ -1670,16 +1719,16 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 			zy = 0x10000 - ((zoomy - 0x7f) * 512);
 		}
 
-		if (!tc0080vco->flipscreen)
+		if (!m_flipscreen)
 		{
-			sx = (-tc0080vco->scroll_ram[layer + 1] - 1) << 16;
-			sy = ( tc0080vco->scroll_ram[layer + 3] - 1) << 16;
+			sx = (-m_scroll_ram[layer + 1] - 1) << 16;
+			sy = ( m_scroll_ram[layer + 3] - 1) << 16;
 		}
 		else
 		{
 			/* adjustment for zx is entirely speculative */
-			sx =  (( 0x200 + tc0080vco->scroll_ram[layer + 1]) << 16) - (max_x + min_x) * (zx - 0x10000);
-			sy =  (( 0x3fe - tc0080vco->scroll_ram[layer + 3]) << 16) - (max_y + min_y) * (zy - 0x10000);
+			sx =  (( 0x200 + m_scroll_ram[layer + 1]) << 16) - (max_x + min_x) * (zx - 0x10000);
+			sy =  (( 0x3fe - m_scroll_ram[layer + 3]) << 16) - (max_y + min_y) * (zy - 0x10000);
 		}
 
 		{
@@ -1693,7 +1742,7 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 			INT32 incyy = zy;
 			int wraparound = 0;
 			UINT32 privalue = priority;
-			bitmap_ind8 &priority = device->machine().priority_bitmap;
+			bitmap_ind8 &priority = machine().priority_bitmap;
 
 			if (dest.bpp() == 16)
 				COPYROZBITMAP_CORE(UINT16, PIXEL_OP_COPY_TRANS0_SET_PRIORITY, UINT8);
@@ -1704,9 +1753,8 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, 
 }
 
 
-void tc0080vco_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
+void tc0080vco_device::tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
 	int disable = 0x00; /* possibly layer disable bits do exist ?? */
 
 #if 0
@@ -1718,81 +1766,101 @@ void tc0080vco_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const recta
 		case 0:
 			if (disable & 0x01)
 				return;
-			tc0080vco_bg0_tilemap_draw(device, bitmap, cliprect, flags, priority);
+			bg0_tilemap_draw(bitmap, cliprect, flags, priority);
 			break;
 		case 1:
 			if (disable & 0x02)
 				return;
-			tc0080vco_bg1_tilemap_draw(device, bitmap, cliprect, flags, priority);
+			bg1_tilemap_draw(bitmap, cliprect, flags, priority);
 			break;
 		case 2:
 			if (disable & 0x04)
 				return;
-			tc0080vco->tilemap[2]->draw(bitmap, cliprect, flags, priority);
+			m_tilemap[2]->draw(bitmap, cliprect, flags, priority);
 			break;
 	}
 }
 
 /* FIXME: maybe it would be better to provide pointers to these RAM regions
 which can be accessed directly by the drivers... */
-READ16_DEVICE_HANDLER( tc0080vco_cram_0_r )
+READ16_MEMBER( tc0080vco_device::cram_0_r )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	return tc0080vco->chain_ram_0[offset];
+	return m_chain_ram_0[offset];
 }
 
-READ16_DEVICE_HANDLER( tc0080vco_cram_1_r )
+READ16_MEMBER( tc0080vco_device::cram_1_r )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	return tc0080vco->chain_ram_1[offset];
+	return m_chain_ram_1[offset];
 }
 
-READ16_DEVICE_HANDLER( tc0080vco_sprram_r )
+READ16_MEMBER( tc0080vco_device::sprram_r )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	return tc0080vco->spriteram[offset];
+	return m_spriteram[offset];
 }
 
-READ16_DEVICE_HANDLER( tc0080vco_scrram_r )
+READ16_MEMBER( tc0080vco_device::scrram_r )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	return tc0080vco->scroll_ram[offset];
+	return m_scroll_ram[offset];
 }
 
-READ_LINE_DEVICE_HANDLER( tc0080vco_flipscreen_r )
+READ_LINE_MEMBER( tc0080vco_device::flipscreen_r )
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
-	return tc0080vco->flipscreen;
+	return m_flipscreen;
 }
 
 
-void tc0080vco_device::tc0080vco_postload()
+void tc0080vco_device::postload()
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(this);
+	m_flipscreen = m_scroll_ram[0] & 0x0c00;
 
-	tc0080vco->flipscreen = tc0080vco->scroll_ram[0] & 0x0c00;
+	m_tilemap[0]->set_flip(m_flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+	m_tilemap[1]->set_flip(m_flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+	m_tilemap[2]->set_flip(m_flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
 
-	tc0080vco->tilemap[0]->set_flip(tc0080vco->flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
-	tc0080vco->tilemap[1]->set_flip(tc0080vco->flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
-	tc0080vco->tilemap[2]->set_flip(tc0080vco->flipscreen ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
-
-	tc0080vco->bg0_scrollx = tc0080vco->scroll_ram[1] & 0x03ff;
-	tc0080vco->bg1_scrollx = tc0080vco->scroll_ram[2] & 0x03ff;
-	tc0080vco->bg0_scrolly = tc0080vco->scroll_ram[3] & 0x03ff;
-	tc0080vco->bg1_scrolly = tc0080vco->scroll_ram[4] & 0x03ff;
+	m_bg0_scrollx = m_scroll_ram[1] & 0x03ff;
+	m_bg1_scrollx = m_scroll_ram[2] & 0x03ff;
+	m_bg0_scrolly = m_scroll_ram[3] & 0x03ff;
+	m_bg1_scrolly = m_scroll_ram[4] & 0x03ff;
 }
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
+
+/***************************************************************************/
+/*                                                                         */
+/*                              TC0100SCN                                  */
+/*                                                                         */
+/***************************************************************************/
 
 
-const device_type TC0080VCO = &device_creator<tc0080vco_device>;
+#define TC0100SCN_RAM_SIZE        0x14000   /* enough for double-width tilemaps */
+#define TC0100SCN_TOTAL_CHARS     256
 
-tc0080vco_device::tc0080vco_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0080VCO, "Taito TC0080VCO", tag, owner, clock)
+const device_type TC0100SCN = &device_creator<tc0100scn_device>;
+
+tc0100scn_device::tc0100scn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0100SCN, "Taito TC0100SCN", tag, owner, clock, "tc0100scn", __FILE__),
+	m_ram(NULL),
+	m_bg_ram(NULL),
+	m_fg_ram(NULL),
+	m_tx_ram(NULL),
+	m_char_ram(NULL),
+	m_bgscroll_ram(NULL),
+	m_fgscroll_ram(NULL),
+	m_colscroll_ram(NULL),
+	m_bgscrollx(0),	
+	m_bgscrolly(0),
+	m_fgscrollx(0),
+	m_fgscrolly(0),
+	m_bg_col_mult(0),
+	m_bg_tilemask(0),
+	m_tx_col_mult(0),
+	m_gfxbank(0),
+	m_colbank(0),
+	m_bg0_colbank(0),
+	m_bg1_colbank(0),
+	m_tx_colbank(0),
+	m_dblwidth(0),
+	m_screen(NULL)
 {
-	m_token = global_alloc_clear(tc0080vco_state);
 }
 
 //-------------------------------------------------
@@ -1801,215 +1869,27 @@ tc0080vco_device::tc0080vco_device(const machine_config &mconfig, const char *ta
 //  complete
 //-------------------------------------------------
 
-void tc0080vco_device::device_config_complete()
+void tc0100scn_device::device_config_complete()
 {
+	// inherit a copy of the static data
+	const tc0100scn_interface *intf = reinterpret_cast<const tc0100scn_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0100scn_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
 }
 
 //-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
 
-void tc0080vco_device::device_start()
+void tc0100scn_device::device_start()
 {
-	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(this);
-	const tc0080vco_interface *intf = tc0080vco_get_interface(this);
-
-	/* use the given gfx sets for bg/tx tiles*/
-	tc0080vco->bg_gfx = intf->gfxnum;
-	tc0080vco->tx_gfx = intf->txnum;
-
-	tc0080vco->bg_xoffs = intf->bg_xoffs;   /* usually 1 */
-	tc0080vco->bg_yoffs = intf->bg_yoffs;   /* usually 1 */
-	tc0080vco->bg_flip_yoffs = intf->bg_flip_yoffs; /* usually -2 */
-	tc0080vco->has_tx = intf->has_fg0;  /* for debugging only */
-
-	tc0080vco->tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0080vco_device::tc0080vco_get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
-	tc0080vco->tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0080vco_device::tc0080vco_get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
-
-	tc0080vco->tilemap[0]->set_transparent_pen(0);
-	tc0080vco->tilemap[1]->set_transparent_pen(0);
-
-	tc0080vco->tilemap[0]->set_scrolldx(tc0080vco->bg_xoffs, 512);
-	tc0080vco->tilemap[1]->set_scrolldx(tc0080vco->bg_xoffs, 512);
-	tc0080vco->tilemap[0]->set_scrolldy(tc0080vco->bg_yoffs, tc0080vco->bg_flip_yoffs);
-	tc0080vco->tilemap[1]->set_scrolldy(tc0080vco->bg_yoffs, tc0080vco->bg_flip_yoffs);
-
-	/* bg0 tilemap scrollable per pixel row */
-	tc0080vco->tilemap[0]->set_scroll_rows(512);
-
-	/* Perform extra initialisations for text layer */
-	tc0080vco->tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0080vco_device::tc0080vco_get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-
-	tc0080vco->tilemap[2]->set_scrolldx(0, 0);
-	tc0080vco->tilemap[2]->set_scrolldy(48, -448);
-
-	tc0080vco->tilemap[2]->set_transparent_pen(0);
-
-	tc0080vco->ram = auto_alloc_array_clear(machine(), UINT16, TC0080VCO_RAM_SIZE / 2);
-
-	tc0080vco->char_ram      = tc0080vco->ram + 0x00000 / 2;    /* continues at +0x10000 */
-	tc0080vco->tx_ram_0      = tc0080vco->ram + 0x01000 / 2;
-	tc0080vco->chain_ram_0   = tc0080vco->ram + 0x00000 / 2;    /* only used from +0x2000 */
-
-	tc0080vco->bg0_ram_0     = tc0080vco->ram + 0x0c000 / 2;
-	tc0080vco->bg1_ram_0     = tc0080vco->ram + 0x0e000 / 2;
-
-	tc0080vco->tx_ram_1      = tc0080vco->ram + 0x11000 / 2;
-	tc0080vco->chain_ram_1   = tc0080vco->ram + 0x10000 / 2;    /* only used from +0x12000 */
-
-	tc0080vco->bg0_ram_1     = tc0080vco->ram + 0x1c000 / 2;
-	tc0080vco->bg1_ram_1     = tc0080vco->ram + 0x1e000 / 2;
-	tc0080vco->bgscroll_ram  = tc0080vco->ram + 0x20000 / 2;
-	tc0080vco->spriteram     = tc0080vco->ram + 0x20400 / 2;
-	tc0080vco->scroll_ram    = tc0080vco->ram + 0x20800 / 2;
-
-	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine().gfx[tc0080vco->tx_gfx] = auto_alloc(machine(), gfx_element(machine(), tc0080vco_charlayout, (UINT8 *)tc0080vco->char_ram, 64, 0));
-
-	save_pointer(NAME(tc0080vco->ram), TC0080VCO_RAM_SIZE / 2);
-	machine().save().register_postload(save_prepost_delegate(FUNC(tc0080vco_device::tc0080vco_postload), this));
-}
-
-/***************************************************************************/
-/*                                                                         */
-/*                              TC0100SCN                                  */
-/*                                                                         */
-/***************************************************************************/
-
-struct tc0100scn_state
-{
-	UINT16       ctrl[8];
-
-	UINT16 *     ram;
-	UINT16 *     bg_ram;
-	UINT16 *     fg_ram;
-	UINT16 *     tx_ram;
-	UINT16 *     char_ram;
-	UINT16 *     bgscroll_ram;
-	UINT16 *     fgscroll_ram;
-	UINT16 *     colscroll_ram;
-
-	int          bgscrollx, bgscrolly, fgscrollx, fgscrolly;
-
-	/* We keep two tilemaps for each of the 3 actual tilemaps: one at standard width, one double */
-	tilemap_t      *tilemap[3][2];
-	rectangle    cliprect;
-
-	int          bg_gfx, tx_gfx;
-	int          bg_col_mult, bg_tilemask, tx_col_mult;
-	INT32        gfxbank, colbank;
-	INT32        bg0_colbank, bg1_colbank, tx_colbank;
-	int          dblwidth;
-
-	screen_device *screen;
-};
-
-#define TC0100SCN_RAM_SIZE        0x14000   /* enough for double-width tilemaps */
-#define TC0100SCN_TOTAL_CHARS     256
-
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
-
-INLINE tc0100scn_state *tc0100scn_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert(device->type() == TC0100SCN);
-
-	return (tc0100scn_state *)downcast<tc0100scn_device *>(device)->token();
-}
-
-INLINE const tc0100scn_interface *tc0100scn_get_interface( device_t *device )
-{
-	assert(device != NULL);
-	assert((device->type() == TC0100SCN));
-	return (const tc0100scn_interface *) device->static_config();
-}
-
-/*****************************************************************************
-    DEVICE HANDLERS
-*****************************************************************************/
-
-INLINE void common_get_bg0_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum, int colbank, int dblwidth )
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	int code, attr;
-
-	if (!dblwidth)
+	static const gfx_layout tc0100scn_charlayout =
 	{
-		/* Mahjong Quest (F2 system) inexplicably has a banking feature */
-		code = (ram[2 * tile_index + 1] & tc0100scn->bg_tilemask) + (tc0100scn->gfxbank << 15);
-		attr = ram[2 * tile_index];
-	}
-	else
-	{
-		code = ram[2 * tile_index + 1] & tc0100scn->bg_tilemask;
-		attr = ram[2 * tile_index];
-	}
-
-	SET_TILE_INFO(
-			gfxnum,
-			code,
-			(((attr * tc0100scn->bg_col_mult) + tc0100scn->bg0_colbank) & 0xff) + colbank,
-			TILE_FLIPYX((attr & 0xc000) >> 14));
-}
-
-INLINE void common_get_bg1_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum, int colbank, int dblwidth )
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	int code, attr;
-
-	if (!dblwidth)
-	{
-		/* Mahjong Quest (F2 system) inexplicably has a banking feature */
-		code = (ram[2 * tile_index + 1] & tc0100scn->bg_tilemask) + (tc0100scn->gfxbank << 15);
-		attr = ram[2 * tile_index];
-	}
-	else
-	{
-		code = ram[2 * tile_index + 1] & tc0100scn->bg_tilemask;
-		attr = ram[2 * tile_index];
-	}
-
-	SET_TILE_INFO(
-			gfxnum,
-			code,
-			(((attr * tc0100scn->bg_col_mult) + tc0100scn->bg1_colbank) & 0xff) + colbank,
-			TILE_FLIPYX((attr & 0xc000) >> 14));
-}
-
-INLINE void common_get_tx_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum, int colbank, int dblwidth )
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	int attr = ram[tile_index];
-
-	SET_TILE_INFO(
-			gfxnum,
-			attr & 0xff,
-			((((attr >> 6) & 0xfc) * tc0100scn->tx_col_mult + (tc0100scn->tx_colbank << 2)) & 0x3ff) + colbank * 4,
-			TILE_FLIPYX((attr & 0xc000) >> 14));
-}
-
-TILE_GET_INFO_MEMBER(tc0100scn_device::tc0100scn_get_bg_tile_info)
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(this);
-	common_get_bg0_tile_info(machine(), this, tileinfo, tile_index, tc0100scn->bg_ram, tc0100scn->bg_gfx, tc0100scn->colbank, tc0100scn->dblwidth);
-}
-
-TILE_GET_INFO_MEMBER(tc0100scn_device::tc0100scn_get_fg_tile_info)
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(this);
-	common_get_bg1_tile_info(machine(), this, tileinfo, tile_index, tc0100scn->fg_ram, tc0100scn->bg_gfx, tc0100scn->colbank, tc0100scn->dblwidth);
-}
-
-TILE_GET_INFO_MEMBER(tc0100scn_device::tc0100scn_get_tx_tile_info)
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(this);
-	common_get_tx_tile_info(machine(), this, tileinfo, tile_index, tc0100scn->tx_ram, tc0100scn->tx_gfx, tc0100scn->colbank, tc0100scn->dblwidth);
-}
-
-static const gfx_layout tc0100scn_charlayout =
-{
 	8,8,    /* 8*8 characters */
 	256,    /* 256 characters */
 	2,  /* 2 bits per pixel */
@@ -2017,199 +1897,370 @@ static const gfx_layout tc0100scn_charlayout =
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
 	16*8    /* every sprite takes 16 consecutive bytes */
-};
+	};
+	
+	int xd, yd;
 
+	m_screen = machine().device<screen_device>(m_screen_tag);
 
-void tc0100scn_set_colbank( device_t *device, int col )
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	tc0100scn->colbank = col;
+	/* Set up clipping for multi-TC0100SCN games. We assume
+	   this code won't ever affect single screen games:
+	   Thundfox is the only one of those with two chips, and
+	   we're safe as it uses single width tilemaps. */
+
+	m_cliprect = m_screen->visible_area();
+
+	/* Single width versions */
+	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[2][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+
+	/* Double width versions */
+	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 64);
+	m_tilemap[2][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 32);
+
+	m_tilemap[0][0]->set_transparent_pen(0);
+	m_tilemap[1][0]->set_transparent_pen(0);
+	m_tilemap[2][0]->set_transparent_pen(0);
+
+	m_tilemap[0][1]->set_transparent_pen(0);
+	m_tilemap[1][1]->set_transparent_pen(0);
+	m_tilemap[2][1]->set_transparent_pen(0);
+
+	/* Standard width tilemaps. I'm setting the optional chip #2
+	   7 bits higher and 2 pixels to the left than chip #1 because
+	   that's how thundfox wants it. */
+
+	xd = (m_multiscrn_hack == 0) ?  (-m_x_offset) : (-m_x_offset - 2);
+	yd = (m_multiscrn_hack == 0) ?  (8 - m_y_offset) : (1 - m_y_offset);
+
+	m_tilemap[0][0]->set_scrolldx(xd - 16, -m_flip_xoffs - xd - 16);
+	m_tilemap[0][0]->set_scrolldy(yd,      -m_flip_yoffs - yd);
+	m_tilemap[1][0]->set_scrolldx(xd - 16, -m_flip_xoffs - xd - 16);
+	m_tilemap[1][0]->set_scrolldy(yd,      -m_flip_yoffs - yd);
+	m_tilemap[2][0]->set_scrolldx(xd - 16, -m_flip_text_xoffs - xd - 16 - 7);
+	m_tilemap[2][0]->set_scrolldy(yd,      -m_flip_text_yoffs - yd);
+
+	/* Double width tilemaps. We must correct offsets for
+	   extra chips, as MAME sees offsets from LHS of whole
+	   display not from the edges of individual screens.
+	   NB flipscreen tilemap offsets are based on Cameltry */
+
+	xd = -m_x_offset - m_multiscrn_xoffs;
+	yd = 8 - m_y_offset;
+
+	m_tilemap[0][1]->set_scrolldx(xd - 16, -m_flip_xoffs - xd - 16);
+	m_tilemap[0][1]->set_scrolldy(yd,      -m_flip_yoffs - yd);
+	m_tilemap[1][1]->set_scrolldx(xd - 16, -m_flip_xoffs - xd - 16);
+	m_tilemap[1][1]->set_scrolldy(yd,      -m_flip_yoffs - yd);
+	m_tilemap[2][1]->set_scrolldx(xd - 16, -m_flip_text_xoffs - xd - 16 - 7);
+	m_tilemap[2][1]->set_scrolldy(yd,      -m_flip_text_yoffs - yd);
+
+	m_tilemap[0][0]->set_scroll_rows(512);
+	m_tilemap[1][0]->set_scroll_rows(512);
+	m_tilemap[0][1]->set_scroll_rows(512);
+	m_tilemap[1][1]->set_scroll_rows(512);
+
+	m_bg_tilemask = 0xffff;    /* Mjnquest has 0x7fff tilemask */
+
+	m_bg_col_mult = 1; /* multiplier for when bg gfx != 4bpp */
+	m_tx_col_mult = 1; /* multiplier needed when bg gfx is 6bpp */
+
+	if (machine().gfx[m_gfxnum]->granularity() == 2)    /* Yuyugogo, Yesnoj */
+		m_bg_col_mult = 8;
+
+	if (machine().gfx[m_gfxnum]->granularity() == 0x40) /* Undrfire */
+		m_tx_col_mult = 4;
+
+//logerror("TC0100SCN bg gfx granularity %04x: multiplier %04x\n", machine().gfx[m_gfxnum]->granularity(), m_tx_col_mult);
+
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0100SCN_RAM_SIZE / 2);
+
+	set_layer_ptrs();
+
+	set_colbanks(0, 0, 0);  /* standard values, only Wgp & multiscreen games change them */
+									/* we call this here, so that they can be modified at VIDEO_START*/
+
+	/* create the char set (gfx will then be updated dynamically from RAM) */
+	machine().gfx[m_txnum] = auto_alloc_clear(machine(), gfx_element(machine(), tc0100scn_charlayout, (UINT8 *)m_char_ram, 64, 0));
+
+	save_pointer(NAME(m_ram), TC0100SCN_RAM_SIZE / 2);
+	save_item(NAME(m_ctrl));
+	save_item(NAME(m_dblwidth));
+	save_item(NAME(m_gfxbank));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tc0100scn_device::postload), this));
 }
 
-void tc0100scn_set_colbanks( device_t *device, int bg0, int bg1, int tx )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tc0100scn_device::device_reset()
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	tc0100scn->bg0_colbank = bg0;
-	tc0100scn->bg1_colbank = bg1;
-	tc0100scn->tx_colbank = tx;
+	int i;
+
+	m_dblwidth = 0;
+	m_colbank = 0;
+	m_gfxbank = 0; /* Mjnquest uniquely banks tiles */
+
+	for (i = 0; i < 8; i++)
+		m_ctrl[i] = 0;
 }
 
-void tc0100scn_set_bg_tilemask( device_t *device, int mask )
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	tc0100scn->bg_tilemask = mask;
-}
 
-WRITE16_DEVICE_HANDLER( tc0100scn_gfxbank_w )   /* Mjnquest banks its 2 sets of scr tiles */
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	tc0100scn->gfxbank = (data & 0x1);
-}
+/*****************************************************************************
+    DEVICE HANDLERS
+*****************************************************************************/
 
-static void tc0100scn_set_layer_ptrs( tc0100scn_state *tc0100scn )
+void tc0100scn_device::common_get_bg0_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum, int colbank, int dblwidth )
 {
-	if (!tc0100scn->dblwidth)
+	int code, attr;
+
+	if (!dblwidth)
 	{
-		tc0100scn->bg_ram        = tc0100scn->ram + 0x0;
-		tc0100scn->tx_ram        = tc0100scn->ram + 0x4000 /2;
-		tc0100scn->char_ram      = tc0100scn->ram + 0x6000 /2;
-		tc0100scn->fg_ram        = tc0100scn->ram + 0x8000 /2;
-		tc0100scn->bgscroll_ram  = tc0100scn->ram + 0xc000 /2;
-		tc0100scn->fgscroll_ram  = tc0100scn->ram + 0xc400 /2;
-		tc0100scn->colscroll_ram = tc0100scn->ram + 0xe000 /2;
+		/* Mahjong Quest (F2 system) inexplicably has a banking feature */
+		code = (ram[2 * tile_index + 1] & m_bg_tilemask) + (m_gfxbank << 15);
+		attr = ram[2 * tile_index];
 	}
 	else
 	{
-		tc0100scn->bg_ram        = tc0100scn->ram + 0x0;
-		tc0100scn->fg_ram        = tc0100scn->ram + 0x08000 /2;
-		tc0100scn->bgscroll_ram  = tc0100scn->ram + 0x10000 /2;
-		tc0100scn->fgscroll_ram  = tc0100scn->ram + 0x10400 /2;
-		tc0100scn->colscroll_ram = tc0100scn->ram + 0x10800 /2;
-		tc0100scn->char_ram      = tc0100scn->ram + 0x11000 /2;
-		tc0100scn->tx_ram        = tc0100scn->ram + 0x12000 /2;
+		code = ram[2 * tile_index + 1] & m_bg_tilemask;
+		attr = ram[2 * tile_index];
+	}
+
+	SET_TILE_INFO_MEMBER(
+			gfxnum,
+			code,
+			(((attr * m_bg_col_mult) + m_bg0_colbank) & 0xff) + colbank,
+			TILE_FLIPYX((attr & 0xc000) >> 14));
+}
+
+void tc0100scn_device::common_get_bg1_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum, int colbank, int dblwidth )
+{
+	int code, attr;
+
+	if (!dblwidth)
+	{
+		/* Mahjong Quest (F2 system) inexplicably has a banking feature */
+		code = (ram[2 * tile_index + 1] & m_bg_tilemask) + (m_gfxbank << 15);
+		attr = ram[2 * tile_index];
+	}
+	else
+	{
+		code = ram[2 * tile_index + 1] & m_bg_tilemask;
+		attr = ram[2 * tile_index];
+	}
+
+	SET_TILE_INFO_MEMBER(
+			gfxnum,
+			code,
+			(((attr * m_bg_col_mult) + m_bg1_colbank) & 0xff) + colbank,
+			TILE_FLIPYX((attr & 0xc000) >> 14));
+}
+
+void tc0100scn_device::common_get_tx_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum, int colbank, int dblwidth )
+{
+	int attr = ram[tile_index];
+
+	SET_TILE_INFO_MEMBER(
+			gfxnum,
+			attr & 0xff,
+			((((attr >> 6) & 0xfc) * m_tx_col_mult + (m_tx_colbank << 2)) & 0x3ff) + colbank * 4,
+			TILE_FLIPYX((attr & 0xc000) >> 14));
+}
+
+TILE_GET_INFO_MEMBER(tc0100scn_device::get_bg_tile_info)
+{
+	common_get_bg0_tile_info(tileinfo, tile_index, m_bg_ram, m_gfxnum, m_colbank, m_dblwidth);
+}
+
+TILE_GET_INFO_MEMBER(tc0100scn_device::get_fg_tile_info)
+{
+	common_get_bg1_tile_info(tileinfo, tile_index, m_fg_ram, m_gfxnum, m_colbank, m_dblwidth);
+}
+
+TILE_GET_INFO_MEMBER(tc0100scn_device::get_tx_tile_info)
+{
+	common_get_tx_tile_info(tileinfo, tile_index, m_tx_ram, m_txnum, m_colbank, m_dblwidth);
+}
+
+void tc0100scn_device::set_colbank( int col )
+{
+	m_colbank = col;
+}
+
+void tc0100scn_device::set_colbanks( int bg0, int bg1, int tx )
+{
+	m_bg0_colbank = bg0;
+	m_bg1_colbank = bg1;
+	m_tx_colbank = tx;
+}
+
+void tc0100scn_device::set_bg_tilemask( int mask )
+{
+	m_bg_tilemask = mask;
+}
+
+WRITE16_MEMBER( tc0100scn_device::gfxbank_w )   /* Mjnquest banks its 2 sets of scr tiles */
+{
+	m_gfxbank = (data & 0x1);
+}
+
+void tc0100scn_device::set_layer_ptrs()
+{
+	if (!m_dblwidth)
+	{
+		m_bg_ram        = m_ram + 0x0;
+		m_tx_ram        = m_ram + 0x4000 /2;
+		m_char_ram      = m_ram + 0x6000 /2;
+		m_fg_ram        = m_ram + 0x8000 /2;
+		m_bgscroll_ram  = m_ram + 0xc000 /2;
+		m_fgscroll_ram  = m_ram + 0xc400 /2;
+		m_colscroll_ram = m_ram + 0xe000 /2;
+	}
+	else
+	{
+		m_bg_ram        = m_ram + 0x0;
+		m_fg_ram        = m_ram + 0x08000 /2;
+		m_bgscroll_ram  = m_ram + 0x10000 /2;
+		m_fgscroll_ram  = m_ram + 0x10400 /2;
+		m_colscroll_ram = m_ram + 0x10800 /2;
+		m_char_ram      = m_ram + 0x11000 /2;
+		m_tx_ram        = m_ram + 0x12000 /2;
 	}
 }
 
-static void tc0100scn_dirty_tilemaps( device_t *device )
+void tc0100scn_device::dirty_tilemaps()
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-
-	tc0100scn->tilemap[0][tc0100scn->dblwidth]->mark_all_dirty();
-	tc0100scn->tilemap[1][tc0100scn->dblwidth]->mark_all_dirty();
-	tc0100scn->tilemap[2][tc0100scn->dblwidth]->mark_all_dirty();
+	m_tilemap[0][m_dblwidth]->mark_all_dirty();
+	m_tilemap[1][m_dblwidth]->mark_all_dirty();
+	m_tilemap[2][m_dblwidth]->mark_all_dirty();
 }
 
-static void tc0100scn_restore_scroll( tc0100scn_state *tc0100scn )
+void tc0100scn_device::restore_scroll()
 {
 	int flip;
 
-	tc0100scn->bgscrollx = -tc0100scn->ctrl[0];
-	tc0100scn->fgscrollx = -tc0100scn->ctrl[1];
-	tc0100scn->tilemap[2][0]->set_scrollx(0, -tc0100scn->ctrl[2]);
-	tc0100scn->tilemap[2][1]->set_scrollx(0, -tc0100scn->ctrl[2]);
+	m_bgscrollx = -m_ctrl[0];
+	m_fgscrollx = -m_ctrl[1];
+	m_tilemap[2][0]->set_scrollx(0, -m_ctrl[2]);
+	m_tilemap[2][1]->set_scrollx(0, -m_ctrl[2]);
 
-	tc0100scn->bgscrolly = -tc0100scn->ctrl[3];
-	tc0100scn->fgscrolly = -tc0100scn->ctrl[4];
-	tc0100scn->tilemap[2][0]->set_scrolly(0, -tc0100scn->ctrl[5]);
-	tc0100scn->tilemap[2][1]->set_scrolly(0, -tc0100scn->ctrl[5]);
+	m_bgscrolly = -m_ctrl[3];
+	m_fgscrolly = -m_ctrl[4];
+	m_tilemap[2][0]->set_scrolly(0, -m_ctrl[5]);
+	m_tilemap[2][1]->set_scrolly(0, -m_ctrl[5]);
 
-	flip = (tc0100scn->ctrl[7] & 0x01) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0;
-	tc0100scn->tilemap[0][0]->set_flip(flip);
-	tc0100scn->tilemap[1][0]->set_flip(flip);
-	tc0100scn->tilemap[2][0]->set_flip(flip);
-	tc0100scn->tilemap[0][1]->set_flip(flip);
-	tc0100scn->tilemap[1][1]->set_flip(flip);
-	tc0100scn->tilemap[2][1]->set_flip(flip);
+	flip = (m_ctrl[7] & 0x01) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0;
+	m_tilemap[0][0]->set_flip(flip);
+	m_tilemap[1][0]->set_flip(flip);
+	m_tilemap[2][0]->set_flip(flip);
+	m_tilemap[0][1]->set_flip(flip);
+	m_tilemap[1][1]->set_flip(flip);
+	m_tilemap[2][1]->set_flip(flip);
 }
 
 
-void tc0100scn_device::tc0100scn_postload()
+void tc0100scn_device::postload()
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(this);
+	set_layer_ptrs();
+	restore_scroll();
 
-	tc0100scn_set_layer_ptrs(tc0100scn);
-	tc0100scn_restore_scroll(tc0100scn);
-
-	tc0100scn->tilemap[0][0]->mark_all_dirty();
-	tc0100scn->tilemap[1][0]->mark_all_dirty();
-	tc0100scn->tilemap[2][0]->mark_all_dirty();
-	tc0100scn->tilemap[0][1]->mark_all_dirty();
-	tc0100scn->tilemap[1][1]->mark_all_dirty();
-	tc0100scn->tilemap[2][1]->mark_all_dirty();
+	m_tilemap[0][0]->mark_all_dirty();
+	m_tilemap[1][0]->mark_all_dirty();
+	m_tilemap[2][0]->mark_all_dirty();
+	m_tilemap[0][1]->mark_all_dirty();
+	m_tilemap[1][1]->mark_all_dirty();
+	m_tilemap[2][1]->mark_all_dirty();
 }
 
-READ16_DEVICE_HANDLER( tc0100scn_word_r )
+READ16_MEMBER( tc0100scn_device::word_r )
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	return tc0100scn->ram[offset];
+	return m_ram[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0100scn_word_w )
+WRITE16_MEMBER( tc0100scn_device::word_w )
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-
-	COMBINE_DATA(&tc0100scn->ram[offset]);
-	if (!tc0100scn->dblwidth)
+	COMBINE_DATA(&m_ram[offset]);
+	if (!m_dblwidth)
 	{
 		if (offset < 0x2000)
-			tc0100scn->tilemap[0][0]->mark_tile_dirty(offset / 2);
+			m_tilemap[0][0]->mark_tile_dirty(offset / 2);
 		else if (offset < 0x3000)
-			tc0100scn->tilemap[2][0]->mark_tile_dirty((offset & 0x0fff));
+			m_tilemap[2][0]->mark_tile_dirty((offset & 0x0fff));
 		else if (offset < 0x3800)
-			space.machine().gfx[tc0100scn->tx_gfx]->mark_dirty((offset - 0x3000) / 8);
+			space.machine().gfx[m_txnum]->mark_dirty((offset - 0x3000) / 8);
 		else if (offset >= 0x4000 && offset < 0x6000)
-			tc0100scn->tilemap[1][0]->mark_tile_dirty((offset & 0x1fff) / 2);
+			m_tilemap[1][0]->mark_tile_dirty((offset & 0x1fff) / 2);
 	}
 	else    /* Double-width tilemaps have a different memory map */
 	{
 		if (offset < 0x4000)
-			tc0100scn->tilemap[0][1]->mark_tile_dirty(offset / 2);
+			m_tilemap[0][1]->mark_tile_dirty(offset / 2);
 		else if (offset >= 0x4000 && offset < 0x8000)
-			tc0100scn->tilemap[1][1]->mark_tile_dirty((offset & 0x3fff) / 2);
+			m_tilemap[1][1]->mark_tile_dirty((offset & 0x3fff) / 2);
 		else if (offset >= 0x8800 && offset < 0x9000)
-			space.machine().gfx[tc0100scn->tx_gfx]->mark_dirty((offset - 0x8800) / 8);
+			space.machine().gfx[m_txnum]->mark_dirty((offset - 0x8800) / 8);
 		else if (offset >= 0x9000)
-			tc0100scn->tilemap[2][1]->mark_tile_dirty((offset & 0x0fff));
+			m_tilemap[2][1]->mark_tile_dirty((offset & 0x0fff));
 	}
 }
 
-READ16_DEVICE_HANDLER( tc0100scn_ctrl_word_r )
+READ16_MEMBER( tc0100scn_device::ctrl_word_r )
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	return tc0100scn->ctrl[offset];
+	return m_ctrl[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0100scn_ctrl_word_w )
+WRITE16_MEMBER( tc0100scn_device::ctrl_word_w )
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
+	COMBINE_DATA(&m_ctrl[offset]);
 
-	COMBINE_DATA(&tc0100scn->ctrl[offset]);
-
-	data = tc0100scn->ctrl[offset];
+	data = m_ctrl[offset];
 
 	switch (offset)
 	{
 		case 0x00:
-			tc0100scn->bgscrollx = -data;
+			m_bgscrollx = -data;
 			break;
 
 		case 0x01:
-			tc0100scn->fgscrollx = -data;
+			m_fgscrollx = -data;
 			break;
 
 		case 0x02:
-			tc0100scn->tilemap[2][0]->set_scrollx(0, -data);
-			tc0100scn->tilemap[2][1]->set_scrollx(0, -data);
+			m_tilemap[2][0]->set_scrollx(0, -data);
+			m_tilemap[2][1]->set_scrollx(0, -data);
 			break;
 
 		case 0x03:
-			tc0100scn->bgscrolly = -data;
+			m_bgscrolly = -data;
 			break;
 
 		case 0x04:
-			tc0100scn->fgscrolly = -data;
+			m_fgscrolly = -data;
 			break;
 
 		case 0x05:
-			tc0100scn->tilemap[2][0]->set_scrolly(0, -data);
-			tc0100scn->tilemap[2][1]->set_scrolly(0, -data);
+			m_tilemap[2][0]->set_scrolly(0, -data);
+			m_tilemap[2][1]->set_scrolly(0, -data);
 			break;
 
 		case 0x06:
 		{
-			int old_width = tc0100scn->dblwidth;
-			tc0100scn->dblwidth = (data & 0x10) >> 4;
+			int old_width = m_dblwidth;
+			m_dblwidth = (data & 0x10) >> 4;
 
-			if (tc0100scn->dblwidth != old_width)   /* tilemap width is changing */
+			if (m_dblwidth != old_width)   /* tilemap width is changing */
 			{
 				/* Reinitialise layer pointers */
-				tc0100scn_set_layer_ptrs(tc0100scn);
+				set_layer_ptrs();
 
 				/* and ensure full redraw of the tilemaps */
-				tc0100scn_dirty_tilemaps(device);
+				dirty_tilemaps();
 
 				/* reset the pointer to the text characters (and dirty them all) */
-				space.machine().gfx[tc0100scn->tx_gfx]->set_source((UINT8 *)tc0100scn->char_ram);
+				space.machine().gfx[m_txnum]->set_source((UINT8 *)m_char_ram);
 			}
 
 			break;
@@ -2219,12 +2270,12 @@ WRITE16_DEVICE_HANDLER( tc0100scn_ctrl_word_w )
 		{
 			int flip = (data & 0x01) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0;
 
-			tc0100scn->tilemap[0][0]->set_flip(flip);
-			tc0100scn->tilemap[1][0]->set_flip(flip);
-			tc0100scn->tilemap[2][0]->set_flip(flip);
-			tc0100scn->tilemap[0][1]->set_flip(flip);
-			tc0100scn->tilemap[1][1]->set_flip(flip);
-			tc0100scn->tilemap[2][1]->set_flip(flip);
+			m_tilemap[0][0]->set_flip(flip);
+			m_tilemap[1][0]->set_flip(flip);
+			m_tilemap[2][0]->set_flip(flip);
+			m_tilemap[0][1]->set_flip(flip);
+			m_tilemap[1][1]->set_flip(flip);
+			m_tilemap[2][1]->set_flip(flip);
 
 			break;
 		}
@@ -2232,66 +2283,64 @@ WRITE16_DEVICE_HANDLER( tc0100scn_ctrl_word_w )
 }
 
 
-READ32_DEVICE_HANDLER( tc0100scn_ctrl_long_r )
+READ32_MEMBER( tc0100scn_device::ctrl_long_r )
 {
-	return (tc0100scn_ctrl_word_r(device, space, offset * 2, 0xffff) << 16) | tc0100scn_ctrl_word_r(device, space, offset * 2 + 1, 0xffff);
+	return (ctrl_word_r(space, offset * 2, 0xffff) << 16) | ctrl_word_r(space, offset * 2 + 1, 0xffff);
 }
 
-WRITE32_DEVICE_HANDLER( tc0100scn_ctrl_long_w )
+WRITE32_MEMBER( tc0100scn_device::ctrl_long_w )
 {
 	if (ACCESSING_BITS_16_31)
-		tc0100scn_ctrl_word_w(device, space, offset * 2, data >> 16, mem_mask >> 16);
+		ctrl_word_w(space, offset * 2, data >> 16, mem_mask >> 16);
 	if (ACCESSING_BITS_0_15)
-		tc0100scn_ctrl_word_w(device, space, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
+		ctrl_word_w(space, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
 }
 
-READ32_DEVICE_HANDLER( tc0100scn_long_r )
+READ32_MEMBER( tc0100scn_device::long_r )
 {
-	return (tc0100scn_word_r(device, space, offset * 2, 0xffff) << 16) | tc0100scn_word_r(device, space, offset * 2 + 1, 0xffff);
+	return (word_r(space, offset * 2, 0xffff) << 16) | word_r(space, offset * 2 + 1, 0xffff);
 }
 
-WRITE32_DEVICE_HANDLER( tc0100scn_long_w )
+WRITE32_MEMBER( tc0100scn_device::long_w )
 {
 	if (ACCESSING_BITS_16_31)
 	{
-		int oldword = tc0100scn_word_r(device, space, offset * 2, 0xffff);
+		int oldword = word_r(space, offset * 2, 0xffff);
 		int newword = data >> 16;
 		if (!ACCESSING_BITS_16_23)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_24_31)
 			newword |= (oldword & 0xff00);
-		tc0100scn_word_w(device, space, offset * 2, newword, 0xffff);
+		word_w(space, offset * 2, newword, 0xffff);
 	}
 	if (ACCESSING_BITS_0_15)
 	{
-		int oldword = tc0100scn_word_r(device, space, (offset * 2) + 1, 0xffff);
+		int oldword = word_r(space, (offset * 2) + 1, 0xffff);
 		int newword = data& 0xffff;
 		if (!ACCESSING_BITS_0_7)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_8_15)
 			newword |= (oldword & 0xff00);
-		tc0100scn_word_w(device, space, (offset * 2) + 1, newword, 0xffff);
+		word_w(space, (offset * 2) + 1, newword, 0xffff);
 	}
 }
 
 
-void tc0100scn_tilemap_update( device_t *device )
+void tc0100scn_device::tilemap_update()
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
 	int j;
 
-	tc0100scn->tilemap[0][tc0100scn->dblwidth]->set_scrolly(0, tc0100scn->bgscrolly);
-	tc0100scn->tilemap[1][tc0100scn->dblwidth]->set_scrolly(0, tc0100scn->fgscrolly);
+	m_tilemap[0][m_dblwidth]->set_scrolly(0, m_bgscrolly);
+	m_tilemap[1][m_dblwidth]->set_scrolly(0, m_fgscrolly);
 
 	for (j = 0; j < 256; j++)
-		tc0100scn->tilemap[0][tc0100scn->dblwidth]->set_scrollx((j + tc0100scn->bgscrolly) & 0x1ff, tc0100scn->bgscrollx - tc0100scn->bgscroll_ram[j]);
+		m_tilemap[0][m_dblwidth]->set_scrollx((j + m_bgscrolly) & 0x1ff, m_bgscrollx - m_bgscroll_ram[j]);
 	for (j = 0; j < 256; j++)
-		tc0100scn->tilemap[1][tc0100scn->dblwidth]->set_scrollx((j + tc0100scn->fgscrolly) & 0x1ff, tc0100scn->fgscrollx - tc0100scn->fgscroll_ram[j]);
+		m_tilemap[1][m_dblwidth]->set_scrollx((j + m_fgscrolly) & 0x1ff, m_fgscrollx - m_fgscroll_ram[j]);
 }
 
-static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, tilemap_t* tmap, int flags, UINT32 priority )
+void tc0100scn_device::tilemap_draw_fg( bitmap_ind16 &bitmap, const rectangle &cliprect, tilemap_t* tmap, int flags, UINT32 priority )
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
 	const bitmap_ind16 &src_bitmap = tmap->pixmap();
 	int width_mask, height_mask, x, y, p;
 	int column_offset, src_x = 0, src_y = 0;
@@ -2301,8 +2350,8 @@ static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_ind16 &bitmap, c
 	width_mask = src_bitmap.width() - 1;
 	height_mask = src_bitmap.height() - 1;
 
-	src_y = (tc0100scn->fgscrolly + scrolly_delta) & height_mask;
-	if (tc0100scn->ctrl[0x7] & 1) // Flipscreen
+	src_y = (m_fgscrolly + scrolly_delta) & height_mask;
+	if (m_ctrl[0x7] & 1) // Flipscreen
 		src_y = (256 - src_y) & height_mask;
 
 	//We use cliprect.max_y and cliprect.max_x to support games which use more than 1 screen
@@ -2310,22 +2359,22 @@ static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_ind16 &bitmap, c
 	// Row offsets are 'screen space' 0-255 regardless of Y scroll
 	for (y = 0; y <= cliprect.max_y; y++)
 	{
-		src_x = (tc0100scn->fgscrollx - tc0100scn->fgscroll_ram[(y + scrolly_delta) & 0x1ff] + scrollx_delta + cliprect.min_x) & width_mask;
-		if (tc0100scn->ctrl[0x7] & 1) // Flipscreen
+		src_x = (m_fgscrollx - m_fgscroll_ram[(y + scrolly_delta) & 0x1ff] + scrollx_delta + cliprect.min_x) & width_mask;
+		if (m_ctrl[0x7] & 1) // Flipscreen
 			src_x = (256 - 64 - src_x) & width_mask;
 
 		// Col offsets are 'tilemap' space 0-511, and apply to blocks of 8 pixels at once
 		for (x = 0; x < cliprect.width(); x++)
 		{
-			column_offset = tc0100scn->colscroll_ram[(src_x & 0x3ff) / 8];
+			column_offset = m_colscroll_ram[(src_x & 0x3ff) / 8];
 			p = src_bitmap.pix16((src_y - column_offset) & height_mask, src_x);
 
 			if ((p & 0xf)!= 0 || (flags & TILEMAP_DRAW_OPAQUE))
 			{
 				bitmap.pix16(y, x + cliprect.min_x) = p;
-				if (device->machine().priority_bitmap.valid())
+				if (machine().priority_bitmap.valid())
 				{
-					UINT8 *pri = &device->machine().priority_bitmap.pix8(y);
+					UINT8 *pri = &machine().priority_bitmap.pix8(y);
 					pri[x + cliprect.min_x] |= priority;
 				}
 			}
@@ -2335,12 +2384,11 @@ static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_ind16 &bitmap, c
 	}
 }
 
-int tc0100scn_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
+int tc0100scn_device::tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	int disable = tc0100scn->ctrl[6] & 0xf7;
+	int disable = m_ctrl[6] & 0xf7;
 	rectangle clip = cliprect;
-	clip &= tc0100scn->cliprect;
+	clip &= m_cliprect;
 
 #if 0
 if (disable != 0 && disable != 3 && disable != 7)
@@ -2352,168 +2400,26 @@ if (disable != 0 && disable != 3 && disable != 7)
 		case 0:
 			if (disable & 0x01)
 				return 1;
-			tc0100scn->tilemap[0][tc0100scn->dblwidth]->draw(bitmap, clip, flags, priority);
+			m_tilemap[0][m_dblwidth]->draw(bitmap, clip, flags, priority);
 			break;
 		case 1:
 			if (disable & 0x02)
 				return 1;
-			tc0100scn_tilemap_draw_fg(device, bitmap, clip, tc0100scn->tilemap[1][tc0100scn->dblwidth], flags, priority);
+			tilemap_draw_fg(bitmap, clip, m_tilemap[1][m_dblwidth], flags, priority);
 			break;
 		case 2:
 			if (disable & 0x04)
 				return 1;
-			tc0100scn->tilemap[2][tc0100scn->dblwidth]->draw(bitmap, clip, flags, priority);
+			m_tilemap[2][m_dblwidth]->draw(bitmap, clip, flags, priority);
 			break;
 	}
 	return 0;
 }
 
-int tc0100scn_bottomlayer( device_t *device )
+int tc0100scn_device::bottomlayer()
 {
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	return (tc0100scn->ctrl[6] & 0x8) >> 3;
+	return (m_ctrl[6] & 0x8) >> 3;
 }
-
-const device_type TC0100SCN = &device_creator<tc0100scn_device>;
-
-tc0100scn_device::tc0100scn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0100SCN, "Taito TC0100SCN", tag, owner, clock)
-{
-	m_token = global_alloc_clear(tc0100scn_state);
-}
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void tc0100scn_device::device_config_complete()
-{
-}
-
-//-------------------------------------------------
-//  device_start - device-specific startup
-//-------------------------------------------------
-
-void tc0100scn_device::device_start()
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(this);
-	const tc0100scn_interface *intf = tc0100scn_get_interface(this);
-	int xd, yd;
-
-	tc0100scn->screen = machine().device<screen_device>(intf->screen);
-
-	/* Set up clipping for multi-TC0100SCN games. We assume
-	   this code won't ever affect single screen games:
-	   Thundfox is the only one of those with two chips, and
-	   we're safe as it uses single width tilemaps. */
-
-	tc0100scn->cliprect = tc0100scn->screen->visible_area();
-
-	/* use the given gfx sets for bg/tx tiles*/
-	tc0100scn->bg_gfx = intf->gfxnum;   /* 2nd/3rd chips will use the same gfx set */
-	tc0100scn->tx_gfx = intf->txnum;
-
-	/* Single width versions */
-	tc0100scn->tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::tc0100scn_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	tc0100scn->tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::tc0100scn_get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	tc0100scn->tilemap[2][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::tc0100scn_get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-
-	/* Double width versions */
-	tc0100scn->tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::tc0100scn_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 64);
-	tc0100scn->tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::tc0100scn_get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 64);
-	tc0100scn->tilemap[2][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0100scn_device::tc0100scn_get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 32);
-
-	tc0100scn->tilemap[0][0]->set_transparent_pen(0);
-	tc0100scn->tilemap[1][0]->set_transparent_pen(0);
-	tc0100scn->tilemap[2][0]->set_transparent_pen(0);
-
-	tc0100scn->tilemap[0][1]->set_transparent_pen(0);
-	tc0100scn->tilemap[1][1]->set_transparent_pen(0);
-	tc0100scn->tilemap[2][1]->set_transparent_pen(0);
-
-	/* Standard width tilemaps. I'm setting the optional chip #2
-	   7 bits higher and 2 pixels to the left than chip #1 because
-	   that's how thundfox wants it. */
-
-	xd = (intf->multiscrn_hack == 0) ?  (-intf->x_offset) : (-intf->x_offset - 2);
-	yd = (intf->multiscrn_hack == 0) ?  (8 - intf->y_offset) : (1 - intf->y_offset);
-
-	tc0100scn->tilemap[0][0]->set_scrolldx(xd - 16, -intf->flip_xoffs - xd - 16);
-	tc0100scn->tilemap[0][0]->set_scrolldy(yd,      -intf->flip_yoffs - yd);
-	tc0100scn->tilemap[1][0]->set_scrolldx(xd - 16, -intf->flip_xoffs - xd - 16);
-	tc0100scn->tilemap[1][0]->set_scrolldy(yd,      -intf->flip_yoffs - yd);
-	tc0100scn->tilemap[2][0]->set_scrolldx(xd - 16, -intf->flip_text_xoffs - xd - 16 - 7);
-	tc0100scn->tilemap[2][0]->set_scrolldy(yd,      -intf->flip_text_yoffs - yd);
-
-	/* Double width tilemaps. We must correct offsets for
-	   extra chips, as MAME sees offsets from LHS of whole
-	   display not from the edges of individual screens.
-	   NB flipscreen tilemap offsets are based on Cameltry */
-
-	xd = -intf->x_offset - intf->multiscrn_xoffs;
-	yd = 8 - intf->y_offset;
-
-	tc0100scn->tilemap[0][1]->set_scrolldx(xd - 16, -intf->flip_xoffs - xd - 16);
-	tc0100scn->tilemap[0][1]->set_scrolldy(yd,      -intf->flip_yoffs - yd);
-	tc0100scn->tilemap[1][1]->set_scrolldx(xd - 16, -intf->flip_xoffs - xd - 16);
-	tc0100scn->tilemap[1][1]->set_scrolldy(yd,      -intf->flip_yoffs - yd);
-	tc0100scn->tilemap[2][1]->set_scrolldx(xd - 16, -intf->flip_text_xoffs - xd - 16 - 7);
-	tc0100scn->tilemap[2][1]->set_scrolldy(yd,      -intf->flip_text_yoffs - yd);
-
-	tc0100scn->tilemap[0][0]->set_scroll_rows(512);
-	tc0100scn->tilemap[1][0]->set_scroll_rows(512);
-	tc0100scn->tilemap[0][1]->set_scroll_rows(512);
-	tc0100scn->tilemap[1][1]->set_scroll_rows(512);
-
-	tc0100scn->bg_tilemask = 0xffff;    /* Mjnquest has 0x7fff tilemask */
-
-	tc0100scn->bg_col_mult = 1; /* multiplier for when bg gfx != 4bpp */
-	tc0100scn->tx_col_mult = 1; /* multiplier needed when bg gfx is 6bpp */
-
-	if (machine().gfx[intf->gfxnum]->granularity() == 2)    /* Yuyugogo, Yesnoj */
-		tc0100scn->bg_col_mult = 8;
-
-	if (machine().gfx[intf->gfxnum]->granularity() == 0x40) /* Undrfire */
-		tc0100scn->tx_col_mult = 4;
-
-//logerror("TC0100SCN bg gfx granularity %04x: multiplier %04x\n", machine().gfx[intf->gfxnum]->granularity(), tc0100scn->tx_col_mult);
-
-	tc0100scn->ram = auto_alloc_array_clear(machine(), UINT16, TC0100SCN_RAM_SIZE / 2);
-
-	tc0100scn_set_layer_ptrs(tc0100scn);
-
-	tc0100scn_set_colbanks(this, 0, 0, 0);  /* standard values, only Wgp & multiscreen games change them */
-									/* we call this here, so that they can be modified at VIDEO_START*/
-
-	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine().gfx[tc0100scn->tx_gfx] = auto_alloc(machine(), gfx_element(machine(), tc0100scn_charlayout, (UINT8 *)tc0100scn->char_ram, 64, 0));
-
-	save_pointer(NAME(tc0100scn->ram), TC0100SCN_RAM_SIZE / 2);
-	save_item(NAME(tc0100scn->ctrl));
-	save_item(NAME(tc0100scn->dblwidth));
-	save_item(NAME(tc0100scn->gfxbank));
-	machine().save().register_postload(save_prepost_delegate(FUNC(tc0100scn_device::tc0100scn_postload), this));
-}
-
-//-------------------------------------------------
-//  device_reset - device-specific reset
-//-------------------------------------------------
-
-void tc0100scn_device::device_reset()
-{
-	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(this);
-	int i;
-
-	tc0100scn->dblwidth = 0;
-	tc0100scn->colbank = 0;
-	tc0100scn->gfxbank = 0; /* Mjnquest uniquely banks tiles */
-
-	for (i = 0; i < 8; i++)
-		tc0100scn->ctrl[i] = 0;
-}
-
 
 
 /***************************************************************************/
@@ -2522,152 +2428,16 @@ void tc0100scn_device::device_reset()
 /*                                                                         */
 /***************************************************************************/
 
-struct tc0280grd_state
-{
-	UINT16 *       ram;
-
-	tilemap_t      *tilemap;
-
-	UINT16         ctrl[8];
-	int            gfxnum, base_color;
-};
-
 #define TC0280GRD_RAM_SIZE 0x2000
-
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
-
-INLINE tc0280grd_state *tc0280grd_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert((device->type() == TC0280GRD) || (device->type() == TC0430GRW));
-
-	return (tc0280grd_state *)downcast<tc0280grd_device *>(device)->token();
-}
-
-INLINE const tc0280grd_interface *tc0280grd_get_interface( device_t *device )
-{
-	assert(device != NULL);
-	assert((device->type() == TC0280GRD) || (device->type() == TC0430GRW));
-	return (const tc0280grd_interface *) device->static_config();
-}
-
-/*****************************************************************************
-    DEVICE HANDLERS
-*****************************************************************************/
-
-TILE_GET_INFO_MEMBER(tc0280grd_device::tc0280grd_get_tile_info)
-{
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(this);
-	int attr = tc0280grd->ram[tile_index];
-	SET_TILE_INFO_MEMBER(
-			tc0280grd->gfxnum,
-			attr & 0x3fff,
-			((attr & 0xc000) >> 14) + tc0280grd->base_color,
-			0);
-}
-
-READ16_DEVICE_HANDLER( tc0280grd_word_r )
-{
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(device);
-	return tc0280grd->ram[offset];
-}
-
-WRITE16_DEVICE_HANDLER( tc0280grd_word_w )
-{
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(device);
-	COMBINE_DATA(&tc0280grd->ram[offset]);
-	tc0280grd->tilemap->mark_tile_dirty(offset);
-}
-
-WRITE16_DEVICE_HANDLER( tc0280grd_ctrl_word_w )
-{
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(device);
-	COMBINE_DATA(&tc0280grd->ctrl[offset]);
-}
-
-READ16_DEVICE_HANDLER( tc0430grw_word_r )
-{
-	return tc0280grd_word_r(device, space, offset, mem_mask);
-}
-
-WRITE16_DEVICE_HANDLER( tc0430grw_word_w )
-{
-	tc0280grd_word_w(device, space, offset, data, mem_mask);
-}
-
-WRITE16_DEVICE_HANDLER( tc0430grw_ctrl_word_w )
-{
-	tc0280grd_ctrl_word_w(device, space, offset, data, mem_mask);
-}
-
-void tc0280grd_tilemap_update( device_t *device, int base_color )
-{
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(device);
-	if (tc0280grd->base_color != base_color)
-	{
-		tc0280grd->base_color = base_color;
-		tc0280grd->tilemap->mark_all_dirty();
-	}
-}
-
-void tc0430grw_tilemap_update( device_t *device, int base_color )
-{
-	tc0280grd_tilemap_update(device, base_color);
-}
-
-static void zoom_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority, int xmultiply )
-{
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(device);
-	UINT32 startx, starty;
-	int incxx, incxy, incyx, incyy;
-
-	/* 24-bit signed */
-	startx = ((tc0280grd->ctrl[0] & 0xff) << 16) + tc0280grd->ctrl[1];
-
-	if (startx & 0x800000)
-		startx -= 0x1000000;
-
-	incxx = (INT16)tc0280grd->ctrl[2];
-	incxx *= xmultiply;
-	incyx = (INT16)tc0280grd->ctrl[3];
-
-	/* 24-bit signed */
-	starty = ((tc0280grd->ctrl[4] & 0xff) << 16) + tc0280grd->ctrl[5];
-
-	if (starty & 0x800000)
-		starty -= 0x1000000;
-
-	incxy = (INT16)tc0280grd->ctrl[6];
-	incxy *= xmultiply;
-	incyy = (INT16)tc0280grd->ctrl[7];
-
-	startx -= xoffset * incxx + yoffset * incyx;
-	starty -= xoffset * incxy + yoffset * incyy;
-
-	tc0280grd->tilemap->draw_roz(bitmap, cliprect, startx << 4, starty << 4,
-			incxx << 4, incxy << 4, incyx << 4, incyy << 4,
-			1,  /* copy with wraparound */
-			0, priority);
-}
-
-void tc0280grd_zoom_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority )
-{
-	zoom_draw(device, bitmap, cliprect, xoffset, yoffset, priority, 2);
-}
-
-void tc0430grw_zoom_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority )
-{
-	zoom_draw(device, bitmap, cliprect, xoffset, yoffset, priority, 1);
-}
 
 const device_type TC0280GRD = &device_creator<tc0280grd_device>;
 
 tc0280grd_device::tc0280grd_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0280GRD, "Taito TC0280GRD & TC0430GRW", tag, owner, clock)
+	: device_t(mconfig, TC0280GRD, "Taito TC0280GRD & TC0430GRW", tag, owner, clock, "tc0280grd", __FILE__),
+	m_ram(NULL),
+    //m_ctrl[8](0),
+	m_base_color(0)
 {
-	m_token = global_alloc_clear(tc0280grd_state);
 }
 
 //-------------------------------------------------
@@ -2678,6 +2448,15 @@ tc0280grd_device::tc0280grd_device(const machine_config &mconfig, const char *ta
 
 void tc0280grd_device::device_config_complete()
 {
+	// inherit a copy of the static data
+	const tc0280grd_interface *intf = reinterpret_cast<const tc0280grd_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0280grd_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
 }
 
 //-------------------------------------------------
@@ -2686,18 +2465,13 @@ void tc0280grd_device::device_config_complete()
 
 void tc0280grd_device::device_start()
 {
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(this);
-	const tc0280grd_interface *intf = tc0280grd_get_interface(this);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0280grd_device::tc0280grd_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap->set_transparent_pen(0);
 
-	tc0280grd->gfxnum = intf->gfxnum;
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0280GRD_RAM_SIZE / 2);
 
-	tc0280grd->tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0280grd_device::tc0280grd_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	tc0280grd->tilemap->set_transparent_pen(0);
-
-	tc0280grd->ram = auto_alloc_array(machine(), UINT16, TC0280GRD_RAM_SIZE / 2);
-
-	save_pointer(NAME(tc0280grd->ram), TC0280GRD_RAM_SIZE / 2);
-	save_item(NAME(tc0280grd->ctrl));
+	save_pointer(NAME(m_ram), TC0280GRD_RAM_SIZE / 2);
+	save_item(NAME(m_ctrl));
 }
 
 //-------------------------------------------------
@@ -2706,11 +2480,113 @@ void tc0280grd_device::device_start()
 
 void tc0280grd_device::device_reset()
 {
-	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(this);
 	int i;
 
 	for (i = 0; i < 8; i++)
-		tc0280grd->ctrl[i] = 0;
+		m_ctrl[i] = 0;
+}
+
+/*****************************************************************************
+    DEVICE HANDLERS
+*****************************************************************************/
+
+TILE_GET_INFO_MEMBER(tc0280grd_device::tc0280grd_get_tile_info)
+{
+	int attr = m_ram[tile_index];
+	SET_TILE_INFO_MEMBER(
+			m_gfxnum,
+			attr & 0x3fff,
+			((attr & 0xc000) >> 14) + m_base_color,
+			0);
+}
+
+READ16_MEMBER( tc0280grd_device::tc0280grd_word_r )
+{
+	return m_ram[offset];
+}
+
+WRITE16_MEMBER( tc0280grd_device::tc0280grd_word_w )
+{
+	COMBINE_DATA(&m_ram[offset]);
+	m_tilemap->mark_tile_dirty(offset);
+}
+
+WRITE16_MEMBER( tc0280grd_device::tc0280grd_ctrl_word_w )
+{
+	COMBINE_DATA(&m_ctrl[offset]);
+}
+
+READ16_MEMBER( tc0280grd_device::tc0430grw_word_r )
+{
+	return tc0280grd_word_r(space, offset, mem_mask);
+}
+
+WRITE16_MEMBER( tc0280grd_device::tc0430grw_word_w )
+{
+	tc0280grd_word_w(space, offset, data, mem_mask);
+}
+
+WRITE16_MEMBER( tc0280grd_device::tc0430grw_ctrl_word_w )
+{
+	tc0280grd_ctrl_word_w(space, offset, data, mem_mask);
+}
+
+void tc0280grd_device::tc0280grd_tilemap_update( int base_color )
+{
+	if (m_base_color != base_color)
+	{
+		m_base_color = base_color;
+		m_tilemap->mark_all_dirty();
+	}
+}
+
+void tc0280grd_device::tc0430grw_tilemap_update( int base_color )
+{
+	tc0280grd_tilemap_update(base_color);
+}
+
+void tc0280grd_device::zoom_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority, int xmultiply )
+{
+	UINT32 startx, starty;
+	int incxx, incxy, incyx, incyy;
+
+	/* 24-bit signed */
+	startx = ((m_ctrl[0] & 0xff) << 16) + m_ctrl[1];
+
+	if (startx & 0x800000)
+		startx -= 0x1000000;
+
+	incxx = (INT16)m_ctrl[2];
+	incxx *= xmultiply;
+	incyx = (INT16)m_ctrl[3];
+
+	/* 24-bit signed */
+	starty = ((m_ctrl[4] & 0xff) << 16) + m_ctrl[5];
+
+	if (starty & 0x800000)
+		starty -= 0x1000000;
+
+	incxy = (INT16)m_ctrl[6];
+	incxy *= xmultiply;
+	incyy = (INT16)m_ctrl[7];
+
+	startx -= xoffset * incxx + yoffset * incyx;
+	starty -= xoffset * incxy + yoffset * incyy;
+
+	m_tilemap->draw_roz(bitmap, cliprect, startx << 4, starty << 4,
+			incxx << 4, incxy << 4, incyx << 4, incyy << 4,
+			1,  /* copy with wraparound */
+			0, priority);
+}
+
+void tc0280grd_device::tc0280grd_zoom_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority )
+{
+	zoom_draw(bitmap, cliprect, xoffset, yoffset, priority, 2);
+}
+
+void tc0280grd_device::tc0430grw_zoom_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority )
+{
+	zoom_draw(bitmap, cliprect, xoffset, yoffset, priority, 1);
 }
 
 
@@ -2720,75 +2596,14 @@ void tc0280grd_device::device_reset()
 /*                                                                         */
 /***************************************************************************/
 
-struct tc0360pri_state
-{
-	UINT8   regs[16];
-};
 
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
-
-INLINE tc0360pri_state *tc0360pri_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert(device->type() == TC0360PRI);
-
-	return (tc0360pri_state *)downcast<tc0360pri_device *>(device)->token();
-}
-
-/*****************************************************************************
-    DEVICE HANDLERS
-*****************************************************************************/
-
-WRITE8_DEVICE_HANDLER( tc0360pri_w )
-{
-	tc0360pri_state *tc0360pri = tc0360pri_get_safe_token(device);
-	tc0360pri->regs[offset] = data;
-
-if (offset >= 0x0a)
-	popmessage("write %02x to unused TC0360PRI reg %x", data, offset);
-#if 0
-#define regs tc0360pri->regs
-	popmessage("%02x %02x  %02x %02x  %02x %02x %02x %02x %02x %02x",
-		regs[0x00], regs[0x01], regs[0x02], regs[0x03],
-		regs[0x04], regs[0x05], regs[0x06], regs[0x07],
-		regs[0x08], regs[0x09]);
-#endif
-}
-
-READ8_DEVICE_HANDLER( tc0360pri_r )
-{
-	tc0360pri_state *tc0360pri = tc0360pri_get_safe_token(device);
-	return tc0360pri->regs[offset];
-}
-
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
-
-static DEVICE_START( tc0360pri )
-{
-	tc0360pri_state *tc0360pri = tc0360pri_get_safe_token(device);
-	device->save_item(NAME(tc0360pri->regs));
-}
-
-static DEVICE_RESET( tc0360pri )
-{
-	tc0360pri_state *tc0360pri = tc0360pri_get_safe_token(device);
-	int i;
-
-	for (i = 0; i < 16; i++)
-		tc0360pri->regs[i] = 0;
-
-}
 
 const device_type TC0360PRI = &device_creator<tc0360pri_device>;
 
 tc0360pri_device::tc0360pri_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0360PRI, "Taito TC0360PRI", tag, owner, clock)
+	: device_t(mconfig, TC0360PRI, "Taito TC0360PRI", tag, owner, clock, "tc0360pri", __FILE__)
+	// m_regs[16](0),
 {
-	m_token = global_alloc_clear(tc0360pri_state);
 }
 
 //-------------------------------------------------
@@ -2807,7 +2622,7 @@ void tc0360pri_device::device_config_complete()
 
 void tc0360pri_device::device_start()
 {
-	DEVICE_START_NAME( tc0360pri )(this);
+	save_item(NAME(m_regs));
 }
 
 //-------------------------------------------------
@@ -2816,8 +2631,38 @@ void tc0360pri_device::device_start()
 
 void tc0360pri_device::device_reset()
 {
-	DEVICE_RESET_NAME( tc0360pri )(this);
+		int i;
+
+	for (i = 0; i < 16; i++)
+		m_regs[i] = 0;
 }
+
+
+/*****************************************************************************
+    DEVICE HANDLERS
+*****************************************************************************/
+
+WRITE8_MEMBER( tc0360pri_device::write )
+{
+	m_regs[offset] = data;
+
+if (offset >= 0x0a)
+	popmessage("write %02x to unused TC0360PRI reg %x", data, offset);
+#if 0
+#define regs m_regs
+	popmessage("%02x %02x  %02x %02x  %02x %02x %02x %02x %02x %02x",
+		regs[0x00], regs[0x01], regs[0x02], regs[0x03],
+		regs[0x04], regs[0x05], regs[0x06], regs[0x07],
+		regs[0x08], regs[0x09]);
+#endif
+}
+
+READ8_MEMBER( tc0360pri_device::read )
+{
+	return m_regs[offset];
+}
+
+
 
 /***************************************************************************/
 /*                                                                         */
@@ -2825,50 +2670,166 @@ void tc0360pri_device::device_reset()
 /*                                                                         */
 /***************************************************************************/
 
-struct tc0480scp_state
-{
-	UINT16           ctrl[0x18];
-
-	UINT16 *         ram;
-	UINT16 *         bg_ram[4];
-	UINT16 *         tx_ram;
-	UINT16 *         char_ram;
-	UINT16 *         bgscroll_ram[4];
-	UINT16 *         rowzoom_ram[4];
-	UINT16 *         bgcolumn_ram[4];
-	int              bgscrollx[4];
-	int              bgscrolly[4];
-	int              pri_reg;
-
-	/* We keep two tilemaps for each of the 5 actual tilemaps: one at standard width, one double */
-	tilemap_t         *tilemap[5][2];
-	int             bg_gfx, tx_gfx;
-	INT32           tile_colbase, dblwidth;
-	int             x_offs, y_offs;
-	int             text_xoffs, text_yoffs;
-	int             flip_xoffs, flip_yoffs;
-};
-
 #define TC0480SCP_RAM_SIZE 0x10000
 #define TC0480SCP_TOTAL_CHARS 256
 
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
 
-INLINE tc0480scp_state *tc0480scp_get_safe_token( device_t *device )
+
+const device_type TC0480SCP = &device_creator<tc0480scp_device>;
+
+tc0480scp_device::tc0480scp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0480SCP, "Taito TC0480SCP", tag, owner, clock, "tc0480scp", __FILE__),
+	// m_ctrl[0x18](0),
+	m_ram(NULL),
+	//m_bg_ram[4](NULL),
+	m_tx_ram(NULL),
+	m_char_ram(NULL),
+	//m_bgscroll_ram[4](NULL),
+	//m_rowzoom_ram[4](NULL),
+	//m_bgcolumn_ram[4](NULL),
+	//m_bgscrollx[4](NULL),
+	//m_bgscrolly[4](NULL),
+	m_pri_reg(0),
+	m_dblwidth(0),
+	m_x_offs(0)
 {
-	assert(device != NULL);
-	assert(device->type() == TC0480SCP);
-
-	return (tc0480scp_state *)downcast<tc0480scp_device *>(device)->token();
 }
 
-INLINE const tc0480scp_interface *tc0480scp_get_interface( device_t *device )
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tc0480scp_device::device_config_complete()
 {
-	assert(device != NULL);
-	assert((device->type() == TC0480SCP));
-	return (const tc0480scp_interface *) device->static_config();
+	// inherit a copy of the static data
+	const tc0480scp_interface *intf = reinterpret_cast<const tc0480scp_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0480scp_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tc0480scp_device::device_start()
+{
+	int i, xd, yd;
+
+	m_x_offs = m_x_offset + m_pixels;
+	
+	
+	static const gfx_layout tc0480scp_charlayout =
+	{
+		8,8,    /* 8*8 characters */
+		256,    /* 256 characters */
+		4,  /* 4 bits per pixel */
+		{ 0, 1, 2, 3 },
+		{ XOR(3)*4, XOR(2)*4, XOR(1)*4, XOR(0)*4, XOR(7)*4, XOR(6)*4, XOR(5)*4, XOR(4)*4 },
+		{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
+		32*8    /* every sprite takes 32 consecutive bytes */
+	};
+	
+	
+	/* Single width versions */
+	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[2][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[3][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[4][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+
+	/* Double width versions */
+	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[2][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[3][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[4][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+
+	for (i = 0; i < 2; i++)
+	{
+		m_tilemap[0][i]->set_transparent_pen(0);
+		m_tilemap[1][i]->set_transparent_pen(0);
+		m_tilemap[2][i]->set_transparent_pen(0);
+		m_tilemap[3][i]->set_transparent_pen(0);
+		m_tilemap[4][i]->set_transparent_pen(0);
+	}
+
+	xd = -m_x_offs;
+	yd =  m_y_offset;
+
+	/* Metalb and Deadconx have minor screenflip issues: blue planet
+	   is off on x axis by 1 and in Deadconx the dark blue screen
+	   between stages also seems off by 1 pixel. */
+
+	/* It's not possible to get the text scrolldx calculations
+	   harmonised with the other layers: xd-2, 315-xd is the
+	   next valid pair:- the numbers diverge from xd, 319-xd */
+
+	/* Single width offsets */
+	m_tilemap[0][0]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[0][0]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[1][0]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[1][0]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[2][0]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[2][0]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[3][0]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[3][0]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[4][0]->set_scrolldx(xd - 3, 316 - xd);   /* text layer */
+	m_tilemap[4][0]->set_scrolldy(yd,     256 - yd);   /* text layer */
+
+	/* Double width offsets */
+	m_tilemap[0][1]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[0][1]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[1][1]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[1][1]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[2][1]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[2][1]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[3][1]->set_scrolldx(xd,     320 - xd + m_flip_xoffs);
+	m_tilemap[3][1]->set_scrolldy(yd,     256 - yd + m_flip_yoffs);
+	m_tilemap[4][1]->set_scrolldx(xd - 3, 317 - xd);   /* text layer */
+	m_tilemap[4][1]->set_scrolldy(yd,     256 - yd);   /* text layer */
+
+	for (i = 0; i < 2; i++)
+	{
+		/* Both sets of bg tilemaps scrollable per pixel row */
+		m_tilemap[0][i]->set_scroll_rows(512);
+		m_tilemap[1][i]->set_scroll_rows(512);
+		m_tilemap[2][i]->set_scroll_rows(512);
+		m_tilemap[3][i]->set_scroll_rows(512);
+	}
+
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0480SCP_RAM_SIZE / 2);
+
+	set_layer_ptrs();
+
+	/* create the char set (gfx will then be updated dynamically from RAM) */
+	machine().gfx[m_txnum] = auto_alloc_clear(machine(), gfx_element(machine(), tc0480scp_charlayout, (UINT8 *)m_char_ram, 64, 0));
+
+	save_pointer(NAME(m_ram), TC0480SCP_RAM_SIZE / 2);
+	save_item(NAME(m_ctrl));
+	save_item(NAME(m_dblwidth));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tc0480scp_device::postload), this));
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tc0480scp_device::device_reset()
+{
+	int i;
+
+	m_dblwidth = 0;
+
+	for (i = 0; i < 0x18; i++)
+		m_ctrl[i] = 0;
+
 }
 
 /*****************************************************************************
@@ -2876,227 +2837,203 @@ INLINE const tc0480scp_interface *tc0480scp_get_interface( device_t *device )
 *****************************************************************************/
 
 
-INLINE void common_get_tc0480bg_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum )
+void tc0480scp_device::common_get_tc0480bg_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
 	int code = ram[2 * tile_index + 1] & 0x7fff;
 	int attr = ram[2 * tile_index];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			gfxnum,
 			code,
-			(attr & 0xff) + tc0480scp->tile_colbase,
+			(attr & 0xff) + m_col_base,
 			TILE_FLIPYX((attr & 0xc000) >> 14));
 }
 
-INLINE void common_get_tc0480tx_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum )
+void tc0480scp_device::common_get_tc0480tx_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
 	int attr = ram[tile_index];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			gfxnum,
 			attr & 0xff,
-			((attr & 0x3f00) >> 8) + tc0480scp->tile_colbase,
+			((attr & 0x3f00) >> 8) + m_col_base,
 			TILE_FLIPYX((attr & 0xc000) >> 14));
 }
 
-TILE_GET_INFO_MEMBER(tc0480scp_device::tc0480scp_get_bg0_tile_info)
+TILE_GET_INFO_MEMBER(tc0480scp_device::get_bg0_tile_info)
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	common_get_tc0480bg_tile_info(machine(), this, tileinfo, tile_index, tc0480scp->bg_ram[0], tc0480scp->bg_gfx );
+	common_get_tc0480bg_tile_info(tileinfo, tile_index, m_bg_ram[0], m_gfxnum );
 }
 
-TILE_GET_INFO_MEMBER(tc0480scp_device::tc0480scp_get_bg1_tile_info)
+TILE_GET_INFO_MEMBER(tc0480scp_device::get_bg1_tile_info)
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	common_get_tc0480bg_tile_info(machine(), this, tileinfo, tile_index, tc0480scp->bg_ram[1], tc0480scp->bg_gfx);
+	common_get_tc0480bg_tile_info(tileinfo, tile_index, m_bg_ram[1], m_gfxnum);
 }
 
-TILE_GET_INFO_MEMBER(tc0480scp_device::tc0480scp_get_bg2_tile_info)
+TILE_GET_INFO_MEMBER(tc0480scp_device::get_bg2_tile_info)
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	common_get_tc0480bg_tile_info(machine(), this, tileinfo, tile_index, tc0480scp->bg_ram[2], tc0480scp->bg_gfx);
+	common_get_tc0480bg_tile_info(tileinfo, tile_index, m_bg_ram[2], m_gfxnum);
 }
 
-TILE_GET_INFO_MEMBER(tc0480scp_device::tc0480scp_get_bg3_tile_info)
+TILE_GET_INFO_MEMBER(tc0480scp_device::get_bg3_tile_info)
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	common_get_tc0480bg_tile_info(machine(), this, tileinfo, tile_index, tc0480scp->bg_ram[3], tc0480scp->bg_gfx);
+	common_get_tc0480bg_tile_info(tileinfo, tile_index, m_bg_ram[3], m_gfxnum);
 }
 
-TILE_GET_INFO_MEMBER(tc0480scp_device::tc0480scp_get_tx_tile_info)
+TILE_GET_INFO_MEMBER(tc0480scp_device::get_tx_tile_info)
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	common_get_tc0480tx_tile_info(machine(), this, tileinfo, tile_index, tc0480scp->tx_ram, tc0480scp->tx_gfx);
+	common_get_tc0480tx_tile_info(tileinfo, tile_index, m_tx_ram, m_txnum);
 }
 
-static const gfx_layout tc0480scp_charlayout =
+void tc0480scp_device::dirty_tilemaps()
 {
-	8,8,    /* 8*8 characters */
-	256,    /* 256 characters */
-	4,  /* 4 bits per pixel */
-	{ 0, 1, 2, 3 },
-	{ XOR(3)*4, XOR(2)*4, XOR(1)*4, XOR(0)*4, XOR(7)*4, XOR(6)*4, XOR(5)*4, XOR(4)*4 },
-	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
-	32*8    /* every sprite takes 32 consecutive bytes */
-};
-
-
-static void tc0480scp_dirty_tilemaps( tc0480scp_state *tc0480scp )
-{
-	tc0480scp->tilemap[0][tc0480scp->dblwidth]->mark_all_dirty();
-	tc0480scp->tilemap[1][tc0480scp->dblwidth]->mark_all_dirty();
-	tc0480scp->tilemap[2][tc0480scp->dblwidth]->mark_all_dirty();
-	tc0480scp->tilemap[3][tc0480scp->dblwidth]->mark_all_dirty();
-	tc0480scp->tilemap[4][tc0480scp->dblwidth]->mark_all_dirty();
+	m_tilemap[0][m_dblwidth]->mark_all_dirty();
+	m_tilemap[1][m_dblwidth]->mark_all_dirty();
+	m_tilemap[2][m_dblwidth]->mark_all_dirty();
+	m_tilemap[3][m_dblwidth]->mark_all_dirty();
+	m_tilemap[4][m_dblwidth]->mark_all_dirty();
 }
 
 
-static void tc0480scp_set_layer_ptrs( tc0480scp_state *tc0480scp )
+void tc0480scp_device::set_layer_ptrs()
 {
-	if (!tc0480scp->dblwidth)
+	if (!m_dblwidth)
 	{
-		tc0480scp->bg_ram[0]       = tc0480scp->ram + 0x0000; //0000
-		tc0480scp->bg_ram[1]       = tc0480scp->ram + 0x0800; //1000
-		tc0480scp->bg_ram[2]       = tc0480scp->ram + 0x1000; //2000
-		tc0480scp->bg_ram[3]       = tc0480scp->ram + 0x1800; //3000
-		tc0480scp->bgscroll_ram[0] = tc0480scp->ram + 0x2000; //4000
-		tc0480scp->bgscroll_ram[1] = tc0480scp->ram + 0x2200; //4400
-		tc0480scp->bgscroll_ram[2] = tc0480scp->ram + 0x2400; //4800
-		tc0480scp->bgscroll_ram[3] = tc0480scp->ram + 0x2600; //4c00
-		tc0480scp->rowzoom_ram[2]  = tc0480scp->ram + 0x3000; //6000
-		tc0480scp->rowzoom_ram[3]  = tc0480scp->ram + 0x3200; //6400
-		tc0480scp->bgcolumn_ram[2] = tc0480scp->ram + 0x3400; //6800
-		tc0480scp->bgcolumn_ram[3] = tc0480scp->ram + 0x3600; //6c00
-		tc0480scp->tx_ram          = tc0480scp->ram + 0x6000; //c000
-		tc0480scp->char_ram    = tc0480scp->ram + 0x7000; //e000
+		m_bg_ram[0]       = m_ram + 0x0000; //0000
+		m_bg_ram[1]       = m_ram + 0x0800; //1000
+		m_bg_ram[2]       = m_ram + 0x1000; //2000
+		m_bg_ram[3]       = m_ram + 0x1800; //3000
+		m_bgscroll_ram[0] = m_ram + 0x2000; //4000
+		m_bgscroll_ram[1] = m_ram + 0x2200; //4400
+		m_bgscroll_ram[2] = m_ram + 0x2400; //4800
+		m_bgscroll_ram[3] = m_ram + 0x2600; //4c00
+		m_rowzoom_ram[2]  = m_ram + 0x3000; //6000
+		m_rowzoom_ram[3]  = m_ram + 0x3200; //6400
+		m_bgcolumn_ram[2] = m_ram + 0x3400; //6800
+		m_bgcolumn_ram[3] = m_ram + 0x3600; //6c00
+		m_tx_ram          = m_ram + 0x6000; //c000
+		m_char_ram    = m_ram + 0x7000; //e000
 	}
 	else
 	{
-		tc0480scp->bg_ram[0]       = tc0480scp->ram + 0x0000; //0000
-		tc0480scp->bg_ram[1]       = tc0480scp->ram + 0x1000; //2000
-		tc0480scp->bg_ram[2]       = tc0480scp->ram + 0x2000; //4000
-		tc0480scp->bg_ram[3]       = tc0480scp->ram + 0x3000; //6000
-		tc0480scp->bgscroll_ram[0] = tc0480scp->ram + 0x4000; //8000
-		tc0480scp->bgscroll_ram[1] = tc0480scp->ram + 0x4200; //8400
-		tc0480scp->bgscroll_ram[2] = tc0480scp->ram + 0x4400; //8800
-		tc0480scp->bgscroll_ram[3] = tc0480scp->ram + 0x4600; //8c00
-		tc0480scp->rowzoom_ram[2]  = tc0480scp->ram + 0x5000; //a000
-		tc0480scp->rowzoom_ram[3]  = tc0480scp->ram + 0x5200; //a400
-		tc0480scp->bgcolumn_ram[2] = tc0480scp->ram + 0x5400; //a800
-		tc0480scp->bgcolumn_ram[3] = tc0480scp->ram + 0x5600; //ac00
-		tc0480scp->tx_ram          = tc0480scp->ram + 0x6000; //c000
-		tc0480scp->char_ram    = tc0480scp->ram + 0x7000; //e000
+		m_bg_ram[0]       = m_ram + 0x0000; //0000
+		m_bg_ram[1]       = m_ram + 0x1000; //2000
+		m_bg_ram[2]       = m_ram + 0x2000; //4000
+		m_bg_ram[3]       = m_ram + 0x3000; //6000
+		m_bgscroll_ram[0] = m_ram + 0x4000; //8000
+		m_bgscroll_ram[1] = m_ram + 0x4200; //8400
+		m_bgscroll_ram[2] = m_ram + 0x4400; //8800
+		m_bgscroll_ram[3] = m_ram + 0x4600; //8c00
+		m_rowzoom_ram[2]  = m_ram + 0x5000; //a000
+		m_rowzoom_ram[3]  = m_ram + 0x5200; //a400
+		m_bgcolumn_ram[2] = m_ram + 0x5400; //a800
+		m_bgcolumn_ram[3] = m_ram + 0x5600; //ac00
+		m_tx_ram          = m_ram + 0x6000; //c000
+		m_char_ram    = m_ram + 0x7000; //e000
 	}
 }
 
-READ16_DEVICE_HANDLER( tc0480scp_word_r )
+READ16_MEMBER( tc0480scp_device::word_r )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	return tc0480scp->ram[offset];
+	return m_ram[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0480scp_word_w )
+WRITE16_MEMBER( tc0480scp_device::word_w )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
+	COMBINE_DATA(&m_ram[offset]);
 
-	COMBINE_DATA(&tc0480scp->ram[offset]);
-
-	if (!tc0480scp->dblwidth)
+	if (!m_dblwidth)
 	{
 		if (offset < 0x2000)
 		{
-			tc0480scp->tilemap[(offset / 0x800)][tc0480scp->dblwidth]->mark_tile_dirty(((offset % 0x800) / 2));
+			m_tilemap[(offset / 0x800)][m_dblwidth]->mark_tile_dirty(((offset % 0x800) / 2));
 		}
 		else if (offset < 0x6000)
 		{   /* do nothing */
 		}
 		else if (offset < 0x7000)
 		{
-			tc0480scp->tilemap[4][tc0480scp->dblwidth]->mark_tile_dirty((offset - 0x6000));
+			m_tilemap[4][m_dblwidth]->mark_tile_dirty((offset - 0x6000));
 		}
 		else if (offset <= 0x7fff)
 		{
-			space.machine().gfx[tc0480scp->tx_gfx]->mark_dirty((offset - 0x7000) / 16);
+			space.machine().gfx[m_txnum]->mark_dirty((offset - 0x7000) / 16);
 		}
 	}
 	else
 	{
 		if (offset < 0x4000)
 		{
-			tc0480scp->tilemap[(offset / 0x1000)][tc0480scp->dblwidth]->mark_tile_dirty(((offset % 0x1000) / 2));
+			m_tilemap[(offset / 0x1000)][m_dblwidth]->mark_tile_dirty(((offset % 0x1000) / 2));
 		}
 		else if (offset < 0x6000)
 		{   /* do nothing */
 		}
 		else if (offset < 0x7000)
 		{
-			tc0480scp->tilemap[4][tc0480scp->dblwidth]->mark_tile_dirty((offset - 0x6000));
+			m_tilemap[4][m_dblwidth]->mark_tile_dirty((offset - 0x6000));
 		}
 		else if (offset <= 0x7fff)
 		{
-			space.machine().gfx[tc0480scp->tx_gfx]->mark_dirty((offset - 0x7000) / 16);
+			space.machine().gfx[m_txnum]->mark_dirty((offset - 0x7000) / 16);
 		}
 	}
 }
 
-READ16_DEVICE_HANDLER( tc0480scp_ctrl_word_r )
+READ16_MEMBER( tc0480scp_device::ctrl_word_r )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	return tc0480scp->ctrl[offset];
+	return m_ctrl[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0480scp_ctrl_word_w )
+WRITE16_MEMBER( tc0480scp_device::ctrl_word_w )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	int flip = tc0480scp->pri_reg & 0x40;
+	int flip = m_pri_reg & 0x40;
 
-	COMBINE_DATA(&tc0480scp->ctrl[offset]);
-	data = tc0480scp->ctrl[offset];
+	COMBINE_DATA(&m_ctrl[offset]);
+	data = m_ctrl[offset];
 
 	switch (offset)
 	{
 		/* The x offsets of the four bg layers are staggered by intervals of 4 pixels */
 		case 0x00:   /* bg0 x */
 			if (!flip)  data = -data;
-			tc0480scp->bgscrollx[0] = data;
+			m_bgscrollx[0] = data;
 			break;
 
 		case 0x01:   /* bg1 x */
 			data += 4;
 			if (!flip)  data = -data;
-			tc0480scp->bgscrollx[1] = data;
+			m_bgscrollx[1] = data;
 			break;
 
 		case 0x02:   /* bg2 x */
 			data += 8;
 			if (!flip)  data = -data;
-			tc0480scp->bgscrollx[2] = data;
+			m_bgscrollx[2] = data;
 			break;
 
 		case 0x03:   /* bg3 x */
 			data += 12;
 			if (!flip)  data = -data;
-			tc0480scp->bgscrollx[3] = data;
+			m_bgscrollx[3] = data;
 			break;
 
 		case 0x04:   /* bg0 y */
 			if (flip)  data = -data;
-			tc0480scp->bgscrolly[0] = data;
+			m_bgscrolly[0] = data;
 			break;
 
 		case 0x05:   /* bg1 y */
 			if (flip)  data = -data;
-			tc0480scp->bgscrolly[1] = data;
+			m_bgscrolly[1] = data;
 			break;
 
 		case 0x06:   /* bg2 y */
 			if (flip)  data = -data;
-			tc0480scp->bgscrolly[2] = data;
+			m_bgscrolly[2] = data;
 			break;
 
 		case 0x07:   /* bg3 y */
 			if (flip)  data = -data;
-			tc0480scp->bgscrolly[3] = data;
+			m_bgscrolly[3] = data;
 			break;
 
 		case 0x08:   /* bg0 zoom */
@@ -3108,52 +3045,52 @@ WRITE16_DEVICE_HANDLER( tc0480scp_ctrl_word_w )
 		case 0x0c:   /* fg (text) x */
 
 			/* Text layer can be offset from bg0 (e.g. Metalb) */
-			if (!flip)  data -= tc0480scp->text_xoffs;
-			if (flip)   data += tc0480scp->text_xoffs;
+			if (!flip)  data -= m_text_xoffs;
+			if (flip)   data += m_text_xoffs;
 
-			tc0480scp->tilemap[4][0]->set_scrollx(0, -data);
-			tc0480scp->tilemap[4][1]->set_scrollx(0, -data);
+			m_tilemap[4][0]->set_scrollx(0, -data);
+			m_tilemap[4][1]->set_scrollx(0, -data);
 			break;
 
 		case 0x0d:   /* fg (text) y */
 
 			/* Text layer can be offset from bg0 (e.g. Slapshot) */
-			if (!flip)  data -= tc0480scp->text_yoffs;
-			if (flip)   data += tc0480scp->text_yoffs;
+			if (!flip)  data -= m_text_yoffs;
+			if (flip)   data += m_text_yoffs;
 
-			tc0480scp->tilemap[4][0]->set_scrolly(0, -data);
-			tc0480scp->tilemap[4][1]->set_scrolly(0, -data);
+			m_tilemap[4][0]->set_scrolly(0, -data);
+			m_tilemap[4][1]->set_scrolly(0, -data);
 			break;
 
 		/* offset 0x0e unused */
 
 		case 0x0f:   /* control register */
 		{
-			int old_width = (tc0480scp->pri_reg & 0x80) >> 7;
+			int old_width = (m_pri_reg & 0x80) >> 7;
 			flip = (data & 0x40) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0;
-			tc0480scp->pri_reg = data;
+			m_pri_reg = data;
 
-			tc0480scp->tilemap[0][0]->set_flip(flip);
-			tc0480scp->tilemap[1][0]->set_flip(flip);
-			tc0480scp->tilemap[2][0]->set_flip(flip);
-			tc0480scp->tilemap[3][0]->set_flip(flip);
-			tc0480scp->tilemap[4][0]->set_flip(flip);
+			m_tilemap[0][0]->set_flip(flip);
+			m_tilemap[1][0]->set_flip(flip);
+			m_tilemap[2][0]->set_flip(flip);
+			m_tilemap[3][0]->set_flip(flip);
+			m_tilemap[4][0]->set_flip(flip);
 
-			tc0480scp->tilemap[0][1]->set_flip(flip);
-			tc0480scp->tilemap[1][1]->set_flip(flip);
-			tc0480scp->tilemap[2][1]->set_flip(flip);
-			tc0480scp->tilemap[3][1]->set_flip(flip);
-			tc0480scp->tilemap[4][1]->set_flip(flip);
+			m_tilemap[0][1]->set_flip(flip);
+			m_tilemap[1][1]->set_flip(flip);
+			m_tilemap[2][1]->set_flip(flip);
+			m_tilemap[3][1]->set_flip(flip);
+			m_tilemap[4][1]->set_flip(flip);
 
-			tc0480scp->dblwidth = (tc0480scp->pri_reg & 0x80) >> 7;
+			m_dblwidth = (m_pri_reg & 0x80) >> 7;
 
-			if (tc0480scp->dblwidth != old_width)   /* tilemap width is changing */
+			if (m_dblwidth != old_width)   /* tilemap width is changing */
 			{
 				/* Reinitialise layer pointers */
-				tc0480scp_set_layer_ptrs(tc0480scp);
+				set_layer_ptrs();
 
 				/* and ensure full redraw of tilemaps */
-				tc0480scp_dirty_tilemaps(tc0480scp);
+				dirty_tilemaps();
 			}
 
 			break;
@@ -3164,76 +3101,75 @@ WRITE16_DEVICE_HANDLER( tc0480scp_ctrl_word_w )
 }
 
 
-READ32_DEVICE_HANDLER( tc0480scp_ctrl_long_r )
+READ32_MEMBER( tc0480scp_device::ctrl_long_r )
 {
-	return (tc0480scp_ctrl_word_r(device, space, offset * 2, 0xffff) << 16) | tc0480scp_ctrl_word_r(device, space, offset * 2 + 1, 0xffff);
+	return (ctrl_word_r(space, offset * 2, 0xffff) << 16) | ctrl_word_r(space, offset * 2 + 1, 0xffff);
 }
 
 /* TODO: byte access ? */
 
-WRITE32_DEVICE_HANDLER( tc0480scp_ctrl_long_w )
+WRITE32_MEMBER( tc0480scp_device::ctrl_long_w )
 {
 	if (ACCESSING_BITS_16_31)
-		tc0480scp_ctrl_word_w(device, space, offset * 2, data >> 16, mem_mask >> 16);
+		ctrl_word_w(space, offset * 2, data >> 16, mem_mask >> 16);
 	if (ACCESSING_BITS_0_15)
-		tc0480scp_ctrl_word_w(device, space, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
+		ctrl_word_w(space, (offset * 2) + 1, data & 0xffff, mem_mask & 0xffff);
 }
 
-READ32_DEVICE_HANDLER( tc0480scp_long_r )
+READ32_MEMBER( tc0480scp_device::long_r )
 {
-	return (tc0480scp_word_r(device, space, offset * 2, 0xffff) << 16) | tc0480scp_word_r(device, space, offset * 2 + 1, 0xffff);
+	return (word_r(space, offset * 2, 0xffff) << 16) | word_r(space, offset * 2 + 1, 0xffff);
 }
 
-WRITE32_DEVICE_HANDLER( tc0480scp_long_w )
+WRITE32_MEMBER( tc0480scp_device::long_w )
 {
 	if (ACCESSING_BITS_16_31)
 	{
-		int oldword = tc0480scp_word_r(device, space, offset * 2, 0xffff);
+		int oldword = word_r(space, offset * 2, 0xffff);
 		int newword = data >> 16;
 		if (!ACCESSING_BITS_16_23)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_24_31)
 			newword |= (oldword & 0xff00);
-		tc0480scp_word_w(device, space, offset * 2, newword, 0xffff);
+		word_w(space, offset * 2, newword, 0xffff);
 	}
 	if (ACCESSING_BITS_0_15)
 	{
-		int oldword = tc0480scp_word_r(device, space, (offset * 2) + 1, 0xffff);
+		int oldword = word_r(space, (offset * 2) + 1, 0xffff);
 		int newword = data & 0xffff;
 		if (!ACCESSING_BITS_0_7)
 			newword |= (oldword & 0x00ff);
 		if (!ACCESSING_BITS_8_15)
 			newword |= (oldword & 0xff00);
-		tc0480scp_word_w(device, space, (offset * 2) + 1, newword, 0xffff);
+		word_w(space, (offset * 2) + 1, newword, 0xffff);
 	}
 }
 
 
-void tc0480scp_tilemap_update( device_t *device )
+void tc0480scp_device::tilemap_update()
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
 	int layer, zoom, i, j;
-	int flip = tc0480scp->pri_reg & 0x40;
+	int flip = m_pri_reg & 0x40;
 
 	for (layer = 0; layer < 4; layer++)
 	{
-		tc0480scp->tilemap[layer][tc0480scp->dblwidth]->set_scrolly(0, tc0480scp->bgscrolly[layer]);
-		zoom = 0x10000 + 0x7f - tc0480scp->ctrl[0x08 + layer];
+		m_tilemap[layer][m_dblwidth]->set_scrolly(0, m_bgscrolly[layer]);
+		zoom = 0x10000 + 0x7f - m_ctrl[0x08 + layer];
 
 		if (zoom != 0x10000)    /* can't use scroll rows when zooming */
 		{
-			tc0480scp->tilemap[layer][tc0480scp->dblwidth]->set_scrollx(0, tc0480scp->bgscrollx[layer]);
+			m_tilemap[layer][m_dblwidth]->set_scrollx(0, m_bgscrollx[layer]);
 		}
 		else
 		{
 			for (j = 0; j < 512; j++)
 			{
-				i = tc0480scp->bgscroll_ram[layer][j];
+				i = m_bgscroll_ram[layer][j];
 
 				if (!flip)
-					tc0480scp->tilemap[layer][tc0480scp->dblwidth]->set_scrollx(j & 0x1ff, tc0480scp->bgscrollx[layer] - i);
+					m_tilemap[layer][m_dblwidth]->set_scrollx(j & 0x1ff, m_bgscrollx[layer] - i);
 				else
-					tc0480scp->tilemap[layer][tc0480scp->dblwidth]->set_scrollx(j & 0x1ff, tc0480scp->bgscrollx[layer] + i);
+					m_tilemap[layer][m_dblwidth]->set_scrollx(j & 0x1ff, m_bgscrollx[layer] + i);
 			}
 		}
 	}
@@ -3276,20 +3212,19 @@ Historical Issues
 
 **********************************************************************/
 
-static void tc0480scp_bg01_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
+void tc0480scp_device::bg01_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	/* X-axis zoom offers expansion only: 0 = no zoom, 0xff = max
 	   Y-axis zoom offers expansion/compression: 0x7f = no zoom, 0xff = max
 	   (0x1a in Footchmp hiscore = shrunk) */
 
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	int zoomx = 0x10000 - (tc0480scp->ctrl[0x08 + layer] & 0xff00);
-	int zoomy = 0x10000 - (((tc0480scp->ctrl[0x08 + layer] & 0xff) - 0x7f) * 512);
+	int zoomx = 0x10000 - (m_ctrl[0x08 + layer] & 0xff00);
+	int zoomy = 0x10000 - (((m_ctrl[0x08 + layer] & 0xff) - 0x7f) * 512);
 
 	if ((zoomx == 0x10000) && (zoomy == 0x10000))   /* no zoom, simple */
 	{
 		/* Prevent bad things */
-		tc0480scp->tilemap[layer][tc0480scp->dblwidth]->draw(bitmap, cliprect, flags, priority);
+		m_tilemap[layer][m_dblwidth]->draw(bitmap, cliprect, flags, priority);
 	}
 	else    /* zoom */
 	{
@@ -3297,9 +3232,9 @@ static void tc0480scp_bg01_draw( device_t *device, bitmap_ind16 &bitmap, const r
 		UINT8 *tsrc;
 		UINT16 scanline[512];
 		UINT32 sx;
-		bitmap_ind16 &srcbitmap = tc0480scp->tilemap[layer][tc0480scp->dblwidth]->pixmap();
-		bitmap_ind8 &flagsbitmap = tc0480scp->tilemap[layer][tc0480scp->dblwidth]->flagsmap();
-		int flip = tc0480scp->pri_reg & 0x40;
+		bitmap_ind16 &srcbitmap = m_tilemap[layer][m_dblwidth]->pixmap();
+		bitmap_ind8 &flagsbitmap = m_tilemap[layer][m_dblwidth]->flagsmap();
+		int flip = m_pri_reg & 0x40;
 		int i, y, y_index, src_y_index, row_index;
 		int x_index, x_step;
 		int machine_flip = 0;   /* for  ROT 180 ? */
@@ -3309,24 +3244,24 @@ static void tc0480scp_bg01_draw( device_t *device, bitmap_ind16 &bitmap, const r
 		UINT16 max_y = cliprect.max_y;
 
 		int width_mask = 0x1ff;
-		if (tc0480scp->dblwidth)
+		if (m_dblwidth)
 			width_mask = 0x3ff;
 
 		if (!flip)
 		{
-			sx = ((tc0480scp->bgscrollx[layer] + 15 + layer * 4) << 16) + ((255 - (tc0480scp->ctrl[0x10 + layer] & 0xff)) << 8);
-			sx += (tc0480scp->x_offs - 15 - layer * 4) * zoomx;
+			sx = ((m_bgscrollx[layer] + 15 + layer * 4) << 16) + ((255 - (m_ctrl[0x10 + layer] & 0xff)) << 8);
+			sx += (m_x_offs - 15 - layer * 4) * zoomx;
 
-			y_index = (tc0480scp->bgscrolly[layer] << 16) + ((tc0480scp->ctrl[0x14 + layer] & 0xff) << 8);
-			y_index -= (tc0480scp->y_offs - min_y) * zoomy;
+			y_index = (m_bgscrolly[layer] << 16) + ((m_ctrl[0x14 + layer] & 0xff) << 8);
+			y_index -= (m_y_offset - min_y) * zoomy;
 		}
 		else    /* TC0480SCP tiles flipscreen */
 		{
-			sx = ((-tc0480scp->bgscrollx[layer] + 15 + layer * 4 + tc0480scp->flip_xoffs ) << 16) + ((255-(tc0480scp->ctrl[0x10 + layer] & 0xff)) << 8);
-			sx += (tc0480scp->x_offs - 15 - layer * 4) * zoomx;
+			sx = ((-m_bgscrollx[layer] + 15 + layer * 4 + m_flip_xoffs ) << 16) + ((255-(m_ctrl[0x10 + layer] & 0xff)) << 8);
+			sx += (m_x_offs - 15 - layer * 4) * zoomx;
 
-			y_index = ((-tc0480scp->bgscrolly[layer] + tc0480scp->flip_yoffs) << 16) + ((tc0480scp->ctrl[0x14 + layer] & 0xff) << 8);
-			y_index -= (tc0480scp->y_offs - min_y) * zoomy;
+			y_index = ((-m_bgscrolly[layer] + m_flip_yoffs) << 16) + ((m_ctrl[0x14 + layer] & 0xff) << 8);
+			y_index -= (m_y_offset - min_y) * zoomy;
 		}
 
 		if (!machine_flip)
@@ -3343,7 +3278,7 @@ static void tc0480scp_bg01_draw( device_t *device, bitmap_ind16 &bitmap, const r
 			if (flip)
 				row_index = 0x1ff - row_index;
 
-			x_index = sx - ((tc0480scp->bgscroll_ram[layer][row_index] << 16)) - ((tc0480scp->bgscroll_ram[layer][row_index + 0x800] << 8) & 0xffff);
+			x_index = sx - ((m_bgscroll_ram[layer][row_index] << 16)) - ((m_bgscroll_ram[layer][row_index + 0x800] << 8) & 0xffff);
 
 			src16 = &srcbitmap.pix16(src_y_index);
 			tsrc = &flagsbitmap.pix8(src_y_index);
@@ -3371,7 +3306,7 @@ static void tc0480scp_bg01_draw( device_t *device, bitmap_ind16 &bitmap, const r
 				}
 			}
 
-			taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, (flags & TILEMAP_DRAW_OPAQUE) ? 0 : 1, ROT0, device->machine().priority_bitmap, priority);
+			taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, (flags & TILEMAP_DRAW_OPAQUE) ? 0 : 1, ROT0, machine().priority_bitmap, priority);
 
 			y_index += zoomy;
 			if (!machine_flip)
@@ -3425,11 +3360,10 @@ flipscreen.
 
 ****************************************************************/
 
-static void tc0480scp_bg23_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
+void tc0480scp_device::bg23_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	bitmap_ind16 &srcbitmap = tc0480scp->tilemap[layer][tc0480scp->dblwidth]->pixmap();
-	bitmap_ind8 &flagsbitmap = tc0480scp->tilemap[layer][tc0480scp->dblwidth]->flagsmap();
+	bitmap_ind16 &srcbitmap = m_tilemap[layer][m_dblwidth]->pixmap();
+	bitmap_ind8 &flagsbitmap = m_tilemap[layer][m_dblwidth]->flagsmap();
 
 	UINT16 *dst16, *src16;
 	UINT8 *tsrc;
@@ -3437,7 +3371,7 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_ind16 &bitmap, const r
 	int sx, x_index, x_step;
 	UINT32 zoomx, zoomy;
 	UINT16 scanline[512];
-	int flipscreen = tc0480scp->pri_reg & 0x40;
+	int flipscreen = m_pri_reg & 0x40;
 	int machine_flip = 0;   /* for  ROT 180 ? */
 
 	UINT16 screen_width = 512; //cliprect.width();
@@ -3445,31 +3379,31 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_ind16 &bitmap, const r
 	UINT16 max_y = cliprect.max_y;
 
 	int width_mask = 0x1ff;
-	if (tc0480scp->dblwidth)
+	if (m_dblwidth)
 		width_mask = 0x3ff;
 
 	/* X-axis zoom offers expansion only: 0 = no zoom, 0xff = max
 	   Y-axis zoom offers expansion/compression: 0x7f = no zoom, 0xff = max
 	   (0x1a in Footchmp hiscore = shrunk) */
 
-	zoomx = 0x10000 - (tc0480scp->ctrl[0x08 + layer] & 0xff00);
-	zoomy = 0x10000 - (((tc0480scp->ctrl[0x08 + layer] & 0xff) - 0x7f) * 512);
+	zoomx = 0x10000 - (m_ctrl[0x08 + layer] & 0xff00);
+	zoomy = 0x10000 - (((m_ctrl[0x08 + layer] & 0xff) - 0x7f) * 512);
 
 	if (!flipscreen)
 	{
-		sx = ((tc0480scp->bgscrollx[layer] + 15 + layer * 4) << 16) + ((255-(tc0480scp->ctrl[0x10 + layer] & 0xff)) << 8);
-		sx += (tc0480scp->x_offs - 15 - layer * 4) * zoomx;
+		sx = ((m_bgscrollx[layer] + 15 + layer * 4) << 16) + ((255-(m_ctrl[0x10 + layer] & 0xff)) << 8);
+		sx += (m_x_offs - 15 - layer * 4) * zoomx;
 
-		y_index = (tc0480scp->bgscrolly[layer] << 16) + ((tc0480scp->ctrl[0x14 + layer] & 0xff) << 8);
-		y_index -= (tc0480scp->y_offs - min_y) * zoomy;
+		y_index = (m_bgscrolly[layer] << 16) + ((m_ctrl[0x14 + layer] & 0xff) << 8);
+		y_index -= (m_y_offset - min_y) * zoomy;
 	}
 	else    /* TC0480SCP tiles flipscreen */
 	{
-		sx = ((-tc0480scp->bgscrollx[layer] + 15 + layer * 4 + tc0480scp->flip_xoffs ) << 16) + ((255 - (tc0480scp->ctrl[0x10 + layer] & 0xff)) << 8);
-		sx += (tc0480scp->x_offs - 15 - layer * 4) * zoomx;
+		sx = ((-m_bgscrollx[layer] + 15 + layer * 4 + m_flip_xoffs ) << 16) + ((255 - (m_ctrl[0x10 + layer] & 0xff)) << 8);
+		sx += (m_x_offs - 15 - layer * 4) * zoomx;
 
-		y_index = ((-tc0480scp->bgscrolly[layer] + tc0480scp->flip_yoffs) << 16) + ((tc0480scp->ctrl[0x14 + layer] & 0xff) << 8);
-		y_index -= (tc0480scp->y_offs - min_y) * zoomy;
+		y_index = ((-m_bgscrolly[layer] + m_flip_yoffs) << 16) + ((m_ctrl[0x14 + layer] & 0xff) << 8);
+		y_index -= (m_y_offset - min_y) * zoomy;
 	}
 
 
@@ -3481,24 +3415,24 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_ind16 &bitmap, const r
 	do
 	{
 		if (!flipscreen)
-			src_y_index = ((y_index>>16) + tc0480scp->bgcolumn_ram[layer][(y - tc0480scp->y_offs) & 0x1ff]) & 0x1ff;
+			src_y_index = ((y_index>>16) + m_bgcolumn_ram[layer][(y - m_y_offset) & 0x1ff]) & 0x1ff;
 		else    /* colscroll area is back to front in flipscreen */
-			src_y_index = ((y_index>>16) + tc0480scp->bgcolumn_ram[layer][0x1ff - ((y - tc0480scp->y_offs) & 0x1ff)]) & 0x1ff;
+			src_y_index = ((y_index>>16) + m_bgcolumn_ram[layer][0x1ff - ((y - m_y_offset) & 0x1ff)]) & 0x1ff;
 
 		/* row areas are the same in flipscreen, so we must read in reverse */
 		row_index = src_y_index;
 		if (flipscreen)
 			row_index = 0x1ff - row_index;
 
-		if (tc0480scp->pri_reg & (layer - 1))   /* bit0 enables for BG2, bit1 for BG3 */
-			row_zoom = tc0480scp->rowzoom_ram[layer][row_index];
+		if (m_pri_reg & (layer - 1))   /* bit0 enables for BG2, bit1 for BG3 */
+			row_zoom = m_rowzoom_ram[layer][row_index];
 		else
 			row_zoom = 0;
 
-		x_index = sx - ((tc0480scp->bgscroll_ram[layer][row_index] << 16)) - ((tc0480scp->bgscroll_ram[layer][row_index + 0x800] << 8) & 0xffff);
+		x_index = sx - ((m_bgscroll_ram[layer][row_index] << 16)) - ((m_bgscroll_ram[layer][row_index + 0x800] << 8) & 0xffff);
 
 		/* flawed calc ?? */
-		x_index -= (tc0480scp->x_offs - 0x1f + layer * 4) * ((row_zoom & 0xff) << 8);
+		x_index -= (m_x_offs - 0x1f + layer * 4) * ((row_zoom & 0xff) << 8);
 
 /* We used to kludge 270 multiply factor, before adjusting x_index instead */
 
@@ -3535,7 +3469,7 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_ind16 &bitmap, const r
 			}
 		}
 
-		taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, (flags & TILEMAP_DRAW_OPAQUE) ? 0 : 1, ROT0, device->machine().priority_bitmap, priority);
+		taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, (flags & TILEMAP_DRAW_OPAQUE) ? 0 : 1, ROT0, machine().priority_bitmap, priority);
 
 		y_index += zoomy;
 		if (!machine_flip)
@@ -3547,27 +3481,25 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_ind16 &bitmap, const r
 }
 
 
-void tc0480scp_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
+void tc0480scp_device::tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-
 	/* no layer disable bits */
 	switch (layer)
 	{
 		case 0:
-			tc0480scp_bg01_draw(device, bitmap, cliprect, 0, flags, priority);
+			bg01_draw(bitmap, cliprect, 0, flags, priority);
 			break;
 		case 1:
-			tc0480scp_bg01_draw(device, bitmap, cliprect, 1, flags, priority);
+			bg01_draw(bitmap, cliprect, 1, flags, priority);
 			break;
 		case 2:
-			tc0480scp_bg23_draw(device, bitmap, cliprect, 2, flags, priority);
+			bg23_draw(bitmap, cliprect, 2, flags, priority);
 			break;
 		case 3:
-			tc0480scp_bg23_draw(device, bitmap, cliprect, 3, flags, priority);
+			bg23_draw(bitmap, cliprect, 3, flags, priority);
 			break;
 		case 4:
-			tc0480scp->tilemap[4][tc0480scp->dblwidth]->draw(bitmap, cliprect, flags, priority);
+			m_tilemap[4][m_dblwidth]->draw(bitmap, cliprect, flags, priority);
 			break;
 	}
 }
@@ -3586,93 +3518,97 @@ static const UINT16 tc0480scp_bg_pri_lookup[8] =
 	0x0321
 };
 
-int tc0480scp_get_bg_priority( device_t *device )
+int tc0480scp_device::get_bg_priority()
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	return tc0480scp_bg_pri_lookup[(tc0480scp->pri_reg & 0x1c) >> 2];
+	return tc0480scp_bg_pri_lookup[(m_pri_reg & 0x1c) >> 2];
 }
 
 // undrfire.c also needs to directly access the priority reg
-READ8_DEVICE_HANDLER( tc0480scp_pri_reg_r )
+READ8_MEMBER( tc0480scp_device::pri_reg_r )
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	return tc0480scp->pri_reg;
+	return m_pri_reg;
 }
 
-void tc0480scp_device::tc0480scp_postload()
+void tc0480scp_device::postload()
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-
 	int reg;
-	int flip = tc0480scp->ctrl[0xf] & 0x40;
+	int flip = m_ctrl[0xf] & 0x40;
 
-	tc0480scp_set_layer_ptrs(tc0480scp);
+	set_layer_ptrs();
 
-	tc0480scp->tilemap[0][0]->set_flip(flip);
-	tc0480scp->tilemap[1][0]->set_flip(flip);
-	tc0480scp->tilemap[2][0]->set_flip(flip);
-	tc0480scp->tilemap[3][0]->set_flip(flip);
-	tc0480scp->tilemap[4][0]->set_flip(flip);
+	m_tilemap[0][0]->set_flip(flip);
+	m_tilemap[1][0]->set_flip(flip);
+	m_tilemap[2][0]->set_flip(flip);
+	m_tilemap[3][0]->set_flip(flip);
+	m_tilemap[4][0]->set_flip(flip);
 
-	tc0480scp->tilemap[0][1]->set_flip(flip);
-	tc0480scp->tilemap[1][1]->set_flip(flip);
-	tc0480scp->tilemap[2][1]->set_flip(flip);
-	tc0480scp->tilemap[3][1]->set_flip(flip);
-	tc0480scp->tilemap[4][1]->set_flip(flip);
+	m_tilemap[0][1]->set_flip(flip);
+	m_tilemap[1][1]->set_flip(flip);
+	m_tilemap[2][1]->set_flip(flip);
+	m_tilemap[3][1]->set_flip(flip);
+	m_tilemap[4][1]->set_flip(flip);
 
-	reg = tc0480scp->ctrl[0];
+	reg = m_ctrl[0];
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrollx[0] = reg;
+	m_bgscrollx[0] = reg;
 
-	reg = tc0480scp->ctrl[1] + 4;
+	reg = m_ctrl[1] + 4;
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrollx[1] = reg;
+	m_bgscrollx[1] = reg;
 
-	reg = tc0480scp->ctrl[2] + 8;
+	reg = m_ctrl[2] + 8;
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrollx[2] = reg;
+	m_bgscrollx[2] = reg;
 
-	reg = tc0480scp->ctrl[3] + 12;
+	reg = m_ctrl[3] + 12;
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrollx[3] = reg;
+	m_bgscrollx[3] = reg;
 
-	reg = tc0480scp->ctrl[4];
+	reg = m_ctrl[4];
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrolly[0] = reg;
+	m_bgscrolly[0] = reg;
 
-	reg = tc0480scp->ctrl[5];
+	reg = m_ctrl[5];
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrolly[1] = reg;
+	m_bgscrolly[1] = reg;
 
-	reg = tc0480scp->ctrl[6];
+	reg = m_ctrl[6];
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrolly[2] = reg;
+	m_bgscrolly[2] = reg;
 
-	reg = tc0480scp->ctrl[7];
+	reg = m_ctrl[7];
 	if (!flip)  reg = -reg;
-	tc0480scp->bgscrolly[3] = reg;
+	m_bgscrolly[3] = reg;
 
-	reg = tc0480scp->ctrl[0x0c];
-	if (!flip)  reg -= tc0480scp->text_xoffs;
-	if (flip)   reg += tc0480scp->text_xoffs;
-	tc0480scp->tilemap[4][0]->set_scrollx(0, -reg);
-	tc0480scp->tilemap[4][1]->set_scrollx(0, -reg);
+	reg = m_ctrl[0x0c];
+	if (!flip)  reg -= m_text_xoffs;
+	if (flip)   reg += m_text_xoffs;
+	m_tilemap[4][0]->set_scrollx(0, -reg);
+	m_tilemap[4][1]->set_scrollx(0, -reg);
 
-	reg = tc0480scp->ctrl[0x0d];
-	if (!flip)  reg -= tc0480scp->text_yoffs;
-	if (flip)   reg += tc0480scp->text_yoffs;
-	tc0480scp->tilemap[4][0]->set_scrolly(0, -reg);
-	tc0480scp->tilemap[4][1]->set_scrolly(0, -reg);
+	reg = m_ctrl[0x0d];
+	if (!flip)  reg -= m_text_yoffs;
+	if (flip)   reg += m_text_yoffs;
+	m_tilemap[4][0]->set_scrolly(0, -reg);
+	m_tilemap[4][1]->set_scrolly(0, -reg);
 }
 
+/***************************************************************************/
+/*                                                                         */
+/*                              TC0150ROD                                  */
+/*                                                                         */
+/***************************************************************************/
+
+#define TC0150ROD_RAM_SIZE 0x2000
 
 
-const device_type TC0480SCP = &device_creator<tc0480scp_device>;
 
-tc0480scp_device::tc0480scp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0480SCP, "Taito TC0480SCP", tag, owner, clock)
+const device_type TC0150ROD = &device_creator<tc0150rod_device>;
+
+tc0150rod_device::tc0150rod_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0150ROD, "Taito TC0150ROD", tag, owner, clock, "tc0150rod", __FILE__),
+	m_ram(NULL)
 {
-	m_token = global_alloc_clear(tc0480scp_state);
 }
 
 //-------------------------------------------------
@@ -3681,177 +3617,43 @@ tc0480scp_device::tc0480scp_device(const machine_config &mconfig, const char *ta
 //  complete
 //-------------------------------------------------
 
-void tc0480scp_device::device_config_complete()
+void tc0150rod_device::device_config_complete()
 {
+	// inherit a copy of the static data
+	const tc0150rod_interface *intf = reinterpret_cast<const tc0150rod_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0150rod_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
 }
 
 //-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
 
-void tc0480scp_device::device_start()
+void tc0150rod_device::device_start()
 {
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	const tc0480scp_interface *intf = tc0480scp_get_interface(this);
-	int i, xd, yd;
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0150ROD_RAM_SIZE / 2);
 
-	/* use the given gfx set for bg/tx tiles */
-	tc0480scp->bg_gfx = intf->gfxnum;
-	tc0480scp->tx_gfx = intf->txnum;
-
-	tc0480scp->tile_colbase = intf->col_base;
-	tc0480scp->text_xoffs = intf->text_xoffs;
-	tc0480scp->text_yoffs = intf->text_yoffs;
-	tc0480scp->flip_xoffs = intf->flip_xoffs;   /* for most games (-1,0) */
-	tc0480scp->flip_yoffs = intf->flip_yoffs;
-	tc0480scp->x_offs = intf->x_offset + intf->pixels;
-	tc0480scp->y_offs = intf->y_offset;
-
-	/* Single width versions */
-	tc0480scp->tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	tc0480scp->tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	tc0480scp->tilemap[2][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	tc0480scp->tilemap[3][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	tc0480scp->tilemap[4][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-
-	/* Double width versions */
-	tc0480scp->tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	tc0480scp->tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	tc0480scp->tilemap[2][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	tc0480scp->tilemap[3][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	tc0480scp->tilemap[4][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::tc0480scp_get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-
-	for (i = 0; i < 2; i++)
-	{
-		tc0480scp->tilemap[0][i]->set_transparent_pen(0);
-		tc0480scp->tilemap[1][i]->set_transparent_pen(0);
-		tc0480scp->tilemap[2][i]->set_transparent_pen(0);
-		tc0480scp->tilemap[3][i]->set_transparent_pen(0);
-		tc0480scp->tilemap[4][i]->set_transparent_pen(0);
-	}
-
-	xd = -tc0480scp->x_offs;
-	yd =  tc0480scp->y_offs;
-
-	/* Metalb and Deadconx have minor screenflip issues: blue planet
-	   is off on x axis by 1 and in Deadconx the dark blue screen
-	   between stages also seems off by 1 pixel. */
-
-	/* It's not possible to get the text scrolldx calculations
-	   harmonised with the other layers: xd-2, 315-xd is the
-	   next valid pair:- the numbers diverge from xd, 319-xd */
-
-	/* Single width offsets */
-	tc0480scp->tilemap[0][0]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[0][0]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[1][0]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[1][0]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[2][0]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[2][0]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[3][0]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[3][0]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[4][0]->set_scrolldx(xd - 3, 316 - xd);   /* text layer */
-	tc0480scp->tilemap[4][0]->set_scrolldy(yd,     256 - yd);   /* text layer */
-
-	/* Double width offsets */
-	tc0480scp->tilemap[0][1]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[0][1]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[1][1]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[1][1]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[2][1]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[2][1]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[3][1]->set_scrolldx(xd,     320 - xd + tc0480scp->flip_xoffs);
-	tc0480scp->tilemap[3][1]->set_scrolldy(yd,     256 - yd + tc0480scp->flip_yoffs);
-	tc0480scp->tilemap[4][1]->set_scrolldx(xd - 3, 317 - xd);   /* text layer */
-	tc0480scp->tilemap[4][1]->set_scrolldy(yd,     256 - yd);   /* text layer */
-
-	for (i = 0; i < 2; i++)
-	{
-		/* Both sets of bg tilemaps scrollable per pixel row */
-		tc0480scp->tilemap[0][i]->set_scroll_rows(512);
-		tc0480scp->tilemap[1][i]->set_scroll_rows(512);
-		tc0480scp->tilemap[2][i]->set_scroll_rows(512);
-		tc0480scp->tilemap[3][i]->set_scroll_rows(512);
-	}
-
-	tc0480scp->ram = auto_alloc_array_clear(machine(), UINT16, TC0480SCP_RAM_SIZE / 2);
-
-	tc0480scp_set_layer_ptrs(tc0480scp);
-
-	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine().gfx[tc0480scp->tx_gfx] = auto_alloc(machine(), gfx_element(machine(), tc0480scp_charlayout, (UINT8 *)tc0480scp->char_ram, 64, 0));
-
-	save_pointer(NAME(tc0480scp->ram), TC0480SCP_RAM_SIZE / 2);
-	save_item(NAME(tc0480scp->ctrl));
-	save_item(NAME(tc0480scp->dblwidth));
-	machine().save().register_postload(save_prepost_delegate(FUNC(tc0480scp_device::tc0480scp_postload), this));
+	save_pointer(NAME(m_ram), TC0150ROD_RAM_SIZE / 2);
 }
 
-//-------------------------------------------------
-//  device_reset - device-specific reset
-//-------------------------------------------------
-
-void tc0480scp_device::device_reset()
-{
-	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(this);
-	int i;
-
-	tc0480scp->dblwidth = 0;
-
-	for (i = 0; i < 0x18; i++)
-		tc0480scp->ctrl[i] = 0;
-
-}
-
-
-/***************************************************************************/
-/*                                                                         */
-/*                              TC0150ROD                                  */
-/*                                                                         */
-/***************************************************************************/
-
-struct tc0150rod_state
-{
-	UINT16 *        ram;
-
-	const char      *gfx_region;    /* gfx region for the road */
-};
-
-#define TC0150ROD_RAM_SIZE 0x2000
-
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
-
-INLINE tc0150rod_state *tc0150rod_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert(device->type() == TC0150ROD);
-
-	return (tc0150rod_state *)downcast<tc0150rod_device *>(device)->token();
-}
-
-INLINE const tc0150rod_interface *tc0150rod_get_interface( device_t *device )
-{
-	assert(device != NULL);
-	assert((device->type() == TC0150ROD));
-	return (const tc0150rod_interface *) device->static_config();
-}
 
 /*****************************************************************************
     DEVICE HANDLERS
 *****************************************************************************/
 
-READ16_DEVICE_HANDLER( tc0150rod_word_r )
+READ16_MEMBER( tc0150rod_device::word_r )
 {
-	tc0150rod_state *tc0150rod = tc0150rod_get_safe_token(device);
-	return tc0150rod->ram[offset];
+	return m_ram[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0150rod_word_w )
+WRITE16_MEMBER( tc0150rod_device::word_w )
 {
-	tc0150rod_state *tc0150rod = tc0150rod_get_safe_token(device);
-	COMBINE_DATA(&tc0150rod->ram[offset]);
+	COMBINE_DATA(&m_ram[offset]);
 }
 
 /******************************************************************************
@@ -4017,20 +3819,18 @@ lookup table from rom for the TaitoZ sprites.
 
 ******************************************************************************/
 
-void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs, int palette_offs, int type, int road_trans, UINT32 low_priority, UINT32 high_priority )
+void tc0150rod_device::draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs, int palette_offs, int type, int road_trans, UINT32 low_priority, UINT32 high_priority )
 {
-	tc0150rod_state *tc0150rod = tc0150rod_get_safe_token(device);
-
-#ifdef MAME_DEBUG
+	#ifdef MAME_DEBUG
 	static int dislayer[6]; /* Road Layer toggles to help get road correct */
-#endif
+	#endif
 
 	int x_offs = 0xa7;  /* Increasing this shifts road to right */
 	UINT16 scanline[512];
 	UINT16 roada_line[512], roadb_line[512];
 	UINT16 *dst16;
 	UINT16 *roada, *roadb;
-	UINT16 *roadgfx = (UINT16 *)device->machine().root_device().memregion(tc0150rod->gfx_region)->base();
+	UINT16 *roadgfx = (UINT16 *)machine().root_device().memregion(m_gfx_region)->base();
 
 	UINT16 pixel, color, gfx_word;
 	UINT16 roada_clipl, roada_clipr, roada_bodyctrl;
@@ -4040,7 +3840,7 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 	int x_index, roadram_index, roadram2_index, i;
 	int xoffset, paloffs, palloffs, palroffs;
 	int road_gfx_tilenum, colbank, road_center;
-	int road_ctrl = tc0150rod->ram[0xfff];
+	int road_ctrl = m_ram[0xfff];
 	int left_edge, right_edge, begin, end, right_over, left_over;
 	int line_needs_drawing, draw_top_road_line, background_only;
 
@@ -4061,36 +3861,36 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 	int priority_switch_line = (road_ctrl & 0x00ff) - y_offs;
 
 #ifdef MAME_DEBUG
-	if (device->machine().input().code_pressed_once (KEYCODE_X))
+	if (machine().input().code_pressed_once (KEYCODE_X))
 	{
 		dislayer[0] ^= 1;
 		popmessage("RoadA body: %01x",dislayer[0]);
 	}
 
-	if (device->machine().input().code_pressed_once (KEYCODE_C))
+	if (machine().input().code_pressed_once (KEYCODE_C))
 	{
 		dislayer[1] ^= 1;
 		popmessage("RoadA l-edge: %01x",dislayer[1]);
 	}
 
-	if (device->machine().input().code_pressed_once (KEYCODE_V))
+	if (machine().input().code_pressed_once (KEYCODE_V))
 	{
 		dislayer[2] ^= 1;
 		popmessage("RoadA r-edge: %01x",dislayer[2]);
 	}
 
-	if (device->machine().input().code_pressed_once (KEYCODE_B))
+	if (machine().input().code_pressed_once (KEYCODE_B))
 	{
 		dislayer[3] ^= 1;
 		popmessage("RoadB body: %01x",dislayer[3]);
 	}
 
-	if (device->machine().input().code_pressed_once (KEYCODE_N))
+	if (machine().input().code_pressed_once (KEYCODE_N))
 	{
 		dislayer[4] ^= 1;
 		popmessage("RoadB l-edge: %01x",dislayer[4]);
 	}
-	if (device->machine().input().code_pressed_once (KEYCODE_M))
+	if (machine().input().code_pressed_once (KEYCODE_M))
 	{
 		dislayer[5] ^= 1;
 		popmessage("RoadB r-edge: %01x",dislayer[5]);
@@ -4130,12 +3930,12 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 		priorities[4] = 3;
 		priorities[5] = 4;
 
-		roada_clipr    = tc0150rod->ram[roadram_index];
-		roada_clipl    = tc0150rod->ram[roadram_index + 1];
-		roada_bodyctrl = tc0150rod->ram[roadram_index + 2];
-		roadb_clipr    = tc0150rod->ram[roadram2_index];
-		roadb_clipl    = tc0150rod->ram[roadram2_index + 1];
-		roadb_bodyctrl = tc0150rod->ram[roadram2_index + 2];
+		roada_clipr    = m_ram[roadram_index];
+		roada_clipl    = m_ram[roadram_index + 1];
+		roada_bodyctrl = m_ram[roadram_index + 2];
+		roadb_clipr    = m_ram[roadram2_index];
+		roadb_clipl    = m_ram[roadram2_index + 1];
+		roadb_bodyctrl = m_ram[roadram2_index + 2];
 
 		/* Not very logical, but seems to work */
 		if (roada_bodyctrl & 0x2000)    priorities[2] += 2;
@@ -4160,8 +3960,8 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 		palloffs =(roada_clipl & 0x1000) >> 11;
 		xoffset  = roada_bodyctrl & 0x7ff;
 		paloffs  =(roada_bodyctrl & 0x1800) >> 11;
-		colbank  =(tc0150rod->ram[roadram_index + 3] & 0xf000) >> 10;
-		road_gfx_tilenum = tc0150rod->ram[roadram_index + 3] & 0x3ff;
+		colbank  =(m_ram[roadram_index + 3] & 0xf000) >> 10;
+		road_gfx_tilenum = m_ram[roadram_index + 3] & 0x3ff;
 		right_over = 0;
 		left_over = 0;
 
@@ -4349,8 +4149,8 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 		palloffs = (roadb_clipl & 0x1000) >> 11;
 		xoffset  =  roadb_bodyctrl & 0x7ff;
 		paloffs  = (roadb_bodyctrl & 0x1800) >> 11;
-		colbank  = (tc0150rod->ram[roadram2_index + 3] & 0xf000) >> 10;
-		road_gfx_tilenum = tc0150rod->ram[roadram2_index + 3] & 0x3ff;
+		colbank  = (m_ram[roadram2_index + 3] & 0xf000) >> 10;
+		road_gfx_tilenum = m_ram[roadram2_index + 3] & 0x3ff;
 		right_over = 0;
 		left_over = 0;
 
@@ -4577,7 +4377,7 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 				}
 			}
 
-			taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, 1, ROT0, device->machine().priority_bitmap, (y > priority_switch_line) ? high_priority : low_priority);
+			taitoic_drawscanline(bitmap, cliprect, 0, y, scanline, 1, ROT0, machine().priority_bitmap, (y > priority_switch_line) ? high_priority : low_priority);
 		}
 
 		y++;
@@ -4594,29 +4394,24 @@ void tc0150rod_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cl
 #endif
 }
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
 
-static DEVICE_START( tc0150rod )
+/***************************************************************************/
+/*                                                                         */
+/*                              TC0110PCR                                  */
+/*                                                                         */
+/***************************************************************************/
+
+#define TC0110PCR_RAM_SIZE 0x2000
+
+
+const device_type TC0110PCR = &device_creator<tc0110pcr_device>;
+
+tc0110pcr_device::tc0110pcr_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0110PCR, "Taito TC0110PCR", tag, owner, clock, "tc0110pcr", __FILE__),
+		m_ram(NULL),
+		m_type(0),
+		m_addr(0)
 {
-	tc0150rod_state *tc0150rod = tc0150rod_get_safe_token(device);
-	const tc0150rod_interface *intf = tc0150rod_get_interface(device);
-
-	tc0150rod->gfx_region = intf->gfx_region;
-
-	tc0150rod->ram = auto_alloc_array(device->machine(), UINT16, TC0150ROD_RAM_SIZE / 2);
-
-	device->save_pointer(NAME(tc0150rod->ram), TC0150ROD_RAM_SIZE / 2);
-
-}
-
-const device_type TC0150ROD = &device_creator<tc0150rod_device>;
-
-tc0150rod_device::tc0150rod_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0150ROD, "Taito TC0150ROD", tag, owner, clock)
-{
-	m_token = global_alloc_clear(tc0150rod_state);
 }
 
 //-------------------------------------------------
@@ -4625,72 +4420,55 @@ tc0150rod_device::tc0150rod_device(const machine_config &mconfig, const char *ta
 //  complete
 //-------------------------------------------------
 
-void tc0150rod_device::device_config_complete()
+void tc0110pcr_device::device_config_complete()
 {
+	// inherit a copy of the static data
+	const tc0110pcr_interface *intf = reinterpret_cast<const tc0110pcr_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0110pcr_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
 }
 
 //-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
 
-void tc0150rod_device::device_start()
+void tc0110pcr_device::device_start()
 {
-	DEVICE_START_NAME( tc0150rod )(this);
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0110PCR_RAM_SIZE);
+
+	save_pointer(NAME(m_ram), TC0110PCR_RAM_SIZE);
+	save_item(NAME(m_type));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tc0110pcr_device::restore_colors), this));
+
 }
 
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
 
-/***************************************************************************/
-/*                                                                         */
-/*                              TC0110PCR                                  */
-/*                                                                         */
-/***************************************************************************/
-
-struct tc0110pcr_state
+void tc0110pcr_device::device_reset()
 {
-	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
-	UINT16 *     ram;
-	int          type;
-	int          addr;
-	int          pal_offs;
-	running_machine *m_machine;
-};
-
-#define TC0110PCR_RAM_SIZE 0x2000
-
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
-
-INLINE tc0110pcr_state *tc0110pcr_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert(device->type() == TC0110PCR);
-
-	return (tc0110pcr_state *)downcast<tc0110pcr_device *>(device)->token();
-}
-
-INLINE const tc0110pcr_interface *tc0110pcr_get_interface( device_t *device )
-{
-	assert(device != NULL);
-	assert((device->type() == TC0110PCR));
-	return (const tc0110pcr_interface *) device->static_config();
+	m_type = 0;    /* default, xBBBBBGGGGGRRRRR */
 }
 
 /*****************************************************************************
     DEVICE HANDLERS
 *****************************************************************************/
 
-void tc0110pcr_device::tc0110pcr_restore_colors()
+void tc0110pcr_device::restore_colors()
 {
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(this);
-
 	int i, color, r = 0, g = 0, b = 0;
 
 	for (i = 0; i < (256 * 16); i++)
 	{
-		color = tc0110pcr->ram[i];
+		color = m_ram[i];
 
-		switch (tc0110pcr->type)
+		switch (m_type)
 		{
 			case 0x00:
 			{
@@ -4717,19 +4495,17 @@ void tc0110pcr_device::tc0110pcr_restore_colors()
 			}
 		}
 
-		palette_set_color(tc0110pcr->machine(), i + (tc0110pcr->pal_offs << 12), MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i + (m_pal_offs << 12), MAKE_RGB(r, g, b));
 	}
 }
 
 
-READ16_DEVICE_HANDLER( tc0110pcr_word_r )
+READ16_MEMBER(tc0110pcr_device::word_r )
 {
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(device);
-
 	switch (offset)
 	{
 		case 1:
-			return tc0110pcr->ram[tc0110pcr->addr];
+			return m_ram[m_addr];
 
 		default:
 //logerror("PC %06x: warning - read TC0110PCR address %02x\n",space.device().safe_pc(),offset);
@@ -4737,22 +4513,20 @@ READ16_DEVICE_HANDLER( tc0110pcr_word_r )
 	}
 }
 
-WRITE16_DEVICE_HANDLER( tc0110pcr_word_w )
+WRITE16_MEMBER(tc0110pcr_device::word_w )
 {
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(device);
-
 	switch (offset)
 	{
 		case 0:
 			/* In test mode game writes to odd register number so (data>>1) */
-			tc0110pcr->addr = (data >> 1) & 0xfff;
+			m_addr = (data >> 1) & 0xfff;
 			if (data > 0x1fff)
 				logerror ("Write to palette index > 0x1fff\n");
 			break;
 
 		case 1:
-			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(space.machine(), tc0110pcr->addr, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+			m_ram[m_addr] = data & 0xffff;
+			palette_set_color_rgb(space.machine(), m_addr, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 			break;
 
 		default:
@@ -4761,21 +4535,19 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_word_w )
 	}
 }
 
-WRITE16_DEVICE_HANDLER( tc0110pcr_step1_word_w )
+WRITE16_MEMBER(tc0110pcr_device::step1_word_w )
 {
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(device);
-
 	switch (offset)
 	{
 		case 0:
-			tc0110pcr->addr = data & 0xfff;
+			m_addr = data & 0xfff;
 			if (data > 0xfff)
-				logerror ("Write to palette index (color area %d) > 0xfff\n", tc0110pcr->pal_offs);
+				logerror ("Write to palette index (color area %d) > 0xfff\n", m_pal_offs);
 			break;
 
 		case 1:
-			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(space.machine(), tc0110pcr->addr + (tc0110pcr->pal_offs << 12), pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+			m_ram[m_addr] = data & 0xffff;
+			palette_set_color_rgb(space.machine(), m_addr + (m_pal_offs << 12), pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 			break;
 
 		default:
@@ -4784,23 +4556,21 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_step1_word_w )
 	}
 }
 
-WRITE16_DEVICE_HANDLER( tc0110pcr_step1_rbswap_word_w )
+WRITE16_MEMBER(tc0110pcr_device::step1_rbswap_word_w )
 {
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(device);
-
-	tc0110pcr->type = 1;    /* xRRRRRGGGGGBBBBB */
+	m_type = 1;    /* xRRRRRGGGGGBBBBB */
 
 	switch (offset)
 	{
 		case 0:
-			tc0110pcr->addr = data & 0xfff;
+			m_addr = data & 0xfff;
 			if (data > 0xfff)
 				logerror ("Write to palette index > 0xfff\n");
 			break;
 
 		case 1:
-			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(space.machine(), tc0110pcr->addr, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+			m_ram[m_addr] = data & 0xffff;
+			palette_set_color_rgb(space.machine(), m_addr, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 			break;
 
 		default:
@@ -4809,23 +4579,21 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_step1_rbswap_word_w )
 	}
 }
 
-WRITE16_DEVICE_HANDLER( tc0110pcr_step1_4bpg_word_w )
+WRITE16_MEMBER(tc0110pcr_device::step1_4bpg_word_w )
 {
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(device);
-
-	tc0110pcr->type = 2;    /* xxxxBBBBGGGGRRRR */
+	m_type = 2;    /* xxxxBBBBGGGGRRRR */
 
 	switch (offset)
 	{
 		case 0:
-			tc0110pcr->addr = data & 0xfff;
+			m_addr = data & 0xfff;
 			if (data > 0xfff)
 				logerror ("Write to palette index > 0xfff\n");
 			break;
 
 		case 1:
-			tc0110pcr->ram[tc0110pcr->addr] = data & 0xffff;
-			palette_set_color_rgb(space.machine(), tc0110pcr->addr, pal4bit(data >> 0), pal4bit(data >> 4), pal4bit(data >> 8));
+			m_ram[m_addr] = data & 0xffff;
+			palette_set_color_rgb(space.machine(), m_addr, pal4bit(data >> 0), pal4bit(data >> 4), pal4bit(data >> 8));
 			break;
 
 		default:
@@ -4834,58 +4602,6 @@ WRITE16_DEVICE_HANDLER( tc0110pcr_step1_4bpg_word_w )
 	}
 }
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
-
-const device_type TC0110PCR = &device_creator<tc0110pcr_device>;
-
-tc0110pcr_device::tc0110pcr_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0110PCR, "Taito TC0110PCR", tag, owner, clock)
-{
-	m_token = global_alloc_clear(tc0110pcr_state);
-}
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void tc0110pcr_device::device_config_complete()
-{
-}
-
-//-------------------------------------------------
-//  device_start - device-specific startup
-//-------------------------------------------------
-
-void tc0110pcr_device::device_start()
-{
-	tc0110pcr_state *tc0110pcr = tc0110pcr_get_safe_token(this);
-	const tc0110pcr_interface *intf = tc0110pcr_get_interface(this);
-
-	tc0110pcr->m_machine = &machine();
-
-	tc0110pcr->pal_offs = intf->pal_offs;
-
-	tc0110pcr->ram = auto_alloc_array(machine(), UINT16, TC0110PCR_RAM_SIZE);
-
-	save_pointer(NAME(tc0110pcr->ram), TC0110PCR_RAM_SIZE);
-	save_item(NAME(tc0110pcr->type));
-	machine().save().register_postload(save_prepost_delegate(FUNC(tc0110pcr_device::tc0110pcr_restore_colors), this));
-
-}
-
-//-------------------------------------------------
-//  device_reset - device-specific reset
-//-------------------------------------------------
-
-void tc0110pcr_device::device_reset()
-{
-	tc0110pcr_state *tc0110pcr =  tc0110pcr_get_safe_token(this);
-	tc0110pcr->type = 0;    /* default, xBBBBBGGGGGRRRRR */
-}
 
 
 /***************************************************************************/
@@ -4894,45 +4610,98 @@ void tc0110pcr_device::device_reset()
 /*                                                                         */
 /***************************************************************************/
 
-struct tc0180vcu_state
-{
-	UINT16         ctrl[0x10];
-
-	UINT16 *       ram;
-	UINT16 *       scrollram;
-
-	tilemap_t        *tilemap[3];
-
-	UINT16         bg_rambank[2], fg_rambank[2], tx_rambank;
-	UINT8          framebuffer_page;
-	UINT8          video_control;
-
-	int            bg_color_base;
-	int            fg_color_base;
-	int            tx_color_base;
-};
 
 #define TC0180VCU_RAM_SIZE          0x10000
 #define TC0180VCU_SCROLLRAM_SIZE    0x0800
 
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
 
-INLINE tc0180vcu_state *tc0180vcu_get_safe_token( device_t *device )
+const device_type TC0180VCU = &device_creator<tc0180vcu_device>;
+
+tc0180vcu_device::tc0180vcu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0180VCU, "Taito TC0180VCU", tag, owner, clock, "tc0180vcu", __FILE__),
+	m_ram(NULL),
+	//m_scrollram(NULL),
+	//m_bg_rambank(0),
+	//m_fg_rambank(0),
+	//m_tx_rambank(0),
+	m_framebuffer_page(0),
+	m_video_control(0)
 {
-	assert(device != NULL);
-	assert(device->type() == TC0180VCU);
-
-	return (tc0180vcu_state *)downcast<tc0180vcu_device *>(device)->token();
 }
 
-INLINE const tc0180vcu_interface *tc0180vcu_get_interface( device_t *device )
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tc0180vcu_device::device_config_complete()
 {
-	assert(device != NULL);
-	assert((device->type() == TC0180VCU));
-	return (const tc0180vcu_interface *) device->static_config();
+	// inherit a copy of the static data
+	const tc0180vcu_interface *intf = reinterpret_cast<const tc0180vcu_interface *>(static_config());
+	if (intf != NULL)
+	*static_cast<tc0180vcu_interface *>(this) = *intf;
+	
+	// or initialize to defaults if none provided
+	else
+	{
+	}
 }
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tc0180vcu_device::device_start()
+{
+	m_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0180vcu_device::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
+	m_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0180vcu_device::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
+	m_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0180vcu_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+
+	m_tilemap[1]->set_transparent_pen(0);
+	m_tilemap[2]->set_transparent_pen(0);
+
+	m_tilemap[0]->set_scrolldx(0, 24 * 8);
+	m_tilemap[1]->set_scrolldx(0, 24 * 8);
+	m_tilemap[2]->set_scrolldx(0, 24 * 8);
+
+	m_ram = auto_alloc_array_clear(machine(), UINT16, TC0180VCU_RAM_SIZE / 2);
+	m_scrollram = auto_alloc_array_clear(machine(), UINT16, TC0180VCU_SCROLLRAM_SIZE / 2);
+
+	save_pointer(NAME(m_ram), TC0180VCU_RAM_SIZE / 2);
+	save_pointer(NAME(m_scrollram), TC0180VCU_SCROLLRAM_SIZE / 2);
+
+	save_item(NAME(m_bg_rambank));
+	save_item(NAME(m_fg_rambank));
+	save_item(NAME(m_tx_rambank));
+
+	save_item(NAME(m_framebuffer_page));
+
+	save_item(NAME(m_video_control));
+	save_item(NAME(m_ctrl));
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tc0180vcu_device::device_reset()
+{
+	int i;
+
+	for (i = 0; i < 0x10; i++)
+		m_ctrl[i] = 0;
+
+	m_bg_rambank[0] = 0;
+	m_bg_rambank[1] = 0;
+	m_fg_rambank[0] = 0;
+	m_fg_rambank[1] = 0;
+	m_tx_rambank = 0;
+
+	m_framebuffer_page = 0;
+	m_video_control = 0;
+}
+
 
 /*****************************************************************************
     DEVICE HANDLERS
@@ -4981,79 +4750,73 @@ INLINE const tc0180vcu_interface *tc0180vcu_get_interface( device_t *device )
 *
 */
 
-READ8_DEVICE_HANDLER( tc0180vcu_get_fb_page )
+READ8_MEMBER( tc0180vcu_device::get_fb_page )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	return tc0180vcu->framebuffer_page;
+	return m_framebuffer_page;
 }
 
-WRITE8_DEVICE_HANDLER( tc0180vcu_set_fb_page )
+WRITE8_MEMBER( tc0180vcu_device::set_fb_page )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	tc0180vcu->framebuffer_page = data;
+	m_framebuffer_page = data;
 }
 
-READ8_DEVICE_HANDLER( tc0180vcu_get_videoctrl )
+READ8_MEMBER( tc0180vcu_device::get_videoctrl )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	return tc0180vcu->video_control;
+	return m_video_control;
 }
 
-static void tc0180vcu_video_control( device_t *device, UINT8 data )
+void tc0180vcu_device::video_control( UINT8 data )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
 #if 0
-	if (data != tc0180vcu->video_control)
+	if (data != m_video_control)
 		popmessage("video control = %02x", data);
 #endif
 
-	tc0180vcu->video_control = data;
+	m_video_control = data;
 
-	if (tc0180vcu->video_control & 0x80)
-		tc0180vcu->framebuffer_page = (~tc0180vcu->video_control & 0x40) >> 6;
+	if (m_video_control & 0x80)
+		m_framebuffer_page = (~m_video_control & 0x40) >> 6;
 
-	device->machine().tilemap().set_flip_all((tc0180vcu->video_control & 0x10) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0 );
+	machine().tilemap().set_flip_all((m_video_control & 0x10) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0 );
 }
 
-READ16_DEVICE_HANDLER( tc0180vcu_ctrl_r )
+READ16_MEMBER( tc0180vcu_device::ctrl_r )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	return tc0180vcu->ctrl[offset];
+	return m_ctrl[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0180vcu_ctrl_w )
+WRITE16_MEMBER( tc0180vcu_device::ctrl_w )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	UINT16 oldword = tc0180vcu->ctrl[offset];
+	UINT16 oldword = m_ctrl[offset];
 
-	COMBINE_DATA (&tc0180vcu->ctrl[offset]);
+	COMBINE_DATA (&m_ctrl[offset]);
 
-	if (oldword != tc0180vcu->ctrl[offset])
+	if (oldword != m_ctrl[offset])
 	{
 		if (ACCESSING_BITS_8_15)
 		{
 			switch(offset)
 			{
 			case 0:
-				tc0180vcu->tilemap[1]->mark_all_dirty();
-				tc0180vcu->fg_rambank[0] = (((tc0180vcu->ctrl[offset] >> 8) & 0x0f) << 12);
-				tc0180vcu->fg_rambank[1] = (((tc0180vcu->ctrl[offset] >> 12) & 0x0f) << 12);
+				m_tilemap[1]->mark_all_dirty();
+				m_fg_rambank[0] = (((m_ctrl[offset] >> 8) & 0x0f) << 12);
+				m_fg_rambank[1] = (((m_ctrl[offset] >> 12) & 0x0f) << 12);
 				break;
 			case 1:
-				tc0180vcu->tilemap[0]->mark_all_dirty();
-				tc0180vcu->bg_rambank[0] = (((tc0180vcu->ctrl[offset] >> 8) & 0x0f) << 12);
-				tc0180vcu->bg_rambank[1] = (((tc0180vcu->ctrl[offset] >> 12) & 0x0f) << 12);
+				m_tilemap[0]->mark_all_dirty();
+				m_bg_rambank[0] = (((m_ctrl[offset] >> 8) & 0x0f) << 12);
+				m_bg_rambank[1] = (((m_ctrl[offset] >> 12) & 0x0f) << 12);
 				break;
 			case 4:
 			case 5:
-				tc0180vcu->tilemap[2]->mark_all_dirty();
+				m_tilemap[2]->mark_all_dirty();
 				break;
 			case 6:
-				tc0180vcu->tilemap[2]->mark_all_dirty();
-				tc0180vcu->tx_rambank = (((tc0180vcu->ctrl[offset] >> 8) & 0x0f) << 11);
+				m_tilemap[2]->mark_all_dirty();
+				m_tx_rambank = (((m_ctrl[offset] >> 8) & 0x0f) << 11);
 				break;
 			case 7:
-				tc0180vcu_video_control(device, (tc0180vcu->ctrl[offset] >> 8) & 0xff);
+				video_control((m_ctrl[offset] >> 8) & 0xff);
 				break;
 			default:
 				break;
@@ -5064,83 +4827,74 @@ WRITE16_DEVICE_HANDLER( tc0180vcu_ctrl_w )
 
 TILE_GET_INFO_MEMBER(tc0180vcu_device::get_bg_tile_info)
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(this);
-	int tile  = tc0180vcu->ram[tile_index + tc0180vcu->bg_rambank[0]];
-	int color = tc0180vcu->ram[tile_index + tc0180vcu->bg_rambank[1]];
+	int tile  = m_ram[tile_index + m_bg_rambank[0]];
+	int color = m_ram[tile_index + m_bg_rambank[1]];
 
 	SET_TILE_INFO_MEMBER(
 		1,
 		tile,
-		tc0180vcu->bg_color_base + (color & 0x3f),
+		m_bg_color_base + (color & 0x3f),
 		TILE_FLIPYX((color & 0x00c0) >> 6));
 }
 
 TILE_GET_INFO_MEMBER(tc0180vcu_device::get_fg_tile_info)
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(this);
-	int tile  = tc0180vcu->ram[tile_index + tc0180vcu->fg_rambank[0]];
-	int color = tc0180vcu->ram[tile_index + tc0180vcu->fg_rambank[1]];
+	int tile  = m_ram[tile_index + m_fg_rambank[0]];
+	int color = m_ram[tile_index + m_fg_rambank[1]];
 
 	SET_TILE_INFO_MEMBER(
 		1,
 		tile,
-		tc0180vcu->fg_color_base + (color & 0x3f),
+		m_fg_color_base + (color & 0x3f),
 		TILE_FLIPYX((color & 0x00c0) >> 6));
 }
 
 TILE_GET_INFO_MEMBER(tc0180vcu_device::get_tx_tile_info)
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(this);
-	int tile = tc0180vcu->ram[tile_index + tc0180vcu->tx_rambank];
+	int tile = m_ram[tile_index + m_tx_rambank];
 
 	SET_TILE_INFO_MEMBER(
 		0,
-		(tile & 0x07ff) | ((tc0180vcu->ctrl[4 + ((tile & 0x800) >> 11)]>>8) << 11),
-		tc0180vcu->tx_color_base + ((tile >> 12) & 0x0f),
+		(tile & 0x07ff) | ((m_ctrl[4 + ((tile & 0x800) >> 11)]>>8) << 11),
+		m_tx_color_base + ((tile >> 12) & 0x0f),
 		0);
 }
 
-READ16_DEVICE_HANDLER( tc0180vcu_scroll_r )
+READ16_MEMBER( tc0180vcu_device::scroll_r )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	return tc0180vcu->scrollram[offset];
+	return m_scrollram[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0180vcu_scroll_w )
+WRITE16_MEMBER( tc0180vcu_device::scroll_w )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	COMBINE_DATA(&tc0180vcu->scrollram[offset]);
+	COMBINE_DATA(&m_scrollram[offset]);
 }
 
-READ16_DEVICE_HANDLER( tc0180vcu_word_r )
+READ16_MEMBER( tc0180vcu_device::word_r )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	return tc0180vcu->ram[offset];
+	return m_ram[offset];
 }
 
-WRITE16_DEVICE_HANDLER( tc0180vcu_word_w )
+WRITE16_MEMBER( tc0180vcu_device::word_w )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-	COMBINE_DATA(&tc0180vcu->ram[offset]);
+	COMBINE_DATA(&m_ram[offset]);
 
-	if ((offset & 0x7000) == tc0180vcu->fg_rambank[0] || (offset & 0x7000) == tc0180vcu->fg_rambank[1])
-		tc0180vcu->tilemap[1]->mark_tile_dirty(offset & 0x0fff);
+	if ((offset & 0x7000) == m_fg_rambank[0] || (offset & 0x7000) == m_fg_rambank[1])
+		m_tilemap[1]->mark_tile_dirty(offset & 0x0fff);
 
-	if ((offset & 0x7000) == tc0180vcu->bg_rambank[0] || (offset & 0x7000) == tc0180vcu->bg_rambank[1])
-		tc0180vcu->tilemap[0]->mark_tile_dirty(offset & 0x0fff);
+	if ((offset & 0x7000) == m_bg_rambank[0] || (offset & 0x7000) == m_bg_rambank[1])
+		m_tilemap[0]->mark_tile_dirty(offset & 0x0fff);
 
-	if ((offset & 0x7800) == tc0180vcu->tx_rambank)
-		tc0180vcu->tilemap[2]->mark_tile_dirty(offset & 0x7ff);
+	if ((offset & 0x7800) == m_tx_rambank)
+		m_tilemap[2]->mark_tile_dirty(offset & 0x7ff);
 }
 
-void tc0180vcu_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int tmap_num, int plane )
+void tc0180vcu_device::tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int tmap_num, int plane )
 {
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
-
 	assert(tmap_num < 3);
 
 	if (tmap_num == 2)
-		tc0180vcu->tilemap[2]->draw(bitmap, cliprect, 0, 0);    /* not much to do for tx_tilemap */
+		m_tilemap[2]->draw(bitmap, cliprect, 0, 0);    /* not much to do for tx_tilemap */
 	else
 	{
 		/*plane = 0 fg tilemap*/
@@ -5151,7 +4905,7 @@ void tc0180vcu_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const recta
 		int lines_per_block;    /* number of lines scrolled by the same amount (per one scroll value) */
 		int number_of_blocks;   /* number of such blocks per _screen_ (256 lines) */
 
-		lines_per_block = 256 - (tc0180vcu->ctrl[2 + plane] >> 8);
+		lines_per_block = 256 - (m_ctrl[2 + plane] >> 8);
 		number_of_blocks = 256 / lines_per_block;
 
 		my_clip.min_x = cliprect.min_x;
@@ -5159,13 +4913,13 @@ void tc0180vcu_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const recta
 
 		for (i = 0; i < number_of_blocks; i++)
 		{
-			scrollx = tc0180vcu->scrollram[plane * 0x200 + i * 2 * lines_per_block];
-			scrolly = tc0180vcu->scrollram[plane * 0x200 + i * 2 * lines_per_block + 1];
+			scrollx = m_scrollram[plane * 0x200 + i * 2 * lines_per_block];
+			scrolly = m_scrollram[plane * 0x200 + i * 2 * lines_per_block + 1];
 
 			my_clip.min_y = i * lines_per_block;
 			my_clip.max_y = (i + 1) * lines_per_block - 1;
 
-			if (tc0180vcu->video_control & 0x10)   /*flip screen*/
+			if (m_video_control & 0x10)   /*flip screen*/
 			{
 				my_clip.min_y = bitmap.height() - 1 - (i + 1) * lines_per_block - 1;
 				my_clip.max_y = bitmap.height() - 1 - i * lines_per_block;
@@ -5175,90 +4929,10 @@ void tc0180vcu_tilemap_draw( device_t *device, bitmap_ind16 &bitmap, const recta
 
 			if (my_clip.min_y <= my_clip.max_y)
 			{
-				tc0180vcu->tilemap[tmap_num]->set_scrollx(0, -scrollx);
-				tc0180vcu->tilemap[tmap_num]->set_scrolly(0, -scrolly);
-				tc0180vcu->tilemap[tmap_num]->draw(bitmap, my_clip, 0, 0);
+				m_tilemap[tmap_num]->set_scrollx(0, -scrollx);
+				m_tilemap[tmap_num]->set_scrolly(0, -scrolly);
+				m_tilemap[tmap_num]->draw(bitmap, my_clip, 0, 0);
 			}
 		}
 	}
-}
-
-const device_type TC0180VCU = &device_creator<tc0180vcu_device>;
-
-tc0180vcu_device::tc0180vcu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TC0180VCU, "Taito TC0180VCU", tag, owner, clock)
-{
-	m_token = global_alloc_clear(tc0180vcu_state);
-}
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void tc0180vcu_device::device_config_complete()
-{
-}
-
-//-------------------------------------------------
-//  device_start - device-specific startup
-//-------------------------------------------------
-
-void tc0180vcu_device::device_start()
-{
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(this);
-	const tc0180vcu_interface *intf = tc0180vcu_get_interface(this);
-
-	tc0180vcu->bg_color_base = intf->bg_color_base;
-	tc0180vcu->fg_color_base = intf->fg_color_base;
-	tc0180vcu->tx_color_base = intf->tx_color_base;
-
-	tc0180vcu->tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0180vcu_device::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
-	tc0180vcu->tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0180vcu_device::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
-	tc0180vcu->tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0180vcu_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
-
-	tc0180vcu->tilemap[1]->set_transparent_pen(0);
-	tc0180vcu->tilemap[2]->set_transparent_pen(0);
-
-	tc0180vcu->tilemap[0]->set_scrolldx(0, 24 * 8);
-	tc0180vcu->tilemap[1]->set_scrolldx(0, 24 * 8);
-	tc0180vcu->tilemap[2]->set_scrolldx(0, 24 * 8);
-
-	tc0180vcu->ram = auto_alloc_array_clear(machine(), UINT16, TC0180VCU_RAM_SIZE / 2);
-	tc0180vcu->scrollram = auto_alloc_array_clear(machine(), UINT16, TC0180VCU_SCROLLRAM_SIZE / 2);
-
-	save_pointer(NAME(tc0180vcu->ram), TC0180VCU_RAM_SIZE / 2);
-	save_pointer(NAME(tc0180vcu->scrollram), TC0180VCU_SCROLLRAM_SIZE / 2);
-
-	save_item(NAME(tc0180vcu->bg_rambank));
-	save_item(NAME(tc0180vcu->fg_rambank));
-	save_item(NAME(tc0180vcu->tx_rambank));
-
-	save_item(NAME(tc0180vcu->framebuffer_page));
-
-	save_item(NAME(tc0180vcu->video_control));
-	save_item(NAME(tc0180vcu->ctrl));
-}
-
-//-------------------------------------------------
-//  device_reset - device-specific reset
-//-------------------------------------------------
-
-void tc0180vcu_device::device_reset()
-{
-	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(this);
-	int i;
-
-	for (i = 0; i < 0x10; i++)
-		tc0180vcu->ctrl[i] = 0;
-
-	tc0180vcu->bg_rambank[0] = 0;
-	tc0180vcu->bg_rambank[1] = 0;
-	tc0180vcu->fg_rambank[0] = 0;
-	tc0180vcu->fg_rambank[1] = 0;
-	tc0180vcu->tx_rambank = 0;
-
-	tc0180vcu->framebuffer_page = 0;
-	tc0180vcu->video_control = 0;
 }

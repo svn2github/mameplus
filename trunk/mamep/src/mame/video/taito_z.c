@@ -1,5 +1,4 @@
 #include "emu.h"
-#include "video/taitoic.h"
 #include "includes/taito_z.h"
 
 /**********************************************************/
@@ -835,9 +834,9 @@ UINT32 taitoz_state::screen_update_contcirc(screen_device &screen, bitmap_ind16 
 {
 	UINT8 layer[3];
 
-	tc0100scn_tilemap_update(m_tc0100scn);
+	m_tc0100scn->tilemap_update();
 
-	layer[0] = tc0100scn_bottomlayer(m_tc0100scn);
+	layer[0] = m_tc0100scn->bottomlayer();
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
@@ -845,10 +844,10 @@ UINT32 taitoz_state::screen_update_contcirc(screen_device &screen, bitmap_ind16 
 
 	bitmap.fill(0, cliprect);
 
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[0], 0, 0);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[1], 0, 1);
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -3, m_road_palbank << 6, 1, 0, 1, 2); // -6
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[0], 0, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[1], 0, 1);
+	m_tc0150rod->draw(bitmap, cliprect, -3, m_road_palbank << 6, 1, 0, 1, 2); // -6
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	contcirc_draw_sprites_16x8(bitmap, cliprect, 5); // 7
 	return 0;
@@ -861,9 +860,9 @@ UINT32 taitoz_state::screen_update_chasehq(screen_device &screen, bitmap_ind16 &
 {
 	UINT8 layer[3];
 
-	tc0100scn_tilemap_update(m_tc0100scn);
+	m_tc0100scn->tilemap_update();
 
-	layer[0] = tc0100scn_bottomlayer(m_tc0100scn);
+	layer[0] = m_tc0100scn->bottomlayer();
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
@@ -872,10 +871,10 @@ UINT32 taitoz_state::screen_update_chasehq(screen_device &screen, bitmap_ind16 &
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
 	bitmap.fill(0, cliprect);
 
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[1], 0, 1);
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[1], 0, 1);
+	m_tc0150rod->draw(bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	chasehq_draw_sprites_16x16(bitmap, cliprect, 7);
 	return 0;
@@ -886,9 +885,9 @@ UINT32 taitoz_state::screen_update_bshark(screen_device &screen, bitmap_ind16 &b
 {
 	UINT8 layer[3];
 
-	tc0100scn_tilemap_update(m_tc0100scn);
+	m_tc0100scn->tilemap_update();
 
-	layer[0] = tc0100scn_bottomlayer(m_tc0100scn);
+	layer[0] = m_tc0100scn->bottomlayer();
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
@@ -897,10 +896,10 @@ UINT32 taitoz_state::screen_update_bshark(screen_device &screen, bitmap_ind16 &b
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
 	bitmap.fill(0, cliprect);
 
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[1], 0, 1);
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -1, 0xc0, 0, 1, 1, 2);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[1], 0, 1);
+	m_tc0150rod->draw(bitmap, cliprect, -1, 0xc0, 0, 1, 1, 2);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	bshark_draw_sprites_16x8(bitmap, cliprect, 8);
 	return 0;
@@ -911,9 +910,9 @@ UINT32 taitoz_state::screen_update_sci(screen_device &screen, bitmap_ind16 &bitm
 {
 	UINT8 layer[3];
 
-	tc0100scn_tilemap_update(m_tc0100scn);
+	m_tc0100scn->tilemap_update();
 
-	layer[0] = tc0100scn_bottomlayer(m_tc0100scn);
+	layer[0] = m_tc0100scn->bottomlayer();
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
@@ -922,10 +921,10 @@ UINT32 taitoz_state::screen_update_sci(screen_device &screen, bitmap_ind16 &bitm
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
 	bitmap.fill(0, cliprect);
 
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[1], 0, 1);
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[1], 0, 1);
+	m_tc0150rod->draw(bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	sci_draw_sprites_16x8(bitmap, cliprect, 6);
 	return 0;
@@ -936,9 +935,9 @@ UINT32 taitoz_state::screen_update_aquajack(screen_device &screen, bitmap_ind16 
 {
 	UINT8 layer[3];
 
-	tc0100scn_tilemap_update(m_tc0100scn);
+	m_tc0100scn->tilemap_update();
 
-	layer[0] = tc0100scn_bottomlayer(m_tc0100scn);
+	layer[0] = m_tc0100scn->bottomlayer();
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
@@ -947,10 +946,10 @@ UINT32 taitoz_state::screen_update_aquajack(screen_device &screen, bitmap_ind16 
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
 	bitmap.fill(0, cliprect);
 
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[1], 0, 1);
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -1, 0, 2, 1, 1, 2);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[1], 0, 1);
+	m_tc0150rod->draw(bitmap, cliprect, -1, 0, 2, 1, 1, 2);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	aquajack_draw_sprites_16x8(bitmap, cliprect, 3);
 	return 0;
@@ -961,9 +960,9 @@ UINT32 taitoz_state::screen_update_spacegun(screen_device &screen, bitmap_ind16 
 {
 	UINT8 layer[3];
 
-	tc0100scn_tilemap_update(m_tc0100scn);
+	m_tc0100scn->tilemap_update();
 
-	layer[0] = tc0100scn_bottomlayer(m_tc0100scn);
+	layer[0] = m_tc0100scn->bottomlayer();
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
@@ -972,9 +971,9 @@ UINT32 taitoz_state::screen_update_spacegun(screen_device &screen, bitmap_ind16 
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
 	bitmap.fill(0, cliprect);
 
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 1);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[1], 0, 2);
-	tc0100scn_tilemap_draw(m_tc0100scn, bitmap, cliprect, layer[2], 0, 4);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 1);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[1], 0, 2);
+	m_tc0100scn->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	spacegun_draw_sprites_16x8(bitmap, cliprect, 4);
 
@@ -987,9 +986,9 @@ UINT32 taitoz_state::screen_update_dblaxle(screen_device &screen, bitmap_ind16 &
 	UINT8 layer[5];
 	UINT16 priority;
 
-	tc0480scp_tilemap_update(m_tc0480scp);
+	m_tc0480scp->tilemap_update();
 
-	priority = tc0480scp_get_bg_priority(m_tc0480scp);
+	priority = m_tc0480scp->get_bg_priority();
 
 	layer[0] = (priority & 0xf000) >> 12;   /* tells us which bg layer is bottom */
 	layer[1] = (priority & 0x0f00) >>  8;
@@ -1002,17 +1001,17 @@ UINT32 taitoz_state::screen_update_dblaxle(screen_device &screen, bitmap_ind16 &
 	/* Ensure screen blanked - this shouldn't be necessary! */
 	bitmap.fill(0, cliprect);
 
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[1], 0, 0);
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[2], 0, 1);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[1], 0, 0);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[2], 0, 1);
 
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
+	m_tc0150rod->draw(bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
 	bshark_draw_sprites_16x8(bitmap, cliprect, 7);
 
 	/* This layer used for the big numeric displays */
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[3], 0, 4);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[3], 0, 4);
 
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[4], 0, 0);  /* Text layer */
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[4], 0, 0);  /* Text layer */
 	return 0;
 }
 
@@ -1022,9 +1021,9 @@ UINT32 taitoz_state::screen_update_racingb(screen_device &screen, bitmap_ind16 &
 	UINT8 layer[5];
 	UINT16 priority;
 
-	tc0480scp_tilemap_update(m_tc0480scp);
+	m_tc0480scp->tilemap_update();
 
-	priority = tc0480scp_get_bg_priority(m_tc0480scp);
+	priority = m_tc0480scp->get_bg_priority();
 
 	layer[0] = (priority & 0xf000) >> 12;   /* tells us which bg layer is bottom */
 	layer[1] = (priority & 0x0f00) >>  8;
@@ -1037,14 +1036,14 @@ UINT32 taitoz_state::screen_update_racingb(screen_device &screen, bitmap_ind16 &
 	/* Ensure screen blanked - this shouldn't be necessary! */
 	bitmap.fill(0, cliprect);
 
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[1], 0, 0);
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[2], 0, 2);
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[3], 0, 2);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[1], 0, 0);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[2], 0, 2);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[3], 0, 2);
 
-	tc0150rod_draw(m_tc0150rod, bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
+	m_tc0150rod->draw(bitmap, cliprect, -1, 0xc0, 0, 0, 1, 2);
 	sci_draw_sprites_16x8(bitmap, cliprect, 7);
 
-	tc0480scp_tilemap_draw(m_tc0480scp, bitmap, cliprect, layer[4], 0, 4);
+	m_tc0480scp->tilemap_draw(bitmap, cliprect, layer[4], 0, 4);
 	return 0;
 }

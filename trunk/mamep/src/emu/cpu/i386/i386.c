@@ -31,6 +31,7 @@ MODRM_TABLE i386_MODRM_table[256];
 static void i386_trap_with_error(i386_state* cpustate, int irq, int irq_gate, int trap_level, UINT32 err);
 static void i286_task_switch(i386_state* cpustate, UINT16 selector, UINT8 nested);
 static void i386_task_switch(i386_state* cpustate, UINT16 selector, UINT8 nested);
+static void pentium_smi(i386_state* cpustate);
 
 #define FAULT(fault,error) {cpustate->ext = 1; i386_trap_with_error(cpustate,fault,0,0,error); return;}
 #define FAULT_EXP(fault,error) {cpustate->ext = 1; i386_trap_with_error(cpustate,fault,0,trap_level+1,error); return;}
@@ -136,7 +137,7 @@ static void i386_load_segment_descriptor(i386_state *cpustate, int segment )
 		{
 			cpustate->sreg[segment].base = cpustate->sreg[segment].selector << 4;
 			cpustate->sreg[segment].limit = 0xffff;
-			cpustate->sreg[segment].flags = (segment == CS) ? 0x009a : 0x0092;
+			cpustate->sreg[segment].flags = (segment == CS) ? 0x00fb : 0x00f3;
 			cpustate->sreg[segment].d = 0;
 			cpustate->sreg[segment].valid = true;
 		}
@@ -1224,6 +1225,12 @@ static void i386_task_switch(i386_state *cpustate, UINT16 selector, UINT8 nested
 
 static void i386_check_irq_line(i386_state *cpustate)
 {
+	if(!cpustate->smm && cpustate->smi)
+	{
+		pentium_smi(cpustate);
+		return;
+	}
+
 	/* Check if the interrupts are enabled */
 	if ( (cpustate->irq_state) && cpustate->IF )
 	{
@@ -2987,6 +2994,8 @@ static void i386_common_init(legacy_cpu_device *device, device_irq_acknowledge_c
 	static const int regs32[8] = {EAX,ECX,EDX,EBX,ESP,EBP,ESI,EDI};
 	i386_state *cpustate = get_safe_token(device);
 
+	assert((sizeof(XMM_REG)/sizeof(double)) == 2);
+
 	build_cycle_table(device->machine());
 
 	for( i=0; i < 256; i++ ) {
@@ -3014,6 +3023,7 @@ static void i386_common_init(legacy_cpu_device *device, device_irq_acknowledge_c
 	cpustate->direct = &cpustate->program->direct();
 	cpustate->io = &device->space(AS_IO);
 	cpustate->vtlb = vtlb_alloc(device, AS_PROGRAM, 0, tlbsize);
+	cpustate->smi = false;
 
 	device->save_item(NAME( cpustate->reg.d));
 	device->save_item(NAME(cpustate->sreg[ES].selector));
@@ -3069,7 +3079,20 @@ static void i386_common_init(legacy_cpu_device *device, device_irq_acknowledge_c
 	device->save_item(NAME(cpustate->irq_state));
 	device->save_item(NAME(cpustate->performed_intersegment_jump));
 	device->save_item(NAME(cpustate->mxcsr));
+	device->save_item(NAME(cpustate->smm));
+	device->save_item(NAME(cpustate->smi_latched));
+	device->save_item(NAME(cpustate->smi));
+	device->save_item(NAME(cpustate->nmi_masked));
+	device->save_item(NAME(cpustate->nmi_latched));
+	device->save_item(NAME(cpustate->smbase));
 	device->machine().save().register_postload(save_prepost_delegate(FUNC(i386_postload), cpustate));
+
+	i386_interface *intf = (i386_interface *) device->static_config();
+
+	if (intf != NULL)
+		cpustate->smiact.resolve(intf->smiact, *device);
+	else
+		memset(&cpustate->smiact, 0, sizeof(cpustate->smiact));
 }
 
 CPU_INIT( i386 )
@@ -3159,6 +3182,10 @@ static CPU_RESET( i386 )
 
 	cpustate->idtr.base = 0;
 	cpustate->idtr.limit = 0x3ff;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	cpustate->a20_mask = ~0;
 
@@ -3183,6 +3210,95 @@ static CPU_RESET( i386 )
 	CHANGE_PC(cpustate,cpustate->eip);
 }
 
+static void pentium_smi(i386_state *cpustate)
+{
+	UINT32 smram_state = cpustate->smbase + 0xfe00;
+	UINT32 old_cr0 = cpustate->cr[0];
+	UINT32 old_flags = get_flags(cpustate);
+
+	if(cpustate->smm)
+		return;
+
+	cpustate->cr[0] &= ~(0x8000000d);
+	set_flags(cpustate, 2);
+	if(!cpustate->smiact.isnull())
+		cpustate->smiact(true);
+	cpustate->smm = true;
+	cpustate->smi_latched = false;
+
+	// save state
+	WRITE32(cpustate, cpustate->cr[4], smram_state+SMRAM_IP5_CR4);
+	WRITE32(cpustate, cpustate->sreg[ES].limit, smram_state+SMRAM_IP5_ESLIM);
+	WRITE32(cpustate, cpustate->sreg[ES].base, smram_state+SMRAM_IP5_ESBASE);
+	WRITE32(cpustate, cpustate->sreg[ES].flags, smram_state+SMRAM_IP5_ESACC);
+	WRITE32(cpustate, cpustate->sreg[CS].limit, smram_state+SMRAM_IP5_CSLIM);
+	WRITE32(cpustate, cpustate->sreg[CS].base, smram_state+SMRAM_IP5_CSBASE);
+	WRITE32(cpustate, cpustate->sreg[CS].flags, smram_state+SMRAM_IP5_CSACC);
+	WRITE32(cpustate, cpustate->sreg[SS].limit, smram_state+SMRAM_IP5_SSLIM);
+	WRITE32(cpustate, cpustate->sreg[SS].base, smram_state+SMRAM_IP5_SSBASE);
+	WRITE32(cpustate, cpustate->sreg[SS].flags, smram_state+SMRAM_IP5_SSACC);
+	WRITE32(cpustate, cpustate->sreg[DS].limit, smram_state+SMRAM_IP5_DSLIM);
+	WRITE32(cpustate, cpustate->sreg[DS].base, smram_state+SMRAM_IP5_DSBASE);
+	WRITE32(cpustate, cpustate->sreg[DS].flags, smram_state+SMRAM_IP5_DSACC);
+	WRITE32(cpustate, cpustate->sreg[FS].limit, smram_state+SMRAM_IP5_FSLIM);
+	WRITE32(cpustate, cpustate->sreg[FS].base, smram_state+SMRAM_IP5_FSBASE);
+	WRITE32(cpustate, cpustate->sreg[FS].flags, smram_state+SMRAM_IP5_FSACC);
+	WRITE32(cpustate, cpustate->sreg[GS].limit, smram_state+SMRAM_IP5_GSLIM);
+	WRITE32(cpustate, cpustate->sreg[GS].base, smram_state+SMRAM_IP5_GSBASE);
+	WRITE32(cpustate, cpustate->sreg[GS].flags, smram_state+SMRAM_IP5_GSACC);
+	WRITE32(cpustate, cpustate->ldtr.flags, smram_state+SMRAM_IP5_LDTACC);
+	WRITE32(cpustate, cpustate->ldtr.limit, smram_state+SMRAM_IP5_LDTLIM);
+	WRITE32(cpustate, cpustate->ldtr.base, smram_state+SMRAM_IP5_LDTBASE);
+	WRITE32(cpustate, cpustate->gdtr.limit, smram_state+SMRAM_IP5_GDTLIM);
+	WRITE32(cpustate, cpustate->gdtr.base, smram_state+SMRAM_IP5_GDTBASE);
+	WRITE32(cpustate, cpustate->idtr.limit, smram_state+SMRAM_IP5_IDTLIM);
+	WRITE32(cpustate, cpustate->idtr.base, smram_state+SMRAM_IP5_IDTBASE);
+	WRITE32(cpustate, cpustate->task.limit, smram_state+SMRAM_IP5_TRLIM);
+	WRITE32(cpustate, cpustate->task.base, smram_state+SMRAM_IP5_TRBASE);
+	WRITE32(cpustate, cpustate->task.flags, smram_state+SMRAM_IP5_TRACC);
+
+	WRITE32(cpustate, cpustate->sreg[ES].selector, smram_state+SMRAM_ES);
+	WRITE32(cpustate, cpustate->sreg[CS].selector, smram_state+SMRAM_CS);
+	WRITE32(cpustate, cpustate->sreg[SS].selector, smram_state+SMRAM_SS);
+	WRITE32(cpustate, cpustate->sreg[DS].selector, smram_state+SMRAM_DS);
+	WRITE32(cpustate, cpustate->sreg[FS].selector, smram_state+SMRAM_FS);
+	WRITE32(cpustate, cpustate->sreg[GS].selector, smram_state+SMRAM_GS);
+	WRITE32(cpustate, cpustate->ldtr.segment, smram_state+SMRAM_LDTR);
+	WRITE32(cpustate, cpustate->task.segment, smram_state+SMRAM_TR);
+
+	WRITE32(cpustate, cpustate->dr[7], smram_state+SMRAM_DR7);
+	WRITE32(cpustate, cpustate->dr[6], smram_state+SMRAM_DR6);
+	WRITE32(cpustate, REG32(EAX), smram_state+SMRAM_EAX);
+	WRITE32(cpustate, REG32(ECX), smram_state+SMRAM_ECX);
+	WRITE32(cpustate, REG32(EDX), smram_state+SMRAM_EDX);
+	WRITE32(cpustate, REG32(EBX), smram_state+SMRAM_EBX);
+	WRITE32(cpustate, REG32(ESP), smram_state+SMRAM_ESP);
+	WRITE32(cpustate, REG32(EBP), smram_state+SMRAM_EBP);
+	WRITE32(cpustate, REG32(ESI), smram_state+SMRAM_ESI);
+	WRITE32(cpustate, REG32(EDI), smram_state+SMRAM_EDI);
+	WRITE32(cpustate, cpustate->eip, smram_state+SMRAM_EIP);
+	WRITE32(cpustate, old_flags, smram_state+SMRAM_EAX);
+	WRITE32(cpustate, cpustate->cr[3], smram_state+SMRAM_CR3);
+	WRITE32(cpustate, old_cr0, smram_state+SMRAM_CR0);
+
+	cpustate->sreg[DS].selector = cpustate->sreg[ES].selector = cpustate->sreg[FS].selector = cpustate->sreg[GS].selector = cpustate->sreg[SS].selector = 0;
+	cpustate->sreg[DS].base = cpustate->sreg[ES].base = cpustate->sreg[FS].base = cpustate->sreg[GS].base = cpustate->sreg[SS].base = 0x00000000;
+	cpustate->sreg[DS].limit = cpustate->sreg[ES].limit = cpustate->sreg[FS].limit = cpustate->sreg[GS].limit = cpustate->sreg[SS].limit = 0xffffffff;
+	cpustate->sreg[DS].flags = cpustate->sreg[ES].flags = cpustate->sreg[FS].flags = cpustate->sreg[GS].flags = cpustate->sreg[SS].flags = 0x8093;
+	cpustate->sreg[DS].valid = cpustate->sreg[ES].valid = cpustate->sreg[FS].valid = cpustate->sreg[GS].valid = cpustate->sreg[SS].valid =true;
+	cpustate->sreg[CS].selector = 0x3000; // pentium only, ppro sel = smbase >> 4
+	cpustate->sreg[CS].base = cpustate->smbase;
+	cpustate->sreg[CS].limit = 0xffffffff;
+	cpustate->sreg[CS].flags = 0x809b;
+	cpustate->sreg[CS].valid = true;
+	cpustate->cr[4] = 0;
+	cpustate->dr[7] = 0x400;
+	cpustate->eip = 0x8000;
+
+	cpustate->nmi_masked = true;
+	CHANGE_PC(cpustate,cpustate->eip);
+}
+
 static void i386_set_irq_line(i386_state *cpustate,int irqline, int state)
 {
 	if (state != CLEAR_LINE && cpustate->halted)
@@ -3193,6 +3309,11 @@ static void i386_set_irq_line(i386_state *cpustate,int irqline, int state)
 	if ( irqline == INPUT_LINE_NMI )
 	{
 		/* NMI (I do not think that this is 100% right) */
+		if(cpustate->nmi_masked)
+		{
+			cpustate->nmi_latched = true;
+			return;
+		}
 		if ( state )
 			i386_trap(cpustate,2, 1, 0);
 	}
@@ -3669,6 +3790,10 @@ static CPU_RESET( i486 )
 	cpustate->eflags = 0;
 	cpustate->eflags_mask = 0x00077fd7;
 	cpustate->eip = 0xfff0;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -3781,6 +3906,11 @@ static CPU_RESET( pentium )
 	cpustate->eflags_mask = 0x003f7fd7;
 	cpustate->eip = 0xfff0;
 	cpustate->mxcsr = 0x1f80;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->smbase = 0x30000;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -3823,6 +3953,11 @@ static CPU_SET_INFO( pentium )
 	i386_state *cpustate = get_safe_token(device);
 	switch (state)
 	{
+		case CPUINFO_INT_INPUT_STATE+INPUT_LINE_SMI:
+			if(!cpustate->smi && state && cpustate->smm)
+				cpustate->smi_latched = true;
+			cpustate->smi = state;
+			break;
 		case CPUINFO_INT_REGISTER + X87_CTRL:           cpustate->x87_cw = info->i;     break;
 		case CPUINFO_INT_REGISTER + X87_STATUS:         cpustate->x87_sw = info->i;     break;
 		case CPUINFO_INT_REGISTER + X87_TAG:            cpustate->x87_tw = info->i;     break;
@@ -3907,6 +4042,10 @@ static CPU_RESET( mediagx )
 	cpustate->eflags = 0x00200000;
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -4027,6 +4166,11 @@ static CPU_RESET( pentium_pro )
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 	cpustate->mxcsr = 0x1f80;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->smbase = 0x30000;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -4127,6 +4271,11 @@ static CPU_RESET( pentium_mmx )
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 	cpustate->mxcsr = 0x1f80;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->smbase = 0x30000;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -4227,6 +4376,11 @@ static CPU_RESET( pentium2 )
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 	cpustate->mxcsr = 0x1f80;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->smbase = 0x30000;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -4327,6 +4481,11 @@ static CPU_RESET( pentium3 )
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 	cpustate->mxcsr = 0x1f80;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->smbase = 0x30000;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 
@@ -4429,6 +4588,11 @@ static CPU_RESET( pentium4 )
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 	cpustate->mxcsr = 0x1f80;
+	cpustate->smm = false;
+	cpustate->smi_latched = false;
+	cpustate->smbase = 0x30000;
+	cpustate->nmi_masked = false;
+	cpustate->nmi_latched = false;
 
 	x87_reset(cpustate);
 

@@ -334,7 +334,7 @@ Notes:
 #include "cpu/m68000/m68000.h"
 #include "cpu/mips/r3000.h"
 #include "cpu/jaguar/jaguar.h"
-#include "machine/idectrl.h"
+#include "machine/vt83c461.h"
 #include "sound/dac.h"
 #include "includes/jaguar.h"
 #include "emuopts.h"
@@ -1077,57 +1077,6 @@ static ADDRESS_MAP_START( jaguar_map, AS_PROGRAM, 16, jaguar_state )
 	AM_RANGE(0xf1d000, 0xf1dfff) AM_READWRITE(wave_rom_r16, wave_rom_w16 )
 ADDRESS_MAP_END
 
-/// hack for 32 big endian bus talking to 16 bit little endian ide
-READ32_MEMBER(jaguar_state::vt83c461_r)
-{
-	UINT32 data = 0;
-
-	if(offset >= 0x30/4 && offset < 0x40/4)
-	{
-		if (ACCESSING_BITS_0_7)
-			data = m_ide->read_via_config(space, (offset * 4) & 0xf, mem_mask);
-	}
-	else if( offset >= 0x1f0/4 && offset < 0x1f8/4 )
-	{
-		if (ACCESSING_BITS_0_15)
-			data |= m_ide->read_cs0_pc(space, (offset * 2) & 7, mem_mask);
-		if (ACCESSING_BITS_16_31)
-			data |= m_ide->read_cs0_pc(space, ((offset * 2) & 7) + 1, mem_mask >> 16) << 16;
-	}
-	else if( offset >= 0x3f0/4 && offset < 0x3f8/4 )
-	{
-		if (ACCESSING_BITS_0_15)
-			data |= m_ide->read_cs1_pc(space, (offset * 2) & 7, mem_mask);
-		if (ACCESSING_BITS_16_31)
-			data |= m_ide->read_cs1_pc(space, ((offset * 2) & 7) + 1, mem_mask >> 16) << 16;
-	}
-
-	return data;
-}
-
-WRITE32_MEMBER(jaguar_state::vt83c461_w)
-{
-	if(offset >= 0x30/4 && offset < 0x40/4)
-	{
-		if (ACCESSING_BITS_0_7)
-			m_ide->write_via_config(space, (offset * 4) & 0xf, data, mem_mask);
-	}
-	else if( offset >= 0x1f0/4 && offset < 0x1f8/4 )
-	{
-		if (ACCESSING_BITS_0_15)
-			m_ide->write_cs0_pc(space, (offset * 2) & 7, data, mem_mask);
-		if (ACCESSING_BITS_16_31)
-			m_ide->write_cs0_pc(space, ((offset * 2) & 7) + 1, data >> 16, mem_mask >> 16);
-	}
-	else if( offset >= 0x3f0/4 && offset < 0x3f8/4 )
-	{
-		if (ACCESSING_BITS_0_15)
-			m_ide->write_cs1_pc(space, (offset * 2) & 7, data, mem_mask);
-		if (ACCESSING_BITS_16_31)
-			m_ide->write_cs1_pc(space, ((offset * 2) & 7) + 1, data >> 16, mem_mask >> 16);
-	}
-}
-
 
 
 /*************************************
@@ -1140,7 +1089,9 @@ static ADDRESS_MAP_START( r3000_map, AS_PROGRAM, 32, jaguar_state )
 	AM_RANGE(0x04000000, 0x047fffff) AM_RAM AM_SHARE("sharedram")
 	AM_RANGE(0x04800000, 0x04bfffff) AM_ROMBANK("maingfxbank")
 	AM_RANGE(0x04c00000, 0x04dfffff) AM_ROMBANK("mainsndbank")
-	AM_RANGE(0x04e00000, 0x04e003ff) AM_READWRITE(vt83c461_r, vt83c461_w)
+	AM_RANGE(0x04e00030, 0x04e0003f) AM_DEVREADWRITE("ide", vt83c461_device, read_config, write_config)
+	AM_RANGE(0x04e001f0, 0x04e001f7) AM_DEVREADWRITE("ide", vt83c461_device, read_cs0, write_cs0)
+	AM_RANGE(0x04e003f0, 0x04e003f7) AM_DEVREADWRITE("ide", vt83c461_device, read_cs1, write_cs1)
 	AM_RANGE(0x04f00000, 0x04f003ff) AM_READWRITE16(tom_regs_r, tom_regs_w, 0xffffffff)
 	AM_RANGE(0x04f00400, 0x04f007ff) AM_RAM AM_SHARE("gpuclut")
 	AM_RANGE(0x04f02100, 0x04f021ff) AM_READWRITE(gpuctrl_r, gpuctrl_w)
@@ -1174,7 +1125,9 @@ static ADDRESS_MAP_START( m68020_map, AS_PROGRAM, 32, jaguar_state )
 	AM_RANGE(0xa40000, 0xa40003) AM_WRITE(eeprom_enable_w)
 	AM_RANGE(0xb70000, 0xb70003) AM_READWRITE(misc_control_r, misc_control_w)
 	AM_RANGE(0xc00000, 0xdfffff) AM_ROMBANK("mainsndbank")
-	AM_RANGE(0xe00000, 0xe003ff) AM_READWRITE(vt83c461_r, vt83c461_w)
+	AM_RANGE(0xe00030, 0xe0003f) AM_DEVREADWRITE("ide", vt83c461_device, read_config, write_config)
+	AM_RANGE(0xe001f0, 0xe001f7) AM_DEVREADWRITE("ide", vt83c461_device, read_cs0, write_cs0)
+	AM_RANGE(0xe003f0, 0xe003f7) AM_DEVREADWRITE("ide", vt83c461_device, read_cs1, write_cs1)
 	AM_RANGE(0xf00000, 0xf003ff) AM_READWRITE16(tom_regs_r, tom_regs_w, 0xffffffff)
 	AM_RANGE(0xf00400, 0xf007ff) AM_RAM AM_SHARE("gpuclut")
 	AM_RANGE(0xf02100, 0xf021ff) AM_READWRITE(gpuctrl_r, gpuctrl_w)
@@ -1202,7 +1155,9 @@ static ADDRESS_MAP_START( gpu_map, AS_PROGRAM, 32, jaguar_state )
 	AM_RANGE(0x000000, 0x7fffff) AM_RAM AM_SHARE("sharedram")
 	AM_RANGE(0x800000, 0xbfffff) AM_ROMBANK("gpugfxbank")
 	AM_RANGE(0xc00000, 0xdfffff) AM_ROMBANK("dspsndbank")
-	AM_RANGE(0xe00000, 0xe003ff) AM_READWRITE(vt83c461_r, vt83c461_w)
+	AM_RANGE(0xe00030, 0xe0003f) AM_DEVREADWRITE("ide", vt83c461_device, read_config, write_config)
+	AM_RANGE(0xe001f0, 0xe001f7) AM_DEVREADWRITE("ide", vt83c461_device, read_cs0, write_cs0)
+	AM_RANGE(0xe003f0, 0xe003f7) AM_DEVREADWRITE("ide", vt83c461_device, read_cs1, write_cs1)
 	AM_RANGE(0xf00000, 0xf003ff) AM_READWRITE16(tom_regs_r, tom_regs_w, 0xffffffff)
 	AM_RANGE(0xf00400, 0xf007ff) AM_RAM AM_SHARE("gpuclut")
 	AM_RANGE(0xf02100, 0xf021ff) AM_READWRITE(gpuctrl_r, gpuctrl_w)
@@ -1601,8 +1556,8 @@ static MACHINE_CONFIG_START( cojagr3k, jaguar_state )
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_devices, "hdd", NULL, true)
-	MCFG_IDE_CONTROLLER_IRQ_HANDLER(WRITELINE(jaguar_state, external_int))
+	MCFG_VT83C461_ADD("ide", ata_devices, "hdd", NULL, true)
+	MCFG_ATA_INTERFACE_IRQ_HANDLER(WRITELINE(jaguar_state, external_int))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -1623,7 +1578,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cojagr3k_rom, cojagr3k )
 	MCFG_DEVICE_REMOVE("ide:0")
-	MCFG_IDE_SLOT_ADD("ide:0", ide_devices, NULL, true)
+	MCFG_ATA_SLOT_ADD("ide:0", ata_devices, NULL, true)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cojag68k, cojagr3k )
@@ -1897,7 +1852,7 @@ ROM_START( area51t ) /* 68020 based, Area51 Time Warner License  Date: Nov 15, 1
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "area51t", 0, SHA1(d2865cc7b1bb08a4393a72013a90e18d8a8f9860) )
 ROM_END
 
@@ -1911,7 +1866,7 @@ ROM_START( area51a ) /* 68020 based, Area51 Atari Games License  Date: Oct 25, 1
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "area51", 0, SHA1(3b303bc37e206a6d7339352c869f050d04186f11) )
 ROM_END
 
@@ -1925,7 +1880,7 @@ ROM_START( area51 ) /* R3000 based, labeled as "Area51 2-C"  Date: Nov 11 1996 *
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "area51", 0, SHA1(3b303bc37e206a6d7339352c869f050d04186f11) )
 ROM_END
 
@@ -1939,7 +1894,7 @@ ROM_START( maxforce ) /* R3000 based, labeled as "Maximum Force 5-23-97 v1.05" *
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "maxforce", 0, SHA1(d54e7a8f3866bb2a1d28ae637e7c92ffa4dbe558) )
 ROM_END
 
@@ -1954,7 +1909,7 @@ ROM_START( maxf_102 ) /* R3000 based, labeled as "Maximum Force 2-27-97 v1.02" *
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "maxforce", 0, SHA1(d54e7a8f3866bb2a1d28ae637e7c92ffa4dbe558) )
 ROM_END
 
@@ -1972,7 +1927,7 @@ ROM_START( maxf_ng ) /* R3000 based, stickers say 'NO GORE' */
 	ROM_REGION( 0x800, "user2", 0 ) /* 28C16 style eeprom, currently loaded but not used */
 	ROM_LOAD( "28c16.17z", 0x000, 0x800, CRC(1cdd9088) SHA1(4f01f02ff95f31ced87a3cdd7f171afd92551266) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "maxforce", 0, SHA1(d54e7a8f3866bb2a1d28ae637e7c92ffa4dbe558) )
 ROM_END
 
@@ -1987,7 +1942,7 @@ ROM_START( area51mx )   /* 68020 based, Labeled as "68020 MAX/A51 KIT 2.0" Date:
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "area51mx", 0, SHA1(5ff10f4e87094d4449eabf3de7549564ca568c7e) )
 ROM_END
 
@@ -2002,7 +1957,7 @@ ROM_START( a51mxr3k ) /* R3000 based, Labeled as "R3K Max/A51 Kit Ver 1.0" */
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "area51mx", 0, SHA1(5ff10f4e87094d4449eabf3de7549564ca568c7e) )
 ROM_END
 
@@ -2017,7 +1972,7 @@ ROM_START( vcircle )
 	ROM_REGION16_BE( 0x1000, "waverom", 0 )
 	ROM_LOAD16_WORD("jagwave.rom", 0x0000, 0x1000, CRC(7a25ee5b) SHA1(58117e11fd6478c521fbd3fdbe157f39567552f0) )
 
-	DISK_REGION( "ide:0:hdd" )
+	DISK_REGION( "ide:0:hdd:image" )
 	DISK_IMAGE( "vcircle", 0, SHA1(bfa79c4cacdc9c2cd6362f62a23056b3e35a2034) )
 ROM_END
 
