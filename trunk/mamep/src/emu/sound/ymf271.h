@@ -105,16 +105,19 @@ private:
 	void update_lfo(YMF271Slot *slot);
 	INT64 calculate_slot_volume(YMF271Slot *slot);
 	void update_pcm(int slotnum, INT32 *mixp, int length);
-	INT64 calculate_2op_fm_0(int slotnum1, int slotnum2);
-	INT64 calculate_2op_fm_1(int slotnum1, int slotnum2);
-	INT64 calculate_1op_fm_0(int slotnum, INT64 phase_modulation);
-	INT64 calculate_1op_fm_1(int slotnum);
+	INT64 calculate_op(int slotnum, INT64 inp);
+	void set_feedback(int slotnum, INT64 inp);
 	void write_register(int slotnum, int reg, UINT8 data);
 	void ymf271_write_fm(int bank, UINT8 address, UINT8 data);
 	void ymf271_write_pcm(UINT8 address, UINT8 data);
 	void ymf271_write_timer(UINT8 address, UINT8 data);
 	UINT8 ymf271_read_memory(UINT32 offset);
-	
+
+	inline int get_keyscaled_rate(int rate, int keycode, int keyscale);
+	inline int get_internal_keycode(int block, int fns);
+	inline int get_external_keycode(int block, int fns);
+	inline bool check_envelope_end(YMF271Slot *slot);
+
 	// lookup tables
 	INT16 *m_lut_waves[8];
 	double *m_lut_plfo[4][8];
@@ -125,11 +128,11 @@ private:
 	int m_lut_attenuation[16];
 	int m_lut_total_level[128];
 	int m_lut_env_volume[256];
-	
+
 	// internal state
 	YMF271Slot m_slots[48];
 	YMF271Group m_groups[12];
-	
+
 	UINT8 m_regs_main[0x10];
 
 	UINT32 m_timerA;

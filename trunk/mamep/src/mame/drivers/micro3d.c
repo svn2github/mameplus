@@ -28,9 +28,9 @@
 #include "machine/68681.h"
 #include "machine/mc68901.h"
 #include "sound/2151intf.h"
-#include "sound/upd7759.h"
 #include "machine/nvram.h"
 #include "includes/micro3d.h"
+#include "scrlegcy.h"
 
 
 /*************************************

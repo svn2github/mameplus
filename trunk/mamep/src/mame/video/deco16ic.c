@@ -51,7 +51,7 @@
 
     Sotsugyo Shousho                    59      52              74              146?
     Lemmings                    ---     59      52,52,71,71     None            75
-    Tattoo Assassins            ---     101     52,52,71,71     141, 141?       ?           99, ?
+    Tattoo Assassins            ---     101     52,52,71,71     141, 141?       104? (same as Night Slashers)           99, ?
 
 Note 1: Mitchell game on DECO PCB board number DEC-22V0 (S-NK-3220)
 Note 2: Mitchell games on DECO PCB board number MT5601-0
@@ -168,7 +168,7 @@ const device_type DECO16IC = &device_creator<deco16ic_device>;
 
 deco16ic_device::deco16ic_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, DECO16IC, "Data East IC 55 / 56 / 74 / 141", tag, owner, clock, "deco16ic", __FILE__),
-	m_screen(NULL),
+	//m_screen(NULL),
 	m_pf1_data(NULL),
 	m_pf2_data(NULL),
 	m_pf12_control(NULL),
@@ -182,7 +182,6 @@ deco16ic_device::deco16ic_device(const machine_config &mconfig, const char *tag,
 	m_pf12_last_big(0),
 	m_pf1_8bpp_mode(0)
 {
-
 }
 
 //-------------------------------------------------
@@ -197,7 +196,7 @@ void deco16ic_device::device_config_complete()
 	const deco16ic_interface *intf = reinterpret_cast<const deco16ic_interface *>(static_config());
 	if (intf != NULL)
 	*static_cast<deco16ic_interface *>(this) = *intf;
-	
+
 	// or initialize to defaults if none provided
 	else
 	{

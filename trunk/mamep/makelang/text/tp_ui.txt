@@ -210,11 +210,11 @@
 &Picture Area\tAlt+P
 
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7293
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7291
 &Play
 
 
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7244
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7242
 &Play %s
 
 
@@ -298,7 +298,7 @@
 &Working
 
 
-# osd/winui/winui.c: 6666
+# osd/winui/winui.c: 6664
 '%s' is not a valid savestate file for game '%s'.
 
 
@@ -330,7 +330,7 @@ AD Stick
 ADStick device
 
 
-# osd/winui/mui_opts.c: 283
+# osd/winui/mui_opts.c: 284
 APPLICATION OPTIONS
 
 
@@ -374,7 +374,7 @@ All
 All Games
 
 
-# osd/winui/winui.c: 6321, 6324, 6327, 6330, 6333, 6337, 6342, 6346, 6349, 6352, 6355, 6358, 6362
+# osd/winui/winui.c: 6319, 6322, 6325, 6328, 6331, 6335, 6340, 6344, 6347, 6350, 6353, 6356, 6360
 All files (*.*)
 
 
@@ -622,7 +622,7 @@ C&lones
 CPU
 
 
-# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 462
+# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 463
 Cabinet
 
 
@@ -710,7 +710,7 @@ Config
 Configure for:
 
 
-# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 444
+# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 445
 Console
 
 
@@ -746,7 +746,7 @@ Contrast Correction
 Control &Panel
 
 
-# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 465
+# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 466
 Control Panel
 
 
@@ -790,11 +790,11 @@ Correct:
 Could not create '%s'
 
 
-# osd/winui/winui.c: 6567
+# osd/winui/winui.c: 6565
 Could not open '%s' as a valid input file.
 
 
-# osd/winui/winui.c: 6679
+# osd/winui/winui.c: 6677
 Could not open '%s' as a valid savestate file.
 
 
@@ -850,7 +850,7 @@ Customize interface options.
 Customize which columns are used in the game list
 
 
-# osd/winui/mui_opts.c: 291
+# osd/winui/mui_opts.c: 292
 DISPLAY STATE OPTIONS
 
 
@@ -902,7 +902,7 @@ Dial
 Dial device
 
 
-# osd/winui/properties.c: 342
+# osd/winui/properties.c: 343
 Direct3D
 
 
@@ -1134,7 +1134,7 @@ Error
 Error finding custom file name to save
 
 
-# osd/winui/winui.c: 7742
+# osd/winui/winui.c: 7740
 Error searching for custom folder
 
 
@@ -1154,7 +1154,7 @@ Exit the application
 External Folder List
 
 
-# osd/winui/mui_opts.c: 376
+# osd/winui/mui_opts.c: 377
 FILENAME OPTIONS
 
 
@@ -1190,7 +1190,7 @@ Flip screen left-right
 Flip screen upside-down
 
 
-# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 461
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 462
 Flyer
 
 
@@ -1226,7 +1226,7 @@ Full screen contrast
 Full screen gamma
 
 
-# osd/winui/game_opts.h: 195 osd/winui/mui_opts.c: 439
+# osd/winui/game_opts.h: 195 osd/winui/mui_opts.c: 440
 GAME STATISTICS
 
 
@@ -1338,7 +1338,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 
 
-# osd/winui/mui_opts.c: 467
+# osd/winui/mui_opts.c: 468
 History
 
 
@@ -1358,7 +1358,7 @@ Horizontal options\nCustom options used by all games in the Horizontal
 How cheats work
 
 
-# osd/winui/mui_opts.c: 333
+# osd/winui/mui_opts.c: 334
 INTERFACE OPTIONS
 
 
@@ -1414,15 +1414,15 @@ Ini Files
 Input Files (*.inp)
 
 
-# osd/winui/winui.c: 6591
+# osd/winui/winui.c: 6589
 Input file format version mismatch
 
 
-# osd/winui/winui.c: 6586
+# osd/winui/winui.c: 6584
 Input file invalid or in an older, unsupported format
 
 
-# osd/winui/winui.c: 6580
+# osd/winui/winui.c: 6578
 Input file is corrupt or invalid (missing header)
 
 
@@ -1546,7 +1546,7 @@ Localize GUI and MAME core.
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 
 
-# osd/winui/winui.c: 6321
+# osd/winui/winui.c: 6319
 MAME input files (*.inp,*.zip)
 
 
@@ -1554,7 +1554,7 @@ MAME input files (*.inp,*.zip)
 MAME release notes
 
 
-# osd/winui/winui.c: 6324
+# osd/winui/winui.c: 6322
 MAME savestate files (*.sta)
 
 
@@ -1578,7 +1578,7 @@ MAMEUI version by
 MAMEUI will now reset the following\nto the default settings:\n\n
 
 
-# osd/winui/mui_opts.c: 328 osd/winui/translate.c: 111
+# osd/winui/mui_opts.c: 329 osd/winui/translate.c: 111
 MS Sans Serif
 
 
@@ -1602,7 +1602,7 @@ Manufactured:
 Manufacturer
 
 
-# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 463
+# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 464
 Marquee
 
 
@@ -1650,11 +1650,11 @@ Move Item
 Move Up
 
 
-# osd/winui/mui_opts.c: 423
+# osd/winui/mui_opts.c: 424
 NAVIGATION JOYSTICK CODES
 
 
-# osd/winui/mui_opts.c: 383
+# osd/winui/mui_opts.c: 384
 NAVIGATION KEY CODES
 
 
@@ -1698,7 +1698,7 @@ Non Mechanical
 Non-Wor&king
 
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 339, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
 None
 
 
@@ -1762,7 +1762,7 @@ P&layback Input...
 PC&B
 
 
-# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 466
+# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 467
 PCB
 
 
@@ -1890,19 +1890,19 @@ Positional device
 Pr&operties
 
 
-# osd/winui/winui.c: 3884, 7258
+# osd/winui/winui.c: 3884, 7256
 Propert&ies for %s
 
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7303
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7301
 Propert&ies for Driver
 
 
-# osd/winui/winui.c: 3896, 7272
+# osd/winui/winui.c: 3896, 7270
 Properties &for %s BIOS
 
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7278, 7316
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7276, 7314
 Properties &for BIOS
 
 
@@ -2058,7 +2058,7 @@ S&mall Icons
 S&tretch screenshot larger than natural size
 
 
-# osd/winui/mui_opts.c: 361
+# osd/winui/mui_opts.c: 362
 SEARCH PATH OPTIONS
 
 
@@ -2362,7 +2362,7 @@ Sleep when possible
 Small Icons
 
 
-# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 460
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 461
 Snapshot
 
 
@@ -2490,7 +2490,7 @@ Status:
 Stereo
 
 
-# osd/winui/mui_opts.c: 469
+# osd/winui/mui_opts.c: 470
 Story
 
 
@@ -2574,7 +2574,7 @@ Thread priority
 Throttle
 
 
-# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 464
+# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 465
 Title
 
 
@@ -2767,10 +2767,6 @@ Vector options\nCustom options used by all games in the Vector
 
 
 # osd/winui/properties.c: 353
-Version 8
-
-
-# osd/winui/properties.c: 352
 Version 9
 
 
@@ -2902,43 +2898,43 @@ by S&amples
 by T&rackball
 
 
-# osd/winui/winui.c: 6352
+# osd/winui/winui.c: 6350
 cheats (*.dat)
 
 
-# osd/winui/winui.c: 6342
+# osd/winui/winui.c: 6340
 gamelists (*.lst)
 
 
-# osd/winui/winui.c: 6355
+# osd/winui/winui.c: 6353
 history (*.dat)
 
 
-# osd/winui/winui.c: 6358
+# osd/winui/winui.c: 6356
 mameinfo (*.dat)
 
 
-# osd/winui/winui.c: 6346
+# osd/winui/winui.c: 6344
 maps (*.map,*.txt)
 
 
-# osd/winui/winui.c: 6349
+# osd/winui/winui.c: 6347
 scripts (*.txt,*.dat)
 
 
-# osd/winui/winui.c: 6327
+# osd/winui/winui.c: 6325
 sounds (*.wav)
 
 
-# osd/winui/winui.c: 6362
+# osd/winui/winui.c: 6360
 story (*.dat)
 
 
-# osd/winui/winui.c: 6333
+# osd/winui/winui.c: 6331
 videos (*.avi)
 
 
-# osd/winui/winui.c: 6330
+# osd/winui/winui.c: 6328
 videos (*.mng)
 
 

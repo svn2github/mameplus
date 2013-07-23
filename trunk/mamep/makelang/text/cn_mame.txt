@@ -4195,7 +4195,7 @@ Return to %s
 回到%s
 
 # emu/uimenu.c: 191
-Return to Prior Menu
+Return to Previous Menu
 回到上一层菜单
 
 # emu/ioport.c: 795

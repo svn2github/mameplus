@@ -4,6 +4,8 @@
 #include "video/deco16ic.h"
 #include "machine/eeprom.h"
 #include "sound/okim6295.h"
+#include "machine/deco146.h"
+#include "machine/deco104.h"
 
 class deco32_state : public driver_device
 {
@@ -12,6 +14,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
+		m_deco146(*this, "ioprot"),
+		m_deco104(*this, "ioprot104"),
 		m_decobsmt(*this, "decobsmt"),
 		m_spriteram(*this, "spriteram"),
 		m_ram(*this, "ram"),
@@ -32,6 +36,8 @@ public:
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_audiocpu;
+	optional_device<deco146_device> m_deco146;
+	optional_device<deco104_device> m_deco104;
 	optional_device<decobsmt_device> m_decobsmt;
 	optional_device<buffered_spriteram32_device> m_spriteram;
 	required_shared_ptr<UINT32> m_ram;
@@ -53,7 +59,7 @@ public:
 	int m_raster_enable;
 	timer_device *m_raster_irq_timer;
 	UINT8 m_nslasher_sound_irq;
-	int m_strobe;
+
 	int m_tattass_eprom_bit;
 	int m_lastClock;
 	char m_buffer[32];
@@ -88,19 +94,21 @@ public:
 	DECLARE_WRITE32_MEMBER(deco32_irq_controller_w);
 	DECLARE_WRITE32_MEMBER(deco32_sound_w);
 	DECLARE_READ32_MEMBER(deco32_71_r);
-	DECLARE_READ32_MEMBER(captaven_prot_r);
 	DECLARE_READ32_MEMBER(captaven_soundcpu_r);
 	DECLARE_READ32_MEMBER(fghthist_control_r);
 	DECLARE_WRITE32_MEMBER(fghthist_eeprom_w);
 	DECLARE_READ32_MEMBER(dragngun_service_r);
 	DECLARE_READ32_MEMBER(lockload_gun_mirror_r);
-	DECLARE_READ32_MEMBER(dragngun_prot_r);
 	DECLARE_READ32_MEMBER(tattass_prot_r);
 	DECLARE_WRITE32_MEMBER(tattass_prot_w);
 	DECLARE_WRITE32_MEMBER(tattass_control_w);
-	DECLARE_READ32_MEMBER(nslasher_prot_r);
+	//DECLARE_READ32_MEMBER(nslasher_prot_r);
+	DECLARE_READ16_MEMBER( nslasher_protection_region_0_104_r );
+	DECLARE_WRITE16_MEMBER( nslasher_protection_region_0_104_w );
+	DECLARE_READ16_MEMBER( nslasher_debug_r );
+
 	DECLARE_WRITE32_MEMBER(nslasher_eeprom_w);
-	DECLARE_WRITE32_MEMBER(nslasher_prot_w);
+	//DECLARE_WRITE32_MEMBER(nslasher_prot_w);
 	DECLARE_READ32_MEMBER(deco32_spriteram_r);
 	DECLARE_WRITE32_MEMBER(deco32_spriteram_w);
 	DECLARE_WRITE32_MEMBER(deco32_buffer_spriteram_w);
@@ -137,6 +145,21 @@ public:
 	TIMER_DEVICE_CALLBACK_MEMBER(lockload_vbl_irq);
 	void updateAceRam();
 	void mixDualAlphaSprites(bitmap_rgb32 &bitmap, const rectangle &cliprect, gfx_element *gfx0, gfx_element *gfx1, int mixAlphaTilemap);
+
+	UINT16 port_a_fghthist(int unused);
+	UINT16 port_b_fghthist(int unused);
+	UINT16 port_c_fghthist(int unused);
+	READ32_MEMBER( fghthist_protection_region_0_146_r );
+	WRITE32_MEMBER( fghthist_protection_region_0_146_w );
+	READ16_MEMBER( dg_protection_region_0_146_r );
+	WRITE16_MEMBER( dg_protection_region_0_146_w );
+	void deco32_sound_cb( address_space &space, UINT16 data, UINT16 mem_mask );
+
+	UINT16 port_b_nslasher(int unused);
+	void nslasher_sound_cb( address_space &space, UINT16 data, UINT16 mem_mask );
+	UINT16 port_b_tattass(int unused);
+	void tattass_sound_cb( address_space &space, UINT16 data, UINT16 mem_mask );
+
 };
 
 class dragngun_state : public deco32_state
@@ -170,4 +193,5 @@ public:
 	void init_dragngun_common();
 	void screen_eof_dragngun(screen_device &screen, bool state);
 	void dragngun_draw_sprites( bitmap_rgb32 &bitmap, const rectangle &cliprect, const UINT32 *spritedata);
+	READ32_MEMBER( dragngun_unk_video_r );
 };

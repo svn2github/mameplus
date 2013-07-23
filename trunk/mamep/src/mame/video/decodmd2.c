@@ -171,12 +171,12 @@ machine_config_constructor decodmd_type2_device::device_mconfig_additions() cons
 
 decodmd_type2_device::decodmd_type2_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, DECODMD2, "Data East Pinball Dot Matrix Display Type 2", tag, owner, clock, "decodmd2", __FILE__),
-	  m_cpu(*this,"dmdcpu"),
-	  m_mc6845(*this,"dmd6845"),
-	  m_rombank1(*this,"dmdbank1"),
-	  m_rombank2(*this,"dmdbank2"),
-	  m_rambank(*this,"dmdram"),
-	  m_ram(*this,RAM_TAG)
+		m_cpu(*this,"dmdcpu"),
+		m_mc6845(*this,"dmd6845"),
+		m_rombank1(*this,"dmdbank1"),
+		m_rombank2(*this,"dmdbank2"),
+		m_rambank(*this,"dmdram"),
+		m_ram(*this,RAM_TAG)
 {}
 
 void decodmd_type2_device::device_start()
@@ -187,7 +187,7 @@ void decodmd_type2_device::device_reset()
 {
 	UINT8* ROM;
 	UINT8* RAM = m_ram->pointer();
-	m_rom = memregion(m_romregion);
+	m_rom = memregion(m_gfxtag);
 
 	memset(RAM,0,0x3000);
 
@@ -201,16 +201,8 @@ void decodmd_type2_device::device_reset()
 	m_busy = false;
 }
 
-void decodmd_type2_device::device_config_complete()
+void decodmd_type2_device::static_set_gfxregion(device_t &device, const char *tag)
 {
-	// inherit a copy of the static data
-	const decodmd_type2_intf *intf = reinterpret_cast<const decodmd_type2_intf *>(static_config());
-	if (intf != NULL)
-		*static_cast<decodmd_type2_intf *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-		m_romregion = NULL;
-	}
+	decodmd_type2_device &cpuboard = downcast<decodmd_type2_device &>(device);
+	cpuboard.m_gfxtag = tag;
 }

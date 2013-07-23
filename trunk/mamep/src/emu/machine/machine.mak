@@ -805,6 +805,32 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/machine/68307.h,MACHINES += M68307
+#-------------------------------------------------
+
+ifneq ($(filter M68307,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/68307.o
+MACHINEOBJS += $(MACHINEOBJ)/68307sim.o
+MACHINEOBJS += $(MACHINEOBJ)/68307bus.o
+MACHINEOBJS += $(MACHINEOBJ)/68307ser.o
+MACHINEOBJS += $(MACHINEOBJ)/68307tmu.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/machine/68340.h,MACHINES += M68340
+#-------------------------------------------------
+
+ifneq ($(filter M68340,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/68340.o
+MACHINEOBJS += $(MACHINEOBJ)/68340sim.o
+MACHINEOBJS += $(MACHINEOBJ)/68340dma.o
+MACHINEOBJS += $(MACHINEOBJ)/68340ser.o
+MACHINEOBJS += $(MACHINEOBJ)/68340tmu.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/machine/mcf5206e.h,MACHINES += MCF5206E
 #-------------------------------------------------
 

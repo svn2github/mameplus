@@ -173,8 +173,10 @@ Check gticlub.c for details on the bottom board.
 #include "machine/eeprom.h"
 #include "sound/k056800.h"
 #include "sound/k054539.h"
-#include "video/konicdev.h"
+#include "video/k001604.h"
 #include "video/gticlub.h"
+#include "video/k054156_k054157_k056832.h"
+#include "video/konami_helper.h"
 
 
 class zr107_state : public driver_device
@@ -246,11 +248,11 @@ UINT32 zr107_state::screen_update_jetwave(screen_device &screen, bitmap_rgb32 &b
 {
 	bitmap.fill(machine().pens[0], cliprect);
 
-	k001604_draw_back_layer(m_k001604, bitmap, cliprect);
+	m_k001604->draw_back_layer(bitmap, cliprect);
 
 	K001005_draw(bitmap, cliprect);
 
-	k001604_draw_front_layer(m_k001604, bitmap, cliprect);
+	m_k001604->draw_front_layer(bitmap, cliprect);
 
 	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
 	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
@@ -279,14 +281,14 @@ static void game_tile_callback(running_machine &machine, int layer, int *code, i
 
 VIDEO_START_MEMBER(zr107_state,zr107)
 {
-	k056832_set_layer_offs(m_k056832, 0, -29, -27);
-	k056832_set_layer_offs(m_k056832, 1, -29, -27);
-	k056832_set_layer_offs(m_k056832, 2, -29, -27);
-	k056832_set_layer_offs(m_k056832, 3, -29, -27);
-	k056832_set_layer_offs(m_k056832, 4, -29, -27);
-	k056832_set_layer_offs(m_k056832, 5, -29, -27);
-	k056832_set_layer_offs(m_k056832, 6, -29, -27);
-	k056832_set_layer_offs(m_k056832, 7, -29, -27);
+	m_k056832->set_layer_offs(0, -29, -27);
+	m_k056832->set_layer_offs(1, -29, -27);
+	m_k056832->set_layer_offs(2, -29, -27);
+	m_k056832->set_layer_offs(3, -29, -27);
+	m_k056832->set_layer_offs(4, -29, -27);
+	m_k056832->set_layer_offs(5, -29, -27);
+	m_k056832->set_layer_offs(6, -29, -27);
+	m_k056832->set_layer_offs(7, -29, -27);
 
 	K001006_init(machine());
 	K001005_init(machine());
@@ -296,9 +298,9 @@ UINT32 zr107_state::screen_update_zr107(screen_device &screen, bitmap_rgb32 &bit
 {
 	bitmap.fill(machine().pens[0], cliprect);
 
-	k056832_tilemap_draw(m_k056832, bitmap, cliprect, 1, 0, 0);
+	m_k056832->tilemap_draw(bitmap, cliprect, 1, 0, 0);
 	K001005_draw(bitmap, cliprect);
-	k056832_tilemap_draw(m_k056832, bitmap, cliprect, 0, 0, 0);
+	m_k056832->tilemap_draw(bitmap, cliprect, 0, 0, 0);
 
 	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
 	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
@@ -437,11 +439,11 @@ void zr107_state::machine_start()
 
 static ADDRESS_MAP_START( zr107_map, AS_PROGRAM, 32, zr107_state )
 	AM_RANGE(0x00000000, 0x000fffff) AM_RAM AM_SHARE("workram") /* Work RAM */
-	AM_RANGE(0x74000000, 0x74003fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_long_r, k056832_ram_long_w)
-	AM_RANGE(0x74020000, 0x7402003f) AM_DEVREADWRITE_LEGACY("k056832", k056832_long_r, k056832_long_w)
+	AM_RANGE(0x74000000, 0x74003fff) AM_DEVREADWRITE("k056832", k056832_device, ram_long_r, ram_long_w)
+	AM_RANGE(0x74020000, 0x7402003f) AM_DEVREADWRITE("k056832", k056832_device, long_r, long_w)
 	AM_RANGE(0x74060000, 0x7406003f) AM_READWRITE(ccu_r, ccu_w)
 	AM_RANGE(0x74080000, 0x74081fff) AM_RAM_WRITE(paletteram32_w) AM_SHARE("paletteram")
-	AM_RANGE(0x740a0000, 0x740a3fff) AM_DEVREAD_LEGACY("k056832", k056832_rom_long_r)
+	AM_RANGE(0x740a0000, 0x740a3fff) AM_DEVREAD("k056832", k056832_device, rom_long_r)
 	AM_RANGE(0x78000000, 0x7800ffff) AM_READWRITE_LEGACY(cgboard_dsp_shared_r_ppc, cgboard_dsp_shared_w_ppc)        /* 21N 21K 23N 23K */
 	AM_RANGE(0x78010000, 0x7801ffff) AM_WRITE_LEGACY(cgboard_dsp_shared_w_ppc)
 	AM_RANGE(0x78040000, 0x7804000f) AM_READWRITE_LEGACY(K001006_0_r, K001006_0_w)
@@ -465,10 +467,10 @@ WRITE32_MEMBER(zr107_state::jetwave_palette_w)
 
 static ADDRESS_MAP_START( jetwave_map, AS_PROGRAM, 32, zr107_state )
 	AM_RANGE(0x00000000, 0x000fffff) AM_MIRROR(0x80000000) AM_RAM       /* Work RAM */
-	AM_RANGE(0x74000000, 0x740000ff) AM_MIRROR(0x80000000) AM_DEVREADWRITE_LEGACY("k001604", k001604_reg_r, k001604_reg_w)
+	AM_RANGE(0x74000000, 0x740000ff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001604", k001604_device, reg_r, reg_w)
 	AM_RANGE(0x74010000, 0x7401ffff) AM_MIRROR(0x80000000) AM_RAM_WRITE(jetwave_palette_w) AM_SHARE("paletteram")
-	AM_RANGE(0x74020000, 0x7403ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE_LEGACY("k001604", k001604_tile_r, k001604_tile_w)
-	AM_RANGE(0x74040000, 0x7407ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE_LEGACY("k001604", k001604_char_r, k001604_char_w)
+	AM_RANGE(0x74020000, 0x7403ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001604", k001604_device, tile_r, tile_w)
+	AM_RANGE(0x74040000, 0x7407ffff) AM_MIRROR(0x80000000) AM_DEVREADWRITE("k001604", k001604_device, char_r, char_w)
 	AM_RANGE(0x78000000, 0x7800ffff) AM_MIRROR(0x80000000) AM_READWRITE_LEGACY(cgboard_dsp_shared_r_ppc, cgboard_dsp_shared_w_ppc)      /* 21N 21K 23N 23K */
 	AM_RANGE(0x78010000, 0x7801ffff) AM_MIRROR(0x80000000) AM_WRITE_LEGACY(cgboard_dsp_shared_w_ppc)
 	AM_RANGE(0x78040000, 0x7804000f) AM_MIRROR(0x80000000) AM_READWRITE_LEGACY(K001006_0_r, K001006_0_w)

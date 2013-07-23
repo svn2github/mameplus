@@ -5,6 +5,9 @@
 *************************************************************************/
 #include "sound/k053260.h"
 #include "machine/k053252.h"
+#include "video/k051316.h"
+#include "video/konami_helper.h"
+#include "video/k053244_k053245.h"
 
 class rollerg_state : public driver_device
 {

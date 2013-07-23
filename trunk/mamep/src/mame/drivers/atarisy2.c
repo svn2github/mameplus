@@ -335,12 +335,7 @@ void atarisy2_state::device_post_load()
 
 READ16_MEMBER(atarisy2_state::switch_r)
 {
-	int result = ioport("1800")->read() | (ioport("1801")->read() << 8);
-
-	if (m_cpu_to_sound_ready) result ^= 0x20;
-	if (m_sound_to_cpu_ready) result ^= 0x10;
-
-	return result;
+	return ioport("1800")->read() | (ioport("1801")->read() << 8);
 }
 
 
@@ -348,8 +343,6 @@ READ8_MEMBER(atarisy2_state::switch_6502_r)
 {
 	int result = ioport("1840")->read();
 
-	if (m_cpu_to_sound_ready) result |= 0x01;
-	if (m_sound_to_cpu_ready) result |= 0x02;
 	if ((m_has_tms5220) && (machine().device<tms5220_device>("tms")->readyq_r() == 0))
 		result &= ~0x04;
 	if (!(ioport("1801")->read() & 0x80)) result |= 0x10;
@@ -682,7 +675,7 @@ WRITE8_MEMBER(atarisy2_state::sound_reset_w)
 		return;
 
 	/* a large number of signals are reset when this happens */
-	sound_io_reset();
+	m_soundcomm->reset();
 	machine().device("ymsnd")->reset();
 	if (m_has_tms5220)
 	{
@@ -699,7 +692,7 @@ READ16_MEMBER(atarisy2_state::sound_r)
 	update_interrupts();
 
 	/* handle it normally otherwise */
-	return atarigen_state::sound_r(space,offset) | 0xff00;
+	return m_soundcomm->main_response_r(space,offset) | 0xff00;
 }
 
 
@@ -710,7 +703,7 @@ WRITE8_MEMBER(atarisy2_state::sound_6502_w)
 	update_interrupts();
 
 	/* handle it normally otherwise */
-	m6502_sound_w(space, offset, data);
+	m_soundcomm->sound_response_w(space, offset, data);
 }
 
 
@@ -721,7 +714,7 @@ READ8_MEMBER(atarisy2_state::sound_6502_r)
 	update_interrupts();
 
 	/* handle it normally otherwise */
-	return m6502_sound_r(space, offset);
+	return m_soundcomm->sound_command_r(space, offset);
 }
 
 
@@ -779,7 +772,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, atarisy2_state )
 	AM_RANGE(0x15c0, 0x15c1) AM_MIRROR(0x001e) AM_WRITE(scanline_int_ack_w)
 	AM_RANGE(0x15e0, 0x15e1) AM_MIRROR(0x001e) AM_WRITE(video_int_ack_w)
 	AM_RANGE(0x1600, 0x1601) AM_MIRROR(0x007e) AM_WRITE(int_enable_w)
-	AM_RANGE(0x1680, 0x1681) AM_MIRROR(0x007e) AM_WRITE8(sound_w, 0x00ff)
+	AM_RANGE(0x1680, 0x1681) AM_MIRROR(0x007e) AM_DEVWRITE8("soundcomm", atari_sound_comm_device, main_command_w, 0x00ff)
 	AM_RANGE(0x1700, 0x1701) AM_MIRROR(0x007e) AM_WRITE(xscroll_w) AM_SHARE("xscroll")
 	AM_RANGE(0x1780, 0x1781) AM_MIRROR(0x007e) AM_WRITE(yscroll_w) AM_SHARE("yscroll")
 	AM_RANGE(0x1800, 0x1801) AM_MIRROR(0x03fe) AM_READ(switch_r) AM_WRITE(watchdog_reset16_w)
@@ -813,7 +806,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, atarisy2_state )
 	AM_RANGE(0x1872, 0x1873) AM_MIRROR(0x2780) AM_WRITE(tms5220_strobe_w)
 	AM_RANGE(0x1874, 0x1874) AM_MIRROR(0x2781) AM_WRITE(sound_6502_w)
 	AM_RANGE(0x1876, 0x1876) AM_MIRROR(0x2781) AM_WRITE(coincount_w)
-	AM_RANGE(0x1878, 0x1878) AM_MIRROR(0x2781) AM_WRITE(m6502_irq_ack_w)
+	AM_RANGE(0x1878, 0x1878) AM_MIRROR(0x2781) AM_DEVWRITE("soundcomm", atari_sound_comm_device, sound_irq_ack_w)
 	AM_RANGE(0x187a, 0x187a) AM_MIRROR(0x2781) AM_WRITE(mixer_w)
 	AM_RANGE(0x187c, 0x187c) AM_MIRROR(0x2781) AM_WRITE(switch_6502_w)
 	AM_RANGE(0x187e, 0x187e) AM_MIRROR(0x2781) AM_WRITE(sound_reset_w)
@@ -830,8 +823,8 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( paperboy )
 	PORT_START("1840")  /*(sound) */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL )
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_MAIN_TO_SOUND_READY("soundcomm")
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_SOUND_TO_MAIN_READY("soundcomm")
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE )
@@ -844,8 +837,8 @@ static INPUT_PORTS_START( paperboy )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_SOUND_TO_MAIN_READY("soundcomm")
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_MAIN_TO_SOUND_READY("soundcomm")
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 )
 
@@ -1238,7 +1231,7 @@ static MACHINE_CONFIG_START( atarisy2, atarisy2_state )
 
 	MCFG_CPU_ADD("audiocpu", M6502, SOUND_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(atarigen_state, m6502_irq_gen, (double)MASTER_CLOCK/2/16/16/16/10)
+	MCFG_DEVICE_PERIODIC_INT_DEVICE("soundcomm", atari_sound_comm_device, sound_irq_gen, (double)MASTER_CLOCK/2/16/16/16/10)
 
 	MCFG_MACHINE_START_OVERRIDE(atarisy2_state,atarisy2)
 	MCFG_MACHINE_RESET_OVERRIDE(atarisy2_state,atarisy2)
@@ -1249,6 +1242,9 @@ static MACHINE_CONFIG_START( atarisy2, atarisy2_state )
 	MCFG_GFXDECODE(atarisy2)
 	MCFG_PALETTE_LENGTH(256)
 
+	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, atarisy2_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 128,64)
+	MCFG_TILEMAP_ADD_STANDARD_TRANSPEN("alpha", 2, atarisy2_state, get_alpha_tile_info, 8,8, SCAN_ROWS, 64,48, 0)
+
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 640, 0, 512, 416, 0, 384)
 	MCFG_SCREEN_UPDATE_DRIVER(atarisy2_state, screen_update_atarisy2)
@@ -1256,6 +1252,7 @@ static MACHINE_CONFIG_START( atarisy2, atarisy2_state )
 	MCFG_VIDEO_START_OVERRIDE(atarisy2_state,atarisy2)
 
 	/* sound hardware */
+	MCFG_ATARI_SOUND_COMM_ADD("soundcomm", "audiocpu", WRITELINE(atarigen_state, sound_int_write_line))
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_YM2151_ADD("ymsnd", SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.60)

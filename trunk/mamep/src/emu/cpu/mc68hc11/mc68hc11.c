@@ -550,13 +550,11 @@ static void check_irq_lines(hc11_state *cpustate)
 	{
 		int divider = div_tab[cpustate->pr & 3];
 		UINT64 cur_time = cpustate->device->total_cycles();
-		UINT64 add = (cur_time - cpustate->frc_base) / divider;
+		UINT32 add = (cur_time - cpustate->frc_base) / divider;
 
 		if (add > 0)
 		{
-			int i;
-
-			for(i=0;i<add;i++)
+			for(UINT32 i=0;i<add;i++)
 			{
 				cpustate->tcnt++;
 				if(cpustate->tcnt == cpustate->toc1)
@@ -697,7 +695,7 @@ CPU_GET_INFO( mc68hc11 )
 		case CPUINFO_STR_FAMILY:                    strcpy(info->s, "Motorola MC68HC11");   break;
 		case CPUINFO_STR_VERSION:                   strcpy(info->s, "1.0");                 break;
 		case CPUINFO_STR_SOURCE_FILE:                       strcpy(info->s, __FILE__);              break;
-		case CPUINFO_STR_CREDITS:                   strcpy(info->s, "Copyright Ville Linde"); break;
+		case CPUINFO_STR_CREDITS:                   strcpy(info->s, "Copyright Ville Linde & Angelo Salese"); break;
 
 		case CPUINFO_STR_FLAGS:
 			sprintf(info->s, "%c%c%c%c%c%c%c%c",

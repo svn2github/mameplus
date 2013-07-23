@@ -23,16 +23,14 @@ Notes:
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m6809/hd6309.h"
-#include "video/konicdev.h"
 #include "cpu/m6809/m6809.h"
 #include "sound/2151intf.h"
-#include "sound/upd7759.h"
 #include "includes/konamipt.h"
 #include "includes/mainevt.h"
 
 INTERRUPT_GEN_MEMBER(mainevt_state::mainevt_interrupt)
 {
-	if (k052109_is_irq_enabled(m_k052109))
+	if (m_k052109->is_irq_enabled())
 		irq0_line_hold(device);
 }
 
@@ -57,7 +55,7 @@ WRITE8_MEMBER(mainevt_state::mainevt_bankswitch_w)
 	//palette_selected = data & 0x20;
 
 	/* bit 6 = enable char ROM reading through the video RAM */
-	k052109_set_rmrd_line(m_k052109, (data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+	m_k052109->set_rmrd_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* bit 7 = NINITSET (unknown) */
 
@@ -81,13 +79,13 @@ WRITE8_MEMBER(mainevt_state::mainevt_sh_irqtrigger_w)
 
 READ8_MEMBER(mainevt_state::mainevt_sh_busy_r)
 {
-	return upd7759_busy_r(m_upd7759);
+	return m_upd7759->busy_r();
 }
 
 WRITE8_MEMBER(mainevt_state::mainevt_sh_irqcontrol_w)
 {
-	upd7759_reset_w(m_upd7759, data & 2);
-	upd7759_start_w(m_upd7759, data & 1);
+	m_upd7759->reset_w(data & 2);
+	m_upd7759->start_w(data & 1);
 
 	m_sound_irq_mask = data & 4;
 }
@@ -109,7 +107,7 @@ WRITE8_MEMBER(mainevt_state::mainevt_sh_bankswitch_w)
 	m_k007232->set_bank(bank_A, bank_B);
 
 	/* bits 4-5 select the UPD7759 bank */
-	upd7759_set_bank_base(m_upd7759, ((data >> 4) & 0x03) * 0x20000);
+	m_upd7759->set_bank_base(((data >> 4) & 0x03) * 0x20000);
 }
 
 WRITE8_MEMBER(mainevt_state::dv_sh_bankswitch_w)
@@ -126,27 +124,27 @@ WRITE8_MEMBER(mainevt_state::dv_sh_bankswitch_w)
 
 READ8_MEMBER(mainevt_state::k052109_051960_r)
 {
-	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
+	if (m_k052109->get_rmrd_line() == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, space, offset - 0x3800);
+			return m_k051960->k051937_r(space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, space, offset);
+			return m_k052109->read(space, offset);
 		else
-			return k051960_r(m_k051960, space, offset - 0x3c00);
+			return m_k051960->k051960_r(space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, space, offset);
+		return m_k052109->read(space, offset);
 }
 
 WRITE8_MEMBER(mainevt_state::k052109_051960_w)
 {
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, space, offset - 0x3800, data);
+		m_k051960->k051937_w(space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, space, offset, data);
+		m_k052109->write(space, offset, data);
 	else
-		k051960_w(m_k051960, space, offset - 0x3c00, data);
+		m_k051960->k051960_w(space, offset - 0x3c00, data);
 }
 
 
@@ -188,7 +186,7 @@ static ADDRESS_MAP_START( devstors_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x1f97, 0x1f97) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1f98, 0x1f98) AM_READ_PORT("DSW3")
 	AM_RANGE(0x1f9b, 0x1f9b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x1fa0, 0x1fbf) AM_DEVREADWRITE_LEGACY("k051733", k051733_r, k051733_w)
+	AM_RANGE(0x1fa0, 0x1fbf) AM_DEVREADWRITE("k051733", k051733_device, read, write)
 
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 
@@ -202,7 +200,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( mainevt_sound_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
-	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
+	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE("upd", upd7759_device, port_w)
 	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE("k007232", k007232_device, read, write)
 	AM_RANGE(0xd000, 0xd000) AM_READ(mainevt_sh_busy_r)

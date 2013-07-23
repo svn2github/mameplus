@@ -65,7 +65,6 @@ Unresolved Issues:
 #include "sound/k054539.h"
 #include "sound/2151intf.h"
 #include "sound/flt_vol.h"
-#include "video/konicdev.h"
 #include "includes/xexex.h"
 #include "includes/konamipt.h"
 
@@ -89,7 +88,7 @@ static const eeprom_interface eeprom_intf =
 /* the interface with the 053247 is weird. The chip can address only 0x1000 bytes */
 /* of RAM, but they put 0x8000 there. The CPU can access them all. Address lines */
 /* A1, A5 and A6 don't go to the 053247. */
-READ16_MEMBER(xexex_state::K053247_scattered_word_r)
+READ16_MEMBER(xexex_state::k053247_scattered_word_r)
 {
 	if (offset & 0x0031)
 		return m_spriteram[offset];
@@ -100,7 +99,7 @@ READ16_MEMBER(xexex_state::K053247_scattered_word_r)
 	}
 }
 
-WRITE16_MEMBER(xexex_state::K053247_scattered_word_w)
+WRITE16_MEMBER(xexex_state::k053247_scattered_word_w)
 {
 	if (offset & 0x0031)
 		COMBINE_DATA(m_spriteram + offset);
@@ -124,8 +123,8 @@ void xexex_state::xexex_objdma( int limiter )
 	if (limiter && counter == m_frame)
 		return; // make sure we only do DMA transfer once per frame
 
-	k053247_get_ram(m_k053246, &dst);
-	counter = k053247_get_dy(m_k053246);
+	m_k053246->k053247_get_ram( &dst);
+	counter = m_k053246->k053247_get_dy();
 	src = m_spriteram;
 	num_inactive = counter = 256;
 
@@ -180,7 +179,7 @@ void xexex_state::parse_control2(  )
 	ioport("EEPROMOUT")->write(m_cur_control2, 0xff);
 
 	/* bit 8 = enable sprite ROM reading */
-	k053246_set_objcha_line(m_k053246, (m_cur_control2 & 0x0100) ? ASSERT_LINE : CLEAR_LINE);
+	m_k053246->k053246_set_objcha_line( (m_cur_control2 & 0x0100) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* bit 9 = disable alpha channel on K054157 plane 0 (under investigation) */
 	m_cur_alpha = !(m_cur_control2 & 0x200);
@@ -284,7 +283,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(xexex_state::xexex_interrupt)
 	/* TODO: vblank is at 256! (enable CCU then have fun in fixing offsetted layers) */
 	if(scanline == 128)
 	{
-		if (k053246_is_irq_enabled(m_k053246))
+		if (m_k053246->k053246_is_irq_enabled())
 		{
 			// OBJDMA starts at the beginning of V-blank
 			xexex_objdma(0);
@@ -311,38 +310,38 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, xexex_state )
 
 	AM_RANGE(0x090000, 0x097fff) AM_RAM AM_SHARE("spriteram")           // K053247 sprite RAM
 	AM_RANGE(0x098000, 0x09ffff) AM_READWRITE(spriteram_mirror_r, spriteram_mirror_w)   // K053247 sprite RAM mirror read
-	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVWRITE_LEGACY("k056832", k056832_word_w)              // VACSET (K054157)
-	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVWRITE_LEGACY("k053246", k053246_word_w)              // OBJSET1
-	AM_RANGE(0x0c4000, 0x0c4001) AM_DEVREAD_LEGACY("k053246", k053246_word_r)               // Passthrough to sprite roms
+	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVWRITE("k056832", k056832_device, word_w)              // VACSET (K054157)
+	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVWRITE("k053246", k053247_device, k053246_word_w)              // OBJSET1
+	AM_RANGE(0x0c4000, 0x0c4001) AM_DEVREAD("k053246", k053247_device, k053246_word_r)               // Passthrough to sprite roms
 	AM_RANGE(0x0c6000, 0x0c7fff) AM_DEVREADWRITE("k053250", k053250_device, ram_r, ram_w)    // K053250 "road" RAM
 	AM_RANGE(0x0c8000, 0x0c800f) AM_DEVREADWRITE("k053250", k053250_device, reg_r, reg_w)
-	AM_RANGE(0x0ca000, 0x0ca01f) AM_DEVWRITE_LEGACY("k054338", k054338_word_w)              // CLTC
-	AM_RANGE(0x0cc000, 0x0cc01f) AM_DEVWRITE_LEGACY("k053251", k053251_lsb_w)               // priority encoder
+	AM_RANGE(0x0ca000, 0x0ca01f) AM_DEVWRITE("k054338", k054338_device, word_w)              // CLTC
+	AM_RANGE(0x0cc000, 0x0cc01f) AM_DEVWRITE("k053251", k053251_device, lsb_w)               // priority encoder
 //  AM_RANGE(0x0d0000, 0x0d001f) AM_DEVREADWRITE8("k053252", k053252_device, read, write, 0x00ff)                // CCU
 	AM_RANGE(0x0d4000, 0x0d4001) AM_WRITE(sound_irq_w)
 	AM_RANGE(0x0d600c, 0x0d600d) AM_WRITE(sound_cmd1_w)
 	AM_RANGE(0x0d600e, 0x0d600f) AM_WRITE(sound_cmd2_w)
 	AM_RANGE(0x0d6014, 0x0d6015) AM_READ(sound_status_r)
 	AM_RANGE(0x0d6000, 0x0d601f) AM_RAM                                 // sound regs fall through
-	AM_RANGE(0x0d8000, 0x0d8007) AM_DEVWRITE_LEGACY("k056832", k056832_b_word_w)                // VSCCS regs
+	AM_RANGE(0x0d8000, 0x0d8007) AM_DEVWRITE("k056832", k056832_device, b_word_w)                // VSCCS regs
 	AM_RANGE(0x0da000, 0x0da001) AM_READ_PORT("P1")
 	AM_RANGE(0x0da002, 0x0da003) AM_READ_PORT("P2")
 	AM_RANGE(0x0dc000, 0x0dc001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x0dc002, 0x0dc003) AM_READ_PORT("EEPROM")
 	AM_RANGE(0x0de000, 0x0de001) AM_READWRITE(control2_r, control2_w)
 	AM_RANGE(0x100000, 0x17ffff) AM_ROM
-	AM_RANGE(0x180000, 0x181fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)
-	AM_RANGE(0x182000, 0x183fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)
-	AM_RANGE(0x190000, 0x191fff) AM_DEVREAD_LEGACY("k056832", k056832_rom_word_r)       // Passthrough to tile roms
+	AM_RANGE(0x180000, 0x181fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)
+	AM_RANGE(0x182000, 0x183fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)
+	AM_RANGE(0x190000, 0x191fff) AM_DEVREAD("k056832", k056832_device, rom_word_r)       // Passthrough to tile roms
 	AM_RANGE(0x1a0000, 0x1a1fff) AM_DEVREAD("k053250", k053250_device, rom_r)
 	AM_RANGE(0x1b0000, 0x1b1fff) AM_RAM_WRITE(paletteram_xrgb_word_be_w) AM_SHARE("paletteram")
 
 #if XE_DEBUG
-	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVREAD_LEGACY("k056832", k056832_word_r)
+	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVREAD("k056832", k056832_device, word_r)
 	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVREAD_LEGACY("k053246", k053246_reg_word_r)
-	AM_RANGE(0x0ca000, 0x0ca01f) AM_DEVREAD_LEGACY("k054338", k054338_word_r)
-	AM_RANGE(0x0cc000, 0x0cc01f) AM_DEVREAD_LEGACY("k053251", k053251_lsb_r)
-	AM_RANGE(0x0d8000, 0x0d8007) AM_DEVREAD_LEGACY("k056832", k056832_b_word_r)
+	AM_RANGE(0x0ca000, 0x0ca01f) AM_DEVREAD("k054338", k054338_device, word_r)
+	AM_RANGE(0x0cc000, 0x0cc01f) AM_DEVREAD("k053251", k053251_device, lsb_r)
+	AM_RANGE(0x0d8000, 0x0d8007) AM_DEVREAD("k056832", k056832_device, b_word_r)
 #endif
 
 ADDRESS_MAP_END

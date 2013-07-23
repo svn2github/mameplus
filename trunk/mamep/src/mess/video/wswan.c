@@ -565,7 +565,7 @@ void wswan_state::wswan_refresh_scanline()
 	 * Draw sprites in front of foreground layer
 	 */
 	if ( m_vdp.sprites_enable ) {
-		wswan_handle_sprites(0x2000 );
+		wswan_handle_sprites(0x2000);
 	}
 }
 

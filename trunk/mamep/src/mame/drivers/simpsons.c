@@ -69,7 +69,7 @@ Custom ICs - 053260        - sound chip (QFP80)
 #include "emu.h"
 #include "cpu/m6809/konami.h" /* for the callback and the firq irq definition */
 #include "cpu/z80/z80.h"
-#include "video/konicdev.h"
+
 #include "machine/eeprom.h"
 #include "sound/2151intf.h"
 #include "sound/k053260.h"
@@ -91,16 +91,16 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, simpsons_state )
 	AM_RANGE(0x1f91, 0x1f91) AM_READ_PORT("P2")
 	AM_RANGE(0x1f92, 0x1f92) AM_READ_PORT("P3")
 	AM_RANGE(0x1f93, 0x1f93) AM_READ_PORT("P4")
-	AM_RANGE(0x1fa0, 0x1fa7) AM_DEVWRITE_LEGACY("k053246", k053246_w)
-	AM_RANGE(0x1fb0, 0x1fbf) AM_DEVWRITE_LEGACY("k053251", k053251_w)
+	AM_RANGE(0x1fa0, 0x1fa7) AM_DEVWRITE("k053246", k053247_device, k053246_w)
+	AM_RANGE(0x1fb0, 0x1fbf) AM_DEVWRITE("k053251", k053251_device, write)
 	AM_RANGE(0x1fc0, 0x1fc0) AM_WRITE(simpsons_coin_counter_w)
 	AM_RANGE(0x1fc2, 0x1fc2) AM_WRITE(simpsons_eeprom_w)
 	AM_RANGE(0x1fc4, 0x1fc4) AM_READ(simpsons_sound_interrupt_r)
 	AM_RANGE(0x1fc6, 0x1fc7) AM_READ(simpsons_sound_r) AM_DEVWRITE("k053260", k053260_device, k053260_w)
-	AM_RANGE(0x1fc8, 0x1fc9) AM_DEVREAD_LEGACY("k053246", k053246_r)
+	AM_RANGE(0x1fc8, 0x1fc9) AM_DEVREAD("k053246", k053247_device, k053246_r)
 	AM_RANGE(0x1fca, 0x1fca) AM_READ(watchdog_reset_r)
 	AM_RANGE(0x2000, 0x3fff) AM_RAMBANK("bank4")
-	AM_RANGE(0x0000, 0x3fff) AM_DEVREADWRITE_LEGACY("k052109", k052109_r, k052109_w)
+	AM_RANGE(0x0000, 0x3fff) AM_DEVREADWRITE("k052109", k052109_device, read, write)
 	AM_RANGE(0x4000, 0x5fff) AM_RAM
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -242,8 +242,7 @@ void simpsons_state::simpsons_objdma(  )
 	int counter, num_inactive;
 	UINT16 *src, *dst;
 
-	k053247_get_ram(m_k053246, &dst);
-	counter = k053247_get_dy(m_k053246);
+	m_k053246->k053247_get_ram(&dst);
 
 	src = m_spriteram;
 	num_inactive = counter = 256;
@@ -264,14 +263,14 @@ void simpsons_state::simpsons_objdma(  )
 
 INTERRUPT_GEN_MEMBER(simpsons_state::simpsons_irq)
 {
-	if (k053246_is_irq_enabled(m_k053246))
+	if (m_k053246->k053246_is_irq_enabled())
 	{
 		simpsons_objdma();
 		// 32+256us delay at 8MHz dotclock; artificially shortened since actual V-blank length is unknown
 		timer_set(attotime::from_usec(30), TIMER_DMAEND);
 	}
 
-	if (k052109_is_irq_enabled(m_k052109))
+	if (m_k052109->is_irq_enabled())
 		device.execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 

@@ -1,9 +1,20 @@
-/* Seibu Protected 1993-94 era hardware, V30 based (sequel to the 68k based hardware)
+/********************************************************************************************************
+
+	Seibu Protected 1993-94 era hardware, V30 based (sequel to the 68k based hardware)
     TODO: figure out the rest of the protection
     TODO: Zero Team presumably needs additive blending on the character screen
-*/
 
-/* raiden 2 board test note 17/04/08 (based on test by dox)
+    TODO:
+    - Zero Team currently crashes due of an unknown check with collision detection.
+    Additionally:
+    8E377: C7 06 00 05 80 A9         mov     word ptr [500h],0A980h
+	8E37D: C7 06 00 05 00 B9         mov     word ptr [500h],0B900h
+	8E383: F7 06 88 05 FF FF         test    word ptr [588h],0FFFFh ;checks unknown collision detection port with 0xffff?
+	8E389: 75 0A                     bne     8E395h
+
+===========================================================================================================
+
+raiden 2 board test note 17/04/08 (based on test by dox)
 
  rom banking is at 6c9, bit 0x80
   -- the game only writes this directly at startup, must be written indirectly by
@@ -11,9 +22,9 @@
   value of 0x80 puts 0x00000-0x1ffff at 0x20000 - 0x3ffff
   value of 0x00 puts 0x20000-0x3ffff at 0x20000 - 0x3ffff
 
-*/
 
-/*
+===========================================================================================================
+
 Raiden DX
 Seibu Kaihatsu, 1994
 
@@ -131,7 +142,7 @@ Current Problem(s) - in order of priority
 
  Low Priority
 
-*/
+********************************************************************************************************/
 
 #include "emu.h"
 #include "cpu/nec/nec.h"
@@ -140,6 +151,7 @@ Current Problem(s) - in order of priority
 #include "machine/eeprom.h"
 #include "sound/okim6295.h"
 #include "includes/raiden2.h"
+#include "video/seibu_crtc.h"
 
 UINT16 raiden2_state::rps()
 {
@@ -520,7 +532,6 @@ UINT8 raiden2_state::cop_calculate_collsion_detection(running_machine &machine)
 	cop_hit_val_z = 1;
 	cop_hit_val_unk = res; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
 
-
 	return res;
 }
 
@@ -531,7 +542,7 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 	switch(data) {
 	case 0x0205:   // 0205 0006 ffeb 0000 - 0188 0282 0082 0b8e 098e 0000 0000 0000
 		space.write_dword(cop_regs[0] + 4 + offset*4, space.read_dword(cop_regs[0] + 4 + offset*4) + space.read_dword(cop_regs[0] + 0x10 + offset*4));
-		/* TODO: check the following, makes Zero Team to crash as soon as this command is triggered. */
+		/* TODO: check the following, makes Zero Team to crash as soon as this command is triggered (see above). */
 		space.write_dword(cop_regs[0] + 0x1c + offset*4, space.read_dword(cop_regs[0] + 0x1c + offset*4) + space.read_dword(cop_regs[0] + 0x10 + offset*4));
 		break;
 
@@ -1017,7 +1028,7 @@ UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_ind16 
 
 	//if (!machine().input().code_pressed(KEYCODE_S))
 	{
-		//if (!(raiden2_tilemap_enable & 0x10))
+		if (!(raiden2_tilemap_enable & 0x10))
 			draw_sprites(machine(), bitmap, cliprect, 0);
 	}
 
@@ -1425,8 +1436,9 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x005b2, 0x005b3) AM_READ(cop_dist_r)
 	AM_RANGE(0x005b4, 0x005b5) AM_READ(cop_angle_r)
 
-	AM_RANGE(0x0061c, 0x0061d) AM_WRITE(tilemap_enable_w)
-	AM_RANGE(0x00620, 0x0062b) AM_WRITE(tile_scroll_w)
+	AM_RANGE(0x00600, 0x0064f) AM_DEVREADWRITE("crtc", seibu_crtc_device, read, write)
+//	AM_RANGE(0x0061c, 0x0061d) AM_WRITE(tilemap_enable_w)
+//	AM_RANGE(0x00620, 0x0062b) AM_WRITE(tile_scroll_w)
 	AM_RANGE(0x006a0, 0x006a3) AM_WRITE(sprcpt_val_1_w)
 	AM_RANGE(0x006a4, 0x006a7) AM_WRITE(sprcpt_data_3_w)
 	AM_RANGE(0x006a8, 0x006ab) AM_WRITE(sprcpt_data_4_w)
@@ -1482,8 +1494,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( raidendx_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x00470, 0x00471) AM_READWRITE(cop_tile_bank_2_r,raidendx_cop_bank_2_w)
 	AM_RANGE(0x004d0, 0x004d7) AM_RAM //???
-	AM_RANGE(0x0062c, 0x0062d) AM_WRITE(tilemap_enable_w)
-	AM_RANGE(0x00610, 0x0061b) AM_WRITE(tile_scroll_w)
+	AM_RANGE(0x00600, 0x0064f) AM_DEVREADWRITE("crtc", seibu_crtc_device, read_alt, write_alt)
 //  AM_RANGE(0x006ca, 0x006cb) AM_WRITENOP
 	AM_IMPORT_FROM( raiden2_mem )
 ADDRESS_MAP_END
@@ -1850,6 +1861,13 @@ static GFXDECODE_START( raiden2 )
 	GFXDECODE_ENTRY( "gfx3", 0x00000, raiden2_spritelayout, 0x000, 128 )
 GFXDECODE_END
 
+SEIBU_CRTC_INTERFACE(crtc_intf)
+{
+	"screen",
+	DEVCB_DRIVER_MEMBER16(raiden2_state, tilemap_enable_w),
+	DEVCB_DRIVER_MEMBER16(raiden2_state, tile_scroll_w),
+};
+
 
 /* MACHINE DRIVERS */
 
@@ -1875,6 +1893,8 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 	MCFG_SCREEN_UPDATE_DRIVER(raiden2_state, screen_update_raiden2)
 	MCFG_GFXDECODE(raiden2)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_SEIBU_CRTC_ADD("crtc",crtc_intf,0)
 
 	MCFG_VIDEO_START_OVERRIDE(raiden2_state,raiden2)
 
@@ -1929,6 +1949,8 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 	MCFG_SCREEN_UPDATE_DRIVER(raiden2_state, screen_update_raiden2)
 	MCFG_GFXDECODE(raiden2)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_SEIBU_CRTC_ADD("crtc",crtc_intf,0)
 
 	MCFG_VIDEO_START_OVERRIDE(raiden2_state,raiden2)
 

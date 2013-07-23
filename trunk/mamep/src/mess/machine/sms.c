@@ -14,30 +14,50 @@
 #define ENABLE_BIOS      4
 
 
-void sms_state::lphaser_hcount_latch( int hpos )
+void sms_state::lphaser_hcount_latch()
 {
 	/* A delay seems to occur when the Light Phaser latches the
 	   VDP hcount, then an offset is added here to the hpos. */
-	m_vdp->hcount_latch_at_hpos(hpos + m_lphaser_x_offs);
+	m_vdp->hcount_latch_at_hpos(m_main_scr->hpos() + m_lphaser_x_offs);
 }
 
 
-WRITE16_MEMBER(sms_state::sms_ctrl1_th_input)
+WRITE_LINE_MEMBER(sms_state::sms_ctrl1_th_input)
 {
-	if (m_ctrl1_th_latch == 0)
+	// Check if TH of controller port 1 is set to input (1)
+	if (m_io_ctrl_reg & 0x02)
 	{
-		m_ctrl1_th_latch = 1;
-		lphaser_hcount_latch(data);
+		if (state == 0)
+		{
+			m_ctrl1_th_latch = 1;
+		}
+		else
+		{
+			// If previous state was 0 and now is 1, latch hcount.
+			if (m_ctrl1_th_state == 0)
+				lphaser_hcount_latch();
+		}
+		m_ctrl1_th_state = state;
 	}
 }
 
 
-WRITE16_MEMBER(sms_state::sms_ctrl2_th_input)
+WRITE_LINE_MEMBER(sms_state::sms_ctrl2_th_input)
 {
-	if (m_ctrl2_th_latch == 0)
+	// Check if TH of controller port 2 is set to input (1)
+	if (m_io_ctrl_reg & 0x08)
 	{
-		m_ctrl2_th_latch = 1;
-		lphaser_hcount_latch(data);
+		if (state == 0)
+		{
+			m_ctrl2_th_latch = 1;
+		}
+		else
+		{
+			// If previous state was 0 and now is 1, latch hcount.
+			if (m_ctrl2_th_state == 0)
+				lphaser_hcount_latch();
+		}
+		m_ctrl2_th_state = state;
 	}
 }
 
@@ -117,10 +137,11 @@ WRITE8_MEMBER(sms_state::sms_io_control_w)
 	// check if TH is set to input (1).
 	if (data & 0x02)
 	{
-		UINT8 th_level = (m_port_ctrl1->port_r() & 0x40) >> 1;
+		if (!m_is_gamegear)
+			ctrl1_port_data &= ~0x40 | m_port_ctrl1->port_r();
 
-		// check if TH pin level is high (1) and was low (0)
-		if ((th_level & 0x20) && !(m_io_ctrl_reg & 0x20))
+		// check if TH input level is high (1) and was output/low (0)
+		if ((ctrl1_port_data & 0x40) && !(m_io_ctrl_reg & 0x22))
 			latch_hcount = true;
 	}
 
@@ -143,10 +164,11 @@ WRITE8_MEMBER(sms_state::sms_io_control_w)
 	// check if TH is set to input (1).
 	if (data & 0x08)
 	{
-		UINT8 th_level = (m_port_ctrl2->port_r() & 0x40) << 1;
+		if (!m_is_gamegear)
+			ctrl2_port_data &= ~0x40 | m_port_ctrl2->port_r();
 
-		// check if TH pin level is high (1) and was low (0)
-		if ((th_level & 0x80) && !(m_io_ctrl_reg & 0x80))
+		// check if TH input level is high (1) and was output/low (0)
+		if ((ctrl2_port_data & 0x40) && !(m_io_ctrl_reg & 0x88))
 			latch_hcount = true;
 	}
 
@@ -727,6 +749,8 @@ MACHINE_START_MEMBER(sms_state,sms)
 	save_item(NAME(m_bank_enabled));
 	save_item(NAME(m_bios_page));
 
+	save_item(NAME(m_ctrl1_th_state));
+	save_item(NAME(m_ctrl2_th_state));
 	save_item(NAME(m_ctrl1_th_latch));
 	save_item(NAME(m_ctrl2_th_latch));
 	save_item(NAME(m_sscope_state));
@@ -788,9 +812,11 @@ MACHINE_RESET_MEMBER(sms_state,mess_sms)
 
 	setup_rom();
 
+	m_ctrl1_th_state = 1;
+	m_ctrl2_th_state = 1;
 	m_ctrl1_th_latch = 0;
 	m_ctrl2_th_latch = 0;
-	m_lphaser_x_offs = (m_cartslot->m_cart) ? m_cartslot->m_cart->get_lphaser_xoffs() : 51;
+	m_lphaser_x_offs = (m_cartslot->m_cart) ? m_cartslot->m_cart->get_lphaser_xoffs() : 44;
 
 	m_sscope_state = 0;
 	m_frame_sscope_state = 0;
@@ -809,8 +835,8 @@ WRITE8_MEMBER(smssdisp_state::sms_store_cart_select_w)
 
 	logerror("switching in part of %s slot #%d\n", slottype ? "card" : "cartridge", slot );
 	/* cartridge? slot #0 */
-//  if (slottype == 0)
-//      m_current_cartridge = slot;
+	//if (slottype == 0)
+	//  m_current_cartridge = slot;
 
 	setup_rom();
 }

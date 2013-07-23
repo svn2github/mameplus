@@ -26,6 +26,8 @@ TODO:
 #include "sound/sn76496.h"
 #include "sound/okiadpcm.h"
 #include "includes/mjkjidai.h"
+#include "devlegcy.h"
+#include "mcfglgcy.h"
 
 class mjkjidai_adpcm_device : public device_t,
 									public device_sound_interface
@@ -458,7 +460,7 @@ static MACHINE_CONFIG_START( mjkjidai, mjkjidai_state )
 	MCFG_GFXDECODE(mjkjidai)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
+	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRR_GGGG_BBBB)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

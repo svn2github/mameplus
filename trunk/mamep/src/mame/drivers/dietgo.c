@@ -24,9 +24,26 @@ PAL16R6A 11H
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
 #include "includes/decocrpt.h"
-#include "includes/decoprot.h"
 #include "includes/dietgo.h"
-#include "video/decocomn.h"
+
+
+READ16_MEMBER( dietgo_state::dietgo_protection_region_0_104_r )
+{
+	int real_address = 0 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	UINT16 data = m_deco104->read_data( deco146_addr, mem_mask, cs );
+	return data;
+}
+
+WRITE16_MEMBER( dietgo_state::dietgo_protection_region_0_104_w )
+{
+	int real_address = 0 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	m_deco104->write_data( space, deco146_addr, data, mem_mask, cs );
+}
+
 
 static ADDRESS_MAP_START( dietgo_map, AS_PROGRAM, 16, dietgo_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
@@ -36,8 +53,9 @@ static ADDRESS_MAP_START( dietgo_map, AS_PROGRAM, 16, dietgo_state )
 	AM_RANGE(0x220000, 0x2207ff) AM_WRITEONLY AM_SHARE("pf1_rowscroll")
 	AM_RANGE(0x222000, 0x2227ff) AM_WRITEONLY AM_SHARE("pf2_rowscroll")
 	AM_RANGE(0x280000, 0x2807ff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x300000, 0x300bff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
-	AM_RANGE(0x340000, 0x3407ff) AM_READWRITE_LEGACY(dietgo_104_prot_r, dietgo_104_prot_w)
+	AM_RANGE(0x300000, 0x300bff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
+//  AM_RANGE(0x340000, 0x3407ff) AM_READWRITE_LEGACY(dietgo_104_prot_r, dietgo_104_prot_w)
+	AM_RANGE(0x340000, 0x343fff) AM_READWRITE(dietgo_protection_region_0_104_r,dietgo_protection_region_0_104_w)AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0x380000, 0x38ffff) AM_RAM // mainram
 ADDRESS_MAP_END
 
@@ -58,13 +76,13 @@ ADDRESS_MAP_END
 
 
 static INPUT_PORTS_START( dietgo )
-	PORT_START("IN0")   /* Verified as 4 bit input port only */
+	PORT_START("SYSTEM")   /* Verified as 4 bit input port only */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_VBLANK("screen")
 
-	PORT_START("IN1")
+	PORT_START("INPUTS")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
@@ -227,6 +245,10 @@ static MACHINE_CONFIG_START( dietgo, dietgo_state )
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 2);
+
+	MCFG_DECO104_ADD("ioprot104")
+	MCFG_DECO146_SET_INTERFACE_SCRAMBLE_INTERLEAVE
+	MCFG_DECO146_SET_USE_MAGIC_ADDRESS_XOR
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -55,10 +55,8 @@ bootleg todo:
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "includes/decocrpt.h"
-#include "includes/decoprot.h"
 #include "sound/okim6295.h"
 #include "includes/pktgaldx.h"
-#include "video/decocomn.h"
 
 /**********************************************************************************/
 
@@ -78,7 +76,7 @@ static ADDRESS_MAP_START( pktgaldx_map, AS_PROGRAM, 16, pktgaldx_state )
 	AM_RANGE(0x112000, 0x1127ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x130000, 0x130fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x130000, 0x130fff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x140000, 0x14000f) AM_DEVWRITE8("oki1", okim6295_device, write, 0x00ff)
 	AM_RANGE(0x140006, 0x140007) AM_DEVREAD8("oki1", okim6295_device, read, 0x00ff)
@@ -313,7 +311,6 @@ static const deco16ic_interface pktgaldx_deco16ic_tilegen1_intf =
 
 void pktgaldx_state::machine_start()
 {
-	decoprot_reset(machine());
 }
 
 static MACHINE_CONFIG_START( pktgaldx, pktgaldx_state )
@@ -341,6 +338,8 @@ static MACHINE_CONFIG_START( pktgaldx, pktgaldx_state )
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 2);
+
+	MCFG_DECO104_ADD("ioprot104")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

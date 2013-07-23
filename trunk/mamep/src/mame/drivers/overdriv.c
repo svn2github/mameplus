@@ -10,18 +10,22 @@
     - Visible area and relative placement of sprites and tiles is most likely wrong.
     - Test mode doesn't work well with 3 IRQ5 per frame, the ROM check doesn't work
       and the coin A setting isn't shown. It's OK with 1 IRQ5 per frame.
-    - Some flickering sprites, this might be an interrupt/timing issue
-    - The screen is cluttered with sprites which aren't supposed to be visible,
-      increasing the coordinate mask in K053247_sprites_draw() from 0x3ff to 0xfff
-      fixes this but breaks other games (e.g. Vendetta).
     - The "Continue?" sprites are not visible until you press start
     - priorities
+
+
+    The issues below are both IRQ timing, and relate to when the sprites get
+    copied across by the DMA
+        - Some flickering sprites, this might be an interrupt/timing issue
+        - The screen is cluttered with sprites which aren't supposed to be visible,
+          increasing the coordinate mask in k053247_sprites_draw() from 0x3ff to 0xfff
+          fixes this but breaks other games (e.g. Vendetta).
+
 
 ***************************************************************************/
 
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
-#include "video/konicdev.h"
 #include "video/k053250.h"
 #include "machine/eeprom.h"
 #include "cpu/m6809/m6809.h"
@@ -87,8 +91,9 @@ TIMER_DEVICE_CALLBACK_MEMBER(overdriv_state::overdriv_cpuA_scanline)
 
 INTERRUPT_GEN_MEMBER(overdriv_state::cpuB_interrupt)
 {
-	if (k053246_is_irq_enabled(m_k053246))
-		device.execute().set_input_line(4, HOLD_LINE);
+	// this doesn't get turned on until the irq has happened? wrong irq?
+//  if (m_k053246->k053246_is_irq_enabled())
+	m_subcpu->set_input_line(4, HOLD_LINE); // likely wrong
 }
 
 
@@ -121,7 +126,7 @@ WRITE16_MEMBER(overdriv_state::cpuB_ctrl_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 0 = enable sprite ROM reading */
-		k053246_set_objcha_line(m_k053246, (data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
+		m_k053246->k053246_set_objcha_line( (data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
 
 		/* bit 1 used but unknown (irq enable?) */
 
@@ -145,14 +150,14 @@ WRITE16_MEMBER(overdriv_state::overdriv_soundirq_w)
 	m_audiocpu->set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
-WRITE16_MEMBER(overdriv_state::overdriv_cpuB_irq5_w)
+WRITE16_MEMBER(overdriv_state::overdriv_cpuB_irq_x_w)
 {
-	m_subcpu->set_input_line(5, HOLD_LINE);
+	m_subcpu->set_input_line(5, HOLD_LINE); // likely wrong
 }
 
-WRITE16_MEMBER(overdriv_state::overdriv_cpuB_irq6_w)
+WRITE16_MEMBER(overdriv_state::overdriv_cpuB_irq_y_w)
 {
-	m_subcpu->set_input_line(6, HOLD_LINE);
+	m_subcpu->set_input_line(6, HOLD_LINE); // likely wrong
 }
 
 static ADDRESS_MAP_START( overdriv_master_map, AS_PROGRAM, 16, overdriv_state )
@@ -165,33 +170,57 @@ static ADDRESS_MAP_START( overdriv_master_map, AS_PROGRAM, 16, overdriv_state )
 	AM_RANGE(0x100000, 0x10001f) AM_DEVREADWRITE8("k053252", k053252_device, read, write, 0x00ff)          /* 053252? (LSB) */
 	AM_RANGE(0x140000, 0x140001) AM_WRITENOP //watchdog reset?
 	AM_RANGE(0x180000, 0x180001) AM_READ_PORT("PADDLE")
-	AM_RANGE(0x1c0000, 0x1c001f) AM_DEVWRITE8_LEGACY("k051316_1", k051316_ctrl_w, 0xff00)
-	AM_RANGE(0x1c8000, 0x1c801f) AM_DEVWRITE8_LEGACY("k051316_2", k051316_ctrl_w, 0xff00)
-	AM_RANGE(0x1d0000, 0x1d001f) AM_DEVWRITE_LEGACY("k053251", k053251_msb_w)
+	AM_RANGE(0x1c0000, 0x1c001f) AM_DEVWRITE8("k051316_1", k051316_device, ctrl_w, 0xff00)
+	AM_RANGE(0x1c8000, 0x1c801f) AM_DEVWRITE8("k051316_2", k051316_device, ctrl_w, 0xff00)
+	AM_RANGE(0x1d0000, 0x1d001f) AM_DEVWRITE("k053251", k053251_device, msb_w)
 	AM_RANGE(0x1d8000, 0x1d8003) AM_READ8(overdriv_1_sound_r, 0x00ff) AM_DEVWRITE8("k053260_1", k053260_device, k053260_w, 0x00ff)   /* K053260 */
 	AM_RANGE(0x1e0000, 0x1e0003) AM_READ8(overdriv_2_sound_r, 0x00ff) AM_DEVWRITE8("k053260_2", k053260_device, k053260_w, 0x00ff)   /* K053260 */
 	AM_RANGE(0x1e8000, 0x1e8001) AM_WRITE(overdriv_soundirq_w)
 	AM_RANGE(0x1f0000, 0x1f0001) AM_WRITE(cpuA_ctrl_w)  /* halt cpu B, coin counter, start lamp, other? */
 	AM_RANGE(0x1f8000, 0x1f8001) AM_WRITE(eeprom_w)
 	AM_RANGE(0x200000, 0x203fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x210000, 0x210fff) AM_DEVREADWRITE8_LEGACY("k051316_1", k051316_r, k051316_w, 0xff00)
-	AM_RANGE(0x218000, 0x218fff) AM_DEVREADWRITE8_LEGACY("k051316_2", k051316_r, k051316_w, 0xff00)
-	AM_RANGE(0x220000, 0x220fff) AM_DEVREAD8_LEGACY("k051316_1", k051316_rom_r, 0xff00)
-	AM_RANGE(0x228000, 0x228fff) AM_DEVREAD8_LEGACY("k051316_2", k051316_rom_r, 0xff00)
-	AM_RANGE(0x230000, 0x230001) AM_WRITE(overdriv_cpuB_irq6_w)
-	AM_RANGE(0x238000, 0x238001) AM_WRITE(overdriv_cpuB_irq5_w)
+	AM_RANGE(0x210000, 0x210fff) AM_DEVREADWRITE8("k051316_1", k051316_device, read, write, 0xff00)
+	AM_RANGE(0x218000, 0x218fff) AM_DEVREADWRITE8("k051316_2", k051316_device, read, write, 0xff00)
+	AM_RANGE(0x220000, 0x220fff) AM_DEVREAD8("k051316_1", k051316_device, rom_r, 0xff00)
+	AM_RANGE(0x228000, 0x228fff) AM_DEVREAD8("k051316_2", k051316_device, rom_r, 0xff00)
+	AM_RANGE(0x230000, 0x230001) AM_WRITE(overdriv_cpuB_irq_y_w)
+	AM_RANGE(0x238000, 0x238001) AM_WRITE(overdriv_cpuB_irq_x_w)
 ADDRESS_MAP_END
+
+// HACK ALERT
+WRITE16_MEMBER( overdriv_state::overdriv_k053246_word_w )
+{
+	m_k053246->k053246_word_w(space,offset,data,mem_mask);
+
+	UINT16 *src, *dst;
+
+	m_k053246->k053247_get_ram(&dst);
+
+	src = m_sprram;
+
+	// this should be the sprite dma/irq bit...
+	// but it is already turned off by the time overdriv_state::cpuB_interrupt is executed?
+	// even now it rarely gets set, I imagine because the communication / irq is actually
+	// worse than we thought. (drive very slowly and things update..)
+	if (m_k053246->k053246_is_irq_enabled())
+	{
+		memcpy(dst,src,0x1000);
+	}
+
+	//printf("%02x %04x %04x\n", offset, data, mem_mask);
+
+}
 
 static ADDRESS_MAP_START( overdriv_slave_map, AS_PROGRAM, 16, overdriv_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x080000, 0x083fff) AM_RAM /* work RAM */
-	AM_RANGE(0x0c0000, 0x0c1fff) AM_RAM //AM_DEVREADWRITE_LEGACY("k053250_1", k053250_ram_r, k053250_ram_w)
+	AM_RANGE(0x0c0000, 0x0c1fff) AM_RAM //AM_DEVREADWRITE("k053250_1", k053250_device, ram_r, ram_w)
 	AM_RANGE(0x100000, 0x10000f) AM_DEVREADWRITE("k053250_1", k053250_device, reg_r, reg_w)
 	AM_RANGE(0x108000, 0x10800f) AM_DEVREADWRITE("k053250_2", k053250_device, reg_r, reg_w)
-	AM_RANGE(0x118000, 0x118fff) AM_DEVREADWRITE_LEGACY("k053246", k053247_word_r, k053247_word_w)
-	AM_RANGE(0x120000, 0x120001) AM_DEVREAD_LEGACY("k053246", k053246_word_r)
+	AM_RANGE(0x118000, 0x118fff) AM_RAM AM_SHARE("sprram") //AM_DEVREADWRITE("k053246", k053247_device, k053247_word_r, k053247_word_w) // data gets copied to sprite chip with DMA..
+	AM_RANGE(0x120000, 0x120001) AM_DEVREAD("k053246", k053247_device, k053246_word_r)
 	AM_RANGE(0x128000, 0x128001) AM_READWRITE(cpuB_ctrl_r, cpuB_ctrl_w) /* enable K053247 ROM reading, plus something else */
-	AM_RANGE(0x130000, 0x130007) AM_DEVWRITE_LEGACY("k053246", k053246_word_w)
+	AM_RANGE(0x130000, 0x130007) AM_WRITE(overdriv_k053246_word_w) // AM_DEVWRITE("k053246", k053247_device, k053246_word_w)
 	AM_RANGE(0x200000, 0x203fff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x208000, 0x20bfff) AM_RAM
 	AM_RANGE(0x218000, 0x219fff) AM_DEVREAD("k053250_1", k053250_device, rom_r)

@@ -218,6 +218,8 @@ conventional RAM. See the memory map for sprite data format.
  ****************************************************************************
 
 TODO:
+- MCU is identical between Empire City and Cross Shooter, I guess it's coinage
+  related.
 - palette is incorporated - fix!!!
 - handle transparency in text layer properly (how?)
 - second bank of sf02 is this used? (probably NOT)
@@ -230,6 +232,7 @@ DONE? (check on real board)
 
 #include "emu.h"
 #include "cpu/z80/z80.h"
+#include "cpu/m6805/m6805.h"
 #include "sound/2203intf.h"
 #include "sound/msm5205.h"
 #include "includes/stfight.h"
@@ -242,7 +245,8 @@ static ADDRESS_MAP_START( cpu1_map, AS_PROGRAM, 8, stfight_state )
 	AM_RANGE(0xc200, 0xc200) AM_READ_PORT("P1")         /* IN1 */
 	AM_RANGE(0xc201, 0xc201) AM_READ_PORT("P2")         /* IN2 */
 	AM_RANGE(0xc202, 0xc202) AM_READ_PORT("START")      /* IN3 */
-	AM_RANGE(0xc203, 0xc204) AM_READ(stfight_dsw_r)     /* DS0,1 */
+	AM_RANGE(0xc203, 0xc203) AM_READ_PORT("DSW0")
+	AM_RANGE(0xc204, 0xc204) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc205, 0xc205) AM_READ(stfight_coin_r)    /* coin mech */
 	AM_RANGE(0xc500, 0xc500) AM_WRITE(stfight_fm_w)               /* play fm sound */
 	AM_RANGE(0xc600, 0xc600) AM_WRITE(stfight_adpcm_control_w)    /* voice control */
@@ -256,6 +260,16 @@ static ADDRESS_MAP_START( cpu1_map, AS_PROGRAM, 8, stfight_state )
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("sprite_ram")
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( cshooter_cpu1_map, AS_PROGRAM, 8, stfight_state )
+	/* wants 0xff at PC=0x9a otherwise it won't boot, MCU related? */
+	AM_RANGE(0x0007, 0x0007) AM_READ(cshooter_mcu_unk1_r)
+	AM_RANGE(0xc801, 0xc801) AM_WRITE(stfight_bank_w)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(cshooter_text_w) AM_SHARE("tx_vram")
+	AM_RANGE(0xe000, 0xfdff) AM_RAM
+	AM_RANGE(0xfe00, 0xffff) AM_RAM AM_SHARE("sprite_ram")
+	AM_IMPORT_FROM(cpu1_map)
+ADDRESS_MAP_END
+
 static ADDRESS_MAP_START( cpu2_map, AS_PROGRAM, 8, stfight_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ym1", ym2203_device, read, write)
@@ -263,6 +277,18 @@ static ADDRESS_MAP_START( cpu2_map, AS_PROGRAM, 8, stfight_state )
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(stfight_e800_w)
 	AM_RANGE(0xf000, 0xf000) AM_READ(stfight_fm_r)
 	AM_RANGE(0xf800, 0xffff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( cshooter_mcu_map, AS_PROGRAM, 8, stfight_state )
+	ADDRESS_MAP_GLOBAL_MASK(0x7ff)
+	AM_RANGE(0x0000, 0x0000) AM_READWRITE(cshooter_68705_port_a_r,cshooter_68705_port_a_w)
+	AM_RANGE(0x0001, 0x0001) AM_READWRITE(cshooter_68705_port_b_r,cshooter_68705_port_b_w)
+	AM_RANGE(0x0002, 0x0002) AM_READWRITE(cshooter_68705_port_c_r,cshooter_68705_port_c_w)
+	AM_RANGE(0x0004, 0x0004) AM_WRITE(cshooter_68705_ddr_a_w)
+	AM_RANGE(0x0005, 0x0005) AM_WRITE(cshooter_68705_ddr_b_w)
+	AM_RANGE(0x0006, 0x0006) AM_WRITE(cshooter_68705_ddr_c_w)
+	AM_RANGE(0x0010, 0x007f) AM_RAM
+	AM_RANGE(0x0080, 0x07ff) AM_ROM
 ADDRESS_MAP_END
 
 
@@ -292,57 +318,101 @@ static INPUT_PORTS_START( stfight )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xe7, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START("DSW0")  /* DSW0 */
-	PORT_DIPNAME( 0x07, 0x00, DEF_STR( Coin_A ) )
-	PORT_DIPSETTING(    0x07, DEF_STR( 5C_1C ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( 4C_1C ) )
-	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_5C ) )
-	PORT_DIPNAME( 0x18, 0x00, DEF_STR( Coin_B ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x18, DEF_STR( 2C_3C ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
-	PORT_SERVICE( 0x20, IP_ACTIVE_HIGH )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Allow_Continue ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x80, 0x80, "Bullet Colour" )
-	PORT_DIPSETTING(    0x80, "Red" )
-	PORT_DIPSETTING(    0x00, "Blue" )
+	PORT_START("DSW0")  /* DSW1 */
+	/* Manual refers to these as Dip-Switch Bank B, but TEST mode shows them as DIP-SW 1 */
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )       PORT_DIPLOCATION("SW1:1,2,3")
+	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_5C ) )
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Coin_B ) )       PORT_DIPLOCATION("SW1:4,5")
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
+	PORT_SERVICE_DIPLOC(  0x20, IP_ACTIVE_LOW, "SW1:6" )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Allow_Continue ) )   PORT_DIPLOCATION("SW1:7")
+	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x80, 0x00, "Bullet Colour" )     PORT_DIPLOCATION("SW1:8")
+	PORT_DIPSETTING(    0x00, "Red" )
+	PORT_DIPSETTING(    0x80, "Blue" )
 
-	PORT_START("DSW1")  /* DSW1 */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x06, 0x02, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Easy ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Normal ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Hard ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( Hardest ) )
-	PORT_DIPNAME( 0x18, 0x10, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x00, "1" )
-	PORT_DIPSETTING(    0x08, "2" )
-	PORT_DIPSETTING(    0x10, "3" )
-	PORT_DIPSETTING(    0x18, "4" )
-	PORT_DIPNAME( 0x60, 0x20, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(    0x00, "10000 30000" )
-	PORT_DIPSETTING(    0x20, "20000 40000" )
-	PORT_DIPSETTING(    0x40, "30000 60000" )
-	PORT_DIPSETTING(    0x60, "40000 80000" )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+	PORT_START("DSW1")  /* DSWA */
+	/* Manual refers to these as Dip-Switch Bank A, but TEST mode shows them as DIP-SW 2 */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )      PORT_DIPLOCATION("SW2:1")
+	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_DIPNAME( 0x06, 0x04, DEF_STR( Difficulty ) )   PORT_DIPLOCATION("SW2:2,3")
+	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
+	PORT_DIPNAME( 0x18, 0x08, DEF_STR( Lives ) )        PORT_DIPLOCATION("SW2:4,5")
+	PORT_DIPSETTING(    0x18, "1" )
+	PORT_DIPSETTING(    0x10, "2" )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPNAME( 0x60, 0x40, DEF_STR( Bonus_Life ) )   PORT_DIPLOCATION("SW2:6,7")
+	PORT_DIPSETTING(    0x60, "10000 30000" )
+	PORT_DIPSETTING(    0x40, "20000 40000" )
+	PORT_DIPSETTING(    0x20, "30000 60000" )
+	PORT_DIPSETTING(    0x00, "40000 80000" )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )  PORT_DIPLOCATION("SW2:8")
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START("COIN")  /* COIN MECH */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_IMPULSE(1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_IMPULSE(1)
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( cshooter )
+	PORT_INCLUDE(stfight)
+
+	PORT_MODIFY("DSW0")  /* DSW2 (0xc203) */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )   PORT_DIPLOCATION("SW2:1,2")
+	PORT_DIPSETTING(    0x03, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Medium ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )   PORT_DIPLOCATION("SW2:3,4")
+	PORT_DIPSETTING(    0x0c, "2k 10k 20k" )
+	PORT_DIPSETTING(    0x08, "5k 20k 40k" )
+	PORT_DIPSETTING(    0x04, "6k 30k 60k" )
+	PORT_DIPSETTING(    0x00, "7k 40k 80k" )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Lives ) )        PORT_DIPLOCATION("SW2:5,6")
+	PORT_DIPSETTING(    0x20, "1" )
+	PORT_DIPSETTING(    0x10, "2" )
+	PORT_DIPSETTING(    0x30, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW2:7" )
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "SW2:8" )
+
+	PORT_MODIFY("DSW1")  /* DSW1 (0xc204) */
+	PORT_DIPNAME( 0x01, 0x01, "Coin Slots" )        PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(    0x01, "1" )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_SERVICE_DIPLOC(  0x02, IP_ACTIVE_LOW, "SW1:2" )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Demo_Sounds ) )  PORT_DIPLOCATION("SW1:3")
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coinage ) )      PORT_DIPLOCATION("SW1:4,5,6")
+	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_5C ) )
+	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW1:7" )
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "SW1:8" )
+INPUT_PORTS_END
 
 /* text-layer characters */
 static const gfx_layout charlayout =
@@ -355,6 +425,18 @@ static const gfx_layout charlayout =
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
 	8*16        /* every char takes 16 consecutive bytes */
 };
+
+static const gfx_layout cshooter_charlayout =
+{
+	8,8,        /* 8*8 characters */
+	RGN_FRAC(1,1),      /* 512 characters */
+	2,          /* 4 bits per pixel */
+	{ 0,4 },
+	{ 8,9,10,11,0,1,2,3 },
+	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
+	128*1
+};
+
 
 /* foreground tiles */
 static const gfx_layout fglayout =
@@ -425,6 +507,15 @@ static GFXDECODE_START( stfight )
 	GFXDECODE_ENTRY( "gfx4", 0x0000, spritelayout, 16*4+16*16+16*16, 16 )
 GFXDECODE_END
 
+static GFXDECODE_START( cshooter )
+	GFXDECODE_ENTRY( "gfx1", 0x0000, cshooter_charlayout,0,                16 )
+	GFXDECODE_ENTRY( "gfx2", 0x0000, fglayout,           16*4,             16 )
+	GFXDECODE_ENTRY( "gfx3", 0x0000, bglayout,           16*4+16*16,       16 )
+	GFXDECODE_ENTRY( "gfx3", 0x0020, bglayout,           16*4+16*16,       16 )
+	GFXDECODE_ENTRY( "gfx4", 0x0000, spritelayout,       16*4+16*16+16*16, 16 )
+GFXDECODE_END
+
+
 static const msm5205_interface msm5205_config =
 {
 	DEVCB_DRIVER_LINE_MEMBER(stfight_state,stfight_adpcm_int),  /* interrupt function */
@@ -452,6 +543,7 @@ static MACHINE_CONFIG_START( stfight, stfight_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(stfight_state, screen_update_stfight)
+	MCFG_VIDEO_START_OVERRIDE(stfight_state,stfight)
 
 	MCFG_GFXDECODE(stfight)
 	MCFG_PALETTE_LENGTH(16*4+16*16+16*16+16*16)
@@ -477,6 +569,26 @@ static MACHINE_CONFIG_START( stfight, stfight_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( cshooter, stfight )
+	MCFG_CPU_REPLACE("maincpu", Z80, 6000000)   /* 6 MHz */
+	MCFG_CPU_PROGRAM_MAP(cshooter_cpu1_map)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", stfight_state,  stfight_vb_interrupt)
+
+	MCFG_CPU_REPLACE("audiocpu", Z80, 6000000)  /* 6 MHz */
+	MCFG_CPU_PROGRAM_MAP(cpu2_map)
+	MCFG_CPU_PERIODIC_INT_DRIVER(stfight_state, irq0_line_hold, 120)
+
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
+
+	MCFG_CPU_ADD("mcu", M68705, 6000000)   /* 6 MHz? */
+	MCFG_CPU_PROGRAM_MAP(cshooter_mcu_map)
+
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE_DRIVER(stfight_state, screen_update_cshooter)
+
+	MCFG_GFXDECODE(cshooter)
+	MCFG_VIDEO_START_OVERRIDE(stfight_state,cshooter)
+MACHINE_CONFIG_END
 
 /***************************************************************************
 
@@ -800,9 +912,101 @@ ROM_START( empcityi ) // very similar to above set
 	ROM_LOAD( "sf04.bin",   0x00000, 0x8000, CRC(1b8d0c07) SHA1(c163ccd2b7ed6c84facc075eb1564ca399f3ba17) )
 ROM_END
 
-GAME( 1986, empcity,  0,       stfight, stfight, stfight_state, empcity, ROT0, "Seibu Kaihatsu",                           "Empire City: 1931 (bootleg?)", 0 )
-GAME( 1986, empcityu, empcity, stfight, stfight, stfight_state, stfight, ROT0, "Seibu Kaihatsu (Taito / Romstar license)", "Empire City: 1931 (US)", 0 ) // different title logo
-GAME( 1986, empcityj, empcity, stfight, stfight, stfight_state, stfight, ROT0, "Seibu Kaihatsu (Taito license)",           "Empire City: 1931 (Japan)", 0 )
-GAME( 1986, empcityi, empcity, stfight, stfight, stfight_state, stfight, ROT0, "Seibu Kaihatsu (Eurobed license)",         "Empire City: 1931 (Italy)", 0 )
-GAME( 1986, stfight,  empcity, stfight, stfight, stfight_state, stfight, ROT0, "Seibu Kaihatsu (Tuning license)",          "Street Fight (Germany)", 0 )
-GAME( 1986, stfighta, empcity, stfight, stfight, stfight_state, stfight, ROT0, "Seibu Kaihatsu",                           "Street Fight (bootleg?)", 0 )
+/*
+
+-----------------------------
+Cross Shooter by TAITO (1987)
+-----------------------------
+malcor
+
+
+Location    Type     File ID   Checksum
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LB 4U       27256      R1        C2F0   [  main program  ]
+LB 2U       27512      R2        74EA   [    tilemaps    ]
+TB 11A      2764       R3        DFA7   [      fix       ]
+LB 5C       27256      R4        D7B8   [ sound program  ]
+LB 7A       82S123     0.BPR     00A1   [  foregrounds   ]
+LB 9S       82S129     1.BPR     0194   [ motion objects ]
+TB 4E       82S129     2.BPR     00DC   [ motion objects ]
+TB 16A      63S281     x         x      [     clut       ] NOTE: dumped much later
+LB 3J       68705
+
+
+Notes:   LB - CPU board        S-0086-002-0B
+         TB - GFX board        S-0087-807
+
+         The PCB looks like a prototype, due to the modifications
+         to the PCB. The game is probably licensed from Seibu.
+
+         The 0/1/2 bipolar PROMs are not used for colour.
+
+         However, this contradicts Guru's findings: "If I short some of the pins(of 0.bpr at 7A)
+         the sprite colors change, and the chip is connected to the color RAM."
+
+
+Brief hardware overview:
+------------------------
+
+Main processor  - Z80 6MHz
+                - 68705
+
+GFX             - custom TC15G008AP-0048  SEI0040BU    - Toshiba CMOS Gate Array
+            3 x - custom TC17G008AN-0015  SEI0020BU    - Toshiba CMOS Gate Array
+                - custom TC17G005AN-0028  SEI0030BU    - Toshiba CMOS Gate Array
+            3 x - custom SIPs. No ID, unusually large. - covered in epoxy, probably sprite/tile gfx data is in here
+
+Sound processor - Z80 6MHz (5.897MHz)
+            2 x - YM2203C
+
+
+The game data seems to be small. There may be graphics
+data in the custom SIPs. I am not sure though.
+
+*/
+
+ROM_START( cshooter )
+	ROM_REGION( 0x20000, "maincpu", 0 ) // Main CPU
+	ROM_LOAD( "r1.4u",   0x00000, 0x08000, CRC(fbe8c518) SHA1(bff8319f4892e6d06f1c7a679f67dc8407279cfa) )
+	ROM_LOAD( "r2.2u",   0x10000, 0x10000, CRC(5ddf9f4e) SHA1(69e4d422ca272bf2e9f00edbe7d23760485fdfe6) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 ) // Sub/Sound CPU
+	ROM_LOAD( "r4.5c",   0x00000, 0x08000, CRC(84fed017) SHA1(9a564c9379eb48569cfba48562889277991864d8) )
+
+	// not hooked up yet (Taito version has this instead of encryption!
+	ROM_REGION( 0x0800, "mcu", 0 ) /* 2k for the microcontroller */
+	ROM_LOAD( "crshooter.3j", 0x0000, 0x0800, CRC(aae61ce7) SHA1(bb2b9887ec73a5b82604b9b64c533c2242d20d0f) )
+
+	ROM_REGION( 0x02000, "gfx1", 0 ) // TX Layer
+	ROM_LOAD( "r3.11a",  0x00000, 0x02000, CRC(67b50a47) SHA1(b1f4aefc9437edbeefba5371149cc08c0b55c741) )
+
+	ROM_REGION( 0x20000, "gfx2", ROMREGION_ERASEFF ) // foreground tiles
+	ROM_LOAD( "graphics.14c", 0x00000, 0x10000, NO_DUMP )
+	ROM_LOAD( "graphics.16c", 0x10000, 0x10000, NO_DUMP )
+
+	ROM_REGION( 0x20000, "gfx3", ROMREGION_ERASEFF ) // background tiles
+
+	ROM_REGION( 0x20000, "gfx4", 0 ) // sprites
+	ROM_LOAD( "graphics.1a", 0x00000, 0x20000, NO_DUMP )
+
+	ROM_REGION( 0x10000, "gfx5", ROMREGION_ERASEFF )    /* foreground map data */
+
+	ROM_REGION( 0x10000, "gfx6", ROMREGION_ERASEFF )    /* background map data */
+
+	ROM_REGION( 0x08000, "adpcm", ROMREGION_ERASEFF )   /* adpcm voice data */
+
+	ROM_REGION( 0x820, "proms", 0 )
+	ROM_LOAD( "63s281.16a", 0x0000, 0x0100, CRC(0b8b914b) SHA1(8cf4910b846de79661cc187887171ed8ebfd6719) ) // clut
+	ROM_LOAD( "82s129.9s",  0x0500, 0x0100, CRC(cf14ba30) SHA1(3284b6809075756b3c8e07d9705fc7eacb7556f1) ) // timing? (not used)
+	ROM_LOAD( "82s129.4e",  0x0600, 0x0100, CRC(0eaf5158) SHA1(bafd4108708f66cd7b280e47152b108f3e254fc9) ) // timing? (not used)
+	ROM_LOAD( "82s123.7a",  0x0800, 0x0020, CRC(93e2d292) SHA1(af8edd0cfe85f28ede9604cfaf4516d54e5277c9) ) // sprite color related? (not used)
+ROM_END
+
+GAME( 1986, empcity,  0,       stfight, stfight, stfight_state, empcity, ROT0,   "Seibu Kaihatsu",                           "Empire City: 1931 (bootleg?)", 0 )
+GAME( 1986, empcityu, empcity, stfight, stfight, stfight_state, stfight, ROT0,   "Seibu Kaihatsu (Taito / Romstar license)", "Empire City: 1931 (US)", 0 ) // different title logo
+GAME( 1986, empcityj, empcity, stfight, stfight, stfight_state, stfight, ROT0,   "Seibu Kaihatsu (Taito license)",           "Empire City: 1931 (Japan)", 0 )
+GAME( 1986, empcityi, empcity, stfight, stfight, stfight_state, stfight, ROT0,   "Seibu Kaihatsu (Eurobed license)",         "Empire City: 1931 (Italy)", 0 )
+GAME( 1986, stfight,  empcity, stfight, stfight, stfight_state, stfight, ROT0,   "Seibu Kaihatsu (Tuning license)",          "Street Fight (Germany)", 0 )
+GAME( 1986, stfighta, empcity, stfight, stfight, stfight_state, stfight, ROT0,   "Seibu Kaihatsu",                           "Street Fight (bootleg?)", 0 )
+/* Cross Shooter runs on a slightly modified version of Empire City, with M68705 MCU, a different text tilemap and gfx blobs (see also airraid.c) */
+GAME( 1987, cshooter,  0,      cshooter,cshooter, stfight_state, cshooter,ROT270,"Seibu Kaihatsu (Taito license)",           "Cross Shooter (not encrypted)", GAME_NOT_WORKING )

@@ -148,9 +148,9 @@ void gauntlet_state::scanline_update(screen_device &screen, int scanline)
 
 	/* sound IRQ is on 32V */
 	if (scanline & 32)
-		m6502_irq_gen(m_audiocpu);
+		m_soundcomm->sound_irq_gen(m_audiocpu);
 	else
-		m6502_irq_ack_r(space, 0);
+		m_soundcomm->sound_irq_ack_r(space, 0);
 }
 
 
@@ -173,22 +173,6 @@ MACHINE_RESET_MEMBER(gauntlet_state,gauntlet)
 
 /*************************************
  *
- *  Controller reads
- *
- *************************************/
-
-READ16_MEMBER(gauntlet_state::port4_r)
-{
-	int temp = ioport("803008")->read();
-	if (m_cpu_to_sound_ready) temp ^= 0x0020;
-	if (m_sound_to_cpu_ready) temp ^= 0x0010;
-	return temp;
-}
-
-
-
-/*************************************
- *
  *  Sound reset
  *
  *************************************/
@@ -203,7 +187,7 @@ WRITE16_MEMBER(gauntlet_state::sound_reset_w)
 		if ((oldword ^ m_sound_reset_val) & 1)
 		{
 			m_audiocpu->set_input_line(INPUT_LINE_RESET, (m_sound_reset_val & 1) ? CLEAR_LINE : ASSERT_LINE);
-			sound_cpu_reset();
+			m_soundcomm->sound_cpu_reset();
 			if (m_sound_reset_val & 1)
 			{
 				machine().device("ymsnd")->reset();
@@ -231,8 +215,8 @@ READ8_MEMBER(gauntlet_state::switch_6502_r)
 	tms5220_device *tms5220 = machine().device<tms5220_device>("tms");
 	int temp = 0x30;
 
-	if (m_cpu_to_sound_ready) temp ^= 0x80;
-	if (m_sound_to_cpu_ready) temp ^= 0x40;
+	if (m_soundcomm->main_to_sound_ready()) temp ^= 0x80;
+	if (m_soundcomm->sound_to_main_ready()) temp ^= 0x40;
 	if (!tms5220->readyq_r()) temp ^= 0x20;
 	if (!(ioport("803008")->read() & 0x0008)) temp ^= 0x10;
 
@@ -307,20 +291,20 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, gauntlet_state )
 	AM_RANGE(0x803002, 0x803003) AM_MIRROR(0x2fcef0) AM_READ_PORT("803002")
 	AM_RANGE(0x803004, 0x803005) AM_MIRROR(0x2fcef0) AM_READ_PORT("803004")
 	AM_RANGE(0x803006, 0x803007) AM_MIRROR(0x2fcef0) AM_READ_PORT("803006")
-	AM_RANGE(0x803008, 0x803009) AM_MIRROR(0x2fcef0) AM_READ(port4_r)
-	AM_RANGE(0x80300e, 0x80300f) AM_MIRROR(0x2fcef0) AM_READ8(sound_r, 0x00ff)
+	AM_RANGE(0x803008, 0x803009) AM_MIRROR(0x2fcef0) AM_READ_PORT("803008")
+	AM_RANGE(0x80300e, 0x80300f) AM_MIRROR(0x2fcef0) AM_DEVREAD8("soundcomm", atari_sound_comm_device, main_response_r, 0x00ff)
 	AM_RANGE(0x803100, 0x803101) AM_MIRROR(0x2fce8e) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x803120, 0x803121) AM_MIRROR(0x2fce8e) AM_WRITE(sound_reset_w)
+	AM_RANGE(0x803120, 0x803121) AM_MIRROR(0x2fce8e) AM_DEVWRITE("soundcomm", atari_sound_comm_device, sound_reset_w)
 	AM_RANGE(0x803140, 0x803141) AM_MIRROR(0x2fce8e) AM_WRITE(video_int_ack_w)
 	AM_RANGE(0x803150, 0x803151) AM_MIRROR(0x2fce8e) AM_WRITE(eeprom_enable_w)
-	AM_RANGE(0x803170, 0x803171) AM_MIRROR(0x2fce8e) AM_WRITE8(sound_w, 0x00ff)
+	AM_RANGE(0x803170, 0x803171) AM_MIRROR(0x2fce8e) AM_DEVWRITE8("soundcomm", atari_sound_comm_device, main_command_w, 0x00ff)
 
 	/* VBUS */
-	AM_RANGE(0x900000, 0x901fff) AM_MIRROR(0x2c8000) AM_RAM_WRITE(playfield_w) AM_SHARE("playfield")
+	AM_RANGE(0x900000, 0x901fff) AM_MIRROR(0x2c8000) AM_RAM_DEVWRITE("playfield", tilemap_device, write) AM_SHARE("playfield")
 	AM_RANGE(0x902000, 0x903fff) AM_MIRROR(0x2c8000) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
 	AM_RANGE(0x904000, 0x904fff) AM_MIRROR(0x2c8000) AM_RAM
 	AM_RANGE(0x905f6e, 0x905f6f) AM_MIRROR(0x2c8000) AM_RAM_WRITE(gauntlet_yscroll_w) AM_SHARE("yscroll")
-	AM_RANGE(0x905000, 0x905f7f) AM_MIRROR(0x2c8000) AM_RAM_WRITE(alpha_w) AM_SHARE("alpha")
+	AM_RANGE(0x905000, 0x905f7f) AM_MIRROR(0x2c8000) AM_RAM_DEVWRITE("alpha", tilemap_device, write) AM_SHARE("alpha")
 	AM_RANGE(0x905f80, 0x905fff) AM_MIRROR(0x2c8000) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
 	AM_RANGE(0x910000, 0x9107ff) AM_MIRROR(0x2cf800) AM_RAM_WRITE(paletteram_IIIIRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x930000, 0x930001) AM_MIRROR(0x2cfffe) AM_WRITE(gauntlet_xscroll_w) AM_SHARE("xscroll")
@@ -338,14 +322,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, gauntlet_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x0fff) AM_MIRROR(0x2000) AM_RAM
-	AM_RANGE(0x1000, 0x100f) AM_MIRROR(0x27c0) AM_WRITE(m6502_sound_w)
-	AM_RANGE(0x1010, 0x101f) AM_MIRROR(0x27c0) AM_READ(m6502_sound_r)
+	AM_RANGE(0x1000, 0x100f) AM_MIRROR(0x27c0) AM_DEVWRITE("soundcomm", atari_sound_comm_device, sound_response_w)
+	AM_RANGE(0x1010, 0x101f) AM_MIRROR(0x27c0) AM_DEVREAD("soundcomm", atari_sound_comm_device, sound_command_r)
 	AM_RANGE(0x1020, 0x102f) AM_MIRROR(0x27c0) AM_READ_PORT("COIN") AM_WRITE(mixer_w)
 	AM_RANGE(0x1030, 0x103f) AM_MIRROR(0x27c0) AM_READWRITE(switch_6502_r, sound_ctl_w)
 	AM_RANGE(0x1800, 0x180f) AM_MIRROR(0x27c0) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0x1810, 0x1811) AM_MIRROR(0x27ce) AM_DEVREADWRITE("ymsnd", ym2151_device, read, write)
 	AM_RANGE(0x1820, 0x182f) AM_MIRROR(0x27c0) AM_DEVWRITE("tms", tms5220_device, data_w)
-	AM_RANGE(0x1830, 0x183f) AM_MIRROR(0x27c0) AM_READWRITE(m6502_irq_ack_r, m6502_irq_ack_w)
+	AM_RANGE(0x1830, 0x183f) AM_MIRROR(0x27c0) AM_DEVREADWRITE("soundcomm", atari_sound_comm_device, sound_irq_ack_r, sound_irq_ack_w)
 	AM_RANGE(0x4000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -401,7 +385,8 @@ static INPUT_PORTS_START( gauntlet )
 	PORT_START("803008")
 	PORT_BIT( 0x0007, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_SERVICE( 0x0008, IP_ACTIVE_LOW )
-	PORT_BIT( 0x0030, IP_ACTIVE_HIGH, IPT_SPECIAL )
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_SOUND_TO_MAIN_READY("soundcomm")
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_MAIN_TO_SOUND_READY("soundcomm")
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_CUSTOM ) PORT_VBLANK("screen")
 	PORT_BIT( 0xff80, IP_ACTIVE_HIGH, IPT_UNUSED )
 
@@ -448,7 +433,8 @@ static INPUT_PORTS_START( vindctr2 )
 	PORT_START("803008")
 	PORT_BIT( 0x0007, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_SERVICE( 0x0008, IP_ACTIVE_LOW )
-	PORT_BIT( 0x0030, IP_ACTIVE_HIGH, IPT_SPECIAL )
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_SOUND_TO_MAIN_READY("soundcomm")
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_ATARI_COMM_MAIN_TO_SOUND_READY("soundcomm")
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_CUSTOM ) PORT_VBLANK("screen")
 	PORT_BIT( 0xff80, IP_ACTIVE_HIGH, IPT_UNUSED )
 
@@ -524,6 +510,9 @@ static MACHINE_CONFIG_START( gauntlet, gauntlet_state )
 	MCFG_GFXDECODE(gauntlet)
 	MCFG_PALETTE_LENGTH(1024)
 
+	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, gauntlet_state, get_playfield_tile_info, 8,8, SCAN_COLS, 64,64)
+	MCFG_TILEMAP_ADD_STANDARD_TRANSPEN("alpha", 2, gauntlet_state, get_alpha_tile_info, 8,8, SCAN_ROWS, 64,32, 0)
+
 	MCFG_SCREEN_ADD("screen", RASTER)
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses a SYNGEN chip to generate video signals */
@@ -533,6 +522,7 @@ static MACHINE_CONFIG_START( gauntlet, gauntlet_state )
 	MCFG_VIDEO_START_OVERRIDE(gauntlet_state,gauntlet)
 
 	/* sound hardware */
+	MCFG_ATARI_SOUND_COMM_ADD("soundcomm", "audiocpu", WRITELINE(atarigen_state, sound_int_write_line))
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_YM2151_ADD("ymsnd", ATARI_CLOCK_14MHz/4)

@@ -1,4 +1,7 @@
 #include "machine/ataintf.h"
+#include "video/konami_helper.h"
+#include "video/k054156_k054157_k056832.h"
+#include "video/k055555.h"
 
 class djmain_state : public driver_device
 {

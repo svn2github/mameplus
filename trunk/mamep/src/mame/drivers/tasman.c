@@ -15,7 +15,7 @@
 */
 
 #include "emu.h"
-#include "video/konicdev.h"
+#include "video/konami_helper.h"
 #include "includes/konamigx.h"
 #include "cpu/m68000/m68000.h"
 #include "machine/eeprom.h"
@@ -46,11 +46,11 @@ VIDEO_START_MEMBER(kongambl_state,kongambl)
 	#if CUSTOM_DRAW
 
 	#else
-	k056832_set_layer_association(m_k056832, 0);
-	k056832_set_layer_offs(m_k056832, 0, -2, 0);
-	k056832_set_layer_offs(m_k056832, 1,  2, 0);
-	k056832_set_layer_offs(m_k056832, 2,  4, 0);
-	k056832_set_layer_offs(m_k056832, 3,  6, 0);
+	m_k056832->set_layer_association(0);
+	m_k056832->set_layer_offs(0, -2, 0);
+	m_k056832->set_layer_offs(1,  2, 0);
+	m_k056832->set_layer_offs(2,  4, 0);
+	m_k056832->set_layer_offs(3,  6, 0);
 	#endif
 }
 
@@ -95,10 +95,10 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 	bitmap.fill(0, cliprect);
 	machine().priority_bitmap.fill(0, cliprect);
 
-	k056832_tilemap_draw(m_k056832, bitmap, cliprect, 3, 0, 0);
-	k056832_tilemap_draw(m_k056832, bitmap, cliprect, 2, 0, 0);
-	k056832_tilemap_draw(m_k056832, bitmap, cliprect, 1, 0, 0);
-	k056832_tilemap_draw(m_k056832, bitmap, cliprect, 0, 0, 0);
+	m_k056832->tilemap_draw(bitmap, cliprect, 3, 0, 0);
+	m_k056832->tilemap_draw(bitmap, cliprect, 2, 0, 0);
+	m_k056832->tilemap_draw(bitmap, cliprect, 1, 0, 0);
+	m_k056832->tilemap_draw(bitmap, cliprect, 0, 0, 0);
 	#endif
 	return 0;
 }
@@ -106,24 +106,25 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 READ32_MEMBER(kongambl_state::eeprom_r)
 {
 	//return machine().rand();
-
-	if (ACCESSING_BITS_16_23)
-		return ioport("EXT_PCB")->read() << 16; // ???
+	UINT32 retval = 0;
 
 	if (ACCESSING_BITS_24_31)
-		return ioport("IN0")->read() << 24; // bit 0 freezes the system if 1
+		retval |= ioport("IN0")->read() << 24; // bit 0 freezes the system if 1
 
-	if (ACCESSING_BITS_0_7)
-		return (ioport("SYSTEM")->read());
+	if (ACCESSING_BITS_16_23)
+		retval |= ioport("EXT_PCB")->read() << 16; // ???
 
 	if (ACCESSING_BITS_8_15)
-		return ioport("IN2")->read() << 8; // ???
+		retval |= ioport("IN2")->read() << 8; // ???
 
-	printf("%08x\n",mem_mask);
+	if (ACCESSING_BITS_0_7)
+		retval |= (ioport("SYSTEM")->read());
 
-	return 0;
+
+//  printf("%08x\n",mem_mask);
+
+	return retval;
 }
-
 WRITE32_MEMBER(kongambl_state::eeprom_w)
 {
 	if (ACCESSING_BITS_8_15)
@@ -161,17 +162,18 @@ static ADDRESS_MAP_START( kongambl_map, AS_PROGRAM, 32, kongambl_state )
 
 	AM_RANGE(0x300000, 0x307fff) AM_RAM // backup RAM 24H
 
-	//0x400000 0x400001 "13M" even addresses
-	//0x400002,0x400003 "13J" odd addresses
-	#if CUSTOM_DRAW
+	// override konami chips with custom areas until that code is removed
 	AM_RANGE(0x400000, 0x401fff) AM_ROM AM_REGION("gfx1",0)
 	AM_RANGE(0x420000, 0x43ffff) AM_RAM AM_SHARE("vram")
 	AM_RANGE(0x480000, 0x48003f) AM_RAM // vregs
-	#else
-	AM_RANGE(0x400000, 0x401fff) AM_DEVREAD_LEGACY("k056832", k056832_rom_long_r)
-	AM_RANGE(0x420000, 0x43ffff) AM_DEVREADWRITE_LEGACY("k056832", k056832_unpaged_ram_long_r, k056832_unpaged_ram_long_w)
-	AM_RANGE(0x480000, 0x48003f) AM_DEVWRITE_LEGACY("k056832", k056832_long_w)
-	#endif
+
+	//0x400000 0x400001 "13M" even addresses
+	//0x400002,0x400003 "13J" odd addresses
+	AM_RANGE(0x400000, 0x401fff) AM_DEVREAD("k056832", k056832_device, rom_long_r)
+	AM_RANGE(0x420000, 0x43ffff) AM_DEVREADWRITE("k056832", k056832_device, unpaged_ram_long_r, unpaged_ram_long_w)
+	AM_RANGE(0x480000, 0x48003f) AM_DEVWRITE("k056832", k056832_device, long_w)
+
+
 
 	AM_RANGE(0x440000, 0x443fff) AM_RAM // OBJ RAM
 
@@ -533,13 +535,13 @@ static void kongambl_sprite_callback( running_machine &machine, int *code, int *
 {
 }
 
-#if !CUSTOM_DRAW
+
 static void kongambl_tile_callback( running_machine &machine, int layer, int *code, int *color, int *flags )
 {
 }
-#endif
 
-#if CUSTOM_DRAW
+
+
 static const gfx_layout charlayout8_tasman =
 {
 	8,8,
@@ -555,7 +557,7 @@ static GFXDECODE_START( tasman )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout8_tasman, 0, 0x8000/256 )
 GFXDECODE_END
 
-#else
+
 static const k056832_interface k056832_intf =
 {
 	"gfx1", 0,
@@ -564,7 +566,7 @@ static const k056832_interface k056832_intf =
 	KONAMI_ROM_DEINTERLEAVE_NONE,
 	kongambl_tile_callback, "none"
 };
-#endif
+
 
 static const k053247_interface k053247_intf =
 {
@@ -609,12 +611,14 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 
 	MCFG_VIDEO_START_OVERRIDE(kongambl_state,kongambl)
 
-	MCFG_K053247_ADD("k053246", k053247_intf)
-	#if CUSTOM_DRAW
+	MCFG_K053246_ADD("k053246", k053247_intf)
+	MCFG_K055555_ADD("k055555")
+	MCFG_K055673_ADD_NOINTF("k055673")
+
 	MCFG_GFXDECODE(tasman)
-	#else
+
 	MCFG_K056832_ADD("k056832", k056832_intf)
-	#endif
+
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 MACHINE_CONFIG_END

@@ -437,7 +437,7 @@ void screen_device::static_set_default_position(device_t &device, double xscale,
 
 
 //-------------------------------------------------
-//  static_set_screen_update - set the legacy
+//  static_set_screen_update - set the legacy(?)
 //  screen update callback in the device
 //  configuration
 //-------------------------------------------------
@@ -1099,17 +1099,6 @@ void screen_device::register_screen_bitmap(bitmap_t &bitmap)
 	// if allocating now, just do it
 	bitmap.allocate(width(), height());
 	bitmap.set_palette(machine().palette);
-}
-
-
-//-------------------------------------------------
-//  vblank_port_read - custom port handler to
-//  return a VBLANK state
-//-------------------------------------------------
-
-int screen_device::vblank_port_read()
-{
-	return vblank() ? -1 : 0;
 }
 
 

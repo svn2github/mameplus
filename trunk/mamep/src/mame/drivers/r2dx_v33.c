@@ -4,9 +4,6 @@ Raiden 2 / DX V33 Version
 
 Temporary split from raiden2.c, it'll be re-merged at some point.
 
-Note:
-Please don't do any state machine refactoring of this.
-
 0x430-0x433
 1) appears to control where the first enemies turns, if clockwise or anticlockwise
 2) ...
@@ -23,6 +20,7 @@ Then it puts settings at 0x9e08 and 0x9e0a (bp 91acb)
 #include "machine/eeprom.h"
 #include "sound/okim6295.h"
 #include "includes/raiden2.h"
+#include "drivlgcy.h"
 
 
 class r2dx_v33_state : public driver_device

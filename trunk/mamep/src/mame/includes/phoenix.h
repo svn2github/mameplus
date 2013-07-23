@@ -1,4 +1,3 @@
-#include "devcb.h"
 #include "sound/discrete.h"
 #include "sound/tms36xx.h"
 
@@ -99,7 +98,7 @@ private:
 	UINT32 *                m_poly18;
 	device_t *m_discrete;
 	tms36xx_device *m_tms;
-	
+
 	int update_c24(int samplerate);
 	int update_c25(int samplerate);
 	int noise(int samplerate);

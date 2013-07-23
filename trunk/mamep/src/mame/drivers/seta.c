@@ -1366,9 +1366,7 @@ Note: on screen copyright is (c)1998 Coinmaster.
 #include "sound/2612intf.h"
 #include "sound/3812intf.h"
 #include "sound/okim6295.h"
-#include "sound/x1_010.h"
 #include "sound/2151intf.h"
-#include "video/seta001.h"
 #include "machine/nvram.h"
 
 #if __uPD71054_TIMER
@@ -1592,7 +1590,7 @@ void seta_state::screen_eof_seta_buffer_sprites(screen_device &screen, bool stat
 	// rising edge
 	if (state)
 	{
-		machine().device<seta001_device>("spritegen")->setac_eof();
+		m_seta001->setac_eof();
 	}
 }
 
@@ -1630,12 +1628,12 @@ static ADDRESS_MAP_START( tndrcade_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x300000, 0x300001) AM_WRITENOP                        // ? 0 / 1
 	AM_RANGE(0x380000, 0x3803ff) AM_RAM AM_SHARE("paletteram") // Palette
 /**/AM_RANGE(0x400000, 0x400001) AM_WRITENOP                        // ? $4000
-/**/AM_RANGE(0x600000, 0x6005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0x600600, 0x600607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0x600000, 0x6005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0x600600, 0x600607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 
 	AM_RANGE(0x800000, 0x800007) AM_WRITE(sub_ctrl_w)               // Sub CPU Control?
 	AM_RANGE(0xa00000, 0xa00fff) AM_READWRITE(sharedram_68000_r,sharedram_68000_w)  // Shared RAM
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_SHARE("share1")                  // RAM (Mirrored?)
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM AM_SHARE("share1")                  // RAM (Mirrored?)
 ADDRESS_MAP_END
@@ -1648,7 +1646,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( downtown_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x09ffff) AM_ROM                             // ROM
-	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0x200000, 0x200001) AM_NOP                             // watchdog? (twineagl)
 	AM_RANGE(0x300000, 0x300001) AM_WRITENOP                        // IRQ enable/acknowledge?
 	AM_RANGE(0x400000, 0x400007) AM_WRITE(twineagl_tilebank_w)      // special tile banking to animate water in twineagl
@@ -1660,9 +1658,9 @@ static ADDRESS_MAP_START( downtown_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xa00000, 0xa00007) AM_WRITE(sub_ctrl_w)               // Sub CPU Control?
 	AM_RANGE(0xb00000, 0xb00fff) AM_READWRITE(sharedram_68000_r,sharedram_68000_w)  // Shared RAM
 	AM_RANGE(0xc00000, 0xc00001) AM_WRITENOP                        // ? $4000
-	AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xf00000, 0xffffff) AM_RAM                             // RAM
 ADDRESS_MAP_END
 
@@ -1720,9 +1718,9 @@ static ADDRESS_MAP_START( calibr50_map, AS_PROGRAM, 16, seta_state )
 
 	AM_RANGE(0x904000, 0x904fff) AM_RAM                             //
 	AM_RANGE(0xa00000, 0xa00019) AM_READ(calibr50_ip_r)             // Input Ports
-/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xb00000, 0xb00001) AM_READ(soundlatch2_word_r) AM_WRITE(calibr50_soundlatch_w)    // From Sub CPU
 /**/AM_RANGE(0xc00000, 0xc00001) AM_RAM                             // ? $4000
 ADDRESS_MAP_END
@@ -1789,8 +1787,8 @@ WRITE16_MEMBER(seta_state::usclssic_lockout_w)
 static ADDRESS_MAP_START( usclssic_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM                                 // ROM
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM                                 // RAM
-	AM_RANGE(0x800000, 0x8005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16) // Sprites Y
-	AM_RANGE(0x800600, 0x800607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0x800000, 0x8005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16) // Sprites Y
+	AM_RANGE(0x800600, 0x800607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0x900000, 0x900001) AM_RAM                                 // ? $4000
 	AM_RANGE(0xa00000, 0xa00005) AM_RAM AM_SHARE("vctrl_0")         // VRAM Ctrl
 /**/AM_RANGE(0xb00000, 0xb003ff) AM_RAM AM_SHARE("paletteram")  // Palette
@@ -1803,7 +1801,7 @@ static ADDRESS_MAP_START( usclssic_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xb40018, 0xb4001f) AM_READ(usclssic_dsw_r)                // 2 DSWs
 	AM_RANGE(0xb40018, 0xb40019) AM_WRITE(watchdog_reset16_w)           // Watchdog
 	AM_RANGE(0xb80000, 0xb80001) AM_READNOP                             // Watchdog (value is discarded)?
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)         // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)         // Sprites Code + X + Attr
 	AM_RANGE(0xd00000, 0xd03fff) AM_RAM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM
 	AM_RANGE(0xd04000, 0xd04fff) AM_RAM                                 //
 	AM_RANGE(0xe00000, 0xe00fff) AM_RAM                                 // NVRAM? (odd bytes)
@@ -1817,19 +1815,19 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( atehate_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM                             // ROM
 	AM_RANGE(0x900000, 0x9fffff) AM_RAM                             // RAM
-	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP                        // ? watchdog ?
 	AM_RANGE(0x300000, 0x300001) AM_WRITENOP                        // ? 0 (irq ack lev 2?)
 	AM_RANGE(0x500000, 0x500001) AM_WRITENOP                        // ? (end of lev 1: bit 4 goes 1,0,1)
 	AM_RANGE(0x600000, 0x600003) AM_READ(seta_dsw_r)                // DSW
 	AM_RANGE(0x700000, 0x7003ff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xb00000, 0xb00001) AM_READ_PORT("P1")                 // P1
 	AM_RANGE(0xb00002, 0xb00003) AM_READ_PORT("P2")                 // P2
 	AM_RANGE(0xb00004, 0xb00005) AM_READ_PORT("COINS")              // Coins
 /**/AM_RANGE(0xc00000, 0xc00001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 ADDRESS_MAP_END
 
 
@@ -1850,17 +1848,17 @@ static ADDRESS_MAP_START( blandia_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x700000, 0x7003ff) AM_RAM                             // (rezon,jjsquawk)
 	AM_RANGE(0x700400, 0x700fff) AM_RAM AM_SHARE("paletteram")  // Palette
 	AM_RANGE(0x703c00, 0x7047ff) AM_RAM AM_SHARE("paletteram2") // 2nd Palette for the palette offset effect
-/**/AM_RANGE(0x800000, 0x8005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0x800600, 0x800607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0x800000, 0x8005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0x800600, 0x800607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0x880000, 0x880001) AM_RAM                             // ? 0xc000
-	AM_RANGE(0x900000, 0x903fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0x900000, 0x903fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 /**/AM_RANGE(0xa00000, 0xa00005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 /**/AM_RANGE(0xa80000, 0xa80005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
 	AM_RANGE(0xb00000, 0xb03fff) AM_RAM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM 0&1
 	AM_RANGE(0xb04000, 0xb0ffff) AM_RAM                             // (jjsquawk)
 	AM_RANGE(0xb80000, 0xb83fff) AM_RAM_WRITE(seta_vram_2_w) AM_SHARE("vram_2") // VRAM 2&3
 	AM_RANGE(0xb84000, 0xb8ffff) AM_RAM                             // (jjsquawk)
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITENOP                        // ?
 	AM_RANGE(0xe00000, 0xe00001) AM_WRITENOP                        // ? VBlank IRQ Ack
 	AM_RANGE(0xf00000, 0xf00001) AM_WRITENOP                        // ? Sound  IRQ Ack
@@ -1891,11 +1889,11 @@ static ADDRESS_MAP_START( blandiap_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x88ffff) AM_RAM                             // (jjsquawk)
 /**/AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 /**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITENOP                        // ?
 	AM_RANGE(0xe00000, 0xe00001) AM_WRITENOP                        // ? VBlank IRQ Ack
 	AM_RANGE(0xf00000, 0xf00001) AM_WRITENOP                        // ? Sound  IRQ Ack
@@ -1971,11 +1969,11 @@ static ADDRESS_MAP_START( wrofaero_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x88ffff) AM_RAM                             // (jjsquawk)
 /**/AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 /**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 #if __uPD71054_TIMER
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITE(timer_regs_w)             // ?
 #else
@@ -2014,10 +2012,10 @@ static ADDRESS_MAP_START( zingzipbl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x902010, 0x902013) AM_READ(zingzipbl_unknown_r )
 
 /**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xc00000, 0xc03fff) AM_RAM // soundram on original
 #if __uPD71054_TIMER
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITE(timer_regs_w)             // ?
@@ -2047,11 +2045,11 @@ static ADDRESS_MAP_START( jjsquawb_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x88ffff) AM_RAM                             // (jjsquawk)
 	AM_RANGE(0x908000, 0x908005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 	AM_RANGE(0x909000, 0x909005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-	AM_RANGE(0xa0a000, 0xa0a5ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // RZ: Sprites Y
-	AM_RANGE(0xa0a600, 0xa0a607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa0a000, 0xa0a5ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // RZ: Sprites Y
+	AM_RANGE(0xa0a600, 0xa0a607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 // AM_RANGE(0xa80000, 0xa80001) AM_RAM                              // ? 0x4000
-	AM_RANGE(0xb0c000, 0xb0ffff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // RZ: Sprites Code + X + Attr
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xb0c000, 0xb0ffff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // RZ: Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 #if __uPD71054_TIMER
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITE(timer_regs_w)             // ?
 #else
@@ -2078,12 +2076,12 @@ static ADDRESS_MAP_START( orbs_map, AS_PROGRAM, 16, seta_state )
 	//AM_RANGE(0x600000, 0x60000f) AM_READ(krzybowl_input_r     )   // P1
 	AM_RANGE(0x8000f0, 0x8000f1) AM_RAM                             // NVRAM
 	AM_RANGE(0x800100, 0x8001ff) AM_RAM                             // NVRAM
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xb00000, 0xb003ff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 /**/AM_RANGE(0xd00000, 0xd00001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -2159,12 +2157,12 @@ static ADDRESS_MAP_START( keroppi_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x800100, 0x8001ff) AM_RAM                             // NVRAM
 	AM_RANGE(0x900000, 0x900001) AM_WRITENOP                        // ?
 	AM_RANGE(0x900002, 0x900003) AM_WRITE(keroppi_prize_w)          //
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xb00000, 0xb003ff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 /**/AM_RANGE(0xd00000, 0xd00001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 ADDRESS_MAP_END
 
 MACHINE_START_MEMBER(seta_state,keroppi)
@@ -2190,12 +2188,12 @@ static ADDRESS_MAP_START( blockcar_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("P1")                 // P1
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("P2")                 // P2
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("COINS")              // Coins
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xb00000, 0xb003ff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
 /**/AM_RANGE(0xd00000, 0xd00001) AM_RAM // ? 0x4000
-/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16) // Sprites Y
-	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16) // Sprites Y
+	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 ADDRESS_MAP_END
 
 
@@ -2221,13 +2219,13 @@ static ADDRESS_MAP_START( daioh_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x88ffff) AM_RAM                             //
 	AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 	AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16) // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16) // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 
 	AM_RANGE(0xa80000, 0xa80001) AM_RAM // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
 	AM_RANGE(0xb04000, 0xb13fff) AM_RAM
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xe00000, 0xe00001) AM_WRITENOP    //
 ADDRESS_MAP_END
 
@@ -2240,7 +2238,7 @@ static ADDRESS_MAP_START( drgnunit_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x0bffff) AM_ROM                             // ROM
 	AM_RANGE(0xf00000, 0xf0ffff) AM_RAM                             // RAM (qzkklogy)
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM                             // RAM (drgnunit,stg)
-	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP                        // Watchdog
 	AM_RANGE(0x300000, 0x300001) AM_WRITENOP                        // ? IRQ Ack
 	AM_RANGE(0x500000, 0x500001) AM_RAM_WRITE(seta_vregs_w) AM_SHARE("vregs")   // Coin Lockout + Video Registers
@@ -2254,9 +2252,9 @@ static ADDRESS_MAP_START( drgnunit_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xb00004, 0xb00005) AM_READ_PORT("COINS")              // Coins
 	AM_RANGE(0xb00006, 0xb00007) AM_READNOP                         // unused (qzkklogy)
 /**/AM_RANGE(0xc00000, 0xc00001) AM_RAM                             // ? $4000
-/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -2268,31 +2266,27 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(seta_state::setaroul_spriteylow_w)
 {
-	seta001_device *dev = machine().device<seta001_device>("spritegen");
-	if ((offset&1)==0) spriteylow_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==0) m_seta001->spriteylow_w8(space, offset>>1, (data & 0xff00) >> 8);
 }
 
 WRITE16_MEMBER(seta_state::setaroul_spritectrl_w)
 {
-	seta001_device *dev = machine().device<seta001_device>("spritegen");
-	if ((offset&1)==0) spritectrl_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==0) m_seta001->spritectrl_w8(space, offset>>1, (data & 0xff00) >> 8);
 }
 
 WRITE16_MEMBER(seta_state::setaroul_spritecode_w)
 {
-	seta001_device *dev = machine().device<seta001_device>("spritegen");
-	if ((offset&1)==1) spritecodelow_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
-	if ((offset&1)==0) spritecodehigh_w8(dev, space, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==1) m_seta001->spritecodelow_w8(space, offset>>1, (data & 0xff00) >> 8);
+	if ((offset&1)==0) m_seta001->spritecodehigh_w8(space, offset>>1, (data & 0xff00) >> 8);
 }
 
 READ16_MEMBER(seta_state::setaroul_spritecode_r)
 {
 	UINT16 ret;
-	seta001_device *dev = machine().device<seta001_device>("spritegen");
 	if ((offset&1)==1)
-		ret = spritecodelow_r8(dev, space, offset>>1);
+		ret = m_seta001->spritecodelow_r8(space, offset>>1);
 	else
-		ret = spritecodehigh_r8(dev, space, offset>>1);
+		ret = m_seta001->spritecodehigh_r8(space, offset>>1);
 	return ret << 8;
 }
 
@@ -2353,12 +2347,12 @@ static ADDRESS_MAP_START( extdwnhl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x88ffff) AM_RAM                             //
 /**/AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 /**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xb04000, 0xb13fff) AM_RAM                             //
-	AM_RANGE(0xe00000, 0xe03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xe00000, 0xe03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 ADDRESS_MAP_END
 
 
@@ -2385,17 +2379,17 @@ static ADDRESS_MAP_START( kamenrid_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x887fff) AM_RAM // tested
 	AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 	AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? $4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xb04000, 0xb07fff) AM_RAM                             // tested
 #if __uPD71054_TIMER
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITE(timer_regs_w)             // ?
 #else
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITENOP                        // ?
 #endif
-	AM_RANGE(0xd00000, 0xd03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xd00000, 0xd03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 ADDRESS_MAP_END
 
 /* almost identical to kamenrid */
@@ -2415,16 +2409,16 @@ static ADDRESS_MAP_START( madshark_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 	AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
 
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? $4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 #if __uPD71054_TIMER
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITE(timer_regs_w)             // ?
 #else
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITENOP                        // ?
 #endif
-	AM_RANGE(0xd00000, 0xd03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xd00000, 0xd03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 ADDRESS_MAP_END
 
 
@@ -2461,17 +2455,17 @@ static ADDRESS_MAP_START( magspeed_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x884000, 0x887fff) AM_RAM                             // tested
 	AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")         // VRAM 0&1 Ctrl
 	AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")         // VRAM 2&3 Ctrl
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? $4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xb04000, 0xb07fff) AM_RAM                             // tested
 #if __uPD71054_TIMER
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITE(timer_regs_w)             // ?
 #else
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITENOP                        // ?
 #endif
-	AM_RANGE(0xd00000, 0xd03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xd00000, 0xd03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 ADDRESS_MAP_END
 
 
@@ -2516,12 +2510,12 @@ static ADDRESS_MAP_START( krzybowl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x600000, 0x60000f) AM_READ(krzybowl_input_r)          // P1
 	AM_RANGE(0x8000f0, 0x8000f1) AM_RAM                             // NVRAM
 	AM_RANGE(0x800100, 0x8001ff) AM_RAM                             // NVRAM
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xb00000, 0xb003ff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 /**/AM_RANGE(0xd00000, 0xd00001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 ADDRESS_MAP_END
 
 
@@ -2554,15 +2548,15 @@ static ADDRESS_MAP_START( msgundam_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x500000, 0x500005) AM_RAM_WRITE(msgundam_vregs_w) AM_SHARE("vregs")   // Coin Lockout + Video Registers
 	AM_RANGE(0x600000, 0x600003) AM_READ(seta_dsw_r)                // DSW
 	AM_RANGE(0x700400, 0x700fff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0x800000, 0x8005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0x800600, 0x800607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0x800000, 0x8005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0x800600, 0x800607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0x880000, 0x880001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0x900000, 0x903fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0x900000, 0x903fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xa00000, 0xa03fff) AM_RAM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM 0&1
 	AM_RANGE(0xa80000, 0xa83fff) AM_RAM_WRITE(seta_vram_2_w) AM_SHARE("vram_2") // VRAM 2&3
 	AM_RANGE(0xb00000, 0xb00005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 	AM_RANGE(0xb80000, 0xb80005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 #if __uPD71054_TIMER
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITE(timer_regs_w) // ?
 #else
@@ -2586,15 +2580,15 @@ static ADDRESS_MAP_START( oisipuzl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x400004, 0x400005) AM_READ_PORT("COINS")              // Coins
 	AM_RANGE(0x400000, 0x400001) AM_WRITENOP                        // ? IRQ Ack
 	AM_RANGE(0x500000, 0x500005) AM_RAM_WRITE(seta_vregs_w) AM_SHARE("vregs")   // Coin Lockout + Video Registers
-	AM_RANGE(0x700000, 0x703fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0x700000, 0x703fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0x800000, 0x803fff) AM_RAM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM 0&1
 	AM_RANGE(0x880000, 0x883fff) AM_RAM_WRITE(seta_vram_2_w) AM_SHARE("vram_2") // VRAM 2&3
 /**/AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 /**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xc00400, 0xc00fff) AM_RAM AM_SHARE("paletteram")  // Palette
 ADDRESS_MAP_END
 
@@ -2620,10 +2614,10 @@ static ADDRESS_MAP_START( triplfun_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x880000, 0x883fff) AM_RAM_WRITE(seta_vram_2_w) AM_SHARE("vram_2") // VRAM 2&3
 /**/AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_0")     // VRAM 0&1 Ctrl
 /**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_2")     // VRAM 2&3 Ctrl
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xc00400, 0xc00fff) AM_RAM AM_SHARE("paletteram")  // Palette
 ADDRESS_MAP_END
 
@@ -2672,12 +2666,12 @@ static ADDRESS_MAP_START( kiwame_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM                             // ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM                             // RAM
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(kiwame_nvram_r, kiwame_nvram_w) AM_SHARE("kiwame_nvram")  // NVRAM + Regs ?
-	AM_RANGE(0x800000, 0x803fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0x800000, 0x803fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 /**/AM_RANGE(0x900000, 0x900001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+/**/AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xb00000, 0xb003ff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xd00000, 0xd00009) AM_READ(kiwame_input_r)            // mahjong panel
 	AM_RANGE(0xe00000, 0xe00003) AM_READ(seta_dsw_r)                // DSW
 ADDRESS_MAP_END
@@ -2702,7 +2696,7 @@ WRITE16_MEMBER(seta_state::thunderl_protection_w)
 static ADDRESS_MAP_START( thunderl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM                             // ROM
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM                             // RAM
-	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP                        // ?
 	AM_RANGE(0x300000, 0x300001) AM_WRITENOP                        // ?
 	AM_RANGE(0x400000, 0x40ffff) AM_WRITE(thunderl_protection_w)    // Protection (not in wits)
@@ -2716,9 +2710,9 @@ static ADDRESS_MAP_START( thunderl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xb00008, 0xb00009) AM_READ_PORT("P3")                 // P3 (wits)
 	AM_RANGE(0xb0000a, 0xb0000b) AM_READ_PORT("P4")                 // P4 (wits)
 /**/AM_RANGE(0xc00000, 0xc00001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xe04000, 0xe07fff) AM_RAM                             // (wits)
 ADDRESS_MAP_END
 
@@ -2726,7 +2720,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( thunderlbl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM                             // ROM
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM                             // RAM
-//  AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)  // Sound
+//  AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)  // Sound
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP                        // ?
 	AM_RANGE(0x300000, 0x300001) AM_WRITENOP                        // ?
 //  AM_RANGE(0x400000, 0x40ffff) AM_WRITE(thunderl_protection_w)    // Protection (not in wits)
@@ -2740,9 +2734,9 @@ static ADDRESS_MAP_START( thunderlbl_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xb00008, 0xb00009) AM_READ_PORT("P3")                 // P3 (wits)
 	AM_RANGE(0xb0000a, 0xb0000b) AM_READ_PORT("P4")                 // P4 (wits)
 /**/AM_RANGE(0xc00000, 0xc00001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xe04000, 0xe07fff) AM_RAM                             // (wits)
 ADDRESS_MAP_END
 
@@ -2778,9 +2772,9 @@ static ADDRESS_MAP_START( wiggie_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xb00008, 0xb00009) AM_READ_PORT("P3")                 // P3 (wits)
 	AM_RANGE(0xb0000a, 0xb0000b) AM_READ_PORT("P4")                 // P4 (wits)
 /**/AM_RANGE(0xc00000, 0xc00001) AM_RAM                             // ? 0x4000
-/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+/**/AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xe04000, 0xe07fff) AM_RAM // (wits)
 ADDRESS_MAP_END
 
@@ -2808,11 +2802,11 @@ static ADDRESS_MAP_START( umanclub_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x400004, 0x400005) AM_WRITENOP                        // ? (end of lev 2)
 	AM_RANGE(0x500000, 0x500001) AM_RAM_WRITE(seta_vregs_w) AM_SHARE("vregs")   // Coin Lockout + Video Registers
 	AM_RANGE(0x600000, 0x600003) AM_READ(seta_dsw_r)                // DSW
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
-	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 ADDRESS_MAP_END
 
 
@@ -2842,9 +2836,9 @@ static ADDRESS_MAP_START( utoukond_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x880000, 0x883fff) AM_RAM_WRITE(seta_vram_2_w) AM_SHARE("vram_2") // VRAM 2&3
 	AM_RANGE(0x900000, 0x900005) AM_WRITEONLY AM_SHARE("vctrl_0")// VRAM 0&1 Ctrl
 	AM_RANGE(0x980000, 0x980005) AM_WRITEONLY AM_SHARE("vctrl_2")// VRAM 2&3 Ctrl
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xc00000, 0xc00001) AM_WRITE(utoukond_soundlatch_w)    // To Sound CPU (cause an IRQ)
 	AM_RANGE(0xe00000, 0xe00001) AM_WRITENOP                        // ? ack
 ADDRESS_MAP_END
@@ -2880,12 +2874,12 @@ static ADDRESS_MAP_START( pairlove_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("P2")                 // P2
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("COINS")              // Coins
 	AM_RANGE(0x900000, 0x9001ff) AM_READWRITE(pairlove_prot_r,pairlove_prot_w)
-	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r,seta_sound_word_w)   // Sound
+	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 	AM_RANGE(0xb00000, 0xb00fff) AM_RAM AM_SHARE("paletteram")  // Palette
-	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16)     // Sprites Code + X + Attr
 	AM_RANGE(0xd00000, 0xd00001) AM_RAM                             // ? 0x4000
-	AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16)     // Sprites Y
-	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xe00000, 0xe005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16)     // Sprites Y
+	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xf00000, 0xf0ffff) AM_RAM                             // RAM
 ADDRESS_MAP_END
 
@@ -2911,10 +2905,10 @@ static ADDRESS_MAP_START( crazyfgt_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0x880000, 0x883fff) AM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM 0
 	AM_RANGE(0x900000, 0x900005) AM_RAM AM_SHARE("vctrl_2") // VRAM 2&3 Ctrl
 	AM_RANGE(0x980000, 0x980005) AM_RAM AM_SHARE("vctrl_0") // VRAM 0&1 Ctrl
-	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16) // Sprites Y
-	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xa00000, 0xa005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16) // Sprites Y
+	AM_RANGE(0xa00600, 0xa00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 	AM_RANGE(0xa80000, 0xa80001) AM_WRITENOP    // ? 0x4000
-	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
 ADDRESS_MAP_END
 
 
@@ -2970,17 +2964,17 @@ static ADDRESS_MAP_START( inttoote_map, AS_PROGRAM, 16, seta_state )
 
 	AM_RANGE(0x800000, 0x80001f) AM_DEVREADWRITE8("rtc", msm6242_device, read, write, 0x00ff)
 
-	AM_RANGE(0x900000, 0x903fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r, seta_sound_word_w       )   // Sound
+	AM_RANGE(0x900000, 0x903fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)   // Sound
 
 	AM_RANGE(0xa00000, 0xa00005) AM_WRITEONLY AM_SHARE("vctrl_0")   // VRAM 0&1 Ctrl
 	AM_RANGE(0xb00000, 0xb03fff) AM_RAM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM 0&1
 
 	AM_RANGE(0xc00000, 0xc00001) AM_RAM     // ? 0x4000
 
-	AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16) // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16) // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
 
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM // RAM
 ADDRESS_MAP_END
@@ -3032,7 +3026,7 @@ static ADDRESS_MAP_START( jockeyc_map, AS_PROGRAM, 16, seta_state )
 
 	AM_RANGE(0x800000, 0x80001f) AM_DEVREADWRITE8("rtc", msm6242_device, read, write, 0x00ff)
 
-	AM_RANGE(0x900000, 0x903fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_word_r, seta_sound_word_w)  // Sound
+	AM_RANGE(0x900000, 0x903fff) AM_DEVREADWRITE("x1snd", x1_010_device, word_r, word_w)  // Sound
 
 	AM_RANGE(0xa00000, 0xa00005) AM_WRITEONLY AM_SHARE("vctrl_0")   // VRAM 0&1 Ctrl
 	AM_RANGE(0xb00000, 0xb03fff) AM_RAM_WRITE(seta_vram_0_w) AM_SHARE("vram_0") // VRAM 0&1
@@ -3040,10 +3034,10 @@ static ADDRESS_MAP_START( jockeyc_map, AS_PROGRAM, 16, seta_state )
 
 	AM_RANGE(0xc00000, 0xc00001) AM_RAM     // ? 0x4000
 
-	AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spriteylow_r16, spriteylow_w16) // Sprites Y
-	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
+	AM_RANGE(0xd00000, 0xd005ff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spriteylow_r16, spriteylow_w16) // Sprites Y
+	AM_RANGE(0xd00600, 0xd00607) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritectrl_r16, spritectrl_w16)
 
-	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_DEVREADWRITE("spritegen", seta001_device, spritecode_r16, spritecode_w16) // Sprites Code + X + Attr
 
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM // RAM
 ADDRESS_MAP_END
@@ -3171,7 +3165,7 @@ WRITE8_MEMBER(seta_state::calibr50_soundlatch2_w)
 }
 
 static ADDRESS_MAP_START( calibr50_sub_map, AS_PROGRAM, 8, seta_state )
-	AM_RANGE(0x0000, 0x1fff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_r,seta_sound_w) // Sound
+	AM_RANGE(0x0000, 0x1fff) AM_DEVREADWRITE("x1snd", x1_010_device, read ,write) // Sound
 	AM_RANGE(0x4000, 0x4000) AM_READ(soundlatch_byte_r)             // From Main CPU
 	AM_RANGE(0x4000, 0x4000) AM_WRITE(sub_bankswitch_w)         // Bankswitching
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")                        // Banked ROM
@@ -3207,7 +3201,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( utoukond_sound_map, AS_PROGRAM, 8, seta_state )
 	AM_RANGE(0x0000, 0xdfff) AM_ROM
 	AM_RANGE(0xe000, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xffff) AM_DEVREADWRITE_LEGACY("x1snd", seta_sound_r,seta_sound_w)
+	AM_RANGE(0xf000, 0xffff) AM_DEVREADWRITE("x1snd", x1_010_device, read, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( utoukond_sound_io_map, AS_IO, 8, seta_state )
@@ -10407,7 +10401,7 @@ ROM_START( zombraidp ) /* Prototype or test board version.  Data matches release
 	ROM_REGION( 0x400000, "gfx3", ROMREGION_ERASE00 )   /* Layer 2 */
 	ROM_LOAD16_BYTE( "u164_master_scn_2-0_e79c.u164", 0x000000, 0x080000, CRC(f8c89062) SHA1(08fd32b30923025b3769e56a8601b2ea1f85ebd1) ) /* These 6 roms dated 7/17/95 */
 	ROM_LOAD16_BYTE( "u166_master_scn_2-1_0b75.u166", 0x000001, 0x080000, CRC(4d7a72d5) SHA1(83b7ca4ea4c83fdab5be3c17d816dfd4033fb89c) )
-	ROM_LOAD16_BYTE( "u165_master_scn_2-3_be68.u165", 0x100000, 0x080000, CRC(8aaaef08) SHA1(12b9c8c170a4acf200e3fba45407a3e38f787926) )	
+	ROM_LOAD16_BYTE( "u165_master_scn_2-3_be68.u165", 0x100000, 0x080000, CRC(8aaaef08) SHA1(12b9c8c170a4acf200e3fba45407a3e38f787926) )
 	ROM_LOAD16_BYTE( "u167_master_scn_2-4_c515.u167", 0x100001, 0x080000, CRC(d22ff5c1) SHA1(c488a69c9a241e1ca2119264bf879140d16fe69f) )
 	ROM_LOAD16_BYTE( "u152_master_scn_2-2_c00e.u152", 0x200000, 0x080000, CRC(0870ad58) SHA1(20e076fa665c24db0e316598a0a5d7fae9fc2f2a) )
 	ROM_LOAD16_BYTE( "u153_master_scn_2-5_e1da.u153", 0x300000, 0x080000, CRC(814ac66a) SHA1(1fd13a0bf73b9bdede82a865789413308d989c3a) )
@@ -10452,7 +10446,7 @@ ROM_START( zombraidpj ) /* Prototype or test board version.  Data matches releas
 	ROM_REGION( 0x400000, "gfx3", ROMREGION_ERASE00 )   /* Layer 2 */
 	ROM_LOAD16_BYTE( "u164_master_scn_2-0_e79c.u164", 0x000000, 0x080000, CRC(f8c89062) SHA1(08fd32b30923025b3769e56a8601b2ea1f85ebd1) ) /* These 6 roms dated 7/17/95 */
 	ROM_LOAD16_BYTE( "u166_master_scn_2-1_0b75.u166", 0x000001, 0x080000, CRC(4d7a72d5) SHA1(83b7ca4ea4c83fdab5be3c17d816dfd4033fb89c) )
-	ROM_LOAD16_BYTE( "u165_master_scn_2-3_be68.u165", 0x100000, 0x080000, CRC(8aaaef08) SHA1(12b9c8c170a4acf200e3fba45407a3e38f787926) )	
+	ROM_LOAD16_BYTE( "u165_master_scn_2-3_be68.u165", 0x100000, 0x080000, CRC(8aaaef08) SHA1(12b9c8c170a4acf200e3fba45407a3e38f787926) )
 	ROM_LOAD16_BYTE( "u167_master_scn_2-4_c515.u167", 0x100001, 0x080000, CRC(d22ff5c1) SHA1(c488a69c9a241e1ca2119264bf879140d16fe69f) )
 	ROM_LOAD16_BYTE( "u152_master_scn_2-2_c00e.u152", 0x200000, 0x080000, CRC(0870ad58) SHA1(20e076fa665c24db0e316598a0a5d7fae9fc2f2a) )
 	ROM_LOAD16_BYTE( "u153_master_scn_2-5_e1da.u153", 0x300000, 0x080000, CRC(814ac66a) SHA1(1fd13a0bf73b9bdede82a865789413308d989c3a) )

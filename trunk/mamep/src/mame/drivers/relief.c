@@ -41,25 +41,6 @@ void relief_state::update_interrupts()
 
 /*************************************
  *
- *  Video controller access
- *
- *************************************/
-
-READ16_MEMBER(relief_state::relief_atarivc_r)
-{
-	return atarivc_r(*machine().primary_screen, offset);
-}
-
-
-WRITE16_MEMBER(relief_state::relief_atarivc_w)
-{
-	atarivc_w(*machine().primary_screen, offset, data, mem_mask);
-}
-
-
-
-/*************************************
- *
  *  Initialization
  *
  *************************************/
@@ -67,7 +48,6 @@ WRITE16_MEMBER(relief_state::relief_atarivc_w)
 MACHINE_RESET_MEMBER(relief_state,relief)
 {
 	atarigen_state::machine_reset();
-	atarivc_reset(*machine().primary_screen, m_atarivc_eof_data, 2);
 
 	m_oki->set_bank_base(0);
 	m_ym2413_volume = 15;
@@ -86,7 +66,6 @@ MACHINE_RESET_MEMBER(relief_state,relief)
 READ16_MEMBER(relief_state::special_port2_r)
 {
 	int result = ioport("260010")->read();
-	if (m_cpu_to_sound_ready) result ^= 0x0020;
 	if (!(result & 0x0080) || get_hblank(*machine().primary_screen)) result ^= 0x0001;
 	return result;
 }
@@ -148,13 +127,13 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, relief_state )
 	AM_RANGE(0x260012, 0x260013) AM_READ_PORT("260012")
 	AM_RANGE(0x2a0000, 0x2a0001) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM_WRITE(paletteram_666_w) AM_SHARE("paletteram")
-	AM_RANGE(0x3effc0, 0x3effff) AM_READWRITE(relief_atarivc_r, relief_atarivc_w) AM_SHARE("atarivc_data")
-	AM_RANGE(0x3f0000, 0x3f1fff) AM_RAM_WRITE(playfield2_latched_msb_w) AM_SHARE("playfield2")
-	AM_RANGE(0x3f2000, 0x3f3fff) AM_RAM_WRITE(playfield_latched_lsb_w) AM_SHARE("playfield")
-	AM_RANGE(0x3f4000, 0x3f5fff) AM_RAM_WRITE(playfield_dual_upper_w) AM_SHARE("playfield_up")
+	AM_RANGE(0x3effc0, 0x3effff) AM_DEVREADWRITE("vad", atari_vad_device, control_read, control_write)
+	AM_RANGE(0x3f0000, 0x3f1fff) AM_RAM_DEVWRITE("vad", atari_vad_device, playfield2_latched_msb_w) AM_SHARE("vad:playfield2")
+	AM_RANGE(0x3f2000, 0x3f3fff) AM_RAM_DEVWRITE("vad", atari_vad_device, playfield_latched_lsb_w) AM_SHARE("vad:playfield")
+	AM_RANGE(0x3f4000, 0x3f5fff) AM_RAM_DEVWRITE("vad", atari_vad_device, playfield_upper_w) AM_SHARE("vad:playfield_ext")
 	AM_RANGE(0x3f6000, 0x3f67ff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
 	AM_RANGE(0x3f6800, 0x3f8eff) AM_RAM
-	AM_RANGE(0x3f8f00, 0x3f8f7f) AM_RAM AM_SHARE("atarivc_eof")
+	AM_RANGE(0x3f8f00, 0x3f8f7f) AM_RAM AM_SHARE("vad:eof")
 	AM_RANGE(0x3f8f80, 0x3f8fff) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
 	AM_RANGE(0x3f9000, 0x3fffff) AM_RAM
 ADDRESS_MAP_END
@@ -222,7 +201,7 @@ static INPUT_PORTS_START( relief )
 
 	PORT_START("260010")    /* 260010 */
 	PORT_BIT( 0x001f, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )   /* tested before writing to 260040 */
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_CUSTOM ) PORT_VBLANK("screen")
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -293,6 +272,10 @@ static MACHINE_CONFIG_START( relief, relief_state )
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_GFXDECODE(relief)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_ATARI_VAD_ADD("vad", "screen", WRITELINE(atarigen_state, scanline_int_write_line))
+	MCFG_ATARI_VAD_PLAYFIELD(relief_state, get_playfield_tile_info)
+	MCFG_ATARI_VAD_PLAYFIELD2(relief_state, get_playfield2_tile_info)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	/* note: these parameters are from published specs, not derived */

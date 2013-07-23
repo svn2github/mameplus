@@ -31,6 +31,7 @@
 
 #include "emu.h"
 #include "video/ygv608.h"
+#include "tilelgcy.h"
 
 #define _ENABLE_SPRITES
 #define _ENABLE_SCROLLX
@@ -117,6 +118,7 @@ static TILEMAP_MAPPER( get_tile_offset )
 
 static TILE_GET_INFO( get_tile_info_A_8 )
 {
+	running_machine &machine = device.machine();
 	// extract row,col packed into tile_index
 	int             col = tile_index >> 6;
 	int             row = tile_index & 0x3f;
@@ -210,6 +212,8 @@ static TILE_GET_INFO( get_tile_info_A_8 )
 
 static TILE_GET_INFO( get_tile_info_B_8 )
 {
+	running_machine &machine = device.machine();
+
 	// extract row,col packed into tile_index
 	int             col = tile_index >> 6;
 	int             row = tile_index & 0x3f;
@@ -307,6 +311,8 @@ static TILE_GET_INFO( get_tile_info_B_8 )
 
 static TILE_GET_INFO( get_tile_info_A_16 )
 {
+	running_machine &machine = device.machine();
+
 	// extract row,col packed into tile_index
 	int             col = tile_index >> 6;
 	int             row = tile_index & 0x3f;
@@ -396,6 +402,8 @@ static TILE_GET_INFO( get_tile_info_A_16 )
 
 static TILE_GET_INFO( get_tile_info_B_16 )
 {
+	running_machine &machine = device.machine();
+
 	// extract row,col packed into tile_index
 	int             col = tile_index >> 6;
 	int             row = tile_index & 0x3f;

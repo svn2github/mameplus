@@ -46,11 +46,9 @@ Note about version levels using Mutant Fighter as the example:
 #include "cpu/h6280/h6280.h"
 #include "includes/cninja.h"
 #include "includes/decocrpt.h"
-#include "includes/decoprot.h"
 #include "sound/2203intf.h"
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
-#include "video/decocomn.h"
 
 WRITE16_MEMBER(cninja_state::cninja_sound_w)
 {
@@ -124,23 +122,6 @@ WRITE16_MEMBER(cninja_state::cninja_irq_w)
 	logerror("%08x:  Unmapped IRQ write %d %04x\n", space.device().safe_pc(), offset, data);
 }
 
-READ16_MEMBER(cninja_state::robocop2_prot_r)
-{
-	switch (offset << 1)
-	{
-		case 0x41a: /* Player 1 & 2 input ports */
-			return ioport("IN0")->read();
-		case 0x320: /* Coins */
-			return ioport("IN1")->read();
-		case 0x4e6: /* Dip switches */
-			return ioport("DSW")->read();
-		case 0x504: /* PC: 6b6.  b4, 2c, 36 written before read */
-			logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", space.device().safe_pc(), offset);
-			return 0x84;
-	}
-	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", space.device().safe_pc(), offset);
-	return 0;
-}
 
 /**********************************************************************************/
 
@@ -155,6 +136,24 @@ WRITE16_MEMBER(cninja_state::cninja_pf34_control_w)
 {
 	machine().primary_screen->update_partial(machine().primary_screen->vpos());
 	m_deco_tilegen2->pf_control_w(space, offset, data, mem_mask);
+}
+
+
+READ16_MEMBER( cninja_state::cninja_protection_region_0_104_r )
+{
+	int real_address = 0 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	UINT16 data = m_deco104->read_data( deco146_addr, mem_mask, cs );
+	return data;
+}
+
+WRITE16_MEMBER( cninja_state::cninja_protection_region_0_104_w )
+{
+	int real_address = 0 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	m_deco104->write_data( space, deco146_addr, data, mem_mask, cs );
 }
 
 
@@ -175,12 +174,15 @@ static ADDRESS_MAP_START( cninja_map, AS_PROGRAM, 16, cninja_state )
 
 	AM_RANGE(0x184000, 0x187fff) AM_RAM AM_SHARE("ram")
 	AM_RANGE(0x190000, 0x190007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
-	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x1a4000, 0x1a47ff) AM_RAM AM_SHARE("spriteram")           /* Sprites */
 	AM_RANGE(0x1b4000, 0x1b4001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
-	AM_RANGE(0x1bc000, 0x1bc0ff) AM_WRITE_LEGACY(deco16_104_cninja_prot_w) AM_SHARE("prot16ram")        /* Protection writes */
-	AM_RANGE(0x1bc000, 0x1bcfff) AM_READ_LEGACY(deco16_104_cninja_prot_r) AM_SHARE("prot16ram")     /* Protection device */
+//  AM_RANGE(0x1bc000, 0x1bc0ff) AM_WRITE_LEGACY(deco16_104_cninja_prot_w) AM_SHARE("prot16ram")        /* Protection writes */
+//  AM_RANGE(0x1bc000, 0x1bcfff) AM_READ_LEGACY(deco16_104_cninja_prot_r) AM_SHARE("prot16ram")     /* Protection device */
+	AM_RANGE(0x1bc000, 0x1bffff) AM_READWRITE(cninja_protection_region_0_104_r,cninja_protection_region_0_104_w) AM_SHARE("prot16ram") /* Protection device */
+
+
 
 	AM_RANGE(0x308000, 0x308fff) AM_WRITENOP /* Bootleg only */
 ADDRESS_MAP_END
@@ -203,17 +205,61 @@ static ADDRESS_MAP_START( cninjabl_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
 	AM_RANGE(0x17ff22, 0x17ff23) AM_READ_PORT("DSW")
-	AM_RANGE(0x17ff28, 0x17ff29) AM_READ_PORT("IN1")
+	AM_RANGE(0x17ff28, 0x17ff29) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x17ff2a, 0x17ff2b) AM_WRITE(stoneage_sound_w)
-	AM_RANGE(0x17ff2c, 0x17ff2d) AM_READ_PORT("IN0")
+	AM_RANGE(0x17ff2c, 0x17ff2d) AM_READ_PORT("INPUTS")
 
 	AM_RANGE(0x180000, 0x187fff) AM_RAM // more ram on bootleg?
 
 	AM_RANGE(0x190000, 0x190007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
-	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x1b4000, 0x1b4001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
 ADDRESS_MAP_END
+
+READ16_MEMBER( cninja_state::sshangha_protection_region_8_146_r )
+{
+	int real_address = 0x1a0000 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	UINT16 data = m_deco146->read_data( deco146_addr, mem_mask, cs );
+	return data;
+}
+
+WRITE16_MEMBER( cninja_state::sshangha_protection_region_8_146_w )
+{
+	int real_address = 0x1a0000 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	m_deco146->write_data( space, deco146_addr, data, mem_mask, cs );
+}
+
+READ16_MEMBER( cninja_state::sshangha_protection_region_6_146_r )
+{
+//  UINT16 realdat = deco16_60_prot_r(space,offset&0x3ff,mem_mask);
+
+	int real_address = 0x198000 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	UINT16 data = m_deco146->read_data( deco146_addr, mem_mask, cs );
+
+
+//  if ((realdat & mem_mask) != (data & mem_mask))
+//      printf("returned %04x instead of %04x (real address %08x)\n", data, realdat, real_address);
+
+	return data;
+}
+
+WRITE16_MEMBER( cninja_state::sshangha_protection_region_6_146_w )
+{
+//  deco16_60_prot_w(space,offset&0x3ff,data,mem_mask);
+
+
+	int real_address = 0x198000 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	m_deco146->write_data( space, deco146_addr, data, mem_mask, cs );
+}
 
 static ADDRESS_MAP_START( edrandy_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
@@ -230,11 +276,15 @@ static ADDRESS_MAP_START( edrandy_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_SHARE("pf3_rowscroll")
 	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
-	AM_RANGE(0x188000, 0x189fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x188000, 0x189fff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x194000, 0x197fff) AM_RAM AM_SHARE("ram") /* Main ram */
-	AM_RANGE(0x198000, 0x1987ff) AM_READWRITE_LEGACY(deco16_60_prot_r, deco16_60_prot_w) AM_SHARE("prot16ram") /* Protection device */
-	AM_RANGE(0x199550, 0x199551) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
-	AM_RANGE(0x199750, 0x199751) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
+//  AM_RANGE(0x198000, 0x1987ff) AM_READWRITE_LEGACY(deco16_60_prot_r, deco16_60_prot_w) AM_SHARE("prot16ram") /* Protection device */
+//  AM_RANGE(0x199550, 0x199551) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
+//  AM_RANGE(0x199750, 0x199751) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
+	AM_RANGE(0x198000, 0x19bfff) AM_READWRITE(sshangha_protection_region_6_146_r,sshangha_protection_region_6_146_w) AM_SHARE("prot16ram") /* Protection device */
+//  AM_RANGE(0x198000, 0x1987ff) AM_READWRITE(sshangha_protection_region_6_146_r,sshangha_protection_region_6_146_w) AM_SHARE("prot16ram") /* Protection device */
+
+	AM_RANGE(0x1a0000, 0x1a3fff) AM_READWRITE(sshangha_protection_region_8_146_r,sshangha_protection_region_8_146_w)
 
 	AM_RANGE(0x1a4000, 0x1a4007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
 	AM_RANGE(0x1ac000, 0x1ac001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
@@ -260,26 +310,52 @@ static ADDRESS_MAP_START( robocop2_map, AS_PROGRAM, 16, cninja_state )
 
 	AM_RANGE(0x180000, 0x1807ff) AM_RAM AM_SHARE("spriteram")
 //  AM_RANGE(0x18c000, 0x18c0ff) AM_WRITE(cninja_loopback_w) /* Protection writes */
-	AM_RANGE(0x18c000, 0x18c7ff) AM_READ(robocop2_prot_r) /* Protection device */
-	AM_RANGE(0x18c064, 0x18c065) AM_WRITE(cninja_sound_w)
-	AM_RANGE(0x198000, 0x198001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
-	AM_RANGE(0x1a8000, 0x1a9fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
+//  AM_RANGE(0x18c000, 0x18c7ff) AM_DEVREAD("ioprot", deco146_device,robocop2_prot_r) /* Protection device */
+//  AM_RANGE(0x18c064, 0x18c065) AM_WRITE(cninja_sound_w)
+	AM_RANGE(0x18c000, 0x18ffff) AM_READWRITE(mutantf_protection_region_0_146_r,mutantf_protection_region_0_146_w)AM_SHARE("prot16ram") /* Protection device */
+
+
+AM_RANGE(0x198000, 0x198001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
+	AM_RANGE(0x1a8000, 0x1a9fff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x1b0000, 0x1b0007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
 	AM_RANGE(0x1b8000, 0x1bbfff) AM_RAM AM_SHARE("ram") /* Main ram */
-	AM_RANGE(0x1f0000, 0x1f0001) AM_DEVWRITE_LEGACY("deco_common", decocomn_priority_w)
+	AM_RANGE(0x1f0000, 0x1f0001) AM_DEVWRITE("deco_common", decocomn_device, priority_w)
 	AM_RANGE(0x1f8000, 0x1f8001) AM_READ_PORT("DSW3") /* Dipswitch #3 */
 ADDRESS_MAP_END
+
+
+
+
+READ16_MEMBER( cninja_state::mutantf_protection_region_0_146_r )
+{
+	int real_address = 0 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	UINT16 data = m_deco146->read_data( deco146_addr, mem_mask, cs );
+	return data;
+}
+
+WRITE16_MEMBER( cninja_state::mutantf_protection_region_0_146_w )
+{
+	int real_address = 0 + (offset *2);
+	int deco146_addr = BITSWAP32(real_address, /* NC */31,30,29,28,27,26,25,24,23,22,21,20,19,18, 13,12,11,/**/      17,16,15,14,    10,9,8, 7,6,5,4, 3,2,1,0) & 0x7fff;
+	UINT8 cs = 0;
+	m_deco146->write_data( space, deco146_addr, data, mem_mask, cs );
+}
+
+
 
 static ADDRESS_MAP_START( mutantf_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM
 	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x140000, 0x1407ff) AM_RAM AM_SHARE("spriteram2")
-	AM_RANGE(0x160000, 0x161fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
-	AM_RANGE(0x180000, 0x180001) AM_DEVWRITE_LEGACY("deco_common", decocomn_priority_w)
+	AM_RANGE(0x160000, 0x161fff) AM_RAM_DEVWRITE("deco_common", decocomn_device, nonbuffered_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x180000, 0x180001) AM_DEVWRITE("deco_common", decocomn_device, priority_w)
 	AM_RANGE(0x180002, 0x180003) AM_WRITENOP /* VBL irq ack */
-	AM_RANGE(0x1a0000, 0x1a07ff) AM_READWRITE_LEGACY(deco16_66_prot_r, deco16_66_prot_w) AM_SHARE("prot16ram") /* Protection device */
-	AM_RANGE(0x1c0000, 0x1c0001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) AM_DEVREAD_LEGACY("deco_common", decocomn_71_r)
+//  AM_RANGE(0x1a0000, 0x1a07ff) AM_READWRITE_LEGACY(deco16_66_prot_r, deco16_66_prot_w) AM_SHARE("prot16ram") /* Protection device */
+	AM_RANGE(0x1a0000, 0x1a3fff) AM_READWRITE(mutantf_protection_region_0_146_r,mutantf_protection_region_0_146_w)AM_SHARE("prot16ram") /* Protection device */
+	AM_RANGE(0x1c0000, 0x1c0001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) AM_DEVREAD("deco_common", decocomn_device, d_71_r)
 	AM_RANGE(0x1e0000, 0x1e0001) AM_DEVWRITE("spriteram2", buffered_spriteram16_device, write)
 
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(cninja_pf12_control_w)
@@ -377,10 +453,10 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( edrandy )
 
-	PORT_START("IN0")
+	PORT_START("INPUTS")
 	DATAEAST_2BUTTON
 
-	PORT_START("IN1")
+	PORT_START("SYSTEM")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -431,10 +507,10 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( cninja )
 
-	PORT_START("IN0")
+	PORT_START("INPUTS")
 	DATAEAST_2BUTTON
 
-	PORT_START("IN1")
+	PORT_START("SYSTEM")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -485,7 +561,7 @@ static INPUT_PORTS_START( cninjau )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( robocop2 )
-	PORT_START("IN0")
+	PORT_START("INPUTS")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
@@ -503,7 +579,7 @@ static INPUT_PORTS_START( robocop2 )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START("IN1")
+	PORT_START("SYSTEM")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -568,10 +644,10 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( mutantf )
 
-	PORT_START("IN0")
+	PORT_START("INPUTS")
 	DATAEAST_2BUTTON
 
-	PORT_START("IN1")
+	PORT_START("SYSTEM")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -847,8 +923,6 @@ void cninja_state::machine_start()
 {
 	save_item(NAME(m_scanline));
 	save_item(NAME(m_irq_mask));
-
-	decoprot_reset(machine());
 }
 
 void cninja_state::machine_reset()
@@ -907,6 +981,9 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_pri_callback(*device, cninja_pri_callback);
 
+	MCFG_DECO104_ADD("ioprot104")
+	MCFG_DECO146_SET_USE_MAGIC_ADDRESS_XOR
+
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
@@ -962,6 +1039,10 @@ static MACHINE_CONFIG_START( stoneage, cninja_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_pri_callback(*device, cninja_pri_callback);
+
+	MCFG_DECO104_ADD("ioprot104")
+	MCFG_DECO146_SET_USE_MAGIC_ADDRESS_XOR
+
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1056,6 +1137,8 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_pri_callback(*device, cninja_pri_callback);
 
+	MCFG_DECO146_ADD("ioprot")
+
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
@@ -1109,6 +1192,10 @@ static MACHINE_CONFIG_START( robocop2, cninja_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_pri_callback(*device, cninja_pri_callback);
+
+	MCFG_DECO146_ADD("ioprot")
+	MCFG_DECO146_SET_USE_MAGIC_ADDRESS_XOR
+
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1170,6 +1257,7 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 	MCFG_DEVICE_ADD("spritegen2", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 4);
 
+	MCFG_DECO146_ADD("ioprot")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

@@ -15,39 +15,38 @@
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m6809/m6809.h"
-#include "video/konicdev.h"
 #include "includes/konamipt.h"
 #include "includes/bottom9.h"
 
 INTERRUPT_GEN_MEMBER(bottom9_state::bottom9_interrupt)
 {
-	if (k052109_is_irq_enabled(m_k052109))
+	if (m_k052109->is_irq_enabled())
 		device.execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(bottom9_state::k052109_051960_r)
 {
-	if (k052109_get_rmrd_line(m_k052109) == CLEAR_LINE)
+	if (m_k052109->get_rmrd_line() == CLEAR_LINE)
 	{
 		if (offset >= 0x3800 && offset < 0x3808)
-			return k051937_r(m_k051960, space, offset - 0x3800);
+			return m_k051960->k051937_r(space, offset - 0x3800);
 		else if (offset < 0x3c00)
-			return k052109_r(m_k052109, space, offset);
+			return m_k052109->read(space, offset);
 		else
-			return k051960_r(m_k051960, space, offset - 0x3c00);
+			return m_k051960->k051960_r(space, offset - 0x3c00);
 	}
 	else
-		return k052109_r(m_k052109, space, offset);
+		return m_k052109->read(space, offset);
 }
 
 WRITE8_MEMBER(bottom9_state::k052109_051960_w)
 {
 	if (offset >= 0x3800 && offset < 0x3808)
-		k051937_w(m_k051960, space, offset - 0x3800, data);
+		m_k051960->k051937_w(space, offset - 0x3800, data);
 	else if (offset < 0x3c00)
-		k052109_w(m_k052109, space, offset, data);
+		m_k052109->write(space, offset, data);
 	else
-		k051960_w(m_k051960, space, offset - 0x3c00, data);
+		m_k051960->k051960_w(space, offset - 0x3c00, data);
 }
 
 READ8_MEMBER(bottom9_state::bottom9_bankedram1_r)
@@ -57,9 +56,9 @@ READ8_MEMBER(bottom9_state::bottom9_bankedram1_r)
 	else
 	{
 		if (m_zoomreadroms)
-			return k051316_rom_r(m_k051316, space, offset);
+			return m_k051316->rom_r(space, offset);
 		else
-			return k051316_r(m_k051316, space, offset);
+			return m_k051316->read(space, offset);
 	}
 }
 
@@ -68,7 +67,7 @@ WRITE8_MEMBER(bottom9_state::bottom9_bankedram1_w)
 	if (m_k052109_selected)
 		k052109_051960_w(space, offset, data);
 	else
-		k051316_w(m_k051316, space, offset, data);
+		m_k051316->write(space, offset, data);
 }
 
 READ8_MEMBER(bottom9_state::bottom9_bankedram2_r)
@@ -111,7 +110,7 @@ WRITE8_MEMBER(bottom9_state::bottom9_1f90_w)
 	coin_counter_w(machine(), 1, data & 0x02);
 
 	/* bit 2 = enable char ROM reading through the video RAM */
-	k052109_set_rmrd_line(m_k052109, (data & 0x04) ? ASSERT_LINE : CLEAR_LINE);
+	m_k052109->set_rmrd_line((data & 0x04) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* bit 3 = disable video */
 	m_video_enable = ~data & 0x08;
@@ -165,7 +164,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, bottom9_state )
 	AM_RANGE(0x1fd2, 0x1fd2) AM_READ_PORT("P2")
 	AM_RANGE(0x1fd3, 0x1fd3) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1fe0, 0x1fe0) AM_READ_PORT("DSW2")
-	AM_RANGE(0x1ff0, 0x1fff) AM_DEVWRITE_LEGACY("k051316", k051316_ctrl_w)
+	AM_RANGE(0x1ff0, 0x1fff) AM_DEVWRITE("k051316", k051316_device, ctrl_w)
 	AM_RANGE(0x2000, 0x27ff) AM_READWRITE(bottom9_bankedram2_r, bottom9_bankedram2_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 	AM_RANGE(0x4000, 0x5fff) AM_RAM

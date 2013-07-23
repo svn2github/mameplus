@@ -187,7 +187,6 @@ TODO!
 #include "sound/2610intf.h"
 #include "sound/okim6295.h"
 #include "video/hd63484.h"
-#include "video/taitoic.h"
 #include "includes/taito_b.h"
 
 WRITE8_MEMBER(taitob_state::bankswitch_w)
@@ -3082,28 +3081,28 @@ ROM_START( tetrist )
 	/* empty */
 ROM_END
 
-ROM_START( tetrista )
+ROM_START( tetrista ) // Master of Weapon conversion
 	ROM_REGION( 0x80000, "maincpu", 0 )     /* 512k for 68000 code */
-	ROM_LOAD16_BYTE( "c35-04.bin", 0x000000, 0x020000, CRC(fa6e42ff) SHA1(1c586243aaf57b46338f22ae0fcdba2897ccb98a) )
-	ROM_LOAD16_BYTE( "c35-03.bin", 0x000001, 0x020000, CRC(aebd8539) SHA1(5230c0513581513ba971da55c04da8ba451a16e2) )
-	ROM_LOAD16_BYTE( "c35-02.bin", 0x040000, 0x020000, CRC(128e9927) SHA1(227b4a43074b66c9ba6f4497eb329fbcc5e3f52b) ) // ==c12-05
-	ROM_LOAD16_BYTE( "c35-01.bin", 0x040001, 0x020000, CRC(5da7a319) SHA1(0c903b3274f6eafe24c8b5ef476dc5e8e3131b20) ) // ==c12-04
+	ROM_LOAD16_BYTE( "c35-04.33", 0x000000, 0x020000, CRC(fa6e42ff) SHA1(1c586243aaf57b46338f22ae0fcdba2897ccb98a) )
+	ROM_LOAD16_BYTE( "c35-03.24", 0x000001, 0x020000, CRC(aebd8539) SHA1(5230c0513581513ba971da55c04da8ba451a16e2) )
+	ROM_LOAD16_BYTE( "c35-02.34", 0x040000, 0x020000, CRC(128e9927) SHA1(227b4a43074b66c9ba6f4497eb329fbcc5e3f52b) ) // ==c12-05
+	ROM_LOAD16_BYTE( "c35-01.25", 0x040001, 0x020000, CRC(5da7a319) SHA1(0c903b3274f6eafe24c8b5ef476dc5e8e3131b20) ) // ==c12-04
 
 	ROM_REGION( 0x1c000, "audiocpu", 0 )     /* 64k for Z80 code */
-	ROM_LOAD( "c35-05.bin", 0x00000, 0x4000, CRC(785c63fb) SHA1(13db76d8ce52ff21bfda0866c9c6b52147c6fc9d) )
+	ROM_LOAD( "c35-05.30", 0x00000, 0x4000, CRC(785c63fb) SHA1(13db76d8ce52ff21bfda0866c9c6b52147c6fc9d) )
 	ROM_CONTINUE(           0x10000, 0xc000 ) /* banked stuff */
 
 	ROM_REGION( 0x100000, "gfx1", ROMREGION_ERASE00 )
 	ROM_REGION( 0x100000, "gfx2", 0 )
-	/* these roms (present on the original board) are actually from from master of weapon
+	/* these roms (present on the original board) are actually from Master of Weapon (Japan)
 	 b72-01.rom              mow-m01.rom             IDENTICAL
-	 b72-02.rom              mow-m02.rom             99.999809% (maybe one of them is bad?)
+	 b72-02.rom              mow-m02.rom             IDENTICAL
 	  the game doesn't use any tiles from here but the roms must be present on the board to avoid
 	  tile 0 being solid and obscuring the bitmap (however if we load them in the correct region
 	  unwanted tiles from here are shown after gameover which is wrong)
 	 */
-	ROM_LOAD( "b72-02.rom", 0x000000, 0x080000, CRC(843444eb) SHA1(2b466045f882996c80e0090009ee957e11d32825) )
-	ROM_LOAD( "b72-01.rom", 0x080000, 0x080000, CRC(a24ac26e) SHA1(895715a2bb0cb15334cba2283bd228b4fc08cd0c) )
+	ROM_LOAD( "b72-02.6", 0x000000, 0x080000, CRC(843444eb) SHA1(2b466045f882996c80e0090009ee957e11d32825) )
+	ROM_LOAD( "b72-01.5", 0x080000, 0x080000, CRC(a24ac26e) SHA1(895715a2bb0cb15334cba2283bd228b4fc08cd0c) )
 ROM_END
 
 ROM_START( hitice ) /* 4 Player version */
@@ -3436,7 +3435,7 @@ ROM_START( masterw )
 	ROM_CONTINUE(           0x10000, 0xc000 ) /* banked stuff */
 
 	ROM_REGION( 0x100000, "gfx1", 0 )
-	ROM_LOAD( "b72-02.rom", 0x000000, 0x080000, CRC(c519f65a) SHA1(f40cd7e09fa50abdafa95b7f9edf229e94e53d6f) )
+	ROM_LOAD( "b72-02.6", 0x000000, 0x080000, CRC(843444eb) SHA1(2b466045f882996c80e0090009ee957e11d32825) )
 	ROM_LOAD( "b72-01.5", 0x080000, 0x080000, CRC(a24ac26e) SHA1(895715a2bb0cb15334cba2283bd228b4fc08cd0c) )
 ROM_END
 
@@ -3452,7 +3451,7 @@ ROM_START( masterwu )
 	ROM_CONTINUE(           0x10000, 0xc000 ) /* banked stuff */
 
 	ROM_REGION( 0x100000, "gfx1", 0 )
-	ROM_LOAD( "b72-02.rom", 0x000000, 0x080000, CRC(c519f65a) SHA1(f40cd7e09fa50abdafa95b7f9edf229e94e53d6f) )
+	ROM_LOAD( "b72-02.6", 0x000000, 0x080000, CRC(843444eb) SHA1(2b466045f882996c80e0090009ee957e11d32825) )
 	ROM_LOAD( "b72-01.5", 0x080000, 0x080000, CRC(a24ac26e) SHA1(895715a2bb0cb15334cba2283bd228b4fc08cd0c) )
 ROM_END
 

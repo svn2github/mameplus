@@ -188,7 +188,7 @@ void ui_menu::reset(ui_menu_reset_options options)
 	else if (parent->is_special_main_menu())
 		item_append(_("Exit"), NULL, 0, NULL);
 	else
-		item_append(_("Return to Prior Menu"), NULL, 0, NULL);
+		item_append(_("Return to Previous Menu"), NULL, 0, NULL);
 }
 
 

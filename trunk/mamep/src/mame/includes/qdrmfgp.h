@@ -1,6 +1,8 @@
 #include "machine/ataintf.h"
 #include "sound/k054539.h"
 #include "machine/k053252.h"
+#include "video/konami_helper.h"
+#include "video/k054156_k054157_k056832.h"
 
 class qdrmfgp_state : public driver_device
 {

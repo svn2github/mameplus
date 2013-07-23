@@ -157,7 +157,7 @@ endif
 
 #-------------------------------------------------
 # Excellent Systems ADPCM sound chip
-#@src/emu/sound/es8712.h,SOUNDS += ES8712 
+#@src/emu/sound/es8712.h,SOUNDS += ES8712
 #-------------------------------------------------
 
 ifneq ($(filter ES8712,$(SOUNDS)),)
@@ -470,9 +470,9 @@ endif
 #@src/emu/sound/qs1000.h,SOUNDS += QS1000
 #-------------------------------------------------
 
-#ifneq ($(filter QS1000,$(SOUNDS)),)
+ifneq ($(filter QS1000,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/qs1000.o
-#endif
+endif
 
 
 
@@ -820,7 +820,7 @@ SOUNDOBJS += $(SOUNDOBJ)/3812intf.o $(SOUNDOBJ)/fmopl.o $(SOUNDOBJ)/ymdeltat.o
 endif
 
 ifneq ($(filter YM3526,$(SOUNDS)),)
-SOUNDOBJS += $(SOUNDOBJ)/3526intf.o $(SOUNDOBJ)/fmopl.o
+SOUNDOBJS += $(SOUNDOBJ)/3526intf.o $(SOUNDOBJ)/fmopl.o $(SOUNDOBJ)/ymdeltat.o
 endif
 
 ifneq ($(filter Y8950,$(SOUNDS)),)

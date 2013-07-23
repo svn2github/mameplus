@@ -56,8 +56,8 @@ TODO:
   * DMA table? can't find any
   * data in transparent pen? nope
   * color bit 15? nope
-- not sure if sprite priorities are completely right
-  * parallax scrolling clouds in rdft intro (when jet flies towards screen) is wrong compared to pcb
+  * writes to $100/104/108 might be interesting...
+- not sure if layer priorities are completely right
 
 */
 
@@ -854,6 +854,18 @@ Notes:
 #include "machine/seibuspi.h"
 #include "includes/seibuspi.h"
 
+// default values written to CRTC (note: SYS386F does not have this chip)
+#define PIXEL_CLOCK  (XTAL_28_63636MHz/4)
+
+#define SPI_HTOTAL   (448)
+#define SPI_HBEND    (0)
+#define SPI_HBSTART  (320)
+
+#define SPI_VTOTAL   (296)
+#define SPI_VBEND    (0)
+#define SPI_VBSTART  (240) /* actually 253, but visible area is 240 lines */
+
+
 #define ENABLE_SPEEDUP_HACKS 1 /* speed up at idle loops */
 
 
@@ -870,9 +882,15 @@ READ8_MEMBER(seibuspi_state::sound_fifo_status_r)
 
 READ8_MEMBER(seibuspi_state::spi_status_r)
 {
-	// d0: unknown status
+	// d0: unknown status, waits for it to be set, video/dma related?
 	// other bits: unused?
 	return 0x01;
+}
+
+READ8_MEMBER(seibuspi_state::spi_ds2404_unknown_r)
+{
+	// d0, d1, d2: unknown, waits for it to be cleared
+	return 0x00;
 }
 
 WRITE8_MEMBER(seibuspi_state::eeprom_w)
@@ -950,8 +968,8 @@ WRITE32_MEMBER(seibuspi_state::ejsakura_input_select_w)
 static ADDRESS_MAP_START( base_map, AS_PROGRAM, 32, seibuspi_state )
 	AM_RANGE(0x00000414, 0x00000417) AM_WRITENOP // bg gfx decryption key, see machine/seibuspi.c
 	AM_RANGE(0x00000418, 0x0000041b) AM_READWRITE(spi_layer_bank_r, spi_layer_bank_w)
-	AM_RANGE(0x0000041c, 0x0000041f) AM_WRITE(spi_layer_enable_w)
-	AM_RANGE(0x00000420, 0x0000042b) AM_RAM AM_SHARE("scrollram")
+	AM_RANGE(0x0000041c, 0x0000041f) AM_WRITE(spi_layer_enable_w) // seibu crtc
+	AM_RANGE(0x00000420, 0x0000042b) AM_RAM AM_SHARE("scrollram") // seibu crtc
 	AM_RANGE(0x00000480, 0x00000483) AM_WRITE(tilemap_dma_start_w)
 	AM_RANGE(0x00000484, 0x00000487) AM_WRITE(palette_dma_start_w)
 	AM_RANGE(0x00000490, 0x00000493) AM_WRITE(video_dma_length_w)
@@ -966,20 +984,16 @@ static ADDRESS_MAP_START( base_map, AS_PROGRAM, 32, seibuspi_state )
 	AM_RANGE(0x0000054c, 0x0000054f) AM_WRITENOP // RISE10/11 sprite decryption key, see machine/seibuspi.c
 	AM_RANGE(0x00000560, 0x00000563) AM_WRITE16(sprite_dma_start_w, 0xffff0000)
 	AM_RANGE(0x00000600, 0x00000603) AM_READ8(spi_status_r, 0x000000ff)
-	AM_RANGE(0x00000600, 0x00000603) AM_WRITENOP // ?
 	AM_RANGE(0x00000604, 0x00000607) AM_READ_PORT("INPUTS")
 	AM_RANGE(0x00000608, 0x0000060b) AM_READ_PORT("UNKNOWN")
 	AM_RANGE(0x0000060c, 0x0000060f) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x00000684, 0x00000687) AM_WRITENOP // ?
-	AM_RANGE(0x00000688, 0x0000068b) AM_NOP // ?
-	AM_RANGE(0x00000690, 0x00000693) AM_WRITENOP // ?
-	AM_RANGE(0x00000400, 0x000007ff) AM_UNMAP
 	AM_RANGE(0x00000000, 0x0003ffff) AM_RAM AM_SHARE("mainram")
 	AM_RANGE(0x00200000, 0x003fffff) AM_ROM AM_SHARE("share1")
 	AM_RANGE(0xffe00000, 0xffffffff) AM_ROM AM_REGION("maincpu", 0) AM_SHARE("share1") // ROM location in real-mode
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( spi_map, AS_PROGRAM, 32, seibuspi_state )
+	AM_RANGE(0x00000600, 0x00000603) AM_WRITENOP // ?
 	AM_RANGE(0x00000680, 0x00000683) AM_DEVREAD8("soundfifo2", fifo7200_device, data_byte_r, 0x000000ff)
 	AM_RANGE(0x00000680, 0x00000683) AM_DEVWRITE8("soundfifo1", fifo7200_device, data_byte_w, 0x000000ff)
 	AM_RANGE(0x00000684, 0x00000687) AM_READ8(sound_fifo_status_r, 0x000000ff)
@@ -990,6 +1004,7 @@ static ADDRESS_MAP_START( spi_map, AS_PROGRAM, 32, seibuspi_state )
 	AM_RANGE(0x000006d4, 0x000006d7) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_data_w, 0x000000ff)
 	AM_RANGE(0x000006d8, 0x000006db) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_clk_w, 0x000000ff)
 	AM_RANGE(0x000006dc, 0x000006df) AM_DEVREAD8("ds2404", ds2404_device, ds2404_data_r, 0x000000ff)
+	AM_RANGE(0x000006dc, 0x000006df) AM_READ8(spi_ds2404_unknown_r, 0x0000ff00)
 	AM_RANGE(0x00a00000, 0x013fffff) AM_ROM AM_REGION("sound01", 0)
 	AM_IMPORT_FROM( base_map )
 ADDRESS_MAP_END
@@ -998,10 +1013,13 @@ static ADDRESS_MAP_START( sxx2e_map, AS_PROGRAM, 32, seibuspi_state )
 	AM_RANGE(0x00000680, 0x00000683) AM_READ8(sb_coin_r, 0x000000ff)
 	AM_RANGE(0x00000680, 0x00000683) AM_DEVWRITE8("soundfifo1", fifo7200_device, data_byte_w, 0x000000ff)
 	AM_RANGE(0x00000684, 0x00000687) AM_READ8(sound_fifo_status_r, 0x000000ff)
+	AM_RANGE(0x00000688, 0x0000068b) AM_NOP // ?
+	AM_RANGE(0x0000068c, 0x0000068f) AM_WRITENOP
 	AM_RANGE(0x000006d0, 0x000006d3) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_1w_reset_w, 0x000000ff)
 	AM_RANGE(0x000006d4, 0x000006d7) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_data_w, 0x000000ff)
 	AM_RANGE(0x000006d8, 0x000006db) AM_DEVWRITE8("ds2404", ds2404_device, ds2404_clk_w, 0x000000ff)
 	AM_RANGE(0x000006dc, 0x000006df) AM_DEVREAD8("ds2404", ds2404_device, ds2404_data_r, 0x000000ff)
+	AM_RANGE(0x000006dc, 0x000006df) AM_READ8(spi_ds2404_unknown_r, 0x0000ff00)
 	AM_IMPORT_FROM( base_map )
 ADDRESS_MAP_END
 
@@ -1009,7 +1027,9 @@ static ADDRESS_MAP_START( sxx2f_map, AS_PROGRAM, 32, seibuspi_state )
 	AM_RANGE(0x00000680, 0x00000683) AM_READ8(sb_coin_r, 0x000000ff)
 	AM_RANGE(0x00000680, 0x00000683) AM_DEVWRITE8("soundfifo1", fifo7200_device, data_byte_w, 0x000000ff)
 	AM_RANGE(0x00000684, 0x00000687) AM_READ8(sound_fifo_status_r, 0x000000ff)
+	AM_RANGE(0x00000688, 0x0000068b) AM_NOP // ?
 	AM_RANGE(0x0000068c, 0x0000068f) AM_WRITE8(spi_layerbanks_eeprom_w, 0x00ff0000)
+	AM_RANGE(0x00000690, 0x00000693) AM_WRITENOP // ?
 	AM_IMPORT_FROM( base_map )
 ADDRESS_MAP_END
 
@@ -1794,7 +1814,7 @@ void seibuspi_state::machine_start()
 
 	// use this to determine the region code when adding a new SPI cartridge clone set
 	logerror("Game region code: %02X\n", memregion("maincpu")->base()[0x1ffffc]);
-	
+
 	// savestates
 	save_item(NAME(m_z80_prg_transfer_pos));
 	save_item(NAME(m_z80_lastbank));
@@ -1836,16 +1856,12 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(54)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(64*8, 32*8)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
+	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, SPI_HTOTAL, SPI_HBEND, SPI_HBSTART, SPI_VTOTAL, SPI_VBEND, SPI_VBSTART)
+	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_spi)
 
 	MCFG_GFXDECODE(spi)
 	MCFG_PALETTE_LENGTH(6144)
-
-	MCFG_VIDEO_START_OVERRIDE(seibuspi_state, spi)
-	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_spi)
+	MCFG_PALETTE_INIT_OVERRIDE(driver_device, all_black)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1938,16 +1954,12 @@ static MACHINE_CONFIG_START( sys386i, seibuspi_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(54)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(64*8, 32*8)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1)
+	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, SPI_HTOTAL, SPI_HBEND, SPI_HBSTART, SPI_VTOTAL, SPI_VBEND, SPI_VBSTART)
+	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_spi)
 
 	MCFG_GFXDECODE(spi)
 	MCFG_PALETTE_LENGTH(6144)
-
-	MCFG_VIDEO_START_OVERRIDE(seibuspi_state, spi)
-	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_spi)
+	MCFG_PALETTE_INIT_OVERRIDE(driver_device, all_black)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1999,6 +2011,7 @@ static MACHINE_CONFIG_START( sys386f, seibuspi_state )
 
 	MCFG_GFXDECODE(sys386f)
 	MCFG_PALETTE_LENGTH(8192)
+	MCFG_PALETTE_INIT_OVERRIDE(driver_device, all_black)
 
 	MCFG_VIDEO_START_OVERRIDE(seibuspi_state, sys386f)
 	MCFG_SCREEN_UPDATE_DRIVER(seibuspi_state, screen_update_sys386f)
@@ -3447,16 +3460,16 @@ ROM_START( rdft2us ) /* Single board version SXX2F */
 
 	ROM_REGION( 0x280000, "ymf", ROMREGION_ERASE00 ) /* sound roms */
 	ROM_LOAD("pcm.u0103",    0x000000, 0x200000, CRC(2edc30b5) SHA1(c25d690d633657fc3687636b9070f36bd305ae06) )
-	ROM_LOAD("sound1.u0107", 0x200000, 0x080000, CRC(20384b0e) SHA1(9c5d725418543df740f9145974ed6ffbbabee1d0) ) /* Different sound1 then SPI carts */
+	ROM_LOAD("sound1.u0107", 0x200000, 0x080000, CRC(20384b0e) SHA1(9c5d725418543df740f9145974ed6ffbbabee1d0) ) /* Different sound1 than SPI carts */
 ROM_END
 
 
-ROM_START( rfjetsa ) /* Single board version SXX2G */
+ROM_START( rfjets ) /* Single board version SXX2G */
 	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
-	ROM_LOAD32_BYTE("rfj-06(__rfjetsa).u0259", 0x000000, 0x80000, CRC(c835aa7a) SHA1(291eada97ceb907dfea15688ce6055e63b3aa675) ) /* PRG0 */
-	ROM_LOAD32_BYTE("rfj-07(__rfjetsa).u0258", 0x000001, 0x80000, CRC(3b6ca1ca) SHA1(9db019c0ddecfb58e2be5c345d78352f700035bf) ) /* PRG1 */
-	ROM_LOAD32_BYTE("rfj-08(__rfjetsa).u0265", 0x000002, 0x80000, CRC(1f5dd06c) SHA1(6f5a8c9035971a470212cd0a89b94181011602c3) ) /* PRG2 */
-	ROM_LOAD32_BYTE("rfj-09(__rfjetsa).u0264", 0x000003, 0x80000, CRC(cc71c402) SHA1(b040e600744e7b3f52de0fa852ce3ae08ae49985) ) /* PRG3 */
+	ROM_LOAD32_BYTE("rfj-06.u0259", 0x000000, 0x80000, CRC(c835aa7a) SHA1(291eada97ceb907dfea15688ce6055e63b3aa675) ) /* PRG0 */
+	ROM_LOAD32_BYTE("rfj-07.u0258", 0x000001, 0x80000, CRC(3b6ca1ca) SHA1(9db019c0ddecfb58e2be5c345d78352f700035bf) ) /* PRG1 */
+	ROM_LOAD32_BYTE("rfj-08.u0265", 0x000002, 0x80000, CRC(1f5dd06c) SHA1(6f5a8c9035971a470212cd0a89b94181011602c3) ) /* PRG2 */
+	ROM_LOAD32_BYTE("rfj-09.u0264", 0x000003, 0x80000, CRC(cc71c402) SHA1(b040e600744e7b3f52de0fa852ce3ae08ae49985) ) /* PRG3 */
 
 	ROM_REGION( 0x40000, "audiocpu", 0 ) /* 256K ROM for the Z80 */
 	ROM_LOAD("rfj-05.u091", 0x000000, 0x40000, CRC(a55e8799) SHA1(5d4ca9ae920ab54e23ee3b1b33db72711e744516) ) /* ZPRG */
@@ -3482,23 +3495,23 @@ ROM_START( rfjetsa ) /* Single board version SXX2G */
 	ROM_LOAD("rfj-04.u0107", 0x200000, 0x080000, CRC(c050da03) SHA1(1002dac51a3a4932c4f0074c1f3d97a597d98755) ) /* SOUND1 */
 
 	ROM_REGION16_BE( 0x80, "eeprom", 0 )
-	ROM_LOAD16_WORD( "93c46-rfjetsa.bin", 0x0000, 0x0080, CRC(8fe8063b) SHA1(afb0141580e1b2bd149092a9cc9e8b4072b1ef10) )
+	ROM_LOAD16_WORD( "st93c46.bin", 0x0000, 0x0080, CRC(8fe8063b) SHA1(afb0141580e1b2bd149092a9cc9e8b4072b1ef10) )
 ROM_END
 
-/* Notes on rfjets:
+/* Notes on rfjetsa:
 
- - Will initialize the EEPROM on 1st boot and continue (rfjetsa needs a pre-initialized EEPROM to boot into the game)
- - Default game cost 2 credits for Solo & 4 credits for Dual (rfjetsa is 1 credit for Solo & 2 credits for Dual)
+ - Will initialize the EEPROM on 1st boot and continue (rfjets requires it to be done manually in testmode)
+ - Default game cost 2 credits for Solo & 4 credits for Dual (rfjets is 1 credit for Solo & 2 credits for Dual)
  - Has a Parental Advisory warning screen for acceptance in the US arcade market
  - Adds Sound Test and EEPROM Test to the Test Mode menu
  - Misc. debug strings and bugs (see MT 5211)
 */
-ROM_START( rfjets ) /* Single board version SXX2G */
+ROM_START( rfjetsa ) /* Single board version SXX2G */
 	ROM_REGION32_LE( 0x200000, "maincpu", 0 ) /* i386 program */
-	ROM_LOAD32_BYTE("rfj-06.u0259", 0x000000, 0x80000, CRC(b0c8d47e) SHA1(1dde30d25f9e8eaa301343ae1d272b5c0044bc1f) ) /* PRG0 */
-	ROM_LOAD32_BYTE("rfj-07.u0258", 0x000001, 0x80000, CRC(17189b39) SHA1(6471170ae770d762e15f1503ef9a6832c202da6c) ) /* PRG1 */
-	ROM_LOAD32_BYTE("rfj-08.u0265", 0x000002, 0x80000, CRC(ab6d724b) SHA1(ef7e42b1bf649a354fe22b0edd00475ced4151be) ) /* PRG2 */
-	ROM_LOAD32_BYTE("rfj-09.u0264", 0x000003, 0x80000, CRC(b119a67c) SHA1(4fa7dd0e86a3f7c6efa6ae9cf72991b652c877b9) ) /* PRG3 */
+	ROM_LOAD32_BYTE("rfj-06(__rfjetsa).u0259", 0x000000, 0x80000, CRC(b0c8d47e) SHA1(1dde30d25f9e8eaa301343ae1d272b5c0044bc1f) ) /* PRG0 */
+	ROM_LOAD32_BYTE("rfj-07(__rfjetsa).u0258", 0x000001, 0x80000, CRC(17189b39) SHA1(6471170ae770d762e15f1503ef9a6832c202da6c) ) /* PRG1 */
+	ROM_LOAD32_BYTE("rfj-08(__rfjetsa).u0265", 0x000002, 0x80000, CRC(ab6d724b) SHA1(ef7e42b1bf649a354fe22b0edd00475ced4151be) ) /* PRG2 */
+	ROM_LOAD32_BYTE("rfj-09(__rfjetsa).u0264", 0x000003, 0x80000, CRC(b119a67c) SHA1(4fa7dd0e86a3f7c6efa6ae9cf72991b652c877b9) ) /* PRG3 */
 
 	ROM_REGION( 0x40000, "audiocpu", 0 ) /* 256K ROM for the Z80 */
 	ROM_LOAD("rfj-05.u091", 0x000000, 0x40000, CRC(a55e8799) SHA1(5d4ca9ae920ab54e23ee3b1b33db72711e744516) ) /* ZPRG */
@@ -3686,8 +3699,8 @@ GAME( 1996, rdfts,      rdft,     sxx2e,   sxx2e,       seibuspi_state, rdft,   
 GAME( 1997, rdft2us,    rdft2,    sxx2f,   sxx2f,       seibuspi_state, rdft2,    ROT270, "Seibu Kaihatsu (Fabtek license)", "Raiden Fighters 2 - Operation Hell Dive (US, single board)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // title screen shows small '.1'
 
 /* SXX2G */
-GAME( 1999, rfjetsa,    rfjet,    sxx2g,   sxx2f,       seibuspi_state, rfjet,    ROT270, "Seibu Kaihatsu", "Raiden Fighters Jet (US, single board)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // has 1998-99 copyright + planes unlocked
-GAME( 1999, rfjets,     rfjet,    sxx2g,   sxx2f,       seibuspi_state, rfjet,    ROT270, "Seibu Kaihatsu", "Raiden Fighters Jet (US, single board, earlier?)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // maybe proto? see notes at romdefs
+GAME( 1999, rfjets,     rfjet,    sxx2g,   sxx2f,       seibuspi_state, rfjet,    ROT270, "Seibu Kaihatsu", "Raiden Fighters Jet (US, single board)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // has 1998-99 copyright + planes unlocked
+GAME( 1999, rfjetsa,    rfjet,    sxx2g,   sxx2f,       seibuspi_state, rfjet,    ROT270, "Seibu Kaihatsu", "Raiden Fighters Jet (US, single board, test version?)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) // maybe test/proto? see notes at romdefs
 
 /* SYS386I */
 GAME( 2000, rdft22kc,   rdft2,    sys386i, sys386i,     seibuspi_state, rdft2,    ROT270, "Seibu Kaihatsu", "Raiden Fighters 2 - Operation Hell Dive 2000 (China, SYS386I)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )

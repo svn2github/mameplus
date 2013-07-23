@@ -95,7 +95,9 @@ $(CPUOBJ)/arm7/arm7.o:  $(CPUSRC)/arm7/arm7.c \
 						$(CPUSRC)/arm7/arm7help.h \
 						$(CPUSRC)/arm7/arm7thmb.c \
 						$(CPUSRC)/arm7/arm7ops.c \
-						$(CPUSRC)/arm7/arm7core.c
+						$(CPUSRC)/arm7/arm7core.c \
+						$(CPUSRC)/arm7/arm7drc.c \
+						$(CPUSRC)/arm7/arm7tdrc.c
 
 $(CPUOBJ)/arm7/arm7ops.o:   $(CPUSRC)/arm7/arm7ops.c \
 						$(CPUSRC)/arm7/arm7.h \
@@ -564,7 +566,7 @@ $(CPUOBJ)/sh2/sh2fe.o:  $(CPUSRC)/sh2/sh2fe.c \
 
 #-------------------------------------------------
 # Hitachi SH4
-#@src/emu/cpu/sh4/sh4.h,CPUS += SH4 
+#@src/emu/cpu/sh4/sh4.h,CPUS += SH4
 #-------------------------------------------------
 
 ifneq ($(filter SH4,$(CPUS)),)
@@ -1209,43 +1211,43 @@ $(CPUOBJ)/m6502/m5074x.o:   $(CPUSRC)/m6502/m5074x.c \
 
 # rule to generate the C files
 $(CPUOBJ)/m6502/deco16.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/odeco16.lst $(CPUSRC)/m6502/ddeco16.lst
-	@echo Generating DECO16 source file...
+	@echo Generating deco16 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py deco16_device $(CPUSRC)/m6502/odeco16.lst $(CPUSRC)/m6502/ddeco16.lst $@
 
 $(CPUOBJ)/m6502/m4510.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om4510.lst $(CPUSRC)/m6502/dm4510.lst
-	@echo Generating M4510 source file...
+	@echo Generating m4510 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m4510_device $(CPUSRC)/m6502/om4510.lst $(CPUSRC)/m6502/dm4510.lst $@
 
 $(CPUOBJ)/m6502/m6502.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om6502.lst $(CPUSRC)/m6502/dm6502.lst
-	@echo Generating M6502 source file...
+	@echo Generating m6502 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m6502_device $(CPUSRC)/m6502/om6502.lst $(CPUSRC)/m6502/dm6502.lst $@
 
 $(CPUOBJ)/m6502/m65c02.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om65c02.lst $(CPUSRC)/m6502/dm65c02.lst
-	@echo Generating M65C02 source file...
+	@echo Generating m65c02 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m65c02_device $(CPUSRC)/m6502/om65c02.lst $(CPUSRC)/m6502/dm65c02.lst $@
 
 $(CPUOBJ)/m6502/m65ce02.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om65ce02.lst $(CPUSRC)/m6502/dm65ce02.lst
-	@echo Generating M65CE02 source file...
+	@echo Generating m65ce02 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m65ce02_device $(CPUSRC)/m6502/om65ce02.lst $(CPUSRC)/m6502/dm65ce02.lst $@
 
 $(CPUOBJ)/m6502/m6509.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om6509.lst $(CPUSRC)/m6502/dm6509.lst
-	@echo Generating M6509 source file...
+	@echo Generating m6509 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m6509_device $(CPUSRC)/m6502/om6509.lst $(CPUSRC)/m6502/dm6509.lst $@
 
 $(CPUOBJ)/m6502/m6510.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om6510.lst $(CPUSRC)/m6502/dm6510.lst
-	@echo Generating M6510 source file...
+	@echo Generating m6510 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m6510_device $(CPUSRC)/m6502/om6510.lst $(CPUSRC)/m6502/dm6510.lst $@
 
 $(CPUOBJ)/m6502/n2a03.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/on2a03.lst $(CPUSRC)/m6502/dn2a03.lst
-	@echo Generating N2A03 source file...
+	@echo Generating n2a03 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py n2a03_device $(CPUSRC)/m6502/on2a03.lst $(CPUSRC)/m6502/dn2a03.lst $@
 
 $(CPUOBJ)/m6502/r65c02.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/dr65c02.lst
-	@echo Generating R65C02 source file...
+	@echo Generating r65c02 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py r65c02_device - $(CPUSRC)/m6502/dr65c02.lst $@
 
 $(CPUOBJ)/m6502/m740.inc: $(CPUSRC)/m6502/m6502make.py $(CPUSRC)/m6502/om740.lst $(CPUSRC)/m6502/dm740.lst
-	@echo Generating M740 source file...
+	@echo Generating m740 source file...
 	$(PYTHON) $(CPUSRC)/m6502/m6502make.py m740_device $(CPUSRC)/m6502/om740.lst $(CPUSRC)/m6502/dm740.lst $@
 
 #-------------------------------------------------
@@ -1352,14 +1354,6 @@ $(CPUOBJ)/mc68hc11/mc68hc11.o:  $(CPUSRC)/mc68hc11/mc68hc11.c \
 ifneq ($(filter M680X0,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/m68000
 CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kops.o \
-	$(CPUOBJ)/m68000/68307sim.o \
-	$(CPUOBJ)/m68000/68307bus.o \
-	$(CPUOBJ)/m68000/68307ser.o \
-	$(CPUOBJ)/m68000/68307tmu.o \
-	$(CPUOBJ)/m68000/68340sim.o \
-	$(CPUOBJ)/m68000/68340dma.o \
-	$(CPUOBJ)/m68000/68340ser.o \
-	$(CPUOBJ)/m68000/68340tmu.o \
 
 DASMOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 ifndef M68KMAKE
@@ -1398,14 +1392,7 @@ $(CPUOBJ)/m68000/m68kcpu.o:     $(CPUOBJ)/m68000/m68kops.c \
 
 # m68kcpu.h now includes m68kops.h; m68kops.h won't exist until m68kops.c has been made
 $(CPUSRC)/m68000/m68kcpu.h: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68307sim.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68307bus.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68307ser.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68307tmu.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68340sim.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68340dma.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68340ser.c: $(CPUOBJ)/m68000/m68kops.c
-$(CPUSRC)/m68000/68340tmu.c: $(CPUOBJ)/m68000/m68kops.c
+
 
 
 #-------------------------------------------------
@@ -2002,6 +1989,23 @@ endif
 $(CPUOBJ)/tms32051/tms32051.o:  $(CPUSRC)/tms32051/tms32051.c \
 								$(CPUSRC)/tms32051/tms32051.h \
 								$(CPUSRC)/tms32051/32051ops.c
+
+
+
+#-------------------------------------------------
+# Texas Instruments TMS3208x DSP
+#@src/emu/cpu/tms32082/tms32082.h,CPUS += TMS32082_MP
+#-------------------------------------------------
+
+ifneq ($(filter TMS32082,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/tms32082
+CPUOBJS += $(CPUOBJ)/tms32082/tms32082.o $(CPUOBJ)/tms32082/mp_ops.o
+DASMOBJS += $(CPUOBJ)/tms32082/dis32082.o
+endif
+
+$(CPUOBJ)/tms32082/tms32082.o:  $(CPUSRC)/tms32082/tms32082.c \
+								$(CPUSRC)/tms32082/mp_ops.c \
+								$(CPUSRC)/tms32082/tms32082.h
 
 
 

@@ -1,16 +1,16 @@
-# osd/winui/properties.c: 967
+# osd/winui/properties.c: 965
 %d colors 
 %d 色 
 
-# osd/winui/layout.c: 210 osd/winui/winui.c: 3656
+# osd/winui/layout.c: 210 osd/winui/winui.c: 3660
 %d games
 %d 個遊戲
 
-# osd/winui/properties.c: 878
+# osd/winui/properties.c: 876
 %d x %d (H) %f Hz (%d colors)\n
 %d x %d (H) %f Hz (%d 色)\n
 
-# osd/winui/properties.c: 871
+# osd/winui/properties.c: 869
 %d x %d (V) %f Hz (%d colors)\n
 %d x %d (V) %f Hz (%d 色)\n
 
@@ -22,27 +22,27 @@
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 935
+# osd/winui/properties.c: 933
 %s (%d player)
 %s (%d 玩家)
 
-# osd/winui/properties.c: 946
+# osd/winui/properties.c: 944
 %s (%d player, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/properties.c: 944
+# osd/winui/properties.c: 942
 %s (%d player, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/properties.c: 932
+# osd/winui/properties.c: 930
 %s (%d players)
 %s (%d 玩家)
 
-# osd/winui/properties.c: 941
+# osd/winui/properties.c: 939
 %s (%d players, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/properties.c: 938
+# osd/winui/properties.c: 936
 %s (%d players, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
@@ -210,11 +210,11 @@ MAME 版本資訊(&M)
 &Picture Area\tAlt+P
 預覽圖(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3819, 7292
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7291
 &Play
 執行(&P)
 
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3869, 7243
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7242
 &Play %s
 執行 %s(&P)
 
@@ -298,7 +298,7 @@ MAME 版本資訊(&M)
 &Working
 可以執行(&W)
 
-# osd/winui/winui.c: 6665
+# osd/winui/winui.c: 6664
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是遊戲 '%s' 的有效儲存狀態檔。
 
@@ -314,7 +314,7 @@ MAME 版本資訊(&M)
 <unknown>
 <未知的>
 
-# osd/winui/mui_util.c: 258
+# osd/winui/mui_util.c: 277
 A sharing violation occurred.
 發生共用違規。
 
@@ -322,13 +322,17 @@ A sharing violation occurred.
 A&udit
 驗證(&U)
 
-# osd/winui/properties.c: 917 osd/winui/treeview.c: 1392
+# osd/winui/properties.c: 915 osd/winui/treeview.c: 1392
 AD Stick
 AD 搖桿
 
 # osd/winui/mameui.rc: 484
 ADStick device
 AD 搖桿裝置
+
+# osd/winui/mui_opts.c: 284
+APPLICATION OPTIONS
+應用程式選項
 
 # osd/winui/winui.c: 775
 About
@@ -370,7 +374,7 @@ All
 All Games
 全部遊戲
 
-# osd/winui/winui.c: 6320, 6323, 6326, 6329, 6332, 6336, 6341, 6345, 6348, 6351, 6354, 6357, 6361
+# osd/winui/winui.c: 6319, 6322, 6325, 6328, 6331, 6335, 6340, 6344, 6347, 6350, 6353, 6356, 6360
 All files (*.*)
 所有檔案 (*.*)
 
@@ -394,7 +398,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 允許\從資料夾篩選出遊戲
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3623
 Anti-clockwise
 逆時針
 
@@ -442,15 +446,15 @@ Audit items in this folder
 Audit the selected item
 驗證選定項目
 
-# osd/winui/properties.c: 378, 409, 2778, 3044, 3050
+# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
 Auto
 自動
 
-# osd/winui/properties.c: 3628
+# osd/winui/properties.c: 3626
 Auto anti-clockwise
 自動逆時針
 
-# osd/winui/properties.c: 3627
+# osd/winui/properties.c: 3625
 Auto clockwise
 自動順時針
 
@@ -482,11 +486,11 @@ Available fields:
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1098
+# osd/winui/properties.c: 1096
 BIOS missing
 BIOS 遺失
 
-# osd/winui/properties.c: 1209
+# osd/winui/properties.c: 1207
 BIOS options\nCustom options used by all games in the %s
 BIOS 選項\n供 %s 全部遊戲使用的自訂選項
 
@@ -618,7 +622,7 @@ C&lones
 CPU
 CPU
 
-# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 452
+# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 463
 Cabinet
 筐體圖
 
@@ -658,7 +662,7 @@ Checking...
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 與 MAMEUI 開發團隊
 
-# osd/winui/properties.c: 3624
+# osd/winui/properties.c: 3622
 Clockwise
 順時針
 
@@ -682,11 +686,11 @@ Cocktail
 Coin lockout
 鎖定投幣
 
-# osd/winui/properties.c: 1001, 1054, 1125
+# osd/winui/properties.c: 999, 1052, 1123
 Colors are completely wrong
 色彩是完全錯誤的
 
-# osd/winui/properties.c: 1007, 1060, 1131
+# osd/winui/properties.c: 1005, 1058, 1129
 Colors aren't 100% accurate
 色彩尚未達到 100% 精確
 
@@ -706,7 +710,7 @@ Config
 Configure for:
 設定對象:
 
-# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 423
+# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 445
 Console
 家用機台
 
@@ -742,7 +746,7 @@ Contrast Correction
 Control &Panel
 控制器(&P)
 
-# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 455
+# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 466
 Control Panel
 控制器
 
@@ -782,15 +786,15 @@ Copyright (C) 1997-2011 The MAME Team
 Correct:
 正確:
 
-# osd/winui/winui.c: 4793
+# osd/winui/winui.c: 4797
 Could not create '%s'
 無法建立 '%s'
 
-# osd/winui/winui.c: 6566
+# osd/winui/winui.c: 6565
 Could not open '%s' as a valid input file.
 無法開啟 '%s' 為有效的輸入檔。
 
-# osd/winui/winui.c: 6678
+# osd/winui/winui.c: 6677
 Could not open '%s' as a valid savestate file.
 無法開啟 '%s' 為有效的儲存狀態檔。
 
@@ -818,7 +822,7 @@ Cursor text (floating)
 Cursor text (selected)
 游標文字 (選定)
 
-# osd/winui/winui.c: 4646, 4674
+# osd/winui/winui.c: 4650, 4678
 Custom
 自訂
 
@@ -846,7 +850,7 @@ Customize interface options.
 Customize which columns are used in the game list
 自訂遊戲清單中所顯示的欄位
 
-# osd/winui/mui_opts.c: 270
+# osd/winui/mui_opts.c: 292
 DISPLAY STATE OPTIONS
 顯示狀態選項
 
@@ -862,11 +866,11 @@ Debugscript
 Decrypted
 解密版
 
-# osd/winui/properties.c: 3623, 3849, 3879
+# osd/winui/properties.c: 3621, 3847, 3877
 Default
 預設
 
-# osd/winui/properties.c: 567
+# osd/winui/properties.c: 565
 Default Game
 預設遊戲
 
@@ -874,7 +878,7 @@ Default Game
 Default Game &Options...
 預設遊戲選項(&O)...
 
-# osd/winui/properties.c: 689
+# osd/winui/properties.c: 687
 Default Settings
 預設的設定值
 
@@ -890,7 +894,7 @@ Delete
 Details
 詳細資料
 
-# osd/winui/properties.c: 919 osd/winui/treeview.c: 1394
+# osd/winui/properties.c: 917 osd/winui/treeview.c: 1394
 Dial
 方向盤
 
@@ -898,7 +902,7 @@ Dial
 Dial device
 方向盤裝置
 
-# osd/winui/properties.c: 342
+# osd/winui/properties.c: 343
 Direct3D
 Direct3D
 
@@ -994,23 +998,23 @@ Double Joy 4-Way
 Double Joy 8-Way
 8 方向雙搖桿
 
-# osd/winui/properties.c: 915
+# osd/winui/properties.c: 913
 Double Joystick 16-Way
 16 方向雙搖桿
 
-# osd/winui/properties.c: 912
+# osd/winui/properties.c: 910
 Double Joystick 2-Way
 2 方向雙搖桿
 
-# osd/winui/properties.c: 916
+# osd/winui/properties.c: 914
 Double Joystick 2-Way Vertical
 垂直 2 方向雙搖桿
 
-# osd/winui/properties.c: 913
+# osd/winui/properties.c: 911
 Double Joystick 4-Way
 4 方向雙搖桿
 
-# osd/winui/properties.c: 914
+# osd/winui/properties.c: 912
 Double Joystick 8-Way
 8 方向雙搖桿
 
@@ -1018,11 +1022,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3589
 Draw every frame
 描繪出全部畫格
 
-# osd/winui/properties.c: 1199
+# osd/winui/properties.c: 1197
 Driver options\nCustom options used by all games in the %s
 驅動選項\n供 %s 全部遊戲使用的自訂選項
 
@@ -1122,7 +1126,7 @@ Enable the title tab
 Enforce aspect ratio
 強制長寬比例
 
-# osd/winui/mui_audit.c: 102 osd/winui/properties.c: 586, 724, 1990
+# osd/winui/mui_audit.c: 102 osd/winui/properties.c: 584, 722, 1988
 Error
 錯誤
 
@@ -1130,7 +1134,7 @@ Error
 Error finding custom file name to save
 尋找自訂檔名儲存時發生錯誤
 
-# osd/winui/winui.c: 7741
+# osd/winui/winui.c: 7740
 Error searching for custom folder
 尋找自訂資料夾時發生錯誤
 
@@ -1150,7 +1154,7 @@ Exit the application
 External Folder List
 外部資料夾清單
 
-# osd/winui/mui_opts.c: 355
+# osd/winui/mui_opts.c: 377
 FILENAME OPTIONS
 檔案名稱選項
 
@@ -1186,7 +1190,7 @@ Flip screen left-right
 Flip screen upside-down
 上下翻轉畫面
 
-# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 451
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 462
 Flyer
 廣告圖
 
@@ -1222,7 +1226,7 @@ Full screen contrast
 Full screen gamma
 全螢幕 Gamma 值
 
-# osd/winui/mui_opts.c: 418
+# osd/winui/game_opts.h: 195 osd/winui/mui_opts.c: 440
 GAME STATISTICS
 遊戲統計
 
@@ -1250,19 +1254,19 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 遊戲篩選程式允許\通過隱藏符合篩選條件\n的運用來顯示自訂的遊戲在每個資料夾。
 
-# osd/winui/properties.c: 1019, 1072, 1143
+# osd/winui/properties.c: 1017, 1070, 1141
 Game lacks sound
 遊戲缺少聲音
 
-# osd/winui/properties.c: 995, 1048, 1119
+# osd/winui/properties.c: 993, 1046, 1117
 Game protection isn't fully emulated
 遊戲的保護尚未完全模擬
 
-# osd/winui/properties.c: 1037, 1090, 1161
+# osd/winui/properties.c: 1035, 1088, 1159
 Game requires external artwork files
 遊戲需要外部裝飾圖檔案
 
-# osd/winui/winui.c: 3452
+# osd/winui/winui.c: 3456
 Game search %d%% complete
 完成 %d%% 遊戲搜尋
 
@@ -1302,7 +1306,7 @@ General
 Global game options\n
 通用遊戲選項\n
 
-# osd/winui/properties.c: 1184
+# osd/winui/properties.c: 1182
 Global game options\nDefault options used by all games
 通用遊戲選項\n供全部遊戲使用的預設選項
 
@@ -1334,7 +1338,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 高分記錄
 
-# osd/winui/mui_opts.c: 457
+# osd/winui/mui_opts.c: 468
 History
 歷史
 
@@ -1342,11 +1346,11 @@ History
 Homebrew
 自製遊戲
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5684
 Horizontal
 水平
 
-# osd/winui/properties.c: 1193
+# osd/winui/properties.c: 1191
 Horizontal options\nCustom options used by all games in the Horizontal
 水平選項\n供水平全部遊戲使用的自訂選項
 
@@ -1354,7 +1358,7 @@ Horizontal options\nCustom options used by all games in the Horizontal
 How cheats work
 如何使用作弊引擎
 
-# osd/winui/mui_opts.c: 312
+# osd/winui/mui_opts.c: 334
 INTERFACE OPTIONS
 介面選項
 
@@ -1370,7 +1374,7 @@ Icons
 Image Enhancement
 影像增強
 
-# osd/winui/winui.c: 5391
+# osd/winui/winui.c: 5395
 Image Files (*.png)
 圖像檔 (*.png)
 
@@ -1410,15 +1414,15 @@ INI 檔案
 Input Files (*.inp)
 輸入檔 (*.inp)
 
-# osd/winui/winui.c: 6590
+# osd/winui/winui.c: 6589
 Input file format version mismatch
 輸入檔格式版本不符合
 
-# osd/winui/winui.c: 6585
+# osd/winui/winui.c: 6584
 Input file invalid or in an older, unsupported format
 無效的輸入檔或是舊版未支援的格式
 
-# osd/winui/winui.c: 6579
+# osd/winui/winui.c: 6578
 Input file is corrupt or invalid (missing header)
 輸入檔損壞或無效 (缺少檔頭)
 
@@ -1434,7 +1438,7 @@ Interface Options
 Internal
 內定像素長寬
 
-# osd/winui/winui.c: 3509, 3533
+# osd/winui/winui.c: 3513, 3537
 Invalid Button Index
 無效的按鍵索引
 
@@ -1466,23 +1470,23 @@ Joy 8-Way
 Joystick
 搖桿
 
-# osd/winui/properties.c: 910
+# osd/winui/properties.c: 908
 Joystick 16-Way
 16 方向搖桿
 
-# osd/winui/properties.c: 907
+# osd/winui/properties.c: 905
 Joystick 2-Way
 2 方向搖桿
 
-# osd/winui/properties.c: 911
+# osd/winui/properties.c: 909
 Joystick 2-Way Vertical
 垂直 2 方向搖桿
 
-# osd/winui/properties.c: 908
+# osd/winui/properties.c: 906
 Joystick 4-Way
 4 方向搖桿
 
-# osd/winui/properties.c: 909
+# osd/winui/properties.c: 907
 Joystick 8-Way
 8 方向搖桿
 
@@ -1514,7 +1518,7 @@ Language Files
 Large Icons
 大圖示
 
-# osd/winui/layout.c: 88 osd/winui/properties.c: 397, 921 osd/winui/treeview.c: 1396
+# osd/winui/layout.c: 88 osd/winui/properties.c: 397, 919 osd/winui/treeview.c: 1396
 Lightgun
 光線槍
 
@@ -1542,7 +1546,7 @@ Localize GUI and MAME core.
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 MAME 於自我正確性檢查時失敗。GUI 仍可正常運作，但模擬部分將無法執行。
 
-# osd/winui/winui.c: 6320
+# osd/winui/winui.c: 6319
 MAME input files (*.inp,*.zip)
 MAME 輸入檔 (*.inp,*.zip)
 
@@ -1550,7 +1554,7 @@ MAME 輸入檔 (*.inp,*.zip)
 MAME release notes
 MAME 版本資訊
 
-# osd/winui/winui.c: 6323
+# osd/winui/winui.c: 6322
 MAME savestate files (*.sta)
 MAME 儲存狀態檔 (*.sta)
 
@@ -1574,7 +1578,7 @@ MAMEUI 版本作者
 MAMEUI will now reset the following\nto the default settings:\n\n
 MAMEUI 現在將會重設下列項目\n回到預設的設定值:\n\n
 
-# osd/winui/mui_opts.c: 307 osd/winui/translate.c: 111
+# osd/winui/mui_opts.c: 329 osd/winui/translate.c: 111
 MS Sans Serif
 新細明體
 
@@ -1598,7 +1602,7 @@ Manufactured:
 Manufacturer
 製造廠商
 
-# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 453
+# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 464
 Marquee
 標籤圖
 
@@ -1622,7 +1626,7 @@ Miscellaneous
 Missing Sound
 缺少聲音
 
-# osd/winui/winui.c: 3514
+# osd/winui/winui.c: 3518
 Modify 'The'
 修正 The 位置
 
@@ -1646,11 +1650,11 @@ Move Item
 Move Up
 上移
 
-# osd/winui/mui_opts.c: 402
+# osd/winui/mui_opts.c: 424
 NAVIGATION JOYSTICK CODES
 導引搖桿碼
 
-# osd/winui/mui_opts.c: 362
+# osd/winui/mui_opts.c: 384
 NAVIGATION KEY CODES
 導引鍵盤碼
 
@@ -1662,7 +1666,7 @@ NVRAM
 New game changes
 遊戲的新增異動
 
-# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5695, 5730
+# osd/winui/mui_audit.c: 122 osd/winui/winui.c: 5699, 5733
 No
 否
 
@@ -1678,7 +1682,7 @@ No Dump
 No PCB Info available for this game.
 這個遊戲沒有可供查看的電路板資訊。
 
-# osd/winui/winui.c: 3846
+# osd/winui/winui.c: 3850
 No Selection
 未選取遊戲
 
@@ -1694,7 +1698,7 @@ Non Mechanical
 Non-Wor&king
 不可執行(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 339, 393, 2912, 3626, 3707, 3836, 3845, 3875
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
 None
 無
 
@@ -1710,7 +1714,7 @@ Not Working
 Not found
 找不到
 
-# osd/winui/properties.c: 989, 1109
+# osd/winui/properties.c: 987, 1107
 Not working
 不可執行
 
@@ -1758,7 +1762,7 @@ P&layback Input...
 PC&B
 電路板(&B)
 
-# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 456
+# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 467
 PCB
 電路板
 
@@ -1774,7 +1778,7 @@ PCB Info Files
 PCBs
 電路板圖 (pcb)
 
-# osd/winui/properties.c: 918 osd/winui/treeview.c: 1393
+# osd/winui/properties.c: 916 osd/winui/treeview.c: 1393
 Paddle
 操縱桿
 
@@ -1794,7 +1798,7 @@ Passed
 Pause Brightness
 暫停時亮度
 
-# osd/winui/properties.c: 922 osd/winui/treeview.c: 1397
+# osd/winui/properties.c: 920 osd/winui/treeview.c: 1397
 Pedal
 踏板
 
@@ -1886,23 +1890,23 @@ Positional device
 Pr&operties
 內容(&O)
 
-# osd/winui/winui.c: 3880, 7257
+# osd/winui/winui.c: 3884, 7256
 Propert&ies for %s
 %s 內容(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3826, 7302
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7301
 Propert&ies for Driver
 驅動內容(&I)
 
-# osd/winui/winui.c: 3892, 7271
+# osd/winui/winui.c: 3896, 7270
 Properties &for %s BIOS
 %s BIOS 內容(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3833, 3898, 7277, 7315
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7276, 7314
 Properties &for BIOS
 BIOS 內容(&F)
 
-# osd/winui/properties.c: 585, 723
+# osd/winui/properties.c: 583, 721
 Propery Sheet Error %d %X
 內容表錯誤 %d %X
 
@@ -1926,7 +1930,7 @@ ROM 檢查:
 ROMs
 ROM
 
-# osd/winui/properties.c: 1100
+# osd/winui/properties.c: 1098
 ROMs missing
 ROM 檔遺失
 
@@ -1934,11 +1938,11 @@ ROM 檔遺失
 Randomly select a game.
 隨機選取一個遊戲。
 
-# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5724
 Raster
 點陣
 
-# osd/winui/winui.c: 3589
+# osd/winui/winui.c: 3593
 Ready
 準備完畢
 
@@ -2054,7 +2058,7 @@ S&mall Icons
 S&tretch screenshot larger than natural size
 延展預覽圖至合適的大小(&T)
 
-# osd/winui/mui_opts.c: 340
+# osd/winui/mui_opts.c: 362
 SEARCH PATH OPTIONS
 搜尋路徑選項
 
@@ -2090,7 +2094,7 @@ Scale screen
 Screen
 畫面
 
-# osd/winui/winui.c: 3411
+# osd/winui/winui.c: 3415
 Screen flip support is missing
 尚未支援畫面翻轉
 
@@ -2098,7 +2102,7 @@ Screen flip support is missing
 Screen flipping in cocktail mode is not supported.\n
 尚未支援檯面型筐體模式的畫面翻轉。\n
 
-# osd/winui/properties.c: 1031, 1084, 1155
+# osd/winui/properties.c: 1029, 1082, 1153
 Screen flipping is not supported
 尚未支援畫面翻轉
 
@@ -2110,7 +2114,7 @@ Screen setting
 Screen:
 畫面:
 
-# osd/winui/properties.c: 861
+# osd/winui/properties.c: 859
 Screenless Game
 遊戲無畫面
 
@@ -2194,7 +2198,7 @@ Select Story tab
 Select Title tab
 選取標題圖索引標籤
 
-# osd/winui/winui.c: 5400
+# osd/winui/winui.c: 5404
 Select a Background Image
 選取一個背景圖像
 
@@ -2306,43 +2310,43 @@ Show or hide the toolbar
 Show these fields in this order:
 按照這個順序顯示欄位:
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3591
 Skip 1 frame
 略過 1 畫格
 
-# osd/winui/properties.c: 3611
+# osd/winui/properties.c: 3609
 Skip 10 frames
 略過 10 畫格
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3593
 Skip 2 frames
 略過 2 畫格
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3595
 Skip 3 frames
 略過 3 畫格
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3597
 Skip 4 frames
 略過 4 畫格
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3599
 Skip 5 frames
 略過 5 畫格
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3601
 Skip 6 frames
 略過 6 畫格
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3603
 Skip 7 frames
 略過 7 畫格
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3605
 Skip 8 frames
 略過 8 畫格
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3607
 Skip 9 frames
 略過 9 畫格
 
@@ -2358,7 +2362,7 @@ Sleep when possible
 Small Icons
 小圖示
 
-# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 450
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 461
 Snapshot
 遊戲圖
 
@@ -2450,7 +2454,7 @@ Sort items by year
 Sound
 聲音
 
-# osd/winui/properties.c: 1025, 1078, 1149
+# osd/winui/properties.c: 1023, 1076, 1147
 Sound emulation isn't 100% accurate
 聲音模擬尚未達到 100% 精確
 
@@ -2486,11 +2490,11 @@ Status:
 Stereo
 立體聲
 
-# osd/winui/mui_opts.c: 459
+# osd/winui/mui_opts.c: 470
 Story
 故事
 
-# osd/winui/properties.c: 955 osd/winui/treeview.c: 1345
+# osd/winui/properties.c: 953 osd/winui/treeview.c: 1345
 Supported
 已支援
 
@@ -2530,7 +2534,7 @@ The game lacks sound.\n
 The game requires external artwork files\n
 遊戲需要外部裝飾圖檔案\n
 
-# osd/winui/mui_util.c: 238
+# osd/winui/mui_util.c: 257
 The operating system is out of memory or resources.
 作業系統的記憶體或資源不足。
 
@@ -2538,11 +2542,11 @@ The operating system is out of memory or resources.
 The sound emulation isn't 100% accurate.\n
 聲音模擬尚未達到 100% 精確。\n
 
-# osd/winui/mui_util.c: 242
+# osd/winui/mui_util.c: 261
 The specified file was not found.
 找不到指定的檔案。
 
-# osd/winui/mui_util.c: 254
+# osd/winui/mui_util.c: 273
 The specified path was not found.
 找不到指定的路徑。
 
@@ -2550,11 +2554,11 @@ The specified path was not found.
 The video emulation isn't 100% accurate.\n
 視訊模擬尚未達到 100% 精確。\n
 
-# osd/winui/mui_util.c: 246
+# osd/winui/mui_util.c: 265
 There is no application associated with the given filename extension.
 沒有應用程式與這個副檔名相關聯。
 
-# osd/winui/mui_util.c: 250
+# osd/winui/mui_util.c: 269
 There was not enough memory to complete the operation.
 記憶體不足無法完成這項作業。
 
@@ -2570,7 +2574,7 @@ Thread priority
 Throttle
 限制速度
 
-# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 454
+# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 465
 Title
 標題圖
 
@@ -2598,7 +2602,7 @@ Toggle full screen mode
 Total:
 合計:
 
-# osd/winui/layout.c: 87 osd/winui/properties.c: 920 osd/winui/treeview.c: 1395 osd/winui/winui.c: 884
+# osd/winui/layout.c: 87 osd/winui/properties.c: 918 osd/winui/treeview.c: 1395 osd/winui/winui.c: 884
 Trackball
 軌跡球
 
@@ -2702,15 +2706,15 @@ Unavailable
 Unemulated Protection
 未模擬保護
 
-# osd/winui/mui_audit.c: 511 osd/winui/properties.c: 929, 983 
+# osd/winui/mui_audit.c: 511 osd/winui/properties.c: 927, 981 
 Unknown
 未知的
 
-# osd/winui/mui_util.c: 262
+# osd/winui/mui_util.c: 281
 Unknown error.
 未知的錯誤。
 
-# osd/winui/properties.c: 957 osd/winui/treeview.c: 1346
+# osd/winui/properties.c: 955 osd/winui/treeview.c: 1346
 Unsupported
 未支援
 
@@ -2738,7 +2742,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 使用者介面設定值\n\n
 
-# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5719
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 944 osd/winui/winui.c: 5722
 Vector
 向量
 
@@ -2746,7 +2750,7 @@ Vector
 Vector (H)
 向量 (H)
 
-# osd/winui/properties.c: 853
+# osd/winui/properties.c: 851
 Vector (H) %f Hz (%d colors)
 Vector (H) %f Hz (%d 色)
 
@@ -2754,31 +2758,27 @@ Vector (H) %f Hz (%d 色)
 Vector (V)
 向量 (V)
 
-# osd/winui/properties.c: 848
+# osd/winui/properties.c: 846
 Vector (V) %f Hz (%d colors)
 Vector (V) %f Hz (%d 色)
 
-# osd/winui/properties.c: 1187
+# osd/winui/properties.c: 1185
 Vector options\nCustom options used by all games in the Vector
 向量選項\n供向量全部遊戲使用的自訂選項
 
 # osd/winui/properties.c: 353
-Version 8
-版本 8
-
-# osd/winui/properties.c: 352
 Version 9
 版本 9
 
-# osd/winui/layout.c: 81 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5684
 Vertical
 垂直
 
-# osd/winui/properties.c: 1190
+# osd/winui/properties.c: 1188
 Vertical options\nCustom options used by all games in the Vertical
 垂直選項\n供垂直全部遊戲使用的自訂選項
 
-# osd/winui/properties.c: 1013, 1066, 1137
+# osd/winui/properties.c: 1011, 1064, 1135
 Video emulation isn't 100% accurate
 視訊模擬尚未達到 100% 精確
 
@@ -2810,7 +2810,7 @@ Wait for vertical sync
 What's new in MAME
 MAME 的新增異動
 
-# osd/winui/layout.c: 70 osd/winui/properties.c: 1042, 1113
+# osd/winui/layout.c: 70 osd/winui/properties.c: 1040, 1111
 Working
 可以執行
 
@@ -2822,7 +2822,7 @@ Wrong Colors
 Year
 年份
 
-# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5693, 5728
+# osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5697, 5731
 Yes
 是
 
@@ -2898,43 +2898,43 @@ by S&amples
 by T&rackball
 依軌跡球(&R)
 
-# osd/winui/winui.c: 6351
+# osd/winui/winui.c: 6350
 cheats (*.dat)
 作弊碼檔案 (*.dat)
 
-# osd/winui/winui.c: 6341
+# osd/winui/winui.c: 6340
 gamelists (*.lst)
 遊戲清單檔 (*.lst)
 
-# osd/winui/winui.c: 6354
+# osd/winui/winui.c: 6353
 history (*.dat)
 history (*.dat)
 
-# osd/winui/winui.c: 6357
+# osd/winui/winui.c: 6356
 mameinfo (*.dat)
 mameinfo (*.dat)
 
-# osd/winui/winui.c: 6345
+# osd/winui/winui.c: 6344
 maps (*.map,*.txt)
 對應檔 (*.map,*.txt)
 
-# osd/winui/winui.c: 6348
+# osd/winui/winui.c: 6347
 scripts (*.txt,*.dat)
 指令檔 (*.txt,*.dat)
 
-# osd/winui/winui.c: 6326
+# osd/winui/winui.c: 6325
 sounds (*.wav)
 聲音檔 (*.wav)
 
-# osd/winui/winui.c: 6361
+# osd/winui/winui.c: 6360
 story (*.dat)
 故事檔 (*.dat)
 
-# osd/winui/winui.c: 6332
+# osd/winui/winui.c: 6331
 videos (*.avi)
 視訊檔 (*.avi)
 
-# osd/winui/winui.c: 6329
+# osd/winui/winui.c: 6328
 videos (*.mng)
 視訊檔 (*.mng)
 

@@ -79,6 +79,7 @@ public:
 	DECLARE_WRITE32_MEMBER(video_dma_length_w);
 	DECLARE_WRITE32_MEMBER(video_dma_address_w);
 	DECLARE_READ8_MEMBER(spi_status_r);
+	DECLARE_READ8_MEMBER(spi_ds2404_unknown_r);
 	DECLARE_READ8_MEMBER(sb_coin_r);
 	DECLARE_WRITE8_MEMBER(spi_coin_w);
 	DECLARE_READ8_MEMBER(sound_fifo_status_r);
@@ -117,11 +118,10 @@ public:
 	void set_scroll(tilemap_t *layer, int scroll);
 	void combine_tilemap(bitmap_rgb32 &bitmap, const rectangle &cliprect, tilemap_t *tile, int x, int y, int opaque, INT16 *rowscroll);
 
-	virtual void palette_init();
 	virtual void machine_start();
+	virtual void video_start();
 	DECLARE_MACHINE_RESET(spi);
 	DECLARE_MACHINE_RESET(sxx2e);
-	DECLARE_VIDEO_START(spi);
 	DECLARE_VIDEO_START(sys386f);
 	TILE_GET_INFO_MEMBER(get_text_tile_info);
 	TILE_GET_INFO_MEMBER(get_back_tile_info);

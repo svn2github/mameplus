@@ -1,7 +1,6 @@
 #ifndef _SNES_H_
 #define _SNES_H_
 
-#include "devcb.h"
 #include "cpu/spc700/spc700.h"
 #include "cpu/g65816/g65816.h"
 #include "cpu/upd7725/upd7725.h"
@@ -621,9 +620,9 @@ public:
 	UINT8                 m_oldjoy1_latch;
 
 	/* input-related */
-	UINT16                m_data1[4];	// JOY1/JOY2 + 3rd & 4th only used by multitap (hacky support)
-	UINT16                m_data2[4];	// JOY3/JOY4 + 3rd & 4th only used by multitap (hacky support)
-	UINT8                 m_read_idx[4];	// 3rd & 4th only used by multitap (hacky support)
+	UINT16                m_data1[4];   // JOY1/JOY2 + 3rd & 4th only used by multitap (hacky support)
+	UINT16                m_data2[4];   // JOY3/JOY4 + 3rd & 4th only used by multitap (hacky support)
+	UINT8                 m_read_idx[4];    // 3rd & 4th only used by multitap (hacky support)
 
 	/* cart related */
 	snes_cart_info m_cart;   // used by NSS/SFCBox only! to be moved in a derived class!

@@ -1,7 +1,8 @@
-
+#include "emu.h"
 #include "includes/megadriv.h"
 #include "megacd.lh"
 #include "sound/rf5c68.h"
+#include "mcfglgcy.h"
 
 
 /* Callback when the genesis enters interrupt code */
@@ -1186,7 +1187,7 @@ READ16_MEMBER( sega_segacd_device::segacd_sub_dataram_part2_r )
 {
 	if ((scd_rammode&2)==RAM_MODE_2MEG)
 	{
-		printf("ILLEGAL segacd_sub_dataram_part2_r in mode 0\n"); // not mapped to anything in mode 0
+		//printf("ILLEGAL segacd_sub_dataram_part2_r in mode 0\n"); // not mapped to anything in mode 0
 		return 0x0000;
 	}
 	else if ((scd_rammode&2)==RAM_MODE_1MEG)

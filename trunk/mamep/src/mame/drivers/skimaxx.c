@@ -38,6 +38,7 @@
 #include "cpu/m68000/m68000.h"
 #include "cpu/tms34010/tms34010.h"
 #include "sound/okim6295.h"
+#include "scrlegcy.h"
 
 
 class skimaxx_state : public driver_device
@@ -549,7 +550,7 @@ static MACHINE_CONFIG_START( skimaxx, skimaxx_state )
 
 //  MCFG_GFXDECODE( skimaxx )
 
-	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
 	MCFG_PALETTE_LENGTH(32768)
 
 	/* sound hardware */

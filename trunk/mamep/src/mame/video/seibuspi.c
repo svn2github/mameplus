@@ -41,13 +41,13 @@ WRITE32_MEMBER(seibuspi_state::spi_layer_bank_w)
 	// x: ? (0 in ejanhs, 1 in all other games)
 	UINT32 prev = m_layer_bank;
 	COMBINE_DATA(&m_layer_bank);
-	
+
 	if ((prev ^ m_layer_bank) & 0x80000000)
 	{
 		m_rowscroll_enable = m_layer_bank >> 31 & 1;
 		set_layer_offsets();
 	}
-	
+
 	if ((prev ^ m_layer_bank) & 0x08000000)
 		m_fore_layer->mark_all_dirty();
 }
@@ -63,7 +63,7 @@ WRITE8_MEMBER(seibuspi_state::spi_set_layer_banks_w)
 
 	if ((m_rf2_layer_bank ^ data) & 4)
 		m_fore_layer->mark_all_dirty();
-	
+
 	m_rf2_layer_bank = data;
 }
 
@@ -186,13 +186,13 @@ WRITE32_MEMBER(seibuspi_state::tilemap_dma_start_w)
 WRITE32_MEMBER(seibuspi_state::palette_dma_start_w)
 {
 	int dma_length = (m_video_dma_length + 1) * 2;
-	
+
 	// safety check
 	if ((m_video_dma_address & 3) != 0 || (m_video_dma_length & 3) != 3 || dma_length > m_palette_ram_size || (m_video_dma_address + dma_length) > 0x40000)
 		popmessage("Pal DMA %X %X, contact MAMEdev", m_video_dma_address, m_video_dma_length); // shouldn't happen
 	if (m_video_dma_address < 0x800)
 		logerror("palette_dma_start_w in I/O area: %X\n", m_video_dma_address);
-	
+
 	for (int i = 0; i < dma_length / 4; i++)
 	{
 		UINT32 color = m_mainram[m_video_dma_address / 4 + i];
@@ -337,7 +337,8 @@ void seibuspi_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprec
 	int priority;
 	int x1, y1;
 	gfx_element *gfx = machine().gfx[2];
-	const int gfx_high_mask = (gfx->elements() > 0x10000) ? 0x10000 : 0;
+	const int has_tile_high = (gfx->elements() > 0x10000) ? 1 : 0;
+	const int colormask = (m_sprite_bpp == 6) ? 0x3f : 0x1f;
 
 	static const int sprite_xtable[2][8] =
 	{
@@ -356,23 +357,26 @@ void seibuspi_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprec
 	for (int a = m_sprite_ram_size / 4 - 2; a >= 0; a -= 2)
 	{
 		/*
-			Word 0
-			xxxxxxxx xxxxxxxx -------- --------  tile_num low
-			-------- -------- x------- --------  flip_y
-			-------- -------- -xxx---- --------  height
-			-------- -------- ----x--- --------  flip_x
-			-------- -------- -----xxx --------  width
-			-------- -------- -------- xx------  priority
-			-------- -------- -------- --xxxxxx  color
-			
-			Word 1, unmarked bits have no function
-			-------x xxxxxxxx -------- --------  ypos
-			-------- -------- ---x---- --------  tile_num high (only on RISE10/11 chip)
-			-------- -------- ------xx xxxxxxxx  xpos
+		    Word 0
+		    xxxxxxxx xxxxxxxx -------- --------  tile_num low
+		    -------- -------- x------- --------  flip_y
+		    -------- -------- -xxx---- --------  height
+		    -------- -------- ----x--- --------  flip_x
+		    -------- -------- -----xxx --------  width
+		    -------- -------- -------- xx------  priority
+		    -------- -------- -------- --xxxxxx  color (highest bit not used on SYS386F)
+
+		    Word 1, unmarked bits have no function
+		    -------x xxxxxxxx -------- --------  ypos
+		    -------- -------- ---x---- --------  tile_num high (only on RISE10/11 chip)
+		    -------- -------- ------xx xxxxxxxx  xpos
 		*/
 		tile_num = m_sprite_ram[a + 0] >> 16 & 0xffff;
 		if (tile_num == 0)
 			continue;
+
+		if (has_tile_high)
+			tile_num |= m_sprite_ram[a + 1] << 4 & 0x10000;
 
 		priority = m_sprite_ram[a + 0] >> 6 & 0x3;
 		if (pri_mask != priority)
@@ -384,8 +388,7 @@ void seibuspi_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprec
 		ypos = m_sprite_ram[a + 1] >> 16 & 0x1ff;
 		if (ypos & 0x100)
 			ypos |= 0xfe00;
-		color = m_sprite_ram[a + 0] & 0x3f;
-		tile_num |= m_sprite_ram[a + 1] << 4 & gfx_high_mask;
+		color = m_sprite_ram[a + 0] & colormask;
 
 		width = (m_sprite_ram[a + 0] >> 8 & 0x7) + 1;
 		height = (m_sprite_ram[a + 0] >> 12 & 0x7) + 1;
@@ -483,11 +486,6 @@ UINT32 seibuspi_state::screen_update_spi(screen_device &screen, bitmap_rgb32 &bi
 		fore_rowscroll = NULL;
 	}
 
-	m_back_layer->enable((m_layer_enable & 1) ? false : true);
-	m_midl_layer->enable((m_layer_enable & 2) ? false : true);
-	m_fore_layer->enable((m_layer_enable & 4) ? false : true);
-	m_text_layer->enable((m_layer_enable & 8) ? false : true);
-
 	if (m_layer_enable & 1)
 		bitmap.fill(0, cliprect);
 
@@ -495,6 +493,10 @@ UINT32 seibuspi_state::screen_update_spi(screen_device &screen, bitmap_rgb32 &bi
 		combine_tilemap(bitmap, cliprect, m_back_layer, m_scrollram[0] & 0xffff, (m_scrollram[0] >> 16) & 0xffff, 1, back_rowscroll);
 
 	draw_sprites(bitmap, cliprect, 0);
+
+	// if fore layer is enabled, draw priority 0 sprites behind back layer
+	if ((m_layer_enable & 0x15) == 0)
+		combine_tilemap(bitmap, cliprect, m_back_layer, m_scrollram[0] & 0xffff, (m_scrollram[0] >> 16) & 0xffff, 0, back_rowscroll);
 
 	// if fore layer is enabled, draw priority 1 sprites behind middle layer
 	if (~m_layer_enable & 4)
@@ -534,16 +536,6 @@ UINT32 seibuspi_state::screen_update_sys386f(screen_device &screen, bitmap_rgb32
 
 
 /*****************************************************************************/
-
-void seibuspi_state::palette_init()
-{
-	for (int i = 0; i < palette_get_num_colors(machine().palette); i++)
-	{
-		palette_set_color(machine(), i, MAKE_RGB(0, 0, 0));
-		m_alpha_table[i] = 0;
-	}
-}
-
 
 TILE_GET_INFO_MEMBER(seibuspi_state::get_text_tile_info)
 {
@@ -596,7 +588,7 @@ TILE_GET_INFO_MEMBER(seibuspi_state::get_fore_tile_info)
 }
 
 
-VIDEO_START_MEMBER(seibuspi_state,spi)
+void seibuspi_state::video_start()
 {
 	int i;
 
@@ -620,7 +612,7 @@ VIDEO_START_MEMBER(seibuspi_state,spi)
 	m_palette_ram_size = 0x3000;
 	m_sprite_ram_size = 0x1000;
 	m_sprite_bpp = 6;
-	
+
 	m_tilemap_ram = auto_alloc_array_clear(machine(), UINT32, m_tilemap_ram_size/4);
 	m_palette_ram = auto_alloc_array_clear(machine(), UINT32, m_palette_ram_size/4);
 	m_sprite_ram = auto_alloc_array_clear(machine(), UINT32, m_sprite_ram_size/4);
@@ -631,8 +623,11 @@ VIDEO_START_MEMBER(seibuspi_state,spi)
 	m_fore_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seibuspi_state::get_fore_tile_info),this), TILEMAP_SCAN_COLS, 16,16,32,32);
 
 	m_text_layer->set_transparent_pen(31);
+	m_back_layer->set_transparent_pen(63);
 	m_midl_layer->set_transparent_pen(63);
 	m_fore_layer->set_transparent_pen(63);
+
+	memset(m_alpha_table, 0, 8192);
 
 	// sprites
 	//for (i = 1792; i < 1808; i++) { m_alpha_table[i] = 1; } // breaks rdft
@@ -652,7 +647,7 @@ VIDEO_START_MEMBER(seibuspi_state,spi)
 	// text layer
 	for (i = 6000; i < 6016; i++) { m_alpha_table[i] = 1; }
 	for (i = 6128; i < 6144; i++) { m_alpha_table[i] = 1; }
-	
+
 	register_video_state();
 }
 
@@ -668,11 +663,13 @@ VIDEO_START_MEMBER(seibuspi_state,sys386f)
 	m_palette_ram_size = 0x4000;
 	m_sprite_ram_size = 0x2000;
 	m_sprite_bpp = 8;
-	
+
 	m_tilemap_ram = NULL;
 	m_palette_ram = auto_alloc_array_clear(machine(), UINT32, m_palette_ram_size/4);
 	m_sprite_ram = auto_alloc_array_clear(machine(), UINT32, m_sprite_ram_size/4);
-	
+
+	memset(m_alpha_table, 0, 8192);
+
 	register_video_state();
 }
 
@@ -687,7 +684,7 @@ void seibuspi_state::register_video_state()
 	save_item(NAME(m_midl_layer_offset));
 	save_item(NAME(m_fore_layer_offset));
 	save_item(NAME(m_text_layer_offset));
-	
+
 	if (m_tilemap_ram != NULL) save_pointer(NAME(m_tilemap_ram), m_tilemap_ram_size/4);
 	save_pointer(NAME(m_palette_ram), m_palette_ram_size/4);
 	save_pointer(NAME(m_sprite_ram), m_sprite_ram_size/4);

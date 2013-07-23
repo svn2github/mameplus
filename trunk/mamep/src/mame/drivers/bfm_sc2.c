@@ -171,6 +171,8 @@ Adder hardware:
 #include "sc2_dmd.lh"
 #include "drwho.lh"
 #include "machine/bfm_comn.h"
+#include "drivlgcy.h"
+#include "scrlegcy.h"
 
 
 class bfm_sc2_state : public driver_device
@@ -484,9 +486,9 @@ int bfm_sc2_state::Scorpion2_GetSwitchState(int strobe, int data)
 
 void bfm_sc2_state::e2ram_init(nvram_device &nvram, void *data, size_t size)
 {
-	static const UINT8 init_e2ram[10] = { 1, 4, 10, 20, 0, 1, 1, 4, 10, 20 };
+	static const UINT8 init_e2ram[] = { 1, 4, 10, 20, 0, 1, 1, 4, 10, 20 };
 	memset(data,0x00,size);
-	memcpy(data,init_e2ram,size);
+	memcpy(data,init_e2ram,sizeof(init_e2ram));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -707,8 +709,8 @@ WRITE8_MEMBER(bfm_sc2_state::volume_override_w)
 
 WRITE8_MEMBER(bfm_sc2_state::nec_reset_w)
 {
-	upd7759_start_w(m_upd7759, 0);
-	upd7759_reset_w(m_upd7759, data);
+	m_upd7759->start_w(0);
+	m_upd7759->reset_w(data);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -720,11 +722,11 @@ WRITE8_MEMBER(bfm_sc2_state::nec_latch_w)
 	if ( data & 0x80 )         bank |= 0x01;
 	if ( m_expansion_latch & 2 ) bank |= 0x02;
 
-	upd7759_set_bank_base(m_upd7759, bank*0x20000);
+	m_upd7759->set_bank_base(bank*0x20000);
 
-	upd7759_port_w(m_upd7759, space, 0, data&0x3F);    // setup sample
-	upd7759_start_w(m_upd7759, 0);
-	upd7759_start_w(m_upd7759, 1);
+	m_upd7759->port_w(space, 0, data&0x3F);    // setup sample
+	m_upd7759->start_w(0);
+	m_upd7759->start_w(1);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -754,7 +756,7 @@ READ8_MEMBER(bfm_sc2_state::vfd_status_hop_r)// on video games, hopper inputs ar
 		}
 	}
 
-	if ( !upd7759_busy_r(m_upd7759) ) result |= 0x80;           // update sound busy input
+	if ( !m_upd7759->busy_r() ) result |= 0x80;           // update sound busy input
 
 	return result;
 }
@@ -1164,7 +1166,7 @@ READ8_MEMBER(bfm_sc2_state::vfd_status_r)
 
 	int result = m_optic_pattern;
 
-	if ( !upd7759_busy_r(m_upd7759) ) result |= 0x80;
+	if ( !m_upd7759->busy_r() ) result |= 0x80;
 
 	if (machine().device("matrix"))
 		if ( BFM_dm01_busy() ) result |= 0x40;

@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
 		v.author = "MAME Team and MAME Plus! Team";
 		v.comments = "Multiple Arcade Machine Emulator with GUI";
 		v.company_name = "MAME Team";
-		v.file_description = "Multiple Arcade Machine Emulator With GUI";
+		v.file_description = "Multiple Arcade Machine Emulator with GUI";
 		v.internal_name = "MAME Plus!";
 		v.original_filename = "MAMEPlus";
 		v.product_name = "MAMEPlus";

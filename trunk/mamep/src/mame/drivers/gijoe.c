@@ -35,7 +35,6 @@ Known Issues
 
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
-#include "video/konicdev.h"
 #include "cpu/z80/z80.h"
 #include "machine/eeprom.h"
 #include "sound/k054539.h"
@@ -78,7 +77,7 @@ WRITE16_MEMBER(gijoe_state::control2_w)
 		m_cur_control2 = data;
 
 		/* bit 6 = enable sprite ROM reading */
-		k053246_set_objcha_line(m_k053246, (data & 0x0040) ? ASSERT_LINE : CLEAR_LINE);
+		m_k053246->k053246_set_objcha_line( (data & 0x0040) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -88,7 +87,7 @@ void gijoe_state::gijoe_objdma(  )
 
 	src_head = m_spriteram;
 	src_tail = m_spriteram + 255 * 8;
-	k053247_get_ram(m_k053246, &dst_head);
+	m_k053246->k053247_get_ram( &dst_head);
 	dst_tail = dst_head + 255 * 8;
 
 	for (; src_head <= src_tail; src_head += 8)
@@ -115,10 +114,10 @@ TIMER_CALLBACK_MEMBER(gijoe_state::dmaend_callback)
 INTERRUPT_GEN_MEMBER(gijoe_state::gijoe_interrupt)
 {
 	// global interrupt masking (*this game only)
-	if (!k056832_is_irq_enabled(m_k056832, 0))
+	if (!m_k056832->is_irq_enabled(0))
 		return;
 
-	if (k053246_is_irq_enabled(m_k053246))
+	if (m_k053246->k053246_is_irq_enabled())
 	{
 		gijoe_objdma();
 
@@ -159,16 +158,16 @@ static void sound_nmi( device_t *device )
 static ADDRESS_MAP_START( gijoe_map, AS_PROGRAM, 16, gijoe_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x100fff) AM_RAM AM_SHARE("spriteram")                               // Sprites
-	AM_RANGE(0x110000, 0x110007) AM_DEVWRITE_LEGACY("k053246", k053246_word_w)
-	AM_RANGE(0x120000, 0x121fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)      // Graphic planes
-	AM_RANGE(0x122000, 0x123fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)      // Graphic planes mirror read
-	AM_RANGE(0x130000, 0x131fff) AM_DEVREAD_LEGACY("k056832", k056832_rom_word_r)                               // Passthrough to tile roms
-	AM_RANGE(0x160000, 0x160007) AM_DEVWRITE_LEGACY("k056832", k056832_b_word_w)                                    // VSCCS (board dependent)
+	AM_RANGE(0x110000, 0x110007) AM_DEVWRITE("k053246", k053247_device, k053246_word_w)
+	AM_RANGE(0x120000, 0x121fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)      // Graphic planes
+	AM_RANGE(0x122000, 0x123fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)      // Graphic planes mirror read
+	AM_RANGE(0x130000, 0x131fff) AM_DEVREAD("k056832", k056832_device, rom_word_r)                               // Passthrough to tile roms
+	AM_RANGE(0x160000, 0x160007) AM_DEVWRITE("k056832", k056832_device, b_word_w)                                    // VSCCS (board dependent)
 	AM_RANGE(0x170000, 0x170001) AM_WRITENOP                                                // Watchdog
 	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_SHARE("workram")                 // Main RAM.  Spec. 180000-1803ff, 180400-187fff
 	AM_RANGE(0x190000, 0x190fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x1a0000, 0x1a001f) AM_DEVWRITE_LEGACY("k053251", k053251_lsb_w)
-	AM_RANGE(0x1b0000, 0x1b003f) AM_DEVWRITE_LEGACY("k056832", k056832_word_w)
+	AM_RANGE(0x1a0000, 0x1a001f) AM_DEVWRITE("k053251", k053251_device, lsb_w)
+	AM_RANGE(0x1b0000, 0x1b003f) AM_DEVWRITE("k056832", k056832_device, word_w)
 	AM_RANGE(0x1c000c, 0x1c000d) AM_WRITE(sound_cmd_w)
 	AM_RANGE(0x1c0014, 0x1c0015) AM_READ(sound_status_r)
 	AM_RANGE(0x1c0000, 0x1c001f) AM_RAM
@@ -178,12 +177,12 @@ static ADDRESS_MAP_START( gijoe_map, AS_PROGRAM, 16, gijoe_state )
 	AM_RANGE(0x1e4000, 0x1e4001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1e4002, 0x1e4003) AM_READ_PORT("START")
 	AM_RANGE(0x1e8000, 0x1e8001) AM_READWRITE(control2_r, control2_w)
-	AM_RANGE(0x1f0000, 0x1f0001) AM_DEVREAD_LEGACY("k053246", k053246_word_r)
+	AM_RANGE(0x1f0000, 0x1f0001) AM_DEVREAD("k053246", k053247_device, k053246_word_r)
 #if JOE_DEBUG
 	AM_RANGE(0x110000, 0x110007) AM_DEVREAD_LEGACY("k053246", k053246_reg_word_r)
-	AM_RANGE(0x160000, 0x160007) AM_DEVREAD_LEGACY("k056832", k056832_b_word_r)
-	AM_RANGE(0x1a0000, 0x1a001f) AM_DEVREAD_LEGACY("k053251", k053251_lsb_r)
-	AM_RANGE(0x1b0000, 0x1b003f) AM_DEVREAD_LEGACY("k056832", k056832_word_r)
+	AM_RANGE(0x160000, 0x160007) AM_DEVREAD("k056832", k056832_device, b_word_r)
+	AM_RANGE(0x1a0000, 0x1a001f) AM_DEVREAD("k053251", k053251_device, lsb_r)
+	AM_RANGE(0x1b0000, 0x1b003f) AM_DEVREAD("k056832", k056832_device, word_r)
 #endif
 ADDRESS_MAP_END
 

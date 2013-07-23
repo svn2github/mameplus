@@ -7150,6 +7150,18 @@ ROM_START( ngdup23e )
 	ROM_LOAD("317-unk-jpn.pic", 0x00, 0x4000, NO_DUMP )
 ROM_END
 
+ROM_START( ndcfboxa )
+	NAOMIGD_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+	DISK_REGION( "gdrom" )
+	DISK_IMAGE_READONLY( "gds-0042a", 0, SHA1(619fd9ebd52fb418526f741ddacbd3edf7dcb4f5) )
+
+	ROM_REGION( 0x4000, "pic", ROMREGION_ERASEFF)
+	// PIC and sticker unknown
+	ROM_LOAD("317-unk-jpn.pic", 0x00, 0x4000, NO_DUMP )
+ROM_END
+
 /*
 0C03F492: MOV     R5,R0
 0C03F494: MOV     R0,R5
@@ -8204,7 +8216,7 @@ ROM_END
 // 0012A Virtua Fighter 4 (Rev A)
 /* 0012B */ GAME( 2001, vf4b,     vf4,     naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Virtua Fighter 4 (Rev B) (GDS-0012B)", GAME_FLAGS )
 /* 0012C */ GAME( 2001, vf4c,     vf4,     naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Virtua Fighter 4 (Rev C) (GDS-0012C)", GAME_FLAGS )
-/* 0013  */ GAME( 2001, shaktmsp,  naomigd,  naomigd, shaktamb, naomi_state, naomigd,  ROT0, "Sega", "Shakatto Tambourine 2K1 SPR (GDS-0013)", GAME_FLAGS )
+/* 0013  */ GAME( 2001, shaktmsp, naomigd, naomigd,  shaktamb,naomi_state, naomigd, ROT0, "Sega", "Shakatto Tambourine 2K1 SPR (GDS-0013)", GAME_FLAGS )
 /* 0014  */ GAME( 2001, beachspi, naomi2,  naomi2gd, naomi,   naomi_state, naomi2,  ROT0, "Sega", "Beach Spikers (GDS-0014)", GAME_FLAGS )
 // 0015  Virtua Tennis 2 / Power Smash 2
 /* 0015A */ GAME( 2001, vtennis2, naomigd, naomigd,  naomi,   naomi_state, naomigd, ROT0, "Sega", "Virtua Tennis 2 / Power Smash 2 (Rev A) (GDS-0015A)", GAME_FLAGS )
@@ -8260,7 +8272,7 @@ ROM_END
 // 0041  Dragon Treasure 3
 // 0041A Dragon Treasure 3 (Rev A)
 // 0042  NAOMI DIMM Firm Update for CF-BOX
-// 0042A NAOMI DIMM Firm Update for CF-BOX (Rev A)
+/* 0042A */ GAME( 2001, ndcfboxa, naomigd, naomigd,  naomi,   naomi_state, naomigd, ROT0, "Sega", "Naomi DIMM Firmware Update for CF-BOX (Rev A) (GDS-0042A)", GAME_FLAGS )
 // 00??  Dragon Treasure
 // 00??  Dragon Treasure 2
 // 00??  Get Bass 2
