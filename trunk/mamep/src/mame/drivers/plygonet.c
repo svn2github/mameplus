@@ -67,25 +67,10 @@
 #include "cpu/z80/z80.h"
 #include "cpu/dsp56k/dsp56k.h"
 #include "sound/k054539.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "includes/plygonet.h"
 
 enum { BANK_GROUP_A, BANK_GROUP_B, INVALID_BANK_GROUP };
-
-static const eeprom_interface eeprom_intf =
-{
-	9,               // address bits
-	8,               // data bits
-	"*110",          // read command
-	"*101",          // write command
-	"*111",          // erase command
-	"*10000xxxxxxx", // lock command
-	"*10011xxxxxxx", // unlock command
-	1,
-	0
-//  "*10001xxxxxxx", // write all
-//  "*10010xxxxxxx"  // erase all
-};
 
 READ8_MEMBER(polygonet_state::polygonet_inputs_r)
 {
@@ -105,9 +90,9 @@ WRITE8_MEMBER(polygonet_state::polygonet_sys_w)
 		    D25 = EEPROM CS
 		    D24 = EEPROM DATA
 		*/
-			m_eeprom->write_bit(data & 1);
-			m_eeprom->set_cs_line((data & 2) ? CLEAR_LINE : ASSERT_LINE);
-			m_eeprom->set_clock_line((data & 4) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->di_write(data & 1);
+			m_eeprom->cs_write((data & 2) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->clk_write((data & 4) ? ASSERT_LINE : CLEAR_LINE);
 
 			m_sys0 = data;
 			break;
@@ -671,7 +656,7 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 
 	MCFG_QUANTUM_PERFECT_CPU("maincpu") /* TODO: TEMPORARY!  UNTIL A MORE LOCALIZED SYNC CAN BE MADE */
 
-	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
+	MCFG_EEPROM_SERIAL_93C66_8BIT_ADD("eeprom")
 
 	MCFG_GFXDECODE(plygonet)
 
@@ -726,7 +711,7 @@ static INPUT_PORTS_START( polygonet )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("IN2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, do_read)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED ) // Start 2, unused

@@ -20,6 +20,7 @@
 #define CONTROL2_TAG   "ctrl2"
 
 #include "machine/smsctrl.h"
+#include "machine/smsexp.h"
 #include "machine/sega8_slot.h"
 
 
@@ -34,7 +35,8 @@ public:
 		m_main_scr(*this, "screen"),
 		m_mainram(*this, "mainram"),
 		m_cartslot(*this, "slot"),
-		m_card(*this, "mycard"),
+		m_cardslot(*this, "mycard"),
+		m_expslot(*this, "exp"),
 		m_region_maincpu(*this, "maincpu"),
 		m_port_ctrl1(*this, CONTROL1_TAG),
 		m_port_ctrl2(*this, CONTROL2_TAG),
@@ -42,14 +44,15 @@ public:
 		m_port_reset(*this, "RESET"),
 		m_port_start(*this, "START"),
 		m_port_scope(*this, "SEGASCOPE"),
+		m_port_scope_binocular(*this, "SSCOPE_BINOCULAR"),
 		m_port_persist(*this, "PERSISTENCE"),
 		m_is_gamegear(0),
 		m_is_region_japan(0),
+		m_is_korean(0),
 		m_is_sdisp(0),
 		m_has_bios_0400(0),
 		m_has_bios_2000(0),
 		m_has_bios_full(0),
-		m_has_bios(0),
 		m_has_fm(0) { }
 
 	// devices
@@ -59,7 +62,8 @@ public:
 	required_device<screen_device> m_main_scr;
 	required_shared_ptr<UINT8> m_mainram;
 	required_device<sega8_cart_slot_device> m_cartslot;
-	optional_device<sega8_card_slot_device> m_card;
+	optional_device<sega8_card_slot_device> m_cardslot;
+	optional_device<sms_expansion_slot_device> m_expslot;
 	required_memory_region m_region_maincpu;
 	optional_device<sms_control_port_device> m_port_ctrl1;
 	optional_device<sms_control_port_device> m_port_ctrl2;
@@ -67,6 +71,7 @@ public:
 	optional_ioport m_port_reset;
 	optional_ioport m_port_start;
 	optional_ioport m_port_scope;
+	optional_ioport m_port_scope_binocular;
 	optional_ioport m_port_persist;
 
 	device_t *m_left_lcd;
@@ -98,11 +103,11 @@ public:
 	// model identifiers
 	UINT8 m_is_gamegear;
 	UINT8 m_is_region_japan;
+	UINT8 m_is_korean;
 	UINT8 m_is_sdisp;
 	UINT8 m_has_bios_0400;
 	UINT8 m_has_bios_2000;
 	UINT8 m_has_bios_full;
-	UINT8 m_has_bios;
 	UINT8 m_has_fm;
 
 	// Data needed for Light Phaser
@@ -155,6 +160,7 @@ public:
 	DECLARE_MACHINE_RESET(mess_sms);
 	DECLARE_VIDEO_START(gamegear);
 	DECLARE_VIDEO_START(sms1);
+	DECLARE_VIDEO_RESET(sms1);
 	UINT32 screen_update_gamegear(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_sms(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);

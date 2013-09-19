@@ -101,6 +101,10 @@ public:
 	DECLARE_READ16_MEMBER( genesis_vdp_r );
 	DECLARE_WRITE16_MEMBER( genesis_vdp_w );
 
+	DECLARE_WRITE_LINE_MEMBER(genesis_vdp_sndirqline_callback_segas18);
+	DECLARE_WRITE_LINE_MEMBER(genesis_vdp_lv6irqline_callback_segas18);
+	DECLARE_WRITE_LINE_MEMBER(genesis_vdp_lv4irqline_callback_segas18);
+
 
 	// custom I/O
 	DECLARE_READ16_MEMBER( ddcrew_custom_io_r );
@@ -111,12 +115,6 @@ public:
 
 	// video rendering
 	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-
-	// wrappers for legacy functions (to be removed)
-	template<read16_space_func _Legacy>
-	READ16_MEMBER( legacy_wrapper_r ) { return _Legacy(space, offset, mem_mask); }
-	template<write16_space_func _Legacy>
-	WRITE16_MEMBER( legacy_wrapper ) { _Legacy(space, offset, data, mem_mask); }
 
 	DECLARE_WRITE16_HANDLER( sega_tileram_0_w ) { m_segaic16vid->segaic16_tileram_0_w(space,offset,data,mem_mask); };
 	DECLARE_WRITE16_HANDLER( sega_textram_0_w ) { m_segaic16vid->segaic16_textram_0_w(space,offset,data,mem_mask); };

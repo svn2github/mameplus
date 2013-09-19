@@ -14,7 +14,7 @@
 #include "cpu/sh2/sh2.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/adsp2100/adsp2100.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "machine/scudsp.h"
 #include "sound/scsp.h"
 #include "sound/cdda.h"
@@ -954,7 +954,7 @@ static MACHINE_CONFIG_START( stv, stv_state )
 	MCFG_MACHINE_START_OVERRIDE(stv_state,stv)
 	MCFG_MACHINE_RESET_OVERRIDE(stv_state,stv)
 
-	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom") /* Actually 93c45 */
 
 	MCFG_TIMER_DRIVER_ADD("sector_timer", stv_state, stv_sector_cb)
 	MCFG_TIMER_DRIVER_ADD("sh1_cmd", stv_state, stv_sh1_sim)

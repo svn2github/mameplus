@@ -1,6 +1,6 @@
 /********************************************************************************************************
 
-	Seibu Protected 1993-94 era hardware, V30 based (sequel to the 68k based hardware)
+    Seibu Protected 1993-94 era hardware, V30 based (sequel to the 68k based hardware)
     TODO: figure out the rest of the protection
     TODO: Zero Team presumably needs additive blending on the character screen
 
@@ -8,9 +8,9 @@
     - Zero Team currently crashes due of an unknown check with collision detection.
     Additionally:
     8E377: C7 06 00 05 80 A9         mov     word ptr [500h],0A980h
-	8E37D: C7 06 00 05 00 B9         mov     word ptr [500h],0B900h
-	8E383: F7 06 88 05 FF FF         test    word ptr [588h],0FFFFh ;checks unknown collision detection port with 0xffff?
-	8E389: 75 0A                     bne     8E395h
+    8E37D: C7 06 00 05 00 B9         mov     word ptr [500h],0B900h
+    8E383: F7 06 88 05 FF FF         test    word ptr [588h],0FFFFh ;checks unknown collision detection port with 0xffff?
+    8E389: 75 0A                     bne     8E395h
 
 ===========================================================================================================
 
@@ -147,8 +147,7 @@ Current Problem(s) - in order of priority
 #include "emu.h"
 #include "cpu/nec/nec.h"
 #include "cpu/z80/z80.h"
-#include "audio/seibu.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "sound/okim6295.h"
 #include "includes/raiden2.h"
 #include "video/seibu_crtc.h"
@@ -1002,7 +1001,7 @@ VIDEO_START_MEMBER(raiden2_state,raiden2)
 	text_layer->set_transparent_pen(15);
 }
 
-/* SCREEN_UPDATE_IND16 (move to video file) */
+/* screen_update_raiden2 (move to video file) */
 
 UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
@@ -1011,19 +1010,19 @@ UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_ind16 
 	//if (!machine().input().code_pressed(KEYCODE_Q))
 	{
 		if (!(raiden2_tilemap_enable & 1))
-			background_layer->draw(bitmap, cliprect, 0, 0);
+			background_layer->draw(screen, bitmap, cliprect, 0, 0);
 	}
 
 	//if (!machine().input().code_pressed(KEYCODE_W))
 	{
 		if (!(raiden2_tilemap_enable & 2))
-			midground_layer->draw(bitmap, cliprect, 0, 0);
+			midground_layer->draw(screen, bitmap, cliprect, 0, 0);
 	}
 
 	//if (!machine().input().code_pressed(KEYCODE_E))
 	{
 		if (!(raiden2_tilemap_enable & 4))
-			foreground_layer->draw(bitmap, cliprect, 0, 0);
+			foreground_layer->draw(screen, bitmap, cliprect, 0, 0);
 	}
 
 	//if (!machine().input().code_pressed(KEYCODE_S))
@@ -1035,7 +1034,7 @@ UINT32 raiden2_state::screen_update_raiden2(screen_device &screen, bitmap_ind16 
 	//if (!machine().input().code_pressed(KEYCODE_A))
 	{
 		if (!(raiden2_tilemap_enable & 8))
-			text_layer->draw(bitmap, cliprect, 0, 0);
+			text_layer->draw(screen, bitmap, cliprect, 0, 0);
 	}
 
 	return 0;
@@ -1176,7 +1175,6 @@ MACHINE_RESET_MEMBER(raiden2_state,raiden2)
 {
 	common_reset();
 	sprcpt_init();
-	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
 	membank("mainbank")->set_entry(1);
 
@@ -1188,7 +1186,6 @@ MACHINE_RESET_MEMBER(raiden2_state,raidendx)
 {
 	common_reset();
 	sprcpt_init();
-	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
 	membank("mainbank")->set_entry(8);
 
@@ -1203,7 +1200,6 @@ MACHINE_RESET_MEMBER(raiden2_state,zeroteam)
 	fg_bank = 2;
 	mid_bank = 1;
 	sprcpt_init();
-	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
 	membank("mainbank")->set_entry(1);
 
@@ -1217,7 +1213,6 @@ MACHINE_RESET_MEMBER(raiden2_state,xsedae)
 	fg_bank = 2;
 	mid_bank = 1;
 	sprcpt_init();
-	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
 	//membank("mainbank")->set_entry(1);
 
@@ -1226,12 +1221,12 @@ MACHINE_RESET_MEMBER(raiden2_state,xsedae)
 
 READ16_MEMBER(raiden2_state::raiden2_sound_comms_r)
 {
-	return seibu_main_word_r(space,(offset >> 1) & 7,0xffff);
+	return m_seibu_sound->main_word_r(space,(offset >> 1) & 7,0xffff);
 }
 
 WRITE16_MEMBER(raiden2_state::raiden2_sound_comms_w)
 {
-	seibu_main_word_w(space,(offset >> 1) & 7,data,0x00ff);
+	m_seibu_sound->main_word_w(space,(offset >> 1) & 7,data,0x00ff);
 }
 
 WRITE16_MEMBER(raiden2_state::raiden2_bank_w)
@@ -1437,8 +1432,8 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x005b4, 0x005b5) AM_READ(cop_angle_r)
 
 	AM_RANGE(0x00600, 0x0064f) AM_DEVREADWRITE("crtc", seibu_crtc_device, read, write)
-//	AM_RANGE(0x0061c, 0x0061d) AM_WRITE(tilemap_enable_w)
-//	AM_RANGE(0x00620, 0x0062b) AM_WRITE(tile_scroll_w)
+//  AM_RANGE(0x0061c, 0x0061d) AM_WRITE(tilemap_enable_w)
+//  AM_RANGE(0x00620, 0x0062b) AM_WRITE(tile_scroll_w)
 	AM_RANGE(0x006a0, 0x006a3) AM_WRITE(sprcpt_val_1_w)
 	AM_RANGE(0x006a4, 0x006a7) AM_WRITE(sprcpt_data_3_w)
 	AM_RANGE(0x006a8, 0x006ab) AM_WRITE(sprcpt_data_4_w)
@@ -1863,7 +1858,6 @@ GFXDECODE_END
 
 SEIBU_CRTC_INTERFACE(crtc_intf)
 {
-	"screen",
 	DEVCB_DRIVER_MEMBER16(raiden2_state, tilemap_enable_w),
 	DEVCB_DRIVER_MEMBER16(raiden2_state, tile_scroll_w),
 };

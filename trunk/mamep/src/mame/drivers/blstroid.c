@@ -20,7 +20,6 @@
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "machine/atarigen.h"
-#include "video/atarimo.h"
 #include "includes/blstroid.h"
 
 
@@ -41,14 +40,14 @@ void blstroid_state::update_interrupts()
 
 WRITE16_MEMBER(blstroid_state::blstroid_halt_until_hblank_0_w)
 {
-	halt_until_hblank_0(space.device(), *machine().primary_screen);
+	halt_until_hblank_0(space.device(), *m_screen);
 }
 
 
 MACHINE_RESET_MEMBER(blstroid_state,blstroid)
 {
 	atarigen_state::machine_reset();
-	scanline_timer_reset(*machine().primary_screen, 8);
+	scanline_timer_reset(*m_screen, 8);
 }
 
 
@@ -66,7 +65,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, blstroid_state )
 	AM_RANGE(0xff8000, 0xff8001) AM_MIRROR(0x7f81fe) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0xff8200, 0xff8201) AM_MIRROR(0x7f81fe) AM_WRITE(scanline_int_ack_w)
 	AM_RANGE(0xff8400, 0xff8401) AM_MIRROR(0x7f81fe) AM_WRITE(video_int_ack_w)
-	AM_RANGE(0xff8600, 0xff8601) AM_MIRROR(0x7f81fe) AM_WRITE(eeprom_enable_w)
+	AM_RANGE(0xff8600, 0xff8601) AM_MIRROR(0x7f81fe) AM_DEVWRITE("eeprom", atari_eeprom_device, unlock_write)
 	AM_RANGE(0xff8800, 0xff89ff) AM_MIRROR(0x7f8000) AM_WRITEONLY AM_SHARE("priorityram")
 	AM_RANGE(0xff8a00, 0xff8a01) AM_MIRROR(0x7f81fe) AM_DEVWRITE8("jsa", atari_jsa_i_device, main_command_w, 0x00ff)
 	AM_RANGE(0xff8c00, 0xff8c01) AM_MIRROR(0x7f81fe) AM_DEVWRITE("jsa", atari_jsa_i_device, sound_reset_w)
@@ -77,9 +76,9 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, blstroid_state )
 	AM_RANGE(0xff9c00, 0xff9c01) AM_MIRROR(0x7f83fc) AM_READ_PORT("IN0")
 	AM_RANGE(0xff9c02, 0xff9c03) AM_MIRROR(0x7f83fc) AM_READ_PORT("IN1")
 	AM_RANGE(0xffa000, 0xffa3ff) AM_MIRROR(0x7f8c00) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0xffb000, 0xffb3ff) AM_MIRROR(0x7f8c00) AM_READWRITE(eeprom_r, eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0xffb000, 0xffb3ff) AM_MIRROR(0x7f8c00) AM_DEVREADWRITE8("eeprom", atari_eeprom_device, read, write, 0x00ff)
 	AM_RANGE(0xffc000, 0xffcfff) AM_MIRROR(0x7f8000) AM_RAM_DEVWRITE("playfield", tilemap_device, write) AM_SHARE("playfield")
-	AM_RANGE(0xffd000, 0xffdfff) AM_MIRROR(0x7f8000) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
+	AM_RANGE(0xffd000, 0xffdfff) AM_MIRROR(0x7f8000) AM_RAM AM_SHARE("mob")
 	AM_RANGE(0xffe000, 0xffffff) AM_MIRROR(0x7f8000) AM_RAM
 ADDRESS_MAP_END
 
@@ -177,7 +176,8 @@ static MACHINE_CONFIG_START( blstroid, blstroid_state )
 	MCFG_DEVICE_VBLANK_INT_DRIVER("screen", atarigen_state, video_int_gen)
 
 	MCFG_MACHINE_RESET_OVERRIDE(blstroid_state,blstroid)
-	MCFG_NVRAM_ADD_1FILL("eeprom")
+
+	MCFG_ATARI_EEPROM_2804_ADD("eeprom")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -185,6 +185,7 @@ static MACHINE_CONFIG_START( blstroid, blstroid_state )
 	MCFG_PALETTE_LENGTH(512)
 
 	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, blstroid_state, get_playfield_tile_info, 16,8, SCAN_ROWS, 64,64)
+	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", blstroid_state::s_mob_config)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	/* note: these parameters are from published specs, not derived */

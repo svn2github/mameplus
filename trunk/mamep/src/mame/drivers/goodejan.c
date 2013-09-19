@@ -55,7 +55,6 @@ Notes:
 #include "audio/seibu.h"
 #include "sound/3812intf.h"
 #include "video/seibu_crtc.h"
-#include "drivlgcy.h"
 
 
 class goodejan_state : public driver_device
@@ -317,12 +316,6 @@ void goodejan_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap
 	}
 }
 
-/***********************************
-*
-* VIDEO_START/VIDEO_UPDATE functions
-*
-***********************************/
-
 void goodejan_state::video_start()
 {
 	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
@@ -350,13 +343,13 @@ UINT32 goodejan_state::screen_update_goodejan(screen_device &screen, bitmap_ind1
 	m_sc3_tilemap->set_scrollx(0, (0) & 0x1ff );
 	m_sc3_tilemap->set_scrolly(0, (0) & 0x1ff );
 
-	if(SEIBU_CRTC_ENABLE_SC0) { m_sc0_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC0) { m_sc0_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 2); }
-	if(SEIBU_CRTC_ENABLE_SC2) { m_sc2_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC2) { m_sc2_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 1); }
-	if(SEIBU_CRTC_ENABLE_SC1) { m_sc1_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC1) { m_sc1_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 0); }
-	if(SEIBU_CRTC_ENABLE_SC3) { m_sc3_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC3) { m_sc3_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 3); }
 
 	return 0;
@@ -417,7 +410,7 @@ static ADDRESS_MAP_START( common_io_map, AS_IO, 16, goodejan_state )
 	AM_RANGE(0xc000, 0xc001) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc002, 0xc003) AM_READ(mahjong_panel_r)
 	AM_RANGE(0xc004, 0xc005) AM_READ_PORT("DSW2") // switches
-	AM_RANGE(0xd000, 0xd00f) AM_READWRITE_LEGACY(seibu_main_word_r, seibu_main_word_w)
+	AM_RANGE(0xd000, 0xd00f) AM_DEVREADWRITE("seibu_sound", seibu_sound_device, main_word_r, main_word_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( totmejan_io_map, AS_IO, 16, goodejan_state )
@@ -641,7 +634,6 @@ WRITE16_MEMBER( goodejan_state::layer_scroll_w )
 
 SEIBU_CRTC_INTERFACE(crtc_intf)
 {
-	"screen",
 	DEVCB_DRIVER_MEMBER16(goodejan_state, layer_en_w),
 	DEVCB_DRIVER_MEMBER16(goodejan_state, layer_scroll_w),
 
@@ -656,8 +648,6 @@ static MACHINE_CONFIG_START( goodejan, goodejan_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", goodejan_state, goodejan_irq)
 
 	SEIBU_SOUND_SYSTEM_CPU(GOODEJAN_MHZ1/2)
-
-	MCFG_MACHINE_RESET(seibu_sound)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

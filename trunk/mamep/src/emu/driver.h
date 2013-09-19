@@ -58,6 +58,8 @@
 #define MCFG_MACHINE_RESET_OVERRIDE(_class, _func) \
 	driver_device::static_set_callback(config.root_device(), driver_device::CB_MACHINE_RESET, driver_callback_delegate(&_class::MACHINE_RESET_NAME(_func), #_class "::machine_reset_" #_func, downcast<_class *>(owner)));
 
+#define MCFG_MACHINE_RESET_REMOVE() \
+	driver_device::static_set_callback(config.root_device(), driver_device::CB_MACHINE_RESET, driver_callback_delegate());
 
 // core sound callbacks
 #define MCFG_SOUND_START_OVERRIDE(_class, _func) \
@@ -119,7 +121,6 @@
 #define VIDEO_START_MEMBER(cls,name) void cls::VIDEO_START_NAME(name)()
 
 #define VIDEO_RESET_NAME(name)      video_reset_##name
-#define VIDEO_RESET(name)           void VIDEO_RESET_NAME(name)(running_machine &machine) // legacy
 #define VIDEO_RESET_CALL_MEMBER(name)       VIDEO_RESET_NAME(name)()
 #define DECLARE_VIDEO_RESET(name)   void VIDEO_RESET_NAME(name)()
 #define VIDEO_RESET_MEMBER(cls,name) void cls::VIDEO_RESET_NAME(name)()
@@ -133,7 +134,7 @@
 typedef delegate<void ()> driver_callback_delegate;
 
 // legacy callback functions
-typedef void   (*legacy_callback_func)(running_machine &machine);
+/*ATTR_DEPRECATED*/ typedef void (*legacy_callback_func)(running_machine &machine);
 
 
 // ======================> driver_device
@@ -165,7 +166,7 @@ public:
 
 	// inline configuration helpers
 	static void static_set_game(device_t &device, const game_driver &game);
-	static void static_set_callback(device_t &device, callback_type type, legacy_callback_func callback);
+	ATTR_DEPRECATED static void static_set_callback(device_t &device, callback_type type, legacy_callback_func callback);
 	static void static_set_callback(device_t &device, callback_type type, driver_callback_delegate callback);
 
 	// generic helpers
@@ -174,28 +175,6 @@ public:
 	{
 		(machine.driver_data<_DriverClass>()->*_Function)();
 	}
-
-	// member-to-legacy-static wrappers
-	template<read_line_device_func _Func>
-	DECLARE_READ_LINE_MEMBER( member_wrapper_line ) { return (*_Func)(this); }
-	template<write_line_device_func _Func>
-	DECLARE_WRITE_LINE_MEMBER( member_wrapper_line ) { (*_Func)(this, state); }
-	template<read8_device_func _Func>
-	DECLARE_READ8_MEMBER( member_wrapper8 ) { return (*_Func)(this, space, offset, mem_mask); }
-	template<write8_device_func _Func>
-	DECLARE_WRITE8_MEMBER( member_wrapper8 ) { (*_Func)(this, space, offset, data, mem_mask); }
-	template<read16_device_func _Func>
-	DECLARE_READ16_MEMBER( member_wrapper16 ) { return (*_Func)(this, space, offset, mem_mask); }
-	template<write16_device_func _Func>
-	DECLARE_WRITE16_MEMBER( member_wrapper16 ) { (*_Func)(this, space, offset, data, mem_mask); }
-	template<read32_device_func _Func>
-	DECLARE_READ32_MEMBER( member_wrapper32 ) { return (*_Func)(this, space, offset, mem_mask); }
-	template<write32_device_func _Func>
-	DECLARE_WRITE32_MEMBER( member_wrapper32 ) { (*_Func)(this, space, offset, data, mem_mask); }
-	template<read64_device_func _Func>
-	DECLARE_READ64_MEMBER( member_wrapper64 ) { return (*_Func)(this, space, offset, mem_mask); }
-	template<write64_device_func _Func>
-	DECLARE_WRITE64_MEMBER( member_wrapper64 ) { (*_Func)(this, space, offset, data, mem_mask); }
 
 	// dummy driver_init callbacks
 	void init_0() { }
@@ -422,6 +401,9 @@ protected:
 	inline UINT32 paletteram32_be(offs_t offset) const { return m_generic_paletteram_16[offset | 1] | (m_generic_paletteram_16[offset & ~1] << 16); }
 
 public:
+	// generic devices
+	optional_device<screen_device> m_screen;
+
 	// generic pointers
 	optional_shared_ptr<UINT8> m_generic_paletteram_8;
 	optional_shared_ptr<UINT8> m_generic_paletteram2_8;

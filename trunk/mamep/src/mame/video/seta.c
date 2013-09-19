@@ -827,7 +827,7 @@ UINT32 seta_state::screen_update_seta_no_layers(screen_device &screen, bitmap_in
 	set_pens();
 	bitmap.fill(0x1f0, cliprect);
 
-	m_seta001->draw_sprites(bitmap,cliprect,0x1000, 1);
+	m_seta001->draw_sprites(screen, bitmap,cliprect,0x1000, 1);
 	return 0;
 }
 
@@ -943,21 +943,21 @@ if (screen.machine().input().code_pressed(KEYCODE_Z))
 	{
 		if (m_tilemap_2)
 		{
-			if (layers_ctrl & 2)    m_tilemap_2->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-			if (layers_ctrl & 2)    m_tilemap_3->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+			if (layers_ctrl & 2)    m_tilemap_2->draw(screen, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+			if (layers_ctrl & 2)    m_tilemap_3->draw(screen, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 		}
 
 		if (order & 2)  // layer-sprite priority?
 		{
-			if (layers_ctrl & 8)        m_seta001->draw_sprites(bitmap,cliprect,sprite_bank_size, sprite_setac);
+			if (layers_ctrl & 8)        m_seta001->draw_sprites(screen, bitmap,cliprect,sprite_bank_size, sprite_setac);
 
 			if(order & 4)
 			{
 				popmessage("Missing palette effect. Contact MAMETesters.");
 			}
 
-			if (layers_ctrl & 1)    m_tilemap_0->draw(bitmap, cliprect, 0, 0);
-			if (layers_ctrl & 1)    m_tilemap_1->draw(bitmap, cliprect, 0, 0);
+			if (layers_ctrl & 1)    m_tilemap_0->draw(screen, bitmap, cliprect, 0, 0);
+			if (layers_ctrl & 1)    m_tilemap_1->draw(screen, bitmap, cliprect, 0, 0);
 		}
 		else
 		{
@@ -966,20 +966,20 @@ if (screen.machine().input().code_pressed(KEYCODE_Z))
 				popmessage("Missing palette effect. Contact MAMETesters.");
 			}
 
-			if (layers_ctrl & 1)    m_tilemap_0->draw(bitmap, cliprect, 0, 0);
-			if (layers_ctrl & 1)    m_tilemap_1->draw(bitmap, cliprect, 0, 0);
+			if (layers_ctrl & 1)    m_tilemap_0->draw(screen, bitmap, cliprect, 0, 0);
+			if (layers_ctrl & 1)    m_tilemap_1->draw(screen, bitmap, cliprect, 0, 0);
 
-			if (layers_ctrl & 8)        m_seta001->draw_sprites(bitmap,cliprect,sprite_bank_size, sprite_setac);
+			if (layers_ctrl & 8)        m_seta001->draw_sprites(screen, bitmap,cliprect,sprite_bank_size, sprite_setac);
 		}
 	}
 	else
 	{
-		if (layers_ctrl & 1)    m_tilemap_0->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-		if (layers_ctrl & 1)    m_tilemap_1->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+		if (layers_ctrl & 1)    m_tilemap_0->draw(screen, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+		if (layers_ctrl & 1)    m_tilemap_1->draw(screen, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 
 		if (order & 2)  // layer-sprite priority?
 		{
-			if (layers_ctrl & 8)        m_seta001->draw_sprites(bitmap,cliprect,sprite_bank_size, sprite_setac);
+			if (layers_ctrl & 8)        m_seta001->draw_sprites(screen, bitmap,cliprect,sprite_bank_size, sprite_setac);
 
 			if((order & 4) && m_paletteram2 != NULL)
 			{
@@ -1001,8 +1001,8 @@ if (screen.machine().input().code_pressed(KEYCODE_Z))
 
 				if (m_tilemap_2)
 				{
-					if (layers_ctrl & 2)    m_tilemap_2->draw(bitmap, cliprect, 0, 0);
-					if (layers_ctrl & 2)    m_tilemap_3->draw(bitmap, cliprect, 0, 0);
+					if (layers_ctrl & 2)    m_tilemap_2->draw(screen, bitmap, cliprect, 0, 0);
+					if (layers_ctrl & 2)    m_tilemap_3->draw(screen, bitmap, cliprect, 0, 0);
 				}
 			}
 		}
@@ -1028,12 +1028,12 @@ if (screen.machine().input().code_pressed(KEYCODE_Z))
 
 				if (m_tilemap_2)
 				{
-					if (layers_ctrl & 2)    m_tilemap_2->draw(bitmap, cliprect, 0, 0);
-					if (layers_ctrl & 2)    m_tilemap_3->draw(bitmap, cliprect, 0, 0);
+					if (layers_ctrl & 2)    m_tilemap_2->draw(screen, bitmap, cliprect, 0, 0);
+					if (layers_ctrl & 2)    m_tilemap_3->draw(screen, bitmap, cliprect, 0, 0);
 				}
 			}
 
-			if (layers_ctrl & 8) m_seta001->draw_sprites(bitmap,cliprect,sprite_bank_size, sprite_setac);
+			if (layers_ctrl & 8) m_seta001->draw_sprites(screen,bitmap,cliprect,sprite_bank_size, sprite_setac);
 		}
 	}
 

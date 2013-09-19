@@ -723,7 +723,7 @@ void neogeo_state::kf2k3pcb_gfx_decrypt()
 	{
 		rom[ i ] ^= xorval[ (i % 4) ];
 	}
-	for ( i = 0; i < rom_size; i+=4 )
+	for ( i = 0; i < rom_size; i +=4 )
 	{
 		UINT32 rom32 = rom[i] | rom[i+1]<<8 | rom[i+2]<<16 | rom[i+3]<<24;
 		rom32 = BITSWAP32( rom32, 0x09, 0x0d, 0x13, 0x00, 0x17, 0x0f, 0x03, 0x05, 0x04, 0x0c, 0x11, 0x1e, 0x12, 0x15, 0x0b, 0x06, 0x1b, 0x0a, 0x1a, 0x1c, 0x14, 0x02, 0x0e, 0x1d, 0x18, 0x08, 0x01, 0x10, 0x19, 0x1f, 0x07, 0x16 );
@@ -1324,7 +1324,7 @@ void neogeo_state::kf2k3pcb_decrypt_68k()
 
 	for (i = 0; i < 0x100000; i++)
 	{
-		rom[ 0x800000 + i ] ^= rom[ 0x100002 | BYTE_XOR_LE(i) ];
+		rom[ 0x800000 + i ] ^= rom[ 0x100002 | i ];
 	}
 	for( i = 0x100000; i < 0x800000; i++ )
 	{
@@ -1367,7 +1367,7 @@ void neogeo_state::kof2003_decrypt_68k()
 
 	for (i = 0; i < 0x100000; i++)
 	{
-		rom[ 0x800000 + i ] ^= rom[ 0x100002 | BYTE_XOR_LE(i) ];
+		rom[ 0x800000 + i ] ^= rom[ 0x100002 | i ];
 	}
 	for( i = 0; i < 0x100000; i++)
 	{
@@ -1402,7 +1402,6 @@ void neogeo_state::kof2003_decrypt_68k()
 }
 
 
-// Thanks to IQ_132 for the info
 void neogeo_state::kof2003h_decrypt_68k()
 {
 	static const UINT8 xor1[0x20] = { 0xc2, 0x4b, 0x74, 0xfd, 0x0b, 0x34, 0xeb, 0xd7, 0x10, 0x6d, 0xf9, 0xce, 0x5d, 0xd5, 0x61, 0x29, 0xf5, 0xbe, 0x0d, 0x82, 0x72, 0x45, 0x0f, 0x24, 0xb3, 0x34, 0x1b, 0x99, 0xea, 0x09, 0xf3, 0x03 };
@@ -1415,7 +1414,7 @@ void neogeo_state::kof2003h_decrypt_68k()
 
 	for (i = 0; i < 0x100000; i++)
 	{
-		rom[ 0x800000 + i ] ^= rom[ 0x100002 | BYTE_XOR_LE(i) ];
+		rom[ 0x800000 + i ] ^= rom[ 0x100002 | i ];
 	}
 	for( i = 0; i < 0x100000; i++)
 	{
@@ -1538,12 +1537,12 @@ void neogeo_state::kf2k3pcb_sp1_decrypt()
 	};
 
 	UINT16 *rom = (UINT16 *)memregion("mainbios")->base();
-	UINT16*buf= auto_alloc_array(machine(), UINT16, 0x80000/2);
+	UINT16 *buf = auto_alloc_array(machine(), UINT16, 0x80000/2);
 	int i, addr;
 
 	for (i = 0; i < 0x80000/2; i++)
 	{
-		//address xor
+		// address xor
 		addr = i ^ 0x0020;
 		if ( i & 0x00020) addr ^= 0x0010;
 		if (~i & 0x00010) addr ^= 0x0040;

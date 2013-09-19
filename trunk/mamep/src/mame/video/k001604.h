@@ -22,7 +22,7 @@ public:
 	~k001604_device() {}
 
 	void draw_back_layer( bitmap_rgb32 &bitmap, const rectangle &cliprect );
-	void draw_front_layer( bitmap_rgb32 &bitmap, const rectangle &cliprect );
+	void draw_front_layer( screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect );
 	DECLARE_WRITE32_MEMBER( tile_w );
 	DECLARE_READ32_MEMBER( tile_r );
 	DECLARE_WRITE32_MEMBER( char_w );
@@ -37,7 +37,6 @@ protected:
 	virtual void device_reset();
 private:
 	// internal state
-	//screen_device *m_screen;
 	tilemap_t        *m_layer_8x8[2];
 	tilemap_t        *m_layer_roz;
 	int            m_gfx_index[2];

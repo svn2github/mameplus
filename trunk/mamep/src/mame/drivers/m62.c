@@ -423,26 +423,6 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( kungfum )
 	PORT_INCLUDE( common )
 
-	PORT_MODIFY("P1")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_4WAY
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_4WAY
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_4WAY
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_4WAY
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 )
-
-	PORT_MODIFY("P2")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_4WAY PORT_COCKTAIL
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_4WAY PORT_COCKTAIL
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_4WAY PORT_COCKTAIL
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_4WAY PORT_COCKTAIL
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_COCKTAIL
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_COCKTAIL
-
 	PORT_MODIFY("DSW2")
 	/* In slowmo mode, press 2 to slow game speed */
 	PORT_DIPNAME( 0x08, 0x08, "Slow Motion Mode (Cheat)" ) PORT_DIPLOCATION("SW2:4")
@@ -2196,8 +2176,8 @@ DRIVER_INIT_MEMBER(m62_state,youjyudn)
 	membank("bank1")->configure_entries(0, 2, memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
-GAME( 1984, kungfum,  0,        kungfum,  kungfum, driver_device,  0,        ROT0,   "Irem", "Kung-Fu Master", GAME_SUPPORTS_SAVE )
-GAME( 1984, kungfumd, kungfum,  kungfum,  kungfum, driver_device,  0,        ROT0,   "Irem (Data East license)", "Kung-Fu Master (Data East)", GAME_SUPPORTS_SAVE )
+GAME( 1984, kungfum,  0,        kungfum,  kungfum, driver_device,  0,        ROT0,   "Irem", "Kung-Fu Master (World)", GAME_SUPPORTS_SAVE )
+GAME( 1984, kungfumd, kungfum,  kungfum,  kungfum, driver_device,  0,        ROT0,   "Irem (Data East USA license)", "Kung-Fu Master (US)", GAME_SUPPORTS_SAVE )
 GAME( 1984, spartanx, kungfum,  kungfum,  kungfum, driver_device,  0,        ROT0,   "Irem", "Spartan X (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1984, kungfub,  kungfum,  kungfum,  kungfum, driver_device,  0,        ROT0,   "bootleg", "Kung-Fu Master (bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1984, kungfub2, kungfum,  kungfum,  kungfum, driver_device,  0,        ROT0,   "bootleg", "Kung-Fu Master (bootleg set 2)", GAME_SUPPORTS_SAVE )

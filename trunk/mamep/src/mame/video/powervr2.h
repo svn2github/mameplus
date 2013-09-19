@@ -5,7 +5,8 @@
 	MCFG_DEVICE_ADD(_tag, POWERVR2, 0)                                  \
 	downcast<powervr2_device *>(device)->set_irq_cb(DEVCB2_ ## _irq_cb);
 
-class powervr2_device : public device_t
+class powervr2_device : public device_t,
+						public device_video_interface
 {
 public:
 	enum { NUM_BUFFERS = 4 };
@@ -22,7 +23,9 @@ public:
 		EOR_VIDEO_IRQ,
 		EOR_TSP_IRQ,
 		EOR_ISP_IRQ,
-		DMA_PVR_IRQ
+		DMA_PVR_IRQ,
+		ERR_ISP_LIMIT_IRQ,
+		ERR_PVRIF_ILL_ADDR_IRQ
 	};
 
 	DECLARE_ADDRESS_MAP(ta_map, 32);
@@ -54,7 +57,10 @@ public:
 
 	struct texinfo  {
 		UINT32 address, vqbase;
+		UINT32 nontextured_pal_int;
+		UINT8 nontextured_fpal_a,nontextured_fpal_r,nontextured_fpal_g,nontextured_fpal_b;
 		int textured, sizex, sizey, stride, sizes, pf, palette, mode, mipmapped, blend_mode, filter_mode, flip_u, flip_v;
+		int coltype;
 
 		UINT32 (powervr2_device::*r)(struct texinfo *t, float x, float y);
 		UINT32 (*blend)(UINT32 s, UINT32 d);
@@ -106,7 +112,8 @@ public:
 	UINT32 blend_mode, srcselect,dstselect,fogcontrol,colorclamp, use_alpha;
 	UINT32 ignoretexalpha,flipuv,clampuv,filtermode,sstexture,mmdadjust,tsinstruction;
 	UINT32 depthcomparemode,cullingmode,zwritedisable,cachebypass,dcalcctrl,volumeinstruction,mipmapped,vqcompressed,strideselect,paletteselector;
-
+	UINT32 nontextured_pal_int;
+	float nontextured_fpal_a,nontextured_fpal_r,nontextured_fpal_g,nontextured_fpal_b;
 
 	UINT64 *dc_texture_ram;
 	UINT64 *dc_framebuffer_ram;
@@ -122,6 +129,7 @@ public:
 	emu_timer *endofrender_timer_isp;
 	emu_timer *endofrender_timer_tsp;
 	emu_timer *endofrender_timer_video;
+	emu_timer *yuv_timer_end;
 	UINT32 tafifo_buff[32];
 	int scanline;
 	int next_y;
@@ -168,6 +176,8 @@ public:
 	DECLARE_WRITE32_MEMBER( spg_hblank_int_w );
 	DECLARE_READ32_MEMBER(  spg_vblank_int_r );
 	DECLARE_WRITE32_MEMBER( spg_vblank_int_w );
+	DECLARE_READ32_MEMBER(  spg_control_r );
+	DECLARE_WRITE32_MEMBER( spg_control_w );
 	DECLARE_READ32_MEMBER(  spg_hblank_r );
 	DECLARE_WRITE32_MEMBER( spg_hblank_w );
 	DECLARE_READ32_MEMBER(  spg_load_r );
@@ -245,13 +255,14 @@ public:
 	DECLARE_READ32_MEMBER(  elan_regs_r );
 	DECLARE_WRITE32_MEMBER( elan_regs_w );
 	DECLARE_WRITE64_MEMBER( ta_fifo_poly_w );
-	DECLARE_WRITE64_MEMBER( ta_fifo_yuv_w );
+	DECLARE_WRITE8_MEMBER( ta_fifo_yuv_w );
 	DECLARE_WRITE64_MEMBER( ta_texture_directpath0_w );
 	DECLARE_WRITE64_MEMBER( ta_texture_directpath1_w );
 
 	TIMER_CALLBACK_MEMBER(vbin);
 	TIMER_CALLBACK_MEMBER(vbout);
 	TIMER_CALLBACK_MEMBER(hbin);
+	TIMER_CALLBACK_MEMBER(yuv_convert_end);
 	TIMER_CALLBACK_MEMBER(endofrender_video);
 	TIMER_CALLBACK_MEMBER(endofrender_tsp);
 	TIMER_CALLBACK_MEMBER(endofrender_isp);
@@ -263,6 +274,7 @@ public:
 	TIMER_CALLBACK_MEMBER(pvr_dma_irq);
 
 	void pvr_dma_execute(address_space &space);
+	void pvr_scanline_timer(int vpos);
 	UINT32 screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 
 protected:
@@ -279,7 +291,7 @@ private:
 	UINT32 fb_r_ctrl, fb_w_ctrl, fb_w_linestride, fb_r_sof1, fb_r_sof2, fb_r_size, fb_w_sof1, fb_w_sof2, fb_x_clip, fb_y_clip;
 	UINT32 fpu_param_cfg;
 	UINT32 isp_backgnd_t;
-	UINT32 spg_hblank_int, spg_vblank_int, spg_hblank, spg_load, spg_vblank, spg_width;
+	UINT32 spg_hblank_int, spg_vblank_int, spg_control, spg_hblank, spg_load, spg_vblank, spg_width;
 	UINT32 vo_control, vo_startx, vo_starty;
 	UINT32 text_control;
 	UINT32 pal_ram_ctrl;
@@ -288,6 +300,10 @@ private:
 	UINT32 ta_ol_base, ta_ol_limit, ta_isp_base, ta_isp_limit;
 	UINT32 ta_next_opb, ta_itp_current, ta_alloc_ctrl, ta_next_opb_init;
 	UINT32 ta_yuv_tex_base, ta_yuv_tex_ctrl, ta_yuv_tex_cnt;
+	UINT32 ta_yuv_index;
+	int ta_yuv_x,ta_yuv_y;
+	int ta_yuv_x_size,ta_yuv_y_size;
+	UINT8 yuv_fifo[384];
 
 	// Other registers
 	UINT32 fog_table[0x80];
@@ -377,6 +393,8 @@ private:
 	static inline UINT32 cv_4444z(UINT16 c);
 	static inline UINT32 cv_yuv(UINT16 c1, UINT16 c2, int x);
 	UINT32 tex_r_yuv_n(texinfo *t, float x, float y);
+	UINT32 tex_r_yuv_tw(texinfo *t, float x, float y);
+//  UINT32 tex_r_yuv_vq(texinfo *t, float x, float y);
 	UINT32 tex_r_1555_n(texinfo *t, float x, float y);
 	UINT32 tex_r_1555_tw(texinfo *t, float x, float y);
 	UINT32 tex_r_1555_vq(texinfo *t, float x, float y);
@@ -402,6 +420,10 @@ private:
 	UINT32 tex_r_p8_4444_vq(texinfo *t, float x, float y);
 	UINT32 tex_r_p8_8888_tw(texinfo *t, float x, float y);
 	UINT32 tex_r_p8_8888_vq(texinfo *t, float x, float y);
+
+	UINT32 tex_r_nt_palint(texinfo *t, float x, float y);
+	UINT32 tex_r_nt_palfloat(texinfo *t, float x, float y);
+
 	UINT32 tex_r_default(texinfo *t, float x, float y);
 	void tex_get_info(texinfo *t);
 
@@ -429,6 +451,32 @@ private:
 	void process_ta_fifo();
 	void debug_paletteram();
 	void update_screen_format();
+
+	void fb_convert_0555krgb_to_555rgb(address_space &space, int x, int y);
+	void fb_convert_0555krgb_to_565rgb(address_space &space, int x, int y);
+	void fb_convert_0555krgb_to_888rgb24(address_space &space, int x, int y);
+	void fb_convert_0555krgb_to_888rgb32(address_space &space, int x, int y);
+
+	void fb_convert_0565rgb_to_555rgb(address_space &space, int x, int y);
+	void fb_convert_0565rgb_to_565rgb(address_space &space, int x, int y);
+	void fb_convert_0565rgb_to_888rgb24(address_space &space, int x, int y);
+	void fb_convert_0565rgb_to_888rgb32(address_space &space, int x, int y);
+
+	void fb_convert_1555argb_to_555rgb(address_space &space, int x, int y);
+	void fb_convert_1555argb_to_565rgb(address_space &space, int x, int y);
+	void fb_convert_1555argb_to_888rgb24(address_space &space, int x, int y);
+	void fb_convert_1555argb_to_888rgb32(address_space &space, int x, int y);
+
+	void fb_convert_888rgb_to_555rgb(address_space &space, int x, int y);
+	void fb_convert_888rgb_to_565rgb(address_space &space, int x, int y);
+	void fb_convert_888rgb_to_888rgb24(address_space &space, int x, int y);
+	void fb_convert_888rgb_to_888rgb32(address_space &space, int x, int y);
+
+	void fb_convert_8888argb_to_555rgb(address_space &space, int x, int y);
+	void fb_convert_8888argb_to_565rgb(address_space &space, int x, int y);
+	void fb_convert_8888argb_to_888rgb24(address_space &space, int x, int y);
+	void fb_convert_8888argb_to_888rgb32(address_space &space, int x, int y);
+
 };
 
 extern const device_type POWERVR2;

@@ -71,7 +71,6 @@ OBJDIRS += \
 
 # System-specific directories
 
-OBJDIRS += $(MESS_MACHINE)/ti99 \
 
 #-------------------------------------------------
 # MESS core objects

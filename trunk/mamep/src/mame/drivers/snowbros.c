@@ -70,7 +70,6 @@ out of the sprite list at that point.. (verify on real hw)
 #include "sound/2151intf.h"
 #include "sound/3812intf.h"
 #include "sound/okim6295.h"
-#include "video/kan_panb.h" // for bootlegs / non-original hw
 #include "cpu/mcs51/mcs51.h" // for semicom mcu
 
 
@@ -1512,7 +1511,6 @@ MACHINE_RESET_MEMBER(snowbros_state,finalttr)
 
 static const kaneko_pandora_interface snowbros_pandora_config =
 {
-	"screen",   /* screen tag */
 	0,  /* gfx_region */
 	0, 0    /* x_offs, y_offs */
 };

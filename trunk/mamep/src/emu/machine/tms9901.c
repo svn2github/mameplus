@@ -485,7 +485,7 @@ void tms9901_device::device_timer(emu_timer &timer, device_timer_id id, int para
 }
 
 /*-------------------------------------------------
-    DEVICE_STOP( tms9901 )
+    device_stop - device-specific stop
 -------------------------------------------------*/
 
 void tms9901_device::device_stop(void)
@@ -493,7 +493,7 @@ void tms9901_device::device_stop(void)
 }
 
 /*-------------------------------------------------
-    DEVICE_RESET( tms9901 )
+    device_reset - device-specific reset
 -------------------------------------------------*/
 
 void tms9901_device::device_reset(void)
@@ -517,7 +517,7 @@ void tms9901_device::device_reset(void)
 
 
 /*-------------------------------------------------
-    DEVICE_START( tms9901 )
+    device_start - device-specific startup
 -------------------------------------------------*/
 
 void tms9901_device::device_start(void)

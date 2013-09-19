@@ -7,7 +7,7 @@
 #include "cpu/jaguar/jaguar.h"
 #include "machine/nvram.h"
 #include "sound/dac.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "machine/vt83c461.h"
 #include "imagedev/snapquik.h"
 
@@ -62,8 +62,8 @@ public:
 
 	// devices
 	required_device<cpu_device> m_maincpu;
-	required_device<jaguargpu_device> m_gpu;
-	required_device<jaguardsp_device> m_dsp;
+	required_device<jaguargpu_cpu_device> m_gpu;
+	required_device<jaguardsp_cpu_device> m_dsp;
 	required_device<dac_device> m_dac1;
 	required_device<dac_device> m_dac2;
 
@@ -322,6 +322,6 @@ protected:
 	emu_file *jaguar_nvram_fopen( UINT32 openflags);
 	void jaguar_nvram_load();
 	void jaguar_nvram_save();
-	optional_device<eeprom_device> m_eeprom;
+	optional_device<eeprom_serial_93cxx_device> m_eeprom;
 	optional_device<vt83c461_device> m_ide;
 };

@@ -166,7 +166,6 @@ Measurements -
 #include "cpu/m68000/m68000.h"
 #include "cpu/m6502/m6502.h"
 #include "sound/2151intf.h"
-#include "video/atarimo.h"
 #include "includes/badlands.h"
 
 
@@ -186,13 +185,18 @@ void badlands_state::update_interrupts()
 
 void badlands_state::scanline_update(screen_device &screen, int scanline)
 {
-	address_space &space = m_audiocpu->space(AS_PROGRAM);
+	if (m_audiocpu != 0)
+	{
+		address_space &space = m_audiocpu->space(AS_PROGRAM);
 
-	/* sound IRQ is on 32V */
-	if (scanline & 32)
-		m_soundcomm->sound_irq_ack_r(space, 0);
-	else if (!(ioport("FE4000")->read() & 0x40))
-		m_soundcomm->sound_irq_gen(m_audiocpu);
+		/* sound IRQ is on 32V */
+		if (scanline & 32)
+			m_soundcomm->sound_irq_ack_r(space, 0);
+		else if (!(ioport("FE4000")->read() & 0x40))
+			m_soundcomm->sound_irq_gen(m_audiocpu);
+	}
+	else
+		return;
 }
 
 
@@ -209,7 +213,7 @@ MACHINE_RESET_MEMBER(badlands_state,badlands)
 	m_pedal_value[0] = m_pedal_value[1] = 0x80;
 
 	atarigen_state::machine_reset();
-	scanline_timer_reset(*machine().primary_screen, 32);
+	scanline_timer_reset(*m_screen, 32);
 
 	memcpy(m_bank_base, &m_bank_source_data[0x0000], 0x1000);
 }
@@ -369,7 +373,7 @@ WRITE8_MEMBER(badlands_state::audio_io_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, badlands_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0xfc0000, 0xfc1fff) AM_READ(sound_busy_r) AM_DEVWRITE("soundcomm", atari_sound_comm_device, sound_reset_w)
-	AM_RANGE(0xfd0000, 0xfd1fff) AM_READWRITE(eeprom_r, eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0xfd0000, 0xfd1fff) AM_DEVREADWRITE8("eeprom", atari_eeprom_device, read, write, 0x00ff)
 	AM_RANGE(0xfe0000, 0xfe1fff) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0xfe2000, 0xfe3fff) AM_WRITE(video_int_ack_w)
 	AM_RANGE(0xfe4000, 0xfe5fff) AM_READ_PORT("FE4000")
@@ -380,10 +384,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, badlands_state )
 	AM_RANGE(0xfe8000, 0xfe9fff) AM_DEVWRITE8("soundcomm", atari_sound_comm_device, main_command_w, 0xff00)
 	AM_RANGE(0xfea000, 0xfebfff) AM_DEVREAD8("soundcomm", atari_sound_comm_device, main_response_r, 0xff00)
 	AM_RANGE(0xfec000, 0xfedfff) AM_WRITE(badlands_pf_bank_w)
-	AM_RANGE(0xfee000, 0xfeffff) AM_WRITE(eeprom_enable_w)
+	AM_RANGE(0xfee000, 0xfeffff) AM_DEVWRITE("eeprom", atari_eeprom_device, unlock_write)
 	AM_RANGE(0xffc000, 0xffc3ff) AM_RAM_WRITE(expanded_paletteram_666_w) AM_SHARE("paletteram")
 	AM_RANGE(0xffe000, 0xffefff) AM_RAM_DEVWRITE("playfield", tilemap_device, write) AM_SHARE("playfield")
-	AM_RANGE(0xfff000, 0xfff1ff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_expanded_w)
+	AM_RANGE(0xfff000, 0xfff1ff) AM_RAM AM_SHARE("mob")
 	AM_RANGE(0xfff200, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -444,7 +448,6 @@ static INPUT_PORTS_START( badlands )
 INPUT_PORTS_END
 
 
-
 /*************************************
  *
  *  Graphics definitions
@@ -500,7 +503,8 @@ static MACHINE_CONFIG_START( badlands, badlands_state )
 
 	MCFG_MACHINE_START_OVERRIDE(badlands_state,badlands)
 	MCFG_MACHINE_RESET_OVERRIDE(badlands_state,badlands)
-	MCFG_NVRAM_ADD_1FILL("eeprom")
+
+	MCFG_ATARI_EEPROM_2816_ADD("eeprom")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -508,6 +512,7 @@ static MACHINE_CONFIG_START( badlands, badlands_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, badlands_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 64,32)
+	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", badlands_state::s_mob_config)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	/* note: these parameters are from published specs, not derived */
@@ -638,17 +643,27 @@ static ADDRESS_MAP_START( bootleg_map, AS_PROGRAM, 16, badlands_state )
 	AM_RANGE(0xfe4006, 0xfe4007) AM_READ(badlandsb_unk_r )
 
 
-	AM_RANGE(0xfd0000, 0xfd1fff) AM_READWRITE(eeprom_r, eeprom_w) AM_SHARE("eeprom")
+	AM_RANGE(0xfd0000, 0xfd1fff) AM_DEVREADWRITE8("eeprom", atari_eeprom_device, read, write, 0x00ff)
 	//AM_RANGE(0xfe0000, 0xfe1fff) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0xfe2000, 0xfe3fff) AM_WRITE(video_int_ack_w)
 
 	AM_RANGE(0xfec000, 0xfedfff) AM_WRITE(badlands_pf_bank_w)
-	AM_RANGE(0xfee000, 0xfeffff) AM_WRITE(eeprom_enable_w)
+	AM_RANGE(0xfee000, 0xfeffff) AM_DEVWRITE("eeprom", atari_eeprom_device, unlock_write)
 	AM_RANGE(0xffc000, 0xffc3ff) AM_RAM_WRITE(expanded_paletteram_666_w) AM_SHARE("paletteram")
 	AM_RANGE(0xffe000, 0xffefff) AM_RAM_DEVWRITE("playfield", tilemap_device, write) AM_SHARE("playfield")
-	AM_RANGE(0xfff000, 0xfff1ff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_expanded_w)
+	AM_RANGE(0xfff000, 0xfff1ff) AM_RAM AM_SHARE("mob")
 	AM_RANGE(0xfff200, 0xffffff) AM_RAM
 ADDRESS_MAP_END
+
+static INPUT_PORTS_START( badlandsb )
+
+	PORT_INCLUDE( badlands )
+
+	PORT_MODIFY("AUDIO") /* audio port */
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+
+INPUT_PORTS_END
 
 
 static const gfx_layout pflayout_bootleg =
@@ -673,7 +688,7 @@ MACHINE_RESET_MEMBER(badlands_state,badlandsb)
 //  m_pedal_value[0] = m_pedal_value[1] = 0x80;
 
 	atarigen_state::machine_reset();
-	scanline_timer_reset(*machine().primary_screen, 32);
+	scanline_timer_reset(*m_screen, 32);
 
 //  memcpy(m_bank_base, &m_bank_source_data[0x0000], 0x1000);
 }
@@ -690,7 +705,8 @@ static MACHINE_CONFIG_START( badlandsb, badlands_state )
 
 	MCFG_MACHINE_START_OVERRIDE(badlands_state,badlands)
 	MCFG_MACHINE_RESET_OVERRIDE(badlands_state,badlandsb)
-	MCFG_NVRAM_ADD_1FILL("eeprom")
+
+	MCFG_ATARI_EEPROM_2816_ADD("eeprom")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -698,6 +714,7 @@ static MACHINE_CONFIG_START( badlandsb, badlands_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, badlands_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 64,32)
+	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", badlands_state::s_mob_config)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	/* note: these parameters are from published specs, not derived */
@@ -783,5 +800,5 @@ ROM_END
 
 
 
-GAME( 1989, badlandsb, badlands, badlandsb, badlands, driver_device, 0, ROT0, "bootleg (Playmark)", "Bad Lands (bootleg)", GAME_NOT_WORKING )
-GAME( 1989, badlandsb2,badlands, badlandsb, badlands, driver_device, 0, ROT0, "bootleg (Playmark)", "Bad Lands (bootleg, alternate)", GAME_NOT_WORKING )
+GAME( 1989, badlandsb, badlands, badlandsb, badlandsb, driver_device, 0, ROT0, "bootleg (Playmark)", "Bad Lands (bootleg)", GAME_NOT_WORKING )
+GAME( 1989, badlandsb2,badlands, badlandsb, badlandsb, driver_device, 0, ROT0, "bootleg (Playmark)", "Bad Lands (bootleg, alternate)", GAME_NOT_WORKING )

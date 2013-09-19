@@ -1760,6 +1760,10 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 						FAULT(FAULT_SS,stack.selector)  // #SS(SS selector)
 					}
 					UINT32 newESP = i386_get_stack_ptr(cpustate,DPL);
+					if(!stack.d)
+					{
+						newESP &= 0xffff;
+					}
 					if(operand32 != 0)
 					{
 						if(newESP < ((gate.dword_count & 0x1f) + 16))
@@ -1775,7 +1779,6 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 					}
 					else
 					{
-						newESP &= 0x0000ffff;
 						if(newESP < ((gate.dword_count & 0x1f) + 8))
 						{
 							logerror("CALL: Call gate: New stack has no room for 16-bit return address and parameters.\n");
@@ -1795,7 +1798,7 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 					WRITE_TEST(cpustate, stack.base+newESP-1);
 					/* switch to new stack */
 					oldSS = cpustate->sreg[SS].selector;
-					cpustate->sreg[SS].selector = i386_get_stack_segment(cpustate,gate.selector & 0x03);
+					cpustate->sreg[SS].selector = i386_get_stack_segment(cpustate,cpustate->CPL);
 					if(operand32 != 0)
 					{
 						oldESP = REG32(ESP);
@@ -3645,6 +3648,7 @@ CPU_GET_INFO( i386 )
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "I386");                break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "i386");                break;
 		case CPUINFO_STR_FAMILY:                    strcpy(info->s, "Intel 386");           break;
 		case CPUINFO_STR_VERSION:                   strcpy(info->s, "1.0");                 break;
 		case CPUINFO_STR_SOURCE_FILE:                       strcpy(info->s, __FILE__);              break;
@@ -3844,6 +3848,7 @@ CPU_GET_INFO( i486 )
 		case CPUINFO_INT_REGISTER + X87_TAG:            info->i = cpustate->x87_tw;             break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "I486");                break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "i486");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel 486");           break;
 		case CPUINFO_STR_REGISTER + X87_CTRL:           sprintf(info->s, "x87_CW: %04X", cpustate->x87_cw); break;
 		case CPUINFO_STR_REGISTER + X87_STATUS:         sprintf(info->s, "x87_SW: %04X", cpustate->x87_sw); break;
@@ -3981,6 +3986,7 @@ CPU_GET_INFO( pentium )
 		case CPUINFO_INT_REGISTER + X87_TAG:            info->i = cpustate->x87_tw;             break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "PENTIUM");             break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "pentium");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel Pentium");       break;
 		case CPUINFO_STR_REGISTER + X87_CTRL:           sprintf(info->s, "x87_CW: %04X", cpustate->x87_cw); break;
 		case CPUINFO_STR_REGISTER + X87_STATUS:         sprintf(info->s, "x87_SW: %04X", cpustate->x87_sw); break;
@@ -4105,6 +4111,7 @@ CPU_GET_INFO( mediagx )
 		case CPUINFO_INT_REGISTER + X87_TAG:            info->i = cpustate->x87_tw;             break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "MEDIAGX");             break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "mediagx");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Cyrix MediaGX");       break;
 		case CPUINFO_STR_REGISTER + X87_CTRL:           sprintf(info->s, "x87_CW: %04X", cpustate->x87_cw); break;
 		case CPUINFO_STR_REGISTER + X87_STATUS:         sprintf(info->s, "x87_SW: %04X", cpustate->x87_sw); break;
@@ -4221,6 +4228,7 @@ CPU_GET_INFO( pentium_pro )
 		case CPUINFO_FCT_EXIT:                          info->exit = CPU_EXIT_NAME(pentium_pro);    break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "Pentium Pro");         break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "pentium_pro");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel Pentium Pro");   break;
 
 		default:                                        CPU_GET_INFO_CALL(pentium);             break;
@@ -4326,6 +4334,7 @@ CPU_GET_INFO( pentium_mmx )
 		case CPUINFO_FCT_EXIT:                          info->exit = CPU_EXIT_NAME(pentium_mmx);    break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "Pentium MMX");         break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "pentium_mmx");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel Pentium");       break;
 
 		default:                                        CPU_GET_INFO_CALL(pentium);             break;
@@ -4431,6 +4440,7 @@ CPU_GET_INFO( pentium2 )
 		case CPUINFO_FCT_EXIT:                          info->exit = CPU_EXIT_NAME(pentium2);       break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "Pentium II");          break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "pentium2");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel Pentium II");    break;
 
 		default:                                        CPU_GET_INFO_CALL(pentium);                break;
@@ -4538,6 +4548,7 @@ CPU_GET_INFO( pentium3 )
 		case CPUINFO_FCT_EXIT:                          info->exit = CPU_EXIT_NAME(pentium3);       break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "Pentium III");         break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "pentium3");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel Pentium III");   break;
 
 		default:                                        CPU_GET_INFO_CALL(pentium);             break;
@@ -4646,6 +4657,7 @@ CPU_GET_INFO( pentium4 )
 		case CPUINFO_FCT_EXIT:                          info->exit = CPU_EXIT_NAME(pentium4);       break;
 
 		case CPUINFO_STR_NAME:                          strcpy(info->s, "Pentium 4");           break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "pentium4");                break;
 		case CPUINFO_STR_FAMILY:                        strcpy(info->s, "Intel Pentium 4");     break;
 
 		default:                                        CPU_GET_INFO_CALL(pentium);             break;

@@ -134,7 +134,6 @@ static ADDRESS_MAP_START( rohga_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x200000, 0x20000f) AM_DEVWRITE("tilegen1", deco16ic_device, pf_control_w)
 	AM_RANGE(0x240000, 0x24000f) AM_DEVWRITE("tilegen2", deco16ic_device, pf_control_w)
 
-//  AM_RANGE(0x280000, 0x2807ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_104_rohga_prot_r,deco16_104_rohga_prot_w)  AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0x280000, 0x283fff) AM_READWRITE(wf_protection_region_0_104_r,wf_protection_region_0_104_w) AM_SHARE("prot16ram") /* Protection device */
 
 	AM_RANGE(0x2c0000, 0x2c0001) AM_READ_PORT("DSW3")
@@ -206,7 +205,6 @@ static ADDRESS_MAP_START( wizdfire_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x380000, 0x381fff) AM_RAM_DEVWRITE("deco_common", decocomn_device, buffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x390008, 0x390009) AM_DEVWRITE("deco_common", decocomn_device, palette_dma_w)
 
-//  AM_RANGE(0xfe4000, 0xfe47ff) AM_READWRITE_LEGACY(deco16_104_prot_r,deco16_104_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0xfe4000, 0xfe7fff) AM_READWRITE(wf_protection_region_0_104_r,wf_protection_region_0_104_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0xfdc000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -259,7 +257,6 @@ static ADDRESS_MAP_START( nitrobal_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x390008, 0x390009) AM_DEVWRITE("deco_common", decocomn_device, palette_dma_w)
 
 	AM_RANGE(0xfec000, 0xff3fff) AM_RAM
-//  AM_RANGE(0xff4000, 0xff47ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_146_nitroball_prot_r,deco16_146_nitroball_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0xff4000, 0xff7fff) AM_READWRITE(nb_protection_region_0_146_r,nb_protection_region_0_146_w) AM_SHARE("prot16ram") /* Protection device */
 
 AM_RANGE(0xff8000, 0xffffff) AM_RAM
@@ -269,7 +266,6 @@ static ADDRESS_MAP_START( schmeisr_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x200000, 0x20000f) AM_DEVWRITE("tilegen1", deco16ic_device, pf_control_w)
 	AM_RANGE(0x240000, 0x24000f) AM_DEVWRITE("tilegen2", deco16ic_device, pf_control_w)
-	//AM_RANGE(0x280000, 0x2807ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_104_rohga_prot_r,deco16_104_rohga_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0x280000, 0x283fff) AM_READWRITE(wf_protection_region_0_104_r,wf_protection_region_0_104_w) AM_SHARE("prot16ram") /* Protection device */
 
 	AM_RANGE(0x2c0000, 0x2c0001) AM_READ_PORT("DSW3")
@@ -763,11 +759,6 @@ WRITE8_MEMBER(rohga_state::sound_bankswitch_w)
 
 /**********************************************************************************/
 
-static const decocomn_interface rohga_decocomn_intf =
-{
-	"screen",
-};
-
 static int rohga_bank_callback( const int bank )
 {
 	return ((bank >> 4) & 0x3) << 12;
@@ -775,7 +766,6 @@ static int rohga_bank_callback( const int bank )
 
 static const deco16ic_interface rohga_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0, 16,/* color base (default values) */
@@ -787,7 +777,6 @@ static const deco16ic_interface rohga_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface rohga_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0, 16, /* color base (default values) */
@@ -799,7 +788,6 @@ static const deco16ic_interface rohga_deco16ic_tilegen2_intf =
 
 static const deco16ic_interface nitrobal_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 0,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0, 16, /* color base (pf4 is not default) */
@@ -811,7 +799,6 @@ static const deco16ic_interface nitrobal_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface nitrobal_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 0,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0, 0, /* color base (pf4 is not default) */
@@ -846,7 +833,7 @@ static MACHINE_CONFIG_START( rohga, rohga_state )
 
 	MCFG_VIDEO_START_OVERRIDE(rohga_state,rohga)
 
-	MCFG_DECOCOMN_ADD("deco_common", rohga_decocomn_intf)
+	MCFG_DECOCOMN_ADD("deco_common")
 
 	MCFG_DECO16IC_ADD("tilegen1", rohga_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", rohga_deco16ic_tilegen2_intf)
@@ -898,7 +885,7 @@ static MACHINE_CONFIG_START( wizdfire, rohga_state )
 	MCFG_GFXDECODE(wizdfire)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_DECOCOMN_ADD("deco_common", rohga_decocomn_intf)
+	MCFG_DECOCOMN_ADD("deco_common")
 
 	MCFG_DECO16IC_ADD("tilegen1", rohga_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", rohga_deco16ic_tilegen2_intf)
@@ -956,7 +943,7 @@ static MACHINE_CONFIG_START( nitrobal, rohga_state )
 	MCFG_GFXDECODE(wizdfire)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_DECOCOMN_ADD("deco_common", rohga_decocomn_intf)
+	MCFG_DECOCOMN_ADD("deco_common")
 
 	MCFG_DECO16IC_ADD("tilegen1", nitrobal_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", nitrobal_deco16ic_tilegen2_intf)
@@ -1017,7 +1004,7 @@ static MACHINE_CONFIG_START( schmeisr, rohga_state )
 
 	MCFG_VIDEO_START_OVERRIDE(rohga_state,schmeisr)
 
-	MCFG_DECOCOMN_ADD("deco_common", rohga_decocomn_intf)
+	MCFG_DECOCOMN_ADD("deco_common")
 
 	MCFG_DECO16IC_ADD("tilegen1", rohga_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", rohga_deco16ic_tilegen2_intf)

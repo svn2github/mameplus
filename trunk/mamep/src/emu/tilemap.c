@@ -905,9 +905,10 @@ UINT8 tilemap_t::tile_apply_bitmask(const UINT8 *maskdata, UINT32 x0, UINT32 y0,
 //  and indexed drawing code
 //-------------------------------------------------
 
-void tilemap_t::configure_blit_parameters(blit_parameters &blit, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
+void tilemap_t::configure_blit_parameters(blit_parameters &blit, bitmap_ind8 &priority_bitmap, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
 {
 	// set the target bitmap
+	blit.priority = &priority_bitmap;
 	blit.cliprect = cliprect;
 
 	// set the priority code and alpha
@@ -949,7 +950,7 @@ void tilemap_t::configure_blit_parameters(blit_parameters &blit, const rectangle
 //-------------------------------------------------
 
 template<class _BitmapClass>
-void tilemap_t::draw_common(_BitmapClass &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
+void tilemap_t::draw_common(screen_device &screen, _BitmapClass &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
 {
 	// skip if disabled
 	if (!m_enable)
@@ -958,13 +959,13 @@ void tilemap_t::draw_common(_BitmapClass &dest, const rectangle &cliprect, UINT3
 g_profiler.start(PROFILER_TILEMAP_DRAW);
 	// configure the blit parameters based on the input parameters
 	blit_parameters blit;
-	configure_blit_parameters(blit, cliprect, flags, priority, priority_mask);
+	configure_blit_parameters(blit, screen.priority(), cliprect, flags, priority, priority_mask);
 
 	// flush the dirty state to all tiles as appropriate
 	realize_all_dirty_tiles();
 
-	UINT32 width  = machine().primary_screen->width();
-	UINT32 height = machine().primary_screen->height();
+	UINT32 width  = screen.width();
+	UINT32 height = screen.height();
 
 	// XY scrolling playfield
 	if (m_scrollrows == 1 && m_scrollcols == 1)
@@ -1054,11 +1055,11 @@ g_profiler.start(PROFILER_TILEMAP_DRAW);
 g_profiler.stop();
 }
 
-void tilemap_t::draw(bitmap_ind16 &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
-{ draw_common(dest, cliprect, flags, priority, priority_mask); }
+void tilemap_t::draw(screen_device &screen, bitmap_ind16 &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
+{ draw_common(screen, dest, cliprect, flags, priority, priority_mask); }
 
-void tilemap_t::draw(bitmap_rgb32 &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
-{ draw_common(dest, cliprect, flags, priority, priority_mask); }
+void tilemap_t::draw(screen_device &screen, bitmap_rgb32 &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask)
+{ draw_common(screen, dest, cliprect, flags, priority, priority_mask); }
 
 
 //-------------------------------------------------
@@ -1069,7 +1070,7 @@ void tilemap_t::draw(bitmap_rgb32 &dest, const rectangle &cliprect, UINT32 flags
 //-------------------------------------------------
 
 template<class _BitmapClass>
-void tilemap_t::draw_roz_common(_BitmapClass &dest, const rectangle &cliprect,
+void tilemap_t::draw_roz_common(screen_device &screen, _BitmapClass &dest, const rectangle &cliprect,
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy,
 		bool wraparound, UINT32 flags, UINT8 priority, UINT8 priority_mask)
 {
@@ -1086,14 +1087,14 @@ void tilemap_t::draw_roz_common(_BitmapClass &dest, const rectangle &cliprect,
 	{
 		set_scrollx(0, startx >> 16);
 		set_scrolly(0, starty >> 16);
-		draw(dest, cliprect, flags, priority, priority_mask);
+		draw(screen, dest, cliprect, flags, priority, priority_mask);
 		return;
 	}
 
 g_profiler.start(PROFILER_TILEMAP_DRAW_ROZ);
 	// configure the blit parameters
 	blit_parameters blit;
-	configure_blit_parameters(blit, cliprect, flags, priority, priority_mask);
+	configure_blit_parameters(blit, screen.priority(), cliprect, flags, priority, priority_mask);
 
 	// get the full pixmap for the tilemap
 	pixmap();
@@ -1103,15 +1104,15 @@ g_profiler.start(PROFILER_TILEMAP_DRAW_ROZ);
 g_profiler.stop();
 }
 
-void tilemap_t::draw_roz(bitmap_ind16 &dest, const rectangle &cliprect,
+void tilemap_t::draw_roz(screen_device &screen, bitmap_ind16 &dest, const rectangle &cliprect,
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy,
 		bool wraparound, UINT32 flags, UINT8 priority, UINT8 priority_mask)
-{ draw_roz_common(dest, cliprect, startx, starty, incxx, incxy, incyx, incyy, wraparound, flags, priority, priority_mask); }
+{ draw_roz_common(screen, dest, cliprect, startx, starty, incxx, incxy, incyx, incyy, wraparound, flags, priority, priority_mask); }
 
-void tilemap_t::draw_roz(bitmap_rgb32 &dest, const rectangle &cliprect,
+void tilemap_t::draw_roz(screen_device &screen, bitmap_rgb32 &dest, const rectangle &cliprect,
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy,
 		bool wraparound, UINT32 flags, UINT8 priority, UINT8 priority_mask)
-{ draw_roz_common(dest, cliprect, startx, starty, incxx, incxy, incyx, incyy, wraparound, flags, priority, priority_mask); }
+{ draw_roz_common(screen, dest, cliprect, startx, starty, incxx, incxy, incyx, incyy, wraparound, flags, priority, priority_mask); }
 
 
 //-------------------------------------------------
@@ -1135,7 +1136,7 @@ void tilemap_t::draw_instance(_BitmapClass &dest, const blit_parameters &blit, i
 		return;
 
 	// look up priority and destination base addresses for y1
-	bitmap_ind8 &priority_bitmap = machine().priority_bitmap;
+	bitmap_ind8 &priority_bitmap = *blit.priority;
 	UINT8 *priority_baseaddr = &priority_bitmap.pix8(y1, xpos);
 	typename _BitmapClass::pixel_t *dest_baseaddr = NULL;
 	int dest_rowpixels = 0;
@@ -1304,7 +1305,7 @@ void tilemap_t::draw_roz_core(_BitmapClass &destbitmap, const blit_parameters &b
 {
 	// pre-cache all the inner loop values
 	const rgb_t *clut = ((destbitmap.palette() != NULL) ? palette_entry_list_raw(destbitmap.palette()) : machine().pens) + (blit.tilemap_priority_code >> 16);
-	bitmap_ind8 &priority_bitmap = machine().priority_bitmap;
+	bitmap_ind8 &priority_bitmap = *blit.priority;
 	const int xmask = m_pixmap.width() - 1;
 	const int ymask = m_pixmap.height() - 1;
 	const int widthshifted = m_pixmap.width() << 16;
@@ -1471,7 +1472,8 @@ void tilemap_t::draw_debug(bitmap_rgb32 &dest, UINT32 scrollx, UINT32 scrolly)
 {
 	// set up for the blit, using hard-coded parameters (no priority, etc)
 	blit_parameters blit;
-	configure_blit_parameters(blit, dest.cliprect(), TILEMAP_DRAW_OPAQUE | TILEMAP_DRAW_ALL_CATEGORIES, 0, 0xff);
+	bitmap_ind8 dummy_priority;
+	configure_blit_parameters(blit, dummy_priority, dest.cliprect(), TILEMAP_DRAW_OPAQUE | TILEMAP_DRAW_ALL_CATEGORIES, 0, 0xff);
 
 	// compute the effective scroll positions
 	scrollx = m_width  - scrollx % m_width;
@@ -1489,170 +1491,6 @@ void tilemap_t::draw_debug(bitmap_rgb32 &dest, UINT32 scrollx, UINT32 scrolly)
 
 
 //**************************************************************************
-//  TILEMAP MEMORY HELPER
-//**************************************************************************
-
-//-------------------------------------------------
-//  tilemap_memory - constructor
-//-------------------------------------------------
-
-tilemap_memory::tilemap_memory()
-	: m_base(NULL),
-		m_bytes(0),
-		m_membits(0),
-		m_bytes_per_entry(0)
-{
-}
-
-
-//-------------------------------------------------
-//  set - configure the parameters
-//-------------------------------------------------
-
-void tilemap_memory::set(void *base, UINT32 bytes, int membits, endianness_t endianness, int bpe)
-{
-	// validate inputs
-	assert(base != NULL);
-	assert(bytes > 0);
-	assert(membits == 8 || membits == 16 || membits == 32 || membits == 64);
-	assert(bpe == 1 || bpe == 2 || bpe == 4);
-
-	// populate direct data
-	m_base = base;
-	m_bytes = bytes;
-	m_membits = membits;
-	m_endianness = endianness;
-	m_bytes_per_entry = bpe;
-
-	// derive data
-	switch (bpe*1000 + membits*10 + endianness)
-	{
-		case 1*1000 + 8*10 + ENDIANNESS_LITTLE:     m_reader = &tilemap_memory::read8_from_8;       m_writer = &tilemap_memory::write8_to_8;        break;
-		case 1*1000 + 8*10 + ENDIANNESS_BIG:        m_reader = &tilemap_memory::read8_from_8;       m_writer = &tilemap_memory::write8_to_8;        break;
-		case 1*1000 + 16*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read8_from_16le;    m_writer = &tilemap_memory::write8_to_16le;     break;
-		case 1*1000 + 16*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read8_from_16be;    m_writer = &tilemap_memory::write8_to_16be;     break;
-		case 1*1000 + 32*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read8_from_32le;    m_writer = &tilemap_memory::write8_to_32le;     break;
-		case 1*1000 + 32*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read8_from_32be;    m_writer = &tilemap_memory::write8_to_32be;     break;
-		case 1*1000 + 64*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read8_from_64le;    m_writer = &tilemap_memory::write8_to_64le;     break;
-		case 1*1000 + 64*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read8_from_64be;    m_writer = &tilemap_memory::write8_to_64be;     break;
-
-		case 2*1000 + 8*10 + ENDIANNESS_LITTLE:     m_reader = &tilemap_memory::read16_from_8le;    m_writer = &tilemap_memory::write16_to_8le;     break;
-		case 2*1000 + 8*10 + ENDIANNESS_BIG:        m_reader = &tilemap_memory::read16_from_8be;    m_writer = &tilemap_memory::write16_to_8be;     break;
-		case 2*1000 + 16*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read16_from_16;     m_writer = &tilemap_memory::write16_to_16;      break;
-		case 2*1000 + 16*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read16_from_16;     m_writer = &tilemap_memory::write16_to_16;      break;
-		case 2*1000 + 32*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read16_from_32le;   m_writer = &tilemap_memory::write16_to_32le;    break;
-		case 2*1000 + 32*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read16_from_32be;   m_writer = &tilemap_memory::write16_to_32be;    break;
-		case 2*1000 + 64*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read16_from_64le;   m_writer = &tilemap_memory::write16_to_64le;    break;
-		case 2*1000 + 64*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read16_from_64be;   m_writer = &tilemap_memory::write16_to_64be;    break;
-
-		case 4*1000 + 8*10 + ENDIANNESS_LITTLE:     m_reader = &tilemap_memory::read32_from_8le;    m_writer = &tilemap_memory::write32_to_8le;     break;
-		case 4*1000 + 8*10 + ENDIANNESS_BIG:        m_reader = &tilemap_memory::read32_from_8be;    m_writer = &tilemap_memory::write32_to_8be;     break;
-		case 4*1000 + 16*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read32_from_16le;   m_writer = &tilemap_memory::write32_to_16le;    break;
-		case 4*1000 + 16*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read32_from_16be;   m_writer = &tilemap_memory::write32_to_16be;    break;
-		case 4*1000 + 32*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read32_from_32;     m_writer = &tilemap_memory::write32_to_32;      break;
-		case 4*1000 + 32*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read32_from_32;     m_writer = &tilemap_memory::write32_to_32;      break;
-		case 4*1000 + 64*10 + ENDIANNESS_LITTLE:    m_reader = &tilemap_memory::read32_from_64le;   m_writer = &tilemap_memory::write32_to_64le;    break;
-		case 4*1000 + 64*10 + ENDIANNESS_BIG:       m_reader = &tilemap_memory::read32_from_64be;   m_writer = &tilemap_memory::write32_to_64be;    break;
-
-		default:    throw emu_fatalerror("Illegal memory bits/bus width combo in tilemap_memory");
-	}
-}
-
-
-//-------------------------------------------------
-//  set - additional setter variants
-//-------------------------------------------------
-
-void tilemap_memory::set(const address_space &space, void *base, UINT32 bytes, int bpe)
-{
-	set(base, bytes, space.data_width(), space.endianness(), bpe);
-}
-
-void tilemap_memory::set(const memory_share &share, int bpe)
-{
-	set(share.ptr(), share.bytes(), share.width(), share.endianness(), bpe);
-}
-
-void tilemap_memory::set(const tilemap_memory &helper)
-{
-	set(helper.base(), helper.bytes(), helper.membits(), helper.endianness(), helper.bytes_per_entry());
-}
-
-
-//-------------------------------------------------
-//  read8_from_*/write8_to_* - entry read/write
-//  heleprs for 1 byte-per-entry
-//-------------------------------------------------
-
-UINT32 tilemap_memory::read8_from_8(int index) { return reinterpret_cast<UINT8 *>(m_base)[index]; }
-void tilemap_memory::write8_to_8(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[index] = data; }
-
-UINT32 tilemap_memory::read8_from_16le(int index) { return reinterpret_cast<UINT8 *>(m_base)[BYTE_XOR_LE(index)]; }
-void tilemap_memory::write8_to_16le(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[BYTE_XOR_LE(index)] = data; }
-UINT32 tilemap_memory::read8_from_16be(int index) { return reinterpret_cast<UINT8 *>(m_base)[BYTE_XOR_BE(index)]; }
-void tilemap_memory::write8_to_16be(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[BYTE_XOR_BE(index)] = data; }
-
-UINT32 tilemap_memory::read8_from_32le(int index) { return reinterpret_cast<UINT8 *>(m_base)[BYTE4_XOR_BE(index)]; }
-void tilemap_memory::write8_to_32le(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[BYTE4_XOR_BE(index)] = data; }
-UINT32 tilemap_memory::read8_from_32be(int index) { return reinterpret_cast<UINT8 *>(m_base)[BYTE4_XOR_BE(index)]; }
-void tilemap_memory::write8_to_32be(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[BYTE4_XOR_BE(index)] = data; }
-
-UINT32 tilemap_memory::read8_from_64le(int index) { return reinterpret_cast<UINT8 *>(m_base)[BYTE8_XOR_BE(index)]; }
-void tilemap_memory::write8_to_64le(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[BYTE8_XOR_BE(index)] = data; }
-UINT32 tilemap_memory::read8_from_64be(int index) { return reinterpret_cast<UINT8 *>(m_base)[BYTE8_XOR_BE(index)]; }
-void tilemap_memory::write8_to_64be(int index, UINT32 data) { reinterpret_cast<UINT8 *>(m_base)[BYTE8_XOR_BE(index)] = data; }
-
-
-//-------------------------------------------------
-//  read16_from_*/write16_to_* - entry read/write
-//  heleprs for 2 bytes-per-entry
-//-------------------------------------------------
-
-UINT32 tilemap_memory::read16_from_8le(int index) { return read8_from_8(index*2) | (read8_from_8(index*2+1) << 8); }
-void tilemap_memory::write16_to_8le(int index, UINT32 data) { write8_to_8(index*2, data); write8_to_8(index*2+1, data >> 8); }
-UINT32 tilemap_memory::read16_from_8be(int index) { return (read8_from_8(index*2) << 8) | read8_from_8(index*2+1); }
-void tilemap_memory::write16_to_8be(int index, UINT32 data) { write8_to_8(index*2, data >> 8); write8_to_8(index*2+1, data); }
-
-UINT32 tilemap_memory::read16_from_16(int index) { return reinterpret_cast<UINT16 *>(m_base)[index]; }
-void tilemap_memory::write16_to_16(int index, UINT32 data) { reinterpret_cast<UINT16 *>(m_base)[index] = data; }
-
-UINT32 tilemap_memory::read16_from_32le(int index) { return reinterpret_cast<UINT16 *>(m_base)[BYTE_XOR_LE(index)]; }
-void tilemap_memory::write16_to_32le(int index, UINT32 data) { reinterpret_cast<UINT16 *>(m_base)[BYTE_XOR_LE(index)] = data; }
-UINT32 tilemap_memory::read16_from_32be(int index) { return reinterpret_cast<UINT16 *>(m_base)[BYTE_XOR_BE(index)]; }
-void tilemap_memory::write16_to_32be(int index, UINT32 data) { reinterpret_cast<UINT16 *>(m_base)[BYTE_XOR_BE(index)] = data; }
-
-UINT32 tilemap_memory::read16_from_64le(int index) { return reinterpret_cast<UINT16 *>(m_base)[BYTE4_XOR_LE(index)]; }
-void tilemap_memory::write16_to_64le(int index, UINT32 data) { reinterpret_cast<UINT16 *>(m_base)[BYTE4_XOR_LE(index)] = data; }
-UINT32 tilemap_memory::read16_from_64be(int index) { return reinterpret_cast<UINT16 *>(m_base)[BYTE4_XOR_BE(index)]; }
-void tilemap_memory::write16_to_64be(int index, UINT32 data) { reinterpret_cast<UINT16 *>(m_base)[BYTE4_XOR_BE(index)] = data; }
-
-
-//-------------------------------------------------
-//  read32_from_*/write32_to_* - entry read/write
-//  heleprs for 4 bytes-per-entry
-//-------------------------------------------------
-
-UINT32 tilemap_memory::read32_from_8le(int index) { return read16_from_8le(index*2) | (read16_from_8le(index*2+1) << 16); }
-void tilemap_memory::write32_to_8le(int index, UINT32 data) { write16_to_8le(index*2, data); write16_to_8le(index*2+1, data >> 16); }
-UINT32 tilemap_memory::read32_from_8be(int index) { return (read16_from_8be(index*2) << 16) | read16_from_8be(index*2+1); }
-void tilemap_memory::write32_to_8be(int index, UINT32 data) { write16_to_8be(index*2, data >> 16); write16_to_8be(index*2+1, data); }
-
-UINT32 tilemap_memory::read32_from_16le(int index) { return read16_from_16(index*2) | (read16_from_16(index*2+1) << 16); }
-void tilemap_memory::write32_to_16le(int index, UINT32 data) { write16_to_16(index*2, data); write16_to_16(index*2+1, data >> 16); }
-UINT32 tilemap_memory::read32_from_16be(int index) { return (read16_from_16(index*2) << 16) | read16_from_16(index*2+1); }
-void tilemap_memory::write32_to_16be(int index, UINT32 data) { write16_to_16(index*2, data >> 16); write16_to_16(index*2+1, data); }
-
-UINT32 tilemap_memory::read32_from_32(int index) { return reinterpret_cast<UINT32 *>(m_base)[index]; }
-void tilemap_memory::write32_to_32(int index, UINT32 data) { reinterpret_cast<UINT32 *>(m_base)[index] = data; }
-
-UINT32 tilemap_memory::read32_from_64le(int index) { return reinterpret_cast<UINT32 *>(m_base)[BYTE_XOR_LE(index)]; }
-void tilemap_memory::write32_to_64le(int index, UINT32 data) { reinterpret_cast<UINT32 *>(m_base)[BYTE_XOR_LE(index)] = data; }
-UINT32 tilemap_memory::read32_from_64be(int index) { return reinterpret_cast<UINT32 *>(m_base)[BYTE_XOR_BE(index)]; }
-void tilemap_memory::write32_to_64be(int index, UINT32 data) { reinterpret_cast<UINT32 *>(m_base)[BYTE_XOR_BE(index)] = data; }
-
-
-
-//**************************************************************************
 //  TILEMAP MANAGER
 //**************************************************************************
 
@@ -1664,9 +1502,6 @@ tilemap_manager::tilemap_manager(running_machine &machine)
 	: m_machine(machine),
 		m_instance(0)
 {
-	if (machine.primary_screen == NULL || machine.primary_screen->width() == 0)
-		return;
-	machine.primary_screen->register_screen_bitmap(machine.priority_bitmap);
 }
 
 

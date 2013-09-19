@@ -329,7 +329,6 @@ Notes:
 #include "sound/dac.h"
 #include "includes/slapstic.h"
 #include "includes/harddriv.h"
-#include "scrlegcy.h"
 
 
 /*************************************
@@ -438,7 +437,7 @@ static ADDRESS_MAP_START( driver_68k_map, AS_PROGRAM, 16, harddriv_state )
 	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(hd68k_gsp_io_r, hd68k_gsp_io_w)
 	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE_LEGACY(hd68k_msp_io_r, hd68k_msp_io_w)
 	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
-	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("eeprom")
+	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("zram")
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -485,7 +484,7 @@ static ADDRESS_MAP_START( multisync_68k_map, AS_PROGRAM, 16, harddriv_state )
 	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(hd68k_gsp_io_r, hd68k_gsp_io_w)
 	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE_LEGACY(hd68k_msp_io_r, hd68k_msp_io_w)
 	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
-	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("eeprom")
+	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("zram")
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -523,7 +522,7 @@ static ADDRESS_MAP_START( multisync2_68k_map, AS_PROGRAM, 16, harddriv_state )
 	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(hd68k_gsp_io_r, hd68k_gsp_io_w)
 	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE_LEGACY(hd68k_msp_io_r, hd68k_msp_io_w)
 	AM_RANGE(0xfc0000, 0xfc001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
-	AM_RANGE(0xfd0000, 0xfd0fff) AM_MIRROR(0x004000) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("eeprom")
+	AM_RANGE(0xfd0000, 0xfd0fff) AM_MIRROR(0x004000) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("zram")
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1350,7 +1349,9 @@ static MACHINE_CONFIG_START( driver_nomsp, harddriv_state )
 
 	MCFG_MACHINE_START_OVERRIDE(harddriv_state,harddriv)
 	MCFG_MACHINE_RESET_OVERRIDE(harddriv_state,harddriv)
-	MCFG_NVRAM_ADD_1FILL("eeprom")
+
+// TODO: ZRAM is really an MK48T02  MCFG_MK48T02_ADD("zram")
+	MCFG_NVRAM_ADD_1FILL("zram")
 
 	MCFG_DUARTN68681_ADD("duartn68681", XTAL_3_6864MHz, duart_config)
 
@@ -1360,7 +1361,7 @@ static MACHINE_CONFIG_START( driver_nomsp, harddriv_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(HARDDRIV_GSP_CLOCK/12*4, 160*4, 0, 127*4, 417, 0, 384)
-	MCFG_SCREEN_UPDATE_STATIC(tms340x0_ind16)
+	MCFG_SCREEN_UPDATE_DEVICE("gsp", tms34010_device, tms340x0_ind16)
 
 	MCFG_VIDEO_START_OVERRIDE(harddriv_state,harddriv)
 MACHINE_CONFIG_END
@@ -1665,7 +1666,7 @@ ROM_START( harddriv )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1697,7 +1698,7 @@ ROM_START( harddrivg )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1731,7 +1732,7 @@ ROM_START( harddrivj )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1763,7 +1764,7 @@ ROM_START( harddrivb )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1795,7 +1796,7 @@ ROM_START( harddrivb6 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1829,7 +1830,7 @@ ROM_START( harddrivj6 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1861,7 +1862,7 @@ ROM_START( harddrivb5 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1893,7 +1894,7 @@ ROM_START( harddrivg4 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1925,7 +1926,7 @@ ROM_START( harddriv3 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1957,7 +1958,7 @@ ROM_START( harddriv2 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -1989,7 +1990,7 @@ ROM_START( harddriv1 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
 ROM_END
 
@@ -2021,7 +2022,7 @@ ROM_START( harddrivc )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
 ROM_END
 
@@ -2053,7 +2054,7 @@ ROM_START( harddrivcg )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
 ROM_END
 
@@ -2085,7 +2086,7 @@ ROM_START( harddrivcb )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
 ROM_END
 
@@ -2117,7 +2118,7 @@ ROM_START( harddrivc1 )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
 ROM_END
 
@@ -2155,7 +2156,7 @@ ROM_START( stunrun )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2193,7 +2194,7 @@ ROM_START( stunrunj )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2231,7 +2232,7 @@ ROM_START( stunrun5 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2269,7 +2270,7 @@ ROM_START( stunrune )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2307,7 +2308,7 @@ ROM_START( stunrun4 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2345,7 +2346,7 @@ ROM_START( stunrun3 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2383,7 +2384,7 @@ ROM_START( stunrun3e )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2421,7 +2422,7 @@ ROM_START( stunrun2 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2459,7 +2460,7 @@ ROM_START( stunrun2e )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2497,7 +2498,7 @@ ROM_START( stunrun0 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2535,7 +2536,7 @@ ROM_START( stunrunp )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -2583,7 +2584,7 @@ ROM_START( racedriv )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2631,7 +2632,7 @@ ROM_START( racedrivb )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2679,7 +2680,7 @@ ROM_START( racedrivg )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2727,7 +2728,7 @@ ROM_START( racedriv4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2775,7 +2776,7 @@ ROM_START( racedrivb4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2823,7 +2824,7 @@ ROM_START( racedrivg4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2871,7 +2872,7 @@ ROM_START( racedriv3 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2919,7 +2920,7 @@ ROM_START( racedriv2 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -2967,7 +2968,7 @@ ROM_START( racedriv1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -3015,7 +3016,7 @@ ROM_START( racedrivg1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -3063,7 +3064,7 @@ ROM_START( racedrivb1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -3111,7 +3112,7 @@ ROM_START( racedrivc )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3159,7 +3160,7 @@ ROM_START( racedrivcb )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3207,7 +3208,7 @@ ROM_START( racedrivcg )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3255,7 +3256,7 @@ ROM_START( racedrivc4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3303,7 +3304,7 @@ ROM_START( racedrivcb4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3351,7 +3352,7 @@ ROM_START( racedrivcg4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3399,7 +3400,7 @@ ROM_START( racedrivc2 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3447,7 +3448,7 @@ ROM_START( racedrivc1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
 ROM_END
 
@@ -3596,7 +3597,7 @@ ROM_START( racedrivpan )
 	ROM_LOAD( "rdps1126.bin", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "rdps1017.bin", 0x040000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
 ROM_END
 
@@ -3657,7 +3658,7 @@ ROM_START( steeltal )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -3718,7 +3719,7 @@ ROM_START( steeltalg )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -3779,7 +3780,7 @@ ROM_START( steeltal1 )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -3840,7 +3841,7 @@ ROM_START( steeltalp )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -3898,7 +3899,7 @@ ROM_START( strtdriv )
 	ROM_FILL(                           0x60000, 0x20000, 0xff) /* 12N */
 	ROM_LOAD16_BYTE( "136052-1126.12h", 0x60000, 0x10000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "strtdriv-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
 ROM_END
 
@@ -3954,7 +3955,7 @@ ROM_START( hdrivair )
 	ROM_LOAD16_BYTE( "ds3rom7.bin", 0x300000, 0x80000, CRC(323eff0b) SHA1(5d4945d77191ee44b4fbf125bc0816217321829e) )
 	ROM_LOAD16_BYTE( "ds3rom3.bin", 0x300001, 0x80000, CRC(63965868) SHA1(d61d9d6709a3a3c37c2652602e97fdee52e0e7cb) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "hdrivair-eeprom.bin", 0x0000, 0x1000, CRC(7828df8f) SHA1(4b62ceb1d3f4b8026d77a59118a9002aa006e98e) )
 ROM_END
 
@@ -4014,7 +4015,7 @@ ROM_START( hdrivairp )
 	ROM_LOAD16_BYTE( "ds3rom.0",    0x300000, 0x80000, CRC(90b8dbb6) SHA1(fff693cb81e88bc00e048bb71406295fe7be5122) )
 	ROM_LOAD16_BYTE( "ds3rom.4",    0x300001, 0x80000, CRC(6281efee) SHA1(47d0f3ff973166d818877996c45dccf1d3a85fe1) )
 
-	ROM_REGION( 0x1000, "eeprom", 0 )
+	ROM_REGION( 0x1000, "zram", 0 )
 	ROM_LOAD( "hdrivair-eeprom.bin", 0x0000, 0x1000, CRC(7828df8f) SHA1(4b62ceb1d3f4b8026d77a59118a9002aa006e98e) )
 ROM_END
 

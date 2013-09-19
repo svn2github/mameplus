@@ -324,7 +324,7 @@ of your command:
 
         Posts to screen a specific software list which matches with the gamename
         provided.
- 
+
 -verifysoftlist [softwarelistname]
 
 	Checks a specified software list for missing ROM images if files exist for issued

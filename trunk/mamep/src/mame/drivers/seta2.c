@@ -111,7 +111,7 @@ reelquak:
 #include "cpu/m68000/m68000.h"
 #include "cpu/h83002/h8.h"
 #include "sound/okim9810.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "machine/nvram.h"
 #include "machine/ticket.h"
 #include "machine/mcf5206e.h"
@@ -181,14 +181,14 @@ ADDRESS_MAP_END
 
 READ16_MEMBER(seta2_state::gundamex_eeprom_r)
 {
-	return ((m_eeprom->read_bit() & 1)) << 3;
+	return ((m_eeprom->do_read() & 1)) << 3;
 }
 
 WRITE16_MEMBER(seta2_state::gundamex_eeprom_w)
 {
-	m_eeprom->set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
-	m_eeprom->write_bit(data & 0x1);
-	m_eeprom->set_cs_line((data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
+	m_eeprom->clk_write((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
+	m_eeprom->di_write(data & 0x1);
+	m_eeprom->cs_write((data & 0x4) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( gundamex_map, AS_PROGRAM, 16, seta2_state )
@@ -550,7 +550,7 @@ READ32_MEMBER(seta2_state::funcube_debug_r)
 	UINT32 ret = ioport("DEBUG")->read();
 
 	// This bits let you move the crosshair in the inputs / touch panel test with a joystick
-	if (!(machine().primary_screen->frame_number() % 3))
+	if (!(m_screen->frame_number() % 3))
 		ret |= 0x3f;
 
 	return ret;
@@ -632,7 +632,7 @@ READ8_MEMBER(seta2_state::funcube_coins_r)
 	UINT8 coin_bit0 = 1;    // active low
 	UINT8 coin_bit1 = 1;
 
-	UINT8 hopper_bit = (m_funcube_hopper_motor && !(machine().primary_screen->frame_number()%20)) ? 1 : 0;
+	UINT8 hopper_bit = (m_funcube_hopper_motor && !(m_screen->frame_number()%20)) ? 1 : 0;
 
 	const UINT64 coin_total_cycles = FUNCUBE_SUB_CPU_CLOCK / (1000/20);
 
@@ -2036,7 +2036,7 @@ static MACHINE_CONFIG_DERIVED( gundamex, seta2 )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(gundamex_map)
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	// video hardware
 	MCFG_SCREEN_MODIFY("screen")

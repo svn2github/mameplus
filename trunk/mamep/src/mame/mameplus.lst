@@ -101,6 +101,11 @@ spclone     // GX587 (c) 1986 based
 bublcave    // hack, bublbobl.c 
 ddonpacha   // hack, cave.c
 ketarr      // hack, pgm.c 
+ketarr15    // hack, pgm.c 
 ketarr151   // hack, pgm.c
+ketst100    // hack, pgm.c 
+ketstoic    // hack, pgm.c 
+ketback     // hack, pgm.c 
+ketfast     // hack, pgm.c 
 outrunen    // hack, segaorun.c
 #endif // !NCP

@@ -90,12 +90,12 @@ UINT32 xmen_state::screen_update_xmen(screen_device &screen, bitmap_ind16 &bitma
 
 	konami_sortlayers3(layer, m_layerpri);
 
-	machine().priority_bitmap.fill(0, cliprect);
+	screen.priority().fill(0, cliprect);
 	/* note the '+1' in the background color!!! */
 	bitmap.fill(16 * bg_colorbase + 1, cliprect);
-	m_k052109->tilemap_draw(bitmap, cliprect, layer[0], 0, 1);
-	m_k052109->tilemap_draw(bitmap, cliprect, layer[1], 0, 2);
-	m_k052109->tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
+	m_k052109->tilemap_draw(screen, bitmap, cliprect, layer[0], 0, 1);
+	m_k052109->tilemap_draw(screen, bitmap, cliprect, layer[1], 0, 2);
+	m_k052109->tilemap_draw(screen, bitmap, cliprect, layer[2], 0, 4);
 
 /* this isn't supported anymore and it is unsure if still needed; keeping here for reference
     pdrawgfx_shadow_lowpri = 1; fix shadows of boulders in front of feet */
@@ -147,14 +147,14 @@ void xmen_state::screen_eof_xmen6p(screen_device &screen, bool state)
 		rectangle cliprect;
 		int offset;
 
-	//  const rectangle *visarea = machine().primary_screen->visible_area();
+	//  const rectangle *visarea = m_screen->visible_area();
 	//  cliprect = *visarea;
 
 		cliprect.set(0, 64 * 8 - 1, 2 * 8, 30 * 8 - 1);
 
 
 		address_space &space = machine().driver_data()->generic_space();
-		if (machine().primary_screen->frame_number() & 0x01)
+		if (m_screen->frame_number() & 0x01)
 		{
 			/* copy the desired spritelist to the chip */
 			memcpy(m_k053247_ram, m_xmen6p_spriteramright, 0x1000);
@@ -210,12 +210,12 @@ void xmen_state::screen_eof_xmen6p(screen_device &screen, bool state)
 
 		konami_sortlayers3(layer, m_layerpri);
 
-		machine().priority_bitmap.fill(0, cliprect);
+		screen.priority().fill(0, cliprect);
 		/* note the '+1' in the background color!!! */
 		renderbitmap->fill(16 * bg_colorbase + 1, cliprect);
-		m_k052109->tilemap_draw(*renderbitmap, cliprect, layer[0], 0, 1);
-		m_k052109->tilemap_draw(*renderbitmap, cliprect, layer[1], 0, 2);
-		m_k052109->tilemap_draw(*renderbitmap, cliprect, layer[2], 0, 4);
+		m_k052109->tilemap_draw(screen, *renderbitmap, cliprect, layer[0], 0, 1);
+		m_k052109->tilemap_draw(screen, *renderbitmap, cliprect, layer[1], 0, 2);
+		m_k052109->tilemap_draw(screen, *renderbitmap, cliprect, layer[2], 0, 4);
 
 	/* this isn't supported anymore and it is unsure if still needed; keeping here for reference
 	    pdrawgfx_shadow_lowpri = 1; fix shadows of boulders in front of feet */

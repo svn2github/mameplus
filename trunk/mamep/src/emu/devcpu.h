@@ -46,6 +46,8 @@
 #ifndef __DEVCPU_H__
 #define __DEVCPU_H__
 
+#include "emuopts.h"
+
 //**************************************************************************
 //  CONSTANTS
 //**************************************************************************
@@ -189,11 +191,11 @@ enum
 #define MCFG_CPU_DATA_MAP MCFG_DEVICE_DATA_MAP
 #define MCFG_CPU_IO_MAP MCFG_DEVICE_IO_MAP
 
-#define MCFG_CPU_VBLANK_INT MCFG_DEVICE_VBLANK_INT
-#define MCFG_CPU_PERIODIC_INT MCFG_DEVICE_PERIODIC_INT
-
 #define MCFG_CPU_VBLANK_INT_DRIVER MCFG_DEVICE_VBLANK_INT_DRIVER
 #define MCFG_CPU_PERIODIC_INT_DRIVER MCFG_DEVICE_PERIODIC_INT_DRIVER
+
+#define MCFG_CPU_VBLANK_INT_REMOVE MCFG_DEVICE_VBLANK_INT_REMOVE
+#define MCFG_CPU_PERIODIC_INT_REMOVE MCFG_DEVICE_PERIODIC_INT_REMOVE
 
 
 //**************************************************************************
@@ -296,6 +298,16 @@ template<class _DeviceClass>
 device_t *legacy_device_creator(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 {
 	return global_alloc(_DeviceClass(mconfig, &legacy_device_creator<_DeviceClass>, tag, owner, clock));
+}
+
+// this template function creates a stub which constructs a device
+template<class _DeviceClass1,class _DeviceClass2>
+device_t *legacy_device_creator_drc(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+{
+	if (mconfig.options().drc())
+		return global_alloc(_DeviceClass2(mconfig, &legacy_device_creator<_DeviceClass2>, tag, owner, clock));
+	else
+		return global_alloc(_DeviceClass1(mconfig, &legacy_device_creator<_DeviceClass1>, tag, owner, clock));
 }
 
 //**************************************************************************

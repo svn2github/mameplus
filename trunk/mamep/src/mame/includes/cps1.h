@@ -142,7 +142,7 @@ public:
 	int          m_sample_select1;
 	int          m_sample_select2;
 
-	/* video config (never changed after VIDEO_START) */
+	/* video config (never changed after video_start) */
 	const struct CPS1config *m_game_config;
 	int          m_scroll_size;
 	int          m_obj_size;
@@ -310,9 +310,9 @@ public:
 	DECLARE_WRITE8_MEMBER(fcrash_msm5205_1_data_w);
 	UINT32 screen_update_fcrash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void fcrash_update_transmasks();
-	void fcrash_render_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
-	void fcrash_render_layer(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int primask);
-	void fcrash_render_high_layer(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer);
+	void fcrash_render_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void fcrash_render_layer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int primask);
+	void fcrash_render_high_layer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer);
 	void fcrash_build_palette();
 
 
@@ -325,12 +325,12 @@ public:
 	void cps1_update_transmasks();
 	void cps1_build_palette(const UINT16* const palette_base);
 	void cps1_find_last_sprite();
-	void cps1_render_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void cps1_render_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void cps2_find_last_sprite();
-	void cps2_render_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, int *primasks);
+	void cps2_render_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int *primasks);
 	void cps1_render_stars(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	void cps1_render_layer(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int primask);
-	void cps1_render_high_layer(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer);
+	void cps1_render_layer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int primask);
+	void cps1_render_high_layer(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer);
 	void cps2_set_sprite_priorities();
 	void cps2_objram_latch();
 	UINT16 *cps2_objbase();

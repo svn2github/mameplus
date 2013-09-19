@@ -206,7 +206,7 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8, tceptor_state )
-	AM_RANGE(0x0000, 0x001f) AM_READWRITE_LEGACY(m6801_io_r, m6801_io_w)
+	AM_RANGE(0x0000, 0x001f) AM_DEVREADWRITE("mcu", hd63701_cpu_device, m6801_io_r, m6801_io_w)
 	AM_RANGE(0x0080, 0x00ff) AM_RAM
 	AM_RANGE(0x1000, 0x13ff) AM_DEVREADWRITE("namco", namco_cus30_device, namcos1_cus30_r, namcos1_cus30_w)
 	AM_RANGE(0x1400, 0x154d) AM_RAM
@@ -317,7 +317,7 @@ static const gfx_layout tile_layout =
 static GFXDECODE_START( tceptor )
 	GFXDECODE_ENTRY( "gfx1", 0, tile_layout,     0,  256 )
 
-	/* decode in VIDEO_START */
+	/* decode in video_start */
 	//GFXDECODE_ENTRY( "gfx2", 0, bg_layout,    2048,   64 )
 	//GFXDECODE_ENTRY( "gfx3", 0, spr16_layout, 1024,   64 )
 	//GFXDECODE_ENTRY( "gfx4", 0, spr32_layout, 1024,   64 )

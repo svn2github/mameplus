@@ -190,16 +190,6 @@ WRITE16_MEMBER(nmk16_state::nmk16_mainram_strange_w)
 }
 
 
-MACHINE_RESET_MEMBER(nmk16_state,NMK004)
-{
-	NMK004_init(machine());
-}
-
-MACHINE_RESET_MEMBER(nmk16_state,mustang_sound)
-{
-	MACHINE_RESET_CALL_LEGACY(seibu_sound);
-}
-
 WRITE16_MEMBER(nmk16_state::ssmissin_sound_w)
 {
 	if (ACCESSING_BITS_0_7)
@@ -249,7 +239,7 @@ READ16_MEMBER(nmk16_state::tharrier_mcu_r)
 		else
 		{
 			res = to_main[m_prot_count++];
-			if (m_prot_count > sizeof(to_main))
+			if (m_prot_count == sizeof(to_main))
 				m_prot_count = 0;
 		}
 
@@ -314,10 +304,10 @@ static ADDRESS_MAP_START( vandyke_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080008, 0x080009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08000a, 0x08000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITE(vandyke_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -332,11 +322,11 @@ static ADDRESS_MAP_START( vandykeb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080008, 0x080009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08000a, 0x08000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x080010, 0x08001d) AM_WRITE(vandykeb_scroll_w) /* 10, 12, 1a, 1c */
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITENOP    /* just in case... */
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -405,10 +395,10 @@ static ADDRESS_MAP_START( mustang_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080000, 0x080001) AM_READ_PORT("IN0")
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080004, 0x080005) AM_READ_PORT("DSW1")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r) AM_WRITENOP
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read) AM_WRITENOP
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    // frame number?
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP    // ??
@@ -425,7 +415,7 @@ static ADDRESS_MAP_START( mustangb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x08000e, 0x08000f) AM_NOP
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    // frame number?
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(seibu_main_mustb_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("seibu_sound", seibu_sound_device, main_mustb_w)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP    // ??
@@ -460,11 +450,11 @@ static ADDRESS_MAP_START( acrobatm_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0xc0002, 0xc0003) AM_READ_PORT("IN1")
 	AM_RANGE(0xc0008, 0xc0009) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc000a, 0xc000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0xc000e, 0xc000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0xc000e, 0xc000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0xc0014, 0xc0015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0xc0016, 0xc0017) AM_WRITENOP
 	AM_RANGE(0xc0018, 0xc0019) AM_WRITE(nmk_tilebank_w)
-	AM_RANGE(0xc001e, 0xc001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0xc001e, 0xc001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0xc4000, 0xc45ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc8000, 0xc8007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0xcc000, 0xcffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -477,9 +467,9 @@ static ADDRESS_MAP_START( bioship_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080008, 0x080009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08000a, 0x08000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read)
 //  AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x084000, 0x084001) AM_WRITE(bioship_bank_w)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_RAM_WRITE(bioshipbg_scroll_w)
@@ -655,10 +645,10 @@ static ADDRESS_MAP_START( hachamf_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080008, 0x080009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08000a, 0x08000b) AM_READ_PORT("UNK")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	/* Video Region */
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITE(nmk_scroll_w)
@@ -887,10 +877,10 @@ static ADDRESS_MAP_START( tdragon_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0002, 0x0c0003) AM_READ_PORT("IN1")
 	AM_RANGE(0x0c0008, 0x0c0009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0c000a, 0x0c000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x0c000e, 0x0c000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x0c000e, 0x0c000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x0c0014, 0x0c0015) AM_WRITE(nmk_flipscreen_w) /* Maybe */
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
-	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x0c001e, 0x0c001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -913,7 +903,7 @@ static ADDRESS_MAP_START( tdragonb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c000a, 0x0c000b) AM_READ_PORT("DSW2")
 	AM_RANGE(0x0c0014, 0x0c0015) AM_WRITE(nmk_flipscreen_w) /* Maybe */
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
-	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE_LEGACY(seibu_main_mustb_w)
+	AM_RANGE(0x0c001e, 0x0c001f) AM_DEVWRITE("seibu_sound", seibu_sound_device, main_mustb_w)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -926,7 +916,7 @@ static ADDRESS_MAP_START( ssmissin_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("IN0")
 	AM_RANGE(0x0c0004, 0x0c0005) AM_READ_PORT("IN1")
 	AM_RANGE(0x0c0006, 0x0c0007) AM_READ_PORT("DSW1")
-//  AM_RANGE(0x0c000e, 0x0c000f) AM_READ_LEGACY(??)
+//  AM_RANGE(0x0c000e, 0x0c000f) AM_READ(??)
 	AM_RANGE(0x0c0014, 0x0c0015) AM_WRITE(nmk_flipscreen_w) /* Maybe */
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE(ssmissin_sound_w)
@@ -950,10 +940,10 @@ static ADDRESS_MAP_START( strahl_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x80002, 0x80003) AM_READ_PORT("IN1")
 	AM_RANGE(0x80008, 0x80009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x8000a, 0x8000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x8000e, 0x8000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x8000e, 0x8000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x80014, 0x80015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x80016, 0x80017) AM_WRITENOP  /* IRQ enable? */
-	AM_RANGE(0x8001e, 0x8001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x8001e, 0x8001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x84000, 0x84007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x88000, 0x88007) AM_RAM_WRITE(nmk_scroll_2_w)
 	AM_RANGE(0x8c000, 0x8c7ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
@@ -969,11 +959,11 @@ static ADDRESS_MAP_START( macross_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080008, 0x080009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08000a, 0x08000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -987,11 +977,11 @@ static ADDRESS_MAP_START( gunnail_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080002, 0x080003) AM_READ_PORT("IN1")
 	AM_RANGE(0x080008, 0x080009) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08000a, 0x08000b) AM_READ_PORT("DSW2")
-	AM_RANGE(0x08000e, 0x08000f) AM_READ_LEGACY(NMK004_r)
+	AM_RANGE(0x08000e, 0x08000f) AM_DEVREAD("nmk004", nmk004_device, read)
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
-	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
+	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c1ff) AM_WRITEONLY AM_SHARE("scrollram")
 	AM_RANGE(0x08c200, 0x08c3ff) AM_WRITEONLY AM_SHARE("scrollramy")
@@ -3593,8 +3583,6 @@ static MACHINE_CONFIG_START( tharrier, nmk16_state )
 	MCFG_CPU_PROGRAM_MAP(tharrier_sound_map)
 	MCFG_CPU_IO_MAP(tharrier_sound_io_map)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,mustang_sound)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3679,8 +3667,6 @@ static MACHINE_CONFIG_START( mustang, nmk16_state )
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3698,8 +3684,10 @@ static MACHINE_CONFIG_START( mustang, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, 1500000)
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -3722,8 +3710,6 @@ static MACHINE_CONFIG_START( mustangb, nmk16_state )
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
 	SEIBU_SOUND_SYSTEM_CPU(14318180/4)
-
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,mustang_sound)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3755,8 +3741,6 @@ static MACHINE_CONFIG_START( bioship, nmk16_state )
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 100)/* 112 breaks the title screen */
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3774,8 +3758,10 @@ static MACHINE_CONFIG_START( bioship, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, BIOSHIP_CRYSTAL2 / 8) /* 1.5 Mhz (verified) */
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -3797,8 +3783,6 @@ static MACHINE_CONFIG_START( vandyke, nmk16_state )
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3816,8 +3800,10 @@ static MACHINE_CONFIG_START( vandyke, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_12MHz/8) /* verified on pcb */
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -3842,8 +3828,6 @@ static MACHINE_CONFIG_START( vandykeb, nmk16_state )
 	MCFG_CPU_ADD("mcu", PIC16C57, 12000000) /* 3MHz */
 	MCFG_DEVICE_DISABLE()
 
-	//MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004) // no NMK004
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3860,6 +3844,8 @@ static MACHINE_CONFIG_START( vandykeb, nmk16_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
+
+	MCFG_NMK004_ADD("nmk004")
 
 	MCFG_OKIM6295_ADD("oki1", 16000000/4, OKIM6295_PIN7_LOW)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
@@ -3873,8 +3859,6 @@ static MACHINE_CONFIG_START( acrobatm, nmk16_state )
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3892,8 +3876,10 @@ static MACHINE_CONFIG_START( acrobatm, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, 1500000) /* (verified on pcb) */
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -3918,8 +3904,6 @@ static MACHINE_CONFIG_START( tdragonb, nmk16_state )    /* bootleg using Raiden 
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
 	SEIBU_SOUND_SYSTEM_CPU(14318180/4)
-
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,mustang_sound)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3948,8 +3932,6 @@ static MACHINE_CONFIG_START( tdragon, nmk16_state )
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ?? drives music */
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -3968,8 +3950,10 @@ static MACHINE_CONFIG_START( tdragon, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_12MHz/8) /* verified on pcb */
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -4024,9 +4008,7 @@ static MACHINE_CONFIG_START( strahl, nmk16_state )
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", nmk16_state, nmk16_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
-	/* video hardware */
+		/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
@@ -4043,8 +4025,10 @@ static MACHINE_CONFIG_START( strahl, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, 1500000)
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -4066,8 +4050,6 @@ static MACHINE_CONFIG_START( hachamf, nmk16_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", nmk16_state,  irq4_line_hold)
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -4086,8 +4068,10 @@ static MACHINE_CONFIG_START( hachamf, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, 1500000)
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -4109,8 +4093,6 @@ static MACHINE_CONFIG_START( macross, nmk16_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", nmk16_state,  irq4_line_hold)
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -4128,8 +4110,10 @@ static MACHINE_CONFIG_START( macross, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, 1500000)
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -4151,8 +4135,6 @@ static MACHINE_CONFIG_START( blkheart, nmk16_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", nmk16_state,  irq4_line_hold)
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)/* ???????? */
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56.18) /* verified on pcb */
@@ -4170,8 +4152,10 @@ static MACHINE_CONFIG_START( blkheart, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_12MHz/8 ) /* verified on pcb */
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -4193,8 +4177,6 @@ static MACHINE_CONFIG_START( gunnail, nmk16_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", nmk16_state,  irq4_line_hold)
 	MCFG_CPU_PERIODIC_INT_DRIVER(nmk16_state, irq1_line_hold, 112)
 
-	MCFG_MACHINE_RESET_OVERRIDE(nmk16_state,NMK004)
-
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(56)
@@ -4212,8 +4194,10 @@ static MACHINE_CONFIG_START( gunnail, nmk16_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
+	MCFG_NMK004_ADD("nmk004")
+
 	MCFG_SOUND_ADD("ymsnd", YM2203, 1500000)
-	MCFG_YM2203_IRQ_HANDLER(WRITELINE(driver_device, member_wrapper_line<NMK004_irq>))
+	MCFG_YM2203_IRQ_HANDLER(DEVWRITELINE("nmk004", nmk004_device, ym2203_irq_handler))
 	MCFG_YM2203_AY8910_INTF(&ay8910_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.50)
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
@@ -7332,8 +7316,6 @@ ROM_START( twinactn )
 	ROM_CONTINUE(           0x0e0000, 0x20000 )
 ROM_END
 
-
-
 /***************************************************************************
 
 
@@ -7427,8 +7409,9 @@ GAME( 1998, redfoxwp2,grdnstrm, grdnstrmk,grdnstrk, nmk16_state,   grdnstrm, ROT
 GAME( 1998, redfoxwp2a,grdnstrm,grdnstrmk,grdnstrk, nmk16_state,  redfoxwp2a,ROT270,             "Afega",                             "Red Fox War Planes II (China, set 2)", 0 )
 GAME( 1998, grdnstrmg,grdnstrm, grdnstrmk,grdnstrk, nmk16_state,   grdnstrmg,ROT270,             "Afega",                             "Guardian Storm (Germany)", 0 )
 
-GAME( 1998, bubl2000, 0,        popspops, bubl2000, nmk16_state,   bubl2000, ROT0,               "Tuning",                            "Bubble 2000", 0 ) // on a tuning board (bootleg?)
-GAME( 1998, hotbubl,  bubl2000, popspops, bubl2000, nmk16_state,   bubl2000, ROT0,               "Pandora",                           "Hot Bubble" , 0 ) // on an afega board ..
+// is there a 'bubble 2000' / 'hot bubble' version with Afega copyright, or is the only Afega release dolmen above, this seems like a sequel, not a clone?
+GAME( 1998, bubl2000, 0,        popspops, bubl2000, nmk16_state,   bubl2000, ROT0,               "Afega (Tuning license)",                            "Bubble 2000", 0 ) // on a tuning board (bootleg?)
+GAME( 1998, hotbubl,  bubl2000, popspops, bubl2000, nmk16_state,   bubl2000, ROT0,               "Afega (Pandora license)",                           "Hot Bubble" , 0 ) // on an afega board ..
 
 GAME( 1999, popspops, 0,        popspops, popspops, nmk16_state,   grdnstrm, ROT0,               "Afega",                             "Pop's Pop's", 0 )
 

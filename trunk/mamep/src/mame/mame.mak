@@ -54,6 +54,7 @@ OBJDIRS += \
 CPUS += Z80
 CPUS += Z180
 CPUS += I8085
+CPUS += I8089
 CPUS += M6502
 CPUS += H6280
 CPUS += I86
@@ -209,6 +210,7 @@ SOUNDS += OKIM6258
 SOUNDS += OKIM6295
 SOUNDS += OKIM6376
 SOUNDS += OKIM9810
+#SOUNDS += UPD7752
 SOUNDS += UPD7759
 SOUNDS += HC55516
 SOUNDS += TC8830F
@@ -258,7 +260,6 @@ SOUNDS += CDP1863
 SOUNDS += CDP1864
 SOUNDS += ZSG2
 SOUNDS += MOS656X
-SOUNDS += S2636
 SOUNDS += ASC
 SOUNDS += MAS3507D
 SOUNDS += SOCRATES
@@ -315,7 +316,6 @@ VIDEOS += PC_VGA
 VIDEOS += POLY
 VIDEOS += PSX
 VIDEOS += RAMDAC
-VIDEOS += S2636
 VIDEOS += SAA5050
 #VIDEOS += SED1330
 VIDEOS += STVVDP
@@ -358,6 +358,7 @@ MACHINES += ADC0808
 MACHINES += ADC083X
 MACHINES += ADC1038
 MACHINES += ADC1213X
+MACHINES += AICARTC
 MACHINES += AM53CF96
 MACHINES += AM9517A
 MACHINES += AMIGAFDC
@@ -452,6 +453,7 @@ MACHINES += RP5H01
 MACHINES += RTC4543
 MACHINES += RTC65271
 MACHINES += RTC9701
+MACHINES += S2636
 MACHINES += S3520CF
 MACHINES += S3C2400
 MACHINES += S3C2410
@@ -619,6 +621,7 @@ $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/ticket.o \
 	$(VIDEO)/avgdvg.o \
 	$(AUDIO)/decobsmt.o \
+	$(AUDIO)/segam1audio.o \
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers
@@ -1830,7 +1833,6 @@ $(MAMEOBJ)/technos.a: \
 	$(DRIVERS)/tagteam.o $(VIDEO)/tagteam.o \
 	$(DRIVERS)/vball.o $(VIDEO)/vball.o \
 	$(DRIVERS)/wwfsstar.o $(VIDEO)/wwfsstar.o \
-	$(DRIVERS)/wwfwfest.o $(VIDEO)/wwfwfest.o \
 	$(DRIVERS)/xain.o $(VIDEO)/xain.o \
 
 $(MAMEOBJ)/tehkan.a: \
@@ -1951,6 +1953,7 @@ $(MAMEOBJ)/pinball.a: \
 	$(MACHINE)/decopincpu.o \
 	$(VIDEO)/decodmd1.o \
 	$(VIDEO)/decodmd2.o \
+	$(VIDEO)/decodmd3.o \
 	$(DRIVERS)/de_3b.o  \
 	$(DRIVERS)/flicker.o  \
 	$(DRIVERS)/g627.o  \
@@ -2355,6 +2358,8 @@ $(DRIVERS)/bzone.o:     $(LAYOUT)/bzone.lh \
 
 $(DRIVERS)/cardline.o:  $(LAYOUT)/cardline.lh
 
+$(DRIVERS)/cave.o:      $(LAYOUT)/ppsatan.lh
+
 $(DRIVERS)/cdi.o:       $(LAYOUT)/cdi.lh
 
 $(DRIVERS)/chance32.o:  $(LAYOUT)/chance32.lh
@@ -2693,7 +2698,6 @@ $(MACHINE)/megacd.o:  $(LAYOUT)/megacd.lh
 # misc dependencies
 #-------------------------------------------------
 
-$(DRIVERS)/galaxian.o:  $(MAMESRC)/drivers/galaxian.inc
 $(DRIVERS)/neogeo.o:    $(MAMESRC)/drivers/neogeo.inc
 $(VIDEO)/jaguar.o:      $(MAMESRC)/video/jagobj.inc \
 			$(MAMESRC)/video/jagblit.inc

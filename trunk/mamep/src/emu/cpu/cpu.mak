@@ -718,6 +718,25 @@ $(CPUOBJ)/i8085/i8085.o:    $(CPUSRC)/i8085/i8085.c \
 							$(CPUSRC)/i8085/i8085cpu.h
 
 
+#-------------------------------------------------
+# Intel 8089
+#@src/emu/cpu/i8085/i8089.h,CPUS += I8089
+#-------------------------------------------------
+
+ifneq ($(filter I8089,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/i8089
+CPUOBJS += $(CPUOBJ)/i8089/i8089.o \
+			$(CPUOBJ)/i8089/i8089_channel.o \
+			$(CPUOBJ)/i8089/i8089_ops.o
+DASMOBJS += $(CPUOBJ)/i8089/i8089_dasm.o
+endif
+
+$(CPUOBJ)/i8089/i8089_ops.o:     $(CPUSRC)/i8089/i8089_channel.h
+$(CPUOBJ)/i8089/i8089_channel.o: $(CPUSRC)/i8089/i8089_channel.h
+
+$(CPUOBJ)/i8089/i8089.o:    $(CPUSRC)/i8089/i8089.c \
+							$(CPUSRC)/i8089/i8089.h
+
 
 #-------------------------------------------------
 # Intel MCS-48 (8039 and derivatives)
@@ -798,6 +817,7 @@ $(CPUOBJ)/mcs96/i8xc196.inc: $(CPUSRC)/mcs96/mcs96make.py $(CPUSRC)/mcs96/mcs96o
 ifneq ($(filter I86,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/i86 $(CPUOBJ)/i386
 CPUOBJS += $(CPUOBJ)/i86/i86.o
+CPUOBJS += $(CPUOBJ)/i86/i186.o
 CPUOBJS += $(CPUOBJ)/i86/i286.o
 DASMOBJS += $(CPUOBJ)/i386/i386dasm.o
 endif
@@ -808,27 +828,19 @@ CPUOBJS += $(CPUOBJ)/i386/i386.o
 DASMOBJS += $(CPUOBJ)/i386/i386dasm.o
 endif
 
-I86DEPS = \
-	$(CPUSRC)/i86/i86priv.h \
-	$(CPUSRC)/i86/ea.h \
-	$(CPUSRC)/i86/host.h \
-	$(CPUSRC)/i86/modrm.h
-
 $(CPUOBJ)/i86/i86.o:    $(CPUSRC)/i86/i86.c \
 						$(CPUSRC)/i86/i86.h \
-						$(CPUSRC)/i86/i86time.c \
-						$(CPUSRC)/i86/instr86.c \
-						$(CPUSRC)/i86/instr186.c \
-						$(I86DEPS)
+						$(CPUSRC)/i86/i86inline.h
+
+$(CPUOBJ)/i86/i186.o:   $(CPUSRC)/i86/i186.c \
+						$(CPUSRC)/i86/i86.h \
+						$(CPUSRC)/i86/i186.h \
+						$(CPUSRC)/i86/i86inline.h
 
 $(CPUOBJ)/i86/i286.o:   $(CPUSRC)/i86/i286.c \
+						$(CPUSRC)/i86/i86.h \
 						$(CPUSRC)/i86/i286.h \
-						$(CPUSRC)/i86/i86time.c \
-						$(CPUSRC)/i86/instr86.c \
-						$(CPUSRC)/i86/instr186.c \
-						$(CPUSRC)/i86/instr286.c \
-						$(CPUSRC)/i86/modrm286.h \
-						$(I86DEPS)
+						$(CPUSRC)/i86/i86inline.h
 
 $(CPUOBJ)/i386/i386.o:  $(CPUSRC)/i386/i386.c \
 						$(CPUSRC)/i386/i386.h \
@@ -2000,7 +2012,7 @@ $(CPUOBJ)/tms32051/tms32051.o:  $(CPUSRC)/tms32051/tms32051.c \
 ifneq ($(filter TMS32082,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/tms32082
 CPUOBJS += $(CPUOBJ)/tms32082/tms32082.o $(CPUOBJ)/tms32082/mp_ops.o
-DASMOBJS += $(CPUOBJ)/tms32082/dis32082.o
+DASMOBJS += $(CPUOBJ)/tms32082/dis_mp.o $(CPUOBJ)/tms32082/dis_pp.o
 endif
 
 $(CPUOBJ)/tms32082/tms32082.o:  $(CPUSRC)/tms32082/tms32082.c \
@@ -2234,4 +2246,23 @@ DASMOBJS += $(CPUOBJ)/scudsp/scudspdasm.o
 endif
 
 $(CPUOBJ)/scudsp/scudspdasm.o: CPUOBJS += $(CPUOBJ)/scudsp/scudspdasm.c
+
+
+#-------------------------------------------------
+# Sunplus Technology S+core
+#@src/emu/cpu/score/score.h,CPUS += SCORE
+#-------------------------------------------------
+
+ifneq ($(filter SCORE,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/score
+CPUOBJS += $(CPUOBJ)/score/score.o
+DASMOBJS += $(CPUOBJ)/score/scoredsm.o
+endif
+
+$(CPUOBJ)/score/score.o:    $(CPUSRC)/score/score.c \
+							$(CPUSRC)/score/score.h \
+							$(CPUSRC)/score/scorem.h
+
+$(CPUOBJ)/score/scoredsm.o: $(CPUSRC)/score/scoredsm.c \
+							$(CPUSRC)/score/scorem.h
 

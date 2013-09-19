@@ -70,9 +70,6 @@ VIDEO_START_MEMBER(atarigx2_state,atarigx2)
 	/* blend the playfields and free the temporary one */
 	blend_gfx(0, 2, 0x0f, 0x30);
 
-	/* initialize the motion objects */
-	m_rle = machine().device("rle");
-
 	/* save states */
 	save_item(NAME(m_current_control));
 	save_item(NAME(m_playfield_tile_bank));
@@ -91,7 +88,7 @@ VIDEO_START_MEMBER(atarigx2_state,atarigx2)
 
 WRITE16_MEMBER( atarigx2_state::atarigx2_mo_control_w )
 {
-	logerror("MOCONT = %d (scan = %d)\n", data, machine().primary_screen->vpos());
+	logerror("MOCONT = %d (scan = %d)\n", data, m_screen->vpos());
 
 	/* set the control value */
 	COMBINE_DATA(&m_current_control);
@@ -167,22 +164,22 @@ void atarigx2_state::scanline_update(screen_device &screen, int scanline)
 
 UINT32 atarigx2_state::screen_update_atarigx2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bitmap_ind8 &priority_bitmap = machine().priority_bitmap;
+	bitmap_ind8 &priority_bitmap = screen.priority();
 
 	/* draw the playfield */
 	priority_bitmap.fill(0, cliprect);
-	m_playfield_tilemap->draw(bitmap, cliprect, 0, 0);
-	m_playfield_tilemap->draw(bitmap, cliprect, 1, 1);
-	m_playfield_tilemap->draw(bitmap, cliprect, 2, 2);
-	m_playfield_tilemap->draw(bitmap, cliprect, 3, 3);
-	m_playfield_tilemap->draw(bitmap, cliprect, 4, 4);
-	m_playfield_tilemap->draw(bitmap, cliprect, 5, 5);
-	m_playfield_tilemap->draw(bitmap, cliprect, 6, 6);
-	m_playfield_tilemap->draw(bitmap, cliprect, 7, 7);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 0, 0);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 1, 1);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 2, 2);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 3, 3);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 4, 4);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 5, 5);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 6, 6);
+	m_playfield_tilemap->draw(screen, bitmap, cliprect, 7, 7);
 
 	/* copy the motion objects on top */
 	{
-		bitmap_ind16 *mo_bitmap = atarirle_get_vram(m_rle, 0);
+		bitmap_ind16 &mo_bitmap = m_rle->vram(0);
 		int left    = cliprect.min_x;
 		int top     = cliprect.min_y;
 		int right   = cliprect.max_x + 1;
@@ -193,7 +190,7 @@ UINT32 atarigx2_state::screen_update_atarigx2(screen_device &screen, bitmap_ind1
 		for (y = top; y < bottom; y++)
 		{
 			UINT16 *pf = &bitmap.pix16(y);
-			UINT16 *mo = &mo_bitmap->pix16(y);
+			UINT16 *mo = &mo_bitmap.pix16(y);
 			UINT8 *pri = &priority_bitmap.pix8(y);
 			for (x = left; x < right; x++)
 				if (mo[x] && (mo[x] >> ATARIRLE_PRIORITY_SHIFT) >= pri[x])
@@ -202,15 +199,6 @@ UINT32 atarigx2_state::screen_update_atarigx2(screen_device &screen, bitmap_ind1
 	}
 
 	/* add the alpha on top */
-	m_alpha_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_alpha_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 	return 0;
-}
-
-void atarigx2_state::screen_eof_atarigx2(screen_device &screen, bool state)
-{
-	// rising edge
-	if (state)
-	{
-		atarirle_eof(m_rle);
-	}
 }

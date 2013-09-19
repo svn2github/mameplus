@@ -6,7 +6,7 @@
 *************************************************************************/
 
 #include "audio/taitosnd.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "machine/taitoio.h"
 #include "video/tc0100scn.h"
 #include "video/tc0110pcr.h"
@@ -56,7 +56,7 @@ public:
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_audiocpu;
 	required_device<cpu_device> m_subcpu;
-	optional_device<eeprom_device> m_eeprom;
+	optional_device<eeprom_serial_93cxx_device> m_eeprom;
 	optional_device<tc0480scp_device> m_tc0480scp;
 	optional_device<tc0150rod_device> m_tc0150rod;
 	optional_device<tc0100scn_device> m_tc0100scn;
@@ -112,12 +112,12 @@ public:
 	UINT32 screen_update_racingb(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(sci_interrupt);
 	void taitoz_postload();
-	void contcirc_draw_sprites_16x8( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
-	void chasehq_draw_sprites_16x16( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
-	void bshark_draw_sprites_16x8( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
-	void sci_draw_sprites_16x8( bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
-	void aquajack_draw_sprites_16x8(bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
-	void spacegun_draw_sprites_16x8(bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
+	void contcirc_draw_sprites_16x8( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void chasehq_draw_sprites_16x16( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void bshark_draw_sprites_16x8( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void sci_draw_sprites_16x8( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs );
+	void aquajack_draw_sprites_16x8(screen_device &screen, bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
+	void spacegun_draw_sprites_16x8(screen_device &screen, bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs);
 	void parse_cpu_control(  );
 	void reset_sound_region(  );
 	DECLARE_WRITE_LINE_MEMBER(irqhandler);

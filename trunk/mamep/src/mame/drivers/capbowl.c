@@ -136,10 +136,10 @@ TIMER_CALLBACK_MEMBER(capbowl_state::capbowl_update)
 {
 	int scanline = param;
 
-	machine().primary_screen->update_partial(scanline - 1);
+	m_screen->update_partial(scanline - 1);
 	scanline += 32;
 	if (scanline > 240) scanline = 32;
-	timer_set(machine().primary_screen->time_until_pos(scanline), TIMER_CAPBOWL_UPDATE, scanline);
+	timer_set(m_screen->time_until_pos(scanline), TIMER_CAPBOWL_UPDATE, scanline);
 }
 
 
@@ -348,7 +348,6 @@ static void generate_interrupt( running_machine &machine, int state )
 
 static const struct tms34061_interface tms34061intf =
 {
-	"screen",               /* the screen we are acting on */
 	8,                      /* VRAM address is (row << rowshift) | col */
 	0x10000,                /* size of video RAM */
 	generate_interrupt      /* interrupt gen callback */
@@ -371,7 +370,7 @@ void capbowl_state::machine_start()
 
 void capbowl_state::machine_reset()
 {
-	timer_set(machine().primary_screen->time_until_pos(32), TIMER_CAPBOWL_UPDATE, 32);
+	timer_set(m_screen->time_until_pos(32), TIMER_CAPBOWL_UPDATE, 32);
 
 	m_blitter_addr = 0;
 	m_last_trackball_val[0] = 0;

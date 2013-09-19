@@ -3,21 +3,1049 @@
     Data East 104 based protection/IO chips
     (a variation on the Deco 146 protection, see deco146.c for notes)
 
-    original protection simulations by Bryan McPhail, mish@tendril.co.uk
+    Emulation by David Haywood
+     based on findings by Charles MacDonald
+
+     previous protection simulations by Bryan McPhail
+
 
 ***************************************************************************/
 
 #include "emu.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "deco104.h"
 
-// the same way some 146 games require an address XOR of 0x44a at some point during the read chain
-// there are 104 games requiring a xor of 0x2a4
 
 
-#define DECO_PORT(p) (prot_ram[p/2])
-#define DECO_NEW_PORT(p) (prot_ram[p/2])
 
+
+deco146port_xx port104_table[] = {
+	/* 0x000 */ { 0x04,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x002 */ { 0x2a,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 1 },
+	/* 0x004 */ { 0x5e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x006 */ { 0x98,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x008 */ { 0x94,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x00a */ { 0xbe,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x00c */ { 0xd6,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x00e */ { 0xe4,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x010 */ { 0x90,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x012 */ { 0xa8,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x014 */ { 0x24,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x016 */ { 0xfc,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x018 */ { 0x08,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x01a */ { INPUT_PORT_C , { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $001A ; 0x0010
+	/* 0x01c */ { 0x72,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x01e */ { 0xc4,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x020 */ { 0xd0,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x022 */ { 0x66,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 1 },
+	/* 0x024 */ { 0x8c,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x026 */ { 0xec,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x028 */ { 0x58,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x02a */ { 0x80,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x02c */ { 0x82,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 1 },
+	/* 0x02e */ { 0x6a,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x030 */ { 0x00,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x032 */ { 0x60,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x034 */ { INPUT_PORT_B , { NIB0R3, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x036 */ { 0xae,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x038 */ { 0x12,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x03a */ { 0x42,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x03c */ { 0x1e,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x03e */ { 0xf6,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x040 */ { 0xdc,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x042 */ { 0x34,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x044 */ { 0x2c,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x046 */ { 0x7a,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x048 */ { 0x10,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x04a */ { 0x9e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x04c */ { 0x3e,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x04e */ { 0x0e,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x050 */ { 0xa4,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 1 },
+	/* 0x052 */ { 0x0c,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x054 */ { 0x40,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x056 */ { 0x20,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x058 */ { 0x46,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x05a */ { 0x6c,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x05c */ { 0x9a,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x05e */ { 0x18,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x060 */ { 0xe0,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x062 */ { 0x30,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x064 */ { 0xca,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x066 */ { 0xac,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x068 */ { 0xe8,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x06a */ { 0x66,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x06c */ { 0x14,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x06e */ { 0x96,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x070 */ { 0x5c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x072 */ { 0x0a,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x074 */ { INPUT_PORT_B , { NIB0R1, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x076 */ { INPUT_PORT_C , { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 }, // dc.w    $0076 ; 0x1000  dc.w    $0076 ; 0x1000 ; nand
+	/* 0x078 */ { 0x5a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x07a */ { 0x74,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x07c */ { 0xb4,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x07e */ { 0x86,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x080 */ { 0x84,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x082 */ { 0x28,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x084 */ { 0x50,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x086 */ { 0x66,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x088 */ { INPUT_PORT_A , { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $0088
+	/* 0x08a */ { 0x1c,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x08c */ { 0x48,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x08e */ { 0xc2,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x090 */ { 0x44,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x092 */ { 0x3c,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x094 */ { 0xfa,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x096 */ { 0x22,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x098 */ { 0xf0,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x09a */ { 0x2e,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 0 },
+	/* 0x09c */ { 0x06,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x09e */ { 0x64,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 0 },
+	/* 0x0a0 */ { 0xcc,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x0a2 */ { 0x7a,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x0a4 */ { 0xb2,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x0a6 */ { 0xbe,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x0a8 */ { 0xde,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x0aa */ { 0xf8,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x0ac */ { 0xca,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x0ae */ { 0x3e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x0b0 */ { 0xb6,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x0b2 */ { 0xd8,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x0b4 */ { INPUT_PORT_C , { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 0 }, // dc.w    $00B4 ; 0x1000
+	/* 0x0b6 */ { 0xc0,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x0b8 */ { 0xa2,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x0ba */ { 0xe6,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x0bc */ { 0x1a,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x0be */ { 0xb0,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x0c0 */ { 0x4c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x0c2 */ { 0x56,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x0c4 */ { 0xee,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x0c6 */ { 0xd4,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x0c8 */ { INPUT_PORT_A , { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 0 }, // dc.w    $00C8 ; xor
+	/* 0x0ca */ { 0xda,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x0cc */ { 0xce,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 0 },
+	/* 0x0ce */ { 0xf2,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x0d0 */ { 0x8e,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 1 },
+	/* 0x0d2 */ { 0x3a,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x0d4 */ { 0x6e,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x0d6 */ { 0xa6,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x0d8 */ { 0x78,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 0 },
+	/* 0x0da */ { 0xbc,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x0dc */ { 0xba,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x0de */ { 0x36,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x0e0 */ { 0x66,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x0e2 */ { 0x92,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x0e4 */ { 0x52,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x0e6 */ { 0xf4,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x0e8 */ { INPUT_PORT_B , { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x0ea */ { 0xc6,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x0ec */ { 0xea,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x0ee */ { 0xfe,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x0f0 */ { 0xb2,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x0f2 */ { 0x32,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x0f4 */ { 0x76,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x0f6 */ { 0xe2,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x0f8 */ { 0x7c,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x0fa */ { 0xa0,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x0fc */ { 0x4a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x0fe */ { 0x70,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x100 */ { 0x64,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x102 */ { 0x04,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x104 */ { 0xe2,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x106 */ { 0xca,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x108 */ { 0xa4,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x10a */ { 0x12,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x10c */ { 0xaa,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x10e */ { 0x7c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x110 */ { 0xf4,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x112 */ { 0xda,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x114 */ { 0x7a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x116 */ { 0x3a,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x118 */ { 0x00,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x11a */ { 0x66,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x11c */ { 0xce,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x11e */ { 0xb6,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x120 */ { 0x1c,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x122 */ { 0x82,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x124 */ { 0x4a,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x126 */ { 0x58,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x128 */ { 0xbe,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x12a */ { 0x36,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x12c */ { 0x9a,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 0 },
+	/* 0x12e */ { 0x02,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 1 },
+	/* 0x130 */ { 0xea,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x132 */ { 0xae,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x134 */ { 0x52,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x136 */ { 0xdc,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x138 */ { 0x9e,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x13a */ { 0xfc,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 1 },
+	/* 0x13c */ { 0x4c,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x13e */ { 0x76,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x140 */ { 0x8c,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 0 },
+	/* 0x142 */ { 0xd4,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x144 */ { 0x3e,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x146 */ { 0x16,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x148 */ { 0xb8,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x14a */ { 0x50,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x14c */ { 0x42,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 0 },  // xor readback address, affected by xor, funky
+	/* 0x14e */ { 0xd6,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x150 */ { 0x7e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x152 */ { 0x92,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x154 */ { INPUT_PORT_A , { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x156 */ { 0xde,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x158 */ { 0x1a,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x15a */ { 0x9c,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 1 },
+	/* 0x15c */ { 0x14,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x15e */ { 0x98,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x160 */ { 0x40,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x162 */ { 0x6e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x164 */ { 0xc4,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x166 */ { 0xc6,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x168 */ { 0x84,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x16a */ { 0x8e,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x16c */ { 0x96,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x16e */ { 0x6a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x170 */ { 0xf0,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x172 */ { 0x2a,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x174 */ { 0x1e,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x176 */ { 0x62,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x178 */ { 0x88,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x17a */ { 0xe0,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x17c */ { INPUT_PORT_A , { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 1 },  // dc.w    $017C ; xor,nand
+	/* 0x17e */ { 0xcc,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x180 */ { INPUT_PORT_A , { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x182 */ { 0x46,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x184 */ { 0x90,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x186 */ { 0x72,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x188 */ { 0xee,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x18a */ { 0x2c,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x18c */ { 0x22,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x18e */ { 0x38,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x190 */ { 0x44,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x192 */ { 0xc0,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x194 */ { 0x54,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x196 */ { 0x6c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x198 */ { 0xfa,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x19a */ { 0x34,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x19c */ { 0xa8,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x19e */ { 0x3c,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x1a0 */ { 0x7e,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x1a2 */ { 0x4e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1a4 */ { 0x9c,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x1a6 */ { 0x16,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x1a8 */ { 0x38,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x1aa */ { 0xc8,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x1ac */ { 0x68,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x1ae */ { 0x54,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1b0 */ { 0xba,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x1b2 */ { 0x78,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1b4 */ { 0xcc,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x1b6 */ { 0xfe,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x1b8 */ { 0x86,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x1ba */ { 0x18,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x1bc */ { 0x0e,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x1be */ { 0xc2,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x1c0 */ { INPUT_PORT_C , { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 0 }, // dc.w    $01C0 ; 0x1000
+	/* 0x1c2 */ { 0x0c,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x1c4 */ { INPUT_PORT_A , { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1c6 */ { 0x70,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1c8 */ { INPUT_PORT_A , { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1ca */ { 0x5c,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x1cc */ { 0xac,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x1ce */ { 0x48,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x1d0 */ { 0x0a,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 1 },
+	/* 0x1d2 */ { 0x94,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x1d4 */ { 0x66,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x1d6 */ { 0xf8,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x1d8 */ { 0x68,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1da */ { 0x24,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x1dc */ { 0x66,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x1de */ { 0xa6,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x1e0 */ { 0x74,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1e2 */ { 0xd0,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x1e4 */ { 0x5e,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 0, 1 },
+	/* 0x1e6 */ { 0xe6,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x1e8 */ { 0x66,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1ea */ { INPUT_PORT_B , { NIB1__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x1ec */ { INPUT_PORT_B , { NIB1R2, BLANK_, BLANK_, BLANK_ } , 0, 1 }, // dc.w    $01EC ; nand
+	/* 0x1ee */ { 0xc8,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x1f0 */ { 0xa2,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x1f2 */ { 0x60,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x1f4 */ { 0xbc,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 1 },
+	/* 0x1f6 */ { 0x06,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x1f8 */ { 0x2e,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x1fa */ { 0x26,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x1fc */ { 0x56,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x1fe */ { 0xd2,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x200 */ { 0xa0,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x202 */ { 0x34,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x204 */ { 0xf6,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x206 */ { INPUT_PORT_A , { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x208 */ { 0xae,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x20a */ { 0xf4,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x20c */ { INPUT_PORT_C , { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 1 }, // dc.w    $020C ; Bit not present  dc.w    $020C ; Bit not present ; xor,nand
+	/* 0x20e */ { 0x4e,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x210 */ { 0x0e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x212 */ { 0x6e,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x214 */ { 0x4a,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 0, 1 },
+	/* 0x216 */ { 0x0a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x218 */ { 0x82,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 1 },
+	/* 0x21a */ { 0x66,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x21c */ { 0x6c,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x21e */ { 0xb8,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x220 */ { 0x12,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x222 */ { 0x06,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x224 */ { 0x00,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x226 */ { 0x72,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x228 */ { 0xe4,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x22a */ { 0x90,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x22c */ { 0xc4,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x22e */ { 0x08,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x230 */ { 0x98,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x232 */ { 0xda,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x234 */ { 0x3a,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 0 },
+	/* 0x236 */ { 0xcc,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 1 },
+	/* 0x238 */ { 0x7c,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x23a */ { 0x86,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x23c */ { 0x56,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 1 },
+	/* 0x23e */ { 0x8a,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x240 */ { 0xa0,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x242 */ { 0x04,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x244 */ { 0x32,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x246 */ { 0x48,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x248 */ { 0x8c,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x24a */ { 0xa2,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x24c */ { 0xfa,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x24e */ { 0x46,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x250 */ { 0x62,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x252 */ { 0xe0,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x254 */ { 0x7e,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x256 */ { 0xce,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x258 */ { 0xf8,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x25a */ { 0x6a,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x25c */ { 0x58,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x25e */ { 0xc0,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 0 },
+	/* 0x260 */ { 0xe2,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x262 */ { 0x30,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x264 */ { 0x88,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x266 */ { 0xe8,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x268 */ { 0xac,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 1 },
+	/* 0x26a */ { 0xe6,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x26c */ { 0xc2,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x26e */ { 0xa8,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x270 */ { INPUT_PORT_C , { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 0 }, // dc.w    $0270 ; 0x0010
+	/* 0x272 */ { 0x3c,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x274 */ { 0x68,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x276 */ { 0x2e,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x278 */ { 0x18,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x27a */ { 0x02,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x27c */ { 0x70,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x27e */ { 0x94,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x280 */ { 0x5e,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x282 */ { 0x26,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x284 */ { 0x14,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x286 */ { 0x7a,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x288 */ { 0xd2,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x28a */ { 0xd4,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x28c */ { 0xa6,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 0 },
+	/* 0x28e */ { 0x36,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x290 */ { 0xee,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x292 */ { INPUT_PORT_C , { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $0292 ; 0x0001
+	/* 0x294 */ { 0x66,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x296 */ { 0x5a,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x298 */ { 0x64,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x29a */ { 0x60,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x29c */ { 0xec,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x29e */ { 0x80,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x2a0 */ { 0xd0,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x2a2 */ { 0x44,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x2a4 */ { INPUT_PORT_C , { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 0 }, // dc.w    $02A4 ; 0x0001
+	/* 0x2a6 */ { 0xbc,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 1 },
+	/* 0x2a8 */ { 0x22,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x2aa */ { 0xb2,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x2ac */ { 0x1e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x2ae */ { 0x9c,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 0 },
+	/* 0x2b0 */ { 0x96,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 0 },
+	/* 0x2b2 */ { 0x8e,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x2b4 */ { 0xb6,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x2b6 */ { 0xfe,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 1 },
+	/* 0x2b8 */ { 0x66,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x2ba */ { 0xf0,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x2bc */ { 0x20,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x2be */ { 0x40,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x2c0 */ { 0x4c,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x2c2 */ { 0x76,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 1 },
+	/* 0x2c4 */ { 0xca,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x2c6 */ { 0x50,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x2c8 */ { 0x1c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x2ca */ { 0x1a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x2cc */ { INPUT_PORT_B , { NIB0__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x2ce */ { 0x92,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x2d0 */ { 0x66,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 0 },
+	/* 0x2d2 */ { 0x28,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x2d4 */ { 0x74,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x2d6 */ { 0x16,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x2d8 */ { 0x9e,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x2da */ { 0xde,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x2dc */ { 0xba,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x2de */ { 0x78,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x2e0 */ { 0x9a,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x2e2 */ { 0xc6,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x2e4 */ { 0x42,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x2e6 */ { 0xea,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x2e8 */ { 0x0c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x2ea */ { 0xd8,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x2ec */ { 0x5c,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x2ee */ { 0xaa,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x2f0 */ { 0xb4,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x2f2 */ { 0xf2,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x2f4 */ { INPUT_PORT_C , { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 1 }, // dc.w    $02F4 ; 0x0001 dc.w    $02F4 ; 0x0001 ; nand
+	/* 0x2f6 */ { 0x84,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x2f8 */ { 0xa4,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x2fa */ { INPUT_PORT_C , { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $02FA ; 0x0008
+	/* 0x2fc */ { 0xfc,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 0 },
+	/* 0x2fe */ { 0x10,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x300 */ { 0xa4,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x302 */ { 0x24,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x304 */ { 0xe2,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x306 */ { 0x32,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x308 */ { 0x2a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x30a */ { 0x66,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x30c */ { 0x86,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x30e */ { 0xaa,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x310 */ { 0x66,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x312 */ { 0x4e,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x314 */ { 0x84,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x316 */ { 0x96,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x318 */ { 0x26,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x31a */ { 0x64,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x31c */ { 0xac,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x31e */ { 0x78,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x320 */ { 0xfe,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x322 */ { 0x2e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x324 */ { 0x06,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x326 */ { 0x92,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x328 */ { 0x34,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x32a */ { 0xc0,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x32c */ { 0x8a,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x32e */ { 0x46,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x330 */ { 0xd8,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x332 */ { 0xc4,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x334 */ { 0x30,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x336 */ { 0x1a,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x338 */ { 0xd0,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x33a */ { 0x60,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x33c */ { 0xf6,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x33e */ { 0x00,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x340 */ { 0x90,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x342 */ { 0xfc,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x344 */ { 0x08,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x346 */ { 0xa8,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x348 */ { 0x44,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x34a */ { 0x04,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x34c */ { 0x3c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x34e */ { 0xde,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x350 */ { 0x72,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x352 */ { 0x62,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x354 */ { 0x3a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x356 */ { 0xba,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x358 */ { 0x68,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x35a */ { 0x76,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x35c */ { 0x9e,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x35e */ { 0xc6,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x360 */ { 0xe4,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x362 */ { 0x02,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x364 */ { 0x6c,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x366 */ { 0xec,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x368 */ { INPUT_PORT_C , { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 }, // dc.w    $0368 ; 0x1000
+	/* 0x36a */ { INPUT_PORT_A , { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x36c */ { INPUT_PORT_B , { NIB0__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x36e */ { 0x0c,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 1 },
+	/* 0x370 */ { 0x80,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x372 */ { 0x82,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x374 */ { 0xb8,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x376 */ { 0x50,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x378 */ { 0x20,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x37a */ { 0xf4,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x37c */ { 0x8c,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x37e */ { 0xe6,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x380 */ { 0xda,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x382 */ { 0xf2,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x384 */ { 0xdc,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x386 */ { 0x9c,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x388 */ { INPUT_PORT_A , { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x38a */ { INPUT_PORT_B , { NIB1__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x38c */ { 0x28,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x38e */ { 0xb6,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x390 */ { 0x2c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x392 */ { 0xce,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x394 */ { 0x0e,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x396 */ { 0x5c,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x398 */ { 0x52,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 1 },
+	/* 0x39a */ { 0x7e,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x39c */ { 0x6a,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x39e */ { 0xa0,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x3a0 */ { 0x52,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x3a2 */ { 0x94,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x3a4 */ { 0x2c,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x3a6 */ { 0xc8,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x3a8 */ { 0x18,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x3aa */ { 0x56,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x3ac */ { 0x54,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x3ae */ { 0x58,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x3b0 */ { INPUT_PORT_B , { NIB1__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x3b2 */ { 0x14,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x3b4 */ { 0x38,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x3b6 */ { 0xf8,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x3b8 */ { 0xb4,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x3ba */ { 0xd6,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x3bc */ { 0x5c,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 0 },
+	/* 0x3be */ { 0x1c,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x3c0 */ { 0x22,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x3c2 */ { 0x66,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x3c4 */ { 0x8e,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x3c6 */ { 0xf0,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x3c8 */ { 0xae,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x3ca */ { 0x1e,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x3cc */ { 0xee,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x3ce */ { 0xea,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 1 },
+	/* 0x3d0 */ { 0xe8,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x3d2 */ { 0x88,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x3d4 */ { INPUT_PORT_C , { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 }, // dc.w    $03D4 ; 0x0010
+	/* 0x3d6 */ { 0x66,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x3d8 */ { INPUT_PORT_B , { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x3da */ { 0xfa,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x3dc */ { 0x4c,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x3de */ { 0x36,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x3e0 */ { 0xe0,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x3e2 */ { 0xd4,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x3e4 */ { 0xc8,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x3e6 */ { 0xc2,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x3e8 */ { 0x0a,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x3ea */ { 0x9a,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x3ec */ { 0x7c,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x3ee */ { 0x4a,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x3f0 */ { 0xd2,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x3f2 */ { 0x48,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x3f4 */ { 0x6e,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x3f6 */ { 0xa6,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 1 },
+	/* 0x3f8 */ { 0x42,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x3fa */ { 0x5e,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x3fc */ { 0xbc,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x3fe */ { 0x10,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x400 */ { 0x02,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x402 */ { 0x72,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x404 */ { 0x74,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x406 */ { 0x96,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x408 */ { 0x54,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x40a */ { 0xda,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x40c */ { 0xd6,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x40e */ { 0x8a,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x410 */ { 0xde,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x412 */ { 0xa4,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x414 */ { 0xa2,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 0 },
+	/* 0x416 */ { 0xe4,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x418 */ { 0x04,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x41a */ { 0x84,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x41c */ { 0x2a,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x41e */ { 0x4c,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x420 */ { 0x2e,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x422 */ { 0x86,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x424 */ { 0x60,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x426 */ { 0xba,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x428 */ { 0x8c,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x42a */ { 0xee,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 0 },
+	/* 0x42c */ { 0xac,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x42e */ { 0x32,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 1 },
+	/* 0x430 */ { 0xd2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x432 */ { 0x0e,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x434 */ { 0x06,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 1 },
+	/* 0x436 */ { 0x66,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x438 */ { 0xec,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x43a */ { 0xfe,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x43c */ { INPUT_PORT_B , { BLANK_, BLANK_, BLANK_, BLANK_ } , 0, 0 },  // this address always seems to return 0, is it a port with all bits masked out? I'm going to assume it's a 'B' port (4-bit) with mask applied to those 4 bits so they always return 0 due to a design flaw, that would make 21 of each port type.
+	/* 0x43e */ { 0x7a,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x440 */ { 0xfc,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x442 */ { 0x10,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x444 */ { 0x66,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x446 */ { 0x16,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x448 */ { 0x90,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x44a */ { 0xb4,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x44c */ { INPUT_PORT_B,  { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 1 }, //dc.w    $044C ; nand
+	/* 0x44e */ { 0x44,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x450 */ { INPUT_PORT_C , { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 }, // dc.w    $0450 ; 0x0100  dc.w    $0450 ; 0x0100 ; xor
+	/* 0x452 */ { 0x30,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x454 */ { 0x82,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x456 */ { 0x26,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x458 */ { 0x52,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x45a */ { 0xc6,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x45c */ { 0xd8,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x45e */ { 0x18,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x460 */ { 0xc8,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x462 */ { 0x64,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x464 */ { 0xbe,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x466 */ { 0x42,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x468 */ { 0xc0,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x46a */ { 0x38,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x46c */ { 0xd0,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x46e */ { 0x9c,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x470 */ { 0xa8,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x472 */ { 0x4a,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x474 */ { 0x1c,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 0 },
+	/* 0x476 */ { 0xf0,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x478 */ { 0xb6,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x47a */ { 0xc2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x47c */ { 0x7e,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x47e */ { INPUT_PORT_B , { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x480 */ { 0x5a,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x482 */ { 0x5c,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x484 */ { 0x5a,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x486 */ { 0x06,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x488 */ { 0x2c,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x48a */ { 0x76,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x48c */ { 0xbc,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x48e */ { 0x46,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x490 */ { 0x66,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x492 */ { 0xea,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x494 */ { 0x9a,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x496 */ { 0xb8,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 1 },
+	/* 0x498 */ { 0x36,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x49a */ { 0x56,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x49c */ { 0x6c,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x49e */ { 0x12,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x4a0 */ { 0xa4,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4a2 */ { 0xa8,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4a4 */ { 0xce,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 1 },
+	/* 0x4a6 */ { 0x8c,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4a8 */ { 0xb0,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4aa */ { 0x48,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x4ac */ { INPUT_PORT_A , { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 0 },
+	/* 0x4ae */ { 0x92,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x4b0 */ { 0x10,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x4b2 */ { 0x74,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x4b4 */ { 0x08,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x4b6 */ { 0x94,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x4b8 */ { 0x46,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x4ba */ { 0x24,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x4bc */ { 0x42,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x4be */ { 0xa6,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4c0 */ { 0x08,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x4c2 */ { 0x80,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x4c4 */ { 0x3c,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x4c6 */ { 0x94,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x4c8 */ { INPUT_PORT_A , { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4ca */ { 0x20,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x4cc */ { 0xf6,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x4ce */ { 0x66,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x4d0 */ { 0xe2,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x4d2 */ { INPUT_PORT_B , { NIB0R2, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x4d4 */ { 0xd4,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4d6 */ { 0xa0,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 0 },
+	/* 0x4d8 */ { 0x48,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x4da */ { 0xca,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4dc */ { 0x62,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x4de */ { 0x70,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x4e0 */ { 0xfa,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x4e2 */ { 0x9e,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x4e4 */ { 0x40,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x4e6 */ { 0x68,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x4e8 */ { 0x88,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x4ea */ { 0x3e,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x4ec */ { 0x7c,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x4ee */ { 0xcc,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x4f0 */ { 0x34,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x4f2 */ { INPUT_PORT_A , { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 0 },  // dc.w    $04F2
+	/* 0x4f4 */ { 0x28,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x4f6 */ { 0xe6,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x4f8 */ { 0x6a,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x4fa */ { 0xaa,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 1 },
+	/* 0x4fc */ { 0x50,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x4fe */ { 0xa6,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 1 },
+	/* 0x500 */ { 0xf0,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x502 */ { 0x88,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x504 */ { 0x5c,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x506 */ { INPUT_PORT_C , { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $0506 ; 0x0004
+	/* 0x508 */ { INPUT_PORT_A , { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x50a */ { 0xc0,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 1 },
+	/* 0x50c */ { 0x26,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x50e */ { 0x72,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x510 */ { 0x8a,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 1 },
+	/* 0x512 */ { 0x06,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x514 */ { 0x32,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x516 */ { 0xb6,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x518 */ { 0x02,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x51a */ { 0xb2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x51c */ { 0x0a,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x51e */ { 0xd6,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x520 */ { 0xaa,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x522 */ { 0xca,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x524 */ { 0x54,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x526 */ { 0x08,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x528 */ { INPUT_PORT_B , { NIB2__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x52a */ { 0x8e,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x52c */ { 0xe0,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x52e */ { 0xba,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x530 */ { 0x18,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x532 */ { 0xb0,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x534 */ { 0x1a,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x536 */ { 0x7a,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x538 */ { 0x3c,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x53a */ { 0x0c,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x53c */ { 0xfa,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x53e */ { 0x9e,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x540 */ { 0x3e,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x542 */ { 0x9c,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x544 */ { 0x5a,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x546 */ { 0x62,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x548 */ { 0xf6,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x54a */ { 0xde,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x54c */ { 0x38,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 0 },
+	/* 0x54e */ { 0xe6,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x550 */ { 0xa2,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x552 */ { 0x4c,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x554 */ { 0xae,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x556 */ { 0xac,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x558 */ { 0x68,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x55a */ { 0xf2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x55c */ { 0x66,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x55e */ { 0xea,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x560 */ { 0x82,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x562 */ { INPUT_PORT_B , { NIB0__, BLANK_, BLANK_, BLANK_ } , 1, 0 }, // dc.w    $0562 ; xor
+	/* 0x564 */ { 0x80,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x566 */ { 0xf8,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x568 */ { 0x6c,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x56a */ { 0x7c,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x56c */ { INPUT_PORT_A , { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x56e */ { 0x98,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x570 */ { 0x24,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x572 */ { 0xc2,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 1 },
+	/* 0x574 */ { 0xdc,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x576 */ { 0x52,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x578 */ { 0x2a,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x57a */ { 0xb8,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x57c */ { 0x28,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x57e */ { 0xd8,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x580 */ { 0x0c,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x582 */ { 0x8e,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x584 */ { 0x22,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x586 */ { 0x00,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x588 */ { 0x04,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x58a */ { 0x22,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x58c */ { 0xe8,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x58e */ { 0x74,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x590 */ { 0x0e,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x592 */ { 0x66,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x594 */ { 0x40,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x596 */ { 0xc8,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x598 */ { 0x70,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x59a */ { 0x16,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x59c */ { 0x12,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x59e */ { 0x36,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x5a0 */ { 0x5e,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x5a2 */ { 0x24,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x5a4 */ { 0xce,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5a6 */ { 0xb0,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x5a8 */ { 0xf2,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x5aa */ { 0x98,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x5ac */ { 0x6e,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x5ae */ { 0xdc,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5b0 */ { 0xc4,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5b2 */ { INPUT_PORT_B , { NIB0__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x5b4 */ { 0xe0,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 0 },
+	/* 0x5b6 */ { 0x92,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x5b8 */ { 0x4e,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x5ba */ { 0xf4,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5bc */ { 0x78,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x5be */ { 0x58,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 0, 1 },
+	/* 0x5c0 */ { 0xfe,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5c2 */ { 0x4a,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 0 },
+	/* 0x5c4 */ { 0x3a,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x5c6 */ { 0x2c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x5c8 */ { 0x96,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x5ca */ { 0x20,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x5cc */ { 0xc6,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x5ce */ { 0xa8,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x5d0 */ { 0xe2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5d2 */ { 0x66,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 0 },
+	/* 0x5d4 */ { 0xf4,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5d6 */ { 0xec,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5d8 */ { 0xbe,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x5da */ { 0xe8,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5dc */ { 0x6e,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x5de */ { 0x1e,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x5e0 */ { 0x14,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x5e2 */ { 0x84,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x5e4 */ { 0xa0,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x5e6 */ { 0x34,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x5e8 */ { 0xe4,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x5ea */ { 0x58,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x5ec */ { INPUT_PORT_B , { NIB2__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x5ee */ { 0x42,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x5f0 */ { 0x8c,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x5f2 */ { 0x10,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x5f4 */ { INPUT_PORT_C , { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 }, // dc.w    $05F4 ; 0x0100
+	/* 0x5f6 */ { 0x04,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x5f8 */ { 0x4e,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x5fa */ { 0xd2,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x5fc */ { 0x7e,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x5fe */ { 0xcc,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x600 */ { 0xc6,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x602 */ { 0x20,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x604 */ { 0x36,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x606 */ { 0xfc,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x608 */ { 0x1c,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x60a */ { 0xca,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x60c */ { INPUT_PORT_A , { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x60e */ { 0xa0,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x610 */ { 0xa4,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x612 */ { 0x64,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x614 */ { 0x96,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x616 */ { 0x7e,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x618 */ { 0x0c,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x61a */ { 0x38,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x61c */ { 0x66,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x61e */ { 0x22,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x620 */ { 0x1a,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x622 */ { 0xae,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x624 */ { 0x9a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x626 */ { 0x4e,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x628 */ { 0x5a,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x62a */ { 0x8a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x62c */ { INPUT_PORT_A , { NIB1__, NIB2__, BLANK_, NIB3__ } , 0, 1 },  // dc.w    $062C ; nand
+	/* 0x62e */ { 0x58,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x630 */ { INPUT_PORT_B , { NIB0__, BLANK_, BLANK_, BLANK_ } , 0, 1 },  //   dc.w    $0630 ; nand
+	/* 0x632 */ { 0x6a,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x634 */ { 0xc2,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 0 },
+	/* 0x636 */ { 0xc4,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x638 */ { 0x94,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x63a */ { 0x3c,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x63c */ { 0x74,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x63e */ { 0x0a,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x640 */ { 0x30,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x642 */ { 0x68,          { NIB1__, NIB0__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x644 */ { 0x40,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x646 */ { 0xda,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 0, 0 },
+	/* 0x648 */ { 0x60,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x64a */ { 0xde,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x64c */ { 0x04,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x64e */ { 0x86,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x650 */ { 0x78,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x652 */ { 0x4a,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x654 */ { 0x4c,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x656 */ { 0x2e,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x658 */ { 0xbc,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x65a */ { 0xc0,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x65c */ { 0x44,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x65e */ { 0x9c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x660 */ { 0x48,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x662 */ { 0x8c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x664 */ { 0x9e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x666 */ { 0xfe,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x668 */ { 0x5e,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x66a */ { 0x16,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x66c */ { 0xdc,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x66e */ { 0xec,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x670 */ { 0xf4,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x672 */ { 0x6c,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x674 */ { INPUT_PORT_C , { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 0 }, // dc.w    $0674 ; 0x0010
+	/* 0x676 */ { 0xd2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x678 */ { 0x72,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x67a */ { 0x28,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x67c */ { 0x1e,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x67e */ { INPUT_PORT_B , { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x680 */ { 0x7a,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x682 */ { 0xba,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x684 */ { 0xd8,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x686 */ { 0x46,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 0 },
+	/* 0x688 */ { 0xe4,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x68a */ { 0xd0,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x68c */ { 0x50,          { NIB1R2, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x68e */ { 0x92,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x690 */ { 0x10,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x692 */ { 0x88,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x694 */ { 0xf2,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 0 },
+	/* 0x696 */ { 0xce,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x698 */ { 0x12,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x69a */ { 0x3e,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x69c */ { 0x06,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 1 },
+	/* 0x69e */ { 0xe8,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x6a0 */ { 0xb2,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x6a2 */ { 0x28,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x6a4 */ { 0xa0,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x6a6 */ { 0xe4,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x6a8 */ { 0x32,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x6aa */ { 0x20,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x6ac */ { 0xf6,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x6ae */ { 0xf2,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x6b0 */ { 0x10,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x6b2 */ { 0xb4,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x6b4 */ { 0xa0,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x6b6 */ { 0x30,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 1, 1 },
+	/* 0x6b8 */ { 0xea,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x6ba */ { 0xf6,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x6bc */ { 0x42,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x6be */ { INPUT_PORT_A , { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 0 },  // dc.w    $06BE ; xor
+	/* 0x6c0 */ { 0x08,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 1 },
+	/* 0x6c2 */ { 0x54,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x6c4 */ { 0x66,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x6c6 */ { 0xcc,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x6c8 */ { 0x52,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x6ca */ { 0xd4,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x6cc */ { INPUT_PORT_C , { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $06CC ; 0x0002
+	/* 0x6ce */ { 0x0e,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x6d0 */ { 0xb2,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x6d2 */ { 0xa2,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x6d4 */ { 0xb4,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x6d6 */ { INPUT_PORT_A , { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 0 },  // dc.w    $06D6 ; xor
+	/* 0x6d8 */ { 0xac,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x6da */ { 0x24,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x6dc */ { 0xbe,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 0 },
+	/* 0x6de */ { 0xa8,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x6e0 */ { 0x2c,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x6e2 */ { 0x90,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x6e4 */ { 0x98,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x6e6 */ { 0x70,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x6e8 */ { 0xb6,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 1 },
+	/* 0x6ea */ { 0xb8,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 1 },
+	/* 0x6ec */ { 0x66,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x6ee */ { 0x2a,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 0 },
+	/* 0x6f0 */ { 0x62,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x6f2 */ { 0xc8,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x6f4 */ { 0x14,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x6f6 */ { 0xa6,          { NIB2__, NIB3__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x6f8 */ { 0xe6,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 0, 0 },
+	/* 0x6fa */ { 0xee,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x6fc */ { 0x82,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x6fe */ { 0x26,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 1, 1 },
+	/* 0x700 */ { 0x66,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 0 },
+	/* 0x702 */ { 0x2c,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x704 */ { 0x7c,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x706 */ { 0x18,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x708 */ { 0xda,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 0, 0 },
+	/* 0x70a */ { 0xde,          { NIB2R1, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x70c */ { 0x6e,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x70e */ { 0x26,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x710 */ { 0xca,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x712 */ { 0xf0,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x714 */ { 0x82,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x716 */ { 0xc0,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x718 */ { 0x8e,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x71a */ { 0x20,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x71c */ { 0x4e,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x71e */ { 0xe0,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x720 */ { 0x66,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 1 },
+	/* 0x722 */ { 0xdc,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x724 */ { 0xb2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x726 */ { INPUT_PORT_C , { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $0726 ; 0x0001
+	/* 0x728 */ { 0xd4,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x72a */ { 0x86,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x72c */ { 0x78,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 0 },
+	/* 0x72e */ { 0xe4,          { NIB1R2, NIB2__, NIB3__, BLANK_ } , 0, 1 },
+	/* 0x730 */ { 0x3e,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x732 */ { 0x72,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 0, 0 },
+	/* 0x734 */ { 0x64,          { NIB2__, NIB1__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x736 */ { 0x68,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 0, 1 },
+	/* 0x738 */ { 0x54,          { NIB3R1, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x73a */ { 0x00,          { NIB2R3, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x73c */ { INPUT_PORT_A , { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 }, // dc.w    $073C
+	/* 0x73e */ { 0xae,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x740 */ { 0x6a,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 0 },
+	/* 0x742 */ { 0x2e,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 0 },
+	/* 0x744 */ { 0xf6,          { NIB2__, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x746 */ { INPUT_PORT_C , { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 0 }, // dc.w    $0746 ; 0x0001  dc.w    $0746 ; 0x0001 ; xor
+	/* 0x748 */ { 0x44,          { NIB0R3, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x74a */ { 0x14,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x74c */ { 0xd2,          { BLANK_, BLANK_, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x74e */ { INPUT_PORT_C , { NIB2__, NIB3__, NIB0__, NIB1__ } , 0, 0 }, // dc.w    $074E ; 0x0100
+	/* 0x750 */ { 0xaa,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x752 */ { 0xbe,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x754 */ { 0x76,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x756 */ { 0x60,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x758 */ { 0x70,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x75a */ { 0x4c,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 1 },
+	/* 0x75c */ { 0xbc,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x75e */ { 0x7e,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x760 */ { 0x32,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 0, 1 },
+	/* 0x762 */ { 0x88,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x764 */ { 0xe2,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x766 */ { 0x66,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x768 */ { 0x16,          { NIB0__, NIB3__, NIB2__, NIB1__ } , 0, 1 },
+	/* 0x76a */ { 0xfa,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x76c */ { 0x52,          { NIB0R1, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x76e */ { 0xd6,          { NIB0__, NIB3__, NIB1__, NIB2__ } , 0, 1 },
+	/* 0x770 */ { INPUT_PORT_B , { NIB1__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x772 */ { 0xc4,          { NIB1__, NIB3__, NIB0__, NIB2__ } , 1, 0 },
+	/* 0x774 */ { 0x38,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x776 */ { 0x6c,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 1 },
+	/* 0x778 */ { 0xfc,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 1 },
+	/* 0x77a */ { 0x84,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 0, 1 },
+	/* 0x77c */ { 0xb6,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x77e */ { 0x62,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 0, 0 },
+	/* 0x780 */ { 0xb8,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x782 */ { 0xa2,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x784 */ { 0x8a,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 0, 0 },
+	/* 0x786 */ { 0x3a,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x788 */ { 0xf4,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 1 },
+	/* 0x78a */ { 0x40,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x78c */ { 0x7a,          { NIB1__, NIB2__, NIB3__, BLANK_ } , 0, 0 },
+	/* 0x78e */ { 0x1c,          { NIB2R3, NIB3__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x790 */ { 0x04,          { NIB0R2, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x792 */ { 0x1a,          { NIB2R1, NIB3__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x794 */ { 0x0e,          { NIB1R3, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x796 */ { 0x30,          { NIB3__, NIB0__, NIB2__, NIB1__ } , 1, 0 },
+	/* 0x798 */ { 0x50,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 1 },
+	/* 0x79a */ { 0xc8,          { NIB3R1, NIB0__, NIB1__, NIB2__ } , 1, 0 },
+	/* 0x79c */ { 0xc6,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 1 },
+	/* 0x79e */ { 0x12,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x7a0 */ { 0x6e,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x7a2 */ { 0x56,          { NIB2__, NIB1__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x7a4 */ { 0xe2,          { NIB2__, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x7a6 */ { 0x00,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x7a8 */ { 0xfa,          { NIB3__, NIB1__, NIB2__, NIB0__ } , 1, 0 },
+	/* 0x7aa */ { 0x76,          { NIB1R3, NIB2__, NIB3__, NIB0__ } , 1, 0 },
+	/* 0x7ac */ { 0x8e,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7ae */ { 0xaa,          { NIB1__, NIB0__, NIB3__, NIB2__ } , 0, 0 },
+	/* 0x7b0 */ { 0x80,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7b2 */ { 0x3a,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x7b4 */ { 0xf8,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x7b6 */ { 0x02,          { NIB0__, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x7b8 */ { 0x84,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7ba */ { 0xd0,          { NIB0__, NIB1__, NIB3__, NIB2__ } , 1, 1 },
+	/* 0x7bc */ { 0xd6,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x7be */ { 0x66,          { NIB2__, NIB1__, NIB0__, NIB3__ } , 1, 0 },
+	/* 0x7c0 */ { 0xea,          { NIB3R2, NIB0__, NIB1__, NIB2__ } , 0, 0 },
+	/* 0x7c2 */ { 0xe8,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 0, 0 },
+	/* 0x7c4 */ { 0x9c,          { NIB2R2, NIB3__, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x7c6 */ { 0x02,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 1, 0 },
+	/* 0x7c8 */ { 0x9a,          { BLANK_, NIB2__, NIB3__, NIB1__ } , 1, 1 },
+	/* 0x7ca */ { 0xa0,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7cc */ { 0x0c,          { NIB3R3, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x7ce */ { 0x80,          { NIB3R3, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x7d0 */ { 0xec,          { NIB1__, NIB2__, NIB0__, NIB3__ } , 0, 0 },
+	/* 0x7d2 */ { 0x1e,          { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x7d4 */ { 0xb4,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7d6 */ { 0x28,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 0, 1 },
+	/* 0x7d8 */ { 0xee,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 1 },
+	/* 0x7da */ { 0x56,          { NIB2__, NIB0__, NIB1__, NIB3__ } , 1, 1 },
+	/* 0x7dc */ { INPUT_PORT_A , { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 1 },  // dc.w    $07DC ; nand
+	/* 0x7de */ { 0x2a,          { NIB3__, NIB2__, NIB1__, NIB0__ } , 1, 1 },
+	/* 0x7e0 */ { 0xf8,          { NIB3__, NIB0__, NIB1__, NIB2__ } , 1, 1 },
+	/* 0x7e2 */ { 0x96,          { NIB1__, NIB2__, BLANK_, NIB3__ } , 1, 0 },
+	/* 0x7e4 */ { 0x34,          { BLANK_, NIB3__, BLANK_, NIB2__ } , 1, 1 },
+	/* 0x7e6 */ { 0x36,          { NIB1R1, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x7e8 */ { 0x4a,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 1, 0 },
+	/* 0x7ea */ { 0x0a,          { NIB3__, BLANK_, BLANK_, BLANK_ } , 0, 0 },
+	/* 0x7ec */ { 0x66,          { NIB3__, NIB2__, NIB0__, NIB1__ } , 1, 0 },
+	/* 0x7ee */ { 0xc2,          { NIB1R1, NIB2__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x7f0 */ { 0xba,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7f2 */ { 0x5e,          { NIB3__, NIB2__, BLANK_, BLANK_ } , 0, 1 },
+	/* 0x7f4 */ { 0x5c,          { NIB2__, NIB1__, NIB3__, BLANK_ } , 1, 0 },
+	/* 0x7f6 */ { 0xac,          { NIB0__, NIB1__, NIB2__, NIB3__ } , 0, 0 },
+	/* 0x7f8 */ { 0x98,          { NIB1__, NIB2__, NIB3__, NIB0__ } , 0, 1 },
+	/* 0x7fa */ { 0x80,          { NIB3R2, BLANK_, BLANK_, BLANK_ } , 1, 1 },
+	/* 0x7fc */ { INPUT_PORT_C , { BLANK_, NIB3__, BLANK_, BLANK_ } , 0, 0 }, // dc.w    $07FC ; Bit not present
+	/* 0x7fe */ { 0xd8,          { NIB2R2, NIB3__, NIB0__, NIB1__ } , 1, 1 }
+
+	};
 
 
 
@@ -34,8 +1062,8 @@ deco104_device::deco104_device(const machine_config &mconfig, const char *tag, d
 	m_xor_port = 0x42;
 	m_mask_port = 0xee;
 	m_soundlatch_port = 0xa8;
-
-	m_use_dblewings_hacks = 0;
+	m_lookup_table = port104_table;
+	m_configregion = 0xc;
 }
 
 
@@ -45,599 +1073,12 @@ void deco104_device::device_config_complete()
 {
 }
 
-void deco104_device::set_use_dblewing_hacks(device_t &device, int use_hacks)
-{
-	deco104_device &dev = downcast<deco104_device &>(device);
-	dev.m_use_dblewings_hacks = use_hacks;
-}
-
 void deco104_device::device_start()
 {
 	deco_146_base_device::device_start();
-
-	// double wing
-	save_item(NAME(m_008_data));
-	save_item(NAME(m_104_data));
-	save_item(NAME(m_406_data));
-	save_item(NAME(m_608_data));
-	save_item(NAME(m_70c_data));
-	save_item(NAME(m_78a_data));
-	save_item(NAME(m_088_data));
-	save_item(NAME(m_58c_data));
-	save_item(NAME(m_408_data));
-	save_item(NAME(m_40e_data));
-	save_item(NAME(m_080_data));
-	save_item(NAME(m_788_data));
-	save_item(NAME(m_38e_data));
-	save_item(NAME(m_580_data));
-	save_item(NAME(m_60a_data));
-	save_item(NAME(m_200_data));
-	save_item(NAME(m_28c_data));
-	save_item(NAME(m_18a_data));
-	save_item(NAME(m_280_data));
-	save_item(NAME(m_384_data));
-
-	save_item(NAME(m_boss_move));
-	save_item(NAME(m_boss_shoot_type));
-	save_item(NAME(m_boss_3_data));
-	save_item(NAME(m_boss_4_data));
-	save_item(NAME(m_boss_5_data));
-	save_item(NAME(m_boss_5sx_data));
-	save_item(NAME(m_boss_6_data));
 }
 
 void deco104_device::device_reset()
 {
 	deco_146_base_device::device_reset();
-
-	// double wing
-	m_008_data = 0;
-	m_104_data = 0;
-	m_406_data = 0;
-	m_608_data = 0;
-	m_70c_data = 0;
-	m_78a_data = 0;
-	m_088_data = 0;
-	m_58c_data = 0;
-	m_408_data = 0;
-	m_40e_data = 0;
-	m_080_data = 0;
-	m_788_data = 0;
-	m_38e_data = 0;
-	m_580_data = 0;
-	m_60a_data = 0;
-	m_200_data = 0;
-	m_28c_data = 0;
-	m_18a_data = 0;
-	m_280_data = 0;
-	m_384_data = 0;
-
-	m_boss_move = 0;
-	m_boss_shoot_type = 0;
-	m_boss_3_data = 0;
-	m_boss_4_data = 0;
-	m_boss_5_data = 0;
-	m_boss_5sx_data = 0;
-	m_boss_6_data = 0;
-}
-
-
-/***************************************************************************/
-
-
-UINT16 deco104_device::read_data_getloc(UINT16 offset, int& location)
-{
-	UINT16* prot_ram;
-
-	if (m_current_rambank==0)
-		prot_ram = m_rambank0;
-	else
-		prot_ram = m_rambank1;
-
-
-	location = 0x00;
-	int tempinput = 0;
-
-	if (m_use_dblewings_hacks==1)
-	{
-		switch (offset)
-		{
-			//case 0x4c0: /* was 0x664 */ /* was 0x16a*/ return m_boss_move;          // boss 1 movement  // in shared sim
-			case 0x13a: /* was 0x39e */ /* was 0x6d6*/ return m_boss_move;          // boss 1 2nd pilot
-			case 0x0ce: /* was 0x26a */ /* was 0x748*/ return m_boss_move;          // boss 1 3rd pilot
-
-			case 0x492: /* was 0x636 */ /* was 0x566*/ return 0x0009;             // boss BGM,might be a variable one (read->write to the sound latch)
-			case 0x440: /* was 0x6e4 */ /* was 0x1ea*/ return m_boss_shoot_type;    // boss 1 shoot type
-			case 0x312: /* was 0x1b6 */ /* was 0x596*/ return m_boss_3_data;          // boss 3 appearing
-			//case 0x32a: /* was 0x18e */ /* was 0x692*/ return m_boss_4_data; // in shared sim
-			case 0x72e: /* was 0x58a */ /* was 0x6b0*/ return m_boss_5_data;
-			//case 0x3d2: /* was 0x176 */ /* was 0x51e*/ return m_boss_5sx_data;  // in shared sim
-			case 0x21e: /* was 0x0ba */ /* was 0x784*/ return m_boss_6_data;
-
-			case 0x78c: /* was 0x528 */ /* was 0x330*/ return 0; // controls bonuses such as shoot type,bombs etc.
-			case 0x114: /* was 0x3b0 */ /* was 0x1d4*/ return m_70c_data;  //controls restart points
-
-			case 0x674: /* was 0x4d0 */ /* was 0x0ac*/tempinput = m_port_c_r(0); return (tempinput & 0x40) << 4;//flip screen
-			case 0x726: /* was 0x582 */ /* was 0x4b0*/return m_608_data;//coinage
-			case 0x4e4: /* was 0x640 */ /* was 0x068*/
-			{
-				tempinput = m_port_c_r(0);
-
-				switch (tempinput & 0x0300) //I don't know how to relationate this...
-				{
-					case 0x0000: return 0x000;//0
-					case 0x0100: return 0x060;//3
-					case 0x0200: return 0x0d0;//6
-					case 0x0300: return 0x160;//b
-				}
-			}
-			//case 0x334: /* was 0x190 */ /* was 0x094*/ return m_104_data;// p1 inputs select screen  OK // in shared sim
-			//case 0x0fc: /* was 0x258 */ /* was 0x24c*/return m_008_data;//read DSW (mirror for coinage/territory) // in shared sim
-			//case 0x36c: /* was 0x1c8 */ /* was 0x298*/return ioport(":IN1")->read();//vblank // in shared sim
-			case 0x5b2: /* was 0x716 */ /* was 0x476*/tempinput = m_port_b_r(0); return tempinput;//mirror for coins
-			//case 0x292: /* was 0x036 */ /* was 0x506*/return ioport(":DSW")->read(); // in shared sim
-			case 0x146: /* was 0x3e2 */ /* was 0x5d8*/return m_406_data;
-			case 0x73c: /* was 0x598 */ /* was 0x2b4*/tempinput = m_port_a_r(0); return tempinput;
-			case 0x644: /* was 0x4e0 */ /* was 0x1a8*/tempinput = m_port_c_r(0); return (tempinput & 0x4000) >> 12;//allow continue
-			// case 0x45c: /* was 0x6f8 */ /* was 0x3ec*/return m_70c_data; //score entry // in shared sim
-			case 0x0b8: /* was 0x21c */ /* was 0x246*/return m_580_data; // these three controls "perfect bonus" I suppose...
-			case 0x6d2: /* was 0x476 */ /* was 0x52e*/return m_580_data;
-			//case 0x782: /* was 0x526 */ /* was 0x532*/return m_580_data; // in shared sim
-
-
-			case 0x564: /* was 0x7c0 */ /* was 0x0f8*/ return 0; // m_080_data;
-			//case 0x294: /* was 0x030 */ /* was 0x104*/ return 0; // in shared sim (ram buffer change!)
-			//case 0x2d0: /* was 0x074 */ /* was 0x10e*/ return 0;// in shared sim (ram buffer change!)
-			//case 0x2b8: /* was 0x01c */ /* was 0x206*/ return 0; // m_70c_data;// in shared sim (ram buffer change!)
-			case 0x1fc: /* was 0x358 */ /* was 0x25c*/return 0;
-			case 0x23c: /* was 0x098 */ /* was 0x284*/ return 0; // 3rd player 2nd boss
-			case 0x7a2: /* was 0x506 */ /* was 0x432*/return 0; // boss on water level?
-			case 0x0c2: /* was 0x266 */ /* was 0x54a*/ return 0; // 3rd player 2nd boss
-			case 0x21a: /* was 0x0be */ /* was 0x786*/return 0;
-
-		}
-	}
-
-
-	switch (offset>>1)
-	{
-		case 0x088/2: /* Player 1 & 2 input ports */    tempinput = m_port_a_r(0);  return tempinput; // also caveman ninja + wizard fire
-		case 0x36c/2:                                   tempinput = m_port_b_r(0); return tempinput; // also caveman ninja + wizard fire
-		case 0x44c/2:                                   tempinput = m_port_b_r(0);  return ((tempinput & 0x7)<<13)|((tempinput & 0x8)<<9);
-		case 0x292/2: /* Dips */                        tempinput = m_port_c_r(0); return tempinput; // also wizard fire
-		case 0x044/2:                                   location = 0x2c; return ((((DECO_PORT(location)&0x000f)<<12)) ^ m_xor) & (~m_nand);
-		case 0x282/2:                                   location = 0x26; return ((DECO_PORT(location)&0x000f)<<12) & (~m_nand);
-		case 0x0d4/2:                                   location = 0x6e; return ((DECO_PORT(location)&0x0ff0)<<4) | ((DECO_PORT(location)&0x000e)<<3) | ((DECO_PORT(location)&0x0001)<<7);
-		case 0x5a2/2:                                   return (((DECO_PORT(0x24)&0xff00)>>4) | ((DECO_PORT(0x24)&0x000f)<<0) | ((DECO_PORT(0x24)&0x00f0)<<8)) & (~m_nand);
-		case 0x570/2:                                   return (((DECO_PORT(0x24)&0xf0f0)>>0) | ((DECO_PORT(0x24)&0x000f)<<8)) ^ m_xor;
-		case 0x32e/2:                                   return (((DECO_PORT(0x46)&0xf000)>>0) | ((DECO_PORT(0x46)&0x00ff)<<4)) & (~m_nand);
-		case 0x4dc/2:                                   return ((DECO_PORT(0x62)&0x00ff)<<8);
-		case 0x1be/2:                                   return ((((DECO_PORT(0xc2)&0x0ff0)<<4) | ((DECO_PORT(0xc2)&0x0003)<<6) | ((DECO_PORT(0xc2)&0x000c)<<2)) ^ m_xor) & (~m_nand);
-		case 0x420/2:                                   return ((DECO_PORT(0x2e)&0xf000)>>4) | ((DECO_PORT(0x2e)&0x0f00)<<4) | ((DECO_PORT(0x2e)&0x00f0)>>4) | ((DECO_PORT(0x2e)&0x000f)<<4);
-		case 0x390/2:                                   return DECO_PORT(0x2c);
-		case 0x756/2:                                   return ((DECO_PORT(0x60)&0xfff0)>>4) | ((DECO_PORT(0x60)&0x0007)<<13) | ((DECO_PORT(0x60)&0x0008)<<9);
-		case 0x424/2:                                   return ((DECO_PORT(0x60)&0xf000)>>4) | ((DECO_PORT(0x60)&0x0f00)<<4) | ((DECO_PORT(0x60)&0x00f0)>>0) | ((DECO_PORT(0x60)&0x000f)<<0);
-		case 0x156/2:                                   return (((DECO_PORT(0xde)&0xff00)<<0) | ((DECO_PORT(0xde)&0x000f)<<4) | ((DECO_PORT(0xde)&0x00f0)>>4)) & (~m_nand);
-		case 0x0a8/2:                                   return (((DECO_PORT(0xde)&0xff00)>>4) | ((DECO_PORT(0xde)&0x000f)<<0) | ((DECO_PORT(0xde)&0x00f0)<<8)) & (~m_nand);
-		case 0x64a/2:                                   return (((DECO_PORT(0xde)&0xfff0)>>4) | ((DECO_PORT(0xde)&0x000c)<<10) | ((DECO_PORT(0xde)&0x0003)<<14)) & (~m_nand);
-		case 0x16e/2:                                   return DECO_PORT(0x6a);
-		case 0x39c/2:                                   return (DECO_PORT(0x6a)&0x00ff) | ((DECO_PORT(0x6a)&0xf000)>>4) | ((DECO_PORT(0x6a)&0x0f00)<<4);
-		case 0x212/2:                                   return (((DECO_PORT(0x6e)&0xff00)>>4) | ((DECO_PORT(0x6e)&0x00f0)<<8) | ((DECO_PORT(0x6e)&0x000f)<<0)) ^ m_xor;
-		case 0x70a/2:                                   return (((DECO_PORT(0xde)&0x00f0)<<8) | ((DECO_PORT(0xde)&0x0007)<<9) | ((DECO_PORT(0xde)&0x0008)<<5)) ^ m_xor;
-		case 0x7a0/2:                                   return (DECO_PORT(0x6e)&0x00ff) | ((DECO_PORT(0x6e)&0xf000)>>4) | ((DECO_PORT(0x6e)&0x0f00)<<4);
-		case 0x162/2:                                   return DECO_PORT(0x6e);
-		case 0x384/2:                                   return ((DECO_PORT(0xdc)&0xf000)>>12) | ((DECO_PORT(0xdc)&0x0ff0)<<4) | ((DECO_PORT(0xdc)&0x000c)<<2) | ((DECO_PORT(0xdc)&0x0003)<<6);
-		case 0x302/2:                                   return DECO_PORT(0x24);
-		case 0x334/2:                                   return DECO_PORT(0x30);
-		case 0x34c/2:                                   return DECO_PORT(0x3c);
-		case 0x514/2:                                   return (((DECO_PORT(0x32)&0x0ff0)<<4) | ((DECO_PORT(0x32)&0x000c)<<2) | ((DECO_PORT(0x32)&0x0003)<<6)) & (~m_nand);
-		case 0x34e/2:                                   return ((DECO_PORT(0xde)&0x0ff0)<<4) | ((DECO_PORT(0xde)&0xf000)>>8) | ((DECO_PORT(0xde)&0x000f)<<0);
-		case 0x722/2:                                   return (((DECO_PORT(0xdc)&0x0fff)<<4) ^ m_xor) & (~m_nand);
-		case 0x574/2:                                   return ((((DECO_PORT(0xdc)&0xfff0)>>0) | ((DECO_PORT(0xdc)&0x0003)<<2) | ((DECO_PORT(0xdc)&0x000c)>>2)) ^ m_xor) & (~m_nand);
-		case 0x5ae/2:                                   return DECO_PORT(0xdc); // also caveman ninja
-		case 0x410/2:                                   return DECO_PORT(0xde); // also caveman ninja
-		case 0x340/2:                                   return ((DECO_PORT(0x90)&0xfff0) | ((DECO_PORT(0x90)&0x7)<<1) | ((DECO_PORT(0x90)&0x8)>>3)) ^ m_xor;
-		case 0x4a4/2:                                   return (((DECO_PORT(0xce)&0x0ff0) | ((DECO_PORT(0xce)&0xf000)>>12) | ((DECO_PORT(0xce)&0x000f)<<12)) ^ m_xor) & (~m_nand);
-		case 0x256/2:                                   return ((((DECO_PORT(0xce)&0xf000)>>12) | ((DECO_PORT(0xce)&0x0fff)<<4))) & (~m_nand);
-		case 0x79a/2:                                   return (((DECO_PORT(0xc8)&0xfff0)>>4) | ((DECO_PORT(0xc8)&0x0008)<<9) | ((DECO_PORT(0xc8)&0x0007)<<13)) ^ m_xor;
-		case 0x65e/2:                                   return DECO_PORT(0x9c); // also caveman ninja
-		case 0x79c/2:                                   return ((DECO_PORT(0xc6)&0xf000) | ((DECO_PORT(0xc6)&0x00ff)<<4) | ((DECO_PORT(0xc6)&0x0f00)>>8)) & (~m_nand);
-		case 0x15e/2:                                   return (((DECO_PORT(0x98)&0x0ff0)<<4) | ((DECO_PORT(0x98)&0xf000)>>12) | ((DECO_PORT(0x98)&0x0003)<<6) | ((DECO_PORT(0x98)&0x000c)<<2)) ^ m_xor;
-		case 0x6e4/2:                                   return DECO_PORT(0x98); // also caveman ninja
-		case 0x01e/2:                                   return ((((DECO_PORT(0xc4)&0xf000)>>4) | ((DECO_PORT(0xc4)&0x0f00)<<4) | ((DECO_PORT(0xc4)&0x00ff)<<0)) ^ m_xor) & (~m_nand);
-		case 0x23a/2:                                   return ((((DECO_PORT(0x86)&0xfff0)>>0) | ((DECO_PORT(0x86)&0x0003)<<2) | ((DECO_PORT(0x86)&0x000c)>>2)) ^ m_xor);
-		case 0x06e/2:                                   return ((((DECO_PORT(0x96)&0xf000)>>8) | ((DECO_PORT(0x96)&0x0f0f)<<0) | ((DECO_PORT(0x96)&0x00f0)<<8)) ^ m_xor);
-		case 0x3a2/2:                                   return ((((DECO_PORT(0x94)&0xf000)>>8) | ((DECO_PORT(0x94)&0x0f00)>>8) | ((DECO_PORT(0x94)&0x00f0)<<8) | ((DECO_PORT(0x94)&0x000e)<<7) | ((DECO_PORT(0x94)&0x0001)<<11)) ^ m_xor);// & (~m_nand);
-		case 0x4a6/2:                                   return ((DECO_PORT(0x8c)&0xff00)>>0) | ((DECO_PORT(0x8c)&0x00f0)>>4) | ((DECO_PORT(0x8c)&0x000f)<<4);
-		case 0x7b0/2:                                   return DECO_PORT(0x80); // also caveman ninja
-		case 0x5aa/2:                                   return ((((DECO_PORT(0x98)&0x0f00)>>8) | ((DECO_PORT(0x98)&0xf000)>>8) | ((DECO_PORT(0x98)&0x00f0)<<8) | ((DECO_PORT(0x98)&0x000e)<<7) | ((DECO_PORT(0x98)&0x0001)<<11)) ^ m_xor) & (~m_nand);
-		case 0x662/2:                                   return DECO_PORT(0x8c); // also caveman ninja
-		case 0x624/2:                                   return DECO_PORT(0x9a); // also caveman ninja
-		case 0x02c/2:                                   return (((DECO_PORT(0x82)&0x0f0f)>>0) | ((DECO_PORT(0x82)&0xf000)>>8) | ((DECO_PORT(0x82)&0x00f0)<<8)) & (~m_nand);
-		case 0x1b4/2:                                   return ((DECO_PORT(0xcc)&0x00f0)<<4) | ((DECO_PORT(0xcc)&0x000f)<<12);
-		case 0x7ce/2:                                   return ((DECO_PORT(0x80)&0x000e)<<11) | ((DECO_PORT(0x80)&0x0001)<<15);
-		case 0x41a/2:                                   return ((((DECO_PORT(0x84)&0x00f0)<<8) | ((DECO_PORT(0x84)&0xf000)>>8) | ((DECO_PORT(0x84)&0x0f00)>>8) | ((DECO_PORT(0x84)&0x0003)<<10) | ((DECO_PORT(0x84)&0x000c)<<6)) ^ m_xor);
-		case 0x168/2:                                   return ((((DECO_PORT(0x84)&0x0ff0)<<4) | ((DECO_PORT(0x84)&0x000e)<<3) | ((DECO_PORT(0x84)&0x0001)<<5))) & (~m_nand);
-		case 0x314/2:                                   return ((((DECO_PORT(0x84)&0x0ff0)<<4) | ((DECO_PORT(0x84)&0x000e)<<3) | ((DECO_PORT(0x84)&0x0001)<<5)));
-		case 0x5e2/2:                                   return ((((DECO_PORT(0x84)&0x00f0)<<8) | ((DECO_PORT(0x84)&0x000e)<<7) | ((DECO_PORT(0x84)&0x0001)<<9)));
-		case 0x72a/2:                                   return ((((DECO_PORT(0x86)&0xfff0)>>4) | ((DECO_PORT(0x86)&0x0003)<<14) | ((DECO_PORT(0x86)&0x000c)<<10)) ^ m_xor) & (~m_nand);
-		case 0x178/2:                                   return (((DECO_PORT(0x88)&0x00ff)<<8) | ((DECO_PORT(0x88)&0xff00)>>8)) & (~m_nand); // also wizard fire
-		case 0x40e/2:                                   return ((((DECO_PORT(0x8a)&0xf000)>>0) | ((DECO_PORT(0x8a)&0x00ff)<<4)) ^ m_xor) & (~m_nand);
-		case 0x248/2:                                   return ((((DECO_PORT(0x8c)&0xff00)>>8) | ((DECO_PORT(0x8c)&0x00f0)<<4) | ((DECO_PORT(0x8c)&0x000f)<<12)) ^ m_xor) & (~m_nand);
-		case 0x27e/2:                                   return ((((DECO_PORT(0x94)&0x00f0)<<8)) ^ m_xor) & (~m_nand);
-		case 0x22c/2:                                   return ((DECO_PORT(0xc4)&0x00f0)<<8);
-		case 0x77e/2:                                   return ((DECO_PORT(0x62)&0xf000)>>12) | ((DECO_PORT(0x62)&0x0ff0)<<0) | ((DECO_PORT(0x62)&0x000f)<<12);
-		case 0x00c/2:                                       return ((DECO_PORT(0xd6)&0xf000)>>12) | ((DECO_PORT(0xd6)&0x0fff)<<4);
-		case 0x090/2:                                   return DECO_PORT(0x44);
-		case 0x246/2:                                   return ((((DECO_PORT(0x48)&0xff00)>>8) | ((DECO_PORT(0x48)&0x00f0)<<8) | ((DECO_PORT(0x48)&0x0f00)>>8) | ((DECO_PORT(0x48)&0x0003)<<10) | ((DECO_PORT(0x48)&0x000c)<<6)) ^ m_xor);
-		case 0x546/2:                                   return (((DECO_PORT(0x62)&0xf0f0)>>0) | ((DECO_PORT(0x62)&0x000f)<<8)) & (~m_nand);
-		case 0x2e2/2:                                   return ((DECO_PORT(0xc6)&0x000e)<<11) | ((DECO_PORT(0xc6)&0x0001)<<15);
-		case 0x3c0/2:                                   return DECO_PORT(0x22);
-		case 0x4b8/2:                                   return (((DECO_PORT(0x46)&0xf000)>>12) | ((DECO_PORT(0x46)&0x0f00)>>4) | ((DECO_PORT(0x46)&0x00ff)<<8)) ^ m_xor;
-		case 0x65c/2:                                   return ((((DECO_PORT(0x44)&0xf000)>>12) | ((DECO_PORT(0x44)&0x0fff)<<4)) ^ m_xor) & (~m_nand);
-		case 0x32a/2:                                   return ((((DECO_PORT(0xc0)&0x0ff0)<<4) | ((DECO_PORT(0xc0)&0x000e)<<3) | ((DECO_PORT(0xc0)&0x0001)<<7))) & (~m_nand);// ^ m_xor;
-		case 0x008/2:                                       return ((((DECO_PORT(0x94)&0xfff0)<<0) | ((DECO_PORT(0x94)&0x000e)>>1) | ((DECO_PORT(0x94)&0x0001)<<3))) & (~m_nand);// ^ m_xor;
-		case 0x456/2:                                   return (((DECO_PORT(0x26)&0xfff0)<<0) | ((DECO_PORT(0x26)&0x0007)<<1) | ((DECO_PORT(0x26)&0x0008)>>3));// ^ m_xor;
-		case 0x190/2:                                   return ((((DECO_PORT(0x44)&0xf000)<<0) | ((DECO_PORT(0x44)&0x00ff)<<4))) & (~m_nand);// ^ m_xor;
-		case 0x3f2/2:                                   return ((((DECO_PORT(0x48)&0x000f)<<12) | ((DECO_PORT(0x48)&0x00f0)<<4))) & (~m_nand);// ^ m_xor;
-		case 0x2be/2:                                   return ((DECO_PORT(0x40)&0x00ff)<<8);
-		case 0x19e/2:                                   return ((((DECO_PORT(0x3c)&0xf000)>>12) | ((DECO_PORT(0x3c)&0x0f00)<<4) | ((DECO_PORT(0x3c)&0x00f0)>>0) | ((DECO_PORT(0x3c)&0x000f)<<8)) ^ m_xor) & (~m_nand);
-		case 0x2a2/2:                                   return ((((DECO_PORT(0x44)&0xff00)>>8) | ((DECO_PORT(0x44)&0x00f0)<<8) | ((DECO_PORT(0x44)&0x000e)<<7) | ((DECO_PORT(0x44)&0x0001)<<11)) ^ m_xor) & (~m_nand);
-		case 0x748/2:                                   return (((DECO_PORT(0x44)&0xfff0)<<0) | ((DECO_PORT(0x44)&0x000e)>>1) | ((DECO_PORT(0x44)&0x0001)<<3));// & (~m_nand);
-		case 0x686/2:                                   return (((DECO_PORT(0x46)&0xf000)>>4) | ((DECO_PORT(0x46)&0x0f00)>>8) | ((DECO_PORT(0x46)&0x00f0)<<8) | ((DECO_PORT(0x46)&0x000f)<<4));// & (~m_nand);
-		case 0x4c4/2:                                   return ((DECO_PORT(0x3c)&0x000f)<<12) & (~m_nand);
-		case 0x538/2:                                   return ((DECO_PORT(0x3c)&0x000f)<<12);
-		case 0x63a/2:                                   return ((DECO_PORT(0x3c)&0x000f)<<12);
-		case 0x348/2:                                   return ((((DECO_PORT(0x44)&0xf000)>>12) | ((DECO_PORT(0x44)&0x0ff0)<<4) | ((DECO_PORT(0x44)&0x000e)<<3) | ((DECO_PORT(0x44)&0x0001)<<7))) ^ m_xor;// & (~m_nand);
-		case 0x200/2:                                   return (((DECO_PORT(0xa0)&0xfff0)>>4) | ((DECO_PORT(0xa0)&0x0007)<<13) | ((DECO_PORT(0xa0)&0x0008)<<9));// & (~m_nand);
-		case 0x254/2:                                   return ((((DECO_PORT(0x7e)&0x0ff0)<<4) | ((DECO_PORT(0x7e)&0x000c)<<2) | ((DECO_PORT(0x7e)&0x0003)<<6))) ^ m_xor;// & (~m_nand);
-		case 0x182/2:                                   return ((DECO_PORT(0x46)&0xf000)<<0) | ((DECO_PORT(0x46)&0x0f00)>>8) | ((DECO_PORT(0x46)&0x00f0)>>0) | ((DECO_PORT(0x46)&0x000f)<<8);
-		case 0x058/2:                                   return DECO_PORT(0x46);
-		case 0x48e/2:                                   return ((((DECO_PORT(0x46)&0xf000)>>12) | ((DECO_PORT(0x46)&0x0f00)>>4) | ((DECO_PORT(0x46)&0x00f0)<<4) | ((DECO_PORT(0x46)&0x000f)<<12)));// /*^ m_xor*/) & (~m_nand);
-		case 0x4ba/2:                                   return (((DECO_PORT(0x24)&0xf000)>>12) | ((DECO_PORT(0x24)&0x0ff0)<<4) | ((DECO_PORT(0x24)&0x000c)<<2) | ((DECO_PORT(0x24)&0x0003)<<6)) & (~m_nand);
-		case 0x092/2:                                   return (((DECO_PORT(0x3c)&0xfff0)>>0) | ((DECO_PORT(0x3c)&0x0007)<<1) | ((DECO_PORT(0x3c)&0x0008)>>3));
-		case 0x1f0/2:                                   return ((((DECO_PORT(0xa2)&0xf000)>>12) | ((DECO_PORT(0xa2)&0x0f00)>>4) | ((DECO_PORT(0xa2)&0x00ff)<<8)) ^ m_xor) & (~m_nand);
-		case 0x24e/2:                                   return ((((DECO_PORT(0x46)&0xf000)>>8) | ((DECO_PORT(0x46)&0x0f00)>>0) | ((DECO_PORT(0x46)&0x00f0)>>4) | ((DECO_PORT(0x46)&0x000f)<<12)) ^ m_xor);// & (~m_nand);
-		case 0x594/2:                                   return ((((DECO_PORT(0x40)&0x00f0)<<8) | ((DECO_PORT(0x40)&0x000c)<<6) | ((DECO_PORT(0x40)&0x0003)<<10)) ^ m_xor);// & (~m_nand);
-		case 0x7e2/2:                                   return ((((DECO_PORT(0x96)&0xf000)<<0) | ((DECO_PORT(0x96)&0x00f0)<<4) | ((DECO_PORT(0x96)&0x000f)<<4))) ^ m_xor;// | ((DECO_PORT(0x96)&0x0001)<<7));// ^ m_xor);// & (~m_nand);
-		case 0x18c/2:                                   return (((DECO_PORT(0x22)&0xfff0)>>4) | ((DECO_PORT(0x22)&0x000e)<<11) | ((DECO_PORT(0x22)&0x0001)<<15));// ^ m_xor);// & (~m_nand);
-		case 0x1fa/2:                                   return ((((DECO_PORT(0x26)&0xf000)>>8) | ((DECO_PORT(0x26)&0x0f00)<<0) | ((DECO_PORT(0x26)&0x00f0)>>4) | ((DECO_PORT(0x26)&0x000f)<<12))) ^ m_xor;// & (~m_nand);
-		case 0x70e/2:                                   return ((((DECO_PORT(0x26)&0x0ff0)<<4) | ((DECO_PORT(0x26)&0x000c)<<2) | ((DECO_PORT(0x26)&0x0003)<<6))) ^ m_xor;// & (~m_nand);
-		case 0x33a/2:                                   return DECO_PORT(0x60) & (~m_nand);
-		case 0x1e2/2:                                   return ((DECO_PORT(0xd0)&0xf000)>>12) | ((DECO_PORT(0xd0)&0x0f00)>>4) | ((DECO_PORT(0xd0)&0x00ff)<<8);
-		case 0x3f4/2:                                   return DECO_PORT(0x6e)<<4;
-		case 0x2ae/2:                                   return ((DECO_PORT(0x9c)&0xf000)<<0) | ((DECO_PORT(0x9c)&0x0ff0)>>4) | ((DECO_PORT(0x9c)&0x000f)<<8);// & (~m_nand);
-		case 0x096/2:                                   return ((((DECO_PORT(0x22)&0xff00)>>8) | ((DECO_PORT(0x22)&0x00f0)<<8) | ((DECO_PORT(0x22)&0x000e)<<7) | ((DECO_PORT(0x22)&0x0001)<<11)) ^ m_xor) & (~m_nand);
-		case 0x33e/2:                                   return (((DECO_PORT(0x0)&0xf000)>>12) | ((DECO_PORT(0x0)&0x0f00)>>4) | ((DECO_PORT(0x0)&0x00f0)<<4) | ((DECO_PORT(0x0)&0x000f)<<12)) & (~m_nand); // also wizard fire
-		case 0x6c4/2: /* Reads from here flip buffers */location = 0x66; /* Flip occurs AFTER this data has been calculated*/return ((DECO_PORT(location)&0xf0f0) | ((DECO_PORT(location)&0x000f)<<8)) & (~m_nand);
-		case 0x700/2: /* Reads from here flip buffers */location = 0x66; return (((DECO_PORT(location)&0xf000)>>4) | ((DECO_PORT(location)&0x00f0)<<8)) ^ m_xor;
-		case 0x444/2:                                   location = 0x66; return ((DECO_PORT(location)&0x00f0)<<8) | ((DECO_PORT(location)&0x0007)<<9)  | ((DECO_PORT(location)&0x0008)<<5);
-		case 0x2d0/2:                                   location = 0x66; return (((DECO_PORT(location)&0xf000)>>4) | ((DECO_PORT(location)&0x00f0)<<8)) ^ m_xor;
-		case 0x2b8/2:                                   location = 0x66; return ((DECO_PORT(location)&0x00f0)<<8) ^ m_xor;
-		case 0x294/2:                                   location = 0x66; return ((DECO_PORT(location)&0x000f)<<12);
-		case 0x1e8/2:                                   location = 0x66; return 0; // todo
-		case 0x49c/2:                                   return (((DECO_PORT(0x6c)&0x00f0)<<8) ^ m_xor) & (~m_nand);
-		case 0x44e/2:                                   return (((DECO_PORT(0x44)&0x00f0)<<4) | ((DECO_PORT(0x44)&0x000f)<<12)) ^ m_xor;
-		case 0x3ca/2:                                   return (((DECO_PORT(0x1e)&0xfff0)>>4) | ((DECO_PORT(0x1e)&0x0003)<<14) | ((DECO_PORT(0x1e)&0x000c)<<10)) ^ m_xor;
-		case 0x2ac/2:                                   return DECO_PORT(0x1e); // also caveman ninja
-		case 0x03c/2:                                   return (((DECO_PORT(0x1e)&0x0003)<<14) | ((DECO_PORT(0x1e)&0x000c)<<10)) & (~m_nand);
-		case 0x174/2:                                   return (((DECO_PORT(0x1e)&0xff00)>>8) | ((DECO_PORT(0x1e)&0x00f0)<<8) | ((DECO_PORT(0x1e)&0x0007)<<9) | ((DECO_PORT(0x1e)&0x0008)<<5)) & (~m_nand);
-		case 0x34a/2:                                   return (((DECO_PORT(0x4)&0xff00)>>0) | ((DECO_PORT(0x4)&0x00f0)>>4) | ((DECO_PORT(0x4)&0x000f)<<4)) & (~m_nand);
-		case 0x324/2:                                   return (((DECO_PORT(0x6)&0xf000)>>12) | ((DECO_PORT(0x6)&0x0ff0)<<4) | ((DECO_PORT(0x6)&0x0007)<<5) | ((DECO_PORT(0x6)&0x0008)<<1));
-		case 0x344/2:                                   return (((DECO_PORT(0x8)&0xf000)>>8) | ((DECO_PORT(0x8)&0x0f00)>>8) | ((DECO_PORT(0x8)&0x00f0)<<4) | ((DECO_PORT(0x8)&0x000f)<<12));
-		case 0x072/2:                                   return ((((DECO_PORT(0xa)&0xf000)>>8) | ((DECO_PORT(0xa)&0x0ff0)<<4) | ((DECO_PORT(0xa)&0x000f)>>0))) & (~m_nand);
-		case 0x36e/2:                                   return ((((DECO_PORT(0xc)&0xf000)>>0) | ((DECO_PORT(0xc)&0x0ff0)>>4) | ((DECO_PORT(0xc)&0x000f)<<8))) & (~m_nand);
-		case 0x590/2:                                   return ((((DECO_PORT(0xe)&0xfff0)>>4) | ((DECO_PORT(0xe)&0x000e)<<11) | ((DECO_PORT(0xe)&0x0001)<<15))) ^ m_xor;
-		case 0x7b6/2:                                   return ((((DECO_PORT(0x2)&0xf000)>>8) | ((DECO_PORT(0x2)&0x0ff0)<<4) | ((DECO_PORT(0x2)&0x000f)<<0)) ^ m_xor) & (~m_nand);
-		case 0x588/2:                                   return ((((DECO_PORT(0x4)&0xff00)>>4) | ((DECO_PORT(0x4)&0x00f0)<<8) | ((DECO_PORT(0x4)&0x000f)<<0)) ^ m_xor) & (~m_nand);
-		case 0x1f6/2:                                   return (((DECO_PORT(0x6)&0xf000)>>12) | ((DECO_PORT(0x6)&0x0ff0)<<4) | ((DECO_PORT(0x6)&0x0007)<<5) | ((DECO_PORT(0x6)&0x0008)<<1)) ^ m_xor;
-		case 0x4c0/2:                                   return (((DECO_PORT(0x8)&0xf000)>>4) | ((DECO_PORT(0x8)&0x0f00)<<4) | ((DECO_PORT(0x8)&0x00f0)>>4) | ((DECO_PORT(0x8)&0x000f)<<4)) & (~m_nand);
-		case 0x63e/2:                                   return ((((DECO_PORT(0xa)&0x0ff0)<<4) | ((DECO_PORT(0xa)&0xf000)>>12) | ((DECO_PORT(0xa)&0x0003)<<6) | ((DECO_PORT(0xa)&0x000c)<<2)));
-		case 0x7cc/2:                                   return ((((DECO_PORT(0xc)&0xfff0)>>4) | ((DECO_PORT(0xc)&0x000e)<<11) | ((DECO_PORT(0xc)&0x0001)<<15)) ^ m_xor) & (~m_nand);
-		case 0x1bc/2:                                   return (((DECO_PORT(0xe)&0xf000)>>12) | ((DECO_PORT(0xe)&0x0f00)>>4) | ((DECO_PORT(0xe)&0x00ff)<<8)) & (~m_nand);
-		case 0x780/2:                                   return DECO_PORT(0xb8); // also caveman ninja
-		case 0x454/2:                                   return (((DECO_PORT(0x82)&0xf000)>>8) | ((DECO_PORT(0x82)&0x0f00)>>0) | ((DECO_PORT(0x82)&0x00f0)>>4) | ((DECO_PORT(0x82)&0x000f)<<12)) ^ m_xor;
-		case 0x53e/2:                                   return ((DECO_PORT(0x9e)&0x0003)<<14) | ((DECO_PORT(0x9e)&0x000c)<<10);
-		case 0x250/2:                                   return (((DECO_PORT(0x62)&0xf0f0)<<0) | ((DECO_PORT(0x62)&0x0f00)>>8)  | ((DECO_PORT(0x62)&0x000f)<<8)) & (~m_nand);
-		case 0x150/2: /* Shared */                      return DECO_PORT(0x7e);
-		case 0x10e/2: /* Schmeizr Robo only */          return DECO_PORT(0x7c);
-		case 0x56a/2: /* Schmeizr Robo only */          return (((DECO_PORT(0x7c)&0xfff0)>>4) | ((DECO_PORT(0x7c)&0x000e)<<11) | ((DECO_PORT(0x7c)&0x0001)<<15)) & (~m_nand);
-		case 0x39a/2: /* Schmeizr Robo only */          return ((((DECO_PORT(0x7e)&0xfff0)>>4) | ((DECO_PORT(0x7e)&0x000e)<<11) | ((DECO_PORT(0x7e)&0x0001)<<15)) ^ m_xor) & (~m_nand);
-		case 0x188/2: /* Schmeizr Robo only */          return (((m_nand&0x0003)<<6) | ((m_nand&0x000c)<<2) | ((m_nand&0x00f0)<<4) | ((m_nand&0x0f00)<<4)) & (~m_nand);
-		case 0x3cc/2: /* Schmeizr Robo only */          return m_nand;
-		case 0x04a/2: /* Schmeizr Robo only */          return DECO_PORT(0x9e) & (~m_nand);
-		case 0x7e8/2: /* Schmeizr Robo only */          return DECO_PORT(0x4a) ^ m_xor;
-		case 0x0fc/2: /* Schmeizr Robo only */          return DECO_PORT(0x4a);
-		case 0x38c/2: /* Schmeizr Robo only */          return DECO_PORT(0x28);
-		case 0x028/2: /* Schmeizr Robo only  */         return DECO_PORT(0x58);
-
-		// caveman ninja cases
-		case 0x224/2: /* was 0x080 */ /* Master level control */            return prot_ram[0x0/2];
-		case 0x27a/2: /* was 0x0de */ /* Restart position control */            return prot_ram[0x2/2];
-		case 0x242/2: /* was 0x0e6 */ /* The number of credits in the system. */            return prot_ram[0x4/2];
-		case 0x222/2: /* was 0x086 */ /* End of game check.  See 0x1814 */          return prot_ram[0x6/2];
-		case 0x2fe/2: /* was 0x05a */ /* Moved to 0x140000 on int */            return prot_ram[0x10/2];
-		case 0x220/2: /* was 0x084 */ /* Moved to 0x14000a on int */            return prot_ram[0x12/2];
-		case 0x284/2: /* was 0x020 */ /* Moved to 0x14000c on int */            return prot_ram[0x14/2];
-		case 0x2d6/2: /* was 0x072 */ /* Moved to 0x14000e on int */            return prot_ram[0x16/2];
-		case 0x278/2: /* was 0x0dc */ /* Moved to 0x150000 on int */            return prot_ram[0x18/2];
-		case 0x2ca/2: /* was 0x06e */ /* Moved to 0x15000a on int */            return prot_ram[0x1a/2]; /* Not used on bootleg */
-		case 0x2c8/2: /* was 0x06c */ /* Moved to 0x15000c on int */            return prot_ram[0x1c/2];
-		//case 0x2ac/2: /* was 0x008 */ /* Moved to 0x15000e on int */          return prot_ram[0x1e/2];
-		//case 0x292/2: /* was 0x036 */ /* Dip switches */          return space.machine().root_device().ioport("DSW")->read();
-		//case 0x36c/2: /* was 0x1c8 */ /* Coins */         return space.machine().root_device().ioport("IN1")->read();
-		//case 0x088/2: /* was 0x22c */ /* Player 1 & 2 input ports */          return space.machine().root_device().ioport("IN0")->read();
-		case 0x016/2: /* was 0x2b2 */ return prot_ram[0x0fc/2]; // 0xad65
-		case 0x68e/2: /* was 0x42a */ return prot_ram[0x092/2]; // 0xb2b7
-		case 0x692/2: /* was 0x436 */ return prot_ram[0x088/2]; // 0xea5a
-		//case 0x6e4/2: /* was 0x440 */ return prot_ram[0x098/2]; // 0x7aa0
-		case 0x6e2/2: /* was 0x446 */ return prot_ram[0x090/2]; // 0x5fdf
-		case 0x6fc/2: /* was 0x458 */ return prot_ram[0x082/2]; // 0x108d
-		//case 0x624/2: /* was 0x480 */ return prot_ram[0x09a/2]; // 0xfbe4
-		case 0x62a/2: /* was 0x48e */ return prot_ram[0x08a/2]; // 0x67a2
-		case 0x638/2: /* was 0x49c */ return prot_ram[0x094/2]; // 0xb62a
-		case 0x614/2: /* was 0x4b0 */ return prot_ram[0x096/2]; // 0x3555
-		case 0x664/2: /* was 0x4c0 */ return prot_ram[0x09e/2]; // 0x6a34
-		//case 0x662/2: /* was 0x4c6 */ return prot_ram[0x08c/2]; // 0xc6ef
-		case 0x64e/2: /* was 0x4ea */ return prot_ram[0x086/2]; // 0x9feb
-		//case 0x65e/2: /* was 0x4fa */ return prot_ram[0x09c/2]; // 0x1dcb
-		case 0x7ac/2: /* was 0x508 */ return prot_ram[0x08e/2]; // 0xed9c
-		//case 0x7b0/2: /* was 0x514 */ return prot_ram[0x080/2]; // 0xf6e2
-		case 0x7b8/2: /* was 0x51c */ return prot_ram[0x084/2]; // 0xbdb9
-		//case 0x780/2: /* was 0x524 */ return prot_ram[0x0b8/2]; // 0x5d26
-		case 0x782/2: /* was 0x526 */ return prot_ram[0x0a2/2]; // 0x4770
-		case 0x7f6/2: /* was 0x552 */ return prot_ram[0x0ac/2]; // 0x0843
-		case 0x7f0/2: /* was 0x554 */ return prot_ram[0x0ba/2]; // 0x9b79
-		case 0x7ca/2: /* was 0x56e */ return prot_ram[0x0a0/2]; // 0xd1be
-		case 0x7d4/2: /* was 0x570 */ return prot_ram[0x0b4/2]; // 0xc950
-		case 0x724/2: /* was 0x580 */ return prot_ram[0x0b2/2]; // 0xa600
-		case 0x73e/2: /* was 0x59a */ return prot_ram[0x0ae/2]; // 0x2b24
-		case 0x77c/2: /* was 0x5d8 */ return prot_ram[0x0b6/2]; // 0x17c1
-		case 0x750/2: /* was 0x5f4 */ return prot_ram[0x0aa/2]; // 0xf152
-		case 0x752/2: /* was 0x5f6 */ return prot_ram[0x0be/2]; // 0x97ce
-		case 0x75c/2: /* was 0x5f8 */ return prot_ram[0x0bc/2]; // 0xa485
-		case 0x4a0/2: /* was 0x604 */ return prot_ram[0x0a4/2]; // 0x0e88
-		case 0x4a8/2: /* was 0x60c */ return prot_ram[0x0b0/2]; // 0xab89
-		case 0x4be/2: /* was 0x61a */ return prot_ram[0x0a6/2]; // 0x64ba
-		case 0x4ee/2: /* was 0x64a */ return prot_ram[0x0cc/2]; // 0x0ae9
-		case 0x4d4/2: /* was 0x670 */ return prot_ram[0x0d4/2]; // 0x4ec2
-		case 0x4da/2: /* was 0x67e */ return prot_ram[0x0ca/2]; // 0x61c3
-		case 0x430/2: /* was 0x694 */ return prot_ram[0x0d2/2]; // 0x3b4f
-		case 0x40c/2: /* was 0x6a8 */ return prot_ram[0x0d6/2]; // 0x0c27
-		case 0x40a/2: /* was 0x6ae */ return prot_ram[0x0da/2]; // 0x3a72
-		//case 0x410/2: /* was 0x6b4 */ return prot_ram[0x0de/2]; // 0x15d2
-		case 0x460/2: /* was 0x6c4 */ return prot_ram[0x0c8/2]; // 0x5849
-		case 0x46c/2: /* was 0x6c8 */ return prot_ram[0x0d0/2]; // 0x186c
-		case 0x468/2: /* was 0x6cc */ return prot_ram[0x0c0/2]; // 0x713e
-		case 0x47a/2: /* was 0x6de */ return prot_ram[0x0c2/2]; // 0xa87e
-		case 0x45c/2: /* was 0x6f8 */ return prot_ram[0x0d8/2]; // 0x9a31
-		case 0x45a/2: /* was 0x6fe */ return prot_ram[0x0c6/2]; // 0xec69
-		case 0x5a4/2: /* was 0x700 */ return prot_ram[0x0ce/2]; // 0x82d9
-		//case 0x5ae/2: /* was 0x70a */ return prot_ram[0x0dc/2]; // 0x628c
-		case 0x5b0/2: /* was 0x714 */ return prot_ram[0x0c4/2]; // 0xda45
-		case 0x5e8/2: /* was 0x74c */ return prot_ram[0x0e4/2]; // 0x8e3d
-		case 0x5c0/2: /* was 0x764 */ return prot_ram[0x0fe/2]; // 0xdef7
-		case 0x5d4/2: /* was 0x770 */ return prot_ram[0x0f4/2]; // 0xe7fe
-		case 0x5d6/2: /* was 0x772 */ return prot_ram[0x0ec/2]; // 0x23ca
-		case 0x5d0/2: /* was 0x774 */ return prot_ram[0x0e2/2]; // 0xe62c
-		case 0x5da/2: /* was 0x77e */ return prot_ram[0x0e8/2]; // 0x6683
-		case 0x52c/2: /* was 0x788 */ return prot_ram[0x0e0/2]; // 0xd60b
-		case 0x53c/2: /* was 0x798 */ return prot_ram[0x0fa/2]; // 0x9e1a
-		case 0x500/2: /* was 0x7a4 */ return prot_ram[0x0f0/2]; // 0x578f
-		case 0x566/2: /* was 0x7c2 */ return prot_ram[0x0f8/2]; // 0x0503
-		case 0x54e/2: /* was 0x7ea */ return prot_ram[0x0e6/2]; // 0x8654
-		case 0x548/2: /* was 0x7ec */ return prot_ram[0x0f6/2]; // 0xa1e1
-		case 0x55e/2: /* was 0x7fa */ return prot_ram[0x0ea/2]; // 0x5146
-		case 0x55a/2: /* was 0x7fe */ return prot_ram[0x0f2/2]; // 0x91d4
-
-		// wizard fire cases
-		//case 0x088/2: /* was 0x110*/ /* Player input */       return space.machine().root_device().ioport("IN0")->read(); // also used in rohga sim
-		//case 0x36c/2: /* was 0x36c*/                          return space.machine().root_device().ioport("IN1")->read(); // also used in rohga sim
-		case 0x2cc/2: /* was 0x334*/                            tempinput = m_port_b_r(0);  return tempinput;
-		case 0x3b0/2: /* was 0x0dc*/                            tempinput = m_port_b_r(0);  return tempinput<<4;
-		//case 0x292/2: /* was 0x494*/ /* Dips */               return space.machine().root_device().ioport("DSW1_2")->read(); // also used in rohga sim // also caveman ninja
-		//case 0x224/2: /* was 0x244*/                          return DECO_NEW_PORT(0x00); // also caveman ninja
-		//case 0x33e/2: /* was 0x7cc*/                          return ((DECO_NEW_PORT(0x00)&0x000f)<<12) | ((DECO_NEW_PORT(0x00)&0x00f0)<<4) | ((DECO_NEW_PORT(0x00)&0x0f00)>>4) | ((DECO_NEW_PORT(0x00)&0xf000)>>12); // also used in rohga sim (NOTE, ROHGA APPLIES MASK, CHECK!)
-		case 0x030/2: /* was 0x0c0*/                            return (((DECO_NEW_PORT(0x00)&0x000e)>>1) | ((DECO_NEW_PORT(0x00)&0x0001)<<3))<<12;
-		case 0x118/2: /* was 0x188*/                            return (((DECO_NEW_PORT(0x00)&0x000e)>>1) | ((DECO_NEW_PORT(0x00)&0x0001)<<3))<<12;
-		case 0x7a6/2: /* was 0x65e*/                            return (((DECO_NEW_PORT(0x00)&0x000c)>>2) | ((DECO_NEW_PORT(0x00)&0x0003)<<2))<<12;
-		case 0x73a/2: /* was 0x5ce*/                            return ((DECO_NEW_PORT(0x00)<<8)&0xf000) | ((DECO_NEW_PORT(0x00)&0xe)<<7) | ((DECO_NEW_PORT(0x00)&0x1)<<11);
-		case 0x586/2: /* was 0x61a*/                            return (DECO_NEW_PORT(0x00)<<8)&0xff00;
-		//case 0x692/2: /* was 0x496*/                          return DECO_NEW_PORT(0x88); // also caveman ninja
-		case 0x502/2: /* was 0x40a*/                            return ((DECO_NEW_PORT(0x88)&0x000f)<<12) | ((DECO_NEW_PORT(0x88)&0x00f0)>>4) | ((DECO_NEW_PORT(0x88)&0x0f00)<<0) | ((DECO_NEW_PORT(0x88)&0xf000)>>8);
-		//case 0x178/2: /* was 0x1e8*/                          return ((DECO_NEW_PORT(0x88)&0x00ff)<<8) | ((DECO_NEW_PORT(0x88)&0xff00)>>8); // also used in rohga sim  (NOTE, ROHGA APPLIES MASK, CHECK!)
-		case 0x3d2/2: /* was 0x4bc*/                            return ((DECO_NEW_PORT(0x88)&0x0ff0)<<4) | ((DECO_NEW_PORT(0x88)&0x0003)<<6) | ((DECO_NEW_PORT(0x88)&0x000c)<<2);
-		case 0x762/2: /* was 0x46e*/                            return ((DECO_NEW_PORT(0x88)&0xfff0)<<0) | ((DECO_NEW_PORT(0x88)&0x0007)<<1) | ((DECO_NEW_PORT(0x88)&0x0008)>>3);
-		case 0x264/2: /* was 0x264*/                            return ((DECO_NEW_PORT(0x88)&0x000f)<<8) | ((DECO_NEW_PORT(0x88)&0x00f0)>>0) | ((DECO_NEW_PORT(0x88)&0x0f00)<<4);
-		case 0x4e8/2: /* was 0x172*/                            return ((DECO_NEW_PORT(0x88)&0x000f)<<4) | ((DECO_NEW_PORT(0x88)&0x00f0)<<4) | ((DECO_NEW_PORT(0x88)&0xf000)<<0);
-		//case 0x284/2: /* was 0x214*/                          return DECO_NEW_PORT(0x14); // also caveman ninja
-		case 0x74a/2: /* was 0x52e*/                            return ((DECO_NEW_PORT(0x14)&0x000f)<<8) | ((DECO_NEW_PORT(0x14)&0x00f0)>>0) | ((DECO_NEW_PORT(0x14)&0x0f00)>>8) | ((DECO_NEW_PORT(0x14)&0xf000)>>0);
-		case 0x5e0/2: /* was 0x07a*/                            return ((DECO_NEW_PORT(0x14)&0x000f)<<8) | ((DECO_NEW_PORT(0x14)&0x00f0)>>0) | ((DECO_NEW_PORT(0x14)&0x0f00)>>8) | ((DECO_NEW_PORT(0x14)&0xf000)>>0);
-		case 0x06c/2: /* was 0x360*/                            return ((DECO_NEW_PORT(0x14)&0x000f)<<8) | ((DECO_NEW_PORT(0x14)&0x00f0)>>0) | ((DECO_NEW_PORT(0x14)&0x0f00)>>8) | ((DECO_NEW_PORT(0x14)&0xf000)>>0);
-		case 0x3b2/2: /* was 0x4dc*/                            return ((DECO_NEW_PORT(0x14)&0x0ff0)<<4) | ((DECO_NEW_PORT(0x14)&0x0007)<<5) | ((DECO_NEW_PORT(0x14)&0x0008)<<1);
-		case 0x15c/2: /* was 0x3a8*/                            return ((DECO_NEW_PORT(0x14)&0x000e)<<3) | ((DECO_NEW_PORT(0x14)&0x0001)<<7) | ((DECO_NEW_PORT(0x14)&0x0ff0)<<4) | ((DECO_NEW_PORT(0x14)&0xf000)>>12);
-		case 0x6f4/2: /* was 0x2f6*/                            return ((DECO_NEW_PORT(0x14)&0xff00)>>8) | ((DECO_NEW_PORT(0x14)&0x00f0)<<8) | ((DECO_NEW_PORT(0x14)&0x000c)<<6) | ((DECO_NEW_PORT(0x14)&0x0003)<<10);
-		//case 0x27e/2: /* was 0x7e4*/                          return (DECO_NEW_PORT(0x94)&0x00f0)<<8; // also used in rohga sim (NOTE, ROHGA APPLIES XOR and MASK, CHECK!)
-		case 0x6ca/2: /* was 0x536*/                            return ((DECO_NEW_PORT(0xd4)&0x000f)<<8) | ((DECO_NEW_PORT(0xd4)&0x00f0)<<0) | ((DECO_NEW_PORT(0xd4)&0x0f00)<<4) | ((DECO_NEW_PORT(0xd4)&0xf000)>>12);
-		case 0x7d0/2: /* was 0x0be*/                            return ((DECO_NEW_PORT(0xec)&0x000f)<<4) | ((DECO_NEW_PORT(0xec)&0x00f0)<<4) | ((DECO_NEW_PORT(0xec)&0x0f00)>>8) | ((DECO_NEW_PORT(0xec)&0xf000)>>0);
-		//case 0x092/2: /* was 0x490*/                          return (DECO_NEW_PORT(0x3c)&0xfff0) | ((DECO_NEW_PORT(0x3c)&0x0007)<<1) | ((DECO_NEW_PORT(0x3c)&0x0008)>>3); // also used in rohga sim
-		case 0x08e/2: /* was 0x710*/                            return (DECO_NEW_PORT(0xc2)&0xfff0) | ((DECO_NEW_PORT(0xc2)&0x0007)<<1) | ((DECO_NEW_PORT(0xc2)&0x0008)>>3);
-		case 0x544/2: /* was 0x22a*/                            return ((DECO_NEW_PORT(0x5a)&0xff00)>>8) | ((DECO_NEW_PORT(0x5a)&0x00f0)<<8) | ((DECO_NEW_PORT(0x5a)&0x0001)<<11) | ((DECO_NEW_PORT(0x5a)&0x000e)<<7);
-		case 0x646/2: /* was 0x626*/                            return ((DECO_NEW_PORT(0xda)&0x000f)<<8) | ((DECO_NEW_PORT(0xda)&0x00f0)<<8) | ((DECO_NEW_PORT(0xda)&0x0f00)>>4) | ((DECO_NEW_PORT(0xda)&0xf000)>>12);
-		//case 0x222/2: /* was 0x444*/                          return DECO_NEW_PORT(0x06); // (old comment was 'rohga') /* this CAN'T be right (port addr > 0x100), is it even used by this game or some c+p error? */
-		case 0x35a/2: /* was 0x5ac*/                            return ((DECO_NEW_PORT(0x76)&0xfff0)>>4) | ((DECO_NEW_PORT(0x76)&0x0007)<<13) | ((DECO_NEW_PORT(0x76)&0x0008)<<9);
-		case 0x0a6/2: /* was 0x650*/                            return ((DECO_NEW_PORT(0xbe)&0xfff0)>>4) | ((DECO_NEW_PORT(0xbe)&0x000f)<<12); // also used in rohga sim
-		case 0x352/2: /* was 0x4ac*/                            return ((DECO_NEW_PORT(0x62)&0x0007)<<13) | ((DECO_NEW_PORT(0x62)&0x0008)<<9);
-
-	}
-	//logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",device().safe_pc(),offset);
-
-	return 0x0000;
-}
-
-
-
-/**********************************************************************************/
-
-
-/**********************************************************************************/
-
-
-/**********************************************************************************/
-
-static UINT16 deco16_prot_ram[0x800];
-
-READ16_HANDLER( deco16_104_pktgaldx_prot_r )
-{
-	const UINT16* prot_ram=deco16_prot_ram;
-	switch (offset * 2)
-	{
-	case 0x5b2: return space.machine().root_device().ioport("SYSTEM")->read();
-	case 0x44c: return space.machine().root_device().ioport("DSW")->read();
-	case 0x042: return space.machine().root_device().ioport("INPUTS")->read();
-
-	case 0x510: return DECO_PORT(0);
-	case 0x51a: return DECO_PORT(2);
-	}
-
-	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", space.device().safe_pc(), offset<<1);
-
-	return 0;
-}
-
-WRITE16_HANDLER( deco16_104_pktgaldx_prot_w )
-{
-	COMBINE_DATA(&deco16_prot_ram[offset]);
-//  logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n",space.device().safe_pc(),offset<<1,data);
-
-}
-
-/**********************************************************************************/
-
-
-
-
-
-void deco104_device::write_protport(address_space &space, UINT16 address, UINT16 data, UINT16 mem_mask)
-{
-	deco_146_base_device::write_protport(space,address,data,mem_mask);
-
-	if (m_use_dblewings_hacks==1)
-	{
-		switch (address)
-		{
-			case 0x0c0: /* was 0x088*/
-				m_088_data = data;
-				if(m_088_data == 0)          { m_boss_4_data = 0;    }
-				else if(m_088_data & 0x8000) { m_boss_4_data = 0x50; }
-				else                                { m_boss_4_data = 0x40; }
-
-				return;
-
-			case 0x030: /* was 0x104*/
-				m_104_data = data;
-				return; // p1 inputs select screen  OK
-
-			case 0x0e4: /* was 0x18a*/
-				m_18a_data = data;
-				switch (m_18a_data)
-				{
-					case 0x6b94: m_boss_5_data = 0x10; break; //initialize
-					case 0x7c68: m_boss_5_data = 0x60; break; //go up
-					case 0xfb1d: m_boss_5_data = 0x50; break;
-					case 0x977c: m_boss_5_data = 0x50; break;
-					case 0x8a49: m_boss_5_data = 0x60; break;
-				}
-				return;
-			case 0x008: /* was 0x200*/
-				m_200_data = data;
-				switch (m_200_data)
-				{
-					case 0x5a19: m_boss_move = 1; break;
-					case 0x3b28: m_boss_move = 2; break;
-					case 0x1d4d: m_boss_move = 1; break;
-				}
-				//popmessage("%04x",m_200_data);
-				return;
-			case 0x088: /* was 0x280*/
-				m_280_data = data;
-				switch (m_280_data)
-				{
-					case 0x6b94: m_boss_5sx_data = 0x10; break;
-					case 0x7519: m_boss_5sx_data = 0x60; break;
-					case 0xfc68: m_boss_5sx_data = 0x50; break;
-					case 0x02dd: m_boss_5sx_data = 0x50; break;
-					case 0x613c: m_boss_5sx_data = 0x50; break;
-				}
-				//printf("%04x\n",m_280_data);
-				return;
-			//case 0x0a8: /* was 0x380*/
-			//  drvstate->soundlatch_byte_w(space, 0, data & 0xff);
-			//  cpudev = (cpu_device*)machine().device(":audiocpu");
-			//  if (cpudev) cpudev->set_input_line(0, HOLD_LINE);
-
-
-			//  m_sound_irq |= 0x02;
-			//  m_audiocpu->set_input_line(0, (m_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
-			//  return;
-			case 0x0b8: /* was 0x384*/
-				m_384_data = data;
-				switch(m_384_data)
-				{
-					case 0xaa41: m_boss_6_data = 1; break;
-					case 0x5a97: m_boss_6_data = 2; break;
-					case 0xbac5: m_boss_6_data = 3; break;
-					case 0x0afb: m_boss_6_data = 4; break;
-					case 0x6a99: m_boss_6_data = 5; break;
-					case 0xda8f: m_boss_6_data = 6; break;
-				}
-				return;
-			case 0x0fc: /* was 0x38e*/
-				m_38e_data = data;
-				switch(m_38e_data)
-				{
-					case 0x6c13: m_boss_shoot_type = 3; break;
-					case 0xc311: m_boss_shoot_type = 0; break;
-					case 0x1593: m_boss_shoot_type = 1; break;
-					case 0xf9db: m_boss_shoot_type = 2; break;
-					case 0xf742: m_boss_shoot_type = 3; break;
-
-					case 0xeff5: m_boss_move = 1; break;
-					case 0xd2f1: m_boss_move = 2; break;
-					//default:   printf("%04x\n",m_38e_data); break;
-					//case 0xe65a: m_boss_shoot_type = 0; break;
-				}
-				return;
-			case 0x0f2: /* was 0x58c*/ // 3rd player 1st level
-				m_58c_data = data;
-				if(m_58c_data == 0)     { m_boss_move = 5; }
-				else                           { m_boss_move = 2; }
-
-				return;
-			case 0x04e: /* was 0x60a*/
-				m_60a_data = data;
-				if(m_60a_data & 0x8000) { m_boss_3_data = 2; }
-				else                           { m_boss_3_data = 9; }
-
-				return;
-			case 0x0a2: /* was 0x580*/
-				m_580_data = data;
-				return;
-			case 0x016: /* was 0x406*/
-				m_406_data = data;
-				return;  // p2 inputs select screen  OK
-
-			case 0x040: /* was 0x008*/ { m_008_data = data; return; }
-			case 0x080: /* was 0x080*/ { m_080_data = data; return; } // p3 3rd boss?
-			case 0x0d8: /* was 0x28c*/ { m_28c_data = data; return; }
-			case 0x042: /* was 0x408*/ { m_408_data = data; return; } // 3rd player 1st level?
-			case 0x056: /* was 0x40e*/ { m_40e_data = data; return; } // 3rd player 2nd level?
-			case 0x04a: /* was 0x608*/ { m_608_data = data; return; }
-			case 0x07a: /* was 0x70c*/ { m_70c_data = data; return; }
-			case 0x0ee: /* was 0x78a*/ { m_78a_data = data; return; }
-			case 0x0ea: /* was 0x788*/ { m_788_data = data; return; }
-		}
-
-
-	}
 }

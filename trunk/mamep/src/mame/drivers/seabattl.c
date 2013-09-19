@@ -31,8 +31,7 @@ the sound board should be fully discrete.
 
 #include "emu.h"
 #include "cpu/s2650/s2650.h"
-#include "sound/s2636.h"
-#include "video/s2636.h"
+#include "machine/s2636.h"
 #include "video/dm9368.h"
 #include "seabattl.lh"
 
@@ -52,6 +51,7 @@ public:
 		m_digit3(*this, "sc_unity"),
 		m_digit4(*this, "tm_half"),
 		m_digit5(*this, "tm_unity"),
+		m_s2636(*this, "s2636"),
 		m_waveenable(false),
 		m_collision(0)
 	{
@@ -67,6 +67,7 @@ public:
 	required_device<dm9368_device> m_digit3;
 	required_device<dm9368_device> m_digit4;
 	required_device<dm9368_device> m_digit5;
+	required_device<s2636_device> m_s2636;
 
 	tilemap_t *m_bg_tilemap;
 	bitmap_ind16 m_collision_bg;
@@ -163,8 +164,8 @@ UINT32 seabattl_state::screen_update_seabattl(screen_device &screen, bitmap_ind1
 	}
 
 	// background (scr.sm.obj)
-	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
-	m_bg_tilemap->draw(m_collision_bg, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(screen, m_collision_bg, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 
 	// sprites (m.obj)
 	for ( offset = 0; offset < 256; offset++ )
@@ -181,7 +182,7 @@ UINT32 seabattl_state::screen_update_seabattl(screen_device &screen, bitmap_ind1
 		}
 	}
 
-	bitmap_ind16 &s2636_0_bitmap = s2636_update(machine().device("s2636"), cliprect);
+	bitmap_ind16 &s2636_0_bitmap = m_s2636->update(cliprect);
 
 	// collisions
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
@@ -224,7 +225,7 @@ UINT32 seabattl_state::screen_update_seabattl(screen_device &screen, bitmap_ind1
 
 void seabattl_state::video_start()
 {
-	machine().primary_screen->register_screen_bitmap(m_collision_bg);
+	m_screen->register_screen_bitmap(m_collision_bg);
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seabattl_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 	m_bg_tilemap->set_transparent_pen(0);
 	m_bg_tilemap->set_scrolldx(-12, 0);
@@ -252,7 +253,7 @@ static ADDRESS_MAP_START( seabattl_map, AS_PROGRAM, 8, seabattl_state )
 	AM_RANGE(0x1e06, 0x1e06) AM_MIRROR(0x20f0) AM_READ_PORT("DIPS1") AM_WRITE(sound_w)
 	AM_RANGE(0x1e07, 0x1e07) AM_MIRROR(0x20f0) AM_READ_PORT("DIPS0") AM_WRITE(sound2_w)
 	AM_RANGE(0x1fcc, 0x1fcc) AM_MIRROR(0x2000) AM_READ_PORT("IN1")
-	AM_RANGE(0x1f00, 0x1fff) AM_MIRROR(0x2000) AM_DEVREADWRITE_LEGACY("s2636", s2636_work_ram_r, s2636_work_ram_w)
+	AM_RANGE(0x1f00, 0x1fff) AM_MIRROR(0x2000) AM_DEVREADWRITE("s2636", s2636_device, work_ram_r, work_ram_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( seabattl_io_map, AS_IO, 8, seabattl_state )
@@ -263,7 +264,7 @@ ADDRESS_MAP_END
 
 READ8_HANDLER(seabattl_state::seabattl_collision_r)
 {
-	machine().primary_screen->update_partial(machine().primary_screen->vpos());
+	m_screen->update_partial(m_screen->vpos());
 	return m_collision;
 }
 
@@ -282,14 +283,14 @@ WRITE8_MEMBER(seabattl_state::seabattl_control_w)
 
 READ8_HANDLER(seabattl_state::seabattl_collision_clear_r)
 {
-	machine().primary_screen->update_partial(machine().primary_screen->vpos());
+	m_screen->update_partial(m_screen->vpos());
 	m_collision = 0;
 	return 0;
 }
 
 WRITE8_HANDLER(seabattl_state::seabattl_collision_clear_w )
 {
-	machine().primary_screen->update_partial(machine().primary_screen->vpos());
+	m_screen->update_partial(m_screen->vpos());
 	m_collision = 0;
 }
 
@@ -467,10 +468,9 @@ GFXDECODE_END
 
 static const s2636_interface s2636_config =
 {
-	"screen",
 	0x100,
 	3, -21,
-	"s2636snd"
+	//"s2636snd"
 };
 
 static DM9368_INTERFACE( digit_score_thousand_intf )
@@ -524,6 +524,7 @@ static MACHINE_CONFIG_START( seabattl, seabattl_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", seabattl_state, seabattl_interrupt)
 
 	MCFG_S2636_ADD("s2636", s2636_config)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	MCFG_DM9368_ADD("sc_thousand", digit_score_thousand_intf)
 	MCFG_DM9368_ADD("sc_hundred", digit_score_hundred_intf)
@@ -546,8 +547,6 @@ static MACHINE_CONFIG_START( seabattl, seabattl_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("s2636snd", S2636_SOUND, 0)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	/* discrete sound */
 MACHINE_CONFIG_END

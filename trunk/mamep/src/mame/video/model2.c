@@ -2699,7 +2699,7 @@ void model2_state::model2_exit()
 
 VIDEO_START_MEMBER(model2_state,model2)
 {
-	const rectangle &visarea = machine().primary_screen->visible_area();
+	const rectangle &visarea = m_screen->visible_area();
 	int width = visarea.width();
 	int height = visarea.height();
 
@@ -2723,10 +2723,10 @@ UINT32 model2_state::screen_update_model2(screen_device &screen, bitmap_rgb32 &b
 	m_sys24_bitmap.fill(0, cliprect);
 
 	segas24_tile *tile = machine().device<segas24_tile>("tile");
-	tile->draw(m_sys24_bitmap, cliprect, 7, 0, 0);
-	tile->draw(m_sys24_bitmap, cliprect, 6, 0, 0);
-	tile->draw(m_sys24_bitmap, cliprect, 5, 0, 0);
-	tile->draw(m_sys24_bitmap, cliprect, 4, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 7, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 6, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 5, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 4, 0, 0);
 
 	copybitmap_trans(bitmap, m_sys24_bitmap, 0, 0, 0, 0, cliprect, 0);
 
@@ -2740,10 +2740,10 @@ UINT32 model2_state::screen_update_model2(screen_device &screen, bitmap_rgb32 &b
 	model2_3d_frame_end( this, bitmap, cliprect );
 
 	m_sys24_bitmap.fill(0, cliprect);
-	tile->draw(m_sys24_bitmap, cliprect, 3, 0, 0);
-	tile->draw(m_sys24_bitmap, cliprect, 2, 0, 0);
-	tile->draw(m_sys24_bitmap, cliprect, 1, 0, 0);
-	tile->draw(m_sys24_bitmap, cliprect, 0, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 3, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 2, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 1, 0, 0);
+	tile->draw(screen, m_sys24_bitmap, cliprect, 0, 0, 0);
 
 	copybitmap_trans(bitmap, m_sys24_bitmap, 0, 0, 0, 0, cliprect, 0);
 

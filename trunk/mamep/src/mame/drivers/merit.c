@@ -226,7 +226,7 @@ WRITE8_MEMBER(merit_state::palette_w)
 {
 	int co;
 
-	machine().primary_screen->update_now();
+	m_screen->update_now();
 	data &= 0x0f;
 
 	co = ((m_ram_attr[offset] & 0x7F) << 3) | (offset & 0x07);
@@ -307,7 +307,7 @@ static MC6845_UPDATE_ROW( update_row )
 WRITE_LINE_MEMBER(merit_state::hsync_changed)
 {
 	/* update any video up to the current scanline */
-	machine().primary_screen->update_now();
+	m_screen->update_now();
 }
 
 WRITE_LINE_MEMBER(merit_state::vsync_changed)
@@ -317,7 +317,6 @@ WRITE_LINE_MEMBER(merit_state::vsync_changed)
 
 static MC6845_INTERFACE( mc6845_intf )
 {
-	"screen",                   /* screen we are acting on */
 	false,                      /* show border area */
 	8,                          /* number of pixels per video memory address */
 	begin_update,               /* before pixel update callback */
@@ -1208,7 +1207,7 @@ static MACHINE_CONFIG_START( pitboss, merit_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 512, 0, 512, 256, 0, 256)   /* temporary, CRTC will configure screen */
 	MCFG_SCREEN_UPDATE_DEVICE("crtc", mc6845_device, screen_update)
 
-	MCFG_MC6845_ADD("crtc", MC6845, CRTC_CLOCK, mc6845_intf)
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)
 
 
 	/* sound hardware */

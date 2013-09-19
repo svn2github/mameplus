@@ -25,6 +25,7 @@
 // ======================> sms_light_phaser_device
 
 class sms_light_phaser_device : public device_t,
+							public device_video_interface,
 							public device_sms_control_port_interface
 {
 public:
@@ -34,12 +35,13 @@ public:
 	// optional information overrides
 	virtual ioport_constructor device_input_ports() const;
 
-	DECLARE_INPUT_CHANGED_MEMBER( th_pin_w );
+	DECLARE_CUSTOM_INPUT_MEMBER( th_pin_r );
 	DECLARE_INPUT_CHANGED_MEMBER( position_changed );
 
 protected:
 	// device-level overrides
 	virtual void device_start();
+	virtual void device_reset();
 
 	// device_sms_control_port_interface overrides
 	virtual UINT8 peripheral_r();
@@ -49,8 +51,7 @@ private:
 	required_ioport m_lphaser_x;
 	required_ioport m_lphaser_y;
 
-	int m_last_state;
-	screen_device *m_screen;
+	int m_sensor_last_state;
 	emu_timer *m_lphaser_timer;
 	static const device_timer_id TIMER_LPHASER = 0;
 

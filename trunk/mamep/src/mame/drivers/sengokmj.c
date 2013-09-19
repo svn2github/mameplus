@@ -57,7 +57,6 @@ RSSENGO2.72   chr.
 #include "sound/3812intf.h"
 #include "video/seibu_crtc.h"
 #include "machine/nvram.h"
-#include "drivlgcy.h"
 
 
 class sengokmj_state : public driver_device
@@ -279,12 +278,6 @@ void sengokmj_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap
 	}
 }
 
-/***********************************
-*
-* VIDEO_START/VIDEO_UPDATE functions
-*
-***********************************/
-
 void sengokmj_state::video_start()
 {
 	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(sengokmj_state::seibucrtc_sc0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
@@ -311,13 +304,13 @@ UINT32 sengokmj_state::screen_update_sengokmj(screen_device &screen, bitmap_ind1
 	m_sc3_tilemap->set_scrollx(0, (128) & 0x1ff );
 	m_sc3_tilemap->set_scrolly(0, (0) & 0x1ff );
 
-	if(SEIBU_CRTC_ENABLE_SC0) { m_sc0_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC0) { m_sc0_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 2); }
-	if(SEIBU_CRTC_ENABLE_SC2) { m_sc2_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC2) { m_sc2_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 1); }
-	if(SEIBU_CRTC_ENABLE_SC1) { m_sc1_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC1) { m_sc1_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 0); }
-	if(SEIBU_CRTC_ENABLE_SC3) { m_sc3_tilemap->draw(bitmap, cliprect, 0,0); }
+	if(SEIBU_CRTC_ENABLE_SC3) { m_sc3_tilemap->draw(screen, bitmap, cliprect, 0,0); }
 	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 3); }
 
 	return 0;
@@ -381,7 +374,7 @@ static ADDRESS_MAP_START( sengokmj_map, AS_PROGRAM, 16, sengokmj_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sengokmj_io_map, AS_IO, 16, sengokmj_state )
-	AM_RANGE(0x4000, 0x400f) AM_READWRITE_LEGACY(seibu_main_word_r, seibu_main_word_w)
+	AM_RANGE(0x4000, 0x400f) AM_DEVREADWRITE("seibu_sound", seibu_sound_device, main_word_r, main_word_w)
 	/*Areas from 8000-804f are for the custom Seibu CRTC.*/
 	AM_RANGE(0x8000, 0x804f) AM_DEVREADWRITE("crtc", seibu_crtc_device, read, write)
 
@@ -557,7 +550,6 @@ WRITE16_MEMBER( sengokmj_state::layer_scroll_w )
 
 SEIBU_CRTC_INTERFACE(crtc_intf)
 {
-	"screen",
 	DEVCB_DRIVER_MEMBER16(sengokmj_state, layer_en_w),
 	DEVCB_DRIVER_MEMBER16(sengokmj_state, layer_scroll_w),
 };
@@ -572,7 +564,6 @@ static MACHINE_CONFIG_START( sengokmj, sengokmj_state )
 
 	SEIBU_SOUND_SYSTEM_CPU(14318180/4)
 
-	MCFG_MACHINE_RESET(seibu_sound)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */

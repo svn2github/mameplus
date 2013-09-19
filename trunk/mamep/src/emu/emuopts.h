@@ -213,6 +213,8 @@ enum
 #define OPTION_DEBUGSCRIPT          "debugscript"
 
 // core misc options
+#define OPTION_DRC                  "drc"
+#define OPTION_DRC_USE_C            "drc_use_c"
 #define OPTION_BIOS                 "bios"
 #define OPTION_CHEAT                "cheat"
 #define OPTION_SKIP_GAMEINFO        "skip_gameinfo"
@@ -225,6 +227,10 @@ enum
 #define OPTION_AUTOBOOT_COMMAND     "autoboot_command"
 #define OPTION_AUTOBOOT_DELAY       "autoboot_delay"
 #define OPTION_AUTOBOOT_SCRIPT      "autoboot_script"
+
+#define OPTION_HTTP                 "http"
+#define OPTION_HTTP_PORT            "http_port"
+#define OPTION_HTTP_PATH            "http_path"
 
 #ifdef PLAYBACK_END_PAUSE
 #define OPTION_PLAYBACK_END_PAUSE   "playback_end_pause"
@@ -405,6 +411,8 @@ public:
 	bool update_in_pause() const { return bool_value(OPTION_UPDATEINPAUSE); }
 
 	// core misc options
+	bool drc() const { return bool_value(OPTION_DRC); }
+	bool drc_use_c() const { return bool_value(OPTION_DRC_USE_C); }
 	const char *bios() const { return value(OPTION_BIOS); }
 	bool cheat() const { return bool_value(OPTION_CHEAT); }
 	bool skip_gameinfo() const { return bool_value(OPTION_SKIP_GAMEINFO); }
@@ -417,6 +425,10 @@ public:
 	const char *autoboot_command() const { return value(OPTION_AUTOBOOT_COMMAND); }
 	int autoboot_delay() const { return int_value(OPTION_AUTOBOOT_DELAY); }
 	const char *autoboot_script() const { return value(OPTION_AUTOBOOT_SCRIPT); }
+
+	bool http() const { return bool_value(OPTION_HTTP); }
+	const char *http_port() const { return value(OPTION_HTTP_PORT); }
+	const char *http_path() const { return value(OPTION_HTTP_PATH); }
 
 	// device-specific options
 	const char *device_option(device_image_interface &image);

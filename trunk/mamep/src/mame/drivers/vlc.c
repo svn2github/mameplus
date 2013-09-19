@@ -233,7 +233,6 @@ static const UINT8 pal35[256] = {
 
 static MC6845_INTERFACE( mc6845_intf )
 {
-	"screen",   /* screen we are acting on */
 	false,      /* show border area */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
@@ -305,7 +304,7 @@ UINT32 nevada_state::screen_update_nevada(screen_device &screen, bitmap_ind16 &b
 {
 	// Todo
 /*
-    m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+    m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 */
 	return 0;
 }
@@ -660,7 +659,7 @@ static MACHINE_CONFIG_START( nevada, nevada_state )
 	MCFG_GFXDECODE(nevada)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_MC6845_ADD("crtc", MC6845, MC6845_CLOCK, mc6845_intf)
+	MCFG_MC6845_ADD("crtc", MC6845, "screen", MC6845_CLOCK, mc6845_intf)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")

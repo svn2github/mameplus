@@ -197,6 +197,7 @@ public:
 
 	// information getters
 	render_container &container() const { assert(m_container != NULL); return *m_container; }
+	bitmap_ind8 &priority() { return m_priority; }
 
 	// dynamic configuration
 	void configure(int width, int height, const rectangle &visarea, attoseconds_t frame_period);
@@ -286,6 +287,7 @@ private:
 	texture_format      m_texformat;                // texture format
 	render_texture *    m_texture[2];               // 2x textures for the screen bitmap
 	screen_bitmap       m_bitmap[2];                // 2x bitmaps for rendering
+	bitmap_ind8         m_priority;                 // priority bitmap
 	bitmap_ind64        m_burnin;                   // burn-in bitmap
 	UINT8               m_curbitmap;                // current bitmap index
 	UINT8               m_curtexture;               // current texture index
@@ -371,10 +373,12 @@ typedef device_type_iterator<&device_creator<screen_device>, screen_device> scre
 //  SCREEN DEVICE CONFIGURATION MACROS
 //**************************************************************************
 
+	// legacy
 #define SCREEN_UPDATE_NAME(name)        screen_update_##name
 #define SCREEN_UPDATE_IND16(name)       UINT32 SCREEN_UPDATE_NAME(name)(device_t *, screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 #define SCREEN_UPDATE_RGB32(name)       UINT32 SCREEN_UPDATE_NAME(name)(device_t *, screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 
+	// legacy
 #define SCREEN_VBLANK_NAME(name)        screen_vblank_##name
 #define SCREEN_VBLANK(name)             void SCREEN_VBLANK_NAME(name)(device_t *, screen_device &screen, bool vblank_on)
 

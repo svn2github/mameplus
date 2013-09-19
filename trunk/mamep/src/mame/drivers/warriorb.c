@@ -425,7 +425,6 @@ WRITE_LINE_MEMBER(warriorb_state::irqhandler)
 
 static const tc0100scn_interface darius2d_tc0100scn_intf_l =
 {
-	"lscreen",
 	1, 3,       /* gfxnum, txnum */
 	4, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -435,7 +434,6 @@ static const tc0100scn_interface darius2d_tc0100scn_intf_l =
 
 static const tc0100scn_interface darius2d_tc0100scn_intf_r =
 {
-	"rscreen",
 	2, 3,       /* gfxnum, txnum */
 	4, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -445,7 +443,6 @@ static const tc0100scn_interface darius2d_tc0100scn_intf_r =
 
 static const tc0100scn_interface warriorb_tc0100scn_intf_l =
 {
-	"lscreen",
 	1, 3,       /* gfxnum, txnum */
 	4, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -455,7 +452,6 @@ static const tc0100scn_interface warriorb_tc0100scn_intf_l =
 
 static const tc0100scn_interface warriorb_tc0100scn_intf_r =
 {
-	"rscreen",
 	2, 3,       /* gfxnum, txnum */
 	4, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */

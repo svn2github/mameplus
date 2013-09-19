@@ -171,8 +171,6 @@ Adder hardware:
 #include "sc2_dmd.lh"
 #include "drwho.lh"
 #include "machine/bfm_comn.h"
-#include "drivlgcy.h"
-#include "scrlegcy.h"
 
 
 class bfm_sc2_state : public driver_device
@@ -182,12 +180,13 @@ public:
 		: driver_device(mconfig, type, tag),
 			m_vfd0(*this, "vfd0"),
 			m_vfd1(*this, "vfd1"),
+			m_dm01(*this, "dm01"),
 			m_maincpu(*this, "maincpu"),
-			m_upd7759(*this, "upd"),
-			m_adder2(*this, "adder2") { }
+			m_upd7759(*this, "upd") { }
 
 	optional_device<bfm_bd1_t> m_vfd0;
 	optional_device<bfm_bd1_t> m_vfd1;
+	optional_device<bfmdm01_device> m_dm01;
 
 	int m_sc2gui_update_mmtr;
 	UINT8 *m_nvram;
@@ -270,10 +269,6 @@ public:
 	DECLARE_READ8_MEMBER(uart2data_r);
 	DECLARE_WRITE8_MEMBER(uart2ctrl_w);
 	DECLARE_WRITE8_MEMBER(uart2data_w);
-	DECLARE_WRITE8_MEMBER(vid_uart_tx_w);
-	DECLARE_WRITE8_MEMBER(vid_uart_ctrl_w);
-	DECLARE_READ8_MEMBER(vid_uart_rx_r);
-	DECLARE_READ8_MEMBER(vid_uart_ctrl_r);
 	DECLARE_READ8_MEMBER(key_r);
 	DECLARE_READ8_MEMBER(vfd_status_r);
 	DECLARE_WRITE8_MEMBER(vfd1_bd1_w);
@@ -321,7 +316,6 @@ public:
 	void sc2awpdmd_common_init(int reels, int decrypt);
 	required_device<cpu_device> m_maincpu;
 	required_device<upd7759_device> m_upd7759;
-	optional_device<cpu_device> m_adder2;
 };
 
 
@@ -1027,40 +1021,8 @@ WRITE8_MEMBER(bfm_sc2_state::uart2data_w)
 	UART_LOG(("uart2:%x\n", data));
 }
 
-///////////////////////////////////////////////////////////////////////////
-
-WRITE8_MEMBER(bfm_sc2_state::vid_uart_tx_w)
-{
-	adder2_send(data);
-	m_adder2->set_input_line(M6809_IRQ_LINE, HOLD_LINE );
-
-	LOG_SERIAL(("sadder  %02X  (%c)\n",data, data ));
-}
 
 ///////////////////////////////////////////////////////////////////////////
-
-WRITE8_MEMBER(bfm_sc2_state::vid_uart_ctrl_w)
-{
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-READ8_MEMBER(bfm_sc2_state::vid_uart_rx_r)
-{
-	int data = adder2_receive();
-
-	LOG_SERIAL(("radder:  %02X(%c)\n",data, data ));
-
-	return data;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-READ8_MEMBER(bfm_sc2_state::vid_uart_ctrl_r)
-{
-	return adder2_status();
-}
-
 ///////////////////////////////////////////////////////////////////////////
 
 READ8_MEMBER(bfm_sc2_state::key_r)
@@ -1169,7 +1131,7 @@ READ8_MEMBER(bfm_sc2_state::vfd_status_r)
 	if ( !m_upd7759->busy_r() ) result |= 0x80;
 
 	if (machine().device("matrix"))
-		if ( BFM_dm01_busy() ) result |= 0x40;
+		if ( m_dm01->busy() ) result |= 0x40;
 
 	return result;
 }
@@ -1187,7 +1149,7 @@ WRITE8_MEMBER(bfm_sc2_state::vfd_reset_w)
 
 WRITE8_MEMBER(bfm_sc2_state::vfd1_dmd_w)
 {
-	BFM_dm01_writedata(machine(),data);
+	m_dm01->writedata(data);
 }
 
 //
@@ -1490,8 +1452,8 @@ static ADDRESS_MAP_START( memmap_vid, AS_PROGRAM, 8, bfm_sc2_state )
 	AM_RANGE(0x3C00, 0x3C07) AM_READ(key_r   )
 	AM_RANGE(0x3C80, 0x3C80) AM_WRITE(e2ram_w )
 
-	AM_RANGE(0x3E00, 0x3E00) AM_READWRITE(vid_uart_ctrl_r, vid_uart_ctrl_w)     // video uart control reg
-	AM_RANGE(0x3E01, 0x3E01) AM_READWRITE(vid_uart_rx_r, vid_uart_tx_w)         // video uart data  reg
+	AM_RANGE(0x3E00, 0x3E00) AM_DEVREADWRITE("adder2", bfm_adder2_device, vid_uart_ctrl_r, vid_uart_ctrl_w)     // video uart control reg
+	AM_RANGE(0x3E01, 0x3E01) AM_DEVREADWRITE("adder2", bfm_adder2_device, vid_uart_rx_r,   vid_uart_tx_w)       // video uart data  reg
 ADDRESS_MAP_END
 
 // input ports for pyramid ////////////////////////////////////////
@@ -2164,22 +2126,7 @@ static MACHINE_CONFIG_START( scorpion2_vid, bfm_sc2_state )
 	MCFG_NVRAM_ADD_CUSTOM_DRIVER("e2ram", bfm_sc2_state, e2ram_init)
 	MCFG_DEFAULT_LAYOUT(layout_sc2_vid)
 
-	MCFG_SCREEN_ADD("adder", RASTER)
-	MCFG_SCREEN_SIZE( 400, 280)
-	MCFG_SCREEN_VISIBLE_AREA(  0, 400-1, 0, 280-1)
-	MCFG_SCREEN_REFRESH_RATE(50)
-
-	MCFG_VIDEO_START( adder2)
-	MCFG_SCREEN_UPDATE_STATIC(adder2)
-	MCFG_VIDEO_RESET( adder2)
-
-	MCFG_PALETTE_LENGTH(16)
-	MCFG_PALETTE_INIT(adder2)
-	MCFG_GFXDECODE(adder2)
-
-	MCFG_CPU_ADD("adder2", M6809, MASTER_CLOCK/4 )  // adder2 board 6809 CPU at 2 Mhz
-	MCFG_CPU_PROGRAM_MAP(adder2_memmap)             // setup adder2 board memorymap
-	MCFG_CPU_VBLANK_INT("adder", adder2_vbl)        // board has a VBL IRQ
+	MCFG_BFM_ADDER2_ADD("adder2")
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)
@@ -2289,7 +2236,6 @@ void bfm_sc2_state::adder2_common_init()
 DRIVER_INIT_MEMBER(bfm_sc2_state,quintoon)
 {
 	sc2_common_init( 1);
-	adder2_decode_char_roms(machine());
 	MechMtr_config(machine(),8);                    // setup mech meters
 
 	m_has_hopper = 0;
@@ -2310,7 +2256,6 @@ DRIVER_INIT_MEMBER(bfm_sc2_state,quintoon)
 DRIVER_INIT_MEMBER(bfm_sc2_state,pyramid)
 {
 	sc2_common_init(1);
-	adder2_decode_char_roms(machine());         // decode GFX roms
 	adder2_common_init();
 
 	m_has_hopper = 1;
@@ -2327,7 +2272,6 @@ DRIVER_INIT_MEMBER(bfm_sc2_state,pyramid)
 DRIVER_INIT_MEMBER(bfm_sc2_state,sltsbelg)
 {
 	sc2_common_init(1);
-	adder2_decode_char_roms(machine());         // decode GFX roms
 	adder2_common_init();
 
 	m_has_hopper = 1;
@@ -2341,7 +2285,6 @@ DRIVER_INIT_MEMBER(bfm_sc2_state,sltsbelg)
 DRIVER_INIT_MEMBER(bfm_sc2_state,adder_dutch)
 {
 	sc2_common_init(1);
-	adder2_decode_char_roms(machine());         // decode GFX roms
 	adder2_common_init();
 
 	m_has_hopper = 0;
@@ -2359,7 +2302,6 @@ DRIVER_INIT_MEMBER(bfm_sc2_state,adder_dutch)
 DRIVER_INIT_MEMBER(bfm_sc2_state,gldncrwn)
 {
 	sc2_common_init(1);
-	adder2_decode_char_roms(machine());         // decode GFX roms
 	adder2_common_init();
 
 	m_has_hopper = 0;
@@ -3828,9 +3770,10 @@ static MACHINE_CONFIG_START( scorpion2_dm01, bfm_sc2_state )
 
 	/* video hardware */
 	MCFG_DEFAULT_LAYOUT(layout_sc2_dmd)
+	MCFG_DM01_ADD("dm01", dm01_interface)
 	MCFG_CPU_ADD("matrix", M6809, 2000000 )             /* matrix board 6809 CPU at 2 Mhz ?? I don't know the exact freq.*/
 	MCFG_CPU_PROGRAM_MAP(bfm_dm01_memmap)
-	MCFG_CPU_PERIODIC_INT(bfm_dm01_vbl, 1500 )          /* generate 1500 NMI's per second ?? what is the exact freq?? */
+	MCFG_CPU_PERIODIC_INT_DRIVER(bfm_sc2_state, nmi_line_assert, 1500 )          /* generate 1500 NMI's per second ?? what is the exact freq?? */
 MACHINE_CONFIG_END
 
 void bfm_sc2_state::sc2awp_common_init(int reels, int decrypt)
@@ -3850,7 +3793,6 @@ void bfm_sc2_state::sc2awp_common_init(int reels, int decrypt)
 void bfm_sc2_state::sc2awpdmd_common_init(int reels, int decrypt)
 {
 	int n;
-	BFM_dm01_config(machine(), &dm01_interface);
 	sc2_common_init(decrypt);
 	/* setup n default 96 half step reels */
 
@@ -5401,7 +5343,7 @@ ROM_START( sc2cpe3 )
 	ROM_LOAD( "club-public-enemy-no1_std_ac_200pnd_ass.bin", 0x0000, 0x010000, CRC(5704e52d) SHA1(dfae48734794cea2e9a952d808dedb96fd5204b3) )
 
 	ROM_REGION( 0x20000, "matrix", 0 )
-	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) )
+	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) ) // seems to be from a cops+robbers instead, will say 'wrong display prom' during attract cycle
 
 	sc2_cpe_sound_alt2
 ROM_END
@@ -5411,7 +5353,7 @@ ROM_START( sc2cpe3p )
 	ROM_LOAD( "club-public-enemy-no1_dat_ac_200pnd_ass.bin", 0x0000, 0x010000, CRC(fec925a3) SHA1(5ce3b6f1236f511ae8975c7ecd1549e8d427a245) )
 
 	ROM_REGION( 0x20000, "matrix", 0 )
-	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) )
+	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) ) // see above comment
 
 	sc2_cpe_sound_alt2
 ROM_END
@@ -5421,7 +5363,7 @@ ROM_START( sc2cpe4 )
 	ROM_LOAD( "95750273.p1", 0x0000, 0x010000, CRC(950da13c) SHA1(2c544e06112969f7914a5b4fd15e6b0dfedf6b0b) )
 
 	ROM_REGION( 0x20000, "matrix", 0 )
-	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) )
+	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) ) // see above comment
 
 	sc2_cpe_sound_alt2
 ROM_END
@@ -5431,7 +5373,7 @@ ROM_START( sc2cpe4p )
 	ROM_LOAD( "club-public-enemy-no1_dat_fe_ac_200pnd_p65_rot_ass.bin", 0x0000, 0x010000, CRC(8d5ff953) SHA1(bdf6b5e014c46f6abac792a5913e98cb897b2a73) )
 
 	ROM_REGION( 0x20000, "matrix", 0 )
-	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) )
+	ROM_LOAD( "matrix.bin", 0x0000, 0x010000, CRC(64014f73) SHA1(67d44db91944738fcadc38bfd0d2b7c0536adb9a) ) // see above comment
 
 	sc2_cpe_sound_alt2
 ROM_END

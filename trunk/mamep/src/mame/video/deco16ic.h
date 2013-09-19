@@ -22,7 +22,6 @@ typedef int (*deco16_bank_cb)( const int bank );
 
 struct deco16ic_interface
 {
-	const char         *m_screen_tag;
 	int                m_split;
 	int                m_full_width12;
 
@@ -34,7 +33,8 @@ struct deco16ic_interface
 };
 
 class deco16ic_device : public device_t,
-										public deco16ic_interface
+						public device_video_interface,
+						public deco16ic_interface
 {
 public:
 	deco16ic_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
@@ -65,17 +65,17 @@ public:
 	void pf_update(const UINT16 *rowscroll_1_ptr, const UINT16 *rowscroll_2_ptr);
 
 	template<class _BitmapClass>
-	void tilemap_1_draw_common(_BitmapClass &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
+	void tilemap_1_draw_common(screen_device &screen, _BitmapClass &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
 	template<class _BitmapClass>
-	void tilemap_2_draw_common(_BitmapClass &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
-	void tilemap_1_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
-	void tilemap_1_draw(bitmap_rgb32 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
-	void tilemap_2_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
-	void tilemap_2_draw(bitmap_rgb32 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
+	void tilemap_2_draw_common(screen_device &screen, _BitmapClass &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
+	void tilemap_1_draw(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
+	void tilemap_1_draw(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
+	void tilemap_2_draw(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
+	void tilemap_2_draw(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, int flags, UINT32 priority);
 
 	/* used by boogwing, nitrobal */
-	void tilemap_12_combine_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority, int is_tattoo = false);
-	void tilemap_12_combine_draw(bitmap_rgb32 &bitmap, const rectangle &cliprect, int flags, UINT32 priority, int is_tattoo = false);
+	void tilemap_12_combine_draw(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority, int is_tattoo = false);
+	void tilemap_12_combine_draw(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, int flags, UINT32 priority, int is_tattoo = false);
 
 	/* used by robocop2 */
 	void set_tilemap_colour_mask(int tmap, int mask);
@@ -92,6 +92,7 @@ public:
 
 	template<class _BitmapClass>
 	void custom_tilemap_draw(
+	screen_device &screen,
 	_BitmapClass &bitmap,
 	const rectangle &cliprect,
 	tilemap_t *tilemap0_8x8,
@@ -119,8 +120,6 @@ protected:
 
 private:
 	// internal state
-	//screen_device *m_screen;
-
 	UINT16 *m_pf1_data, *m_pf2_data;
 	UINT16 *m_pf12_control;
 
@@ -158,5 +157,6 @@ extern const device_type DECO16IC;
 	MCFG_DEVICE_ADD(_tag, DECO16IC, 0) \
 	MCFG_DEVICE_CONFIG(_interface)
 
+#define MCFG_DECO16IC_SET_SCREEN MCFG_VIDEO_SET_SCREEN
 
 #endif

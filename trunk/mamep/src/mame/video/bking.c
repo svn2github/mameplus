@@ -221,14 +221,14 @@ TILE_GET_INFO_MEMBER(bking_state::get_tile_info)
 void bking_state::video_start()
 {
 	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bking_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
-	machine().primary_screen->register_screen_bitmap(m_colmap_bg);
-	machine().primary_screen->register_screen_bitmap(m_colmap_ball);
+	m_screen->register_screen_bitmap(m_colmap_bg);
+	m_screen->register_screen_bitmap(m_colmap_ball);
 }
 
 
 UINT32 bking_state::screen_update_bking(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
+	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 
 	/* draw the balls */
 	drawgfx_transpen(bitmap, cliprect, machine().gfx[2],
@@ -290,7 +290,7 @@ void bking_state::screen_eof_bking(screen_device &screen, bool state)
 		m_bg_tilemap->set_scrollx(0, flip_screen() ? -xld : xld);
 		m_bg_tilemap->set_scrolly(0, flip_screen() ? -yld : yld);
 
-		m_bg_tilemap->draw(m_colmap_bg, rect, 0, 0);
+		m_bg_tilemap->draw(screen, m_colmap_bg, rect, 0, 0);
 
 		m_bg_tilemap->set_scrollx(0, 0);
 		m_bg_tilemap->set_scrolly(0, 0);

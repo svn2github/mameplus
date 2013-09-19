@@ -56,7 +56,6 @@ YM2203C
 #include "video/v9938.h"
 #include "machine/i8255.h"
 #include "sound/2203intf.h"
-#include "drivlgcy.h"
 
 
 class sfkick_state : public driver_device
@@ -500,9 +499,6 @@ static MACHINE_CONFIG_START( sfkick, sfkick_state )
 	MCFG_PALETTE_LENGTH(512)
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
-
-
-	MCFG_PALETTE_INIT( v9938 )
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("ym1", YM2203, MASTER_CLOCK/6)

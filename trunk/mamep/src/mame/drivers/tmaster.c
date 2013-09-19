@@ -104,7 +104,7 @@ To Do:
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "sound/okim6295.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "machine/microtch.h"
 #include "machine/n68681.h"
 #include "machine/nvram.h"
@@ -332,7 +332,7 @@ VIDEO_START_MEMBER(tmaster_state,tmaster)
 	{
 		for (buffer = 0; buffer < 2; buffer++)
 		{
-			machine().primary_screen->register_screen_bitmap(m_bitmap[layer][buffer]);
+			m_screen->register_screen_bitmap(m_bitmap[layer][buffer]);
 			m_bitmap[layer][buffer].fill(0xff);
 		}
 	}
@@ -571,19 +571,6 @@ ADDRESS_MAP_END
 
 // NVRAM (5 x EEPROM)
 
-static const eeprom_interface galgames_eeprom_interface =
-{
-	10,                 // address bits 10
-	8,                  // data bits    8
-	"*1100",            // read         110 0aaaaaaaaaa
-	"*1010",            // write        101 0aaaaaaaaaa dddddddd
-	"*1110",            // erase        111 0aaaaaaaaaa
-	"*10000xxxxxxxxx",  // lock         100 00xxxxxxxxx
-	"*10011xxxxxxxxx",  // unlock       100 11xxxxxxxxx
-	0,                  // multi_read
-	1                   // reset_delay
-};
-
 #define GALGAMES_EEPROM_BIOS  "eeprom_bios"
 #define GALGAMES_EEPROM_CART1 "eeprom_cart1"
 #define GALGAMES_EEPROM_CART2 "eeprom_cart2"
@@ -594,9 +581,9 @@ static const char *const galgames_eeprom_names[5] = { GALGAMES_EEPROM_BIOS, GALG
 
 READ16_MEMBER(tmaster_state::galgames_eeprom_r)
 {
-	eeprom_device *eeprom = machine().device<eeprom_device>(galgames_eeprom_names[m_galgames_cart]);
+	eeprom_serial_93cxx_device *eeprom = machine().device<eeprom_serial_93cxx_device>(galgames_eeprom_names[m_galgames_cart]);
 
-	return eeprom->read_bit() ? 0x80 : 0x00;
+	return eeprom->do_read() ? 0x80 : 0x00;
 }
 
 WRITE16_MEMBER(tmaster_state::galgames_eeprom_w)
@@ -606,13 +593,13 @@ WRITE16_MEMBER(tmaster_state::galgames_eeprom_w)
 
 	if ( ACCESSING_BITS_0_7 )
 	{
-		eeprom_device *eeprom = machine().device<eeprom_device>(galgames_eeprom_names[m_galgames_cart]);
+		eeprom_serial_93cxx_device *eeprom = machine().device<eeprom_serial_93cxx_device>(galgames_eeprom_names[m_galgames_cart]);
 
 		// latch the bit
-		eeprom->write_bit(data & 0x0001);
+		eeprom->di_write(data & 0x0001);
 
 		// clock line asserted: write latch or select next bit to read
-		eeprom->set_clock_line((data & 0x0002) ? ASSERT_LINE : CLEAR_LINE );
+		eeprom->clk_write((data & 0x0002) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
@@ -679,7 +666,7 @@ WRITE16_MEMBER(tmaster_state::galgames_cart_sel_w)
 		{
 			case 0x07:      // 7 resets the eeprom
 				for (i = 0; i < 5; i++)
-					machine().device<eeprom_device>(galgames_eeprom_names[i])->set_cs_line(ASSERT_LINE);
+					machine().device<eeprom_serial_93cxx_device>(galgames_eeprom_names[i])->cs_write(CLEAR_LINE);
 				break;
 
 			case 0x00:
@@ -687,12 +674,12 @@ WRITE16_MEMBER(tmaster_state::galgames_cart_sel_w)
 			case 0x02:
 			case 0x03:
 			case 0x04:
-				machine().device<eeprom_device>(galgames_eeprom_names[data & 0xff])->set_cs_line(CLEAR_LINE);
+				machine().device<eeprom_serial_93cxx_device>(galgames_eeprom_names[data & 0xff])->cs_write(ASSERT_LINE);
 				galgames_update_rombank(data & 0xff);
 				break;
 
 			default:
-				machine().device<eeprom_device>(galgames_eeprom_names[0])->set_cs_line(CLEAR_LINE);
+				machine().device<eeprom_serial_93cxx_device>(galgames_eeprom_names[0])->cs_write(ASSERT_LINE);
 				galgames_update_rombank(0);
 				logerror("%06x: unknown cart sel = %04x\n", space.device().safe_pc(), data);
 				break;
@@ -968,11 +955,11 @@ static MACHINE_CONFIG_START( galgames, tmaster_state )
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", tmaster_state, tm3k_interrupt, "screen", 0, 1)
 
 	// 5 EEPROMs on the motherboard (for BIOS + 4 Carts)
-	MCFG_EEPROM_ADD(GALGAMES_EEPROM_BIOS,  galgames_eeprom_interface)
-	MCFG_EEPROM_ADD(GALGAMES_EEPROM_CART1, galgames_eeprom_interface)
-	MCFG_EEPROM_ADD(GALGAMES_EEPROM_CART2, galgames_eeprom_interface)
-	MCFG_EEPROM_ADD(GALGAMES_EEPROM_CART3, galgames_eeprom_interface)
-	MCFG_EEPROM_ADD(GALGAMES_EEPROM_CART4, galgames_eeprom_interface)
+	MCFG_EEPROM_SERIAL_93C76_8BIT_ADD(GALGAMES_EEPROM_BIOS)
+	MCFG_EEPROM_SERIAL_93C76_8BIT_ADD(GALGAMES_EEPROM_CART1)
+	MCFG_EEPROM_SERIAL_93C76_8BIT_ADD(GALGAMES_EEPROM_CART2)
+	MCFG_EEPROM_SERIAL_93C76_8BIT_ADD(GALGAMES_EEPROM_CART3)
+	MCFG_EEPROM_SERIAL_93C76_8BIT_ADD(GALGAMES_EEPROM_CART4)
 
 	MCFG_MACHINE_RESET_OVERRIDE(tmaster_state, galgames )
 

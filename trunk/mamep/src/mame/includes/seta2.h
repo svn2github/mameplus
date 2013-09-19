@@ -1,5 +1,5 @@
 #include "sound/okim9810.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "sound/x1_010.h"
 #include "machine/tmp68301.h"
 
@@ -31,7 +31,7 @@ public:
 
 	optional_device<x1_010_device> m_x1;
 	optional_device<okim9810_device> m_oki;
-	optional_device<eeprom_device> m_eeprom;
+	optional_device<eeprom_serial_93cxx_device> m_eeprom;
 
 	int m_xoffset;
 	int m_yoffset;

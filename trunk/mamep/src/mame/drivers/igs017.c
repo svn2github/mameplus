@@ -455,11 +455,11 @@ UINT32 igs017_state::screen_update_igs017(screen_device &screen, bitmap_ind16 &b
 	if (m_video_disable)
 		return 0;
 
-	if (layers_ctrl & 1)    m_bg_tilemap->draw(bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	if (layers_ctrl & 1)    m_bg_tilemap->draw(screen, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
 
 	if (layers_ctrl & 4)    draw_sprites(bitmap, cliprect);
 
-	if (layers_ctrl & 2)    m_fg_tilemap->draw(bitmap, cliprect, 0, 0);
+	if (layers_ctrl & 2)    m_fg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 
 	return 0;
 }
@@ -1567,7 +1567,7 @@ READ16_MEMBER(igs017_state::sdmg2_magic_r)
 	{
 		case 0x00:
 		{
-			UINT16 hopper_bit = (m_hopper && ((machine().primary_screen->frame_number()/10)&1)) ? 0x0000 : 0x0001;
+			UINT16 hopper_bit = (m_hopper && ((m_screen->frame_number()/10)&1)) ? 0x0000 : 0x0001;
 			return ioport("COINS")->read() | hopper_bit;
 		}
 
@@ -1688,7 +1688,7 @@ READ16_MEMBER(igs017_state::mgdha_magic_r)
 
 		case 0x03:
 		{
-			UINT16 hopper_bit = (m_hopper && ((machine().primary_screen->frame_number()/10)&1)) ? 0x0000 : 0x0001;
+			UINT16 hopper_bit = (m_hopper && ((m_screen->frame_number()/10)&1)) ? 0x0000 : 0x0001;
 			return ioport("COINS")->read() | hopper_bit;
 		}
 
@@ -1772,7 +1772,7 @@ READ8_MEMBER(igs017_state::tjsb_input_r)
 		case 0x02:  return ioport("COINS")->read();
 		case 0x03:
 		{
-			UINT8 hopper_bit = (m_hopper && ((machine().primary_screen->frame_number()/10)&1)) ? 0x00 : 0x20;
+			UINT8 hopper_bit = (m_hopper && ((m_screen->frame_number()/10)&1)) ? 0x00 : 0x20;
 			return ioport("HOPPER")->read() | hopper_bit;
 		}
 
@@ -2215,7 +2215,7 @@ READ16_MEMBER(igs017_state::lhzb2a_input_r)
 
 		case 0x02:
 		{
-			UINT16 hopper_bit = (m_hopper && ((machine().primary_screen->frame_number()/10)&1)) ? 0x0000 : 0x0002;
+			UINT16 hopper_bit = (m_hopper && ((m_screen->frame_number()/10)&1)) ? 0x0000 : 0x0002;
 			return (ioport("DSW1")->read() << 8) | ioport("COINS")->read() | hopper_bit;
 		}
 

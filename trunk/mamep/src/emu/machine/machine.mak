@@ -16,6 +16,16 @@ MACHINEOBJ = $(EMUOBJ)/machine
 
 #-------------------------------------------------
 #
+#@src/emu/machine/40105.h,MACHINES += CMOS40105
+#-------------------------------------------------
+
+ifneq ($(filter CMOS40105,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/40105.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/machine/53c7xx.h,MACHINES += NCR53C7XX
 #-------------------------------------------------
 
@@ -236,6 +246,15 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/machine/aicartc.h,MACHINES += AICARTC
+#-------------------------------------------------
+
+ifneq ($(filter AICARTC,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/aicartc.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/machine/am53cf96.h,MACHINES += AM53CF96
 #-------------------------------------------------
 
@@ -419,10 +438,14 @@ endif
 #-------------------------------------------------
 #
 #@src/emu/machine/eeprom.h,MACHINES += EEPROMDEV
+#@src/emu/machine/eepromser.h,MACHINES += EEPROMDEV
+#@src/emu/machine/eeprompar.h,MACHINES += EEPROMDEV
 #-------------------------------------------------
 
 ifneq ($(filter EEPROMDEV,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/eeprom.o
+MACHINEOBJS += $(MACHINEOBJ)/eepromser.o
+MACHINEOBJS += $(MACHINEOBJ)/eeprompar.o
 endif
 
 #-------------------------------------------------
@@ -526,13 +549,16 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/machine/idectrl.h,MACHINES += IDE
-#@src/emu/machine/idehd.h,MACHINES += IDE
+#@src/emu/machine/atadev.h,MACHINES += IDE
+#@src/emu/machine/ataintf.h,MACHINES += IDE
 #-------------------------------------------------
 
 ifneq ($(filter IDE,$(MACHINES)),)
-MACHINEOBJS += $(MACHINEOBJ)/ataintf.o
 MACHINEOBJS += $(MACHINEOBJ)/atadev.o
+MACHINEOBJS += $(MACHINEOBJ)/atahle.o
+MACHINEOBJS += $(MACHINEOBJ)/ataintf.o
+MACHINEOBJS += $(MACHINEOBJ)/atapicdr.o
+MACHINEOBJS += $(MACHINEOBJ)/atapihle.o
 MACHINEOBJS += $(MACHINEOBJ)/idectrl.o
 MACHINEOBJS += $(MACHINEOBJ)/idehd.o
 MACHINEOBJS += $(MACHINEOBJ)/vt83c461.o
@@ -1094,6 +1120,15 @@ endif
 
 ifneq ($(filter RTC9701,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/rtc9701.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/machine/s2636.h,MACHINES += S2636
+#-------------------------------------------------
+
+ifneq ($(filter S2636,$(MACHINES)),)
+MACHINEOBJS+= $(MACHINEOBJ)/s2636.o
 endif
 
 #-------------------------------------------------

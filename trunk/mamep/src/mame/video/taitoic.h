@@ -45,8 +45,6 @@ struct tc0080vco_interface
 
 struct tc0100scn_interface
 {
-	const char         *m_screen_tag;
-
 	int                m_gfxnum;
 	int                m_txnum;
 
@@ -123,7 +121,7 @@ public:
 	void tilemap_update();
 	void tilemap_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority);
 	void tilemap_draw_offset(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority, int xoffs, int yoffs);
-	void topspeed_custom_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority, UINT16 *color_ctrl_ram);
+	void topspeed_custom_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, bitmap_ind8 &priority_bitmap, UINT32 priority, UINT16 *color_ctrl_ram);
 
 	/* For Topspeed */
 	void tilemap_draw_special(bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority, UINT16 *ram);
@@ -255,6 +253,7 @@ public:
 extern const device_type TC0080VCO;
 
 class tc0100scn_device : public device_t,
+							public device_video_interface,
 							public tc0100scn_interface
 {
 public:
@@ -327,8 +326,6 @@ private:
 	INT32        m_bg0_colbank, m_bg1_colbank, m_tx_colbank;
 	int          m_dblwidth;
 
-	screen_device *m_screen;
-
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	TILE_GET_INFO_MEMBER(get_tx_tile_info);
@@ -356,13 +353,13 @@ public:
 	DECLARE_WRITE16_MEMBER( tc0280grd_word_w );
 	DECLARE_WRITE16_MEMBER( tc0280grd_ctrl_word_w );
 	void tc0280grd_tilemap_update(int base_color);
-	void tc0280grd_zoom_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority);
+	void tc0280grd_zoom_draw(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority);
 
 	DECLARE_READ16_MEMBER( tc0430grw_word_r );
 	DECLARE_WRITE16_MEMBER( tc0430grw_word_w );
 	DECLARE_WRITE16_MEMBER( tc0430grw_ctrl_word_w );
 	void tc0430grw_tilemap_update(int base_color);
-	void tc0430grw_zoom_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority);
+	void tc0430grw_zoom_draw(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority);
 
 protected:
 	// device-level overrides

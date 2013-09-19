@@ -119,7 +119,6 @@ static ADDRESS_MAP_START( boogwing_map, AS_PROGRAM, 16, boogwing_state )
 //  AM_RANGE(0x24e6c0, 0x24e6c1) AM_READ_PORT("DSW")
 //  AM_RANGE(0x24e138, 0x24e139) AM_READ_PORT("SYSTEM")
 //  AM_RANGE(0x24e344, 0x24e345) AM_READ_PORT("INPUTS")
-//  /*READD AM_RANGE(0x24e000, 0x24e7ff) AM_WRITE_LEGACY(deco16_104_prot_w) AM_SHARE("prot16ram") */
 	AM_RANGE(0x24e000, 0x24efff) AM_READWRITE(boogwing_protection_region_0_104_r,boogwing_protection_region_0_104_w) AM_SHARE("prot16ram") /* Protection device */
 
 	AM_RANGE(0x260000, 0x26000f) AM_DEVWRITE("tilegen1", deco16ic_device, pf_control_w)
@@ -311,14 +310,8 @@ static int boogwing_bank_callback2( const int bank )
 	return offset;
 }
 
-static const decocomn_interface boogwing_decocomn_intf =
-{
-	"screen",
-};
-
 static const deco16ic_interface boogwing_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x1f, /* trans masks (pf2 has 5bpp graphics) */
 	0, 0,  /* color base (pf2 is non default) */
@@ -330,7 +323,6 @@ static const deco16ic_interface boogwing_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface boogwing_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f,
 	0, 16,
@@ -366,7 +358,7 @@ static MACHINE_CONFIG_START( boogwing, boogwing_state )
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram2")
 
-	MCFG_DECOCOMN_ADD("deco_common", boogwing_decocomn_intf)
+	MCFG_DECOCOMN_ADD("deco_common")
 
 	MCFG_DECO16IC_ADD("tilegen1", boogwing_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", boogwing_deco16ic_tilegen2_intf)

@@ -204,6 +204,7 @@ $(MESSOBJ)/sega.a:              \
 	$(MESS_MACHINE)/md_stm95.o  \
 	$(MESS_MACHINE)/md_svp.o    \
 	$(MESS_DRIVERS)/megadriv.o  \
+	$(MESS_DRIVERS)/segapico.o  \
 	$(MESS_MACHINE)/sat_slot.o  \
 	$(MESS_MACHINE)/sat_rom.o   \
 	$(MESS_MACHINE)/sat_dram.o  \
@@ -218,6 +219,8 @@ $(MESSOBJ)/sega.a:              \
 	$(MESS_MACHINE)/sms_rfu.o     \
 	$(MESS_MACHINE)/sega8_slot.o \
 	$(MESS_MACHINE)/sega8_rom.o \
+	$(MESS_MACHINE)/smsexp.o    \
+	$(MESS_MACHINE)/sms_gender.o  \
 	$(MESS_DRIVERS)/sms.o       \
 
 $(MESSOBJ)/snk.a:               \

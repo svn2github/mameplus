@@ -35,7 +35,6 @@ The sprite RAM format is very similar to the 053245.
 #include "emu.h"
 #include "k053246_k053247_k055673.h"
 #include "konami_helper.h"
-#include "devlegcy.h"
 
 #define VERBOSE 0
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
@@ -64,9 +63,7 @@ void k053247_device::clear_all()
 	m_callback = 0;
 
 	m_memory_region = 0;
-	m_screen = 0;
 
-	m_intf_screen = 0;
 	m_intf_gfx_memory_region = 0;
 	m_intf_gfx_num = -1;
 	m_intf_plane_order = 0;
@@ -988,8 +985,6 @@ void k055673_device::device_start()
 		return;
 
 	alt_k055673_vh_start(machine(), m_intf_gfx_memory_region, m_intf_plane_order, m_intf_dx, m_intf_dy, m_intf_callback);
-
-	m_screen = machine().device<screen_device>(m_intf_screen);
 }
 
 //-------------------------------------------------
@@ -1001,13 +996,15 @@ void k055673_device::device_start()
 const device_type K053246 = &device_creator<k053247_device>;
 
 k053247_device::k053247_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, K053246, "Konami 053246 & 053247", tag, owner, clock, "k053247", __FILE__)
+	: device_t(mconfig, K053246, "Konami 053246 & 053247", tag, owner, clock, "k053247", __FILE__),
+		device_video_interface(mconfig, *this)
 {
 	clear_all();
 }
 
 k053247_device::k053247_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
-	: device_t(mconfig, type, name, tag, owner, clock, shortname, source)
+	: device_t(mconfig, type, name, tag, owner, clock, shortname, source),
+		device_video_interface(mconfig, *this)
 {
 	clear_all();
 }
@@ -1066,8 +1063,6 @@ void k053247_device::device_start()
 		{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64, 8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64 },
 		16*64
 	};
-
-	m_screen = machine().device<screen_device>(m_intf_screen);
 
 	/* decode the graphics */
 	switch (m_intf_plane_order)
@@ -1270,7 +1265,7 @@ void k053247_device::alt_k055673_vh_start(running_machine &machine, const char *
 		}
 
 		total = size4 / 128;
-		konami_decode_gfx(machine, gfx_index, (UINT8 *)alt_k055673_rom, total, &spritelayout, 4);
+		konami_decode_gfx(machine, gfx_index, (UINT8 *)alt_k055673_rom, total, &spritelayout, 5);
 		break;
 
 	case K055673_LAYOUT_RNG:
@@ -1280,12 +1275,12 @@ void k053247_device::alt_k055673_vh_start(running_machine &machine, const char *
 
 	case K055673_LAYOUT_LE2:
 		total = machine.root_device().memregion(gfx_memory_region)->bytes() / (16*16);
-		konami_decode_gfx(machine, gfx_index, (UINT8 *)alt_k055673_rom, total, &spritelayout3, 4);
+		konami_decode_gfx(machine, gfx_index, (UINT8 *)alt_k055673_rom, total, &spritelayout3, 8);
 		break;
 
 	case K055673_LAYOUT_GX6:
 		total = machine.root_device().memregion(gfx_memory_region)->bytes() / (16*16*6/8);
-		konami_decode_gfx(machine, gfx_index, (UINT8 *)alt_k055673_rom, total, &spritelayout4, 4);
+		konami_decode_gfx(machine, gfx_index, (UINT8 *)alt_k055673_rom, total, &spritelayout4, 6);
 		break;
 
 	default:
@@ -1303,7 +1298,6 @@ void k053247_device::alt_k055673_vh_start(running_machine &machine, const char *
 	m_callback = callback;
 	m_objcha_line = CLEAR_LINE;
 	m_ram = auto_alloc_array(machine, UINT16, 0x1000/2);
-	m_screen = machine.primary_screen;
 
 	memset(m_ram,  0, 0x1000);
 	memset(m_kx46_regs, 0, 8);

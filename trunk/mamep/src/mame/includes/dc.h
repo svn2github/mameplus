@@ -9,6 +9,7 @@
 
 #include "video/powervr2.h"
 #include "machine/naomig1.h"
+#include "machine/maple-dc.h"
 
 class dc_state : public driver_device
 {
@@ -22,6 +23,7 @@ class dc_state : public driver_device
 		m_maincpu(*this, "maincpu"),
 		m_soundcpu(*this, "soundcpu"),
 		m_powervr2(*this, "powervr2"),
+		m_maple(*this, "maple_dc"),
 		m_naomig1(*this, "rom_board") { }
 
 	required_shared_ptr<UINT64> dc_framebuffer_ram; // '32-bit access area'
@@ -31,12 +33,10 @@ class dc_state : public driver_device
 	required_shared_ptr<UINT64> dc_ram;
 
 	/* machine related */
-	UINT32 dc_rtcregister[4];
 	UINT32 dc_sysctrl_regs[0x200/4];
 	UINT32 g1bus_regs[0x100/4]; // DC-only
 	UINT32 g2bus_regs[0x100/4];
-
-	emu_timer *dc_rtc_timer;
+	UINT8 m_armrst;
 
 	struct {
 		UINT32 aica_addr;
@@ -54,9 +54,8 @@ class dc_state : public driver_device
 	TIMER_CALLBACK_MEMBER(aica_dma_irq);
 	TIMER_CALLBACK_MEMBER(ch2_dma_irq);
 	TIMER_CALLBACK_MEMBER(yuv_fifo_irq);
-	TIMER_CALLBACK_MEMBER(dc_rtc_increment);
-	DECLARE_READ64_MEMBER(dc_aica_reg_r);
-	DECLARE_WRITE64_MEMBER(dc_aica_reg_w);
+	DECLARE_READ32_MEMBER(dc_aica_reg_r);
+	DECLARE_WRITE32_MEMBER(dc_aica_reg_w);
 	DECLARE_READ32_MEMBER(dc_arm_aica_r);
 	DECLARE_WRITE32_MEMBER(dc_arm_aica_w);
 	void wave_dma_execute(address_space &space);
@@ -65,7 +64,6 @@ class dc_state : public driver_device
 	int dc_compute_interrupt_level();
 	void dc_update_interrupt_status();
 	inline int decode_reg_64(UINT32 offset, UINT64 mem_mask, UINT64 *shift);
-	void rtc_initial_setup();
 	DECLARE_READ64_MEMBER( dc_sysctrl_r );
 	DECLARE_WRITE64_MEMBER( dc_sysctrl_w );
 	DECLARE_READ64_MEMBER( dc_gdrom_r );
@@ -74,17 +72,17 @@ class dc_state : public driver_device
 	DECLARE_WRITE64_MEMBER( dc_g2_ctrl_w );
 	DECLARE_READ64_MEMBER( dc_modem_r );
 	DECLARE_WRITE64_MEMBER( dc_modem_w );
-	DECLARE_READ64_MEMBER( dc_rtc_r );
-	DECLARE_WRITE64_MEMBER( dc_rtc_w );
 	DECLARE_WRITE8_MEMBER( g1_irq );
 	DECLARE_WRITE8_MEMBER( pvr_irq );
 
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_soundcpu;
 	required_device<powervr2_device> m_powervr2;
+	required_device<maple_dc_device> m_maple;
 	optional_device<naomi_g1_device> m_naomig1;
 
 	void generic_dma(UINT32 main_adr, void *dma_ptr, UINT32 length, UINT32 size, bool to_mainram);
+	TIMER_DEVICE_CALLBACK_MEMBER(dc_scanline);
 };
 
 /*--------- Ch2-DMA Control Registers ----------*/
@@ -162,6 +160,9 @@ class dc_state : public driver_device
 #define SB_G1SYSM   ((0x005f74b0-0x005f7400)/4)
 #define SB_G1CRDYC  ((0x005f74b4-0x005f7400)/4)
 #define SB_GDAPRO   ((0x005f74b8-0x005f7400)/4)
+
+/*-------- Unknown/Special Registers ---------*/
+#define GD_UNLOCK   ((0x005f74e4-0x005f7400)/4)
 /*---------- GD-DMA Debug Registers ------------*/
 #define SB_GDSTARD  ((0x005f74f4-0x005f7400)/4)
 #define SB_GDLEND   ((0x005f74f8-0x005f7400)/4)
@@ -266,6 +267,9 @@ class dc_state : public driver_device
 #define IST_EXT_MODEM   0x00000004
 #define IST_EXT_AICA    0x00000002
 #define IST_EXT_GDROM   0x00000001
+/* -------------- error interrupts ------------- */
+#define IST_ERR_ISP_LIMIT        0x00000004
+#define IST_ERR_PVRIF_ILL_ADDR   0x00000040
 
 void dc_maple_irq(running_machine &machine);
 

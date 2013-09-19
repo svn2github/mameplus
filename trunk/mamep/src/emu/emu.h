@@ -49,9 +49,6 @@
 #ifndef __EMU_H__
 #define __EMU_H__
 
-// turn off legacy bitmap addressing macros
-#define BITMAP_DISABLE_LEGACY_MACROS
-
 // core emulator headers -- must be first
 #include "emucore.h"
 #include "emutempl.h"
@@ -76,6 +73,7 @@
 // memory and address spaces
 #include "memory.h"
 #include "addrmap.h"
+#include "memarray.h"
 
 // machine-wide utilities
 #include "romload.h"
@@ -105,6 +103,7 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 #include "diserial.h"
 #include "dislot.h"
 #include "disound.h"
+#include "divideo.h"
 #include "dinvram.h"
 #include "dirtc.h"
 #include "didisasm.h"
@@ -112,12 +111,12 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 #include "timer.h"
 #include "dinetwork.h"
 
-// timers, CPU and scheduling
-#include "devcpu.h"
-
 // machine and driver configuration
 #include "mconfig.h"
 #include "gamedrv.h"
+
+// timers, CPU and scheduling
+#include "devcpu.h"
 
 // image-related
 #include "softlist.h"

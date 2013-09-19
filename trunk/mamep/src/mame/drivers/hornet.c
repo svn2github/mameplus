@@ -312,7 +312,7 @@
 #include "cpu/powerpc/ppc.h"
 #include "cpu/sharc/sharc.h"
 #include "machine/adc1213x.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "machine/k033906.h"
 #include "machine/konppc.h"
 #include "machine/timekpr.h"
@@ -354,7 +354,7 @@ public:
 	optional_device<cpu_device> m_gn680;
 	required_device<cpu_device> m_dsp;
 	optional_device<cpu_device> m_dsp2;
-	required_device<eeprom_device> m_eeprom;
+	required_device<eeprom_serial_93cxx_device> m_eeprom;
 	optional_device<k037122_device> m_k037122_1;
 	optional_device<k037122_device> m_k037122_2;
 	required_device<adc12138_device> m_adc12138;
@@ -454,7 +454,7 @@ UINT32 hornet_state::screen_update_hornet(screen_device &screen, bitmap_rgb32 &b
 
 	voodoo_update(voodoo, bitmap, cliprect);
 
-	m_k037122_1->tile_draw(bitmap, cliprect);
+	m_k037122_1->tile_draw(screen, bitmap, cliprect);
 
 	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
 	draw_7segment_led(bitmap, 9, 3, m_led_reg1);
@@ -469,7 +469,7 @@ UINT32 hornet_state::screen_update_hornet_2board(screen_device &screen, bitmap_r
 		voodoo_update(voodoo, bitmap, cliprect);
 
 		/* TODO: tilemaps per screen */
-		m_k037122_1->tile_draw(bitmap, cliprect);
+		m_k037122_1->tile_draw(screen, bitmap, cliprect);
 	}
 	else if (strcmp(screen.tag(), ":rscreen") == 0)
 	{
@@ -477,7 +477,7 @@ UINT32 hornet_state::screen_update_hornet_2board(screen_device &screen, bitmap_r
 		voodoo_update(voodoo, bitmap, cliprect);
 
 		/* TODO: tilemaps per screen */
-		m_k037122_2->tile_draw(bitmap, cliprect);
+		m_k037122_2->tile_draw(screen, bitmap, cliprect);
 	}
 
 	draw_7segment_led(bitmap, 3, 3, m_led_reg0);
@@ -509,7 +509,7 @@ READ8_MEMBER(hornet_state::sysreg_r)
 			    0x02 = ADDOR (ADC DOR)
 			    0x01 = ADDO (ADC DO)
 			*/
-			r = 0xf0 | (m_eeprom->read_bit() << 3);
+			r = 0xf0 | (m_eeprom->do_read() << 3);
 			r |= m_adc12138->do_r(space, 0) | (m_adc12138->eoc_r(space, 0) << 2);
 			break;
 
@@ -821,9 +821,9 @@ static INPUT_PORTS_START( hornet )
 	PORT_DIPSETTING( 0x00, "15KHz" )
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, di_write)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, clk_write)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, cs_write)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( sscope )
@@ -873,9 +873,9 @@ static INPUT_PORTS_START( sscope )
 	PORT_DIPSETTING( 0x00, "15KHz" )
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, di_write)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, clk_write)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, cs_write)
 
 	PORT_START("ANALOG1")       // Gun Yaw
 	PORT_BIT( 0x7ff, 0x400, IPT_AD_STICK_X ) PORT_MINMAX(0x000, 0x7ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
@@ -980,21 +980,6 @@ static const k033906_interface hornet_k033906_intf_1 =
 	"voodoo1"
 };
 
-static const k037122_interface hornet_k037122_intf =
-{
-	"screen", 0
-};
-
-static const k037122_interface hornet_k037122_intf_l =
-{
-	"lscreen", 0
-};
-
-static const k037122_interface hornet_k037122_intf_r =
-{
-	"rscreen", 1
-};
-
 static const voodoo_config hornet_voodoo_intf =
 {
 	2, //               fbmem;
@@ -1023,7 +1008,7 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, hornet_voodoo_intf)
 
@@ -1038,7 +1023,7 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 
 	MCFG_PALETTE_LENGTH(65536)
 
-	MCFG_K037122_ADD("k037122_1", hornet_k037122_intf)
+	MCFG_K037122_ADD("k037122_1", "screen", 0)
 
 	MCFG_K056800_ADD("k056800", hornet_k056800_interface, XTAL_64MHz/4)
 
@@ -1106,8 +1091,8 @@ static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 
 
 	MCFG_DEVICE_REMOVE("k037122_1")
-	MCFG_K037122_ADD("k037122_1", hornet_k037122_intf_l)
-	MCFG_K037122_ADD("k037122_2", hornet_k037122_intf_r)
+	MCFG_K037122_ADD("k037122_1", "lscreen", 0)
+	MCFG_K037122_ADD("k037122_2", "rscreen", 1)
 
 	MCFG_DEVICE_REMOVE("voodoo0")
 	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, voodoo_l_intf)
@@ -1151,7 +1136,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( sscope2, hornet_2board_v2)
 
 	MCFG_DS2401_ADD("lan_serial_id")
-	MCFG_EEPROM_93C46_ADD("lan_eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("lan_eeprom")
 MACHINE_CONFIG_END
 
 

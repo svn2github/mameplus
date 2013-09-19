@@ -63,6 +63,7 @@ ADDRESS_MAP_END
 driver_device::driver_device(const machine_config &mconfig, device_type type, const char *tag)
 	: device_t(mconfig, type, "Driver Device", tag, NULL, 0, "", __FILE__),
 		device_memory_interface(mconfig, *this),
+		m_screen(*this, "screen"),
 		m_generic_paletteram_8(*this, "paletteram"),
 		m_generic_paletteram2_8(*this, "paletteram2"),
 		m_generic_paletteram_16(*this, "paletteram"),
@@ -549,9 +550,9 @@ void driver_device::updateflip()
 	machine().tilemap().set_flip_all((TILEMAP_FLIPX & m_flip_screen_x) | (TILEMAP_FLIPY & m_flip_screen_y));
 
 	// flip the visible area within the screen width/height
-	int width = machine().primary_screen->width();
-	int height = machine().primary_screen->height();
-	rectangle visarea = machine().primary_screen->visible_area();
+	int width = m_screen->width();
+	int height = m_screen->height();
+	rectangle visarea = m_screen->visible_area();
 	if (m_flip_screen_x)
 	{
 		int temp = width - visarea.min_x - 1;
@@ -566,8 +567,8 @@ void driver_device::updateflip()
 	}
 
 	// reconfigure the screen with the new visible area
-	attoseconds_t period = machine().primary_screen->frame_period().attoseconds;
-	machine().primary_screen->configure(width, height, visarea, period);
+	attoseconds_t period = m_screen->frame_period().attoseconds;
+	m_screen->configure(width, height, visarea, period);
 }
 
 

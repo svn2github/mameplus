@@ -3,6 +3,7 @@
 #ifndef __TMS32082_H__
 #define __TMS32082_H__
 
+// Master Processor class
 class tms32082_mp_device : public cpu_device
 {
 public:
@@ -48,6 +49,19 @@ public:
 		MP_ACC1,
 		MP_ACC2,
 		MP_ACC3,
+		MP_IN0P,
+		MP_IN1P,
+		MP_OUTP,
+		MP_IE,
+		MP_INTPEN,
+	};
+
+	enum
+	{
+		INPUT_X1        = 1,
+		INPUT_X2        = 2,
+		INPUT_X3        = 3,
+		INPUT_X4        = 4,
 	};
 
 	DECLARE_READ32_MEMBER(mp_param_r);
@@ -64,6 +78,7 @@ protected:
 	virtual UINT32 execute_max_cycles() const { return 1; }
 	virtual UINT32 execute_input_lines() const { return 0; }
 	virtual void execute_run();
+	virtual void execute_set_input(int inputnum, int state);
 
 	// device_memory_interface overrides
 	virtual const address_space_config *memory_space_config(address_spacenum spacenum = AS_0) const
@@ -90,14 +105,25 @@ protected:
 
 	UINT32 m_pc;
 	UINT32 m_fetchpc;
-	//UINT32 m_reg[32];
 	union
 	{
 		UINT32 m_reg[32];
 		UINT64 m_fpair[16];
 	};
-	UINT64 m_acc[4];
+	union
+	{
+		UINT64 m_acc[4];
+		double m_facc[4];
+	};
 	UINT32 m_ir;
+
+	UINT32 m_in0p;
+	UINT32 m_in1p;
+	UINT32 m_outp;
+	UINT32 m_ie;
+	UINT32 m_intpen;
+	UINT32 m_epc;
+	UINT32 m_eip;
 
 	UINT32 *m_param_ram;
 
@@ -106,6 +132,8 @@ protected:
 	address_space *m_program;
 	direct_read_data* m_direct;
 
+	void check_interrupts();
+	void processor_command(UINT32 command);
 	UINT32 fetch();
 	void delay_slot();
 	void execute();
@@ -115,9 +143,65 @@ protected:
 	void write_creg(int reg, UINT32 data);
 	bool test_condition(int condition, UINT32 value);
 	UINT32 calculate_cmp(UINT32 src1, UINT32 src2);
+	void vector_loadstore();
 };
 
+
+// Parallel Processor class
+class tms32082_pp_device : public cpu_device
+{
+public:
+	// construction/destruction
+	tms32082_pp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	enum
+	{
+		PP_PC = 1,
+	};
+
+protected:
+	// device level overrides
+	virtual void device_start();
+	virtual void device_reset();
+
+	// device_execute_interface overrides
+	virtual UINT32 execute_min_cycles() const { return 1; }
+	virtual UINT32 execute_max_cycles() const { return 1; }
+	virtual UINT32 execute_input_lines() const { return 0; }
+	virtual void execute_run();
+
+	// device_memory_interface overrides
+	virtual const address_space_config *memory_space_config(address_spacenum spacenum = AS_0) const
+	{
+		switch (spacenum)
+		{
+			case AS_PROGRAM: return &m_program_config;
+			default:         return NULL;
+		}
+	}
+
+	// device_state_interface overrides
+	void state_string_export(const device_state_entry &entry, astring &string);
+
+	// device_disasm_interface overrides
+	virtual UINT32 disasm_min_opcode_bytes() const { return 8; }
+	virtual UINT32 disasm_max_opcode_bytes() const { return 8; }
+	virtual offs_t disasm_disassemble(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, UINT32 options);
+
+	address_space_config m_program_config;
+
+	UINT32 m_pc;
+	UINT32 m_fetchpc;
+
+	int m_icount;
+
+	address_space *m_program;
+	direct_read_data* m_direct;
+};
+
+
 extern const device_type TMS32082_MP;
+extern const device_type TMS32082_PP;
 
 
 #endif /* __TMS32082_H__ */

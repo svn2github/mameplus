@@ -33,13 +33,10 @@ CPU_DISASSEMBLE( rsp );
 
 extern offs_t rsp_dasm_one(char *buffer, offs_t pc, UINT32 op);
 
-#ifdef USE_RSPDRC
-
 /***************************************************************************
     DEBUGGING
 ***************************************************************************/
 
-#define FORCE_C_BACKEND                 (0)
 #define LOG_UML                         (0)
 #define LOG_NATIVE                      (0)
 
@@ -267,7 +264,7 @@ static void log_add_disasm_comment(rsp_state *rsp, drcuml_block *block, UINT32 p
 INLINE rsp_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
-	assert(device->type() == RSP);
+	assert(device->type() == RSP_DRC);
 	return *(rsp_state **)downcast<legacy_cpu_device *>(device)->token();
 }
 
@@ -333,6 +330,7 @@ INLINE void save_fast_iregs(rsp_state *rsp, drcuml_block *block)
 
 void rspdrc_add_imem(device_t *device, UINT32 *base)
 {
+	if (!device->machine().options().drc()) return;
 	rsp_state *rsp = get_safe_token(device);
 	rsp->imem32 = base;
 	rsp->imem16 = (UINT16*)base;
@@ -341,6 +339,7 @@ void rspdrc_add_imem(device_t *device, UINT32 *base)
 
 void rspdrc_add_dmem(device_t *device, UINT32 *base)
 {
+	if (!device->machine().options().drc()) return;
 	rsp_state *rsp = get_safe_token(device);
 	rsp->dmem32 = base;
 	rsp->dmem16 = (UINT16*)base;
@@ -445,6 +444,7 @@ static void cfunc_write32(void *param)
 
 void rspdrc_set_options(device_t *device, UINT32 options)
 {
+	if (!device->machine().options().drc()) return;
 	rsp_state *rsp = get_safe_token(device);
 	rsp->impstate->drcoptions = options;
 }
@@ -718,10 +718,6 @@ static CPU_INIT( rsp )
 	rsp->impstate->cache = cache;
 
 	/* initialize the UML generator */
-	if (FORCE_C_BACKEND)
-	{
-		flags |= DRCUML_OPTION_USE_C;
-	}
 	if (LOG_UML)
 	{
 		flags |= DRCUML_OPTION_LOG_UML;
@@ -4634,6 +4630,7 @@ static CPU_EXECUTE( rsp )
 
 void rspdrc_flush_drc_cache(device_t *device)
 {
+	if (!device->machine().options().drc()) return;
 	rsp_state *rsp = get_safe_token(device);
 	rsp->impstate->cache_dirty = TRUE;
 }
@@ -5969,7 +5966,7 @@ static CPU_SET_INFO( rsp )
 	}
 }
 
-CPU_GET_INFO( rsp )
+CPU_GET_INFO( rsp_drc )
 {
 	rsp_state *rsp = (device != NULL && device->token() != NULL) ? get_safe_token(device) : NULL;
 
@@ -6052,7 +6049,8 @@ CPU_GET_INFO( rsp )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:           info->icount = &rsp->icount;                break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:                          strcpy(info->s, "RSP");                 break;
+		case CPUINFO_STR_NAME:                          strcpy(info->s, "RSP DRC");                 break;
+		case CPUINFO_STR_SHORTNAME:                     strcpy(info->s, "rsp_drc");                 break;
 		case CPUINFO_STR_FAMILY:                    strcpy(info->s, "RSP");                 break;
 		case CPUINFO_STR_VERSION:                   strcpy(info->s, "1.0");                 break;
 		case CPUINFO_STR_SOURCE_FILE:                       strcpy(info->s, __FILE__);              break;
@@ -6168,6 +6166,4 @@ CPU_GET_INFO( rsp )
 	}
 }
 
-DEFINE_LEGACY_CPU_DEVICE(RSP, rsp);
-
-#endif // USE_RSPDRC
+DEFINE_LEGACY_CPU_DEVICE(RSP_DRC, rsp_drc);

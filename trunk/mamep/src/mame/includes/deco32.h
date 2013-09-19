@@ -2,7 +2,7 @@
 #include "video/bufsprite.h"
 #include "video/decospr.h"
 #include "video/deco16ic.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "sound/okim6295.h"
 #include "machine/deco146.h"
 #include "machine/deco104.h"
@@ -52,7 +52,7 @@ public:
 	optional_device<decospr_device> m_sprgen1;
 	optional_device<decospr_device> m_sprgen2;
 
-	optional_device<eeprom_device> m_eeprom;
+	optional_device<eeprom_serial_93cxx_device> m_eeprom;
 	optional_device<okim6295_device> m_oki1;
 	optional_device<okim6295_device> m_oki2;
 
@@ -144,7 +144,7 @@ public:
 	TIMER_DEVICE_CALLBACK_MEMBER(interrupt_gen);
 	TIMER_DEVICE_CALLBACK_MEMBER(lockload_vbl_irq);
 	void updateAceRam();
-	void mixDualAlphaSprites(bitmap_rgb32 &bitmap, const rectangle &cliprect, gfx_element *gfx0, gfx_element *gfx1, int mixAlphaTilemap);
+	void mixDualAlphaSprites(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect, gfx_element *gfx0, gfx_element *gfx1, int mixAlphaTilemap);
 
 	UINT16 port_a_fghthist(int unused);
 	UINT16 port_b_fghthist(int unused);

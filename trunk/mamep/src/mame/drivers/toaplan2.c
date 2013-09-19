@@ -352,7 +352,7 @@ To Do / Unknowns:
 #include "cpu/nec/nec.h"
 #include "cpu/z80/z80.h"
 #include "cpu/z180/z180.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "sound/2151intf.h"
 #include "sound/3812intf.h"
 #include "sound/okim6295.h"
@@ -487,7 +487,7 @@ void toaplan2_state::device_timer(emu_timer &timer, device_timer_id id, int para
 void toaplan2_state::toaplan2_vblank_irq(int irq_line)
 {
 	// the IRQ appears to fire at line 0xe6
-	timer_set(machine().primary_screen->time_until_pos(0xe6), TIMER_RAISE_IRQ, irq_line);
+	timer_set(m_screen->time_until_pos(0xe6), TIMER_RAISE_IRQ, irq_line);
 }
 
 INTERRUPT_GEN_MEMBER(toaplan2_state::toaplan2_vblank_irq1){ toaplan2_vblank_irq(1); }
@@ -503,8 +503,8 @@ READ16_MEMBER(toaplan2_state::video_count_r)
 	/* +---------+---------+--------+---------------------------+ */
 	/*************** Control Signals are active low ***************/
 
-	int hpos = machine().primary_screen->hpos();
-	int vpos = machine().primary_screen->vpos();
+	int hpos = m_screen->hpos();
+	int vpos = m_screen->vpos();
 
 	m_video_status = 0xff00;    // Set signals inactive
 
@@ -526,7 +526,7 @@ READ16_MEMBER(toaplan2_state::video_count_r)
 	else
 		m_video_status |= 0xff;
 
-//  logerror("VC: vpos=%04x hpos=%04x VBL=%04x\n",vpos,hpos,machine().primary_screen->vblank());
+//  logerror("VC: vpos=%04x hpos=%04x VBL=%04x\n",vpos,hpos,m_screen->vblank());
 
 	return m_video_status;
 }
@@ -946,23 +946,6 @@ WRITE8_MEMBER(toaplan2_state::batrider_clear_nmi_w)
 }
 
 
-static const eeprom_interface bbakraid_93C66_intf =
-{
-	// Pin 6 of the 93C66 is connected to Gnd!
-	// So it's configured for 512 bytes
-
-	9,          // address bits
-	8,          // data bits
-	"*110",     // read         110 aaaaaaaaa
-	"*101",     // write        101 aaaaaaaaa dddddddd
-	"*111",     // erase        111 aaaaaaaaa
-	"*10000xxxxxxx",// lock         100x 00xxxx
-	"*10011xxxxxxx",// unlock       100x 11xxxx
-//  "*10001xxxx",   // write all    1 00 01xxxx dddddddd
-//  "*10010xxxx"    // erase all    1 00 10xxxx
-};
-
-
 READ16_MEMBER(toaplan2_state::bbakraid_eeprom_r)
 {
 	// Bit 0x01 returns the status of BUSAK from the Z80.
@@ -971,7 +954,7 @@ READ16_MEMBER(toaplan2_state::bbakraid_eeprom_r)
 	// ROM code. Failure to return the correct status incurrs a Sound Error.
 
 	int data;
-	data  = ((m_eeprom->read_bit() & 0x01) << 4);
+	data  = ((m_eeprom->do_read() & 0x01) << 4);
 	data |= ((m_z80_busreq >> 4) & 0x01);   // Loop BUSRQ to BUSAK
 
 	return data;
@@ -2087,10 +2070,10 @@ static INPUT_PORTS_START( fixeight )
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN ) // Unknown/Unused
 
 	PORT_START("EEPROM")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
-	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
-	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, cs_write)
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, clk_write)
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, di_write)
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, do_read)
 INPUT_PORTS_END
 
 
@@ -2766,9 +2749,9 @@ static INPUT_PORTS_START( bbakraid )
 	PORT_DIPSETTING(        0x8000, DEF_STR( On ) )
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
-	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
-	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, cs_write)
+	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, di_write)
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, clk_write)
 INPUT_PORTS_END
 
 
@@ -3333,7 +3316,7 @@ static MACHINE_CONFIG_START( fixeight, toaplan2_state )
 
 	MCFG_MACHINE_START_OVERRIDE(toaplan2_state,toaplan2)
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -3727,7 +3710,7 @@ static MACHINE_CONFIG_START( bbakraid, toaplan2_state )
 	MCFG_MACHINE_START_OVERRIDE(toaplan2_state,toaplan2)
 	MCFG_MACHINE_RESET_OVERRIDE(toaplan2_state,toaplan2)
 
-	MCFG_EEPROM_ADD("eeprom", bbakraid_93C66_intf)
+	MCFG_EEPROM_SERIAL_93C66_8BIT_ADD("eeprom")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -4046,28 +4029,7 @@ ROM_END
 	ROM_LOAD( "tp-026-3", 0x000000, 0x200000, CRC(e5578d98) SHA1(280d2b716d955e767d311fc9596823852435b6d7) ) \
 	ROM_LOAD( "tp-026-4", 0x200000, 0x200000, CRC(b760cb53) SHA1(bc9c5e49e45cdda0f774be0038aa4deb21d4d285) ) \
 	ROM_REGION( 0x40000, "oki", 0 ) \
-	ROM_LOAD( "tp-026-2", 0x00000, 0x40000, CRC(85063f1f) SHA1(1bf4d77494de421c98f6273b9876e60d827a6826) ) \
-	ROM_REGION( 0x80, "eepromdumped", 0 ) \
-	ROM_LOAD16_WORD_SWAP( "93c45.u21", 0x00, 0x80, CRC(40d75df0) SHA1(a22f1cc74ce9bc9bfe53f48f6a43ab60e921052b) )
-// eeprom dumped can't be accepted by the code, but the values can't be a simple bad dump (not fixed bits and the values are present three times)
-// robiza's note: probably between sound cpu and EEPROM there's something that modify the values (PAL?)
-// we can get the eeprom with a value in [00004] address (1XXX dcba) -> then we need a different value in [00004] address (0XXX XXXX)
-// dcba = 0 -> korea
-// dcba = 1 -> korea (taito license)
-// dcba = 2 -> hong kong
-// dcba = 3 -> hong kong (taito license)
-// dcba = 4 -> taiwan
-// dcba = 5 -> taiwan (taito license)
-// dcba = 6 -> southeast asia
-// dcba = 7 -> southeast asia (taito license)
-// dcba = 8 -> europe
-// dcba = 9 -> europe (taito license)
-// dcba = a -> u.s.a.
-// dcba = b -> u.s.a. (taito license)
-// dcba = c -> NO COUNTRY
-// dcba = d -> NO COUNTRY (taito license)
-// dcba = e -> japan
-// dcba = f -> japan (taito license)
+	ROM_LOAD( "tp-026-2", 0x00000, 0x40000, CRC(85063f1f) SHA1(1bf4d77494de421c98f6273b9876e60d827a6826) )
 
 ROM_START( fixeightkt )
 	ROMS_FIXEIGHT

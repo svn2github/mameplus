@@ -18,7 +18,7 @@
 #include "video/konami_helper.h"
 #include "includes/konamigx.h"
 #include "cpu/m68000/m68000.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 
 #define CUSTOM_DRAW 1
 
@@ -68,7 +68,7 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 		{
 			UINT32 tile = m_vram[count] & 0xffff;
 
-			if(machine().primary_screen->visible_area().contains(x*8, y*8))
+			if(m_screen->visible_area().contains(x*8, y*8))
 				drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
 
 			count++;
@@ -83,7 +83,7 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 		{
 			UINT32 tile = m_vram[count] & 0xffff;
 
-			if(machine().primary_screen->visible_area().contains(x*8, y*8))
+			if(m_screen->visible_area().contains(x*8, y*8))
 				drawgfx_transpen(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8,0);
 
 			count++;
@@ -93,12 +93,12 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 
 	#else
 	bitmap.fill(0, cliprect);
-	machine().priority_bitmap.fill(0, cliprect);
+	screen.priority().fill(0, cliprect);
 
-	m_k056832->tilemap_draw(bitmap, cliprect, 3, 0, 0);
-	m_k056832->tilemap_draw(bitmap, cliprect, 2, 0, 0);
-	m_k056832->tilemap_draw(bitmap, cliprect, 1, 0, 0);
-	m_k056832->tilemap_draw(bitmap, cliprect, 0, 0, 0);
+	m_k056832->tilemap_draw(screen, bitmap, cliprect, 3, 0, 0);
+	m_k056832->tilemap_draw(screen, bitmap, cliprect, 2, 0, 0);
+	m_k056832->tilemap_draw(screen, bitmap, cliprect, 1, 0, 0);
+	m_k056832->tilemap_draw(screen, bitmap, cliprect, 0, 0, 0);
 	#endif
 	return 0;
 }
@@ -237,7 +237,7 @@ static INPUT_PORTS_START( kongambl )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, do_read)
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
@@ -526,9 +526,9 @@ static INPUT_PORTS_START( kongambl )
 	PORT_DIPSETTING(    0x80000000, DEF_STR( On ) )
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, di_write)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, clk_write)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, cs_write)
 INPUT_PORTS_END
 
 static void kongambl_sprite_callback( running_machine &machine, int *code, int *color, int *priority_mask )
@@ -570,7 +570,6 @@ static const k056832_interface k056832_intf =
 
 static const k053247_interface k053247_intf =
 {
-	"screen",
 	"gfx2", 1,
 	TASMAN_PLANE_ORDER,
 	-48+1, 23,
@@ -598,7 +597,7 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 	MCFG_CPU_PROGRAM_MAP(kongamaud_map)
 	MCFG_CPU_PERIODIC_INT_DRIVER(kongambl_state, irq2_line_hold,  480)
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)

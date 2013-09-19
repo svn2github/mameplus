@@ -2835,7 +2835,6 @@ static const ay8910_interface ay8910_config =
 
 static const tc0100scn_interface taitof2_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	0, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -2845,7 +2844,6 @@ static const tc0100scn_interface taitof2_tc0100scn_intf =
 
 static const tc0100scn_interface liquidk_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	3, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -2855,7 +2853,6 @@ static const tc0100scn_interface liquidk_tc0100scn_intf =
 
 static const tc0100scn_interface dondokod_tc0100scn_intf =
 {
-	"screen",
 	1, 3,       /* gfxnum, txnum */
 	3, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -2865,7 +2862,6 @@ static const tc0100scn_interface dondokod_tc0100scn_intf =
 
 static const tc0100scn_interface finalb_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	1, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -2875,7 +2871,6 @@ static const tc0100scn_interface finalb_tc0100scn_intf =
 
 static const tc0100scn_interface ninjak_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	0, 0,       /* x_offset, y_offset */
 	0, 0,       /* flip_xoff, flip_yoff */
@@ -2885,7 +2880,6 @@ static const tc0100scn_interface ninjak_tc0100scn_intf =
 
 static const tc0100scn_interface qzchikyu_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	0, 0,       /* x_offset, y_offset */
 	-4, 0,      /* flip_xoff, flip_yoff */
@@ -2895,7 +2889,6 @@ static const tc0100scn_interface qzchikyu_tc0100scn_intf =
 
 static const tc0100scn_interface solfigtr_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	3, 0,       /* x_offset, y_offset */
 	6, 0,       /* flip_xoff, flip_yoff */
@@ -2905,7 +2898,6 @@ static const tc0100scn_interface solfigtr_tc0100scn_intf =
 
 static const tc0100scn_interface koshien_tc0100scn_intf =
 {
-	"screen",
 	1, 2,       /* gfxnum, txnum */
 	1, 0,       /* x_offset, y_offset */
 	2, 0,       /* flip_xoff, flip_yoff */
@@ -2915,7 +2907,6 @@ static const tc0100scn_interface koshien_tc0100scn_intf =
 
 static const tc0100scn_interface thundfox_tc0100scn_intf_1 =
 {
-	"screen",
 	1, 3,       /* gfxnum, txnum */
 	3, 0,       /* x_offset, y_offset */
 	5, 0,       /* flip_xoff, flip_yoff */
@@ -2925,7 +2916,6 @@ static const tc0100scn_interface thundfox_tc0100scn_intf_1 =
 
 static const tc0100scn_interface thundfox_tc0100scn_intf_2 =
 {
-	"screen",
 	2, 4,       /* gfxnum, txnum */
 	3, 0,       /* x_offset, y_offset */
 	5, 0,       /* flip_xoff, flip_yoff */
@@ -3616,7 +3606,7 @@ static MACHINE_CONFIG_START( cameltrya, taitof2_state )
 	MCFG_SOUND_ROUTE(2, "mono", 0.20)
 	MCFG_SOUND_ROUTE(3, "mono", 0.60)
 
-	MCFG_OKIM6295_ADD("oki", 4224000/4, OKIM6295_PIN7_HIGH) /* verified on pcb */
+	MCFG_OKIM6295_ADD("oki", XTAL_4_224MHz/4, OKIM6295_PIN7_HIGH) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", taitof2_tc0140syt_intf)

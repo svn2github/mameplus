@@ -25,7 +25,7 @@ void sms_state::lphaser_hcount_latch()
 WRITE_LINE_MEMBER(sms_state::sms_ctrl1_th_input)
 {
 	// Check if TH of controller port 1 is set to input (1)
-	if (m_io_ctrl_reg & 0x02)
+	if (m_is_korean || (m_io_ctrl_reg & 0x02))
 	{
 		if (state == 0)
 		{
@@ -45,7 +45,7 @@ WRITE_LINE_MEMBER(sms_state::sms_ctrl1_th_input)
 WRITE_LINE_MEMBER(sms_state::sms_ctrl2_th_input)
 {
 	// Check if TH of controller port 2 is set to input (1)
-	if (m_io_ctrl_reg & 0x08)
+	if (m_is_korean || (m_io_ctrl_reg & 0x08))
 	{
 		if (state == 0)
 		{
@@ -64,23 +64,28 @@ WRITE_LINE_MEMBER(sms_state::sms_ctrl2_th_input)
 
 void sms_state::sms_get_inputs( address_space &space )
 {
-	UINT8 data;
+	UINT8 data1, data2;
 
 	m_port_dc_reg = 0xff;
 	m_port_dd_reg = 0xff;
 
-	data = m_port_ctrl1->port_r();
-	m_port_dc_reg &= ~0x0F | data; // Up, Down, Left, Right
-	m_port_dc_reg &= ~0x10 | (data >> 1); // TL (Button 1)
-	m_port_dc_reg &= ~0x20 | (data >> 2); // TR (Button 2)
-	m_port_dd_reg &= ~0x40 | data; // TH
+	data1 = m_port_ctrl1->port_r();
+	m_port_dc_reg &= ~0x0f | data1; // Up, Down, Left, Right
+	m_port_dc_reg &= ~0x10 | (data1 >> 1); // TL (Button 1)
+	m_port_dc_reg &= ~0x20 | (data1 >> 2); // TR (Button 2)
 
-	data = m_port_ctrl2->port_r();
-	m_port_dc_reg &= ~0xc0 | (data << 6); // Up, Down
-	m_port_dd_reg &= ~0x03 | (data >> 2); // Left, Right
-	m_port_dd_reg &= ~0x04 | (data >> 3); // TL (Button 1)
-	m_port_dd_reg &= ~0x08 | (data >> 4); // TR (Button 2)
-	m_port_dd_reg &= ~0x80 | (data << 1); // TH
+	data2 = m_port_ctrl2->port_r();
+	m_port_dc_reg &= ~0xc0 | (data2 << 6); // Up, Down
+	m_port_dd_reg &= ~0x03 | (data2 >> 2); // Left, Right
+	m_port_dd_reg &= ~0x04 | (data2 >> 3); // TL (Button 1)
+	m_port_dd_reg &= ~0x08 | (data2 >> 4); // TR (Button 2)
+
+	// Japanese consoles do not have TH line connected.
+	if (!m_is_region_japan || m_is_korean)
+	{
+		m_port_dd_reg &= ~0x40 | data1; // TH ctrl1
+		m_port_dd_reg &= ~0x80 | (data2 << 1); // TH ctrl2
+	}
 }
 
 
@@ -225,10 +230,10 @@ READ8_MEMBER(sms_state::sms_input_port_dc_r)
 		sms_get_inputs(space);
 
 		// Check if TR of controller port 1 is set to output (0)
-		if (!(m_io_ctrl_reg & 0x01))
+		if (!m_is_region_japan && !(m_io_ctrl_reg & 0x01))
 		{
 			// Read TR state set through IO control port
-			m_port_dc_reg &= ~0x20 | (m_is_region_japan ? 0x00 : (m_io_ctrl_reg & 0x10) << 1);
+			m_port_dc_reg &= ~0x20 | ((m_io_ctrl_reg & 0x10) << 1);
 		}
 
 		return m_port_dc_reg;
@@ -244,20 +249,23 @@ READ8_MEMBER(sms_state::sms_input_port_dd_r)
 	sms_get_inputs(space);
 
 	// Reset Button
-	m_port_dd_reg &= ~0x10 | (m_port_reset->read_safe(0x01) & 0x01) << 4;
+	if ( m_port_reset )
+	{
+		m_port_dd_reg &= ~0x10 | (m_port_reset->read() & 0x01) << 4;
+	}
 
 	// Check if TR of controller port 2 is set to output (0)
-	if (!(m_io_ctrl_reg & 0x04))
+	if (!m_is_region_japan && !(m_io_ctrl_reg & 0x04))
 	{
 		// Read TR state set through IO control port
-		m_port_dd_reg &= ~0x08 | (m_is_region_japan ? 0x00 : (m_io_ctrl_reg & 0x40) >> 3);
+		m_port_dd_reg &= ~0x08 | ((m_io_ctrl_reg & 0x40) >> 3);
 	}
 
 	// Check if TH of controller port 1 is set to output (0)
-	if (!(m_io_ctrl_reg & 0x02))
+	if (!m_is_region_japan && !(m_io_ctrl_reg & 0x02))
 	{
 		// Read TH state set through IO control port
-		m_port_dd_reg &= ~0x40 | (m_is_region_japan ? 0x00 : (m_io_ctrl_reg & 0x20) << 1);
+		m_port_dd_reg &= ~0x40 | ((m_io_ctrl_reg & 0x20) << 1);
 	}
 	else  // TH set to input (1)
 	{
@@ -269,10 +277,10 @@ READ8_MEMBER(sms_state::sms_input_port_dd_r)
 	}
 
 	// Check if TH of controller port 2 is set to output (0)
-	if (!(m_io_ctrl_reg & 0x08))
+	if (!m_is_region_japan && !(m_io_ctrl_reg & 0x08))
 	{
 		// Read TH state set through IO control port
-		m_port_dd_reg &= ~0x80 | (m_is_region_japan ? 0x00 : (m_io_ctrl_reg & 0x80));
+		m_port_dd_reg &= ~0x80 | (m_io_ctrl_reg & 0x80);
 	}
 	else  // TH set to input (1)
 	{
@@ -298,7 +306,7 @@ WRITE8_MEMBER(sms_state::sms_ym2413_data_port_w)
 {
 	if (m_has_fm)
 	{
-		logerror("data_port_w %x %x\n", offset, data);
+		//logerror("data_port_w %x %x\n", offset, data);
 		m_ym->write(space, 1, data);
 	}
 }
@@ -313,7 +321,7 @@ READ8_MEMBER(sms_state::gg_input_port_2_r)
 
 READ8_MEMBER(sms_state::sms_sscope_r)
 {
-	int sscope = m_port_scope->read_safe(0x00);
+	int sscope = m_port_scope->read();
 
 	if ( sscope )
 	{
@@ -329,7 +337,7 @@ WRITE8_MEMBER(sms_state::sms_sscope_w)
 {
 	m_mainram[0x1FF8 + offset] = data;
 
-	int sscope = m_port_scope->read_safe(0x00);
+	int sscope = m_port_scope->read();
 
 	if ( sscope )
 	{
@@ -359,6 +367,8 @@ WRITE8_MEMBER(sms_state::sms_mapper_w)
 {
 	bool bios_selected = false;
 	bool cartridge_selected = false;
+	bool card_selected = false;
+	bool expansion_selected = false;
 
 	m_mapper[offset] = data;
 	m_mainram[0x1ffc + offset] = data;
@@ -367,6 +377,10 @@ WRITE8_MEMBER(sms_state::sms_mapper_w)
 	{
 		if (!(m_bios_port & IO_CARTRIDGE) || (m_is_gamegear && m_BIOS == NULL))
 			cartridge_selected = true;
+		else if (!(m_bios_port & IO_CARD))
+			card_selected = true;
+		else if (!(m_bios_port & IO_EXPANSION))
+			expansion_selected = true;
 		else
 			return; // nothing to page in
 	}
@@ -393,6 +407,16 @@ WRITE8_MEMBER(sms_state::sms_mapper_w)
 				m_bank_enabled[2] = ENABLE_CART;
 				m_cartslot->write_mapper(space, offset, data);
 			}
+			else if (card_selected)    // CARD ROM/RAM
+			{
+				m_bank_enabled[2] = ENABLE_CARD;
+				m_cardslot->write_mapper(space, offset, data);
+			}
+			else if (expansion_selected)    // expansion slot
+			{
+				m_bank_enabled[2] = ENABLE_EXPANSION;
+				m_expslot->write_mapper(space, offset, data);
+			}
 			break;
 
 		case 1: // Select 16k ROM bank for 0400-3fff
@@ -411,6 +435,16 @@ WRITE8_MEMBER(sms_state::sms_mapper_w)
 				m_bank_enabled[offset - 1] = ENABLE_CART;
 				m_cartslot->write_mapper(space, offset, data);
 			}
+			else if (card_selected)
+			{
+				m_bank_enabled[offset - 1] = ENABLE_CARD;
+				m_cardslot->write_mapper(space, offset, data);
+			}
+			else if (expansion_selected)
+			{
+				m_bank_enabled[offset - 1] = ENABLE_EXPANSION;
+				m_expslot->write_mapper(space, offset, data);
+			}
 			break;
 	}
 }
@@ -427,8 +461,10 @@ READ8_MEMBER(sms_state::read_0000)
 		}
 		if (m_bank_enabled[3] == ENABLE_CART)
 			return m_cartslot->read_cart(space, offset);
-		if (m_card && m_bank_enabled[3] == ENABLE_CARD)
-			return m_card->read_cart(space, offset);
+		if (m_cardslot && m_bank_enabled[3] == ENABLE_CARD)
+			return m_cardslot->read_cart(space, offset);
+		if (m_expslot && m_bank_enabled[3] == ENABLE_EXPANSION)
+			return m_expslot->read(space, offset);
 	}
 	else
 	{
@@ -439,8 +475,10 @@ READ8_MEMBER(sms_state::read_0000)
 		}
 		if (m_bank_enabled[0] == ENABLE_CART)
 			return m_cartslot->read_cart(space, offset);
-		if (m_card && m_bank_enabled[0] == ENABLE_CARD)
-			return m_card->read_cart(space, offset);
+		if (m_cardslot && m_bank_enabled[0] == ENABLE_CARD)
+			return m_cardslot->read_cart(space, offset);
+		if (m_expslot && m_bank_enabled[0] == ENABLE_EXPANSION)
+			return m_expslot->read(space, offset);
 	}
 	return m_region_maincpu->base()[offset];
 }
@@ -455,8 +493,10 @@ READ8_MEMBER(sms_state::read_4000)
 
 	if (m_bank_enabled[1] == ENABLE_CART)
 		return m_cartslot->read_cart(space, offset + 0x4000);
-	if (m_card && m_bank_enabled[1] == ENABLE_CARD)
-		return m_card->read_cart(space, offset + 0x4000);
+	if (m_cardslot && m_bank_enabled[1] == ENABLE_CARD)
+		return m_cardslot->read_cart(space, offset + 0x4000);
+	if (m_expslot && m_bank_enabled[1] == ENABLE_EXPANSION)
+		return m_expslot->read(space, offset + 0x4000);
 
 	return m_region_maincpu->base()[offset];
 }
@@ -471,15 +511,22 @@ READ8_MEMBER(sms_state::read_8000)
 
 	if (m_bank_enabled[2] == ENABLE_CART)
 		return m_cartslot->read_cart(space, offset + 0x8000);
-	if (m_card && m_bank_enabled[2] == ENABLE_CARD)
-		return m_card->read_cart(space, offset + 0x8000);
+	if (m_cardslot && m_bank_enabled[2] == ENABLE_CARD)
+		return m_cardslot->read_cart(space, offset + 0x8000);
+	if (m_expslot && m_bank_enabled[2] == ENABLE_EXPANSION)
+		return m_expslot->read(space, offset + 0x8000);
 
 	return m_region_maincpu->base()[offset];
 }
 
 WRITE8_MEMBER(sms_state::write_cart)
 {
-	m_cartslot->write_cart(space, offset, data);
+	if (m_bank_enabled[0] == ENABLE_CART)
+		m_cartslot->write_cart(space, offset, data);
+	if (m_cardslot && m_bank_enabled[0] == ENABLE_CARD)
+		m_cardslot->write_cart(space, offset, data);
+	if (m_expslot && m_bank_enabled[0] == ENABLE_EXPANSION)
+		m_expslot->write(space, offset, data);
 }
 
 READ8_MEMBER(smssdisp_state::store_read_0000)
@@ -582,7 +629,7 @@ WRITE8_MEMBER(sms_state::gg_sio_w)
 		case 0x00: /* Parallel Data */
 			break;
 
-		case 0x01: /* Data Direction/ NMI Enable */
+		case 0x01: /* Data Direction / NMI Enable */
 			break;
 
 		case 0x02: /* Serial Output */
@@ -606,7 +653,7 @@ READ8_MEMBER(sms_state::gg_sio_r)
 		case 0x00: /* Parallel Data */
 			break;
 
-		case 0x01: /* Data Direction/ NMI Enable */
+		case 0x01: /* Data Direction / NMI Enable */
 			break;
 
 		case 0x02: /* Serial Output */
@@ -633,23 +680,21 @@ void sms_state::setup_rom()
 	/* 2. check and set up expansion port */
 	if (!(m_bios_port & IO_EXPANSION) && (m_bios_port & IO_CARTRIDGE) && (m_bios_port & IO_CARD))
 	{
-		/* TODO: Implement me */
 		m_bank_enabled[3] = ENABLE_EXPANSION;
 		m_bank_enabled[0] = ENABLE_EXPANSION;
 		m_bank_enabled[1] = ENABLE_EXPANSION;
 		m_bank_enabled[2] = ENABLE_EXPANSION;
-		logerror("Switching to unsupported expansion port.\n");
+		logerror("Switching to expansion port.\n");
 	}
 
 	/* 3. check and set up card rom */
 	if (!(m_bios_port & IO_CARD) && (m_bios_port & IO_CARTRIDGE) && (m_bios_port & IO_EXPANSION))
 	{
-		/* TODO: Implement me */
 		m_bank_enabled[3] = ENABLE_CARD;
 		m_bank_enabled[0] = ENABLE_CARD;
 		m_bank_enabled[1] = ENABLE_CARD;
 		m_bank_enabled[2] = ENABLE_CARD;
-		logerror("Switching to unsupported card rom port.\n");
+		logerror("Switching to card rom port.\n");
 	}
 
 	/* 4. check and set up cartridge rom */
@@ -705,7 +750,6 @@ void sms_state::setup_bios()
 		m_has_bios_0400 = 0;
 		m_has_bios_2000 = 0;
 		m_has_bios_full = 0;
-		m_has_bios = 0;
 	}
 
 	if (m_BIOS)
@@ -790,7 +834,17 @@ MACHINE_RESET_MEMBER(sms_state,mess_sms)
 	if (m_has_fm)
 		m_fm_detect = 0x01;
 
+	if (m_is_sdisp)
+	{
+		m_store_control = 0;
+		m_current_cartridge = 0;
+	}
+
 	m_bios_port = 0;
+
+	setup_bios();
+	setup_sms_cart();
+	setup_rom();
 
 	if (m_cartslot->m_cart && m_cartslot->m_cart->get_sms_mode())
 		m_vdp->set_sega315_5124_compatibility_mode(true);
@@ -801,16 +855,6 @@ MACHINE_RESET_MEMBER(sms_state,mess_sms)
 	m_gg_sio[2] = 0x00;
 	m_gg_sio[3] = 0xff;
 	m_gg_sio[4] = 0x00;
-
-	if (m_is_sdisp)
-	{
-		m_store_control = 0;
-		m_current_cartridge = 0;
-	}
-
-	setup_bios();
-
-	setup_rom();
 
 	m_ctrl1_th_state = 1;
 	m_ctrl2_th_state = 1;
@@ -891,10 +935,15 @@ WRITE_LINE_MEMBER(smssdisp_state::sms_store_int_callback)
 void sms_state::setup_sms_cart()
 {
 	m_bios_port = (IO_EXPANSION | IO_CARTRIDGE | IO_CARD);
-	if (!m_is_gamegear && !m_has_bios)
+	if (!m_is_gamegear && !m_BIOS)
 	{
-		m_bios_port &= ~(IO_CARTRIDGE);
 		m_bios_port |= IO_BIOS_ROM;
+
+		// Mark-III has hardware method that prioritizes cartridge slot.
+		if (m_cartslot && m_cartslot->m_cart)
+			m_bios_port &= ~(IO_CARTRIDGE);
+		else
+			m_bios_port &= ~(IO_CARD);
 	}
 }
 
@@ -903,14 +952,12 @@ DRIVER_INIT_MEMBER(sms_state,sg1000m3)
 {
 	m_is_region_japan = 1;
 	m_has_fm = 1;
-	setup_sms_cart();
 }
 
 
 DRIVER_INIT_MEMBER(sms_state,sms1)
 {
 	m_has_bios_full = 1;
-	setup_sms_cart();
 }
 
 
@@ -919,7 +966,6 @@ DRIVER_INIT_MEMBER(sms_state,smsj)
 	m_is_region_japan = 1;
 	m_has_bios_2000 = 1;
 	m_has_fm = 1;
-	setup_sms_cart();
 }
 
 
@@ -928,14 +974,13 @@ DRIVER_INIT_MEMBER(sms_state,sms2kr)
 	m_is_region_japan = 1;
 	m_has_bios_full = 1;
 	m_has_fm = 1;
-	setup_sms_cart();
+	m_is_korean = 1;
 }
 
 
 DRIVER_INIT_MEMBER(smssdisp_state,smssdisp)
 {
 	m_is_sdisp = 1;
-	setup_sms_cart();
 }
 
 
@@ -943,7 +988,6 @@ DRIVER_INIT_MEMBER(sms_state,gamegear)
 {
 	m_is_gamegear = 1;
 	m_has_bios_0400 = 1;
-	setup_sms_cart();
 }
 
 
@@ -952,7 +996,6 @@ DRIVER_INIT_MEMBER(sms_state,gamegeaj)
 	m_is_region_japan = 1;
 	m_is_gamegear = 1;
 	m_has_bios_0400 = 1;
-	setup_sms_cart();
 }
 
 
@@ -962,6 +1005,23 @@ VIDEO_START_MEMBER(sms_state,sms1)
 	m_main_scr->register_screen_bitmap(m_prevright_bitmap);
 	save_item(NAME(m_prevleft_bitmap));
 	save_item(NAME(m_prevright_bitmap));
+
+	// Allow sscope screens to have crosshair, useful for the game missil3d
+	crosshair_set_screen(machine(), 0, CROSSHAIR_SCREEN_ALL);
+}
+
+
+VIDEO_RESET_MEMBER(sms_state,sms1)
+{
+	if (m_port_scope->read())
+	{
+		UINT8 sscope_binocular_hack = m_port_scope_binocular->read();
+
+		if (sscope_binocular_hack & 0x01)
+			m_prevleft_bitmap.fill(RGB_BLACK);
+		if (sscope_binocular_hack & 0x02)
+			m_prevright_bitmap.fill(RGB_BLACK);
+	}
 }
 
 
@@ -999,7 +1059,7 @@ UINT32 sms_state::screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap
 
 	if (&screen != m_main_scr)
 	{
-		sscope = m_port_scope->read_safe(0x00);
+		sscope = m_port_scope->read();
 		if (!sscope)
 		{
 			// without SegaScope, both LCDs for glasses go black
@@ -1027,7 +1087,7 @@ UINT32 sms_state::screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap
 		// save a copy of current bitmap for the binocular hack
 		if (sscope)
 		{
-			sscope_binocular_hack = ioport("SSCOPE_BINOCULAR")->read_safe(0x00);
+			sscope_binocular_hack = m_port_scope_binocular->read();
 
 			if (&screen == m_left_lcd)
 			{
@@ -1047,7 +1107,7 @@ UINT32 sms_state::screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap
 		// use the copied bitmap for the binocular hack
 		if (sscope)
 		{
-			sscope_binocular_hack = ioport("SSCOPE_BINOCULAR")->read_safe(0x00);
+			sscope_binocular_hack = m_port_scope_binocular->read();
 
 			if (&screen == m_left_lcd)
 			{
@@ -1066,7 +1126,7 @@ UINT32 sms_state::screen_update_sms1(screen_device &screen, bitmap_rgb32 &bitmap
 				}
 			}
 		}
-		bitmap.fill(RGB_BLACK);
+		bitmap.fill(RGB_BLACK, cliprect);
 	}
 
 	return 0;
@@ -1088,11 +1148,22 @@ UINT32 sms_state::screen_update_gamegear(screen_device &screen, bitmap_rgb32 &bi
 {
 	int x, y;
 	bitmap_rgb32 &vdp_bitmap = m_vdp->get_bitmap();
+	static bool prev_bitmap_copied = false;
 
 	if (!m_port_persist->read())
 	{
 		copybitmap(bitmap, vdp_bitmap, 0, 0, 0, 0, cliprect);
+		if (prev_bitmap_copied)
+		{
+			m_prev_bitmap.fill(RGB_BLACK);
+			prev_bitmap_copied = false;
+		}
+	}
+	else if (!prev_bitmap_copied)
+	{
+		copybitmap(bitmap, vdp_bitmap, 0, 0, 0, 0, cliprect);
 		copybitmap(m_prev_bitmap, vdp_bitmap, 0, 0, 0, 0, cliprect);
+		prev_bitmap_copied = true;
 	}
 	else
 	{

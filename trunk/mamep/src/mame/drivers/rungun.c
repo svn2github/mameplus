@@ -45,24 +45,13 @@
 
 #include "cpu/m68000/m68000.h"
 #include "cpu/z80/z80.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "sound/k054539.h"
 #include "includes/konamipt.h"
 #include "includes/rungun.h"
 
 #define RNG_DEBUG 0
 
-
-static const eeprom_interface eeprom_intf =
-{
-	7,          /* address bits */
-	8,          /* data bits */
-	"011000",       /*  read command */
-	"011100",       /* write command */
-	"0100100000000",/* erase command */
-	"0100000000000",/* lock command */
-	"0100110000000" /* unlock command */
-};
 
 READ16_MEMBER(rungun_state::rng_sysregs_r)
 {
@@ -115,9 +104,9 @@ WRITE16_MEMBER(rungun_state::rng_sysregs_w)
 	{
 		case 0x08/2:
 			/*
-			    bit0  : eeprom_write_bit
-			    bit1  : eeprom_set_cs_line
-			    bit2  : eeprom_set_clock_line
+			    bit0  : eeprom_di_write
+			    bit1  : eeprom_cs_write
+			    bit2  : eeprom_clk_write
 			    bit3  : coin counter?
 			    bit7  : set before massive memory writes
 			    bit10 : IRQ5 ACK
@@ -196,8 +185,8 @@ static ADDRESS_MAP_START( rungun_map, AS_PROGRAM, 16, rungun_state )
 	AM_RANGE(0x740000, 0x741fff) AM_READWRITE(rng_ttl_ram_r, rng_ttl_ram_w)     // text plane RAM
 	AM_RANGE(0x7c0000, 0x7c0001) AM_WRITENOP                                    // watchdog
 #if RNG_DEBUG
-	AM_RANGE(0x5c0010, 0x5c001f) AM_DEVREAD_LEGACY("k055673", k053247_reg_word_r)
-	AM_RANGE(0x640000, 0x640007) AM_DEVREAD_LEGACY("k055673", k053246_reg_word_r)
+	AM_RANGE(0x5c0010, 0x5c001f) AM_DEVREAD("k055673", k055673_device, k053247_reg_word_r)
+	AM_RANGE(0x640000, 0x640007) AM_DEVREAD("k055673", k055673_device, k053246_reg_word_r)
 #endif
 ADDRESS_MAP_END
 
@@ -263,8 +252,8 @@ static INPUT_PORTS_START( rng )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("DSW")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SPECIAL )    /* EEPROM ready (always 1) */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, do_read)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, ready_read)
 	PORT_SERVICE_NO_TOGGLE( 0x08, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x10, 0x00, "Monitors" )
 	PORT_DIPSETTING(    0x00, "1" )
@@ -283,9 +272,9 @@ static INPUT_PORTS_START( rng )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, di_write)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, cs_write)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, clk_write)
 
 	PORT_START("P1")
 	KONAMI8_B123_START(1)
@@ -336,17 +325,15 @@ static const k053936_interface rng_k053936_intf =
 
 static const k053247_interface rng_k055673_intf =
 {
-	"screen",
 	"gfx2", 1,
 	K055673_LAYOUT_RNG,
 	-8, 15,
-	KONAMI_ROM_DEINTERLEAVE_NONE,   // there is some interleave in VIDEO_START...
+	KONAMI_ROM_DEINTERLEAVE_NONE,   // there is some interleave in video_start...
 	rng_sprite_callback
 };
 
 static const k053252_interface rng_k053252_intf =
 {
-	"screen",
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL,
@@ -391,8 +378,7 @@ static MACHINE_CONFIG_START( rng, rungun_state )
 
 	MCFG_GFXDECODE(rungun)
 
-
-	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
+	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_BEFORE_VBLANK)

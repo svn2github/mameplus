@@ -99,7 +99,7 @@
 
 #include "emu.h"
 #include "includes/decocrpt.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "sound/ymz280b.h"
 #include "cpu/arm/arm.h"
 #include "cpu/sh2/sh2.h"
@@ -174,8 +174,8 @@ READ32_MEMBER(deco_mlc_state::mlc_20007c_r)
 
 READ32_MEMBER(deco_mlc_state::mlc_scanline_r)
 {
-//  logerror("read scanline counter (%d)\n", machine().primary_screen->vpos());
-	return machine().primary_screen->vpos();
+//  logerror("read scanline counter (%d)\n", m_screen->vpos());
+	return m_screen->vpos();
 }
 
 
@@ -184,9 +184,9 @@ WRITE32_MEMBER(deco_mlc_state::avengrs_eprom_w)
 	if (ACCESSING_BITS_8_15) {
 		UINT8 ebyte=(data>>8)&0xff;
 //      if (ebyte&0x80) {
-			m_eeprom->set_clock_line((ebyte & 0x2) ? ASSERT_LINE : CLEAR_LINE);
-			m_eeprom->write_bit(ebyte & 0x1);
-			m_eeprom->set_cs_line((ebyte & 0x4) ? CLEAR_LINE : ASSERT_LINE);
+			m_eeprom->clk_write((ebyte & 0x2) ? ASSERT_LINE : CLEAR_LINE);
+			m_eeprom->di_write(ebyte & 0x1);
+			m_eeprom->cs_write((ebyte & 0x4) ? ASSERT_LINE : CLEAR_LINE);
 //      }
 	}
 	else if (ACCESSING_BITS_0_7) {
@@ -206,13 +206,13 @@ WRITE32_MEMBER(deco_mlc_state::avengrs_palette_w)
 
 TIMER_DEVICE_CALLBACK_MEMBER(deco_mlc_state::interrupt_gen)
 {
-//  logerror("hit scanline IRQ %d (%08x)\n", machine.primary_screen->vpos(), info.i);
+//  logerror("hit scanline IRQ %d (%08x)\n", m_screen->vpos(), info.i);
 	m_maincpu->set_input_line(m_mainCpuIsArm ? ARM_IRQ_LINE : 1, HOLD_LINE);
 }
 
 WRITE32_MEMBER(deco_mlc_state::mlc_irq_w)
 {
-//  int scanline=machine().primary_screen->vpos();
+//  int scanline=m_screen->vpos();
 	COMBINE_DATA(&m_irq_ram[offset]);
 
 
@@ -222,8 +222,8 @@ WRITE32_MEMBER(deco_mlc_state::mlc_irq_w)
 		m_maincpu->set_input_line(m_mainCpuIsArm ? ARM_IRQ_LINE : 1, CLEAR_LINE);
 		return;
 	case 0x14: /* Prepare scanline interrupt */
-		m_raster_irq_timer->adjust(machine().primary_screen->time_until_pos(m_irq_ram[0x14/4]));
-		//logerror("prepare scanline to fire at %d (currently on %d)\n", m_irq_ram[0x14/4], machine().primary_screen->vpos());
+		m_raster_irq_timer->adjust(m_screen->time_until_pos(m_irq_ram[0x14/4]));
+		//logerror("prepare scanline to fire at %d (currently on %d)\n", m_irq_ram[0x14/4], m_screen->vpos());
 		return;
 
 	default:
@@ -344,7 +344,7 @@ static INPUT_PORTS_START( mlc )
 	PORT_BIT( 0x00100000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x00200000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x00400000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x00800000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
+	PORT_BIT( 0x00800000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, do_read)
 	PORT_BIT( 0x01000000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
 	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -420,7 +420,7 @@ static MACHINE_CONFIG_START( avengrgs, deco_mlc_state )
 	MCFG_CPU_PROGRAM_MAP(decomlc_map)
 
 	MCFG_MACHINE_RESET_OVERRIDE(deco_mlc_state,mlc)
-	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom") /* Actually 93c45 */
 
 	MCFG_TIMER_DRIVER_ADD("int_timer", deco_mlc_state, interrupt_gen)
 
@@ -453,7 +453,7 @@ static MACHINE_CONFIG_START( mlc, deco_mlc_state )
 	MCFG_CPU_PROGRAM_MAP(decomlc_map)
 
 	MCFG_MACHINE_RESET_OVERRIDE(deco_mlc_state,mlc)
-	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom") /* Actually 93c45 */
 
 	MCFG_TIMER_DRIVER_ADD("int_timer", deco_mlc_state, interrupt_gen)
 

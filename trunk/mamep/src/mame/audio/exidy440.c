@@ -61,6 +61,14 @@ exidy440_sound_device::exidy440_sound_device(const machine_config &mconfig, cons
 		m_m6844_chain(0x00),
 		m_stream(NULL)
 {
+	m_sound_banks[0] = m_sound_banks[1] = m_sound_banks[2] = m_sound_banks[3] = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		m_sound_channel[i].base = NULL;
+		m_sound_channel[i].offset = 0;
+		m_sound_channel[i].remaining = 0;
+	}
 }
 
 //-------------------------------------------------
@@ -875,7 +883,7 @@ MACHINE_CONFIG_FRAGMENT( exidy440_audio )
 
 	MCFG_CPU_ADD("audiocpu", M6809, EXIDY440_AUDIO_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(exidy440_audio_map)
-	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", driver_device, irq0_line_assert)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

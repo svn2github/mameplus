@@ -230,7 +230,7 @@ Notes:
 #include "cpu/m6809/m6809.h"
 #include "cpu/z80/z80.h"
 #include "includes/decocrpt.h"
-#include "machine/eeprom.h"
+#include "machine/eepromser.h"
 #include "includes/deco32.h"
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
@@ -248,7 +248,6 @@ static int fghthist_bank_callback( int bank )
 
 static const deco16ic_interface fghthist_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x00, 0x10, /* color base */
@@ -260,7 +259,6 @@ static const deco16ic_interface fghthist_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface fghthist_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x20, 0x30, /* color base */
@@ -303,7 +301,7 @@ READ32_MEMBER(deco32_state::deco32_irq_controller_r)
 
 		/* ZV03082007 - video_screen_get_vblank() doesn't work for Captain America, as it expects
 		   that this bit is NOT set in rows 0-7. */
-		vblank = machine().primary_screen->vpos() > machine().primary_screen->visible_area().max_y;
+		vblank = m_screen->vpos() > m_screen->visible_area().max_y;
 		if (vblank)
 			return 0xffffff80 | 0x1 | 0x10; /* Assume VBL takes priority over possible raster/lightgun irq */
 
@@ -329,7 +327,7 @@ WRITE32_MEMBER(deco32_state::deco32_irq_controller_w)
 		scanline=(data&0xff);
 		if (m_raster_enable && scanline>0 && scanline<240)
 		{
-			m_raster_irq_timer->adjust(machine().primary_screen->time_until_pos(scanline-1, 0));
+			m_raster_irq_timer->adjust(m_screen->time_until_pos(scanline-1, 0));
 		}
 		else
 			m_raster_irq_timer->reset();
@@ -370,7 +368,7 @@ READ32_MEMBER(deco32_state::fghthist_control_r)
 	switch (offset) {
 	case 0: return 0xffff0000 | ioport("IN0")->read();
 	case 1: return 0xffff0000 | ioport("IN1")->read(); //check top bits??
-	case 2: return 0xfffffffe | m_eeprom->read_bit();
+	case 2: return 0xfffffffe | m_eeprom->do_read();
 	}
 
 	return 0xffffffff;
@@ -379,9 +377,9 @@ READ32_MEMBER(deco32_state::fghthist_control_r)
 WRITE32_MEMBER(deco32_state::fghthist_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7) {
-		m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-		m_eeprom->write_bit(data & 0x10);
-		m_eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->clk_write((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->di_write((data & 0x10) >> 4);
+		m_eeprom->cs_write((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 
 		deco32_pri_w(space,0,data&0x1,0xffffffff); /* Bit 0 - layer priority toggle */
 	}
@@ -431,15 +429,15 @@ WRITE32_MEMBER(dragngun_state::dragngun_lightgun_w)
 
 READ32_MEMBER(deco32_state::dragngun_eeprom_r)
 {
-	return 0xfffffffe | m_eeprom->read_bit();
+	return 0xfffffffe | m_eeprom->do_read();
 }
 
 WRITE32_MEMBER(deco32_state::dragngun_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7) {
-		m_eeprom->set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
-		m_eeprom->write_bit(data & 0x1);
-		m_eeprom->set_cs_line((data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->clk_write((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->di_write(data & 0x1);
+		m_eeprom->cs_write((data & 0x4) ? ASSERT_LINE : CLEAR_LINE);
 		return;
 	}
 	logerror("%s:Write control 1 %08x %08x\n",machine().describe_context(),offset,data);
@@ -583,7 +581,7 @@ WRITE32_MEMBER(deco32_state::tattass_control_w)
 
 UINT16 deco32_state::port_b_nslasher(int unused)
 {
-	return (m_eeprom->read_bit());
+	return (m_eeprom->do_read());
 }
 
 
@@ -615,9 +613,9 @@ WRITE32_MEMBER(deco32_state::nslasher_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		m_eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
-		m_eeprom->write_bit(data & 0x10);
-		m_eeprom->set_cs_line((data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		m_eeprom->clk_write((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+		m_eeprom->di_write((data & 0x10) >> 4);
+		m_eeprom->cs_write((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 
 		deco32_pri_w(space,0,data&0x3,0xffffffff); /* Bit 0 - layer priority toggle, Bit 1 - BG2/3 Joint mode (8bpp) */
 	}
@@ -772,7 +770,6 @@ static ADDRESS_MAP_START( fghthist_map, AS_PROGRAM, 32, deco32_state )
 	AM_RANGE(0x16c000, 0x16c01f) AM_READNOP
 	AM_RANGE(0x17c000, 0x17c03f) AM_READNOP
 
-//  AM_RANGE(0x200000, 0x200fff) AM_READWRITE_LEGACY(deco16_146_fghthist_prot_r, deco16_146_fghthist_prot_w) AM_SHARE("prot32ram")
 	AM_RANGE(0x200000, 0x207fff) AM_READWRITE(fghthist_protection_region_0_146_r, fghthist_protection_region_0_146_w) AM_SHARE("prot32ram") // only maps on 16-bits
 	AM_RANGE(0x208800, 0x208803) AM_WRITENOP /* ? */
 ADDRESS_MAP_END
@@ -803,7 +800,6 @@ static ADDRESS_MAP_START( fghthsta_memmap, AS_PROGRAM, 32, deco32_state )
 	AM_RANGE(0x1d4000, 0x1d5fff)  AM_RAM_WRITE(deco32_pf4_rowscroll_w) AM_SHARE("pf4_rowscroll32")
 	AM_RANGE(0x1e0000, 0x1e001f) AM_DEVREADWRITE("tilegen2", deco16ic_device, pf_control_dword_r, pf_control_dword_w)
 
-//  AM_RANGE(0x200000, 0x200fff) AM_READWRITE_LEGACY(deco16_146_fghthist_prot_r, deco16_146_fghthist_prot_w) AM_SHARE("prot32ram")
 	AM_RANGE(0x200000, 0x207fff) AM_READWRITE(fghthist_protection_region_0_146_r, fghthist_protection_region_0_146_w) AM_SHARE("prot32ram") // only maps on 16-bits
 
 ADDRESS_MAP_END
@@ -1671,12 +1667,6 @@ WRITE8_MEMBER(deco32_state::sound_bankswitch_w)
 	m_oki2->set_bank_base(((data >> 1)& 1) * 0x40000);
 }
 
-static const eeprom_interface eeprom_interface_tattass =
-{
-	10,             // address bits 10  ==> } 1024 byte eprom
-	8,              // data bits    8
-};
-
 /**********************************************************************************/
 
 MACHINE_RESET_MEMBER(deco32_state,deco32)
@@ -1720,7 +1710,6 @@ static int captaven_bank_callback( int bank )
 // pf4 not used (pf3 is in 8bpp mode)
 static const deco16ic_interface captaven_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1, // pf12only, split, fullwidth12 / fullwidth34
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x20, 0x30, /* color base */
@@ -1732,7 +1721,6 @@ static const deco16ic_interface captaven_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface captaven_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 0, // pf12only, split, fullwidth12 / fullwidth34
 	0xff, 0x00, /* trans masks (default values) */
 	0x10, 0x00, /* color base */
@@ -1805,7 +1793,7 @@ UINT16 deco32_state::port_a_fghthist(int unused)
 
 UINT16 deco32_state::port_b_fghthist(int unused)
 {
-	return machine().device<eeprom_device>(":eeprom")->read_bit();
+	return machine().device<eeprom_serial_93cxx_device>(":eeprom")->do_read();
 }
 
 UINT16 deco32_state::port_c_fghthist(int unused)
@@ -1823,7 +1811,7 @@ static MACHINE_CONFIG_START( fghthist, deco32_state ) /* DE-0380-2 PCB */
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1879,7 +1867,7 @@ static MACHINE_CONFIG_START( fghthsta, deco32_state ) /* DE-0395-1 PCB */
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1940,7 +1928,6 @@ static int dragngun_bank2_callback( int bank )
 
 static const deco16ic_interface dragngun_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1, // dragon gun definitely needs pf3/4 full width, bgs in 2nd attract demo.
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x20, 0x30, /* color base */
@@ -1952,7 +1939,6 @@ static const deco16ic_interface dragngun_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface dragngun_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 1, // dragon gun definitely needs pf3/4 full width, bgs in 2nd attract demo.
 	0xff, 0xff, /* trans masks (default values) */
 	0x04, 0x04, /* color base */
@@ -1964,7 +1950,6 @@ static const deco16ic_interface dragngun_deco16ic_tilegen2_intf =
 
 static const deco16ic_interface lockload_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1, // lockload definitely wants pf34 half width..
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x20, 0x30, /* color base */
@@ -1976,7 +1961,6 @@ static const deco16ic_interface lockload_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface lockload_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 0, // lockload definitely wants pf34 half width..
 	0xff, 0xff, /* trans masks (default values) */
 	0x04, 0x04, /* color base */
@@ -1997,7 +1981,7 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	MCFG_TIMER_DRIVER_ADD("int_timer", deco32_state, interrupt_gen)
 
@@ -2079,7 +2063,7 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))  /* to improve main<->audio comms */
 
 	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	MCFG_TIMER_DRIVER_ADD("int_timer", deco32_state, interrupt_gen)
 
@@ -2140,7 +2124,6 @@ static int tattass_bank_callback( int bank )
 
 static const deco16ic_interface tattass_deco16ic_tilegen1_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x00, 0x10, /* color base */
@@ -2152,7 +2135,6 @@ static const deco16ic_interface tattass_deco16ic_tilegen1_intf =
 
 static const deco16ic_interface tattass_deco16ic_tilegen2_intf =
 {
-	"screen",
 	0, 1,
 	0x0f, 0x0f, /* trans masks (default values) */
 	0x20, 0x30, /* color base */
@@ -2171,7 +2153,7 @@ static MACHINE_CONFIG_START( tattass, deco32_state )
 	MCFG_CPU_PROGRAM_MAP(tattass_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", deco32_state,  deco32_vbl_interrupt)
 
-	MCFG_EEPROM_ADD("eeprom", eeprom_interface_tattass)
+	MCFG_EEPROM_SERIAL_93C76_8BIT_ADD("eeprom")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -2216,7 +2198,7 @@ static MACHINE_CONFIG_START( nslasher, deco32_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))  /* to improve main<->audio comms */
 
-	MCFG_EEPROM_93C46_ADD("eeprom")
+	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -2260,6 +2242,22 @@ static MACHINE_CONFIG_START( nslasher, deco32_state )
 	MCFG_OKIM6295_ADD("oki2", 32220000/16, OKIM6295_PIN7_HIGH)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.10)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.10)
+MACHINE_CONFIG_END
+
+// the US release uses a H6280 instead of a Z80, much like Lock 'n' Loaded
+static MACHINE_CONFIG_DERIVED( nslasheru, nslasher )
+	MCFG_CPU_REPLACE("audiocpu", H6280, 32220000/8)
+	MCFG_CPU_PROGRAM_MAP(sound_map)
+
+	MCFG_SOUND_MODIFY("ymsnd")
+	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 1))
+
+	MCFG_DEVICE_REMOVE("ioprot104")
+	MCFG_DECO104_ADD("ioprot104")
+	MCFG_DECO146_SET_PORTB_CALLBACK( deco32_state, port_b_nslasher )
+	MCFG_DECO146_SET_SOUNDLATCH_CALLBACK(deco32_state, deco32_sound_cb)
+	MCFG_DECO146_SET_INTERFACE_SCRAMBLE_INTERLEAVE
+
 MACHINE_CONFIG_END
 
 /**********************************************************************************/
@@ -3018,11 +3016,11 @@ ROM_START( lockload ) /* Board No. DE-0420-1 + Bottom board DE-0421-0 slightly d
 
 	ROM_REGION( 0x1000000, "dvi", ROMREGION_ERASE00 ) /* Video data - unique PCB and this region is not used? */
 
-	ROM_REGION(0x100000, "oki1", 0 )
-	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
+	ROM_REGION(0x80000, "oki1", 0 )
+	ROM_LOAD( "mbm-07.n19",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) )
 
-	ROM_REGION(0x80000, "oki2", 0 )
-	ROM_LOAD( "mbm-07.n19",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) ) /* Does this go here or "oki2" ?? */
+	ROM_REGION(0x100000, "oki2", 0 )
+	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
 ROM_END
 
 ROM_START( gunhard ) /* Board No. DE-0420-1 + Bottom board DE-0421-0 slightly different hardware, a unique PCB and not a Dragongun conversion */
@@ -3089,11 +3087,11 @@ ROM_START( gunhard ) /* Board No. DE-0420-1 + Bottom board DE-0421-0 slightly di
 
 	ROM_REGION( 0x1000000, "dvi", ROMREGION_ERASE00 ) /* Video data - unique PCB and this region is not used? */
 
-	ROM_REGION(0x100000, "oki1", 0 )
-	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
+	ROM_REGION(0x80000, "oki1", 0 )
+	ROM_LOAD( "mbm-07.n19",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) )
 
-	ROM_REGION(0x80000, "oki2", 0 )
-	ROM_LOAD( "mbm-07.n19",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) ) /* Does this go here or "oki2" ?? */
+	ROM_REGION(0x100000, "oki2", 0 )
+	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
 ROM_END
 
 ROM_START( lockloadu ) /* Board No. DE-0359-2 + Bottom board DE-0360-4, a Dragongun conversion */
@@ -3172,13 +3170,14 @@ ROM_START( lockloadu ) /* Board No. DE-0359-2 + Bottom board DE-0360-4, a Dragon
 //  ROM_LOAD( "mar-27.bin",  0x00000,  0x100000,  CRC(3fcbd10f) SHA1(70fc7b88bbe35bbae1de14364b03d0a06d541de5) )
 //  ROM_LOAD( "mar-28.bin",  0x00000,  0x100000,  CRC(5a2ec71d) SHA1(447c404e6bb696f7eb7c61992a99b9be56f5d6b0) )
 
-	ROM_REGION(0x100000, "oki1", 0 )
-	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
-
-	ROM_REGION(0x80000, "oki2", 0 )
+	// not sure why the IC positions are swapped compared to Dragon Gun
+	ROM_REGION(0x80000, "oki1", 0 )
 	ROM_LOAD( "mbm-07.n21",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) )
 
-	ROM_REGION(0x80000, "oki3", 0 )
+	ROM_REGION(0x100000, "oki2", ROMREGION_ERASE00 )
+	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
+
+	ROM_REGION(0x80000, "oki3", ROMREGION_ERASE00 )
 	ROM_LOAD( "mar-07.n19",  0x00000, 0x80000,  CRC(40287d62) SHA1(c00cb08bcdae55bcddc14c38e88b0484b1bc9e3e) )  // same as dragngun, unused?
 ROM_END
 
@@ -3361,6 +3360,8 @@ ROM_START( nslasher )
 	ROM_REGION(0x80000, "oki2", 0 )
 	ROM_LOAD( "mbh-11.16l", 0x000000,  0x80000,  CRC(0ec40b6b) SHA1(9fef44149608ae2a00f6a75a6f77f2efcab6e78e) )
 
+	ROM_REGION(0x200, "prom", 0 )
+	ROM_LOAD( "ln-00.j7", 0x000000,  0x200, CRC(5e83eaf3) SHA1(95f5eb8e56dff6c2dce7c39a6dd458bfc38fe1cf) )
 ROM_END
 
 ROM_START( nslasherj )
@@ -3394,6 +3395,9 @@ ROM_START( nslasherj )
 
 	ROM_REGION(0x80000, "oki2", 0 )
 	ROM_LOAD( "mbh-11.16l", 0x000000,  0x80000,  CRC(0ec40b6b) SHA1(9fef44149608ae2a00f6a75a6f77f2efcab6e78e) )
+
+	ROM_REGION(0x200, "prom", 0 )
+	ROM_LOAD( "ln-00.j7", 0x000000,  0x200, CRC(5e83eaf3) SHA1(95f5eb8e56dff6c2dce7c39a6dd458bfc38fe1cf) )
 ROM_END
 
 ROM_START( nslashers )
@@ -3427,8 +3431,46 @@ ROM_START( nslashers )
 
 	ROM_REGION(0x80000, "oki2", 0 )
 	ROM_LOAD( "mbh-11.16l", 0x000000,  0x80000,  CRC(0ec40b6b) SHA1(9fef44149608ae2a00f6a75a6f77f2efcab6e78e) )
+
+	ROM_REGION(0x200, "prom", 0 )
+	ROM_LOAD( "ln-00.j7", 0x000000,  0x200, CRC(5e83eaf3) SHA1(95f5eb8e56dff6c2dce7c39a6dd458bfc38fe1cf) )
 ROM_END
 
+ROM_START( nslasheru )
+	ROM_REGION(0x100000, "maincpu", 0 ) /* Encrypted ARM 32 bit code */
+	ROM_LOAD32_WORD( "00.f1", 0x000000, 0x80000, CRC(944f3329) SHA1(7e7909e203b9752de3d3d798c6f84ac6ae824a07) )
+	ROM_LOAD32_WORD( "01.f2", 0x000002, 0x80000, CRC(ac12d18a) SHA1(7cd4e843bf575c70c5c39a8afa78b803106f59b0) )
+
+	ROM_REGION(0x10000, "audiocpu", 0 ) /* Sound CPU */
+	ROM_LOAD( "02.l18",  0x00000,  0x10000, CRC(5e63bd91) SHA1(a6ac3c8c50f44cf2e6cf029aef1c974d1fc16ed5) )
+
+	ROM_REGION( 0x200000, "gfx1", 0 )
+	ROM_LOAD( "mbh-00.8c",  0x000000,  0x200000,  CRC(a877f8a3) SHA1(79253525f360a73161894f31e211e4d6b38d307a) ) /* Encrypted tiles */
+
+	ROM_REGION( 0x200000, "gfx2", 0 )
+	ROM_LOAD( "mbh-01.9c",  0x000000,  0x200000,  CRC(1853dafc) SHA1(b1183c0db301cbed9f079c782202dbfc553b198e) ) /* Encrypted tiles */
+
+	ROM_REGION( 0xa00000, "gfx3", 0 ) /* Sprites */
+	ROM_LOAD16_BYTE( "mbh-02.14c",  0x000001,  0x200000, CRC(b2f158a1) SHA1(4f8c0b324813db198fe1dad7fff4185b828b94de) )
+	ROM_LOAD16_BYTE( "mbh-04.16c",  0x000000,  0x200000, CRC(eecfe06d) SHA1(2df817fe5e2ea31207b217bb03dc58979c05d0d2) )
+	ROM_LOAD16_BYTE( "mbh-03.15c",  0x400001,  0x80000,  CRC(787787e3) SHA1(531444e3f28aa9a7539a5a76ca94a9d6b97274c5) )
+	ROM_LOAD16_BYTE( "mbh-05.17c",  0x400000,  0x80000,  CRC(1d2b7c17) SHA1(ae0b8e0448a1a8180fb424fb0bc8a4302f8ff602) )
+	ROM_LOAD32_BYTE( "mbh-06.18c",  0x500000,  0x100000, CRC(038c2127) SHA1(5bdb215305f1a419fde27a83b623a38b9328e560) )
+	ROM_LOAD32_BYTE( "mbh-07.19c",  0x900000,  0x40000,  CRC(bbd22323) SHA1(6ab665b2e6d04cdadc48c52e15098e978b61fe10) )
+
+	ROM_REGION( 0x100000, "gfx4", 0 ) /* Sprites */
+	ROM_LOAD16_BYTE( "mbh-08.16e",  0x000001,  0x80000,  CRC(cdd7f8cb) SHA1(910bbe8783c0ba722e9d6399b332d658fa059fdb) )
+	ROM_LOAD16_BYTE( "mbh-09.18e",  0x000000,  0x80000,  CRC(33fa2121) SHA1(eb0e99d29b1ad9995df28e5b7cfc89d53efb53c3) )
+
+	ROM_REGION(0x80000, "oki1", 0 )
+	ROM_LOAD( "mbh-10.14l", 0x000000,  0x80000,  CRC(c4d6b116) SHA1(c5685bce6a6c6a74ca600ebf766ba1007f0dc666) )
+
+	ROM_REGION(0x80000, "oki2", 0 )
+	ROM_LOAD( "mbh-11.16l", 0x000000,  0x80000,  CRC(0ec40b6b) SHA1(9fef44149608ae2a00f6a75a6f77f2efcab6e78e) )
+
+	ROM_REGION(0x200, "prom", 0 )
+	ROM_LOAD( "ln-00.j7", 0x000000,  0x200, CRC(5e83eaf3) SHA1(95f5eb8e56dff6c2dce7c39a6dd458bfc38fe1cf) )
+ROM_END
 
 DRIVER_INIT_MEMBER(deco32_state,captaven)
 {
@@ -3571,18 +3613,26 @@ GAME( 1991, captavenu,  captaven, captaven, captaven, deco32_state,   captaven, 
 GAME( 1991, captavenuu, captaven, captaven, captaven, deco32_state,   captaven,  ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.6)", 0 )
 GAME( 1991, captavenua, captaven, captaven, captaven, deco32_state,   captaven,  ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.4)", 0 )
 GAME( 1991, captavenj,  captaven, captaven, captaven, deco32_state,   captaven,  ROT0, "Data East Corporation", "Captain America and The Avengers (Japan Rev 0.2)", 0 )
-GAME( 1993, dragngun,   0,        dragngun, dragngun, dragngun_state, dragngun,  ROT0, "Data East Corporation", "Dragon Gun (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, dragngunj,  dragngun, dragngun, dragngun, dragngun_state, dragngunj, ROT0, "Data East Corporation", "Dragon Gun (Japan)", GAME_IMPERFECT_GRAPHICS )
+
 GAME( 1993, fghthist,   0,        fghthist, fghthist, deco32_state,   fghthist,  ROT0, "Data East Corporation", "Fighter's History (World ver 43-07, DE-0380-2 PCB)", 0 )
 GAME( 1993, fghthistu,  fghthist, fghthist, fghthist, deco32_state,   fghthist,  ROT0, "Data East Corporation", "Fighter's History (US ver 42-03, DE-0380-2 PCB)", 0 )
 GAME( 1993, fghthistua, fghthist, fghthsta, fghthist, deco32_state,   fghthist,  ROT0, "Data East Corporation", "Fighter's History (US ver 42-05, DE-0395-1 PCB)", 0 )
 GAME( 1993, fghthistj,  fghthist, fghthist, fghthist, deco32_state,   fghthist,  ROT0, "Data East Corporation", "Fighter's History (Japan ver 42-03, DE-0380-2 PCB)", 0 )
 GAME( 1993, fghthistja, fghthist, fghthsta, fghthist, deco32_state,   fghthist,  ROT0, "Data East Corporation", "Fighter's History (Japan ver 42-03, DE-0395-1 PCB)", 0 )
-GAME( 1994, lockload,   0,        lockload, lockload, dragngun_state, lockload,  ROT0, "Data East Corporation", "Locked 'n Loaded (World)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1994, gunhard,    lockload, lockload, lockload, dragngun_state, lockload,  ROT0, "Data East Corporation", "Gun Hard (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1994, lockloadu,  lockload, lockloadu,lockload, dragngun_state, lockload,  ROT0, "Data East Corporation", "Locked 'n Loaded (US)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1994, tattass,    0,        tattass,  tattass,  deco32_state,   tattass,   ROT0, "Data East Pinball",     "Tattoo Assassins (US prototype)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, tattassa,   tattass,  tattass,  tattass,  deco32_state,   tattass,   ROT0, "Data East Pinball",     "Tattoo Assassins (Asia prototype)", GAME_IMPERFECT_GRAPHICS )
+
 GAME( 1994, nslasher,   0,        nslasher, nslasher, deco32_state,   nslasher,  ROT0, "Data East Corporation", "Night Slashers (Korea Rev 1.3)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, nslasherj,  nslasher, nslasher, nslasher, deco32_state,   nslasher,  ROT0, "Data East Corporation", "Night Slashers (Japan Rev 1.2)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, nslashers,  nslasher, nslasher, nslasher, deco32_state,   nslasher,  ROT0, "Data East Corporation", "Night Slashers (Over Sea Rev 1.2)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, nslasheru,  nslasher, nslasheru,nslasher, deco32_state,   nslasher,  ROT0, "Data East Corporation", "Night Slashers (US Rev 1.2, HuC6280 Sound CPU)", GAME_IMPERFECT_GRAPHICS )
+
+GAME( 1994, tattass,    0,        tattass,  tattass,  deco32_state,   tattass,   ROT0, "Data East Pinball",     "Tattoo Assassins (US prototype)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, tattassa,   tattass,  tattass,  tattass,  deco32_state,   tattass,   ROT0, "Data East Pinball",     "Tattoo Assassins (Asia prototype)", GAME_IMPERFECT_GRAPHICS )
+
+
+// Dragon Gun / Lock 'n' Loaded have very different sprite hardware
+GAME( 1993, dragngun,   0,        dragngun, dragngun, dragngun_state, dragngun,  ROT0, "Data East Corporation", "Dragon Gun (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, dragngunj,  dragngun, dragngun, dragngun, dragngun_state, dragngunj, ROT0, "Data East Corporation", "Dragon Gun (Japan)", GAME_IMPERFECT_GRAPHICS )
+
+GAME( 1994, lockload,   0,        lockload, lockload, dragngun_state, lockload,  ROT0, "Data East Corporation", "Locked 'n Loaded (World)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1994, gunhard,    lockload, lockload, lockload, dragngun_state, lockload,  ROT0, "Data East Corporation", "Gun Hard (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1994, lockloadu,  lockload, lockloadu,lockload, dragngun_state, lockload,  ROT0, "Data East Corporation", "Locked 'n Loaded (US, Dragon Gun conversion)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) // HuC6280 Sound CPU

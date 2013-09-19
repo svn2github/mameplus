@@ -797,7 +797,7 @@ WRITE8_MEMBER( tms9902_device::cruwrite )
 }
 
 /*-------------------------------------------------
-    DEVICE_STOP( tms9902 )
+    device_stop - device-specific stop
 -------------------------------------------------*/
 
 void tms9902_device::device_stop()
@@ -810,7 +810,7 @@ void tms9902_device::device_stop()
 }
 
 /*-------------------------------------------------
-    DEVICE_RESET( tms9902 )
+    device_reset - device-specific reset
 -------------------------------------------------*/
 
 void tms9902_device::device_reset()
@@ -819,7 +819,7 @@ void tms9902_device::device_reset()
 }
 
 /*-------------------------------------------------
-    DEVICE_START( tms9902 )
+    device_start - device-specific startup
 -------------------------------------------------*/
 
 void tms9902_device::device_start()

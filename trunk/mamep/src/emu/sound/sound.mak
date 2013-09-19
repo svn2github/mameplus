@@ -154,6 +154,15 @@ SOUNDOBJS += $(SOUNDOBJ)/es5506.o
 endif
 
 
+#-------------------------------------------------
+# Ensoniq "pump" device, interfaces 5505/5506 with 5510
+#@src/emu/sound/esqpump.h,SOUNDS += ESQPUMP
+#-------------------------------------------------
+
+ifneq ($(filter ESQPUMP,$(SOUNDS)),)
+SOUNDOBJS += $(SOUNDOBJ)/esqpump.o
+endif
+
 
 #-------------------------------------------------
 # Excellent Systems ADPCM sound chip
@@ -504,17 +513,6 @@ endif
 
 
 #-------------------------------------------------
-# S2636 wave generator
-#@src/emu/sound/s2636.h,SOUNDS += S2636
-#-------------------------------------------------
-
-ifneq ($(filter S2636,$(SOUNDS)),)
-SOUNDOBJS += $(SOUNDOBJ)/s2636.o
-endif
-
-
-
-#-------------------------------------------------
 # Sega custom sound chips
 #@src/emu/sound/segapcm.h,SOUNDS += SEGAPCM
 #@src/emu/sound/multipcm.h,SOUNDS += MULTIPCM
@@ -727,6 +725,15 @@ ifneq ($(filter TC8830F,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/tc8830f.o
 endif
 
+
+#-------------------------------------------------
+# NEC uPD7752
+#@src/emu/sound/upd7752.h,SOUNDS += UPD7752
+#-------------------------------------------------
+
+ifneq ($(filter UPD7752,$(SOUNDS)),)
+SOUNDOBJS += $(SOUNDOBJ)/upd7752.o
+endif
 
 
 #-------------------------------------------------
