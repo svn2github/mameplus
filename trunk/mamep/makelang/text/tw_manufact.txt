@@ -138,7 +138,7 @@ Acom
 Advanced Video Technology
 
 
-# Guardian Storm (horizontal, not encrypted)
+# Bubble 2000
 Afega
 
 
@@ -608,10 +608,6 @@ Comad & New Japan System
 
 # CD32 Bios
 Commodore Business Machines
-
-
-# Video Stars
-Competitive Video?
 
 
 # Puyo Puyo (World)
@@ -1846,6 +1842,10 @@ Mitsubishi
 Model Racing
 
 
+# Tap a Tune
+Moloney Manufacturing Inc.
+
+
 # Lady Frog
 Mondial Games
 
@@ -1890,7 +1890,7 @@ NIX
 NIX?
 
 
-# Arcadia
+# Arcadia (NMK)
 NMK
 
 
@@ -1942,7 +1942,7 @@ Nazionale Elettronica
 Neodev
 
 
-# Bonanza (Revision 3)
+# Touchstar Bonanza (Revision 3)
 New Image Technologies
 
 
@@ -2156,10 +2156,6 @@ Panac
 
 # CF-2700G (Germany)
 Panasonic
-
-
-# Hot Bubble
-Pandora
 
 
 # Silver Millennium
@@ -2718,7 +2714,7 @@ Subsino
 Subtle Style
 
 
-# Cotton (set 3, World, FD1094 317-0181a)
+# Cotton (set 4, World, FD1094 317-0181a)
 Success
 
 
@@ -2950,7 +2946,7 @@ The Game Room
 Thomas Automatics
 
 
-# Trivia Madness
+# Trivia Madness - Series A Question set
 Thunderhead Inc.
 
 
@@ -2998,7 +2994,7 @@ Triumph Software Inc.
 Tung Sheng Electronics
 
 
-# Bubble 2000
+# Mad Donna (set 1)
 Tuning
 
 

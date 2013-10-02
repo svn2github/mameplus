@@ -2,479 +2,411 @@
 (primary)
 (主显示器)
 
-# osd/windows/input.c: 1230
+# osd/windows/input.c: 1232
 Assign joystick %s to player %d\n
 分配游戏杆 %s 到玩家 %d\n
 
-# osd/windows/d3dhlsl.c: 2688
+# osd/windows/d3dhlsl.c: 2901
 Blue Convergence X
 X 轴蓝色收敛度
 
-# osd/windows/d3dhlsl.c: 2689
+# osd/windows/d3dhlsl.c: 2902
 Blue Convergence Y
 Y 轴蓝色收敛度
 
-# osd/windows/d3dhlsl.c: 2701
+# osd/windows/d3dhlsl.c: 2915
 Blue DC Offset
 蓝色 DC 偏移量
 
-# osd/windows/d3dhlsl.c: 2710
+# osd/windows/d3dhlsl.c: 2924
 Blue Floor
 蓝色层
 
-# osd/windows/d3dhlsl.c: 2698
+# osd/windows/d3dhlsl.c: 2911
 Blue Output from Blue Input
 来自蓝色输入的蓝色输出
 
-# osd/windows/d3dhlsl.c: 2697
+# osd/windows/d3dhlsl.c: 2910
 Blue Output from Green Input
 来自绿色输入的蓝色输出
 
-# osd/windows/d3dhlsl.c: 2696
+# osd/windows/d3dhlsl.c: 2909
 Blue Output from Red Input
 来自红色输入的蓝色输出
 
-# osd/windows/d3dhlsl.c: 2713
+# osd/windows/d3dhlsl.c: 2927
 Blue Phosphor Life
 蓝色荧光度
 
-# osd/windows/d3dhlsl.c: 2682
+# osd/windows/d3dhlsl.c: 2895
 Blue Position Offset X
 蓝色荧光 X 轴偏移量
 
-# osd/windows/d3dhlsl.c: 2683
+# osd/windows/d3dhlsl.c: 2896
 Blue Position Offset Y
 蓝色荧光 Y 轴偏移量
 
-# osd/windows/d3dhlsl.c: 2707
-Blue Power
-蓝色强度
-
-# osd/windows/d3dhlsl.c: 2704
+# osd/windows/d3dhlsl.c: 2918
 Blue Scale
 蓝色比例
 
-# osd/windows/winmain.c: 330
+# osd/windows/winmain.c: 333
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定选项
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 329
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定选项
 
-# osd/windows/d3dhlsl.c: 2674
+# osd/windows/d3dhlsl.c: 2889
 Defocus X
 X 轴散焦度
 
-# osd/windows/d3dhlsl.c: 2675
+# osd/windows/d3dhlsl.c: 2890
 Defocus Y
 Y 轴散焦度
 
-# osd/windows/drawd3d.c: 1205
+# osd/windows/drawd3d.c: 1293
 Device %s currently in an unsupported mode\n
 设备 %s 当前处于未支持的模式\n
 
-# osd/windows/drawd3d.c: 1175
+# osd/windows/drawd3d.c: 1263
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: 正在设置界面卡 #%d = %s\n
 
-# osd/windows/drawd3d.c: 747
+# osd/windows/drawd3d.c: 971
 Direct3D: Device created at %dx%d\n
 Direct3D: 设备创建在 %dx%d\n
 
-# osd/windows/drawd3d.c: 593, 2441
+# osd/windows/drawd3d.c: 802, 2726
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: 设备 begin_scene 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1274, 1318, 1362, 1396, 1432, 1469, 1538, 1563 osd/windows/drawd3d.c: 580
+# osd/windows/d3dhlsl.c: 943, 1187, 1357, 1383, 1416, 1446, 1474, 1503, 1555, 1579, 1666, 1951, 1983, 2004, 2170 osd/windows/drawd3d.c: 790
 Direct3D: Error %08X during device clear call\n
 Direct3D: 设备清除时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1283, 1327, 1371, 1403, 1439, 1476, 1505, 1547, 1572, 1595, 1618, 1642, 1671 osd/windows/drawd3d.c: 1708, 2490
+# osd/windows/d3dhlsl.c: 1160, 1207, 1366, 1392, 1425, 1453, 1481, 1510, 1530, 1564, 1588, 1619, 1640, 1675, 1719, 1764, 1852, 1906, 1958, 1992, 2025 osd/windows/drawd3d.c: 1940, 2776
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: 设备 draw_primitive 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 631, 2494
+# osd/windows/drawd3d.c: 874, 2780
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: 设备 end_scene 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1150 osd/windows/drawd3d.c: 2434
+# osd/windows/d3dhlsl.c: 931, 1116 osd/windows/drawd3d.c: 2719
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: 设备 get_render_target 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 637
+# osd/windows/drawd3d.c: 878
 Direct3D: Error %08X during device present call\n
 Direct3D: 设备提交调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 300, 307, 314, 321
+# osd/windows/drawd3d.c: 447, 454, 461, 468
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: 设备 set_render_state 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1536
+# osd/windows/d3dhlsl.c: 1553, 1981
 Direct3D: Error %08X during device set_render_target call 4\n
 Direct3D: 设备 set_render_target 调用 4 时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1561
+# osd/windows/d3dhlsl.c: 1577
 Direct3D: Error %08X during device set_render_target call 5\n
 Direct3D: 设备 set_render_target 调用 5 时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1430, 1467
+# osd/windows/d3dhlsl.c: 1472, 1501, 1711, 1757, 1897, 1949
 Direct3D: Error %08X during device set_render_target call 6\n
 Direct3D: 设备 set_render_target 调用 6 时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1498
+# osd/windows/d3dhlsl.c: 1523
 Direct3D: Error %08X during device set_render_target call 7\n
 Direct3D: 设备 set_render_target 调用 7 时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1272, 1316, 1360, 1394, 1586, 1609, 1633
+# osd/windows/d3dhlsl.c: 941, 945, 1140, 1169, 1185, 1218, 1355, 1381, 1414, 1444, 1610, 1631, 1845, 1858, 2002, 2006, 2168, 2172
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1657, 2488
+# osd/windows/drawd3d.c: 1887, 2774
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: 设备 set_stream_source 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 222, 2447
+# osd/windows/drawd3d.c: 373, 2732
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: 设备 set_texture 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 234, 236, 238, 240, 252, 254, 256, 258, 270, 272
+# osd/windows/drawd3d.c: 384, 386, 388, 390, 401, 403, 405, 407, 418, 420
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: 设备 set_texture_stage_state 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2422
+# osd/windows/drawd3d.c: 2707
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: 设备 stretct_rect 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 960, 962, 964, 966, 981, 995, 1009, 1023, 1049, 1073, 1087, 1100, 1107
+# osd/windows/drawd3d.c: 498, 504, 510, 512, 514, 516, 1148, 1162, 1176, 1188
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2401
+# osd/windows/drawd3d.c: 2686
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: 材质 get_surface_level 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 319, 403 osd/windows/drawd3d.c: 2377
+# osd/windows/d3dhlsl.c: 348, 430 osd/windows/drawd3d.c: 2661
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: 材质 unlock_rect 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2451
+# osd/windows/drawd3d.c: 2736
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 顶点缓冲 lock 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1652, 2483
+# osd/windows/drawd3d.c: 1882, 2769
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 顶点缓冲解锁调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1036
-Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
-Direct3D: 错误 - 设备不支持 alpha blending 搭配 inverted source alpha\n
-
-# osd/windows/drawd3d.c: 1031
-Direct3D: Error - Device does not support dest alpha blending with one\n
-Direct3D: 错误 - 设备不支持 alpha blending 搭配系数 1\n
-
-# osd/windows/drawd3d.c: 1026
-Direct3D: Error - Device does not support dest alpha blending with zero\n
-Direct3D: 错误 - 设备不支持 alpha blending 搭配系数 0\n
-
-# osd/windows/drawd3d.c: 984
+# osd/windows/drawd3d.c: 1151
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: 错误 - 设备不支持立即演示\n
 
-# osd/windows/drawd3d.c: 989
+# osd/windows/drawd3d.c: 1156
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: 错误 - 设备不支持每个刷新率演示\n
 
-# osd/windows/drawd3d.c: 1017
-Direct3D: Error - Device does not support source alpha blending with destination color\n
-Direct3D: 错误 - 设备不支持 source alpha blending 搭配目标颜色\n
-
-# osd/windows/drawd3d.c: 1012
-Direct3D: Error - Device does not support source alpha blending with source alpha\n
-Direct3D: 错误 - 设备不支持 source alpha blending 搭配 source alpha\n
-
-# osd/windows/drawd3d.c: 1043
-Direct3D: Error - Device does not support texture alpha\n
-Direct3D: 错误 - 设备不支持材质 alpha\n
-
-# osd/windows/d3d8intf.c: 134
-Direct3D: Error attempting to initialize Direct3D8\n
-Direct3D: 试图初始化 Direct3D8 时发生错误\n
-
-# osd/windows/d3d9intf.c: 133
+# osd/windows/d3d9intf.c: 127
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: 试图初始化 Direct3D9 时发生错误\n
 
-# osd/windows/drawd3d.c: 751
+# osd/windows/drawd3d.c: 532
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 最大材质大小 = %dx%d\n
 
-# osd/windows/drawd3d.c: 1360
+# osd/windows/drawd3d.c: 1442
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 模式选定 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1304
+# osd/windows/drawd3d.c: 1389
 Direct3D: Selecting video mode...\n
 Direct3D: 正在选定视频模式...\n
 
-# osd/windows/d3d8intf.c: 116
-Direct3D: Unable to access d3d8.dll\n
-Direct3D: 不能访问 d3d8.dll\n
-
-# osd/windows/d3d9intf.c: 115
+# osd/windows/d3d9intf.c: 109
 Direct3D: Unable to access d3d9.dll\n
 Direct3D: 不能访问 d3d9.dll\n
 
-# osd/windows/d3d8intf.c: 124
-Direct3D: Unable to find Direct3DCreate8\n
-Direct3D: 无法找到 Direct3DCreate8\n
-
-# osd/windows/d3d9intf.c: 123
+# osd/windows/d3d9intf.c: 117
 Direct3D: Unable to find Direct3DCreate9\n
 Direct3D: 无法找到 Direct3DCreate9\n
 
-# osd/windows/d3dhlsl.c: 708
+# osd/windows/d3dhlsl.c: 950
 Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n
 Direct3D: 无法为初始化系统内存目标 HLSL AVI 转储 (%08x)\n
 
-# osd/windows/d3dhlsl.c: 234
+# osd/windows/d3dhlsl.c: 265
 Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n
 Direct3D: 无法为初始化系统内存目标 HLSL 快照 (%08x)\n
 
-# osd/windows/d3dhlsl.c: 716
+# osd/windows/d3dhlsl.c: 958
 Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n
 Direct3D: 无法为初始化视频内存目标 HLSL AVI 转储 (%08x)\n
 
-# osd/windows/d3dhlsl.c: 242
+# osd/windows/d3dhlsl.c: 273
 Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n
 Direct3D: 无法为初始化视频内存目标 HLSL 快照 (%08x)\n
 
-# osd/windows/d3d8intf.c: 148
-Direct3D: Using Direct3D 8\n
-Direct3D: 正在使用 Direct3D 8\n
-
-# osd/windows/d3d9intf.c: 175
+# osd/windows/d3d9intf.c: 160
 Direct3D: Using Direct3D 9\n
 Direct3D: 正在使用 Direct3D 9\n
 
-# osd/windows/drawd3d.c: 1109
+# osd/windows/drawd3d.c: 506
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: 正在使用 StretchRect 于预缩放\n
 
-# osd/windows/drawd3d.c: 1103
+# osd/windows/drawd3d.c: 500
 Direct3D: Using dynamic textures\n
 Direct3D: 正在使用动态材质\n
 
-# osd/windows/drawd3d.c: 1057
-Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
-Direct3D: 警告 - 设备不支持放大双线材质过滤\n
-
-# osd/windows/drawd3d.c: 1067
-Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
-Direct3D: 警告 - 设备不支持缩小双线性材质过滤\n
-
-# osd/windows/drawd3d.c: 1003
+# osd/windows/drawd3d.c: 1170
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告 - 设备不支持硬件位图化\n
 
-# osd/windows/drawd3d.c: 1052
-Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
-Direct3D: 警告 - 设备不支持放大抽样材质过滤\n
-
-# osd/windows/drawd3d.c: 1062
-Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
-Direct3D: 警告 - 设备不支持缩小抽样材质过滤\n
-
-# osd/windows/drawd3d.c: 998
+# osd/windows/drawd3d.c: 1165
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告 - 设备不支持在伫列描绘后页面翻转\n
 
-# osd/windows/drawd3d.c: 1076
-Direct3D: Warning - Device does not support texture clamping\n
-Direct3D: 警告 - 设备不支持材质嵌位\n
-
-# osd/windows/drawd3d.c: 1090
+# osd/windows/drawd3d.c: 1179
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告 - 设备不支持材质调节\n
 
-# osd/windows/drawd3d.c: 1081
-Direct3D: Warning - Device does not support texture wrapping\n
-Direct3D: 警告 - 设备不支持材质包装\n
-
-# osd/windows/drawd3d.c: 765
+# osd/windows/drawd3d.c: 986
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告 - 设备不支持全屏幕灰度修正。\n
 
-# osd/windows/drawd3d.c: 688
+# osd/windows/drawd3d.c: 528
 Direct3D: YUV format = %s\n
 Direct3D: YUV 格式 = %s\n
 
-# osd/windows/drawd3d.c: 1782
+# osd/windows/drawd3d.c: 2056
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 调整预缩放由 %dx%d 到 %dx%d\n
 
-# osd/windows/drawd3d.c: 1145
+# osd/windows/drawd3d.c: 1228
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: 无法重新创建设备资源; 永久失败\n
 
-# osd/windows/drawd3d.c: 1132
+# osd/windows/drawd3d.c: 1210
 Direct3D: resetting device\n
 Direct3D: 正在重设设备\n
 
-# osd/windows/drawdd.c: 821
+# osd/windows/drawdd.c: 792
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s 已创建界面: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1158
+# osd/windows/drawdd.c: 1129
 DirectDraw: Configuring device %s\n
 Direct3D: 正在设置设备 %s\n
 
-# osd/windows/drawdd.c: 649
+# osd/windows/drawdd.c: 620
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: 试图设置灰度修正时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 532
+# osd/windows/drawdd.c: 503
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 试图设置视频模式 %dx%d@%d 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1118
+# osd/windows/drawdd.c: 1089
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: blit 到画面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1085, 1094, 1103, 1112
+# osd/windows/drawdd.c: 1056, 1065, 1074, 1083
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 清除画面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 806
+# osd/windows/drawdd.c: 777
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: 创建 %s 界面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 847
+# osd/windows/drawdd.c: 818
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: 创建 clipper 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 497, 1147
+# osd/windows/drawdd.c: 468, 1118
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1244
+# osd/windows/drawdd.c: 1215
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: DirectDrawEnumerateEx 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1334
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 748
+# osd/windows/drawdd.c: 719
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 522
+# osd/windows/drawdd.c: 493
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 516
+# osd/windows/drawdd.c: 487
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 814
+# osd/windows/drawdd.c: 785
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: 取得 %s 界面描述时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 581
+# osd/windows/drawdd.c: 552
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 取得附加列块界面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1166
+# osd/windows/drawdd.c: 1137
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 取得当前显示模式时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 390
+# osd/windows/drawdd.c: 361
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: 锁定 blit 界面时发生错 %08X\n
 
-# osd/windows/drawdd.c: 855
+# osd/windows/drawdd.c: 826
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: 设置 clipper hwnd 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 863
+# osd/windows/drawdd.c: 834
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: 设置主要界面的 clipper 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 463
+# osd/windows/drawdd.c: 434
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: 解锁 blit 界面时发生错 %08X\n
 
-# osd/windows/drawdd.c: 469, 1124
+# osd/windows/drawdd.c: 440, 1095
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: 等待 VBLANK 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 505
+# osd/windows/drawdd.c: 476
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: 警告 - 设备不符合 DirectDraw 描绘的最低要求\n
 
-# osd/windows/drawdd.c: 384
+# osd/windows/drawdd.c: 355
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: 遗失界面; 正在删除并再试下一个帧\n
 
-# osd/windows/drawdd.c: 1364
+# osd/windows/drawdd.c: 1335
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 模式选定 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 959
+# osd/windows/drawdd.c: 930
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新的 blit 大小 = %dx%d\n
 
-# osd/windows/drawdd.c: 1361
+# osd/windows/drawdd.c: 1332
 DirectDraw: Selecting video mode...\n
 DirectDraw: 正在选定视频模式...\n
 
-# osd/windows/drawdd.c: 229
+# osd/windows/drawdd.c: 199
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: 无法访问 ddraw.dll\n
 
-# osd/windows/drawdd.c: 237
+# osd/windows/drawdd.c: 207
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: 无法找到 DirectDrawCreateEx\n
 
-# osd/windows/drawdd.c: 247
+# osd/windows/drawdd.c: 217
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: 无法找到 DirectDrawEnumerateExA\n
 
-# osd/windows/drawdd.c: 419, 455, 1200
+# osd/windows/drawdd.c: 390, 426, 1171
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 未知的目标模式: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 262
+# osd/windows/drawdd.c: 233
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: 正在使用 DirectDraw 7\n
 
-# osd/windows/drawdd.c: 755
+# osd/windows/drawdd.c: 726
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告 - 设备不支持硬件拉伸\n
 
-# osd/windows/drawdd.c: 509
+# osd/windows/drawdd.c: 480
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告 - 设备可能无法正常配合 DirectDraw 描绘\n
 
-# osd/windows/drawdd.c: 632
+# osd/windows/drawdd.c: 603
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 设备不支持全屏幕灰度修正。\n
 
-# osd/windows/input.c: 1214
+# osd/windows/input.c: 1216
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: 无法列举游戏杆 (result=%08X)\n
 
-# osd/windows/input.c: 1199
+# osd/windows/input.c: 1201
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: 无法列举键盘 (result=%08X)\n
 
-# osd/windows/input.c: 1208
+# osd/windows/input.c: 1210
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: 无法列举鼠标 (result=%08X)\n
 
-# osd/windows/input.c: 1188
+# osd/windows/input.c: 1190
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
@@ -482,7 +414,7 @@ DirectInput: 正在使用 DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要缓冲: %d Hz, %d 位, %d 声道\n
 
-# osd/windows/d3dhlsl.c: 571
+# osd/windows/d3dhlsl.c: 614
 Error creating AVI: %s\n
 创建 AVI 错误: %s\n
 
@@ -498,11 +430,11 @@ Error creating DirectSound: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 创建主要 DirectSound 缓冲时发生错误: %08x\n
 
-# osd/windows/drawd3d.c: 819
+# osd/windows/drawd3d.c: 1024
 Error creating vertex buffer (%08X)
 创建顶点缓冲时发生错误 (%08X)
 
-# osd/windows/d3dhlsl.c: 394
+# osd/windows/d3dhlsl.c: 421
 Error generating PNG for HLSL snapshot: png_error = %d\n
 生成 HLSL 快照错误: png_error = %d\n
 
@@ -510,15 +442,15 @@ Error generating PNG for HLSL snapshot: png_error = %d\n
 Error getting DirectSound capabilities: %08x\n
 获取 DirectSound 能力时发生错误: %08x\n
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1260
 Error getting identifier for adapter #%d\n
 为界面卡取得标识信息时发生错误 #%d\n
 
-# osd/windows/drawdd.c: 1155
+# osd/windows/drawdd.c: 1126
 Error getting identifier for device\n
 为设备取得标识信息时发生错误 \n
 
-# osd/windows/drawd3d.c: 1181
+# osd/windows/drawd3d.c: 1269
 Error getting mode for adapter #%d\n
 为界面卡取得模式时发生错误 #%d\n
 
@@ -542,19 +474,19 @@ Error setting DirectSound cooperative level: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 设置主要 DirectSound 缓冲格式时发生错误: %08x\n
 
-# osd/windows/drawd3d.c: 674
+# osd/windows/drawd3d.c: 905
 Error: A8R8G8B8 format textures not supported\n
 错误: 未支持 A8R8G8B8 格式的材质\n
 
-# osd/windows/drawd3d.c: 664
+# osd/windows/drawd3d.c: 895
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 错误: 设备未达到 Direct3D 描绘的最低要求\n
 
-# osd/windows/drawd3d.c: 706
+# osd/windows/drawd3d.c: 927
 Error: unable to configure a screen texture format\n
 错误: 未能配置画面材质格式\n
 
-# osd/windows/winmain.c: 419
+# osd/windows/winmain.c: 440
 FULL SCREEN OPTIONS
 全屏幕选项
 
@@ -562,215 +494,199 @@ FULL SCREEN OPTIONS
 Failed to create pause event\n
 无法创建暂停事件\n
 
-# osd/windows/window.c: 901
+# osd/windows/window.c: 925
 Failed to create window class\n
 无法创建窗口类别\n
-
-# osd/windows/window.c: 263
-Failed to create window thread\n
-无法创建窗口线程\n
 
 # osd/windows/window.c: 257
 Failed to create window thread ready event\n
 无法创建窗口线程预备事件\n
 
-# osd/windows/d3dhlsl.c: 2686
+# osd/windows/window.c: 263
+Failed to create window thread\n
+无法创建窗口线程\n
+
+# osd/windows/d3dhlsl.c: 2899
 Green Convergence X
 X 轴蓝色收敛度
 
-# osd/windows/d3dhlsl.c: 2687
+# osd/windows/d3dhlsl.c: 2900
 Green Convergence Y
 Y 轴蓝色收敛度
 
-# osd/windows/d3dhlsl.c: 2700
+# osd/windows/d3dhlsl.c: 2914
 Green DC Offset
 绿色 DC 偏移量
 
-# osd/windows/d3dhlsl.c: 2709
+# osd/windows/d3dhlsl.c: 2923
 Green Floor
 绿色层
 
-# osd/windows/d3dhlsl.c: 2695
+# osd/windows/d3dhlsl.c: 2908
 Green Output from Blue Input
 来自蓝色输入的绿色输出
 
-# osd/windows/d3dhlsl.c: 2694
+# osd/windows/d3dhlsl.c: 2907
 Green Output from Green Input
 来自绿色输入的绿色输出
 
-# osd/windows/d3dhlsl.c: 2693
+# osd/windows/d3dhlsl.c: 2906
 Green Output from Red Input
 来自红色输入的绿色输出
 
-# osd/windows/d3dhlsl.c: 2712
+# osd/windows/d3dhlsl.c: 2926
 Green Phosphor Life
 绿色荧光度
 
-# osd/windows/d3dhlsl.c: 2680
+# osd/windows/d3dhlsl.c: 2893
 Green Position Offset X
 绿色荧光 X 轴偏移量
 
-# osd/windows/d3dhlsl.c: 2681
+# osd/windows/d3dhlsl.c: 2894
 Green Position Offset Y
 绿色荧光 Y 轴偏移量
 
-# osd/windows/d3dhlsl.c: 2706
-Green Power
-绿色强度
-
-# osd/windows/d3dhlsl.c: 2703
+# osd/windows/d3dhlsl.c: 2917
 Green Scale
 绿色比例
 
-# osd/windows/winmain.c: 434
+# osd/windows/winmain.c: 455
 INPUT DEVICE OPTIONS
 输入设备选项
 
-# osd/windows/d3dhlsl.c: 2272
+# osd/windows/d3dhlsl.c: 2416
 Illegal double vector value = %s\n
 非法的双重矢量值 = %s\n
 
-# osd/windows/d3dhlsl.c: 2262
+# osd/windows/d3dhlsl.c: 2406
 Illegal quad vector value = %s\n
 非法的四重矢量值 = %s\n
 
-# osd/windows/d3dhlsl.c: 2277
+# osd/windows/d3dhlsl.c: 2421
 Illegal single vector value = %s\n
 非法的单一矢量值 = %s\n
 
-# osd/windows/d3dhlsl.c: 2267
+# osd/windows/d3dhlsl.c: 2411
 Illegal triple vector value = %s\n
 非法的三重矢量值 = %s\n
 
-# osd/windows/d3dhlsl.c: 2667
+# osd/windows/d3dhlsl.c: 2882
 Image Pincushion
 图像桶型调整
 
-# osd/windows/video.c: 456
+# osd/windows/video.c: 460
 Invalid video value %s; reverting to gdi\n
 无效的 video 值 %s; 还原成 gdi\n
 
-# osd/windows/winmain.c: 392
+# osd/windows/winmain.c: 413
 PER-WINDOW VIDEO OPTIONS
 各个画面的视频选项
 
-# osd/windows/d3dhlsl.c: 2676
-Phosphor Defocus X
-荧光 X 轴散焦度
-
-# osd/windows/d3dhlsl.c: 2677
-Phosphor Defocus Y
-荧光 Y 轴散焦度
-
-# osd/windows/drawd3d.c: 1233
+# osd/windows/drawd3d.c: 1321
 Proposed video mode not supported on device %s\n
 建议的视频模式无法支持设备 %s\n
 
-# osd/windows/input.c: 1780
+# osd/windows/input.c: 1792
 RawInput: APIs detected\n
 RawInput: 检测出 API\n
 
-# osd/windows/input.c: 849
+# osd/windows/input.c: 841
 Record Rendered Video
 录制渲染视频
 
-# osd/windows/d3dhlsl.c: 2684
+# osd/windows/d3dhlsl.c: 2897
 Red Convergence X
 X 轴红色收敛度
 
-# osd/windows/d3dhlsl.c: 2685
+# osd/windows/d3dhlsl.c: 2898
 Red Convergence Y
 Y 轴红色收敛度
 
-# osd/windows/d3dhlsl.c: 2699
+# osd/windows/d3dhlsl.c: 2913
 Red DC Offset
 红色 DC 偏移量
 
-# osd/windows/d3dhlsl.c: 2708
+# osd/windows/d3dhlsl.c: 2922
 Red Floor
 红色层
 
-# osd/windows/d3dhlsl.c: 2692
+# osd/windows/d3dhlsl.c: 2905
 Red Output from Blue Input
 来自蓝色输入的红色输出
 
-# osd/windows/d3dhlsl.c: 2691
+# osd/windows/d3dhlsl.c: 2904
 Red Output from Green Input
 来自绿色输入的红色输出
 
-# osd/windows/d3dhlsl.c: 2690
+# osd/windows/d3dhlsl.c: 2903
 Red Output from Red Input
 来自红色输入的红色输出
 
-# osd/windows/d3dhlsl.c: 2711
+# osd/windows/d3dhlsl.c: 2925
 Red Phosphor Life
 红色荧光度
 
-# osd/windows/d3dhlsl.c: 2678
+# osd/windows/d3dhlsl.c: 2891
 Red Position Offset X
 红色荧光 X 轴偏移量
 
-# osd/windows/d3dhlsl.c: 2679
+# osd/windows/d3dhlsl.c: 2892
 Red Position Offset Y
 红色荧光 Y 轴偏移量
 
-# osd/windows/d3dhlsl.c: 2705
-Red Power
-红色强度
-
-# osd/windows/d3dhlsl.c: 2702
+# osd/windows/d3dhlsl.c: 2916
 Red Scale
 红色比例
 
-# osd/windows/d3dhlsl.c: 1355, 2714
+# osd/windows/d3dhlsl.c: 1047, 2912, 3093
 Saturation
 饱和
 
-# osd/windows/d3dhlsl.c: 2671
+# osd/windows/d3dhlsl.c: 2886
 Scanline Brightness
 扫描线亮度
 
-# osd/windows/d3dhlsl.c: 2672
+# osd/windows/d3dhlsl.c: 2887
 Scanline Brightness Overdrive
 扫描线亮度过高
 
-# osd/windows/d3dhlsl.c: 2668
+# osd/windows/d3dhlsl.c: 2883
 Scanline Darkness
 扫描线暗度
 
-# osd/windows/d3dhlsl.c: 2670
+# osd/windows/d3dhlsl.c: 2885
 Scanline Indiv. Height
 扫描线个别高度
 
-# osd/windows/d3dhlsl.c: 2673
+# osd/windows/d3dhlsl.c: 2888
 Scanline Jitter
 扫描线抖动度
 
-# osd/windows/d3dhlsl.c: 2669
+# osd/windows/d3dhlsl.c: 2884
 Scanline Screen Height
 扫描线画面高度
 
-# osd/windows/d3dhlsl.c: 2666
+# osd/windows/d3dhlsl.c: 2881
 Screen Curvature
 屏幕曲率
 
-# osd/windows/d3dhlsl.c: 2661
+# osd/windows/d3dhlsl.c: 2873
 Shadow Mask Darkness
 阴影遮罩暗度
 
-# osd/windows/d3dhlsl.c: 2664
+# osd/windows/d3dhlsl.c: 2876
 Shadow Mask Pixel Count X
 阴影遮罩 X 轴像素度
 
-# osd/windows/d3dhlsl.c: 2665
+# osd/windows/d3dhlsl.c: 2877, 2878, 2879, 2880
 Shadow Mask Pixel Count Y
 阴影遮罩 Y 轴像素度
 
-# osd/windows/d3dhlsl.c: 2662
+# osd/windows/d3dhlsl.c: 2874
 Shadow Mask X Count
 阴影遮罩 X 轴计数
 
-# osd/windows/d3dhlsl.c: 2663
+# osd/windows/d3dhlsl.c: 2875
 Shadow Mask Y Count
 阴影遮罩 Y 轴计数
 
@@ -782,47 +698,47 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 声音: 缓冲 overflows=%d underflows=%d\n
 
-# osd/windows/input.c: 842
+# osd/windows/input.c: 835
 Take Rendered Snapshot
 捕捉渲染快照
 
-# osd/windows/drawd3d.c: 1954
+# osd/windows/drawd3d.c: 2236
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 材质太大! (要求: %dx%d, 最大 %dx%d)\n
 
-# osd/windows/input.c: 835
+# osd/windows/input.c: 829
 Toggle Fullscreen
 切换全屏幕
 
-# osd/windows/ledutil.c: 603, 609
+# osd/windows/ledutil.c: 590, 596
 Unable to close the keyboard device. (error %d)\n
 无法关闭键盘设备。(错误 %d)\n
 
-# osd/windows/window.c: 723
+# osd/windows/window.c: 747
 Unable to complete window creation\n
 无法完成窗口创建\n
 
-# osd/windows/drawd3d.c: 743
+# osd/windows/drawd3d.c: 967
 Unable to create the Direct3D device (%08X)\n
 无法创建 Direct3D 设备 (%08X)\n
 
-# osd/windows/drawd3d.c: 404, 472
+# osd/windows/drawd3d.c: 237, 324
 Unable to initialize Direct3D.\n
 无法初始化 Direct3D\n
 
-# osd/windows/drawdd.c: 304
+# osd/windows/drawdd.c: 275
 Unable to initialize DirectDraw.\n
 无法初始化 DirectDraw\n
 
-# osd/windows/ledutil.c: 567, 575
+# osd/windows/ledutil.c: 554, 562
 Unable to open the keyboard device. (error %d)\n
 无法打开键盘设备 (错误 %d)\n
 
-# osd/windows/drawd3d.c: 2364
+# osd/windows/drawd3d.c: 2646
 Unknown texture blendmode=%d format=%d\n
 未知的材质混和模式=%d 格式=%d\\
 
-# osd/windows/video.c: 419
+# osd/windows/video.c: 423
 Using %s scale effect\n
 正在使用 %s 图像增强\n
 
@@ -830,251 +746,247 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 视频: 显示器 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 299
+# osd/windows/winmain.c: 301
 WINDOWS DEBUGGING OPTIONS
 WINDOWS 调试器选项
 
-# osd/windows/winmain.c: 306
+# osd/windows/winmain.c: 308
 WINDOWS PERFORMANCE OPTIONS
 WUNDOWS 效能选项
 
-# osd/windows/winmain.c: 427
+# osd/windows/winmain.c: 448
 WINDOWS SOUND OPTIONS
 WINDOWS 声音选项
 
-# osd/windows/winmain.c: 314
+# osd/windows/winmain.c: 316
 WINDOWS VIDEO OPTIONS
 WINDOWS 视频选项
 
-# osd/windows/video.c: 452
+# osd/windows/video.c: 456
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 参数为 none 时无法判断 -seconds_to_run 选项\n
 
-# osd/windows/drawd3d.c: 668
+# osd/windows/drawd3d.c: 899
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 设备可能无法正常配合 Direct3D 描绘\n
 
-# osd/windows/winmain.c: 662
+# osd/windows/winmain.c: 692
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 警告: numprocessors < 1 并没有意义。将假设为 auto ...\n
 
-# osd/windows/winmain.c: 394
+# osd/windows/winmain.c: 415
 aspect ratio for all screens; 'auto' here will try to make a best guess
 所有画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 399
+# osd/windows/winmain.c: 420
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 第一个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 414
+# osd/windows/winmain.c: 435
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 第四个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 404
+# osd/windows/winmain.c: 425
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 第二个个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 409
+# osd/windows/winmain.c: 430
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 第三个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 422
+# osd/windows/winmain.c: 443
 brightness value in full screen mode
 全屏幕模式亮度
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 321
 constrain to the proper aspect ratio
 强制使用合适的长宽比例
 
-# osd/windows/winmain.c: 423
+# osd/windows/winmain.c: 444
 contrast value in full screen mode
 全屏幕模式对比度
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 320
 default to maximized windows; otherwise, windows will be minimized
 默认成窗口最大化; 否则将采用窗口最小化模式
 
-# osd/windows/winmain.c: 430
+# osd/windows/winmain.c: 451
 enable audio sync
 启用音频同步
 
-# osd/windows/winmain.c: 332
+# osd/windows/winmain.c: 334
 enable bilinear filtering on screen output
 启用双线性过滤的画面输出
 
-# osd/windows/winmain.c: 436
+# osd/windows/winmain.c: 456
 enable dual lightgun input
 启用双光枪输入
 
-# osd/windows/winmain.c: 327
+# osd/windows/winmain.c: 330
 enable hardware stretching
 启用硬件拉伸
 
-# osd/windows/winmain.c: 308
+# osd/windows/winmain.c: 310
 enable multithreading; this enables rendering and blitting on a separate thread
 启用多线程; 可以将描绘和 blit 分开处理
 
-# osd/windows/winmain.c: 310
+# osd/windows/winmain.c: 312
 enable profiling, specifying the stack depth to track
 启用性能分析，指定要跟踪的堆叠深度
 
-# osd/windows/winmain.c: 421
+# osd/windows/winmain.c: 442
 enable resolution switching
 启用分辨率切换
 
-# osd/windows/winmain.c: 420
+# osd/windows/winmain.c: 441
 enable triple buffering
 启用三重缓冲
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 325
 enable using the start of VBLANK for throttling instead of the game time
 启用 VBLANK 开始限制速度替换游戏时间
 
-# osd/windows/winmain.c: 321
+# osd/windows/winmain.c: 324
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 启用画面翻转之前等待 VBLANK 开始; 降低破损效果
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 319
 enable window mode; otherwise, full screen mode is assumed
 启用窗口模式; 否则将假设为全屏幕模式
 
-# osd/windows/winmain.c: 393
+# osd/windows/winmain.c: 414
 explicit name of all screens; 'auto' here will try to make a best guess
 所有画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 398
+# osd/windows/winmain.c: 419
 explicit name of the first screen; 'auto' here will try to make a best guess
 第一个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 413
+# osd/windows/winmain.c: 434
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 第四个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 403
+# osd/windows/winmain.c: 424
 explicit name of the second screen; 'auto' here will try to make a best guess
 第二个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 408
+# osd/windows/winmain.c: 429
 explicit name of the third screen; 'auto' here will try to make a best guess
 第三个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 301
+# osd/windows/winmain.c: 303
 force the program to terminate if no updates within specified number of seconds
 如果在指定的秒数内没有更新就强制终止程序
 
-# osd/windows/winmain.c: 424
+# osd/windows/winmain.c: 445
 gamma value in full screen mode
 全屏幕模式灰度
 
-# osd/windows/winmain.c: 309
+# osd/windows/winmain.c: 311
 number of processors; this overrides the number the system reports
 设置处理器数量; 将覆盖系统回报的数量
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 318
 number of screens to create; usually, you want just one
 创建的画面数量; 通常设为一个
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 302
 output error.log data to the system debugger
 输出 error.log 数据到系统调试器
 
-# osd/windows/winmain.c: 395
+# osd/windows/winmain.c: 416
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 所有画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
-# osd/windows/winmain.c: 400
+# osd/windows/winmain.c: 421
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第一个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
-# osd/windows/winmain.c: 415
+# osd/windows/winmain.c: 436
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第四个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
-# osd/windows/winmain.c: 405
+# osd/windows/winmain.c: 426
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第二个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
-# osd/windows/winmain.c: 410
+# osd/windows/winmain.c: 431
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第三个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
-# osd/windows/winmain.c: 396
+# osd/windows/winmain.c: 417
 preferred view for all screens
 所有画面的查看方式
 
-# osd/windows/winmain.c: 401
+# osd/windows/winmain.c: 422
 preferred view for the first screen
 第一个画面的查看方式
 
-# osd/windows/winmain.c: 416
+# osd/windows/winmain.c: 437
 preferred view for the fourth screen
 第四个画面的查看方式
 
-# osd/windows/winmain.c: 406
+# osd/windows/winmain.c: 427
 preferred view for the second screen
 第二个画面的查看方式
 
-# osd/windows/winmain.c: 411
+# osd/windows/winmain.c: 432
 preferred view for the third screen
 第三个画面的查看方式
 
-# osd/windows/winmain.c: 320
+# osd/windows/winmain.c: 323
 scale screen rendering by this amount in software
 以此倍数运行软件缩放画面描绘
 
-# osd/windows/winmain.c: 428
+# osd/windows/winmain.c: 449
 set audio latency (increase to reduce glitches)
 设置音频等待时间 (增加值可减少破损)
 
-# osd/windows/winmain.c: 438
+# osd/windows/winmain.c: 458
 set joystick ID (Player1)
 设置游戏杆标识码 (P1)
 
-# osd/windows/winmain.c: 439
+# osd/windows/winmain.c: 459
 set joystick ID (Player2)
 设置游戏杆标识码 (P2)
 
-# osd/windows/winmain.c: 440
+# osd/windows/winmain.c: 460
 set joystick ID (Player3)
 设置游戏杆标识码 (P3)
 
-# osd/windows/winmain.c: 441
+# osd/windows/winmain.c: 461
 set joystick ID (Player4)
 设置游戏杆标识码 (P4)
 
-# osd/windows/winmain.c: 442
+# osd/windows/winmain.c: 462
 set joystick ID (Player5)
 设置游戏杆标识码 (P5)
 
-# osd/windows/winmain.c: 443
+# osd/windows/winmain.c: 463
 set joystick ID (Player6)
 设置游戏杆标识码 (P6)
 
-# osd/windows/winmain.c: 444
+# osd/windows/winmain.c: 464
 set joystick ID (Player7)
 设置游戏杆标识码 (P7)
 
-# osd/windows/winmain.c: 445
+# osd/windows/winmain.c: 465
 set joystick ID (Player8)
 设置游戏杆标识码 (P8)
 
-# osd/windows/winmain.c: 303
+# osd/windows/winmain.c: 305
 specifies the font size to use for debugging; defaults to 9 pt
 指定调试器的字体大小; 默认是 9 pt
 
-# osd/windows/winmain.c: 302
+# osd/windows/winmain.c: 304
 specifies the font to use for debugging; defaults to Lucida Console
 指定调试器的字体; 默认是 Lucida Console
 
-# osd/windows/winmain.c: 331
-specify the preferred Direct3D version (8 or 9)
-指定 Direct3D 版本 (8 或 9)
-
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 309
 thread priority for the main game thread; range from -15 to 1
 主要游戏的线程优先级; 范围是 -15 至 1
 
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 317
 video output method: none, gdi, ddraw, or d3d
 视频输出方式: none, gdi, ddraw 或 d3d
 
@@ -1086,71 +998,67 @@ A value for NTSC signal processing
 B value for NTSC signal processing
 
 
+# osd/windows/winmain.c: 397
+BLOOM POST-PROCESSING OPTIONS
+
+
 # osd/windows/winmain.c: 379
 Color Carrier frequency for NTSC signal processing
 
 
-# osd/windows/drawd3d.c: 1867
+# osd/windows/winmain.c: 337
+DIRECT3D POST-PROCESSING OPTIONS
+
+
+# osd/windows/drawd3d.c: 2147
 Direct3D: Critical warning: A texture failed to allocate. Expect things to get bad quickly.\n
 
 
-# osd/windows/drawd3d.c: 2498
+# osd/windows/drawd3d.c: 2784
 Direct3D: Error %08X during device set_render_target call 2\n
 
 
-# osd/windows/drawd3d.c: 975
+# osd/windows/drawd3d.c: 1142
 Direct3D: Warning - Device does not support Pixel Shader 3.0, falling back to non-PS rendering\n
 
 
-# osd/windows/d3d9intf.c: 144
-Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect rendering\n
-
-
-# osd/windows/d3d9intf.c: 164
-Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n
-
-
-# osd/windows/input.c: 1616
+# osd/windows/input.c: 1618
 DirectInput: Unable to reset saturation for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1606
+# osd/windows/input.c: 1608
 DirectInput: Unable to set absolute mode for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1511
+# osd/windows/input.c: 1513
 DirectInput: Unable to set relative mode for mouse %d (%s)\n
 
 
-# osd/windows/drawd3d.c: 827
+# osd/windows/drawd3d.c: 1033
 Error setting vertex format (%08X)
 
 
 # osd/windows/winmain.c: 340
-HLSL INI file name for this game
-
-
-# osd/windows/winmain.c: 341
 HLSL pre-scale override factor for X (0 for auto)
 
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 341
 HLSL pre-scale override factor for Y (0 for auto)
 
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 342
 HLSL preset to use (0-3)
 
 
-# osd/windows/winmain.c: 346
+# osd/windows/winmain.c: 345
 HLSL upscaled-snapshot height
 
 
-# osd/windows/winmain.c: 345
+# osd/windows/winmain.c: 344
 HLSL upscaled-snapshot width
 
 
-# osd/windows/winmain.c: 388
+# osd/windows/winmain.c: 388, 390
 Horizontal scanline duration for NTSC signal processing (in usec)
 
 
@@ -1158,11 +1066,11 @@ Horizontal scanline duration for NTSC signal processing (in usec)
 I filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/video.c: 490
+# osd/windows/video.c: 494
 Illegal aspect ratio value = %s\n
 
 
-# osd/windows/video.c: 510
+# osd/windows/video.c: 514
 Illegal resolution value = %s\n
 
 
@@ -1170,11 +1078,15 @@ Illegal resolution value = %s\n
 Incoming Pixel Clock scaling value for NTSC signal processing
 
 
+# osd/windows/winmain.c: 377
+NTSC POST-PROCESSING OPTIONS
+
+
 # osd/windows/winmain.c: 382
 Outgoing Color Carrier phase offset for NTSC signal processing
 
 
-# osd/windows/winmain.c: 389
+# osd/windows/winmain.c: 389, 391
 Phase Count value for NTSC signal processing
 
 
@@ -1182,16 +1094,20 @@ Phase Count value for NTSC signal processing
 Q filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/netdev_pcap.c: 122
+# osd/windows/netdev_pcap.c: 121
 Unable to get network devices: %s\n
 
 
-# osd/windows/netdev_pcap.c: 116
+# osd/windows/netdev_pcap.c: 115
 Unable to load winpcap: %lx\n
 
 
-# osd/windows/input.c: 569
+# osd/windows/input.c: 564
 Use joystick #%d for player %d\n
+
+
+# osd/windows/winmain.c: 393
+VECTOR POST-PROCESSING OPTIONS
 
 
 # osd/windows/winmain.c: 385
@@ -1202,35 +1118,27 @@ Y filter cutoff frequency for NTSC signal processing
 Y filter notch width for NTSC signal processing
 
 
-# osd/windows/winmain.c: 311
+# osd/windows/winmain.c: 313
 benchmark for the given number of emulated seconds; implies -video none -nosound -nothrottle
 
 
-# osd/windows/winmain.c: 370
+# osd/windows/winmain.c: 369
 blue output signal generated by input signal
 
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 362
 convergence in screen-relative X direction
 
 
-# osd/windows/winmain.c: 364
+# osd/windows/winmain.c: 363
 convergence in screen-relative Y direction
 
 
-# osd/windows/winmain.c: 344
+# osd/windows/winmain.c: 343
 enable HLSL AVI writing (huge disk bandwidth suggested)
 
 
 # osd/windows/winmain.c: 338
-enable HLSL INI reading
-
-
-# osd/windows/winmain.c: 339
-enable HLSL INI writing
-
-
-# osd/windows/winmain.c: 336
 enable HLSL post-processing (PS3.0 required)
 
 
@@ -1238,119 +1146,115 @@ enable HLSL post-processing (PS3.0 required)
 enable YIQ-space HLSL post-processing
 
 
-# osd/windows/winmain.c: 323
+# osd/windows/winmain.c: 326
 enable menu bar if available by UI implementation
 
 
-# osd/windows/winmain.c: 369
+# osd/windows/winmain.c: 368
 green output signal generated by input signal
 
 
-# osd/windows/winmain.c: 435
-hide cursor in full screen or if mouse is enabled
-
-
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 357
 individual height scaling value for scanlines
 
 
-# osd/windows/input.c: 553
+# osd/windows/input.c: 548
 invalid %s value: joystick #%d is used by player %d\n
 
 
-# osd/windows/winmain.c: 356
+# osd/windows/winmain.c: 355
 overall alpha scaling value for scanlines
 
 
-# osd/windows/winmain.c: 360
+# osd/windows/winmain.c: 359
 overall brightness offset value for scanlines (additive)
 
 
-# osd/windows/winmain.c: 359
+# osd/windows/winmain.c: 358
 overall brightness scaling value for scanlines (multiplicative)
 
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 361
 overall defocus value in screen-relative coords
 
 
-# osd/windows/winmain.c: 357
+# osd/windows/winmain.c: 356
 overall height scaling value for scanlines
 
 
-# osd/windows/winmain.c: 361
+# osd/windows/winmain.c: 360
 overall interlace jitter scaling value for scanlines
 
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 339
 path to hlsl files
 
 
-# osd/windows/winmain.c: 376
+# osd/windows/winmain.c: 375
 phosphorescence decay rate (0.0 is instant, 1.0 is forever)
 
 
-# osd/windows/winmain.c: 355
+# osd/windows/winmain.c: 354
 pincushion amount
 
 
-# osd/windows/winmain.c: 365
+# osd/windows/winmain.c: 364
 radial convergence in screen-relative X direction
 
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 365
 radial convergence in screen-relative Y direction
 
 
-# osd/windows/winmain.c: 368
+# osd/windows/winmain.c: 367
 red output signal generated by input signal
 
 
-# osd/windows/winmain.c: 371
+# osd/windows/winmain.c: 370
 saturation scaling value
 
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 352
 screen curvature amount
 
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 346
 shadow mask alpha-blend value (1.0 is fully blended, 0.0 is no mask)
 
 
-# osd/windows/winmain.c: 350
+# osd/windows/winmain.c: 349
 shadow mask height, in phosphor dots
 
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 347
 shadow mask texture name
 
 
-# osd/windows/winmain.c: 351
+# osd/windows/winmain.c: 350
 shadow mask texture size in U direction
 
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 351
 shadow mask texture size in V direction
 
 
-# osd/windows/winmain.c: 349
+# osd/windows/winmain.c: 348
 shadow mask width, in phosphor dots
 
 
-# osd/windows/winmain.c: 375
+# osd/windows/winmain.c: 374
 signal floor level
 
 
-# osd/windows/winmain.c: 372
+# osd/windows/winmain.c: 371
 signal offset value (additive)
 
 
-# osd/windows/winmain.c: 374
+# osd/windows/winmain.c: 373
 signal power value (exponential)
 
 
-# osd/windows/winmain.c: 373
+# osd/windows/winmain.c: 372
 signal scaling value (multiplicative)
 
 

@@ -210,11 +210,11 @@ MameƒŠƒŠ[ƒXƒm[ƒg(&M)
 &Picture Area\tAlt+P
 ‰æ‘œƒGƒŠƒA(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7293
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3823, 7291
 &Play
 ƒvƒŒƒC(&P)
 
-# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7244
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3873, 7242
 &Play %s
 ƒvƒŒƒC(&P) %s
 
@@ -298,7 +298,7 @@ MameƒŠƒŠ[ƒXƒm[ƒg(&M)
 &Working
 “®ì‰Â(&W)
 
-# osd/winui/winui.c: 6666
+# osd/winui/winui.c: 6664
 '%s' is not a valid savestate file for game '%s'.
 '%s'‚ÍƒQ[ƒ€'%s'‚É“KØ‚ÈƒXƒe[ƒg‚Å‚Í‚ ‚è‚Ü‚¹‚ñB
 
@@ -330,7 +330,7 @@ AD Stick
 ADStick device
 ADƒXƒeƒBƒbƒNƒfƒoƒCƒX
 
-# osd/winui/mui_opts.c: 283
+# osd/winui/mui_opts.c: 284
 APPLICATION OPTIONS
 ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒIƒvƒVƒ‡ƒ“
 
@@ -370,7 +370,7 @@ All
 All Games
 ‘SƒA[ƒP[ƒh
 
-# osd/winui/winui.c: 6321, 6324, 6327, 6330, 6333, 6337, 6342, 6346, 6349, 6352, 6355, 6358, 6362
+# osd/winui/winui.c: 6319, 6322, 6325, 6328, 6331, 6335, 6340, 6344, 6347, 6350, 6353, 6356, 6360
 All files (*.*)
 ‘S‚Ä‚Ìƒtƒ@ƒCƒ‹ (*.*)
 
@@ -618,7 +618,7 @@ C&lones
 CPU
 CPU
 
-# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 458
+# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 463
 Cabinet
 â‘Ì
 
@@ -702,7 +702,7 @@ Config
 Configure for:
 İ’è‘ÎÛ:
 
-# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 440
+# osd/winui/mameui.rc: 934 osd/winui/mui_opts.c: 445
 Console
 ‰Æ’ë—pƒQ[ƒ€‹@
 
@@ -738,7 +738,7 @@ Contrast Correction
 Control &Panel
 ƒRƒ“ƒpƒl(&P)
 
-# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 461
+# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 466
 Control Panel
 ƒRƒ“ƒpƒl
 
@@ -778,11 +778,11 @@ Correct:
 Could not create '%s'
 '%s' ‚ªì¬‚Å‚«‚Ü‚¹‚ñ
 
-# osd/winui/winui.c: 6567
+# osd/winui/winui.c: 6565
 Could not open '%s' as a valid input file.
 u%sv‚ğ—LŒø‚ÈÄ¶ƒtƒ@ƒCƒ‹‚Æ‚µ‚ÄƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ
 
-# osd/winui/winui.c: 6679
+# osd/winui/winui.c: 6677
 Could not open '%s' as a valid savestate file.
 '%s'‚Í³í‚ÈƒXƒe[ƒg‚Æ‚µ‚ÄŠJ‚¯‚Ü‚¹‚ñB
 
@@ -838,7 +838,7 @@ Customize interface options.
 Customize which columns are used in the game list
 ƒQ[ƒ€ƒŠƒXƒg‚É—p‚¢‚é•\\¦€–Ú‚ğİ’è‚µ‚Ü‚·
 
-# osd/winui/mui_opts.c: 287
+# osd/winui/mui_opts.c: 292
 DISPLAY STATE OPTIONS
 ƒfƒBƒXƒvƒŒƒCó‘ÔƒIƒvƒVƒ‡ƒ“
 
@@ -890,7 +890,7 @@ Dial
 Dial device
 ƒ_ƒCƒAƒ‹ƒfƒoƒCƒX
 
-# osd/winui/properties.c: 342
+# osd/winui/properties.c: 343
 Direct3D
 Direct3D
 
@@ -1122,7 +1122,7 @@ Error
 Error finding custom file name to save
 •Û‘¶‚·‚éƒJƒXƒ^ƒ€ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
-# osd/winui/winui.c: 7742
+# osd/winui/winui.c: 7740
 Error searching for custom folder
 ƒJƒXƒ^ƒ€ƒtƒHƒ‹ƒ_‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
@@ -1142,7 +1142,7 @@ Exit the application
 External Folder List
 ŠO•”ƒtƒHƒ‹ƒ_ƒŠƒXƒg
 
-# osd/winui/mui_opts.c: 372
+# osd/winui/mui_opts.c: 377
 FILENAME OPTIONS
 ƒtƒ@ƒCƒ‹–¼ƒIƒvƒVƒ‡ƒ“
 
@@ -1178,7 +1178,7 @@ Flip screen left-right
 Flip screen upside-down
 ã‰º”½“]
 
-# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 457
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 462
 Flyer
 L
 
@@ -1214,7 +1214,7 @@ Full screen contrast
 Full screen gamma
 ƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}’l
 
-# osd/winui/game_opts.h: 196 osd/winui/mui_opts.c: 435
+# osd/winui/game_opts.h: 195 osd/winui/mui_opts.c: 440
 GAME STATISTICS
 ƒQ[ƒ€“Œv
 
@@ -1326,7 +1326,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 ƒnƒCƒXƒRƒA
 
-# osd/winui/mui_opts.c: 463
+# osd/winui/mui_opts.c: 468
 History
 —ğj
 
@@ -1346,7 +1346,7 @@ Horizontal options\nCustom options used by all games in the Horizontal
 How cheats work
 ƒ`[ƒg‚Ìg—p•û–@‚ğà–¾‚µ‚Ü‚·
 
-# osd/winui/mui_opts.c: 329
+# osd/winui/mui_opts.c: 334
 INTERFACE OPTIONS
 ƒCƒ“ƒ^[ƒtƒF[ƒXƒIƒvƒVƒ‡ƒ“
 
@@ -1402,11 +1402,11 @@ INIƒtƒ@ƒCƒ‹
 Input Files (*.inp)
 Ä¶ƒtƒ@ƒCƒ‹ (*.inp)
 
-# osd/winui/winui.c: 6591
+# osd/winui/winui.c: 6589
 Input file format version mismatch
 “ü—Íƒtƒ@ƒCƒ‹‚ÌŒ`®‚ªŠÔˆá‚Á‚Ä‚¢‚Ü‚·
 
-# osd/winui/winui.c: 6580
+# osd/winui/winui.c: 6578
 Input file is corrupt or invalid (missing header)
 “ü—Íƒtƒ@ƒCƒ‹‚ª‰ó‚ê‚Ä‚¢‚é‚©–³Œø‚Å‚·(ƒwƒbƒ_‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ)
 
@@ -1522,7 +1522,7 @@ GUI‚ÆMAMEƒRƒA‚ÌŒ¾Œê‚ğØ‚è‘Ö‚¦‚Ü‚·
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 MAME‚Í‘Ã“–«ƒ`ƒFƒbƒN‚É¸”s‚µ‚Ü‚µ‚½B  GUI‚Í“®ì‚µ‚Ü‚·‚ªAƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌÀs‚É¸”s‚µ‚Ü‚·B
 
-# osd/winui/winui.c: 6321
+# osd/winui/winui.c: 6319
 MAME input files (*.inp,*.zip)
 MAMEÄ¶ƒtƒ@ƒCƒ‹ (*.inp,*.zip)
 
@@ -1530,7 +1530,7 @@ MAMEÄ¶ƒtƒ@ƒCƒ‹ (*.inp,*.zip)
 MAME release notes
 MAMEƒŠƒŠ[ƒXƒm[ƒg‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/winui/winui.c: 6324
+# osd/winui/winui.c: 6322
 MAME savestate files (*.sta)
 MAMEƒXƒe[ƒgƒtƒ@ƒCƒ‹ (*.sta)
 
@@ -1546,7 +1546,7 @@ MAMEUI ‚ÍAMicrosoft Windows 9x/Me/NT/2000‚ÌOSŠg’£ƒZƒbƒg‚Å‚ ‚éDirectX\r\nƒo[ƒWƒ
 MAMEUI will now reset the following\nto the default settings:\n\n
 MAMEUI‚ÍŒ»İˆÈ‰º‚ğ•W€‚Ìİ’è‚É\nƒŠƒZƒbƒg‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚Ü‚·:\n\n
 
-# osd/winui/mui_opts.c: 324 osd/winui/translate.c: 111
+# osd/winui/mui_opts.c: 329 osd/winui/translate.c: 111
 MS Sans Serif
 ‚l‚r ‚oƒSƒVƒbƒN
 
@@ -1570,7 +1570,7 @@ Manufactured:
 Manufacturer
 »‘¢Œ³
 
-# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 459
+# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 464
 Marquee
 ƒ}[ƒL[
 
@@ -1614,11 +1614,11 @@ Move Item
 Move Up
 ã‚ÉˆÚ“®
 
-# osd/winui/mui_opts.c: 419
+# osd/winui/mui_opts.c: 424
 NAVIGATION JOYSTICK CODES
 ƒiƒrƒQ[ƒVƒ‡ƒ“ƒWƒ‡ƒCƒXƒeƒBƒbƒNƒR[ƒh
 
-# osd/winui/mui_opts.c: 379
+# osd/winui/mui_opts.c: 384
 NAVIGATION KEY CODES
 ƒiƒrƒQ[ƒVƒ‡ƒ“ƒL[ƒR[ƒh
 
@@ -1662,7 +1662,7 @@ Non Mechanical
 Non-Wor&king
 “®ì•s‰Â(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 339, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
 None
 ‚È‚µ
 
@@ -1726,7 +1726,7 @@ P&layback Input...
 PC&B
 PC&B
 
-# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 462
+# osd/winui/dialogs.c: 251 osd/winui/mui_opts.c: 467
 PCB
 PCB
 
@@ -1854,19 +1854,19 @@ Positional device
 Pr&operties
 ƒvƒƒpƒeƒB(&O)
 
-# osd/winui/winui.c: 3884, 7258
+# osd/winui/winui.c: 3884, 7256
 Propert&ies for %s
 %s‚ÌƒvƒƒpƒeƒB(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7303
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3830, 7301
 Propert&ies for Driver
 ƒhƒ‰ƒCƒo‚ÌƒvƒƒpƒeƒB(&I)
 
-# osd/winui/winui.c: 3896, 7272
+# osd/winui/winui.c: 3896, 7270
 Properties &for %s BIOS
 %s BIOS‚ÌƒvƒƒpƒeƒB(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7278, 7316
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3837, 3902, 7276, 7314
 Properties &for BIOS
 BIOS‚ÌƒvƒƒpƒeƒB(&F)
 
@@ -2022,7 +2022,7 @@ S&mall Icons
 S&tretch screenshot larger than natural size
 ƒXƒNƒŠ[ƒ“ƒVƒ‡ƒbƒg‚ğŠg‘å‚·‚é(&T)
 
-# osd/winui/mui_opts.c: 357
+# osd/winui/mui_opts.c: 362
 SEARCH PATH OPTIONS
 ŒŸõƒpƒXƒIƒvƒVƒ‡ƒ“
 
@@ -2326,7 +2326,7 @@ Sleep when possible
 Small Icons
 ¬‚³‚ÈƒAƒCƒRƒ“
 
-# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 456
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 461
 Snapshot
 ƒXƒiƒbƒvƒVƒ‡ƒbƒg
 
@@ -2454,7 +2454,7 @@ Status:
 Stereo
 ƒXƒeƒŒƒI
 
-# osd/winui/mui_opts.c: 465
+# osd/winui/mui_opts.c: 470
 Story
 ƒXƒg[ƒŠ[
 
@@ -2538,7 +2538,7 @@ Thread priority
 Throttle
 ‘¬“x§ŒÀ‚ğ—LŒø
 
-# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 460
+# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 465
 Title
 ƒ^ƒCƒgƒ‹
 
@@ -2731,10 +2731,6 @@ Vector options\nCustom options used by all games in the Vector
 ƒOƒ[ƒoƒ‹ƒxƒNƒ^ƒIƒvƒVƒ‡ƒ“‚Å‚·B\nƒxƒNƒ^‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
 # osd/winui/properties.c: 353
-Version 8
-ƒo[ƒWƒ‡ƒ“ 8
-
-# osd/winui/properties.c: 352
 Version 9
 ƒo[ƒWƒ‡ƒ“ 9
 
@@ -2866,43 +2862,43 @@ by S&amples
 by T&rackball
 ƒgƒ‰ƒbƒNƒ{[ƒ‹(&R)
 
-# osd/winui/winui.c: 6352
+# osd/winui/winui.c: 6350
 cheats (*.dat)
 ƒ`[ƒgƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6342
+# osd/winui/winui.c: 6340
 gamelists (*.lst)
 ƒQ[ƒ€ƒŠƒXƒg (*.lst)
 
-# osd/winui/winui.c: 6355
+# osd/winui/winui.c: 6353
 history (*.dat)
 —ğjƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6358
+# osd/winui/winui.c: 6356
 mameinfo (*.dat)
 MAMEî•ñƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6346
+# osd/winui/winui.c: 6344
 maps (*.map,*.txt)
 ƒ}ƒbƒvƒtƒ@ƒCƒ‹ (*.map,*.txt)
 
-# osd/winui/winui.c: 6349
+# osd/winui/winui.c: 6347
 scripts (*.txt,*.dat)
 ƒXƒNƒŠƒvƒg (*.txt,*.dat)
 
-# osd/winui/winui.c: 6327
+# osd/winui/winui.c: 6325
 sounds (*.wav)
 ƒTƒEƒ“ƒhƒtƒ@ƒCƒ‹ (*.wav)
 
-# osd/winui/winui.c: 6362
+# osd/winui/winui.c: 6360
 story (*.dat)
 ƒXƒg[ƒŠ[ƒtƒ@ƒCƒ‹ (*.dat)
 
-# osd/winui/winui.c: 6333
+# osd/winui/winui.c: 6331
 videos (*.avi)
 “®‰æƒtƒ@ƒCƒ‹ (*.avi)
 
-# osd/winui/winui.c: 6330
+# osd/winui/winui.c: 6328
 videos (*.mng)
 “®‰æƒtƒ@ƒCƒ‹ (*.mng)
 
@@ -2918,7 +2914,7 @@ Christopher Kirmse and the MAMEUI team
 Copyright (C) 1997-2011 The MAME Team
 
 
-# osd/winui/winui.c: 6586
+# osd/winui/winui.c: 6584
 Input file invalid or in an older, unsupported format
 
 
