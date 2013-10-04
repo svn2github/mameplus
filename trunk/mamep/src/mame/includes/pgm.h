@@ -65,7 +65,6 @@ public:
 	UINT8        m_cal_cnt;
 	system_time  m_systime;
 
-
 	DECLARE_READ16_MEMBER(pgm_videoram_r);
 	DECLARE_WRITE16_MEMBER(pgm_videoram_w);
 	DECLARE_WRITE16_MEMBER(pgm_coin_counter_w);
@@ -150,9 +149,11 @@ public:
 	UINT8         m_asic3_x;
 	UINT8         m_asic3_y;
 	UINT8         m_asic3_z;
-	UINT8         m_asic3_h1;
-	UINT8         m_asic3_h2;
+	UINT16        m_asic3_h1;
+	UINT16        m_asic3_h2;
 	UINT16        m_asic3_hold;
+
+	
 
 	DECLARE_DRIVER_INIT(orlegend);
 	void asic3_compute_hold();
@@ -399,14 +400,13 @@ public:
 	int           m_kb_reg;
 	int           m_kb_ptr;
 	UINT8         m_kb_swap;
-	UINT32        m_kb_regs[0x10];
+	UINT32        m_kb_regs[0x100];
 
 	required_shared_ptr<UINT16> m_sharedprotram;
 
 	DECLARE_DRIVER_INIT(killbld);
 	DECLARE_DRIVER_INIT(drgw3);
 	DECLARE_MACHINE_RESET(killbld);
-	DECLARE_MACHINE_RESET(dw3);
 	void pgm_dw3_decrypt();
 	void pgm_killbld_decrypt();
 	void killbld_protection_calculate_hilo();
@@ -555,11 +555,11 @@ MACHINE_CONFIG_EXTERN( pgm_arm_type3 );
 
 /*----------- defined in machine/pgmprot4.c -----------*/
 
-MACHINE_CONFIG_EXTERN( pgm_022_025_kb );
-MACHINE_CONFIG_EXTERN( pgm_022_025_dw );
+MACHINE_CONFIG_EXTERN( pgm_022_025 );
 
 INPUT_PORTS_EXTERN( killbld );
 INPUT_PORTS_EXTERN( dw3 );
+INPUT_PORTS_EXTERN( dw3j );
 
 /*----------- defined in machine/pgmprot5.c -----------*/
 
