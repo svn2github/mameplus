@@ -242,7 +242,6 @@ struct romload_private
 /* ----- per-disk macros ----- */
 #define DISK_GETINDEX(r)            ((r)->_offset)
 #define DISK_ISREADONLY(r)          ((ROM_GETFLAGS(r) & DISK_READONLYMASK) == DISK_READONLY)
-#define DISK_ISOPTIONAL(r)          ((ROM_GETFLAGS(r) & ROM_OPTIONALMASK) == ROM_OPTIONAL)
 
 
 /* ----- start/stop macros ----- */

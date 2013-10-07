@@ -1064,6 +1064,7 @@ $(MAMEOBJ)/igs.a: \
 	$(MACHINE)/pgmprot_igs025_igs012.o \
 	$(MACHINE)/pgmprot_igs025_igs022.o \
 	$(MACHINE)/pgmprot_igs025_igs028.o \
+	$(MACHINE)/igs025_igs022.o \
 
 $(MAMEOBJ)/irem.a: \
 	$(DRIVERS)/m10.o $(VIDEO)/m10.o \
@@ -1987,6 +1988,7 @@ $(MAMEOBJ)/pinball.a: \
 	$(DRIVERS)/s11a.o  \
 	$(DRIVERS)/s11b.o  \
 	$(DRIVERS)/s11c.o  \
+	$(AUDIO)/s11c_bg.o \
 	$(DRIVERS)/s3.o  \
 	$(DRIVERS)/s4.o  \
 	$(DRIVERS)/s6.o  \
@@ -2012,6 +2014,7 @@ $(MAMEOBJ)/pinball.a: \
 	$(DRIVERS)/wpc_flip1.o  \
 	$(DRIVERS)/wpc_flip2.o  \
 	$(DRIVERS)/wpc_s.o  \
+	$(AUDIO)/wpcsnd.o \
 	$(DRIVERS)/zac_1.o  \
 	$(DRIVERS)/zac_2.o  \
 	$(DRIVERS)/zac_proto.o  \
@@ -2449,6 +2452,8 @@ $(DRIVERS)/jankenmn.o:  $(LAYOUT)/jankenmn.lh
 
 $(DRIVERS)/jpmimpct.o:  $(LAYOUT)/jpmimpct.lh
 
+$(DRIVERS)/jpmmps.o:   $(LAYOUT)/jpmmps.lh
+
 $(DRIVERS)/jpmsys5.o:   $(LAYOUT)/jpmsys5.lh
 
 $(DRIVERS)/kas89.o:     $(LAYOUT)/kas89.lh
@@ -2677,6 +2682,8 @@ $(DRIVERS)/videopkr.o:  $(LAYOUT)/videopkr.lh \
 $(DRIVERS)/warpwarp.o:  $(LAYOUT)/geebee.lh \
 			$(LAYOUT)/navarone.lh \
 			$(LAYOUT)/sos.lh
+
+$(DRIVERS)/wpc_an.o:    $(LAYOUT)/wpc_an.lh
 
 $(DRIVERS)/wecleman.o:  $(LAYOUT)/wecleman.lh
 

@@ -666,8 +666,20 @@ READ32_MEMBER(namconb1_state::custom_key_r)
 
 	switch( m_gametype )
 	{
+	/*
+		Gunbullet/Point Blank keycus notes (thanks Guru):
+
+		These games use the keycus in an unconventional way.  Instead of reading it for a PRNG or a
+		magic value, it writes a scratch value to the keycus once per frame.
+
+		On hardware, if there is no keycus or the wrong keycus is present, this write will stall the
+		68000 (probably nothing completes the bus cycle in that case) and the game will hang instead
+		of booting.
+
+		Patching these writes out causes the game to run fine with no keycus present.
+	*/
 	case NAMCONB1_GUNBULET:
-		return 0; /* no protection */
+		return 0;
 
 	case NAMCONB1_SWS95:
 		switch( offset )

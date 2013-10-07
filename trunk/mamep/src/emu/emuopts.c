@@ -229,7 +229,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_AUTOBOOT_DELAY,                             "2",         OPTION_INTEGER,    "timer delay in sec to trigger command execution on autoboot" },
 	{ OPTION_AUTOBOOT_SCRIPT ";script",                  NULL,        OPTION_STRING,     "lua script to execute after machine boot" },
 	{ OPTION_HTTP,                                       "0",         OPTION_BOOLEAN,    "enable local http server" },
-	{ OPTION_HTTP_PORT,                                  "8080",      OPTION_INTEGER,    "http server listener port" },
+	{ OPTION_HTTP_PORT,                                  "8080",      OPTION_STRING,     "http server listener port" },
 	{ OPTION_HTTP_PATH,                                  "web",       OPTION_STRING,     "path to web files" },
 #ifdef PLAYBACK_END_PAUSE
 	{ OPTION_PLAYBACK_END_PAUSE,                         "0",         OPTION_BOOLEAN,    "automatic pause when playback ended" },

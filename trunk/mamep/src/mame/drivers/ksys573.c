@@ -756,14 +756,19 @@ TIMER_CALLBACK_MEMBER(ksys573_state::atapi_xfer_end)
 
 	address_space &space = m_maincpu->space(AS_PROGRAM);
 
-	while( m_atapi_xfersize > 0 )
+	for (int i = 0; i < m_atapi_xfersize; i++)
 	{
 		UINT32 d = m_ata->read_cs0(space, (UINT32) 0, (UINT32) 0xffff) << 0;
 		d |= m_ata->read_cs0(space, (UINT32) 0, (UINT32) 0xffff) << 16;
 
 		m_p_n_psxram[ m_atapi_xferbase / 4 ] = d;
 		m_atapi_xferbase += 4;
-		m_atapi_xfersize--;
+	}
+
+	/// HACK: konami80s only works if you dma more data than requested
+	if ((m_ata->read_cs1(space, (UINT32) 6, (UINT32) 0xffff) & 8) != 0)
+	{
+		m_atapi_timer->adjust(m_maincpu->cycles_to_attotime((ATAPI_CYCLES_PER_SECTOR * (m_atapi_xfersize/256))));
 	}
 }
 
@@ -829,7 +834,7 @@ void ksys573_state::update_disc()
 		new_cdrom = m_available_cdroms[ 0 ];
 	}
 
-	scsihle_device *image = machine().device<scsihle_device>("ata:0:cr589:device");
+	atapi_hle_device *image = machine().device<atapi_hle_device>("ata:0:cr589");
 	if (image != NULL)
 	{
 		void *current_cdrom = NULL;
@@ -2104,9 +2109,9 @@ SLOT_INTERFACE_START(slot_empty)
 SLOT_INTERFACE_END
 
 static MACHINE_CONFIG_FRAGMENT( cr589_config )
-	MCFG_DEVICE_MODIFY("device:cdda")
-	MCFG_SOUND_ROUTE(0, "^^^^^lspeaker", 1.0)
-	MCFG_SOUND_ROUTE(1, "^^^^^rspeaker", 1.0)
+	MCFG_DEVICE_MODIFY("cdda")
+	MCFG_SOUND_ROUTE(0, "^^^^lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(1, "^^^^rspeaker", 1.0)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( konami573, ksys573_state )

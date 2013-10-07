@@ -663,7 +663,8 @@ csplayh7        // (c) 1999
 fuudol          // (c) 2000
 
 // "Phoenix hardware" (and variations) games
-safarir         // Shin Nihon Kikaku (SNK)
+safarir         // (c) 1980 Shin Nihon Kikaku (SNK) + Taito license
+safarirj        // (c) 1979 Shin Nihon Kikaku (SNK)
 phoenix         // (c) 1980 Amstar
 phoenixa        // (c) 1980 Amstar + Centuri license
 phoenixb        // (c) 1980 Amstar + Centuri license
@@ -683,7 +684,7 @@ vautourz        // bootleg
 griffon         // bootleg (Videotron)
 nextfase        // bootleg
 phoenixs        // bootleg (Sonic)
-avefenix        //
+avefenix        // bootleg (Video Game)
 pleiads         // (c) 1981 Tehkan
 pleiadsb2       // bootleg
 pleiadbl        // bootleg
@@ -2333,6 +2334,7 @@ gunfrontj       // 1991.01 C71 (c) 1990 Taito Corporation (Japan)
 growl           // 1991.?? C74 (c) 1990 Taito Corporation Japan (World)
 growlu          // 1991.02 C74 (c) 1990 Taito America Corporation (US)
 runark          // 1991.02 C74 (c) 1990 Taito Corporation (Japan)
+growlp          // 1991.?? C74 (c) 1990 Taito Corporation Japan (World, prototype)
 mjnquest        // 1991.05 C77 (c) 1990 Taito Corporation (Japan)
 mjnquestb       // 1991.05 C77 (c) 1990 Taito Corporation (Japan)
 footchmp        // 1991.?? C80 (c) 1990 Taito Corporation Japan (World)
@@ -3452,6 +3454,8 @@ jojoban         // 27/09/1999 (c) 1999 (Japan)
 jojobanr1       // 13/09/1999 (c) 1999 (Japan)
 jojobane        // 27/09/1999 (c) 1999 (Euro)
 jojobaner1      // 13/09/1999 (c) 1999 (Euro)
+cps3boot        // bootleg
+cps3boota       // bootleg
 
 #ifndef NCP
 // Capcom ZN1
@@ -4552,6 +4556,7 @@ toutrun1        // 1987 (FD1094, decrypted)
 // X Board
 aburner         // 1987.07 After Burner (Japan)
 aburner2        // 1987.09 After Burner II (Japan)
+aburner2g       // 1987.09 After Burner II (German)
 thndrbld1       // 1987.12 Thunder Blade (Japan, deluxe/standard)
 thndrbld        // 1988.02 Thunder Blade (US?, upright, FD1094, decrypted)
 lastsurv        // 1989.01 Last Survivor (Japan)
@@ -5890,6 +5895,7 @@ wondl96         // (c) 1996 SemiCom
 htchctch        // (c) 1995 SemiCom
 cookbib         // (c) 1995 SemiCom
 chokchok        // (c) 1995 SemiCom
+carket          //
 bcstry          // (c) 1997 SemiCom
 bcstrya         // (c) 1997 SemiCom
 semibase        // (c) 1997 SemiCom
@@ -8972,6 +8978,7 @@ hrdtimes        // (c) 1994
 hrdtimesa       // (c) 1994
 drtomy          // (c) 1993 no copyright message (1993 on pcb), some code taken from 'Big Karnak'
 sderby          // (c) 1996
+sderby2         // (c) 1996
 croupier        // (c) 1997 Playmark
 croupiera       // (c) 1997 Playmark
 spacewin
@@ -9111,16 +9118,17 @@ silkroada       // (c) 1999
 aoh             // (c) 2001
 
 // Afega games
-twinactn        // (c) 1996 - bootleg of US AFF Mustang
+twinactn        // (c) 1995 - bootleg of US AFF Mustang
+dolmen          // (c) 1995
 stagger1        // (c) 1998
 redhawk         // (c) 1997 New Vision Ent. license
 redhawke        // (c) 1997 Excellent Co., Ltd license
 redhawki        // (c) 1997 Haedong Corp. license
 redhawkb        // (c) 1997
 grdnstrm        // (c) 1998 Apples Industries license
-grdnstrmv       //
+grdnstrmv       // (c) 1998 Apples Industries license
 grdnstrmk       // (c) 1998 (Korea)
-grdnstrmg       //
+grdnstrmg       // (c) 1998
 redfoxwp2       // (c) 1998 (China)
 redfoxwp2a      // (c) 1998 (China)
 bubl2000        // (c) 1998 Tuning
@@ -9981,6 +9989,7 @@ winka           // (c) 1985 Midcoin
 24cdjuke        // (c) 1988 Midcoin
 skyarmy         // (c) 1982 Shoei
 lethalj         // (c) 1996 The Game Room
+franticf        // (c) 1996 The Game Room
 eggventr        // (c) 1997 The Game Room
 eggventr8       // (c) 1997 The Game Room
 eggventr7       // (c) 1997 The Game Room
@@ -10215,6 +10224,7 @@ pntnpuzl        // Century?
 trucocl         // (c) 1991 Miky SRL
 ertictac        // (c) 1992 Sisteme
 ertictaca       // (c) 1992 Sisteme
+ertictacb       // (c) 1992 Sisteme
 poizone         // (c) 1990 Sisteme
 ssfindo         // (c) 1999 Icarus
 ppcar           // (c) 1999 Icarus
@@ -10596,6 +10606,149 @@ comg5108        // (c) 1985 Cal Omega Inc.
 comg903d        // (c) 198? Cal Omega Inc.
 comg905d        // (c) 198? Cal Omega Inc.
 
+// IGT Player's Edge Plus
+peset001        // (c) 1987 IGT - International Gaming Technology
+peset038        // (c) 1987 IGT - International Gaming Technology
+pepp0043        // (c) 1987 IGT - International Gaming Technology
+pepp0055        // (c) 1987 IGT - International Gaming Technology
+pepp0065        // (c) 1987 IGT - International Gaming Technology
+pepp0103        // (c) 1987 IGT - International Gaming Technology
+pepp0126        // (c) 1987 IGT - International Gaming Technology
+pepp0127        // (c) 1987 IGT - International Gaming Technology
+pepp0158        // (c) 1987 IGT - International Gaming Technology
+pepp0178        // (c) 1987 IGT - International Gaming Technology
+pepp0188        // (c) 1987 IGT - International Gaming Technology
+pepp0188a       // (c) 1987 IGT - International Gaming Technology
+pepp0190        // (c) 1987 IGT - International Gaming Technology
+pepp0197        // (c) 1987 IGT - International Gaming Technology
+pepp0203        // (c) 1987 IGT - International Gaming Technology
+pepp0203a       // (c) 1987 IGT - International Gaming Technology
+pepp0221        // (c) 1987 IGT - International Gaming Technology
+pepp0224        // (c) 1987 IGT - International Gaming Technology
+pepp0224a       // (c) 1987 IGT - International Gaming Technology
+pepp0230        // (c) 1987 IGT - International Gaming Technology
+pepp0235        // (c) 1987 IGT - International Gaming Technology
+pepp0250        // (c) 1987 IGT - International Gaming Technology
+pepp0265        // (c) 1987 IGT - International Gaming Technology
+pepp0274        // (c) 1987 IGT - International Gaming Technology
+pepp0290        // (c) 1987 IGT - International Gaming Technology
+pepp0291        // (c) 1987 IGT - International Gaming Technology
+pepp0409        // (c) 1987 IGT - International Gaming Technology
+pepp0410        // (c) 1987 IGT - International Gaming Technology
+pepp0417        // (c) 1987 IGT - International Gaming Technology
+pepp0419        // (c) 1987 IGT - International Gaming Technology
+pepp0420        // (c) 1987 IGT - International Gaming Technology
+pepp0423        // (c) 1987 IGT - International Gaming Technology
+pepp0426        // (c) 1987 IGT - International Gaming Technology
+pepp0428        // (c) 1987 IGT - International Gaming Technology
+pepp0429        // (c) 1987 IGT - International Gaming Technology
+pepp0434        // (c) 1987 IGT - International Gaming Technology
+pepp0447        // (c) 1987 IGT - International Gaming Technology
+pepp0447a       // (c) 1987 IGT - International Gaming Technology
+pepp0449        // (c) 1987 IGT - International Gaming Technology
+pepp0452        // (c) 1987 IGT - International Gaming Technology
+pepp0454        // (c) 1987 IGT - International Gaming Technology
+pepp0488        // (c) 1987 IGT - International Gaming Technology
+pepp0508        // (c) 1987 IGT - International Gaming Technology
+pepp0509        // (c) 1987 IGT - International Gaming Technology
+pepp0514        // (c) 1987 IGT - International Gaming Technology
+pepp0514a       // (c) 1987 IGT - International Gaming Technology
+pepp0515        // (c) 1987 IGT - International Gaming Technology
+pepp0515a       // (c) 1987 IGT - International Gaming Technology
+pepp0516        // (c) 1987 IGT - International Gaming Technology
+pepp0516a       // (c) 1987 IGT - International Gaming Technology
+pepp0538        // (c) 1987 IGT - International Gaming Technology
+pepp0540        // (c) 1987 IGT - International Gaming Technology
+pepp0542        // (c) 1987 IGT - International Gaming Technology
+pepp0568        // (c) 1987 IGT - International Gaming Technology
+pepp0585        // (c) 1987 IGT - International Gaming Technology
+pepp0725        // (c) 1987 IGT - International Gaming Technology
+pepp0760        // (c) 1987 IGT - International Gaming Technology
+pepp0763        // (c) 1987 IGT - International Gaming Technology
+pepp0775        // (c) 1987 IGT - International Gaming Technology
+pebe0014        // (c) 1994 IGT - International Gaming Technology
+peke1012        // (c) 1994 IGT - International Gaming Technology
+peke1013        // (c) 1994 IGT - International Gaming Technology
+peps0014        // (c) 1996 IGT - International Gaming Technology
+peps0021        // (c) 1996 IGT - International Gaming Technology
+peps0022        // (c) 1996 IGT - International Gaming Technology
+peps0042        // (c) 1996 IGT - International Gaming Technology
+peps0043        // (c) 1996 IGT - International Gaming Technology
+peps0045        // (c) 1996 IGT - International Gaming Technology
+peps0047        // (c) 1996 IGT - International Gaming Technology
+peps0092        // (c) 1996 IGT - International Gaming Technology
+peps0206        // (c) 1996 IGT - International Gaming Technology
+peps0308        // (c) 1996 IGT - International Gaming Technology
+peps0615        // (c) 1996 IGT - International Gaming Technology
+peps0716        // (c) 1996 IGT - International Gaming Technology
+pex0055p        // (c) 1995 IGT - International Gaming Technology
+pex0055pa       // (c) 1995 IGT - International Gaming Technology
+pex0055pb       // (c) 1995 IGT - International Gaming Technology
+pex0055pc       // (c) 1995 IGT - International Gaming Technology
+pex0055pd       // (c) 1995 IGT - International Gaming Technology
+pex0055pe       // (c) 1995 IGT - International Gaming Technology
+pex0055pf       // (c) 1995 IGT - International Gaming Technology
+pex0055pg       // (c) 1995 IGT - International Gaming Technology
+pex0055ph       // (c) 1995 IGT - International Gaming Technology
+pex0055pi       // (c) 1995 IGT - International Gaming Technology
+pex0055pj       // (c) 1995 IGT - International Gaming Technology
+pex0055pk       // (c) 1995 IGT - International Gaming Technology
+pex0055pl       // (c) 1995 IGT - International Gaming Technology
+pex0055pm       // (c) 1995 IGT - International Gaming Technology
+pex0055pn       // (c) 1995 IGT - International Gaming Technology
+pex0055po       // (c) 1995 IGT - International Gaming Technology
+pex0055pp       // (c) 1995 IGT - International Gaming Technology
+pex0055pq       // (c) 1995 IGT - International Gaming Technology
+pex0055pr       // (c) 1995 IGT - International Gaming Technology
+pex0225p        // (c) 1995 IGT - International Gaming Technology
+pex0454p        // (c) 1995 IGT - International Gaming Technology
+pex0458p        // (c) 1995 IGT - International Gaming Technology
+pex0508p        // (c) 1995 IGT - International Gaming Technology
+pex0514p        // (c) 1995 IGT - International Gaming Technology
+pex0515p        // (c) 1995 IGT - International Gaming Technology
+pex0581p        // (c) 1995 IGT - International Gaming Technology
+pex0725p        // (c) 1995 IGT - International Gaming Technology
+pex0726p        // (c) 1995 IGT - International Gaming Technology
+pex0727p        // (c) 1995 IGT - International Gaming Technology
+pex0763p        // (c) 1995 IGT - International Gaming Technology
+pex2018p        // (c) 1995 IGT - International Gaming Technology
+pex2025p        // (c) 1995 IGT - International Gaming Technology
+pex2026p        // (c) 1995 IGT - International Gaming Technology
+pex2027p        // (c) 1995 IGT - International Gaming Technology
+pex2031p        // (c) 1995 IGT - International Gaming Technology
+pex2035p        // (c) 1995 IGT - International Gaming Technology
+pex2036p        // (c) 1995 IGT - International Gaming Technology
+pex2040p        // (c) 1995 IGT - International Gaming Technology
+pex2042p        // (c) 1995 IGT - International Gaming Technology
+pex2045p        // (c) 1995 IGT - International Gaming Technology
+pex2067p        // (c) 1995 IGT - International Gaming Technology
+pex2068p        // (c) 1995 IGT - International Gaming Technology
+pex2069p        // (c) 1995 IGT - International Gaming Technology
+pex2070p        // (c) 1995 IGT - International Gaming Technology
+pex2172p        // (c) 1995 IGT - International Gaming Technology
+pex2241p        // (c) 1995 IGT - International Gaming Technology
+pex2244p        // (c) 1995 IGT - International Gaming Technology
+pex2245p        // (c) 1995 IGT - International Gaming Technology
+pex2245pa       // (c) 1995 IGT - International Gaming Technology
+pex2250p        // (c) 1995 IGT - International Gaming Technology
+pex2251p        // (c) 1995 IGT - International Gaming Technology
+pex2302p        // (c) 1995 IGT - International Gaming Technology
+pex2303p        // (c) 1995 IGT - International Gaming Technology
+pex2307p        // (c) 1995 IGT - International Gaming Technology
+pex2314p        // (c) 1995 IGT - International Gaming Technology
+pex2374p        // (c) 1995 IGT - International Gaming Technology
+pexs0006        // (c) 1997 IGT - International Gaming Technology
+pexmp002        // (c) 1997 IGT - International Gaming Technology
+pexmp003        // (c) 1997 IGT - International Gaming Technology
+pexmp003a       // (c) 1997 IGT - International Gaming Technology
+pexmp003b       // (c) 1997 IGT - International Gaming Technology
+pexmp004        // (c) 1997 IGT - International Gaming Technology
+pexmp006        // (c) 1997 IGT - International Gaming Technology
+pexmp006a       // (c) 1997 IGT - International Gaming Technology
+pexmp006b       // (c) 1997 IGT - International Gaming Technology
+pexmp017        // (c) 1997 IGT - International Gaming Technology
+pexmp024        // (c) 1997 IGT - International Gaming Technology
+
 elgrande        // (c) 1982 Tuni Electro Service / E.T. Marketing
 jjpoker         // (c) 1983 Enter-Tech
 jjpokerb        // (c) 1983 Enter-Tech
@@ -10646,30 +10799,6 @@ esha            // (c) 1984 Funai / Gakken
 eshb            // (c) 1984 Funai / Gakken
 comebaby        // (c) 2000 ExPotato
 bntyhunt        // (c) 200? GCTech Co., LTD
-peset038        // (c) 1987 IGT - International Gaming Technology
-pepp0043        // (c) 1987 IGT - International Gaming Technology
-pepp0065        // (c) 1987 IGT - International Gaming Technology
-pepp0158        // (c) 1987 IGT - International Gaming Technology
-pepp0188        // (c) 1987 IGT - International Gaming Technology
-pepp0250        // (c) 1987 IGT - International Gaming Technology
-pepp0447        // (c) 1987 IGT - International Gaming Technology
-pepp0516        // (c) 1987 IGT - International Gaming Technology
-pebe0014        // (c) 1994 IGT - International Gaming Technology
-peke1012        // (c) 1994 IGT - International Gaming Technology
-peps0014        // (c) 1996 IGT - International Gaming Technology
-peps0022        // (c) 1996 IGT - International Gaming Technology
-peps0043        // (c) 1996 IGT - International Gaming Technology
-peps0045        // (c) 1996 IGT - International Gaming Technology
-peps0308        // (c) 1996 IGT - International Gaming Technology
-peps0615        // (c) 1996 IGT - International Gaming Technology
-peps0716        // (c) 1996 IGT - International Gaming Technology
-pex2069p        // (c) 1995 IGT - International Gaming Technology
-pexp0019        // (c) 1995 IGT - International Gaming Technology
-pexp0112        // (c) 1995 IGT - International Gaming Technology
-pexs0006        // (c) 1997 IGT - International Gaming Technology
-pexmp006        // (c) 1997 IGT - International Gaming Technology
-pexmp017        // (c) 1997 IGT - International Gaming Technology
-pexmp024        // (c) 1997 IGT - International Gaming Technology
 mirage          // (c) 1994 Mitchell
 dominob         // (c) 1996 Wonwoo Systems
 dominobv2       // (c) 1996 Wonwoo Systems

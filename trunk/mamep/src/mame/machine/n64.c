@@ -223,10 +223,9 @@ void n64_periphs::device_reset()
 
 	if (boot_checksum == U64(0x00000000001ff230))
 	{
-		//printf("64DD detected\n");
 		pif_ram[0x24] = 0x00;
 		pif_ram[0x25] = 0x08;
-		pif_ram[0x26] = 0xdd; // How utterly predictable
+		pif_ram[0x26] = 0xdd;
 		pif_ram[0x27] = 0x3f;
 		dd_present = true;
 		cic_type=0xd;
@@ -234,7 +233,6 @@ void n64_periphs::device_reset()
 	else if (boot_checksum == U64(0x000000cffb830843) || boot_checksum == U64(0x000000d0027fdf31))
 	{
 		// CIC-NUS-6101
-		//printf("CIC-NUS-6101 detected\n");
 		pif_ram[0x24] = 0x00;
 		pif_ram[0x25] = 0x04;
 		pif_ram[0x26] = 0x3f;
@@ -244,7 +242,6 @@ void n64_periphs::device_reset()
 	else if (boot_checksum == U64(0x000000d6499e376b))
 	{
 		// CIC-NUS-6103
-		//printf("CIC-NUS-6103 detected\n");
 		pif_ram[0x24] = 0x00;
 		pif_ram[0x25] = 0x00;
 		pif_ram[0x26] = 0x78;
@@ -254,7 +251,6 @@ void n64_periphs::device_reset()
 	else if (boot_checksum == U64(0x0000011a4a1604b6))
 	{
 		// CIC-NUS-6105
-		//printf("CIC-NUS-6105 detected\n");
 		pif_ram[0x24] = 0x00;
 		pif_ram[0x25] = 0x00;
 		pif_ram[0x26] = 0x91;
@@ -265,7 +261,6 @@ void n64_periphs::device_reset()
 	else if (boot_checksum == U64(0x000000d6d5de4ba0))
 	{
 		// CIC-NUS-6106
-		//printf("CIC-NUS-6106 detected\n");
 		pif_ram[0x24] = 0x00;
 		pif_ram[0x25] = 0x00;
 		pif_ram[0x26] = 0x85;
@@ -566,16 +561,17 @@ void n64_periphs::sp_dma(int direction)
 
 	UINT32 *sp_mem[2] = { rsp_dmem, rsp_imem };
 
+	int sp_mem_page = (sp_mem_addr >> 12) & 1;
 	if(direction == 0)// RDRAM -> I/DMEM
 	{
 		for(int c = 0; c <= sp_dma_count; c++)
 		{
 			UINT32 src = (sp_dram_addr & 0x007fffff) >> 2;
-			UINT32 dst = (sp_mem_addr & 0x1fff) >> 2;
+			UINT32 dst = (sp_mem_addr & 0xfff) >> 2;
 
 			for(int i = 0; i < length / 4; i++)
 			{
-				sp_mem[(dst + i) >> 10][(dst + i) & 0x3ff] = rdram[src + i];
+				sp_mem[sp_mem_page][(dst + i) & 0x3ff] = rdram[src + i];
 			}
 
 			sp_mem_addr += length;
@@ -588,12 +584,12 @@ void n64_periphs::sp_dma(int direction)
 	{
 		for(int c = 0; c <= sp_dma_count; c++)
 		{
-			UINT32 src = (sp_mem_addr & 0x1fff) >> 2;
+			UINT32 src = (sp_mem_addr & 0xfff) >> 2;
 			UINT32 dst = (sp_dram_addr & 0x007fffff) >> 2;
 
 			for(int i = 0; i < length / 4; i++)
 			{
-				rdram[dst + i] = sp_mem[(src + i) >> 10][(src + i) & 0x3ff];
+				rdram[dst + i] = sp_mem[sp_mem_page][(src + i) & 0x3ff];
 			}
 
 			sp_mem_addr += length;
@@ -2001,15 +1997,7 @@ int n64_periphs::pif_channel_handle_command(int channel, int slength, UINT8 *sda
 
 void n64_periphs::handle_pif()
 {
-	/*printf("Before:\n"); fflush(stdout);
-	for(int i = 0; i < 0x40; i++)
-	{
-	    printf("%02x ", pif_cmd[i]);
-	    if((i & 0xf) == 0xf)
-	    {
-	        printf("\n"); fflush(stdout);
-	    }
-	}*/
+	UINT8 *ram = (UINT8*)pif_ram;
 	if(pif_cmd[0x3f] == 0x1)        // only handle the command if the last byte is 1
 	{
 		int channel = 0;
@@ -2069,7 +2057,7 @@ void n64_periphs::handle_pif()
 					else if (res == 1)
 					{
 						int offset = 0;//bytes_to_send;
-						pif_ram[cmd_ptr-offset-2] |= 0x80;
+						pif_ram[cmd_ptr - offset - 2] |= 0x80;
 					}
 				}
 
@@ -2077,7 +2065,7 @@ void n64_periphs::handle_pif()
 			}
 		}
 
-		pif_ram[0x3f] = 0;
+		ram[0x3f ^ BYTE4_XOR_BE(0)] = 0;
 	}
 
 	/*printf("After:\n"); fflush(stdout);
@@ -2093,8 +2081,6 @@ void n64_periphs::handle_pif()
 
 void n64_periphs::pif_dma(int direction)
 {
-	UINT32 *src, *dst;
-
 	if (si_dram_addr & 0x3)
 	{
 		fatalerror("pif_dma: si_dram_addr unaligned: %08X\n", si_dram_addr);
@@ -2102,7 +2088,7 @@ void n64_periphs::pif_dma(int direction)
 
 	if (direction)      // RDRAM -> PIF RAM
 	{
-		src = (UINT32*)&rdram[(si_dram_addr & 0x1fffffff) / 4];
+		UINT32 *src = (UINT32*)&rdram[(si_dram_addr & 0x1fffffff) / 4];
 
 		for(int i = 0; i < 64; i+=4)
 		{
@@ -2119,7 +2105,7 @@ void n64_periphs::pif_dma(int direction)
 	{
 		handle_pif();
 
-		dst = (UINT32*)&rdram[(si_dram_addr & 0x1fffffff) / 4];
+		UINT32 *dst = (UINT32*)&rdram[(si_dram_addr & 0x1fffffff) / 4];
 
 		for(int i = 0; i < 64; i+=4)
 		{
