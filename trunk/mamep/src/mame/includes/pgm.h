@@ -153,8 +153,6 @@ public:
 	UINT16        m_asic3_h2;
 	UINT16        m_asic3_hold;
 
-	
-
 	DECLARE_DRIVER_INIT(orlegend);
 	void asic3_compute_hold();
 	DECLARE_READ16_MEMBER( pgm_asic3_r );
