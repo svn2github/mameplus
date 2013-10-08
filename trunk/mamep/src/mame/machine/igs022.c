@@ -1,54 +1,43 @@
 /* 
 
  IGS022 is an encrypted DMA device, most likely an MCU of some sort
-
- IGS025 is some kind of state machine / logic device which the game
- uses for various securit checks, and to determine the region of the
- game based on string sequences.
+ it can safely be swapped between games so doesn't appear to have
+ any kind of game specific programming
 
 */
 
 #include "emu.h"
-#include "igs025_igs022.h"
+#include "igs022.h"
 
 
-igs_025_022_device::igs_025_022_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, IGS025022, "IGS025022", tag, owner, clock, "igs_025_022", __FILE__)
+igs022_device::igs022_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, IGS022, "IGS022", tag, owner, clock, "igs022", __FILE__)
 {
 }
 
-void igs_025_022_device::device_config_complete()
+void igs022_device::device_config_complete()
 {
 }
 
-void igs_025_022_device::device_validity_check(validity_checker &valid) const
+void igs022_device::device_validity_check(validity_checker &valid) const
 {
 }
 
-void igs_025_022_device::device_start()
+void igs022_device::device_start()
 {
-	// Reset IGS025 stuff
-	m_kb_prot_hold = 0;
-	m_kb_prot_hilo = 0;
-	m_kb_prot_hilo_select = 0;
-	m_kb_cmd = 0;
-	m_kb_reg = 0;
-	m_kb_ptr = 0;
-	m_kb_swap = 0;
+	// Reset  stuff
 	memset(m_kb_regs, 0, 0x100 * sizeof(UINT32));
 	m_sharedprotram = 0;
 
-	save_item(NAME(m_kb_prot_hold));
-	save_item(NAME(m_kb_prot_hilo));
-	save_item(NAME(m_kb_prot_hilo_select));
-	save_item(NAME(m_kb_cmd));
-	save_item(NAME(m_kb_reg));
-	save_item(NAME(m_kb_ptr));
 	save_item(NAME(m_kb_regs));
 }
 
-void igs_025_022_device::device_reset()
+void igs022_device::device_reset()
 {
+
+	//printf("igs022_device::device_reset()");
+
+
 	if (!m_sharedprotram)
 	{
 		logerror("m_sharedprotram was not set\n");
@@ -57,21 +46,15 @@ void igs_025_022_device::device_reset()
 
 	IGS022_reset();
 
-	// Reset IGS025 stuff
-	m_kb_prot_hold = 0;
-	m_kb_prot_hilo = 0;
-	m_kb_prot_hilo_select = 0;
-	m_kb_cmd = 0;
-	m_kb_reg = 0;
-	m_kb_ptr = 0;
-	m_kb_swap = 0;
 	memset(m_kb_regs, 0, 0x100 * sizeof(UINT32));
 }
 
 
 
-void igs_025_022_device::IGS022_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT16 mode)
+void igs022_device::IGS022_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT16 mode)
 {
+	//printf("igs022_device::IGS022_do_dma\n");
+
 	UINT16 param;
 	/*
 	P_SRC =0x300290 (offset from prot rom base)
@@ -86,7 +69,12 @@ void igs_025_022_device::IGS022_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT
 	*/
 
 	param = mode >> 8;
-	mode &=0xf;  // what are the other bits?
+
+	// the initial DMA on kilbld has 0x10 set, drgw3 has 0x18 set, not sure how they affect the operation.
+	if (mode & 0x00f8) printf("IGS022_do_dma mode bits %04x set\n", mode & 0x00f8);
+
+	mode &=0x7;  // what are the other bits?
+
 
 	if ((mode == 0) || (mode == 1) || (mode == 2) || (mode == 3)  || (mode == 4))
 	{
@@ -134,7 +122,7 @@ void igs_025_022_device::IGS022_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT
 
 			if (mode==4)
 			{
-				printf("%06x | %04x (%04x)\n", (dst+x)*2, dat2, (UINT16)(dat2-extraxor));
+				//printf("%06x | %04x (%04x)\n", (dst+x)*2, dat2, (UINT16)(dat2-extraxor));
 
 				dat2 -= extraxor;
 			}
@@ -145,43 +133,42 @@ void igs_025_022_device::IGS022_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT
 	}
 	else if (mode == 5)
 	{
-		/* mode 5 seems to be a straight copy, byteswap */
+		/* mode 5 seems to be a byteswapped copy */
 		int x;
 		UINT16 *PROTROM = (UINT16*)memregion(":igs022data")->base();
 		for (x = 0; x < size; x++)
 		{
 			UINT16 dat = PROTROM[src + x];
+			dat = ((dat &0x00ff) << 8) | ((dat &0xff00) >> 8);
 
-			m_sharedprotram[dst + x] = (dat << 8) | (dat >> 8);
+			m_sharedprotram[dst + x] = dat;
 		}
 	}
 	else if (mode == 6)
 	{
-		/* mode 6 seems to swap bytes and nibbles */
+		/* mode 6 seems to be a nibble swapped copy */
 		int x;
 		UINT16 *PROTROM = (UINT16*)memregion(":igs022data")->base();
 		for (x = 0; x < size; x++)
 		{
 			UINT16 dat = PROTROM[src + x];
 
-			dat = ((dat & 0xf000) >> 12)|
-					((dat & 0x0f00) >> 4)|
-					((dat & 0x00f0) << 4)|
-					((dat & 0x000f) << 12);
+			dat = ((dat & 0xf0f0) >> 4)|
+					((dat & 0x0f0f) << 4);
 
 			m_sharedprotram[dst + x] = dat;
 		}
 	}
 	else if (mode == 7)
 	{
-		mame_printf_debug("unhandled copy mode %04x!\n", mode);
+		printf("unhandled copy mode %04x!\n", mode);
 		// not used by killing blade
 		/* weird mode, the params get left in memory? - maybe it's a NOP? */
 	}
 	else
 	{
 		mame_printf_debug("unhandled copy mode %04x!\n", mode);
-		logerror ("DMA MODE: %d, src: %4.4x, dst: %4.4x, size: %4.4x, param: %2.2x\n", mode, src, dst, size, param);
+		printf ("DMA MODE: %d, src: %4.4x, dst: %4.4x, size: %4.4x, param: %2.2x\n", mode, src, dst, size, param);
 		// not used by killing blade
 		/* invalid? */
 	}
@@ -189,7 +176,7 @@ void igs_025_022_device::IGS022_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT
 
 // the internal MCU boot code automatically does this DMA
 // and puts the version # of the data rom in ram
-void igs_025_022_device::IGS022_reset()
+void igs022_device::IGS022_reset()
 {
 	int i;
 	UINT16 *PROTROM = (UINT16*)memregion(":igs022data")->base();
@@ -216,8 +203,11 @@ void igs_025_022_device::IGS022_reset()
 	m_sharedprotram[0x2a2/2] = PROTROM[0x114/2];
 }
 
-void igs_025_022_device::IGS022_handle_command()
+void igs022_device::IGS022_handle_command()
 {
+	//printf("igs022_device::IGS022_handle_command\n");
+
+
 	UINT16 cmd = m_sharedprotram[0x200/2];
 
 	if (cmd == 0x6d)    // Store values to asic ram
@@ -289,151 +279,8 @@ void igs_025_022_device::IGS022_handle_command()
 	}
 }
 
-void igs_025_022_device::killbld_protection_calculate_hold(int y, int z)
-{
-	unsigned short old = m_kb_prot_hold;
 
-	m_kb_prot_hold = ((old << 1) | (old >> 15));
-
-	m_kb_prot_hold ^= 0x2bad;
-	m_kb_prot_hold ^= BIT(z, y);
-	m_kb_prot_hold ^= BIT( old,  7) <<  0;
-	m_kb_prot_hold ^= BIT(~old, 13) <<  4;
-	m_kb_prot_hold ^= BIT( old,  3) << 11;
-
-	m_kb_prot_hold ^= (m_kb_prot_hilo & ~0x0408) << 1;
-}
-
-void igs_025_022_device::killbld_protection_calculate_hilo()
-{
-	UINT8 source;
-
-	m_kb_prot_hilo_select++;
-
-	if (m_kb_prot_hilo_select > 0xeb) {
-		m_kb_prot_hilo_select = 0;
-	}
-
-	source = m_kb_source_data[(ioport(":Region")->read() - m_kb_source_data_offset)][m_kb_prot_hilo_select];
-
-	if (m_kb_prot_hilo_select & 1)
-	{
-		m_kb_prot_hilo = (m_kb_prot_hilo & 0x00ff) | (source << 8);
-	}
-	else
-	{
-		m_kb_prot_hilo = (m_kb_prot_hilo & 0xff00) | (source << 0);
-	}
-}
-
-WRITE16_MEMBER(igs_025_022_device::killbld_igs025_prot_w )
-{
-	if (offset == 0)
-	{
-		m_kb_cmd = data;
-	}
-	else
-	{
-		switch (m_kb_cmd)
-		{
-			case 0x00:
-				m_kb_reg = data;
-			break;
-
-			case 0x01: // drgw3
-			{
-				if (data == 0x0002) { // Execute command
-					IGS022_handle_command();		
-				}
-			}
-			break;
-
-			case 0x02: // killbld
-			{
-				if (data == 0x0001) { // Execute command
-					IGS022_handle_command();
-					m_kb_reg++;
-				}
-			}
-			break;
-
-			case 0x03:
-				m_kb_swap = data;
-			break;
-
-			case 0x04:
-		//		m_kb_ptr = data; // Suspect. Not good for drgw3
-			break;
-
-			case 0x20:
-			case 0x21:
-			case 0x22:
-			case 0x23:
-			case 0x24:
-			case 0x25:
-			case 0x26:
-			case 0x27:
-				m_kb_ptr++;
-				killbld_protection_calculate_hold(m_kb_cmd & 0x0f, data & 0xff);
-			break;
-
-		//	default:
-		//		logerror("%06X: ASIC25 W CMD %X  VAL %X\n", space.device().safe_pc(), m_kb_cmd, data);
-		}
-	}
-}
-
-READ16_MEMBER(igs_025_022_device::killbld_igs025_prot_r )
-{
-	if (offset)
-	{
-		switch (m_kb_cmd)
-		{
-			case 0x00:
-				return BITSWAP8((m_kb_swap+1) & 0x7f, 0,1,2,3,4,5,6,7); // drgw3
-
-			case 0x01:
-				return m_kb_reg & 0x7f;
-
-			case 0x05:
-			{
-				switch (m_kb_ptr)
-				{
-					case 1:
-						return 0x3f00 | ioport(":Region")->read();
-
-					case 2:
-						return 0x3f00 | ((m_kb_game_id >> 8) & 0xff);
-
-					case 3:
-						return 0x3f00 | ((m_kb_game_id >> 16) & 0xff);
-
-					case 4:
-						return 0x3f00 | ((m_kb_game_id >> 24) & 0xff);
-
-					default: // >= 5
-						return 0x3f00 | BITSWAP8(m_kb_prot_hold, 5,2,9,7,10,13,12,15);
-				}
-
-				return 0;
-			}
-
-			case 0x40:
-				killbld_protection_calculate_hilo();
-				return 0; // Read and then discarded
-
-		//	default:
-		//		logerror("%06X: ASIC25 R CMD %X\n", space.device().safe_pc(), m_kb_cmd);
-		}
-	}
-
-	return 0;
-}
-
-
-
-
-const device_type IGS025022 = &device_creator<igs_025_022_device>;
+const device_type IGS022 = &device_creator<igs022_device>;
 
 
 
