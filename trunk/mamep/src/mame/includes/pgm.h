@@ -10,6 +10,7 @@
 
 #include "machine/igs025.h"
 #include "machine/igs022.h"
+#include "machine/igs028.h"
 
 #define PGMARM7LOGERROR 0
 
@@ -341,6 +342,7 @@ public:
 	pgm_arm_type3_state(const machine_config &mconfig, device_type type, const char *tag)
 		: pgm_state(mconfig, type, tag),
 			m_arm_ram(*this, "arm_ram"),
+			m_arm_ram2(*this, "arm_ram2"),
 			m_prot(*this, "prot") {
 	}
 	// svg
@@ -350,6 +352,7 @@ public:
 	UINT32        m_svg_latchdata_68k_w;
 	UINT32        m_svg_latchdata_arm_w;
 	required_shared_ptr<UINT32> m_arm_ram;
+	required_shared_ptr<UINT32> m_arm_ram2;
 
 	optional_device<cpu_device> m_prot;
 
@@ -376,6 +379,7 @@ public:
 	void svg_latch_init();
 	DECLARE_READ32_MEMBER( dmnfrnt_speedup_r );
 	DECLARE_READ16_MEMBER( dmnfrnt_main_speedup_r );
+	DECLARE_READ32_MEMBER( killbldp_speedup_r );
 };
 
 
@@ -411,18 +415,13 @@ class pgm_012_025_state : public pgm_state
 {
 public:
 	pgm_012_025_state(const machine_config &mconfig, device_type type, const char *tag)
-		: pgm_state(mconfig, type, tag) {
+		: pgm_state(mconfig, type, tag),
+			m_igs025(*this,"igs025")
+	{
 	}
 
-	UINT32 m_drgw2_protection_region;
 
-	const UINT8 (*m_drgw2_source_data)[0xec];
-
-	UINT16        m_drgw2_prot_hold;
-	UINT16        m_drgw2_prot_hilo;
-	UINT16        m_drgw2_prot_hilo_select;
-	int           m_drgw2_cmd;
-	int           m_drgw2_ptr;
+	required_device<igs025_device> m_igs025;
 
 	void pgm_drgw2_decrypt();
 	void drgw2_common_init();
@@ -434,11 +433,7 @@ public:
 
 	DECLARE_MACHINE_RESET(drgw2);
 
-	DECLARE_READ16_MEMBER( drgw2_d80000_protection_r );
-	DECLARE_WRITE16_MEMBER( drgw2_d80000_protection_w );
 
-	void drgw2_protection_calculate_hilo();
-	void drgw2_protection_calculate_hold(int y, int z);
 };
 
 /* for machine/pgmprot6.c type games */
@@ -447,32 +442,25 @@ class pgm_028_025_state : public pgm_state
 public:
 	pgm_028_025_state(const machine_config &mconfig, device_type type, const char *tag)
 		: pgm_state(mconfig, type, tag),
-			m_sharedprotram(*this, "sharedprotram") {
+			m_sharedprotram(*this, "sharedprotram"),
+			m_igs025(*this,"igs025"),
+			m_igs028(*this,"igs028")
+	
+	{
 	}
 
-	int           m_olds_cmd;
-	int           m_olds_reg;
-	int           m_olds_ptr;
-	UINT16        m_olds_bs;
-	UINT16        m_olds_cmd3;
-	UINT16        m_olds_prot_hold;
-	UINT16        m_olds_prot_hilo;
-	UINT16        m_olds_prot_hilo_select;
-	const UINT8  *m_olds_prot_hilo_source2;
+
+
 	required_shared_ptr<UINT16> m_sharedprotram;
+	required_device<igs025_device> m_igs025;
+	required_device<igs028_device> m_igs028;
+
+	void igs025_to_igs028_callback( void );
 
 	DECLARE_DRIVER_INIT(olds);
 	DECLARE_MACHINE_RESET(olds);
 
-	UINT32 olds_prot_addr( UINT16 addr );
-	UINT32 olds_read_reg( UINT16 addr );
-	void olds_write_reg( UINT16 addr, UINT32 val );
-	DECLARE_READ16_MEMBER( olds_r );
-	DECLARE_WRITE16_MEMBER( olds_w );
-	DECLARE_READ16_MEMBER( olds_prot_swap_r );
-	void IGS028_do_dma(UINT16 src, UINT16 dst, UINT16 size, UINT16 mode);
-	void olds_protection_calculate_hilo();
-	void olds_protection_calculate_hold(int y, int z);
+
 };
 
 
