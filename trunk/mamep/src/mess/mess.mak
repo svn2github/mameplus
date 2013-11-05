@@ -88,6 +88,7 @@ $(MESSOBJ)/ascii.a:             \
 	$(MESS_DRIVERS)/msx.o       \
 	$(MESS_MACHINE)/msx.o       \
 	$(MESS_MACHINE)/msx_slot.o  \
+	$(BUSOBJ)/centronics/ctronics.o
 
 $(MESSOBJ)/atari.a:             \
 	$(MESS_MACHINE)/ataricrt.o  \
@@ -97,13 +98,13 @@ $(MESSOBJ)/atari.a:             \
 	$(MESS_DRIVERS)/a7800.o     \
 	$(MESS_VIDEO)/a7800.o       \
 	$(MESS_DRIVERS)/a2600.o     \
-	$(MESS_MACHINE)/vcs_joy.o   \
-	$(MESS_MACHINE)/vcs_joybooster.o\
-	$(MESS_MACHINE)/vcs_keypad.o    \
-	$(MESS_MACHINE)/vcs_lightpen.o  \
-	$(MESS_MACHINE)/vcs_paddles.o   \
-	$(MESS_MACHINE)/vcs_wheel.o \
-	$(MESS_MACHINE)/vcsctrl.o   \
+	$(BUSOBJ)/vcs/ctrl.o        \
+	$(BUSOBJ)/vcs/joystick.o    \
+	$(BUSOBJ)/vcs/joybooster.o  \
+	$(BUSOBJ)/vcs/keypad.o      \
+	$(BUSOBJ)/vcs/lightpen.o    \
+	$(BUSOBJ)/vcs/paddles.o     \
+	$(BUSOBJ)/vcs/wheel.o       \
 
 $(MESSOBJ)/bandai.a:            \
 	$(MESS_DRIVERS)/wswan.o     \

@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:David Haywood, Angelo Salese, Olivier Galibert, Mariusz Wojcieszek, R.Belmont
 /************************************************************************************************************************
 
     stv.c
@@ -7,31 +9,31 @@
 
     TODO:
     - clean this up!
-	- Properly emulate the protection chips, used by several games (check stvprot.c for more info)
+    - Properly emulate the protection chips, used by several games (check stvprot.c for more info)
 
-	(per-game issues)
-	- stress: accesses the Sound Memory Expansion Area (0x05a80000-0x05afffff), unknown purpose;
+    (per-game issues)
+    - stress: accesses the Sound Memory Expansion Area (0x05a80000-0x05afffff), unknown purpose;
 
-	- smleague / finlarch: it randomly hangs / crashes,it works if you use a ridiculous MCFG_INTERLEAVE number,might need strict
-	  SH-2 synching or it's actually a m68k comms issue.
+    - smleague / finlarch: it randomly hangs / crashes,it works if you use a ridiculous MCFG_INTERLEAVE number,might need strict
+      SH-2 synching or it's actually a m68k comms issue.
 
-	- groovef: ugly back screen color, caused by incorrect usage of the Color Calculation function.
+    - groovef: ugly back screen color, caused by incorrect usage of the Color Calculation function.
 
-	- myfairld: Apparently this game gives a black screen (either test mode and in-game mode),but let it wait for about
-	  10 seconds and the game will load everything. This is because of a hellishly slow m68k sub-routine located at 54c2.
-	  Likely to not be a bug but an in-game design issue.
+    - myfairld: Apparently this game gives a black screen (either test mode and in-game mode),but let it wait for about
+      10 seconds and the game will load everything. This is because of a hellishly slow m68k sub-routine located at 54c2.
+      Likely to not be a bug but an in-game design issue.
 
-	- danchih / danchiq: currently hangs randomly (regression).
+    - danchih / danchiq: currently hangs randomly (regression).
 
-	- batmanfr: Missing sound,caused by an extra ADSP chip which is on the cart.The CPU is a
-	  ADSP-2181,and it's the same used by NBA Jam Extreme (ZN game).
+    - batmanfr: Missing sound,caused by an extra ADSP chip which is on the cart.The CPU is a
+      ADSP-2181,and it's the same used by NBA Jam Extreme (ZN game).
 
-	- vfremix: when you play as Akira, there is a problem with third match: game doesn't upload all textures
-	  and tiles and doesn't enable display, although gameplay is normal - wait a while to get back
-	  to title screen after losing a match
+    - vfremix: when you play as Akira, there is a problem with third match: game doesn't upload all textures
+      and tiles and doesn't enable display, although gameplay is normal - wait a while to get back
+      to title screen after losing a match
 
-	- vfremix: various problems with SCU DSP: Jeffry causes a black screen hang. Akira's kick sometimes
-	  sends the opponent out of the ring from whatever position.
+    - vfremix: various problems with SCU DSP: Jeffry causes a black screen hang. Akira's kick sometimes
+      sends the opponent out of the ring from whatever position.
 
 ************************************************************************************************************************/
 
@@ -39,8 +41,8 @@
 #include "cpu/sh2/sh2.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/adsp2100/adsp2100.h"
+#include "cpu/scudsp/scudsp.h"
 #include "machine/eepromser.h"
-#include "machine/scudsp.h"
 #include "sound/scsp.h"
 #include "sound/cdda.h"
 #include "sound/dmadac.h"
@@ -960,6 +962,21 @@ static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 16, stv_state )
 	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp", scsp_r, scsp_w)
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( scudsp_mem, AS_PROGRAM, 32, stv_state )
+	AM_RANGE(0x00, 0xff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( scudsp_data, AS_DATA, 32, stv_state )
+	AM_RANGE(0x00, 0xff) AM_RAM
+ADDRESS_MAP_END
+
+static SCUDSP_INTERFACE( scudsp_config )
+{
+	DEVCB_DRIVER_LINE_MEMBER(saturn_state, scudsp_end_w),
+	DEVCB_DRIVER_MEMBER16(saturn_state,scudsp_dma_r),
+	DEVCB_DRIVER_MEMBER16(saturn_state,scudsp_dma_w)
+};
+
 static MACHINE_CONFIG_START( stv, stv_state )
 
 	/* basic machine hardware */
@@ -975,6 +992,11 @@ static MACHINE_CONFIG_START( stv, stv_state )
 
 	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //11.2896 MHz
 	MCFG_CPU_PROGRAM_MAP(sound_mem)
+
+	MCFG_CPU_ADD("scudsp", SCUDSP, MASTER_CLOCK_352/4) // 14 MHz
+	MCFG_CPU_PROGRAM_MAP(scudsp_mem)
+	MCFG_CPU_DATA_MAP(scudsp_data)
+	MCFG_CPU_CONFIG(scudsp_config)
 
 	MCFG_MACHINE_START_OVERRIDE(stv_state,stv)
 	MCFG_MACHINE_RESET_OVERRIDE(stv_state,stv)
@@ -1220,6 +1242,7 @@ MACHINE_RESET_MEMBER(stv_state,stv)
 	// don't let the slave cpu and the 68k go anywhere
 	m_slave->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_scudsp->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	m_en_68k = 0;
 	m_NMI_reset = 0;
@@ -1401,8 +1424,8 @@ static INPUT_PORTS_START( stv )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(2)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("1P Push Switch") PORT_CODE(KEYCODE_7)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("2P Push Switch") PORT_CODE(KEYCODE_8)
 
@@ -1588,7 +1611,7 @@ static INPUT_PORTS_START( myfairld )
 
 	PORT_MODIFY("PORTC")
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x00)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 ) PORT_CONDITION("IO_TYPE", 0x01, EQUALS, 0x01)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_MODIFY("PORTE")
@@ -3062,7 +3085,7 @@ GAME( 1997, thuntk,    sandor,  stv,      stv, stv_state,        sandor,     ROT
 GAME( 1995, smleague,  stvbios, stv,      stv, stv_state,        smleague,   ROT0,   "Sega",                         "Super Major League (U 960108 V1.000)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, finlarch,  smleague,stv,      stv, stv_state,        finlarch,   ROT0,   "Sega",                         "Final Arch (J 950714 V1.001)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, sokyugrt,  stvbios, stv,      stv, stv_state,        sokyugrt,   ROT0,   "Raizing / Eighting",           "Soukyugurentai / Terra Diver (JUET 960821 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, suikoenb,  stvbios, stv,      stv6b, stv_state,     suikoenb,   ROT0,   "Data East",                    "Suiko Enbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, suikoenb,  stvbios, stv,      stv6b, stv_state,      suikoenb,   ROT0,   "Data East",                    "Suiko Enbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, vfkids,    stvbios, stv,      stv, stv_state,        stv,        ROT0,   "Sega",                         "Virtua Fighter Kids (JUET 960319 V0.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, vmahjong,  stvbios, stv,      myfairld, stv_state,   stvmp,      ROT0,   "Micronet",                     "Virtual Mahjong (J 961214 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, winterht,  stvbios, stv,      stv, stv_state,        winterht,   ROT0,   "Sega",                         "Winter Heat (JUET 971012 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )

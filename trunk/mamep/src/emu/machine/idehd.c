@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:smf
 #include "idehd.h"
 
 /***************************************************************************
@@ -361,7 +363,7 @@ void ata_mass_storage_device::fill_buffer()
 					start_busy(TIME_MULTIPLE_SECTORS, PARAM_COMMAND);
 			}
 			else
-				start_busy(TIME_PER_SECTOR, PARAM_COMMAND);
+				start_busy(TIME_MULTIPLE_SECTORS, PARAM_COMMAND);
 		}
 		break;
 	}
@@ -431,20 +433,15 @@ void ata_mass_storage_device::read_first_sector()
 		set_dasp(ASSERT_LINE);
 
 		/* just set a timer */
-		if (m_command == IDE_COMMAND_READ_MULTIPLE)
-		{
-			int new_lba = lba_address();
-			attotime seek_time;
+		int new_lba = lba_address();
+		attotime seek_time;
 
-			if (new_lba == m_cur_lba || new_lba == m_cur_lba + 1)
-				start_busy(TIME_NO_SEEK_MULTISECTOR, PARAM_COMMAND);
-			else
-				start_busy(TIME_SEEK_MULTISECTOR, PARAM_COMMAND);
-
-			m_cur_lba = new_lba;
-		}
+		if (new_lba == m_cur_lba || new_lba == m_cur_lba + 1)
+			start_busy(TIME_NO_SEEK_MULTISECTOR, PARAM_COMMAND);
 		else
-			start_busy(TIME_PER_SECTOR, PARAM_COMMAND);
+			start_busy(TIME_SEEK_MULTISECTOR, PARAM_COMMAND);
+
+		m_cur_lba = new_lba;
 	}
 }
 

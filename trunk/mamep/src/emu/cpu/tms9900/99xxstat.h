@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:Raphael Nabet
 /************************************************************************
 
     ST register functions

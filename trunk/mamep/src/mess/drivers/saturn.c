@@ -1,10 +1,11 @@
+// license:?
+// copyright-holders:David Haywood, Angelo Salese, Olivier Galibert, Mariusz Wojcieszek, R.Belmont
 /**************************************************************************************************
 
     Sega Saturn & Sega ST-V (Sega Titan Video) HW (c) 1994 Sega
 
     Driver by David Haywood, Angelo Salese, Olivier Galibert & Mariusz Wojcieszek
     SCSP driver provided by R.Belmont, based on ElSemi's SCSP sound chip emulator
-    CD Block driver provided by ANY, based on sthief original emulator
     Many thanks to Guru, Fabien, Runik and Charles MacDonald for the help given.
 
 ===================================================================================================
@@ -38,7 +39,7 @@ test1f diagnostic hacks:
 #include "cpu/m68000/m68000.h"
 #include "machine/eepromser.h"
 #include "cpu/sh2/sh2.h"
-#include "machine/scudsp.h"
+#include "cpu/scudsp/scudsp.h"
 #include "sound/scsp.h"
 #include "sound/cdda.h"
 #include "machine/smpc.h"
@@ -181,6 +182,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 16, sat_console_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_RAM AM_SHARE("sound_ram")
 	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp", scsp_r, scsp_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( scudsp_mem, AS_PROGRAM, 32, sat_console_state )
+	AM_RANGE(0x00, 0xff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( scudsp_data, AS_DATA, 32, sat_console_state )
+	AM_RANGE(0x00, 0xff) AM_RAM
 ADDRESS_MAP_END
 
 
@@ -695,6 +704,7 @@ MACHINE_RESET_MEMBER(sat_console_state,saturn)
 	// don't let the slave cpu and the 68k go anywhere
 	m_slave->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	m_audiocpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_scudsp->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	m_smpc.SR = 0x40;   // this bit is always on according to docs
 
@@ -726,6 +736,12 @@ struct cdrom_interface saturn_cdrom =
 	NULL
 };
 
+static SCUDSP_INTERFACE( scudsp_config )
+{
+	DEVCB_DRIVER_LINE_MEMBER(saturn_state, scudsp_end_w),
+	DEVCB_DRIVER_MEMBER16(saturn_state,scudsp_dma_r),
+	DEVCB_DRIVER_MEMBER16(saturn_state,scudsp_dma_w)
+};
 
 static MACHINE_CONFIG_START( saturn, sat_console_state )
 
@@ -743,7 +759,12 @@ static MACHINE_CONFIG_START( saturn, sat_console_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //256 x 44100 Hz = 11.2896 MHz
 	MCFG_CPU_PROGRAM_MAP(sound_mem)
 
-//	SH-1
+	MCFG_CPU_ADD("scudsp", SCUDSP, MASTER_CLOCK_352/4) // 14 MHz
+	MCFG_CPU_PROGRAM_MAP(scudsp_mem)
+	MCFG_CPU_DATA_MAP(scudsp_data)
+	MCFG_CPU_CONFIG(scudsp_config)
+
+//  SH-1
 
 //  SMPC MCU, running at 4 MHz (+ custom RTC device that runs at 32.768 KHz)
 

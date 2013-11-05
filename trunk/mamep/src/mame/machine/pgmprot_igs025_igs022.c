@@ -317,7 +317,7 @@ MACHINE_RESET_MEMBER(pgm_022_025_state,killbld)
 
 void pgm_022_025_state::igs025_to_igs022_callback( void )
 {
-//	printf("igs025_to_igs022_callback\n");
+//  printf("igs025_to_igs022_callback\n");
 	m_igs022->IGS022_handle_command();
 }
 
@@ -413,13 +413,13 @@ INPUT_PORTS_START( dw3j ) // for dw3100 set
 
 	PORT_MODIFY("Region")   /* Region - supplied by protection device */
 	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
-//	PORT_CONFSETTING(      0x0000, "0" )
+//  PORT_CONFSETTING(      0x0000, "0" )
 	PORT_CONFSETTING(      0x0001, DEF_STR( Japan ) )
-//	PORT_CONFSETTING(      0x0002, DEF_STR( Korea ))
-//	PORT_CONFSETTING(      0x0003, DEF_STR( Taiwan ) )
-//	PORT_CONFSETTING(      0x0004, DEF_STR( Hong_Kong ) ) // typo Hokg Kong
-//	PORT_CONFSETTING(      0x0005, DEF_STR( China ) )
-//	PORT_CONFSETTING(      0x0006, DEF_STR( World ) )
-//	PORT_CONFSETTING(      0x0007, "Singapore" )
+//  PORT_CONFSETTING(      0x0002, DEF_STR( Korea ))
+//  PORT_CONFSETTING(      0x0003, DEF_STR( Taiwan ) )
+//  PORT_CONFSETTING(      0x0004, DEF_STR( Hong_Kong ) ) // typo Hokg Kong
+//  PORT_CONFSETTING(      0x0005, DEF_STR( China ) )
+//  PORT_CONFSETTING(      0x0006, DEF_STR( World ) )
+//  PORT_CONFSETTING(      0x0007, "Singapore" )
 
 INPUT_PORTS_END

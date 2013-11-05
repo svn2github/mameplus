@@ -1,12 +1,10 @@
+// license:BSD-3-Clause
+// copyright-holders:Aaron Giles
 /***************************************************************************
 
     ppcdrc.c
 
     Universal machine language-based PowerPC emulator.
-
-    Copyright Aaron Giles
-    Released for general non-commercial use under the MAME license
-    Visit http://mamedev.org for licensing and usage restrictions.
 
 ****************************************************************************
 
@@ -924,7 +922,7 @@ static void code_compile_block(powerpc_state *ppc, UINT8 mode, offs_t pc)
 	const opcode_desc *desclist;
 	int override = FALSE;
 	drcuml_block *block;
-logerror("Compile %08X\n", pc);
+
 	g_profiler.start(PROFILER_DRC_COMPILE);
 
 	/* get a description of this sequence */

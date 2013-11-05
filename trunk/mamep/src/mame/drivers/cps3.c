@@ -16,10 +16,10 @@ To-Do/Issues:
 Street Fighter 3 2nd Impact uses flipped tilemaps during flashing, emulate this.
 
 Figure out proper IRQ10 generation:
- If we generate on DMA operations only then Warzard is OK, otherwise it hangs during attract
+    If we generate on DMA operations only then Warzard is OK, otherwise it hangs during attract
     HOWEVER, SFIII2 sometimes has messed up character profiles unless we also generate it periodically.
     I think the corrupt background on some of the lighting effects may be related to this + the DMA
- status flags.
+    status flags.
 
 Alpha Blending Effects
     These are actually palette manipulation effects, not true blending.  How the values are used is
@@ -32,15 +32,15 @@ Palette DMA effects
     Verify them, they might not be 100% accurate at the moment
 
 Verify Full Screen Zoom on real hardware
- Which is which, x & y registers, how far can it zoom etc.
+    Which is which, x & y registers, how far can it zoom etc.
 
 Verify CRT registers
- Only SFIII2 changes them, for widescreen mode.  What other modes are possible?
+    Only SFIII2 changes them, for widescreen mode.  What other modes are possible?
 
 Sprite positioning glitches
- Some sprites are still in the wrong places, seems the placement of zooming sprites is imperfect
- eg. warzard intro + cutscenes leave the left most 16 pixels uncovered because the sprite is positioned incorrectly,
-     the same occurs in the sf games.  doesn't look like the origin is correct when zooming in all cases.
+    Some sprites are still in the wrong places, seems the placement of zooming sprites is imperfect
+    eg. warzard intro + cutscenes leave the left most 16 pixels uncovered because the sprite is positioned incorrectly,
+    the same occurs in the sf games.  doesn't look like the origin is correct when zooming in all cases.
 
 Gaps in Sprite Zooming
     probably caused by use of drawgfx instead of processing as a single large sprite, but could also be due to the
@@ -157,7 +157,7 @@ the CPU to boot the system. Even though the code in the flashROM is encrypted, t
 dead/suicided because it has been discovered that the program contains a hidden security menu allowing the cart to be
 loaded with the security data. This proves the cart runs the code even if the battery is dead. The special security
 menu is not normally available but is likely accessed with a special key/button combination which is currently unknown.
- 
+
 Because the CPU in the cart is always powered by the battery, it has stealth capability that allows it to continually
 monitor the situation. If the custom CPU detects any tampering (generally things such as voltage fluctuation or voltage
 dropping or even removal of the cart with the power on), it immediately erases the SRAM (i.e. the decryption key)
@@ -166,7 +166,7 @@ additional internal code to initiate the boot process because in order to re-pro
 menu the CPU must execute some working code. It is known (from decapping it) that the CPU in the security cart contains
 an amount of static RAM for data storage and a SH2 core based on the Hitachi SH7010-series (SH7014) SuperH RISC engine
 family of Microprocessors.
- 
+
 It is thought that when a cartridge dies it will set the decryption keys identical to the ones of SFIII-2nd Impact, so
 removing the battery and changing the content of the flashROM (if it's not a 2nd Impact) will make it run as a normal
 SFIII-2nd Impact cartridge (is this verified on real hardware?)
@@ -450,7 +450,7 @@ hardware modification to the security cart.....
 3. Power on the PCB and using the built-in cart flashROM menu re-program the SIMMs for your chosen game using the CD
    from set 'cps3boot' in MAME.
 4. That is all. Enjoy your working PCB.
- 
+
 */
 
 #include "emu.h"
@@ -4075,5 +4075,3 @@ GAME( 1999, jojobaner1,jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0
 GAME( 1999, cps3boot,  0,        sfiii3,   cps3_jojo, cps3_state, cps3boot,   ROT0, "bootleg", "CPS3 Multi-game bootleg for HD6417095 type SH2 (New Generation, 3rd Strike, JoJo's Venture, JoJo's Bizarre Adventure, Red Earth)", GAME_IMPERFECT_GRAPHICS )
 // this does not play Red Earth or the 2 Jojo games.  New Generation and 3rd Strike have been heavily modified to work with the separate code/data encryption a dead cart / 2nd Impact cart has.  Selecting the other games will give an 'invalid CD' message.
 GAME( 1999, cps3boota, cps3boot, sfiii3,   cps3_jojo, cps3_state, sfiii2,     ROT0, "bootleg", "CPS3 Multi-game bootleg for dead security cart (New Generation, 2nd Impact, 3rd Strike)", GAME_IMPERFECT_GRAPHICS )
-
-

@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:trap15,nimitz,austere
 #pragma once
 
 #ifndef __ICS2115_H__

@@ -106,6 +106,15 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/video/fixfreq.h,VIDEOS += FIXFREQ
+#-------------------------------------------------
+
+ifneq ($(filter FIXFREQ,$(VIDEOS)),)
+VIDEOOBJS+= $(VIDEOOBJ)/fixfreq.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/video/h63484.h,VIDEOS += H63484
 #-------------------------------------------------
 
@@ -257,6 +266,15 @@ endif
 
 ifneq ($(filter MB90082,$(VIDEOS)),)
 VIDEOOBJS+= $(VIDEOOBJ)/mb90082.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/video/mb_vcu.h,VIDEOS += MB_VCU
+#-------------------------------------------------
+
+ifneq ($(filter MB_VCU,$(VIDEOS)),)
+VIDEOOBJS+= $(VIDEOOBJ)/mb_vcu.o
 endif
 
 #-------------------------------------------------

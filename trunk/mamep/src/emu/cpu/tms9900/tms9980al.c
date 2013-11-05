@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:Raphael Nabet
 /*
     generate the tms9980a/tms9981 emulator
 */

@@ -82,11 +82,10 @@
 
 *******************************************************************************/
 
-
 #define MASTER_CLOCK    XTAL_8MHz   /* guess */
 
 #include "emu.h"
-#include "cpu/tms9900/tms9900l.h"
+#include "cpu/tms9900/tms9980a.h"
 #include "video/mc6845.h"
 
 
@@ -102,6 +101,7 @@ public:
 	tilemap_t *m_bg_tilemap;
 	DECLARE_WRITE8_MEMBER(jubileep_videoram_w);
 	DECLARE_READ8_MEMBER(unk_r);
+	DECLARE_WRITE8_MEMBER(unk_w);
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void video_start();
 	virtual void palette_init();
@@ -156,8 +156,7 @@ void jubilee_state::palette_init()
 
 INTERRUPT_GEN_MEMBER(jubilee_state::jubileep_interrupt)
 {
-	/* doesn't seems to work properly. need to set level1 interrupts */
-	device.execute().set_input_line_and_vector(0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
+	m_maincpu->set_input_line(INT_9980A_LEVEL1, ASSERT_LINE);
 }
 
 
@@ -181,17 +180,41 @@ ADDRESS_MAP_END
 
 */
 
-
+/*
+    TODO: I/O lines handling. This is still work to be done; someone needs to
+    check the schematics. Here, we need to deliver some reasonable return values
+    instead of the 0. Returning a random number will create a nondeterministic
+    behavior at best.
+*/
 READ8_MEMBER(jubilee_state::unk_r)
 {
-	return (machine().rand() & 0xff);
+//  return (machine().rand() & 0xff);
+	logerror("CRU read from address %04x\n", offset<<4);
+	return 0;
+}
+
+WRITE8_MEMBER(jubilee_state::unk_w)
+{
+//  return (machine().rand() & 0xff);
+	logerror("CRU write to address %04x: %d\n", offset<<1, data & 1);
+
+	// In particular, the interrupt from above must be cleared. We assume that
+	// this is done by one of the output lines, and from the 32 lines that are
+	// set right after an interrupt is serviced, all are set to 0, and only one
+	// is set to one. Maybe this one clears the interrupt.
+	// TODO: Check the schematics.
+	if (((offset<<1)==0x0ce2)&&(data==1))
+	{
+		m_maincpu->set_input_line(INT_9980A_LEVEL1, CLEAR_LINE);
+	}
 }
 
 static ADDRESS_MAP_START( jubileep_cru_map, AS_IO, 8, jubilee_state )
-//  AM_RANGE(0x0000, 0xffff) AM_READ(unk_r)
+	AM_RANGE(0x0000, 0x01ff) AM_READ(unk_r)
+	AM_RANGE(0x0000, 0x0fff) AM_WRITE(unk_w)
 //  AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("crtc", mc6845_device, status_r, address_w)
 //  AM_RANGE(0x01, 0x01) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
-	AM_RANGE(0xc8, 0xc8) AM_READ(unk_r)
+//  AM_RANGE(0xc8, 0xc8) AM_READ(unk_r)
 ADDRESS_MAP_END
 
 /* I/O byte R/W
@@ -408,6 +431,14 @@ static MC6845_INTERFACE( mc6845_intf )
 	NULL        /* update address callback */
 };
 
+static TMS9980A_CONFIG( cpuconf )
+{
+	DEVCB_NULL,
+	DEVCB_NULL,     // Instruction acquisition
+	DEVCB_NULL,     // Clock out
+	DEVCB_NULL,     // Hold acknowledge
+	DEVCB_NULL      // DBIN
+};
 
 /*************************
 *    Machine Drivers     *
@@ -416,9 +447,7 @@ static MC6845_INTERFACE( mc6845_intf )
 static MACHINE_CONFIG_START( jubileep, jubilee_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", TMS9980L, MASTER_CLOCK/2)   /* guess */
-	MCFG_CPU_PROGRAM_MAP(jubileep_map)
-	MCFG_CPU_IO_MAP(jubileep_cru_map)
+	MCFG_TMS99xx_ADD("maincpu", TMS9980A, MASTER_CLOCK/2, jubileep_map, jubileep_cru_map, cpuconf)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", jubilee_state,  jubileep_interrupt)
 
 	/* video hardware */

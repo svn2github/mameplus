@@ -447,7 +447,6 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 static void ParseClose(void)
 {
 	/* If the file is open, time for fclose. */
-
 	if (fp)
 	{
 		fp->close();
@@ -456,7 +455,6 @@ static void ParseClose(void)
 
 	fp = NULL;
 }
-
 
 /****************************************************************************
  *      ParseOpen - Open up file for reading
@@ -474,7 +472,6 @@ static UINT8 ParseOpen(const char *pszFilename)
 		return(FALSE);
 
 	/* Otherwise, prepare! */
-
 	dwFilePos = 0;
 
 	/* identify text file type first */
@@ -483,7 +480,6 @@ static UINT8 ParseOpen(const char *pszFilename)
 
 	return(TRUE);
 }
-
 
 /****************************************************************************
  *      ParseSeek - Move the file position indicator
@@ -669,7 +665,6 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 	idx->driver = 0;
 	return count;
 }
-
 
 /**************************************************************************
  *      load_datafile_text

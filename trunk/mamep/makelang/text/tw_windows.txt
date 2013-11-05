@@ -36,7 +36,7 @@ Blue Scale
 
 # osd/windows/winmain.c: 337
 DIRECT3D POST-PROCESSING OPTIONS
-DITECT3D 後處理選項
+DIRECT3D 後處理選項
 
 # osd/windows/winmain.c: 333
 DIRECT3D-SPECIFIC OPTIONS

@@ -39,7 +39,6 @@ EMUSRC = $(SRC)/emu
 EMUOBJ = $(OBJ)/emu
 
 # MAME directories
-EMU_AUDIO = $(EMUOBJ)/audio
 EMU_MACHINE = $(EMUOBJ)/machine
 EMU_VIDEO = $(EMUOBJ)/video
 MAME_AUDIO = $(MAMEOBJ)/audio

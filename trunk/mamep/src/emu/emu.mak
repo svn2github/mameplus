@@ -14,6 +14,7 @@ EMUSRC = $(SRC)/emu
 EMUOBJ = $(OBJ)/emu
 
 EMUAUDIO = $(EMUOBJ)/audio
+EMUBUS = $(EMUOBJ)/bus
 EMUDRIVERS = $(EMUOBJ)/drivers
 EMULAYOUT = $(EMUOBJ)/layout
 EMUMACHINE = $(EMUOBJ)/machine
@@ -26,8 +27,40 @@ OBJDIRS += \
 	$(EMUOBJ)/debug \
 	$(EMUOBJ)/debugint \
 	$(EMUOBJ)/audio \
+	$(EMUOBJ)/bus \
+	$(EMUOBJ)/bus/abcbus \
+	$(EMUOBJ)/bus/adam \
+	$(EMUOBJ)/bus/adamnet \
+	$(EMUOBJ)/bus/bw2 \
+	$(EMUOBJ)/bus/c64 \
+	$(EMUOBJ)/bus/cbm2 \
+	$(EMUOBJ)/bus/cbmiec \
+	$(EMUOBJ)/bus/comx35 \
+	$(EMUOBJ)/bus/ecbbus \
+	$(EMUOBJ)/bus/econet \
+	$(EMUOBJ)/bus/ep64 \
+	$(EMUOBJ)/bus/ieee488 \
+	$(EMUOBJ)/bus/isbx \
+	$(EMUOBJ)/bus/pet \
+	$(EMUOBJ)/bus/plus4 \
+	$(EMUOBJ)/bus/s100 \
+	$(EMUOBJ)/bus/vcs \
+	$(EMUOBJ)/bus/vic10 \
+	$(EMUOBJ)/bus/vic20 \
+	$(EMUOBJ)/bus/vidbrain \
+	$(EMUOBJ)/bus/vip \
+	$(EMUOBJ)/bus/wangpc \
+	$(EMUOBJ)/bus/a2bus \
+	$(EMUOBJ)/bus/nubus \
+	$(EMUOBJ)/bus/centronics \
+	$(EMUOBJ)/bus/iq151 \
+	$(EMUOBJ)/bus/kc \
+	$(EMUOBJ)/bus/tvc \
+	$(EMUOBJ)/bus/z88 \
 	$(EMUOBJ)/drivers \
 	$(EMUOBJ)/machine \
+	$(EMUOBJ)/netlist \
+	$(EMUOBJ)/netlist/devices \
 	$(EMUOBJ)/layout \
 	$(EMUOBJ)/imagedev \
 	$(EMUOBJ)/video \
@@ -168,7 +201,6 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/ram.o         \
 	$(EMUMACHINE)/nvram.o       \
 	$(EMUMACHINE)/laserdsc.o    \
-	$(EMUMACHINE)/net_lib.o     \
 	$(EMUMACHINE)/netlist.o     \
 
 EMUIMAGEDEVOBJS = \
@@ -215,6 +247,12 @@ $(LIBDASM): $(DASMOBJS)
 include $(EMUSRC)/sound/sound.mak
 
 #-------------------------------------------------
+# netlist core objects
+#-------------------------------------------------
+
+include $(EMUSRC)/netlist/netlist.mak
+
+#-------------------------------------------------
 # video core objects
 #-------------------------------------------------
 
@@ -227,10 +265,16 @@ include $(EMUSRC)/video/video.mak
 include $(EMUSRC)/machine/machine.mak
 
 #-------------------------------------------------
+# bus core objects
+#-------------------------------------------------
+
+include $(EMUSRC)/bus/bus.mak
+
+#-------------------------------------------------
 # core optional library
 #-------------------------------------------------
 
-$(LIBOPTIONAL): $(CPUOBJS) $(SOUNDOBJS) $(VIDEOOBJS) $(MACHINEOBJS)
+$(LIBOPTIONAL): $(CPUOBJS) $(SOUNDOBJS) $(VIDEOOBJS) $(MACHINEOBJS) $(BUSOBJS) $(NETLISTOBJS)
 
 #-------------------------------------------------
 # additional dependencies

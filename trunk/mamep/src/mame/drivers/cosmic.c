@@ -33,7 +33,7 @@ cosmicg - board can operate in b&w mode if there is no PROM, in this case
 
 
 #include "emu.h"
-#include "cpu/tms9900/tms9900l.h"
+#include "cpu/tms9900/tms9980a.h"
 #include "cpu/z80/z80.h"
 #include "sound/samples.h"
 #include "sound/dac.h"
@@ -528,7 +528,7 @@ INPUT_PORTS_END
 
 INPUT_CHANGED_MEMBER(cosmic_state::cosmicg_coin_inserted)
 {
-	m_maincpu->set_input_line_and_vector(0, newval ? ASSERT_LINE : CLEAR_LINE, 6);
+	m_maincpu->set_input_line(INT_9980A_LEVEL4, newval? ASSERT_LINE : CLEAR_LINE);
 }
 
 static INPUT_PORTS_START( cosmicg )
@@ -980,6 +980,16 @@ MACHINE_RESET_MEMBER(cosmic_state,cosmic)
 	m_color_registers[2] = 0;
 }
 
+MACHINE_RESET_MEMBER(cosmic_state,cosmicg)
+{
+	m_pixel_clock = 0;
+	m_background_enable = 0;
+	m_color_registers[0] = 0;
+	m_color_registers[1] = 0;
+	m_color_registers[2] = 0;
+	m_maincpu->set_input_line(INT_9980A_RESET, ASSERT_LINE);
+	m_maincpu->set_input_line(INT_9980A_RESET, CLEAR_LINE);
+}
 
 static MACHINE_CONFIG_START( cosmic, cosmic_state )
 
@@ -1059,20 +1069,26 @@ static MACHINE_CONFIG_DERIVED( cosmica, cosmic )
 
 MACHINE_CONFIG_END
 
+static TMS9980A_CONFIG( cpuconf )
+{
+	DEVCB_NULL,     // External operation
+	DEVCB_NULL,     // Instruction acquisition
+	DEVCB_NULL,     // Clock out
+	DEVCB_NULL,     // Hold acknowledge
+	DEVCB_NULL      // DBIN
+};
 
 static MACHINE_CONFIG_START( cosmicg, cosmic_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", TMS9980L, COSMICG_MASTER_CLOCK/8)
-			/* 9.828 MHz Crystal */
-			/* R Nabet : huh ? This would imply the crystal frequency is somehow divided by 2 before being
-			fed to the tms9904 or tms9980.  Also, I have never heard of a tms9900/9980 operating under
-			1.5MHz.  So, if someone can check this... */
-	MCFG_CPU_PROGRAM_MAP(cosmicg_map)
-	MCFG_CPU_IO_MAP(cosmicg_io_map)
+	MCFG_TMS99xx_ADD("maincpu", TMS9980A, COSMICG_MASTER_CLOCK/8, cosmicg_map, cosmicg_io_map, cpuconf)
+		/* 9.828 MHz Crystal */
+		/* R Nabet : huh ? This would imply the crystal frequency is somehow divided by 2 before being
+		fed to the tms9904 or tms9980.  Also, I have never heard of a tms9900/9980 operating under
+		1.5MHz.  So, if someone can check this... */
 
 	MCFG_MACHINE_START_OVERRIDE(cosmic_state,cosmic)
-	MCFG_MACHINE_RESET_OVERRIDE(cosmic_state,cosmic)
+	MCFG_MACHINE_RESET_OVERRIDE(cosmic_state,cosmicg)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1569,8 +1585,8 @@ DRIVER_INIT_MEMBER(cosmic_state,panic)
 }
 
 
-GAME( 1979, cosmicg,  0,       cosmicg,  cosmicg, cosmic_state,  cosmicg, ROT270, "Universal", "Cosmic Guerilla", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1979, cosmicgi, cosmicg, cosmicg,  cosmicg, cosmic_state,  cosmicg, ROT270, "bootleg (Inder)", "Cosmic Guerilla (Spanish bootleg)", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1979, cosmicg,  0,       cosmicg,  cosmicg, cosmic_state,  cosmicg, ROT270, "Universal", "Cosmic Guerilla", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL /*| GAME_SUPPORTS_SAVE */)
+GAME( 1979, cosmicgi, cosmicg, cosmicg,  cosmicg, cosmic_state,  cosmicg, ROT270, "bootleg (Inder)", "Cosmic Guerilla (Spanish bootleg)", GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL  /*| GAME_SUPPORTS_SAVE */)
 GAME( 1979, cosmica,  0,       cosmica,  cosmica, cosmic_state,  cosmica, ROT270, "Universal", "Cosmic Alien (version II)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1979, cosmica1, cosmica, cosmica,  cosmica, cosmic_state,  cosmica, ROT270, "Universal", "Cosmic Alien (first version)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1979, cosmica2, cosmica, cosmica,  cosmica, cosmic_state,  cosmica, ROT270, "Universal", "Cosmic Alien (early version II?)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

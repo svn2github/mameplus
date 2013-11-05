@@ -2381,7 +2381,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	BOOL joystick_attached = FALSE;
 	bool in_window = FALSE;
 	bool hlsl_on = FALSE;
-	int d3d_version = 8;
 
 	nIndex = g_nGame;
 
@@ -2449,16 +2448,13 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),		useart);
 #endif
 
-	// HLSL - only enable if D3D selected, and Version 9 selected
+	// HLSL - only enable if D3D selected
 	if (d3d)
-	{
-		d3d_version = pCurrentOpts.int_value(WINOPTION_D3DVERSION);
+		hlsl_on = TRUE;
+	else
+		hlsl_on = FALSE;
 
-		if (d3d_version >= 9)
-			hlsl_on = pCurrentOpts.bool_value(WINOPTION_HLSL_ENABLE);
-	}
-
-	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ON), (d3d_version >= 9));
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ON),		hlsl_on);
 	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHATEXT),	hlsl_on);
 	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHADISP),	hlsl_on);
 	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHA),		hlsl_on);

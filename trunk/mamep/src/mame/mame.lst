@@ -769,6 +769,7 @@ pacnpal         // (c) 1983
 pacnpal2        // (c) 1983
 pacnchmp        // (c) 1983
 phozon          // (c) 1983
+phozons         // (c) 1983 pcb manufactured by Sidam
 mappy           // (c) 1983
 mappyj          // (c) 1983
 digdug2         // (c) 1985
@@ -1084,6 +1085,7 @@ gundzaft
 soulclb3
 soulclb3a
 fateulc
+fateulcb
 
 // Namco System 256
 sys256
@@ -1490,11 +1492,13 @@ m79amb          // (c) 1977 RamTek
 alieninv        // Margamatics
 alieninvp2      // bootleg
 tst_invd        // Test ROM
-sitv            // (c) 1978 Taito
-sitvo           // (c) 1978 Taito
-sicv            // (c) 1979 Taito
-sisv            // (c) 1978 Taito
+sisv1           // (c) 1978 Taito
 sisv2           // (c) 1978 Taito
+sisv3           // (c) 1978 Taito
+sisv            // (c) 1978 Taito
+sitv1           // (c) 1978 Taito
+sitv            // (c) 1978 Taito
+sicv            // (c) 1979 Taito
 spacerng        // bootleg
 spacewr3        // bootleg
 invaderl        // bootleg
@@ -1797,6 +1801,7 @@ atompunk        // (c) 1991 Irem America (licensed from Hudson Soft)
 // M97
 bbmanw          // (c) 1992 Irem (World)
 bbmanwj         // (c) 1992 Irem (Japan)
+bbmanwja        // (c) 1992 Irem (Japan) - revised sound hardware
 bomblord        // bootleg
 newapunk        // (c) 1992 Irem America (US)
 quizf1          // (c) 1992 Irem (Japan)
@@ -2560,6 +2565,7 @@ demonwld1       // TP-O16 (c) 1989 Toaplan + Taito license
 demonwld2       // TP-O16 (c) 1989 Toaplan
 demonwld3       // TP-O16 (c) 1989 Toaplan
 fireshrk        // TP-O17 (c) 1990 Toaplan
+fireshrka       // TP-O17 (c) 1989 Toaplan
 fireshrkd       // TP-O17 (c) 1990 Toaplan
 fireshrkdh      // TP-O17 (c) 1990 Toaplan
 samesame        // TP-O17 (c) 1989 Toaplan
@@ -2979,6 +2985,7 @@ ffightub        // 13/06/1990 (c) 1989 (USA)
 ffightj         // 12/1989 (c) 1989 (Japan)
 ffightj1        // 12/01/1990 (c) 1989 (Japan)
 ffightj2        // 05/03/1990 (c) 1989 (Japan)
+ffightj3        // 13/06/1990 (c) 1989 (Japan)
 ffightjh        // hack
 1941            // 27/02/1990 (c) 1990 (World)
 1941r1          //  2/1990 (c) 1990 (World)
@@ -3292,8 +3299,9 @@ xmvsfj          // 04/10/1996 (c) 1996 (Japan)
 xmvsfjr1        // 10/09/1996 (c) 1996 (Japan)
 xmvsfjr2        // 09/09/1996 (c) 1996 (Japan)
 xmvsfa          // 23/10/1996 (c) 1996 (Asia)
-xmvsfar1        // 19/09/1996 (c) 1996 (Asia)
-xmvsfar2        // 10/09/1996 (c) 1996 (Asia)
+xmvsfar1        // 04/10/1996 (c) 1996 (Asia)
+xmvsfar2        // 19/09/1996 (c) 1996 (Asia)
+xmvsfar3        // 10/09/1996 (c) 1996 (Asia)
 xmvsfh          // 04/10/1996 (c) 1996 (Hispanic)
 xmvsfb          // 23/10/1996 (c) 1996 (Brazil)
 batcir          // 19/03/1997 (c) 1997 (Euro)
@@ -4413,11 +4421,13 @@ cottonu         // (c) 1990 (FD1094, decrypted)
 cottonj         // (c) 1990 (FD1094, decrypted)
 cottonja        // (c) 1990 (FD1094, decrypted)
 ddux            // (c) 1989 (FD1094, decrypted)
+dduxj           // (c) 1989 (FD1094, decrypted)
 ddux1           // (c) 1989 (8751)
 dunkshot        // (c) 1986 (FD1094, decrypted)
 eswat           // (c) 1989 (FD1094, decrypted)
 eswatu          // (c) 1989 (FD1094, decrypted)
 eswatj          // (c) 1989 (FD1094, decrypted)
+eswatj1         // (c) 1989 (FD1094, decrypted)
 exctleag        // (c) 1988 (FD1094, decrypted)
 fpoint          // (c) 1989 (Japan, FD1094, decrypted)
 fpoint1         // (c) 1989 (Japan, FD1094, decrypted)
@@ -4597,7 +4607,8 @@ pdrifte         // 1988.?? Power Drift (World)
 gloc            // 1990.04 G-LOC Air Battle (US)
 				// 1990.05 G-LOC Air Battle (Japan)
 glocr360        // 1990.?? G-LOC (R360, World?)
-strkfgtr        // 1991.06 Strike Fighter (Japan)
+strkfgtr        // 1991.06 Strike Fighter (World)
+strkfgtrj       // 1991.06 Strike Fighter (Japan)
 rchase          // 1991.09 Rail Chase (World)
 rchasej         // 1991.09 Rail Chase (Japan)
 				// 1991.09 Rail Chase (US)
@@ -4916,6 +4927,7 @@ spikeofe        // 1999.01 Spikeout Final Edition
 magtruck        // 1999.03 Magical Truck Adventure (US)
 eca             // 1999.10 Kyukyuusya Emergency Call Ambulance
 ecax
+ecap            // 1999.12 Emergency Call Ambulance - US proto or location test
 
 
 // Sega Lindbergh games
@@ -5493,6 +5505,7 @@ lnc             // (c) 1981
 zoar            // (c) 1982
 btime           // (c) 1982
 btime2          // (c) 1982
+btime3          // (c) 1982
 btimem          // (c) 1982 + Midway
 tisland         // (c) 1982
 protennb        // bootleg
@@ -7330,7 +7343,7 @@ kof96           // 0214 (c) 1996 SNK
 kof96h          // 0214 (c) 1996 SNK
 ssideki4        // 0215 (c) 1996 SNK
 kizuna          // 0216 (c) 1996 SNK
-				//  Fu-un Super Tag Battle Special Version (4-player battle available) exists
+kizuna4p        // 0216 (c) 1996 SNK - same cartridge as kizuna, needs extension board and a compatible MVS to enable 4p mode
 ninjamas        // 0217 (c) 1996 ADK / SNK
 ragnagrd        // 0218 (c) 1996 Saurus
 pgoal           // 0219 (c) 1996 Saurus
@@ -9985,6 +9998,7 @@ thedeep         // (c) 1987 Wood Place
 rundeep         // (c) 1988 Cream (bootleg?)
 wallc           // (c) 1984 Midcoin
 wallca          // (c) 1984 Midcoin
+sidampkr        //
 wink            // (c) 1985 Midcoin
 winka           // (c) 1985 Midcoin
 24cdjuke        // (c) 1988 Midcoin
@@ -10236,6 +10250,7 @@ dambustr        // (c) 1981 South West Research
 dambustra       // (c) 1981 South West Research
 dambustruk      // (c) 1981 South West Research
 gunpey          // (c) 2000 Banpresto
+hideseek        //
 spaceg          // (c) 19??
 gldarrow        // (c) 1984 Meyco Games
 wldarrow        // (c) 1982 Meyco Games
@@ -10622,6 +10637,7 @@ pepp0188        // (c) 1987 IGT - International Gaming Technology
 pepp0188a       // (c) 1987 IGT - International Gaming Technology
 pepp0190        // (c) 1987 IGT - International Gaming Technology
 pepp0197        // (c) 1987 IGT - International Gaming Technology
+pepp0197a       // (c) 1987 IGT - International Gaming Technology
 pepp0203        // (c) 1987 IGT - International Gaming Technology
 pepp0203a       // (c) 1987 IGT - International Gaming Technology
 pepp0221        // (c) 1987 IGT - International Gaming Technology
@@ -10664,6 +10680,7 @@ pepp0542        // (c) 1987 IGT - International Gaming Technology
 pepp0568        // (c) 1987 IGT - International Gaming Technology
 pepp0585        // (c) 1987 IGT - International Gaming Technology
 pepp0725        // (c) 1987 IGT - International Gaming Technology
+pepp0728        // (c) 1987 IGT - International Gaming Technology
 pepp0760        // (c) 1987 IGT - International Gaming Technology
 pepp0763        // (c) 1987 IGT - International Gaming Technology
 pepp0775        // (c) 1987 IGT - International Gaming Technology
@@ -10679,8 +10696,13 @@ peps0045        // (c) 1996 IGT - International Gaming Technology
 peps0047        // (c) 1996 IGT - International Gaming Technology
 peps0092        // (c) 1996 IGT - International Gaming Technology
 peps0206        // (c) 1996 IGT - International Gaming Technology
+peps0207        // (c) 1996 IGT - International Gaming Technology
+peps0298        // (c) 1996 IGT - International Gaming Technology
 peps0308        // (c) 1996 IGT - International Gaming Technology
+peps0364        // (c) 1996 IGT - International Gaming Technology
+peps0581        // (c) 1996 IGT - International Gaming Technology
 peps0615        // (c) 1996 IGT - International Gaming Technology
+peps0631        // (c) 1996 IGT - International Gaming Technology
 peps0716        // (c) 1996 IGT - International Gaming Technology
 pex0055p        // (c) 1995 IGT - International Gaming Technology
 pex0055pa       // (c) 1995 IGT - International Gaming Technology
@@ -10701,7 +10723,19 @@ pex0055po       // (c) 1995 IGT - International Gaming Technology
 pex0055pp       // (c) 1995 IGT - International Gaming Technology
 pex0055pq       // (c) 1995 IGT - International Gaming Technology
 pex0055pr       // (c) 1995 IGT - International Gaming Technology
+pex0158p        // (c) 1995 IGT - International Gaming Technology
+pex0188p        // (c) 1995 IGT - International Gaming Technology
+pex0190p        // (c) 1995 IGT - International Gaming Technology
+pex0197p        // (c) 1995 IGT - International Gaming Technology
+pex0203p        // (c) 1995 IGT - International Gaming Technology
 pex0225p        // (c) 1995 IGT - International Gaming Technology
+pex0291p        // (c) 1995 IGT - International Gaming Technology
+pex0430p        // (c) 1995 IGT - International Gaming Technology
+pex0434p        // (c) 1995 IGT - International Gaming Technology
+pex0447p        // (c) 1995 IGT - International Gaming Technology
+pex0449p        // (c) 1995 IGT - International Gaming Technology
+pex0451p        // (c) 1995 IGT - International Gaming Technology
+pex0452p        // (c) 1995 IGT - International Gaming Technology
 pex0454p        // (c) 1995 IGT - International Gaming Technology
 pex0458p        // (c) 1995 IGT - International Gaming Technology
 pex0508p        // (c) 1995 IGT - International Gaming Technology

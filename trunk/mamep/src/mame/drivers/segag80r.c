@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:Aaron Giles
 /***************************************************************************
 
     Sega G-80 raster hardware
@@ -109,7 +111,6 @@
 #include "sound/dac.h"
 #include "sound/sn76496.h"
 #include "sound/samples.h"
-#include "audio/segasnd.h"
 #include "machine/i8255.h"
 #include "machine/segacrpt.h"
 #include "machine/segag80.h"
@@ -185,7 +186,7 @@ WRITE8_MEMBER(segag80r_state::vidram_w){ segag80r_videoram_w(space, decrypt_offs
 WRITE8_MEMBER(segag80r_state::monsterb_vidram_w){ monsterb_videoram_w(space, decrypt_offset(space, offset), data); }
 WRITE8_MEMBER(segag80r_state::pignewt_vidram_w){ pignewt_videoram_w(space, decrypt_offset(space, offset), data); }
 WRITE8_MEMBER(segag80r_state::sindbadm_vidram_w){ sindbadm_videoram_w(space, decrypt_offset(space, offset), data); }
-WRITE8_MEMBER(segag80r_state::usb_ram_w){ device_t *device = machine().device("usbsnd"); sega_usb_ram_w(device, space, decrypt_offset(m_maincpu->space(AS_PROGRAM), offset), data); }
+WRITE8_MEMBER(segag80r_state::usb_ram_w){ m_usbsnd->ram_w(space, decrypt_offset(m_maincpu->space(AS_PROGRAM), offset), data); }
 
 
 
@@ -919,7 +920,7 @@ static MACHINE_CONFIG_DERIVED( pignewt, g80r_base )
 	MCFG_PALETTE_LENGTH(64+64)
 
 	/* sound boards */
-	MCFG_FRAGMENT_ADD(sega_universal_sound_board)
+	MCFG_SEGAUSB_ADD("usbsnd")
 MACHINE_CONFIG_END
 
 
@@ -1442,7 +1443,6 @@ void segag80r_state::monsterb_expand_gfx(const char *region)
 
 DRIVER_INIT_MEMBER(segag80r_state,astrob)
 {
-	device_t *speech = machine().device("segaspeech");
 	address_space &iospace = m_maincpu->space(AS_IO);
 
 	/* configure the 315-0062 security chip */
@@ -1452,11 +1452,14 @@ DRIVER_INIT_MEMBER(segag80r_state,astrob)
 	m_background_pcb = G80_BACKGROUND_NONE;
 
 	/* install speech board */
-	iospace.install_legacy_write_handler(*speech, 0x38, 0x38, FUNC(sega_speech_data_w));
-	iospace.install_legacy_write_handler(*speech, 0x3b, 0x3b, FUNC(sega_speech_control_w));
+	iospace.install_write_handler(0x38, 0x38, write8_delegate(FUNC(speech_sound_device::data_w), (speech_sound_device*)m_speech));
+	iospace.install_write_handler(0x3b, 0x3b, write8_delegate(FUNC(speech_sound_device::control_w), (speech_sound_device*)m_speech));
 
 	/* install Astro Blaster sound board */
 	iospace.install_write_handler(0x3e, 0x3f, write8_delegate(FUNC(segag80r_state::astrob_sound_w),this));
+
+	save_item(NAME(m_sound_state));
+	save_item(NAME(m_sound_rate));
 }
 
 
@@ -1467,6 +1470,12 @@ DRIVER_INIT_MEMBER(segag80r_state,005)
 
 	/* configure video */
 	m_background_pcb = G80_BACKGROUND_NONE;
+
+	save_item(NAME(m_sound_state));
+	save_item(NAME(m_sound_addr));
+	save_item(NAME(m_sound_data));
+	save_item(NAME(m_square_state));
+	save_item(NAME(m_square_count));
 }
 
 
@@ -1489,6 +1498,8 @@ DRIVER_INIT_MEMBER(segag80r_state,spaceod)
 	/* install our wacky mangled ports */
 	iospace.install_read_handler(0xf8, 0xfb, read8_delegate(FUNC(segag80r_state::spaceod_mangled_ports_r),this));
 	iospace.install_read_handler(0xfc, 0xfc, read8_delegate(FUNC(segag80r_state::spaceod_port_fc_r),this));
+
+	save_item(NAME(m_sound_state));
 }
 
 
@@ -1507,6 +1518,11 @@ DRIVER_INIT_MEMBER(segag80r_state,monsterb)
 	/* install background board handlers */
 	iospace.install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::monsterb_back_port_w),this));
 	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::monsterb_vidram_w),this));
+
+	save_item(NAME(m_sound_state));
+	save_item(NAME(m_sound_addr));
+	save_item(NAME(m_n7751_command));
+	save_item(NAME(m_n7751_busy));
 }
 
 
@@ -1527,12 +1543,16 @@ DRIVER_INIT_MEMBER(segag80r_state,monster2)
 	iospace.install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
 	iospace.install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
 	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
+
+	save_item(NAME(m_sound_state));
+	save_item(NAME(m_sound_addr));
+	save_item(NAME(m_n7751_command));
+	save_item(NAME(m_n7751_busy));
 }
 
 
 DRIVER_INIT_MEMBER(segag80r_state,pignewt)
 {
-	device_t *usbsnd = machine().device("usbsnd");
 	address_space &iospace = m_maincpu->space(AS_IO);
 	address_space &pgmspace = m_maincpu->space(AS_PROGRAM);
 
@@ -1549,8 +1569,8 @@ DRIVER_INIT_MEMBER(segag80r_state,pignewt)
 	pgmspace.install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
 
 	/* install Universal sound board */
-	iospace.install_legacy_readwrite_handler(*usbsnd, 0x3f, 0x3f, FUNC(sega_usb_status_r), FUNC(sega_usb_data_w));
-	pgmspace.install_legacy_read_handler(*usbsnd, 0xd000, 0xdfff, FUNC(sega_usb_ram_r));
+	iospace.install_readwrite_handler(0x3f, 0x3f, read8_delegate(FUNC(usb_sound_device::status_r), (usb_sound_device*)m_usbsnd), write8_delegate(FUNC(usb_sound_device::data_w), (usb_sound_device*)m_usbsnd));
+	pgmspace.install_read_handler(0xd000, 0xdfff, read8_delegate(FUNC(usb_sound_device::ram_r), (usb_sound_device*)m_usbsnd));
 	pgmspace.install_write_handler(0xd000, 0xdfff, write8_delegate(FUNC(segag80r_state::usb_ram_w),this));
 }
 

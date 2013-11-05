@@ -59,15 +59,15 @@ static ADDRESS_MAP_START( burglarx_map, AS_PROGRAM, 16, unico_state )
 	AM_RANGE(0x80001a, 0x80001b) AM_READ_PORT("DSW1")
 	AM_RANGE(0x80001c, 0x80001d) AM_READ_PORT("DSW2")
 	AM_RANGE(0x800030, 0x800031) AM_WRITENOP                                                // ? 0
-	AM_RANGE(0x80010c, 0x800121) AM_READWRITE( unico_scroll_r, unico_scroll_w )               // Scroll
+	AM_RANGE(0x80010c, 0x800121) AM_READWRITE(unico_scroll_r, unico_scroll_w)               // Scroll
 	AM_RANGE(0x800188, 0x800189) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)  // Sound
 	AM_RANGE(0x80018a, 0x80018b) AM_DEVWRITE8("ymsnd", ym3812_device, write_port_w, 0xff00)
 	AM_RANGE(0x80018c, 0x80018d) AM_DEVREADWRITE8("ymsnd", ym3812_device, status_port_r, control_port_w, 0xff00)
 	AM_RANGE(0x80018e, 0x80018f) AM_WRITE(burglarx_sound_bank_w)                    //
 	AM_RANGE(0x8001e0, 0x8001e1) AM_WRITENOP                                                // IRQ Ack
-	AM_RANGE(0x904000, 0x90ffff) AM_READWRITE( unico_vram_r, unico_vram_w )         // Layers 1, 2, 0
+	AM_RANGE(0x904000, 0x90ffff) AM_READWRITE(unico_vram_r, unico_vram_w)         // Layers 1, 2, 0
 	AM_RANGE(0x920000, 0x923fff) AM_RAM                                                     // ? 0
-	AM_RANGE(0x930000, 0x9307ff) AM_READWRITE( unico_spriteram_r, unico_spriteram_w )   // Sprites
+	AM_RANGE(0x930000, 0x9307ff) AM_READWRITE(unico_spriteram_r, unico_spriteram_w)   // Sprites
 	AM_RANGE(0x940000, 0x947fff) AM_RAM_WRITE(unico_palette_w) AM_SHARE("paletteram")   // Palette
 ADDRESS_MAP_END
 
@@ -144,14 +144,14 @@ static ADDRESS_MAP_START( zeropnt_map, AS_PROGRAM, 16, unico_state )
 	AM_RANGE(0x80001a, 0x80001b) AM_READ_PORT("DSW1")
 	AM_RANGE(0x80001c, 0x80001d) AM_READ_PORT("DSW2")
 	AM_RANGE(0x80010c, 0x800121) AM_READWRITE( unico_scroll_r, unico_scroll_w )   // Scroll
-	AM_RANGE(0x800170, 0x800171) AM_READ(unico_guny_0_msb_r         )   // Light Guns
-	AM_RANGE(0x800174, 0x800175) AM_READ(unico_gunx_0_msb_r         )   //
-	AM_RANGE(0x800178, 0x800179) AM_READ(unico_guny_1_msb_r         )   //
-	AM_RANGE(0x80017c, 0x80017d) AM_READ(unico_gunx_1_msb_r         )   //
+	AM_RANGE(0x800170, 0x800171) AM_READ(unico_guny_0_msb_r)   // Light Guns
+	AM_RANGE(0x800174, 0x800175) AM_READ(unico_gunx_0_msb_r)   //
+	AM_RANGE(0x800178, 0x800179) AM_READ(unico_guny_1_msb_r)   //
+	AM_RANGE(0x80017c, 0x80017d) AM_READ(unico_gunx_1_msb_r)   //
 	AM_RANGE(0x800188, 0x800189) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff               )   // Sound
 	AM_RANGE(0x80018a, 0x80018b) AM_DEVWRITE8("ymsnd", ym3812_device, write_port_w, 0xff00)
 	AM_RANGE(0x80018c, 0x80018d) AM_DEVREADWRITE8("ymsnd", ym3812_device, status_port_r, control_port_w, 0xff00)
-	AM_RANGE(0x80018e, 0x80018f) AM_WRITE(zeropnt_sound_bank_w              )   //
+	AM_RANGE(0x80018e, 0x80018f) AM_WRITE(zeropnt_sound_bank_w)   //
 	AM_RANGE(0x8001e0, 0x8001e1) AM_WRITEONLY   // ? IRQ Ack
 	AM_RANGE(0x904000, 0x90ffff) AM_READWRITE( unico_vram_r, unico_vram_w )     // Layers 1, 2, 0
 	AM_RANGE(0x920000, 0x923fff) AM_RAM // ? 0
@@ -211,24 +211,24 @@ WRITE32_MEMBER(unico_state::zeropnt2_eeprom_w)
 static ADDRESS_MAP_START( zeropnt2_map, AS_PROGRAM, 32, unico_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM                                             // ROM
 	AM_RANGE(0x800018, 0x80001b) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x800024, 0x800027) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff0000  )   // Sound
+	AM_RANGE(0x800024, 0x800027) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff0000)   // Sound
 	AM_RANGE(0x800028, 0x80002f) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff0000)  //
-	AM_RANGE(0x800030, 0x800033) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff0000  )   //
-	AM_RANGE(0x800034, 0x800037) AM_WRITE(zeropnt2_sound_bank_w             )   //
-	AM_RANGE(0x800038, 0x80003b) AM_WRITE(zeropnt2_leds_w                   )   // ?
-	AM_RANGE(0x80010c, 0x800123) AM_READWRITE16( unico_scroll_r, unico_scroll_w, 0xffffffff )   // Scroll
-	AM_RANGE(0x800140, 0x800143) AM_READ(zeropnt2_guny_0_msb_r          )   // Light Guns
-	AM_RANGE(0x800144, 0x800147) AM_READ(zeropnt2_gunx_0_msb_r          )   //
-	AM_RANGE(0x800148, 0x80014b) AM_READ(zeropnt2_guny_1_msb_r          )   //
-	AM_RANGE(0x80014c, 0x80014f) AM_READ(zeropnt2_gunx_1_msb_r          )   //
+	AM_RANGE(0x800030, 0x800033) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff0000)   //
+	AM_RANGE(0x800034, 0x800037) AM_WRITE(zeropnt2_sound_bank_w)   //
+	AM_RANGE(0x800038, 0x80003b) AM_WRITE(zeropnt2_leds_w)   // ?
+	AM_RANGE(0x80010c, 0x800123) AM_READWRITE16(unico_scroll_r, unico_scroll_w, 0xffffffff)   // Scroll
+	AM_RANGE(0x800140, 0x800143) AM_READ(zeropnt2_guny_0_msb_r)   // Light Guns
+	AM_RANGE(0x800144, 0x800147) AM_READ(zeropnt2_gunx_0_msb_r)   //
+	AM_RANGE(0x800148, 0x80014b) AM_READ(zeropnt2_guny_1_msb_r)   //
+	AM_RANGE(0x80014c, 0x80014f) AM_READ(zeropnt2_gunx_1_msb_r)   //
 	AM_RANGE(0x800150, 0x800153) AM_READ_PORT("DSW1")
 	AM_RANGE(0x800154, 0x800157) AM_READ_PORT("DSW2")
 	AM_RANGE(0x80015c, 0x80015f) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0x8001e0, 0x8001e3) AM_WRITENOP                                    // ? IRQ Ack
 	AM_RANGE(0x8001f0, 0x8001f3) AM_WRITE(zeropnt2_eeprom_w)                    // EEPROM
-	AM_RANGE(0x904000, 0x90ffff) AM_READWRITE16( unico_vram_r, unico_vram_w, 0xffffffff )     // Layers 1, 2, 0
+	AM_RANGE(0x904000, 0x90ffff) AM_READWRITE16(unico_vram_r, unico_vram_w, 0xffffffff)     // Layers 1, 2, 0
 	AM_RANGE(0x920000, 0x923fff) AM_RAM                                         // ? 0
-	AM_RANGE(0x930000, 0x9307ff) AM_READWRITE16( unico_spriteram_r, unico_spriteram_w, 0xffffffff )   // Sprites
+	AM_RANGE(0x930000, 0x9307ff) AM_READWRITE16(unico_spriteram_r, unico_spriteram_w, 0xffffffff)   // Sprites
 	AM_RANGE(0x940000, 0x947fff) AM_RAM_WRITE(unico_palette32_w) AM_SHARE("paletteram") // Palette
 	AM_RANGE(0xfe0000, 0xffffff) AM_RAM                                         // RAM
 ADDRESS_MAP_END

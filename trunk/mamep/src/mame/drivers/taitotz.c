@@ -586,10 +586,6 @@ public:
 
 	UINT8 m_rtcdata[8];
 
-	UINT16 ide_cs0_latch_r;
-	UINT16 ide_cs0_latch_w;
-	UINT16 ide_cs1_latch_w;
-
 
 	UINT32 m_reg105;
 	UINT32 m_displist_addr;
@@ -2442,7 +2438,7 @@ static INPUT_PORTS_START( landhigh )
 	PORT_BIT( 0x00000001, IP_ACTIVE_LOW, IPT_BUTTON5 )                                  // ID Button
 	PORT_BIT( 0x00000002, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000004, IP_ACTIVE_LOW, IPT_BUTTON6 )                                  // Lever Sync
-	PORT_BIT( 0x00000008, IP_ACTIVE_LOW, IPT_START )                                    // Start
+	PORT_BIT( 0x00000008, IP_ACTIVE_LOW, IPT_START1 )                                   // Start
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000020, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -2500,7 +2496,7 @@ static INPUT_PORTS_START( batlgr2 )
 	PORT_BIT( 0x00000008, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000020, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_START )                                    // Start
+	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_START1 )                                   // Start
 	PORT_BIT( 0x00000080, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("ANALOG1")       // Steering
@@ -2613,7 +2609,7 @@ static INPUT_PORTS_START( styphp )
 	PORT_BIT( 0x00000008, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00000020, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_START )                                    // Start
+	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_START1 )                                   // Start
 	PORT_BIT( 0x00000080, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("ANALOG1")       // Steering

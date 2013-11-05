@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:Angelo Salese, Tomasz Slanina
 /************************************************************************************
 
  Super Crowns Golf (c) 1989 Nasco Japan

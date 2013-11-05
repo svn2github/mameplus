@@ -3,6 +3,7 @@
 #include "machine/eepromser.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/adsp2100/adsp2100.h"
+#include "cpu/scudsp/scudsp.h"
 
 #define MAX_FILTERS (24)
 #define MAX_BLOCKS  (200)
@@ -20,6 +21,7 @@ public:
 			m_maincpu(*this, "maincpu"),
 			m_slave(*this, "slave"),
 			m_audiocpu(*this, "audiocpu"),
+			m_scudsp(*this, "scudsp"),
 			m_eeprom(*this, "eeprom")
 	{
 	}
@@ -144,6 +146,7 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_slave;
 	required_device<m68000_base_device> m_audiocpu;
+	required_device<scudsp_cpu_device> m_scudsp;
 	optional_device<eeprom_serial_93cxx_device> m_eeprom;
 
 	bitmap_rgb32 m_tmpbitmap;
@@ -311,7 +314,7 @@ public:
 	int get_ystep_count( void );
 
 	void refresh_palette_data( void );
-	int stv_vdp2_window_process(int x,int y);
+	inline int stv_vdp2_window_process(int x,int y);
 	void stv_vdp2_get_window0_coordinates(int *s_x, int *e_x, int *s_y, int *e_y);
 	void stv_vdp2_get_window1_coordinates(int *s_x, int *e_x, int *s_y, int *e_y);
 	int get_window_pixel(int s_x,int e_x,int s_y,int e_y,int x, int y,UINT8 win_num);
@@ -555,6 +558,7 @@ public:
 	void stvcd_set_tray_close(void);
 
 	int get_track_index(UINT32 fad);
+	int sega_cdrom_get_adr_control(cdrom_file *file, int track);
 	void cr_standard_return(UINT16 cur_status);
 	void cd_free_block(blockT *blktofree);
 	void cd_defragblocks(partitionT *part);
@@ -633,6 +637,10 @@ public:
 
 	static void m68k_reset_callback(device_t *device);
 	int DectoBCD(int num);
+
+	DECLARE_WRITE_LINE_MEMBER(scudsp_end_w);
+	DECLARE_READ16_MEMBER(scudsp_dma_r);
+	DECLARE_WRITE16_MEMBER(scudsp_dma_w);
 };
 
 class stv_state : public saturn_state

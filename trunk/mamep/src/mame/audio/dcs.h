@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:Aaron Giles
 /***************************************************************************
 
     Midway DCS Audio Board
@@ -10,6 +12,7 @@
 MACHINE_CONFIG_EXTERN( dcs_audio_2k );
 MACHINE_CONFIG_EXTERN( dcs_audio_2k_uart );
 MACHINE_CONFIG_EXTERN( dcs_audio_8k );
+MACHINE_CONFIG_EXTERN( dcs_audio_wpc );
 MACHINE_CONFIG_EXTERN( dcs2_audio_2115 );
 MACHINE_CONFIG_EXTERN( dcs2_audio_2104 );
 MACHINE_CONFIG_EXTERN( dcs2_audio_dsio );

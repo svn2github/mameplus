@@ -1,3 +1,5 @@
+// license:BSD-3-Clause
+// copyright-holders:Michael Zapf
 /*
   tms9995.h
 
@@ -10,50 +12,14 @@
 
 #include "emu.h"
 #include "debugger.h"
-
-/*
-    Define symbols for interrupt lines.
-
-    We use a separate RESET signal which is not captured by the core.
-
-    Caution: Check irqline in set_input_line of each driver using this CPU.
-    Values have changed. Use these symbols instead.
-*/
-enum
-{
-	INPUT_LINE_99XX_RESET = 0,
-	INPUT_LINE_99XX_INTREQ = 1,
-	INPUT_LINE_99XX_INT1 = 2,
-	INPUT_LINE_99XX_INT4 = 3
-};
+#include "tms99com.h"
 
 enum
 {
-	TI990_10_ID = 1,
-	TMS9900_ID = 3,
-	TMS9940_ID = 4,
-	TMS9980_ID = 5,
-	TMS9985_ID = 6,
-	TMS9989_ID = 7,
-	TMS9995_ID = 9,
-	TMS99000_ID = 10,
-	TMS99105A_ID = 11,
-	TMS99110A_ID = 12
-};
-
-#define MCFG_TMS9995_ADD(_tag, _device, _clock, _prgmap, _iomap, _config)       \
-	MCFG_DEVICE_ADD(_tag, _device, _clock / 4.0)        \
-	MCFG_DEVICE_PROGRAM_MAP(_prgmap)            \
-	MCFG_DEVICE_IO_MAP(_iomap)                  \
-	MCFG_DEVICE_CONFIG(_config)
-
-enum
-{
-	IDLE_OP = 2,
-	RSET_OP = 3,
-	CKOF_OP = 5,
-	CKON_OP = 6,
-	LREX_OP = 7
+	INT_9995_RESET = 0,
+	INT_9995_INTREQ = 1,
+	INT_9995_INT1 = 2,
+	INT_9995_INT4 = 3
 };
 
 /*
@@ -97,6 +63,10 @@ public:
 	// is acknowledged by the HOLDA output line.
 	void set_hold(int state);
 
+	// For debugger access
+	UINT8 debug_read_onchip_memory(offs_t addr) { return m_onchip_memory[addr & 0xff]; };
+	bool is_onchip(offs_t addrb) { return (((addrb & 0xff00)==0xf000 && (addrb < 0xf0fc)) || ((addrb & 0xfffc)==0xfffc)) && !m_mp9537; }
+
 protected:
 	// device-level overrides
 	virtual void        device_start();
@@ -116,6 +86,9 @@ protected:
 	virtual offs_t      disasm_disassemble(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, UINT32 options);
 
 	const address_space_config* memory_space_config(address_spacenum spacenum) const;
+
+	UINT64 execute_clocks_to_cycles(UINT64 clocks) const { return clocks / 4.0; }
+	UINT64 execute_cycles_to_clocks(UINT64 cycles) const { return cycles * 4.0; }
 
 private:
 	// State / debug management
@@ -137,7 +110,7 @@ private:
 	UINT16  PC_debug;
 
 	// 256 bytes of onchip memory
-	UINT8   m_onchip_memory[256];
+	UINT8*   m_onchip_memory;
 
 	const address_space_config      m_program_config;
 	const address_space_config      m_io_config;
@@ -202,6 +175,10 @@ private:
 	bool    m_reset;
 	bool    m_from_reset;
 	bool    m_mid_flag;
+	bool    m_mid_active;
+
+	int     m_decrementer_clkdiv;
+	bool    m_servicing_interrupt;
 
 	// Flag field
 	int     m_int_pending;

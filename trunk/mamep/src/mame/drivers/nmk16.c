@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:Mirko Buffoni,Richard Bush,Nicola Salmoria,Bryan McPhail,David Haywood,R. Belmont,trap15,Angelo Salese
 /********************************************************************
 
 Task Force Harrier       1989 UPL        68000 Z80           YM2203 2xOKIM6295
@@ -7486,7 +7488,7 @@ GAME( 1996, airattcka,airattck, ssmissin, airattck, nmk16_state, ssmissin, ROT27
 // afega & clones
 GAME( 1995, twinactn, 0,        twinactn, twinactn, driver_device, 0,        ROT0,   "Afega",                             "Twin Action", 0 ) // hacked from USSAF Mustang
 
-GAME( 1995, dolmen, 0,          twinactn, dolmen, driver_device, 0,        ROT0,   "Afega",                             "Dolmen", 0 )
+GAME( 1995, dolmen, 0,          twinactn, dolmen,   driver_device, 0,        ROT0,   "Afega",                             "Dolmen", 0 )
 
 GAME( 1998, stagger1, 0,        stagger1, stagger1, driver_device, 0,        ROT270, "Afega",                             "Stagger I (Japan)", 0 )
 GAME( 1997, redhawk,  stagger1, stagger1, stagger1, nmk16_state,   redhawk,  ROT270, "Afega (New Vision Ent. license)",   "Red Hawk (US)", 0 )

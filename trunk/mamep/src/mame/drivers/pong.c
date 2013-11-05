@@ -18,8 +18,9 @@ TODO:
 
 #include "machine/rescap.h"
 #include "machine/netlist.h"
-#include "machine/net_lib.h"
+#include "netlist/devices/net_lib.h"
 #include "sound/dac.h"
+#include "video/fixfreq.h"
 #include "astring.h"
 
 /*
@@ -47,7 +48,7 @@ TODO:
  */
 
 #define MASTER_CLOCK    7159000
-#define V_TOTAL         (0x105+1)
+#define V_TOTAL         (0x105+1)       // 262
 #define H_TOTAL         (0x1C6+1)       // 454
 
 #define HBSTART                 (H_TOTAL)
@@ -55,7 +56,23 @@ TODO:
 #define VBSTART                 (V_TOTAL)
 #define VBEND                   (16)
 
-#define HRES_MULT                   (2)
+#define HRES_MULT                   (1)
+
+fixedfreq_interface fixedfreq_mode_pong = {
+	MASTER_CLOCK,
+	H_TOTAL-67,H_TOTAL-40,H_TOTAL-8,H_TOTAL,
+	V_TOTAL-22,V_TOTAL-19,V_TOTAL-16,V_TOTAL,
+	1,  /* interlaced */
+	0.3
+};
+
+fixedfreq_interface fixedfreq_mode_pongX2 = {
+	MASTER_CLOCK * 2,
+	(H_TOTAL-67) * 2, (H_TOTAL-40) * 2, (H_TOTAL-8) * 2, (H_TOTAL) * 2,
+	V_TOTAL-22,V_TOTAL-19,V_TOTAL-16,V_TOTAL,
+	1,  /* interlaced */
+	0.3
+};
 
 enum input_changed_enum
 {
@@ -70,8 +87,28 @@ enum input_changed_enum
 static NETLIST_START(pong_schematics)
 	NETDEV_TTL_CONST(high, 1)
 	NETDEV_TTL_CONST(low, 0)
+#if 1
+#if 0
+	/* this is the clock circuit in schematics. */
+	NETDEV_MAINCLOCK(xclk)
+	//NETDEV_CLOCK(clk)
+	NETDEV_PARAM(xclk.FREQ, 7159000.0*2)
+	TTL_74107(ic_f6a, xclk, high, high, high)
+	NET_ALIAS(clk, ic_f6a.Q)
+#else
+	/* abstracting this, performance increases by 40%
+	 * No surprise, the clock is extremely expensive */
 	NETDEV_MAINCLOCK(clk)
+	//NETDEV_CLOCK(clk)
 	NETDEV_PARAM(clk.FREQ, 7159000.0)
+#endif
+#else
+	// benchmarking ...
+	NETDEV_TTL_CONST(clk, 0)
+	NETDEV_MAINCLOCK(xclk)
+	NETDEV_PARAM(xclk.FREQ, 7159000.0*2)
+#endif
+
 	NETDEV_LOGIC_INPUT(SRST)
 	NETDEV_ANALOG_INPUT(P1)
 	NETDEV_ANALOG_INPUT(P2)
@@ -178,6 +215,9 @@ static NETLIST_START(pong_schematics)
 	TTL_7400_NAND(ic_e1c, ic_f1.QC, ic_f1.QD)
 	TTL_7493(ic_f1, ic_e1d.Q, ic_f1.QA, rstspeed, rstspeed)
 
+	//NETDEV_LOG(LOG2, ic_f1.QC)
+	//NETDEV_LOG(LOG3, ic_f1.QD)
+
 	TTL_7402_NOR(ic_g1d, ic_f1.QC, ic_f1.QD)
 	TTL_7400_NAND(ic_h1a, ic_g1d.Q, ic_g1d.Q)
 	TTL_7400_NAND(ic_h1d, ic_e1c.Q, ic_h1a.Q)
@@ -188,12 +228,19 @@ static NETLIST_START(pong_schematics)
 
 	TTL_74107(ic_h2a, ic_g1c.Q, ic_h2b.Q, low, ic_h1b.Q)
 	TTL_74107(ic_h2b, ic_g1c.Q, high, move, ic_h1c.Q)
+
+	//NETDEV_LOG(LOG2, ic_h2a)
+	//NETDEV_LOG(LOG3, ic_h2b)
+
+
 	TTL_7400_NAND(ic_h4a, ic_h2b.Q, ic_h2a.Q)
 	NET_ALIAS(move, ic_h4a.Q)
 
 	TTL_7400_NAND(ic_c1d, SC, attract)
 	TTL_7404_INVERT(ic_d1a, ic_c1d.Q)
 	TTL_7474(ic_h3b, ic_d1a.Q, ic_h3b.QQ, hit1Q, hit2Q)
+
+	//NETDEV_LOG(LOG1, move)
 
 	TTL_7400_NAND(ic_h4d, ic_h3b.Q, move)
 	TTL_7400_NAND(ic_h4b, ic_h3b.QQ, move)
@@ -287,7 +334,7 @@ static NETLIST_START(pong_schematics)
 	NE555N_MSTABLE(ic_b9, 256VQ, P1)
 	NETDEV_PARAM(ic_b9.R, RES_K(90))
 	NETDEV_PARAM(ic_b9.C, CAP_U(.1))
-	NETDEV_PARAM(ic_b9.VL, 0.5)			// 1N914
+	NETDEV_PARAM(ic_b9.VL, 0.5)         // 1N914
 	TTL_7404_INVERT(ic_c9b, ic_b9.Q)
 	TTL_7400_NAND(ic_b7b, ic_a7b.Q, hsyncQ)
 	TTL_7493(ic_b8, ic_b7b.Q, ic_b8.QA, ic_b9.Q, ic_b9.Q)
@@ -304,7 +351,7 @@ static NETLIST_START(pong_schematics)
 	NE555N_MSTABLE(ic_a9, 256VQ, P2)
 	NETDEV_PARAM(ic_a9.R, RES_K(90))
 	NETDEV_PARAM(ic_a9.C, CAP_U(.1))
-	NETDEV_PARAM(ic_a9.VL, 0.5)			// 1N914
+	NETDEV_PARAM(ic_a9.VL, 0.5)         // 1N914
 	TTL_7404_INVERT(ic_c9a, ic_a9.Q)
 	TTL_7400_NAND(ic_b7c, ic_a7a.Q, hsyncQ)
 	TTL_7493(ic_a8, ic_b7c.Q, ic_a8.QA, ic_a9.Q, ic_a9.Q)
@@ -373,7 +420,8 @@ static NETLIST_START(pong_schematics)
 	TTL_7427_NOR(ic_e5c, ic_e4b.Q, 8H, 4H)
 	NET_ALIAS(scoreFE, ic_e5c.Q)
 
-	TTL_7400_NAND(ic_c3d, 4H, 8H)
+	TTL_7400_NAND(ic_c3d, 8H, 4H)
+	//TTL_7400_NAND(ic_c3d, 4H, 8H)
 	TTL_7402_NOR(ic_d2b, ic_e4b.Q, ic_c3d.Q)
 	NET_ALIAS(scoreBC, ic_d2b.Q)
 
@@ -416,7 +464,6 @@ static NETLIST_START(pong_schematics)
 	NETDEV_PARAM(videomix.R1, RES_K(1))
 	NETDEV_PARAM(videomix.R2, RES_K(1.2))
 	NETDEV_PARAM(videomix.R3, RES_K(22))
-
 NETLIST_END
 
 static NETLIST_START(pong)
@@ -449,6 +496,8 @@ public:
 	pong_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			m_maincpu(*this, "maincpu"),
+			m_video(*this, "fixfreq"),
+
 			m_dac(*this, "dac"),                /* just to have a sound device */
 			m_srst(*this, "maincpu", "SRST"),
 			m_p_V0(*this, "maincpu", "P1"),
@@ -462,6 +511,7 @@ public:
 
 	// devices
 	required_device<netlist_mame_device> m_maincpu;
+	required_device<fixedfreq_device> m_video;
 	required_device<dac_device> m_dac; /* just to have a sound device */
 
 	// sub devices
@@ -486,12 +536,7 @@ public:
 
 	void video_cb(double newval)
 	{
-		//printf("%f\n", newval);
-		if (newval != m_vid)
-		{
-			update_vid();
-			m_vid = newval;
-		}
+		m_video->update_vid(newval, m_maincpu->local_time());
 	}
 
 protected:
@@ -504,86 +549,10 @@ protected:
 
 private:
 
-	void update_vid()
-	{
-		const netlist_time clock_period = netlist_time::from_hz(NETLIST_CLOCK);
-		const netlist_time hsync_min_time = netlist_time::from_us(4);
-		const netlist_time vsync_min_time = netlist_time::from_us(50); /* usec */
-		const int vsync_min_pulses = 4;
-
-		UINT64 clocks = m_maincpu->total_cycles(); // m_maincpu->attotime_to_cycles(m_maincpu->local_time());
-		int pw = NETLIST_CLOCK / ((UINT64)MASTER_CLOCK) / HRES_MULT;
-		netlist_time time = clock_period * (clocks - m_last_clock);
-
-		//UINT64 clocks = m_maincpu->netlist().time().as_raw() >> 10; // m_maincpu->attotime_to_cycles(m_maincpu->local_time());
-		//int pw = (NETLIST_INTERNAL_CLOCK / ((UINT64)MASTER_CLOCK) / HRES_MULT) >> 8;
-
-		if (m_last_y < m_bitmap->height())
-		{
-			int colv = (int) (m_vid / 3.5 * 255.0);
-			rgb_t col = MAKE_RGB(colv, colv, colv);
-			int pixels = (clocks - m_line_clock) / pw;
-
-			while (pixels >= m_bitmap->width())
-			{
-				for (int i = m_last_x ; i < m_bitmap->width() - 1; i++)
-					m_bitmap->pix(m_last_y, i) = col;
-				pixels -= m_bitmap->width();
-				m_last_x = 0;
-			}
-			for (int i = m_last_x ; i < pixels; i++)
-				m_bitmap->pix(m_last_y, i) = col;
-			m_last_x = pixels;
-		}
-		if (m_vid <= 0.34)
-		{
-			if (time >= vsync_min_time)
-			{
-				m_vsync_cnt++;
-				if (m_vsync_cnt >= vsync_min_pulses)
-				{
-					m_vsync_cnt = 0;
-					m_last_y = 0;
-					attoseconds_t new_refresh = DOUBLE_TO_ATTOSECONDS((double) (clocks - m_vsync_clock) / (double) NETLIST_CLOCK);
-					if (new_refresh != m_refresh)
-					{
-						m_refresh = new_refresh;
-						rectangle visarea(0, H_TOTAL * HRES_MULT - 1, 0, V_TOTAL-1);
-						this->mconfig().first_screen()->configure(H_TOTAL * HRES_MULT, V_TOTAL, visarea, m_refresh);
-						m_vsync_clock = clocks;
-					}
-				}
-				m_last_y++;
-				m_last_x = 0;
-			}
-			else if (time >= hsync_min_time)
-			{
-				//printf("%d\n", m_last_x);
-				m_last_x = 0; // hsync
-				m_last_y++;
-				m_line_clock = clocks;
-			}
-		}
-		m_last_clock = clocks;
-	}
-
-	double m_vid;
-	int m_last_x;
-	int m_last_y;
-	UINT64 m_last_clock;
-	UINT64 m_line_clock;
-	UINT64 m_vsync_clock;
-	attoseconds_t m_refresh;
-	int m_vsync_cnt;
-	bitmap_rgb32 *m_bitmap;
 };
 
 void pong_state::machine_start()
 {
-	m_bitmap = auto_bitmap_rgb32_alloc(machine(),H_TOTAL * HRES_MULT,V_TOTAL);
-
-	m_maincpu->setup().register_callback("sound_cb", net_output_delegate(&pong_state::sound_cb, "pong_state::sound_cb", this));
-	m_maincpu->setup().register_callback("video_cb", net_output_delegate(&pong_state::video_cb, "pong_state::video_cb", this));
 }
 
 void pong_state::machine_reset()
@@ -593,15 +562,8 @@ void pong_state::machine_reset()
 
 void pong_state::video_start()
 {
-	//FIXME: createtemporary bitmap
-}
-
-
-UINT32 pong_state::screen_update( screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect )
-{
-	copybitmap(bitmap, *m_bitmap, 0, 0, 0, 0, cliprect);
-	//m_bitmap->fill(MAKE_RGB(0,0,0));
-	return 0;
+	m_maincpu->setup().register_callback("sound_cb", netlist_output_delegate(&pong_state::sound_cb, "pong_state::sound_cb", this));
+	m_maincpu->setup().register_callback("video_cb", netlist_output_delegate(&pong_state::video_cb, "pong_state::video_cb", this));
 }
 
 
@@ -631,10 +593,10 @@ INPUT_CHANGED_MEMBER(pong_state::input_changed)
 		double pad = vA + (vB - vA)*PRE_R / (Req + PRE_R);
 		switch (numpad)
 		{
-		case IC_PADDLE1:    m_p_V0->setToPS(pad, NLTIME_FROM_NS(0)); break;
-		case IC_PADDLE2:    m_p_V1->setToPS(pad, NLTIME_FROM_NS(0)); break;
+		case IC_PADDLE1:    m_p_V0->set_Q(pad, NLTIME_FROM_NS(0)); break;
+		case IC_PADDLE2:    m_p_V1->set_Q(pad, NLTIME_FROM_NS(0)); break;
 		}
-		printf("%d %f\n", newval, (float) pad);
+		//printf("%d %f\n", newval, (float) pad);
 		break;
 	}
 	case IC_SWITCH:
@@ -642,7 +604,7 @@ INPUT_CHANGED_MEMBER(pong_state::input_changed)
 		m_sw1b->setTo(newval ? 1 : 0);
 		break;
 	case IC_COIN:
-		m_srst->setTo(newval & 1, NLTIME_FROM_US(500));
+		m_srst->set_Q(newval & 1, NLTIME_FROM_US(500));
 		break;
 	case IC_VR1:
 	case IC_VR2:
@@ -657,7 +619,6 @@ INPUT_CHANGED_MEMBER(pong_state::input_changed)
 
 
 }
-
 
 static INPUT_PORTS_START( pong )
 	PORT_START( "PADDLE0" ) /* fake input port for player 1 paddle */
@@ -687,9 +648,10 @@ static MACHINE_CONFIG_START( pong, pong_state )
 	MCFG_NETLIST_ADD("maincpu", pong)
 
 	/* video hardware */
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK * HRES_MULT, H_TOTAL * HRES_MULT, HBEND * HRES_MULT, HBSTART * HRES_MULT, V_TOTAL, VBEND, VBSTART)
-	MCFG_SCREEN_UPDATE_DRIVER(pong_state, screen_update)
+
+	//MCFG_FIXFREQ_ADD("fixfreq", "screen", fixedfreq_mode_ntsc720)
+	//MCFG_FIXFREQ_ADD("fixfreq", "screen", fixedfreq_mode_pongX2)
+	MCFG_FIXFREQ_ADD("fixfreq", "screen", fixedfreq_mode_pong)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -701,7 +663,6 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( pongf, pong )
 
 	/* basic machine hardware */
-	//MCFG_NETLIST_REPLACE("maincpu", MASTER_CLOCK, pong_fast, 100)
 	MCFG_NETLIST_REPLACE("maincpu", pong_fast)
 
 MACHINE_CONFIG_END

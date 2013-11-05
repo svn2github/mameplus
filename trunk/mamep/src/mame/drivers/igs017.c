@@ -64,7 +64,7 @@ public:
 		m_oki(*this, "oki"),
 		m_igs025(*this,"igs025"),
 		m_igs022(*this,"igs022")
-		{ }
+	{ }
 
 	int m_input_addr;
 	required_device<cpu_device> m_maincpu;
@@ -74,8 +74,8 @@ public:
 	required_device<okim6295_device> m_oki;
 	optional_device<igs025_device> m_igs025; // Mj Shuang Long Qiang Zhu 2
 	optional_device<igs022_device> m_igs022; // Mj Shuang Long Qiang Zhu 2
-	 
-	 void igs025_to_igs022_callback( void );
+
+	void igs025_to_igs022_callback( void );
 
 	int m_toggle;
 	int m_debug_addr;
@@ -1097,12 +1097,12 @@ DRIVER_INIT_MEMBER(igs017_state,lhzb2)
 	lhzb2_decrypt_sprites();
 	lhzb2_patch_rom();
 
-	// install and configure protection device(s)
-//	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xda5610, 0xda5613, read16_delegate(FUNC(igs025_device::killbld_igs025_prot_r), (igs025_device*)m_igs025), write16_delegate(FUNC(igs025_device::killbld_igs025_prot_w), (igs025_device*)m_igs025));
-//	m_igs022->m_sharedprotram = m_sharedprotram;
-//	m_igs025->m_kb_source_data = dw3_source_data;
-//	m_igs025->m_kb_source_data_offset = 0;
-//	m_igs025->m_kb_game_id = 0x00060000;
+//  install and configure protection device(s)
+//  m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xda5610, 0xda5613, read16_delegate(FUNC(igs025_device::killbld_igs025_prot_r), (igs025_device*)m_igs025), write16_delegate(FUNC(igs025_device::killbld_igs025_prot_w), (igs025_device*)m_igs025));
+//  m_igs022->m_sharedprotram = m_sharedprotram;
+//  m_igs025->m_kb_source_data = dw3_source_data;
+//  m_igs025->m_kb_source_data_offset = 0;
+//  m_igs025->m_kb_game_id = 0x00060000;
 }
 
 
@@ -1281,12 +1281,12 @@ DRIVER_INIT_MEMBER(igs017_state,slqz2)
 	lhzb2_decrypt_sprites();
 	slqz2_patch_rom();
 
-	// install and configure protection device(s)
-//	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xda5610, 0xda5613, read16_delegate(FUNC(igs025_device::killbld_igs025_prot_r), (igs025_device*)m_igs025), write16_delegate(FUNC(igs025_device::killbld_igs025_prot_w), (igs025_device*)m_igs025));
-//	m_igs022->m_sharedprotram = m_sharedprotram;
-//	m_igs025->m_kb_source_data = dw3_source_data;
-//	m_igs025->m_kb_source_data_offset = 0;
-//	m_igs025->m_kb_game_id = 0x00060000;
+//  install and configure protection device(s)
+//  m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xda5610, 0xda5613, read16_delegate(FUNC(igs025_device::killbld_igs025_prot_r), (igs025_device*)m_igs025), write16_delegate(FUNC(igs025_device::killbld_igs025_prot_w), (igs025_device*)m_igs025));
+//  m_igs022->m_sharedprotram = m_sharedprotram;
+//  m_igs025->m_kb_source_data = dw3_source_data;
+//  m_igs025->m_kb_source_data_offset = 0;
+//  m_igs025->m_kb_game_id = 0x00060000;
 }
 
 // spkrform

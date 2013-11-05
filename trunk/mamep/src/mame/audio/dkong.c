@@ -1,9 +1,7 @@
 #include "emu.h"
 #include "cpu/mcs48/mcs48.h"
-#include "cpu/m6502/n2a03.h"
 #include "sound/nes_apu.h"
 #include "sound/discrete.h"
-#include "machine/latch8.h"
 
 #include "sound/tms5110.h"
 
@@ -1108,20 +1106,6 @@ DISCRETE_SOUND_END
 
 /****************************************************************
  *
- * Initialization
- *
- ****************************************************************/
-
-static SOUND_START( dkong)
-{
-	dkong_state *state = machine.driver_data<dkong_state>();
-
-	state->m_snd_rom = state->memregion("soundcpu")->base();
-}
-
-
-/****************************************************************
- *
  * M58817 Speech
  *
  ****************************************************************/
@@ -1368,8 +1352,6 @@ const tms5110_interface tms_interface = {
  *************************************/
 
 MACHINE_CONFIG_FRAGMENT( dkong2b_audio )
-
-	MCFG_SOUND_START( dkong )
 
 	/* sound latches */
 

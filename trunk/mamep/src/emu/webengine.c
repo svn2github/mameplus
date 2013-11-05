@@ -1,48 +1,19 @@
+// license:BSD-3-Clause
+// copyright-holders:Miodrag Milanovic
 /***************************************************************************
 
     webengine.c
 
     Handle MAME internal web server.
 
-****************************************************************************
-
-    Copyright Miodrag Milanovic
-    All rights reserved.
-
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are
-    met:
-
-        * Redistributions of source code must retain the above copyright
-          notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright
-          notice, this list of conditions and the following disclaimer in
-          the documentation and/or other materials provided with the
-          distribution.
-        * Neither the name 'MAME' nor the names of its contributors may be
-          used to endorse or promote products derived from this software
-          without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY MIODRAG MILANOVIC ''AS IS'' AND ANY EXPRESS OR
-    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL MIODRAG MILANOVIC BE LIABLE FOR ANY DIRECT,
-    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
-
 ***************************************************************************/
 
+#include "web/mongoose.h"
+#include "web/json/json.h"
 #include "emu.h"
 #include "emuopts.h"
 #include "ui.h"
 #include "webengine.h"
-#include "web/mongoose.h"
-#include "web/json/json.h"
 
 
 //**************************************************************************
@@ -78,15 +49,15 @@ static void get_qsvar(const struct mg_request_info *request_info,
 }
 
 char* websanitize_statefilename ( char* unsanitized )
-{ 
-	// It's important that we remove any dangerous characters from any filename 
+{
+	// It's important that we remove any dangerous characters from any filename
 	// we receive from a web client. This can be a serious security hole.
 	// As MAME/MESS policy is lowercase filenames, also lowercase it.
-	
+
 	char* sanitized = new char[64];
 	int insertpoint =0;
 	char charcompare;
-	
+
 	while (*unsanitized != 0)
 	{
 	charcompare = *unsanitized;
@@ -107,7 +78,7 @@ char* websanitize_statefilename ( char* unsanitized )
 			sanitized[insertpoint] = '\0'; // Make sure we're null-terminated.
 		}
 		unsanitized++;
-	} 
+	}
 	return (sanitized);
 }
 
@@ -228,7 +199,7 @@ int web_engine::begin_request_handler(struct mg_connection *conn)
 		else if(!strcmp(cmd_name,"savestate"))
 		{
 			char cmd_val[64];
-			get_qsvar(request_info, "val", cmd_val, sizeof(cmd_val)); 
+			get_qsvar(request_info, "val", cmd_val, sizeof(cmd_val));
 			char *filename = websanitize_statefilename(cmd_val);
 			m_machine->schedule_save(filename);
 		}
@@ -364,6 +335,25 @@ static int begin_request_handler_static(struct mg_connection *conn)
 	return engine->begin_request_handler(conn);
 }
 
+static int begin_http_error_handler_static(struct mg_connection *conn, int status)
+{
+	//const struct mg_request_info *request_info = mg_get_request_info(conn);
+	if (status == 404) // 404 -- File Not Found
+	{
+		{
+				mg_printf(conn,
+					"HTTP/1.1 404 Not Found\r\n"
+					"Content-Type: text/plain\r\n"
+					"Content-Length: 14\r\n"        // Always set Content-Length
+					"\r\n"
+					"Nothing to do.");
+		}
+	}
+	// Returning non-zero tells mongoose that our function has replied to
+	// the client, and mongoose should not send client any more data.
+	return 1;
+}
+
 static void *websocket_keepalive_static(void *thread_func_param)
 {
 	web_engine *engine = static_cast<web_engine *>(thread_func_param);
@@ -396,6 +386,7 @@ web_engine::web_engine(emu_options &options)
 	callbacks.begin_request = begin_request_handler_static;
 	callbacks.websocket_ready = websocket_ready_handler_static;
 	callbacks.websocket_data = websocket_data_handler_static;
+	callbacks.http_error = begin_http_error_handler_static;
 
 	// Start the web server.
 	if (m_options.http()) {

@@ -445,7 +445,7 @@ public:
 			m_sharedprotram(*this, "sharedprotram"),
 			m_igs025(*this,"igs025"),
 			m_igs028(*this,"igs028")
-	
+
 	{
 	}
 
