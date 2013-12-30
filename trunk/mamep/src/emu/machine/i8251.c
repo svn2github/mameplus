@@ -22,7 +22,7 @@
     GLOBAL VARIABLES
 ***************************************************************************/
 
-const i8251_interface default_i8251_interface = { DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL };
+const i8251_interface default_i8251_interface = { DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL };
 
 
 /***************************************************************************
@@ -40,7 +40,7 @@ void i8251_device::input_callback(UINT8 state)
 	m_input_state = state;
 
 	/* did cts change state? */
-	if (changed & SERIAL_STATE_CTS)
+	if (changed & CTS)
 	{
 		/* yes */
 		/* update tx ready */
@@ -80,9 +80,7 @@ void i8251_device::device_config_complete()
 	// or initialize to defaults if none provided
 	else
 	{
-		memset(&m_in_rxd_cb, 0, sizeof(m_in_rxd_cb));
 		memset(&m_out_txd_cb, 0, sizeof(m_out_txd_cb));
-		memset(&m_in_dsr_cb, 0, sizeof(m_in_dsr_cb));
 		memset(&m_out_dtr_cb, 0, sizeof(m_out_dtr_cb));
 		memset(&m_out_rts_cb, 0, sizeof(m_out_rts_cb));
 		memset(&m_out_rxrdy_cb, 0, sizeof(m_out_rxrdy_cb));
@@ -99,9 +97,7 @@ void i8251_device::device_config_complete()
 void i8251_device::device_start()
 {
 	// resolve callbacks
-	m_in_rxd_func.resolve(m_in_rxd_cb,*this);
 	m_out_txd_func.resolve(m_out_txd_cb,*this);
-	m_in_dsr_func.resolve(m_in_dsr_cb,*this);
 	m_out_rxrdy_func.resolve(m_out_rxrdy_cb, *this);
 	m_out_txrdy_func.resolve(m_out_txrdy_cb, *this);
 	m_out_txempty_func.resolve(m_out_txempty_cb, *this);
@@ -151,10 +147,7 @@ void i8251_device::receive_clock()
 	{
 		//logerror("I8251\n");
 		/* get bit received from other side and update receive register */
-		if(m_in_rxd_func.isnull())
-			receive_register_update_bit(get_in_data_bit());
-		else
-			receive_register_update_bit(m_in_rxd_func());
+		receive_register_update_bit(get_in_data_bit());
 
 		if (is_receive_register_full())
 		{
@@ -208,7 +201,7 @@ void i8251_device::transmit_clock()
 			//transmit_register_send_bit();
 			m_out_txd_func(data);
 
-			m_connection_state &=~SERIAL_STATE_TX_DATA;
+			m_connection_state &= ~TX;
 			m_connection_state|=(data<<5);
 			serial_connection_out();
 		}
@@ -265,7 +258,7 @@ void i8251_device::update_tx_ready()
 	if ((m_command & (1<<0))!=0)
 	{
 		/* other side has rts set (comes in as CTS at this side) */
-		if (m_input_state & SERIAL_STATE_CTS)
+		if (m_input_state & CTS)
 		{
 			if (m_status & I8251_STATUS_TX_EMPTY)
 			{
@@ -313,7 +306,7 @@ void i8251_device::device_reset()
 	set_out_data_bit(1);
 
 	/* assumption, rts is set to 1 */
-	m_connection_state &= ~SERIAL_STATE_RTS;
+	m_connection_state &= ~RTS;
 	serial_connection_out();
 
 	transmit_register_reset();
@@ -406,7 +399,7 @@ WRITE8_MEMBER(i8251_device::control_w)
 
 				LOG(("Character length: %d\n", (((data>>2) & 0x03)+5)));
 
-				int parity = SERIAL_PARITY_NONE;
+				int parity = PARITY_NONE;
 
 				if (data & (1<<4))
 				{
@@ -415,12 +408,12 @@ WRITE8_MEMBER(i8251_device::control_w)
 					if (data & (1<<5))
 					{
 						LOG(("even parity\n"));
-						parity = SERIAL_PARITY_EVEN;
+						parity = PARITY_EVEN;
 					}
 					else
 					{
 						LOG(("odd parity\n"));
-						parity = SERIAL_PARITY_ODD;
+						parity = PARITY_ODD;
 					}
 				}
 				else
@@ -478,7 +471,7 @@ WRITE8_MEMBER(i8251_device::control_w)
 						stop_bit_count =  2;
 						break;
 				}
-				set_data_frame(word_length,stop_bit_count,parity);
+				set_data_frame(word_length,stop_bit_count,parity,false);
 
 				switch (data & 0x03)
 				{
@@ -624,17 +617,17 @@ WRITE8_MEMBER(i8251_device::control_w)
 		        1 = transmit enable
 		*/
 
-		m_connection_state &=~SERIAL_STATE_RTS;
+		m_connection_state &= ~RTS;
 		if (data & (1<<5))
 		{
 			/* rts set to 0 */
-			m_connection_state |= SERIAL_STATE_RTS;
+			m_connection_state |= RTS;
 		}
 
-		m_connection_state &=~SERIAL_STATE_DTR;
+		m_connection_state &= ~DTR;
 		if (data & (1<<1))
 		{
-			m_connection_state |= SERIAL_STATE_DTR;
+			m_connection_state |= DTR;
 		}
 
 		if ((data & (1<<0))==0)
@@ -674,7 +667,7 @@ WRITE8_MEMBER(i8251_device::control_w)
 
 READ8_MEMBER(i8251_device::status_r)
 {
-	UINT8 dsr = !(m_in_dsr_func.isnull() ? 0 : m_in_dsr_func() != 0);
+	UINT8 dsr = !((m_input_state & DSR) != 0);
 	UINT8 status = (dsr << 7) | m_status;
 
 	LOG(("status: %02x\n", status));
@@ -740,4 +733,35 @@ READ8_MEMBER(i8251_device::data_r)
 
 	update_rx_ready();
 	return m_data;
+}
+
+
+void i8251_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	device_serial_interface::device_timer(timer, id, param, ptr);
+}
+
+
+WRITE_LINE_MEMBER(i8251_device::write_rx)
+{
+	if (state)
+	{
+		input_callback(m_input_state | RX);
+	}
+	else
+	{
+		input_callback(m_input_state & ~RX);
+	}
+}
+
+WRITE_LINE_MEMBER(i8251_device::write_dsr)
+{
+	if (state)
+	{
+		input_callback(m_input_state | DSR);
+	}
+	else
+	{
+		input_callback(m_input_state & ~DSR);
+	}
 }

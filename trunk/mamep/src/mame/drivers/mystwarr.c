@@ -19,7 +19,80 @@
  * Game status:
  * - All games are playable with sound and correct colors.
  * - Metamorphic Force's intro needs alpha blended sprites.
- */
+
+Mystic Warriors
+Konami 1993
+
+PCB Layout
+----------
+GX128 PWB353366A
+|--------------------------------------------------------|
+|LA4705   128A07.1D                  128A08.1H 128A09.1K |
+|054986A  128A06.2D  62256           128A10.3H  |------| |
+|          |------||------|            |------| |054156| |
+|CN2       |054539||054539|            |054157| |      | |
+|128A05.6B |      ||      |            |      | |      | |
+|Z80E      |      ||      |            |      | |      | |
+|          |      ||      |            |      | |------| |
+|          |------||------|            |------|          |
+|           4464                                         |
+|           055983                   |------|            |
+| 051550                             |055555|            |
+|J                                   |      |  128A11.10K|
+|A 054573  |------| 2018             |      |  128A12.12K|
+|M 054573  |054338| 2018             |------|            |
+|M 054573  |      | 2018                                 |
+|A 054574  |      |                  |------|   |------| |
+| 18.432MHz|------|                  |053246A   |055673| |
+| 32MHz                              |      |   |      | |
+| 24MHz      053252                  |      |   |      | |
+| ER5911.15B                         |      |   |------| |
+|                                    |------|            |
+|                      056371                 128A13.17K |
+|DSW(4)      |------|                 62256              |
+|            |68000 |      128A04.19G 62256   128A14.19K |
+|005273(X10) |      | 128A03.19F                         |
+|            |      | 128JAA02.20G            128A15.20K |
+|        CN4 |------| 128JAA01.20F                       |
+|TEST_SW CN3          62256  62256            128A16.22K |
+|--------------------------------------------------------|
+Notes:
+      68000  - Clock 16.000MHz [32/2]
+      Z80E   - Clock 8.000MHz [32/4]
+      2018   - Motorola MCM2018 2kx8 SRAM (DIP24)
+      4464   - Panasonic MN4464 8kx8 SRAM (DIP28)
+      62256  - Hitachi HM62256 32kx8 SRAM (DIP28)
+      ER5911 - EEPROM (128 bytes)
+      CN2    - 4 pin connector for stereo sound output
+      128*   - EPROM/mask ROM
+      LA4705 - 15W 2-channel BTL audio power AMP
+
+      Custom Chips
+      ------------
+      055555  - Mixer/Priority encoder
+      053252  - Timing/Interrupt controller. Clock input 24MHz
+      054157  \
+      054156  / Tilemap generators
+      053246A \
+      055673  / Sprite generators
+      054539  - 8-Channel ADPCM sound generator. Clock input 18.432MHz. Clock outputs 18.432/4 & 18.432/8
+      054573  - Video DAC (one for each R,G,B video signal)
+      054574  - Possibly RGB mixer/DAC/filter? (connected to 054573)
+      054338  - Color mixer for special effects/alpha blending etc (connected to 054573 & 054574 and 2018 RAM)
+      051550  - EMI filter for credit/coin counter
+      005273  - Resistor array for player 3 & player 4 controls
+      054986A - Audio DAC/filter + sound latch + Z80 memory mapper/banker (large ceramic SDIP64 module)
+                This module contains several surface mounted capacitors and resistors, 4558 OP amp,
+                Analog Devices AD1868 dual 18-bit audio DAC and a Konami 054321 QFP44 IC. Clock input 8.000MHz [32/4]
+      054983  - MMI PAL16L8
+      056371  - MMI PAL20L10
+
+      Sync Measurements
+      -----------------
+      HSync - 15.2042kHz
+      VSync - 59.1879Hz
+
+**************************************************************************/
 
 #include "emu.h"
 #include "video/k053250.h"
@@ -523,21 +596,23 @@ ADDRESS_MAP_END
 
 /**********************************************************************************/
 
-
 void mystwarr_state::reset_sound_region()
 {
-	membank("bank2")->set_base(memregion("soundcpu")->base() + 0x10000 + m_cur_sound_region*0x4000);
+	membank("bank2")->set_base(memregion("soundcpu")->base() + 0x10000 + (m_sound_ctrl & 0xf)*0x4000);
 }
 
-WRITE8_MEMBER(mystwarr_state::sound_bankswitch_w)
+WRITE8_MEMBER(mystwarr_state::sound_ctrl_w)
 {
-	m_cur_sound_region = (data & 0xf);
+	if (!(data & 0x10))
+		m_soundcpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+
+	m_sound_ctrl = data;
 	reset_sound_region();
 }
 
 /* sound memory maps
 
-   there are 2 sound boards: the martial champion single-'539 version
+   there are 2 sound systems: the martial champion single-'539 version
    and the dual-'539 version used by run and gun, violent storm, monster maulers,
    gaiapolous, metamorphic force, and mystic warriors.  Their memory maps are
    quite similar to xexex/gijoe/asterix's sound.
@@ -555,10 +630,24 @@ static ADDRESS_MAP_START( mystwarr_sound_map, AS_PROGRAM, 8, mystwarr_state )
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_byte_w)
 	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_byte_r)
-	AM_RANGE(0xf800, 0xf800) AM_WRITE(sound_bankswitch_w)
+	AM_RANGE(0xf800, 0xf800) AM_WRITE(sound_ctrl_w)
 	AM_RANGE(0xfff0, 0xfff3) AM_WRITENOP    // unknown write
 ADDRESS_MAP_END
 
+
+WRITE_LINE_MEMBER(mystwarr_state::k054539_nmi_gen)
+{
+	if (m_sound_ctrl & 0x10)
+	{
+		// Trigger an /NMI on the rising edge
+		if (!m_sound_nmi_clk && state)
+		{
+			m_soundcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		}
+	}
+
+	m_sound_nmi_clk = state;
+}
 
 static const k054539_interface k054539_config =
 {
@@ -809,13 +898,15 @@ GFXDECODE_END
 MACHINE_START_MEMBER(mystwarr_state,mystwarr)
 {
 	/* set default bankswitch */
-	m_cur_sound_region = 2;
+	m_sound_ctrl = 2;
 	reset_sound_region();
 
 	m_mw_irq_control = 0;
 
 	save_item(NAME(m_mw_irq_control));
-	save_item(NAME(m_cur_sound_region));
+	save_item(NAME(m_sound_ctrl));
+	save_item(NAME(m_sound_nmi_clk));
+
 	machine().save().register_postload(save_prepost_delegate(FUNC(mystwarr_state::reset_sound_region), this));
 }
 
@@ -945,7 +1036,6 @@ static MACHINE_CONFIG_START( mystwarr, mystwarr_state )
 
 	MCFG_CPU_ADD("soundcpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(mystwarr_sound_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(mystwarr_state, nmi_line_pulse,  480)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1920))
 
@@ -976,11 +1066,12 @@ static MACHINE_CONFIG_START( mystwarr, mystwarr_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539_1", 48000, k054539_config)
+	MCFG_K054539_ADD("k054539_1", XTAL_18_432MHz, k054539_config)
+	MCFG_K054539_TIMER_HANDLER(WRITELINE(mystwarr_state, k054539_nmi_gen))
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.0)    /* stereo channels are inverted */
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.0)
 
-	MCFG_K054539_ADD("k054539_2", 48000, k054539_config)
+	MCFG_K054539_ADD("k054539_2", XTAL_18_432MHz, k054539_config)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.0)    /* stereo channels are inverted */
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.0)
 MACHINE_CONFIG_END

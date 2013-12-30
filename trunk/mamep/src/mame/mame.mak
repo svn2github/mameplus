@@ -187,7 +187,7 @@ SOUNDS += SN76477
 SOUNDS += SN76496
 SOUNDS += POKEY
 SOUNDS += TIA
-SOUNDS += NES
+SOUNDS += NES_APU
 SOUNDS += ASTROCADE
 SOUNDS += NAMCO
 SOUNDS += NAMCO_15XX
@@ -375,6 +375,7 @@ MACHINES += CDP1871
 MACHINES += CDU76S
 MACHINES += COM8116
 MACHINES += CR589
+MACHINES += DS1204
 MACHINES += DS1302
 MACHINES += DS2401
 MACHINES += DS2404
@@ -475,6 +476,7 @@ MACHINES += TMS6100
 MACHINES += TMS9901
 MACHINES += TMS9902
 MACHINES += UPD1990A
+MACHINES += UPD4992
 MACHINES += UPD4701
 MACHINES += UPD7002
 MACHINES += UPD765
@@ -1199,7 +1201,7 @@ $(MAMEOBJ)/konami.a: \
 	$(DRIVERS)/konamim2.o \
 	$(DRIVERS)/kontest.o \
 	$(DRIVERS)/konendev.o \
-	$(DRIVERS)/ksys573.o $(MACHINE)/k573cass.o $(MACHINE)/mpeg573.o $(MACHINE)/zs01.o \
+	$(DRIVERS)/ksys573.o $(MACHINE)/k573cass.o $(MACHINE)/k573dio.o $(MACHINE)/k573mcr.o $(MACHINE)/k573msu.o $(MACHINE)/k573npu.o $(MACHINE)/zs01.o \
 	$(DRIVERS)/labyrunr.o $(VIDEO)/labyrunr.o \
 	$(DRIVERS)/lethal.o $(VIDEO)/lethal.o \
 	$(DRIVERS)/mainevt.o $(VIDEO)/mainevt.o \
@@ -1303,10 +1305,8 @@ $(MAMEOBJ)/midcoin.a: \
 $(MAMEOBJ)/midw8080.a: \
 	$(DRIVERS)/8080bw.o $(AUDIO)/8080bw.o $(VIDEO)/8080bw.o \
 	$(DRIVERS)/m79amb.o $(AUDIO)/m79amb.o \
-	$(DRIVERS)/mw18w.o \
 	$(DRIVERS)/mw8080bw.o $(MACHINE)/mw8080bw.o $(AUDIO)/mw8080bw.o $(VIDEO)/mw8080bw.o \
 	$(DRIVERS)/rotaryf.o \
-	$(DRIVERS)/sspeedr.o $(VIDEO)/sspeedr.o \
 
 $(MAMEOBJ)/midway.a: \
 	$(DRIVERS)/astrocde.o $(VIDEO)/astrocde.o \
@@ -1323,9 +1323,12 @@ $(MAMEOBJ)/midway.a: \
 	$(DRIVERS)/midxunit.o $(MACHINE)/midxunit.o \
 	$(DRIVERS)/midyunit.o $(MACHINE)/midyunit.o $(VIDEO)/midyunit.o \
 	$(DRIVERS)/midzeus.o $(VIDEO)/midzeus.o $(VIDEO)/midzeus2.o \
+	$(DRIVERS)/mw18w.o \
+	$(DRIVERS)/mwsub.o \
 	$(DRIVERS)/omegrace.o \
 	$(DRIVERS)/pinball2k.o \
 	$(DRIVERS)/seattle.o \
+	$(DRIVERS)/sspeedr.o $(VIDEO)/sspeedr.o \
 	$(DRIVERS)/tmaster.o \
 	$(DRIVERS)/vegas.o $(DRIVERS)/wmg.o \
 	$(DRIVERS)/williams.o $(MACHINE)/williams.o $(AUDIO)/williams.o $(VIDEO)/williams.o \
@@ -1411,7 +1414,7 @@ $(MAMEOBJ)/nichibut.a: \
 	$(DRIVERS)/nbmj8991.o $(VIDEO)/nbmj8991.o \
 	$(DRIVERS)/nbmj9195.o $(VIDEO)/nbmj9195.o \
 	$(DRIVERS)/nightgal.o \
-	$(DRIVERS)/niyanpai.o $(MACHINE)/m68kfmly.o $(VIDEO)/niyanpai.o \
+	$(DRIVERS)/niyanpai.o $(VIDEO)/niyanpai.o \
 	$(DRIVERS)/pastelg.o $(VIDEO)/pastelg.o \
 	$(DRIVERS)/seicross.o $(VIDEO)/seicross.o \
 	$(DRIVERS)/terracre.o $(VIDEO)/terracre.o \
@@ -1455,6 +1458,7 @@ $(MAMEOBJ)/nmk.a: \
 
 $(MAMEOBJ)/olympia.a: \
 	$(DRIVERS)/dday.o $(VIDEO)/dday.o \
+	$(DRIVERS)/lbeach.o \
 	$(DRIVERS)/monzagp.o \
 	$(DRIVERS)/portrait.o $(VIDEO)/portrait.o \
 	$(DRIVERS)/vega.o \
@@ -2042,6 +2046,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/amaticmg.o \
 	$(DRIVERS)/ampoker2.o $(VIDEO)/ampoker2.o \
 	$(DRIVERS)/amspdwy.o $(VIDEO)/amspdwy.o \
+	$(DRIVERS)/arachnid.o \
 	$(DRIVERS)/artmagic.o $(VIDEO)/artmagic.o \
 	$(DRIVERS)/astrafr.o \
 	$(DRIVERS)/astrcorp.o \
@@ -2187,7 +2192,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/oneshot.o $(VIDEO)/oneshot.o \
 	$(DRIVERS)/onetwo.o \
 	$(DRIVERS)/othello.o \
-	$(DRIVERS)/othldrby.o $(VIDEO)/othldrby.o \
 	$(DRIVERS)/pachifev.o \
 	$(DRIVERS)/pasha2.o \
 	$(DRIVERS)/pass.o $(VIDEO)/pass.o \
@@ -2283,6 +2287,7 @@ $(DRIVERS)/30test.o:    $(LAYOUT)/30test.lh
 
 $(DRIVERS)/8080bw.o:    $(LAYOUT)/cosmicm.lh \
 			$(LAYOUT)/galactic.lh \
+			$(LAYOUT)/gunchamp.lh \
 			$(LAYOUT)/shuttlei.lh \
 			$(LAYOUT)/spacecom.lh
 
@@ -2383,7 +2388,8 @@ $(DRIVERS)/cinemat.o:   $(LAYOUT)/armora.lh \
 			$(LAYOUT)/solarq.lh \
 			$(LAYOUT)/starcas.lh \
 			$(LAYOUT)/sundance.lh \
-			$(LAYOUT)/tailg.lh
+			$(LAYOUT)/tailg.lh \
+			$(LAYOUT)/wotw.lh
 
 $(DRIVERS)/cischeat.o:  $(LAYOUT)/cischeat.lh \
 			$(LAYOUT)/f1gpstar.lh
@@ -2438,6 +2444,8 @@ $(DRIVERS)/globalfr.o:  $(LAYOUT)/globalfr.lh
 $(DRIVERS)/goldnpkr.o:  $(LAYOUT)/goldnpkr.lh \
 			$(LAYOUT)/pmpoker.lh \
 			$(LAYOUT)/upndown.lh
+
+$(DRIVERS)/lbeach.o:    $(LAYOUT)/lbeach.lh
 
 $(DRIVERS)/goldstar.o:  $(LAYOUT)/lucky8.lh \
 			$(LAYOUT)/bingowng.lh
@@ -2519,6 +2527,8 @@ $(DRIVERS)/mw8080bw.o:  $(LAYOUT)/280zzzap.lh \
 			$(LAYOUT)/spacwalk.lh \
 			$(LAYOUT)/spcenctr.lh
 
+$(DRIVERS)/mwsub.o:     $(LAYOUT)/submar.lh
+
 $(DRIVERS)/meadows.o:   $(LAYOUT)/deadeye.lh \
 			$(LAYOUT)/gypsyjug.lh \
 			$(LAYOUT)/minferno.lh
@@ -2540,6 +2550,8 @@ $(DRIVERS)/model1.o:    $(LAYOUT)/vr.lh
 $(DRIVERS)/nbmj8688.o:  $(LAYOUT)/nbmj8688.lh
 
 $(DRIVERS)/namcos2.o:   $(LAYOUT)/finallap.lh
+
+$(DRIVERS)/nemesis.o:   $(LAYOUT)/konamigt.lh
 
 $(DRIVERS)/neogeo.o:    $(LAYOUT)/neogeo.lh
 
@@ -2624,6 +2636,8 @@ $(DRIVERS)/speedbal.o:  $(LAYOUT)/speedbal.lh
 $(DRIVERS)/sspeedr.o:   $(LAYOUT)/sspeedr.lh
 
 $(DRIVERS)/stactics.o:  $(LAYOUT)/stactics.lh
+
+$(DRIVERS)/sshot.o:     $(LAYOUT)/gunchamps.lh
 
 $(DRIVERS)/sstrangr.o:  $(LAYOUT)/sstrangr.lh
 

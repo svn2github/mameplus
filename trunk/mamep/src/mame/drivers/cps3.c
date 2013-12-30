@@ -69,6 +69,9 @@ Red Earth                                                  WZD96aA0F  CP3000U0G 
 Street Fighter III: New Generation                   1997  SF397200F  CP300000G  JAPAN   X          CAP-SF3000  CAP-SF3-3   CAP-SF3-3    970204
 Street Fighter III: New Generation                         SF397200F  CP300000G  JAPAN   X          CAP-SF3000  ?           ?            970312*
 Street Fighter III: New Generation                         SF397200F  CP300000G  JAPAN   X          CAP-SF3000  ?           ?            970403*
+Street Fighter III: New Generation                         SF3972A0F  CP3000B0G  EUROPE  X          CAP-SF30A0  CAP-SF3-3   CAP-SF3-3    970204
+Street Fighter III: New Generation                         SF3972A0F  CP3000B0G  EUROPE  X          CAP-SF30A0  ?           ?            970312*
+Street Fighter III: New Generation                         SF3972A0F  CP3000B0G  EUROPE  X          CAP-SF30A0  ?           ?            970403*
 Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                           970204
 Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                           970312*
 Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                           970403*
@@ -832,7 +835,7 @@ DRIVER_INIT_MEMBER(cps3_state,sfiii2)    { init_crypt(0x00000000, 0x00000000, 1)
 DRIVER_INIT_MEMBER(cps3_state,jojo)      { init_crypt(0x02203ee3, 0x01301972, 0); }
 DRIVER_INIT_MEMBER(cps3_state,sfiii3)    { init_crypt(0xa55432b4, 0x0c129981, 0); }
 DRIVER_INIT_MEMBER(cps3_state,jojoba)    { init_crypt(0x23323ee3, 0x03021972, 0); }
-DRIVER_INIT_MEMBER(cps3_state,cps3boot)  { init_crypt(-1,-1,2); }
+DRIVER_INIT_MEMBER(cps3_state,cps3boot)  { init_crypt((UINT32)-1,(UINT32)-1,2); }
 DRIVER_INIT_MEMBER(cps3_state,nocd )
 {
 	DRIVER_INIT_CALL( redearth );
@@ -2848,6 +2851,14 @@ ROM_END
 
 ROM_START( sfiii )
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
+	ROM_LOAD( "sfiii_euro.29f400.u2", 0x000000, 0x080000, CRC(27699ddc) SHA1(d8b525cd27e584560b129598df31fd2c5b2a682a) )
+
+	DISK_REGION( "scsi:cdrom" )
+	DISK_IMAGE_READONLY( "cap-sf3-3", 0, BAD_DUMP SHA1(606e62cc5f46275e366e7dbb412dbaeb7e54cd0c) )
+ROM_END
+
+ROM_START( sfiiiu )
+	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
 	ROM_LOAD( "sfiii_usa.29f400.u2", 0x000000, 0x080000, CRC(fb172a8e) SHA1(48ebf59910f246835f7dc0c588da30f7a908072f) )
 
 	DISK_REGION( "scsi:cdrom" )
@@ -4014,10 +4025,11 @@ GAME( 1996, warzardr1, redearth, redearth, cps3_re, cps3_state,   redearth, ROT0
 // not dumped
 
 // 970204
-GAME( 1997, sfiii,     0,        sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii,     0,        sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Euro 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiiu,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 /* Street Fighter III 2nd Impact: Giant Attack */
 

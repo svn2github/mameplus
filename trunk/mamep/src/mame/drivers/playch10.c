@@ -291,12 +291,10 @@ Notes & Todo:
 
 #include "emu.h"
 #include "cpu/m6502/n2a03.h"
-#include "video/ppu2c0x.h"
 #include "cpu/z80/z80.h"
 #include "machine/rp5h01.h"
 #include "machine/nvram.h"
 #include "sound/dac.h"
-#include "sound/nes_apu.h"
 
 #include "rendlay.h"
 #include "includes/playch10.h"
@@ -331,8 +329,7 @@ WRITE8_MEMBER(playch10_state::ram_8w_w)
 WRITE8_MEMBER(playch10_state::sprite_dma_w)
 {
 	int source = ( data & 7 );
-	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
-	ppu->spriteram_dma(space, source);
+	m_ppu->spriteram_dma(space, source);
 }
 
 /* Only used in single monitor bios */
@@ -349,20 +346,17 @@ WRITE8_MEMBER(playch10_state::time_w)
 
 READ8_MEMBER(playch10_state::psg_4015_r)
 {
-	device_t *device = machine().device("nes");
-	return nes_psg_r(device, space, 0x15);
+	return m_nesapu->read(space, 0x15);
 }
 
 WRITE8_MEMBER(playch10_state::psg_4015_w)
 {
-	device_t *device = machine().device("nes");
-	nes_psg_w(device, space, 0x15, data);
+	m_nesapu->write(space, 0x15, data);
 }
 
 WRITE8_MEMBER(playch10_state::psg_4017_w)
 {
-	device_t *device = machine().device("nes");
-	nes_psg_w(device, space, 0x17, data);
+	m_nesapu->write(space, 0x17, data);
 }
 
 /******************************************************************************/
@@ -398,7 +392,7 @@ static ADDRESS_MAP_START( cart_map, AS_PROGRAM, 8, playch10_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_MIRROR(0x1800) AM_SHARE("work_ram")
 	AM_RANGE(0x2000, 0x3fff) AM_DEVREADWRITE("ppu", ppu2c0x_device, read, write)
 	AM_RANGE(0x4011, 0x4011) AM_DEVWRITE("dac", dac_device, write_unsigned8)
-	AM_RANGE(0x4000, 0x4013) AM_DEVREADWRITE_LEGACY("nes", nes_psg_r, nes_psg_w)
+	AM_RANGE(0x4000, 0x4013) AM_DEVREADWRITE("nesapu", nesapu_device, read, write)
 	AM_RANGE(0x4014, 0x4014) AM_WRITE(sprite_dma_w)
 	AM_RANGE(0x4015, 0x4015) AM_READWRITE(psg_4015_r, psg_4015_w)  /* PSG status / first control register */
 	AM_RANGE(0x4016, 0x4016) AM_READWRITE(pc10_in0_r, pc10_in0_w)
@@ -666,7 +660,7 @@ INTERRUPT_GEN_MEMBER(playch10_state::playch10_interrupt){
 		device.execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static const nes_interface nes_config =
+static const nesapu_interface nes_config =
 {
 	"cart"
 };
@@ -707,7 +701,7 @@ static MACHINE_CONFIG_START( playch10, playch10_state )
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("nes", NES, N2A03_DEFAULTCLOCK)
+	MCFG_SOUND_ADD("nesapu", NES_APU, N2A03_DEFAULTCLOCK)
 	MCFG_SOUND_CONFIG(nes_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
@@ -738,18 +732,18 @@ MACHINE_CONFIG_END
 #define BIOS_CPU                                            \
 	ROM_REGION( 0x10000, "maincpu", 0 )                     \
 	ROM_SYSTEM_BIOS( 0, "dual",   "Dual Monitor Version" ) \
-	ROM_LOAD_BIOS( 0, "pch1-c.8t", 0x00000, 0x4000, CRC(d52fa07a) SHA1(55cabf52ae10c050c2229081a80b9fe5454ab8c5) ) \
+	ROM_LOAD_BIOS( 0, "pch1-c__8t_e-2.8t", 0x00000, 0x4000, CRC(d52fa07a) SHA1(55cabf52ae10c050c2229081a80b9fe5454ab8c5) ) \
 	ROM_SYSTEM_BIOS( 1, "single", "Single Monitor Version" ) \
 	ROM_LOAD_BIOS( 1, "pck1-c.8t", 0x00000, 0x4000, CRC(503ee8b1) SHA1(3bd20bc71cac742d1b8c1430a6426d0a19db7ad0) )
 #define BIOS_GFX                                            \
 	ROM_REGION( 0x6000, "gfx1", 0 ) \
-	ROM_LOAD( "pch1-c.8p",    0x00000, 0x2000, CRC(30c15e23) SHA1(69166afdb2fe827c7f1919cdf4197caccbd961fa) )   \
-	ROM_LOAD( "pch1-c.8m",    0x02000, 0x2000, CRC(c1232eee) SHA1(beaf9fa2d091a3c7f70c51e966d885b1f9f0935f) )   \
-	ROM_LOAD( "pch1-c.8k",    0x04000, 0x2000, CRC(9acffb30) SHA1(b814f10ef23f2ca445fabafcbf7f25e2d454ba8c) )   \
+	ROM_LOAD( "pch1-c__8p_e-1.8p",    0x00000, 0x2000, CRC(30c15e23) SHA1(69166afdb2fe827c7f1919cdf4197caccbd961fa) )   \
+	ROM_LOAD( "pch1-c__8m_e-1.8m",    0x02000, 0x2000, CRC(c1232eee) SHA1(beaf9fa2d091a3c7f70c51e966d885b1f9f0935f) )   \
+	ROM_LOAD( "pch1-c__8k.8k",    0x04000, 0x2000, CRC(9acffb30) SHA1(b814f10ef23f2ca445fabafcbf7f25e2d454ba8c) )   \
 	ROM_REGION( 0x0300, "proms", 0 )                        \
-	ROM_LOAD( "pch1-c.6f",    0x0000, 0x0100, CRC(e5414ca3) SHA1(d2878411cda84ffe0afb2e538a67457f51bebffb) )    \
-	ROM_LOAD( "pch1-c.6e",    0x0100, 0x0100, CRC(a2625c6e) SHA1(a448b47c9289902e26a3d3c4c7d5a7968c385e81) )    \
-	ROM_LOAD( "pch1-c.6d",    0x0200, 0x0100, CRC(1213ebd4) SHA1(0ad386fc3eab5e53c0288ad1de33639a9e461b7c) )    \
+	ROM_LOAD( "pch1-c-6f.82s129an.6f",    0x0000, 0x0100, CRC(e5414ca3) SHA1(d2878411cda84ffe0afb2e538a67457f51bebffb) )    \
+	ROM_LOAD( "pch1-c-6e.82s129an.6e",    0x0100, 0x0100, CRC(a2625c6e) SHA1(a448b47c9289902e26a3d3c4c7d5a7968c385e81) )    \
+	ROM_LOAD( "pch1-c-6d.82s129an.6d",    0x0200, 0x0100, CRC(1213ebd4) SHA1(0ad386fc3eab5e53c0288ad1de33639a9e461b7c) )    \
 	ROM_REGION( 0xc0, "palette", 0 )                        \
 	ROM_LOAD( "rp2c0x.pal", 0x00, 0xc0, CRC(48de65dc) SHA1(d10acafc8da9ff479c270ec01180cca61efe62f5) )
 

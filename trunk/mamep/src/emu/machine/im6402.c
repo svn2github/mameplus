@@ -103,7 +103,6 @@ void im6402_device::device_config_complete()
 	// or initialize to defaults if none provided
 	else
 	{
-		memset(&m_in_rri_cb, 0, sizeof(m_in_rri_cb));
 		memset(&m_out_tro_cb, 0, sizeof(m_out_tro_cb));
 		memset(&m_out_dr_cb, 0, sizeof(m_out_dr_cb));
 		memset(&m_out_tbre_cb, 0, sizeof(m_out_tbre_cb));
@@ -119,7 +118,6 @@ void im6402_device::device_config_complete()
 void im6402_device::device_start()
 {
 	// resolve callbacks
-	m_in_rri_func.resolve(m_in_rri_cb, *this);
 	m_out_tro_func.resolve(m_out_tro_cb, *this);
 	m_out_dr_func.resolve(m_out_dr_cb, *this);
 	m_out_tbre_func.resolve(m_out_tbre_cb, *this);
@@ -182,6 +180,10 @@ void im6402_device::device_reset()
 	set_tre(ASSERT_LINE);
 }
 
+void im6402_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	device_serial_interface::device_timer(timer, id, param, ptr);
+}
 
 //-------------------------------------------------
 //  tra_callback -
@@ -220,10 +222,7 @@ void im6402_device::tra_complete()
 
 void im6402_device::rcv_callback()
 {
-	if (m_in_rri_func.isnull())
-		receive_register_update_bit(get_in_data_bit());
-	else
-		receive_register_update_bit(m_in_rri_func());
+	receive_register_update_bit(get_in_data_bit());
 }
 
 
@@ -255,7 +254,8 @@ void im6402_device::input_callback(UINT8 state)
 {
 	m_input_state = state;
 
-	rcv_clock(); // HACK for Wang PC keyboard
+	rx_clock_w(1); // HACK for Wang PC keyboard
+	rx_clock_w(0);
 }
 
 
@@ -293,13 +293,8 @@ WRITE_LINE_MEMBER( im6402_device::rrc_w )
 {
 	if (state)
 	{
-		m_rrc_count++;
-
-		if (m_rrc_count == 16)
-		{
-			rcv_clock();
-			m_rrc_count = 0;
-		}
+		rx_clock_w(m_rrc_count < 8);
+		m_rrc_count = (m_rrc_count + 1) & 15;
 	}
 }
 
@@ -312,13 +307,8 @@ WRITE_LINE_MEMBER( im6402_device::trc_w )
 {
 	if (state)
 	{
-		m_trc_count++;
-
-		if (m_trc_count == 16)
-		{
-			tra_clock();
-			m_trc_count = 0;
-		}
+		tx_clock_w(m_trc_count < 8);
+		m_trc_count = (m_trc_count + 1) & 15;
 	}
 }
 
@@ -381,11 +371,11 @@ WRITE_LINE_MEMBER( im6402_device::crl_w )
 		float stop_bits = 1 + (m_sbs ? ((word_length == 5) ? 0.5 : 1) : 0);
 		int parity_code;
 
-		if (m_pi) parity_code = SERIAL_PARITY_NONE;
-		else if (m_epe) parity_code = SERIAL_PARITY_EVEN;
-		else parity_code = SERIAL_PARITY_ODD;
+		if (m_pi) parity_code = PARITY_NONE;
+		else if (m_epe) parity_code = PARITY_EVEN;
+		else parity_code = PARITY_ODD;
 
-		set_data_frame(word_length, stop_bits, parity_code);
+		set_data_frame(word_length, stop_bits, parity_code, false);
 	}
 }
 
@@ -447,4 +437,16 @@ WRITE_LINE_MEMBER( im6402_device::epe_w )
 	if (LOG) logerror("IM6402 '%s' Even Parity Enable %u\n", tag(), state);
 
 	m_epe = state;
+}
+
+WRITE_LINE_MEMBER(im6402_device::write_rx)
+{
+	if (state)
+	{
+		input_callback(m_input_state | RX);
+	}
+	else
+	{
+		input_callback(m_input_state & ~RX);
+	}
 }

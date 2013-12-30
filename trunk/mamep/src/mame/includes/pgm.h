@@ -80,42 +80,9 @@ public:
 	DECLARE_WRITE8_MEMBER(z80_l3_w);
 	DECLARE_WRITE16_MEMBER(pgm_tx_videoram_w);
 	DECLARE_WRITE16_MEMBER(pgm_bg_videoram_w);
-	DECLARE_DRIVER_INIT(ket);
-	DECLARE_DRIVER_INIT(killbld);
+
 	DECLARE_DRIVER_INIT(pgm);
-	DECLARE_DRIVER_INIT(kovsh);
-	DECLARE_DRIVER_INIT(killbldp);
-	DECLARE_DRIVER_INIT(ddp2);
-	DECLARE_DRIVER_INIT(drgw2j);
-	DECLARE_DRIVER_INIT(kov2);
-	DECLARE_DRIVER_INIT(puzzli2);
-	DECLARE_DRIVER_INIT(dw2001);
-	DECLARE_DRIVER_INIT(martmast);
-	DECLARE_DRIVER_INIT(kovlsqh2);
-	DECLARE_DRIVER_INIT(espgal);
-	DECLARE_DRIVER_INIT(happy6);
-	DECLARE_DRIVER_INIT(oldsplus);
-	DECLARE_DRIVER_INIT(kovboot);
-	DECLARE_DRIVER_INIT(kovshp);
-	DECLARE_DRIVER_INIT(kovshxas);
-	DECLARE_DRIVER_INIT(theglad);
-	DECLARE_DRIVER_INIT(kov2p);
-	DECLARE_DRIVER_INIT(olds);
-	DECLARE_DRIVER_INIT(svg);
-	DECLARE_DRIVER_INIT(photoy2k);
-	DECLARE_DRIVER_INIT(svgpcb);
-	DECLARE_DRIVER_INIT(dmnfrnt);
-	DECLARE_DRIVER_INIT(dw2v100x);
-	DECLARE_DRIVER_INIT(kovqhsgs);
-	DECLARE_DRIVER_INIT(ddp3);
-	DECLARE_DRIVER_INIT(drgw2c);
-	DECLARE_DRIVER_INIT(dwpc);
-	DECLARE_DRIVER_INIT(kov);
-	DECLARE_DRIVER_INIT(py2k2);
-	DECLARE_DRIVER_INIT(drgw2);
-	DECLARE_DRIVER_INIT(drgw3);
-	DECLARE_DRIVER_INIT(orlegend);
-	DECLARE_DRIVER_INIT(pstar);
+
 	TILE_GET_INFO_MEMBER(get_pgm_tx_tilemap_tile_info);
 	TILE_GET_INFO_MEMBER(get_pgm_bg_tilemap_tile_info);
 	DECLARE_VIDEO_START(pgm);
@@ -139,7 +106,7 @@ public:
 };
 
 
-/* for machine/pgmprot.c type games */
+/* for machine/pgmprot_orlegend.c type games */
 class pgm_asic3_state : public pgm_state
 {
 public:
@@ -151,14 +118,11 @@ public:
 	UINT8         m_asic3_reg;
 	UINT8         m_asic3_latch[3];
 	UINT8         m_asic3_x;
-	UINT8         m_asic3_y;
-	UINT8         m_asic3_z;
-	UINT16        m_asic3_h1;
-	UINT16        m_asic3_h2;
+	UINT16        m_asic3_hilo;
 	UINT16        m_asic3_hold;
 
 	DECLARE_DRIVER_INIT(orlegend);
-	void asic3_compute_hold();
+	void asic3_compute_hold(int,int);
 	DECLARE_READ16_MEMBER( pgm_asic3_r );
 	DECLARE_WRITE16_MEMBER( pgm_asic3_w );
 	DECLARE_WRITE16_MEMBER( pgm_asic3_reg_w );
@@ -354,9 +318,12 @@ public:
 	required_shared_ptr<UINT32> m_arm_ram;
 	required_shared_ptr<UINT32> m_arm_ram2;
 
+	UINT32* m_armrom;
+
 	optional_device<cpu_device> m_prot;
 
 	DECLARE_DRIVER_INIT(theglad);
+	DECLARE_DRIVER_INIT(theglada);
 	DECLARE_DRIVER_INIT(svg);
 	DECLARE_DRIVER_INIT(svgpcb);
 	DECLARE_DRIVER_INIT(killbldp);
@@ -375,11 +342,19 @@ public:
 	DECLARE_READ32_MEMBER( svg_latch_arm_r );
 	DECLARE_WRITE32_MEMBER( svg_latch_arm_w );
 	void svg_basic_init();
-	void pgm_create_dummy_internal_arm_region();
+	void pgm_create_dummy_internal_arm_region(int size);
+	void pgm_patch_external_arm_rom_jumptable_theglada(int base);
+	void pgm_patch_external_arm_rom_jumptable_svg(int base);
+	void pgm_create_dummy_internal_arm_region_theglad(int is_svg);
+	void pgm_descramble_happy6(UINT8* src);
+	void pgm_descramble_happy6_2(UINT8* src);
 	void svg_latch_init();
 	DECLARE_READ32_MEMBER( dmnfrnt_speedup_r );
 	DECLARE_READ16_MEMBER( dmnfrnt_main_speedup_r );
 	DECLARE_READ32_MEMBER( killbldp_speedup_r );
+	DECLARE_READ32_MEMBER( theglad_speedup_r );
+	DECLARE_READ32_MEMBER( svg_speedup_r );
+	DECLARE_MACHINE_RESET(pgm_arm_type3_reset);
 };
 
 
@@ -403,6 +378,7 @@ public:
 	DECLARE_DRIVER_INIT(killbld);
 	DECLARE_DRIVER_INIT(drgw3);
 	DECLARE_MACHINE_RESET(killbld);
+	DECLARE_MACHINE_RESET(dw3);
 
 	void igs025_to_igs022_callback( void );
 
@@ -527,10 +503,14 @@ INPUT_PORTS_EXTERN( dw2001 );
 /*----------- defined in machine/pgmprot3.c -----------*/
 
 MACHINE_CONFIG_EXTERN( pgm_arm_type3 );
+INPUT_PORTS_EXTERN(theglad);
+INPUT_PORTS_EXTERN(happy6);
+INPUT_PORTS_EXTERN(svg);
 
 /*----------- defined in machine/pgmprot4.c -----------*/
 
-MACHINE_CONFIG_EXTERN( pgm_022_025 );
+MACHINE_CONFIG_EXTERN(pgm_022_025_dw3);
+MACHINE_CONFIG_EXTERN(pgm_022_025_killbld);
 
 INPUT_PORTS_EXTERN( killbld );
 INPUT_PORTS_EXTERN( dw3 );

@@ -71,6 +71,13 @@ TILE_GET_INFO_MEMBER(mcr3_state::spyhunt_get_alpha_tile_info)
 
 PALETTE_INIT_MEMBER(mcr3_state,spyhunt)
 {
+	int i;
+
+	for (i = 0; i < machine().total_colors(); i++)
+	{
+		palette_set_color(machine(),i,RGB_BLACK); /* black */
+	}
+
 	/* alpha colors are hard-coded */
 	palette_set_color(machine(),4*16+0,MAKE_RGB(0x00,0x00,0x00));
 	palette_set_color(machine(),4*16+1,MAKE_RGB(0x00,0xff,0x00));
@@ -118,6 +125,21 @@ VIDEO_START_MEMBER(mcr3_state,spyhunt)
 	save_item(NAME(m_spyhunt_scroll_offset));
 }
 
+VIDEO_START_MEMBER(mcr3_state,spyhuntpr)
+{
+	/* initialize the background tilemap */
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcr3_state::spyhunt_get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(mcr3_state::spyhunt_bg_scan),this),  64,16, 64,32);
+
+	/* initialize the text tilemap */
+	m_alpha_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcr3_state::spyhunt_get_alpha_tile_info),this), TILEMAP_SCAN_COLS,  16,8, 32,32);
+	m_alpha_tilemap->set_transparent_pen(0);
+	m_alpha_tilemap->set_scrollx(0, 16);
+
+	save_item(NAME(m_spyhunt_sprite_color_mask));
+	save_item(NAME(m_spyhunt_scrollx));
+	save_item(NAME(m_spyhunt_scrolly));
+	save_item(NAME(m_spyhunt_scroll_offset));
+}
 
 
 /*************************************
@@ -135,6 +157,17 @@ WRITE8_MEMBER(mcr3_state::mcr3_paletteram_w)
 	palette_set_color_rgb(machine(), offset / 2, pal3bit(((offset & 1) << 2) + (data >> 6)), pal3bit(data >> 0), pal3bit(data >> 3));
 }
 
+WRITE8_MEMBER(mcr3_state::spyhuntpr_paletteram_w)
+{
+	m_generic_paletteram_8[offset] = data;
+	offset = (offset & 0x0f) | (offset & 0x60) >> 1;
+
+	int r = (data & 0x07) >> 0;
+	int g = (data & 0x38) >> 3;
+	int b = (data & 0xc0) >> 6;
+
+	palette_set_color(machine(), offset^0xf, MAKE_RGB(r<<5,g<<5,b<<6));
+}
 
 
 /*************************************
@@ -196,7 +229,7 @@ WRITE8_MEMBER(mcr3_state::spyhunt_scroll_value_w)
  *
  *************************************/
 
-void mcr3_state::mcr3_update_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int color_mask, int code_xor, int dx, int dy)
+void mcr3_state::mcr3_update_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int color_mask, int code_xor, int dx, int dy, int interlaced)
 {
 	UINT8 *spriteram = m_spriteram;
 	int offs;
@@ -230,7 +263,9 @@ void mcr3_state::mcr3_update_sprites(screen_device &screen, bitmap_ind16 &bitmap
 		flipx = flags & 0x10;
 		flipy = flags & 0x20;
 		sx = (spriteram[offs + 3] - 3) * 2;
-		sy = (241 - spriteram[offs]) * 2;
+		sy = (241 - spriteram[offs]);
+
+		if (interlaced == 1) sy *= 2;
 
 		code ^= code_xor;
 
@@ -279,7 +314,7 @@ UINT32 mcr3_state::screen_update_mcr3(screen_device &screen, bitmap_ind16 &bitma
 	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 
 	/* draw the sprites */
-	mcr3_update_sprites(screen, bitmap, cliprect, 0x03, 0, 0, 0);
+	mcr3_update_sprites(screen, bitmap, cliprect, 0x03, 0, 0, 0, 1);
 	return 0;
 }
 
@@ -293,7 +328,24 @@ UINT32 mcr3_state::screen_update_spyhunt(screen_device &screen, bitmap_ind16 &bi
 	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 
 	/* draw the sprites */
-	mcr3_update_sprites(screen, bitmap, cliprect, m_spyhunt_sprite_color_mask, 0, -12, 0);
+	mcr3_update_sprites(screen, bitmap, cliprect, m_spyhunt_sprite_color_mask, 0, -12, 0, 1);
+
+	/* render any characters on top */
+	m_alpha_tilemap->draw(screen, bitmap, cliprect, 0, 0);
+	return 0;
+}
+
+
+UINT32 mcr3_state::screen_update_spyhuntpr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+{
+	/* for every character in the Video RAM, check if it has been modified */
+	/* since last time and update it accordingly. */
+	m_bg_tilemap->set_scrollx(0, m_spyhunt_scrollx * 2 + m_spyhunt_scroll_offset);
+	m_bg_tilemap->set_scrolly(0, m_spyhunt_scrolly * 2);
+	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
+
+	/* draw the sprites */
+	mcr3_update_sprites(screen, bitmap, cliprect, m_spyhunt_sprite_color_mask, 0, -12, 0, 0);
 
 	/* render any characters on top */
 	m_alpha_tilemap->draw(screen, bitmap, cliprect, 0, 0);

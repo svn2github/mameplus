@@ -24,10 +24,10 @@ class m68307_serial
 	void reset(void);
 	UINT8 m_uivr;
 
-	void m68307ser_set_duart68681(device_t* duart68681)
+	void m68307ser_set_duart68681(device_t *duart68681)
 	{
 		m_duart68681 = duart68681;
 	}
 
-	device_t* m_duart68681;
+	device_t * m_duart68681;
 };

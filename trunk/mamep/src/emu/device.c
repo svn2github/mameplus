@@ -92,6 +92,7 @@ device_t::device_t(const machine_config &mconfig, device_type type, const char *
 		m_machine_config(mconfig),
 		m_static_config(NULL),
 		m_input_defaults(NULL),
+		m_default_bios_tag(""),
 
 		m_machine(NULL),
 		m_save(NULL),
@@ -773,7 +774,7 @@ device_t *device_t::add_subdevice(device_type type, const char *tag, UINT32 cloc
 	// apply any machine configuration owned by the device now
 	machine_config_constructor additions = device->machine_config_additions();
 	if (additions != NULL)
-		(*additions)(const_cast<machine_config &>(mconfig()), device);
+		(*additions)(const_cast<machine_config &>(mconfig()), device, NULL);
 	return device;
 }
 
@@ -797,7 +798,7 @@ device_t *device_t::replace_subdevice(device_t &old, device_type type, const cha
 	// apply any machine configuration owned by the device now
 	machine_config_constructor additions = device->machine_config_additions();
 	if (additions != NULL)
-		(*additions)(const_cast<machine_config &>(mconfig()), device);
+		(*additions)(const_cast<machine_config &>(mconfig()), device, NULL);
 	return device;
 }
 

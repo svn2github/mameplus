@@ -326,8 +326,6 @@ Notes:
 
 
 #include "emu.h"
-#include "machine/atarigen.h"
-#include "machine/asic65.h"
 #include "sound/dac.h"
 #include "includes/slapstic.h"
 #include "includes/harddriv.h"
@@ -428,18 +426,18 @@ static const duartn68681_config duart_config =
 static ADDRESS_MAP_START( driver_68k_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x600000, 0x603fff) AM_READ_LEGACY(hd68k_port0_r)
-	AM_RANGE(0x604000, 0x607fff) AM_WRITE_LEGACY(hd68k_nwr_w)
+	AM_RANGE(0x600000, 0x603fff) AM_READ(hd68k_port0_r)
+	AM_RANGE(0x604000, 0x607fff) AM_WRITE(hd68k_nwr_w)
 	AM_RANGE(0x608000, 0x60bfff) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x60c000, 0x60ffff) AM_WRITE_LEGACY(hd68k_irq_ack_w)
-	AM_RANGE(0xa00000, 0xa7ffff) AM_WRITE_LEGACY(hd68k_wr0_write)
-	AM_RANGE(0xa80000, 0xafffff) AM_READ_PORT("a80000") AM_WRITE_LEGACY(hd68k_wr1_write)
-	AM_RANGE(0xb00000, 0xb7ffff) AM_READWRITE_LEGACY(hd68k_adc8_r, hd68k_wr2_write)
-	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE_LEGACY(hd68k_adc12_r, hd68k_adc_control_w)
-	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(hd68k_gsp_io_r, hd68k_gsp_io_w)
-	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE_LEGACY(hd68k_msp_io_r, hd68k_msp_io_w)
+	AM_RANGE(0x60c000, 0x60ffff) AM_WRITE(hd68k_irq_ack_w)
+	AM_RANGE(0xa00000, 0xa7ffff) AM_WRITE(hd68k_wr0_write)
+	AM_RANGE(0xa80000, 0xafffff) AM_READ_PORT("a80000") AM_WRITE(hd68k_wr1_write)
+	AM_RANGE(0xb00000, 0xb7ffff) AM_READWRITE(hd68k_adc8_r, hd68k_wr2_write)
+	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE(hd68k_adc12_r, hd68k_adc_control_w)
+	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE(hd68k_gsp_io_r, hd68k_gsp_io_w)
+	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE(hd68k_msp_io_r, hd68k_msp_io_w)
 	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
-	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("zram")
+	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE(hd68k_zram_r, hd68k_zram_w)
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -447,12 +445,12 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( driver_gsp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x0000200f) AM_NOP                 /* hit during self-test */
-	AM_RANGE(0x02000000, 0x0207ffff) AM_READWRITE_LEGACY(hdgsp_vram_2bpp_r, hdgsp_vram_1bpp_w)
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, hdgsp_io_w)
-	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE_LEGACY(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
-	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE_LEGACY(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
-	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE_LEGACY(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
-	AM_RANGE(0xf5800000, 0xf5800fff) AM_READWRITE_LEGACY(hdgsp_paletteram_hi_r, hdgsp_paletteram_hi_w) AM_SHARE("gsp_palram_hi")
+	AM_RANGE(0x02000000, 0x0207ffff) AM_READWRITE(hdgsp_vram_2bpp_r, hdgsp_vram_1bpp_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_READ_LEGACY(tms34010_io_register_r) AM_WRITE(hdgsp_io_w)
+	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
+	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
+	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
+	AM_RANGE(0xf5800000, 0xf5800fff) AM_READWRITE(hdgsp_paletteram_hi_r, hdgsp_paletteram_hi_w) AM_SHARE("gsp_palram_hi")
 	AM_RANGE(0xff800000, 0xffffffff) AM_RAM AM_SHARE("gsp_vram")
 ADDRESS_MAP_END
 
@@ -476,17 +474,17 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( multisync_68k_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x604000, 0x607fff) AM_READWRITE_LEGACY(hd68k_sound_reset_r, hd68k_nwr_w)
+	AM_RANGE(0x604000, 0x607fff) AM_READWRITE(hd68k_sound_reset_r, hd68k_nwr_w)
 	AM_RANGE(0x608000, 0x60bfff) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x60c000, 0x60ffff) AM_READWRITE_LEGACY(hd68k_port0_r, hd68k_irq_ack_w)
-	AM_RANGE(0xa00000, 0xa7ffff) AM_WRITE_LEGACY(hd68k_wr0_write)
-	AM_RANGE(0xa80000, 0xafffff) AM_READ_PORT("a80000") AM_WRITE_LEGACY(hd68k_wr1_write)
-	AM_RANGE(0xb00000, 0xb7ffff) AM_READWRITE_LEGACY(hd68k_adc8_r, hd68k_wr2_write)
-	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE_LEGACY(hd68k_adc12_r, hd68k_adc_control_w)
-	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(hd68k_gsp_io_r, hd68k_gsp_io_w)
-	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE_LEGACY(hd68k_msp_io_r, hd68k_msp_io_w)
+	AM_RANGE(0x60c000, 0x60ffff) AM_READWRITE(hd68k_port0_r, hd68k_irq_ack_w)
+	AM_RANGE(0xa00000, 0xa7ffff) AM_WRITE(hd68k_wr0_write)
+	AM_RANGE(0xa80000, 0xafffff) AM_READ_PORT("a80000") AM_WRITE(hd68k_wr1_write)
+	AM_RANGE(0xb00000, 0xb7ffff) AM_READWRITE(hd68k_adc8_r, hd68k_wr2_write)
+	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE(hd68k_adc12_r, hd68k_adc_control_w)
+	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE(hd68k_gsp_io_r, hd68k_gsp_io_w)
+	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE(hd68k_msp_io_r, hd68k_msp_io_w)
 	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
-	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("zram")
+	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE(hd68k_zram_r, hd68k_zram_w)
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -494,12 +492,12 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( multisync_gsp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x0000200f) AM_NOP                 /* hit during self-test */
-	AM_RANGE(0x02000000, 0x020fffff) AM_READWRITE_LEGACY(hdgsp_vram_2bpp_r, hdgsp_vram_2bpp_w)
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, hdgsp_io_w)
-	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE_LEGACY(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
-	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE_LEGACY(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
-	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE_LEGACY(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
-	AM_RANGE(0xf5800000, 0xf5800fff) AM_READWRITE_LEGACY(hdgsp_paletteram_hi_r, hdgsp_paletteram_hi_w) AM_SHARE("gsp_palram_hi")
+	AM_RANGE(0x02000000, 0x020fffff) AM_READWRITE(hdgsp_vram_2bpp_r, hdgsp_vram_2bpp_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_READ_LEGACY(tms34010_io_register_r) AM_WRITE(hdgsp_io_w)
+	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
+	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
+	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
+	AM_RANGE(0xf5800000, 0xf5800fff) AM_READWRITE(hdgsp_paletteram_hi_r, hdgsp_paletteram_hi_w) AM_SHARE("gsp_palram_hi")
 	AM_RANGE(0xff800000, 0xffbfffff) AM_MIRROR(0x0400000) AM_RAM AM_SHARE("gsp_vram")
 ADDRESS_MAP_END
 
@@ -514,17 +512,17 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( multisync2_68k_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
-	AM_RANGE(0x604000, 0x607fff) AM_WRITE_LEGACY(hd68k_nwr_w)
+	AM_RANGE(0x604000, 0x607fff) AM_WRITE(hd68k_nwr_w)
 	AM_RANGE(0x608000, 0x60bfff) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x60c000, 0x60ffff) AM_READWRITE_LEGACY(hd68k_port0_r, hd68k_irq_ack_w)
-	AM_RANGE(0xa00000, 0xa7ffff) AM_WRITE_LEGACY(hd68k_wr0_write)
-	AM_RANGE(0xa80000, 0xafffff) AM_READ_PORT("a80000") AM_WRITE_LEGACY(hd68k_wr1_write)
-	AM_RANGE(0xb00000, 0xb7ffff) AM_READWRITE_LEGACY(hd68k_adc8_r, hd68k_wr2_write)
-	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE_LEGACY(hd68k_adc12_r, hd68k_adc_control_w)
-	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(hd68k_gsp_io_r, hd68k_gsp_io_w)
-	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE_LEGACY(hd68k_msp_io_r, hd68k_msp_io_w)
+	AM_RANGE(0x60c000, 0x60ffff) AM_READWRITE(hd68k_port0_r, hd68k_irq_ack_w)
+	AM_RANGE(0xa00000, 0xa7ffff) AM_WRITE(hd68k_wr0_write)
+	AM_RANGE(0xa80000, 0xafffff) AM_READ_PORT("a80000") AM_WRITE(hd68k_wr1_write)
+	AM_RANGE(0xb00000, 0xb7ffff) AM_READWRITE(hd68k_adc8_r, hd68k_wr2_write)
+	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE(hd68k_adc12_r, hd68k_adc_control_w)
+	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE(hd68k_gsp_io_r, hd68k_gsp_io_w)
+	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE(hd68k_msp_io_r, hd68k_msp_io_w)
 	AM_RANGE(0xfc0000, 0xfc001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
-	AM_RANGE(0xfd0000, 0xfd0fff) AM_MIRROR(0x004000) AM_READWRITE_LEGACY(hd68k_zram_r, hd68k_zram_w) AM_SHARE("zram")
+	AM_RANGE(0xfd0000, 0xfd0fff) AM_MIRROR(0x004000) AM_READWRITE(hd68k_zram_r, hd68k_zram_w)
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -533,12 +531,12 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( multisync2_gsp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x0000200f) AM_NOP                 /* hit during self-test */
-	AM_RANGE(0x02000000, 0x020fffff) AM_READWRITE_LEGACY(hdgsp_vram_2bpp_r, hdgsp_vram_2bpp_w)
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, hdgsp_io_w)
-	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE_LEGACY(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
-	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE_LEGACY(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
-	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE_LEGACY(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
-	AM_RANGE(0xf5800000, 0xf5800fff) AM_READWRITE_LEGACY(hdgsp_paletteram_hi_r, hdgsp_paletteram_hi_w) AM_SHARE("gsp_palram_hi")
+	AM_RANGE(0x02000000, 0x020fffff) AM_READWRITE(hdgsp_vram_2bpp_r, hdgsp_vram_2bpp_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_READ_LEGACY(tms34010_io_register_r) AM_WRITE(hdgsp_io_w)
+	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
+	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
+	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
+	AM_RANGE(0xf5800000, 0xf5800fff) AM_READWRITE(hdgsp_paletteram_hi_r, hdgsp_paletteram_hi_w) AM_SHARE("gsp_palram_hi")
 	AM_RANGE(0xff800000, 0xffffffff) AM_RAM AM_SHARE("gsp_vram")
 ADDRESS_MAP_END
 
@@ -559,7 +557,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( adsp_data_map, AS_DATA, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_SHARE("adsp_data")
-	AM_RANGE(0x2000, 0x2fff) AM_READWRITE_LEGACY(hdadsp_special_r, hdadsp_special_w)
+	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(hdadsp_special_r, hdadsp_special_w)
 ADDRESS_MAP_END
 
 
@@ -580,8 +578,8 @@ static ADDRESS_MAP_START( ds3_data_map, AS_DATA, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_SHARE("adsp_data")
 	AM_RANGE(0x3800, 0x3bff) AM_RAM                     /* internal RAM */
-	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE_LEGACY(hdds3_control_r, hdds3_control_w)  /* adsp control regs */
-	AM_RANGE(0x2000, 0x3fff) AM_READWRITE_LEGACY(hdds3_special_r, hdds3_special_w)
+	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE(hdds3_control_r, hdds3_control_w)  /* adsp control regs */
+	AM_RANGE(0x2000, 0x3fff) AM_READWRITE(hdds3_special_r, hdds3_special_w)
 ADDRESS_MAP_END
 
 
@@ -593,8 +591,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( ds3sdsp_data_map, AS_DATA, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x3800, 0x39ff) AM_RAM                     /* internal RAM */
-	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE_LEGACY(hdds3_sdsp_control_r, hdds3_sdsp_control_w)
-	AM_RANGE(0x2000, 0x3fff) AM_READWRITE_LEGACY(hdds3_sdsp_special_r, hdds3_sdsp_special_w)
+	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE(hdds3_sdsp_control_r, hdds3_sdsp_control_w)
+	AM_RANGE(0x2000, 0x3fff) AM_READWRITE(hdds3_sdsp_special_r, hdds3_sdsp_special_w)
 ADDRESS_MAP_END
 
 
@@ -607,7 +605,7 @@ static ADDRESS_MAP_START( ds3xdsp_data_map, AS_DATA, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x1fff) AM_RAM // TODO
 	AM_RANGE(0x3800, 0x39ff) AM_RAM                     /* internal RAM */
-	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE_LEGACY(hdds3_xdsp_control_r, hdds3_xdsp_control_w)
+	AM_RANGE(0x3fe0, 0x3fff) AM_READWRITE(hdds3_xdsp_control_r, hdds3_xdsp_control_w)
 ADDRESS_MAP_END
 
 
@@ -1352,8 +1350,8 @@ static MACHINE_CONFIG_START( driver_nomsp, harddriv_state )
 	MCFG_MACHINE_START_OVERRIDE(harddriv_state,harddriv)
 	MCFG_MACHINE_RESET_OVERRIDE(harddriv_state,harddriv)
 
-// TODO: ZRAM is really an MK48T02  MCFG_MK48T02_ADD("zram")
-	MCFG_NVRAM_ADD_1FILL("zram")
+	MCFG_M48T02_ADD("200e") // MK48T02
+	MCFG_EEPROM_2816_ADD("210e") // MK48Z02
 
 	MCFG_DUARTN68681_ADD("duartn68681", XTAL_3_6864MHz, duart_config)
 
@@ -1481,8 +1479,11 @@ static MACHINE_CONFIG_FRAGMENT( dsk )
 	MCFG_DSP32C_CONFIG(dsp32c_config)
 	MCFG_CPU_PROGRAM_MAP(dsk_dsp32_map)
 
+	MCFG_EEPROM_2816_ADD("dsk_10c") // MK48Z02
+	MCFG_EEPROM_2816_ADD("dsk_30c") // MK48Z02
+
 	/* ASIC65 */
-	MCFG_FRAGMENT_ADD( asic65 )
+	MCFG_ASIC65_ADD("asic65", ASIC65_STANDARD)
 MACHINE_CONFIG_END
 
 
@@ -1495,7 +1496,7 @@ static MACHINE_CONFIG_FRAGMENT( dsk2 )
 	MCFG_CPU_PROGRAM_MAP(dsk2_dsp32_map)
 
 	/* ASIC65 */
-	MCFG_FRAGMENT_ADD( asic65 )
+	MCFG_ASIC65_ADD("asic65", ASIC65_STANDARD)
 MACHINE_CONFIG_END
 
 
@@ -1597,7 +1598,7 @@ static MACHINE_CONFIG_DERIVED( steeltal, multisync_msp )
 	MCFG_DEVICE_REMOVE("lspeaker")
 	MCFG_DEVICE_REMOVE("rspeaker")
 
-	MCFG_FRAGMENT_ADD( asic65 )         /* ASIC65 on DSPCOM board */
+	MCFG_ASIC65_ADD("asic65", ASIC65_STEELTAL)         /* ASIC65 on DSPCOM board */
 
 	/* sund hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1668,8 +1669,11 @@ ROM_START( harddriv )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1700,8 +1704,11 @@ ROM_START( harddrivg )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1734,8 +1741,11 @@ ROM_START( harddrivj )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1766,8 +1776,11 @@ ROM_START( harddrivb )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1798,8 +1811,11 @@ ROM_START( harddrivb6 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1832,8 +1848,11 @@ ROM_START( harddrivj6 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1864,8 +1883,11 @@ ROM_START( harddrivb5 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1896,8 +1918,11 @@ ROM_START( harddrivg4 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1928,8 +1953,11 @@ ROM_START( harddriv3 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1960,8 +1988,11 @@ ROM_START( harddriv2 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -1992,8 +2023,11 @@ ROM_START( harddriv1 )
 	ROM_LOAD( "136052-1125.45a", 0x020000, 0x010000, CRC(ebf391af) SHA1(3c4097db8d625b994b39d46fe652585a74378ca0) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddriv-eeprom.bin", 0x0000, 0x1000, CRC(692ef86c) SHA1(e79dab6969d0e835e8ae8eaf2f08d5d81d391ef7) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddriv.200e",   0x000000, 0x000800, CRC(aed020f7) SHA1(494fc2eb74b4924c07f18bef5e69efd5476deec2) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddriv.210e",   0x000000, 0x000800, CRC(4a91835b) SHA1(96f0087ba7e577748758a2fbe61225048862bb65) )
 ROM_END
 
 
@@ -2024,8 +2058,11 @@ ROM_START( harddrivc )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddrivc.200e",  0x000000, 0x000800, CRC(560a0106) SHA1(7295a4f1255869c43c3cf146ddebaea62c30b850) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddrivc.210e",  0x000000, 0x000800, CRC(208bba53) SHA1(c9a36015a66917df528b84d20d255b6b96a90e76) )
 ROM_END
 
 
@@ -2056,8 +2093,11 @@ ROM_START( harddrivcg )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddrivc.200e",  0x000000, 0x000800, CRC(560a0106) SHA1(7295a4f1255869c43c3cf146ddebaea62c30b850) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddrivc.210e",  0x000000, 0x000800, CRC(208bba53) SHA1(c9a36015a66917df528b84d20d255b6b96a90e76) )
 ROM_END
 
 
@@ -2088,8 +2128,11 @@ ROM_START( harddrivcb )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddrivc.200e",  0x000000, 0x000800, CRC(560a0106) SHA1(7295a4f1255869c43c3cf146ddebaea62c30b850) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddrivc.210e",  0x000000, 0x000800, CRC(208bba53) SHA1(c9a36015a66917df528b84d20d255b6b96a90e76) )
 ROM_END
 
 
@@ -2120,8 +2163,11 @@ ROM_START( harddrivc1 )
 	ROM_LOAD( "136052-3125.45a", 0x020000, 0x010000, CRC(856548ff) SHA1(e8a17b274185c5e4ecf5f9f1c211e18b3ef2456d) )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "harddrivc-eeprom.bin", 0x0000, 0x1000, CRC(c036ef04) SHA1(2f28a52facdff2269ff2f905f9818520a1d8e468) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "harddrivc.200e",  0x000000, 0x000800, CRC(560a0106) SHA1(7295a4f1255869c43c3cf146ddebaea62c30b850) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "harddrivc.210e",  0x000000, 0x000800, CRC(208bba53) SHA1(c9a36015a66917df528b84d20d255b6b96a90e76) )
 ROM_END
 
 
@@ -2158,8 +2204,11 @@ ROM_START( stunrun )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2196,8 +2245,11 @@ ROM_START( stunrunj )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2234,8 +2286,11 @@ ROM_START( stunrun5 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2272,8 +2327,11 @@ ROM_START( stunrune )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2310,8 +2368,11 @@ ROM_START( stunrun4 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2348,8 +2409,11 @@ ROM_START( stunrun3 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2386,8 +2450,11 @@ ROM_START( stunrun3e )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2424,8 +2491,11 @@ ROM_START( stunrun2 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2462,8 +2532,11 @@ ROM_START( stunrun2e )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2500,8 +2573,11 @@ ROM_START( stunrun0 )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2538,8 +2614,11 @@ ROM_START( stunrunp )
 	ROM_LOAD( "136070-2126.1de", 0x020000, 0x010000, CRC(b973d9d1) SHA1(a74a3c981497a9c5557f793d49381a9b776cb025) )
 	ROM_LOAD( "136070-2127.1cd", 0x030000, 0x010000, CRC(3e419f4e) SHA1(e382e047f02591a934a53e5fbf07cccf285abb29) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "stunrun-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -2562,7 +2641,7 @@ ROM_START( racedriv )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-4015.210y", 0x0e0001, 0x010000, CRC(725806f3) SHA1(0fa4601465dc94f27c71db789ad625bbcd254169) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2575,7 +2654,7 @@ ROM_START( racedriv )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-4030.30e", 0x000000, 0x010000, CRC(4207c784) SHA1(5ec410bd75c281ac57d9856d08ce65431f3af994) )
 	ROM_LOAD16_BYTE( "136077-4031.10e", 0x000001, 0x010000, CRC(796486b3) SHA1(937e27c012c5fb457bee1b43fc8e075b3e9405b4) )
 
@@ -2586,8 +2665,11 @@ ROM_START( racedriv )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2610,7 +2692,7 @@ ROM_START( racedrivb )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-4015.210y", 0x0e0001, 0x010000, CRC(725806f3) SHA1(0fa4601465dc94f27c71db789ad625bbcd254169) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2623,7 +2705,7 @@ ROM_START( racedrivb )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-4030.30e", 0x000000, 0x010000, CRC(4207c784) SHA1(5ec410bd75c281ac57d9856d08ce65431f3af994) )
 	ROM_LOAD16_BYTE( "136077-4031.10e", 0x000001, 0x010000, CRC(796486b3) SHA1(937e27c012c5fb457bee1b43fc8e075b3e9405b4) )
 
@@ -2634,8 +2716,11 @@ ROM_START( racedrivb )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2658,7 +2743,7 @@ ROM_START( racedrivg )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-4015.210y", 0x0e0001, 0x010000, CRC(725806f3) SHA1(0fa4601465dc94f27c71db789ad625bbcd254169) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2671,7 +2756,7 @@ ROM_START( racedrivg )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-4030.30e", 0x000000, 0x010000, CRC(4207c784) SHA1(5ec410bd75c281ac57d9856d08ce65431f3af994) )
 	ROM_LOAD16_BYTE( "136077-4031.10e", 0x000001, 0x010000, CRC(796486b3) SHA1(937e27c012c5fb457bee1b43fc8e075b3e9405b4) )
 
@@ -2682,8 +2767,11 @@ ROM_START( racedrivg )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2706,7 +2794,7 @@ ROM_START( racedriv4 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-4015.210y", 0x0e0001, 0x010000, CRC(725806f3) SHA1(0fa4601465dc94f27c71db789ad625bbcd254169) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2719,7 +2807,7 @@ ROM_START( racedriv4 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-4030.30e", 0x000000, 0x010000, CRC(4207c784) SHA1(5ec410bd75c281ac57d9856d08ce65431f3af994) )
 	ROM_LOAD16_BYTE( "136077-4031.10e", 0x000001, 0x010000, CRC(796486b3) SHA1(937e27c012c5fb457bee1b43fc8e075b3e9405b4) )
 
@@ -2730,8 +2818,11 @@ ROM_START( racedriv4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2754,7 +2845,7 @@ ROM_START( racedrivb4 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-4015.210y", 0x0e0001, 0x010000, CRC(725806f3) SHA1(0fa4601465dc94f27c71db789ad625bbcd254169) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2767,7 +2858,7 @@ ROM_START( racedrivb4 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-4030.30e", 0x000000, 0x010000, CRC(4207c784) SHA1(5ec410bd75c281ac57d9856d08ce65431f3af994) )
 	ROM_LOAD16_BYTE( "136077-4031.10e", 0x000001, 0x010000, CRC(796486b3) SHA1(937e27c012c5fb457bee1b43fc8e075b3e9405b4) )
 
@@ -2778,8 +2869,11 @@ ROM_START( racedrivb4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2802,7 +2896,7 @@ ROM_START( racedrivg4 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-4015.210y", 0x0e0001, 0x010000, CRC(725806f3) SHA1(0fa4601465dc94f27c71db789ad625bbcd254169) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2815,7 +2909,7 @@ ROM_START( racedrivg4 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-4030.30e", 0x000000, 0x010000, CRC(4207c784) SHA1(5ec410bd75c281ac57d9856d08ce65431f3af994) )
 	ROM_LOAD16_BYTE( "136077-4031.10e", 0x000001, 0x010000, CRC(796486b3) SHA1(937e27c012c5fb457bee1b43fc8e075b3e9405b4) )
 
@@ -2826,8 +2920,11 @@ ROM_START( racedrivg4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2850,7 +2947,7 @@ ROM_START( racedriv3 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-1015.210y", 0x0e0001, 0x010000, CRC(c51f2702) SHA1(2279f15c4c09af92fe9b87dc0ed842092ca64906) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2863,7 +2960,7 @@ ROM_START( racedriv3 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-1030.30e", 0x000000, 0x010000, CRC(ff575b3d) SHA1(7f2202db7ec9dac06499c9535b4852defb192eb3) )
 	ROM_LOAD16_BYTE( "136077-1031.10e", 0x000001, 0x010000, CRC(2ae2ac35) SHA1(e2a050a6e24dc6fef86b3556b69b2c3e2993febc) )
 
@@ -2874,8 +2971,11 @@ ROM_START( racedriv3 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2898,7 +2998,7 @@ ROM_START( racedriv2 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-1015.210y", 0x0e0001, 0x010000, CRC(c51f2702) SHA1(2279f15c4c09af92fe9b87dc0ed842092ca64906) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2911,7 +3011,7 @@ ROM_START( racedriv2 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-1030.30e", 0x000000, 0x010000, CRC(ff575b3d) SHA1(7f2202db7ec9dac06499c9535b4852defb192eb3) )
 	ROM_LOAD16_BYTE( "136077-1031.10e", 0x000001, 0x010000, CRC(2ae2ac35) SHA1(e2a050a6e24dc6fef86b3556b69b2c3e2993febc) )
 
@@ -2922,8 +3022,11 @@ ROM_START( racedriv2 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2946,7 +3049,7 @@ ROM_START( racedriv1 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-1015.210y", 0x0e0001, 0x010000, CRC(c51f2702) SHA1(2279f15c4c09af92fe9b87dc0ed842092ca64906) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -2959,7 +3062,7 @@ ROM_START( racedriv1 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-1030.30e", 0x000000, 0x010000, CRC(ff575b3d) SHA1(7f2202db7ec9dac06499c9535b4852defb192eb3) )
 	ROM_LOAD16_BYTE( "136077-1031.10e", 0x000001, 0x010000, CRC(2ae2ac35) SHA1(e2a050a6e24dc6fef86b3556b69b2c3e2993febc) )
 
@@ -2970,8 +3073,11 @@ ROM_START( racedriv1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -2994,7 +3100,7 @@ ROM_START( racedrivg1 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-1015.210y", 0x0e0001, 0x010000, CRC(c51f2702) SHA1(2279f15c4c09af92fe9b87dc0ed842092ca64906) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3007,7 +3113,7 @@ ROM_START( racedrivg1 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-1030.30e", 0x000000, 0x010000, CRC(ff575b3d) SHA1(7f2202db7ec9dac06499c9535b4852defb192eb3) )
 	ROM_LOAD16_BYTE( "136077-1031.10e", 0x000001, 0x010000, CRC(2ae2ac35) SHA1(e2a050a6e24dc6fef86b3556b69b2c3e2993febc) )
 
@@ -3018,8 +3124,11 @@ ROM_START( racedrivg1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -3042,7 +3151,7 @@ ROM_START( racedrivb1 )
 	ROM_LOAD16_BYTE( "136077-1016.200y", 0x0e0000, 0x010000, CRC(e83a9c99) SHA1(1d4093902133bb6da981f294e6947544c3564393) )
 	ROM_LOAD16_BYTE( "136077-1015.210y", 0x0e0001, 0x010000, CRC(c51f2702) SHA1(2279f15c4c09af92fe9b87dc0ed842092ca64906) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3055,7 +3164,7 @@ ROM_START( racedrivb1 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136077-1030.30e", 0x000000, 0x010000, CRC(ff575b3d) SHA1(7f2202db7ec9dac06499c9535b4852defb192eb3) )
 	ROM_LOAD16_BYTE( "136077-1031.10e", 0x000001, 0x010000, CRC(2ae2ac35) SHA1(e2a050a6e24dc6fef86b3556b69b2c3e2993febc) )
 
@@ -3066,8 +3175,11 @@ ROM_START( racedrivb1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -3090,7 +3202,7 @@ ROM_START( racedrivc )
 	ROM_LOAD16_BYTE( "136078-4016.200y", 0x0e0000, 0x010000, CRC(aa296776) SHA1(991e33568e47a82cb183724f7df1f835850c30fa) )
 	ROM_LOAD16_BYTE( "136078-4015.210y", 0x0e0001, 0x010000, CRC(030c803d) SHA1(bb249c9d1d28f6851a529b93c4f96d80665f2bce) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3103,7 +3215,7 @@ ROM_START( racedrivc )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3114,8 +3226,11 @@ ROM_START( racedrivc )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3138,7 +3253,7 @@ ROM_START( racedrivcb )
 	ROM_LOAD16_BYTE( "136078-4016.200y", 0x0e0000, 0x010000, CRC(aa296776) SHA1(991e33568e47a82cb183724f7df1f835850c30fa) )
 	ROM_LOAD16_BYTE( "136078-4015.210y", 0x0e0001, 0x010000, CRC(030c803d) SHA1(bb249c9d1d28f6851a529b93c4f96d80665f2bce) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3151,7 +3266,7 @@ ROM_START( racedrivcb )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3162,8 +3277,11 @@ ROM_START( racedrivcb )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3186,7 +3304,7 @@ ROM_START( racedrivcg )
 	ROM_LOAD16_BYTE( "136078-4016.200y", 0x0e0000, 0x010000, CRC(aa296776) SHA1(991e33568e47a82cb183724f7df1f835850c30fa) )
 	ROM_LOAD16_BYTE( "136078-4015.210y", 0x0e0001, 0x010000, CRC(030c803d) SHA1(bb249c9d1d28f6851a529b93c4f96d80665f2bce) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3199,7 +3317,7 @@ ROM_START( racedrivcg )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3210,8 +3328,11 @@ ROM_START( racedrivcg )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3234,7 +3355,7 @@ ROM_START( racedrivc4 )
 	ROM_LOAD16_BYTE( "136078-4016.200y", 0x0e0000, 0x010000, CRC(aa296776) SHA1(991e33568e47a82cb183724f7df1f835850c30fa) )
 	ROM_LOAD16_BYTE( "136078-4015.210y", 0x0e0001, 0x010000, CRC(030c803d) SHA1(bb249c9d1d28f6851a529b93c4f96d80665f2bce) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3247,7 +3368,7 @@ ROM_START( racedrivc4 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3258,8 +3379,11 @@ ROM_START( racedrivc4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3282,7 +3406,7 @@ ROM_START( racedrivcb4 )
 	ROM_LOAD16_BYTE( "136078-4016.200y", 0x0e0000, 0x010000, CRC(aa296776) SHA1(991e33568e47a82cb183724f7df1f835850c30fa) )
 	ROM_LOAD16_BYTE( "136078-4015.210y", 0x0e0001, 0x010000, CRC(030c803d) SHA1(bb249c9d1d28f6851a529b93c4f96d80665f2bce) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3295,7 +3419,7 @@ ROM_START( racedrivcb4 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3306,8 +3430,11 @@ ROM_START( racedrivcb4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3330,7 +3457,7 @@ ROM_START( racedrivcg4 )
 	ROM_LOAD16_BYTE( "136078-4016.200y", 0x0e0000, 0x010000, CRC(aa296776) SHA1(991e33568e47a82cb183724f7df1f835850c30fa) )
 	ROM_LOAD16_BYTE( "136078-4015.210y", 0x0e0001, 0x010000, CRC(030c803d) SHA1(bb249c9d1d28f6851a529b93c4f96d80665f2bce) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3343,7 +3470,7 @@ ROM_START( racedrivcg4 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3354,8 +3481,11 @@ ROM_START( racedrivcg4 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3378,7 +3508,7 @@ ROM_START( racedrivc2 )
 	ROM_LOAD16_BYTE( "136078-1015.210y", 0x0e0001, 0x010000, CRC(64dd6040) SHA1(bcadf4f1d9a0685ca39af903d3342d590850513c) )
 	ROM_LOAD16_BYTE( "136078-1016.200y", 0x0e0000, 0x010000, CRC(a2a0ed28) SHA1(6f308a38594f7e54ebdd6983d28664ba595bc525) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3391,7 +3521,7 @@ ROM_START( racedrivc2 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3402,8 +3532,11 @@ ROM_START( racedrivc2 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3426,7 +3559,7 @@ ROM_START( racedrivc1 )
 	ROM_LOAD16_BYTE( "136078-1015.210y", 0x0e0001, 0x010000, CRC(64dd6040) SHA1(bcadf4f1d9a0685ca39af903d3342d590850513c) )
 	ROM_LOAD16_BYTE( "136078-1016.200y", 0x0e0000, 0x010000, CRC(a2a0ed28) SHA1(6f308a38594f7e54ebdd6983d28664ba595bc525) )
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	ROM_REGION( 0x20000, "soundcpu", 0 )        /* 2*64k for audio 68000 code */
@@ -3439,7 +3572,7 @@ ROM_START( racedrivc1 )
 	ROM_LOAD16_BYTE( "136077-1022.10j", 0x020000, 0x010000, CRC(c0393c31) SHA1(31726c01eb0d4650936908c90d45161197b7efba) )
 	ROM_LOAD16_BYTE( "136077-1024.10l", 0x020001, 0x010000, CRC(1e2fb25f) SHA1(4940091bbad6144bce091d2737191d266d4b0310) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136078-1030.30e", 0x000000, 0x010000, CRC(d355a1c2) SHA1(6b0fb52dbecbe574959739f49c3c0fccdd5cebdb) )
 	ROM_LOAD16_BYTE( "136078-1031.10e", 0x000001, 0x010000, CRC(18fd5f44) SHA1(1c3bd780b72cfa61bcbd82683da18b4ee8d03a6d) )
 
@@ -3450,8 +3583,11 @@ ROM_START( racedrivc1 )
 	ROM_LOAD( "136052-1126.30a", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "136077-1017.45c", 0x040000, 0x010000, CRC(e93129a3) SHA1(1221b08c8efbfd8cf6bfbfd956545f10bef48663) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedrivc-eeprom.bin", 0x0000, 0x1000, CRC(79266a98) SHA1(61471a0cdb5074c65f5d37a556d2d4e693d0f8e4) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedrivc.200e",  0x000000, 0x000800, CRC(2c0f7715) SHA1(79cf3a6cd48fc4a86cd94e823243fc0cd4bffa57) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedrivc.210e",  0x000000, 0x000800, CRC(2e843742) SHA1(bc73ab0270cdf45aaa1a19703e8c3aa916578ef0) )
 ROM_END
 
 
@@ -3578,7 +3714,7 @@ ROM_START( racedrivpan )
 
 	/* ----------------------- */
 
-	ROM_REGION( 0x2000, "asic65", 0 )   /* ASIC65 TMS32015 code */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )   /* ASIC65 TMS32015 code */
 	ROM_LOAD( "136077-1027.30j", 0x00000, 0x02000, NO_DUMP )
 
 	/* ADSP board */
@@ -3587,7 +3723,7 @@ ROM_START( racedrivpan )
 	ROM_LOAD16_BYTE( "rdps1033.bin", 0x000001, 0x010000, CRC(4fc800ac) SHA1(dd8cfdb727d6a65274f4f871a589a36796ae1e57) )
 
 	/* DSK board */
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "rdpd1026.bin", 0x000000, 0x020000, CRC(16572618) SHA1(08d9f7f76e6e75d5233240d4deab96808825994b) )
 	ROM_LOAD16_BYTE( "rdpd1025.bin", 0x000001, 0x020000, CRC(57b8a266) SHA1(257246d42841aa30220caeb91945e29978ee8fc0) )
 
@@ -3599,8 +3735,11 @@ ROM_START( racedrivpan )
 	ROM_LOAD( "rdps1126.bin", 0x030000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 	ROM_LOAD( "rdps1017.bin", 0x040000, 0x010000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "racedriv-eeprom.bin", 0x0000, 0x1000, CRC(0e9cf36e) SHA1(bc6cc7eb243d5ec6e346ebf5c3887d0820eb1a1c) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "racedriv.200e",   0x000000, 0x000800, CRC(bfdf633c) SHA1(b930f90c388e6773e6ba4254214a3a6076e610b0) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "racedriv.210e",   0x000000, 0x000800, CRC(3d7c732e) SHA1(e7de81d4a54327514fdd339e93c888c63a344d2c) )
 ROM_END
 
 
@@ -3627,7 +3766,7 @@ ROM_START( steeltal )
 	ROM_LOAD( "136087-5001.1f",  0x010000, 0x004000, CRC(c52d8218) SHA1(3511c8c65583c7e44242f4cc48d7cc46fc748868) )
 	ROM_CONTINUE(                0x004000, 0x00c000 )
 
-	ROM_REGION( 0x2000, "asic65", 0 )       /* 64k for ASIC65 */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )       /* 64k for ASIC65 */
 	ROM_LOAD( "136087-9007.10c", 0x000000, 0x002000, CRC(2956984f) SHA1(63c9a99b00c3cbb63aca908b076c2c4d3f70f386) )
 
 	ROM_REGION( 0x10000, "cpu6", 0 )        /* 64k for DSP communications */
@@ -3660,8 +3799,11 @@ ROM_START( steeltal )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -3688,7 +3830,7 @@ ROM_START( steeltalg )
 	ROM_LOAD( "136087-5001.1f",  0x010000, 0x004000, CRC(c52d8218) SHA1(3511c8c65583c7e44242f4cc48d7cc46fc748868) )
 	ROM_CONTINUE(             0x004000, 0x00c000 )
 
-	ROM_REGION( 0x2000, "asic65", 0 )       /* 64k for ASIC65 */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )       /* 64k for ASIC65 */
 	ROM_LOAD( "136087-9007.10c", 0x000000, 0x002000, CRC(2956984f) SHA1(63c9a99b00c3cbb63aca908b076c2c4d3f70f386) )
 
 	ROM_REGION( 0x10000, "cpu6", 0 )        /* 64k for DSP communications */
@@ -3721,8 +3863,11 @@ ROM_START( steeltalg )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -3749,7 +3894,7 @@ ROM_START( steeltal1 )
 	ROM_LOAD( "136087-5001.1f",  0x010000, 0x004000, CRC(c52d8218) SHA1(3511c8c65583c7e44242f4cc48d7cc46fc748868) )
 	ROM_CONTINUE(             0x004000, 0x00c000 )
 
-	ROM_REGION( 0x2000, "asic65", 0 )       /* 64k for ASIC65 */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )       /* 64k for ASIC65 */
 	ROM_LOAD( "136087-9007.10c", 0x000000, 0x002000, CRC(2956984f) SHA1(63c9a99b00c3cbb63aca908b076c2c4d3f70f386) )
 
 	ROM_REGION( 0x10000, "cpu6", 0 )        /* 64k for DSP communications */
@@ -3782,8 +3927,11 @@ ROM_START( steeltal1 )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -3810,7 +3958,7 @@ ROM_START( steeltalp )
 	ROM_LOAD( "136087-5001.1f",  0x010000, 0x004000, CRC(c52d8218) SHA1(3511c8c65583c7e44242f4cc48d7cc46fc748868) )
 	ROM_CONTINUE(             0x004000, 0x00c000 )
 
-	ROM_REGION( 0x2000, "asic65", 0 )       /* 64k for ASIC65 */
+	ROM_REGION( 0x2000, "asic65:asic65cpu", 0 )       /* 64k for ASIC65 */
 	ROM_LOAD( "136087-9007.10c", 0x000000, 0x002000, CRC(2956984f) SHA1(63c9a99b00c3cbb63aca908b076c2c4d3f70f386) )
 
 	ROM_REGION( 0x10000, "cpu6", 0 )        /* 64k for DSP communications */
@@ -3843,8 +3991,11 @@ ROM_START( steeltalp )
 	/* GAL's located on "Multisync" board */
 	ROM_LOAD( "136087-9001.bin", 0x0000, 0x0001, NO_DUMP ) /* GAL6001 at location 200K (SLOOP) */
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "steeltal-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 
@@ -3867,7 +4018,7 @@ ROM_START( strtdriv )
 	ROM_LOAD16_BYTE( "136091-0016.200y", 0x0e0000, 0x010000, CRC(f85ad532) SHA1(f9d2480104a7487c23d33b05aa044b7f4ca08c67) )
 	ROM_LOAD16_BYTE( "136091-0015.210y", 0x0e0001, 0x010000, CRC(a2e406f3) SHA1(a7266508011c892cb1032fa4d77ccbafedc844e8) )
 
-	ROM_REGION( 0x10000 + 0x10000, "asic65", 0 )    /* dummy region for ADSP 2105 */
+	ROM_REGION( 0x10000 + 0x10000, "asic65:asic65cpu", 0 )    /* dummy region for ADSP 2105 */
 	ROM_LOAD( "136091-0033.10j", 0x000000, 0x010000, CRC(57504ab6) SHA1(ec8361b7da964c07ca0da48a87537badc3986fe0) )
 
 	ROM_REGION( 0x60000, "user1", 0 )       /* 384k for object ROM */
@@ -3878,7 +4029,7 @@ ROM_START( strtdriv )
 	ROM_LOAD16_BYTE( "136091-0021.2j",  0x40000, 0x10000, CRC(14f2caae) SHA1(ff40dbced58dc910a2b5825b846a5e52933cb8fc) )
 	ROM_LOAD16_BYTE( "136091-0022.2p",  0x40001, 0x10000, CRC(bc4dd071) SHA1(ca182451a0a18d343dce1be56090d51950d43906) )
 
-	ROM_REGION16_BE( 0x51000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM + 4k for ZRAM */
+	ROM_REGION16_BE( 0x50000, "user3", 0 )  /* 256k for DSK ROMs + 64k for RAM */
 	ROM_LOAD16_BYTE( "136091-0026.30e", 0x000000, 0x020000, CRC(47705109) SHA1(fa40275b71b74be8591282d2fba4215b98fc29c9) )
 	ROM_LOAD16_BYTE( "136091-0025.10e", 0x000001, 0x020000, CRC(ead9254e) SHA1(92152d3ca77b542b3bb3398ccf414df28c95abfd) )
 
@@ -3901,8 +4052,11 @@ ROM_START( strtdriv )
 	ROM_FILL(                           0x60000, 0x20000, 0xff) /* 12N */
 	ROM_LOAD16_BYTE( "136052-1126.12h", 0x60000, 0x10000, CRC(f46ef09c) SHA1(ba62f73ee3b33d8f26b430ffa468f8792dca23de) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "strtdriv-eeprom.bin", 0x0000, 0x1000, CRC(c71c0011) SHA1(1ceaf73df40e531df3bfb26b4fb7cd95fb7bff1d) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "stunrun.200e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "stunrun.210e",    0x000000, 0x000800, CRC(f1e8ba9e) SHA1(605db3fdbaff4ba13729371ad0c4fbab3889378e) )
 ROM_END
 
 ROM_START( hdrivair )
@@ -3920,7 +4074,7 @@ ROM_START( hdrivair )
 	ROM_LOAD16_BYTE( "coprochi.bin",0x1c0000, 0x20000, CRC(5d2ca109) SHA1(e1a94d3fbfd5d542732555bf60268e73d66b3a06) )
 	ROM_LOAD16_BYTE( "coproclo.bin",0x1c0001, 0x20000, CRC(5f98b04d) SHA1(9c4fa4092fd85f1d67be44f2ff91a907a87db51a) )
 
-	ROM_REGION( 0x10000 + 0x10000, "asic65", 0 )    /* dummy region for ADSP 2105 */
+	ROM_REGION( 0x10000 + 0x10000, "asic65:asic65cpu", 0 )    /* dummy region for ADSP 2105 */
 	ROM_LOAD( "sboot.bin", 0x000000, 0x010000, CRC(cde4d010) SHA1(853f4b813ff70fe74cd87e92131c46fca045610d) )
 
 	ROM_REGION( 0xc0000, "user1", 0 )       /* 768k for object ROM */
@@ -3957,8 +4111,11 @@ ROM_START( hdrivair )
 	ROM_LOAD16_BYTE( "ds3rom7.bin", 0x300000, 0x80000, CRC(323eff0b) SHA1(5d4945d77191ee44b4fbf125bc0816217321829e) )
 	ROM_LOAD16_BYTE( "ds3rom3.bin", 0x300001, 0x80000, CRC(63965868) SHA1(d61d9d6709a3a3c37c2652602e97fdee52e0e7cb) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "hdrivair-eeprom.bin", 0x0000, 0x1000, CRC(7828df8f) SHA1(4b62ceb1d3f4b8026d77a59118a9002aa006e98e) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "hdrivair.200e",      0x000000, 0x000800, CRC(6270b696) SHA1(e302880dbca53ee725108ca4f7e45a176e85e96d) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "hdrivair.210e",      0x000000, 0x000800, CRC(a1c39919) SHA1(92799a7a73f545dad6684eacf7009a6c4d52d8f7) )
 ROM_END
 
 
@@ -3980,7 +4137,7 @@ ROM_START( hdrivairp )
 	ROM_REGION( 0x10000 + 0x10000, "dsp32", 0 ) /* dummy region for ADSP 2105 */
 	ROM_LOAD( "sboota.bin", 0x10000 + 0x00000, 0x10000, CRC(3ef819cd) SHA1(c547b869a3a37a82fb46584fe0ef0cfe21a4f882) )
 
-	ROM_REGION( 0x10000 + 0x10000, "asic65", 0 )    /* dummy region for ADSP 2105 */
+	ROM_REGION( 0x10000 + 0x10000, "asic65:asic65cpu", 0 )    /* dummy region for ADSP 2105 */
 	ROM_LOAD( "xboota.bin", 0x10000 + 0x00000, 0x10000, CRC(d9c49901) SHA1(9f90ae3a47eb1ef00c3ec3661f60402c2eae2108) )
 
 	ROM_REGION( 0xc0000, "user1", 0 )       /* 768k for object ROM */
@@ -4017,8 +4174,11 @@ ROM_START( hdrivairp )
 	ROM_LOAD16_BYTE( "ds3rom.0",    0x300000, 0x80000, CRC(90b8dbb6) SHA1(fff693cb81e88bc00e048bb71406295fe7be5122) )
 	ROM_LOAD16_BYTE( "ds3rom.4",    0x300001, 0x80000, CRC(6281efee) SHA1(47d0f3ff973166d818877996c45dccf1d3a85fe1) )
 
-	ROM_REGION( 0x1000, "zram", 0 )
-	ROM_LOAD( "hdrivair-eeprom.bin", 0x0000, 0x1000, CRC(7828df8f) SHA1(4b62ceb1d3f4b8026d77a59118a9002aa006e98e) )
+	ROM_REGION( 0x800, "200e", 0 )
+	ROM_LOAD( "hdrivair.200e",      0x000000, 0x000800, CRC(6270b696) SHA1(e302880dbca53ee725108ca4f7e45a176e85e96d) )
+
+	ROM_REGION( 0x800, "210e", 0 )
+	ROM_LOAD( "hdrivair.210e",      0x000000, 0x000800, CRC(a1c39919) SHA1(92799a7a73f545dad6684eacf7009a6c4d52d8f7) )
 ROM_END
 
 
@@ -4030,85 +4190,77 @@ ROM_END
  *************************************/
 
 /* COMMON INIT: initialize the original "driver" main board */
-static void init_driver(running_machine &machine)
+void harddriv_state::init_driver()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
 	/* note that we're not multisync */
-	state->m_gsp_multisync = FALSE;
+	m_gsp_multisync = FALSE;
 }
 
 
 /* COMMON INIT: initialize the later "multisync" main board */
-static void init_multisync(running_machine &machine, int compact_inputs)
+void harddriv_state::init_multisync(int compact_inputs)
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
 	/* note that we're multisync */
-	state->m_gsp_multisync = TRUE;
+	m_gsp_multisync = TRUE;
 
 	// if we have a JSA board, install the read/write handlers
-	if (state->m_jsa != NULL)
-		state->m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x600000, 0x603fff, read8_delegate(FUNC(atari_jsa_base_device::main_response_r),state->m_jsa.target()), write8_delegate(FUNC(atari_jsa_base_device::main_command_w),state->m_jsa.target()), 0xff00);
+	if (m_jsa != NULL)
+		m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x600000, 0x603fff, read8_delegate(FUNC(atari_jsa_base_device::main_response_r),m_jsa.target()), write8_delegate(FUNC(atari_jsa_base_device::main_command_w),m_jsa.target()), 0xff00);
 
 	/* install handlers for the compact driving games' inputs */
 	if (compact_inputs)
 	{
-		state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x400000, 0x400001, FUNC(hdc68k_wheel_r));
-		state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x408000, 0x408001, FUNC(hdc68k_wheel_edge_reset_w));
-		state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xa80000, 0xafffff, FUNC(hdc68k_port1_r));
+		m_maincpu->space(AS_PROGRAM).install_read_handler(0x400000, 0x400001, read16_delegate(FUNC(harddriv_state::hdc68k_wheel_r), this));
+		m_maincpu->space(AS_PROGRAM).install_write_handler(0x408000, 0x408001, write16_delegate(FUNC(harddriv_state::hdc68k_wheel_edge_reset_w), this));
+		m_maincpu->space(AS_PROGRAM).install_read_handler(0xa80000, 0xafffff, read16_delegate(FUNC(harddriv_state::hdc68k_port1_r), this));
 	}
 }
 
 
 /* COMMON INIT: initialize the ADSP/ADSP2 board */
-static void init_adsp(running_machine &machine)
+void harddriv_state::init_adsp()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
 	/* install ADSP program RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x800000, 0x807fff, FUNC(hd68k_adsp_program_r), FUNC(hd68k_adsp_program_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x800000, 0x807fff, read16_delegate(FUNC(harddriv_state::hd68k_adsp_program_r), this), write16_delegate(FUNC(harddriv_state::hd68k_adsp_program_w), this));
 
 	/* install ADSP data RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x808000, 0x80bfff, FUNC(hd68k_adsp_data_r), FUNC(hd68k_adsp_data_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x808000, 0x80bfff, read16_delegate(FUNC(harddriv_state::hd68k_adsp_data_r), this), write16_delegate(FUNC(harddriv_state::hd68k_adsp_data_w), this));
 
 	/* install ADSP serial buffer RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x810000, 0x813fff, FUNC(hd68k_adsp_buffer_r), FUNC(hd68k_adsp_buffer_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x810000, 0x813fff, read16_delegate(FUNC(harddriv_state::hd68k_adsp_buffer_r), this), write16_delegate(FUNC(harddriv_state::hd68k_adsp_buffer_w), this));
 
 	/* install ADSP control locations */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x818000, 0x81801f, FUNC(hd68k_adsp_control_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x818060, 0x81807f, FUNC(hd68k_adsp_irq_clear_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x838000, 0x83ffff, FUNC(hd68k_adsp_irq_state_r));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x818000, 0x81801f, write16_delegate(FUNC(harddriv_state::hd68k_adsp_control_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x818060, 0x81807f, write16_delegate(FUNC(harddriv_state::hd68k_adsp_irq_clear_w), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x838000, 0x83ffff, read16_delegate(FUNC(harddriv_state::hd68k_adsp_irq_state_r), this));
 }
 
 
 /* COMMON INIT: initialize the DS3 board */
-static void init_ds3(running_machine &machine)
+void harddriv_state::init_ds3()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
 	/* install ADSP program RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x800000, 0x807fff, FUNC(hd68k_ds3_program_r), FUNC(hd68k_ds3_program_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x800000, 0x807fff, read16_delegate(FUNC(harddriv_state::hd68k_ds3_program_r), this), write16_delegate(FUNC(harddriv_state::hd68k_ds3_program_w), this));
 
 	/* install ADSP data RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x808000, 0x80bfff, FUNC(hd68k_adsp_data_r), FUNC(hd68k_adsp_data_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x80c000, 0x80dfff, FUNC(hdds3_special_r), FUNC(hdds3_special_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x808000, 0x80bfff, read16_delegate(FUNC(harddriv_state::hd68k_adsp_data_r), this), write16_delegate(FUNC(harddriv_state::hd68k_adsp_data_w), this));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x80c000, 0x80dfff, read16_delegate(FUNC(harddriv_state::hdds3_special_r), this), write16_delegate(FUNC(harddriv_state::hdds3_special_w), this));
 
 	/* install ADSP control locations */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x820000, 0x8207ff, FUNC(hd68k_ds3_gdata_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x820800, 0x820fff, FUNC(hd68k_ds3_girq_state_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x820000, 0x8207ff, FUNC(hd68k_ds3_gdata_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x821000, 0x8217ff, FUNC(hd68k_adsp_irq_clear_w));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x820000, 0x8207ff, read16_delegate(FUNC(harddriv_state::hd68k_ds3_gdata_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x820800, 0x820fff, read16_delegate(FUNC(harddriv_state::hd68k_ds3_girq_state_r), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x820000, 0x8207ff, write16_delegate(FUNC(harddriv_state::hd68k_ds3_gdata_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x821000, 0x8217ff, write16_delegate(FUNC(harddriv_state::hd68k_adsp_irq_clear_w), this));
 
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x822000, 0x8227ff, FUNC(hd68k_ds3_sdata_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x822800, 0x822fff, FUNC(hd68k_ds3_sirq_state_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x822000, 0x8227ff, FUNC(hd68k_ds3_sdata_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x823000, 0x8237ff, FUNC(hd68k_ds3_sirq_clear_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x823800, 0x823fff, FUNC(hd68k_ds3_control_w));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x822000, 0x8227ff, read16_delegate(FUNC(harddriv_state::hd68k_ds3_sdata_r), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x822800, 0x822fff, read16_delegate(FUNC(harddriv_state::hd68k_ds3_sirq_state_r), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x822000, 0x8227ff, write16_delegate(FUNC(harddriv_state::hd68k_ds3_sdata_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x823000, 0x8237ff, write16_delegate(FUNC(harddriv_state::hd68k_ds3_sirq_clear_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x823800, 0x823fff, write16_delegate(FUNC(harddriv_state::hd68k_ds3_control_w), this));
 
 	/* predetermine memory regions */
-	state->m_ds3_sdata_memory = (UINT16 *)state->memregion("ds3sdsp_data")->base();
-	state->m_ds3_sdata_memory_size = state->memregion("ds3sdsp_data")->bytes() / 2;
+	m_ds3_sdata_memory = (UINT16 *)memregion("ds3sdsp_data")->base();
+	m_ds3_sdata_memory_size = memregion("ds3sdsp_data")->bytes() / 2;
 
 /*
 
@@ -4180,98 +4332,83 @@ static void init_ds3(running_machine &machine)
 
 
 /* COMMON INIT: initialize the DSK add-on board */
-static void init_dsk(running_machine &machine)
+void harddriv_state::init_dsk()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-	UINT8 *usr3 = state->memregion("user3")->base();
+	UINT8 *usr3 = memregion("user3")->base();
 
 	/* install ASIC61 */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x85c000, 0x85c7ff, FUNC(hd68k_dsk_dsp32_r), FUNC(hd68k_dsk_dsp32_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x85c000, 0x85c7ff, read16_delegate(FUNC(harddriv_state::hd68k_dsk_dsp32_r), this), write16_delegate(FUNC(harddriv_state::hd68k_dsk_dsp32_w), this));
 
 	/* install control registers */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x85c800, 0x85c81f, FUNC(hd68k_dsk_control_w));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x85c800, 0x85c81f, write16_delegate(FUNC(harddriv_state::hd68k_dsk_control_w), this));
 
 	/* install extra RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x900000, 0x90ffff, FUNC(hd68k_dsk_ram_r), FUNC(hd68k_dsk_ram_w));
-	state->m_dsk_ram = (UINT16 *)(usr3 + 0x40000);
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x900000, 0x90ffff, read16_delegate(FUNC(harddriv_state::hd68k_dsk_ram_r), this), write16_delegate(FUNC(harddriv_state::hd68k_dsk_ram_w), this));
+	m_dsk_ram = (UINT16 *)(usr3 + 0x40000);
 
 	/* install extra ZRAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x910000, 0x910fff, FUNC(hd68k_dsk_zram_r), FUNC(hd68k_dsk_zram_w));
-	state->m_dsk_zram = (UINT16 *)(usr3 + 0x50000);
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x910000, 0x910fff, read8_delegate(FUNC(eeprom_parallel_28xx_device::read), m_dsk_10c.target()), write8_delegate(FUNC(eeprom_parallel_28xx_device::write), m_dsk_10c.target()), 0xff00);
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x910000, 0x910fff, read8_delegate(FUNC(eeprom_parallel_28xx_device::read), m_dsk_30c.target()), write8_delegate(FUNC(eeprom_parallel_28xx_device::write), m_dsk_30c.target()), 0x00ff);
 
 	/* install ASIC65 */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x914000, 0x917fff, FUNC(asic65_data_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x914000, 0x917fff, FUNC(asic65_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x918000, 0x91bfff, FUNC(asic65_io_r));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x914000, 0x917fff, write16_delegate(FUNC(asic65_device::data_w), (asic65_device*)m_asic65));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x914000, 0x917fff, read16_delegate(FUNC(asic65_device::read), (asic65_device*)m_asic65));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x918000, 0x91bfff, read16_delegate(FUNC(asic65_device::io_r), (asic65_device*)m_asic65));
 
 	/* install extra ROM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x940000, 0x9fffff, FUNC(hd68k_dsk_small_rom_r));
-	state->m_dsk_rom = (UINT16 *)(usr3 + 0x00000);
-
-	/* set up the ASIC65 */
-	asic65_config(machine, ASIC65_STANDARD);
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x940000, 0x9fffff, read16_delegate(FUNC(harddriv_state::hd68k_dsk_small_rom_r), this));
+	m_dsk_rom = (UINT16 *)(usr3 + 0x00000);
 }
 
 
 /* COMMON INIT: initialize the DSK II add-on board */
-static void init_dsk2(running_machine &machine)
+void harddriv_state::init_dsk2()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-	UINT8 *usr3 = state->memregion("user3")->base();
+	UINT8 *usr3 = memregion("user3")->base();
 
 	/* install ASIC65 */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x824000, 0x824003, FUNC(asic65_data_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x824000, 0x824003, FUNC(asic65_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x825000, 0x825001, FUNC(asic65_io_r));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x824000, 0x824003, write16_delegate(FUNC(asic65_device::data_w), (asic65_device*)m_asic65));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x824000, 0x824003, read16_delegate(FUNC(asic65_device::read), (asic65_device*)m_asic65));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x825000, 0x825001, read16_delegate(FUNC(asic65_device::io_r), (asic65_device*)m_asic65));
 
 	/* install ASIC61 */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x827000, 0x8277ff, FUNC(hd68k_dsk_dsp32_r), FUNC(hd68k_dsk_dsp32_w));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x827000, 0x8277ff, read16_delegate(FUNC(harddriv_state::hd68k_dsk_dsp32_r), this), write16_delegate(FUNC(harddriv_state::hd68k_dsk_dsp32_w), this));
 
 	/* install control registers */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x827800, 0x82781f, FUNC(hd68k_dsk_control_w));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x827800, 0x82781f, write16_delegate(FUNC(harddriv_state::hd68k_dsk_control_w), this));
 
 	/* install extra RAM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0x880000, 0x8bffff, FUNC(hd68k_dsk_ram_r), FUNC(hd68k_dsk_ram_w));
-	state->m_dsk_ram = (UINT16 *)(usr3 + 0x100000);
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x880000, 0x8bffff, read16_delegate(FUNC(harddriv_state::hd68k_dsk_ram_r), this), write16_delegate(FUNC(harddriv_state::hd68k_dsk_ram_w), this));
+	m_dsk_ram = (UINT16 *)(usr3 + 0x100000);
 
 	/* install extra ROM */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x900000, 0x9fffff, FUNC(hd68k_dsk_rom_r));
-	state->m_dsk_rom = (UINT16 *)(usr3 + 0x000000);
-
-	/* set up the ASIC65 */
-	asic65_config(machine, ASIC65_STANDARD);
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x900000, 0x9fffff, read16_delegate(FUNC(harddriv_state::hd68k_dsk_rom_r), this));
+	m_dsk_rom = (UINT16 *)(usr3 + 0x000000);
 }
 
 
 /* COMMON INIT: initialize the DSPCOM add-on board */
-static void init_dspcom(running_machine &machine)
+void harddriv_state::init_dspcom()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
-	/* install ASIC65 */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x900000, 0x900003, FUNC(asic65_data_w));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x900000, 0x900003, FUNC(asic65_r));
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x901000, 0x910001, FUNC(asic65_io_r));
-
-	/* set up the ASIC65 */
-	asic65_config(machine, ASIC65_STEELTAL);
+		/* install ASIC65 */
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x900000, 0x900003, write16_delegate(FUNC(asic65_device::data_w), (asic65_device*)m_asic65));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x900000, 0x900003, read16_delegate(FUNC(asic65_device::read), (asic65_device*)m_asic65));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x901000, 0x910001, read16_delegate(FUNC(asic65_device::io_r), (asic65_device*)m_asic65));
 
 	/* install DSPCOM control */
-	state->m_maincpu->space(AS_PROGRAM).install_legacy_write_handler(0x904000, 0x90401f, FUNC(hddspcom_control_w));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x904000, 0x90401f, write16_delegate(FUNC(harddriv_state::hddspcom_control_w), this));
 }
 
 
 /* COMMON INIT: initialize the original "driver" sound board */
-static void init_driver_sound(running_machine &machine)
+void harddriv_state::init_driver_sound()
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
-	hdsnd_init(machine);
+	hdsnd_init();
 
 	/* install sound handlers */
-	state->m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x840000, 0x840001, read16_delegate(FUNC(harddriv_state::hd68k_snd_data_r),state), write16_delegate(FUNC(harddriv_state::hd68k_snd_data_w),state));
-	state->m_maincpu->space(AS_PROGRAM).install_read_handler(0x844000, 0x844001, read16_delegate(FUNC(harddriv_state::hd68k_snd_status_r),state));
-	state->m_maincpu->space(AS_PROGRAM).install_write_handler(0x84c000, 0x84c001, write16_delegate(FUNC(harddriv_state::hd68k_snd_reset_w),state));
+	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0x840000, 0x840001, read16_delegate(FUNC(harddriv_state::hd68k_snd_data_r), this), write16_delegate(FUNC(harddriv_state::hd68k_snd_data_w), this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x844000, 0x844001, read16_delegate(FUNC(harddriv_state::hd68k_snd_status_r), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x84c000, 0x84c001, write16_delegate(FUNC(harddriv_state::hd68k_snd_reset_w), this));
 }
 
 
@@ -4286,119 +4423,117 @@ static void init_driver_sound(running_machine &machine)
 DRIVER_INIT_MEMBER(harddriv_state,harddriv)
 {
 	/* initialize the boards */
-	init_driver(machine());
-	init_adsp(machine());
-	init_driver_sound(machine());
+	init_driver();
+	init_adsp();
+	init_driver_sound();
 
 	/* set up gsp speedup handler */
-	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff9fc00, 0xfff9fc0f, FUNC(hdgsp_speedup1_w));
-	m_gsp_speedup_addr[1] = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfffcfc00, 0xfffcfc0f, FUNC(hdgsp_speedup2_w));
-	m_gsp->space(AS_PROGRAM).install_legacy_read_handler(0xfff9fc00, 0xfff9fc0f, FUNC(hdgsp_speedup_r));
+	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff9fc00, 0xfff9fc0f, write16_delegate(FUNC(harddriv_state::hdgsp_speedup1_w), this));
+	m_gsp_speedup_addr[1] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfffcfc00, 0xfffcfc0f, write16_delegate(FUNC(harddriv_state::hdgsp_speedup2_w), this));
+	m_gsp->space(AS_PROGRAM).install_read_handler(0xfff9fc00, 0xfff9fc0f, read16_delegate(FUNC(harddriv_state::hdgsp_speedup_r), this));
 	m_gsp_speedup_pc = 0xffc00f10;
 
 	/* set up msp speedup handler */
-	m_msp_speedup_addr = m_msp->space(AS_PROGRAM).install_legacy_write_handler(0x00751b00, 0x00751b0f, FUNC(hdmsp_speedup_w));
-	m_msp->space(AS_PROGRAM).install_legacy_read_handler(0x00751b00, 0x00751b0f, FUNC(hdmsp_speedup_r));
+	m_msp_speedup_addr = m_msp->space(AS_PROGRAM).install_write_handler(0x00751b00, 0x00751b0f, write16_delegate(FUNC(harddriv_state::hdmsp_speedup_w), this));
+	m_msp->space(AS_PROGRAM).install_read_handler(0x00751b00, 0x00751b0f, read16_delegate(FUNC(harddriv_state::hdmsp_speedup_r), this));
 	m_msp_speedup_pc = 0x00723b00;
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
 }
 
 
 DRIVER_INIT_MEMBER(harddriv_state,harddrivc)
 {
 	/* initialize the boards */
-	init_multisync(machine(), 1);
-	init_adsp(machine());
-	init_driver_sound(machine());
+	init_multisync(1);
+	init_adsp();
+	init_driver_sound();
 
 	/* set up gsp speedup handler */
-	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff9fc00, 0xfff9fc0f, FUNC(hdgsp_speedup1_w));
-	m_gsp_speedup_addr[1] = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfffcfc00, 0xfffcfc0f, FUNC(hdgsp_speedup2_w));
-	m_gsp->space(AS_PROGRAM).install_legacy_read_handler(0xfff9fc00, 0xfff9fc0f, FUNC(hdgsp_speedup_r));
+	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff9fc00, 0xfff9fc0f, write16_delegate(FUNC(harddriv_state::hdgsp_speedup1_w), this));
+	m_gsp_speedup_addr[1] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfffcfc00, 0xfffcfc0f, write16_delegate(FUNC(harddriv_state::hdgsp_speedup2_w), this));
+	m_gsp->space(AS_PROGRAM).install_read_handler(0xfff9fc00, 0xfff9fc0f, read16_delegate(FUNC(harddriv_state::hdgsp_speedup_r), this));
 	m_gsp_speedup_pc = 0xfff40ff0;
 
 	/* set up msp speedup handler */
-	m_msp_speedup_addr = m_msp->space(AS_PROGRAM).install_legacy_write_handler(0x00751b00, 0x00751b0f, FUNC(hdmsp_speedup_w));
-	m_msp->space(AS_PROGRAM).install_legacy_read_handler(0x00751b00, 0x00751b0f, FUNC(hdmsp_speedup_r));
+	m_msp_speedup_addr = m_msp->space(AS_PROGRAM).install_write_handler(0x00751b00, 0x00751b0f, write16_delegate(FUNC(harddriv_state::hdmsp_speedup_w), this));
+	m_msp->space(AS_PROGRAM).install_read_handler(0x00751b00, 0x00751b0f, read16_delegate(FUNC(harddriv_state::hdmsp_speedup_r), this));
 	m_msp_speedup_pc = 0x00723b00;
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
 }
 
 
 DRIVER_INIT_MEMBER(harddriv_state,stunrun)
 {
 	/* initialize the boards */
-	init_multisync(machine(), 0);
-	init_adsp(machine());
+	init_multisync(0);
+	init_adsp();
 
 	/* set up gsp speedup handler */
-	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff9fc00, 0xfff9fc0f, FUNC(hdgsp_speedup1_w));
-	m_gsp_speedup_addr[1] = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfffcfc00, 0xfffcfc0f, FUNC(hdgsp_speedup2_w));
-	m_gsp->space(AS_PROGRAM).install_legacy_read_handler(0xfff9fc00, 0xfff9fc0f, FUNC(hdgsp_speedup_r));
+	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff9fc00, 0xfff9fc0f, write16_delegate(FUNC(harddriv_state::hdgsp_speedup1_w), this));
+	m_gsp_speedup_addr[1] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfffcfc00, 0xfffcfc0f, write16_delegate(FUNC(harddriv_state::hdgsp_speedup2_w), this));
+	m_gsp->space(AS_PROGRAM).install_read_handler(0xfff9fc00, 0xfff9fc0f, read16_delegate(FUNC(harddriv_state::hdgsp_speedup_r), this));
 	m_gsp_speedup_pc = 0xfff41070;
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
 }
 
 
 DRIVER_INIT_MEMBER(harddriv_state,racedriv)
 {
 	/* initialize the boards */
-	init_driver(machine());
-	init_adsp(machine());
-	init_dsk(machine());
-	init_driver_sound(machine());
+	init_driver();
+	init_adsp();
+	init_dsk();
+	init_driver_sound();
 
 	/* set up the slapstic */
 	slapstic_init(machine(), 117);
-	m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0xe0000, 0xfffff, FUNC(rd68k_slapstic_r), FUNC(rd68k_slapstic_w));
+	m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xe0000, 0xfffff, read16_delegate(FUNC(harddriv_state::rd68k_slapstic_r), this), write16_delegate(FUNC(harddriv_state::rd68k_slapstic_w), this));
 
 	/* synchronization */
-	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x613c00, 0x613c03, FUNC(rddsp32_sync0_w));
-	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x613e00, 0x613e03, FUNC(rddsp32_sync1_w));
+	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613c00, 0x613c03, write32_delegate(FUNC(harddriv_state::rddsp32_sync0_w), this));
+	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613e00, 0x613e03, write32_delegate(FUNC(harddriv_state::rddsp32_sync1_w), this));
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
 }
 
 
-static void racedrivc_init_common(running_machine &machine, offs_t gsp_protection)
+void harddriv_state::racedrivc_init_common(offs_t gsp_protection)
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
 	/* initialize the boards */
-	init_multisync(machine, 1);
-	init_adsp(machine);
-	init_dsk(machine);
-	init_driver_sound(machine);
+	init_multisync(1);
+	init_adsp();
+	init_dsk();
+	init_driver_sound();
 
 	/* set up the slapstic */
-	slapstic_init(machine, 117);
-	state->m_m68k_slapstic_base = state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0xe0000, 0xfffff, FUNC(rd68k_slapstic_r), FUNC(rd68k_slapstic_w));
+	slapstic_init(machine(), 117);
+	m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xe0000, 0xfffff, read16_delegate(FUNC(harddriv_state::rd68k_slapstic_r), this), write16_delegate(FUNC(harddriv_state::rd68k_slapstic_w), this));
 
 	/* synchronization */
-	state->m_rddsp32_sync[0] = state->m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x613c00, 0x613c03, FUNC(rddsp32_sync0_w));
-	state->m_rddsp32_sync[1] = state->m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x613e00, 0x613e03, FUNC(rddsp32_sync1_w));
+	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613c00, 0x613c03, write32_delegate(FUNC(harddriv_state::rddsp32_sync0_w), this));
+	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613e00, 0x613e03, write32_delegate(FUNC(harddriv_state::rddsp32_sync1_w), this));
 
 	/* set up protection hacks */
-	state->m_gsp_protection = state->m_gsp->space(AS_PROGRAM).install_legacy_write_handler(gsp_protection, gsp_protection + 0x0f, FUNC(hdgsp_protection_w));
+	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_write_handler(gsp_protection, gsp_protection + 0x0f, write16_delegate(FUNC(harddriv_state::hdgsp_protection_w), this));
 
 	/* set up gsp speedup handler */
-	state->m_gsp_speedup_addr[0] = state->m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff76f60, 0xfff76f6f, FUNC(rdgsp_speedup1_w));
-	state->m_gsp->space(AS_PROGRAM).install_legacy_read_handler(0xfff76f60, 0xfff76f6f, FUNC(rdgsp_speedup1_r));
-	state->m_gsp_speedup_pc = 0xfff43a00;
+	m_gsp_speedup_addr[0] = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff76f60, 0xfff76f6f, write16_delegate(FUNC(harddriv_state::rdgsp_speedup1_w), this));
+	m_gsp->space(AS_PROGRAM).install_read_handler(0xfff76f60, 0xfff76f6f, read16_delegate(FUNC(harddriv_state::rdgsp_speedup1_r), this));
+	m_gsp_speedup_pc = 0xfff43a00;
 
 	/* set up adsp speedup handlers */
-	state->m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
 }
 
-DRIVER_INIT_MEMBER(harddriv_state,racedrivc) { racedrivc_init_common(machine(), 0xfff95cd0); }
-DRIVER_INIT_MEMBER(harddriv_state,racedrivc1) { racedrivc_init_common(machine(), 0xfff7ecd0); }
+DRIVER_INIT_MEMBER(harddriv_state,racedrivc) { racedrivc_init_common(0xfff95cd0); }
+DRIVER_INIT_MEMBER(harddriv_state,racedrivc1) { racedrivc_init_common(0xfff7ecd0); }
 
 DRIVER_INIT_MEMBER(harddriv_state,racedrivb1)
 {
@@ -4423,77 +4558,75 @@ READ16_MEMBER(harddriv_state::steeltal_dummy_r)
 }
 
 
-static void steeltal_init_common(running_machine &machine, offs_t ds3_transfer_pc, int proto_sloop)
+void harddriv_state::steeltal_init_common(offs_t ds3_transfer_pc, int proto_sloop)
 {
-	harddriv_state *state = machine.driver_data<harddriv_state>();
-
 	/* initialize the boards */
-	init_multisync(machine, 0);
-	init_ds3(machine);
-	init_dspcom(machine);
+	init_multisync(0);
+	init_ds3();
+	init_dspcom();
 
-	state->m_maincpu->space(AS_PROGRAM).install_read_handler(0x908000, 0x908001, read16_delegate(FUNC(harddriv_state::steeltal_dummy_r),state));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0x908000, 0x908001, read16_delegate(FUNC(harddriv_state::steeltal_dummy_r), this));
 
 	/* set up the SLOOP */
 	if (!proto_sloop)
 	{
-		state->m_m68k_slapstic_base = state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0xe0000, 0xfffff, FUNC(st68k_sloop_r), FUNC(st68k_sloop_w));
-		state->m_m68k_sloop_alt_base = state->m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0x4e000, 0x4ffff, FUNC(st68k_sloop_alt_r));
+		m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xe0000, 0xfffff, read16_delegate(FUNC(harddriv_state::st68k_sloop_r), this),  write16_delegate(FUNC(harddriv_state::st68k_sloop_w), this));
+		m_m68k_sloop_alt_base = m_maincpu->space(AS_PROGRAM).install_read_handler(0x4e000, 0x4ffff, read16_delegate(FUNC(harddriv_state::st68k_sloop_alt_r), this));
 	}
 	else
-		state->m_m68k_slapstic_base = state->m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0xe0000, 0xfffff, FUNC(st68k_protosloop_r), FUNC(st68k_protosloop_w));
+		m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xe0000, 0xfffff, read16_delegate(FUNC(harddriv_state::st68k_protosloop_r), this), write16_delegate(FUNC(harddriv_state::st68k_protosloop_w), this));
 
 	/* set up protection hacks */
-	state->m_gsp_protection = state->m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff965d0, 0xfff965df, FUNC(hdgsp_protection_w));
+	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff965d0, 0xfff965df, write16_delegate(FUNC(harddriv_state::hdgsp_protection_w), this));
 
 	/* set up adsp speedup handlers */
-	state->m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
-	state->m_adsp->space(AS_DATA).install_legacy_read_handler(0x1f99, 0x1f99, FUNC(hdds3_speedup_r));
-	state->m_ds3_speedup_addr = &state->m_adsp_data_memory[0x1f99];
-	state->m_ds3_speedup_pc = 0xff;
-	state->m_ds3_transfer_pc = ds3_transfer_pc;
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
+	m_adsp->space(AS_DATA).install_read_handler(0x1f99, 0x1f99, read16_delegate(FUNC(harddriv_state::hdds3_speedup_r), this));
+	m_ds3_speedup_addr = &m_adsp_data_memory[0x1f99];
+	m_ds3_speedup_pc = 0xff;
+	m_ds3_transfer_pc = ds3_transfer_pc;
 }
 
 
 DRIVER_INIT_MEMBER(harddriv_state,steeltal)
 {
-	steeltal_init_common(machine(), 0x4fc18, 0);
+	steeltal_init_common(0x4fc18, 0);
 }
 
 DRIVER_INIT_MEMBER(harddriv_state,steeltal1)
 {
-	steeltal_init_common(machine(), 0x4f9c6, 0);
+	steeltal_init_common(0x4f9c6, 0);
 }
 
 DRIVER_INIT_MEMBER(harddriv_state,steeltalp)
 {
-	steeltal_init_common(machine(), 0x52290, 1);
+	steeltal_init_common(0x52290, 1);
 }
 
 
 DRIVER_INIT_MEMBER(harddriv_state,strtdriv)
 {
 	/* initialize the boards */
-	init_multisync(machine(), 1);
-	init_ds3(machine());
-	init_dsk(machine());
+	init_multisync(1);
+	init_ds3();
+	init_dsk();
 
 	/* set up the slapstic */
 	slapstic_init(machine(), 117);
-	m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_legacy_readwrite_handler(0xe0000, 0xfffff, FUNC(rd68k_slapstic_r), FUNC(rd68k_slapstic_w));
+	m_m68k_slapstic_base = m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xe0000, 0xfffff, read16_delegate(FUNC(harddriv_state::rd68k_slapstic_r), this), write16_delegate(FUNC(harddriv_state::rd68k_slapstic_w), this));
 
-	m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xa80000, 0xafffff, FUNC(hda68k_port1_r));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa80000, 0xafffff, read16_delegate(FUNC(harddriv_state::hda68k_port1_r), this));
 
 	/* synchronization */
-	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x613c00, 0x613c03, FUNC(rddsp32_sync0_w));
-	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x613e00, 0x613e03, FUNC(rddsp32_sync1_w));
+	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613c00, 0x613c03, write32_delegate(FUNC(harddriv_state::rddsp32_sync0_w), this));
+	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613e00, 0x613e03, write32_delegate(FUNC(harddriv_state::rddsp32_sync1_w), this));
 
 	/* set up protection hacks */
-	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff960a0, 0xfff960af, FUNC(hdgsp_protection_w));
+	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff960a0, 0xfff960af, write16_delegate(FUNC(harddriv_state::hdgsp_protection_w), this));
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1f99, 0x1f99, FUNC(hdds3_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
+	m_adsp->space(AS_DATA).install_read_handler(0x1f99, 0x1f99, read16_delegate(FUNC(harddriv_state::hdds3_speedup_r), this));
 	m_ds3_speedup_addr = &m_adsp_data_memory[0x1f99];
 	m_ds3_speedup_pc = 0xff;
 	m_ds3_transfer_pc = 0x43672;
@@ -4503,22 +4636,22 @@ DRIVER_INIT_MEMBER(harddriv_state,strtdriv)
 DRIVER_INIT_MEMBER(harddriv_state,hdrivair)
 {
 	/* initialize the boards */
-	init_multisync(machine(), 1);
-	init_ds3(machine());
-	init_dsk2(machine());
+	init_multisync(1);
+	init_ds3();
+	init_dsk2();
 
-	m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xa80000, 0xafffff, FUNC(hda68k_port1_r));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa80000, 0xafffff, read16_delegate(FUNC(harddriv_state::hda68k_port1_r), this));
 
 	/* synchronization */
-	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x21fe00, 0x21fe03, FUNC(rddsp32_sync0_w));
-	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x21ff00, 0x21ff03, FUNC(rddsp32_sync1_w));
+	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613c00, 0x613c03, write32_delegate(FUNC(harddriv_state::rddsp32_sync0_w), this));
+	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613e00, 0x613e03, write32_delegate(FUNC(harddriv_state::rddsp32_sync1_w), this));
 
 	/* set up protection hacks */
-	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff943f0, 0xfff943ff, FUNC(hdgsp_protection_w));
+	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff960a0, 0xfff960af, write16_delegate(FUNC(harddriv_state::hdgsp_protection_w), this));
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1f99, 0x1f99, FUNC(hdds3_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
+	m_adsp->space(AS_DATA).install_read_handler(0x1f99, 0x1f99, read16_delegate(FUNC(harddriv_state::hdds3_speedup_r), this));
 	m_ds3_speedup_addr = &m_adsp_data_memory[0x1f99];
 	m_ds3_speedup_pc = 0x2da;
 	m_ds3_transfer_pc = 0x407b8;
@@ -4528,22 +4661,22 @@ DRIVER_INIT_MEMBER(harddriv_state,hdrivair)
 DRIVER_INIT_MEMBER(harddriv_state,hdrivairp)
 {
 	/* initialize the boards */
-	init_multisync(machine(), 1);
-	init_ds3(machine());
-	init_dsk2(machine());
+	init_multisync(1);
+	init_ds3();
+	init_dsk2();
 
-	m_maincpu->space(AS_PROGRAM).install_legacy_read_handler(0xa80000, 0xafffff, FUNC(hda68k_port1_r));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xa80000, 0xafffff, read16_delegate(FUNC(harddriv_state::hda68k_port1_r), this));
 
 	/* synchronization */
-	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x21fe00, 0x21fe03, FUNC(rddsp32_sync0_w));
-	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_legacy_write_handler(0x21ff00, 0x21ff03, FUNC(rddsp32_sync1_w));
+	m_rddsp32_sync[0] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613c00, 0x613c03, write32_delegate(FUNC(harddriv_state::rddsp32_sync0_w), this));
+	m_rddsp32_sync[1] = m_dsp32->space(AS_PROGRAM).install_write_handler(0x613e00, 0x613e03, write32_delegate(FUNC(harddriv_state::rddsp32_sync1_w), this));
 
 	/* set up protection hacks */
-	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_legacy_write_handler(0xfff916c0, 0xfff916cf, FUNC(hdgsp_protection_w));
+	m_gsp_protection = m_gsp->space(AS_PROGRAM).install_write_handler(0xfff916c0, 0xfff916cf, write16_delegate(FUNC(harddriv_state::hdgsp_protection_w), this));
 
 	/* set up adsp speedup handlers */
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1fff, 0x1fff, FUNC(hdadsp_speedup_r));
-	m_adsp->space(AS_DATA).install_legacy_read_handler(0x1f9a, 0x1f9a, FUNC(hdds3_speedup_r));
+	m_adsp->space(AS_DATA).install_read_handler(0x1fff, 0x1fff, read16_delegate(FUNC(harddriv_state::hdadsp_speedup_r), this));
+	m_adsp->space(AS_DATA).install_read_handler(0x1f9a, 0x1f9a, read16_delegate(FUNC(harddriv_state::hdds3_speedup_r), this));
 	m_ds3_speedup_addr = &m_adsp_data_memory[0x1f9a];
 	m_ds3_speedup_pc = 0x2d9;
 	m_ds3_transfer_pc = 0X407da;

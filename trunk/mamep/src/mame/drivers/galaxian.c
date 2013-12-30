@@ -1090,6 +1090,7 @@ CUSTOM_INPUT_MEMBER(galaxian_state::gmgalax_port_r)
 
 WRITE8_MEMBER(galaxian_state::zigzag_bankswap_w)
 {
+	/* Zig Zag can swap ROMs 2 and 3 as a form of copy protection */
 	membank("bank1")->set_entry(data & 1);
 	membank("bank2")->set_entry(~data & 1);
 }
@@ -6071,7 +6072,7 @@ DRIVER_INIT_MEMBER(galaxian_state,tenspot)
 	//common_init(&galaxian_state::galaxian_draw_bullet, &galaxian_state::galaxian_draw_background, &galaxian_state::batman2_extend_tile_info, &galaxian_state::upper_extend_sprite_info);
 
 	/* coin lockout replaced by graphics bank */
-	//space.install_legacy_write_handler(0x6002, 0x6002, 0, 0x7f8, FUNC(galaxian_gfxbank_w));
+	//space.install_write_handler(0x6002, 0x6002, 0, 0x7f8, write8_delegate(FUNC(galaxian_state::galaxian_gfxbank_w),this));
 
 
 	DRIVER_INIT_CALL(galaxian);
@@ -9662,6 +9663,26 @@ ROM_START( scrambles2 )
 	ROM_LOAD( "c01s.6e",      0x0000, 0x0020, CRC(4e3caeab) SHA1(a25083c3e36d28afdefe4af6e6d4f3155e303625) )
 ROM_END
 
+ROM_START( scramrf )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "(__scramrf)2c.cpu",     0x0000, 0x1000, CRC(85fa7de3) SHA1(120392c9949b43b6e937afe4bc25605b2878758f) )
+	ROM_LOAD( "(__scramrf)2f.cpu",     0x1000, 0x1000, CRC(5b500c90) SHA1(45b1bad1d93f3e474395a193d2fe00e105ba39e5) )
+	ROM_LOAD( "(__scramrf)2j.cpu",     0x2000, 0x1000, CRC(179e1c1f) SHA1(a86d3e7a1340a396e418df4580e73fb6c76ce175) )
+	ROM_LOAD( "(__scramrf)2m.cpu",     0x3000, 0x1000, CRC(4a4bb870) SHA1(e551c0876df85375997dc468b3bb5970cec752d8) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "(__scramrf)5c.cpu",     0x0000, 0x0800, CRC(be037cf6) SHA1(f28e5ead496e70beaada24775aa58bd5d75f2d25) )
+	ROM_LOAD( "(__scramrf)5d.cpu",     0x0800, 0x0800, CRC(de7912da) SHA1(8558b4eff5d7e63029b325edef9914feda5834c3) )
+	ROM_LOAD( "(__scramrf)5e.cpu",     0x1000, 0x0800, CRC(ba2fa933) SHA1(1f976d8595706730e29f93027e7ab4620075c078) )
+
+	ROM_REGION( 0x1000, "gfx1", 0 )
+	ROM_LOAD( "(__scramrf)5f.cpu",     0x0000, 0x0800, CRC(4708845b) SHA1(a8b1ad19a95a9d35050a2ab7194cc96fc5afcdc9) )
+	ROM_LOAD( "(__scramrf)5h.cpu",     0x0800, 0x0800, CRC(11fd2887) SHA1(69844e48bb4d372cac7ae83c953df573c7ecbb7f) )
+
+	ROM_REGION( 0x0020, "proms", 0 ) // not confirmed
+	ROM_LOAD( "c01s.6e",      0x0000, 0x0020, CRC(4e3caeab) SHA1(a25083c3e36d28afdefe4af6e6d4f3155e303625) )
+ROM_END
+
 ROM_START( scramblebf )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "scf1.2d",      0x0000, 0x0800, CRC(b126aa1f) SHA1(1e4db9ee891711e880273241e74e932b0f4e3a0b) )
@@ -9685,8 +9706,6 @@ ROM_START( scramblebf )
 	ROM_REGION( 0x0020, "proms", 0 ) // should be different on this bootleg..
 	ROM_LOAD( "c01s.6e",      0x0000, 0x0020, BAD_DUMP CRC(4e3caeab) SHA1(a25083c3e36d28afdefe4af6e6d4f3155e303625) )
 ROM_END
-
-
 
 
 ROM_START( scrambp )
@@ -10723,6 +10742,7 @@ GAME( 1981, explorer, scramble, explorer, explorer, galaxian_state, explorer, RO
 GAME( 1981, scramblebf,scramble,scramble, scramble, galaxian_state, scramble, ROT90,  "bootleg (Karateko)",                 "Scramble (Karateko, French bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1981, scrambp,   scramble,scramble, scramble, galaxian_state, scramble, ROT90,  "bootleg (Billport S.A.)",            "Impacto (Billport S.A., Spanish bootleg of Scramble)", GAME_SUPPORTS_SAVE ) // similar to the Karateko set above
 GAME( 1981, scrampt,   scramble,scramble, scramble, galaxian_state, scramble, ROT90,  "bootleg (Petaco S.A.)",              "Scramble (Petaco S.A., Spanish bootleg)", GAME_SUPPORTS_SAVE ) // ^^
+GAME( 1981, scramrf,   scramble,scramble, scramble, galaxian_state, scramble, ROT90,  "bootleg (Recreativos Franco)",       "Scramble (Recreativos Franco, Spanish bootleg)", GAME_SUPPORTS_SAVE )
 
 
 

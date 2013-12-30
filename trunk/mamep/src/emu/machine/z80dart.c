@@ -166,13 +166,11 @@ void z80dart_device::device_config_complete()
 	{
 		m_rxca = m_txca = m_rxcb = m_txcb = 0;
 
-		memset(&m_in_rxda_cb, 0, sizeof(m_in_rxda_cb));
 		memset(&m_out_txda_cb, 0, sizeof(m_out_txda_cb));
 		memset(&m_out_dtra_cb, 0, sizeof(m_out_dtra_cb));
 		memset(&m_out_rtsa_cb, 0, sizeof(m_out_rtsa_cb));
 		memset(&m_out_wrdya_cb, 0, sizeof(m_out_wrdya_cb));
 		memset(&m_out_synca_cb, 0, sizeof(m_out_synca_cb));
-		memset(&m_in_rxdb_cb, 0, sizeof(m_in_rxdb_cb));
 		memset(&m_out_txdb_cb, 0, sizeof(m_out_txdb_cb));
 		memset(&m_out_dtrb_cb, 0, sizeof(m_out_dtrb_cb));
 		memset(&m_out_rtsb_cb, 0, sizeof(m_out_rtsb_cb));
@@ -200,7 +198,6 @@ void z80dart_device::device_start()
 	m_chanA->m_rxc = m_rxca;
 	m_chanA->m_txc = m_txca;
 
-	m_chanA->m_in_rxd_cb = m_in_rxda_cb;
 	m_chanA->m_out_txd_cb = m_out_txda_cb;
 	m_chanA->m_out_dtr_cb = m_out_dtra_cb;
 	m_chanA->m_out_rts_cb = m_out_rtsa_cb;
@@ -213,8 +210,6 @@ void z80dart_device::device_start()
 	m_chanB->m_rxc = m_rxcb;
 	m_chanB->m_txc = m_txcb;
 
-	m_chanB->m_in_rxd_cb = m_in_rxdb_cb;
-	m_chanB->m_in_rxd_cb = m_in_rxdb_cb;
 	m_chanB->m_out_txd_cb = m_out_txdb_cb;
 	m_chanB->m_out_dtr_cb = m_out_dtrb_cb;
 	m_chanB->m_out_rts_cb = m_out_rtsb_cb;
@@ -239,7 +234,6 @@ void z80dart_device::device_reset()
 	m_chanA->reset();
 	m_chanB->reset();
 }
-
 
 //-------------------------------------------------
 //  z80daisy_irq_state - get interrupt status
@@ -299,7 +293,7 @@ int z80dart_device::z80daisy_irq_ack()
 		}
 	}
 
-	logerror("z80dart_irq_ack: failed to find an interrupt to ack!\n");
+	//logerror("z80dart_irq_ack: failed to find an interrupt to ack!\n");
 
 	return m_chanB->m_rr[2];
 }
@@ -328,7 +322,7 @@ void z80dart_device::z80daisy_irq_reti()
 		}
 	}
 
-	logerror("z80dart_irq_reti: failed to find an interrupt to clear IEO on!\n");
+	//logerror("z80dart_irq_reti: failed to find an interrupt to clear IEO on!\n");
 }
 
 
@@ -510,7 +504,6 @@ void z80dart_channel::device_start()
 	m_index = m_uart->get_channel_index(this);
 
 	// resolve callbacks
-	m_in_rxd_func.resolve(m_in_rxd_cb, *m_uart);
 	m_out_txd_func.resolve(m_out_txd_cb, *m_uart);
 	m_out_dtr_func.resolve(m_out_dtr_cb, *m_uart);
 	m_out_rts_func.resolve(m_out_rts_cb, *m_uart);
@@ -566,6 +559,11 @@ void z80dart_channel::device_reset()
 	{
 		m_uart->reset_interrupts();
 	}
+}
+
+void z80dart_channel::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	device_serial_interface::device_timer(timer, id, param, ptr);
 }
 
 
@@ -650,10 +648,7 @@ void z80dart_channel::rcv_callback()
 {
 	if (m_wr[3] & WR3_RX_ENABLE)
 	{
-		if (m_in_rxd_func.isnull())
-			receive_register_update_bit(get_in_data_bit());
-		else
-			receive_register_update_bit(m_in_rxd_func());
+		receive_register_update_bit(get_in_data_bit());
 	}
 }
 
@@ -679,7 +674,7 @@ void z80dart_channel::input_callback(UINT8 state)
 
 	m_input_state = state;
 
-	if (changed & SERIAL_STATE_CTS)
+	if (changed & CTS)
 	{
 		cts_w(state);
 	}
@@ -1221,16 +1216,18 @@ WRITE_LINE_MEMBER( z80dart_channel::sync_w )
 
 WRITE_LINE_MEMBER( z80dart_channel::rxc_w )
 {
-	int clocks = get_clock_mode();
-
-	if (!state) return;
-
 	//LOG(("Z80DART \"%s\" Channel %c : Receiver Clock Pulse\n", m_owner->tag(), m_index + 'A'));
-
-	if (++m_rx_clock == clocks)
+	int clocks = get_clock_mode();
+	if (clocks == 1)
+		rx_clock_w(state);
+	else if(state)
 	{
-		m_rx_clock = 0;
-		rcv_clock();
+		rx_clock_w(m_rx_clock < clocks/2);
+
+		m_rx_clock++;
+		if (m_rx_clock == clocks)
+			m_rx_clock = 0;
+
 	}
 }
 
@@ -1241,16 +1238,18 @@ WRITE_LINE_MEMBER( z80dart_channel::rxc_w )
 
 WRITE_LINE_MEMBER( z80dart_channel::txc_w )
 {
-	int clocks = get_clock_mode();
-
-	if (!state) return;
-
 	//LOG(("Z80DART \"%s\" Channel %c : Transmitter Clock Pulse\n", m_owner->tag(), m_index + 'A'));
-
-	if (++m_tx_clock == clocks)
+	int clocks = get_clock_mode();
+	if (clocks == 1)
+		tx_clock_w(state);
+	else if(state)
 	{
-		m_tx_clock = 0;
-		tra_clock();
+		tx_clock_w(m_tx_clock < clocks/2);
+
+		m_tx_clock++;
+		if (m_tx_clock == clocks)
+			m_tx_clock = 0;
+
 	}
 }
 
@@ -1275,17 +1274,17 @@ void z80dart_channel::update_serial()
 
 	int num_data_bits = get_rx_word_length();
 	int stop_bit_count = get_stop_bits();
-	int parity_code = SERIAL_PARITY_NONE;
+	int parity_code = PARITY_NONE;
 
 	if (m_wr[1] & WR4_PARITY_ENABLE)
 	{
 		if (m_wr[1] & WR4_PARITY_EVEN)
-			parity_code = SERIAL_PARITY_EVEN;
+			parity_code = PARITY_EVEN;
 		else
-			parity_code = SERIAL_PARITY_ODD;
+			parity_code = PARITY_ODD;
 	}
 
-	set_data_frame(num_data_bits, stop_bit_count, parity_code);
+	set_data_frame(num_data_bits, stop_bit_count, parity_code, false);
 }
 
 
@@ -1300,9 +1299,9 @@ void z80dart_channel::set_dtr(int state)
 	m_out_dtr_func(m_dtr);
 
 	if (state)
-		m_connection_state &= ~SERIAL_STATE_DTR;
+		m_connection_state &= ~DTR;
 	else
-		m_connection_state |= SERIAL_STATE_DTR;
+		m_connection_state |= DTR;
 
 	serial_connection_out();
 }
@@ -1317,9 +1316,26 @@ void z80dart_channel::set_rts(int state)
 	m_out_rts_func(state);
 
 	if (state)
-		m_connection_state &= ~SERIAL_STATE_RTS;
+		m_connection_state &= ~RTS;
 	else
-		m_connection_state |= SERIAL_STATE_RTS;
+		m_connection_state |= RTS;
 
 	serial_connection_out();
+}
+
+
+//-------------------------------------------------
+//  write_rx -
+//-------------------------------------------------
+
+WRITE_LINE_MEMBER(z80dart_channel::write_rx)
+{
+	if (state)
+	{
+		input_callback(m_input_state | RX);
+	}
+	else
+	{
+		input_callback(m_input_state & ~RX);
+	}
 }

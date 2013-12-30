@@ -49,6 +49,9 @@ public:
 						int &output_samples, int &sample_rate, int &channels);
 
 
+	// Clear audio buffer
+	void clear();
+
 	// Change the base pointer
 	void set_base(const void *base);
 
@@ -93,7 +96,7 @@ private:
 
 	int current_pos, current_limit;
 
-	void read_header_amm(bool layer25);
+	bool read_header_amm(bool layer25);
 	void read_header_mpeg2(bool layer25);
 	void read_data_mpeg2();
 	void decode_mpeg2(short *output, int &output_samples);

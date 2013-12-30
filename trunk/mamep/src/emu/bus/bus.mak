@@ -287,6 +287,7 @@ endif
 ifneq ($(filter ISBX,$(BUSES)),)
 BUSOBJS += $(BUSOBJ)/isbx/isbx.o
 BUSOBJS += $(BUSOBJ)/isbx/compis_fdc.o
+BUSOBJS += $(BUSOBJ)/isbx/isbc_218a.o
 endif
 
 
@@ -301,6 +302,23 @@ BUSOBJS += $(BUSOBJ)/kc/d002.o
 BUSOBJS += $(BUSOBJ)/kc/d004.o
 BUSOBJS += $(BUSOBJ)/kc/ram.o
 BUSOBJS += $(BUSOBJ)/kc/rom.o
+endif
+
+#-------------------------------------------------
+#
+#@src/emu/bus/pc_kbd/pc_kbdc.h,BUSES += PC_KBD
+#-------------------------------------------------
+
+ifneq ($(filter PC_KBD,$(BUSES)),)
+BUSOBJS += $(BUSOBJ)/pc_kbd/pc_kbdc.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/keyboards.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/ec1841.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/iskr1030.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/keytro.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/msnat.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/pc83.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/pcat84.o
+BUSOBJS += $(BUSOBJ)/pc_kbd/pcxt83.o
 endif
 
 
@@ -512,10 +530,10 @@ endif
 
 #-------------------------------------------------
 #
-#@src/emu/bus/a2bus/nubus.h,BUSES += NUBUS
+#@src/emu/bus/nubus/nubus.h,BUSES += NUBUS
 #-------------------------------------------------
 
-ifneq ($(filter A2BUS,$(BUSES)),)
+ifneq ($(filter NUBUS,$(BUSES)),)
 BUSOBJS += $(BUSOBJ)/nubus/nubus.o
 BUSOBJS += $(BUSOBJ)/nubus/nubus_48gc.o
 BUSOBJS += $(BUSOBJ)/nubus/nubus_cb264.o

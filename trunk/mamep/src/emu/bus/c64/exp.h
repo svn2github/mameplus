@@ -167,107 +167,25 @@ public:
 	device_c64_expansion_card_interface(const machine_config &mconfig, device_t &device);
 	virtual ~device_c64_expansion_card_interface();
 
-protected:
-	// initialization
-	virtual UINT8* c64_roml_pointer(running_machine &machine, size_t size);
-	virtual UINT8* c64_romh_pointer(running_machine &machine, size_t size);
-	virtual UINT8* c64_ram_pointer(running_machine &machine, size_t size);
-	virtual UINT8* c64_nvram_pointer(running_machine &machine, size_t size);
-
-	// runtime
 	virtual UINT8 c64_cd_r(address_space &space, offs_t offset, UINT8 data, int sphi2, int ba, int roml, int romh, int io1, int io2) { return data; };
 	virtual void c64_cd_w(address_space &space, offs_t offset, UINT8 data, int sphi2, int ba, int roml, int romh, int io1, int io2) { };
 	virtual int c64_game_r(offs_t offset, int sphi2, int ba, int rw) { return m_game; }
 	virtual int c64_exrom_r(offs_t offset, int sphi2, int ba, int rw) { return m_exrom; }
 
-	c64_expansion_slot_device *m_slot;
-
-	UINT8 *m_roml;
-	UINT8 *m_romh;
-	UINT8 *m_ram;
-	UINT8 *m_nvram;
-
-	size_t m_nvram_size;
-
-	size_t m_roml_mask;
-	size_t m_romh_mask;
-	size_t m_ram_mask;
-	size_t m_nvram_mask;
+protected:
+	optional_shared_ptr<UINT8> m_roml;
+	optional_shared_ptr<UINT8> m_romh;
+	optional_shared_ptr<UINT8> m_nvram;
 
 	int m_game;
 	int m_exrom;
+
+	c64_expansion_slot_device *m_slot;
 };
 
 
 // device type definition
 extern const device_type C64_EXPANSION_SLOT;
-
-
-// slot devices
-#include "16kb.h"
-#include "c128_comal80.h"
-#include "comal80.h"
-#include "cpm.h"
-#include "currah_speech.h"
-#include "dela_ep256.h"
-#include "dela_ep64.h"
-#include "dela_ep7x8.h"
-#include "dinamic.h"
-#include "dqbb.h"
-#include "easy_calc_result.h"
-#include "easyflash.h"
-#include "epyx_fast_load.h"
-#include "exos.h"
-#include "fcc.h"
-#include "final.h"
-#include "final3.h"
-#include "fun_play.h"
-#include "georam.h"
-#include "ide64.h"
-#include "ieee488.h"
-#include "kingsoft.h"
-#include "mach5.h"
-#include "magic_desk.h"
-#include "magic_formel.h"
-#include "magic_voice.h"
-#include "midi_maplin.h"
-#include "midi_namesoft.h"
-#include "midi_passport.h"
-#include "midi_sci.h"
-#include "midi_siel.h"
-#include "mikro_assembler.h"
-#include "multiscreen.h"
-#include "music64.h"
-#include "neoram.h"
-#include "ocean.h"
-#include "pagefox.h"
-#include "partner.h"
-#include "prophet64.h"
-#include "ps64.h"
-#include "reu.h"
-#include "rex.h"
-#include "rex_ep256.h"
-#include "ross.h"
-#include "sfx_sound_expander.h"
-#include "silverrock.h"
-#include "simons_basic.h"
-#include "stardos.h"
-#include "std.h"
-#include "structured_basic.h"
-#include "super_explode.h"
-#include "super_games.h"
-#include "supercpu.h"
-#include "sw8k.h"
-#include "swiftlink.h"
-#include "system3.h"
-#include "tdos.h"
-#include "turbo232.h"
-#include "vizastar.h"
-#include "vw64.h"
-#include "warp_speed.h"
-#include "westermann.h"
-#include "xl80.h"
-#include "zaxxon.h"
 
 SLOT_INTERFACE_EXTERN( c64_expansion_cards );
 

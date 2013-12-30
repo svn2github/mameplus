@@ -14,14 +14,17 @@
 
 #define TIME_PER_SECTOR                     (attotime::from_usec(100))
 #define TIME_PER_ROTATION                   (attotime::from_hz(5400/60))
-#define TIME_MULTIPLE_SECTORS               (attotime::from_usec(1))
+#define TIME_BETWEEN_SECTORS                (attotime::from_nsec(400))
 
-#define TIME_SEEK_MULTISECTOR               (attotime::from_msec(13))
-#define TIME_NO_SEEK_MULTISECTOR            (attotime::from_nsec(16300))
+#define TIME_FULL_STROKE_SEEK               (attotime::from_usec(13000))
+#define TIME_AVERAGE_ROTATIONAL_LATENCY     (attotime::from_usec(1300))
 
 ata_mass_storage_device::ata_mass_storage_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock,const char *shortname, const char *source)
 	: ata_hle_device(mconfig, type, name, tag, owner, clock, shortname, source),
 	m_can_identify_device(0),
+	m_num_cylinders(0),
+	m_num_sectors(0),
+	m_num_heads(0),
 	m_master_password(NULL),
 	m_user_password(NULL)
 {
@@ -187,6 +190,7 @@ void ata_mass_storage_device::soft_reset()
 {
 	ata_hle_device::soft_reset();
 
+	m_cur_lba = 0;
 	m_status |= IDE_STATUS_DSC;
 
 	m_master_password_enable = (m_master_password != NULL);
@@ -338,6 +342,28 @@ void ata_mass_storage_device::security_error()
  *
  *************************************/
 
+attotime ata_mass_storage_device::seek_time()
+{
+	int sectors_per_cylinder =  m_num_heads * m_num_sectors;
+
+	if (sectors_per_cylinder == 0 || m_num_cylinders == 0)
+		return attotime::zero;
+
+	int new_lba = lba_address();
+	int old_cylinder = m_cur_lba / sectors_per_cylinder;
+	int new_cylinder = new_lba / sectors_per_cylinder;
+	int diff = abs(old_cylinder - new_cylinder);
+
+	m_cur_lba = new_lba;
+
+	if (diff == 0)
+		return TIME_BETWEEN_SECTORS;
+
+	attotime seek_time = (TIME_FULL_STROKE_SEEK * diff) / m_num_cylinders;
+
+	return seek_time + TIME_AVERAGE_ROTATIONAL_LATENCY;
+}
+
 void ata_mass_storage_device::fill_buffer()
 {
 	switch (m_command)
@@ -354,16 +380,7 @@ void ata_mass_storage_device::fill_buffer()
 		{
 			set_dasp(ASSERT_LINE);
 
-			if (m_command == IDE_COMMAND_READ_MULTIPLE)
-			{
-				if (m_sectors_until_int != 1)
-					/* make ready now */
-					finished_read();
-				else
-					start_busy(TIME_MULTIPLE_SECTORS, PARAM_COMMAND);
-			}
-			else
-				start_busy(TIME_MULTIPLE_SECTORS, PARAM_COMMAND);
+			start_busy(TIME_BETWEEN_SECTORS, PARAM_COMMAND);
 		}
 		break;
 	}
@@ -432,16 +449,7 @@ void ata_mass_storage_device::read_first_sector()
 	{
 		set_dasp(ASSERT_LINE);
 
-		/* just set a timer */
-		int new_lba = lba_address();
-		attotime seek_time;
-
-		if (new_lba == m_cur_lba || new_lba == m_cur_lba + 1)
-			start_busy(TIME_NO_SEEK_MULTISECTOR, PARAM_COMMAND);
-		else
-			start_busy(TIME_SEEK_MULTISECTOR, PARAM_COMMAND);
-
-		m_cur_lba = new_lba;
+		start_busy(seek_time(), PARAM_COMMAND);
 	}
 }
 

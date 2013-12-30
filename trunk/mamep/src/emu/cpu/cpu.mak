@@ -67,6 +67,20 @@ $(DRCOBJ): $(DRCDEPS)
 
 
 #-------------------------------------------------
+# Signetics 8X300 / Scientific Micro Systems SMS300
+#@src/emu/cpu/8x300/8x300.h,CPUS += 8X300
+#-------------------------------------------------
+
+ifneq ($(filter 8X300,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/8x300
+CPUOBJS += $(CPUOBJ)/8x300/8x300.o
+DASMOBJS += $(CPUOBJ)/8x300/8x300dasm.o
+endif
+
+$(CPUOBJ)/8x300/8x300.o:    $(CPUSRC)/8x300/8x300.c \
+							$(CPUSRC)/8x300/8x300.h
+
+#-------------------------------------------------
 # Acorn ARM series
 #
 #@src/emu/cpu/arm/arm.h,CPUS += ARM
@@ -1778,7 +1792,7 @@ $(CPUOBJ)/spc700/spc700.o:  $(CPUSRC)/spc700/spc700.c \
 
 #-------------------------------------------------
 # SSP1601
-#@src/emu/cpu/ssp1610/ssp1601.h,CPUS += SSP1601
+#@src/emu/cpu/ssp1601/ssp1601.h,CPUS += SSP1601
 #-------------------------------------------------
 
 ifneq ($(filter SSP1601,$(CPUS)),)
@@ -1787,8 +1801,8 @@ CPUOBJS += $(CPUOBJ)/ssp1601/ssp1601.o
 DASMOBJS += $(CPUOBJ)/ssp1601/ssp1601d.o
 endif
 
-$(CPUOBJ)/ssp1610/ssp1601.o:    $(CPUSRC)/ssp1601/ssp1601.c \
-								$(CPUSRC)/ssp1610/ssp1601.h
+$(CPUOBJ)/ssp1601/ssp1601.o:    $(CPUSRC)/ssp1601/ssp1601.c \
+								$(CPUSRC)/ssp1601/ssp1601.h
 
 
 
@@ -2237,7 +2251,7 @@ $(CPUOBJ)/lc8670/lc8670.o:  $(CPUSRC)/lc8670/lc8670.c \
 
 #-------------------------------------------------
 # Sega SCU DSP
-#@src/emu/cpu/,CPUS += SCUDSP
+#@src/emu/cpu/scudsp/scudsp.h,CPUS += SCUDSP
 #-------------------------------------------------
 
 ifneq ($(filter SCUDSP,$(CPUS)),)

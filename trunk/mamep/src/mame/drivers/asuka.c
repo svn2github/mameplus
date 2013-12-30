@@ -1486,6 +1486,31 @@ ROM_START( earthjkr )
 	ROM_CONTINUE(         0x10000, 0x0c000 )    /* banked stuff */
 ROM_END
 
+ROM_START( earthjkrp ) // was production PCB complete with MASK rom, could just be an early revision, not proto
+	ROM_REGION( 0x100000, "maincpu", 0 )     /* 1024k for 68000 code */
+	ROM_LOAD16_BYTE( "3.bin",  0x00001, 0x20000, CRC(26c33225) SHA1(b039c47d0776c90813ab52c867e95989cab2c567) )
+	ROM_LOAD16_BYTE( "4.bin",  0x00000, 0x20000, CRC(e9b1ef0c) SHA1(5e104146d37922a8c7e93696c2c156223653025b) )
+	/* 0x40000 - 0x7ffff is intentionally empty */
+	ROM_LOAD16_WORD( "5.bin", 0x80000, 0x80000, CRC(bf760b2d) SHA1(4aff36623e5a31ab86c77461fa93e40e77f08edd) ) /* Fix ROM */
+
+	ROM_REGION( 0x80000, "gfx1", 0 )
+	ROM_LOAD( "ej_chr.rom", 0x00000, 0x80000, CRC(ac675297) SHA1(2a34e1eae3a4be84dbf709053f5e8a781b1073fc) )    /* SCR tiles (8 x 8) */
+
+	ROM_REGION( 0xa0000, "gfx2", 0 )
+	ROM_LOAD       ( "ej_obj.rom", 0x00000, 0x80000, CRC(5f21ac47) SHA1(45c94ffb53ee9b822b0676f6fb151fed4ce6d967) ) /* Sprites (16 x 16) */
+	ROM_LOAD16_BYTE( "ej_1.rom",   0x80000, 0x10000, CRC(cb4891db) SHA1(af1112608cdd897ef6028ef617f5ca69d7964861) )
+	ROM_LOAD16_BYTE( "ej_0.rom",   0x80001, 0x10000, CRC(b612086f) SHA1(625748fcb698ec57b7b3ce46019cf85de99aaaa1) )
+
+	ROM_REGION( 0x1c000, "audiocpu", 0 )    /* sound cpu */
+	ROM_LOAD( "ej_2.rom", 0x00000, 0x04000, CRC(42ba2566) SHA1(c437388684b565c7504d6bad6accd73aa000faca) )
+	ROM_CONTINUE(         0x10000, 0x0c000 )    /* banked stuff */
+
+
+	ROM_REGION( 0x144, "pals", 0 )
+	ROM_LOAD( "b68-04.bin", 0x00000, 0x144, CRC(9be618d1) SHA1(61ee33c3db448a05ff8f455e77fe17d51106baec) )
+	ROM_LOAD( "b68-05.bin", 0x00000, 0x104, CRC(d6524ccc) SHA1(f3b56253692aebb63278d47832fc27b8b212b59c) )
+ROM_END
+
 ROM_START( eto )
 	ROM_REGION( 0x100000, "maincpu", 0 )     /* 1024k for 68000 code */
 	ROM_LOAD16_BYTE( "eto-1.23",  0x00000, 0x20000, CRC(44286597) SHA1(ac37e5edbf9d187f60232adc5e9ebed45b3d2fe2) )
@@ -1504,6 +1529,28 @@ ROM_START( eto )
 	ROM_CONTINUE(         0x10000, 0x0c000 )    /* banked stuff */
 ROM_END
 
+ROM_START( cadashp )
+	ROM_REGION( 0x80000, "maincpu", 0 )     /* 512k for 68000 code */
+	ROM_LOAD16_BYTE( "euro main h.ic11",  0x00000, 0x20000, CRC(9dae00ca) SHA1(e80a069d1afbc624fa3e9cbe9c18bcd0364b3889) )
+	ROM_LOAD16_BYTE( "euro main l.ic15",  0x00001, 0x20000, CRC(ba66b6a5) SHA1(26040c847209c2fd25805eefb99c280b12564a17) )
+	ROM_LOAD16_BYTE( "euro data h.bin",  0x40000, 0x20000, CRC(bcce9d44) SHA1(e20a79e1e1c3367f92d05a2313cbeee122c1d3c5) )
+	ROM_LOAD16_BYTE( "euro data l.bin",  0x40001, 0x20000, CRC(21f5b591) SHA1(6ff70f79bca705407ab9a4825466826bc2dbab32) )
+
+	ROM_REGION( 0x08000, "subcpu", 0 )  /* 2 machine interface mcu rom ? */
+	ROM_LOAD( "com.ic57",   0x00000, 0x08000, CRC(bae1a92f) SHA1(dbe10a02a294dfa7d6052a692c3a49aad85d6ffd) )
+
+	// all other roms are under some kind of epoxy, assuming to be the same..
+	ROM_REGION( 0x80000, "gfx1", 0 )
+	ROM_LOAD( "c21-02.9",  0x00000, 0x80000, CRC(205883b9) SHA1(5aafee8cab3f949a7db91bcc26912f331041b51e) ) /* SCR tiles (8 x 8) */
+
+	ROM_REGION( 0x80000, "gfx2", 0 )
+	ROM_LOAD( "c21-01.1",  0x00000, 0x80000, CRC(1ff6f39c) SHA1(742f296efc8073fafa73da2c8d7d26ca9514b6bf) ) /* Sprites (16 x 16) */
+
+	ROM_REGION( 0x1c000, "audiocpu", 0 )    /* sound cpu */
+	ROM_LOAD( "c21-08.38",   0x00000, 0x04000, CRC(dca495a0) SHA1(4e0f401f1b967da75f33fd7294860ad0b4bf2dce) )
+	ROM_CONTINUE(            0x10000, 0x0c000 ) /* banked stuff */
+ROM_END
+
 
 GAME( 1988, bonzeadv,  0,        bonzeadv, bonzeadv, driver_device, 0, ROT0,   "Taito Corporation Japan",   "Bonze Adventure (World, Newer)", GAME_SUPPORTS_SAVE )
 GAME( 1988, bonzeadvo, bonzeadv, bonzeadv, bonzeadv, driver_device, 0, ROT0,   "Taito Corporation Japan",   "Bonze Adventure (World, Older)", GAME_SUPPORTS_SAVE )
@@ -1518,6 +1565,8 @@ GAME( 1989, cadashu,   cadash,   cadash,   cadashu, driver_device,  0, ROT0,   "
 GAME( 1989, cadashi,   cadash,   cadash,   cadash, driver_device,   0, ROT0,   "Taito Corporation Japan",   "Cadash (Italy)", GAME_SUPPORTS_SAVE )
 GAME( 1989, cadashf,   cadash,   cadash,   cadash, driver_device,   0, ROT0,   "Taito Corporation Japan",   "Cadash (France)", GAME_SUPPORTS_SAVE )
 GAME( 1989, cadashg,   cadash,   cadash,   cadash, driver_device,   0, ROT0,   "Taito Corporation Japan",   "Cadash (Germany)", GAME_SUPPORTS_SAVE )
+GAME( 1989, cadashp,   cadash,   cadash,   cadashj, driver_device,  0, ROT0,   "Taito Corporation Japan",   "Cadash (World, prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1992, galmedes,  0,        galmedes, galmedes, driver_device, 0, ROT270, "Visco",                     "Galmedes (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1993, earthjkr,  0,        galmedes, earthjkr, driver_device, 0, ROT270, "Visco",                     "U.N. Defense Force: Earth Joker", GAME_SUPPORTS_SAVE )
+GAME( 1993, earthjkr,  0,        galmedes, earthjkr, driver_device, 0, ROT270, "Visco",                     "U.N. Defense Force: Earth Joker (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1993, earthjkrp, earthjkr, galmedes, earthjkr, driver_device, 0, ROT270, "Visco",                     "U.N. Defense Force: Earth Joker (Japan, prototype?)", GAME_SUPPORTS_SAVE )
 GAME( 1994, eto,       0,        eto,      eto, driver_device,      0, ROT0,   "Visco",                     "Kokontouzai Eto Monogatari (Japan)", GAME_SUPPORTS_SAVE )

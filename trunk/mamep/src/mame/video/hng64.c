@@ -5,7 +5,6 @@
 #define MAKE_MAME_REEEEAAALLLL_SLOW 0
 
 
-static void clear3d(running_machine &machine);  // TODO: Inline
 
 
 static void hng64_mark_all_tiles_dirty( hng64_state *state, int tilemap )
@@ -1119,6 +1118,9 @@ static void hng64_drawtilemap(screen_device &screen, bitmap_rgb32 &bitmap, const
 			   The code below could also be wrong, and rowscroll simply acts the same in all
 			   modes, this is hard to know because ss64_2 barely uses it.
 
+
+			   buriki line data is at 20146000 (physical)
+
 			*/
 
 			popmessage("Unhandled rowscroll %02x", tileregs>>12);
@@ -1522,6 +1524,7 @@ UINT32 hng64_state::screen_update_hng64(screen_device &screen, bitmap_rgb32 &bit
 	hng64_drawtilemap(screen,bitmap,cliprect, 0);
 
 	// 3d really shouldn't be last, but you don't see some cool stuff right now if it's put before sprites.
+	if(!(m_3dregs[0] & 0x1000000))
 	{
 		int x, y;
 
@@ -1633,8 +1636,8 @@ UINT32 hng64_state::screen_update_hng64(screen_device &screen, bitmap_rgb32 &bit
 void hng64_state::screen_eof_hng64(screen_device &screen, bool state)
 {
 	// rising edge
-	if (state)
-		clear3d(machine());
+	//if (state)
+	//  clear3d();
 }
 
 void hng64_state::video_start()
@@ -2514,7 +2517,7 @@ void hng64_command3d(running_machine& machine, const UINT16* packet)
 	int numPolys = 0;
 	struct polygon* polys = auto_alloc_array(machine, struct polygon, 1024*5);
 
-	//printf("packet type : %04x\n", packet[0]);
+	//printf("packet type : %04x %04x|%04x %04x|%04x %04x|%04x %04x\n", packet[0],packet[1],packet[2],packet[3],packet[4],packet[5],packet[6],packet[7]);
 	switch (packet[0])
 	{
 	case 0x0000:    // Appears to be a NOP.
@@ -2601,31 +2604,30 @@ void hng64_command3d(running_machine& machine, const UINT16* packet)
 	auto_free(machine, polys);
 }
 
-static void clear3d(running_machine &machine)
+void hng64_state::clear3d()
 {
-	hng64_state *state = machine.driver_data<hng64_state>();
 	int i;
 
-	const rectangle &visarea = machine.primary_screen->visible_area();
+	const rectangle &visarea = machine().primary_screen->visible_area();
 
 	// Clear each of the display list buffers after drawing - todo: kill!
 	for (i = 0; i < 0x81; i++)
 	{
-		state->m_dls[0][i] = 0;
-		state->m_dls[1][i] = 0;
+		m_dls[0][i] = 0;
+		m_dls[1][i] = 0;
 	}
 
 	// Reset the buffers...
 	for (i = 0; i < (visarea.max_x)*(visarea.max_y); i++)
 	{
-		state->m_depthBuffer3d[i] = 100.0f;
-		state->m_colorBuffer3d[i] = MAKE_ARGB(0, 0, 0, 0);
+		m_depthBuffer3d[i] = 100.0f;
+		m_colorBuffer3d[i] = MAKE_ARGB(0, 0, 0, 0);
 	}
 
 	// Set some matrices to the identity...
-	setIdentity(state->m_projectionMatrix);
-	setIdentity(state->m_modelViewMatrix);
-	setIdentity(state->m_cameraMatrix);
+	setIdentity(m_projectionMatrix);
+	setIdentity(m_modelViewMatrix);
+	setIdentity(m_cameraMatrix);
 }
 
 /* 3D/framebuffer video registers
@@ -2634,6 +2636,8 @@ static void clear3d(running_machine &machine)
  * UINT32 | Bits                                    | Use
  *        | 3322 2222 2222 1111 1111 11             |
  * -------+-1098-7654-3210-9876-5432-1098-7654-3210-+----------------
+ *      0 | ---- --x- ---- ---- ---- ---- ---- ---- | Reads in Fatal Fury WA, if on then there isn't a 3d refresh (busy flag?).
+ *      0 | ---- ---x ---- ---- ---- ---- ---- ---- | set at POST/service modes, almost likely fb disable
  *      0 | ???? ???? ???? ???? ccc? ???? ???? ???? | framebuffer color base, 0x311800 in Fatal Fury WA, 0x313800 in Buriki One
  *      1 |                                         |
  *      2 | ???? ???? ???? ???? ???? ???? ???? ???? | camera / framebuffer global x/y? Actively used by Samurai Shodown 64 2

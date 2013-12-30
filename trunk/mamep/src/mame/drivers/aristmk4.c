@@ -170,6 +170,9 @@
     Promoted Fortune Hunter and clone to working status, as they were in fact working for quite a while.
     Fixed ROM names for kgbird/kgbirda; 5c and 10c variants were mixed up.
 
+    11/12/13 - Lord-Data
+    Added hopper and meter outputs.
+
     ****************************************************************************
 
     When the games first power on (or when reset), they will display a TILT message on the screen. This doesn't affect gameplay, and if there are no pending errors the game should coin up and/or play immediately.
@@ -614,8 +617,37 @@ WRITE8_MEMBER(aristmk4_state::mkiv_pia_outb)
 	{
 		if(emet[i])
 		{
-		//logerror("Mechanical meter %d pulse: %02d\n",i+1, emet[i]);
-		m_samples->start(i,0); // pulse sound for mechanical meters
+			//logerror("Mechanical meter %d pulse: %02d\n",i+1, emet[i]);
+			// Output Physical Meters
+			switch(i+1)
+			{
+				case 4:
+					output_set_value("creditspendmeter", emet[i]);
+					break;
+				case 5:
+					output_set_value("creditoutmeter", emet[i]);
+					break;
+				default:
+					printf("Unhandled Mechanical meter %d pulse: %02d\n",i+1, emet[i]);
+					break;
+			}
+
+			m_samples->start(i,0); // pulse sound for mechanical meters
+		}
+		else
+		{
+			// if there is not a value set, this meter is not active, reset output to 0
+			switch(i+1)
+			{
+				case 4:
+					output_set_value("creditspendmeter", 0);
+					break;
+				case 5:
+					output_set_value("creditoutmeter", 0);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }
@@ -648,7 +680,8 @@ TIMER_CALLBACK_MEMBER(aristmk4_state::coin_input_reset)
 
 TIMER_CALLBACK_MEMBER(aristmk4_state::hopper_reset)
 {
-	m_hopper_motor=0x01;
+	m_hopper_motor = 0x01;
+	output_set_value("hopper_motor", m_hopper_motor);
 }
 
 // Port A read (SW1)
@@ -708,6 +741,7 @@ READ8_MEMBER(aristmk4_state::via_b_r)
 		ret=ret^0x40;
 		machine().scheduler().timer_set(attotime::from_msec(175), timer_expired_delegate(FUNC(aristmk4_state::hopper_reset),this));
 		m_hopper_motor=0x02;
+		output_set_value("hopper_motor", m_hopper_motor);
 		break;
 	case 0x01:
 		break; //default
@@ -831,6 +865,8 @@ WRITE8_MEMBER(aristmk4_state::via_cb2_w)
 		m_hopper_motor=data;
 	else if (m_hopper_motor<0x02)
 		m_hopper_motor=data;
+
+	output_set_value("hopper_motor", m_hopper_motor); // stop motor
 }
 
 // Lamp output
@@ -980,14 +1016,14 @@ INPUT PORTS
 static INPUT_PORTS_START(aristmk4)
 
 	PORT_START("via_port_b")
-	PORT_DIPNAME( 0x10, 0x00, "1" )
+	PORT_DIPNAME( 0x10, 0x00, "1" )                                                                                         // "COIN FAULT"
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) ) PORT_DIPLOCATION("AY:1")
-	PORT_DIPNAME( 0x20, 0x00, "2" )
+	PORT_DIPNAME( 0x20, 0x00, "2" )                                                                                         // "COIN FAULT"
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) ) PORT_DIPLOCATION("AY:2")
-	PORT_DIPNAME( 0x40, 0x40, "HOPCO1" )
-	PORT_DIPSETTING(    0x40, DEF_STR( On ) ) PORT_DIPLOCATION("AY:3")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Hopper Coin Release") PORT_CODE(KEYCODE_BACKSLASH)              // "ILLEGAL COIN PAID"
+
 	PORT_DIPNAME( 0x80, 0x00, "CBOPT1" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) ) PORT_DIPLOCATION("AY:4")
@@ -1001,8 +1037,9 @@ static INPUT_PORTS_START(aristmk4)
 	PORT_DIPNAME( 0x04, 0x00, "HOPHI2") // hopper 2 full
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) ) PORT_DIPLOCATION("5002:3")
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, "DOPTI")  // photo optic door
+	PORT_DIPNAME( 0x08, 0x00, "DOPTI")  // photo optic door                                                                         DOOR OPEN SENSE SWITCH
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_KEYIN ) PORT_NAME("Audit Key") PORT_TOGGLE PORT_CODE(KEYCODE_K) // AUDTSW
 	PORT_DIPNAME( 0x20, 0x00, "HOPLO1") // hopper 1 low
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) ) PORT_DIPLOCATION("5002:6")

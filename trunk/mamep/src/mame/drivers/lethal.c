@@ -146,6 +146,89 @@ Address          Dir Data     Name      Description
 1xxxxxxxxxxxxxxx R   xxxxxxxx PROM      program ROM
 
 
+Lethal Enforcers
+Konami 1992
+
+PCB Layout
+----------
+GX191 PWB353060A
+|--------------------------------------------------------|
+|LA4705           191A03.A4  |------|191A04.A8 191A05.A10|
+|CN6     84256     |------|  |053245A                    |
+|         18.432MHz|054539|  |      |  |------| |------| |
+| 054986A          |      |  |      |  |053244A |053244A |
+|                  |      |  |------|  |      | |      | |
+|                  |------|            |      | |      | |
+|     Z80B        191A02.F4   LH5116   |------| |------| |
+|                  LH5116                                |
+|                                        191A06.G9       |
+|                                                        |
+|                                                        |
+|J 051550                                                |
+|A                            CY7C185                    |
+|M 052535                     CY7C185                    |
+|M 052535                                                |
+|A 052535                                                |
+|                                                        |
+|                                                        |
+|                                                        |
+|                  054884     LH5116                     |
+|                             MN4464                     |
+|     005273                  MN4464   |------| |------| |
+|     005273                  MN4464   |054157| |054157| |
+| DSW(4)                      LH5116   |      | |      | |
+|      ER5911.Q2   007644     |------| |      | |      | |
+|TEST_SW           054000     |054156| |------| |------| |
+|                  MN4464     |      |                   |
+|                191UAD01.U4  |      |                   |
+|                   007324    |------|                   |
+|  CN8                              191A07.V8  191A08.V10|
+|  CN7   24MHz   HD63C09EP          191A09.X8  191A10.X10|
+|--------------------------------------------------------|
+Notes:
+      63C09EP - Clock 3.000MHz [24/8]
+      Z80B    - Clock 6.000MHz [24/4]
+      84256   - Fujitsu 84256 32kx8 SRAM (DIP28)
+      LH5116  - Sharp LH5116 2kx8 SRAM (DIP24)
+      CY7C185 - Cypress CY7C185 8kx8 SRAM (DIP28)
+      MN4464  - Panasonic MN4464 8kx8 SRAM (DIP28)
+      ER5911  - EEPROM (128 bytes)
+      CN6     - 4 pin connector for stereo sound output
+      CN7/CN8 - 4 pin connectors for standard light guns
+                Pin numbering from left to right is 4 3 2 1
+                Pin 1 - Opto
+                Pin 2 - Ground
+                Pin 3 - Trigger
+                Pin 4 - +5v
+      191*    - EPROM/mask ROM
+      LA4705  - 15W 2-channel BTL audio power AMP
+
+      Custom Chips
+      ------------
+      054000  - Collision/protection
+      007324  - Resistor array package containing eight 150 ohm resistors. The IC looks like a DIP16 logic chip
+                but with an epoxy top. The schematics show it connected to the 6309 data lines (D0-D7), main
+                8k program RAM (D0-D7) and the 054000. It is a simple resistor array (x8)
+      007644  - ? (DIP22)
+      054157  \
+      054156  / Tilemap generators
+      053244A \
+      053245A / Sprite generators
+      054539  - 8-Channel ADPCM sound generator. Clock input 18.432MHz. Clock outputs 18.432/4 & 18.432/8
+      052535  - Video DAC (one for each R,G,B video signal)
+      051550  - EMI filter for credit/coin counter
+      005273  - Resistor array for gun trigger and 1 player/2 player start
+      054884  - MMI PAL16L8
+      054986A - Audio DAC/filter + sound latch + Z80 memory mapper/banker (large ceramic SDIP64 module)
+                This module contains several surface mounted capacitors and resistors, 4558 OP amp,
+                Analog Devices AD1868 dual 18-bit audio DAC and a Konami 054321 QFP44 IC.
+
+      Sync Measurements
+      -----------------
+      HSync - 15.2038kHz
+      VSync - 59.6380Hz
+
+
 note:
 
 lethal enforcers has 2 sprite rendering chips working in parallel mixing
@@ -210,12 +293,6 @@ WRITE8_MEMBER(lethal_state::sound_irq_w)
 READ8_MEMBER(lethal_state::sound_status_r)
 {
 	return 0xf;
-}
-
-static void sound_nmi( device_t *device )
-{
-	lethal_state *state = device->machine().driver_data<lethal_state>();
-	state->m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(lethal_state::le_bankswitch_w)
@@ -460,12 +537,12 @@ static ADDRESS_MAP_START( le_main, AS_PROGRAM, 8, lethal_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( le_sound, AS_PROGRAM, 8, lethal_state )
-	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xfa2f) AM_DEVREADWRITE("k054539", k054539_device, read, write)
 	AM_RANGE(0xfc00, 0xfc00) AM_WRITE(soundlatch2_byte_w)
 	AM_RANGE(0xfc02, 0xfc02) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xfc03, 0xfc03) AM_READNOP
+	AM_RANGE(0x0000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( lethalen )
@@ -484,18 +561,18 @@ static INPUT_PORTS_START( lethalen )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, ready_read)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR(Language) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR(Language) )       PORT_DIPLOCATION("DSW:4")
 	PORT_DIPSETTING(    0x10, DEF_STR(English) )
 	PORT_DIPSETTING(    0x00, DEF_STR(Spanish) )
-	PORT_DIPNAME( 0x20, 0x00, "Game Type" )
+	PORT_DIPNAME( 0x20, 0x00, "Game Type" )         PORT_DIPLOCATION("DSW:3")
 	PORT_DIPSETTING(    0x20, "Street" )
 	PORT_DIPSETTING(    0x00, "Arcade" )
-	PORT_DIPNAME( 0x40, 0x40, "Coin Mechanism" )
+	PORT_DIPNAME( 0x40, 0x40, "Coin Mechanism" )        PORT_DIPLOCATION("DSW:2")
 	PORT_DIPSETTING(    0x40, "Common" )
 	PORT_DIPSETTING(    0x00, "Independent" )
-	PORT_DIPNAME( 0x0080, 0x0080, "Sound Output" )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Mono ) )
-	PORT_DIPSETTING(      0x0080, DEF_STR( Stereo ) )
+	PORT_DIPNAME( 0x80, 0x80, "Sound Output" )      PORT_DIPLOCATION("DSW:1")
+	PORT_DIPSETTING(    0x00, DEF_STR( Mono ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Stereo ) )
 
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_er5911_device, di_write)
@@ -515,10 +592,16 @@ static INPUT_PORTS_START( lethalen )
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, -1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(15) PORT_PLAYER(2)
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( lethalej )
+static INPUT_PORTS_START( lethalenj )
 	PORT_INCLUDE( lethalen )
 
-	PORT_MODIFY("LIGHT0_X")
+		PORT_MODIFY("DSW")  /* Normal DIPs appear to do nothing for Japan region - wrong location?  Set to unknown */
+		PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "DSW:4")
+		PORT_DIPUNKNOWN_DIPLOC( 0x20, 0x20, "DSW:3")
+		PORT_DIPUNKNOWN_DIPLOC( 0x40, 0x40, "DSW:2")
+		PORT_DIPUNKNOWN_DIPLOC( 0x80, 0x80, "DSW:1")
+
+		PORT_MODIFY("LIGHT0_X")
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(15) PORT_PLAYER(1) PORT_REVERSE
 
 	PORT_MODIFY("LIGHT0_Y")
@@ -531,6 +614,12 @@ static INPUT_PORTS_START( lethalej )
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, -1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(15) PORT_PLAYER(2) PORT_REVERSE
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( lethalene ) /* European region does not have non-english Language option */
+	PORT_INCLUDE( lethalen )
+
+	PORT_MODIFY("DSW")
+		PORT_DIPUNUSED_DIPLOC( 0x10, 0x10, "DSW:4")
+INPUT_PORTS_END
 
 static const gfx_layout lethal_6bpp =
 {
@@ -557,7 +646,6 @@ static const k054539_interface k054539_config =
 {
 	NULL,
 	NULL,
-	sound_nmi
 };
 
 void lethal_state::machine_start()
@@ -643,7 +731,6 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 
 	MCFG_PALETTE_LENGTH(7168+1)
 
-
 	MCFG_K056832_ADD("k056832", lethalen_k056832_intf)
 	MCFG_K053244_ADD("k053244", lethalen_k05324x_intf)
 	MCFG_K054000_ADD("k054000")
@@ -651,7 +738,8 @@ static MACHINE_CONFIG_START( lethalen, lethal_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_K054539_ADD("k054539", 48000, k054539_config)
+	MCFG_K054539_ADD("k054539", XTAL_18_432MHz, k054539_config)
+	MCFG_K054539_TIMER_HANDLER(INPUTLINE("soundcpu", INPUT_LINE_NMI))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -897,7 +985,7 @@ DRIVER_INIT_MEMBER(lethal_state,lethalen)
 GAME( 1992, lethalen,   0,        lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver UAE, 11/19/92 15:04)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UE to eeprom
 GAME( 1992, lethalenua, lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver unknown, US, 08/17/92 21:38)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // UAA? (writes UA to eeprom)
 GAME( 1992, lethalenux, lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver unknown, US, 08/06/92 15:11, hacked/proto?)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes UA to eeprom but earlier than suspected UAA set, might be a proto, might be hacked, fails rom test, definitely a good dump, another identical set was found in Italy
-GAME( 1992, lethaleneab,lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAB, 10/14/92 19:53)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EC to eeprom?!
-GAME( 1992, lethaleneae,lethalen, lethalen, lethalen, lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAE, 11/19/92 16:24)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EE to eeprom
+GAME( 1992, lethaleneab,lethalen, lethalen, lethalene,lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAB, 10/14/92 19:53)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EC to eeprom?!
+GAME( 1992, lethaleneae,lethalen, lethalen, lethalene,lethal_state, lethalen, ORIENTATION_FLIP_Y, "Konami", "Lethal Enforcers (ver EAE, 11/19/92 16:24)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes EE to eeprom
 // different mirror / display setup
-GAME( 1992, lethalenj,  lethalen, lethalej, lethalej, lethal_state, lethalen, ORIENTATION_FLIP_X, "Konami", "Lethal Enforcers (ver JAD, 12/04/92 17:16)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes JC to eeprom?!
+GAME( 1992, lethalenj,  lethalen, lethalej, lethalenj,lethal_state, lethalen, ORIENTATION_FLIP_X, "Konami", "Lethal Enforcers (ver JAD, 12/04/92 17:16)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // writes JC to eeprom?!

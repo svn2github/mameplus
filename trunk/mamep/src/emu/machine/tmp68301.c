@@ -6,6 +6,12 @@
     3 timers, address decoder, wait generator, interrupt controller,
     all integrated in a single chip.
 
+    TODO:
+    - Interrupt generation: handle pending / in-service mechanisms
+    - Parallel port: handle timing latency
+    - Serial port: not done at all
+    - (and many other things)
+
 ***************************************************************************/
 
 #include "emu.h"
@@ -13,8 +19,85 @@
 
 const device_type TMP68301 = &device_creator<tmp68301_device>;
 
+static ADDRESS_MAP_START( tmp68301_regs, AS_0, 16, tmp68301_device )
+//  AM_RANGE(0x000,0x3ff) AM_RAM
+	AM_RANGE(0x094,0x095) AM_READWRITE(imr_r,imr_w)
+	AM_RANGE(0x098,0x099) AM_READWRITE(iisr_r,iisr_w)
+
+	/* Parallel Port */
+	AM_RANGE(0x100,0x101) AM_READWRITE(pdir_r,pdir_w)
+	AM_RANGE(0x10a,0x10b) AM_READWRITE(pdr_r,pdr_w)
+
+	/* Serial Port */
+	AM_RANGE(0x18e,0x18f) AM_READWRITE(scr_r,scr_w)
+ADDRESS_MAP_END
+
+// IRQ Mask register, 0x94
+READ16_MEMBER(tmp68301_device::imr_r)
+{
+	return m_imr;
+}
+
+WRITE16_MEMBER(tmp68301_device::imr_w)
+{
+	COMBINE_DATA(&m_imr);
+}
+
+// IRQ In-Service Register
+READ16_MEMBER(tmp68301_device::iisr_r)
+{
+	return m_iisr;
+}
+
+WRITE16_MEMBER(tmp68301_device::iisr_w)
+{
+	COMBINE_DATA(&m_iisr);
+}
+
+// Serial Control Register (TODO: 8-bit wide)
+READ16_MEMBER(tmp68301_device::scr_r)
+{
+	return m_scr;
+}
+
+WRITE16_MEMBER(tmp68301_device::scr_w)
+{
+	/*
+	    *--- ---- CKSE
+	    --*- ---- RES
+	    ---- ---* INTM
+	*/
+
+	COMBINE_DATA(&m_scr);
+	m_scr &= 0xa1;
+}
+
+/* Parallel direction: 1 = output, 0 = input */
+READ16_MEMBER(tmp68301_device::pdir_r)
+{
+	return m_pdir;
+}
+
+WRITE16_MEMBER(tmp68301_device::pdir_w)
+{
+	m_pdir = data;
+}
+
+READ16_MEMBER(tmp68301_device::pdr_r)
+{
+	return m_in_parallel_func(0) & ~m_pdir;
+}
+
+WRITE16_MEMBER(tmp68301_device::pdr_w)
+{
+	m_out_parallel_func(0,data & m_pdir);
+}
+
+
 tmp68301_device::tmp68301_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, TMP68301, "TMP68301", tag, owner, clock, "tmp68301", __FILE__)
+	: device_t(mconfig, TMP68301, "TMP68301", tag, owner, clock, "tmp68301", __FILE__),
+		device_memory_interface(mconfig, *this),
+		m_space_config("regs", ENDIANNESS_LITTLE, 16, 10, 0, NULL, *ADDRESS_MAP_NAME(tmp68301_regs))
 {
 }
 
@@ -26,6 +109,18 @@ tmp68301_device::tmp68301_device(const machine_config &mconfig, const char *tag,
 
 void tmp68301_device::device_config_complete()
 {
+	// inherit a copy of the static data
+	const tmp68301_interface *intf = reinterpret_cast<const tmp68301_interface *>(static_config());
+	if (intf != NULL)
+		*static_cast<tmp68301_interface *>(this) = *intf;
+
+	// or defaults to 0 if none provided
+	else
+	{
+		memset(&m_in_parallel_cb, 0, sizeof(m_in_parallel_cb));
+		memset(&m_out_parallel_cb, 0, sizeof(m_out_parallel_cb));
+
+	}
 }
 
 //-------------------------------------------------
@@ -37,6 +132,9 @@ void tmp68301_device::device_start()
 	int i;
 	for (i = 0; i < 3; i++)
 		m_tmp68301_timer[i] = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(tmp68301_device::timer_callback), this));
+
+	m_in_parallel_func.resolve(m_in_parallel_cb, *this);
+	m_out_parallel_func.resolve(m_out_parallel_cb, *this);
 }
 
 //-------------------------------------------------
@@ -51,8 +149,41 @@ void tmp68301_device::device_reset()
 		m_IE[i] = 0;
 
 	machine().firstcpu->set_irq_acknowledge_callback(device_irq_acknowledge_delegate(FUNC(tmp68301_device::irq_callback),this));
+
+	m_imr = 0x7f7; // mask all irqs
 }
 
+//-------------------------------------------------
+//  memory_space_config - return a description of
+//  any address spaces owned by this device
+//-------------------------------------------------
+
+const address_space_config *tmp68301_device::memory_space_config(address_spacenum spacenum) const
+{
+	return (spacenum == AS_0) ? &m_space_config : NULL;
+}
+
+//**************************************************************************
+//  INLINE HELPERS
+//**************************************************************************
+
+//-------------------------------------------------
+//  read_byte - read a byte at the given address
+//-------------------------------------------------
+
+inline UINT16 tmp68301_device::read_word(offs_t address)
+{
+	return space(AS_0).read_word(address << 1);
+}
+
+//-------------------------------------------------
+//  write_byte - write a byte at the given address
+//-------------------------------------------------
+
+inline void tmp68301_device::write_word(offs_t address, UINT16 data)
+{
+	space(AS_0).write_word(address << 1, data);
+}
 
 IRQ_CALLBACK_MEMBER(tmp68301_device::irq_callback)
 {
@@ -65,14 +196,13 @@ TIMER_CALLBACK_MEMBER( tmp68301_device::timer_callback )
 {
 	int i = param;
 	UINT16 TCR  =   m_regs[(0x200 + i * 0x20)/2];
-	UINT16 IMR  =   m_regs[0x94/2];      // Interrupt Mask Register (IMR)
 	UINT16 ICR  =   m_regs[0x8e/2+i];    // Interrupt Controller Register (ICR7..9)
 	UINT16 IVNR =   m_regs[0x9a/2];      // Interrupt Vector Number Register (IVNR)
 
 //  logerror("s: callback timer %04X, j = %d\n",machine.describe_context(),i,tcount);
 
 	if  (   (TCR & 0x0004) &&   // INT
-			!(IMR & (0x100<<i))
+			!(m_imr & (0x100<<i))
 		)
 	{
 		int level = ICR & 0x0007;
@@ -147,13 +277,12 @@ void tmp68301_device::update_irq_state()
 
 	/* Take care of external interrupts */
 
-	UINT16 IMR  =   m_regs[0x94/2];      // Interrupt Mask Register (IMR)
 	UINT16 IVNR =   m_regs[0x9a/2];      // Interrupt Vector Number Register (IVNR)
 
 	for (i = 0; i < 3; i++)
 	{
 		if  (   (m_IE[i]) &&
-				!(IMR & (1<<i))
+				!(m_imr & (1<<i))
 			)
 		{
 			UINT16 ICR  =   m_regs[0x80/2+i];    // Interrupt Controller Register (ICR0..2)
@@ -174,12 +303,14 @@ void tmp68301_device::update_irq_state()
 
 READ16_MEMBER( tmp68301_device::regs_r )
 {
-	return m_regs[offset];
+	return read_word(offset);
 }
 
 WRITE16_MEMBER( tmp68301_device::regs_w )
 {
 	COMBINE_DATA(&m_regs[offset]);
+
+	write_word(offset,m_regs[offset]);
 
 	if (!ACCESSING_BITS_0_7)    return;
 

@@ -84,7 +84,7 @@ TODO (game-specific):
     - The House of the Dead 2: game uses an earlier PVR so it has extra gfx issues;
     - The Typing of the Dead: missing keyboard inputs, doesn't enter into attract/test mode anymore (JVS issue);
     - Virtua Tennis: dies when accessing the gameplay or the attract mode (PVR or SH-4 bug, most likely);
-    - World Kicks: MAME crashes even before showing Naomi logo;
+    - World Kicks (both sets): "NAOMIM2: unhandled board write a0800600, 0000" after Naomi logo
     (more will come up soon ...)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -338,7 +338,7 @@ Spawn In the Demon's Hand (Rev B)               841-0005C  22977B  10 (64Mb)   ?
 The Typing of the Dead (Rev A)                  840-0026C  23021A  20 (64Mb)   present  315-6213  not present
 Toy Fighter / Waffupu                           840-0011C  22035   10 (64Mb)   ?        315-6212  317-0257-COM   joystick + 3 buttons
 Virtua NBA                                      840-0021C  23073   21 (64Mb)   present  315-6213  not present
-Virtua NBA (original)                           840-0021C  23073   21 (64Mb)   ?        315-6213  not present
+Virtua NBA (original)                           840-0021C  23073   21 (64Mb)   ?        315-6213  not present    Inside Cart label 840-0021B (Outside C)
 Virtua Striker 2 Ver. 2000 (Rev C)              840-0010C  21929C  14 (64Mb)   present  315-6213  317-0258-COM   joystick + 3 buttons (+1x 32Mb)
 Virtua Tennis / Power Smash                     840-0015C  22927   11 (64Mb)   present  315-6213  317-0263-COM
 Zombie Revenge                                  840-0003C  21707   19 (64Mb)   ?        315-6213  317-0249-COM   joystick + 3 buttons
@@ -3948,6 +3948,27 @@ ROM_START( gram2000 )
 	ROM_LOAD( "gram2000-key.bin", 0, 4, CRC(179314d9) SHA1(3dbbc04e9ff62800d08c4a239af3a83252a28dc0) )
 ROM_END
 
+ROM_START( tduno )
+	NAOMI_BIOS
+
+	ROM_REGION16_BE( 0x80, "main_eeprom", 0 )
+	ROM_LOAD16_WORD("main_eeprom.bin", 0x0000, 0x0080, CRC(fea29cbb) SHA1(4099f1747aafa07db34f6e072cd9bfaa83bae10e) )
+
+	ROM_REGION( 0x4000000, "rom_board", ROMREGION_ERASEFF)
+	ROM_LOAD( "epr-22073.ic22", 0x0000000, 0x200000, CRC(dbeee93c) SHA1(95a761aa07b231f36e1656f46d3a711a4eea0210) )
+	ROM_LOAD( "mpr-22074.ic1",  0x0800000, 0x800000, CRC(fd6070a4) SHA1(8fb01c39e5deb002401b971aa415f7d7e220134d) )
+	ROM_LOAD( "mpr-22075.ic2",  0x1000000, 0x800000, CRC(4c11d298) SHA1(d4edfd2a2c81dd45356ee53de27a86e04a13011b) )
+	ROM_LOAD( "mpr-22076.ic3",  0x1800000, 0x800000, CRC(e4c98898) SHA1(c13c842874a9266a7bd5856f298687e0f8c07fc1) )
+	ROM_LOAD( "mpr-22077.ic4",  0x2000000, 0x400000, CRC(f33d7620) SHA1(82c3e2bb6feed68670798efa3e17c9f6d6d0070a) )
+
+	// on-cart X76F100 eeprom contents
+	ROM_REGION( 0x84, "naomibd_eeprom", 0 )
+	ROM_LOAD( "x76f100.ic37", 0x000000, 0x000084, CRC(c79251d5) SHA1(3e70bbbb6d28bade7eec7e27d716463045656f98) )
+
+	ROM_REGION( 4, "rom_key", 0 )
+	ROM_LOAD( "tduno.key",    0x000000, 0x000004, CRC(217ce9d0) SHA1(39d71a84b2769cd0c1521ddf1c617c18f577020c) )
+ROM_END
+
 ROM_START( tduno2 )
 	NAOMI_BIOS
 	NAOMI_DEFAULT_EEPROM
@@ -5603,6 +5624,29 @@ ROM_START( wldkicks )
 	ROM_REGION( 0xb000000, "rom_board", ROMREGION_ERASEFF)
 	ROM_LOAD( "wk1fl1.2d",   0x0400000, 0x0400000, CRC(f833a543) SHA1(328b64f2790bfd0b63168a8a3175227e083b995d) )
 	ROM_LOAD( "wk1fl2.2c",   0x0c00000, 0x0400000, CRC(20ee71b0) SHA1(074e0c531e8770b0efd6464193bce7a284a3c057) )
+	ROM_LOAD( "wk1ma2.4m",   0x1000000, 0x1000000, CRC(650590ec) SHA1(bb9d5d5df2321df24ee0fb9e8bf2757d5277f8ea) )
+	ROM_RELOAD( 0x800000, 0x400000)
+	ROM_LOAD( "wk1ma3.4l",   0x2000000, 0x1000000, CRC(3b340dc0) SHA1(2412e41d5bd74d1233fb91f8ce2276a318bfc53d) )
+	ROM_LOAD( "wk1ma4.4k",   0x3000000, 0x1000000, CRC(263fbb16) SHA1(b5d3a3d085f9623d70030ca3c49afb84e25549e3) )
+	ROM_LOAD( "wk1ma5.4j",   0x4000000, 0x1000000, CRC(9697db68) SHA1(7926e2acff0519403afcba9bdb5f68de28b06c79) )
+	ROM_LOAD( "wk1ma6.4h",   0x5000000, 0x1000000, CRC(65017db3) SHA1(a66cd73cdfc9355df63da781a46aa832889f583a) )
+	ROM_LOAD( "wk1ma7.4f",   0x6000000, 0x1000000, CRC(902eea85) SHA1(aa7964eb85b468d4fe112f9f0faaf2fa3f1aa96b) )
+	ROM_LOAD( "wk1ma8.4e",   0x7000000, 0x1000000, CRC(90e917ed) SHA1(53d32ce0ae2b05fa55a95b8697927045d07f4e8a) )
+	ROM_LOAD( "wk1ma9.4d",   0x8000000, 0x1000000, CRC(1d227a05) SHA1(9f816bcdf0279785e0b37ab2f3c5eb5912114dd5) )
+	ROM_LOAD( "wk1ma10.4c",  0x9000000, 0x1000000, CRC(29635a54) SHA1(a3109d0f8f271e2183316846df2a6a819f6a9b20) )
+	ROM_LOAD( "wk1ma11.4b",  0xa000000, 0x1000000, CRC(e96f312c) SHA1(0a92640277111aef5c6e9dab4218a8ae2196ce61) )
+
+	ROM_REGION( 4, "rom_key", 0 )
+	ROM_LOAD( "wldkicks-key.bin", 0, 4, CRC(c1e3000b) SHA1(36c2546833effe9452e2b3f7d31335fc5e349f49) )
+ROM_END
+
+ROM_START( wldkicksa )
+	NAOMI_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+	ROM_REGION( 0xb000000, "rom_board", ROMREGION_ERASEFF)
+	ROM_LOAD( "wk3vera_fl1.2d", 0x0400000, 0x800000, CRC(cfdd5c5d) SHA1(ffc5d38edb600462574d4ed8ce5ada8625d59c74) )
+	ROM_LOAD( "wk3vera_fl2.2c", 0x0c00000, 0x800000, CRC(ad2577d5) SHA1(f7b6bab001c5f5cf0b33a70cd0dfdca8f7d25921) )
 	ROM_LOAD( "wk1ma2.4m",   0x1000000, 0x1000000, CRC(650590ec) SHA1(bb9d5d5df2321df24ee0fb9e8bf2757d5277f8ea) )
 	ROM_RELOAD( 0x800000, 0x400000)
 	ROM_LOAD( "wk1ma3.4l",   0x2000000, 0x1000000, CRC(3b340dc0) SHA1(2412e41d5bd74d1233fb91f8ce2276a318bfc53d) )
@@ -8109,7 +8153,7 @@ ROM_END
 /* 0004 */ GAME( 1999, ringout,  naomi,    naomim2, naomi,   naomi_state, naomi,   ROT0, "Sega", "Ring Out 4x4", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0005 */ GAME( 1999, alpilota, naomi,    naomim2, alpilota,naomi_state, naomi,   ROT0, "Sega", "Airline Pilots (Rev A)", GAME_FLAGS ) /* specific BIOS "airlbios" needed */
 /* 0007 */ GAME( 1999, ggram2,   naomi,    naomim2, naomi,   naomi_state, naomi,   ROT0, "Sega", "Giant Gram: All Japan Pro Wrestling 2 (JPN, USA, EXP, KOR, AUS)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
-// 0008 Touch de Uno!
+/* 0008 */ GAME( 1999, tduno,    naomi,    naomim2, naomi,   naomi_state, naomi,   ROT0, "Sega", "Touch de Uno!", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0010 */ GAME( 1999, vs2_2k,   naomi,    naomim2, naomi,   naomi_state, naomi,   ROT0, "Sega", "Virtua Striker 2 Ver. 2000 (JPN, USA, EXP, KOR, AUS) (Rev C)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0011 */ GAME( 1999, toyfight, naomi,    naomim2, naomi,   naomi_state, naomi,   ROT0, "Sega", "Toy Fighter", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0012 */ GAME( 1999, smlg99,   naomi,    naomim2, dybbnao, naomi_state, naomi,   ROT0, "Sega", "Super Major League '99", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
@@ -8206,6 +8250,7 @@ ROM_END
 
 /* Cart games on Namco custom ROM board */
 /* 25209801 */ GAME( 2000, wldkicks, naomi,   naomim2,naomi, naomi_state, naomi, ROT0, "Capcom / Namco", "World Kicks (WK2 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
+/* 25209801 */ GAME( 2000, wldkicksa,wldkicks,naomim2,naomi, naomi_state, naomi, ROT0, "Capcom / Namco", "World Kicks (WK3 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 25349801 */ GAME( 2000, toukon4,  naomi,   naomim2,naomi, naomi_state, naomi, ROT0, "Capcom / Namco", "Shin Nihon Pro Wrestling Toukon Retsuden 4 Arcade Edition (TRF1 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 // 25469801 Ninja Assault (NJA1 Ver. A)
 // 25469801 Ninja Assault (NJA2 Ver. A)

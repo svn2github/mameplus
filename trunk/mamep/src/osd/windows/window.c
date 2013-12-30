@@ -1195,6 +1195,9 @@ static int complete_create(win_window_info *window)
 	if (window->hwnd == NULL)
 		return 1;
 
+	// set window #0 as the focus window for all windows, required for D3D & multimonitor
+	window->focus_hwnd = win_window_list->hwnd;
+
 	// set a pointer back to us
 	SetWindowLongPtr(window->hwnd, GWLP_USERDATA, (LONG_PTR)window);
 
@@ -1360,15 +1363,17 @@ LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wpar
 		// syscommands: catch win_start_maximized
 		case WM_SYSCOMMAND:
 		{
+			UINT16 cmd = wparam & 0xfff0;
+
 			// prevent screensaver or monitor power events
-			if (wparam == SC_MONITORPOWER || wparam == SC_SCREENSAVE)
+			if (cmd == SC_MONITORPOWER || cmd == SC_SCREENSAVE)
 				return 1;
 
 			// most SYSCOMMANDs require us to invalidate the window
 			InvalidateRect(wnd, NULL, FALSE);
 
 			// handle maximize
-			if ((wparam & 0xfff0) == SC_MAXIMIZE)
+			if (cmd == SC_MAXIMIZE)
 			{
 				update_minmax_state(window);
 				if (window->ismaximized)

@@ -60,7 +60,6 @@ struct mc2661_interface
 	int m_rxc;
 	int m_txc;
 
-	devcb_read_line     m_in_rxd_cb;
 	devcb_write_line    m_out_txd_cb;
 
 	devcb_write_line    m_out_rxrdy_cb;
@@ -86,9 +85,6 @@ public:
 	DECLARE_READ8_MEMBER( read );
 	DECLARE_WRITE8_MEMBER( write );
 
-	DECLARE_WRITE_LINE_MEMBER( rxc_w );
-	DECLARE_WRITE_LINE_MEMBER( txc_w );
-
 	DECLARE_WRITE_LINE_MEMBER( dsr_w );
 	DECLARE_WRITE_LINE_MEMBER( dcd_w );
 	DECLARE_WRITE_LINE_MEMBER( cts_w );
@@ -96,11 +92,14 @@ public:
 	DECLARE_READ_LINE_MEMBER( rxrdy_r );
 	DECLARE_READ_LINE_MEMBER( txemt_r );
 
+	DECLARE_WRITE_LINE_MEMBER( rx_w ) { m_signal = state; device_serial_interface::rx_w(state); }
+
 protected:
 	// device-level overrides
 	virtual void device_config_complete();
 	virtual void device_start();
 	virtual void device_reset();
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
 	// device_serial_interface overrides
 	virtual void tra_callback();
@@ -127,6 +126,7 @@ private:
 	UINT8 m_sr;
 	UINT8 m_mr[2];
 	UINT8 m_sync[3];
+	UINT8 m_signal;
 
 	int m_mode_index;
 	int m_sync_index;

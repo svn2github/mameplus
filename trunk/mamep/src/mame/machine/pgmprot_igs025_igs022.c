@@ -312,8 +312,26 @@ static const UINT8 dw3_source_data[0x08][0xec] =
 
 MACHINE_RESET_MEMBER(pgm_022_025_state,killbld)
 {
+	int region = (ioport(":Region")->read()) & 0xff;
+
+	m_igs025->m_kb_region = region - 0x16;
+	m_igs025->m_kb_game_id = 0x89911400 | region;
+
 	MACHINE_RESET_CALL_MEMBER(pgm);
 }
+
+MACHINE_RESET_MEMBER(pgm_022_025_state, dw3)
+{
+	int region = (ioport(":Region")->read()) & 0xff;
+
+	m_igs025->m_kb_region = region;
+	m_igs025->m_kb_game_id = 0x00060000 | region;
+
+	MACHINE_RESET_CALL_MEMBER(pgm);
+}
+
+
+
 
 void pgm_022_025_state::igs025_to_igs022_callback( void )
 {
@@ -332,8 +350,6 @@ DRIVER_INIT_MEMBER(pgm_022_025_state,killbld)
 	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xd40000, 0xd40003, read16_delegate(FUNC(igs025_device::killbld_igs025_prot_r), (igs025_device*)m_igs025), write16_delegate(FUNC(igs025_device::killbld_igs025_prot_w), (igs025_device*)m_igs025));
 	m_igs022->m_sharedprotram = m_sharedprotram;
 	m_igs025->m_kb_source_data = killbld_source_data;
-	m_igs025->m_kb_source_data_offset = 0x16;
-	m_igs025->m_kb_game_id = 0x89911400;
 }
 
 DRIVER_INIT_MEMBER(pgm_022_025_state,drgw3)
@@ -345,8 +361,6 @@ DRIVER_INIT_MEMBER(pgm_022_025_state,drgw3)
 	m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0xda5610, 0xda5613, read16_delegate(FUNC(igs025_device::killbld_igs025_prot_r), (igs025_device*)m_igs025), write16_delegate(FUNC(igs025_device::killbld_igs025_prot_w), (igs025_device*)m_igs025));
 	m_igs022->m_sharedprotram = m_sharedprotram;
 	m_igs025->m_kb_source_data = dw3_source_data;
-	m_igs025->m_kb_source_data_offset = 0;
-	m_igs025->m_kb_game_id = 0x00060000;
 }
 
 
@@ -368,7 +382,14 @@ MACHINE_CONFIG_START( pgm_022_025, pgm_022_025_state )
 
 	MCFG_DEVICE_ADD("igs022", IGS022, 0)
 
-	MCFG_MACHINE_RESET_OVERRIDE(pgm_022_025_state,killbld)
+MACHINE_CONFIG_END
+
+MACHINE_CONFIG_DERIVED(pgm_022_025_dw3, pgm_022_025)
+	MCFG_MACHINE_RESET_OVERRIDE(pgm_022_025_state, dw3)
+MACHINE_CONFIG_END
+
+MACHINE_CONFIG_DERIVED(pgm_022_025_killbld, pgm_022_025)
+	MCFG_MACHINE_RESET_OVERRIDE(pgm_022_025_state, killbld)
 MACHINE_CONFIG_END
 
 

@@ -5016,7 +5016,7 @@ ROM_START( ffightj )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, CRC(6d86b45e) SHA1(2b27646adaf1ca2f58e14754d6f7ef4fdca77fbe) )
 	ROM_LOAD( "lwio.12c",     0x0000, 0x0117, CRC(ad52b90c) SHA1(f0fd6aeea515ee449320fe15684e6b3ab7f97bf4) )    // pal & position verification required
 ROM_END
 
@@ -5066,7 +5066,7 @@ ROM_START( ffightj1 )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, CRC(6d86b45e) SHA1(2b27646adaf1ca2f58e14754d6f7ef4fdca77fbe) )
 	ROM_LOAD( "lwio.12e",     0x0000, 0x0117, CRC(ad52b90c) SHA1(f0fd6aeea515ee449320fe15684e6b3ab7f97bf4) )
 ROM_END
 
@@ -5116,7 +5116,7 @@ ROM_START( ffightj2 )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, CRC(6d86b45e) SHA1(2b27646adaf1ca2f58e14754d6f7ef4fdca77fbe) )
 	ROM_LOAD( "lwio.12c",     0x0000, 0x0117, CRC(ad52b90c) SHA1(f0fd6aeea515ee449320fe15684e6b3ab7f97bf4) )
 ROM_END
 
@@ -5166,7 +5166,7 @@ ROM_START( ffightj3 )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s222b.1a",     0x0000, 0x0117, CRC(6d86b45e) SHA1(2b27646adaf1ca2f58e14754d6f7ef4fdca77fbe) )
 	ROM_LOAD( "lwio.12e",     0x0000, 0x0117, CRC(ad52b90c) SHA1(f0fd6aeea515ee449320fe15684e6b3ab7f97bf4) )    // pal verification required
 ROM_END
 
@@ -6235,7 +6235,7 @@ ROM_START( sf2ee )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
 	ROM_LOAD( "stf29.1a",     0x0000, 0x0117, CRC(043309c5) SHA1(f6b9610c9f896c495041ba56a654776a521c356b) )
-	ROM_LOAD( "iob2.11d",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "iob2.11d",     0x0000, 0x0117, CRC(d26f0a27) SHA1(22bb5647ff98df22fd19ae079ff98b9d100855f9) )
 
 	ROM_REGION( 0x0200, "cboardplds", 0 )
 	ROM_LOAD( "c632b.ic1",    0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )    // == c632.ic1
@@ -6482,7 +6482,7 @@ ROM_START( sf2ue )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
 	ROM_LOAD( "stf29.1a",     0x0000, 0x0117, CRC(043309c5) SHA1(f6b9610c9f896c495041ba56a654776a521c356b) )
-	ROM_LOAD( "iob2.11d",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "iob2.11d",     0x0000, 0x0117, CRC(d26f0a27) SHA1(22bb5647ff98df22fd19ae079ff98b9d100855f9) )
 
 	ROM_REGION( 0x0200, "cboardplds", 0 )
 	ROM_LOAD( "c632b.ic1",    0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )    // == c632.ic1
@@ -8230,7 +8230,6 @@ ROM_START( knightsja )
 	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 ROM_END
 
-
 /* B-Board 91635B-2 */
 ROM_START( sf2ce )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
@@ -8268,7 +8267,7 @@ ROM_START( sf2ce )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8314,7 +8313,7 @@ ROM_START( sf2ceea )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8360,7 +8359,7 @@ ROM_START( sf2ceua )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8406,7 +8405,7 @@ ROM_START( sf2ceub )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8452,7 +8451,7 @@ ROM_START( sf2ceuc )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8498,7 +8497,7 @@ ROM_START( sf2ceja )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8544,7 +8543,7 @@ ROM_START( sf2cejb )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8590,7 +8589,7 @@ ROM_START( sf2cejc )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -8638,7 +8637,7 @@ ROM_START( sf2bhh )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -9886,7 +9885,7 @@ ROM_START( sf2hf )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -9932,7 +9931,7 @@ ROM_START( sf2hfu )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -9978,7 +9977,7 @@ ROM_START( sf2hfj )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "s9263b.1a",    0x0000, 0x0117, CRC(0a7ecfe0) SHA1(f75e7eed4604fcf68273197fe3dd7f0d7a313ada) )
 	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
 
@@ -10039,7 +10038,7 @@ ROM_END
 ROM_START( dinou )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "cdu_23a.8f", 0x000000, 0x80000, CRC(7c2543cd) SHA1(6b7a90392fe4c31b2d57620b0ddcb3412401efc3) )
-	ROM_LOAD16_WORD_SWAP( "cdu_22a.7f", 0x080000, 0x80000, CRC(fab740a9) SHA1(149cec3fa5e1d6e39bcaf079274d47fe768c910b) )
+	ROM_LOAD16_WORD_SWAP( "cdu_22a.7f", 0x080000, 0x80000, CRC(d19f981e) SHA1(acb951caba3867c21149286185b94beb37721bd2) )
 	ROM_LOAD16_WORD_SWAP( "cdu_21a.6f", 0x100000, 0x80000, CRC(66d23de2) SHA1(19b8a365f630411d524d055459020f4c8cf930f1) )   // == cde_21a.6f
 
 	ROM_REGION( 0x400000, "gfx", 0 )
@@ -10837,7 +10836,7 @@ ROM_START( pang3 )
 	ROM_REGION( 0x0200, "bboardplds", 0 )
 	ROM_LOAD( "cp1b1f.1f",    0x0000, 0x0117, CRC(3979b8e3) SHA1(07c9819d68b4d93bc37b96bd15d689ce54fe034e) )
 	ROM_LOAD( "cp1b8k.8k",    0x0000, 0x0117, CRC(8a52ea7a) SHA1(47a59abc54a83292cfd6faa2d293c8f948c7ea03) )
-	ROM_LOAD( "cp1b9ka.9k",   0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "cp1b9ka.9k",   0x0000, 0x0117, CRC(238d3ff4) SHA1(597f429d6a0ea485746322592604188c1ec87595) )
 
 	ROM_REGION( 0x0200, "cboardplds", 0 )
 	ROM_LOAD( "ioc1.ic7",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
@@ -12896,12 +12895,12 @@ GAME( 1992, sf2accp2,    sf2ce,    cps1_12MHz, sf2,      cps_state,   cps1,     
 GAME( 1992, sf2amf,      sf2ce,    cps1_12MHz, sf2amf,   cps_state,   cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )     // 920313 - based on World version
 GAME( 1992, sf2dkot2,    sf2ce,    cps1_12MHz, sf2,      cps_state,   cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Double K.O. Turbo II, bootleg)", GAME_SUPPORTS_SAVE ) // 902140 !!! - based on USA version
 GAME( 1992, sf2m2,       sf2ce,    cps1_12MHz, sf2m2,    cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M2, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on World version
-GAME( 1992, sf2m3,       sf2ce,    sf2m3,      sf2hack,  cps_state,   cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on USA version
+GAME( 1992, sf2m3,       sf2ce,    sf2m3,      sf2,      cps_state,   cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on USA version
 GAME( 1992, sf2m4,       sf2ce,    cps1_12MHz, sf2m4,    cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M4, bootleg)", GAME_SUPPORTS_SAVE )               // 920322 - based on Japan version
 GAME( 1992, sf2m5,       sf2ce,    cps1_12MHz, sf2hack,  cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M5, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on World version
 GAME( 1992, sf2m6,       sf2ce,    cps1_12MHz, sf2hack,  cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M6, bootleg)", GAME_SUPPORTS_SAVE )               // 811102 !!! - based on World version
 GAME( 1992, sf2m7,       sf2ce,    cps1_12MHz, sf2hack,  cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M7, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on World version
-GAME( 1992, sf2m8,       sf2ce,    sf2m3,      sf2hack,  cps_state,   sf2m8,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M8, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on USA version
+GAME( 1992, sf2m8,       sf2ce,    sf2m3,      sf2,      cps_state,   sf2m8,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M8, bootleg)", GAME_SUPPORTS_SAVE )               // 920313 - based on USA version
 GAME( 1992, sf2yyc,      sf2ce,    cps1_12MHz, sf2hack,  cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (YYC, bootleg)", GAME_SUPPORTS_SAVE )              // 920313 - based on World version
 GAME( 1992, sf2koryu,    sf2ce,    cps1_12MHz, sf2hack,  cps_state,   sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (Xiang Long, Chinese bootleg)", GAME_SUPPORTS_SAVE )       // 811102 !!! - based on World version
 GAME( 1992, sf2dongb,    sf2ce,    cps1_12MHz, sf2,      cps_state,   sf2dongb, ROT0,   "bootleg", "Street Fighter II': Champion Edition (Dongfang Bubai protection, bootleg)", GAME_SUPPORTS_SAVE ) // 920313 - based on World version

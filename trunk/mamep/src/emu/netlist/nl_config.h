@@ -27,8 +27,6 @@
 // Next if enabled adds 20% performance ... but is not guaranteed to be absolutely timing correct.
 #define USE_DEACTIVE_DEVICE     (0)
 
-#define OUTPUT_MAX_CONNECTIONS  (48)
-
 // Use nano-second resolution - Sufficient for now
 #define NETLIST_INTERNAL_RES        (U64(1000000000))
 #define NETLIST_DIV_BITS            (0)
@@ -38,34 +36,38 @@
 #define NETLIST_MASK                (NETLIST_DIV-1)
 #define NETLIST_CLOCK               (NETLIST_INTERNAL_RES / NETLIST_DIV)
 
+//FIXME: LEGACY
 #define NETLIST_HIGHIMP_V   (1.23456e20)        /* some voltage we should never see */
 
+#define NETLIST_GMIN    (1e-9)
+
 typedef UINT8 netlist_sig_t;
-
-/* FIXME: We need a different solution to output delegates !
- * More something like a callback object
- */
-
-typedef delegate<void (const double)> netlist_output_delegate;
 
 //============================================================
 //  DEBUGGING
 //============================================================
 
-#define NL_VERBOSE                 (0)
-#define NL_KEEP_STATISTICS         (0)
-#define FATAL_ERROR_AFTER_NS     (0) //(1000)
+#define fatalerror xxbreakme
+
+#define NL_VERBOSE                  (0)
+#define NL_KEEP_STATISTICS          (0)
+#define FATAL_ERROR_AFTER_NS        (0) //(1000)
 
 #if (NL_VERBOSE)
-	#define NL_VERBOSE_OUT(x)      printf x
+	#define NL_VERBOSE_OUT(x)       printf x
 #else
-	#define NL_VERBOSE_OUT(x)
+	#define NL_VERBOSE_OUT(x)       do { } while (0)
 #endif
 
 //============================================================
 //  MACROS
 //============================================================
 
+// prevent implicit copying
+#define NETLIST_PREVENT_COPYING(_name)          \
+	private:                                    \
+		_name(const _name &);                   \
+		_name &operator=(const _name &);
 #if NL_KEEP_STATISTICS
 #define add_to_stat(v,x)        do { v += (x); } while (0)
 #define inc_stat(v)             add_to_stat(v, 1)

@@ -65,6 +65,11 @@ void wd_fdc_t::device_start()
 
 void wd_fdc_t::device_reset()
 {
+	soft_reset();
+}
+
+void wd_fdc_t::soft_reset()
+{
 	command = 0x00;
 	main_state = IDLE;
 	sub_state = IDLE;
@@ -1071,7 +1076,7 @@ void wd_fdc_t::ready_callback(floppy_image_device *floppy, int state)
 	if(!ready_hooked)
 		return;
 
-	if(!intrq && (((intrq_cond & I_RDY) && state) || ((intrq_cond & I_NRDY) && !state))) {
+	if(!intrq && (((intrq_cond & I_RDY) && !state) || ((intrq_cond & I_NRDY) && state))) {
 		intrq = true;
 		if(!intrq_cb.isnull())
 			intrq_cb(intrq);
@@ -1460,6 +1465,10 @@ void wd_fdc_t::live_run(attotime limit)
 			set_drq();
 
 			if(cur_live.bit_counter == 16*6) {
+				if(cur_live.crc) {
+					status |= S_CRC;
+				}
+
 				// Already synchronous
 				cur_live.state = IDLE;
 				return;

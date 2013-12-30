@@ -97,6 +97,11 @@ Notes:
 //**************************************************************************
 
 const device_type LUXOR_55_21046 = &device_creator<luxor_55_21046_device>;
+const device_type ABC830 = &device_creator<abc830_device>;
+const device_type ABC832 = &device_creator<abc832_device>;
+const device_type ABC834 = &device_creator<abc834_device>;
+const device_type ABC838 = &device_creator<abc838_device>;
+const device_type ABC850_FLOPPY = &device_creator<abc850_floppy_device>;
 
 
 //-------------------------------------------------
@@ -146,14 +151,14 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( luxor_55_21046_io, AS_IO, 8, luxor_55_21046_device )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x08, 0x08) AM_MIRROR(0xff07) AM_READ(out_r)
-	AM_RANGE(0x18, 0x18) AM_MIRROR(0xff07) AM_WRITE(inp_w)
-	AM_RANGE(0x28, 0x28) AM_MIRROR(0xff07) AM_WRITE(_4b_w)
-	AM_RANGE(0x38, 0x38) AM_MIRROR(0xff07) AM_WRITE(_9b_w)
-	AM_RANGE(0x48, 0x48) AM_MIRROR(0xff07) AM_WRITE(_8a_w)
-	AM_RANGE(0x58, 0x58) AM_MIRROR(0xff07) AM_MASK(0xff00) AM_READ(_9a_r)
-	AM_RANGE(0x68, 0x6b) AM_MIRROR(0xff04) AM_DEVREAD(SAB1793_TAG, fd1793_t, read)
-	AM_RANGE(0x78, 0x7b) AM_MIRROR(0xff04) AM_DEVWRITE(SAB1793_TAG, fd1793_t, write)
+	AM_RANGE(0x0c, 0x0c) AM_MIRROR(0xff03) AM_READ(out_r)
+	AM_RANGE(0x1c, 0x1c) AM_MIRROR(0xff03) AM_WRITE(inp_w)
+	AM_RANGE(0x2c, 0x2c) AM_MIRROR(0xff03) AM_WRITE(_4b_w)
+	AM_RANGE(0x3c, 0x3c) AM_MIRROR(0xff03) AM_WRITE(_9b_w)
+	AM_RANGE(0x4c, 0x4c) AM_MIRROR(0xff03) AM_WRITE(_8a_w)
+	AM_RANGE(0x5c, 0x5c) AM_MIRROR(0xff07) AM_MASK(0xff00) AM_READ(_9a_r)
+	AM_RANGE(0x68, 0x6b) AM_MIRROR(0xff00) AM_DEVREAD(SAB1793_TAG, fd1793_t, read)
+	AM_RANGE(0x78, 0x7b) AM_MIRROR(0xff00) AM_DEVWRITE(SAB1793_TAG, fd1793_t, write)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0xff77) AM_DEVREADWRITE(Z80DMA_TAG, z80dma_device, read, write)
 ADDRESS_MAP_END
 
@@ -261,11 +266,16 @@ static Z80DMA_INTERFACE( dma_intf )
 //  wd17xx_interface fdc_intf
 //-------------------------------------------------
 
+FLOPPY_FORMATS_MEMBER( luxor_55_21046_device::floppy_formats )
+	FLOPPY_ABC800_FORMAT
+FLOPPY_FORMATS_END
+
 static SLOT_INTERFACE_START( abc_floppies )
 	SLOT_INTERFACE( "525sssd", FLOPPY_525_SSSD )
 	SLOT_INTERFACE( "525sd", FLOPPY_525_SD )
 	SLOT_INTERFACE( "525ssdd", FLOPPY_525_SSDD )
 	SLOT_INTERFACE( "525dd", FLOPPY_525_DD )
+	SLOT_INTERFACE( "525qd", FLOPPY_525_QD )
 	SLOT_INTERFACE( "8dsdd", FLOPPY_8_DSDD )
 SLOT_INTERFACE_END
 
@@ -284,19 +294,68 @@ void luxor_55_21046_device::fdc_drq_w(bool state)
 
 
 //-------------------------------------------------
-//  MACHINE_DRIVER( luxor_55_21046 )
+//  z80_daisy_config z80_daisy_chain
+//-------------------------------------------------
+
+static const z80_daisy_config z80_daisy_chain[] =
+{
+	{ Z80DMA_TAG },
+	{ NULL }
+};
+
+
+//-------------------------------------------------
+//  MACHINE_CONFIG( luxor_55_21046 )
 //-------------------------------------------------
 
 static MACHINE_CONFIG_FRAGMENT( luxor_55_21046 )
 	MCFG_CPU_ADD(Z80_TAG, Z80, XTAL_16MHz/4)
+	MCFG_CPU_CONFIG(z80_daisy_chain)
 	MCFG_CPU_PROGRAM_MAP(luxor_55_21046_mem)
 	MCFG_CPU_IO_MAP(luxor_55_21046_io)
 
 	MCFG_Z80DMA_ADD(Z80DMA_TAG, XTAL_16MHz/4, dma_intf)
 	MCFG_FD1793x_ADD(SAB1793_TAG, XTAL_16MHz/16)
+MACHINE_CONFIG_END
 
-	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":0", abc_floppies, "525dd", floppy_image_device::default_floppy_formats)
-	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":1", abc_floppies, "525dd", floppy_image_device::default_floppy_formats)
+
+//-------------------------------------------------
+//  MACHINE_CONFIG( abc830 )
+//-------------------------------------------------
+
+static MACHINE_CONFIG_DERIVED( abc830, luxor_55_21046 )
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":0", abc_floppies, "525ssdd", luxor_55_21046_device::floppy_formats)
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":1", abc_floppies, "525ssdd", luxor_55_21046_device::floppy_formats)
+MACHINE_CONFIG_END
+
+
+//-------------------------------------------------
+//  MACHINE_CONFIG( abc832 )
+//-------------------------------------------------
+
+static MACHINE_CONFIG_DERIVED( abc832, luxor_55_21046 )
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":0", abc_floppies, "525qd", luxor_55_21046_device::floppy_formats)
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":1", abc_floppies, "525qd", luxor_55_21046_device::floppy_formats)
+MACHINE_CONFIG_END
+
+
+//-------------------------------------------------
+//  MACHINE_CONFIG( abc838 )
+//-------------------------------------------------
+
+static MACHINE_CONFIG_DERIVED( abc838, luxor_55_21046 )
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":0", abc_floppies, "8dsdd", luxor_55_21046_device::floppy_formats)
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":1", abc_floppies, "8dsdd", luxor_55_21046_device::floppy_formats)
+MACHINE_CONFIG_END
+
+
+//-------------------------------------------------
+//  MACHINE_CONFIG( abc850 )
+//-------------------------------------------------
+
+static MACHINE_CONFIG_DERIVED( abc850, luxor_55_21046 )
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":0", abc_floppies, "525qd", luxor_55_21046_device::floppy_formats)
+	MCFG_FLOPPY_DRIVE_ADD(SAB1793_TAG":1", abc_floppies, NULL, luxor_55_21046_device::floppy_formats)
 MACHINE_CONFIG_END
 
 
@@ -310,6 +369,31 @@ machine_config_constructor luxor_55_21046_device::device_mconfig_additions() con
 	return MACHINE_CONFIG_NAME( luxor_55_21046 );
 }
 
+machine_config_constructor abc830_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( abc830 );
+}
+
+machine_config_constructor abc832_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( abc832 );
+}
+
+machine_config_constructor abc834_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( abc832 );
+}
+
+machine_config_constructor abc838_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( abc838 );
+}
+
+machine_config_constructor abc850_floppy_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( abc850 );
+}
+
 
 //-------------------------------------------------
 //  INPUT_PORTS( luxor_55_21046 )
@@ -321,31 +405,31 @@ INPUT_PORTS_START( luxor_55_21046 )
 	PORT_DIPNAME( 0x0f, 0x00, DEF_STR( Unused ) ) PORT_DIPLOCATION("SW1:1,2,3,4") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2e)
 	PORT_DIPSETTING(    0x00, DEF_STR( Unused ) ) PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2e)
 	// ABC 830
-	PORT_DIPNAME( 0x01, 0x00, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2d)
-	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
-	PORT_DIPSETTING(    0x01, "Double" )
-	PORT_DIPNAME( 0x02, 0x00, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2d)
-	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
-	PORT_DIPSETTING(    0x02, "Double" )
+	PORT_DIPNAME( 0x01, 0x01, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2d)
+	PORT_DIPSETTING(    0x01, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x02, 0x02, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2d)
+	PORT_DIPSETTING(    0x02, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
 	PORT_DIPNAME( 0x04, 0x00, "Drive 0 Density" ) PORT_DIPLOCATION("SW1:3") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2d)
-	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
-	PORT_DIPSETTING(    0x04, "Double" )
+	PORT_DIPSETTING(    0x04, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
 	PORT_DIPNAME( 0x08, 0x00, "Drive 1 Density" ) PORT_DIPLOCATION("SW1:4") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2d)
-	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
-	PORT_DIPSETTING(    0x08, "Double" )
+	PORT_DIPSETTING(    0x08, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
 	// ABC 832/834/850
-	PORT_DIPNAME( 0x01, 0x01, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
-	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
-	PORT_DIPSETTING(    0x01, "Double" )
-	PORT_DIPNAME( 0x02, 0x02, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
-	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
-	PORT_DIPSETTING(    0x02, "Double" )
-	PORT_DIPNAME( 0x04, 0x00, "Drive 0 Tracks" ) PORT_DIPLOCATION("SW1:3") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
-	PORT_DIPSETTING(    0x00, "80" )
-	PORT_DIPSETTING(    0x04, "40" )
-	PORT_DIPNAME( 0x08, 0x00, "Drive 1 Tracks" ) PORT_DIPLOCATION("SW1:4") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
-	PORT_DIPSETTING(    0x00, "80" )
-	PORT_DIPSETTING(    0x08, "40" )
+	PORT_DIPNAME( 0x01, 0x00, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
+	PORT_DIPSETTING(    0x01, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x02, 0x00, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
+	PORT_DIPSETTING(    0x02, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x04, 0x04, "Drive 0 Tracks" ) PORT_DIPLOCATION("SW1:3") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x04, "80" )
+	PORT_DIPNAME( 0x08, 0x08, "Drive 1 Tracks" ) PORT_DIPLOCATION("SW1:4") PORT_CONDITION("SW3", 0x7f, EQUALS, 0x2c)
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x08, "80" )
 
 	PORT_START("SW2")
 	PORT_DIPNAME( 0x0f, 0x01, "Drive Type" ) PORT_DIPLOCATION("SW2:1,2,3,4")
@@ -361,9 +445,249 @@ INPUT_PORTS_START( luxor_55_21046 )
 
 	PORT_START("SW3")
 	PORT_DIPNAME( 0x7f, 0x2c, "Card Address" ) PORT_DIPLOCATION("SW3:1,2,3,4,5,6,7")
-	PORT_DIPSETTING(    0x2c, "44 (ABC 832/834/850)" )
-	PORT_DIPSETTING(    0x2d, "45 (ABC 830)" )
-	PORT_DIPSETTING(    0x2e, "46 (ABC 838)" )
+	PORT_DIPSETTING(    0x2c, "44 (ABC 832/834/850)" ) // MF0: MF1:
+	PORT_DIPSETTING(    0x2d, "45 (ABC 830)" ) // MO0: MO1:
+	PORT_DIPSETTING(    0x2e, "46 (ABC 838)" ) // SF0: SF1:
+
+	PORT_START("S1") // also S3,S5
+	PORT_DIPNAME( 0x01, 0x01, "Interface Type" )
+	PORT_DIPSETTING(    0x00, "ABC 1600" )
+	PORT_DIPSETTING(    0x01, "ABC 80/800/802/806" )
+
+	PORT_START("S6")
+	PORT_DIPNAME( 0x01, 0x01, "RAM Size" )
+	PORT_DIPSETTING(    0x00, "2 KB" )
+	PORT_DIPSETTING(    0x01, "8 KB" )
+
+	PORT_START("S8")
+	PORT_DIPNAME( 0x01, 0x01, "Drive Type" )
+	PORT_DIPSETTING(    0x00, "8\"" )
+	PORT_DIPSETTING(    0x01, "5.25\"" )
+
+	PORT_START("S9")
+	PORT_DIPNAME( 0x01, 0x01, "RDY Pin" )
+	PORT_DIPSETTING(    0x00, "P2-6 (8\")" )
+	PORT_DIPSETTING(    0x01, "P2-34 (5.25\")" )
+INPUT_PORTS_END
+
+
+//-------------------------------------------------
+//  INPUT_PORTS( abc830 )
+//-------------------------------------------------
+
+INPUT_PORTS_START( abc830 )
+	PORT_START("SW1")
+	PORT_DIPNAME( 0x01, 0x01, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(    0x01, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x02, 0x02, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2")
+	PORT_DIPSETTING(    0x02, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x04, 0x00, "Drive 0 Density" ) PORT_DIPLOCATION("SW1:3")
+	PORT_DIPSETTING(    0x04, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x08, 0x00, "Drive 1 Density" ) PORT_DIPLOCATION("SW1:4")
+	PORT_DIPSETTING(    0x08, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+
+	PORT_START("SW2")
+	PORT_DIPNAME( 0x0f, 0x08, "Drive Type" ) PORT_DIPLOCATION("SW2:1,2,3,4")
+	PORT_DIPSETTING(    0x08, "BASF 6106/08" )
+	PORT_DIPSETTING(    0x09, "MPI 51" )
+
+	PORT_START("SW3")
+	PORT_DIPNAME( 0x7f, 0x2d, "Card Address" ) PORT_DIPLOCATION("SW3:1,2,3,4,5,6,7")
+	PORT_DIPSETTING(    0x2d, "45" )
+
+	PORT_START("S1") // also S3,S5
+	PORT_DIPNAME( 0x01, 0x01, "Interface Type" )
+	PORT_DIPSETTING(    0x00, "ABC 1600" )
+	PORT_DIPSETTING(    0x01, "ABC 80/800/802/806" )
+
+	PORT_START("S6")
+	PORT_DIPNAME( 0x01, 0x01, "RAM Size" )
+	PORT_DIPSETTING(    0x00, "2 KB" )
+	PORT_DIPSETTING(    0x01, "8 KB" )
+
+	PORT_START("S8")
+	PORT_DIPNAME( 0x01, 0x01, "Drive Type" )
+	PORT_DIPSETTING(    0x00, "8\"" )
+	PORT_DIPSETTING(    0x01, "5.25\"" )
+
+	PORT_START("S9")
+	PORT_DIPNAME( 0x01, 0x01, "RDY Pin" )
+	PORT_DIPSETTING(    0x00, "P2-6 (8\")" )
+	PORT_DIPSETTING(    0x01, "P2-34 (5.25\")" )
+INPUT_PORTS_END
+
+
+//-------------------------------------------------
+//  INPUT_PORTS( abc832 )
+//-------------------------------------------------
+
+INPUT_PORTS_START( abc832 )
+	PORT_START("SW1")
+	PORT_DIPNAME( 0x01, 0x00, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(    0x01, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x02, 0x00, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2")
+	PORT_DIPSETTING(    0x02, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x04, 0x04, "Drive 0 Tracks" ) PORT_DIPLOCATION("SW1:3")
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x04, "80" )
+	PORT_DIPNAME( 0x08, 0x08, "Drive 1 Tracks" ) PORT_DIPLOCATION("SW1:4")
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x08, "80" )
+
+	PORT_START("SW2")
+	PORT_DIPNAME( 0x0f, 0x04, "Drive Type" ) PORT_DIPLOCATION("SW2:1,2,3,4")
+	PORT_DIPSETTING(    0x03, "Micropolis 1015F" )
+	PORT_DIPSETTING(    0x04, "BASF 6118" )
+	PORT_DIPSETTING(    0x05, "Micropolis 1115F" )
+
+	PORT_START("SW3")
+	PORT_DIPNAME( 0x7f, 0x2c, "Card Address" ) PORT_DIPLOCATION("SW3:1,2,3,4,5,6,7")
+	PORT_DIPSETTING(    0x2c, "44" )
+
+	PORT_START("S1") // also S3,S5
+	PORT_DIPNAME( 0x01, 0x01, "Interface Type" )
+	PORT_DIPSETTING(    0x00, "ABC 1600" )
+	PORT_DIPSETTING(    0x01, "ABC 80/800/802/806" )
+
+	PORT_START("S6")
+	PORT_DIPNAME( 0x01, 0x01, "RAM Size" )
+	PORT_DIPSETTING(    0x00, "2 KB" )
+	PORT_DIPSETTING(    0x01, "8 KB" )
+
+	PORT_START("S8")
+	PORT_DIPNAME( 0x01, 0x01, "Drive Type" )
+	PORT_DIPSETTING(    0x00, "8\"" )
+	PORT_DIPSETTING(    0x01, "5.25\"" )
+
+	PORT_START("S9")
+	PORT_DIPNAME( 0x01, 0x01, "RDY Pin" )
+	PORT_DIPSETTING(    0x00, "P2-6 (8\")" )
+	PORT_DIPSETTING(    0x01, "P2-34 (5.25\")" )
+INPUT_PORTS_END
+
+
+//-------------------------------------------------
+//  INPUT_PORTS( abc834 )
+//-------------------------------------------------
+
+INPUT_PORTS_START( abc834 )
+	PORT_START("SW1")
+	PORT_DIPNAME( 0x01, 0x00, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(    0x01, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x02, 0x00, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2")
+	PORT_DIPSETTING(    0x02, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x00, "Double" )
+	PORT_DIPNAME( 0x04, 0x04, "Drive 0 Tracks" ) PORT_DIPLOCATION("SW1:3")
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x04, "80" )
+	PORT_DIPNAME( 0x08, 0x08, "Drive 1 Tracks" ) PORT_DIPLOCATION("SW1:4")
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x08, "80" )
+
+	PORT_START("SW2")
+	PORT_DIPNAME( 0x0f, 0x01, "Drive Type" ) PORT_DIPLOCATION("SW2:1,2,3,4")
+	PORT_DIPSETTING(    0x01, "TEAC FD55F" )
+
+	PORT_START("SW3")
+	PORT_DIPNAME( 0x7f, 0x2c, "Card Address" ) PORT_DIPLOCATION("SW3:1,2,3,4,5,6,7")
+	PORT_DIPSETTING(    0x2c, "44" )
+
+	PORT_START("S1") // also S3,S5
+	PORT_DIPNAME( 0x01, 0x01, "Interface Type" )
+	PORT_DIPSETTING(    0x00, "ABC 1600" )
+	PORT_DIPSETTING(    0x01, "ABC 80/800/802/806" )
+
+	PORT_START("S6")
+	PORT_DIPNAME( 0x01, 0x01, "RAM Size" )
+	PORT_DIPSETTING(    0x00, "2 KB" )
+	PORT_DIPSETTING(    0x01, "8 KB" )
+
+	PORT_START("S8")
+	PORT_DIPNAME( 0x01, 0x01, "Drive Type" )
+	PORT_DIPSETTING(    0x00, "8\"" )
+	PORT_DIPSETTING(    0x01, "5.25\"" )
+
+	PORT_START("S9")
+	PORT_DIPNAME( 0x01, 0x01, "RDY Pin" )
+	PORT_DIPSETTING(    0x00, "P2-6 (8\")" )
+	PORT_DIPSETTING(    0x01, "P2-34 (5.25\")" )
+INPUT_PORTS_END
+
+
+//-------------------------------------------------
+//  INPUT_PORTS( abc838 )
+//-------------------------------------------------
+
+INPUT_PORTS_START( abc838 )
+	PORT_START("SW1")
+	PORT_DIPNAME( 0x0f, 0x00, DEF_STR( Unused ) ) PORT_DIPLOCATION("SW1:1,2,3,4")
+	PORT_DIPSETTING(    0x00, DEF_STR( Unused ) )
+
+	PORT_START("SW2")
+	PORT_DIPNAME( 0x0f, 0x0e, "Drive Type" ) PORT_DIPLOCATION("SW2:1,2,3,4")
+	PORT_DIPSETTING(    0x0e, "BASF 6105" )
+	PORT_DIPSETTING(    0x0f, "BASF 6106" )
+
+	PORT_START("SW3")
+	PORT_DIPNAME( 0x7f, 0x2e, "Card Address" ) PORT_DIPLOCATION("SW3:1,2,3,4,5,6,7")
+	PORT_DIPSETTING(    0x2e, "46" )
+
+	PORT_START("S1") // also S3,S5
+	PORT_DIPNAME( 0x01, 0x01, "Interface Type" )
+	PORT_DIPSETTING(    0x00, "ABC 1600" )
+	PORT_DIPSETTING(    0x01, "ABC 80/800/802/806" )
+
+	PORT_START("S6")
+	PORT_DIPNAME( 0x01, 0x01, "RAM Size" )
+	PORT_DIPSETTING(    0x00, "2 KB" )
+	PORT_DIPSETTING(    0x01, "8 KB" )
+
+	PORT_START("S8")
+	PORT_DIPNAME( 0x01, 0x00, "Drive Type" )
+	PORT_DIPSETTING(    0x00, "8\"" )
+	PORT_DIPSETTING(    0x01, "5.25\"" )
+
+	PORT_START("S9")
+	PORT_DIPNAME( 0x01, 0x00, "RDY Pin" )
+	PORT_DIPSETTING(    0x00, "P2-6 (8\")" )
+	PORT_DIPSETTING(    0x01, "P2-34 (5.25\")" )
+INPUT_PORTS_END
+
+
+//-------------------------------------------------
+//  INPUT_PORTS( abc850 )
+//-------------------------------------------------
+
+INPUT_PORTS_START( abc850 )
+	PORT_START("SW1")
+	PORT_DIPNAME( 0x01, 0x01, "Drive 0 Sides" ) PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x01, "Double" )
+	PORT_DIPNAME( 0x02, 0x02, "Drive 1 Sides" ) PORT_DIPLOCATION("SW1:2")
+	PORT_DIPSETTING(    0x00, DEF_STR( Single ) )
+	PORT_DIPSETTING(    0x02, "Double" )
+	PORT_DIPNAME( 0x04, 0x04, "Drive 0 Tracks" ) PORT_DIPLOCATION("SW1:3")
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x04, "80" )
+	PORT_DIPNAME( 0x08, 0x08, "Drive 1 Tracks" ) PORT_DIPLOCATION("SW1:4")
+	PORT_DIPSETTING(    0x00, "40" )
+	PORT_DIPSETTING(    0x08, "80" )
+
+	PORT_START("SW2")
+	PORT_DIPNAME( 0x0f, 0x02, "Drive Type" ) PORT_DIPLOCATION("SW2:1,2,3,4")
+	PORT_DIPSETTING(    0x01, "TEAC FD55F" )
+	PORT_DIPSETTING(    0x02, "BASF 6138" )
+
+	PORT_START("SW3")
+	PORT_DIPNAME( 0x7f, 0x2c, "Card Address" ) PORT_DIPLOCATION("SW3:1,2,3,4,5,6,7")
+	PORT_DIPSETTING(    0x2c, "44" )
 
 	PORT_START("S1") // also S3,S5
 	PORT_DIPNAME( 0x01, 0x01, "Interface Type" )
@@ -396,6 +720,31 @@ ioport_constructor luxor_55_21046_device::device_input_ports() const
 	return INPUT_PORTS_NAME( luxor_55_21046 );
 }
 
+ioport_constructor abc830_device::device_input_ports() const
+{
+	return INPUT_PORTS_NAME( abc830 );
+}
+
+ioport_constructor abc832_device::device_input_ports() const
+{
+	return INPUT_PORTS_NAME( abc832 );
+}
+
+ioport_constructor abc834_device::device_input_ports() const
+{
+	return INPUT_PORTS_NAME( abc834 );
+}
+
+ioport_constructor abc838_device::device_input_ports() const
+{
+	return INPUT_PORTS_NAME( abc838 );
+}
+
+ioport_constructor abc850_floppy_device::device_input_ports() const
+{
+	return INPUT_PORTS_NAME( abc850 );
+}
+
 
 
 //**************************************************************************
@@ -423,6 +772,51 @@ luxor_55_21046_device::luxor_55_21046_device(const machine_config &mconfig, cons
 		m_dma_irq(0),
 		m_busy(0),
 		m_force_busy(0)
+{
+}
+
+luxor_55_21046_device::luxor_55_21046_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
+	: device_t(mconfig, type, name, tag, owner, clock, shortname, source),
+		device_abcbus_card_interface(mconfig, *this),
+		m_maincpu(*this, Z80_TAG),
+		m_dma(*this, Z80DMA_TAG),
+		m_fdc(*this, SAB1793_TAG),
+		m_floppy0(*this, SAB1793_TAG":0"),
+		m_floppy1(*this, SAB1793_TAG":1"),
+		m_floppy(NULL),
+		m_sw1(*this, "SW1"),
+		m_sw2(*this, "SW2"),
+		m_sw3(*this, "SW3"),
+		m_cs(false),
+		m_fdc_irq(0),
+		m_dma_irq(0),
+		m_busy(0),
+		m_force_busy(0)
+{
+}
+
+abc830_device::abc830_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: luxor_55_21046_device(mconfig, ABC830, "ABC 830", tag, owner, clock, "lux21046", __FILE__)
+{
+}
+
+abc832_device::abc832_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: luxor_55_21046_device(mconfig, ABC832, "ABC 832", tag, owner, clock, "lux21046", __FILE__)
+{
+}
+
+abc834_device::abc834_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: luxor_55_21046_device(mconfig, ABC834, "ABC 834", tag, owner, clock, "lux21046", __FILE__)
+{
+}
+
+abc838_device::abc838_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: luxor_55_21046_device(mconfig, ABC838, "ABC 838", tag, owner, clock, "lux21046", __FILE__)
+{
+}
+
+abc850_floppy_device::abc850_floppy_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: luxor_55_21046_device(mconfig, ABC850_FLOPPY, "ABC 850 floppy", tag, owner, clock, "lux21046", __FILE__)
 {
 }
 
@@ -457,6 +851,8 @@ void luxor_55_21046_device::device_reset()
 {
 	m_cs = false;
 	m_out = 0;
+
+	m_maincpu->reset();
 
 	address_space &space = m_maincpu->space(AS_PROGRAM);
 	_4b_w(space, 0, 0);
@@ -577,7 +973,7 @@ void luxor_55_21046_device::abcbus_c3(UINT8 data)
 {
 	if (m_cs)
 	{
-		m_maincpu->reset();
+		device_reset();
 	}
 }
 
@@ -722,21 +1118,19 @@ WRITE8_MEMBER( luxor_55_21046_device::_8a_w )
 	*/
 
 	// FDC master reset
-	if (!BIT(data, 0)) m_fdc->reset();
+	if (!BIT(data, 0)) m_fdc->soft_reset();
 
 	// density select
 	m_fdc->dden_w(BIT(data, 1));
 
-	/*
 	if (BIT(data, 2))
 	{
-	    m_fdc->set_unscaled_clock(XTAL_16MHz/16);
+		m_fdc->set_unscaled_clock(XTAL_16MHz/16);
 	}
 	else
 	{
-	    m_fdc->set_unscaled_clock(XTAL_16MHz/8);
+		m_fdc->set_unscaled_clock(XTAL_16MHz/8);
 	}
-	*/
 }
 
 
@@ -786,63 +1180,3 @@ READ8_MEMBER( luxor_55_21046_device::_9a_r )
 
 	return data ^ 0xff;
 }
-
-
-
-//**************************************************************************
-//  LUXOR 55 21046 DEVICE INPUT DEFAULTS
-//**************************************************************************
-
-//-------------------------------------------------
-//  DEVICE_INPUT_DEFAULTS( abc830_fast_intf )
-//-------------------------------------------------
-
-DEVICE_INPUT_DEFAULTS_START( abc830_fast )
-	DEVICE_INPUT_DEFAULTS("SW1", 0x0f, 0x03)
-	DEVICE_INPUT_DEFAULTS("SW2", 0x0f, DRIVE_BASF_6106_08)
-	DEVICE_INPUT_DEFAULTS("SW3", 0x7f, ADDRESS_ABC830)
-DEVICE_INPUT_DEFAULTS_END
-
-
-//-------------------------------------------------
-//  DEVICE_INPUT_DEFAULTS( abc832_fast )
-//-------------------------------------------------
-
-DEVICE_INPUT_DEFAULTS_START( abc832_fast )
-	DEVICE_INPUT_DEFAULTS("SW1", 0x0f, 0x03)
-	DEVICE_INPUT_DEFAULTS("SW2", 0x0f, DRIVE_TEAC_FD55F)
-	DEVICE_INPUT_DEFAULTS("SW3", 0x7f, ADDRESS_ABC832)
-DEVICE_INPUT_DEFAULTS_END
-
-
-//-------------------------------------------------
-//  DEVICE_INPUT_DEFAULTS( abc834_fast )
-//-------------------------------------------------
-
-DEVICE_INPUT_DEFAULTS_START( abc834_fast )
-	DEVICE_INPUT_DEFAULTS("SW1", 0x0f, 0x03)
-	DEVICE_INPUT_DEFAULTS("SW2", 0x0f, DRIVE_TEAC_FD55F)
-	DEVICE_INPUT_DEFAULTS("SW3", 0x7f, ADDRESS_ABC832)
-DEVICE_INPUT_DEFAULTS_END
-
-
-//-------------------------------------------------
-//  DEVICE_INPUT_DEFAULTS( abc838_fast )
-//-------------------------------------------------
-
-DEVICE_INPUT_DEFAULTS_START( abc838_fast )
-	DEVICE_INPUT_DEFAULTS("SW1", 0x0f, 0x03)
-	DEVICE_INPUT_DEFAULTS("SW2", 0x0f, DRIVE_BASF_6105)
-	DEVICE_INPUT_DEFAULTS("SW3", 0x7f, ADDRESS_ABC838)
-DEVICE_INPUT_DEFAULTS_END
-
-
-//-------------------------------------------------
-//  DEVICE_INPUT_DEFAULTS( abc850_fast )
-//-------------------------------------------------
-
-DEVICE_INPUT_DEFAULTS_START( abc850_fast )
-	DEVICE_INPUT_DEFAULTS("SW1", 0x0f, 0x03)
-	DEVICE_INPUT_DEFAULTS("SW2", 0x0f, DRIVE_BASF_6138)
-	DEVICE_INPUT_DEFAULTS("SW3", 0x7f, ADDRESS_ABC830)
-DEVICE_INPUT_DEFAULTS_END

@@ -383,6 +383,15 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/machine/ds1204.h,MACHINES += DS1204
+#-------------------------------------------------
+
+ifneq ($(filter DS1204,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/ds1204.o
+endif
+
+#-------------------------------------------------
+#
 #@src/emu/machine/ds1302.h,MACHINES += DS1302
 #-------------------------------------------------
 
@@ -1022,14 +1031,18 @@ endif
 #-------------------------------------------------
 #
 #@src/emu/machine/nscsi_bus.h,MACHINES += NSCSI
+#@src/emu/machine/nscsi_cb.h,MACHINES += NSCSI
 #@src/emu/machine/nscsi_cd.h,MACHINES += NSCSI
 #@src/emu/machine/nscsi_hd.h,MACHINES += NSCSI
+#@src/emu/machine/nscsi_s1410.h,MACHINES += NSCSI
 #-------------------------------------------------
 
 ifneq ($(filter NSCSI,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/nscsi_bus.o
+MACHINEOBJS += $(MACHINEOBJ)/nscsi_cb.o
 MACHINEOBJS += $(MACHINEOBJ)/nscsi_cd.o
 MACHINEOBJS += $(MACHINEOBJ)/nscsi_hd.o
+MACHINEOBJS += $(MACHINEOBJ)/nscsi_s1410.o
 endif
 
 #-------------------------------------------------
@@ -1372,6 +1385,16 @@ endif
 
 #-------------------------------------------------
 #
+#@src/emu/machine/upd4992.h,MACHINES += UPD4992
+#-------------------------------------------------
+
+ifneq ($(filter UPD4992,$(MACHINES)),)
+MACHINEOBJS += $(MACHINEOBJ)/upd4992.o
+endif
+
+
+#-------------------------------------------------
+#
 #@src/emu/machine/upd4701.h,MACHINES += UPD4701
 #-------------------------------------------------
 
@@ -1468,7 +1491,6 @@ endif
 #-------------------------------------------------
 
 ifneq ($(filter X76F041,$(MACHINES)),)
-MACHINES += SECFLASH
 MACHINEOBJS += $(MACHINEOBJ)/x76f041.o
 endif
 
@@ -1478,7 +1500,6 @@ endif
 #-------------------------------------------------
 
 ifneq ($(filter X76F100,$(MACHINES)),)
-MACHINES += SECFLASH
 MACHINEOBJS += $(MACHINEOBJ)/x76f100.o
 endif
 
@@ -1543,15 +1564,6 @@ endif
 
 ifneq ($(filter Z8536,$(MACHINES)),)
 MACHINEOBJS += $(MACHINEOBJ)/z8536.o
-endif
-
-#-------------------------------------------------
-#
-#@src/emu/machine/secflash.h,MACHINES += SECFLASH
-#-------------------------------------------------
-
-ifneq ($(filter SECFLASH,$(MACHINES)),)
-MACHINEOBJS += $(MACHINEOBJ)/secflash.o
 endif
 
 #-------------------------------------------------

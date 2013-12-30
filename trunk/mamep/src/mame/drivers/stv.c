@@ -46,7 +46,6 @@
 #include "sound/scsp.h"
 #include "sound/cdda.h"
 #include "sound/dmadac.h"
-#include "machine/stvprot.h"
 #include "machine/smpc.h"
 #include "includes/stv.h"
 #include "imagedev/chd_cd.h"
@@ -667,7 +666,7 @@ DRIVER_INIT_MEMBER(stv_state,astrass)
 	sh2drc_add_pcflush(m_maincpu, 0x60011ba);
 	sh2drc_add_pcflush(m_maincpu, 0x605b9da);
 
-	install_astrass_protection(machine());
+	install_astrass_protection();
 
 	DRIVER_INIT_CALL(stv);
 }
@@ -761,7 +760,7 @@ DRIVER_INIT_MEMBER(stv_state,sss)
 	sh2drc_add_pcflush(m_maincpu, 0x6026398);
 	sh2drc_add_pcflush(m_slave, 0x6028cd6);
 
-	install_sss_protection(machine());
+	install_sss_protection();
 
 	DRIVER_INIT_CALL(stv);
 
@@ -824,7 +823,7 @@ DRIVER_INIT_MEMBER(stv_state,twcup98)
 	sh2drc_add_pcflush(m_slave, 0x6062bca);
 
 	DRIVER_INIT_CALL(stv);
-	install_twcup98_protection(machine());
+	install_twcup98_protection();
 
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(5);
 }
@@ -881,7 +880,7 @@ DRIVER_INIT_MEMBER(stv_state,elandore)
 	sh2drc_add_pcflush(m_maincpu, 0x604eac0);
 	sh2drc_add_pcflush(m_slave, 0x605340a);
 
-	install_elandore_protection(machine());
+	install_elandore_protection();
 
 	DRIVER_INIT_CALL(stv);
 	m_minit_boost_timeslice = m_sinit_boost_timeslice = attotime::from_usec(0);
@@ -892,7 +891,7 @@ DRIVER_INIT_MEMBER(stv_state,rsgun)
 	sh2drc_add_pcflush(m_maincpu, 0x6034d04);
 	sh2drc_add_pcflush(m_slave, 0x6036152);
 
-	install_rsgun_protection(machine());
+	install_rsgun_protection();
 
 	DRIVER_INIT_CALL(stv);
 
@@ -901,13 +900,16 @@ DRIVER_INIT_MEMBER(stv_state,rsgun)
 
 DRIVER_INIT_MEMBER(stv_state,ffreveng)
 {
-	install_ffreveng_protection(machine());
+	install_ffreveng_protection();
 	DRIVER_INIT_CALL(stv);
 }
 
 DRIVER_INIT_MEMBER(stv_state,decathlt)
 {
-	install_decathlt_protection(machine());
+	m_decathlt_lastcount = 0;
+	m_decathlt_prot_uploadmode = 0;
+	m_decathlt_prot_uploadoffset = 0;
+	install_decathlt_protection();
 	DRIVER_INIT_CALL(stv);
 }
 
@@ -1332,7 +1334,7 @@ MACHINE_START_MEMBER(stv_state,stv)
 	save_item(NAME(m_mux_data));
 	save_item(NAME(m_scsp_last_line));
 
-	stv_register_protection_savestates(machine()); // machine/stvprot.c
+	stv_register_protection_savestates(); // machine/stvprot.c
 
 	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(stv_state::stvcd_exit), this));
 

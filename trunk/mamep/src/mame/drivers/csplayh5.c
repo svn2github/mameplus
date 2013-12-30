@@ -1,19 +1,27 @@
 // license:MAME
 // copyright-holders:Angelo Salese
-/***************************************************************************
+/***********************************************************************************************************
 
     'High Rate DVD' HW (c) 1998 Nichibutsu
 
     preliminary driver by Angelo Salese
 
     TODO:
-    - rewrite v9938/v9958 video chip;
     - fix h8 CPU core bugs, it trips various unhandled opcodes
     - Implement DVD routing and YUV decoding;
     - game timings seem busted, could be due of missing DVD hook-up
     - csplayh1: inputs doesn't work at all, slower than the others too
+    - h8 type is almost likely to be wrong;
 
-***************************************************************************/
+    DVD Notes:
+    - TMP68301 communicates with h8 via their respective internal serial comms
+    - First command is a "?P<CR>", which, according to the Pioneer V5000 protocol manual
+      is an Active Mode request. Manual is at:
+      http://www.pioneerelectronics.com/ephox/StaticFiles/Manuals/Business/Pio%20V5000-RS232%20-%20CPM.pdf
+      After returning a correct status code, tmp68301 sends "FSDVD04.MPG00001<CR>" to serial, probably tries
+      to playback the file ...
+
+***********************************************************************************************************/
 
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
@@ -146,9 +154,9 @@ static ADDRESS_MAP_START( csplayh5_map, AS_PROGRAM, 16, csplayh5_state )
 
 	AM_RANGE(0x800000, 0xbfffff) AM_ROM AM_REGION("blit_gfx",0) // GFX ROM routes here
 
-	AM_RANGE(0xc00000, 0xc7ffff) AM_RAM AM_SHARE("nvram") AM_MIRROR(0x380000) // work RAM
-
 	AM_RANGE(0xfffc00, 0xffffff) AM_DEVREADWRITE("tmp68301", tmp68301_device, regs_r, regs_w)  // TMP68301 Registers
+
+	AM_RANGE(0xc00000, 0xc7ffff) AM_RAM AM_SHARE("nvram") AM_MIRROR(0x380000) // work RAM
 ADDRESS_MAP_END
 
 #if USE_H8
@@ -611,7 +619,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(csplayh5_state::csplayh5_irq)
 	int scanline = param;
 
 	if(scanline == 212*2)
-		m_maincpu->set_input_line_and_vector(1, HOLD_LINE,0x100/4);
+		m_tmp68301->external_interrupt_0();
 
 	if((scanline % 2) == 0)
 	{
@@ -626,6 +634,12 @@ static const z80_daisy_config daisy_chain_sound[] =
 	{ NULL }
 };
 
+static TMP68301_INTERFACE( tmp68301_interface )
+{
+	DEVCB_NULL,
+	DEVCB_NULL
+};
+
 
 static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 
@@ -634,7 +648,7 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_CPU_PROGRAM_MAP(csplayh5_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", csplayh5_state, csplayh5_irq, "screen", 0, 1)
 
-	MCFG_TMP68301_ADD("tmp68301")
+	MCFG_TMP68301_ADD("tmp68301",tmp68301_interface)
 
 #if USE_H8
 	MCFG_CPU_ADD("subcpu", H83002, 16000000)    /* unknown clock */
@@ -648,7 +662,6 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_CPU_IO_MAP(csplayh5_sound_io_map)
 
 	MCFG_Z80CTC_ADD("ctc", 8000000, ctc_intf)
-
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -665,7 +678,7 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_SCREEN_VISIBLE_AREA(MSX2_XBORDER_PIXELS - MSX2_VISIBLE_XBORDER_PIXELS, MSX2_TOTAL_XRES_PIXELS - MSX2_XBORDER_PIXELS + MSX2_VISIBLE_XBORDER_PIXELS - 1, MSX2_YBORDER_PIXELS - MSX2_VISIBLE_YBORDER_PIXELS, MSX2_TOTAL_YRES_PIXELS - MSX2_YBORDER_PIXELS + MSX2_VISIBLE_YBORDER_PIXELS - 1)
 	MCFG_SCREEN_UPDATE_DEVICE("v9958", v9958_device, screen_update)
 
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_PALETTE_LENGTH(19780)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

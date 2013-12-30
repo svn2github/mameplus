@@ -54,7 +54,7 @@
 #include "netlist/nl_base.h"
 #include "netlist/nl_setup.h"
 
-// MAME specific
+// MAME specific configuration
 
 #define MCFG_NETLIST_ADD(_tag, _setup )                                             \
 	MCFG_DEVICE_ADD(_tag, NETLIST, NETLIST_CLOCK)                                   \
@@ -65,46 +65,77 @@
 #define MCFG_NETLIST_SETUP(_setup)                                                  \
 	netlist_mame_device::static_set_constructor(*device, NETLIST_NAME(_setup));
 
+// ----------------------------------------------------------------------------------------
+// Extensions to interface netlist with MAME code ....
+// ----------------------------------------------------------------------------------------
 
+#define NETLIST_MEMREGION(_name)                                                    \
+		netlist.parse((char *)downcast<netlist_mame_t &>(netlist.netlist()).machine().root_device().memregion(_name)->base());
 
+#define NETDEV_ANALOG_CALLBACK(_name, _IN, _class, _member, _tag) \
+		{ \
+			NETLIB_NAME(analog_callback) *dev = downcast<NETLIB_NAME(analog_callback) *>(netlist.register_dev(NET_NEW(analog_callback), # _name)); \
+			netlist_analog_output_delegate d = netlist_analog_output_delegate(& _class :: _member, # _class "::" # _member, _tag, (_class *) 0); \
+			dev->register_callback(d); \
+		} \
+		NET_CONNECT(_name, IN, _IN)
 
+#define NETDEV_ANALOG_CALLBACK_MEMBER(_name) \
+	void _name(const double data, const attotime &time)
+
+class netlist_mame_device;
+
+class netlist_mame_t : public netlist_base_t
+{
+public:
+
+	netlist_mame_t(netlist_mame_device &parent)
+	: netlist_base_t(),
+		m_parent(parent)
+	{}
+	virtual ~netlist_mame_t() { };
+
+	inline running_machine &machine();
+
+	netlist_mame_device &parent() { return m_parent; }
+
+protected:
+
+	void vfatalerror(const char *format, va_list ap) const
+	{
+		emu_fatalerror error(format, ap);
+		throw error;
+	}
+
+private:
+	netlist_mame_device &m_parent;
+};
 
 // ----------------------------------------------------------------------------------------
 // MAME glue classes
 // ----------------------------------------------------------------------------------------
 
 
-class netlist_t : public netlist_base_t
-{
-public:
 
-	netlist_t(device_t &parent)
-	: netlist_base_t(),
-		m_parent(parent)
-	{}
-	virtual ~netlist_t() { };
-
-	inline running_machine &machine()   { return m_parent.machine(); }
-
-	device_t &parent() { return m_parent; }
-
-private:
-	device_t &m_parent;
-};
 
 // ======================> netlist_mame_device
 
 class netlist_mame_device : public device_t,
-						public device_execute_interface
+							public device_execute_interface
+							//public device_state_interface
+							//, public device_memory_interface
 {
 public:
 
 	template<bool _Required, class _NETClass>
 	class output_finder;
+	template<class C>
 	class optional_output;
 	template<class C>
 	class required_output;
+	template<class C>
 	class optional_param;
+	template<class C>
 	class required_param;
 	class on_device_start;
 
@@ -115,9 +146,11 @@ public:
 	static void static_set_constructor(device_t &device, void (*setup_func)(netlist_setup_t &));
 
 	netlist_setup_t &setup() { return *m_setup; }
-	netlist_t &netlist() { return *m_netlist; }
+	netlist_mame_t &netlist() { return *m_netlist; }
 
-	netlist_list_t<on_device_start *> m_device_start_list;
+	typedef netlist_list_t<on_device_start *> device_start_list_t;
+
+	device_start_list_t m_device_start_list;
 
 protected:
 	// device-level overrides
@@ -126,15 +159,26 @@ protected:
 	virtual void device_stop();
 	virtual void device_reset();
 	virtual void device_post_load();
+	virtual void device_pre_save();
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 	virtual UINT64 execute_clocks_to_cycles(UINT64 clocks) const;
 	virtual UINT64 execute_cycles_to_clocks(UINT64 cycles) const;
 
 	ATTR_HOT virtual void execute_run();
 
-	netlist_t *m_netlist;
+	netlist_mame_t *m_netlist;
 
 	netlist_setup_t *m_setup;
+
+// more save state ... needs to go somewhere else
+
+	struct qentry {
+		netlist_time m_time;
+		char m_name[64];
+	};
+
+	qentry qtemp[1024];
+	int qsize;
 
 private:
 
@@ -146,6 +190,92 @@ private:
 
 
 };
+
+inline running_machine &netlist_mame_t::machine()
+{
+	return m_parent.machine();
+}
+
+// ----------------------------------------------------------------------------------------
+// netdev_callback
+// ----------------------------------------------------------------------------------------
+
+typedef device_delegate<void (const double, const attotime &)> netlist_analog_output_delegate;
+
+class NETLIB_NAME(analog_callback) : public netlist_device_t
+{
+public:
+	NETLIB_NAME(analog_callback)()
+		: netlist_device_t() { }
+
+	ATTR_COLD void start()
+	{
+		register_input("IN", m_in);
+		m_callback.bind_relative_to(downcast<netlist_mame_t &>(netlist()).machine().root_device());
+	}
+
+	ATTR_COLD void register_callback(netlist_analog_output_delegate callback)
+	{
+		m_callback = callback;
+	}
+
+	ATTR_HOT void update()
+	{
+		// FIXME: Remove after device cleanup
+		if (!m_callback.isnull())
+			m_callback(INPANALOG(m_in), downcast<netlist_mame_t &>(netlist()).parent().local_time());
+	}
+
+private:
+	netlist_analog_input_t m_in;
+	netlist_analog_output_delegate m_callback;
+};
+
+class NETLIB_NAME(sound) : public netlist_device_t
+{
+public:
+	NETLIB_NAME(sound)()
+		: netlist_device_t() { }
+
+	static const int BUFSIZE = 2048;
+
+	ATTR_COLD void start()
+	{
+		register_input("IN", m_in);
+		m_cur = 0;
+		m_last_pos = 0;
+		m_last_buffer = netlist_time::zero;
+		m_sample = netlist_time::zero;  // FIXME: divide by zero
+		}
+
+	ATTR_HOT void sound_update()
+	{
+		netlist_time current = netlist().time();
+		int pos = (current - m_last_buffer) / m_sample;
+		if (pos >= BUFSIZE)
+			netlist().xfatalerror("sound %s: exceeded BUFSIZE\n", name().cstr());
+		while (m_last_pos < pos )
+		{
+			m_buffer[m_last_pos++] = m_cur;
+		}
+	}
+
+	ATTR_HOT void update()
+	{
+		double val = INPANALOG(m_in);
+		sound_update();
+		m_cur = val;
+	}
+
+private:
+	netlist_analog_input_t m_in;
+	netlist_time m_sample;
+	double m_cur;
+	int m_last_pos;
+	netlist_time m_last_buffer;
+	stream_sample_t m_buffer[BUFSIZE];
+};
+
 
 // ======================> netlist_output_finder
 
@@ -187,16 +317,17 @@ protected:
 };
 
 // optional device finder
-class netlist_mame_device::optional_output : public netlist_mame_device::output_finder<false, net_output_t>
+template<class C>
+class netlist_mame_device::optional_output : public netlist_mame_device::output_finder<false, C>
 {
 public:
-	optional_output(device_t &base, const char *tag, const char *output) : output_finder<false, net_output_t>(base, tag, output) { }
+	optional_output(device_t &base, const char *tag, const char *output) : output_finder<false, C>(base, tag, output) { }
 
 	virtual ~optional_output() {};
 
 	virtual bool OnDeviceStart()
 	{
-		this->m_target = &m_netlist->setup().find_output(m_output);
+		this->m_target = dynamic_cast<C *>(this->m_netlist->setup().find_terminal(this->m_output, netlist_object_t::OUTPUT, false));
 		return this->report_missing(this->m_target != NULL, "output", false);
 	}
 
@@ -213,36 +344,38 @@ public:
 
 	virtual bool OnDeviceStart()
 	{
-		this->m_target = (C *) &(this->m_netlist->setup().find_output(this->m_output));
+		this->m_target = dynamic_cast<C *>(this->m_netlist->setup().find_terminal(this->m_output, netlist_object_t::OUTPUT));
 		return this->report_missing(this->m_target != NULL, "output", true);
 	}
 
 };
 
 // optional device finder
-class netlist_mame_device::optional_param : public netlist_mame_device::output_finder<false, net_param_t>
+template<class C>
+class netlist_mame_device::optional_param : public netlist_mame_device::output_finder<false, C>
 {
 public:
-	optional_param(device_t &base, const char *tag, const char *output) : output_finder<false, net_param_t>(base, tag, output) { }
+	optional_param(device_t &base, const char *tag, const char *output) : output_finder<false, C>(base, tag, output) { }
 
 	virtual bool OnDeviceStart()
 	{
-		this->m_target = &m_netlist->setup().find_param(m_output);
+		this->m_target = dynamic_cast<C *>(this->m_netlist->setup().find_param(this->m_output, false));
 		return this->report_missing(this->m_target != NULL, "parameter", false);
 	}
 
 };
 
 // required devices are similar but throw an error if they are not found
-class netlist_mame_device::required_param : public netlist_mame_device::output_finder<true, net_param_t>
+template<class C>
+class netlist_mame_device::required_param : public netlist_mame_device::output_finder<true, C>
 {
 public:
-	required_param(device_t &base, const char *tag, const char *output) : output_finder<true, net_param_t>(base, tag, output) { }
+	required_param(device_t &base, const char *tag, const char *output) : output_finder<true, C>(base, tag, output) { }
 
 	virtual bool OnDeviceStart()
 	{
-		this->m_target = &m_netlist->setup().find_param(m_output);
-		return this->report_missing(this->m_target != NULL, "output", true);
+		this->m_target = dynamic_cast<C *>( this->m_netlist->setup().find_param(this->m_output));
+		return this->report_missing(this->m_target != NULL, "parameter", true);
 	}
 };
 

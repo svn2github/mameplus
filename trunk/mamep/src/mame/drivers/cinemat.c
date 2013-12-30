@@ -43,6 +43,7 @@
 #include "solarq.lh"
 #include "sundance.lh"
 #include "tailg.lh"
+#include "wotw.lh"
 
 #define MASTER_CLOCK            XTAL_19_923MHz
 
@@ -630,25 +631,18 @@ static INPUT_PORTS_START( warrior )
 	PORT_BIT( 0xe000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("SWITCHES")
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x04, IP_ACTIVE_HIGH )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x03, 0x02, "Time" )      PORT_DIPLOCATION("SW1:!1,!2")
+	PORT_DIPSETTING(    0x00, "0:30/coin" )
+	PORT_DIPSETTING(    0x02, "1:00/coin" )
+	PORT_DIPSETTING(    0x01, "1:30/coin" )
+	PORT_DIPSETTING(    0x03, "2:00/coin" )
+	PORT_SERVICE_DIPLOC( 0x04, IP_ACTIVE_HIGH, "SW1:!3" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Coinage ) )  PORT_DIPLOCATION("SW1:!4")
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_1C ) )
+	PORT_DIPUNUSED_DIPLOC( 0x10, IP_ACTIVE_HIGH, "SW1:!5" )
+	PORT_DIPUNUSED_DIPLOC( 0x20, IP_ACTIVE_HIGH, "SW1:!6" )
+	PORT_DIPUNUSED_DIPLOC( 0x40, IP_ACTIVE_HIGH, "SW1:!7" )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
@@ -975,7 +969,6 @@ static MACHINE_CONFIG_START( cinemat_nojmi_4k, cinemat_state )
 	MCFG_CPU_DATA_MAP(data_map)
 	MCFG_CPU_IO_MAP(io_map)
 
-
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
 
@@ -985,7 +978,6 @@ static MACHINE_CONFIG_START( cinemat_nojmi_4k, cinemat_state )
 	MCFG_SCREEN_SIZE(1024, 768)
 	MCFG_SCREEN_VISIBLE_AREA(0, 1023, 0, 767)
 	MCFG_SCREEN_UPDATE_DRIVER(cinemat_state, screen_update_cinemat)
-
 MACHINE_CONFIG_END
 
 
@@ -1475,25 +1467,25 @@ DRIVER_INIT_MEMBER(cinemat_state,qb3)
 
 GAME( 1977, spacewar, 0,       spacewar, spacewar, driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Space Wars", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1978, spaceshp, spacewar,spacewar, spaceshp, driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics (Sega license)", "Space Ship", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL(1979, barrier,  0,       barrier,  barrier, driver_device,  0,        ORIENTATION_FLIP_X ^ ROT270, "Cinematronics (Vectorbeam license)", "Barrier", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_barrier ) // developed by Cinematronics, then (when they noticed it wasn't going to be a successful game) sold to Vectorbeam, and ultimately back in the hands of Cinematronics again after they bought the dying company Vectorbeam
+GAMEL(1979, barrier,  0,       barrier,  barrier,  driver_device, 0,        ORIENTATION_FLIP_X ^ ROT270, "Cinematronics (Vectorbeam license)", "Barrier", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_barrier ) // developed by Cinematronics, then (when they noticed it wasn't going to be a successful game) sold to Vectorbeam, and ultimately back in the hands of Cinematronics again after they bought the dying company Vectorbeam
 GAME( 1979, speedfrk, 0,       speedfrk, speedfrk, cinemat_state, speedfrk, ORIENTATION_FLIP_Y,   "Vectorbeam", "Speed Freak", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1979, starhawk, 0,       starhawk, starhawk, driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Hawk", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAMEL(1979, sundance, 0,       sundance, sundance, cinemat_state, sundance, ORIENTATION_FLIP_X ^ ROT270, "Cinematronics", "Sundance", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_sundance )
-GAMEL(1979, tailg,    0,       tailg,    tailg, cinemat_state,    tailg,    ORIENTATION_FLIP_Y,   "Cinematronics", "Tailgunner", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_tailg )
-GAME( 1979, warrior,  0,       warrior,  warrior, driver_device,  0,        ORIENTATION_FLIP_Y,   "Vectorbeam", "Warrior", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL(1980, armora,   0,       armora,   armora, driver_device,   0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Armor Attack", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
-GAMEL(1980, armorap,  armora,  armora,   armora, driver_device,   0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Armor Attack (prototype)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
-GAMEL(1980, armorar,  armora,  armora,   armora, driver_device,   0,        ORIENTATION_FLIP_Y,   "Cinematronics (Rock-Ola license)", "Armor Attack (Rock-Ola)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
-GAME( 1980, ripoff,   0,       ripoff,   ripoff, driver_device,   0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Rip Off", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL(1980, starcas,  0,       starcas,  starcas, driver_device,  0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Castle (version 3)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
-GAMEL(1980, starcas1, starcas, starcas,  starcas, driver_device,  0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Castle (older)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
-GAMEL(1980, starcasp, starcas, starcas,  starcas, driver_device,  0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Castle (prototype)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
-GAMEL(1980, starcase, starcas, starcas,  starcas, driver_device,  0,        ORIENTATION_FLIP_Y,   "Cinematronics (Mottoeis license)", "Star Castle (Mottoeis)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
-GAMEL(1980, stellcas, starcas, starcas,  starcas, driver_device,  0,        ORIENTATION_FLIP_Y,   "bootleg (Elettronolo)", "Stellar Castle (Elettronolo)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
-GAMEL(1981, spaceftr, starcas, starcas,  starcas, driver_device,  0,        ORIENTATION_FLIP_Y,   "Cinematronics (Zaccaria license)", "Space Fortress (Zaccaria)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
-GAMEL(1981, solarq,   0,       solarq,   solarq, driver_device,   0,        ORIENTATION_FLIP_Y ^ ORIENTATION_FLIP_X, "Cinematronics", "Solar Quest", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_solarq )
-GAME( 1981, boxingb,  0,       boxingb,  boxingb, cinemat_state,  boxingb,  ORIENTATION_FLIP_Y,   "Cinematronics", "Boxing Bugs", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1981, wotw,     0,       wotw,     wotw, driver_device,     0,        ORIENTATION_FLIP_Y,   "Cinematronics", "War of the Worlds", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1981, wotwc,    wotw,    wotwc,    wotw, driver_device,     0,        ORIENTATION_FLIP_Y,   "Cinematronics", "War of the Worlds (color)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL(1982, demon,    0,       demon,    demon, driver_device,    0,        ORIENTATION_FLIP_Y,   "Rock-Ola", "Demon", GAME_SUPPORTS_SAVE, layout_demon )
-GAME( 1982, qb3,      0,       qb3,      qb3, cinemat_state,      qb3,      ORIENTATION_FLIP_Y,   "Rock-Ola", "QB-3 (prototype)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAMEL(1979, tailg,    0,       tailg,    tailg,    cinemat_state, tailg,    ORIENTATION_FLIP_Y,   "Cinematronics", "Tailgunner", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_tailg )
+GAME( 1979, warrior,  0,       warrior,  warrior,  driver_device, 0,        ORIENTATION_FLIP_Y,   "Vectorbeam", "Warrior", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1980, armora,   0,       armora,   armora,   driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Armor Attack", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
+GAMEL(1980, armorap,  armora,  armora,   armora,   driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Armor Attack (prototype)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
+GAMEL(1980, armorar,  armora,  armora,   armora,   driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics (Rock-Ola license)", "Armor Attack (Rock-Ola)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_armora )
+GAME( 1980, ripoff,   0,       ripoff,   ripoff,   driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Rip Off", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1980, starcas,  0,       starcas,  starcas,  driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Castle (version 3)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
+GAMEL(1980, starcas1, starcas, starcas,  starcas,  driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Castle (older)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
+GAMEL(1980, starcasp, starcas, starcas,  starcas,  driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "Star Castle (prototype)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
+GAMEL(1980, starcase, starcas, starcas,  starcas,  driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics (Mottoeis license)", "Star Castle (Mottoeis)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
+GAMEL(1980, stellcas, starcas, starcas,  starcas,  driver_device, 0,        ORIENTATION_FLIP_Y,   "bootleg (Elettronolo)", "Stellar Castle (Elettronolo)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
+GAMEL(1981, spaceftr, starcas, starcas,  starcas,  driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics (Zaccaria license)", "Space Fortress (Zaccaria)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_starcas )
+GAMEL(1981, solarq,   0,       solarq,   solarq,   driver_device, 0,        ORIENTATION_FLIP_Y ^ ORIENTATION_FLIP_X, "Cinematronics", "Solar Quest", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_solarq )
+GAME( 1981, boxingb,  0,       boxingb,  boxingb,  cinemat_state, boxingb,  ORIENTATION_FLIP_Y,   "Cinematronics", "Boxing Bugs", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1981, wotw,     0,       wotw,     wotw,     driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "War of the Worlds", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_wotw )
+GAME( 1981, wotwc,    wotw,    wotwc,    wotw,     driver_device, 0,        ORIENTATION_FLIP_Y,   "Cinematronics", "War of the Worlds (color)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL(1982, demon,    0,       demon,    demon,    driver_device, 0,        ORIENTATION_FLIP_Y,   "Rock-Ola", "Demon", GAME_SUPPORTS_SAVE, layout_demon )
+GAME( 1982, qb3,      0,       qb3,      qb3,      cinemat_state, qb3,      ORIENTATION_FLIP_Y,   "Rock-Ola", "QB-3 (prototype)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

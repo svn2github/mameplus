@@ -32,15 +32,12 @@ static struct ptm6840_interface ptm_interface =
 	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, ptm_irq_w)
 };
 
-static struct acia6850_interface acia_interface =
+static ACIA6850_INTERFACE( acia_interface )
 {
 	31250*16,   // tx clock
 	0,          // rx clock (we manually clock rx)
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, rx_in),  // rx in
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, tx_out), // tx out
-	DEVCB_NULL, // cts in
+	DEVCB_DEVICE_LINE_MEMBER("mdout", serial_port_device, tx), // tx out
 	DEVCB_NULL, // rts out
-	DEVCB_NULL, // dcd in
 	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, acia_irq_w)
 };
 
@@ -48,25 +45,18 @@ static SLOT_INTERFACE_START(midiin_slot)
 	SLOT_INTERFACE("midiin", MIDIIN_PORT)
 SLOT_INTERFACE_END
 
-static const serial_port_interface midiin_intf =
-{
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, midi_rx_w)
-};
-
 static SLOT_INTERFACE_START(midiout_slot)
 	SLOT_INTERFACE("midiout", MIDIOUT_PORT)
 SLOT_INTERFACE_END
 
-static const serial_port_interface midiout_intf =
-{
-	DEVCB_NULL  // midi out ports don't transmit inward
-};
-
 MACHINE_CONFIG_FRAGMENT( midi )
 	MCFG_PTM6840_ADD(MIDI_PTM_TAG, ptm_interface)
 	MCFG_ACIA6850_ADD(MIDI_ACIA_TAG, acia_interface)
-	MCFG_SERIAL_PORT_ADD("mdin", midiin_intf, midiin_slot, "midiin")
-	MCFG_SERIAL_PORT_ADD("mdout", midiout_intf, midiout_slot, "midiout")
+
+	MCFG_SERIAL_PORT_ADD("mdin", midiin_slot, "midiin")
+	MCFG_SERIAL_OUT_RX_HANDLER(DEVWRITELINE(DEVICE_SELF, a2bus_midi_device, midi_rx_w))
+
+	MCFG_SERIAL_PORT_ADD("mdout", midiout_slot, "midiout")
 MACHINE_CONFIG_END
 
 //-------------------------------------------------
@@ -87,8 +77,7 @@ a2bus_midi_device::a2bus_midi_device(const machine_config &mconfig, const char *
 		device_t(mconfig, A2BUS_MIDI, "6850 MIDI card", tag, owner, clock, "a2midi", __FILE__),
 		device_a2bus_card_interface(mconfig, *this),
 		m_ptm(*this, MIDI_PTM_TAG),
-		m_acia(*this, MIDI_ACIA_TAG),
-		m_mdout(*this, "mdout")
+		m_acia(*this, MIDI_ACIA_TAG)
 {
 }
 
@@ -96,8 +85,7 @@ a2bus_midi_device::a2bus_midi_device(const machine_config &mconfig, device_type 
 		device_t(mconfig, type, name, tag, owner, clock, shortname, source),
 		device_a2bus_card_interface(mconfig, *this),
 		m_ptm(*this, MIDI_PTM_TAG),
-		m_acia(*this, MIDI_ACIA_TAG),
-		m_mdout(*this, "mdout")
+		m_acia(*this, MIDI_ACIA_TAG)
 {
 }
 
@@ -114,7 +102,6 @@ void a2bus_midi_device::device_start()
 void a2bus_midi_device::device_reset()
 {
 	m_acia_irq = m_ptm_irq = false;
-	m_rx_state = 0;
 }
 
 /*-------------------------------------------------
@@ -199,19 +186,10 @@ WRITE_LINE_MEMBER( a2bus_midi_device::ptm_irq_w )
 
 WRITE_LINE_MEMBER( a2bus_midi_device::midi_rx_w )
 {
-	m_rx_state = state;
+	m_acia->write_rx(state);
+
 	for (int i = 0; i < 16; i++)    // divider is set to 16
 	{
 		m_acia->rx_clock_in();
 	}
-}
-
-READ_LINE_MEMBER( a2bus_midi_device::rx_in )
-{
-	return m_rx_state;
-}
-
-WRITE_LINE_MEMBER( a2bus_midi_device::tx_out )
-{
-	m_mdout->tx(state);
 }

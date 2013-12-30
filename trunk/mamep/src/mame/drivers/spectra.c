@@ -148,12 +148,12 @@ WRITE8_MEMBER( spectra_state::portb_w )
 	if (BIT(data, 1)) vco -= 0.625;
 	if (BIT(data, 2)) vco -= 1.25;
 	if (BIT(data, 3)) vco -= 2.5;
-	sn76477_vco_voltage_w(m_snsnd, 5.4 - vco);
-	sn76477_enable_w(m_snsnd, !BIT(data, 4)); // strobe: toggles enable
-	sn76477_envelope_1_w(m_snsnd, !BIT(data, 5)); //decay: toggles envelope
-	sn76477_vco_w(m_snsnd, BIT(data, 6)); // "phaser" sound: VCO toggled
-	sn76477_mixer_b_w(m_snsnd, BIT(data, 7)); // "pulse" sound: pins 25 & 27 changed
-	sn76477_mixer_c_w(m_snsnd, BIT(data, 7)); // "pulse" sound: pins 25 & 27 changed
+	m_snsnd->vco_voltage_w(5.4 - vco);
+	m_snsnd->enable_w(!BIT(data, 4)); // strobe: toggles enable
+	m_snsnd->envelope_1_w(!BIT(data, 5)); //decay: toggles envelope
+	m_snsnd->vco_w(BIT(data, 6)); // "phaser" sound: VCO toggled
+	m_snsnd->mixer_b_w(BIT(data, 7)); // "pulse" sound: pins 25 & 27 changed
+	m_snsnd->mixer_c_w(BIT(data, 7)); // "pulse" sound: pins 25 & 27 changed
 }
 
 
@@ -261,8 +261,7 @@ MACHINE_CONFIG_END
 ROM_START(spectra)
 	ROM_REGION(0x10000, "maincpu", 0)
 	ROM_LOAD("spect_u5.dat", 0x0400, 0x0400, CRC(49e0759f) SHA1(c3badc90ff834cbc92d8c519780069310c2b1507))
-	// pinmame has a different u4 rom: CRC(b58f1205) SHA1(9578fd89485f3f560789cb0f24c7116e4bc1d0da)
-	ROM_LOAD("spect_u4.dat", 0x0800, 0x0400, BAD_DUMP CRC(e6519689) SHA1(06ef3d349ea27a072889b7c379f258d29b7217be))
+	ROM_LOAD("spect_u4.dat", 0x0800, 0x0400, CRC(b58f1205) SHA1(9578fd89485f3f560789cb0f24c7116e4bc1d0da) BAD_DUMP)
 	ROM_LOAD("spect_u3.dat", 0x0c00, 0x0400, CRC(9ca7510f) SHA1(a87849f16903836158063d593bb4a2e90c7473c8))
 ROM_END
 

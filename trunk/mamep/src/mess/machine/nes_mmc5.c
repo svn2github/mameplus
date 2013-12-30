@@ -46,8 +46,6 @@ nes_exrom_device::nes_exrom_device(const machine_config &mconfig, const char *ta
 }
 
 
-
-
 void nes_exrom_device::device_start()
 {
 	common_start();
@@ -333,8 +331,8 @@ WRITE8_MEMBER(nes_exrom_device::write_l)
 	/* Send $5000-$5015 to the sound chip */
 	if ((offset >= 0xf00) && (offset <= 0xf15))
 	{
-		device_t *m_sound = machine().device("nessound");
-		nes_psg_w(m_sound, space, offset & 0x1f, data);
+		nesapu_device *m_sound = machine().device<nesapu_device>("nessound");
+		m_sound->write(space, offset & 0x1f, data);
 		return;
 	}
 

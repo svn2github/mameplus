@@ -43,9 +43,7 @@
 
 struct i8251_interface
 {
-	devcb_read_line     m_in_rxd_cb;
 	devcb_write_line    m_out_txd_cb;
-	devcb_read_line     m_in_dsr_cb;
 	devcb_write_line    m_out_dtr_cb;
 	devcb_write_line    m_out_rts_cb;
 	devcb_write_line    m_out_rxrdy_cb;
@@ -85,6 +83,9 @@ public:
 	DECLARE_WRITE_LINE_MEMBER( txc_w ) { if (state) transmit_clock(); }
 	DECLARE_WRITE_LINE_MEMBER( rxc_w ) { if (state) receive_clock(); }
 
+	DECLARE_WRITE_LINE_MEMBER( write_rx );
+	DECLARE_WRITE_LINE_MEMBER( write_dsr );
+
 	void receive_character(UINT8 ch);
 
 	virtual void input_callback(UINT8 state);
@@ -93,14 +94,13 @@ protected:
 	virtual void device_start();
 	virtual void device_config_complete();
 	virtual void device_reset();
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
 	void update_rx_ready();
 	void update_tx_ready();
 	void update_tx_empty();
 private:
-	devcb_resolved_read_line    m_in_rxd_func;
 	devcb_resolved_write_line   m_out_txd_func;
-	devcb_resolved_read_line    m_in_dsr_func;
 	devcb_resolved_write_line   m_out_dtr_func;
 	devcb_resolved_write_line   m_out_rts_func;
 	devcb_resolved_write_line   m_out_rxrdy_func;

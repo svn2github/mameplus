@@ -11,26 +11,34 @@
 
 /*
 
-    Use the CHDMAN utility to create a 5MB image for ABC 850:
+    Use the CHDMAN utility to create a 10MB image for ABC 850:
 
-    $ chdman createhd -o /path/to/ro202.chd -chs 321,4,17 -ss 512
-    $ chdman createhd -o /path/to/basf6185.chd -chs 440,6,32 -ss 256
+    $ chdman createhd -o ro202.chd -chs 321,4,32 -ss 256
+    $ chdman createhd -o basf6186.chd -chs 440,4,32 -ss 256
 
-    or a 10MB image for ABC 852:
+    or a 20MB image for ABC 852:
 
-    $ chdman createhd -o /path/to/nec5126.chd -chs 615,4,17 -ss 512
+    $ chdman createhd -o basf6185.chd -chs 440,6,32 -ss 256
+    $ chdman createhd -o nec5126.chd -chs 615,4,32 -ss 256
 
-    or a 20MB image for ABC 856:
+    or a 60MB image for ABC 856:
 
-    $ chdman createhd -o /path/to/micr1325.chd -chs 1024,8,33 -ss 256
+    $ chdman createhd -o micr1325.chd -chs 1024,8,32 -ss 256
 
     Start the abc800 emulator with the ABC 850 attached on the ABC bus,
     with the new CHD and a UFD-DOS floppy mounted:
 
-    $ mess abc800m -bus hdd -bus:hdd:io2 xebec,bios=ro202 -flop1 ufd631 -hard ro202.chd
-    $ mess abc800m -bus hdd -bus:hdd:io2 xebec,bios=basf6185 -flop1 ufd631 -hard basf6185.chd
-    $ mess abc800m -bus hdd -bus:hdd:io2 xebec,bios=nec5126 -flop1 ufd631 -hard nec5126.chd
-    $ mess abc800m -bus hdd -bus:hdd:io2 xebec,bios=micr1325 -flop1 ufd631 -hard micr1325.chd
+    $ mess abc800m -bus abc850 -flop1 ufd631 -hard ro202.chd
+    $ mess abc800m -bus abc850 -bus:abc850:io2 xebec,bios=basf6186 -flop1 ufd631 -hard basf6186.chd
+
+    or with the ABC 852 attached:
+
+    $ mess abc800m -bus abc852 -flop1 ufd631 -hard basf6185.chd
+    $ mess abc800m -bus abc852 -bus:abc852:io2 xebec,bios=nec5126 -flop1 ufd631 -hard nec5126.chd
+
+    or with the ABC 856 attached:
+
+    $ mess abc800m -bus abc856 -flop1 ufd631 -hard micr1325.chd
 
     Configure the floppy controller for use with an ABC 850:
 
@@ -44,14 +52,25 @@
 
     You should now see the following text at the top of the screen:
 
-    DOS ??r UFD-DOS ver. 19
+    DOS ar UFD-DOS ver. 19
     DR_: motsvarar MF_:
 
     Enter "BYE" to get into the UFD-DOS command prompt.
     Enter "DOSGEN,F HD0:" to start the formatting utility.
     Enter "J", and enter "J" to confirm the formatting.
 
-    To Be Continued...
+    If you have a 20MB image, format the second partition by entering "DOSGEN,F HD1:", "J", and "J".
+
+    If you have a 60MB image, format the third partition by entering "DOSGEN,F HD2:", "J", and "J",
+    and format the fourth partition by entering "DOSGEN,F HD3:", "J", and "J".
+
+    You can now list your freshly created partitions by entering "LIB".
+
+    Or skip all of the above and use the preformatted images in the software list:
+
+    $ mess abc800m -bus abc850 -flop1 ufd631 -hard abc850
+    $ mess abc800m -bus abc852 -flop1 ufd631 -hard abc852
+    $ mess abc800m -bus abc856 -flop1 ufd631 -hard abc856
 
 */
 
@@ -86,16 +105,18 @@ const device_type LUXOR_55_21056 = &device_creator<luxor_55_21056_device>;
 ROM_START( luxor_55_21056 )
 	ROM_REGION( 0x2000, Z80_TAG, 0 )
 	// ABC 850
-	ROM_SYSTEM_BIOS( 0, "ro202", "Rodime RO202 (CHS: 321,4,17,512)" )
-	ROMX_LOAD( "rodi202.bin",  0x0000, 0x0800, CRC(337b4dcf) SHA1(791ebeb4521ddc11fb9742114018e161e1849bdf), ROM_BIOS(1) ) // Rodime RO202 (http://stason.org/TULARC/pc/hard-drives-hdd/rodime/RO202-11MB-5-25-FH-MFM-ST506.html)
-	ROM_SYSTEM_BIOS( 1, "basf6185", "BASF 6185 (CHS: 440,6,32,256)" )
-	ROMX_LOAD( "basf6185.bin", 0x0000, 0x0800, CRC(06f8fe2e) SHA1(e81f2a47c854e0dbb096bee3428d79e63591059d), ROM_BIOS(2) ) // BASF 6185 (http://stason.org/TULARC/pc/hard-drives-hdd/basf-magnetics/6185-22MB-5-25-FH-MFM-ST412.html)
+	ROM_SYSTEM_BIOS( 0, "ro202", "Rodime RO202 (CHS: 321,4,32,256)" )
+	ROMX_LOAD( "rodi202.bin", 0x0000, 0x0800, CRC(337b4dcf) SHA1(791ebeb4521ddc11fb9742114018e161e1849bdf), ROM_BIOS(1) ) // Rodime RO202 (http://stason.org/TULARC/pc/hard-drives-hdd/rodime/RO202-11MB-5-25-FH-MFM-ST506.html)
+	ROM_SYSTEM_BIOS( 1, "basf6186", "BASF 6186 (CHS: 440,4,32,256)" )
+	ROMX_LOAD( "basf6186.bin", 0x0000, 0x0800, NO_DUMP, ROM_BIOS(2) ) // BASF 6186 (http://stason.org/TULARC/pc/hard-drives-hdd/basf-magnetics/6186-14MB-5-25-FH-MFM-ST412.html)
 	// ABC 852
-	ROM_SYSTEM_BIOS( 2, "nec5126", "NEC 5126 (CHS: 615,4,17,512)" )
-	ROMX_LOAD( "nec5126.bin",  0x0000, 0x1000, CRC(17c247e7) SHA1(7339738b87751655cb4d6414422593272fe72f5d), ROM_BIOS(3) ) // NEC 5126 (http://stason.org/TULARC/pc/hard-drives-hdd/nec/D5126-20MB-5-25-HH-MFM-ST506.html)
+	ROM_SYSTEM_BIOS( 2, "basf6185", "BASF 6185 (CHS: 440,6,32,256)" )
+	ROMX_LOAD( "basf6185.bin", 0x0000, 0x0800, CRC(06f8fe2e) SHA1(e81f2a47c854e0dbb096bee3428d79e63591059d), ROM_BIOS(3) ) // BASF 6185 (http://stason.org/TULARC/pc/hard-drives-hdd/basf-magnetics/6185-22MB-5-25-FH-MFM-ST412.html)
+	ROM_SYSTEM_BIOS( 3, "nec5126", "NEC 5126 (CHS: 615,4,32,256)" )
+	ROMX_LOAD( "nec5126.bin", 0x0000, 0x1000, CRC(17c247e7) SHA1(7339738b87751655cb4d6414422593272fe72f5d), ROM_BIOS(4) ) // NEC 5126 (http://stason.org/TULARC/pc/hard-drives-hdd/nec/D5126-20MB-5-25-HH-MFM-ST506.html)
 	// ABC 856
-	ROM_SYSTEM_BIOS( 3, "micr1325", "Micropolis 1325 (CHS: 1024,8,33,256)" )
-	ROMX_LOAD( "micr1325.bin", 0x0000, 0x0800, CRC(084af409) SHA1(342b8e214a8c4c2b014604e53c45ef1bd1c69ea3), ROM_BIOS(4) ) // Micropolis 1325 (http://stason.org/TULARC/pc/hard-drives-hdd/micropolis/1325-69MB-5-25-FH-MFM-ST506.html)
+	ROM_SYSTEM_BIOS( 4, "micr1325", "Micropolis 1325 (CHS: 1024,8,32,256)" )
+	ROMX_LOAD( "micr1325.bin", 0x0000, 0x0800, CRC(084af409) SHA1(342b8e214a8c4c2b014604e53c45ef1bd1c69ea3), ROM_BIOS(5) ) // Micropolis 1325 (http://stason.org/TULARC/pc/hard-drives-hdd/micropolis/1325-69MB-5-25-FH-MFM-ST506.html)
 ROM_END
 
 
@@ -116,7 +137,7 @@ const rom_entry *luxor_55_21056_device::device_rom_region() const
 static ADDRESS_MAP_START( luxor_55_21056_mem, AS_PROGRAM, 8, luxor_55_21056_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
-	AM_RANGE(0x0000, 0x07ff) AM_MIRROR(0x1800) AM_ROM AM_REGION(Z80_TAG, 0)
+	AM_RANGE(0x0000, 0x0fff) AM_MIRROR(0x1000) AM_ROM AM_REGION(Z80_TAG, 0)
 	AM_RANGE(0x2000, 0x27ff) AM_MIRROR(0x1800) AM_RAM
 ADDRESS_MAP_END
 
@@ -198,7 +219,11 @@ WRITE_LINE_MEMBER( luxor_55_21056_device::sasi_io_w )
 {
 	if (!state)
 	{
-		m_sasibus->scsi_data_w(m_sasi_data ^ 0xff);
+		m_sasibus->scsi_data_w(m_sasi_data);
+	}
+	else
+	{
+		m_sasibus->scsi_data_w(0);
 	}
 }
 
@@ -225,7 +250,7 @@ static MACHINE_CONFIG_FRAGMENT( luxor_55_21056 )
 	MCFG_Z80DMA_ADD(Z80DMA_TAG, XTAL_8MHz/2, dma_intf)
 
 	MCFG_SCSIBUS_ADD(SASIBUS_TAG)
-	MCFG_SCSIDEV_ADD(SASIBUS_TAG ":harddisk0", SCSIHD, SCSI_ID_0)
+	MCFG_SCSIDEV_ADD(SASIBUS_TAG ":harddisk0", S1410, SCSI_ID_0)
 	MCFG_SCSICB_ADD(SASIBUS_TAG ":host")
 	MCFG_SCSICB_BSY_HANDLER(DEVWRITELINE(DEVICE_SELF_OWNER, luxor_55_21056_device, sasi_bsy_w))
 	MCFG_SCSICB_IO_HANDLER(DEVWRITELINE(DEVICE_SELF_OWNER, luxor_55_21056_device, sasi_io_w))
@@ -250,19 +275,19 @@ machine_config_constructor luxor_55_21056_device::device_mconfig_additions() con
 
 INPUT_PORTS_START( luxor_55_21056 )
 	PORT_START("S1")
-	PORT_DIPNAME( 0x3f, 0x2b, "Card Address" )
+	PORT_DIPNAME( 0x3f, 0x24, "Card Address" )
 	PORT_DIPSETTING(    0x20, "32" )
 	PORT_DIPSETTING(    0x21, "33" )
 	PORT_DIPSETTING(    0x22, "34" )
 	PORT_DIPSETTING(    0x23, "35" )
-	PORT_DIPSETTING(    0x24, "36" )
+	PORT_DIPSETTING(    0x24, "36 (ABC 850)" )
 	PORT_DIPSETTING(    0x25, "37" )
 	PORT_DIPSETTING(    0x26, "38" )
 	PORT_DIPSETTING(    0x27, "39" )
 	PORT_DIPSETTING(    0x28, "40" )
 	PORT_DIPSETTING(    0x29, "41" )
 	PORT_DIPSETTING(    0x2a, "42" )
-	PORT_DIPSETTING(    0x2b, "43 (ABC 850)" )
+	PORT_DIPSETTING(    0x2b, "43" )
 	PORT_DIPSETTING(    0x2c, "44" )
 	PORT_DIPSETTING(    0x2d, "45" )
 	PORT_DIPSETTING(    0x2e, "46" )
@@ -338,9 +363,13 @@ void luxor_55_21056_device::device_start()
 
 void luxor_55_21056_device::device_reset()
 {
+	m_maincpu->reset();
+
 	m_cs = false;
 	m_stat = 0;
 	m_sasi_data = 0;
+
+	set_rdy(m_rdy);
 }
 
 
@@ -370,7 +399,7 @@ UINT8 luxor_55_21056_device::abcbus_stat()
 	if (m_cs)
 	{
 		data = m_stat & 0xfe;
-		data |= m_rdy;
+		data |= m_rdy ^ STAT_DIR;
 	}
 
 	return data;
@@ -389,7 +418,7 @@ UINT8 luxor_55_21056_device::abcbus_inp()
 	{
 		data = m_inp;
 
-		set_rdy(!m_rdy);
+		if (m_rdy) set_rdy(!m_rdy);
 	}
 
 	return data;
@@ -406,7 +435,7 @@ void luxor_55_21056_device::abcbus_out(UINT8 data)
 	{
 		m_out = data;
 
-		set_rdy(!m_rdy);
+		if (STAT_DIR && !m_rdy) set_rdy(!m_rdy);
 	}
 }
 
@@ -433,7 +462,7 @@ void luxor_55_21056_device::abcbus_c3(UINT8 data)
 {
 	if (m_cs)
 	{
-		m_maincpu->reset();
+		device_reset();
 	}
 }
 
@@ -461,9 +490,9 @@ READ8_MEMBER( luxor_55_21056_device::sasi_status_r )
 
 	UINT8 data = 0;
 
-	data |= m_rdy;
+	data |= m_rdy ^ STAT_DIR;
 
-	data |= (m_req || !m_sasibus->scsi_req_r()) << 1;
+	data |= (m_req || m_sasibus->scsi_req_r()) << 1;
 	data |= m_sasibus->scsi_io_r() << 2;
 	data |= !m_sasibus->scsi_cd_r() << 3;
 	data |= !m_sasibus->scsi_msg_r() << 4;
@@ -480,6 +509,8 @@ READ8_MEMBER( luxor_55_21056_device::sasi_status_r )
 WRITE8_MEMBER( luxor_55_21056_device::stat_w )
 {
 	m_stat = data;
+
+	set_rdy(m_rdy);
 }
 
 
@@ -491,7 +522,7 @@ READ8_MEMBER( luxor_55_21056_device::out_r )
 {
 	UINT8 data = m_out;
 
-	set_rdy(!m_rdy);
+	if (STAT_DIR && m_rdy) set_rdy(!m_rdy);
 
 	return data;
 }
@@ -505,7 +536,7 @@ WRITE8_MEMBER( luxor_55_21056_device::inp_w )
 {
 	m_inp = data;
 
-	set_rdy(!m_rdy);
+	if (!STAT_DIR && !m_rdy) set_rdy(!m_rdy);
 }
 
 
@@ -520,7 +551,7 @@ READ8_MEMBER( luxor_55_21056_device::sasi_data_r )
 	m_req = !m_sasibus->scsi_req_r();
 	m_sasibus->scsi_ack_w(!m_req);
 
-	return data ^ 0xff;
+	return data;
 }
 
 
@@ -534,7 +565,7 @@ WRITE8_MEMBER( luxor_55_21056_device::sasi_data_w )
 
 	if (!m_sasibus->scsi_io_r())
 	{
-		m_sasibus->scsi_data_w(m_sasi_data ^ 0xff);
+		m_sasibus->scsi_data_w(m_sasi_data);
 	}
 
 	m_req = !m_sasibus->scsi_req_r();
@@ -560,7 +591,7 @@ READ8_MEMBER( luxor_55_21056_device::rdy_reset_r )
 
 WRITE8_MEMBER( luxor_55_21056_device::rdy_reset_w )
 {
-	set_rdy(STAT_DIR);
+	set_rdy(0);
 }
 
 
@@ -617,5 +648,5 @@ void luxor_55_21056_device::set_rdy(int state)
 {
 	m_rdy = state;
 
-	m_dma->rdy_w(m_rdy);
+	m_dma->rdy_w(m_rdy ^ STAT_DIR);
 }

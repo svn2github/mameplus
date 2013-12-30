@@ -14,11 +14,15 @@ mpeg_audio::mpeg_audio(const void *_base, unsigned int _accepted, bool lsb_first
 	do_gb = lsb_first ? do_gb_lsb : do_gb_msb;
 	position_align = _position_align ? _position_align - 1 : 0;
 
+	clear();
+}
+
+void mpeg_audio::clear()
+{
 	memset(audio_buffer, 0, sizeof(audio_buffer));
 	audio_buffer_pos[0] = 16*32;
 	audio_buffer_pos[1] = 16*32;
 }
-
 
 bool mpeg_audio::decode_buffer(int &pos, int limit, short *output,
 								int &output_samples, int &sample_rate, int &channels)
@@ -92,9 +96,11 @@ bool mpeg_audio::decode_buffer(int &pos, int limit, short *output,
 		abort();
 	case 4:
 		try {
-			read_header_amm(variant == 2);
+			if (!read_header_amm(variant == 2))
+				return false;
 			read_data_mpeg2();
-			decode_mpeg2(output, output_samples);
+			if(last_frame_number)
+				decode_mpeg2(output, output_samples);
 		} catch(limit_hit) {
 			return false;
 		}
@@ -110,7 +116,7 @@ bool mpeg_audio::decode_buffer(int &pos, int limit, short *output,
 	return true;
 }
 
-void mpeg_audio::read_header_amm(bool layer25)
+bool mpeg_audio::read_header_amm(bool layer25)
 {
 	gb(1); // unused
 	int full_packets_count = gb(4); // max 12
@@ -131,6 +137,8 @@ void mpeg_audio::read_header_amm(bool layer25)
 		joint_bands = joint_band_counts[stereo_mode_ext];
 	if(joint_bands > total_bands )
 		joint_bands = total_bands;
+
+	return true;
 }
 
 void mpeg_audio::read_header_mpeg2(bool layer25)

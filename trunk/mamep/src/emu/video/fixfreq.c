@@ -113,6 +113,31 @@ void fixedfreq_device::device_start()
 	m_bitmap[1] = NULL;
 	//m_vblank_timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(vga_device::vblank_timer_cb),this));
 	recompute_parameters(false);
+
+	save_item(NAME(m_vid));
+	save_item(NAME(m_last_x));
+	save_item(NAME(m_last_y));
+	save_item(NAME(m_last_time));
+	save_item(NAME(m_line_time));
+	save_item(NAME(m_last_hsync_time));
+	save_item(NAME(m_last_vsync_time));
+	save_item(NAME(m_refresh));
+	save_item(NAME(m_clock_period));
+	//save_item(NAME(m_bitmap[0]));
+	//save_item(NAME(m_bitmap[1]));
+	save_item(NAME(m_cur_bm));
+
+	/* sync separator */
+	save_item(NAME(m_vint));
+	save_item(NAME(m_int_trig));
+	save_item(NAME(m_mult));
+
+	save_item(NAME(m_sig_vsync));
+	save_item(NAME(m_sig_composite));
+	save_item(NAME(m_sig_field));
+
+
+
 }
 
 void fixedfreq_device::device_reset()
@@ -122,6 +147,7 @@ void fixedfreq_device::device_reset()
 	m_last_hsync_time = attotime::zero;
 	m_last_vsync_time = attotime::zero;
 	m_vint = 0;
+
 }
 
 
@@ -145,7 +171,7 @@ void fixedfreq_device::recompute_parameters(bool postload)
 	/* sync separator */
 
 	m_int_trig = (exp(- 3.0/(3.0+3.0))) - exp(-1.0);
-	m_mult = (double) (m_monitor_clock) / m_htotal; // / (3.0 + 3.0);
+	m_mult = (double) (m_monitor_clock) / (double) m_htotal * 1.0; // / (3.0 + 3.0);
 	VERBOSE_OUT(("trigger %f with len %f\n", m_int_trig, 1e6 / m_mult));
 
 	m_bitmap[0] = auto_bitmap_rgb32_alloc(machine(),m_htotal, m_vtotal);
@@ -183,7 +209,7 @@ int fixedfreq_device::sync_separator(attotime time, double newval)
 	int last_comp = m_sig_composite;
 	int ret = 0;
 
-	m_vint += ((double) m_sig_composite - m_vint) * (1.0 - exp(-time.as_double() * m_mult));
+	m_vint += ((double) last_comp - m_vint) * (1.0 - exp(-time.as_double() * m_mult));
 	m_sig_composite = (newval < m_sync_threshold) ? 1 : 0 ;
 
 	m_sig_vsync = (m_vint > m_int_trig) ? 1 : 0;
@@ -222,6 +248,7 @@ UINT32 fixedfreq_device::screen_update(screen_device &screen, bitmap_rgb32 &bitm
 void fixedfreq_device::update_vid(double newval, attotime cur_time)
 {
 	bitmap_rgb32 *bm = m_bitmap[m_cur_bm];
+	const int has_fields = (m_fieldcount > 1) ? 1: 0;
 
 	int pixels = round((cur_time - m_line_time).as_double() / m_clock_period.as_double());
 	attotime time = (cur_time - m_last_time);
@@ -234,6 +261,7 @@ void fixedfreq_device::update_vid(double newval, attotime cur_time)
 	if (m_last_y < bm->height())
 	{
 		rgb_t col;
+
 		if (m_vid < m_sync_threshold)
 			col = MAKE_RGB(255, 0, 0);
 		else
@@ -242,15 +270,13 @@ void fixedfreq_device::update_vid(double newval, attotime cur_time)
 			col = MAKE_RGB(colv, colv, colv);
 		}
 
-		if (m_vid < m_sync_threshold)
-
 		while (0 && pixels >= m_htotal)
 		{
-			bm->plot_box(m_last_x, m_last_y + m_sig_field, m_htotal - 1 - m_last_x, 1, col);
+			bm->plot_box(m_last_x, m_last_y + m_sig_field * has_fields, m_htotal - 1 - m_last_x, 1, col);
 			pixels -= m_htotal;
 			m_last_x = 0;
 		}
-		bm->plot_box(m_last_x, m_last_y + m_sig_field, pixels - m_last_x, 1, col);
+		bm->plot_box(m_last_x, m_last_y + m_sig_field * has_fields, pixels - m_last_x, 1, col);
 		m_last_x = pixels;
 	}
 	if (sync & 1)
@@ -265,18 +291,17 @@ void fixedfreq_device::update_vid(double newval, attotime cur_time)
 	{
 		VERBOSE_OUT(("HSYNC down %f %d %f\n", time.as_double()* 1e6, pixels, m_vid));
 	}
-	//VERBOSE_OUT(("%d\n", m_last_x);
 
 	if (sync & 1)
 	{
-		m_last_y = 0;
+		m_last_y = m_vbackporch - m_vsync; // 6; // FIXME: needed for pong - need to be able to adjust screen parameters
 		// toggle bitmap
 		m_cur_bm ^= 1;
 		update_screen_parameters(cur_time - m_last_vsync_time);
 		m_last_vsync_time = cur_time;
 	}
 
-	if (sync & 2)
+	if ((sync & 2) && !m_sig_vsync)
 	{
 		m_last_y += m_fieldcount;
 		m_last_x = 0;

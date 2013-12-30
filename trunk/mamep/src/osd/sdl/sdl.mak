@@ -59,17 +59,16 @@ USE_DISPATCH_GL = 1
 # active development on sdlmame or SDL.
 
 # uncomment the next line to compile and link against SDL2.0
-
 # SDL_LIBVER = sdl2
 
-# uncomment the next line to use couriersud's multi-keyboard patch for sdl2.0
+# uncomment the next line to use couriersud's multi-keyboard patch for SDL 2.1? (this API was removed prior to the 2.0 release)
 # SDL2_MULTIAPI = 1
 
 # uncomment the next line to specify where you have installed
 # SDL. Equivalent to the ./configure --prefix=<path>
 # SDL_INSTALL_ROOT = /usr/local/sdl13
 
-# uncomment to disable the Qt debugger and fall back to a system default
+# uncomment to disable the Qt debugger (on non-OSX this disables all debugging)
 # NO_USE_QTDEBUG = 1
 
 # uncomment to disable MIDI
@@ -270,8 +269,10 @@ SDL_NETWORK = pcap
 MAINLDFLAGS = -Xlinker -all_load
 NO_X11 = 1
 NO_USE_XINPUT = 1
+
 ifdef BIGENDIAN
 DEFS += -DOSX_PPC=1
+CCOMFLAGS += -Wno-unused-label
 ifdef SYMBOLS
 CCOMFLAGS += -mlong-branch
 endif   # SYMBOLS
@@ -306,11 +307,6 @@ SDLMAIN = $(SDLOBJ)/main.o
 # needed for unidasm
 LDFLAGS += -Wl,--allow-multiple-definition
 SDL_NETWORK = pcap
-
-# if no Qt, no debugger
-ifdef NO_USE_QTDEBUG
-NO_DEBUGGER = 1
-endif
 
 # enable UNICODE
 DEFS += -Dmain=utf8_main -DUNICODE -D_UNICODE
@@ -353,6 +349,13 @@ endif
 
 ifeq ($(BASE_TARGETOS),)
 $(error $(TARGETOS) not supported !)
+endif
+
+# if no Qt and not OS X, no debugger
+ifneq ($(TARGETOS),macosx)
+ifdef NO_USE_QTDEBUG
+NO_DEBUGGER = 1
+endif
 endif
 
 #-------------------------------------------------
@@ -431,6 +434,7 @@ SDLOS_TARGETOS = $(BASE_TARGETOS)
 #-------------------------------------------------
 # TEST_GCC for GCC version-specific stuff
 #-------------------------------------------------
+ifneq ($(TARGETOS),emscripten)
 
 ifeq (,$(findstring clang,$(CC)))
 TEST_GCC = $(shell gcc --version)
@@ -460,14 +464,16 @@ ifeq ($(findstring 4.8.,$(TEST_GCC)),4.8.)
 	CCOMFLAGS += -Wno-narrowing -Wno-attributes -Wno-unused-local-typedefs -Wno-unused-variable -Wno-array-bounds -Wno-strict-overflow
 endif
 
-# disable the cast alignment warnings for ARM-based systems (test needs to be fixed to check arch rather than a specific vendor)
-#ifneq (,$(findstring arm,$(UNAME))) # does this work?
-ifeq ($(findstring rpi,$(TEST_GCC)),rpi)
+# minimal preliminary ARM support
+ifeq ($(findstring arm,$(UNAME)),arm)
 	CCOMFLAGS += -Wno-cast-align
+	DEFS += -DSDLMAME_NOASM -DSDLMAME_ARM
 endif
 
 else    # compiler is specifically Clang
 	CCOMFLAGS += -Wno-cast-align -Wno-constant-logical-operand -Wno-shift-count-overflow -Wno-tautological-constant-out-of-range-compare -Wno-tautological-compare -Wno-self-assign-field
+endif
+
 endif
 
 #-------------------------------------------------
@@ -528,8 +534,6 @@ endif
 QT_INSTALL_HEADERS = $(shell $(QMAKE) -query QT_INSTALL_HEADERS)
 INCPATH += -I$(QT_INSTALL_HEADERS)/QtCore -I$(QT_INSTALL_HEADERS)/QtGui -I$(QT_INSTALL_HEADERS)
 LIBS += -L$(shell $(QMAKE) -query QT_INSTALL_LIBS) -lQtGui -lQtCore
-else
-DEBUGOBJS = $(SDLOBJ)/debugwin.o $(SDLOBJ)/dview.o $(SDLOBJ)/debug-sup.o $(SDLOBJ)/debug-intf.o
 endif
 
 LIBGL = -lGL
