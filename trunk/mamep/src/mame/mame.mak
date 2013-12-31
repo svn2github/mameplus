@@ -2067,6 +2067,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/carrera.o \
 	$(DRIVERS)/castle.o \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
+	$(DRIVERS)/cavesh3.o \
 	$(DRIVERS)/cavepc.o \
 	$(DRIVERS)/cb2001.o \
 	$(DRIVERS)/cdi.o $(VIDEO)/mcd212.o $(MACHINE)/cdi070.o $(MACHINE)/cdislave.o $(MACHINE)/cdicdic.o \
@@ -2725,6 +2726,7 @@ $(MACHINE)/megacd.o:  $(LAYOUT)/megacd.lh
 # misc dependencies
 #-------------------------------------------------
 
+$(DRIVERS)/cavesh3.o:	$(MAMESRC)/drivers/csh3blit.inc
 $(DRIVERS)/neogeo.o:    $(MAMESRC)/drivers/neogeo.inc
 $(VIDEO)/jaguar.o:      $(MAMESRC)/video/jagobj.inc \
 			$(MAMESRC)/video/jagblit.inc
