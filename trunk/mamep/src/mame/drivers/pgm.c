@@ -3797,7 +3797,7 @@ ROM_END
 ROM_START( ketarr )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
 	/* doesn't use a separate BIOS rom */
-	ROM_LOAD16_WORD_SWAP( "ketarr_v100.u38", 0x000000, 0x200000, CRC(d4c7a8ab) SHA1(65d104d17bd4fd03a2b44297a003ba03d746c7ee) )
+	ROM_LOAD16_WORD_SWAP( "ketsui_v100.u38", 0x000000, 0x200000, CRC(d4c7a8ab) SHA1(65d104d17bd4fd03a2b44297a003ba03d746c7ee) )
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "ket_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
@@ -3824,7 +3824,7 @@ ROM_END
 ROM_START( ketarr15 )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
 	/* doesn't use a separate BIOS rom */
-	ROM_LOAD16_WORD_SWAP( "ketarr_v150.u38", 0x000000, 0x200000, CRC(552a7d95) SHA1(4f3fb13f34d58a7482e1d26623d38aa0b54ca8dd) )
+	ROM_LOAD16_WORD_SWAP( "ketsui_v150.u38", 0x000000, 0x200000, CRC(552a7d95) SHA1(4f3fb13f34d58a7482e1d26623d38aa0b54ca8dd) )
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "ket_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
@@ -3851,7 +3851,7 @@ ROM_END
 ROM_START( ketarr151 )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
 	/* doesn't use a separate BIOS rom */
-	ROM_LOAD16_WORD_SWAP( "ketarr_v151.u38", 0x000000, 0x200000, CRC(2b7c030d) SHA1(9aaba1242d7ce29915a31d40341da82985927f9d) )
+	ROM_LOAD16_WORD_SWAP( "ketsui_v151.u38", 0x000000, 0x200000, CRC(2b7c030d) SHA1(9aaba1242d7ce29915a31d40341da82985927f9d) )
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "ket_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
@@ -4344,11 +4344,11 @@ GAME( 2002, ddpdojblka, ddpdoj,      pgm_arm_type1_cave,    pgm, pgm_arm_type1_s
 GAME( 2002, ket,          0,         pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (2003/01/01. Master Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 2002, keta,         ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (2003/01/01 Master Ver.)",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 2002, ketb,         ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (2003/01/01 Master Ver)",   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 2012, ketarr,       ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Arrange v1.0 (2012/04/17 Arrange Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 2012, ketarr15,     ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Arrange v1.5 (2012/06/26 Arrange Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 2012, ketarr151,    ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Arrange v1.51 (2012/09/27 Arrange Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 2012, ketst100,     ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Mr.Stoic v1.0 (2012/06/27 Mr. Stoic Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 2012, ketstoic,     ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Mr.Stoic v1.01 (2012/09/27 Mr. Stoic Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2012, ketarr,       ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Arrange (2012/04/17 Arrange Ver. 1.0)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2012, ketarr15,     ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Arrange (2012/06/26 Arrange Ver. 1.5)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2012, ketarr151,    ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Arrange (2012/09/27 Arrange Ver. 1.51)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2012, ketst100,     ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Mr.Stoic (2012/06/27 Mr. Stoic Ver. 1.0)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2012, ketstoic,     ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Mr.Stoic (2012/09/27 Mr. Stoic Ver. 1.01)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 2012, ketback,      ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Kizuna Jigoku Tachi (2012/04/17 Back Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 2012, ketfast,      ket,       pgm_arm_type1_cave,    pgm, pgm_arm_type1_state,     ket,       ROT270, "hack by trap15", "Ketsui: Kizuna Jigoku Tachi (2012/04/17 Fast Ver.)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 

@@ -330,9 +330,6 @@ MACHINE_RESET_MEMBER(pgm_022_025_state, dw3)
 	MACHINE_RESET_CALL_MEMBER(pgm);
 }
 
-
-
-
 void pgm_022_025_state::igs025_to_igs022_callback( void )
 {
 //  printf("igs025_to_igs022_callback\n");
