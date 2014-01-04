@@ -69,78 +69,115 @@ wrally          // (c) 1993 - Ref 930705
 
 // Cave games
 // Cave was formed in 1994 from the ruins of Toaplan, like Raizing was.
-pwrinst2		// (c) 1994 Atlus
-pwrinst2j		// (c) 1994 Atlus
-plegends		// (c) 1994 Atlus
-plegendsj		// (c) 1994 Atlus
-mazinger		// (c) 1994 Banpresto (country is in EEPROM)
-mazingerj		// (c) 1994 Banpresto (country is in EEPROM)
-donpachi		// (c) 1995 Atlus/Cave
-donpachij		// (c) 1995 Atlus/Cave
-donpachikr		// (c) 1995 Atlus/Cave
-donpachihk		// (c) 1995 Atlus/Cave
-metmqstr		// (c) 1995 Banpresto / Pandorabox
-nmaster			// (c) 1995 Banpresto / Pandorabox
-sailormn		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnu		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnj		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnk		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnt		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnh		// (c) 1995 Banpresto (country is in EEPROM)
-sailormno		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnou		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnoj		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnok		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnot		// (c) 1995 Banpresto (country is in EEPROM)
-sailormnoh		// (c) 1995 Banpresto (country is in EEPROM)
-agallet			// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
-agalletu		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
-agalletj		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
-agalletk		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
-agallett		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
-agalleth		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
-hotdogst		// (c) 1996 Marble
-pacslot			// (c) 1996 Namco
-ddonpach		// (c) 1997 Atlus/Cave
-ddonpachj		// (c) 1997 Atlus/Cave
-dfeveron		// (c) 1998 Cave + Nihon System license
-feversos		// (c) 1998 Cave + Nihon System license
-esprade			// (c) 1998 Atlus/Cave
-espradej		// (c) 1998 Atlus/Cave (Japan)
-espradejo		// (c) 1998 Atlus/Cave (Japan)
-uopoko			// (c) 1998 Cave + Jaleco license
-uopokoj			// (c) 1998 Cave + Jaleco license
-guwange			// (c) 1999 Atlus/Cave
-gaia			// (c) 1999 Noise Factory
-theroes			// (c) 2001 Primetek Investments
-korokoro		// (c) 1999 Takumi
-crusherm		// (c) 1999 Takumi
-tjumpman		// (c) 1999 Namco
+pwrinst2        // (c) 1994 Atlus
+pwrinst2j       // (c) 1994 Atlus
+plegends        // (c) 1994 Atlus
+plegendsj       // (c) 1994 Atlus
+mazinger        // (c) 1994 Banpresto (country is in EEPROM)
+mazingerj       // (c) 1994 Banpresto (country is in EEPROM)
+donpachi        // (c) 1995 Atlus/Cave
+donpachij       // (c) 1995 Atlus/Cave
+donpachikr      // (c) 1995 Atlus/Cave
+donpachihk      // (c) 1995 Atlus/Cave
+metmqstr        // (c) 1995 Banpresto / Pandorabox
+nmaster         // (c) 1995 Banpresto / Pandorabox
+sailormn        // (c) 1995 Banpresto (country is in EEPROM)
+sailormnu       // (c) 1995 Banpresto (country is in EEPROM)
+sailormnj       // (c) 1995 Banpresto (country is in EEPROM)
+sailormnk       // (c) 1995 Banpresto (country is in EEPROM)
+sailormnt       // (c) 1995 Banpresto (country is in EEPROM)
+sailormnh       // (c) 1995 Banpresto (country is in EEPROM)
+sailormno       // (c) 1995 Banpresto (country is in EEPROM)
+sailormnou      // (c) 1995 Banpresto (country is in EEPROM)
+sailormnoj      // (c) 1995 Banpresto (country is in EEPROM)
+sailormnok      // (c) 1995 Banpresto (country is in EEPROM)
+sailormnot      // (c) 1995 Banpresto (country is in EEPROM)
+sailormnoh      // (c) 1995 Banpresto (country is in EEPROM)
+agallet         // (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalletu        // (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalletj        // (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalletk        // (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agallett        // (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalleth        // (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+hotdogst        // (c) 1996 Marble
+pacslot         // (c) 1996 Namco
+ppsatan         // (c) 1996 <unknown>
+ddonpach        // (c) 1997 Atlus/Cave
+ddonpachj       // (c) 1997 Atlus/Cave
+dfeveron        // (c) 1998 Cave + Nihon System license
+feversos        // (c) 1998 Cave + Nihon System license
+esprade         // (c) 1998 Atlus/Cave
+espradej        // (c) 1998 Atlus/Cave (Japan)
+espradejo       // (c) 1998 Atlus/Cave (Japan)
+uopoko          // (c) 1998 Cave + Jaleco license
+uopokoj         // (c) 1998 Cave + Jaleco license
+guwange         // (c) 1999 Atlus/Cave
+guwanges        // (c) 1999 Atlus/Cave
+gaia            // (c) 1999 Noise Factory
+theroes         // (c) 2001 Primetek Investments
+korokoro        // (c) 1999 Takumi
+crusherm        // (c) 1999 Takumi
+tjumpman        // (c) 1999 Namco
+
+mushisam        // (c) 2004 Cave
+mushisama       // (c) 2004 Cave
+mushisamb       // (c) 2004 Cave
+espgal2         // (c) 2005 Cave
+ibara           // (c) 2006 Cave
+ibarablk        // (c) 2006 Cave
+ibarablka       // (c) 2006 Cave
+mushitam        // (c) 2005 Cave
+mushitama       // (c) 2005 Cave
+futari15        // (c) 2006 Cave
+futari15a       // (c) 2006 Cave
+futari10        // (c) 2006 Cave
+futaribl        // (c) 2006 Cave
+pinkswts        // (c) 2006 Cave
+pinkswtsa       // (c) 2006 Cave
+pinkswtsb       // (c) 2006 Cave
+pinkswtsx       // (c) 2006 Cave
+deathsml        // (c) 2007 Cave
+mmpork          // (c) 2007 Cave
+mmmbanc         // (c) 2007 Cave
+ddpdfk          // (c) 2008 Cave
+ddpdfk10        // (c) 2008 Cave
+dsmbl           // (c) 2008 Cave
 
 // Psikyo games
-samuraia		// (c) 1993 (World)
-sngkace			// (c) 1993 (Japan)
-gunbird			// (c) 1994
-gunbirdk		// (c) 1994
-gunbirdj		// (c) 1994
-btlkroad		// (c) 1994
-s1945			// (c) 1995
-s1945a			// (c) 1995
-s1945j			// (c) 1995
-s1945jn			// (c) 1995
-s1945bl			// (c) 1995 (Hong Kong bootleg)
-s1945k			// (c) 1995
-tengai			// (c) 1996
-tengaij			// (c) 1996
-s1945ii			// (c) 1997
-soldivid		// (c) 1997
-sbomber			// (c) 1998
-sbombera		// (c) 1998
-daraku			// (c) 1998
-gunbird2		// (c) 1998
-s1945iii		// (c) 1999
-dragnblz		// (c) 2000
-tgm2			// (c) 2000
-tgm2p			// (c) 2000
-gnbarich		// (c) 2001
-mjgtaste		// (c) 2002
+// 68020 board
+samuraia        // (c) 1993 (World)
+sngkace         // (c) 1993 (Japan)
+gunbird         // (c) 1994
+gunbirdk        // (c) 1994
+gunbirdj        // (c) 1994
+btlkroad        // (c) 1994
+s1945           // (c) 1995
+s1945a          // (c) 1995
+s1945j          // (c) 1995
+s1945jn         // (c) 1995
+s1945bl         // (c) 1995 (Hong Kong bootleg)
+s1945k          // (c) 1995
+tengai          // (c) 1996
+tengaij         // (c) 1996
+
+// SH2 board
+s1945ii         // (c) 1997
+soldivid        // (c) 1997
+sbomber         // (c) 1998
+sbombera        // (c) 1998
+daraku          // (c) 1998
+gunbird2        // (c) 1998
+s1945iii        // (c) 1999
+dragnblz        // (c) 2000
+tgm2            // (c) 2000
+tgm2p           // (c) 2000
+gnbarich        // (c) 2001
+mjgtaste        // (c) 2002
+hotgmck         // (c) 1997
+hgkairak        // (c) 1998
+hotgmck3        // (c) 1999
+hotgm4ev        // (c) 2000
+hotgmcki        // (c) 2001
+loderndf        // (c) 2000
+loderndfa       // (c) 2000
+hotdebut        // (c) 2000

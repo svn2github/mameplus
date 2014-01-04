@@ -46,6 +46,7 @@ CPUS += M680X0
 CPUS += TMS9900
 CPUS += COP400
 CPUS += SH2
+CPUS += SH4
 
 
 
@@ -73,11 +74,16 @@ SOUNDS += OKIM6295
 SOUNDS += HC55516
 SOUNDS += YM3812
 SOUNDS += CEM3394
+SOUNDS += YMZ770
 
 
 #-------------------------------------------------
 # specify available video cores
 #-------------------------------------------------
+
+VIDEOS += BUFSPRITE
+VIDEOS += EPIC12
+
 
 #-------------------------------------------------
 # specify available machine cores
@@ -91,6 +97,9 @@ MACHINES += RIOT6532
 MACHINES += PIT8253
 MACHINES += Z80CTC
 MACHINES += 68681
+MACHINES += EEPROMDEV
+MACHINES += SERFLASH
+MACHINES += RTC9701
 
 #-------------------------------------------------
 # This is the list of files that are necessary
@@ -154,6 +163,8 @@ $(MAMEOBJ)/psikyo.a: \
 
 $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
+	$(DRIVERS)/psikyo4.o $(VIDEO)/psikyo4.o \
+	$(DRIVERS)/cv1k.o \
 
 
 
@@ -167,6 +178,8 @@ $(DRIVERS)/astrocde.o:  $(LAYOUT)/gorf.lh \
 						$(LAYOUT)/tenpindx.lh
 $(DRIVERS)/circus.o:    $(LAYOUT)/circus.lh \
 						$(LAYOUT)/crash.lh
+
+$(DRIVERS)/cave.o:      $(LAYOUT)/ppsatan.lh
 
 $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
 
