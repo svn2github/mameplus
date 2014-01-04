@@ -31,6 +31,23 @@ static UINT8 original[MAX_FILE_SIZE];
 static UINT8 modified[MAX_FILE_SIZE];
 
 
+static int le_convert(char *buffer, int size)
+{
+	char *pos;
+	char *end = buffer + size;
+
+	/* brute force */
+	*end = 0;
+	pos = strchr(buffer, 0x0d);
+	while (pos != NULL)
+	{
+		memmove(pos, pos+1,end - pos + 1);
+		size--;
+		buffer = pos + 1;
+		pos = strchr(buffer, 0x0d);
+	}
+	return size;
+}
 
 /***************************************************************************
     MAIN
@@ -38,10 +55,12 @@ static UINT8 modified[MAX_FILE_SIZE];
 
 int main(int argc, char *argv[])
 {
+	bool unix_le = false;
 	int removed_tabs = 0;
 	int added_tabs = 0;
 	int removed_spaces = 0;
 	int removed_continuations = 0;
+	int fixed_dos_style = 0;
 	int fixed_mac_style = 0;
 	int fixed_nix_style = 0;
 	int added_newline = 0;
@@ -62,11 +81,31 @@ int main(int argc, char *argv[])
 	int escape = 0;
 	int consume = 0;
 	const int tab_size = 4;
+	bool arg_found = true;
+	bool dry_run = false;
 
-	/* print usage info */
-	if (argc != 2)
+	while (arg_found && argc > 1) {
+		if (strcmp(argv[1], "-u") == 0)
+		{
+			unix_le = true;
+			argc--;
+			argv++;
+		}
+		else if (strcmp(argv[1], "-d") == 0)
+		{
+			dry_run = true;
+			argc--;
+			argv++;
+		}
+		else
+			arg_found = false;
+
+	}
+
+    /* print usage info */
+	if (argc < 2)
 	{
-		printf("Usage:\nsrcclean <file>\n");
+		printf("Usage:\nsrcclean [-u] [-d] <file>\n");
 		return 0;
 	}
 
@@ -79,6 +118,10 @@ int main(int argc, char *argv[])
 	}
 	bytes = fread(original, 1, MAX_FILE_SIZE, file);
 	fclose(file);
+
+	/* check whether we have dos line endings and are in unix mode */
+	if (unix_le && (strchr((char *) original, 0x0d) != NULL))
+		fixed_dos_style = 1;
 
 	/* determine if we are a C file */
 	ext = strrchr(argv[1], '.');
@@ -324,6 +367,11 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	/* convert to unix_le if requested */
+
+	if (unix_le)
+		dst = le_convert((char *) modified, dst);
+
 	/* if the result == original, skip it */
 	if (dst != bytes || memcmp(original, modified, bytes))
 	{
@@ -336,14 +384,18 @@ int main(int argc, char *argv[])
 		if (removed_tabs) printf(" removed %d tab(s)", removed_tabs);
 		if (added_tabs) printf(" added %d tab(s)", added_tabs);
 		if (hichars) printf(" fixed %d high-ASCII char(s)", hichars);
-		if (fixed_nix_style) printf(" fixed *nix-style line-ends");
+		if (fixed_nix_style && !unix_le) printf(" fixed *nix-style line-ends");
 		if (fixed_mac_style) printf(" fixed Mac-style line-ends");
+		if (fixed_dos_style) printf(" fixed Dos-style line-ends");
 		printf("\n");
 
-		/* write the file */
-		file = fopen(argv[1], "wb");
-		fwrite(modified, 1, dst, file);
-		fclose(file);
+		if (!dry_run)
+		{
+			/* write the file */
+			file = fopen(argv[1], "wb");
+			fwrite(modified, 1, dst, file);
+			fclose(file);
+		}
 	}
 
 	return 0;

@@ -388,7 +388,7 @@ ui_menu_keyboard_mode::ui_menu_keyboard_mode(running_machine &machine, render_co
 void ui_menu_keyboard_mode::populate()
 {
 	int natural = ui_get_use_natural_keyboard(machine());
-	item_append("Keyboard Mode:", natural ? "Natural" : "Emulated", natural ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, NULL);
+	item_append(_("Keyboard Mode:"), natural ? _("Natural") : _("Emulated"), natural ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, NULL);
 }
 
 ui_menu_keyboard_mode::~ui_menu_keyboard_mode()

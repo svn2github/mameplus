@@ -290,7 +290,7 @@ static void CLIB_DECL ATTR_PRINTF(1,2) debugload(const char *string, ...)
     from SystemBios structure and OPTION_BIOS
 -------------------------------------------------*/
 
-static void determine_bios_rom(romload_private *romdata, device_t *device, const char *specbios)
+static void determine_bios_rom(romload_private *romdata, device_t *device,const char *specbios)
 {
 	const char *defaultname = NULL;
 	const rom_entry *rom;
@@ -514,7 +514,7 @@ static void display_rom_load_results(romload_private *romdata, bool from_list)
 	{
 		/* create the error message and exit fatally */
 		mame_printf_error("%s", romdata->errorstring.cstr());
-		fatalerror_exitcode(romdata->machine(), MAMERR_MISSING_FILES, _("ERROR: required files are missing, the %s cannot be run."),emulator_info::get_gamenoun());
+		fatalerror_exitcode(romdata->machine(), MAMERR_MISSING_FILES, _("Required files are missing, the %s cannot be run."),emulator_info::get_gamenoun());
 	}
 
 	/* if we had warnings, output them, but continue */

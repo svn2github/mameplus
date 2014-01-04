@@ -9,9 +9,7 @@
 
 **********************************************************************/
 
-#include "emu.h"
 #include "exp.h"
-#include "emuopts.h"
 
 
 
@@ -129,7 +127,7 @@ bool vic20_expansion_slot_device::call_load()
 				// read the header
 				UINT8 header[2];
 				fread(&header, 2);
-				UINT16 address = pick_integer_le(header, 0, 2);
+				UINT16 address = (header[1] << 8) | header[0];
 
 				switch (address)
 				{
@@ -209,6 +207,15 @@ void vic20_expansion_slot_device::cd_w(address_space &space, offs_t offset, UINT
 //-------------------------------------------------
 //  SLOT_INTERFACE( vic20_expansion_cards )
 //-------------------------------------------------
+
+// slot devices
+#include "megacart.h"
+#include "std.h"
+#include "vic1010.h"
+#include "vic1110.h"
+#include "vic1111.h"
+#include "vic1112.h"
+#include "vic1210.h"
 
 SLOT_INTERFACE_START( vic20_expansion_cards )
 	SLOT_INTERFACE("exp", VIC1010)

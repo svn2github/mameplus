@@ -169,7 +169,7 @@ MACHINE_RESET_MEMBER(pgm_arm_type3_state, pgm_arm_type3_reset)
 		int regionhack = ioport("RegionHack")->read();
 		if (regionhack != 0xff)
 		{
-//          printf("%04x\n", temp16[(base) / 2]);
+//  printf("%04x\n", temp16[(base) / 2]);
 			temp16[(base) / 2] = regionhack; base += 2;
 		}
 	}

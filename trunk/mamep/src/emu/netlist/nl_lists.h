@@ -16,14 +16,17 @@
 
 
 template <class _ListClass, int _NumElem = 128>
-struct netlist_list_t
+class netlist_list_t
 {
 public:
 
-	struct entry_t {
+	struct entry_t
+	{
+	    friend class netlist_list_t;
+	public:
 		// keep compatibility with tagmap
-		_ListClass object() { return m_obj; }
-
+		ATTR_HOT inline _ListClass object() { return m_obj; }
+	private:
 		_ListClass m_obj;
 	};
 
@@ -31,15 +34,14 @@ public:
 	{
 		m_num_elements = numElements;
 		m_list = new entry_t[m_num_elements];
-		m_ptr = m_list;
-		m_ptr--;
+        m_count = 0;
 	}
 
 	ATTR_COLD netlist_list_t(const netlist_list_t &rhs)
 	{
+	    m_num_elements = rhs.capacity();
 		m_list = new entry_t[m_num_elements];
-		m_ptr = m_list;
-		m_ptr--;
+		m_count = 0;
 		for (int i=0; i<rhs.count(); i++)
 		{
 			this->add(rhs[i]);
@@ -60,73 +62,78 @@ public:
 	{
 		delete[] m_list;
 	}
+
 	ATTR_HOT inline void add(const _ListClass elem)
 	{
-		if (m_ptr-m_list >= m_num_elements - 1)
+		if (m_count >= m_num_elements)
 			resize(m_num_elements * 2);
 
-		(++m_ptr)->m_obj = elem;
+		m_list[m_count++].m_obj = elem;
 	}
+
 	ATTR_HOT inline void resize(const int new_size)
 	{
 		int cnt = count();
 		entry_t *m_new = new entry_t[new_size];
 		entry_t *pd = m_new;
 
-		for (entry_t *ps = m_list; ps <= m_ptr; ps++, pd++)
+		for (entry_t *ps = m_list; ps < m_list + cnt; ps++, pd++)
 			*pd = *ps;
 		delete[] m_list;
 		m_list = m_new;
-		m_ptr = m_list + cnt - 1;
+		m_count = cnt;
 		m_num_elements = new_size;
 	}
+
 	ATTR_HOT inline void remove(const _ListClass elem)
 	{
-		for (entry_t *i = m_list; i <= m_ptr; i++)
+		for (int i =0; i < m_count; i++)
 		{
-			if (i->object() == elem)
+			if (m_list[i].object() == elem)
 			{
-				while (i < m_ptr)
+			    m_count --;
+				while (i < m_count)
 				{
-					*i = *(i+1);
+					m_list[i] = m_list[i+1];
 					i++;
 				}
-				m_ptr--;
 				return;
 			}
 		}
 	}
+
 	ATTR_HOT inline bool contains(const _ListClass elem) const
 	{
-		for (entry_t *i = m_list; i <= m_ptr; i++)
+		for (entry_t *i = m_list; i < m_list + m_count; i++)
 		{
 			if (i->object() == elem)
 				return true;
 		}
 		return false;
 	}
-	ATTR_HOT inline entry_t *first() const { return (m_ptr >= m_list ? &m_list[0] : NULL ); }
-	ATTR_HOT inline entry_t *next(entry_t *lc) const { return (lc < last() ? lc + 1 : NULL ); }
-	ATTR_HOT inline entry_t *last() const { return m_ptr; }
-	ATTR_HOT inline int count() const { return m_ptr - m_list + 1; }
-	ATTR_HOT inline bool empty() const { return (m_ptr < m_list); }
-	ATTR_HOT inline void reset() { m_ptr = m_list - 1; }
+
+	ATTR_HOT inline entry_t *first() const { return ((m_count > 0) ? &m_list[0] : NULL ); }
+	ATTR_HOT inline entry_t *next(entry_t *lc) const { return ((lc < last()) ? lc + 1 : NULL ); }
+	ATTR_HOT inline entry_t *last() const { return &m_list[m_count -1]; }
+	ATTR_HOT inline int count() const { return m_count; }
+	ATTR_HOT inline bool empty() const { return (m_count == 0); }
+	ATTR_HOT inline void reset() { m_count = 0; }
+    ATTR_HOT inline int capacity() const { return m_num_elements; }
 
 	ATTR_COLD void reset_and_free()
 	{
-		for (entry_t *i = m_list; i <= m_ptr; i++)
+		for (entry_t *i = m_list; i < m_list + m_count; i++)
 		{
 			delete i->object();
 		}
 		reset();
 	}
 
-	//ATTR_HOT inline entry_t *item(int i) const { return &m_list[i]; }
 	ATTR_HOT inline _ListClass& operator[](const int & index) { return m_list[index].m_obj; }
 	ATTR_HOT inline const _ListClass& operator[](const int & index) const { return m_list[index].m_obj; }
 
 private:
-	entry_t * m_ptr;
+	int m_count;
 	entry_t * m_list;
 	int m_num_elements;
 	//_ListClass m_list[_NumElements];
@@ -145,17 +152,15 @@ public:
 	struct entry_t
 	{
 	public:
-		inline entry_t()
-		: m_time(), m_object(NULL) {}
-		inline entry_t(const _Time atime, _Element &elem) : m_time(atime), m_object(&elem) {}
-		ATTR_HOT inline const _Time &time() const { return m_time; }
-		ATTR_HOT inline _Element & object() const { return *m_object; }
+		ATTR_HOT inline entry_t()
+		: m_time(), m_object() {}
+		ATTR_HOT inline entry_t(const _Time atime, _Element elem) : m_time(atime), m_object(elem) {}
+		ATTR_HOT inline _Time time() const { return m_time; }
+		ATTR_HOT inline _Element object() const { return m_object; }
 
-		ATTR_HOT inline const _Time *time_ptr() const { return &m_time; }
-		ATTR_HOT inline _Element *object_ptr() const { return m_object; }
 	private:
 		_Time m_time;
-		_Element *m_object;
+		_Element m_object;
 	};
 
 	netlist_timed_queue()
@@ -168,19 +173,22 @@ public:
 	ATTR_HOT inline bool is_empty() const { return (m_end == &m_list[0]); }
 	ATTR_HOT inline bool is_not_empty() const { return (m_end > &m_list[0]); }
 
-	ATTR_HOT ATTR_ALIGN inline void push(const entry_t &e)
+	ATTR_HOT ATTR_ALIGN void push(const entry_t &e)
 	{
-		if (is_empty() || (e.time() <= (m_end - 1)->time()))
+#if 0
+	    // less is more
+	    if (is_empty() || (e.time() <= (m_end - 1)->time()))
 		{
 			*m_end++ = e;
 			inc_stat(m_prof_end);
 		}
 		else
+#endif
 		{
 			entry_t * RESTRICT i = m_end++;
-			while ((i>&m_list[0]) && (e.time() > (i-1)->time()) )
+			while ((i > &m_list[0]) && (e.time() > (i - 1)->time()) )
 			{
-				i--;
+			    i--;
 				*(i+1) = *i;
 				inc_stat(m_prof_sortmove);
 			}
@@ -190,7 +198,7 @@ public:
 		assert(m_end - m_list < _Size);
 	}
 
-	ATTR_HOT inline const entry_t &pop()
+	ATTR_HOT inline entry_t pop()
 	{
 		return *--m_end;
 	}
@@ -205,10 +213,11 @@ public:
 		m_end = &m_list[0];
 	}
 
-	// save state support
+	// save state support & mame disasm
 
-	ATTR_COLD entry_t *listptr() { return &m_list[0]; }
-	ATTR_COLD int count() const { return m_end - m_list; }
+	ATTR_COLD inline const entry_t *listptr() const { return &m_list[0]; }
+	ATTR_HOT inline int count() const { return m_end - m_list; }
+	ATTR_HOT inline const entry_t & operator[](const int & index) const { return m_list[index]; }
 
 #if (NL_KEEP_STATISTICS)
 	// profiling

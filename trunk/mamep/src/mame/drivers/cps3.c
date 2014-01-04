@@ -4025,11 +4025,11 @@ GAME( 1996, warzardr1, redearth, redearth, cps3_re, cps3_state,   redearth, ROT0
 // not dumped
 
 // 970204
-GAME( 1997, sfiii,     0,        sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Euro 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiiu,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,      sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii,     0,        sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Euro 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiiu,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 /* Street Fighter III 2nd Impact: Giant Attack */
 

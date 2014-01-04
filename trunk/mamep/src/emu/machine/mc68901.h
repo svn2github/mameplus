@@ -79,7 +79,6 @@ struct mc68901_interface
 
 	devcb_write_line        m_out_irq_cb;
 
-	devcb_read8             m_in_gpio_cb;
 	devcb_write8            m_out_gpio_cb;
 
 	devcb_write_line        m_out_tao_cb;
@@ -134,7 +133,6 @@ protected:
 	// device_serial_interface overrides
 	virtual void tra_callback();
 	virtual void tra_complete();
-	virtual void rcv_callback();
 	virtual void rcv_complete();
 	virtual void input_callback(UINT8 state);
 
@@ -145,6 +143,7 @@ protected:
 	void timer_count(int index);
 	void timer_input(int index, int value);
 	void gpio_input(int bit, int state);
+	void gpio_output();
 	void register_w(offs_t offset, UINT8 data);
 
 private:
@@ -238,7 +237,6 @@ private:
 	static const int GPIO_TIMER[];
 	static const int PRESCALER[];
 
-	devcb_resolved_read8        m_in_gpio_func;
 	devcb_resolved_write8       m_out_gpio_func;
 	devcb_resolved_write_line   m_out_so_func;
 	devcb_resolved_write_line   m_out_tao_func;
@@ -269,7 +267,12 @@ private:
 	UINT8 m_ucr;                            /* USART control register */
 	UINT8 m_tsr;                            /* transmitter status register */
 	UINT8 m_rsr;                            /* receiver status register */
-	UINT8 m_udr;                            /* USART data register */
+	UINT8 m_transmit_buffer;                /* USART data register */
+	int m_transmit_pending;
+	UINT8 m_receive_buffer;
+	int m_receive_pending;
+	UINT8 m_gpio_input;
+	UINT8 m_gpio_output;
 
 	/* counter timer state */
 	UINT8 m_tmc[4];     /* timer main counters */
@@ -285,19 +288,6 @@ private:
 	int m_rxtx_word;                        /* word length */
 	int m_rxtx_start;                       /* start bits */
 	int m_rxtx_stop;                        /* stop bits */
-
-	/* receive state */
-	UINT8 m_rx_buffer;                      /* receive buffer */
-	int m_rx_bits;                          /* receive bit count */
-	int m_rx_parity;                        /* receive parity bit */
-	int m_rx_state;                         /* receive state */
-
-	/* transmit state */
-	UINT8 m_tx_buffer;                      /* transmit buffer */
-	int m_tx_bits;                          /* transmit bit count */
-	int m_tx_parity;                        /* transmit parity bit */
-	int m_tx_state;                         /* transmit state */
-	int m_xmit_state;                       /* transmitter state */
 
 	// timers
 	emu_timer *m_timer[4]; /* counter timers */

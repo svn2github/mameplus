@@ -38,31 +38,16 @@ static const ay8910_interface mockingboard_ay8910_interface =
 	DEVCB_NULL
 };
 
-const via6522_interface mockingboard_via1_intf =
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via1_in_a), DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via1_in_b),
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via1_out_a), DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via1_out_b),
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via1_irq_w)
-};
-
-const via6522_interface mockingboard_via2_intf =
-{
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via2_in_a), DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via2_in_b),
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via2_out_a), DEVCB_DEVICE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via2_out_b),
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_NULL, DEVCB_NULL,
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_ayboard_device, via2_irq_w)
-};
-
 MACHINE_CONFIG_FRAGMENT( mockingboard )
-	MCFG_VIA6522_ADD(VIA1_TAG, 1022727, mockingboard_via1_intf)
-	MCFG_VIA6522_ADD(VIA2_TAG, 1022727, mockingboard_via2_intf)
+	MCFG_DEVICE_ADD(VIA1_TAG, VIA6522, 1022727)
+	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(a2bus_ayboard_device, via1_out_a))
+	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(a2bus_ayboard_device, via1_out_b))
+	MCFG_VIA6522_IRQ_HANDLER(WRITELINE(a2bus_ayboard_device, via1_irq_w))
+
+	MCFG_DEVICE_ADD(VIA2_TAG, VIA6522, 1022727)
+	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(a2bus_ayboard_device, via2_out_a))
+	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(a2bus_ayboard_device, via2_out_b))
+	MCFG_VIA6522_IRQ_HANDLER(WRITELINE(a2bus_ayboard_device, via2_irq_w))
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD(AY1_TAG, AY8913, 1022727)
@@ -74,8 +59,15 @@ MACHINE_CONFIG_FRAGMENT( mockingboard )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_FRAGMENT( phasor )
-	MCFG_VIA6522_ADD(VIA1_TAG, 1022727, mockingboard_via1_intf)
-	MCFG_VIA6522_ADD(VIA2_TAG, 1022727, mockingboard_via2_intf)
+	MCFG_DEVICE_ADD(VIA1_TAG, VIA6522, 1022727)
+	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(a2bus_ayboard_device, via1_out_a))
+	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(a2bus_ayboard_device, via1_out_b))
+	MCFG_VIA6522_IRQ_HANDLER(WRITELINE(a2bus_ayboard_device, via1_irq_w))
+
+	MCFG_DEVICE_ADD(VIA2_TAG, VIA6522, 1022727)
+	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(a2bus_ayboard_device, via2_out_a))
+	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(a2bus_ayboard_device, via2_out_b))
+	MCFG_VIA6522_IRQ_HANDLER(WRITELINE(a2bus_ayboard_device, via2_irq_w))
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker2", "rspeaker2")
@@ -94,8 +86,15 @@ MACHINE_CONFIG_FRAGMENT( phasor )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_FRAGMENT( echoplus )
-	MCFG_VIA6522_ADD(VIA1_TAG, 1022727, mockingboard_via1_intf)
-	MCFG_VIA6522_ADD(VIA2_TAG, 1022727, mockingboard_via2_intf)
+	MCFG_DEVICE_ADD(VIA1_TAG, VIA6522, 1022727)
+	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(a2bus_ayboard_device, via1_out_a))
+	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(a2bus_ayboard_device, via1_out_b))
+	MCFG_VIA6522_IRQ_HANDLER(WRITELINE(a2bus_ayboard_device, via1_irq_w))
+
+	MCFG_DEVICE_ADD(VIA2_TAG, VIA6522, 1022727)
+	MCFG_VIA6522_WRITEPA_HANDLER(WRITE8(a2bus_ayboard_device, via2_out_a))
+	MCFG_VIA6522_WRITEPB_HANDLER(WRITE8(a2bus_ayboard_device, via2_out_b))
+	MCFG_VIA6522_IRQ_HANDLER(WRITELINE(a2bus_ayboard_device, via2_irq_w))
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD(AY1_TAG, AY8913, 1022727)
@@ -312,19 +311,9 @@ WRITE_LINE_MEMBER( a2bus_ayboard_device::via2_irq_w )
 	}
 }
 
-READ8_MEMBER( a2bus_ayboard_device::via1_in_a )
-{
-	return 0;
-}
-
 WRITE8_MEMBER( a2bus_ayboard_device::via1_out_a )
 {
 	m_porta1 = data;
-}
-
-READ8_MEMBER( a2bus_ayboard_device::via1_in_b )
-{
-	return 0;
 }
 
 WRITE8_MEMBER( a2bus_ayboard_device::via1_out_b )
@@ -415,19 +404,9 @@ WRITE8_MEMBER( a2bus_ayboard_device::via1_out_b )
 	}
 }
 
-READ8_MEMBER( a2bus_ayboard_device::via2_in_a )
-{
-	return 0;
-}
-
 WRITE8_MEMBER( a2bus_ayboard_device::via2_out_a )
 {
 	m_porta2 = data;
-}
-
-READ8_MEMBER( a2bus_ayboard_device::via2_in_b )
-{
-	return 0;
 }
 
 WRITE8_MEMBER( a2bus_ayboard_device::via2_out_b )

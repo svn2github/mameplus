@@ -82,8 +82,13 @@ enum input_changed_enum
 };
 
 static NETLIST_START(pong_schematics)
+    NETDEV_SOLVER(Solver)
+    NETDEV_PARAM(Solver.FREQ, 48000)
+    NETDEV_ANALOG_CONST(V5, 5)
+
 	NETDEV_TTL_CONST(high, 1)
 	NETDEV_TTL_CONST(low, 0)
+
 #if 1
 #if 0
 	/* this is the clock circuit in schematics. */
@@ -106,8 +111,85 @@ static NETLIST_START(pong_schematics)
 	NETDEV_PARAM(xclk.FREQ, 7159000.0*2)
 #endif
 
-	NETDEV_LOGIC_INPUT(SRST)
-	NETDEV_ANALOG_INPUT(P2)
+	/* 3V Logic - Just a resistor - the value is not given in schematics */
+
+	NETDEV_R(R3V, 50)   // Works ...
+	NET_C(R3V.1, V5)
+	NET_ALIAS(V3, R3V.2)
+
+	/* Coin, antenna and startup circuit */
+
+	NETDEV_ANALOG_CONST(STOPG, 0)
+    NET_ALIAS(SRSTQ, RYf.2)
+    NET_ALIAS(SRST, RYc.2)
+
+    /* SRSTQ has a diode to +3V to protect against overvoltage - omitted */
+
+    NETDEV_LOGIC_INPUT(antenna)
+
+    NET_ALIAS(runQ, Q1.C)
+
+    TTL_7404_INVERT(e4d, STOPG)
+
+    NETDEV_R(RYf, 50)   // output impedance
+    NETDEV_R(RYc, 50)   // output impedance
+
+    TTL_7404_INVERT(c9f, RYc.2)
+    TTL_7404_INVERT(c9c, RYf.2)
+    NET_C(c9f.Q, RYf.1)
+    NET_C(c9c.Q, RYc.1)
+
+    NETDEV_SWITCH2(coinsw,  RYc.2, RYf.2)
+
+    NET_C(coinsw.Q, GND)
+
+    /* Antenna circuit */
+    /* Has a diode to clamp negative voltages - omitted here */
+
+    NETDEV_QNPN(Q3, BC237B)
+    NET_C(antenna, Q3.B)
+    NET_C(GND, Q3.E)
+    NETDEV_R(RX5, 100)
+    NETDEV_C(CX1, CAP_U(0.1))
+
+    NET_C(RX5.1, CX1.1)
+    NET_C(RX5.1, Q3.C)
+    NET_C(RX5.2, GND)
+    NET_C(CX1.2, GND)
+    NETDEV_QNPN(Q1, BC237B)
+    NET_C(Q1.B, RX5.1)
+    NET_C(Q1.E, GND)
+
+    NETDEV_D(D3, 1N914)
+    NET_C(D3.A, Q1.C)
+    NET_C(D3.K, SRSTQ)
+
+    NETDEV_D(D2, 1N914)
+    NETDEV_R(RX4, 220)
+    NET_C(D2.K, e4d.Q)
+    NET_C(D2.A, RX4.1)
+    NET_C(RX4.2, Q3.C)
+
+    NETDEV_R(RX1, 100)
+    NETDEV_R(RX2, 100)
+    NETDEV_R(RX3, 330)
+    NETDEV_C(CX2, CAP_U(0.1))
+
+    NET_C(RX3.2, D3.A)
+    NET_C(RX3.1, RX1.2)
+    NET_C(RX1.1, V3)
+
+    NET_C(RX1.1, CX2.1)
+    NET_C(RX1.2, CX2.2)
+
+    NETDEV_QPNP(Q2, BC556B)
+    NET_C(Q2.E, V3)
+    NET_C(Q2.B, RX1.2)
+    NET_C(Q2.C, RX2.2)
+
+    NET_C(RX2.1, D2.A)
+
+    /* hit logic */
 
 	TTL_7404_INVERT(hitQ, hit)
 	TTL_7400_NAND(hit, hit1Q, hit2Q)
@@ -125,11 +207,6 @@ static NETLIST_START(pong_schematics)
 	TTL_7400_NAND(ic_e1a, ic_d1e.Q, attractQ)
 	NET_ALIAS(Missed, ic_e1a.Q)
 
-	// runQ is basically the output of a RS flipflop
-	// This is realized with discrete components in the real thing
-	NETDEV_RSFF(runQ_ff, SRST, StopG)
-	NET_ALIAS(runQ, runQ_ff.QQ)
-
 	TTL_7400_NAND(rstspeed, SRSTQ, MissQ)
 	TTL_7400_NAND(StopG, StopG1Q, StopG2Q)
 	NET_ALIAS(L, ic_h3b.Q)
@@ -137,8 +214,6 @@ static NETLIST_START(pong_schematics)
 
 	TTL_7400_NAND(hit1Q, pad1, ic_g1b.Q)
 	TTL_7400_NAND(hit2Q, pad2, ic_g1b.Q)
-
-	TTL_7404_INVERT(SRSTQ, SRST)
 
 	TTL_7400_NAND(ic_g3c, 128H, ic_h3a.QQ)
 	TTL_7427_NOR(ic_g2c, ic_g3c.Q, 256H, vpad1Q)
@@ -370,6 +445,7 @@ static NETLIST_START(pong_schematics)
 	// ----------------------------------------------------------------------------------------
 
 	NETDEV_POT(ic_b9_POT, RES_K(1))     // This is a guess!!
+	NETDEV_PARAM(ic_b9_POT.DIALLOG, 1)  // Log Dial ...
 	NETDEV_R(ic_b9_RPRE, 470)
 
 	NET_C(ic_b9_POT.1, V5)
@@ -377,7 +453,7 @@ static NETLIST_START(pong_schematics)
 	NET_C(ic_b9_POT.2, ic_b9_RPRE.1)
 	NET_C(ic_b9_RPRE.2, ic_b9.CONT)
 
-	NETDEV_R(ic_b9_R, RES_K(71))
+	NETDEV_R(ic_b9_R, RES_K(81))        // Adjustment pot
 	NETDEV_C(ic_b9_C, CAP_U(.1))
 	NETDEV_D(ic_b9_D, 1N914)
 	NETDEV_NE555(ic_b9)
@@ -409,6 +485,7 @@ static NETLIST_START(pong_schematics)
 	// ----------------------------------------------------------------------------------------
 
 	NETDEV_POT(ic_a9_POT, RES_K(1))     // This is a guess!!
+    NETDEV_PARAM(ic_a9_POT.DIALLOG, 1)  // Log Dial ...
 	NETDEV_R(ic_a9_RPRE, 470)
 
 	NET_C(ic_a9_POT.1, V5)
@@ -416,7 +493,7 @@ static NETLIST_START(pong_schematics)
 	NET_C(ic_a9_POT.2, ic_a9_RPRE.1)
 	NET_C(ic_a9_RPRE.2, ic_a9.CONT)
 
-	NETDEV_R(ic_a9_R, RES_K(71))
+	NETDEV_R(ic_a9_R, RES_K(81))        // Adjustment pot
 	NETDEV_C(ic_a9_C, CAP_U(.1))
 	NETDEV_D(ic_a9_D, 1N914)
 	NETDEV_NE555(ic_a9)
@@ -454,7 +531,7 @@ static NETLIST_START(pong_schematics)
 	TTL_7402_NOR(ic_d2c, ic_e3c.Q, ic_e3b.Q)
 	TTL_7404_INVERT(ic_g1a, 32V)
 	TTL_7425_NOR(ic_f2a, ic_g1a.Q, 64V, 128V, ic_d2c.Q)
-	NET_ALIAS(c5-en, ic_f2a.Q)
+	NET_ALIAS(c5_en, ic_f2a.Q)
 
 	// ----------------------------------------------------------------------------------------
 	// Score logic ...
@@ -500,7 +577,7 @@ static NETLIST_START(pong_schematics)
 	TTL_74153(ic_c6a, high, score1_1, high, score2_1, 32H, 64H, low)
 	TTL_74153(ic_c6b, score1_10Q, score1_2, score2_10Q, score2_2, 32H, 64H, low)
 
-	TTL_7448(ic_c5, ic_c6a.AY, ic_c6b.AY, ic_d6a.AY, ic_d6b.AY, high, c5-en, high)
+	TTL_7448(ic_c5, ic_c6a.AY, ic_c6b.AY, ic_d6a.AY, ic_d6b.AY, high, c5_en, high)
 
 	TTL_7404_INVERT(ic_e4b, 16H)
 	TTL_7427_NOR(ic_e5c, ic_e4b.Q, 8H, 4H)
@@ -560,228 +637,7 @@ static NETLIST_START(pong_schematics)
 
 	NET_ALIAS(videomix, RV3.2)
 
-	NETDEV_SOLVER(Solver)
-	NETDEV_PARAM(Solver.FREQ, 48000)
-	NETDEV_ANALOG_CONST(V5, 5)
-	NETDEV_ANALOG_CONST(V1, 1)
-	NETDEV_ANALOG_CONST(GND, 0)
-
-#if 0
-	NETDEV_R(R1, 10)
-	NETDEV_R(R2, 10)
-	NETDEV_R(R3, 10)
-	NET_C(V5,R1.1)
-	NET_C(R1.2, R2.1)
-	NET_C(R2.2, R3.1)
-	NET_C(R3.2, GND)
-#endif
-#if 0
-	NETDEV_R(R4, 1000)
-	NETDEV_C(C1, 1e-6)
-	NET_C(V5,R4.1)
-	NET_C(R4.2, C1.1)
-	NET_C(C1.2, GND)
-	//NETDEV_LOG(log1, C1.1)
-#endif
-
-#define tt(_n) \
-	NETDEV_R(R ## _n, 1000) \
-	NETDEV_D(D ## _n) \
-	NET_C(V5, R ## _n.1) \
-	NET_C(R ## _n.2, D ## _n.A) \
-	NET_C(D ## _n.K, GND)
-
-/*    tt(20)
-    tt(21)
-    tt(22)
-    tt(23)
-    tt(24)
-    tt(25)
-    tt(26)
-    tt(27)
-    tt(28)
-    tt(29)
-*/
-
-#if 0
-	NETDEV_R(R5, 1000)
-	NETDEV_1N914(D1)
-	NET_C(V5, R5.1)
-	NET_C(R5.2, D1.A)
-	NET_C(D1.K, GND)
-	//NETDEV_LOG(log1, D1.A)
-#endif
-
-#if 0
-	// astable NAND Multivibrator
-	NETDEV_R(R1, 1000)
-	NETDEV_C(C1, 1e-6)
-	TTL_7400_NAND(n1,R1.1,R1.1)
-	TTL_7400_NAND(n2,R1.2,R1.2)
-	NET_C(n1.Q, R1.2)
-	NET_C(n2.Q, C1.1)
-	NET_C(C1.2, R1.1)
-	//NETDEV_LOG(log2, C1.2)
-	//NETDEV_LOG(log2, n1.Q)
-	//NETDEV_LOG(log3, n2.Q)
-#endif
-
-#if 0
-	// astable NE555, 1.13 ms period
-	NETDEV_R(RA, 5000)
-	NETDEV_R(RB, 3000)
-	NETDEV_C(C, 0.15e-6)
-	NETDEV_NE555(555)
-
-	NET_C(GND, 555.GND)
-	NET_C(V5, 555.VCC)
-
-	NET_C(RA.1, 555.VCC)
-	NET_C(RA.2, 555.DISCH)
-
-	NET_C(RB.1, 555.DISCH)
-	NET_C(RB.2, 555.TRIG)
-
-	NET_C(RB.2, 555.THRESH)
-
-	NET_C(555.TRIG, C.1)
-	NET_C(C.2, GND)
-	//NETDEV_LOG(log2, C.1)
-	//NETDEV_LOG(log3, 555.OUT)
-#endif
-
-#if 0
-	NETDEV_BC238B(Q)
-	NETDEV_R(RB, 1000)
-	NETDEV_R(RC, 1000)
-
-	NET_C(RC.1, V5)
-	NET_C(RC.2, Q.C)
-	NET_C(RB.1, 128H)
-	NET_C(RB.2, Q.B)
-	NET_C(Q.E, GND)
-	//NETDEV_LOG(logB, Q.B)
-	//NETDEV_LOG(logC, Q.C)
-#endif
-
-#if 0
-	NETDEV_VCVS(VV)
-	NETDEV_R(R1, 1000)
-	NETDEV_R(R2, 10000)
-
-	NET_C(V5, R1.1)
-	NET_C(R1.2, VV.IN)
-	NET_C(R2.1, VV.OP)
-	NET_C(R2.2, VV.IN)
-	NET_C(VV.ON, GND)
-	NET_C(VV.IP, GND)
-	NETDEV_LOG(logX, VV.OP)
-
-#endif
-
-#if 0
-	NETDEV_VCCS(VV)
-	NETDEV_PARAM(VV.G, 100000)  // typical OP-AMP amplification
-	NETDEV_R(R1, 1000)
-	NETDEV_R(R2, 1)
-	NETDEV_R(R3, 10000)
-
-	NET_C(4V, R1.1)
-	NET_C(R1.2, VV.IN)
-	NET_C(R2.1, VV.OP)
-	NET_C(R3.1, VV.IN)
-	NET_C(R3.2, VV.OP)
-	NET_C(R2.2, GND)
-	NET_C(VV.ON, GND)
-	NET_C(VV.IP, GND)
-	//NETDEV_LOG(logX, VV.OP)
-	//NETDEV_LOG(logY, 4V)
-
-#endif
-
-#if 0
-	NETDEV_VCVS(VV)
-	NETDEV_PARAM(VV.G, 100000)  // typical OP-AMP amplification
-	NETDEV_PARAM(VV.RO, 50)  // typical OP-AMP amplification
-	NETDEV_R(R1, 1000)
-	NETDEV_R(R3, 10000) // ==> 10x amplification (inverting)
-
-	NET_C(4V, R1.1)
-	NET_C(R1.2, VV.IN)
-	NET_C(R3.1, VV.IN)
-	NET_C(R3.2, VV.OP)
-	NET_C(VV.ON, GND)
-	NET_C(VV.IP, GND)
-	NETDEV_LOG(logX, VV.OP)
-	NETDEV_LOG(logY, 4V)
-
-#endif
-
-#if 0
-	// Impedance converter with resistor
-	NETDEV_VCVS(VV)
-	NETDEV_PARAM(VV.G, 100000)  // typical OP-AMP amplification
-	NETDEV_PARAM(VV.RO, 50)  // typical OP-AMP amplification
-	NETDEV_R(R3, 10000)
-
-	NET_C(4V, VV.IP)
-	NET_C(R3.1, VV.IN)
-	NET_C(R3.2, VV.OP)
-	NET_C(VV.ON, GND)
-	NETDEV_LOG(logX, VV.OP)
-	NETDEV_LOG(logY, 4V)
-
-#endif
-
-#if 0
-	// Impedance converter without resistor
-	NETDEV_VCVS(VV)
-	NETDEV_PARAM(VV.G, 100000)  // typical OP-AMP amplification
-	NETDEV_PARAM(VV.RO, 50)  // typical OP-AMP amplification
-
-	NET_C(4V, VV.IP)
-	NET_C(VV.IN, VV.OP)
-	NET_C(VV.ON, GND)
-	NETDEV_LOG(logX, VV.OP)
-	NETDEV_LOG(logY, 4V)
-
-#endif
-
-#if 0
-	/* Impedance converter current source opamp model from
-	 *
-	 * http://www.ecircuitcenter.com/Circuits/opmodel1/opmodel1.htm
-	 *
-	 * Bandwidth 10Mhz
-	 *
-	 */
-	NETDEV_VCCS(G1)
-	NETDEV_PARAM(G1.G, 100)  // typical OP-AMP amplification 100 * 1000 = 100000
-	NETDEV_R(RP1, 1000)
-	NETDEV_C(CP1, 1.59e-6)   // <== change to 1.59e-3 for 10Khz bandwidth
-	NETDEV_VCVS(EBUF)
-	NETDEV_PARAM(EBUF.RO, 50)
-	NETDEV_PARAM(EBUF.G, 1)
-
-	NET_C(G1.IP, 4V)
-	NET_C(G1.IN, EBUF.OP)
-	NET_C(EBUF.ON, GND)
-
-	NET_C(G1.ON, GND)
-	NET_C(RP1.2, GND)
-	NET_C(CP1.2, GND)
-	NET_C(EBUF.IN, GND)
-
-	NET_C(RP1.1, G1.OP)
-	NET_C(CP1.1, RP1.1)
-	NET_C(EBUF.IP, RP1.1)
-
-	//NETDEV_LOG(logX, EBUF.OP)
-	//NETDEV_LOG(logY, 4V)
-
-#endif
-
-NETLIST_END
+NETLIST_END()
 
 class pong_state : public driver_device
 {
@@ -792,31 +648,21 @@ public:
 			m_video(*this, "fixfreq"),
 
 			m_dac(*this, "dac"),                /* just to have a sound device */
-			m_srst(*this, "maincpu", "SRST"),
-			m_p_P0(*this, "maincpu", "ic_b9_POT.DIAL"),
-			m_p_P1(*this, "maincpu", "ic_a9_POT.DIAL"),
-			m_sw1a(*this, "maincpu", "sw1a.POS"),
-			m_sw1b(*this, "maincpu", "sw1b.POS"),
-			m_p_R0(*this, "maincpu", "ic_a9_R.R"),
-			m_p_R1(*this, "maincpu", "ic_b9_R.R")
+			m_sw1a(*this, "maincpu:sw1a"),
+			m_sw1b(*this, "maincpu:sw1b")
 	{
 	}
 
 	// devices
-	required_device<netlist_mame_device> m_maincpu;
+	required_device<netlist_mame_device_t> m_maincpu;
 	required_device<fixedfreq_device> m_video;
 	required_device<dac_device> m_dac; /* just to have a sound device */
 
 	// sub devices
-	netlist_mame_device::required_output<netlist_logic_output_t> m_srst;
-	netlist_mame_device::required_param<netlist_param_double_t> m_p_P0;
-	netlist_mame_device::required_param<netlist_param_double_t> m_p_P1;
-	netlist_mame_device::required_param<netlist_param_int_t> m_sw1a;
-	netlist_mame_device::required_param<netlist_param_int_t> m_sw1b;
-	netlist_mame_device::required_param<netlist_param_double_t> m_p_R0;
-	netlist_mame_device::required_param<netlist_param_double_t> m_p_R1;
+	required_device<netlist_mame_logic_input_t> m_sw1a;
+	required_device<netlist_mame_logic_input_t> m_sw1b;
 
-	UINT32 screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+	//UINT32 screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 
 	DECLARE_INPUT_CHANGED_MEMBER(input_changed);
 
@@ -825,12 +671,6 @@ public:
 		//printf("snd %f\n", newval);
 		//dac_w(m_dac, 0, newval*64);
 		m_dac->write_unsigned8(64*data);
-	}
-
-	NETDEV_ANALOG_CALLBACK_MEMBER(video_cb)
-	{
-		m_video->update_vid(data, time);
-		//printf("%20.15f\n", newval);
 	}
 
 protected:
@@ -851,17 +691,17 @@ static NETLIST_START(pong)
 	NETLIST_MEMREGION("maincpu")
 
 	NETDEV_ANALOG_CALLBACK(sound_cb, sound, pong_state, sound_cb, "")
-	NETDEV_ANALOG_CALLBACK(video_cb, videomix, pong_state, video_cb, "")
-NETLIST_END
+	NETDEV_ANALOG_CALLBACK(video_cb, videomix, fixedfreq_device, update_vid, "fixfreq")
+NETLIST_END()
 
 static NETLIST_START(pong_fast)
 
 	NETLIST_INCLUDE(pong_schematics)
 
 	NETDEV_ANALOG_CALLBACK(sound_cb, sound, pong_state, sound_cb, "")
-	NETDEV_ANALOG_CALLBACK(video_cb, videomix, pong_state, video_cb, "")
+    NETDEV_ANALOG_CALLBACK(video_cb, videomix, fixedfreq_device, update_vid, "fixfreq")
 
-NETLIST_END
+NETLIST_END()
 
 void pong_state::machine_start()
 {
@@ -879,72 +719,54 @@ void pong_state::video_start()
 
 INPUT_CHANGED_MEMBER(pong_state::input_changed)
 {
-	double pad;
 	int numpad = (FPTR) (param);
 
 	switch (numpad)
 	{
-	case IC_PADDLE1:
-	case IC_PADDLE2:
-	{
-		// http://ion.chem.usu.edu/~sbialkow/Classes/564/Thevenin/Thevenin.html
-
-		double fac = (double) newval / (double) 256;
-		fac = (exp(fac) - 1.0) / (exp(1.0) -1.0) ;
-		switch (numpad)
-		{
-		case IC_PADDLE1:    m_p_P0->setTo(fac); break;
-		case IC_PADDLE2:    m_p_P1->setTo(fac); break;
-		}
-		break;
-	}
 	case IC_SWITCH:
-		m_sw1a->setTo(newval ? 1 : 0);
-		m_sw1b->setTo(newval ? 1 : 0);
-		break;
-	case IC_COIN:
-		m_srst->set_Q(newval & 1, NLTIME_FROM_US(500));
-		break;
-	case IC_VR1:
-	case IC_VR2:
-		pad = (double) newval / (double) 100 * RES_K(50) + RES_K(56);
-		switch (numpad)
-		{
-		case IC_VR1:    m_p_R0->setTo(pad); break;
-		case IC_VR2:    m_p_R1->setTo(pad); break;
-		}
+		m_sw1a->write(newval ? 1 : 0);
+		m_sw1b->write(newval ? 1 : 0);
 		break;
 	}
-
-
 }
 
 static INPUT_PORTS_START( pong )
 	PORT_START( "PADDLE0" ) /* fake input port for player 1 paddle */
-	PORT_BIT( 0xff, 0x00, IPT_PADDLE ) PORT_SENSITIVITY(2) PORT_KEYDELTA(100) PORT_CENTERDELTA(0)   PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed,IC_PADDLE1)
+    PORT_BIT( 0xff, 0x00, IPT_PADDLE ) PORT_SENSITIVITY(2) PORT_KEYDELTA(100) PORT_CENTERDELTA(0)   NETLIST_ANALOG_PORT_CHANGED("maincpu", "pot0")
 
 	PORT_START( "PADDLE1" ) /* fake input port for player 2 paddle */
-	PORT_BIT( 0xff, 0x00, IPT_PADDLE ) PORT_SENSITIVITY(2) PORT_KEYDELTA(100) PORT_CENTERDELTA(0) PORT_PLAYER(2) PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed, IC_PADDLE2)
+    PORT_BIT( 0xff, 0x00, IPT_PADDLE ) PORT_SENSITIVITY(2) PORT_KEYDELTA(100) PORT_CENTERDELTA(0) PORT_PLAYER(2) NETLIST_ANALOG_PORT_CHANGED("maincpu", "pot1")
 
 	PORT_START("IN0") /* fake as well */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )     PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed, IC_COIN)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )     NETLIST_LOGIC_PORT_CHANGED("maincpu", "coinsw")
+
 	PORT_DIPNAME( 0x06, 0x00, "Game Won" )          PORT_DIPLOCATION("SW1A:1,SW1B:1") PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed, IC_SWITCH)
 	PORT_DIPSETTING(    0x00, "11" )
 	PORT_DIPSETTING(    0x06, "15" )
 
+    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SERVICE )  PORT_NAME("Antenna") NETLIST_LOGIC_PORT_CHANGED("maincpu", "antenna")
+
 	PORT_START("VR1")
-	PORT_ADJUSTER( 50, "VR1 - 50k, Paddle 1 adjustment" )   PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed, IC_VR1)
+	PORT_ADJUSTER( 50, "VR1 - 50k, Paddle 1 adjustment" )   NETLIST_ANALOG_PORT_CHANGED("maincpu", "vr0")
 	PORT_START("VR2")
-	PORT_ADJUSTER( 50, "VR2 - 50k, Paddle 2 adjustment" )   PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed, IC_VR2)
-	//PORT_START("GATESPEED")
-	//PORT_ADJUSTER( 100, "Logic Gate Delay" ) PORT_MINMAX(10, 200) PORT_CHANGED_MEMBER(DEVICE_SELF, pong_state, input_changed, IC_GATEDELAY)
+	PORT_ADJUSTER( 50, "VR2 - 50k, Paddle 2 adjustment" )   NETLIST_ANALOG_PORT_CHANGED("maincpu", "vr1")
 
 INPUT_PORTS_END
 
 static MACHINE_CONFIG_START( pong, pong_state )
 
 	/* basic machine hardware */
-	MCFG_NETLIST_ADD("maincpu", pong)
+	MCFG_NETLIST_ADD("maincpu", pong, MASTER_CLOCK * 2)
+    MCFG_NETLIST_ANALOG_INPUT("maincpu", "vr0", "ic_b9_R.R")
+    MCFG_NETLIST_ANALOG_INPUT_MULT_OFFSET(1.0 / 100.0 * RES_K(50), RES_K(56) )
+    MCFG_NETLIST_ANALOG_INPUT("maincpu", "vr1", "ic_a9_R.R")
+    MCFG_NETLIST_ANALOG_INPUT_MULT_OFFSET(1.0 / 100.0 * RES_K(50), RES_K(56) )
+    MCFG_NETLIST_ANALOG_INPUT("maincpu", "pot0", "ic_b9_POT.DIAL")
+    MCFG_NETLIST_ANALOG_INPUT("maincpu", "pot1", "ic_a9_POT.DIAL")
+    MCFG_NETLIST_LOGIC_INPUT("maincpu", "sw1a", "sw1a.POS", 0, 0x01)
+    MCFG_NETLIST_LOGIC_INPUT("maincpu", "sw1b", "sw1b.POS", 0, 0x01)
+    MCFG_NETLIST_LOGIC_INPUT("maincpu", "coinsw", "coinsw.POS", 0, 0x01)
+    MCFG_NETLIST_LOGIC_INPUT("maincpu", "antenna", "antenna.OUT", 0, 0x01)
 
 	/* video hardware */
 
@@ -962,7 +784,8 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( pongf, pong )
 
 	/* basic machine hardware */
-	MCFG_NETLIST_REPLACE("maincpu", pong_fast)
+    MCFG_DEVICE_MODIFY("maincpu")
+	MCFG_NETLIST_SETUP(pong_fast)
 
 MACHINE_CONFIG_END
 
@@ -974,7 +797,7 @@ MACHINE_CONFIG_END
 
 ROM_START( pong ) /* dummy to satisfy game entry*/
 	ROM_REGION( 0x10000, "maincpu", 0 ) /* enough for netlist */
-	ROM_LOAD( "pong.netlist", 0x000000, 0x003f24, CRC(cc99883b) SHA1(87ea6ec8772db7bf4047695d4c3513fa1a52b6b8) )
+    ROM_LOAD( "pong.netlist", 0x000000, 0x0043d9, CRC(64edd5a0) SHA1(9e661f2fba44f46015fdccffa7766dd4e61cdc7d) )
 ROM_END
 
 ROM_START( pongf ) /* dummy to satisfy game entry*/

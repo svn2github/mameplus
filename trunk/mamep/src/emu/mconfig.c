@@ -55,7 +55,7 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 			const device_slot_option *option = slot->option(selval);
 
 			if (option && (isdefault || option->selectable()))
-			{
+						{
 				device_t *new_dev = device_add(&owner, option->name(), option->devtype(), option->clock());
 
 				const char *default_bios = option->default_bios();

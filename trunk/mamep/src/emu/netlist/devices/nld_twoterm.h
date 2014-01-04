@@ -128,6 +128,7 @@ NETLIB_DEVICE_WITH_PARAMS(POT,
 
 	netlist_param_double_t m_R;
 	netlist_param_double_t m_Dial;
+	netlist_param_logic_t m_DialIsLog;
 );
 
 
@@ -313,13 +314,14 @@ public:
 	{
 		double vE = INPANALOG(m_EV);
 		double vB = INPANALOG(m_BV);
+		double m = (_type == BJT_NPN) ? 1 : -1;
 
-		int new_state = (vB - vE > m_V ) ? 1 : 0;
+		int new_state = ((vB - vE) * m > m_V ) ? 1 : 0;
 		if (m_state_on ^ new_state)
 		{
 			double gb = m_gB;
 			double gc = m_gC;
-			double v  = m_V;
+			double v  = m_V * m;
 			if (!new_state )
 			{
 				// not conducting
@@ -345,7 +347,7 @@ public:
 protected:
 
 	ATTR_COLD virtual void start();
-	ATTR_COLD void update_param();
+	ATTR_HOT void update_param();
 
 	double m_gB; // base conductance / switch on
 	double m_gC; // collector conductance / switch on
@@ -455,8 +457,6 @@ protected:
 
 	netlist_terminal_t m_OP2;
 	netlist_terminal_t m_ON2;
-
-	double m_mult;
 
 	netlist_param_double_t m_RO;
 };

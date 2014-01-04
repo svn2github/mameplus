@@ -16,7 +16,6 @@
 //  SETUP
 //============================================================
 
-#define USE_DELEGATES           (0)
 /*
  * The next options needs -Wno-pmf-conversions to compile and gcc
  * This is intended for non-mame usage.
@@ -24,20 +23,16 @@
  */
 #define USE_PMFDELEGATES        (0)
 
-// Next if enabled adds 20% performance ... but is not guaranteed to be absolutely timing correct.
+// This used to add 20% performance ... but is not guaranteed to be absolutely timing correct.
+// Update 01.01.2014: Currently, enabling this has no observable impact on performance.
+
 #define USE_DEACTIVE_DEVICE     (0)
 
 // Use nano-second resolution - Sufficient for now
 #define NETLIST_INTERNAL_RES        (U64(1000000000))
-#define NETLIST_DIV_BITS            (0)
 //#define NETLIST_INTERNAL_RES      (U64(1000000000000))
-//#define NETLIST_DIV_BITS          (10)
-#define NETLIST_DIV                 (U64(1) << NETLIST_DIV_BITS)
-#define NETLIST_MASK                (NETLIST_DIV-1)
-#define NETLIST_CLOCK               (NETLIST_INTERNAL_RES / NETLIST_DIV)
 
-//FIXME: LEGACY
-#define NETLIST_HIGHIMP_V   (1.23456e20)        /* some voltage we should never see */
+#define NETLIST_CLOCK               (NETLIST_INTERNAL_RES)
 
 #define NETLIST_GMIN    (1e-9)
 
@@ -47,7 +42,7 @@ typedef UINT8 netlist_sig_t;
 //  DEBUGGING
 //============================================================
 
-#define fatalerror xxbreakme
+//#define fatalerror xxbreakme
 
 #define NL_VERBOSE                  (0)
 #define NL_KEEP_STATISTICS          (0)

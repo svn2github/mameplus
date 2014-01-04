@@ -17,9 +17,9 @@ texture DiffuseK;
 sampler DiffuseSampler0 = sampler_state
 {
 	Texture   = <DiffuseA>;
-	MipFilter = LINEAR;
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
+	MipFilter = NONE;
+	MinFilter = NONE;
+	MagFilter = NONE;
 	AddressU = CLAMP;
 	AddressV = CLAMP;
 	AddressW = CLAMP;
@@ -164,19 +164,20 @@ struct PS_INPUT
 // Bloom Vertex Shader
 //-----------------------------------------------------------------------------
 
-uniform float2 TargetSize;
+uniform float2 ScreenSize;
+uniform float2 TextureSize;
 
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
 	VS_OUTPUT Output = (VS_OUTPUT)0;
 	
 	Output.Position = float4(Input.Position.xyz, 1.0f);
-	Output.Position.xy /= TargetSize;
+	Output.Position.xy /= ScreenSize;
 	Output.Position.y = 1.0f - Output.Position.y;
 	Output.Position.xy -= float2(0.5f, 0.5f);
 	Output.Position.xy *= float2(2.0f, 2.0f);
 	Output.Color = Input.Color;
-	Output.TexCoord = (Input.Position.xy  + 0.5f) / TargetSize;
+	Output.TexCoord = (Input.Position.xy + 0.5f) / ScreenSize;
 
 	return Output;
 }

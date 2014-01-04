@@ -1,10 +1,8 @@
 /***************************************************************************
 
-  video.c
+  Mr. Do's Castle hardware
 
   Functions to emulate the video hardware of the machine.
-
-  (Cocktail mode implemented by Chad Hendrickson Aug 1, 1999)
 
 ***************************************************************************/
 
@@ -190,8 +188,8 @@ void docastle_state::draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, 
 
 		if (flip_screen())
 		{
-			sx = 240 - sx;
-			sy = 240 - sy;
+			sx = 296 - sx;
+			sy = 248 - sy;
 			flipx = !flipx;
 			flipy = !flipy;
 		}

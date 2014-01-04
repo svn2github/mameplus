@@ -25,10 +25,10 @@ pstring::str_t *pstring::m_zero = NULL;
 
 #ifdef MAME_DEBUG
 	#ifndef IMMEDIATE_MODE
-		#define IMMEDIATE_MODE  (0)
+		#define IMMEDIATE_MODE  (1)
 	#endif
 	#ifndef DEBUG_MODE
-		#define DEBUG_MODE      (1)
+		#define DEBUG_MODE      (0)
 	#endif
 #else
 	#ifndef IMMEDIATE_MODE

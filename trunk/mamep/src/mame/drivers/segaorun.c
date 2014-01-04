@@ -296,7 +296,17 @@ const UINT32 MASTER_CLOCK_25MHz = XTAL_25_1748MHz;
 //  PPI INTERFACES
 //**************************************************************************
 
-static I8255_INTERFACE(single_ppi_intf)
+static I8255_INTERFACE(outrun_ppi_intf)
+{
+	DEVCB_DRIVER_MEMBER(segaorun_state, bankmotor_limit_r),
+	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_porta_w),
+	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portb_r),
+	DEVCB_DRIVER_MEMBER(segaorun_state, bankmotor_control_w),
+	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_portc_r),
+	DEVCB_DRIVER_MEMBER(segaorun_state, video_control_w)
+};
+
+static I8255_INTERFACE(shangon_ppi_intf)
 {
 	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_porta_r),
 	DEVCB_DRIVER_MEMBER(segaorun_state, unknown_porta_w),
@@ -359,7 +369,7 @@ WRITE8_MEMBER( segaorun_state::unknown_portb_w )
 
 WRITE8_MEMBER( segaorun_state::video_control_w )
 {
-	// Output port:
+	// PPI Output port C:
 	//  D7: SG1 -- connects to sprite chip
 	//  D6: SG0 -- connects to mixing
 	//  D5: Screen display (1= blanked, 0= displayed)
@@ -370,6 +380,76 @@ WRITE8_MEMBER( segaorun_state::video_control_w )
 	m_segaic16vid->segaic16_set_display_enable(data & 0x20);
 	m_adc_select = (data >> 2) & 7;
 	m_soundcpu->set_input_line(INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+}
+
+
+//-------------------------------------------------
+//  bankmotor_limit_r - bank motor limit switches
+//  for deluxe cabs
+//-------------------------------------------------
+
+READ8_MEMBER( segaorun_state::bankmotor_limit_r )
+{
+	UINT8 ret = 0xff;
+
+	// PPI Input port A:
+	//  D5: left limit
+	//  D4: center
+	//  D3: right limit
+	// other bits: ?
+	UINT8 pos = m_bankmotor_pos >> 8 & 0xff;
+	
+	// these values may need to be tweaked when hooking up real motors to MAME
+	const int left_limit = 0x20;
+	const int center = 0x80;
+	const int right_limit = 0xe0;
+	const int tolerance = 2;
+	
+	if (pos <= left_limit + tolerance)
+		ret ^= 0x20;
+	else if (pos >= center - tolerance && pos <= center + tolerance)
+		ret ^= 0x10;
+	else if (pos >= right_limit - tolerance)
+		ret ^= 0x08;
+	
+	return ret;
+}
+
+
+//-------------------------------------------------
+//  bankmotor_control_w - bank motor control
+//  for deluxe cabs
+//-------------------------------------------------
+
+WRITE8_MEMBER( segaorun_state::bankmotor_control_w )
+{
+	// PPI Output port B
+	data &= 0x0f;
+
+	if (data == 0)
+		return;
+	
+	m_bankmotor_delta = 8 - data;
+	
+	// convert to speed and direction for output
+	if (data < 8)
+	{
+		// left
+		output_set_value("Bank_Motor_Direction", 1);
+		output_set_value("Bank_Motor_Speed", 8 - data);
+	}
+	else if (data == 8)
+	{
+		// no movement
+		output_set_value("Bank_Motor_Direction", 0);
+		output_set_value("Bank_Motor_Speed", 0);
+	}
+	else
+	{
+		// right
+		output_set_value("Bank_Motor_Direction", 2);
+		output_set_value("Bank_Motor_Speed", data - 8);
+	}
 }
 
 
@@ -454,6 +534,7 @@ READ16_MEMBER( segaorun_state::misc_io_r )
 {
 	if (!m_custom_io_r.isnull())
 		return m_custom_io_r(space, offset, mem_mask);
+
 	logerror("%06X:misc_io_r - unknown read access to address %04X\n", space.device().safe_pc(), offset * 2);
 	return open_bus_r(space, 0, mem_mask);
 }
@@ -470,6 +551,7 @@ WRITE16_MEMBER( segaorun_state::misc_io_w )
 		m_custom_io_w(space, offset, data, mem_mask);
 		return;
 	}
+
 	logerror("%06X:misc_io_w - unknown write access to address %04X = %04X & %04X\n", space.device().safe_pc(), offset * 2, data, mem_mask);
 }
 
@@ -580,6 +662,9 @@ void segaorun_state::device_timer(emu_timer &timer, device_timer_id id, int para
 					next_scanline = 65;
 					m_subcpu->set_input_line(4, CLEAR_LINE);
 					break;
+				
+				default:
+					break;
 			}
 
 			// update IRQs on the main CPU
@@ -589,7 +674,26 @@ void segaorun_state::device_timer(emu_timer &timer, device_timer_id id, int para
 			timer.adjust(m_screen->time_until_pos(next_scanline), next_scanline);
 			break;
 		}
+
+		default:
+			assert_always(FALSE, "Unknown id in segaorun_state::device_timer");
 	}
+}
+
+
+TIMER_DEVICE_CALLBACK_MEMBER(segaorun_state::bankmotor_update)
+{
+	// arbitrary timer for updating bank motor position
+	// these values may need to be tweaked when hooking up real motors to MAME
+	const int speed = 100;
+	const int left_limit = 0x2000;
+	const int right_limit = 0xe000;
+	
+	m_bankmotor_pos += speed * m_bankmotor_delta;
+	if (m_bankmotor_pos <= left_limit)
+		m_bankmotor_pos = left_limit;
+	else if (m_bankmotor_pos >= right_limit)
+		m_bankmotor_pos = right_limit;
 }
 
 
@@ -625,6 +729,9 @@ READ16_MEMBER( segaorun_state::outrun_custom_io_r )
 
 		case 0x60/2:
 			return watchdog_reset_r(space, 0);
+		
+		default:
+			break;
 	}
 
 	logerror("%06X:outrun_custom_io_r - unknown read access to address %04X\n", space.device().safe_pc(), offset * 2);
@@ -652,8 +759,14 @@ WRITE16_MEMBER( segaorun_state::outrun_custom_io_w )
 			{
 				// Output port:
 				//  D7: /MUTE
-				//  D6-D0: unknown
+				//  D5: Vibration motor
+				//  D2: Start lamp
+				//  D1: Brake lamp
+				//  other bits: ?
 				machine().sound().system_enable(data & 0x80);
+				output_set_value("Vibration_motor", data >> 5 & 1);
+				output_set_value("Start_lamp", data >> 2 & 1);
+				output_set_value("Brake_lamp", data >> 1 & 1);
 			}
 			return;
 
@@ -668,7 +781,11 @@ WRITE16_MEMBER( segaorun_state::outrun_custom_io_w )
 		case 0x70/2:
 			m_sprites->draw_write(space, offset, data, mem_mask);
 			return;
+		
+		default:
+			break;
 	}
+
 	logerror("%06X:misc_io_w - unknown write access to address %04X = %04X & %04X\n", space.device().safe_pc(), offset * 2, data, mem_mask);
 }
 
@@ -697,7 +814,11 @@ READ16_MEMBER( segaorun_state::shangon_custom_io_r )
 			static const char *const ports[] = { "ADC0", "ADC1", "ADC2", "ADC3" };
 			return ioport(ports[m_adc_select])->read_safe(0x0010);
 		}
+		
+		default:
+			break;
 	}
+
 	logerror("%06X:misc_io_r - unknown read access to address %04X\n", space.device().safe_pc(), offset * 2);
 	return open_bus_r(space,0,mem_mask);
 }
@@ -714,17 +835,28 @@ WRITE16_MEMBER( segaorun_state::shangon_custom_io_w )
 	switch (offset)
 	{
 		case 0x0000/2:
+			if (ACCESSING_BITS_0_7)
+			{
 			// Output port:
 			//  D7-D6: (ADC1-0)
 			//  D5: Screen display
-			m_adc_select = (data >> 6) & 3;
-			m_segaic16vid->segaic16_set_display_enable((data >> 5) & 1);
+				//  D3: Vibration motor
+				//  D2: Start lamp
+				//  other bits: ?
+				m_adc_select = data >> 6 & 3;
+				m_segaic16vid->segaic16_set_display_enable(data >> 5 & 1);
+				output_set_value("Vibration_motor", data >> 3 & 1);
+				output_set_value("Start_lamp", data >> 2 & 1);
+			}
 			return;
 
 		case 0x0020/2:
-			// Output port:
-			//  D0: Sound section reset (1= normal operation, 0= reset)
-			m_soundcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			if (ACCESSING_BITS_0_7)
+			{
+				// Output port:
+				//  D0: Sound section reset (1= normal operation, 0= reset)
+				m_soundcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			}
 			return;
 
 		case 0x3000/2:
@@ -734,7 +866,11 @@ WRITE16_MEMBER( segaorun_state::shangon_custom_io_w )
 		case 0x3020/2:
 			// ADC trigger
 			return;
+		
+		default:
+			break;
 	}
+
 	logerror("%06X:misc_io_w - unknown write access to address %04X = %04X & %04X\n", space.device().safe_pc(), offset * 2, data, mem_mask);
 }
 
@@ -833,13 +969,19 @@ ADDRESS_MAP_END
 //  GENERIC PORT DEFINITIONS
 //**************************************************************************
 
+CUSTOM_INPUT_MEMBER(segaorun_state::bankmotor_pos_r)
+{
+	return m_bankmotor_pos >> 8 & 0xff;
+}
+
+
 static INPUT_PORTS_START( outrun_generic )
 	PORT_START("SERVICE")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_NAME("Gear Shift") PORT_CODE(KEYCODE_SPACE) PORT_TOGGLE
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_NAME("Gear Shift") PORT_TOGGLE
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -876,6 +1018,9 @@ static INPUT_PORTS_START( outrun_generic )
 
 	PORT_START("ADC2")  // brake
 	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 ) PORT_SENSITIVITY(100) PORT_KEYDELTA(40)
+
+	PORT_START("ADC3")
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, segaorun_state, bankmotor_pos_r, NULL)
 INPUT_PORTS_END
 
 
@@ -900,7 +1045,7 @@ static INPUT_PORTS_START( outrundx )
 	PORT_INCLUDE( outrun_generic )
 
 	PORT_MODIFY("DSW")
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) ) PORT_DIPLOCATION("SWB:1")
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) ) PORT_DIPLOCATION("SWB:1")
 	PORT_DIPSETTING(    0x00, "Not Moving" )
 	PORT_DIPSETTING(    0x01, "Moving" )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) ) PORT_DIPLOCATION("SWB:2")
@@ -917,7 +1062,7 @@ static INPUT_PORTS_START( toutrun )
 	PORT_INCLUDE( outrun_generic )
 
 	PORT_MODIFY("SERVICE")
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Turbo") PORT_CODE(KEYCODE_LSHIFT)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Turbo")
 
 	PORT_MODIFY("DSW")
 	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Cabinet ) ) PORT_DIPLOCATION("SWB:1,2")
@@ -983,7 +1128,7 @@ static INPUT_PORTS_START( shangon )
 	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Supercharger") PORT_CODE(KEYCODE_LSHIFT)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Supercharger")
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
@@ -1007,6 +1152,9 @@ static INPUT_PORTS_START( shangon )
 
 	PORT_MODIFY("ADC0") // steering
 	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_MINMAX(0x20,0xe0) PORT_SENSITIVITY(100) PORT_KEYDELTA(4) PORT_REVERSE
+
+	PORT_MODIFY("ADC3")
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
 INPUT_PORTS_END
 
 
@@ -1051,7 +1199,7 @@ static MACHINE_CONFIG_START( outrun_base, segaorun_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_I8255_ADD( "i8255", single_ppi_intf )
+	MCFG_I8255_ADD( "i8255", outrun_ppi_intf )
 	MCFG_SEGA_315_5195_MAPPER_ADD("mapper", "maincpu", segaorun_state, memory_mapper, mapper_sound_r, mapper_sound_w)
 
 	// video hardware
@@ -1085,24 +1233,37 @@ MACHINE_CONFIG_END
 //**************************************************************************
 
 static MACHINE_CONFIG_DERIVED( outrundx, outrun_base )
+
+	// basic machine hardware
+	MCFG_TIMER_DRIVER_ADD_PERIODIC("bankmotor", segaorun_state, bankmotor_update, attotime::from_msec(10))
+
+	// video hardware
 	MCFG_SEGA_OUTRUN_SPRITES_ADD("sprites")
 MACHINE_CONFIG_END
 
-static MACHINE_CONFIG_DERIVED( outrun, outrun_base )
-	MCFG_NVRAM_ADD_0FILL("nvram")
+static MACHINE_CONFIG_DERIVED( outrun, outrundx )
 
-	MCFG_SEGA_OUTRUN_SPRITES_ADD("sprites")
+	// basic machine hardware
+	MCFG_NVRAM_ADD_0FILL("nvram")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( outrun_fd1094, outrun )
+
+	// basic machine hardware
 	MCFG_CPU_REPLACE("maincpu", FD1094, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(outrun_map)
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( shangon, outrun_base )
+
+	// basic machine hardware
+	MCFG_DEVICE_REMOVE("i8255")
+	MCFG_I8255_ADD( "i8255", shangon_ppi_intf )
+
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
+	// video hardware
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_25MHz/4, 400, 0, 321, 262, 0, 224)
 	MCFG_SCREEN_UPDATE_DRIVER(segaorun_state, screen_update_shangon)
@@ -1111,6 +1272,8 @@ static MACHINE_CONFIG_DERIVED( shangon, outrun_base )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( shangon_fd1089b, shangon )
+
+	// basic machine hardware
 	MCFG_CPU_REPLACE("maincpu", FD1089B, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(outrun_map)
 MACHINE_CONFIG_END
@@ -2284,14 +2447,14 @@ GAMEL(1986, outrunra, outrun,  outrun,          outrun,   segaorun_state,outrun,
 GAMEL(1986, outruno,  outrun,  outrun,          outrun,   segaorun_state,outrun,  ROT0,   "Sega", "Out Run (sitdown/upright)", 0,                                  layout_outrun ) // Upright/Sitdown determined by dipswitch settings
 GAMEL(1986, outrundx, outrun,  outrundx,        outrundx, segaorun_state,outrun,  ROT0,   "Sega", "Out Run (deluxe sitdown)", 0,                                   layout_outrun )
 GAMEL(1986, outrunb,  outrun,  outrun,          outrun,   segaorun_state,outrunb, ROT0,   "bootleg", "Out Run (bootleg)", 0,                                       layout_outrun )
-GAMEL(2012, outrunen, outrun,  outrun,          outrun,   segaorun_state,outrun,  ROT0,   "hack", "Out Run Enhanced Edition", 0,                           	   layout_outrun ) // Upright/Sitdown determined by dipswitch settings
+GAMEL(2012, outrunen, outrun,  outrun,          outrun,   segaorun_state,outrun,  ROT0,   "hack", "Out Run Enhanced Edition (Ver 1.0.3)", 0,                       layout_outrun ) // Upright/Sitdown determined by dipswitch settings
 GAME( 1987, shangon,  0,       shangon,         shangon,  segaorun_state,shangon, ROT0,   "Sega", "Super Hang-On (sitdown/upright, unprotected)", 0 )
 GAME( 1987, shangon3, shangon, shangon_fd1089b, shangon,  segaorun_state,shangon, ROT0,   "Sega", "Super Hang-On (sitdown/upright, FD1089B 317-0034)", 0 )
 GAME( 1987, shangon2, shangon, shangon_fd1089b, shangon,  segaorun_state,shangon, ROT0,   "Sega", "Super Hang-On (mini ride-on, Rev A, FD1089B 317-0034)", 0 )
 GAME( 1987, shangon1, shangon, shangon_fd1089b, shangon,  segaorun_state,shangon, ROT0,   "Sega", "Super Hang-On (mini ride-on?, FD1089B 317-0034)", GAME_NOT_WORKING ) // bad program rom
 GAME( 1991, shangonle,shangon, shangon,         shangon,  segaorun_state,shangon, ROT0,   "Sega", "Limited Edition Hang-On", 0 )
 GAMEL(1989, toutrun,  0,       outrun_fd1094,   toutrun,  segaorun_state,outrun,  ROT0,   "Sega", "Turbo Out Run (Out Run upgrade, FD1094 317-0118)", 0,           layout_outrun ) // Cabinet determined by dipswitch settings
-GAMEL(1989, toutrunj, toutrun, outrun_fd1094,   toutrun,  segaorun_state,outrun,  ROT0,   "Sega", "Turbo Out Run (Japan, Out Run upgrade, FD1094 317-0117)", 0,           layout_outrun ) // Cabinet determined by dipswitch settings
+GAMEL(1989, toutrunj, toutrun, outrun_fd1094,   toutrun,  segaorun_state,outrun,  ROT0,   "Sega", "Turbo Out Run (Japan, Out Run upgrade, FD1094 317-0117)", 0,    layout_outrun ) // Cabinet determined by dipswitch settings
 GAMEL(1989, toutrun3, toutrun, outrun_fd1094,   toutrunc, segaorun_state,outrun,  ROT0,   "Sega", "Turbo Out Run (cockpit, FD1094 317-0107)", 0,                   layout_outrun )
 GAMEL(1989, toutrun2, toutrun, outrun_fd1094,   toutrunc, segaorun_state,outrun,  ROT0,   "Sega", "Turbo Out Run (cockpit, FD1094 317-0106)", 0,                   layout_outrun )
 GAMEL(1989, toutrun1, toutrun, outrun_fd1094,   toutrunm, segaorun_state,outrun,  ROT0,   "Sega", "Turbo Out Run (deluxe cockpit, FD1094 317-0109)", 0,            layout_outrun )

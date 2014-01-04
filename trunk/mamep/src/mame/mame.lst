@@ -96,6 +96,7 @@ piranhao        // GL
 nmouse          // (c) 1981 Amenip (Palcom Queen River)
 nmouseb         // (c) 1981 Amenip Nova Games Ltd.
 mspacman        // (c) 1981 Midway  // made by General Computer
+mspacmancr      // bootleg on Crush Roller board
 mspacmnf        // hack
 mspacmat        // hack
 msheartb        // hack
@@ -1183,6 +1184,7 @@ helifirea       // (c) 1980 Nintendo
 radarscp        // (c) 1980 Nintendo
 radarscp1       // (c) 1980 Nintendo
 dkong           // (c) 1981 Nintendo of America
+dkonghrd
 dkongo          // (c) 1981 Nintendo
 dkongj          // (c) 1981 Nintendo
 dkongjo         // (c) 1981 Nintendo
@@ -2654,6 +2656,7 @@ batsugun        // TP-030 (c) 1993 Toaplan
 batsuguna       // TP-030 (c) 1993 Toaplan
 batsugunsp      // TP-??? (c) 1993 Toaplan
 snowbro2        // TP-??? (c) 1994 Hanafram
+snowbro2b       //
 pwrkick         // (c) 1994 Sunwise
 sstriker        // (c) 1993 Raizing
 sstrikera       // (c) 1993 Raizing
@@ -2797,6 +2800,8 @@ mmmbanc         // (c) 2007 Cave
 ddpdfk          // (c) 2008 Cave
 ddpdfk10        // (c) 2008 Cave
 dsmbl           // (c) 2008 Cave
+
+deathsm2
 
 // Kyugo games
 // Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf.
@@ -4766,6 +4771,7 @@ swa             // 1994.04 Star Wars Arcade
 wingwar         // 1994.06 Wing War
 wingwarj        // 1994.06 Wing War (Japan)
 wingwaru        // 1994.09 Wing War (US)
+netmerc         // ?? Info available in time ??
 
 // Sega H1 games
 coolridr        // 1995.04 Cool Riders
@@ -6774,6 +6780,7 @@ centipdd        // hack by Two Bit Score
 caterplr        // (bootleg)
 millpac         // Valadon
 magworm         // (bootleg)
+magworma        // (bootleg)
 mazeinv         // (proto)          (c) 1982
 milliped        // 136013           (c) 1982
 multiped        // hack
@@ -9596,6 +9603,7 @@ orleg2          // (c) 2007
 orleg2o         //
 kov2nl          // (c) 2008
 kov2nlo         //
+ddpdojh
 
 #ifndef NCP
 // IGS PC based HW
@@ -10702,6 +10710,8 @@ pepp0045        // (c) 1987 IGT - International Gaming Technology
 pepp0046        // (c) 1987 IGT - International Gaming Technology
 pepp0055        // (c) 1987 IGT - International Gaming Technology
 pepp0055a       // (c) 1987 IGT - International Gaming Technology
+pepp0059        // (c) 1987 IGT - International Gaming Technology
+pepp0060        // (c) 1987 IGT - International Gaming Technology
 pepp0065        // (c) 1987 IGT - International Gaming Technology
 pepp0103        // (c) 1987 IGT - International Gaming Technology
 pepp0126        // (c) 1987 IGT - International Gaming Technology
@@ -10716,7 +10726,9 @@ pepp0197        // (c) 1987 IGT - International Gaming Technology
 pepp0197a       // (c) 1987 IGT - International Gaming Technology
 pepp0203        // (c) 1987 IGT - International Gaming Technology
 pepp0203a       // (c) 1987 IGT - International Gaming Technology
+pepp0219        // (c) 1987 IGT - International Gaming Technology
 pepp0221        // (c) 1987 IGT - International Gaming Technology
+pepp0221a       // (c) 1987 IGT - International Gaming Technology
 pepp0224        // (c) 1987 IGT - International Gaming Technology
 pepp0224a       // (c) 1987 IGT - International Gaming Technology
 pepp0230        // (c) 1987 IGT - International Gaming Technology
@@ -10760,6 +10772,7 @@ pepp0542        // (c) 1987 IGT - International Gaming Technology
 pepp0568        // (c) 1987 IGT - International Gaming Technology
 pepp0585        // (c) 1987 IGT - International Gaming Technology
 pepp0725        // (c) 1987 IGT - International Gaming Technology
+pepp0725a       // (c) 1987 IGT - International Gaming Technology
 pepp0726        // (c) 1987 IGT - International Gaming Technology
 pepp0728        // (c) 1987 IGT - International Gaming Technology
 pepp0760        // (c) 1987 IGT - International Gaming Technology

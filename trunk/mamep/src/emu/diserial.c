@@ -43,12 +43,14 @@ device_serial_interface::device_serial_interface(const machine_config &mconfig, 
 	m_tra_clock_state = false;
 	m_tra_rate = attotime::never;
 	m_rcv_rate = attotime::never;
-	m_tra_flags = 0;
+	m_tra_flags = TRANSMIT_REGISTER_EMPTY;
 	m_rcv_register_data = 0x8000;
 	m_rcv_bit_count = 0;
 	m_connection_state = 0;
 	m_rcv_flags = 0;
 	m_input_state = 0;
+	m_rcv_line = 0;
+	m_start_bit_hack_for_external_clocks = false;
 }
 
 device_serial_interface::~device_serial_interface()
@@ -79,11 +81,16 @@ void device_serial_interface::set_tra_rate(attotime rate)
 
 void device_serial_interface::tra_edge()
 {
-	tra_callback();
-	if(is_transmit_register_empty())
+	if (!is_transmit_register_empty())
+	{
+		tra_callback();
+		if (is_transmit_register_empty())
+			tra_complete();
+	}
+
+	if (is_transmit_register_empty() && !m_tra_rate.is_never())
 	{
 		m_tra_clock->adjust(attotime::never);
-		tra_complete();
 	}
 }
 
@@ -172,6 +179,8 @@ WRITE_LINE_MEMBER(device_serial_interface::rx_w)
 		if(m_rcv_clock && !(m_rcv_rate.is_never()))
 			// make start delay just a bit longer to make sure we are called after the sender
 			m_rcv_clock->adjust(((m_rcv_rate*3)/2), 0, m_rcv_rate);
+		else if(m_start_bit_hack_for_external_clocks)
+			m_rcv_bit_count_received--;
 	}
 	return;
 }
@@ -193,7 +202,6 @@ void device_serial_interface::receive_register_update_bit(int bit)
 	/* shift new bit in */
 	m_rcv_register_data = (m_rcv_register_data & 0x7fff) | (bit<<15);
 	/* update bit count received */
-	m_rcv_bit_count_received++;
 
 	/* asynchronous mode */
 	if (m_rcv_flags & RECEIVE_REGISTER_WAITING_FOR_START_BIT)
@@ -219,6 +227,8 @@ void device_serial_interface::receive_register_update_bit(int bit)
 	else
 	if (m_rcv_flags & RECEIVE_REGISTER_SYNCHRONISED)
 	{
+		m_rcv_bit_count_received++;
+
 		/* received all bits? */
 		if (m_rcv_bit_count_received==m_rcv_bit_count)
 		{
@@ -468,38 +478,4 @@ void device_serial_interface::connect(device_serial_interface *other_connection)
 	serial_connection_out();
 	/* let a know the state of b */
 	other_connection->serial_connection_out();
-}
-
-
-
-const device_type SERIAL_SOURCE = &device_creator<serial_source_device>;
-
-//-------------------------------------------------
-//  serial_source_device - constructor
-//-------------------------------------------------
-
-serial_source_device::serial_source_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, SERIAL_SOURCE, "Serial source", tag, owner, clock, "serial_source", __FILE__),
-		device_serial_interface(mconfig, *this)
-{
-}
-
-void serial_source_device::device_start()
-{
-}
-
-void serial_source_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
-{
-	device_serial_interface::device_timer(timer, id, param, ptr);
-}
-
-void serial_source_device::input_callback(UINT8 state)
-{
-	m_input_state = state;
-}
-
-void serial_source_device::send_bit(UINT8 data)
-{
-	set_out_data_bit(data);
-	serial_connection_out();
 }

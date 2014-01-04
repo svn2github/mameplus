@@ -51,12 +51,11 @@ public:
 	base_c1541_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source);
 
 	DECLARE_WRITE_LINE_MEMBER( via0_irq_w );
-	DECLARE_READ8_MEMBER( via0_pa_r );
+	virtual DECLARE_READ8_MEMBER( via0_pa_r );
 	DECLARE_WRITE8_MEMBER( via0_pa_w );
 	DECLARE_READ8_MEMBER( via0_pb_r );
 	DECLARE_WRITE8_MEMBER( via0_pb_w );
 	DECLARE_WRITE_LINE_MEMBER( via0_ca2_w );
-	DECLARE_READ_LINE_MEMBER( atn_in_r );
 	DECLARE_WRITE_LINE_MEMBER( via1_irq_w );
 	DECLARE_READ8_MEMBER( via1_pb_r );
 	DECLARE_WRITE8_MEMBER( via1_pb_w );
@@ -143,7 +142,7 @@ public:
 	virtual machine_config_constructor device_mconfig_additions() const;
 
 	// not really public
-	DECLARE_READ8_MEMBER( via0_pa_r );
+	virtual DECLARE_READ8_MEMBER( via0_pa_r );
 };
 
 
