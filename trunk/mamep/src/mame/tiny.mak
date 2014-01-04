@@ -153,6 +153,7 @@ $(MAMEOBJ)/shared.a: \
 
 $(MAMEOBJ)/psikyo.a: \
 	$(DRIVERS)/psikyo.o $(VIDEO)/psikyo.o \
+	$(DRIVERS)/psikyo4.o $(VIDEO)/psikyo4.o \
 	$(DRIVERS)/psikyosh.o $(VIDEO)/psikyosh.o \
 
 
@@ -163,7 +164,6 @@ $(MAMEOBJ)/psikyo.a: \
 
 $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
-	$(DRIVERS)/psikyo4.o $(VIDEO)/psikyo4.o \
 	$(DRIVERS)/cv1k.o \
 
 
