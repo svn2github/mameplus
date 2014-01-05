@@ -120,6 +120,9 @@ public:
 
 public slots:
 	void sync();
+	void saveChange(bool b);
+	void saveChange(int index);
+	void saveChange(const QString &);
 	void setChangesAccepted();
 	void setCSV();
 	void setCSVAccepted();

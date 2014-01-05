@@ -209,6 +209,40 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int 
 	layout->addWidget(widget);
 	subWidget = widget;
 
+	//fix save change bug	
+	//win->log(QString("optType: %1").arg(optType));
+	//QCheckBox *_checkBox;
+	//QComboBox *_comboBox
+	switch (optType)
+	{
+		case MAMEOPT_TYPE_BOOL:
+			widget->disconnect(SIGNAL(toggled(bool)));
+			connect(widget, SIGNAL(toggled(bool)), &optDelegate, SLOT(saveChange(bool)));
+			win->log("listen checkbox");
+			break;
+
+		case MAMEOPT_TYPE_STRING:
+		case MAMEOPT_TYPE_STRING_EDITABLE:
+			widget->disconnect(SIGNAL(activated(int)));
+			connect(widget, SIGNAL(activated(int)), &optDelegate, SLOT(saveChange(int)));
+			win->log("listen combobox");
+			break;
+
+		case MAMEOPT_TYPE_INT:
+		case MAMEOPT_TYPE_FLOAT:
+			widget->disconnect(SIGNAL(sliderMoved(int)));
+			connect(widget, SIGNAL(sliderMoved(int)), &optDelegate, SLOT(saveChange(int)));
+			win->log("listen combobox");
+			break;
+
+		default:
+			
+			widget->disconnect(SIGNAL(textChanged(const QString&)));
+			connect(widget, SIGNAL(textChanged(const QString&)), &optDelegate, SLOT(saveChange(const QString&)));
+			win->log("listen unknown");
+			break;
+	}
+
 	if (widget2)
 	{
 		layout->addWidget(widget2);
@@ -464,7 +498,7 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 	{
 		QCheckBox *ctrl = new QCheckBox(parent);
 
-		resetWidget->setWidget(ctrl);
+		resetWidget->setWidget(ctrl, NULL, optType);
 		return resetWidget;
 	}
 
@@ -540,7 +574,7 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 			foreach (QVariant guivalue, guivalues)
 				ctrl->addItem(guivalue.toString());
 
-			resetWidget->setWidget(ctrl);
+			resetWidget->setWidget(ctrl, NULL, optType);
 			return resetWidget;
 		}
 		//fall to default
@@ -915,6 +949,33 @@ void OptionDelegate::sync()
 	emit commitData(w);
 	emit closeEditor(w, QAbstractItemDelegate::EditNextItem);
 	isReset = false;
+}
+
+void OptionDelegate::saveChange(bool b)
+{
+	ResetWidget *w = qobject_cast<ResetWidget*>(sender()->parent());
+	win->log("saveChange");
+	if (w == NULL)
+		return;
+	emit commitData(w);
+}
+
+void OptionDelegate::saveChange(int index)
+{
+	ResetWidget *w = qobject_cast<ResetWidget*>(sender()->parent());
+	win->log("saveChange");
+	if (w == NULL)
+		return;
+	emit commitData(w);
+}
+
+void OptionDelegate::saveChange(const QString &)
+{
+	ResetWidget *w = qobject_cast<ResetWidget*>(sender()->parent());
+	win->log("saveChange");
+	if (w == NULL)
+		return;
+	emit commitData(w);
 }
 
 //save options when dialog is closed

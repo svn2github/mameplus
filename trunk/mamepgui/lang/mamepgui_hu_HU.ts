@@ -48,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="3672"/>
+        <location filename="../gamelist.cpp" line="3705"/>
         <source>Horizontal</source>
         <translation>Vízszintes</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3677"/>
+        <location filename="../gamelist.cpp" line="3710"/>
         <source>Vertical</source>
         <translation>Függőleges</translation>
     </message>
@@ -271,39 +271,39 @@
         <translation>Mind törlése</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2893"/>
+        <location filename="../gamelist.cpp" line="2926"/>
         <source>(H)</source>
         <translation>(V)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2893"/>
+        <location filename="../gamelist.cpp" line="2926"/>
         <source>(V)</source>
         <translation>(F)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2981"/>
+        <location filename="../gamelist.cpp" line="3014"/>
         <source>Root Folder [.]</source>
         <translation>Gyökér könyvtár [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3303"/>
+        <location filename="../gamelist.cpp" line="3336"/>
         <source>Loading M1, please wait...</source>
         <translation>M1 betöltése, egy kis türelem...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3340"/>
+        <location filename="../gamelist.cpp" line="3373"/>
         <source>Could not load:
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3342"/>
+        <location filename="../gamelist.cpp" line="3375"/>
         <source>Please refresh the game list.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3382"/>
+        <location filename="../gamelist.cpp" line="3415"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -952,7 +952,7 @@ Folytatja?</translation>
 <context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="542"/>
+        <location filename="../audit.cpp" line="616"/>
         <source>Checking...</source>
         <translation>Ellenőrzés...</translation>
     </message>
@@ -1859,6 +1859,16 @@ Folytatja?</translation>
         <translation>alternatív libGL.so</translation>
     </message>
     <message>
+        <location filename="../mameopt.cpp" line="1745"/>
+        <source>MESS software directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1748"/>
+        <source>GUI paths</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../mameopt.cpp" line="2057"/>
         <source>core configuration</source>
         <translation>alap beállítások</translation>
@@ -2372,8 +2382,8 @@ Folytatja?</translation>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="270"/>
-        <location filename="../audit.cpp" line="490"/>
+        <location filename="../audit.cpp" line="277"/>
+        <location filename="../audit.cpp" line="564"/>
         <source>Auditing %1 ...</source>
         <translation>Ellenőrzés %1 ...</translation>
     </message>

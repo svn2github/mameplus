@@ -3516,11 +3516,16 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	bool tmpresult = false;
 
 	GameInfo *gameInfo = pMameDat->games[gameName];
+
+	//del device game
+	if(gameInfo->isDevice)
+		return false;
+
 	if (!gameInfo->devices.isEmpty() && !gameNameExtRom.isEmpty())
 		gameInfo = pMameDat->games[gameNameExtRom];
 
 	//fixme: how to filter MESS games
-	const bool isConsole = gameInfo->sourcefile == "cpschngr.c" || !gameInfo->devices.isEmpty();
+	const bool isConsole = !gameInfo->softwarelists.isEmpty();//gameInfo->isConsole == 1;
 	const bool isBIOS = gameInfo->isBios;
 	const bool isExtRom = gameInfo->isExtRom;
 	const bool isClone = !gameInfo->cloneof.isEmpty();

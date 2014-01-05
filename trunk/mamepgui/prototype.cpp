@@ -33,6 +33,11 @@ ChipInfo::ChipInfo(QObject *parent) :
 {
 }
 
+SoftwareListInfo::SoftwareListInfo(QObject *parent) :
+	QObject(parent)
+{
+}
+
 DisplayInfo::DisplayInfo(QObject *parent) :
 	QObject(parent)
 {
@@ -183,6 +188,7 @@ public:
 			gameInfo = new GameInfo(_pMameDat);
 			gameInfo->sourcefile = attributes.value("sourcefile");
 			gameInfo->isBios = attributes.value("isbios") == "yes";
+			gameInfo->isDevice = attributes.value("isdevice") == "yes";
 			gameInfo->cloneof = attributes.value("cloneof");
 			gameInfo->romof = attributes.value("romof");
 			gameInfo->sampleof = attributes.value("sampleof");
@@ -241,6 +247,15 @@ public:
 			chipInfo->clock = attributes.value("clock").toUInt();
 
 			gameInfo->chips.append(chipInfo);
+		}
+		else if (qName == "softwarelist")
+		{
+			SoftwareListInfo *softwarelist = new SoftwareListInfo(gameInfo);
+			softwarelist->name = attributes.value("name");
+			softwarelist->status = attributes.value("status");
+			softwarelist->filter = attributes.value("filter");
+
+			gameInfo->softwarelists.append(softwarelist);
 		}
 		else if (qName == "display")
 		{
@@ -421,6 +436,7 @@ void MameDat::save()
 			out << gameInfo->cloneof;
 			out << gameInfo->sourcefile;
 			out << gameInfo->isBios;
+			out << gameInfo->isDevice;
 			out << gameInfo->sampleof;
 			out << gameInfo->isMechanical;
 			out << gameInfo->isGamble;
@@ -482,6 +498,15 @@ void MameDat::save()
 				out << chipInfo->tag;
 				out << chipInfo->type;
 				out << chipInfo->clock;
+			}
+
+			/* softwarelist */
+			out << gameInfo->softwarelists.size();
+			foreach (SoftwareListInfo* softwarelist, gameInfo->softwarelists)
+			{
+				out << softwarelist->name;
+				out << softwarelist->status;
+				out << softwarelist->filter;
 			}
 
 			/* display */
@@ -652,6 +677,7 @@ int MameDat::load()
 			in >> gameInfo->cloneof;
 			in >> gameInfo->sourcefile;
 			in >> gameInfo->isBios;
+			in >> gameInfo->isDevice;
 			in >> gameInfo->sampleof;
 			in >> gameInfo->isMechanical;
 			in >> gameInfo->isGamble;
@@ -721,6 +747,17 @@ int MameDat::load()
 				in >> chipInfo->type;
 				in >> chipInfo->clock;
 				gameInfo->chips.append(chipInfo);
+			}
+
+			/* softwarelist */
+			in >> count;
+			for (int j = 0; j < count; j++)
+			{
+				SoftwareListInfo *softwarelist = new SoftwareListInfo(gameInfo);
+				in >> softwarelist->name;
+				in >> softwarelist->status;
+				in >> softwarelist->filter;
+				gameInfo->softwarelists.append(softwarelist);
 			}
 
 			/* display */

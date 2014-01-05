@@ -48,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="3672"/>
+        <location filename="../gamelist.cpp" line="3705"/>
         <source>Horizontal</source>
         <translation>水平</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3677"/>
+        <location filename="../gamelist.cpp" line="3710"/>
         <source>Vertical</source>
         <translation>垂直</translation>
     </message>
@@ -271,27 +271,27 @@
         <translation>全部移除</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2893"/>
+        <location filename="../gamelist.cpp" line="2926"/>
         <source>(H)</source>
         <translation>(橫)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2893"/>
+        <location filename="../gamelist.cpp" line="2926"/>
         <source>(V)</source>
         <translation>(縱)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2981"/>
+        <location filename="../gamelist.cpp" line="3014"/>
         <source>Root Folder [.]</source>
         <translation>根資料夾 [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3303"/>
+        <location filename="../gamelist.cpp" line="3336"/>
         <source>Loading M1, please wait...</source>
         <translation>正在載入 M1，請稍侯...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3340"/>
+        <location filename="../gamelist.cpp" line="3373"/>
         <source>Could not load:
 
 </source>
@@ -300,12 +300,12 @@
 </translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3342"/>
+        <location filename="../gamelist.cpp" line="3375"/>
         <source>Please refresh the game list.</source>
         <translation>請重新整理遊戲清單。</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3382"/>
+        <location filename="../gamelist.cpp" line="3415"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -953,7 +953,7 @@ Do you wish to continue?</source>
 <context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="542"/>
+        <location filename="../audit.cpp" line="616"/>
         <source>Checking...</source>
         <translation>正在檢查...</translation>
     </message>
@@ -1804,6 +1804,16 @@ Do you wish to continue?</source>
         <translation>替代 libGL.so</translation>
     </message>
     <message>
+        <location filename="../mameopt.cpp" line="1745"/>
+        <source>MESS software directory</source>
+        <translation type="MESS 軟體目錄"></translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1748"/>
+        <source>GUI paths</source>
+        <translation type="GUI 路徑"></translation>
+    </message>
+    <message>
         <location filename="../mameopt.cpp" line="2057"/>
         <source>core configuration</source>
         <translation>核心組態選項</translation>
@@ -2372,8 +2382,8 @@ Do you wish to continue?</source>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="270"/>
-        <location filename="../audit.cpp" line="490"/>
+        <location filename="../audit.cpp" line="277"/>
+        <location filename="../audit.cpp" line="564"/>
         <source>Auditing %1 ...</source>
         <translation>正在驗證 %1 ...</translation>
     </message>

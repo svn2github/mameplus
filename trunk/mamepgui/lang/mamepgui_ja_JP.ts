@@ -48,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="3672"/>
+        <location filename="../gamelist.cpp" line="3705"/>
         <source>Horizontal</source>
         <translation>横型</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3677"/>
+        <location filename="../gamelist.cpp" line="3710"/>
         <source>Vertical</source>
         <translation>縦型</translation>
     </message>
@@ -271,27 +271,27 @@
         <translation>全て削除</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2893"/>
+        <location filename="../gamelist.cpp" line="2926"/>
         <source>(H)</source>
         <translation>(横)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2893"/>
+        <location filename="../gamelist.cpp" line="2926"/>
         <source>(V)</source>
         <translation>(縦)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2981"/>
+        <location filename="../gamelist.cpp" line="3014"/>
         <source>Root Folder [.]</source>
         <translation>ルート フォルダ [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3303"/>
+        <location filename="../gamelist.cpp" line="3336"/>
         <source>Loading M1, please wait...</source>
         <translation>M1 を読み込み中，しばらくお待ち下さい...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3340"/>
+        <location filename="../gamelist.cpp" line="3373"/>
         <source>Could not load:
 
 </source>
@@ -300,12 +300,12 @@
 </translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3342"/>
+        <location filename="../gamelist.cpp" line="3375"/>
         <source>Please refresh the game list.</source>
         <translation>ゲームリストを最新情報に更新ください。</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3382"/>
+        <location filename="../gamelist.cpp" line="3415"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -951,7 +951,7 @@ Do you wish to continue?</source>
 <context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="542"/>
+        <location filename="../audit.cpp" line="616"/>
         <source>Checking...</source>
         <translation>チェック中...</translation>
     </message>
@@ -2002,12 +2002,14 @@ Do you wish to continue?</source>
         <translation>Windows版デバッグ</translation>
     </message>
     <message>
+        <location filename="../mameopt.cpp" line="1745"/>
         <source>MESS software directory</source>
-        <translation type="obsolete">MESS ソフトウェア ディレクトリ</translation>
+        <translation type="unfinished">MESS ソフトウェア ディレクトリ</translation>
     </message>
     <message>
+        <location filename="../mameopt.cpp" line="1748"/>
         <source>GUI paths</source>
-        <translation type="obsolete">GUIのパス</translation>
+        <translation type="unfinished">GUIのパス</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2201"/>
@@ -2378,8 +2380,8 @@ Do you wish to continue?</source>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="270"/>
-        <location filename="../audit.cpp" line="490"/>
+        <location filename="../audit.cpp" line="277"/>
+        <location filename="../audit.cpp" line="564"/>
         <source>Auditing %1 ...</source>
         <translation>監査中 %1 ...</translation>
     </message>

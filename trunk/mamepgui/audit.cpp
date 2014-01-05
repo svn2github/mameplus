@@ -1,5 +1,11 @@
 #include "quazip.h"
 #include "quazipfile.h"
+#include "7zCrc.h"
+#include "7zFile.h"
+#include "7zVersion.h"
+#include "7zAlloc.h"
+#include "7zExtract.h"
+#include "7zIn.h"
 
 #include "audit.h"
 #include "prototype.h"
@@ -264,6 +270,7 @@ void RomAuditor::run()
 		{
 			QDir dir(dirPath);
 			QStringList nameFilter = QStringList() << "*" ZIP_EXT;
+			nameFilter<<"*" SZIP_EXT;
 			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable | QDir::Hidden);
 			QStringList romDirs = dir.entryList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Readable | QDir::Hidden);
 
@@ -313,41 +320,108 @@ void RomAuditor::run()
 				//update progressbar every 10 files
 				if (i % 10 == 0)
 					emit progressUpdated(i);
-
-				QString gameName = romFiles[i].toLower().remove(ZIP_EXT);
-
-				if (!pMameDat->games.contains(gameName))
-					continue;
-
-				gameInfo = pMameDat->games[gameName];
-				auditedGames.insert(gameName);
-
-				//open zip file
-				QuaZip zip(utils->getPath(dirPath) + romFiles[i]);
-				if(!zip.open(QuaZip::mdUnzip))
-					continue;
-
-				QuaZipFileInfo zipFileInfo;
-				QuaZipFile zipFile(&zip);
-
-				//iterate all files in the zip
-				for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
+				QString fullRomName = romFiles[i].toLower();
+				if(fullRomName.contains(ZIP_EXT))
 				{
-					if(!zip.getCurrentFileInfo(&zipFileInfo))
+					QString gameName = fullRomName.remove(ZIP_EXT);
+
+					if (!pMameDat->games.contains(gameName))
 						continue;
 
-					//fill rom available status if crc recognized
-					if (gameInfo->roms.contains(zipFileInfo.crc))
-						gameInfo->roms.value(zipFileInfo.crc)->available = true;
+					gameInfo = pMameDat->games[gameName];
+					auditedGames.insert(gameName);
 
-					//check if rom belongs to a clone
-					foreach (QString cloneName, gameInfo->clones)
+					//open zip file
+					QuaZip zip(utils->getPath(dirPath) + romFiles[i]);
+					if(!zip.open(QuaZip::mdUnzip))
+						continue;
+
+					QuaZipFileInfo zipFileInfo;
+					QuaZipFile zipFile(&zip);
+
+					//iterate all files in the zip
+					for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
 					{
-						auditedGames.insert(cloneName);
-						gameInfo2 = pMameDat->games[cloneName];
-						if (gameInfo2->roms.contains(zipFileInfo.crc))
-							gameInfo2->roms.value(zipFileInfo.crc)->available = true;
+						if(!zip.getCurrentFileInfo(&zipFileInfo))
+							continue;
+
+						//fill rom available status if crc recognized
+						if (gameInfo->roms.contains(zipFileInfo.crc))
+							gameInfo->roms.value(zipFileInfo.crc)->available = true;
+
+						//check if rom belongs to a clone
+						foreach (QString cloneName, gameInfo->clones)
+						{
+							auditedGames.insert(cloneName);
+							gameInfo2 = pMameDat->games[cloneName];
+							if (gameInfo2->roms.contains(zipFileInfo.crc))
+								gameInfo2->roms.value(zipFileInfo.crc)->available = true;
+						}
 					}
+				}
+				else if(fullRomName.contains(SZIP_EXT))
+				{
+					QString gameName = fullRomName.remove(SZIP_EXT);
+
+					if (!pMameDat->games.contains(gameName))
+						continue;
+
+					gameInfo = pMameDat->games[gameName];
+					auditedGames.insert(gameName);
+
+					CFileInStream archiveStream;
+					CLookToRead lookStream;
+					CSzArEx db;
+					SRes res;
+					ISzAlloc allocImp;
+					ISzAlloc allocTempImp;
+
+					if (InFile_Open(&archiveStream.file,  qPrintable(utils->getPath(dirPath) + romFiles[i])))
+						continue;
+
+					FileInStream_CreateVTable(&archiveStream);
+					LookToRead_CreateVTable(&lookStream, False);
+
+					lookStream.realStream = &archiveStream.s;
+					LookToRead_Init(&lookStream);
+
+					allocImp.Alloc = SzAlloc;
+					allocImp.Free = SzFree;
+
+					allocTempImp.Alloc = SzAllocTemp;
+					allocTempImp.Free = SzFreeTemp;
+
+					CrcGenerateTable();
+
+					SzArEx_Init(&db);
+					res = SzArEx_Open(&db, &lookStream.s, &allocImp, &allocTempImp);
+
+					if (res == SZ_OK)
+					{
+						UInt32 i;
+						Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
+
+						for (i = 0; i < db.db.NumFiles; i++)
+						{
+							CSzFileItem *f = db.db.Files + i;
+							//fill rom available status if crc recognized
+							if (gameInfo->roms.contains(f->FileCRC))
+								gameInfo->roms.value(f->FileCRC)->available = true;
+
+							//check if rom belongs to a clone
+							foreach (QString cloneName, gameInfo->clones)
+							{
+								auditedGames.insert(cloneName);
+								gameInfo2 = pMameDat->games[cloneName];
+								if (gameInfo2->roms.contains(f->FileCRC))
+									gameInfo2->roms.value(f->FileCRC)->available = true;
+							}
+
+						}
+						IAlloc_Free(&allocImp, outBuffer);
+					}
+					SzArEx_Free(&db, &allocImp);
+					File_Close(&archiveStream.file);
 				}
 			}
 		}

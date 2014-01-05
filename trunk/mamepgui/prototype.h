@@ -110,6 +110,16 @@ public:
 	DeviceInfo(QObject *parent = 0);
 };
 
+class SoftwareListInfo : public QObject
+{
+public:
+	QString name;
+	QString status;
+	QString filter;
+
+	SoftwareListInfo(QObject *parent = 0);
+};
+
 class TreeItem;
 class GameInfo : public QObject
 {
@@ -117,6 +127,7 @@ public:
 	/* game */
 	QString sourcefile;
 	bool isBios;
+	bool isDevice;
 //	bool runnable;
 	QString cloneof;
 	QString romof;
@@ -145,6 +156,9 @@ public:
 
 	/* sound */
 	quint8 channels;
+
+	/* softwarelist */
+	QList<SoftwareListInfo *> softwarelists;
 
 	/* input */
 	bool service;
