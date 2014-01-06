@@ -144,7 +144,7 @@ private:
 	void exportFixDat(int);
 };
 
-#define MAMEPLUS_SIG 0x704c7553
+#define MAMEPLUS_SIG 0x52111314
 #define S11N_VER 12
 
 // global vars
@@ -176,6 +176,7 @@ extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
 extern bool isMESS;
+extern bool isUME;
 
 extern QStringList validGuiSettings;
 

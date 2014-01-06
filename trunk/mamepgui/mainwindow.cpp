@@ -44,10 +44,11 @@ bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
 bool isMESS = false;
+bool isUME = false;
 
 QStringList validGuiSettings;
 
-#define MPGUI_VER "1.5.6"
+#define MPGUI_VER "1.5.8.1"
 
 void MainWindow::log(QString message)
 {
@@ -618,6 +619,8 @@ bool MainWindow::validateMameBinary()
 	pGuiSettings->setValue("mame_binary", mame_binary);
 	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
 		isMESS = true;
+	else if (QFileInfo(mame_binary).baseName().contains("ume", Qt::CaseInsensitive))
+        isUME = true;
 
 	return true;
 }

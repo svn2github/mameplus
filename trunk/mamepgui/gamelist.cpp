@@ -2618,7 +2618,7 @@ void Gamelist::initFolders()
 			continue;
 
 		//sourcefile
-		if (!srcList.contains(gameInfo->sourcefile))
+		if (!srcList.contains(gameInfo->sourcefile) && !gameInfo->isDevice)
 			srcList << gameInfo->sourcefile;
 
 		//palettesize

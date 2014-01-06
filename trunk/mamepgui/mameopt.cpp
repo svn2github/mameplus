@@ -789,7 +789,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	{
 	case OPTLEVEL_GUI:
 	case OPTLEVEL_GLOBAL:
-		iniFileName = mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT);
+		iniFileName = mameIniPath + (isMESS ? "mess" INI_EXT : (isUME ? "ume" INI_EXT : "mame" INI_EXT));
 
 		//save old value
 		prevVal = pMameOpt->globalvalue;
@@ -1732,7 +1732,7 @@ void OptionUtils::loadDefault(QString text)
 
 	//test ini readable/writable
 	QString warnings = "";
-	QFile iniFile(mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
+	QFile iniFile(mameIniPath + (isMESS ? "mess" INI_EXT : (isUME ? "ume" INI_EXT : "mame" INI_EXT)));
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append(QFileInfo(iniFile).absoluteFilePath());
 	iniFile.close();
@@ -2261,7 +2261,7 @@ void OptionUtils::chainLoadOptions(QListWidgetItem *currrentOptCatItem, int optL
 	QString iniFileName;
 	static const QString STR_OPTS_ = tr("Options") + " - ";
 
-	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
+	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" INI_EXT : (isUME ? "ume" INI_EXT : "mame" INI_EXT)));
 	//GUI
 	if (optLevel == OPTLEVEL_GUI)
 	{
