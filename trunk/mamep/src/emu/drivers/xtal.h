@@ -194,9 +194,11 @@ enum
 	XTAL_45_158MHz      = 45158000,     /* Sega Model 2A video board, Model 3 CPU board */
 	XTAL_45_6192Mhz     = 45619200,     /* DEC VK100 */
 	XTAL_48MHz          = 48000000,     /* Williams/Midway Y/Z-unit system / SSV board */
+	XTAL_48_384MHz      = 48384000,     /* Namco NB-1 */
 	XTAL_48_66MHz       = 48660000,     /* Zaxxon */
 	XTAL_49_152MHz      = 49152000,     /* Used on some Namco PCBs, Baraduke h/w, System 21, Super System 22  */
 	XTAL_50MHz          = 50000000,     /* Williams/Midway T/W/V-unit system */
+	XTAL_50_113MHz      = 50113000,     /* Namco NA-1 */
 	XTAL_52MHz          = 52000000,     /* Cojag */
 	XTAL_52_832MHz      = 52832000,     /* Wang PC TIG video controller */
 	XTAL_53_693175MHz   = 53693175,     /* PSX-based h/w, Sony ZN1-2-based (15x NTSC subcarrier) */

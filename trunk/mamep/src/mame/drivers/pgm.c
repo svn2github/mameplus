@@ -3679,14 +3679,44 @@ ROM_END
 ROM_START( happy6 )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
 	PGM_68K_BIOS
+	ROM_LOAD16_WORD_SWAP( "v101cn.u5",      0x100000, 0x080000, CRC(aa4646e3) SHA1(e6772cc480ddd3e1d199364b1f2ff93b973e6842) )
+
+	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	// data before 0x188 is read-protected and cannot be read even with a trojan (as with most 2001/2+ IGS titles)
+//  ROM_LOAD( "happy6_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_LOAD( "happy6_igs027a_execute_only_area", 0x0000, 0x00188, NO_DUMP )
+	ROM_LOAD( "happy6_igs027a_v100_china.bin", 0x0188, 0x3e78, CRC(ed530445) SHA1(05c92d649701be2541557b1334dd6c820ca1009e) )
+
+
+	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
+	ROM_LOAD( "v102cn.u26", 0x000000, 0x400000, CRC(310510fb) SHA1(e0e80a04e9f7bf27e6581a8935c960bad33bb6de) )
+
+	ROM_REGION( 0xc00000, "tiles", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	PGM_VIDEO_BIOS
+	ROM_LOAD( "t01w64m.u29",0x180000, 0x800000, CRC(2d3feb8b) SHA1(9832b1c46b1ee73febf5c5c8913859f4e0581665) )
+
+	ROM_REGION( 0x1c00000, "sprcol", 0 ) /* Sprite Colour Data */
+	ROM_LOAD( "a01w64m.u5",  0x0000000, 0x0800000, CRC(bbaa3df3) SHA1(a72268d3989e96d571242279922291d0dc72db28) )
+	ROM_LOAD( "a02w64m.u6",  0x0800000, 0x0800000, CRC(f8c9cd36) SHA1(d9613a83bcc2364492fa922fde1c4f0d07b3009c) )
+
+	ROM_REGION( 0x1000000, "sprmask", 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b01w64m.u19",  0x0000000, 0x0800000, CRC(73f5f225) SHA1(507126fa96dcec967bdbc0978d79fbce9d25db37) )
+
+	ROM_REGION( 0x1000000, "ics", 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	PGM_AUDIO_BIOS
+	ROM_LOAD( "w01w64m.u17",  0x400000, 0x800000, CRC(7e23e2be) SHA1(5e920b8e480f00b6666292d4a56039b40af18141) )
+ROM_END
+
+ROM_START( happy6101 )
+	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
+	PGM_68K_BIOS
 	ROM_LOAD16_WORD_SWAP( "happy6in1_v100cn.u5",      0x100000, 0x080000, CRC(a25418e8) SHA1(acd7e7b69956cb4ce8e26c6420cb97bb4bf404e7) )
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	// data before 0x188 is read-protected and cannot be read even with a trojan (as with most 2001/2+ IGS titles)
 //  ROM_LOAD( "happy6_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
-	// for testing only, this is from the gladiator and wrong for this game.
 	ROM_LOAD( "happy6_igs027a_execute_only_area", 0x0000, 0x00188, NO_DUMP )
-	ROM_LOAD( "happy6_igs027a_v100_japan.bin", 0x0188, 0x3e78, BAD_DUMP CRC(d7f06e2d) SHA1(9c3aca7a487f5329d84731e2c63d5ed591bf9d24) )   // from 'thegladpcb set'
+	ROM_LOAD( "happy6_igs027a_v100_china.bin", 0x0188, 0x3e78, CRC(ed530445) SHA1(05c92d649701be2541557b1334dd6c820ca1009e) )
 
 
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
@@ -3707,7 +3737,6 @@ ROM_START( happy6 )
 	PGM_AUDIO_BIOS
 	ROM_LOAD( "w01w64m.u17",  0x400000, 0x800000, CRC(7e23e2be) SHA1(5e920b8e480f00b6666292d4a56039b40af18141) )
 ROM_END
-
 
 /* all known revisions of ketsui have roms marked v100, even when the actual game revision is upgraded */
 
@@ -4293,6 +4322,10 @@ GAME( 2001, kov2p,        pgm,       pgm_arm_type2,    kov2, pgm_arm_type2_state
 GAME( 2001, kov2p204,     kov2p,     pgm_arm_type2,    kov2, pgm_arm_type2_state,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M204XX, 200, 100CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 08/28/01  09:11:49 M204XX
 GAME( 2001, kov2p202,     kov2p,     pgm_arm_type2,    kov2, pgm_arm_type2_state,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M202XX, 200, 100CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 07/09/01  11:03:50 M202XX
 
+
+
+
+
 // region provided by internal ARM rom
 GAME( 2001, martmast,     pgm,       pgm_arm_type2,    martmast, pgm_arm_type2_state,  martmast,   ROT0,   "IGS", "Martial Masters (ver. 104, 102, 102US)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 68k V104, Ext Arm 102, Int Arm 102US
 GAME( 2001, martmastc,    martmast,  pgm_arm_type2,    martmast, pgm_arm_type2_state,  martmast,   ROT0,   "IGS", "Martial Masters (ver. 104, 102, 101CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 68k V104, Ext Arm 102, Int Arm 101CN
@@ -4371,6 +4404,9 @@ GAME( 2003, thegladpcb,   theglad,   pgm_arm_type3,     pgm,    pgm_arm_type3_st
 
 GAME( 2005, svgpcb,       svg,       pgm_arm_type3,     svg, pgm_arm_type3_state,    svgpcb,     ROT0,   "IGS / Idea Factory", "S.V.G. - Spectral vs Generation (M68k label V100JP) (ARM label V100JP ROM 05/12/05  S.V.G V100) (Japan, JAMMA PCB)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )// ARM time: 15:31:35 // PCB version only released in Japan?
 
+GAME( 2004, happy6,       pgm,       pgm_arm_type3,     happy6, pgm_arm_type3_state,    happy6,     ROT0,   "IGS", "Happy 6-in-1 (ver. 102CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2004, happy6101,    happy6,    pgm_arm_type3,     happy6, pgm_arm_type3_state,    happy6,     ROT0,   "IGS", "Happy 6-in-1 (ver. 101CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+
 /* -----------------------------------------------------------------------------------------------------------------------
    Partially Working, playable, but some imperfections
    -----------------------------------------------------------------------------------------------------------------------*/
@@ -4427,7 +4463,7 @@ GAME( 2004, kovlsjb,      kovshp,    pgm_arm_type1,     kovsh, pgm_arm_type1_sta
 GAME( 2004, kovlsjba,     kovshp,    pgm_arm_type1,     kovsh, pgm_arm_type1_state, kovlsqh2,   ROT0,   "bootleg", "Knights of Valour: Luan Shi Jie Ba / Sangoku Senki: Luan Shi Jie Ba (ver. 200CN, set 2)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* need internal rom of IGS027A */
 
 
-GAME( 2004, happy6,       pgm,       pgm_arm_type3,     happy6, pgm_arm_type3_state,    happy6,     ROT0,   "IGS", "Happy 6-in-1 (ver. 101CN)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* need internal rom of IGS027A */
+
 
 // this is kludged to boot but isn't really going to work properly without the real internal ROM
 GAME( 2005, svg,          pgm,       pgm_arm_type3,     pgm, pgm_arm_type3_state,    svg,        ROT0,   "IGS / Idea Factory", "S.V.G. - Spectral vs Generation (M68k label V200) (ARM label V200, ROM 10/11/05 S.V.G V201)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* need internal rom of IGS027A */ // label was 200, but it's code rev 201? // ARM time: 10:07:20
