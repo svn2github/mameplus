@@ -350,7 +350,7 @@ Permitir restaurar opções para valores 'são'.
 Allows filtering out games from a folder
 Permitir filtrar jogos de uma pasta
 
-# osd/winui/properties.c: 3623
+# osd/winui/properties.c: 3619
 Anti-clockwise
 Anti-horário
 
@@ -390,15 +390,15 @@ Verificar sets de ROMs e amostas
 Audit complete.\n
 Verificação completa.\n
 
-# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
+# osd/winui/properties.c: 378, 409, 2772, 3038, 3044
 Auto
 Auto
 
-# osd/winui/properties.c: 3626
+# osd/winui/properties.c: 3622
 Auto anti-clockwise
 Auto anti-horário
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3621
 Auto clockwise
 Auto horário
 
@@ -582,7 +582,7 @@ Checando jogo -%s - %s
 Checking...
 Checando...
 
-# osd/winui/properties.c: 3622
+# osd/winui/properties.c: 3618
 Clockwise
 Horário
 
@@ -722,7 +722,7 @@ Customizar opções de interface.
 Customize which columns are used in the game list
 Customizar quais colinas serão usadas na lista de jogos
 
-# osd/winui/properties.c: 3621, 3847, 3877
+# osd/winui/properties.c: 3617, 3843, 3873
 Default
 Padrão
 
@@ -846,7 +846,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 Mostra Vetores antialiased
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3585
 Draw every frame
 Mostra cada quadro
 
@@ -1298,7 +1298,7 @@ Sem offset para clones sem master na visualização
 Non-Wor&king
 Não-Fun&cionando
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2906, 3620, 3701, 3830, 3839, 3869
 None
 Nenhum
 
@@ -2470,7 +2470,7 @@ Main background
 Mame&info File...
 
 
-# osd/winui/datafile.c: 1062
+# osd/winui/datafile.c: 1057
 Mameinfo:\n
 
 
@@ -2586,7 +2586,7 @@ Resetting the User Interface options\nrequires exiting MAMEUI.\n
 SEARCH PATH OPTIONS
 
 
-# osd/winui/datafile.c: 1096
+# osd/winui/datafile.c: 1091
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -2694,43 +2694,43 @@ Show or hide the screen shot
 Show or hide the tabs in the picture area
 
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3587
 Skip 1 frame
 
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3605
 Skip 10 frames
 
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3589
 Skip 2 frames
 
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3591
 Skip 3 frames
 
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3593
 Skip 4 frames
 
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3595
 Skip 5 frames
 
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3597
 Skip 6 frames
 
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3599
 Skip 7 frames
 
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3601
 Skip 8 frames
 
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3603
 Skip 9 frames
 
 
@@ -2782,35 +2782,35 @@ Source
 Switch drivers
 
 
-# osd/winui/datafile.c: 1074
+# osd/winui/datafile.c: 1069
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 
 
-# osd/winui/datafile.c: 1084
+# osd/winui/datafile.c: 1079
 The colors are completely wrong.\n
 
 
-# osd/winui/datafile.c: 1087
+# osd/winui/datafile.c: 1082
 The colors aren't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1078
+# osd/winui/datafile.c: 1073
 The game has protection which isn't fully emulated.\n
 
 
-# osd/winui/datafile.c: 1090
+# osd/winui/datafile.c: 1085
 The game lacks sound.\n
 
 
-# osd/winui/datafile.c: 1099
+# osd/winui/datafile.c: 1094
 The game requires external artwork files\n
 
 
-# osd/winui/datafile.c: 1093
+# osd/winui/datafile.c: 1088
 The sound emulation isn't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1081
+# osd/winui/datafile.c: 1076
 The video emulation isn't 100% accurate.\n
 
 
@@ -2846,7 +2846,7 @@ Version 9
 Vertical options\nCustom options used by all games in the Vertical
 
 
-# osd/winui/datafile.c: 1155
+# osd/winui/datafile.c: 1150
 \nDRIVER: %s\n
 
 
@@ -2854,15 +2854,15 @@ Vertical options\nCustom options used by all games in the Vertical
 \nDo you wish to continue?
 
 
-# osd/winui/datafile.c: 1117, 1131
+# osd/winui/datafile.c: 1112, 1126
 \nORIGINAL:\n
 
 
-# osd/winui/datafile.c: 1036
+# osd/winui/datafile.c: 1031
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1119, 1133
+# osd/winui/datafile.c: 1114, 1128
 \n\nCLONES:\n
 
 

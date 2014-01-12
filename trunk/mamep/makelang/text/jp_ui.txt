@@ -394,7 +394,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 フォルダに対してフィルタリングを設定します
 
-# osd/winui/properties.c: 3623
+# osd/winui/properties.c: 3619
 Anti-clockwise
 反時計回り
 
@@ -442,15 +442,15 @@ Audit items in this folder
 Audit the selected item
 選択した項目を監査
 
-# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
+# osd/winui/properties.c: 378, 409, 2772, 3038, 3044
 Auto
 自動
 
-# osd/winui/properties.c: 3626
+# osd/winui/properties.c: 3622
 Auto anti-clockwise
 自動的に反時計回り
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3621
 Auto clockwise
 自動的に時計回り
 
@@ -654,7 +654,7 @@ Checking Game %s - %s
 Checking...
 チェック中...
 
-# osd/winui/properties.c: 3622
+# osd/winui/properties.c: 3618
 Clockwise
 時計回り
 
@@ -854,7 +854,7 @@ Debugscript
 Decrypted
 暗号解除
 
-# osd/winui/properties.c: 3621, 3847, 3877
+# osd/winui/properties.c: 3617, 3843, 3873
 Default
 デフォルト
 
@@ -1010,7 +1010,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3585
 Draw every frame
 フレームスキップなし
 
@@ -1558,7 +1558,7 @@ Main background
 Mame&info File...
 MAME情報ファイル(&I)...
 
-# osd/winui/datafile.c: 1062
+# osd/winui/datafile.c: 1057
 Mameinfo:\n
 MAME情報:\n
 
@@ -1662,7 +1662,7 @@ Non Mechanical
 Non-Wor&king
 動作不可(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2906, 3620, 3701, 3830, 3839, 3869
 None
 なし
 
@@ -2062,7 +2062,7 @@ Screen
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
-# osd/winui/datafile.c: 1096
+# osd/winui/datafile.c: 1091
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
@@ -2274,43 +2274,43 @@ Show or hide the toolbar
 Show these fields in this order:
 表\示設定済みフィールド:
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3587
 Skip 1 frame
 1フレームスキップ
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3605
 Skip 10 frames
 10フレームスキップ
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3589
 Skip 2 frames
 2フレームスキップ
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3591
 Skip 3 frames
 3フレームスキップ
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3593
 Skip 4 frames
 4フレームスキップ
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3595
 Skip 5 frames
 5フレームスキップ
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3597
 Skip 6 frames
 6フレームスキップ
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3599
 Skip 7 frames
 7フレームスキップ
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3601
 Skip 8 frames
 8フレームスキップ
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3603
 Skip 9 frames
 9フレームスキップ
 
@@ -2474,27 +2474,27 @@ Switch resolutions to fit
 Sync to monitor refresh
 モニタと同期
 
-# osd/winui/datafile.c: 1074
+# osd/winui/datafile.c: 1069
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 このゲームは動作しません。 このゲームのエミュレーションはまだ不完全です。 開発者がエミュレーションを改善するのを待つ以外できることはありません。\n
 
-# osd/winui/datafile.c: 1084
+# osd/winui/datafile.c: 1079
 The colors are completely wrong.\n
 色が再現されません。\n
 
-# osd/winui/datafile.c: 1087
+# osd/winui/datafile.c: 1082
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
 
-# osd/winui/datafile.c: 1078
+# osd/winui/datafile.c: 1073
 The game has protection which isn't fully emulated.\n
 このゲームはプロテクトのためエミュレーションが不完全です。\n
 
-# osd/winui/datafile.c: 1090
+# osd/winui/datafile.c: 1085
 The game lacks sound.\n
 サウンドが再生されません。\n
 
-# osd/winui/datafile.c: 1099
+# osd/winui/datafile.c: 1094
 The game requires external artwork files\n
 ゲームは外部のアートワークファイルが必要です\n
 
@@ -2502,7 +2502,7 @@ The game requires external artwork files\n
 The operating system is out of memory or resources.
 メモリもしくはリソ\ースが不足しています。
 
-# osd/winui/datafile.c: 1093
+# osd/winui/datafile.c: 1088
 The sound emulation isn't 100% accurate.\n
 サウンドエミュレーションが不完全です。\n
 
@@ -2514,7 +2514,7 @@ The specified file was not found.
 The specified path was not found.
 指定されたパスが見つかりません。
 
-# osd/winui/datafile.c: 1081
+# osd/winui/datafile.c: 1076
 The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
 
@@ -2790,7 +2790,7 @@ Year
 Yes
 はい
 
-# osd/winui/datafile.c: 1155
+# osd/winui/datafile.c: 1150
 \nDRIVER: %s\n
 \nドライバ: %s\n
 
@@ -2798,15 +2798,15 @@ Yes
 \nDo you wish to continue?
 \n続けますか?
 
-# osd/winui/datafile.c: 1117, 1131
+# osd/winui/datafile.c: 1112, 1126
 \nORIGINAL:\n
 \n原作:\n
 
-# osd/winui/datafile.c: 1036
+# osd/winui/datafile.c: 1031
 \nStory:\n
 \nストーリー:\n
 
-# osd/winui/datafile.c: 1119, 1133
+# osd/winui/datafile.c: 1114, 1128
 \n\nCLONES:\n
 \n\nクローン:\n
 

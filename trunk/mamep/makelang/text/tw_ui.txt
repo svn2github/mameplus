@@ -398,7 +398,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 允許\從資料夾篩選出遊戲
 
-# osd/winui/properties.c: 3623
+# osd/winui/properties.c: 3619
 Anti-clockwise
 逆時針
 
@@ -446,15 +446,15 @@ Audit items in this folder
 Audit the selected item
 驗證選定項目
 
-# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
+# osd/winui/properties.c: 378, 409, 2772, 3038, 3044
 Auto
 自動
 
-# osd/winui/properties.c: 3626
+# osd/winui/properties.c: 3622
 Auto anti-clockwise
 自動逆時針
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3621
 Auto clockwise
 自動順時針
 
@@ -662,7 +662,7 @@ Checking...
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 與 MAMEUI 開發團隊
 
-# osd/winui/properties.c: 3622
+# osd/winui/properties.c: 3618
 Clockwise
 順時針
 
@@ -866,7 +866,7 @@ Debugscript
 Decrypted
 解密版
 
-# osd/winui/properties.c: 3621, 3847, 3877
+# osd/winui/properties.c: 3617, 3843, 3873
 Default
 預設
 
@@ -1022,7 +1022,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3585
 Draw every frame
 描繪出全部畫格
 
@@ -1590,7 +1590,7 @@ Main background
 Mame&info File...
 資訊檔案(&I)...
 
-# osd/winui/datafile.c: 1062
+# osd/winui/datafile.c: 1057
 Mameinfo:\n
 資訊:\n
 
@@ -1698,7 +1698,7 @@ Non Mechanical
 Non-Wor&king
 不可執行(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2906, 3620, 3701, 3830, 3839, 3869
 None
 無
 
@@ -2098,7 +2098,7 @@ Screen
 Screen flip support is missing
 尚未支援畫面翻轉
 
-# osd/winui/datafile.c: 1096
+# osd/winui/datafile.c: 1091
 Screen flipping in cocktail mode is not supported.\n
 尚未支援檯面型筐體模式的畫面翻轉。\n
 
@@ -2310,43 +2310,43 @@ Show or hide the toolbar
 Show these fields in this order:
 按照這個順序顯示欄位:
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3587
 Skip 1 frame
 略過 1 畫格
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3605
 Skip 10 frames
 略過 10 畫格
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3589
 Skip 2 frames
 略過 2 畫格
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3591
 Skip 3 frames
 略過 3 畫格
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3593
 Skip 4 frames
 略過 4 畫格
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3595
 Skip 5 frames
 略過 5 畫格
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3597
 Skip 6 frames
 略過 6 畫格
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3599
 Skip 7 frames
 略過 7 畫格
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3601
 Skip 8 frames
 略過 8 畫格
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3603
 Skip 9 frames
 略過 9 畫格
 
@@ -2510,27 +2510,27 @@ Switch resolutions to fit
 Sync to monitor refresh
 同步於顯示器的更新頻率
 
-# osd/winui/datafile.c: 1074
+# osd/winui/datafile.c: 1069
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 這個遊戲無法執行。遊戲的模擬還不完全，除了等待開發人員改良模擬之外，沒有方法可以解決這個問題。\n
 
-# osd/winui/datafile.c: 1084
+# osd/winui/datafile.c: 1079
 The colors are completely wrong.\n
 色彩是完全錯誤的。\n
 
-# osd/winui/datafile.c: 1087
+# osd/winui/datafile.c: 1082
 The colors aren't 100% accurate.\n
 色彩尚未達到 100% 精確。\n
 
-# osd/winui/datafile.c: 1078
+# osd/winui/datafile.c: 1073
 The game has protection which isn't fully emulated.\n
 遊戲具有保護尚未完全模擬。\n
 
-# osd/winui/datafile.c: 1090
+# osd/winui/datafile.c: 1085
 The game lacks sound.\n
 遊戲缺少聲音。\n
 
-# osd/winui/datafile.c: 1099
+# osd/winui/datafile.c: 1094
 The game requires external artwork files\n
 遊戲需要外部裝飾圖檔案\n
 
@@ -2538,7 +2538,7 @@ The game requires external artwork files\n
 The operating system is out of memory or resources.
 作業系統的記憶體或資源不足。
 
-# osd/winui/datafile.c: 1093
+# osd/winui/datafile.c: 1088
 The sound emulation isn't 100% accurate.\n
 聲音模擬尚未達到 100% 精確。\n
 
@@ -2550,7 +2550,7 @@ The specified file was not found.
 The specified path was not found.
 找不到指定的路徑。
 
-# osd/winui/datafile.c: 1081
+# osd/winui/datafile.c: 1076
 The video emulation isn't 100% accurate.\n
 視訊模擬尚未達到 100% 精確。\n
 
@@ -2826,7 +2826,7 @@ Year
 Yes
 是
 
-# osd/winui/datafile.c: 1155
+# osd/winui/datafile.c: 1150
 \nDRIVER: %s\n
 \n驅動: %s\n
 
@@ -2834,15 +2834,15 @@ Yes
 \nDo you wish to continue?
 \n是否繼續?
 
-# osd/winui/datafile.c: 1117, 1131
+# osd/winui/datafile.c: 1112, 1126
 \nORIGINAL:\n
 \n原作版:\n
 
-# osd/winui/datafile.c: 1036
+# osd/winui/datafile.c: 1031
 \nStory:\n
 \n故事:\n
 
-# osd/winui/datafile.c: 1119, 1133
+# osd/winui/datafile.c: 1114, 1128
 \n\nCLONES:\n
 \n\n仿製版:\n
 

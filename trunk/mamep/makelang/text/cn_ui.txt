@@ -394,7 +394,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 允许从文件夹中过滤出游戏
 
-# osd/winui/properties.c: 3623
+# osd/winui/properties.c: 3619
 Anti-clockwise
 逆时针
 
@@ -442,15 +442,15 @@ Audit items in this folder
 Audit the selected item
 校验所选项目
 
-# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
+# osd/winui/properties.c: 378, 409, 2772, 3038, 3044
 Auto
 自动
 
-# osd/winui/properties.c: 3626
+# osd/winui/properties.c: 3622
 Auto anti-clockwise
 自动逆时针
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3621
 Auto clockwise
 自动顺时针
 
@@ -650,7 +650,7 @@ Checking...
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 和 MAMEUI 开发组
 
-# osd/winui/properties.c: 3622
+# osd/winui/properties.c: 3618
 Clockwise
 顺时针
 
@@ -854,7 +854,7 @@ Debugscript
 Decrypted
 解密
 
-# osd/winui/properties.c: 3621, 3847, 3877
+# osd/winui/properties.c: 3617, 3843, 3873
 Default
 默认
 
@@ -1006,7 +1006,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 抗锯齿描绘矢量
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3585
 Draw every frame
 不跳帧
 
@@ -1662,7 +1662,7 @@ Non Mechanical
 Non-Wor&king
 不可运行(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2906, 3620, 3701, 3830, 3839, 3869
 None
 无
 
@@ -2062,7 +2062,7 @@ Screen
 Screen flip support is missing
 不支持画面翻转
 
-# osd/winui/datafile.c: 1096
+# osd/winui/datafile.c: 1091
 Screen flipping in cocktail mode is not supported.\n
 不支持台面型机台模式下的画面翻转\n
 
@@ -2274,43 +2274,43 @@ Show or hide the toolbar
 Show these fields in this order:
 按以下顺序显示栏目:
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3587
 Skip 1 frame
 跳 1 帧
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3605
 Skip 10 frames
 跳 10 帧
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3589
 Skip 2 frames
 跳 2 帧
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3591
 Skip 3 frames
 跳 3 帧
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3593
 Skip 4 frames
 跳 4 帧
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3595
 Skip 5 frames
 跳 5 帧
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3597
 Skip 6 frames
 跳 6 帧
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3599
 Skip 7 frames
 跳 7 帧
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3601
 Skip 8 frames
 跳 8 帧
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3603
 Skip 9 frames
 跳 9 帧
 
@@ -2474,27 +2474,27 @@ Switch resolutions to fit
 Sync to monitor refresh
 同步显示器刷新率
 
-# osd/winui/datafile.c: 1074
+# osd/winui/datafile.c: 1069
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 这个游戏无法运行。游戏的模拟还不完全，除了等待开发人员改良模拟之外，没有方法可以解决这个问题。\n
 
-# osd/winui/datafile.c: 1084
+# osd/winui/datafile.c: 1079
 The colors are completely wrong.\n
 颜色完全错误。\n
 
-# osd/winui/datafile.c: 1087
+# osd/winui/datafile.c: 1082
 The colors aren't 100% accurate.\n
 颜色不是 100% 精确。\n
 
-# osd/winui/datafile.c: 1078
+# osd/winui/datafile.c: 1073
 The game has protection which isn't fully emulated.\n
 这个游戏的保护尚未完全模拟。\n
 
-# osd/winui/datafile.c: 1090
+# osd/winui/datafile.c: 1085
 The game lacks sound.\n
 这个游戏尚未支持声音。\n
 
-# osd/winui/datafile.c: 1099
+# osd/winui/datafile.c: 1094
 The game requires external artwork files\n
 游戏需要外部装饰图文件\n
 
@@ -2502,7 +2502,7 @@ The game requires external artwork files\n
 The operating system is out of memory or resources.
 操作系统内存或资源不足。
 
-# osd/winui/datafile.c: 1093
+# osd/winui/datafile.c: 1088
 The sound emulation isn't 100% accurate.\n
 声音模拟不是 100% 精确。\n
 
@@ -2514,7 +2514,7 @@ The specified file was not found.
 The specified path was not found.
 未找到指定的路径。
 
-# osd/winui/datafile.c: 1081
+# osd/winui/datafile.c: 1076
 The video emulation isn't 100% accurate.\n
 视频模拟不是 100% 精确。\n
 
@@ -2790,7 +2790,7 @@ Year
 Yes
 是
 
-# osd/winui/datafile.c: 1155
+# osd/winui/datafile.c: 1150
 \nDRIVER: %s\n
 \n驱动: %s\n
 
@@ -2798,15 +2798,15 @@ Yes
 \nDo you wish to continue?
 \n您要继续吗?
 
-# osd/winui/datafile.c: 1117, 1131
+# osd/winui/datafile.c: 1112, 1126
 \nORIGINAL:\n
 \n原作:\n
 
-# osd/winui/datafile.c: 1036
+# osd/winui/datafile.c: 1031
 \nStory:\n
 \nS故事:\n
 
-# osd/winui/datafile.c: 1119, 1133
+# osd/winui/datafile.c: 1114, 1128
 \n\nCLONES:\n
 \n\n克隆:\n
 
@@ -2926,7 +2926,7 @@ MAME has failed its validity checks.  The GUI will still work, but emulations wi
 MAMEUI has detected an old version of comctl32.dll\n\nGame Properties, many configuration options and\nfeatures are not available without an updated DLL\n\nPlease install the common control update found at:\n\nhttp://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp\n\nWould you like to continue without using the new features?\n
 
 
-# osd/winui/datafile.c: 1062
+# osd/winui/datafile.c: 1057
 Mameinfo:\n
 
 

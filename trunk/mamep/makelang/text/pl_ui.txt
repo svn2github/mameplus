@@ -298,7 +298,7 @@ Przywrócenie opcji do standardowych wartoœci.
 Allows filtering out games from a folder
 Wyszukiwanie gier w danym folderze
 
-# osd/winui/properties.c: 3623
+# osd/winui/properties.c: 3619
 Anti-clockwise
 W lewo
 
@@ -330,15 +330,15 @@ Remanent ROM'ów i Sampli
 Audit complete.\n
 Remanent zakoñczony.\n
 
-# osd/winui/properties.c: 378, 409, 2776, 3042, 3048
+# osd/winui/properties.c: 378, 409, 2772, 3038, 3044
 Auto
 Automatycznie
 
-# osd/winui/properties.c: 3626
+# osd/winui/properties.c: 3622
 Auto anti-clockwise
 Automatycznie w lewo
 
-# osd/winui/properties.c: 3625
+# osd/winui/properties.c: 3621
 Auto clockwise
 Automatycznie w prawo
 
@@ -458,7 +458,7 @@ Sprawdzanie gry %s - %s
 Checking...
 Sprawdzanie...
 
-# osd/winui/properties.c: 3622
+# osd/winui/properties.c: 3618
 Clockwise
 W prawo
 
@@ -554,7 +554,7 @@ Opcje do ustawiania interfejsu.
 Customize which columns are used in the game list
 Wybór kolumn do wyœwietlania w liœcie gier
 
-# osd/winui/properties.c: 3621, 3847, 3877
+# osd/winui/properties.c: 3617, 3843, 3873
 Default
 Domyœlne
 
@@ -630,7 +630,7 @@ Wyœwietla informacje o programie i prawach autorskich
 Draw antialiased vectors
 Rysuj niezdublowane wektory
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3585
 Draw every frame
 Rysuj wszystkie klatki
 
@@ -958,7 +958,7 @@ Bez przesuniêcia dla zaginionych klonów
 Non-Wor&king
 Niedzia³aj¹ce
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2910, 3624, 3705, 3834, 3843, 3873
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2906, 3620, 3701, 3830, 3839, 3869
 None
 Brak
 
@@ -2198,7 +2198,7 @@ Main background
 Mame&info File...
 
 
-# osd/winui/datafile.c: 1062
+# osd/winui/datafile.c: 1057
 Mameinfo:\n
 
 
@@ -2450,7 +2450,7 @@ Save game list in specified lst file
 Scale screen
 
 
-# osd/winui/datafile.c: 1096
+# osd/winui/datafile.c: 1091
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -2586,43 +2586,43 @@ Show or hide the screen shot
 Show or hide the tabs in the picture area
 
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3587
 Skip 1 frame
 
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3605
 Skip 10 frames
 
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3589
 Skip 2 frames
 
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3591
 Skip 3 frames
 
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3593
 Skip 4 frames
 
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3595
 Skip 5 frames
 
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3597
 Skip 6 frames
 
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3599
 Skip 7 frames
 
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3601
 Skip 8 frames
 
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3603
 Skip 9 frames
 
 
@@ -2702,35 +2702,35 @@ Supported
 Switch drivers
 
 
-# osd/winui/datafile.c: 1074
+# osd/winui/datafile.c: 1069
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 
 
-# osd/winui/datafile.c: 1084
+# osd/winui/datafile.c: 1079
 The colors are completely wrong.\n
 
 
-# osd/winui/datafile.c: 1087
+# osd/winui/datafile.c: 1082
 The colors aren't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1078
+# osd/winui/datafile.c: 1073
 The game has protection which isn't fully emulated.\n
 
 
-# osd/winui/datafile.c: 1090
+# osd/winui/datafile.c: 1085
 The game lacks sound.\n
 
 
-# osd/winui/datafile.c: 1099
+# osd/winui/datafile.c: 1094
 The game requires external artwork files\n
 
 
-# osd/winui/datafile.c: 1093
+# osd/winui/datafile.c: 1088
 The sound emulation isn't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1081
+# osd/winui/datafile.c: 1076
 The video emulation isn't 100% accurate.\n
 
 
@@ -2838,7 +2838,7 @@ View:
 Visual Effects
 
 
-# osd/winui/datafile.c: 1155
+# osd/winui/datafile.c: 1150
 \nDRIVER: %s\n
 
 
@@ -2846,15 +2846,15 @@ Visual Effects
 \nDo you wish to continue?
 
 
-# osd/winui/datafile.c: 1117, 1131
+# osd/winui/datafile.c: 1112, 1126
 \nORIGINAL:\n
 
 
-# osd/winui/datafile.c: 1036
+# osd/winui/datafile.c: 1031
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1119, 1133
+# osd/winui/datafile.c: 1114, 1128
 \n\nCLONES:\n
 
 

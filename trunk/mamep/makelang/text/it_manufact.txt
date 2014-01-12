@@ -26,7 +26,7 @@ bootleg
 bootleg?
 bootleg?
 
-# Buccaneer
+# Bubble Bobble Redux (With Level Skipper)
 hack
 modificato
 
@@ -264,6 +264,10 @@ Aorn
 
 # Otona no Mahjong (Japan 880628)
 Apple
+
+
+# Super Six Plus II English Mark Darts
+Arachnid
 
 
 # Guilty Gear X (JPN)
@@ -526,7 +530,7 @@ Castle
 Catalina
 
 
-# DoDonPachi Dai-Ou-Jou V101 (2002.04.05.Master Ver)
+# DoDonPachi Dai-Fukkatsu Ver 1.5 (2008/06/23  MASTER VER 1.5)
 Cave
 
 
@@ -752,6 +756,10 @@ Data East Pinball
 
 # Bad Dudes vs. Dragonninja (US)
 Data East USA
+
+
+# Burger Time (Data East USA)
+Data East USA Inc.
 
 
 # Rock Duck (prototype?)
@@ -1378,7 +1386,7 @@ IBS
 ICE
 
 
-# 4 En Raya
+# 4 En Raya (set 1)
 IDSA
 
 
@@ -1391,7 +1399,7 @@ IGS?
 
 
 # Draw 80 Poker - Minn
-IGT - International Gaming Technology
+IGT - International Game Technology
 
 
 # Andromeda (Japan?)
@@ -1560,6 +1568,10 @@ Karateco
 
 # Rotary Fighter
 Kasco
+
+
+# Poka Poka Satan (Japan)
+Kato Seisakujo Co., Ltd.
 
 
 # Kimble Double HI-LO
@@ -1870,7 +1882,7 @@ Monolith Corp.
 Monroe Bowling Co.
 
 
-# Steal See (& Get Land)
+# Steal See
 Moov Generation
 
 
@@ -2552,6 +2564,10 @@ Shoei
 
 # Time Attacker
 Shonan
+
+
+# Unknown Sidam Poker
+Sidam
 
 
 # Astropal
@@ -3354,7 +3370,7 @@ dgPIX Entertainment Inc.
 eic
 
 
-# Bubble Bobble Lost Cave (Ver 1.1)
+# Bubble Bobble Lost Cave (Ver 1.2)
 hack by Bisboch and Aladar
 
 

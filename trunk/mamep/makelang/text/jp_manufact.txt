@@ -62,7 +62,7 @@ Banpresto
 Capcom
 カプコン
 
-# DoDonPachi Dai-Ou-Jou V101 (2002.04.05.Master Ver)
+# DoDonPachi Dai-Fukkatsu Ver 1.5 (2008/06/23  MASTER VER 1.5)
 Cave
 ケイブ
 
@@ -586,7 +586,7 @@ bootleg
 bootleg?
 海賊版?
 
-# Buccaneer
+# Bubble Bobble Redux (With Level Skipper)
 hack
 ハック
 
@@ -796,6 +796,10 @@ Aorn
 
 # Otona no Mahjong (Japan 880628)
 Apple
+
+
+# Super Six Plus II English Mark Darts
+Arachnid
 
 
 # SportTime Table Hockey (Arcadia, set 1, V 2.1)
@@ -1216,6 +1220,10 @@ Danbi
 
 # Super Casino
 Data Amusement
+
+
+# Burger Time (Data East USA)
+Data East USA Inc.
 
 
 # Rock Duck (prototype?)
@@ -1738,7 +1746,7 @@ IBS
 ICE
 
 
-# 4 En Raya
+# 4 En Raya (set 1)
 IDSA
 
 
@@ -1747,7 +1755,7 @@ IGS?
 
 
 # Draw 80 Poker - Minn
-IGT - International Gaming Technology
+IGT - International Game Technology
 
 
 # Andromeda (Japan?)
@@ -1892,6 +1900,10 @@ Karateco
 
 # Rotary Fighter
 Kasco
+
+
+# Poka Poka Satan (Japan)
+Kato Seisakujo Co., Ltd.
 
 
 # Kimble Double HI-LO
@@ -2166,7 +2178,7 @@ Mondial Games
 Monroe Bowling Co.
 
 
-# Steal See (& Get Land)
+# Steal See
 Moov Generation
 
 
@@ -2728,6 +2740,10 @@ Shinkai Inc.
 
 # Time Attacker
 Shonan
+
+
+# Unknown Sidam Poker
+Sidam
 
 
 # Astropal
@@ -3354,7 +3370,7 @@ dgPIX Entertainment Inc.
 eic
 
 
-# Bubble Bobble Lost Cave (Ver 1.1)
+# Bubble Bobble Lost Cave (Ver 1.2)
 hack by Bisboch and Aladar
 
 

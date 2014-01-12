@@ -246,7 +246,7 @@ Capcom
 Catalina
 Catalina
 
-# DoDonPachi Dai-Ou-Jou V101 (2002.04.05.Master Ver)
+# DoDonPachi Dai-Fukkatsu Ver 1.5 (2008/06/23  MASTER VER 1.5)
 Cave
 Cave
 
@@ -718,7 +718,7 @@ I'Max
 I.G.R.
 I.G.R.
 
-# 4 En Raya
+# 4 En Raya (set 1)
 IDSA
 IDSA
 
@@ -729,10 +729,6 @@ IGS
 # Dou Di Zhu
 IGS?
 IGS?
-
-# Draw 80 Poker - Minn
-IGT - International Gaming Technology
-IGT - International Gaming Technology
 
 # Pang Pang Car
 Icarus
@@ -1750,7 +1746,7 @@ pirata?
 dgPIX Entertainment Inc.
 dgPIX Entertainment Inc.
 
-# Buccaneer
+# Bubble Bobble Redux (With Level Skipper)
 hack
 modificação
 
@@ -1868,6 +1864,10 @@ Anime Tec
 
 # Rabbit (Japan)
 Aorn
+
+
+# Super Six Plus II English Mark Darts
+Arachnid
 
 
 # Guilty Gear X (JPN)
@@ -2104,6 +2104,10 @@ Daewoo
 
 # Donggul Donggul Haerong
 Danbi
+
+
+# Burger Time (Data East USA)
+Data East USA Inc.
 
 
 # 280-ZZZAP
@@ -2390,6 +2394,10 @@ IBS
 ICE
 
 
+# Draw 80 Poker - Minn
+IGT - International Game Technology
+
+
 # Andromeda (Japan?)
 IPM
 
@@ -2472,6 +2480,10 @@ Karateco
 
 # Rotary Fighter
 Kasco
+
+
+# Poka Poka Satan (Japan)
+Kato Seisakujo Co., Ltd.
 
 
 # Kimble Double HI-LO
@@ -2638,7 +2650,7 @@ Moloney Manufacturing Inc.
 Monroe Bowling Co.
 
 
-# Steal See (& Get Land)
+# Steal See
 Moov Generation
 
 
@@ -2984,6 +2996,10 @@ Seojin
 
 # Hana Awase
 Seta Kikaku, Ltd.
+
+
+# Unknown Sidam Poker
+Sidam
 
 
 # Cube Quest (01/04/84)
@@ -3354,7 +3370,7 @@ Yung Yu
 eic
 
 
-# Bubble Bobble Lost Cave (Ver 1.1)
+# Bubble Bobble Lost Cave (Ver 1.2)
 hack by Bisboch and Aladar
 
 
