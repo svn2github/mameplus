@@ -20,9 +20,9 @@
 #define NLD_NE555_H_
 
 #include "../nl_base.h"
-#include "nld_twoterm.h"
+#include "../analog/nld_twoterm.h"
 
-#define NETDEV_NE555(_name)                                                        \
+#define NE555(_name)                                                        \
 		NET_REGISTER_DEV(NE555, _name)
 NETLIB_DEVICE(NE555,
 	NETLIB_NAME(R) m_R1;

@@ -491,7 +491,7 @@ static void display_loading_rom_message(romload_private *romdata, const char *na
 	char buffer[200];
 
 	if (name != NULL)
-		sprintf(buffer, _("Loading %s (%d%%)"), from_list ? "Software" : emulator_info::get_capstartgamenoun(), (UINT32)(100 * (UINT64)romdata->romsloadedsize / (UINT64)romdata->romstotalsize));
+		sprintf(buffer, _("Loading %s (%d%%)"), from_list ? _("Software") : emulator_info::get_capstartgamenoun(), (UINT32)(100 * (UINT64)romdata->romsloadedsize / (UINT64)romdata->romstotalsize));
 	else
 		sprintf(buffer, _("Loading Complete"));
 

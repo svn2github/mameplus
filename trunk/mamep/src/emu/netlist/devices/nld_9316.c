@@ -9,7 +9,7 @@ NETLIB_START(9316)
 {
 	register_sub(sub, "sub");
 
-	register_subalias("CLK", sub.m_clk);
+	register_subalias("CLK", sub.m_CLK);
 
 	register_input("ENP", m_ENP);
 	register_input("ENT", m_ENT);
@@ -29,18 +29,19 @@ NETLIB_START(9316)
 
 }
 
+NETLIB_RESET(9316)
+{
+    sub.do_reset();
+}
+
 NETLIB_START(9316_sub)
 {
-	m_cnt = 0;
-	m_loadq = 1;
-	m_ent = 1;
+	register_input("CLK", m_CLK);
 
-	register_input("CLK", m_clk, netlist_input_t::STATE_INP_LH);
-
-	register_input("A", m_A, netlist_input_t::STATE_INP_PASSIVE);
-	register_input("B", m_B, netlist_input_t::STATE_INP_PASSIVE);
-	register_input("C", m_C, netlist_input_t::STATE_INP_PASSIVE);
-	register_input("D", m_D, netlist_input_t::STATE_INP_PASSIVE);
+	register_input("A", m_A);
+	register_input("B", m_B);
+	register_input("C", m_C);
+	register_input("D", m_D);
 
 	register_output("QA", m_QA);
 	register_output("QB", m_QB);
@@ -51,6 +52,19 @@ NETLIB_START(9316_sub)
 	save(NAME(m_cnt));
 	save(NAME(m_loadq));
 	save(NAME(m_ent));
+}
+
+NETLIB_RESET(9316_sub)
+{
+    m_CLK.set_state(netlist_input_t::STATE_INP_LH);
+    m_A.set_state(netlist_input_t::STATE_INP_PASSIVE);
+    m_B.set_state(netlist_input_t::STATE_INP_PASSIVE);
+    m_C.set_state(netlist_input_t::STATE_INP_PASSIVE);
+    m_D.set_state(netlist_input_t::STATE_INP_PASSIVE);
+
+    m_cnt = 0;
+    m_loadq = 1;
+    m_ent = 1;
 }
 
 NETLIB_UPDATE(9316_sub)
@@ -82,11 +96,11 @@ NETLIB_UPDATE(9316)
 
 	if ((!sub.m_loadq || (sub.m_ent & INPLOGIC(m_ENP))) & clrq)
 	{
-		sub.m_clk.activate_lh();
+		sub.m_CLK.activate_lh();
 	}
 	else
 	{
-		sub.m_clk.inactivate();
+		sub.m_CLK.inactivate();
 		if (!clrq & (sub.m_cnt>0))
 		{
 			sub.m_cnt = 0;
@@ -151,3 +165,37 @@ NETLIB_FUNC_VOID(9316_sub, update_outputs, (const UINT8 cnt))
 	}
 #endif
 }
+
+NETLIB_START(9316_dip)
+{
+    NETLIB_NAME(9316)::start();
+
+    register_subalias("1", m_CLRQ);
+    register_subalias("2", sub.m_CLK);
+    register_subalias("3", sub.m_A);
+    register_subalias("4", sub.m_B);
+    register_subalias("5", sub.m_C);
+    register_subalias("6", sub.m_D);
+    register_subalias("7", m_ENP);
+    // register_subalias("8", ); --> GND
+
+    register_subalias("9", m_LOADQ);
+    register_subalias("10", m_ENT);
+    register_subalias("11", sub.m_QD);
+    register_subalias("12", sub.m_QC);
+    register_subalias("13", sub.m_QB);
+    register_subalias("14", sub.m_QA);
+    register_subalias("15", sub.m_RC);
+    // register_subalias("16", ); --> VCC
+}
+
+NETLIB_UPDATE(9316_dip)
+{
+    NETLIB_NAME(9316)::update();
+}
+
+NETLIB_RESET(9316_dip)
+{
+    NETLIB_NAME(9316)::reset();
+}
+
