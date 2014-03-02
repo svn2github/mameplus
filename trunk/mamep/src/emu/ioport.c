@@ -260,7 +260,7 @@ struct ioport_field_live
 	bool                    toggle;             // current toggle setting
 	digital_joystick::direction_t joydir;       // digital joystick direction index
 #ifdef USE_AUTOFIRE
-//	UINT8                   toggle;             // current toggle state
+	UINT8                   autofire_toggle;    // autofire current toggle state
 	int                     autofire;           // autofire
 	int                     autopressed;        // autofire status
 #endif /* USE_AUTOFIRE */
@@ -2230,7 +2230,7 @@ void ioport_field::frame_update(ioport_value &result, bool mouse_down)
 			{
 				m_live->value ^= m_mask;
 #ifdef USE_AUTOFIRE
-				m_live->toggle = !m_live->toggle;
+				m_live->autofire_toggle = !m_live->autofire_toggle;
 #endif /* USE_AUTOFIRE */
 			}
 			else
@@ -2453,6 +2453,7 @@ ioport_field_live::ioport_field_live(ioport_field &field, analog_field *analog)
 		toggle(field.toggle()),
 		joydir(digital_joystick::JOYDIR_COUNT)
 #ifdef USE_AUTOFIRE
+		,autofire_toggle(0)
 		,autofire(0)
 		,autopressed(0)
 #endif /* USE_AUTOFIRE */
@@ -3345,6 +3346,19 @@ void ioport_manager::load_config(int config_type, xml_data_node *parentnode)
 		else
 			load_game_config(portnode, type, player, newseq);
 	}
+
+#ifdef USE_AUTOFIRE
+	if (config_type == CONFIG_TYPE_GAME)
+	{
+		for (xml_data_node *portnode = xml_get_sibling(parentnode->child, "autofire"); portnode; portnode = xml_get_sibling(portnode->next, "autofire"))
+		{
+			int player = xml_get_attribute_int(portnode, "player", 0);
+
+			if (player > 0 && player <= MAX_PLAYERS)
+				m_autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 3);
+		}
+	}
+#endif /* USE_AUTOFIRE */
 
 	// after applying the controller config, push that back into the backup, since that is
 	// what we will diff against
@@ -4907,7 +4921,7 @@ bool ioport_manager::auto_pressed(ioport_field *field)
 	int is_auto = IS_AUTOKEY(field);
 
 	if (pressed && (field->toggle()))
-		m_autofiretoggle[field->player()] = field->live().toggle;
+		m_autofiretoggle[field->player()] = field->live().autofire_toggle;
 
 #ifdef USE_CUSTOM_BUTTON
 	if (field->type() >= IPT_BUTTON1 && field->type() < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
