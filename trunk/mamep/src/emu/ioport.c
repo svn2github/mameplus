@@ -5092,7 +5092,7 @@ void ioport_manager::make_input_log()
 	if (normal_buttons > 0)
 	{
 		int is_neogeo = !mame_stricmp(machine().system().source_file+17, "neogeo.c")
-		                || !mame_stricmp(machine().system().source_file+17, "neodrvr.c");
+		                || !mame_stricmp(machine().system().source_file+17, "neodrvr.inc");
 		static UINT16 old_btn = 0;
 		static UINT16 now_btn;
 		int is_pressed = 0;
