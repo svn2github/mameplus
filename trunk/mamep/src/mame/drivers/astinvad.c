@@ -56,7 +56,8 @@ public:
 		m_ppi8255_0(*this, "ppi8255_0"),
 		m_ppi8255_1(*this, "ppi8255_1"),
 		m_videoram(*this, "videoram"),
-		m_samples(*this, "samples"){ }
+		m_samples(*this, "samples"),
+		m_screen(*this, "screen"){ }
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<i8255_device>  m_ppi8255_0;
@@ -72,6 +73,8 @@ public:
 	UINT8      m_color_latch;
 
 	required_device<samples_device> m_samples;
+	required_device<screen_device> m_screen;
+
 	DECLARE_WRITE8_MEMBER(color_latch_w);
 	DECLARE_WRITE8_MEMBER(spaceint_videoram_w);
 	DECLARE_READ8_MEMBER(kamikaze_ppi_r);
@@ -167,17 +170,17 @@ WRITE8_MEMBER(astinvad_state::spaceint_videoram_w)
 
 void astinvad_state::plot_byte( bitmap_rgb32 &bitmap, UINT8 y, UINT8 x, UINT8 data, UINT8 color )
 {
-	pen_t fore_pen = MAKE_RGB(pal1bit(color >> 0), pal1bit(color >> 2), pal1bit(color >> 1));
+	pen_t fore_pen = rgb_t(pal1bit(color >> 0), pal1bit(color >> 2), pal1bit(color >> 1));
 	UINT8 flip_xor = m_screen_flip & 7;
 
-	bitmap.pix32(y, x + (0 ^ flip_xor)) = (data & 0x01) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (1 ^ flip_xor)) = (data & 0x02) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (2 ^ flip_xor)) = (data & 0x04) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (3 ^ flip_xor)) = (data & 0x08) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (4 ^ flip_xor)) = (data & 0x10) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (5 ^ flip_xor)) = (data & 0x20) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (6 ^ flip_xor)) = (data & 0x40) ? fore_pen : RGB_BLACK;
-	bitmap.pix32(y, x + (7 ^ flip_xor)) = (data & 0x80) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (0 ^ flip_xor)) = (data & 0x01) ? fore_pen : 0;
+	bitmap.pix32(y, x + (1 ^ flip_xor)) = (data & 0x02) ? fore_pen : 0;
+	bitmap.pix32(y, x + (2 ^ flip_xor)) = (data & 0x04) ? fore_pen : 0;
+	bitmap.pix32(y, x + (3 ^ flip_xor)) = (data & 0x08) ? fore_pen : 0;
+	bitmap.pix32(y, x + (4 ^ flip_xor)) = (data & 0x10) ? fore_pen : 0;
+	bitmap.pix32(y, x + (5 ^ flip_xor)) = (data & 0x20) ? fore_pen : 0;
+	bitmap.pix32(y, x + (6 ^ flip_xor)) = (data & 0x40) ? fore_pen : 0;
+	bitmap.pix32(y, x + (7 ^ flip_xor)) = (data & 0x80) ? fore_pen : 0;
 }
 
 

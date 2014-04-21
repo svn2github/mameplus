@@ -103,7 +103,9 @@ public:
 		m_luck_vram1(*this, "luck_vram1"),
 		m_luck_vram2(*this, "luck_vram2"),
 		m_luck_vram3(*this, "luck_vram3"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	UINT8 m_nmi_enable;
 	tilemap_t *m_reel1_tilemap;
@@ -154,6 +156,8 @@ public:
 	UINT32 screen_update_luckgrln(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(luckgrln_irq);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -180,8 +184,7 @@ TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel1_tile_info)
 	code |= (attr & 0xe0)<<3;
 
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			code,
 			col,
 			0);
@@ -210,8 +213,7 @@ TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel2_tile_info)
 	code |= (attr & 0xe0)<<3;
 
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			code,
 			col,
 			0);
@@ -238,8 +240,7 @@ TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel3_tile_info)
 
 	code |= (attr & 0xe0)<<3;
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			code,
 			col,
 			0);
@@ -266,8 +267,7 @@ TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel4_tile_info)
 
 	code |= (attr & 0xe0)<<3;
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			code,
 			col,
 			0);
@@ -275,10 +275,10 @@ TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel4_tile_info)
 
 void luckgrln_state::video_start()
 {
-	m_reel1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel1_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
-	m_reel2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel2_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
-	m_reel3_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel3_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
-	m_reel4_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel4_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel1_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel1_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel2_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel2_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel3_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel3_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel4_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel4_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
 
 	m_reel1_tilemap->set_scroll_cols(64);
 	m_reel2_tilemap->set_scroll_cols(64);
@@ -365,10 +365,10 @@ UINT32 luckgrln_state::screen_update_luckgrln(screen_device &screen, bitmap_ind1
 				if (bgenable==3) m_reel4_tilemap->draw(screen, bitmap, clip, 0, 0);
 			}
 
-			if (tileattr&0x08) drawgfx_transpen(bitmap,clip,machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
+			if (tileattr&0x08) m_gfxdecode->gfx(region)->transpen(bitmap,clip,tile,col,0,0,x*8,y*8, 0);
 
 #else // treat it as priority flag instead (looks better in non-adult title screen - needs verifying)
-			if (!(tileattr&0x08)) drawgfx_transpen(bitmap,clip,machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
+			if (!(tileattr&0x08)) m_gfxdecode->gfx(region)->transpen(bitmap,clip,tile,col,0,0,x*8,y*8, 0);
 
 			if (tileattr&0x04)
 			{
@@ -378,7 +378,7 @@ UINT32 luckgrln_state::screen_update_luckgrln(screen_device &screen, bitmap_ind1
 				if (bgenable==3) m_reel4_tilemap->draw(screen, bitmap, clip, 0, 0);
 			}
 
-			if ((tileattr&0x08)) drawgfx_transpen(bitmap,clip,machine().gfx[region],tile,col,0,0,x*8,y*8, 0);
+			if ((tileattr&0x08)) m_gfxdecode->gfx(region)->transpen(bitmap,clip,tile,col,0,0,x*8,y*8, 0);
 #endif
 
 			count++;
@@ -468,7 +468,7 @@ WRITE8_MEMBER(luckgrln_state::palette_w)
 		g = (dat >> 5) & 0x1f;
 		b = (dat >> 10) & 0x1f;
 
-		palette_set_color_rgb(machine(), offs/2, pal5bit(r), pal5bit(g), pal5bit(b));
+		m_palette->set_pen_color(offs/2, pal5bit(r), pal5bit(g), pal5bit(b));
 
 	}
 
@@ -978,6 +978,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -1009,9 +1010,10 @@ static MACHINE_CONFIG_START( luckgrln, luckgrln_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(luckgrln_state, screen_update_luckgrln)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(luckgrln)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", luckgrln)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")

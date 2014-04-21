@@ -18,7 +18,9 @@ public:
 		: driver_device(mconfig, type, tag) ,
 		m_maincpu(*this, "maincpu"),
 		m_dac1(*this, "dac1"),
-		m_dac2(*this, "dac2") { }
+		m_dac2(*this, "dac2"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	int m_inputport;
 	int m_dipswbitsel;
@@ -52,7 +54,7 @@ public:
 	bitmap_ind16 m_tmpbitmap[VRAM_MAX];
 	UINT16 *m_videoram[VRAM_MAX];
 	UINT16 *m_videoworkram[VRAM_MAX];
-	UINT8 *m_palette;
+	UINT8 *m_palette_ptr;
 	UINT8 *m_nb22090_palette;
 	UINT8 *m_clut[VRAM_MAX];
 	int m_flipscreen_old[VRAM_MAX];
@@ -137,6 +139,8 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<dac_device> m_dac1;
 	required_device<dac_device> m_dac2;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 protected:
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);

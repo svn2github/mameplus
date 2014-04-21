@@ -163,7 +163,7 @@ Speedups
 
 Blitter Timing
  - Correct slowdown emulation and flags (depends on blit mode, and speed of RAM) - could do with the recompiler or alt idle skips on the busy flag wait looops
- - End of Blit IRQ? (one game has a valid irq routine that looks like it was used for profiling, but nothing depends on it) 
+ - End of Blit IRQ? (one game has a valid irq routine that looks like it was used for profiling, but nothing depends on it)
 
 */
 
@@ -237,7 +237,7 @@ UINT32 cv1k_state::screen_update_cv1k(screen_device &screen, bitmap_rgb32 &bitma
 
 READ64_MEMBER( cv1k_state::cv1k_flash_port_e_r )
 {
-	return	((m_serflash->flash_ready_r(space, offset) ? 0x20 : 0x00)) | 0xdf;
+	return  ((m_serflash->flash_ready_r(space, offset) ? 0x20 : 0x00)) | 0xdf;
 }
 
 
@@ -324,7 +324,7 @@ static ADDRESS_MAP_START( cv1k_map, AS_PROGRAM, 64, cv1k_state )
 	AM_RANGE(0x10000000, 0x10000007) AM_READWRITE8(cv1k_flash_io_r, cv1k_flash_io_w, U64(0xffffffffffffffff))
 	AM_RANGE(0x10400000, 0x10400007) AM_DEVWRITE8("ymz770", ymz770_device, write, U64(0xffffffffffffffff))
 	AM_RANGE(0x10C00000, 0x10C00007) AM_READWRITE8(serial_rtc_eeprom_r, serial_rtc_eeprom_w, U64(0xffffffffffffffff))
-//	AM_RANGE(0x18000000, 0x18000057) // blitter, installed on reset
+//  AM_RANGE(0x18000000, 0x18000057) // blitter, installed on reset
 	AM_RANGE(0xf0000000, 0xf0ffffff) AM_RAM // mem mapped cache (sh3 internal?)
 ADDRESS_MAP_END
 
@@ -334,7 +334,7 @@ static ADDRESS_MAP_START( cv1k_d_map, AS_PROGRAM, 64, cv1k_state )
 	AM_RANGE(0x10000000, 0x10000007) AM_READWRITE8(cv1k_flash_io_r, cv1k_flash_io_w, U64(0xffffffffffffffff))
 	AM_RANGE(0x10400000, 0x10400007) AM_DEVWRITE8("ymz770", ymz770_device, write, U64(0xffffffffffffffff))
 	AM_RANGE(0x10C00000, 0x10C00007) AM_READWRITE8(serial_rtc_eeprom_r, serial_rtc_eeprom_w, U64(0xffffffffffffffff))
-//	AM_RANGE(0x18000000, 0x18000057) // blitter, installed on reset
+//  AM_RANGE(0x18000000, 0x18000057) // blitter, installed on reset
 	AM_RANGE(0xf0000000, 0xf0ffffff) AM_RAM // mem mapped cache (sh3 internal?)
 ADDRESS_MAP_END
 
@@ -349,7 +349,7 @@ ADDRESS_MAP_END
 
 
 static INPUT_PORTS_START( cv1k )
-	PORT_START("DSW")		// 18000050.l (18000050.b + 3 i.e. MSB + 3, is shown as DIPSW)
+	PORT_START("DSW")       // 18000050.l (18000050.b + 3 i.e. MSB + 3, is shown as DIPSW)
 //  PORT_BIT(        0xfcfffffc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_DIPNAME(    0x00000002, 0x00000000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING( 0x00000000, DEF_STR( Off ) )
@@ -357,9 +357,9 @@ static INPUT_PORTS_START( cv1k )
 	PORT_SERVICE(    0x00000001, IP_ACTIVE_HIGH )
 
 	PORT_START("PORT_C")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )	// Service coin
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Test button copied here
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1  )	// IMPLEMENT COIN ERROR!
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )   // Service coin
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )   // Test button copied here
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1  ) // IMPLEMENT COIN ERROR!
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2  )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
@@ -376,10 +376,10 @@ static INPUT_PORTS_START( cv1k )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4        ) PORT_PLAYER(1)
 
 	PORT_START("PORT_F")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE2 )	// Test Push Button
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE2 )  // Test Push Button
 	PORT_BIT( 0xfd, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
-	PORT_START("PORT_L")	// 4000134.b, 4000136.b
+	PORT_START("PORT_L")    // 4000134.b, 4000136.b
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    ) PORT_PLAYER(2)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  ) PORT_PLAYER(2)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  ) PORT_PLAYER(2)
@@ -453,10 +453,10 @@ static MACHINE_CONFIG_START( cv1k, cv1k_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(0x200, 0x200)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xf0-1)
-
-	MCFG_PALETTE_LENGTH(0x10000)
-
 	MCFG_SCREEN_UPDATE_DRIVER(cv1k_state, screen_update_cv1k)
+
+
+	MCFG_PALETTE_ADD("palette", 0x10000)
 
 	MCFG_MACHINE_RESET_OVERRIDE(cv1k_state, cv1k)
 
@@ -804,7 +804,7 @@ READ64_MEMBER( cv1k_state::mushisam_speedup_r )
 
 DRIVER_INIT_MEMBER(cv1k_state,mushisam)
 {
-    m_maincpu->space(AS_PROGRAM).install_read_handler(0xc0022f0, 0xc0022f7, read64_delegate(FUNC(cv1k_state::mushisam_speedup_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xc0022f0, 0xc0022f7, read64_delegate(FUNC(cv1k_state::mushisam_speedup_r),this));
 }
 
 READ64_MEMBER( cv1k_state::mushisama_speedup_r )
@@ -816,7 +816,7 @@ READ64_MEMBER( cv1k_state::mushisama_speedup_r )
 
 DRIVER_INIT_MEMBER(cv1k_state,mushisama)
 {
-    m_maincpu->space(AS_PROGRAM).install_read_handler(0xc0024d8, 0xc0024df, read64_delegate(FUNC(cv1k_state::mushisama_speedup_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xc0024d8, 0xc0024df, read64_delegate(FUNC(cv1k_state::mushisama_speedup_r),this));
 }
 
 READ64_MEMBER( cv1k_state::espgal2_speedup_r )
@@ -827,13 +827,13 @@ READ64_MEMBER( cv1k_state::espgal2_speedup_r )
 	if ( pc == 0xc05176a ) m_maincpu->spin_until_time( attotime::from_usec(10)); // futari15 / futari15a / futari10 / futariblk / ibarablk / ibarablka / mmpork / mmmbanc
 	if ( pc == 0xc0519a2 ) m_maincpu->spin_until_time( attotime::from_usec(10)); // deathsml
 	if ( pc == 0xc1d1346 ) m_maincpu->spin_until_time( attotime::from_usec(10)); // dpddfk / dsmbl
-//	else printf("read %08x\n", m_maincpu->pc());
+//  else printf("read %08x\n", m_maincpu->pc());
 	return cv1k_ram[0x002310/8];
 }
 
 DRIVER_INIT_MEMBER(cv1k_state,espgal2)
 {
-    m_maincpu->space(AS_PROGRAM).install_read_handler(0xc002310, 0xc002317, read64_delegate(FUNC(cv1k_state::espgal2_speedup_r),this));
+	m_maincpu->space(AS_PROGRAM).install_read_handler(0xc002310, 0xc002317, read64_delegate(FUNC(cv1k_state::espgal2_speedup_r),this));
 }
 
 

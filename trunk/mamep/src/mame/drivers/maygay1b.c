@@ -292,6 +292,7 @@ WRITE8_MEMBER(maygay1b_state::m1_8279_w)
 	}
 	if ( chip->write_display )
 	{  // Data
+		assert(chip->disp_address < ARRAY_LENGTH(chip->ram));
 		if ( chip->ram[chip->disp_address] != data )
 		{
 			m1_draw_lamps(chip->ram[chip->disp_address],chip->disp_address, 0);
@@ -538,22 +539,6 @@ WRITE8_MEMBER(maygay1b_state::m1_pia_portb_w)
 	for (i=0; i<8; i++)
 		if ( data & (1 << i) )      output_set_indexed_value("triac", i, data & (1 << i));
 }
-
-static const pia6821_interface m1_pia_intf =
-{
-	DEVCB_NULL,     /* port A in */
-	DEVCB_NULL,     /* port B in */
-	DEVCB_NULL,     /* line CA1 in */
-	DEVCB_NULL,     /* line CB1 in */
-	DEVCB_NULL,     /* line CA2 in */
-	DEVCB_NULL,     /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(maygay1b_state,m1_pia_porta_w),     /* port A out */
-	DEVCB_DRIVER_MEMBER(maygay1b_state,m1_pia_portb_w),     /* port B out */
-	DEVCB_NULL,     /* line CA2 out */
-	DEVCB_NULL,     /* port CB2 out */
-	DEVCB_NULL,     /* IRQA */
-	DEVCB_NULL      /* IRQB */
-};
 
 // input ports for M1 board ////////////////////////////////////////
 
@@ -818,9 +803,9 @@ static ADDRESS_MAP_START( m1_memmap, AS_PROGRAM, 8, maygay1b_state )
 	AM_RANGE(0x2040, 0x2041) AM_READWRITE(m1_8279_2_r,m1_8279_2_w)
 //  AM_RANGE(0x2050, 0x2050)// SCAN on M1B
 
-	AM_RANGE(0x2070, 0x207f) AM_DEVREADWRITE("duart68681", duartn68681_device, read, write )
+	AM_RANGE(0x2070, 0x207f) AM_DEVREADWRITE("duart68681", mc68681_device, read, write )
 
-	AM_RANGE(0x2090, 0x2091) AM_DEVWRITE("aysnd", ay8910_device, address_data_w)
+	AM_RANGE(0x2090, 0x2091) AM_DEVWRITE("aysnd", ay8910_device, data_address_w)
 	AM_RANGE(0x20B0, 0x20B0) AM_READ(m1_meter_r)
 
 	AM_RANGE(0x20A0, 0x20A3) AM_DEVWRITE("pia", pia6821_device, write)
@@ -858,18 +843,21 @@ MACHINE_CONFIG_START( maygay_m1, maygay1b_state )
 	MCFG_CPU_ADD("maincpu", M6809, M1_MASTER_CLOCK/2)
 	MCFG_CPU_PROGRAM_MAP(m1_memmap)
 
-	MCFG_DUARTN68681_ADD("duart68681", M1_DUART_CLOCK)
-	MCFG_DUARTN68681_IRQ_CALLBACK(WRITELINE(maygay1b_state, duart_irq_handler))
-	MCFG_DUARTN68681_INPORT_CALLBACK(READ8(maygay1b_state, m1_duart_r))
+	MCFG_MC68681_ADD("duart68681", M1_DUART_CLOCK)
+	MCFG_MC68681_IRQ_CALLBACK(WRITELINE(maygay1b_state, duart_irq_handler))
+	MCFG_MC68681_INPORT_CALLBACK(READ8(maygay1b_state, m1_duart_r))
 
-	MCFG_PIA6821_ADD("pia", m1_pia_intf)
+	MCFG_DEVICE_ADD("pia", PIA6821, 0)
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(maygay1b_state, m1_pia_porta_w))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(maygay1b_state, m1_pia_portb_w))
+
 	MCFG_MSC1937_ADD("vfd",0,RIGHT_TO_LEFT)
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd",YM2149, M1_MASTER_CLOCK)
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("ymsnd", YM2413, M1_MASTER_CLOCK/4) // should be a 2149F?
+	MCFG_SOUND_ADD("ymsnd", YM2413, M1_MASTER_CLOCK/4)
 
 	MCFG_SOUND_ADD("msm6376", OKIM6376, M1_MASTER_CLOCK/4) //?
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)

@@ -183,6 +183,7 @@ DRIVER_INIT_MEMBER(wpc_dot_state,wpc_dot)
 	m_bankmask = (memregion("code")->bytes() >> 14) - 1;
 	logerror("WPC: ROM bank mask = %02x\n",m_bankmask);
 	memset(m_ram,0,0x3000);
+	memset(m_dmdram,0,0x2000);
 	save_pointer(m_dmdram,"DMD RAM",0x2000);
 }
 
@@ -282,10 +283,11 @@ UINT32 wpc_dot_state::screen_update(screen_device &screen, bitmap_rgb32 &bitmap,
 		{
 			for(bit=0;bit<8;bit++)  // bits
 			{
+				assert(offset >= 0 && offset < ARRAY_LENGTH(m_dmdram));
 				if(m_dmdram[offset] & (1<<bit))
-					col = MAKE_RGB(0xff,0xaa,0x00);
+					col = rgb_t(0xff,0xaa,0x00);
 				else
-					col = MAKE_RGB(0x00,0x00,0x00);
+					col = rgb_t(0x00,0x00,0x00);
 				bitmap.pix32(y,x+bit) = col;
 			}
 			offset++;

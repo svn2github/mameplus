@@ -327,8 +327,6 @@ this is a legitimate Nintendo Kit.
 #include "cpu/m6502/m6502.h"
 #include "includes/dkong.h"
 #include "machine/8257dma.h"
-#include "machine/z80dma.h"
-#include "machine/latch8.h"
 #include "machine/eepromser.h"
 
 /*************************************
@@ -581,7 +579,7 @@ WRITE8_MEMBER(dkong_state::p8257_drq_w)
 READ8_MEMBER(dkong_state::dkong_in2_r)
 {
 	/* mcu status (sound feedback) is inverted bit4 from port B (8039) */
-	UINT8 mcustatus = latch8_bit4_q_r(m_dev_vp2, space, 0);
+	UINT8 mcustatus = m_dev_vp2->bit4_q_r(space, 0);
 	UINT8 r;
 
 	r = (ioport("IN2")->read() & 0xBF) | (mcustatus << 6);
@@ -653,13 +651,13 @@ WRITE8_MEMBER(dkong_state::s2650_data_w)
 	m_hunchloopback = data;
 }
 
-WRITE8_MEMBER(dkong_state::s2650_fo_w)
+WRITE_LINE_MEMBER(dkong_state::s2650_fo_w)
 {
 #if DEBUG_PROTECTION
 	logerror("write : pc = %04x, FO = %02x\n",space.device().safe_pc(), data);
 #endif
 
-	m_main_fo = data;
+	m_main_fo = state;
 
 	if (m_main_fo)
 		m_hunchloopback = 0xfb;
@@ -755,8 +753,7 @@ READ8_MEMBER(dkong_state::strtheat_inputport_1_r)
 
 WRITE8_MEMBER(dkong_state::dkong_z80dma_rdy_w)
 {
-	device_t *device = machine().device("z80dma");
-	z80dma_rdy_w(device, data & 0x01);
+	m_z80dma->rdy_w(data & 0x01);
 }
 
 WRITE8_MEMBER(dkong_state::nmi_mask_w)
@@ -780,7 +777,7 @@ static ADDRESS_MAP_START( dkong_map, AS_PROGRAM, 8, dkong_state )
 	AM_RANGE(0x7c80, 0x7c80) AM_READ_PORT("IN1") AM_WRITE(radarscp_grid_color_w)/* IN1 */
 
 	AM_RANGE(0x7d00, 0x7d00) AM_READ(dkong_in2_r)                               /* IN2 */
-	AM_RANGE(0x7d00, 0x7d07) AM_DEVWRITE_LEGACY("ls259.6h", latch8_bit0_w)          /* Sound signals */
+	AM_RANGE(0x7d00, 0x7d07) AM_DEVWRITE("ls259.6h", latch8_device, bit0_w)          /* Sound signals */
 
 	AM_RANGE(0x7d80, 0x7d80) AM_READ_PORT("DSW0") AM_WRITE(dkong_audio_irq_w)   /* DSW0 */
 	AM_RANGE(0x7d81, 0x7d81) AM_WRITE(radarscp_grid_enable_w)
@@ -802,10 +799,10 @@ static ADDRESS_MAP_START( dkongjr_map, AS_PROGRAM, 8, dkong_state )
 	AM_RANGE(0x7c00, 0x7c00) AM_READ_PORT("IN0") AM_LATCH8_WRITE("ls174.3d")    /* IN0, sound interface */
 
 	AM_RANGE(0x7c80, 0x7c80) AM_READ_PORT("IN1") AM_WRITE(dkongjr_gfxbank_w)
-	AM_RANGE(0x7c80, 0x7c87) AM_DEVWRITE_LEGACY("ls259.4h", latch8_bit0_w)     /* latch for sound and signals above */
+	AM_RANGE(0x7c80, 0x7c87) AM_DEVWRITE("ls259.4h", latch8_device, bit0_w)     /* latch for sound and signals above */
 
 	AM_RANGE(0x7d00, 0x7d00) AM_READ(dkongjr_in2_r)                             /* IN2 */
-	AM_RANGE(0x7d00, 0x7d07) AM_DEVWRITE_LEGACY("ls259.6h",latch8_bit0_w)      /* Sound addrs */
+	AM_RANGE(0x7d00, 0x7d07) AM_DEVWRITE("ls259.6h", latch8_device, bit0_w)      /* Sound addrs */
 
 	AM_RANGE(0x7d80, 0x7d80) AM_READ_PORT("DSW0") AM_WRITE(dkong_audio_irq_w)   /* DSW0 */
 	AM_RANGE(0x7d82, 0x7d82) AM_WRITE(dkong_flipscreen_w)
@@ -813,7 +810,7 @@ static ADDRESS_MAP_START( dkongjr_map, AS_PROGRAM, 8, dkong_state )
 	AM_RANGE(0x7d84, 0x7d84) AM_WRITE(nmi_mask_w)
 	AM_RANGE(0x7d85, 0x7d85) AM_WRITE(p8257_drq_w)        /* P8257 ==> /DRQ0 /DRQ1 */
 	AM_RANGE(0x7d86, 0x7d87) AM_WRITE(dkong_palettebank_w)
-	AM_RANGE(0x7d80, 0x7d87) AM_DEVWRITE_LEGACY("ls259.5h", latch8_bit0_w)     /* latch for sound and signals above*/
+	AM_RANGE(0x7d80, 0x7d87) AM_DEVWRITE("ls259.5h", latch8_device, bit0_w)     /* latch for sound and signals above*/
 
 	AM_RANGE(0x8000, 0x9fff) AM_ROM                                             /* bootleg DKjr only */
 	AM_RANGE(0xb000, 0xbfff) AM_ROM                                             /* pestplce only */
@@ -842,7 +839,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dkong3_io_map, AS_IO, 8, dkong_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE_LEGACY("z80dma", z80dma_r, z80dma_w)  /* dma controller */
+	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("z80dma", z80dma_device, read, write)  /* dma controller */
 ADDRESS_MAP_END
 
 /* Epos conversions */
@@ -857,10 +854,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( s2650_map, AS_PROGRAM, 8, dkong_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x13ff) AM_RAM AM_SHARE("sprite_ram")  /* 0x7000 */
-	AM_RANGE(0x1400, 0x1400) AM_MIRROR(0x007f) AM_READ_PORT("IN0") AM_DEVWRITE_LEGACY("ls175.3d", latch8_w)
+	AM_RANGE(0x1400, 0x1400) AM_MIRROR(0x007f) AM_READ_PORT("IN0") AM_DEVWRITE("ls175.3d", latch8_device, write)
 	AM_RANGE(0x1480, 0x1480) AM_READ_PORT("IN1")
 	AM_RANGE(0x1500, 0x1500) AM_MIRROR(0x007f) AM_READ(dkong_in2_r)                                 /* IN2 */
-	AM_RANGE(0x1500, 0x1507) AM_DEVWRITE_LEGACY("ls259.6h", latch8_bit0_w)       /* Sound signals */
+	AM_RANGE(0x1500, 0x1507) AM_DEVWRITE("ls259.6h", latch8_device, bit0_w)       /* Sound signals */
 	AM_RANGE(0x1580, 0x1580) AM_READ_PORT("DSW0") AM_WRITE(dkong_audio_irq_w)     /* DSW0 */
 	AM_RANGE(0x1582, 0x1582) AM_WRITE(dkong_flipscreen_w)
 	AM_RANGE(0x1583, 0x1583) AM_WRITE(dkong_spritebank_w)                         /* 2 PSL Signal */
@@ -884,7 +881,6 @@ static ADDRESS_MAP_START( s2650_io_map, AS_IO, 8, dkong_state )
 	AM_RANGE(0x00, 0x00) AM_READ(s2650_port0_r)
 	AM_RANGE(0x01, 0x01) AM_READ(s2650_port1_r)
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_WRITE(s2650_fo_w)
 	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_WRITE(s2650_data_w)
 ADDRESS_MAP_END
 
@@ -1667,11 +1663,12 @@ static MACHINE_CONFIG_START( dkong_base, dkong_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_dkong)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(dkong)
-	MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dkong)
+	MCFG_PALETTE_ADD("palette", DK2B_PALETTE_LENGTH)
 
-	MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong2b)
+	MCFG_PALETTE_INIT_OWNER(dkong_state,dkong2b)
 	MCFG_VIDEO_START_OVERRIDE(dkong_state,dkong)
 MACHINE_CONFIG_END
 
@@ -1679,8 +1676,9 @@ static MACHINE_CONFIG_DERIVED( radarscp, dkong_base )
 
 	/* basic machine hardware */
 	MCFG_MACHINE_START_OVERRIDE(dkong_state,radarscp)
-	MCFG_PALETTE_LENGTH(RS_PALETTE_LENGTH)
-	MCFG_PALETTE_INIT_OVERRIDE(dkong_state,radarscp)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(RS_PALETTE_LENGTH)
+	MCFG_PALETTE_INIT_OWNER(dkong_state,radarscp)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(radarscp_audio)
@@ -1690,8 +1688,9 @@ static MACHINE_CONFIG_DERIVED( radarscp1, dkong_base )
 
 	/* basic machine hardware */
 	MCFG_MACHINE_START_OVERRIDE(dkong_state,radarscp1)
-	MCFG_PALETTE_LENGTH(RS_PALETTE_LENGTH)
-	MCFG_PALETTE_INIT_OVERRIDE(dkong_state,radarscp1)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(RS_PALETTE_LENGTH)
+	MCFG_PALETTE_INIT_OWNER(dkong_state,radarscp1)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(radarscp1_audio)
@@ -1702,7 +1701,8 @@ static MACHINE_CONFIG_DERIVED( dkong2b, dkong_base )
 
 	/* basic machine hardware */
 	MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong2b)
-	MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(DK2B_PALETTE_LENGTH)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(dkong2b_audio)
@@ -1729,11 +1729,12 @@ static MACHINE_CONFIG_START( dkong3, dkong_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_dkong)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(dkong)
-	MCFG_PALETTE_LENGTH(DK3_PALETTE_LENGTH)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dkong)
+	MCFG_PALETTE_ADD("palette", DK3_PALETTE_LENGTH)
 
-	MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong3)
+	MCFG_PALETTE_INIT_OWNER(dkong_state,dkong3)
 	MCFG_VIDEO_START_OVERRIDE(dkong_state,dkong)
 
 	/* sound hardware */
@@ -1752,9 +1753,10 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( pestplce, dkongjr )
 
 	/* video hardware */
-	MCFG_GFXDECODE(pestplce)
-	MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
-	MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong2b)  /* wrong! */
+	MCFG_GFXDECODE_MODIFY("gfxdecode", pestplce)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(DK2B_PALETTE_LENGTH)
+	MCFG_PALETTE_INIT_OWNER(dkong_state,dkong2b)  /* wrong! */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(dkong_state, screen_update_pestplce)
 MACHINE_CONFIG_END
@@ -1762,7 +1764,8 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( dkong3b, dkongjr )
 
 	/* basic machine hardware */
-	MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong3)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_INIT_OWNER(dkong_state,dkong3)
 MACHINE_CONFIG_END
 
 /*************************************
@@ -1777,6 +1780,7 @@ static MACHINE_CONFIG_DERIVED( s2650, dkong2b )
 	MCFG_CPU_REPLACE("maincpu", S2650, CLOCK_1H / 2)    /* ??? */
 	MCFG_CPU_PROGRAM_MAP(s2650_map)
 	MCFG_CPU_IO_MAP(s2650_io_map)
+	MCFG_S2650_FLAG_HANDLER(WRITELINE(dkong_state, s2650_fo_w))
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", dkong_state,  s2650_interrupt)
 
 	MCFG_DEVICE_MODIFY("dma8257")
@@ -2176,34 +2180,34 @@ ROM_END
 
 ROM_START( dkongjr )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "dkj.5b",       0x0000, 0x1000, CRC(dea28158) SHA1(08baf84ae6f9b40a2c743fe1d8c158c74a40e95a) )
-	ROM_CONTINUE(             0x3000, 0x1000 )
-	ROM_LOAD( "dkj.5c",       0x2000, 0x0800, CRC(6fb5faf6) SHA1(ce1cfde71a9e2a8b5896a6301d386f72869a1d2e) )
-	ROM_CONTINUE(             0x4800, 0x0800 )
-	ROM_CONTINUE(             0x1000, 0x0800 )
-	ROM_CONTINUE(             0x5800, 0x0800 )
-	ROM_LOAD( "dkj.5e",       0x4000, 0x0800, CRC(d042b6a8) SHA1(57ac237d273496b44220b4437118115ef11dbd9f) )
-	ROM_CONTINUE(             0x2800, 0x0800 )
-	ROM_CONTINUE(             0x5000, 0x0800 )
-	ROM_CONTINUE(             0x1800, 0x0800 )
+	ROM_LOAD( "djr1-c_5b_f-2.5b", 0x0000, 0x1000, CRC(dea28158) SHA1(08baf84ae6f9b40a2c743fe1d8c158c74a40e95a) )
+	ROM_CONTINUE(                 0x3000, 0x1000 )
+	ROM_LOAD( "djr1-c_5c_f-2.5c", 0x2000, 0x0800, CRC(6fb5faf6) SHA1(ce1cfde71a9e2a8b5896a6301d386f72869a1d2e) )
+	ROM_CONTINUE(                 0x4800, 0x0800 )
+	ROM_CONTINUE(                 0x1000, 0x0800 )
+	ROM_CONTINUE(                 0x5800, 0x0800 )
+	ROM_LOAD( "djr1-c_5e_f-2.5e", 0x4000, 0x0800, CRC(d042b6a8) SHA1(57ac237d273496b44220b4437118115ef11dbd9f) )
+	ROM_CONTINUE(                 0x2800, 0x0800 )
+	ROM_CONTINUE(                 0x5000, 0x0800 )
+	ROM_CONTINUE(                 0x1800, 0x0800 )
 
 	ROM_REGION( 0x1000, "soundcpu", 0 ) /* sound */
-	ROM_LOAD( "c_3h.bin",       0x0000, 0x1000, CRC(715da5f8) SHA1(f708c3fd374da65cbd9fe2e191152f5d865414a0) )
+	ROM_LOAD( "djr1-c_3h.3h",     0x0000, 0x1000, CRC(715da5f8) SHA1(f708c3fd374da65cbd9fe2e191152f5d865414a0) )
 
 	ROM_REGION( 0x2000, "gfx1", 0 )
-	ROM_LOAD( "dkj.3n",       0x0000, 0x1000, CRC(8d51aca9) SHA1(64887564b079d98e98aafa53835e398f34fe4e3f) )
-	ROM_LOAD( "dkj.3p",       0x1000, 0x1000, CRC(4ef64ba5) SHA1(41a7a4005087951f57f62c9751d62a8c495e6bb3) )
+	ROM_LOAD( "djr1-v.3n",        0x0000, 0x1000, CRC(8d51aca9) SHA1(64887564b079d98e98aafa53835e398f34fe4e3f) )
+	ROM_LOAD( "djr1-v.3p",        0x1000, 0x1000, CRC(4ef64ba5) SHA1(41a7a4005087951f57f62c9751d62a8c495e6bb3) )
 
 	ROM_REGION( 0x2000, "gfx2", 0 )
-	ROM_LOAD( "v_7c.bin",     0x0000, 0x0800, CRC(dc7f4164) SHA1(07a6242e95b5c3b8dfdcd4b4950f463dba16dd77) )
-	ROM_LOAD( "v_7d.bin",     0x0800, 0x0800, CRC(0ce7dcf6) SHA1(0654b77526c49f0dfa077ac4f1f69cf5cb2e2f64) )
-	ROM_LOAD( "v_7e.bin",     0x1000, 0x0800, CRC(24d1ff17) SHA1(696854bf3dc5447d33b4815db357e6ce3834d867) )
-	ROM_LOAD( "v_7f.bin",     0x1800, 0x0800, CRC(0f8c083f) SHA1(0b688ae9da296b2447fffa5e135fd6a56ec3e790) )
+	ROM_LOAD( "djr1-v_7c.7c",     0x0000, 0x0800, CRC(dc7f4164) SHA1(07a6242e95b5c3b8dfdcd4b4950f463dba16dd77) )
+	ROM_LOAD( "djr1-v_7d.7d",     0x0800, 0x0800, CRC(0ce7dcf6) SHA1(0654b77526c49f0dfa077ac4f1f69cf5cb2e2f64) )
+	ROM_LOAD( "djr1-v_7e.7e",     0x1000, 0x0800, CRC(24d1ff17) SHA1(696854bf3dc5447d33b4815db357e6ce3834d867) )
+	ROM_LOAD( "djr1-v_7f.7f",     0x1800, 0x0800, CRC(0f8c083f) SHA1(0b688ae9da296b2447fffa5e135fd6a56ec3e790) )
 
 	ROM_REGION( 0x0300, "proms", 0 )
-	ROM_LOAD( "c-2e.bpr",  0x0000, 0x0100, CRC(463dc7ad) SHA1(b2c9f22facc8885be2d953b056eb8dcddd4f34cb) )   /* palette low 4 bits (inverted) */
-	ROM_LOAD( "c-2f.bpr",  0x0100, 0x0100, CRC(47ba0042) SHA1(dbec3f4b8013628c5b8f83162e5f8b1f82f6ee5f) )   /* palette high 4 bits (inverted) */
-	ROM_LOAD( "v-2n.bpr",  0x0200, 0x0100, CRC(dbf185bf) SHA1(2697a991a4afdf079dd0b7e732f71c7618f43b70) )   /* character color codes on a per-column basis */
+	ROM_LOAD( "djr1-c-2e.2e",     0x0000, 0x0100, CRC(463dc7ad) SHA1(b2c9f22facc8885be2d953b056eb8dcddd4f34cb) )   /* palette low 4 bits (inverted) */
+	ROM_LOAD( "djr1-c-2f.2f",     0x0100, 0x0100, CRC(47ba0042) SHA1(dbec3f4b8013628c5b8f83162e5f8b1f82f6ee5f) )   /* palette high 4 bits (inverted) */
+	ROM_LOAD( "djr1-v-2n.2n",     0x0200, 0x0100, CRC(dbf185bf) SHA1(2697a991a4afdf079dd0b7e732f71c7618f43b70) )   /* character color codes on a per-column basis */
 ROM_END
 
 ROM_START( dkongjrj )
@@ -3225,6 +3229,7 @@ DRIVER_INIT_MEMBER(dkong_state,dkingjr)
 	{
 		prom[i]^=0xff; // invert color data
 	}
+	m_palette->update();
 }
 
 
@@ -3248,7 +3253,7 @@ GAME( 2004, dkongf,    dkong,    dkong2b,   dkongf,   driver_device, 0,        R
 GAME( 2006, dkongx,    dkong,    braze,     dkongx,   dkong_state,   dkongx,   ROT90,  "hack (Braze Technologies)", "Donkey Kong II - Jumpman Returns (V1.2) (hack)", GAME_SUPPORTS_SAVE )
 GAME( 2006, dkongx11,  dkong,    braze,     dkongx,   dkong_state,   dkongx,   ROT90,  "hack (Braze Technologies)", "Donkey Kong II - Jumpman Returns (V1.1) (hack)", GAME_SUPPORTS_SAVE )
 
-GAME( 1982, dkongjr,   0,        dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "Nintendo of America", "Donkey Kong Junior (US)", GAME_SUPPORTS_SAVE )
+GAME( 1982, dkongjr,   0,        dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "Nintendo of America", "Donkey Kong Junior (US set F-2)", GAME_SUPPORTS_SAVE )
 GAME( 1982, dkongjrj,  dkongjr,  dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "Nintendo", "Donkey Kong Jr. (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1982, dkongjnrj, dkongjr,  dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "Nintendo", "Donkey Kong Junior (Japan?)", GAME_SUPPORTS_SAVE )
 GAME( 1982, dkongjrb,  dkongjr,  dkongjr,   dkongjr,  driver_device, 0,        ROT90,  "bootleg", "Donkey Kong Jr. (bootleg)", GAME_SUPPORTS_SAVE )

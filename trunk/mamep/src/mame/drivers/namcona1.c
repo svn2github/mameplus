@@ -1,4 +1,5 @@
 /***************************************************************************
+
 Namco NA-1 / NA-2 System
 
 NA-1 Games:
@@ -20,6 +21,10 @@ NA-2 Games:
 To Do:
 - Remove remaining MCU simulation hacks
 - View area / screen resolution controlled by registers?
+- Canned EEPROM data for [see below*] oughtn't be necessary; when their EEPROM
+  area is uninitialized, the game software automatically writes these values there,
+  but then hangs.
+  *cgangpzl, cgangpzlj, exvania, exvaniaj, knckheadjp, quiztou
 
 - X-Day 2:
     Rom board  M112
@@ -161,216 +166,17 @@ Notes:
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "includes/namcona1.h"
-#include "sound/c140.h"
 #include "cpu/m37710/m37710.h"
-#include "mcfglgcy.h"
+
+#define MASTER_CLOCK    XTAL_50_113MHz
 
 
 /*************************************************************************/
 
-static const UINT8 ExvaniaDefaultNvMem[] =
-{
-/* This data oughtn't be necessary; when Exbania's EPROM area is uninitialized,
- * the game software automatically writes these values there, but then jumps
- * to an unmapped (bogus) address, causing MAME to crash.
- */
-	0x30,0x32,0x4f,0x63,0x74,0x39,0x32,0x52,0x45,0x56,0x49,0x53,0x49,0x4f,0x4e,0x35,
-	0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x00,0x00,0x01,
-	0x00,0x01,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x02
-}; /* ExvaniaDefaultNvMem */
-
-static const UINT8 QuiztouDefaultNvMem[] =
-{
-/* This data oughtn't be necessary; when QuiztouDefaultNvMem's EPROM area is uninitialized,
- * the game software automatically writes these values there, but then jumps
- * to an unmapped (bogus) address, causing MAME to crash.
- */
-	0x30,0x32,0x4F,0x63,0x74,0x39,0x32,0x52,0x45,0x56,0x49,0x53,0x49,0x4F,0x4E,0x35,
-	0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x00,0x00,0x01,
-	0x00,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02
-}; /* QuiztouDefaultNvMem */
-
-static const UINT8 CgangpzlDefaultNvMem[] =
-{
-/* This data oughtn't be necessary; when Cgangpzl's EPROM area is uninitialized,
- * the game software automatically writes these values there, but then hangs.
- */
-	0x30,0x32,0x4F,0x63,0x74,0x39,0x32,0x52,0x45,0x56,0x49,0x53,0x49,0x4F,0x4E,0x35,
-	0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x01,0x00,0x00,0x00,0x01,
-	0x00,0x02,0x00,0x00,0x00,0x01
-}; /* CgangpzlDefaultNvMem */
-
-
-static NVRAM_HANDLER( namcosna1 )
-{
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	if( read_or_write )
-	{
-		file->write( state->m_nvmem, NA1_NVRAM_SIZE );
-	}
-	else
-	{
-		if (file)
-		{
-			file->read( state->m_nvmem, NA1_NVRAM_SIZE );
-		}
-		else
-		{
-			memset( state->m_nvmem, 0x00, NA1_NVRAM_SIZE );
-
-			switch( state->m_gametype )
-			{
-			case NAMCO_EXBANIA:
-				memcpy( state->m_nvmem, ExvaniaDefaultNvMem, sizeof(ExvaniaDefaultNvMem) );
-				break;
-
-			case NAMCO_QUIZTOU:
-				memcpy( state->m_nvmem, QuiztouDefaultNvMem, sizeof(QuiztouDefaultNvMem) );
-				break;
-
-			case NAMCO_CGANGPZL:
-				memcpy( state->m_nvmem, CgangpzlDefaultNvMem, sizeof(CgangpzlDefaultNvMem) );
-				break;
-			}
-		}
-	}
-} /* namcosna1_nvram_handler */
-
-READ16_MEMBER(namcona1_state::namcona1_nvram_r)
-{
-	return m_nvmem[offset];
-} /* namcona1_nvram_r */
-
-WRITE16_MEMBER(namcona1_state::namcona1_nvram_w)
-{
-	if( ACCESSING_BITS_0_7 )
-	{
-		m_nvmem[offset] = data&0xff;
-	}
-} /* namcona1_nvram_w */
-
-/***************************************************************************/
-
-static INPUT_PORTS_START( namcona1_joy )
-	PORT_START("P1")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
-
-	PORT_START("P2")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
-
-	PORT_START("P3")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
-
-	PORT_START("P4")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(4)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(4)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(4)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(4)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(4)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(4)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(4)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
-
-	PORT_START("DSW")
-	PORT_DIPNAME( 0x01, 0x01, "DIP2 (Freeze)" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "DIP1 (Test)" )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN3 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
-INPUT_PORTS_END
-
-static INPUT_PORTS_START( namcona1_quiz )
-	PORT_START("P1")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
-
-	PORT_START("P2")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
-
-	PORT_START("P3")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(3)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
-
-	PORT_START("P4")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(4)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(4)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(4)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(4)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
-
-	PORT_START("DSW")
-	PORT_DIPNAME( 0x01, 0x01, "DIP2 (Freeze)" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "DIP1 (Test)" )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN3 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
-INPUT_PORTS_END
-
-
-/***************************************************************************/
-
 /* FIXME: These two functions shouldn't be necessary? */
-static void simulate_mcu( running_machine &machine )
+void namcona1_state::simulate_mcu()
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	state->m_workram[0xf60/2] = 0x0000; /* mcu ready */
+	m_workram[0xf60/2] = 0x0000; /* mcu ready */
 }
 
 
@@ -492,23 +298,22 @@ READ16_MEMBER(namcona1_state::namcona1_vreg_r)
 	return m_vreg[offset];
 } /* namcona1_vreg_r */
 
-static int transfer_dword( running_machine &machine, UINT32 dest, UINT32 source )
+int namcona1_state::transfer_dword( UINT32 dest, UINT32 source )
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
 	UINT16 data;
-	address_space &space = state->m_maincpu->space(AS_PROGRAM);
+	address_space &space = m_maincpu->space(AS_PROGRAM);
 
 	if( source>=0x400000 && source<0xc00000 )
 	{
-		data = state->m_mpBank1[(source-0x400000)/2];
+		data = m_mpBank1[(source-0x400000)/2];
 	}
 	else if( source>=0xc00000 && source<0xe00000 )
 	{
-		data = state->m_mpBank0[(source-0xc00000)/2];
+		data = m_mpBank0[(source-0xc00000)/2];
 	}
 	else if( source<0x80000 && source>=0x1000 )
 	{
-		data = state->m_workram[source/2];
+		data = m_workram[source/2];
 	}
 	else
 	{
@@ -517,19 +322,19 @@ static int transfer_dword( running_machine &machine, UINT32 dest, UINT32 source 
 	}
 	if( dest>=0xf00000 && dest<0xf02000 )
 	{
-		state->namcona1_paletteram_w(space, (dest-0xf00000)/2, data, 0xffff );
+		namcona1_paletteram_w(space, (dest-0xf00000)/2, data, 0xffff );
 	}
 	else if( dest>=0xf40000 && dest<0xf80000 )
 	{
-		state->namcona1_gfxram_w(space, (dest-0xf40000)/2, data, 0xffff );
+		namcona1_gfxram_w(space, (dest-0xf40000)/2, data, 0xffff );
 	}
 	else if( dest>=0xff0000 && dest<0xffc000 )
 	{
-		state->namcona1_videoram_w(space, (dest-0xff0000)/2, data, 0xffff );
+		namcona1_videoram_w(space, (dest-0xff0000)/2, data, 0xffff );
 	}
 	else if( dest>=0xfff000 && dest<0x1000000 )
 	{
-		state->m_spriteram[(dest-0xfff000)/2] = data;
+		m_spriteram[(dest-0xfff000)/2] = data;
 	}
 	else
 	{
@@ -610,24 +415,23 @@ static void blit_setup( int format, int *bytes_per_row, int *pitch, int mode )
 	}
 } /* blit_setup */
 
-static void namcona1_blit( running_machine &machine )
+void namcona1_state::namcona1_blit()
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	int src0 = state->m_vreg[0x0];
-	int src1 = state->m_vreg[0x1];
-	int src2 = state->m_vreg[0x2];
+	int src0 = m_vreg[0x0];
+	int src1 = m_vreg[0x1];
+	int src2 = m_vreg[0x2];
 
-	int dst0 = state->m_vreg[0x3];
-	int dst1 = state->m_vreg[0x4];
-	int dst2 = state->m_vreg[0x5];
+	int dst0 = m_vreg[0x3];
+	int dst1 = m_vreg[0x4];
+	int dst2 = m_vreg[0x5];
 
-	int gfxbank = state->m_vreg[0x6];
+	int gfxbank = m_vreg[0x6];
 
 	/* dest and source are provided as dword offsets */
-	UINT32 src_baseaddr = 2*(0xffffff&((state->m_vreg[0x7]<<16)|state->m_vreg[0x8]));
-	UINT32 dst_baseaddr = 2*(0xffffff&((state->m_vreg[0x9]<<16)|state->m_vreg[0xa]));
+	UINT32 src_baseaddr = 2*(0xffffff&((m_vreg[0x7]<<16)|m_vreg[0x8]));
+	UINT32 dst_baseaddr = 2*(0xffffff&((m_vreg[0x9]<<16)|m_vreg[0xa]));
 
-	int num_bytes = state->m_vreg[0xb];
+	int num_bytes = m_vreg[0xb];
 
 	int dst_offset, src_offset;
 	int dst_bytes_per_row, dst_pitch;
@@ -663,7 +467,7 @@ static void namcona1_blit( running_machine &machine )
 
 	while( num_bytes>0 )
 	{
-		if( transfer_dword(machine,
+		if( transfer_dword(
 			dst_baseaddr + dst_offset,
 			src_baseaddr + src_offset ) )
 		{
@@ -695,7 +499,7 @@ WRITE16_MEMBER(namcona1_state::namcona1_vreg_w)
 	switch( offset )
 	{
 	case 0x18/2:
-		namcona1_blit(machine());
+		namcona1_blit();
 		/* see also 0x1e */
 		break;
 
@@ -743,12 +547,12 @@ static ADDRESS_MAP_START( namcona1_main_map, AS_PROGRAM, 16, namcona1_state )
 	AM_RANGE(0x3f8000, 0x3fffff) AM_READWRITE(mcu_mailbox_r, mcu_mailbox_w_68k)
 	AM_RANGE(0x400000, 0xbfffff) AM_ROM AM_REGION("maincpu", 0x280000)  /* data */
 	AM_RANGE(0xc00000, 0xdfffff) AM_ROM AM_REGION("maincpu", 0x080000)  /* code */
-	AM_RANGE(0xe00000, 0xe00fff) AM_READWRITE(namcona1_nvram_r, namcona1_nvram_w)
+	AM_RANGE(0xe00000, 0xe00fff) AM_DEVREADWRITE8("eeprom", eeprom_parallel_28xx_device, read, write, 0x00ff)
 	AM_RANGE(0xe40000, 0xe4000f) AM_READWRITE(custom_key_r, custom_key_w)
 	AM_RANGE(0xefff00, 0xefffff) AM_READWRITE(namcona1_vreg_r, namcona1_vreg_w) AM_SHARE("vreg")
 	AM_RANGE(0xf00000, 0xf01fff) AM_READWRITE(namcona1_paletteram_r, namcona1_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xf40000, 0xf7ffff) AM_READWRITE(namcona1_gfxram_r, namcona1_gfxram_w)
-	AM_RANGE(0xff0000, 0xffbfff) AM_READWRITE(namcona1_videoram_r,    namcona1_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xff0000, 0xffbfff) AM_READWRITE(namcona1_videoram_r, namcona1_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xffd000, 0xffdfff) AM_RAM /* unknown */
 	AM_RANGE(0xffe000, 0xffefff) AM_RAM AM_SHARE("scroll")      /* scroll registers */
 	AM_RANGE(0xfff000, 0xffffff) AM_RAM AM_SHARE("spriteram")           /* spriteram */
@@ -764,13 +568,13 @@ static ADDRESS_MAP_START( namcona2_main_map, AS_PROGRAM, 16, namcona1_state )
 	AM_RANGE(0xd80000, 0xd80001) AM_WRITENOP /* xday: serial out? */
 	AM_RANGE(0xdc0000, 0xdc001f) AM_WRITENOP /* xday: serial config? */
 	AM_RANGE(0xc00000, 0xdfffff) AM_ROM AM_REGION("maincpu", 0x080000)  /* code */
-	AM_RANGE(0xe00000, 0xe00fff) AM_READWRITE(namcona1_nvram_r, namcona1_nvram_w)
+	AM_RANGE(0xe00000, 0xe00fff) AM_DEVREADWRITE8("eeprom", eeprom_parallel_28xx_device, read, write, 0x00ff)
 	/* xday: additional battery-backed ram at 00E024FA? */
 	AM_RANGE(0xe40000, 0xe4000f) AM_READWRITE(custom_key_r, custom_key_w)
 	AM_RANGE(0xefff00, 0xefffff) AM_READWRITE(namcona1_vreg_r, namcona1_vreg_w) AM_SHARE("vreg")
 	AM_RANGE(0xf00000, 0xf01fff) AM_READWRITE(namcona1_paletteram_r, namcona1_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xf40000, 0xf7ffff) AM_READWRITE(namcona1_gfxram_r, namcona1_gfxram_w)
-	AM_RANGE(0xff0000, 0xffbfff) AM_READWRITE(namcona1_videoram_r,    namcona1_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xff0000, 0xffbfff) AM_READWRITE(namcona1_videoram_r, namcona1_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xffd000, 0xffdfff) AM_RAM /* unknown */
 	AM_RANGE(0xffe000, 0xffefff) AM_RAM AM_SHARE("scroll")      /* scroll registers */
 	AM_RANGE(0xfff000, 0xffffff) AM_RAM AM_SHARE("spriteram")           /* spriteram */
@@ -805,23 +609,21 @@ WRITE16_MEMBER(namcona1_state::na1mcu_shared_w)
 
 READ16_MEMBER(namcona1_state::snd_r)
 {
-	c140_device *device = machine().device<c140_device>("c140");
 	/* can't use DEVREADWRITE8 for this because it is opposite endianness to the CPU for some reason */
-	return device->c140_r(space,offset*2+1) | device->c140_r(space,offset*2)<<8;
+	return m_c140->c140_r(space,offset*2+1) | m_c140->c140_r(space,offset*2)<<8;
 }
 
 WRITE16_MEMBER(namcona1_state::snd_w)
 {
-	c140_device *device = machine().device<c140_device>("c140");
 	/* can't use DEVREADWRITE8 for this because it is opposite endianness to the CPU for some reason */
 	if (ACCESSING_BITS_0_7)
 	{
-		device->c140_w(space,(offset*2)+1, data);
+		m_c140->c140_w(space,(offset*2)+1, data);
 	}
 
 	if (ACCESSING_BITS_8_15)
 	{
-		device->c140_w(space,(offset*2), data>>8);
+		m_c140->c140_w(space,(offset*2), data>>8);
 	}
 }
 
@@ -917,7 +719,7 @@ WRITE8_MEMBER(namcona1_state::port8_w)
 
 void namcona1_state::machine_start()
 {
-	machine().device<c140_device>("c140")->set_base(m_workram);
+	m_c140->set_base(m_workram);
 }
 
 // for games with the MCU emulated, the MCU boots the 68000.  don't allow it before that.
@@ -956,6 +758,123 @@ static ADDRESS_MAP_START( namcona1_mcu_io_map, AS_IO, 8, namcona1_state )
 ADDRESS_MAP_END
 
 
+/***************************************************************************/
+
+static INPUT_PORTS_START( namcona1_joy )
+	PORT_START("P1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START("P2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START("P3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
+
+	PORT_START("P4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(4)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(4)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(4)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(4)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(4)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(4)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(4)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
+
+	PORT_START("DSW")
+	PORT_DIPNAME( 0x01, 0x01, "DIP2 (Freeze)" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, "DIP1 (Test)" )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( namcona1_quiz )
+	PORT_START("P1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	PORT_START("P2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START("P3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(3)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
+
+	PORT_START("P4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(4)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(4)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(4)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(4)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
+
+	PORT_START("DSW")
+	PORT_DIPNAME( 0x01, 0x01, "DIP2 (Freeze)" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, "DIP1 (Test)" )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
+INPUT_PORTS_END
+
+
+/***************************************************************************/
+
 TIMER_DEVICE_CALLBACK_MEMBER(namcona1_state::namcona1_interrupt)
 {
 	int scanline = param;
@@ -964,7 +883,7 @@ TIMER_DEVICE_CALLBACK_MEMBER(namcona1_state::namcona1_interrupt)
 	// vblank
 	if (scanline == 224)
 	{
-		simulate_mcu( machine() );
+		simulate_mcu( );
 		if (enabled & 8)
 			m_maincpu->set_input_line(4, HOLD_LINE);
 	}
@@ -1004,31 +923,32 @@ static const c140_interface C140_interface_typeA =
 
 /* cropped at sides */
 static MACHINE_CONFIG_START( namcona1, namcona1_state )
+
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000, 50113000/4)
+	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(namcona1_main_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scan_main", namcona1_state, namcona1_interrupt, "screen", 0, 1)
 
-	MCFG_CPU_ADD("mcu", M37702, 50113000/4)
+	MCFG_CPU_ADD("mcu", M37702, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(namcona1_mcu_map)
 	MCFG_CPU_IO_MAP( namcona1_mcu_io_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scan_mcu", namcona1_state, mcu_interrupt, "screen", 0, 1)
 
-	MCFG_NVRAM_HANDLER(namcosna1)
+	MCFG_EEPROM_2816_ADD("eeprom")
 	MCFG_QUANTUM_TIME(attotime::from_hz(2400))
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(38*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8, 38*8-1-8, 4*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(namcona1_state, screen_update_namcona1)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x2000)
-
+	MCFG_PALETTE_ADD("palette", 0x2000)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1043,8 +963,6 @@ MACHINE_CONFIG_END
 /* full-width */
 static MACHINE_CONFIG_DERIVED( namcona1w, namcona1 )
 
-	/* basic machine hardware */
-
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 38*8-1-0, 4*8, 32*8-1)
@@ -1054,36 +972,34 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( namcona2, namcona1 )
 
 	/* basic machine hardware */
-
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(namcona2_main_map)
 MACHINE_CONFIG_END
 
 
-static void init_namcona1( running_machine &machine, int gametype )
+void namcona1_state::init_namcona1( int gametype )
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	UINT16 *pMem = (UINT16 *)state->memregion( "maincpu" )->base();
+	UINT16 *pMem = (UINT16 *)memregion( "maincpu" )->base();
 
-	state->m_gametype = gametype;
-	state->m_mpBank0 = &pMem[0x80000/2];
-	state->m_mpBank1 = state->m_mpBank0 +  0x200000/2;
+	m_gametype = gametype;
+	m_mpBank0 = &pMem[0x80000/2];
+	m_mpBank1 = m_mpBank0 +  0x200000/2;
 
-	state->m_mEnableInterrupts = 0;
+	m_mEnableInterrupts = 0;
 }
 
-DRIVER_INIT_MEMBER(namcona1_state,bkrtmaq)   { init_namcona1(machine(), NAMCO_BKRTMAQ); }
-DRIVER_INIT_MEMBER(namcona1_state,cgangpzl)  { init_namcona1(machine(), NAMCO_CGANGPZL); }
-DRIVER_INIT_MEMBER(namcona1_state,emeralda)  { init_namcona1(machine(), NAMCO_EMERALDA); } /* NA-2 Hardware */
-DRIVER_INIT_MEMBER(namcona1_state,emeraldj)  { init_namcona1(machine(), NAMCO_EMERALDA); } /* NA-1 Hardware */
-DRIVER_INIT_MEMBER(namcona1_state,exbania)   { init_namcona1(machine(), NAMCO_EXBANIA); }
-DRIVER_INIT_MEMBER(namcona1_state,fa)        { init_namcona1(machine(), NAMCO_FA); }
-DRIVER_INIT_MEMBER(namcona1_state,knckhead)  { init_namcona1(machine(), NAMCO_KNCKHEAD); }
-DRIVER_INIT_MEMBER(namcona1_state,numanath)  { init_namcona1(machine(), NAMCO_NUMANATH); }
-DRIVER_INIT_MEMBER(namcona1_state,quiztou)   { init_namcona1(machine(), NAMCO_QUIZTOU); }
-DRIVER_INIT_MEMBER(namcona1_state,swcourt)   { init_namcona1(machine(), NAMCO_SWCOURT); }
-DRIVER_INIT_MEMBER(namcona1_state,tinklpit)  { init_namcona1(machine(), NAMCO_TINKLPIT); }
-DRIVER_INIT_MEMBER(namcona1_state,xday2)     { init_namcona1(machine(), NAMCO_XDAY2); }
+DRIVER_INIT_MEMBER(namcona1_state,bkrtmaq)   { init_namcona1(NAMCO_BKRTMAQ); }
+DRIVER_INIT_MEMBER(namcona1_state,cgangpzl)  { init_namcona1(NAMCO_CGANGPZL); }
+DRIVER_INIT_MEMBER(namcona1_state,emeralda)  { init_namcona1(NAMCO_EMERALDA); } /* NA-2 Hardware */
+DRIVER_INIT_MEMBER(namcona1_state,emeraldj)  { init_namcona1(NAMCO_EMERALDA); } /* NA-1 Hardware */
+DRIVER_INIT_MEMBER(namcona1_state,exbania)   { init_namcona1(NAMCO_EXBANIA); }
+DRIVER_INIT_MEMBER(namcona1_state,fa)        { init_namcona1(NAMCO_FA); }
+DRIVER_INIT_MEMBER(namcona1_state,knckhead)  { init_namcona1(NAMCO_KNCKHEAD); }
+DRIVER_INIT_MEMBER(namcona1_state,numanath)  { init_namcona1(NAMCO_NUMANATH); }
+DRIVER_INIT_MEMBER(namcona1_state,quiztou)   { init_namcona1(NAMCO_QUIZTOU); }
+DRIVER_INIT_MEMBER(namcona1_state,swcourt)   { init_namcona1(NAMCO_SWCOURT); }
+DRIVER_INIT_MEMBER(namcona1_state,tinklpit)  { init_namcona1(NAMCO_TINKLPIT); }
+DRIVER_INIT_MEMBER(namcona1_state,xday2)     { init_namcona1(NAMCO_XDAY2); }
 
 ROM_START( bkrtmaq )
 	ROM_REGION( 0xa80000, "maincpu", 0 )
@@ -1110,6 +1026,9 @@ ROM_START( cgangpzl )
 	/* M37702 BIOS - labeled as Namco custom C69 */
 	ROM_REGION16_LE( 0x4000, "mcu", 0 )
 	ROM_LOAD( "c69.bin",      0x000000, 0x004000, CRC(349134d9) SHA1(61a4981fc2716c228b6121fedcbf1ed6f34dc2de) )
+
+	ROM_REGION( 0x0800, "eeprom", 0 ) // default eeprom, otherwise game would lock up on 1st boot
+	ROM_LOAD( "eeprom", 0x0000, 0x0800, CRC(5f8dfe9e) SHA1(81cc9cdbd8b5d6092a292309f78e3037233078f9) )
 ROM_END
 
 ROM_START( cgangpzlj )
@@ -1120,6 +1039,9 @@ ROM_START( cgangpzlj )
 	/* M37702 BIOS - labeled as Namco custom C69 */
 	ROM_REGION16_LE( 0x4000, "mcu", 0 )
 	ROM_LOAD( "c69.bin",      0x000000, 0x004000, CRC(349134d9) SHA1(61a4981fc2716c228b6121fedcbf1ed6f34dc2de) )
+
+	ROM_REGION( 0x0800, "eeprom", 0 ) // default eeprom, otherwise game would lock up on 1st boot
+	ROM_LOAD( "eeprom", 0x0000, 0x0800, CRC(ef5ddff2) SHA1(ea3f8e4da119e27c27f66f169bbf19bc37499048) )
 ROM_END
 
 ROM_START( emeraldaj ) /* NA-1 Game PCB, parent is NA-2 version listed below */
@@ -1159,6 +1081,9 @@ ROM_START( exvania )
 	/* M37702 BIOS - labeled as Namco custom C69 */
 	ROM_REGION16_LE( 0x4000, "mcu", 0 )
 	ROM_LOAD( "c69.bin",      0x000000, 0x004000, CRC(349134d9) SHA1(61a4981fc2716c228b6121fedcbf1ed6f34dc2de) )
+
+	ROM_REGION( 0x0800, "eeprom", 0 ) // default eeprom, otherwise game would lock up on 1st boot
+	ROM_LOAD( "eeprom", 0x0000, 0x0800, CRC(0f46389d) SHA1(5706a46b02a667f5bddaa3842bb009ea07d23603) )
 ROM_END
 
 ROM_START( exvaniaj )
@@ -1174,6 +1099,9 @@ ROM_START( exvaniaj )
 	/* M37702 BIOS - labeled as Namco custom C69 */
 	ROM_REGION16_LE( 0x4000, "mcu", 0 )
 	ROM_LOAD( "c69.bin",      0x000000, 0x004000, CRC(349134d9) SHA1(61a4981fc2716c228b6121fedcbf1ed6f34dc2de) )
+
+	ROM_REGION( 0x0800, "eeprom", 0 ) // default eeprom, otherwise game would lock up on 1st boot
+	ROM_LOAD( "eeprom", 0x0000, 0x0800, CRC(0f46389d) SHA1(5706a46b02a667f5bddaa3842bb009ea07d23603) )
 ROM_END
 
 ROM_START( fghtatck )
@@ -1342,6 +1270,9 @@ ROM_START( knckheadjp ) /* Older or possible prototype. Doesn't show rom test at
 	/* M37702 BIOS - labeled as Namco custom C70 */
 	ROM_REGION16_LE( 0x4000, "mcu", 0 )
 	ROM_LOAD( "c70.bin",      0x000000, 0x004000, CRC(b4015f23) SHA1(7ce91eda76e86b5cab625e2b67c463b7d143832e) )
+
+	ROM_REGION( 0x0800, "eeprom", 0 ) // default eeprom, otherwise game would lock up on 1st boot
+	ROM_LOAD( "eeprom", 0x0000, 0x0800, CRC(98875a23) SHA1(2256cd231587351a0768faaedafbd1f80e3fd7c4) )
 ROM_END
 
 ROM_START( numanath )
@@ -1405,6 +1336,9 @@ ROM_START( quiztou )
 	/* M37702 BIOS - labeled as Namco custom C70 */
 	ROM_REGION16_LE( 0x4000, "mcu", 0 )
 	ROM_LOAD( "c70.bin",      0x000000, 0x004000, CRC(b4015f23) SHA1(7ce91eda76e86b5cab625e2b67c463b7d143832e) )
+
+	ROM_REGION( 0x0800, "eeprom", 0 ) // default eeprom, otherwise game would lock up on 1st boot
+	ROM_LOAD( "eeprom", 0x0000, 0x0800, CRC(57a478a6) SHA1(b6d66610690f2fdf6643b2de91e2345d15d839b1) )
 ROM_END
 
 ROM_START( xday2 )

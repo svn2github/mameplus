@@ -26,7 +26,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_vram(*this, "vram"),
 		m_cram(*this, "cram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	required_shared_ptr<UINT8> m_vram;
 	required_shared_ptr<UINT8> m_cram;
@@ -35,6 +37,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_royalgum(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -45,7 +49,7 @@ void rgum_state::video_start()
 UINT32 rgum_state::screen_update_royalgum(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	int x,y,count;
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 
 	count = 0;
 
@@ -55,7 +59,7 @@ UINT32 rgum_state::screen_update_royalgum(screen_device &screen, bitmap_ind16 &b
 		{
 			int tile = m_vram[count] | ((m_cram[count] & 0xf) <<8);
 
-			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
+			gfx->opaque(bitmap,cliprect,tile,0,0,0,x*8,y*8);
 
 			count++;
 		}
@@ -233,6 +237,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -278,13 +283,14 @@ static MACHINE_CONFIG_START( rgum, rgum_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(rgum_state, screen_update_royalgum)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", 24000000/16, mc6845_intf)   /* unknown clock & type, hand tuned to get ~50 fps (?) */
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
-	MCFG_GFXDECODE(rgum)
-	MCFG_PALETTE_LENGTH(0x100)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", rgum)
+	MCFG_PALETTE_ADD("palette", 0x100)
 
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")

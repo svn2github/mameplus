@@ -140,7 +140,7 @@ void tapatune_state::machine_reset()
  *
  *************************************/
 
-const pen_t* get_pens(tapatune_state *state)
+const rgb_t* get_pens(tapatune_state *state)
 {
 	for (UINT32 i = 0; i < 0x100; i++)
 	{
@@ -152,7 +152,7 @@ const pen_t* get_pens(tapatune_state *state)
 		g = pal6bit(g);
 		b = pal6bit(b);
 
-		state->m_pens[i] = MAKE_RGB(r, g, b);
+		state->m_pens[i] = rgb_t(r, g, b);
 	}
 
 	return state->m_pens;
@@ -174,7 +174,7 @@ static MC6845_UPDATE_ROW( update_row )
 {
 	tapatune_state *state = device->machine().driver_data<tapatune_state>();
 	UINT32 *dest = &bitmap.pix32(y);
-	pen_t *pens = (pen_t *)param;
+	rgb_t *pens = (rgb_t *)param;
 	offs_t offs = (ma*2 + ra*0x40)*4;
 
 	UINT8 *videoram = reinterpret_cast<UINT8 *>(state->m_videoram.target());
@@ -514,6 +514,7 @@ INPUT_PORTS_END
 static MC6845_INTERFACE( h46505_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	5,          /* number of pixels per video memory address */
 	begin_update,/* before pixel update callback */
 	update_row, /* row update callback */

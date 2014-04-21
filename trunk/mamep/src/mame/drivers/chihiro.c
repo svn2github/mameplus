@@ -365,7 +365,7 @@ Thanks to Alex, Mr Mudkips, and Philip Burke for this info.
 #include "machine/idectrl.h"
 #include "machine/idehd.h"
 #include "machine/naomigd.h"
-#include "video/polynew.h"
+#include "video/poly.h"
 #include "bitmap.h"
 #include "debug/debugcon.h"
 #include "debug/debugcmd.h"
@@ -861,7 +861,8 @@ static void jamtable_disasm(running_machine &machine, address_space &space,UINT3
 
 static void jamtable_disasm_command(running_machine &machine, int ref, int params, const char **param)
 {
-	address_space &space=machine.firstcpu->space();
+	chihiro_state *state = machine.driver_data<chihiro_state>();
+	address_space &space=state->m_maincpu->space();
 	UINT64  addr,size;
 
 	if (params < 2)
@@ -875,7 +876,8 @@ static void jamtable_disasm_command(running_machine &machine, int ref, int param
 
 static void dump_string_command(running_machine &machine, int ref, int params, const char **param)
 {
-	address_space &space=machine.firstcpu->space();
+	chihiro_state *state = machine.driver_data<chihiro_state>();
+	address_space &space=state->m_maincpu->space();
 	UINT64  addr;
 	offs_t address;
 	UINT32 length,maximumlength;
@@ -914,7 +916,8 @@ static void dump_string_command(running_machine &machine, int ref, int params, c
 
 static void dump_process_command(running_machine &machine, int ref, int params, const char **param)
 {
-	address_space &space=machine.firstcpu->space();
+	chihiro_state *state = machine.driver_data<chihiro_state>();
+	address_space &space=state->m_maincpu->space();
 	UINT64 addr;
 	offs_t address;
 
@@ -940,7 +943,8 @@ static void dump_process_command(running_machine &machine, int ref, int params, 
 
 static void dump_list_command(running_machine &machine, int ref, int params, const char **param)
 {
-	address_space &space=machine.firstcpu->space();
+	chihiro_state *state = machine.driver_data<chihiro_state>();
+	address_space &space=state->m_maincpu->space();
 	UINT64 addr,offs,start,old;
 	offs_t address,offset;
 
@@ -987,14 +991,13 @@ static void dump_list_command(running_machine &machine, int ref, int params, con
 
 static void curthread_command(running_machine &machine, int ref, int params, const char **param)
 {
-	address_space &space=machine.firstcpu->space();
+	chihiro_state *state = machine.driver_data<chihiro_state>();
+	address_space &space=state->m_maincpu->space();
 	UINT64 fsbase;
 	UINT32 kthrd,topstack,tlsdata;
 	offs_t address;
-	cpuinfo cpu_info;
 
-	CPU_GET_INFO_NAME(i386)((legacy_cpu_device *)machine.firstcpu,CPUINFO_INT_REGISTER + 44,&cpu_info);
-	fsbase=cpu_info.i;
+	fsbase = state->m_maincpu->state_int(44);
 	address=(offs_t)fsbase+0x28;
 	if (!debug_cpu_translate(space,TRANSLATE_READ_DEBUG,&address))
 	{
@@ -3249,6 +3252,7 @@ static void geforce_pci_w(device_t *busdevice, device_t *device, int function, i
  * ohci usb controller placeholder
  */
 
+#ifdef LOG_OHCI
 static const char *const usbregnames[]={
 	"HcRevision",
 	"HcControl",
@@ -3273,37 +3277,38 @@ static const char *const usbregnames[]={
 	"HcRhStatus",
 	"HcRhPortStatus[1]"
 };
+#endif
 
 READ32_MEMBER( chihiro_state::usbctrl_r )
 {
 	if (offset == 0) { /* hack needed until usb (and jvs) is implemented */
 		if (usbhack_counter == 0) {
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6a79f,0x01);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6a7a0,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6b575,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6b576,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6b5af,0x75);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6b78a,0x75);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6b7ca,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x6b7b8,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x8f5b2,0x75);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x79a9e,0x74);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x79b80,0x74);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x79b97,0x74);
+			m_maincpu->space(0).write_byte(0x6a79f,0x01);
+			m_maincpu->space(0).write_byte(0x6a7a0,0x00);
+			m_maincpu->space(0).write_byte(0x6b575,0x00);
+			m_maincpu->space(0).write_byte(0x6b576,0x00);
+			m_maincpu->space(0).write_byte(0x6b5af,0x75);
+			m_maincpu->space(0).write_byte(0x6b78a,0x75);
+			m_maincpu->space(0).write_byte(0x6b7ca,0x00);
+			m_maincpu->space(0).write_byte(0x6b7b8,0x00);
+			m_maincpu->space(0).write_byte(0x8f5b2,0x75);
+			m_maincpu->space(0).write_byte(0x79a9e,0x74);
+			m_maincpu->space(0).write_byte(0x79b80,0x74);
+			m_maincpu->space(0).write_byte(0x79b97,0x74);
 		}
 		// after game loaded
 		if (usbhack_counter == 1) {
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x12e4cf,0x01);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x12e4d0,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x4793e,0x01);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x4793f,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x47aa3,0x01);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x47aa4,0x00);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x14f2b6,0x84);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x14f2d1,0x75);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x8732f,0x7d);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x87384,0x7d);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x87388,0xeb);
+			m_maincpu->space(0).write_byte(0x12e4cf,0x01);
+			m_maincpu->space(0).write_byte(0x12e4d0,0x00);
+			m_maincpu->space(0).write_byte(0x4793e,0x01);
+			m_maincpu->space(0).write_byte(0x4793f,0x00);
+			m_maincpu->space(0).write_byte(0x47aa3,0x01);
+			m_maincpu->space(0).write_byte(0x47aa4,0x00);
+			m_maincpu->space(0).write_byte(0x14f2b6,0x84);
+			m_maincpu->space(0).write_byte(0x14f2d1,0x75);
+			m_maincpu->space(0).write_byte(0x8732f,0x7d);
+			m_maincpu->space(0).write_byte(0x87384,0x7d);
+			m_maincpu->space(0).write_byte(0x87388,0xeb);
 		}
 		usbhack_counter++;
 	}
@@ -3684,25 +3689,6 @@ WRITE_LINE_MEMBER(chihiro_state::chihiro_pit8254_out2_changed)
 	//chihiro_speaker_set_input( state ? 1 : 0 );
 }
 
-static const struct pit8253_interface chihiro_pit8254_config =
-{
-	{
-		{
-			1125000,                /* heartbeat IRQ */
-			DEVCB_NULL,
-			DEVCB_DRIVER_LINE_MEMBER(chihiro_state, chihiro_pit8254_out0_changed)
-		}, {
-			1125000,                /* (unused) dram refresh */
-			DEVCB_NULL,
-			DEVCB_NULL
-		}, {
-			1125000,                /* (unused) pio port c pin 4, and speaker polling enough */
-			DEVCB_NULL,
-			DEVCB_DRIVER_LINE_MEMBER(chihiro_state, chihiro_pit8254_out2_changed)
-		}
-	}
-};
-
 /*
  * SMbus devices
  */
@@ -3766,10 +3752,10 @@ int chihiro_state::smbus_eeprom(int command,int rw,int data)
 		// hack to avoid hanging if eeprom contents are not correct
 		// this would need dumping the serial eeprom on the xbox board
 		if (command == 0) {
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x3b744,0x90);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x3b745,0x90);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x3b766,0xc9);
-			chihiro_devs.pic8259_1->machine().firstcpu->space(0).write_byte(0x3b767,0xc3);
+			m_maincpu->space(0).write_byte(0x3b744,0x90);
+			m_maincpu->space(0).write_byte(0x3b745,0x90);
+			m_maincpu->space(0).write_byte(0x3b766,0xc9);
+			m_maincpu->space(0).write_byte(0x3b767,0xc3);
 		}
 		data = dummyeeprom[command]+dummyeeprom[command+1]*256;
 		logerror("eeprom: %d %d %d\n",command,rw,data);
@@ -3916,7 +3902,7 @@ void chihiro_state::machine_start()
 	if (chihiro_devs.dimmboard != NULL) {
 		dimm_board_memory=chihiro_devs.dimmboard->memory(dimm_board_memory_size);
 	}
-	apust.space=&machine().firstcpu->space();
+	apust.space=&m_maincpu->space();
 	apust.timer=machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(chihiro_state::audio_apu_timer),this),(void *)"APU Timer");
 	apust.timer->enable(false);
 	if (machine().debug_flags & DEBUG_FLAG_ENABLED)
@@ -3965,7 +3951,14 @@ static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 	MCFG_PCI_BUS_LEGACY_DEVICE(0, "NV2A GeForce 3MX Integrated GPU/Northbridge", geforce_pci_r, geforce_pci_w)
 	MCFG_PIC8259_ADD( "pic8259_1", WRITELINE(chihiro_state, chihiro_pic8259_1_set_int_line), VCC, READ8(chihiro_state,get_slave_ack) )
 	MCFG_PIC8259_ADD( "pic8259_2", DEVWRITELINE("pic8259_1", pic8259_device, ir2_w), GND, NULL )
-	MCFG_PIT8254_ADD( "pit8254", chihiro_pit8254_config )
+
+	MCFG_DEVICE_ADD("pit8254", PIT8254, 0)
+	MCFG_PIT8253_CLK0(1125000) /* heartbeat IRQ */
+	MCFG_PIT8253_OUT0_HANDLER(WRITELINE(chihiro_state, chihiro_pit8254_out0_changed))
+	MCFG_PIT8253_CLK1(1125000) /* (unused) dram refresh */
+	MCFG_PIT8253_CLK2(1125000) /* (unused) pio port c pin 4, and speaker polling enough */
+	MCFG_PIT8253_OUT2_HANDLER(WRITELINE(chihiro_state, chihiro_pit8254_out2_changed))
+
 	MCFG_BUS_MASTER_IDE_CONTROLLER_ADD( "ide", ide_baseboard, NULL, "bb", true)
 	MCFG_ATA_INTERFACE_IRQ_HANDLER(DEVWRITELINE("pic8259_2", pic8259_device, ir6_w))
 	MCFG_BUS_MASTER_IDE_CONTROLLER_SPACE("maincpu", AS_PROGRAM)
@@ -3979,7 +3972,7 @@ static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 	MCFG_SCREEN_UPDATE_DRIVER(chihiro_state,screen_update_callback)
 	MCFG_SCREEN_VBLANK_DRIVER(chihiro_state,vblank_callback)
 
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_ADD("palette", 65536)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( chihirogd, chihiro_base )

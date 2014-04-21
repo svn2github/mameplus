@@ -43,10 +43,10 @@ WRITE8_MEMBER(ironhors_state::ironhors_sh_irqtrigger_w)
 
 WRITE8_MEMBER(ironhors_state::ironhors_filter_w)
 {
-	device_t *device = machine().device("disc_ih");
-	discrete_sound_w(device, space, NODE_11, (data & 0x04) >> 2);
-	discrete_sound_w(device, space, NODE_12, (data & 0x02) >> 1);
-	discrete_sound_w(device, space, NODE_13, (data & 0x01) >> 0);
+	discrete_device *m_disc_ih = machine().device<discrete_device>("disc_ih");
+	m_disc_ih->write(space, NODE_11, (data & 0x04) >> 2);
+	m_disc_ih->write(space, NODE_12, (data & 0x02) >> 1);
+	m_disc_ih->write(space, NODE_13, (data & 0x01) >> 0);
 }
 
 /*************************************
@@ -384,10 +384,12 @@ static MACHINE_CONFIG_START( ironhors, ironhors_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ironhors_state, screen_update_ironhors)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ironhors)
-	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ironhors)
+	MCFG_PALETTE_ADD("palette", 16*8*16+16*8*16)
+	MCFG_PALETTE_INDIRECT_ENTRIES(256)
+	MCFG_PALETTE_INIT_OWNER(ironhors_state, ironhors)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -450,7 +452,7 @@ static MACHINE_CONFIG_DERIVED( farwest, ironhors )
 	MCFG_CPU_PROGRAM_MAP(farwest_slave_map)
 	MCFG_CPU_IO_MAP(0)
 
-	MCFG_GFXDECODE(farwest)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", farwest)
 	MCFG_VIDEO_START_OVERRIDE(ironhors_state,farwest)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(ironhors_state, screen_update_farwest)

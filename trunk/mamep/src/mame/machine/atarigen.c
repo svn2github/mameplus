@@ -971,7 +971,10 @@ atarigen_state::atarigen_state(const machine_config &mconfig, device_type type, 
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
 		m_oki(*this, "oki"),
-		m_soundcomm(*this, "soundcomm")
+		m_soundcomm(*this, "soundcomm"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")
 {
 }
 
@@ -1411,7 +1414,7 @@ WRITE16_MEMBER(atarigen_state::paletteram_666_w)
 	g = ((newword >> 4) & 0x3e) | ((newword >> 15) & 1);
 	b = ((newword << 1) & 0x3e) | ((newword >> 15) & 1);
 
-	palette_set_color_rgb(space.machine(), offset, pal6bit(r), pal6bit(g), pal6bit(b));
+	m_palette->set_pen_color(offset, pal6bit(r), pal6bit(g), pal6bit(b));
 }
 
 
@@ -1435,7 +1438,7 @@ WRITE16_MEMBER(atarigen_state::expanded_paletteram_666_w)
 		g = ((newword >> 4) & 0x3e) | ((newword >> 15) & 1);
 		b = ((newword << 1) & 0x3e) | ((newword >> 15) & 1);
 
-		palette_set_color_rgb(space.machine(), palentry & 0x1ff, pal6bit(r), pal6bit(g), pal6bit(b));
+		m_palette->set_pen_color(palentry & 0x1ff, pal6bit(r), pal6bit(g), pal6bit(b));
 	}
 }
 
@@ -1458,7 +1461,7 @@ WRITE32_MEMBER(atarigen_state::paletteram32_666_w )
 		g = ((newword >> 4) & 0x3e) | ((newword >> 15) & 1);
 		b = ((newword << 1) & 0x3e) | ((newword >> 15) & 1);
 
-		palette_set_color_rgb(space.machine(), offset * 2, pal6bit(r), pal6bit(g), pal6bit(b));
+		m_palette->set_pen_color(offset * 2, pal6bit(r), pal6bit(g), pal6bit(b));
 	}
 
 	if (ACCESSING_BITS_0_15)
@@ -1469,7 +1472,7 @@ WRITE32_MEMBER(atarigen_state::paletteram32_666_w )
 		g = ((newword >> 4) & 0x3e) | ((newword >> 15) & 1);
 		b = ((newword << 1) & 0x3e) | ((newword >> 15) & 1);
 
-		palette_set_color_rgb(space.machine(), offset * 2 + 1, pal6bit(r), pal6bit(g), pal6bit(b));
+		m_palette->set_pen_color(offset * 2 + 1, pal6bit(r), pal6bit(g), pal6bit(b));
 	}
 }
 
@@ -1486,8 +1489,8 @@ WRITE32_MEMBER(atarigen_state::paletteram32_666_w )
 
 void atarigen_state::blend_gfx(int gfx0, int gfx1, int mask0, int mask1)
 {
-	gfx_element *gx0 = machine().gfx[gfx0];
-	gfx_element *gx1 = machine().gfx[gfx1];
+	gfx_element *gx0 = m_gfxdecode->gfx(gfx0);
+	gfx_element *gx1 = m_gfxdecode->gfx(gfx1);
 	UINT8 *srcdata, *dest;
 	int c, x, y;
 
@@ -1520,8 +1523,7 @@ void atarigen_state::blend_gfx(int gfx0, int gfx1, int mask0, int mask1)
 	gx0->set_granularity(granularity);
 
 	// free the second graphics element
-	machine().gfx[gfx1] = NULL;
-	auto_free(machine(), gx1);
+	m_gfxdecode->set_gfx(gfx1, NULL);
 }
 
 

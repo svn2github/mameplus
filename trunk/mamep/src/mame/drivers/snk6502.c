@@ -755,6 +755,7 @@ INTERRUPT_GEN_MEMBER(snk6502_state::snk6502_interrupt)
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -828,11 +829,12 @@ static MACHINE_CONFIG_START( sasuke, snk6502_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(snk6502_state, screen_update_snk6502)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(sasuke)
-	MCFG_PALETTE_LENGTH(32)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", sasuke)
+	MCFG_PALETTE_ADD("palette", 32)
 
-	MCFG_PALETTE_INIT_OVERRIDE(snk6502_state,satansat)
+	MCFG_PALETTE_INIT_OWNER(snk6502_state,satansat)
 	MCFG_VIDEO_START_OVERRIDE(snk6502_state,satansat)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK / 16, mc6845_intf)
@@ -869,7 +871,7 @@ static MACHINE_CONFIG_DERIVED( satansat, sasuke )
 	MCFG_MACHINE_RESET_OVERRIDE(snk6502_state,satansat)
 
 	// video hardware
-	MCFG_GFXDECODE(satansat)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", satansat)
 
 	// sound hardware
 	MCFG_SAMPLES_REPLACE("samples", vanguard_samples_interface)
@@ -901,11 +903,12 @@ static MACHINE_CONFIG_START( vanguard, snk6502_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(snk6502_state, screen_update_snk6502)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(vanguard)
-	MCFG_PALETTE_LENGTH(64)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", vanguard)
+	MCFG_PALETTE_ADD("palette", 64)
 
-	MCFG_PALETTE_INIT_OVERRIDE(snk6502_state,snk6502)
+	MCFG_PALETTE_INIT_OWNER(snk6502_state,snk6502)
 	MCFG_VIDEO_START_OVERRIDE(snk6502_state,snk6502)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK / 16, mc6845_intf)

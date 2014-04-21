@@ -751,16 +751,6 @@ static const tc0100scn_interface darius2_tc0100scn_intf_r =
 	4, 1
 };
 
-static const tc0110pcr_interface darius2_tc0110pcr_intf_l = {   0   /* pal_offs / 0x1000 */ };
-static const tc0110pcr_interface darius2_tc0110pcr_intf_m = {   1   /* pal_offs / 0x1000 */ };
-static const tc0110pcr_interface darius2_tc0110pcr_intf_r = {   2   /* pal_offs / 0x1000 */ };
-
-static const tc0220ioc_interface ninjaw_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
-
 static const tc0140syt_interface ninjaw_tc0140syt_intf =
 {
 	"maincpu", "audiocpu"
@@ -809,12 +799,19 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))  /* CPU slices */
 
-
-	MCFG_TC0220IOC_ADD("tc0220ioc", ninjaw_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
-	MCFG_GFXDECODE(ninjaw)
-	MCFG_PALETTE_LENGTH(4096*3)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ninjaw)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_ADD("palette2", 4096)
+	MCFG_PALETTE_ADD("palette3", 4096)
+
 	MCFG_DEFAULT_LAYOUT(layout_darius)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
@@ -823,6 +820,7 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("mscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -830,6 +828,7 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_middle)
+	MCFG_SCREEN_PALETTE("palette2")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -837,14 +836,24 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_right)
-
+	MCFG_SCREEN_PALETTE("palette3")
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2_tc0100scn_intf_l)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
 	MCFG_TC0100SCN_ADD("tc0100scn_2", darius2_tc0100scn_intf_m)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette2")
 	MCFG_TC0100SCN_ADD("tc0100scn_3", darius2_tc0100scn_intf_r)
-	MCFG_TC0110PCR_ADD("tc0110pcr_1", darius2_tc0110pcr_intf_l)
-	MCFG_TC0110PCR_ADD("tc0110pcr_2", darius2_tc0110pcr_intf_m)
-	MCFG_TC0110PCR_ADD("tc0110pcr_3", darius2_tc0110pcr_intf_r)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette3")
+
+	MCFG_TC0110PCR_ADD("tc0110pcr_1")
+	MCFG_TC0110PCR_PALETTE("palette")
+	MCFG_TC0110PCR_ADD("tc0110pcr_2")
+	MCFG_TC0110PCR_PALETTE("palette2")
+	MCFG_TC0110PCR_ADD("tc0110pcr_3")
+	MCFG_TC0110PCR_PALETTE("palette3")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -889,12 +898,19 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))  /* CPU slices */
 
-
-	MCFG_TC0220IOC_ADD("tc0220ioc", ninjaw_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
-	MCFG_GFXDECODE(ninjaw)
-	MCFG_PALETTE_LENGTH(4096*3)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ninjaw)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_ADD("palette2", 4096)
+	MCFG_PALETTE_ADD("palette3", 4096)
+
 	MCFG_DEFAULT_LAYOUT(layout_darius)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
@@ -903,6 +919,7 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("mscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -910,6 +927,7 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_middle)
+	MCFG_SCREEN_PALETTE("palette2")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -917,14 +935,24 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ninjaw_state, screen_update_ninjaw_right)
-
+	MCFG_SCREEN_PALETTE("palette3")
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2_tc0100scn_intf_l)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
 	MCFG_TC0100SCN_ADD("tc0100scn_2", darius2_tc0100scn_intf_m)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette2")
 	MCFG_TC0100SCN_ADD("tc0100scn_3", darius2_tc0100scn_intf_r)
-	MCFG_TC0110PCR_ADD("tc0110pcr_1", darius2_tc0110pcr_intf_l)
-	MCFG_TC0110PCR_ADD("tc0110pcr_2", darius2_tc0110pcr_intf_m)
-	MCFG_TC0110PCR_ADD("tc0110pcr_3", darius2_tc0110pcr_intf_r)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette3")
+
+	MCFG_TC0110PCR_ADD("tc0110pcr_1")
+	MCFG_TC0110PCR_PALETTE("palette")
+	MCFG_TC0110PCR_ADD("tc0110pcr_2")
+	MCFG_TC0110PCR_PALETTE("palette2")
+	MCFG_TC0110PCR_ADD("tc0110pcr_3")
+	MCFG_TC0110PCR_PALETTE("palette3")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

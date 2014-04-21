@@ -38,7 +38,8 @@ public:
 		m_backup_ram(*this, "backup_ram"),
 		m_ram_attr(*this, "raattr"),
 		m_ram_video(*this, "ravideo"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_screen(*this, "screen") { }
 
 	pen_t m_pens[NUM_PENS];
 	required_shared_ptr<UINT8> m_backup_ram;
@@ -51,6 +52,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(vsync_changed);
 	virtual void machine_start();
 	required_device<cpu_device> m_maincpu;
+	required_device<screen_device> m_screen;
 };
 
 
@@ -97,7 +99,7 @@ static MC6845_BEGIN_UPDATE( begin_update )
 		bit0 = BIT(i,0);
 		bit1 = BIT(i,1);
 		bit2 = BIT(i,2);
-		state->m_pens[i] = MAKE_RGB(dim*bit0, dim*bit1, dim*bit2);
+		state->m_pens[i] = rgb_t(dim*bit0, dim*bit1, dim*bit2);
 	}
 
 	return state->m_pens;
@@ -171,6 +173,7 @@ WRITE_LINE_MEMBER(slotcarn_state::vsync_changed)
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,                      /* show border area */
+	0,0,0,0,                    /* visarea adjustment */
 	8,                          /* number of pixels per video memory address */
 	begin_update,               /* before pixel update callback */
 	update_row,                 /* row update callback */
@@ -624,8 +627,8 @@ static MACHINE_CONFIG_START( slotcarn, slotcarn_state )
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)
 
-	MCFG_GFXDECODE(slotcarn)
-	MCFG_PALETTE_LENGTH(0x400)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", slotcarn)
+	MCFG_PALETTE_ADD("palette", 0x400)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -36,11 +36,11 @@ void namcona1_state::tilemap_get_info(
 
 	if( data & 0x8000 )
 	{
-		SET_TILE_INFO_MEMBER( gfx,tile,tilemap_color,TILE_FORCE_LAYER0 );
+		SET_TILE_INFO_MEMBER(gfx,tile,tilemap_color,TILE_FORCE_LAYER0 );
 	}
 	else
 	{
-		SET_TILE_INFO_MEMBER( gfx,tile,tilemap_color,0 );
+		SET_TILE_INFO_MEMBER(gfx,tile,tilemap_color,0 );
 		if (ENDIANNESS_NATIVE == ENDIANNESS_BIG)
 			tileinfo.mask_data = (UINT8 *)(m_shaperam+4*tile);
 		else
@@ -102,7 +102,7 @@ TILE_GET_INFO_MEMBER(namcona1_state::roz_get_info)
 	}
 	if( data & 0x8000 )
 	{
-		SET_TILE_INFO_MEMBER( gfx,tile,tilemap_color,TILE_FORCE_LAYER0 );
+		SET_TILE_INFO_MEMBER(gfx,tile,tilemap_color,TILE_FORCE_LAYER0 );
 	}
 	else
 	{
@@ -122,7 +122,7 @@ TILE_GET_INFO_MEMBER(namcona1_state::roz_get_info)
 			conv_data[7] = source[3]&0xff;
 			mask_data = conv_data;
 		}
-		SET_TILE_INFO_MEMBER( gfx,tile,tilemap_color,0 );
+		SET_TILE_INFO_MEMBER(gfx,tile,tilemap_color,0 );
 		tileinfo.mask_data = mask_data;
 	}
 } /* roz_get_info */
@@ -151,11 +151,9 @@ READ16_MEMBER(namcona1_state::namcona1_videoram_r)
 
 /*************************************************************************/
 
-static void
-UpdatePalette(running_machine &machine, int offset )
+void namcona1_state::UpdatePalette( int offset )
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	UINT16 data = state->m_generic_paletteram_16[offset]; /* -RRRRRGG GGGBBBBB */
+	UINT16 data = m_generic_paletteram_16[offset]; /* -RRRRRGG GGGBBBBB */
 	/**
 	 * sprites can be configured to use an alternate interpretation of palette ram
 	 * (used in-game in Emeraldia)
@@ -165,9 +163,9 @@ UpdatePalette(running_machine &machine, int offset )
 	int r = (((data&0x00e0)>>5)+((data&0xe000)>>13)*2)*0xff/(0x7*3);
 	int g = (((data&0x001c)>>2)+((data&0x1c00)>>10)*2)*0xff/(0x7*3);
 	int b = (((data&0x0003)>>0)+((data&0x0300)>>8)*2)*0xff/(0x3*3);
-	palette_set_color_rgb( machine, offset+0x1000, r, g, b);
+	m_palette->set_pen_color(offset+0x1000, r, g, b);
 
-	palette_set_color_rgb( machine, offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+	m_palette->set_pen_color(offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 } /* namcona1_paletteram_w */
 
 READ16_MEMBER(namcona1_state::namcona1_paletteram_r)
@@ -180,7 +178,7 @@ WRITE16_MEMBER(namcona1_state::namcona1_paletteram_w)
 	COMBINE_DATA( &m_generic_paletteram_16[offset] );
 	if( m_vreg[0x8e/2] )
 	{ /* graphics enabled; update palette immediately */
-		UpdatePalette(machine(), offset );
+		UpdatePalette( offset );
 	}
 	else
 	{
@@ -190,16 +188,14 @@ WRITE16_MEMBER(namcona1_state::namcona1_paletteram_w)
 
 /*************************************************************************/
 
-#define XOR(a) BYTE_XOR_BE(a)
-
 static const gfx_layout shape_layout =
 {
 	8,8,
 	0x1000,
 	1,
 	{ 0 },
-	{ 0,1,2,3,4,5,6,7 },
-	{ 8*XOR(0),8*XOR(1),8*XOR(2),8*XOR(3),8*XOR(4),8*XOR(5),8*XOR(6),8*XOR(7) },
+	{ STEP8(0, 1) },
+	{ STEP8(0, 8) },
 	8*8
 }; /* shape_layout */
 
@@ -209,9 +205,9 @@ static const gfx_layout cg_layout_8bpp =
 	0x1000,
 	8, /* 8BPP */
 	{ 0,1,2,3,4,5,6,7 },
-	{ 8*XOR(0),8*XOR(1),8*XOR(2),8*XOR(3),8*XOR(4),8*XOR(5),8*XOR(6),8*XOR(7) },
-	{ 64*0,64*1,64*2,64*3,64*4,64*5,64*6,64*7 },
-	64*8
+	{ STEP8(0, 8) },
+	{ STEP8(0, 8*8) },
+	8*8*8
 }; /* cg_layout_8bpp */
 
 static const gfx_layout cg_layout_4bpp =
@@ -220,9 +216,9 @@ static const gfx_layout cg_layout_4bpp =
 	0x1000,
 	4, /* 4BPP */
 	{ 4,5,6,7 },
-	{ 8*XOR(0),8*XOR(1),8*XOR(2),8*XOR(3),8*XOR(4),8*XOR(5),8*XOR(6),8*XOR(7) },
-	{ 64*0,64*1,64*2,64*3,64*4,64*5,64*6,64*7 },
-	64*8
+	{ STEP8(0, 8) },
+	{ STEP8(0, 8*8) },
+	8*8*8
 }; /* cg_layout_4bpp */
 
 READ16_MEMBER(namcona1_state::namcona1_gfxram_r)
@@ -254,7 +250,7 @@ WRITE16_MEMBER(namcona1_state::namcona1_gfxram_w)
 			old_word = m_shaperam[offset];
 			COMBINE_DATA( &m_shaperam[offset] );
 			if( m_shaperam[offset]!=old_word )
-				machine().gfx[2]->mark_dirty(offset/4);
+				m_gfxdecode->gfx(2)->mark_dirty(offset/4);
 		}
 	}
 	else if( type == 0x02 )
@@ -263,8 +259,8 @@ WRITE16_MEMBER(namcona1_state::namcona1_gfxram_w)
 		COMBINE_DATA( &m_cgram[offset] );
 		if( m_cgram[offset]!=old_word )
 		{
-			machine().gfx[0]->mark_dirty(offset/0x20);
-			machine().gfx[1]->mark_dirty(offset/0x20);
+			m_gfxdecode->gfx(0)->mark_dirty(offset/0x20);
+			m_gfxdecode->gfx(1)->mark_dirty(offset/0x20);
 		}
 	}
 } /* namcona1_gfxram_w */
@@ -275,7 +271,7 @@ static void UpdateGfx(running_machine &machine)
 
 void namcona1_state::video_start()
 {
-	m_roz_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(namcona1_state::roz_get_info),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
+	m_roz_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(namcona1_state::roz_get_info),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
 	m_roz_palette = -1;
 
 	for( int i=0; i<NAMCONA1_NUM_TILEMAPS; i++ )
@@ -283,23 +279,23 @@ void namcona1_state::video_start()
 		m_tilemap_palette_bank[i] = -1;
 	}
 
-	m_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info0),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
-	m_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info1),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
-	m_bg_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info2),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
-	m_bg_tilemap[3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info3),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
+	m_bg_tilemap[0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info0),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
+	m_bg_tilemap[1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info1),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
+	m_bg_tilemap[2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info2),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
+	m_bg_tilemap[3] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(namcona1_state::tilemap_get_info3),this), TILEMAP_SCAN_ROWS, 8,8,64,64 );
 
 	m_shaperam           = auto_alloc_array_clear(machine(), UINT16, 0x2000*4/2 );
 	m_cgram              = auto_alloc_array_clear(machine(), UINT16, 0x1000*0x40/2 );
 
-	machine().gfx[0] = auto_alloc( machine(), gfx_element( machine(), cg_layout_8bpp, (UINT8 *)m_cgram, machine().total_colors()/256, 0 ));
-	machine().gfx[1] = auto_alloc( machine(), gfx_element( machine(), cg_layout_4bpp, (UINT8 *)m_cgram, machine().total_colors()/16, 0 ));
-	machine().gfx[2] = auto_alloc( machine(), gfx_element( machine(), shape_layout, (UINT8 *)m_shaperam, machine().total_colors()/2, 0 ));
+	m_gfxdecode->set_gfx(0, global_alloc( gfx_element(m_palette, cg_layout_8bpp, (UINT8 *)m_cgram, NATIVE_ENDIAN_VALUE_LE_BE(8,0), m_palette->entries()/256, 0 )));
+	m_gfxdecode->set_gfx(1, global_alloc( gfx_element(m_palette, cg_layout_4bpp, (UINT8 *)m_cgram, NATIVE_ENDIAN_VALUE_LE_BE(8,0), m_palette->entries()/16, 0 )));
+	m_gfxdecode->set_gfx(2, global_alloc( gfx_element(m_palette, shape_layout, (UINT8 *)m_shaperam, NATIVE_ENDIAN_VALUE_LE_BE(8,0), m_palette->entries()/2, 0 )));
 
 } /* namcona1_vh_start */
 
 /*************************************************************************/
 
-static void pdraw_tile(
+void namcona1_state::pdraw_tile(
 		screen_device &screen,
 		bitmap_ind16 &dest_bmp,
 		const rectangle &clip,
@@ -312,8 +308,8 @@ static void pdraw_tile(
 		int bOpaque,
 		int gfx_region )
 {
-	gfx_element *gfx = screen.machine().gfx[gfx_region];
-	gfx_element *mask = screen.machine().gfx[2];
+	gfx_element *gfx = m_gfxdecode->gfx(gfx_region);
+	gfx_element *mask = m_gfxdecode->gfx(2);
 
 	int pal_base = gfx->colorbase() + gfx->granularity() * (color % gfx->colors());
 	const UINT8 *source_base = gfx->get_data((code % gfx->elements()));
@@ -417,7 +413,7 @@ static void pdraw_tile(
 									if( (gfx_region == 0 && color == 0x0f) ||
 										(gfx_region == 1 && color == 0xff) )
 									{
-										pen_t *palette_shadow_table = screen.machine().shadow_table;
+										pen_t *palette_shadow_table = m_palette->shadow_table();
 										dest[x] = palette_shadow_table[dest[x]];
 									}
 									else
@@ -443,11 +439,10 @@ static void pdraw_tile(
 	}
 } /* pdraw_tile */
 
-static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+void namcona1_state::draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	namcona1_state *state = screen.machine().driver_data<namcona1_state>();
 	int which;
-	const UINT16 *source = state->m_spriteram;
+	const UINT16 *source = m_spriteram;
 	UINT16 sprite_control;
 	UINT16 ypos,tile,color,xpos;
 	int priority;
@@ -456,7 +451,7 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rect
 	int row,col;
 	int sx,sy;
 
-	sprite_control = state->m_vreg[0x22/2];
+	sprite_control = m_vreg[0x22/2];
 	if( sprite_control&1 ) source += 0x400; /* alternate spriteram bank */
 
 	for( which=0; which<0x100; which++ )
@@ -540,10 +535,9 @@ static void draw_pixel_line( UINT16 *pDest, UINT8 *pPri, UINT16 *pSource, const 
 	} /* next x */
 } /* draw_pixel_line */
 
-static void draw_background(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int which, int primask )
+void namcona1_state::draw_background(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int which, int primask )
 {
-	namcona1_state *state = screen.machine().driver_data<namcona1_state>();
-	UINT16 *videoram = state->m_videoram;
+	UINT16 *videoram = m_videoram;
 	/*          scrollx lineselect
 	 *  tmap0   ffe000  ffe200
 	 *  tmap1   ffe400  ffe600
@@ -551,7 +545,7 @@ static void draw_background(screen_device &screen, bitmap_ind16 &bitmap, const r
 	 *  tmap3   ffec00  ffee00
 	 */
 	int xadjust = 0x3a - which*2;
-	const UINT16 *scroll = state->m_scroll+0x200*which;
+	const UINT16 *scroll = m_scroll+0x200*which;
 	int line;
 	UINT16 xdata, ydata;
 	int scrollx, scrolly;
@@ -559,8 +553,9 @@ static void draw_background(screen_device &screen, bitmap_ind16 &bitmap, const r
 	const pen_t *paldata;
 	gfx_element *pGfx;
 
-	pGfx = screen.machine().gfx[0];
-	paldata = &screen.machine().pens[pGfx->colorbase() + pGfx->granularity() * state->m_tilemap_palette_bank[which]];
+	pGfx = m_gfxdecode->gfx(0);
+	assert(which >= 0 && which < ARRAY_LENGTH(m_tilemap_palette_bank));
+	paldata = &m_palette->pen(pGfx->colorbase() + pGfx->granularity() * m_tilemap_palette_bank[which]);
 
 	/* draw one scanline at a time */
 	clip.min_x = cliprect.min_x;
@@ -601,24 +596,24 @@ static void draw_background(screen_device &screen, bitmap_ind16 &bitmap, const r
 			{
 				if(which == NAMCONA1_NUM_TILEMAPS )
 				{
-					int incxx = ((INT16)state->m_vreg[0xc0/2])<<8;
-					int incxy = ((INT16)state->m_vreg[0xc2/2])<<8;
-					int incyx = ((INT16)state->m_vreg[0xc4/2])<<8;
-					int incyy = ((INT16)state->m_vreg[0xc6/2])<<8;
-					INT16 xoffset = state->m_vreg[0xc8/2];
-					INT16 yoffset = state->m_vreg[0xca/2];
+					int incxx = ((INT16)m_vreg[0xc0/2])<<8;
+					int incxy = ((INT16)m_vreg[0xc2/2])<<8;
+					int incyx = ((INT16)m_vreg[0xc4/2])<<8;
+					int incyy = ((INT16)m_vreg[0xc6/2])<<8;
+					INT16 xoffset = m_vreg[0xc8/2];
+					INT16 yoffset = m_vreg[0xca/2];
 					int dx = 46; /* horizontal adjust */
 					int dy = -8; /* vertical adjust */
 					UINT32 startx = (xoffset<<12)+incxx*dx+incyx*dy;
 					UINT32 starty = (yoffset<<12)+incxy*dx+incyy*dy;
-					state->m_roz_tilemap->draw_roz(screen, bitmap, clip,
+					m_roz_tilemap->draw_roz(screen, bitmap, clip,
 						startx, starty, incxx, incxy, incyx, incyy, 0, 0, primask, 0);
 				}
 				else
 				{
-					state->m_bg_tilemap[which]->set_scrollx(0, scrollx );
-					state->m_bg_tilemap[which]->set_scrolly(0, scrolly );
-					state->m_bg_tilemap[which]->draw(screen, bitmap, clip, 0, primask, 0 );
+					m_bg_tilemap[which]->set_scrollx(0, scrollx );
+					m_bg_tilemap[which]->set_scrolly(0, scrolly );
+					m_bg_tilemap[which]->draw(screen, bitmap, clip, 0, primask, 0 );
 				}
 			}
 		}
@@ -639,7 +634,7 @@ UINT32 namcona1_state::screen_update_namcona1(screen_device &screen, bitmap_ind1
 			/* palette updates are delayed when graphics are disabled */
 			for( which=0; which<0x1000; which++ )
 			{
-				UpdatePalette(machine(), which );
+				UpdatePalette( which );
 			}
 			m_palette_is_dirty = 0;
 		}

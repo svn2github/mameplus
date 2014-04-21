@@ -17,8 +17,7 @@ TILE_GET_INFO_MEMBER(gaiden_state::get_bg_tile_info)
 {
 	UINT16 *videoram1 = &m_videoram3[0x0800];
 	UINT16 *videoram2 = m_videoram3;
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			videoram1[tile_index] & 0x0fff,
 			(videoram2[tile_index] & 0xf0) >> 4,
 			0);
@@ -28,8 +27,7 @@ TILE_GET_INFO_MEMBER(gaiden_state::get_fg_tile_info)
 {
 	UINT16 *videoram1 = &m_videoram2[0x0800];
 	UINT16 *videoram2 = m_videoram2;
-	SET_TILE_INFO_MEMBER(
-			2,
+	SET_TILE_INFO_MEMBER(2,
 			videoram1[tile_index] & 0x0fff,
 			(videoram2[tile_index] & 0xf0) >> 4,
 			0);
@@ -43,8 +41,7 @@ TILE_GET_INFO_MEMBER(gaiden_state::get_fg_tile_info_raiga)
 	/* bit 3 controls blending */
 	tileinfo.category = (videoram2[tile_index] & 0x08) >> 3;
 
-	SET_TILE_INFO_MEMBER(
-			2,
+	SET_TILE_INFO_MEMBER(2,
 			videoram1[tile_index] & 0x0fff,
 			((videoram2[tile_index] & 0xf0) >> 4) | (tileinfo.category ? 0x80 : 0x00),
 			0);
@@ -54,8 +51,7 @@ TILE_GET_INFO_MEMBER(gaiden_state::get_tx_tile_info)
 {
 	UINT16 *videoram1 = &m_videoram[0x0400];
 	UINT16 *videoram2 = m_videoram;
-	SET_TILE_INFO_MEMBER(
-			0,
+	SET_TILE_INFO_MEMBER(0,
 			videoram1[tile_index] & 0x07ff,
 			(videoram2[tile_index] & 0xf0) >> 4,
 			0);
@@ -74,9 +70,9 @@ VIDEO_START_MEMBER(gaiden_state,gaiden)
 	m_screen->register_screen_bitmap(m_tile_bitmap_bg);
 	m_screen->register_screen_bitmap(m_tile_bitmap_fg);
 
-	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_foreground = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info_raiga),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_text_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_background = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_foreground = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info_raiga),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_text_layer = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	m_background->set_transparent_pen(0);
 	m_foreground->set_transparent_pen(0);
@@ -100,9 +96,9 @@ VIDEO_START_MEMBER(gaiden_state,mastninj)
 	m_screen->register_screen_bitmap(m_tile_bitmap_bg);
 	m_screen->register_screen_bitmap(m_tile_bitmap_fg);
 
-	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_foreground = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info_raiga),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_text_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_background = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_foreground = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info_raiga),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_text_layer = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 //  m_background->set_transparent_pen(15);
 	m_foreground->set_transparent_pen(15);
@@ -121,9 +117,9 @@ VIDEO_START_MEMBER(gaiden_state,raiga)
 	m_screen->register_screen_bitmap(m_tile_bitmap_bg);
 	m_screen->register_screen_bitmap(m_tile_bitmap_fg);
 
-	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_foreground = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info_raiga),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_text_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_background = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_foreground = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info_raiga),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_text_layer = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	m_background->set_transparent_pen(0);
 	m_foreground->set_transparent_pen(0);
@@ -136,9 +132,9 @@ VIDEO_START_MEMBER(gaiden_state,raiga)
 VIDEO_START_MEMBER(gaiden_state,drgnbowl)
 {
 	/* set up tile layers */
-	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_foreground = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_text_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_background = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_foreground = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_text_layer = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gaiden_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	m_foreground->set_transparent_pen(15);
 	m_text_layer->set_transparent_pen(15);
@@ -276,7 +272,7 @@ void gaiden_state::blendbitmaps(bitmap_rgb32 &dest,bitmap_ind16 &src1,bitmap_ind
 		int sx,int sy,const rectangle &cliprect)
 {
 	int y,x;
-	const pen_t *paldata = machine().pens;
+	const pen_t *paldata = m_palette->pens();
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
@@ -353,16 +349,16 @@ void gaiden_state::drgnbowl_draw_sprites(screen_device &screen, bitmap_ind16 &bi
 		else
 			priority_mask = 0;
 
-		pdrawgfx_transpen_raw(bitmap,cliprect,machine().gfx[3],
+		m_gfxdecode->gfx(3)->prio_transpen_raw(bitmap,cliprect,
 				code,
-				machine().gfx[3]->colorbase() + color * machine().gfx[3]->granularity(),
+				m_gfxdecode->gfx(3)->colorbase() + color * m_gfxdecode->gfx(3)->granularity(),
 				flipx,flipy,x,y,
 				screen.priority(), priority_mask,15);
 
 		/* wrap x*/
-		pdrawgfx_transpen_raw(bitmap,cliprect,machine().gfx[3],
+		m_gfxdecode->gfx(3)->prio_transpen_raw(bitmap,cliprect,
 				code,
-				machine().gfx[3]->colorbase() + color * machine().gfx[3]->granularity(),
+				m_gfxdecode->gfx(3)->colorbase() + color * m_gfxdecode->gfx(3)->granularity(),
 				flipx,flipy,x-512,y,
 				screen.priority(), priority_mask,15);
 
@@ -386,7 +382,7 @@ UINT32 gaiden_state::screen_update_gaiden(screen_device &screen, bitmap_rgb32 &b
 	m_text_layer->draw(screen, m_tile_bitmap_fg, cliprect, 0, 4);
 
 	/* draw sprites into a 16-bit bitmap */
-	gaiden_draw_sprites(screen, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, cliprect, m_spriteram, m_sprite_sizey, m_spr_offset_y, flip_screen());
+	gaiden_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, cliprect, m_spriteram, m_sprite_sizey, m_spr_offset_y, flip_screen());
 
 	/* mix & blend the tilemaps and sprites into a 32-bit bitmap */
 	blendbitmaps(bitmap, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, 0, 0, cliprect);
@@ -411,7 +407,7 @@ UINT32 gaiden_state::screen_update_raiga(screen_device &screen, bitmap_rgb32 &bi
 	m_text_layer->draw(screen, m_tile_bitmap_fg, cliprect, 0, 4);
 
 	/* draw sprites into a 16-bit bitmap */
-	raiga_draw_sprites(screen, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, cliprect, m_spriteram, m_sprite_sizey, m_spr_offset_y, flip_screen());
+	raiga_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, cliprect, m_spriteram, m_sprite_sizey, m_spr_offset_y, flip_screen());
 
 	/* mix & blend the tilemaps and sprites into a 32-bit bitmap */
 	blendbitmaps(bitmap, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, 0, 0, cliprect);

@@ -1,3 +1,4 @@
+#include "cpu/z80/z80.h"
 #include "machine/i8255.h"
 
 class system1_state : public driver_device
@@ -12,7 +13,10 @@ public:
 		m_nob_mcu_status(*this, "nob_mcu_status"),
 		m_maincpu(*this, "maincpu"),
 		m_soundcpu(*this, "soundcpu"),
-		m_mcu(*this, "mcu") { }
+		m_mcu(*this, "mcu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	optional_device<i8255_device>  m_ppi8255;
 	required_shared_ptr<UINT8> m_ram;
@@ -123,7 +127,10 @@ public:
 	void bank44_custom_w(UINT8 data, UINT8 prevdata);
 	void bank0c_custom_w(UINT8 data, UINT8 prevdata);
 	void dakkochn_custom_w(UINT8 data, UINT8 prevdata);
-	required_device<cpu_device> m_maincpu;
+	required_device<z80_device> m_maincpu;
 	required_device<cpu_device> m_soundcpu;
 	optional_device<cpu_device> m_mcu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };

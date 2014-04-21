@@ -1186,12 +1186,16 @@ static MACHINE_CONFIG_START( yboard, segaybd_state )
 	MCFG_SCREEN_SIZE(342,262)   // to be verified
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(segaybd_state,screen_update)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	MCFG_SEGA_SYS16B_SPRITES_ADD("bsprites")
 	MCFG_SEGA_YBOARD_SPRITES_ADD("ysprites")
 	MCFG_SEGAIC16VID_ADD("segaic16vid")
+	MCFG_SEGAIC16VID_GFXDECODE("gfxdecode")
 
-	MCFG_PALETTE_LENGTH(8192*3)
+	MCFG_PALETTE_ADD("palette", 8192*3)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1300,6 +1304,9 @@ ROM_START( gforce2 )
 	ROM_RELOAD(                  0x120000, 0x20000 )
 	ROM_RELOAD(                  0x140000, 0x20000 )
 	ROM_RELOAD(                  0x160000, 0x20000 )
+
+	ROM_REGION( 0x10000, "motorcpu", 0 )        // Z80 motor CPU (for super deluxe unit)
+	ROM_LOAD( "motorpcb.prg",   0x000000, 0x08000, CRC(fecee31e) SHA1(b50a26896a71d4741bbdc4ae51c3702585531b7e) ) // sega epr label??
 ROM_END
 
 //*************************************************************************************************************************

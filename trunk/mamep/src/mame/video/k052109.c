@@ -151,8 +151,31 @@ k052109_device::k052109_device(const machine_config &mconfig, const char *tag, d
 	m_irq_enabled(0),
 	//m_dx[3], m_dy[3],
 	m_romsubbank(0),
-	m_scrollctrl(0)
+	m_scrollctrl(0),
+	m_gfxdecode(*this),
+	m_palette(*this)
 {
+}
+
+//-------------------------------------------------
+//  static_set_gfxdecode_tag: Set the tag of the
+//  gfx decoder
+//-------------------------------------------------
+
+void k052109_device::static_set_gfxdecode_tag(device_t &device, const char *tag)
+{
+	downcast<k052109_device &>(device).m_gfxdecode.set_tag(tag);
+}
+
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void k052109_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<k052109_device &>(device).m_palette.set_tag(tag);
 }
 
 //-------------------------------------------------
@@ -207,18 +230,20 @@ void k052109_device::device_start()
 		32*8
 	};
 
+	if(!m_gfxdecode->started())
+		throw device_missing_dependencies();
 
 	/* decode the graphics */
 	switch (m_plane_order)
 	{
 	case NORMAL_PLANE_ORDER:
 		total = machine().root_device().memregion(m_gfx_memory_region)->bytes() / 32;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &charlayout, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &charlayout, 4);
 		break;
 
 	case GRADIUS3_PLANE_ORDER:
 		total = 0x1000;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &charlayout_gradius3, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &charlayout_gradius3, 4);
 		break;
 
 	default:
@@ -228,9 +253,9 @@ void k052109_device::device_start()
 	/* deinterleave the graphics, if needed */
 	konami_deinterleave_gfx(machine(), m_gfx_memory_region, m_deinterleave);
 
-	m_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k052109_device::get_tile_info0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
-	m_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k052109_device::get_tile_info1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
-	m_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k052109_device::get_tile_info2),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap[0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(k052109_device::get_tile_info0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap[1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(k052109_device::get_tile_info1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap[2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(k052109_device::get_tile_info2),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
 	m_ram = auto_alloc_array_clear(machine(), UINT8, 0x6000);
 
@@ -716,8 +741,7 @@ void k052109_device::get_tile_info( tile_data &tileinfo, int tile_index, int lay
 	if (flipy && (m_tileflip_enable & 2))
 		flags |= TILE_FLIPY;
 
-	SET_TILE_INFO_MEMBER(
-			m_gfx_num,
+	SET_TILE_INFO_MEMBER(m_gfx_num,
 			code,
 			color,
 			flags);

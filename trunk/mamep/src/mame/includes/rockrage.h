@@ -18,7 +18,9 @@ public:
 		m_audiocpu(*this, "audiocpu"),
 		m_k007342(*this, "k007342"),
 		m_k007420(*this, "k007420"),
-		m_vlm(*this, "vlm") { }
+		m_vlm(*this, "vlm"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_paletteram;
@@ -33,6 +35,9 @@ public:
 	required_device<k007342_device> m_k007342;
 	required_device<k007420_device> m_k007420;
 	required_device<vlm5030_device> m_vlm;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
+
 	DECLARE_WRITE8_MEMBER(rockrage_bankswitch_w);
 	DECLARE_WRITE8_MEMBER(rockrage_sh_irqtrigger_w);
 	DECLARE_WRITE8_MEMBER(rockrage_vreg_w);
@@ -40,11 +45,11 @@ public:
 	DECLARE_WRITE8_MEMBER(rockrage_speech_w);
 	virtual void machine_start();
 	virtual void machine_reset();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(rockrage);
 	UINT32 screen_update_rockrage(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(rockrage_interrupt);
-};
+	void set_pens();
+	K007342_CALLBACK_MEMBER(rockrage_tile_callback);
+	K007420_CALLBACK_MEMBER(rockrage_sprite_callback);
 
-/*----------- defined in video/rockrage.c -----------*/
-void rockrage_tile_callback(running_machine &machine, int layer, int bank, int *code, int *color, int *flags);
-void rockrage_sprite_callback(running_machine &machine, int *code, int *color);
+};

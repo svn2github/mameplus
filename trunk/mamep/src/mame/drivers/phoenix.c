@@ -460,11 +460,12 @@ static MACHINE_CONFIG_START( phoenix, phoenix_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(phoenix_state, screen_update_phoenix)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(phoenix)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", phoenix)
+	MCFG_PALETTE_ADD("palette", 256)
 
-	MCFG_PALETTE_INIT_OVERRIDE(phoenix_state,phoenix)
+	MCFG_PALETTE_INIT_OWNER(phoenix_state,phoenix)
 	MCFG_VIDEO_START_OVERRIDE(phoenix_state,phoenix)
 
 	/* sound hardware */
@@ -490,9 +491,10 @@ static MACHINE_CONFIG_DERIVED( pleiads, phoenix )
 	MCFG_CPU_PROGRAM_MAP(pleiads_memory_map)
 
 	/* video hardware */
-	MCFG_GFXDECODE(pleiads)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", pleiads)
 
-	MCFG_PALETTE_INIT_OVERRIDE(phoenix_state,pleiads)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_INIT_OWNER(phoenix_state,pleiads)
 
 	/* sound hardware */
 	MCFG_TMS36XX_REPLACE("tms", 247)
@@ -526,11 +528,12 @@ static MACHINE_CONFIG_START( survival, phoenix_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(phoenix_state, screen_update_phoenix)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(phoenix)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", phoenix)
+	MCFG_PALETTE_ADD("palette", 256)
 
-	MCFG_PALETTE_INIT_OVERRIDE(phoenix_state,survival)
+	MCFG_PALETTE_INIT_OWNER(phoenix_state,survival)
 	MCFG_VIDEO_START_OVERRIDE(phoenix_state,phoenix)
 
 	/* sound hardware */

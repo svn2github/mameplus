@@ -504,22 +504,32 @@ static MACHINE_CONFIG_START( dassault, dassault_state )
 	MCFG_SCREEN_UPDATE_DRIVER(dassault_state, screen_update_dassault)
 
 
-	MCFG_GFXDECODE(dassault)
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dassault)
+	MCFG_PALETTE_ADD("palette", 4096)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram2")
 
 	MCFG_DECOCOMN_ADD("deco_common")
+	MCFG_DECOCOMN_PALETTE("palette")
 
 	MCFG_DECO16IC_ADD("tilegen1", dassault_deco16ic_tilegen1_intf)
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
+
 	MCFG_DECO16IC_ADD("tilegen2", dassault_deco16ic_tilegen2_intf)
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen1", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen2", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 4);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
 
 	/* sound hardware */
@@ -961,7 +971,7 @@ DRIVER_INIT_MEMBER(dassault_state,dassault)
 {
 	const UINT8 *src = memregion("gfx1")->base();
 	UINT8 *dst = memregion("gfx2")->base();
-	UINT8 *tmp = auto_alloc_array(machine(), UINT8, 0x80000);
+	dynamic_buffer tmp(0x80000);
 
 	/* Playfield 4 also has access to the char graphics, make things easier
 	by just copying the chars to both banks (if I just used a different gfx
@@ -970,15 +980,13 @@ DRIVER_INIT_MEMBER(dassault_state,dassault)
 	memcpy(dst + 0x090000, tmp + 0x00000, 0x80000);
 	memcpy(dst + 0x080000, src + 0x00000, 0x10000);
 	memcpy(dst + 0x110000, src + 0x10000, 0x10000);
-
-	auto_free(machine(), tmp);
 }
 
 DRIVER_INIT_MEMBER(dassault_state,thndzone)
 {
 	const UINT8 *src = memregion("gfx1")->base();
 	UINT8 *dst = memregion("gfx2")->base();
-	UINT8 *tmp = auto_alloc_array(machine(), UINT8, 0x80000);
+	dynamic_buffer tmp(0x80000);
 
 	/* Playfield 4 also has access to the char graphics, make things easier
 	by just copying the chars to both banks (if I just used a different gfx
@@ -987,8 +995,6 @@ DRIVER_INIT_MEMBER(dassault_state,thndzone)
 	memcpy(dst + 0x090000, tmp + 0x00000, 0x80000);
 	memcpy(dst + 0x080000, src + 0x00000, 0x10000);
 	memcpy(dst + 0x110000, src + 0x10000, 0x10000);
-
-	auto_free(machine(), tmp);
 }
 
 /**********************************************************************************/

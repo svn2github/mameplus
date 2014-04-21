@@ -16,7 +16,9 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_mcu(*this, "mcu"),
 		m_bmcu(*this, "bmcu"),
-		m_msm(*this, "msm") { }
+		m_msm(*this, "msm"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -69,6 +71,8 @@ public:
 	optional_device<cpu_device> m_mcu;
 	optional_device<buggychl_mcu_device> m_bmcu;
 	required_device<msm5232_device> m_msm;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	DECLARE_WRITE8_MEMBER(sound_command_w);
 	DECLARE_WRITE8_MEMBER(nmi_disable_w);
@@ -101,7 +105,7 @@ public:
 	DECLARE_DRIVER_INIT(40love);
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(fortyl);
 	DECLARE_MACHINE_START(40love);
 	DECLARE_MACHINE_RESET(40love);
 	DECLARE_MACHINE_START(undoukai);

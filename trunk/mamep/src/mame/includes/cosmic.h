@@ -20,7 +20,10 @@ public:
 		m_spriteram(*this, "spriteram"),
 		m_samples(*this, "samples"),
 		m_dac(*this, "dac"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -88,4 +91,7 @@ public:
 	void devzone_draw_grid( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void nomnlnd_draw_background( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect );
 	required_device<cpu_device> m_maincpu;
+	optional_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };

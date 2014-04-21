@@ -10,8 +10,10 @@ Ernesto Corvi & Mariusz Wojcieszek
 #ifndef __AMIGA_H__
 #define __AMIGA_H__
 
+#include "bus/centronics/ctronics.h"
 #include "machine/6526cia.h"
 #include "machine/amigafdc.h"
+#include "machine/msm6242.h"
 #include "cpu/m68000/m68000.h"
 
 
@@ -388,7 +390,9 @@ public:
 			m_maincpu(*this, "maincpu"), /* accelerator cards may present an interesting challenge because the maincpu will be the one on the card instead */
 			m_cia_0(*this, "cia_0"),
 			m_cia_1(*this, "cia_1"),
+			m_centronics(*this, "centronics"),
 			m_sound(*this, "amiga"),
+			m_rtc(*this, "rtc"),
 			m_fdc(*this, "fdc"),
 			m_chip_ram(*this, "chip_ram", 0),
 			m_custom_regs(*this, "custom_regs", 0),
@@ -399,14 +403,18 @@ public:
 			m_pot1dat_port(*this, "POT1DAT"),
 			m_p1joy_port(*this, "P1JOY"),
 			m_p2joy_port(*this, "P2JOY"),
-			m_bank1(*this, "bank1")
+			m_bank1(*this, "bank1"),
+			m_screen(*this, "screen"),
+			m_palette(*this, "palette")
 
 	{ }
 
 	required_device<m68000_base_device> m_maincpu;
 	required_device<legacy_mos6526_device> m_cia_0;
 	required_device<legacy_mos6526_device> m_cia_1;
+	optional_device<centronics_device> m_centronics;
 	required_device<amiga_sound_device> m_sound;
+	optional_device<msm6242_device> m_rtc;
 	optional_device<amiga_fdc> m_fdc;
 	required_shared_ptr<UINT16> m_chip_ram;
 	UINT16 (*m_chip_ram_r)(amiga_state *state, offs_t offset);
@@ -421,6 +429,9 @@ public:
 	optional_ioport m_p1joy_port;
 	optional_ioport m_p2joy_port;
 	optional_memory_bank m_bank1;
+
+	required_device<screen_device> m_screen;
+	optional_device<palette_device> m_palette;
 
 	address_space* m_maincpu_program_space;
 
@@ -452,7 +463,7 @@ public:
 
 	/* playfield states */
 	int m_last_scanline;
-	int m_ham_color;
+	rgb_t m_ham_color;
 
 	/* misc states */
 	UINT16 m_genlock_color;
@@ -462,7 +473,7 @@ public:
 
 	/* aga */
 	int m_aga_diwhigh_written;
-	pen_t m_aga_palette[256];
+	rgb_t m_aga_palette[256];
 	UINT64 m_aga_bpldat[8];
 	UINT16 m_aga_sprdata[8][4];
 	UINT16 m_aga_sprdatb[8][4];
@@ -486,8 +497,17 @@ public:
 	TIMER_CALLBACK_MEMBER(finish_serial_write);
 	DECLARE_WRITE_LINE_MEMBER(amiga_cia_0_irq);
 	DECLARE_WRITE_LINE_MEMBER(amiga_cia_1_irq);
+	DECLARE_READ8_MEMBER( amiga_cia_0_portA_r );
+	DECLARE_WRITE8_MEMBER( amiga_cia_0_portA_w );
 
+	DECLARE_READ16_MEMBER( amiga_clock_r );
+	DECLARE_WRITE16_MEMBER( amiga_clock_w );
 
+	DECLARE_READ8_MEMBER(amiga_cia_1_porta_r);
+	DECLARE_WRITE_LINE_MEMBER( write_centronics_ack );
+	DECLARE_WRITE_LINE_MEMBER( write_centronics_busy );
+	DECLARE_WRITE_LINE_MEMBER( write_centronics_perror );
+	DECLARE_WRITE_LINE_MEMBER( write_centronics_select );
 
 	DECLARE_READ16_MEMBER( amiga_custom_r );
 	DECLARE_WRITE16_MEMBER( amiga_custom_w );
@@ -502,6 +522,14 @@ public:
 	DECLARE_READ16_MEMBER( amiga_ar23_mode_r );
 	DECLARE_WRITE16_MEMBER( amiga_ar23_mode_w );
 	void amiga_ar23_init( running_machine &machine, int ar3 );
+
+	DECLARE_READ8_MEMBER( amigacd_tpi6525_portc_r );
+	DECLARE_WRITE8_MEMBER( amigacd_tpi6525_portb_w );
+	DECLARE_WRITE_LINE_MEMBER( amigacd_tpi6525_irq );
+
+	int m_centronics_busy;
+	int m_centronics_perror;
+	int m_centronics_select;
 
 protected:
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);

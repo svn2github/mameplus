@@ -119,7 +119,9 @@ class vpoker_state : public driver_device
 public:
 	vpoker_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	UINT8 *m_videoram;
 	UINT8 m_blit_ram[8];
@@ -127,9 +129,11 @@ public:
 	DECLARE_WRITE8_MEMBER(blitter_w);
 	DECLARE_WRITE_LINE_MEMBER(ptm_irq);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(vpoker);
 	UINT32 screen_update_vpoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -141,7 +145,7 @@ void vpoker_state::video_start()
 UINT32 vpoker_state::screen_update_vpoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	UINT8 *videoram = m_videoram;
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	int count = 0x0000;
 
 	int y,x;
@@ -152,7 +156,7 @@ UINT32 vpoker_state::screen_update_vpoker(screen_device &screen, bitmap_ind16 &b
 		{
 			int tile = videoram[count];
 			//int colour = tile>>12;
-			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*16,y*16);
+			gfx->opaque(bitmap,cliprect,tile,0,0,0,x*16,y*16);
 
 			count++;
 		}
@@ -628,7 +632,7 @@ static GFXDECODE_START( vpoker )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,     0, 1 )
 GFXDECODE_END
 
-void vpoker_state::palette_init()
+PALETTE_INIT_MEMBER(vpoker_state, vpoker)
 {
 	int i;
 
@@ -636,9 +640,9 @@ void vpoker_state::palette_init()
 	{
 		rgb_t color;
 
-		color = MAKE_RGB(pal1bit((i & 4) >> 2),pal1bit(i & 1),pal1bit((i & 2) >> 1));
+		color = rgb_t(pal1bit((i & 4) >> 2),pal1bit(i & 1),pal1bit((i & 2) >> 1));
 
-		palette_set_color(machine(), i, color);
+		palette.set_pen_color(i, color);
 	}
 }
 
@@ -670,10 +674,11 @@ static MACHINE_CONFIG_START( vpoker, vpoker_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 480-1, 0*8, 240-1)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(vpoker_state, screen_update_vpoker)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(vpoker)
-	MCFG_PALETTE_LENGTH(8)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", vpoker)
+	MCFG_PALETTE_ADD("palette", 8)
+	MCFG_PALETTE_INIT_OWNER(vpoker_state, vpoker)
 
 	/* 6840 PTM */
 	MCFG_PTM6840_ADD("6840ptm", ptm_intf)

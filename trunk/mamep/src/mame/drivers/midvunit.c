@@ -1019,11 +1019,12 @@ static MACHINE_CONFIG_START( midvcommon, midvunit_state )
 	MCFG_TIMER_ADD_NONE("timer1")
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(32768)
+	MCFG_PALETTE_ADD("palette", 32768)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MIDVUNIT_VIDEO_CLOCK/2, 666, 0, 512, 432, 0, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(midvunit_state, screen_update_midvunit)
+	MCFG_SCREEN_PALETTE("palette")
 
 MACHINE_CONFIG_END
 

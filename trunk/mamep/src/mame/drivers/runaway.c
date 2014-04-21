@@ -359,9 +359,10 @@ static MACHINE_CONFIG_START( runaway, runaway_state )
 	MCFG_SCREEN_SIZE(256, 263)
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
 	MCFG_SCREEN_UPDATE_DRIVER(runaway_state, screen_update_runaway)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(runaway)
-	MCFG_PALETTE_LENGTH(16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", runaway)
+	MCFG_PALETTE_ADD("palette", 16)
 
 
 	/* sound hardware */
@@ -382,7 +383,7 @@ static MACHINE_CONFIG_DERIVED( qwak, runaway )
 	/* basic machine hardware */
 
 	/* video hardware */
-	MCFG_GFXDECODE(qwak)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", qwak)
 
 	MCFG_VIDEO_START_OVERRIDE(runaway_state,qwak)
 	MCFG_SCREEN_MODIFY("screen")

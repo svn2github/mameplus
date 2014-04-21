@@ -109,9 +109,9 @@ WRITE8_MEMBER(tbowl_state::tbowl_bg2yscroll_hi)
 
 void tbowl_state::video_start()
 {
-	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tbowl_state::get_tx_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tbowl_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS, 16, 16,128,32);
-	m_bg2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tbowl_state::get_bg2_tile_info),this),TILEMAP_SCAN_ROWS, 16, 16,128,32);
+	m_tx_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tbowl_state::get_tx_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tbowl_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS, 16, 16,128,32);
+	m_bg2_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tbowl_state::get_bg2_tile_info),this),TILEMAP_SCAN_ROWS, 16, 16,128,32);
 
 	m_tx_tilemap->set_transparent_pen(0);
 	m_bg_tilemap->set_transparent_pen(0);
@@ -162,28 +162,28 @@ void tbowl_state::tbowl_draw_sprites(bitmap_ind16 &bitmap,const rectangle &clipr
 
 					sx -= xscroll;
 
-					drawgfx_transpen(bitmap,cliprect,machine().gfx[3],
+					m_gfxdecode->gfx(3)->transpen(bitmap,cliprect,
 							code + layout[y][x],
 							color,
 							flipx,flipy,
 							sx,sy,0 );
 
 					/* wraparound */
-					drawgfx_transpen(bitmap,cliprect,machine().gfx[3],
+					m_gfxdecode->gfx(3)->transpen(bitmap,cliprect,
 							code + layout[y][x],
 							color,
 							flipx,flipy,
 							sx,sy-0x200,0 );
 
 					/* wraparound */
-					drawgfx_transpen(bitmap,cliprect,machine().gfx[3],
+					m_gfxdecode->gfx(3)->transpen(bitmap,cliprect,
 							code + layout[y][x],
 							color,
 							flipx,flipy,
 							sx-0x400,sy,0 );
 
 					/* wraparound */
-					drawgfx_transpen(bitmap,cliprect,machine().gfx[3],
+					m_gfxdecode->gfx(3)->transpen(bitmap,cliprect,
 							code + layout[y][x],
 							color,
 							flipx,flipy,

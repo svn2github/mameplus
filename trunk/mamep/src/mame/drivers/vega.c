@@ -104,12 +104,16 @@ public:
 	m_maincpu(*this, "maincpu"),
 	m_i8255(*this, "ppi8255"),
 	m_ins8154(*this, "ins8154"),
-	m_ay8910(*this, "ay8910") {}
+	m_ay8910(*this, "ay8910"),
+	m_gfxdecode(*this, "gfxdecode"),
+	m_palette(*this, "palette") {}
 
 	required_device<cpu_device>     m_maincpu;
 	required_device<i8255_device>   m_i8255;
 	required_device<ins8154_device> m_ins8154;
 	required_device<ay8910_device>  m_ay8910;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	int m_p2_data;
 	int m_ext_offset_w;
@@ -155,7 +159,7 @@ public:
 
 	virtual void machine_start();
 	virtual void machine_reset();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(vega);
 	UINT32 screen_update_vega(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
@@ -479,13 +483,13 @@ INPUT_PORTS_END
 
 
 
-void vega_state::palette_init()
+PALETTE_INIT_MEMBER(vega_state, vega)
 {
 	int i;
 	for(i=0;i<8;++i)
 	{
-		palette_set_color( machine(),2*i, MAKE_RGB(0x00, 0x00, 0x00) );
-		palette_set_color( machine(),2*i+1, MAKE_RGB( (i&1)?0xff:0x00, (i&2)?0xff:0x00, (i&4)?0xff:0x00) );
+		palette.set_pen_color( 2*i, rgb_t(0x00, 0x00, 0x00) );
+		palette.set_pen_color( 2*i+1, rgb_t( (i&1)?0xff:0x00, (i&2)?0xff:0x00, (i&4)?0xff:0x00) );
 	}
 }
 
@@ -529,7 +533,7 @@ static void draw_tilemap(vega_state *state, screen_device& screen, bitmap_ind16&
 				{
 					//for(int x=0;x<4;++x)
 					{
-						drawgfx_transpen(bitmap, cliprect,  screen.machine().gfx[1], num, 0, 1,flip?1:0,  x*4+x0-offset_x, (flip?(3-y):y)*8+y0-offset_y, 0);
+						state->m_gfxdecode->gfx(1)->transpen(bitmap,cliprect, num, 0, 1,flip?1:0,  x*4+x0-offset_x, (flip?(3-y):y)*8+y0-offset_y, 0);
 						++num;
 					}
 				}
@@ -578,7 +582,7 @@ UINT32 vega_state::screen_update_vega(screen_device &screen, bitmap_ind16 &bitma
 
 			//  if(color==0) color=0xf;
 
-				drawgfx_transpen(bitmap, cliprect,  machine().gfx[0], character, color, 0, 0, x*7, y*10,0);
+					m_gfxdecode->gfx(0)->transpen(bitmap,cliprect, character, color, 0, 0, x*7, y*10,0);
 
 				++idx;
 			}
@@ -599,7 +603,7 @@ UINT32 vega_state::screen_update_vega(screen_device &screen, bitmap_ind16 &bitma
 			{
 				//for(int x=0;x<4;++x)
 				{
-					drawgfx_transpen(bitmap, cliprect,  machine().gfx[2], num, 0, 1, flip?1:0, x*4+x0, (flip?(3-y):y)*8+y0, 0);
+						m_gfxdecode->gfx(2)->transpen(bitmap,cliprect, num, 0, 1, flip?1:0, x*4+x0, (flip?(3-y):y)*8+y0, 0);
 					++num;
 				}
 			}
@@ -639,7 +643,7 @@ UINT32 vega_state::screen_update_vega(screen_device &screen, bitmap_ind16 &bitma
 
 				for(int y=0;y<4;++y)
 				{
-					drawgfx_transpen(bitmap, cliprect,  machine().gfx[3], strip_num, 0, !xor_line, 0, x*4+x0, y*8+y0, 0);
+						m_gfxdecode->gfx(3)->transpen(bitmap,cliprect, strip_num, 0, !xor_line, 0, x*4+x0, y*8+y0, 0);
 					++strip_num;
 				}
 			}
@@ -803,16 +807,6 @@ static I8255A_INTERFACE( ppi8255_intf )
 };
 
 
-static const ins8154_interface ins8154_intf =
-{
-	DEVCB_DRIVER_MEMBER(vega_state, ins8154_pa_r),
-	DEVCB_DRIVER_MEMBER(vega_state, ins8154_pa_w),
-	DEVCB_DRIVER_MEMBER(vega_state, ins8154_pb_r),
-	DEVCB_DRIVER_MEMBER(vega_state, ins8154_pb_w),
-	DEVCB_NULL
-};
-
-
 static const ay8910_interface ay8910_inf =
 {
 	AY8910_LEGACY_OUTPUT,
@@ -839,7 +833,11 @@ static MACHINE_CONFIG_START( vega, vega_state )
 
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
-	MCFG_INS8154_ADD( "ins8154", ins8154_intf)
+	MCFG_DEVICE_ADD( "ins8154", INS8154, 0 )
+	MCFG_INS8154_IN_A_CB(READ8(vega_state, ins8154_pa_r))
+	MCFG_INS8154_OUT_A_CB(WRITE8(vega_state, ins8154_pa_w))
+	MCFG_INS8154_IN_B_CB(READ8(vega_state, ins8154_pb_r))
+	MCFG_INS8154_OUT_B_CB(WRITE8(vega_state, ins8154_pb_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -847,12 +845,13 @@ static MACHINE_CONFIG_START( vega, vega_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 280, 0*8, 239)
-
-	MCFG_PALETTE_LENGTH(0x100)
-
-	MCFG_GFXDECODE(test_decode)
-
 	MCFG_SCREEN_UPDATE_DRIVER(vega_state, screen_update_vega)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_PALETTE_ADD("palette", 0x100)
+	MCFG_PALETTE_INIT_OWNER(vega_state, vega)
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", test_decode)
 
 	/* sound hardware */
 

@@ -358,6 +358,7 @@ static const ay8910_interface ay8910_intf =
 };
 
 
+#if 0
 /************************
 *    CRTC Interface    *
 ************************/
@@ -365,6 +366,7 @@ static const ay8910_interface ay8910_intf =
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -375,6 +377,7 @@ static MC6845_INTERFACE( mc6845_intf )
 	DEVCB_NULL, /* VSYNC callback */
 	NULL        /* update address callback */
 };
+#endif
 
 
 /**************************
@@ -397,11 +400,12 @@ static MACHINE_CONFIG_START( 4roses, _4roses_state )
 	MCFG_SCREEN_SIZE((124+1)*4, (30+1)*8)               /* guess. taken from funworld games */
 	MCFG_SCREEN_VISIBLE_AREA(0*4, 96*4-1, 0*8, 29*8-1)  /* guess. taken from funworld games */
 	MCFG_SCREEN_UPDATE_DRIVER(_4roses_state, screen_update_funworld)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(4roses)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 4roses)
 
-	MCFG_PALETTE_LENGTH(0x1000)
-	MCFG_PALETTE_INIT_OVERRIDE(_4roses_state,funworld)
+	MCFG_PALETTE_ADD("palette", 0x1000)
+	MCFG_PALETTE_INIT_OWNER(_4roses_state,funworld)
 	MCFG_VIDEO_START_OVERRIDE(_4roses_state,funworld)
 
 //  MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK/8, mc6845_intf) /* 2MHz, guess */

@@ -331,7 +331,7 @@ static ADDRESS_MAP_START( bbusters_map, AS_PROGRAM, 16, bbusters_state )
 	AM_RANGE(0x0b4000, 0x0b5fff) AM_RAM     /* service mode */
 	AM_RANGE(0x0b8000, 0x0b8003) AM_WRITEONLY AM_SHARE("pf1_scroll_data")
 	AM_RANGE(0x0b8008, 0x0b800b) AM_WRITEONLY AM_SHARE("pf2_scroll_data")
-	AM_RANGE(0x0d0000, 0x0d0fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0d0000, 0x0d0fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READ_PORT("COINS")  /* Coins */
 	AM_RANGE(0x0e0002, 0x0e0003) AM_READ_PORT("IN0")    /* Player 1 & 2 */
 	AM_RANGE(0x0e0004, 0x0e0005) AM_READ_PORT("IN1")    /* Player 3 */
@@ -358,7 +358,7 @@ static ADDRESS_MAP_START( mechatt_map, AS_PROGRAM, 16, bbusters_state )
 	AM_RANGE(0x0b8000, 0x0b8003) AM_WRITEONLY AM_SHARE("pf1_scroll_data")
 	AM_RANGE(0x0c0000, 0x0c3fff) AM_RAM_WRITE(bbusters_pf2_w) AM_SHARE("pf2_data")
 	AM_RANGE(0x0c8000, 0x0c8003) AM_WRITEONLY AM_SHARE("pf2_scroll_data")
-	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READ_PORT("IN0")
 	AM_RANGE(0x0e0002, 0x0e0003) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0e0004, 0x0e0007) AM_READ(mechatt_gun_r)
@@ -680,9 +680,11 @@ static MACHINE_CONFIG_START( bbusters, bbusters_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(bbusters_state, screen_update_bbuster)
 	MCFG_SCREEN_VBLANK_DRIVER(bbusters_state, screen_eof_bbuster)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bbusters)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bbusters)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBxxxx)
 
 	MCFG_VIDEO_START_OVERRIDE(bbusters_state,bbuster)
 
@@ -718,9 +720,11 @@ static MACHINE_CONFIG_START( mechatt, bbusters_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(bbusters_state, screen_update_mechatt)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(mechatt)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", mechatt)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBxxxx)
 
 	MCFG_VIDEO_START_OVERRIDE(bbusters_state,mechatt)
 

@@ -102,6 +102,12 @@ MACHINES += SERFLASH
 MACHINES += RTC9701
 
 #-------------------------------------------------
+# specify available bus cores
+#-------------------------------------------------
+BUSES += CENTRONICS
+
+
+#-------------------------------------------------
 # This is the list of files that are necessary
 # for building all of the drivers referenced
 # in tiny.c

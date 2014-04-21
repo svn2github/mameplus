@@ -117,6 +117,8 @@
 #include "machine/nvram.h"
 #include "includes/goldstar.h"
 
+#include "goldstar.lh"
+#include "cherryb3.lh"
 #include "lucky8.lh"
 #include "bingowng.lh"
 
@@ -134,6 +136,49 @@ READ8_MEMBER(goldstar_state::protection_r)
 	m_dataoffset %= 4;
 	return data[m_dataoffset++];
 }
+
+WRITE8_MEMBER(goldstar_state::goldstar_lamps_w)
+{
+/*  bits
+  7654 3210
+  ---- ---x  Bet Red / Card 2.
+  ---- --x-  Stop 3 / Small / Info / Card 1
+  ---- -x--  Bet Blue / Double / Card 3
+  ---- x---  Stop 1 / Take
+  ---x ----  Stop 2 / Big / Bonus
+  --x- ----  Start / Stop All / Card 4
+*/
+	output_set_lamp_value(0, (data) & 1);       /* Bet Red / Card 2 */
+	output_set_lamp_value(1, (data >> 1) & 1);  /* Stop 3 / Small / Info / Card 1 */
+	output_set_lamp_value(2, (data >> 2) & 1);  /* Bet Blue / Double / Card 3 */
+	output_set_lamp_value(3, (data >> 3) & 1);  /* Stop 1 / Take */
+	output_set_lamp_value(4, (data >> 4) & 1);  /* Stop 2 / Big / Bonus */
+	output_set_lamp_value(5, (data >> 5) & 1);  /* Start / Stop All / Card 4 */
+
+//  popmessage("lamps: %02X", data);
+}
+
+WRITE8_MEMBER(goldstar_state::cb3_lamps_w)
+{
+/*  bits
+  7654 3210
+  ---- ---x  Stop 2 / Big
+  ---- --x-  Blue Bet / Double
+  ---- -x--  Stop 1 / Take
+  ---- x---  Red Bet
+  ---x ----  Stop 3 / Small / Info
+  --x- ----  Start / Stop All
+*/
+	output_set_lamp_value(0, (data) & 1);       /* Stop 2 / Big */
+	output_set_lamp_value(1, (data >> 1) & 1);  /* Blue Bet / Double */
+	output_set_lamp_value(2, (data >> 2) & 1);  /* Stop 1 / Take */
+	output_set_lamp_value(3, (data >> 3) & 1);  /* Red Bet */
+	output_set_lamp_value(4, (data >> 4) & 1);  /* Stop 3 / Small / Info */
+	output_set_lamp_value(5, (data >> 5) & 1);  /* Start / Stop All */
+
+//  popmessage("lamps: %02X", data);
+}
+
 
 static ADDRESS_MAP_START( goldstar_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0xb7ff) AM_ROM
@@ -160,9 +205,10 @@ static ADDRESS_MAP_START( goldstar_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xf820, 0xf820) AM_READ_PORT("DSW2")
 	AM_RANGE(0xf830, 0xf830) AM_DEVREADWRITE("aysnd", ay8910_device, data_r, data_w)
 	AM_RANGE(0xf840, 0xf840) AM_DEVWRITE("aysnd", ay8910_device, address_w)
+	AM_RANGE(0xf900, 0xf900) AM_WRITE(goldstar_lamps_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(goldstar_fa00_w)
 	AM_RANGE(0xfb00, 0xfb00) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xfd00, 0xfdff) AM_RAM_WRITE(paletteram_BBGGGRRR_byte_w) AM_SHARE("paletteram")
+	AM_RANGE(0xfd00, 0xfdff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xfe00, 0xfe00) AM_READWRITE(protection_r,protection_w)
 ADDRESS_MAP_END
 
@@ -198,15 +244,15 @@ static ADDRESS_MAP_START( ncb3_map, AS_PROGRAM, 8, goldstar_state )
 
 	AM_RANGE(0xf830, 0xf830) AM_DEVREADWRITE("aysnd", ay8910_device, data_r, data_w)
 	AM_RANGE(0xf840, 0xf840) AM_DEVWRITE("aysnd", ay8910_device, address_w)
-//  AM_RANGE(0xf850, 0xf850) AM_WRITE(ncb3_p1_flip_w)   // need flip?
-//  AM_RANGE(0xf860, 0xf860) AM_WRITE(ncb3_p2_flip_w)   // need flip?
+	AM_RANGE(0xf850, 0xf850) AM_WRITE(cb3_lamps_w)      /* Control Set 1 lamps */
+	AM_RANGE(0xf860, 0xf860) AM_WRITE(cb3_lamps_w)      /* Control Set 2 lamps */
 	AM_RANGE(0xf870, 0xf870) AM_DEVWRITE("snsnd", sn76489_device, write)    /* guess... device is initialized, but doesn't seems to be used.*/
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ncb3_readwriteport, AS_IO, 8, goldstar_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-//  AM_RANGE(0x00, 0x00) AM_READ(ncb3_unkread_r)    // read from 0x00 when controls set1 is used...
-//  AM_RANGE(0x02, 0x02) AM_READ(ncb3_unkread_r)    // read from 0x02 when controls set2 is used...
+//  AM_RANGE(0x00, 0x00) AM_READ(ncb3_unkread_r)    // read from 0x00 when controls set 1 is used...
+//  AM_RANGE(0x02, 0x02) AM_READ(ncb3_unkread_r)    // read from 0x02 when controls set 2 is used...
 //  AM_RANGE(0x06, 0x06) AM_READ(ncb3_unkread_r)    // unknown...
 //  AM_RANGE(0x08, 0x08) AM_READ(ncb3_unkread_r)    // unknown...
 	AM_RANGE(0x10, 0x10) AM_READ_PORT("DSW5")   /* confirmed for ncb3 */
@@ -216,33 +262,88 @@ ADDRESS_MAP_END
 
 /* ncb3 findings...
 
+  c101-c102 = unknown writes...
   f800-f803 = 8255_1 (ctrl=9b) ; portA, B & C (input)
   f810-f813 = 8255_2 (ctrl=9b) ; portA, B & C (input)
   f820-f823 = 8255_3 (ctrl=90) ; portA (input); ports B & C (output)
   f830      = AY8910 RW
   f840      = AY8910 ctrl
-  f850      = Unknown
+  f850      = control set 1 lamps
+  f860      = control set 2 lamps
   f870      = PSG (init writes)
 
 
   I/O
 
   00 = RW  (chrygld, ncb3 in ctrl set1)
-  02 = RW  (ncb3 in ctrl set2)
-  06 = RW
+  02 = R  (W - ncb3 in ctrl set2)
+  06 = W
   08 = RW
   81 =  W
 
   00-0f = initial seq. writes
 
-  Controls Set1 = write to f850 (0x1a), read from 0002.
-  Controls Set2 = write to f860 (0x1a), read from 0000.
+  Controls Set 1 = write lamps to f850, read from 0002.
+  Controls Set 2 = write lamps to f860, read from 0000.
 
-  Controls Set2 is using reels stop buttons from Controls Set1.
+  Controls Set 2 is using reels stop buttons from Controls Set 1.
+  So, seems that control set 2 was meant for non-stop reels.
 
 */
 
 
+static ADDRESS_MAP_START( wcherry_map, AS_PROGRAM, 8, goldstar_state )
+	AM_RANGE(0x0000, 0xb7ff) AM_ROM
+	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("nvram")
+	AM_RANGE(0xc000, 0xc7ff) AM_ROM
+
+	/* Video RAM and reels stuff are there just as placeholder, and obviously in wrong offset */
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w ) AM_SHARE("fg_vidram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w ) AM_SHARE("fg_atrram")
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_SHARE("reel1_ram")
+	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_SHARE("reel2_ram")
+	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_SHARE("reel3_ram")
+	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xf0c0, 0xf0ff) AM_RAM AM_SHARE("reel3_scroll")
+
+	/* Not really PPI's... They are emulated/simulated inside the CPLDs */
+	AM_RANGE(0xf600, 0xf603) AM_DEVREADWRITE("ppi8255_0", i8255_device, read, write)    /* Input Ports */
+	AM_RANGE(0xf610, 0xf613) AM_DEVREADWRITE("ppi8255_1", i8255_device, read, write)    /* Input Ports */
+	AM_RANGE(0xf620, 0xf623) AM_DEVREADWRITE("ppi8255_2", i8255_device, read, write)    /* Input/Output Ports */
+
+	AM_RANGE(0xf630, 0xf630) AM_DEVREADWRITE("aysnd", ay8910_device, data_r, data_w)
+	AM_RANGE(0xf640, 0xf640) AM_DEVWRITE("aysnd", ay8910_device, address_w)
+	AM_RANGE(0xf650, 0xf650) AM_WRITENOP    // AM_WRITE(output_w)  // unknown register: 0x3e
+	AM_RANGE(0xf660, 0xf660) AM_WRITENOP    // AM_WRITE(output_w)  // unknown register: 0x3e
+	AM_RANGE(0xf670, 0xf670) AM_DEVWRITE("snsnd", sn76489_device, write)    /* guess... device is initialized, but doesn't seems to be used.*/
+
+	AM_RANGE(0xf800, 0xffff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( wcherry_readwriteport, AS_IO, 8, goldstar_state )
+	ADDRESS_MAP_GLOBAL_MASK(0xff)
+	ADDRESS_MAP_END
+
+/* wcherry findings...
+
+  0000-bfff = ROM space.
+  b000-b7ff = NVRAM.
+  c000-c7ff = ROM space.
+
+  f600-f603 = 8255_1 (ctrl=9b) ; portA, B & C (input)
+  f610-f613 = 8255_2 (ctrl=9b) ; portA, B & C (input)
+  f620-f623 = 8255_3 (ctrl=90) ; portA (input); ports B & C (output)
+  f630      = AY8910 RW
+  f640      = AY8910 ctrl
+  f650      = Unknown. Seems a register. Writes 0x3e.
+  f660      = Unknown. Seems a register. Writes 0x3e.
+  f670      = PSG (init writes)
+
+
+  I/O
+
+*/
 
 
 WRITE8_MEMBER(goldstar_state::cm_outport1_w)
@@ -521,8 +622,8 @@ READ8_MEMBER(goldstar_state::unkch_unk_r)
 /* newer / more capable hw */
 static ADDRESS_MAP_START( unkch_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
-	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w) AM_SHARE("paletteram")
-	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
+	AM_RANGE(0xc000, 0xc1ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
+	AM_RANGE(0xc800, 0xc9ff) AM_RAM_DEVWRITE("palette", palette_device, write_ext) AM_SHARE("palette_ext")
 
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("nvram")
 
@@ -1613,13 +1714,13 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( goldstar )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )    // appear in the input test but seems that lack of functions.
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )    // appear in the input test but seems that lack of functions.
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_V) PORT_NAME("Bet Red / 2")
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SLOT_STOP3 ) PORT_NAME("Stop 3 / Small / 1 / Info")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SLOT_STOP3 ) PORT_CODE(KEYCODE_C) PORT_NAME("Stop 3 / Small / 1 / Info")
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_B) PORT_NAME("Bet Blue / D-UP / 3")
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SLOT_STOP1 ) PORT_NAME("Stop 1 / Take")
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SLOT_STOP2 ) PORT_NAME("Stop 2 / Big / Ticket")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SLOT_STOP1 ) PORT_CODE(KEYCODE_Z) PORT_NAME("Stop 1 / Take")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SLOT_STOP2 ) PORT_CODE(KEYCODE_X) PORT_NAME("Stop 2 / Big / Ticket")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_N) PORT_NAME("Start / Stop All / 4")
 
 	PORT_START("IN1")
@@ -1627,9 +1728,10 @@ static INPUT_PORTS_START( goldstar )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )    /* this is not a coin, not sure what it is */
-													/* maybe it's used to buy tickets. Will check soon. */
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	/* this is not a coin, not sure what it is */
+	/* maybe it's used to buy tickets. Will check soon. */
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_W) PORT_NAME("Collect")
 	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_F1) PORT_NAME("Statistics")
 
@@ -5595,6 +5697,31 @@ static const gfx_layout charlayout_chry10 =
 	32*8   /* every char takes 32 consecutive bytes */
 };
 
+
+static const gfx_layout charlayout_goldfrui =
+{
+	8,8,    /* 8*8 characters */
+	4096,    /* 4096 characters */
+	3,      /* 3 bits per pixel */
+	{ 2, 4, 6 }, /* the bitplanes are packed in one byte */
+	{ 0*8+0, 0*8+1, 2*8+0, 2*8+1, 1*8+0, 1*8+1, 3*8+0, 3*8+1 },
+	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
+	32*8   /* every char takes 32 consecutive bytes */
+};
+
+
+static const gfx_layout charlayout_cb3e =
+{
+	8,8,    /* 8*8 characters */
+	4096,    /* 4096 characters */
+	3,      /* 3 bits per pixel */
+	{ 2, 4, 6 }, /* the bitplanes are packed in one byte */
+	{ 2*8+0, 2*8+1, 3*8+0, 3*8+1, 0*8+0, 0*8+1, 1*8+0, 1*8+1 },
+	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
+	32*8   /* every char takes 32 consecutive bytes */
+};
+
+
 static const gfx_layout tilelayout =
 {
 	8,32,    /* 8*32 characters */
@@ -5638,6 +5765,19 @@ static const gfx_layout tilelayout_chry10 =
 	128*8   /* every char takes 128 consecutive bytes */
 };
 
+static const gfx_layout tilelayout_cb3e =
+{
+	8,32,    /* 8*32 characters */
+	256,    /* 256 tiles */
+	4,      /* 4 bits per pixel */
+	{ 0, 2, 4, 6 },
+	{ 2*8+0, 2*8+1,3*8+0, 3*8+1,  0, 1, 1*8+0, 1*8+1 },
+	{ 0*8, 4*8, 8*8, 12*8, 16*8, 20*8, 24*8, 28*8,
+			32*8, 36*8, 40*8, 44*8, 48*8, 52*8, 56*8, 60*8,
+			64*8, 68*8, 72*8, 76*8, 80*8, 84*8, 88*8, 92*8,
+			96*8, 100*8, 104*8, 108*8, 112*8, 116*8, 120*8, 124*8 },
+	128*8   /* every char takes 128 consecutive bytes */
+};
 
 
 static const gfx_layout tiles8x8x3_layout =
@@ -5797,6 +5937,11 @@ static GFXDECODE_START( ml )
 	GFXDECODE_ENTRY( "gfx2", 0x18000, tilelayout, 128,  8 )
 GFXDECODE_END
 
+static GFXDECODE_START( goldfrui )
+	GFXDECODE_ENTRY( "gfx1", 0, charlayout_goldfrui,   0, 16 )
+	GFXDECODE_ENTRY( "gfx2", 0, tilelayoutbl, 128,  8 )
+GFXDECODE_END
+
 static GFXDECODE_START( chry10 )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout_chry10,   0, 16 )
 	GFXDECODE_ENTRY( "gfx2", 0, tilelayout_chry10, 128,  8 )
@@ -5805,6 +5950,11 @@ GFXDECODE_END
 static GFXDECODE_START( cb3c )
 	GFXDECODE_ENTRY( "gfx1", 0, cb3c_tiles8x8_layout,   0, 16 )
 	GFXDECODE_ENTRY( "gfx2", 0, cb3c_tiles8x32_layout, 128,  8 )
+GFXDECODE_END
+
+static GFXDECODE_START( cb3e )
+	GFXDECODE_ENTRY( "gfx1", 0, charlayout_cb3e,   0, 16 )
+	GFXDECODE_ENTRY( "gfx2", 0, tilelayout_cb3e, 128,  8 )
 GFXDECODE_END
 
 static GFXDECODE_START( ncb3 )
@@ -6210,26 +6360,6 @@ static const ay8910_interface ladylinr_ay8910_config =
 };
 
 
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
-
-static const sn76496_config psg2_intf =
-{
-	DEVCB_NULL
-};
-
-static const sn76496_config psg3_intf =
-{
-	DEVCB_NULL
-};
-
-
 static MACHINE_CONFIG_START( goldstar, goldstar_state )
 
 	/* basic machine hardware */
@@ -6245,9 +6375,11 @@ static MACHINE_CONFIG_START( goldstar, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(goldstar)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", goldstar)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6279,9 +6411,11 @@ static MACHINE_CONFIG_START( goldstbl, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bl)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bl)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6312,9 +6446,84 @@ static MACHINE_CONFIG_START( moonlght, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ml)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ml)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
+	MCFG_NVRAM_ADD_1FILL("nvram")
+
+	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
+
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
+	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+
+	MCFG_OKIM6295_ADD("oki", OKI_CLOCK, OKIM6295_PIN7_HIGH) /* clock frequency & pin 7 not verified */
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_START( goldfrui, goldstar_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
+	MCFG_CPU_PROGRAM_MAP(goldstar_map)
+	MCFG_CPU_IO_MAP(goldstar_readport)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+//  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", goldfrui)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
+
+	MCFG_NVRAM_ADD_1FILL("nvram")
+
+	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
+
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
+	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+
+	MCFG_OKIM6295_ADD("oki", OKI_CLOCK, OKIM6295_PIN7_HIGH) /* clock frequency & pin 7 not verified */
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_START( super9, goldstar_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
+	MCFG_CPU_PROGRAM_MAP(goldstar_map)
+//  MCFG_CPU_PROGRAM_MAP(nfm_map)
+	MCFG_CPU_IO_MAP(goldstar_readport)
+//  MCFG_CPU_IO_MAP(unkch_portmap)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+//  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", goldstar)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6343,7 +6552,7 @@ PALETTE_INIT_MEMBER(goldstar_state,cm)
 
 		data = proms[0x000 + i] | (proms[0x100 + i] << 4);
 
-		palette_set_color_rgb(machine(), i, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
+		palette.set_pen_color(i, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
 	}
 }
 
@@ -6360,7 +6569,7 @@ PALETTE_INIT_MEMBER(goldstar_state,cmast91)
 		g = proms[0x100 + i] << 4;
 		r = proms[0x200 + i] << 4;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -6377,7 +6586,7 @@ PALETTE_INIT_MEMBER(goldstar_state,lucky8)
 	{
 		data = proms[0x000 + i] | (proms[0x100 + i] << 4);
 
-		palette_set_color_rgb(machine(), i, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
+		palette.set_pen_color(i, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
 	}
 
 	proms = memregion("proms2")->base();
@@ -6385,7 +6594,7 @@ PALETTE_INIT_MEMBER(goldstar_state,lucky8)
 	{
 		data = proms[i];
 
-		palette_set_color_rgb(machine(), i + 0x80, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
+		palette.set_pen_color(i + 0x80, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
 	}
 }
 
@@ -6410,10 +6619,11 @@ static MACHINE_CONFIG_START( chrygld, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(chry10)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", chry10)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6423,7 +6633,48 @@ static MACHINE_CONFIG_START( chrygld, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
+
+	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
+	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+MACHINE_CONFIG_END
+
+
+
+static MACHINE_CONFIG_START( cb3e, goldstar_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
+	MCFG_CPU_PROGRAM_MAP(ncb3_map)
+	MCFG_CPU_IO_MAP(ncb3_readwriteport)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
+
+	/* 3x 8255 */
+	MCFG_I8255A_ADD( "ppi8255_0", ncb3_ppi8255_0_intf )
+	MCFG_I8255A_ADD( "ppi8255_1", ncb3_ppi8255_1_intf )
+	MCFG_I8255A_ADD( "ppi8255_2", ncb3_ppi8255_2_intf )
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+//  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cb3e)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state, cm)
+	MCFG_NVRAM_ADD_1FILL("nvram")
+
+	MCFG_VIDEO_START_OVERRIDE(goldstar_state, goldstar)
+
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(ay8910_config)
@@ -6452,10 +6703,11 @@ static MACHINE_CONFIG_START( cb3c, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cb3c)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cb3c)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6465,7 +6717,6 @@ static MACHINE_CONFIG_START( cb3c, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(ay8910_config)
@@ -6493,10 +6744,11 @@ static MACHINE_CONFIG_START( ncb3, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ncb3)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ncb3)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
@@ -6507,12 +6759,53 @@ static MACHINE_CONFIG_START( ncb3, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_START( wcherry, goldstar_state )
+
+	/* basic machine hardware */
+	MCFG_CPU_ADD("maincpu", Z80, CPU_CLOCK)
+	MCFG_CPU_PROGRAM_MAP(wcherry_map)
+	MCFG_CPU_IO_MAP(wcherry_readwriteport)
+	MCFG_CPU_VBLANK_INT_DRIVER("screen", goldstar_state,  irq0_line_hold)
+
+	/* 3x 8255 */
+	MCFG_I8255A_ADD( "ppi8255_0", ncb3_ppi8255_0_intf )
+	MCFG_I8255A_ADD( "ppi8255_1", ncb3_ppi8255_1_intf )
+	MCFG_I8255A_ADD( "ppi8255_2", ncb3_ppi8255_2_intf )
+
+	/* video hardware */
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+//  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cb3e)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state, cm)
+	MCFG_NVRAM_ADD_1FILL("nvram")
+
+	MCFG_VIDEO_START_OVERRIDE(goldstar_state, goldstar)
+
+	/* sound hardware */
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+
+	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+
+	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
+	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+MACHINE_CONFIG_END
+
 
 
 static MACHINE_CONFIG_START( cm, goldstar_state )
@@ -6534,10 +6827,11 @@ static MACHINE_CONFIG_START( cm, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cmbitmap)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cmbitmap)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -6550,7 +6844,7 @@ static MACHINE_CONFIG_START( cm, goldstar_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cmasterc, cm )
-	MCFG_GFXDECODE(cmasterc)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", cmasterc)
 
 MACHINE_CONFIG_END
 
@@ -6574,10 +6868,11 @@ static MACHINE_CONFIG_START( cmnobmp, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cm)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cm)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -6609,10 +6904,11 @@ static MACHINE_CONFIG_START( cmast91, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_cmast91)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cmast91)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cmast91)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cmast91)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cmast91)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -6649,11 +6945,13 @@ static MACHINE_CONFIG_START( lucky8, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ncb3)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ncb3)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6663,7 +6961,6 @@ static MACHINE_CONFIG_START( lucky8, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
@@ -6689,11 +6986,12 @@ static MACHINE_CONFIG_START( bingowng, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_bingowng)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ncb3)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ncb3)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,bingowng)
@@ -6703,7 +7001,6 @@ static MACHINE_CONFIG_START( bingowng, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
@@ -6729,11 +7026,12 @@ static MACHINE_CONFIG_START( bingownga, goldstar_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_bingowng)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bingownga)       /* GFX Decode is the only difference with the parent machine */
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bingownga)       /* GFX Decode is the only difference with the parent machine */
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,bingowng)
@@ -6743,7 +7041,6 @@ static MACHINE_CONFIG_START( bingownga, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
@@ -6763,7 +7060,7 @@ PALETTE_INIT_MEMBER(goldstar_state,magodds)
 		g = proms[0x100 + i] << 4;
 		r = proms[0x200 + i] << 4;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -6787,10 +7084,11 @@ static MACHINE_CONFIG_START( magodds, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_magical)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,magodds)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(magodds)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", magodds)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,magodds)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,magical)
@@ -6800,7 +7098,6 @@ static MACHINE_CONFIG_START( magodds, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.00)  // shut up annoying whine
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
@@ -6829,10 +7126,11 @@ static MACHINE_CONFIG_START( kkotnoli, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ncb3)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ncb3)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
 
@@ -6841,7 +7139,6 @@ static MACHINE_CONFIG_START( kkotnoli, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 MACHINE_CONFIG_END
 
@@ -6865,10 +7162,11 @@ static MACHINE_CONFIG_START( ladylinr, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ncb3)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ncb3)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6878,7 +7176,6 @@ static MACHINE_CONFIG_START( ladylinr, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(ladylinr_ay8910_config)
@@ -6906,10 +7203,11 @@ static MACHINE_CONFIG_START( wcat3, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ncb3)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ncb3)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -6919,7 +7217,6 @@ static MACHINE_CONFIG_START( wcat3, goldstar_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
@@ -6948,10 +7245,11 @@ static MACHINE_CONFIG_START( amcoe1, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cm)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cm)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -6987,10 +7285,11 @@ static MACHINE_CONFIG_START( amcoe1a, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_amcoe1a)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cm)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cm)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -7026,10 +7325,11 @@ static MACHINE_CONFIG_START( amcoe2, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cm)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cm)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -7060,10 +7360,11 @@ static MACHINE_CONFIG_START( nfm, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(nfm)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", nfm)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -7091,9 +7392,11 @@ static MACHINE_CONFIG_START( unkch, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_unkch)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(unkch)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", unkch)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	//MCFG_NVRAM_HANDLER(goldstar)
 
@@ -7108,12 +7411,12 @@ static MACHINE_CONFIG_START( unkch, goldstar_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cherrys, ncb3 )
-	MCFG_GFXDECODE(cherrys)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", cherrys)
 
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cm97, ncb3 )
-	MCFG_GFXDECODE(cm97)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", cm97)
 
 MACHINE_CONFIG_END
 
@@ -7139,10 +7442,11 @@ static MACHINE_CONFIG_START( pkrmast, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(pkrmast)
-	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,cm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", pkrmast)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,cm)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,cherrym)
@@ -7175,10 +7479,11 @@ static MACHINE_CONFIG_START( megaline, goldstar_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(goldstar_state, screen_update_goldstar)
-	MCFG_PALETTE_INIT_OVERRIDE(goldstar_state,lucky8)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(megaline)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", megaline)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(goldstar_state,lucky8)
 //  MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_START_OVERRIDE(goldstar_state,goldstar)
@@ -7188,15 +7493,12 @@ static MACHINE_CONFIG_START( megaline, goldstar_state )
 
 	MCFG_SOUND_ADD("sn1", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("sn2", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg2_intf)
 
 	MCFG_SOUND_ADD("sn3", SN76489, PSG_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg3_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, AY_CLOCK)
 	MCFG_SOUND_CONFIG(lucky8_ay8910_config)
@@ -7239,6 +7541,7 @@ ROM_START( goldstbl )
 	ROM_REGION( 0x40000, "oki", 0 ) /* Audio ADPCM */
 	ROM_LOAD( "gs1-snd.bin",  0x0000, 0x20000, CRC(9d58960f) SHA1(c68edf95743e146398aabf6b9617d18e1f9bf25b) )
 ROM_END
+
 
 /*
 
@@ -7315,7 +7618,6 @@ Note
 1x push lever (TS)
 
 */
-
 ROM_START( chry10 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "ver.1h2.u20",  0x0000, 0x10000, CRC(85bbde06) SHA1(f44d335feb4697b195e9fc7e5aeaabf099e21ed8) )
@@ -7342,7 +7644,6 @@ ROM_START( chry10 )
 ROM_END
 
 
-
 ROM_START( chrygld )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "ol-v9.u20",  0x00000, 0x10000, CRC(b61c0695) SHA1(63c44b20fd7f76bdb33331273d2610e8cfd31add) )
@@ -7366,7 +7667,6 @@ ROM_START( chrygld )
 ROM_END
 
 
-
 ROM_START( moonlght )
 	ROM_REGION( 0x20000, "maincpu", 0 )
 	ROM_LOAD( "4.bin",       0x0000, 0x20000, CRC(ecb06cfb) SHA1(e32613cac5583a0fecf04fca98796b91698e530c) )
@@ -7381,6 +7681,61 @@ ROM_START( moonlght )
 	ROM_LOAD( "gs1-snd.bin",  0x0000, 0x20000, CRC(9d58960f) SHA1(c68edf95743e146398aabf6b9617d18e1f9bf25b) )
 ROM_END
 
+
+/* Gold Fruit
+
+   Graphics are packed/encoded in a different way.
+   Game rate is fixed in 40%.
+   Coin A and B are fixed to 100 credits by pulse.
+
+*/
+ROM_START( goldfrui )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "27c1000.u6",  0x0000, 0x10000, CRC(84b982fc) SHA1(39f401da52a9df799f3fe6bbeb7cad493911b831) )
+	ROM_CONTINUE( 0x0000, 0x10000) /* Discarding 1nd half 0xff filled*/
+
+	ROM_REGION( 0x20000, "gfx1", 0 )
+	ROM_LOAD( "27c1000.u24",      0x00000, 0x20000, CRC(9642c9c2) SHA1(10fdced265ef4a9a5494d8df0432337df4ecec7f) ) //FIXED BITS (00xxxxxx)
+
+	ROM_REGION( 0x08000, "gfx2", 0 )
+	ROM_LOAD( "27c1000.u25",      0x00000, 0x08000, CRC(5ce73db6) SHA1(e93948f6a44831583e0779da3158d7b5e33bcca7) )
+	ROM_CONTINUE( 0x0000, 0x08000) /* Discarding 1nd quarter 0xff filled*/
+	ROM_CONTINUE( 0x0000, 0x08000) /* Discarding 2nd quarter 0xff filled*/
+	ROM_CONTINUE( 0x0000, 0x08000) /* Discarding 3nd quarter 0xff filled*/
+
+	ROM_REGION( 0x40000, "oki", 0 ) // Audio ADPCM
+	ROM_LOAD( "27c1000.u57",  0x0000, 0x20000, CRC(9d58960f) SHA1(c68edf95743e146398aabf6b9617d18e1f9bf25b) )
+ROM_END
+
+
+/*
+    Super Nove by Playmark
+
+    bp 2db
+    the next call ($0C33) hangs the game
+    since there are ascii strings there
+    instead of code.
+
+*/
+ROM_START( super9 )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "27e010.30",       0x0000, 0x10000, CRC(1aaea8d3) SHA1(71395a6d74a7cd55606daa57d17ff4628aa5f577) )
+	ROM_IGNORE(                          0x10000)   /* Discarding 2nd half */
+//  ROM_LOAD( "27e010.30",       0x0000, 0x10000, CRC(1aaea8d3) SHA1(71395a6d74a7cd55606daa57d17ff4628aa5f577) )
+//  ROM_CONTINUE(                0x0000, 0x10000)   /* Discarding 1st half */
+
+	ROM_REGION( 0x20000, "gfx1", 0 )
+	ROM_LOAD( "nearcpu.bin",      0x00000, 0x20000, CRC(643cff6f) SHA1(305ca9182c3f6d69e09be38b854b3d7bdfa75439) )
+
+	ROM_REGION( 0x20000, "gfx2", 0 )
+	ROM_LOAD( "27e010.29",      0x00000, 0x08000, CRC(5ea46322) SHA1(147078689f0194affcdcf0e8f8e17fe8a113a377) )
+	ROM_CONTINUE( 0x0000, 0x08000) // Discarding 1nd quarter 0xff filled
+	ROM_CONTINUE( 0x0000, 0x08000) // Discarding 2nd quarter 0xff filled
+	ROM_CONTINUE( 0x0000, 0x08000) // Discarding 3nd quarter 0xff filled
+
+	ROM_REGION( 0x40000, "oki", 0 ) /* Audio ADPCM */
+	ROM_LOAD( "27c1001.27",  0x0000, 0x20000, CRC(9d58960f) SHA1(c68edf95743e146398aabf6b9617d18e1f9bf25b) )
+ROM_END
 
 
 ROM_START( ncb3 )
@@ -7403,7 +7758,9 @@ ROM_START( ncb3 )
 	ROM_LOAD( "82s147.u2",      0x00000, 0x0200, BAD_DUMP CRC(5c8f2b8f) SHA1(67d2121e75813dd85d83858c5fc5ec6ad9cc2a7d) )
 ROM_END
 
+
 /*
+
 mame -romident cb3.zip
 cpu_u6.512          NO MATCH
 main_3.764          = 5.764                 New Cherry Bonus 3
@@ -7412,10 +7769,7 @@ main_5.256          = 2.256                 New Cherry Bonus 3
 main_6.256          = 3.256                 New Cherry Bonus 3
 main_7.256          NO MATCH
 
-C:\mame061208>src\mame\mamedriv.c
-
 */
-
 ROM_START( cb3 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "cpu_u6.512", 0x00000, 0x10000, CRC(d17c936b) SHA1(bf90edd214118116da675bcfca41247d5891ac90) ) // encrypted??
@@ -7436,6 +7790,7 @@ ROM_START( cb3 )
 	ROM_LOAD( "82s147.u2",      0x00000, 0x0200, BAD_DUMP CRC(5c8f2b8f) SHA1(67d2121e75813dd85d83858c5fc5ec6ad9cc2a7d) )
 ROM_END
 
+
 /*
 CB3A
 Known differences with ncb3:
@@ -7443,7 +7798,6 @@ Known differences with ncb3:
 - Double-Up rate: 50% and 80% instead of 80% and 90%.
 
 */
-
 ROM_START( cb3a )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "cb3a01.bin", 0x00000, 0x10000, CRC(53b099ab) SHA1(612d86d7f011a554903400e60e2c4a0d4f24e095) )
@@ -7485,6 +7839,7 @@ ROM_START( cb3b )
 	ROM_LOAD( "adatabin_0.bin",      0x00000, 0x100, CRC(f566e5e0) SHA1(754f04521b9eb73b34fe3de07e8f3679d1034870) )
 ROM_END
 
+
 ROM_START( cb3c )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "27c512.bin", 0x00000, 0x10000, CRC(c42533cd) SHA1(d55b54b31c910d97418f400fc1ba78460c7183a9) )
@@ -7498,6 +7853,7 @@ ROM_START( cb3c )
 	ROM_REGION( 0x0200, "proms", 0 ) // wasn't in this set..
 	ROM_LOAD( "82s147.u2",      0x00000, 0x0200, CRC(5c8f2b8f) SHA1(67d2121e75813dd85d83858c5fc5ec6ad9cc2a7d) )
 ROM_END
+
 
 // set marked 'pignapoke'
 ROM_START( cb3d )
@@ -7515,13 +7871,37 @@ ROM_START( cb3d )
 	ROM_LOAD( "3.4h", 0x04000, 0x02000, CRC(91162010) SHA1(3acc21e7074602b247f2f392eb181802092d2f21) )
 	ROM_LOAD( "4.5h", 0x06000, 0x02000, CRC(cbcc6bfb) SHA1(5bafc934fef1f50d8c182c39d3a7ce795c89d175) )
 
-	ROM_REGION( 0x0200, "proms2", 0 )
-	ROM_LOAD( "dm74s288.13d",   0x00000, 0x0020, CRC(77a85e21) SHA1(3b41e0ab7cc55c5d78914d23e8289383f5bd5654) )
+	ROM_REGION( 0x0200, "proms", 0 )
+	ROM_LOAD_NIB_LOW(  "n82s129.13g",  0x0000, 0x0100, CRC(59ac98e4) SHA1(5fc0f1a48c49c956cdb8826e20663dc57a9175e4) )   // 1st bank colors, low 4 bits.
+	ROM_LOAD_NIB_HIGH( "n82s129.14g",  0x0000, 0x0100, CRC(0d8f35bd) SHA1(0c2a0145cdaaf9beabdce241731a36b0c65f18a2) )   // 1st bank colors, high 4 bits.
+	ROM_LOAD(          "dm74s288.13d", 0x0080, 0x0020, CRC(77a85e21) SHA1(3b41e0ab7cc55c5d78914d23e8289383f5bd5654) )   // 2nd bank colors
+ROM_END
+
+
+/*
+  1x Z80.
+  3x 8255 (2 have no mark).
+  1x Ay-3-8910.
+  5x 8 DIP switches.
+  1x 12 MHz xtal.
+
+  ROM 3v202 is the prg.
+*/
+ROM_START( cb3e )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "3v202.u22",  0x00000, 0x10000, CRC(f127d203) SHA1(d23b9e5972e797e7c18e9e8e2e70c01f381a4c4d) )
+
+	ROM_REGION( 0x20000, "gfx1", 0 )
+	ROM_LOAD( "2.u6",      0x00000, 0x20000, CRC(e3be1d33) SHA1(5cc3b5d6e371e8bb414b552c68770666e3914ae4) )
+
+	ROM_REGION( 0x08000, "gfx2", 0 )
+	ROM_LOAD( "1.u3",      0x00000, 0x08000, CRC(919bd692) SHA1(1aeb66f1e4555b731858833445000593e613f74d) )
 
 	ROM_REGION( 0x0200, "proms", 0 )
-	ROM_LOAD16_BYTE( "n82s129.13g",    0x001, 0x0100, CRC(59ac98e4) SHA1(5fc0f1a48c49c956cdb8826e20663dc57a9175e4) )
-	ROM_LOAD16_BYTE( "n82s129.14g",    0x000, 0x0100, CRC(0d8f35bd) SHA1(0c2a0145cdaaf9beabdce241731a36b0c65f18a2) )
+	ROM_LOAD( "82s147.u1",      0x00000, 0x0100, CRC(d4eaa276) SHA1(b6598ee64ac3d41ca979c8667de8576cfb304451) )
+	ROM_CONTINUE(               0x00000, 0x0100)    // 2nd half has the data.
 ROM_END
+
 
 ROM_START( cmv801 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -7688,7 +8068,6 @@ ROM_START( cmv4a )
 	ROM_LOAD( "hold8_pr1.u46", 0x0000, 0x0100, CRC(50ec383b) SHA1(ae95b92bd3946b40134bcdc22708d5c6b0f4c23e) )
 ROM_END
 
-
 ROM_START( cmwm )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "waterm.rom",  0x0000, 0x1000, CRC(93b6cb9b) SHA1(294e1e5909b304252c79a7d3f50fc175558e713b) )
@@ -7722,6 +8101,7 @@ ROM_START( cmwm )
 	ROM_LOAD( "82s129.u46", 0x0000, 0x0100, CRC(50ec383b) SHA1(ae95b92bd3946b40134bcdc22708d5c6b0f4c23e) )
 ROM_END
 
+
 ROM_START( cmfun )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "cmvfun.rom",  0x0000, 0x1000, CRC(128f373e) SHA1(24d51ab669d568c004e2c94cac22eb8476ce2718) )
@@ -7754,6 +8134,7 @@ ROM_START( cmfun )
 	ROM_REGION( 0x100, "proms2", 0 )
 	ROM_LOAD( "82s129.u46", 0x0000, 0x0100, CRC(50ec383b) SHA1(ae95b92bd3946b40134bcdc22708d5c6b0f4c23e) )
 ROM_END
+
 
 /* looks like a bootleg of cmv4 */
 ROM_START( cmaster )
@@ -7823,7 +8204,6 @@ ROM_END
 
     4x8 dip + 1 Switch (main test ???)
 */
-
 ROM_START( cmasterb )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "u81.9",  0x0000,  0x1000, CRC(09e44314) SHA1(dbb7e9afc9a1dc0d4ce7b150324077f3f3579c02) )
@@ -8040,6 +8420,7 @@ ROM_START( cmasterd )
 	ROM_LOAD( "82s129.u46", 0x0000, 0x0100, CRC(50ec383b) SHA1(ae95b92bd3946b40134bcdc22708d5c6b0f4c23e) )
 ROM_END
 
+
 ROM_START( cmastere )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "cm33.rom",  0x0000, 0x1000, CRC(c3c3f7df) SHA1(47eda025859afebe64fd76e17e8390262fb40e0b) )
@@ -8074,6 +8455,7 @@ ROM_START( cmastere )
 	ROM_LOAD( "82s129.u46", 0x0000, 0x0100, CRC(50ec383b) SHA1(ae95b92bd3946b40134bcdc22708d5c6b0f4c23e) )
 ROM_END
 
+
 ROM_START( cmasterf )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "cmbig55.rom",  0x0000, 0x1000, CRC(2cc4df7b) SHA1(ad5b8108913ff88fb435c8c12b47446575e1360e) )
@@ -8107,6 +8489,7 @@ ROM_START( cmasterf )
 	ROM_REGION( 0x100, "proms2", 0 )
 	ROM_LOAD( "82s129.u46", 0x0000, 0x0100, CRC(50ec383b) SHA1(ae95b92bd3946b40134bcdc22708d5c6b0f4c23e) )
 ROM_END
+
 
 ROM_START( chryangl )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -8185,9 +8568,9 @@ ROM_START( jkrmast )
 
 	ROM_REGION( 0x200, "proms", ROMREGION_ERASE00 )
 
-
 	ROM_REGION( 0x100, "proms2", ROMREGION_ERASE00 )
 ROM_END
+
 
 ROM_START( pkrmast )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -8204,7 +8587,6 @@ ROM_START( pkrmast )
 	ROM_LOAD( "proms", 0x00000,  0x200, NO_DUMP )
 	ROM_REGION( 0x100, "proms2", ROMREGION_ERASE00 )
 ROM_END
-
 
 
 ROM_START( pkrmasta )
@@ -8224,7 +8606,6 @@ ROM_START( pkrmasta )
 ROM_END
 
 
-
 /*
 
 Cherry Master '91
@@ -8240,7 +8621,6 @@ all pals are type 16L8
 all proms are type s129
 
 */
-
 ROM_START( cmast91 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "8.bin",   0x00000, 0x01000, CRC(31a16d9f) SHA1(f007148449d66954b780f12a9f910968a4052482) )
@@ -8290,7 +8670,6 @@ ROM_START( cmast91 )
 ROM_END
 
 
-
 ROM_START( cmast92 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "cm9230d.rom",   0x00000, 0x01000, CRC(214a0a2d) SHA1(2d349e0888ac2da3df954517fdeb9214a3b17ae1) )
@@ -8321,6 +8700,7 @@ ROM_START( cmast92 )
 	ROM_REGION( 0x100, "proms2", ROMREGION_ERASEFF )
 ROM_END
 
+
 /*
 
         Lucky 8 Line
@@ -8342,7 +8722,6 @@ ROM_END
     ---
 
 */
-
 ROM_START( lucky8 )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "8",   0x0000, 0x4000, CRC(a187573e) SHA1(864627502025dbc83a0049fc98505655cec7b181) )
@@ -8373,6 +8752,7 @@ ROM_START( lucky8 )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "g13", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
+
 
 /*
 
@@ -8453,6 +8833,7 @@ ROM_START( lucky8a )
 	ROM_LOAD( "prom2", 0x0000, 0x0020, CRC(7b1a769f) SHA1(788b3573df17d398c74662fec4fd7693fc27e2ef) )
 ROM_END
 
+
 /*
    New Lucky 8 Lines (set 3, extended gfx)
 
@@ -8461,7 +8842,6 @@ ROM_END
   Maybe is a hidden feature, maybe just graphics for another hack.
 
 */
-
 ROM_START( lucky8b )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "8.bin",  0x0000, 0x8000, CRC(ab7c58f2) SHA1(74782772bcc91178fa381074ddca99e0515f7693) )
@@ -8490,6 +8870,7 @@ ROM_START( lucky8b )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "u1.bin", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
+
 
 ROM_START( lucky8c )
 	ROM_REGION( 0x8000, "maincpu", 0 )
@@ -8521,6 +8902,7 @@ ROM_START( lucky8c )
 	ROM_LOAD( "g13", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
 
+
 ROM_START( lucky8d )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "8-40%.bin",   0x0000, 0x4000, CRC(4c79db5a) SHA1(b959030856f54776841092c4c2bccc6565faa587) )
@@ -8551,6 +8933,7 @@ ROM_START( lucky8d )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "g13", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
+
 
 /*
 
@@ -8610,7 +8993,6 @@ The program is exactly the same of lucky8d, with 40% for main rate and 60% for d
 but merged in only one 27128 EPROM instead of two.
 
 */
-
 ROM_START( lucky8e )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "27256.8",   0x0000, 0x8000, CRC(65decc53) SHA1(100f26ef796557182ba894d1e30b18ac58a793be) )
@@ -8642,6 +9024,7 @@ ROM_START( lucky8e )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "g13", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
+
 
 /*
   New Lucky 8 Lines / New Super 8 Lines.
@@ -8755,7 +9138,6 @@ Y = LS60 ??
 Z = sn76489an
 
 */
-
 ROM_START( ns8lines )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "8.bin",  0x0000, 0x8000, CRC(ab7c58f2) SHA1(74782772bcc91178fa381074ddca99e0515f7693) )
@@ -8785,8 +9167,8 @@ ROM_START( ns8lines )
 	ROM_LOAD( "u1.bin", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
 
-/*
 
+/*
   New Lucky 8 Lines / New Super 8 Lines (Witch Bonus)
 
   This set has the 'Witch Bonus' present in Witch Card games.
@@ -8817,7 +9199,6 @@ ROM_END
   f5-8.14b     [3/4]      8    [2/2]      1.904297%
 
 */
-
 ROM_START( ns8linew )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "f5-8.14b",   0x0000, 0x8000, CRC(63dd3005) SHA1(62d71dbfa0a00c6b050db067ad55e80225e1589d) )
@@ -8846,6 +9227,7 @@ ROM_START( ns8linew )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "dm74s288.d12", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
+
 
 /******************************************************************************
 
@@ -8896,7 +9278,6 @@ ROM_END
 
 
 ******************************************************************************/
-
 ROM_START( luckylad )
 	ROM_REGION( 0x8000, "maincpu", 0 )  /* encrypted CPU */
 	ROM_LOAD( "18.b12",  0x0000, 0x4000, CRC(2d178126) SHA1(5fc490e115e5c9073a7e3f56894fe19be6adb2b5) )
@@ -8926,6 +9307,7 @@ ROM_START( luckylad )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "tbp18s030.d12", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
+
 
 /*
   Bingo, from Wing (1993).
@@ -8959,7 +9341,6 @@ ROM_END
   1x battery 3.6V.
 
 */
-
 ROM_START( bingowng )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "bingo9.14b", 0x0000, 0x8000, CRC(e041092e) SHA1(2aa3e7af08c336e49bed817ddad7c3604398e296) )
@@ -8988,6 +9369,7 @@ ROM_START( bingowng )
 	ROM_REGION( 0x20, "unkprom2", 0 )
 	ROM_LOAD( "n82s123n.12d", 0x0000, 0x0020, BAD_DUMP CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) ) // taken from other set
 ROM_END
+
 
 ROM_START( bingownga )  /* This set is coming from Dumping Union */
 	ROM_REGION( 0x8000, "maincpu", 0 )
@@ -9031,7 +9413,6 @@ YM2203
 4x DSW
 
 */
-
 /* is this the original Magical Odds? */
 DRIVER_INIT_MEMBER(goldstar_state,magoddsc)
 {
@@ -9081,6 +9462,7 @@ ROM_START( magodds )
 	ROM_LOAD( "dm74s288.12k",0x40, 0x20, CRC(03231e84) SHA1(92abdf6f8ef705b260378e90e6d591da056c2cee) )
 ROM_END
 
+
 // is this a bootleg board?
 // program is the same as above set (but without the oversized rom 9), only gfx1 differs
 // the proms came from this board
@@ -9114,6 +9496,7 @@ ROM_START( magoddsa )
 	ROM_LOAD( "dm74s288.1b", 0x20, 0x20, CRC(e04abac8) SHA1(4f2adf9f1482470b6de6d0e547623f62e95eaf24) )
 	ROM_LOAD( "dm74s288.12k",0x40, 0x20, CRC(03231e84) SHA1(92abdf6f8ef705b260378e90e6d591da056c2cee) )
 ROM_END
+
 
 // gfx same as above set, program rom differs
 ROM_START( magoddsb )
@@ -9179,6 +9562,7 @@ ROM_START( magoddsc )
 	ROM_LOAD( "dm74s288.12k",0x40, 0x20, CRC(03231e84) SHA1(92abdf6f8ef705b260378e90e6d591da056c2cee) )
 ROM_END
 
+
 // custom CPU block
 ROM_START( magoddsd )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -9210,6 +9594,7 @@ ROM_START( magoddsd )
 	ROM_LOAD( "dm74s288.1b", 0x20, 0x20, CRC(e04abac8) SHA1(4f2adf9f1482470b6de6d0e547623f62e95eaf24) )
 	ROM_LOAD( "dm74s288.12k",0x40, 0x20, CRC(03231e84) SHA1(92abdf6f8ef705b260378e90e6d591da056c2cee) )
 ROM_END
+
 
 /*
     LADY LINER - TAB Austria
@@ -9247,7 +9632,6 @@ ROM_END
     "TAB Austria" & "LL 2690"
 
 */
-
 ROM_START( ladylinr )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "ladybrd.bin",    0x0000, 0x8000, CRC(44d2aed0) SHA1(1afe6178d1bf4ad0b623f33be879ed5180ad2db1) )
@@ -9277,8 +9661,8 @@ ROM_START( ladylinr )
 	ROM_LOAD( "am27s19pc.73",   0x0000, 0x0020, CRC(b48d0b41) SHA1(01d2d0fd5e79c17043e97146001150b4b32ac86c) )
 ROM_END
 
-/*
 
+/*
   Board had a sticker that said MODEL 9006
 
   .u22  2764
@@ -9333,6 +9717,7 @@ ROM_START( kkotnoli )
 	ROM_LOAD( "9006.u58", 0x0000, 0x0020, CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
 
+
 /*
 
 Wild cat 3 by E.A.I.
@@ -9365,7 +9750,6 @@ SN76489AN
 Winbound WF19054 40 pin dip
 
 */
-
 ROM_START( wcat3 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "wcat3.u5",   0x0000, 0x10000, CRC(bf21cde5) SHA1(b501ba8ea815e3b19b26196f6fd48243892278eb) )
@@ -9449,7 +9833,6 @@ ROM_START( skill98 )
 ROM_END
 
 
-
 ROM_START( schery97 )
 	ROM_REGION( 0x20000, "maincpu", 0 )
 	ROM_LOAD( "sc352.bin", 0x00000, 0x1000, CRC(d3857d85) SHA1(e97b2634f0993631023c08f6baf800461abfad12) )
@@ -9499,6 +9882,7 @@ ROM_START( schery97 )
 	ROM_REGION( 0x80000, "oki", 0 ) // samples
 	ROM_LOAD( "sc97t.bin", 0x00000, 0x20000, CRC(8598b059) SHA1(9e031e30e58a9c1b3d029004ee0f1616711fa2ae) )
 ROM_END
+
 
 ROM_START( schery97a )
 	ROM_REGION( 0x20000, "maincpu", 0 )
@@ -9550,6 +9934,7 @@ ROM_START( schery97a )
 	ROM_LOAD( "sc97t.bin", 0x00000, 0x20000, CRC(8598b059) SHA1(9e031e30e58a9c1b3d029004ee0f1616711fa2ae) )
 ROM_END
 
+
 ROM_START( roypok96 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "rp35.bin", 0x0000, 0x1000, CRC(e1509440) SHA1(30d931b02d4eb74f9a16c57eb12e834cf24f87a9) )
@@ -9589,6 +9974,7 @@ ROM_START( roypok96 )
 	ROM_REGION( 0x100, "proms2", 0 ) // colours again?
 	ROM_LOAD( "rpu1920.bin", 0x0000, 0x0100, CRC(e204e8f3) SHA1(9005fe9c72055af690701cd239f4b3665b2fae21) )
 ROM_END
+
 
 ROM_START( roypok96a )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -9644,7 +10030,6 @@ ROM_START( roypok96b )
 	ROM_CONTINUE(0x5000,0x1000)
 	ROM_CONTINUE(0x8000,0x8000)
 
-
 	ROM_REGION( 0x20000, "graphics", 0 )
 	ROM_LOAD( "rp35h.bin",  0x00000, 0x10000, CRC(664649ea) SHA1(7915ab31afd2a1bbb8f817f961e0e522d76f5c05) )
 	ROM_LOAD( "rp35l.bin",  0x10000, 0x10000, CRC(ef416c4e) SHA1(5aac157ba15c66f79a7a68935095bef9a2636f7b) )
@@ -9672,8 +10057,6 @@ ROM_START( roypok96b )
 	ROM_REGION( 0x100, "proms2", 0 ) // colours again?
 	ROM_LOAD( "rpu1920.bin", 0x0000, 0x0100, CRC(e204e8f3) SHA1(9005fe9c72055af690701cd239f4b3665b2fae21) )
 ROM_END
-
-
 
 
 ROM_START( pokonl97 )
@@ -9707,7 +10090,6 @@ ROM_START( pokonl97 )
 	ROM_COPY( "graphics", 0x12000, 0x02000, 0x2000 )
 	ROM_COPY( "graphics", 0x00000, 0x04000, 0x2000 )
 	ROM_COPY( "graphics", 0x10000, 0x06000, 0x2000 )
-
 
 	ROM_REGION( 0x200, "proms", 0 ) // palette
 	ROM_LOAD( "po97u19.bin", 0x0000, 0x0100, CRC(889dd4b3) SHA1(dc4b2506bf61f1bc4d491c3a9c410be11d93b76f) )
@@ -9792,7 +10174,6 @@ ROM_START( nfb96a )
 
 	ROM_REGION( 0x10000, "user1", ROMREGION_ERASEFF )
 
-
 	ROM_REGION( 0x20000, "graphics", 0 )
 	ROM_LOAD( "fbseh.bin",  0x00000, 0x10000, CRC(2fc10ce7) SHA1(a2418cfbe7ed217848ace8ea06587bcaa6b2c8f2) )
 	ROM_LOAD( "fbsel.bin",  0x10000, 0x10000, CRC(fb9d679a) SHA1(a4f6246bdbbf2e25f702006b30a62bc7873137de) )
@@ -9821,6 +10202,7 @@ ROM_START( nfb96a )
 	ROM_REGION( 0x80000, "oki", ROMREGION_ERASEFF ) // samples
 	// none?
 ROM_END
+
 
 ROM_START( nfb96b )
 	ROM_REGION( 0x20000, "maincpu", 0 )
@@ -9872,6 +10254,7 @@ ROM_START( nfb96b )
 	ROM_REGION( 0x80000, "oki", ROMREGION_ERASEFF ) // samples
 	// none?
 ROM_END
+
 
 ROM_START( nfb96c )
 	ROM_REGION( 0x20000, "maincpu", 0 )
@@ -10053,7 +10436,6 @@ ROM_START( nc96a )
 ROM_END
 
 
-
 ROM_START( nc96b )
 	ROM_REGION( 0x20000, "maincpu", 0 )
 	ROM_LOAD( "chse354d.bin", 0x00000, 0x1000, CRC(160f7b78) SHA1(537a91317e613676b748d4e4ec7015183872814b) ) // v3.54, D Sub-PCB
@@ -10069,7 +10451,6 @@ ROM_START( nc96b )
 	ROM_REGION( 0x20000, "graphics", 0 )
 	ROM_LOAD( "ch96seh.bin",  0x00000, 0x10000, CRC(65dee6ba) SHA1(77f5769ed0b745a4735576e9f0ce90dcdd9b5410) )
 	ROM_LOAD( "ch96sel.bin",  0x10000, 0x10000, CRC(c21cc114) SHA1(f7b6ff5ac34dc1a7332e8c1b9cc40f3b65deac05) )
-
 
 	ROM_REGION( 0x10000, "user1", ROMREGION_ERASEFF )
 
@@ -10188,6 +10569,7 @@ ROM_START( nc96txt )
 	// none?
 ROM_END
 
+
 ROM_START( match98 )
 	ROM_REGION( 0x20000, "maincpu", 0 )
 	ROM_LOAD( "match133.bin", 0x00000, 0x1000, CRC(ddd82435) SHA1(4d7310f77e1f87e2b5c820a311aaefd82307b388) )
@@ -10233,7 +10615,6 @@ ROM_START( match98 )
 	ROM_REGION( 0x80000, "oki", ROMREGION_ERASEFF ) // samples
 	ROM_LOAD( "match98t.bin", 0x00000, 0x40000, CRC(830f4e01) SHA1(fbc41e9100a69663b0f799aee447edd5fabd2af7) )
 ROM_END
-
 
 
 ROM_START( fb2010 )
@@ -10309,8 +10690,6 @@ DRIVER_INIT_MEMBER(goldstar_state,fb2010)
 }
 
 
-
-
 /* descrambled by looking at CALLs
 
 0000 -> 0000
@@ -10347,7 +10726,6 @@ b84a -> b84a
 c??? -> c???
 
 */
-
 ROM_START( nfb96se )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "dogdptb.prg",0x00000, 0x1000, CRC(0690f915) SHA1(ed2477ba260a421013603017cfd1e1ba5ecd7f4e) ) // alt program?
@@ -10433,6 +10811,7 @@ ROM_START( nfb96sea )
 	ROM_LOAD( "chu1920.bin", 0x0000, 0x0100, CRC(71b0e11d) SHA1(1d2a2a31d8571f580c0cb7f4833823841072b31f) )
 ROM_END
 
+
 ROM_START( nfb96seb )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "dogdptb.prg",0x00000, 0x1000, CRC(0690f915) SHA1(ed2477ba260a421013603017cfd1e1ba5ecd7f4e) ) // alt program?
@@ -10444,7 +10823,6 @@ ROM_START( nfb96seb )
 	ROM_CONTINUE(0x2000, 0x1000)
 	ROM_CONTINUE(0x5000, 0x1000)
 	ROM_CONTINUE(0x8000, 0x8000)
-
 
 	ROM_REGION( 0x10000, "user1", ROMREGION_ERASEFF )
 
@@ -10467,6 +10845,7 @@ ROM_START( nfb96seb )
 	ROM_REGION( 0x100, "proms2", 0 ) // colours again?
 	ROM_LOAD( "chu1920.bin", 0x0000, 0x0100, CRC(71b0e11d) SHA1(1d2a2a31d8571f580c0cb7f4833823841072b31f) )
 ROM_END
+
 
 // this contains elephants etc. instead of the usual symbols, maybe
 // it's meant to work with the above program roms?
@@ -10514,6 +10893,7 @@ ROM_START( carb2002 )
 	ROM_LOAD( "chu1920.bin", 0x0000, 0x0100, BAD_DUMP CRC(71b0e11d) SHA1(1d2a2a31d8571f580c0cb7f4833823841072b31f) )
 ROM_END
 
+
 // same program as dogh set.. different gfx
 ROM_START( carb2003 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -10559,7 +10939,6 @@ ROM_START( carb2003 )
 ROM_END
 
 
-
 ROM_START( nfm )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "fuitprg", 0x00000, 0x01000, CRC(6f6c98cf) SHA1(4641cb2b90d4d21edc65e504584f3ec92fe741c4) )
@@ -10599,7 +10978,6 @@ ROM_START( nfm )
 ROM_END
 
 
-
 ROM_START( unkch1 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "u6.bin",  0x0000, 0x10000, CRC(30309996) SHA1(290f35f587fdf78dcb4f09403c510deec533c9c2) )
@@ -10610,6 +10988,7 @@ ROM_START( unkch1 )
 	ROM_REGION( 0x40000, "gfx2", 0 )
 	ROM_LOAD( "u41.bin", 0x00000, 0x40000, CRC(b2bca15d) SHA1(57747c9c05e5ab54e40cbded2e420dfbfc929ce5) )
 ROM_END
+
 
 ROM_START( unkch2 ) // only gfx2 differs from unkch1
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -10622,6 +11001,7 @@ ROM_START( unkch2 ) // only gfx2 differs from unkch1
 	ROM_LOAD( "u41.1", 0x00000, 0x40000, CRC(725b48c7) SHA1(2f21c33fb7d23ad9411e926130a65b75029b9112) )
 ROM_END
 
+
 ROM_START( unkch3 )  // gfx2 is the same as unkch1, others differ
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "u6.3",  0x0000, 0x10000, CRC(902f9e42) SHA1(ac5843089748d457f70ea52d15285a0ccda705ad) )
@@ -10633,6 +11013,7 @@ ROM_START( unkch3 )  // gfx2 is the same as unkch1, others differ
 	ROM_LOAD( "u41.bin", 0x00000, 0x40000, CRC(b2bca15d) SHA1(57747c9c05e5ab54e40cbded2e420dfbfc929ce5) )
 ROM_END
 
+
 ROM_START( unkch4 )  // all roms unique
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "u6.4",  0x0000, 0x10000, CRC(eb191efa) SHA1(3004f26f9af7633df572f609647716cc4ac75990) )
@@ -10643,6 +11024,7 @@ ROM_START( unkch4 )  // all roms unique
 	ROM_REGION( 0x40000, "gfx2", 0 )
 	ROM_LOAD( "u41.4", 0x00000, 0x40000, CRC(ef586512) SHA1(a720e40903dd04b2c498efad40d583618596e048) )
 ROM_END
+
 
 /*
   Cherry Master '97
@@ -11171,7 +11553,6 @@ ROM_END
 
 
 *****************************************************************************************/
-
 ROM_START( megaline )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "18.r1",  0x00000, 0x10000, CRC(37234cca) SHA1(f991bc55fbfc69594573608ca03a9001ccf2f73b) )
@@ -11196,6 +11577,47 @@ ROM_START( megaline )
 ROM_END
 
 
+/*
+  Win Cherry (ver 0.16 - 19990219)
+
+  1x Z0840006PSC-Z80CPU 8-bit Microprocessor.
+  1x KC89C72            Programmable Sound Generator.
+  1x TDA2003            Audio Amplifier.
+
+  1x 27C256 (ic9) dumped.
+  1x 27C512 (ic2) dumped.
+  1x M27C1001 (ic6) dumped.
+  1x AM27C29PC (not dumped yet).
+
+  1x CY62256LL-70PC Static RAM.
+  1x LP6264D-70LL   Static RAM.
+
+  2x Xilinx XC9572-PC84 CPLD's (read protected).
+
+  1x oscillator 12.000 MHz.
+  1x 2x28 JAMMA edge connector.
+  2x pushbutton (MANAG. - STATIS.).
+  1x trimmer (volume).
+  5x 8 DIP switches.
+  1x battery (missing).
+
+*/
+
+ROM_START( wcherry )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "wc20%388.ic2",  0x00000, 0x10000, CRC(b1ea0e6a) SHA1(2dd3f2cfffc1e47b45c29daa9d7df7af956b599c) )
+
+	ROM_REGION( 0x20000, "gfx1", 0 )
+	ROM_LOAD( "wincherryb.ic6",  0x00000, 0x20000, CRC(cace16f5) SHA1(a6caddc6ccd30901e2332a42f339a1da022de410) )
+
+	ROM_REGION( 0x08000, "gfx2", 0 )
+	ROM_LOAD( "wincherrya.ic9",  0x00000, 0x08000, CRC(919bd692) SHA1(1aeb66f1e4555b731858833445000593e613f74d) )
+
+	ROM_REGION( 0x0200, "proms", 0 )
+	ROM_LOAD( "am27c29pc",      0x00000, 0x0200, BAD_DUMP CRC(5c8f2b8f) SHA1(67d2121e75813dd85d83858c5fc5ec6ad9cc2a7d) )    // borrowed from other game.
+ROM_END
+
+
 /*********************************************************************************************************************/
 
 DRIVER_INIT_MEMBER(goldstar_state,goldstar)
@@ -11217,7 +11639,6 @@ DRIVER_INIT_MEMBER(goldstar_state,goldstar)
 void goldstar_state::do_blockswaps(UINT8* ROM)
 {
 	int A;
-	UINT8 *buffer;
 
 	static const UINT16 cherry_swaptables[32] = {
 		/* to align with goldstar */
@@ -11233,7 +11654,7 @@ void goldstar_state::do_blockswaps(UINT8* ROM)
 		0xa000, 0xa800, 0xb000, 0xb800,
 	};
 
-	buffer = auto_alloc_array(machine(), UINT8, 0x10000);
+	dynamic_buffer buffer(0x10000);
 	memcpy(buffer,ROM,0x10000);
 
 	// swap some 0x800 blocks around..
@@ -11241,8 +11662,6 @@ void goldstar_state::do_blockswaps(UINT8* ROM)
 	{
 		memcpy(ROM+A*0x800,buffer+cherry_swaptables[A],0x800);
 	}
-
-	auto_free(machine(), buffer);
 }
 
 void goldstar_state::dump_to_file( UINT8* ROM)
@@ -11834,25 +12253,99 @@ DRIVER_INIT_MEMBER(goldstar_state,tonypok)
 
 }
 
+DRIVER_INIT_MEMBER(goldstar_state, super9)
+{
+	int i;
+	UINT8 *src = memregion("gfx1")->base();
+	for (i = 0;i < 0x20000;i++)
+	{
+//      src[i] = BITSWAP8(src[i], 7,4,2,1,6,5,3,0);
+//      src[i] = BITSWAP8(src[i], 7,3,2,6,1,5,4,0);
+		src[i] = BITSWAP8(src[i], 7,3,2,6,5,1,4,0);
+	}
+
+	UINT8 *src2 = memregion("gfx2")->base();
+	for (i = 0;i < 0x8000;i++)
+	{
+//      src2[i] = BITSWAP8(src2[i], 7,4,2,1,6,5,3,0);
+//      src2[i] = BITSWAP8(src2[i], 7,3,2,6,1,5,4,0);
+		src2[i] = BITSWAP8(src2[i], 3,7,6,2,5,1,0,4);   // endianess
+	}
+
+}
+
+DRIVER_INIT_MEMBER(goldstar_state, cb3e)
+{
+/*  program bitswap */
+	int i;
+	UINT8 *ROM = memregion("maincpu")->base();
+	do_blockswaps(ROM);
+
+	for (i = 0; i < 0x10000; i++)
+	{
+		UINT8 dat = ROM[i];
+		dat =  BITSWAP8(dat, 5, 6, 3, 4, 7, 2, 1, 0);
+		ROM[i] = dat;
+	}
+
+/*  bank 1 graphics */
+//  int i;
+	UINT8 *src = memregion("gfx1")->base();
+	for (i = 0; i < 0x20000; i++)
+	{
+		src[i] = BITSWAP8(src[i], 4, 3, 2, 5, 1, 6, 0, 7);      // OK
+	}
+
+/*  bank 2 graphics */
+	UINT8 *src2 = memregion("gfx2")->base();
+	for (i = 0; i < 0x8000; i++)
+	{
+		src2[i] = BITSWAP8(src2[i], 3, 4, 2, 5, 1, 6, 0, 7);    // OK
+	}
+}
+
+DRIVER_INIT_MEMBER(goldstar_state, wcherry)
+{
+/*  bank 1 graphics */
+	int i;
+	UINT8 *src = memregion("gfx1")->base();
+	for (i = 0; i < 0x20000; i++)
+	{
+		src[i] = BITSWAP8(src[i], 4, 3, 2, 5, 1, 6, 0, 7);      // OK
+	}
+
+/*  bank 2 graphics */
+	UINT8 *src2 = memregion("gfx2")->base();
+	for (i = 0; i < 0x8000; i++)
+	{
+		src2[i] = BITSWAP8(src2[i], 3, 4, 2, 5, 1, 6, 0, 7);    // OK
+	}
+}
+
 
 /*********************************************
 *                Game Drivers                *
 **********************************************
 
        YEAR  NAME       PARENT    MACHINE   INPUT     STATE           INIT       ROT    COMPANY              FULLNAME                                      FLAGS              LAYOUT */
-GAME(  199?, goldstar,  0,        goldstar, goldstar, goldstar_state, goldstar,  ROT0, "IGS",               "Golden Star",                                 0 )
-GAME(  199?, goldstbl,  goldstar, goldstbl, goldstar, driver_device,  0,         ROT0, "IGS",               "Golden Star (Blue version)",                  0 )
+GAMEL( 199?, goldstar,  0,        goldstar, goldstar, goldstar_state, goldstar,  ROT0, "IGS",               "Golden Star",                                 0,                 layout_goldstar )
+GAMEL( 199?, goldstbl,  goldstar, goldstbl, goldstar, driver_device,  0,         ROT0, "IGS",               "Golden Star (Blue version)",                  0,                 layout_goldstar )
 GAME(  199?, moonlght,  goldstar, moonlght, goldstar, driver_device,  0,         ROT0, "bootleg",           "Moon Light (bootleg of Golden Star)",         0 )
 GAME(  199?, chrygld,   0,        chrygld,  chrygld,  goldstar_state, chrygld,   ROT0, "bootleg",           "Cherry Gold I",                               0 )
 GAME(  199?, chry10,    0,        chrygld,  chry10,   goldstar_state, chry10,    ROT0, "bootleg",           "Cherry 10 (bootleg with PIC16F84)",           0 )
+GAME(  199?, goldfrui,  goldstar, goldfrui, goldstar, driver_device,  0,         ROT0, "bootleg",           "Gold Fruit",                                  0 )                  // maybe fullname should be 'Gold Fruit (main 40%)'
+GAME(  2001, super9,    goldstar, super9,   goldstar, goldstar_state, super9,    ROT0, "Playmark",          "Super Nove (Playmark)",                       GAME_NOT_WORKING)    // need to decode gfx and see the program loops/reset...
+GAME(  2001, wcherry,   0,        wcherry,  chrygld,  goldstar_state, wcherry,   ROT0, "bootleg",           "Win Cherry (ver 0.16 - 19990219)",            GAME_NOT_WORKING)
+
 
 // are these really dyna, or bootlegs?
-GAME(  199?, ncb3,      0,        ncb3,     ncb3,     driver_device,  0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 1)",          0 )
-GAME(  199?, cb3a,      ncb3,     ncb3,     cb3a,     driver_device,  0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 2)",          0 )
-GAME(  199?, cb3,       ncb3,     ncb3,     ncb3,     goldstar_state, cb3,       ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, encrypted)",      0 )
-GAME(  199?, cb3b,      ncb3,     cherrys,  ncb3,     goldstar_state, cherrys,   ROT0, "Dyna",              "Cherry Bonus III (alt)",                      0 )
+GAMEL( 199?, ncb3,      0,        ncb3,     ncb3,     driver_device,  0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 1)",          0,                 layout_cherryb3 )
+GAMEL( 199?, cb3a,      ncb3,     ncb3,     cb3a,     driver_device,  0,         ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, set 2)",          0,                 layout_cherryb3 )
+GAMEL( 199?, cb3,       ncb3,     ncb3,     ncb3,     goldstar_state, cb3,       ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, encrypted)",      0,                 layout_cherryb3 )
+GAMEL( 199?, cb3b,      ncb3,     cherrys,  ncb3,     goldstar_state, cherrys,   ROT0, "Dyna",              "Cherry Bonus III (alt)",                      0,                 layout_cherryb3 )
 GAME(  199?, cb3c,      ncb3,     cb3c,     chrygld,  goldstar_state, cb3,       ROT0, "bootleg",           "Cherry Bonus III (alt, set 2)",               GAME_NOT_WORKING)
-GAME(  199?, cb3d,      ncb3,     ncb3,     ncb3,     driver_device,  0,         ROT0, "bootleg",           "Cherry Bonus III (set 3)",                    GAME_NOT_WORKING) // fix prom decode
+GAMEL( 199?, cb3d,      ncb3,     ncb3,     ncb3,     driver_device,  0,         ROT0, "bootleg",           "Cherry Bonus III (set 3)",                    0,                 layout_cherryb3 )
+GAMEL( 199?, cb3e,      ncb3,     cb3e,     chrygld,  goldstar_state, cb3e,      ROT0, "bootleg",           "Cherry Bonus III (set 4, encrypted bootleg)", 0,                 layout_cherryb3 )
 
 GAME(  1996, cmast97,   ncb3,     cm97,     chrygld,  driver_device,  0,         ROT0, "Dyna",              "Cherry Master '97",                           GAME_NOT_WORKING) // fix prom decode
 

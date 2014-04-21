@@ -20,7 +20,9 @@ public:
 		m_tilemap50_regs_base(*this, "tmap50_regs"),
 		m_fullscreenzoom(*this, "fullscreenzoom"),
 		m_0xc0000000_ram(*this, "0xc0000000_ram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	required_shared_ptr<UINT32> m_mainram;
 	required_shared_ptr<UINT32> m_spriteram;
@@ -133,6 +135,8 @@ public:
 		int scalex, int scaley,bitmap_ind8 *pri_buffer,UINT32 pri_mask);
 
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 	int m_use_fastboot;
 	emu_timer* m_fastboot_timer;
 	TIMER_CALLBACK_MEMBER(fastboot_timer_callback);
@@ -158,7 +162,7 @@ struct cps3_voice
 
 	UINT32 regs[8];
 	UINT32 pos;
-	UINT16 frac;
+	UINT32 frac;
 };
 
 // ======================> cps3_sound_device

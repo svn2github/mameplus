@@ -188,10 +188,10 @@ static MACHINE_CONFIG_START( psattack, psattack_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MCFG_SCREEN_UPDATE_DRIVER(psattack_state, screen_update_psattack)
 	MCFG_SCREEN_VBLANK_DRIVER(psattack_state, screen_eof_psattack)
+	MCFG_SCREEN_PALETTE("palette")
 
 
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGGG_BBBBB)
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_ADD_RRRRRGGGGGGBBBBB("palette")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

@@ -59,13 +59,15 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_samples(*this, "samples"),
 		m_ram(*this, "ram"),
-		m_bg_scroll(*this, "bg_scroll")
+		m_bg_scroll(*this, "bg_scroll"),
+		m_gfxdecode(*this, "gfxdecode")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<samples_device> m_samples;
 	required_shared_ptr<UINT8> m_ram;
 	required_shared_ptr<UINT8> m_bg_scroll;
+	required_device<gfxdecode_device> m_gfxdecode;
 
 	UINT8 *m_ram_1;
 	UINT8 *m_ram_2;
@@ -83,7 +85,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_fg_tile_info);
 	virtual void machine_start();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(safarir);
 	UINT32 screen_update_safarir(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
@@ -144,14 +146,14 @@ static GFXDECODE_START( safarir )
 GFXDECODE_END
 
 
-void safarir_state::palette_init()
+PALETTE_INIT_MEMBER(safarir_state, safarir)
 {
 	int i;
 
-	for (i = 0; i < machine().total_colors() / 2; i++)
+	for (i = 0; i < palette.entries() / 2; i++)
 	{
-		palette_set_color(machine(), (i * 2) + 0, RGB_BLACK);
-		palette_set_color(machine(), (i * 2) + 1, MAKE_RGB(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0)));
+		palette.set_pen_color((i * 2) + 0, rgb_t::black);
+		palette.set_pen_color((i * 2) + 1, rgb_t(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0)));
 	}
 }
 
@@ -196,8 +198,8 @@ TILE_GET_INFO_MEMBER(safarir_state::get_fg_tile_info)
 
 void safarir_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(safarir_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(safarir_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(safarir_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(safarir_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	m_fg_tilemap->set_transparent_pen(0);
 }
@@ -406,14 +408,17 @@ static MACHINE_CONFIG_START( safarir, safarir_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(2*8)
-	MCFG_GFXDECODE(safarir)
+	MCFG_PALETTE_ADD("palette", 2*8)
+	MCFG_PALETTE_INIT_OWNER(safarir_state, safarir)
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", safarir)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 26*8-1)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_UPDATE_DRIVER(safarir_state, screen_update_safarir)
+	MCFG_SCREEN_PALETTE("palette")
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(safarir_audio)

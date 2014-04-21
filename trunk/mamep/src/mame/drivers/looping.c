@@ -105,7 +105,9 @@ public:
 		m_spriteram(*this, "spriteram"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
-		m_dac(*this, "dac") { }
+		m_dac(*this, "dac"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -147,13 +149,15 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(looping);
 	UINT32 screen_update_looping(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(looping_interrupt);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<dac_device> m_dac;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -164,7 +168,7 @@ public:
  *
  *************************************/
 
-void looping_state::palette_init()
+PALETTE_INIT_MEMBER(looping_state, looping)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 	static const int resistances[3] = { 1000, 470, 220 };
@@ -199,7 +203,7 @@ void looping_state::palette_init()
 		bit1 = (color_prom[i] >> 7) & 1;
 		b = combine_2_weights(bweights, bit0, bit1);
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -221,7 +225,7 @@ TILE_GET_INFO_MEMBER(looping_state::get_tile_info)
 
 void looping_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(looping_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 32,32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(looping_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 32,32);
 
 	m_bg_tilemap->set_scroll_cols(0x20);
 }
@@ -308,7 +312,7 @@ void looping_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect
 			flipy = !flipy;
 		}
 
-		drawgfx_transpen(bitmap, cliprect, machine().gfx[1], code, color, flipx, flipy, sx, sy, 0);
+		m_gfxdecode->gfx(1)->transpen(bitmap,cliprect, code, color, flipx, flipy, sx, sy, 0);
 	}
 }
 
@@ -632,43 +636,18 @@ static const ay8910_interface ay8910_config =
 
 /*************************************
  *
- *  CPU configs
- *
- *************************************/
-
-static TMS9980A_CONFIG( cpuconf80 )
-{
-	DEVCB_NULL,
-	DEVCB_NULL,     // Instruction acquisition
-	DEVCB_NULL,     // Clock out
-	DEVCB_NULL,      // Hold acknowledge
-	DEVCB_NULL      // DBIN
-};
-
-static TMS9995_CONFIG( cpuconf95 )
-{
-	DEVCB_NULL,         // external op
-	DEVCB_NULL,        // Instruction acquisition
-	DEVCB_NULL,         // clock out
-	DEVCB_NULL,        // HOLDA
-	DEVCB_NULL,         // DBIN
-	INTERNAL_RAM,      // use internal RAM
-	NO_OVERFLOW_INT    // The generally available versions of TMS9995 have a deactivated overflow interrupt
-};
-
-/*************************************
- *
  *  Machine drivers
  *
  *************************************/
 
 static MACHINE_CONFIG_START( looping, looping_state )
 
-	/* basic machine hardware */
-	MCFG_TMS99xx_ADD("maincpu", TMS9995, MAIN_CPU_CLOCK, looping_map, looping_io_map, cpuconf95)
+	// CPU TMS9995, standard variant; no line connections
+	MCFG_TMS99xx_ADD("maincpu", TMS9995, MAIN_CPU_CLOCK, looping_map, looping_io_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", looping_state,  looping_interrupt)
 
-	MCFG_TMS99xx_ADD("audiocpu", TMS9980A,  SOUND_CLOCK/4, looping_sound_map, looping_sound_io_map, cpuconf80)
+	// CPU TMS9980A for audio subsystem; no line connections
+	MCFG_TMS99xx_ADD("audiocpu", TMS9980A,  SOUND_CLOCK/4, looping_sound_map, looping_sound_io_map)
 
 	MCFG_CPU_ADD("mcu", COP420, COP_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(looping_cop_map)
@@ -680,10 +659,12 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(looping_state, screen_update_looping)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(looping)
-	MCFG_PALETTE_LENGTH(32)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", looping)
 
+	MCFG_PALETTE_ADD("palette", 32)
+	MCFG_PALETTE_INIT_OWNER(looping_state, looping)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

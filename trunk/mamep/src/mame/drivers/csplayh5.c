@@ -33,7 +33,7 @@
 #include "sound/3812intf.h"
 #include "cpu/z80/z80daisy.h"
 #include "machine/nvram.h"
-#include "cpu/h83002/h8.h"
+#include "cpu/h8/h83002.h"
 
 
 class csplayh5_state : public driver_device
@@ -589,8 +589,10 @@ static INPUT_PORTS_START( csplayh5 )
 	PORT_DIPSETTING(      0x8000, DEF_STR( On ) )
 INPUT_PORTS_END
 
+#if 0
 static GFXDECODE_START( csplayh5 )
 GFXDECODE_END
+#endif
 
 static Z80CTC_INTERFACE( ctc_intf )
 {
@@ -634,13 +636,6 @@ static const z80_daisy_config daisy_chain_sound[] =
 	{ NULL }
 };
 
-static TMP68301_INTERFACE( tmp68301_interface )
-{
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
-
 static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 
 	/* basic machine hardware */
@@ -648,7 +643,7 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_CPU_PROGRAM_MAP(csplayh5_map)
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", csplayh5_state, csplayh5_irq, "screen", 0, 1)
 
-	MCFG_TMP68301_ADD("tmp68301",tmp68301_interface)
+	MCFG_DEVICE_ADD("tmp68301", TMP68301, 0)
 
 #if USE_H8
 	MCFG_CPU_ADD("subcpu", H83002, 16000000)    /* unknown clock */
@@ -666,19 +661,17 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MCFG_V9958_ADD("v9958", "screen", 0x20000)
 	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(csplayh5_state, csplayh5_vdp0_interrupt))
 
 	MCFG_SCREEN_ADD("screen",RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_SIZE(MSX2_TOTAL_XRES_PIXELS, 262*2)
 	MCFG_SCREEN_VISIBLE_AREA(MSX2_XBORDER_PIXELS - MSX2_VISIBLE_XBORDER_PIXELS, MSX2_TOTAL_XRES_PIXELS - MSX2_XBORDER_PIXELS + MSX2_VISIBLE_XBORDER_PIXELS - 1, MSX2_YBORDER_PIXELS - MSX2_VISIBLE_YBORDER_PIXELS, MSX2_TOTAL_YRES_PIXELS - MSX2_YBORDER_PIXELS + MSX2_VISIBLE_YBORDER_PIXELS - 1)
 	MCFG_SCREEN_UPDATE_DEVICE("v9958", v9958_device, screen_update)
-
-	MCFG_PALETTE_LENGTH(19780)
+	MCFG_SCREEN_PALETTE("v9958:palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

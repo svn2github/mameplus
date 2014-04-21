@@ -215,33 +215,33 @@ WRITE32_MEMBER(polygonet_state::shared_ram_write)
 	if (mem_mask == 0xffff0000)
 	{
 		logerror("68k WRITING %04x to shared ram %x (@%x)\n", (m_shared_ram[offset] & 0xffff0000) >> 16,
-																0xc000 + (offset<<1),
-																space.device().safe_pc());
+			0xc000 + (offset<<1),
+			space.device().safe_pc());
 	}
 	else if (mem_mask == 0x0000ffff)
 	{
 		logerror("68k WRITING %04x to shared ram %x (@%x)\n", (m_shared_ram[offset] & 0x0000ffff),
-																0xc000 +((offset<<1)+1),
-																space.device().safe_pc());
+			0xc000 +((offset<<1)+1),
+			space.device().safe_pc());
 	}
 	else
 	{
 		logerror("68k WRITING %04x & %04x to shared ram %x & %x [%08x] (@%x)\n", (m_shared_ram[offset] & 0xffff0000) >> 16,
-																					(m_shared_ram[offset] & 0x0000ffff),
-																					0xc000 + (offset<<1),
-																					0xc000 +((offset<<1)+1),
-																					mem_mask,
-																					space.device().safe_pc());
+			(m_shared_ram[offset] & 0x0000ffff),
+			0xc000 + (offset<<1),
+			0xc000 +((offset<<1)+1),
+			mem_mask,
+			space.device().safe_pc());
 	}
 
 	/* write to the current dsp56k word */
-	if (mem_mask | (0xffff0000))
+	if (mem_mask & 0xffff0000)
 	{
 		m_dsp56k_shared_ram_16[(offset<<1)] = (m_shared_ram[offset] & 0xffff0000) >> 16 ;
 	}
 
 	/* write to the next dsp56k word */
-	if (mem_mask | (0x0000ffff))
+	if (mem_mask & 0x0000ffff)
 	{
 		m_dsp56k_shared_ram_16[(offset<<1)+1] = (m_shared_ram[offset] & 0x0000ffff) ;
 	}
@@ -298,7 +298,7 @@ WRITE32_MEMBER(polygonet_state::plygonet_palette_w)
 	g = (m_generic_paletteram_32[offset] >> 8) & 0xff;
 	b = (m_generic_paletteram_32[offset] >> 0) & 0xff;
 
-	palette_set_color(machine(),offset,MAKE_RGB(r,g,b));
+	m_palette->set_pen_color(offset,rgb_t(r,g,b));
 }
 
 
@@ -666,7 +666,7 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 
 	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
-	MCFG_GFXDECODE(plygonet)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", plygonet)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -675,8 +675,9 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(64, 64+368-1, 0, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(polygonet_state, screen_update_polygonet)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
+	MCFG_PALETTE_ADD("palette", 32768)
 
 	MCFG_K053936_ADD("k053936", polygonet_k053936_intf)
 

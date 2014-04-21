@@ -79,7 +79,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_vram1(*this, "vram1"),
 		m_vram2(*this, "vram2"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	tilemap_t *m_tilemap1;
 	tilemap_t *m_tilemap2;
@@ -101,18 +103,19 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info);
 	TILE_GET_INFO_MEMBER(get_tile_info2);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(pipeline);
 	UINT32 screen_update_pipeline(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_CALLBACK_MEMBER(protection_deferred_w);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
 TILE_GET_INFO_MEMBER(pipeline_state::get_tile_info)
 {
 	int code = m_vram2[tile_index]+m_vram2[tile_index+0x800]*256;
-	SET_TILE_INFO_MEMBER(
-		0,
+	SET_TILE_INFO_MEMBER(0,
 		code,
 		0,
 		0);
@@ -122,20 +125,17 @@ TILE_GET_INFO_MEMBER(pipeline_state::get_tile_info2)
 {
 	int code =m_vram1[tile_index]+((m_vram1[tile_index+0x800]>>4))*256;
 	int color=((m_vram1[tile_index+0x800])&0xf);
-	SET_TILE_INFO_MEMBER
-	(
-		1,
+	SET_TILE_INFO_MEMBER(1,
 		code,
 		color,
-		0
-	);
+		0);
 }
 
 void pipeline_state::video_start()
 {
 	m_palram=auto_alloc_array(machine(), UINT8, 0x1000);
-	m_tilemap1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pipeline_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32 );
-	m_tilemap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pipeline_state::get_tile_info2),this),TILEMAP_SCAN_ROWS,8,8,64,32 );
+	m_tilemap1 = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(pipeline_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32 );
+	m_tilemap2 = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(pipeline_state::get_tile_info2),this),TILEMAP_SCAN_ROWS,8,8,64,32 );
 	m_tilemap2->set_transparent_pen(0);
 }
 
@@ -165,7 +165,7 @@ WRITE8_MEMBER(pipeline_state::vram2_w)
 			if(offset<0x300)
 			{
 			offset&=0xff;
-			palette_set_color_rgb(machine(), offset, pal6bit(m_palram[offset]), pal6bit(m_palram[offset+0x100]), pal6bit(m_palram[offset+0x200]));
+			m_palette->set_pen_color(offset, pal6bit(m_palram[offset]), pal6bit(m_palram[offset+0x100]), pal6bit(m_palram[offset+0x200]));
 			}
 	}
 }
@@ -366,7 +366,7 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 };
 
-void pipeline_state::palette_init()
+PALETTE_INIT_MEMBER(pipeline_state, pipeline)
 {
 	int r,g,b,i,c;
 	UINT8 *prom1 = &memregion("proms")->base()[0x000];
@@ -381,7 +381,7 @@ void pipeline_state::palette_init()
 		r*=36;
 		g*=36;
 		b*=85;
-		palette_set_color(machine(), 0x100+i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(0x100+i, rgb_t(r, g, b));
 	}
 }
 
@@ -413,11 +413,12 @@ static MACHINE_CONFIG_START( pipeline, pipeline_state )
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 16, 239)
 	MCFG_SCREEN_UPDATE_DRIVER(pipeline_state, screen_update_pipeline)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(pipeline)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", pipeline)
 
-	MCFG_PALETTE_LENGTH(0x100+0x100)
-
+	MCFG_PALETTE_ADD("palette", 0x100+0x100)
+	MCFG_PALETTE_INIT_OWNER(pipeline_state, pipeline)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

@@ -169,15 +169,13 @@ Notes:
 
 */
 
-#define ADDRESS_MAP_MODERN
-
 #include "emu.h"
 #include "cpu/powerpc/ppc.h"
 #include "cpu/tlcs900/tlcs900.h"
 #include "machine/ataintf.h"
 #include "machine/idehd.h"
 #include "machine/nvram.h"
-#include "video/polynew.h"
+#include "video/poly.h"
 
 /*
     Interesting mem areas
@@ -544,7 +542,8 @@ public:
 		m_iocpu(*this, "iocpu"),
 		m_work_ram(*this, "work_ram"),
 		m_mbox_ram(*this, "mbox_ram"),
-		m_ata(*this, "ata")
+		m_ata(*this, "ata"),
+		m_screen(*this, "screen")
 	{
 	}
 
@@ -553,6 +552,7 @@ public:
 	required_shared_ptr<UINT64> m_work_ram;
 	required_shared_ptr<UINT16> m_mbox_ram;
 	required_device<ata_interface_device> m_ata;
+	required_device<screen_device> m_screen;
 
 	DECLARE_READ64_MEMBER(ppc_common_r);
 	DECLARE_WRITE64_MEMBER(ppc_common_w);
@@ -780,6 +780,7 @@ INLINE float finvsqrt(float number)
 	return y;
 }
 
+#if 0
 INLINE void normalize_vec3(VECTOR3 *v)
 {
 	float l = finvsqrt(*v[0] * *v[0] + *v[1] * *v[1] + *v[2] * *v[2]);
@@ -787,6 +788,7 @@ INLINE void normalize_vec3(VECTOR3 *v)
 	*v[1] *= l;
 	*v[2] *= l;
 }
+#endif
 
 INLINE float clamp_pos(float v)
 {
@@ -2658,9 +2660,7 @@ WRITE_LINE_MEMBER(taitotz_state::ide_interrupt)
 
 static const powerpc_config ppc603e_config =
 {
-	XTAL_66_6667MHz,        /* Multiplier 1.5, Bus = 66MHz, Core = 100MHz */
-	NULL,
-	NULL
+	XTAL_66_6667MHz        /* Multiplier 1.5, Bus = 66MHz, Core = 100MHz */
 };
 
 

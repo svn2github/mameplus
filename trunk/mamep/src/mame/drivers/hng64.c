@@ -525,7 +525,7 @@ WRITE32_MEMBER(hng64_state::hng64_pal_w)
 	g = ((paletteram[offset] & 0x0000ff00) >>8);
 	r = ((paletteram[offset] & 0x00ff0000) >>16);
 	//a = ((paletteram[offset] & 0xff000000) >>24);
-	palette_set_color(machine(),offset,MAKE_RGB(r,g,b));
+	m_palette->set_pen_color(offset,rgb_t(r,g,b));
 }
 
 READ32_MEMBER(hng64_state::hng64_sysregs_r)
@@ -914,16 +914,17 @@ WRITE32_MEMBER(hng64_state::dl_upload_w)
 	machine().scheduler().timer_set(m_maincpu->cycles_to_attotime(0x200*8), timer_expired_delegate(FUNC(hng64_state::hng64_3dfifo_processed),this));
 }
 
+/* Note: Samurai Shodown games never calls bit 1, so it can't be framebuffer clear. It also calls bit 3 at start-up, meaning unknown */
 WRITE32_MEMBER(hng64_state::dl_control_w) // This handles framebuffers
 {
-	if(data & 2) // clear current buffer
-	{
-		clear3d();
-	}
+	//if(data & 2) // swap buffers
+	//{
+	//  clear3d();
+	//}
 
 //  printf("%02x\n",data);
 
-//  if(data & 1) // swap buffers?
+//  if(data & 1) // process DMA from 3d FIFO to framebuffer
 
 //  if(data & 4) // reset buffer count
 }
@@ -1735,11 +1736,10 @@ static void hng64_reorder(running_machine &machine, UINT8* gfxregion, size_t gfx
 {
 	// by default 2 4bpp tiles are stored in each 8bpp tile, this makes decoding in MAME harder than it needs to be
 	// reorder them
-	UINT8* buffer;
 	int i;
 	UINT8 tilesize = 4*8; // 4 bytes per line, 8 lines
 
-	buffer = auto_alloc_array(machine, UINT8, gfxregionsize);
+	dynamic_buffer buffer(gfxregionsize);
 
 	for (i=0;i<gfxregionsize/2;i+=tilesize)
 	{
@@ -1748,8 +1748,6 @@ static void hng64_reorder(running_machine &machine, UINT8* gfxregion, size_t gfx
 	}
 
 	memcpy(gfxregion, buffer, gfxregionsize);
-
-	auto_free (machine, buffer);
 }
 
 DRIVER_INIT_MEMBER(hng64_state,hng64_reorder_gfx)
@@ -1940,11 +1938,6 @@ void hng64_state::machine_reset()
 }
 
 
-static MSM6242_INTERFACE( hng64_rtc_intf )
-{
-	DEVCB_NULL
-};
-
 static MACHINE_CONFIG_START( hng64, hng64_state )
 
 	/* basic machine hardware */
@@ -1962,17 +1955,17 @@ static MACHINE_CONFIG_START( hng64, hng64_state )
 	MCFG_CPU_IO_MAP(hng_comm_io_map)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_MSM6242_ADD("rtc", hng64_rtc_intf)
 
-	MCFG_GFXDECODE(hng64)
+	MCFG_DEVICE_ADD("rtc", MSM6242, XTAL_32_768kHz)
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", hng64)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(hng64_state, screen_update_hng64)
-
-	MCFG_PALETTE_LENGTH(0x1000)
-
 	MCFG_SCREEN_VBLANK_DRIVER(hng64_state, screen_eof_hng64)
+
+	MCFG_PALETTE_ADD("palette", 0x1000)
 MACHINE_CONFIG_END
 
 

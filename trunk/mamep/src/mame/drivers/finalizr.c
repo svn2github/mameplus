@@ -232,23 +232,6 @@ static GFXDECODE_START( finalizr )
 GFXDECODE_END
 
 
-/*************************************
- *
- *  Sound interface
- *
- *************************************/
-
-
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
-
-
 void finalizr_state::machine_start()
 {
 	save_item(NAME(m_spriterambank));
@@ -286,17 +269,18 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 35*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(finalizr_state, screen_update_finalizr)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(finalizr)
-	MCFG_PALETTE_LENGTH(2*16*16)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", finalizr)
+	MCFG_PALETTE_ADD("palette", 2*16*16)
+	MCFG_PALETTE_INDIRECT_ENTRIES(32)
+	MCFG_PALETTE_INIT_OWNER(finalizr_state, finalizr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)

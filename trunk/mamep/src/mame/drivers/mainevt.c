@@ -167,7 +167,7 @@ static ADDRESS_MAP_START( mainevt_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 
 	AM_RANGE(0x4000, 0x5dff) AM_RAM
-	AM_RANGE(0x5e00, 0x5fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x5e00, 0x5fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -191,7 +191,7 @@ static ADDRESS_MAP_START( devstors_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 
 	AM_RANGE(0x4000, 0x5dff) AM_RAM
-	AM_RANGE(0x5e00, 0x5fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x5e00, 0x5fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -376,11 +376,6 @@ WRITE8_MEMBER(mainevt_state::volume_callback)
 	m_k007232->set_volume(1, 0, (data & 0x0f) * 0x11);
 }
 
-static const k007232_interface k007232_config =
-{
-	DEVCB_DRIVER_MEMBER(mainevt_state,volume_callback) /* external port callback */
-};
-
 static const k052109_interface mainevt_k052109_intf =
 {
 	"gfx1", 0,
@@ -436,27 +431,33 @@ static MACHINE_CONFIG_START( mainevt, mainevt_state )
 
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(mainevt_state, screen_update_mainevt)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(mainevt_state,mainevt)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", mainevt_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", mainevt_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("k007232", K007232, 3579545)
-	MCFG_SOUND_CONFIG(k007232_config)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(mainevt_state, volume_callback))
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 
@@ -494,21 +495,27 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(mainevt_state, screen_update_dv)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(mainevt_state,dv)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", dv_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", dv_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 	MCFG_K051733_ADD("k051733")
 
 	/* sound hardware */
@@ -519,7 +526,7 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 	MCFG_SOUND_ROUTE(1, "mono", 0.30)
 
 	MCFG_SOUND_ADD("k007232", K007232, 3579545)
-	MCFG_SOUND_CONFIG(k007232_config)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(mainevt_state, volume_callback))
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 MACHINE_CONFIG_END

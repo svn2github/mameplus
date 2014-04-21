@@ -42,13 +42,15 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_dac(*this, "dac"),
 		m_main_ram(*this, "main_ram"),
-		m_fo_state(*this, "fo_state")
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<dac_device> m_dac;
 	required_shared_ptr<UINT8> m_main_ram;
-	required_shared_ptr<UINT8> m_fo_state;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
 
 	tilemap_t *m_tilemap;
 	UINT32 m_clocks;
@@ -71,7 +73,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(quizshow);
 	UINT32 screen_update_quizshow(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(quizshow_clock_timer_cb);
 };
@@ -83,12 +85,10 @@ public:
 
 ***************************************************************************/
 
-void quizshow_state::palette_init()
+PALETTE_INIT_MEMBER(quizshow_state, quizshow)
 {
-	machine().colortable = colortable_alloc(machine(), 2);
-
-	colortable_palette_set_color(machine().colortable, 0, RGB_BLACK);
-	colortable_palette_set_color(machine().colortable, 1, RGB_WHITE);
+	palette.set_indirect_color(0, rgb_t::black);
+	palette.set_indirect_color(1, rgb_t::white);
 
 	// normal, blink/off, invert, blink+invert
 	const int lut_pal[16] = {
@@ -99,7 +99,7 @@ void quizshow_state::palette_init()
 	};
 
 	for (int i = 0; i < 16 ; i++)
-		colortable_entry_set_value(machine().colortable, i, lut_pal[i]);
+		palette.set_pen_indirect(i, lut_pal[i]);
 }
 
 TILE_GET_INFO_MEMBER(quizshow_state::get_tile_info)
@@ -114,7 +114,7 @@ TILE_GET_INFO_MEMBER(quizshow_state::get_tile_info)
 
 void quizshow_state::video_start()
 {
-	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(quizshow_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 16, 32, 16);
+	m_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(quizshow_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 16, 32, 16);
 }
 
 UINT32 quizshow_state::screen_update_quizshow(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
@@ -240,7 +240,6 @@ static ADDRESS_MAP_START( quizshow_io_map, AS_IO, 8, quizshow_state )
 //  AM_RANGE(S2650_CTRL_PORT, S2650_CTRL_PORT) AM_NOP // unused
 //  AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_NOP // unused
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ(quizshow_tape_signal_r)
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_SHARE("fo_state")
 ADDRESS_MAP_END
 
 
@@ -391,9 +390,12 @@ static MACHINE_CONFIG_START( quizshow, quizshow_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 
 	MCFG_SCREEN_UPDATE_DRIVER(quizshow_state, screen_update_quizshow)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(quizshow)
-	MCFG_PALETTE_LENGTH(8*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", quizshow)
+	MCFG_PALETTE_ADD("palette", 8*2)
+	MCFG_PALETTE_INDIRECT_ENTRIES(2)
+	MCFG_PALETTE_INIT_OWNER(quizshow_state, quizshow)
 
 	/* sound hardware (discrete) */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -216,7 +216,7 @@ WRITE32_MEMBER(undrfire_state::color_ram_w)
 		g = (a & 0xff00) >> 8;
 		b = (a & 0xff);
 
-		palette_set_color(machine(),offset,MAKE_RGB(r,g,b));
+		m_palette->set_pen_color(offset,rgb_t(r,g,b));
 	}
 }
 
@@ -731,13 +731,18 @@ static MACHINE_CONFIG_START( undrfire, undrfire_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 3*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(undrfire_state, screen_update_undrfire)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(undrfire)
-	MCFG_PALETTE_LENGTH(16384)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", undrfire)
+	MCFG_PALETTE_ADD("palette", 16384)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn", undrfire_tc0100scn_intf)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
 	MCFG_TC0480SCP_ADD("tc0480scp", undrfire_tc0480scp_intf)
+	MCFG_TC0480SCP_GFXDECODE("gfxdecode")
+	MCFG_TC0480SCP_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(taito_en_sound)
@@ -766,13 +771,19 @@ static MACHINE_CONFIG_START( cbombers, undrfire_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 3*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(undrfire_state, screen_update_cbombers)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(cbombers)
-	MCFG_PALETTE_LENGTH(16384)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cbombers)
+	MCFG_PALETTE_ADD("palette", 16384)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn", undrfire_tc0100scn_intf)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
+
 	MCFG_TC0480SCP_ADD("tc0480scp", undrfire_tc0480scp_intf)
+	MCFG_TC0480SCP_GFXDECODE("gfxdecode")
+	MCFG_TC0480SCP_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(taito_en_sound)

@@ -124,6 +124,7 @@ static const discrete_lfsr_desc bzone_lfsr =
 	15                  /* Output bit */
 };
 
+#if 0
 static const discrete_op_amp_filt_info bzone_explo_0 =
 {
 		BZ_R18 + BZ_R19, 0, 0, 0,       /* r1, r2, r3, r4 */
@@ -159,6 +160,7 @@ static const discrete_op_amp_filt_info bzone_shell_1 =
 		0,                              /* vRef - not used */
 		22, 0                           /* vP, vN */
 };
+#endif
 
 static const discrete_555_desc bzone_vco_desc =
 {
@@ -389,7 +391,7 @@ static const pokey_interface bzone_pokey_interface =
 
 WRITE8_MEMBER(bzone_state::bzone_sounds_w)
 {
-	discrete_sound_w(m_discrete, space, BZ_INPUT, data);
+	m_discrete->write(space, BZ_INPUT, data);
 
 	output_set_value("startled", (data >> 6) & 1);
 	machine().sound().system_enable(data & 0x20);

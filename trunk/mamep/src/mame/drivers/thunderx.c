@@ -45,7 +45,7 @@ void thunderx_state::device_timer(emu_timer &timer, device_timer_id id, int para
 READ8_MEMBER(thunderx_state::scontra_bankedram_r)
 {
 	if (m_palette_selected)
-		return m_generic_paletteram_8[offset];
+		return m_paletteram[offset];
 	else
 		return m_ram[offset];
 }
@@ -53,7 +53,7 @@ READ8_MEMBER(thunderx_state::scontra_bankedram_r)
 WRITE8_MEMBER(thunderx_state::scontra_bankedram_w)
 {
 	if (m_palette_selected)
-		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
+		m_palette->write(space, offset, data);
 	else
 		m_ram[offset] = data;
 }
@@ -76,7 +76,7 @@ READ8_MEMBER(thunderx_state::thunderx_bankedram_r)
 		}
 	}
 	else
-		return m_generic_paletteram_8[offset];
+		return m_paletteram[offset];
 }
 
 WRITE8_MEMBER(thunderx_state::thunderx_bankedram_w)
@@ -94,7 +94,7 @@ WRITE8_MEMBER(thunderx_state::thunderx_bankedram_w)
 			logerror("%04x pmc internal ram %04x = %02x\n",space.device().safe_pc(),offset,data);
 	}
 	else
-		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
+		m_palette->write(space, offset, data);
 }
 
 /*
@@ -577,13 +577,6 @@ WRITE8_MEMBER(thunderx_state::volume_callback)
 	m_k007232->set_volume(1, 0, (data & 0x0f) * 0x11);
 }
 
-static const k007232_interface k007232_config =
-{
-	DEVCB_DRIVER_MEMBER(thunderx_state,volume_callback) /* external port callback */
-};
-
-
-
 static const k052109_interface thunderx_k052109_intf =
 {
 	"gfx1", 0,
@@ -602,8 +595,10 @@ static const k051960_interface thunderx_k051960_intf =
 
 MACHINE_START_MEMBER(thunderx_state,scontra)
 {
-	m_generic_paletteram_8.allocate(0x800);
+	m_paletteram.resize(0x800);
+	m_palette->basemem().set(m_paletteram, ENDIANNESS_BIG, 2);
 
+	save_item(NAME(m_paletteram));
 	save_item(NAME(m_priority));
 	save_item(NAME(m_1f98_data));
 	save_item(NAME(m_palette_selected));
@@ -656,20 +651,25 @@ static MACHINE_CONFIG_START( scontra, thunderx_state )
 	MCFG_MACHINE_RESET_OVERRIDE(thunderx_state,scontra)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.17)             /* verified on pcb */
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(thunderx_state, screen_update_scontra)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", thunderx_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", thunderx_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -679,7 +679,7 @@ static MACHINE_CONFIG_START( scontra, thunderx_state )
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)
 
 	MCFG_SOUND_ADD("k007232", K007232, XTAL_3_579545MHz)    /* verified on pcb */
-	MCFG_SOUND_CONFIG(k007232_config)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(thunderx_state, volume_callback))
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 MACHINE_CONFIG_END
@@ -699,20 +699,25 @@ static MACHINE_CONFIG_START( thunderx, thunderx_state )
 	MCFG_MACHINE_RESET_OVERRIDE(thunderx_state,thunderx)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(thunderx_state, screen_update_scontra)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", thunderx_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", thunderx_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

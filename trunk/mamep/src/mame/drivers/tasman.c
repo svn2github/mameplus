@@ -59,7 +59,7 @@ VIDEO_START_MEMBER(kongambl_state,kongambl)
 UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	#if CUSTOM_DRAW
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	UINT32 count;
 
 	count = 0;
@@ -71,7 +71,7 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 			UINT32 tile = m_vram[count] & 0xffff;
 
 			if(m_screen->visible_area().contains(x*8, y*8))
-				drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
+				gfx->opaque(bitmap,cliprect,tile,0,0,0,x*8,y*8);
 
 			count++;
 		}
@@ -86,7 +86,7 @@ UINT32 kongambl_state::screen_update_kongambl(screen_device &screen, bitmap_ind1
 			UINT32 tile = m_vram[count] & 0xffff;
 
 			if(m_screen->visible_area().contains(x*8, y*8))
-				drawgfx_transpen(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8,0);
+				gfx->transpen(bitmap,cliprect,tile,0,0,0,x*8,y*8,0);
 
 			count++;
 		}
@@ -607,19 +607,25 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 	MCFG_SCREEN_SIZE(96*8, 64*8+16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 80*8-1, 0*8, 64*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(kongambl_state, screen_update_kongambl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 	MCFG_VIDEO_START_OVERRIDE(kongambl_state,kongambl)
 
 	MCFG_K053246_ADD("k053246", k053247_intf)
+	MCFG_K053246_GFXDECODE("gfxdecode")
+	MCFG_K053246_PALETTE("palette")
 	MCFG_K055555_ADD("k055555")
 	MCFG_K055673_ADD_NOINTF("k055673")
+	MCFG_K055673_GFXDECODE("gfxdecode")
+	MCFG_K055673_PALETTE("palette")
 
-	MCFG_GFXDECODE(tasman)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tasman)
 
 	MCFG_K056832_ADD("k056832", k056832_intf)
-
+	MCFG_K056832_GFXDECODE("gfxdecode")
+	MCFG_K056832_PALETTE("palette")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 MACHINE_CONFIG_END

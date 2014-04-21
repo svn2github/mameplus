@@ -223,7 +223,7 @@ void segas32_state::common_start(int multi32)
 	{
 		struct cache_entry *entry = auto_alloc(machine(), struct cache_entry);
 
-		entry->tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(segas32_state::get_tile_info),this), TILEMAP_SCAN_ROWS,  16,16, 32,16);
+		entry->tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(segas32_state::get_tile_info),this), TILEMAP_SCAN_ROWS,  16,16, 32,16);
 		entry->page = 0xff;
 		entry->bank = 0;
 		entry->next = m_cache_head;
@@ -336,7 +336,7 @@ inline void segas32_state::update_color(int offset, UINT16 data)
 	/* nice display when you hit F4, which is useful for debugging */
 
 	/* set the color */
-	palette_set_color_rgb(machine(), offset, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+	m_palette->set_pen_color(offset, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 }
 
 
@@ -2377,7 +2377,7 @@ UINT32 segas32_state::screen_update_system32(screen_device &screen, bitmap_rgb32
 	/* if the display is off, punt */
 	if (!m_system32_displayenable[0])
 	{
-		bitmap.fill(get_black_pen(machine()), cliprect);
+		bitmap.fill(m_palette->black_pen(), cliprect);
 		return 0;
 	}
 
@@ -2555,7 +2555,7 @@ UINT32 segas32_state::multi32_update(screen_device &screen, bitmap_rgb32 &bitmap
 	/* if the display is off, punt */
 	if (!m_system32_displayenable[index])
 	{
-		bitmap.fill(get_black_pen(screen.machine()), cliprect);
+		bitmap.fill(m_palette->black_pen(), cliprect);
 		return 0;
 	}
 

@@ -220,7 +220,8 @@ public:
 	tmspoker_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	tilemap_t *m_bg_tilemap;
@@ -232,10 +233,11 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(tmspoker);
 	UINT32 screen_update_tmspoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(tmspoker_interrupt);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -260,12 +262,12 @@ TILE_GET_INFO_MEMBER(tmspoker_state::get_bg_tile_info)
 */
 	int code = m_videoram[tile_index];
 
-	SET_TILE_INFO_MEMBER( 0 /* bank */, code, 0 /* color */, 0);
+	SET_TILE_INFO_MEMBER(0 /* bank */, code, 0 /* color */, 0);
 }
 
 void tmspoker_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tmspoker_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tmspoker_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 UINT32 tmspoker_state::screen_update_tmspoker(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
@@ -274,7 +276,7 @@ UINT32 tmspoker_state::screen_update_tmspoker(screen_device &screen, bitmap_ind1
 	return 0;
 }
 
-void tmspoker_state::palette_init()
+PALETTE_INIT_MEMBER(tmspoker_state, tmspoker)
 {
 }
 
@@ -550,6 +552,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -561,29 +564,15 @@ static MC6845_INTERFACE( mc6845_intf )
 	NULL        /* update address callback */
 };
 
-/***********************
-*    CPU Interface    *
-************************/
-static TMS9980A_CONFIG( cpuconf )
-{
-	DEVCB_NULL,     // External operation
-	DEVCB_NULL,     // Instruction acquisition
-	DEVCB_NULL,     // Clock out
-	DEVCB_NULL,     // Hold acknowledge
-	DEVCB_NULL      // DBIN
-};
-
 /*************************
 *    Machine Drivers     *
 *************************/
 
 static MACHINE_CONFIG_START( tmspoker, tmspoker_state )
 
-	/* basic machine hardware */
-	MCFG_TMS99xx_ADD("maincpu", TMS9980A, MASTER_CLOCK/4, tmspoker_map, tmspoker_cru_map, cpuconf)
+	// CPU TMS9980A; no line connections
+	MCFG_TMS99xx_ADD("maincpu", TMS9980A, MASTER_CLOCK/4, tmspoker_map, tmspoker_cru_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", tmspoker_state,  tmspoker_interrupt)
-
-//  MCFG_NVRAM_HANDLER(generic_0fill)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -591,12 +580,13 @@ static MACHINE_CONFIG_START( tmspoker, tmspoker_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-
-	MCFG_GFXDECODE(tmspoker)
-
-	MCFG_PALETTE_LENGTH(256)
-
 	MCFG_SCREEN_UPDATE_DRIVER(tmspoker_state, screen_update_tmspoker)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tmspoker)
+
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(tmspoker_state, tmspoker)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK/4, mc6845_intf) /* guess */
 

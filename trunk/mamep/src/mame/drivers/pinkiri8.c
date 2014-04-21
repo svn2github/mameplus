@@ -55,7 +55,9 @@ public:
 		m_janshi_paletteram(*this, "paletteram"),
 		m_janshi_paletteram2(*this, "paletteram2"),
 		m_janshi_crtc_regs(*this, "crtc_regs"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	required_shared_ptr<UINT8> m_janshi_back_vram;
 	required_shared_ptr<UINT8> m_janshi_vram1;
@@ -85,6 +87,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_pinkiri8(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	void draw_background(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
@@ -149,7 +153,7 @@ void pinkiri8_state::video_start() {}
 
 void pinkiri8_state::draw_background(bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 
 	/* FIXME: color is a bit of a mystery */
 	{
@@ -165,7 +169,7 @@ void pinkiri8_state::draw_background(bitmap_ind16 &bitmap, const rectangle &clip
 				attr = m_janshi_back_vram[count + 2] ^ 0xf0;
 				col = (attr >> 4) | 0x10;
 
-				drawgfx_transpen(bitmap, cliprect, gfx, tile, col, 0, 0, x * 16, y * 8, 0);
+					gfx->transpen(bitmap,cliprect, tile, col, 0, 0, x * 16, y * 8, 0);
 
 				count += 4;
 			}
@@ -177,7 +181,7 @@ void pinkiri8_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 {
 	int game_type_hack = 0;
 	int col_bank;
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 
 	if (!strcmp(machine().system().name,"janshi")) game_type_hack = 1;
 
@@ -311,7 +315,7 @@ void pinkiri8_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 			{
 				for (int xx=0;xx<width;xx++)
 				{
-					drawgfx_transpen(bitmap,cliprect,gfx,spr_offs+count,col,0,0,(x+xx*16) -7 ,(y+yy*8)-33,0);
+					gfx->transpen(bitmap,cliprect,spr_offs+count,col,0,0,(x+xx*16) -7 ,(y+yy*8)-33,0);
 					count++;
 				}
 			}
@@ -328,7 +332,7 @@ UINT32 pinkiri8_state::screen_update_pinkiri8(screen_device &screen, bitmap_ind1
 		int r = (val & 0x001f) >> 0;
 		int g = (val & 0x03e0) >> 5;
 		int b = (val & 0x7c00) >> 10;
-		palette_set_color_rgb(machine(), pen, pal5bit(r), pal5bit(g), pal5bit(b));
+		m_palette->set_pen_color(pen, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 
 
@@ -356,7 +360,7 @@ UINT32 pinkiri8_state::screen_update_pinkiri8(screen_device &screen, bitmap_ind1
 #endif
 
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	draw_background(bitmap, cliprect);
 
@@ -1091,9 +1095,10 @@ static MACHINE_CONFIG_START( pinkiri8, pinkiri8_state )
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(pinkiri8_state, screen_update_pinkiri8)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(pinkiri8)
-	MCFG_PALETTE_LENGTH(0x2000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", pinkiri8)
+	MCFG_PALETTE_ADD("palette", 0x2000)
 
 
 	MCFG_DEVICE_ADD("janshivdp", JANSHIVDP, 0)

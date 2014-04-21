@@ -982,20 +982,12 @@ static const ay8910_interface ay8910_config =
 	DEVCB_DRIVER_MEMBER(flstory_state,sound_control_3_w)
 };
 
-static const msm5232_interface msm5232_config =
-{
-	{ 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6 }, /* 1.0 uF capacitors (verified on real PCB) */
-	DEVCB_NULL
-};
-
-
 void flstory_state::machine_start()
 {
 	/* video */
+	save_item(NAME(m_gfxctrl));
 	save_item(NAME(m_char_bank));
 	save_item(NAME(m_palette_bank));
-	save_item(NAME(m_flipscreen));
-	save_item(NAME(m_gfxctrl));
 	/* sound */
 	save_item(NAME(m_snd_data));
 	save_item(NAME(m_snd_flag));
@@ -1028,10 +1020,9 @@ MACHINE_RESET_MEMBER(flstory_state,flstory)
 	MACHINE_RESET_CALL_MEMBER(ta7630);
 
 	/* video */
+	m_gfxctrl = 0;
 	m_char_bank = 0;
 	m_palette_bank = 0;
-	m_flipscreen = 0;
-	m_gfxctrl = 0;
 	/* sound */
 	m_snd_data = 0;
 	m_snd_flag = 0;
@@ -1084,9 +1075,11 @@ static MACHINE_CONFIG_START( flstory, flstory_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(flstory_state, screen_update_flstory)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(flstory)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", flstory)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(flstory_state,flstory)
 
@@ -1098,7 +1091,7 @@ static MACHINE_CONFIG_START( flstory, flstory_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	MCFG_SOUND_ADD("msm", MSM5232, XTAL_8MHz/4) /* verified on pcb */
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6) /* 1.0 uF capacitors (verified on real PCB) */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1
@@ -1141,9 +1134,11 @@ static MACHINE_CONFIG_START( onna34ro, flstory_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(flstory_state, screen_update_flstory)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(flstory)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", flstory)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(flstory_state,flstory)
 
@@ -1155,7 +1150,7 @@ static MACHINE_CONFIG_START( onna34ro, flstory_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	MCFG_SOUND_ADD("msm", MSM5232, 8000000/4)
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6) /* 1.0 uF capacitors (verified on real PCB) */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1
@@ -1198,9 +1193,11 @@ static MACHINE_CONFIG_START( victnine, flstory_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(flstory_state, screen_update_victnine)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(flstory)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", flstory)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(flstory_state,victnine)
 
@@ -1212,7 +1209,7 @@ static MACHINE_CONFIG_START( victnine, flstory_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("msm", MSM5232, 8000000/4)
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6) /* 1.0 uF capacitors (verified on real PCB) */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1
@@ -1261,9 +1258,11 @@ static MACHINE_CONFIG_START( rumba, flstory_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(flstory_state, screen_update_rumba)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(flstory)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", flstory)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(flstory_state,rumba)
 
@@ -1275,7 +1274,7 @@ static MACHINE_CONFIG_START( rumba, flstory_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("msm", MSM5232, XTAL_8MHz/4) /* verified on pcb */
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6) /* 1.0 uF capacitors (verified on real PCB) */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1

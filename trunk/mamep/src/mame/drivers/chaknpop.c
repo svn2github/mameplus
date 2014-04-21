@@ -384,10 +384,11 @@ static MACHINE_CONFIG_START( chaknpop, chaknpop_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(chaknpop_state, screen_update_chaknpop)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(chaknpop)
-	MCFG_PALETTE_LENGTH(1024)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", chaknpop)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_INIT_OWNER(chaknpop_state, chaknpop)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

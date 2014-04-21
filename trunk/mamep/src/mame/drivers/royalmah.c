@@ -105,11 +105,13 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
 		m_videoram(*this, "videoram"),
-		m_audiocpu(*this, "audiocpu") { }
+		m_audiocpu(*this, "audiocpu"),
+		m_rtc(*this, "rtc") { }
 
 	required_device<cpu_device> m_maincpu;
 	required_shared_ptr<UINT8> m_videoram;
 	optional_device<cpu_device> m_audiocpu;
+	optional_device<msm6242_device> m_rtc;
 	UINT8 m_input_port_select;
 	UINT8 m_dsw_select;
 	UINT8 m_rombank;
@@ -197,7 +199,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(mjtensin_rtc_irq);
 	DECLARE_DRIVER_INIT(janptr96);
 	DECLARE_DRIVER_INIT(ippatsu);
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(royalmah);
 	DECLARE_PALETTE_INIT(mjderngr);
 	UINT32 screen_update_royalmah(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(suzume_irq);
@@ -210,7 +212,7 @@ public:
 
 
 
-void royalmah_state::palette_init()
+PALETTE_INIT_MEMBER(royalmah_state, royalmah)
 {
 	offs_t i;
 	const UINT8 *prom = memregion("proms")->base();
@@ -240,7 +242,7 @@ void royalmah_state::palette_init()
 		bit2 = (data >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color_rgb(machine(),i, r,g,b);
+		palette.set_pen_color(i, r,g,b);
 	}
 }
 
@@ -259,7 +261,7 @@ PALETTE_INIT_MEMBER(royalmah_state,mjderngr)
 		UINT8 g = BITSWAP8((data >>  5) & 0x1f,7,6,5,0,1,2,3,4 );
 		UINT8 b = BITSWAP8((data >> 10) & 0x1f,7,6,5,0,1,2,3,4 );
 
-		palette_set_color_rgb(machine(),i, pal5bit(r), pal5bit(g), pal5bit(b));
+		palette.set_pen_color(i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 
@@ -1194,9 +1196,7 @@ READ8_MEMBER(royalmah_state::mjvegasa_rom_io_r)
 
 	if((offset & 0xfff0) == 0x8000)
 	{
-		msm6242_device *rtc = machine().device<msm6242_device>("rtc");
-
-		return rtc->read(space, offset & 0xf);
+		return m_rtc->read(space, offset & 0xf);
 	}
 
 	logerror("%04X: unmapped IO read at %04X\n", space.device().safe_pc(), offset);
@@ -1216,9 +1216,7 @@ WRITE8_MEMBER(royalmah_state::mjvegasa_rom_io_w)
 
 	if((offset & 0xfff0) == 0x8000)
 	{
-		msm6242_device *rtc = machine().device<msm6242_device>("rtc");
-
-		rtc->write(space, offset & 0xf,data);
+		m_rtc->write(space, offset & 0xf,data);
 		return;
 	}
 
@@ -3234,7 +3232,8 @@ static MACHINE_CONFIG_START( royalmah, royalmah_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(16*2)
+	MCFG_PALETTE_ADD("palette", 16*2)
+	MCFG_PALETTE_INIT_OWNER(royalmah_state,royalmah)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_SIZE(256, 256)
@@ -3242,6 +3241,7 @@ static MACHINE_CONFIG_START( royalmah, royalmah_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_UPDATE_DRIVER(royalmah_state, screen_update_royalmah)
+	MCFG_SCREEN_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3345,8 +3345,9 @@ static MACHINE_CONFIG_DERIVED( mjderngr, dondenmj )
 	MCFG_CPU_IO_MAP(mjderngr_iomap)
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(16*32)
-	MCFG_PALETTE_INIT_OVERRIDE(royalmah_state,mjderngr)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(16*32)
+	MCFG_PALETTE_INIT_OWNER(royalmah_state,mjderngr)
 MACHINE_CONFIG_END
 
 /* It runs in IM 2, thus needs a vector on the data bus */
@@ -3366,11 +3367,6 @@ WRITE_LINE_MEMBER(royalmah_state::janptr96_rtc_irq)
 	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x82);   // rtc
 }
 
-static MSM6242_INTERFACE( janptr96_rtc_intf )
-{
-	DEVCB_DRIVER_LINE_MEMBER(royalmah_state,janptr96_rtc_irq)
-};
-
 static MACHINE_CONFIG_DERIVED( janptr96, mjderngr )
 	MCFG_DEVICE_REMOVE("maincpu")
 
@@ -3383,8 +3379,9 @@ static MACHINE_CONFIG_DERIVED( janptr96, mjderngr )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
 
 	/* devices */
-	MCFG_MSM6242_ADD("rtc", janptr96_rtc_intf)
-MACHINE_CONFIG_END
+	MCFG_DEVICE_ADD("rtc", MSM6242, XTAL_32_768kHz)
+	MCFG_MSM6242_OUT_INT_HANDLER(WRITELINE(royalmah_state, janptr96_rtc_irq))
+	MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( mjifb, mjderngr )
@@ -3420,12 +3417,6 @@ WRITE_LINE_MEMBER(royalmah_state::mjtensin_rtc_irq)
 }
 
 
-static MSM6242_INTERFACE( mjtensin_rtc_intf )
-{
-	DEVCB_DRIVER_LINE_MEMBER(royalmah_state,mjtensin_rtc_irq)
-};
-
-
 static MACHINE_CONFIG_DERIVED( mjtensin, mjderngr )
 	MCFG_CPU_REPLACE("maincpu",TMP90841, 12000000)  /* ? */
 	MCFG_CPU_PROGRAM_MAP(mjtensin_map)
@@ -3436,7 +3427,8 @@ static MACHINE_CONFIG_DERIVED( mjtensin, mjderngr )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
 
 	/* devices */
-	MCFG_MSM6242_ADD("rtc", mjtensin_rtc_intf)
+	MCFG_DEVICE_ADD("rtc", MSM6242, XTAL_32_768kHz)
+	MCFG_MSM6242_OUT_INT_HANDLER(WRITELINE(royalmah_state, mjtensin_rtc_irq))
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cafetime, mjderngr )
@@ -3449,7 +3441,8 @@ static MACHINE_CONFIG_DERIVED( cafetime, mjderngr )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
 
 	/* devices */
-	MCFG_MSM6242_ADD("rtc", mjtensin_rtc_intf)
+	MCFG_DEVICE_ADD("rtc", MSM6242, XTAL_32_768kHz)
+	MCFG_MSM6242_OUT_INT_HANDLER(WRITELINE(royalmah_state, mjtensin_rtc_irq))
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mjvegasa, mjderngr )
@@ -3462,7 +3455,8 @@ static MACHINE_CONFIG_DERIVED( mjvegasa, mjderngr )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 8, 255-8)
 
 	/* devices */
-	MCFG_MSM6242_ADD("rtc", mjtensin_rtc_intf)
+	MCFG_DEVICE_ADD("rtc", MSM6242, XTAL_32_768kHz)
+	MCFG_MSM6242_OUT_INT_HANDLER(WRITELINE(royalmah_state, mjtensin_rtc_irq))
 MACHINE_CONFIG_END
 
 

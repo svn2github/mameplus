@@ -326,17 +326,19 @@ static MACHINE_CONFIG_START( arcadecl, arcadecl_state )
 	MCFG_ATARI_EEPROM_2804_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_GFXDECODE(arcadecl)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", arcadecl)
+	MCFG_PALETTE_ADD("palette", 512)
 
 	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", arcadecl_state::s_mob_config)
+	MCFG_ATARI_MOTION_OBJECTS_GFXDECODE("gfxdecode")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 456, 0+12, 336+12, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_DRIVER(arcadecl_state, screen_update_arcadecl)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(arcadecl_state,arcadecl)
 

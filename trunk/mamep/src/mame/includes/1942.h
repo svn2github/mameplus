@@ -14,7 +14,9 @@ public:
 		m_bg_videoram(*this, "bg_videoram"),
 		m_protopal(*this, "protopal"),
 		m_audiocpu(*this, "audiocpu"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_spriteram;
@@ -27,9 +29,9 @@ public:
 	tilemap_t *m_bg_tilemap;
 	int m_palette_bank;
 	UINT8 m_scroll[2];
-	rgb_t palette[256];
 	void create_palette();
-	void palette_init_1942p();
+	DECLARE_PALETTE_INIT(1942);
+	DECLARE_PALETTE_INIT(1942p);
 	DECLARE_WRITE8_MEMBER(c1942p_palette_w);
 
 	/* devices */
@@ -48,11 +50,12 @@ public:
 	virtual void machine_reset();
 	virtual void video_start();
 	void video_start_c1942p();
-	virtual void palette_init();
 	UINT32 screen_update_1942(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_1942p(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(c1942_scanline);
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	void draw_sprites_p( bitmap_ind16 &bitmap, const rectangle &cliprect );
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };

@@ -22,7 +22,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_i8255(*this, "i8255"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -48,6 +49,7 @@ public:
 	UINT32 screen_update_mayumi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(mayumi_interrupt);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -67,7 +69,7 @@ TILE_GET_INFO_MEMBER(mayumi_state::get_tile_info)
 
 void mayumi_state::video_start()
 {
-	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mayumi_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(mayumi_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 }
 
 WRITE8_MEMBER(mayumi_state::mayumi_videoram_w)
@@ -407,11 +409,10 @@ static MACHINE_CONFIG_START( mayumi, mayumi_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 62*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(mayumi_state, screen_update_mayumi)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(mayumi)
-	MCFG_PALETTE_LENGTH(256)
-
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRR_GGGG_BBBB)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", mayumi)
+	MCFG_PALETTE_ADD_RRRRGGGGBBBB_PROMS("palette", 256)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

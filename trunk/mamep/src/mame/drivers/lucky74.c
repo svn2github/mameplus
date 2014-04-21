@@ -791,6 +791,11 @@
 #include "lucky74.lh"
 #include "includes/lucky74.h"
 
+void lucky74_state::machine_reset()
+{
+	m_copro_sm7831 = 0;
+	m_usart_8251 = 0;
+}
 
 /*****************************
 *    Read/Write  Handlers    *
@@ -1511,20 +1516,6 @@ static const ay8910_interface ay8910_config =
 	DEVCB_DRIVER_MEMBER(lucky74_state,ym2149_portb_w)
 };
 
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(lucky74_state,lucky74_adpcm_int),  /* interrupt function */
-	MSM5205_S48_4B      /* 8KHz */
-};
-
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
 
 /*************************
 *    Machine Drivers     *
@@ -1553,33 +1544,32 @@ static MACHINE_CONFIG_START( lucky74, lucky74_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(lucky74_state, screen_update_lucky74)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(lucky74)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", lucky74)
 
-	MCFG_PALETTE_LENGTH(512)
-
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_INIT_OWNER(lucky74_state, lucky74)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("sn1", SN76489, C_06B49P_CLKOUT_03)  /* 3 MHz. */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("sn2", SN76489, C_06B49P_CLKOUT_03)  /* 3 MHz. */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("sn3", SN76489, C_06B49P_CLKOUT_03)  /* 3 MHz. */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, C_06B49P_CLKOUT_04) /* 1.5 MHz. */
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.00)         /* not routed to audio hardware */
 
 	MCFG_SOUND_ADD("msm", MSM5205, C_06B49P_CLKOUT_06)  /* 375 kHz. */
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(lucky74_state, lucky74_adpcm_int))  /* interrupt function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8KHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 
 MACHINE_CONFIG_END

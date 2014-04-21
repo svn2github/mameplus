@@ -393,12 +393,6 @@ static const tms34010_config msp_config =
 	hdmsp_irq_gen                   /* generate interrupt */
 };
 
-
-static const dsp32_config dsp32c_config =
-{
-	hddsk_update_pif                /* a change has occurred on an output pin */
-};
-
 /*************************************
  *
  *  Driver board memory maps
@@ -418,7 +412,7 @@ static ADDRESS_MAP_START( driver_68k_map, AS_PROGRAM, 16, harddriv_state )
 	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE(hd68k_adc12_r, hd68k_adc_control_w)
 	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE(hd68k_gsp_io_r, hd68k_gsp_io_w)
 	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE(hd68k_msp_io_r, hd68k_msp_io_w)
-	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
+	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", mc68681_device, read, write, 0xff00)
 	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE(hd68k_zram_r, hd68k_zram_w)
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -428,7 +422,7 @@ static ADDRESS_MAP_START( driver_gsp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x0000200f) AM_NOP                 /* hit during self-test */
 	AM_RANGE(0x02000000, 0x0207ffff) AM_READWRITE(hdgsp_vram_2bpp_r, hdgsp_vram_1bpp_w)
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READ_LEGACY(tms34010_io_register_r) AM_WRITE(hdgsp_io_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_DEVREADWRITE("gsp", tms34010_device, io_register_r, io_register_w)
 	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
 	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
 	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
@@ -441,7 +435,7 @@ static ADDRESS_MAP_START( driver_msp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x000fffff) AM_RAM AM_SHARE("msp_ram")
 	AM_RANGE(0x00700000, 0x007fffff) AM_RAM AM_SHARE("msp_ram")
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, tms34010_io_register_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_DEVREADWRITE("msp", tms34010_device, io_register_r, io_register_w)
 	AM_RANGE(0xfff00000, 0xffffffff) AM_RAM AM_SHARE("msp_ram")
 ADDRESS_MAP_END
 
@@ -465,7 +459,7 @@ static ADDRESS_MAP_START( multisync_68k_map, AS_PROGRAM, 16, harddriv_state )
 	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE(hd68k_adc12_r, hd68k_adc_control_w)
 	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE(hd68k_gsp_io_r, hd68k_gsp_io_w)
 	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE(hd68k_msp_io_r, hd68k_msp_io_w)
-	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
+	AM_RANGE(0xff0000, 0xff001f) AM_DEVREADWRITE8("duartn68681", mc68681_device, read, write, 0xff00)
 	AM_RANGE(0xff4000, 0xff4fff) AM_READWRITE(hd68k_zram_r, hd68k_zram_w)
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -475,7 +469,7 @@ static ADDRESS_MAP_START( multisync_gsp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x0000200f) AM_NOP                 /* hit during self-test */
 	AM_RANGE(0x02000000, 0x020fffff) AM_READWRITE(hdgsp_vram_2bpp_r, hdgsp_vram_2bpp_w)
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READ_LEGACY(tms34010_io_register_r) AM_WRITE(hdgsp_io_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_DEVREAD("gsp", tms34010_device, io_register_r) AM_WRITE(hdgsp_io_w)
 	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
 	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
 	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
@@ -503,7 +497,7 @@ static ADDRESS_MAP_START( multisync2_68k_map, AS_PROGRAM, 16, harddriv_state )
 	AM_RANGE(0xb80000, 0xbfffff) AM_READWRITE(hd68k_adc12_r, hd68k_adc_control_w)
 	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE(hd68k_gsp_io_r, hd68k_gsp_io_w)
 	AM_RANGE(0xc04000, 0xc07fff) AM_READWRITE(hd68k_msp_io_r, hd68k_msp_io_w)
-	AM_RANGE(0xfc0000, 0xfc001f) AM_DEVREADWRITE8("duartn68681", duartn68681_device, read, write, 0xff00)
+	AM_RANGE(0xfc0000, 0xfc001f) AM_DEVREADWRITE8("duartn68681", mc68681_device, read, write, 0xff00)
 	AM_RANGE(0xfd0000, 0xfd0fff) AM_MIRROR(0x004000) AM_READWRITE(hd68k_zram_r, hd68k_zram_w)
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -514,7 +508,7 @@ static ADDRESS_MAP_START( multisync2_gsp_map, AS_PROGRAM, 16, harddriv_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x0000200f) AM_NOP                 /* hit during self-test */
 	AM_RANGE(0x02000000, 0x020fffff) AM_READWRITE(hdgsp_vram_2bpp_r, hdgsp_vram_2bpp_w)
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READ_LEGACY(tms34010_io_register_r) AM_WRITE(hdgsp_io_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_DEVREAD("gsp", tms34010_device, io_register_r) AM_WRITE(hdgsp_io_w)
 	AM_RANGE(0xf4000000, 0xf40000ff) AM_READWRITE(hdgsp_control_lo_r, hdgsp_control_lo_w) AM_SHARE("gsp_control_lo")
 	AM_RANGE(0xf4800000, 0xf48000ff) AM_READWRITE(hdgsp_control_hi_r, hdgsp_control_hi_w) AM_SHARE("gsp_control_hi")
 	AM_RANGE(0xf5000000, 0xf5000fff) AM_READWRITE(hdgsp_paletteram_lo_r, hdgsp_paletteram_lo_w) AM_SHARE("gsp_palram_lo")
@@ -1335,16 +1329,17 @@ static MACHINE_CONFIG_START( driver_nomsp, harddriv_state )
 	MCFG_M48T02_ADD("200e") // MK48T02
 	MCFG_EEPROM_2816_ADD("210e") // MK48Z02
 
-	MCFG_DUARTN68681_ADD("duartn68681", XTAL_3_6864MHz)
-	MCFG_DUARTN68681_IRQ_CALLBACK(WRITELINE(harddriv_state, harddriv_duart_irq_handler))
+	MCFG_MC68681_ADD("duartn68681", XTAL_3_6864MHz)
+	MCFG_MC68681_IRQ_CALLBACK(WRITELINE(harddriv_state, harddriv_duart_irq_handler))
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(HARDDRIV_GSP_CLOCK/12*4, 160*4, 0, 127*4, 417, 0, 384)
 	MCFG_SCREEN_UPDATE_DEVICE("gsp", tms34010_device, tms340x0_ind16)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(harddriv_state,harddriv)
 MACHINE_CONFIG_END
@@ -1459,7 +1454,7 @@ static MACHINE_CONFIG_FRAGMENT( dsk )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("dsp32", DSP32C, XTAL_40MHz)
-	MCFG_DSP32C_CONFIG(dsp32c_config)
+	MCFG_DSP32C_OUTPUT_CALLBACK(WRITE32(harddriv_state,hddsk_update_pif))
 	MCFG_CPU_PROGRAM_MAP(dsk_dsp32_map)
 
 	MCFG_EEPROM_2816_ADD("dsk_10c") // MK48Z02
@@ -1475,7 +1470,7 @@ static MACHINE_CONFIG_FRAGMENT( dsk2 )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("dsp32", DSP32C, XTAL_40MHz)
-	MCFG_DSP32C_CONFIG(dsp32c_config)
+	MCFG_DSP32C_OUTPUT_CALLBACK(WRITE32(harddriv_state,hddsk_update_pif))
 	MCFG_CPU_PROGRAM_MAP(dsk2_dsp32_map)
 
 	/* ASIC65 */

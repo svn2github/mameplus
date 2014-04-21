@@ -437,12 +437,6 @@ static GFXDECODE_START( blasto )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, blasto_layout,   0, 1 )
 GFXDECODE_END
 
-void blockade_state::palette_init()
-{
-	palette_set_color(machine(),0,MAKE_RGB(0x00,0x00,0x00)); /* BLACK */
-	palette_set_color(machine(),1,MAKE_RGB(0xff,0xff,0xff)); /* WHITE */
-}
-
 
 /*************************************
  *
@@ -478,9 +472,10 @@ static MACHINE_CONFIG_START( blockade, blockade_state )
 	MCFG_SCREEN_SIZE(32*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(blockade_state, screen_update_blockade)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(blockade)
-	MCFG_PALETTE_LENGTH(2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", blockade)
+	MCFG_PALETTE_ADD_BLACK_AND_WHITE("palette")
 
 
 	/* sound hardware */
@@ -495,7 +490,7 @@ static MACHINE_CONFIG_START( blockade, blockade_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( blasto, blockade )
-	MCFG_GFXDECODE(blasto)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", blasto)
 MACHINE_CONFIG_END
 
 /*************************************

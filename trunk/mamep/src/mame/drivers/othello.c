@@ -55,7 +55,8 @@ public:
 		m_videoram(*this, "videoram"),
 		m_maincpu(*this, "maincpu"),
 		m_ay1(*this, "ay1"),
-		m_ay2(*this, "ay2")
+		m_ay2(*this, "ay2"),
+		m_palette(*this, "palette")
 	{
 	}
 
@@ -79,6 +80,8 @@ public:
 	required_device<ay8910_device> m_ay2;
 	mc6845_device *m_mc6845;
 	device_t *m_n7751;
+	required_device<palette_device> m_palette;
+
 	DECLARE_READ8_MEMBER(unk_87_r);
 	DECLARE_WRITE8_MEMBER(unk_8a_w);
 	DECLARE_WRITE8_MEMBER(unk_8c_w);
@@ -98,14 +101,14 @@ public:
 	DECLARE_WRITE8_MEMBER(n7751_rom_control_w);
 	virtual void machine_start();
 	virtual void machine_reset();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(othello);
 };
 
 
 static MC6845_UPDATE_ROW( update_row )
 {
 	othello_state *state = device->machine().driver_data<othello_state>();
-	const rgb_t *palette = palette_entry_list_raw(bitmap.palette());
+	const rgb_t *palette = state->m_palette->palette()->entry_list_raw();
 	int cx, x;
 	UINT32 data_address;
 	UINT32 tmp;
@@ -125,22 +128,22 @@ static MC6845_UPDATE_ROW( update_row )
 	}
 }
 
-void othello_state::palette_init()
+PALETTE_INIT_MEMBER(othello_state, othello)
 {
 	int i;
-	for (i = 0; i < machine().total_colors(); i++)
+	for (i = 0; i < palette.entries(); i++)
 	{
-		palette_set_color(machine(), i, MAKE_RGB(0xff, 0x00, 0xff));
+		palette.set_pen_color(i, rgb_t(0xff, 0x00, 0xff));
 	}
 
 	/* only colors  2,3,7,9,c,d,f are used */
-	palette_set_color(machine(), 0x02, MAKE_RGB(0x00, 0xff, 0x00));
-	palette_set_color(machine(), 0x03, MAKE_RGB(0xff, 0x7f, 0x00));
-	palette_set_color(machine(), 0x07, MAKE_RGB(0x00, 0x00, 0x00));
-	palette_set_color(machine(), 0x09, MAKE_RGB(0xff, 0x00, 0x00));
-	palette_set_color(machine(), 0x0c, MAKE_RGB(0x00, 0x00, 0xff));
-	palette_set_color(machine(), 0x0d, MAKE_RGB(0x7f, 0x7f, 0x00));
-	palette_set_color(machine(), 0x0f, MAKE_RGB(0xff, 0xff, 0xff));
+	palette.set_pen_color(0x02, rgb_t(0x00, 0xff, 0x00));
+	palette.set_pen_color(0x03, rgb_t(0xff, 0x7f, 0x00));
+	palette.set_pen_color(0x07, rgb_t(0x00, 0x00, 0x00));
+	palette.set_pen_color(0x09, rgb_t(0xff, 0x00, 0x00));
+	palette.set_pen_color(0x0c, rgb_t(0x00, 0x00, 0xff));
+	palette.set_pen_color(0x0d, rgb_t(0x7f, 0x7f, 0x00));
+	palette.set_pen_color(0x0f, rgb_t(0xff, 0xff, 0xff));
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, othello_state )
@@ -372,6 +375,7 @@ INPUT_PORTS_END
 static MC6845_INTERFACE( h46505_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	TILE_WIDTH, /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	update_row, /* row update callback */
@@ -433,7 +437,8 @@ static MACHINE_CONFIG_START( othello, othello_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*6-1, 0*8, 64*8-1)
 	MCFG_SCREEN_UPDATE_DEVICE("crtc", h46505_device, screen_update)
 
-	MCFG_PALETTE_LENGTH(0x10)
+	MCFG_PALETTE_ADD("palette", 0x10)
+	MCFG_PALETTE_INIT_OWNER(othello_state, othello)
 
 	MCFG_MC6845_ADD("crtc", H46505, "screen", 1000000 /* ? MHz */, h46505_intf)   /* H46505 @ CPU clock */
 

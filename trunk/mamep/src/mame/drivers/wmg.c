@@ -94,7 +94,7 @@ public:
 	DECLARE_WRITE8_MEMBER(wmg_nvram_w);
 	DECLARE_READ8_MEMBER(wmg_pia_0_r);
 	DECLARE_WRITE8_MEMBER(wmg_def_rombank_w);
-	DECLARE_WRITE8_MEMBER(wmg_port_select_w);
+	DECLARE_WRITE_LINE_MEMBER(wmg_port_select_w);
 	DECLARE_WRITE8_MEMBER(wmg_sound_reset_w);
 	DECLARE_WRITE8_MEMBER(wmg_vram_select_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(wmg_mux_r);
@@ -164,7 +164,6 @@ WRITE8_MEMBER( wmg_state::wmg_vram_select_w )
 
 void wmg_state::wmg_def_install_io_space(address_space &space)
 {
-	williams_state *state = space.machine().driver_data<williams_state>();
 	pia6821_device *pia_0 = space.machine().device<pia6821_device>("pia_0");
 	pia6821_device *pia_1 = space.machine().device<pia6821_device>("pia_1");
 
@@ -180,7 +179,7 @@ void wmg_state::wmg_def_install_io_space(address_space &space)
 	space.install_write_handler    (0xcbff, 0xcbff, write8_delegate(FUNC(williams_state::williams_watchdog_reset_w),this));
 	space.install_read_handler     (0xcb00, 0xcbff, read8_delegate(FUNC(williams_state::williams_video_counter_r),this));
 	space.install_readwrite_handler(0xcc00, 0xcfff, read8_delegate(FUNC(wmg_state::wmg_nvram_r), this), write8_delegate(FUNC(wmg_state::wmg_nvram_w),this));
-	membank("bank4")->set_base(state->m_generic_paletteram_8);
+	membank("bank4")->set_base(m_generic_paletteram_8);
 }
 
 WRITE8_MEMBER( wmg_state::wmg_def_rombank_w )
@@ -241,9 +240,9 @@ MACHINE_RESET_MEMBER( wmg_state, wmg )
  *
  *************************************/
 
-WRITE8_MEMBER( wmg_state::wmg_port_select_w )
+WRITE_LINE_MEMBER( wmg_state::wmg_port_select_w )
 {
-	m_wmg_port_select = data | (m_wmg_bank << 1);
+	m_wmg_port_select = state | (m_wmg_bank << 1);
 }
 
 CUSTOM_INPUT_MEMBER(wmg_state::wmg_mux_r)
@@ -257,13 +256,6 @@ CUSTOM_INPUT_MEMBER(wmg_state::wmg_mux_r)
 
 	return ioport(tag)->read();
 }
-
-static const pia6821_interface wmg_muxed_pia_0_intf =
-{
-	/*inputs : A/B,CA/B1,CA/B2 */ DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL,
-	/*outputs: A/B,CA/B2       */ DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_DRIVER_MEMBER(wmg_state, wmg_port_select_w),
-	/*irqs   : A/B             */ DEVCB_NULL, DEVCB_NULL
-};
 
 READ8_MEMBER( wmg_state::wmg_pia_0_r )
 {
@@ -477,9 +469,8 @@ static MACHINE_CONFIG_START( wmg, wmg_state )
 	MCFG_TIMER_DRIVER_ADD("240_timer", williams_state, williams_count240_callback)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE | VIDEO_ALWAYS_UPDATE)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE | VIDEO_ALWAYS_UPDATE)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK*2/3, 512, 10, 304, 260, 7, 245)
 	MCFG_SCREEN_VISIBLE_AREA(6, 298-1, 7, 247-1)
 	MCFG_SCREEN_UPDATE_DRIVER(williams_state, screen_update_williams)
@@ -493,9 +484,21 @@ static MACHINE_CONFIG_START( wmg, wmg_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	/* pia */
-	MCFG_PIA6821_ADD("pia_0", wmg_muxed_pia_0_intf)
-	MCFG_PIA6821_ADD("pia_1", williams_pia_1_intf)
-	MCFG_PIA6821_ADD("pia_2", williams_snd_pia_intf)
+	MCFG_DEVICE_ADD("pia_0", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(IOPORT("IN0"))
+	MCFG_PIA_READPB_HANDLER(IOPORT("IN1"))
+	MCFG_PIA_CB2_HANDLER(WRITELINE(wmg_state, wmg_port_select_w))
+
+	MCFG_DEVICE_ADD("pia_1", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(IOPORT("IN2"))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(williams_state, williams_snd_cmd_w))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(williams_state, williams_main_irq))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(williams_state, williams_main_irq))
+
+	MCFG_DEVICE_ADD("pia_2", PIA6821, 0)
+	MCFG_PIA_WRITEPA_HANDLER(DEVWRITE8("wmsdac", dac_device, write_unsigned8))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(williams_state,williams_snd_irq))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(williams_state,williams_snd_irq))
 MACHINE_CONFIG_END
 
 /*************************************

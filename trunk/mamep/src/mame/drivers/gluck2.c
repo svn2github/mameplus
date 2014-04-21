@@ -206,7 +206,8 @@ public:
 		: driver_device(mconfig, type, tag) ,
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_maincpu(*this, "maincpu"){ }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"){ }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
@@ -219,6 +220,7 @@ public:
 	DECLARE_PALETTE_INIT(gluck2);
 	UINT32 screen_update_gluck2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -259,7 +261,7 @@ TILE_GET_INFO_MEMBER(gluck2_state::get_gluck2_tile_info)
 
 void gluck2_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gluck2_state::get_gluck2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gluck2_state::get_gluck2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -301,7 +303,7 @@ PALETTE_INIT_MEMBER(gluck2_state, gluck2)
 		bit3 = (color_prom[i + 0x200] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 
 	}
 }
@@ -508,6 +510,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -563,10 +566,11 @@ static MACHINE_CONFIG_START( gluck2, gluck2_state )
 	MCFG_SCREEN_SIZE((39+1)*8, (38+1)*8)                /* from MC6845 init, registers 00 & 04. (value - 1) */
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)  /* from MC6845 init, registers 01 & 06. */
 	MCFG_SCREEN_UPDATE_DRIVER(gluck2_state, screen_update_gluck2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(gluck2)
-	MCFG_PALETTE_LENGTH(0x100)
-	MCFG_PALETTE_INIT_OVERRIDE(gluck2_state, gluck2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gluck2)
+	MCFG_PALETTE_ADD("palette", 0x100)
+	MCFG_PALETTE_INIT_OWNER(gluck2_state, gluck2)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK/16, mc6845_intf) /* guess */
 

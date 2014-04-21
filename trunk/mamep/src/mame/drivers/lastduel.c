@@ -505,20 +505,20 @@ static MACHINE_CONFIG_START( lastduel, lastduel_state )
 	MCFG_MACHINE_START_OVERRIDE(lastduel_state,lastduel)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(lastduel_state, screen_update_lastduel)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
-	MCFG_GFXDECODE(lastduel)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", lastduel)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 	MCFG_VIDEO_START_OVERRIDE(lastduel_state,lastduel)
 
@@ -549,20 +549,20 @@ static MACHINE_CONFIG_START( madgear, lastduel_state )
 	MCFG_MACHINE_START_OVERRIDE(lastduel_state,madgear)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(57.4444)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 1*8, 31*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(lastduel_state, screen_update_madgear)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
-	MCFG_GFXDECODE(madgear)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", madgear)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 	MCFG_VIDEO_START_OVERRIDE(lastduel_state,madgear)
 

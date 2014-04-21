@@ -75,8 +75,31 @@ k051960_device::k051960_device(const machine_config &mconfig, const char *tag, d
 	m_readroms(0),
 	m_irq_enabled(0),
 	m_nmi_enabled(0),
-	m_k051937_counter(0)
+	m_k051937_counter(0),
+	m_gfxdecode(*this),
+	m_palette(*this)
 {
+}
+
+//-------------------------------------------------
+//  static_set_gfxdecode_tag: Set the tag of the
+//  gfx decoder
+//-------------------------------------------------
+
+void k051960_device::static_set_gfxdecode_tag(device_t &device, const char *tag)
+{
+	downcast<k051960_device &>(device).m_gfxdecode.set_tag(tag);
+}
+
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void k051960_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<k051960_device &>(device).m_palette.set_tag(tag);
 }
 
 //-------------------------------------------------
@@ -152,30 +175,30 @@ void k051960_device::device_start()
 	{
 	case NORMAL_PLANE_ORDER:
 		total = machine().root_device().memregion(m_gfx_memory_region)->bytes() / 128;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &spritelayout, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &spritelayout, 4);
 		break;
 
 	case REVERSE_PLANE_ORDER:
 		total = machine().root_device().memregion(m_gfx_memory_region)->bytes() / 128;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &spritelayout_reverse, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &spritelayout_reverse, 4);
 		break;
 
 	case GRADIUS3_PLANE_ORDER:
 		total = 0x4000;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &spritelayout_gradius3, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region)->base(), total, &spritelayout_gradius3, 4);
 		break;
 
 	default:
 		fatalerror("Unknown plane_order\n");
 	}
 
-	if (VERBOSE && !(machine().config().m_video_attributes & VIDEO_HAS_SHADOWS))
+	if (VERBOSE && !(m_palette->shadows_enabled()))
 		popmessage("driver should use VIDEO_HAS_SHADOWS");
 
 	/* deinterleave the graphics, if needed */
 	konami_deinterleave_gfx(machine(), m_gfx_memory_region, m_deinterleave);
 
-	m_gfx = machine().gfx[m_gfx_num];
+	m_gfx = m_gfxdecode->gfx(m_gfx_num);
 	m_ram = auto_alloc_array_clear(machine(), UINT8, 0x400);
 
 	save_item(NAME(m_romoffset));
@@ -500,20 +523,18 @@ void k051960_device::k051960_sprites_draw( bitmap_ind16 &bitmap, const rectangle
 						c += yoffset[y];
 
 					if (max_priority == -1)
-						pdrawgfx_transtable(bitmap,cliprect,m_gfx,
-								c,
-								color,
+						m_gfx->prio_transtable(bitmap,cliprect,
+								c,color,
 								flipx,flipy,
 								sx & 0x1ff,sy,
 								priority_bitmap,pri,
-								drawmode_table,machine().shadow_table);
+								drawmode_table);
 					else
-						drawgfx_transtable(bitmap,cliprect,m_gfx,
-								c,
-								color,
+						m_gfx->transtable(bitmap,cliprect,
+								c,color,
 								flipx,flipy,
 								sx & 0x1ff,sy,
-								drawmode_table,machine().shadow_table);
+								drawmode_table);
 				}
 			}
 		}
@@ -543,22 +564,20 @@ void k051960_device::k051960_sprites_draw( bitmap_ind16 &bitmap, const rectangle
 						c += yoffset[y];
 
 					if (max_priority == -1)
-						pdrawgfxzoom_transtable(bitmap,cliprect,m_gfx,
-								c,
-								color,
+						m_gfx->prio_zoom_transtable(bitmap,cliprect,
+								c,color,
 								flipx,flipy,
 								sx & 0x1ff,sy,
 								(zw << 16) / 16,(zh << 16) / 16,
 								priority_bitmap,pri,
-								drawmode_table,machine().shadow_table);
+								drawmode_table);
 					else
-						drawgfxzoom_transtable(bitmap,cliprect,m_gfx,
-								c,
-								color,
+						m_gfx->zoom_transtable(bitmap,cliprect,
+								c,color,
 								flipx,flipy,
 								sx & 0x1ff,sy,
 								(zw << 16) / 16,(zh << 16) / 16,
-								drawmode_table,machine().shadow_table);
+								drawmode_table);
 				}
 			}
 		}

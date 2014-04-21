@@ -63,7 +63,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu"){ }
+		m_audiocpu(*this, "audiocpu"),
+		m_screen(*this, "screen"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -81,6 +82,7 @@ public:
 	/* devices */
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	required_device<screen_device> m_screen;
 	DECLARE_READ8_MEMBER(dip_switch_r);
 	DECLARE_WRITE8_MEMBER(sound_data_w);
 	DECLARE_WRITE8_MEMBER(enigma2_flip_screen_w);
@@ -205,7 +207,7 @@ void enigma2_state::get_pens(pen_t *pens)
 	for (i = 0; i < NUM_PENS; i++)
 	{
 		/* this color gun arrengement is supported by the flyer screenshot */
-		pens[i] = MAKE_RGB(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
+		pens[i] = rgb_t(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
 	}
 }
 
@@ -334,7 +336,7 @@ UINT32 enigma2_state::screen_update_enigma2a(screen_device &screen, bitmap_rgb32
 			video_data = video_data >> 1;
 		}
 
-		pen = bit ? RGB_WHITE : RGB_BLACK;
+		pen = bit ? rgb_t::white : rgb_t::black;
 		bitmap.pix32(bitmap_y, x) = pen;
 
 		/* next pixel */

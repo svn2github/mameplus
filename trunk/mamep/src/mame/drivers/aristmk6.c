@@ -13,7 +13,8 @@ class aristmk6_state : public driver_device
 public:
 	aristmk6_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_palette(*this, "palette")  { }
 
 	UINT32 m_test_x,m_test_y,m_start_offs;
 	UINT8 m_type;
@@ -21,6 +22,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_aristmk6(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -62,7 +64,7 @@ UINT32 aristmk6_state::screen_update_aristmk6(screen_device &screen, bitmap_rgb3
 
 	popmessage("%d %d %04x %d",m_test_x,m_test_y,m_start_offs,m_type);
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	count = (m_start_offs);
 
@@ -97,7 +99,7 @@ UINT32 aristmk6_state::screen_update_aristmk6(screen_device &screen, bitmap_rgb3
 				color = blit_ram[count];
 
 				if(cliprect.contains(x, y))
-					bitmap.pix32(y, x) = machine().pens[color];
+					bitmap.pix32(y, x) = m_palette->pen(color);
 
 				count++;
 			}
@@ -146,7 +148,7 @@ static MACHINE_CONFIG_START( aristmk6, aristmk6_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 480-1)
 	MCFG_SCREEN_UPDATE_DRIVER(aristmk6_state, screen_update_aristmk6)
 
-	MCFG_PALETTE_LENGTH(0x1000)
+	MCFG_PALETTE_ADD("palette", 0x1000)
 
 MACHINE_CONFIG_END
 

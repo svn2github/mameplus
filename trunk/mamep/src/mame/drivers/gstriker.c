@@ -277,7 +277,7 @@ static ADDRESS_MAP_START( gstriker_map, AS_PROGRAM, 16, gstriker_state )
 	AM_RANGE(0x140000, 0x141fff) AM_RAM AM_SHARE("cg10103_vram")
 	AM_RANGE(0x180000, 0x180fff) AM_RAM_WRITE(VS920A_0_vram_w) AM_SHARE("vs920a_vram")
 	AM_RANGE(0x181000, 0x181fff) AM_RAM AM_SHARE("lineram")
-	AM_RANGE(0x1c0000, 0x1c0fff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1c0000, 0x1c0fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
 	AM_RANGE(0x200000, 0x20000f) AM_RAM_WRITE(MB60553_0_regs_w)
 	AM_RANGE(0x200040, 0x20005f) AM_RAM
@@ -314,7 +314,7 @@ static ADDRESS_MAP_START( vgoal_map, AS_PROGRAM, 16, gstriker_state )
 	AM_RANGE(0x140000, 0x141fff) AM_RAM AM_SHARE("cg10103_vram")
 	AM_RANGE(0x180000, 0x180fff) AM_RAM_WRITE(VS920A_0_vram_w) AM_SHARE("vs920a_vram")
 	AM_RANGE(0x181000, 0x181fff) AM_RAM AM_SHARE("lineram")
-	AM_RANGE(0x1c0000, 0x1c4fff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1c0000, 0x1c4fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x200000, 0x20000f) AM_RAM_WRITE(MB60553_0_regs_w)
 	AM_RANGE(0x200040, 0x20005f) AM_RAM
 
@@ -543,23 +543,26 @@ static MACHINE_CONFIG_START( gstriker, gstriker_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_io_map)
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(5000) /* hand-tuned, it needs a bit */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(gstriker_state, screen_update_gstriker)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(gstriker)
-	MCFG_PALETTE_LENGTH(0x800)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gstriker)
+	MCFG_PALETTE_ADD("palette", 0x800)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
 	MCFG_VSYSTEM_SPR_SET_GFXREGION(2)
 	MCFG_VSYSTEM_SPR_SET_PALBASE(0x10)
 	MCFG_VSYSTEM_SPR_SET_PALMASK(0x1f)
 	MCFG_VSYSTEM_SPR_SET_TRANSPEN(0)
+	MCFG_VSYSTEM_SPR_GFXDECODE("gfxdecode")
+	MCFG_VSYSTEM_SPR_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(gstriker_state,gstriker)
 
@@ -591,21 +594,24 @@ static MACHINE_CONFIG_START( vgoal, gstriker_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_io_map)
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(5000) /* hand-tuned, it needs a bit */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(gstriker_state, screen_update_gstriker)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(gstriker)
-	MCFG_PALETTE_LENGTH(0x2000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gstriker)
+	MCFG_PALETTE_ADD("palette", 0x2000)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 	MCFG_DEVICE_ADD("vsystem_spr", VSYSTEM_SPR, 0)
 	MCFG_VSYSTEM_SPR_SET_GFXREGION(2)
 	MCFG_VSYSTEM_SPR_SET_PALBASE(0x00)
+	MCFG_VSYSTEM_SPR_GFXDECODE("gfxdecode")
+	MCFG_VSYSTEM_SPR_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(gstriker_state,vgoalsoc)
 
@@ -862,8 +868,8 @@ the zooming.To use it,you should use Player 2 Start button to show the test scre
 or to advance into the tests.
 ******************************************************************************************/
 #define PC(_num_)\
-state->m_work_ram[0x000/2] = (_num_ & 0xffff0000) >> 16;\
-state->m_work_ram[0x002/2] = (_num_ & 0x0000ffff) >> 0;
+m_work_ram[0x000/2] = (_num_ & 0xffff0000) >> 16;\
+m_work_ram[0x002/2] = (_num_ & 0x0000ffff) >> 0;
 
 
 WRITE16_MEMBER(gstriker_state::twrldc94_mcu_w)
@@ -878,7 +884,6 @@ READ16_MEMBER(gstriker_state::twrldc94_mcu_r)
 
 WRITE16_MEMBER(gstriker_state::twrldc94_prot_reg_w)
 {
-	gstriker_state *state = machine().driver_data<gstriker_state>();
 	m_prot_reg[1] = m_prot_reg[0];
 	m_prot_reg[0] = data;
 
@@ -1009,15 +1014,15 @@ READ16_MEMBER(gstriker_state::twrldc94_prot_reg_r)
 
     The tick count is usually set to 0x3c => it's driven off vblank?
 */
-//state->m_work_ram[ (0xffe900 - 0xffc00) ]
-#define COUNTER1_ENABLE state->m_work_ram[0x2900/2] >> 8
-#define COUNTER2_ENABLE (state->m_work_ram[0x2900/2] & 0xff)
-#define TICK_1 state->m_work_ram[0x2908/2]
-#define TICKCOUNT_1 state->m_work_ram[0x290a/2]
-#define TICK_2 state->m_work_ram[0x290c/2]
-#define TICKCOUNT_3 state->m_work_ram[0x290e/2]
-#define COUNTER_1 state->m_work_ram[0x2928/2]
-#define COUNTER_2 state->m_work_ram[0x292a/2]
+//m_work_ram[ (0xffe900 - 0xffc00) ]
+#define COUNTER1_ENABLE m_work_ram[0x2900/2] >> 8
+#define COUNTER2_ENABLE (m_work_ram[0x2900/2] & 0xff)
+#define TICK_1 m_work_ram[0x2908/2]
+#define TICKCOUNT_1 m_work_ram[0x290a/2]
+#define TICK_2 m_work_ram[0x290c/2]
+#define TICKCOUNT_3 m_work_ram[0x290e/2]
+#define COUNTER_1 m_work_ram[0x2928/2]
+#define COUNTER_2 m_work_ram[0x292a/2]
 READ16_MEMBER(gstriker_state::vbl_toggle_r)
 {
 	return 0xff;
@@ -1025,7 +1030,6 @@ READ16_MEMBER(gstriker_state::vbl_toggle_r)
 
 WRITE16_MEMBER(gstriker_state::vbl_toggle_w)
 {
-	gstriker_state *state = machine().driver_data<gstriker_state>();
 	if( COUNTER1_ENABLE == 1 )
 	{
 		TICK_1 = (TICK_1 - 1) & 0xff;   // 8bit

@@ -644,7 +644,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, wgp_state )
 	AM_RANGE(0x502000, 0x517fff) AM_READWRITE(wgp_pivram_word_r, wgp_pivram_word_w) AM_SHARE("pivram") /* piv tilemaps */
 	AM_RANGE(0x520000, 0x52001f) AM_READWRITE(wgp_piv_ctrl_word_r, wgp_piv_ctrl_word_w) AM_SHARE("piv_ctrlram")
 	AM_RANGE(0x600000, 0x600003) AM_WRITE(rotate_port_w)    /* rotation control ? */
-	AM_RANGE(0x700000, 0x701fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cpu2_map, AS_PROGRAM, 16  /* LAN areas not mapped... */, wgp_state )
@@ -951,12 +951,6 @@ static const tc0100scn_interface wgp2_tc0100scn_intf =
 	0, 0
 };
 
-static const tc0220ioc_interface wgp_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
-
 static const tc0140syt_interface wgp_tc0140syt_intf =
 {
 	"sub", "audiocpu"
@@ -979,7 +973,12 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
 
-	MCFG_TC0220IOC_ADD("tc0220ioc", wgp_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -988,12 +987,15 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(wgp_state, screen_update_wgp)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(wgp)
-	MCFG_PALETTE_LENGTH(4096)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", wgp)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBxxxx)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", wgp_tc0100scn_intf)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1017,6 +1019,8 @@ static MACHINE_CONFIG_DERIVED( wgp2, wgp )
 
 	MCFG_DEVICE_REMOVE("tc0100scn")
 	MCFG_TC0100SCN_ADD("tc0100scn", wgp2_tc0100scn_intf)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 

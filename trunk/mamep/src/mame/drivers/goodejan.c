@@ -67,7 +67,9 @@ public:
 		m_sc2_vram(*this, "sc2_vram"),
 		m_sc3_vram(*this, "sc3_vram"),
 		m_spriteram16(*this, "sprite_ram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	required_shared_ptr<UINT16> m_sc0_vram;
 	required_shared_ptr<UINT16> m_sc1_vram;
@@ -75,6 +77,8 @@ public:
 	required_shared_ptr<UINT16> m_sc3_vram;
 	required_shared_ptr<UINT16> m_spriteram16;
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 	tilemap_t *m_sc0_tilemap;
 	tilemap_t *m_sc1_tilemap;
 	tilemap_t *m_sc2_tilemap;
@@ -305,11 +309,11 @@ void goodejan_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap
 		for (ax=0; ax<dx; ax++)
 			for (ay=0; ay<dy; ay++) {
 				if (!fx)
-					drawgfx_transpen(bitmap,cliprect,machine.gfx[0],
+					m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,
 						sprite++,
 						color,fx,fy,x+ax*16,y+ay*16,15);
 				else
-					drawgfx_transpen(bitmap,cliprect,machine.gfx[0],
+					m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,
 						sprite++,
 						color,fx,fy,x+(dx-1-ax)*16,y+ay*16,15);
 			}
@@ -318,10 +322,10 @@ void goodejan_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap
 
 void goodejan_state::video_start()
 {
-	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	m_sc2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc2_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	m_sc1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc1_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	m_sc3_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc3_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_sc0_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	m_sc2_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc2_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	m_sc1_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc1_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	m_sc3_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(goodejan_state::seibucrtc_sc3_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
 	m_sc2_tilemap->set_transparent_pen(15);
 	m_sc1_tilemap->set_transparent_pen(15);
@@ -332,7 +336,7 @@ void goodejan_state::video_start()
 
 UINT32 goodejan_state::screen_update_goodejan(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bitmap.fill(screen.machine().pens[0x7ff], cliprect); //black pen
+	bitmap.fill(m_palette->pen(0x7ff), cliprect); //black pen
 
 	m_sc0_tilemap->set_scrollx(0, (SEIBU_CRTC_SC0_SX) & 0x1ff );
 	m_sc0_tilemap->set_scrolly(0, (SEIBU_CRTC_SC0_SY) & 0x1ff );
@@ -393,7 +397,7 @@ static ADDRESS_MAP_START( goodejan_map, AS_PROGRAM, 16, goodejan_state )
 	AM_RANGE(0x00000, 0x0afff) AM_RAM
 	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM_WRITE(seibucrtc_sc0vram_w) AM_SHARE("sc0_vram")
 	AM_RANGE(0x0c800, 0x0cfff) AM_RAM_WRITE(seibucrtc_sc3vram_w) AM_SHARE("sc3_vram")
-	AM_RANGE(0x0d000, 0x0dfff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0d000, 0x0dfff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	/*Guess: these two aren't used/initialized at all.*/
 	AM_RANGE(0x0e000, 0x0e7ff) AM_RAM_WRITE(seibucrtc_sc1vram_w) AM_SHARE("sc1_vram")
 	AM_RANGE(0x0e800, 0x0efff) AM_RAM_WRITE(seibucrtc_sc2vram_w) AM_SHARE("sc2_vram")
@@ -632,12 +636,6 @@ WRITE16_MEMBER( goodejan_state::layer_scroll_w )
 }
 
 
-SEIBU_CRTC_INTERFACE(crtc_intf)
-{
-	DEVCB_DRIVER_MEMBER16(goodejan_state, layer_en_w),
-	DEVCB_DRIVER_MEMBER16(goodejan_state, layer_scroll_w),
-
-};
 
 static MACHINE_CONFIG_START( goodejan, goodejan_state )
 
@@ -656,11 +654,15 @@ static MACHINE_CONFIG_START( goodejan, goodejan_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1) //TODO: dynamic resolution
 	MCFG_SCREEN_UPDATE_DRIVER(goodejan_state, screen_update_goodejan)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_SEIBU_CRTC_ADD("crtc",crtc_intf,0)
+	MCFG_DEVICE_ADD("crtc", SEIBU_CRTC, 0)
+	MCFG_SEIBU_CRTC_LAYER_EN_CB(WRITE16(goodejan_state, layer_en_w))
+	MCFG_SEIBU_CRTC_LAYER_SCROLL_CB(WRITE16(goodejan_state, layer_scroll_w))
 
-	MCFG_GFXDECODE(goodejan)
-	MCFG_PALETTE_LENGTH(0x1000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", goodejan)
+	MCFG_PALETTE_ADD("palette", 0x1000)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_INTERFACE(GOODEJAN_MHZ1/2,GOODEJAN_MHZ2/16)

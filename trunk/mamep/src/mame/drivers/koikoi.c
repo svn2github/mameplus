@@ -51,7 +51,8 @@ public:
 	koikoi_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -73,9 +74,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(koikoi);
 	UINT32 screen_update_koikoi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -91,16 +93,13 @@ TILE_GET_INFO_MEMBER(koikoi_state::get_tile_info)
 	int color = (m_videoram[tile_index + 0x400] & 0x1f);
 	int flip  = (m_videoram[tile_index + 0x400] & 0x80) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0;
 
-	SET_TILE_INFO_MEMBER( 0, code, color, flip);
+	SET_TILE_INFO_MEMBER(0, code, color, flip);
 }
 
-void koikoi_state::palette_init()
+PALETTE_INIT_MEMBER(koikoi_state, koikoi)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 	int i;
-
-	/* allocate the colortable */
-	machine().colortable = colortable_alloc(machine(), 0x10);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x10; i++)
@@ -126,7 +125,7 @@ void koikoi_state::palette_init()
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
+		palette.set_indirect_color(i, rgb_t(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -136,13 +135,13 @@ void koikoi_state::palette_init()
 	for (i = 0; i < 0x100; i++)
 	{
 		UINT8 ctabentry = color_prom[i] & 0x0f;
-		colortable_entry_set_value(machine().colortable, i, ctabentry);
+		palette.set_pen_indirect(i, ctabentry);
 	}
 }
 
 void koikoi_state::video_start()
 {
-	m_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(koikoi_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(koikoi_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 UINT32 koikoi_state::screen_update_koikoi(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
@@ -375,10 +374,12 @@ static MACHINE_CONFIG_START( koikoi, koikoi_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(koikoi_state, screen_update_koikoi)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(koikoi)
-	MCFG_PALETTE_LENGTH(8*32)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", koikoi)
+	MCFG_PALETTE_ADD("palette", 8*32)
+	MCFG_PALETTE_INDIRECT_ENTRIES(16)
+	MCFG_PALETTE_INIT_OWNER(koikoi_state, koikoi)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -459,28 +459,6 @@ static const tc0100scn_interface warriorb_tc0100scn_intf_r =
 	1, 1
 };
 
-static const tc0110pcr_interface darius2d_tc0110pcr_intf_l =
-{
-	0
-};
-
-static const tc0110pcr_interface darius2d_tc0110pcr_intf_r =
-{
-	1
-};
-
-
-static const tc0220ioc_interface darius2d_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
-
-static const tc0510nio_interface warriorb_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
 
 static const tc0140syt_interface warriorb_tc0140syt_intf =
 {
@@ -515,12 +493,18 @@ static MACHINE_CONFIG_START( darius2d, warriorb_state )
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)    /* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
-
-	MCFG_TC0220IOC_ADD("tc0220ioc", darius2d_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
-	MCFG_GFXDECODE(warriorb)
-	MCFG_PALETTE_LENGTH(4096*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", warriorb)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_ADD("palette2", 4096)
+
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
@@ -529,6 +513,7 @@ static MACHINE_CONFIG_START( darius2d, warriorb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 3*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -536,12 +521,20 @@ static MACHINE_CONFIG_START( darius2d, warriorb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 3*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_right)
-
+	MCFG_SCREEN_PALETTE("palette2")
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2d_tc0100scn_intf_l)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
+
 	MCFG_TC0100SCN_ADD("tc0100scn_2", darius2d_tc0100scn_intf_r)
-	MCFG_TC0110PCR_ADD("tc0110pcr_1", darius2d_tc0110pcr_intf_l)
-	MCFG_TC0110PCR_ADD("tc0110pcr_2", darius2d_tc0110pcr_intf_r)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette2")
+
+	MCFG_TC0110PCR_ADD("tc0110pcr_1")
+	MCFG_TC0110PCR_PALETTE("palette")
+	MCFG_TC0110PCR_ADD("tc0110pcr_2")
+	MCFG_TC0110PCR_PALETTE("palette2")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -578,12 +571,18 @@ static MACHINE_CONFIG_START( warriorb, warriorb_state )
 	MCFG_CPU_ADD("audiocpu", Z80,16000000/4)    /* 4 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(z80_sound_map)
 
-
-	MCFG_TC0510NIO_ADD("tc0510nio", warriorb_io_intf)
+	MCFG_DEVICE_ADD("tc0510nio", TC0510NIO, 0)
+	MCFG_TC0510NIO_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0510NIO_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0510NIO_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0510NIO_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0510NIO_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
-	MCFG_GFXDECODE(warriorb)
-	MCFG_PALETTE_LENGTH(4096*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", warriorb)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_ADD("palette2", 4096)
+
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
@@ -592,6 +591,7 @@ static MACHINE_CONFIG_START( warriorb, warriorb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -599,12 +599,20 @@ static MACHINE_CONFIG_START( warriorb, warriorb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(warriorb_state, screen_update_warriorb_right)
-
+	MCFG_SCREEN_PALETTE("palette2")
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", warriorb_tc0100scn_intf_l)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
+
 	MCFG_TC0100SCN_ADD("tc0100scn_2", warriorb_tc0100scn_intf_r)
-	MCFG_TC0110PCR_ADD("tc0110pcr_1", darius2d_tc0110pcr_intf_l)
-	MCFG_TC0110PCR_ADD("tc0110pcr_2", darius2d_tc0110pcr_intf_r)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette2")
+
+	MCFG_TC0110PCR_ADD("tc0110pcr_1")
+	MCFG_TC0110PCR_PALETTE("palette")
+	MCFG_TC0110PCR_ADD("tc0110pcr_2")
+	MCFG_TC0110PCR_PALETTE("palette2")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

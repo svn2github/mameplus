@@ -40,11 +40,11 @@ TILE_GET_INFO_MEMBER(nemesis_state::get_bg_tile_info)
 
 	if (code & 0xf800)
 	{
-		SET_TILE_INFO_MEMBER( 0, code & 0x7ff, color & 0x7f, flags );
+		SET_TILE_INFO_MEMBER(0, code & 0x7ff, color & 0x7f, flags );
 	}
 	else
 	{
-		SET_TILE_INFO_MEMBER( 0, 0, 0x00, 0 );
+		SET_TILE_INFO_MEMBER(0, 0, 0x00, 0 );
 		tileinfo.pen_data = m_blank_tile;
 	}
 
@@ -75,11 +75,11 @@ TILE_GET_INFO_MEMBER(nemesis_state::get_fg_tile_info)
 
 	if (code & 0xf800)
 	{
-		SET_TILE_INFO_MEMBER( 0, code & 0x7ff, color & 0x7f, flags );
+		SET_TILE_INFO_MEMBER(0, code & 0x7ff, color & 0x7f, flags );
 	}
 	else
 	{
-		SET_TILE_INFO_MEMBER( 0, 0, 0x00, 0 );
+		SET_TILE_INFO_MEMBER(0, 0, 0x00, 0 );
 		tileinfo.pen_data = m_blank_tile;
 	}
 
@@ -180,10 +180,10 @@ WRITE16_MEMBER(nemesis_state::nemesis_palette_word_w)
 	    2400 Ohms
 	    4700 Ohms
 
-	    So the correct weights per bit are 8, 17, 33, 67, 130
+	    So the correct weights per bit are 8, 17, 33, 64, 133
 	*/
 
-	#define MULTIPLIER 8 * bit1 + 17 * bit2 + 33 * bit3 + 67 * bit4 + 130 * bit5
+	#define MULTIPLIER 8 * bit1 + 17 * bit2 + 33 * bit3 + 64 * bit4 + 133 * bit5
 
 	bit1 = BIT(data, 0);
 	bit2 = BIT(data, 1);
@@ -204,7 +204,7 @@ WRITE16_MEMBER(nemesis_state::nemesis_palette_word_w)
 	bit5 = BIT(data, 14);
 	b = MULTIPLIER;
 
-	palette_set_color(machine(), offset, MAKE_RGB(r, g, b));
+	m_palette->set_pen_color(offset, rgb_t(r, g, b));
 }
 
 WRITE16_MEMBER(nemesis_state::salamander_palette_word_w)
@@ -213,7 +213,7 @@ WRITE16_MEMBER(nemesis_state::salamander_palette_word_w)
 	offset &= ~1;
 
 	data = ((m_paletteram[offset] << 8) & 0xff00) | (m_paletteram[offset + 1] & 0xff);
-	palette_set_color_rgb(machine(), offset / 2, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+	m_palette->set_pen_color(offset / 2, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 }
 
 
@@ -257,7 +257,7 @@ WRITE16_MEMBER(nemesis_state::nemesis_charram_word_w)
 		{
 			int w = sprite_data[i].width;
 			int h = sprite_data[i].height;
-			machine().gfx[sprite_data[i].char_type]->mark_dirty(offset * 4 / (w * h));
+			m_gfxdecode->gfx(sprite_data[i].char_type)->mark_dirty(offset * 4 / (w * h));
 		}
 	}
 }
@@ -273,7 +273,7 @@ void nemesis_state::nemesis_postload()
 		{
 			int w = sprite_data[i].width;
 			int h = sprite_data[i].height;
-			machine().gfx[sprite_data[i].char_type]->mark_dirty(offs * 4 / (w * h));
+			m_gfxdecode->gfx(sprite_data[i].char_type)->mark_dirty(offs * 4 / (w * h));
 		}
 	}
 	m_background->mark_all_dirty();
@@ -286,8 +286,8 @@ void nemesis_state::video_start()
 {
 	m_spriteram_words = m_spriteram.bytes() / 2;
 
-	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(nemesis_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
-	m_foreground = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(nemesis_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	m_background = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(nemesis_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	m_foreground = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(nemesis_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
 
 	m_background->set_transparent_pen(0);
 	m_foreground->set_transparent_pen(0);
@@ -296,15 +296,6 @@ void nemesis_state::video_start()
 
 	memset(m_charram, 0, m_charram.bytes());
 	memset(m_blank_tile, 0, ARRAY_LENGTH(m_blank_tile));
-
-	machine().gfx[0]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[1]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[2]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[3]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[4]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[5]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[6]->set_source((UINT8 *)m_charram.target());
-	machine().gfx[7]->set_source((UINT8 *)m_charram.target());
 
 	/* Set up save state */
 	machine().save().register_postload(save_prepost_delegate(FUNC(nemesis_state::nemesis_postload), this));
@@ -386,7 +377,7 @@ void nemesis_state::draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, c
 						flipy = !flipy;
 					}
 
-					pdrawgfxzoom_transpen(bitmap,cliprect,machine().gfx[char_type],
+					m_gfxdecode->gfx(char_type)->prio_zoom_transpen(bitmap,cliprect,
 						code,
 						color,
 						flipx,flipy,

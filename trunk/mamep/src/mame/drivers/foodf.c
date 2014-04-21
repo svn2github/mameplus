@@ -366,14 +366,15 @@ static MACHINE_CONFIG_START( foodf, foodf_state )
 	MCFG_TIMER_DRIVER_ADD("scan_timer", foodf_state, scanline_update_timer)
 
 	/* video hardware */
-	MCFG_GFXDECODE(foodf)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", foodf)
+	MCFG_PALETTE_ADD("palette", 256)
 
-	MCFG_TILEMAP_ADD_STANDARD_TRANSPEN("playfield", 2, foodf_state, get_playfield_tile_info, 8,8, SCAN_COLS, 32,32, 0)
+	MCFG_TILEMAP_ADD_STANDARD_TRANSPEN("playfield", "gfxdecode", 2, foodf_state, get_playfield_tile_info, 8,8, SCAN_COLS, 32,32, 0)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 384, 0, 256, 259, 0, 224)
 	MCFG_SCREEN_UPDATE_DRIVER(foodf_state, screen_update_foodf)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(foodf_state,foodf)
 

@@ -46,7 +46,9 @@ sega_16bit_common_base::sega_16bit_common_base(const machine_config &mconfig, de
 	: driver_device(mconfig, type, tag),
 		m_paletteram(*this, "paletteram"),
 		m_open_bus_recurse(false),
-		m_palette_entries(0)
+		m_palette_entries(0),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")
 {
 	palette_init();
 }
@@ -157,9 +159,9 @@ WRITE16_MEMBER( sega_16bit_common_base::paletteram_w )
 	int b = ((newval >> 14) & 0x01) | ((newval >> 7) & 0x1e);
 
 	// normal colors
-	palette_set_color_rgb(machine(), offset + 0 * m_palette_entries, m_palette_normal[r],  m_palette_normal[g],  m_palette_normal[b]);
-	palette_set_color_rgb(machine(), offset + 1 * m_palette_entries, m_palette_shadow[r],  m_palette_shadow[g],  m_palette_shadow[b]);
-	palette_set_color_rgb(machine(), offset + 2 * m_palette_entries, m_palette_hilight[r], m_palette_hilight[g], m_palette_hilight[b]);
+	m_palette->set_pen_color(offset + 0 * m_palette_entries, m_palette_normal[r],  m_palette_normal[g],  m_palette_normal[b]);
+	m_palette->set_pen_color(offset + 1 * m_palette_entries, m_palette_shadow[r],  m_palette_shadow[g],  m_palette_shadow[b]);
+	m_palette->set_pen_color(offset + 2 * m_palette_entries, m_palette_hilight[r], m_palette_hilight[g], m_palette_hilight[b]);
 }
 
 
@@ -599,8 +601,7 @@ sega_315_5195_mapper_device::decrypt_bank::decrypt_bank()
 		m_end(0),
 		m_rgnoffs(~0),
 		m_srcptr(NULL),
-		m_fd1089(NULL),
-		m_fd1094_cache(NULL)
+		m_fd1089(NULL)
 {
 	// invalidate all states
 	reset();
@@ -613,8 +614,6 @@ sega_315_5195_mapper_device::decrypt_bank::decrypt_bank()
 
 sega_315_5195_mapper_device::decrypt_bank::~decrypt_bank()
 {
-	// delete any allocated cache
-	global_free(m_fd1094_cache);
 }
 
 
@@ -629,14 +628,13 @@ void sega_315_5195_mapper_device::decrypt_bank::set_decrypt(fd1089_base_device *
 	m_fd1089 = fd1089;
 
 	// clear out all fd1094 stuff
-	delete m_fd1094_cache;
-	m_fd1094_cache = NULL;
+	m_fd1094_cache.reset();
 }
 
 void sega_315_5195_mapper_device::decrypt_bank::set_decrypt(fd1094_device *fd1094)
 {
 	// set the fd1094 pointer and allocate a decryption cache
-	m_fd1094_cache = global_alloc(fd1094_decryption_cache(*fd1094));
+	m_fd1094_cache.reset(global_alloc(fd1094_decryption_cache(*fd1094)));
 
 	// clear out all fd1089 stuff
 	m_fd1089 = NULL;

@@ -385,7 +385,7 @@ static ADDRESS_MAP_START( gaiden_map, AS_PROGRAM, 16, gaiden_state )
 	AM_RANGE(0x072000, 0x073fff) AM_READWRITE(gaiden_videoram2_r, gaiden_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0x074000, 0x075fff) AM_READWRITE(gaiden_videoram3_r, gaiden_videoram3_w) AM_SHARE("videoram3")
 	AM_RANGE(0x076000, 0x077fff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x078000, 0x079fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x078000, 0x079fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x07a000, 0x07a001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x07a002, 0x07a003) AM_READ_PORT("P1_P2") AM_WRITE(gaiden_sproffsety_w)
 	AM_RANGE(0x07a004, 0x07a005) AM_READ_PORT("DSW")
@@ -411,7 +411,7 @@ static ADDRESS_MAP_START( drgnbowl_map, AS_PROGRAM, 16, gaiden_state )
 	AM_RANGE(0x072000, 0x073fff) AM_RAM_WRITE(gaiden_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0x074000, 0x075fff) AM_RAM_WRITE(gaiden_videoram3_w) AM_SHARE("videoram3")
 	AM_RANGE(0x076000, 0x077fff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x078000, 0x079fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x078000, 0x079fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x07a000, 0x07a001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x07a002, 0x07a003) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x07a004, 0x07a005) AM_READ_PORT("DSW")
@@ -770,8 +770,9 @@ static MACHINE_CONFIG_START( shadoww, gaiden_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_gaiden)
 
-	MCFG_GFXDECODE(gaiden)
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gaiden)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(gaiden_state,gaiden)
 
@@ -802,7 +803,7 @@ static MACHINE_CONFIG_DERIVED( raiga, shadoww )
 	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_raiga)
 
 	MCFG_VIDEO_START_OVERRIDE(gaiden_state,raiga)
-	MCFG_GFXDECODE(raiga)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", raiga)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( drgnbowl, gaiden_state )
@@ -826,9 +827,11 @@ static MACHINE_CONFIG_START( drgnbowl, gaiden_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_drgnbowl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(drgnbowl)
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", drgnbowl)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(gaiden_state,drgnbowl)
 
@@ -904,7 +907,7 @@ static ADDRESS_MAP_START( mastninj_map, AS_PROGRAM, 16, gaiden_state )
 	AM_RANGE(0x072000, 0x073fff) AM_READWRITE(gaiden_videoram2_r, gaiden_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0x074000, 0x075fff) AM_READWRITE(gaiden_videoram3_r, gaiden_videoram3_w) AM_SHARE("videoram3")
 	AM_RANGE(0x076000, 0x077fff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x078000, 0x079fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x078000, 0x079fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 //  AM_RANGE(0x078800, 0x079fff) AM_RAM
 	AM_RANGE(0x07a000, 0x07a001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x07a002, 0x07a003) AM_READ_PORT("P1_P2")
@@ -943,8 +946,9 @@ static MACHINE_CONFIG_START( mastninj, gaiden_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(gaiden_state, screen_update_gaiden)
 
-	MCFG_GFXDECODE(mastninj)
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", mastninj)
+	MCFG_PALETTE_ADD("palette", 4096)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(gaiden_state,mastninj)
 
@@ -1507,37 +1511,38 @@ void gaiden_state::descramble_drgnbowl_gfx()
 	int i;
 	UINT8 *ROM = memregion("maincpu")->base();
 	size_t size = memregion("maincpu")->bytes();
-	UINT8 *buffer = auto_alloc_array(machine(), UINT8, size);
 
-	memcpy(buffer, ROM, size);
-	for( i = 0; i < size; i++ )
 	{
-		ROM[i] = buffer[BITSWAP24(i,23,22,21,20,
-									19,18,17,15,
-							16,14,13,12,
-							11,10, 9, 8,
-								7, 6, 5, 4,
-								3, 2, 1, 0)];
-	}
+		dynamic_buffer buffer(size);
 
-	auto_free(machine(), buffer);
+		memcpy(buffer, ROM, size);
+		for( i = 0; i < size; i++ )
+		{
+			ROM[i] = buffer[BITSWAP24(i,23,22,21,20,
+										19,18,17,15,
+								16,14,13,12,
+								11,10, 9, 8,
+									7, 6, 5, 4,
+									3, 2, 1, 0)];
+		}
+	}
 
 	ROM = memregion("gfx2")->base();
 	size = memregion("gfx2")->bytes();
-	buffer = auto_alloc_array(machine(), UINT8, size);
-
-	memcpy(buffer,ROM,size);
-	for( i = 0; i < size; i++ )
 	{
-		ROM[i] = buffer[BITSWAP24(i,23,22,21,20,
-									19,18,16,17,
-									15,14,13, 4,
-										3,12,11,10,
-										9, 8, 7, 6,
-										5, 2, 1, 0)];
-	}
+		dynamic_buffer buffer(size);
 
-	auto_free(machine(), buffer);
+		memcpy(buffer,ROM,size);
+		for( i = 0; i < size; i++ )
+		{
+			ROM[i] = buffer[BITSWAP24(i,23,22,21,20,
+										19,18,16,17,
+										15,14,13, 4,
+											3,12,11,10,
+											9, 8, 7, 6,
+											5, 2, 1, 0)];
+		}
+	}
 }
 
 DRIVER_INIT_MEMBER(gaiden_state,drgnbowl)
@@ -1549,12 +1554,11 @@ DRIVER_INIT_MEMBER(gaiden_state,drgnbowl)
 
 void gaiden_state::descramble_mastninj_gfx(UINT8* src)
 {
-	UINT8 *buffer;
 	int len = 0x80000;
 
 	/*  rearrange gfx */
-	buffer = auto_alloc_array(machine(), UINT8, len);
 	{
+		dynamic_buffer buffer(len);
 		int i;
 		for (i = 0;i < len; i++)
 		{
@@ -1567,11 +1571,10 @@ void gaiden_state::descramble_mastninj_gfx(UINT8* src)
 			3,2,1,0)];
 		}
 		memcpy(src, buffer, len);
-		auto_free(machine(), buffer);
 	}
 
-	buffer = auto_alloc_array(machine(), UINT8, len);
 	{
+		dynamic_buffer buffer(len);
 		int i;
 		for (i = 0; i < len; i++)
 		{
@@ -1584,7 +1587,6 @@ void gaiden_state::descramble_mastninj_gfx(UINT8* src)
 			3,2,1,0)];
 		}
 		memcpy(src, buffer, len);
-		auto_free(machine(), buffer);
 	}
 }
 

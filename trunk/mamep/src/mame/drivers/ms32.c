@@ -1405,8 +1405,8 @@ static MACHINE_CONFIG_START( ms32, ms32_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ms32_state, screen_update_ms32)
 
-	MCFG_GFXDECODE(ms32)
-	MCFG_PALETTE_LENGTH(0x10000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ms32)
+	MCFG_PALETTE_ADD("palette", 0x10000)
 
 
 	/* sound hardware */
@@ -1422,7 +1422,7 @@ static MACHINE_CONFIG_DERIVED( f1superb, ms32 )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(f1superb_map)
 
-	MCFG_GFXDECODE(f1superb)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", f1superb)
 
 	MCFG_VIDEO_START_OVERRIDE(ms32_state,f1superb)
 MACHINE_CONFIG_END

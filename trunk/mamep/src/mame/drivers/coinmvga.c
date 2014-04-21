@@ -214,7 +214,7 @@
 #define SND_CLOCK   XTAL_16_9344MHz
 
 #include "emu.h"
-#include "cpu/h83002/h8.h"
+#include "cpu/h8/h83006.h"
 #include "sound/ymz280b.h"
 #include "machine/nvram.h"
 
@@ -225,7 +225,9 @@ public:
 	coinmvga_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_vram(*this, "vram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	required_shared_ptr<UINT16> m_vram;
 	struct { int r,g,b,offs,offs_internal; } m_bgpal, m_fgpal;
@@ -236,10 +238,12 @@ public:
 	DECLARE_DRIVER_INIT(colorama);
 	DECLARE_DRIVER_INIT(cmrltv75);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(coinmvga);
 	UINT32 screen_update_coinmvga(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(vblank_irq);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -255,7 +259,7 @@ void coinmvga_state::video_start()
 
 UINT32 coinmvga_state::screen_update_coinmvga(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	int count = 0x04000/2;
 
 	int y,x;
@@ -267,7 +271,7 @@ UINT32 coinmvga_state::screen_update_coinmvga(screen_device &screen, bitmap_ind1
 		{
 			int tile = m_vram[count];
 			//int colour = tile>>12;
-			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
+			gfx->opaque(bitmap,cliprect,tile,0,0,0,x*8,y*8);
 
 			count++;
 		}
@@ -278,7 +282,7 @@ UINT32 coinmvga_state::screen_update_coinmvga(screen_device &screen, bitmap_ind1
 }
 
 
-void coinmvga_state::palette_init()
+PALETTE_INIT_MEMBER(coinmvga_state, coinmvga)
 {
 }
 
@@ -313,7 +317,7 @@ WRITE16_MEMBER(coinmvga_state::ramdac_bg_w)
 				break;
 			case 2:
 				m_bgpal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				palette_set_color(machine(), m_bgpal.offs, MAKE_RGB(m_bgpal.r, m_bgpal.g, m_bgpal.b));
+				m_palette->set_pen_color(m_bgpal.offs, rgb_t(m_bgpal.r, m_bgpal.g, m_bgpal.b));
 				m_bgpal.offs_internal = 0;
 				m_bgpal.offs++;
 				break;
@@ -343,7 +347,7 @@ WRITE16_MEMBER(coinmvga_state::ramdac_fg_w)
 				break;
 			case 2:
 				m_fgpal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				palette_set_color(machine(), 0x100+m_fgpal.offs, MAKE_RGB(m_fgpal.r, m_fgpal.g, m_fgpal.b));
+				m_palette->set_pen_color(0x100+m_fgpal.offs, rgb_t(m_fgpal.r, m_fgpal.g, m_fgpal.b));
 				m_fgpal.offs_internal = 0;
 				m_fgpal.offs++;
 				break;
@@ -384,27 +388,22 @@ static ADDRESS_MAP_START( coinmvga_map, AS_PROGRAM, 16, coinmvga_state )
 	//0x800008 "arrow" w?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( coinmvga_io_map, AS_IO, 8, coinmvga_state )
+static ADDRESS_MAP_START( coinmvga_io_map, AS_IO, 16, coinmvga_state )
 /*  Digital I/O ports (ports 4-B are valid on 16-bit H8/3xx) */
-//  AM_RANGE(H8_PORT_4, H8_PORT_4)
-//  AM_RANGE(H8_PORT_5, H8_PORT_5)
-//  AM_RANGE(H8_PORT_6, H8_PORT_6)
-//  AM_RANGE(H8_PORT_7, H8_PORT_7) <---- 0006 RW colorama
-//  AM_RANGE(H8_PORT_8, H8_PORT_8)
-//  AM_RANGE(H8_PORT_9, H8_PORT_9)
-//  AM_RANGE(H8_PORT_A, H8_PORT_A)
-//  AM_RANGE(H8_PORT_B, H8_PORT_B)
+//  AM_RANGE(h8_device::PORT_4, h8_device::PORT_4)
+//  AM_RANGE(h8_device::PORT_5, h8_device::PORT_5)
+//  AM_RANGE(h8_device::PORT_6, h8_device::PORT_6)
+//  AM_RANGE(h8_device::PORT_7, h8_device::PORT_7) <---- 0006 RW colorama
+//  AM_RANGE(h8_device::PORT_8, h8_device::PORT_8)
+//  AM_RANGE(h8_device::PORT_9, h8_device::PORT_9)
+//  AM_RANGE(h8_device::PORT_A, h8_device::PORT_A)
+//  AM_RANGE(h8_device::PORT_B, h8_device::PORT_B)
 
 /*  Analog Inputs */
-//  AM_RANGE(H8_ADC_0_H, H8_ADC_0_L)
-//  AM_RANGE(H8_ADC_1_H, H8_ADC_1_L)
-//  AM_RANGE(H8_ADC_2_H, H8_ADC_2_L)
-//  AM_RANGE(H8_ADC_3_H, H8_ADC_3_L)
-
-/*  Serial ports */
-//  AM_RANGE(H8_SERIAL_0, H8_SERIAL_0)
-//  AM_RANGE(H8_SERIAL_1, H8_SERIAL_1)
-
+//  AM_RANGE(h8_device::ADC_0, h8_device::ADC_0)
+//  AM_RANGE(h8_device::ADC_1, h8_device::ADC_1)
+//  AM_RANGE(h8_device::ADC_2, h8_device::ADC_2)
+//  AM_RANGE(h8_device::ADC_3, h8_device::ADC_3)
 ADDRESS_MAP_END
 
 /*  unknown writes (cmrltv75):
@@ -683,11 +682,12 @@ static MACHINE_CONFIG_START( coinmvga, coinmvga_state )
 	MCFG_SCREEN_SIZE(640,480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 480-1)
 	MCFG_SCREEN_UPDATE_DRIVER(coinmvga_state, screen_update_coinmvga)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(coinmvga)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", coinmvga)
 
-	MCFG_PALETTE_LENGTH(512)
-
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_INIT_OWNER(coinmvga_state, coinmvga)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

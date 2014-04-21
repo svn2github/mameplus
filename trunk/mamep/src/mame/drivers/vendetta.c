@@ -154,9 +154,9 @@ void vendetta_state::vendetta_video_banking( int select )
 	if (select & 1)
 	{
 		space.install_read_bank(m_video_banking_base + 0x2000, m_video_banking_base + 0x2fff, "bank4" );
-		space.install_write_handler(m_video_banking_base + 0x2000, m_video_banking_base + 0x2fff, write8_delegate(FUNC(vendetta_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), this) );
+		space.install_write_handler(m_video_banking_base + 0x2000, m_video_banking_base + 0x2fff, write8_delegate(FUNC(palette_device::write), m_palette.target()) );
 		space.install_readwrite_handler(m_video_banking_base + 0x0000, m_video_banking_base + 0x0fff, read8_delegate(FUNC(k053247_device::k053247_r), (k053247_device*)m_k053246), write8_delegate(FUNC(k053247_device::k053247_w), (k053247_device*)m_k053246) );
-		membank("bank4")->set_base(m_generic_paletteram_8);
+		membank("bank4")->set_base(m_paletteram);
 	}
 	else
 	{
@@ -433,14 +433,6 @@ static const k053247_interface esckids_k053246_intf =
 	vendetta_sprite_callback
 };
 
-static const k053252_interface esckids_k053252_intf =
-{
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	12*8, 1*8
-};
 
 void vendetta_state::machine_start()
 {
@@ -449,8 +441,10 @@ void vendetta_state::machine_start()
 	membank("bank1")->configure_entries(0, 28, &ROM[0x10000], 0x2000);
 	membank("bank1")->set_entry(0);
 
-	m_generic_paletteram_8.allocate(0x1000);
+	m_paletteram.resize(0x1000);
+	m_palette->basemem().set(m_paletteram, ENDIANNESS_BIG, 2);
 
+	save_item(NAME(m_paletteram));
 	save_item(NAME(m_irq_enabled));
 	save_item(NAME(m_sprite_colorbase));
 	save_item(NAME(m_layer_colorbase));
@@ -490,19 +484,25 @@ static MACHINE_CONFIG_START( vendetta, vendetta_state )
 	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.17) /* measured on PCB */
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(vendetta_state, screen_update_vendetta)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", vendetta_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K053246_ADD("k053246", vendetta_k053246_intf)
+	MCFG_K053246_GFXDECODE("gfxdecode")
+	MCFG_K053246_PALETTE("palette")
 	MCFG_K053251_ADD("k053251")
 	MCFG_K054000_ADD("k054000")
 
@@ -532,9 +532,14 @@ static MACHINE_CONFIG_DERIVED( esckids, vendetta )
 	MCFG_DEVICE_REMOVE("k054000")
 	MCFG_DEVICE_REMOVE("k052109")
 	MCFG_K052109_ADD("k052109", esckids_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_DEVICE_REMOVE("k053246")
 	MCFG_K053246_ADD("k053246", esckids_k053246_intf)
-	MCFG_K053252_ADD("k053252", 6000000, esckids_k053252_intf)
+	MCFG_K053246_GFXDECODE("gfxdecode")
+	MCFG_K053246_PALETTE("palette")
+	MCFG_DEVICE_ADD("k053252", K053252, 6000000)
+	MCFG_K053252_OFFSETS(12*8, 1*8)
 MACHINE_CONFIG_END
 
 

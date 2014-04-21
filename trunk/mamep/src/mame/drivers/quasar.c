@@ -126,7 +126,6 @@ static ADDRESS_MAP_START( quasar_io, AS_IO, 8, quasar_state )
 	AM_RANGE(S2650_DATA_PORT,  S2650_DATA_PORT) AM_READ(cvs_collision_clear) AM_WRITE(quasar_sh_command_w)
 	AM_RANGE(S2650_CTRL_PORT,  S2650_CTRL_PORT) AM_READ(cvs_collision_r) AM_WRITENOP
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_SHARE("fo_state")
 ADDRESS_MAP_END
 
 /*************************************
@@ -336,15 +335,17 @@ static MACHINE_CONFIG_START( quasar, quasar_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(1*8+1, 29*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(quasar_state, screen_update_quasar)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(quasar)
-	MCFG_PALETTE_LENGTH((64+1)*8+(4*256))
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", quasar)
+	MCFG_PALETTE_ADD("palette", (64+1)*8+(4*256))
+	MCFG_PALETTE_INDIRECT_ENTRIES(0x500)
+	MCFG_PALETTE_INIT_OWNER(quasar_state,quasar)
 
 	MCFG_S2636_ADD("s2636_0", s2636_0_config)
 	MCFG_S2636_ADD("s2636_1", s2636_1_config)
 	MCFG_S2636_ADD("s2636_2", s2636_2_config)
 
-	MCFG_PALETTE_INIT_OVERRIDE(quasar_state,quasar)
 	MCFG_VIDEO_START_OVERRIDE(quasar_state,quasar)
 
 	/* sound hardware */

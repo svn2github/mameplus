@@ -42,14 +42,14 @@ void aquarium_state::draw_sprites( bitmap_ind16 &bitmap, const rectangle &clipre
 
 			for (chain_pos = chain; chain_pos >= 0; chain_pos--)
 			{
-				drawgfx_transpen(bitmap, cliprect,machine().gfx[0],
+				m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,
 						code,
 						col,
 						flipx, flipy,
 						curx,cury,0);
 
 				/* wrap around y */
-				drawgfx_transpen(bitmap, cliprect,machine().gfx[0],
+				m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,
 						code,
 						col,
 						flipx, flipy,
@@ -142,9 +142,9 @@ WRITE16_MEMBER(aquarium_state::aquarium_bak_videoram_w)
 
 void aquarium_state::video_start()
 {
-	m_txt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(aquarium_state::get_aquarium_txt_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_bak_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(aquarium_state::get_aquarium_bak_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_mid_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(aquarium_state::get_aquarium_mid_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_txt_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(aquarium_state::get_aquarium_txt_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_bak_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(aquarium_state::get_aquarium_bak_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_mid_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(aquarium_state::get_aquarium_mid_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
 	m_txt_tilemap->set_transparent_pen(0);
 	m_mid_tilemap->set_transparent_pen(0);

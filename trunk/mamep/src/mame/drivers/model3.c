@@ -659,7 +659,6 @@ ALL VROM ROMs are 16M MASK
 #include "machine/eepromser.h"
 #include "machine/53c810.h"
 #include "machine/nvram.h"
-#include "sound/scsp.h"
 #include "includes/model3.h"
 
 
@@ -1263,9 +1262,9 @@ static void model3_init(running_machine &machine, int step)
 	model3_tap_reset(machine);
 
 	if(step < 0x20) {
-		if( mame_stricmp(machine.system().name, "vs215") == 0 ||
-			mame_stricmp(machine.system().name, "vs29815") == 0 ||
-			mame_stricmp(machine.system().name, "bass") == 0 )
+		if( core_stricmp(machine.system().name, "vs215") == 0 ||
+			core_stricmp(machine.system().name, "vs29815") == 0 ||
+			core_stricmp(machine.system().name, "bass") == 0 )
 		{
 			mpc106_init(machine);
 		}
@@ -1279,8 +1278,8 @@ static void model3_init(running_machine &machine, int step)
 		mpc106_init(machine);
 		// some step 2+ games need the older PCI ID (obvious symptom:
 		// vbl is enabled briefly then disabled so the game hangs)
-		if (mame_stricmp(machine.system().name, "magtruck") == 0 ||
-			mame_stricmp(machine.system().name, "von254g") == 0)
+		if (core_stricmp(machine.system().name, "magtruck") == 0 ||
+			core_stricmp(machine.system().name, "von254g") == 0)
 		{
 			state->m_real3d_device_id = 0x16c311db; /* PCI Vendor ID (11db = SEGA), Device ID (16c3 = 315-5827) */
 		}
@@ -1626,7 +1625,7 @@ WRITE8_MEMBER(model3_state::model3_sound_w)
 			}
 
 			// send to the sound board
-			scsp_midi_in(machine().device("scsp1"), space, 0, data, 0);
+			m_scsp1->midi_in(space, 0, data, 0);
 
 			if (m_sound_irq_enable)
 			{
@@ -1751,13 +1750,13 @@ READ64_MEMBER(model3_state::model3_security_r)
 		case 0x00/8:    return 0;       /* status */
 		case 0x1c/8:                    /* security board data read */
 		{
-			if (mame_stricmp(machine().system().name, "vs299") == 0 ||
-				mame_stricmp(machine().system().name, "vs2v991") == 0)
+			if (core_stricmp(machine().system().name, "vs299") == 0 ||
+				core_stricmp(machine().system().name, "vs2v991") == 0)
 			{
 				return (UINT64)vs299_prot_data[m_prot_data_ptr++] << 48;
 			}
-			else if (mame_stricmp(machine().system().name, "swtrilgy") == 0 ||
-						mame_stricmp(machine().system().name, "swtrilgya") == 0)
+			else if (core_stricmp(machine().system().name, "swtrilgy") == 0 ||
+						core_stricmp(machine().system().name, "swtrilgya") == 0)
 			{
 				UINT64 data = (UINT64)swt_prot_data[m_prot_data_ptr++] << 16;
 				if (m_prot_data_ptr > 0x38)
@@ -1766,7 +1765,7 @@ READ64_MEMBER(model3_state::model3_security_r)
 				}
 				return data;
 			}
-			else if (mame_stricmp(machine().system().name, "fvipers2") == 0)
+			else if (core_stricmp(machine().system().name, "fvipers2") == 0)
 			{
 				UINT64 data = (UINT64)fvipers2_prot_data[m_prot_data_ptr++] << 16;
 				if (m_prot_data_ptr >= 0x41)
@@ -1775,8 +1774,8 @@ READ64_MEMBER(model3_state::model3_security_r)
 				}
 				return data;
 			}
-			else if (mame_stricmp(machine().system().name, "spikeout") == 0 ||
-						mame_stricmp(machine().system().name, "spikeofe") == 0)
+			else if (core_stricmp(machine().system().name, "spikeout") == 0 ||
+						core_stricmp(machine().system().name, "spikeofe") == 0)
 			{
 				UINT64 data = (UINT64)spikeout_prot_data[m_prot_data_ptr++] << 16;
 				if (m_prot_data_ptr >= 0x55)
@@ -1785,8 +1784,8 @@ READ64_MEMBER(model3_state::model3_security_r)
 				}
 				return data;
 			}
-			else if (mame_stricmp(machine().system().name, "eca") == 0 ||
-						mame_stricmp(machine().system().name, "ecax") == 0)
+			else if (core_stricmp(machine().system().name, "eca") == 0 ||
+						core_stricmp(machine().system().name, "ecax") == 0)
 			{
 				UINT64 data = (UINT64)eca_prot_data[m_prot_data_ptr++] << 16;
 				if (m_prot_data_ptr >= 0x31)
@@ -1795,7 +1794,7 @@ READ64_MEMBER(model3_state::model3_security_r)
 				}
 				return data;
 			}
-			else if (mame_stricmp(machine().system().name, "oceanhun") == 0)
+			else if (core_stricmp(machine().system().name, "oceanhun") == 0)
 			{
 				UINT64 data = (UINT64)oceanhun_prot_data[m_prot_data_ptr++] << 16;
 				if (m_prot_data_ptr >= 58)
@@ -2941,6 +2940,31 @@ ROM_START( bassdx ) /* step 1.0, Sega game ID# is 833-13476 BSS DX JPN, ROM boar
 	ROM_FILL( 0x000000, 0x80000, 0 )
 ROM_END
 
+/*
+In Mame getbass is marked as GET BASS STD, while my pcb came from a DLX cab.
+Rom board 833-13317
+834-13318 sticker is on rom board too.
+On cage the follow sticker are present
+BSS-4500-CVT2
+833-13317 GAME BD BSS-CVT2
+
+I/O board 837-13283 (GET BASS MEC CONT BD in manual)  171-7558c
+
+epr20690.ic11 is controller board prg
+cpu is kl5c80a16cf
+this board have 4 switch (sw3 to sw6)
+a reset switch
+2 bank of 8 dip switch
+SW1 all off
+SW2 all off
+lh52256cn-70 ram (super cap backup)
+sega 315-5296
+sega 315-5649 both seem I/O chip
+gal16v8d (sega 315-6126)
+32 Mhz xtal
+93c45 eeprom
+*/
+
 ROM_START( getbass )    /* step 1.0, Sega game ID# is 833-13416 GET BASS STD, ROM board ID# 834-13417 */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
@@ -3008,6 +3032,9 @@ ROM_START( getbass )    /* step 1.0, Sega game ID# is 833-13416 GET BASS STD, RO
 
 	ROM_REGION( 0x80000, "scsp2", 0 )   /* second SCSP's RAM */
 	ROM_FILL( 0x000000, 0x80000, 0 )
+
+	ROM_REGION( 0x10000, "iocpu", 0 ) // kl5c80a16cf code
+	ROM_LOAD( "epr20690.ic11",  0x00000, 0x10000, CRC(b7da201d) SHA1(7e58eb45ee6ec78250ece7b4fcc4e955b8b4f084) )
 ROM_END
 
 ROM_START( lostwsga )   /* Step 1.5, PCB cage labeled 834-13172 THE LOST WORLD U/R. Sega game ID# is 833-13171, ROM board ID# 834-13172 REV.A */
@@ -4051,6 +4078,9 @@ ROM_START( swtrilgy )   /* Step 2.1, Sega game ID# is 833-13586, ROM board ID# 8
 
 	ROM_REGION( 0x80000, "scsp2", 0 )   /* second SCSP's RAM */
 	ROM_FILL( 0x000000, 0x80000, 0 )
+
+	ROM_REGION( 0x10000, "ffcpu", 0 )   /* force feedback controller prg */
+	ROM_LOAD( "epr21119.ic8",  0x00000, 0x10000, CRC(65082b14) SHA1(6c3c192dd6ef3780c6202dd63fc6086328928818) )
 ROM_END
 
 ROM_START( swtrilgya )  /* Step 2.1, Sega game ID# is 833-13586, ROM board ID# 834-13587 STAR WARS TRILOGY, Security board ID# 837-13588-COM */
@@ -5333,9 +5363,9 @@ WRITE16_MEMBER(model3_state::model3snd_ctrl)
 
 static ADDRESS_MAP_START( model3_snd, AS_PROGRAM, 16, model3_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_RAM AM_REGION("scsp1", 0) AM_SHARE("soundram")
-	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp1", scsp_r, scsp_w)
+	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE("scsp1", scsp_device, read, write)
 	AM_RANGE(0x200000, 0x27ffff) AM_RAM AM_REGION("scsp2", 0)
-	AM_RANGE(0x300000, 0x300fff) AM_DEVREADWRITE_LEGACY("scsp2", scsp_r, scsp_w)
+	AM_RANGE(0x300000, 0x300fff) AM_DEVREADWRITE("scsp2", scsp_device, read, write)
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(model3snd_ctrl)
 	AM_RANGE(0x600000, 0x67ffff) AM_ROM AM_REGION("audiocpu", 0x80000)
 	AM_RANGE(0x800000, 0x9fffff) AM_ROM AM_REGION("samples", 0)
@@ -5344,30 +5374,10 @@ static ADDRESS_MAP_START( model3_snd, AS_PROGRAM, 16, model3_state )
 ADDRESS_MAP_END
 
 
-WRITE_LINE_MEMBER(model3_state::scsp_irq)
+WRITE8_MEMBER(model3_state::scsp_irq)
 {
-	if (state > 0)
-	{
-		m_scsp_last_line = state;
-		m_audiocpu->set_input_line(state, ASSERT_LINE);
-	}
-	else
-		m_audiocpu->set_input_line(-state, CLEAR_LINE);
+	m_audiocpu->set_input_line(offset, data);
 }
-
-static const scsp_interface scsp_config =
-{
-	0,
-	DEVCB_DRIVER_LINE_MEMBER(model3_state,scsp_irq),
-	DEVCB_NULL
-};
-
-static const scsp_interface scsp2_interface =
-{
-	0,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
 
 /* IRQs */
 /*
@@ -5393,25 +5403,19 @@ TIMER_DEVICE_CALLBACK_MEMBER(model3_state::model3_interrupt)
 static const powerpc_config model3_10 =
 {
 	/* 603e, Stretch, 1.3 */
-	66000000,       /* Multiplier 1, Bus = 66MHz, Core = 66MHz */
-	NULL,
-	NULL
+	66000000       /* Multiplier 1, Bus = 66MHz, Core = 66MHz */
 };
 
 static const powerpc_config model3_15 =
 {
 	/* 603e, Stretch, 1.3 */
-	66000000,       /* Multiplier 1.5, Bus = 66MHz, Core = 100MHz */
-	NULL,
-	NULL
+	66000000       /* Multiplier 1.5, Bus = 66MHz, Core = 100MHz */
 };
 
 static const powerpc_config model3_2x =
 {
 	/* 603e-PID7t, Goldeneye, 2.1 */
-	66000000,       /* Multiplier 2.5, Bus = 66MHz, Core = 166MHz */
-	NULL,
-	NULL
+	66000000       /* Multiplier 2.5, Bus = 66MHz, Core = 166MHz */
 };
 
 static MACHINE_CONFIG_START( model3_10, model3_state )
@@ -5437,19 +5441,18 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(512, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model3_state, scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
 	MCFG_SOUND_ADD("scsp2", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp2_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
@@ -5478,19 +5481,18 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model3_state, scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
 	MCFG_SOUND_ADD("scsp2", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp2_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
@@ -5525,19 +5527,18 @@ static MACHINE_CONFIG_START( model3_20, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model3_state, scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
 	MCFG_SOUND_ADD("scsp2", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp2_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 MACHINE_CONFIG_END
@@ -5564,19 +5565,18 @@ static MACHINE_CONFIG_START( model3_21, model3_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 495, 0, 383)
 	MCFG_SCREEN_SIZE(496, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(model3_state, screen_update_model3)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model3_state, scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 
 	MCFG_SOUND_ADD("scsp2", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp2_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 MACHINE_CONFIG_END
@@ -6041,7 +6041,7 @@ GAME( 1997, scudplusa,   scud,      scud, scud, model3_state,    scudplusa, ROT0
 GAME( 1997, lostwsga,       0, model3_15, lostwsga, model3_state, lostwsga, ROT0, "Sega", "The Lost World (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1997, vs215,        vs2, model3_15, model3, model3_state,      vs215, ROT0, "Sega", "Virtua Striker 2 (Step 1.5)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1997, vs215o,       vs2, model3_15, model3, model3_state,      vs215, ROT0, "Sega", "Virtua Striker 2 (Step 1.5, older)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, lemans24,       0, model3_15, scud, model3_state,     lemans24, ROT0, "Sega", "LeMans 24 (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, lemans24,       0, model3_15, scud, model3_state,     lemans24, ROT0, "Sega", "Le Mans 24 (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, vs29815,    vs298, model3_15, model3, model3_state,    vs29815, ROT0, "Sega", "Virtua Striker 2 '98 (Step 1.5)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* Model 3 Step 2.0 */

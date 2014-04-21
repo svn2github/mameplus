@@ -32,7 +32,8 @@ public:
 			m_deco_tilegen1(*this, "tilegen1"),
 			m_oki1(*this, "oki1"),
 			m_oki2(*this, "oki2"),
-			m_sprgen(*this, "spritegen")
+			m_sprgen(*this, "spritegen"),
+			m_palette(*this, "palette")
 	{ }
 
 	/* devices */
@@ -41,6 +42,7 @@ public:
 	optional_device<okim6295_device> m_oki1;
 	optional_device<okim6295_device> m_oki2;
 	optional_device<decospr_device> m_sprgen;
+	required_device<palette_device> m_palette;
 
 	/* memory */
 	UINT16   m_pf1_rowscroll[0x800/2];
@@ -112,7 +114,7 @@ WRITE32_MEMBER(deco156_state::hvysmsh_oki_0_bank_w)
 WRITE32_MEMBER(deco156_state::wcvol95_nonbuffered_palette_w)
 {
 	COMBINE_DATA(&m_generic_paletteram_32[offset]);
-	palette_set_color_rgb(machine(),offset,pal5bit(m_generic_paletteram_32[offset] >> 0),pal5bit(m_generic_paletteram_32[offset] >> 5),pal5bit(m_generic_paletteram_32[offset] >> 10));
+	m_palette->set_pen_color(offset,pal5bit(m_generic_paletteram_32[offset] >> 0),pal5bit(m_generic_paletteram_32[offset] >> 5),pal5bit(m_generic_paletteram_32[offset] >> 10));
 }
 
 /* This is the same as deco32_nonbuffered_palette_w in video/deco32.c */
@@ -126,7 +128,7 @@ WRITE32_MEMBER(deco156_state::deco156_nonbuffered_palette_w)
 	g = (m_generic_paletteram_32[offset] >> 8) & 0xff;
 	r = (m_generic_paletteram_32[offset] >> 0) & 0xff;
 
-	palette_set_color(machine(),offset,MAKE_RGB(r,g,b));
+	m_palette->set_pen_color(offset,rgb_t(r,g,b));
 }
 
 READ32_MEMBER(deco156_state::wcvol95_pf1_rowscroll_r){ return m_pf1_rowscroll[offset] ^ 0xffff0000; }
@@ -204,12 +206,12 @@ static INPUT_PORTS_START( hvysmsh )
 	PORT_BIT( 0x00400000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00800000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x01000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, do_read)
-	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
-	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
+	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(1)
+	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(1)
 	PORT_BIT( 0x08000000, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
-	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
-	PORT_BIT( 0x40000000, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
+	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(2)
+	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(2)
+	PORT_BIT( 0x40000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(2)
 	PORT_BIT( 0x80000000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START( "EEPROMOUT" )
@@ -246,12 +248,12 @@ static INPUT_PORTS_START( wcvol95 )
 	PORT_BIT( 0x00400000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00800000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x01000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_serial_93cxx_device, do_read)
-	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
-	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
+	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(1)
+	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(1)
 	PORT_BIT( 0x08000000, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
-	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
-	PORT_BIT( 0x40000000, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
+	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(2)
+	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(2)
+	PORT_BIT( 0x40000000, IP_ACTIVE_LOW, IPT_UNUSED ) //PORT_PLAYER(2)
 	PORT_BIT( 0x80000000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START( "EEPROMOUT" )
@@ -365,14 +367,19 @@ static MACHINE_CONFIG_START( hvysmsh, deco156_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(deco156_state, screen_update_wcvol95)
 
-	MCFG_GFXDECODE(hvysmsh)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", hvysmsh)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 
 	MCFG_DECO16IC_ADD("tilegen1", deco156_deco16ic_tilegen1_intf)
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
+
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 2);
 	decospr_device::set_pri_callback(*device, deco156_pri_callback);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -402,14 +409,19 @@ static MACHINE_CONFIG_START( wcvol95, deco156_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(deco156_state, screen_update_wcvol95)
 
-	MCFG_GFXDECODE(hvysmsh)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", hvysmsh)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 
 	MCFG_DECO16IC_ADD("tilegen1", deco156_deco16ic_tilegen1_intf)
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
+
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 2);
 	decospr_device::set_pri_callback(*device, deco156_pri_callback);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -617,7 +629,7 @@ void deco156_state::descramble_sound( const char *tag )
 {
 	UINT8 *rom = memregion(tag)->base();
 	int length = memregion(tag)->bytes();
-	UINT8 *buf1 = auto_alloc_array(machine(), UINT8, length);
+	dynamic_buffer buf1(length);
 	UINT32 x;
 
 	for (x = 0; x < length; x++)
@@ -635,8 +647,6 @@ void deco156_state::descramble_sound( const char *tag )
 	}
 
 	memcpy(rom,buf1,length);
-
-	auto_free(machine(), buf1);
 }
 
 DRIVER_INIT_MEMBER(deco156_state,hvysmsh)

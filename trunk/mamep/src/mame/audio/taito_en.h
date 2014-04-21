@@ -1,6 +1,6 @@
 #include "cpu/m68000/m68000.h"
 #include "sound/es5506.h"
-#include "machine/n68681.h"
+#include "machine/mc68681.h"
 
 class taito_en_device : public device_t
 
@@ -20,9 +20,10 @@ public:
 
 	DECLARE_WRITE_LINE_MEMBER(duart_irq_handler);
 
+	DECLARE_WRITE8_MEMBER(mb87078_gain_changed);
+
 protected:
 	// device-level overrides
-	virtual void device_config_complete();
 	virtual void device_start();
 	virtual void device_reset();
 
@@ -41,7 +42,7 @@ private:
 
 	UINT32   *m_snd_shared_ram;
 
-	duartn68681_device *m_duart68681;
+	mc68681_device *m_duart68681;
 
 };
 

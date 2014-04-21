@@ -45,7 +45,10 @@ public:
 		m_blink(*this, "blink"),
 		m_drone_x(*this, "drone_x"),
 		m_drone_y(*this, "drone_y"),
-		m_drone_rot(*this, "drone_rot")
+		m_drone_rot(*this, "drone_rot"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -59,6 +62,9 @@ public:
 	optional_shared_ptr<UINT8> m_drone_x;
 	optional_shared_ptr<UINT8> m_drone_y;
 	optional_shared_ptr<UINT8> m_drone_rot;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	UINT8 m_in_service_mode;
 	UINT32 m_dial[2];
@@ -105,7 +111,7 @@ public:
 	TILE_GET_INFO_MEMBER(montecar_get_tile_info2);
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(firetrk);
 	DECLARE_VIDEO_START(superbug);
 	DECLARE_VIDEO_START(montecar);
 	DECLARE_PALETTE_INIT(montecar);
@@ -121,11 +127,12 @@ public:
 	DECLARE_WRITE8_MEMBER(superbug_motor_snd_w);
 	DECLARE_WRITE8_MEMBER(firetrk_xtndply_w);
 	void prom_to_palette(int number, UINT8 val);
-	void firetrk_draw_car(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element **gfx, int which, int flash);
-	void superbug_draw_car(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element **gfx, int flash);
-	void montecar_draw_car(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element **gfx, int which, int is_collision_detection);
-	void check_collision(firetrk_state *state, int which);
+	void firetrk_draw_car(bitmap_ind16 &bitmap, const rectangle &cliprect, int which, int flash);
+	void superbug_draw_car(bitmap_ind16 &bitmap, const rectangle &cliprect, int flash);
+	void montecar_draw_car(bitmap_ind16 &bitmap, const rectangle &cliprect, int which, int is_collision_detection);
+	void check_collision(int which);
 	void set_service_mode(int enable);
+	void draw_text(bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 *alpha_ram, int x, int count, int height);
 };
 
 

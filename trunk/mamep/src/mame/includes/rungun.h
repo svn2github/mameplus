@@ -22,7 +22,9 @@ public:
 		m_k055673(*this, "k055673"),
 		m_k053252(*this, "k053252"),
 		m_sysreg(*this, "sysreg"),
-		m_936_videoram(*this, "936_videoram") { }
+		m_936_videoram(*this, "936_videoram"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* devices */
 	required_device<cpu_device> m_maincpu;
@@ -36,6 +38,9 @@ public:
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_sysreg;
 	required_shared_ptr<UINT16> m_936_videoram;
+
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 //  UINT16 *    m_paletteram;    // currently this uses generic palette handling
 
 	/* video-related */

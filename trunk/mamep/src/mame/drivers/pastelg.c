@@ -423,9 +423,10 @@ static MACHINE_CONFIG_START( pastelg, pastelg_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(pastelg_state, screen_update_pastelg)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32)
-
+	MCFG_PALETTE_ADD("palette", 32)
+	MCFG_PALETTE_INIT_OWNER(pastelg_state, pastelg)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -479,9 +480,10 @@ static MACHINE_CONFIG_START( threeds, pastelg_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(pastelg_state, screen_update_pastelg)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32)
-
+	MCFG_PALETTE_ADD("palette", 32)
+	MCFG_PALETTE_INIT_OWNER(pastelg_state, pastelg)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

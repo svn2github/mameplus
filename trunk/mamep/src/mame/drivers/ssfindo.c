@@ -220,7 +220,8 @@ public:
 		m_vram(*this, "vram"),
 		m_maincpu(*this, "maincpu"),
 		m_region_user2(*this, "user2"),
-		m_io_ps7500(*this, "PS7500") { }
+		m_io_ps7500(*this, "PS7500"),
+		m_palette(*this, "palette") { }
 
 	UINT32 m_PS7500_IO[MAXIO];
 	UINT32 m_PS7500_FIFO[256];
@@ -257,6 +258,7 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_memory_region m_region_user2;
 	required_ioport m_io_ps7500;
+	required_device<palette_device> m_palette;
 
 	typedef void (ssfindo_state::*ssfindo_speedup_func)(address_space &space);
 	ssfindo_speedup_func ssfindo_speedup;
@@ -300,7 +302,7 @@ WRITE32_MEMBER(ssfindo_state::FIFO_w)
 
 	if(!(data>>28))
 	{
-		palette_set_color_rgb(machine(), m_PS7500_FIFO[1]&0xff, data&0xff,(data>>8)&0xff,(data>>16)&0xff);
+		m_palette->set_pen_color(m_PS7500_FIFO[1]&0xff, data&0xff,(data>>8)&0xff,(data>>16)&0xff);
 		m_PS7500_FIFO[1]++; //autoinc
 	}
 }
@@ -773,8 +775,9 @@ static MACHINE_CONFIG_START( ssfindo, ssfindo_state )
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MCFG_SCREEN_UPDATE_DRIVER(ssfindo_state, screen_update_ssfindo)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( ppcar, ssfindo )

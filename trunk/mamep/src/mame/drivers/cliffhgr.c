@@ -95,7 +95,8 @@ public:
 			m_port_bank(0),
 			m_phillips_code(0) ,
 		m_maincpu(*this, "maincpu"),
-		m_discrete(*this, "discrete") { }
+		m_discrete(*this, "discrete"),
+		m_screen(*this, "screen") { }
 
 	required_device<pioneer_pr8210_device> m_laserdisc;
 
@@ -119,6 +120,7 @@ public:
 	TIMER_CALLBACK_MEMBER(cliff_irq_callback);
 	required_device<cpu_device> m_maincpu;
 	required_device<discrete_device> m_discrete;
+	required_device<screen_device> m_screen;
 };
 
 
@@ -177,8 +179,8 @@ READ8_MEMBER(cliffhgr_state::cliff_irq_ack_r)
 WRITE8_MEMBER(cliffhgr_state::cliff_sound_overlay_w)
 {
 	/* audio */
-	discrete_sound_w(m_discrete, space, CLIFF_ENABLE_SND_1, data & 1);
-	discrete_sound_w(m_discrete, space, CLIFF_ENABLE_SND_2, (data >> 1) & 1);
+	m_discrete->write(space, CLIFF_ENABLE_SND_1, data & 1);
+	m_discrete->write(space, CLIFF_ENABLE_SND_2, (data >> 1) & 1);
 
 	// bit 4 (data & 0x10) is overlay related?
 }

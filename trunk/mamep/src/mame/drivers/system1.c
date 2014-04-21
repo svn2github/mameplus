@@ -364,7 +364,7 @@ void system1_state::machine_start()
 		membank("bank1")->configure_entry(0, memregion("maincpu")->base() + 0x8000);
 	membank("bank1")->set_entry(0);
 
-	z80_set_cycle_tables(m_maincpu, cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex);
+	m_maincpu->z80_set_cycle_tables(cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex);
 
 	m_mute_xor = 0x00;
 
@@ -2100,22 +2100,6 @@ GFXDECODE_END
 
 /*************************************
  *
- *  Sound interface
- *
- *************************************/
-
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
-
-
-/*************************************
- *
  *  Machine driver
  *
  *************************************/
@@ -2168,14 +2152,14 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)  /* needed for proper hardware collisions */
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)  /* needed for proper hardware collisions */
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 640, 0, 512, 260, 0, 224)
 	MCFG_SCREEN_UPDATE_DRIVER(system1_state, screen_update_system1)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(system1)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", system1)
+	MCFG_PALETTE_ADD("palette", 2048)
 
 
 	/* sound hardware */
@@ -2183,11 +2167,9 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 
 	MCFG_SOUND_ADD("sn1", SN76489A, SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("sn2", SN76489A, SOUND_CLOCK/2)  /* selectable via jumper */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 /* reduced visible area for scrolling games */

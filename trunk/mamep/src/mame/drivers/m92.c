@@ -940,9 +940,11 @@ static MACHINE_CONFIG_START( m92, m92_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
 	MCFG_SCREEN_UPDATE_DRIVER(m92_state, screen_update_m92)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(m92)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", m92)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(m92_state,m92)
 
@@ -996,37 +998,18 @@ static MACHINE_CONFIG_DERIVED( hook, m92 )
 	MCFG_V25_CONFIG(hook_decryption_table)
 MACHINE_CONFIG_END
 
-static MACHINE_CONFIG_START( ppan, m92_state )
-
-	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu",V33,XTAL_18MHz/2)
-	MCFG_CPU_PROGRAM_MAP(m92_map)
+static MACHINE_CONFIG_DERIVED( ppan, m92 )
+	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(ppan_portmap)
 
-	/* no Sound CPU */
+	MCFG_DEVICE_REMOVE("soundcpu")
+	MCFG_DEVICE_REMOVE("ymsnd")
+	MCFG_DEVICE_REMOVE("irem")
 
-	MCFG_MACHINE_START_OVERRIDE(m92_state,m92)
-	MCFG_MACHINE_RESET_OVERRIDE(m92_state,m92)
-
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", m92_state, m92_scanline_interrupt, "screen", 0, 1)
-
-	/* video hardware */
-	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram") // not really...
-
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(512, 256)
-	MCFG_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
+	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(m92_state, screen_update_ppan)
 
-	MCFG_GFXDECODE(m92)
-	MCFG_PALETTE_LENGTH(2048)
-
 	MCFG_VIDEO_START_OVERRIDE(m92_state,ppan)
-
-	/* sound hardware */
-	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
@@ -1054,7 +1037,7 @@ static MACHINE_CONFIG_DERIVED( nbbatman2bl, m92 )
 	MCFG_DEVICE_REMOVE("ymsnd")
 	MCFG_DEVICE_REMOVE("irem")
 
-	MCFG_GFXDECODE(bootleg)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", bootleg)
 
 	/* 8951 MCU as sound CPU */
 	/* OKI6295 (AD-65) as sound */
@@ -1065,14 +1048,14 @@ static MACHINE_CONFIG_DERIVED( psoldier, m92 )
 	MCFG_CPU_MODIFY("soundcpu")
 	MCFG_V25_CONFIG(psoldier_decryption_table)
 	/* video hardware */
-	MCFG_GFXDECODE(psoldier)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", psoldier)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dsoccr94j, m92 )
 	MCFG_CPU_MODIFY("soundcpu")
 	MCFG_V25_CONFIG(dsoccr94_decryption_table)
 	/* video hardware */
-	MCFG_GFXDECODE(psoldier)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", psoldier)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( gunforc2, m92 )

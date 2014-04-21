@@ -129,8 +129,8 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( main_portmap, AS_IO, 8, iqblock_state )
-	AM_RANGE(0x2000, 0x23ff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w)
-	AM_RANGE(0x2800, 0x2bff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w)
+	AM_RANGE(0x2000, 0x23ff) AM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
+	AM_RANGE(0x2800, 0x2bff) AM_DEVWRITE("palette", palette_device, write_ext) AM_SHARE("palette_ext")
 	AM_RANGE(0x6000, 0x603f) AM_WRITE(iqblock_fgscroll_w)
 	AM_RANGE(0x6800, 0x69ff) AM_WRITE(iqblock_fgvideoram_w) /* initialized up to 6fff... bug or larger tilemap? */
 	AM_RANGE(0x7000, 0x7fff) AM_WRITE(iqblock_bgvideoram_w)
@@ -247,6 +247,7 @@ static const gfx_layout tilelayout2 =
 	32*16
 };
 
+#if 0
 static const gfx_layout tilelayout3 =
 {
 	8,32,
@@ -260,6 +261,7 @@ static const gfx_layout tilelayout3 =
 		24*16, 25*16, 26*16, 27*16, 28*16, 29*16, 30*16, 31*16 },
 	32*16
 };
+#endif
 
 static GFXDECODE_START( iqblock )
 	GFXDECODE_ENTRY( "gfx1", 0, tilelayout1, 0, 16 )    /* only odd color codes are used */
@@ -285,10 +287,11 @@ static MACHINE_CONFIG_START( iqblock, iqblock_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(iqblock_state, screen_update_iqblock)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(iqblock)
-	MCFG_PALETTE_LENGTH(1024)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", iqblock)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

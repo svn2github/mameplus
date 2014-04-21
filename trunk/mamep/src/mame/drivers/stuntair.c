@@ -91,7 +91,9 @@ public:
 		m_fgram(*this, "fgram"),
 		m_bgram(*this, "bgram"),
 		m_bgattrram(*this, "bgattrram"),
-		m_sprram(*this, "sprram")
+		m_sprram(*this, "sprram"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -100,6 +102,8 @@ public:
 	required_shared_ptr<UINT8> m_bgram;
 	required_shared_ptr<UINT8> m_bgattrram;
 	required_shared_ptr<UINT8> m_sprram;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	tilemap_t *m_fg_tilemap;
 	tilemap_t *m_bg_tilemap;
@@ -151,12 +155,12 @@ PALETTE_INIT_MEMBER(stuntair_state, stuntair)
 		int g = (data&0x38)>>3;
 		int r = (data&0x07)>>0;
 
-		palette_set_color(machine(),i,MAKE_RGB(r<<5,g<<5,b<<6));
+		palette.set_pen_color(i,rgb_t(r<<5,g<<5,b<<6));
 	}
 
 	// just set the FG layer to black and white
-	palette_set_color(machine(),0x100,MAKE_RGB(0x00,0x00,0x00));
-	palette_set_color(machine(),0x101,MAKE_RGB(0xff,0xff,0xff));
+	palette.set_pen_color(0x100,rgb_t(0x00,0x00,0x00));
+	palette.set_pen_color(0x101,rgb_t(0xff,0xff,0xff));
 }
 
 
@@ -182,16 +186,16 @@ TILE_GET_INFO_MEMBER(stuntair_state::get_stuntair_bg_tile_info)
 
 void stuntair_state::video_start()
 {
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 	m_fg_tilemap->set_transparent_pen(0);
 
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(stuntair_state::get_stuntair_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
 void stuntair_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	gfx_element *gfx = machine().gfx[2];
+	gfx_element *gfx = m_gfxdecode->gfx(2);
 
 	/* there seem to be 2 spritelists with something else (fixed values) between them.. is that significant? */
 	for (int i=0;i<0x400;i+=16)
@@ -211,7 +215,7 @@ void stuntair_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 
 		y = 240 - y;
 
-		drawgfx_transpen(bitmap,cliprect,gfx,tile,colour,flipx,flipy,x,y,0);
+		gfx->transpen(bitmap,cliprect,tile,colour,flipx,flipy,x,y,0);
 	}
 }
 
@@ -537,11 +541,12 @@ static MACHINE_CONFIG_START( stuntair, stuntair_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(stuntair_state, screen_update_stuntair)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(stuntair)
-	MCFG_PALETTE_LENGTH(0x100+2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", stuntair)
+	MCFG_PALETTE_ADD("palette", 0x100+2)
 
-	MCFG_PALETTE_INIT_OVERRIDE(stuntair_state, stuntair)
+	MCFG_PALETTE_INIT_OWNER(stuntair_state, stuntair)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono") // stereo?

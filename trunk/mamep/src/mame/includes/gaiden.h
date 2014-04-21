@@ -16,7 +16,10 @@ public:
 		m_videoram3(*this, "videoram3"),
 		m_spriteram(*this, "spriteram"),
 		m_audiocpu(*this, "audiocpu"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_videoram;
@@ -97,4 +100,7 @@ public:
 		int sx,int sy,const rectangle &cliprect);
 	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };

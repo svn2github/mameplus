@@ -95,7 +95,6 @@
 #include "cpu/sharc/sharc.h"
 #include "cpu/mb86233/mb86233.h"
 #include "cpu/z80/z80.h"
-#include "sound/scsp.h"
 #include "sound/2612intf.h"
 #include "includes/model2.h"
 
@@ -134,11 +133,11 @@ static int copro_fifoin_pop(device_t *device, UINT32 *result)
 	{
 		if (state->m_copro_fifoin_num == 0)
 		{
-			sharc_set_flag_input(device, 0, ASSERT_LINE);
+			dynamic_cast<adsp21062_device *>(device)->set_flag_input(0, ASSERT_LINE);
 		}
 		else
 		{
-			sharc_set_flag_input(device, 0, CLEAR_LINE);
+			dynamic_cast<adsp21062_device *>(device)->set_flag_input(0, CLEAR_LINE);
 		}
 	}
 
@@ -195,7 +194,7 @@ static void copro_fifoin_push(device_t *device, UINT32 data)
 	// clear FIFO empty flag on SHARC
 	if (state->m_dsp_type == DSP_TYPE_SHARC)
 	{
-		sharc_set_flag_input(device, 0, CLEAR_LINE);
+		dynamic_cast<adsp21062_device *>(device)->set_flag_input(0, CLEAR_LINE);
 	}
 }
 
@@ -233,11 +232,11 @@ static UINT32 copro_fifoout_pop(address_space &space)
 	{
 		if (state->m_copro_fifoout_num == COPRO_FIFOOUT_SIZE)
 		{
-			sharc_set_flag_input(space.machine().device("dsp"), 1, ASSERT_LINE);
+			space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, ASSERT_LINE);
 		}
 		else
 		{
-			sharc_set_flag_input(space.machine().device("dsp"), 1, CLEAR_LINE);
+			space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, CLEAR_LINE);
 		}
 	}
 
@@ -269,13 +268,13 @@ static void copro_fifoout_push(device_t *device, UINT32 data)
 	{
 		if (state->m_copro_fifoout_num == COPRO_FIFOOUT_SIZE)
 		{
-			sharc_set_flag_input(device, 1, ASSERT_LINE);
+			dynamic_cast<adsp21062_device *>(device)->set_flag_input(1, ASSERT_LINE);
 
 			//device->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 		}
 		else
 		{
-			sharc_set_flag_input(device, 1, CLEAR_LINE);
+			dynamic_cast<adsp21062_device *>(device)->set_flag_input(1, CLEAR_LINE);
 
 			//device->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 		}
@@ -401,7 +400,7 @@ MACHINE_RESET_MEMBER(model2_state,model2_scsp)
 	// copy the 68k vector table into RAM
 	memcpy(m_soundram, memregion("audiocpu")->base() + 0x80000, 16);
 	m_audiocpu->reset();
-	scsp_set_ram_base(machine().device("scsp"), m_soundram);
+	m_scsp->set_ram_base(m_soundram);
 }
 
 MACHINE_RESET_MEMBER(model2_state,model2)
@@ -438,18 +437,18 @@ MACHINE_RESET_MEMBER(model2_state,model2c)
 	m_dsp_type = DSP_TYPE_TGPX4;
 }
 
-static void chcolor(running_machine &machine, pen_t color, UINT16 data)
+static void chcolor(palette_device &palette, pen_t color, UINT16 data)
 {
-	palette_set_color_rgb(machine, color, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+	palette.set_pen_color(color, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 }
 
 WRITE32_MEMBER(model2_state::pal32_w)
 {
 	COMBINE_DATA(m_paletteram32 + offset);
 	if(ACCESSING_BITS_0_15)
-		chcolor(machine(), offset * 2, m_paletteram32[offset]);
+		chcolor(m_palette, offset * 2, m_paletteram32[offset]);
 	if(ACCESSING_BITS_16_31)
-		chcolor(machine(), offset * 2 + 1, m_paletteram32[offset] >> 16);
+		chcolor(m_palette, offset * 2 + 1, m_paletteram32[offset] >> 16);
 }
 
 WRITE32_MEMBER(model2_state::ctrl0_w)
@@ -689,7 +688,7 @@ WRITE32_MEMBER(model2_state::copro_fifo_w)
 	{
 		if (m_dsp_type == DSP_TYPE_SHARC)
 		{
-			sharc_external_dma_write(machine().device("dsp"), m_coprocnt, data & 0xffff);
+			machine().device<adsp21062_device>("dsp")->external_dma_write(m_coprocnt, data & 0xffff);
 		}
 		else if (m_dsp_type == DSP_TYPE_TGP)
 		{
@@ -721,7 +720,7 @@ WRITE32_MEMBER(model2_state::copro_sharc_iop_w)
 		(strcmp(machine().system().name, "vonj" ) == 0) ||
 		(strcmp(machine().system().name, "rchase2" ) == 0))
 	{
-		sharc_external_iop_write(machine().device("dsp"), offset, data);
+		machine().device<adsp21062_device>("dsp")->external_iop_write(offset, data);
 	}
 	else
 	{
@@ -732,7 +731,7 @@ WRITE32_MEMBER(model2_state::copro_sharc_iop_w)
 		else
 		{
 			m_iop_data |= (data & 0xffff) << 16;
-			sharc_external_iop_write(machine().device("dsp"), offset, m_iop_data);
+			machine().device<adsp21062_device>("dsp")->external_iop_write(offset, m_iop_data);
 		}
 		m_iop_write_num++;
 	}
@@ -805,7 +804,7 @@ WRITE32_MEMBER(model2_state::geo_sharc_fifo_w)
 {
 	if (m_geoctl & 0x80000000)
 	{
-		sharc_external_dma_write(machine().device("dsp2"), m_geocnt, data & 0xffff);
+		machine().device<adsp21062_device>("dsp2")->external_dma_write(m_geocnt, data & 0xffff);
 
 		m_geocnt++;
 	}
@@ -819,7 +818,7 @@ WRITE32_MEMBER(model2_state::geo_sharc_iop_w)
 {
 	if ((strcmp(machine().system().name, "schamp" ) == 0))
 	{
-		sharc_external_iop_write(machine().device("dsp2"), offset, data);
+		machine().device<adsp21062_device>("dsp2")->external_iop_write(offset, data);
 	}
 	else
 	{
@@ -830,7 +829,7 @@ WRITE32_MEMBER(model2_state::geo_sharc_iop_w)
 		else
 		{
 			m_geo_iop_data |= (data & 0xffff) << 16;
-			sharc_external_iop_write(machine().device("dsp2"), offset, m_geo_iop_data);
+			machine().device<adsp21062_device>("dsp2")->external_iop_write(offset, m_geo_iop_data);
 		}
 		m_geo_iop_write_num++;
 	}
@@ -1049,7 +1048,7 @@ WRITE32_MEMBER(model2_state::model2_serial_w)
 			m_m1audio->write_fifo(data & 0xff);
 		}
 
-		scsp_midi_in(machine().device("scsp"), space, 0, data&0xff, 0);
+		m_scsp->midi_in(space, 0, data&0xff, 0);
 
 		// give the 68k time to notice
 		space.device().execute().spin_until_time(attotime::from_usec(40));
@@ -1849,7 +1848,7 @@ WRITE16_MEMBER(model2_state::model2snd_ctrl)
 
 static ADDRESS_MAP_START( model2_snd, AS_PROGRAM, 16, model2_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_RAM AM_REGION("audiocpu", 0) AM_SHARE("soundram")
-	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp", scsp_r, scsp_w)
+	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE("scsp", scsp_device, read, write)
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(model2snd_ctrl)
 	AM_RANGE(0x600000, 0x67ffff) AM_ROM AM_REGION("audiocpu", 0x80000)
 	AM_RANGE(0x800000, 0x9fffff) AM_ROM AM_REGION("scsp", 0)
@@ -1858,24 +1857,10 @@ static ADDRESS_MAP_START( model2_snd, AS_PROGRAM, 16, model2_state )
 ADDRESS_MAP_END
 
 
-WRITE_LINE_MEMBER(model2_state::scsp_irq)
+WRITE8_MEMBER(model2_state::scsp_irq)
 {
-	if (state > 0)
-	{
-		m_scsp_last_line = state;
-		m_audiocpu->set_input_line(state, ASSERT_LINE);
-	}
-	else
-		m_audiocpu->set_input_line(-state, CLEAR_LINE);
+	m_audiocpu->set_input_line(offset, data);
 }
-
-static const scsp_interface scsp_config =
-{
-	0,
-	DEVCB_DRIVER_LINE_MEMBER(model2_state,scsp_irq),
-	DEVCB_NULL
-};
-
 
 
 /*****************************************************************************/
@@ -1969,18 +1954,21 @@ static MACHINE_CONFIG_START( model2o, model2_state )
 	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
-	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
+	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
+	MCFG_S24TILE_DEVICE_GFXDECODE("gfxdecode")
+	MCFG_S24TILE_DEVICE_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_PALETTE_ADD("palette", 8192)
 
 	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
@@ -2019,25 +2007,27 @@ static MACHINE_CONFIG_START( model2a, model2_state )
 	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
-
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
+	MCFG_S24TILE_DEVICE_GFXDECODE("gfxdecode")
+	MCFG_S24TILE_DEVICE_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_PALETTE_ADD("palette", 8192)
 
 	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("scsp", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model2_state,scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 MACHINE_CONFIG_END
@@ -2087,11 +2077,6 @@ static MACHINE_CONFIG_DERIVED( srallyc, model2a )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", model2_state,  irq0_line_hold)
 MACHINE_CONFIG_END
 
-static const sharc_config sharc_cfg =
-{
-	BOOT_MODE_HOST
-};
-
 /* 2B-CRX */
 static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_CPU_ADD("maincpu", I960, 25000000)
@@ -2102,11 +2087,11 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_CPU_PROGRAM_MAP(model2_snd)
 
 	MCFG_CPU_ADD("dsp", ADSP21062, 40000000)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_HOST)
 	MCFG_CPU_DATA_MAP(copro_sharc_map)
 
 	//MCFG_CPU_ADD("dsp2", ADSP21062, 40000000)
-	//MCFG_CPU_CONFIG(sharc_cfg)
+	//MCFG_SHARC_BOOT_MODE(BOOT_MODE_HOST)
 	//MCFG_CPU_DATA_MAP(geo_sharc_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(18000))
@@ -2126,25 +2111,27 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
-
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
+	MCFG_S24TILE_DEVICE_GFXDECODE("gfxdecode")
+	MCFG_S24TILE_DEVICE_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_PALETTE_ADD("palette", 8192)
 
 	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("scsp", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model2_state,scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 MACHINE_CONFIG_END
@@ -2173,25 +2160,27 @@ static MACHINE_CONFIG_START( model2c, model2_state )
 	MCFG_TIMER_DRIVER_ADD("timer3", model2_state, model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
-
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
+	MCFG_S24TILE_DEVICE_GFXDECODE("gfxdecode")
+	MCFG_S24TILE_DEVICE_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(62*8, 48*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 62*8-1, 0*8, 48*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(model2_state, screen_update_model2)
 
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_PALETTE_ADD("palette", 8192)
 
 	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("scsp", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(model2_state, scsp_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
 MACHINE_CONFIG_END

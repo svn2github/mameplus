@@ -64,28 +64,28 @@
 
   IC's Reverse Engineering....
 
-  MARKED   PINS     ID    TYPE        DETAILS
+  MARKED   PINS     ID    TYPE        PART                           DETAILS
 
-  - U1 : 40-pin IC  YES   CPU         MOTOROLA M6809EP               (8-bit microprocessor)
-  - U2 : 28-pin IC  YES   ROM         M27128A                        (NMOS 128K 16K x 8 UV EPROM)
-  - U3 : 28-pin IC  YES   ROM         M27128A                        (NMOS 128K 16K x 8 UV EPROM)
-  - U4 : 40-pin IC  YES   I/O         ST EF6821P                     (PIA: Peripheral Interface Adapter)
-  - U5 : 16-pin IC  YES   TTL         ST M74HC157B1                  (Quad 2 Channel Multiplexer)
-  - U6 : 16-pin IC  YES   TTL         ST M74HC157B1                  (Quad 2 Channel Multiplexer)
-  - U7 : 16-pin IC  YES   TTL         ST M74HC157B1                  (Quad 2 Channel Multiplexer)
-  - U8 : 16-pin IC  YES   TTL         ST M74HC157B1                  (Quad 2 Channel Multiplexer)
-  - U9 : 40-pin IC  YES   CRTC        HD6845 / UM6845 / GS GM68A45S  (CRT Controller)
-  - U10: 28-pin IC  YES   RAM         KM62256BLP-10                  (32K x 8 Low Power CMOS Static RAM)
-  - U11: 14-pin IC  YES   TTL         SN74LS95BN                     (4-bit Parallel-Access Shift Registers)
-  - U12: 14-pin IC  YES   TTL         SN74LS95BN                     (4-bit Parallel-Access Shift Registers)
-  - U13: 20-pin IC  YES   TTL         SN74LS244N                     (Octal Buffers and Line Drivers with 3-State outputs)
-  - U14: 20-pin IC  YES   TTL         HD74LS374                      (Octal D-type Flip-Flops with noninverted 3-state output)
-  - U15: 20-pin IC  NO    PLD         ???
-  - U16: 20-pin IC  YES   PLD         PALCE16V8H-25                  (EE CMOS Zero-Power 20-Pin Universal Programmable Array Logic)
-  - U17: 14-pin IC  YES   TTL         HD74LS00P                      (Quadruple 2-Input NAND Gates)
-  - U18: 14-pin IC  YES   TTL         KS74HCTLS86N                   (Quad 2−Input Exclusive OR Gate)
-  - U19: 16-pin IC  YES   WATCHDOG    MAXIM MAX691                   (Microprocessor Supervisory Circuits)
-  - U20: 16-pin IC  YES   DARLINGTON  ULN2003                        (7 NPN Darlington transistor pairs with high voltage and current capability)
+  - U1 : 40-pin IC  YES   CPU         MOTOROLA M6809EP               8-bit microprocessor.
+  - U2 : 28-pin IC  YES   ROM         M27128A (or M27512FI)          NMOS 128K 16K x 8 UV EPROM (or 64K x 8).
+  - U3 : 28-pin IC  YES   ROM         M27128A (or M27512FI)          NMOS 128K 16K x 8 UV EPROM (or 64K x 8).
+  - U4 : 40-pin IC  YES   I/O         ST EF6821P                     PIA: Peripheral Interface Adapter.
+  - U5 : 16-pin IC  YES   TTL         ST M74HC157B1                  Quad 2 Channel Multiplexer.
+  - U6 : 16-pin IC  YES   TTL         ST M74HC157B1                  Quad 2 Channel Multiplexer.
+  - U7 : 16-pin IC  YES   TTL         ST M74HC157B1                  Quad 2 Channel Multiplexer.
+  - U8 : 16-pin IC  YES   TTL         ST M74HC157B1                  Quad 2 Channel Multiplexer.
+  - U9 : 40-pin IC  YES   CRTC        HD6845 / UM6845 / GS GM68A45S  CRT Controller.
+  - U10: 28-pin IC  YES   RAM         KM62256BLP-10                  32K x 8 Low Power CMOS Static RAM.
+  - U11: 14-pin IC  YES   TTL         SN74LS95BN                     4-bit Parallel-Access Shift Registers.
+  - U12: 14-pin IC  YES   TTL         SN74LS95BN                     4-bit Parallel-Access Shift Registers.
+  - U13: 20-pin IC  YES   TTL         SN74LS244N                     Octal Buffers and Line Drivers with 3-State output.
+  - U14: 20-pin IC  YES   TTL         HD74LS374                      Octal D-type Flip-Flops with noninverted 3-state output.
+  - U15: 20-pin IC  YES   PLD         PALCE16V8H-25                  EE CMOS Zero-Power 20-Pin Universal Programmable Array Logic.
+  - U16: 20-pin IC  YES   PLD         PALCE16V8H-25                  EE CMOS Zero-Power 20-Pin Universal Programmable Array Logic.
+  - U17: 14-pin IC  YES   TTL         HD74LS00P                      Quadruple 2-Input NAND Gates.
+  - U18: 14-pin IC  YES   TTL         KS74HCTLS86N                   Quad 2???Input Exclusive OR Gate.
+  - U19: 16-pin IC  YES   WATCHDOG    MAXIM MAX691                   Microprocessor Supervisory Circuits.
+  - U20: 16-pin IC  YES   DARLINGTON  ULN2003                        7 NPN Darlington transistor pairs with high voltage and current capability.
 
 
                              M6809
@@ -221,7 +221,7 @@ WRITE8_MEMBER(truco_state::porta_w)
 	logerror("Port A writes: %2x\n", data);
 }
 
-WRITE8_MEMBER(truco_state::pia_ca2_w)
+WRITE_LINE_MEMBER(truco_state::pia_ca2_w)
 {
 /*  PIA CA2 line is connected to IC U19, leg 11.
     The IC was successfully identified as MAX691.
@@ -244,14 +244,14 @@ WRITE8_MEMBER(truco_state::portb_w)
 		logerror("Port B writes: %2x\n", data);
 }
 
-WRITE8_MEMBER(truco_state::pia_irqa_w)
+WRITE_LINE_MEMBER(truco_state::pia_irqa_w)
 {
-		logerror("PIA irq A: %2x\n", data);
+	logerror("PIA irq A: %2x\n", state);
 }
 
-WRITE8_MEMBER(truco_state::pia_irqb_w)
+WRITE_LINE_MEMBER(truco_state::pia_irqb_w)
 {
-		logerror("PIA irq B: %2x\n", data);
+	logerror("PIA irq B: %2x\n", state);
 }
 
 
@@ -260,9 +260,9 @@ WRITE8_MEMBER(truco_state::pia_irqb_w)
 *******************************************/
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, truco_state )
-	AM_RANGE(0x0000, 0x17ff) AM_RAM                                                     /* General purpose RAM */
+	AM_RANGE(0x0000, 0x17ff) AM_RAM                                     /* General purpose RAM */
 	AM_RANGE(0x1800, 0x7bff) AM_RAM AM_SHARE("videoram")                /* Video RAM */
-	AM_RANGE(0x7c00, 0x7fff) AM_RAM AM_SHARE("battery_ram")         /* Battery backed RAM */
+	AM_RANGE(0x7c00, 0x7fff) AM_RAM AM_SHARE("battery_ram")             /* Battery backed RAM */
 	AM_RANGE(0x8000, 0x8003) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x8004, 0x8004) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0x8005, 0x8005) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
@@ -406,35 +406,13 @@ INTERRUPT_GEN_MEMBER(truco_state::truco_interrupt)
 
 
 /*******************************************
-*              PIA Interfaces              *
-*******************************************/
-/*
-
-*/
-static const pia6821_interface pia0_intf =
-{
-	DEVCB_INPUT_PORT("P1"),     /* port A in */
-	DEVCB_INPUT_PORT("JMPRS"),  /* port B in */
-	DEVCB_NULL,                 /* line CA1 in ??? */
-	DEVCB_NULL,                 /* line CB1 in ??? */
-	DEVCB_NULL,                 /* line CA2 in */
-	DEVCB_NULL,                 /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(truco_state,porta_w),       /* port A out */
-	DEVCB_DRIVER_MEMBER(truco_state,portb_w),       /* port B out */
-	DEVCB_DRIVER_MEMBER(truco_state,pia_ca2_w), /* line CA2 out */
-	DEVCB_NULL,                 /* port CB2 out */
-	DEVCB_DRIVER_MEMBER(truco_state,pia_irqa_w),    /* IRQA */
-	DEVCB_DRIVER_MEMBER(truco_state,pia_irqb_w) /* IRQB */
-};
-
-
-/*******************************************
 *              CRTC Interface              *
 *******************************************/
 
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	4,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -459,8 +437,14 @@ static MACHINE_CONFIG_START( truco, truco_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", truco_state,  truco_interrupt)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(1.6))    /* 1.6 seconds */
 
-	MCFG_PIA6821_ADD("pia0", pia0_intf)
-
+	MCFG_DEVICE_ADD("pia0", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(IOPORT("P1"))
+	MCFG_PIA_READPB_HANDLER(IOPORT("JMPRS"))
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(truco_state,porta_w))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(truco_state,portb_w))
+	MCFG_PIA_CA2_HANDLER(WRITELINE(truco_state,pia_ca2_w))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(truco_state,pia_irqa_w))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(truco_state,pia_irqb_w))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -469,8 +453,10 @@ static MACHINE_CONFIG_START( truco, truco_state )
 	MCFG_SCREEN_SIZE(256, 192)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 192-1)
 	MCFG_SCREEN_UPDATE_DRIVER(truco_state, screen_update_truco)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(16)
+	MCFG_PALETTE_ADD("palette", 16)
+	MCFG_PALETTE_INIT_OWNER(truco_state, truco)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)    /* Identified as UM6845 */
 

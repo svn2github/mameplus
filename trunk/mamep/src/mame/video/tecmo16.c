@@ -22,8 +22,7 @@ TILE_GET_INFO_MEMBER(tecmo16_state::fg_get_tile_info)
 	/* bit 4 controls blending */
 	tileinfo.category = (m_colorram[tile_index] & 0x10) >> 4;
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			tile,
 			color | (tileinfo.category ? 0x70 : 0x00),
 			0);
@@ -34,8 +33,7 @@ TILE_GET_INFO_MEMBER(tecmo16_state::bg_get_tile_info)
 	int tile = m_videoram2[tile_index] & 0x1fff;
 	int color = (m_colorram2[tile_index] & 0x0f)+0x10;
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			tile,
 			color,
 			0);
@@ -44,8 +42,7 @@ TILE_GET_INFO_MEMBER(tecmo16_state::bg_get_tile_info)
 TILE_GET_INFO_MEMBER(tecmo16_state::tx_get_tile_info)
 {
 	int tile = m_charram[tile_index];
-	SET_TILE_INFO_MEMBER(
-			0,
+	SET_TILE_INFO_MEMBER(0,
 			tile & 0x0fff,
 			tile >> 12,
 			0);
@@ -62,9 +59,9 @@ void tecmo16_state::video_start()
 	/* set up sprites */
 	m_screen->register_screen_bitmap(m_sprite_bitmap);
 
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::fg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::fg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	m_tx_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
 
 	m_fg_tilemap->set_transparent_pen(0);
 	m_bg_tilemap->set_transparent_pen(0);
@@ -84,9 +81,9 @@ VIDEO_START_MEMBER(tecmo16_state,ginkun)
 	/* set up sprites */
 	m_screen->register_screen_bitmap(m_sprite_bitmap);
 
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::fg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
-	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::fg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
+	m_tx_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
 
 	m_fg_tilemap->set_transparent_pen(0);
 	m_bg_tilemap->set_transparent_pen(0);
@@ -104,9 +101,9 @@ VIDEO_START_MEMBER(tecmo16_state,riot)
 	/* set up sprites */
 	m_screen->register_screen_bitmap(m_sprite_bitmap);
 
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::fg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
-	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tecmo16_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::fg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,32);
+	m_tx_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tecmo16_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
 
 	m_fg_tilemap->set_transparent_pen(0);
 	m_bg_tilemap->set_transparent_pen(0);
@@ -196,7 +193,7 @@ WRITE16_MEMBER(tecmo16_state::tecmo16_scroll_char_y_w)
 /******************************************************************************/
 
 /* mix & blend the paletted 16-bit tile and sprite bitmaps into an RGB 32-bit bitmap */
-static void blendbitmaps(running_machine &machine,
+static void blendbitmaps(palette_device &palette,
 		bitmap_rgb32 &dest,bitmap_ind16 &src1,bitmap_ind16 &src2,bitmap_ind16 &src3,
 		int sx,int sy,const rectangle &clip)
 {
@@ -224,7 +221,7 @@ static void blendbitmaps(running_machine &machine,
 	if (sy > ey) return;
 
 	{
-		const pen_t *paldata = machine.pens;
+		const pen_t *paldata = palette.pens();
 		UINT32 *end;
 
 		UINT16 *sd1 = &src1.pix16(0);
@@ -323,9 +320,9 @@ UINT32 tecmo16_state::screen_update_tecmo16(screen_device &screen, bitmap_rgb32 
 	m_tx_tilemap->draw(screen, m_tile_bitmap_fg, cliprect, 0, 4);
 
 	/* draw sprites into a 16-bit bitmap */
-	tecmo16_draw_sprites(screen, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, cliprect, m_spriteram, m_spriteram.bytes(), m_game_is_riot, m_flipscreen);
+	tecmo16_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, cliprect, m_spriteram, m_spriteram.bytes(), m_game_is_riot, m_flipscreen);
 
 	/* mix & blend the tilemaps and sprites into a 32-bit bitmap */
-	blendbitmaps(machine(), bitmap, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, 0, 0, cliprect);
+	blendbitmaps(m_palette, bitmap, m_tile_bitmap_bg, m_tile_bitmap_fg, m_sprite_bitmap, 0, 0, cliprect);
 	return 0;
 }

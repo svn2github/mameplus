@@ -15,7 +15,8 @@ public:
 		m_audiocpu(*this, "audiocpu"),
 		m_k007342(*this, "k007342"),
 		m_k007420(*this, "k007420"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	/* memory pointers */
 //  UINT8 *      paletteram;    // this currently uses generic palette handling
@@ -38,8 +39,7 @@ public:
 	UINT32 screen_update_battlnts(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(battlnts_interrupt);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	K007342_CALLBACK_MEMBER(battlnts_tile_callback);
+	K007420_CALLBACK_MEMBER(battlnts_sprite_callback);
 };
-
-/*----------- defined in video/battlnts.c -----------*/
-void battlnts_tile_callback(running_machine &machine, int layer, int bank, int *code, int *color, int *flags);
-void battlnts_sprite_callback(running_machine &machine, int *code, int *color);

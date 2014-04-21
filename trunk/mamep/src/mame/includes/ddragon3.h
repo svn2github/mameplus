@@ -17,7 +17,10 @@ public:
 		m_spriteram(*this, "spriteram"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
-		m_oki(*this, "oki")
+		m_oki(*this, "oki"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")
 
 	{
 		vblank_level = 6;
@@ -29,7 +32,7 @@ public:
 	required_shared_ptr<UINT16> m_fg_videoram;
 //  required_shared_ptr<UINT16> m_spriteram;
 	required_device<buffered_spriteram16_device> m_spriteram;
-	//  UINT16 *        m_paletteram; // currently this uses generic palette handling
+	dynamic_array<UINT16> m_paletteram;
 
 	/* video-related */
 	tilemap_t         *m_fg_tilemap;
@@ -53,6 +56,9 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<okim6295_device> m_oki;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	DECLARE_WRITE16_MEMBER(ddragon3_io_w);
 	DECLARE_WRITE16_MEMBER(ddragon3_scroll_w);

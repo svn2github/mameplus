@@ -202,7 +202,7 @@ WRITE8_MEMBER(rastan_state::rastan_msm5205_stop_w)
 static ADDRESS_MAP_START( rastan_map, AS_PROGRAM, 16, rastan_state )
 	AM_RANGE(0x000000, 0x05ffff) AM_ROM
 	AM_RANGE(0x10c000, 0x10ffff) AM_RAM
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x350008, 0x350009) AM_WRITENOP    /* 0 only (often) ? */
 	AM_RANGE(0x380000, 0x380001) AM_WRITE(rastan_spritectrl_w)  /* sprite palette bank, coin counters & lockout */
 	AM_RANGE(0x390000, 0x390001) AM_READ_PORT("P1")
@@ -333,13 +333,6 @@ static GFXDECODE_START( rastan )
 GFXDECODE_END
 
 
-
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(rastan_state,rastan_msm5205_vck), /* VCK function */
-	MSM5205_S48_4B      /* 8 kHz */
-};
-
 void rastan_state::machine_start()
 {
 	UINT8 *ROM = memregion("audiocpu")->base();
@@ -399,12 +392,18 @@ static MACHINE_CONFIG_START( rastan, rastan_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(rastan_state, screen_update_rastan)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(rastan)
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", rastan)
+	MCFG_PALETTE_ADD("palette", 8192)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_PC080SN_ADD("pc080sn", rastan_pc080sn_intf)
+	MCFG_PC080SN_GFXDECODE("gfxdecode")
+	MCFG_PC080SN_PALETTE("palette")
 	MCFG_PC090OJ_ADD("pc090oj", rastan_pc090oj_intf)
+	MCFG_PC090OJ_GFXDECODE("gfxdecode")
+	MCFG_PC090OJ_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -416,7 +415,8 @@ static MACHINE_CONFIG_START( rastan, rastan_state )
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
 	MCFG_SOUND_ADD("msm", MSM5205, XTAL_384kHz) /* verified on pcb */
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(rastan_state, rastan_msm5205_vck)) /* VCK function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 kHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 
 	MCFG_TC0140SYT_ADD("tc0140syt", rastan_tc0140syt_intf)

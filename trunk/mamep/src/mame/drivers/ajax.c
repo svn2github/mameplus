@@ -27,7 +27,7 @@ static ADDRESS_MAP_START( ajax_main_map, AS_PROGRAM, 8, ajax_state )
 	AM_RANGE(0x0000, 0x01c0) AM_READWRITE(ajax_ls138_f10_r, ajax_ls138_f10_w)   /* bankswitch + sound command + FIRQ command */
 	AM_RANGE(0x0800, 0x0807) AM_DEVREADWRITE("k051960", k051960_device, k051937_r, k051937_w)                    /* sprite control registers */
 	AM_RANGE(0x0c00, 0x0fff) AM_DEVREADWRITE("k051960", k051960_device, k051960_r, k051960_w)                    /* sprite RAM 2128SL at J7 */
-	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_be_w) AM_SHARE("paletteram")/* palette */
+	AM_RANGE(0x1000, 0x1fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")/* palette */
 	AM_RANGE(0x2000, 0x3fff) AM_RAM AM_SHARE("share1")                                  /* shared RAM with the 6809 */
 	AM_RANGE(0x4000, 0x5fff) AM_RAM                                             /* RAM 6264L at K10 */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank2")                                        /* banked ROM */
@@ -166,17 +166,6 @@ WRITE8_MEMBER(ajax_state::volume_callback1)
 	m_k007232_2->set_volume(1, (data & 0x0f) * 0x11/2, (data >> 4) * 0x11/2);
 }
 
-static const k007232_interface k007232_interface_1 =
-{
-	DEVCB_DRIVER_MEMBER(ajax_state,volume_callback0)
-};
-
-static const k007232_interface k007232_interface_2 =
-{
-	DEVCB_DRIVER_MEMBER(ajax_state,volume_callback1)
-};
-
-
 
 static const k052109_interface ajax_k052109_intf =
 {
@@ -219,21 +208,29 @@ static MACHINE_CONFIG_START( ajax, ajax_state )
 
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(ajax_state, screen_update_ajax)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	MCFG_K052109_ADD("k052109", ajax_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", ajax_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 	MCFG_K051316_ADD("k051316", ajax_k051316_intf)
+	MCFG_K051316_GFXDECODE("gfxdecode")
+	MCFG_K051316_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -243,14 +240,14 @@ static MACHINE_CONFIG_START( ajax, ajax_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
 	MCFG_SOUND_ADD("k007232_1", K007232, 3579545)
-	MCFG_SOUND_CONFIG(k007232_interface_1)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(ajax_state, volume_callback0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 
 	MCFG_SOUND_ADD("k007232_2", K007232, 3579545)
-	MCFG_SOUND_CONFIG(k007232_interface_2)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(ajax_state, volume_callback1))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 MACHINE_CONFIG_END

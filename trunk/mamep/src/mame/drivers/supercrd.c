@@ -176,7 +176,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
@@ -188,6 +189,7 @@ public:
 	DECLARE_VIDEO_START(supercrd);
 	UINT32 screen_update_supercrd(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -209,7 +211,7 @@ PALETTE_INIT_MEMBER(supercrd_state, supercrd)
 			2,  resistances_g,  weights_g,  100,    0);
 
 
-	for (i = 0; i < machine().total_colors(); i++)
+	for (i = 0; i < palette.entries(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -228,7 +230,7 @@ PALETTE_INIT_MEMBER(supercrd_state, supercrd)
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		g = combine_2_weights(weights_g, bit0, bit1);
 
-		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
+		palette.set_pen_color(i,rgb_t(r,g,b));
 	}
 }
 
@@ -264,7 +266,7 @@ TILE_GET_INFO_MEMBER(supercrd_state::get_bg_tile_info)
 
 VIDEO_START_MEMBER(supercrd_state, supercrd)
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supercrd_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 4, 8, 96, 29);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(supercrd_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 4, 8, 96, 29);
 }
 
 
@@ -409,6 +411,7 @@ GFXDECODE_END
 //static MC6845_INTERFACE( mc6845_intf )
 //{
 //  false,
+//  0,0,0,0,    /* visarea adjustment */
 //  4,          /* number of pixels per video memory address */
 //  NULL,       /* before pixel update callback */
 //  NULL,       /* row update callback */
@@ -469,11 +472,12 @@ static MACHINE_CONFIG_START( supercrd, supercrd_state )
 	MCFG_SCREEN_SIZE((124+1)*4, (30+1)*8)               /* Taken from MC6845 init, registers 00 & 04. Normally programmed with (value-1) */
 	MCFG_SCREEN_VISIBLE_AREA(0*4, 96*4-1, 0*8, 29*8-1)  /* Taken from MC6845 init, registers 01 & 06 */
 	MCFG_SCREEN_UPDATE_DRIVER(supercrd_state, screen_update_supercrd)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(supercrd)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", supercrd)
 
-	MCFG_PALETTE_LENGTH(0x200)
-	MCFG_PALETTE_INIT_OVERRIDE(supercrd_state, supercrd)
+	MCFG_PALETTE_ADD("palette", 0x200)
+	MCFG_PALETTE_INIT_OWNER(supercrd_state, supercrd)
 	MCFG_VIDEO_START_OVERRIDE(supercrd_state, supercrd)
 
 //  MCFG_MC6845_ADD("crtc", MC6845, "screen", MASTER_CLOCK/8, mc6845_intf)

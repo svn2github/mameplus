@@ -271,6 +271,7 @@ static MC6845_UPDATE_ROW( atamanot_update_row )
 static MC6845_INTERFACE( ssingles_mc6845_intf )
 {
 	false,
+	0,0,0,0,
 	8,
 	NULL,                       /* before pixel update callback */
 	ssingles_update_row,        /* row update callback */
@@ -285,6 +286,7 @@ static MC6845_INTERFACE( ssingles_mc6845_intf )
 static MC6845_INTERFACE( atamanot_mc6845_intf )
 {
 	false,
+	0,0,0,0,
 	8,
 	NULL,                       /* before pixel update callback */
 	atamanot_update_row,        /* row update callback */
@@ -318,7 +320,7 @@ void ssingles_state::video_start()
 		int i;
 		for(i=0;i<NUM_PENS;++i)
 		{
-			m_pens[i]=MAKE_RGB(ssingles_colors[3*i], ssingles_colors[3*i+1], ssingles_colors[3*i+2]);
+			m_pens[i]=rgb_t(ssingles_colors[3*i], ssingles_colors[3*i+1], ssingles_colors[3*i+2]);
 		}
 	}
 }
@@ -573,9 +575,9 @@ static MACHINE_CONFIG_START( ssingles, ssingles_state )
 	MCFG_SCREEN_RAW_PARAMS(4000000, 256, 0, 256, 256, 0, 256)   /* temporary, CRTC will configure screen */
 	MCFG_SCREEN_UPDATE_DEVICE("crtc", mc6845_device, screen_update)
 
-	MCFG_PALETTE_LENGTH(4) //guess
+	MCFG_PALETTE_ADD("palette", 4) //guess
 
-	MCFG_GFXDECODE(ssingles)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ssingles)
 
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", 1000000 /* ? MHz */, ssingles_mc6845_intf)
@@ -606,7 +608,7 @@ static MACHINE_CONFIG_DERIVED( atamanot, ssingles )
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", 1000000 /* ? MHz */, atamanot_mc6845_intf)
 
-	MCFG_GFXDECODE(atamanot)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", atamanot)
 MACHINE_CONFIG_END
 
 ROM_START( ssingles )

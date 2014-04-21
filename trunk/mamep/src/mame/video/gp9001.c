@@ -207,9 +207,22 @@ gp9001vdp_device::gp9001vdp_device(const machine_config &mconfig, const char *ta
 		device_video_interface(mconfig, *this),
 		device_memory_interface(mconfig, *this),
 		m_space_config("gp9001vdp", ENDIANNESS_BIG, 16,14, 0, NULL, *ADDRESS_MAP_NAME(gp9001vdp_map)),
-		m_gfxregion(0)
+		m_gfxregion(0),
+		m_gfxdecode(*this),
+		m_palette(*this)
 {
 }
+
+//-------------------------------------------------
+//  static_set_gfxdecode_tag: Set the tag of the
+//  gfx decoder
+//-------------------------------------------------
+
+void gp9001vdp_device::static_set_gfxdecode_tag(device_t &device, const char *tag)
+{
+	downcast<gp9001vdp_device &>(device).m_gfxdecode.set_tag(tag);
+}
+
 
 void gp9001vdp_device::static_set_gfx_region(device_t &device, int gfxregion)
 {
@@ -240,8 +253,7 @@ TILE_GET_INFO_MEMBER(gp9001vdp_device::get_top0_tile_info)
 	}
 
 	color = attrib & 0x0fff; // 0x0f00 priority, 0x007f colour
-	SET_TILE_INFO_MEMBER(
-			tile_region,
+	SET_TILE_INFO_MEMBER(tile_region,
 			tile_number,
 			color,
 			0);
@@ -263,8 +275,7 @@ TILE_GET_INFO_MEMBER(gp9001vdp_device::get_fg0_tile_info)
 	}
 
 	color = attrib & 0x0fff; // 0x0f00 priority, 0x007f colour
-	SET_TILE_INFO_MEMBER(
-			tile_region,
+	SET_TILE_INFO_MEMBER(tile_region,
 			tile_number,
 			color,
 			0);
@@ -284,8 +295,7 @@ TILE_GET_INFO_MEMBER(gp9001vdp_device::get_bg0_tile_info)
 	}
 
 	color = attrib & 0x0fff; // 0x0f00 priority, 0x007f colour
-	SET_TILE_INFO_MEMBER(
-			tile_region,
+	SET_TILE_INFO_MEMBER(tile_region,
 			tile_number,
 			color,
 			0);
@@ -296,9 +306,9 @@ void gp9001vdp_device::create_tilemaps(int region)
 {
 	tile_region = region;
 
-	top.tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_top0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	fg.tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_fg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
-	bg.tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_bg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	top.tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_top0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	fg.tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_fg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	bg.tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_bg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
 
 	top.tmap->set_transparent_pen(0);
 	fg.tmap->set_transparent_pen(0);
@@ -308,6 +318,9 @@ void gp9001vdp_device::create_tilemaps(int region)
 
 void gp9001vdp_device::device_start()
 {
+	if(!m_gfxdecode->started())
+		throw device_missing_dependencies();
+
 	top.vram16 = auto_alloc_array_clear(machine(), UINT16, GP9001_TOP_VRAM_SIZE/2);
 	fg.vram16 = auto_alloc_array_clear(machine(), UINT16, GP9001_FG_VRAM_SIZE/2);
 	bg.vram16 = auto_alloc_array_clear(machine(), UINT16, GP9001_BG_VRAM_SIZE/2);
@@ -700,7 +713,7 @@ WRITE16_MEMBER( gp9001vdp_device::pipibibi_bootleg_spriteram16_w )
 
 void gp9001vdp_device::draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8* primap )
 {
-	gfx_element *gfx = machine.gfx[tile_region+1];
+	gfx_element *gfx = m_gfxdecode->gfx(tile_region+1);
 
 	int offs, old_x, old_y;
 
@@ -803,7 +816,7 @@ void gp9001vdp_device::draw_sprites( running_machine &machine, bitmap_ind16 &bit
 					else       sx = sx_base + dim_x;
 
 					/*
-					drawgfx_transpen(bitmap,cliprect,gfx,sprite,
+					gfx->transpen(bitmap,cliprect,sprite,
 					    color,
 					    flipx,flipy,
 					    sx,sy,0);
@@ -813,7 +826,7 @@ void gp9001vdp_device::draw_sprites( running_machine &machine, bitmap_ind16 &bit
 
 					{
 						int yy, xx;
-						const pen_t *paldata = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * color];
+						const pen_t *paldata = &m_palette->pen(gfx->colorbase() + gfx->granularity() * color);
 						const UINT8* srcdata = gfx->get_data(sprite);
 						int count = 0;
 						int ystart, yend, yinc;
@@ -893,8 +906,8 @@ void gp9001vdp_device::draw_sprites( running_machine &machine, bitmap_ind16 &bit
 
 void gp9001vdp_device::gp9001_draw_custom_tilemap(running_machine& machine, bitmap_ind16 &bitmap, tilemap_t* tilemap, const UINT8* priremap, const UINT8* pri_enable )
 {
-	int width = machine.primary_screen->width();
-	int height = machine.primary_screen->height();
+	int width = machine.first_screen()->width();
+	int height = machine.first_screen()->height();
 	int y,x;
 	bitmap_ind16 &tmb = tilemap->pixmap();
 	UINT16* srcptr;
@@ -964,4 +977,14 @@ void gp9001vdp_device::gp9001_screen_eof(void)
 {
 	/** Shift sprite RAM buffers  ***  Used to fix sprite lag **/
 	if (sp.use_sprite_buffer) memcpy(sp.vram16_buffer,sp.vram16,GP9001_SPRITERAM_SIZE);
+}
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void gp9001vdp_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<gp9001vdp_device &>(device).m_palette.set_tag(tag);
 }

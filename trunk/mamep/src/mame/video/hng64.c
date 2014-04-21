@@ -64,106 +64,6 @@ static void hng64_mark_tile_dirty( hng64_state *state, int tilemap, int tile_ind
 }
 
 
-#define PIXEL_OP_REMAP_TRANSPEN_PRIORITY_ADDIIVE32(DEST, PRIORITY, SOURCE)                  \
-do                                                                                  \
-{                                                                                   \
-	UINT32 srcdata = (SOURCE);                                                      \
-	if (srcdata != transpen)                                                        \
-	{                                                                               \
-		if (((1 << ((PRIORITY) & 0x1f)) & pmask) == 0)                              \
-		{                                                                           \
-			UINT32 srcdata2 = paldata[srcdata];                                     \
-																					\
-			UINT32 add;                                                             \
-			add = (srcdata2 & 0x00ff0000) + (DEST & 0x00ff0000);                    \
-			if (add & 0x01000000) DEST = (DEST & 0xff00ffff) | (0x00ff0000);        \
-			else DEST = (DEST & 0xff00ffff) | (add & 0x00ff0000);                   \
-			add = (srcdata2 & 0x000000ff) + (DEST & 0x000000ff);                    \
-			if (add & 0x00000100) DEST = (DEST & 0xffffff00) | (0x000000ff);        \
-			else DEST = (DEST & 0xffffff00) | (add & 0x000000ff);                   \
-			add = (srcdata2 & 0x0000ff00) + (DEST & 0x0000ff00);                    \
-			if (add & 0x00010000) DEST = (DEST & 0xffff00ff) | (0x0000ff00);        \
-			else DEST = (DEST & 0xffff00ff) | (add & 0x0000ff00);                   \
-		}                                                                           \
-		(PRIORITY) = 31;                                                            \
-	}                                                                               \
-}                                                                                   \
-while (0)
-
-static void pdrawgfx_transpen_additive(bitmap_rgb32 &dest, const rectangle &cliprect, gfx_element *gfx,
-		UINT32 code, UINT32 color, int flipx, int flipy, INT32 destx, INT32 desty,
-		bitmap_ind8 &priority, UINT32 pmask, UINT32 transpen)
-{
-	const pen_t *paldata;
-
-	assert(dest.valid());
-	assert(dest.bpp() == 32);
-	assert(gfx != NULL);
-
-	/* get final code and color, and grab lookup tables */
-	code %= gfx->elements();
-	color %= gfx->colors();
-	paldata = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * color];
-
-	/* use pen usage to optimize */
-	if (gfx->has_pen_usage())
-	{
-		UINT32 usage = gfx->pen_usage(code);
-
-		/* fully transparent; do nothing */
-		if ((usage & ~(1 << transpen)) == 0)
-			return;
-	}
-
-	/* high bit of the mask is implicitly on */
-	pmask |= 1 << 31;
-
-	/* render based on dest bitmap depth */
-	DRAWGFX_CORE(UINT32, PIXEL_OP_REMAP_TRANSPEN_PRIORITY_ADDIIVE32, UINT8);
-}
-
-
-static void pdrawgfxzoom_transpen_additive(bitmap_rgb32 &dest, const rectangle &cliprect, gfx_element *gfx,
-		UINT32 code, UINT32 color, int flipx, int flipy, INT32 destx, INT32 desty,
-		UINT32 scalex, UINT32 scaley, bitmap_ind8 &priority, UINT32 pmask,
-		UINT32 transpen)
-{
-	const pen_t *paldata;
-
-	/* non-zoom case */
-
-	if (scalex == 0x10000 && scaley == 0x10000)
-	{
-		pdrawgfx_transpen_additive(dest, cliprect, gfx, code, color, flipx, flipy, destx, desty, priority, pmask, transpen);
-		return;
-	}
-
-	assert(dest.valid());
-	assert(dest.bpp() == 32);
-	assert(gfx != NULL);
-
-	/* get final code and color, and grab lookup tables */
-	code %= gfx->elements();
-	color %= gfx->colors();
-	paldata = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * color];
-
-	/* use pen usage to optimize */
-	if (gfx->has_pen_usage())
-	{
-		UINT32 usage = gfx->pen_usage(code);
-
-		/* fully transparent; do nothing */
-		if ((usage & ~(1 << transpen)) == 0)
-			return;
-	}
-
-	/* high bit of the mask is implicitly on */
-	pmask |= 1 << 31;
-
-	DRAWGFXZOOM_CORE(UINT32, PIXEL_OP_REMAP_TRANSPEN_PRIORITY_ADDIIVE32, UINT8);
-}
-
-
 /*
  * Sprite Format
  * ------------------
@@ -299,11 +199,11 @@ static void draw_sprites(screen_device &screen, bitmap_rgb32 &bitmap, const rect
 
 		if (state->m_spriteregs[0] & 0x00800000) //bpp switch
 		{
-			gfx= screen.machine().gfx[4];
+			gfx= state->m_gfxdecode->gfx(4);
 		}
 		else
 		{
-			gfx= screen.machine().gfx[5];
+			gfx= state->m_gfxdecode->gfx(5);
 			tileno>>=1;
 			pal&=0xf;
 		}
@@ -330,7 +230,7 @@ static void draw_sprites(screen_device &screen, bitmap_rgb32 &bitmap, const rect
 		}
 
 #if 0
-		if (((source[2] & 0xffff0000) >> 16) == 0x0001)
+		if (((source[2) & 0xffff0000) >> 16) == 0x0001)
 		{
 			popmessage("T %.8x %.8x %.8x %.8x %.8x", source[0], source[1], source[2], source[3], source[4]);
 			//popmessage("T %.8x %.8x %.8x %.8x %.8x", source[0], source[1], source[2], source[3], source[4]);
@@ -353,8 +253,8 @@ static void draw_sprites(screen_device &screen, bitmap_rgb32 &bitmap, const rect
 
 				if (!chaini)
 				{
-					if (!blend) pdrawgfxzoom_transpen(bitmap,cliprect,gfx,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
-					else pdrawgfxzoom_transpen_additive(bitmap,cliprect,gfx,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
+					if (!blend) gfx->prio_zoom_transpen(bitmap,cliprect,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
+					else gfx->prio_zoom_transpen_additive(bitmap,cliprect,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
 					tileno++;
 				}
 				else // inline chain mode, used by ss64
@@ -364,17 +264,17 @@ static void draw_sprites(screen_device &screen, bitmap_rgb32 &bitmap, const rect
 
 					if (state->m_spriteregs[0] & 0x00800000) //bpp switch
 					{
-						gfx= screen.machine().gfx[4];
+						gfx= state->m_gfxdecode->gfx(4);
 					}
 					else
 					{
-						gfx= screen.machine().gfx[5];
+						gfx= state->m_gfxdecode->gfx(5);
 						tileno>>=1;
 						pal&=0xf;
 					}
 
-					if (!blend) pdrawgfxzoom_transpen(bitmap,cliprect,gfx,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
-					else pdrawgfxzoom_transpen_additive(bitmap,cliprect,gfx,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
+					if (!blend) gfx->prio_zoom_transpen(bitmap,cliprect,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
+					else gfx->prio_zoom_transpen_additive(bitmap,cliprect,tileno,pal,xflip,yflip,drawx,drawy,zoomx,zoomy/*0x10000*/,screen.priority(), 0,0);
 					source +=8;
 				}
 
@@ -456,11 +356,11 @@ static void transition_control(running_machine &machine, bitmap_rgb32 &bitmap, c
 		{
 			for (j = cliprect.min_y; j < cliprect.max_y; j++)
 			{
-				UINT32* thePixel = &bitmap.pix32(j, i);
+				rgb_t* thePixel = reinterpret_cast<rgb_t *>(&bitmap.pix32(j, i));
 
-				finR = (INT32)RGB_RED(*thePixel);
-				finG = (INT32)RGB_GREEN(*thePixel);
-				finB = (INT32)RGB_BLUE(*thePixel);
+				finR = (INT32)thePixel->r();
+				finG = (INT32)thePixel->g();
+				finB = (INT32)thePixel->b();
 
 #if 0
 				// Apply the darkening pass (0x07)...
@@ -468,9 +368,9 @@ static void transition_control(running_machine &machine, bitmap_rgb32 &bitmap, c
 				colorScaleG = 1.0f - (float)((hng64_tcram[0x00000007] >> 8)  & 0xff) / 255.0f;
 				colorScaleB = 1.0f - (float)((hng64_tcram[0x00000007] >> 16) & 0xff) / 255.0f;
 
-				finR = ((float)RGB_RED(*thePixel)   * colorScaleR);
-				finG = ((float)RGB_GREEN(*thePixel) * colorScaleG);
-				finB = ((float)RGB_BLUE(*thePixel)  * colorScaleB);
+				finR = ((float)thePixel->r()   * colorScaleR);
+				finG = ((float)thePixel->g() * colorScaleG);
+				finB = ((float)thePixel->b()  * colorScaleB);
 
 
 				// Apply the lightening pass (0x0a)...
@@ -516,7 +416,7 @@ static void transition_control(running_machine &machine, bitmap_rgb32 &bitmap, c
 				if (finG < 0) finG = 0;
 				if (finB < 0) finB = 0;
 
-				*thePixel = MAKE_ARGB(255, (UINT8)finR, (UINT8)finG, (UINT8)finB);
+				*thePixel = rgb_t(255, (UINT8)finR, (UINT8)finG, (UINT8)finB);
 			}
 		}
 	}
@@ -776,7 +676,8 @@ do {                                                                            
 static void hng64_tilemap_draw_roz_core(screen_device &screen, tilemap_t *tmap, const blit_parameters *blit,
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, int wraparound)
 {
-	const pen_t *clut = &screen.machine().pens[blit->tilemap_priority_code >> 16];
+	hng64_state *state = screen.machine().driver_data<hng64_state>();
+	const pen_t *clut = &state->m_palette->pen(blit->tilemap_priority_code >> 16);
 	bitmap_ind8 &priority_bitmap = screen.priority();
 	bitmap_rgb32 &destbitmap = *blit->bitmap;
 	bitmap_ind16 &srcbitmap = tmap->pixmap();
@@ -1225,7 +1126,7 @@ static void hng64_drawtilemap(screen_device &screen, bitmap_rgb32 &bitmap, const
 				bitmap_ind16 &bm = tilemap->pixmap();
 				int bmheight = bm.height();
 				int bmwidth = bm.width();
-				const pen_t *paldata = screen.machine().pens;
+				const pen_t *paldata = state->m_palette->pens();
 				UINT32* dstptr;
 				UINT16* srcptr;
 				int xx,yy;
@@ -1321,7 +1222,7 @@ static void hng64_drawtilemap(screen_device &screen, bitmap_rgb32 &bitmap, const
 				bitmap_ind16 &bm = tilemap->pixmap();
 				int bmheight = bm.height();
 				int bmwidth = bm.width();
-				const pen_t *paldata = screen.machine().pens;
+				const pen_t *paldata = state->m_palette->pens();
 				UINT32* dstptr;
 				UINT16* srcptr;
 				int xx,yy;
@@ -1447,7 +1348,7 @@ UINT32 hng64_state::screen_update_hng64(screen_device &screen, bitmap_rgb32 &bit
 	}
 #endif
 
-	bitmap.fill(hng64_tcram[0x50/4] & 0x10000 ? get_black_pen(screen.machine()) : screen.machine().pens[0], cliprect); //FIXME: Is the register correct? check with HW tests
+	bitmap.fill(hng64_tcram[0x50/4] & 0x10000 ? m_palette->black_pen() : m_palette->pen(0), cliprect); //FIXME: Is the register correct? check with HW tests
 	screen.priority().fill(0x00, cliprect);
 
 	if (m_screen_dis)
@@ -1636,8 +1537,8 @@ UINT32 hng64_state::screen_update_hng64(screen_device &screen, bitmap_rgb32 &bit
 void hng64_state::screen_eof_hng64(screen_device &screen, bool state)
 {
 	// rising edge
-	//if (state)
-	//  clear3d();
+	if (state)
+		clear3d();
 }
 
 void hng64_state::video_start()
@@ -1651,21 +1552,21 @@ void hng64_state::video_start()
 	m_old_tileflags2 = -1;
 	m_old_tileflags3 = -1;
 
-	m_tilemap0_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap0_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap0_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap0_8x8       = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap0_16x16     = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap0_16x16_alt = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	m_tilemap1_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap1_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap1_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap1_8x8       = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap1_16x16     = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap1_16x16_alt = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	m_tilemap2_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap2_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap2_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap2_8x8       = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap2_16x16     = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap2_16x16_alt = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	m_tilemap3_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap3_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	m_tilemap3_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap3_8x8       = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap3_16x16     = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap3_16x16_alt = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
 	m_tilemap0_8x8->set_transparent_pen(0);
 	m_tilemap0_16x16->set_transparent_pen(0);
@@ -1993,7 +1894,7 @@ static void recoverPolygonBlock(running_machine& machine, const UINT16* packet, 
 	setIdentity(objectMatrix);
 
 	struct polygon lastPoly = { 0 };
-	const rectangle &visarea = machine.primary_screen->visible_area();
+	const rectangle &visarea = machine.first_screen()->visible_area();
 
 	/////////////////
 	// HEADER INFO //
@@ -2515,7 +2416,7 @@ void hng64_command3d(running_machine& machine, const UINT16* packet)
 
 	/* A temporary place to put some polygons.  This will optimize away if the compiler's any good. */
 	int numPolys = 0;
-	struct polygon* polys = auto_alloc_array(machine, struct polygon, 1024*5);
+	dynamic_array<polygon> polys(1024*5);
 
 	//printf("packet type : %04x %04x|%04x %04x|%04x %04x|%04x %04x\n", packet[0],packet[1],packet[2],packet[3],packet[4],packet[5],packet[6],packet[7]);
 	switch (packet[0])
@@ -2600,15 +2501,13 @@ void hng64_command3d(running_machine& machine, const UINT16* packet)
 			drawShaded(machine, &polys[i]);
 		}
 	}
-
-	auto_free(machine, polys);
 }
 
 void hng64_state::clear3d()
 {
 	int i;
 
-	const rectangle &visarea = machine().primary_screen->visible_area();
+	const rectangle &visarea = m_screen->visible_area();
 
 	// Clear each of the display list buffers after drawing - todo: kill!
 	for (i = 0; i < 0x81; i++)
@@ -2621,7 +2520,7 @@ void hng64_state::clear3d()
 	for (i = 0; i < (visarea.max_x)*(visarea.max_y); i++)
 	{
 		m_depthBuffer3d[i] = 100.0f;
-		m_colorBuffer3d[i] = MAKE_ARGB(0, 0, 0, 0);
+		m_colorBuffer3d[i] = rgb_t(0, 0, 0, 0);
 	}
 
 	// Set some matrices to the identity...
@@ -2887,7 +2786,7 @@ static void performFrustumClip(struct polygon *p)
 #ifdef UNUSED_FUNCTION
 static void plot(running_machine &machine, INT32 x, INT32 y, UINT32 color)
 {
-	UINT32* cb = &(colorBuffer3d[(y * machine.primary_screen->visible_area().max_x) + x]);
+	UINT32* cb = &(colorBuffer3d[(y * machine.first_screen()->visible_area().max_x) + x]);
 	*cb = color;
 }
 
@@ -2955,7 +2854,7 @@ static void DrawWireframe(running_machine &machine, struct polygon *p)
 	{
 		// mame_printf_debug("now drawing : %f %f %f, %f %f %f\n", p->vert[j].clipCoords[0], p->vert[j].clipCoords[1], p->vert[j].clipCoords[2], p->vert[(j+1)%p->n].clipCoords[0], p->vert[(j+1)%p->n].clipCoords[1], p->vert[(j+1)%p->n].clipCoords[2]);
 		// mame_printf_debug("%f %f %f %f\n", p->vert[j].clipCoords[0], p->vert[j].clipCoords[1], p->vert[(j+1)%p->n].clipCoords[0], p->vert[(j+1)%p->n].clipCoords[1]);
-		UINT32 color = MAKE_ARGB((UINT8)255, (UINT8)255, (UINT8)0, (UINT8)0);
+		UINT32 color = rgb_t((UINT8)255, (UINT8)255, (UINT8)0, (UINT8)0);
 		drawline2d(machine, p->vert[j].clipCoords[0], p->vert[j].clipCoords[1], p->vert[(j+1)%p->n].clipCoords[0], p->vert[(j+1)%p->n].clipCoords[1], color);
 	}
 
@@ -3004,8 +2903,8 @@ INLINE void FillSmoothTexPCHorizontalLine(running_machine &machine,
 											float s_start, float s_delta, float t_start, float t_delta)
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
-	float*  db = &(state->m_depthBuffer3d[(y * machine.primary_screen->visible_area().max_x) + x_start]);
-	UINT32* cb = &(state->m_colorBuffer3d[(y * machine.primary_screen->visible_area().max_x) + x_start]);
+	float*  db = &(state->m_depthBuffer3d[(y * machine.first_screen()->visible_area().max_x) + x_start]);
+	UINT32* cb = &(state->m_colorBuffer3d[(y * machine.first_screen()->visible_area().max_x) + x_start]);
 
 	UINT8 paletteEntry = 0;
 	float t_coord, s_coord;
@@ -3023,13 +2922,13 @@ INLINE void FillSmoothTexPCHorizontalLine(running_machine &machine,
 			if ((prOptions.debugColor & 0xff000000) == 0x01000000)
 			{
 				// UV COLOR MODE
-				*cb = MAKE_ARGB(255, (UINT8)(s_coord*255.0f), (UINT8)(t_coord*255.0f), (UINT8)(0));
+				*cb = rgb_t(255, (UINT8)(s_coord*255.0f), (UINT8)(t_coord*255.0f), (UINT8)(0));
 				*db = z_start;
 			}
 			else if ((prOptions.debugColor & 0xff000000) == 0x02000000)
 			{
 				// Lit
-				*cb = MAKE_ARGB(255, (UINT8)(r_start/w_start), (UINT8)(g_start/w_start), (UINT8)(b_start/w_start));
+				*cb = rgb_t(255, (UINT8)(r_start/w_start), (UINT8)(g_start/w_start), (UINT8)(b_start/w_start));
 				*db = z_start;
 			}
 			else if ((prOptions.debugColor & 0xff000000) == 0xff000000)
@@ -3071,26 +2970,26 @@ INLINE void FillSmoothTexPCHorizontalLine(running_machine &machine,
 				{
 					// The color out of the texture
 					paletteEntry %= prOptions.palPageSize;
-					UINT32 color = machine.pens[prOptions.palOffset + paletteEntry];
+					rgb_t color = state->m_palette->pen(prOptions.palOffset + paletteEntry);
 
 					// Apply the lighting
 					float rIntensity = (r_start/w_start) / 255.0f;
 					float gIntensity = (g_start/w_start) / 255.0f;
 					float bIntensity = (b_start/w_start) / 255.0f;
-					float red   = RGB_RED(color)   * rIntensity;
-					float green = RGB_GREEN(color) * gIntensity;
-					float blue  = RGB_BLUE(color)  * bIntensity;
+					float red   = color.r()   * rIntensity;
+					float green = color.g() * gIntensity;
+					float blue  = color.b()  * bIntensity;
 
 					// Clamp and finalize
-					red = RGB_RED(color) + red;
-					green = RGB_GREEN(color) + green;
-					blue = RGB_BLUE(color) + blue;
+					red = color.r() + red;
+					green = color.g() + green;
+					blue = color.b() + blue;
 
 					if (red >= 255) red = 255;
 					if (green >= 255) green = 255;
 					if (blue >= 255) blue = 255;
 
-					color = MAKE_ARGB(255, (UINT8)red, (UINT8)green, (UINT8)blue);
+					color = rgb_t(255, (UINT8)red, (UINT8)green, (UINT8)blue);
 
 					*cb = color;
 					*db = z_start;

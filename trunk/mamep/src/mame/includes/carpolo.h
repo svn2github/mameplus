@@ -32,7 +32,9 @@ public:
 		m_ttl7474_1c_1(*this, "7474_1c_1"),
 		m_ttl7474_1c_2(*this, "7474_1c_2"),
 		m_ttl7474_1a_1(*this, "7474_1a_1"),
-		m_ttl7474_1a_2(*this, "7474_1a_2")
+		m_ttl7474_1a_2(*this, "7474_1a_2"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 		{}
 
 	required_shared_ptr<UINT8> m_alpharam;
@@ -61,6 +63,9 @@ public:
 	required_device<ttl7474_device> m_ttl7474_1c_2;
 	required_device<ttl7474_device> m_ttl7474_1a_1;
 	required_device<ttl7474_device> m_ttl7474_1a_2;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
+
 	bitmap_ind16 *m_sprite_sprite_collision_bitmap1;
 	bitmap_ind16 *m_sprite_sprite_collision_bitmap2;
 	bitmap_ind16 *m_sprite_goal_collision_bitmap1;
@@ -84,7 +89,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(carpolo);
 	UINT32 screen_update_carpolo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void screen_eof_carpolo(screen_device &screen, bool state);
 	INTERRUPT_GEN_MEMBER(carpolo_timer_interrupt);
@@ -121,8 +126,5 @@ public:
 
 
 /*----------- defined in machine/carpolo.c -----------*/
-
-extern const pia6821_interface carpolo_pia0_intf;
-extern const pia6821_interface carpolo_pia1_intf;
 
 void carpolo_74148_3s_cb(device_t *device);

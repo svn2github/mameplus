@@ -51,8 +51,8 @@ protected:
 public:
 	DECLARE_DRIVER_INIT(konendev);
 
-	DECLARE_READ32_HANDLER(gcu_r);
-	DECLARE_WRITE32_HANDLER(gcu_w);
+	DECLARE_READ32_MEMBER(gcu_r);
+	DECLARE_WRITE32_MEMBER(gcu_w);
 
 	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
@@ -63,7 +63,7 @@ UINT32 konendev_state::screen_update(screen_device &screen, bitmap_ind16 &bitmap
 }
 
 // VERY similar to the Firebeat GCU, probably the same
-READ32_HANDLER(konendev_state::gcu_r)
+READ32_MEMBER(konendev_state::gcu_r)
 {
 	int reg = offset << 2;
 
@@ -77,7 +77,7 @@ READ32_HANDLER(konendev_state::gcu_r)
 	return 0;
 }
 
-WRITE32_HANDLER(konendev_state::gcu_w)
+WRITE32_MEMBER(konendev_state::gcu_w)
 {
 	int reg = offset << 2;
 
@@ -109,8 +109,7 @@ static MACHINE_CONFIG_START( konendev, konendev_state )
 	MCFG_CPU_PROGRAM_MAP(konendev_map)
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -118,6 +117,7 @@ static MACHINE_CONFIG_START( konendev, konendev_state )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
 	MCFG_SCREEN_UPDATE_DRIVER(konendev_state, screen_update)
+	MCFG_SCREEN_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

@@ -48,7 +48,8 @@ public:
 			m_atomicp_sound_count(0),
 			m_hwc_input_value(0),
 			m_mj_input_num(0),
-			m_mj_last_val(0)
+			m_mj_last_val(0),
+			m_gfxdecode(*this, "gfxdecode")
 	{ }
 
 	// memory mapping
@@ -71,7 +72,7 @@ public:
 	DECLARE_READ8_MEMBER( upd7759_status_r );
 
 	// other callbacks
-	static void upd7759_generate_nmi(device_t *device, int state);
+	DECLARE_WRITE_LINE_MEMBER(upd7759_generate_nmi);
 	INTERRUPT_GEN_MEMBER( i8751_main_cpu_vblank );
 
 	// ROM board-specific driver init
@@ -112,8 +113,8 @@ public:
 	// video updates
 	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 
-	DECLARE_WRITE16_HANDLER( sega_tileram_0_w ) { m_segaic16vid->segaic16_tileram_0_w(space,offset,data,mem_mask); };
-	DECLARE_WRITE16_HANDLER( sega_textram_0_w ) { m_segaic16vid->segaic16_textram_0_w(space,offset,data,mem_mask); };
+	DECLARE_WRITE16_MEMBER( sega_tileram_0_w ) { m_segaic16vid->segaic16_tileram_0_w(space,offset,data,mem_mask); };
+	DECLARE_WRITE16_MEMBER( sega_textram_0_w ) { m_segaic16vid->segaic16_textram_0_w(space,offset,data,mem_mask); };
 
 protected:
 	// internal types
@@ -199,6 +200,8 @@ protected:
 	UINT8               m_hwc_input_value;
 	UINT8               m_mj_input_num;
 	UINT8               m_mj_last_val;
+
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 

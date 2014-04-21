@@ -1,33 +1,86 @@
-/*************************************************************************************************************
+/***************************************************************************************************
 
-    Sky Lancer / Mad Zoo
+  Sky Lancer / Mad Zoo / Super Star '97
+  Bordun International.
 
-    Original preliminary driver by Luca Elia.
-    Additional Work: Roberto Fresca & David Haywood.
+  Original preliminary driver by Luca Elia.
+  Additional Work: Roberto Fresca & David Haywood.
 
+****************************************************************************************************
 
-**************************************************************************************************************
+  Notes:
 
-    Notes:
+  - Some of the tiles look badly scaled down, and others appear to have columns swapped.
+    This might actually be correct.
 
-    - Some of the tiles look badly scaled down, and others appear to have columns swapped.
-      This might actually be correct.
+  - Skylncr and madzoo can run with the same program roms, they're basically graphics swaps.
 
-    - Skylncr and madzoo can run with the same program roms, they're basically graphics swaps.
+  - To enter the Service Mode, press F2. All the game settings are there.
+    Change regular values using DIP switches, and jackpot value using STOP2 and STOP3.
+    To exit the mode, press START. You must reset the machine (F3) to update the changes.
 
-    - To enter the Service Mode, press F2. All the game settings are there.
-      Change regular values using DIP switches, and jackpot value using STOP2 and STOP3.
-      To exit the mode, press START. You must reset the machine (F3) to update the changes.
-
-    - Press key 0 to navigate between statistics pages. Press START to exit the mode.
-
-
-    TODO:
-
-    - Proper M5M82C255 device emulation.
+  - Press key 0 to navigate between statistics pages. Press START to exit the mode.
 
 
-*************************************************************************************************************/
+  TODO:
+
+  - Proper M5M82C255 device emulation.
+
+****************************************************************************************************
+
+  Settings:
+
+  Pressing F2, you can enter the DIP switches settings.
+  Here the translated items:
+
+  .---------------------------------------.
+  |        DIP Switches Settings          |
+  |                                       |
+  |   Main Game %      Double-Up %        |
+  |   Clown %          Reels Speed        |
+  |   Coin Scores      Key In Scores      |
+  |   Payout Limit     Key Out Score      |
+  |   Max Bet          Min Bet            |
+  |   Special Bonus %  Super Star %       |
+  |   Bonus Base       Max Win Bonus      |
+  |   Double-Up Y/N    Bonus Scores       |
+  |                                       |
+  '---------------------------------------'
+
+  'Special Bonus' and 'Super Star' appearance, are per 1000.
+  You also can find the MAME DIP switches menu already translated.
+  The <unknown> items still need translation.
+
+  Press START (key 1) to exit the mode.
+
+
+  Bookkeeping:
+
+  Pressing BOOKKEEPING (key 0), you enter the Record Mode.
+  Here the translated items:
+
+  .---------------------------------------.
+  |             Record Menu               |
+  |                                       |
+  |   Play Scores      Key In Total       |
+  |   Win Scores       Key Out Total      |
+  |   Play Times       Coin In Total      |
+  |   Win Times        Coin Out Total     |
+  |   Bonus Scores     Short Total        |
+  |   Double Play      Special Times      |
+  |   Double Win       Super Show Up      |
+  |   Win Times        Power On Times     |
+  |   Loss Times       Working Time  H M  |
+  |                                       |
+  |            Version XXXXX              |
+  '---------------------------------------'
+
+  Pressing BOOKKEEPING key again, you can find 2 screens showing
+  all statistics and the whole historial by winning hand.
+
+  Press START (key 1) to exit the mode.
+
+***************************************************************************************************/
 
 
 #define MASTER_CLOCK        XTAL_12MHz  /* confirmed */
@@ -58,7 +111,9 @@ public:
 		m_reelscroll2(*this, "reelscroll2"),
 		m_reelscroll3(*this, "reelscroll3"),
 		m_reelscroll4(*this, "reelscroll4"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	tilemap_t *m_tmap;
 	required_shared_ptr<UINT8> m_videoram;
@@ -112,6 +167,8 @@ public:
 	UINT32 screen_update_skylncr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(skylncr_vblank_interrupt);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -140,8 +197,11 @@ TILE_GET_INFO_MEMBER(skylncr_state::get_tile_info)
 
 TILE_GET_INFO_MEMBER(skylncr_state::get_reel_1_tile_info)
 {
+	UINT8 bank = 1;
 	UINT16 code = m_reeltiles_1_ram[ tile_index ] + (m_reeltileshigh_1_ram[ tile_index ] << 8);
-	SET_TILE_INFO_MEMBER(1, code, 0, TILE_FLIPYX( 0 ));
+//  if (code > 0x200)
+//      bank = 2;
+	SET_TILE_INFO_MEMBER(bank, code, 0, TILE_FLIPYX( 0 ));
 }
 
 TILE_GET_INFO_MEMBER(skylncr_state::get_reel_2_tile_info)
@@ -165,12 +225,12 @@ TILE_GET_INFO_MEMBER(skylncr_state::get_reel_4_tile_info)
 
 void skylncr_state::video_start()
 {
-	m_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skylncr_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 0x40, 0x20    );
+	m_tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(skylncr_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 0x40, 0x20    );
 
-	m_reel_1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
-	m_reel_2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
-	m_reel_3_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
-	m_reel_4_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_4_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
+	m_reel_1_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
+	m_reel_2_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
+	m_reel_3_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
+	m_reel_4_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(skylncr_state::get_reel_4_tile_info),this), TILEMAP_SCAN_ROWS, 8, 32, 64, 8 );
 
 	m_reel_2_tilemap->set_scroll_cols(0x40);
 	m_reel_3_tilemap->set_scroll_cols(0x40);
@@ -280,7 +340,7 @@ WRITE8_MEMBER(skylncr_state::skylncr_paletteram_w)
 		g = (g << 2) | (g >> 4);
 		b = (b << 2) | (b >> 4);
 
-		palette_set_color(machine(), m_color / 3, MAKE_RGB(r, g, b));
+		m_palette->set_pen_color(m_color / 3, rgb_t(r, g, b));
 		m_color = (m_color + 1) % (0x100 * 3);
 	}
 }
@@ -303,7 +363,7 @@ WRITE8_MEMBER(skylncr_state::skylncr_paletteram2_w)
 		g = (g << 2) | (g >> 4);
 		b = (b << 2) | (b >> 4);
 
-		palette_set_color(machine(), 0x100 + m_color2 / 3, MAKE_RGB(r, g, b));
+		m_palette->set_pen_color(0x100 + m_color2 / 3, rgb_t(r, g, b));
 		m_color2 = (m_color2 + 1) % (0x100 * 3);
 	}
 }
@@ -456,6 +516,22 @@ static const gfx_layout layout8x8x8 =
 	8*8*4
 };
 
+static const gfx_layout layout8x8x8_alt =   /* for sstar97 */
+{
+	8,8,
+	RGN_FRAC(1,2),
+	8,
+	{ STEP8(0,1) },
+	{
+		8*0,RGN_FRAC(1,2)+8*0,
+		8*1,RGN_FRAC(1,2)+8*1,
+		8*2,RGN_FRAC(1,2)+8*2,
+		8*3,RGN_FRAC(1,2)+8*3
+	},
+	{ STEP8(0,8*4) },
+	8*8*4
+};
+
 static const gfx_layout layout8x32x8 =
 {
 	8,32,
@@ -496,6 +572,25 @@ static const gfx_layout layout8x32x8_rot =
 	8*32*8/2
 };
 
+static const gfx_layout layout8x32x8_alt =  /* for sstar97 */
+{
+	8,32,
+	RGN_FRAC(1,2),
+	8,
+	{ STEP8(0,1) },
+	{
+		RGN_FRAC(1,2)+8*1, 8*1,
+		8*0, RGN_FRAC(1,2)+8*0,
+		RGN_FRAC(1,2)+8*3, 8*3,
+		8*2, RGN_FRAC(1,2)+8*2
+	},
+	{
+		STEP16(0,8*4),
+		STEP16(16*8*4,8*4)
+	},
+	8*32*8/2
+};
+
 
 /**************************************
 *           Graphics Decode           *
@@ -505,6 +600,12 @@ static GFXDECODE_START( skylncr )
 	GFXDECODE_ENTRY( "gfx1", 0, layout8x8x8,        0, 2 )
 	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8,       0, 2 )
 	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8_rot,   0, 2 )
+GFXDECODE_END
+
+static GFXDECODE_START( sstar97 )
+	GFXDECODE_ENTRY( "gfx1", 0, layout8x8x8_alt,    0, 2 )
+	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8_alt,   0, 2 )
+	GFXDECODE_ENTRY( "gfx2", 0, layout8x32x8_alt,   0x100, 2 )
 GFXDECODE_END
 
 
@@ -526,7 +627,7 @@ static INPUT_PORTS_START( skylncr )
 	PORT_START("IN2")   /* $01 (PPI0 port B) */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_GAMBLE_BET)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER) PORT_NAME("Option 2 (D-UP)") PORT_CODE(KEYCODE_S)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_LOW) PORT_NAME("Down/Low") PORT_CODE(KEYCODE_S)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1) PORT_NAME("Start")
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN)
@@ -538,7 +639,8 @@ static INPUT_PORTS_START( skylncr )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_IMPULSE(2)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN3 ) PORT_IMPULSE(2)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_GAMBLE_KEYIN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Option 1 (D-UP)") PORT_CODE(KEYCODE_A)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_HIGH) PORT_NAME("Up/High") PORT_CODE(KEYCODE_A)
+
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_GAMBLE_D_UP )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_GAMBLE_TAKE ) PORT_NAME("Take Score")
@@ -554,7 +656,7 @@ static INPUT_PORTS_START( skylncr )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_GAMBLE_KEYOUT )
 
 	PORT_START("DSW1")  /* $02 (PPI0 port C) */
-	PORT_DIPNAME( 0x11, 0x01, "D-UP Percentage" )
+	PORT_DIPNAME( 0x11, 0x11, "D-UP Percentage" )
 	PORT_DIPSETTING(    0x11, "60%" )
 	PORT_DIPSETTING(    0x01, "70%" )
 	PORT_DIPSETTING(    0x10, "80%" )
@@ -575,8 +677,8 @@ static INPUT_PORTS_START( skylncr )
 	PORT_DIPSETTING(    0x40, "32" )
 	PORT_DIPSETTING(    0x00, "24" )
 	PORT_DIPNAME( 0x80, 0x00, "Key Out" )
-	PORT_DIPSETTING(    0x80, "x100" )
 	PORT_DIPSETTING(    0x00, "x1" )
+	PORT_DIPSETTING(    0x80, "x100" )
 
 	PORT_START("DSW2")  /* $10 (PPI1 port A) */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
@@ -590,9 +692,9 @@ static INPUT_PORTS_START( skylncr )
 	PORT_DIPSETTING(    0x04, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x18, 0x08, "Payout Limit" )
 	PORT_DIPSETTING(    0x00, "0" )
-	PORT_DIPSETTING(    0x08, "5000" )
-	PORT_DIPSETTING(    0x10, "2000" )
 	PORT_DIPSETTING(    0x18, "1000" )
+	PORT_DIPSETTING(    0x10, "2000" )
+	PORT_DIPSETTING(    0x08, "5000" )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -651,6 +753,146 @@ static INPUT_PORTS_START( skylncr )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+
+static INPUT_PORTS_START( sstar97 )
+	PORT_START("IN1")   /* $00 (PPI0 port A) */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLOT_STOP2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SLOT_STOP1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SLOT_STOP3)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("IN2")   /* $01 (PPI0 port B) */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_GAMBLE_BET)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_LOW) PORT_NAME("Low") PORT_CODE(KEYCODE_S)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1) PORT_NAME("Start")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN)
+
+	PORT_START("IN3")   /* $11 (PPI1 port B) */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_IMPULSE(2)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_IMPULSE(2)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN3 ) PORT_IMPULSE(2)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_GAMBLE_KEYIN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_HIGH ) PORT_NAME("High") PORT_CODE(KEYCODE_A)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_GAMBLE_D_UP )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_GAMBLE_TAKE ) PORT_NAME("Take Score")
+
+	PORT_START("IN4")   /* $12 (PPI1 port C) */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_CODE(KEYCODE_R) PORT_NAME("Reset")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Stats")
+	PORT_SERVICE_NO_TOGGLE( 0x08, IP_ACTIVE_LOW )   /* Settings */
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_GAMBLE_KEYOUT )
+
+	PORT_START("DSW1")  /* $02 (PPI0 port C) */
+	PORT_DIPNAME( 0x11, 0x11, "D-UP Percentage" )
+	PORT_DIPSETTING(    0x11, "60%" )
+	PORT_DIPSETTING(    0x01, "70%" )
+	PORT_DIPSETTING(    0x10, "80%" )
+	PORT_DIPSETTING(    0x00, "90%" )
+	PORT_DIPNAME( 0x0e, 0x0e, "Special Bonus Appearance (per 1000)" )
+	PORT_DIPSETTING(    0x0e, "5" )
+	PORT_DIPSETTING(    0x0c, "6" )
+	PORT_DIPSETTING(    0x0a, "7" )
+	PORT_DIPSETTING(    0x08, "8" )
+	PORT_DIPSETTING(    0x06, "9" )
+	PORT_DIPSETTING(    0x04, "10" )
+	PORT_DIPSETTING(    0x02, "11" )
+	PORT_DIPSETTING(    0x00, "12" )
+	PORT_DIPNAME( 0x20, 0x20, "Reels Speed" )
+	PORT_DIPSETTING(    0x20, "Slow" )
+	PORT_DIPSETTING(    0x00, "Fast" )
+	PORT_DIPNAME( 0x40, 0x40, "Bonus Score" )
+	PORT_DIPSETTING(    0x00, "24" )
+	PORT_DIPSETTING(    0x40, "32" )
+	PORT_DIPNAME( 0x80, 0x00, "Key Out" )
+	PORT_DIPSETTING(    0x00, "x1" )
+	PORT_DIPSETTING(    0x80, "x100" )
+
+	PORT_START("DSW2")  /* $10 (PPI1 port A) */
+	PORT_DIPNAME( 0x03, 0x03, "Main Game Percentage" )
+	PORT_DIPSETTING(    0x03, "60%" )
+	PORT_DIPSETTING(    0x02, "70%" )
+	PORT_DIPSETTING(    0x01, "80%" )
+	PORT_DIPSETTING(    0x00, "90%" )
+	PORT_DIPNAME( 0x04, 0x04, "Double-Up" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x18, 0x18, "Payout Limit" )
+	PORT_DIPSETTING(    0x00, "0" )
+	PORT_DIPSETTING(    0x18, "1000" )
+	PORT_DIPSETTING(    0x10, "2000" )
+	PORT_DIPSETTING(    0x08, "5000" )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0xc0, 0xc0, "Clown Percentage" )
+	PORT_DIPSETTING(    0xc0, "60%" )
+	PORT_DIPSETTING(    0x80, "70%" )
+	PORT_DIPSETTING(    0x40, "80%" )
+	PORT_DIPSETTING(    0x00, "90%" )
+
+	PORT_START("DSW3")  /* AY8910 port A */
+	PORT_DIPNAME( 0x07, 0x07, "Coinage A, B & C" )
+	PORT_DIPSETTING(    0x00, "1 Coin / 1 Credit" )
+	PORT_DIPSETTING(    0x01, "1 Coin / 5 Credits" )
+	PORT_DIPSETTING(    0x02, "1 Coin / 10 Credits" )
+	PORT_DIPSETTING(    0x03, "1 Coin / 20 Credits" )
+	PORT_DIPSETTING(    0x04, "1 Coin / 30 Credits" )
+	PORT_DIPSETTING(    0x05, "1 Coin / 40 Credits" )
+	PORT_DIPSETTING(    0x06, "1 Coin / 50 Credits" )
+	PORT_DIPSETTING(    0x07, "1 Coin / 100 Credit" )
+	PORT_DIPNAME( 0x18, 0x18, "Base Bonus (Bonus Bottom)" )
+	PORT_DIPSETTING(    0x18, "200" )
+	PORT_DIPSETTING(    0x10, "400" )
+	PORT_DIPSETTING(    0x08, "600" )
+	PORT_DIPSETTING(    0x00, "800" )
+	PORT_DIPNAME( 0x20, 0x20, "Max Win Bonus" )
+	PORT_DIPSETTING(    0x20, "10000" )
+	PORT_DIPSETTING(    0x00, "20000" )
+	PORT_DIPNAME( 0xc0, 0xc0, "Minimum Bet" )
+	PORT_DIPSETTING(    0xc0, "0" )
+	PORT_DIPSETTING(    0x80, "8" )
+	PORT_DIPSETTING(    0x40, "16" )
+	PORT_DIPSETTING(    0x00, "32" )
+
+	PORT_START("DSW4")  /* AY8910 port B */
+	PORT_DIPNAME( 0x07, 0x07, "Remote Credits" )
+	PORT_DIPSETTING(    0x00, "1 Pulse / 100 Credits" )
+	PORT_DIPSETTING(    0x01, "1 Pulse / 110 Credits" )
+	PORT_DIPSETTING(    0x02, "1 Pulse / 120 Credits" )
+	PORT_DIPSETTING(    0x03, "1 Pulse / 130 Credits" )
+	PORT_DIPSETTING(    0x04, "1 Pulse / 200 Credits" )
+	PORT_DIPSETTING(    0x05, "1 Pulse / 400 Credits" )
+	PORT_DIPSETTING(    0x06, "1 Pulse / 500 Credits" )
+	PORT_DIPSETTING(    0x07, "1 Pulse / 1000 Credits" )
+	PORT_DIPNAME( 0x18, 0x18, "Max Bet" )
+	PORT_DIPSETTING(    0x18, "32" )
+	PORT_DIPSETTING(    0x10, "64" )
+	PORT_DIPSETTING(    0x08, "72" )
+	PORT_DIPSETTING(    0x00, "80" )
+	PORT_DIPNAME( 0xe0, 0xe0, "Super Star Appearance (per 1000)" )
+	PORT_DIPSETTING(    0xe0, "6" )
+	PORT_DIPSETTING(    0xc0, "8" )
+	PORT_DIPSETTING(    0xa0, "10" )
+	PORT_DIPSETTING(    0x80, "12" )
+	PORT_DIPSETTING(    0x60, "14" )
+	PORT_DIPSETTING(    0x40, "16" )
+	PORT_DIPSETTING(    0x20, "18" )
+	PORT_DIPSETTING(    0x00, "20" )
 INPUT_PORTS_END
 
 
@@ -726,16 +968,24 @@ static MACHINE_CONFIG_START( skylncr, skylncr_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(skylncr_state, screen_update_skylncr)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(skylncr)
-	MCFG_PALETTE_LENGTH(0x200)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", skylncr)
+	MCFG_PALETTE_ADD("palette", 0x200)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd", AY8910, MASTER_CLOCK/8)
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_DERIVED( sstar97, skylncr )
+
+	/* basic machine hardware */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_GFXDECODE_MODIFY("gfxdecode", sstar97)
 MACHINE_CONFIG_END
 
 
@@ -864,6 +1114,53 @@ ROM_START( leader )
 	ROM_LOAD16_BYTE( "leadergfx2.dmp22", 0x40001, 0x20000, CRC(04cc0118) SHA1(016ccbe7daf8c4676830aadcc906a64e2826d11a) )
 ROM_END
 
+/*
+  Super Star '97
+  Bordun International.
+
+  For amusement only (as seen in the title).
+  PCB looks similar to Sky Lancer.
+
+  1x M5M82C255ASP for I/O,
+  1x daughterboard with Z80 CPU,
+  1x AY-3-8910A
+
+  1x Xilinx XC2064-33 CPLD...
+
+  1x 12.000 Mhz crystal
+
+  2x UM70C171-66
+  1x HM6116LP-4
+  5x HM6116L-120
+
+  One extra ROM (u48) is blank.
+  Sure is the one that store the palette at offset $C000,
+  among the missing graphics.
+
+  Also graphics ROMs are half the standard size and
+  they lack of at least 4 extra big girl pictures.
+
+  BP 170 to see the palette registers...
+
+*/
+ROM_START( sstar97 )
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "27256.u15",    0x0000, 0x8000, CRC(a5da4f92) SHA1(82ac70bd379649f130db017aa226d0247db0f3cd) )
+	ROM_LOAD( "unknown.u48",  0x8000, 0x8000, BAD_DUMP CRC(9f4c02e3) SHA1(05975184130ea7dd3bb5d32eff77b585bd53e6b5) )   // palette borrowed from other game
+
+	ROM_REGION( 0x40000, "gfx1", 0 )    // All ROMs are 28-pins mask ROMs dumped as 27512. Should be dumped as Fujitsu MB831000 or TC531000 (mask ROM).
+	ROM_LOAD16_BYTE( "bor_dun_4.u23", 0x00000, 0x10000, BAD_DUMP CRC(82c9db19) SHA1(3611fb59bb7c962c7fabe7a29fa72b632fa69bed) )
+	ROM_LOAD16_BYTE( "bor_dun_2.u25", 0x00001, 0x10000, BAD_DUMP CRC(42ee9b7a) SHA1(b39f677f58072ea7dcd7f49208be1a7b70bdc5e5) )
+	ROM_LOAD16_BYTE( "bor_dun_3.u24", 0x20000, 0x10000, BAD_DUMP CRC(6d70879b) SHA1(83cbe67cda95e5f3d95065015f6b1b2044b88989) )
+	ROM_LOAD16_BYTE( "bor_dun_1.u26", 0x20001, 0x10000, BAD_DUMP CRC(1b8b84ac) SHA1(b914bad0b1fb58cf581d1227e8127c6afb906fb7) )
+
+	ROM_REGION( 0x40000, "gfx2", 0 )    // All ROMs are 28-pins mask ROMs dumped as 27512. Should be dumped as Fujitsu MB831000 or TC531000 (mask ROM).
+	ROM_LOAD16_BYTE( "bor_dun_8.u19", 0x00000, 0x10000, BAD_DUMP CRC(daf651a7) SHA1(d4e472aa90aa2b52c997b2f2272007b139e3cbc2) )
+	ROM_LOAD16_BYTE( "bor_dun_6.u21", 0x00001, 0x10000, BAD_DUMP CRC(1d88bc70) SHA1(49246d96a4ce2b8e9b10e928d7dd13973feac883) )
+	ROM_LOAD16_BYTE( "bor_dun_7.u20", 0x20000, 0x10000, BAD_DUMP CRC(7e28ba2f) SHA1(ac8d4e95efce87456f569a71650bd7afcb59095e) )
+	ROM_LOAD16_BYTE( "bor_dun_5.u22", 0x20001, 0x10000, BAD_DUMP CRC(52f98575) SHA1(b786c441d5ef47ff4cb50835c6ac6889cb169c6e) )
+ROM_END
+
 
 /**********************************
 *           Driver Init           *
@@ -880,8 +1177,9 @@ DRIVER_INIT_MEMBER(skylncr_state,skylncr)
 *                  Game Drivers                     *
 ****************************************************/
 
-/*    YEAR  NAME      PARENT   MACHINE   INPUT     INIT     ROT    COMPANY                 FULLNAME                            FLAGS  */
-GAME( 1995, skylncr,  0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Sky Lancer (Bordun, ver.U450C)",    0 )
-GAME( 1995, butrfly,  0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Butterfly Video Game (ver.U350C)",  0 )
-GAME( 1995, madzoo,   0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Mad Zoo (ver.U450C)",               0 )
-GAME( 1995, leader,   0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "bootleg",              "Leader",                            GAME_NOT_WORKING )
+/*    YEAR  NAME      PARENT   MACHINE   INPUT    STATE           INIT     ROT    COMPANY                 FULLNAME                               FLAGS  */
+GAME( 1995, skylncr,  0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Sky Lancer (Bordun, version U450C)",   0 )
+GAME( 1995, butrfly,  0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Butterfly Video Game (version U350C)", 0 )
+GAME( 1995, madzoo,   0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Mad Zoo (version U450C)",              0 )
+GAME( 1995, leader,   0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "bootleg",              "Leader",                               GAME_NOT_WORKING )
+GAME( 199?, sstar97,  0,       sstar97,  sstar97, skylncr_state,  skylncr, ROT0, "Bordun International", "Super Star '97 (version V153B)",       GAME_WRONG_COLORS | GAME_IMPERFECT_GRAPHICS )

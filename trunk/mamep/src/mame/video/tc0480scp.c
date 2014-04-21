@@ -133,7 +133,6 @@ Control registers
 
 #define TC0480SCP_RAM_SIZE 0x10000
 #define TC0480SCP_TOTAL_CHARS 256
-#define XOR(a) WORD_XOR_BE(a)
 
 
 const device_type TC0480SCP = &device_creator<tc0480scp_device>;
@@ -152,8 +151,30 @@ tc0480scp_device::tc0480scp_device(const machine_config &mconfig, const char *ta
 	//m_bgscrolly[4](NULL),
 	m_pri_reg(0),
 	m_dblwidth(0),
-	m_x_offs(0)
+	m_x_offs(0),
+	m_gfxdecode(*this),
+	m_palette(*this)
 {
+}
+
+//-------------------------------------------------
+//  static_set_gfxdecode_tag: Set the tag of the
+//  gfx decoder
+//-------------------------------------------------
+
+void tc0480scp_device::static_set_gfxdecode_tag(device_t &device, const char *tag)
+{
+	downcast<tc0480scp_device &>(device).m_gfxdecode.set_tag(tag);
+}
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void tc0480scp_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<tc0480scp_device &>(device).m_palette.set_tag(tag);
 }
 
 //-------------------------------------------------
@@ -181,6 +202,9 @@ void tc0480scp_device::device_config_complete()
 
 void tc0480scp_device::device_start()
 {
+	if(!m_gfxdecode->started())
+		throw device_missing_dependencies();
+
 	int i, xd, yd;
 
 	m_x_offs = m_x_offset + m_pixels;
@@ -192,25 +216,25 @@ void tc0480scp_device::device_start()
 		256,    /* 256 characters */
 		4,  /* 4 bits per pixel */
 		{ 0, 1, 2, 3 },
-		{ XOR(3)*4, XOR(2)*4, XOR(1)*4, XOR(0)*4, XOR(7)*4, XOR(6)*4, XOR(5)*4, XOR(4)*4 },
+		{ 3*4, 2*4, 1*4, 0*4, 7*4, 6*4, 5*4, 4*4 },
 		{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
 		32*8    /* every sprite takes 32 consecutive bytes */
 	};
 
 
 	/* Single width versions */
-	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_tilemap[2][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_tilemap[3][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_tilemap[4][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[1][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[2][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[3][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap[4][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
 	/* Double width versions */
-	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_tilemap[2][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_tilemap[3][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
-	m_tilemap[4][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0480scp_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[1][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[2][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[3][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_bg3_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[4][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tc0480scp_device::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
 	for (i = 0; i < 2; i++)
 	{
@@ -270,7 +294,7 @@ void tc0480scp_device::device_start()
 	set_layer_ptrs();
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine().gfx[m_txnum] = auto_alloc_clear(machine(), gfx_element(machine(), tc0480scp_charlayout, (UINT8 *)m_char_ram, 64, 0));
+	m_gfxdecode->set_gfx(m_txnum, global_alloc(gfx_element(m_palette, tc0480scp_charlayout, (UINT8 *)m_char_ram, NATIVE_ENDIAN_VALUE_LE_BE(8,0), 64, 0)));
 
 	save_pointer(NAME(m_ram), TC0480SCP_RAM_SIZE / 2);
 	save_item(NAME(m_ctrl));
@@ -302,8 +326,7 @@ void tc0480scp_device::common_get_tc0480bg_tile_info( tile_data &tileinfo, int t
 {
 	int code = ram[2 * tile_index + 1] & 0x7fff;
 	int attr = ram[2 * tile_index];
-	SET_TILE_INFO_MEMBER(
-			gfxnum,
+	SET_TILE_INFO_MEMBER(gfxnum,
 			code,
 			(attr & 0xff) + m_col_base,
 			TILE_FLIPYX((attr & 0xc000) >> 14));
@@ -312,8 +335,7 @@ void tc0480scp_device::common_get_tc0480bg_tile_info( tile_data &tileinfo, int t
 void tc0480scp_device::common_get_tc0480tx_tile_info( tile_data &tileinfo, int tile_index, UINT16 *ram, int gfxnum )
 {
 	int attr = ram[tile_index];
-	SET_TILE_INFO_MEMBER(
-			gfxnum,
+	SET_TILE_INFO_MEMBER(gfxnum,
 			attr & 0xff,
 			((attr & 0x3f00) >> 8) + m_col_base,
 			TILE_FLIPYX((attr & 0xc000) >> 14));
@@ -416,7 +438,7 @@ WRITE16_MEMBER( tc0480scp_device::word_w )
 		}
 		else if (offset <= 0x7fff)
 		{
-			space.machine().gfx[m_txnum]->mark_dirty((offset - 0x7000) / 16);
+			m_gfxdecode->gfx(m_txnum)->mark_dirty((offset - 0x7000) / 16);
 		}
 	}
 	else
@@ -434,7 +456,7 @@ WRITE16_MEMBER( tc0480scp_device::word_w )
 		}
 		else if (offset <= 0x7fff)
 		{
-			space.machine().gfx[m_txnum]->mark_dirty((offset - 0x7000) / 16);
+			m_gfxdecode->gfx(m_txnum)->mark_dirty((offset - 0x7000) / 16);
 		}
 	}
 }

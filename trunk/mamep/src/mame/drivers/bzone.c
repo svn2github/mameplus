@@ -211,7 +211,6 @@
 #include "machine/atari_vg.h"
 #include "includes/bzone.h"
 #include "sound/pokey.h"
-#include "drivlgcy.h"
 
 #include "bzone.lh"
 #include "redbaron.lh"
@@ -302,9 +301,9 @@ static ADDRESS_MAP_START( bzone_map, AS_PROGRAM, 8, bzone_state )
 	AM_RANGE(0x0a00, 0x0a00) AM_READ_PORT("DSW0")
 	AM_RANGE(0x0c00, 0x0c00) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1000, 0x1000) AM_WRITE(bzone_coin_counter_w)
-	AM_RANGE(0x1200, 0x1200) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x1200, 0x1200) AM_DEVWRITE("avg", avg_bzone_device, go_w)
 	AM_RANGE(0x1400, 0x1400) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x1600, 0x1600) AM_WRITE_LEGACY(avgdvg_reset_w)
+	AM_RANGE(0x1600, 0x1600) AM_DEVWRITE("avg", avg_bzone_device, reset_w)
 	AM_RANGE(0x1800, 0x1800) AM_DEVREAD("mathbox", mathbox_device, status_r)
 	AM_RANGE(0x1810, 0x1810) AM_DEVREAD("mathbox", mathbox_device, lo_r)
 	AM_RANGE(0x1818, 0x1818) AM_DEVREAD("mathbox", mathbox_device, hi_r)
@@ -322,9 +321,9 @@ static ADDRESS_MAP_START( redbaron_map, AS_PROGRAM, 8, bzone_state )
 	AM_RANGE(0x0a00, 0x0a00) AM_READ_PORT("DSW0")
 	AM_RANGE(0x0c00, 0x0c00) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1000, 0x1000) AM_WRITENOP        /* coin out - Manual states this is "Coin Counter" */
-	AM_RANGE(0x1200, 0x1200) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x1200, 0x1200) AM_DEVWRITE("avg", avg_bzone_device, go_w)
 	AM_RANGE(0x1400, 0x1400) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x1600, 0x1600) AM_WRITE_LEGACY(avgdvg_reset_w)
+	AM_RANGE(0x1600, 0x1600) AM_DEVWRITE("avg", avg_bzone_device, reset_w)
 	AM_RANGE(0x1800, 0x1800) AM_DEVREAD("mathbox", mathbox_device, status_r)
 	AM_RANGE(0x1802, 0x1802) AM_READ_PORT("IN4")
 	AM_RANGE(0x1804, 0x1804) AM_DEVREAD("mathbox", mathbox_device, lo_r)
@@ -356,7 +355,7 @@ ADDRESS_MAP_END
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("Diagnostic Step") PORT_CODE(KEYCODE_F1)\
 	/* bit 6 is the VG HALT bit. We set it to "low" */\
 	/* per default (busy vector processor). */\
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)\
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("avg", avg_bzone_device, done_r, NULL)\
 	/* bit 7 is tied to a 3kHz clock */\
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, bzone_state,clock_r, NULL)
 
@@ -551,18 +550,18 @@ static MACHINE_CONFIG_START( bzone_base, bzone_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, BZONE_MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(bzone_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(bzone_state, bzone_interrupt,  (double)BZONE_MASTER_CLOCK / 4096 / 12)
-
+	MCFG_CPU_PERIODIC_INT_DRIVER(bzone_state, bzone_interrupt,  BZONE_CLOCK_3KHZ / 12)
 
 	/* video hardware */
 	MCFG_VECTOR_ADD("vector")
 	MCFG_SCREEN_ADD("screen", VECTOR)
-	MCFG_SCREEN_REFRESH_RATE(40)
+	MCFG_SCREEN_REFRESH_RATE(BZONE_CLOCK_3KHZ / 12 / 6)
 	MCFG_SCREEN_SIZE(400, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 580, 0, 400)
 	MCFG_SCREEN_UPDATE_DEVICE("vector", vector_device, screen_update)
 
-	MCFG_VIDEO_START(avg_bzone)
+	MCFG_DEVICE_ADD("avg", AVG_BZONE, 0)
+	MCFG_AVGDVG_VECTOR("vector")
 
 	/* Drivers */
 	MCFG_MATHBOX_ADD("mathbox")
@@ -583,7 +582,6 @@ static MACHINE_CONFIG_DERIVED( redbaron, bzone_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(redbaron_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(bzone_state, bzone_interrupt,  (double)BZONE_MASTER_CLOCK / 4096 / 12)
 
 	MCFG_MACHINE_START_OVERRIDE(bzone_state,redbaron)
 
@@ -591,7 +589,7 @@ static MACHINE_CONFIG_DERIVED( redbaron, bzone_base )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_REFRESH_RATE(BZONE_CLOCK_3KHZ / 12 / 4)
 	MCFG_SCREEN_VISIBLE_AREA(0, 520, 0, 400)
 
 

@@ -23,7 +23,7 @@
     Diet Family                     (c) 2001 SemiCom
     Final Godori                    (c) 2001 SemiCom            (version 2.20.5915)
     Wivern Wings / Wyvern Wings     (c) 2001 SemiCom
-    Mr. Kicker                      (c) 2001 SemiCom [1]
+    Mr. Kicker                      (c) 2001 SemiCom
     Toy Land Adventure              (c) 2001 SemiCom
     Age Of Heroes - Silkroad 2      (c) 2001 Unico              (v0.63 - 2001/02/07)
     Boong-Ga Boong-Ga (Spank 'em)   (c) 2001 Taff System
@@ -32,9 +32,6 @@
  - dquizgo2: bugged video test
 
  Notes:
- [1]    Mr. Kicker game code crashes if the eeprom values are empty, because it replaces
-        the SP register with a bogus value at PC = $18D0 before crashing. It could be an
-        original game bug or a hyperstone core bug. Also happens with High Score update.
 
  Mr Kicker is also known to exist (not dumped) on the F-E1-16-010 PCB that
    Semicom also used for Toy Land Adventure & SemiComDate Quiz Go Go Episode 2 game.
@@ -56,6 +53,7 @@
 TODO:
 - boonggab: simulate photo sensors with a "stroke strength"
 - boonggab: what are sensors bit used for? are they used in the japanese version?
+- wyvernsg: fails a protection check after ~1 hour of play?
 
 *********************************************************************/
 
@@ -79,9 +77,12 @@ public:
 			m_tiles32(*this,"tiles32"),
 			m_wram32(*this,"wram32"),
 			m_maincpu(*this, "maincpu"),
+			m_qs1000(*this, "qs1000"),
 			m_oki(*this, "oki"),
 			m_oki2(*this, "oki_2"),
-			m_eeprom(*this, "eeprom") {
+			m_eeprom(*this, "eeprom"),
+			m_gfxdecode(*this, "gfxdecode"),
+			m_palette(*this, "palette")  {
 			m_has_extra_gfx = 0;
 		}
 
@@ -89,6 +90,15 @@ public:
 	optional_shared_ptr<UINT16> m_wram;
 	optional_shared_ptr<UINT32> m_tiles32;
 	optional_shared_ptr<UINT32> m_wram32;
+
+	required_device<cpu_device> m_maincpu;
+	optional_device<qs1000_device> m_qs1000;
+	optional_device<okim6295_device> m_oki;
+	optional_device<okim6295_device> m_oki2;
+	required_device<eeprom_serial_93cxx_device> m_eeprom;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
+
 	int m_flip_bit;
 	int m_flipscreen;
 	int m_palshift;
@@ -103,7 +113,6 @@ public:
 	DECLARE_WRITE16_MEMBER(flipscreen_w);
 	DECLARE_WRITE32_MEMBER(flipscreen32_w);
 	DECLARE_WRITE16_MEMBER(jmpbreak_flipscreen_w);
-	DECLARE_WRITE32_MEMBER(paletteram32_w);
 	DECLARE_READ32_MEMBER(wyvernwg_prot_r);
 	DECLARE_WRITE32_MEMBER(wyvernwg_prot_w);
 	DECLARE_READ32_MEMBER(finalgdr_prot_r);
@@ -173,10 +182,6 @@ public:
 	DECLARE_DRIVER_INIT(wyvernwg);
 	UINT32 screen_update_common(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_aoh(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	required_device<cpu_device> m_maincpu;
-	optional_device<okim6295_device> m_oki;
-	optional_device<okim6295_device> m_oki2;
-	required_device<eeprom_serial_93cxx_device> m_eeprom;
 };
 
 READ16_MEMBER(vamphalf_state::eeprom_r)
@@ -239,18 +244,6 @@ WRITE16_MEMBER(vamphalf_state::jmpbreak_flipscreen_w)
 }
 
 
-WRITE32_MEMBER(vamphalf_state::paletteram32_w)
-{
-	UINT16 paldata;
-
-	COMBINE_DATA(&m_generic_paletteram_32[offset]);
-
-	paldata = m_generic_paletteram_32[offset] & 0xffff;
-	palette_set_color_rgb(machine(), offset*2 + 1, pal5bit(paldata >> 10), pal5bit(paldata >> 5), pal5bit(paldata >> 0));
-
-	paldata = (m_generic_paletteram_32[offset] >> 16) & 0xffff;
-	palette_set_color_rgb(machine(), offset*2 + 0, pal5bit(paldata >> 10), pal5bit(paldata >> 5), pal5bit(paldata >> 0));
-}
 
 READ32_MEMBER(vamphalf_state::wyvernwg_prot_r)
 {
@@ -377,19 +370,15 @@ WRITE16_MEMBER(vamphalf_state::boonggab_lamps_w)
 
 WRITE32_MEMBER( vamphalf_state::wyvernwg_snd_w )
 {
-	qs1000_device *qs1000 = machine().device<qs1000_device>("qs1000");
-
 	m_qs1000_data = data & 0xff;
-	qs1000->set_irq(ASSERT_LINE);
+	m_qs1000->set_irq(ASSERT_LINE);
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 WRITE16_MEMBER( vamphalf_state::misncrft_snd_w )
 {
-	qs1000_device *qs1000 = machine().device<qs1000_device>("qs1000");
-
 	m_qs1000_data = data & 0xff;
-	qs1000->set_irq(ASSERT_LINE);
+	m_qs1000->set_irq(ASSERT_LINE);
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
@@ -400,10 +389,8 @@ READ8_MEMBER( vamphalf_state::qs1000_p1_r )
 
 WRITE8_MEMBER( vamphalf_state::qs1000_p3_w )
 {
-	qs1000_device *qs1000 = machine().device<qs1000_device>("qs1000");
-
 	if (!BIT(data, 5))
-		qs1000->set_irq(CLEAR_LINE);
+		m_qs1000->set_irq(CLEAR_LINE);
 
 	membank("qs1000:data")->set_entry(data & 7);
 }
@@ -412,14 +399,14 @@ WRITE8_MEMBER( vamphalf_state::qs1000_p3_w )
 static ADDRESS_MAP_START( common_map, AS_PROGRAM, 16, vamphalf_state )
 	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_SHARE("wram")
 	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_SHARE("tiles")
-	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xfff00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( common_32bit_map, AS_PROGRAM, 32, vamphalf_state )
 	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_SHARE("wram32")
 	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_SHARE("tiles32")
-	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_WRITE(paletteram32_w) AM_SHARE("paletteram")
+	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xfff00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
 
@@ -535,7 +522,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( aoh_map, AS_PROGRAM, 32, vamphalf_state )
 	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_SHARE("wram32")
 	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_SHARE("tiles32")
-	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_WRITE(paletteram32_w) AM_SHARE("paletteram")
+	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x80210000, 0x80210003) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x80220000, 0x80220003) AM_READ_PORT("P1_P2")
 	AM_RANGE(0xffc00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
@@ -588,7 +575,7 @@ Offset+3
 static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap)
 {
 	vamphalf_state *state = screen.machine().driver_data<vamphalf_state>();
-	gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = state->m_gfxdecode->gfx(0);
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
@@ -666,7 +653,7 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap)
 				y = 256 - y;
 			}
 
-			drawgfx_transpen(bitmap,clip,gfx,code,color,fx,fy,x,y,0);
+			gfx->transpen(bitmap,clip,code,color,fx,fy,x,y,0);
 		}
 	}
 }
@@ -674,7 +661,7 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap)
 static void draw_sprites_aoh(screen_device &screen, bitmap_ind16 &bitmap)
 {
 	vamphalf_state *state = screen.machine().driver_data<vamphalf_state>();
-	gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = state->m_gfxdecode->gfx(0);
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
@@ -727,7 +714,7 @@ static void draw_sprites_aoh(screen_device &screen, bitmap_ind16 &bitmap)
 				y = 256 - y;
 			}
 
-			drawgfx_transpen(bitmap,clip,gfx,code,color,fx,fy,x,y,0);
+			gfx->transpen(bitmap,clip,code,color,fx,fy,x,y,0);
 		}
 	}
 }
@@ -958,28 +945,6 @@ static GFXDECODE_START( vamphalf )
 GFXDECODE_END
 
 
-
-
-static QS1000_INTERFACE( qs1000_intf )
-{
-	/* External ROM */
-	true,
-
-	/* P1-P3 read handlers */
-	DEVCB_DRIVER_MEMBER(vamphalf_state, qs1000_p1_r),
-	DEVCB_NULL,
-	DEVCB_NULL,
-
-	/* P1-P3 write handlers */
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(vamphalf_state, qs1000_p3_w),
-};
-
-
-
-
-
 static MACHINE_CONFIG_START( common, vamphalf_state )
 	MCFG_CPU_ADD("maincpu", E116T, 50000000)    /* 50 MHz */
 	MCFG_CPU_PROGRAM_MAP(common_map)
@@ -996,9 +961,11 @@ static MACHINE_CONFIG_START( common, vamphalf_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(31, 350, 16, 251)
 	MCFG_SCREEN_UPDATE_DRIVER(vamphalf_state, screen_update_common)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x8000)
-	MCFG_GFXDECODE(vamphalf)
+	MCFG_PALETTE_ADD("palette", 0x8000)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", vamphalf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_FRAGMENT( sound_ym_oki )
@@ -1029,7 +996,10 @@ static MACHINE_CONFIG_FRAGMENT( sound_qs1000 )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_QS1000_ADD("qs1000", XTAL_24MHz, qs1000_intf)
+	MCFG_SOUND_ADD("qs1000", QS1000, XTAL_24MHz)
+	MCFG_QS1000_EXTERNAL_ROM(true)
+	MCFG_QS1000_IN_P1_CB(READ8(vamphalf_state, qs1000_p1_r))
+	MCFG_QS1000_OUT_P3_CB(WRITE8(vamphalf_state, qs1000_p3_w))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -1127,9 +1097,11 @@ static MACHINE_CONFIG_START( aoh, vamphalf_state )
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(64, 511-64, 16, 255-16)
 	MCFG_SCREEN_UPDATE_DRIVER(vamphalf_state, screen_update_aoh)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x8000)
-	MCFG_GFXDECODE(vamphalf)
+	MCFG_PALETTE_ADD("palette", 0x8000)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", vamphalf)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2757,7 +2729,7 @@ GAME( 2000, misncrfta,misncrft, misncrft, common, vamphalf_state,   misncrft, RO
 GAME( 2000, mrdig,    0,        mrdig,    common, vamphalf_state,   mrdig,    ROT0,   "Sun",               "Mr. Dig", 0 )
 GAME( 2001, dtfamily, 0,        coolmini, common, vamphalf_state,   dtfamily, ROT0,   "SemiCom",           "Diet Family", 0 )
 GAME( 2001, finalgdr, 0,        finalgdr, finalgdr, vamphalf_state, finalgdr, ROT0,   "SemiCom",           "Final Godori (Korea, version 2.20.5915)", 0 )
-GAME( 2001, mrkicker, 0,        mrkicker, finalgdr, vamphalf_state, mrkicker, ROT0,   "SemiCom",           "Mr. Kicker", GAME_NOT_WORKING ) // game stops booting / working properly after you get a high score, or if you don't have a default eeprom with 'valid data.  It's never worked properly, CPU core issue?
+GAME( 2001, mrkicker, 0,        mrkicker, finalgdr, vamphalf_state, mrkicker, ROT0,   "SemiCom",           "Mr. Kicker", 0 ) // game still doesn't boot without a default valid eeprom, but no longer seems to fail after you get a high score (since eeprom rewrite)
 GAME( 2001, toyland,  0,        coolmini, common, vamphalf_state,   toyland,  ROT0,   "SemiCom",           "Toy Land Adventure", 0 )
 GAME( 2001, wivernwg, 0,        wyvernwg, common, vamphalf_state,   wyvernwg, ROT270, "SemiCom",            "Wivern Wings", GAME_IMPERFECT_SOUND )
 GAME( 2001, wyvernwg, wivernwg, wyvernwg, common, vamphalf_state,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 1)", GAME_IMPERFECT_SOUND )

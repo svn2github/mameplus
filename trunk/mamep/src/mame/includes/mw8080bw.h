@@ -48,7 +48,8 @@ public:
 		m_samples2(*this, "samples2"),
 		m_sn1(*this, "sn1"),
 		m_sn2(*this, "sn2"),
-		m_sn(*this, "snsnd")
+		m_sn(*this, "snsnd"),
+		m_screen(*this, "screen")
 	{ }
 
 	/* device/memory pointers */
@@ -89,6 +90,7 @@ public:
 	optional_device<sn76477_device> m_sn1;
 	optional_device<sn76477_device> m_sn2;
 	optional_device<sn76477_device> m_sn;
+	required_device<screen_device> m_screen;
 
 	DECLARE_READ8_MEMBER(mw8080bw_shift_result_rev_r);
 	DECLARE_READ8_MEMBER(mw8080bw_reversable_shift_result_r);
@@ -258,7 +260,7 @@ MACHINE_CONFIG_EXTERN( tornbase_audio );
 MACHINE_CONFIG_EXTERN( zzzap_audio );
 
 MACHINE_CONFIG_EXTERN( maze_audio );
-void maze_write_discrete(device_t *device, UINT8 maze_tone_timing_state);
+void maze_write_discrete(discrete_device *device, UINT8 maze_tone_timing_state);
 
 MACHINE_CONFIG_EXTERN( boothill_audio );
 

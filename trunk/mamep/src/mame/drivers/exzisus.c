@@ -285,11 +285,10 @@ static MACHINE_CONFIG_START( exzisus, exzisus_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(exzisus_state, screen_update_exzisus)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(exzisus)
-	MCFG_PALETTE_LENGTH(1024)
-
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRR_GGGG_BBBB)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", exzisus)
+	MCFG_PALETTE_ADD_RRRRGGGGBBBB_PROMS("palette", 1024)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

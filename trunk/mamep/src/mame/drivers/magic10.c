@@ -95,7 +95,9 @@ public:
 		m_layer1_videoram(*this, "layer1_videoram"),
 		m_layer2_videoram(*this, "layer2_videoram"),
 		m_vregs(*this, "vregs"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	tilemap_t *m_layer0_tilemap;
 	tilemap_t *m_layer1_tilemap;
@@ -125,6 +127,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_magic10(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -153,49 +157,39 @@ WRITE16_MEMBER(magic10_state::layer2_videoram_w)
 WRITE16_MEMBER(magic10_state::paletteram_w)
 {
 	data = COMBINE_DATA(&m_generic_paletteram_16[offset]);
-	palette_set_color_rgb( machine(), offset, pal4bit(data >> 4), pal4bit(data >> 0), pal4bit(data >> 8));
+	m_palette->set_pen_color( offset, pal4bit(data >> 4), pal4bit(data >> 0), pal4bit(data >> 8));
 }
 
 
 TILE_GET_INFO_MEMBER(magic10_state::get_layer0_tile_info)
 {
-	SET_TILE_INFO_MEMBER
-	(
-		1,
+	SET_TILE_INFO_MEMBER(1,
 		m_layer0_videoram[tile_index * 2],
 		m_layer0_videoram[tile_index * 2 + 1] & 0x0f,
-		TILE_FLIPYX((m_layer0_videoram[tile_index * 2 + 1] & 0xc0) >> 6)
-	);
+		TILE_FLIPYX((m_layer0_videoram[tile_index * 2 + 1] & 0xc0) >> 6));
 }
 
 TILE_GET_INFO_MEMBER(magic10_state::get_layer1_tile_info)
 {
-	SET_TILE_INFO_MEMBER
-	(
-		1,
+	SET_TILE_INFO_MEMBER(1,
 		m_layer1_videoram[tile_index * 2],
 		m_layer1_videoram[tile_index * 2 + 1] & 0x0f,
-		TILE_FLIPYX((m_layer1_videoram[tile_index * 2 + 1] & 0xc0) >> 6)
-	);
+		TILE_FLIPYX((m_layer1_videoram[tile_index * 2 + 1] & 0xc0) >> 6));
 }
 
 TILE_GET_INFO_MEMBER(magic10_state::get_layer2_tile_info)
 {
-	SET_TILE_INFO_MEMBER
-	(
-		0,
+	SET_TILE_INFO_MEMBER(0,
 		m_layer2_videoram[tile_index * 2],
-		m_layer2_videoram[tile_index * 2 + 1] & 0x0f,
-		0
-	);
+		m_layer2_videoram[tile_index * 2 + 1] & 0x0f,0);
 }
 
 
 void magic10_state::video_start()
 {
-	m_layer0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(magic10_state::get_layer0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_layer1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(magic10_state::get_layer1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
-	m_layer2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(magic10_state::get_layer2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_layer0_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(magic10_state::get_layer0_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_layer1_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(magic10_state::get_layer1_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_layer2_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(magic10_state::get_layer2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
 	m_layer1_tilemap->set_transparent_pen(0);
 	m_layer2_tilemap->set_transparent_pen(0);
@@ -743,9 +737,10 @@ static MACHINE_CONFIG_START( magic10, magic10_state )
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 44*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(magic10_state, screen_update_magic10)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x100)
-	MCFG_GFXDECODE(magic10)
+	MCFG_PALETTE_ADD("palette", 0x100)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", magic10)
 
 
 	/* sound hardware */

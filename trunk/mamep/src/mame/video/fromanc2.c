@@ -77,7 +77,7 @@ WRITE16_MEMBER(fromanc2_state::fromanc2_paletteram_0_w)
 
 	// GGGG_GRRR_RRBB_BBBx
 	color = ((offset & 0x0700) << 1) + (offset & 0x00ff);
-	palette_set_color_rgb(machine(), 0x000 + color, pal5bit(data >> 6), pal5bit(data >> 11), pal5bit(data >> 1));
+	m_palette->set_pen_color(0x000 + color, pal5bit(data >> 6), pal5bit(data >> 11), pal5bit(data >> 1));
 }
 
 WRITE16_MEMBER(fromanc2_state::fromanc2_paletteram_1_w)
@@ -88,7 +88,7 @@ WRITE16_MEMBER(fromanc2_state::fromanc2_paletteram_1_w)
 
 	// GGGG_GRRR_RRBB_BBBx
 	color = ((offset & 0x0700) << 1) + (offset & 0x00ff);
-	palette_set_color_rgb(machine(), 0x100 + color, pal5bit(data >> 6), pal5bit(data >> 11), pal5bit(data >> 1));
+	m_palette->set_pen_color(0x100 + color, pal5bit(data >> 6), pal5bit(data >> 11), pal5bit(data >> 1));
 }
 
 
@@ -110,7 +110,7 @@ WRITE16_MEMBER(fromanc2_state::fromancr_paletteram_0_w)
 
 	// xGGG_GGRR_RRRB_BBBB
 	color = ((offset & 0x0700) << 1) + (offset & 0x00ff);
-	palette_set_color_rgb(machine(), 0x000 + color, pal5bit(data >> 5), pal5bit(data >> 10), pal5bit(data >> 0));
+	m_palette->set_pen_color(0x000 + color, pal5bit(data >> 5), pal5bit(data >> 10), pal5bit(data >> 0));
 }
 
 WRITE16_MEMBER(fromanc2_state::fromancr_paletteram_1_w)
@@ -121,7 +121,7 @@ WRITE16_MEMBER(fromanc2_state::fromancr_paletteram_1_w)
 
 	// xGGG_GGRR_RRRB_BBBB
 	color = ((offset & 0x0700) << 1) + (offset & 0x00ff);
-	palette_set_color_rgb(machine(), 0x100 + color, pal5bit(data >> 5), pal5bit(data >> 10), pal5bit(data >> 0));
+	m_palette->set_pen_color(0x100 + color, pal5bit(data >> 5), pal5bit(data >> 10), pal5bit(data >> 0));
 }
 
 
@@ -143,7 +143,7 @@ WRITE16_MEMBER(fromanc2_state::fromanc4_paletteram_0_w)
 
 	// xRRR_RRGG_GGGB_BBBB
 	color = ((offset & 0x0700) << 1) + (offset & 0x00ff);
-	palette_set_color_rgb(machine(), 0x000 + color, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+	m_palette->set_pen_color(0x000 + color, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 }
 
 WRITE16_MEMBER(fromanc2_state::fromanc4_paletteram_1_w)
@@ -154,7 +154,7 @@ WRITE16_MEMBER(fromanc2_state::fromanc4_paletteram_1_w)
 
 	// xRRR_RRGG_GGGB_BBBB
 	color = ((offset & 0x0700) << 1) + (offset & 0x00ff);
-	palette_set_color_rgb(machine(), 0x100 + color, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+	m_palette->set_pen_color(0x100 + color, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 }
 
 
@@ -374,14 +374,14 @@ WRITE16_MEMBER(fromanc2_state::fromanc4_gfxreg_2_w)
 
 VIDEO_START_MEMBER(fromanc2_state,fromanc2)
 {
-	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[0][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[1][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][3] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][3] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
 	m_tilemap[0][1]->set_transparent_pen(0x000);
 	m_tilemap[0][2]->set_transparent_pen(0x000);
@@ -422,13 +422,13 @@ VIDEO_START_MEMBER(fromanc2_state,fromanc2)
 
 VIDEO_START_MEMBER(fromanc2_state,fromancr)
 {
-	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 	m_tilemap[0][3] = 0;
-	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
-	m_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 	m_tilemap[1][3] = 0;
 
 	m_tilemap[0][1]->set_transparent_pen(0x0ff);
@@ -465,13 +465,13 @@ VIDEO_START_MEMBER(fromanc2_state,fromancr)
 
 VIDEO_START_MEMBER(fromanc2_state,fromanc4)
 {
-	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
-	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
-	m_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[0][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[0][2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
 	m_tilemap[0][3] = 0;
-	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
-	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
-	m_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[1][0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[1][2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
 	m_tilemap[1][3] = 0;
 
 	m_tilemap[0][1]->set_transparent_pen(0x000);

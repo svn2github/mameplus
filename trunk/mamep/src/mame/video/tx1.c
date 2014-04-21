@@ -130,11 +130,11 @@ PALETTE_INIT_MEMBER(tx1_state,tx1)
 	{
 		int r, g, b;
 
-		r = compute_res_net(color_prom[i + 0x300] & 0xf, 0, &tx1_net_info);
-		g = compute_res_net(color_prom[i + 0x400] & 0xf, 1, &tx1_net_info);
-		b = compute_res_net(color_prom[i + 0x500] & 0xf, 2, &tx1_net_info);
+		r = compute_res_net(color_prom[i + 0x300] & 0xf, 0, tx1_net_info);
+		g = compute_res_net(color_prom[i + 0x400] & 0xf, 1, tx1_net_info);
+		b = compute_res_net(color_prom[i + 0x500] & 0xf, 2, tx1_net_info);
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -1285,7 +1285,7 @@ PALETTE_INIT_MEMBER(tx1_state,buggyboy)
 		bit4 = BIT(color_prom[i + 0x300], 0);
 		b = 0x06 * bit4 + 0x0d * bit0 + 0x1e * bit1 + 0x41 * bit2 + 0x8a * bit3;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 

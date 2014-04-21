@@ -186,7 +186,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(multigam);
 	DECLARE_MACHINE_START(multigm3);
 	DECLARE_MACHINE_RESET(multigm3);
 	DECLARE_MACHINE_START(supergm3);
@@ -1145,9 +1145,9 @@ static const nesapu_interface multigam_interface_1 =
 	"maincpu"
 };
 
-void multigam_state::palette_init()
+PALETTE_INIT_MEMBER(multigam_state, multigam)
 {
-	m_ppu->init_palette(machine(), 0);
+	m_ppu->init_palette(palette, 0);
 }
 
 void multigam_state::ppu_irq(int *ppu_regs)
@@ -1257,10 +1257,11 @@ static MACHINE_CONFIG_START( multigam, multigam_state )
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(multigam_state, screen_update_multigam)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(multigam)
-	MCFG_PALETTE_LENGTH(8*4*16)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", multigam)
+	MCFG_PALETTE_ADD("palette", 8*4*16)
+	MCFG_PALETTE_INIT_OWNER(multigam_state, multigam)
 
 	MCFG_PPU2C04_ADD("ppu", ppu_interface)
 	MCFG_PPU2C0X_SET_NMI(multigam_state, ppu_irq)
@@ -1460,7 +1461,7 @@ DRIVER_INIT_MEMBER(multigam_state,multigmt)
 {
 	address_space &space = m_maincpu->space(AS_PROGRAM);
 
-	UINT8* buf = auto_alloc_array(machine(), UINT8, 0x80000);
+	dynamic_buffer buf(0x80000);
 	UINT8 *rom;
 	int size;
 	int i;
@@ -1492,7 +1493,6 @@ DRIVER_INIT_MEMBER(multigam_state,multigmt)
 		rom[i] = BITSWAP8(buf[addr], 4, 7, 3, 2, 5, 1, 6, 0);
 	}
 
-	auto_free(machine(), buf);
 	multigam_switch_prg_rom(space, 0x0, 0x01);
 };
 

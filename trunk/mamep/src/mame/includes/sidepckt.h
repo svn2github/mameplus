@@ -13,7 +13,9 @@ public:
 		m_audiocpu(*this, "audiocpu"),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_spriteram(*this, "spriteram")
+		m_spriteram(*this, "spriteram"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 	{ }
 
 	tilemap_t *m_bg_tilemap;
@@ -22,6 +24,8 @@ public:
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
 	required_shared_ptr<UINT8> m_spriteram;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	const UINT8* m_prot_table[3];
 	UINT8 m_i8751_return;
@@ -42,7 +46,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(sidepckt);
 	UINT32 screen_update_sidepckt(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites(bitmap_ind16 &bitmap,const rectangle &cliprect);
 };

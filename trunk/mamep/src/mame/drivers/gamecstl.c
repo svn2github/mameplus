@@ -75,9 +75,13 @@ class gamecstl_state : public pcat_base_state
 public:
 	gamecstl_state(const machine_config &mconfig, device_type type, const char *tag)
 		: pcat_base_state(mconfig, type, tag),
-		m_cga_ram(*this, "cga_ram") { }
+		m_cga_ram(*this, "cga_ram"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	required_shared_ptr<UINT32> m_cga_ram;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 	UINT32 *m_bios_ram;
 	UINT8 m_mxtc_config_reg[256];
 	UINT8 m_piix4_config_reg[4][256];
@@ -97,17 +101,17 @@ public:
 
 static const rgb_t cga_palette[16] =
 {
-	MAKE_RGB( 0x00, 0x00, 0x00 ), MAKE_RGB( 0x00, 0x00, 0xaa ), MAKE_RGB( 0x00, 0xaa, 0x00 ), MAKE_RGB( 0x00, 0xaa, 0xaa ),
-	MAKE_RGB( 0xaa, 0x00, 0x00 ), MAKE_RGB( 0xaa, 0x00, 0xaa ), MAKE_RGB( 0xaa, 0x55, 0x00 ), MAKE_RGB( 0xaa, 0xaa, 0xaa ),
-	MAKE_RGB( 0x55, 0x55, 0x55 ), MAKE_RGB( 0x55, 0x55, 0xff ), MAKE_RGB( 0x55, 0xff, 0x55 ), MAKE_RGB( 0x55, 0xff, 0xff ),
-	MAKE_RGB( 0xff, 0x55, 0x55 ), MAKE_RGB( 0xff, 0x55, 0xff ), MAKE_RGB( 0xff, 0xff, 0x55 ), MAKE_RGB( 0xff, 0xff, 0xff ),
+	rgb_t( 0x00, 0x00, 0x00 ), rgb_t( 0x00, 0x00, 0xaa ), rgb_t( 0x00, 0xaa, 0x00 ), rgb_t( 0x00, 0xaa, 0xaa ),
+	rgb_t( 0xaa, 0x00, 0x00 ), rgb_t( 0xaa, 0x00, 0xaa ), rgb_t( 0xaa, 0x55, 0x00 ), rgb_t( 0xaa, 0xaa, 0xaa ),
+	rgb_t( 0x55, 0x55, 0x55 ), rgb_t( 0x55, 0x55, 0xff ), rgb_t( 0x55, 0xff, 0x55 ), rgb_t( 0x55, 0xff, 0xff ),
+	rgb_t( 0xff, 0x55, 0x55 ), rgb_t( 0xff, 0x55, 0xff ), rgb_t( 0xff, 0xff, 0x55 ), rgb_t( 0xff, 0xff, 0xff ),
 };
 
 void gamecstl_state::video_start()
 {
 	int i;
 	for (i=0; i < 16; i++)
-		palette_set_color(machine(), i, cga_palette[i]);
+		m_palette->set_pen_color(i, cga_palette[i]);
 }
 
 void gamecstl_state::draw_char(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element *gfx, int ch, int att, int x, int y)
@@ -135,7 +139,7 @@ void gamecstl_state::draw_char(bitmap_ind16 &bitmap, const rectangle &cliprect, 
 UINT32 gamecstl_state::screen_update_gamecstl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	int i, j;
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	UINT32 *cga = m_cga_ram;
 	int index = 0;
 
@@ -445,9 +449,10 @@ static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 199)
 	MCFG_SCREEN_UPDATE_DRIVER(gamecstl_state, screen_update_gamecstl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(CGA)
-	MCFG_PALETTE_LENGTH(16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", CGA)
+	MCFG_PALETTE_ADD("palette", 16)
 
 
 MACHINE_CONFIG_END

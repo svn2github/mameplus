@@ -20,24 +20,24 @@ static const int nusiz[8][3] =
 	{ 1, 4, 0 }
 };
 
-static void extend_palette(running_machine &machine) {
+static void extend_palette(palette_device &palette) {
 	int i,j;
 
 	for( i = 0; i < 128; i ++ )
 	{
-		rgb_t   new_rgb = palette_get_color( machine, i );
-		UINT8   new_r = RGB_RED( new_rgb );
-		UINT8   new_g = RGB_GREEN( new_rgb );
-		UINT8   new_b = RGB_BLUE( new_rgb );
+		rgb_t   new_rgb = palette.pen_color( i );
+		UINT8   new_r =  new_rgb .r();
+		UINT8   new_g =  new_rgb .g();
+		UINT8   new_b =  new_rgb .b();
 
 		for ( j = 0; j < 128; j++ )
 		{
-			rgb_t   old_rgb = palette_get_color( machine, j );
-			UINT8   old_r = RGB_RED( old_rgb );
-			UINT8   old_g = RGB_GREEN( old_rgb );
-			UINT8   old_b = RGB_BLUE( old_rgb );
+			rgb_t   old_rgb = palette.pen_color( j );
+			UINT8   old_r =  old_rgb .r();
+			UINT8   old_g =  old_rgb .g();
+			UINT8   old_b =  old_rgb .b();
 
-			palette_set_color_rgb(machine, ( ( i + 1 ) << 7 ) | j,
+			palette.set_pen_color(( ( i + 1 ) << 7 ) | j,
 				( new_r + old_r ) / 2,
 				( new_g + old_g ) / 2,
 				( new_b + old_b ) / 2 );
@@ -281,13 +281,13 @@ Phase Shift 26.2
 			if (G > 1) G = 1;
 			if (B > 1) B = 1;
 
-			palette_set_color_rgb(machine(),8 * i + j,
+			palette.set_pen_color(8 * i + j,
 				(UINT8) (255 * R + 0.5),
 				(UINT8) (255 * G + 0.5),
 				(UINT8) (255 * B + 0.5));
 		}
 	}
-	extend_palette( machine() );
+	extend_palette( palette );
 }
 
 
@@ -340,18 +340,21 @@ PALETTE_INIT_MEMBER(tia_pal_video_device, tia_pal)
 			if (G > 1) G = 1;
 			if (B > 1) B = 1;
 
-			palette_set_color_rgb(machine(),8 * i + j,
+			palette.set_pen_color(8 * i + j,
 				(UINT8) (255 * R + 0.5),
 				(UINT8) (255 * G + 0.5),
 				(UINT8) (255 * B + 0.5));
 		}
 	}
-	extend_palette( machine() );
+	extend_palette( palette );
 }
 
 tia_video_device::tia_video_device(const machine_config &mconfig, device_type type, const char *name, const char *shortname, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, type, name, tag, owner, clock, shortname, __FILE__),
-		device_video_interface(mconfig, *this)
+		device_video_interface(mconfig, *this),
+		m_read_input_port_cb(*this),
+		m_databus_contents_cb(*this),
+		m_vsync_cb(*this)
 {
 }
 
@@ -368,7 +371,8 @@ tia_pal_video_device::tia_pal_video_device(const machine_config &mconfig, const 
 }
 
 static MACHINE_CONFIG_FRAGMENT( tia_pal )
-	MCFG_PALETTE_INIT_OVERRIDE(tia_pal_video_device, tia_pal)
+	MCFG_PALETTE_ADD("palette", TIA_PALETTE_LENGTH)
+	MCFG_PALETTE_INIT_OWNER(tia_pal_video_device, tia_pal)
 MACHINE_CONFIG_END
 
 //-------------------------------------------------
@@ -394,7 +398,8 @@ tia_ntsc_video_device::tia_ntsc_video_device(const machine_config &mconfig, cons
 }
 
 static MACHINE_CONFIG_FRAGMENT( tia_ntsc )
-	MCFG_PALETTE_INIT_OVERRIDE(tia_ntsc_video_device, tia_ntsc)
+	MCFG_PALETTE_ADD("palette", TIA_PALETTE_LENGTH)
+	MCFG_PALETTE_INIT_OWNER(tia_ntsc_video_device, tia_ntsc)
 MACHINE_CONFIG_END
 
 //-------------------------------------------------
@@ -408,36 +413,15 @@ machine_config_constructor tia_ntsc_video_device::device_mconfig_additions() con
 }
 
 //-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void tia_video_device::device_config_complete()
-{
-	// inherit a copy of the static data
-	const tia_interface *intf = reinterpret_cast<const tia_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<tia_interface *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-		memset(&m_read_input_port_cb, 0, sizeof(m_read_input_port_cb));
-		memset(&m_databus_contents_cb, 0, sizeof(m_databus_contents_cb));
-		memset(&m_vsync_callback_cb, 0, sizeof(m_vsync_callback_cb));
-	}
-}
-//-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
 
 void tia_video_device::device_start()
 {
 	// resolve callbacks
-	m_read_input_port_func.resolve(m_read_input_port_cb, *this);
-	m_databus_contents_func.resolve(m_databus_contents_cb, *this);
-	m_vsync_callback_func.resolve(m_vsync_callback_cb, *this);
+	m_read_input_port_cb.resolve();
+	m_databus_contents_cb.resolve();
+	m_vsync_cb.resolve();
 
 
 	int cx = m_screen->width();
@@ -1048,8 +1032,8 @@ WRITE8_MEMBER( tia_video_device::VSYNC_w )
 					m_screen->width(),
 					m_screen->height());
 
-			if ( !m_vsync_callback_func.isnull() ) {
-				m_vsync_callback_func(0, curr_y, 0xFFFF );
+			if ( !m_vsync_cb.isnull() ) {
+				m_vsync_cb(0, curr_y, 0xFFFF );
 			}
 
 			prev_y = 0;
@@ -1822,9 +1806,9 @@ READ8_MEMBER( tia_video_device::INPT_r )
 {
 	UINT64 elapsed = machine().firstcpu->total_cycles() - paddle_start;
 	UINT16 input = TIA_INPUT_PORT_ALWAYS_ON;
-	if ( !m_read_input_port_func.isnull() )
+	if ( !m_read_input_port_cb.isnull() )
 	{
-		input = m_read_input_port_func(offset & 3, 0xFFFF);
+		input = m_read_input_port_cb(offset & 3, 0xFFFF);
 	}
 
 	if ( input == TIA_INPUT_PORT_ALWAYS_ON )
@@ -1846,9 +1830,9 @@ READ8_MEMBER( tia_video_device::read )
 	*/
 	UINT8 data = offset & 0x3f;
 
-	if ( !m_databus_contents_func.isnull() )
+	if ( !m_databus_contents_cb.isnull() )
 	{
-		data = m_databus_contents_func(offset) & 0x3f;
+		data = m_databus_contents_cb(offset) & 0x3f;
 	}
 
 	if (!(offset & 0x8))
@@ -1884,13 +1868,13 @@ READ8_MEMBER( tia_video_device::read )
 		return data | INPT_r(space,3);
 	case 0xC:
 		{
-			int button = !m_read_input_port_func.isnull() ? ( m_read_input_port_func(4,0xFFFF) & 0x80 ) : 0x80;
+			int button = !m_read_input_port_cb.isnull() ? ( m_read_input_port_cb(4,0xFFFF) & 0x80 ) : 0x80;
 			INPT4 = ( VBLANK & 0x40) ? ( INPT4 & button ) : button;
 		}
 		return data | INPT4;
 	case 0xD:
 		{
-			int button = !m_read_input_port_func.isnull() ? ( m_read_input_port_func(5,0xFFFF) & 0x80 ) : 0x80;
+			int button = !m_read_input_port_cb.isnull() ? ( m_read_input_port_cb(5,0xFFFF) & 0x80 ) : 0x80;
 			INPT5 = ( VBLANK & 0x40) ? ( INPT5 & button ) : button;
 		}
 		return data | INPT5;

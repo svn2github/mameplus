@@ -16,6 +16,10 @@ public:
 	pc090oj_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 	~pc090oj_device() {}
 
+	// static configuration
+	static void static_set_gfxdecode_tag(device_t &device, const char *tag);
+	static void static_set_palette_tag(device_t &device, const char *tag);
+
 	DECLARE_READ16_MEMBER( word_r );
 	DECLARE_WRITE16_MEMBER( word_w );
 
@@ -45,6 +49,8 @@ private:
 
 	UINT16 *   m_ram;
 	UINT16 *   m_ram_buffered;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 extern const device_type PC090OJ;
@@ -52,5 +58,11 @@ extern const device_type PC090OJ;
 #define MCFG_PC090OJ_ADD(_tag, _interface) \
 	MCFG_DEVICE_ADD(_tag, PC090OJ, 0) \
 	MCFG_DEVICE_CONFIG(_interface)
+
+#define MCFG_PC090OJ_GFXDECODE(_gfxtag) \
+	pc090oj_device::static_set_gfxdecode_tag(*device, "^" _gfxtag);
+
+#define MCFG_PC090OJ_PALETTE(_palette_tag) \
+	pc090oj_device::static_set_palette_tag(*device, "^" _palette_tag);
 
 #endif

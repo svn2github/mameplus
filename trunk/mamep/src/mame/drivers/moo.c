@@ -342,7 +342,7 @@ static ADDRESS_MAP_START( moo_map, AS_PROGRAM, 16, moo_state )
 	AM_RANGE(0x1a0000, 0x1a1fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)  /* Graphic planes */
 	AM_RANGE(0x1a2000, 0x1a3fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)  /* Graphic planes mirror */
 	AM_RANGE(0x1b0000, 0x1b1fff) AM_DEVREAD("k056832", k056832_device, rom_word_r)   /* Passthrough to tile roms */
-	AM_RANGE(0x1c0000, 0x1c1fff) AM_RAM_WRITE(paletteram_xrgb_word_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1c0000, 0x1c1fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 #if MOO_DEBUG
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVREAD("k056832", k056832_device, word_r)
 	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVREAD("k053246", k053247_device, k053246_reg_word_r)
@@ -375,7 +375,7 @@ static ADDRESS_MAP_START( moobl_map, AS_PROGRAM, 16, moo_state )
 	AM_RANGE(0x1a0000, 0x1a1fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w) /* Graphic planes */
 	AM_RANGE(0x1a2000, 0x1a3fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)  /* Graphic planes mirror */
 	AM_RANGE(0x1b0000, 0x1b1fff) AM_DEVREAD("k056832", k056832_device, rom_word_r)   /* Passthrough to tile roms */
-	AM_RANGE(0x1c0000, 0x1c1fff) AM_RAM_WRITE(paletteram_xrgb_word_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1c0000, 0x1c1fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bucky_map, AS_PROGRAM, 16, moo_state )
@@ -406,7 +406,7 @@ static ADDRESS_MAP_START( bucky_map, AS_PROGRAM, 16, moo_state )
 	AM_RANGE(0x182000, 0x183fff) AM_DEVREADWRITE("k056832", k056832_device, ram_word_r, ram_word_w)  /* Graphic planes mirror */
 	AM_RANGE(0x184000, 0x187fff) AM_RAM                         /* extra tile RAM? */
 	AM_RANGE(0x190000, 0x191fff) AM_DEVREAD("k056832", k056832_device, rom_word_r)   /* Passthrough to tile roms */
-	AM_RANGE(0x1b0000, 0x1b3fff) AM_RAM_WRITE(paletteram_xrgb_word_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1b0000, 0x1b3fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x200000, 0x23ffff) AM_ROM                         /* data */
 #if MOO_DEBUG
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVREAD("k056832", k056832_device, word_r)
@@ -547,15 +547,6 @@ static const k054338_interface moo_k054338_intf =
 	"none"
 };
 
-static const k053252_interface moo_k053252_intf =
-{
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	40, 16
-};
-
 static k054539_interface k054539_config;
 
 static MACHINE_CONFIG_START( moo, moo_state )
@@ -573,24 +564,32 @@ static MACHINE_CONFIG_START( moo, moo_state )
 
 	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
-	MCFG_K053252_ADD("k053252", XTAL_32MHz/4, moo_k053252_intf) // 8MHz
+	MCFG_DEVICE_ADD("k053252", K053252, XTAL_32MHz/4) // 8MHz
+	MCFG_K053252_OFFSETS(40, 16)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1200))   // should give IRQ4 sufficient time to update scroll registers
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(40, 40+384-1, 16, 16+224-1)
 	MCFG_SCREEN_UPDATE_DRIVER(moo_state, screen_update_moo)
 
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(XRGB)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_ENABLE_HILIGHTS()
 
 	MCFG_VIDEO_START_OVERRIDE(moo_state,moo)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K053246_ADD("k053246", moo_k053247_intf)
+	MCFG_K053246_GFXDECODE("gfxdecode")
+	MCFG_K053246_PALETTE("palette")
 	MCFG_K056832_ADD("k056832", moo_k056832_intf)
+	MCFG_K056832_GFXDECODE("gfxdecode")
+	MCFG_K056832_PALETTE("palette")
 	MCFG_K053251_ADD("k053251")
 	MCFG_K054338_ADD("k054338", moo_k054338_intf)
 
@@ -619,21 +618,28 @@ static MACHINE_CONFIG_START( moobl, moo_state )
 	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1200)) // should give IRQ4 sufficient time to update scroll registers
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(40, 40+384-1, 16, 16+224-1)
 	MCFG_SCREEN_UPDATE_DRIVER(moo_state, screen_update_moo)
 
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(XRGB)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_ENABLE_HILIGHTS()
 
 	MCFG_VIDEO_START_OVERRIDE(moo_state,moo)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K053246_ADD("k053246", moo_k053247_intf)
+	MCFG_K053246_GFXDECODE("gfxdecode")
+	MCFG_K053246_PALETTE("palette")
 	MCFG_K056832_ADD("k056832", moo_k056832_intf)
+	MCFG_K056832_GFXDECODE("gfxdecode")
+	MCFG_K056832_PALETTE("palette")
 	MCFG_K053251_ADD("k053251")
 	MCFG_K054338_ADD("k054338", moo_k054338_intf)
 
@@ -654,9 +660,14 @@ static MACHINE_CONFIG_DERIVED( bucky, moo )
 
 	MCFG_DEVICE_REMOVE("k053246")
 	MCFG_K053246_ADD("k053246", bucky_k053247_intf)     // diff x offset
-
+	MCFG_K053246_GFXDECODE("gfxdecode")
+	MCFG_K053246_PALETTE("palette")
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(4096)
+	MCFG_PALETTE_FORMAT(XRGB)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_ENABLE_HILIGHTS()
 
 	MCFG_VIDEO_START_OVERRIDE(moo_state,bucky)
 MACHINE_CONFIG_END

@@ -1273,12 +1273,14 @@ static MACHINE_CONFIG_START( astrocade_base, astrocde_state )
 	/* each game has its own map */
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_INIT_OWNER(astrocde_state, astrocde)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(ASTROCADE_CLOCK, 455, 0, 352, 262, 0, 240)
 	MCFG_SCREEN_DEFAULT_POSITION(1.1, 0.0, 1.18, -0.018)    /* clip out borders */
 	MCFG_SCREEN_UPDATE_DRIVER(astrocde_state, screen_update_astrocde)
+	MCFG_SCREEN_PALETTE("palette")
 
 MACHINE_CONFIG_END
 
@@ -1289,9 +1291,10 @@ static MACHINE_CONFIG_DERIVED( astrocade_16color_base, astrocade_base )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(4096)
 
-	MCFG_PALETTE_INIT_OVERRIDE(astrocde_state,profpac)
+	MCFG_PALETTE_INIT_OWNER(astrocde_state,profpac)
 	MCFG_VIDEO_START_OVERRIDE(astrocde_state,profpac)
 
 	MCFG_SCREEN_MODIFY("screen")

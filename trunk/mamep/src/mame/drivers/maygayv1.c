@@ -129,7 +129,7 @@ Find lamps/reels after UPD changes.
 #include "video/awpvid.h"
 #include "cpu/mcs51/mcs51.h"
 #include "machine/6821pia.h"
-#include "machine/n68681.h"
+#include "machine/mc68681.h"
 #include "sound/2413intf.h"
 #include "sound/upd7759.h"
 #include "machine/nvram.h"
@@ -221,12 +221,14 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_soundcpu(*this, "soundcpu"),
 		m_upd7759(*this, "upd"),
-		m_duart68681(*this, "duart68681") { }
+		m_duart68681(*this, "duart68681"),
+		m_palette(*this, "palette") { }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<i8052_device> m_soundcpu;
 	required_device<upd7759_device> m_upd7759;
-	required_device<duartn68681_device> m_duart68681;
+	required_device<mc68681_device> m_duart68681;
+	required_device<palette_device> m_palette;
 
 	int m_vsync_latch_preset;
 	UINT8 m_p1;
@@ -323,7 +325,7 @@ UINT32 maygayv1_state::screen_update_maygayv1(screen_device &screen, bitmap_ind1
 	/* If screen output is disabled, fill with black */
 	if (!(VREG(VCR0) & VCR0_DEN))
 	{
-		bitmap.fill(get_black_pen(machine()), cliprect);
+		bitmap.fill(m_palette->black_pen(), cliprect);
 		return 0;
 	}
 
@@ -465,7 +467,7 @@ void maygayv1_state::screen_eof_maygayv1(screen_device &screen, bool state)
 			for (i = 0; i < 16; ++i)
 			{
 				UINT16 entry = *palbase++;
-				palette_set_color_rgb(machine(), entry & 0xf, pal4bit(entry >> 12), pal4bit(entry >> 8), pal4bit(entry >> 4));
+				m_palette->set_pen_color(entry & 0xf, pal4bit(entry >> 12), pal4bit(entry >> 8), pal4bit(entry >> 4));
 			}
 		}
 	}
@@ -679,10 +681,6 @@ WRITE16_MEMBER(maygayv1_state::maygay_8279_w)
 }
 
 
-
-
-
-
 WRITE16_MEMBER(maygayv1_state::vsync_int_ctrl)
 {
 	m_vsync_latch_preset = data & 0x0100;
@@ -701,8 +699,9 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, maygayv1_state )
 	AM_RANGE(0x860000, 0x86000d) AM_READWRITE(read_odd, write_odd)
 	AM_RANGE(0x86000e, 0x86000f) AM_WRITE(vsync_int_ctrl)
 	AM_RANGE(0x880000, 0x89ffff) AM_READWRITE(i82716_r, i82716_w)
-	AM_RANGE(0x8a0000, 0x8a001f) AM_DEVREADWRITE8("duart68681", duartn68681_device, read, write, 0xff)
-	AM_RANGE(0x8c0000, 0x8c000f) AM_DEVREADWRITE8("pia", pia6821_device, read, write, 0xff)
+	AM_RANGE(0x8a0000, 0x8a001f) AM_DEVREADWRITE8("duart68681", mc68681_device, read, write, 0xff)
+	AM_RANGE(0x8c0000, 0x8c000f) AM_DEVREAD8("pia", pia6821_device, read, 0x00ff)
+	AM_RANGE(0x8c0000, 0x8c000f) AM_DEVWRITE8("pia", pia6821_device, write, 0xff00)
 ADDRESS_MAP_END
 
 
@@ -979,24 +978,6 @@ WRITE8_MEMBER(maygayv1_state::b_writ)
 }
 
 
-/* U25 ST 2 9148 EF68B21P */
-static const pia6821_interface pia_intf =
-{
-	DEVCB_DRIVER_MEMBER(maygayv1_state,b_read),     /* port A in */
-	DEVCB_DRIVER_MEMBER(maygayv1_state,b_read),     /* port B in */
-	DEVCB_NULL,     /* line CA1 in */
-	DEVCB_NULL,     /* line CB1 in */
-	DEVCB_NULL,     /* line CA2 in */
-	DEVCB_NULL,     /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(maygayv1_state,b_writ),     /* port A out */
-	DEVCB_DRIVER_MEMBER(maygayv1_state,b_writ),     /* port B out */
-	DEVCB_NULL,     /* line CA2 out */
-	DEVCB_NULL,     /* port CB2 out */
-	DEVCB_NULL,     /* IRQA */
-	DEVCB_NULL      /* IRQB */
-};
-
-
 void maygayv1_state::machine_start()
 {
 	i82716_t &i82716 = m_i82716;
@@ -1035,8 +1016,12 @@ static MACHINE_CONFIG_START( maygayv1, maygayv1_state )
 	MCFG_CPU_DATA_MAP(sound_data)
 	MCFG_CPU_IO_MAP(sound_io)
 
-	MCFG_PIA6821_ADD("pia", pia_intf)
-
+	/* U25 ST 2 9148 EF68B21P */
+	MCFG_DEVICE_ADD("pia", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(READ8(maygayv1_state, b_read))
+	MCFG_PIA_READPB_HANDLER(READ8(maygayv1_state, b_read))
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(maygayv1_state, b_writ))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(maygayv1_state, b_writ))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -1048,12 +1033,13 @@ static MACHINE_CONFIG_START( maygayv1, maygayv1_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 640 - 1, 0, 300 - 1)
 	MCFG_SCREEN_UPDATE_DRIVER(maygayv1_state, screen_update_maygayv1)
 	MCFG_SCREEN_VBLANK_DRIVER(maygayv1_state, screen_eof_maygayv1)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(16)
+	MCFG_PALETTE_ADD("palette", 16)
 
-	MCFG_DUARTN68681_ADD("duart68681", DUART_CLOCK)
-	MCFG_DUARTN68681_IRQ_CALLBACK(WRITELINE(maygayv1_state, duart_irq_handler))
-	MCFG_DUARTN68681_A_TX_CALLBACK(WRITELINE(maygayv1_state, duart_txa))
+	MCFG_MC68681_ADD("duart68681", DUART_CLOCK)
+	MCFG_MC68681_IRQ_CALLBACK(WRITELINE(maygayv1_state, duart_irq_handler))
+	MCFG_MC68681_A_TX_CALLBACK(WRITELINE(maygayv1_state, duart_txa))
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

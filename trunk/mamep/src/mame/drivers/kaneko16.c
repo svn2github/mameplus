@@ -232,11 +232,51 @@ WRITE16_MEMBER(kaneko16_state::kaneko16_eeprom_w)
                                 The Berlin Wall
 ***************************************************************************/
 
+READ16_MEMBER(kaneko16_berlwall_state::berlwall_oki_r)
+{
+	UINT16 ret;
+
+	if (mem_mask == 0xff00) // reads / writes to the upper byte only appear to act as a mirror to the lower byte, 16-bit reads/writes only access the lower byte.
+	{
+		mem_mask >>= 8;
+	}
+
+	ret = m_oki->read(space, offset, mem_mask);
+	ret = ret | ret << 8;
+
+	return ret;
+}
+
+WRITE16_MEMBER(kaneko16_berlwall_state::berlwall_oki_w)
+{
+	if (mem_mask == 0xff00) // reads / writes to the upper byte only appear to act as a mirror to the lower byte, 16-bit reads/writes only access the lower byte.
+	{
+		data >>= 8;
+		mem_mask >>= 8;
+	}
+
+	m_oki->write(space, offset, data, mem_mask);
+}
+
+READ16_MEMBER(kaneko16_berlwall_state::berlwall_spriteram_r)
+{
+	offset = BITSWAP16(offset, 15, 14, 13, 12, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 1, 0);
+	offset ^= 0x800;
+	return m_spriteram[offset];
+}
+
+WRITE16_MEMBER(kaneko16_berlwall_state::berlwall_spriteram_w)
+{
+	offset = BITSWAP16(offset, 15, 14, 13, 12, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 1, 0);
+	offset ^= 0x800;
+	COMBINE_DATA(&m_spriteram[offset]);
+}
+
 static ADDRESS_MAP_START( berlwall, AS_PROGRAM, 16, kaneko16_berlwall_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM     // ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM     // Work RAM
-	AM_RANGE(0x30e000, 0x30ffff) AM_RAM AM_SHARE("spriteram")       // Sprites
-	AM_RANGE(0x400000, 0x400fff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x30e000, 0x30ffff) AM_READWRITE(berlwall_spriteram_r, berlwall_spriteram_w) AM_SHARE("spriteram")       // Sprites
+	AM_RANGE(0x400000, 0x400fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 //  AM_RANGE(0x480000, 0x480001) AM_RAM     // ?
 	AM_RANGE(0x500000, 0x500001) AM_READWRITE(kaneko16_bg15_reg_r, kaneko16_bg15_reg_w) AM_SHARE("bg15_reg")    // High Color Background
 	AM_RANGE(0x580000, 0x580001) AM_READWRITE(kaneko16_bg15_select_r, kaneko16_bg15_select_w) AM_SHARE("bg15_select")
@@ -251,7 +291,7 @@ static ADDRESS_MAP_START( berlwall, AS_PROGRAM, 16, kaneko16_berlwall_state )
 	AM_RANGE(0x800000, 0x80001f) AM_READWRITE(kaneko16_ay1_YM2149_r, kaneko16_ay1_YM2149_w) // Sound
 	AM_RANGE(0x800200, 0x80021f) AM_READWRITE(kaneko16_ay2_YM2149_r, kaneko16_ay2_YM2149_w)
 	AM_RANGE(0x8003fe, 0x8003ff) AM_NOP // for OKI when accessed as .l
-	AM_RANGE(0x800400, 0x800401) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
+	AM_RANGE(0x800400, 0x800401) AM_READWRITE( berlwall_oki_r, berlwall_oki_w )
 	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0xd00000, 0xd0001f) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_regs_r, kaneko_tmap_regs_w)
 ADDRESS_MAP_END
@@ -284,7 +324,7 @@ static ADDRESS_MAP_START( bakubrkr, AS_PROGRAM, 16, kaneko16_state )
 	AM_RANGE(0x500000, 0x503fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x580000, 0x583fff) AM_DEVREADWRITE("view2_1", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_SHARE("spriteram")                   // Sprites
-	AM_RANGE(0x700000, 0x700fff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x700000, 0x700fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x800000, 0x80001f) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_regs_r, kaneko_tmap_regs_w)
 	AM_RANGE(0x900000, 0x90001f) AM_DEVREADWRITE("kan_spr", kaneko16_sprite_device, kaneko16_sprites_regs_r, kaneko16_sprites_regs_w)
 	AM_RANGE(0xa80000, 0xa80001) AM_READ(watchdog_reset16_r)    // Watchdog
@@ -304,7 +344,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( blazeon, AS_PROGRAM, 16, kaneko16_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM     // ROM
 	AM_RANGE(0x300000, 0x30ffff) AM_RAM     // Work RAM
-	AM_RANGE(0x500000, 0x500fff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x500000, 0x500fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x600000, 0x603fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_SHARE("spriteram")                   // Sprites
 	AM_RANGE(0x800000, 0x80001f) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_regs_r, kaneko_tmap_regs_w)
@@ -363,7 +403,7 @@ static ADDRESS_MAP_START( bloodwar, AS_PROGRAM, 16, kaneko16_gtmr_state )
 	AM_RANGE(0x2b0000, 0x2b0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com1_w)
 	AM_RANGE(0x2c0000, 0x2c0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com2_w)
 	AM_RANGE(0x2d0000, 0x2d0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com3_w)
-	AM_RANGE(0x300000, 0x30ffff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x300000, 0x30ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x400000, 0x401fff) AM_RAM AM_SHARE("spriteram")                   // Sprites
 	AM_RANGE(0x500000, 0x503fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x580000, 0x583fff) AM_DEVREADWRITE("view2_1", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
@@ -417,7 +457,7 @@ static ADDRESS_MAP_START( bonkadv, AS_PROGRAM, 16, kaneko16_gtmr_state )
 	AM_RANGE(0x2b0000, 0x2b0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com1_w)
 	AM_RANGE(0x2c0000, 0x2c0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com2_w)
 	AM_RANGE(0x2d0000, 0x2d0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com3_w)
-	AM_RANGE(0x300000, 0x30ffff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x300000, 0x30ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x400000, 0x401fff) AM_RAM AM_SHARE("spriteram")                   // Sprites
 	AM_RANGE(0x500000, 0x503fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x580000, 0x583fff) AM_DEVREADWRITE("view2_1", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
@@ -489,7 +529,7 @@ static ADDRESS_MAP_START( gtmr_map, AS_PROGRAM, 16, kaneko16_gtmr_state )
 	AM_RANGE(0x2c0000, 0x2c0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com2_w)
 	AM_RANGE(0x2d0000, 0x2d0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com3_w)
 
-	AM_RANGE(0x300000, 0x30ffff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x300000, 0x30ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x310000, 0x327fff) AM_RAM                                                                     //
 	AM_RANGE(0x400000, 0x401fff) AM_RAM AM_SHARE("spriteram")                       // Sprites
 
@@ -558,7 +598,7 @@ static ADDRESS_MAP_START( gtmr2_map, AS_PROGRAM, 16, kaneko16_gtmr_state )
 	AM_RANGE(0x2c0000, 0x2c0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com2_w)
 	AM_RANGE(0x2d0000, 0x2d0001) AM_DEVWRITE( "toybox", kaneko_toybox_device, toybox_mcu_com3_w)
 
-	AM_RANGE(0x300000, 0x30ffff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x300000, 0x30ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x310000, 0x327fff) AM_RAM //
 	AM_RANGE(0x400000, 0x401fff) AM_RAM AM_SHARE("spriteram") // Sprites
 
@@ -598,7 +638,7 @@ static ADDRESS_MAP_START( mgcrystl, AS_PROGRAM, 16, kaneko16_state )
 	AM_RANGE(0x400000, 0x40001f) AM_READWRITE(kaneko16_ay1_YM2149_r, kaneko16_ay1_YM2149_w) // Sound
 	AM_RANGE(0x400200, 0x40021f) AM_READWRITE(kaneko16_ay2_YM2149_r, kaneko16_ay2_YM2149_w)
 	AM_RANGE(0x400400, 0x400401) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x500000, 0x500fff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x500000, 0x500fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x600000, 0x603fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x680000, 0x683fff) AM_DEVREADWRITE("view2_1", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x700000, 0x701fff) AM_RAM AM_SHARE("spriteram")                   // Sprites
@@ -660,7 +700,7 @@ static ADDRESS_MAP_START( shogwarr, AS_PROGRAM, 16, kaneko16_shogwarr_state )
 	AM_RANGE(0x2b0000, 0x2b0001) AM_DEVWRITE("calc3_prot", kaneko_calc3_device, calc3_mcu_com2_w)
 	//AM_RANGE(0x2c0000, 0x2c0001) // run calc 3? or irq ack?
 	AM_RANGE(0x2d0000, 0x2d0001) AM_DEVWRITE("calc3_prot", kaneko_calc3_device, calc3_mcu_com3_w)
-	AM_RANGE(0x380000, 0x380fff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")    // Palette
+	AM_RANGE(0x380000, 0x380fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")    // Palette
 	AM_RANGE(0x400000, 0x400001) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff) // Samples
 	AM_RANGE(0x480000, 0x480001) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x580000, 0x581fff) AM_RAM AM_SHARE("spriteram")                   // Sprites
@@ -881,6 +921,8 @@ static INPUT_PORTS_START( berlwalt )
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x04, "5" )
 INPUT_PORTS_END
+
+
 
 
 /***************************************************************************
@@ -1623,27 +1665,32 @@ static MACHINE_CONFIG_START( berlwall, kaneko16_berlwall_state )
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", kaneko16_state, kaneko16_interrupt, "screen", 0, 1)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)    // mangled sprites otherwise
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+//  MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)    // mangled sprites otherwise
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_berlwall)
+//  MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(1x4bit_1x4bit)
-	MCFG_PALETTE_LENGTH(2048 + 32768)   /* 32768 static colors for the bg */
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1x4bit_1x4bit)
+	MCFG_PALETTE_ADD("palette", 2048 )
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
+
+	MCFG_PALETTE_ADD("bgpalette", 32768) /* 32768 static colors for the bg */
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
+	MCFG_PALETTE_INIT_OWNER(kaneko16_berlwall_state,berlwall)
 
 	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, -0x8, 256, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD_VU002_SPRITES
-	kaneko16_sprite_device::set_altspacing(*device, 1);
+//  kaneko16_sprite_device::set_altspacing(*device, 1);
+	MCFG_KANEKO16_SPRITE_GFXDECODE("gfxdecode")
 
-
-	MCFG_PALETTE_INIT_OVERRIDE(kaneko16_berlwall_state,berlwall)
 	MCFG_VIDEO_START_OVERRIDE(kaneko16_berlwall_state,berlwall)
 
 	/* sound hardware */
@@ -1677,28 +1724,32 @@ static MACHINE_CONFIG_START( bakubrkr, kaneko16_state )
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)    // mangled sprites otherwise
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)    // mangled sprites otherwise
 	MCFG_SCREEN_REFRESH_RATE(59)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_state, screen_update_kaneko16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(1x4bit_2x4bit)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1x4bit_2x4bit)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, -0x8, 256, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
+
 	MCFG_DEVICE_ADD("view2_1", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 2);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, -0x8, 256, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD_VU002_SPRITES
 	kaneko16_sprite_device::set_priorities(*device, 8,8,8,8); // above all
-
+	MCFG_KANEKO16_SPRITE_GFXDECODE("gfxdecode")
 
 
 
@@ -1746,25 +1797,28 @@ static MACHINE_CONFIG_START( blazeon, kaneko16_state )
 	MCFG_CPU_IO_MAP(blazeon_soundport)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1 -8)
-	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_state, screen_update_kaneko16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(1x4bit_1x4bit)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1x4bit_1x4bit)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x33, 0x8, 320, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD_VU002_SPRITES
 	kaneko16_sprite_device::set_priorities(*device, 1 /* "above tile[0], below the others" */ ,2 /* "above tile[0-1], below the others" */ ,8 /* above all */,8 /* above all */);
 	kaneko16_sprite_device::set_offsets(*device, 0x10000 - 0x680, 0x000);
+	MCFG_KANEKO16_SPRITE_GFXDECODE("gfxdecode")
 
 	// there is actually a 2nd sprite chip! looks like our device emulation handles both at once
 
@@ -1806,27 +1860,31 @@ static MACHINE_CONFIG_START( gtmr, kaneko16_gtmr_state )
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_state, screen_update_kaneko16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(1x8bit_2x4bit)
-	MCFG_PALETTE_LENGTH(32768)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1x8bit_2x4bit)
+	MCFG_PALETTE_ADD("palette", 32768)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x33, 0x0, 320, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("view2_1", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 2);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x33, 0x0, 320, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD_KC002_SPRITES
+	MCFG_KANEKO16_SPRITE_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("toybox", KANEKO_TOYBOX, 0)
 	kaneko_toybox_device::set_toybox_table(*device, TABLE_NORMAL);
@@ -1924,29 +1982,32 @@ static MACHINE_CONFIG_START( mgcrystl, kaneko16_state )
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
-	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_state, screen_update_kaneko16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(1x4bit_2x4bit)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1x4bit_2x4bit)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, -0x8, 256, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("view2_1", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 2);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, -0x8, 256, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD_VU002_SPRITES
 	kaneko16_sprite_device::set_priorities(*device, 2 /* below all */ ,3 /* above tile[0], below the other */ ,5 /* above all */ ,7 /* above all */);
-
+	MCFG_KANEKO16_SPRITE_GFXDECODE("gfxdecode")
 
 
 
@@ -2054,16 +2115,18 @@ static MACHINE_CONFIG_START( shogwarr, kaneko16_shogwarr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(40, 296-1, 16, 240-1)
-	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_berlwall_state, screen_update_kaneko16)
+	MCFG_SCREEN_UPDATE_DRIVER(kaneko16_state, screen_update_kaneko16)
+	MCFG_SCREEN_PALETTE("palette")
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
-
-	MCFG_GFXDECODE(1x4bit_1x4bit)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1x4bit_1x4bit)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x33, -0x8, 320, 240);
+	MCFG_KANEKO_TMAP_GFXDECODE("gfxdecode")
 
 	MCFG_VIDEO_START_OVERRIDE(kaneko16_shogwarr_state,kaneko16)
 
@@ -2071,6 +2134,7 @@ static MACHINE_CONFIG_START( shogwarr, kaneko16_shogwarr_state )
 	kaneko16_sprite_device::set_priorities(*device, 1 /* below all */ ,3 /* above tile[0], below the others */ ,5 /* above all */ ,7 /* above all */);
 	kaneko16_sprite_device::set_offsets(*device, 0xa00, -0x40);
 	kaneko16_sprite_device::set_fliptype(*device, 1);
+	MCFG_KANEKO16_SPRITE_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("kan_hit", KANEKO_HIT, 0)
 	kaneko_hit_device::set_type(*device, 1);
@@ -2192,6 +2256,8 @@ DRIVER_INIT_MEMBER( kaneko16_state, samplebank )
 	kaneko16_unscramble_tiles("gfx3");
 	kaneko16_expand_sample_banks("oki1");
 }
+
+
 
 
 /***************************************************************************
@@ -2369,29 +2435,29 @@ PALs : BW-U47, BW-U48 (backgrounds encryption)
 
 ROM_START( berlwall )
 	ROM_REGION( 0x040000, "maincpu", 0 )            /* 68000 Code */
-	ROM_LOAD16_BYTE( "u23_01.bin", 0x000000, 0x020000, CRC(76b526ce) SHA1(95ba7cccbe88fd695c28b6a7c25a1afd130c1aa6) )
-	ROM_LOAD16_BYTE( "u39_01.bin", 0x000001, 0x020000, CRC(78fa7ef2) SHA1(8392de6e307dcd2bf5bcbeb37d578d33246acfcf) )
+	ROM_LOAD16_BYTE( "u23_01.u23", 0x000000, 0x020000, CRC(76b526ce) SHA1(95ba7cccbe88fd695c28b6a7c25a1afd130c1aa6) )
+	ROM_LOAD16_BYTE( "u39_01.u39", 0x000001, 0x020000, CRC(78fa7ef2) SHA1(8392de6e307dcd2bf5bcbeb37d578d33246acfcf) )
 
 	ROM_REGION( 0x120000, "gfx1", 0 )   /* Sprites */
-	ROM_LOAD( "bw001",  0x000000, 0x080000, CRC(bc927260) SHA1(44273a8b6a041504d54da4a7897adf23e3e9db10) )
-	ROM_LOAD( "bw002",  0x080000, 0x080000, CRC(223f5465) SHA1(6ed077514ab4370a215a4a60c3aecc8b72ed1c97) )
-	ROM_LOAD( "bw300",  0x100000, 0x020000, CRC(b258737a) SHA1(b5c8fe44a8dcfc19bccba896bdb73030c5843544) )
+	ROM_LOAD( "bw001.u84",  0x000000, 0x080000, CRC(bc927260) SHA1(44273a8b6a041504d54da4a7897adf23e3e9db10) )
+	ROM_LOAD( "bw002.u83",  0x080000, 0x080000, CRC(223f5465) SHA1(6ed077514ab4370a215a4a60c3aecc8b72ed1c97) )
+	ROM_LOAD( "bw300.u82",  0x100000, 0x020000, CRC(b258737a) SHA1(b5c8fe44a8dcfc19bccba896bdb73030c5843544) )
 
 	ROM_REGION( 0x080000, "gfx2", 0 )   /* Tiles (Scrambled) */
-	ROM_LOAD( "bw003",  0x000000, 0x080000, CRC(fbb4b72d) SHA1(07a0590f18b3bba1843ef6a89a5c214e8e605cc3) )
+	ROM_LOAD( "bw003.u77",  0x000000, 0x080000, CRC(fbb4b72d) SHA1(07a0590f18b3bba1843ef6a89a5c214e8e605cc3) )
 
 	ROM_REGION( 0x400000, "gfx3", 0 )   /* High Color Background */
-	ROM_LOAD16_BYTE( "bw004",  0x000000, 0x080000, CRC(5300c34d) SHA1(ccb12ea05f89ef68bcfe003faced2ffea24c4bf0) )
-	ROM_LOAD16_BYTE( "bw008",  0x000001, 0x080000, CRC(9aaf2f2f) SHA1(1352856159e19f07e8e30f9c44b21347103ce024) ) // FIXED BITS (xxxxxxx0)
-	ROM_LOAD16_BYTE( "bw005",  0x100000, 0x080000, CRC(16db6d43) SHA1(0158d0278d085487400ad4384b8cc9618503319e) )
-	ROM_LOAD16_BYTE( "bw009",  0x100001, 0x080000, CRC(1151a0b0) SHA1(584a0da7eb7f06450f95e76faa20d19f053cb74c) ) // FIXED BITS (xxxxxxx0)
-	ROM_LOAD16_BYTE( "bw006",  0x200000, 0x080000, CRC(73a35d1f) SHA1(af919cf858c5923aea45e0d8d91493e6284cb99e) )
-	ROM_LOAD16_BYTE( "bw00a",  0x200001, 0x080000, CRC(f447dfc2) SHA1(1254eafea92e8e416deedf21cb01990ffc4f896c) ) // FIXED BITS (xxxxxxx0)
-	ROM_LOAD16_BYTE( "bw007",  0x300000, 0x080000, CRC(97f85c87) SHA1(865e076e098c49c96639f62be793f2de24b4926b) )
-	ROM_LOAD16_BYTE( "bw00b",  0x300001, 0x080000, CRC(b0a48225) SHA1(de256bb6e2a824114274bff0c6c1234934c31c49) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw004.u73",  0x000000, 0x080000, CRC(5300c34d) SHA1(ccb12ea05f89ef68bcfe003faced2ffea24c4bf0) )
+	ROM_LOAD16_BYTE( "bw008.u65",  0x000001, 0x080000, CRC(9aaf2f2f) SHA1(1352856159e19f07e8e30f9c44b21347103ce024) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw005.u74",  0x100000, 0x080000, CRC(16db6d43) SHA1(0158d0278d085487400ad4384b8cc9618503319e) )
+	ROM_LOAD16_BYTE( "bw009.u66",  0x100001, 0x080000, CRC(1151a0b0) SHA1(584a0da7eb7f06450f95e76faa20d19f053cb74c) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw006.u75",  0x200000, 0x080000, CRC(73a35d1f) SHA1(af919cf858c5923aea45e0d8d91493e6284cb99e) )
+	ROM_LOAD16_BYTE( "bw00a.u67",  0x200001, 0x080000, CRC(f447dfc2) SHA1(1254eafea92e8e416deedf21cb01990ffc4f896c) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw007.u76",  0x300000, 0x080000, CRC(97f85c87) SHA1(865e076e098c49c96639f62be793f2de24b4926b) )
+	ROM_LOAD16_BYTE( "bw00b.u68",  0x300001, 0x080000, CRC(b0a48225) SHA1(de256bb6e2a824114274bff0c6c1234934c31c49) ) // FIXED BITS (xxxxxxx0)
 
 	ROM_REGION( 0x040000, "oki", 0 )    /* Samples */
-	ROM_LOAD( "bw000",  0x000000, 0x040000, CRC(d8fe869d) SHA1(75e9044c4164ca6db9519fcff8eca6c8a2d8d5d1) )
+	ROM_LOAD( "bw000.u46",  0x000000, 0x040000, CRC(d8fe869d) SHA1(75e9044c4164ca6db9519fcff8eca6c8a2d8d5d1) )
 ROM_END
 
 
@@ -2441,30 +2507,32 @@ berlwall and not berlwalt!
 
 ROM_START( berlwallt )
 	ROM_REGION( 0x040000, "maincpu", 0 )            /* 68000 Code */
-	ROM_LOAD16_BYTE( "bw100a", 0x000000, 0x020000, CRC(e6bcb4eb) SHA1(220b8fddc79230b4f6a8cf33e1035355c485e8d1) )
-	ROM_LOAD16_BYTE( "bw101a", 0x000001, 0x020000, CRC(38056fb2) SHA1(48338b9a5ebea872286541a3c45016673c4af76b) )
+	ROM_LOAD16_BYTE( "bw100a.u23", 0x000000, 0x020000, CRC(e6bcb4eb) SHA1(220b8fddc79230b4f6a8cf33e1035355c485e8d1) )
+	ROM_LOAD16_BYTE( "bw101a.u39", 0x000001, 0x020000, CRC(38056fb2) SHA1(48338b9a5ebea872286541a3c45016673c4af76b) )
 
 	ROM_REGION( 0x120000, "gfx1", 0 )   /* Sprites */
-	ROM_LOAD( "bw001",  0x000000, 0x080000, CRC(bc927260) SHA1(44273a8b6a041504d54da4a7897adf23e3e9db10) )
-	ROM_LOAD( "bw002",  0x080000, 0x080000, CRC(223f5465) SHA1(6ed077514ab4370a215a4a60c3aecc8b72ed1c97) )
-	ROM_LOAD( "bw300",  0x100000, 0x020000, CRC(b258737a) SHA1(b5c8fe44a8dcfc19bccba896bdb73030c5843544) )
+	ROM_LOAD( "bw001.u84",  0x000000, 0x080000, CRC(bc927260) SHA1(44273a8b6a041504d54da4a7897adf23e3e9db10) )
+	ROM_LOAD( "bw002.u83",  0x080000, 0x080000, CRC(223f5465) SHA1(6ed077514ab4370a215a4a60c3aecc8b72ed1c97) )
+	ROM_LOAD( "bw300.u82",  0x100000, 0x020000, CRC(b258737a) SHA1(b5c8fe44a8dcfc19bccba896bdb73030c5843544) )
 
 	ROM_REGION( 0x080000, "gfx2", 0 )   /* Tiles (Scrambled) */
-	ROM_LOAD( "bw003",  0x000000, 0x080000, CRC(fbb4b72d) SHA1(07a0590f18b3bba1843ef6a89a5c214e8e605cc3) )
+	ROM_LOAD( "bw003.u77",  0x000000, 0x080000, CRC(fbb4b72d) SHA1(07a0590f18b3bba1843ef6a89a5c214e8e605cc3) )
 
 	ROM_REGION( 0x400000, "gfx3", 0 )   /* High Color Background */
-	ROM_LOAD16_BYTE( "bw004",  0x000000, 0x080000, CRC(5300c34d) SHA1(ccb12ea05f89ef68bcfe003faced2ffea24c4bf0) )
-	ROM_LOAD16_BYTE( "bw008",  0x000001, 0x080000, CRC(9aaf2f2f) SHA1(1352856159e19f07e8e30f9c44b21347103ce024) ) // FIXED BITS (xxxxxxx0)
-	ROM_LOAD16_BYTE( "bw005",  0x100000, 0x080000, CRC(16db6d43) SHA1(0158d0278d085487400ad4384b8cc9618503319e) )
-	ROM_LOAD16_BYTE( "bw009",  0x100001, 0x080000, CRC(1151a0b0) SHA1(584a0da7eb7f06450f95e76faa20d19f053cb74c) ) // FIXED BITS (xxxxxxx0)
-	ROM_LOAD16_BYTE( "bw006",  0x200000, 0x080000, CRC(73a35d1f) SHA1(af919cf858c5923aea45e0d8d91493e6284cb99e) )
-	ROM_LOAD16_BYTE( "bw00a",  0x200001, 0x080000, CRC(f447dfc2) SHA1(1254eafea92e8e416deedf21cb01990ffc4f896c) ) // FIXED BITS (xxxxxxx0)
-	ROM_LOAD16_BYTE( "bw007",  0x300000, 0x080000, CRC(97f85c87) SHA1(865e076e098c49c96639f62be793f2de24b4926b) )
-	ROM_LOAD16_BYTE( "bw00b",  0x300001, 0x080000, CRC(b0a48225) SHA1(de256bb6e2a824114274bff0c6c1234934c31c49) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw004.u73",  0x000000, 0x080000, CRC(5300c34d) SHA1(ccb12ea05f89ef68bcfe003faced2ffea24c4bf0) )
+	ROM_LOAD16_BYTE( "bw008.u65",  0x000001, 0x080000, CRC(9aaf2f2f) SHA1(1352856159e19f07e8e30f9c44b21347103ce024) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw005.u74",  0x100000, 0x080000, CRC(16db6d43) SHA1(0158d0278d085487400ad4384b8cc9618503319e) )
+	ROM_LOAD16_BYTE( "bw009.u66",  0x100001, 0x080000, CRC(1151a0b0) SHA1(584a0da7eb7f06450f95e76faa20d19f053cb74c) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw006.u75",  0x200000, 0x080000, CRC(73a35d1f) SHA1(af919cf858c5923aea45e0d8d91493e6284cb99e) )
+	ROM_LOAD16_BYTE( "bw00a.u67",  0x200001, 0x080000, CRC(f447dfc2) SHA1(1254eafea92e8e416deedf21cb01990ffc4f896c) ) // FIXED BITS (xxxxxxx0)
+	ROM_LOAD16_BYTE( "bw007.u76",  0x300000, 0x080000, CRC(97f85c87) SHA1(865e076e098c49c96639f62be793f2de24b4926b) )
+	ROM_LOAD16_BYTE( "bw00b.u68",  0x300001, 0x080000, CRC(b0a48225) SHA1(de256bb6e2a824114274bff0c6c1234934c31c49) ) // FIXED BITS (xxxxxxx0)
 
 	ROM_REGION( 0x040000, "oki", 0 )    /* Samples */
-	ROM_LOAD( "bw000",  0x000000, 0x040000, CRC(d8fe869d) SHA1(75e9044c4164ca6db9519fcff8eca6c8a2d8d5d1) )
+	ROM_LOAD( "bw000.u46",  0x000000, 0x040000, CRC(d8fe869d) SHA1(75e9044c4164ca6db9519fcff8eca6c8a2d8d5d1) )
 ROM_END
+
+
 
 
 /***************************************************************************
@@ -3834,6 +3902,8 @@ DRIVER_INIT_MEMBER( kaneko16_shogwarr_state, brapboys )
 
 GAME( 1991, berlwall, 0,        berlwall, berlwall, kaneko16_berlwall_state, berlwall, ROT0,  "Kaneko", "The Berlin Wall", 0 )
 GAME( 1991, berlwallt,berlwall, berlwall, berlwalt, kaneko16_berlwall_state, berlwall, ROT0,  "Kaneko", "The Berlin Wall (bootleg ?)", 0 )
+
+
 
 GAME( 1991, mgcrystl, 0,        mgcrystl, mgcrystl, kaneko16_state,          kaneko16, ROT0,  "Kaneko", "Magical Crystals (World, 92/01/10)", 0 )
 GAME( 1991, mgcrystlo,mgcrystl, mgcrystl, mgcrystl, kaneko16_state,          kaneko16, ROT0,  "Kaneko", "Magical Crystals (World, 91/12/10)", 0 )

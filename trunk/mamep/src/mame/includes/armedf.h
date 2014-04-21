@@ -10,7 +10,9 @@ public:
 		m_fg_videoram(*this, "fg_videoram"),
 		m_bg_videoram(*this, "bg_videoram"),
 		m_maincpu(*this, "maincpu"),
-		m_extra(*this, "extra") { }
+		m_extra(*this, "extra"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	UINT8  *  m_text_videoram;
@@ -89,6 +91,8 @@ public:
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_extra;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 class bigfghtr_state : public armedf_state

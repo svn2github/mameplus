@@ -80,7 +80,7 @@ void cloak_state::set_pens()
 		bit2 = (~palette_ram[i] >> 2) & 0x01;
 		b = combine_3_weights(weights, bit0, bit1, bit2);
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		m_palette->set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -160,7 +160,7 @@ TILE_GET_INFO_MEMBER(cloak_state::get_bg_tile_info)
 
 void cloak_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cloak_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(cloak_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	m_bitmap_videoram1 = auto_alloc_array(machine(), UINT8, 256*256);
 	m_bitmap_videoram2 = auto_alloc_array(machine(), UINT8, 256*256);
@@ -212,7 +212,7 @@ void cloak_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
 			flipy = !flipy;
 		}
 
-		drawgfx_transpen(bitmap, cliprect, machine().gfx[1], code, 0, flipx, flipy,   sx, sy, 0);
+		m_gfxdecode->gfx(1)->transpen(bitmap,cliprect, code, 0, flipx, flipy,   sx, sy, 0);
 	}
 }
 

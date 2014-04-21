@@ -168,18 +168,20 @@ static MACHINE_CONFIG_START( klax, klax_state )
 	MCFG_ATARI_EEPROM_2816_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_GFXDECODE(klax)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", klax)
+	MCFG_PALETTE_ADD("palette", 512)
 
-	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, klax_state, get_playfield_tile_info, 8,8, SCAN_COLS, 64,32)
+	MCFG_TILEMAP_ADD_STANDARD("playfield", "gfxdecode", 2, klax_state, get_playfield_tile_info, 8,8, SCAN_COLS, 64,32)
 	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", klax_state::s_mob_config)
+	MCFG_ATARI_MOTION_OBJECTS_GFXDECODE("gfxdecode")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_DRIVER(klax_state, screen_update_klax)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(klax_state,klax)
 

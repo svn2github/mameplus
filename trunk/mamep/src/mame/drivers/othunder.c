@@ -632,17 +632,6 @@ static const tc0100scn_interface othunder_tc0100scn_intf =
 	0, 0
 };
 
-static const tc0110pcr_interface othunder_tc0110pcr_intf =
-{
-	0
-};
-
-static const tc0220ioc_interface othunder_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
-
 static const tc0140syt_interface othunder_tc0140syt_intf =
 {
 	"maincpu", "audiocpu"
@@ -680,7 +669,12 @@ static MACHINE_CONFIG_START( othunder, othunder_state )
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 
 
-	MCFG_TC0220IOC_ADD("tc0220ioc", othunder_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -689,13 +683,18 @@ static MACHINE_CONFIG_START( othunder, othunder_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(othunder_state, screen_update_othunder)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(othunder)
-	MCFG_PALETTE_LENGTH(4096)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", othunder)
+	MCFG_PALETTE_ADD("palette", 4096)
 
 
 	MCFG_TC0100SCN_ADD("tc0100scn", othunder_tc0100scn_intf)
-	MCFG_TC0110PCR_ADD("tc0110pcr", othunder_tc0110pcr_intf)
+	MCFG_TC0100SCN_GFXDECODE("gfxdecode")
+	MCFG_TC0100SCN_PALETTE("palette")
+
+	MCFG_TC0110PCR_ADD("tc0110pcr")
+	MCFG_TC0110PCR_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

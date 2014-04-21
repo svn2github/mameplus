@@ -14,16 +14,13 @@
 // reading the original raw data
 static void mystwarr_decode_tiles(running_machine &machine)
 {
+	mystwarr_state *state = machine.driver_data<mystwarr_state>();
 	UINT8 *s = machine.root_device().memregion("gfx1")->base();
 	int len = machine.root_device().memregion("gfx1")->bytes();
 	UINT8 *pFinish = s+len-3;
 	UINT8 *d, *decoded;
-	int gfxnum;
 
-	for (gfxnum = 0; gfxnum < ARRAY_LENGTH(machine.gfx); gfxnum++)
-		if (machine.gfx[gfxnum] != NULL && machine.gfx[gfxnum]->srcdata() == s)
-			break;
-	assert(gfxnum != ARRAY_LENGTH(machine.gfx));
+	int gfxnum = state->m_k056832->get_gfx_num();
 
 	decoded = auto_alloc_array(machine, UINT8, len);
 	d = decoded;
@@ -54,7 +51,7 @@ static void mystwarr_decode_tiles(running_machine &machine)
 		d += 5;
 	}
 
-	machine.gfx[gfxnum]->set_source(decoded);
+	state->m_gfxdecode->gfx(gfxnum)->set_source(decoded);
 }
 
 
@@ -182,7 +179,7 @@ VIDEO_START_MEMBER(mystwarr_state,gaiapols)
 	K053936_wraparound_enable(0, 1);
 	K053936GP_set_offset(0, -10,  0); // floor tiles in demo loop2 (Elaine vs. boss)
 
-	m_ult_936_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mystwarr_state::get_gai_936_tile_info),this), TILEMAP_SCAN_ROWS,  16, 16, 512, 512);
+	m_ult_936_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(mystwarr_state::get_gai_936_tile_info),this), TILEMAP_SCAN_ROWS,  16, 16, 512, 512);
 	m_ult_936_tilemap->set_transparent_pen(0);
 }
 
@@ -224,7 +221,7 @@ VIDEO_START_MEMBER(mystwarr_state,dadandrn)
 	K053936_wraparound_enable(0, 1);
 	K053936GP_set_offset(0, -8, 0); // Brainy's laser
 
-	m_ult_936_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mystwarr_state::get_ult_936_tile_info),this), TILEMAP_SCAN_ROWS,  16, 16, 512, 512);
+	m_ult_936_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(mystwarr_state::get_ult_936_tile_info),this), TILEMAP_SCAN_ROWS,  16, 16, 512, 512);
 	m_ult_936_tilemap->set_transparent_pen(0);
 }
 
@@ -262,7 +259,7 @@ VIDEO_START_MEMBER(mystwarr_state,metamrph)
 
 	mystwarr_decode_tiles(machine());
 
-	m_k055673->alt_k055673_vh_start(machine(), "gfx2", 1, -51, -22, metamrph_sprite_callback);
+	m_k055673->alt_k055673_vh_start(machine(), "gfx2", 1, -51, -24, metamrph_sprite_callback);
 
 	konamigx_mixer_init(*m_screen, 0);
 

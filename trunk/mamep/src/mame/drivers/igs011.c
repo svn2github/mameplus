@@ -87,7 +87,9 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_priority_ram(*this, "priority_ram"),
 		m_vbowl_trackball(*this, "vbowl_trackball"),
-		m_oki(*this, "oki"){ }
+		m_oki(*this, "oki"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette"){ }
 
 	required_device<cpu_device> m_maincpu;
 	required_shared_ptr<UINT16> m_priority_ram;
@@ -185,6 +187,7 @@ public:
 	DECLARE_WRITE16_MEMBER(lhb_okibank_w);
 	DECLARE_READ16_MEMBER(ics2115_word_r);
 	DECLARE_WRITE16_MEMBER(ics2115_word_w);
+	DECLARE_WRITE_LINE_MEMBER(sound_irq);
 	DECLARE_DRIVER_INIT(lhbv33c);
 	DECLARE_DRIVER_INIT(drgnwrldv21j);
 	DECLARE_DRIVER_INIT(wlcc);
@@ -219,6 +222,8 @@ public:
 	void lhb2_decrypt_gfx();
 	void drgnwrld_gfx_decrypt();
 	optional_device<okim6295_device> m_oki;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -315,7 +320,7 @@ UINT32 igs011_state::screen_update_igs011(screen_device &screen, bitmap_ind16 &b
 
 #ifdef MAME_DEBUG
 			if ((layer_enable != -1) && (pri_addr == 0xff))
-				bitmap.pix16(y, x) = get_black_pen(machine());
+				bitmap.pix16(y, x) = m_palette->black_pen();
 			else
 #endif
 				bitmap.pix16(y, x) = m_layer[l][scr_addr] | (l << 8);
@@ -389,7 +394,7 @@ WRITE16_MEMBER(igs011_state::igs011_palette)
 	COMBINE_DATA(&m_generic_paletteram_16[offset]);
 
 	rgb = (m_generic_paletteram_16[offset & 0x7ff] & 0xff) | ((m_generic_paletteram_16[offset | 0x800] & 0xff) << 8);
-	palette_set_color_rgb(machine(),offset & 0x7ff,pal5bit(rgb >> 0),pal5bit(rgb >> 5),pal5bit(rgb >> 10));
+	m_palette->set_pen_color(offset & 0x7ff,pal5bit(rgb >> 0),pal5bit(rgb >> 5),pal5bit(rgb >> 10));
 }
 
 /***************************************************************************
@@ -744,7 +749,7 @@ void igs011_state::lhb2_decrypt()
 	int i,j;
 	int rom_size = 0x80000;
 	UINT16 *src = (UINT16 *) (memregion("maincpu")->base());
-	UINT16 *result_data = auto_alloc_array(machine(), UINT16, rom_size/2);
+	dynamic_array<UINT16> result_data(rom_size/2);
 
 	for (i=0; i<rom_size/2; i++)
 	{
@@ -765,8 +770,6 @@ void igs011_state::lhb2_decrypt()
 	}
 
 	memcpy(src,result_data,rom_size);
-
-	auto_free(machine(), result_data);
 }
 
 
@@ -776,7 +779,7 @@ void igs011_state::nkishusp_decrypt()
 	int i,j;
 	int rom_size = 0x80000;
 	UINT16 *src = (UINT16 *) (memregion("maincpu")->base());
-	UINT16 *result_data = auto_alloc_array(machine(), UINT16, rom_size/2);
+	dynamic_array<UINT16> result_data(rom_size/2);
 
 	for (i=0; i<rom_size/2; i++)
 	{
@@ -805,8 +808,6 @@ void igs011_state::nkishusp_decrypt()
 	}
 
 	memcpy(src,result_data,rom_size);
-
-	auto_free(machine(), result_data);
 }
 
 
@@ -930,14 +931,12 @@ void igs011_state::lhb2_decrypt_gfx()
 	int i;
 	unsigned rom_size = 0x200000;
 	UINT8 *src = (UINT8 *) (memregion("blitter")->base());
-	UINT8 *result_data = auto_alloc_array(machine(), UINT8, rom_size);
+	dynamic_buffer result_data(rom_size);
 
 	for (i=0; i<rom_size; i++)
 		result_data[i] = src[BITSWAP24(i, 23,22,21,20, 19, 17,16,15, 13,12, 10,9,8,7,6,5,4, 2,1, 3, 11, 14, 18, 0)];
 
 	memcpy(src,result_data,rom_size);
-
-	auto_free(machine(), result_data);
 }
 
 void igs011_state::drgnwrld_gfx_decrypt()
@@ -945,14 +944,12 @@ void igs011_state::drgnwrld_gfx_decrypt()
 	int i;
 	unsigned rom_size = 0x400000;
 	UINT8 *src = (UINT8 *) (memregion("blitter")->base());
-	UINT8 *result_data = auto_alloc_array(machine(), UINT8, rom_size);
+	dynamic_buffer result_data(rom_size);
 
 	for (i=0; i<rom_size; i++)
 		result_data[i] = src[BITSWAP24(i, 23,22,21,20,19,18,17,16,15, 12, 13, 14, 11,10,9,8,7,6,5,4,3,2,1,0)];
 
 	memcpy(src,result_data,rom_size);
-
-	auto_free(machine(), result_data);
 }
 
 
@@ -2592,9 +2589,9 @@ READ16_MEMBER(igs011_state::ics2115_word_r)
 	ics2115_device* ics2115 = machine().device<ics2115_device>("ics");
 	switch(offset)
 	{
-		case 0: return ics2115_device::read(ics2115, space, (offs_t)0);
-		case 1: return ics2115_device::read(ics2115, space, (offs_t)1);
-		case 2: return (ics2115_device::read(ics2115, space, (offs_t)3) << 8) | ics2115_device::read(ics2115, space, (offs_t)2);
+		case 0: return ics2115->read(space, (offs_t)0);
+		case 1: return ics2115->read(space, (offs_t)1);
+		case 2: return (ics2115->read(space, (offs_t)3) << 8) | ics2115->read(space, (offs_t)2);
 	}
 	return 0xff;
 }
@@ -2605,11 +2602,11 @@ WRITE16_MEMBER(igs011_state::ics2115_word_w)
 	switch(offset)
 	{
 		case 1:
-			if (ACCESSING_BITS_0_7)     ics2115_device::write(ics2115,space, 1,data);
+			if (ACCESSING_BITS_0_7)     ics2115->write(space, 1,data);
 			break;
 		case 2:
-			if (ACCESSING_BITS_0_7)     ics2115_device::write(ics2115,space, 2,data);
-			if (ACCESSING_BITS_8_15)    ics2115_device::write(ics2115,space, 3,data>>8);
+			if (ACCESSING_BITS_0_7)     ics2115->write(space, 2,data);
+			if (ACCESSING_BITS_8_15)    ics2115->write(space, 3,data>>8);
 			break;
 	}
 }
@@ -3940,9 +3937,10 @@ static MACHINE_CONFIG_START( igs011_base, igs011_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs011_state, screen_update_igs011)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x800)
-//  MCFG_GFXDECODE(igs011)
+	MCFG_PALETTE_ADD("palette", 0x800)
+//  MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs011)
 
 
 	/* sound hardware */
@@ -4035,7 +4033,7 @@ static MACHINE_CONFIG_DERIVED( lhb2, igs011_base )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs011_state, irq6_line_hold)
 	MCFG_TIMER_ADD_PERIODIC("timer_irq", lev5_timer_irq_cb, attotime::from_hz(240)) // lev5 frequency drives the music tempo
 
-//  MCFG_GFXDECODE(igs011_hi)
+//  MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs011_hi)
 
 	MCFG_SOUND_ADD("ymsnd", YM2413, XTAL_3_579545MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
@@ -4051,7 +4049,7 @@ static MACHINE_CONFIG_DERIVED( nkishusp, igs011_base )
 
 	// VSync 60.0052Hz, HSync 15.620kHz
 
-//  MCFG_GFXDECODE(igs011_hi)
+//  MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs011_hi)
 
 	MCFG_SOUND_ADD("ymsnd", YM2413, XTAL_3_579545MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
@@ -4059,7 +4057,7 @@ MACHINE_CONFIG_END
 
 
 
-static void sound_irq(device_t *device, int state)
+WRITE_LINE_MEMBER(igs011_state::sound_irq)
 {
 //   m_maincpu->set_input_line(3, state);
 }
@@ -4074,10 +4072,11 @@ static MACHINE_CONFIG_DERIVED( vbowl, igs011_base )
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VBLANK_DRIVER(igs011_state, screen_eof_vbowl)
-//  MCFG_GFXDECODE(igs011_hi)
+//  MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs011_hi)
 
 	MCFG_DEVICE_REMOVE("oki")
-	MCFG_ICS2115_ADD("ics", 0, sound_irq)
+	MCFG_ICS2115_ADD("ics", 0)
+	MCFG_ICS2115_IRQ_CB(WRITELINE(igs011_state, sound_irq))
 //  MCFG_SOUND_ADD("ics", ICS2115, 0)
 //  MCFG_SOUND_CONFIG(vbowl_ics2115_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 5.0)

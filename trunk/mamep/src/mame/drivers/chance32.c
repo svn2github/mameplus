@@ -31,7 +31,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_fgram(*this, "fgram"),
 		m_bgram(*this, "bgram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	DECLARE_WRITE8_MEMBER(chance32_fgram_w)
 	{
@@ -63,6 +64,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_chance32(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -70,8 +72,7 @@ TILE_GET_INFO_MEMBER(chance32_state::get_fg_tile_info)
 {
 	int code = (m_fgram[tile_index * 2 + 1] << 8) | m_fgram[tile_index * 2];
 	int flip = (~code >> 12)&1;
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			code & 0x0fff,
 			code >> 13,
 			TILE_FLIPYX(flip<<1)|flip);
@@ -81,8 +82,7 @@ TILE_GET_INFO_MEMBER(chance32_state::get_bg_tile_info)
 {
 	int code = (m_bgram[tile_index * 2 +1] << 8) | m_bgram[tile_index * 2];
 	int flip = (~code >> 12)&1;
-	SET_TILE_INFO_MEMBER(
-			0,
+	SET_TILE_INFO_MEMBER(0,
 			code & 0x0fff,
 			code >> 13,
 			TILE_FLIPYX(flip<<1|flip));
@@ -91,10 +91,10 @@ TILE_GET_INFO_MEMBER(chance32_state::get_bg_tile_info)
 
 void chance32_state::video_start()
 {
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(chance32_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 35, 29);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(chance32_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 35, 29);
 	m_fg_tilemap->set_transparent_pen(0);
 
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(chance32_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 35, 29);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(chance32_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 35, 29);
 
 	m_fg_tilemap->set_flip(TILE_FLIPX|TILE_FLIPY);
 	m_bg_tilemap->set_flip(TILE_FLIPX|TILE_FLIPY);
@@ -103,12 +103,6 @@ void chance32_state::video_start()
 
 UINT32 chance32_state::screen_update_chance32(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	/* TODO: wtf? */
-	m_bg_tilemap->set_scrollx(0, 352);
-	m_bg_tilemap->set_scrolly(0, 160);
-	m_fg_tilemap->set_scrollx(0, 352);
-	m_fg_tilemap->set_scrolly(0, 160);
-
 	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 	m_fg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 
@@ -201,7 +195,7 @@ WRITE8_MEMBER(chance32_state::muxout_w)
 static ADDRESS_MAP_START( chance32_map, AS_PROGRAM, 8, chance32_state )
 	AM_RANGE(0x0000, 0xcfff) AM_ROM
 	AM_RANGE(0xd800, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_byte_le_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe000, 0xefff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(chance32_fgram_w) AM_SHARE("fgram")
 	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(chance32_bgram_w) AM_SHARE("bgram")
 ADDRESS_MAP_END
@@ -449,6 +443,7 @@ void chance32_state::machine_reset()
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	16,         /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -478,12 +473,13 @@ static MACHINE_CONFIG_START( chance32, chance32_state )
 	MCFG_SCREEN_SIZE(40*16, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 35*16-1, 0, 29*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(chance32_state, screen_update_chance32)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_MC6845_ADD("crtc", H46505, "screen", 12000000/16, mc6845_intf)   /* 52.786 Hz (similar to Major Poker) */
 
-	MCFG_GFXDECODE(chance32)
-	MCFG_PALETTE_LENGTH(0x800)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", chance32)
+	MCFG_PALETTE_ADD("palette", 0x800)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

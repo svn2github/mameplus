@@ -1,3 +1,4 @@
+#include "sound/flt_rc.h"
 #include "sound/k007232.h"
 #include "sound/k005289.h"
 #include "sound/vlm5030.h"
@@ -19,11 +20,19 @@ public:
 		m_spriteram(*this, "spriteram"),
 		m_paletteram(*this, "paletteram"),
 		m_gx400_shared_ram(*this, "gx400_shared"),
+		m_voiceram(*this, "voiceram"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
+		m_filter1(*this, "filter1"),
+		m_filter2(*this, "filter2"),
+		m_filter3(*this, "filter3"),
+		m_filter4(*this, "filter4"),
 		m_k007232(*this, "k007232"),
 		m_k005289(*this, "k005289"),
-		m_vlm(*this, "vlm") { }
+		m_vlm(*this, "vlm"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT16> m_charram;
@@ -38,6 +47,7 @@ public:
 	required_shared_ptr<UINT16> m_spriteram;
 	required_shared_ptr<UINT16> m_paletteram;
 	optional_shared_ptr<UINT8> m_gx400_shared_ram;
+	optional_shared_ptr<UINT8> m_voiceram;
 
 	/* video-related */
 	tilemap_t *m_background;
@@ -60,9 +70,17 @@ public:
 	/* devices */
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	optional_device<filter_rc_device> m_filter1;
+	optional_device<filter_rc_device> m_filter2;
+	optional_device<filter_rc_device> m_filter3;
+	optional_device<filter_rc_device> m_filter4;
 	optional_device<k007232_device> m_k007232;
 	optional_device<k005289_device> m_k005289;
 	optional_device<vlm5030_device> m_vlm;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
+
 	DECLARE_WRITE16_MEMBER(gx400_irq1_enable_word_w);
 	DECLARE_WRITE16_MEMBER(gx400_irq2_enable_word_w);
 	DECLARE_WRITE16_MEMBER(gx400_irq4_enable_word_w);
@@ -85,6 +103,7 @@ public:
 	DECLARE_WRITE16_MEMBER(nemesis_colorram1_word_w);
 	DECLARE_WRITE16_MEMBER(nemesis_colorram2_word_w);
 	DECLARE_WRITE16_MEMBER(nemesis_charram_word_w);
+	DECLARE_WRITE8_MEMBER(nemesis_filter_w);
 	DECLARE_WRITE8_MEMBER(gx400_speech_start_w);
 	DECLARE_WRITE8_MEMBER(salamand_speech_start_w);
 	DECLARE_READ8_MEMBER(nemesis_portA_r);

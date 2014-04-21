@@ -882,10 +882,6 @@ static INPUT_PORTS_START( sscope )
 	PORT_BIT( 0x7ff, 0x3ff, IPT_AD_STICK_Y ) PORT_MINMAX(0x000, 0x7ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_INVERT
 INPUT_PORTS_END
 
-static const sharc_config sharc_cfg =
-{
-	BOOT_MODE_EPROM
-};
 
 /* PowerPC interrupts
 
@@ -981,7 +977,7 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
 	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_EPROM)
 	MCFG_CPU_DATA_MAP(sharc0_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
@@ -1000,9 +996,13 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 48*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(hornet_state, screen_update_hornet)
 
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_ADD("palette", 65536)
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	MCFG_K037122_ADD("k037122_1", "screen", 0)
+	MCFG_K037122_GFXDECODE("gfxdecode")
+	MCFG_K037122_PALETTE("palette")
 
 	MCFG_K056800_ADD("k056800", XTAL_16_9344MHz)
 	MCFG_K056800_INT_HANDLER(INPUTLINE("audiocpu", M68K_IRQ_2))
@@ -1064,7 +1064,7 @@ static const voodoo_config voodoo_r_intf =
 static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 
 	MCFG_CPU_ADD("dsp2", ADSP21062, XTAL_36MHz)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_EPROM)
 	MCFG_CPU_DATA_MAP(sharc1_map)
 
 	MCFG_MACHINE_RESET_OVERRIDE(hornet_state,hornet_2board)
@@ -1072,7 +1072,12 @@ static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 
 	MCFG_DEVICE_REMOVE("k037122_1")
 	MCFG_K037122_ADD("k037122_1", "lscreen", 0)
+	MCFG_K037122_GFXDECODE("gfxdecode")
+	MCFG_K037122_PALETTE("palette")
+
 	MCFG_K037122_ADD("k037122_2", "rscreen", 1)
+	MCFG_K037122_GFXDECODE("gfxdecode")
+	MCFG_K037122_PALETTE("palette")
 
 	MCFG_DEVICE_REMOVE("voodoo0")
 	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, voodoo_l_intf)
@@ -1081,7 +1086,8 @@ static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 	MCFG_K033906_ADD("k033906_2", hornet_k033906_intf_1)
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(65536)
 
 	MCFG_DEVICE_REMOVE("screen")
 

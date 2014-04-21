@@ -73,11 +73,12 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_spriteram(*this, "spriteram"),
 		m_maincpu(*this, "maincpu"),
-		m_oki(*this, "oki") { }
+		m_oki(*this, "oki"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	UINT16 m_x;
 	required_shared_ptr<UINT32> m_spriteram;
-	DECLARE_WRITE32_MEMBER(fs_paletteram_w);
 	DECLARE_READ32_MEMBER(in0_r);
 	DECLARE_WRITE32_MEMBER(output_w);
 	DECLARE_DRIVER_INIT(feversoc);
@@ -86,6 +87,8 @@ public:
 	INTERRUPT_GEN_MEMBER(feversoc_irq);
 	required_device<cpu_device> m_maincpu;
 	required_device<okim6295_device> m_oki;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -100,7 +103,7 @@ UINT32 feversoc_state::screen_update_feversoc(screen_device &screen, bitmap_ind1
 	UINT32 *spriteram32 = m_spriteram;
 	int offs,spr_offs,colour,sx,sy,h,w,dx,dy;
 
-	bitmap.fill(machine().pens[0], cliprect); //black pen
+	bitmap.fill(m_palette->pen(0), cliprect); //black pen
 
 	for(offs=(0x2000/4)-2;offs>-1;offs-=2)
 	{
@@ -118,29 +121,13 @@ UINT32 feversoc_state::screen_update_feversoc(screen_device &screen, bitmap_ind1
 
 		for(dx=0;dx<w;dx++)
 			for(dy=0;dy<h;dy++)
-				drawgfx_transpen(bitmap,cliprect,machine().gfx[0],spr_offs++,colour,0,0,(sx+dx*16),(sy+dy*16),0x3f);
+				m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,spr_offs++,colour,0,0,(sx+dx*16),(sy+dy*16),0x3f);
 	}
 
 	return 0;
 }
 
-WRITE32_MEMBER(feversoc_state::fs_paletteram_w)
-{
-	int r,g,b;
-	COMBINE_DATA(&m_generic_paletteram_32[offset]);
 
-	r = ((m_generic_paletteram_32[offset] & 0x001f0000)>>16) << 3;
-	g = ((m_generic_paletteram_32[offset] & 0x03e00000)>>16) >> 2;
-	b = ((m_generic_paletteram_32[offset] & 0x7c000000)>>16) >> 7;
-
-	palette_set_color(machine(),offset*2+0,MAKE_RGB(r,g,b));
-
-	r = (m_generic_paletteram_32[offset] & 0x001f) << 3;
-	g = (m_generic_paletteram_32[offset] & 0x03e0) >> 2;
-	b = (m_generic_paletteram_32[offset] & 0x7c00) >> 7;
-
-	palette_set_color(machine(),offset*2+1,MAKE_RGB(r,g,b));
-}
 
 READ32_MEMBER(feversoc_state::in0_r)
 {
@@ -181,7 +168,7 @@ static ADDRESS_MAP_START( feversoc_map, AS_PROGRAM, 32, feversoc_state )
 	AM_RANGE(0x0600000c, 0x0600000f) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff0000)
 //  AM_RANGE(0x06010000, 0x06017fff) AM_RAM //contains RISE11 keys and other related stuff.
 //  AM_RANGE(0x06010060, 0x06010063) //bit 0 almost certainly irq ack
-	AM_RANGE(0x06018000, 0x06019fff) AM_RAM_WRITE(fs_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0x06018000, 0x06019fff) AM_RAM_DEVWRITE("palette",  palette_device, write) AM_SHARE("palette")
 ADDRESS_MAP_END
 
 static const gfx_layout spi_spritelayout =
@@ -271,9 +258,11 @@ static MACHINE_CONFIG_START( feversoc, feversoc_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 30*8-1) //dynamic resolution?
 	MCFG_SCREEN_UPDATE_DRIVER(feversoc_state, screen_update_feversoc)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(feversoc)
-	MCFG_PALETTE_LENGTH(0x1000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", feversoc)
+	MCFG_PALETTE_ADD("palette", 0x1000)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 
 	/* sound hardware */

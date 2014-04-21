@@ -54,7 +54,7 @@ public:
 	DECLARE_READ16_MEMBER( dreambal_protection_region_0_104_r );
 	DECLARE_WRITE16_MEMBER( dreambal_protection_region_0_104_w );
 
-	DECLARE_WRITE16_HANDLER( dreambal_eeprom_w )
+	DECLARE_WRITE16_MEMBER( dreambal_eeprom_w )
 	{
 		if (data&0xfff8)
 		{
@@ -114,7 +114,7 @@ static ADDRESS_MAP_START( dreambal_map, AS_PROGRAM, 16, dreambal_state )
 	AM_RANGE(0x103000, 0x103fff) AM_RAM
 
 	AM_RANGE(0x120000, 0x123fff) AM_RAM
-	AM_RANGE(0x140000, 0x1403ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x1403ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x161000, 0x16100f) AM_DEVWRITE("tilegen1", deco16ic_device, pf_control_w)
 
 	AM_RANGE(0x160000, 0x163fff) AM_READWRITE(dreambal_protection_region_0_104_r,dreambal_protection_region_0_104_w)AM_SHARE("prot16ram") /* Protection device */
@@ -324,15 +324,19 @@ static MACHINE_CONFIG_START( dreambal, dreambal_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dreambal_state, screen_update_dreambal)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x400/2)
-	MCFG_GFXDECODE(dreambal)
+	MCFG_PALETTE_ADD("palette", 0x400/2)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dreambal)
 
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")  // 93lc46b
 
 	MCFG_DECO104_ADD("ioprot104")
 
 	MCFG_DECO16IC_ADD("tilegen1", dreambal_deco16ic_tilegen1_intf)
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

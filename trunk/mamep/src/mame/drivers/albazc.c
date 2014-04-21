@@ -22,7 +22,9 @@ public:
 		m_spriteram1(*this, "spriteram1"),
 		m_spriteram2(*this, "spriteram2"),
 		m_spriteram3(*this, "spriteram3"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* video-related */
 	required_shared_ptr<UINT8> m_spriteram1;
@@ -34,17 +36,19 @@ public:
 	DECLARE_WRITE8_MEMBER(hanaroku_out_2_w);
 	DECLARE_WRITE8_MEMBER(albazc_vregs_w);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(albazc);
 	UINT32 screen_update_hanaroku(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
 
 /* video */
 
-void albazc_state::palette_init()
+PALETTE_INIT_MEMBER(albazc_state, albazc)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 	int i;
@@ -56,7 +60,7 @@ void albazc_state::palette_init()
 		g = ((color_prom[i * 2 + 1] & 0xe0) | ((color_prom[i * 2 + 0]& 0x03) <<8)) >> 5;
 		r = (color_prom[i * 2 + 0] & 0x7c) >> 2;
 
-		palette_set_color_rgb(machine(), i, pal5bit(r), pal5bit(g), pal5bit(b));
+		palette.set_pen_color(i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 
@@ -85,7 +89,7 @@ void albazc_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
 			flipy = !flipy;
 		}
 
-		drawgfx_transpen(bitmap, cliprect, machine().gfx[0], code, color, flipx, flipy,
+		m_gfxdecode->gfx(0)->transpen(bitmap,cliprect, code, color, flipx, flipy,
 			sx, sy, 0);
 	}
 }
@@ -281,10 +285,12 @@ static MACHINE_CONFIG_START( hanaroku, albazc_state )
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(albazc_state, screen_update_hanaroku)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(hanaroku)
-	MCFG_PALETTE_LENGTH(0x200)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", hanaroku)
 
+	MCFG_PALETTE_ADD("palette", 0x200)
+	MCFG_PALETTE_INIT_OWNER(albazc_state, albazc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

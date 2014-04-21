@@ -63,7 +63,10 @@ public:
 		m_bg_videoram(*this, "bg_videoram", 0),
 		m_oki(*this, "oki"),
 		m_igs025(*this,"igs025"),
-		m_igs022(*this,"igs022")
+		m_igs022(*this,"igs022"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")
 	{ }
 
 	int m_input_addr;
@@ -74,7 +77,9 @@ public:
 	required_device<okim6295_device> m_oki;
 	optional_device<igs025_device> m_igs025; // Mj Shuang Long Qiang Zhu 2
 	optional_device<igs022_device> m_igs022; // Mj Shuang Long Qiang Zhu 2
-
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 	void igs025_to_igs022_callback( void );
 
 	int m_toggle;
@@ -301,8 +306,8 @@ void igs017_state::expand_sprites()
 
 void igs017_state::video_start()
 {
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs017_state::get_fg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs017_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(igs017_state::get_fg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(igs017_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 
 	m_fg_tilemap->set_transparent_pen(0xf);
 	m_bg_tilemap->set_transparent_pen(0xf);
@@ -355,9 +360,9 @@ void igs017_state::draw_sprite(bitmap_ind16 &bitmap,const rectangle &cliprect, i
 	if ( addr + dimx * dimy >= m_sprites_gfx_size )
 		return;
 
-	gfx_element gfx(machine(), m_sprites_gfx + addr, dimx, dimy, dimx, 0x100, 32);
+	gfx_element gfx(m_palette, m_sprites_gfx + addr, dimx, dimy, dimx, m_palette->entries(), 0x100, 32);
 
-	drawgfx_transpen(   bitmap,cliprect, &gfx,
+	gfx.transpen(bitmap,cliprect,
 				0, color,
 				flipx, flipy,
 				sx, sy, 0x1f    );
@@ -458,7 +463,7 @@ UINT32 igs017_state::screen_update_igs017(screen_device &screen, bitmap_ind16 &b
 	if (debug_viewer(bitmap,cliprect))
 		return 0;
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	if (m_video_disable)
 		return 0;
@@ -665,7 +670,7 @@ void igs017_state::mgcs_decrypt_tiles()
 {
 	int length = memregion("tilemaps")->bytes();
 	UINT8 *rom = memregion("tilemaps")->base();
-	UINT8 *tmp = auto_alloc_array(machine(), UINT8, length);
+	dynamic_buffer tmp(length);
 	int i;
 
 	memcpy(tmp,rom,length);
@@ -674,8 +679,6 @@ void igs017_state::mgcs_decrypt_tiles()
 		int addr = (i & ~0xffff) | BITSWAP16(i,15,14,13,12,11,10,6,7,8,9,5,4,3,2,1,0);
 		rom[i] = tmp[addr];
 	}
-
-	auto_free(machine(), tmp);
 }
 
 void igs017_state::mgcs_flip_sprites()
@@ -961,7 +964,7 @@ void igs017_state::lhzb2_decrypt_tiles()
 {
 	int length = memregion("tilemaps")->bytes();
 	UINT8 *rom = memregion("tilemaps")->base();
-	UINT8 *tmp = auto_alloc_array(machine(), UINT8, length);
+	dynamic_buffer tmp(length);
 	int i;
 
 	int addr;
@@ -971,8 +974,6 @@ void igs017_state::lhzb2_decrypt_tiles()
 		addr = (i & ~0xffffff) | BITSWAP24(i,23,22,21,20,19,18,17,1,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,0);
 		rom[i] = tmp[addr];
 	}
-
-	auto_free(machine(), tmp);
 }
 
 void igs017_state::lhzb2_decrypt_sprites()
@@ -1188,7 +1189,7 @@ void igs017_state::slqz2_decrypt_tiles()
 {
 	int length = memregion("tilemaps")->bytes();
 	UINT8 *rom = memregion("tilemaps")->base();
-	UINT8 *tmp = auto_alloc_array(machine(), UINT8, length);
+	dynamic_buffer tmp(length);
 	int i;
 
 	memcpy(tmp,rom,length);
@@ -1197,8 +1198,6 @@ void igs017_state::slqz2_decrypt_tiles()
 		int addr = (i & ~0xff) | BITSWAP8(i,7,4,5,6,3,2,1,0);
 		rom[i] = tmp[addr];
 	}
-
-	auto_free(machine(), tmp);
 }
 
 DRIVER_INIT_MEMBER(igs017_state,slqz2)
@@ -1394,7 +1393,7 @@ static ADDRESS_MAP_START( iqblocka_io, AS_IO, 8, igs017_state )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // internal regs
 
 	AM_RANGE( 0x1000, 0x17ff ) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_le_w ) AM_SHARE("paletteram")
+	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE( 0x1c00, 0x1fff ) AM_RAM
 
 //  AM_RANGE(0x200a, 0x200a) AM_WRITENOP
@@ -1510,7 +1509,7 @@ WRITE16_MEMBER(igs017_state::mgcs_paletteram_w)
 	// bitswap
 	bgr = BITSWAP16(bgr, 7,8,9,2,14,3,13,15,12,11,10,0,1,4,5,6);
 
-	palette_set_color_rgb(machine(), offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
+	m_palette->set_pen_color(offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
 }
 
 static ADDRESS_MAP_START( mgcs, AS_PROGRAM, 16, igs017_state )
@@ -1540,7 +1539,7 @@ WRITE16_MEMBER(igs017_state::sdmg2_paletteram_w)
 
 	int bgr = ((m_generic_paletteram_16[offset/2*2+1] & 0xff) << 8) | (m_generic_paletteram_16[offset/2*2+0] & 0xff);
 
-	palette_set_color_rgb(machine(), offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
+	m_palette->set_pen_color(offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
 }
 
 READ8_MEMBER(igs017_state::sdmg2_keys_r)
@@ -1758,7 +1757,7 @@ WRITE8_MEMBER(igs017_state::tjsb_paletteram_w)
 	// bitswap
 	bgr = BITSWAP16(bgr, 15,12,3,6,10,5,4,2,9,13,8,7,11,1,0,14);
 
-	palette_set_color_rgb(machine(), offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
+	m_palette->set_pen_color(offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
 }
 
 WRITE8_MEMBER(igs017_state::tjsb_output_w)
@@ -1877,7 +1876,7 @@ static ADDRESS_MAP_START( spkrform_io, AS_IO, 8, igs017_state )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // internal regs
 
 	AM_RANGE( 0x1000, 0x17ff ) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_le_w ) AM_SHARE("paletteram")
+	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE( 0x1c00, 0x1fff ) AM_RAM
 
 	AM_RANGE( 0x2010, 0x2013 ) AM_DEVREAD("ppi8255", i8255_device, read)
@@ -2223,7 +2222,7 @@ WRITE16_MEMBER(igs017_state::lhzb2a_paletteram_w)
 	// bitswap
 	bgr = BITSWAP16(bgr, 15,9,13,12,11,5,4,8,7,6,0,14,3,2,1,10);
 
-	palette_set_color_rgb(machine(), offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
+	m_palette->set_pen_color(offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
 }
 
 READ16_MEMBER(igs017_state::lhzb2a_input_r)
@@ -2328,7 +2327,7 @@ WRITE16_MEMBER(igs017_state::slqz2_paletteram_w)
 	// bitswap
 	bgr = BITSWAP16(bgr, 15,14,9,4,11,10,12,3,7,6,5,8,13,2,1,0);
 
-	palette_set_color_rgb(machine(), offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
+	m_palette->set_pen_color(offset/2, pal5bit(bgr >> 0), pal5bit(bgr >> 5), pal5bit(bgr >> 10));
 }
 
 WRITE16_MEMBER(igs017_state::slqz2_magic_w)
@@ -3495,9 +3494,11 @@ static MACHINE_CONFIG_START( iqblocka, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */
@@ -3559,9 +3560,11 @@ static MACHINE_CONFIG_START( mgcs, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017_flipped)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017_flipped)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */
@@ -3600,9 +3603,11 @@ static MACHINE_CONFIG_START( lhzb2, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017_swapped)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017_swapped)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 	// protection
 	MCFG_DEVICE_ADD("igs025", IGS025, 0)
@@ -3643,9 +3648,11 @@ static MACHINE_CONFIG_START( lhzb2a, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017_swapped)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017_swapped)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */
@@ -3674,9 +3681,11 @@ static MACHINE_CONFIG_START( slqz2, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 	// protection
 	MCFG_DEVICE_ADD("igs025", IGS025, 0)
@@ -3720,9 +3729,11 @@ static MACHINE_CONFIG_START( sdmg2, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */
@@ -3771,9 +3782,11 @@ static MACHINE_CONFIG_START( mgdha, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017_swapped)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017_swapped)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */
@@ -3802,9 +3815,11 @@ static MACHINE_CONFIG_START( tjsb, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */
@@ -3836,9 +3851,11 @@ static MACHINE_CONFIG_START( spkrform, igs017_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs017_state, screen_update_igs017)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(igs017)
-	MCFG_PALETTE_LENGTH(0x100*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs017)
+	MCFG_PALETTE_ADD("palette", 0x100*2)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 
 	/* sound hardware */

@@ -89,7 +89,7 @@ WRITE8_MEMBER(cd32_state::cd32_cia_0_porta_w)
 	/* bit 2 = Power Led on Amiga */
 	set_led_status(machine(), 0, (data & 2) ? 0 : 1);
 
-	handle_cd32_joystick_cia(machine(), data, mos6526_r(m_cia_0, space, 2));
+	handle_cd32_joystick_cia(machine(), data, m_cia_0->read(space, 2));
 }
 
 /*************************************
@@ -736,30 +736,6 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static const legacy_mos6526_interface cia_0_intf =
-{
-	DEVCB_DRIVER_LINE_MEMBER(amiga_state,amiga_cia_0_irq),                                    /* irq_func */
-	DEVCB_NULL, /* pc_func */
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_INPUT_PORT("CIA0PORTA"),
-	DEVCB_DRIVER_MEMBER(cd32_state,cd32_cia_0_porta_w),     /* port A */
-	DEVCB_DRIVER_MEMBER(cd32_state,cd32_cia_0_portb_r),
-	DEVCB_DRIVER_MEMBER(cd32_state,cd32_cia_0_portb_w)      /* port B */
-};
-
-static const legacy_mos6526_interface cia_1_intf =
-{
-	DEVCB_DRIVER_LINE_MEMBER(amiga_state,amiga_cia_1_irq),                                    /* irq_func */
-	DEVCB_NULL, /* pc_func */
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
-
 #define NVRAM_SIZE 1024
 #define NVRAM_PAGE_SIZE 16  /* max size of one write request */
 
@@ -778,9 +754,8 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 	MCFG_I2CMEM_DATA_SIZE(NVRAM_SIZE)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(50)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512*2, 312)
@@ -804,13 +779,20 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 
 	/* cia */
 	// these are setup differently on other amiga drivers (needed for floppy to work) which is correct / why?
-	MCFG_LEGACY_MOS8520_ADD("cia_0", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_0_intf)
-	MCFG_LEGACY_MOS8520_ADD("cia_1", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_1_intf)
+	MCFG_DEVICE_ADD("cia_0", LEGACY_MOS8520, AMIGA_68EC020_PAL_CLOCK / 10)
+	MCFG_MOS6526_IRQ_CALLBACK(WRITELINE(amiga_state, amiga_cia_0_irq))
+	MCFG_MOS6526_PA_INPUT_CALLBACK(IOPORT("CIA0PORTA"))
+	MCFG_MOS6526_PA_OUTPUT_CALLBACK(WRITE8(cd32_state,cd32_cia_0_porta_w))
+	MCFG_MOS6526_PB_INPUT_CALLBACK(READ8(cd32_state,cd32_cia_0_portb_r))
+	MCFG_MOS6526_PB_OUTPUT_CALLBACK(WRITE8(cd32_state,cd32_cia_0_portb_w))
+	MCFG_DEVICE_ADD("cia_1", LEGACY_MOS8520, AMIGA_68EC020_PAL_CLOCK / 10)
+	MCFG_MOS6526_IRQ_CALLBACK(WRITELINE(amiga_state, amiga_cia_1_irq))
 
 	MCFG_MICROTOUCH_ADD( "microtouch", WRITE8(cd32_state, microtouch_tx) )
 
 	/* fdc */
-	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)
+	MCFG_DEVICE_ADD("fdc", AMIGA_FDC, AMIGA_68000_NTSC_CLOCK)
+	MCFG_AMIGA_FDC_INDEX_CALLBACK(DEVWRITELINE("cia_1", legacy_mos6526_device, flag_w))
 MACHINE_CONFIG_END
 
 struct cdrom_interface cd32_cdrom =
@@ -882,7 +864,7 @@ CONS( 1993, cd32,    0,       0,      cd32,   cd32,   cd32_state, cd32,   "Commo
    Harem Challenge      |      | 1995
    Laser Quiz           |      | 1995
    Laser Quiz 2 "Italy" |  1.0 | 1995
-   Laser Strixx	        |      | 1995
+   Laser Strixx         |      | 1995
    Laser Strixx 2       |      | 1995
    Magic Premium        |  1.1 | 1996
    Laser Quiz France    |  1.0 | 1995

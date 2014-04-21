@@ -73,6 +73,7 @@
 ******************************************************************************/
 
 #include "emu.h"
+#include "machine/clock.h"
 #include "machine/6850acia.h"
 #include "machine/meters.h"
 #include "cpu/z80/z80.h"
@@ -234,12 +235,17 @@ struct fdc_t
 class bfcobra_state : public driver_device
 {
 public:
-	bfcobra_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
+	bfcobra_state(const machine_config &mconfig, device_type type, const char *tag) :
+		driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
+		m_acia6850_0(*this, "acia6850_2"),
+		m_acia6850_1(*this, "acia6850_2"),
 		m_acia6850_2(*this, "acia6850_2"),
-		m_upd7759(*this, "upd") { }
+		m_upd7759(*this, "upd"),
+		m_palette(*this, "palette")
+	{
+	}
 
 	UINT8 m_bank_data[4];
 	UINT8 *m_work_ram;
@@ -288,6 +294,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(z80_acia_irq);
 	DECLARE_WRITE_LINE_MEMBER(m6809_data_irq);
 	DECLARE_WRITE_LINE_MEMBER(data_acia_tx_w);
+	DECLARE_WRITE_LINE_MEMBER(write_acia_clock);
 	DECLARE_DRIVER_INIT(bfcobra);
 	virtual void machine_reset();
 	virtual void video_start();
@@ -306,8 +313,11 @@ public:
 	UINT8 results_phase(void);
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	required_device<acia6850_device> m_acia6850_0;
+	required_device<acia6850_device> m_acia6850_1;
 	required_device<acia6850_device> m_acia6850_2;
 	required_device<upd7759_device> m_upd7759;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -420,13 +430,13 @@ UINT32 bfcobra_state::screen_update_bfcobra(screen_device &screen, bitmap_rgb32 
 
 			if ( ( m_videomode & 0x81 ) == 1 || (m_videomode & 0x80 && pen & 0x80) )
 			{
-				*dest++ = machine().pens[hirescol[pen & 0x0f]];
-				*dest++ = machine().pens[hirescol[(pen >> 4) & 0x0f]];
+				*dest++ = m_palette->pen(hirescol[pen & 0x0f]);
+				*dest++ = m_palette->pen(hirescol[(pen >> 4) & 0x0f]);
 			}
 			else
 			{
-				*dest++ = machine().pens[lorescol[pen]];
-				*dest++ = machine().pens[lorescol[pen]];
+				*dest++ = m_palette->pen(lorescol[pen]);
+				*dest++ = m_palette->pen(lorescol[pen]);
 			}
 		}
 	}
@@ -764,11 +774,11 @@ READ8_MEMBER(bfcobra_state::ramdac_r)
 			if (*count == 0)
 			{
 				rgb_t color;
-				color = palette_get_color(machine(), ramdac.addr_r);
+				color = m_palette->pen_color(ramdac.addr_r);
 
-				ramdac.color_r[0] = RGB_RED(color);
-				ramdac.color_r[1] = RGB_GREEN(color);
-				ramdac.color_r[2] = RGB_BLUE(color);
+				ramdac.color_r[0] = color.r();
+				ramdac.color_r[1] = color.g();
+				ramdac.color_r[2] = color.b();
 			}
 
 			val = ramdac.color_r[*count];
@@ -809,7 +819,7 @@ WRITE8_MEMBER(bfcobra_state::ramdac_w)
 			ramdac.color_w[ramdac.count_w] = pal6bit(data);
 			if (++ramdac.count_w == 3)
 			{
-				palette_set_color_rgb(machine(), ramdac.addr_w, ramdac.color_w[0], ramdac.color_w[1], ramdac.color_w[2]);
+				m_palette->set_pen_color(ramdac.addr_w, ramdac.color_w[0], ramdac.color_w[1], ramdac.color_w[2]);
 				ramdac.count_w = 0;
 				ramdac.addr_w++;
 			}
@@ -1326,7 +1336,7 @@ void bfcobra_state::machine_reset()
 
 	for (pal = 0; pal < 256; ++pal)
 	{
-		palette_set_color_rgb(machine(), pal, pal3bit((pal>>5)&7), pal3bit((pal>>2)&7), pal2bit(pal&3));
+		m_palette->set_pen_color(pal, pal3bit((pal>>5)&7), pal3bit((pal>>2)&7), pal2bit(pal&3));
 	}
 
 	m_bank_data[0] = 1;
@@ -1352,10 +1362,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( z80_io_map, AS_IO, 8, bfcobra_state )
 ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x23) AM_READWRITE(chipset_r, chipset_w)
-	AM_RANGE(0x24, 0x24) AM_DEVWRITE("acia6850_0", acia6850_device, control_write)
-	AM_RANGE(0x25, 0x25) AM_DEVWRITE("acia6850_0", acia6850_device, data_write)
-	AM_RANGE(0x26, 0x26) AM_DEVREAD("acia6850_0", acia6850_device, status_read)
-	AM_RANGE(0x27, 0x27) AM_DEVREAD("acia6850_0", acia6850_device, data_read)
+	AM_RANGE(0x24, 0x24) AM_DEVWRITE("acia6850_0", acia6850_device, control_w)
+	AM_RANGE(0x25, 0x25) AM_DEVWRITE("acia6850_0", acia6850_device, data_w)
+	AM_RANGE(0x26, 0x26) AM_DEVREAD("acia6850_0", acia6850_device, status_r)
+	AM_RANGE(0x27, 0x27) AM_DEVREAD("acia6850_0", acia6850_device, data_r)
 	AM_RANGE(0x30, 0x30) AM_READ(fdctrl_r)
 	AM_RANGE(0x31, 0x31) AM_READWRITE(fddata_r, fdctrl_w)
 	AM_RANGE(0x40, 0x40) AM_WRITE(rombank_w)
@@ -1482,10 +1492,10 @@ static ADDRESS_MAP_START( m6809_prog_map, AS_PROGRAM, 8, bfcobra_state )
 	AM_RANGE(0x2E00, 0x2E00) AM_READ(int_latch_r)
 	AM_RANGE(0x3001, 0x3001) AM_DEVWRITE("aysnd", ay8910_device, data_w)
 	AM_RANGE(0x3201, 0x3201) AM_DEVWRITE("aysnd", ay8910_device, address_w)
-	AM_RANGE(0x3404, 0x3404) AM_DEVREADWRITE("acia6850_1", acia6850_device, status_read, control_write)
-	AM_RANGE(0x3405, 0x3405) AM_DEVREADWRITE("acia6850_1", acia6850_device, data_read, data_write)
-	AM_RANGE(0x3406, 0x3406) AM_DEVREADWRITE("acia6850_2", acia6850_device, status_read, control_write)
-	AM_RANGE(0x3407, 0x3407) AM_DEVREADWRITE("acia6850_2", acia6850_device, data_read, data_write)
+	AM_RANGE(0x3404, 0x3404) AM_DEVREADWRITE("acia6850_1", acia6850_device, status_r, control_w)
+	AM_RANGE(0x3405, 0x3405) AM_DEVREADWRITE("acia6850_1", acia6850_device, data_r, data_w)
+	AM_RANGE(0x3406, 0x3406) AM_DEVREADWRITE("acia6850_2", acia6850_device, status_r, control_w)
+	AM_RANGE(0x3407, 0x3407) AM_DEVREADWRITE("acia6850_2", acia6850_device, data_r, data_w)
 //  AM_RANGE(0x3408, 0x3408) AM_NOP
 //  AM_RANGE(0x340A, 0x340A) AM_NOP
 //  AM_RANGE(0x3600, 0x3600) AM_NOP
@@ -1609,9 +1619,6 @@ void bfcobra_state::init_ram()
 	m_video_ram = auto_alloc_array_clear(machine(), UINT8, 0x20000);
 }
 
-/*
-    What are the correct ACIA clocks ?
-*/
 
 WRITE_LINE_MEMBER(bfcobra_state::z80_acia_irq)
 {
@@ -1619,28 +1626,12 @@ WRITE_LINE_MEMBER(bfcobra_state::z80_acia_irq)
 	update_irqs();
 }
 
-static ACIA6850_INTERFACE( z80_acia_if )
-{
-	500000,
-	500000,
-	DEVCB_DEVICE_LINE_MEMBER("acia6850_1", acia6850_device, write_rx),
-	DEVCB_NULL,
-	DEVCB_DRIVER_LINE_MEMBER(bfcobra_state,z80_acia_irq)
-};
 
 WRITE_LINE_MEMBER(bfcobra_state::m6809_data_irq)
 {
 	m_audiocpu->set_input_line(M6809_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static ACIA6850_INTERFACE( m6809_acia_if )
-{
-	500000,
-	500000,
-	DEVCB_DEVICE_LINE_MEMBER("acia6850_0", acia6850_device, write_rx),
-	DEVCB_NULL,
-	DEVCB_NULL
-};
 
 WRITE_LINE_MEMBER(bfcobra_state::data_acia_tx_w)
 {
@@ -1648,14 +1639,15 @@ WRITE_LINE_MEMBER(bfcobra_state::data_acia_tx_w)
 }
 
 
-static ACIA6850_INTERFACE( data_acia_if )
+WRITE_LINE_MEMBER(bfcobra_state::write_acia_clock)
 {
-	500000,
-	500000,
-	DEVCB_DRIVER_LINE_MEMBER(bfcobra_state,data_acia_tx_w),/*data_t,*/
-	DEVCB_NULL,
-	DEVCB_DRIVER_LINE_MEMBER(bfcobra_state,m6809_data_irq)
-};
+	m_acia6850_0->write_txc(state);
+	m_acia6850_0->write_rxc(state);
+	m_acia6850_1->write_txc(state);
+	m_acia6850_1->write_rxc(state);
+	m_acia6850_2->write_txc(state);
+	m_acia6850_2->write_rxc(state);
+}
 
 
 /* TODO: Driver vs Machine Init */
@@ -1670,9 +1662,8 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 
 	UINT32 i;
 	UINT8 *rom;
-	UINT8 *tmp;
 
-	tmp = auto_alloc_array(machine(), UINT8, 0x8000);
+	dynamic_buffer tmp(0x8000);
 	rom = memregion("audiocpu")->base() + 0x8000;
 	memcpy(tmp, rom, 0x8000);
 
@@ -1692,8 +1683,6 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 		rom[addr] = data;
 	}
 
-	auto_free(machine(), tmp);
-
 	init_ram();
 
 	m_bank_data[0] = 1;
@@ -1705,7 +1694,7 @@ DRIVER_INIT_MEMBER(bfcobra_state,bfcobra)
 	membank("bank4")->set_base(memregion("user1")->base());
 
 	/* TODO: Properly sort out the data ACIA */
-	m_acia6850_2->write_rx(1);
+	m_acia6850_2->write_rxd(1);
 
 	/* Finish this */
 	save_item(NAME(m_data_r));
@@ -1755,7 +1744,7 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 512 - 1, 0, 256 - 1)
 	MCFG_SCREEN_UPDATE_DRIVER(bfcobra_state, screen_update_bfcobra)
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
@@ -1765,11 +1754,20 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-
 	/* ACIAs */
-	MCFG_ACIA6850_ADD("acia6850_0", z80_acia_if)
-	MCFG_ACIA6850_ADD("acia6850_1", m6809_acia_if)
-	MCFG_ACIA6850_ADD("acia6850_2", data_acia_if)
+	MCFG_DEVICE_ADD("acia6850_0", ACIA6850, 0)
+	MCFG_ACIA6850_TXD_HANDLER(DEVWRITELINE("acia6850_1", acia6850_device, write_rxd))
+	MCFG_ACIA6850_IRQ_HANDLER(WRITELINE(bfcobra_state, z80_acia_irq))
+
+	MCFG_DEVICE_ADD("acia6850_1", ACIA6850, 0)
+	MCFG_ACIA6850_TXD_HANDLER(DEVWRITELINE("acia6850_0", acia6850_device, write_rxd))
+
+	MCFG_DEVICE_ADD("acia6850_2", ACIA6850, 0)
+	MCFG_ACIA6850_TXD_HANDLER(WRITELINE(bfcobra_state, data_acia_tx_w))
+	MCFG_ACIA6850_IRQ_HANDLER(WRITELINE(bfcobra_state, m6809_data_irq))
+
+	MCFG_DEVICE_ADD("acia_clock", CLOCK, 31250*16) // What are the correct ACIA clocks ?
+	MCFG_CLOCK_SIGNAL_HANDLER(WRITELINE(bfcobra_state, write_acia_clock))
 MACHINE_CONFIG_END
 
 /***************************************************************************

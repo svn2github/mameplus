@@ -3,7 +3,7 @@
 #include "cpu/sharc/sharc.h"
 #include "machine/konppc.h"
 #include "video/voodoo.h"
-#include "video/poly.h"
+#include "video/polylgcy.h"
 #include "video/k001604.h"
 #include "video/gticlub.h"
 
@@ -63,8 +63,9 @@ static UINT32 K001006_addr[MAX_K001006_CHIPS] = { 0, 0 };
 static int K001006_device_sel[MAX_K001006_CHIPS] = { 0, 0 };
 
 static UINT32 *K001006_palette[MAX_K001006_CHIPS];
+static palette_device *m_palette;
 
-void K001006_init(running_machine &machine)
+void K001006_init(running_machine &machine, palette_device *palette)
 {
 	int i;
 	for (i=0; i<MAX_K001006_CHIPS; i++)
@@ -76,6 +77,7 @@ void K001006_init(running_machine &machine)
 		K001006_palette[i] = auto_alloc_array(machine, UINT32, 0x800);
 		memset(K001006_palette[i], 0, 0x800*sizeof(UINT32));
 	}
+	m_palette = palette;
 }
 
 static UINT32 K001006_r(running_machine &machine, int chip, int offset, UINT32 mem_mask)
@@ -133,7 +135,7 @@ static void K001006_w(int chip, int offset, UINT32 data, UINT32 mem_mask)
 				b |= (b >> 5);
 				g |= (g >> 5);
 				r |= (r >> 5);
-				K001006_palette[chip][index>>1] = MAKE_ARGB(a, r, g, b);
+				K001006_palette[chip][index>>1] = rgb_t(a, r, g, b);
 
 				K001006_addr[chip] += 2;
 				break;
@@ -211,7 +213,7 @@ static int *tex_mirror_table[2][8];
 
 static int K001005_bitmap_page = 0;
 
-static poly_manager *poly;
+static legacy_poly_manager *poly;
 static poly_vertex prev_v[4];
 
 static UINT32 fog_r, fog_g, fog_b;
@@ -233,14 +235,14 @@ void K001005_init(running_machine &machine)
 {
 	int i,k;
 
-	int width = machine.primary_screen->width();
-	int height = machine.primary_screen->height();
+	int width = machine.first_screen()->width();
+	int height = machine.first_screen()->height();
 	K001005_zbuffer = auto_bitmap_ind32_alloc(machine, width, height);
 
 	gfxrom = machine.root_device().memregion("gfx1")->base();
 
-	K001005_bitmap[0] = auto_bitmap_rgb32_alloc(machine, machine.primary_screen->width(), machine.primary_screen->height());
-	K001005_bitmap[1] = auto_bitmap_rgb32_alloc(machine, machine.primary_screen->width(), machine.primary_screen->height());
+	K001005_bitmap[0] = auto_bitmap_rgb32_alloc(machine, machine.first_screen()->width(), machine.first_screen()->height());
+	K001005_bitmap[1] = auto_bitmap_rgb32_alloc(machine, machine.first_screen()->width(), machine.first_screen()->height());
 
 	K001005_texture = auto_alloc_array(machine, UINT8, 0x800000);
 
@@ -351,18 +353,18 @@ READ32_HANDLER( K001005_r )
 				if (K001005_fifo_read_ptr < 0x3ff)
 				{
 					//space.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
-					sharc_set_flag_input(space.machine().device("dsp"), 1, CLEAR_LINE);
+					space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, CLEAR_LINE);
 				}
 				else
 				{
 					//space.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-					sharc_set_flag_input(space.machine().device("dsp"), 1, ASSERT_LINE);
+					space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, ASSERT_LINE);
 				}
 			}
 			else
 			{
 				//space.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-				sharc_set_flag_input(space.machine().device("dsp"), 1, ASSERT_LINE);
+				space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, ASSERT_LINE);
 			}
 
 			K001005_fifo_read_ptr++;
@@ -404,18 +406,18 @@ WRITE32_HANDLER( K001005_w )
 				if (K001005_fifo_write_ptr < 0x400)
 				{
 					//space.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-					sharc_set_flag_input(space.machine().device("dsp"), 1, ASSERT_LINE);
+					space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, ASSERT_LINE);
 				}
 				else
 				{
 					//space.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
-					sharc_set_flag_input(space.machine().device("dsp"), 1, CLEAR_LINE);
+					space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, CLEAR_LINE);
 				}
 			}
 			else
 			{
 				//space.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-				sharc_set_flag_input(space.machine().device("dsp"), 1, ASSERT_LINE);
+				space.machine().device<adsp21062_device>("dsp")->set_flag_input(1, ASSERT_LINE);
 			}
 
 		//  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, space.device().safe_pc());
@@ -831,7 +833,7 @@ static void draw_scanline_gouraud_blend(void *dest, INT32 scanline, const poly_e
 
 static void render_polygons(running_machine &machine)
 {
-	const rectangle& visarea = machine.primary_screen->visible_area();
+	const rectangle& visarea = machine.first_screen()->visible_area();
 	poly_vertex v[4];
 	int poly_type;
 	int brightness;
@@ -1581,7 +1583,7 @@ void K001005_swap_buffers(running_machine &machine)
 	//if (K001005_status == 2)
 	{
 		float zvalue = ZBUFFER_MAX;
-		K001005_bitmap[K001005_bitmap_page]->fill(machine.pens[0]&0x00ffffff, K001005_cliprect);
+		K001005_bitmap[K001005_bitmap_page]->fill(m_palette->pen(0)&0x00ffffff, K001005_cliprect);
 		K001005_zbuffer->fill(*(int*)&zvalue, K001005_cliprect);
 	}
 }

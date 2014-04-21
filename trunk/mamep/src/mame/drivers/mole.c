@@ -58,7 +58,8 @@ class mole_state : public driver_device
 public:
 	mole_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	/* video-related */
 	tilemap_t    *m_bg_tilemap;
@@ -74,9 +75,10 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(mole);
 	UINT32 screen_update_mole(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -86,12 +88,12 @@ public:
  *
  *************************************/
 
-void mole_state::palette_init()
+PALETTE_INIT_MEMBER(mole_state, mole)
 {
 	int i;
 
 	for (i = 0; i < 8; i++)
-		palette_set_color_rgb(machine(), i, pal1bit(i >> 0), pal1bit(i >> 2), pal1bit(i >> 1));
+		palette.set_pen_color(i, pal1bit(i >> 0), pal1bit(i >> 2), pal1bit(i >> 1));
 }
 
 TILE_GET_INFO_MEMBER(mole_state::get_bg_tile_info)
@@ -104,7 +106,7 @@ TILE_GET_INFO_MEMBER(mole_state::get_bg_tile_info)
 void mole_state::video_start()
 {
 	memset(m_tileram, 0, sizeof(m_tileram));
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mole_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 40, 25);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(mole_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 40, 25);
 
 	save_item(NAME(m_tileram));
 }
@@ -327,10 +329,11 @@ static MACHINE_CONFIG_START( mole, mole_state )
 	MCFG_SCREEN_SIZE(40*8, 25*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 25*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(mole_state, screen_update_mole)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(mole)
-	MCFG_PALETTE_LENGTH(8)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", mole)
+	MCFG_PALETTE_ADD("palette", 8)
+	MCFG_PALETTE_INIT_OWNER(mole_state, mole)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

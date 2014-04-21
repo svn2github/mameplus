@@ -309,11 +309,14 @@ static MACHINE_CONFIG_START( gunsmoke, gunsmoke_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-
-	MCFG_GFXDECODE(gunsmoke)
-	MCFG_PALETTE_LENGTH(32*4+16*16+16*16)
-
 	MCFG_SCREEN_UPDATE_DRIVER(gunsmoke_state, screen_update_gunsmoke)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gunsmoke)
+
+	MCFG_PALETTE_ADD("palette", 32*4+16*16+16*16)
+	MCFG_PALETTE_INDIRECT_ENTRIES(256)
+	MCFG_PALETTE_INIT_OWNER(gunsmoke_state, gunsmoke)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

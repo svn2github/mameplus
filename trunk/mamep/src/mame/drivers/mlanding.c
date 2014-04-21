@@ -87,7 +87,8 @@ public:
 		m_g_ram(*this, "g_ram"),
 		m_cha_ram(*this, "cha_ram"),
 		m_dot_ram(*this, "dot_ram"),
-		m_power_ram(*this, "power_ram")
+		m_power_ram(*this, "power_ram"),
+		m_palette(*this, "palette")
 	{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -107,6 +108,8 @@ public:
 	required_shared_ptr<UINT16> m_cha_ram;
 	required_shared_ptr<UINT16> m_dot_ram;
 	required_shared_ptr<UINT8>  m_power_ram;
+
+	required_device<palette_device> m_palette;
 
 	UINT16  *m_dma_ram;
 	UINT8   m_dma_cpu_bank;
@@ -214,7 +217,7 @@ void mlanding_state::machine_reset()
 
 UINT32 mlanding_state::screen_update_mlanding(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	const pen_t *pens = machine().pens;
+	const pen_t *pens = m_palette->pens();
 
 	for (UINT32 y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
@@ -726,7 +729,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, mlanding_state )
 	AM_RANGE(0x1c4000, 0x1cffff) AM_RAM AM_SHARE("sub_com_ram")
 	AM_RANGE(0x1d0000, 0x1d0001) AM_WRITE(dma_start_w)
 	AM_RANGE(0x1d0002, 0x1d0003) AM_WRITE(dma_stop_w)
-	AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x20ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x240004, 0x240005) AM_READNOP // Watchdog
 	AM_RANGE(0x240006, 0x240007) AM_READ(input_r)
 	AM_RANGE(0x280000, 0x280fff) AM_READWRITE(power_ram_r, power_ram_w)
@@ -937,21 +940,6 @@ static Z80CTC_INTERFACE( ctc_intf )
 };
 
 
-static const msm5205_interface msm5205_1_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(mlanding_state, msm5205_1_vck), // VCK function
-	MSM5205_S48_4B      // 8 kHz, 4-bit
-};
-
-
-static const msm5205_interface msm5205_2_config =
-{
-	DEVCB_NULL,         // VCK function
-	MSM5205_SEX_4B      // Slave mode, 4-bit
-};
-
-
-
 /*************************************
  *
  *  Machine driver
@@ -992,8 +980,10 @@ static MACHINE_CONFIG_START( mlanding, mlanding_state )
 	// Estimated
 	MCFG_SCREEN_RAW_PARAMS(16000000, 640, 0, 512, 462, 0, 400)
 	MCFG_SCREEN_UPDATE_DRIVER(mlanding_state, screen_update_mlanding)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
+	MCFG_PALETTE_ADD("palette", 32768)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1005,11 +995,12 @@ static MACHINE_CONFIG_START( mlanding, mlanding_state )
 	MCFG_SOUND_ROUTE(1, "mono", 0.50)
 
 	MCFG_SOUND_ADD("msm1", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_1_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(mlanding_state, msm5205_1_vck)) // VCK function
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      // 8 kHz, 4-bit
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
 	MCFG_SOUND_ADD("msm2", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_2_config)
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_SEX_4B)      // Slave mode, 4-bit
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 MACHINE_CONFIG_END
 

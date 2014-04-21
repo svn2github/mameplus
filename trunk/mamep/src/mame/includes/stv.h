@@ -22,7 +22,9 @@ public:
 			m_slave(*this, "slave"),
 			m_audiocpu(*this, "audiocpu"),
 			m_scudsp(*this, "scudsp"),
-			m_eeprom(*this, "eeprom")
+			m_eeprom(*this, "eeprom"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 	{
 	}
 
@@ -32,7 +34,6 @@ public:
 	optional_ioport m_fake_comms;
 
 	UINT8     *m_backupram;
-	UINT8     *m_cart_backupram;
 	UINT32    *m_scu_regs;
 	UINT16    *m_scsp_regs;
 	UINT16    *m_vdp2_regs;
@@ -148,6 +149,8 @@ public:
 	required_device<m68000_base_device> m_audiocpu;
 	required_device<scudsp_cpu_device> m_scudsp;
 	optional_device<eeprom_serial_93cxx_device> m_eeprom;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	bitmap_rgb32 m_tmpbitmap;
 	DECLARE_VIDEO_START(stv_vdp2);
@@ -177,7 +180,7 @@ public:
 	DECLARE_WRITE8_MEMBER(saturn_backupram_w);
 	TIMER_CALLBACK_MEMBER(stv_rtc_increment);
 	DECLARE_WRITE_LINE_MEMBER(scsp_to_main_irq);
-	DECLARE_WRITE_LINE_MEMBER(scsp_irq);
+	DECLARE_WRITE8_MEMBER(scsp_irq);
 	int m_scsp_last_line;
 
 	UINT8 smpc_direct_mode(UINT8 pad_n);
@@ -350,7 +353,7 @@ public:
 	void stv_vdp2_draw_mosaic(bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT8 is_roz);
 	void stv_vdp2_fade_effects( void );
 	void stv_vdp2_compute_color_offset( int *r, int *g, int *b, int cor );
-	void stv_vdp2_compute_color_offset_UINT32(UINT32 *rgb, int cor);
+	void stv_vdp2_compute_color_offset_UINT32(rgb_t *rgb, int cor);
 	void stv_vdp2_check_fade_control_for_layer( void );
 
 	void stv_vdp2_draw_line(bitmap_rgb32 &bitmap, const rectangle &cliprect);
@@ -631,7 +634,7 @@ public:
 	int get_timing_command( void );
 
 	direntryT curroot;       // root entry of current filesystem
-	direntryT *curdir;       // current directory
+	dynamic_array<direntryT> curdir;       // current directory
 	int numfiles;            // # of entries in current directory
 	int firstfile;           // first non-directory file
 
@@ -641,6 +644,34 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(scudsp_end_w);
 	DECLARE_READ16_MEMBER(scudsp_dma_r);
 	DECLARE_WRITE16_MEMBER(scudsp_dma_w);
+
+	// FROM smpc.c
+	TIMER_CALLBACK_MEMBER( stv_bankswitch_state );
+	void stv_select_game(int gameno);
+	void smpc_master_on();
+	TIMER_CALLBACK_MEMBER( smpc_slave_enable );
+	TIMER_CALLBACK_MEMBER( smpc_sound_enable );
+	TIMER_CALLBACK_MEMBER( smpc_cd_enable );
+	void smpc_system_reset();
+	TIMER_CALLBACK_MEMBER( smpc_change_clock );
+	TIMER_CALLBACK_MEMBER( stv_intback_peripheral );
+	TIMER_CALLBACK_MEMBER( stv_smpc_intback );
+	void smpc_digital_pad(UINT8 pad_num, UINT8 offset);
+	void smpc_analog_pad(UINT8 pad_num, UINT8 offset, UINT8 id);
+	void smpc_keyboard(UINT8 pad_num, UINT8 offset);
+	void smpc_mouse(UINT8 pad_num, UINT8 offset, UINT8 id);
+	void smpc_md_pad(UINT8 pad_num, UINT8 offset, UINT8 id);
+	void smpc_unconnected(UINT8 pad_num, UINT8 offset);
+	TIMER_CALLBACK_MEMBER( intback_peripheral );
+	TIMER_CALLBACK_MEMBER( saturn_smpc_intback );
+	void smpc_rtc_write();
+	void smpc_memory_setting();
+	void smpc_nmi_req();
+	TIMER_CALLBACK_MEMBER( smpc_nmi_set );
+	void smpc_comreg_exec(address_space &space, UINT8 data, UINT8 is_stv);
+	DECLARE_READ8_MEMBER( stv_SMPC_r );
+	DECLARE_WRITE8_MEMBER( stv_SMPC_w );
+
 };
 
 class stv_state : public saturn_state
@@ -809,5 +840,4 @@ public:
 #define IRQ_VDP1_END   1 << 13
 #define IRQ_ABUS       1 << 15
 
-extern void scsp_irq(device_t *device, int irq);
 GFXDECODE_EXTERN( stv );

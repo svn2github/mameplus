@@ -95,7 +95,11 @@ public:
 		m_colorram2(*this, "colorram2"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
-		m_audiocpu2(*this, "audio2"){ }
+		m_audiocpu2(*this, "audio2"),
+		m_ic48_1(*this, "ic48_1"),
+		m_mc6845(*this, "crtc"),
+		m_pia1(*this, "pia1"),
+		m_pia2(*this, "pia2") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram1;
@@ -113,10 +117,11 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
 	required_device<cpu_device> m_audiocpu2;
-	device_t *m_ic48_1;
-	mc6845_device *m_mc6845;
-	pia6821_device *m_pia1;
-	pia6821_device *m_pia2;
+	required_device<ttl74123_device> m_ic48_1;
+	required_device<mc6845_device> m_mc6845;
+	required_device<pia6821_device> m_pia1;
+	required_device<pia6821_device> m_pia2;
+
 	pen_t m_pens[NUM_PENS];
 	DECLARE_WRITE8_MEMBER(audio_1_command_w);
 	DECLARE_WRITE8_MEMBER(audio_1_answer_w);
@@ -192,24 +197,6 @@ INTERRUPT_GEN_MEMBER(nyny_state::update_pia_1)
 }
 
 
-static const pia6821_interface pia_1_intf =
-{
-	DEVCB_INPUT_PORT("IN0"),        /* port A in */
-	DEVCB_INPUT_PORT("IN1"),        /* port B in */
-	DEVCB_NULL,                     /* line CA1 in */
-	DEVCB_NULL,                     /* line CB1 in */
-	DEVCB_NULL,                     /* line CA2 in */
-	DEVCB_NULL,                     /* line CB2 in */
-	DEVCB_NULL,                     /* port A out */
-	DEVCB_NULL,                     /* port B out */
-	DEVCB_NULL,                     /* line CA2 out */
-	DEVCB_NULL,                     /* port CB2 out */
-	DEVCB_DRIVER_LINE_MEMBER(nyny_state,main_cpu_irq),      /* IRQA */
-	DEVCB_DRIVER_LINE_MEMBER(nyny_state,main_cpu_irq)       /* IRQB */
-};
-
-
-
 /*************************************
  *
  *  PIA2
@@ -233,24 +220,6 @@ WRITE8_MEMBER(nyny_state::pia_2_port_b_w)
 	/* bits 5-7 go to the music board connector */
 	audio_2_command_w(m_maincpu->space(AS_PROGRAM), 0, data & 0xe0);
 }
-
-
-static const pia6821_interface pia_2_intf =
-{
-	DEVCB_NULL,                     /* port A in */
-	DEVCB_NULL,                     /* port B in */
-	DEVCB_NULL,                     /* line CA1 in */
-	DEVCB_NULL,                     /* line CB1 in */
-	DEVCB_NULL,                     /* line CA2 in */
-	DEVCB_NULL,                     /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(nyny_state,pia_2_port_a_w), /* port A out */
-	DEVCB_DRIVER_MEMBER(nyny_state,pia_2_port_b_w), /* port B out */
-	DEVCB_DRIVER_LINE_MEMBER(nyny_state,flipscreen_w),      /* line CA2 out */
-	DEVCB_NULL,                     /* port CB2 out */
-	DEVCB_DRIVER_LINE_MEMBER(nyny_state,main_cpu_firq),     /* IRQA */
-	DEVCB_DRIVER_LINE_MEMBER(nyny_state,main_cpu_irq)       /* IRQB */
-};
-
 
 
 /*************************************
@@ -305,7 +274,7 @@ static MC6845_BEGIN_UPDATE( begin_update )
 
 	for (i = 0; i < NUM_PENS; i++)
 	{
-		state->m_pens[i] = MAKE_RGB(pal1bit(i >> 0), pal1bit(i >> 1), pal1bit(i >> 2));
+		state->m_pens[i] = rgb_t(pal1bit(i >> 0), pal1bit(i >> 1), pal1bit(i >> 2));
 	}
 
 	return state->m_pens;
@@ -421,13 +390,14 @@ static MC6845_END_UPDATE( end_update )
 
 WRITE_LINE_MEMBER(nyny_state::display_enable_changed)
 {
-	ttl74123_a_w(m_ic48_1, generic_space(), 0, state);
+	m_ic48_1->a_w(generic_space(), 0, state);
 }
 
 
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,                  /* show border area */
+	0,0,0,0,                /* visarea adjustment */
 	8,                      /* number of pixels per video memory address */
 	begin_update,           /* before pixel update callback */
 	update_row,             /* row update callback */
@@ -674,11 +644,6 @@ INPUT_PORTS_END
 
 void nyny_state::machine_start()
 {
-	m_ic48_1 = machine().device("ic48_1");
-	m_mc6845 = machine().device<mc6845_device>("crtc");
-	m_pia1 = machine().device<pia6821_device>("pia1");
-	m_pia2 = machine().device<pia6821_device>("pia2");
-
 	/* setup for save states */
 	save_item(NAME(m_flipscreen));
 	save_item(NAME(m_star_enable));
@@ -725,8 +690,18 @@ static MACHINE_CONFIG_START( nyny, nyny_state )
 	/* 74LS123 */
 	MCFG_TTL74123_ADD("ic48_1", ic48_1_config)
 
-	MCFG_PIA6821_ADD("pia1", pia_1_intf)
-	MCFG_PIA6821_ADD("pia2", pia_2_intf)
+	MCFG_DEVICE_ADD("pia1", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(IOPORT("IN0"))
+	MCFG_PIA_READPB_HANDLER(IOPORT("IN1"))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(nyny_state, main_cpu_irq))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(nyny_state, main_cpu_irq))
+
+	MCFG_DEVICE_ADD("pia2", PIA6821, 0)
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(nyny_state,pia_2_port_a_w))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(nyny_state,pia_2_port_b_w))
+	MCFG_PIA_CA2_HANDLER(WRITELINE(nyny_state,flipscreen_w))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(nyny_state,main_cpu_firq))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(nyny_state,main_cpu_irq))
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

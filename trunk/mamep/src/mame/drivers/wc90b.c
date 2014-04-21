@@ -164,7 +164,7 @@ static ADDRESS_MAP_START( wc90b_map2, AS_PROGRAM, 8, wc90b_state )
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xe800, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_ROMBANK("bank2")
 	AM_RANGE(0xf800, 0xfbff) AM_RAM AM_SHARE("share1")
@@ -348,11 +348,6 @@ WRITE_LINE_MEMBER(wc90b_state::adpcm_int)
 		m_msm->data_w((m_msm5205next & 0x0f) >> 0);
 }
 
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(wc90b_state,adpcm_int),      /* interrupt function */
-	MSM5205_S96_4B  /* 4KHz 4-bit */
-};
 
 static MACHINE_CONFIG_START( wc90b, wc90b_state )
 
@@ -376,10 +371,12 @@ static MACHINE_CONFIG_START( wc90b, wc90b_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(wc90b_state, screen_update_wc90b)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(wc90b)
-	MCFG_PALETTE_LENGTH(1024)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", wc90b)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
+	MCFG_PALETTE_ENDIANNESS(ENDIANNESS_BIG)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -390,7 +387,8 @@ static MACHINE_CONFIG_START( wc90b, wc90b_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 
 	MCFG_SOUND_ADD("msm", MSM5205, MSM5205_CLOCK)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(wc90b_state, adpcm_int))      /* interrupt function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S96_4B)  /* 4KHz 4-bit */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_CONFIG_END
 

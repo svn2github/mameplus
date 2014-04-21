@@ -671,7 +671,7 @@ inline void cps3_state::cps3_drawgfxzoom(bitmap_rgb32 &dest_bmp,const rectangle 
 											if (c&0x02) dest[x] |= 0x4000;
 											if (c&0x04) dest[x] |= 0x8000;
 											if (c&0x08) dest[x] |= 0x10000;
-											if (c&0xf0) dest[x] |= gfx->machine().rand(); // ?? not used?
+											if (c&0xf0) dest[x] |= machine().rand(); // ?? not used?
 										}
 										else
 										{
@@ -910,7 +910,7 @@ void cps3_state::cps3_set_mame_colours(int colournum, UINT16 data, UINT32 fadeva
 
 	m_mame_colours[colournum] = (r << (16+3)) | (g << (8+3)) | (b << (0+3));
 
-	if (colournum<0x10000) palette_set_color(machine(),colournum,m_mame_colours[colournum]/* MAKE_RGB(r<<3,g<<3,b<<3)*/);//m_mame_colours[colournum]);
+	if (colournum<0x10000) m_palette->set_pen_color(colournum,m_mame_colours[colournum]/* rgb_t(r<<3,g<<3,b<<3)*/);//m_mame_colours[colournum]);
 }
 
 
@@ -925,13 +925,13 @@ void cps3_state::video_start()
 	save_pointer(NAME(m_char_ram), 0x800000 /4);
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine().gfx[0] = auto_alloc(machine(), gfx_element(machine(), cps3_tiles8x8_layout, (UINT8 *)m_ss_ram, machine().total_colors() / 16, 0));
+	m_gfxdecode->set_gfx(0, global_alloc(gfx_element(m_palette, cps3_tiles8x8_layout, (UINT8 *)m_ss_ram, 0, m_palette->entries() / 16, 0)));
 
 	//decode_ssram();
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine().gfx[1] = auto_alloc(machine(), gfx_element(machine(), cps3_tiles16x16_layout, (UINT8 *)m_char_ram, machine().total_colors() / 64, 0));
-	machine().gfx[1]->set_granularity(64);
+	m_gfxdecode->set_gfx(1, global_alloc(gfx_element(m_palette, cps3_tiles16x16_layout, (UINT8 *)m_char_ram, 0, m_palette->entries() / 64, 0)));
+	m_gfxdecode->gfx(1)->set_granularity(64);
 
 	//decode_charram();
 
@@ -1022,10 +1022,10 @@ void cps3_state::cps3_draw_tilemapsprite_line(int tmnum, int drawline, bitmap_rg
 			yflip  = (dat & 0x00000800)>>11;
 			xflip  = (dat & 0x00001000)>>12;
 
-			if (!bpp) machine().gfx[1]->set_granularity(256);
-			else machine().gfx[1]->set_granularity(64);
+			if (!bpp) m_gfxdecode->gfx(1)->set_granularity(256);
+			else m_gfxdecode->gfx(1)->set_granularity(64);
 
-			cps3_drawgfxzoom(bitmap,clip,machine().gfx[1],tileno,colour,xflip,yflip,(x*16)-scrollx%16,drawline-tilesubline,CPS3_TRANSPARENCY_PEN_INDEX,0, 0x10000, 0x10000, NULL, 0);
+			cps3_drawgfxzoom(bitmap,clip,m_gfxdecode->gfx(1),tileno,colour,xflip,yflip,(x*16)-scrollx%16,drawline-tilesubline,CPS3_TRANSPARENCY_PEN_INDEX,0, 0x10000, 0x10000, NULL, 0);
 		}
 	}
 }
@@ -1251,13 +1251,13 @@ UINT32 cps3_state::screen_update_cps3(screen_device &screen, bitmap_rgb32 &bitma
 								/* use the bpp value from the main list or the sublists? */
 								if (whichbpp)
 								{
-									if (!global_bpp) machine().gfx[1]->set_granularity(256);
-									else machine().gfx[1]->set_granularity(64);
+									if (!global_bpp) m_gfxdecode->gfx(1)->set_granularity(256);
+									else m_gfxdecode->gfx(1)->set_granularity(64);
 								}
 								else
 								{
-									if (!bpp) machine().gfx[1]->set_granularity(256);
-									else machine().gfx[1]->set_granularity(64);
+									if (!bpp) m_gfxdecode->gfx(1)->set_granularity(256);
+									else m_gfxdecode->gfx(1)->set_granularity(64);
 								}
 
 								{
@@ -1265,11 +1265,11 @@ UINT32 cps3_state::screen_update_cps3(screen_device &screen, bitmap_rgb32 &bitma
 
 									if (global_alpha || alpha)
 									{
-										cps3_drawgfxzoom(m_renderbuffer_bitmap,m_renderbuffer_clip,machine().gfx[1],realtileno,actualpal,0^flipx,0^flipy,current_xpos,current_ypos,CPS3_TRANSPARENCY_PEN_INDEX_BLEND,0,xinc,yinc, NULL, 0);
+										cps3_drawgfxzoom(m_renderbuffer_bitmap,m_renderbuffer_clip,m_gfxdecode->gfx(1),realtileno,actualpal,0^flipx,0^flipy,current_xpos,current_ypos,CPS3_TRANSPARENCY_PEN_INDEX_BLEND,0,xinc,yinc, NULL, 0);
 									}
 									else
 									{
-										cps3_drawgfxzoom(m_renderbuffer_bitmap,m_renderbuffer_clip,machine().gfx[1],realtileno,actualpal,0^flipx,0^flipy,current_xpos,current_ypos,CPS3_TRANSPARENCY_PEN_INDEX,0,xinc,yinc, NULL, 0);
+										cps3_drawgfxzoom(m_renderbuffer_bitmap,m_renderbuffer_clip,m_gfxdecode->gfx(1),realtileno,actualpal,0^flipx,0^flipy,current_xpos,current_ypos,CPS3_TRANSPARENCY_PEN_INDEX,0,xinc,yinc, NULL, 0);
 									}
 									count++;
 								}
@@ -1314,7 +1314,7 @@ UINT32 cps3_state::screen_update_cps3(screen_device &screen, bitmap_rgb32 &bitma
 //  for (offset=0;offset<0x200;offset++)
 //  {
 //      int palreadbase = (m_ss_pal_base << 9);
-//      palette_set_color(machine(),offset,m_mame_colours[palreadbase+offset]);
+//      m_palette->set_pen_color(offset,m_mame_colours[palreadbase+offset]);
 //  }
 
 	// fg layer
@@ -1335,7 +1335,7 @@ UINT32 cps3_state::screen_update_cps3(screen_device &screen, bitmap_rgb32 &bitma
 				pal += m_ss_pal_base << 5;
 				tile+=0x200;
 
-				cps3_drawgfxzoom(bitmap, cliprect, machine().gfx[0],tile,pal,flipx,flipy,x*8,y*8,CPS3_TRANSPARENCY_PEN,0,0x10000,0x10000,NULL,0);
+				cps3_drawgfxzoom(bitmap, cliprect, m_gfxdecode->gfx(0),tile,pal,flipx,flipy,x*8,y*8,CPS3_TRANSPARENCY_PEN,0,0x10000,0x10000,NULL,0);
 				count++;
 			}
 		}
@@ -1358,7 +1358,7 @@ WRITE32_MEMBER(cps3_state::cps3_ssram_w)
 		// we only want to endian-flip the character data, the tilemap info is fine
 		data = LITTLE_ENDIANIZE_INT32(data);
 		mem_mask = LITTLE_ENDIANIZE_INT32(mem_mask);
-		machine().gfx[0]->mark_dirty(offset/16);
+		m_gfxdecode->gfx(0)->mark_dirty(offset/16);
 	}
 
 	COMBINE_DATA(&m_ss_ram[offset]);
@@ -1450,7 +1450,7 @@ WRITE32_MEMBER(cps3_state::cram_data_w)
 	mem_mask = LITTLE_ENDIANIZE_INT32(mem_mask);
 	data = LITTLE_ENDIANIZE_INT32(data);
 	COMBINE_DATA(&m_char_ram[fulloffset]);
-	machine().gfx[1]->mark_dirty(fulloffset/0x40);
+	m_gfxdecode->gfx(1)->mark_dirty(fulloffset/0x40);
 }
 
 /* FLASH ROM ACCESS */
@@ -1913,7 +1913,7 @@ UINT32 cps3_state::process_byte( UINT8 real_byte, UINT32 destination, int max_le
 		while (m_rle_length)
 		{
 			dest[((destination+tranfercount)&0x7fffff)^3] = (m_last_normal_byte&0x3f);
-			machine().gfx[1]->mark_dirty(((destination+tranfercount)&0x7fffff)/0x100);
+			m_gfxdecode->gfx(1)->mark_dirty(((destination+tranfercount)&0x7fffff)/0x100);
 			//printf("RLE WRite Byte %08x, %02x\n", destination+tranfercount, real_byte);
 
 			tranfercount++;
@@ -1932,7 +1932,7 @@ UINT32 cps3_state::process_byte( UINT8 real_byte, UINT32 destination, int max_le
 		//printf("Write Normal Data\n");
 		dest[(destination&0x7fffff)^3] = real_byte;
 		m_last_normal_byte = real_byte;
-		machine().gfx[1]->mark_dirty((destination&0x7fffff)/0x100);
+		m_gfxdecode->gfx(1)->mark_dirty((destination&0x7fffff)/0x100);
 		return 1;
 	}
 }
@@ -2001,7 +2001,7 @@ UINT32 cps3_state::ProcessByte8(UINT8 b,UINT32 dst_offset)
 		for(i=0;i<rle;++i)
 		{
 			destRAM[(dst_offset&0x7fffff)^3] = m_lastb;
-			machine().gfx[1]->mark_dirty((dst_offset&0x7fffff)/0x100);
+			m_gfxdecode->gfx(1)->mark_dirty((dst_offset&0x7fffff)/0x100);
 
 			dst_offset++;
 			++l;
@@ -2015,7 +2015,7 @@ UINT32 cps3_state::ProcessByte8(UINT8 b,UINT32 dst_offset)
 		m_lastb2=m_lastb;
 		m_lastb=b;
 		destRAM[(dst_offset&0x7fffff)^3] = b;
-		machine().gfx[1]->mark_dirty((dst_offset&0x7fffff)/0x100);
+		m_gfxdecode->gfx(1)->mark_dirty((dst_offset&0x7fffff)/0x100);
 		return 1;
 	}
 }
@@ -2445,11 +2445,6 @@ INTERRUPT_GEN_MEMBER(cps3_state::cps3_other_interrupt)
 //static sh2_cpu_core sh2cp_conf_slave  = { 1, NULL };
 
 
-static const struct WD33C93interface wd33c93_intf =
-{
-	DEVCB_NULL            /* command completion IRQ */
-};
-
 void cps3_state::machine_reset()
 {
 	m_current_table_address = -1;
@@ -2734,7 +2729,7 @@ static MACHINE_CONFIG_START( cps3, cps3_state )
 
 	MCFG_SCSIBUS_ADD("scsi")
 	MCFG_SCSIDEV_ADD("scsi:cdrom", SCSICD, SCSI_ID_1)
-	MCFG_WD33C93_ADD("scsi:wd33c93", wd33c93_intf)
+	MCFG_DEVICE_ADD("scsi:wd33c93", WD33C93, 0)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2752,9 +2747,10 @@ static MACHINE_CONFIG_START( cps3, cps3_state )
 */
 
 	MCFG_NVRAM_ADD_0FILL("eeprom")
-	MCFG_PALETTE_LENGTH(0x10000) // actually 0x20000 ...
+	MCFG_PALETTE_ADD("palette", 0x10000) // actually 0x20000 ...
 
 	MCFG_DEFAULT_LAYOUT(layout_cps3)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2859,7 +2855,15 @@ ROM_END
 
 ROM_START( sfiiiu )
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
-	ROM_LOAD( "sfiii_usa.29f400.u2", 0x000000, 0x080000, CRC(fb172a8e) SHA1(48ebf59910f246835f7dc0c588da30f7a908072f) )
+	ROM_LOAD( "sfiii_usa_region_b1.29f400.u2", 0x000000, 0x080000, CRC(fb172a8e) SHA1(48ebf59910f246835f7dc0c588da30f7a908072f) )
+
+	DISK_REGION( "scsi:cdrom" )
+	DISK_IMAGE_READONLY( "cap-sf3-3", 0, BAD_DUMP SHA1(606e62cc5f46275e366e7dbb412dbaeb7e54cd0c) )
+ROM_END
+
+ROM_START( sfiiia )
+	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
+	ROM_LOAD( "sfiii_asia_region_bd.29f400.u2", 0x000000, 0x080000,  CRC(cbd28de7) SHA1(9c15ecb73b9587d20850e62e8683930a45caa01b) )
 
 	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "cap-sf3-3", 0, BAD_DUMP SHA1(606e62cc5f46275e366e7dbb412dbaeb7e54cd0c) )
@@ -3005,7 +3009,61 @@ ROM_END
 
 ROM_START( sfiiin )
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
-	ROM_LOAD( "sfiii_asia_nocd.29f400.u2", 0x000000, 0x080000, CRC(73e32463) SHA1(45d144e533e4b20cc5a744ca4f618e288430c601) )
+	ROM_LOAD( "(__sfiiin)sfiii_asia_nocd.29f400.u2", 0x000000, 0x080000, CRC(ca2b715f) SHA1(86319987f9af4afd272a2488e73de8382743cb37) ) // this is a different VERSION of the bios compared to all other sets, not just an alt region code
+
+	ROM_REGION( 0x200000, "simm1.0", 0 )
+	ROM_LOAD( "sfiii-simm1.0", 0x00000, 0x200000, CRC(cfc9e45a) SHA1(5d9061f76680642e730373e3ac29b24926dc5c0c) )
+	ROM_REGION( 0x200000, "simm1.1", 0 )
+	ROM_LOAD( "sfiii-simm1.1", 0x00000, 0x200000, CRC(57920546) SHA1(c8452e7e101b8888fb806d1c9874c6be49fc7dbd) )
+	ROM_REGION( 0x200000, "simm1.2", 0 )
+	ROM_LOAD( "sfiii-simm1.2", 0x00000, 0x200000, CRC(0d8f2680) SHA1(ade7b28acd11023696c4b20136f3d2f34da6b1be) )
+	ROM_REGION( 0x200000, "simm1.3", 0 )
+	ROM_LOAD( "sfiii-simm1.3", 0x00000, 0x200000, CRC(ea4ca054) SHA1(f91c55c4e4fc428ce15d27be38aeed3a483d028c) )
+
+	ROM_REGION( 0x200000, "simm3.0", 0 )
+	ROM_LOAD( "sfiii-simm3.0", 0x00000, 0x200000, CRC(080b3bd3) SHA1(f51bc5de95ab22b87ba09ea721285b308afd0bda) )
+	ROM_REGION( 0x200000, "simm3.1", 0 )
+	ROM_LOAD( "sfiii-simm3.1", 0x00000, 0x200000, CRC(5c356f2f) SHA1(e969ce388f6e565d9612e65b0895560c7bb472e6) )
+	ROM_REGION( 0x200000, "simm3.2", 0 )
+	ROM_LOAD( "sfiii-simm3.2", 0x00000, 0x200000, CRC(f9c97a45) SHA1(58a9691696c3f26a1150a451567c501f55cf1874) )
+	ROM_REGION( 0x200000, "simm3.3", 0 )
+	ROM_LOAD( "sfiii-simm3.3", 0x00000, 0x200000, CRC(09de3ead) SHA1(2f41d84a96cb5e0d169200a4e9358ad5f407a2b7) )
+	ROM_REGION( 0x200000, "simm3.4", 0 )
+	ROM_LOAD( "sfiii-simm3.4", 0x00000, 0x200000, CRC(7dd7e1f3) SHA1(bcf1023287457d97f09d9f6e9c93fdf24cc24a07) )
+	ROM_REGION( 0x200000, "simm3.5", 0 )
+	ROM_LOAD( "sfiii-simm3.5", 0x00000, 0x200000, CRC(47a03a3a) SHA1(2509e5737059251888e4e1efbcdfac86a89ff1a1) )
+	ROM_REGION( 0x200000, "simm3.6", 0 )
+	ROM_LOAD( "sfiii-simm3.6", 0x00000, 0x200000, CRC(e9eb7a26) SHA1(b8547edb7085e9149aa59d5226ad2d1976cab2bd) )
+	ROM_REGION( 0x200000, "simm3.7", 0 )
+	ROM_LOAD( "sfiii-simm3.7", 0x00000, 0x200000, CRC(7f44395c) SHA1(f4d2e283cb3a4aad4eae4e13963a74e20be7c181) )
+
+	ROM_REGION( 0x200000, "simm4.0", 0 )
+	ROM_LOAD( "sfiii-simm4.0", 0x00000, 0x200000, CRC(9ac080fc) SHA1(2e5024b35b147513ee42eda8748df9d669410377) )
+	ROM_REGION( 0x200000, "simm4.1", 0 )
+	ROM_LOAD( "sfiii-simm4.1", 0x00000, 0x200000, CRC(6e2c4c94) SHA1(5a185cb76b5999bd826bc9b5ea584a5c3498f69d) )
+	ROM_REGION( 0x200000, "simm4.2", 0 )
+	ROM_LOAD( "sfiii-simm4.2", 0x00000, 0x200000, CRC(8afc22d4) SHA1(04a419a3092c98fc4a7693e6acf30ae5a849e5c1) )
+	ROM_REGION( 0x200000, "simm4.3", 0 )
+	ROM_LOAD( "sfiii-simm4.3", 0x00000, 0x200000, CRC(9f3873b8) SHA1(33499d6f02bc84c80acb56be078aaed7f8d1300d) )
+	ROM_REGION( 0x200000, "simm4.4", 0 )
+	ROM_LOAD( "sfiii-simm4.4", 0x00000, 0x200000, CRC(166b3c97) SHA1(40e6e9d43cbbd8496b430931b8ab7db01dc1c6d5) )
+	ROM_REGION( 0x200000, "simm4.5", 0 )
+	ROM_LOAD( "sfiii-simm4.5", 0x00000, 0x200000, CRC(e5ea2547) SHA1(a823c689098f37a3054d728bddb0033a4b8396f1) )
+	ROM_REGION( 0x200000, "simm4.6", 0 )
+	ROM_LOAD( "sfiii-simm4.6", 0x00000, 0x200000, CRC(e85b9fdd) SHA1(264cb10fe9b3ede384c7db42bfc58ed5c21ea8f8) )
+	ROM_REGION( 0x200000, "simm4.7", 0 )
+	ROM_LOAD( "sfiii-simm4.7", 0x00000, 0x200000, CRC(362c01b7) SHA1(9c404312a6aabe8e91e68dde193e3972bc1636cd) )
+
+	ROM_REGION( 0x200000, "simm5.0", 0 )
+	ROM_LOAD( "sfiii-simm5.0", 0x00000, 0x200000, CRC(9bc108b2) SHA1(894dadab7957044bf877029c7f8e556d5d6e85d3) )
+	ROM_REGION( 0x200000, "simm5.1", 0 )
+	ROM_LOAD( "sfiii-simm5.1", 0x00000, 0x200000, CRC(c6f1c066) SHA1(00de492dd1ef7aef05027a8c501c296b6602e917) )
+ROM_END
+
+
+ROM_START( sfiiina )
+	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
+	ROM_LOAD( "(__sfiiina)sfiii_asia_nocd.29f400.u2", 0x000000, 0x080000, CRC(73e32463) SHA1(45d144e533e4b20cc5a744ca4f618e288430c601) )
 
 	ROM_REGION( 0x200000, "simm1.0", 0 )
 	ROM_LOAD( "sfiii-simm1.0", 0x00000, 0x200000, CRC(cfc9e45a) SHA1(5d9061f76680642e730373e3ac29b24926dc5c0c) )
@@ -3804,6 +3862,22 @@ ROM_START( cps3boot ) // for cart with standard SH2
 	DISK_IMAGE_READONLY( "no-battery_multi-game_bootleg_cd_for_hd6417095_sh2", 0, SHA1(123f2fcb0f3dd3d6b859e82a51d0127e46763776) )
 ROM_END
 
+ROM_START( cps3bs32 ) // for cart with standard SH2
+	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
+	ROM_LOAD( "no-battery_bios_29f400_for_hd6417095_sh2.u2", 0x000000, 0x080000, CRC(cb9bd5b0) SHA1(ea7ecb3deb69f5307a62d8f0d7d8e68d49013d07))
+
+	DISK_REGION( "scsi:cdrom" )
+	DISK_IMAGE_READONLY( "sfiii_2nd_impact_converted_for_standard_sh2_v3", 0, SHA1(8f180d159e88042a1e819cefd39eef67f5e86e3d) )
+ROM_END
+
+ROM_START( cps3bs32a ) // for cart with standard SH2
+	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
+	ROM_LOAD( "no-battery_bios_29f400_for_hd6417095_sh2.u2", 0x000000, 0x080000, CRC(cb9bd5b0) SHA1(ea7ecb3deb69f5307a62d8f0d7d8e68d49013d07))
+
+	DISK_REGION( "scsi:cdrom" )
+	DISK_IMAGE_READONLY( "sfiii_2nd_impact_converted_for_standard_sh2_older", 0, SHA1(8a8e4138c3bf12435933ab9d9ace510513200843) ) // v1 or v2?
+ROM_END
+
 ROM_START( cps3boota ) // for cart with dead custom SH2 (or 2nd Impact CPU which is the same as a dead one)
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
 	ROM_LOAD( "no-battery_bios_29f400_for_dead_security_cart.u2", 0x000000, 0x080000, CRC(0fd56fb3) SHA1(5a8bffc07eb7da73cf4bca6718df72e471296bfd) )
@@ -4027,9 +4101,11 @@ GAME( 1996, warzardr1, redearth, redearth, cps3_re, cps3_state,   redearth, ROT0
 // 970204
 GAME( 1997, sfiii,     0,        sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Euro 970204)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, sfiiiu,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiia,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD, bios set 1)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiina,   sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD, bios set 2)", GAME_IMPERFECT_GRAPHICS )
 
 /* Street Fighter III 2nd Impact: Giant Attack */
 
@@ -4087,3 +4163,7 @@ GAME( 1999, jojobaner1,jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0
 GAME( 1999, cps3boot,  0,        sfiii3,   cps3_jojo, cps3_state, cps3boot,   ROT0, "bootleg", "CPS3 Multi-game bootleg for HD6417095 type SH2 (New Generation, 3rd Strike, JoJo's Venture, JoJo's Bizarre Adventure, Red Earth)", GAME_IMPERFECT_GRAPHICS )
 // this does not play Red Earth or the 2 Jojo games.  New Generation and 3rd Strike have been heavily modified to work with the separate code/data encryption a dead cart / 2nd Impact cart has.  Selecting the other games will give an 'invalid CD' message.
 GAME( 1999, cps3boota, cps3boot, sfiii3,   cps3_jojo, cps3_state, sfiii2,     ROT0, "bootleg", "CPS3 Multi-game bootleg for dead security cart (New Generation, 2nd Impact, 3rd Strike)", GAME_IMPERFECT_GRAPHICS )
+// these are test bootleg CDs for running 2nd Impact on a standard SH2
+GAME( 1999, cps3bs32,  cps3boot, sfiii3,   cps3_jojo, cps3_state, cps3boot,   ROT0, "bootleg", "Street Fighter III 2nd Impact: Giant Attack (USA 970930, bootleg for HD6417095 type SH2, V3)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, cps3bs32a, cps3boot, sfiii3,   cps3_jojo, cps3_state, cps3boot,   ROT0, "bootleg", "Street Fighter III 2nd Impact: Giant Attack (USA 970930, bootleg for HD6417095 type SH2, older)", GAME_IMPERFECT_GRAPHICS ) // older / buggier hack
+// there is a newer version for a standard CPU with all games, not dumped (possibly newer ones for dead cart too?)

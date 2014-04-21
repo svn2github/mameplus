@@ -185,7 +185,8 @@ public:
 		m_scc68070_dma_ch1_regs(*this, "scc_dma1_regs"),
 		m_scc68070_dma_ch2_regs(*this, "scc_dma2_regs"),
 		m_scc68070_mmu_regs(*this, "scc_mmu_regs"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_palette(*this, "palette")  { }
 
 	required_shared_ptr<UINT16> m_magicram;
 	required_shared_ptr<UINT16> m_pcab_vregs;
@@ -224,6 +225,7 @@ public:
 	UINT32 screen_update_magicard(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(magicard_irq);
 	required_device<cpu_device> m_maincpu;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -284,7 +286,7 @@ TODO: check this register,doesn't seem to be 100% correct.
     w ........ ....aaaa  VSR:H = video start address (MSB's)
 */
 
-#define SCC_DCR_VREG    (state->m_pcab_vregs[0x02/2] & 0xffff)
+#define SCC_DCR_VREG    (m_pcab_vregs[0x02/2] & 0xffff)
 #define SCC_DE_VREG     ((SCC_DCR_VREG & 0x8000)>>15)
 #define SCC_FG_VREG     ((SCC_DCR_VREG & 0x0080)>>7)
 #define SCC_VSR_VREG_H  ((SCC_DCR_VREG & 0xf)>>0)
@@ -294,7 +296,7 @@ TODO: check this register,doesn't seem to be 100% correct.
     w aaaaaaaa aaaaaaaa  VSR:L = video start address (LSB's)
 */
 
-#define SCC_VSR_VREG_L  (state->m_pcab_vregs[0x04/2] & 0xffff)
+#define SCC_VSR_VREG_L  (m_pcab_vregs[0x04/2] & 0xffff)
 #define SCC_VSR_VREG    ((SCC_VSR_VREG_H)<<16) | (SCC_VSR_VREG_L)
 
 /*
@@ -313,7 +315,7 @@ TODO: check this register,doesn't seem to be 100% correct.
     w ........ xxxx....  not used
     w ........ ....aaaa  "data" (dunno the purpose...)
 */
-#define SCC_DCR2_VREG  (state->m_pcab_vregs[0x08/2] & 0xffff)
+#define SCC_DCR2_VREG  (m_pcab_vregs[0x08/2] & 0xffff)
 
 /*
 (Note: not present on the original vreg listing)
@@ -334,14 +336,14 @@ TODO: check this register,doesn't seem to be 100% correct.
 1ffff0  a = source register a
     w nnnnnnnn nnnnnnnn  source
 */
-#define SCC_SRCA_VREG  (state->m_pcab_vregs[0x10/2] & 0xffff)
+#define SCC_SRCA_VREG  (m_pcab_vregs[0x10/2] & 0xffff)
 
 /*
 1ffff2  b = destination register b
    rw nnnnnnnn nnnnnnnn  destination
 */
 
-#define SCC_DSTB_VREG  (state->m_pcab_vregs[0x12/2] & 0xffff)
+#define SCC_DSTB_VREG  (m_pcab_vregs[0x12/2] & 0xffff)
 
 /*
 1ffff4  pcr = pixac command register
@@ -388,7 +390,7 @@ TODO: check this register,doesn't seem to be 100% correct.
     w ........ .......0
 */
 
-#define SCC_PCR_VREG  (state->m_pcab_vregs[0x14/2] & 0xffff)
+#define SCC_PCR_VREG  (m_pcab_vregs[0x14/2] & 0xffff)
 
 /*
 1ffff6  mask = mask register
@@ -420,11 +422,10 @@ void magicard_state::video_start()
 
 UINT32 magicard_state::screen_update_magicard(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	magicard_state *state = machine().driver_data<magicard_state>();
 	int x,y;
 	UINT32 count;
 
-	bitmap.fill(get_black_pen(machine()), cliprect); //TODO
+	bitmap.fill(m_palette->black_pen(), cliprect); //TODO
 
 	if(!(SCC_DE_VREG)) //display enable
 		return 0;
@@ -442,22 +443,22 @@ UINT32 magicard_state::screen_update_magicard(screen_device &screen, bitmap_rgb3
 				color = ((m_magicram[count]) & 0x000f)>>0;
 
 				if(cliprect.contains((x*4)+3, y))
-					bitmap.pix32(y, (x*4)+3) = machine().pens[color];
+					bitmap.pix32(y, (x*4)+3) = m_palette->pen(color);
 
 				color = ((m_magicram[count]) & 0x00f0)>>4;
 
 				if(cliprect.contains((x*4)+2, y))
-					bitmap.pix32(y, (x*4)+2) = machine().pens[color];
+					bitmap.pix32(y, (x*4)+2) = m_palette->pen(color);
 
 				color = ((m_magicram[count]) & 0x0f00)>>8;
 
 				if(cliprect.contains((x*4)+1, y))
-					bitmap.pix32(y, (x*4)+1) = machine().pens[color];
+					bitmap.pix32(y, (x*4)+1) = m_palette->pen(color);
 
 				color = ((m_magicram[count]) & 0xf000)>>12;
 
 				if(cliprect.contains((x*4)+0, y))
-					bitmap.pix32(y, (x*4)+0) = machine().pens[color];
+					bitmap.pix32(y, (x*4)+0) = m_palette->pen(color);
 
 				count++;
 			}
@@ -474,12 +475,12 @@ UINT32 magicard_state::screen_update_magicard(screen_device &screen, bitmap_rgb3
 				color = ((m_magicram[count]) & 0x00ff)>>0;
 
 				if(cliprect.contains((x*2)+1, y))
-					bitmap.pix32(y, (x*2)+1) = machine().pens[color];
+					bitmap.pix32(y, (x*2)+1) = m_palette->pen(color);
 
 				color = ((m_magicram[count]) & 0xff00)>>8;
 
 				if(cliprect.contains((x*2)+0, y))
-					bitmap.pix32(y, (x*2)+0) = machine().pens[color];
+					bitmap.pix32(y, (x*2)+0) = m_palette->pen(color);
 
 				count++;
 			}
@@ -522,7 +523,7 @@ WRITE16_MEMBER(magicard_state::paletteram_io_w)
 					break;
 				case 2:
 					m_pal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-					palette_set_color(machine(), m_pal.offs, MAKE_RGB(m_pal.r, m_pal.g, m_pal.b));
+					m_palette->set_pen_color(m_pal.offs, rgb_t(m_pal.r, m_pal.g, m_pal.b));
 					m_pal.offs_internal = 0;
 					m_pal.offs++;
 					break;
@@ -733,7 +734,7 @@ static MACHINE_CONFIG_START( magicard, magicard_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 256-1) //dynamic resolution,TODO
 	MCFG_SCREEN_UPDATE_DRIVER(magicard_state, screen_update_magicard)
 
-	MCFG_PALETTE_LENGTH(0x100)
+	MCFG_PALETTE_ADD("palette", 0x100)
 
 
 

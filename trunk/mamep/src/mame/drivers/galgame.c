@@ -19,7 +19,8 @@ class galaxygame_state : public driver_device
 public:
 	galaxygame_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_palette(*this, "palette")  { }
 
 	UINT16 m_clk;
 
@@ -47,11 +48,11 @@ public:
 	DECLARE_WRITE16_MEMBER(clk_w);
 	DECLARE_DRIVER_INIT(galaxygame);
 	virtual void machine_reset();
-	virtual void palette_init();
 	UINT32 screen_update_galaxygame(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(galaxygame_irq);
 	IRQ_CALLBACK_MEMBER(galaxygame_irq_callback);
 	required_device<cpu_device> m_maincpu;
+	required_device<palette_device> m_palette;
 };
 
 /*************************************
@@ -173,7 +174,7 @@ WRITE16_MEMBER(galaxygame_state::ke_w)
 
 UINT32 galaxygame_state::screen_update_galaxygame(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 	for (int i = 0; i < m_point_display_list_index; i++ )
 	{
 		bitmap.pix16(m_point_display_list[i].x >> 7, m_point_display_list[i].y >> 7) = 1;
@@ -291,12 +292,6 @@ static ADDRESS_MAP_START( galaxygame_map, AS_PROGRAM, 16, galaxygame_state )
 ADDRESS_MAP_END
 
 
-void galaxygame_state::palette_init()
-{
-	palette_set_color(machine(),0,RGB_BLACK); /* black */
-	palette_set_color(machine(),1,RGB_WHITE); /* white */
-}
-
 IRQ_CALLBACK_MEMBER(galaxygame_state::galaxygame_irq_callback)
 {
 	device.execute().set_input_line(0, CLEAR_LINE);
@@ -336,8 +331,9 @@ static MACHINE_CONFIG_START( galaxygame, galaxygame_state )
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 511)
 	MCFG_SCREEN_UPDATE_DRIVER(galaxygame_state, screen_update_galaxygame)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(2)
+	MCFG_PALETTE_ADD_BLACK_AND_WHITE("palette")
 
 MACHINE_CONFIG_END
 

@@ -35,7 +35,7 @@ To do:
 ************************************************************************************************************/
 
 #include "emu.h"
-#include "cpu/h83002/h8.h"
+#include "cpu/h8/h83048.h"
 #include "cpu/i86/i186.h"
 #include "cpu/z180/z180.h"
 #include "sound/3812intf.h"
@@ -81,7 +81,10 @@ public:
 		m_outputs16(*this, "outputs16"),
 		m_outputs(*this, "outputs"),
 		m_maincpu(*this, "maincpu"),
-		m_oki(*this, "oki") { }
+		m_oki(*this, "oki"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	UINT8 *m_hm86171_colorram;
 	layer_t m_layers[2];
@@ -166,6 +169,9 @@ public:
 	INTERRUPT_GEN_MEMBER(am188em_int0_irq);
 	required_device<cpu_device> m_maincpu;
 	optional_device<okim6295_device> m_oki;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 private:
 	inline void ss9601_get_tile_info(layer_t *l, tile_data &tileinfo, tilemap_memory_index tile_index);
@@ -584,7 +590,10 @@ VIDEO_START_MEMBER(subsino2_state,subsino2)
 	{
 		layer_t *l = &m_layers[i];
 
-		l->tmap = &machine().tilemap().create(i ? tilemap_get_info_delegate(FUNC(subsino2_state::ss9601_get_tile_info_1),this) : tilemap_get_info_delegate(FUNC(subsino2_state::ss9601_get_tile_info_0),this), TILEMAP_SCAN_ROWS, 8,8, 0x80,0x40);
+		l->tmap = &machine().tilemap().create(m_gfxdecode, i ?
+												tilemap_get_info_delegate(FUNC(subsino2_state::ss9601_get_tile_info_1),this) :
+												tilemap_get_info_delegate(FUNC(subsino2_state::ss9601_get_tile_info_0),this),
+												TILEMAP_SCAN_ROWS, 8,8, 0x80,0x40);
 
 		l->tmap->set_transparent_pen(0);
 
@@ -690,7 +699,7 @@ UINT32 subsino2_state::screen_update_subsino2(screen_device &screen, bitmap_ind1
 		}
 	}
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	if (layers_ctrl & 1)
 	{
@@ -771,7 +780,7 @@ WRITE8_MEMBER(subsino2_state::hm86171_colorram_w)
 
 		case 1:
 			m_hm86171_colorram[m_hm86171_offs] = data;
-			palette_set_color_rgb(machine(), m_hm86171_offs/3,
+			m_palette->set_pen_color(m_hm86171_offs/3,
 				pal6bit(m_hm86171_colorram[(m_hm86171_offs/3)*3+0]),
 				pal6bit(m_hm86171_colorram[(m_hm86171_offs/3)*3+1]),
 				pal6bit(m_hm86171_colorram[(m_hm86171_offs/3)*3+2])
@@ -831,16 +840,6 @@ WRITE8_MEMBER(subsino2_state::oki_bank_bit4_w)
 INTERRUPT_GEN_MEMBER(subsino2_state::am188em_int0_irq)
 {
 	downcast<i80186_cpu_device *>(m_maincpu.target())->int0_w(1);
-}
-
-/***************************************************************************
-                             H8/3044  Functions
-***************************************************************************/
-
-// To be removed when cpu core is updated
-TIMER_DEVICE_CALLBACK_MEMBER(subsino2_state::h8_timer_irq)
-{
-	m_maincpu->set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 
@@ -2129,7 +2128,6 @@ static MACHINE_CONFIG_START( bishjan, subsino2_state )
 	MCFG_CPU_ADD("maincpu", H83044, XTAL_44_1MHz / 3)
 	MCFG_CPU_PROGRAM_MAP( bishjan_map )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", subsino2_state,  irq0_line_hold)
-	MCFG_TIMER_DRIVER_ADD_PERIODIC("timer", subsino2_state, h8_timer_irq, attotime::from_hz(60))
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_TICKET_DISPENSER_ADD("hopper", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW)
@@ -2140,9 +2138,10 @@ static MACHINE_CONFIG_START( bishjan, subsino2_state )
 	MCFG_SCREEN_VISIBLE_AREA( 0, 512-1, 0, 256-16-1 )
 	MCFG_SCREEN_REFRESH_RATE( 60 )
 	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE( ss9601 )
-	MCFG_PALETTE_LENGTH( 256 )
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ss9601 )
+	MCFG_PALETTE_ADD( "palette", 256 )
 
 	MCFG_VIDEO_START_OVERRIDE(subsino2_state, subsino2 )
 
@@ -2168,9 +2167,10 @@ static MACHINE_CONFIG_START( mtrain, subsino2_state )
 	MCFG_SCREEN_REFRESH_RATE( 58.7270 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)   // game reads vblank state
 	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE( ss9601 )
-	MCFG_PALETTE_LENGTH( 256 )
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ss9601 )
+	MCFG_PALETTE_ADD( "palette", 256 )
 
 	MCFG_VIDEO_START_OVERRIDE(subsino2_state, mtrain )
 
@@ -2199,9 +2199,10 @@ static MACHINE_CONFIG_START( saklove, subsino2_state )
 	MCFG_SCREEN_REFRESH_RATE( 58.7270 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)   // game reads vblank state
 	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE( ss9601 )
-	MCFG_PALETTE_LENGTH( 256 )
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ss9601 )
+	MCFG_PALETTE_ADD( "palette", 256 )
 
 	MCFG_VIDEO_START_OVERRIDE(subsino2_state, subsino2 )
 
@@ -2234,9 +2235,10 @@ static MACHINE_CONFIG_START( xplan, subsino2_state )
 	MCFG_SCREEN_REFRESH_RATE( 58.7270 )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)   // game reads vblank state
 	MCFG_SCREEN_UPDATE_DRIVER(subsino2_state, screen_update_subsino2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE( ss9601 )
-	MCFG_PALETTE_LENGTH( 256 )
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ss9601 )
+	MCFG_PALETTE_ADD( "palette", 256 )
 
 	MCFG_VIDEO_START_OVERRIDE(subsino2_state, subsino2 )
 

@@ -21,7 +21,8 @@ public:
 		m_pc3092_data(*this, "pc3092_data"),
 		m_maincpu(*this, "maincpu"),
 		m_sn(*this, "snsnd"),
-		m_discrete(*this, "discrete") { }
+		m_discrete(*this, "discrete"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
@@ -30,6 +31,8 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<sn76477_device> m_sn;
 	required_device<discrete_device> m_discrete;
+	required_device<gfxdecode_device> m_gfxdecode;
+
 	UINT16 m_collision_address;
 	UINT8 m_collision_address_clear;
 	tilemap_t *m_bg_tilemap;
@@ -43,7 +46,7 @@ public:
 	TILE_GET_INFO_MEMBER(get_bg_tile_info);
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(crbaloon);
 	UINT32 screen_update_crbaloon(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(vblank_irq);
 	DECLARE_WRITE8_MEMBER(crbaloon_audio_set_music_freq);

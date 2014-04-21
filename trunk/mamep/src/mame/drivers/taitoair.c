@@ -291,7 +291,7 @@ WRITE16_MEMBER(taitoair_state::airsys_paletteram16_w)/* xxBBBBxRRRRxGGGG */
 	COMBINE_DATA(&m_paletteram[offset]);
 
 	a = m_paletteram[offset];
-	palette_set_color_rgb(machine(), offset, pal4bit(a >> 0), pal4bit(a >> 5), pal4bit(a >> 10));
+	m_palette->set_pen_color(offset, pal4bit(a >> 0), pal4bit(a >> 5), pal4bit(a >> 10));
 }
 
 WRITE16_MEMBER(taitoair_state::airsys_gradram_w)
@@ -322,7 +322,7 @@ WRITE16_MEMBER(taitoair_state::airsys_gradram_w)
 	//if(g == 0) { g = (pal_g); }
 	//if(b == 0) { b = (pal_b); }
 
-	palette_set_color_rgb(machine(), offset+0x2000, r, g, b);
+	m_palette->set_pen_color(offset+0x2000, r, g, b);
 }
 
 
@@ -645,12 +645,6 @@ static const tc0080vco_interface airsys_tc0080vco_intf =
 	0
 };
 
-static const tc0220ioc_interface airsys_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
-
 static const tc0140syt_interface airsys_tc0140syt_intf =
 {
 	"maincpu", "audiocpu"
@@ -707,7 +701,12 @@ static MACHINE_CONFIG_START( airsys, taitoair_state )
 
 	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
-	MCFG_TC0220IOC_ADD("tc0220ioc", airsys_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -716,12 +715,15 @@ static MACHINE_CONFIG_START( airsys, taitoair_state )
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 3*16, 28*16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitoair_state, screen_update_taitoair)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(airsys)
-	MCFG_PALETTE_LENGTH(512*16+512*16)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, all_black)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", airsys)
+
+	MCFG_PALETTE_ADD_INIT_BLACK("palette", 512*16+512*16)
 
 	MCFG_TC0080VCO_ADD("tc0080vco", airsys_tc0080vco_intf)
+	MCFG_TC0080VCO_GFXDECODE("gfxdecode")
+	MCFG_TC0080VCO_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

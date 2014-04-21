@@ -49,7 +49,9 @@ public:
 		m_i2cmem(*this, "i2cmem"),
 		m_wd1772(*this, "wd1772"),
 		m_region_maincpu(*this, "maincpu"),
-		m_region_vram(*this, "vram") { }
+		m_region_vram(*this, "vram"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	optional_device<aakart_device> m_kart;
 	void archimedes_init();
@@ -79,6 +81,7 @@ public:
 	UINT8 m_i2c_clk;
 	INT16 m_memc_pages[0x2000]; // the logical RAM area is 32 megs, and the smallest page size is 4k
 	UINT32 m_vidc_regs[256];
+	UINT8 m_cursor_vram[0x200];
 	UINT8 m_ioc_regs[0x80/4];
 	UINT8 m_vidc_bpp_mode;
 	UINT8 m_vidc_interlace;
@@ -89,9 +92,11 @@ public:
 protected:
 	required_device<cpu_device> m_maincpu;
 	optional_device<i2cmem_device> m_i2cmem;
-	optional_device<device_t> m_wd1772;
+	optional_device<wd1772_device> m_wd1772;
 	required_memory_region m_region_maincpu;
 	required_memory_region m_region_vram;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 	dac_device *m_dac[8];
 
 private:
@@ -116,7 +121,7 @@ private:
 	UINT32 m_memc_pagesize;
 	int m_memc_latchrom;
 	UINT32 m_ioc_timercnt[4], m_ioc_timerout[4];
-	UINT32 m_vidc_vidstart, m_vidc_vidend, m_vidc_vidinit, m_vidc_vidcur;
+	UINT32 m_vidc_vidstart, m_vidc_vidend, m_vidc_vidinit, m_vidc_vidcur,m_vidc_cinit;
 	UINT32 m_vidc_sndstart, m_vidc_sndend, m_vidc_sndcur;
 	UINT8 m_video_dma_on,m_audio_dma_on;
 	UINT8 m_vidc_pixel_clk;

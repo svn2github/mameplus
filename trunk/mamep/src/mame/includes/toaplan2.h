@@ -24,9 +24,10 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_shared_ram(*this, "shared_ram"),
 		m_shared_ram16(*this, "shared_ram16"),
-		m_txvideoram16(*this, "txvideoram16"),
-		m_txvideoram16_offs(*this, "txvram_offs"),
-		m_txscrollram16(*this, "txscrollram16"),
+		m_paletteram(*this, "palette"),
+		m_tx_videoram(*this, "tx_videoram"),
+		m_tx_lineselect(*this, "tx_lineselect"),
+		m_tx_linescroll(*this, "tx_linescroll"),
 		m_tx_gfxram16(*this, "tx_gfxram16"),
 		m_mainram16(*this, "mainram16"),
 		m_maincpu(*this, "maincpu"),
@@ -37,13 +38,17 @@ public:
 		m_oki(*this, "oki"),
 		m_oki1(*this, "oki1"),
 		m_eeprom(*this, "eeprom"),
-		m_rtc(*this, "rtc") { }
+		m_rtc(*this, "rtc"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	optional_shared_ptr<UINT8> m_shared_ram; // 8 bit RAM shared between 68K and sound CPU
 	optional_shared_ptr<UINT16> m_shared_ram16;     // Really 8 bit RAM connected to Z180
-	optional_shared_ptr<UINT16> m_txvideoram16;
-	optional_shared_ptr<UINT16> m_txvideoram16_offs;
-	optional_shared_ptr<UINT16> m_txscrollram16;
+	optional_shared_ptr<UINT16> m_paletteram;
+	optional_shared_ptr<UINT16> m_tx_videoram;
+	optional_shared_ptr<UINT16> m_tx_lineselect;
+	optional_shared_ptr<UINT16> m_tx_linescroll;
 	optional_shared_ptr<UINT16> m_tx_gfxram16;
 	optional_shared_ptr<UINT16> m_mainram16;
 
@@ -56,6 +61,9 @@ public:
 	optional_device<okim6295_device> m_oki1;
 	optional_device<eeprom_serial_93cxx_device> m_eeprom;
 	optional_device<upd4992_device> m_rtc;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	UINT16 m_mcu_data;
 	UINT16 m_video_status;
@@ -69,7 +77,6 @@ public:
 	bitmap_ind16 m_secondary_render_bitmap;
 
 	tilemap_t *m_tx_tilemap;    /* Tilemap for extra-text-layer */
-	UINT8 m_tx_flip;
 	DECLARE_READ16_MEMBER(video_count_r);
 	DECLARE_WRITE8_MEMBER(toaplan2_coin_w);
 	DECLARE_WRITE16_MEMBER(toaplan2_coin_word_w);
@@ -106,9 +113,8 @@ public:
 	DECLARE_WRITE8_MEMBER(batrider_clear_nmi_w);
 	DECLARE_READ16_MEMBER(bbakraid_eeprom_r);
 	DECLARE_WRITE16_MEMBER(bbakraid_eeprom_w);
-	DECLARE_WRITE16_MEMBER(toaplan2_txvideoram16_w);
-	DECLARE_WRITE16_MEMBER(toaplan2_txvideoram16_offs_w);
-	DECLARE_WRITE16_MEMBER(toaplan2_txscrollram16_w);
+	DECLARE_WRITE16_MEMBER(toaplan2_tx_videoram_w);
+	DECLARE_WRITE16_MEMBER(toaplan2_tx_linescroll_w);
 	DECLARE_WRITE16_MEMBER(toaplan2_tx_gfxram16_w);
 	DECLARE_WRITE16_MEMBER(batrider_textdata_dma_w);
 	DECLARE_WRITE16_MEMBER(batrider_unknown_dma_w);
@@ -132,15 +138,13 @@ public:
 	DECLARE_VIDEO_START(truxton2);
 	DECLARE_VIDEO_START(fixeightbl);
 	DECLARE_VIDEO_START(bgaregga);
-	DECLARE_VIDEO_START(batrider);
 	DECLARE_VIDEO_START(bgareggabl);
+	DECLARE_VIDEO_START(batrider);
 	UINT32 screen_update_toaplan2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_dogyuun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	UINT32 screen_update_truxton2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_batsugun(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	UINT32 screen_update_batrider(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	UINT32 screen_update_toaplan2_dual(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	UINT32 screen_update_toaplan2_mixed(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_truxton2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_bootleg(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void screen_eof_toaplan2(screen_device &screen, bool state);
 	INTERRUPT_GEN_MEMBER(toaplan2_vblank_irq1);
 	INTERRUPT_GEN_MEMBER(toaplan2_vblank_irq2);
@@ -148,8 +152,7 @@ public:
 	INTERRUPT_GEN_MEMBER(bbakraid_snd_interrupt);
 	TIMER_CALLBACK_MEMBER(toaplan2_raise_irq);
 	void truxton2_postload();
-	void truxton2_create_tx_tilemap();
-	void register_state_save();
+	void create_tx_tilemap(int dx = 0, int dx_flipped = 0);
 	void toaplan2_vblank_irq(int irq_line);
 	DECLARE_WRITE_LINE_MEMBER(irqhandler);
 	DECLARE_WRITE_LINE_MEMBER(bbakraid_irqhandler);

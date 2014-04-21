@@ -267,40 +267,6 @@ static const ttl74123_interface ttl74123_intf =
  *
  *************************************/
 
-static const pia6821_interface pia_main_intf =
-{
-	DEVCB_INPUT_PORT("IN0"),        /* port A in */
-	DEVCB_INPUT_PORT("IN1"),    /* port B in */
-	DEVCB_NULL,     /* line CA1 in */
-	DEVCB_NULL,     /* line CB1 in */
-	DEVCB_NULL,     /* line CA2 in */
-	DEVCB_NULL,     /* line CB2 in */
-	DEVCB_NULL,     /* port A out */
-	DEVCB_NULL,     /* port B out */
-	DEVCB_NULL,     /* line CA2 out */
-	DEVCB_DRIVER_LINE_MEMBER(r2dtank_state,flipscreen_w),       /* port CB2 out */
-	DEVCB_DRIVER_LINE_MEMBER(r2dtank_state,main_cpu_irq),       /* IRQA */
-	DEVCB_DRIVER_LINE_MEMBER(r2dtank_state,main_cpu_irq)        /* IRQB */
-};
-
-
-static const pia6821_interface pia_audio_intf =
-{
-	DEVCB_DRIVER_MEMBER(r2dtank_state,AY8910_port_r),       /* port A in */
-	DEVCB_NULL,     /* port B in */
-	DEVCB_NULL,     /* line CA1 in */
-	DEVCB_NULL,     /* line CB1 in */
-	DEVCB_NULL,     /* line CA2 in */
-	DEVCB_NULL,     /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(r2dtank_state,AY8910_port_w),       /* port A out */
-	DEVCB_DRIVER_MEMBER(r2dtank_state,AY8910_select_w),     /* port B out */
-	DEVCB_NULL,     /* line CA2 out */
-	DEVCB_NULL,     /* port CB2 out */
-	DEVCB_DRIVER_LINE_MEMBER(r2dtank_state,main_cpu_irq),       /* IRQA */
-	DEVCB_DRIVER_LINE_MEMBER(r2dtank_state,main_cpu_irq)        /* IRQB */
-};
-
-
 void r2dtank_state::machine_start()
 {
 	/* setup for save states */
@@ -332,7 +298,7 @@ static MC6845_BEGIN_UPDATE( begin_update )
 
 	for (i = 0; i < NUM_PENS; i++)
 	{
-		state->m_pens[i] = MAKE_RGB(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
+		state->m_pens[i] = rgb_t(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
 	}
 
 	return state->m_pens;
@@ -378,7 +344,7 @@ static MC6845_UPDATE_ROW( update_row )
 				data = data << 1;
 			}
 
-			color = bit ? fore_color : RGB_BLACK;
+			color = bit ? fore_color : 0;
 			bitmap.pix32(y, x) = pens[color];
 
 			x = x + 1;
@@ -391,14 +357,14 @@ static MC6845_UPDATE_ROW( update_row )
 
 WRITE_LINE_MEMBER(r2dtank_state::display_enable_changed)
 {
-	address_space &space = generic_space();
-	ttl74123_a_w(machine().device("74123"), space, 0, state);
+	machine().device<ttl74123_device>("74123")->a_w(generic_space(), 0, state);
 }
 
 
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,                  /* show border area */
+	0,0,0,0,                /* visarea adjustment */
 	8,                      /* number of pixels per video memory address */
 	begin_update,           /* before pixel update callback */
 	update_row,             /* row update callback */
@@ -557,8 +523,19 @@ static MACHINE_CONFIG_START( r2dtank, r2dtank_state )
 
 	MCFG_TTL74123_ADD("74123", ttl74123_intf)
 
-	MCFG_PIA6821_ADD("pia_main", pia_main_intf)
-	MCFG_PIA6821_ADD("pia_audio", pia_audio_intf)
+	MCFG_DEVICE_ADD("pia_main", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(IOPORT("IN0"))
+	MCFG_PIA_READPB_HANDLER(IOPORT("IN1"))
+	MCFG_PIA_CB2_HANDLER(WRITELINE(r2dtank_state, flipscreen_w))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(r2dtank_state, main_cpu_irq))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(r2dtank_state, main_cpu_irq))
+
+	MCFG_DEVICE_ADD("pia_audio", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(READ8(r2dtank_state, AY8910_port_r))
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(r2dtank_state, AY8910_port_w))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(r2dtank_state, AY8910_select_w))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(r2dtank_state, main_cpu_irq))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(r2dtank_state, main_cpu_irq))
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

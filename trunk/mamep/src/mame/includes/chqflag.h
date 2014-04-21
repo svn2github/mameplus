@@ -20,11 +20,12 @@ public:
 		m_k007232_2(*this, "k007232_2"),
 		m_k051960(*this, "k051960"),
 		m_k051316_1(*this, "k051316_1"),
-		m_k051316_2(*this, "k051316_2") { }
+		m_k051316_2(*this, "k051316_2"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	UINT8 *    m_ram;
-//  UINT8 *    m_paletteram;    // currently this uses generic palette handling
+	dynamic_array<UINT8> m_paletteram;
 
 	/* video-related */
 	int        m_zoom_colorbase[2];
@@ -45,6 +46,7 @@ public:
 	required_device<k051960_device> m_k051960;
 	required_device<k051316_device> m_k051316_1;
 	required_device<k051316_device> m_k051316_2;
+	required_device<palette_device> m_palette;
 	DECLARE_WRITE8_MEMBER(chqflag_bankswitch_w);
 	DECLARE_WRITE8_MEMBER(chqflag_vreg_w);
 	DECLARE_WRITE8_MEMBER(select_analog_ctrl_w);

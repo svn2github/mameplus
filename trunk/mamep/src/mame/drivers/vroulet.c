@@ -49,7 +49,9 @@ public:
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
 		m_ball(*this, "ball"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
@@ -65,6 +67,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_vroulet(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -86,7 +90,7 @@ WRITE8_MEMBER(vroulet_state::vroulet_paletteram_w)
 		{
 			a=m_generic_paletteram_8[((i*8+j)*2)&0xff ];
 			b=m_generic_paletteram_8[((i*8+j)*2+1)&0xff ];
-			palette_set_color_rgb(machine(),i*16+j,pal4bit(b),pal4bit(b>>4),pal4bit(a));
+			m_palette->set_pen_color(i*16+j,pal4bit(b),pal4bit(b>>4),pal4bit(a));
 		}
 	}
 }
@@ -114,14 +118,14 @@ TILE_GET_INFO_MEMBER(vroulet_state::get_bg_tile_info)
 
 void vroulet_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(vroulet_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(vroulet_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 		8, 8, 32, 32);
 }
 
 UINT32 vroulet_state::screen_update_vroulet(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	m_bg_tilemap->draw(screen, bitmap, cliprect, 0, 0);
-	drawgfx_transpen(bitmap, cliprect, machine().gfx[0], 0x320, 1, 0, 0,
+	m_gfxdecode->gfx(0)->transpen(bitmap,cliprect, 0x320, 1, 0, 0,
 		m_ball[1], m_ball[0] - 12, 0);
 	return 0;
 }
@@ -305,9 +309,10 @@ static MACHINE_CONFIG_START( vroulet, vroulet_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(vroulet_state, screen_update_vroulet)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(vroulet)
-	MCFG_PALETTE_LENGTH(128*4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", vroulet)
+	MCFG_PALETTE_ADD("palette", 128*4)
 
 
 	// sound hardware

@@ -125,7 +125,10 @@ public:
 			m_vram0(*this, "vram0"),
 			m_attr0(*this, "attr0"),
 			m_vram1(*this, "vram1"),
-			m_attr1(*this, "attr1")
+			m_attr1(*this, "attr1"),
+			m_gfxdecode(*this, "gfxdecode"),
+			m_screen(*this, "screen"),
+			m_palette(*this, "palette")
 			{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -135,6 +138,9 @@ public:
 	required_shared_ptr<UINT8> m_attr0;
 	required_shared_ptr<UINT8> m_vram1;
 	required_shared_ptr<UINT8> m_attr1;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	UINT8 m_laserdisc_data;
 	int m_nmimask;
@@ -155,7 +161,7 @@ public:
 
 void deco_ld_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT8 *spriteram, UINT16 tile_bank )
 {
-	gfx_element *gfx = machine().gfx[1];
+	gfx_element *gfx = m_gfxdecode->gfx(1);
 	int i,spr_offs,x,y,col,fx,fy;
 
 	/*
@@ -169,7 +175,7 @@ void deco_ld_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprect
 
 	for(i=0;i<0x20;i+=4)
 	{
-		if(!spriteram[i+0] & 1)
+		if(~spriteram[i+0] & 1)
 			continue;
 
 		spr_offs = spriteram[i+1]|tile_bank;
@@ -179,12 +185,12 @@ void deco_ld_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprect
 		fx = (spriteram[i+0] & 0x04) ? 1 : 0;
 		fy = (spriteram[i+0] & 0x02) ? 1 : 0;
 
-		drawgfx_transpen(bitmap,cliprect,gfx,spr_offs,col,fx,fy,x,y,0);
+		gfx->transpen(bitmap,cliprect,spr_offs,col,fx,fy,x,y,0);
 	}
 
 	for(i=0x3e0;i<0x400;i+=4)
 	{
-		if(!spriteram[i+0] & 1)
+		if(~spriteram[i+0] & 1)
 			continue;
 
 		spr_offs = spriteram[i+1]|tile_bank;
@@ -194,13 +200,13 @@ void deco_ld_state::draw_sprites(bitmap_rgb32 &bitmap, const rectangle &cliprect
 		fx = (spriteram[i+0] & 0x04) ? 1 : 0;
 		fy = (spriteram[i+0] & 0x02) ? 1 : 0;
 
-		drawgfx_transpen(bitmap,cliprect,gfx,spr_offs,col,fx,fy,x,y,0);
+		gfx->transpen(bitmap,cliprect,spr_offs,col,fx,fy,x,y,0);
 	}
 }
 
 UINT32 deco_ld_state::screen_update_rblaster(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	int y,x;
 
 	bitmap.fill(0, cliprect);
@@ -216,7 +222,7 @@ UINT32 deco_ld_state::screen_update_rblaster(screen_device &screen, bitmap_rgb32
 			int tile = m_vram0[x+y*32] | ((attr & 3) << 8);
 			int colour = (6 & 0x7); /* TODO */
 
-			drawgfx_transpen(bitmap,cliprect,gfx,tile|0x400,colour,0,0,x*8,y*8,0);
+			gfx->transpen(bitmap,cliprect,tile|0x400,colour,0,0,x*8,y*8,0);
 		}
 	}
 
@@ -228,7 +234,7 @@ UINT32 deco_ld_state::screen_update_rblaster(screen_device &screen, bitmap_rgb32
 			int tile = m_vram1[x+y*32] | ((attr & 3) << 8);
 			int colour = (6 & 0x7); /* TODO */
 
-			drawgfx_transpen(bitmap,cliprect,gfx,tile,colour,0,0,x*8,y*8,0);
+			gfx->transpen(bitmap,cliprect,tile,colour,0,0,x*8,y*8,0);
 		}
 	}
 
@@ -260,7 +266,7 @@ WRITE8_MEMBER(deco_ld_state::decold_sound_cmd_w)
 /* same as Burger Time HW */
 WRITE8_MEMBER(deco_ld_state::decold_palette_w)
 {
-	paletteram_BBGGGRRR_byte_w(space, offset, ~data);
+	m_palette->write(space, offset, UINT8(~data));
 }
 
 /* unknown, but certainly related to audiocpu somehow */
@@ -279,7 +285,7 @@ static ADDRESS_MAP_START( rblaster_map, AS_PROGRAM, 8, deco_ld_state )
 	AM_RANGE(0x1005, 0x1005) AM_READ(sound_status_r)
 	AM_RANGE(0x1006, 0x1006) AM_NOP // 6850 status
 	AM_RANGE(0x1007, 0x1007) AM_READWRITE(laserdisc_r,laserdisc_w) // 6850 data
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(decold_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(decold_palette_w) AM_SHARE("palette")
 	AM_RANGE(0x2000, 0x27ff) AM_RAM
 	AM_RANGE(0x2800, 0x2bff) AM_RAM AM_SHARE("vram0")
 	AM_RANGE(0x2c00, 0x2fff) AM_RAM AM_SHARE("attr0")
@@ -473,11 +479,13 @@ static MACHINE_CONFIG_START( rblaster, deco_ld_state )
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc") //Sony LDP-1000A, is it truly compatible with the Pioneer?
 	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, deco_ld_state, screen_update_rblaster)
 	MCFG_LASERDISC_OVERLAY_CLIP(0, 256-1, 8, 240-1)
+	MCFG_LASERDISC_OVERLAY_PALETTE("palette")
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")
-	MCFG_GFXDECODE(rblaster)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", rblaster)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
 
 	/* sound hardware */
 	/* TODO: mixing */

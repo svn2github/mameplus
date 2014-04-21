@@ -3,12 +3,12 @@
 #include "includes/spbactn.h"
 
 
-static void blendbitmaps(running_machine &machine,
+static void blendbitmaps(palette_device &palette,
 		bitmap_rgb32 &dest,bitmap_ind16 &src1,bitmap_ind16 &src2,
 		const rectangle &cliprect)
 {
 	int y,x;
-	const pen_t *paldata = machine.pens;
+	const pen_t *paldata = palette.pens();
 
 	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
@@ -77,8 +77,8 @@ VIDEO_START_MEMBER(spbactn_state,spbactn)
 	m_screen->register_screen_bitmap(m_tile_bitmap_bg);
 	m_screen->register_screen_bitmap(m_tile_bitmap_fg);
 
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spbactn_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 64, 128);
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spbactn_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 64, 128);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(spbactn_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 64, 128);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(spbactn_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 64, 128);
 	m_bg_tilemap->set_transparent_pen(0);
 	m_fg_tilemap->set_transparent_pen(0);
 
@@ -88,7 +88,7 @@ VIDEO_START_MEMBER(spbactn_state,spbactnp)
 {
 	VIDEO_START_CALL_MEMBER(spbactn);
 	// no idea..
-	m_extra_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spbactn_state::get_extra_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 16, 16);
+	m_extra_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(spbactn_state::get_extra_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 16, 16);
 }
 WRITE16_MEMBER( spbactn_state::spbatnp_90002_w )
 {
@@ -154,21 +154,21 @@ int spbactn_state::draw_video(screen_device &screen, bitmap_rgb32 &bitmap, const
 
 
 
-	if (spbactn_draw_sprites(screen, m_tile_bitmap_bg, cliprect, 0, alt_sprites, m_spvideoram))
+	if (spbactn_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_bg, cliprect, 0, alt_sprites, m_spvideoram))
 	{
 		m_bg_tilemap->draw(screen, m_tile_bitmap_bg, cliprect, 0, 0);
 	}
 
-	spbactn_draw_sprites(screen, m_tile_bitmap_bg, cliprect, 1, alt_sprites, m_spvideoram);
+	spbactn_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_bg, cliprect, 1, alt_sprites, m_spvideoram);
 
 	m_fg_tilemap->draw(screen, m_tile_bitmap_fg, cliprect, 0, 0);
 
 
-	spbactn_draw_sprites(screen, m_tile_bitmap_fg, cliprect, 2, alt_sprites, m_spvideoram);
-	spbactn_draw_sprites(screen, m_tile_bitmap_fg, cliprect, 3, alt_sprites, m_spvideoram);
+	spbactn_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_fg, cliprect, 2, alt_sprites, m_spvideoram);
+	spbactn_draw_sprites(screen, m_gfxdecode, m_tile_bitmap_fg, cliprect, 3, alt_sprites, m_spvideoram);
 
 	/* mix & blend the tilemaps and sprites into a 32-bit bitmap */
-	blendbitmaps(machine(), bitmap, m_tile_bitmap_bg, m_tile_bitmap_fg, cliprect);
+	blendbitmaps(m_palette, bitmap, m_tile_bitmap_bg, m_tile_bitmap_fg, cliprect);
 	return 0;
 }
 

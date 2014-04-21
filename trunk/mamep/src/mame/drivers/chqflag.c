@@ -46,8 +46,8 @@ WRITE8_MEMBER(chqflag_state::chqflag_bankswitch_w)
 	if (data & 0x20)
 	{
 		space.install_read_bank(0x1800, 0x1fff, "bank5");
-		space.install_write_handler(0x1800, 0x1fff, write8_delegate(FUNC(driver_device::paletteram_xBBBBBGGGGGRRRRR_byte_be_w),this));
-		membank("bank5")->set_base(m_generic_paletteram_8);
+		space.install_write_handler(0x1800, 0x1fff, write8_delegate(FUNC(palette_device::write),m_palette.target()));
+		membank("bank5")->set_base(m_paletteram);
 
 		if (m_k051316_readroms)
 			space.install_readwrite_handler(0x1000, 0x17ff, read8_delegate(FUNC(k051316_device::rom_r), (k051316_device*)m_k051316_1), write8_delegate(FUNC(k051316_device::write), (k051316_device*)m_k051316_1)); /* 051316 #1 (ROM test) */
@@ -83,9 +83,9 @@ WRITE8_MEMBER(chqflag_state::chqflag_vreg_w)
 	/* the headlight (which have the shadow bit set) become highlights */
 	/* Maybe one of the bits inverts the SHAD line while the other darkens the background. */
 	if (data & 0x08)
-		palette_set_shadow_factor(machine(), 1 / PALETTE_DEFAULT_SHADOW_FACTOR);
+		m_palette->set_shadow_factor(1 / PALETTE_DEFAULT_SHADOW_FACTOR);
 	else
-		palette_set_shadow_factor(machine(), PALETTE_DEFAULT_SHADOW_FACTOR);
+		m_palette->set_shadow_factor(PALETTE_DEFAULT_SHADOW_FACTOR);
 
 	if ((data & 0x80) != m_last_vreg)
 	{
@@ -96,7 +96,7 @@ WRITE8_MEMBER(chqflag_state::chqflag_vreg_w)
 
 		/* only affect the background */
 		for (i = 512; i < 1024; i++)
-			palette_set_pen_contrast(machine(), i, brt);
+			m_palette->set_pen_contrast(i, brt);
 	}
 
 //if ((data & 0xf8) && (data & 0xf8) != 0x88)
@@ -268,16 +268,6 @@ WRITE8_MEMBER(chqflag_state::volume_callback1)
 	m_k007232_2->set_volume(0, (data & 0x0f) * 0x11/2, (data >> 4) * 0x11/2);
 }
 
-static const k007232_interface k007232_interface_1 =
-{
-	DEVCB_DRIVER_MEMBER(chqflag_state,volume_callback0)
-};
-
-static const k007232_interface k007232_interface_2 =
-{
-	DEVCB_DRIVER_MEMBER(chqflag_state,volume_callback1)
-};
-
 static const k051960_interface chqflag_k051960_intf =
 {
 	"gfx1", 0,
@@ -308,6 +298,10 @@ void chqflag_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
+	m_paletteram.resize(m_palette->entries() * 2);
+	m_palette->basemem().set(m_paletteram, ENDIANNESS_BIG, 2);
+
+	save_item(NAME(m_paletteram));
 	save_item(NAME(m_k051316_readroms));
 	save_item(NAME(m_last_vreg));
 	save_item(NAME(m_analog_ctrl));
@@ -338,8 +332,6 @@ static MACHINE_CONFIG_START( chqflag, chqflag_state )
 
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	//TODO: Vsync 59.17hz Hsync 15.13 / 15.19khz
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -347,13 +339,22 @@ static MACHINE_CONFIG_START( chqflag, chqflag_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(12*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(chqflag_state, screen_update_chqflag)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K051960_ADD("k051960", chqflag_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 	MCFG_K051316_ADD("k051316_1", chqflag_k051316_intf_1)
+	MCFG_K051316_GFXDECODE("gfxdecode")
+	MCFG_K051316_PALETTE("palette")
 	MCFG_K051316_ADD("k051316_2", chqflag_k051316_intf_2)
+	MCFG_K051316_GFXDECODE("gfxdecode")
+	MCFG_K051316_PALETTE("palette")
 	MCFG_K051733_ADD("k051733")
 
 	/* sound hardware */
@@ -365,14 +366,14 @@ static MACHINE_CONFIG_START( chqflag, chqflag_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.80)
 
 	MCFG_SOUND_ADD("k007232_1", K007232, XTAL_3_579545MHz) /* verified on pcb */
-	MCFG_SOUND_CONFIG(k007232_interface_1)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(chqflag_state, volume_callback0))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 
 	MCFG_SOUND_ADD("k007232_2", K007232, XTAL_3_579545MHz) /* verified on pcb */
-	MCFG_SOUND_CONFIG(k007232_interface_2)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(chqflag_state, volume_callback1))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.20)
 MACHINE_CONFIG_END

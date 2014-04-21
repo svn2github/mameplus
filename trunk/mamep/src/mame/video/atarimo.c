@@ -147,10 +147,20 @@ atari_motion_objects_device::atari_motion_objects_device(const machine_config &m
 		m_slipram(*this, "slip"),
 		m_activelast(NULL),
 		m_last_xpos(0),
-		m_next_xpos(0)
+		m_next_xpos(0),
+		m_gfxdecode(*this)
 {
 }
 
+//-------------------------------------------------
+//  static_set_gfxdecode_tag: Set the tag of the
+//  gfx decoder
+//-------------------------------------------------
+
+void atari_motion_objects_device::static_set_gfxdecode_tag(device_t &device, const char *tag)
+{
+	downcast<atari_motion_objects_device &>(device).m_gfxdecode.set_tag(tag);
+}
 
 //-------------------------------------------------
 //  static_set_config: Set the tag of the
@@ -211,6 +221,7 @@ void atari_motion_objects_device::draw(bitmap_ind16 &bitmap, const rectangle &cl
 		if (m_reverse)
 		{
 			first = m_activelast - 4;
+			// TODO: this sets last to index m_activelist[-4]
 			last = m_activelist - 4;
 			step = -4;
 		}
@@ -263,7 +274,7 @@ void atari_motion_objects_device::device_start()
 	sprite16_device_ind16::device_start();
 
 	// verify configuration
-	gfx_element *gfx = machine().gfx[m_gfxindex];
+	gfx_element *gfx = m_gfxdecode->gfx(m_gfxindex);
 	if (gfx == NULL)
 		throw emu_fatalerror("No gfxelement #%d!", m_gfxindex);
 
@@ -425,7 +436,7 @@ void atari_motion_objects_device::render_object(bitmap_ind16 &bitmap, const rect
 {
 	// select the gfx element and save off key information
 	int rawcode = m_codemask.extract(entry);
-	gfx_element *gfx = machine().gfx[m_gfxlookup[rawcode >> 8]];
+	gfx_element *gfx = m_gfxdecode->gfx(m_gfxlookup[rawcode >> 8]);
 	int save_granularity = gfx->granularity();
 	int save_colorbase = gfx->colorbase();
 	int save_colors = gfx->colors();
@@ -523,7 +534,7 @@ void atari_motion_objects_device::render_object(bitmap_ind16 &bitmap, const rect
 						continue;
 
 					// draw the sprite
-					drawgfx_transpen_raw(bitmap, cliprect, gfx, code, color, hflip, vflip, sx, sy, m_transpen);
+						gfx->transpen_raw(bitmap,cliprect, code, color, hflip, vflip, sx, sy, m_transpen);
 					mark_dirty(sx, sx + m_tilewidth - 1, sy, sy + m_tileheight - 1);
 				}
 			}
@@ -552,7 +563,7 @@ void atari_motion_objects_device::render_object(bitmap_ind16 &bitmap, const rect
 						continue;
 
 					// draw the sprite
-					drawgfx_transpen_raw(bitmap, cliprect, gfx, code, color, hflip, vflip, sx, sy, m_transpen);
+						gfx->transpen_raw(bitmap,cliprect, code, color, hflip, vflip, sx, sy, m_transpen);
 					mark_dirty(sx, sx + m_tilewidth - 1, sy, sy + m_tileheight - 1);
 				}
 			}

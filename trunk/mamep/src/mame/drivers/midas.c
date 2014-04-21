@@ -64,7 +64,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_gfxregs(*this, "gfxregs"),
 		m_maincpu(*this, "maincpu"),
-		m_eeprom(*this, "eeprom") { }
+		m_eeprom(*this, "eeprom"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	UINT16 *m_gfxram;
 	required_shared_ptr<UINT16> m_gfxregs;
@@ -85,6 +87,8 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(livequiz_irqhandler);
 	required_device<cpu_device> m_maincpu;
 	required_device<eeprom_serial_93cxx_device> m_eeprom;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -102,7 +106,7 @@ void midas_state::video_start()
 {
 	m_gfxram = auto_alloc_array(machine(), UINT16, 0x20000/2);
 
-	m_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(midas_state::get_tile_info),this), TILEMAP_SCAN_COLS,8,8,0x80,0x20);
+	m_tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(midas_state::get_tile_info),this), TILEMAP_SCAN_COLS,8,8,0x80,0x20);
 
 	m_tmap->set_transparent_pen(0);
 }
@@ -180,7 +184,7 @@ void midas_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect)
 			UINT16 code     =   codes[y*2];
 			UINT16 attr     =   codes[y*2+1];
 
-			drawgfxzoom_transpen(   bitmap, cliprect, machine().gfx[0],
+			m_gfxdecode->gfx(0)->zoom_transpen(bitmap,cliprect,
 							code,
 							attr >> 8,
 							attr & 1, attr & 2,
@@ -280,7 +284,7 @@ static ADDRESS_MAP_START( livequiz_map, AS_PROGRAM, 16, midas_state )
 
 	AM_RANGE(0x9c0000, 0x9c0005) AM_WRITE(midas_gfxregs_w ) AM_SHARE("gfxregs")
 
-	AM_RANGE(0xa00000, 0xa3ffff) AM_RAM_WRITE(paletteram_xrgb_word_be_w ) AM_SHARE("paletteram")
+	AM_RANGE(0xa00000, 0xa3ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xa40000, 0xa7ffff) AM_RAM
 
 	AM_RANGE(0xb00000, 0xb00001) AM_READ(ret_ffff )
@@ -359,7 +363,7 @@ static ADDRESS_MAP_START( hammer_map, AS_PROGRAM, 16, midas_state )
 
 	AM_RANGE(0x9c0000, 0x9c0005) AM_WRITE(midas_gfxregs_w ) AM_SHARE("gfxregs")
 
-	AM_RANGE(0xa00000, 0xa3ffff) AM_RAM_WRITE(paletteram_xrgb_word_be_w ) AM_SHARE("paletteram")
+	AM_RANGE(0xa00000, 0xa3ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xa40000, 0xa7ffff) AM_RAM
 
 	AM_RANGE(0xb00000, 0xb00001) AM_READ(ret_ffff )
@@ -710,10 +714,11 @@ static MACHINE_CONFIG_START( livequiz, midas_state )
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(midas_state, screen_update_midas)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(midas)
-	MCFG_PALETTE_LENGTH(0x10000)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", midas)
+	MCFG_PALETTE_ADD("palette", 0x10000)
+	MCFG_PALETTE_FORMAT(XRGB)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -743,9 +748,11 @@ static MACHINE_CONFIG_START( hammer, midas_state )
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(midas_state, screen_update_midas)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(midas)
-	MCFG_PALETTE_LENGTH(0x10000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", midas)
+	MCFG_PALETTE_ADD("palette", 0x10000)
+	MCFG_PALETTE_FORMAT(XRGB)
 
 
 	/* sound hardware */

@@ -215,6 +215,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -243,10 +244,11 @@ static MACHINE_CONFIG_START( usg32, usgames_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(7*8, 57*8-1, 0*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(usgames_state, screen_update_usgames)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(usgames)
-	MCFG_PALETTE_LENGTH(2*256)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", usgames)
+	MCFG_PALETTE_ADD("palette", 2*256)
+	MCFG_PALETTE_INIT_OWNER(usgames_state, usgames)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", XTAL_18MHz / 16, mc6845_intf)
 

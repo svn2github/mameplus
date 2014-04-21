@@ -500,7 +500,7 @@ static ADDRESS_MAP_START( slyspy_map, AS_PROGRAM, 16, dec0_state )
 
 	AM_RANGE(0x304000, 0x307fff) AM_RAM AM_SHARE("ram") /* Sly spy main ram */
 	AM_RANGE(0x308000, 0x3087ff) AM_RAM AM_SHARE("spriteram")   /* Sprites */
-	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x310000, 0x3107ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x314000, 0x314003) AM_WRITE(slyspy_control_w)
 	AM_RANGE(0x314008, 0x31400f) AM_READ(slyspy_controls_r)
 	AM_RANGE(0x31c000, 0x31c00f) AM_READ(slyspy_protection_r) AM_WRITENOP
@@ -511,7 +511,7 @@ static ADDRESS_MAP_START( midres_map, AS_PROGRAM, 16, dec0_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_SHARE("ram")
 	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x140000, 0x1407ff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x160000, 0x160001) AM_WRITE(dec0_priority_w)
 	AM_RANGE(0x180000, 0x18000f) AM_READ(midres_controls_r)
 	AM_RANGE(0x180008, 0x18000f) AM_WRITENOP /* ?? watchdog ?? */
@@ -581,13 +581,13 @@ ADDRESS_MAP_END
 READ16_MEMBER( dec0_automat_state::automat_palette_r )
 {
 	offset ^=0xf;
-	return m_generic_paletteram_16[offset];
+	return m_paletteram[offset];
 }
 
 WRITE16_MEMBER( dec0_automat_state::automat_palette_w )
 {
 	offset ^=0xf;
-	paletteram_xxxxBBBBGGGGRRRR_word_w(space, offset, data, mem_mask);
+	m_palette->write(space, offset, data, mem_mask);
 }
 
 
@@ -617,7 +617,7 @@ static ADDRESS_MAP_START( automat_map, AS_PROGRAM, 16, dec0_automat_state )
 	AM_RANGE(0x300000, 0x30001f) AM_READ(dec0_rotary_r)
 	AM_RANGE(0x30c000, 0x30c00b) AM_READ(dec0_controls_r)
 	AM_RANGE(0x30c000, 0x30c01f) AM_WRITE(automat_control_w)            /* Priority, sound, etc. */
-	AM_RANGE(0x310000, 0x3107ff) AM_READWRITE(automat_palette_r, automat_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x310000, 0x3107ff) AM_READWRITE(automat_palette_r, automat_palette_w)
 	AM_RANGE(0x314000, 0x3147ff) AM_RAM
 
 	// video regs are moved to here..
@@ -651,7 +651,7 @@ static ADDRESS_MAP_START( secretab_map, AS_PROGRAM, 16, dec0_automat_state )
 	AM_RANGE(0x300c00, 0x300fff) AM_RAM
 	AM_RANGE(0x301000, 0x3017ff) AM_DEVREADWRITE("tilegen3", deco_bac06_device, pf_data_r, pf_data_w)
 	AM_RANGE(0x301800, 0x307fff) AM_RAM AM_SHARE("ram") /* Sly spy main ram */
-	AM_RANGE(0x310000, 0x3107ff) AM_READWRITE(automat_palette_r, automat_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x310000, 0x3107ff) AM_READWRITE(automat_palette_r, automat_palette_w)
 	AM_RANGE(0xb08000, 0xb08fff) AM_RAM AM_SHARE("spriteram") /* Sprites */
 ADDRESS_MAP_END
 
@@ -1307,18 +1307,24 @@ WRITE_LINE_MEMBER(dec0_state::sound_irq2)
 
 
 static MACHINE_CONFIG_START( dec0_base, dec0_state )
-	MCFG_GFXDECODE(dec0)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dec0)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_DEVICE_ADD("tilegen1", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,0,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 	MCFG_DEVICE_ADD("tilegen2", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,1,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 	MCFG_DEVICE_ADD("tilegen3", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,2,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_MXC06, 0)
 	deco_mxc06_device::set_gfx_region(*device, 3);
+	MCFG_DECO_MXC06_GFXDECODE("gfxdecode")
+	MCFG_DECO_MXC06_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0)
 MACHINE_CONFIG_END
@@ -1386,12 +1392,6 @@ WRITE_LINE_MEMBER(dec0_automat_state::automat_vclk_cb)
 	m_automat_msm5205_vclk_toggle ^= 1;
 }
 
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(dec0_automat_state,automat_vclk_cb),
-	MSM5205_S48_4B
-};
-
 
 static MACHINE_CONFIG_START( automat, dec0_automat_state )
 
@@ -1409,21 +1409,28 @@ static MACHINE_CONFIG_START( automat, dec0_automat_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 57.41 Hz, 529us Vblank */)
 	MCFG_SCREEN_RAW_PARAMS(DEC0_PIXEL_CLOCK,DEC0_HTOTAL,DEC0_HBEND,DEC0_HBSTART,DEC0_VTOTAL,DEC0_VBEND,DEC0_VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_automat_state, screen_update_automat)
-	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
+	MCFG_VIDEO_START_OVERRIDE(dec0_automat_state,automat)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("tilegen1", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,0,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 	MCFG_DEVICE_ADD("tilegen2", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,1,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 	MCFG_DEVICE_ADD("tilegen3", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,2,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_MXC06, 0)
 	deco_mxc06_device::set_gfx_region(*device, 3);
+	MCFG_DECO_MXC06_GFXDECODE("gfxdecode")
+	MCFG_DECO_MXC06_PALETTE("palette")
 
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
-	MCFG_PALETTE_LENGTH(1024)
-	MCFG_GFXDECODE(automat)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", automat)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1441,7 +1448,8 @@ static MACHINE_CONFIG_START( automat, dec0_automat_state )
 	MCFG_SOUND_ROUTE(3, "mono", 0.35)
 
 	MCFG_SOUND_ADD("msm", MSM5205, 384000/2)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(dec0_automat_state, automat_vclk_cb))
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -1462,21 +1470,28 @@ static MACHINE_CONFIG_START( secretab, dec0_automat_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 57.41 Hz, 529us Vblank */)
 	MCFG_SCREEN_RAW_PARAMS(DEC0_PIXEL_CLOCK,DEC0_HTOTAL,DEC0_HBEND,DEC0_HBSTART,DEC0_VTOTAL,DEC0_VBEND,DEC0_VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_automat_state, screen_update_secretab)
-	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
+	MCFG_VIDEO_START_OVERRIDE(dec0_automat_state,automat)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("tilegen1", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,0,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 	MCFG_DEVICE_ADD("tilegen2", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,1,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 	MCFG_DEVICE_ADD("tilegen3", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device,0,2,0);
+	MCFG_DECO_BAC06_GFXDECODE("gfxdecode")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_MXC06, 0)
 	deco_mxc06_device::set_gfx_region(*device, 3);
+	MCFG_DECO_MXC06_GFXDECODE("gfxdecode")
+	MCFG_DECO_MXC06_PALETTE("palette")
 
 
-	MCFG_PALETTE_LENGTH(1024)
-	MCFG_GFXDECODE(secretab)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", secretab)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1494,7 +1509,8 @@ static MACHINE_CONFIG_START( secretab, dec0_automat_state )
 	MCFG_SOUND_ROUTE(3, "mono", 0.35)
 
 	MCFG_SOUND_ADD("msm", MSM5205, 384000/2)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(dec0_automat_state, automat_vclk_cb))
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 MACHINE_CONFIG_END
@@ -1521,6 +1537,7 @@ static MACHINE_CONFIG_DERIVED( hbarrel, dec0_base_sound )
 	//MCFG_SCREEN_SIZE(32*8, 32*8)
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_hbarrel)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( baddudes, dec0_base_sound )
@@ -1541,6 +1558,7 @@ static MACHINE_CONFIG_DERIVED( baddudes, dec0_base_sound )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_baddudes)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( birdtry, dec0_base_sound )
@@ -1561,6 +1579,7 @@ static MACHINE_CONFIG_DERIVED( birdtry, dec0_base_sound )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_birdtry)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( robocop, dec0_base_sound )
@@ -1586,6 +1605,7 @@ static MACHINE_CONFIG_DERIVED( robocop, dec0_base_sound )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_robocop)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( robocopb, dec0_base_sound )
@@ -1606,6 +1626,7 @@ static MACHINE_CONFIG_DERIVED( robocopb, dec0_base_sound )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_robocop)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( hippodrm, dec0_base_sound )
@@ -1631,6 +1652,7 @@ static MACHINE_CONFIG_DERIVED( hippodrm, dec0_base_sound )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_hippodrm)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( ffantasybl, dec0_base_sound )
@@ -1656,6 +1678,7 @@ static MACHINE_CONFIG_DERIVED( ffantasybl, dec0_base_sound )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_hippodrm)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 MACHINE_RESET_MEMBER(dec0_state,slyspy)
@@ -1682,6 +1705,7 @@ static MACHINE_CONFIG_DERIVED( slyspy, dec0_base_sound_alt )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_slyspy)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
 
@@ -1709,8 +1733,9 @@ static MACHINE_CONFIG_DERIVED( midres, dec0_base_sound_alt )
 //  MCFG_SCREEN_SIZE(32*8, 32*8)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(dec0_state, screen_update_midres)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(midres)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", midres)
 	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
 MACHINE_CONFIG_END
 

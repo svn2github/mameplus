@@ -74,6 +74,8 @@ protected:
 	UINT8       m_palette_normal[32];       // RGB translations for normal pixels
 	UINT8       m_palette_shadow[32];       // RGB translations for shadowed pixels
 	UINT8       m_palette_hilight[32];      // RGB translations for hilighted pixels
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -149,7 +151,7 @@ private:
 		UINT8 *                 m_srcptr;
 		fd1089_base_device *    m_fd1089;
 		dynamic_array<UINT16>   m_fd1089_decrypted;
-		fd1094_decryption_cache *m_fd1094_cache;
+		auto_pointer<fd1094_decryption_cache> m_fd1094_cache;
 	};
 
 	// internal helpers

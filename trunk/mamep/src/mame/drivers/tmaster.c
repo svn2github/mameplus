@@ -106,7 +106,7 @@ To Do:
 #include "sound/okim6295.h"
 #include "machine/eepromser.h"
 #include "machine/microtch.h"
-#include "machine/n68681.h"
+#include "machine/mc68681.h"
 #include "machine/nvram.h"
 #include "machine/ds1204.h"
 
@@ -128,14 +128,18 @@ public:
 		m_regs(*this, "regs"),
 		m_galgames_ram(*this, "galgames_ram"),
 		m_oki(*this, "oki"),
-		m_duart(*this, "duart68681"){ }
+		m_duart(*this, "duart68681"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<microtouch_serial_device> m_microtouch;
 	required_shared_ptr<UINT16> m_regs;
 	optional_shared_ptr<UINT16> m_galgames_ram;
 	required_device<okim6295_device> m_oki;
-	optional_device<duartn68681_device> m_duart;
+	optional_device<mc68681_device> m_duart;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	int m_okibank;
 	UINT8 m_rtc_ram[8];
@@ -375,7 +379,7 @@ UINT32 tmaster_state::screen_update_tmaster(screen_device &screen, bitmap_ind16 
 #endif
 
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	if (layers_ctrl & 1)    copybitmap_trans(bitmap, m_bitmap[0][(m_regs[0x02/2]>>8)&1], 0,0,0,0, cliprect, 0xff);
 	if (layers_ctrl & 2)    copybitmap_trans(bitmap, m_bitmap[1][(m_regs[0x02/2]>>9)&1], 0,0,0,0, cliprect, 0xff);
@@ -545,7 +549,7 @@ static ADDRESS_MAP_START( tmaster_map, AS_PROGRAM, 16, tmaster_state )
 
 	AM_RANGE( 0x300010, 0x300011 ) AM_READ_PORT("COIN")
 
-	AM_RANGE( 0x300020, 0x30003f ) AM_DEVREADWRITE8("duart68681", duartn68681_device, read, write, 0xff )
+	AM_RANGE( 0x300020, 0x30003f ) AM_DEVREADWRITE8("duart68681", mc68681_device, read, write, 0xff )
 
 	AM_RANGE( 0x300040, 0x300041 ) AM_WRITE_PORT("OUT")
 
@@ -556,7 +560,7 @@ static ADDRESS_MAP_START( tmaster_map, AS_PROGRAM, 16, tmaster_state )
 
 	AM_RANGE( 0x580000, 0x580001 ) AM_WRITENOP // often
 
-	AM_RANGE( 0x600000, 0x601fff ) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w ) AM_SHARE("paletteram")
+	AM_RANGE( 0x600000, 0x601fff ) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
 	AM_RANGE( 0x800000, 0x800001 ) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 
@@ -636,7 +640,7 @@ WRITE16_MEMBER(tmaster_state::galgames_palette_data_w)
 		{
 			int palette_base;
 			for (palette_base = 0; palette_base < 0x1000; palette_base += 0x100)
-				palette_set_color(machine(), m_palette_offset + palette_base, MAKE_RGB(m_palette_data[0], m_palette_data[1], m_palette_data[2]));
+				m_palette->set_pen_color(m_palette_offset + palette_base, rgb_t(m_palette_data[0], m_palette_data[1], m_palette_data[2]));
 			m_palette_index = 0;
 			m_palette_offset++;
 		}
@@ -915,11 +919,11 @@ static MACHINE_CONFIG_START( tm, tmaster_state )
 
 	MCFG_MACHINE_RESET_OVERRIDE(tmaster_state,tmaster)
 
-	MCFG_DUARTN68681_ADD( "duart68681", XTAL_8_664MHz / 2 /*??*/)
-	MCFG_DUARTN68681_IRQ_CALLBACK(WRITELINE(tmaster_state, duart_irq_handler))
-	MCFG_DUARTN68681_A_TX_CALLBACK(DEVWRITELINE("microtouch", microtouch_serial_device, rx))
+	MCFG_MC68681_ADD( "duart68681", XTAL_8_664MHz / 2 /*??*/)
+	MCFG_MC68681_IRQ_CALLBACK(WRITELINE(tmaster_state, duart_irq_handler))
+	MCFG_MC68681_A_TX_CALLBACK(DEVWRITELINE("microtouch", microtouch_serial_device, rx))
 
-	MCFG_MICROTOUCH_SERIAL_ADD( "microtouch", 9600, DEVWRITELINE("duart68681", duartn68681_device, rx_a_w) )
+	MCFG_MICROTOUCH_SERIAL_ADD( "microtouch", 9600, DEVWRITELINE("duart68681", mc68681_device, rx_a_w) )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -929,8 +933,10 @@ static MACHINE_CONFIG_START( tm, tmaster_state )
 	MCFG_SCREEN_SIZE(400, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 400-1, 0, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tmaster_state, screen_update_tmaster)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x1000)
+	MCFG_PALETTE_ADD("palette", 0x1000)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tmaster_state,tmaster)
 
@@ -988,8 +994,10 @@ static MACHINE_CONFIG_START( galgames, tmaster_state )
 	MCFG_SCREEN_SIZE(400, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 400-1, 0, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tmaster_state, screen_update_tmaster)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x1000) // only 0x100 used
+	MCFG_PALETTE_ADD("palette", 0x1000) // only 0x100 used
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tmaster_state,galgames)
 

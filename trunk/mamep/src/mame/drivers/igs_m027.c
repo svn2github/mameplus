@@ -37,13 +37,15 @@ public:
 		m_igs_palette32(*this, "igs_palette32"),
 		m_igs_tx_videoram(*this, "igs_tx_videoram"),
 		m_igs_bg_videoram(*this, "igs_bg_videoram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
-	required_shared_ptr<UINT32> m_igs_mainram;
-	required_shared_ptr<UINT32> m_igs_cg_videoram;
-	required_shared_ptr<UINT32> m_igs_palette32;
-	required_shared_ptr<UINT32> m_igs_tx_videoram;
-	required_shared_ptr<UINT32> m_igs_bg_videoram;
+	optional_shared_ptr<UINT32> m_igs_mainram;
+	optional_shared_ptr<UINT32> m_igs_cg_videoram;
+	optional_shared_ptr<UINT32> m_igs_palette32;
+	optional_shared_ptr<UINT32> m_igs_tx_videoram;
+	optional_shared_ptr<UINT32> m_igs_bg_videoram;
 
 	tilemap_t *m_igs_tx_tilemap;
 	tilemap_t *m_igs_bg_tilemap;
@@ -52,6 +54,7 @@ public:
 	DECLARE_WRITE32_MEMBER(igs_tx_videoram_w);
 	DECLARE_WRITE32_MEMBER(igs_bg_videoram_w);
 	DECLARE_WRITE32_MEMBER(igs_palette32_w);
+	DECLARE_WRITE_LINE_MEMBER(sound_irq);
 	DECLARE_DRIVER_INIT(sdwx);
 	DECLARE_DRIVER_INIT(chessc2);
 	DECLARE_DRIVER_INIT(lhzb4);
@@ -66,12 +69,15 @@ public:
 	TILE_GET_INFO_MEMBER(get_tx_tilemap_tile_info);
 	TILE_GET_INFO_MEMBER(get_bg_tilemap_tile_info);
 	virtual void video_start();
+	virtual void video_start_fearless();
 	UINT32 screen_update_igs_majhong(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	UINT32 screen_update_fearless(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(igs_majhong_interrupt);
 	void sdwx_gfx_decrypt();
 	void pgm_create_dummy_internal_arm_region();
 	required_device<cpu_device> m_maincpu;
+	optional_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -187,18 +193,22 @@ WRITE32_MEMBER(igs_m027_state::igs_palette32_w)
 
 void igs_m027_state::video_start()
 {
-	m_igs_tx_tilemap= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs_m027_state::get_tx_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_igs_tx_tilemap= &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(igs_m027_state::get_tx_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
 	m_igs_tx_tilemap->set_transparent_pen(15);
-	m_igs_bg_tilemap= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs_m027_state::get_bg_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
-	//m_igs_bg_tilemap= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs_m027_state::get_bg_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_igs_bg_tilemap= &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(igs_m027_state::get_bg_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	//m_igs_bg_tilemap= &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(igs_m027_state::get_bg_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
 	//m_igs_bg_tilemap->set_transparent_pen(15);
 	logerror("Video START OK!\n");
+}
+
+void igs_m027_state::video_start_fearless()
+{
 }
 
 UINT32 igs_m027_state::screen_update_igs_majhong(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	//??????????
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	//??????
 	m_igs_bg_tilemap->draw(screen, bitmap, cliprect, 0,0);
@@ -247,6 +257,11 @@ static ADDRESS_MAP_START( igs_majhong_map, AS_PROGRAM, 32, igs_m027_state )
 	AM_RANGE(0xf0000000, 0xF000000f) AM_WRITENOP // magic registers
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( igs_fearless_map, AS_PROGRAM, 32, igs_m027_state )
+	AM_RANGE(0x00000000, 0x00003fff) AM_ROM /* Internal ROM */
+	AM_RANGE(0x08000000, 0x0807ffff) AM_ROM AM_REGION("user1", 0)/* Game ROM */
+ADDRESS_MAP_END
+
 
 /***************************************************************************
 
@@ -259,6 +274,7 @@ ADDRESS_MAP_END
     Code Decryption
 
 ***************************************************************************/
+#if 0
 static const UINT8 sdwx_tab[] =
 {
 	0x49,0x47,0x53,0x30,0x30,0x35,0x35,0x52,0x44,0x34,0x30,0x32,0x30,0x36,0x32,0x31,
@@ -278,6 +294,7 @@ static const UINT8 sdwx_tab[] =
 	0x12,0x56,0x97,0x26,0x1D,0x5F,0xA7,0xF8,0x89,0x3F,0x14,0x36,0x72,0x3B,0x48,0x7B,
 	0xF1,0xED,0x72,0xB7,0x7A,0x56,0x05,0xDE,0x7B,0x27,0x6D,0xCF,0x33,0x4C,0x14,0x86,
 };
+#endif
 
 
 
@@ -286,7 +303,7 @@ void igs_m027_state::sdwx_gfx_decrypt()
 	int i;
 	unsigned rom_size = 0x80000;
 	UINT8 *src = (UINT8 *) (memregion("gfx1")->base());
-	UINT8 *result_data = auto_alloc_array(machine(), UINT8, rom_size);
+	dynamic_buffer result_data(rom_size);
 
 	for (i=0; i<rom_size; i++)
 		result_data[i] = src[BITSWAP24(i, 23,22,21,20,19,18,17,16,15,14,13,12,11,8,7,6,10,9,5,4,3,2,1,0)];
@@ -298,7 +315,6 @@ void igs_m027_state::sdwx_gfx_decrypt()
 		memcpy(src+i+0x100,result_data+i+0x080,0x80);
 		memcpy(src+i+0x180,result_data+i+0x180,0x80);
 	}
-	auto_free(machine(), result_data);
 }
 
 /***************************************************************************
@@ -389,7 +405,7 @@ static MACHINE_CONFIG_START( igs_majhong, igs_m027_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs_m027_state,  igs_majhong_interrupt)
 	//MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_GFXDECODE(igs_m027)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", igs_m027)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -398,8 +414,9 @@ static MACHINE_CONFIG_START( igs_majhong, igs_m027_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
 	MCFG_SCREEN_UPDATE_DRIVER(igs_m027_state, screen_update_igs_majhong)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x200)
+	MCFG_PALETTE_ADD("palette", 0x200)
 
 
 	/* sound hardware */
@@ -407,14 +424,14 @@ static MACHINE_CONFIG_START( igs_majhong, igs_m027_state )
 MACHINE_CONFIG_END
 
 
-static void sound_irq( device_t *device, int level )
+WRITE_LINE_MEMBER(igs_m027_state::sound_irq)
 {
 }
 
 
 static MACHINE_CONFIG_START( fearless, igs_m027_state )
 	MCFG_CPU_ADD("maincpu",ARM7, 50000000/2)
-	MCFG_CPU_PROGRAM_MAP(igs_majhong_map)
+	MCFG_CPU_PROGRAM_MAP(igs_fearless_map)
 
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", igs_m027_state,  igs_majhong_interrupt)
 
@@ -423,13 +440,17 @@ static MACHINE_CONFIG_START( fearless, igs_m027_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_DRIVER(igs_m027_state, screen_update_fearless)
 
-	MCFG_PALETTE_LENGTH(0x200)
+	MCFG_VIDEO_START_OVERRIDE(igs_m027_state, fearless)
+	MCFG_SCREEN_UPDATE_DRIVER(igs_m027_state, screen_update_fearless)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_PALETTE_ADD("palette", 0x200)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_ICS2115_ADD("ics", 0, sound_irq)
+	MCFG_ICS2115_ADD("ics", 0)
+	MCFG_ICS2115_IRQ_CB(WRITELINE(igs_m027_state, sound_irq))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 5.0)
 
 MACHINE_CONFIG_END

@@ -13,6 +13,8 @@
 #ifndef __GALAXOLD_H__
 #define __GALAXOLD_H__
 
+#include "machine/7474.h"
+
 /* star circuit */
 #define STAR_COUNT  252
 struct star
@@ -33,7 +35,14 @@ public:
 			m_rockclim_videoram(*this,"rockclim_vram"),
 			m_racknrol_tiles_bank(*this,"racknrol_tbank"),
 			m_maincpu(*this, "maincpu"),
-			m_audiocpu(*this, "audiocpu") { }
+			m_audiocpu(*this, "audiocpu"),
+			m_7474_9m_1(*this, "7474_9m_1"),
+			m_7474_9m_2(*this, "7474_9m_2"),
+			m_gfxdecode(*this, "gfxdecode"),
+			m_screen(*this, "screen"),
+			m_palette(*this, "palette")
+	{
+	}
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_spriteram;
@@ -133,7 +142,6 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(vpool_lives_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(ckongg_coinage_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(dkongjrm_coinage_r);
-	DECLARE_READ8_MEMBER(ttl7474_trampoline);
 	DECLARE_DRIVER_INIT(bullsdrtg);
 	DECLARE_DRIVER_INIT(ladybugg);
 	DECLARE_DRIVER_INIT(4in1);
@@ -241,6 +249,11 @@ public:
 	void machine_reset_common(int line);
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_audiocpu;
+	optional_device<ttl7474_device> m_7474_9m_1;
+	optional_device<ttl7474_device> m_7474_9m_2;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };
 
 #define galaxold_coin_counter_0_w galaxold_coin_counter_w

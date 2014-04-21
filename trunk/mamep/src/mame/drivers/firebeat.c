@@ -603,7 +603,7 @@ UINT32 firebeat_state::update_screen(screen_device &screen, bitmap_ind16 &bitmap
 {
 	bitmap.fill(0, cliprect);
 
-	if ((mame_strnicmp(screen.machine().system().name, "popn", 4) == 0) || (mame_strnicmp(screen.machine().system().name, "bm3", 3) == 0))
+	if ((core_strnicmp(screen.machine().system().name, "popn", 4) == 0) || (core_strnicmp(screen.machine().system().name, "bm3", 3) == 0))
 	{
 		gcu_exec_display_list( bitmap, cliprect, chip, 0x1f80000);
 	}
@@ -751,7 +751,7 @@ void firebeat_state::GCU_w(int chip, UINT32 offset, UINT32 data, UINT32 mem_mask
 		case 0x40:      /* framebuffer config */
 			// HACK: switch display lists at the right times for the ParaParaParadise games until we
 			// do the video emulation properly
-			if (mame_strnicmp(machine().system().name, "pp", 2) == 0)
+			if (core_strnicmp(machine().system().name, "pp", 2) == 0)
 			{
 				switch (data)
 				{
@@ -771,7 +771,7 @@ void firebeat_state::GCU_w(int chip, UINT32 offset, UINT32 data, UINT32 mem_mask
 						break;
 				}
 			}
-			else if (mame_strnicmp(machine().system().name, "kbm", 3) == 0)
+			else if (core_strnicmp(machine().system().name, "kbm", 3) == 0)
 			{
 				switch (data)
 				{
@@ -1723,11 +1723,6 @@ MACHINE_RESET_MEMBER(firebeat_state,firebeat)
 	m_layer = 0;
 }
 
-const rtc65271_interface firebeat_rtc =
-{
-	DEVCB_NULL
-};
-
 WRITE_LINE_MEMBER( firebeat_state::ata_interrupt )
 {
 	m_maincpu->set_input_line(INPUT_LINE_IRQ4, state);
@@ -1749,7 +1744,7 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_MACHINE_START_OVERRIDE(firebeat_state,firebeat)
 	MCFG_MACHINE_RESET_OVERRIDE(firebeat_state,firebeat)
 
-	MCFG_RTC65271_ADD("rtc", firebeat_rtc)
+	MCFG_DEVICE_ADD("rtc", RTC65271, 0)
 
 	MCFG_FUJITSU_29F016A_ADD("flash_main")
 	MCFG_FUJITSU_29F016A_ADD("flash_snd1")
@@ -1762,8 +1757,7 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_DEVICE_CARD_MACHINE_CONFIG( "cdrom", cdrom_config )
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1771,6 +1765,7 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
 	MCFG_SCREEN_UPDATE_DRIVER(firebeat_state, screen_update_firebeat_0)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(firebeat_state,firebeat)
 
@@ -1797,7 +1792,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_MACHINE_START_OVERRIDE(firebeat_state,firebeat)
 	MCFG_MACHINE_RESET_OVERRIDE(firebeat_state,firebeat)
 
-	MCFG_RTC65271_ADD("rtc", firebeat_rtc)
+	MCFG_DEVICE_ADD("rtc", RTC65271, 0)
 
 	MCFG_FUJITSU_29F016A_ADD("flash_main")
 	MCFG_FUJITSU_29F016A_ADD("flash_snd1")
@@ -1810,8 +1805,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_DEVICE_CARD_MACHINE_CONFIG( "cdrom", cdrom_config )
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1819,6 +1813,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
 	MCFG_SCREEN_UPDATE_DRIVER(firebeat_state, screen_update_firebeat_0)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1826,6 +1821,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
 	MCFG_SCREEN_UPDATE_DRIVER(firebeat_state, screen_update_firebeat_1)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(firebeat_state,firebeat)
 

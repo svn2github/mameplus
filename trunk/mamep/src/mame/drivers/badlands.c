@@ -509,18 +509,20 @@ static MACHINE_CONFIG_START( badlands, badlands_state )
 	MCFG_ATARI_EEPROM_2816_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_GFXDECODE(badlands)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", badlands)
+	MCFG_PALETTE_ADD("palette", 256)
 
-	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, badlands_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 64,32)
+	MCFG_TILEMAP_ADD_STANDARD("playfield", "gfxdecode", 2, badlands_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 64,32)
 	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", badlands_state::s_mob_config)
+	MCFG_ATARI_MOTION_OBJECTS_GFXDECODE("gfxdecode")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_DRIVER(badlands_state, screen_update_badlands)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(badlands_state,badlands)
 
@@ -711,18 +713,20 @@ static MACHINE_CONFIG_START( badlandsb, badlands_state )
 	MCFG_ATARI_EEPROM_2816_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_GFXDECODE(badlandsb)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", badlandsb)
+	MCFG_PALETTE_ADD("palette", 256)
 
-	MCFG_TILEMAP_ADD_STANDARD("playfield", 2, badlands_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 64,32)
+	MCFG_TILEMAP_ADD_STANDARD("playfield", "gfxdecode", 2, badlands_state, get_playfield_tile_info, 8,8, SCAN_ROWS, 64,32)
 	MCFG_ATARI_MOTION_OBJECTS_ADD("mob", "screen", badlands_state::s_mob_config)
+	MCFG_ATARI_MOTION_OBJECTS_GFXDECODE("gfxdecode")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	/* note: these parameters are from published specs, not derived */
 	/* the board uses an SOS-2 chip to generate video signals */
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_DRIVER(badlands_state, screen_update_badlands)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_VIDEO_START_OVERRIDE(badlands_state,badlands)
 

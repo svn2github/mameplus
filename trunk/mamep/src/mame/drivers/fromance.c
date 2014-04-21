@@ -954,20 +954,6 @@ static GFXDECODE_START( fromance )
 GFXDECODE_END
 
 
-
-/*************************************
- *
- *  Sound definitions
- *
- *************************************/
-
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(fromance_state,fromance_adpcm_int), /* IRQ handler */
-	MSM5205_S48_4B      /* 8 KHz */
-};
-
-
 /*************************************
  *
  *  Machine drivers
@@ -1041,9 +1027,10 @@ static MACHINE_CONFIG_START( nekkyoku, fromance_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(fromance)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", fromance)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 	MCFG_VIDEO_START_OVERRIDE(fromance_state,nekkyoku)
 
@@ -1054,7 +1041,8 @@ static MACHINE_CONFIG_START( nekkyoku, fromance_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 
 	MCFG_SOUND_ADD("msm", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(fromance_state, fromance_adpcm_int)) /* IRQ handler */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 KHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -1079,9 +1067,10 @@ static MACHINE_CONFIG_START( idolmj, fromance_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(fromance)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", fromance)
+	MCFG_PALETTE_ADD("palette", 2048)
 
 	MCFG_VIDEO_START_OVERRIDE(fromance_state,fromance)
 
@@ -1092,7 +1081,8 @@ static MACHINE_CONFIG_START( idolmj, fromance_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 
 	MCFG_SOUND_ADD("msm", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(fromance_state, fromance_adpcm_int)) /* IRQ handler */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 KHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -1117,9 +1107,10 @@ static MACHINE_CONFIG_START( fromance, fromance_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 352-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(fromance_state, screen_update_fromance)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(fromance)
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", fromance)
+	MCFG_PALETTE_ADD("palette", 2048)
 
 	MCFG_VIDEO_START_OVERRIDE(fromance_state,fromance)
 
@@ -1130,7 +1121,8 @@ static MACHINE_CONFIG_START( fromance, fromance_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 
 	MCFG_SOUND_ADD("msm", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(fromance_state, fromance_adpcm_int)) /* IRQ handler */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 KHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 MACHINE_CONFIG_END
 

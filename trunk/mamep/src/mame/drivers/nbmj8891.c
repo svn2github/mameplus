@@ -12,13 +12,10 @@ Notes:
 - mjcamerb and mmcamera is the medal version of mjcamera, however the
    two don't run on the same hardware. mjcamera is in nbmj8688.c.
 
-TODO:
-
-- mjfocus was crashing because of nested NMIs, to fix that I bumped the
-  clock from 5 MHz to 10 MHz.
-
 - In mjfocus(Medal Type), sometimes CPU's hands are forced out from the screen.
   This is correct behaviour.
+
+TODO:
 
 - Telmajan cannot set to JAMMA type. I don't know why.
 
@@ -2539,8 +2536,9 @@ static MACHINE_CONFIG_START( gionbana, nbmj8891_state )
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 8, 248-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nbmj8891_state, screen_update_nbmj8891)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
 
 
 	/* sound hardware */

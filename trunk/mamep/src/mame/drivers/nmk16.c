@@ -310,7 +310,7 @@ static ADDRESS_MAP_START( vandyke_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITE(vandyke_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x094000, 0x097fff) AM_RAM /* what is this? */
@@ -329,7 +329,7 @@ static ADDRESS_MAP_START( vandykeb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x080010, 0x08001d) AM_WRITE(vandykeb_scroll_w) /* 10, 12, 1a, 1c */
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITENOP    /* just in case... */
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x094000, 0x097fff) AM_RAM /* what is this? */
@@ -347,7 +347,7 @@ static ADDRESS_MAP_START( manybloc_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x08001c, 0x08001d) AM_WRITENOP            /* See notes at the top of the driver */
 	AM_RANGE(0x08001e, 0x08001f) AM_READWRITE(soundlatch2_word_r,soundlatch_word_w)
-	AM_RANGE(0x088000, 0x0883ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0883ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x09c000, 0x09cfff) AM_RAM_WRITE(manybloc_scroll_w) AM_SHARE("scrollram")
 	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
@@ -366,7 +366,7 @@ static ADDRESS_MAP_START( tharrier_map, AS_PROGRAM, 16, nmk16_state )
 //  AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE(soundlatch_word_w)
 	AM_RANGE(0x080202, 0x080203) AM_READ_PORT("IN2")
-	AM_RANGE(0x088000, 0x0883ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0883ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 //  AM_RANGE(0x08c000, 0x08c007) AM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM /* Unused txvideoram area? */
@@ -401,7 +401,7 @@ static ADDRESS_MAP_START( mustang_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    // frame number?
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP    // ??
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -418,7 +418,7 @@ static ADDRESS_MAP_START( mustangb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    // frame number?
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("seibu_sound", seibu_sound_device, main_mustb_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP    // ??
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -436,7 +436,7 @@ static ADDRESS_MAP_START( twinactn_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    // frame number?
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE(afega_soundlatch_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP    // ??
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -457,7 +457,7 @@ static ADDRESS_MAP_START( acrobatm_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0xc0016, 0xc0017) AM_WRITENOP
 	AM_RANGE(0xc0018, 0xc0019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0xc001e, 0xc001f) AM_DEVWRITE("nmk004", nmk004_device, write)
-	AM_RANGE(0xc4000, 0xc45ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xc4000, 0xc45ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xc8000, 0xc8007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0xcc000, 0xcffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0xd4000, 0xd47ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
@@ -473,7 +473,7 @@ static ADDRESS_MAP_START( bioship_map, AS_PROGRAM, 16, nmk16_state )
 //  AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x084000, 0x084001) AM_WRITE(bioship_bank_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c007) AM_RAM_WRITE(bioshipbg_scroll_w)
 	AM_RANGE(0x08c010, 0x08c017) AM_RAM_WRITE(bioship_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -652,7 +652,7 @@ static ADDRESS_MAP_START( hachamf_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	/* Video Region */
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
@@ -884,7 +884,7 @@ static ADDRESS_MAP_START( tdragon_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
 ADDRESS_MAP_END
@@ -907,7 +907,7 @@ static ADDRESS_MAP_START( tdragonb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_DEVWRITE("seibu_sound", seibu_sound_device, main_mustb_w)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
 ADDRESS_MAP_END
@@ -923,7 +923,7 @@ static ADDRESS_MAP_START( ssmissin_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE(ssmissin_sound_w)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x0d0000, 0x0d07ff) AM_MIRROR(0x1800) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram") //mirror for airattck
 ADDRESS_MAP_END
@@ -948,7 +948,7 @@ static ADDRESS_MAP_START( strahl_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x8001e, 0x8001f) AM_DEVWRITE("nmk004", nmk004_device, write)
 	AM_RANGE(0x84000, 0x84007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x88000, 0x88007) AM_RAM_WRITE(nmk_scroll_2_w)
-	AM_RANGE(0x8c000, 0x8c7ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x8c000, 0x8c7ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x90000, 0x93fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x94000, 0x97fff) AM_RAM_WRITE(nmk_fgvideoram_w) AM_SHARE("nmk_fgvideoram")
 	AM_RANGE(0x9c000, 0x9c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
@@ -966,7 +966,7 @@ static ADDRESS_MAP_START( macross_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
@@ -984,7 +984,7 @@ static ADDRESS_MAP_START( gunnail_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_DEVWRITE("nmk004", nmk004_device, write)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x08c000, 0x08c1ff) AM_WRITEONLY AM_SHARE("scrollram")
 	AM_RANGE(0x08c200, 0x08c3ff) AM_WRITEONLY AM_SHARE("scrollramy")
 	AM_RANGE(0x08c400, 0x08c7ff) AM_WRITEONLY   // unknown
@@ -1004,7 +1004,7 @@ static ADDRESS_MAP_START( macross2_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x100016, 0x100017) AM_WRITE(macross2_sound_reset_w)   /* Z80 reset */
 	AM_RANGE(0x100018, 0x100019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x10001e, 0x10001f) AM_WRITE(macross2_sound_command_w) /* to Z80 */
-	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x120000, 0x1207ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
 	AM_RANGE(0x130000, 0x1301ff) AM_RAM AM_SHARE("scrollram")
 	AM_RANGE(0x130200, 0x1303ff) AM_RAM AM_SHARE("scrollramy")
@@ -1030,7 +1030,7 @@ static ADDRESS_MAP_START( raphero_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x100016, 0x100017) AM_WRITENOP    /* IRQ enable or z80 sound reset like in Macross 2? */
 	AM_RANGE(0x100018, 0x100019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x10001e, 0x10001f) AM_WRITE(macross2_sound_command_w) /* to Z80 */
-	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x120000, 0x1207ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
 	AM_RANGE(0x130000, 0x1301ff) AM_RAM AM_SHARE("scrollram")
 	AM_RANGE(0x130200, 0x1303ff) AM_RAM AM_SHARE("scrollramy")
@@ -1092,7 +1092,7 @@ static ADDRESS_MAP_START( bjtwin_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x084000, 0x084001) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x084010, 0x084011) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x084020, 0x08402f) AM_DEVWRITE("nmk112", nmk112_device, okibank_lsb_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x094000, 0x094001) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x094002, 0x094003) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x09c000, 0x09cfff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -1118,7 +1118,7 @@ static ADDRESS_MAP_START( atombjt_map, AS_PROGRAM, 16, nmk16_state )
 //  AM_RANGE(0x084000, 0x084001) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 //  AM_RANGE(0x084010, 0x084011) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 //  AM_RANGE(0x084020, 0x08402f) AM_DEVWRITE("nmk112", nmk112_device, okibank_lsb_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x094000, 0x094001) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x094002, 0x094003) AM_WRITENOP    /* IRQ enable? */
 	AM_RANGE(0x09c000, 0x09cfff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
@@ -3652,10 +3652,11 @@ static MACHINE_CONFIG_START( tharrier, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_tharrier)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tharrier)
-	MCFG_PALETTE_LENGTH(512)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tharrier)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
 	/* sound hardware */
@@ -3696,9 +3697,11 @@ static MACHINE_CONFIG_START( manybloc, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_manybloc)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tharrier)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tharrier)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -3736,9 +3739,11 @@ static MACHINE_CONFIG_START( mustang, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -3780,9 +3785,11 @@ static MACHINE_CONFIG_START( mustangb, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -3810,9 +3817,11 @@ static MACHINE_CONFIG_START( bioship, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_bioship)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bioship)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bioship)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,bioship)
 
@@ -3852,9 +3861,11 @@ static MACHINE_CONFIG_START( vandyke, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -3897,9 +3908,11 @@ static MACHINE_CONFIG_START( vandykeb, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -3928,9 +3941,11 @@ static MACHINE_CONFIG_START( acrobatm, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBxxxx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -3974,9 +3989,11 @@ static MACHINE_CONFIG_START( tdragonb, nmk16_state )    /* bootleg using Raiden 
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -4001,9 +4018,11 @@ static MACHINE_CONFIG_START( tdragon, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 	MCFG_TIMER_DRIVER_ADD_PERIODIC("coinsim", nmk16_state, tdragon_mcu_sim, attotime::from_hz(10000))
@@ -4047,9 +4066,11 @@ static MACHINE_CONFIG_START( ssmissin, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -4077,9 +4098,11 @@ static MACHINE_CONFIG_START( strahl, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_strahl)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_strahl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(strahl)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", strahl)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBxxxx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,strahl)
 
@@ -4119,9 +4142,11 @@ static MACHINE_CONFIG_START( hachamf, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 	MCFG_TIMER_DRIVER_ADD_PERIODIC("coinsim", nmk16_state, hachamf_mcu_sim, attotime::from_hz(10000))
@@ -4162,9 +4187,11 @@ static MACHINE_CONFIG_START( macross, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -4204,9 +4231,11 @@ static MACHINE_CONFIG_START( blkheart, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -4246,9 +4275,11 @@ static MACHINE_CONFIG_START( gunnail, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_gunnail)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,gunnail)
 
@@ -4292,9 +4323,11 @@ static MACHINE_CONFIG_START( macross2, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_gunnail)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross2)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross2)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross2)
 
@@ -4335,9 +4368,11 @@ static MACHINE_CONFIG_START( tdragon2, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_tdragon2)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross2)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross2)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross2)
 
@@ -4377,9 +4412,11 @@ static MACHINE_CONFIG_START( raphero, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_tdragon2)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross2)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross2)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,raphero)
 
@@ -4419,9 +4456,11 @@ static MACHINE_CONFIG_START( bjtwin, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_bjtwin)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bjtwin)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bjtwin)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,bjtwin)
 
@@ -4454,9 +4493,11 @@ static MACHINE_CONFIG_START( atombjt, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_bjtwin)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(atombjt)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", atombjt)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,bjtwin)
 
@@ -4748,7 +4789,7 @@ static ADDRESS_MAP_START( afega, AS_PROGRAM, 16, nmk16_state )
 /**/AM_RANGE(0x084000, 0x084003) AM_RAM_WRITE(afega_scroll0_w)  // Scroll on redhawkb (mirror or changed?..)
 /**/AM_RANGE(0x084004, 0x084007) AM_RAM_WRITE(afega_scroll1_w)  // Scroll on redhawkb (mirror or changed?..)
 	AM_RANGE(0x080020, 0x087fff) AM_WRITEONLY               //
-/**/AM_RANGE(0x088000, 0x0885ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") // Palette
+/**/AM_RANGE(0x088000, 0x0885ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette") // Palette
 	AM_RANGE(0x088600, 0x08bfff) AM_WRITEONLY               //
 /**/AM_RANGE(0x08c000, 0x08c003) AM_RAM_WRITE(afega_scroll0_w) AM_SHARE("afega_scroll_0")   // Scroll
 /**/AM_RANGE(0x08c004, 0x08c007) AM_RAM_WRITE(afega_scroll1_w) AM_SHARE("afega_scroll_1")   //
@@ -4915,9 +4956,11 @@ static MACHINE_CONFIG_START( stagger1, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_afega)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(stagger1)
-	MCFG_PALETTE_LENGTH(768)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", stagger1)
+	MCFG_PALETTE_ADD("palette", 768)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,afega)
 
@@ -4946,7 +4989,7 @@ static MACHINE_CONFIG_DERIVED( redhawkb, stagger1 )
 
 	/* basic machine hardware */
 	/* video hardware */
-	MCFG_GFXDECODE(redhawkb)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", redhawkb)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_redhawkb)
 MACHINE_CONFIG_END
@@ -4956,7 +4999,7 @@ static MACHINE_CONFIG_DERIVED( grdnstrm, stagger1 )
 	/* basic machine hardware */
 
 	/* video hardware */
-	MCFG_GFXDECODE(grdnstrm)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", grdnstrm)
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,firehawk)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_firehawk)
@@ -4969,7 +5012,7 @@ static MACHINE_CONFIG_DERIVED( grdnstrmk, stagger1 ) /* Side by side with PCB, t
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_REFRESH_RATE(57) /* Side by side with PCB, MAME is too fast at 56 */
-	MCFG_GFXDECODE(grdnstrm)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", grdnstrm)
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,grdnstrm)
 MACHINE_CONFIG_END
 
@@ -5000,9 +5043,11 @@ static MACHINE_CONFIG_START( firehawk, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_firehawk)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(grdnstrm)
-	MCFG_PALETTE_LENGTH(768)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", grdnstrm)
+	MCFG_PALETTE_ADD("palette", 768)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,firehawk)
 
@@ -5035,9 +5080,11 @@ static MACHINE_CONFIG_START( twinactn, nmk16_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nmk16_state, screen_update_macross)
 	MCFG_SCREEN_VBLANK_DRIVER(nmk16_state, screen_eof_nmk)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(macross)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macross)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(RRRRGGGGBBBBRGBx)
 
 	MCFG_VIDEO_START_OVERRIDE(nmk16_state,macross)
 
@@ -5065,7 +5112,7 @@ static void decryptcode( running_machine &machine, int a23, int a22, int a21, in
 	int i;
 	UINT8 *RAM = machine.root_device().memregion( "maincpu" )->base();
 	size_t  size = machine.root_device().memregion( "maincpu" )->bytes();
-	UINT8 *buffer = auto_alloc_array(machine, UINT8,  size );
+	dynamic_buffer buffer( size );
 
 	memcpy( buffer, RAM, size );
 	for( i = 0; i < size; i++ )
@@ -5073,7 +5120,6 @@ static void decryptcode( running_machine &machine, int a23, int a22, int a21, in
 		RAM[ i ] = buffer[ BITSWAP24( i, a23, a22, a21, a20, a19, a18, a17, a16, a15, a14, a13, a12,
 			a11, a10, a9, a8, a7, a6, a5, a4, a3, a2, a1, a0 ) ];
 	}
-	auto_free( machine, buffer );
 }
 
 
@@ -7358,6 +7404,31 @@ ROM_START( spec2k )
 	ROM_LOAD( "yonatech3.u106", 0x00000, 0x80000, CRC(6644c404) SHA1(b7ad3f9f08971432d024ef8be3fa3140f0bbae67) )
 ROM_END
 
+ROM_START( spec2kv )
+	ROM_REGION( 0x80000, "maincpu", 0 ) /* 68000 Code */
+	ROM_LOAD16_BYTE( "prg1", 0x00000, 0x40000, NO_DUMP )
+	ROM_LOAD16_BYTE( "prg2", 0x00001, 0x40000, NO_DUMP )
+
+	ROM_REGION( 0x20000, "audiocpu", 0 )    /* Z80 Code */
+	ROM_LOAD( "z80", 0x00000, 0x10000, NO_DUMP )
+
+	ROM_REGION( 0x200000, "sprites",0 ) /* Sprites, 16x16x4 */
+	ROM_LOAD( "uc1", 0x00000, 0x200000, CRC(3139a213) SHA1(5ec4be0e27cbf1c4556ab10d7e1408ea64aa9e17) )
+
+	ROM_REGION( 0x400000, "bgtile", 0 ) /* Layer 0, 16x16x8 */
+	ROM_LOAD( "uc3", 0x000000, 0x200000, CRC(1d087122) SHA1(9e82c5f26c1387c6006cbd9248b333921388146c) )
+	ROM_LOAD( "uc2", 0x200000, 0x200000, CRC(998dc05c) SHA1(cadf8bb0b8944372fbce9934b93684749ebc3ba0) )
+
+	ROM_REGION( 0x20000, "fgtile", ROMREGION_ERASEFF )    /* Layer 1, 8x8x4 */
+	ROM_LOAD( "fgtiles", 0x00000, 0x20000, NO_DUMP )
+
+	ROM_REGION( 0x40000, "oki1", 0 ) /* Samples */
+	ROM_LOAD( "samples1", 0x00000, 0x20000, NO_DUMP )
+
+	ROM_REGION( 0x080000, "oki2", 0 ) /* Samples */
+	ROM_LOAD( "samples2", 0x00000, 0x80000, NO_DUMP )
+ROM_END
+
 /***************************************************************************
     1995, Afega
 
@@ -7513,6 +7584,7 @@ GAME( 2000, mangchi,  0,        popspops, mangchi, nmk16_state,    bubl2000, ROT
 
 // these two are very similar games, but the exact parent/clone relationship is unknown
 GAME( 2000, spec2k,   0,        firehawk, spec2k, nmk16_state,     spec2k,   ORIENTATION_FLIP_Y, "Yona Tech",             "Spectrum 2000 (Euro)", 0 )
+GAME( 2000, spec2kv,  spec2k,   firehawk, spec2k, nmk16_state,     spec2k,   ROT270,             "Yona Tech",             "Spectrum 2000 (vertical)", GAME_NOT_WORKING ) // incomplete dump, only gfx roms are dumped
 GAME( 2001, firehawk, 0,        firehawk, firehawk, driver_device, 0,        ORIENTATION_FLIP_Y, "ESD",                   "Fire Hawk", 0 )
 
 // bee-oh board - different display / interrupt timing to others?

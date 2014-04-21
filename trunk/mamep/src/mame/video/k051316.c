@@ -47,10 +47,33 @@ const device_type K051316 = &device_creator<k051316_device>;
 
 k051316_device::k051316_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, K051316, "Konami 051316", tag, owner, clock, "k051316", __FILE__),
-	m_ram(NULL)
+	m_ram(NULL),
 	//m_tmap,
-	//m_ctrlram[16]
+	//m_ctrlram[16],
+	m_gfxdecode(*this),
+	m_palette(*this)
 {
+}
+
+//-------------------------------------------------
+//  static_set_gfxdecode_tag: Set the tag of the
+//  gfx decoder
+//-------------------------------------------------
+
+void k051316_device::static_set_gfxdecode_tag(device_t &device, const char *tag)
+{
+	downcast<k051316_device &>(device).m_gfxdecode.set_tag(tag);
+}
+
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void k051316_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<k051316_device &>(device).m_palette.set_tag(tag);
 }
 
 //-------------------------------------------------
@@ -87,6 +110,9 @@ void k051316_device::device_config_complete()
 
 void k051316_device::device_start()
 {
+	if(!m_gfxdecode->started())
+		throw device_missing_dependencies();
+
 	int is_tail2nos = 0;
 	UINT32 total;
 
@@ -148,22 +174,22 @@ void k051316_device::device_start()
 	case -4:
 		total = 0x400;
 		is_tail2nos = 1;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout_tail2nos, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout_tail2nos, 4);
 		break;
 
 	case 4:
 		total = machine().root_device().memregion(m_gfx_memory_region_tag)->bytes() / 128;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout4, 4);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout4, 4);
 		break;
 
 	case 7:
 		total = machine().root_device().memregion(m_gfx_memory_region_tag)->bytes() / 256;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout7, 7);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout7, 7);
 		break;
 
 	case 8:
 		total = machine().root_device().memregion(m_gfx_memory_region_tag)->bytes() / 256;
-		konami_decode_gfx(machine(), m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout8, 8);
+		konami_decode_gfx(machine(), m_gfxdecode, m_palette, m_gfx_num, machine().root_device().memregion(m_gfx_memory_region_tag)->base(), total, &charlayout8, 8);
 		break;
 
 	default:
@@ -172,7 +198,7 @@ void k051316_device::device_start()
 
 	m_bpp = is_tail2nos ? 4 : m_bpp; // tail2nos is passed with bpp = -4 to setup the custom charlayout!
 
-	m_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k051316_device::get_tile_info0),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tmap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(k051316_device::get_tile_info0),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
 	m_ram = auto_alloc_array_clear(machine(), UINT8, 0x800);
 
@@ -261,8 +287,7 @@ void k051316_device::get_tile_info( tile_data &tileinfo, int tile_index )
 
 	m_callback(machine(), &code, &color, &flags);
 
-	SET_TILE_INFO_MEMBER(
-			m_gfx_num,
+	SET_TILE_INFO_MEMBER(m_gfx_num,
 			code,
 			color,
 			flags);

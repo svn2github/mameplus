@@ -28,7 +28,10 @@ public:
 		m_konamigx_type3_psac2_bank(*this,"psac2_bank"),
 		m_k056800(*this, "k056800"),
 		m_k054539_1(*this,"k054539_1"),
-		m_k054539_2(*this,"k054539_2")
+		m_k054539_2(*this,"k054539_2"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")
 		{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -49,6 +52,9 @@ public:
 	optional_device<k056800_device> m_k056800;
 	optional_device<k054539_device> m_k054539_1;
 	optional_device<k054539_device> m_k054539_2;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	DECLARE_WRITE32_MEMBER(esc_w);
 	DECLARE_WRITE32_MEMBER(eeprom_w);

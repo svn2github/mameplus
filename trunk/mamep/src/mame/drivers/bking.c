@@ -479,9 +479,11 @@ static MACHINE_CONFIG_START( bking, bking_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(bking_state, screen_update_bking)
 	MCFG_SCREEN_VBLANK_DRIVER(bking_state, screen_eof_bking)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bking)
-	MCFG_PALETTE_LENGTH(4*8+4*4+4*2+4*2)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bking)
+	MCFG_PALETTE_ADD("palette", 4*8+4*4+4*2+4*2)
+	MCFG_PALETTE_INIT_OWNER(bking_state, bking)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -13,8 +13,7 @@
 TILE_GET_INFO_MEMBER(tail2nos_state::get_tile_info)
 {
 	UINT16 code = m_bgvideoram[tile_index];
-	SET_TILE_INFO_MEMBER(
-			0,
+	SET_TILE_INFO_MEMBER(0,
 			(code & 0x1fff) + (m_charbank << 13),
 			((code & 0xe000) >> 13) + m_charpalette * 16,
 			0);
@@ -47,13 +46,13 @@ void tail2nos_state::tail2nos_postload()
 
 	for (i = 0; i < 0x20000; i += 64)
 	{
-		machine().gfx[2]->mark_dirty(i / 64);
+		m_gfxdecode->gfx(2)->mark_dirty(i / 64);
 	}
 }
 
 void tail2nos_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tail2nos_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tail2nos_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
 	m_bg_tilemap->set_transparent_pen(15);
 
@@ -88,7 +87,7 @@ WRITE16_MEMBER(tail2nos_state::tail2nos_zoomdata_w)
 
 	COMBINE_DATA(&m_zoomdata[offset]);
 	if (oldword != m_zoomdata[offset])
-		machine().gfx[2]->mark_dirty(offset / 64);
+		m_gfxdecode->gfx(2)->mark_dirty(offset / 64);
 }
 
 WRITE16_MEMBER(tail2nos_state::tail2nos_gfxbank_w)
@@ -156,8 +155,8 @@ void tail2nos_state::draw_sprites( bitmap_ind16 &bitmap, const rectangle &clipre
 		flipx = spriteram[offs + 2] & 0x1000;
 		flipy = spriteram[offs + 2] & 0x0800;
 
-		drawgfx_transpen(bitmap,/* placement relative to zoom layer verified on the real thing */
-				cliprect,machine().gfx[1],
+		m_gfxdecode->gfx(1)->transpen(bitmap,/* placement relative to zoom layer verified on the real thing */
+				cliprect,
 				code,
 				40 + color,
 				flipx,flipy,

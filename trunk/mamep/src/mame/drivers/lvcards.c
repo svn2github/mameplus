@@ -69,7 +69,6 @@ TODO:
 - CPU speed/ YM2149 frequencies
 - Input ports need to be cleaned up
 - NVRAM does not work for lvcards?
-- AGEMAME marks lvpoker/ponttekh as GAME_SUPPORTS_SAVE, needs checking.
 
 ***************************************************************************/
 
@@ -475,10 +474,11 @@ static MACHINE_CONFIG_START( lvcards, lvcards_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(8*0, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(lvcards_state, screen_update_lvcards)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(lvcards)
-	MCFG_PALETTE_LENGTH(256)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", lvcards)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(lvcards_state, lvcards)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -507,7 +507,8 @@ static MACHINE_CONFIG_DERIVED( ponttehk, lvcards )
 	MCFG_MACHINE_RESET_OVERRIDE(lvcards_state,lvpoker)
 
 	// video hardware
-	MCFG_PALETTE_INIT_OVERRIDE(lvcards_state,ponttehk)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_INIT_OWNER(lvcards_state,ponttehk)
 MACHINE_CONFIG_END
 
 ROM_START( lvpoker )

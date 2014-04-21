@@ -196,12 +196,11 @@ There is not a rev 03 known or dumped. An Asteroids rev 03 is not mentioned in a
 #include "includes/asteroid.h"
 #include "sound/discrete.h"
 #include "sound/pokey.h"
-#include "drivlgcy.h"
 
 #include "astdelux.lh"
 
 #define MASTER_CLOCK (XTAL_12_096MHz)
-#define CLOCK_3KHZ  (MASTER_CLOCK / 4096)
+#define CLOCK_3KHZ   ((double)MASTER_CLOCK / 4096)
 
 /*************************************
  *
@@ -249,7 +248,7 @@ static ADDRESS_MAP_START( asteroid_map, AS_PROGRAM, 8, asteroid_state )
 	AM_RANGE(0x2000, 0x2007) AM_READ(asteroid_IN0_r)    /* IN0 */
 	AM_RANGE(0x2400, 0x2407) AM_READ(asteroid_IN1_r)    /* IN1 */
 	AM_RANGE(0x2800, 0x2803) AM_READ(asteroid_DSW1_r)   /* DSW1 */
-	AM_RANGE(0x3000, 0x3000) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x3000, 0x3000) AM_DEVWRITE("dvg", dvg_device, go_w)
 	AM_RANGE(0x3200, 0x3200) AM_WRITE(asteroid_bank_switch_w)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x3600, 0x3600) AM_WRITE(asteroid_explode_w)
@@ -272,7 +271,7 @@ static ADDRESS_MAP_START( astdelux_map, AS_PROGRAM, 8, asteroid_state )
 	AM_RANGE(0x2800, 0x2803) AM_READ(asteroid_DSW1_r)   /* DSW1 */
 	AM_RANGE(0x2c00, 0x2c0f) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0x2c40, 0x2c7f) AM_DEVREAD("earom", atari_vg_earom_device, read)
-	AM_RANGE(0x3000, 0x3000) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x3000, 0x3000) AM_DEVWRITE("dvg", dvg_device, go_w)
 	AM_RANGE(0x3200, 0x323f) AM_DEVWRITE("earom", atari_vg_earom_device, write)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x3600, 0x3600) AM_WRITE(asteroid_explode_w)
@@ -295,7 +294,7 @@ static ADDRESS_MAP_START( llander_map, AS_PROGRAM, 8, asteroid_state )
 	AM_RANGE(0x2400, 0x2407) AM_READ(asteroid_IN1_r)    /* IN1 */
 	AM_RANGE(0x2800, 0x2803) AM_READ(asteroid_DSW1_r)   /* DSW1 */
 	AM_RANGE(0x2c00, 0x2c00) AM_READ_PORT("THRUST")
-	AM_RANGE(0x3000, 0x3000) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x3000, 0x3000) AM_DEVWRITE("dvg", dvg_device, go_w)
 	AM_RANGE(0x3200, 0x3200) AM_WRITE(llander_led_w)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x3c00, 0x3c00) AM_WRITE(llander_sounds_w)
@@ -323,7 +322,7 @@ static INPUT_PORTS_START( asteroid )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	/* Bit 2 is the 3 KHz source and Bit 3 the VG_HALT bit    */
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, asteroid_state,clock_r, NULL)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("dvg", dvg_device, done_r, NULL)
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_CODE(KEYCODE_SPACE) PORT_CODE(JOYCODE_BUTTON3)       /* hyperspace */
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_CODE(KEYCODE_LCONTROL) PORT_CODE(JOYCODE_BUTTON1)    /* fire */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SERVICE ) PORT_NAME("Diagnostic Step") PORT_CODE(KEYCODE_F1)
@@ -377,7 +376,7 @@ static INPUT_PORTS_START( asteroidb )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	/* Bit 7 is VG_HALT */
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("dvg", dvg_device, done_r, NULL)
 
 	PORT_MODIFY("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
@@ -414,7 +413,7 @@ static INPUT_PORTS_START( asterock )
 
 	PORT_MODIFY("IN0")
 	/* Bit 0 is VG_HALT and Bit 2 is the 3 KHz source */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("dvg", dvg_device, done_r, NULL)
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, asteroid_state,clock_r, NULL)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_CODE(KEYCODE_SPACE) PORT_CODE(JOYCODE_BUTTON3)        /* hyperspace */
@@ -457,7 +456,7 @@ static INPUT_PORTS_START( astdelux )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED ) /* According to schematics */
 	/* Bit 2 is the 3 KHz source and Bit 3 the VG_HALT bit    */
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, asteroid_state,clock_r, NULL)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("dvg", dvg_device, done_r, NULL)
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_CODE(KEYCODE_SPACE) PORT_CODE(JOYCODE_BUTTON3)       /* hyperspace */
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_CODE(KEYCODE_LCONTROL) PORT_CODE(JOYCODE_BUTTON1)    /* fire */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SERVICE ) PORT_NAME("Diagnostic Step") PORT_CODE(KEYCODE_F1)
@@ -539,7 +538,7 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( llander )
 	PORT_START("IN0")
 	/* Bit 0 is VG_HALT */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("dvg", dvg_device, done_r, NULL)
 	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT )
 	/* Of the rest, Bit 6 is the 3KHz source. 3,4 and 5 are unknown */
@@ -634,18 +633,18 @@ static MACHINE_CONFIG_START( asteroid, asteroid_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(asteroid_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, asteroid_interrupt,  (double)MASTER_CLOCK/4096/12)
-
+	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, asteroid_interrupt, CLOCK_3KHZ/12)
 
 	/* video hardware */
 	MCFG_VECTOR_ADD("vector")
 	MCFG_SCREEN_ADD("screen", VECTOR)
-	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_REFRESH_RATE(CLOCK_3KHZ/12/4)
 	MCFG_SCREEN_SIZE(400,300)
 	MCFG_SCREEN_VISIBLE_AREA(522, 1566, 394, 1182)
 	MCFG_SCREEN_UPDATE_DEVICE("vector", vector_device, screen_update)
 
-	MCFG_VIDEO_START(dvg)
+	MCFG_DEVICE_ADD("dvg", DVG, 0)
+	MCFG_AVGDVG_VECTOR("vector")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -659,7 +658,7 @@ static MACHINE_CONFIG_DERIVED( asterock, asteroid )
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, asterock_interrupt,  (double)MASTER_CLOCK/4096/12)
+	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, asterock_interrupt, CLOCK_3KHZ/12)
 MACHINE_CONFIG_END
 
 
@@ -690,14 +689,12 @@ static MACHINE_CONFIG_DERIVED( llander, asteroid )
 	MCFG_CPU_PROGRAM_MAP(llander_map)
 	MCFG_CPU_PERIODIC_INT_DRIVER(asteroid_state, llander_interrupt,  (double)MASTER_CLOCK/4096/12)
 
-	MCFG_MACHINE_RESET(avgdvg)
+	MCFG_MACHINE_RESET_OVERRIDE(asteroid_state, llander)
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_REFRESH_RATE(40)
+	MCFG_SCREEN_REFRESH_RATE(CLOCK_3KHZ/12/6)
 	MCFG_SCREEN_VISIBLE_AREA(522, 1566, 270, 1070)
 	MCFG_SCREEN_UPDATE_DEVICE("vector", vector_device, screen_update)
-
-	MCFG_VIDEO_START(dvg)
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("discrete", DISCRETE, 0)
@@ -752,15 +749,13 @@ ROM_START( asteroid1 )
 	ROM_LOAD( "034602-01.c8",   0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
 ROM_END
 
-
-
 ROM_START( asteroidb )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "035145ll.de1",  0x6800, 0x0800, CRC(605fc0f2) SHA1(8d897a3b75bd1f2537470f0a34a97a8c0853ee08) )
 	ROM_LOAD( "035144ll.c1",   0x7000, 0x0800, CRC(e106de77) SHA1(003e99d095bd4df6fae243ea1dd5b12f3eb974f1) )
 	ROM_LOAD( "035143ll.b1",   0x7800, 0x0800, CRC(6b1d8594) SHA1(ff3cd93f1bc5734bface285e442125b395602d7d) )
 	/* Vector ROM */
-	ROM_LOAD( "035127-01.np3", 0x5000, 0x0800, CRC(99699366) SHA1(9b2828fc1cef7727f65fa65e1e11e309b7c98792) )
+	ROM_LOAD( "035127-02.np3",  0x5000, 0x0800, CRC(8b71fd9e) SHA1(8cd5005e531eafa361d6b7e9eed159d164776c70) )
 
 	/* DVG PROM */
 	ROM_REGION( 0x100, "user1", 0 )
@@ -779,7 +774,6 @@ ROM_START( aerolitos )
 	ROM_REGION( 0x100, "user1", 0 )
 	ROM_LOAD( "034602-01.c8",   0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
 ROM_END
-
 
 ROM_START( asterock )
 	ROM_REGION( 0x8000, "maincpu", 0 )
@@ -857,7 +851,6 @@ ROM_START( hyperspc )
 	ROM_REGION( 0x100, "user1", 0 )
 	ROM_LOAD( "034602-01.c8",   0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
 ROM_END
-
 
 ROM_START( astdelux )
 	ROM_REGION( 0x8000, "maincpu", 0 )
@@ -941,7 +934,6 @@ ROM_START( astdelux1 )
 	ROM_REGION( 0x100, "user1", 0 )
 	ROM_LOAD( "034602-01.c8",  0x0000, 0x0100, CRC(97953db8) SHA1(8cbded64d1dd35b18c4d5cece00f77e7b2cab2ad) )
 ROM_END
-
 
 ROM_START( llander )
 	ROM_REGION( 0x8000, "maincpu", 0 )

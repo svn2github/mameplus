@@ -1150,9 +1150,7 @@ INPUT_PORTS_END
 
 static const powerpc_config ppc602_config =
 {
-	33000000,           /* Multiplier 2, Bus = 33MHz, Core = 66MHz */
-	NULL,
-	NULL
+	33000000           /* Multiplier 2, Bus = 33MHz, Core = 66MHz */
 };
 
 INTERRUPT_GEN_MEMBER(konamim2_state::m2)
@@ -1189,9 +1187,9 @@ static MACHINE_CONFIG_START( m2, konamim2_state )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
 	MCFG_SCREEN_UPDATE_DRIVER(konamim2_state, screen_update_m2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, RRRRR_GGGGG_BBBBB)
+	MCFG_PALETTE_ADD_RRRRRGGGGGBBBBB("palette")
 
 
 MACHINE_CONFIG_END

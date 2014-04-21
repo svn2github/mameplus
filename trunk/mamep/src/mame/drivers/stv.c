@@ -925,16 +925,9 @@ DRIVER_INIT_MEMBER(stv_state,nameclv3)
 static const sh2_cpu_core sh2_conf_master = { 0, NULL };
 static const sh2_cpu_core sh2_conf_slave  = { 1, NULL };
 
-static const scsp_interface scsp_config =
-{
-	0,
-	DEVCB_DRIVER_LINE_MEMBER(saturn_state, scsp_irq),
-	DEVCB_DRIVER_LINE_MEMBER(saturn_state, scsp_to_main_irq)
-};
-
 static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32, stv_state )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
-	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8_LEGACY(stv_SMPC_r, stv_SMPC_w,0xffffffff)
+	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(stv_SMPC_r, stv_SMPC_w,0xffffffff)
 	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE8(saturn_backupram_r,saturn_backupram_w,0xffffffff) AM_SHARE("share1")
 	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("workram_l")
 //  AM_RANGE(0x00400000, 0x0040001f) AM_READWRITE(stv_ioga_r32, stv_io_w32) AM_SHARE("ioga") AM_MIRROR(0x20) /* installed with per-game specific */
@@ -944,7 +937,7 @@ static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32, stv_state )
 	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE(stvcd_r, stvcd_w)
 	/* Sound */
 	AM_RANGE(0x05a00000, 0x05afffff) AM_READWRITE16(saturn_soundram_r, saturn_soundram_w,0xffffffff)
-	AM_RANGE(0x05b00000, 0x05b00fff) AM_DEVREADWRITE16_LEGACY("scsp", scsp_r, scsp_w, 0xffffffff)
+	AM_RANGE(0x05b00000, 0x05b00fff) AM_DEVREADWRITE16("scsp", scsp_device, read, write, 0xffffffff)
 	/* VDP1 */
 	AM_RANGE(0x05c00000, 0x05c7ffff) AM_READWRITE(saturn_vdp1_vram_r, saturn_vdp1_vram_w)
 	AM_RANGE(0x05c80000, 0x05cbffff) AM_READWRITE(saturn_vdp1_framebuffer0_r, saturn_vdp1_framebuffer0_w)
@@ -961,7 +954,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 16, stv_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_RAM AM_SHARE("sound_ram")
-	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp", scsp_r, scsp_w)
+	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE("scsp", scsp_device, read, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( scudsp_mem, AS_PROGRAM, 32, stv_state )
@@ -1009,20 +1002,21 @@ static MACHINE_CONFIG_START( stv, stv_state )
 	MCFG_TIMER_DRIVER_ADD("sh1_cmd", stv_state, stv_sh1_sim)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_320/8, 427, 0, 320, 263, 0, 224)
 	MCFG_SCREEN_UPDATE_DRIVER(stv_state, screen_update_stv_vdp2)
-	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness.
+	MCFG_PALETTE_ADD("palette", 2048+(2048*2))//standard palette + extra memory for rgb brightness.
 
-	MCFG_GFXDECODE(stv)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", stv)
 
 	MCFG_VIDEO_START_OVERRIDE(stv_state,stv_vdp2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("scsp", SCSP, 0)
-	MCFG_SOUND_CONFIG(scsp_config)
+	MCFG_SCSP_IRQ_CB(WRITE8(saturn_state, scsp_irq))
+	MCFG_SCSP_MAIN_IRQ_CB(WRITELINE(saturn_state, scsp_to_main_irq))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
@@ -1316,7 +1310,7 @@ MACHINE_START_MEMBER(stv_state,stv)
 	system_time systime;
 	machine().base_datetime(systime);
 
-	scsp_set_ram_base(machine().device("scsp"), m_sound_ram);
+	machine().device<scsp_device>("scsp")->set_ram_base(m_sound_ram);
 
 	// save states
 	save_pointer(NAME(m_scu_regs), 0x100/4);

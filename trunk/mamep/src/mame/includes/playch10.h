@@ -20,7 +20,8 @@ public:
 		m_ram_8w(*this, "ram_8w"),
 		m_videoram(*this, "videoram"),
 		m_timedata(*this, "timedata"),
-		m_work_ram(*this, "work_ram")
+		m_work_ram(*this, "work_ram"),
+		m_gfxdecode(*this, "gfxdecode")
 		{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -32,6 +33,8 @@ public:
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_timedata;
 	required_shared_ptr<UINT8> m_work_ram;
+	required_device<gfxdecode_device> m_gfxdecode;
+
 	int m_up_8w;
 	int m_pc10_nmi_enable;
 	int m_pc10_dog_di;
@@ -126,7 +129,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(playch10);
 	DECLARE_MACHINE_START(playch10_hboard);
 	DECLARE_VIDEO_START(playch10_hboard);
 	UINT32 screen_update_playch10_top(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);

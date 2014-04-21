@@ -237,7 +237,8 @@ public:
 		m_dsp(*this, "dsp"),
 		m_k056800(*this, "k056800"),
 		m_k001604(*this, "k001604"),
-		m_adc12138(*this, "adc12138") { }
+		m_adc12138(*this, "adc12138"),
+		m_palette(*this, "palette") { }
 
 	// TODO: Needs verification on real hardware
 	static const int m_sound_timer_usec = 2400;
@@ -251,6 +252,7 @@ public:
 	required_device<k056800_device> m_k056800;
 	required_device<k001604_device> m_k001604;
 	required_device<adc12138_device> m_adc12138;
+	required_device<palette_device> m_palette;
 	emu_timer *m_sound_irq_timer;
 	int m_fpga_uploaded;
 	int m_lanc2_ram_r;
@@ -286,7 +288,7 @@ WRITE32_MEMBER(nwktr_state::paletteram32_w)
 {
 	COMBINE_DATA(&m_generic_paletteram_32[offset]);
 	data = m_generic_paletteram_32[offset];
-	palette_set_color_rgb(machine(), offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+	m_palette->set_pen_color(offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 }
 
 WRITE_LINE_MEMBER(nwktr_state::voodoo_vblank_0)
@@ -299,7 +301,7 @@ UINT32 nwktr_state::screen_update_nwktr(screen_device &screen, bitmap_rgb32 &bit
 {
 	device_t *voodoo = machine().device("voodoo");
 
-	bitmap.fill(machine().pens[0], cliprect);
+	bitmap.fill(m_palette->pen(0), cliprect);
 
 	voodoo_update(voodoo, bitmap, cliprect);
 
@@ -499,9 +501,9 @@ WRITE32_MEMBER(nwktr_state::lanc2_w)
 	{
 		// TODO: check if these should be transferred via PPC DMA.
 
-		if (mame_stricmp(machine().system().name, "thrilld") == 0 ||
-			mame_stricmp(machine().system().name, "thrilldb") == 0 ||
-			mame_stricmp(machine().system().name, "thrilldae") == 0)
+		if (core_stricmp(machine().system().name, "thrilld") == 0 ||
+			core_stricmp(machine().system().name, "thrilldb") == 0 ||
+			core_stricmp(machine().system().name, "thrilldae") == 0)
 		{
 			m_work_ram[(0x3ffed0/4) + 0] = 0x472a3731;      // G*71
 			m_work_ram[(0x3ffed0/4) + 1] = 0x33202020;      // 3
@@ -513,7 +515,7 @@ WRITE32_MEMBER(nwktr_state::lanc2_w)
 			m_work_ram[(0x3fff40/4) + 2] = 0x19994a41;      //   JA
 			m_work_ram[(0x3fff40/4) + 3] = 0x4100a9b1;      // A
 		}
-		else if (mame_stricmp(machine().system().name, "racingj2") == 0)
+		else if (core_stricmp(machine().system().name, "racingj2") == 0)
 		{
 			m_work_ram[(0x3ffc80/4) + 0] = 0x47453838;      // GE88
 			m_work_ram[(0x3ffc80/4) + 1] = 0x38003030;      // 8 00
@@ -686,11 +688,6 @@ static INPUT_PORTS_START( nwktr )
 
 INPUT_PORTS_END
 
-static const sharc_config sharc_cfg =
-{
-	BOOT_MODE_EPROM
-};
-
 
 static double adc12138_input_callback( device_t *device, UINT8 input )
 {
@@ -757,7 +754,7 @@ static MACHINE_CONFIG_START( nwktr, nwktr_state )
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
 	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_EPROM)
 	MCFG_CPU_DATA_MAP(sharc_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(9000))
@@ -775,9 +772,13 @@ static MACHINE_CONFIG_START( nwktr, nwktr_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
 	MCFG_SCREEN_UPDATE_DRIVER(nwktr_state, screen_update_nwktr)
 
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_ADD("palette", 65536)
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 
 	MCFG_K001604_ADD("k001604", racingj_k001604_intf)
+	MCFG_K001604_GFXDECODE("gfxdecode")
+	MCFG_K001604_PALETTE("palette")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -793,6 +794,8 @@ static MACHINE_CONFIG_DERIVED( thrilld, nwktr )
 
 	MCFG_DEVICE_REMOVE("k001604")
 	MCFG_K001604_ADD("k001604", thrilld_k001604_intf)
+	MCFG_K001604_GFXDECODE("gfxdecode")
+	MCFG_K001604_PALETTE("palette")
 MACHINE_CONFIG_END
 
 /*****************************************************************************/

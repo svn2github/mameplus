@@ -131,7 +131,7 @@ pen_t neogeo_state::get_pen( UINT16 data )
 							(data >>  0) & 0x01,
 							(data >> 12) & 0x01);
 
-	return MAKE_RGB(r, g, b);
+	return rgb_t(r, g, b);
 }
 
 
@@ -721,7 +721,7 @@ UINT16 neogeo_state::get_video_control(  )
 	      raster effects on the title screen; sdodgeb loops waiting for the top
 	      bit to be 1; zedblade heavily depends on it to work correctly (it
 	      checks the top bit in the IRQ2 handler).
-	    B is definitely a PAL/NTSC flag. Evidence:
+	    B is definitely a PAL/NTSC flag. (LSPC2 only) Evidence:
 	      1) trally changes the position of the speed indicator depending on
 	         it (0 = lower 1 = higher).
 	      2) samsho3 sets a variable to 60 when the bit is 0 and 50 when it's 1.
@@ -751,7 +751,6 @@ UINT16 neogeo_state::get_video_control(  )
 
 void neogeo_state::set_video_control( UINT16 data )
 {
-	/* this does much more than this, but I'm not sure exactly what */
 	if (VERBOSE) logerror("%s: video control write %04x\n", machine().describe_context(), data);
 
 	set_auto_animation_speed(data >> 8);
@@ -802,7 +801,7 @@ WRITE16_MEMBER(neogeo_state::neogeo_video_register_w)
 		case 0x04: neogeo_set_display_counter_msb(data); break;
 		case 0x05: neogeo_set_display_counter_lsb(data); break;
 		case 0x06: neogeo_acknowledge_interrupt(data); break;
-		case 0x07: break; /* unknown, see get_video_control */
+		case 0x07: break; // d0: pause timer for 32 lines when in PAL mode (LSPC2 only)
 		}
 	}
 }
@@ -827,7 +826,7 @@ void neogeo_state::video_start()
 	memset(m_palettes[0], 0x00, NUM_PENS * sizeof(UINT16));
 	memset(m_palettes[1], 0x00, NUM_PENS * sizeof(UINT16));
 	memset(m_pens, 0x00, NUM_PENS * sizeof(pen_t));
-	memset(m_videoram, 0x00, (0x8000 + 0x800) * 2);
+	memset(m_videoram, 0x00, (0x8000 + 0x800) * sizeof(UINT16));
 
 	compute_rgb_weights();
 	create_sprite_line_timer();
@@ -848,7 +847,7 @@ void neogeo_state::video_start()
 	/* register for state saving */
 	save_pointer(NAME(m_palettes[0]), NUM_PENS);
 	save_pointer(NAME(m_palettes[1]), NUM_PENS);
-	save_pointer(NAME(m_videoram), 0x20000/2);
+	save_pointer(NAME(m_videoram), 0x8000 + 0x800);
 	save_item(NAME(m_vram_offset));
 	save_item(NAME(m_vram_read_buffer));
 	save_item(NAME(m_vram_modulo));

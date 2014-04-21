@@ -19,12 +19,15 @@ public:
 		m_audiocpu(*this, "audiocpu"),
 		m_subcpu(*this, "sub"),
 		m_mcu(*this, "mcu"),
-		m_msm(*this, "msm") { }
+		m_msm(*this, "msm"),
+		m_palette(*this, "palette") { }
 
 	required_shared_ptr<UINT16> m_ram;
 	required_shared_ptr<UINT16> m_spriteram;
 	optional_shared_ptr<UINT8> m_robocop_shared_ram;
 	optional_shared_ptr<UINT8> m_hippodrm_shared_ram;
+	dynamic_array<UINT16> m_paletteram;
+	dynamic_array<UINT16> m_paletteram_ext;
 
 	optional_device<deco_bac06_device> m_tilegen1;
 	optional_device<deco_bac06_device> m_tilegen2;
@@ -99,6 +102,7 @@ public:
 	optional_device<cpu_device> m_subcpu;
 	optional_device<cpu_device> m_mcu;
 	optional_device<msm5205_device> m_msm;
+	required_device<palette_device> m_palette;
 };
 
 

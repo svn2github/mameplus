@@ -361,7 +361,7 @@ static ADDRESS_MAP_START( opwolf_map, AS_PROGRAM, 16, opwolf_state )
 	AM_RANGE(0x0ff802, 0x0ff803) AM_WRITE(opwolf_cchip_status_w)
 	AM_RANGE(0x0ffc00, 0x0ffc01) AM_WRITE(opwolf_cchip_bank_w)
 	AM_RANGE(0x100000, 0x107fff) AM_RAM
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x380000, 0x380003) AM_READ(opwolf_dsw_r)          /* dip switches */
 	AM_RANGE(0x380000, 0x380003) AM_WRITE(opwolf_spritectrl_w)  // usually 0x4, changes when you fire
 	AM_RANGE(0x3a0000, 0x3a0003) AM_READ(opwolf_lightgun_r)     /* lightgun, read at $11e0/6 */
@@ -382,7 +382,7 @@ static ADDRESS_MAP_START( opwolfb_map, AS_PROGRAM, 16, opwolf_state )
 	AM_RANGE(0x0f0008, 0x0f000b) AM_READ(opwolf_in_r)           /* coins and buttons */
 	AM_RANGE(0x0ff000, 0x0fffff) AM_READWRITE(cchip_r,cchip_w)
 	AM_RANGE(0x100000, 0x107fff) AM_RAM
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x380000, 0x380003) AM_READ(opwolf_dsw_r)          /* dip switches */
 	AM_RANGE(0x380000, 0x380003) AM_WRITE(opwolf_spritectrl_w)  // usually 0x4, changes when you fire
 	AM_RANGE(0x3a0000, 0x3a0003) AM_READ(opwolf_lightgun_r)     /* lightgun, read at $11e0/6 */
@@ -676,23 +676,6 @@ static GFXDECODE_START( opwolfb )
 GFXDECODE_END
 
 
-/**************************************************************
-                 YM2151 (SOUND)
-**************************************************************/
-
-static const msm5205_interface msm5205_config_1 =
-{
-	DEVCB_DRIVER_LINE_MEMBER(opwolf_state,opwolf_msm5205_vck_1), /* VCK function */
-	MSM5205_S48_4B      /* 8 kHz */
-};
-
-static const msm5205_interface msm5205_config_2 =
-{
-	DEVCB_DRIVER_LINE_MEMBER(opwolf_state,opwolf_msm5205_vck_2), /* VCK function */
-	MSM5205_S48_4B      /* 8 kHz */
-};
-
-
 /***********************************************************
                  MACHINE DRIVERS
 ***********************************************************/
@@ -734,12 +717,18 @@ static MACHINE_CONFIG_START( opwolf, opwolf_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(opwolf_state, screen_update_opwolf)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(opwolf)
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", opwolf)
+	MCFG_PALETTE_ADD("palette", 8192)
+	MCFG_PALETTE_FORMAT(xxxxRRRRGGGGBBBB)
 
 	MCFG_PC080SN_ADD("pc080sn", opwolf_pc080sn_intf)
+	MCFG_PC080SN_GFXDECODE("gfxdecode")
+	MCFG_PC080SN_PALETTE("palette")
 	MCFG_PC090OJ_ADD("pc090oj", opwolf_pc090oj_intf)
+	MCFG_PC090OJ_GFXDECODE("gfxdecode")
+	MCFG_PC090OJ_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -751,12 +740,14 @@ static MACHINE_CONFIG_START( opwolf, opwolf_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
 	MCFG_SOUND_ADD("msm1", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config_1)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(opwolf_state, opwolf_msm5205_vck_1)) /* VCK function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 kHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
 	MCFG_SOUND_ADD("msm2", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config_2)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(opwolf_state, opwolf_msm5205_vck_2)) /* VCK function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 kHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
@@ -788,12 +779,18 @@ static MACHINE_CONFIG_START( opwolfb, opwolf_state ) /* OSC clocks unknown for t
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(opwolf_state, screen_update_opwolf)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(opwolfb)
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", opwolfb)
+	MCFG_PALETTE_ADD("palette", 8192)
+	MCFG_PALETTE_FORMAT(xxxxRRRRGGGGBBBB)
 
 	MCFG_PC080SN_ADD("pc080sn", opwolf_pc080sn_intf)
+	MCFG_PC080SN_GFXDECODE("gfxdecode")
+	MCFG_PC080SN_PALETTE("palette")
 	MCFG_PC090OJ_ADD("pc090oj", opwolf_pc090oj_intf)
+	MCFG_PC090OJ_GFXDECODE("gfxdecode")
+	MCFG_PC090OJ_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -805,12 +802,14 @@ static MACHINE_CONFIG_START( opwolfb, opwolf_state ) /* OSC clocks unknown for t
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
 	MCFG_SOUND_ADD("msm1", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config_1)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(opwolf_state, opwolf_msm5205_vck_1)) /* VCK function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 kHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 
 	MCFG_SOUND_ADD("msm2", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config_2)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(opwolf_state, opwolf_msm5205_vck_2)) /* VCK function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 kHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.60)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.60)
 

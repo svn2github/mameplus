@@ -112,12 +112,6 @@ static const ay8910_interface ay8910_config =
 	DEVCB_DRIVER_MEMBER(ladyfrog_state,unk_w)
 };
 
-static const msm5232_interface msm5232_config =
-{
-	{ 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6 },
-	DEVCB_NULL
-};
-
 READ8_MEMBER(ladyfrog_state::snd_flag_r)
 {
 	return m_snd_flag | 0xfd;
@@ -313,10 +307,11 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 29*8-1) // black borders in ladyfrog gameplay are correct
 	MCFG_SCREEN_UPDATE_DRIVER(ladyfrog_state, screen_update_ladyfrog)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ladyfrog)
-	MCFG_PALETTE_LENGTH(512)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ladyfrog)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -326,7 +321,7 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 
 	MCFG_SOUND_ADD("msm", MSM5232, 2000000)
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6, 0.65e-6)
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1

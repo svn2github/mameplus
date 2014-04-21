@@ -45,7 +45,10 @@ public:
 		m_lineram(*this, "lineram"),
 		m_spr(*this, "vsystem_spr"),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu") { }
+		m_audiocpu(*this, "audiocpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	virtual void machine_start()
 	{
@@ -114,6 +117,9 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(gs_ym2610_irq);
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };
 
 #endif

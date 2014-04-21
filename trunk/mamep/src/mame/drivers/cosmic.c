@@ -1004,6 +1004,7 @@ static MACHINE_CONFIG_START( cosmic, cosmic_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 TIMER_DEVICE_CALLBACK_MEMBER(cosmic_state::panic_scanline)
@@ -1026,10 +1027,11 @@ static MACHINE_CONFIG_DERIVED( panic, cosmic )
 	MCFG_TIMER_DRIVER_ADD_SCANLINE("scantimer", cosmic_state, panic_scanline, "screen", 0, 1)
 
 	/* video hardware */
-	MCFG_GFXDECODE(panic)
-	MCFG_PALETTE_LENGTH(16+8*4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", panic)
+	MCFG_PALETTE_ADD("palette", 16+8*4)
+	MCFG_PALETTE_INDIRECT_ENTRIES(16)
+	MCFG_PALETTE_INIT_OWNER(cosmic_state,panic)
 
-	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,panic)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_panic)
 
@@ -1051,10 +1053,11 @@ static MACHINE_CONFIG_DERIVED( cosmica, cosmic )
 	MCFG_CPU_PROGRAM_MAP(cosmica_map)
 
 	/* video hardware */
-	MCFG_GFXDECODE(cosmica)
-	MCFG_PALETTE_LENGTH(8+16*4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", cosmica)
+	MCFG_PALETTE_ADD("palette", 8+16*4)
+	MCFG_PALETTE_INDIRECT_ENTRIES(8)
+	MCFG_PALETTE_INIT_OWNER(cosmic_state,cosmica)
 
-	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,cosmica)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_cosmica)
 
@@ -1069,19 +1072,10 @@ static MACHINE_CONFIG_DERIVED( cosmica, cosmic )
 
 MACHINE_CONFIG_END
 
-static TMS9980A_CONFIG( cpuconf )
-{
-	DEVCB_NULL,     // External operation
-	DEVCB_NULL,     // Instruction acquisition
-	DEVCB_NULL,     // Clock out
-	DEVCB_NULL,     // Hold acknowledge
-	DEVCB_NULL      // DBIN
-};
-
 static MACHINE_CONFIG_START( cosmicg, cosmic_state )
 
 	/* basic machine hardware */
-	MCFG_TMS99xx_ADD("maincpu", TMS9980A, COSMICG_MASTER_CLOCK/8, cosmicg_map, cosmicg_io_map, cpuconf)
+	MCFG_TMS99xx_ADD("maincpu", TMS9980A, COSMICG_MASTER_CLOCK/8, cosmicg_map, cosmicg_io_map)
 		/* 9.828 MHz Crystal */
 		/* R Nabet : huh ? This would imply the crystal frequency is somehow divided by 2 before being
 		fed to the tms9904 or tms9980.  Also, I have never heard of a tms9900/9980 operating under
@@ -1096,10 +1090,10 @@ static MACHINE_CONFIG_START( cosmicg, cosmic_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 4*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_cosmicg)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(16)
-
-	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,cosmicg)
+	MCFG_PALETTE_ADD("palette", 16)
+	MCFG_PALETTE_INIT_OWNER(cosmic_state,cosmicg)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1119,10 +1113,11 @@ static MACHINE_CONFIG_DERIVED( magspot, cosmic )
 	MCFG_CPU_PROGRAM_MAP(magspot_map)
 
 	/* video hardware */
-	MCFG_GFXDECODE(panic)
-	MCFG_PALETTE_LENGTH(16+8*4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", panic)
+	MCFG_PALETTE_ADD("palette", 16+8*4)
+	MCFG_PALETTE_INDIRECT_ENTRIES(16)
+	MCFG_PALETTE_INIT_OWNER(cosmic_state,magspot)
 
-	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,magspot)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_magspot)
 
@@ -1151,10 +1146,11 @@ static MACHINE_CONFIG_DERIVED( nomnlnd, cosmic )
 	MCFG_CPU_PROGRAM_MAP(magspot_map)
 
 	/* video hardware */
-	MCFG_GFXDECODE(panic)
-	MCFG_PALETTE_LENGTH(16+8*4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", panic)
+	MCFG_PALETTE_ADD("palette", 16+8*4)
+	MCFG_PALETTE_INDIRECT_ENTRIES(16)
+	MCFG_PALETTE_INIT_OWNER(cosmic_state,nomnlnd)
 
-	MCFG_PALETTE_INIT_OVERRIDE(cosmic_state,nomnlnd)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(cosmic_state, screen_update_nomnlnd)
 

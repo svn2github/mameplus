@@ -239,8 +239,7 @@ WRITE8_MEMBER(rallyx_state::rallyx_latch_w)
 			break;
 
 		case 0x03:  /* FLIP */
-			flip_screen_set_no_update(bit);
-			machine().tilemap().set_flip_all(bit * (TILEMAP_FLIPX | TILEMAP_FLIPY));
+			flip_screen_set(bit);
 			break;
 
 		case 0x04:
@@ -281,8 +280,7 @@ WRITE8_MEMBER(rallyx_state::locomotn_latch_w)
 			break;
 
 		case 0x03:  /* FLIP */
-			flip_screen_set_no_update(bit);
-			machine().tilemap().set_flip_all(bit * (TILEMAP_FLIPX | TILEMAP_FLIPY));
+			flip_screen_set(bit);
 			break;
 
 		case 0x04:  /* OUT1 */
@@ -862,19 +860,20 @@ static MACHINE_CONFIG_START( rallyx, rallyx_state )
 	MCFG_MACHINE_RESET_OVERRIDE(rallyx_state,rallyx)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60.606060)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_rallyx)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(rallyx)
-	MCFG_PALETTE_LENGTH(64*4+4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", rallyx)
 
-	MCFG_PALETTE_INIT_OVERRIDE(rallyx_state,rallyx)
+	MCFG_PALETTE_ADD("palette", 64*4+4)
+	MCFG_PALETTE_INDIRECT_ENTRIES(32)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_INIT_OWNER(rallyx_state,rallyx)
 	MCFG_VIDEO_START_OVERRIDE(rallyx_state,rallyx)
 
 	/* sound hardware */
@@ -900,19 +899,20 @@ static MACHINE_CONFIG_START( jungler, rallyx_state )
 	MCFG_MACHINE_RESET_OVERRIDE(rallyx_state,rallyx)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)  /* frames per second, vblank duration */)
 	MCFG_SCREEN_SIZE(36*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(rallyx_state, screen_update_jungler)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(jungler)
-	MCFG_PALETTE_LENGTH(64*4+4+64)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", jungler)
 
-	MCFG_PALETTE_INIT_OVERRIDE(rallyx_state,jungler)
+	MCFG_PALETTE_ADD("palette", 64*4+4+64)
+	MCFG_PALETTE_INDIRECT_ENTRIES(32+64)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_INIT_OWNER(rallyx_state,jungler)
 	MCFG_VIDEO_START_OVERRIDE(rallyx_state,jungler)
 
 	/* sound hardware */

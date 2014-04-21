@@ -248,7 +248,8 @@ public:
 		m_dsp2(*this, "dsp2"),
 		m_k056800(*this, "k056800"),
 		m_adc1038(*this, "adc1038"),
-		m_eeprom(*this, "eeprom")  { }
+		m_eeprom(*this, "eeprom"),
+		m_palette(*this, "palette")  { }
 
 	// TODO: Needs verification on real hardware
 	static const int m_sound_timer_usec = 2400;
@@ -256,11 +257,12 @@ public:
 	required_shared_ptr<UINT32> m_work_ram;
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
-	required_device<cpu_device> m_dsp;
+	required_device<adsp21062_device> m_dsp;
 	optional_device<cpu_device> m_dsp2;
 	required_device<k056800_device> m_k056800;
 	required_device<adc1038_device> m_adc1038;
 	required_device<eeprom_serial_93cxx_device> m_eeprom;
+	required_device<palette_device> m_palette;
 
 	DECLARE_WRITE32_MEMBER(paletteram32_w);
 	DECLARE_READ32_MEMBER(gticlub_k001604_tile_r);
@@ -308,7 +310,7 @@ WRITE32_MEMBER(gticlub_state::paletteram32_w)
 {
 	COMBINE_DATA(&m_generic_paletteram_32[offset]);
 	data = m_generic_paletteram_32[offset];
-	palette_set_color_rgb(machine(), offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
+	m_palette->set_pen_color(offset, pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 }
 
 WRITE_LINE_MEMBER(gticlub_state::voodoo_vblank_0)
@@ -748,12 +750,6 @@ INTERRUPT_GEN_MEMBER(gticlub_state::gticlub_vblank)
 }
 
 
-static const sharc_config sharc_cfg =
-{
-	BOOT_MODE_EPROM
-};
-
-
 static int adc1038_input_callback( device_t *device, int input )
 {
 	int value = 0;
@@ -849,7 +845,7 @@ VIDEO_START_MEMBER(gticlub_state,gticlub)
 	debug_tex_palette = 0;
 	*/
 
-	K001006_init(machine());
+	K001006_init(machine(),m_palette);
 	K001005_init(machine());
 }
 
@@ -917,13 +913,13 @@ UINT32 gticlub_state::screen_update_gticlub(screen_device &screen, bitmap_rgb32 
 	draw_7segment_led(bitmap, 9, 3, gticlub_led_reg[1]);
 
 	//machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-	sharc_set_flag_input(machine().device("dsp"), 1, ASSERT_LINE);
+	m_dsp->set_flag_input(1, ASSERT_LINE);
 	return 0;
 }
 
 UINT32 gticlub_state::screen_update_hangplt(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	bitmap.fill(machine().pens[0], cliprect);
+	bitmap.fill(m_palette->pen(0), cliprect);
 
 	if (strcmp(screen.tag(), ":lscreen") == 0)
 	{
@@ -964,7 +960,7 @@ static MACHINE_CONFIG_START( gticlub, gticlub_state )
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
 	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_EPROM)
 	MCFG_CPU_DATA_MAP(sharc_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
@@ -985,11 +981,14 @@ static MACHINE_CONFIG_START( gticlub, gticlub_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
 	MCFG_SCREEN_UPDATE_DRIVER(gticlub_state, screen_update_gticlub)
 
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_ADD("palette", 65536)
 
 	MCFG_VIDEO_START_OVERRIDE(gticlub_state,gticlub)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K001604_ADD("k001604_1", gticlub_k001604_intf)
+	MCFG_K001604_GFXDECODE("gfxdecode")
+	MCFG_K001604_PALETTE("palette")
 
 	MCFG_K056800_ADD("k056800", XTAL_33_8688MHz/2)
 	MCFG_K056800_INT_HANDLER(INPUTLINE("audiocpu", M68K_IRQ_2))
@@ -1017,6 +1016,8 @@ static MACHINE_CONFIG_DERIVED( slrasslt, gticlub )
 
 	MCFG_DEVICE_REMOVE("k001604_1")
 	MCFG_K001604_ADD("k001604_1", slrasslt_k001604_intf)
+	MCFG_K001604_GFXDECODE("gfxdecode")
+	MCFG_K001604_PALETTE("palette")
 MACHINE_CONFIG_END
 
 
@@ -1068,11 +1069,11 @@ static MACHINE_CONFIG_START( hangplt, gticlub_state )
 	MCFG_CPU_PROGRAM_MAP(sound_memmap)
 
 	MCFG_CPU_ADD("dsp", ADSP21062, XTAL_36MHz)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_EPROM)
 	MCFG_CPU_DATA_MAP(hangplt_sharc0_map)
 
 	MCFG_CPU_ADD("dsp2", ADSP21062, XTAL_36MHz)
-	MCFG_CPU_CONFIG(sharc_cfg)
+	MCFG_SHARC_BOOT_MODE(BOOT_MODE_EPROM)
 	MCFG_CPU_DATA_MAP(hangplt_sharc1_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
@@ -1092,7 +1093,7 @@ static MACHINE_CONFIG_START( hangplt, gticlub_state )
 	MCFG_K033906_ADD("k033906_2", hangplt_k033906_intf_1)
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(65536)
+	MCFG_PALETTE_ADD("palette", 65536)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1106,8 +1107,15 @@ static MACHINE_CONFIG_START( hangplt, gticlub_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
 	MCFG_SCREEN_UPDATE_DRIVER(gticlub_state, screen_update_hangplt)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
+
 	MCFG_K001604_ADD("k001604_1", hangplt_k001604_intf_l)
+	MCFG_K001604_GFXDECODE("gfxdecode")
+	MCFG_K001604_PALETTE("palette")
+
 	MCFG_K001604_ADD("k001604_2", hangplt_k001604_intf_r)
+	MCFG_K001604_GFXDECODE("gfxdecode")
+	MCFG_K001604_PALETTE("palette")
 
 	MCFG_K056800_ADD("k056800", XTAL_33_8688MHz/2)
 	MCFG_K056800_INT_HANDLER(INPUTLINE("audiocpu", M68K_IRQ_2))

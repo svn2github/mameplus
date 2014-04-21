@@ -75,7 +75,9 @@ public:
 		m_col_line(*this, "col_line"),
 		m_videoram(*this, "videoram"),
 		m_char_bank(*this, "char_bank"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	required_shared_ptr<UINT8> m_col_line;
 	required_shared_ptr<UINT8> m_videoram;
@@ -92,9 +94,11 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(supdrapo);
 	UINT32 screen_update_supdrapo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -123,7 +127,7 @@ UINT32 supdrapo_state::screen_update_supdrapo(screen_device &screen, bitmap_ind1
 			/* Global Column Coloring, GUESS! */
 			color = m_col_line[(x*2) + 1] ? (m_col_line[(x*2) + 1] - 1) & 7 : 0;
 
-			drawgfx_opaque(bitmap, cliprect, machine().gfx[0], tile,color, 0, 0, x*8, y*8);
+			m_gfxdecode->gfx(0)->opaque(bitmap,cliprect, tile,color, 0, 0, x*8, y*8);
 
 			count++;
 		}
@@ -134,7 +138,7 @@ UINT32 supdrapo_state::screen_update_supdrapo(screen_device &screen, bitmap_ind1
 
 
 /*Maybe bit 2 & 3 of the second color prom are intensity bits? */
-void supdrapo_state::palette_init()
+PALETTE_INIT_MEMBER(supdrapo_state, supdrapo)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 	int bit0, bit1, bit2 , r, g, b;
@@ -157,7 +161,7 @@ void supdrapo_state::palette_init()
 		bit2 = (color_prom[0x100] >> 1) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 		color_prom++;
 	}
 }
@@ -461,10 +465,11 @@ static MACHINE_CONFIG_START( supdrapo, supdrapo_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(supdrapo_state, screen_update_supdrapo)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(supdrapo)
-	MCFG_PALETTE_LENGTH(0x100)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", supdrapo)
+	MCFG_PALETTE_ADD("palette", 0x100)
+	MCFG_PALETTE_INIT_OWNER(supdrapo_state, supdrapo)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

@@ -530,12 +530,6 @@ static GFXDECODE_START( cshooter )
 GFXDECODE_END
 
 
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(stfight_state, stfight_adpcm_int), // Interrupt function
-	MSM5205_S48_4B  // 8KHz, 4-bit
-};
-
 static MACHINE_CONFIG_START( stfight, stfight_state )
 
 	/* basic machine hardware */
@@ -559,10 +553,13 @@ static MACHINE_CONFIG_START( stfight, stfight_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(stfight_state, screen_update_stfight)
+	MCFG_SCREEN_PALETTE("palette")
 	MCFG_VIDEO_START_OVERRIDE(stfight_state,stfight)
 
-	MCFG_GFXDECODE(stfight)
-	MCFG_PALETTE_LENGTH(16*4+16*16+16*16+16*16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", stfight)
+	MCFG_PALETTE_ADD("palette", 16*4+16*16+16*16+16*16)
+	MCFG_PALETTE_INDIRECT_ENTRIES(256)
+	MCFG_PALETTE_INIT_OWNER(stfight_state, stfight)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -581,7 +578,8 @@ static MACHINE_CONFIG_START( stfight, stfight_state )
 	MCFG_SOUND_ROUTE(3, "mono", 0.10)
 
 	MCFG_SOUND_ADD("msm", MSM5205, XTAL_384kHz)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(stfight_state, stfight_adpcm_int)) // Interrupt function
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)  // 8KHz, 4-bit
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -600,7 +598,7 @@ static MACHINE_CONFIG_DERIVED( cshooter, stfight )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(stfight_state, screen_update_cshooter)
 
-	MCFG_GFXDECODE(cshooter)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", cshooter)
 	MCFG_VIDEO_START_OVERRIDE(stfight_state,cshooter)
 
 	MCFG_SOUND_MODIFY("ym1")

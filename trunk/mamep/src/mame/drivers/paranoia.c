@@ -38,12 +38,10 @@ HuC6280A (Hudson)
 #include "cpu/i8085/i8085.h"
 #include "machine/i8155.h"
 #include "machine/pcecommn.h"
-#include "video/vdc.h"
+#include "video/huc6260.h"
+#include "video/huc6270.h"
 #include "cpu/h6280/h6280.h"
 #include "sound/c6280.h"
-#include "drivlgcy.h"
-#include "scrlegcy.h"
-
 
 class paranoia_state : public pce_common_state
 {
@@ -78,8 +76,8 @@ INPUT_PORTS_END
 static ADDRESS_MAP_START( pce_mem , AS_PROGRAM, 8, paranoia_state )
 	AM_RANGE( 0x000000, 0x03FFFF) AM_ROM
 	AM_RANGE( 0x1F0000, 0x1F1FFF) AM_RAM AM_MIRROR(0x6000)
-	AM_RANGE( 0x1FE000, 0x1FE3FF) AM_READWRITE_LEGACY(vdc_0_r, vdc_0_w )
-	AM_RANGE( 0x1FE400, 0x1FE7FF) AM_READWRITE_LEGACY(vce_r, vce_w )
+	AM_RANGE( 0x1FE000, 0x1FE3FF) AM_DEVREADWRITE( "huc6270", huc6270_device, read, write )
+	AM_RANGE( 0x1FE400, 0x1FE7FF) AM_DEVREADWRITE( "huc6260", huc6260_device, read, write )
 	AM_RANGE( 0x1FE800, 0x1FEBFF) AM_DEVREADWRITE("c6280", c6280_device, c6280_r, c6280_w )
 	AM_RANGE( 0x1FEC00, 0x1FEFFF) AM_DEVREADWRITE("maincpu", h6280_device, timer_r, timer_w )
 	AM_RANGE( 0x1FF000, 0x1FF3FF) AM_READWRITE(pce_joystick_r, pce_joystick_w )
@@ -87,7 +85,7 @@ static ADDRESS_MAP_START( pce_mem , AS_PROGRAM, 8, paranoia_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( pce_io , AS_IO, 8, paranoia_state )
-	AM_RANGE( 0x00, 0x03) AM_READWRITE_LEGACY(vdc_0_r, vdc_0_w )
+	AM_RANGE( 0x00, 0x03) AM_DEVREADWRITE( "huc6270", huc6270_device, read, write )
 ADDRESS_MAP_END
 
 WRITE8_MEMBER(paranoia_state::paranoia_8085_d000_w)
@@ -181,8 +179,6 @@ static MACHINE_CONFIG_START( paranoia, paranoia_state )
 	MCFG_CPU_ADD("maincpu", H6280, PCE_MAIN_CLOCK/3)
 	MCFG_CPU_PROGRAM_MAP(pce_mem)
 	MCFG_CPU_IO_MAP(pce_io)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", pce_interrupt, "screen", 0, 1)
-
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_CPU_ADD("sub", I8085A, 18000000/3)
@@ -196,16 +192,19 @@ static MACHINE_CONFIG_START( paranoia, paranoia_state )
 	MCFG_I8155_ADD("i8155", 1000000 /*?*/, i8155_intf)
 
 	/* video hardware */
-
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_RAW_PARAMS(PCE_MAIN_CLOCK/2, VDC_WPF, 70, 70 + 512 + 32, VDC_LPF, 14, 14+242)
-	MCFG_SCREEN_UPDATE_STATIC( pce )
+	MCFG_SCREEN_RAW_PARAMS(PCE_MAIN_CLOCK, HUC6260_WPF, 64, 64 + 1024 + 64, HUC6260_LPF, 18, 18 + 242)
+	MCFG_SCREEN_UPDATE_DRIVER( pce_common_state, screen_update )
+	MCFG_SCREEN_PALETTE("huc6260:palette")
 
-	/* MCFG_GFXDECODE( pce_gfxdecodeinfo ) */
-	MCFG_PALETTE_LENGTH(1024)
-	MCFG_PALETTE_INIT( vce )
-
-	MCFG_VIDEO_START( pce )
+	MCFG_DEVICE_ADD( "huc6260", HUC6260, PCE_MAIN_CLOCK )
+	MCFG_HUC6260_NEXT_PIXEL_DATA_CB(DEVREAD16("huc6270", huc6270_device, next_pixel))
+	MCFG_HUC6260_TIME_TIL_NEXT_EVENT_CB(DEVREAD16("huc6270", huc6270_device, time_until_next_event))
+	MCFG_HUC6260_VSYNC_CHANGED_CB(DEVWRITELINE("huc6270", huc6270_device, vsync_changed))
+	MCFG_HUC6260_HSYNC_CHANGED_CB(DEVWRITELINE("huc6270", huc6270_device, hsync_changed))
+	MCFG_DEVICE_ADD( "huc6270", HUC6270, 0 )
+	MCFG_HUC6270_VRAM_SIZE(0x10000)
+	MCFG_HUC6270_IRQ_CHANGED_CB(WRITELINE(pce_common_state, pce_irq_changed))
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
 	MCFG_SOUND_ADD("c6280", C6280, PCE_MAIN_CLOCK/6)

@@ -1,3 +1,12 @@
+/***************************************************************************
+
+    Namco NA-1 System hardware
+
+***************************************************************************/
+
+#include "machine/eeprompar.h"
+#include "sound/c140.h"
+
 enum
 {
 	NAMCO_CGANGPZL,
@@ -13,8 +22,8 @@ enum
 	NAMCO_XDAY2
 };
 
-#define NA1_NVRAM_SIZE (0x800)
 #define NAMCONA1_NUM_TILEMAPS 4
+
 
 class namcona1_state : public driver_device
 {
@@ -23,25 +32,35 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
 		m_mcu(*this,"mcu"),
+		m_eeprom(*this, "eeprom"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette"),
+		m_c140(*this, "c140"),
 		m_videoram(*this,"videoram"),
 		m_spriteram(*this,"spriteram"),
 		m_workram(*this,"workram"),
 		m_vreg(*this,"vreg"),
 		m_scroll(*this,"scroll")
-		{ }
+	{ }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_mcu;
+	required_device<eeprom_parallel_28xx_device> m_eeprom;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
+	required_device<c140_device> m_c140;
 	required_shared_ptr<UINT16> m_videoram;
 	required_shared_ptr<UINT16> m_spriteram;
 	required_shared_ptr<UINT16> m_workram;
 	required_shared_ptr<UINT16> m_vreg;
 	required_shared_ptr<UINT16> m_scroll;
+
 	UINT16 *m_mpBank0;
 	UINT16 *m_mpBank1;
 	int m_mEnableInterrupts;
 	int m_gametype;
-	UINT8 m_nvmem[NA1_NVRAM_SIZE];
 	UINT16 m_count;
 	UINT32 m_keyval;
 	UINT16 m_mcu_mailbox[8];
@@ -59,8 +78,7 @@ public:
 	UINT8 m_mask_data[8];
 	UINT8 m_conv_data[9];
 
-	DECLARE_READ16_MEMBER(namcona1_nvram_r);
-	DECLARE_WRITE16_MEMBER(namcona1_nvram_w);
+
 	DECLARE_READ16_MEMBER(custom_key_r);
 	DECLARE_WRITE16_MEMBER(custom_key_w);
 	DECLARE_READ16_MEMBER(namcona1_vreg_r);
@@ -81,13 +99,22 @@ public:
 	DECLARE_READ8_MEMBER(port8_r);
 	DECLARE_WRITE8_MEMBER(port8_w);
 	DECLARE_READ8_MEMBER(portana_r);
+	void simulate_mcu();
 	void write_version_info();
+	int transfer_dword(UINT32 dest, UINT32 source);
+	void namcona1_blit();
+	void init_namcona1(int gametype);
+	void UpdatePalette(int offset);
 	DECLARE_WRITE16_MEMBER(namcona1_videoram_w);
 	DECLARE_READ16_MEMBER(namcona1_videoram_r);
 	DECLARE_READ16_MEMBER(namcona1_paletteram_r);
 	DECLARE_WRITE16_MEMBER(namcona1_paletteram_w);
 	DECLARE_READ16_MEMBER(namcona1_gfxram_r);
 	DECLARE_WRITE16_MEMBER(namcona1_gfxram_w);
+	void pdraw_tile( screen_device &screen, bitmap_ind16 &dest_bmp, const rectangle &clip, UINT32 code, int color,
+		int sx, int sy, int flipx, int flipy, int priority, int bShadow, int bOpaque, int gfx_region );
+	void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void draw_background(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int which, int primask );
 	DECLARE_READ16_MEMBER(snd_r);
 	DECLARE_WRITE16_MEMBER(snd_w);
 	DECLARE_DRIVER_INIT(bkrtmaq);

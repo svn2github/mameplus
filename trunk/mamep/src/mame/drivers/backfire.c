@@ -39,7 +39,8 @@ public:
 		m_io_in0(*this, "IN0"),
 		m_io_in1(*this, "IN1"),
 		m_io_in2(*this, "IN2"),
-		m_io_in3(*this, "IN3")
+		m_io_in3(*this, "IN3"),
+		m_palette(*this, "palette")
 	{ }
 
 	/* memory pointers */
@@ -100,6 +101,7 @@ public:
 	required_ioport m_io_in1;
 	required_ioport m_io_in2;
 	required_ioport m_io_in3;
+	required_device<palette_device> m_palette;
 	DECLARE_WRITE_LINE_MEMBER(sound_irq_gen);
 };
 
@@ -232,7 +234,7 @@ WRITE32_MEMBER(backfire_state::backfire_eeprom_w)
 WRITE32_MEMBER(backfire_state::backfire_nonbuffered_palette_w)
 {
 	COMBINE_DATA(&m_generic_paletteram_32[offset]);
-	palette_set_color_rgb(machine(),offset,pal5bit(m_generic_paletteram_32[offset] >> 0),pal5bit(m_generic_paletteram_32[offset] >> 5),pal5bit(m_generic_paletteram_32[offset] >> 10));
+	m_palette->set_pen_color(offset,pal5bit(m_generic_paletteram_32[offset] >> 0),pal5bit(m_generic_paletteram_32[offset] >> 5),pal5bit(m_generic_paletteram_32[offset] >> 10));
 }
 
 /* map 32-bit writes to 16-bit */
@@ -503,8 +505,8 @@ static MACHINE_CONFIG_START( backfire, backfire_state )
 
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(2048)
-	MCFG_GFXDECODE(backfire)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", backfire)
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
@@ -513,6 +515,7 @@ static MACHINE_CONFIG_START( backfire, backfire_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(backfire_state, screen_update_backfire_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -520,22 +523,32 @@ static MACHINE_CONFIG_START( backfire, backfire_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(backfire_state, screen_update_backfire_right)
+	MCFG_SCREEN_PALETTE("palette")
 
 
 	MCFG_DECO16IC_ADD("tilegen1", backfire_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_SET_SCREEN("lscreen")
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
+
 	MCFG_DECO16IC_ADD("tilegen2", backfire_deco16ic_tilegen2_intf)
 	MCFG_DECO16IC_SET_SCREEN("lscreen")
+	MCFG_DECO16IC_GFXDECODE("gfxdecode")
+	MCFG_DECO16IC_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	MCFG_VIDEO_SET_SCREEN("lscreen")
 	decospr_device::set_gfx_region(*device, 4);
 	decospr_device::set_pri_callback(*device, backfire_pri_callback);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen2", DECO_SPRITE, 0)
 	MCFG_VIDEO_SET_SCREEN("rscreen")
 	decospr_device::set_gfx_region(*device, 5);
 	decospr_device::set_pri_callback(*device, backfire_pri_callback);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
 
 	/* sound hardware */
@@ -673,7 +686,7 @@ void backfire_state::descramble_sound()
 {
 	UINT8 *rom = memregion("ymz")->base();
 	int length = 0x200000; // only the first rom is swapped on backfire!
-	UINT8 *buf1 = auto_alloc_array(machine(), UINT8, length);
+	dynamic_buffer buf1(length);
 	UINT32 x;
 
 	for (x = 0; x < length; x++)
@@ -691,8 +704,6 @@ void backfire_state::descramble_sound()
 	}
 
 	memcpy(rom, buf1, length);
-
-	auto_free(machine(), buf1);
 }
 
 READ32_MEMBER(backfire_state::backfire_speedup_r)

@@ -458,10 +458,12 @@ static MACHINE_CONFIG_START( skykid, skykid_state )
 	MCFG_SCREEN_SIZE(36*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(skykid_state, screen_update_skykid)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(skykid)
-	MCFG_PALETTE_LENGTH(64*4+128*4+64*8)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", skykid)
+	MCFG_PALETTE_ADD("palette", 64*4+128*4+64*8)
+	MCFG_PALETTE_INDIRECT_ENTRIES(256)
+	MCFG_PALETTE_INIT_OWNER(skykid_state, skykid)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

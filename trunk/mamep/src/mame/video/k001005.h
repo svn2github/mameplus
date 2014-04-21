@@ -2,7 +2,7 @@
 #ifndef __K001005_H__
 #define __K001005_H__
 
-#include "video/poly.h"
+#include "video/polylgcy.h"
 #include "cpu/sharc/sharc.h"
 
 #define POLY_DEVICE 0
@@ -26,6 +26,8 @@ class k001005_device : public device_t,
 public:
 	k001005_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 	~k001005_device() {}
+
+	static void static_set_palette_tag(device_t &device, const char *tag);
 
 	void draw(bitmap_rgb32 &bitmap, const rectangle &cliprect);
 	void swap_buffers();
@@ -53,7 +55,7 @@ protected:
 private:
 	// internal state
 	device_t *m_cpu;
-	device_t *m_dsp;
+	adsp21062_device *m_dsp;
 	device_t *m_k001006_1;
 	device_t *m_k001006_2;
 
@@ -75,11 +77,12 @@ private:
 
 	int m_bitmap_page;
 
-	poly_manager *m_poly;
+	legacy_poly_manager *m_poly;
 	poly_vertex m_prev_v[4];
 	int m_prev_poly_type;
 
 	UINT8 *m_gfxrom;
+	required_device<palette_device> m_palette;
 };
 
 extern const device_type K001005;
@@ -89,5 +92,7 @@ extern const device_type K001005;
 	MCFG_DEVICE_ADD(_tag, K001005, 0) \
 	MCFG_DEVICE_CONFIG(_interface)
 
+#define MCFG_K001005_PALETTE(_palette_tag) \
+	k001005_device::static_set_palette_tag(*device, "^" _palette_tag);
 
 #endif

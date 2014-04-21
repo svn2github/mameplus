@@ -1411,8 +1411,9 @@ static MACHINE_CONFIG_START( nbmjdrv1, nbmj8991_state ) // galkoku
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nbmj8991_state, screen_update_nbmj8991_type1)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1446,8 +1447,9 @@ static MACHINE_CONFIG_START( nbmjdrv2, nbmj8991_state ) // pstadium
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(nbmj8991_state, screen_update_nbmj8991_type2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

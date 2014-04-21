@@ -814,23 +814,6 @@ GFXDECODE_END
 
 /*************************************
  *
- *  Sound interface
- *
- *************************************/
-
-
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
-
-
-/*************************************
- *
  *  Machine drivers
  *
  *************************************/
@@ -845,13 +828,13 @@ static MACHINE_CONFIG_START( g80r_base, segag80r_state )
 
 
 	/* video hardware */
-	MCFG_GFXDECODE(segag80r)
-	MCFG_PALETTE_LENGTH(64)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", segag80r)
+	MCFG_PALETTE_ADD("palette", 64)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(segag80r_state, screen_update_segag80r)
-
+	MCFG_SCREEN_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -885,10 +868,11 @@ static MACHINE_CONFIG_DERIVED( spaceod, g80r_base )
 	/* basic machine hardware */
 
 	/* background board changes */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_GFXDECODE(spaceod)
-	MCFG_PALETTE_LENGTH(64+64)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", spaceod)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(64+64)
 
 	/* sound boards */
 	MCFG_FRAGMENT_ADD(spaceod_sound_board)
@@ -903,8 +887,9 @@ static MACHINE_CONFIG_DERIVED( monsterb, g80r_base )
 	MCFG_CPU_IO_MAP(main_ppi8255_portmap)
 
 	/* background board changes */
-	MCFG_GFXDECODE(monsterb)
-	MCFG_PALETTE_LENGTH(64+64)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", monsterb)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(64+64)
 
 	/* sound boards */
 	MCFG_FRAGMENT_ADD(monsterb_sound_board)
@@ -916,8 +901,9 @@ static MACHINE_CONFIG_DERIVED( pignewt, g80r_base )
 	/* basic machine hardware */
 
 	/* background board changes */
-	MCFG_GFXDECODE(monsterb)
-	MCFG_PALETTE_LENGTH(64+64)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", monsterb)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(64+64)
 
 	/* sound boards */
 	MCFG_SEGAUSB_ADD("usbsnd")
@@ -934,8 +920,9 @@ static MACHINE_CONFIG_DERIVED( sindbadm, g80r_base )
 	MCFG_I8255A_ADD( "ppi8255", sindbadm_ppi_intf )
 
 	/* video hardware */
-	MCFG_GFXDECODE(monsterb)
-	MCFG_PALETTE_LENGTH(64+64)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", monsterb)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(64+64)
 
 	/* sound boards */
 
@@ -946,11 +933,9 @@ static MACHINE_CONFIG_DERIVED( sindbadm, g80r_base )
 	/* sound hardware */
 	MCFG_SOUND_ADD("sn1", SN76496, SINDBADM_SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("sn2", SN76496, SINDBADM_SOUND_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
-	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 
@@ -1415,13 +1400,13 @@ ROM_END
 
 void segag80r_state::monsterb_expand_gfx(const char *region)
 {
-	UINT8 *temp, *dest;
+	UINT8 *dest;
 	int i;
 
 	/* expand the background ROMs; A11/A12 of each ROM is independently controlled via */
 	/* banking */
 	dest = memregion(region)->base();
-	temp = auto_alloc_array(machine(), UINT8, 0x4000);
+	dynamic_buffer temp(0x4000);
 	memcpy(temp, dest, 0x4000);
 
 	/* 16 effective total banks */
@@ -1430,7 +1415,6 @@ void segag80r_state::monsterb_expand_gfx(const char *region)
 		memcpy(&dest[0x0000 + i * 0x800], &temp[0x0000 + (i & 3) * 0x800], 0x800);
 		memcpy(&dest[0x8000 + i * 0x800], &temp[0x2000 + (i >> 2) * 0x800], 0x800);
 	}
-	auto_free(machine(), temp);
 }
 
 

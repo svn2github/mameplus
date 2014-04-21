@@ -38,7 +38,7 @@ INTERRUPT_GEN_MEMBER(blockhl_state::blockhl_interrupt)
 READ8_MEMBER(blockhl_state::bankedram_r)
 {
 	if (m_palette_selected)
-		return m_generic_paletteram_8[offset];
+		return m_paletteram[offset];
 	else
 		return m_ram[offset];
 }
@@ -46,7 +46,7 @@ READ8_MEMBER(blockhl_state::bankedram_r)
 WRITE8_MEMBER(blockhl_state::bankedram_w)
 {
 	if (m_palette_selected)
-		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
+		m_palette->write(space, offset, data);
 	else
 		m_ram[offset] = data;
 }
@@ -185,6 +185,10 @@ void blockhl_state::machine_start()
 
 	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
+	m_paletteram.resize(m_palette->entries() * 2);
+	m_palette->basemem().set(m_paletteram, ENDIANNESS_BIG, 2);
+
+	save_item(NAME(m_paletteram));
 	save_item(NAME(m_palette_selected));
 	save_item(NAME(m_rombank));
 }
@@ -209,20 +213,25 @@ static MACHINE_CONFIG_START( blockhl, blockhl_state )
 
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(blockhl_state, screen_update_blockhl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", blockhl_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", blockhl_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

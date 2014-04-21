@@ -16,25 +16,27 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
-		m_fo_state(*this, "fo_state"),
 		m_ay1(*this, "ay1"),
 		m_ay2(*this, "ay2"),
 		m_s2636_1(*this, "s2636_1"),
 		m_s2636_2(*this, "s2636_2"),
 		m_s2636_3(*this, "s2636_3"),
-		m_sn(*this, "snsnd")
+		m_sn(*this, "snsnd"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 	{
 	}
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_audiocpu;
-	required_shared_ptr<UINT8> m_fo_state;
 	optional_device<ay8910_device> m_ay1;
 	optional_device<ay8910_device> m_ay2;
 	required_device<s2636_device> m_s2636_1;
 	required_device<s2636_device> m_s2636_2;
 	required_device<s2636_device> m_s2636_3;
 	optional_device<sn76477_device> m_sn;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	/* video-related */
 	tilemap_t    *m_bg_tilemap;

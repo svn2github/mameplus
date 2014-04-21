@@ -43,21 +43,25 @@
 #include "machine/z80ctc.h"
 #include "machine/z80sio.h"
 #include "sound/ay8910.h"
-#include "sound/beep.h"
+#include "sound/speaker.h"
 #include "dlair.lh"
 
 
 class dlair_state : public driver_device
 {
 public:
-	dlair_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
-			m_ldv1000(*this, "ld_ldv1000"),
-			m_pr7820(*this, "ld_pr7820"),
-			m_22vp932(*this, "ld_22vp932") ,
+	dlair_state(const machine_config &mconfig, device_type type, const char *tag) :
+		driver_device(mconfig, type, tag),
+		m_ldv1000(*this, "ld_ldv1000"),
+		m_pr7820(*this, "ld_pr7820"),
+		m_22vp932(*this, "ld_22vp932") ,
 		m_videoram(*this, "videoram"),
 		m_maincpu(*this, "maincpu"),
-		m_beeper(*this, "beeper")    { }
+		m_speaker(*this, "speaker"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
+	{
+	}
 
 	void laserdisc_data_w(UINT8 data)
 	{
@@ -118,12 +122,14 @@ public:
 	DECLARE_MACHINE_RESET(dlair);
 	DECLARE_PALETTE_INIT(dleuro);
 	UINT32 screen_update_dleuro(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-	INTERRUPT_GEN_MEMBER(vblank_callback);
+	DECLARE_WRITE_LINE_MEMBER(write_speaker);
 	DECLARE_WRITE_LINE_MEMBER(dleuro_interrupt);
 	DECLARE_WRITE16_MEMBER(serial_transmit);
 	DECLARE_READ16_MEMBER(serial_receive);
 	required_device<cpu_device> m_maincpu;
-	optional_device<beep_device> m_beeper;
+	optional_device<speaker_sound_device> m_speaker;
+	optional_device<gfxdecode_device> m_gfxdecode;
+	optional_device<palette_device> m_palette;
 };
 
 
@@ -181,10 +187,17 @@ READ16_MEMBER(dlair_state::serial_receive)
 }
 
 
+
+WRITE_LINE_MEMBER(dlair_state::write_speaker)
+{
+	m_speaker->level_w(state);
+}
+
+
 static Z80CTC_INTERFACE( ctc_intf )
 {
 	DEVCB_CPU_INPUT_LINE("maincpu", INPUT_LINE_IRQ0),   /* interrupt handler */
-	DEVCB_NULL,         /* ZC/TO0 callback */
+	DEVCB_DRIVER_LINE_MEMBER(dlair_state, write_speaker),         /* ZC/TO0 callback */
 	DEVCB_NULL,         /* ZC/TO1 callback */
 	DEVCB_NULL          /* ZC/TO2 callback */
 };
@@ -222,8 +235,8 @@ PALETTE_INIT_MEMBER(dlair_state,dleuro)
 
 	for (i = 0; i < 8; i++)
 	{
-		palette_set_color(machine(), 2 * i + 0, MAKE_RGB(0, 0, 0));
-		palette_set_color_rgb(machine(), 2 * i + 1, pal1bit(i >> 0), pal1bit(i >> 1), pal1bit(i >> 2));
+		palette.set_pen_color(2 * i + 0, rgb_t(0, 0, 0));
+		palette.set_pen_color(2 * i + 1, pal1bit(i >> 0), pal1bit(i >> 1), pal1bit(i >> 2));
 	}
 }
 
@@ -245,7 +258,7 @@ UINT32 dlair_state::screen_update_dleuro(screen_device &screen, bitmap_ind16 &bi
 		for (x = 0; x < 32; x++)
 		{
 			UINT8 *base = &videoram[y * 64 + x * 2 + 1];
-			drawgfx_opaque(bitmap, cliprect, machine().gfx[0], base[0], base[1], 0, 0, 10 * x, 16 * y);
+			m_gfxdecode->gfx(0)->opaque(bitmap,cliprect, base[0], base[1], 0, 0, 10 * x, 16 * y);
 		}
 
 	return 0;
@@ -275,25 +288,6 @@ MACHINE_RESET_MEMBER(dlair_state,dlair)
 		laserdisc_set_type(m_laserdisc, newtype);
 	}
 #endif
-}
-
-
-
-/*************************************
- *
- *  VBLANK callback
- *
- *************************************/
-
-INTERRUPT_GEN_MEMBER(dlair_state::vblank_callback)
-{
-	/* also update the speaker on the European version */
-	if (m_beeper != NULL)
-	{
-		z80ctc_device *ctc = machine().device<z80ctc_device>("ctc");
-		m_beeper->set_state(1);
-		m_beeper->set_frequency(ATTOSECONDS_TO_HZ(ctc->period(0).attoseconds));
-	}
 }
 
 
@@ -730,7 +724,6 @@ static MACHINE_CONFIG_START( dlair_base, dlair_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, MASTER_CLOCK_US/4)
 	MCFG_CPU_PROGRAM_MAP(dlus_map)
-	MCFG_CPU_VBLANK_INT_DRIVER("screen", dlair_state,  vblank_callback)
 	MCFG_CPU_PERIODIC_INT_DRIVER(dlair_state, irq0_line_hold,  (double)MASTER_CLOCK_US/8/16/16/16/16)
 
 	MCFG_MACHINE_START_OVERRIDE(dlair_state,dlair)
@@ -768,7 +761,6 @@ static MACHINE_CONFIG_START( dleuro, dlair_state )
 	MCFG_CPU_CONFIG(dleuro_daisy_chain)
 	MCFG_CPU_PROGRAM_MAP(dleuro_map)
 	MCFG_CPU_IO_MAP(dleuro_io_map)
-	MCFG_CPU_VBLANK_INT_DRIVER("screen", dlair_state,  vblank_callback)
 
 	MCFG_Z80CTC_ADD("ctc", MASTER_CLOCK_EURO/4 /* same as "maincpu" */, ctc_intf)
 	MCFG_Z80SIO_ADD("sio", MASTER_CLOCK_EURO/4 /* same as "maincpu" */, sio_intf)
@@ -780,19 +772,20 @@ static MACHINE_CONFIG_START( dleuro, dlair_state )
 
 	MCFG_LASERDISC_22VP932_ADD("ld_22vp932")
 	MCFG_LASERDISC_OVERLAY_DRIVER(256, 256, dlair_state, screen_update_dleuro)
+	MCFG_LASERDISC_OVERLAY_PALETTE("palette")
 
 	/* video hardware */
 	MCFG_LASERDISC_SCREEN_ADD_PAL("screen", "ld_22vp932")
 
-	MCFG_GFXDECODE(dlair)
-	MCFG_PALETTE_LENGTH(16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dlair)
+	MCFG_PALETTE_ADD("palette", 16)
 
-	MCFG_PALETTE_INIT_OVERRIDE(dlair_state,dleuro)
+	MCFG_PALETTE_INIT_OWNER(dlair_state,dleuro)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("beeper", BEEP, 0)
+	MCFG_SOUND_ADD("speaker", SPEAKER_SOUND, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.33)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.33)
 

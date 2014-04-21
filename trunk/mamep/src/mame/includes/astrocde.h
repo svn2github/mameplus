@@ -34,7 +34,8 @@ public:
 		m_votrax(*this, "votrax"),
 		m_astrocade_sound1(*this, "astrocade1"),
 		m_videoram(*this, "videoram"),
-		m_protected_ram(*this, "protected_ram") { }
+		m_protected_ram(*this, "protected_ram"),
+		m_screen(*this, "screen") { }
 
 	required_device<cpu_device> m_maincpu;
 	optional_device<cpu_device> m_subcpu;
@@ -43,6 +44,7 @@ public:
 	optional_device<astrocade_device> m_astrocade_sound1;
 	optional_shared_ptr<UINT8> m_videoram;
 	optional_shared_ptr<UINT8> m_protected_ram;
+	required_device<screen_device> m_screen;
 
 	UINT8 m_video_config;
 	UINT8 m_sparkle[4];
@@ -137,7 +139,7 @@ public:
 	DECLARE_DRIVER_INIT(gorf);
 	DECLARE_DRIVER_INIT(astrocde);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(astrocde);
 	DECLARE_VIDEO_START(profpac);
 	DECLARE_PALETTE_INIT(profpac);
 	UINT32 screen_update_astrocde(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);

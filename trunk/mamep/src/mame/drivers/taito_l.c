@@ -101,7 +101,7 @@ void taitol_state::palette_notifier(int addr)
 	else
 	{
 		//      r = g = b = ((addr & 0x1e) != 0)*255;
-		palette_set_color_rgb(machine(), addr / 2, pal4bit(byte0), pal4bit(byte0 >> 4), pal4bit(byte1));
+		m_palette->set_pen_color(addr / 2, pal4bit(byte0), pal4bit(byte0 >> 4), pal4bit(byte1));
 	}
 }
 
@@ -166,7 +166,7 @@ void taitol_state::taito_machine_reset()
 	m_cur_rombank = m_cur_rombank2 = 0;
 	membank("bank1")->set_base(memregion("maincpu")->base());
 
-	machine().gfx[2]->set_source(m_rambanks);
+	m_gfxdecode->gfx(2)->set_source(m_rambanks);
 
 	m_adpcm_pos = 0;
 	m_adpcm_data = -1;
@@ -1771,13 +1771,6 @@ static const ay8910_interface champwr_ay8910_config =
 	DEVCB_DRIVER_MEMBER(taitol_state,champwr_msm5205_volume_w),
 };
 
-
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(taitol_state,champwr_msm5205_vck),/* VCK function */
-	MSM5205_S48_4B      /* 8 kHz */
-};
-
 static const ay8910_interface single_ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
@@ -1822,9 +1815,10 @@ static MACHINE_CONFIG_START( fhawk, taitol_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
 	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(2)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 2)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	MCFG_VIDEO_START_OVERRIDE(taitol_state,taitol)
 
@@ -1863,7 +1857,8 @@ static MACHINE_CONFIG_DERIVED( champwr, fhawk )
 	MCFG_YM2203_AY8910_INTF(&champwr_ay8910_config)
 
 	MCFG_SOUND_ADD("msm", MSM5205, XTAL_384kHz)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(taitol_state, champwr_msm5205_vck)) /* VCK function */
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)      /* 8 kHz */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -1916,9 +1911,10 @@ static MACHINE_CONFIG_START( kurikint, taitol_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
 	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(2)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 2)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	MCFG_VIDEO_START_OVERRIDE(taitol_state,taitol)
 
@@ -1940,7 +1936,7 @@ static MACHINE_CONFIG_DERIVED( kurikinta, kurikint )
 	/* basic machine hardware */
 
 	/* video hardware */
-	MCFG_GFXDECODE(1)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", 1)
 MACHINE_CONFIG_END
 
 
@@ -1962,9 +1958,10 @@ static MACHINE_CONFIG_START( plotting, taitol_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
 	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(1)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	MCFG_VIDEO_START_OVERRIDE(taitol_state,taitol)
 
@@ -2055,9 +2052,10 @@ static MACHINE_CONFIG_START( evilston, taitol_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitol_state, screen_update_taitol)
 	MCFG_SCREEN_VBLANK_DRIVER(taitol_state, screen_eof_taitol)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(2)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 2)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	MCFG_VIDEO_START_OVERRIDE(taitol_state,taitol)
 

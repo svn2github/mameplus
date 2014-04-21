@@ -178,7 +178,6 @@ static ADDRESS_MAP_START( laserbat_io_map, AS_IO, 8, laserbat_state )
 	AM_RANGE(0x06, 0x06) AM_WRITE(laserbat_input_mux_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(laserbat_csound2_w)
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_SHARE("fo_state")
 ADDRESS_MAP_END
 
 
@@ -191,7 +190,6 @@ static ADDRESS_MAP_START( catnmous_io_map, AS_IO, 8, laserbat_state )
 	AM_RANGE(0x06, 0x06) AM_WRITE(laserbat_input_mux_w)
 	AM_RANGE(0x07, 0x07) AM_WRITENOP // unknown
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_SHARE("fo_state")
 ADDRESS_MAP_END
 
 // the same as in zaccaria.c ?
@@ -483,7 +481,7 @@ TILE_GET_INFO_MEMBER(laserbat_state::get_tile_info)
 
 void laserbat_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(laserbat_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(laserbat_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	save_item(NAME(m_videoram));
 	save_item(NAME(m_colorram));
@@ -523,7 +521,7 @@ UINT32 laserbat_state::screen_update_laserbat(screen_device &screen, bitmap_ind1
 	}
 
 	if (m_sprite_enable)
-		drawgfx_transpen(bitmap,cliprect,machine().gfx[1],
+		m_gfxdecode->gfx(1)->transpen(bitmap,cliprect,
 				m_sprite_code,
 				m_sprite_color,
 				0,0,
@@ -613,22 +611,6 @@ WRITE8_MEMBER(laserbat_state::zaccaria_port0b_w)
 
 	m_last_port0b = data;
 }
-
-static const pia6821_interface pia_intf =
-{
-	DEVCB_DRIVER_MEMBER(laserbat_state,zaccaria_port0a_r),      /* port A in */
-	DEVCB_NULL,     /* port B in */
-	DEVCB_NULL,     /* line CA1 in */
-	DEVCB_NULL,     /* line CB1 in */
-	DEVCB_NULL,     /* line CA2 in */
-	DEVCB_NULL,     /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(laserbat_state,zaccaria_port0a_w),      /* port A out */
-	DEVCB_DRIVER_MEMBER(laserbat_state,zaccaria_port0b_w),      /* port B out */
-	DEVCB_NULL,     /* line CA2 out */
-	DEVCB_NULL,     /* port CB2 out */
-	DEVCB_DRIVER_LINE_MEMBER(laserbat_state,zaccaria_irq0a),        /* IRQA */
-	DEVCB_DRIVER_LINE_MEMBER(laserbat_state,zaccaria_irq0b)     /* IRQB */
-};
 
 static const ay8910_interface ay8910_config =
 {
@@ -739,9 +721,10 @@ static MACHINE_CONFIG_START( laserbat, laserbat_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 29*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(laserbat_state, screen_update_laserbat)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(laserbat)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", laserbat)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 	MCFG_S2636_ADD("s2636_1", s2636_1_config)
 	MCFG_S2636_ADD("s2636_2", s2636_2_config)
@@ -773,8 +756,12 @@ static MACHINE_CONFIG_START( catnmous, laserbat_state )
 	MCFG_CPU_PROGRAM_MAP(catnmous_sound_map)
 	MCFG_CPU_PERIODIC_INT_DRIVER(laserbat_state, zaccaria_cb1_toggle,  (double)3580000/4096)
 
-	MCFG_PIA6821_ADD("pia", pia_intf)
-
+	MCFG_DEVICE_ADD("pia", PIA6821, 0)
+	MCFG_PIA_READPA_HANDLER(READ8(laserbat_state, zaccaria_port0a_r))
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(laserbat_state, zaccaria_port0a_w))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(laserbat_state, zaccaria_port0b_w))
+	MCFG_PIA_IRQA_HANDLER(WRITELINE(laserbat_state, zaccaria_irq0a))
+	MCFG_PIA_IRQB_HANDLER(WRITELINE(laserbat_state, zaccaria_irq0b))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -783,9 +770,10 @@ static MACHINE_CONFIG_START( catnmous, laserbat_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(laserbat_state, screen_update_laserbat)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(laserbat)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", laserbat)
+	MCFG_PALETTE_ADD("palette", 1024)
 
 	MCFG_S2636_ADD("s2636_1", s2636_1_config)
 	MCFG_S2636_ADD("s2636_2", s2636_2_config)

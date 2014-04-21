@@ -160,7 +160,7 @@ WRITE16_MEMBER(slapshot_state::color_ram_word_w)
 		g = (m_color_ram[offset] & 0xff00) >> 8;
 		b = (m_color_ram[offset] & 0xff);
 
-		palette_set_color(machine(), offset / 2, MAKE_RGB(r,g,b));
+		m_palette->set_pen_color(offset / 2, rgb_t(r,g,b));
 	}
 }
 
@@ -501,12 +501,6 @@ static const tc0480scp_interface slapshot_tc0480scp_intf =
 	256     /* col_base */
 };
 
-static const tc0640fio_interface slapshot_io_intf =
-{
-	DEVCB_NULL, DEVCB_INPUT_PORT("COINS"),
-	DEVCB_INPUT_PORT("BUTTONS"), DEVCB_INPUT_PORT("SYSTEM"), DEVCB_INPUT_PORT("JOY")    /* port read handlers */
-};
-
 static const tc0140syt_interface slapshot_tc0140syt_intf =
 {
 	"maincpu", "audiocpu"
@@ -534,8 +528,11 @@ static MACHINE_CONFIG_START( slapshot, slapshot_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-
-	MCFG_TC0640FIO_ADD("tc0640fio", slapshot_io_intf)
+	MCFG_DEVICE_ADD("tc0640fio", TC0640FIO, 0)
+	MCFG_TC0640FIO_READ_1_CB(IOPORT("COINS"))
+	MCFG_TC0640FIO_READ_2_CB(IOPORT("BUTTONS"))
+	MCFG_TC0640FIO_READ_3_CB(IOPORT("SYSTEM"))
+	MCFG_TC0640FIO_READ_7_CB(IOPORT("JOY"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -545,12 +542,15 @@ static MACHINE_CONFIG_START( slapshot, slapshot_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(slapshot_state, screen_update_slapshot)
 	MCFG_SCREEN_VBLANK_DRIVER(slapshot_state, screen_eof_taito_no_buffer)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(slapshot)
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", slapshot)
+	MCFG_PALETTE_ADD("palette", 8192)
 
 
 	MCFG_TC0480SCP_ADD("tc0480scp", slapshot_tc0480scp_intf)
+	MCFG_TC0480SCP_GFXDECODE("gfxdecode")
+	MCFG_TC0480SCP_PALETTE("palette")
 	MCFG_TC0360PRI_ADD("tc0360pri")
 
 	/* sound hardware */
@@ -580,8 +580,11 @@ static MACHINE_CONFIG_START( opwolf3, slapshot_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-
-	MCFG_TC0640FIO_ADD("tc0640fio", slapshot_io_intf)
+	MCFG_DEVICE_ADD("tc0640fio", TC0640FIO, 0)
+	MCFG_TC0640FIO_READ_1_CB(IOPORT("COINS"))
+	MCFG_TC0640FIO_READ_2_CB(IOPORT("BUTTONS"))
+	MCFG_TC0640FIO_READ_3_CB(IOPORT("SYSTEM"))
+	MCFG_TC0640FIO_READ_7_CB(IOPORT("JOY"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -591,12 +594,15 @@ static MACHINE_CONFIG_START( opwolf3, slapshot_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(slapshot_state, screen_update_slapshot)
 	MCFG_SCREEN_VBLANK_DRIVER(slapshot_state, screen_eof_taito_no_buffer)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(slapshot)
-	MCFG_PALETTE_LENGTH(8192)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", slapshot)
+	MCFG_PALETTE_ADD("palette", 8192)
 
 
 	MCFG_TC0480SCP_ADD("tc0480scp", slapshot_tc0480scp_intf)
+	MCFG_TC0480SCP_GFXDECODE("gfxdecode")
+	MCFG_TC0480SCP_PALETTE("palette")
 	MCFG_TC0360PRI_ADD("tc0360pri")
 
 	/* sound hardware */

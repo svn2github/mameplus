@@ -176,7 +176,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, tigeroad_state )
 	AM_RANGE(0xfec000, 0xfec7ff) AM_RAM_WRITE(tigeroad_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xfe8000, 0xfe8003) AM_WRITE(tigeroad_scroll_w)
 	AM_RANGE(0xfe800e, 0xfe800f) AM_WRITEONLY    /* fe800e = watchdog or IRQ acknowledge */
-	AM_RANGE(0xff8200, 0xff867f) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xff8200, 0xff867f) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xffc000, 0xffffff) AM_RAM AM_SHARE("ram16")
 ADDRESS_MAP_END
 
@@ -503,12 +503,6 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL,
 };
 
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_NULL,              /* interrupt function */
-	MSM5205_SEX_4B  /* 4KHz playback ?  */
-};
-
 
 static MACHINE_CONFIG_START( tigeroad, tigeroad_state )
 
@@ -533,10 +527,12 @@ static MACHINE_CONFIG_START( tigeroad, tigeroad_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tigeroad_state, screen_update_tigeroad)
 	MCFG_SCREEN_VBLANK_DEVICE("spriteram", buffered_spriteram16_device, vblank_copy_rising)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tigeroad)
-	MCFG_PALETTE_LENGTH(576)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tigeroad)
 
+	MCFG_PALETTE_ADD("palette", 576)
+	MCFG_PALETTE_FORMAT(xxxxRRRRGGGGBBBB)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -563,7 +559,7 @@ static MACHINE_CONFIG_DERIVED( toramich, tigeroad )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("msm", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_SEX_4B)  /* 4KHz playback ?  */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 

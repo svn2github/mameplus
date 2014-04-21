@@ -46,7 +46,8 @@ public:
 		m_cpu_1(*this, "cpu1"),
 		m_nsc(*this, "nsc"),
 		m_msm(*this, "msm"),
-		m_cvsd(*this, "cvsd") { }
+		m_cvsd(*this, "cvsd"),
+		m_palette(*this, "palette") { }
 
 	/* sound-related */
 	// Jangou CVSD Sound
@@ -68,6 +69,7 @@ public:
 	optional_device<cpu_device> m_nsc;
 	optional_device<msm5205_device> m_msm;
 	optional_device<hc55516_device> m_cvsd;
+	required_device<palette_device> m_palette;
 
 	/* video-related */
 	UINT8        m_pen_data[0x10];
@@ -93,7 +95,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(jangou);
 	DECLARE_MACHINE_START(jngolady);
 	DECLARE_MACHINE_RESET(jngolady);
 	DECLARE_MACHINE_START(common);
@@ -113,7 +115,7 @@ public:
  *************************************/
 
 /* guess: use the same resistor values as Crazy Climber (needs checking on the real HW) */
-void jangou_state::palette_init()
+PALETTE_INIT_MEMBER(jangou_state, jangou)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
@@ -127,7 +129,7 @@ void jangou_state::palette_init()
 			2, resistances_b,  weights_b,  0, 0,
 			0, 0, 0, 0, 0);
 
-	for (i = 0;i < machine().total_colors(); i++)
+	for (i = 0;i < palette.entries(); i++)
 	{
 		int bit0, bit1, bit2;
 		int r, g, b;
@@ -149,7 +151,7 @@ void jangou_state::palette_init()
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = combine_2_weights(weights_b, bit0, bit1);
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -170,8 +172,8 @@ UINT32 jangou_state::screen_update_jangou(screen_device &screen, bitmap_ind16 &b
 		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			UINT32 srcpix = *src++;
-			*dst++ = machine().pens[srcpix & 0xf];
-			*dst++ = machine().pens[(srcpix >> 4) & 0xf];
+			*dst++ = m_palette->pen(srcpix & 0xf);
+			*dst++ = m_palette->pen((srcpix >> 4) & 0xf);
 		}
 	}
 
@@ -902,12 +904,6 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL
 };
 
-static const msm5205_interface msm5205_config =
-{
-	DEVCB_DRIVER_LINE_MEMBER(jangou_state,jngolady_vclk_cb),
-	MSM5205_S96_4B
-};
-
 /*************************************
  *
  *  Machine driver
@@ -996,9 +992,10 @@ static MACHINE_CONFIG_START( jangou, jangou_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
 	MCFG_SCREEN_UPDATE_DRIVER(jangou_state, screen_update_jangou)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(32)
-
+	MCFG_PALETTE_ADD("palette", 32)
+	MCFG_PALETTE_INIT_OWNER(jangou_state, jangou)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1032,7 +1029,8 @@ static MACHINE_CONFIG_DERIVED( jngolady, jangou )
 	MCFG_DEVICE_REMOVE("cvsd")
 
 	MCFG_SOUND_ADD("msm", MSM5205, XTAL_400kHz)
-	MCFG_SOUND_CONFIG(msm5205_config)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(jangou_state, jngolady_vclk_cb))
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S96_4B)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 

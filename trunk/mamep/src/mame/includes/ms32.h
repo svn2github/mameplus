@@ -17,20 +17,23 @@ public:
 		m_bgram(*this, "bgram", 32),
 		m_f1superb_extraram(*this, "f1sb_extraram", 32),
 		m_maincpu(*this, "maincpu"),
-		m_audiocpu(*this, "audiocpu")  { }
+		m_audiocpu(*this, "audiocpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette")  { }
 
-	required_shared_ptr<UINT32> m_mainram;
-	required_shared_ptr<UINT32> m_roz_ctrl;
-	required_shared_ptr<UINT32> m_tx_scroll;
-	required_shared_ptr<UINT32> m_bg_scroll;
-	required_shared_ptr<UINT32> m_mahjong_input_select;
-	required_shared_ptr<UINT8> m_priram;
-	required_shared_ptr<UINT16> m_palram;
-	required_shared_ptr<UINT16> m_rozram;
-	required_shared_ptr<UINT16> m_lineram;
-	required_shared_ptr<UINT16> m_sprram;
-	required_shared_ptr<UINT16> m_txram;
-	required_shared_ptr<UINT16> m_bgram;
+	optional_shared_ptr<UINT32> m_mainram;
+	optional_shared_ptr<UINT32> m_roz_ctrl;
+	optional_shared_ptr<UINT32> m_tx_scroll;
+	optional_shared_ptr<UINT32> m_bg_scroll;
+	optional_shared_ptr<UINT32> m_mahjong_input_select;
+	optional_shared_ptr<UINT8> m_priram;
+	optional_shared_ptr<UINT16> m_palram;
+	optional_shared_ptr<UINT16> m_rozram;
+	optional_shared_ptr<UINT16> m_lineram;
+	optional_shared_ptr<UINT16> m_sprram;
+	optional_shared_ptr<UINT16> m_txram;
+	optional_shared_ptr<UINT16> m_bgram;
 	optional_shared_ptr<UINT16> m_f1superb_extraram;
 	UINT8 *m_nvram_8;
 	UINT32 m_to_main;
@@ -108,4 +111,7 @@ public:
 	void configure_banks();
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_audiocpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	optional_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 };

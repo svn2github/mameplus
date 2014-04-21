@@ -304,10 +304,11 @@ static MACHINE_CONFIG_START( funkybee, funkybee_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(12, 32*8-8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(funkybee_state, screen_update_funkybee)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(funkybee)
-	MCFG_PALETTE_LENGTH(32)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", funkybee)
+	MCFG_PALETTE_ADD("palette", 32)
+	MCFG_PALETTE_INIT_OWNER(funkybee_state, funkybee)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

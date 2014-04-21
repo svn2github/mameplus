@@ -334,7 +334,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
 		m_vram(*this, "vram"),
-		m_eeprom(*this, "eeprom"){ }
+		m_eeprom(*this, "eeprom"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	required_device<cpu_device> m_maincpu;
 	required_shared_ptr<UINT8> m_vram;
@@ -345,9 +347,11 @@ public:
 	DECLARE_DRIVER_INIT(fortecar);
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(fortecar);
 	UINT32 screen_update_fortecar(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<eeprom_serial_93cxx_device> m_eeprom;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -373,7 +377,7 @@ UINT32 fortecar_state::screen_update_fortecar(screen_device &screen, bitmap_ind1
 			if(bpp)
 				color&=0x3;
 
-			drawgfx_opaque(bitmap,cliprect,machine().gfx[bpp],tile,color,0,0,x*8,y*8);
+			m_gfxdecode->gfx(bpp)->opaque(bitmap,cliprect,tile,color,0,0,x*8,y*8);
 			count++;
 
 		}
@@ -382,7 +386,7 @@ UINT32 fortecar_state::screen_update_fortecar(screen_device &screen, bitmap_ind1
 	return 0;
 }
 
-void fortecar_state::palette_init()
+PALETTE_INIT_MEMBER(fortecar_state, fortecar)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 /* Video resistors...
@@ -429,7 +433,7 @@ R = 82 Ohms Pull Down.
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = combine_2_weights(weights_b, bit0, bit1);
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -538,6 +542,7 @@ static const ay8910_interface ay8910_config =
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -687,6 +692,7 @@ static MACHINE_CONFIG_START( fortecar, fortecar_state )
 	MCFG_SCREEN_SIZE(640, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 600-1, 0, 240-1)    /* driven by CRTC */
 	MCFG_SCREEN_UPDATE_DRIVER(fortecar_state, screen_update_fortecar)
+	MCFG_SCREEN_PALETTE("palette")
 
 
 	MCFG_EEPROM_SERIAL_93C56_ADD("eeprom")
@@ -695,9 +701,9 @@ static MACHINE_CONFIG_START( fortecar, fortecar_state )
 	MCFG_I8255A_ADD( "fcppi0", ppi8255_intf )
 	MCFG_V3021_ADD("rtc")
 
-	MCFG_GFXDECODE(fortecar)
-	MCFG_PALETTE_LENGTH(0x200)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", fortecar)
+	MCFG_PALETTE_ADD("palette", 0x200)
+	MCFG_PALETTE_INIT_OWNER(fortecar_state, fortecar)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)    /* 1.5 MHz, measured */
 

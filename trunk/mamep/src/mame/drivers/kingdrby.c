@@ -84,7 +84,9 @@ public:
 		m_vram(*this, "vram"),
 		m_attr(*this, "attr"),
 		m_spriteram(*this, "spriteram"),
-		m_soundcpu(*this, "soundcpu"){ }
+		m_soundcpu(*this, "soundcpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	UINT8 m_sound_cmd;
 	required_shared_ptr<UINT8> m_vram;
@@ -116,6 +118,8 @@ public:
 	UINT32 screen_update_kingdrby(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_soundcpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -147,8 +151,7 @@ TILE_GET_INFO_MEMBER(kingdrby_state::get_sc0_tile_info)
 
 	tile&=0x1ff;
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			tile,
 			color|0x40,
 			0);
@@ -164,8 +167,7 @@ TILE_GET_INFO_MEMBER(kingdrby_state::get_sc1_tile_info)
 	//0x13
 	//
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			tile,
 			color|0x40,
 			0);
@@ -175,9 +177,9 @@ TILE_GET_INFO_MEMBER(kingdrby_state::get_sc1_tile_info)
 
 void kingdrby_state::video_start()
 {
-	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,24);
-	m_sc1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,24);
-	m_sc0w_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_sc0_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,24);
+	m_sc1_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,24);
+	m_sc0w_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
 	m_sc1_tilemap->set_transparent_pen(0);
 }
@@ -221,13 +223,13 @@ void kingdrby_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 		{
 			for(dy=0;dy<h;dy++)
 				for(dx=0;dx<w;dx++)
-					drawgfx_transpen(bitmap,cliprect,machine().gfx[0],spr_offs++,colour,1,0,((x+16*w)-(dx+1)*16),(y+dy*16),0);
+					m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,spr_offs++,colour,1,0,((x+16*w)-(dx+1)*16),(y+dy*16),0);
 		}
 		else
 		{
 			for(dy=0;dy<h;dy++)
 				for(dx=0;dx<w;dx++)
-					drawgfx_transpen(bitmap,cliprect,machine().gfx[0],spr_offs++,colour,0,0,(x+dx*16),(y+dy*16),0);
+					m_gfxdecode->gfx(0)->transpen(bitmap,cliprect,spr_offs++,colour,0,0,(x+dx*16),(y+dy*16),0);
 		}
 	}
 }
@@ -919,6 +921,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -977,7 +980,7 @@ PALETTE_INIT_MEMBER(kingdrby_state,kingdrby)
 		bit2 = (color_prom[0] >> 5) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 		color_prom++;
 	}
 }
@@ -1010,7 +1013,7 @@ PALETTE_INIT_MEMBER(kingdrby_state,kingdrbb)
 		bit2 = (prom[i] >> 5) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		palette.set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -1037,15 +1040,16 @@ static MACHINE_CONFIG_START( kingdrby, kingdrby_state )
 	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
 	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
 
-	MCFG_GFXDECODE(kingdrby)
-	MCFG_PALETTE_LENGTH(0x200)
-	MCFG_PALETTE_INIT_OVERRIDE(kingdrby_state,kingdrby)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", kingdrby)
+	MCFG_PALETTE_ADD("palette", 0x200)
+	MCFG_PALETTE_INIT_OWNER(kingdrby_state,kingdrby)
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 224-1)    /* controlled by CRTC */
 	MCFG_SCREEN_UPDATE_DRIVER(kingdrby_state, screen_update_kingdrby)
+	MCFG_SCREEN_PALETTE("palette")
 
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", CLK_1/32, mc6845_intf)  /* 53.333 Hz. guess */
@@ -1062,7 +1066,8 @@ static MACHINE_CONFIG_DERIVED( kingdrbb, kingdrby )
 	MCFG_CPU_MODIFY("slave")
 	MCFG_CPU_PROGRAM_MAP(slave_1986_map)
 
-	MCFG_PALETTE_INIT_OVERRIDE(kingdrby_state,kingdrbb)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_INIT_OWNER(kingdrby_state,kingdrbb)
 
 	MCFG_DEVICE_REMOVE("ppi8255_0")
 	MCFG_DEVICE_REMOVE("ppi8255_1")
@@ -1076,8 +1081,9 @@ static MACHINE_CONFIG_DERIVED( cowrace, kingdrbb )
 	MCFG_CPU_PROGRAM_MAP(cowrace_sound_map)
 	MCFG_CPU_IO_MAP(cowrace_sound_io)
 
-	MCFG_GFXDECODE(cowrace)
-	MCFG_PALETTE_INIT_OVERRIDE(kingdrby_state,kingdrby)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", cowrace)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_INIT_OWNER(kingdrby_state,kingdrby)
 	MCFG_OKIM6295_ADD("oki", 1056000, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 

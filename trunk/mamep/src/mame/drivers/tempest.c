@@ -280,7 +280,6 @@ Note: Roms for Tempest Analog Vector-Generator PCB Assembly A037383-03 or A03738
 #include "video/vector.h"
 #include "machine/atari_vg.h"
 #include "sound/pokey.h"
-#include "drivlgcy.h"
 
 
 class tempest_state : public driver_device
@@ -289,10 +288,12 @@ public:
 	tempest_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
-		m_mathbox(*this, "mathbox") { }
+		m_mathbox(*this, "mathbox"),
+		m_avg(*this, "avg") { }
 
 	required_device<cpu_device> m_maincpu;
 	required_device<mathbox_device> m_mathbox;
+	required_device<avg_tempest_device> m_avg;
 
 	UINT8 m_player_select;
 	DECLARE_WRITE8_MEMBER(wdclr_w);
@@ -308,7 +309,7 @@ public:
 
 
 #define MASTER_CLOCK (XTAL_12_096MHz)
-#define CLOCK_3KHZ  (MASTER_CLOCK / 4096)
+#define CLOCK_3KHZ   ((double)MASTER_CLOCK / 4096)
 
 #define TEMPEST_KNOB_P1_TAG ("KNOBP1")
 #define TEMPEST_KNOB_P2_TAG ("KNOBP2")
@@ -391,8 +392,8 @@ WRITE8_MEMBER(tempest_state::tempest_coin_w)
 	coin_counter_w(machine(), 0, (data & 0x01));
 	coin_counter_w(machine(), 1, (data & 0x02));
 	coin_counter_w(machine(), 2, (data & 0x04));
-	avg_set_flip_x(data & 0x08);
-	avg_set_flip_y(data & 0x10);
+	m_avg->set_flip_x(data & 0x08);
+	m_avg->set_flip_y(data & 0x10);
 }
 
 
@@ -412,9 +413,9 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, tempest_state )
 	AM_RANGE(0x2000, 0x2fff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x2000)
 	AM_RANGE(0x3000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x4000) AM_WRITE(tempest_coin_w)
-	AM_RANGE(0x4800, 0x4800) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x4800, 0x4800) AM_DEVWRITE("avg", avg_tempest_device, go_w)
 	AM_RANGE(0x5000, 0x5000) AM_WRITE(wdclr_w)
-	AM_RANGE(0x5800, 0x5800) AM_WRITE_LEGACY(avgdvg_reset_w)
+	AM_RANGE(0x5800, 0x5800) AM_DEVWRITE("avg", avg_tempest_device, reset_w)
 	AM_RANGE(0x6000, 0x603f) AM_DEVWRITE("earom", atari_vg_earom_device, write)
 	AM_RANGE(0x6040, 0x6040) AM_DEVREAD("mathbox", mathbox_device, status_r) AM_DEVWRITE("earom", atari_vg_earom_device, ctrl_w)
 	AM_RANGE(0x6050, 0x6050) AM_DEVREAD("earom", atari_vg_earom_device, read)
@@ -445,7 +446,7 @@ static INPUT_PORTS_START( tempest )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME("Diagnostic Step") PORT_CODE(KEYCODE_F1)
 	/* bit 6 is the VG HALT bit. We set it to "low" */
 	/* per default (busy vector processor). */
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER("avg", avg_tempest_device, done_r, NULL)
 	/* bit 7 is tied to a 3kHz (?) clock */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, tempest_state,clock_r, NULL)
 
@@ -594,11 +595,14 @@ static MACHINE_CONFIG_START( tempest, tempest_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_CPU_PERIODIC_INT_DRIVER(tempest_state, irq0_line_assert,  (double)MASTER_CLOCK / 4096 / 12)
+
+	/* needed to ensure routine at ae1c passes checks and does not corrupt data */
+	MCFG_QUANTUM_PERFECT_CPU("maincpu")
+
+	MCFG_CPU_PERIODIC_INT_DRIVER(tempest_state, irq0_line_assert, CLOCK_3KHZ / 12)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_hz(CLOCK_3KHZ / 256))
 
 	MCFG_ATARIVGEAROM_ADD("earom")
-
 
 	/* video hardware */
 	MCFG_VECTOR_ADD("vector")
@@ -608,7 +612,8 @@ static MACHINE_CONFIG_START( tempest, tempest_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 580, 0, 570)
 	MCFG_SCREEN_UPDATE_DEVICE("vector", vector_device, screen_update)
 
-	MCFG_VIDEO_START(avg_tempest)
+	MCFG_DEVICE_ADD("avg", AVG_TEMPEST, 0)
+	MCFG_AVGDVG_VECTOR("vector")
 
 	/* Drivers */
 	MCFG_MATHBOX_ADD("mathbox")

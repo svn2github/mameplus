@@ -26,7 +26,9 @@ class chsuper_state : public driver_device
 public:
 	chsuper_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-			m_maincpu(*this, "maincpu") { }
+			m_maincpu(*this, "maincpu"),
+			m_gfxdecode(*this, "gfxdecode"),
+			m_palette(*this, "palette")  { }
 
 	DECLARE_WRITE8_MEMBER(chsuper_vram_w);
 	DECLARE_READ8_MEMBER(ff_r);
@@ -35,7 +37,8 @@ public:
 	UINT8 *m_vram;
 
 	required_device<z180_device> m_maincpu;
-
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 
 protected:
@@ -59,7 +62,7 @@ void chsuper_state::video_start()
 
 UINT32 chsuper_state::screen_update( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	int count = 0x0000;
 	int y,x;
 
@@ -69,7 +72,7 @@ UINT32 chsuper_state::screen_update( screen_device &screen, bitmap_ind16 &bitmap
 		{
 			int tile = ((m_vram[count+1]<<8) | m_vram[count]) & 0xffff;
 
-			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*4,y*8);
+			gfx->opaque(bitmap,cliprect,tile,0,0,0,x*4,y*8);
 			count+=2;
 		}
 	}
@@ -212,13 +215,14 @@ static MACHINE_CONFIG_START( chsuper, chsuper_state )
 	MCFG_SCREEN_UPDATE_DRIVER(chsuper_state, screen_update)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0, 30*8-1)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_GFXDECODE(chsuper)
-	MCFG_PALETTE_LENGTH(0x100)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", chsuper)
+	MCFG_PALETTE_ADD("palette", 0x100)
 
-	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
+	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map, "palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

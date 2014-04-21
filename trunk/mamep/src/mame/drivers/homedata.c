@@ -1121,23 +1121,6 @@ static GFXDECODE_START( lemnangl )
 GFXDECODE_END
 
 
-/*************************************
- *
- *  Sound interface
- *
- *************************************/
-
-
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
-
-
 MACHINE_START_MEMBER(homedata_state,homedata)
 {
 	m_sn = machine().device<sn76489a_device>("snsnd");
@@ -1256,11 +1239,12 @@ static MACHINE_CONFIG_START( mrokumei, homedata_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_mrokumei)
 	MCFG_SCREEN_VBLANK_DRIVER(homedata_state, screen_eof_homedata)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(mrokumei)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", mrokumei)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
-	MCFG_PALETTE_INIT_OVERRIDE(homedata_state,mrokumei)
+	MCFG_PALETTE_INIT_OWNER(homedata_state,mrokumei)
 	MCFG_VIDEO_START_OVERRIDE(homedata_state,mrokumei)
 
 	/* sound hardware */
@@ -1268,7 +1252,6 @@ static MACHINE_CONFIG_START( mrokumei, homedata_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489A, 16000000/4)     // SN76489AN actually
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
@@ -1289,13 +1272,6 @@ static const ay8910_interface ay8910_config =
 };
 
 
-static const UPD7810_CONFIG upd_config =
-{
-	TYPE_7810,
-	NULL    /* io_callback */
-};
-
-
 static MACHINE_CONFIG_START( reikaids, homedata_state )
 
 	/* basic machine hardware */
@@ -1304,7 +1280,6 @@ static MACHINE_CONFIG_START( reikaids, homedata_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  homedata_irq) /* also triggered by the blitter */
 
 	MCFG_CPU_ADD("audiocpu", UPD7807, 8000000)  /* ??? MHz (max speed for the 7807 is 12MHz) */
-	MCFG_CPU_CONFIG(upd_config)
 	MCFG_CPU_PROGRAM_MAP(reikaids_upd7807_map)
 	MCFG_CPU_IO_MAP(reikaids_upd7807_io_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  upd7807_irq)
@@ -1322,11 +1297,12 @@ static MACHINE_CONFIG_START( reikaids, homedata_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 16, 256-1-16)
 	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_reikaids)
 	MCFG_SCREEN_VBLANK_DRIVER(homedata_state, screen_eof_homedata)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(reikaids)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", reikaids)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
-	MCFG_PALETTE_INIT_OVERRIDE(homedata_state,reikaids)
+	MCFG_PALETTE_INIT_OWNER(homedata_state,reikaids)
 	MCFG_VIDEO_START_OVERRIDE(homedata_state,reikaids)
 
 	/* sound hardware */
@@ -1354,7 +1330,6 @@ static MACHINE_CONFIG_START( pteacher, homedata_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  homedata_irq) /* also triggered by the blitter */
 
 	MCFG_CPU_ADD("audiocpu", UPD7807, 9000000)  /* 9MHz ? */
-	MCFG_CPU_CONFIG(upd_config)
 	MCFG_CPU_PROGRAM_MAP(pteacher_upd7807_map)
 	MCFG_CPU_IO_MAP(pteacher_upd7807_io_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", homedata_state,  upd7807_irq)
@@ -1373,11 +1348,12 @@ static MACHINE_CONFIG_START( pteacher, homedata_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_pteacher)
 	MCFG_SCREEN_VBLANK_DRIVER(homedata_state, screen_eof_homedata)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(pteacher)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", pteacher)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
-	MCFG_PALETTE_INIT_OVERRIDE(homedata_state,pteacher)
+	MCFG_PALETTE_INIT_OWNER(homedata_state,pteacher)
 	MCFG_VIDEO_START_OVERRIDE(homedata_state,pteacher)
 
 	/* sound hardware */
@@ -1385,7 +1361,6 @@ static MACHINE_CONFIG_START( pteacher, homedata_state )
 
 	MCFG_SOUND_ADD("snsnd", SN76489A, 16000000/4)     // SN76489AN actually
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
@@ -1400,7 +1375,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( lemnangl, pteacher )
 
 	/* video hardware */
-	MCFG_GFXDECODE(lemnangl)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", lemnangl)
 
 	MCFG_VIDEO_START_OVERRIDE(homedata_state,lemnangl)
 MACHINE_CONFIG_END
@@ -1536,11 +1511,12 @@ static MACHINE_CONFIG_START( mirderby, homedata_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(homedata_state, screen_update_mirderby)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(mirderby)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", mirderby)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
-	MCFG_PALETTE_INIT_OVERRIDE(homedata_state,mirderby)
+	MCFG_PALETTE_INIT_OWNER(homedata_state,mirderby)
 	MCFG_VIDEO_START_OVERRIDE(homedata_state,mirderby)
 
 	/* sound hardware */

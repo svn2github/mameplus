@@ -8,22 +8,12 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "machine/7474.h"
 #include "includes/galaxold.h"
 
 
 IRQ_CALLBACK_MEMBER(galaxold_state::hunchbkg_irq_callback)
 {
-	//galaxold_state *state = device->machine().driver_data<galaxold_state>();
-	/* for some reason a call to cputag_set_input_line
-	 * is significantly delayed ....
-	 *
-	 * state->m_maincpu->set_input_line(0, CLEAR_LINE);
-	 *
-	 * Therefore we reset the line without any detour ....
-	 */
-	device.machine().firstcpu->set_input_line(0, CLEAR_LINE);
-	//cpu_set_info(device->machine().firstcpu, CPUINFO_INT_INPUT_STATE + state->m_irq_line, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 	return 0x03;
 }
 
@@ -32,7 +22,7 @@ WRITE_LINE_MEMBER(galaxold_state::galaxold_7474_9m_2_q_callback)
 {
 	/* Q bar clocks the other flip-flop,
 	   Q is VBLANK (not visible to the CPU) */
-	downcast<ttl7474_device *>(machine().device("7474_9m_1"))->clock_w(state);
+	m_7474_9m_1->clock_w(state);
 }
 
 WRITE_LINE_MEMBER(galaxold_state::galaxold_7474_9m_1_callback)
@@ -43,20 +33,17 @@ WRITE_LINE_MEMBER(galaxold_state::galaxold_7474_9m_1_callback)
 
 WRITE8_MEMBER(galaxold_state::galaxold_nmi_enable_w)
 {
-	ttl7474_device *target = machine().device<ttl7474_device>("7474_9m_1");
-	target->preset_w(data ? 1 : 0);
+	m_7474_9m_1->preset_w(data ? 1 : 0);
 }
 
 
 TIMER_DEVICE_CALLBACK_MEMBER(galaxold_state::galaxold_interrupt_timer)
 {
-	ttl7474_device *target = machine().device<ttl7474_device>("7474_9m_2");
-
 	/* 128V, 64V and 32V go to D */
-	target->d_w(((param & 0xe0) != 0xe0) ? 1 : 0);
+	m_7474_9m_2->d_w(((param & 0xe0) != 0xe0) ? 1 : 0);
 
 	/* 16V clocks the flip-flop */
-	target->clock_w(((param & 0x10) == 0x10) ? 1 : 0);
+	m_7474_9m_2->clock_w(((param & 0x10) == 0x10) ? 1 : 0);
 
 	param = (param + 0x10) & 0xff;
 
@@ -66,17 +53,15 @@ TIMER_DEVICE_CALLBACK_MEMBER(galaxold_state::galaxold_interrupt_timer)
 
 void galaxold_state::machine_reset_common(int line)
 {
-	ttl7474_device *ttl7474_9m_1 = machine().device<ttl7474_device>("7474_9m_1");
-	ttl7474_device *ttl7474_9m_2 = machine().device<ttl7474_device>("7474_9m_2");
 	m_irq_line = line;
 
 	/* initalize main CPU interrupt generator flip-flops */
-	ttl7474_9m_2->preset_w(1);
-	ttl7474_9m_2->clear_w (1);
+	m_7474_9m_2->preset_w(1);
+	m_7474_9m_2->clear_w (1);
 
-	ttl7474_9m_1->clear_w (1);
-	ttl7474_9m_1->d_w     (0);
-	ttl7474_9m_1->preset_w(0);
+	m_7474_9m_1->clear_w (1);
+	m_7474_9m_1->d_w     (0);
+	m_7474_9m_1->preset_w(0);
 
 	/* start a timer to generate interrupts */
 	timer_device *int_timer = machine().device<timer_device>("int_timer");

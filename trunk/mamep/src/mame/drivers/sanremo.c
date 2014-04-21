@@ -109,7 +109,8 @@ public:
 	sanremo_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_videoram(*this, "videoram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 
@@ -121,9 +122,10 @@ public:
 	DECLARE_WRITE8_MEMBER(lamps_w);
 	int banksel;
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(sanremo);
 	UINT32 screen_update_sanremo(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 
@@ -144,12 +146,12 @@ TILE_GET_INFO_MEMBER(sanremo_state::get_sanremo_tile_info)
 	int code = m_videoram[tile_index];
 	int bank = m_attrram[tile_index];
 
-	SET_TILE_INFO_MEMBER( 0, code + bank * 256, 0, 0);
+	SET_TILE_INFO_MEMBER(0, code + bank * 256, 0, 0);
 }
 
 void sanremo_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(sanremo_state::get_sanremo_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 48, 40);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(sanremo_state::get_sanremo_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 48, 40);
 
 }
 
@@ -159,15 +161,15 @@ UINT32 sanremo_state::screen_update_sanremo(screen_device &screen, bitmap_ind16 
 	return 0;
 }
 
-void sanremo_state::palette_init()
+PALETTE_INIT_MEMBER(sanremo_state, sanremo)
 {
 	int index;
 
 	for (index = 0; index < 0x8; index++)
-		palette_entry_set_color(machine().palette, index, MAKE_RGB(pal1bit((index >> 0)&1), pal1bit((index >> 1)&1), pal1bit((index >> 2)&1)));
+		palette.set_pen_color(index, rgb_t(pal1bit((index >> 0)&1), pal1bit((index >> 1)&1), pal1bit((index >> 2)&1)));
 
 	for (index = 0x8; index < 0x10; index++)
-		palette_entry_set_color(machine().palette, index, MAKE_RGB(pal2bit((index >> 0)&1), pal2bit((index >> 1)&1), pal2bit((index >> 2)&1)));
+		palette.set_pen_color(index, rgb_t(pal2bit((index >> 0)&1), pal2bit((index >> 1)&1), pal2bit((index >> 2)&1)));
 }
 
 
@@ -346,6 +348,7 @@ static const mc6845_interface mc6845_intf =
 */
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -394,11 +397,13 @@ static MACHINE_CONFIG_START( sanremo, sanremo_state )
 	MCFG_SCREEN_SIZE(70*8, 41*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 48*8-1, 0, 38*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(sanremo_state, screen_update_sanremo)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf)
 
-	MCFG_GFXDECODE(sanremo)
-	MCFG_PALETTE_LENGTH(0x10)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", sanremo)
+	MCFG_PALETTE_ADD("palette", 0x10)
+	MCFG_PALETTE_INIT_OWNER(sanremo_state, sanremo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

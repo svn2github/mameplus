@@ -14,7 +14,9 @@ public:
 		m_reel1_attrram(*this, "reel1_attrram"),
 		m_reel2_attrram(*this, "reel2_attrram"),
 		m_reel3_attrram(*this, "reel3_attrram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	int m_dataoffset;
 
@@ -52,6 +54,8 @@ public:
 	DECLARE_WRITE8_MEMBER(protection_w);
 	DECLARE_READ8_MEMBER(protection_r);
 	DECLARE_WRITE8_MEMBER(ncb3_port81_w);
+	DECLARE_WRITE8_MEMBER(goldstar_lamps_w);
+	DECLARE_WRITE8_MEMBER(cb3_lamps_w);
 	DECLARE_WRITE8_MEMBER(cm_outport1_w);
 	DECLARE_WRITE8_MEMBER(lucky8_outport_w);
 	DECLARE_WRITE8_MEMBER(magodds_outb850_w);
@@ -111,6 +115,8 @@ public:
 	DECLARE_DRIVER_INIT(chrygld);
 	DECLARE_DRIVER_INIT(rp35);
 	DECLARE_DRIVER_INIT(cb3);
+	DECLARE_DRIVER_INIT(cb3e);
+	DECLARE_DRIVER_INIT(wcherry);
 	DECLARE_DRIVER_INIT(cmv4);
 	DECLARE_DRIVER_INIT(nfb96_c2);
 	DECLARE_DRIVER_INIT(rp36);
@@ -126,6 +132,7 @@ public:
 	DECLARE_DRIVER_INIT(magoddsc);
 	DECLARE_DRIVER_INIT(nfb96_c1);
 	DECLARE_DRIVER_INIT(fb2010);
+	DECLARE_DRIVER_INIT(super9);
 	TILE_GET_INFO_MEMBER(get_goldstar_fg_tile_info);
 	TILE_GET_INFO_MEMBER(get_magical_fg_tile_info);
 	TILE_GET_INFO_MEMBER(get_cherrym_fg_tile_info);
@@ -156,4 +163,6 @@ public:
 	UINT8 decrypt(UINT8 cipherText, UINT16 address);
 	UINT8 chry10_decrypt(UINT8 cipherText);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };

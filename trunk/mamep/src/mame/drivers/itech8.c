@@ -522,33 +522,6 @@
 
 /*************************************
  *
- *  6821 PIA interface
- *
- *************************************/
-
-
-
-
-static const pia6821_interface pia_interface =
-{
-	DEVCB_NULL,     /* port A in */
-	DEVCB_DEVICE_LINE_MEMBER("ticket", ticket_dispenser_device, line_r),            /* port B in */
-	DEVCB_NULL,     /* line CA1 in */
-	DEVCB_NULL,     /* line CB1 in */
-	DEVCB_NULL,     /* line CA2 in */
-	DEVCB_NULL,     /* line CB2 in */
-	DEVCB_DRIVER_MEMBER(itech8_state,pia_porta_out),        /* port A out */
-	DEVCB_DRIVER_MEMBER(itech8_state, pia_portb_out),       /* port B out */
-	DEVCB_NULL,     /* line CA2 out */
-	DEVCB_NULL,     /* port CB2 out */
-	DEVCB_NULL,     /* IRQA */
-	DEVCB_NULL      /* IRQB */
-};
-
-
-
-/*************************************
- *
  *  Interrupt handling
  *
  *************************************/
@@ -1635,23 +1608,12 @@ static const ay8910_interface ay8910_config =
  *
  *************************************/
 
-void itech8_state::static_generate_interrupt(running_machine &machine, int state_num) { machine.driver_data<itech8_state>()->generate_interrupt(state_num); }
-void itech8_state::generate_interrupt(int state_num)
+WRITE_LINE_MEMBER(itech8_state::generate_tms34061_interrupt)
 {
-	itech8_update_interrupts(-1, state_num, -1);
+	itech8_update_interrupts(-1, state, -1);
 
-	if (FULL_LOGGING && state_num) logerror("------------ DISPLAY INT (%d) --------------\n", m_screen->vpos());
+	if (FULL_LOGGING && state) logerror("------------ DISPLAY INT (%d) --------------\n", m_screen->vpos());
 }
-
-
-static const struct tms34061_interface tms34061intf =
-{
-	8,                      /* VRAM address is (row << rowshift) | col */
-	0x40000,                /* size of video RAM */
-	&itech8_state::static_generate_interrupt      /* interrupt gen callback */
-};
-
-
 
 /*************************************
  *
@@ -1675,13 +1637,15 @@ static MACHINE_CONFIG_START( itech8_core_lo, itech8_state )
 	/* video hardware */
 	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(512, 263)
 
-	MCFG_TMS34061_ADD("tms34061", tms34061intf)
+	MCFG_DEVICE_ADD("tms34061", TMS34061, 0)
+	MCFG_TMS34061_ROWSHIFT(8)  /* VRAM address is (row << rowshift) | col */
+	MCFG_TMS34061_VRAM_SIZE(0x40000) /* size of video RAM */
+	MCFG_TMS34061_INTERRUPT_CB(WRITELINE(itech8_state, generate_tms34061_interrupt))      /* interrupt gen callback */
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1741,7 +1705,10 @@ static MACHINE_CONFIG_FRAGMENT( itech8_sound_ym3812 )
 	MCFG_CPU_ADD("soundcpu", M6809, CLOCK_8MHz/4)
 	MCFG_CPU_PROGRAM_MAP(sound3812_map)
 
-	MCFG_PIA6821_ADD("pia", pia_interface)
+	MCFG_DEVICE_ADD("pia", PIA6821, 0)
+	MCFG_PIA_READPB_HANDLER(DEVREADLINE("ticket", ticket_dispenser_device, line_r))
+	MCFG_PIA_WRITEPA_HANDLER(WRITE8(itech8_state, pia_porta_out))
+	MCFG_PIA_WRITEPB_HANDLER(WRITE8(itech8_state, pia_portb_out))
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("ymsnd", YM3812, CLOCK_8MHz/2)
@@ -1796,7 +1763,7 @@ static MACHINE_CONFIG_DERIVED( grmatch, itech8_core_hi )
 	MCFG_SCREEN_UPDATE_DRIVER(itech8_state, screen_update_itech8_grmatch)
 
 	/* palette updater */
-	MCFG_TIMER_DRIVER_ADD_SCANLINE("palette", itech8_state, grmatch_palette_update, "screen", 0, 0)
+	MCFG_TIMER_DRIVER_ADD_SCANLINE("palette_timer", itech8_state, grmatch_palette_update, "screen", 0, 0)
 
 MACHINE_CONFIG_END
 

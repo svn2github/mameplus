@@ -3,9 +3,10 @@
 Asterix
 
 TODO:
-the konami logo: in the original the outline is drawn, then there's a slight
-delay of 1 or 2 seconds, then it fills from the top to the bottom with the
-colour, including the word "Konami"
+ - the konami logo: in the original the outline is drawn, then there's a slight
+   delay of 1 or 2 seconds, then it fills from the top to the bottom with the
+   colour, including the word "Konami"
+ - Verify clocks, PCB has 2 OSCs. 32MHz & 24MHz
 
 ***************************************************************************/
 
@@ -164,7 +165,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, asterix_state )
 	AM_RANGE(0x180000, 0x1807ff) AM_DEVREADWRITE("k053244", k05324x_device, k053245_word_r, k053245_word_w)
 	AM_RANGE(0x180800, 0x180fff) AM_RAM                             // extra RAM, or mirror for the above?
 	AM_RANGE(0x200000, 0x20000f) AM_DEVREADWRITE("k053244", k05324x_device, k053244_word_r, k053244_word_w)
-	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x280000, 0x280fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x300000, 0x30001f) AM_DEVREADWRITE("k053244", k05324x_device, k053244_lsb_r, k053244_lsb_w)
 	AM_RANGE(0x380000, 0x380001) AM_READ_PORT("IN0")
 	AM_RANGE(0x380002, 0x380003) AM_READ_PORT("IN1")
@@ -270,39 +271,45 @@ void asterix_state::machine_reset()
 static MACHINE_CONFIG_START( asterix, asterix_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000, 12000000)
+	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2) // 12MHz
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", asterix_state,  asterix_interrupt)
 
-	MCFG_CPU_ADD("audiocpu", Z80, 8000000)
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_32MHz/4) // 8MHz Z80E ??
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
 	MCFG_EEPROM_SERIAL_ER5911_8BIT_ADD("eeprom")
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(asterix_state, screen_update_asterix)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_PALETTE_ADD("palette", 2048)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K056832_ADD("k056832", asterix_k056832_intf)
+	MCFG_K056832_GFXDECODE("gfxdecode")
+	MCFG_K056832_PALETTE("palette")
 	MCFG_K053244_ADD("k053244", asterix_k05324x_intf)
+	MCFG_K053244_GFXDECODE("gfxdecode")
+	MCFG_K053244_PALETTE("palette")
 	MCFG_K053251_ADD("k053251")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_YM2151_ADD("ymsnd", 4000000)
+	MCFG_YM2151_ADD("ymsnd", XTAL_32MHz/8) // 4MHz
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_K053260_ADD("k053260", 4000000)
+	MCFG_K053260_ADD("k053260", XTAL_32MHz/8) // 4MHz
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 MACHINE_CONFIG_END

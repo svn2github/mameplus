@@ -15,8 +15,6 @@
 
 ***************************************************************************/
 
-#define MODERN_DRIVER_INIT
-
 #include "emu.h"
 #include "includes/segahang.h"
 #include "machine/segaic16.h"
@@ -720,7 +718,7 @@ static INPUT_PORTS_START( sharrier )
 	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_X ) PORT_MINMAX(0x20,0xe0) PORT_SENSITIVITY(100) PORT_KEYDELTA(4) PORT_REVERSE
 
 	PORT_START("ADC1")  // Y axis
-	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_Y ) PORT_MINMAX(0x60,0xa0) PORT_SENSITIVITY(100) PORT_KEYDELTA(4) PORT_REVERSE
+	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_Y ) PORT_MINMAX(0x20,0xe0) PORT_SENSITIVITY(100) PORT_KEYDELTA(4) PORT_REVERSE
 INPUT_PORTS_END
 
 
@@ -817,15 +815,17 @@ static MACHINE_CONFIG_START( shared_base, segahang_state )
 	MCFG_I8255_ADD( "i8255_2", hangon_ppi_intf_1 )
 
 	MCFG_SEGAIC16VID_ADD("segaic16vid")
+	MCFG_SEGAIC16VID_GFXDECODE("gfxdecode")
 	MCFG_SEGAIC16_ROAD_ADD("segaic16road")
 
 	// video hardware
-	MCFG_GFXDECODE(segahang)
-	MCFG_PALETTE_LENGTH(2048*3)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", segahang)
+	MCFG_PALETTE_ADD("palette", 2048*3)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_25MHz/4, 400, 0, 320, 262, 0, 224)
 	MCFG_SCREEN_UPDATE_DRIVER(segahang_state, screen_update)
+	MCFG_SCREEN_PALETTE("palette")
 MACHINE_CONFIG_END
 
 

@@ -51,14 +51,13 @@ public:
 		m_cus_ram(*this, "cus_ram"),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_cus_ram;
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
-//  UINT8 *  m_paletteram;    // currently this uses generic palette handling
-//  UINT8 *  m_paletteram_2;  // currently this uses generic palette handling
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -81,6 +80,7 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_yumefuda(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
 };
 
 TILE_GET_INFO_MEMBER(albazg_state::y_get_bg_tile_info)
@@ -88,8 +88,7 @@ TILE_GET_INFO_MEMBER(albazg_state::y_get_bg_tile_info)
 	int code = m_videoram[tile_index];
 	int color = m_colorram[tile_index];
 
-	SET_TILE_INFO_MEMBER(
-			0,
+	SET_TILE_INFO_MEMBER(0,
 			code + ((color & 0xf8) << 3),
 			color & 0x7,
 			0);
@@ -98,7 +97,7 @@ TILE_GET_INFO_MEMBER(albazg_state::y_get_bg_tile_info)
 
 void albazg_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(albazg_state::y_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(albazg_state::y_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 UINT32 albazg_state::screen_update_yumefuda(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
@@ -214,6 +213,7 @@ static const ay8910_interface ay8910_config =
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,      /* show border area */
+	0,0,0,0,    /* visarea adjustment */
 	8,          /* number of pixels per video memory address */
 	NULL,       /* before pixel update callback */
 	NULL,       /* row update callback */
@@ -243,8 +243,8 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, albazg_state )
 	AM_RANGE(0xa7fc, 0xa7fc) AM_WRITE(prot_lock_w)
 	AM_RANGE(0xa7ff, 0xa7ff) AM_WRITE_PORT("EEPROMOUT")
 	AM_RANGE(0xaf80, 0xafff) AM_READWRITE(custom_ram_r, custom_ram_w) AM_SHARE("cus_ram")
-	AM_RANGE(0xb000, 0xb07f) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_split_lo_w) AM_SHARE("paletteram")
-	AM_RANGE(0xb080, 0xb0ff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_split_hi_w) AM_SHARE("paletteram2")
+	AM_RANGE(0xb000, 0xb07f) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
+	AM_RANGE(0xb080, 0xb0ff) AM_RAM_DEVWRITE("palette", palette_device, write_ext) AM_SHARE("palette_ext")
 	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(yumefuda_vram_w) AM_SHARE("videoram")
 	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(yumefuda_cram_w) AM_SHARE("colorram")
 	AM_RANGE(0xe000, 0xffff) AM_RAM
@@ -399,11 +399,13 @@ static MACHINE_CONFIG_START( yumefuda, albazg_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*8-1, 0, 32*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(albazg_state, screen_update_yumefuda)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_MC6845_ADD("crtc", H46505, "screen", MASTER_CLOCK/16, mc6845_intf)   /* hand tuned to get ~60 fps */
 
-	MCFG_GFXDECODE( yumefuda )
-	MCFG_PALETTE_LENGTH(0x80)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", yumefuda )
+	MCFG_PALETTE_ADD("palette", 0x80)
+	MCFG_PALETTE_FORMAT(xRRRRRGGGGGBBBBB)
 
 
 	/* sound hardware */

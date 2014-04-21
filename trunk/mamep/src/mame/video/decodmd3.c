@@ -108,12 +108,12 @@ MC6845_UPDATE_ROW( dmd64_update_row )
 		for(dot=0;dot<8;dot++)
 		{
 			intensity = ((RAM[addr+1] >> (7-dot) & 0x01) << 1) | (RAM[addr+0x801] >> (7-dot) & 0x01);
-			bitmap.pix32(y,x+dot) = MAKE_RGB(0x3f*intensity,0x2a*intensity,0x00);
+			bitmap.pix32(y,x+dot) = rgb_t(0x3f*intensity,0x2a*intensity,0x00);
 		}
 		for(dot=8;dot<16;dot++)
 		{
 			intensity = ((RAM[addr] >> (15-dot) & 0x01) << 1) | (RAM[addr+0x800] >> (15-dot) & 0x01);
-			bitmap.pix32(y,x+dot) = MAKE_RGB(0x3f*intensity,0x2a*intensity,0x00);
+			bitmap.pix32(y,x+dot) = rgb_t(0x3f*intensity,0x2a*intensity,0x00);
 		}
 		addr+=2;
 	}
@@ -121,15 +121,16 @@ MC6845_UPDATE_ROW( dmd64_update_row )
 
 MC6845_INTERFACE( decodmd3_6845_intf )
 {
-	false,                                  /* show border area */
-	16,                                     /* number of pixels per video memory address */
-	NULL,                                   /* begin_update */
-	dmd64_update_row,                                   /* update_row */
-	NULL,                                   /* end_update */
-	DEVCB_NULL,      /* on_de_changed */
-	DEVCB_NULL,      /* on_cur_changed */
-	DEVCB_NULL,      /* on_hsync_changed */
-	DEVCB_NULL,      /* on_vsync_changed */
+	false,              /* show border area */
+	0,0,0,0,            /* visarea adjustment */
+	16,                 /* number of pixels per video memory address */
+	NULL,               /* begin_update */
+	dmd64_update_row,   /* update_row */
+	NULL,               /* end_update */
+	DEVCB_NULL,         /* on_de_changed */
+	DEVCB_NULL,         /* on_cur_changed */
+	DEVCB_NULL,         /* on_hsync_changed */
+	DEVCB_NULL,         /* on_vsync_changed */
 	NULL
 };
 

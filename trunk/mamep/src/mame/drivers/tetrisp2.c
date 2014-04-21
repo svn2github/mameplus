@@ -560,9 +560,7 @@ READ16_MEMBER(stepstag_state::unk_a42000_r)
 
 WRITE16_MEMBER(stepstag_state::stepstag_soundlatch_word_w)
 {
-	stepstag_state *state = machine().driver_data<stepstag_state>();
-
-	state->soundlatch_word_w(space, offset, data, mem_mask);
+	soundlatch_word_w(space, offset, data, mem_mask);
 
 	m_subcpu->set_input_line(M68K_IRQ_6, HOLD_LINE);
 
@@ -1338,9 +1336,10 @@ static MACHINE_CONFIG_START( tetrisp2, tetrisp2_state )
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_tetrisp2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tetrisp2)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tetrisp2)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,tetrisp2)
 
@@ -1369,9 +1368,10 @@ static MACHINE_CONFIG_START( nndmseal, tetrisp2_state )
 	MCFG_SCREEN_SIZE(0x180, 0xf0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x180-1, 0, 0xf0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_tetrisp2)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tetrisp2)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tetrisp2)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,nndmseal)  // bg layer offset
 
@@ -1399,9 +1399,10 @@ static MACHINE_CONFIG_START( rockn, tetrisp2_state )
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_rockntread)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tetrisp2)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tetrisp2)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,rockntread)
 
@@ -1430,9 +1431,10 @@ static MACHINE_CONFIG_START( rockn2, tetrisp2_state )
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tetrisp2_state, screen_update_rockntread)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(tetrisp2)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tetrisp2)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,rockntread)
 
@@ -1460,8 +1462,8 @@ static MACHINE_CONFIG_START( rocknms, tetrisp2_state )
 
 	/* video hardware */
 
-	MCFG_GFXDECODE(rocknms)
-	MCFG_PALETTE_LENGTH(0x10000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", rocknms)
+	MCFG_PALETTE_ADD("palette", 0x10000)
 	MCFG_DEFAULT_LAYOUT(layout_rocknms)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
@@ -1507,6 +1509,7 @@ static MACHINE_CONFIG_START( stepstag, stepstag_state )
 	MCFG_SCREEN_SIZE(0x160, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x160-1, 0, 0xf0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(stepstag_state, screen_update_stepstag_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1514,6 +1517,7 @@ static MACHINE_CONFIG_START( stepstag, stepstag_state )
 	MCFG_SCREEN_SIZE(0x160, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x160-1, 0, 0xf0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(stepstag_state, screen_update_stepstag_mid)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1521,11 +1525,12 @@ static MACHINE_CONFIG_START( stepstag, stepstag_state )
 	MCFG_SCREEN_SIZE(0x160, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x160-1, 0, 0xf0-1)
 	MCFG_SCREEN_UPDATE_DRIVER(stepstag_state, screen_update_stepstag_right)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(0x8000) // 0x8000 * 3 needed I guess, but it hits an assert
+	MCFG_PALETTE_ADD("palette", 0x8000) // 0x8000 * 3 needed I guess, but it hits an assert
 
 	MCFG_VIDEO_START_OVERRIDE(stepstag_state, stepstag )
-	MCFG_GFXDECODE(stepstag)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", stepstag)
 
 	MCFG_DEFAULT_LAYOUT(layout_stepstag)
 

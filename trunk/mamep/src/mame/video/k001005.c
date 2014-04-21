@@ -46,7 +46,8 @@ k001005_device::k001005_device(const machine_config &mconfig, const char *tag, d
 		m_bitmap_page(0),
 		m_poly(NULL),
 		m_prev_poly_type(0),
-		m_gfxrom(NULL)
+		m_gfxrom(NULL),
+		m_palette(*this)
 {
 		m_ram[0] = 0;
 		m_ram[1] = 0;
@@ -97,7 +98,7 @@ void k001005_device::device_start()
 	int i, width, height;
 
 	m_cpu = machine().device(m_cpu_tag);
-	m_dsp = machine().device(m_dsp_tag);
+	m_dsp = machine().device<adsp21062_device>(m_dsp_tag);
 	m_k001006_1 = machine().device(m_k001006_1_tag);
 	m_k001006_2 = machine().device(m_k001006_2_tag);
 
@@ -245,7 +246,7 @@ void k001005_device::swap_buffers( )
 
 	//if (m_status == 2)
 	{
-		m_bitmap[m_bitmap_page]->fill(machine().pens[0] & 0x00ffffff, m_cliprect);
+		m_bitmap[m_bitmap_page]->fill(m_palette->pen(0) & 0x00ffffff, m_cliprect);
 		m_zbuffer->fill(0xffffffff, m_cliprect);
 	}
 }
@@ -271,18 +272,18 @@ READ32_MEMBER( k001005_device::read )
 				if (m_fifo_read_ptr < 0x3ff)
 				{
 					//m_dsp->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
-					sharc_set_flag_input(m_dsp, 1, CLEAR_LINE);
+					m_dsp->set_flag_input(1, CLEAR_LINE);
 				}
 				else
 				{
 					//m_dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-					sharc_set_flag_input(m_dsp, 1, ASSERT_LINE);
+					m_dsp->set_flag_input(1, ASSERT_LINE);
 				}
 			}
 			else
 			{
 				//m_dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-				sharc_set_flag_input(m_dsp, 1, ASSERT_LINE);
+				m_dsp->set_flag_input(1, ASSERT_LINE);
 			}
 
 			m_fifo_read_ptr++;
@@ -324,18 +325,18 @@ WRITE32_MEMBER( k001005_device::write )
 				if (m_fifo_write_ptr < 0x400)
 				{
 					//m_dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-					sharc_set_flag_input(m_dsp, 1, ASSERT_LINE);
+					m_dsp->set_flag_input(1, ASSERT_LINE);
 				}
 				else
 				{
 					//m_dsp->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
-					sharc_set_flag_input(m_dsp, 1, CLEAR_LINE);
+					m_dsp->set_flag_input(1, CLEAR_LINE);
 				}
 			}
 			else
 			{
 				//m_dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
-				sharc_set_flag_input(m_dsp, 1, ASSERT_LINE);
+				m_dsp->set_flag_input(1, ASSERT_LINE);
 			}
 
 		//  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, space.device().safe_pc());
@@ -408,7 +409,7 @@ WRITE32_MEMBER( k001005_device::write )
 
 }
 
-/* emu/video/poly.c cannot handle atm callbacks passing a device parameter */
+/* legacy_poly_manager cannot handle atm callbacks passing a device parameter */
 
 #if POLY_DEVICE
 void k001005_device::draw_scanline( void *dest, INT32 scanline, const poly_extent *extent, const void *extradata, int threadid )
@@ -929,4 +930,14 @@ void k001005_device::draw( bitmap_rgb32 &bitmap, const rectangle &cliprect )
 			}
 		}
 	}
+}
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void k001005_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<k001005_device &>(device).m_palette.set_tag(tag);
 }

@@ -366,13 +366,6 @@ WRITE_LINE_MEMBER(segas1x_bootleg_state::tturfbl_msm5205_callback)
 		m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static const msm5205_interface tturfbl_msm5205_interface  =
-{
-	DEVCB_DRIVER_LINE_MEMBER(segas1x_bootleg_state,tturfbl_msm5205_callback),
-	MSM5205_S48_4B
-};
-
-
 READ8_MEMBER(segas1x_bootleg_state::tturfbl_soundbank_r)
 {
 	if (m_soundbank_ptr)
@@ -1166,12 +1159,6 @@ WRITE_LINE_MEMBER(segas1x_bootleg_state::shdancbl_msm5205_callback)
 	if (m_sample_select == 0)
 		m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
-
-static const msm5205_interface shdancbl_msm5205_interface  =
-{
-	DEVCB_DRIVER_LINE_MEMBER(segas1x_bootleg_state,shdancbl_msm5205_callback),
-	MSM5205_S48_4B
-};
 
 READ8_MEMBER(segas1x_bootleg_state::shdancbl_soundbank_r)
 {
@@ -2006,9 +1993,10 @@ static MACHINE_CONFIG_START( system16, segas1x_bootleg_state )
 	MCFG_SCREEN_SIZE(40*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(segas1x_bootleg_state, screen_update_system16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(sys16)
-	MCFG_PALETTE_LENGTH(2048*SHADOW_COLORS_MULTIPLIER)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", sys16)
+	MCFG_PALETTE_ADD("palette", 2048*SHADOW_COLORS_MULTIPLIER)
 
 	MCFG_VIDEO_START_OVERRIDE(segas1x_bootleg_state,system16)
 
@@ -2021,20 +2009,11 @@ static MACHINE_CONFIG_START( system16, segas1x_bootleg_state )
 MACHINE_CONFIG_END
 
 
-static void sound_cause_nmi( device_t *device, int chip )
+WRITE_LINE_MEMBER(segas1x_bootleg_state::sound_cause_nmi)
 {
-	segas1x_bootleg_state *state = device->machine().driver_data<segas1x_bootleg_state>();
-
 	/* upd7759 callback */
-	state->m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
-
-
-const upd775x_interface sys16_upd7759_interface  =
-{
-	sound_cause_nmi
-};
-
 
 static MACHINE_CONFIG_DERIVED( system16_7759, system16 )
 
@@ -2046,7 +2025,7 @@ static MACHINE_CONFIG_DERIVED( system16_7759, system16 )
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("7759", UPD7759, UPD7759_STANDARD_CLOCK)
-	MCFG_SOUND_CONFIG(sys16_upd7759_interface)
+	MCFG_UPD7759_DRQ_CALLBACK(WRITELINE(segas1x_bootleg_state,sound_cause_nmi))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.48)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.48)
 MACHINE_CONFIG_END
@@ -2069,7 +2048,8 @@ static MACHINE_CONFIG_FRAGMENT( system16_datsu_sound )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.32)
 
 	MCFG_SOUND_ADD("5205", MSM5205, 220000)
-	MCFG_SOUND_CONFIG(tturfbl_msm5205_interface)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(segas1x_bootleg_state, tturfbl_msm5205_callback))
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.80)
 MACHINE_CONFIG_END
@@ -2153,14 +2133,15 @@ static MACHINE_CONFIG_START( goldnaxeb1, segas1x_bootleg_state )
 	MCFG_SCREEN_SIZE(40*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(segas1x_bootleg_state, screen_update_system16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(sys16)
-	MCFG_PALETTE_LENGTH(2048*SHADOW_COLORS_MULTIPLIER)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", sys16)
+
+	MCFG_PALETTE_ADD_INIT_BLACK("palette", 2048*SHADOW_COLORS_MULTIPLIER)
 
 	MCFG_BOOTLEG_SYS16B_SPRITES_ADD("sprites")
 	MCFG_BOOTLEG_SYS16B_SPRITES_XORIGIN(189-121)
 
-	MCFG_PALETTE_INIT_OVERRIDE(driver_device, all_black)
 	MCFG_VIDEO_START_OVERRIDE(segas1x_bootleg_state,system16)
 MACHINE_CONFIG_END
 
@@ -2205,7 +2186,8 @@ static MACHINE_CONFIG_DERIVED( tturfbl, system16_7759 )
 
 	MCFG_DEVICE_REMOVE("7759")
 	MCFG_SOUND_ADD("5205", MSM5205, 220000)
-	MCFG_SOUND_CONFIG(tturfbl_msm5205_interface)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(segas1x_bootleg_state, tturfbl_msm5205_callback))
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.80)
 
@@ -2286,9 +2268,10 @@ static MACHINE_CONFIG_START( system18, segas1x_bootleg_state )
 	MCFG_SCREEN_SIZE(40*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(segas1x_bootleg_state, screen_update_system18old)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(sys16)
-	MCFG_PALETTE_LENGTH((2048+2048)*SHADOW_COLORS_MULTIPLIER) // 64 extra colours for vdp (but we use 2048 so shadow mask works)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", sys16)
+	MCFG_PALETTE_ADD("palette", (2048+2048)*SHADOW_COLORS_MULTIPLIER) // 64 extra colours for vdp (but we use 2048 so shadow mask works)
 
 	MCFG_VIDEO_START_OVERRIDE(segas1x_bootleg_state,system18old)
 
@@ -2344,7 +2327,8 @@ static MACHINE_CONFIG_DERIVED( shdancbl, system18 )
 	MCFG_DEVICE_REMOVE("5c68")
 
 	MCFG_SOUND_ADD("5205", MSM5205, 200000)
-	MCFG_SOUND_CONFIG(shdancbl_msm5205_interface)
+	MCFG_MSM5205_VCLK_CB(WRITELINE(segas1x_bootleg_state, shdancbl_msm5205_callback))
+	MCFG_MSM5205_PRESCALER_SELECTOR(MSM5205_S48_4B)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.80)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.80)
 MACHINE_CONFIG_END

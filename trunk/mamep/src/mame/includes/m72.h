@@ -21,7 +21,10 @@ public:
 		m_soundcpu(*this, "soundcpu"),
 		m_mcu(*this, "mcu"),
 		m_dac(*this, "dac"),
-		m_audio(*this, "m72") { }
+		m_audio(*this, "m72"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	required_shared_ptr<UINT16> m_spriteram;
 	required_shared_ptr<UINT16> m_videoram1;
@@ -35,6 +38,9 @@ public:
 	optional_device<cpu_device> m_mcu;
 	optional_device<dac_device> m_dac;
 	optional_device<m72_audio_device> m_audio;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 	UINT16 *m_protection_ram;
 	emu_timer *m_scanline_timer;

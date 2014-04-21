@@ -28,7 +28,8 @@ public:
 		m_s14001a(*this, "speech"),
 		m_ls181_10c(*this, "ls181_10c"),
 		m_ls181_12c(*this, "ls181_12c"),
-		m_custom(*this, "exidy") { }
+		m_custom(*this, "exidy"),
+		m_screen(*this, "screen") { }
 
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
@@ -38,6 +39,7 @@ public:
 	required_device<ttl74181_device> m_ls181_10c;
 	required_device<ttl74181_device> m_ls181_12c;
 	required_device<exidy_sound_device> m_custom;
+	required_device<screen_device> m_screen;
 
 	UINT8 m_magicram_control;
 	UINT8 m_last_shift_data;
@@ -80,7 +82,7 @@ public:
 	void start_irq_timer();
 	void create_nmi_timer();
 	void start_nmi_timer();
-	void get_pens(pen_t *pens);
+	void get_pens(rgb_t *pens);
 };
 
 
@@ -430,7 +432,7 @@ READ8_MEMBER(berzerk_state::intercept_v256_r)
 }
 
 
-void berzerk_state::get_pens(pen_t *pens)
+void berzerk_state::get_pens(rgb_t *pens)
 {
 	static const int resistances_wg[] = { 750, 0 };
 	static const int resistances_el[] = { 1.0 / ((1.0 / 750.0) + (1.0 / 360.0)), 0 };
@@ -460,14 +462,14 @@ void berzerk_state::get_pens(pen_t *pens)
 		UINT8 g = combine_2_weights(color_weights, g_bit & i_bit, g_bit);
 		UINT8 b = combine_2_weights(color_weights, b_bit & i_bit, b_bit);
 
-		pens[color] = MAKE_RGB(r, g, b);
+		pens[color] = rgb_t(r, g, b);
 	}
 }
 
 
 UINT32 berzerk_state::screen_update_berzerk(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	pen_t pens[NUM_PENS];
+	rgb_t pens[NUM_PENS];
 	offs_t offs;
 
 	get_pens(pens);
@@ -484,7 +486,7 @@ UINT32 berzerk_state::screen_update_berzerk(screen_device &screen, bitmap_rgb32 
 
 		for (i = 0; i < 4; i++)
 		{
-			pen_t pen = (data & 0x80) ? pens[color >> 4] : RGB_BLACK;
+			rgb_t pen = (data & 0x80) ? pens[color >> 4] : rgb_t::black;
 			bitmap.pix32(y, x) = pen;
 
 			x = x + 1;
@@ -493,7 +495,7 @@ UINT32 berzerk_state::screen_update_berzerk(screen_device &screen, bitmap_rgb32 
 
 		for (; i < 8; i++)
 		{
-			pen_t pen = (data & 0x80) ? pens[color & 0x0f] : RGB_BLACK;
+			rgb_t pen = (data & 0x80) ? pens[color & 0x0f] : rgb_t::black;
 			bitmap.pix32(y, x) = pen;
 
 			x = x + 1;

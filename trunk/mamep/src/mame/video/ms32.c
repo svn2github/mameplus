@@ -64,10 +64,10 @@ TILE_GET_INFO_MEMBER(ms32_state::get_ms32_extra_tile_info)
 
 void ms32_state::video_start()
 {
-	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_tx_tile_info),this),TILEMAP_SCAN_ROWS,8, 8,64,64);
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_bg_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,64);
-	m_bg_tilemap_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_bg_tile_info),this),TILEMAP_SCAN_ROWS,16,16,256,16); // alt layout, controller by register?
-	m_roz_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_roz_tile_info),this),TILEMAP_SCAN_ROWS,16,16,128,128);
+	m_tx_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_tx_tile_info),this),TILEMAP_SCAN_ROWS,8, 8,64,64);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_bg_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,64);
+	m_bg_tilemap_alt = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_bg_tile_info),this),TILEMAP_SCAN_ROWS,16,16,256,16); // alt layout, controller by register?
+	m_roz_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_roz_tile_info),this),TILEMAP_SCAN_ROWS,16,16,128,128);
 
 
 	/* set up tile layers */
@@ -97,7 +97,7 @@ void ms32_state::video_start()
 
 	// tp2m32 doesn't set the brightness registers so we need sensible defaults
 	m_brt[0] = m_brt[1] = 0xffff;
-	
+
 	save_item(NAME(m_irqreq));
 	save_item(NAME(m_temp_bitmap_tilemaps));
 	save_item(NAME(m_temp_bitmap_sprites));
@@ -115,7 +115,7 @@ VIDEO_START_MEMBER(ms32_state,f1superb)
 {
 	ms32_state::video_start();
 
-	m_extra_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_extra_tile_info),this),TILEMAP_SCAN_ROWS,2048,1,1,0x400);
+	m_extra_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(ms32_state::get_ms32_extra_tile_info),this),TILEMAP_SCAN_ROWS,2048,1,1,0x400);
 }
 
 /********** PALETTE WRITES **********/
@@ -142,7 +142,7 @@ void ms32_state::update_color(int color)
 		b = ((m_palram[color*2+1] & 0x00ff) >>0 );
 	}
 
-	palette_set_color(machine(),color,MAKE_RGB(r,g,b));
+	m_palette->set_pen_color(color,rgb_t(r,g,b));
 }
 
 WRITE32_MEMBER(ms32_state::ms32_brightness_w)
@@ -202,7 +202,7 @@ void ms32_state::draw_sprites(bitmap_ind16 &bitmap, bitmap_ind8 &bitmap_pri, con
 	int code, attr, color, size;
 	int pri;
 	int xzoom, yzoom;
-	gfx_element *gfx = machine().gfx[gfxnum];
+	gfx_element *gfx = m_gfxdecode->gfx(gfxnum);
 
 	UINT16      *source =   sprram_top;
 	UINT16  *finish =   sprram_top + (sprram_size - 0x10) / 2;
@@ -254,7 +254,7 @@ void ms32_state::draw_sprites(bitmap_ind16 &bitmap, bitmap_ind8 &bitmap_pri, con
 		{
 			// passes the priority as the upper bits of the colour
 			// for post-processing in mixer instead
-			pdrawgfxzoom_transpen_raw(bitmap, cliprect, gfx,
+			gfx->prio_zoom_transpen_raw(bitmap,cliprect,
 					code,
 					color<<8 | pri<<8,
 					flipx, flipy,
@@ -464,7 +464,7 @@ UINT32 ms32_state::screen_update_ms32(screen_device &screen, bitmap_rgb32 &bitma
 		int xx, yy;
 		int width = screen.width();
 		int height = screen.height();
-		const pen_t *paldata = machine().pens;
+		const pen_t *paldata = m_palette->pens();
 
 		UINT16* srcptr_tile;
 		UINT8* srcptr_tilepri;

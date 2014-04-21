@@ -51,7 +51,7 @@ static ADDRESS_MAP_START( bogeyman_map, AS_PROGRAM, 8, bogeyman_state )
 	AM_RANGE(0x2000, 0x20ff) AM_RAM_WRITE(bogeyman_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2100, 0x21ff) AM_RAM_WRITE(bogeyman_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2800, 0x2bff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x3000, 0x300f) AM_RAM_WRITE(bogeyman_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3000, 0x300f) AM_RAM_WRITE(bogeyman_paletteram_w) AM_SHARE("palette")
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("P1") AM_WRITE(bogeyman_8910_control_w)
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("P2") AM_WRITE(bogeyman_8910_latch_w)
 	AM_RANGE(0x3802, 0x3802) AM_READ_PORT("DSW1")
@@ -241,18 +241,19 @@ static MACHINE_CONFIG_START( bogeyman, bogeyman_state )
 
 
 	// video hardware
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(bogeyman_state, screen_update_bogeyman)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bogeyman)
-	MCFG_PALETTE_LENGTH(16+256)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bogeyman)
+	MCFG_PALETTE_ADD("palette", 16+256)
+	MCFG_PALETTE_FORMAT(BBGGGRRR)
+	MCFG_PALETTE_INIT_OWNER(bogeyman_state, bogeyman)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")

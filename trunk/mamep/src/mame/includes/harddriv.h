@@ -14,7 +14,7 @@
 #include "audio/atarijsa.h"
 #include "sound/dac.h"
 #include "machine/atarigen.h"
-#include "machine/n68681.h"
+#include "machine/mc68681.h"
 #include "machine/asic65.h"
 #include "machine/timekpr.h"
 
@@ -63,7 +63,7 @@ public:
 
 	required_device<cpu_device> m_maincpu;
 	required_device<tms34010_device> m_gsp;
-	optional_device<cpu_device> m_msp;
+	optional_device<tms34010_device> m_msp;
 	required_device<adsp21xx_device> m_adsp;
 	optional_device<cpu_device> m_soundcpu;
 	optional_device<cpu_device> m_sounddsp;
@@ -289,13 +289,15 @@ public:
 	TIMER_CALLBACK_MEMBER(rddsp32_sync_cb);
 	DECLARE_WRITE16_MEMBER(hdsnddsp_dac_w);
 	optional_device<dac_device> m_dac;
-	required_device<duartn68681_device> m_duart;
+	required_device<mc68681_device> m_duart;
 	optional_device<asic65_device> m_asic65;
 	DECLARE_WRITE_LINE_MEMBER(harddriv_duart_irq_handler);
 
 	/*----------- defined in audio/harddriv.c -----------*/
 
 	void hdsnd_init();
+	void update_68k_interrupts();
+	TIMER_CALLBACK_MEMBER( delayed_68k_w );
 
 	/*----------- defined in machine/harddriv.c -----------*/
 
@@ -378,6 +380,9 @@ public:
 	DECLARE_READ16_MEMBER( hdds3_xdsp_control_r );
 	DECLARE_WRITE16_MEMBER( hdds3_xdsp_control_w );
 
+	void hdds3sdsp_reset_timer();
+	void hdds3xdsp_reset_timer();
+
 	/* DSK board */
 	DECLARE_WRITE16_MEMBER( hd68k_dsk_control_w );
 	DECLARE_READ16_MEMBER( hd68k_dsk_ram_r );
@@ -433,6 +438,9 @@ public:
 	DECLARE_WRITE16_MEMBER( hdgsp_paletteram_lo_w );
 	DECLARE_READ16_MEMBER( hdgsp_paletteram_hi_r );
 	DECLARE_WRITE16_MEMBER( hdgsp_paletteram_hi_w );
+
+	/* DSK board */
+	DECLARE_WRITE32_MEMBER(hddsk_update_pif);
 };
 
 
@@ -454,9 +462,6 @@ void hdds3xdsp_timer_enable_callback(adsp21xx_device &device, int enable);
 
 void hdds3xdsp_serial_tx_callback(adsp21xx_device &device, int port, INT32 data);
 INT32 hdds3xdsp_serial_rx_callback(adsp21xx_device &device, int port);
-
-/* DSK board */
-void hddsk_update_pif(dsp32c_device &device, UINT32 pins);
 
 
 /*----------- defined in video/harddriv.c -----------*/

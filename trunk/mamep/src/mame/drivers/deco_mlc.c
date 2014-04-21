@@ -190,7 +190,7 @@ WRITE32_MEMBER(deco_mlc_state::avengrs_palette_w)
 {
 	COMBINE_DATA(&m_generic_paletteram_32[offset]);
 	/* x bbbbb ggggg rrrrr */
-	palette_set_color_rgb(machine(),offset,pal5bit(m_generic_paletteram_32[offset] >> 0),pal5bit(m_generic_paletteram_32[offset] >> 5),pal5bit(m_generic_paletteram_32[offset] >> 10));
+	m_palette->set_pen_color(offset,pal5bit(m_generic_paletteram_32[offset] >> 0),pal5bit(m_generic_paletteram_32[offset] >> 5),pal5bit(m_generic_paletteram_32[offset] >> 10));
 }
 
 
@@ -494,10 +494,10 @@ static MACHINE_CONFIG_START( avengrgs, deco_mlc_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(deco_mlc_state, screen_update_mlc)
 	MCFG_SCREEN_VBLANK_DRIVER(deco_mlc_state, screen_eof_mlc)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE)
 
-	MCFG_GFXDECODE(deco_mlc)
-	MCFG_PALETTE_LENGTH(2048)
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", deco_mlc)
+	MCFG_PALETTE_ADD("palette", 2048)
 
 	MCFG_VIDEO_START_OVERRIDE(deco_mlc_state,mlc)
 
@@ -527,10 +527,10 @@ static MACHINE_CONFIG_START( mlc, deco_mlc_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(deco_mlc_state, screen_update_mlc)
 	MCFG_SCREEN_VBLANK_DRIVER(deco_mlc_state, screen_eof_mlc)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE)
 
-	MCFG_GFXDECODE(deco_mlc)
-	MCFG_PALETTE_LENGTH(2048)
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", deco_mlc)
+	MCFG_PALETTE_ADD("palette", 2048)
 
 	MCFG_VIDEO_START_OVERRIDE(deco_mlc_state,mlc)
 
@@ -546,11 +546,11 @@ static MACHINE_CONFIG_START( mlc, deco_mlc_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mlc_6bpp, mlc )
-	MCFG_GFXDECODE(6bpp)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", 6bpp)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mlc_5bpp, mlc )
-	MCFG_GFXDECODE(5bpp)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", 5bpp)
 MACHINE_CONFIG_END
 
 /***************************************************************************/
@@ -801,7 +801,7 @@ void deco_mlc_state::descramble_sound(  )
 	/* the same as simpl156 / heavy smash? */
 	UINT8 *rom = memregion("ymz")->base();
 	int length = memregion("ymz")->bytes();
-	UINT8 *buf1 = auto_alloc_array(machine(), UINT8, length);
+	dynamic_buffer buf1(length);
 
 	UINT32 x;
 
@@ -820,8 +820,6 @@ void deco_mlc_state::descramble_sound(  )
 	}
 
 	memcpy(rom,buf1,length);
-
-	auto_free(machine(), buf1);
 }
 
 READ32_MEMBER(deco_mlc_state::avengrgs_speedup_r)

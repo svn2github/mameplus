@@ -463,7 +463,9 @@ public:
 	majorpkr_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 			oki(*this, "oki") ,
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")  { }
 
 	int m_mux_data;
 	int m_palette_bank;
@@ -496,6 +498,8 @@ public:
 	virtual void video_start();
 	UINT32 screen_update_majorpkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	required_device<cpu_device> m_maincpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -507,8 +511,7 @@ TILE_GET_INFO_MEMBER(majorpkr_state::bg_get_tile_info)
 {
 	int code = m_videoram[0x800 + 2 * tile_index] + (m_videoram[0x800 + 2 * tile_index + 1] << 8);
 
-	SET_TILE_INFO_MEMBER(
-			0,
+	SET_TILE_INFO_MEMBER(0,
 			(code & 0x1fff),
 			code >> 13,
 			0);
@@ -518,8 +521,7 @@ TILE_GET_INFO_MEMBER(majorpkr_state::fg_get_tile_info)
 {
 	int code = m_videoram[2 * tile_index] + (m_videoram[2 * tile_index + 1] << 8);
 
-	SET_TILE_INFO_MEMBER(
-			1,
+	SET_TILE_INFO_MEMBER(1,
 			(code & 0x07ff),
 			code >> 13,
 			(code & (1 << 12)) ? (TILE_FLIPX|TILE_FLIPY) : 0);
@@ -528,8 +530,8 @@ TILE_GET_INFO_MEMBER(majorpkr_state::fg_get_tile_info)
 
 void majorpkr_state::video_start()
 {
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(majorpkr_state::bg_get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 36, 28);
-	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(majorpkr_state::fg_get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 36, 28);
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(majorpkr_state::bg_get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 36, 28);
+	m_fg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(majorpkr_state::fg_get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 36, 28);
 	m_fg_tilemap->set_transparent_pen(0);
 
 	m_generic_paletteram_8.allocate(4 * 0x800);
@@ -538,7 +540,7 @@ void majorpkr_state::video_start()
 
 UINT32 majorpkr_state::screen_update_majorpkr(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	rectangle custom_clip;
 
@@ -588,7 +590,7 @@ WRITE8_MEMBER(majorpkr_state::paletteram_w)
 
 	offset >>= 1;
 	int color = m_generic_paletteram_8[m_palette_bank * 0x800 + offset * 2] + m_generic_paletteram_8[m_palette_bank * 0x800 + offset * 2 + 1] * 256;
-	palette_set_color(machine(), offset + m_palette_bank * 256 * 4, MAKE_RGB(pal5bit(color >> 5), pal5bit(color >> 10), pal5bit(color)));
+	m_palette->set_pen_color(offset + m_palette_bank * 256 * 4, rgb_t(pal5bit(color >> 5), pal5bit(color >> 10), pal5bit(color)));
 }
 
 
@@ -1004,6 +1006,7 @@ GFXDECODE_END
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,          /* show border area */
+	0,0,0,0,        /* visarea adjustment */
 	16,             /* number of pixels per video memory address */
 	NULL,           /* before pixel update callback */
 	NULL,           /* row update callback */
@@ -1035,11 +1038,11 @@ static MACHINE_CONFIG_START( majorpkr, majorpkr_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE((47+1)*16, (36+1)*8)               /* through CRTC registers: 768 x 296 */
 	MCFG_SCREEN_VISIBLE_AREA(0, (36*16)-1, 0, (28*8)-1) /* through CRTC registers: 560(+16) x 224 */
-
-	MCFG_GFXDECODE(majorpkr)
-	MCFG_PALETTE_LENGTH(0x100 * 16)
-
 	MCFG_SCREEN_UPDATE_DRIVER(majorpkr_state, screen_update_majorpkr)
+	MCFG_SCREEN_PALETTE("palette")
+
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", majorpkr)
+	MCFG_PALETTE_ADD("palette", 0x100 * 16)
 
 	MCFG_MC6845_ADD("crtc", MC6845, "screen", CRTC_CLOCK, mc6845_intf) /* verified */
 

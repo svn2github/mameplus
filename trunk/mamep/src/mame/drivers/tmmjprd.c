@@ -43,7 +43,9 @@ public:
 			m_spriteregs(*this, "spriteregs"),
 			m_spriteram(*this, "spriteram") ,
 		m_maincpu(*this, "maincpu"),
-		m_eeprom(*this, "eeprom") { }
+		m_eeprom(*this, "eeprom"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	required_shared_ptr_array<UINT32, 4> m_tilemap_regs;
 	required_shared_ptr<UINT32> m_spriteregs;
@@ -64,7 +66,6 @@ public:
 	DECLARE_READ32_MEMBER(randomtmmjprds);
 	DECLARE_WRITE32_MEMBER(tmmjprd_blitter_w);
 	DECLARE_READ32_MEMBER(tmmjprd_mux_r);
-	DECLARE_WRITE32_MEMBER(tmmjprd_paletteram_dword_w);
 	DECLARE_WRITE32_MEMBER(tmmjprd_brt_1_w);
 	DECLARE_WRITE32_MEMBER(tmmjprd_brt_2_w);
 	DECLARE_WRITE32_MEMBER(tmmjprd_eeprom_write);
@@ -79,6 +80,8 @@ public:
 	void tmmjprd_do_blit();
 	required_device<cpu_device> m_maincpu;
 	required_device<eeprom_serial_93cxx_device> m_eeprom;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 
@@ -107,7 +110,7 @@ WRITE32_MEMBER(tmmjprd_state::tmmjprd_tilemap3_w)
 void tmmjprd_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, int screen)
 {
 	int xpos,ypos,tileno,xflip,yflip, colr;
-	gfx_element *gfx = machine().gfx[0];
+	gfx_element *gfx = m_gfxdecode->gfx(0);
 	int xoffs;
 	//  int todraw = (m_spriteregs[5]&0x0fff0000)>>16; // how many sprites to draw (start/end reg..) what is the other half?
 
@@ -176,7 +179,7 @@ void tmmjprd_state::draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect
 		tileno >>=1;
 
 		// 255 for 8bpp
-		drawgfx_transpen(bitmap,cliprect,gfx,tileno,colr,!xflip,yflip,(xpos-xoffs)-8,(ypos)-8,255);
+		gfx->transpen(bitmap,cliprect,tileno,colr,!xflip,yflip,(xpos-xoffs)-8,(ypos)-8,255);
 	}
 }
 
@@ -304,7 +307,7 @@ UINT32 tmmjprd_state::screen_update_tmmjprd_left(screen_device &screen, bitmap_i
 {
 	UINT8* gfxroms = memregion("gfx2")->base();
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	ttmjprd_draw_tilemap(bitmap, cliprect, m_tilemap_ram[3], m_tilemap_regs[3], gfxroms );
 	draw_sprites(bitmap,cliprect, 1);
@@ -338,7 +341,7 @@ UINT32 tmmjprd_state::screen_update_tmmjprd_right(screen_device &screen, bitmap_
 {
 	UINT8* gfxroms = memregion("gfx2")->base();
 
-	bitmap.fill(get_black_pen(machine()), cliprect);
+	bitmap.fill(m_palette->black_pen(), cliprect);
 
 	ttmjprd_draw_tilemap(bitmap, cliprect, m_tilemap_ram[1], m_tilemap_regs[1], gfxroms );
 	draw_sprites(bitmap,cliprect, 0);
@@ -622,17 +625,6 @@ static INPUT_PORTS_START( tmmjprd )
 INPUT_PORTS_END
 
 
-WRITE32_MEMBER(tmmjprd_state::tmmjprd_paletteram_dword_w)
-{
-	int r,g,b;
-	COMBINE_DATA(&m_generic_paletteram_32[offset]);
-
-	b = ((m_generic_paletteram_32[offset] & 0x000000ff) >>0);
-	r = ((m_generic_paletteram_32[offset] & 0x0000ff00) >>8);
-	g = ((m_generic_paletteram_32[offset] & 0x00ff0000) >>16);
-
-	palette_set_color(machine(),offset,MAKE_RGB(r,g,b));
-}
 
 
 /* notice that data & 0x4 is always cleared on brt_1 and set on brt_2.        *
@@ -651,7 +643,7 @@ WRITE32_MEMBER(tmmjprd_state::tmmjprd_brt_1_w)
 	{
 		m_old_brt1 = brt;
 		for (i = bank; i < 0x800+bank; i++)
-			palette_set_pen_contrast(machine(), i, brt);
+			m_palette->set_pen_contrast(i, brt);
 	}
 }
 
@@ -669,7 +661,7 @@ WRITE32_MEMBER(tmmjprd_state::tmmjprd_brt_2_w)
 	{
 		m_old_brt2 = brt;
 		for (i = bank; i < 0x800+bank; i++)
-			palette_set_pen_contrast(machine(), i, brt);
+			m_palette->set_pen_contrast(i, brt);
 	}
 }
 
@@ -699,7 +691,7 @@ static ADDRESS_MAP_START( tmmjprd_map, AS_PROGRAM, 32, tmmjprd_state )
 	AM_RANGE(0x28c000, 0x28ffff) AM_READWRITE(tmmjprd_tilemap3_r,tmmjprd_tilemap3_w)
 	/* ?? is palette ram shared with sprites in this case or just a different map */
 	AM_RANGE(0x290000, 0x29bfff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x29c000, 0x29ffff) AM_RAM_WRITE(tmmjprd_paletteram_dword_w) AM_SHARE("paletteram")
+	AM_RANGE(0x29c000, 0x29ffff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 
 	AM_RANGE(0x400000, 0x400003) AM_READ(tmmjprd_mux_r) AM_WRITE(tmmjprd_eeprom_write)
 	AM_RANGE(0xf00000, 0xffffff) AM_RAM
@@ -756,7 +748,7 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	MCFG_EEPROM_SERIAL_93C46_ADD("eeprom")
 	MCFG_EEPROM_SERIAL_ENABLE_STREAMING()
 
-	MCFG_GFXDECODE(tmmjprd)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tmmjprd)
 
 //  MCFG_SCREEN_ADD("screen", RASTER)
 //  MCFG_SCREEN_REFRESH_RATE(60)
@@ -764,7 +756,8 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 //  MCFG_SCREEN_UPDATE_DRIVER(tmmjprd_state, screen_update)
 //  MCFG_SCREEN_SIZE(64*16, 64*16)
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_PALETTE_LENGTH(0x1000)
+	MCFG_PALETTE_ADD("palette", 0x1000)
+	MCFG_PALETTE_FORMAT(XGRB)
 
 
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
@@ -776,6 +769,7 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 64*16-1, 0*8, 64*16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tmmjprd_state, screen_update_tmmjprd_left)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -784,6 +778,7 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 64*16-1, 0*8, 64*16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tmmjprd_state, screen_update_tmmjprd_right)
+	MCFG_SCREEN_PALETTE("palette")
 
 
 	/* sound hardware */

@@ -90,7 +90,8 @@ public:
 		m_ram_attr(*this, "raattr"),
 		m_ram_video(*this, "ravideo"),
 		m_backup_ram(*this, "backup_ram"),
-		m_maincpu(*this, "maincpu") { }
+		m_maincpu(*this, "maincpu"),
+		m_screen(*this, "screen") { }
 
 	void dodge_nvram_init(nvram_device &nvram, void *base, size_t size);
 	pen_t m_pens[NUM_PENS];
@@ -126,6 +127,7 @@ public:
 	virtual void machine_start();
 	DECLARE_MACHINE_START(casino5);
 	required_device<cpu_device> m_maincpu;
+	required_device<screen_device> m_screen;
 };
 
 
@@ -247,7 +249,7 @@ static MC6845_BEGIN_UPDATE( begin_update )
 		bit0 = BIT(i,0);
 		bit1 = BIT(i,1);
 		bit2 = BIT(i,2);
-		state->m_pens[i] = MAKE_RGB(dim*bit0, dim*bit1, dim*bit2);
+		state->m_pens[i] = rgb_t(dim*bit0, dim*bit1, dim*bit2);
 	}
 
 	return state->m_pens;
@@ -318,6 +320,7 @@ WRITE_LINE_MEMBER(merit_state::vsync_changed)
 static MC6845_INTERFACE( mc6845_intf )
 {
 	false,                      /* show border area */
+	0,0,0,0,                    /* visarea adjustment */
 	8,                          /* number of pixels per video memory address */
 	begin_update,               /* before pixel update callback */
 	update_row,                 /* row update callback */
@@ -2141,7 +2144,7 @@ GAME( 1987, riviera,  0,       dodge,    riviera,  driver_device,  0,   ROT0,  "
 GAME( 1986, rivieraa, riviera, dodge,    riviera,  driver_device,  0,   ROT0,  "Merit", "Riviera Hi-Score (2131-08, U5-4)",  GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
 GAME( 1986, rivierab, riviera, dodge,    rivierab, driver_device,  0,   ROT0,  "Merit", "Riviera Hi-Score (2131-08, U5-2D)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
 
-GAME( 1986, bigappg,  0,       bigappg,  bigappg,  driver_device,  0,   ROT0,  "Merit", "Big Apple Games (2131-13, U5-0)",   GAME_SUPPORTS_SAVE )
+GAME( 1986, bigappg,  0,       bigappg,  bigappg,  driver_device,  0,   ROT0,  "Big Apple Games / Merit", "The Big Apple (2131-13, U5-0)",   GAME_SUPPORTS_SAVE )
 
 GAME( 1986, dodgectya,dodgecty,dodge,    dodge,    driver_device,  0,   ROT0,  "Merit", "Dodge City (2131-82, U5-0D)",      GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 GAME( 1986, dodgectyb,dodgecty,dodge,    dodge,    driver_device,  0,   ROT0,  "Merit", "Dodge City (2131-82, U5-50)",      GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )

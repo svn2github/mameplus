@@ -66,8 +66,81 @@ correctly.
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "sound/ay8910.h"
+#include "machine/netlist.h"
+#include "netlist/devices/net_lib.h"
+
 #include "includes/1942.h"
 
+#define NLFILT(RA, R1, C1, R2) \
+	NET_C(RA.1, V5)             \
+	NET_C(RA.2, R1.1)           \
+	NET_C(R1.2, GND)            \
+	NET_C(R1.1, C1.1)           \
+	NET_C(C1.2, R2.1)
+
+static NETLIST_START(nl_1942)
+
+	/* Standard stuff */
+
+	SOLVER(Solver, 48000)
+	ANALOG_INPUT(V5, 5)
+
+	/* AY 8910 internal resistors */
+
+	RES(R_AY1_1, 1000);
+	RES(R_AY1_2, 1000);
+	RES(R_AY1_3, 1000);
+	RES(R_AY2_1, 1000);
+	RES(R_AY2_2, 1000);
+	RES(R_AY2_3, 1000);
+
+	RES(R2, 220000)
+	RES(R3, 220000)
+	RES(R4, 220000)
+	RES(R5, 220000)
+	RES(R6, 220000)
+	RES(R7, 220000)
+
+	RES(R11, 10000)
+	RES(R12, 10000)
+	RES(R13, 10000)
+	RES(R14, 10000)
+	RES(R15, 10000)
+	RES(R16, 10000)
+
+	CAP(CC7, 10e-6)
+	CAP(CC8, 10e-6)
+	CAP(CC9, 10e-6)
+	CAP(CC10, 10e-6)
+	CAP(CC11, 10e-6)
+	CAP(CC12, 10e-6)
+
+	NLFILT(R_AY2_3, R13, CC7, R2)
+	NLFILT(R_AY2_2, R15, CC8, R3)
+	NLFILT(R_AY2_1, R11, CC9, R4)
+
+	NLFILT(R_AY1_3, R12, CC10, R5)
+	NLFILT(R_AY1_2, R14, CC11, R6)
+	NLFILT(R_AY1_1, R16, CC12, R7)
+
+	POT(VR, 2000)
+	NET_C(VR.3, GND)
+
+	NET_C(R2.2, VR.1)
+	NET_C(R3.2, VR.1)
+	NET_C(R4.2, VR.1)
+	NET_C(R5.2, VR.1)
+	NET_C(R6.2, VR.1)
+	NET_C(R7.2, VR.1)
+
+	CAP(CC6, 10e-6)
+	RES(R1, 100000)
+
+	NET_C(CC6.1, VR.2)
+	NET_C(CC6.2, R1.1)
+	NET_C(R1.2, GND)
+
+NETLIST_END()
 
 WRITE8_MEMBER(_1942_state::c1942_bankswitch_w)
 {
@@ -118,7 +191,7 @@ WRITE8_MEMBER(_1942_state::c1942p_palette_w)
 	int g = (data & 0x38) >> 3;
 	int b = (data & 0xc0) >> 6;
 
-	colortable_palette_set_color(machine().colortable, offset, MAKE_RGB(r<<5,g<<5,b<<6));
+	m_palette->set_indirect_color(offset, rgb_t(r<<5,g<<5,b<<6));
 }
 
 static ADDRESS_MAP_START( c1942p_map, AS_PROGRAM, 8, _1942_state )
@@ -444,6 +517,16 @@ void _1942_state::machine_reset()
 	m_scroll[1] = 0;
 }
 
+static const ay8910_interface ay8910_config =
+{
+	AY8910_RESISTOR_OUTPUT,
+	AY8910_DEFAULT_LOADS,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL,
+	DEVCB_NULL
+};
+
 static MACHINE_CONFIG_START( 1942, _1942_state )
 
 	/* basic machine hardware */
@@ -457,8 +540,11 @@ static MACHINE_CONFIG_START( 1942, _1942_state )
 
 
 	/* video hardware */
-	MCFG_GFXDECODE(1942)
-	MCFG_PALETTE_LENGTH(64*4+4*32*8+16*16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1942)
+
+	MCFG_PALETTE_ADD("palette", 64*4+4*32*8+16*16)
+	MCFG_PALETTE_INDIRECT_ENTRIES(256)
+	MCFG_PALETTE_INIT_OWNER(_1942_state, 1942)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -466,15 +552,38 @@ static MACHINE_CONFIG_START( 1942, _1942_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(_1942_state, screen_update_1942)
-
+	MCFG_SCREEN_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("ay1", AY8910, AUDIO_CLOCK)  /* 1.5 MHz */
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ROUTE_EX(0, "snd_nl", 1.0, 0)
+	MCFG_SOUND_ROUTE_EX(1, "snd_nl", 1.0, 1)
+	MCFG_SOUND_ROUTE_EX(2, "snd_nl", 1.0, 2)
 	MCFG_SOUND_ADD("ay2", AY8910, AUDIO_CLOCK)  /* 1.5 MHz */
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_CONFIG(ay8910_config)
+	MCFG_SOUND_ROUTE_EX(0, "snd_nl", 1.0, 3)
+	MCFG_SOUND_ROUTE_EX(1, "snd_nl", 1.0, 4)
+	MCFG_SOUND_ROUTE_EX(2, "snd_nl", 1.0, 5)
+
+	/* NETLIST configuration using internal AY8910 resistor values */
+
+	MCFG_SOUND_ADD("snd_nl", NETLIST_SOUND, 48000)
+	MCFG_NETLIST_SETUP(nl_1942)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 5.0)
+
+	MCFG_NETLIST_STREAM_INPUT("snd_nl", 0, "R_AY1_1.R")
+	MCFG_NETLIST_STREAM_INPUT("snd_nl", 1, "R_AY1_2.R")
+	MCFG_NETLIST_STREAM_INPUT("snd_nl", 2, "R_AY1_3.R")
+	MCFG_NETLIST_STREAM_INPUT("snd_nl", 3, "R_AY2_1.R")
+	MCFG_NETLIST_STREAM_INPUT("snd_nl", 4, "R_AY2_2.R")
+	MCFG_NETLIST_STREAM_INPUT("snd_nl", 5, "R_AY2_3.R")
+
+	MCFG_NETLIST_STREAM_OUTPUT("snd_nl", 0, "R1.1")
+	MCFG_NETLIST_ANALOG_MULT_OFFSET(100000.0, 0.0)
+
 MACHINE_CONFIG_END
 
 
@@ -491,9 +600,11 @@ static MACHINE_CONFIG_START( 1942p, _1942_state )
 
 
 	/* video hardware */
-	MCFG_GFXDECODE(1942p)
-	MCFG_PALETTE_LENGTH(0x500)
-	MCFG_PALETTE_INIT_OVERRIDE(_1942_state, 1942p)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 1942p)
+	MCFG_PALETTE_ADD("palette", 0x500)
+	MCFG_PALETTE_INDIRECT_ENTRIES(0x400)
+	MCFG_PALETTE_INIT_OWNER(_1942_state, 1942p)
+
 	MCFG_VIDEO_START_OVERRIDE(_1942_state,c1942p)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -502,6 +613,7 @@ static MACHINE_CONFIG_START( 1942p, _1942_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(_1942_state, screen_update_1942p)
+	MCFG_SCREEN_PALETTE("palette")
 
 
 	/* sound hardware */

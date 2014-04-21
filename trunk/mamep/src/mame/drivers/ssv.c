@@ -904,8 +904,8 @@ WRITE16_MEMBER(ssv_state::eaglshot_gfxram_w)
 {
 	offset += (m_scroll[0x76/2] & 0xf) * 0x40000/2;
 	COMBINE_DATA(&m_eaglshot_gfxram[offset]);
-	machine().gfx[0]->mark_dirty(offset / (16*8/2));
-	machine().gfx[1]->mark_dirty(offset / (16*8/2));
+	m_gfxdecode->gfx(0)->mark_dirty(offset / (16*8/2));
+	m_gfxdecode->gfx(1)->mark_dirty(offset / (16*8/2));
 }
 
 
@@ -2591,9 +2591,10 @@ static MACHINE_CONFIG_START( ssv, ssv_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(SSV_PIXEL_CLOCK,SSV_HTOTAL,SSV_HBEND,SSV_HBSTART,SSV_VTOTAL,SSV_VBEND,SSV_VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(ssv_state, screen_update_ssv)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(ssv)
-	MCFG_PALETTE_LENGTH(0x8000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", ssv)
+	MCFG_PALETTE_ADD("palette", 0x8000)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2641,8 +2642,10 @@ static MACHINE_CONFIG_DERIVED( gdfs, ssv )
 	MCFG_SCREEN_UPDATE_DRIVER(ssv_state, screen_update_gdfs)
 
 	MCFG_DEVICE_ADD("st0020_spr", ST0020_SPRITES, 0)
+	MCFG_ST0020_SPRITES_GFXDECODE("gfxdecode")
+	MCFG_ST0020_SPRITES_PALETTE("palette")
 
-	MCFG_GFXDECODE(gdfs)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", gdfs)
 	MCFG_VIDEO_START_OVERRIDE(ssv_state,gdfs)
 MACHINE_CONFIG_END
 
@@ -2821,7 +2824,7 @@ static MACHINE_CONFIG_DERIVED( eaglshot, ssv )
 	MCFG_SCREEN_VISIBLE_AREA(0, (0xca - 0x2a)*2-1, 0, (0xf6 - 0x16)-1)
 	MCFG_SCREEN_UPDATE_DRIVER(ssv_state, screen_update_eaglshot)
 
-	MCFG_GFXDECODE(eaglshot)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", eaglshot)
 	MCFG_VIDEO_START_OVERRIDE(ssv_state,eaglshot)
 MACHINE_CONFIG_END
 

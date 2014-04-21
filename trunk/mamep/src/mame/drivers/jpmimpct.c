@@ -90,7 +90,7 @@
 
 IMPACT Games
 
-IMPACT apparently stands for Interactive Moving Picture Amusment Control
+IMPACT apparently stands for Interactive Moving Picture Amusement Control
 Technology, and is intended as a replacement for the JPM System 5 board.
 Large sections of the processing were moved to two identical custom ASICs
 (U1 and U2), only half of each is used.
@@ -166,22 +166,6 @@ MACHINE_RESET_MEMBER(jpmimpct_state,jpmimpct)
 //  m_duart_1.IVR=0x0f;
 }
 
-
-/*************************************
- *
- *  TMS34010 host interface
- *
- *************************************/
-
-WRITE16_MEMBER(jpmimpct_state::m68k_tms_w)
-{
-	tms34010_host_w(machine().device("dsp"), offset, data);
-}
-
-READ16_MEMBER(jpmimpct_state::m68k_tms_r)
-{
-	return tms34010_host_r(machine().device("dsp"), offset);
-}
 
 
 /*************************************
@@ -614,7 +598,7 @@ static ADDRESS_MAP_START( m68k_program_map, AS_PROGRAM, 16, jpmimpct_state )
 	AM_RANGE(0x00480082, 0x00480083) AM_WRITE(volume_w)
 	AM_RANGE(0x00480084, 0x00480085) AM_READ(upd7759_r)
 	AM_RANGE(0x004801e0, 0x004801ff) AM_READWRITE(duart_2_r, duart_2_w)
-	AM_RANGE(0x00800000, 0x00800007) AM_READWRITE(m68k_tms_r, m68k_tms_w)
+	AM_RANGE(0x00800000, 0x00800007) AM_DEVREADWRITE("dsp", tms34010_device, host_r, host_w)
 	AM_RANGE(0x00c00000, 0x00cfffff) AM_ROM
 	AM_RANGE(0x00d00000, 0x00dfffff) AM_ROM
 	AM_RANGE(0x00e00000, 0x00efffff) AM_ROM
@@ -665,7 +649,7 @@ ADDRESS_MAP_END
  *************************************/
 
 static ADDRESS_MAP_START( tms_program_map, AS_PROGRAM, 16, jpmimpct_state )
-	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE_LEGACY(tms34010_io_register_r, tms34010_io_register_w)
+	AM_RANGE(0xc0000000, 0xc00001ff) AM_DEVREADWRITE("dsp", tms34010_device, io_register_r, io_register_w)
 	AM_RANGE(0x00000000, 0x003fffff) AM_MIRROR(0xf8000000) AM_RAM AM_SHARE("vram")
 	AM_RANGE(0x00800000, 0x00ffffff) AM_MIRROR(0xf8000000) AM_ROM AM_REGION("user1", 0x100000)
 	AM_RANGE(0x02000000, 0x027fffff) AM_MIRROR(0xf8000000) AM_ROM AM_REGION("user1", 0)
@@ -880,7 +864,7 @@ static MACHINE_CONFIG_START( jpmimpct, jpmimpct_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(40000000/4, 156*4, 0, 100*4, 328, 0, 300)
 	MCFG_SCREEN_UPDATE_DEVICE("dsp", tms34010_device, tms340x0_rgb32)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_ADD("palette", 256)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)

@@ -1988,9 +1988,7 @@ INPUT_PORTS_END
 
 static const powerpc_config viper_ppc_cfg =
 {
-	100000000,
-	NULL,
-	NULL
+	100000000
 };
 
 INTERRUPT_GEN_MEMBER(viper_state::viper_vblank)
@@ -2063,10 +2061,9 @@ static MACHINE_CONFIG_START( viper, viper_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(1024, 768)
 	MCFG_SCREEN_VISIBLE_AREA(0, 1023, 0, 383)
-
-	MCFG_PALETTE_LENGTH(65536)
-
 	MCFG_SCREEN_UPDATE_DRIVER(viper_state, screen_update_viper)
+
+	MCFG_PALETTE_ADD("palette", 65536)
 
 	MCFG_TIMER_ADD_NONE("ds2430_timer2")
 

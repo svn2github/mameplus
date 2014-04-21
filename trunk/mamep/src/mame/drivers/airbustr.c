@@ -313,19 +313,9 @@ WRITE8_MEMBER(airbustr_state::soundcommand2_w)
 	m_soundlatch2_status = 1;   // soundlatch2 has been written
 }
 
-WRITE8_MEMBER(airbustr_state::airbustr_paletteram_w)
-{
-	int val;
 
-	/*  ! byte 1 ! ! byte 0 !   */
-	/*  xGGG GGRR   RRRB BBBB   */
-	/*  x432 1043   2104 3210   */
 
-	m_paletteram[offset] = data;
-	val = (m_paletteram[offset | 1] << 8) | m_paletteram[offset & ~1];
 
-	palette_set_color_rgb(machine(), offset / 2, pal5bit(val >> 5), pal5bit(val >> 10), pal5bit(val >> 0));
-}
 
 WRITE8_MEMBER(airbustr_state::airbustr_coin_counter_w)
 {
@@ -359,7 +349,7 @@ static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, airbustr_state )
 	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(airbustr_colorram2_w) AM_SHARE("colorram2")
 	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(airbustr_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xcc00, 0xcfff) AM_RAM_WRITE(airbustr_colorram_w) AM_SHARE("colorram")
-	AM_RANGE(0xd000, 0xd5ff) AM_RAM_WRITE(airbustr_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xd5ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xd600, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("share1")
@@ -635,12 +625,15 @@ static MACHINE_CONFIG_START( airbustr, airbustr_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(airbustr_state, screen_update_airbustr)
 	MCFG_SCREEN_VBLANK_DRIVER(airbustr_state, screen_eof_airbustr)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(airbustr)
-	MCFG_PALETTE_LENGTH(768)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", airbustr)
+	MCFG_PALETTE_ADD("palette", 768)
+	MCFG_PALETTE_FORMAT(xGGGGGRRRRRBBBBB)
 
 	MCFG_KANEKO_PANDORA_ADD("pandora", airbustr_pandora_config)
-
+	MCFG_KANEKO_PANDORA_GFXDECODE("gfxdecode")
+	MCFG_KANEKO_PANDORA_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

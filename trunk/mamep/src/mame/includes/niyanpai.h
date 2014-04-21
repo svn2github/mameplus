@@ -15,7 +15,9 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_tmp68301(*this, "tmp68301"),
 		m_dac1(*this, "dac1"),
-		m_dac2(*this, "dac2") { }
+		m_dac2(*this, "dac2"),
+		m_screen(*this, "screen"),
+		m_palette(*this, "palette") { }
 
 	int m_musobana_inputport;
 	int m_musobana_outcoin_flag;
@@ -41,7 +43,7 @@ public:
 	bitmap_ind16 m_tmpbitmap[VRAM_MAX];
 	UINT16 *m_videoram[VRAM_MAX];
 	UINT16 *m_videoworkram[VRAM_MAX];
-	UINT16 *m_palette;
+	UINT16 *m_palette_ptr;
 	UINT8 *m_clut[VRAM_MAX];
 	int m_flipscreen_old[VRAM_MAX];
 	DECLARE_READ8_MEMBER(niyanpai_sound_r);
@@ -106,6 +108,8 @@ public:
 	required_device<tmp68301_device> m_tmp68301;
 	required_device<dac_device> m_dac1;
 	required_device<dac_device> m_dac2;
+	required_device<screen_device> m_screen;
+	required_device<palette_device> m_palette;
 
 protected:
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);

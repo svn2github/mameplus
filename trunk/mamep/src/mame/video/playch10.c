@@ -14,7 +14,7 @@ WRITE8_MEMBER(playch10_state::playch10_videoram_w)
 	}
 }
 
-void playch10_state::palette_init()
+PALETTE_INIT_MEMBER(playch10_state, playch10)
 {
 	const UINT8 *color_prom = memregion("proms")->base();
 	ppu2c0x_device *ppu = machine().device<ppu2c0x_device>("ppu");
@@ -50,12 +50,12 @@ void playch10_state::palette_init()
 
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
+		palette.set_pen_color(i,rgb_t(r,g,b));
 
 		color_prom++;
 	}
 
-	ppu->init_palette_rgb(machine(), 256);
+	ppu->init_palette_rgb(palette, 256);
 }
 
 void playch10_state::ppu_irq(int *ppu_regs)
@@ -91,7 +91,7 @@ void playch10_state::video_start()
 	const UINT8 *bios = memregion("maincpu")->base();
 	m_pc10_bios = (bios[3] == 0x2a) ? 1 : 2;
 
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(playch10_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(playch10_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 			8, 8, 32, 32);
 }
 
@@ -100,7 +100,7 @@ VIDEO_START_MEMBER(playch10_state,playch10_hboard)
 	const UINT8 *bios = memregion("maincpu")->base();
 	m_pc10_bios = (bios[3] == 0x2a) ? 1 : 2;
 
-	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(playch10_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
+	m_bg_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(playch10_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 			8, 8, 32, 32);
 }
 

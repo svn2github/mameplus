@@ -225,12 +225,6 @@ WRITE8_MEMBER(crimfght_state::volume_callback)
 	m_k007232->set_volume(1, 0, (data >> 4) * 0x11);
 }
 
-static const k007232_interface k007232_config =
-{
-	DEVCB_DRIVER_MEMBER(crimfght_state,volume_callback) /* external port callback */
-};
-
-
 static const k052109_interface crimfght_k052109_intf =
 {
 	"gfx1", 0,
@@ -272,20 +266,25 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.17)             /* verified on pcb */
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(13*8, (64-13)*8-1, 2*8, 30*8-1 )
 	MCFG_SCREEN_UPDATE_DRIVER(crimfght_state, screen_update_crimfght)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_PALETTE_ADD("palette", 512)
+	MCFG_PALETTE_ENABLE_SHADOWS()
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", empty)
 	MCFG_K052109_ADD("k052109", crimfght_k052109_intf)
+	MCFG_K052109_GFXDECODE("gfxdecode")
+	MCFG_K052109_PALETTE("palette")
 	MCFG_K051960_ADD("k051960", crimfght_k051960_intf)
+	MCFG_K051960_GFXDECODE("gfxdecode")
+	MCFG_K051960_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -296,7 +295,7 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
 	MCFG_SOUND_ADD("k007232", K007232, XTAL_3_579545MHz)    /* verified on pcb */
-	MCFG_SOUND_CONFIG(k007232_config)
+	MCFG_K007232_PORT_WRITE_HANDLER(WRITE8(crimfght_state, volume_callback))
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.20)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 0.20)
@@ -392,8 +391,8 @@ static KONAMI_SETLINES_CALLBACK( crimfght_banking )
 	if (lines & 0x20)
 	{
 		device->memory().space(AS_PROGRAM).install_read_bank(0x0000, 0x03ff, "bank3");
-		device->memory().space(AS_PROGRAM).install_write_handler(0x0000, 0x03ff, write8_delegate(FUNC(crimfght_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state));
-		state->membank("bank3")->set_base(state->m_generic_paletteram_8);
+		device->memory().space(AS_PROGRAM).install_write_handler(0x0000, 0x03ff, write8_delegate(FUNC(palette_device::write), state->m_palette.target()));
+		state->membank("bank3")->set_base(state->m_paletteram);
 	}
 	else
 		device->memory().space(AS_PROGRAM).install_readwrite_bank(0x0000, 0x03ff, "bank1");                             /* RAM */

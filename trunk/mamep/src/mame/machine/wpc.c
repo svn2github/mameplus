@@ -12,6 +12,7 @@ const device_type WPCASIC = &device_creator<wpc_device>;
 
 wpc_device::wpc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig,WPCASIC,"Williams WPC ASIC",tag,owner,clock, "wpc", __FILE__),
+		m_dmd_visiblepage(0),
 		m_irq_cb(*this),
 		m_firq_cb(*this),
 		m_sounddata_r(*this),
@@ -47,6 +48,7 @@ void wpc_device::device_reset()
 	m_memprotect = 0;
 	m_dmd_irqsrc = false;
 	m_snd_irqsrc = false;
+	m_alpha_pos = 0;
 }
 
 void wpc_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)

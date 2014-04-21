@@ -116,11 +116,17 @@ void archimedes_state::vidc_video_tick()
 	address_space &space = m_maincpu->space(AS_PROGRAM);
 	static UINT8 *vram = m_region_vram->base();
 	UINT32 size;
+	UINT32 m_vidc_ccur;
 
 	size = m_vidc_vidend-m_vidc_vidstart+0x10;
 
 	for(m_vidc_vidcur = 0;m_vidc_vidcur < size;m_vidc_vidcur++)
 		vram[m_vidc_vidcur] = (space.read_byte(m_vidc_vidstart+m_vidc_vidcur));
+
+	size = m_vidc_vidend-m_vidc_vidstart+0x10;
+
+	for(m_vidc_ccur = 0;m_vidc_ccur < 0x200;m_vidc_ccur++)
+		m_cursor_vram[m_vidc_ccur] = (space.read_byte(m_vidc_cinit+m_vidc_ccur));
 
 	if(m_video_dma_on)
 		m_vid_timer->adjust(m_screen->time_until_pos(m_vidc_regs[0xb4]));
@@ -664,7 +670,7 @@ READ32_MEMBER(archimedes_state::archimedes_ioc_r)
 				case 1:
 					if (m_wd1772) {
 						logerror("17XX: R @ addr %x mask %08x\n", offset*4, mem_mask);
-						return wd17xx_data_r(m_wd1772, space, offset&0xf);
+						return m_wd1772->data_r(space, offset&0xf);
 					} else {
 						logerror("Read from FDC device?\n");
 						return 0;
@@ -719,7 +725,7 @@ WRITE32_MEMBER(archimedes_state::archimedes_ioc_w)
 				case 1:
 						if (m_wd1772) {
 							logerror("17XX: %x to addr %x mask %08x\n", data, offset*4, mem_mask);
-							wd17xx_data_w(m_wd1772, space, offset&0xf, data&0xff);
+							m_wd1772->data_w(space, offset&0xf, data&0xff);
 						} else {
 							logerror("Write to FDC device?\n");
 						}
@@ -738,16 +744,16 @@ WRITE32_MEMBER(archimedes_state::archimedes_ioc_w)
 						switch(ioc_addr & 0xfffc)
 						{
 							case 0x18: // latch B
-								wd17xx_dden_w(m_wd1772, BIT(data, 1));
+								m_wd1772->dden_w(BIT(data, 1));
 								return;
 
 							case 0x40: // latch A
-								if (data & 1) { wd17xx_set_drive(m_wd1772,0); }
-								if (data & 2) { wd17xx_set_drive(m_wd1772,1); }
-								if (data & 4) { wd17xx_set_drive(m_wd1772,2); }
-								if (data & 8) { wd17xx_set_drive(m_wd1772,3); }
+								if (data & 1) { m_wd1772->set_drive(0); }
+								if (data & 2) { m_wd1772->set_drive(1); }
+								if (data & 4) { m_wd1772->set_drive(2); }
+								if (data & 8) { m_wd1772->set_drive(3); }
 
-								wd17xx_set_side(m_wd1772,(data & 0x10)>>4);
+								m_wd1772->set_side((data & 0x10)>>4);
 								//bit 5 is motor on
 								return;
 						}
@@ -790,7 +796,7 @@ void archimedes_state::vidc_dynamic_res_change()
 			visarea.min_x = 0;
 			visarea.min_y = 0;
 			visarea.max_x = m_vidc_regs[VIDC_HBER] - m_vidc_regs[VIDC_HBSR] - 1;
-			visarea.max_y = m_vidc_regs[VIDC_VBER] - m_vidc_regs[VIDC_VBSR];
+			visarea.max_y = (m_vidc_regs[VIDC_VBER] - m_vidc_regs[VIDC_VBSR]) * (m_vidc_interlace+1);
 
 			logerror("Configuring: htotal %d vtotal %d border %d x %d display %d x %d\n",
 				m_vidc_regs[VIDC_HCR], m_vidc_regs[VIDC_VCR],
@@ -800,7 +806,7 @@ void archimedes_state::vidc_dynamic_res_change()
 			/* FIXME: pixel clock */
 			refresh = HZ_TO_ATTOSECONDS(pixel_rate[m_vidc_pixel_clk]*2) * m_vidc_regs[VIDC_HCR] * m_vidc_regs[VIDC_VCR];
 
-			m_screen->configure(m_vidc_regs[VIDC_HCR], m_vidc_regs[VIDC_VCR], visarea, refresh);
+			m_screen->configure(m_vidc_regs[VIDC_HCR], m_vidc_regs[VIDC_VCR] * (m_vidc_interlace+1), visarea, refresh);
 		}
 	}
 }
@@ -809,7 +815,7 @@ WRITE32_MEMBER(archimedes_state::archimedes_vidc_w)
 {
 	UINT32 reg = data>>24;
 	UINT32 val = data & 0xffffff;
-	//#ifdef DEBUG
+	//#ifdef MAME_DEBUG
 	static const char *const vrnames[] =
 	{
 		"horizontal total",
@@ -847,7 +853,7 @@ WRITE32_MEMBER(archimedes_state::archimedes_vidc_w)
 		if(reg == 0x40 && val & 0xfff)
 			logerror("WARNING: border color write here (PC=%08x)!\n",space.device().safe_pc());
 
-		palette_set_color_rgb(machine(), reg >> 2, pal4bit(r), pal4bit(g), pal4bit(b) );
+		m_palette->set_pen_color(reg >> 2, pal4bit(r), pal4bit(g), pal4bit(b) );
 
 		/* handle 8bpp colors here */
 		if(reg <= 0x3c)
@@ -860,7 +866,7 @@ WRITE32_MEMBER(archimedes_state::archimedes_vidc_w)
 				g = ((val & 0x030) >> 4) | ((i & 0x20) >> 3) | ((i & 0x40) >> 3);
 				r = ((val & 0x007) >> 0) | ((i & 0x10) >> 1);
 
-				palette_set_color_rgb(machine(), (reg >> 2) + 0x100 + i, pal4bit(r), pal4bit(g), pal4bit(b) );
+				m_palette->set_pen_color((reg >> 2) + 0x100 + i, pal4bit(r), pal4bit(g), pal4bit(b) );
 			}
 		}
 
@@ -896,7 +902,7 @@ WRITE32_MEMBER(archimedes_state::archimedes_vidc_w)
 		}
 
 
-		//#ifdef DEBUG
+		//#ifdef MAME_DEBUG
 		logerror("VIDC: %s = %d\n", vrnames[(reg-0x80)/4], m_vidc_regs[reg]);
 		//#endif
 
@@ -907,6 +913,7 @@ WRITE32_MEMBER(archimedes_state::archimedes_vidc_w)
 		m_vidc_bpp_mode = ((val & 0x0c) >> 2);
 		m_vidc_interlace = ((val & 0x40) >> 6);
 		m_vidc_pixel_clk = (val & 0x03);
+		//todo: vga/svga modes sets 0x1000
 		vidc_dynamic_res_change();
 	}
 	else
@@ -930,17 +937,22 @@ WRITE32_MEMBER(archimedes_state::archimedes_memc_w)
 		{
 			case 0: /* video init */
 				m_vidc_vidinit = ((data>>2)&0x7fff)*16;
-				//logerror("MEMC: VIDINIT %08x\n",vidc_vidinit);
+				//printf("MEMC: VIDINIT %08x\n",m_vidc_vidinit);
 				break;
 
 			case 1: /* video start */
 				m_vidc_vidstart = 0x2000000 | (((data>>2)&0x7fff)*16);
-				//logerror("MEMC: VIDSTART %08x\n",vidc_vidstart);
+				//printf("MEMC: VIDSTART %08x\n",m_vidc_vidstart);
 				break;
 
 			case 2: /* video end */
 				m_vidc_vidend = 0x2000000 | (((data>>2)&0x7fff)*16);
-				//logerror("MEMC: VIDEND %08x\n",vidc_vidend);
+				//printf("MEMC: VIDEND %08x\n",m_vidc_vidend);
+				break;
+
+			case 3: /* cursor init */
+				m_vidc_cinit = 0x2000000 | (((data>>2)&0x7fff)*16);
+				//printf("MEMC: CURSOR %08x\n",((data>>2)&0x7fff)*16);
 				break;
 
 			case 4: /* sound start */

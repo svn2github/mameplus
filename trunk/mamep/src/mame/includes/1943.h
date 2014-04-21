@@ -15,7 +15,9 @@ public:
 		m_scrollx(*this, "scrollx"),
 		m_scrolly(*this, "scrolly"),
 		m_bgscrollx(*this, "bgscrollx"),
-		m_spriteram(*this, "spriteram")
+		m_spriteram(*this, "spriteram"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 	{ }
 
 	/* devices / memory pointers */
@@ -26,6 +28,8 @@ public:
 	required_shared_ptr<UINT8> m_scrolly;
 	required_shared_ptr<UINT8> m_bgscrollx;
 	required_shared_ptr<UINT8> m_spriteram;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 
 	/* video-related */
 	tilemap_t *m_fg_tilemap;
@@ -54,7 +58,7 @@ public:
 	virtual void machine_start();
 	virtual void machine_reset();
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(1943);
 	UINT32 screen_update_1943(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void draw_sprites( bitmap_ind16 &bitmap, const rectangle &cliprect, int priority );
 };

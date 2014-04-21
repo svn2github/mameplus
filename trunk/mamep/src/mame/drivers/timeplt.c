@@ -468,16 +468,17 @@ static MACHINE_CONFIG_START( timeplt, timeplt_state )
 	MCFG_CPU_VBLANK_INT_DRIVER("screen", timeplt_state,  timeplt_interrupt)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_SCANLINE)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(timeplt_state, screen_update_timeplt)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(timeplt)
-	MCFG_PALETTE_LENGTH(32*4+64*4)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", timeplt)
+	MCFG_PALETTE_ADD("palette", 32*4+64*4)
+	MCFG_PALETTE_INIT_OWNER(timeplt_state, timeplt)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(timeplt_sound)
@@ -494,7 +495,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( bikkuric, timeplt )
 
-	MCFG_GFXDECODE(chkun)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", chkun)
 
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
@@ -505,7 +506,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( chkun, bikkuric )
 
-	MCFG_GFXDECODE(chkun)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", chkun)
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("ay2")

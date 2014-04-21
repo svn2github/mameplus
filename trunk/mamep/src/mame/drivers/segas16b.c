@@ -1249,11 +1249,10 @@ READ8_MEMBER( segas16b_state::upd7759_status_r )
 //  NMI to the sound CPU
 //-------------------------------------------------
 
-void segas16b_state::upd7759_generate_nmi(device_t *device, int state)
+WRITE_LINE_MEMBER(segas16b_state::upd7759_generate_nmi)
 {
-	segas16b_state *driver = device->machine().driver_data<segas16b_state>();
 	if (state)
-		driver->m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -3232,17 +3231,6 @@ INPUT_PORTS_END
 
 
 //**************************************************************************
-//  SOUND CONFIGURATIONS
-//**************************************************************************
-
-static const upd775x_interface upd7759_config =
-{
-	&segas16b_state::upd7759_generate_nmi
-};
-
-
-
-//**************************************************************************
 //  GRAPHICS DECODING
 //**************************************************************************
 
@@ -3272,15 +3260,17 @@ static MACHINE_CONFIG_START( system16b, segas16b_state )
 	MCFG_SEGA_315_5195_MAPPER_ADD("mapper", "maincpu", segas16b_state, memory_mapper, mapper_sound_r, mapper_sound_w)
 
 	// video hardware
-	MCFG_GFXDECODE(segas16b)
-	MCFG_PALETTE_LENGTH(2048*3)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", segas16b)
+	MCFG_PALETTE_ADD("palette", 2048*3)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_25MHz/4, 400, 0, 320, 262, 0, 224)
 	MCFG_SCREEN_UPDATE_DRIVER(segas16b_state, screen_update)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_SEGA_SYS16B_SPRITES_ADD("sprites")
 	MCFG_SEGAIC16VID_ADD("segaic16vid")
+	MCFG_SEGAIC16VID_GFXDECODE("gfxdecode")
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3289,7 +3279,7 @@ static MACHINE_CONFIG_START( system16b, segas16b_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.43)
 
 	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)
-	MCFG_SOUND_CONFIG(upd7759_config)
+	MCFG_UPD7759_DRQ_CALLBACK(WRITELINE(segas16b_state,upd7759_generate_nmi))
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.48)
 MACHINE_CONFIG_END
 
@@ -7031,7 +7021,7 @@ WRITE16_MEMBER( isgsm_state::data_w )
 			if (dest == memregion("gfx1")->base())
 			{
 				// we need to re-decode the tiles if writing to this area to keep MAME happy
-				machine().gfx[0]->mark_dirty((m_data_addr & 0x1ffff) / 8);
+				m_gfxdecode->gfx(0)->mark_dirty((m_data_addr & 0x1ffff) / 8);
 			}
 		}
 	}

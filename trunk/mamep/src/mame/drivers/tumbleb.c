@@ -25,6 +25,7 @@
   [1] has the same sprites as the bootlegs, not much else is the same tho
 
   [2] test mode crashes the same way on the real board
+      cookbiba set doesn't crash, maybe it's newer? check the rest of the code
 
   Bootleg sound is not quite correct yet (Nothing on bootleg 2).
   ** at least one of the bootlegs uses a protected PIC to drive the OKI **
@@ -631,7 +632,7 @@ static ADDRESS_MAP_START( tumblepopb_main_map, AS_PROGRAM, 16, tumbleb_state )
 #endif
 	AM_RANGE(0x100000, 0x100001) AM_READWRITE(tumblepb_prot_r, tumblepb_oki_w)
 	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x160800, 0x160807) AM_WRITEONLY /* writes past the end of spriteram */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
@@ -653,7 +654,7 @@ static ADDRESS_MAP_START( fncywld_main_map, AS_PROGRAM, 16, tumbleb_state )
 #endif
 	AM_RANGE(0x100000, 0x100003) AM_DEVREADWRITE8("ymsnd", ym2151_device, read, write, 0x00ff)
 	AM_RANGE(0x100004, 0x100005) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x140fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* sprites */
 	AM_RANGE(0x160800, 0x16080f) AM_WRITEONLY /* goes slightly past the end of spriteram? */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
@@ -681,7 +682,7 @@ static ADDRESS_MAP_START( htchctch_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x100000, 0x100001) AM_WRITE(semicom_soundcmd_w)
 	AM_RANGE(0x100002, 0x100003) AM_WRITE(bcstory_tilebank_w)
 	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x160000, 0x160fff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
 	AM_RANGE(0x18000c, 0x18000d) AM_WRITENOP
@@ -707,7 +708,7 @@ static ADDRESS_MAP_START( suprtrio_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0xa00000, 0xa0000f) AM_RAM AM_SHARE("control")
 	AM_RANGE(0xa20000, 0xa20fff) AM_RAM_WRITE(tumblepb_pf1_data_w) AM_SHARE("pf1_data")
 	AM_RANGE(0xa22000, 0xa22fff) AM_RAM_WRITE(tumblepb_pf2_data_w) AM_SHARE("pf2_data")
-	AM_RANGE(0xcf0000, 0xcf05ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xcf0000, 0xcf05ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0xe00000, 0xe00001) AM_READ_PORT("PLAYERS") AM_WRITE(suprtrio_tilebank_w)
 	AM_RANGE(0xe40000, 0xe40001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xe80002, 0xe80003) AM_READ_PORT("DSW")
@@ -718,7 +719,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( pangpang_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x160800, 0x160807) AM_WRITEONLY // writes past the end of spriteram
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
@@ -774,7 +775,7 @@ static ADDRESS_MAP_START( jumpkids_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_WRITE(jumpkids_sound_w)
 	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x160800, 0x160807) AM_WRITEONLY /* writes past the end of spriteram */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
@@ -2056,13 +2057,17 @@ static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_tumblepb)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(tumbleb)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tumbleb)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
@@ -2091,13 +2096,17 @@ static MACHINE_CONFIG_START( tumbleb2, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_tumblepb)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(tumbleb)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tumbleb)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
@@ -2129,13 +2138,17 @@ static MACHINE_CONFIG_START( jumpkids, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_jumpkids)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(tumbleb)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tumbleb)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
@@ -2163,14 +2176,18 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_fncywld)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
 	decospr_device::set_transpen(*device, 15);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(fncywld)
-	MCFG_PALETTE_LENGTH(0x800)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", fncywld)
+	MCFG_PALETTE_ADD("palette", 0x800)
+	MCFG_PALETTE_FORMAT(xxxxRRRRGGGGBBBB)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,fncywld)
 
@@ -2220,13 +2237,17 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_semicom)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(tumbleb)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tumbleb)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
@@ -2252,6 +2273,9 @@ static MACHINE_CONFIG_DERIVED( cookbib, htchctch )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( chokchok, htchctch )
+		MCFG_PALETTE_MODIFY("palette")
+		MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
+
 		MCFG_OKIM6295_REPLACE("oki", 3579545/4, OKIM6295_PIN7_HIGH)
 		MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 		MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
@@ -2292,6 +2316,8 @@ MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( metlsavr, cookbib )
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_SOUND_REPLACE("ymsnd", YM2151, 3427190)
 	MCFG_YM2151_IRQ_HANDLER(INPUTLINE("audiocpu", 0))
@@ -2322,13 +2348,17 @@ static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8-1, 31*8-2)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_suprtrio)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(suprtrio)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", suprtrio)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,suprtrio)
 
@@ -2357,13 +2387,17 @@ static MACHINE_CONFIG_START( pangpang, tumbleb_state )
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(tumbleb_state, screen_update_pangpang)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 	decospr_device::set_is_bootleg(*device, true);
+	MCFG_DECO_SPRITE_GFXDECODE("gfxdecode")
+	MCFG_DECO_SPRITE_PALETTE("palette")
 
-	MCFG_GFXDECODE(tumbleb)
-	MCFG_PALETTE_LENGTH(1024)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", tumbleb)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_FORMAT(xxxxBBBBGGGGRRRR)
 
 	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,pangpang)
 
@@ -2877,7 +2911,7 @@ ROM_START( carket )
 
 	ROM_REGION16_BE( 0x200, "user1", 0 ) /* Data from Shared RAM */
 	/* this is not a real rom but instead the data extracted from shared ram, the MCU puts it there */
-	ROM_LOAD16_WORD( "protdata.bin", 0x00000, 0x200 , BAD_DUMP CRC(4b5126de) SHA1(73a80c5b68540fb86231cad658d78b51f2575010) ) // this is hand-crafted from choky choky and hatch catch with 3 jumps adjusted to point to similar code in carket
+	ROM_LOAD16_WORD( "carket_protdata.bin", 0x00000, 0x200 , CRC(5778470a) SHA1(3bf0c90e32a1ecf9b4f0ab90f61f29d59616ffbc) )
 
 	ROM_REGION( 0x040000, "oki", 0 ) /* Samples */
 	ROM_LOAD( "27010.uc1", 0x00000, 0x20000, CRC(b825bb9c) SHA1(9e444306e7ac1282871f0132f0137bf7aa87b7e0) )
@@ -2929,6 +2963,36 @@ ROM_START( cookbib )
 	ROM_LOAD16_BYTE( "uor3.bin",  0x40000, 0x20000, CRC(3fee0c3c) SHA1(c71439ba8033c549e40522db5270caf4a297fb99) )
 	ROM_LOAD16_BYTE( "uor4.bin",  0x40001, 0x20000, CRC(bed9ed2d) SHA1(7103b99cd0d54df864ea4a0f269011e30ad29ed7) )
 ROM_END
+
+ROM_START( cookbiba )
+	ROM_REGION( 0x100000, "maincpu", 0 ) /* 68000 Code */
+	ROM_LOAD16_BYTE( "d13.u818",  0x00001, 0x20000, CRC(19c75b1f) SHA1(c6c920d7cb1616b828cc8245cd8f7beb72753b7c) )
+	ROM_LOAD16_BYTE( "d14.u817",  0x00000, 0x20000, CRC(0021349f) SHA1(ae3dbda2fd0e99ce037e35b87a554fbe28b5fe14) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 ) /* Z80 Code */
+	ROM_LOAD( "d12.ub5", 0x00000, 0x10000 , CRC(0a16e0b4) SHA1(c20e8cf2b4fc6cf22d9588ff4b3e15cac8ebf505) )
+
+	ROM_REGION( 0x10000, "cpu2", 0 ) /* Intel 87C52 MCU Code */
+	ROM_LOAD( "87c52.mcu", 0x00000, 0x2000, NO_DUMP ) /* can't be dumped */
+
+	ROM_REGION16_BE( 0x200, "user1", 0 ) /* Data from Shared RAM */ // note, different to cookbib
+	/* this is not a real rom but instead the data extracted from shared ram, the MCU puts it there */
+	ROM_LOAD16_WORD( "cookbiba_protdata.bin", 0x00000, 0x200 , CRC(7f05b832) SHA1(c6141b15ee9e31f7a28748f330405b90c3b9508a) )
+
+	ROM_REGION( 0x40000, "oki", 0 ) /* Samples */
+	ROM_LOAD( "sound.uc1", 0x00000, 0x20000, CRC(545e19b6) SHA1(ef518bbe44b22e7ef77ee6af337ebcad9b2674e0) )
+
+	ROM_REGION( 0x80000, "tilegfx", 0 ) /* */
+	ROM_LOAD16_BYTE( "srom5.bin", 0x00001, 0x40000, CRC(73a46e43) SHA1(054fac2dc5dffcbb9d81600689c07774d2e200b6) )
+	ROM_LOAD16_BYTE( "srom6.bin", 0x00000, 0x40000, CRC(ade2dbec) SHA1(12d385d22307d8251e711788dff2e503c8f8ca7c) )
+
+	ROM_REGION( 0x80000, "sprgfx", 0 ) /* GFX */
+	ROM_LOAD16_BYTE( "d17.uor1",  0x00000, 0x20000, CRC(2fab7c2d) SHA1(6024d3428cc09905c791a3f394487b8bb484a131) )
+	ROM_LOAD16_BYTE( "d18.uor2",  0x00001, 0x20000, CRC(341750a0) SHA1(a218ec0e61591b02bf1a8ba69f2af8d8d29fda8a) )
+	ROM_LOAD16_BYTE( "d19.uor3",  0x40000, 0x20000, CRC(343d2e41) SHA1(d1b123bb4c8749a1cda2c4e25eef09f46ecd68aa) )
+	ROM_LOAD16_BYTE( "d20.uor4",  0x40001, 0x20000, CRC(c35cc03d) SHA1(cbf51cee2a39e3ea3d421a9e0b2422b1ad306031))
+ROM_END
+
 
 /* Choky Choky */
 
@@ -3472,7 +3536,7 @@ DRIVER_INIT_MEMBER(tumbleb_state,htchctch)
 void tumbleb_state::suprtrio_decrypt_code()
 {
 	UINT16 *rom = (UINT16 *)memregion("maincpu")->base();
-	UINT16 *buf = auto_alloc_array(machine(), UINT16, 0x80000/2);
+	dynamic_array<UINT16> buf(0x80000/2);
 	int i;
 
 	/* decrypt main ROMs */
@@ -3484,13 +3548,12 @@ void tumbleb_state::suprtrio_decrypt_code()
 		if ((i & 3) == 0) j ^= 0x08;
 		rom[i] = buf[j];
 	}
-	auto_free(machine(), buf);
 }
 
 void tumbleb_state::suprtrio_decrypt_gfx()
 {
 	UINT16 *rom = (UINT16 *)memregion("tilegfx")->base();
-	UINT16 *buf = auto_alloc_array(machine(), UINT16, 0x100000/2);
+	dynamic_array<UINT16> buf(0x100000/2);
 	int i;
 
 	/* decrypt tiles */
@@ -3501,7 +3564,6 @@ void tumbleb_state::suprtrio_decrypt_gfx()
 		if (i & 1) j ^= 0x04;
 		rom[i] = buf[j];
 	}
-	auto_free(machine(), buf);
 }
 
 DRIVER_INIT_MEMBER(tumbleb_state,suprtrio)
@@ -3515,7 +3577,7 @@ DRIVER_INIT_MEMBER(tumbleb_state,chokchok)
 	DRIVER_INIT_CALL(htchctch);
 
 	/* different palette format, closer to tumblep -- is this controlled by a register? the palette was right with the hatch catch trojan */
-	m_maincpu->space(AS_PROGRAM).install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), this));
+	m_maincpu->space(AS_PROGRAM).install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(palette_device::write), m_palette.target()));
 
 	/* slightly different banking */
 	m_maincpu->space(AS_PROGRAM).install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),this));
@@ -3558,25 +3620,41 @@ DRIVER_INIT_MEMBER(tumbleb_state,dquizgo)
 GAME( 1991, tumbleb,  tumblep, tumblepb,    tumblepb, tumbleb_state, tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
 GAME( 1991, tumbleb2, tumblep, tumbleb2,    tumblepb, tumbleb_state, tumbleb2, ROT0, "bootleg", "Tumble Pop (bootleg with PIC)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
 GAME( 1991, tumblepba, tumblep, tumblepb,    tumblepb, tumbleb_state, tumblepba, ROT0, "bootleg (Playmark)", "Tumble Pop (Playmark bootleg)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE | GAME_NOT_WORKING  ) // Playmark stickers on ROMs
+
 GAME( 1993, jumpkids, 0,       jumpkids,    tumblepb, tumbleb_state, jumpkids, ROT0, "Comad",    "Jump Kids", GAME_SUPPORTS_SAVE )
+
 GAME( 1994, pangpang, 0,       pangpang,    tumblepb, tumbleb_state, tumbleb2, ROT0, "Dong Gue La Mi Ltd.", "Pang Pang", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
 
 /* Misc 'bootleg' hardware - more changes from base hardware */
 GAME( 1994, suprtrio, 0,       suprtrio,    suprtrio, tumbleb_state, suprtrio, ROT0, "Gameace", "Super Trio", GAME_SUPPORTS_SAVE )
+
 GAME( 1996, fncywld,  0,       fncywld,     fncywld, tumbleb_state,  fncywld,  ROT0, "Unico",   "Fancy World - Earth of Crisis" , GAME_SUPPORTS_SAVE ) // game says 1996, testmode 1995?
+
 // Unico - Magic Purple almost certainly goes here
 
 /* First Amusement / Mijin / SemiCom hardware (MCU protected) */
 GAME( 1994, metlsavr, 0,       metlsavr,    metlsavr, tumbleb_state, chokchok, ROT0, "First Amusement", "Metal Saver", GAME_SUPPORTS_SAVE )
+
 GAME( 1994, magicbal, 0,       metlsavr,    magicbal, tumbleb_state, chokchok, ROT0, "SemiCom", "Magicball Fighting (Korea)", GAME_SUPPORTS_SAVE) // also still has the Metal Saver (c)1994 First Amusement tiles in the GFX
+
 GAME( 1995, chokchok, 0,       chokchok,    chokchok, tumbleb_state, chokchok, ROT0, "SemiCom", "Choky! Choky!", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE  )
+
 GAME( 1995, wlstar,   0,       cookbib_mcu, wlstar, tumbleb_state,   wlstar,   ROT0, "Mijin",   "Wonder League Star - Sok-Magicball Fighting (Korea)", GAME_SUPPORTS_SAVE ) // translates to 'Wonder League Star - Return of Magicball Fighting'
+
 GAME( 1995, htchctch, 0,       htchctch,    htchctch, tumbleb_state, htchctch, ROT0, "SemiCom", "Hatch Catch" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
-GAME( 1995, cookbib,  0,       cookbib,     cookbib, tumbleb_state,  htchctch, ROT0, "SemiCom", "Cookie & Bibi" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
-GAME( 1996, carket,   0,       htchctch,    carket,  tumbleb_state,  carket,   ROT0, "SemiCom", "Carket Ball", GAME_NOT_WORKING  ) // we're not using the MCU data from the right game, audio ends up bad after inserting a coin, maybe other issues
+
+GAME( 1995, cookbib,  0,       cookbib,     cookbib, tumbleb_state,  htchctch, ROT0, "SemiCom", "Cookie & Bibi (set 1)" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
+GAME( 1995, cookbiba, cookbib, cookbib,     cookbib, tumbleb_state,  htchctch, ROT0, "SemiCom", "Cookie & Bibi (set 2)" , GAME_SUPPORTS_SAVE )
+
+GAME( 1996, carket,   0,       htchctch,    carket,  tumbleb_state,  carket,   ROT0, "SemiCom", "Carket Ball", GAME_SUPPORTS_SAVE  )
+
 GAME( 1996, wondl96,  0,       cookbib_mcu, wondl96, tumbleb_state,  wondl96,  ROT0, "SemiCom", "Wonder League '96 (Korea)", GAME_SUPPORTS_SAVE )
+
 GAME( 1996, sdfight,  0,       sdfight,     sdfight, tumbleb_state,  bcstory,  ROT0, "SemiCom", "SD Fighters (Korea)", GAME_SUPPORTS_SAVE )
+
 GAME( 1997, bcstry,   0,       bcstory,     bcstory, tumbleb_state,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
 GAME( 1997, bcstrya,  bcstry,  bcstory,     bcstory, tumbleb_state,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 2)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
+
 GAME( 1997, semibase, 0,       semibase,    semibase, tumbleb_state, bcstory,  ROT0, "SemiCom", "MuHanSeungBu (SemiCom Baseball) (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )// sprite offsets..
+
 GAME( 1998, dquizgo,  0,       cookbib,     dquizgo, tumbleb_state,  dquizgo,  ROT0, "SemiCom", "Date Quiz Go Go (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // check layer offsets

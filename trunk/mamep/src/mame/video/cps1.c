@@ -1325,7 +1325,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"msword",      CPS_B_13,     mapper_MS24B },
 	{"mswordr1",    CPS_B_13,     mapper_MS24B },
 	{"mswordu",     CPS_B_13,     mapper_MS24B },
-	{"mswordj",     CPS_B_13,     mapper_MS24B },   // wrong, this set uses MS22B, still not dumped
+	{"mswordj",     CPS_B_13,     mapper_MS24B },   // wrong, this set uses MS22B, dumped but equations still not added
 	{"mtwins",      CPS_B_14,     mapper_CK24B },
 	{"chikij",      CPS_B_14,     mapper_CK24B },   // wrong, this set uses CK22B, dumped but equations still not added
 	{"nemo",        CPS_B_15,     mapper_NM24B },
@@ -1404,9 +1404,11 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2red",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2v004",     CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2acc",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
+	{"sf2ceblp",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2acca",     CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2accp2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2amf",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 }, // probably wrong but this set is not completely dumped anyway
+	{"sf2amf2",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2dkot2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m1",       CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m2",       CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1427,6 +1429,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2koryu",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2mdtb",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlona",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlonb",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"varth",       CPS_B_04,     mapper_VA63B },   /* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */  // wrong, this set uses VA24B, dumped but equations still not added
@@ -1486,7 +1489,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"pang3r1",     CPS_B_21_DEF, mapper_pang3 },   /* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */   // should use one of these three CP1B1F,CP1B8K,CP1B9K
 	{"pang3j",      CPS_B_21_DEF, mapper_pang3 },   /* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */   // should use one of these three CP1B1F,CP1B8K,CP1B9K
 	{"pang3b",      CPS_B_21_DEF, mapper_pang3 },   /* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */   // should use one of these three CP1B1F,CP1B8K,CP1B9K
-	{"ganbare",     CPS_B_21_DEF, mapper_sfzch },   // wrong, this set uses GBPR2, still not dumped
+	{"ganbare",     CPS_B_21_DEF, mapper_sfzch },   // wrong, this set uses GBPR2, dumped but equations still not added
 
 	/* CPS Changer */
 
@@ -1747,39 +1750,6 @@ WRITE16_MEMBER(cps_state::cps1_cps_b_w)
 }
 
 
-
-void cps_state::cps1_gfx_decode()
-{
-	int size = memregion("gfx")->bytes();
-	int i, j, gfxsize;
-	UINT8 *cps1_gfx = memregion("gfx")->base();
-
-	gfxsize = size / 4;
-
-	for (i = 0; i < gfxsize; i++)
-	{
-		UINT32 src = cps1_gfx[4 * i] + (cps1_gfx[4 * i + 1] << 8) + (cps1_gfx[4 * i + 2] << 16) + (cps1_gfx[4 * i + 3] << 24);
-		UINT32 dwval = 0;
-
-		for (j = 0; j < 8; j++)
-		{
-			int n = 0;
-			UINT32 mask = (0x80808080 >> j) & src;
-
-			if (mask & 0x000000ff) n |= 1;
-			if (mask & 0x0000ff00) n |= 2;
-			if (mask & 0x00ff0000) n |= 4;
-			if (mask & 0xff000000) n |= 8;
-
-			dwval |= n << (j * 4);
-		}
-		cps1_gfx[4 *i    ] = dwval >> 0;
-		cps1_gfx[4 *i + 1] = dwval >> 8;
-		cps1_gfx[4 *i + 2] = dwval >> 16;
-		cps1_gfx[4 *i + 3] = dwval >> 24;
-	}
-}
-
 void cps_state::unshuffle( UINT64 *buf, int len )
 {
 	int i;
@@ -1803,6 +1773,7 @@ void cps_state::unshuffle( UINT64 *buf, int len )
 	}
 }
 
+
 void cps_state::cps2_gfx_decode()
 {
 	const int banksize = 0x200000;
@@ -1811,15 +1782,11 @@ void cps_state::cps2_gfx_decode()
 
 	for (i = 0; i < size; i += banksize)
 		unshuffle((UINT64 *)(memregion("gfx")->base() + i), banksize / 8);
-
-	cps1_gfx_decode();
 }
 
 
 DRIVER_INIT_MEMBER(cps_state,cps1)
 {
-	cps1_gfx_decode();
-
 	m_scanline1 = 0;
 	m_scanline2 = 0;
 	m_scancalls = 0;
@@ -2061,8 +2028,7 @@ TILE_GET_INFO_MEMBER(cps_state::get_tile0_info)
 	     should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
-	SET_TILE_INFO_MEMBER(
-			gfxset,
+	SET_TILE_INFO_MEMBER(gfxset,
 			code,
 			(attr & 0x1f) + 0x20,
 			TILE_FLIPYX((attr & 0x60) >> 5));
@@ -2081,8 +2047,7 @@ TILE_GET_INFO_MEMBER(cps_state::get_tile1_info)
 
 	code = gfxrom_bank_mapper(GFXTYPE_SCROLL2, code);
 
-	SET_TILE_INFO_MEMBER(
-			2,
+	SET_TILE_INFO_MEMBER(2,
 			code,
 			(attr & 0x1f) + 0x40,
 			TILE_FLIPYX((attr & 0x60) >> 5));
@@ -2105,8 +2070,7 @@ TILE_GET_INFO_MEMBER(cps_state::get_tile2_info)
 
 	code = gfxrom_bank_mapper(GFXTYPE_SCROLL3, code);
 
-	SET_TILE_INFO_MEMBER(
-			3,
+	SET_TILE_INFO_MEMBER(3,
 			code,
 			(attr & 0x1f) + 0x60,
 			TILE_FLIPYX((attr & 0x60) >> 5));
@@ -2156,9 +2120,9 @@ VIDEO_START_MEMBER(cps_state,cps)
 	m_stars_rom_size = 0x2000;  /* first 0x4000 of gfx ROM are used, but 0x0000-0x1fff is == 0x2000-0x3fff */
 
 	/* create tilemaps */
-	m_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cps_state::get_tile0_info),this), tilemap_mapper_delegate(FUNC(cps_state::tilemap0_scan),this),  8,  8, 64, 64);
-	m_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cps_state::get_tile1_info),this), tilemap_mapper_delegate(FUNC(cps_state::tilemap1_scan),this), 16, 16, 64, 64);
-	m_bg_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cps_state::get_tile2_info),this), tilemap_mapper_delegate(FUNC(cps_state::tilemap2_scan),this), 32, 32, 64, 64);
+	m_bg_tilemap[0] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(cps_state::get_tile0_info),this), tilemap_mapper_delegate(FUNC(cps_state::tilemap0_scan),this),  8,  8, 64, 64);
+	m_bg_tilemap[1] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(cps_state::get_tile1_info),this), tilemap_mapper_delegate(FUNC(cps_state::tilemap1_scan),this), 16, 16, 64, 64);
+	m_bg_tilemap[2] = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(cps_state::get_tile2_info),this), tilemap_mapper_delegate(FUNC(cps_state::tilemap2_scan),this), 32, 32, 64, 64);
 
 	/* create empty tiles */
 	memset(m_empty_tile, 0x0f, sizeof(m_empty_tile));
@@ -2167,7 +2131,7 @@ VIDEO_START_MEMBER(cps_state,cps)
 	cps1_update_transmasks();
 
 	for (i = 0; i < cps1_palette_entries * 16; i++)
-		palette_set_color(machine(), i, MAKE_RGB(0,0,0));
+		m_palette->set_pen_color(i, rgb_t(0,0,0));
 
 	m_buffered_obj = auto_alloc_array_clear(machine(), UINT16, m_obj_size / 2);
 
@@ -2286,7 +2250,7 @@ void cps_state::cps1_build_palette( const UINT16* const palette_base )
 				g = ((palette >> 4) & 0x0f) * 0x11 * bright / 0x2d;
 				b = ((palette >> 0) & 0x0f) * 0x11 * bright / 0x2d;
 
-				palette_set_color (machine(), 0x200 * page + offset, MAKE_RGB(r, g, b));
+				m_palette->set_pen_color (0x200 * page + offset, rgb_t(r, g, b));
 			}
 		}
 		else
@@ -2373,15 +2337,15 @@ void cps_state::cps1_render_sprites( screen_device &screen, bitmap_ind16 &bitmap
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)                    \
 {                                                                   \
 	if (flip_screen())                                           \
-		pdrawgfx_transpen(bitmap,\
-				cliprect,machine().gfx[2],                            \
+		m_gfxdecode->gfx(2)->prio_transpen(bitmap,\
+				cliprect,                            \
 				CODE,                                               \
 				COLOR,                                              \
 				!(FLIPX),!(FLIPY),                                  \
-				511-16-(SX),255-16-(SY),    screen.priority(),0x02,15);                   \
+				512-16-(SX),256-16-(SY),    screen.priority(),0x02,15);                   \
 	else                                                            \
-		pdrawgfx_transpen(bitmap,\
-				cliprect,machine().gfx[2],                            \
+		m_gfxdecode->gfx(2)->prio_transpen(bitmap,\
+				cliprect,                            \
 				CODE,                                               \
 				COLOR,                                              \
 				FLIPX,FLIPY,                                        \
@@ -2606,15 +2570,15 @@ void cps_state::cps2_render_sprites( screen_device &screen, bitmap_ind16 &bitmap
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)                                    \
 {                                                                                   \
 	if (flip_screen())                                                           \
-		pdrawgfx_transpen(bitmap,\
-				cliprect,machine().gfx[2],                                            \
+		m_gfxdecode->gfx(2)->prio_transpen(bitmap,\
+				cliprect,                                            \
 				CODE,                                                               \
 				COLOR,                                                              \
 				!(FLIPX),!(FLIPY),                                                  \
-				511-16-(SX),255-16-(SY), screen.priority(),primasks[priority],15);                 \
+				512-16-(SX),256-16-(SY), screen.priority(),primasks[priority],15);                 \
 	else                                                                            \
-		pdrawgfx_transpen(bitmap,\
-				cliprect,machine().gfx[2],                                            \
+		m_gfxdecode->gfx(2)->prio_transpen(bitmap,\
+				cliprect,                                            \
 				CODE,                                                               \
 				COLOR,                                                              \
 				FLIPX,FLIPY,                                                        \
@@ -2774,8 +2738,8 @@ void cps_state::cps1_render_stars( screen_device &screen, bitmap_ind16 &bitmap, 
 				sy = (sy - m_stars2y) & 0xff;
 				if (flip_screen())
 				{
-					sx = 511 - sx;
-					sy = 255 - sy;
+					sx = 512 - sx;
+					sy = 256 - sy;
 				}
 
 				col = ((col & 0xe0) >> 1) + (screen.frame_number() / 16 & 0x0f);
@@ -2799,8 +2763,8 @@ void cps_state::cps1_render_stars( screen_device &screen, bitmap_ind16 &bitmap, 
 				sy = (sy - m_stars1y) & 0xff;
 				if (flip_screen())
 				{
-					sx = 511 - sx;
-					sy = 255 - sy;
+					sx = 512 - sx;
+					sy = 256 - sy;
 				}
 
 				col = ((col & 0xe0) >> 1) + (screen.frame_number() / 16 & 0x0f);
@@ -2909,7 +2873,7 @@ UINT32 cps_state::screen_update_cps1(screen_device &screen, bitmap_ind16 &bitmap
 		// Maybe Capcom changed the background handling due to the problems that
 		// it caused on several monitors (because the background extended into the
 		// blanking area instead of going black, causing the monitor to clip).
-		bitmap.fill(get_black_pen(machine()), cliprect);
+		bitmap.fill(m_palette->black_pen(), cliprect);
 	}
 
 	cps1_render_stars(screen, bitmap, cliprect);

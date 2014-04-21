@@ -819,9 +819,10 @@ static MACHINE_CONFIG_START( bssoccer, suna16_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_suna16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(suna16)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", suna16)
+	MCFG_PALETTE_ADD("palette", 512)
 
 
 	/* sound hardware */
@@ -877,9 +878,10 @@ static MACHINE_CONFIG_START( uballoon, suna16_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_suna16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(suna16)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", suna16)
+	MCFG_PALETTE_ADD("palette", 512)
 
 
 	/* sound hardware */
@@ -925,9 +927,10 @@ static MACHINE_CONFIG_START( sunaq, suna16_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_suna16)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(suna16)
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", suna16)
+	MCFG_PALETTE_ADD("palette", 512)
 
 
 	/* sound hardware */
@@ -986,9 +989,10 @@ static MACHINE_CONFIG_START( bestbest, suna16_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(suna16_state, screen_update_bestbest)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(bestbest)
-	MCFG_PALETTE_LENGTH(256*8)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", bestbest)
+	MCFG_PALETTE_ADD("palette", 256*8)
 
 
 	/* sound hardware */

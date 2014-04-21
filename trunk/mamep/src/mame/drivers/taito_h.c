@@ -246,7 +246,7 @@ static ADDRESS_MAP_START( syvalion_map, AS_PROGRAM, 16, taitoh_state )
 	AM_RANGE(0x300000, 0x300001) AM_READNOP AM_DEVWRITE8("tc0140syt", tc0140syt_device, tc0140syt_port_w, 0x00ff)
 	AM_RANGE(0x300002, 0x300003) AM_DEVREADWRITE8("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w, 0x00ff)
 	AM_RANGE(0x400000, 0x420fff) AM_DEVREADWRITE("tc0080vco", tc0080vco_device, word_r, word_w)
-	AM_RANGE(0x500800, 0x500fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x500800, 0x500fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( recordbr_map, AS_PROGRAM, 16, taitoh_state )
@@ -257,7 +257,7 @@ static ADDRESS_MAP_START( recordbr_map, AS_PROGRAM, 16, taitoh_state )
 	AM_RANGE(0x300000, 0x300001) AM_READNOP AM_DEVWRITE8("tc0140syt", tc0140syt_device, tc0140syt_port_w, 0x00ff)
 	AM_RANGE(0x300002, 0x300003) AM_DEVREADWRITE8("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w, 0x00ff)
 	AM_RANGE(0x400000, 0x420fff) AM_DEVREADWRITE("tc0080vco", tc0080vco_device, word_r, word_w)
-	AM_RANGE(0x500800, 0x500fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x500800, 0x500fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tetristh_map, AS_PROGRAM, 16, taitoh_state )
@@ -268,7 +268,7 @@ static ADDRESS_MAP_START( tetristh_map, AS_PROGRAM, 16, taitoh_state )
 	AM_RANGE(0x300000, 0x300001) AM_DEVREADWRITE8("tc0220ioc", tc0220ioc_device, portreg_r, portreg_w, 0x00ff)
 	AM_RANGE(0x300002, 0x300003) AM_DEVREADWRITE8("tc0220ioc", tc0220ioc_device, port_r, port_w, 0x00ff)
 	AM_RANGE(0x400000, 0x420fff) AM_DEVREADWRITE("tc0080vco", tc0080vco_device, word_r, word_w)
-	AM_RANGE(0x500800, 0x500fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x500800, 0x500fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dleague_map, AS_PROGRAM, 16, taitoh_state )
@@ -278,7 +278,7 @@ static ADDRESS_MAP_START( dleague_map, AS_PROGRAM, 16, taitoh_state )
 	AM_RANGE(0x300000, 0x300001) AM_READNOP AM_DEVWRITE8("tc0140syt", tc0140syt_device, tc0140syt_port_w, 0x00ff)
 	AM_RANGE(0x300002, 0x300003) AM_DEVREADWRITE8("tc0140syt", tc0140syt_device, tc0140syt_comm_r, tc0140syt_comm_w, 0x00ff)
 	AM_RANGE(0x400000, 0x420fff) AM_DEVREADWRITE("tc0080vco", tc0080vco_device, word_r, word_w)
-	AM_RANGE(0x500800, 0x500fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x500800, 0x500fff) AM_RAM_DEVWRITE("palette", palette_device, write) AM_SHARE("palette")
 	AM_RANGE(0x600000, 0x600001) AM_WRITENOP    /* ?? writes zero once per frame */
 ADDRESS_MAP_END
 
@@ -603,6 +603,7 @@ static const gfx_layout tilelayout =
 	16*16
 };
 
+#if 0
 static const gfx_layout charlayout =
 {
 	8, 8,   /* 8x8 pixels */
@@ -613,6 +614,7 @@ static const gfx_layout charlayout =
 	{ 16*0, 16*1, 16*2, 16*3, 16*4, 16*5, 16*6, 16*7 },
 	16*8
 };
+#endif
 
 
 static GFXDECODE_START( syvalion )
@@ -658,12 +660,6 @@ static const tc0080vco_interface recordbr_tc0080vco_intf =
 	0
 };
 
-static const tc0220ioc_interface taitoh_io_intf =
-{
-	DEVCB_INPUT_PORT("DSWA"), DEVCB_INPUT_PORT("DSWB"),
-	DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_INPUT_PORT("IN2")   /* port read handlers */
-};
-
 static const tc0140syt_interface taitoh_tc0140syt_intf =
 {
 	"maincpu", "audiocpu"
@@ -682,7 +678,12 @@ static MACHINE_CONFIG_START( syvalion, taitoh_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_TC0220IOC_ADD("tc0220ioc", taitoh_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -691,11 +692,15 @@ static MACHINE_CONFIG_START( syvalion, taitoh_state )
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 32*16-1, 3*16, 28*16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitoh_state, screen_update_syvalion)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(syvalion)
-	MCFG_PALETTE_LENGTH(33*16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", syvalion)
+	MCFG_PALETTE_ADD("palette", 33*16)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_TC0080VCO_ADD("tc0080vco", syvalion_tc0080vco_intf)
+	MCFG_TC0080VCO_GFXDECODE("gfxdecode")
+	MCFG_TC0080VCO_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -723,7 +728,12 @@ static MACHINE_CONFIG_START( recordbr, taitoh_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_TC0220IOC_ADD("tc0220ioc", taitoh_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -732,11 +742,15 @@ static MACHINE_CONFIG_START( recordbr, taitoh_state )
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(1*16, 21*16-1, 2*16, 17*16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitoh_state, screen_update_recordbr)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(recordbr)
-	MCFG_PALETTE_LENGTH(32*16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", recordbr)
+	MCFG_PALETTE_ADD("palette", 32*16)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_TC0080VCO_ADD("tc0080vco", recordbr_tc0080vco_intf)
+	MCFG_TC0080VCO_GFXDECODE("gfxdecode")
+	MCFG_TC0080VCO_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -772,7 +786,12 @@ static MACHINE_CONFIG_START( dleague, taitoh_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_TC0220IOC_ADD("tc0220ioc", taitoh_io_intf)
+	MCFG_DEVICE_ADD("tc0220ioc", TC0220IOC, 0)
+	MCFG_TC0220IOC_READ_0_CB(IOPORT("DSWA"))
+	MCFG_TC0220IOC_READ_1_CB(IOPORT("DSWB"))
+	MCFG_TC0220IOC_READ_2_CB(IOPORT("IN0"))
+	MCFG_TC0220IOC_READ_3_CB(IOPORT("IN1"))
+	MCFG_TC0220IOC_READ_7_CB(IOPORT("IN2"))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -781,11 +800,15 @@ static MACHINE_CONFIG_START( dleague, taitoh_state )
 	MCFG_SCREEN_SIZE(64*16, 64*16)
 	MCFG_SCREEN_VISIBLE_AREA(1*16, 21*16-1, 2*16, 17*16-1)
 	MCFG_SCREEN_UPDATE_DRIVER(taitoh_state, screen_update_dleague)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(dleague)
-	MCFG_PALETTE_LENGTH(33*16)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", dleague)
+	MCFG_PALETTE_ADD("palette", 33*16)
+	MCFG_PALETTE_FORMAT(xBBBBBGGGGGRRRRR)
 
 	MCFG_TC0080VCO_ADD("tc0080vco", recordbr_tc0080vco_intf)
+	MCFG_TC0080VCO_GFXDECODE("gfxdecode")
+	MCFG_TC0080VCO_PALETTE("palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

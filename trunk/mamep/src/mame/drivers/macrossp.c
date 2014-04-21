@@ -300,7 +300,7 @@ WRITE32_MEMBER(macrossp_state::paletteram32_macrossp_w)
 	g = ((m_paletteram[offset] & 0x00ff0000) >>16);
 	r = ((m_paletteram[offset] & 0xff000000) >>24);
 
-	palette_set_color(machine(), offset, MAKE_RGB(r,g,b));
+	m_palette->set_pen_color(offset, rgb_t(r,g,b));
 }
 
 
@@ -361,7 +361,7 @@ void macrossp_state::update_colors(  )
 		else
 			r -= m_fade_effect;
 
-		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
+		m_palette->set_pen_color(i, rgb_t(r, g, b));
 	}
 }
 
@@ -615,8 +615,8 @@ static MACHINE_CONFIG_START( macrossp, macrossp_state )
 	MCFG_SCREEN_UPDATE_DRIVER(macrossp_state, screen_update_macrossp)
 	MCFG_SCREEN_VBLANK_DRIVER(macrossp_state, screen_eof_macrossp)
 
-	MCFG_GFXDECODE(macrossp)
-	MCFG_PALETTE_LENGTH(0x1000)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", macrossp)
+	MCFG_PALETTE_ADD("palette", 0x1000)
 
 
 	/* sound hardware */
@@ -765,5 +765,5 @@ DRIVER_INIT_MEMBER(macrossp_state,quizmoon)
 #endif
 }
 
-GAME( 1996, macrossp, 0, macrossp, macrossp, macrossp_state, macrossp, ROT270, "Banpresto", "Macross Plus", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1996, macrossp, 0, macrossp, macrossp, macrossp_state, macrossp, ROT270, "MOSS / Banpresto", "Macross Plus", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
 GAME( 1997, quizmoon, 0, quizmoon, quizmoon, macrossp_state, quizmoon, ROT0,   "Banpresto", "Quiz Bisyoujo Senshi Sailor Moon - Chiryoku Tairyoku Toki no Un", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )

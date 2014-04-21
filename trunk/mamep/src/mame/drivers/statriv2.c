@@ -86,7 +86,9 @@ public:
 		m_maincpu(*this, "maincpu"),
 		m_tms(*this, "tms"),
 		m_videoram(*this, "videoram"),
-		m_question_offset(*this, "question_offset")
+		m_question_offset(*this, "question_offset"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette")
 			{ }
 
 	required_device<cpu_device> m_maincpu;
@@ -94,6 +96,8 @@ public:
 	required_shared_ptr<UINT8> m_videoram;
 	tilemap_t *m_tilemap;
 	required_shared_ptr<UINT8> m_question_offset;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 	UINT8 m_question_offset_low;
 	UINT8 m_question_offset_mid;
 	UINT8 m_question_offset_high;
@@ -114,7 +118,7 @@ public:
 	TILE_GET_INFO_MEMBER(horizontal_tile_info);
 	TILE_GET_INFO_MEMBER(vertical_tile_info);
 	virtual void video_start();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(statriv2);
 	DECLARE_VIDEO_START(vertical);
 	UINT32 screen_update_statriv2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	INTERRUPT_GEN_MEMBER(statriv2_interrupt);
@@ -156,25 +160,25 @@ TILE_GET_INFO_MEMBER(statriv2_state::vertical_tile_info)
  *
  *************************************/
 
-void statriv2_state::palette_init()
+PALETTE_INIT_MEMBER(statriv2_state, statriv2)
 {
 	int i;
 
 	for (i = 0; i < 64; i++)
 	{
-		palette_set_color_rgb(machine(), 2*i+0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
-		palette_set_color_rgb(machine(), 2*i+1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
+		palette.set_pen_color(2*i+0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
+		palette.set_pen_color(2*i+1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
 	}
 }
 
 void statriv2_state::video_start()
 {
-	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(statriv2_state::horizontal_tile_info),this) ,TILEMAP_SCAN_ROWS, 8,15, 64,16);
+	m_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(statriv2_state::horizontal_tile_info),this) ,TILEMAP_SCAN_ROWS, 8,15, 64,16);
 }
 
 VIDEO_START_MEMBER(statriv2_state,vertical)
 {
-	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(statriv2_state::vertical_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 32,32);
+	m_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(statriv2_state::vertical_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 32,32);
 }
 
 
@@ -203,7 +207,7 @@ WRITE8_MEMBER(statriv2_state::statriv2_videoram_w)
 UINT32 statriv2_state::screen_update_statriv2(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	if (m_tms->screen_reset())
-		bitmap.fill(get_black_pen(machine()), cliprect);
+		bitmap.fill(m_palette->black_pen(), cliprect);
 	else
 		m_tilemap->draw(screen, bitmap, cliprect, 0, 0);
 	return 0;
@@ -620,12 +624,13 @@ static MACHINE_CONFIG_START( statriv2, statriv2_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 384, 0, 320, 270, 0, 240)
 	MCFG_SCREEN_UPDATE_DRIVER(statriv2_state, screen_update_statriv2)
+	MCFG_SCREEN_PALETTE("palette")
 
 	MCFG_TMS9927_ADD("tms", MASTER_CLOCK/2, tms9927_intf)
 
-	MCFG_GFXDECODE(horizontal)
-	MCFG_PALETTE_LENGTH(2*64)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", horizontal)
+	MCFG_PALETTE_ADD("palette", 2*64)
+	MCFG_PALETTE_INIT_OWNER(statriv2_state, statriv2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -642,7 +647,7 @@ static MACHINE_CONFIG_DERIVED( statriv2v, statriv2 )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 392, 0, 256, 262, 0, 256)
 
 	MCFG_VIDEO_START_OVERRIDE(statriv2_state,vertical)
-	MCFG_GFXDECODE(vertical)
+	MCFG_GFXDECODE_MODIFY("gfxdecode", vertical)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( funcsino, statriv2 )

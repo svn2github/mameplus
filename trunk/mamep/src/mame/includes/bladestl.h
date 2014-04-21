@@ -18,7 +18,9 @@ public:
 		m_k007342(*this, "k007342"),
 		m_k007420(*this, "k007420"),
 		m_maincpu(*this, "maincpu"),
-		m_upd7759(*this, "upd") { }
+		m_upd7759(*this, "upd"),
+		m_gfxdecode(*this, "gfxdecode"),
+		m_palette(*this, "palette") { }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_paletteram;
@@ -42,13 +44,14 @@ public:
 	DECLARE_WRITE8_MEMBER(bladestl_speech_ctrl_w);
 	virtual void machine_start();
 	virtual void machine_reset();
-	virtual void palette_init();
+	DECLARE_PALETTE_INIT(bladestl);
 	UINT32 screen_update_bladestl(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	TIMER_DEVICE_CALLBACK_MEMBER(bladestl_scanline);
 	required_device<cpu_device> m_maincpu;
 	required_device<upd7759_device> m_upd7759;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
+	void set_pens();
+	K007342_CALLBACK_MEMBER(bladestl_tile_callback);
+	K007420_CALLBACK_MEMBER(bladestl_sprite_callback);
 };
-
-/*----------- defined in video/bladestl.c -----------*/
-void bladestl_tile_callback(running_machine &machine, int layer, int bank, int *code, int *color, int *flags);
-void bladestl_sprite_callback(running_machine &machine, int *code, int *color);

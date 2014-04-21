@@ -24,7 +24,9 @@ public:
 			m_z80_mainram(*this, "z80_mainram"),
 			m_mainram(*this, "sram"),
 			m_maincpu(*this, "maincpu"),
-			m_soundcpu(*this, "soundcpu")
+			m_soundcpu(*this, "soundcpu"),
+			m_gfxdecode(*this, "gfxdecode"),
+			m_palette(*this, "palette")
 		{
 			m_irq4_disabled = 0;
 		}
@@ -51,6 +53,8 @@ public:
 	/* devices */
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_soundcpu;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 	device_t *m_ics;
 
 	/* used by rendering */
@@ -80,6 +84,7 @@ public:
 	DECLARE_WRITE8_MEMBER(z80_l3_w);
 	DECLARE_WRITE16_MEMBER(pgm_tx_videoram_w);
 	DECLARE_WRITE16_MEMBER(pgm_bg_videoram_w);
+	DECLARE_WRITE_LINE_MEMBER(pgm_sound_irq);
 
 	DECLARE_DRIVER_INIT(pgm);
 
@@ -100,8 +105,7 @@ public:
 	void draw_sprite_line_basic( int wide, UINT16* dest, UINT8* destpri, int flip, int xpos, int pri, int realxsize, int palt, int draw );
 	void draw_sprite_new_basic( int wide, int high, int xpos, int ypos, int palt, int flip, bitmap_ind16 &bitmap, bitmap_ind8 &priority_bitmap, int pri );
 	void draw_sprites( bitmap_ind16& spritebitmap, UINT16 *sprite_source, bitmap_ind8& priority_bitmap );
-	void expand_32x32x5bpp();
-	void expand_colourdata(  );
+	void expand_colourdata();
 	void pgm_basic_init( bool set_bank = true);
 };
 

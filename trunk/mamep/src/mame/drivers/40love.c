@@ -963,12 +963,6 @@ static const ay8910_interface ay8910_config =
 	DEVCB_DRIVER_MEMBER(fortyl_state,sound_control_3_w)
 };
 
-static const msm5232_interface msm5232_config =
-{
-	{ 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6 }, /* 1.0 uF capacitors (verified on real PCB) */
-	DEVCB_NULL
-};
-
 /*******************************************************************************/
 
 MACHINE_START_MEMBER(fortyl_state,40love)
@@ -1073,10 +1067,11 @@ static MACHINE_CONFIG_START( 40love, fortyl_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(128,128+255, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(fortyl_state, screen_update_fortyl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(40love)
-	MCFG_PALETTE_LENGTH(1024)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 40love)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_INIT_OWNER(fortyl_state, fortyl)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1086,7 +1081,7 @@ static MACHINE_CONFIG_START( 40love, fortyl_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	MCFG_SOUND_ADD("msm", MSM5232, 8000000/4)
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6) /* 1.0 uF capacitors (verified on real PCB) */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1
@@ -1128,10 +1123,11 @@ static MACHINE_CONFIG_START( undoukai, fortyl_state )
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(128,128+255, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_DRIVER(fortyl_state, screen_update_fortyl)
+	MCFG_SCREEN_PALETTE("palette")
 
-	MCFG_GFXDECODE(40love)
-	MCFG_PALETTE_LENGTH(1024)
-
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", 40love)
+	MCFG_PALETTE_ADD("palette", 1024)
+	MCFG_PALETTE_INIT_OWNER(fortyl_state, fortyl)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1141,7 +1137,7 @@ static MACHINE_CONFIG_START( undoukai, fortyl_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	MCFG_SOUND_ADD("msm", MSM5232, 8000000/4)
-	MCFG_SOUND_CONFIG(msm5232_config)
+	MCFG_MSM5232_SET_CAPACITORS(1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6, 1.0e-6) /* 1.0 uF capacitors (verified on real PCB) */
 	MCFG_SOUND_ROUTE(0, "mono", 1.0)    // pin 28  2'-1
 	MCFG_SOUND_ROUTE(1, "mono", 1.0)    // pin 29  4'-1
 	MCFG_SOUND_ROUTE(2, "mono", 1.0)    // pin 30  8'-1

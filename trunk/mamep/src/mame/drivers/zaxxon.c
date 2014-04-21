@@ -930,23 +930,6 @@ GFXDECODE_END
 
 /*************************************
  *
- *  Sound interface
- *
- *************************************/
-
-
-//-------------------------------------------------
-//  sn76496_config psg_intf
-//-------------------------------------------------
-
-static const sn76496_config psg_intf =
-{
-	DEVCB_NULL
-};
-
-
-/*************************************
- *
  *  Machine driver
  *
  *************************************/
@@ -962,12 +945,14 @@ static MACHINE_CONFIG_START( root, zaxxon_state )
 	MCFG_I8255A_ADD( "ppi8255", zaxxon_ppi_intf )
 
 	/* video hardware */
-	MCFG_GFXDECODE(zaxxon)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", zaxxon)
+	MCFG_PALETTE_ADD("palette", 256)
+	MCFG_PALETTE_INIT_OWNER(zaxxon_state, zaxxon)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_DRIVER(zaxxon_state, screen_update_zaxxon)
+	MCFG_SCREEN_PALETTE("palette")
 
 MACHINE_CONFIG_END
 
@@ -1023,7 +1008,10 @@ static MACHINE_CONFIG_DERIVED( congo, root )
 	MCFG_CPU_PERIODIC_INT_DRIVER(zaxxon_state, irq0_line_hold,  (double)SOUND_CLOCK/16/16/16/4)
 
 	/* video hardware */
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(512)
+	MCFG_PALETTE_INIT_OWNER(zaxxon_state, zaxxon)
+
 	MCFG_VIDEO_START_OVERRIDE(zaxxon_state,congo)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_DRIVER(zaxxon_state, screen_update_congo)
@@ -1033,11 +1021,9 @@ static MACHINE_CONFIG_DERIVED( congo, root )
 
 	MCFG_SOUND_ADD("sn1", SN76496, SOUND_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("sn2", SN76496, SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
-	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_FRAGMENT_ADD(congo_samples)
 MACHINE_CONFIG_END

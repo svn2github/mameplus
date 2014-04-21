@@ -249,7 +249,7 @@ VIDEO_START_MEMBER(tmnt_state,tmnt)
 	m_tmnt_priorityflag = 0;
 	save_item(NAME(m_tmnt_priorityflag));
 
-	palette_set_shadow_factor(machine(),0.75);
+	m_palette->set_shadow_factor(0.75);
 }
 
 VIDEO_START_MEMBER(tmnt_state,lgtnfght)/* also tmnt2, ssriders */
@@ -266,7 +266,7 @@ VIDEO_START_MEMBER(tmnt_state,lgtnfght)/* also tmnt2, ssriders */
 
 VIDEO_START_MEMBER(tmnt_state,glfgreat)
 {
-	m_roz_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tmnt_state::glfgreat_get_roz_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 512, 512);
+	m_roz_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tmnt_state::glfgreat_get_roz_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 512, 512);
 	m_roz_tilemap->set_transparent_pen(0);
 
 	m_glfgreat_roz_rom_bank = 0;
@@ -279,7 +279,7 @@ VIDEO_START_MEMBER(tmnt_state,glfgreat)
 
 VIDEO_START_MEMBER(tmnt_state,prmrsocr)
 {
-	m_roz_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tmnt_state::prmrsocr_get_roz_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 512, 256);
+	m_roz_tilemap = &machine().tilemap().create(m_gfxdecode, tilemap_get_info_delegate(FUNC(tmnt_state::prmrsocr_get_roz_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 512, 256);
 	m_roz_tilemap->set_transparent_pen(0);
 
 	m_prmrsocr_sprite_bank = 0;
@@ -307,7 +307,7 @@ WRITE16_MEMBER(tmnt_state::tmnt_paletteram_word_w)
 	offset &= ~1;
 
 	data = (m_generic_paletteram_16[offset] << 8) | m_generic_paletteram_16[offset + 1];
-	palette_set_color_rgb(machine(), offset / 2, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
+	m_palette->set_pen_color(offset / 2, pal5bit(data >> 0), pal5bit(data >> 5), pal5bit(data >> 10));
 }
 
 
@@ -724,21 +724,21 @@ UINT32 tmnt_state::screen_update_tmnt2(screen_device &screen, bitmap_ind16 &bitm
 
 		// dim all colors before it
 		for (i = 0; i < cb; i++)
-			palette_set_pen_contrast(machine(), i, brt);
+			m_palette->set_pen_contrast(i, brt);
 
 		// reset all colors in range
 		for (i = cb; i < ce; i++)
-			palette_set_pen_contrast(machine(), i, 1.0);
+			m_palette->set_pen_contrast(i, 1.0);
 
 		// dim all colors after it
 		for (i = ce; i < 2048; i++)
-			palette_set_pen_contrast(machine(), i, brt);
+			m_palette->set_pen_contrast(i, brt);
 
 		// toggle shadow/highlight
 		if (~m_dim_c & 0x10)
-			palette_set_shadow_mode(machine(), 1);
+			m_palette->set_shadow_mode(1);
 		else
-			palette_set_shadow_mode(machine(), 0);
+			m_palette->set_shadow_mode(0);
 	}
 
 	screen_update_lgtnfght(screen, bitmap, cliprect);
