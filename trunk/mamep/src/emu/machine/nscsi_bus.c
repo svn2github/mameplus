@@ -4,7 +4,7 @@ const device_type NSCSI_BUS = &device_creator<nscsi_bus_device>;
 const device_type NSCSI_CONNECTOR = &device_creator<nscsi_connector>;
 
 nscsi_bus_device::nscsi_bus_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock) :
-	device_t(mconfig, NSCSI_BUS, "SCSI Bus", tag, owner, clock, "nscsi_bus", __FILE__)
+	device_t(mconfig, NSCSI_BUS, "NSCSI Bus", tag, owner, clock, "nscsi_bus", __FILE__)
 {
 	devcnt = 0;
 	memset(dev, 0, sizeof(dev));
@@ -447,7 +447,7 @@ bool nscsi_full_device::command_done()
 
 nscsi_full_device::control *nscsi_full_device::buf_control_push()
 {
-	if(buf_control_wpos == int(sizeof(buf_control)/sizeof(buf_control[0])))
+	if(buf_control_wpos == int(ARRAY_LENGTH(buf_control)))
 		throw emu_fatalerror("%s: buf_control overflow\n", tag());
 
 	control *c = buf_control + buf_control_wpos;

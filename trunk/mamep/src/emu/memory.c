@@ -619,7 +619,7 @@ public:
 	}
 
 	// enable watchpoints by swapping in the watchpoint table
-	void enable_watchpoints(bool enable = true) { m_live_lookup = enable ? s_watchpoint_table : m_table; }
+	void enable_watchpoints(bool enable = true) { m_live_lookup = enable ? s_watchpoint_table : &m_table[0]; }
 
 	// table mapping helpers
 	void map_range(offs_t bytestart, offs_t byteend, offs_t bytemask, offs_t bytemirror, UINT16 staticentry);
@@ -651,7 +651,7 @@ protected:
 	UINT16 *subtable_ptr(UINT16 entry) { return &m_table[level2_index(entry, 0)]; }
 
 	// internal state
-	UINT16 *                m_table;                    // pointer to base of table
+	dynamic_array<UINT16>   m_table;                    // pointer to base of table
 	UINT16 *                m_live_lookup;              // current lookup
 	address_space &         m_space;                    // pointer back to the space
 	bool                    m_large;                    // large memory model?
@@ -669,7 +669,7 @@ protected:
 		UINT32              m_checksum;                 // checksum over all the bytes
 		UINT32              m_usecount;                 // number of times this has been used
 	};
-	subtable_data *         m_subtable;                 // info about each subtable
+	dynamic_array<subtable_data> m_subtable;            // info about each subtable
 	UINT16                  m_subtable_alloc;           // number of subtables allocated
 
 	// static global read-only watchpoint table
@@ -772,7 +772,7 @@ private:
 	}
 
 	// internal state
-	handler_entry_read *        m_handlers[TOTAL_MEMORY_BANKS];        // array of user-installed handlers
+	auto_pointer<handler_entry_read> m_handlers[TOTAL_MEMORY_BANKS];        // array of user-installed handlers
 };
 
 
@@ -838,7 +838,7 @@ private:
 	}
 
 	// internal state
-	handler_entry_write *       m_handlers[TOTAL_MEMORY_BANKS];        // array of user-installed handlers
+	auto_pointer<handler_entry_write> m_handlers[TOTAL_MEMORY_BANKS];        // array of user-installed handlers
 };
 
 // ======================> address_table_setoffset
@@ -852,9 +852,7 @@ public:
 	{
 		// allocate handlers for each entry, prepopulating the bankptrs for banks
 		for (int entrynum = 0; entrynum < ARRAY_LENGTH(m_handlers); entrynum++)
-		{
-			m_handlers[entrynum] = auto_alloc(space.machine(), handler_entry_setoffset());
-		}
+			m_handlers[entrynum].reset(global_alloc(handler_entry_setoffset()));
 
 		// Watchpoints and unmap states do not make sense for setoffset
 		m_handlers[STATIC_NOP]->set_delegate(setoffset_delegate(FUNC(address_table_setoffset::nop_so), this));
@@ -863,8 +861,6 @@ public:
 
 	~address_table_setoffset()
 	{
-		for (int handnum = 0; handnum < ARRAY_LENGTH(m_handlers); handnum++)
-			auto_free(m_space.machine(), m_handlers[handnum]);
 	}
 
 	handler_entry &handler(UINT32 index) const {    assert(index < ARRAY_LENGTH(m_handlers));   return *m_handlers[index]; }
@@ -892,7 +888,7 @@ private:
 	}
 
 	// internal state
-	handler_entry_setoffset *m_handlers[TOTAL_MEMORY_BANKS];        // array of user-installed handlers
+	auto_pointer<handler_entry_setoffset> m_handlers[TOTAL_MEMORY_BANKS];        // array of user-installed handlers
 };
 
 
@@ -1723,7 +1719,6 @@ address_space::address_space(memory_manager &manager, device_memory_interface &m
 	: m_next(NULL),
 		m_config(*memory.space_config(spacenum)),
 		m_device(memory.device()),
-		m_map(NULL),
 		m_addrmask(0xffffffffUL >> (32 - m_config.m_addrbus_width)),
 		m_bytemask(address_to_byte_end(m_addrmask)),
 		m_logaddrmask(0xffffffffUL >> (32 - m_config.m_logaddr_width)),
@@ -1732,7 +1727,7 @@ address_space::address_space(memory_manager &manager, device_memory_interface &m
 		m_spacenum(spacenum),
 		m_debugger_access(false),
 		m_log_unmap(true),
-		m_direct(*auto_alloc(memory.device().machine(), direct_read_data(*this))),
+		m_direct(global_alloc(direct_read_data(*this))),
 		m_name(memory.space_config(spacenum)->name()),
 		m_addrchars((m_config.m_addrbus_width + 3) / 4),
 		m_logaddrchars((m_config.m_logaddr_width + 3) / 4),
@@ -1750,8 +1745,6 @@ address_space::address_space(memory_manager &manager, device_memory_interface &m
 
 address_space::~address_space()
 {
-	auto_free(m_manager.machine(), &m_direct);
-	global_free(m_map);
 }
 
 
@@ -1869,7 +1862,7 @@ void address_space::prepare_map()
 	UINT32 devregionsize = (devregion != NULL) ? devregion->bytes() : 0;
 
 	// allocate the address map
-	m_map = global_alloc(address_map(m_device, m_spacenum));
+	m_map.reset(global_alloc(address_map(m_device, m_spacenum)));
 
 	// merge in the submaps
 	m_map->uplift_submaps(machine(), m_device, *m_device.owner(), endianness());
@@ -1900,7 +1893,7 @@ void address_space::prepare_map()
 			if (manager().m_sharelist.find(device().siblingtag(fulltag, entry->m_share).cstr()) == NULL)
 			{
 				VPRINTF(("Creating share '%s' of length 0x%X\n", fulltag.cstr(), entry->m_byteend + 1 - entry->m_bytestart));
-				memory_share *share = auto_alloc(machine(), memory_share(m_map->m_databits, entry->m_byteend + 1 - entry->m_bytestart, endianness()));
+				memory_share *share = global_alloc(memory_share(m_map->m_databits, entry->m_byteend + 1 - entry->m_bytestart, endianness()));
 				manager().m_sharelist.append(fulltag, *share);
 			}
 		}
@@ -2899,16 +2892,16 @@ memory_bank &address_space::bank_find_or_allocate(const char *tag, offs_t addrst
 //-------------------------------------------------
 
 address_table::address_table(address_space &space, bool large)
-	: m_table(auto_alloc_array(space.machine(), UINT16, 1 << LEVEL1_BITS)),
+	: m_table(1 << LEVEL1_BITS),
 		m_live_lookup(m_table),
 		m_space(space),
 		m_large(large),
-		m_subtable(auto_alloc_array(space.machine(), subtable_data, SUBTABLE_COUNT)),
+		m_subtable(SUBTABLE_COUNT),
 		m_subtable_alloc(0)
 {
 	// make our static table all watchpoints
 	if (s_watchpoint_table[0] != STATIC_WATCHPOINT)
-		for (unsigned int i=0; i != sizeof(s_watchpoint_table)/sizeof(s_watchpoint_table[0]); i++)
+		for (unsigned int i=0; i != ARRAY_LENGTH(s_watchpoint_table); i++)
 			s_watchpoint_table[i] = STATIC_WATCHPOINT;
 
 	// initialize everything to unmapped
@@ -2932,8 +2925,6 @@ address_table::address_table(address_space &space, bool large)
 
 address_table::~address_table()
 {
-	auto_free(m_space.machine(), m_table);
-	auto_free(m_space.machine(), m_subtable);
 }
 
 
@@ -2965,7 +2956,7 @@ void address_table::map_range(offs_t addrstart, offs_t addrend, offs_t addrmask,
 	populate_range_mirrored(bytestart, byteend, bytemirror, entry);
 
 	// recompute any direct access on this space if it is a read modification
-	m_space.m_direct.force_update(entry);
+	m_space.m_direct->force_update(entry);
 
 	//  verify_reference_counts();
 }
@@ -3091,7 +3082,7 @@ void address_table::setup_range_masked(offs_t addrstart, offs_t addrend, offs_t 
 		entries.push_back(entry);
 
 		// recompute any direct access on this space if it is a read modification
-		m_space.m_direct.force_update(entry);
+		m_space.m_direct->force_update(entry);
 	}
 
 	// Ranges in range_partial must duplicated then partially changed
@@ -3134,7 +3125,7 @@ void address_table::setup_range_masked(offs_t addrstart, offs_t addrend, offs_t 
 			entries.push_back(entry);
 
 			// recompute any direct access on this space if it is a read modification
-			m_space.m_direct.force_update(entry);
+			m_space.m_direct->force_update(entry);
 		}
 	}
 
@@ -3312,7 +3303,7 @@ void address_table::populate_range_mirrored(offs_t bytestart, offs_t byteend, of
 			for (int bit = 0; bit < lmirrorbits; bit++)
 				if (lmirrorcount & (1 << bit))
 					lmirrorbase |= lmirrorbit[bit];
-			m_space.m_direct.remove_intersecting_ranges(bytestart + lmirrorbase, byteend + lmirrorbase);
+			m_space.m_direct->remove_intersecting_ranges(bytestart + lmirrorbase, byteend + lmirrorbase);
 		}
 
 		// if this is not our first time through, and the level 2 entry matches the previous
@@ -3494,16 +3485,13 @@ UINT16 address_table::subtable_alloc()
 				// if this is past our allocation budget, allocate some more
 				if (subindex >= m_subtable_alloc)
 				{
-					UINT32 oldsize = (1 << LEVEL1_BITS) + (m_subtable_alloc << level2_bits());
 					m_subtable_alloc += SUBTABLE_ALLOC;
 					UINT32 newsize = (1 << LEVEL1_BITS) + (m_subtable_alloc << level2_bits());
 
-					UINT16 *newtable = auto_alloc_array_clear(m_space.machine(), UINT16, newsize);
-					memcpy(newtable, m_table, 2*oldsize);
-					if (m_live_lookup == m_table)
-						m_live_lookup = newtable;
-					auto_free(m_space.machine(), m_table);
-					m_table = newtable;
+					bool was_live = (m_live_lookup == m_table);
+					m_table.resize_keep_and_clear_new(newsize);
+					if (was_live)
+						m_live_lookup = m_table;
 				}
 				// bump the usecount and return
 				m_subtable[subindex].m_usecount++;
@@ -3757,7 +3745,7 @@ address_table_read::address_table_read(address_space &space, bool large)
 	for (int entrynum = 0; entrynum < ARRAY_LENGTH(m_handlers); entrynum++)
 	{
 		UINT8 **bankptr = (entrynum >= STATIC_BANK1 && entrynum <= STATIC_BANKMAX) ? space.manager().bank_pointer_addr(entrynum) : NULL;
-		m_handlers[entrynum] = auto_alloc(space.machine(), handler_entry_read(space.data_width(), space.endianness(), bankptr));
+		m_handlers[entrynum].reset(global_alloc(handler_entry_read(space.data_width(), space.endianness(), bankptr)));
 	}
 
 	// we have to allocate different object types based on the data bus width
@@ -3805,8 +3793,6 @@ address_table_read::address_table_read(address_space &space, bool large)
 
 address_table_read::~address_table_read()
 {
-	for (int handnum = 0; handnum < ARRAY_LENGTH(m_handlers); handnum++)
-		auto_free(m_space.machine(), m_handlers[handnum]);
 }
 
 
@@ -3833,7 +3819,7 @@ address_table_write::address_table_write(address_space &space, bool large)
 	for (int entrynum = 0; entrynum < ARRAY_LENGTH(m_handlers); entrynum++)
 	{
 		UINT8 **bankptr = (entrynum >= STATIC_BANK1 && entrynum <= STATIC_BANKMAX) ? space.manager().bank_pointer_addr(entrynum) : NULL;
-		m_handlers[entrynum] = auto_alloc(space.machine(), handler_entry_write(space.data_width(), space.endianness(), bankptr));
+		m_handlers[entrynum].reset(global_alloc(handler_entry_write(space.data_width(), space.endianness(), bankptr)));
 	}
 
 	// we have to allocate different object types based on the data bus width
@@ -3881,8 +3867,6 @@ address_table_write::address_table_write(address_space &space, bool large)
 
 address_table_write::~address_table_write()
 {
-	for (int handnum = 0; handnum < ARRAY_LENGTH(m_handlers); handnum++)
-		auto_free(m_space.machine(), m_handlers[handnum]);
 }
 
 
@@ -3998,7 +3982,7 @@ direct_read_data::direct_range *direct_read_data::find_range(offs_t byteaddress,
 	if (range != NULL)
 		m_freerangelist.detach(*range);
 	else
-		range = auto_alloc(m_space.machine(), direct_range);
+		range = global_alloc(direct_range);
 
 	// fill in the range
 	m_space.read().derive_range(byteaddress, range->m_bytestart, range->m_byteend);
@@ -4081,8 +4065,7 @@ memory_block::memory_block(address_space &space, offs_t bytestart, offs_t byteen
 		m_space(space),
 		m_bytestart(bytestart),
 		m_byteend(byteend),
-		m_data(reinterpret_cast<UINT8 *>(memory)),
-		m_allocated(NULL)
+		m_data(reinterpret_cast<UINT8 *>(memory))
 {
 	VPRINTF(("block_allocate('%s',%s,%08X,%08X,%p)\n", space.device().tag(), space.name(), bytestart, byteend, memory));
 
@@ -4091,11 +4074,14 @@ memory_block::memory_block(address_space &space, offs_t bytestart, offs_t byteen
 	{
 		offs_t length = byteend + 1 - bytestart;
 		if (length < 4096)
-			m_allocated = m_data = auto_alloc_array_clear(space.machine(), UINT8, length);
+		{
+			m_allocated.resize_and_clear(length);
+			m_data = m_allocated;
+		}
 		else
 		{
-			m_allocated = auto_alloc_array_clear(space.machine(), UINT8, length + 0xfff);
-			m_data = reinterpret_cast<UINT8 *>((reinterpret_cast<FPTR>(m_allocated) + 0xfff) & ~0xfff);
+			m_allocated.resize_and_clear(length + 0xfff);
+			m_data = reinterpret_cast<UINT8 *>((reinterpret_cast<FPTR>(&m_allocated[0]) + 0xfff) & ~0xfff);
 		}
 	}
 
@@ -4125,8 +4111,6 @@ memory_block::memory_block(address_space &space, offs_t bytestart, offs_t byteen
 
 memory_block::~memory_block()
 {
-	if (m_allocated != NULL)
-		auto_free(machine(), m_allocated);
 }
 
 
@@ -4148,9 +4132,7 @@ memory_bank::memory_bank(address_space &space, int index, offs_t bytestart, offs
 		m_anonymous(tag == NULL),
 		m_bytestart(bytestart),
 		m_byteend(byteend),
-		m_curentry(BANK_ENTRY_UNSPECIFIED),
-		m_entry(NULL),
-		m_entry_count(0)
+		m_curentry(BANK_ENTRY_UNSPECIFIED)
 {
 	// generate an internal tag if we don't have one
 	if (tag == NULL)
@@ -4175,7 +4157,6 @@ memory_bank::memory_bank(address_space &space, int index, offs_t bytestart, offs
 
 memory_bank::~memory_bank()
 {
-	auto_free(machine(), m_entry);
 }
 
 
@@ -4264,7 +4245,7 @@ void memory_bank::set_entry(int entrynum)
 	// validate
 	if (m_anonymous)
 		throw emu_fatalerror("memory_bank::set_entry called for anonymous bank");
-	if (entrynum < 0 || entrynum >= m_entry_count)
+	if (entrynum < 0 || entrynum >= m_entry.count())
 		throw emu_fatalerror("memory_bank::set_entry called with out-of-range entry %d", entrynum);
 	if (m_entry[entrynum].m_raw == NULL)
 		throw emu_fatalerror("memory_bank::set_entry called for bank '%s' with invalid bank entry %d", m_tag.cstr(), entrynum);
@@ -4286,17 +4267,8 @@ void memory_bank::set_entry(int entrynum)
 
 void memory_bank::expand_entries(int entrynum)
 {
-	int newcount = entrynum + 1;
-
 	// allocate a new array and copy from the old one; zero out the new entries
-	bank_entry *newentry = auto_alloc_array(machine(), bank_entry, newcount);
-	memcpy(newentry, m_entry, sizeof(m_entry[0]) * m_entry_count);
-	memset(&newentry[m_entry_count], 0, (newcount - m_entry_count) * sizeof(m_entry[0]));
-
-	// free the old array and set the updated values
-	auto_free(machine(), m_entry);
-	m_entry = newentry;
-	m_entry_count = newcount;
+	m_entry.resize_keep_and_clear_new(entrynum + 1);
 }
 
 
@@ -4311,7 +4283,7 @@ void memory_bank::configure_entry(int entrynum, void *base)
 		throw emu_fatalerror("memory_bank::configure_entry called with out-of-range entry %d", entrynum);
 
 	// if we haven't allocated this many entries yet, expand our array
-	if (entrynum >= m_entry_count)
+	if (entrynum >= m_entry.count())
 		expand_entries(entrynum);
 
 	// set the entry
@@ -4347,7 +4319,7 @@ void memory_bank::configure_decrypted_entry(int entrynum, void *base)
 		throw emu_fatalerror("memory_bank::configure_decrypted_entry called with out-of-range entry %d", entrynum);
 
 	// if we haven't allocated this many entries yet, expand our array
-	if (entrynum >= m_entry_count)
+	if (entrynum >= m_entry.count())
 		expand_entries(entrynum);
 
 	// set the entry

@@ -25,9 +25,6 @@
 //  CONSTANTS
 //**************************************************************************
 
-const int MAX_GFX_ELEMENTS = 32;
-
-
 // machine phases
 enum machine_phase
 {
@@ -104,7 +101,6 @@ const int DEBUG_FLAG_OSD_ENABLED    = 0x00001000;       // The OSD debugger is e
 #define auto_bitmap_ind16_alloc(m, w, h)    auto_alloc(m, bitmap_ind16(w, h))
 #define auto_bitmap_ind32_alloc(m, w, h)    auto_alloc(m, bitmap_ind32(w, h))
 #define auto_bitmap_rgb32_alloc(m, w, h)    auto_alloc(m, bitmap_rgb32(w, h))
-#define auto_strdup(m, s)               strcpy(auto_alloc_array(m, char, strlen(s) + 1), s)
 
 
 
@@ -113,17 +109,15 @@ const int DEBUG_FLAG_OSD_ENABLED    = 0x00001000;       // The OSD debugger is e
 //**************************************************************************
 
 // forward declarations
-class gfx_element;
-class colortable_t;
 class cheat_manager;
 class render_manager;
 class sound_manager;
 class video_manager;
+class ui_manager;
 class tilemap_manager;
 class debug_view_manager;
 class osd_interface;
 
-struct palette_private;
 struct romload_private;
 struct ui_input_private;
 struct debugcpu_private;
@@ -198,6 +192,7 @@ public:
 	input_manager &input() const { assert(m_input != NULL); return *m_input; }
 	sound_manager &sound() const { assert(m_sound != NULL); return *m_sound; }
 	video_manager &video() const { assert(m_video != NULL); return *m_video; }
+	ui_manager &ui() const { assert(m_ui != NULL); return *m_ui; }
 	tilemap_manager &tilemap() const { assert(m_tilemap != NULL); return *m_tilemap; }
 	debug_view_manager &debug_view() const { assert(m_debug_view != NULL); return *m_debug_view; }
 	driver_device *driver_data() const { return &downcast<driver_device &>(root_device()); }
@@ -224,12 +219,12 @@ public:
 
 	// configuration helpers
 	device_t &add_dynamic_device(device_t &owner, device_type type, const char *tag, UINT32 clock);
-	UINT32 total_colors() const { return m_config.m_total_colors; }
 
 	// immediate operations
 	int run(bool firstrun);
 	void pause();
 	void resume();
+	void toggle_pause();
 	void add_notifier(machine_notification event, machine_notify_delegate callback);
 	void call_notifiers(machine_notification which);
 	void add_logerror_callback(logerror_callback callback);
@@ -256,7 +251,7 @@ public:
 	void watchdog_enable(bool enable = true);
 
 	// misc
-	void CLIB_DECL logerror(const char *format, ...);
+	void CLIB_DECL logerror(const char *format, ...) ATTR_PRINTF(2,3);
 	void CLIB_DECL vlogerror(const char *format, va_list args);
 	UINT32 rand();
 	const char *describe_context();
@@ -267,21 +262,15 @@ public:
 #endif /* USE_HISCORE */
 	cpu_device *            firstcpu;           // first CPU
 
+private:
 	// video-related information
-	gfx_element *           gfx[MAX_GFX_ELEMENTS];// array of pointers to graphic sets (chars, sprites)
 	screen_device *         primary_screen;     // the primary screen device, or NULL if screenless
-	palette_t *             palette;            // global palette object
 
-	// palette-related information
-	const pen_t *           pens;               // remapped palette pen numbers
-	colortable_t *          colortable;         // global colortable for remapping
-	pen_t *                 shadow_table;       // table for looking up a shadowed pen
-
+public:
 	// debugger-related information
 	UINT32                  debug_flags;        // the current debug flags
 
 	// internal core information
-	palette_private *       palette_data;       // internal data from palette.c
 	romload_private *       romload_data;       // internal data from romload.c
 	ui_input_private *      ui_input_data;      // internal data from uiinput.c
 	debugcpu_private *      debugcpu_data;      // internal data from debugcpu.c
@@ -297,6 +286,10 @@ private:
 	void soft_reset(void *ptr = NULL, INT32 param = 0);
 	void watchdog_fired(void *ptr = NULL, INT32 param = 0);
 	void watchdog_vblank(screen_device &screen, bool vblank_state);
+	const char *image_parent_basename(device_t *device);
+	astring &nvram_filename(astring &result, device_t &device);
+	void nvram_load();
+	void nvram_save();
 
 	// internal callbacks
 	static void logfile_callback(running_machine &machine, const char *buffer);
@@ -316,13 +309,14 @@ private:
 	osd_interface &         m_osd;                  // reference to OSD system
 
 	// managers
-	cheat_manager *         m_cheat;                // internal data from cheat.c
-	render_manager *        m_render;               // internal data from render.c
-	input_manager *         m_input;                // internal data from input.c
-	sound_manager *         m_sound;                // internal data from sound.c
-	video_manager *         m_video;                // internal data from video.c
-	tilemap_manager *       m_tilemap;              // internal data from tilemap.c
-	debug_view_manager *    m_debug_view;           // internal data from debugvw.c
+	auto_pointer<cheat_manager> m_cheat;            // internal data from cheat.c
+	auto_pointer<render_manager> m_render;          // internal data from render.c
+	auto_pointer<input_manager> m_input;            // internal data from input.c
+	auto_pointer<sound_manager> m_sound;            // internal data from sound.c
+	auto_pointer<video_manager> m_video;            // internal data from video.c
+	auto_pointer<ui_manager> m_ui;                  // internal data from ui.c
+	auto_pointer<tilemap_manager> m_tilemap;        // internal data from tilemap.c
+	auto_pointer<debug_view_manager> m_debug_view;  // internal data from debugvw.c
 
 	// system state
 	machine_phase           m_current_phase;        // current execution phase
@@ -345,7 +339,7 @@ private:
 	astring                 m_basename;             // basename used for game-related paths
 	astring                 m_context;              // context string buffer
 	int                     m_sample_rate;          // the digital audio sample rate
-	emu_file *              m_logfile;              // pointer to the active log file
+	auto_pointer<emu_file>  m_logfile;              // pointer to the active log file
 
 	// load/save management
 	enum saveload_schedule

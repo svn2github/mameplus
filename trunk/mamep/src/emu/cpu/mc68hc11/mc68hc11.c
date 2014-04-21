@@ -353,7 +353,7 @@ void mc68hc11_cpu_device::WRITE16(UINT32 address, UINT16 value)
 /*****************************************************************************/
 
 
-#include "hc11ops.c"
+#include "hc11ops.inc"
 #include "hc11ops.h"
 
 void mc68hc11_cpu_device::device_start()
@@ -387,7 +387,7 @@ void mc68hc11_cpu_device::device_start()
 		}
 	}
 
-	m_internal_ram = auto_alloc_array(machine(), UINT8, m_internal_ram_size);
+	m_internal_ram.resize(m_internal_ram_size);
 
 	m_program = &space(AS_PROGRAM);
 	m_direct = &m_program->direct();
@@ -410,7 +410,7 @@ void mc68hc11_cpu_device::device_start()
 	save_item(NAME(m_has_extended_io));
 	save_item(NAME(m_internal_ram_size));
 	save_item(NAME(m_init_value));
-	save_pointer(NAME(m_internal_ram),m_internal_ram_size);
+	save_item(NAME(m_internal_ram));
 	save_item(NAME(m_wait_state));
 	save_item(NAME(m_stop_state));
 	save_item(NAME(m_tflg1));

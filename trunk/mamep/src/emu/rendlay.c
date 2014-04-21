@@ -54,7 +54,7 @@
 #include "rendutil.h"
 #include "xmlfile.h"
 #include "png.h"
-#include "ui.h"
+#include "ui/ui.h"
 
 
 
@@ -105,7 +105,7 @@ enum
 //  GLOBAL VARIABLES
 //**************************************************************************
 
-const render_screen_list render_target::s_empty_screen_list;
+render_screen_list render_target::s_empty_screen_list;
 
 
 
@@ -402,10 +402,8 @@ static void parse_orientation(running_machine &machine, xml_data_node *orientnod
 layout_element::layout_element(running_machine &machine, xml_data_node &elemnode, const char *dirname)
 	: m_next(NULL),
 		m_machine(machine),
-		m_complist(machine.respool()),
 		m_defstate(0),
-		m_maxstate(0),
-		m_elemtex(NULL)
+		m_maxstate(0)
 {
 	// extract the name
 	const char *name = xml_get_attribute_string_with_subst(machine, elemnode, "name", NULL);
@@ -422,7 +420,7 @@ layout_element::layout_element(running_machine &machine, xml_data_node &elemnode
 	for (xml_data_node *compnode = elemnode.child; compnode != NULL; compnode = compnode->next)
 	{
 		// allocate a new component
-		component &newcomp = m_complist.append(*auto_alloc(machine, component(machine, *compnode, dirname)));
+		component &newcomp = m_complist.append(*global_alloc(component(machine, *compnode, dirname)));
 
 		// accumulate bounds
 		if (first)
@@ -470,7 +468,7 @@ layout_element::layout_element(running_machine &machine, xml_data_node &elemnode
 	}
 
 	// allocate an array of element textures for the states
-	m_elemtex = auto_alloc_array(machine, texture, m_maxstate + 1);
+	m_elemtex.resize(m_maxstate + 1);
 }
 
 
@@ -480,8 +478,6 @@ layout_element::layout_element(running_machine &machine, xml_data_node &elemnode
 
 layout_element::~layout_element()
 {
-	// loop over all states and free their textures
-	auto_free(machine(), m_elemtex);
 }
 
 
@@ -574,10 +570,7 @@ layout_element::component::component(running_machine &machine, xml_data_node &co
 		m_state(0)
 {
 	for (int i=0;i<MAX_BITMAPS;i++)
-	{
 		m_hasalpha[i] = false;
-		m_file[i] = NULL;
-	}
 
 	// fetch common data
 	m_state = xml_get_attribute_int_with_subst(machine, compnode, "state", -1);
@@ -592,7 +585,7 @@ layout_element::component::component(running_machine &machine, xml_data_node &co
 			m_dirname = dirname;
 		m_imagefile[0] = xml_get_attribute_string_with_subst(machine, compnode, "file", "");
 		m_alphafile[0] = xml_get_attribute_string_with_subst(machine, compnode, "alphafile", "");
-		m_file[0] = global_alloc(emu_file(machine.options().art_path(), OPEN_FLAG_READ));
+		m_file[0].reset(global_alloc(emu_file(machine.options().art_path(), OPEN_FLAG_READ)));
 	}
 
 	// text nodes
@@ -660,19 +653,21 @@ layout_element::component::component(running_machine &machine, xml_data_node &co
 				m_imagefile[i].substr(location+1, m_imagefile[i].len()-(location-1));
 
 				//m_alphafile[i] =
-				m_file[i] = global_alloc(emu_file(machine.options().art_path(), OPEN_FLAG_READ));
+				m_file[i].reset(global_alloc(emu_file(machine.options().art_path(), OPEN_FLAG_READ)));
 			}
 			else
 			{
 				//m_imagefile[i] = 0;
 				//m_alphafile[i] = 0;
-				m_file[i] = 0;
+				m_file[i].reset();
 			}
 		}
 
 		m_stateoffset = xml_get_attribute_int_with_subst(machine, compnode, "stateoffset", 0);
 		m_numsymbolsvisible = xml_get_attribute_int_with_subst(machine, compnode, "numsymbolsvisible", 3);
 		m_reelreversed = xml_get_attribute_int_with_subst(machine, compnode, "reelreversed", 0);
+		m_beltreel = xml_get_attribute_int_with_subst(machine, compnode, "beltreel", 0);
+
 	}
 
 	// led7seg nodes
@@ -715,10 +710,6 @@ layout_element::component::component(running_machine &machine, xml_data_node &co
 
 layout_element::component::~component()
 {
-	for (int i=0;i<MAX_BITMAPS;i++)
-	{
-		global_free(m_file[i]);
-	}
 }
 
 
@@ -822,14 +813,14 @@ void layout_element::component::draw_rect(bitmap_argb32 &dest, const rectangle &
 			// if we're translucent, add in the destination pixel contribution
 			if (inva > 0)
 			{
-				UINT32 dpix = dest.pix32(y, x);
-				finalr += (RGB_RED(dpix) * inva) >> 8;
-				finalg += (RGB_GREEN(dpix) * inva) >> 8;
-				finalb += (RGB_BLUE(dpix) * inva) >> 8;
+				rgb_t dpix = dest.pix32(y, x);
+				finalr += (dpix.r() * inva) >> 8;
+				finalg += (dpix.g() * inva) >> 8;
+				finalb += (dpix.b() * inva) >> 8;
 			}
 
 			// store the target pixel, dividing the RGBA values by the overall scale factor
-			dest.pix32(y, x) = MAKE_ARGB(0xff, finalr, finalg, finalb);
+			dest.pix32(y, x) = rgb_t(finalr, finalg, finalb);
 		}
 	}
 }
@@ -875,14 +866,14 @@ void layout_element::component::draw_disk(bitmap_argb32 &dest, const rectangle &
 			// if we're translucent, add in the destination pixel contribution
 			if (inva > 0)
 			{
-				UINT32 dpix = dest.pix32(y, x);
-				finalr += (RGB_RED(dpix) * inva) >> 8;
-				finalg += (RGB_GREEN(dpix) * inva) >> 8;
-				finalb += (RGB_BLUE(dpix) * inva) >> 8;
+				rgb_t dpix = dest.pix32(y, x);
+				finalr += (dpix.r() * inva) >> 8;
+				finalg += (dpix.g() * inva) >> 8;
+				finalb += (dpix.b() * inva) >> 8;
 			}
 
 			// store the target pixel, dividing the RGBA values by the overall scale factor
-			dest.pix32(y, x) = MAKE_ARGB(0xff, finalr, finalg, finalb);
+			dest.pix32(y, x) = rgb_t(finalr, finalg, finalb);
 		}
 	}
 }
@@ -958,15 +949,15 @@ void layout_element::component::draw_text(running_machine &machine, bitmap_argb3
 					int effx = curx + x + chbounds.min_x;
 					if (effx >= bounds.min_x && effx <= bounds.max_x)
 					{
-						UINT32 spix = RGB_ALPHA(src[x]);
+						UINT32 spix = rgb_t(src[x]).a();
 						if (spix != 0)
 						{
-							UINT32 dpix = d[effx];
+							rgb_t dpix = d[effx];
 							UINT32 ta = (a * (spix + 1)) >> 8;
-							UINT32 tr = (r * ta + RGB_RED(dpix) * (0x100 - ta)) >> 8;
-							UINT32 tg = (g * ta + RGB_GREEN(dpix) * (0x100 - ta)) >> 8;
-							UINT32 tb = (b * ta + RGB_BLUE(dpix) * (0x100 - ta)) >> 8;
-							d[effx] = MAKE_ARGB(0xff, tr, tg, tb);
+							UINT32 tr = (r * ta + dpix.r() * (0x100 - ta)) >> 8;
+							UINT32 tg = (g * ta + dpix.g() * (0x100 - ta)) >> 8;
+							UINT32 tb = (b * ta + dpix.b() * (0x100 - ta)) >> 8;
+							d[effx] = rgb_t(tr, tg, tb);
 						}
 					}
 				}
@@ -992,6 +983,165 @@ void layout_element::component::draw_simplecounter(running_machine &machine, bit
 /* state is a normalized value between 0 and 65536 so that we don't need to worry about how many motor steps here or in the .lay, only the number of symbols */
 void layout_element::component::draw_reel(running_machine &machine, bitmap_argb32 &dest, const rectangle &bounds, int state)
 {
+	if (m_beltreel)
+	{
+		draw_beltreel(machine,dest,bounds,state);
+	}
+	else
+	{
+		const int max_state_used = 0x10000;
+
+		// shift the reels a bit based on this param, allows fine tuning
+		int use_state = (state + m_stateoffset) % max_state_used;
+
+		// compute premultiplied colors
+		UINT32 r = m_color.r * 255.0;
+		UINT32 g = m_color.g * 255.0;
+		UINT32 b = m_color.b * 255.0;
+		UINT32 a = m_color.a * 255.0;
+
+		// get the width of the string
+		render_font *font = machine.render().font_alloc("default");
+		float aspect = 1.0f;
+		INT32 width;
+
+
+		int curry = 0;
+		int num_shown = m_numsymbolsvisible;
+
+		int ourheight = bounds.height();
+
+		for (int fruit = 0;fruit<m_numstops;fruit++)
+		{
+			int basey;
+
+			if (m_reelreversed==1)
+			{
+				basey = bounds.min_y + ((use_state)*(ourheight/num_shown)/(max_state_used/m_numstops)) + curry;
+			}
+			else
+			{
+				basey = bounds.min_y - ((use_state)*(ourheight/num_shown)/(max_state_used/m_numstops)) + curry;
+			}
+
+			// wrap around...
+			if (basey < bounds.min_y)
+				basey += ((max_state_used)*(ourheight/num_shown)/(max_state_used/m_numstops));
+			if (basey > bounds.max_y)
+				basey -= ((max_state_used)*(ourheight/num_shown)/(max_state_used/m_numstops));
+
+			int endpos = basey+ourheight/num_shown;
+
+			// only render the symbol / text if it's atually in view because the code is SLOW
+			if ((endpos >= bounds.min_y) && (basey <= bounds.max_y))
+			{
+				while (1)
+				{
+					width = font->string_width(ourheight/num_shown, aspect, m_stopnames[fruit]);
+					if (width < bounds.width())
+						break;
+					aspect *= 0.9f;
+				}
+
+				INT32 curx;
+				curx = bounds.min_x + (bounds.width() - width) / 2;
+
+				if (m_file[fruit])
+					if (!m_bitmap[fruit].valid())
+						load_reel_bitmap(fruit);
+
+				if (m_file[fruit]) // render gfx
+				{
+					bitmap_argb32 tempbitmap2(dest.width(), ourheight/num_shown);
+
+					if (m_bitmap[fruit].valid())
+					{
+						render_resample_argb_bitmap_hq(tempbitmap2, m_bitmap[fruit], m_color);
+
+						for (int y = 0; y < ourheight/num_shown; y++)
+						{
+							int effy = basey + y;
+
+							if (effy >= bounds.min_y && effy <= bounds.max_y)
+							{
+								UINT32 *src = &tempbitmap2.pix32(y);
+								UINT32 *d = &dest.pix32(effy);
+								for (int x = 0; x < dest.width(); x++)
+								{
+									int effx = x;
+									if (effx >= bounds.min_x && effx <= bounds.max_x)
+									{
+										UINT32 spix = rgb_t(src[x]).a();
+										if (spix != 0)
+										{
+											d[effx] = src[x];
+										}
+									}
+								}
+							}
+
+						}
+					}
+				}
+				else // render text (fallback)
+				{
+					// allocate a temporary bitmap
+					bitmap_argb32 tempbitmap(dest.width(), dest.height());
+
+					// loop over characters
+					for (const char *s = m_stopnames[fruit]; *s != 0; s++)
+					{
+						// get the font bitmap
+						rectangle chbounds;
+						font->get_scaled_bitmap_and_bounds(tempbitmap, ourheight/num_shown, aspect, *s, chbounds);
+
+						// copy the data into the target
+						for (int y = 0; y < chbounds.height(); y++)
+						{
+							int effy = basey + y;
+
+							if (effy >= bounds.min_y && effy <= bounds.max_y)
+							{
+								UINT32 *src = &tempbitmap.pix32(y);
+								UINT32 *d = &dest.pix32(effy);
+								for (int x = 0; x < chbounds.width(); x++)
+								{
+									int effx = curx + x + chbounds.min_x;
+									if (effx >= bounds.min_x && effx <= bounds.max_x)
+									{
+										UINT32 spix = rgb_t(src[x]).a();
+										if (spix != 0)
+										{
+											rgb_t dpix = d[effx];
+											UINT32 ta = (a * (spix + 1)) >> 8;
+											UINT32 tr = (r * ta + dpix.r() * (0x100 - ta)) >> 8;
+											UINT32 tg = (g * ta + dpix.g() * (0x100 - ta)) >> 8;
+											UINT32 tb = (b * ta + dpix.b() * (0x100 - ta)) >> 8;
+											d[effx] = rgb_t(tr, tg, tb);
+										}
+									}
+								}
+							}
+						}
+
+						// advance in the X direction
+						curx += font->char_width(ourheight/num_shown, aspect, *s);
+
+					}
+
+				}
+			}
+
+			curry += ourheight/num_shown;
+		}
+	// free the temporary bitmap and font
+	machine.render().font_free(font);
+	}
+}
+
+
+void layout_element::component::draw_beltreel(running_machine &machine, bitmap_argb32 &dest, const rectangle &bounds, int state)
+{
 	const int max_state_used = 0x10000;
 
 	// shift the reels a bit based on this param, allows fine tuning
@@ -1007,45 +1157,44 @@ void layout_element::component::draw_reel(running_machine &machine, bitmap_argb3
 	render_font *font = machine.render().font_alloc("default");
 	float aspect = 1.0f;
 	INT32 width;
-	int curry = 0;
+	int currx = 0;
 	int num_shown = m_numsymbolsvisible;
 
-	int ourheight = bounds.height();
+	int ourwidth = bounds.width();
 
 	for (int fruit = 0;fruit<m_numstops;fruit++)
 	{
-		int basey;
-
+		int basex;
 		if (m_reelreversed==1)
 		{
-			basey = bounds.min_y + ((use_state)*(ourheight/num_shown)/(max_state_used/m_numstops)) + curry;
+			basex = bounds.min_x + ((use_state)*(ourwidth/num_shown)/(max_state_used/m_numstops)) + currx;
 		}
 		else
 		{
-			basey = bounds.min_y - ((use_state)*(ourheight/num_shown)/(max_state_used/m_numstops)) + curry;
+			basex = bounds.min_x - ((use_state)*(ourwidth/num_shown)/(max_state_used/m_numstops)) + currx;
 		}
 
 		// wrap around...
-		if (basey < bounds.min_y)
-			basey += ((max_state_used)*(ourheight/num_shown)/(max_state_used/m_numstops));
-		if (basey > bounds.max_y)
-			basey -= ((max_state_used)*(ourheight/num_shown)/(max_state_used/m_numstops));
+		if (basex < bounds.min_x)
+			basex += ((max_state_used)*(ourwidth/num_shown)/(max_state_used/m_numstops));
+		if (basex > bounds.max_x)
+			basex -= ((max_state_used)*(ourwidth/num_shown)/(max_state_used/m_numstops));
 
-		int endpos = basey+ourheight/num_shown;
+		int endpos = basex+(ourwidth/num_shown);
 
 		// only render the symbol / text if it's atually in view because the code is SLOW
-		if ((endpos >= bounds.min_y) && (basey <= bounds.max_y))
+		if ((endpos >= bounds.min_x) && (basex <= bounds.max_x))
 		{
 			while (1)
 			{
-				width = font->string_width(ourheight/num_shown, aspect, m_stopnames[fruit]);
+				width = font->string_width(dest.height(), aspect, m_stopnames[fruit]);
 				if (width < bounds.width())
 					break;
 				aspect *= 0.9f;
 			}
 
 			INT32 curx;
-			curx = bounds.min_x + (bounds.width() - width) / 2;
+			curx = bounds.min_x;
 
 			if (m_file[fruit])
 				if (!m_bitmap[fruit].valid())
@@ -1053,26 +1202,26 @@ void layout_element::component::draw_reel(running_machine &machine, bitmap_argb3
 
 			if (m_file[fruit]) // render gfx
 			{
-				bitmap_argb32 tempbitmap2(dest.width(), ourheight/num_shown);
+				bitmap_argb32 tempbitmap2(ourwidth/num_shown, dest.height());
 
 				if (m_bitmap[fruit].valid())
 				{
 					render_resample_argb_bitmap_hq(tempbitmap2, m_bitmap[fruit], m_color);
 
-					for (int y = 0; y < ourheight/num_shown; y++)
+					for (int y = 0; y < dest.height(); y++)
 					{
-						int effy = basey + y;
+						int effy = y;
 
 						if (effy >= bounds.min_y && effy <= bounds.max_y)
 						{
 							UINT32 *src = &tempbitmap2.pix32(y);
 							UINT32 *d = &dest.pix32(effy);
-							for (int x = 0; x < dest.width(); x++)
+							for (int x = 0; x < ourwidth/num_shown; x++)
 							{
-								int effx = x;
+								int effx = basex + x;
 								if (effx >= bounds.min_x && effx <= bounds.max_x)
 								{
-									UINT32 spix = RGB_ALPHA(src[x]);
+									UINT32 spix = rgb_t(src[x]).a();
 									if (spix != 0)
 									{
 										d[effx] = src[x];
@@ -1094,12 +1243,12 @@ void layout_element::component::draw_reel(running_machine &machine, bitmap_argb3
 				{
 					// get the font bitmap
 					rectangle chbounds;
-					font->get_scaled_bitmap_and_bounds(tempbitmap, ourheight/num_shown, aspect, *s, chbounds);
+					font->get_scaled_bitmap_and_bounds(tempbitmap, dest.height(), aspect, *s, chbounds);
 
 					// copy the data into the target
 					for (int y = 0; y < chbounds.height(); y++)
 					{
-						int effy = basey + y;
+						int effy = y;
 
 						if (effy >= bounds.min_y && effy <= bounds.max_y)
 						{
@@ -1107,18 +1256,18 @@ void layout_element::component::draw_reel(running_machine &machine, bitmap_argb3
 							UINT32 *d = &dest.pix32(effy);
 							for (int x = 0; x < chbounds.width(); x++)
 							{
-								int effx = curx + x + chbounds.min_x;
+								int effx = basex + curx + x;
 								if (effx >= bounds.min_x && effx <= bounds.max_x)
 								{
-									UINT32 spix = RGB_ALPHA(src[x]);
+									UINT32 spix = rgb_t(src[x]).a();
 									if (spix != 0)
 									{
-										UINT32 dpix = d[effx];
+										rgb_t dpix = d[effx];
 										UINT32 ta = (a * (spix + 1)) >> 8;
-										UINT32 tr = (r * ta + RGB_RED(dpix) * (0x100 - ta)) >> 8;
-										UINT32 tg = (g * ta + RGB_GREEN(dpix) * (0x100 - ta)) >> 8;
-										UINT32 tb = (b * ta + RGB_BLUE(dpix) * (0x100 - ta)) >> 8;
-										d[effx] = MAKE_ARGB(0xff, tr, tg, tb);
+										UINT32 tr = (r * ta + dpix.r() * (0x100 - ta)) >> 8;
+										UINT32 tg = (g * ta + dpix.g() * (0x100 - ta)) >> 8;
+										UINT32 tb = (b * ta + dpix.b() * (0x100 - ta)) >> 8;
+										d[effx] = rgb_t(tr, tg, tb);
 									}
 								}
 							}
@@ -1126,21 +1275,19 @@ void layout_element::component::draw_reel(running_machine &machine, bitmap_argb3
 					}
 
 					// advance in the X direction
-					curx += font->char_width(ourheight/num_shown, aspect, *s);
+					curx += font->char_width(dest.height(), aspect, *s);
 
 				}
 
 			}
 		}
 
-		curry += ourheight/num_shown;
+		currx += ourwidth/num_shown;
 	}
 
 	// free the temporary bitmap and font
 	machine.render().font_free(font);
 }
-
-
 
 
 //-------------------------------------------------
@@ -1166,13 +1313,13 @@ void layout_element::component::load_bitmap()
 		m_bitmap[0].fill(0);
 		for (int step = 0; step < 100; step += 25)
 			for (int line = 0; line < 100; line++)
-				m_bitmap[0].pix32((step + line) % 100, line % 100) = MAKE_ARGB(0xff,0xff,0xff,0xff);
+				m_bitmap[0].pix32((step + line) % 100, line % 100) = rgb_t(0xff,0xff,0xff,0xff);
 
 		// log an error
 		if (!m_alphafile[0])
-			mame_printf_warning("Unable to load component bitmap '%s'", m_imagefile[0].cstr());
+			mame_printf_warning("Unable to load component bitmap '%s'\n", m_imagefile[0].cstr());
 		else
-			mame_printf_warning("Unable to load component bitmap '%s'/'%s'", m_imagefile[0].cstr(), m_alphafile[0].cstr());
+			mame_printf_warning("Unable to load component bitmap '%s'/'%s'\n", m_imagefile[0].cstr(), m_alphafile[0].cstr());
 	}
 }
 
@@ -1191,8 +1338,7 @@ void layout_element::component::load_reel_bitmap(int number)
 	if (!m_bitmap[number].valid())
 	{
 		// fallback to text rendering
-		global_free(m_file[number]);
-		m_file[number] = NULL;
+		m_file[number].reset();
 	}
 
 }
@@ -1205,8 +1351,8 @@ void layout_element::component::load_reel_bitmap(int number)
 
 void layout_element::component::draw_led7seg(bitmap_argb32 &dest, const rectangle &bounds, int pattern)
 {
-	const rgb_t onpen = MAKE_ARGB(0xff,0xff,0xff,0xff);
-	const rgb_t offpen = MAKE_ARGB(0xff,0x20,0x20,0x20);
+	const rgb_t onpen = rgb_t(0xff,0xff,0xff,0xff);
+	const rgb_t offpen = rgb_t(0xff,0x20,0x20,0x20);
 
 	// sizes for computation
 	int bmwidth = 250;
@@ -1216,7 +1362,7 @@ void layout_element::component::draw_led7seg(bitmap_argb32 &dest, const rectangl
 
 	// allocate a temporary bitmap for drawing
 	bitmap_argb32 tempbitmap(bmwidth + skewwidth, bmheight);
-	tempbitmap.fill(MAKE_ARGB(0xff,0x00,0x00,0x00));
+	tempbitmap.fill(rgb_t(0xff,0x00,0x00,0x00));
 
 	// top bar
 	draw_segment_horizontal(tempbitmap, 0 + 2*segwidth/3, bmwidth - 2*segwidth/3, 0 + segwidth/2, segwidth, (pattern & (1 << 0)) ? onpen : offpen);
@@ -1256,8 +1402,8 @@ void layout_element::component::draw_led7seg(bitmap_argb32 &dest, const rectangl
 
 void layout_element::component::draw_led14seg(bitmap_argb32 &dest, const rectangle &bounds, int pattern)
 {
-	const rgb_t onpen = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
-	const rgb_t offpen = MAKE_ARGB(0xff, 0x20, 0x20, 0x20);
+	const rgb_t onpen = rgb_t(0xff, 0xff, 0xff, 0xff);
+	const rgb_t offpen = rgb_t(0xff, 0x20, 0x20, 0x20);
 
 	// sizes for computation
 	int bmwidth = 250;
@@ -1267,7 +1413,7 @@ void layout_element::component::draw_led14seg(bitmap_argb32 &dest, const rectang
 
 	// allocate a temporary bitmap for drawing
 	bitmap_argb32 tempbitmap(bmwidth + skewwidth, bmheight);
-	tempbitmap.fill(MAKE_ARGB(0xff, 0x00, 0x00, 0x00));
+	tempbitmap.fill(rgb_t(0xff, 0x00, 0x00, 0x00));
 
 	// top bar
 	draw_segment_horizontal(tempbitmap,
@@ -1358,8 +1504,8 @@ void layout_element::component::draw_led14seg(bitmap_argb32 &dest, const rectang
 
 void layout_element::component::draw_led14segsc(bitmap_argb32 &dest, const rectangle &bounds, int pattern)
 {
-	const rgb_t onpen = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
-	const rgb_t offpen = MAKE_ARGB(0xff, 0x20, 0x20, 0x20);
+	const rgb_t onpen = rgb_t(0xff, 0xff, 0xff, 0xff);
+	const rgb_t offpen = rgb_t(0xff, 0x20, 0x20, 0x20);
 
 	// sizes for computation
 	int bmwidth = 250;
@@ -1369,7 +1515,7 @@ void layout_element::component::draw_led14segsc(bitmap_argb32 &dest, const recta
 
 	// allocate a temporary bitmap for drawing, adding some extra space for the tail
 	bitmap_argb32 tempbitmap(bmwidth + skewwidth, bmheight + segwidth);
-	tempbitmap.fill(MAKE_ARGB(0xff, 0x00, 0x00, 0x00));
+	tempbitmap.fill(rgb_t(0xff, 0x00, 0x00, 0x00));
 
 	// top bar
 	draw_segment_horizontal(tempbitmap,
@@ -1468,8 +1614,8 @@ void layout_element::component::draw_led14segsc(bitmap_argb32 &dest, const recta
 
 void layout_element::component::draw_led16seg(bitmap_argb32 &dest, const rectangle &bounds, int pattern)
 {
-	const rgb_t onpen = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
-	const rgb_t offpen = MAKE_ARGB(0xff, 0x20, 0x20, 0x20);
+	const rgb_t onpen = rgb_t(0xff, 0xff, 0xff, 0xff);
+	const rgb_t offpen = rgb_t(0xff, 0x20, 0x20, 0x20);
 
 	// sizes for computation
 	int bmwidth = 250;
@@ -1479,7 +1625,7 @@ void layout_element::component::draw_led16seg(bitmap_argb32 &dest, const rectang
 
 	// allocate a temporary bitmap for drawing
 	bitmap_argb32 tempbitmap(bmwidth + skewwidth, bmheight);
-	tempbitmap.fill(MAKE_ARGB(0xff, 0x00, 0x00, 0x00));
+	tempbitmap.fill(rgb_t(0xff, 0x00, 0x00, 0x00));
 
 	// top-left bar
 	draw_segment_horizontal_caps(tempbitmap,
@@ -1580,8 +1726,8 @@ void layout_element::component::draw_led16seg(bitmap_argb32 &dest, const rectang
 
 void layout_element::component::draw_led16segsc(bitmap_argb32 &dest, const rectangle &bounds, int pattern)
 {
-	const rgb_t onpen = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
-	const rgb_t offpen = MAKE_ARGB(0xff, 0x20, 0x20, 0x20);
+	const rgb_t onpen = rgb_t(0xff, 0xff, 0xff, 0xff);
+	const rgb_t offpen = rgb_t(0xff, 0x20, 0x20, 0x20);
 
 	// sizes for computation
 	int bmwidth = 250;
@@ -1591,7 +1737,7 @@ void layout_element::component::draw_led16segsc(bitmap_argb32 &dest, const recta
 
 	// allocate a temporary bitmap for drawing
 	bitmap_argb32 tempbitmap(bmwidth + skewwidth, bmheight + segwidth);
-	tempbitmap.fill(MAKE_ARGB(0xff, 0x00, 0x00, 0x00));
+	tempbitmap.fill(rgb_t(0xff, 0x00, 0x00, 0x00));
 
 	// top-left bar
 	draw_segment_horizontal_caps(tempbitmap,
@@ -1701,8 +1847,8 @@ void layout_element::component::draw_led16segsc(bitmap_argb32 &dest, const recta
 
 void layout_element::component::draw_dotmatrix(int dots, bitmap_argb32 &dest, const rectangle &bounds, int pattern)
 {
-	const rgb_t onpen = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
-	const rgb_t offpen = MAKE_ARGB(0xff, 0x20, 0x20, 0x20);
+	const rgb_t onpen = rgb_t(0xff, 0xff, 0xff, 0xff);
+	const rgb_t offpen = rgb_t(0xff, 0x20, 0x20, 0x20);
 
 	// sizes for computation
 	int bmheight = 300;
@@ -1710,7 +1856,7 @@ void layout_element::component::draw_dotmatrix(int dots, bitmap_argb32 &dest, co
 
 	// allocate a temporary bitmap for drawing
 	bitmap_argb32 tempbitmap(dotwidth*dots, bmheight);
-	tempbitmap.fill(MAKE_ARGB(0xff, 0x00, 0x00, 0x00));
+	tempbitmap.fill(rgb_t(0xff, 0x00, 0x00, 0x00));
 
 	for (int i = 0; i < dots; i++)
 		draw_segment_decimal(tempbitmap, ((dotwidth/2 )+ (i * dotwidth)), bmheight/2, dotwidth, (pattern & (1 << i))?onpen:offpen);
@@ -1917,14 +2063,7 @@ void layout_element::component::apply_skew(bitmap_argb32 &dest, int skewwidth)
 layout_view::layout_view(running_machine &machine, xml_data_node &viewnode, simple_list<layout_element> &elemlist)
 	: m_next(NULL),
 		m_aspect(1.0f),
-		m_scraspect(1.0f),
-		m_screens(machine.respool()),
-		m_backdrop_list(machine.respool()),
-		m_screen_list(machine.respool()),
-		m_overlay_list(machine.respool()),
-		m_bezel_list(machine.respool()),
-		m_cpanel_list(machine.respool()),
-		m_marquee_list(machine.respool())
+		m_scraspect(1.0f)
 {
 	// allocate a copy of the name
 	m_name = xml_get_attribute_string_with_subst(machine, viewnode, "name", "");
@@ -1937,27 +2076,27 @@ layout_view::layout_view(running_machine &machine, xml_data_node &viewnode, simp
 
 	// load backdrop items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "backdrop"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "backdrop"))
-		m_backdrop_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
+		m_backdrop_list.append(*global_alloc(item(machine, *itemnode, elemlist)));
 
 	// load screen items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "screen"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "screen"))
-		m_screen_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
+		m_screen_list.append(*global_alloc(item(machine, *itemnode, elemlist)));
 
 	// load overlay items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "overlay"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "overlay"))
-		m_overlay_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
+		m_overlay_list.append(*global_alloc(item(machine, *itemnode, elemlist)));
 
 	// load bezel items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "bezel"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "bezel"))
-		m_bezel_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
+		m_bezel_list.append(*global_alloc(item(machine, *itemnode, elemlist)));
 
 	// load cpanel items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "cpanel"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "cpanel"))
-		m_cpanel_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
+		m_cpanel_list.append(*global_alloc(item(machine, *itemnode, elemlist)));
 
 	// load marquee items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "marquee"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "marquee"))
-		m_marquee_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
+		m_marquee_list.append(*global_alloc(item(machine, *itemnode, elemlist)));
 
 	// recompute the data for the view based on a default layer config
 	recompute(render_layer_config());
@@ -2166,6 +2305,16 @@ layout_view::item::~item()
 
 
 //-------------------------------------------------
+//  screen_container - retrieve screen container
+//-------------------------------------------------
+
+
+render_container *layout_view::item::screen_container(running_machine &machine) const
+{
+	return (m_screen != NULL) ? &m_screen->container() : NULL;
+}
+
+//-------------------------------------------------
 //  state - fetch state based on configured source
 //-------------------------------------------------
 
@@ -2204,9 +2353,7 @@ int layout_view::item::state() const
 //-------------------------------------------------
 
 layout_file::layout_file(running_machine &machine, xml_data_node &rootnode, const char *dirname)
-	: m_next(NULL),
-		m_elemlist(machine.respool()),
-		m_viewlist(machine.respool())
+	: m_next(NULL)
 {
 	// find the layout node
 	xml_data_node *mamelayoutnode = xml_get_sibling(rootnode.child, "mamelayout");
@@ -2220,11 +2367,11 @@ layout_file::layout_file(running_machine &machine, xml_data_node &rootnode, cons
 
 	// parse all the elements
 	for (xml_data_node *elemnode = xml_get_sibling(mamelayoutnode->child, "element"); elemnode != NULL; elemnode = xml_get_sibling(elemnode->next, "element"))
-		m_elemlist.append(*auto_alloc(machine, layout_element(machine, *elemnode, dirname)));
+		m_elemlist.append(*global_alloc(layout_element(machine, *elemnode, dirname)));
 
 	// parse all the views
 	for (xml_data_node *viewnode = xml_get_sibling(mamelayoutnode->child, "view"); viewnode != NULL; viewnode = xml_get_sibling(viewnode->next, "view"))
-		m_viewlist.append(*auto_alloc(machine, layout_view(machine, *viewnode, m_elemlist)));
+		m_viewlist.append(*global_alloc(layout_view(machine, *viewnode, m_elemlist)));
 }
 
 

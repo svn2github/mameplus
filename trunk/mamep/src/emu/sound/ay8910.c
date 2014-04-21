@@ -9,6 +9,13 @@
 
   Mostly rewritten by couriersud in 2008
 
+  Public documentation:
+
+  - http://privatfrickler.de/blick-auf-den-chip-soundchip-general-instruments-ay-3-8910/
+    Die pictures of the AY8910
+
+  - US Patent 4933980
+
   Games using ADSR: gyruss
 
   A list with more games using ADSR can be found here:
@@ -144,6 +151,7 @@ has twice the steps, happening twice as fast.
 #define TONE_VOLUME(_psg, _chan)    ( (_psg)->regs[AY_AVOL + (_chan)] & 0x0f)
 #define TONE_ENVELOPE(_psg, _chan)  (((_psg)->regs[AY_AVOL + (_chan)] >> 4) & (((_psg)->device->type() == AY8914) ? 3 : 1))
 #define ENVELOPE_PERIOD(_psg)       (((_psg)->regs[AY_EFINE] | ((_psg)->regs[AY_ECOARSE]<<8)))
+#define NOISE_OUTPUT(_psg)          ((_psg)->rng & 1)
 
 /*************************************
  *
@@ -171,7 +179,7 @@ struct ay8910_context
 	INT32 last_enable;
 	INT32 count[NUM_CHANNELS];
 	UINT8 output[NUM_CHANNELS];
-	UINT8 output_noise;
+	UINT8 prescale_noise;
 	INT32 count_noise;
 	INT32 count_env;
 	INT8 env_step;
@@ -325,9 +333,8 @@ INLINE void build_3D_table(double rl, const ay_ym_param *par, const ay_ym_param 
 	int j, j1, j2, j3, e, indx;
 	double rt, rw, n;
 	double min = 10.0,  max = 0.0;
-	double *temp;
 
-	temp = global_alloc_array(double, 8*32*32*32);
+	dynamic_array<double> temp(8*32*32*32);
 
 	for (e=0; e < 8; e++)
 		for (j1=0; j1 < 32; j1++)
@@ -373,8 +380,6 @@ INLINE void build_3D_table(double rl, const ay_ym_param *par, const ay_ym_param 
 	}
 
 	/* for (e=0;e<16;e++) printf("%d %d\n",e<<10, tab[e<<10]); */
-
-	global_free(temp);
 }
 
 INLINE void build_single_table(double rl, const ay_ym_param *par, int normalize, INT32 *tab, int zero_is_off)
@@ -414,6 +419,22 @@ INLINE void build_single_table(double rl, const ay_ym_param *par, int normalize,
 	}
 
 }
+
+INLINE void build_resisor_table(const ay_ym_param *par, INT32 *tab, int zero_is_off)
+{
+	int j;
+
+	for (j=0; j < par->res_count; j++)
+	{
+		if (zero_is_off && j == 0)
+		{
+			tab[j] = 1e6;
+		}
+		else
+			tab[j] = par->res[j];
+	}
+}
+
 
 INLINE UINT16 mix_3D(ay8910_context *psg)
 {
@@ -485,7 +506,6 @@ static void ay8910_write_reg(ay8910_context *psg, int r, int v)
 				/* write out 0xff if port set to input */
 				psg->portBwrite(0, (psg->regs[AY_ENABLE] & 0x80) ? psg->regs[AY_PORTB] : 0xff);
 			}
-
 			psg->last_enable = psg->regs[AY_ENABLE];
 			break;
 		case AY_ESHAPE:
@@ -577,37 +597,33 @@ static STREAM_UPDATE( ay8910_update )
 			if (psg->count[chan] >= TONE_PERIOD(psg, chan))
 			{
 				psg->output[chan] ^= 1;
-				psg->count[chan] = 0;;
+				psg->count[chan] = 0;
 			}
 		}
 
 		psg->count_noise++;
 		if (psg->count_noise >= NOISE_PERIOD(psg))
 		{
-			/* Is noise output going to change? */
-			if ((psg->rng + 1) & 2) /* (bit0^bit1)? */
-			{
-				psg->output_noise ^= 1;
-			}
-
-			/* The Random Number Generator of the 8910 is a 17-bit shift */
-			/* register. The input to the shift register is bit0 XOR bit3 */
-			/* (bit0 is the output). This was verified on AY-3-8910 and YM2149 chips. */
-
-			/* The following is a fast way to compute bit17 = bit0^bit3. */
-			/* Instead of doing all the logic operations, we only check */
-			/* bit0, relying on the fact that after three shifts of the */
-			/* register, what now is bit3 will become bit0, and will */
-			/* invert, if necessary, bit14, which previously was bit17. */
-			if (psg->rng & 1)
-				psg->rng ^= 0x24000; /* This version is called the "Galois configuration". */
-			psg->rng >>= 1;
+			/* toggle the prescaler output. Noise is no different to
+			 * channels.
+			 */
 			psg->count_noise = 0;
+			psg->prescale_noise ^= 1;
+
+			if ( psg->prescale_noise)
+			{
+				/* The Random Number Generator of the 8910 is a 17-bit shift */
+				/* register. The input to the shift register is bit0 XOR bit3 */
+				/* (bit0 is the output). This was verified on AY-3-8910 and YM2149 chips. */
+
+				psg->rng ^= (((psg->rng & 1) ^ ((psg->rng >> 3) & 1)) << 17);
+				psg->rng >>= 1;
+			}
 		}
 
 		for (chan = 0; chan < NUM_CHANNELS; chan++)
 		{
-			psg->vol_enabled[chan] = (psg->output[chan] | TONE_ENABLEQ(psg, chan)) & (psg->output_noise | NOISE_ENABLEQ(psg, chan));
+			psg->vol_enabled[chan] = (psg->output[chan] | TONE_ENABLEQ(psg, chan)) & (NOISE_OUTPUT(psg) | NOISE_ENABLEQ(psg, chan));
 		}
 
 		/* update envelope */
@@ -687,10 +703,21 @@ static void build_mixer_table(ay8910_context *psg)
 		normalize = 1;
 	}
 
-	for (chan=0; chan < NUM_CHANNELS; chan++)
+	if ((psg->intf->flags & AY8910_RESISTOR_OUTPUT) != 0)
 	{
-		build_single_table(psg->intf->res_load[chan], psg->par, normalize, psg->vol_table[chan], psg->zero_is_off);
-		build_single_table(psg->intf->res_load[chan], psg->par_env, normalize, psg->env_table[chan], 0);
+		for (chan=0; chan < NUM_CHANNELS; chan++)
+		{
+			build_resisor_table(psg->par, psg->vol_table[chan], psg->zero_is_off);
+			build_resisor_table(psg->par_env, psg->env_table[chan], 0);
+		}
+	}
+	else
+	{
+		for (chan=0; chan < NUM_CHANNELS; chan++)
+		{
+			build_single_table(psg->intf->res_load[chan], psg->par, normalize, psg->vol_table[chan], psg->zero_is_off);
+			build_single_table(psg->intf->res_load[chan], psg->par_env, normalize, psg->env_table[chan], 0);
+		}
 	}
 	/*
 	 * The previous implementation added all three channels up instead of averaging them.
@@ -712,7 +739,7 @@ static void ay8910_statesave(ay8910_context *psg, device_t *device)
 	device->save_item(NAME(psg->env_volume));
 
 	device->save_item(NAME(psg->output));
-	device->save_item(NAME(psg->output_noise));
+	device->save_item(NAME(psg->prescale_noise));
 
 	device->save_item(NAME(psg->env_step));
 	device->save_item(NAME(psg->hold));
@@ -804,7 +831,7 @@ void ay8910_reset_ym(void *chip)
 	psg->count[2] = 0;
 	psg->count_noise = 0;
 	psg->count_env = 0;
-	psg->output_noise = 0x01;
+	psg->prescale_noise = 0;
 	psg->last_enable = -1;  /* force a write */
 	for (i = 0;i < AY_PORTA;i++)
 		ay8910_write_reg(psg,i,0);

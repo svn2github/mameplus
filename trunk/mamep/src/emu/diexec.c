@@ -486,7 +486,7 @@ void device_execute_interface::interface_pre_start()
 	m_driver_irq.bind_relative_to(device());
 
 	// fill in the initial states
-	execute_interface_iterator iter(device().machine().root_device());
+	device_iterator iter(device().machine().root_device());
 	int index = iter.indexof(*this);
 	m_suspend = SUSPEND_REASON_RESET;
 	m_profiler = profile_type(index + PROFILER_DEVICE_FIRST);
@@ -556,16 +556,8 @@ void device_execute_interface::interface_post_reset()
 	if (m_vblank_interrupt_screen != NULL)
 	{
 		// get the screen that will trigger the VBLANK
-
-		// new style - use screen tag directly
-		screen_device *screen;
-		if (m_vblank_interrupt_screen != NULL) {
-			astring tempstring;
-			screen = downcast<screen_device *>(device().machine().device(device().siblingtag(tempstring,m_vblank_interrupt_screen)));
-		}
-		// old style 'hack' setup - use screen #0
-		else
-			screen = device().machine().first_screen();
+		astring tempstring;
+		screen_device *screen = downcast<screen_device *>(device().machine().device(device().siblingtag(tempstring,m_vblank_interrupt_screen)));
 
 		assert(screen != NULL);
 		screen->register_vblank_callback(vblank_state_delegate(FUNC(device_execute_interface::on_vblank), this));

@@ -20,7 +20,6 @@
 #include "softbox.h"
 
 
-
 //**************************************************************************
 //  MACROS / CONSTANTS
 //**************************************************************************
@@ -31,6 +30,7 @@
 #define I8255_1_TAG     "ic16"
 #define COM8116_TAG     "ic14"
 #define RS232_TAG       "rs232"
+#define CORVUS_HDC_TAG  "corvus"
 
 
 
@@ -88,25 +88,9 @@ static ADDRESS_MAP_START( softbox_io, AS_IO, 8, softbox_device )
 	AM_RANGE(0x0c, 0x0c) AM_WRITE(dbrg_w)
 	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE(I8255_0_TAG, i8255_device, read, write)
 	AM_RANGE(0x14, 0x17) AM_DEVREADWRITE(I8255_1_TAG, i8255_device, read, write)
-	AM_RANGE(0x18, 0x18) AM_READWRITE_LEGACY(corvus_hdc_data_r, corvus_hdc_data_w)
+	AM_RANGE(0x18, 0x18) AM_DEVREADWRITE(CORVUS_HDC_TAG, corvus_hdc_t, read, write)
 ADDRESS_MAP_END
 
-
-
-//-------------------------------------------------
-//  i8251_interface usart_intf
-//-------------------------------------------------
-
-static const i8251_interface usart_intf =
-{
-	DEVCB_DEVICE_LINE_MEMBER(RS232_TAG, serial_port_device, tx),
-	DEVCB_DEVICE_LINE_MEMBER(RS232_TAG, rs232_port_device, dtr_w),
-	DEVCB_DEVICE_LINE_MEMBER(RS232_TAG, rs232_port_device, rts_w),
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL,
-	DEVCB_NULL
-};
 
 
 //-------------------------------------------------
@@ -213,7 +197,7 @@ READ8_MEMBER( softbox_device::ppi1_pc_r )
 
 	*/
 
-	UINT8 status = corvus_hdc_status_r(space, 0);
+	UINT8 status = m_hdc->status_r(space, 0);
 	UINT8 data = 0;
 
 	data |= (status & CONTROLLER_BUSY) ? 0 : 0x10;
@@ -276,18 +260,29 @@ static MACHINE_CONFIG_FRAGMENT( softbox )
 	MCFG_CPU_IO_MAP(softbox_io)
 
 	// devices
-	MCFG_I8251_ADD(I8251_TAG, usart_intf)
+	MCFG_DEVICE_ADD(I8251_TAG, I8251, 0)
+	MCFG_I8251_TXD_HANDLER(DEVWRITELINE(RS232_TAG, rs232_port_device, write_txd))
+	MCFG_I8251_DTR_HANDLER(DEVWRITELINE(RS232_TAG, rs232_port_device, write_dtr))
+	MCFG_I8251_RTS_HANDLER(DEVWRITELINE(RS232_TAG, rs232_port_device, write_rts))
+
+	MCFG_RS232_PORT_ADD(RS232_TAG, default_rs232_devices, NULL)
+	MCFG_RS232_RXD_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_rxd))
+	MCFG_RS232_DSR_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_dsr))
+	MCFG_DEVICE_CARD_DEVICE_INPUT_DEFAULTS("serial_terminal", terminal)
+
 	MCFG_I8255A_ADD(I8255_0_TAG, ppi0_intf)
 	MCFG_I8255A_ADD(I8255_1_TAG, ppi1_intf)
-	MCFG_COM8116_ADD(COM8116_TAG, XTAL_5_0688MHz, NULL, DEVWRITELINE(I8251_TAG, i8251_device, rxc_w), DEVWRITELINE(I8251_TAG, i8251_device, txc_w))
-	MCFG_HARDDISK_ADD("harddisk1")
-	MCFG_HARDDISK_ADD("harddisk2")
-	MCFG_HARDDISK_ADD("harddisk3")
-	MCFG_HARDDISK_ADD("harddisk4")
-	MCFG_RS232_PORT_ADD(RS232_TAG, default_rs232_devices, NULL)
-	MCFG_DEVICE_CARD_DEVICE_INPUT_DEFAULTS("serial_terminal", terminal)
-	MCFG_SERIAL_OUT_RX_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_rx))
-	MCFG_RS232_OUT_DSR_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_dsr))
+
+	MCFG_DEVICE_ADD(COM8116_TAG, COM8116, XTAL_5_0688MHz)
+	MCFG_COM8116_FR_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_rxc))
+	MCFG_COM8116_FT_HANDLER(DEVWRITELINE(I8251_TAG, i8251_device, write_txc))
+
+	MCFG_DEVICE_ADD(CORVUS_HDC_TAG, CORVUS_HDC, 0)
+	MCFG_HARDDISK_CONFIG_ADD("harddisk1", corvus_hdc_t::hd_intf)
+	MCFG_HARDDISK_CONFIG_ADD("harddisk2", corvus_hdc_t::hd_intf)
+	MCFG_HARDDISK_CONFIG_ADD("harddisk3", corvus_hdc_t::hd_intf)
+	MCFG_HARDDISK_CONFIG_ADD("harddisk4", corvus_hdc_t::hd_intf)
+
 	//MCFG_IMI7000_BUS_ADD("imi5000h", NULL, NULL, NULL)
 MACHINE_CONFIG_END
 
@@ -346,7 +341,8 @@ softbox_device::softbox_device(const machine_config &mconfig, const char *tag, d
 	: device_t(mconfig, SOFTBOX, "PET SoftBox", tag, owner, clock, "pet_softbox", __FILE__),
 		device_ieee488_interface(mconfig, *this),
 		m_maincpu(*this, Z80_TAG),
-		m_dbrg(*this, COM8116_TAG)
+		m_dbrg(*this, COM8116_TAG),
+		m_hdc(*this, CORVUS_HDC_TAG)
 {
 }
 
@@ -357,7 +353,6 @@ softbox_device::softbox_device(const machine_config &mconfig, const char *tag, d
 
 void softbox_device::device_start()
 {
-	corvus_hdc_init(this);
 }
 
 

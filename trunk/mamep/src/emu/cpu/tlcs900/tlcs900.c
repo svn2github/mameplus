@@ -498,7 +498,7 @@ void tmp95c061_device::device_reset()
 }
 
 
-#include "900tbl.c"
+#include "900tbl.inc"
 
 
 #define TMP95C061_NUM_MASKABLE_IRQS   22
@@ -1835,6 +1835,7 @@ void tmp95c063_device::device_reset()
 	{
 		m_level[i] = CLEAR_LINE;
 	}
+	m_prefetch_clear = true;
 }
 
 READ8_MEMBER( tmp95c063_device::internal_r )

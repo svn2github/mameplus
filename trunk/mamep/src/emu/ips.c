@@ -67,7 +67,7 @@ static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)
 			if (!ROMENTRY_ISFILE(rom))
 				continue;
 
-			if (mame_stricmp(ROM_GETNAME(rom), name) == 0)
+			if (core_stricmp(ROM_GETNAME(rom), name) == 0)
 				return rom;
 		}
 	}
@@ -85,7 +85,7 @@ static int load_ips_file(running_machine &machine, ips_chunk **p, const char *ip
 	mame_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
 
 	astring fname(ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
-	emu_file file = emu_file(machine.options().value(OPTION_IPSPATH), OPEN_FLAG_READ);
+	emu_file file(machine.options().value(OPTION_IPSPATH), OPEN_FLAG_READ);
 	filerr = file.open(fname);
 
 	if (filerr != FILERR_NONE)
@@ -215,7 +215,7 @@ static int parse_ips_patch(running_machine &machine, ips_entry **ips_p, const ch
 	mame_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine.system().name, patch_name, INDEX_EXT);
 
 	astring fname(machine.system().name, PATH_SEPARATOR, patch_name, INDEX_EXT);
-	emu_file fpDat = emu_file(machine.options().value(OPTION_IPSPATH), OPEN_FLAG_READ);
+	emu_file fpDat(machine.options().value(OPTION_IPSPATH), OPEN_FLAG_READ);
 	filerr = fpDat.open(fname);
 
 	if (filerr != FILERR_NONE)
@@ -293,8 +293,8 @@ static int parse_ips_patch(running_machine &machine, ips_entry **ips_p, const ch
 			*ips_p = entry;
 			ips_p = &entry->next;
 
-			entry->rom_name = mame_strdup(rom_name);
-			entry->ips_name = mame_strdup(ips_name);
+			entry->rom_name = core_strdup(rom_name);
+			entry->ips_name = core_strdup(ips_name);
 			if (!entry->rom_name || !entry->ips_name)
 			{
 				romdata->errorstring.cat(_("ERROR: IPS is not enough memory\n"));
@@ -328,7 +328,7 @@ parse_ips_patch_fail:
 int open_ips_entry(running_machine &machine, const char *patch_name, romload_private *romdata, const rom_entry *romp)
 {
 	int result = 0;
-	char *s = mame_strdup(patch_name);
+	char *s = core_strdup(patch_name);
 	char *p, *q;
 	ips_entry **list;
 
@@ -416,7 +416,7 @@ void *assign_ips_patch(const rom_entry *romp)
 	{
 		memset(&p->current, 0, sizeof (p->current));
 
-		if (mame_stricmp(p->rom_name, name) == 0)
+		if (core_stricmp(p->rom_name, name) == 0)
 		{
 			logerror("IPS: assign IPS file \"%s\" to ROM entry \"%s\"\n", p->ips_name, p->rom_name);
 			p->current = *p->chunk;

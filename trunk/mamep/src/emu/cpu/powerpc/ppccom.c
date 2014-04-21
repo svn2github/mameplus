@@ -204,6 +204,7 @@ INLINE void set_decrementer(powerpc_state *ppc, UINT32 newdec)
 }
 
 
+#if 0
 /*-------------------------------------------------
     is_nan_double - is a double value a NaN
 -------------------------------------------------*/
@@ -214,6 +215,7 @@ INLINE int is_nan_double(double x)
 	return( ((xi & DOUBLE_EXP) == DOUBLE_EXP) &&
 			((xi & DOUBLE_FRAC) != DOUBLE_ZERO) );
 }
+#endif
 
 
 /*-------------------------------------------------
@@ -230,6 +232,7 @@ INLINE int is_qnan_double(double x)
 }
 
 
+#if 0
 /*-------------------------------------------------
     is_snan_double - is a double value a
     signaling NaN
@@ -242,6 +245,7 @@ INLINE int is_snan_double(double x)
 			((xi & DOUBLE_FRAC) != DOUBLE_ZERO) &&
 			((xi & U64(0x0008000000000000)) == DOUBLE_ZERO) );
 }
+#endif
 
 
 /*-------------------------------------------------
@@ -322,8 +326,8 @@ void ppccom_init(powerpc_state *ppc, powerpc_flavor flavor, UINT32 cap, int tb_d
 	ppc->program = &device->space(AS_PROGRAM);
 	ppc->direct = &ppc->program->direct();
 	ppc->system_clock = (config != NULL) ? config->bus_frequency : device->clock();
-	ppc->dcr_read_func = (config != NULL) ? config->dcr_read_func : NULL;
-	ppc->dcr_write_func = (config != NULL) ? config->dcr_write_func : NULL;
+	ppc->dcr_read_func = read32_delegate();
+	ppc->dcr_write_func = write32_delegate();
 
 	ppc->tb_divisor = (ppc->tb_divisor * device->clock() + ppc->system_clock / 2 - 1) / ppc->system_clock;
 	ppc->codexor = 0;
@@ -1116,14 +1120,14 @@ void ppccom_execute_mfdcr(powerpc_state *ppc)
 	}
 
 	/* default handling */
-	if (!ppc->dcr_read_func) {
+	if (ppc->dcr_read_func.isnull()) {
 		mame_printf_debug("DCR %03X read\n", ppc->param0);
 		if (ppc->param0 < ARRAY_LENGTH(ppc->dcr))
 			ppc->param1 = ppc->dcr[ppc->param0];
 		else
 			ppc->param1 = 0;
 	} else {
-		ppc->param1 = ppc->dcr_read_func(ppc->device,*ppc->program,ppc->param0,0xffffffff);
+		ppc->param1 = ppc->dcr_read_func(*ppc->program,ppc->param0,0xffffffff);
 	}
 }
 
@@ -1208,12 +1212,12 @@ void ppccom_execute_mtdcr(powerpc_state *ppc)
 	}
 
 	/* default handling */
-	if (!ppc->dcr_write_func) {
+	if (ppc->dcr_write_func.isnull()) {
 		mame_printf_debug("DCR %03X write = %08X\n", ppc->param0, ppc->param1);
 		if (ppc->param0 < ARRAY_LENGTH(ppc->dcr))
 			ppc->dcr[ppc->param0] = ppc->param1;
 	} else {
-		ppc->dcr_write_func(ppc->device,*ppc->program,ppc->param0,ppc->param1,0xffffffff);
+		ppc->dcr_write_func(*ppc->program,ppc->param0,ppc->param1,0xffffffff);
 	}
 }
 
@@ -2484,6 +2488,26 @@ void ppc4xx_set_dma_write_handler(device_t *device, int channel, ppc4xx_dma_writ
 	ppc->buffered_dma_rate[channel] = rate;
 }
 
+/*-------------------------------------------------
+    ppc4xx_set_dcr_read_handler
+-------------------------------------------------*/
+
+void ppc4xx_set_dcr_read_handler(device_t *device, read32_delegate dcr_read_func)
+{
+	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(device)->token();
+	ppc->dcr_read_func = dcr_read_func;
+
+}
+
+/*-------------------------------------------------
+    ppc4xx_set_dcr_write_handler
+-------------------------------------------------*/
+
+void ppc4xx_set_dcr_write_handler(device_t *device, write32_delegate dcr_write_func)
+{
+	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(device)->token();
+	ppc->dcr_write_func = dcr_write_func;
+}
 
 /*-------------------------------------------------
     ppc4xx_set_info - PowerPC 4XX-specific

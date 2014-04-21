@@ -62,11 +62,11 @@
 #ifndef __C64H156__
 #define __C64H156__
 
-
 #include "emu.h"
-#include "imagedev/flopdrv.h"
+#include "imagedev/floppy.h"
 #include "formats/d64_dsk.h"
 #include "formats/g64_dsk.h"
+#include "formats/d71_dsk.h"
 
 
 
@@ -74,12 +74,14 @@
 //  INTERFACE CONFIGURATION MACROS
 //**************************************************************************
 
-#define MCFG_64H156_ADD(_tag, _clock, _config) \
-	MCFG_DEVICE_ADD(_tag, C64H156, _clock) \
-	MCFG_DEVICE_CONFIG(_config)
+#define MCFG_64H156_ATN_CALLBACK(_write) \
+	devcb = &c64h156_device::set_atn_wr_callback(*device, DEVCB2_##_write);
 
-#define C64H156_INTERFACE(_name) \
-	const c64h156_interface (_name) =
+#define MCFG_64H156_SYNC_CALLBACK(_write) \
+	devcb = &c64h156_device::set_sync_wr_callback(*device, DEVCB2_##_write);
+
+#define MCFG_64H156_BYTE_CALLBACK(_write) \
+	devcb = &c64h156_device::set_byte_wr_callback(*device, DEVCB2_##_write);
 
 
 
@@ -87,117 +89,113 @@
 //  TYPE DEFINITIONS
 //**************************************************************************
 
-// ======================> c64h156_interface
-
-struct c64h156_interface
-{
-	devcb_write_line    m_out_atn_cb;
-	devcb_write_line    m_out_sync_cb;
-	devcb_write_line    m_out_byte_cb;
-};
-
 // ======================> c64h156_device
 
-class c64h156_device :  public device_t,
-						public device_execute_interface,
-						public c64h156_interface
+class c64h156_device :  public device_t
 {
 public:
 	// construction/destruction
 	c64h156_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 
+	template<class _Object> static devcb2_base &set_atn_wr_callback(device_t &device, _Object object) { return downcast<c64h156_device &>(device).m_write_atn.set_callback(object); }
+	template<class _Object> static devcb2_base &set_sync_wr_callback(device_t &device, _Object object) { return downcast<c64h156_device &>(device).m_write_sync.set_callback(object); }
+	template<class _Object> static devcb2_base &set_byte_wr_callback(device_t &device, _Object object) { return downcast<c64h156_device &>(device).m_write_byte.set_callback(object); }
+
 	DECLARE_READ8_MEMBER( yb_r );
 	DECLARE_WRITE8_MEMBER( yb_w );
+
 	DECLARE_WRITE_LINE_MEMBER( test_w );
 	DECLARE_WRITE_LINE_MEMBER( accl_w );
-	DECLARE_READ_LINE_MEMBER( sync_r );
-	DECLARE_READ_LINE_MEMBER( byte_r );
 	DECLARE_WRITE_LINE_MEMBER( ted_w );
 	DECLARE_WRITE_LINE_MEMBER( mtr_w );
 	DECLARE_WRITE_LINE_MEMBER( oe_w );
 	DECLARE_WRITE_LINE_MEMBER( soe_w );
-	DECLARE_READ_LINE_MEMBER( atn_r );
 	DECLARE_WRITE_LINE_MEMBER( atni_w );
 	DECLARE_WRITE_LINE_MEMBER( atna_w );
 
-	void set_floppy(legacy_floppy_image_device *floppy);
+	DECLARE_READ_LINE_MEMBER( sync_r ) { return checkpoint_live.sync; }
+	DECLARE_READ_LINE_MEMBER( byte_r ) { return checkpoint_live.byte; }
+	DECLARE_READ_LINE_MEMBER( atn_r ) { return m_atni ^ m_atna; }
 
-	void stp_w(int data);
-	void ds_w(int data);
-	void set_side(int side);
+	void stp_w(int stp);
+	void ds_w(int ds);
 
-	static void on_disk_change(device_image_interface &image);
+	void set_floppy(floppy_image_device *floppy);
 
 protected:
 	// device-level overrides
-	virtual void device_config_complete();
 	virtual void device_start();
-
-	// device_execute_interface overrides
-	virtual void execute_run();
-
-	int m_icount;
-
-	inline void set_atn_line();
-	inline void read_current_track();
-	inline void update_cycles_until_next_bit();
-	inline void receive_bit();
-	inline void decode_bit();
+	virtual void device_reset();
+	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
 private:
-	devcb_resolved_write_line   m_out_atn_func;
-	devcb_resolved_write_line   m_out_sync_func;
-	devcb_resolved_write_line   m_out_byte_func;
+	enum {
+		IDLE,
+		RUNNING,
+		RUNNING_SYNCPOINT
+	};
 
-	legacy_floppy_image_device *m_floppy;
-	optional_shared_ptr<UINT8> m_track_buffer;                  // track data buffer
-	optional_shared_ptr<UINT8> m_speed_buffer;                  // speed block buffer
+	struct live_info {
+		attotime tm;
+		int state, next_state;
+		int sync;
+		int byte;
+		int ds;
+		int oe;
+		int soe;
+		int accl;
+		UINT8 accl_yb;
 
-	// track
-	UINT16 m_shift;
-	int m_side;                             // disk side
-	int m_track_len;                        // track length
-	offs_t m_buffer_pos;                    // current byte position within track buffer
-	int m_bit_pos;                          // current bit position within track buffer byte
-	int m_bit_count;                        // current data byte bit counter
-	int m_cycles_until_next_bit;
-	int m_zero_count;
-	int m_cycles_until_random_flux;
+		attotime edge;
+		UINT16 shift_reg;
+		int cycle_counter;
+		int cell_counter;
+		int bit_counter;
+		int zero_counter;
+		int cycles_until_random_flux;
 
-	// motors
-	int m_mtr;                              // spindle motor on
+		UINT8 yb;
+		UINT8 shift_reg_write;
+		attotime write_start_time;
+		attotime write_buffer[32];
+		int write_position;
+	};
 
-	// signals
-	int m_accl;                             // 1/2 MHz select
-	int m_ds;                               // density select
-	int m_soe;                              // serial output enable
-	int m_oe;                               // output enable (0 = write, 1 = read)
+	devcb2_write_line m_write_atn;
+	devcb2_write_line m_write_sync;
+	devcb2_write_line m_write_byte;
 
-	// IEC
-	int m_atni;                             // attention input
-	int m_atna;                             // attention acknowledge
+	floppy_image_device *m_floppy;
 
-	// read logic
-	int m_last_bit_sync;
-	int m_bit_sync;
-	int m_byte_sync;
-	int m_accl_byte_sync;
-	int m_block_sync;
-	int m_ue7;
-	int m_ue7_tc;
-	int m_uf4;
-	int m_uf4_qb;
-	UINT8 m_ud2;
-	UINT8 m_accl_yb;
-	int m_u4a;
-	int m_u4b;
-	int m_ue3;
-	int m_uc1b;
+	int m_mtr;
+	int m_accl;
+	int m_stp;
+	int m_ds;
+	int m_soe;
+	int m_oe;
+	int m_ted;
+	UINT8 m_yb;
+	int m_atni;
+	int m_atna;
 
-	// write logic
-	UINT8 m_via_pa;
-	UINT8 m_ud3;
-	int m_wp;
+	attotime m_period;
+
+	live_info cur_live, checkpoint_live;
+	emu_timer *t_gen;
+
+	void live_start();
+	void checkpoint();
+	void rollback();
+	bool write_next_bit(bool bit, attotime limit);
+	void start_writing(attotime tm);
+	void commit(attotime tm);
+	void stop_writing(attotime tm);
+	void live_delay(int state);
+	void live_sync();
+	void live_abort();
+	void live_run(attotime limit = attotime::never);
+	void get_next_edge(attotime when);
+	int get_next_bit(attotime &tm, attotime limit);
 };
 
 

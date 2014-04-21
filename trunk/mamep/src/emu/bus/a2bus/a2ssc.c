@@ -6,12 +6,8 @@
 
 *********************************************************************/
 
-#include "emu.h"
-#include "includes/apple2.h"
 #include "a2ssc.h"
-#include "machine/terminal.h"
-#include "machine/null_modem.h"
-#include "machine/serial.h"
+#include "bus/rs232/rs232.h"
 
 
 /***************************************************************************
@@ -29,15 +25,16 @@ const device_type A2BUS_SSC = &device_creator<a2bus_ssc_device>;
 #define SSC_RS232_TAG   "ssc_rs232"
 
 MACHINE_CONFIG_FRAGMENT( ssc )
-	MCFG_DEVICE_ADD(SSC_ACIA_TAG, MOS6551, XTAL_1_8432MHz)
+	MCFG_DEVICE_ADD(SSC_ACIA_TAG, MOS6551, 0)
+	MCFG_MOS6551_XTAL(XTAL_1_8432MHz)
 	MCFG_MOS6551_IRQ_HANDLER(WRITELINE(a2bus_ssc_device, acia_irq_w))
-	MCFG_MOS6551_TXD_HANDLER(DEVWRITELINE(SSC_RS232_TAG, rs232_port_device, tx))
+	MCFG_MOS6551_TXD_HANDLER(DEVWRITELINE(SSC_RS232_TAG, rs232_port_device, write_txd))
 
 	MCFG_RS232_PORT_ADD(SSC_RS232_TAG, default_rs232_devices, NULL)
-	MCFG_SERIAL_OUT_RX_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, rxd_w))
-	MCFG_RS232_OUT_DCD_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, dcd_w))
-	MCFG_RS232_OUT_DSR_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, dsr_w))
-	MCFG_RS232_OUT_CTS_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, cts_w))
+	MCFG_RS232_RXD_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, write_rxd))
+	MCFG_RS232_DCD_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, write_dcd))
+	MCFG_RS232_DSR_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, write_dsr))
+	MCFG_RS232_CTS_HANDLER(DEVWRITELINE(SSC_ACIA_TAG, mos6551_device, write_cts))
 MACHINE_CONFIG_END
 
 ROM_START( ssc )
@@ -133,7 +130,8 @@ a2bus_ssc_device::a2bus_ssc_device(const machine_config &mconfig, const char *ta
 		device_a2bus_card_interface(mconfig, *this),
 		m_dsw1(*this, "DSW1"),
 		m_dsw2(*this, "DSW2"),
-		m_acia(*this, SSC_ACIA_TAG)
+		m_acia(*this, SSC_ACIA_TAG),
+		m_started(false)
 {
 }
 
@@ -142,7 +140,8 @@ a2bus_ssc_device::a2bus_ssc_device(const machine_config &mconfig, device_type ty
 		device_a2bus_card_interface(mconfig, *this),
 		m_dsw1(*this, "DSW1"),
 		m_dsw2(*this, "DSW2"),
-		m_acia(*this, SSC_ACIA_TAG)
+		m_acia(*this, SSC_ACIA_TAG),
+		m_started(false)
 {
 }
 
@@ -161,6 +160,7 @@ void a2bus_ssc_device::device_start()
 
 void a2bus_ssc_device::device_reset()
 {
+	m_started = true;
 }
 
 /*-------------------------------------------------
@@ -226,15 +226,18 @@ void a2bus_ssc_device::write_c0nx(address_space &space, UINT8 offset, UINT8 data
 
 WRITE_LINE_MEMBER( a2bus_ssc_device::acia_irq_w )
 {
-	if (!(m_dsw2->read() & 4))
+	if (m_started)
 	{
-		if (state)
+		if (!(m_dsw2->read() & 4))
 		{
-			raise_slot_irq();
-		}
-		else
-		{
-			lower_slot_irq();
+			if (state)
+			{
+				raise_slot_irq();
+			}
+			else
+			{
+				lower_slot_irq();
+			}
 		}
 	}
 }

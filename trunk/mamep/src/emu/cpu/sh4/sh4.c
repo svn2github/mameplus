@@ -2842,14 +2842,12 @@ static CPU_RESET( common_sh4_reset )
 	sh4_state *sh4 = get_safe_token(device);
 	emu_timer *tsaved[4];
 	emu_timer *tsave[5];
-	UINT32 *m;
 	int save_is_slave;
 	int savecpu_clock, savebus_clock, savepm_clock;
 
 	void (*f)(UINT32 data);
 	device_irq_acknowledge_callback save_irqcallback;
 
-	m = sh4->m;
 	tsaved[0] = sh4->dma_timer[0];
 	tsaved[1] = sh4->dma_timer[1];
 	tsaved[2] = sh4->dma_timer[2];
@@ -2888,7 +2886,6 @@ static CPU_RESET( common_sh4_reset )
 	sh4->timer[0] = tsave[2];
 	sh4->timer[1] = tsave[3];
 	sh4->timer[2] = tsave[4];
-	sh4->m = m;
 	memset(sh4->m, 0, 16384*4);
 	sh4_default_exception_priorities(sh4);
 	memset(sh4->exception_requesting, 0, sizeof(sh4->exception_requesting));
@@ -3566,7 +3563,7 @@ CPU_GET_INFO( sh4 )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:           info->icount = &sh4->sh4_icount;                break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-4");                break;
+		case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-4 (little)");                break;
 		case CPUINFO_STR_SHORTNAME:                 strcpy(info->s, "sh4");                break;
 		case CPUINFO_STR_FAMILY:                    strcpy(info->s, "Hitachi SH7750");      break;
 		case CPUINFO_STR_VERSION:                   strcpy(info->s, "1.0");             break;
@@ -3710,9 +3707,9 @@ CPU_GET_INFO( sh3 )
 	case CPUINFO_FCT_RESET:                     info->reset = CPU_RESET_NAME(sh3);              break;
 
 	/* --- the following bits of info are returned as NULL-terminated strings --- */
-	case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-3");                break;
+	case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-3 (little)");                break;
 	case CPUINFO_STR_FAMILY:                    strcpy(info->s, "Hitachi SH7700");      break;
-
+	case CPUINFO_STR_SHORTNAME:                 strcpy(info->s, "sh3");                break;
 	case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map64 = ADDRESS_MAP_NAME(sh3_internal_map); break;
 
 	default:                                    CPU_GET_INFO_CALL(sh4);                 break;
@@ -3729,9 +3726,9 @@ CPU_GET_INFO( sh3be )
 	case CPUINFO_FCT_DISASSEMBLE:               info->disassemble = CPU_DISASSEMBLE_NAME(sh4be);            break;
 
 	/* --- the following bits of info are returned as NULL-terminated strings --- */
-	case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-3");                break;
+	case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-3 (big)");                break;
 	case CPUINFO_STR_FAMILY:                    strcpy(info->s, "Hitachi SH7700");      break;
-
+	case CPUINFO_STR_SHORTNAME:                 strcpy(info->s, "sh3be");                break;
 	case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map64 = ADDRESS_MAP_NAME(sh3_internal_map); break;
 
 	case CPUINFO_INT_ENDIANNESS:                info->i = ENDIANNESS_BIG;               break;
@@ -3744,6 +3741,8 @@ CPU_GET_INFO( sh4be )
 {
 	switch (state)
 	{
+	case CPUINFO_STR_NAME:                      strcpy(info->s, "SH-4 (big)");                break;
+	case CPUINFO_STR_SHORTNAME:                 strcpy(info->s, "sh4be");                break;
 	case CPUINFO_FCT_EXECUTE:                   info->execute = CPU_EXECUTE_NAME(sh4be);            break;
 	case CPUINFO_FCT_DISASSEMBLE:               info->disassemble = CPU_DISASSEMBLE_NAME(sh4be);            break;
 	case CPUINFO_INT_ENDIANNESS:                info->i = ENDIANNESS_BIG;               break;

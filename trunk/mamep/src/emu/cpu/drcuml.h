@@ -110,7 +110,7 @@ public:
 
 	// instruction appending
 	uml::instruction &append();
-	void append_comment(const char *format, ...);
+	void append_comment(const char *format, ...) ATTR_PRINTF(2,3);
 
 	// this class is thrown if abort() is called
 	class abort_compilation : public emu_exception
@@ -130,7 +130,7 @@ private:
 	drcuml_block *          m_next;             // pointer to next block
 	UINT32                  m_nextinst;         // next instruction to fill in the cache
 	UINT32                  m_maxinst;          // maximum number of instructions
-	uml::instruction *      m_inst;             // pointer to the instruction list
+	dynamic_array<uml::instruction> m_inst;     // pointer to the instruction list
 	bool                    m_inuse;            // this block is in use
 };
 
@@ -194,7 +194,7 @@ public:
 
 	// logging
 	bool logging() const { return (m_umllog != NULL); }
-	void log_printf(const char *format, ...);
+	void log_printf(const char *format, ...) ATTR_PRINTF(2,3);
 	void log_flush() { if (logging()) fflush(m_umllog); }
 
 private:

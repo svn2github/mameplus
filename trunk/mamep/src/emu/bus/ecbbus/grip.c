@@ -52,6 +52,7 @@ ROM_START( grip21 )
 ROM_END
 
 
+#if 0
 //-------------------------------------------------
 //  ROM( grip25 )
 //-------------------------------------------------
@@ -100,6 +101,7 @@ ROM_START( grips115 )
 	ROM_REGION( 0x4000, Z80_TAG, 0 )
 	ROM_LOAD( "grips115.z2", 0x0000, 0x4000, CRC(505706ef) SHA1(05fb032fb1a504c534c30c352ba4bd47623503d0) )
 ROM_END
+#endif
 
 
 //-------------------------------------------------
@@ -149,7 +151,7 @@ static ADDRESS_MAP_START( grip_io, AS_IO, 8, grip_device )
 	AM_RANGE(0x50, 0x50) AM_DEVWRITE(MC6845_TAG, mc6845_device, address_w)
 	AM_RANGE(0x52, 0x52) AM_DEVWRITE(MC6845_TAG, mc6845_device, register_w)
 	AM_RANGE(0x53, 0x53) AM_DEVREAD(MC6845_TAG, mc6845_device, register_r)
-	AM_RANGE(0x60, 0x60) AM_DEVWRITE(CENTRONICS_TAG, centronics_device, write)
+	AM_RANGE(0x60, 0x60) AM_DEVWRITE("cent_data_out", output_latch_device, write)
 	AM_RANGE(0x70, 0x73) AM_DEVREADWRITE(I8255A_TAG, i8255_device, read, write)
 //  AM_RANGE(0x80, 0x80) AM_WRITE(bl2out_w)
 //  AM_RANGE(0x90, 0x90) AM_WRITE(gr2out_w)
@@ -194,7 +196,7 @@ static ADDRESS_MAP_START( grip5_io, AS_IO, 8, grip5_device )
     AM_RANGE(0x50, 0x50) AM_DEVWRITE(HD6345_TAG, hd6345_device, address_w)
     AM_RANGE(0x52, 0x52) AM_DEVWRITE(HD6345_TAG, hd6345_device, register_w)
     AM_RANGE(0x53, 0x53) AM_DEVREAD(HD6345_TAG, hd6345_device, register_r)
-    AM_RANGE(0x60, 0x60) AM_DEVWRITE(CENTRONICS_TAG, centronics_device, write)
+    AM_RANGE(0x60, 0x60) AM_DEVWRITE("cent_data_out", output_latch_device, write)
     AM_RANGE(0x70, 0x73) AM_DEVREADWRITE(I8255A_TAG, i8255_device, read, write)
 
 //  AM_RANGE(0x80, 0x80) AM_WRITE(xrflgs_w)
@@ -224,7 +226,7 @@ ADDRESS_MAP_END
 //  mc6845_interface crtc_intf
 //-------------------------------------------------
 
-void grip_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, void *param)
+void grip_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param)
 {
 	int column, bit;
 
@@ -236,9 +238,9 @@ void grip_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, c
 		for (bit = 0; bit < 8; bit++)
 		{
 			int x = (column * 8) + bit;
-			int color = m_flash ? 0 : BIT(data, bit);
+			int color = (m_flash ? 0 : BIT(data, bit)) && de;
 
-			bitmap.pix32(y, x) = RGB_MONOCHROME_WHITE[color];
+			bitmap.pix32(vbp + y, hbp + x) = m_palette->pen(color);
 		}
 	}
 }
@@ -247,13 +249,13 @@ static MC6845_UPDATE_ROW( grip_update_row )
 {
 	grip_device *grip = downcast<grip_device *>(device->owner());
 
-	grip->crtc_update_row(device,bitmap,cliprect,ma,ra,y,x_count,cursor_x,param);
+	grip->crtc_update_row(device,bitmap,cliprect,ma,ra,y,x_count,cursor_x,de,hbp,vbp,param);
 }
 /*
 static MC6845_UPDATE_ROW( grip5_update_row )
 {
     grip5_state *state = device->machine().driver_data<grip5_state>();
-    const rgb_t *palette = palette_entry_list_raw(bitmap.palette());
+    const rgb_t *palette = state->m_palette->palette()->entry_list_raw();
     int column, bit;
 
     for (column = 0; column < x_count; column++)
@@ -286,7 +288,7 @@ static const speaker_interface speaker_intf =
 
 static MC6845_INTERFACE( crtc_intf )
 {
-	false,
+	true,
 	0,0,0,0,
 	8,
 	NULL,
@@ -303,13 +305,13 @@ static MC6845_INTERFACE( crtc_intf )
 static MC6845_INTERFACE( grip5_crtc_intf )
 {
     false,
-	0,0,0,0,
+    0,0,0,0,
     8,
     NULL,
     grip5_update_row,
     NULL,
-    DEVCB_DEVICE_LINE(Z80STI_TAG, z80sti_i1_w),
-    DEVCB_DEVICE_LINE(Z80STI_TAG, z80sti_i2_w),
+    DEVCB_DEVICE_LINE_MEMBER(Z80STI_TAG, z80sti_device, i1_w),
+    DEVCB_DEVICE_LINE_MEMBER(Z80STI_TAG, z80sti_device, i2_w),
     DEVCB_NULL,
     DEVCB_NULL,
     grip5_update_addr_changed
@@ -428,6 +430,11 @@ static I8255A_INTERFACE( ppi_intf )
 //  Z80STI_INTERFACE( sti_intf )
 //-------------------------------------------------
 
+WRITE_LINE_MEMBER(grip_device::write_centronics_busy)
+{
+	m_centronics_busy = state;
+}
+
 READ8_MEMBER( grip_device::sti_gpio_r )
 {
 	/*
@@ -454,7 +461,7 @@ READ8_MEMBER( grip_device::sti_gpio_r )
 	data |= m_crtc->cursor_r() << 2;
 
 	// centronics busy
-	data |= m_centronics->busy_r() << 3;
+	data |= m_centronics_busy << 3;
 
 	// keyboard interrupt
 	data |= m_ib << 4;
@@ -544,6 +551,8 @@ static MACHINE_CONFIG_FRAGMENT( grip )
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 480-1)
 
+	MCFG_PALETTE_ADD_BLACK_AND_WHITE("palette")
+
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("speaker", SPEAKER_SOUND, 0)
@@ -555,7 +564,13 @@ static MACHINE_CONFIG_FRAGMENT( grip )
 //  MCFG_MC6845_ADD(HD6345_TAG, HD6345, SCREEN_TAG, XTAL_16MHz/4, grip5_crtc_intf)
 	MCFG_I8255A_ADD(I8255A_TAG, ppi_intf)
 	MCFG_Z80STI_ADD(Z80STI_TAG, XTAL_16MHz/4, sti_intf)
-	MCFG_CENTRONICS_PRINTER_ADD(CENTRONICS_TAG, standard_centronics)
+
+	MCFG_CENTRONICS_ADD(CENTRONICS_TAG, centronics_printers, "image")
+	MCFG_CENTRONICS_BUSY_HANDLER(WRITELINE(grip_device, write_centronics_busy))
+	MCFG_CENTRONICS_FAULT_HANDLER(WRITELINE(grip_device, write_centronics_fault))
+
+	MCFG_CENTRONICS_OUTPUT_LATCH_ADD("cent_data_out", CENTRONICS_TAG)
+
 	MCFG_ASCII_KEYBOARD_ADD("keyboard", kb_intf)
 MACHINE_CONFIG_END
 
@@ -673,6 +688,7 @@ grip_device::grip_device(const machine_config &mconfig, const char *tag, device_
 	m_sti(*this, Z80STI_TAG),
 	m_crtc(*this, MC6845_TAG),
 	m_centronics(*this, CENTRONICS_TAG),
+	m_palette(*this, "palette"),
 	m_speaker(*this, "speaker"),
 	m_video_ram(*this, "video_ram"),
 	m_j3a(*this, "J3A"),
@@ -779,6 +795,11 @@ WRITE8_MEMBER( grip_device::page_w )
 //  stat_r -
 //-------------------------------------------------
 
+WRITE_LINE_MEMBER(grip_device::write_centronics_fault)
+{
+	m_centronics_fault = state;
+}
+
 READ8_MEMBER( grip_device::stat_r )
 {
 	/*
@@ -824,7 +845,7 @@ READ8_MEMBER( grip_device::stat_r )
 	data |= js1 << 5;
 
 	// centronics fault
-	data |= m_centronics->fault_r() << 6;
+	data |= m_centronics_fault << 6;
 
 	// light pen strobe
 	data |= m_lps << 7;
@@ -861,8 +882,8 @@ WRITE8_MEMBER( grip_device::lrs_w )
 
 READ8_MEMBER( grip_device::cxstb_r )
 {
-	m_centronics->strobe_w(0);
-	m_centronics->strobe_w(1);
+	m_centronics->write_strobe(0);
+	m_centronics->write_strobe(1);
 
 	return 0;
 }
@@ -874,8 +895,8 @@ READ8_MEMBER( grip_device::cxstb_r )
 
 WRITE8_MEMBER( grip_device::cxstb_w )
 {
-	m_centronics->strobe_w(0);
-	m_centronics->strobe_w(1);
+	m_centronics->write_strobe(0);
+	m_centronics->write_strobe(1);
 }
 
 /*

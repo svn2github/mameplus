@@ -75,17 +75,24 @@
 #include "debugger.h"
 #include "render.h"
 #include "cheat.h"
-#include "uimain.h"
+#include "ui/selgame.h"
 #include "uiinput.h"
 #include "crsshair.h"
 #include "validity.h"
 #include "unzip.h"
 #include "debug/debugcon.h"
+#include "debug/debugvw.h"
 #ifdef USE_HISCORE
 #include "hiscore.h"
 #endif /* USE_HISCORE */
 
 #include <time.h>
+
+#ifdef SDLMAME_EMSCRIPTEN
+#include <emscripten.h>
+
+void js_set_main_loop(running_machine * machine);
+#endif
 
 
 
@@ -99,28 +106,6 @@ static char giant_string_buffer[65536] = { 0 };
 
 
 //**************************************************************************
-//  JAVASCRIPT PORT-SPECIFIC
-//**************************************************************************
-
-#ifdef SDLMAME_EMSCRIPTEN
-#include <emscripten.h>
-
-static device_scheduler * scheduler;
-
-void js_main_loop() {
-	attotime stoptime = scheduler->time() + attotime(0,HZ_TO_ATTOSECONDS(60));
-	while (scheduler->time() < stoptime) {
-		scheduler->timeslice();
-	}
-}
-
-void js_set_main_loop(device_scheduler &sched) {
-	scheduler = &sched;
-	emscripten_set_main_loop(&js_main_loop, 0, 1);
-}
-#endif
-
-//**************************************************************************
 //  RUNNING MACHINE
 //**************************************************************************
 
@@ -131,27 +116,14 @@ void js_set_main_loop(device_scheduler &sched) {
 running_machine::running_machine(const machine_config &_config, osd_interface &osd, bool exit_to_game_select)
 	: firstcpu(NULL),
 		primary_screen(NULL),
-		palette(NULL),
-		pens(NULL),
-		colortable(NULL),
-		shadow_table(NULL),
 		debug_flags(0),
-		palette_data(NULL),
 		romload_data(NULL),
 		ui_input_data(NULL),
 		debugcpu_data(NULL),
 		generic_machine_data(NULL),
-
 		m_config(_config),
 		m_system(_config.gamedrv()),
 		m_osd(osd),
-		m_cheat(NULL),
-		m_render(NULL),
-		m_input(NULL),
-		m_sound(NULL),
-		m_video(NULL),
-		m_tilemap(NULL),
-		m_debug_view(NULL),
 		m_current_phase(MACHINE_PHASE_PREINIT),
 		m_paused(false),
 		m_hard_reset_pending(false),
@@ -163,11 +135,9 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 		m_ui_active(_config.options().ui_active()),
 		m_basename(_config.gamedrv().name),
 		m_sample_rate(_config.options().sample_rate()),
-		m_logfile(NULL),
 		m_saveload_schedule(SLS_NONE),
 		m_saveload_schedule_time(attotime::zero),
 		m_saveload_searchpath(NULL),
-		m_logerror_list(m_respool),
 
 		m_save(*this),
 		m_memory(*this),
@@ -175,7 +145,6 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 		m_scheduler(*this),
 		m_lua_engine(*this)
 {
-	memset(gfx, 0, sizeof(gfx));
 	memset(&m_base_time, 0, sizeof(m_base_time));
 
 	// set the machine on all devices
@@ -258,10 +227,9 @@ void running_machine::start()
 {
 	// initialize basic can't-fail systems here
 	config_init(*this);
-	m_input = auto_alloc(*this, input_manager(*this));
+	m_input.reset(global_alloc(input_manager(*this)));
 	output_init(*this);
-	palette_init(*this);
-	m_render = auto_alloc(*this, render_manager(*this));
+	m_render.reset(global_alloc(render_manager(*this)));
 	generic_machine_init(*this);
 
 	// allocate a soft_reset timer
@@ -271,8 +239,8 @@ void running_machine::start()
 	m_osd.init(*this);
 
 	// create the video manager
-	m_video = auto_alloc(*this, video_manager(*this));
-	ui_init(*this);
+	m_video.reset(global_alloc(video_manager(*this)));
+	m_ui.reset(global_alloc(ui_manager(*this)));
 
 	// initialize the base time (needed for doing record/playback)
 	::time(&m_base_time);
@@ -288,7 +256,7 @@ void running_machine::start()
 	ui_input_init(*this);
 
 	// initialize the streams engine before the sound devices start
-	m_sound = auto_alloc(*this, sound_manager(*this));
+	m_sound.reset(global_alloc(sound_manager(*this)));
 
 	// first load ROMs, then populate memory, and finally initialize CPUs
 	// these operations must proceed in this order
@@ -302,12 +270,9 @@ void running_machine::start()
 	save().save_item(NAME(m_watchdog_enabled));
 	save().save_item(NAME(m_watchdog_counter));
 
-	// allocate the gfx elements prior to device initialization
-	gfx_init(*this);
-
 	// initialize image devices
 	image_init(*this);
-	m_tilemap = auto_alloc(*this, tilemap_manager(*this));
+	m_tilemap.reset(global_alloc(tilemap_manager(*this)));
 	crosshair_init(*this);
 	network_init(*this);
 
@@ -318,7 +283,7 @@ void running_machine::start()
 	// call the game driver's init function
 	// this is where decryption is done and memory maps are altered
 	// so this location in the init order is important
-	ui_set_startup_text(*this, _("Initializing..."), true);
+	ui().set_startup_text(_("Initializing..."), true);
 
 	// register callbacks for the devices, then start them
 	add_notifier(MACHINE_NOTIFY_RESET, machine_notify_delegate(FUNC(running_machine::reset_all_devices), this));
@@ -337,7 +302,7 @@ void running_machine::start()
 		schedule_load("auto");
 
 	// set up the cheat engine
-	m_cheat = auto_alloc(*this, cheat_manager(*this));
+	m_cheat.reset(global_alloc(cheat_manager(*this)));
 
 	// allocate autoboot timer
 	m_autoboot_timer = scheduler().timer_alloc(timer_expired_delegate(FUNC(running_machine::autoboot_callback), this));
@@ -390,7 +355,7 @@ int running_machine::run(bool firstrun)
 		// if we have a logfile, set up the callback
 		if (options().log())
 		{
-			m_logfile = auto_alloc(*this, emu_file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
+			m_logfile.reset(global_alloc(emu_file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS)));
 			file_error filerr = m_logfile->open("error.log");
 			assert_always(filerr == FILERR_NONE, "unable to open log file");
 			add_logerror_callback(logfile_callback);
@@ -401,14 +366,14 @@ int running_machine::run(bool firstrun)
 
 		// load the configuration settings and NVRAM
 		bool settingsloaded = config_load_settings(*this);
-		nvram_load(*this);
+		nvram_load();
 		sound().ui_mute(false);
 
 		// initialize ui lists
-		ui_initialize(*this);
+		ui().initialize(*this);
 
 		// display the startup screens
-		ui_display_startup_screens(*this, firstrun, !settingsloaded);
+		ui().display_startup_screens(firstrun, !settingsloaded);
 
 		// perform a soft reset -- this takes us to the running phase
 		soft_reset();
@@ -421,7 +386,7 @@ int running_machine::run(bool firstrun)
 
 			#ifdef SDLMAME_EMSCRIPTEN
 			//break out to our async javascript loop and halt
-			js_set_main_loop(m_scheduler);
+			js_set_main_loop(this);
 			#endif
 
 			// execute CPUs if not paused
@@ -444,7 +409,7 @@ int running_machine::run(bool firstrun)
 
 		// save the NVRAM and configuration
 		sound().ui_mute(true);
-		nvram_save(*this);
+		nvram_save();
 		// mamep: dont save settings during playback
 		if (!ioport().has_playback_file())
 		config_save_settings(*this);
@@ -486,7 +451,7 @@ int running_machine::run(bool firstrun)
 	zip_file_cache_clear();
 
 	// close the logfile
-	auto_free(*this, m_logfile);
+	m_logfile.reset();
 	return error;
 }
 
@@ -501,7 +466,7 @@ void running_machine::schedule_exit()
 	if (m_exit_to_game_select && options().system_name()[0] != 0)
 	{
 		options().set_system_name("");
-		ui_menu_force_game_select(*this, &render().ui_container());
+		ui_menu_select_game::force_game_select(*this, &render().ui_container());
 	}
 
 	// otherwise, exit for real
@@ -789,6 +754,19 @@ void running_machine::resume()
 
 
 //-------------------------------------------------
+//  toggle_pause - toggles the pause state
+//-------------------------------------------------
+
+void running_machine::toggle_pause()
+{
+	if (paused())
+		resume();
+	else
+		pause();
+}
+
+
+//-------------------------------------------------
 //  add_notifier - add a notifier of the
 //  given type
 //-------------------------------------------------
@@ -815,7 +793,7 @@ void running_machine::add_notifier(machine_notification event, machine_notify_de
 void running_machine::add_logerror_callback(logerror_callback callback)
 {
 	assert_always(m_current_phase == MACHINE_PHASE_INIT, "Can only call add_logerror_callback at init time!");
-	m_logerror_list.append(*auto_alloc(*this, logerror_callback_item(callback)));
+	m_logerror_list.append(*global_alloc(logerror_callback_item(callback)));
 }
 
 
@@ -1180,9 +1158,6 @@ void running_machine::stop_all_devices()
 	device_iterator iter(root_device());
 	for (device_t *device = iter.first(); device != NULL; device = iter.next())
 		device->stop();
-
-	// then nuke the device tree
-//  global_free(m_root_device);
 }
 
 
@@ -1212,6 +1187,119 @@ void running_machine::postload_all_devices()
 }
 
 
+/***************************************************************************
+    NVRAM MANAGEMENT
+***************************************************************************/
+
+const char *running_machine::image_parent_basename(device_t *device)
+{
+	device_t *dev = device;
+	while(dev != &root_device())
+	{
+		device_image_interface *intf = NULL;
+		if (dev!=NULL && dev->interface(intf))
+		{
+			return intf->basename_noext();
+		}
+		dev = dev->owner();
+	}
+	return NULL;
+}
+
+/*-------------------------------------------------
+    nvram_filename - returns filename of system's
+    NVRAM depending of selected BIOS
+-------------------------------------------------*/
+
+astring &running_machine::nvram_filename(astring &result, device_t &device)
+{
+	// start with either basename or basename_biosnum
+	result.cpy(basename());
+	if (root_device().system_bios() != 0 && root_device().default_bios() != root_device().system_bios())
+		result.catprintf("_%d", root_device().system_bios() - 1);
+
+	// device-based NVRAM gets its own name in a subdirectory
+	if (&device != &root_device())
+	{
+		// add per software nvrams into one folder
+		const char *software = image_parent_basename(&device);
+		if (software!=NULL && strlen(software)>0)
+		{
+			result.cat('\\').cat(software);
+		}
+		astring tag(device.tag());
+		tag.del(0, 1).replacechr(':', '_');
+		result.cat('\\').cat(tag);
+	}
+	return result;
+}
+
+/*-------------------------------------------------
+    nvram_load - load a system's NVRAM
+-------------------------------------------------*/
+
+void running_machine::nvram_load()
+{
+	if (config().m_nvram_handler != NULL)
+	{
+		astring filename;
+		emu_file file(options().nvram_directory(), OPEN_FLAG_READ);
+		if (file.open(nvram_filename(filename, root_device()), ".nv") == FILERR_NONE)
+		{
+			(*config().m_nvram_handler)(*this, &file, FALSE);
+			file.close();
+		}
+		else
+		{
+			(*config().m_nvram_handler)(*this, NULL, FALSE);
+		}
+	}
+
+	nvram_interface_iterator iter(root_device());
+	for (device_nvram_interface *nvram = iter.first(); nvram != NULL; nvram = iter.next())
+	{
+		astring filename;
+		emu_file file(options().nvram_directory(), OPEN_FLAG_READ);
+		if (file.open(nvram_filename(filename, nvram->device())) == FILERR_NONE)
+		{
+			nvram->nvram_load(file);
+			file.close();
+		}
+		else
+			nvram->nvram_reset();
+	}
+}
+
+
+/*-------------------------------------------------
+    nvram_save - save a system's NVRAM
+-------------------------------------------------*/
+
+void running_machine::nvram_save()
+{
+	if (config().m_nvram_handler != NULL)
+	{
+		astring filename;
+		emu_file file(options().nvram_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		if (file.open(nvram_filename(filename, root_device()), ".nv") == FILERR_NONE)
+		{
+			(*config().m_nvram_handler)(*this, &file, TRUE);
+			file.close();
+		}
+	}
+
+	nvram_interface_iterator iter(root_device());
+	for (device_nvram_interface *nvram = iter.first(); nvram != NULL; nvram = iter.next())
+	{
+		astring filename;
+		emu_file file(options().nvram_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		if (file.open(nvram_filename(filename, nvram->device())) == FILERR_NONE)
+		{
+			nvram->nvram_save(file);
+			file.close();
+		}
+	}
+}
 
 //**************************************************************************
 //  CALLBACK ITEMS
@@ -1283,3 +1371,44 @@ void system_time::full_time::set(struct tm &t)
 	day     = t.tm_yday;
 	is_dst  = t.tm_isdst;
 }
+
+
+
+//**************************************************************************
+//  JAVASCRIPT PORT-SPECIFIC
+//**************************************************************************
+
+#ifdef SDLMAME_EMSCRIPTEN
+
+static running_machine * jsmess_machine;
+
+void js_main_loop() {
+	device_scheduler * scheduler;
+	scheduler = &(jsmess_machine->scheduler());
+	attotime stoptime = scheduler->time() + attotime(0,HZ_TO_ATTOSECONDS(60));
+	while (scheduler->time() < stoptime) {
+		scheduler->timeslice();
+	}
+}
+
+void js_set_main_loop(running_machine * machine) {
+	jsmess_machine = machine;
+	EM_ASM (
+		JSMESS.running = true;
+	);
+	emscripten_set_main_loop(&js_main_loop, 0, 1);
+}
+
+running_machine * js_get_machine() {
+	return jsmess_machine;
+}
+
+ui_manager * js_get_ui() {
+	return &(jsmess_machine->ui());
+}
+
+sound_manager * js_get_sound() {
+	return &(jsmess_machine->sound());
+}
+
+#endif /* SDLMAME_EMSCRIPTEN */

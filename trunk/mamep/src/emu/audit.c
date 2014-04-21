@@ -188,12 +188,12 @@ media_auditor::summary media_auditor::audit_software(const char *list_name, soft
 	// store validation for later
 	m_validation = validation;
 
-	astring combinedpath(swinfo->shortname, ";", list_name, PATH_SEPARATOR, swinfo->shortname);
-	astring locationtag(list_name, "%", swinfo->shortname, "%");
-	if ( swinfo->parentname )
+	astring combinedpath(swinfo->shortname(), ";", list_name, PATH_SEPARATOR, swinfo->shortname());
+	astring locationtag(list_name, "%", swinfo->shortname(), "%");
+	if (swinfo->parentname() != NULL)
 	{
-		locationtag.cat(swinfo->parentname);
-		combinedpath.cat(";").cat(swinfo->parentname).cat(";").cat(list_name).cat(PATH_SEPARATOR).cat(swinfo->parentname);
+		locationtag.cat(swinfo->parentname());
+		combinedpath.cat(";").cat(swinfo->parentname()).cat(";").cat(list_name).cat(PATH_SEPARATOR).cat(swinfo->parentname());
 	}
 	m_searchpath = combinedpath;
 
@@ -201,10 +201,10 @@ media_auditor::summary media_auditor::audit_software(const char *list_name, soft
 	int required = 0;
 
 	// now iterate over software parts
-	for ( software_part *part = software_find_part( swinfo, NULL, NULL ); part != NULL; part = software_part_next( part ) )
+	for ( software_part *part = swinfo->first_part(); part != NULL; part = part->next() )
 	{
 		// now iterate over regions
-		for ( const rom_entry *region = part->romdata; region; region = rom_next_region( region ) )
+		for ( const rom_entry *region = part->romdata(); region; region = rom_next_region( region ) )
 		{
 			// now iterate over rom definitions
 			for (const rom_entry *rom = rom_first_file(region); rom; rom = rom_next_file(rom))
@@ -342,7 +342,7 @@ media_auditor::summary media_auditor::summarize(const char *name, astring *strin
 		{
 			string->catprintf("%-12s: %s", name, record->name());
 			if (record->expected_length() > 0)
-				string->catprintf(_(" (%d bytes)"), record->expected_length());
+				string->catprintf(_(" (%" I64FMT "d bytes)"), record->expected_length());
 			string->catprintf(" - ");
 		}
 
@@ -370,7 +370,7 @@ media_auditor::summary media_auditor::summarize(const char *name, astring *strin
 				break;
 
 			case audit_record::SUBSTATUS_FOUND_WRONG_LENGTH:
-				if (string != NULL) string->catprintf(_("INCORRECT LENGTH: %d bytes\n"), record->actual_length());
+				if (string != NULL) string->catprintf(_("INCORRECT LENGTH: %" I64FMT "d bytes\n"), record->actual_length());
 				break;
 
 			case audit_record::SUBSTATUS_NOT_FOUND:

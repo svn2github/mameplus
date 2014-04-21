@@ -260,7 +260,6 @@ public:
 	virtual void tra_complete();
 	virtual void rcv_callback();
 	virtual void rcv_complete();
-	virtual void input_callback(UINT8 state);
 
 	UINT8 control_read();
 	void control_write(UINT8 data);
@@ -431,7 +430,7 @@ protected:
 	void set_rts(int state);
 
 	int get_clock_mode();
-	float get_stop_bits();
+	stop_bits_t get_stop_bits();
 	int get_rx_word_length();
 	int get_tx_word_length();
 
@@ -454,6 +453,7 @@ protected:
 	int m_rx_break;             // receive break condition
 	UINT8 m_rx_rr0_latch;       // read register 0 latched
 
+	int m_rxd;
 	int m_ri;                   // ring indicator latch
 	int m_cts;                  // clear to send latch
 	int m_dcd;                  // data carrier detect latch

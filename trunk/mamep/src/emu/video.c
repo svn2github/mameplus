@@ -13,10 +13,10 @@
 #include "png.h"
 #include "debugger.h"
 #include "debugint/debugint.h"
-#include "ui.h"
+#include "ui/ui.h"
 #include "aviio.h"
 #include "crsshair.h"
-#include "rendersw.c"
+#include "rendersw.inc"
 #include "output.h"
 
 #include "snap.lh"
@@ -85,7 +85,8 @@ video_manager::video_manager(running_machine &machine)
 		m_overall_real_ticks(0),
 		m_overall_emutime(attotime::zero),
 		m_overall_valid_counter(0),
-		m_throttle(machine.options().throttle()),
+		m_throttled(machine.options().throttle()),
+		m_throttle_rate(1.0f),
 		m_fastforward(false),
 		m_seconds_to_run(machine.options().seconds_to_run()),
 		m_auto_frameskip(machine.options().auto_frameskip()),
@@ -100,7 +101,6 @@ video_manager::video_manager(running_machine &machine)
 		m_snap_native(true),
 		m_snap_width(0),
 		m_snap_height(0),
-		m_mngfile(NULL),
 		m_avifile(NULL),
 		m_movie_frame_period(attotime::zero),
 		m_movie_next_frame_time(attotime::zero),
@@ -115,7 +115,7 @@ video_manager::video_manager(running_machine &machine)
 
 	// create a render target for snapshots
 	const char *viewname = machine.options().snap_view();
-	m_snap_native = (machine.primary_screen != NULL && (viewname[0] == 0 || strcmp(viewname, "native") == 0));
+	m_snap_native = (machine.first_screen() != NULL && (viewname[0] == 0 || strcmp(viewname, "native") == 0));
 
 	// the native target is hard-coded to our internal layout and has all options disabled
 	if (m_snap_native)
@@ -152,7 +152,7 @@ video_manager::video_manager(running_machine &machine)
 		begin_recording(filename, MF_AVI);
 
 	// if no screens, create a periodic timer to drive updates
-	if (machine.primary_screen == NULL)
+	if (machine.first_screen() == NULL)
 	{
 		m_screenless_frame_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(video_manager::screenless_update_callback), this));
 		m_screenless_frame_timer->adjust(screen_device::DEFAULT_FRAME_PERIOD, 0, screen_device::DEFAULT_FRAME_PERIOD);
@@ -209,7 +209,7 @@ void video_manager::frame_update(bool debug)
 	}
 
 	// draw the user interface
-	ui_update_and_render(machine(), &machine().render().ui_container());
+	machine().ui().update_and_render(&machine().render().ui_container());
 
 	// update the internal render debugger
 	debugint_update_during_game(machine());
@@ -240,8 +240,8 @@ void video_manager::frame_update(bool debug)
 	if (phase == MACHINE_PHASE_RUNNING)
 	{
 		// reset partial updates if we're paused or if the debugger is active
-		if (machine().primary_screen != NULL && (machine().paused() || debug || debugger_within_instruction_hook(machine())))
-			machine().primary_screen->reset_partial_updates();
+		if (machine().first_screen() != NULL && (machine().paused() || debug || debugger_within_instruction_hook(machine())))
+			machine().first_screen()->reset_partial_updates();
 	}
 }
 
@@ -256,7 +256,7 @@ astring &video_manager::speed_text(astring &string)
 	string.reset();
 
 #ifdef INP_CAPTION
-	string.catprintf(_("frame:%ld "), (long)machine().primary_screen->frame_number());
+	string.catprintf(_("frame:%ld "), (long)machine().first_screen()->frame_number());
 #endif /* INP_CAPTION */
 
 	// if we're paused, just display Paused
@@ -313,8 +313,9 @@ void video_manager::save_snapshot(screen_device *screen, emu_file &file)
 	png_add_text(&pnginfo, "System", text2);
 
 	// now do the actual work
-	const rgb_t *palette = (machine().palette != NULL) ? palette_entry_list_adjusted(machine().palette) : NULL;
-	png_error error = png_write_bitmap(file, &pnginfo, m_snap_bitmap, machine().total_colors(), palette);
+	const rgb_t *palette = (screen !=NULL && screen->palette() != NULL) ? screen->palette()->palette()->entry_list_adjusted() : NULL;
+	int entries = (screen !=NULL && screen->palette() != NULL) ? screen->palette()->entries() : 0;
+	png_error error = png_write_bitmap(file, &pnginfo, m_snap_bitmap, entries, palette);
 	if (error != PNGERR_NONE)
 		mame_printf_error(_("Error generating PNG for snapshot: png_error = %d\n"), error);
 
@@ -378,7 +379,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 		// build up information about this new movie
 		avi_movie_info info;
 		info.video_format = 0;
-		info.video_timescale = 1000 * ((machine().primary_screen != NULL) ? ATTOSECONDS_TO_HZ(machine().primary_screen->frame_period().attoseconds) : screen_device::DEFAULT_FRAME_RATE);
+		info.video_timescale = 1000 * ((machine().first_screen() != NULL) ? ATTOSECONDS_TO_HZ(machine().first_screen()->frame_period().attoseconds) : screen_device::DEFAULT_FRAME_RATE);
 		info.video_sampletime = 1000;
 		info.video_numsamples = 0;
 		info.video_width = m_snap_bitmap.width();
@@ -424,7 +425,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 	else if (format == MF_MNG)
 	{
 		// create a new movie file and start recording
-		m_mngfile = auto_alloc(machine(), emu_file(machine().options().snapshot_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
+		m_mngfile.reset(global_alloc(emu_file(machine().options().snapshot_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS)));
 		file_error filerr;
 		if (name != NULL)
 			filerr = m_mngfile->open(name);
@@ -434,7 +435,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 		if (filerr == FILERR_NONE)
 		{
 			// start the capture
-			int rate = (machine().primary_screen != NULL) ? ATTOSECONDS_TO_HZ(machine().primary_screen->frame_period().attoseconds) : screen_device::DEFAULT_FRAME_RATE;
+			int rate = (machine().first_screen() != NULL) ? ATTOSECONDS_TO_HZ(machine().first_screen()->frame_period().attoseconds) : screen_device::DEFAULT_FRAME_RATE;
 			png_error pngerr = mng_capture_start(*m_mngfile, m_snap_bitmap, rate);
 			if (pngerr != PNGERR_NONE)
 				return end_recording();
@@ -445,8 +446,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 		else
 		{
 			mame_printf_error("Error creating MNG\n");
-			global_free(m_mngfile);
-			m_mngfile = NULL;
+			m_mngfile.reset();
 		}
 	}
 }
@@ -469,8 +469,7 @@ void video_manager::end_recording()
 	if (m_mngfile != NULL)
 	{
 		mng_capture_stop(*m_mngfile);
-		auto_free(machine(), m_mngfile);
-		m_mngfile = NULL;
+		m_mngfile.reset();
 	}
 
 	// reset the state
@@ -511,10 +510,6 @@ void video_manager::exit()
 {
 	// stop recording any movie
 	end_recording();
-
-	// free all the graphics elements
-	for (int i = 0; i < MAX_GFX_ELEMENTS; i++)
-		auto_free(machine(), machine().gfx[i]);
 
 	// free the snapshot target
 	machine().render().target_free(m_snap_target);
@@ -597,7 +592,7 @@ inline int video_manager::effective_frameskip() const
 inline bool video_manager::effective_throttle() const
 {
 	// if we're paused, or if the UI is active, we always throttle
-	if (machine().paused() || ui_is_menu_active())
+	if (machine().paused() || machine().ui().is_menu_active())
 		return true;
 
 	// if we're fast forwarding, we don't throttle
@@ -605,7 +600,7 @@ inline bool video_manager::effective_throttle() const
 		return false;
 
 	// otherwise, it's up to the user
-	return m_throttle;
+	return throttled();
 }
 
 
@@ -722,7 +717,7 @@ void video_manager::update_throttle(attotime emutime)
 
 		// compute conversion factors up front
 		osd_ticks_t ticks_per_second = osd_ticks_per_second();
-		attoseconds_t attoseconds_per_tick = ATTOSECONDS_PER_SECOND / ticks_per_second;
+		attoseconds_t attoseconds_per_tick = ATTOSECONDS_PER_SECOND / ticks_per_second * m_throttle_rate;
 
 		// if we're paused, emutime will not advance; instead, we subtract a fixed
 		// amount of time (1/60th of a second) from the emulated time that was passed in,
@@ -876,9 +871,12 @@ void video_manager::update_frameskip()
 	// if we're throttling and autoframeskip is on, adjust
 	if (effective_throttle() && effective_autoframeskip() && m_frameskip_counter == 0)
 	{
+		// calibrate the "adjusted speed" based on the target
+		double adjusted_speed_percent = m_speed_percent / m_throttle_rate;
+
 		// if we're too fast, attempt to increase the frameskip
 		double speed = m_speed * 0.001;
-		if (m_speed_percent >= 0.995 * speed)
+		if (adjusted_speed_percent >= 0.995 * speed)
 		{
 			// but only after 3 consecutive frames where we are too fast
 			if (++m_frameskip_adjust >= 3)
@@ -893,7 +891,7 @@ void video_manager::update_frameskip()
 		else
 		{
 			// if below 80% speed, be more aggressive
-			if (m_speed_percent < 0.80 *  speed)
+			if (adjusted_speed_percent < 0.80 *  speed)
 				m_frameskip_adjust -= (0.90 * speed - m_speed_percent) / 0.05;
 
 			// if we're close, only force it up to frameskip 8
@@ -1009,13 +1007,13 @@ void video_manager::recompute_speed(attotime emutime)
 	// if we're past the "time-to-execute" requested, signal an exit
 	if (m_seconds_to_run != 0 && emutime.seconds >= m_seconds_to_run)
 	{
-		if (machine().primary_screen != NULL)
+		if (machine().first_screen() != NULL)
 		{
 			// create a final screenshot
 			emu_file file(machine().options().snapshot_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 			file_error filerr = file.open(machine().basename(), PATH_SEPARATOR "final.png");
 			if (filerr == FILERR_NONE)
-				save_snapshot(machine().primary_screen, file);
+				save_snapshot(machine().first_screen(), file);
 		}
 
 		// schedule our demise
@@ -1188,7 +1186,6 @@ file_error video_manager::open_next(emu_file &file, const char *extension)
 }
 
 
-
 //-------------------------------------------------
 //  record_frame - record a frame of a movie
 //-------------------------------------------------
@@ -1235,8 +1232,9 @@ void video_manager::record_frame()
 			}
 
 			// write the next frame
-			const rgb_t *palette = (machine().palette != NULL) ? palette_entry_list_adjusted(machine().palette) : NULL;
-			png_error error = mng_capture_frame(*m_mngfile, &pnginfo, m_snap_bitmap, machine().total_colors(), palette);
+			const rgb_t *palette = (machine().first_screen() !=NULL && machine().first_screen()->palette() != NULL) ? machine().first_screen()->palette()->palette()->entry_list_adjusted() : NULL;
+			int entries = (machine().first_screen() !=NULL && machine().first_screen()->palette() != NULL) ? machine().first_screen()->palette()->entries() : 0;
+			png_error error = mng_capture_frame(*m_mngfile, &pnginfo, m_snap_bitmap, entries, palette);
 			png_free(&pnginfo);
 			if (error != PNGERR_NONE)
 			{
@@ -1252,29 +1250,30 @@ void video_manager::record_frame()
 	g_profiler.stop();
 }
 
+//-------------------------------------------------
+//  toggle_throttle
+//-------------------------------------------------
 
-
-/*-------------------------------------------------
-    video_assert_out_of_range_pixels - assert if
-    any pixels in the given bitmap contain an
-    invalid palette index
--------------------------------------------------*/
-
-bool video_assert_out_of_range_pixels(running_machine &machine, bitmap_ind16 &bitmap)
+void video_manager::toggle_throttle()
 {
-#ifdef MAME_DEBUG
-	// iterate over rows
-	int maxindex = palette_get_max_index(machine.palette);
-	for (int y = 0; y < bitmap.height(); y++)
+	set_throttled(!throttled());
+}
+
+
+//-------------------------------------------------
+//  toggle_record_movie
+//-------------------------------------------------
+
+void video_manager::toggle_record_movie()
+{
+	if (!is_recording())
 	{
-		UINT16 *rowbase = &bitmap.pix16(y);
-		for (int x = 0; x < bitmap.width(); x++)
-			if (rowbase[x] > maxindex)
-			{
-				osd_break_into_debugger("Out of range pixel");
-				return true;
-			}
+		begin_recording(NULL, video_manager::MF_MNG);
+		popmessage("REC START");
 	}
-#endif
-	return false;
+	else
+	{
+		end_recording();
+		popmessage("REC STOP");
+	}
 }

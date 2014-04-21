@@ -9,7 +9,6 @@
 #ifndef __A2BUS_SSC__
 #define __A2BUS_SSC__
 
-#include "emu.h"
 #include "a2bus.h"
 #include "machine/mos6551.h"
 
@@ -48,6 +47,7 @@ protected:
 
 private:
 	UINT8 *m_rom;
+	bool m_started;
 };
 
 // device type definition

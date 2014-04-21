@@ -132,7 +132,7 @@ public:
 	UINT32 write(const void *buffer, UINT32 length);
 	int puts(const char *s);
 	int vprintf(const char *fmt, va_list va);
-	int printf(const char *fmt, ...);
+	int printf(const char *fmt, ...) ATTR_PRINTF(2,3);
 
 private:
 	bool compressed_file_ready(void);
@@ -156,11 +156,11 @@ private:
 	hash_collection m_hashes;                       // collection of hashes
 
 	zip_file *      m_zipfile;                      // ZIP file pointer
-	UINT8 *         m_zipdata;                      // ZIP file data
+	dynamic_buffer  m_zipdata;                      // ZIP file data
 	UINT64          m_ziplength;                    // ZIP file length
 
 	_7z_file *      m__7zfile;                      // 7Z file pointer
-	UINT8 *         m__7zdata;                      // 7Z file data
+	dynamic_buffer  m__7zdata;                      // 7Z file data
 	UINT64          m__7zlength;                    // 7Z file length
 
 	bool            m_remove_on_close;              // flag: remove the file when closing

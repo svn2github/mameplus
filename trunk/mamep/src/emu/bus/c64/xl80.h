@@ -39,7 +39,7 @@ public:
 	virtual machine_config_constructor device_mconfig_additions() const;
 
 	// not really public
-	void crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, void *param);
+	void crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param);
 
 protected:
 	// device-level overrides
@@ -54,6 +54,7 @@ protected:
 
 private:
 	required_device<h46505_device> m_crtc;
+	required_device<palette_device> m_palette;
 	required_memory_region m_char_rom;
 	optional_shared_ptr<UINT8> m_ram;
 };

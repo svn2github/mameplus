@@ -246,6 +246,8 @@ public:
 	address_space_config();
 	address_space_config(const char *name, endianness_t endian, UINT8 datawidth, UINT8 addrwidth, INT8 addrshift = 0, address_map_constructor internal = NULL, address_map_constructor defmap = NULL);
 	address_space_config(const char *name, endianness_t endian, UINT8 datawidth, UINT8 addrwidth, INT8 addrshift, UINT8 logwidth, UINT8 pageshift, address_map_constructor internal = NULL, address_map_constructor defmap = NULL);
+	address_space_config(const char *name, endianness_t endian, UINT8 datawidth, UINT8 addrwidth, INT8 addrshift, address_map_delegate internal, address_map_delegate defmap = address_map_delegate());
+	address_space_config(const char *name, endianness_t endian, UINT8 datawidth, UINT8 addrwidth, INT8 addrshift, UINT8 logwidth, UINT8 pageshift, address_map_delegate internal, address_map_delegate defmap = address_map_delegate());
 
 	// getters
 	const char *name() const { return m_name; }
@@ -269,6 +271,8 @@ public:
 	UINT8               m_page_shift;
 	address_map_constructor m_internal_map;
 	address_map_constructor m_default_map;
+	address_map_delegate m_internal_map_delegate;
+	address_map_delegate m_default_map_delegate;
 };
 
 
@@ -303,7 +307,7 @@ public:
 	address_spacenum spacenum() const { return m_spacenum; }
 	address_map *map() const { return m_map; }
 
-	direct_read_data &direct() const { return m_direct; }
+	direct_read_data &direct() const { return *m_direct; }
 
 	int data_width() const { return m_config.data_width(); }
 	int addr_width() const { return m_config.addr_width(); }
@@ -377,7 +381,7 @@ public:
 	void set_decrypted_region(offs_t addrstart, offs_t addrend, void *base);
 
 	// direct access
-	direct_update_delegate set_direct_update_handler(direct_update_delegate function) { return m_direct.set_direct_update(function); }
+	direct_update_delegate set_direct_update_handler(direct_update_delegate function) { return m_direct->set_direct_update(function); }
 	bool set_direct_region(offs_t &byteaddress);
 
 	// umap ranges (short form)
@@ -543,7 +547,7 @@ protected:
 	address_space *         m_next;             // next address space in the global list
 	const address_space_config &m_config;       // configuration of this space
 	device_t &              m_device;           // reference to the owning device
-	address_map *           m_map;              // original memory map
+	auto_pointer<address_map> m_map;            // original memory map
 	offs_t                  m_addrmask;         // physical address mask
 	offs_t                  m_bytemask;         // byte-converted physical address mask
 	offs_t                  m_logaddrmask;      // logical address mask
@@ -552,7 +556,7 @@ protected:
 	address_spacenum        m_spacenum;         // address space index
 	bool                    m_debugger_access;  // treat accesses as coming from the debugger
 	bool                    m_log_unmap;        // log unmapped accesses in this space?
-	direct_read_data &      m_direct;           // fast direct-access read info
+	auto_pointer<direct_read_data> m_direct;    // fast direct-access read info
 	const char *            m_name;             // friendly name of the address space
 	UINT8                   m_addrchars;        // number of characters to use for physical addresses
 	UINT8                   m_logaddrchars;     // number of characters to use for logical addresses
@@ -598,7 +602,7 @@ private:
 	address_space &         m_space;                // which address space are we associated with?
 	offs_t                  m_bytestart, m_byteend; // byte-normalized start/end for verifying a match
 	UINT8 *                 m_data;                 // pointer to the data for this block
-	UINT8 *                 m_allocated;            // pointer to the actually allocated block
+	dynamic_buffer          m_allocated;            // pointer to the actually allocated block
 };
 
 
@@ -700,8 +704,7 @@ private:
 	offs_t                  m_bytestart;            // byte-adjusted start offset
 	offs_t                  m_byteend;              // byte-adjusted end offset
 	int                     m_curentry;             // current entry
-	bank_entry *            m_entry;                // array of entries (dynamically allocated)
-	int                     m_entry_count;          // number of allocated entries
+	dynamic_array<bank_entry> m_entry;              // array of entries (dynamically allocated)
 	astring                 m_name;                 // friendly name for this bank
 	astring                 m_tag;                  // tag for this bank
 	simple_list<bank_reference> m_reflist;          // linked list of address spaces referencing this bank

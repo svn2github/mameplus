@@ -6,9 +6,9 @@
 
 *********************************************************************/
 
-#include "emu.h"
-#include "includes/apple2.h"
 #include "a2midi.h"
+#include "machine/clock.h"
+#include "bus/midi/midi.h"
 
 
 /***************************************************************************
@@ -32,31 +32,20 @@ static struct ptm6840_interface ptm_interface =
 	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, ptm_irq_w)
 };
 
-static ACIA6850_INTERFACE( acia_interface )
-{
-	31250*16,   // tx clock
-	0,          // rx clock (we manually clock rx)
-	DEVCB_DEVICE_LINE_MEMBER("mdout", serial_port_device, tx), // tx out
-	DEVCB_NULL, // rts out
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, a2bus_midi_device, acia_irq_w)
-};
-
-static SLOT_INTERFACE_START(midiin_slot)
-	SLOT_INTERFACE("midiin", MIDIIN_PORT)
-SLOT_INTERFACE_END
-
-static SLOT_INTERFACE_START(midiout_slot)
-	SLOT_INTERFACE("midiout", MIDIOUT_PORT)
-SLOT_INTERFACE_END
-
 MACHINE_CONFIG_FRAGMENT( midi )
 	MCFG_PTM6840_ADD(MIDI_PTM_TAG, ptm_interface)
-	MCFG_ACIA6850_ADD(MIDI_ACIA_TAG, acia_interface)
 
-	MCFG_SERIAL_PORT_ADD("mdin", midiin_slot, "midiin")
-	MCFG_SERIAL_OUT_RX_HANDLER(DEVWRITELINE(DEVICE_SELF, a2bus_midi_device, midi_rx_w))
+	MCFG_DEVICE_ADD(MIDI_ACIA_TAG, ACIA6850, 0)
+	MCFG_ACIA6850_TXD_HANDLER(DEVWRITELINE("mdout", midi_port_device, write_txd))
+	MCFG_ACIA6850_IRQ_HANDLER(WRITELINE(a2bus_midi_device, acia_irq_w))
 
-	MCFG_SERIAL_PORT_ADD("mdout", midiout_slot, "midiout")
+	MCFG_MIDI_PORT_ADD("mdin", midiin_slot, "midiin")
+	MCFG_MIDI_RX_HANDLER(DEVWRITELINE(MIDI_ACIA_TAG, acia6850_device, write_rxd))
+
+	MCFG_MIDI_PORT_ADD("mdout", midiout_slot, "midiout")
+
+	MCFG_DEVICE_ADD("acia_clock", CLOCK, 31250*16)
+	MCFG_CLOCK_SIGNAL_HANDLER(WRITELINE(a2bus_midi_device, write_acia_clock))
 MACHINE_CONFIG_END
 
 //-------------------------------------------------
@@ -77,7 +66,8 @@ a2bus_midi_device::a2bus_midi_device(const machine_config &mconfig, const char *
 		device_t(mconfig, A2BUS_MIDI, "6850 MIDI card", tag, owner, clock, "a2midi", __FILE__),
 		device_a2bus_card_interface(mconfig, *this),
 		m_ptm(*this, MIDI_PTM_TAG),
-		m_acia(*this, MIDI_ACIA_TAG)
+		m_acia(*this, MIDI_ACIA_TAG),
+		m_ptm_irq(false)
 {
 }
 
@@ -85,7 +75,8 @@ a2bus_midi_device::a2bus_midi_device(const machine_config &mconfig, device_type 
 		device_t(mconfig, type, name, tag, owner, clock, shortname, source),
 		device_a2bus_card_interface(mconfig, *this),
 		m_ptm(*this, MIDI_PTM_TAG),
-		m_acia(*this, MIDI_ACIA_TAG)
+		m_acia(*this, MIDI_ACIA_TAG),
+		m_ptm_irq(false)
 {
 }
 
@@ -118,11 +109,11 @@ UINT8 a2bus_midi_device::read_c0nx(address_space &space, UINT8 offset)
 	}
 	else if (offset == 8)
 	{
-		return m_acia->status_read(space, 0);
+		return m_acia->status_r(space, 0);
 	}
 	else if (offset == 9)
 	{
-		UINT8 ret = m_acia->data_read(space, 0);
+		UINT8 ret = m_acia->data_r(space, 0);
 		return ret;
 	}
 
@@ -141,18 +132,11 @@ void a2bus_midi_device::write_c0nx(address_space &space, UINT8 offset, UINT8 dat
 	}
 	else if (offset == 8)
 	{
-		// HACK: GS/OS's CARD6850.MIDI driver sets 8-N-2, which is not valid MIDI.
-		// This works on h/w pretty much by accident; we'll make it right here.
-		if ((data & 0x1c) == 0x10)
-		{
-			data |= 0x04;   // change wordbits from 0x10 to 0x14
-		}
-
-		m_acia->control_write(space, 0, data);
+		m_acia->control_w(space, 0, data);
 	}
 	else if (offset == 9)
 	{
-		m_acia->data_write(space, 0, data);
+		m_acia->data_w(space, 0, data);
 	}
 }
 
@@ -184,12 +168,8 @@ WRITE_LINE_MEMBER( a2bus_midi_device::ptm_irq_w )
 	}
 }
 
-WRITE_LINE_MEMBER( a2bus_midi_device::midi_rx_w )
+WRITE_LINE_MEMBER( a2bus_midi_device::write_acia_clock )
 {
-	m_acia->write_rx(state);
-
-	for (int i = 0; i < 16; i++)    // divider is set to 16
-	{
-		m_acia->rx_clock_in();
-	}
+	m_acia->write_txc(state);
+	m_acia->write_rxc(state);
 }

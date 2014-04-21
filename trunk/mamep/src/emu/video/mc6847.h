@@ -37,6 +37,14 @@
 	MCFG_SCREEN_SIZE(320, 243)                                  \
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 1, 241-1)                \
 	MCFG_SCREEN_VBLANK_TIME(0)
+
+#define MCFG_MC6847_HSYNC_CALLBACK(_write) \
+	devcb = &mc6847_friend_device::set_hsync_wr_callback(*device, DEVCB2_##_write);
+
+#define MCFG_MC6847_FSYNC_CALLBACK(_write) \
+	devcb = &mc6847_friend_device::set_fsync_wr_callback(*device, DEVCB2_##_write);
+
+
 /* interface */
 struct mc6847_interface
 {
@@ -45,12 +53,6 @@ struct mc6847_interface
 
 	/* if specified, this gets called whenever reading a byte (offs_t ~0 specifies DA* entering the tristate mode) */
 	devcb_read8                 m_input_func;
-
-	/* if specified, this gets called for every change of the HS pin (pin 38) */
-	devcb_write_line            m_out_hsync_func;
-
-	/* if specified, this gets called for every change of the FS pin (pin 37) */
-	devcb_write_line            m_out_fsync_func;
 
 	/* mode control lines input */
 	devcb_read_line             m_in_ag_func;
@@ -86,6 +88,9 @@ public:
 	bool hs_r(void)                 { return m_horizontal_sync; }
 	bool fs_r(void)                 { return m_field_sync; }
 
+	template<class _Object> static devcb2_base &set_hsync_wr_callback(device_t &device, _Object object) { return downcast<mc6847_friend_device &>(device).m_write_hsync.set_callback(object); }
+	template<class _Object> static devcb2_base &set_fsync_wr_callback(device_t &device, _Object object) { return downcast<mc6847_friend_device &>(device).m_write_fsync.set_callback(object); }
+
 protected:
 	mc6847_friend_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock,
 		const UINT8 *fontdata, bool is_mc6847t1, double tpfs, int field_sync_falling_edge_scanline, bool supports_partial_body_scanlines, const char *shortname, const char *source);
@@ -113,6 +118,7 @@ protected:
 	static const UINT8 ntsc_square_fontdata8x12[];
 	static const UINT8 semigraphics4_fontdata8x12[];
 	static const UINT8 semigraphics6_fontdata8x12[];
+	static const UINT8 s68047_fontdata8x12[];
 
 	// pixel definitions
 	typedef UINT32 pixel_t;
@@ -145,7 +151,7 @@ protected:
 				UINT8 character = data[i];
 
 				// based on the mode, determine which entry to use
-				const entry *e = &m_entries[mode % (sizeof(m_entries) / sizeof(m_entries[0]))];
+				const entry *e = &m_entries[mode % ARRAY_LENGTH(m_entries)];
 
 				// identify the character in the font data
 				const UINT8 *font_character = e->m_fontdata + (character & e->m_character_mask) * 12;
@@ -265,8 +271,8 @@ protected:
 	};
 
 	// callbacks
-	devcb_resolved_write_line m_res_out_hsync_func;
-	devcb_resolved_write_line m_res_out_fsync_func;
+	devcb2_write_line   m_write_hsync;
+	devcb2_write_line   m_write_fsync;
 
 	// incidentals
 	character_map m_character_map;
@@ -295,10 +301,10 @@ protected:
 	emu_timer *setup_timer(device_timer_id id, double offset, double period);
 
 	// converts to B&W
-	static pixel_t black_and_white(pixel_t color)
+	static pixel_t black_and_white(rgb_t color)
 	{
-		UINT8 average_color = (RGB_RED(color) + RGB_GREEN(color) + RGB_BLUE(color)) / 3;
-		return MAKE_RGB(average_color, average_color, average_color);
+		UINT8 average_color = (color.r() + color.g() + color.b()) / 3;
+		return rgb_t(average_color, average_color, average_color);
 	}
 
 	// changes the geometry
@@ -381,6 +387,23 @@ protected:
 		}
 	}
 
+	// template function for external bytes
+	template<int bits_per_pixel, int xscale>
+	ATTR_FORCE_INLINE void emit_extbytes(const UINT8 *data, int length, pixel_t *RESTRICT pixels, UINT16 color_base, const pixel_t *RESTRICT palette)
+	{
+		for (int i = 0; i < length; i++)
+		{
+			for (int j = 0; j < (8 / bits_per_pixel); j++)
+			{
+				for (int k = 0; k < xscale; k++)
+				{
+					UINT16 color = color_base + BIT(data[i], 7-j);
+					pixels[(i * (8 / bits_per_pixel) + j) * xscale + k] = palette[color];
+				}
+			}
+		}
+	}
+
 	// template function for emitting samples
 	template<int xscale>
 	UINT32 emit_mc6847_samples(UINT8 mode, const UINT8 *data, int length, pixel_t *RESTRICT pixels, const pixel_t *RESTRICT palette,
@@ -428,7 +451,7 @@ protected:
 			for (int i = 0; i < length; i++)
 			{
 				UINT8 byte = get_char_rom(machine(), data[i], y % 12) ^ (mode & MODE_INV ? 0xFF : 0x00);
-				emit_graphics<2, xscale * 2>(&byte, 1, &pixels[i * 8], (mode & MODE_CSS) ? 14 : 12, palette);
+				emit_extbytes<1, xscale>(&byte, 1, &pixels[i * 8], (mode & MODE_CSS) ? 14 : 12, palette);
 			}
 			result = length * 8 * xscale;
 		}
@@ -518,6 +541,14 @@ protected:
 	virtual void field_sync_changed(bool line);
 	virtual void record_body_scanline(UINT16 physical_scanline, UINT16 scanline);
 	virtual void record_partial_body_scanline(UINT16 physical_scanline, UINT16 logical_scanline, INT32 start_clock, INT32 end_clock);
+
+	void set_custom_palette(const pixel_t *custom_palette)
+	{
+		if ( m_palette != m_bw_palette )
+		{
+			m_palette = custom_palette ? custom_palette : s_palette;
+		}
+	}
 
 private:
 	struct video_scanline
@@ -634,6 +665,17 @@ public:
 	mc6847t1_pal_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 };
 
+class s68047_device : public mc6847_base_device
+{
+public:
+	s68047_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	void hack_black_becomes_blue(bool flag);
+
+private:
+	static const UINT32 s_s68047_hack_palette[16];
+};
+
 
 extern const device_type MC6847_NTSC;
 extern const device_type MC6847_PAL;
@@ -641,5 +683,6 @@ extern const device_type MC6847Y_NTSC;
 extern const device_type MC6847Y_PAL;
 extern const device_type MC6847T1_NTSC;
 extern const device_type MC6847T1_PAL;
+extern const device_type S68047;
 
 #endif /* __MC6847__ */

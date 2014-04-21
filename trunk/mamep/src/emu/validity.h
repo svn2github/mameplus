@@ -46,6 +46,10 @@ public:
 
 	// helpers for devices
 	void validate_tag(const char *tag);
+	int region_length(const char *tag) { return m_region_map.find(tag); }
+
+	// generic registry of already-checked stuff
+	bool already_checked(const char *string) { return (m_already_checked.add(string, 1, false) == TMERR_DUPLICATE); }
 
 private:
 	// internal helpers
@@ -62,8 +66,6 @@ private:
 	void validate_inlines();
 	void validate_driver();
 	void validate_roms();
-	void validate_display();
-	void validate_gfx();
 	void validate_analog_input_field(ioport_field &field);
 	void validate_dip_settings(ioport_field &field);
 	void validate_condition(ioport_condition &condition, device_t &device, int_map &port_map);
@@ -74,7 +76,7 @@ private:
 	void build_output_prefix(astring &string);
 	void error_output(const char *format, va_list argptr);
 	void warning_output(const char *format, va_list argptr);
-	void output_via_delegate(output_delegate &delegate, const char *format, ...);
+	void output_via_delegate(output_delegate &delegate, const char *format, ...) ATTR_PRINTF(3,4);
 
 	// internal driver list
 	driver_enumerator       m_drivlist;
@@ -97,6 +99,7 @@ private:
 	const device_t *        m_current_device;
 	const char *            m_current_ioport;
 	int_map                 m_region_map;
+	tagmap_t<UINT8>         m_already_checked;
 
 	// callbacks
 	output_delegate         m_saved_error_output;

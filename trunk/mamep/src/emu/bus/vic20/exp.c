@@ -116,13 +116,13 @@ bool vic20_expansion_slot_device::call_load()
 	{
 		if (software_entry() == NULL)
 		{
-			if (!mame_stricmp(filetype(), "20")) fread(m_card->m_blk1, 0x2000);
-			else if (!mame_stricmp(filetype(), "40")) fread(m_card->m_blk2, 0x2000);
-			else if (!mame_stricmp(filetype(), "60")) fread(m_card->m_blk3, 0x2000);
-			else if (!mame_stricmp(filetype(), "70")) fread(m_card->m_blk3, 0x2000, 0x1000);
-			else if (!mame_stricmp(filetype(), "a0")) fread(m_card->m_blk5, 0x2000);
-			else if (!mame_stricmp(filetype(), "b0")) fread(m_card->m_blk5, 0x2000, 0x1000);
-			else if (!mame_stricmp(filetype(), "crt"))
+			if (!core_stricmp(filetype(), "20")) fread(m_card->m_blk1, 0x2000);
+			else if (!core_stricmp(filetype(), "40")) fread(m_card->m_blk2, 0x2000);
+			else if (!core_stricmp(filetype(), "60")) fread(m_card->m_blk3, 0x2000);
+			else if (!core_stricmp(filetype(), "70")) fread(m_card->m_blk3, 0x2000, 0x1000);
+			else if (!core_stricmp(filetype(), "a0")) fread(m_card->m_blk5, 0x2000);
+			else if (!core_stricmp(filetype(), "b0")) fread(m_card->m_blk5, 0x2000, 0x1000);
+			else if (!core_stricmp(filetype(), "crt"))
 			{
 				// read the header
 				UINT8 header[2];
@@ -158,9 +158,9 @@ bool vic20_expansion_slot_device::call_load()
 //  call_softlist_load -
 //-------------------------------------------------
 
-bool vic20_expansion_slot_device::call_softlist_load(char *swlist, char *swname, rom_entry *start_entry)
+bool vic20_expansion_slot_device::call_softlist_load(software_list_device &swlist, const char *swname, const rom_entry *start_entry)
 {
-	load_software_part_region(this, swlist, swname, start_entry);
+	load_software_part_region(*this, swlist, swname, start_entry);
 
 	return true;
 }
@@ -170,9 +170,9 @@ bool vic20_expansion_slot_device::call_softlist_load(char *swlist, char *swname,
 //  get_default_card_software -
 //-------------------------------------------------
 
-const char * vic20_expansion_slot_device::get_default_card_software(const machine_config &config, emu_options &options)
+void vic20_expansion_slot_device::get_default_card_software(astring &result)
 {
-	return software_get_default_slot(config, options, this, "standard");
+	software_get_default_slot(result, "standard");
 }
 
 

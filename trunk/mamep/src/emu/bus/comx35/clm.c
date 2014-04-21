@@ -100,7 +100,7 @@ const rom_entry *comx_clm_device::device_rom_region() const
 //  mc6845_interface crtc_intf
 //-------------------------------------------------
 
-void comx_clm_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, void *param)
+void comx_clm_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param)
 {
 	for (int column = 0; column < x_count; column++)
 	{
@@ -116,9 +116,8 @@ void comx_clm_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitma
 		for (int bit = 0; bit < 8; bit++)
 		{
 			int x = (column * 8) + bit;
-			int color = BIT(data, 7) ? 7 : 0;
 
-			bitmap.pix32(y, x) = RGB_MONOCHROME_WHITE[color];
+			bitmap.pix32(vbp + y, hbp + x) = m_palette->pen(BIT(data, 7) && de);
 
 			data <<= 1;
 		}
@@ -128,12 +127,12 @@ void comx_clm_device::crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitma
 static MC6845_UPDATE_ROW( comx_clm_update_row )
 {
 	comx_clm_device *clm = downcast<comx_clm_device *>(device->owner());
-	clm->crtc_update_row(device,bitmap,cliprect,ma,ra,y,x_count,cursor_x,param);
+	clm->crtc_update_row(device,bitmap,cliprect,ma,ra,y,x_count,cursor_x,de,hbp,vbp,param);
 }
 
 static MC6845_INTERFACE( crtc_intf )
 {
-	false,
+	true,
 	0,0,0,0,
 	8,
 	NULL,
@@ -168,7 +167,8 @@ static MACHINE_CONFIG_FRAGMENT( comx_clm )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_REFRESH_RATE(50)
 
-	//MCFG_GFXDECODE(comx_clm)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", comx_clm)
+	MCFG_PALETTE_ADD_BLACK_AND_WHITE("palette")
 
 	MCFG_MC6845_ADD(MC6845_TAG, MC6845, MC6845_SCREEN_TAG, XTAL_14_31818MHz/7, crtc_intf)
 MACHINE_CONFIG_END
@@ -198,6 +198,7 @@ comx_clm_device::comx_clm_device(const machine_config &mconfig, const char *tag,
 	device_t(mconfig, COMX_CLM, "COMX 80 Column Card", tag, owner, clock, "comx_clm", __FILE__),
 	device_comx_expansion_card_interface(mconfig, *this),
 	m_crtc(*this, MC6845_TAG),
+	m_palette(*this, "palette"),
 	m_rom(*this, "c000"),
 	m_char_rom(*this, MC6845_TAG),
 	m_video_ram(*this, "video_ram")

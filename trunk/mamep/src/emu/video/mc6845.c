@@ -100,6 +100,10 @@ void mc6845_device::device_config_complete()
 	else
 	{
 		m_show_border_area = false;
+		m_visarea_adjust_min_x = 0;
+		m_visarea_adjust_max_x = 0;
+		m_visarea_adjust_min_y = 0;
+		m_visarea_adjust_max_y = 0;
 		m_hpixels_per_column = 0;
 		m_begin_update = NULL;
 		m_update_row = NULL;
@@ -120,7 +124,7 @@ mc6845_device::mc6845_device(const machine_config &mconfig, device_type type, co
 }
 
 mc6845_device::mc6845_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, MC6845, "mc6845", tag, owner, clock, "mc6845", __FILE__),
+	: device_t(mconfig, MC6845, "MC6845 CRTC", tag, owner, clock, "mc6845", __FILE__),
 		device_video_interface(mconfig, *this, false)
 {
 }
@@ -489,8 +493,8 @@ void mc6845_device::recompute_parameters(bool postload)
 	vsync_on_pos = m_vert_sync_pos * video_char_height;
 	vsync_off_pos = vsync_on_pos + vert_sync_pix_width;
 
-	/* the Commodore PET computers program a horizontal synch pulse that extends
-	   past the scanline width.  I assume that the real device will clamp it */
+	// the Commodore PET computers have a non-standard 20kHz monitor which
+	// requires a wider HSYNC pulse that extends past the scanline width
 	if (hsync_off_pos > horiz_pix_total)
 		hsync_off_pos = horiz_pix_total;
 
@@ -531,7 +535,7 @@ void mc6845_device::recompute_parameters(bool postload)
 			if(m_show_border_area)
 				visarea.set(0, horiz_pix_total+1, 0, vert_pix_total+1);
 			else
-				visarea.set(0, max_visible_x, 0, max_visible_y);
+				visarea.set(0 + m_visarea_adjust_min_x, max_visible_x + m_visarea_adjust_max_x, 0 + m_visarea_adjust_min_y, max_visible_y + m_visarea_adjust_max_y);
 
 			if (LOG) logerror("M6845 config screen: HTOTAL: 0x%x  VTOTAL: 0x%x  MAX_X: 0x%x  MAX_Y: 0x%x  HSYNC: 0x%x-0x%x  VSYNC: 0x%x-0x%x  Freq: %ffps\n",
 								horiz_pix_total, vert_pix_total, max_visible_x, max_visible_y, hsync_on_pos, hsync_off_pos - 1, vsync_on_pos, vsync_off_pos - 1, 1 / ATTOSECONDS_TO_DOUBLE(refresh));
@@ -938,6 +942,11 @@ UINT8 mc6845_device::draw_scanline(int y, bitmap_rgb32 &bitmap, const rectangle 
 
 	/* compute the cursor X position, or -1 if not visible */
 	INT8 cursor_x = cursor_visible ? (m_cursor_addr - m_current_disp_addr) : -1;
+	int de = (y < m_max_visible_y) ? 1 : 0;
+	int vbp = m_vert_pix_total - m_vsync_off_pos;
+	if (vbp < 0) vbp = 0;
+	int hbp = m_horiz_pix_total - m_hsync_off_pos;
+	if (hbp < 0) hbp = 0;
 
 	/* call the external system to draw it */
 	if (MODE_ROW_COLUMN_ADDRESSING)
@@ -946,11 +955,11 @@ UINT8 mc6845_device::draw_scanline(int y, bitmap_rgb32 &bitmap, const rectangle 
 		UINT8 cr = y / (m_max_ras_addr + 1);
 		UINT16 ma = (cr << 8) | cc;
 
-		m_update_row(this, bitmap, cliprect, ma, ra, y, m_horiz_disp, cursor_x, param);
+		m_update_row(this, bitmap, cliprect, ma, ra, y, m_horiz_disp, cursor_x, de, hbp, vbp, param);
 	}
 	else
 	{
-		m_update_row(this, bitmap, cliprect, m_current_disp_addr, ra, y, m_horiz_disp, cursor_x, param);
+		m_update_row(this, bitmap, cliprect, m_current_disp_addr, ra, y, m_horiz_disp, cursor_x, de, hbp, vbp, param);
 	}
 
 	/* update MA if the last raster address */
@@ -1064,6 +1073,10 @@ void mc6845_device::device_start()
 	m_disp_start_addr = 0;
 
 	save_item(NAME(m_show_border_area));
+	save_item(NAME(m_visarea_adjust_min_x));
+	save_item(NAME(m_visarea_adjust_max_x));
+	save_item(NAME(m_visarea_adjust_min_y));
+	save_item(NAME(m_visarea_adjust_max_y));
 	save_item(NAME(m_hpixels_per_column));
 	save_item(NAME(m_register_address_latch));
 	save_item(NAME(m_horiz_char_total));
@@ -1373,55 +1386,55 @@ ADDRESS_MAP_END
 
 
 r6545_1_device::r6545_1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, R6545_1, "R6545-1", tag, owner, clock, "r6545_1", __FILE__)
+	: mc6845_device(mconfig, R6545_1, "R6545-1 CRTC", tag, owner, clock, "r6545_1", __FILE__)
 {
 }
 
 
 h46505_device::h46505_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, H46505, "H46505", tag, owner, clock, "h46505", __FILE__)
+	: mc6845_device(mconfig, H46505, "H46505 CRTC", tag, owner, clock, "h46505", __FILE__)
 {
 }
 
 
 mc6845_1_device::mc6845_1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, MC6845_1, "MC6845-1", tag, owner, clock, "mc6845_1", __FILE__)
+	: mc6845_device(mconfig, MC6845_1, "MC6845-1 CRTC", tag, owner, clock, "mc6845_1", __FILE__)
 {
 }
 
 
 hd6845_device::hd6845_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, HD6845, "HD6845", tag, owner, clock, "hd6845", __FILE__)
+	: mc6845_device(mconfig, HD6845, "HD6845 CRTC", tag, owner, clock, "hd6845", __FILE__)
 {
 }
 
 
 c6545_1_device::c6545_1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, C6545_1, "C6545-1", tag, owner, clock, "c6545_1", __FILE__)
+	: mc6845_device(mconfig, C6545_1, "C6545-1 CRTC", tag, owner, clock, "c6545_1", __FILE__)
 {
 }
 
 
 sy6545_1_device::sy6545_1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, SY6545_1, "SY6545-1", tag, owner, clock, "sy6545_1", __FILE__)
+	: mc6845_device(mconfig, SY6545_1, "SY6545-1 CRTC", tag, owner, clock, "sy6545_1", __FILE__)
 {
 }
 
 
 sy6845e_device::sy6845e_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, SY6845E, "SY6845E", tag, owner, clock, "sy6845e", __FILE__)
+	: mc6845_device(mconfig, SY6845E, "SY6845E CRTC", tag, owner, clock, "sy6845e", __FILE__)
 {
 }
 
 
 hd6345_device::hd6345_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, HD6345, "HD6345", tag, owner, clock, "hd6345", __FILE__)
+	: mc6845_device(mconfig, HD6345, "HD6345 CRTC", tag, owner, clock, "hd6345", __FILE__)
 {
 }
 
 
 ams40041_device::ams40041_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: mc6845_device(mconfig, AMS40041, "40041", tag, owner, clock, "ams40041", __FILE__)
+	: mc6845_device(mconfig, AMS40041, "AMS40041 CRTC", tag, owner, clock, "ams40041", __FILE__)
 {
 }
 
@@ -1429,16 +1442,20 @@ ams40041_device::ams40041_device(const machine_config &mconfig, const char *tag,
 mos8563_device::mos8563_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
 	: mc6845_device(mconfig, type, name, tag, owner, clock, shortname, source),
 		device_memory_interface(mconfig, *this),
-		m_videoram_space_config("videoram", ENDIANNESS_LITTLE, 8, 16, 0, NULL, *ADDRESS_MAP_NAME(mos8563_videoram_map))
+		m_videoram_space_config("videoram", ENDIANNESS_LITTLE, 8, 16, 0, NULL, *ADDRESS_MAP_NAME(mos8563_videoram_map)),
+		m_palette(*this, "palette")
 {
+	set_clock_scale(1.0/8);
 }
 
 
 mos8563_device::mos8563_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: mc6845_device(mconfig, MOS8563, "MOS8563", tag, owner, clock, "mos8563", __FILE__),
 		device_memory_interface(mconfig, *this),
-		m_videoram_space_config("videoram", ENDIANNESS_LITTLE, 8, 16, 0, NULL, *ADDRESS_MAP_NAME(mos8563_videoram_map))
+		m_videoram_space_config("videoram", ENDIANNESS_LITTLE, 8, 16, 0, NULL, *ADDRESS_MAP_NAME(mos8563_videoram_map)),
+		m_palette(*this, "palette")
 {
+	set_clock_scale(1.0/8);
 }
 
 
@@ -1448,25 +1465,36 @@ mos8568_device::mos8568_device(const machine_config &mconfig, const char *tag, d
 }
 
 
-// VICE palette
-static const rgb_t MOS8563_PALETTE[] =
+static MACHINE_CONFIG_FRAGMENT(mos8563)
+	MCFG_PALETTE_ADD("palette", 16)
+	MCFG_PALETTE_INIT_OWNER(mos8563_device, mos8563)
+MACHINE_CONFIG_END
+
+machine_config_constructor mos8563_device::device_mconfig_additions() const
 {
-	RGB_BLACK,
-	MAKE_RGB(0x55, 0x55, 0x55),
-	MAKE_RGB(0x00, 0x00, 0xaa),
-	MAKE_RGB(0x55, 0x55, 0xff),
-	MAKE_RGB(0x00, 0xaa, 0x00),
-	MAKE_RGB(0x55, 0xff, 0x55),
-	MAKE_RGB(0x00, 0xaa, 0xaa),
-	MAKE_RGB(0x55, 0xff, 0xff),
-	MAKE_RGB(0xaa, 0x00, 0x00),
-	MAKE_RGB(0xff, 0x55, 0x55),
-	MAKE_RGB(0xaa, 0x00, 0xaa),
-	MAKE_RGB(0xff, 0x55, 0xff),
-	MAKE_RGB(0xaa, 0x55, 0x00),
-	MAKE_RGB(0xff, 0xff, 0x55),
-	MAKE_RGB(0xaa, 0xaa, 0xaa),
-	RGB_WHITE
+		return MACHINE_CONFIG_NAME( mos8563 );
+}
+
+
+// VICE palette
+PALETTE_INIT_MEMBER(mos8563_device, mos8563)
+{
+	palette.set_pen_color(0, rgb_t::black);
+	palette.set_pen_color(1, rgb_t(0x55, 0x55, 0x55));
+	palette.set_pen_color(2, rgb_t(0x00, 0x00, 0xaa));
+	palette.set_pen_color(3, rgb_t(0x55, 0x55, 0xff));
+	palette.set_pen_color(4, rgb_t(0x00, 0xaa, 0x00));
+	palette.set_pen_color(5, rgb_t(0x55, 0xff, 0x55));
+	palette.set_pen_color(6, rgb_t(0x00, 0xaa, 0xaa));
+	palette.set_pen_color(7, rgb_t(0x55, 0xff, 0xff));
+	palette.set_pen_color(8, rgb_t(0xaa, 0x00, 0x00));
+	palette.set_pen_color(9, rgb_t(0xff, 0x55, 0x55));
+	palette.set_pen_color(10, rgb_t(0xaa, 0x00, 0xaa));
+	palette.set_pen_color(11, rgb_t(0xff, 0x55, 0xff));
+	palette.set_pen_color(12, rgb_t(0xaa, 0x55, 0x00));
+	palette.set_pen_color(13, rgb_t(0xff, 0xff, 0x55));
+	palette.set_pen_color(14, rgb_t(0xaa, 0xaa, 0xaa));
+	palette.set_pen_color(15, rgb_t::white);
 };
 
 
@@ -1503,8 +1531,10 @@ UINT8 mos8563_device::draw_scanline(int y, bitmap_rgb32 &bitmap, const rectangle
 }
 
 
-void mos8563_device::update_row(bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, void *param)
+void mos8563_device::update_row(bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param)
 {
+	const pen_t *pen = m_palette->pens();
+
 	ra += (m_vert_scroll & 0x0f);
 	ra &= 0x0f;
 
@@ -1542,7 +1572,7 @@ void mos8563_device::update_row(bitmap_rgb32 &bitmap, const rectangle &cliprect,
 				if (x < 0) x = 0;
 				int color = BIT(code, 7) ? fg : bg;
 
-				bitmap.pix32(y, x) = MOS8563_PALETTE[color];
+				bitmap.pix32(vbp + y, hbp + x) = pen[de ? color : 0];
 			}
 		}
 		else
@@ -1578,7 +1608,7 @@ void mos8563_device::update_row(bitmap_rgb32 &bitmap, const rectangle &cliprect,
 				if (x < 0) x = 0;
 				int color = BIT(data, 7) ? fg : bg;
 
-				bitmap.pix32(y, x) = MOS8563_PALETTE[color];
+				bitmap.pix32(vbp + y, hbp + x) = pen[de ? color : 0];
 
 				if ((bit < 8) || !HSS_SEMI) data <<= 1;
 			}
@@ -1590,5 +1620,5 @@ MC6845_UPDATE_ROW( mos8563_device::vdc_update_row )
 {
 	mos8563_device *mos8563 = static_cast<mos8563_device *>(device);
 
-	mos8563->update_row(bitmap, cliprect, ma, ra, y, x_count, cursor_x, param);
+	mos8563->update_row(bitmap, cliprect, ma, ra, y, x_count, cursor_x, de, hbp, vbp, param);
 }

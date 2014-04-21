@@ -3,7 +3,7 @@
 /*
  * PlayStation GPU emulator
  *
- * Copyright 2003-2013 smf
+ * Copyright 2003-2014 smf
  *
  */
 
@@ -232,15 +232,6 @@ private:
 	void gpu_read( UINT32 *p_ram, INT32 n_size );
 	void gpu_write( UINT32 *p_ram, INT32 n_size );
 
-#if defined( MAME_DEBUG )
-	void DebugMeshInit( void );
-	void DebugMesh( int n_coordx, int n_coordy );
-	void DebugMeshEnd( void );
-	void DebugCheckKeys( void );
-	int DebugMeshDisplay( bitmap_ind16 &bitmap, const rectangle &cliprect );
-	int DebugTextureDisplay( bitmap_ind16 &bitmap );
-#endif
-
 	INT32 m_n_tx;
 	INT32 m_n_ty;
 	INT32 n_abr;
@@ -280,8 +271,6 @@ private:
 
 	PACKET m_packet;
 
-	psx_gpu_debug m_debug;
-
 	UINT16 *p_p_vram[ 1024 ];
 
 	UINT16 p_n_redshade[ MAX_LEVEL * MAX_SHADE ];
@@ -313,6 +302,18 @@ private:
 	UINT16 p_n_b1g1[ 0x10000 ];
 
 	devcb2_write_line m_vblank_handler;
+
+#if defined(DEBUG_VIEWER) && DEBUG_VIEWER
+	required_device<screen_device> m_screen;
+	void DebugMeshInit( void );
+	void DebugMesh( int n_coordx, int n_coordy );
+	void DebugMeshEnd( void );
+	void DebugCheckKeys( void );
+	int DebugMeshDisplay( bitmap_ind16 &bitmap, const rectangle &cliprect );
+	int DebugTextureDisplay( bitmap_ind16 &bitmap );
+
+	psx_gpu_debug m_debug;
+#endif
 };
 
 class cxd8514q_device : public psxgpu_device

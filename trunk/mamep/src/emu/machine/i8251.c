@@ -18,36 +18,6 @@
 
 #define LOG(x)  do { if (VERBOSE) logerror x; } while (0)
 
-/***************************************************************************
-    GLOBAL VARIABLES
-***************************************************************************/
-
-const i8251_interface default_i8251_interface = { DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL };
-
-
-/***************************************************************************
-    IMPLEMENTATION
-***************************************************************************/
-
-/*-------------------------------------------------
-    i8251_in_callback
--------------------------------------------------*/
-
-void i8251_device::input_callback(UINT8 state)
-{
-	int changed = m_input_state^state;
-
-	m_input_state = state;
-
-	/* did cts change state? */
-	if (changed & CTS)
-	{
-		/* yes */
-		/* update tx ready */
-		/* update_tx_ready(); */
-	}
-}
-
 //**************************************************************************
 //  DEVICE DEFINITIONS
 //**************************************************************************
@@ -60,34 +30,17 @@ const device_type I8251 = &device_creator<i8251_device>;
 
 i8251_device::i8251_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, I8251, "I8251", tag, owner, clock, "i8251", __FILE__),
-		device_serial_interface(mconfig, *this)
+	device_serial_interface(mconfig, *this),
+	m_txd_handler(*this),
+	m_dtr_handler(*this),
+	m_rts_handler(*this),
+	m_rxrdy_handler(*this),
+	m_txrdy_handler(*this),
+	m_txempty_handler(*this),
+	m_syndet_handler(*this),
+	m_cts(1),
+	m_dsr(1)
 {
-}
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void i8251_device::device_config_complete()
-{
-	// inherit a copy of the static data
-	const i8251_interface *intf = reinterpret_cast<const i8251_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<i8251_interface *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-		memset(&m_out_txd_cb, 0, sizeof(m_out_txd_cb));
-		memset(&m_out_dtr_cb, 0, sizeof(m_out_dtr_cb));
-		memset(&m_out_rts_cb, 0, sizeof(m_out_rts_cb));
-		memset(&m_out_rxrdy_cb, 0, sizeof(m_out_rxrdy_cb));
-		memset(&m_out_txrdy_cb, 0, sizeof(m_out_txrdy_cb));
-		memset(&m_out_txempty_cb, 0, sizeof(m_out_txempty_cb));
-		memset(&m_out_syndet_cb, 0, sizeof(m_out_syndet_cb));
-	}
 }
 
 //-------------------------------------------------
@@ -97,12 +50,12 @@ void i8251_device::device_config_complete()
 void i8251_device::device_start()
 {
 	// resolve callbacks
-	m_out_txd_func.resolve(m_out_txd_cb,*this);
-	m_out_rxrdy_func.resolve(m_out_rxrdy_cb, *this);
-	m_out_txrdy_func.resolve(m_out_txrdy_cb, *this);
-	m_out_txempty_func.resolve(m_out_txempty_cb, *this);
-
-	m_input_state = 0;
+	m_txd_handler.resolve_safe();
+	m_rts_handler.resolve_safe();
+	m_dtr_handler.resolve_safe();
+	m_rxrdy_handler.resolve_safe();
+	m_txrdy_handler.resolve_safe();
+	m_txempty_handler.resolve_safe();
 }
 
 
@@ -124,7 +77,7 @@ void i8251_device::update_rx_ready()
 		state = 0;
 	}
 
-	m_out_rxrdy_func(state != 0);
+	m_rxrdy_handler(state != 0);
 }
 
 
@@ -135,10 +88,10 @@ void i8251_device::update_rx_ready()
 
 void i8251_device::receive_clock()
 {
-	m_rxc++;
+	m_rxc_count++;
 
-	if (m_rxc == m_br_factor)
-		m_rxc = 0;
+	if (m_rxc_count == m_br_factor)
+		m_rxc_count = 0;
 	else
 		return;
 
@@ -147,7 +100,7 @@ void i8251_device::receive_clock()
 	{
 		//logerror("I8251\n");
 		/* get bit received from other side and update receive register */
-		receive_register_update_bit(get_in_data_bit());
+		receive_register_update_bit(m_rxd);
 
 		if (is_receive_register_full())
 		{
@@ -165,20 +118,20 @@ void i8251_device::receive_clock()
 
 void i8251_device::transmit_clock()
 {
-	m_txc++;
+	m_txc_count++;
 
-	if (m_txc == m_br_factor)
-		m_txc = 0;
+	if (m_txc_count == m_br_factor)
+		m_txc_count = 0;
 	else
 		return;
 
-	/* transmit enable? */
+	/* transmit enabled? */
 	if (m_command & (1<<0))
 	{
-		/* transmit register full? */
+		/* do we have a character to send? */
 		if ((m_status & I8251_STATUS_TX_READY)==0)
 		{
-			/* if transmit reg is empty */
+			/* is diserial ready for it? */
 			if (is_transmit_register_empty())
 			{
 				/* set it up */
@@ -193,17 +146,27 @@ void i8251_device::transmit_clock()
 			}
 		}
 
-		/* if transmit is not empty... transmit data */
+		/* if diserial has bits to send, make them so */
 		if (!is_transmit_register_empty())
 		{
 			UINT8 data = transmit_register_get_data_bit();
-	//      logerror("I8251\n");
-			//transmit_register_send_bit();
-			m_out_txd_func(data);
+			m_tx_busy = true;
+			m_txd_handler(data);
+		}
 
-			m_connection_state &= ~TX;
-			m_connection_state|=(data<<5);
-			serial_connection_out();
+		// is transmitter totally done?
+		if ((m_status & I8251_STATUS_TX_READY) && is_transmit_register_empty())
+		{
+			m_tx_busy = false;
+
+			if (m_disable_tx_pending)
+			{
+				LOG(("Applying pending disable\n"));
+				m_disable_tx_pending = false;
+				m_command &= ~(1<<0);
+				m_txd_handler(1);
+				update_tx_ready();
+			}
 		}
 	}
 
@@ -258,7 +221,7 @@ void i8251_device::update_tx_ready()
 	if ((m_command & (1<<0))!=0)
 	{
 		/* other side has rts set (comes in as CTS at this side) */
-		if (m_input_state & CTS)
+		if (!m_cts)
 		{
 			if (m_status & I8251_STATUS_TX_EMPTY)
 			{
@@ -268,7 +231,7 @@ void i8251_device::update_tx_ready()
 		}
 	}
 
-	m_out_txrdy_func(tx_ready);
+	m_txrdy_handler(tx_ready);
 }
 
 
@@ -282,11 +245,10 @@ void i8251_device::update_tx_empty()
 	if (m_status & I8251_STATUS_TX_EMPTY)
 	{
 		/* tx is in marking state (high) when tx empty! */
-		set_out_data_bit(1);
-		serial_connection_out();
+		m_txd_handler(1);
 	}
 
-	m_out_txempty_func((m_status & I8251_STATUS_TX_EMPTY) != 0);
+	m_txempty_handler((m_status & I8251_STATUS_TX_EMPTY) != 0);
 }
 
 
@@ -303,11 +265,11 @@ void i8251_device::device_reset()
 
 	/* i8251 datasheet explains the state of tx pin at reset */
 	/* tx is set to 1 */
-	set_out_data_bit(1);
+	m_txd_handler(1);
 
-	/* assumption, rts is set to 1 */
-	m_connection_state &= ~RTS;
-	serial_connection_out();
+	/* assumption */
+	m_rts_handler(1);
+	m_dtr_handler(1);
 
 	transmit_register_reset();
 	receive_register_reset();
@@ -323,8 +285,9 @@ void i8251_device::device_reset()
 	m_mode_byte = 0;
 	m_command = 0;
 	m_data = 0;
-	m_rxc = m_txc = 0;
+	m_rxc_count = m_txc_count = 0;
 	m_br_factor = 1;
+	m_tx_busy = m_disable_tx_pending = false;
 
 	/* update tx empty pin output */
 	update_tx_empty();
@@ -399,7 +362,7 @@ WRITE8_MEMBER(i8251_device::control_w)
 
 				LOG(("Character length: %d\n", (((data>>2) & 0x03)+5)));
 
-				int parity = PARITY_NONE;
+				parity_t parity;
 
 				if (data & (1<<4))
 				{
@@ -419,59 +382,38 @@ WRITE8_MEMBER(i8251_device::control_w)
 				else
 				{
 					LOG(("parity check disabled\n"));
+					parity = PARITY_NONE;
 				}
 
-				{
-					UINT8 stop_bit_length;
+				stop_bits_t stop_bits;
 
-					stop_bit_length = (data>>6) & 0x03;
-
-					switch (stop_bit_length)
-					{
-						case 0:
-						{
-							/* inhibit */
-							LOG(("stop bit: inhibit\n"));
-						}
-						break;
-
-						case 1:
-						{
-							/* 1 */
-							LOG(("stop bit: 1 bit\n"));
-						}
-						break;
-
-						case 2:
-						{
-							/* 1.5 */
-							LOG(("stop bit: 1.5 bits\n"));
-						}
-						break;
-
-						case 3:
-						{
-							/* 2 */
-							LOG(("stop bit: 2 bits\n"));
-						}
-						break;
-					}
-				}
-
-				int word_length = ((data>>2) & 0x03)+5;
-				int stop_bit_count = 1;
 				switch ((data>>6) & 0x03)
 				{
-					case 0:
-					case 1:
-						stop_bit_count =  1;
-						break;
-					case 2:
-					case 3:
-						stop_bit_count =  2;
-						break;
+				case 0:
+				default:
+					stop_bits = STOP_BITS_0;
+					LOG(("stop bit: inhibit\n"));
+					break;
+
+				case 1:
+					stop_bits = STOP_BITS_1;
+					LOG(("stop bit: 1 bit\n"));
+					break;
+
+				case 2:
+					stop_bits = STOP_BITS_1_5;
+					LOG(("stop bit: 1.5 bits\n"));
+					break;
+
+				case 3:
+					stop_bits = STOP_BITS_2;
+					LOG(("stop bit: 2 bits\n"));
+					break;
 				}
-				set_data_frame(word_length,stop_bit_count,parity,false);
+
+				int data_bits_count = ((data>>2) & 0x03)+5;
+
+				set_data_frame(1, data_bits_count, parity, stop_bits);
 
 				switch (data & 0x03)
 				{
@@ -480,7 +422,7 @@ WRITE8_MEMBER(i8251_device::control_w)
 				case 3: m_br_factor = 64; break;
 				}
 
-				m_rxc = m_txc = 0;
+				m_rxc_count = m_txc_count = 0;
 
 #if 0
 				/* data bits */
@@ -584,10 +526,30 @@ WRITE8_MEMBER(i8251_device::control_w)
 		if (data & (1<<0))
 		{
 			LOG(("transmit enable\n"));
+
+			/* if we get a tx enable with a disable pending, cancel the disable */
+			m_disable_tx_pending = false;
 		}
 		else
 		{
-			LOG(("transmit disable\n"));
+			if (m_tx_busy)
+			{
+				if (!m_disable_tx_pending)
+				{
+					LOG(("Tx busy, set pending disable\n"));
+				}
+				m_disable_tx_pending = true;
+				m_command |= (1<<0);
+			}
+			else
+			{
+				LOG(("transmit disable\n"));
+				if ((data & (1<<0))==0)
+				{
+					/* held in high state when transmit disable */
+					m_txd_handler(1);
+				}
+			}
 		}
 
 
@@ -617,28 +579,8 @@ WRITE8_MEMBER(i8251_device::control_w)
 		        1 = transmit enable
 		*/
 
-		m_connection_state &= ~RTS;
-		if (data & (1<<5))
-		{
-			/* rts set to 0 */
-			m_connection_state |= RTS;
-		}
-
-		m_connection_state &= ~DTR;
-		if (data & (1<<1))
-		{
-			m_connection_state |= DTR;
-		}
-
-		if ((data & (1<<0))==0)
-		{
-			/* held in high state when transmit disable */
-			set_out_data_bit(1);
-		}
-
-
-		/* refresh outputs */
-		serial_connection_out();
+		m_rts_handler(!BIT(data, 5));
+		m_dtr_handler(!BIT(data, 1));
 
 		if (data & (1<<4))
 		{
@@ -667,8 +609,7 @@ WRITE8_MEMBER(i8251_device::control_w)
 
 READ8_MEMBER(i8251_device::status_r)
 {
-	UINT8 dsr = !((m_input_state & DSR) != 0);
-	UINT8 status = (dsr << 7) | m_status;
+	UINT8 status = (m_dsr << 7) | m_status;
 
 	LOG(("status: %02x\n", status));
 	return status;
@@ -684,7 +625,7 @@ WRITE8_MEMBER(i8251_device::data_w)
 {
 	m_data = data;
 
-	//logerror("write data: %02x\n",data);
+//  printf("i8251 transmit char: %02x\n",data);
 
 	/* writing clears */
 	m_status &=~I8251_STATUS_TX_READY;
@@ -705,7 +646,7 @@ WRITE8_MEMBER(i8251_device::data_w)
 
 void i8251_device::receive_character(UINT8 ch)
 {
-	//logerror("i8251 receive char: %02x\n",ch);
+//  printf("i8251 receive char: %02x\n",ch);
 
 	m_data = ch;
 
@@ -742,38 +683,40 @@ void i8251_device::device_timer(emu_timer &timer, device_timer_id id, int param,
 }
 
 
-WRITE_LINE_MEMBER(i8251_device::write_rx)
+WRITE_LINE_MEMBER(i8251_device::write_rxd)
 {
-	if (state)
-	{
-		input_callback(m_input_state | RX);
-	}
-	else
-	{
-		input_callback(m_input_state & ~RX);
-	}
+	m_rxd = state;
+//  device_serial_interface::rx_w(state);
 }
 
 WRITE_LINE_MEMBER(i8251_device::write_cts)
 {
-	if (state)
-	{
-		input_callback(m_input_state | CTS);
-	}
-	else
-	{
-		input_callback(m_input_state & ~CTS);
-	}
+	m_cts = state;
 }
 
 WRITE_LINE_MEMBER(i8251_device::write_dsr)
 {
-	if (state)
+	m_dsr = !state;
+}
+
+WRITE_LINE_MEMBER(i8251_device::write_rxc)
+{
+	if (m_rxc != state)
 	{
-		input_callback(m_input_state | DSR);
+		m_rxc = state;
+
+		if (m_rxc)
+			receive_clock();
 	}
-	else
+}
+
+WRITE_LINE_MEMBER(i8251_device::write_txc)
+{
+	if (m_txc != state)
 	{
-		input_callback(m_input_state & ~DSR);
+		m_txc = state;
+
+		if (!m_txc)
+			transmit_clock();
 	}
 }

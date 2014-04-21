@@ -35,6 +35,20 @@ enum screen_type_enum
 // screen_update callback flags
 const UINT32 UPDATE_HAS_NOT_CHANGED = 0x0001;   // the video has not changed
 
+// ----- flags for video_attributes -----
+
+// should VIDEO_UPDATE by called at the start of VBLANK or at the end?
+#define VIDEO_UPDATE_BEFORE_VBLANK      0x0000
+#define VIDEO_UPDATE_AFTER_VBLANK       0x0004
+
+// indicates VIDEO_UPDATE will add container bits its
+#define VIDEO_SELF_RENDER               0x0008
+
+// force VIDEO_UPDATE to be called even for skipped frames
+#define VIDEO_ALWAYS_UPDATE             0x0080
+
+// calls VIDEO_UPDATE for every visible scanline, even for skipped frames
+#define VIDEO_UPDATE_SCANLINE           0x0100
 
 
 //**************************************************************************
@@ -165,11 +179,13 @@ public:
 	static void static_set_screen_update(device_t &device, screen_update_ind16_delegate callback);
 	static void static_set_screen_update(device_t &device, screen_update_rgb32_delegate callback);
 	static void static_set_screen_vblank(device_t &device, screen_vblank_delegate callback);
+	static void static_set_palette(device_t &device, const char *tag);
+	static void static_set_video_attributes(device_t &device, UINT32 flags);
 
 	// information getters
 	render_container &container() const { assert(m_container != NULL); return *m_container; }
 	bitmap_ind8 &priority() { return m_priority; }
-
+	palette_device *palette() { return m_palette; }
 	// dynamic configuration
 	void configure(int width, int height, const rectangle &visarea, attoseconds_t frame_period);
 	void reset_origin(int beamy = 0, int beamx = 0);
@@ -186,7 +202,7 @@ public:
 	attotime time_until_pos(int vpos, int hpos = 0) const;
 	attotime time_until_vblank_start() const { return time_until_pos(m_visarea.max_y + 1); }
 	attotime time_until_vblank_end() const;
-	attotime time_until_update() const { return (machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK) ? time_until_vblank_end() : time_until_vblank_start(); }
+	attotime time_until_update() const { return (m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK) ? time_until_vblank_end() : time_until_vblank_start(); }
 	attotime scan_period() const { return attotime(0, m_scantime); }
 	attotime frame_period() const { return (this == NULL) ? DEFAULT_FRAME_PERIOD : attotime(0, m_frame_period); };
 	UINT64 frame_number() const { return m_frame_number; }
@@ -245,6 +261,8 @@ private:
 	screen_update_ind16_delegate m_screen_update_ind16; // screen update callback (16-bit palette)
 	screen_update_rgb32_delegate m_screen_update_rgb32; // screen update callback (32-bit RGB)
 	screen_vblank_delegate m_screen_vblank;         // screen vblank callback
+	optional_device<palette_device> m_palette;      // our palette
+	UINT32              m_video_attributes;         // flags describing the video system
 
 	// internal state
 	render_container *  m_container;                // pointer to our container
@@ -349,10 +367,6 @@ typedef device_type_iterator<&device_creator<screen_device>, screen_device> scre
 #define SCREEN_UPDATE_IND16(name)       UINT32 SCREEN_UPDATE_NAME(name)(device_t *, screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 #define SCREEN_UPDATE_RGB32(name)       UINT32 SCREEN_UPDATE_NAME(name)(device_t *, screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 
-	// legacy
-#define SCREEN_VBLANK_NAME(name)        screen_vblank_##name
-#define SCREEN_VBLANK(name)             void SCREEN_VBLANK_NAME(name)(device_t *, screen_device &screen, bool vblank_on)
-
 #define MCFG_SCREEN_ADD(_tag, _type) \
 	MCFG_DEVICE_ADD(_tag, SCREEN, 0) \
 	MCFG_SCREEN_TYPE(_type)
@@ -384,6 +398,12 @@ typedef device_type_iterator<&device_creator<screen_device>, screen_device> scre
 	screen_device::static_set_screen_vblank(*device, screen_vblank_delegate(&_class::_method, #_class "::" #_method, NULL, (_class *)0));
 #define MCFG_SCREEN_VBLANK_DEVICE(_device, _class, _method) \
 	screen_device::static_set_screen_vblank(*device, screen_vblank_delegate(&_class::_method, #_class "::" #_method, _device, (_class *)0));
+#define MCFG_SCREEN_PALETTE(_palette_tag) \
+	screen_device::static_set_palette(*device, "^" _palette_tag);
+#define MCFG_SCREEN_NO_PALETTE \
+	screen_device::static_set_palette(*device, FINDER_DUMMY_TAG);
+#define MCFG_SCREEN_VIDEO_ATTRIBUTES(_flags) \
+	screen_device::static_set_video_attributes(*device, _flags);
 
 
 //**************************************************************************

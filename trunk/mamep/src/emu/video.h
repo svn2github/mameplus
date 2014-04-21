@@ -61,16 +61,21 @@ public:
 	bool skip_this_frame() const { return m_skipping_this_frame; }
 	int speed_factor() const { return m_speed; }
 	int frameskip() const { return m_auto_frameskip ? -1 : m_frameskip_level; }
-	bool throttled() const { return m_throttle; }
+	bool throttled() const { return m_throttled; }
+	float throttle_rate() const { return m_throttle_rate; }
 	bool fastforward() const { return m_fastforward; }
 	bool is_recording() const { return (m_mngfile != NULL || m_avifile != NULL); }
 
 	// setters
-	void set_speed_factor(int speed) { m_speed = speed; }
 	void set_frameskip(int frameskip);
-	void set_throttled(bool throttled = true) { m_throttle = throttled; }
+	void set_throttled(bool throttled = true) { m_throttled = throttled; }
+	void set_throttle_rate(float throttle_rate) { m_throttle_rate = throttle_rate; }
 	void set_fastforward(bool ffwd = true) { m_fastforward = ffwd; }
 	void set_output_changed() { m_output_changed = true; }
+
+	// misc
+	void toggle_throttle();
+	void toggle_record_movie();
 
 	// render a frame
 	void frame_update(bool debug = false);
@@ -138,7 +143,8 @@ private:
 	UINT32              m_overall_valid_counter;    // number of consecutive valid time periods
 
 	// configuration
-	bool                m_throttle;                 // flag: TRUE if we're currently throttled
+	bool                m_throttled;                // flag: TRUE if we're currently throttled
+	float               m_throttle_rate;            // target rate for throttling
 	bool                m_fastforward;              // flag: TRUE if we're currently fast-forwarding
 	UINT32              m_seconds_to_run;           // number of seconds to run before quitting
 	bool                m_auto_frameskip;           // flag: TRUE if we're automatically frameskipping
@@ -160,7 +166,7 @@ private:
 	INT32               m_snap_height;              // height of snapshots (0 == auto)
 
 	// movie recording
-	emu_file *          m_mngfile;                  // handle to the open movie file
+	auto_pointer<emu_file> m_mngfile;               // handle to the open movie file
 	avi_file *          m_avifile;                  // handle to the open movie file
 	attotime            m_movie_frame_period;       // period of a single movie frame
 	attotime            m_movie_next_frame_time;    // time of next frame
@@ -171,13 +177,5 @@ private:
 	static const attoseconds_t ATTOSECONDS_PER_SPEED_UPDATE = ATTOSECONDS_PER_SECOND / 4;
 	static const int PAUSED_REFRESH_RATE = 30;
 };
-
-
-
-// ----- debugging helpers -----
-
-// assert if any pixels in the given bitmap contain an invalid palette index
-bool video_assert_out_of_range_pixels(running_machine &machine, bitmap_ind16 &bitmap);
-
 
 #endif  /* __VIDEO_H__ */

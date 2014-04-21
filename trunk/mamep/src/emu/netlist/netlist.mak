@@ -33,6 +33,7 @@ NETLISTOBJS+= \
 	$(NETLISTOBJ)/analog/nld_solver.o \
 	$(NETLISTOBJ)/analog/nld_switches.o \
 	$(NETLISTOBJ)/analog/nld_twoterm.o \
+	$(NETLISTOBJ)/devices/nld_4066.o \
 	$(NETLISTOBJ)/devices/nld_7400.o \
 	$(NETLISTOBJ)/devices/nld_7402.o \
 	$(NETLISTOBJ)/devices/nld_7404.o \
@@ -40,6 +41,9 @@ NETLISTOBJS+= \
 	$(NETLISTOBJ)/devices/nld_7420.o \
 	$(NETLISTOBJ)/devices/nld_7425.o \
 	$(NETLISTOBJ)/devices/nld_7427.o \
+	$(NETLISTOBJ)/devices/nld_7430.o \
+	$(NETLISTOBJ)/devices/nld_7448.o \
+	$(NETLISTOBJ)/devices/nld_7450.o \
 	$(NETLISTOBJ)/devices/nld_7474.o \
 	$(NETLISTOBJ)/devices/nld_7483.o \
 	$(NETLISTOBJ)/devices/nld_7486.o \
@@ -47,6 +51,7 @@ NETLISTOBJS+= \
 	$(NETLISTOBJ)/devices/nld_7493.o \
 	$(NETLISTOBJ)/devices/nld_74107.o \
 	$(NETLISTOBJ)/devices/nld_74153.o \
+	$(NETLISTOBJ)/devices/nld_74ls629.o \
 	$(NETLISTOBJ)/devices/nld_9316.o \
 	$(NETLISTOBJ)/devices/nld_ne555.o \
 	$(NETLISTOBJ)/devices/nld_legacy.o \

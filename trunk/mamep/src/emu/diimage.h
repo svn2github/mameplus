@@ -21,6 +21,8 @@
 //  TYPE DEFINITIONS
 //**************************************************************************
 
+class software_list;
+
 enum iodevice_t
 {
 	/* List of all supported devices.  Refer to the device by these names only */
@@ -65,10 +67,26 @@ struct image_device_type_info
 	const char *m_shortname;
 };
 
-struct image_device_format
+class image_device_format
 {
+	friend class simple_list<image_device_format>;
+
+public:
+	image_device_format(const char *name, const char *description, const char *extensions, const char *optspec)
+		: m_next(NULL),
+			m_name(name),
+			m_description(description),
+			m_extensions(extensions),
+			m_optspec(optspec)  { }
+
+	image_device_format *next() const { return m_next; }
+	const char *name() const { return m_name; }
+	const char *description() const { return m_description; }
+	const char *extensions() const { return m_extensions; }
+	const char *optspec() const { return m_optspec; }
+
+private:
 	image_device_format *m_next;
-	int m_index;
 	astring m_name;
 	astring m_description;
 	astring m_extensions;
@@ -78,15 +96,13 @@ struct image_device_format
 
 class device_image_interface;
 struct feature_list;
-struct software_part;
-struct software_info;
+class software_part;
+class software_info;
 
 // device image interface function types
 typedef delegate<int (device_image_interface &)> device_image_load_delegate;
 typedef delegate<void (device_image_interface &)> device_image_func_delegate;
 // legacy
-typedef int (*device_image_load_func)(device_image_interface &image);
-typedef void (*device_image_unload_func)(device_image_interface &image);
 typedef void (*device_image_partialhash_func)(hash_collection &, const unsigned char *, unsigned long, const char *);
 typedef void (*device_image_display_info_func)(device_image_interface &image);
 
@@ -99,13 +115,8 @@ typedef void (*device_image_display_info_func)(device_image_interface &image);
 #define IMAGE_VERIFY_PASS   FALSE
 #define IMAGE_VERIFY_FAIL   TRUE
 
-#define DEVICE_IMAGE_LOAD_NAME_LEGACY(name)        device_load_##name
-#define DEVICE_IMAGE_LOAD_LEGACY(name)             int DEVICE_IMAGE_LOAD_NAME_LEGACY(name)(device_image_interface &image)
-#define DEVICE_IMAGE_UNLOAD_NAME_LEGACY(name)      device_unload_##name
-#define DEVICE_IMAGE_UNLOAD_LEGACY(name)           void DEVICE_IMAGE_UNLOAD_NAME_LEGACY(name)(device_image_interface &image)
 #define DEVICE_IMAGE_DISPLAY_INFO_NAME(name)       device_image_display_info_func##name
 #define DEVICE_IMAGE_DISPLAY_INFO(name)            void DEVICE_IMAGE_DISPLAY_INFO_NAME(name)(device_image_interface &image)
-
 
 #define DEVICE_IMAGE_LOAD_MEMBER_NAME(_name)           device_image_load_##_name
 #define DEVICE_IMAGE_LOAD_NAME(_class,_name)           _class::DEVICE_IMAGE_LOAD_MEMBER_NAME(_name)
@@ -137,7 +148,7 @@ public:
 	virtual void device_compute_hash(hash_collection &hashes, const void *data, size_t length, const char *types) const;
 
 	virtual bool call_load() { return FALSE; }
-	virtual bool call_softlist_load(char *swlist, char *swname, rom_entry *start_entry) { return FALSE; }
+	virtual bool call_softlist_load(software_list_device &swlist, const char *swname, const rom_entry *start_entry) { return FALSE; }
 	virtual bool call_create(int format_type, option_resolution *format_options) { return FALSE; }
 	virtual void call_unload() { }
 	virtual void call_display() { }
@@ -156,14 +167,13 @@ public:
 
 	virtual ui_menu *get_selection_menu(running_machine &machine, class render_container *container);
 
-	const image_device_format *device_get_indexed_creatable_format(int index);
+	const image_device_format *device_get_indexed_creatable_format(int index) { return m_formatlist.find(index); }
 	const image_device_format *device_get_named_creatable_format(const char *format_name);
 	const option_guide *device_get_creation_option_guide() { return create_option_guide(); }
-	const image_device_format *device_get_creatable_formats() { return formatlist(); }
 
 	const char *error();
 	void seterror(image_error_t err, const char *message);
-	void message(const char *format, ...);
+	void message(const char *format, ...) ATTR_PRINTF(2,3);
 
 	bool exists() { return m_image_name; }
 	const char *filename() { if (!m_image_name) return NULL; else return m_image_name; }
@@ -218,15 +228,17 @@ public:
 	const char *instance_name() const { return m_instance_name; }
 	const char *brief_instance_name() const { return m_brief_instance_name; }
 	bool uses_file_extension(const char *file_extension) const;
-	image_device_format *formatlist() const { return m_formatlist; }
+	image_device_format *formatlist() const { return m_formatlist.first(); }
 
 	bool load(const char *path);
 	bool open_image_file(emu_options &options);
 	bool finish_load();
 	void unload();
 	bool create(const char *path, const image_device_format *create_format, option_resolution *create_args);
-	bool load_software(char *swlist, char *swname, rom_entry *entry);
+	bool load_software(software_list_device &swlist, const char *swname, const rom_entry *entry);
 	int reopen_for_write(const char *path);
+
+	static void software_name_split(const char *swlist_swname, astring &swlist_name, astring &swname, astring &swpart);
 
 protected:
 	bool load_internal(const char *path, bool is_create, int create_format, option_resolution *create_args, bool just_load);
@@ -248,6 +260,11 @@ protected:
 	void run_hash(void (*partialhash)(hash_collection &, const unsigned char *, unsigned long, const char *), hash_collection &hashes, const char *types);
 	void image_checkhash();
 	void update_names(const device_type device_type = NULL, const char *inst = NULL, const char *brief = NULL);
+
+	software_part *find_software_item(const char *path, bool restrict_to_interface);
+	bool load_software_part(const char *path, software_part *&swpart);
+	void software_get_default_slot(astring &result, const char *default_card_slot);
+
 	// derived class overrides
 
 	// configuration
@@ -270,10 +287,10 @@ protected:
 	astring m_working_directory;
 
 	/* Software information */
-	char *m_full_software_name;
+	astring m_full_software_name;
 	software_info *m_software_info_ptr;
 	software_part *m_software_part_ptr;
-	char *m_software_list_name;
+	astring m_software_list_name;
 
 	/* info read from the hash file/software list */
 	astring m_longname;
@@ -297,43 +314,12 @@ protected:
 	astring m_instance_name;
 
 	/* creation info */
-	image_device_format *m_formatlist;
+	simple_list<image_device_format> m_formatlist;
 
 	bool m_is_loading;
 };
 
 // iterator
 typedef device_interface_iterator<device_image_interface> image_interface_iterator;
-
-class ui_menu_control_device_image : public ui_menu {
-public:
-	ui_menu_control_device_image(running_machine &machine, render_container *container, device_image_interface *image);
-	virtual ~ui_menu_control_device_image();
-	virtual void populate();
-	virtual void handle();
-
-protected:
-	enum {
-		START_FILE, START_OTHER_PART, START_SOFTLIST, SELECT_PARTLIST, SELECT_ONE_PART, SELECT_OTHER_PART, SELECT_FILE, CREATE_FILE, CREATE_CONFIRM, DO_CREATE, SELECT_SOFTLIST,
-		LAST_ID
-	};
-	int state;
-
-	device_image_interface *image;
-	astring current_directory;
-	astring current_file;
-	int submenu_result;
-	bool create_confirmed;
-	bool softlist_done;
-	const struct software_list *swl;
-	const software_info *swi;
-	const software_part *swp;
-	const class software_list_device *sld;
-	astring software_info_name;
-
-	void test_create(bool &can_create, bool &need_confirm);
-	void load_software_part();
-	virtual void hook_load(astring filename, bool softlist);
-};
 
 #endif  /* __DIIMAGE_H__ */

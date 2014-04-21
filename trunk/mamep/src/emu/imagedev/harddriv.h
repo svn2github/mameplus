@@ -19,8 +19,6 @@
 
 struct harddisk_interface
 {
-	device_image_load_func      m_device_image_load;
-	device_image_unload_func    m_device_image_unload;
 	const char *                    m_interface;
 	device_image_display_info_func  m_device_displayinfo;
 };
@@ -36,12 +34,15 @@ public:
 	harddisk_image_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 	virtual ~harddisk_image_device();
 
+	void set_device_load(device_image_load_delegate _load) { m_device_image_load = _load; }
+	void set_device_unload(device_image_func_delegate _unload) { m_device_image_unload = _unload; }
+
 	// image-level overrides
 	virtual bool call_load();
 	virtual bool call_create(int create_format, option_resolution *create_args);
 	virtual void call_unload();
 	virtual void call_display_info() { if (m_device_displayinfo) m_device_displayinfo(*this); }
-	virtual bool call_softlist_load(char *swlist, char *swname, rom_entry *start_entry) { load_software_part_region(this, swlist, swname, start_entry ); return TRUE; }
+	virtual bool call_softlist_load(software_list_device &swlist, const char *swname, const rom_entry *start_entry) { load_software_part_region(*this, swlist, swname, start_entry ); return TRUE; }
 
 	virtual iodevice_t image_type() const { return IO_HARDDISK; }
 
@@ -71,7 +72,8 @@ protected:
 	chd_file        m_diffchd;              /* handle to the diff CHD */
 	hard_disk_file  *m_hard_disk_handle;
 
-	image_device_format m_format;
+	device_image_load_delegate      m_device_image_load;
+	device_image_func_delegate      m_device_image_unload;
 };
 
 // device type definition
@@ -86,4 +88,11 @@ extern const device_type HARDDISK;
 #define MCFG_HARDDISK_CONFIG_ADD(_tag,_config) \
 	MCFG_DEVICE_ADD(_tag, HARDDISK, 0) \
 	MCFG_DEVICE_CONFIG(_config)
+
+#define MCFG_HARDDISK_LOAD(_class,_load)                                \
+	static_cast<harddisk_image_device *>(device)->set_device_load( DEVICE_IMAGE_LOAD_DELEGATE(_class,_load));
+
+#define MCFG_HARDDISK_UNLOAD(_class,_unload)                            \
+	static_cast<harddisk_image_device *>(device)->set_device_unload( DEVICE_IMAGE_UNLOAD_DELEGATE(_class,_unload));
+
 #endif /* HARDDRIV_H */

@@ -26,7 +26,7 @@
 const device_type HD63484 = &device_creator<hd63484_device>;
 
 hd63484_device::hd63484_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, HD63484, "HD63484", tag, owner, clock, "hd63484", __FILE__),
+	: device_t(mconfig, HD63484, "HD63484 CRTC", tag, owner, clock, "hd63484", __FILE__),
 	m_ram(NULL),
 	//m_reg[256/2],
 	m_fifo_counter(0),
@@ -1557,7 +1557,7 @@ READ16_MEMBER( hd63484_device::data_r )
 	int res;
 
 	if (m_regno == 0x80)
-		res = machine().primary_screen->vpos();
+		res = machine().first_screen()->vpos();
 	else if (m_regno == 0)
 	{
 #if LOG_COMMANDS

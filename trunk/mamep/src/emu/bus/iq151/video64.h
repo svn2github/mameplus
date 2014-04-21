@@ -24,6 +24,7 @@ public:
 
 	// optional information overrides
 	virtual const rom_entry *device_rom_region() const;
+	virtual machine_config_constructor device_mconfig_additions() const;
 
 protected:
 	// device-level overrides
@@ -39,6 +40,8 @@ protected:
 private:
 	UINT8 *     m_videoram;
 	UINT8 *     m_chargen;
+	required_device<gfxdecode_device> m_gfxdecode;
+	required_device<palette_device> m_palette;
 };
 
 

@@ -47,8 +47,6 @@ public:
 	DECLARE_READ8_MEMBER( p2_r );
 	DECLARE_WRITE8_MEMBER( p2_w );
 
-	void fdc_intrq_w(bool state);
-
 	DECLARE_FLOPPY_FORMATS( floppy_formats );
 
 protected:
@@ -60,7 +58,7 @@ protected:
 
 	required_device<cpu_device> m_maincpu;
 	required_device<wd2793_t> m_fdc;
-	required_device<floppy_connector> m_floppy0;
+	required_device<floppy_image_device> m_floppy0;
 	floppy_image_device *m_floppy;
 	required_shared_ptr<UINT8> m_ram;
 	required_ioport m_sw3;

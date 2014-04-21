@@ -33,14 +33,14 @@
 // these are the bits of the incoming commands to the CTC
 const int INTERRUPT         = 0x80;
 const int INTERRUPT_ON      = 0x80;
-const int INTERRUPT_OFF     = 0x00;
+//const int INTERRUPT_OFF     = 0x00;
 
 const int MODE              = 0x40;
 const int MODE_TIMER        = 0x00;
 const int MODE_COUNTER      = 0x40;
 
 const int PRESCALER         = 0x20;
-const int PRESCALER_256     = 0x20;
+//const int PRESCALER_256     = 0x20;
 const int PRESCALER_16      = 0x00;
 
 const int EDGE              = 0x10;
@@ -49,14 +49,14 @@ const int EDGE_RISING       = 0x10;
 
 const int TRIGGER           = 0x08;
 const int TRIGGER_AUTO      = 0x00;
-const int TRIGGER_CLOCK     = 0x08;
+//const int TRIGGER_CLOCK     = 0x08;
 
 const int CONSTANT          = 0x04;
 const int CONSTANT_LOAD     = 0x04;
-const int CONSTANT_NONE     = 0x00;
+//const int CONSTANT_NONE     = 0x00;
 
 const int RESET             = 0x02;
-const int RESET_CONTINUE    = 0x00;
+//const int RESET_CONTINUE    = 0x00;
 const int RESET_ACTIVE      = 0x02;
 
 const int CONTROL           = 0x01;
@@ -80,7 +80,7 @@ const device_type Z80CTC = &device_creator<z80ctc_device>;
 //-------------------------------------------------
 
 z80ctc_device::z80ctc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, Z80CTC, "Zilog Z80 CTC", tag, owner, clock, "z80ctc", __FILE__),
+	: device_t(mconfig, Z80CTC, "Z80 CTC", tag, owner, clock, "z80ctc", __FILE__),
 		device_z80daisy_interface(mconfig, *this)
 {
 }
@@ -92,7 +92,7 @@ z80ctc_device::z80ctc_device(const machine_config &mconfig, const char *tag, dev
 
 READ8_MEMBER( z80ctc_device::read )
 {
-	return read(offset & 3);
+	return m_channel[offset & 3].read();
 }
 
 
@@ -102,7 +102,7 @@ READ8_MEMBER( z80ctc_device::read )
 
 WRITE8_MEMBER( z80ctc_device::write )
 {
-	write(offset & 3, data);
+	m_channel[offset & 3].write(data);
 }
 
 
@@ -111,10 +111,10 @@ WRITE8_MEMBER( z80ctc_device::write )
 //  trigger
 //-------------------------------------------------
 
-WRITE_LINE_MEMBER( z80ctc_device::trg0 ) { trigger(0, state); }
-WRITE_LINE_MEMBER( z80ctc_device::trg1 ) { trigger(1, state); }
-WRITE_LINE_MEMBER( z80ctc_device::trg2 ) { trigger(2, state); }
-WRITE_LINE_MEMBER( z80ctc_device::trg3 ) { trigger(3, state); }
+WRITE_LINE_MEMBER( z80ctc_device::trg0 ) { m_channel[0].trigger(state); }
+WRITE_LINE_MEMBER( z80ctc_device::trg1 ) { m_channel[1].trigger(state); }
+WRITE_LINE_MEMBER( z80ctc_device::trg2 ) { m_channel[2].trigger(state); }
+WRITE_LINE_MEMBER( z80ctc_device::trg3 ) { m_channel[3].trigger(state); }
 
 
 //-------------------------------------------------

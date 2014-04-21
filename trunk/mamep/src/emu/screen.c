@@ -136,7 +136,7 @@ void screen_device::free_scale_bitmap()
 
 void screen_device::convert_palette_to_32(const bitmap_t &src, bitmap_t &dst, const rectangle &visarea, UINT32 palettebase)
 {
-	const rgb_t *palette = palette_entry_list_adjusted(machine().palette) + palettebase;
+	const rgb_t *pal = palette()->palette()->entry_list_adjusted() + palettebase;
 	int x, y;
 
 	for (y = visarea.min_y; y < visarea.max_y; y++)
@@ -145,13 +145,13 @@ void screen_device::convert_palette_to_32(const bitmap_t &src, bitmap_t &dst, co
 		UINT16 *src16 = &src.pixt<UINT16>(y, visarea.min_x);
 
 		for (x = visarea.min_x; x < visarea.max_x; x++)
-			*dst32++ = palette[*src16++];
+			*dst32++ = pal[*src16++];
 	}
 }
 
 void screen_device::convert_palette_to_15(const bitmap_t &src, bitmap_t &dst, const rectangle &visarea, UINT32 palettebase)
 {
-	const rgb_t *palette = palette_entry_list_adjusted(machine().palette) + palettebase;
+	const rgb_t *pal = palette()->palette()->entry_list_adjusted() + palettebase;
 	int x, y;
 
 	for (y = visarea.min_y; y < visarea.max_y; y++)
@@ -160,7 +160,7 @@ void screen_device::convert_palette_to_15(const bitmap_t &src, bitmap_t &dst, co
 		UINT16 *src16 = &src.pixt<UINT16>(y, visarea.min_x);
 
 		for (x = visarea.min_x; x < visarea.max_x; x++)
-			*dst16++ = rgb_to_rgb15(palette[*src16++]);
+			*dst16++ = pal[*src16++].as_rgb15();;
 	}
 }
 
@@ -190,11 +190,12 @@ static void convert_32_to_15(bitmap_t &src, bitmap_t &dst, const rectangle &visa
 
 	for (y = visarea.min_y; y < visarea.max_y; y++)
 	{
-		UINT16 *dst16 = &dst.pixt<UINT16>(y, visarea.min_x);
-		UINT32 *src32 = &src.pixt<UINT32>(y, visarea.min_x);
+		//UINT16 *dst16 = &dst.pixt<UINT16>(y, visarea.min_x);
+		//UINT32 *src32 = &src.pixt<UINT32>(y, visarea.min_x);
 
+		//FIXME
 		for (x = visarea.min_x; x < visarea.max_x; x++)
-			*dst16++ = rgb_to_rgb15(*src32++);
+			; //*dst16++ = rgb_to_rgb15(*src32++);
 	}
 }
 
@@ -275,6 +276,8 @@ screen_device::screen_device(const machine_config &mconfig, const char *tag, dev
 		m_yoffset(0.0f),
 		m_xscale(1.0f),
 		m_yscale(1.0f),
+		m_palette(*this),
+		m_video_attributes(0),
 		m_container(NULL),
 		m_width(100),
 		m_height(100),
@@ -440,6 +443,27 @@ void screen_device::static_set_screen_vblank(device_t &device, screen_vblank_del
 
 
 //-------------------------------------------------
+//  static_set_palette - set the screen palette
+//  configuration
+//-------------------------------------------------
+
+void screen_device::static_set_palette(device_t &device, const char *tag)
+{
+	downcast<screen_device &>(device).m_palette.set_tag(tag);
+}
+
+
+//-------------------------------------------------
+//  static_set_video_attributes - set the screen
+//  video attributes
+//-------------------------------------------------
+
+void screen_device::static_set_video_attributes(device_t &device, UINT32 flags)
+{
+	screen_device &screen = downcast<screen_device &>(device);
+	screen.m_video_attributes = flags;
+}
+//-------------------------------------------------
 //  device_validity_check - verify device
 //  configuration
 //-------------------------------------------------
@@ -464,6 +488,12 @@ void screen_device::device_validity_check(validity_checker &valid) const
 	// check for zero frame rate
 	if (m_refresh == 0)
 		mame_printf_error(_("Invalid (zero) refresh rate\n"));
+
+	texture_format texformat = !m_screen_update_ind16.isnull() ? TEXFORMAT_PALETTE16 : TEXFORMAT_RGB32;
+	if (m_palette == NULL && texformat == TEXFORMAT_PALETTE16)
+		mame_printf_error("Screen does not have palette defined\n");
+	if (m_palette != NULL && texformat == TEXFORMAT_RGB32)
+		mame_printf_warning("Screen does not need palette defined\n");
 }
 
 
@@ -478,8 +508,13 @@ void screen_device::device_start()
 	m_screen_update_rgb32.bind_relative_to(*owner());
 	m_screen_vblank.bind_relative_to(*owner());
 
+	// if we have a palette and it's not started, wait for it
+	if (m_palette != NULL && !m_palette->started())
+		throw device_missing_dependencies();
+
 	// configure bitmap formats and allocate screen bitmaps
 	texture_format texformat = !m_screen_update_ind16.isnull() ? TEXFORMAT_PALETTE16 : TEXFORMAT_RGB32;
+
 	for (int index = 0; index < ARRAY_LENGTH(m_bitmap); index++)
 	{
 		m_bitmap[index].set_format(format(), texformat);
@@ -510,7 +545,7 @@ void screen_device::device_start()
 	m_scanline0_timer = timer_alloc(TID_SCANLINE0);
 
 	// allocate a timer to generate per-scanline updates
-	if ((machine().config().m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
+	if ((m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
 		m_scanline_timer = timer_alloc(TID_SCANLINE);
 
 	// configure the screen with the default parameters
@@ -521,7 +556,7 @@ void screen_device::device_start()
 	m_vblank_end_time = attotime(0, m_vblank_period);
 
 	// start the timer to generate per-scanline updates
-	if ((machine().config().m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
+	if ((m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
 		m_scanline_timer->adjust(time_until_pos(0));
 
 	// create burn-in bitmap
@@ -730,6 +765,11 @@ void screen_device::realloc_screen_bitmaps()
 		item->m_bitmap.resize(effwidth, effheight);
 
 	// re-set up textures
+	if (m_palette != NULL)
+	{
+		m_bitmap[0].set_palette(m_palette->palette());
+		m_bitmap[1].set_palette(m_palette->palette());
+	}
 	m_texture[0]->set_bitmap(m_bitmap[0], m_visarea, m_bitmap[0].texformat());
 	m_texture[1]->set_bitmap(m_bitmap[1], m_visarea, m_bitmap[1].texformat());
 }
@@ -844,7 +884,7 @@ bool screen_device::update_partial(int scanline)
 	LOG_PARTIAL_UPDATES(("Partial: update_partial(%s, %d): ", tag(), scanline));
 
 	// these two checks only apply if we're allowed to skip frames
-	if (!(machine().config().m_video_attributes & VIDEO_ALWAYS_UPDATE))
+	if (!(m_video_attributes & VIDEO_ALWAYS_UPDATE))
 	{
 		// if skipping this frame, bail
 		if (machine().video().skip_this_frame())
@@ -1070,7 +1110,8 @@ void screen_device::register_screen_bitmap(bitmap_t &bitmap)
 
 	// if allocating now, just do it
 	bitmap.allocate(width(), height());
-	bitmap.set_palette(machine().palette);
+	if (m_palette != NULL)
+		bitmap.set_palette(m_palette->palette());
 }
 
 
@@ -1086,7 +1127,7 @@ void screen_device::vblank_begin()
 	m_vblank_end_time = m_vblank_start_time + attotime(0, m_vblank_period);
 
 	// if this is the primary screen and we need to update now
-	if (this == machine().primary_screen && !(machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
+	if (this == machine().first_screen() && !(m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
 		machine().video().frame_update();
 
 	// call the screen specific callbacks
@@ -1120,7 +1161,7 @@ void screen_device::vblank_end()
 		m_screen_vblank(*this, false);
 
 	// if this is the primary screen and we need to update now
-	if (this == machine().primary_screen && (machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
+	if (this == machine().first_screen() && (m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
 		machine().video().frame_update();
 
 	// increment the frame number counter
@@ -1139,7 +1180,7 @@ bool screen_device::update_quads()
 	if (machine().render().is_live(*this))
 	{
 		// only update if empty and not a vector game; otherwise assume the driver did it directly
-		if (m_type != SCREEN_TYPE_VECTOR && (machine().config().m_video_attributes & VIDEO_SELF_RENDER) == 0)
+		if (m_type != SCREEN_TYPE_VECTOR && (m_video_attributes & VIDEO_SELF_RENDER) == 0)
 		{
 			// if we're not skipping the frame and if the screen actually changed, then update the texture
 			if (!machine().video().skip_this_frame() && m_changed)
@@ -1156,7 +1197,7 @@ bool screen_device::update_quads()
 
 			// create an empty container with a single quad
 			m_container->empty();
-			m_container->add_quad(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), m_texture[m_curtexture], PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
+			m_container->add_quad(0.0f, 0.0f, 1.0f, 1.0f, rgb_t(0xff,0xff,0xff,0xff), m_texture[m_curtexture], PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
 		}
 	}
 
@@ -1203,11 +1244,11 @@ void screen_device::update_burnin()
 			{
 				UINT64 *dst = &m_burnin.pix64(y);
 				const UINT16 *src = &srcbitmap.pix16(srcy >> 16);
-				const rgb_t *palette = palette_entry_list_adjusted(machine().palette);
+				const rgb_t *palette = m_palette->palette()->entry_list_adjusted();
 				for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
 				{
 					rgb_t pixel = palette[src[srcx >> 16]];
-					dst[x] += RGB_GREEN(pixel) + RGB_RED(pixel) + RGB_BLUE(pixel);
+					dst[x] += pixel.g() + pixel.r() + pixel.b();
 				}
 			}
 			break;
@@ -1224,7 +1265,7 @@ void screen_device::update_burnin()
 				for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
 				{
 					rgb_t pixel = src[srcx >> 16];
-					dst[x] += RGB_GREEN(pixel) + RGB_RED(pixel) + RGB_BLUE(pixel);
+					dst[x] += pixel.g() + pixel.r() + pixel.b();
 				}
 			}
 			break;
@@ -1282,7 +1323,7 @@ void screen_device::finalize_burnin()
 		for (int x = 0, srcx = 0; x < dstwidth; x++, srcx += xstep)
 		{
 			int brightness = (UINT64)(maxval - src[srcx >> 16]) * 255 / (maxval - minval);
-			dst[x] = MAKE_ARGB(0xff, brightness, brightness, brightness);
+			dst[x] = rgb_t(0xff, brightness, brightness, brightness);
 		}
 	}
 

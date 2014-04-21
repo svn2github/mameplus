@@ -52,12 +52,14 @@
 
 
 #define MCFG_TMS9928A_SCREEN_ADD_NTSC(_screen_tag) \
+	MCFG_VIDEO_SET_SCREEN(_screen_tag) \
 	MCFG_SCREEN_ADD( _screen_tag, RASTER ) \
 	MCFG_SCREEN_RAW_PARAMS( XTAL_10_738635MHz / 2, TMS9928A_TOTAL_HORZ, TMS9928A_HORZ_DISPLAY_START-12, TMS9928A_HORZ_DISPLAY_START + 256 + 12, \
 			TMS9928A_TOTAL_VERT_NTSC, TMS9928A_VERT_DISPLAY_START_NTSC - 12, TMS9928A_VERT_DISPLAY_START_NTSC + 192 + 12 )
 
 
 #define MCFG_TMS9928A_SCREEN_ADD_PAL(_screen_tag) \
+	MCFG_VIDEO_SET_SCREEN(_screen_tag) \
 	MCFG_SCREEN_ADD(_screen_tag, RASTER ) \
 	MCFG_SCREEN_RAW_PARAMS( XTAL_10_738635MHz / 2, TMS9928A_TOTAL_HORZ, TMS9928A_HORZ_DISPLAY_START-12, TMS9928A_HORZ_DISPLAY_START + 256 + 12, \
 			TMS9928A_TOTAL_VERT_PAL, TMS9928A_VERT_DISPLAY_START_PAL - 12, TMS9928A_VERT_DISPLAY_START_PAL + 192 + 12 )
@@ -118,6 +120,7 @@ private:
 	void check_interrupt();
 	void update_backdrop();
 	void update_table_masks();
+	void set_palette();
 
 	static const device_timer_id TIMER_LINE = 0;
 
@@ -176,7 +179,7 @@ class tms9118_device : public tms9928a_device
 {
 public:
 	tms9118_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-		: tms9928a_device( mconfig, TMS9118, "TMS9118", tag, owner, clock, false, true, false, "tms9118", __FILE__) { }
+		: tms9928a_device( mconfig, TMS9118, "TMS9118 VDP", tag, owner, clock, false, true, false, "tms9118", __FILE__) { }
 };
 
 
@@ -184,7 +187,7 @@ class tms9128_device : public tms9928a_device
 {
 public:
 	tms9128_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-		: tms9928a_device( mconfig, TMS9128, "TMS9128", tag, owner, clock, false, true, false, "tms9128", __FILE__) { }
+		: tms9928a_device( mconfig, TMS9128, "TMS9128 VDP", tag, owner, clock, false, true, false, "tms9128", __FILE__) { }
 };
 
 

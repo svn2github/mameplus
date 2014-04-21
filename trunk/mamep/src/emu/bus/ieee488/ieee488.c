@@ -156,7 +156,7 @@ void ieee488_device::device_stop()
 
 void ieee488_device::add_device(ieee488_slot_device *slot, device_t *target)
 {
-	daisy_entry *entry = auto_alloc(machine(), daisy_entry(target));
+	daisy_entry *entry = global_alloc(daisy_entry(target));
 
 	entry->m_interface->m_bus = this;
 	entry->m_interface->m_slot = slot;
@@ -373,6 +373,7 @@ UINT8 ieee488_device::get_data()
 // slot devices
 #include "c2031.h"
 #include "c2040.h"
+#include "c8050.h"
 #include "c8280.h"
 #include "d9060.h"
 #include "hardbox.h"

@@ -59,7 +59,7 @@ enum
 
 
 // register write mask
-static const int REGISTER_WRITE_MASK[2][16] =
+static const int register_write_mask[2][16] =
 {
 	{ 0xf, 0x7, 0xf, 0x7, 0xf, 0x3, 0x7, 0xf, 0x3, 0xf, 0x1, 0xf, 0xf, 0xf, 0xf, 0xf },
 	{ 0x0, 0x0, 0xf, 0x7, 0xf, 0x3, 0x7, 0xf, 0x3, 0x0, 0x1, 0x3, 0x0, 0xf, 0xf, 0xf }
@@ -67,7 +67,7 @@ static const int REGISTER_WRITE_MASK[2][16] =
 
 
 // days per month
-static const int DAYS_PER_MONTH[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+//static const int DAYS_PER_MONTH[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 
 // modes
@@ -119,7 +119,7 @@ inline void rp5c01_device::set_alarm_line()
 	{
 		if (LOG) logerror("RP5C01 '%s' Alarm %u\n", tag(), alarm);
 
-		m_out_alarm_func(alarm);
+		m_out_alarm_cb(alarm);
 		m_alarm = alarm;
 	}
 }
@@ -178,6 +178,7 @@ rp5c01_device::rp5c01_device(const machine_config &mconfig, const char *tag, dev
 	: device_t(mconfig, RP5C01, "RP5C01", tag, owner, clock, "rp5c01", __FILE__),
 		device_rtc_interface(mconfig, *this),
 		device_nvram_interface(mconfig, *this),
+		m_out_alarm_cb(*this),
 		m_mode(0),
 		m_reset(0),
 		m_alarm(1),
@@ -187,28 +188,6 @@ rp5c01_device::rp5c01_device(const machine_config &mconfig, const char *tag, dev
 {
 }
 
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void rp5c01_device::device_config_complete()
-{
-	// inherit a copy of the static data
-	const rp5c01_interface *intf = reinterpret_cast<const rp5c01_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<rp5c01_interface *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-		memset(&m_out_alarm_cb, 0, sizeof(m_out_alarm_cb));
-	}
-}
-
-
 //-------------------------------------------------
 //  device_start - device-specific startup
 //-------------------------------------------------
@@ -216,7 +195,7 @@ void rp5c01_device::device_config_complete()
 void rp5c01_device::device_start()
 {
 	// resolve callbacks
-	m_out_alarm_func.resolve(m_out_alarm_cb, *this);
+	m_out_alarm_cb.resolve_safe();
 
 	// allocate timers
 	m_clock_timer = timer_alloc(TIMER_CLOCK);
@@ -347,8 +326,9 @@ WRITE_LINE_MEMBER( rp5c01_device::adj_w )
 READ8_MEMBER( rp5c01_device::read )
 {
 	UINT8 data = 0;
+	offset &= 0x0f;
 
-	switch (offset & 0x0f)
+	switch (offset)
 	{
 	case REGISTER_MODE:
 		data = m_mode;
@@ -360,11 +340,25 @@ READ8_MEMBER( rp5c01_device::read )
 		break;
 
 	default:
-		data = m_reg[m_mode & MODE_MASK][offset];
+		switch (m_mode & MODE_MASK)
+		{
+		case MODE00:
+		case MODE01:
+			data = m_reg[m_mode & MODE_MASK][offset];
+			break;
+
+		case BLOCK10:
+			data = m_ram[offset];
+			break;
+
+		case BLOCK11:
+			data = m_ram[offset] >> 4;
+			break;
+		}
 		break;
 	}
 
-	if (LOG) logerror("RP5C01 '%s' Register %u Read %02x\n", tag(), offset & 0x0f, data);
+	if (LOG) logerror("RP5C01 '%s' Register %u Read %02x\n", tag(), offset, data);
 
 	return data & 0x0f;
 }
@@ -376,12 +370,13 @@ READ8_MEMBER( rp5c01_device::read )
 
 WRITE8_MEMBER( rp5c01_device::write )
 {
-	int mode = m_mode & MODE_MASK;
+	data &= 0x0f;
+	offset &= 0x0f;
 
-	switch (offset & 0x0f)
+	switch (offset)
 	{
 	case REGISTER_MODE:
-		m_mode = data & 0x0f;
+		m_mode = data;
 
 		if (LOG)
 		{
@@ -396,14 +391,12 @@ WRITE8_MEMBER( rp5c01_device::write )
 		break;
 
 	case REGISTER_RESET:
-		m_reset = data & 0x0f;
+		m_reset = data;
 
 		if (data & RESET_ALARM)
 		{
-			int i;
-
 			// reset alarm registers
-			for (i = REGISTER_1_MINUTE; i < REGISTER_1_MONTH; i++)
+			for (int i = REGISTER_1_MINUTE; i < REGISTER_1_MONTH; i++)
 			{
 				m_reg[MODE01][i] = 0;
 			}
@@ -419,26 +412,26 @@ WRITE8_MEMBER( rp5c01_device::write )
 		break;
 
 	default:
-		switch (mode)
+		switch (m_mode & MODE_MASK)
 		{
 		case MODE00:
 		case MODE01:
-			m_reg[mode][offset & 0x0f] = data & REGISTER_WRITE_MASK[mode][offset & 0x0f];
+			m_reg[m_mode & MODE_MASK][offset] = data & register_write_mask[m_mode & MODE_MASK][offset];
 
 			set_time(false, read_counter(REGISTER_1_YEAR), read_counter(REGISTER_1_MONTH), read_counter(REGISTER_1_DAY), m_reg[MODE00][REGISTER_DAY_OF_THE_WEEK],
 				read_counter(REGISTER_1_HOUR), read_counter(REGISTER_1_MINUTE), read_counter(REGISTER_1_SECOND));
 			break;
 
 		case BLOCK10:
-			m_ram[offset & 0x0f] = (m_ram[offset & 0x0f] & 0xf0) | (data & 0x0f);
+			m_ram[offset] = (m_ram[offset] & 0xf0) | data;
 			break;
 
 		case BLOCK11:
-			m_ram[offset & 0x0f] = (data << 4) | (m_ram[offset & 0x0f] & 0x0f);
+			m_ram[offset] = (data << 4) | (m_ram[offset] & 0x0f);
 			break;
 		}
 
-		if (LOG) logerror("RP5C01 '%s' Register %u Write %02x\n", tag(), offset & 0x0f, data);
+		if (LOG) logerror("RP5C01 '%s' Register %u Write %02x\n", tag(), offset, data);
 		break;
 	}
 }

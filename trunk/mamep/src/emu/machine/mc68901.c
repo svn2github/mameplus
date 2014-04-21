@@ -184,11 +184,11 @@ inline void mc68901_device::check_interrupts()
 {
 	if (m_ipr & m_imr)
 	{
-		m_out_irq_func(ASSERT_LINE);
+		m_out_irq_cb(ASSERT_LINE);
 	}
 	else
 	{
-		m_out_irq_func(CLEAR_LINE);
+		m_out_irq_cb(CLEAR_LINE);
 	}
 }
 
@@ -228,10 +228,10 @@ inline void mc68901_device::timer_count(int index)
 
 		switch (index)
 		{
-		case TIMER_A:   m_out_tao_func(m_to[index]);    break;
-		case TIMER_B:   m_out_tbo_func(m_to[index]);    break;
-		case TIMER_C:   m_out_tco_func(m_to[index]);    break;
-		case TIMER_D:   m_out_tdo_func(m_to[index]);    break;
+		case TIMER_A:   m_out_tao_cb(m_to[index]);    break;
+		case TIMER_B:   m_out_tbo_cb(m_to[index]);    break;
+		case TIMER_C:   m_out_tco_cb(m_to[index]);    break;
+		case TIMER_D:   m_out_tdo_cb(m_to[index]);    break;
 		}
 
 		if (m_ier & INT_MASK_TIMER[index])
@@ -323,7 +323,7 @@ void mc68901_device::gpio_output()
 	if (m_gpio_output != new_gpio_output)
 	{
 		m_gpio_output = new_gpio_output;
-		m_out_gpio_func(0, m_gpio_output);
+		m_out_gpio_cb((offs_t)0, m_gpio_output);
 	}
 }
 
@@ -338,30 +338,23 @@ void mc68901_device::gpio_output()
 mc68901_device::mc68901_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, MC68901, "Motorola MC68901", tag, owner, clock, "mc68901", __FILE__),
 		device_serial_interface(mconfig, *this),
+		m_timer_clock(0),
+		m_rx_clock(0),
+		m_tx_clock(0),
+		m_out_irq_cb(*this),
+		m_out_gpio_cb(*this),
+		m_out_tao_cb(*this),
+		m_out_tbo_cb(*this),
+		m_out_tco_cb(*this),
+		m_out_tdo_cb(*this),
+		m_out_so_cb(*this),
+		//m_out_rr_cb(*this),
+		//m_out_tr_cb(*this),
+		m_aer(0),
+		m_ier(0),
 		m_gpio_input(0),
 		m_gpio_output(0xff)
 {
-}
-
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void mc68901_device::device_config_complete()
-{
-	// inherit a copy of the static data
-	const mc68901_interface *intf = reinterpret_cast<const mc68901_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<mc68901_interface *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-//      memset(&in_pa_cb, 0, sizeof(in_pa_cb));
-	}
 }
 
 
@@ -374,13 +367,15 @@ void mc68901_device::device_start()
 	m_start_bit_hack_for_external_clocks = true;
 
 	/* resolve callbacks */
-	m_out_gpio_func.resolve(m_out_gpio_cb, *this);
-	m_out_so_func.resolve(m_out_so_cb, *this);
-	m_out_tao_func.resolve(m_out_tao_cb, *this);
-	m_out_tbo_func.resolve(m_out_tbo_cb, *this);
-	m_out_tco_func.resolve(m_out_tco_cb, *this);
-	m_out_tdo_func.resolve(m_out_tdo_cb, *this);
-	m_out_irq_func.resolve(m_out_irq_cb, *this);
+	m_out_irq_cb.resolve_safe();
+	m_out_gpio_cb.resolve_safe();
+	m_out_tao_cb.resolve_safe();
+	m_out_tbo_cb.resolve_safe();
+	m_out_tco_cb.resolve_safe();
+	m_out_tdo_cb.resolve_safe();
+	m_out_so_cb.resolve_safe();
+	//m_out_rr_cb.resolve_safe();
+	//m_out_tr_cb.resolve_safe();
 
 	/* create the timers */
 	m_timer[TIMER_A] = timer_alloc(TIMER_A);
@@ -424,9 +419,6 @@ void mc68901_device::device_start()
 	save_item(NAME(m_receive_pending));
 	save_item(NAME(m_gpio_input));
 	save_item(NAME(m_gpio_output));
-	save_item(NAME(m_rxtx_word));
-	save_item(NAME(m_rxtx_start));
-	save_item(NAME(m_rxtx_stop));
 	save_item(NAME(m_rsr_read));
 	save_item(NAME(m_next_rsr));
 }
@@ -493,10 +485,7 @@ void mc68901_device::device_timer(emu_timer &timer, device_timer_id id, int para
 
 void mc68901_device::tra_callback()
 {
-	if (m_out_so_func.isnull())
-		transmit_register_send_bit();
-	else
-		m_out_so_func(transmit_register_get_data_bit());
+	m_out_so_cb(transmit_register_get_data_bit());
 }
 
 
@@ -541,19 +530,9 @@ void mc68901_device::rcv_complete()
 	receive_register_extract();
 	m_receive_buffer = get_received_char();
 	//if (m_receive_pending) TODO: error?
-		
+
 	m_receive_pending = 1;
 	rx_buffer_full();
-}
-
-
-//-------------------------------------------------
-//  input_callback -
-//-------------------------------------------------
-
-void mc68901_device::input_callback(UINT8 state)
-{
-	m_input_state = state;
 }
 
 
@@ -754,7 +733,7 @@ void mc68901_device::register_w(offs_t offset, UINT8 data)
 
 			m_to[TIMER_A] = 0;
 
-			m_out_tao_func(m_to[TIMER_A]);
+			m_out_tao_cb(m_to[TIMER_A]);
 		}
 		break;
 
@@ -809,7 +788,7 @@ void mc68901_device::register_w(offs_t offset, UINT8 data)
 
 			m_to[TIMER_B] = 0;
 
-			m_out_tbo_func(m_to[TIMER_B]);
+			m_out_tbo_cb(m_to[TIMER_B]);
 		}
 		break;
 
@@ -913,7 +892,17 @@ void mc68901_device::register_w(offs_t offset, UINT8 data)
 
 	case REGISTER_UCR:
 		{
-		int parity_code = PARITY_NONE;
+		int data_bit_count;
+
+		switch (data & 0x60)
+		{
+		case UCR_WORD_LENGTH_8: default: data_bit_count = 8; break;
+		case UCR_WORD_LENGTH_7: data_bit_count = 7; break;
+		case UCR_WORD_LENGTH_6: data_bit_count = 6; break;
+		case UCR_WORD_LENGTH_5: data_bit_count = 5; break;
+		}
+
+		parity_t parity;
 
 		if (data & UCR_PARITY_ENABLED)
 		{
@@ -921,52 +910,52 @@ void mc68901_device::register_w(offs_t offset, UINT8 data)
 			{
 				if (LOG) logerror("MC68901 '%s' Parity : Even\n", tag());
 
-				parity_code = PARITY_EVEN;
+				parity = PARITY_EVEN;
 			}
 			else
 			{
 				if (LOG) logerror("MC68901 '%s' Parity : Odd\n", tag());
 
-				parity_code = PARITY_ODD;
+				parity = PARITY_ODD;
 			}
 		}
 		else
 		{
 			if (LOG) logerror("MC68901 '%s' Parity : Disabled\n", tag());
+
+			parity = PARITY_NONE;
 		}
 
-		switch (data & 0x60)
-		{
-		case UCR_WORD_LENGTH_8: m_rxtx_word = 8; break;
-		case UCR_WORD_LENGTH_7: m_rxtx_word = 7; break;
-		case UCR_WORD_LENGTH_6: m_rxtx_word = 6; break;
-		case UCR_WORD_LENGTH_5: m_rxtx_word = 5; break;
-		}
+		if (LOG) logerror("MC68901 '%s' Word Length : %u bits\n", tag(), data_bit_count);
 
-		if (LOG) logerror("MC68901 '%s' Word Length : %u bits\n", tag(), m_rxtx_word);
 
-		bool sync = false;
+		int start_bits;
+		stop_bits_t stop_bits;
+
 		switch (data & 0x18)
 		{
 		case UCR_START_STOP_0_0:
-			m_rxtx_start = 0;
-			m_rxtx_stop = 0;
-			sync = true;
+		default:
+			start_bits = 0;
+			stop_bits = STOP_BITS_0;
 			if (LOG) logerror("MC68901 '%s' Start Bits : 0, Stop Bits : 0, Format : synchronous\n", tag());
 			break;
+
 		case UCR_START_STOP_1_1:
-			m_rxtx_start = 1;
-			m_rxtx_stop = 1;
+			start_bits = 1;
+			stop_bits = STOP_BITS_1;
 			if (LOG) logerror("MC68901 '%s' Start Bits : 1, Stop Bits : 1, Format : asynchronous\n", tag());
 			break;
+
 		case UCR_START_STOP_1_15:
-			m_rxtx_start = 1;
-			m_rxtx_stop = 1;
+			start_bits = 1;
+			stop_bits = STOP_BITS_1_5;
 			if (LOG) logerror("MC68901 '%s' Start Bits : 1, Stop Bits : 1.5, Format : asynchronous\n", tag());
 			break;
+
 		case UCR_START_STOP_1_2:
-			m_rxtx_start = 1;
-			m_rxtx_stop = 2;
+			start_bits = 1;
+			stop_bits = STOP_BITS_2;
 			if (LOG) logerror("MC68901 '%s' Start Bits : 1, Stop Bits : 2, Format : asynchronous\n", tag());
 			break;
 		}
@@ -980,7 +969,7 @@ void mc68901_device::register_w(offs_t offset, UINT8 data)
 			if (LOG) logerror("MC68901 '%s' Rx/Tx Clock Divisor : 1\n", tag());
 		}
 
-		set_data_frame(m_rxtx_word, m_rxtx_stop, parity_code, sync);
+		set_data_frame(start_bits, data_bit_count, parity, stop_bits);
 
 		m_ucr = data;
 		}
@@ -1145,16 +1134,4 @@ WRITE_LINE_MEMBER( mc68901_device::tbi_w )
 WRITE_LINE_MEMBER(mc68901_device::write_rx)
 {
 	device_serial_interface::rx_w(state);
-}
-
-WRITE_LINE_MEMBER(mc68901_device::write_dsr)
-{
-	if (state)
-	{
-		input_callback(m_input_state | DSR);
-	}
-	else
-	{
-		input_callback(m_input_state & ~DSR);
-	}
 }

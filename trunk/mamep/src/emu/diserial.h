@@ -18,18 +18,46 @@
 class device_serial_interface : public device_interface
 {
 public:
+	enum
+	{
+		/* receive is waiting for start bit. The transition from high-low indicates
+		start of start bit. This is used to synchronise with the data being transfered */
+		RECEIVE_REGISTER_WAITING_FOR_START_BIT = 0x01,
+
+		/* receive is synchronised with data, data bits will be clocked in */
+		RECEIVE_REGISTER_SYNCHRONISED = 0x02,
+
+		/* set if receive register has been filled */
+		RECEIVE_REGISTER_FULL = 0x04
+	};
+
+	enum
+	{
+		/* register is empty and ready to be filled with data */
+		TRANSMIT_REGISTER_EMPTY = 0x0001
+	};
+
 	/* parity selections */
 	/* if all the bits are added in a byte, if the result is:
 	   even -> parity is even
 	   odd -> parity is odd
 	*/
-	enum
+
+	enum parity_t
 	{
 		PARITY_NONE,     /* no parity. a parity bit will not be in the transmitted/received data */
 		PARITY_ODD,      /* odd parity */
 		PARITY_EVEN,     /* even parity */
 		PARITY_MARK,     /* one parity */
 		PARITY_SPACE     /* zero parity */
+	};
+
+	enum stop_bits_t
+	{
+		STOP_BITS_0,
+		STOP_BITS_1 = 1,
+		STOP_BITS_1_5 = 2,
+		STOP_BITS_2 = 3
 	};
 
 	/* Communication lines.  Beware, everything is active high */
@@ -48,14 +76,13 @@ public:
 	device_serial_interface(const machine_config &mconfig, device_t &device);
 	virtual ~device_serial_interface();
 
-	void connect(device_serial_interface *other_connection);
 	DECLARE_WRITE_LINE_MEMBER(rx_w);
 	DECLARE_WRITE_LINE_MEMBER(tx_clock_w);
 	DECLARE_WRITE_LINE_MEMBER(rx_clock_w);
 	DECLARE_WRITE_LINE_MEMBER(clock_w);
 
 protected:
-	void set_data_frame(int num_data_bits, int stop_bit_count, int parity_code, bool synchronous);
+	void set_data_frame(int start_bit_count, int data_bit_count, parity_t parity, stop_bits_t stop_bits);
 
 	void receive_register_reset();
 	void receive_register_update_bit(int bit);
@@ -75,26 +102,18 @@ protected:
 	void transmit_register_add_bit(int bit);
 	void transmit_register_setup(UINT8 data_byte);
 	UINT8 transmit_register_get_data_bit();
-	UINT8 transmit_register_send_bit();
 
 	UINT8 serial_helper_get_parity(UINT8 data) { return m_serial_parity_table[data]; }
 
-	UINT8 get_in_data_bit()  { return ((m_input_state & RX)>>4) & 1; }
-	void set_out_data_bit(UINT8 data)  { m_connection_state &= ~TX; m_connection_state |=(data<<5); }
-
-	void serial_connection_out();
-
 	bool is_receive_register_full();
 	bool is_transmit_register_empty();
+	bool is_receive_register_synchronized() { return m_rcv_flags & RECEIVE_REGISTER_SYNCHRONISED; }
+	bool is_receive_register_shifting() { return m_rcv_bit_count_received > 0; }
+	bool is_receive_framing_error() { return m_rcv_framing_error; }
+	bool is_receive_parity_error() { return m_rcv_parity_error; }
 
 	UINT8 get_received_char() { return m_rcv_byte_received; }
 
-	void set_other_connection(device_serial_interface *other_connection);
-
-	virtual void input_callback(UINT8 state) = 0;
-
-	UINT8 m_input_state;
-	UINT8 m_connection_state;
 	virtual void tra_callback() { }
 	virtual void rcv_callback() { receive_register_update_bit(m_rcv_line); }
 	virtual void tra_complete() { }
@@ -108,20 +127,23 @@ protected:
 
 	bool m_start_bit_hack_for_external_clocks;
 
+	const char *parity_tostring(parity_t stop_bits);
+	const char *stop_bits_tostring(stop_bits_t stop_bits);
+
 private:
 	enum { TRA_TIMER_ID = 10000, RCV_TIMER_ID };
 
 	UINT8 m_serial_parity_table[256];
 
 	// Data frame
+	// number of start bits
+	int m_df_start_bit_count;
 	// length of word in bits
 	UINT8 m_df_word_length;
 	// parity state
 	UINT8 m_df_parity;
 	// number of stop bits
 	UINT8 m_df_stop_bit_count;
-	// synchronous or not
-	bool m_synchronous;
 
 	// Receive register
 	/* data */
@@ -134,6 +156,9 @@ private:
 	UINT8 m_rcv_bit_count;
 	/* the byte of data received */
 	UINT8 m_rcv_byte_received;
+
+	bool m_rcv_framing_error;
+	bool m_rcv_parity_error;
 
 	// Transmit register
 	/* data */
@@ -152,8 +177,6 @@ private:
 	UINT8 m_rcv_line;
 
 	int m_tra_clock_state, m_rcv_clock_state;
-
-	device_serial_interface *m_other_connection;
 
 	void tra_edge();
 	void rcv_edge();

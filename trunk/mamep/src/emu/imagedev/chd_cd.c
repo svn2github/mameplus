@@ -25,7 +25,7 @@ const device_type CDROM = &device_creator<cdrom_image_device>;
 //-------------------------------------------------
 
 cdrom_image_device::cdrom_image_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, CDROM, "Cdrom", tag, owner, clock, "cdrom_image", __FILE__),
+	: device_t(mconfig, CDROM, "CD-ROM Image", tag, owner, clock, "cdrom_image", __FILE__),
 		device_image_interface(mconfig, *this)
 {
 }
@@ -65,15 +65,7 @@ void cdrom_image_device::device_config_complete()
 
 	m_extension_list = "chd,cue,toc,nrg,gdi,iso,cdr";
 
-	image_device_format *format = global_alloc_clear(image_device_format);;
-	format->m_index       = 0;
-	format->m_name        = "chdcd";
-	format->m_description = "CD-ROM drive";
-	format->m_extensions  = m_extension_list;
-	format->m_optspec     = cd_option_spec;
-	format->m_next        = NULL;
-
-	m_formatlist = format;
+	m_formatlist.append(*global_alloc(image_device_format("chdcd", "CD-ROM drive", m_extension_list, cd_option_spec)));
 
 	// set brief and instance name
 	update_names();

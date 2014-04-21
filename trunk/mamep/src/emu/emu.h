@@ -25,9 +25,9 @@
 #include "emutempl.h"
 #include "eminline.h"
 #include "profiler.h"
-#include "uilang.h"
+#include "ui/lang.h"
 #ifdef UI_COLOR_DISPLAY
-#include "uipal.h"
+#include "ui/pal.h"
 #endif /* UI_COLOR_DISPLAY */
 
 // commonly-referenecd utilities imported from lib/util
@@ -61,7 +61,7 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 #include "output.h"
 
 // diimage requires uimenu
-#include "uimenu.h"
+#include "ui/menu.h"
 
 // devices and callbacks
 #include "device.h"
@@ -70,7 +70,9 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 #include "dimemory.h"
 #include "diexec.h"
 #include "opresolv.h"
+#include "digfx.h"
 #include "diimage.h"
+#include "dioutput.h"
 #include "diserial.h"
 #include "dislot.h"
 #include "disound.h"
@@ -118,6 +120,7 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 // generic helpers
 #include "devcb.h"
 #include "devcb2.h"
+#include "dispatch.h"
 #include "drivers/xtal.h"
 #include "machine/generic.h"
 #include "video/generic.h"

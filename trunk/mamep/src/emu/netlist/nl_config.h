@@ -23,10 +23,14 @@
  */
 #define USE_PMFDELEGATES        (0)
 
-// This used to add 20% performance ... but is not guaranteed to be absolutely timing correct.
-// Update 01.01.2014: Currently, enabling this has no observable impact on performance.
+// This increases performance in circuits with a lot of gates
+// but is not guaranteed to be absolutely timing correct.
 
 #define USE_DEACTIVE_DEVICE     (0)
+
+// The following adds about 10% performance ...
+
+#define USE_ADD_REMOVE_LIST     (1)
 
 #define USE_OPENMP              (0)
 
@@ -34,11 +38,9 @@
 #define NETLIST_INTERNAL_RES        (U64(1000000000))
 //#define NETLIST_INTERNAL_RES      (U64(1000000000000))
 
-//#define USE_ALTERNATE_SCHEDULING (1)
-
 #define NETLIST_CLOCK               (NETLIST_INTERNAL_RES)
 
-#define NETLIST_GMIN    (1e-9)
+#define NETLIST_GMIN_DEFAULT    (1e-9)
 
 typedef UINT8 netlist_sig_t;
 
@@ -76,7 +78,7 @@ typedef UINT8 netlist_sig_t;
 
 #if defined(__GNUC__) && (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 3))
 #if !defined(__ppc__) && !defined (__PPC__) && !defined(__ppc64__) && !defined(__PPC64__)
-#define ATTR_ALIGN __attribute__ ((aligned(128)))
+#define ATTR_ALIGN __attribute__ ((aligned(64)))
 #else
 #define ATTR_ALIGN
 #endif

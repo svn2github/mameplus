@@ -145,7 +145,7 @@ const device_type Z80DMA = &device_creator<z80dma_device>;
 //-------------------------------------------------
 
 z80dma_device::z80dma_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, Z80DMA, "Z8410", tag, owner, clock, "z80dma", __FILE__),
+	: device_t(mconfig, Z80DMA, "Z8410 DMA", tag, owner, clock, "z80dma", __FILE__),
 		device_z80daisy_interface(mconfig, *this)
 {
 }
@@ -874,7 +874,7 @@ void z80dma_device::rdy_write_callback(int state)
 //  rdy_w - ready input
 //-------------------------------------------------
 
-void z80dma_device::rdy_w(int state)
+WRITE_LINE_MEMBER(z80dma_device::rdy_w)
 {
 	if (LOG) logerror("Z80DMA '%s' RDY: %d Active High: %d\n", tag(), state, READY_ACTIVE_HIGH);
 	machine().scheduler().synchronize(FUNC(static_rdy_write_callback), state, (void *)this);
@@ -885,7 +885,7 @@ void z80dma_device::rdy_w(int state)
 //  wait_w - wait input
 //-------------------------------------------------
 
-void z80dma_device::wait_w(int state)
+WRITE_LINE_MEMBER(z80dma_device::wait_w)
 {
 }
 
@@ -894,19 +894,6 @@ void z80dma_device::wait_w(int state)
 //  bai_w - bus acknowledge input
 //-------------------------------------------------
 
-void z80dma_device::bai_w(int state)
+WRITE_LINE_MEMBER(z80dma_device::bai_w)
 {
 }
-
-
-
-//**************************************************************************
-//  GLOBAL STUBS
-//**************************************************************************
-
-READ8_DEVICE_HANDLER( z80dma_r ) { return downcast<z80dma_device *>(device)->read(); }
-WRITE8_DEVICE_HANDLER( z80dma_w ) { downcast<z80dma_device *>(device)->write(data); }
-
-WRITE_LINE_DEVICE_HANDLER( z80dma_rdy_w ) { downcast<z80dma_device *>(device)->rdy_w(state); }
-WRITE_LINE_DEVICE_HANDLER( z80dma_wait_w ) { downcast<z80dma_device *>(device)->wait_w(state); }
-WRITE_LINE_DEVICE_HANDLER( z80dma_bai_w ) { downcast<z80dma_device *>(device)->bai_w(state); }

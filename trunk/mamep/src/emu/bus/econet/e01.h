@@ -26,7 +26,7 @@
 #include "machine/wd_fdc.h"
 
 class e01_device : public device_t,
-					public device_econet_interface
+	public device_econet_interface
 {
 public:
 	// construction/destruction
@@ -65,8 +65,6 @@ public:
 	DECLARE_WRITE_LINE_MEMBER( fdc_drq_w );
 	DECLARE_WRITE_LINE_MEMBER( scsi_bsy_w );
 	DECLARE_WRITE_LINE_MEMBER( scsi_req_w );
-	void fdc_irq_w(bool state);
-	void fdc_drq_w(bool state);
 
 protected:
 	// device-level overrides
@@ -92,6 +90,7 @@ protected:
 	required_device<floppy_connector> m_floppy0;
 	required_device<floppy_connector> m_floppy1;
 	required_memory_region m_rom;
+	required_device<centronics_device> m_centronics;
 
 	inline void update_interrupts();
 	inline void network_irq_enable(int enabled);

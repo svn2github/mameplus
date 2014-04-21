@@ -14,16 +14,14 @@
 #ifndef __PET_SOFTBOX__
 #define __PET_SOFTBOX__
 
-#include "emu.h"
 #include "ieee488.h"
-#include "bus/imi7000/imi7000.h"
+#include "bus/rs232/rs232.h"
 #include "cpu/z80/z80.h"
 #include "imagedev/harddriv.h"
-#include "includes/corvushd.h"
+#include "machine/corvushd.h"
 #include "machine/com8116.h"
 #include "machine/i8251.h"
 #include "machine/i8255.h"
-#include "machine/serial.h"
 
 
 
@@ -73,6 +71,7 @@ private:
 
 	required_device<cpu_device> m_maincpu;
 	required_device<com8116_device> m_dbrg;
+	required_device<corvus_hdc_t> m_hdc;
 
 	int m_ifc;  // Tracks previous state of IEEE-488 IFC line
 };

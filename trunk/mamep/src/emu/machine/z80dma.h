@@ -88,9 +88,9 @@ public:
 	DECLARE_READ8_MEMBER( read ) { return read(); }
 	DECLARE_WRITE8_MEMBER( write ) { write(data); }
 
-	void rdy_w(int state);
-	void wait_w(int state);
-	void bai_w(int state);
+	DECLARE_WRITE_LINE_MEMBER(rdy_w);
+	DECLARE_WRITE_LINE_MEMBER(wait_w);
+	DECLARE_WRITE_LINE_MEMBER(bai_w);
 
 private:
 	// device-level overrides
@@ -134,7 +134,7 @@ private:
 	UINT16  m_regs[(6<<3)+1+1];
 	UINT8   m_num_follow;
 	UINT8   m_cur_follow;
-	UINT8   m_regs_follow[4];
+	UINT8   m_regs_follow[5];
 	UINT8   m_read_num_follow;
 	UINT8   m_read_cur_follow;
 	UINT8   m_read_regs_follow[7];
@@ -162,24 +162,5 @@ private:
 
 // device type definition
 extern const device_type Z80DMA;
-
-
-
-//**************************************************************************
-//  FUNCTION PROTOTYPES
-//**************************************************************************
-
-// register access
-DECLARE_READ8_DEVICE_HANDLER( z80dma_r );
-DECLARE_WRITE8_DEVICE_HANDLER( z80dma_w );
-
-// ready
-WRITE_LINE_DEVICE_HANDLER( z80dma_rdy_w );
-
-// wait
-WRITE_LINE_DEVICE_HANDLER( z80dma_wait_w );
-
-// bus acknowledge in
-WRITE_LINE_DEVICE_HANDLER( z80dma_bai_w );
 
 #endif

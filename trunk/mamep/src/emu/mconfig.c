@@ -27,18 +27,14 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 		m_watchdog_time(attotime::zero),
 		m_nvram_handler(NULL),
 		m_memcard_handler(NULL),
-		m_video_attributes(0),
-		m_gfxdecodeinfo(NULL),
-		m_total_colors(0),
 		m_default_layout(NULL),
 		m_gamedrv(gamedrv),
-		m_options(options),
-		m_root_device(NULL)
+		m_options(options)
 {
 	// construct the config
 	(*gamedrv.machine_config)(*this, NULL, NULL);
 
-	bool is_selected_driver = mame_stricmp(gamedrv.name,options.system_name())==0;
+	bool is_selected_driver = core_stricmp(gamedrv.name,options.system_name())==0;
 	// intialize slot devices - make sure that any required devices have been allocated
 	slot_interface_iterator slotiter(root_device());
 	for (device_slot_interface *slot = slotiter.first(); slot != NULL; slot = slotiter.next())
@@ -92,7 +88,6 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 
 machine_config::~machine_config()
 {
-	global_free(m_root_device);
 }
 
 
@@ -148,7 +143,7 @@ device_t *machine_config::device_add(device_t *owner, const char *tag, device_ty
 
 	// otherwise, allocate the device directly
 	assert(m_root_device == NULL);
-	m_root_device = (*type)(*this, tag, owner, clock);
+	m_root_device.reset((*type)(*this, tag, owner, clock));
 
 	// apply any machine configuration owned by the device now
 	machine_config_constructor additions = m_root_device->machine_config_additions();

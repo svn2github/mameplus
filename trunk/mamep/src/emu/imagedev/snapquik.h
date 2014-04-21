@@ -23,7 +23,7 @@ public:
 
 	// image-level overrides
 	virtual bool call_load();
-	virtual bool call_softlist_load(char *swlist, char *swname, rom_entry *start_entry) { return load_software(swlist, swname, start_entry); }
+	virtual bool call_softlist_load(software_list_device &swlist, const char *swname, const rom_entry *start_entry) { return load_software(swlist, swname, start_entry); }
 	virtual iodevice_t image_type() const { return IO_SNAPSHOT; }
 
 	virtual bool is_readable()  const { return 1; }
@@ -35,7 +35,7 @@ public:
 	virtual const char *file_extensions() const { return m_file_extensions; }
 	virtual const option_guide *create_option_guide() const { return NULL; }
 
-	void timer_callback();
+	TIMER_CALLBACK_MEMBER(process_snapshot_or_quickload);
 	void set_handler(snapquick_load_delegate load, const char *ext, seconds_t sec) { m_load = load; m_file_extensions = ext; m_delay_seconds = sec; };
 	void set_interface(const char *_interface) { m_interface = _interface; }
 protected:

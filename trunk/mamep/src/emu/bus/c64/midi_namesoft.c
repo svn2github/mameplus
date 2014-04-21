@@ -10,6 +10,8 @@
 **********************************************************************/
 
 #include "midi_namesoft.h"
+#include "machine/clock.h"
+#include "bus/midi/midi.h"
 
 
 
@@ -28,51 +30,16 @@
 const device_type C64_MIDI_NAMESOFT = &device_creator<c64_namesoft_midi_cartridge_device>;
 
 
-//-------------------------------------------------
-//  ACIA6850_INTERFACE( acia_intf )
-//-------------------------------------------------
-
 WRITE_LINE_MEMBER( c64_namesoft_midi_cartridge_device::acia_irq_w )
 {
 	m_slot->nmi_w(state);
 }
 
-static ACIA6850_INTERFACE( acia_intf )
+WRITE_LINE_MEMBER( c64_namesoft_midi_cartridge_device::write_acia_clock )
 {
-	500000,
-	0,          // rx clock (we manually clock rx)
-	DEVCB_DEVICE_LINE_MEMBER("mdout", serial_port_device, tx),
-	DEVCB_NULL,
-	DEVCB_DEVICE_LINE_MEMBER(DEVICE_SELF_OWNER, c64_namesoft_midi_cartridge_device, acia_irq_w)
-};
-
-
-//-------------------------------------------------
-//  SLOT_INTERFACE( midiin_slot )
-//-------------------------------------------------
-
-static SLOT_INTERFACE_START( midiin_slot )
-	SLOT_INTERFACE("midiin", MIDIIN_PORT)
-SLOT_INTERFACE_END
-
-WRITE_LINE_MEMBER( c64_namesoft_midi_cartridge_device::midi_rx_w )
-{
-	m_acia->write_rx(state);
-
-	for (int i = 0; i < 16; i++)    // divider is set to 16
-	{
-		m_acia->rx_clock_in();
-	}
+	m_acia->write_txc(state);
+	m_acia->write_rxc(state);
 }
-
-
-//-------------------------------------------------
-//  SLOT_INTERFACE( midiout_slot )
-//-------------------------------------------------
-
-static SLOT_INTERFACE_START( midiout_slot )
-	SLOT_INTERFACE("midiout", MIDIOUT_PORT)
-SLOT_INTERFACE_END
 
 
 //-------------------------------------------------
@@ -80,12 +47,17 @@ SLOT_INTERFACE_END
 //-------------------------------------------------
 
 static MACHINE_CONFIG_FRAGMENT( c64_passport_midi )
-	MCFG_ACIA6850_ADD(MC6850_TAG, acia_intf)
+	MCFG_DEVICE_ADD(MC6850_TAG, ACIA6850, 0)
+	MCFG_ACIA6850_TXD_HANDLER(DEVWRITELINE("mdout", midi_port_device, write_txd))
+	MCFG_ACIA6850_IRQ_HANDLER(WRITELINE(c64_namesoft_midi_cartridge_device, acia_irq_w))
 
-	MCFG_SERIAL_PORT_ADD("mdin", midiin_slot, "midiin")
-	MCFG_SERIAL_OUT_RX_HANDLER(DEVWRITELINE(DEVICE_SELF, c64_namesoft_midi_cartridge_device, midi_rx_w))
+	MCFG_MIDI_PORT_ADD("mdin", midiin_slot, "midiin")
+	MCFG_MIDI_RX_HANDLER(DEVWRITELINE(MC6850_TAG, acia6850_device, write_rxd))
 
-	MCFG_SERIAL_PORT_ADD("mdout", midiout_slot, "midiout")
+	MCFG_MIDI_PORT_ADD("mdout", midiout_slot, "midiout")
+
+	MCFG_DEVICE_ADD("acia_clock", CLOCK, 31250*16)
+	MCFG_CLOCK_SIGNAL_HANDLER(WRITELINE(c64_namesoft_midi_cartridge_device, write_acia_clock))
 MACHINE_CONFIG_END
 
 
@@ -146,11 +118,11 @@ UINT8 c64_namesoft_midi_cartridge_device::c64_cd_r(address_space &space, offs_t 
 		switch (offset & 0xff)
 		{
 		case 2:
-			data = m_acia->status_read(space, 0);
+			data = m_acia->status_r(space, 0);
 			break;
 
 		case 3:
-			data = m_acia->data_read(space, 0);
+			data = m_acia->data_r(space, 0);
 			break;
 		}
 	}
@@ -170,11 +142,11 @@ void c64_namesoft_midi_cartridge_device::c64_cd_w(address_space &space, offs_t o
 		switch (offset & 0xff)
 		{
 		case 0:
-			m_acia->control_write(space, 0, data);
+			m_acia->control_w(space, 0, data);
 			break;
 
 		case 1:
-			m_acia->data_write(space, 0, data);
+			m_acia->data_w(space, 0, data);
 			break;
 		}
 	}

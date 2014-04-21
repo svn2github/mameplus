@@ -17,17 +17,15 @@
 // Macros
 // ----------------------------------------------------------------------------------------
 
-#define SWITCH2(_name, _i1, _i2)                                             \
-		NET_REGISTER_DEV(switch2, _name)                                            \
-		NET_CONNECT(_name, i1, _i1)                                                 \
-		NET_CONNECT(_name, i2, _i2)
+#define SWITCH2(_name)                                                              \
+		NET_REGISTER_DEV(switch2, _name)
 
 // ----------------------------------------------------------------------------------------
 // Devices ...
 // ----------------------------------------------------------------------------------------
 
 NETLIB_DEVICE_WITH_PARAMS(switch2,
-    NETLIB_NAME(R_base) m_R[2];
+	NETLIB_NAME(R_base) m_R[2];
 
 	netlist_param_int_t m_POS;
 );

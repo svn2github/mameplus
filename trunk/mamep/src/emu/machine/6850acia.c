@@ -1,3 +1,5 @@
+// license:MAME
+// copyright-holders:smf
 /*********************************************************************
 
     6850acia.c
@@ -16,35 +18,39 @@
 
 #define LOG 0
 
-#define CR1_0   0x03
-#define CR4_2   0x1C
-#define CR6_5   0x60
-#define CR7     0x80
-
-#define TXD(_data) \
-	m_out_tx_func(_data)
-
-#define RTS(_data) \
-	m_out_rts_func(_data)
-
 /***************************************************************************
     LOCAL VARIABLES
 ***************************************************************************/
 
-const int acia6850_device::ACIA6850_DIVIDE[3] = { 1, 16, 64 };
-
-const int acia6850_device::ACIA6850_WORD[8][3] =
+const int acia6850_device::counter_divide_select[4] =
 {
-	{ 7, EVEN, 2 },
-	{ 7, ODD,  2 },
-	{ 7, EVEN, 1 },
-	{ 7, ODD,  1 },
-	{ 8, NONE, 2 },
-	{ 8, NONE, 1 },
-	{ 8, EVEN, 1 },
-	{ 8, ODD,  1 }
+	1,
+	16,
+	64,
+	0
 };
 
+const int acia6850_device::word_select[8][3] =
+{
+	// word length, parity, stop bits
+	{ 7, PARITY_EVEN, 2 },
+	{ 7, PARITY_ODD,  2 },
+	{ 7, PARITY_EVEN, 1 },
+	{ 7, PARITY_ODD,  1 },
+	{ 8, PARITY_NONE, 2 },
+	{ 8, PARITY_NONE, 1 },
+	{ 8, PARITY_EVEN, 1 },
+	{ 8, PARITY_ODD,  1 }
+};
+
+const int acia6850_device::transmitter_control[4][3] =
+{
+	// rts, brk, tx irq
+	{ 0, 0, 0 },
+	{ 0, 0, 1 },
+	{ 1, 0, 0 },
+	{ 0, 1, 0 }
+};
 
 
 /***************************************************************************
@@ -60,25 +66,47 @@ const device_type ACIA6850 = &device_creator<acia6850_device>;
 
 acia6850_device::acia6850_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, ACIA6850, "6850 ACIA", tag, owner, clock, "acia6850", __FILE__),
-	m_rxd(0),
+	m_txd_handler(*this),
+	m_rts_handler(*this),
+	m_irq_handler(*this),
+	m_status(SR_TDRE),
+	m_first_master_reset(true),
+	m_dcd_irq_pending(false),
+	m_overrun_pending(false),
+	m_divide(0),
+	m_rts(0),
 	m_dcd(0),
-	m_cts(0)
+	m_irq(0),
+	m_txc(0),
+	m_txd(0),
+	m_tx_irq_enable(false),
+	m_rxc(0),
+	m_rxd(1),
+	m_rx_irq_enable(false)
 {
-	memset(static_cast<acia6850_interface *>(this), 0, sizeof(acia6850_interface));
 }
 
-
-//-------------------------------------------------
-//  static_set_interface - set the interface
-//  struct
-//-------------------------------------------------
-
-void acia6850_device::static_set_interface(device_t &device, const acia6850_interface &interface)
+acia6850_device::acia6850_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock, const char *shortname, const char *source)
+	: device_t(mconfig, type, name, tag, owner, clock, shortname, source),
+	m_txd_handler(*this),
+	m_rts_handler(*this),
+	m_irq_handler(*this),
+	m_status(SR_TDRE),
+	m_first_master_reset(true),
+	m_dcd_irq_pending(false),
+	m_overrun_pending(false),
+	m_divide(0),
+	m_rts(0),
+	m_dcd(0),
+	m_irq(0),
+	m_txc(0),
+	m_txd(0),
+	m_tx_irq_enable(false),
+	m_rxc(0),
+	m_rxd(1),
+	m_rx_irq_enable(false)
 {
-	acia6850_device &ptm = downcast<acia6850_device &>(device);
-	static_cast<acia6850_interface &>(ptm) = interface;
 }
-
 
 //-------------------------------------------------
 //  device_start - device-specific startup
@@ -87,100 +115,188 @@ void acia6850_device::static_set_interface(device_t &device, const acia6850_inte
 void acia6850_device::device_start()
 {
 	// resolve callbacks
-	m_out_tx_func.resolve(m_out_tx_cb, *this);
-	m_out_rts_func.resolve(m_out_rts_cb, *this);
-	m_out_irq_func.resolve(m_out_irq_cb, *this);
+	m_txd_handler.resolve_safe();
+	m_rts_handler.resolve_safe();
+	m_irq_handler.resolve_safe();
 
-	m_tx_counter = 0;
-	m_rx_counter = 0;
-	m_rx_timer = timer_alloc(TIMER_ID_RECEIVE);
-	m_tx_timer = timer_alloc(TIMER_ID_TRANSMIT);
-	m_first_reset = 1;
-	m_status_read = 0;
-	m_brk = 0;
-
-	m_rx_timer->reset();
-	m_tx_timer->reset();
-
-	save_item(NAME(m_ctrl));
 	save_item(NAME(m_status));
-	save_item(NAME(m_rx_clock));
-	save_item(NAME(m_tx_clock));
-	save_item(NAME(m_rx_counter));
-	save_item(NAME(m_tx_counter));
-	save_item(NAME(m_rx_shift));
-	save_item(NAME(m_tx_shift));
-	save_item(NAME(m_rdr));
 	save_item(NAME(m_tdr));
-	save_item(NAME(m_rx_bits));
-	save_item(NAME(m_tx_bits));
-	save_item(NAME(m_rx_parity));
-	save_item(NAME(m_tx_parity));
-	save_item(NAME(m_tx_int));
+	save_item(NAME(m_rdr));
+
+	save_item(NAME(m_first_master_reset));
+	save_item(NAME(m_dcd_irq_pending));
+	save_item(NAME(m_overrun_pending));
 
 	save_item(NAME(m_divide));
-	save_item(NAME(m_overrun));
-	save_item(NAME(m_reset));
-	save_item(NAME(m_first_reset));
-	save_item(NAME(m_rts));
+	save_item(NAME(m_bits));
+	save_item(NAME(m_stopbits));
+	save_item(NAME(m_parity));
 	save_item(NAME(m_brk));
-	save_item(NAME(m_rxd));
+
+	save_item(NAME(m_rts));
 	save_item(NAME(m_dcd));
-	save_item(NAME(m_cts));
-	save_item(NAME(m_status_read));
-	save_item(NAME(m_dcd_triggered));
+	save_item(NAME(m_irq));
+
+	save_item(NAME(m_txc));
+	save_item(NAME(m_txd));
+	save_item(NAME(m_tx_state));
+	save_item(NAME(m_tx_bits));
+	save_item(NAME(m_tx_shift));
+	save_item(NAME(m_tx_parity));
+	save_item(NAME(m_tx_counter));
+	save_item(NAME(m_tx_irq_enable));
+
+	save_item(NAME(m_rxc));
+	save_item(NAME(m_rxd));
+	save_item(NAME(m_rx_state));
+	save_item(NAME(m_rx_bits));
+	save_item(NAME(m_rx_shift));
+	save_item(NAME(m_rx_parity));
+	save_item(NAME(m_rx_counter));
+	save_item(NAME(m_rx_irq_enable));
+
+	output_txd(1);
+	output_rts(1);
+	output_irq(1);
+}
+
+READ8_MEMBER( acia6850_device::status_r )
+{
+	UINT8 status = m_status;
+
+	if (status & SR_CTS)
+	{
+		status &= ~SR_TDRE;
+	}
+
+	if (m_dcd_irq_pending == DCD_IRQ_READ_STATUS)
+	{
+		m_dcd_irq_pending = DCD_IRQ_READ_DATA;
+	}
+
+	return status;
+}
+
+WRITE8_MEMBER( acia6850_device::control_w )
+{
+	if (LOG) logerror("MC6850 '%s' Control: %02x\n", tag(), data);
+
+	// CR0 & CR1
+	int counter_divide_select_bits = (data >> 0) & 3;
+	m_divide = counter_divide_select[counter_divide_select_bits];
+
+	// CR2, CR3 & CR4
+	int word_select_bits = (data >> 2) & 7;
+	m_bits = word_select[word_select_bits][0];
+	m_parity = word_select[word_select_bits][1];
+	m_stopbits = word_select[word_select_bits][2];
+
+	// CR5 & CR6
+	int transmitter_control_bits = (data >> 5) & 3;
+	int rts = transmitter_control[transmitter_control_bits][0];
+	m_brk = transmitter_control[transmitter_control_bits][1];
+	m_tx_irq_enable = transmitter_control[transmitter_control_bits][2];
+
+	// CR7
+	m_rx_irq_enable = (data >> 7) & 1;
+
+	if (m_divide == 0)
+	{
+		if (m_first_master_reset)
+		{
+			/// TODO: find out whether you need to leave master reset before it stops counting as the first
+			rts = 1;
+			m_first_master_reset = false;
+		}
+
+		m_dcd_irq_pending = DCD_IRQ_NONE;
+		m_overrun_pending = false;
+
+		m_rx_state = STATE_START;
+		m_rx_counter = 0;
+
+		m_tx_state = STATE_START;
+		output_txd(1);
+
+		m_status &= SR_CTS;
+
+		if (m_dcd)
+		{
+			m_status |= SR_DCD;
+		}
+	}
+
+	output_rts(rts);
+
+	update_irq();
 }
 
 
-//-------------------------------------------------
-//  device_reset - device-specific reset
-//-------------------------------------------------
-
-void acia6850_device::device_reset()
+int acia6850_device::calculate_txirq()
 {
-	m_status = (m_cts << 3) | (m_dcd << 2) | ACIA6850_STATUS_TDRE;
-	m_tdr = 0;
-	m_rdr = 0;
-	m_tx_shift = 0;
-	m_rx_shift = 0;
-	m_tx_counter = 0;
-	m_rx_counter = 0;
+	return !(m_tx_irq_enable && ((m_status & SR_TDRE) && !(m_status & SR_CTS)));
+}
 
-	m_divide = 0;
+int acia6850_device::calculate_rxirq()
+{
+	return !(m_rx_irq_enable && ((m_status & SR_RDRF) || m_dcd_irq_pending != DCD_IRQ_NONE));
+}
 
-	TXD(1);
-	m_overrun = 0;
-	m_reset = 0;
-	m_status_read = 0;
-	m_brk = 0;
+void acia6850_device::update_irq()
+{
+	output_irq(calculate_txirq() && calculate_rxirq());
+}
 
-	m_rx_state = START;
-	m_tx_state = START;
-	m_irq = 0;
-	m_rts = 0;
-	m_ctrl = 0;
+WRITE8_MEMBER( acia6850_device::data_w )
+{
+	if (LOG) logerror("MC6850 '%s' Data: %02x\n", tag(), data);
 
-	m_bits = 0;
-	m_tx_int = 0;
-	m_dcd_triggered = false;
-
-	m_out_irq_func(CLEAR_LINE);
-
-	if (m_first_reset)
+	/// TODO: find out if data stored during master reset is sent after divider is set
+	if (m_divide == 0)
 	{
-		m_first_reset = 0;
+		logerror("%s:ACIA %p: Data write while in reset!\n", machine().describe_context(), this);
+	}
 
-		RTS(1);
+	/// TODO: find out what happens if TDRE is already clear when you write
+	m_tdr = data;
+	m_status &= ~SR_TDRE;
+
+	update_irq();
+}
+
+READ8_MEMBER( acia6850_device::data_r )
+{
+	if (m_overrun_pending)
+	{
+		m_status |= SR_OVRN;
+		m_overrun_pending = false;
 	}
 	else
 	{
-		RTS(m_rts);
+		m_status &= ~SR_OVRN;
+		m_status &= ~SR_RDRF;
 	}
+
+	if (m_dcd_irq_pending == DCD_IRQ_READ_DATA)
+	{
+		m_dcd_irq_pending = DCD_IRQ_NONE;
+	}
+
+	update_irq();
+
+	return m_rdr;
 }
 
-DECLARE_WRITE_LINE_MEMBER( acia6850_device::write_rx )
+DECLARE_WRITE_LINE_MEMBER( acia6850_device::write_cts )
 {
-	m_rxd = state;
+	if (state)
+	{
+		m_status |= SR_CTS;
+	}
+	else
+	{
+		m_status &= ~SR_CTS;
+	}
 }
 
 DECLARE_WRITE_LINE_MEMBER( acia6850_device::write_dcd )
@@ -188,580 +304,290 @@ DECLARE_WRITE_LINE_MEMBER( acia6850_device::write_dcd )
 	m_dcd = state;
 }
 
-DECLARE_WRITE_LINE_MEMBER( acia6850_device::write_cts )
+WRITE_LINE_MEMBER( acia6850_device::write_rxc )
 {
-	m_cts = state;
-}
-
-//-------------------------------------------------
-//  device_timer - handle timer callbacks
-//-------------------------------------------------
-
-void acia6850_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
-{
-	switch (id)
+	if (m_rxc != state)
 	{
-		case TIMER_ID_TRANSMIT:
-			tx_tick();
-			m_tx_counter = 0;
-			break;
+		m_rxc = state;
 
-		case TIMER_ID_RECEIVE:
-			rx_tick();
-			m_rx_counter = 0;
-			break;
-	}
-}
-
-
-//-------------------------------------------------
-//  acia6850_stat_r - Read Status Register
-//-------------------------------------------------
-
-READ8_MEMBER( acia6850_device::status_read )
-{
-	UINT8 status;
-
-	m_status_read = 1;
-	status = m_status;
-
-	if (status & ACIA6850_STATUS_CTS)
-	{
-		status &= ~ACIA6850_STATUS_TDRE;
-	}
-
-	return status;
-}
-
-
-//-------------------------------------------------
-//  Handle DCD input changes
-//-------------------------------------------------
-
-void acia6850_device::check_dcd_input()
-{
-	if (m_dcd)
-	{
-		// IRQ from DCD is edge triggered
-		if ( ! ( m_status & ACIA6850_STATUS_DCD ) )
+		if (state && m_divide > 0)
 		{
-			m_status |= ACIA6850_STATUS_DCD;
-			m_dcd_triggered = true;
-
-			// Asserting DCD clears RDRF
-			m_status &= ~ACIA6850_STATUS_RDRF;
-
-			check_interrupts();
-		}
-	}
-	else if ((m_status & (ACIA6850_STATUS_DCD | ACIA6850_STATUS_IRQ)) == ACIA6850_STATUS_DCD)
-	{
-		m_status &= ~ACIA6850_STATUS_DCD;
-	}
-}
-
-
-//-------------------------------------------------
-//  control_write - Write Control Register
-//-------------------------------------------------
-
-WRITE8_MEMBER( acia6850_device::control_write )
-{
-	if (LOG) logerror("MC6850 '%s' Control: %02x\n", tag(), data);
-
-	// Counter Divide Select Bits
-
-	int divide = data & CR1_0;
-
-	if (divide == 3)
-	{
-		m_reset = 1;
-		device_reset();
-	}
-	else
-	{
-		m_reset = 0;
-		m_divide = ACIA6850_DIVIDE[divide];
-	}
-
-	// Word Select Bits
-
-	int wordsel = (data & CR4_2) >> 2;
-
-	m_bits = ACIA6850_WORD[wordsel][0];
-	m_parity = (parity_type)ACIA6850_WORD[wordsel][1];
-	m_stopbits = ACIA6850_WORD[wordsel][2];
-
-	// Transmitter Control Bits
-
-	switch ((data & CR6_5) >> 5)
-	{
-	case 0:
-		m_rts = 0;
-		RTS(m_rts);
-
-		m_tx_int = 0;
-		m_brk = 0;
-		break;
-
-	case 1:
-		m_rts = 0;
-		RTS(m_rts);
-
-		m_tx_int = 1;
-		m_brk = 0;
-		break;
-
-	case 2:
-		m_rts = 1;
-		RTS(m_rts);
-
-		m_tx_int = 0;
-		m_brk = 0;
-		break;
-
-	case 3:
-		m_rts = 0;
-		RTS(m_rts);
-
-		m_tx_int = 0;
-		m_brk = 1;
-		break;
-	}
-
-	check_interrupts();
-
-	// After writing the word type, set the rx/tx clocks (provided the divide values have changed)
-
-	if ((m_ctrl ^ data) & CR1_0)
-	{
-		if (!m_reset)
-		{
-			if (m_rx_clock)
+			if (m_dcd)
 			{
-				attotime rx_period = attotime::from_hz(m_rx_clock) *  m_divide;
-				m_rx_timer->adjust(rx_period, 0, rx_period);
+				if (!(m_status & SR_DCD))
+				{
+					m_status |= SR_DCD;
+					m_dcd_irq_pending = DCD_IRQ_READ_STATUS;
+				}
+
+				m_rx_state = STATE_START;
+				m_rx_counter = 0;
+			}
+			else
+			{
+				if (m_dcd_irq_pending == DCD_IRQ_NONE)
+				{
+					m_status &= ~SR_DCD;
+				}
+
+				m_rx_counter++;
+
+				switch (m_rx_state)
+				{
+				case STATE_START:
+					if (m_rxd == 0)
+					{
+						if (m_rx_counter == 1)
+						{
+							if (LOG) logerror("MC6850 '%s': RX START BIT\n", tag());
+						}
+
+						if (m_rx_counter >= m_divide / 2)
+						{
+							m_rx_state = STATE_DATA;
+							m_rx_counter = 0;
+							m_rx_shift = 0;
+							m_rx_parity = 0;
+							m_rx_bits = 0;
+						}
+					}
+					else
+					{
+						if (m_rx_counter != 1)
+						{
+							if (LOG) logerror("MC6850 '%s': RX FALSE START BIT\n", tag());
+						}
+
+						m_rx_counter = 0;
+					}
+					break;
+
+				case STATE_DATA:
+					if (m_rx_counter == m_divide)
+					{
+						m_rx_counter = 0;
+
+						if (m_rx_bits < m_bits)
+						{
+							if (LOG) logerror("MC6850 '%s': RX DATA BIT %d %d\n", tag(), m_rx_bits, m_rxd);
+						}
+						else
+						{
+							if (LOG) logerror("MC6850 '%s': RX PARITY BIT %x\n", tag(), m_rxd);
+						}
+
+						if (m_rxd)
+						{
+							m_rx_shift |= 1 << m_rx_bits;
+						}
+
+						m_rx_bits++;
+
+						m_rx_parity ^= m_rxd;
+
+						if ((m_rx_bits == m_bits && m_parity == PARITY_NONE) ||
+							(m_rx_bits == (m_bits + 1) && m_parity == PARITY_NONE))
+						{
+							if (m_status & SR_RDRF)
+							{
+								m_overrun_pending = true;
+							}
+							else
+							{
+								/// TODO: find out if this is the correct place to calculate parity
+								if (m_parity == PARITY_ODD)
+								{
+									m_rx_parity = !m_rx_parity;
+								}
+
+								if (m_parity != PARITY_NONE && !m_rx_parity)
+								{
+									m_status |= SR_PE;
+								}
+								else
+								{
+									m_status &= ~SR_PE;
+								}
+
+								m_rdr = m_rx_shift;
+
+								if (m_bits == 7 && m_parity != PARITY_NONE)
+								{
+									m_rdr &= 0x7f;
+								}
+
+								m_status |= SR_RDRF;
+							}
+
+							m_rx_state = STATE_STOP;
+						}
+					}
+					break;
+
+				case STATE_STOP:
+					if (m_rx_counter == m_divide)
+					{
+						m_rx_counter = 0;
+
+						if (LOG) logerror("MC6850 '%s': RX STOP BIT\n", tag());
+
+						if (!m_rxd)
+						{
+							m_status |= SR_FE;
+						}
+						else
+						{
+							m_status &= ~SR_FE;
+						}
+
+						/// TODO: find out if 6850 only waits for 1 STOP bit when receiving
+						m_rx_state = STATE_START;
+					}
+					break;
+				}
 			}
 
-			if (m_tx_clock)
-			{
-				attotime tx_period = attotime::from_hz(m_tx_clock) * m_divide;
-				m_tx_timer->adjust(tx_period, 0, tx_period);
-			}
+			update_irq();
 		}
 	}
-	m_ctrl = data;
 }
 
-
-//-------------------------------------------------
-//  check_interrupts
-//-------------------------------------------------
-
-void acia6850_device::check_interrupts()
+DECLARE_WRITE_LINE_MEMBER( acia6850_device::write_rxd )
 {
-	int irq = (m_tx_int && (m_status & ACIA6850_STATUS_TDRE) && (~m_status & ACIA6850_STATUS_CTS)) ||
-		((m_ctrl & 0x80) && (((m_status & ACIA6850_STATUS_RDRF) || m_dcd_triggered) || m_overrun));
+	m_rxd = state;
+}
 
-	if (irq != m_irq)
+WRITE_LINE_MEMBER( acia6850_device::write_txc )
+{
+	if (m_txc != state)
+	{
+		m_txc = state;
+
+		if (!state && m_divide > 0)
+		{
+			m_tx_counter++;
+
+			/// TODO: check txd is correctly generated, check atarist mcu is reading data, start checking receive data.
+			switch (m_tx_state)
+			{
+			case STATE_START:
+				m_tx_counter = 0;
+
+				if (!(m_status & SR_TDRE) && !(m_status & SR_CTS))
+				{
+					if (LOG) logerror("MC6850 '%s': TX DATA %x\n", tag(), m_tdr);
+
+					m_tx_state = STATE_DATA;
+					m_tx_shift = m_tdr;
+					m_tx_bits = 0;
+					m_tx_parity = 0;
+					m_status |= SR_TDRE;
+
+					if (LOG) logerror("MC6850 '%s': TX START BIT\n", tag());
+
+					output_txd(0);
+				}
+				else
+				{
+					/// TODO: find out if break stops transmitter
+					output_txd(!m_brk);
+				}
+				break;
+
+			case STATE_DATA:
+				if (m_tx_counter == m_divide)
+				{
+					m_tx_counter = 0;
+
+					if (m_tx_bits < m_bits)
+					{
+						output_txd((m_tx_shift >> m_tx_bits) & 1);
+
+						m_tx_bits++;
+						m_tx_parity ^= m_txd;
+
+						if (LOG) logerror("MC6850 '%s': TX DATA BIT %d %d\n", tag(), m_tx_bits, m_txd);
+					}
+					else if (m_tx_bits == m_bits && m_parity != PARITY_NONE)
+					{
+						m_tx_bits++;
+
+						/// TODO: find out if this is the correct place to calculate parity
+						if (m_parity == PARITY_ODD)
+						{
+							m_tx_parity = !m_tx_parity;
+						}
+
+						output_txd(m_tx_parity);
+
+						if (LOG) logerror("MC6850 '%s': TX PARITY BIT %d\n", tag(), m_txd);
+					}
+					else
+					{
+						m_tx_state = STATE_STOP;
+						m_tx_bits = 0;
+
+						output_txd(1);
+					}
+				}
+				break;
+
+			case STATE_STOP:
+				if (m_tx_counter == m_divide)
+				{
+					m_tx_counter = 0;
+
+					m_tx_bits++;
+
+					if (LOG) logerror("MC6850 '%s': TX STOP BIT %d\n", tag(), m_tx_bits);
+
+					if (m_tx_bits == m_stopbits)
+					{
+						m_tx_state = STATE_START;
+					}
+				}
+				break;
+			}
+		}
+
+		update_irq();
+	}
+}
+
+void acia6850_device::output_txd(int txd)
+{
+	if (m_txd != txd)
+	{
+		m_txd = txd;
+
+		m_txd_handler(m_txd);
+	}
+}
+
+void acia6850_device::output_rts(int rts)
+{
+	if (m_rts != rts)
+	{
+		m_rts = rts;
+		m_rts_handler(m_rts);
+	}
+}
+
+void acia6850_device::output_irq(int irq)
+{
+	if (m_irq != irq)
 	{
 		m_irq = irq;
 
 		if (irq)
 		{
-			m_status |= ACIA6850_STATUS_IRQ;
-			m_out_irq_func(ASSERT_LINE);
+			m_status &= ~SR_IRQ;
 		}
 		else
 		{
-			m_status &= ~ACIA6850_STATUS_IRQ;
-			m_out_irq_func(CLEAR_LINE);
+			m_status |= SR_IRQ;
 		}
+
+		m_irq_handler(!m_irq);
 	}
-	m_dcd_triggered = false;
-}
-
-
-//-------------------------------------------------
-//  data_write - Write transmit register
-//-------------------------------------------------
-
-WRITE8_MEMBER( acia6850_device::data_write )
-{
-	if (LOG) logerror("MC6850 '%s' Data: %02x\n", tag(), data);
-
-	if (!m_reset)
-	{
-		m_tdr = data;
-		m_status &= ~ACIA6850_STATUS_TDRE;
-		check_interrupts();
-	}
-	else
-	{
-		logerror("%s:ACIA %p: Data write while in reset!\n", machine().describe_context(), this);
-	}
-}
-
-
-//-------------------------------------------------
-//  data_r - Read character
-//-------------------------------------------------
-
-READ8_MEMBER( acia6850_device::data_read )
-{
-	m_status &= ~(ACIA6850_STATUS_RDRF | ACIA6850_STATUS_IRQ | ACIA6850_STATUS_PE);
-
-	if (m_status_read)
-	{
-		m_status_read = 0;
-
-		m_status &= ~ACIA6850_STATUS_OVRN;
-
-		check_dcd_input();
-	}
-
-	if (m_overrun == 1)
-	{
-		m_status |= ACIA6850_STATUS_OVRN;
-		m_overrun = 0;
-	}
-
-	check_interrupts();
-
-	return m_rdr;
-}
-
-
-//-------------------------------------------------
-//  tx_tick - Transmit a bit
-//-------------------------------------------------
-
-void acia6850_device::tx_tick()
-{
-	switch (m_tx_state)
-	{
-		case START:
-		{
-			if (m_brk)
-			{
-				// transmit break
-
-				TXD(0);
-			}
-			else
-			{
-				if (m_cts)
-				{
-					m_status |= ACIA6850_STATUS_CTS;
-				}
-				else
-				{
-					m_status &= ~ACIA6850_STATUS_CTS;
-				}
-
-				check_interrupts();
-
-				if (m_status & ACIA6850_STATUS_TDRE)
-				{
-					// transmitter idle
-					TXD(1);
-				}
-				else
-				{
-					// transmit character
-
-					if (LOG) logerror("MC6850 '%s': TX DATA %x\n", tag(), m_tdr);
-					if (LOG) logerror("MC6850 '%s': TX START BIT\n", tag());
-
-					TXD(0);
-
-					m_tx_bits = m_bits;
-					m_tx_shift = m_tdr;
-					m_tx_parity = 0;
-					m_tx_state = DATA;
-				}
-			}
-			break;
-		}
-		case DATA:
-		{
-			int val = m_tx_shift & 1;
-			if (LOG) logerror("MC6850 '%s': TX DATA BIT %x\n", tag(), val);
-
-			TXD(val);
-			m_tx_parity ^= val;
-			m_tx_shift >>= 1;
-
-			if (--(m_tx_bits) == 0)
-			{
-				m_tx_state = (m_parity == NONE) ? STOP : PARITY;
-			}
-
-			break;
-		}
-		case PARITY:
-		{
-			int parity = 0;
-
-			if (m_parity == EVEN)
-			{
-				parity = (m_tx_parity & 1) ? 1 : 0;
-			}
-			else
-			{
-				parity = (m_tx_parity & 1) ? 0 : 1;
-			}
-
-			TXD(parity);
-
-			if (LOG) logerror("MC6850 '%s': TX PARITY BIT %x\n", tag(), parity);
-			m_tx_state = STOP;
-			break;
-		}
-		case STOP:
-		{
-			if (LOG) logerror("MC6850 '%s': TX STOP BIT\n", tag());
-			TXD(1);
-
-			if (m_stopbits == 1)
-			{
-				m_tx_state = START;
-				m_status |= ACIA6850_STATUS_TDRE;
-			}
-			else
-			{
-				m_tx_state = STOP2;
-			}
-			break;
-		}
-		case STOP2:
-		{
-			if (LOG) logerror("MC6850 '%s': TX STOP BIT\n", tag());
-			TXD(1);
-			m_tx_state = START;
-			m_status |= ACIA6850_STATUS_TDRE;
-			break;
-		}
-	}
-}
-
-
-//-------------------------------------------------
-//  tx_clock_in - As above, but using the tx pin
-//-------------------------------------------------
-
-void acia6850_device::tx_clock_in()
-{
-	if (m_cts)
-	{
-		m_status |= ACIA6850_STATUS_CTS;
-	}
-	else
-	{
-		m_status &= ~ACIA6850_STATUS_CTS;
-	}
-
-	m_tx_counter ++;
-
-	if ( m_tx_counter > m_divide - 1)
-	{
-		tx_tick();
-		m_tx_counter = 0;
-	}
-
-}
-
-
-//-------------------------------------------------
-//  rx_tick - Receive a bit
-//-------------------------------------------------
-
-void acia6850_device::rx_tick()
-{
-	check_dcd_input();
-
-	if (m_status & ACIA6850_STATUS_DCD)
-	{
-		m_rx_state = START;
-	}
-	else
-	{
-		switch (m_rx_state)
-		{
-			case START:
-			{
-				if (m_rxd == 0)
-				{
-					if (LOG) logerror("MC6850 '%s': RX START BIT\n", tag());
-					m_rx_shift = 0;
-					m_rx_parity = 0;
-					m_rx_bits = m_bits;
-					m_rx_state = DATA;
-				}
-				break;
-			}
-			case DATA:
-			{
-				if (LOG) logerror("MC6850 '%s': RX DATA BIT %x\n", tag(), m_rxd);
-				m_rx_shift |= m_rxd ? 0x80 : 0;
-				m_rx_parity ^= m_rxd;
-
-				if (--m_rx_bits == 0)
-				{
-					if (m_status & ACIA6850_STATUS_RDRF)
-					{
-						m_overrun = 1;
-						check_interrupts();
-					}
-
-					m_rx_state = m_parity == NONE ? STOP : PARITY;
-				}
-				else
-				{
-					m_rx_shift >>= 1;
-				}
-				break;
-			}
-			case PARITY:
-			{
-				if (LOG) logerror("MC6850 '%s': RX PARITY BIT %x\n", tag(), m_rxd);
-				m_rx_parity ^= m_rxd;
-
-				if (m_parity == EVEN)
-				{
-					if (m_rx_parity)
-					{
-						m_status |= ACIA6850_STATUS_PE;
-					}
-				}
-				else
-				{
-					if (!m_rx_parity)
-					{
-						m_status |= ACIA6850_STATUS_PE;
-					}
-				}
-
-				m_rx_state = STOP;
-				break;
-			}
-			case STOP:
-			{
-				if (m_rxd == 1)
-				{
-					if (LOG) logerror("MC6850 '%s': RX STOP BIT\n", tag());
-					if (m_stopbits == 1)
-					{
-						m_status &= ~ACIA6850_STATUS_FE;
-
-						if (!(m_status & ACIA6850_STATUS_RDRF))
-						{
-							if (LOG) logerror("MC6850 '%s': RX DATA %x\n", tag(), m_rx_shift);
-							m_rdr = m_rx_shift;
-							m_status |= ACIA6850_STATUS_RDRF;
-							check_interrupts();
-						}
-
-						m_rx_state = START;
-					}
-					else
-					{
-						m_rx_state = STOP2;
-					}
-				}
-				else
-				{
-					m_status |= ACIA6850_STATUS_FE;
-					m_rx_state = START;
-				}
-				break;
-			}
-			case STOP2:
-			{
-				if (m_rxd == 1)
-				{
-					if (LOG) logerror("MC6850 '%s': RX STOP BIT\n", tag());
-					m_status &= ~ACIA6850_STATUS_FE;
-
-					if (!(m_status & ACIA6850_STATUS_RDRF))
-					{
-						if (LOG) logerror("MC6850 '%s': RX DATA %x\n", tag(), m_rx_shift);
-						m_rdr = m_rx_shift;
-						m_status |= ACIA6850_STATUS_RDRF;
-						check_interrupts();
-					}
-
-					m_rx_state = START;
-				}
-				else
-				{
-					m_status |= ACIA6850_STATUS_FE;
-					m_rx_state = START;
-				}
-				break;
-			}
-		}
-	}
-}
-
-
-//-------------------------------------------------
-//  rx_clock_in - As above, but using the rx pin
-//-------------------------------------------------
-
-void acia6850_device::rx_clock_in()
-{
-	check_dcd_input();
-
-	m_rx_counter ++;
-
-	if ( m_rx_counter > m_divide - 1)
-	{
-		rx_tick();
-		m_rx_counter = 0;
-	}
-}
-
-
-//-------------------------------------------------
-//  set_rx_clock - set receiver clock
-//-------------------------------------------------
-
-void acia6850_device::set_rx_clock(int clock)
-{
-	m_rx_clock = clock;
-
-	if (m_rx_clock)
-	{
-		attotime rx_period = attotime::from_hz(m_rx_clock) * m_divide;
-		m_rx_timer->adjust(rx_period, 0, rx_period);
-	}
-}
-
-
-//-------------------------------------------------
-//  set_tx_clock - set receiver clock
-//-------------------------------------------------
-
-void acia6850_device::set_tx_clock(int clock)
-{
-	m_tx_clock = clock;
-
-	if (m_tx_clock)
-	{
-		attotime tx_period = attotime::from_hz(m_tx_clock) * m_divide;
-		m_tx_timer->adjust(tx_period, 0, tx_period);
-	}
-}
-
-
-//-------------------------------------------------
-//  receive_data - receive data byte
-//-------------------------------------------------
-
-void acia6850_device::receive_data(UINT8 data)
-{
-	m_rdr = data;
-	m_status |= ACIA6850_STATUS_RDRF;
-	check_interrupts();
 }

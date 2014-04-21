@@ -402,11 +402,11 @@ void z80dart_device::trigger_interrupt(int index, int state)
 	else
 	{
 		priority = (index << 2) | state;
-	if ((index == CHANNEL_B) && (m_chanB->m_wr[1] & z80dart_channel::WR1_STATUS_VECTOR))
-	{
-		// status affects vector
-		vector = (m_chanB->m_wr[2] & 0xf1) | (!index << 3) | (state << 1);
-	}
+		if ((index == CHANNEL_B) && (m_chanB->m_wr[1] & z80dart_channel::WR1_STATUS_VECTOR))
+		{
+			// status affects vector
+			vector = (m_chanB->m_wr[2] & 0xf1) | (!index << 3) | (state << 1);
+		}
 	}
 
 	LOG(("Z80DART \"%s\" Channel %c : Interrupt Request %u\n", tag(), 'A' + index, state));
@@ -591,6 +591,7 @@ void z80dart_channel::device_reset()
 	// disable transmitter
 	m_wr[5] &= ~WR5_TX_ENABLE;
 	m_rr[0] |= RR0_TX_BUFFER_EMPTY;
+	m_rr[1] |= RR1_ALL_SENT;
 
 	// reset external lines
 	set_rts(1);
@@ -619,21 +620,16 @@ void z80dart_channel::tra_callback()
 	{
 		// transmit mark
 		m_out_txd_func(1);
-		set_out_data_bit(1);
 	}
 	else if (m_wr[5] & WR5_SEND_BREAK)
 	{
 		// transmit break
 		m_out_txd_func(0);
-		set_out_data_bit(0);
 	}
 	else if (!is_transmit_register_empty())
 	{
 		// transmit data
-		if (m_out_txd_func.isnull())
-			transmit_register_send_bit();
-		else
-			m_out_txd_func(transmit_register_get_data_bit());
+		m_out_txd_func(transmit_register_get_data_bit());
 	}
 }
 
@@ -660,13 +656,11 @@ void z80dart_channel::tra_complete()
 	{
 		// transmit break
 		m_out_txd_func(0);
-		set_out_data_bit(0);
 	}
 	else
 	{
 		// transmit mark
 		m_out_txd_func(1);
-		set_out_data_bit(1);
 	}
 
 	// if transmit buffer is empty
@@ -690,7 +684,7 @@ void z80dart_channel::rcv_callback()
 {
 	if (m_wr[3] & WR3_RX_ENABLE)
 	{
-		receive_register_update_bit(get_in_data_bit());
+		receive_register_update_bit(m_rxd);
 	}
 }
 
@@ -703,23 +697,6 @@ void z80dart_channel::rcv_complete()
 {
 	receive_register_extract();
 	receive_data(get_received_char());
-}
-
-
-//-------------------------------------------------
-//  input_callback -
-//-------------------------------------------------
-
-void z80dart_channel::input_callback(UINT8 state)
-{
-	UINT8 changed = m_input_state ^ state;
-
-	m_input_state = state;
-
-	if (changed & CTS)
-	{
-		cts_w(state);
-	}
 }
 
 
@@ -747,18 +724,16 @@ int z80dart_channel::get_clock_mode()
 //  get_stop_bits - get number of stop bits
 //-------------------------------------------------
 
-float z80dart_channel::get_stop_bits()
+device_serial_interface::stop_bits_t z80dart_channel::get_stop_bits()
 {
-	float bits = 1;
-
 	switch (m_wr[4] & WR4_STOP_BITS_MASK)
 	{
-	case WR4_STOP_BITS_1:       bits = 1;       break;
-	case WR4_STOP_BITS_1_5:     bits = 1.5;     break;
-	case WR4_STOP_BITS_2:       bits = 2;       break;
+	case WR4_STOP_BITS_1: return STOP_BITS_1;
+	case WR4_STOP_BITS_1_5: return STOP_BITS_1_5;
+	case WR4_STOP_BITS_2: return STOP_BITS_2;
 	}
 
-	return bits;
+	return STOP_BITS_0;
 }
 
 
@@ -849,7 +824,8 @@ void z80dart_channel::control_write(UINT8 data)
 	LOG(("Z80DART \"%s\" Channel %c : Control Register Write '%02x'\n", m_owner->tag(), 'A' + m_index, data));
 
 	// write data to selected register
-	m_wr[reg] = data;
+	if (reg < 6)
+		m_wr[reg] = data;
 
 	if (reg != 0)
 	{
@@ -966,7 +942,7 @@ void z80dart_channel::control_write(UINT8 data)
 	case 4:
 		LOG(("Z80DART \"%s\" Channel %c : Parity Enable %u\n", m_owner->tag(), 'A' + m_index, (data & WR4_PARITY_ENABLE) ? 1 : 0));
 		LOG(("Z80DART \"%s\" Channel %c : Parity %s\n", m_owner->tag(), 'A' + m_index, (data & WR4_PARITY_EVEN) ? "Even" : "Odd"));
-		LOG(("Z80DART \"%s\" Channel %c : Stop Bits %f\n", m_owner->tag(), 'A' + m_index, get_stop_bits()));
+		LOG(("Z80DART \"%s\" Channel %c : Stop Bits %s\n", m_owner->tag(), 'A' + m_index, stop_bits_tostring(get_stop_bits())));
 		LOG(("Z80DART \"%s\" Channel %c : Clock Mode %uX\n", m_owner->tag(), 'A' + m_index, get_clock_mode()));
 
 		update_serial();
@@ -1023,8 +999,8 @@ UINT8 z80dart_channel::data_read()
 		// load data from the FIFO
 		data = m_rx_data_fifo[m_rx_fifo];
 
-		// load error status from the FIFO, retain overrun and parity errors
-		m_rr[1] = (m_rr[1] & (RR1_RX_OVERRUN_ERROR | RR1_PARITY_ERROR)) | m_rx_error_fifo[m_rx_fifo];
+		// load error status from the FIFO
+		m_rr[1] = (m_rr[1] & ~(RR1_CRC_FRAMING_ERROR | RR1_RX_OVERRUN_ERROR | RR1_PARITY_ERROR)) | m_rx_error_fifo[m_rx_fifo];
 
 		// decrease FIFO pointer
 		m_rx_fifo--;
@@ -1302,6 +1278,22 @@ WRITE_LINE_MEMBER( z80dart_channel::txc_w )
 
 void z80dart_channel::update_serial()
 {
+	int data_bit_count = get_rx_word_length();
+	stop_bits_t stop_bits = get_stop_bits();
+
+	parity_t parity;
+	if (m_wr[4] & WR4_PARITY_ENABLE)
+	{
+		if (m_wr[4] & WR4_PARITY_EVEN)
+			parity = PARITY_EVEN;
+		else
+			parity = PARITY_ODD;
+	}
+	else
+		parity = PARITY_NONE;
+
+	set_data_frame(1, data_bit_count, parity, stop_bits);
+
 	int clocks = get_clock_mode();
 
 	if (m_rxc > 0)
@@ -1313,20 +1305,6 @@ void z80dart_channel::update_serial()
 	{
 		set_tra_rate(m_txc / clocks);
 	}
-
-	int num_data_bits = get_rx_word_length();
-	int stop_bit_count = get_stop_bits();
-	int parity_code = PARITY_NONE;
-
-	if (m_wr[1] & WR4_PARITY_ENABLE)
-	{
-		if (m_wr[1] & WR4_PARITY_EVEN)
-			parity_code = PARITY_EVEN;
-		else
-			parity_code = PARITY_ODD;
-	}
-
-	set_data_frame(num_data_bits, stop_bit_count, parity_code, false);
 }
 
 
@@ -1339,13 +1317,6 @@ void z80dart_channel::set_dtr(int state)
 	m_dtr = state;
 
 	m_out_dtr_func(m_dtr);
-
-	if (state)
-		m_connection_state &= ~DTR;
-	else
-		m_connection_state |= DTR;
-
-	serial_connection_out();
 }
 
 
@@ -1356,13 +1327,6 @@ void z80dart_channel::set_dtr(int state)
 void z80dart_channel::set_rts(int state)
 {
 	m_out_rts_func(state);
-
-	if (state)
-		m_connection_state &= ~RTS;
-	else
-		m_connection_state |= RTS;
-
-	serial_connection_out();
 }
 
 
@@ -1372,12 +1336,8 @@ void z80dart_channel::set_rts(int state)
 
 WRITE_LINE_MEMBER(z80dart_channel::write_rx)
 {
-	if (state)
-	{
-		input_callback(m_input_state | RX);
-	}
-	else
-	{
-		input_callback(m_input_state & ~RX);
-	}
+	m_rxd = state;
+	//only use rx_w when self-clocked
+	if(m_rxc)
+		device_serial_interface::rx_w(state);
 }

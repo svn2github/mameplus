@@ -63,7 +63,10 @@ public:
 	DECLARE_WRITE_LINE_MEMBER( speaker_w );
 	DECLARE_WRITE8_MEMBER( kb_w );
 
-	void crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, void *param);
+	DECLARE_WRITE_LINE_MEMBER( write_centronics_busy );
+	DECLARE_WRITE_LINE_MEMBER( write_centronics_fault );
+
+	void crtc_update_row(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param);
 
 protected:
 	// device-level overrides
@@ -79,11 +82,15 @@ private:
 	required_device<z80sti_device> m_sti;
 	required_device<mc6845_device> m_crtc;
 	required_device<centronics_device> m_centronics;
+	required_device<palette_device> m_palette;
 	required_device<speaker_sound_device> m_speaker;
 	optional_shared_ptr<UINT8> m_video_ram;
 	required_ioport m_j3a;
 	required_ioport m_j3b;
 	required_ioport m_j7;
+
+	int m_centronics_busy;
+	int m_centronics_fault;
 
 	// sound state
 	int m_vol0;

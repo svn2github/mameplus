@@ -24,7 +24,7 @@
 //  CONSTANTS
 //**************************************************************************
 
-const int TRIGGER_SUSPENDTIME = -4000;
+//const int TRIGGER_SUSPENDTIME = -4000;
 
 
 
@@ -75,6 +75,35 @@ address_space_config::address_space_config(const char *name, endianness_t endian
 {
 }
 
+address_space_config::address_space_config(const char *name, endianness_t endian, UINT8 datawidth, UINT8 addrwidth, INT8 addrshift, address_map_delegate internal, address_map_delegate defmap)
+	: m_name(name),
+		m_endianness(endian),
+		m_databus_width(datawidth),
+		m_addrbus_width(addrwidth),
+		m_addrbus_shift(addrshift),
+		m_logaddr_width(addrwidth),
+		m_page_shift(0),
+		m_internal_map(NULL),
+		m_default_map(NULL),
+		m_internal_map_delegate(internal),
+		m_default_map_delegate(defmap)
+{
+}
+
+address_space_config::address_space_config(const char *name, endianness_t endian, UINT8 datawidth, UINT8 addrwidth, INT8 addrshift, UINT8 logwidth, UINT8 pageshift, address_map_delegate internal, address_map_delegate defmap)
+	: m_name(name),
+		m_endianness(endian),
+		m_databus_width(datawidth),
+		m_addrbus_width(addrwidth),
+		m_addrbus_shift(addrshift),
+		m_logaddr_width(logwidth),
+		m_page_shift(pageshift),
+		m_internal_map(NULL),
+		m_default_map(NULL),
+		m_internal_map_delegate(internal),
+		m_default_map_delegate(defmap)
+{
+}
 
 
 //**************************************************************************
@@ -116,7 +145,7 @@ void device_memory_interface::static_set_addrmap(device_t &device, address_space
 	if (!device.interface(memory))
 		throw emu_fatalerror("MCFG_DEVICE_ADDRESS_MAP called on device '%s' with no memory interface", device.tag());
 	if (spacenum >= ARRAY_LENGTH(memory->m_address_map))
-		throw emu_fatalerror("MCFG_DEVICE_ADDRESS_MAP called with out-of-range space number %d", device.tag(), spacenum);
+		throw emu_fatalerror("MCFG_DEVICE_ADDRESS_MAP called on device '%s' with out-of-range space number %d", device.tag(), spacenum);
 	memory->m_address_map[spacenum] = map;
 }
 

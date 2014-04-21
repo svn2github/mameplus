@@ -1429,9 +1429,7 @@ void saturn_state::stvcd_reset( void )
 	cd_stat |= CD_STAT_PERI;
 	cur_track = 0xff;
 
-	if (curdir != (direntryT *)NULL)
-		auto_free(machine(), curdir);
-	curdir = (direntryT *)NULL;     // no directory yet
+	curdir.reset();
 
 	xfertype = XFERTYPE_INVALID;
 	xfertype32 = XFERTYPE32_INVALID;
@@ -2139,10 +2137,9 @@ void saturn_state::make_dir_current(UINT32 fad)
 {
 	int i;
 	UINT32 nextent, numentries;
-	UINT8 *sect;
+	dynamic_buffer sect(MAX_DIR_SIZE);
 	direntryT *curentry;
 
-	sect = (UINT8 *)malloc(MAX_DIR_SIZE);
 	memset(sect, 0, MAX_DIR_SIZE);
 	if(sectlenin != 2048)
 		popmessage("Sector Length %d, contact MAMEdev (1)",sectlenin);
@@ -2167,12 +2164,7 @@ void saturn_state::make_dir_current(UINT32 fad)
 		}
 	}
 
-	if (curdir != (direntryT *)NULL)
-	{
-		auto_free(machine(), curdir);
-	}
-
-	curdir = auto_alloc_array(machine(), direntryT, numentries);
+	curdir.resize(numentries);
 	curentry = curdir;
 	numfiles = numentries;
 
@@ -2237,17 +2229,11 @@ void saturn_state::make_dir_current(UINT32 fad)
 			i = numfiles;
 		}
 	}
-
-	free(sect);
 }
 
 void saturn_state::stvcd_exit( void )
 {
-	if (curdir != (direntryT *)NULL)
-	{
-		auto_free(machine(), curdir);
-		curdir = (direntryT *)NULL;
-	}
+	curdir.reset();
 
 	if (cdrom)
 	{

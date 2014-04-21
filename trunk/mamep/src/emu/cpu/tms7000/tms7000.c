@@ -328,8 +328,8 @@ void tms7000_device::tms7000_do_interrupt( UINT16 address, UINT8 line )
 	standard_irq_callback(line);
 }
 
-#include "tms70op.c"
-#include "tms70tb.c"
+#include "tms70op.inc"
+#include "tms70tb.inc"
 
 void tms7000_device::execute_run()
 {
@@ -572,4 +572,3 @@ READ8_MEMBER( tms7000_device::tms7000_internal_r )
 {
 	return m_rf[ offset ];
 }
-

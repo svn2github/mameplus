@@ -53,12 +53,12 @@ typedef void * (*mc6845_begin_update_func)(mc6845_device *device, bitmap_rgb32 &
 
 typedef void (*mc6845_update_row_func)(mc6845_device *device, bitmap_rgb32 &bitmap,
 										const rectangle &cliprect, UINT16 ma, UINT8 ra,
-										UINT16 y, UINT8 x_count, INT8 cursor_x, void *param);
+										UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param);
 
 
 #define MC6845_UPDATE_ROW(name)     void name(mc6845_device *device, bitmap_rgb32 &bitmap,  \
 												const rectangle &cliprect, UINT16 ma, UINT8 ra, \
-												UINT16 y, UINT8 x_count, INT8 cursor_x, void *param)
+												UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param)
 
 
 typedef void (*mc6845_end_update_func)(mc6845_device *device, bitmap_rgb32 &bitmap, const rectangle &cliprect, void *param);
@@ -73,6 +73,13 @@ typedef void (*mc6845_on_update_addr_changed_func)(mc6845_device *device, int ad
 struct mc6845_interface
 {
 	bool m_show_border_area;        /* visible screen area (false) active display (true) active display + blanking */
+
+	/* visible screen area adjustment */
+	int m_visarea_adjust_min_x;
+	int m_visarea_adjust_max_x;
+	int m_visarea_adjust_min_y;
+	int m_visarea_adjust_max_y;
+
 	int m_hpixels_per_column;       /* number of pixels per video memory address */
 
 	/* if specified, this gets called before any pixel update,
@@ -101,7 +108,7 @@ struct mc6845_interface
 	/* if specified, this gets called for every change of the VSYNC pin (pin 40) */
 	devcb_write_line            m_out_vsync_func;
 
-	/* Called whenenever the update address changes
+	/* Called whenever the update address changes
 	 * For vblank/hblank timing strobe indicates the physical update.
 	 * vblank/hblank timing not supported yet! */
 
@@ -386,6 +393,8 @@ public:
 
 	virtual const address_space_config *memory_space_config(address_spacenum spacenum = AS_0) const;
 
+	DECLARE_PALETTE_INIT(mos8563);
+
 	DECLARE_WRITE8_MEMBER( address_w );
 	DECLARE_READ8_MEMBER( status_r );
 	DECLARE_READ8_MEMBER( register_r );
@@ -394,16 +403,18 @@ public:
 	inline UINT8 read_videoram(offs_t offset);
 	inline void write_videoram(offs_t offset, UINT8 data);
 
-	void update_row(bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, void *param);
+	void update_row(bitmap_rgb32 &bitmap, const rectangle &cliprect, UINT16 ma, UINT8 ra, UINT16 y, UINT8 x_count, INT8 cursor_x, int de, int hbp, int vbp, void *param);
 	static MC6845_UPDATE_ROW( vdc_update_row );
 
 protected:
 	// device-level overrides
+	virtual machine_config_constructor device_mconfig_additions() const;
 	virtual void device_start();
 	virtual void device_reset();
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
 	const address_space_config      m_videoram_space_config;
+	required_device<palette_device> m_palette;
 
 	UINT8 m_char_buffer[80];
 	UINT8 m_attr_buffer[80];

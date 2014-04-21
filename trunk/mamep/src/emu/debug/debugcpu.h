@@ -38,6 +38,9 @@ typedef int (*debug_instruction_hook_func)(device_t &device, offs_t curpc);
 
 struct xml_data_node;
 
+
+// ======================> device_debug
+
 class device_debug
 {
 	typedef offs_t (*dasm_override_func)(device_t &device, char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram, int options);
@@ -205,7 +208,7 @@ public:
 	void go_exception(int exception);
 	void go_milliseconds(UINT64 milliseconds);
 	void go_next_device();
-	void halt_on_next_instruction(const char *fmt, ...);
+	void halt_on_next_instruction(const char *fmt, ...) ATTR_PRINTF(2,3);
 
 	// breakpoints
 	breakpoint *breakpoint_first() const { return m_bplist; }
@@ -263,7 +266,7 @@ public:
 
 	// tracing
 	void trace(FILE *file, bool trace_over, const char *action);
-	void trace_printf(const char *fmt, ...);
+	void trace_printf(const char *fmt, ...) ATTR_PRINTF(2,3);
 	void trace_flush() { if (m_trace != NULL) m_trace->flush(); }
 
 	void reset_transient_flag() { m_flags &= ~DEBUG_FLAG_TRANSIENT; }
@@ -366,8 +369,7 @@ private:
 		address_space *     m_space;                    // space where the access occurred
 		UINT32              m_count;                    // number of hits
 	};
-	hotspot_entry *         m_hotspots;                 // hotspot list
-	int                     m_hotspot_count;            // number of hotspots
+	dynamic_array<hotspot_entry> m_hotspots;            // hotspot list
 	int                     m_hotspot_threshhold;       // threshhold for the number of hits to print
 
 	// pc tracking

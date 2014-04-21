@@ -33,7 +33,7 @@ const char info_xml_creator::s_dtd_string[] =
 "\t<!ATTLIST __XML_ROOT__ build CDATA #IMPLIED>\n"
 "\t<!ATTLIST __XML_ROOT__ debug (yes|no) \"no\">\n"
 "\t<!ATTLIST __XML_ROOT__ mameconfig CDATA #REQUIRED>\n"
-"\t<!ELEMENT __XML_TOP__ (description, year?, manufacturer?, biosset*, rom*, disk*, device_ref*, sample*, chip*, display*, sound?, input?, dipswitch*, configuration*, adjuster*, driver?, device*, slot*, softwarelist*, ramoption*)>\n"
+"\t<!ELEMENT __XML_TOP__ (description, year?, manufacturer?, biosset*, rom*, disk*, device_ref*, sample*, chip*, display*, sound?, input?, dipswitch*, configuration*, port*, adjuster*, driver?, device*, slot*, softwarelist*, ramoption*)>\n"
 "\t\t<!ATTLIST __XML_TOP__ name CDATA #REQUIRED>\n"
 "\t\t<!ATTLIST __XML_TOP__ sourcefile CDATA #IMPLIED>\n"
 "\t\t<!ATTLIST __XML_TOP__ isbios (yes|no) \"no\">\n"
@@ -128,7 +128,7 @@ const char info_xml_creator::s_dtd_string[] =
 "\t\t\t\t<!ATTLIST confsetting name CDATA #REQUIRED>\n"
 "\t\t\t\t<!ATTLIST confsetting value CDATA #REQUIRED>\n"
 "\t\t\t\t<!ATTLIST confsetting default (yes|no) \"no\">\n"
-"\t\t<!ELEMENT port (portbit*)>\n"
+"\t\t<!ELEMENT port (analog*)>\n"
 "\t\t\t<!ATTLIST port tag CDATA #REQUIRED>\n"
 "\t\t\t<!ELEMENT analog EMPTY>\n"
 "\t\t\t\t<!ATTLIST analog mask CDATA #REQUIRED>\n"
@@ -144,7 +144,6 @@ const char info_xml_creator::s_dtd_string[] =
 "\t\t\t<!ATTLIST driver cocktail (good|imperfect|preliminary) #IMPLIED>\n"
 "\t\t\t<!ATTLIST driver protection (good|imperfect|preliminary) #IMPLIED>\n"
 "\t\t\t<!ATTLIST driver savestate (supported|unsupported) #REQUIRED>\n"
-"\t\t\t<!ATTLIST driver palettesize CDATA #REQUIRED>\n"
 "\t\t<!ELEMENT device (instance*, extension*)>\n"
 "\t\t\t<!ATTLIST device type CDATA #REQUIRED>\n"
 "\t\t\t<!ATTLIST device tag CDATA #IMPLIED>\n"
@@ -418,7 +417,6 @@ void info_xml_creator::output_devices()
 					output_one_device(*dev, temptag.cstr());
 
 				const_cast<machine_config &>(m_drivlist.config()).device_remove(&m_drivlist.config().root_device(), temptag.cstr());
-				global_free(dev);
 			}
 		}
 	}
@@ -1197,8 +1195,6 @@ void info_xml_creator::output_driver()
 	else
 		fprintf(m_output, " savestate=\"unsupported\"");
 
-	fprintf(m_output, " palettesize=\"%d\"", m_drivlist.config().m_total_colors);
-
 	fprintf(m_output, "/>\n");
 }
 
@@ -1286,20 +1282,23 @@ void info_xml_creator::output_slots(device_t &device, const char *root_tag)
 
 			for (const device_slot_option *option = slot->first_option(); option != NULL; option = option->next())
 			{
-				device_t *dev = const_cast<machine_config &>(m_drivlist.config()).device_add(&m_drivlist.config().root_device(), "dummy", option->devtype(), 0);
-				if (!dev->configured())
-					dev->config_complete();
-
-				fprintf(m_output, "\t\t\t<slotoption");
-				fprintf(m_output, " name=\"%s\"", xml_normalize_string(option->name()));
-				fprintf(m_output, " devname=\"%s\"", xml_normalize_string(dev->shortname()));
-				if (slot->default_option())
+				if (option->selectable())
 				{
-					if (strcmp(slot->default_option(),option->name())==0)
-						fprintf(m_output, " default=\"yes\"");
+					device_t *dev = const_cast<machine_config &>(m_drivlist.config()).device_add(&m_drivlist.config().root_device(), "dummy", option->devtype(), 0);
+					if (!dev->configured())
+						dev->config_complete();
+
+					fprintf(m_output, "\t\t\t<slotoption");
+					fprintf(m_output, " name=\"%s\"", xml_normalize_string(option->name()));
+					fprintf(m_output, " devname=\"%s\"", xml_normalize_string(dev->shortname()));
+					if (slot->default_option())
+					{
+						if (strcmp(slot->default_option(),option->name())==0)
+							fprintf(m_output, " default=\"yes\"");
+					}
+					fprintf(m_output, "/>\n");
+					const_cast<machine_config &>(m_drivlist.config()).device_remove(&m_drivlist.config().root_device(), "dummy");
 				}
-				fprintf(m_output, "/>\n");
-				const_cast<machine_config &>(m_drivlist.config()).device_remove(&m_drivlist.config().root_device(), "dummy");
 			}
 
 			fprintf(m_output, "\t\t</slot>\n");
