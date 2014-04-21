@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 
 	}
 
-    /* print usage info */
+	/* print usage info */
 	if (argc < 2)
 	{
 		printf("Usage:\nsrcclean [-u] [-d] <file>\n");

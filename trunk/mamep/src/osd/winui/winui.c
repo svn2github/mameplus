@@ -1256,7 +1256,7 @@ static HICON ExtractIconFromZip(const WCHAR *zipname, const WCHAR *iconname)
 	stemp = utf8_from_wstring(iconname);
 
 	for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
-		if (mame_stricmp(entry->filename, stemp) == 0)
+		if (core_stricmp(entry->filename, stemp) == 0)
 			break;
 	osd_free(stemp);
 
@@ -2116,7 +2116,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	{
 		file_error filerr;
 
-		emu_file file = emu_file(OPEN_FLAG_READ);
+		emu_file file(OPEN_FLAG_READ);
 		filerr = file.open(emulator_info::get_configname(), ".ini");
 		if (filerr == FILERR_NONE)
 		{
@@ -2938,7 +2938,7 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 				{
 					for (nParentIndex = nGameIndex; nGameIndex == -1; nParentIndex = GetParentIndex(&driver_list::driver(nParentIndex)))
 					{
-						if (!mame_stricmp(driver_list::driver(nParentIndex).name, szFileName))
+						if (!core_stricmp(driver_list::driver(nParentIndex).name, szFileName))
 						{
 							if (pfnGetAuditResults(nGameIndex) != UNKNOWN)
 							{
@@ -6190,7 +6190,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_DIRECTORY:
-		value = mame_stricmp(driver_list::driver(index1).name, driver_list::driver(index2).name);
+		value = core_stricmp(driver_list::driver(index1).name, driver_list::driver(index2).name);
 		break;
 
    	case COLUMN_SRCDRIVERS:
@@ -6216,11 +6216,11 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_MANUFACTURER:
-		value = mame_stricmp(driver_list::driver(index1).manufacturer, driver_list::driver(index2).manufacturer);
+		value = core_stricmp(driver_list::driver(index1).manufacturer, driver_list::driver(index2).manufacturer);
 		break;
 
 	case COLUMN_YEAR:
-		value = mame_stricmp(driver_list::driver(index1).year, driver_list::driver(index2).year);
+		value = core_stricmp(driver_list::driver(index1).year, driver_list::driver(index2).year);
 		break;
 
 	case COLUMN_CLONE:
@@ -6557,7 +6557,7 @@ static void MamePlayBackGame()
 			path[wcslen(path)-1] = 0; // take off trailing back slash
 
 		stemp = utf8_from_wstring(fname);
-		emu_file pPlayBack = emu_file(MameUIGlobal().input_directory(), OPEN_FLAG_READ);
+		emu_file pPlayBack(MameUIGlobal().input_directory(), OPEN_FLAG_READ);
 		fileerr = pPlayBack.open(stemp);
 		osd_free(stemp);
 		if (fileerr != FILERR_NONE)
@@ -6567,7 +6567,7 @@ static void MamePlayBackGame()
 		}
 
 		// check for game name embedded in .inp header
-		if (pPlayBack)
+		if (pPlayBack.is_open())
 		{
 			int i;
 			inp_header ihdr;
@@ -6669,7 +6669,7 @@ static void MameLoadState()
 #endif // MESS
 
 		stemp = utf8_from_wstring(state_fname);
-		emu_file pSaveState = emu_file(MameUIGlobal().state_directory(), OPEN_FLAG_READ);
+		emu_file pSaveState(MameUIGlobal().state_directory(), OPEN_FLAG_READ);
 		filerr = pSaveState.open(stemp);
 		osd_free(stemp);
 		if (filerr != FILERR_NONE)

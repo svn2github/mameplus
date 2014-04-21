@@ -113,12 +113,13 @@ bool mfi_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 
 	image->set_variant(h.variant);
 
-	UINT8 *compressed = 0;
-	int compressed_size = 0;
+	dynamic_buffer compressed;
 
 	entry *ent = entries;
 	for(unsigned int cyl=0; cyl != h.cyl_count; cyl++)
 		for(unsigned int head=0; head != h.head_count; head++) {
+			image->set_write_splice_position(cyl, head, ent->write_splice);
+
 			if(ent->uncompressed_size == 0) {
 				// Unformatted track
 				image->set_track_size(cyl, head, 0);
@@ -126,12 +127,7 @@ bool mfi_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 				continue;
 			}
 
-			if(ent->compressed_size > compressed_size) {
-				if(compressed)
-					global_free(compressed);
-				compressed_size = ent->compressed_size;
-				compressed = global_alloc_array(UINT8, compressed_size);
-			}
+			compressed.resize(ent->compressed_size);
 
 			io_generic_read(io, compressed, ent->offset, ent->compressed_size);
 
@@ -154,9 +150,6 @@ bool mfi_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 
 			ent++;
 		}
-
-	if(compressed)
-		global_free(compressed);
 
 	return true;
 }

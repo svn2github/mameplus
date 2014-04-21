@@ -1858,8 +1858,8 @@ BOOL InitFolders(void)
 		int subicon = 0;
 		const TCHAR *title = extFavorite.title;
 		TCHAR *filename;
-		char *rootname = mame_strdup(extFavorite.root_icon);
-		char *subname = mame_strdup(extFavorite.sub_icon);
+		char *rootname = core_strdup(extFavorite.root_icon);
+		char *subname = core_strdup(extFavorite.sub_icon);
 
 		filename = (TCHAR *)malloc(wcslen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
 		_tcscpy(filename, title);

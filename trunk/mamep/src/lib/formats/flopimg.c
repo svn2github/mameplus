@@ -430,7 +430,7 @@ static floperr_t floppy_readwrite_sector(floppy_image_legacy *floppy, int head, 
 	floperr_t err;
 	const struct FloppyCallbacks *fmt;
 	size_t this_buffer_len;
-	UINT8 *alloc_buf = NULL;
+	dynamic_buffer alloc_buf;
 	UINT32 sector_length;
 	UINT8 *buffer_ptr = (UINT8 *)buffer;
 	floperr_t (*read_sector)(floppy_image_legacy *floppy, int head, int track, int sector, void *buffer, size_t buflen);
@@ -486,13 +486,7 @@ static floperr_t floppy_readwrite_sector(floppy_image_legacy *floppy, int head, 
 			{
 				/* we will be doing an partial read/write; in other words we
 				 * will not be reading/writing a full sector */
-				if (alloc_buf) free(alloc_buf);
-				alloc_buf = (UINT8*)malloc(sector_length);
-				if (!alloc_buf)
-				{
-					err = FLOPPY_ERROR_OUTOFMEMORY;
-					goto done;
-				}
+				alloc_buf.resize(sector_length);
 
 				/* read the sector (we need to do this even when writing */
 				err = read_sector(floppy, head, track, sector, alloc_buf, sector_length);
@@ -543,8 +537,6 @@ static floperr_t floppy_readwrite_sector(floppy_image_legacy *floppy, int head, 
 	err = FLOPPY_ERROR_SUCCESS;
 
 done:
-	if (alloc_buf)
-		free(alloc_buf);
 	return err;
 }
 
@@ -965,7 +957,7 @@ floppy_image::~floppy_image()
 {
 	for (int i=0;i<MAX_FLOPPY_TRACKS;i++) {
 		for (int j=0;j<MAX_FLOPPY_HEADS;j++) {
-			global_free(cell_data[i][j]);
+			global_free_array(cell_data[i][j]);
 		}
 	}
 }
@@ -1006,7 +998,7 @@ void floppy_image::ensure_alloc(int track, int head)
 		UINT32 *new_array = global_alloc_array(UINT32, new_size);
 		if(track_alloc_size[track][head]) {
 			memcpy(new_array, cell_data[track][head], track_alloc_size[track][head]*4);
-			global_free(cell_data[track][head]);
+			global_free_array(cell_data[track][head]);
 		}
 		cell_data[track][head] = new_array;
 		track_alloc_size[track][head] = new_size;
@@ -1235,7 +1227,7 @@ void floppy_image_format_t::fixup_crc_cbm(UINT32 *buffer, const gen_crc_info *cr
 		v = v ^ gcr5bw_tb[bitn_r(buffer, o+5, 5)];
 	}
 	int offset = crc->write;
-	gcr5_w(buffer, offset, 8, v);
+	gcr5_w(buffer, offset, 10, v);
 }
 
 UINT16 floppy_image_format_t::calc_crc_ccitt(const UINT32 *buffer, int start, int end)
@@ -1342,6 +1334,9 @@ int floppy_image_format_t::calc_sector_index(int num, int interleave, int skew, 
 		i += interleave;
 		i %= total_sectors;
 		sec++;
+		// This line prevents lock-ups of the emulator when the interleave is not appropriate
+		if (sec > total_sectors)
+			throw emu_fatalerror("Format error: interleave %d not appropriate for %d sectors per track\n", interleave, total_sectors);
 	}
 	// use skew param
 	sec -= track_head * skew;
@@ -1352,7 +1347,7 @@ int floppy_image_format_t::calc_sector_index(int num, int interleave, int skew, 
 
 void floppy_image_format_t::generate_track(const desc_e *desc, int track, int head, const desc_s *sect, int sect_count, int track_size, floppy_image *image)
 {
-	UINT32 *buffer = global_alloc_array_clear(UINT32, track_size);
+	dynamic_array<UINT32> buffer(track_size);
 
 	gen_crc_info crcs[MAX_CRC_COUNT];
 	collect_crcs(desc, crcs);
@@ -1385,7 +1380,7 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 
 		case GCR5:
 			for(int i=0; i<desc[index].p2; i++)
-				gcr5_w(buffer, offset, 8, desc[index].p1);
+				gcr5_w(buffer, offset, 10, desc[index].p1);
 			break;
 
 		case _8N1:
@@ -1413,6 +1408,14 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 
 		case TRACK_ID_FM:
 			fm_w(buffer, offset, 8, track);
+			break;
+
+		case TRACK_ID_DOS2_GCR5:
+			gcr5_w(buffer, offset, 10, 1 + (track >> 1) + (head * 35));
+			break;
+
+		case TRACK_ID_DOS25_GCR5:
+			gcr5_w(buffer, offset, 10, 1 + track + (head * 77));
 			break;
 
 		case TRACK_ID_GCR6:
@@ -1448,7 +1451,7 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 			break;
 
 		case SECTOR_ID_GCR5:
-			gcr5_w(buffer, offset, 8, sect[sector_idx].sector_id);
+			gcr5_w(buffer, offset, 10, sect[sector_idx].sector_id);
 			break;
 
 		case SECTOR_ID_GCR6:
@@ -1575,7 +1578,7 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 		case SECTOR_DATA_GCR5: {
 			const desc_s *csect = sect + (desc[index].p1 >= 0 ? desc[index].p1 : sector_idx);
 			for(int i=0; i != csect->size; i++)
-				gcr5_w(buffer, offset, 8, csect->data[i]);
+				gcr5_w(buffer, offset, 10, csect->data[i]);
 			break;
 		}
 
@@ -1627,7 +1630,6 @@ void floppy_image_format_t::generate_track(const desc_e *desc, int track, int he
 	fixup_crcs(buffer, crcs);
 
 	generate_track_from_levels(track, head, buffer, track_size, 0, image);
-	global_free(buffer);
 }
 
 void floppy_image_format_t::normalize_times(UINT32 *buffer, int bitlen)
@@ -2465,35 +2467,21 @@ void floppy_image_format_t::extract_sectors_from_bitstream_fm_pc(const UINT8 *bi
 
 	// Scan the bitstream for sync marks and follow them to check for
 	// blocks
+	// We scan for address marks only, as index marks are not mandatory,
+	// and many formats actually do not use them
+
 	for(int i=0; i<track_size; i++) {
 		shift_reg = (shift_reg << 1) | sbit_r(bitstream, i);
-		if(shift_reg == 0xf77a) {
-			//index mark
-			UINT16 header;
-			int pos = i+1;
-			do {
-				header = 0;
-				for(int j=0; j<16; j++)
-					if(sbit_rp(bitstream, pos, track_size))
-						header |= 0x8000 >> j;
-				// Accept strings of sync marks as long and they're not wrapping
 
-				// Wrapping ones have already been take into account
-				// thanks to the precharging
-
-				// fe
-				if(header == 0xf57e) { // address mark
-					if(idblk_count < 100)
-						idblk[idblk_count++] = pos;
-					i = pos-1;
-				}
-				// fb
-				if(header == 0xf56f ) { // data mark
-					if(dblk_count < 100)
-						dblk[dblk_count++] = pos;
-					i = pos-1;
-				}
-			} while(header != 0xf77a);
+		// fe
+		if(shift_reg == 0xf57e) {       // address mark
+			if(idblk_count < 100)
+				idblk[idblk_count++] = i+1;
+		}
+		// fb
+		if(shift_reg == 0xf56f) {       // data mark
+			if(dblk_count < 100)
+				dblk[dblk_count++] = i+1;
 		}
 	}
 
@@ -2609,7 +2597,7 @@ void floppy_image_format_t::build_wd_track_mfm(int track, int head, floppy_image
 
 void floppy_image_format_t::build_pc_track_fm(int track, int head, floppy_image *image, int cell_count, int sector_count, const desc_pc_sector *sects, int gap_3, int gap_4a, int gap_1, int gap_2)
 {
-	UINT32 *track_data = global_alloc_array(UINT32, cell_count+10000);
+	dynamic_array<UINT32> track_data(cell_count+10000);
 	int tpos = 0;
 
 	// gap 4a , IAM and gap 1
@@ -2673,12 +2661,11 @@ void floppy_image_format_t::build_pc_track_fm(int track, int head, floppy_image 
 	raw_w(track_data, tpos, cell_count-tpos, 0xffff >> (16+tpos-cell_count));
 
 	generate_track_from_levels(track, head, track_data, cell_count, 0, image);
-	global_free(track_data);
 }
 
 void floppy_image_format_t::build_pc_track_mfm(int track, int head, floppy_image *image, int cell_count, int sector_count, const desc_pc_sector *sects, int gap_3, int gap_4a, int gap_1, int gap_2)
 {
-	UINT32 *track_data = global_alloc_array(UINT32, cell_count+10000);
+	dynamic_array<UINT32> track_data(cell_count+10000);
 	int tpos = 0;
 
 	// gap 4a , IAM and gap 1
@@ -2745,5 +2732,4 @@ void floppy_image_format_t::build_pc_track_mfm(int track, int head, floppy_image
 	raw_w(track_data, tpos, cell_count-tpos, 0x9254 >> (16+tpos-cell_count));
 
 	generate_track_from_levels(track, head, track_data, cell_count, 0, image);
-	global_free(track_data);
 }

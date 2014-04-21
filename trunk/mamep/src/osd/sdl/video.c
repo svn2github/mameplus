@@ -40,7 +40,7 @@
 // MAME headers
 #include "emu.h"
 #include "rendutil.h"
-#include "ui.h"
+#include "ui/ui.h"
 #include "emuopts.h"
 #include "uiinput.h"
 
@@ -103,7 +103,7 @@ static void get_resolution(const char *defdata, const char *data, sdl_window_con
 
 int sdlvideo_init(running_machine &machine)
 {
-	int index, tc;
+	int index;
 
 	// extract data from the options
 	extract_video_config(machine);
@@ -121,8 +121,6 @@ int sdlvideo_init(running_machine &machine)
 	if (sdlwindow_init(machine))
 		return 1;
 
-	tc = machine.total_colors();
-
 	// create the windows
 	sdl_options &options = downcast<sdl_options &>(machine.options());
 	for (index = 0; index < video_config.numscreens; index++)
@@ -130,7 +128,6 @@ int sdlvideo_init(running_machine &machine)
 		sdl_window_config conf;
 		memset(&conf, 0, sizeof(conf));
 		extract_window_config(machine, index, &conf);
-		conf.totalColors = tc;
 		if (sdlwindow_video_window_create(machine, index, pick_monitor(options, index), &conf))
 			return 1;
 	}
@@ -571,25 +568,24 @@ static void check_osd_inputs(running_machine &machine)
 	{
 		//FIXME: on a per window basis
 		video_config.fullstretch = !video_config.fullstretch;
-		ui_popup_time(1, "Uneven stretch %s", video_config.fullstretch? "enabled":"disabled");
+		machine.ui().popup_time(1, "Uneven stretch %s", video_config.fullstretch? "enabled":"disabled");
 	}
 
 	if (ui_input_pressed(machine, IPT_OSD_4))
 	{
 		//FIXME: on a per window basis
 		video_config.keepaspect = !video_config.keepaspect;
-		ui_popup_time(1, "Keepaspect %s", video_config.keepaspect? "enabled":"disabled");
+		machine.ui().popup_time(1, "Keepaspect %s", video_config.keepaspect? "enabled":"disabled");
 	}
 
-	if (USE_OPENGL || SDLMAME_SDL2)
-	{
+	#if (USE_OPENGL || SDLMAME_SDL2)
 		//FIXME: on a per window basis
 		if (ui_input_pressed(machine, IPT_OSD_5))
 		{
 			video_config.filter = !video_config.filter;
-			ui_popup_time(1, "Filter %s", video_config.filter? "enabled":"disabled");
+			machine.ui().popup_time(1, "Filter %s", video_config.filter? "enabled":"disabled");
 		}
-	}
+	#endif
 
 	if (ui_input_pressed(machine, IPT_OSD_6))
 		sdlwindow_modify_prescale(machine, window, -1);
@@ -677,13 +673,11 @@ static void extract_video_config(running_machine &machine)
 		video_config.syncrefresh = 0;
 	}
 
-	if (USE_OPENGL || SDLMAME_SDL2)
-	{
+	#if (USE_OPENGL || SDLMAME_SDL2)
 		video_config.filter        = options.filter();
-	}
+	#endif
 
-	if (USE_OPENGL)
-	{
+	#if (USE_OPENGL)
 		video_config.prescale      = options.prescale();
 		if (video_config.prescale < 1 || video_config.prescale > 3)
 		{
@@ -732,20 +726,6 @@ static void extract_video_config(running_machine &machine)
 					video_config.glsl_shader_scrn[i] = NULL;
 				}
 			}
-
-			video_config.glsl_vid_attributes = options.glsl_vid_attr();
-			{
-				// Disable feature: glsl_vid_attributes, as long we have the gamma calculation
-				// disabled within the direct shaders .. -> too slow.
-				// IMHO the gamma setting should be done global anyways, and for the whole system,
-				// not just MAME ..
-				float gamma = options.gamma();
-				if (gamma != 1.0 && video_config.glsl_vid_attributes && video_config.glsl)
-				{
-					video_config.glsl_vid_attributes = FALSE;
-					mame_printf_warning("OpenGL: GLSL - disable handling of brightness and contrast, gamma is set to %f\n", gamma);
-				}
-			}
 		} else {
 			int i;
 			video_config.glsl_filter = 0;
@@ -759,10 +739,9 @@ static void extract_video_config(running_machine &machine)
 			{
 				video_config.glsl_shader_scrn[i] = NULL;
 			}
-			video_config.glsl_vid_attributes = 0;
 		}
 
-	}
+	#endif /* USE_OPENGL */
 	// misc options: sanity check values
 
 	// global options: sanity check values

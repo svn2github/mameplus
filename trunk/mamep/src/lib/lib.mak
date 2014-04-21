@@ -41,9 +41,11 @@ UTILOBJS = \
 	$(LIBOBJ)/util/chd.o \
 	$(LIBOBJ)/util/chdcd.o \
 	$(LIBOBJ)/util/chdcodec.o \
+	$(LIBOBJ)/util/corealloc.o \
 	$(LIBOBJ)/util/corefile.o \
 	$(LIBOBJ)/util/corestr.o \
 	$(LIBOBJ)/util/coreutil.o \
+	$(LIBOBJ)/util/cstrpool.o \
 	$(LIBOBJ)/util/flac.o \
 	$(LIBOBJ)/util/harddisk.o \
 	$(LIBOBJ)/util/hashing.o \
@@ -57,6 +59,7 @@ UTILOBJS = \
 	$(LIBOBJ)/util/png.o \
 	$(LIBOBJ)/util/pool.o \
 	$(LIBOBJ)/util/sha1.o \
+	$(LIBOBJ)/util/tagmap.o \
 	$(LIBOBJ)/util/unicode.o \
 	$(LIBOBJ)/util/unzip.o \
 	$(LIBOBJ)/util/un7z.o \
@@ -116,6 +119,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/bw12_dsk.o    \
 	$(LIBOBJ)/formats/cbm_crt.o     \
 	$(LIBOBJ)/formats/cbm_tap.o     \
+	$(LIBOBJ)/formats/ccvf_dsk.o    \
 	$(LIBOBJ)/formats/cgen_cas.o    \
 	$(LIBOBJ)/formats/coco_cas.o    \
 	$(LIBOBJ)/formats/coco_dsk.o    \
@@ -126,8 +130,10 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/csw_cas.o     \
 	$(LIBOBJ)/formats/d64_dsk.o     \
 	$(LIBOBJ)/formats/d67_dsk.o     \
+	$(LIBOBJ)/formats/d71_dsk.o     \
 	$(LIBOBJ)/formats/d80_dsk.o     \
 	$(LIBOBJ)/formats/d81_dsk.o     \
+	$(LIBOBJ)/formats/d82_dsk.o     \
 	$(LIBOBJ)/formats/d88_dsk.o     \
 	$(LIBOBJ)/formats/dfi_dsk.o     \
 	$(LIBOBJ)/formats/dim_dsk.o     \
@@ -138,6 +144,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/fdi_dsk.o     \
 	$(LIBOBJ)/formats/fm7_cas.o     \
 	$(LIBOBJ)/formats/fmsx_cas.o    \
+	$(LIBOBJ)/formats/fmtowns_dsk.o \
 	$(LIBOBJ)/formats/g64_dsk.o     \
 	$(LIBOBJ)/formats/gtp_cas.o     \
 	$(LIBOBJ)/formats/hect_dsk.o    \
@@ -152,12 +159,14 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/lviv_lvt.o    \
 	$(LIBOBJ)/formats/m20_dsk.o     \
 	$(LIBOBJ)/formats/m5_dsk.o      \
+	$(LIBOBJ)/formats/mbee_cas.o    \
 	$(LIBOBJ)/formats/mbee_dsk.o    \
 	$(LIBOBJ)/formats/mm_dsk.o      \
 	$(LIBOBJ)/formats/msx_dsk.o     \
 	$(LIBOBJ)/formats/mfi_dsk.o     \
 	$(LIBOBJ)/formats/mz_cas.o      \
 	$(LIBOBJ)/formats/nanos_dsk.o   \
+	$(LIBOBJ)/formats/naslite_dsk.o \
 	$(LIBOBJ)/formats/nes_dsk.o     \
 	$(LIBOBJ)/formats/orao_cas.o    \
 	$(LIBOBJ)/formats/oric_dsk.o    \
@@ -167,6 +176,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/pc_dsk.o      \
 	$(LIBOBJ)/formats/pc98_dsk.o    \
 	$(LIBOBJ)/formats/pc98fdi_dsk.o \
+	$(LIBOBJ)/formats/phc25_cas.o   \
 	$(LIBOBJ)/formats/pmd_cas.o     \
 	$(LIBOBJ)/formats/primoptp.o    \
 	$(LIBOBJ)/formats/pyldin_dsk.o  \
@@ -174,11 +184,15 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/sc3000_bit.o  \
 	$(LIBOBJ)/formats/sf7000_dsk.o  \
 	$(LIBOBJ)/formats/smx_dsk.o     \
+	$(LIBOBJ)/formats/sol_cas.o     \
 	$(LIBOBJ)/formats/sorc_dsk.o    \
+	$(LIBOBJ)/formats/sorc_cas.o    \
 	$(LIBOBJ)/formats/sord_cas.o    \
+	$(LIBOBJ)/formats/spc1000_cas.o \
 	$(LIBOBJ)/formats/st_dsk.o      \
 	$(LIBOBJ)/formats/svi_cas.o     \
 	$(LIBOBJ)/formats/svi_dsk.o     \
+	$(LIBOBJ)/formats/tandy2k_dsk.o \
 	$(LIBOBJ)/formats/td0_dsk.o     \
 	$(LIBOBJ)/formats/thom_cas.o    \
 	$(LIBOBJ)/formats/thom_dsk.o    \
@@ -336,7 +350,13 @@ else
 ARCHFLAGS = -DWORDS_BIGENDIAN=0
 endif
 
-FLACOPTS=-DFLAC__NO_ASM -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DHAVE_CONFIG_H=0 -DFLAC__HAS_OGG=0 -Wno-unused-function $(ARCHFLAGS) -O0
+FLACOPTS=-DFLAC__NO_ASM -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DFLAC__HAS_OGG=0 -Wno-unused-function $(ARCHFLAGS) -O0
+ifdef MSVC_BUILD
+	# vconv will convert the \" to just a "
+	FLACOPTS += -DVERSION=\\\"1.2.1\\\"
+else
+	FLACOPTS += -DVERSION=\"1.2.1\"
+endif
 
 LIBFLACOBJS = \
 	$(LIBOBJ)/libflac/bitmath.o \
@@ -357,7 +377,7 @@ LIBFLACOBJS = \
 
 $(OBJ)/libflac.a: $(LIBFLACOBJS)
 
-$(LIBOBJ)/libflac/%.o: $(LIBSRC)/libflac/libflac/%.c | $(OSPREBUILD)
+$(LIBOBJ)/libflac/%.o: $(LIBSRC)/libflac/libFLAC/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CONLYFLAGS) $(CCOMFLAGS) $(FLACOPTS) -I$(LIBSRC)/libflac/include -c $< -o $@
 

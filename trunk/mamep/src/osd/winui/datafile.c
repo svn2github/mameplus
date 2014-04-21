@@ -219,7 +219,7 @@ static int GetSrcDriverIndex(const char *srcdriver)
 {
 	srcdriver_data_type *srcdriver_index_info;
 	srcdriver_data_type key;
-	unsigned char *s = (unsigned char *)mame_strdup(srcdriver);
+	unsigned char *s = (unsigned char *)core_strdup(srcdriver);
 	int i;
 
 	if (s == NULL)
@@ -525,7 +525,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 		if (TOKEN_SYMBOL != token) continue;
 
 		/* DATAFILE_TAG_KEY identifies the driver */
-		if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+		if (!core_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 		{
 			token = GetNextToken (&s, &tell);
 			if (TOKEN_EQUALS == token)
@@ -625,7 +625,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 		if (TOKEN_SYMBOL != token) continue;
 
 		/* DATAFILE_TAG_KEY identifies the driver */
-		if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+		if (!core_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 		{
 			token = GetNextToken (&s, &tell);
 			if (TOKEN_EQUALS == token)
@@ -757,11 +757,11 @@ static int load_datafile_text (const game_driver *drv, char *buffer, int bufsize
 			if (TOKEN_SYMBOL == token)
 			{
 				/* looking for requested tag */
-				if (!mame_strnicmp (tag, (char *)s, strlen (tag)))
+				if (!core_strnicmp (tag, (char *)s, strlen (tag)))
 				{
 					found = 1;
 				}
-				else if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+				else if (!core_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 					break;	/* error: tag missing */
 			}
 		}
@@ -850,9 +850,9 @@ static int load_drivfile_text (const game_driver *drv, char *buffer, int bufsize
 			if (TOKEN_SYMBOL == token)
 			{
 				/* looking for requested tag */
-				if (!mame_strnicmp (tag, (char *)s, strlen (tag)))
+				if (!core_strnicmp (tag, (char *)s, strlen (tag)))
 					found = 1;
-				else if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+				else if (!core_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 					break;	/* error: tag missing */
 			}
 		}
@@ -1114,7 +1114,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; i < driver_list::total(); i++)
 		{
-			if (!mame_stricmp (drv->parent, driver_list::driver(i).parent))
+			if (!core_stricmp (drv->parent, driver_list::driver(i).parent))
 			{
 				strcat(buffer, _LST(driver_list::driver(i).description));
 				strcat(buffer, "\n");
@@ -1128,7 +1128,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; i < driver_list::total(); i++)
 		{
-			if (!mame_stricmp (drv->name, driver_list::driver(i).parent))
+			if (!core_stricmp (drv->name, driver_list::driver(i).parent))
 			{
 				strcat(buffer, _LST(driver_list::driver(i).description));
 				strcat(buffer, "\n");

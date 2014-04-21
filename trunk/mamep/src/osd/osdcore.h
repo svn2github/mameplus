@@ -167,6 +167,23 @@ file_error osd_write(osd_file *file, const void *buffer, UINT64 offset, UINT32 l
 
 
 /*-----------------------------------------------------------------------------
+    osd_truncate: change the size of an open file
+
+    Parameters:
+
+        file - handle to a file previously opened via osd_open
+
+        offset - future size of the file
+
+    Return value:
+
+        a file_error describing any error that occurred while writing to
+        the file, or FILERR_NONE if no error occurred
+-----------------------------------------------------------------------------*/
+file_error osd_truncate(osd_file *file, UINT64 offset);
+
+
+/*-----------------------------------------------------------------------------
     osd_rmfile: deletes a file
 
     Parameters:
@@ -835,7 +852,8 @@ char *osd_get_clipboard_text(void);
     Return value:
 
         an allocated pointer to an osd_directory_entry representing
-        info on the path; even if the file does not exist
+        info on the path; even if the file does not exist.
+        free with osd_free()
 
 -----------------------------------------------------------------------------*/
 osd_directory_entry *osd_stat(const char *path);
@@ -868,7 +886,9 @@ struct osd_midi_device;
 void osd_init_midi(void);
 void osd_shutdown_midi(void);
 void osd_list_midi_devices(void);
+// free result with osd_close_midi_channel()
 osd_midi_device *osd_open_midi_input(const char *devname);
+// free result with osd_close_midi_channel()
 osd_midi_device *osd_open_midi_output(const char *devname);
 void osd_close_midi_channel(osd_midi_device *dev);
 bool osd_poll_midi_channel(osd_midi_device *dev);

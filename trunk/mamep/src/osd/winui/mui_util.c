@@ -1073,7 +1073,7 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 				}
 				else
 				{
-					desc = mame_strdup(s);
+					desc = core_strdup(s);
 				}
 			}
 		}

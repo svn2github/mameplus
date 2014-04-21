@@ -198,7 +198,7 @@ private:
 	UINT8           m_stack_depth;
 	UINT8           m_entry_stride;
 	UINT32          m_max_seconds;
-	FPTR *          m_buffer;
+	dynamic_array<FPTR> m_buffer;
 	FPTR *          m_buffer_ptr;
 	FPTR *          m_buffer_end;
 };
@@ -836,7 +836,7 @@ osd_font windows_osd_interface::font_open(const char *_name, int &height)
 
 	// if it doesn't match our request, fail
 	char *utf = utf8_from_tstring(realname);
-	int result = mame_stricmp(utf, name);
+	int result = core_stricmp(utf, name);
 	osd_free(utf);
 
 	// if we didn't match, nuke our font and fall back
@@ -865,8 +865,8 @@ void windows_osd_interface::font_close(osd_font font)
 //-------------------------------------------------
 //  font_get_bitmap - allocate and populate a
 //  BITMAP_FORMAT_ARGB32 bitmap containing the
-//  pixel values MAKE_ARGB(0xff,0xff,0xff,0xff)
-//  or MAKE_ARGB(0x00,0xff,0xff,0xff) for each
+//  pixel values rgb_t(0xff,0xff,0xff,0xff)
+//  or rgb_t(0x00,0xff,0xff,0xff) for each
 //  pixel of a black & white font
 //-------------------------------------------------
 
@@ -988,7 +988,7 @@ bool windows_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, b
 			for (int x = 0; x < bitmap.width(); x++)
 			{
 				int effx = x + actbounds.min_x;
-				dstrow[x] = ((srcrow[effx / 8] << (effx % 8)) & 0x80) ? MAKE_ARGB(0xff,0xff,0xff,0xff) : MAKE_ARGB(0x00,0xff,0xff,0xff);
+				dstrow[x] = ((srcrow[effx / 8] << (effx % 8)) & 0x80) ? rgb_t(0xff,0xff,0xff,0xff) : rgb_t(0x00,0xff,0xff,0xff);
 			}
 		}
 
@@ -1689,7 +1689,7 @@ sampling_profiler::sampling_profiler(UINT32 max_seconds, UINT8 stack_depth = 0)
 		m_stack_depth(stack_depth),
 		m_entry_stride(stack_depth + 2),
 		m_max_seconds(max_seconds),
-		m_buffer(global_alloc(FPTR[max_seconds * 1000 * m_entry_stride])),
+		m_buffer(max_seconds * 1000 * m_entry_stride),
 		m_buffer_ptr(m_buffer),
 		m_buffer_end(m_buffer + max_seconds * 1000 * m_entry_stride)
 {
@@ -1702,7 +1702,6 @@ sampling_profiler::sampling_profiler(UINT32 max_seconds, UINT8 stack_depth = 0)
 
 sampling_profiler::~sampling_profiler()
 {
-	global_free(m_buffer);
 }
 
 

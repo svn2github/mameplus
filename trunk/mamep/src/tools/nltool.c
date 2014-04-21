@@ -16,6 +16,7 @@
 #include "sha1.h"
 #include "netlist/nl_base.h"
 #include "netlist/nl_setup.h"
+#include "netlist/nl_parser.h"
 #include "netlist/nl_util.h"
 #include "options.h"
 
@@ -24,7 +25,7 @@
 ***************************************************************************/
 
 #if 0
-void mame_printf_warning(const char *format, ...)
+void ATTR_PRINTF(1,2) mame_printf_warning(const char *format, ...)
 {
 	va_list argptr;
 
@@ -56,6 +57,13 @@ void free_file_line( void *memory, const char *file, int line )
 	osd_free( memory );
 }
 
+void CLIB_DECL logerror(const char *format, ...)
+{
+	va_list arg;
+	va_start(arg, format);
+	vprintf(format, arg);
+	va_end(arg);
+}
 
 struct options_entry oplist[] =
 {
@@ -122,11 +130,13 @@ public:
 
 	void read_netlist(const char *buffer)
 	{
-
 		// read the netlist ...
-		//m_setup_func(*m_setup);
 
-		m_setup->parse(buffer);
+		netlist_sources_t sources;
+
+		sources.add(netlist_source_t(buffer));
+		sources.parse(*m_setup,"");
+		//m_setup->parse(buffer);
 		log_setup();
 
 		// start devices
@@ -136,26 +146,37 @@ public:
 		this->reset();
 	}
 
-    void log_setup()
-    {
-        NL_VERBOSE_OUT(("Creating dynamic logs ...\n"));
-        nl_util::pstring_list ll = nl_util::split(m_logs, ":");
-        for (int i=0; i < ll.count(); i++)
-        {
-            netlist_device_t *nc = m_setup->factory().new_device_by_classname("nld_log", *m_setup);
-            pstring name = "log_" + ll[i];
-            m_setup->register_dev(nc, name);
-            m_setup->register_link(name + ".I", ll[i]);
-        }
-    }
+	void log_setup()
+	{
+		NL_VERBOSE_OUT(("Creating dynamic logs ...\n"));
+		nl_util::pstring_list ll = nl_util::split(m_logs, ":");
+		for (int i=0; i < ll.count(); i++)
+		{
+			netlist_device_t *nc = m_setup->factory().new_device_by_classname("nld_log", *m_setup);
+			pstring name = "log_" + ll[i];
+			m_setup->register_dev(nc, name);
+			m_setup->register_link(name + ".I", ll[i]);
+		}
+	}
 
-    pstring m_logs;
+	pstring m_logs;
 protected:
 
-	void vfatalerror(const char *format, va_list ap) const
+	void verror(const loglevel_e level, const char *format, va_list ap) const
 	{
-		vprintf(format, ap);
-		throw;
+		switch (level)
+		{
+			case NL_LOG:
+			case NL_WARNING:
+				vprintf(format, ap);
+				printf("\n");
+				break;
+			case NL_ERROR:
+				vprintf(format, ap);
+				printf("\n");
+				throw;
+				break;
+		}
 	}
 
 private:
@@ -198,47 +219,51 @@ static void run(core_options &opts)
 
 static void listdevices()
 {
-    netlist_tool_t nt;
-    nt.init();
-    const netlist_factory_t::list_t &list = nt.setup().factory().list();
+	netlist_tool_t nt;
+	nt.init();
+	const netlist_factory_t::list_t &list = nt.setup().factory().list();
 
-    for (int i=0; i < list.count(); i++)
-    {
-        pstring out = pstring::sprintf("%-20s %s(<id>", list[i]->classname().cstr(),
-                list[i]->name().cstr() );
-        pstring terms("");
+	nt.setup().start_devices();
+	nt.setup().resolve_inputs();
 
-        net_device_t_base_factory *f = list[i];
-        netlist_device_t *d = f->Create();
-        d->init(nt, pstring::sprintf("dummy%d", i));
+	for (int i=0; i < list.count(); i++)
+	{
+		pstring out = pstring::sprintf("%-20s %s(<id>", list[i]->classname().cstr(),
+				list[i]->name().cstr() );
+		pstring terms("");
 
-        // get the list of terminals ...
-        for (int j=0; j < d->m_terminals.count(); j++)
-        {
-            pstring inp = d->m_terminals[j];
-            if (inp.startsWith(d->name() + "."))
-                inp = inp.substr(d->name().len() + 1);
-            terms += "," + inp;
-        }
+		net_device_t_base_factory *f = list[i];
+		netlist_device_t *d = f->Create();
+		d->init(nt, pstring::sprintf("dummy%d", i));
+		d->start_dev();
 
-        if (list[i]->param_desc().startsWith("+"))
-        {
-            out += "," + list[i]->param_desc().substr(1);
-            terms = "";
-        }
-        else if (list[i]->param_desc() == "-")
-        {
-            /* no params at all */
-        }
-        else
-        {
-            out += "," + list[i]->param_desc();
-        }
-        out += ")";
-        printf("%s\n", out.cstr());
-        if (terms != "")
-            printf("Terminals: %s\n", terms.substr(1).cstr());
-    }
+		// get the list of terminals ...
+		for (int j=0; j < d->m_terminals.count(); j++)
+		{
+			pstring inp = d->m_terminals[j];
+			if (inp.startsWith(d->name() + "."))
+				inp = inp.substr(d->name().len() + 1);
+			terms += "," + inp;
+		}
+
+		if (list[i]->param_desc().startsWith("+"))
+		{
+			out += "," + list[i]->param_desc().substr(1);
+			terms = "";
+		}
+		else if (list[i]->param_desc() == "-")
+		{
+			/* no params at all */
+		}
+		else
+		{
+			out += "," + list[i]->param_desc();
+		}
+		out += ")";
+		printf("%s\n", out.cstr());
+		if (terms != "")
+			printf("Terminals: %s\n", terms.substr(1).cstr());
+	}
 }
 
 /*-------------------------------------------------

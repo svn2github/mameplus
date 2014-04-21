@@ -26,7 +26,7 @@
 
 #include "emu.h"
 #include "emuopts.h"
-#include "ui.h"
+#include "ui/ui.h"
 
 
 // OSD headers
@@ -587,7 +587,7 @@ void sdlwindow_modify_prescale(running_machine &machine, sdl_window_info *window
 			execute_async_wait(destroy_all_textures_wt, &wp);
 			window->prescale = new_prescale;
 		}
-		ui_popup_time(1, "Prescale %d", window->prescale);
+		machine.ui().popup_time(1, "Prescale %d", window->prescale);
 	}
 }
 
@@ -698,7 +698,6 @@ int sdlwindow_video_window_create(running_machine &machine, int index, sdl_monit
 		window->windowed_width = config->width;
 		window->windowed_height = config->height;
 	}
-	window->totalColors = config->totalColors;
 
 	// add us to the list
 	*last_window_ptr = window;

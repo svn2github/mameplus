@@ -219,7 +219,7 @@ static const zip_file_header *zip_file_seek_file(zip_file *zip, const char *file
 
 	// find the entry
 	header = zip_file_first_file(zip);
-	while(header && mame_stricmp(header->filename, new_filename))
+	while(header && core_stricmp(header->filename, new_filename))
 	{
 		header = zip_file_next_file(zip);
 	}

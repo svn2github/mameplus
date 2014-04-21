@@ -28,7 +28,7 @@
 // MAME headers
 #include "emu.h"
 #include "osdepend.h"
-#include "ui.h"
+#include "ui/ui.h"
 
 // MAMEOS headers
 #include "winmain.h"
@@ -169,9 +169,9 @@ typedef /*WINUSERAPI*/ BOOL (WINAPI *register_rawinput_devices_ptr)(IN PCRAWINPU
 //============================================================
 
 // global states
-static UINT8                input_enabled;
+static bool                 input_enabled;
 static osd_lock *           input_lock;
-static UINT8                input_paused;
+static bool                 input_paused;
 static DWORD                last_poll;
 
 // DirectInput variables
@@ -185,16 +185,16 @@ static get_rawinput_device_info_ptr     get_rawinput_device_info;
 static register_rawinput_devices_ptr    register_rawinput_devices;
 
 // keyboard states
-static UINT8                keyboard_win32_reported_key_down;
+static bool                 keyboard_win32_reported_key_down;
 static device_info *        keyboard_list;
 
 // mouse states
-static UINT8                mouse_enabled;
+static bool                 mouse_enabled;
 static device_info *        mouse_list;
 
 // lightgun states
 static UINT8                lightgun_shared_axis_mode;
-static UINT8                lightgun_enabled;
+static bool                 lightgun_enabled;
 static device_info *        lightgun_list;
 
 // joystick states
@@ -540,7 +540,7 @@ void wininput_init(running_machine &machine)
 	win32_init(machine);
 
 	// poll once to get the initial states
-	input_enabled = TRUE;
+	input_enabled = true;
 	wininput_poll(machine);
 }
 
@@ -570,7 +570,7 @@ static void wininput_exit(running_machine &machine)
 {
 	// acquire the lock and turn off input (this ensures everyone is done)
 	osd_lock_acquire(input_lock);
-	input_enabled = FALSE;
+	input_enabled = false;
 	osd_lock_release(input_lock);
 
 	// free the lock
@@ -584,7 +584,7 @@ static void wininput_exit(running_machine &machine)
 
 void wininput_poll(running_machine &machine)
 {
-	int hasfocus = winwindow_has_focus() && input_enabled;
+	bool hasfocus = winwindow_has_focus() && input_enabled;
 
 	// ignore if not enabled
 	if (input_enabled)
@@ -623,22 +623,22 @@ void wininput_poll(running_machine &machine)
 //  wininput_should_hide_mouse
 //============================================================
 
-int wininput_should_hide_mouse(void)
+bool wininput_should_hide_mouse(void)
 {
 	// if we are paused or disabled, no
 	if (input_paused || !input_enabled)
-		return FALSE;
+		return false;
 
 	// if neither mice nor lightguns enabled in the core, then no
 	if (!mouse_enabled && !lightgun_enabled)
-		return FALSE;
+		return false;
 
 	// if the window has a menu, no
 	if (win_window_list != NULL && win_has_menu(win_window_list))
-		return FALSE;
+		return false;
 
 	// otherwise, yes
-	return TRUE;
+	return true;
 }
 
 
@@ -747,7 +747,7 @@ BOOL wininput_handle_raw(HANDLE device)
 
 	// free the temporary buffer and return the result
 	if (data != small_buffer)
-		global_free(data);
+		global_free_array(data);
 	return result;
 }
 
@@ -1062,7 +1062,7 @@ static void win32_keyboard_poll(device_info *devinfo)
 	int keynum;
 
 	// clear the flag that says we detected a key down via win32
-	keyboard_win32_reported_key_down = FALSE;
+	keyboard_win32_reported_key_down = false;
 
 	// reset the keyboard state and then repopulate
 	memset(devinfo->keyboard.state, 0, sizeof(devinfo->keyboard.state));
@@ -1080,7 +1080,7 @@ static void win32_keyboard_poll(device_info *devinfo)
 				devinfo->keyboard.state[dik] = 0x80;
 
 			// set this flag so that we continue to use win32 until all keys are up
-			keyboard_win32_reported_key_down = TRUE;
+			keyboard_win32_reported_key_down = true;
 		}
 	}
 }
@@ -1375,7 +1375,7 @@ static char *dinput_device_item_name(device_info *devinfo, int offset, const TCH
 
 	// convert to UTF8, free the temporary string, and return
 	utf8 = utf8_from_tstring(combined);
-	global_free(combined);
+	global_free_array(combined);
 	return utf8;
 }
 
@@ -1785,11 +1785,11 @@ static void rawinput_init(running_machine &machine)
 		RAWINPUTDEVICELIST *device = &devlist[devnum];
 
 		// handle keyboards
-		if (device->dwType == RIM_TYPEKEYBOARD && !FORCE_DIRECTINPUT)
+		if (!FORCE_DIRECTINPUT && device->dwType == RIM_TYPEKEYBOARD)
 			rawinput_keyboard_enum(machine, device);
 
 		// handle mice
-		else if (device->dwType == RIM_TYPEMOUSE && !FORCE_DIRECTINPUT)
+		else if (!FORCE_DIRECTINPUT && device->dwType == RIM_TYPEMOUSE)
 			rawinput_mouse_enum(machine, device);
 	}
 
@@ -1817,12 +1817,12 @@ static void rawinput_init(running_machine &machine)
 		if (!(*register_rawinput_devices)(reglist, regcount, sizeof(reglist[0])))
 			goto error;
 
-	global_free(devlist);
+	global_free_array(devlist);
 	return;
 
 error:
 	if (devlist != NULL)
-		global_free(devlist);
+		global_free_array(devlist);
 }
 
 
@@ -1866,7 +1866,7 @@ static device_info *rawinput_device_create(running_machine &machine, device_info
 	// improve the name and then allocate a device
 	tname = rawinput_device_improve_name(tname);
 	devinfo = generic_device_alloc(machine, devlist_head_ptr, tname);
-	global_free(tname);
+	global_free_array(tname);
 
 	// copy the handle
 	devinfo->rawinput.device = device->hDevice;
@@ -1874,7 +1874,7 @@ static device_info *rawinput_device_create(running_machine &machine, device_info
 
 error:
 	if (tname != NULL)
-		global_free(tname);
+		global_free_array(tname);
 	if (devinfo != NULL)
 		rawinput_device_release(devinfo);
 	return NULL;
@@ -2007,7 +2007,7 @@ static TCHAR *rawinput_device_improve_name(TCHAR *name)
 
 					// free memory and close the key
 					if (endparentid != NULL)
-						global_free(endparentid);
+						global_free_array(endparentid);
 					RegCloseKey(endkey);
 				}
 			}
@@ -2023,7 +2023,7 @@ static TCHAR *rawinput_device_improve_name(TCHAR *name)
 
 convert:
 	// replace the name with the nicer one
-	global_free(name);
+	global_free_array(name);
 
 	// remove anything prior to the final semicolon
 	chsrc = _tcsrchr(regstring, ';');
@@ -2036,9 +2036,9 @@ convert:
 
 exit:
 	if (regstring != NULL)
-		global_free(regstring);
+		global_free_array(regstring);
 	if (regpath != NULL)
-		global_free(regpath);
+		global_free_array(regpath);
 	if (regkey != NULL)
 		RegCloseKey(regkey);
 
@@ -2261,7 +2261,7 @@ static TCHAR *reg_query_string(HKEY key, const TCHAR *path)
 		return buffer;
 
 	// otherwise return a NULL buffer
-	global_free(buffer);
+	global_free_array(buffer);
 	return NULL;
 }
 

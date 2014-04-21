@@ -843,13 +843,17 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 		const screen_device *screen = iter.first();
 		if (driver_list::driver(nIndex).flags & ORIENTATION_SWAP_XY)
 		{
-			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-					screen->refresh_attoseconds(), config.m_total_colors);
+			//swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
+			//		screen->refresh_attoseconds(), config.m_total_colors);
+			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz")),
+					screen->refresh_attoseconds());
 		}
 		else
 		{
-			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-					screen->refresh_attoseconds(), config.m_total_colors);
+			//swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
+			//		screen->refresh_attoseconds(), config.m_total_colors);
+			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz")),
+					screen->refresh_attoseconds());
 		}
 	}
 	else
@@ -866,17 +870,25 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 
 				if (driver_list::driver(nIndex).flags & ORIENTATION_SWAP_XY)
 				{
-					swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)\n")),
+					//swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)\n")),
+					//		visarea.max_y - visarea.min_y + 1,
+					//		visarea.max_x - visarea.min_x + 1,
+					//		ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
+					swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz\n")),
 							visarea.max_y - visarea.min_y + 1,
 							visarea.max_x - visarea.min_x + 1,
-							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
+							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()));
 				}
 				else
 				{
-					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
+					//swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
+					//		visarea.max_x - visarea.min_x + 1,
+					//		visarea.max_y - visarea.min_y + 1,
+					//		ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
+					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz\n")),
 							visarea.max_x - visarea.min_x + 1,
 							visarea.max_y - visarea.min_y + 1,
-							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
+							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()));
 				}
 				wcscat(buf, tmpbuf);
 			}
@@ -962,7 +974,7 @@ static LPCWSTR GameInfoColors(UINT nIndex)
 	machine_config config(driver_list::driver(nIndex), pCurrentOpts);
 
 	ZeroMemory(buf, sizeof(buf));
-	swprintf(buf, _UIW(TEXT("%d colors ")), config.m_total_colors);
+	//swprintf(buf, _UIW(TEXT("%d colors ")), config.m_total_colors);
 
 	return buf;
 }
@@ -2218,7 +2230,7 @@ static void OptionsToProp(HWND hWnd, windows_options& o)
 
 #ifdef DRIVER_SWITCH
 	{
-		char *temp = mame_strdup(o.value(OPTION_DRIVER_CONFIG));
+		char *temp = core_strdup(o.value(OPTION_DRIVER_CONFIG));
 		UINT32 enabled = 0;
 		int i;
 
@@ -2233,14 +2245,14 @@ static void OptionsToProp(HWND hWnd, windows_options& o)
 				char *s = core_strtrim(p);	//get individual driver name
 				if (s[0])
 				{
-					if (mame_stricmp(s, "all") == 0)
+					if (core_stricmp(s, "all") == 0)
 					{
 						enabled = (UINT32)-1;
 						break;
 					}
 
 					for (i = 0; drivers_table[i].name; i++)
-						if (mame_stricmp(s, drivers_table[i].name) == 0)
+						if (core_stricmp(s, drivers_table[i].name) == 0)
 						{
 							enabled |= 1 << i;
 							break;
@@ -2384,8 +2396,8 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	nIndex = g_nGame;
 
-	d3d = !mame_stricmp(pCurrentOpts.value(WINOPTION_VIDEO), "d3d");
-	ddraw = !mame_stricmp(pCurrentOpts.value(WINOPTION_VIDEO), "ddraw");
+	d3d = !core_stricmp(pCurrentOpts.value(WINOPTION_VIDEO), "d3d");
+	ddraw = !core_stricmp(pCurrentOpts.value(WINOPTION_VIDEO), "ddraw");
 	gdi = !d3d && !ddraw;
 
 	in_window = pCurrentOpts.bool_value(WINOPTION_WINDOW);
@@ -3050,7 +3062,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 		screen = opts->value(screen_option);
 		//t_screen = tstring_from_utf8(screen);
 
-		if (!screen || !*screen || mame_stricmp(screen, "auto") == 0)
+		if (!screen || !*screen || core_stricmp(screen, "auto") == 0)
 			screen = NULL;
 
 		// retrieve screen information
@@ -3138,7 +3150,7 @@ static BOOL DriverConfigReadControl(datamap *map, HWND dialog, HWND control, win
 		strcpy(buf, "all");
 
 	option = opts->value(OPTION_DRIVER_CONFIG);
-	if (mame_stricmp(option, buf) == 0)
+	if (core_stricmp(option, buf) == 0)
 		return FALSE;
 
 	opts->set_value(OPTION_DRIVER_CONFIG, buf, OPTION_PRIORITY_CMDLINE,error_string);

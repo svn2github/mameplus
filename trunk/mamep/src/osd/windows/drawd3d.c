@@ -27,7 +27,7 @@
 // MAME headers
 #include "emu.h"
 #include "render.h"
-#include "ui.h"
+#include "ui/ui.h"
 #include "rendutil.h"
 #include "options.h"
 #include "emuopts.h"
@@ -164,7 +164,7 @@ INLINE UINT32 ycc_to_rgb(UINT8 y, UINT8 cb, UINT8 cr)
 	if (b < 0) b = 0;
 	else if (b > 255) b = 255;
 
-	return MAKE_ARGB(0xff, r, g, b);
+	return rgb_t(0xff, r, g, b);
 }
 
 //============================================================
@@ -293,6 +293,7 @@ int drawd3d_init(running_machine &machine, win_draw_callbacks *callbacks)
 	}
 
 	// fill in the callbacks
+	memset(callbacks, 0, sizeof(*callbacks));
 	callbacks->exit = drawd3d_exit;
 	callbacks->window_init = drawd3d_window_init;
 	callbacks->window_get_primitives = drawd3d_window_get_primitives;
@@ -511,12 +512,12 @@ void texture_manager::create_resources()
 	render_load_png(m_vector_bitmap, file, NULL, "vector.png");
 	if (m_vector_bitmap.valid())
 	{
-		m_vector_bitmap.fill(MAKE_ARGB(0xff,0xff,0xff,0xff));
+		m_vector_bitmap.fill(rgb_t(0xff,0xff,0xff,0xff));
 		render_load_png(m_vector_bitmap, file, NULL, "vector.png", true);
 	}
 
 	m_default_bitmap.allocate(8, 8);
-	m_default_bitmap.fill(MAKE_ARGB(0xff,0xff,0xff,0xff));
+	m_default_bitmap.fill(rgb_t(0xff,0xff,0xff,0xff));
 
 	if (m_default_bitmap.valid())
 	{
@@ -976,7 +977,7 @@ int renderer::device_create_resources()
 				D3DPOOL_DEFAULT, &m_vertexbuf);
 	if (result != D3D_OK)
 	{
-		printf("Error creating vertex buffer (%08X)", (UINT32)result);
+		mame_printf_error("Error creating vertex buffer (%08X)\n", (UINT32)result);
 		return 1;
 	}
 
@@ -985,7 +986,7 @@ int renderer::device_create_resources()
 		d3dintf->post_fx_available) ? D3DFVF_XYZW : D3DFVF_XYZRHW)));
 	if (result != D3D_OK)
 	{
-		mame_printf_error("Error setting vertex format (%08X)", (UINT32)result);
+		mame_printf_error("Error setting vertex format (%08X)\n", (UINT32)result);
 		return 1;
 	}
 
@@ -1173,7 +1174,7 @@ int renderer::device_test_cooperative()
 		// if it didn't work, punt to GDI
 		if (result != D3D_OK)
 		{
-			printf("Unable to reset, result %08x\n", (UINT32)result);
+			mame_printf_error("Unable to reset, result %08x\n", (UINT32)result);
 			return 1;
 		}
 
@@ -1879,7 +1880,7 @@ void renderer::primitive_flush_pending()
 
 		if (vertnum + m_poly[polynum].get_vertcount() > m_numverts)
 		{
-			printf("Error: vertnum (%d) plus poly vertex count (%d) > %d\n", vertnum, m_poly[polynum].get_vertcount(), m_numverts);
+			mame_printf_error("Error: vertnum (%d) plus poly vertex count (%d) > %d\n", vertnum, m_poly[polynum].get_vertcount(), m_numverts);
 			fflush(stdout);
 		}
 
@@ -2101,7 +2102,7 @@ texture_info::texture_info(texture_manager *manager, const render_texinfo* texso
 
 error:
 	d3dintf->post_fx_available = false;
-	printf("Direct3D: Critical warning: A texture failed to allocate. Expect things to get bad quickly.\n");
+	mame_printf_error("Direct3D: Critical warning: A texture failed to allocate. Expect things to get bad quickly.\n");
 	if (m_d3dsurface != NULL)
 		(*d3dintf->surface.release)(m_d3dsurface);
 	if (m_d3dtex != NULL)
@@ -2260,18 +2261,18 @@ INLINE void copyline_rgb32(UINT32 *dst, const UINT32 *src, int width, const rgb_
 	{
 		if (xborderpix)
 		{
-			UINT32 srcpix = *src;
-			*dst++ = 0xff000000 | palette[0x200 + RGB_RED(srcpix)] | palette[0x100 + RGB_GREEN(srcpix)] | palette[RGB_BLUE(srcpix)];
+			rgb_t srcpix = *src;
+			*dst++ = 0xff000000 | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 		for (x = 0; x < width; x++)
 		{
-			UINT32 srcpix = *src++;
-			*dst++ = 0xff000000 | palette[0x200 + RGB_RED(srcpix)] | palette[0x100 + RGB_GREEN(srcpix)] | palette[RGB_BLUE(srcpix)];
+			rgb_t srcpix = *src++;
+			*dst++ = 0xff000000 | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 		if (xborderpix)
 		{
-			UINT32 srcpix = *--src;
-			*dst++ = 0xff000000 | palette[0x200 + RGB_RED(srcpix)] | palette[0x100 + RGB_GREEN(srcpix)] | palette[RGB_BLUE(srcpix)];
+			rgb_t srcpix = *--src;
+			*dst++ = 0xff000000 | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 	}
 
@@ -2304,18 +2305,18 @@ INLINE void copyline_argb32(UINT32 *dst, const UINT32 *src, int width, const rgb
 	{
 		if (xborderpix)
 		{
-			UINT32 srcpix = *src;
-			*dst++ = (srcpix & 0xff000000) | palette[0x200 + RGB_RED(srcpix)] | palette[0x100 + RGB_GREEN(srcpix)] | palette[RGB_BLUE(srcpix)];
+			rgb_t srcpix = *src;
+			*dst++ = (srcpix & 0xff000000) | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 		for (x = 0; x < width; x++)
 		{
-			UINT32 srcpix = *src++;
-			*dst++ = (srcpix & 0xff000000) | palette[0x200 + RGB_RED(srcpix)] | palette[0x100 + RGB_GREEN(srcpix)] | palette[RGB_BLUE(srcpix)];
+			rgb_t srcpix = *src++;
+			*dst++ = (srcpix & 0xff000000) | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 		if (xborderpix)
 		{
-			UINT32 srcpix = *--src;
-			*dst++ = (srcpix & 0xff000000) | palette[0x200 + RGB_RED(srcpix)] | palette[0x100 + RGB_GREEN(srcpix)] | palette[RGB_BLUE(srcpix)];
+			rgb_t srcpix = *--src;
+			*dst++ = (srcpix & 0xff000000) | palette[0x200 + srcpix.r()] | palette[0x100 + srcpix.g()] | palette[srcpix.b()];
 		}
 	}
 

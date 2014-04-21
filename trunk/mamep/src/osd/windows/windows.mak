@@ -166,7 +166,7 @@ endif
 endif
 
 ifdef MSVC_ANALYSIS
-CCOMFLAGS += /analyze /wd6011 /wd6328 /wd6204 /wd6244 /wd6385 /wd6308 /wd6246 /wd6031 /wd6326 /analyze:stacksize384112
+CCOMFLAGS += /analyze /wd6011 /wd6328 /wd6204 /wd6244 /wd6385 /wd6308 /wd6246 /wd6031 /wd6326 /wd6255 /wd6330 /wd28251 /wd6054 /wd6340 /wd28125 /wd6053 /wd6001 /wd6386 /wd28278 /wd6297 /wd28183 /wd28159 /wd28182 /wd6237 /wd6239 /wd6240 /wd6323 /wd28199 /wd6235 /wd6285 /wd6286 /wd6384 /wd6293 /analyze:stacksize384112
 endif
 
 # enable exception handling for C++
@@ -274,17 +274,18 @@ endif
 # add our prefix files to the mix
 CCOMFLAGS += -include $(WINSRC)/winprefix.h
 
+include $(SRC)/build/cc_detection.mak
+
 # ensure we statically link the gcc runtime lib
 LDFLAGS += -static-libgcc
+
 # TODO: needs to use $(CC)
 TEST_GCC := $(shell gcc --version)
 ifeq ($(findstring 4.4.,$(TEST_GCC)),)
 	#if we use new tools
 	LDFLAGS += -static-libstdc++
 endif
-ifeq ($(findstring 4.7.,$(TEST_GCC)),4.7.)
-	CCOMFLAGS += -Wno-narrowing -Wno-attributes
-endif
+
 ifeq ($(findstring 4.8.,$(TEST_GCC)),4.8.)
 	CCOMFLAGS += -Wno-narrowing -Wno-attributes -Wno-unused-local-typedefs
 endif
@@ -351,9 +352,9 @@ endif
 CCOMFLAGS += -DDIRECT3D_VERSION=0x0900
 
 # extra dependencies
-$(WINOBJ)/drawdd.o :    $(SRC)/emu/rendersw.c
-$(WINOBJ)/drawgdi.o :   $(SRC)/emu/rendersw.c
-$(WINOBJ)/winmidi.o:    $(SRC)/osd/portmedia/pmmidi.c
+$(WINOBJ)/drawdd.o :    $(SRC)/emu/rendersw.inc
+$(WINOBJ)/drawgdi.o :   $(SRC)/emu/rendersw.inc
+$(WINOBJ)/winmidi.o:    $(SRC)/osd/portmedia/pmmidi.inc
 
 ifndef USE_QTDEBUG
 # add debug-specific files

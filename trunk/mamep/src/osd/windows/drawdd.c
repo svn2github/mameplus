@@ -18,7 +18,7 @@
 #include "render.h"
 #include "rendutil.h"
 #include "options.h"
-#include "rendersw.c"
+#include "rendersw.inc"
 
 // MAMEOS headers
 #include "winmain.h"
@@ -65,7 +65,7 @@ struct dd_info
 	DDCAPS                  ddcaps;                     // capabilities of the device
 	DDCAPS                  helcaps;                    // capabilities of the hardware
 
-	void *                  membuffer;                  // memory buffer for complex rendering
+	UINT8 *                 membuffer;                  // memory buffer for complex rendering
 	UINT32                  membuffersize;              // current size of the memory buffer
 };
 
@@ -188,13 +188,11 @@ int drawdd_init(running_machine &machine, win_draw_callbacks *callbacks)
 	}
 
 	// fill in the callbacks
+	memset(callbacks, 0, sizeof(*callbacks));
 	callbacks->exit = drawdd_exit;
 	callbacks->window_init = drawdd_window_init;
 	callbacks->window_get_primitives = drawdd_window_get_primitives;
 	callbacks->window_draw = drawdd_window_draw;
-	callbacks->window_save = NULL;
-	callbacks->window_record = NULL;
-	callbacks->window_toggle_fsfx = NULL;
 	callbacks->window_destroy = drawdd_window_destroy;
 
 	mame_printf_verbose(_WINDOWS("DirectDraw: Using DirectDraw 7\n"));
@@ -543,7 +541,7 @@ static int ddraw_create_surfaces(win_window_info *window)
 	if (dd->membuffersize < dd->blitwidth * dd->blitheight * 4)
 	{
 		dd->membuffersize = dd->blitwidth * dd->blitheight * 4;
-		global_free(dd->membuffer);
+		global_free_array(dd->membuffer);
 		dd->membuffer = global_alloc_array(UINT8, dd->membuffersize);
 	}
 	if (dd->membuffer == NULL)
@@ -646,7 +644,7 @@ static void ddraw_delete_surfaces(win_window_info *window)
 	dd->clipper = NULL;
 
 	// free the memory buffer
-	global_free(dd->membuffer);
+	global_free_array(dd->membuffer);
 	dd->membuffer = NULL;
 	dd->membuffersize = 0;
 
