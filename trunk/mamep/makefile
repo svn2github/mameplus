@@ -877,14 +877,14 @@ include $(SRC)/osd/$(OSD)/$(OSD).mak
 include $(SRC)/build/build.mak
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
 -include $(SRC)/$(TARGET)/osd/$(OSD)/$(OSD).mak
+ifneq ($(MAMEMESS),)
+include $(SRC)/mess/mess.mak
+endif
 include $(SRC)/emu/emu.mak
 include $(SRC)/lib/lib.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak
 include $(SRC)/tools/tools.mak
 include $(SRC)/regtests/regtests.mak
-ifneq ($(MAMEMESS),)
-include $(SRC)/mess/mess.mak
-endif
 
 # combine the various definitions to one
 CCOMFLAGS += $(INCPATH)

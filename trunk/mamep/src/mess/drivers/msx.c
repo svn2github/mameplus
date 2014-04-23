@@ -325,6 +325,7 @@ PCB Layouts missing
 
 
 #include "includes/msx.h"
+#include "bus/centronics/covox.h"
 
 static ADDRESS_MAP_START ( msx_memory_map, AS_PROGRAM, 8, msx_state )
 	AM_RANGE( 0x0000, 0x1fff) AM_READ_BANK("bank1") AM_WRITE(msx_page0_w)
@@ -356,8 +357,9 @@ static ADDRESS_MAP_START ( msx_io_map, AS_IO, 8, msx_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE( 0x77, 0x77) AM_WRITE(msx_90in1_w)
 	AM_RANGE( 0x7c, 0x7d) AM_WRITE(msx_fmpac_w)
-	AM_RANGE( 0x90, 0x90) AM_READWRITE(msx_printer_status_r, msx_printer_strobe_w)
-	AM_RANGE( 0x91, 0x91) AM_WRITE(msx_printer_data_w)
+	AM_RANGE( 0x90, 0x90) AM_DEVREAD("cent_status_in", input_buffer_device, read)
+	AM_RANGE( 0x90, 0x90) AM_DEVWRITE("cent_ctrl_out", output_latch_device, write)
+	AM_RANGE( 0x91, 0x91) AM_DEVWRITE("cent_data_out", output_latch_device, write)
 	AM_RANGE( 0xa0, 0xa7) AM_DEVREAD("ay8910", ay8910_device, data_r) AM_WRITE(msx_ay8910_w)
 	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
 	AM_RANGE( 0x98, 0x98) AM_DEVREADWRITE("tms9928a", tms9928a_device, vram_read, vram_write)
@@ -371,8 +373,9 @@ static ADDRESS_MAP_START ( msx2_io_map, AS_IO, 8, msx_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE( 0x77, 0x77) AM_WRITE(msx_90in1_w)
 	AM_RANGE( 0x7c, 0x7d) AM_WRITE(msx_fmpac_w)
-	AM_RANGE( 0x90, 0x90) AM_READWRITE(msx_printer_status_r, msx_printer_strobe_w)
-	AM_RANGE( 0x91, 0x91) AM_WRITE(msx_printer_data_w)
+	AM_RANGE( 0x90, 0x90) AM_DEVREAD("cent_status_in", input_buffer_device, read)
+	AM_RANGE( 0x90, 0x90) AM_DEVWRITE("cent_ctrl_out", output_latch_device, write)
+	AM_RANGE( 0x91, 0x91) AM_DEVWRITE("cent_data_out", output_latch_device, write)
 	AM_RANGE( 0xa0, 0xa7) AM_DEVREAD("ay8910", ay8910_device, data_r) AM_WRITE(msx_ay8910_w)
 	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
 	AM_RANGE( 0x98, 0x9b) AM_DEVREADWRITE("v9938", v9938_device, read, write)
@@ -388,8 +391,9 @@ static ADDRESS_MAP_START ( msx2p_io_map, AS_IO, 8, msx_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE( 0x77, 0x77) AM_WRITE(msx_90in1_w)
 	AM_RANGE( 0x7c, 0x7d) AM_WRITE(msx_fmpac_w)
-	AM_RANGE( 0x90, 0x90) AM_READWRITE(msx_printer_status_r, msx_printer_strobe_w)
-	AM_RANGE( 0x91, 0x91) AM_WRITE(msx_printer_data_w)
+	AM_RANGE( 0x90, 0x90) AM_DEVREAD("cent_status_in", input_buffer_device, read)
+	AM_RANGE( 0x90, 0x90) AM_DEVWRITE("cent_ctrl_out", output_latch_device, write)
+	AM_RANGE( 0x91, 0x91) AM_DEVWRITE("cent_data_out", output_latch_device, write)
 	AM_RANGE( 0xa0, 0xa7) AM_DEVREAD("ay8910", ay8910_device, data_r) AM_WRITE(msx_ay8910_w)
 	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
 	AM_RANGE( 0x98, 0x9b) AM_DEVREADWRITE("v9958", v9958_device, read, write)
@@ -429,9 +433,6 @@ static INPUT_PORTS_START( msx_dips )
 	PORT_DIPNAME( 0x40, 0, "Swap game port 1 and 2")
 	PORT_DIPSETTING( 0, DEF_STR( No ) )
 	PORT_DIPSETTING( 0x40, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x80, 0, "SIMPL")
-	PORT_DIPSETTING( 0x00, DEF_STR ( Off ) )
-	PORT_DIPSETTING( 0x80, DEF_STR ( On ) )
 	PORT_DIPNAME ( 0x03, 0, "Render resolution")
 	PORT_DIPSETTING( 0, DEF_STR( High ))
 	PORT_DIPSETTING( 1, DEF_STR( Low ))
@@ -1028,7 +1029,7 @@ INPUT_PORTS_END
 
 static const ay8910_interface msx_ay8910_interface =
 {
-	AY8910_LEGACY_OUTPUT,
+	AY8910_SINGLE_OUTPUT,
 	AY8910_DEFAULT_LOADS,
 	DEVCB_DRIVER_MEMBER(msx_state, msx_psg_port_a_r),
 	DEVCB_DRIVER_MEMBER(msx_state, msx_psg_port_b_r),
@@ -1061,7 +1062,7 @@ static const floppy_interface msx_floppy_interface =
 	DEVCB_NULL,
 	FLOPPY_STANDARD_5_25_DSHD,
 	LEGACY_FLOPPY_OPTIONS_NAME(msx),
-	NULL,
+	"floppy_5_25",
 	NULL
 };
 
@@ -1102,20 +1103,31 @@ static MACHINE_CONFIG_START( msx, msx_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_ADD("ay8910", AY8910, XTAL_10_738635MHz/3/2)
 	MCFG_SOUND_CONFIG(msx_ay8910_interface)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_ADD("k051649", K051649, XTAL_10_738635MHz/3/2)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 	MCFG_SOUND_ADD("ym2413", YM2413, XTAL_10_738635MHz/3)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	/* printer */
-	MCFG_CENTRONICS_PRINTER_ADD("centronics", standard_centronics)
+	MCFG_CENTRONICS_ADD("centronics", centronics_printers, "image")
+	MCFG_SLOT_OPTION_ADD( "covox", CENTRONICS_COVOX )
+	MCFG_CENTRONICS_BUSY_HANDLER(DEVWRITELINE("cent_status_in", input_buffer_device, write_bit1))
 
+	MCFG_CENTRONICS_OUTPUT_LATCH_ADD("cent_data_out", "centronics")
+	MCFG_DEVICE_ADD("cent_status_in", INPUT_BUFFER, 0)
+
+	MCFG_DEVICE_ADD("cent_ctrl_out", OUTPUT_LATCH, 0)
+	MCFG_OUTPUT_LATCH_BIT1_HANDLER(DEVWRITELINE("centronics", centronics_device, write_strobe))
+
+	/* cassette */
 	MCFG_CASSETTE_ADD( "cassette", msx_cassette_interface )
 
 	MCFG_FD1793_ADD("wd179x", msx_wd17xx_interface ) // TODO confirm type
 
 	MCFG_LEGACY_FLOPPY_2_DRIVES_ADD(msx_floppy_interface)
+
+	MCFG_SOFTWARE_LIST_ADD("flop_list","msx1_flop")
 
 	MCFG_FRAGMENT_ADD(msx_cartslot)
 
@@ -1155,11 +1167,6 @@ MACHINE_CONFIG_END
 #define MSX2_VISIBLE_XBORDER_PIXELS 8 * 2
 #define MSX2_VISIBLE_YBORDER_PIXELS 14 * 2
 
-static RP5C01_INTERFACE( rtc_intf )
-{
-	DEVCB_NULL
-};
-
 static MACHINE_CONFIG_START( msx2, msx_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, XTAL_21_4772MHz/6)       /* 3.579545 MHz */
@@ -1177,15 +1184,14 @@ static MACHINE_CONFIG_START( msx2, msx_state )
 	MCFG_V9938_ADD("v9938", "screen", 0x20000)
 	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(msx_state,msx_vdp_interrupt))
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_UPDATE_DEVICE("v9938", v9938_device, screen_update)
 	MCFG_SCREEN_SIZE(MSX2_TOTAL_XRES_PIXELS, 262*2)
 	MCFG_SCREEN_VISIBLE_AREA(MSX2_XBORDER_PIXELS - MSX2_VISIBLE_XBORDER_PIXELS, MSX2_TOTAL_XRES_PIXELS - MSX2_XBORDER_PIXELS + MSX2_VISIBLE_XBORDER_PIXELS - 1, MSX2_YBORDER_PIXELS - MSX2_VISIBLE_YBORDER_PIXELS, MSX2_TOTAL_YRES_PIXELS - MSX2_YBORDER_PIXELS + MSX2_VISIBLE_YBORDER_PIXELS - 1)
-
-	MCFG_PALETTE_LENGTH(512)
+	MCFG_SCREEN_PALETTE("v9938:palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1195,20 +1201,28 @@ static MACHINE_CONFIG_START( msx2, msx_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_ADD("ay8910", AY8910, XTAL_21_4772MHz/6/2)
 	MCFG_SOUND_CONFIG(msx_ay8910_interface)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_ADD("k051649", K051649, XTAL_21_4772MHz/6/2)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 	MCFG_SOUND_ADD("ym2413", YM2413, XTAL_21_4772MHz/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	/* printer */
-	MCFG_CENTRONICS_PRINTER_ADD("centronics", standard_centronics)
+	MCFG_CENTRONICS_ADD("centronics", centronics_printers, "image")
+	MCFG_SLOT_OPTION_ADD( "covox", CENTRONICS_COVOX )
+	MCFG_CENTRONICS_BUSY_HANDLER(DEVWRITELINE("cent_status_in", input_buffer_device, write_bit1))
+
+	MCFG_CENTRONICS_OUTPUT_LATCH_ADD("cent_data_out", "centronics")
+	MCFG_DEVICE_ADD("cent_status_in", INPUT_BUFFER, 0)
+
+	MCFG_DEVICE_ADD("cent_ctrl_out", OUTPUT_LATCH, 0)
+	MCFG_OUTPUT_LATCH_BIT1_HANDLER(DEVWRITELINE("centronics", centronics_device, write_strobe))
 
 	/* cassette */
 	MCFG_CASSETTE_ADD( "cassette", msx_cassette_interface )
 
 	/* real time clock */
-	MCFG_RP5C01_ADD("rtc", XTAL_32_768kHz, rtc_intf)
+	MCFG_DEVICE_ADD("rtc", RP5C01, XTAL_32_768kHz)
 
 	MCFG_FD1793_ADD("wd179x", msx_wd17xx_interface ) // TODO confirm type
 
@@ -1240,15 +1254,14 @@ static MACHINE_CONFIG_START( msx2p, msx_state )
 	MCFG_V9958_ADD("v9958", "screen", 0x20000)
 	MCFG_V99X8_INTERRUPT_CALLBACK(WRITELINE(msx_state,msx_vdp_interrupt))
 
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_UPDATE_DEVICE("v9958", v9958_device, screen_update)
 	MCFG_SCREEN_SIZE(MSX2_TOTAL_XRES_PIXELS, 262*2)
 	MCFG_SCREEN_VISIBLE_AREA(MSX2_XBORDER_PIXELS - MSX2_VISIBLE_XBORDER_PIXELS, MSX2_TOTAL_XRES_PIXELS - MSX2_XBORDER_PIXELS + MSX2_VISIBLE_XBORDER_PIXELS - 1, MSX2_YBORDER_PIXELS - MSX2_VISIBLE_YBORDER_PIXELS, MSX2_TOTAL_YRES_PIXELS - MSX2_YBORDER_PIXELS + MSX2_VISIBLE_YBORDER_PIXELS - 1)
-
-	MCFG_PALETTE_LENGTH(19780)
+	MCFG_SCREEN_PALETTE("v9958:palette")
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1258,20 +1271,28 @@ static MACHINE_CONFIG_START( msx2p, msx_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 	MCFG_SOUND_ADD("ay8910", AY8910, XTAL_21_4772MHz/6/2)
 	MCFG_SOUND_CONFIG(msx_ay8910_interface)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 	MCFG_SOUND_ADD("k051649", K051649, XTAL_21_4772MHz/6/2)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 	MCFG_SOUND_ADD("ym2413", YM2413, XTAL_21_4772MHz/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	/* printer */
-	MCFG_CENTRONICS_PRINTER_ADD("centronics", standard_centronics)
+	MCFG_CENTRONICS_ADD("centronics", centronics_printers, "image")
+	MCFG_SLOT_OPTION_ADD( "covox", CENTRONICS_COVOX )
+	MCFG_CENTRONICS_BUSY_HANDLER(DEVWRITELINE("cent_status_in", input_buffer_device, write_bit1))
+
+	MCFG_CENTRONICS_OUTPUT_LATCH_ADD("cent_data_out", "centronics")
+	MCFG_DEVICE_ADD("cent_status_in", INPUT_BUFFER, 0)
+
+	MCFG_DEVICE_ADD("cent_ctrl_out", OUTPUT_LATCH, 0)
+	MCFG_OUTPUT_LATCH_BIT1_HANDLER(DEVWRITELINE("centronics", centronics_device, write_strobe))
 
 	/* cassette */
 	MCFG_CASSETTE_ADD( "cassette", msx_cassette_interface )
 
 	/* real time clock */
-	MCFG_RP5C01_ADD("rtc", XTAL_32_768kHz, rtc_intf)
+	MCFG_DEVICE_ADD("rtc", RP5C01, XTAL_32_768kHz)
 
 	MCFG_FD1793_ADD("wd179x", msx_wd17xx_interface ) // TODO confirm type
 
@@ -4469,6 +4490,8 @@ MSX_DRIVER_LIST
 	MSX_DRIVER (cx7m)
 	MSX_DRIVER (cx7m128)
 
+	MSX_DRIVER (fsa1gt)
+	MSX_DRIVER (fsa1st)
 MSX_DRIVER_END
 
 

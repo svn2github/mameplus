@@ -141,6 +141,8 @@ public:
 	DECLARE_READ16_MEMBER(aes_in1_r);
 	DECLARE_READ16_MEMBER(aes_in2_r);
 
+	DECLARE_INPUT_CHANGED_MEMBER(aes_jp1);
+
 	DECLARE_MACHINE_START(neocd);
 	DECLARE_MACHINE_START(neogeo);
 	DECLARE_MACHINE_RESET(neogeo);
@@ -1034,7 +1036,6 @@ MACHINE_START_MEMBER(ng_aes_state,neocd)
 	m_vblank_level = 2;
 	m_raster_level = 1;
 
-
 	/* initialize the memcard data structure */
 	/* NeoCD doesn't have memcard slots, rather, it has a larger internal memory which works the same */
 	m_memcard_data = auto_alloc_array_clear(machine(), UINT8, 0x2000);
@@ -1063,7 +1064,12 @@ MACHINE_RESET_MEMBER(ng_aes_state,neogeo)
 
 	/* reset system control registers */
 	for (offs = 0; offs < 8; offs++)
-		system_control_w(space, offs, 0, 0x00ff);
+		system_control_w(space, offs, 0);
+
+	// disable audiocpu nmi
+	m_audio_cpu_nmi_enabled = false;
+	m_audio_cpu_nmi_pending = false;
+	audio_cpu_check_nmi();
 
 	m_maincpu->reset();
 
@@ -1113,12 +1119,12 @@ static ADDRESS_MAP_START( aes_main_map, AS_PROGRAM, 16, ng_aes_state )
 	AM_RANGE(0x200000, 0x2fffff) AM_ROMBANK("cartridge")
 	AM_RANGE(0x2ffff0, 0x2fffff) AM_WRITE(main_cpu_bank_select_w)
 	AM_RANGE(0x300000, 0x300001) AM_MIRROR(0x01fffe) AM_READ(aes_in0_r)
-	AM_RANGE(0x320000, 0x320001) AM_MIRROR(0x01fffe) AM_READ_PORT("AUDIO") AM_WRITE(audio_command_w)
+	AM_RANGE(0x320000, 0x320001) AM_MIRROR(0x01fffe) AM_READ_PORT("AUDIO") AM_WRITE8(audio_command_w, 0xff00)
 	AM_RANGE(0x340000, 0x340001) AM_MIRROR(0x01fffe) AM_READ(aes_in1_r)
 	AM_RANGE(0x360000, 0x37ffff) AM_READ(neogeo_unmapped_r)
 	AM_RANGE(0x380000, 0x380001) AM_MIRROR(0x01fffe) AM_READ(aes_in2_r)
-	AM_RANGE(0x380000, 0x38007f) AM_MIRROR(0x01ff80) AM_WRITE(io_control_w)
-	AM_RANGE(0x3a0000, 0x3a001f) AM_MIRROR(0x01ffe0) AM_READ(neogeo_unmapped_r) AM_WRITE(system_control_w)
+	AM_RANGE(0x380000, 0x38007f) AM_MIRROR(0x01ff80) AM_WRITE8(io_control_w, 0x00ff)
+	AM_RANGE(0x3a0000, 0x3a001f) AM_MIRROR(0x01ffe0) AM_READ(neogeo_unmapped_r) AM_WRITE8(system_control_w, 0x00ff)
 	AM_RANGE(0x3c0000, 0x3c0007) AM_MIRROR(0x01fff8) AM_READ(neogeo_video_register_r)
 	AM_RANGE(0x3c0000, 0x3c000f) AM_MIRROR(0x01fff0) AM_WRITE(neogeo_video_register_w)
 	AM_RANGE(0x3e0000, 0x3fffff) AM_READ(neogeo_unmapped_r)
@@ -1136,12 +1142,12 @@ static ADDRESS_MAP_START( neocd_main_map, AS_PROGRAM, 16, ng_aes_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_RAM AM_REGION("maincpu", 0x00000)
 
 	AM_RANGE(0x300000, 0x300001) AM_MIRROR(0x01fffe) AM_READ(aes_in0_r)
-	AM_RANGE(0x320000, 0x320001) AM_MIRROR(0x01fffe) AM_READ_PORT("AUDIO") AM_WRITE(audio_command_w)
+	AM_RANGE(0x320000, 0x320001) AM_MIRROR(0x01fffe) AM_READ_PORT("AUDIO") AM_WRITE8(audio_command_w, 0xff00)
 	AM_RANGE(0x340000, 0x340001) AM_MIRROR(0x01fffe) AM_READ(aes_in1_r)
 	AM_RANGE(0x360000, 0x37ffff) AM_READ(neogeo_unmapped_r)
 	AM_RANGE(0x380000, 0x380001) AM_MIRROR(0x01fffe) AM_READ(aes_in2_r)
-	AM_RANGE(0x380000, 0x38007f) AM_MIRROR(0x01ff80) AM_WRITE(io_control_w)
-	AM_RANGE(0x3a0000, 0x3a001f) AM_MIRROR(0x01ffe0) AM_READ(neogeo_unmapped_r) AM_WRITE(system_control_w)
+	AM_RANGE(0x380000, 0x38007f) AM_MIRROR(0x01ff80) AM_WRITE8(io_control_w, 0x00ff)
+	AM_RANGE(0x3a0000, 0x3a001f) AM_MIRROR(0x01ffe0) AM_READ(neogeo_unmapped_r) AM_WRITE8(system_control_w, 0x00ff)
 	AM_RANGE(0x3c0000, 0x3c0007) AM_MIRROR(0x01fff8) AM_READ(neogeo_video_register_r)
 	AM_RANGE(0x3c0000, 0x3c000f) AM_MIRROR(0x01fff0) AM_WRITE(neogeo_video_register_w)
 	AM_RANGE(0x3e0000, 0x3fffff) AM_READ(neogeo_unmapped_r)
@@ -1174,11 +1180,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( neocd_audio_io_map, AS_IO, 8, ng_aes_state )
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0xff00) AM_READWRITE(audio_command_r, soundlatch_clear_byte_w)
 	AM_RANGE(0x04, 0x07) AM_MIRROR(0xff00) AM_DEVREADWRITE("ymsnd", ym2610_device, read, write)
-	AM_RANGE(0x08, 0x08) AM_MIRROR(0xff00) /* write - NMI enable / acknowledge? (the data written doesn't matter) */
+	AM_RANGE(0x08, 0x08) AM_MIRROR(0xff10) AM_MASK(0x0010) AM_WRITE(audio_cpu_enable_nmi_w)
 	// banking reads are actually NOP on NeoCD? but some games still access them
 //  AM_RANGE(0x08, 0x0b) AM_MIRROR(0xfff0) AM_MASK(0xff03) AM_READ(audio_cpu_bank_select_r)
 	AM_RANGE(0x0c, 0x0c) AM_MIRROR(0xff00) AM_WRITE(soundlatch2_byte_w)
-	AM_RANGE(0x18, 0x18) AM_MIRROR(0xff00) /* write - NMI disable? (the data written doesn't matter) */
 
 	// ??
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0xff00) AM_WRITENOP
@@ -1310,15 +1315,15 @@ static INPUT_PORTS_START( mjpanel )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( aes )
-	PORT_START("CTRLSEL")  /* Select Controller Type */
+	PORT_START("CTRLSEL") /* Select Controller Type */
 	PORT_CONFNAME( 0x0f, 0x01, "P1 Controller")
-	PORT_CONFSETTING(  0x00, "Unconnected" )
-	PORT_CONFSETTING(  0x01, "NeoGeo Controller" )
-	PORT_CONFSETTING(  0x02, "NeoGeo Mahjong Panel" )
+	PORT_CONFSETTING(    0x00, "Unconnected" )
+	PORT_CONFSETTING(    0x01, "NeoGeo Controller" )
+	PORT_CONFSETTING(    0x02, "NeoGeo Mahjong Panel" )
 	PORT_CONFNAME( 0xf0, 0x10, "P2 Controller")
-	PORT_CONFSETTING(  0x00, "Unconnected" )
-	PORT_CONFSETTING(  0x10, "NeoGeo Controller" )
-	PORT_CONFSETTING(  0x20, "NeoGeo Mahjong Panel" )
+	PORT_CONFSETTING(    0x00, "Unconnected" )
+	PORT_CONFSETTING(    0x10, "NeoGeo Controller" )
+	PORT_CONFSETTING(    0x20, "NeoGeo Mahjong Panel" )
 
 	PORT_INCLUDE( controller )
 
@@ -1331,15 +1336,25 @@ static INPUT_PORTS_START( aes )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(2)
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_SELECT ) PORT_PLAYER(2)
 	PORT_BIT( 0x7000, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_CUSTOM_MEMBER(DEVICE_SELF, neogeo_state, get_memcard_status, NULL)
-	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* Hardware type (AES=0, MVS=1) Some games check this and show */
-													/* a piracy warning screen if the hardware and BIOS don't match */
+	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* Hardware type (AES=0, MVS=1) Some games check this and show a piracy warning screen if the hardware and BIOS don't match */
 
 	PORT_START("AUDIO")
 	PORT_BIT( 0x0007, IP_ACTIVE_HIGH, IPT_UNUSED )  /* AES has no coin slots, it's a console */
 	PORT_BIT( 0x0018, IP_ACTIVE_HIGH, IPT_UNKNOWN ) /* what is this? Universe BIOS uses these bits to detect MVS or AES hardware */
 	PORT_BIT( 0x00e0, IP_ACTIVE_HIGH, IPT_UNUSED )  /* AES has no upd4990a */
-	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_CUSTOM_MEMBER(DEVICE_SELF, neogeo_state,get_audio_result, NULL)
+	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_CUSTOM_MEMBER(DEVICE_SELF, neogeo_state, get_audio_result, NULL)
+
+	PORT_START("JP") // JP1 and JP2 are jumpers or solderpads depending on AES board revision, intended for use on the Development BIOS
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Short JP1 (Debug Monitor)") PORT_CODE(KEYCODE_F1) PORT_CHANGED_MEMBER(DEVICE_SELF, ng_aes_state, aes_jp1, 0)
+//  PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OTHER ) // what is JP2 for? somehow related to system reset, disable watchdog?
 INPUT_PORTS_END
+
+INPUT_CHANGED_MEMBER(ng_aes_state::aes_jp1)
+{
+	// Shorting JP1 causes a 68000 /BERR (Bus Error). On Dev Bios, this pops up the debug monitor.
+	if (newval)
+		m_maincpu->set_input_line(M68K_LINE_BUSERROR, HOLD_LINE);
+}
 
 
 static INPUT_PORTS_START( neocd )
@@ -1499,25 +1514,28 @@ MACHINE_CONFIG_END
 
 ROM_START( aes )
 	ROM_REGION16_BE( 0x20000, "mainbios", 0 )
-	ROM_SYSTEM_BIOS( 0, "asia",   "Asia AES" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 0, "neo-epo.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) )    /* AES Console (Asia?) Bios */
-	ROM_SYSTEM_BIOS( 1, "japan",   "Japan AES" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 1, "neo-po.bin",  0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) )    /* AES Console (Japan) Bios */
-	ROM_SYSTEM_BIOS( 2, "unibios30","Universe Bios (Hack, Ver. 3.0)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 2, "uni-bios_3_0.rom",  0x00000, 0x020000, CRC(a97c89a9) SHA1(97a5eff3b119062f10e31ad6f04fe4b90d366e7f) ) /* Universe Bios v3.0 (hack) */
-	ROM_SYSTEM_BIOS( 3, "unibios23","Universe Bios (Hack, Ver. 2.3)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 3, "uni-bios_2_3.rom",  0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0) ) /* Universe Bios v2.3 (hack) */
-	ROM_SYSTEM_BIOS( 4, "unibios23o","Universe Bios (Hack, Ver. 2.3, older?)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 4, "uni-bios_2_3o.rom",  0x00000, 0x020000, CRC(601720ae) SHA1(1b8a72c720cdb5ee3f1d735bbcf447b09204b8d9) ) /* Universe Bios v2.3 (hack) alt version, withdrawn? */
-	ROM_SYSTEM_BIOS( 5, "unibios22","Universe Bios (Hack, Ver. 2.2)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 5, "uni-bios_2_2.rom",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) /* Universe Bios v2.2 (hack) */
-	ROM_SYSTEM_BIOS( 6, "unibios21","Universe Bios (Hack, Ver. 2.1)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 6, "uni-bios_2_1.rom",  0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) /* Universe Bios v2.1 (hack) */
-	ROM_SYSTEM_BIOS( 7, "unibios20","Universe Bios (Hack, Ver. 2.0)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 7, "uni-bios_2_0.rom",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */
-	ROM_SYSTEM_BIOS( 8, "unibios13","Universe Bios (Hack, Ver. 1.3)" )
-	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */
-	// Universe BIOS versions older than 1.3 don't support AES hardware
+	ROM_SYSTEM_BIOS( 0, "asia", "Asia AES" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 0, "neo-epo.bin",       0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */
+	ROM_SYSTEM_BIOS( 1, "japan", "Japan AES" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 1, "neo-po.bin",        0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */
+	ROM_SYSTEM_BIOS( 2, "devel", "Development System ROM" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 2, "neodebug.rom",      0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Official debug (development) ROM, for home-use base board */
+	ROM_SYSTEM_BIOS( 3, "unibios31", "Universe Bios (Hack, Ver. 3.1)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 3, "uni-bios_3_1.rom",  0x00000, 0x020000, CRC(0c58093f) SHA1(29329a3448c2505e1ff45ffa75e61e9693165153) ) /* Universe Bios v3.1 (hack) */
+	ROM_SYSTEM_BIOS( 4, "unibios30", "Universe Bios (Hack, Ver. 3.0)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 4, "uni-bios_3_0.rom",  0x00000, 0x020000, CRC(a97c89a9) SHA1(97a5eff3b119062f10e31ad6f04fe4b90d366e7f) ) /* Universe Bios v3.0 (hack) */
+	ROM_SYSTEM_BIOS( 5, "unibios23", "Universe Bios (Hack, Ver. 2.3)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 5, "uni-bios_2_3.rom",  0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0) ) /* Universe Bios v2.3 (hack) */
+	ROM_SYSTEM_BIOS( 6, "unibios23o", "Universe Bios (Hack, Ver. 2.3, older?)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 6, "uni-bios_2_3o.rom", 0x00000, 0x020000, CRC(601720ae) SHA1(1b8a72c720cdb5ee3f1d735bbcf447b09204b8d9) ) /* Universe Bios v2.3 (hack) alt version, withdrawn? */
+	ROM_SYSTEM_BIOS( 7, "unibios22", "Universe Bios (Hack, Ver. 2.2)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 7, "uni-bios_2_2.rom",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) /* Universe Bios v2.2 (hack) */
+	ROM_SYSTEM_BIOS( 8, "unibios21", "Universe Bios (Hack, Ver. 2.1)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios_2_1.rom",  0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) /* Universe Bios v2.1 (hack) */
+	ROM_SYSTEM_BIOS( 9, "unibios20", "Universe Bios (Hack, Ver. 2.0)" )
+	ROM_LOAD16_WORD_SWAP_BIOS( 9, "uni-bios_2_0.rom",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */
+	ROM_SYSTEM_BIOS(10, "unibios13", "Universe Bios (Hack, Ver. 1.3)" )
+	ROM_LOAD16_WORD_SWAP_BIOS(10, "uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) - note: versions older than 1.3 don't support AES hardware */
 
 	ROM_REGION( 0x200000, "maincpu", ROMREGION_ERASEFF )
 
@@ -1592,7 +1610,7 @@ DRIVER_INIT_MEMBER(ng_aes_state,neogeo)
 
 
 /*    YEAR  NAME  PARENT COMPAT MACHINE INPUT  INIT     COMPANY      FULLNAME            FLAGS */
-CONS( 1990, aes,    0,      0,   aes,      aes, ng_aes_state,   neogeo,  "SNK", "Neo-Geo AES", 0)
+CONS( 1990, aes,    0,      0,   aes,      aes, ng_aes_state,   neogeo,  "SNK", "Neo-Geo AES", GAME_SUPPORTS_SAVE )
 
 DRIVER_INIT_MEMBER(ng_aes_state,neocdz)
 {

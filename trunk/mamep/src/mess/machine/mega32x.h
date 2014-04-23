@@ -19,7 +19,11 @@
 #define SH2_CINT_IRQ_LEVEL 8
 #define SH2_PINT_IRQ_LEVEL 6
 
+#define MASTER_CLOCK_NTSC 53693175
+#define MASTER_CLOCK_PAL  53203424
 
+#include "cpu/sh2/sh2.h"
+#include "cpu/sh2/sh2comn.h"
 #include "sound/dac.h"
 
 class sega_32x_device : public device_t
@@ -37,7 +41,11 @@ public:
 	// set some variables at start, depending on region (shall be moved to a device interface?)
 	void set_framerate(int rate) { m_framerate = rate; }
 	void set_32x_pal(bool pal) { m_32x_pal = pal ? 1 : 0; }
+	void set_total_scanlines(int total) { m_base_total_scanlines = total; }     // this get set at start only
+	void update_total_scanlines(bool mode3) { m_total_scanlines = mode3 ? (m_base_total_scanlines * 2) : m_base_total_scanlines; }  // this gets set at each EOF
 
+	// static configuration
+	static void static_set_palette_tag(device_t &device, const char *tag);
 
 	DECLARE_READ32_MEMBER( _32x_sh2_master_4000_common_4002_r );
 	DECLARE_READ32_MEMBER( _32x_sh2_slave_4000_common_4002_r );
@@ -105,17 +113,16 @@ public:
 	DECLARE_WRITE16_MEMBER( _32x_sh2_slave_401e_w );
 
 	void _32x_render_videobuffer_to_screenbuffer_helper(int scanline);
-	int _32x_render_videobuffer_to_screenbuffer_lopri(int x, UINT16 &lineptr);
-	void _32x_render_videobuffer_to_screenbuffer_hipri(int x, UINT16 &lineptr);
+	void _32x_render_videobuffer_to_screenbuffer(int x, UINT32 priority, UINT16 &lineptr);
 	int sh2_master_pwmint_enable, sh2_slave_pwmint_enable;
 
 	void _32x_check_framebuffer_swap(bool enabled);
 	void _32x_check_irqs();
-	void _32x_scanline_cb0();
-	void _32x_scanline_cb1(int scanline);
+	void _32x_interrupt_cb(int scanline, int irq6);
 
 	/* our main vblank handler resets this */
 	int m_32x_hcount_compare_val;
+	int m_32x_vblank_flag;
 	int m_sh2_are_running;
 	int m_32x_240mode;
 	UINT16 m_32x_a1518a_reg;
@@ -173,8 +180,10 @@ private:
 	UINT16 m_a15100_reg;
 	int m_32x_68k_a15102_reg;
 
-	int m_framerate;
 	int m_32x_pal;
+	int m_framerate;
+	int m_base_total_scanlines;
+	int m_total_scanlines;
 
 	UINT16 m_commsram[8];
 
@@ -183,6 +192,8 @@ private:
 	UINT16 *m_32x_display_dram, *m_32x_access_dram;
 	UINT16* m_32x_palette;
 	UINT16* m_32x_palette_lookup;
+
+	required_device<palette_device> m_palette;
 };
 
 
@@ -204,3 +215,6 @@ class sega_32x_pal_device : public sega_32x_device
 
 extern const device_type SEGA_32X_NTSC;
 extern const device_type SEGA_32X_PAL;
+
+#define MCFG_SEGA_32X_PALETTE(_palette_tag) \
+	sega_32x_device::static_set_palette_tag(*device, "^" _palette_tag);

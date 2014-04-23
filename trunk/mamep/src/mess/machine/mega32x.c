@@ -196,7 +196,7 @@ GFX check (these don't explicitly fails):
 
 */
 #include "emu.h"
-#include "includes/megadriv.h"
+#include "machine/mega32x.h"
 
 
 /* need to make fifo callback part of device */
@@ -219,7 +219,8 @@ sega_32x_device::sega_32x_device(const machine_config &mconfig, device_type type
 		m_master_cpu(*this, "32x_master_sh2"),
 		m_slave_cpu(*this, "32x_slave_sh2"),
 		m_lch_pwm(*this, "lch_pwm"),
-		m_rch_pwm(*this, "rch_pwm")
+		m_rch_pwm(*this, "rch_pwm"),
+		m_palette(*this)
 {
 }
 
@@ -231,6 +232,16 @@ sega_32x_ntsc_device::sega_32x_ntsc_device(const machine_config &mconfig, const 
 sega_32x_pal_device::sega_32x_pal_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: sega_32x_device(mconfig, SEGA_32X_PAL, "sega_32x_pal", tag, owner, clock, "sega_32x_pal", __FILE__)
 {
+}
+
+//-------------------------------------------------
+//  static_set_palette_tag: Set the tag of the
+//  palette device
+//-------------------------------------------------
+
+void sega_32x_device::static_set_palette_tag(device_t &device, const char *tag)
+{
+	downcast<sega_32x_device &>(device).m_palette.set_tag(tag);
 }
 
 TIMER_CALLBACK( _32x_pwm_callback );
@@ -256,7 +267,7 @@ WRITE16_MEMBER( sega_32x_device::_32x_68k_palette_w )
 
 	m_32x_palette_lookup[offset] = (r << 10) | (g << 5) | (b << 0) | (p << 15);
 
-	palette_set_color_rgb(space.machine(),offset+0x40,pal5bit(r),pal5bit(g),pal5bit(b));
+	m_palette->set_pen_color(offset+0x40,pal5bit(r),pal5bit(g),pal5bit(b));
 
 }
 
@@ -954,11 +965,11 @@ UINT16 sega_32x_device::get_hposition(void)
 	attotime time_elapsed_since_megadriv_scanline_timer;
 	UINT16 value4;
 
-	time_elapsed_since_megadriv_scanline_timer = megadriv_scanline_timer->time_elapsed();
+	time_elapsed_since_megadriv_scanline_timer = machine().device<timer_device>(":md_scan_timer")->time_elapsed();
 
-	if (time_elapsed_since_megadriv_scanline_timer.attoseconds<(ATTOSECONDS_PER_SECOND/m_framerate /megadrive_total_scanlines))
+	if (time_elapsed_since_megadriv_scanline_timer.attoseconds<(ATTOSECONDS_PER_SECOND/m_framerate /m_total_scanlines))
 	{
-		value4 = (UINT16)(MAX_HPOSITION*((double)(time_elapsed_since_megadriv_scanline_timer.attoseconds) / (double)(ATTOSECONDS_PER_SECOND/m_framerate /megadrive_total_scanlines)));
+		value4 = (UINT16)(MAX_HPOSITION*((double)(time_elapsed_since_megadriv_scanline_timer.attoseconds) / (double)(ATTOSECONDS_PER_SECOND/m_framerate /m_total_scanlines)));
 	}
 	else /* in some cases (probably due to rounding errors) we get some stupid results (the odd huge value where the time elapsed is much higher than the scanline time??!).. hopefully by clamping the result to the maximum we limit errors */
 	{
@@ -1006,16 +1017,16 @@ READ16_MEMBER( sega_32x_device::_32x_common_vdp_regs_r )
 			UINT16 hpos = get_hposition();
 			int megadrive_hblank_flag = 0;
 
-			if (megadrive_vblank_flag) retdata |= 0x8000;
+			if (m_32x_vblank_flag) retdata |= 0x8000;
 
 			if (hpos>400) megadrive_hblank_flag = 1;
 			if (hpos>460) megadrive_hblank_flag = 0;
 
 			if (megadrive_hblank_flag) retdata |= 0x4000;
 
-			if (megadrive_vblank_flag) { retdata |= 2; } // framebuffer approval (TODO: condition is unknown at current time)
+			if (m_32x_vblank_flag) { retdata |= 2; } // framebuffer approval (TODO: condition is unknown at current time)
 
-			if (megadrive_hblank_flag && megadrive_vblank_flag) { retdata |= 0x2000; } // palette approval (TODO: active high or low?)
+			if (megadrive_hblank_flag && m_32x_vblank_flag) { retdata |= 0x2000; } // palette approval (TODO: active high or low?)
 
 			return retdata;
 	}
@@ -1027,7 +1038,7 @@ READ16_MEMBER( sega_32x_device::_32x_common_vdp_regs_r )
 void sega_32x_device::_32x_check_framebuffer_swap(bool enabled)
 {
 	// this logic should be correct, but makes things worse?
-	// enabled = (genesis_scanline_counter >= megadrive_irq6_scanline) from megavdp.c
+	// enabled = (genesis_scanline_counter >= megadrive_irq6_scanline) from video/315_5313.c
 	//if (enabled)
 	{
 		m_32x_a1518a_reg = m_32x_fb_swap & 1;
@@ -1558,16 +1569,18 @@ void sega_32x_device::_32x_check_irqs()
 	else m_slave_cpu->set_input_line(SH2_VINT_IRQ_LEVEL,CLEAR_LINE);
 }
 
-void sega_32x_device::_32x_scanline_cb0()
+void sega_32x_device::_32x_interrupt_cb(int scanline, int irq6)
 {
-	m_sh2_master_vint_pending = 1;
-	m_sh2_slave_vint_pending = 1;
-	_32x_check_irqs();
-}
+	if (scanline == irq6)
+	{
+		m_32x_vblank_flag = 1;
+		m_sh2_master_vint_pending = 1;
+		m_sh2_slave_vint_pending = 1;
+		_32x_check_irqs();
+	}
 
+	_32x_check_framebuffer_swap(scanline >= irq6);
 
-void sega_32x_device::_32x_scanline_cb1(int scanline)
-{
 	m_32x_hcount_compare_val++;
 
 	if (m_32x_hcount_compare_val >= m_32x_hcount_reg)
@@ -1576,8 +1589,10 @@ void sega_32x_device::_32x_scanline_cb1(int scanline)
 
 		if (scanline < 224 || m_sh2_hint_in_vbl)
 		{
-			if (m_sh2_master_hint_enable) { m_master_cpu->set_input_line(SH2_HINT_IRQ_LEVEL,ASSERT_LINE); }
-			if (m_sh2_slave_hint_enable) { m_slave_cpu->set_input_line(SH2_HINT_IRQ_LEVEL,ASSERT_LINE); }
+			if (m_sh2_master_hint_enable)
+				m_master_cpu->set_input_line(SH2_HINT_IRQ_LEVEL, ASSERT_LINE);
+			if (m_sh2_slave_hint_enable)
+				m_slave_cpu->set_input_line(SH2_HINT_IRQ_LEVEL, ASSERT_LINE);
 		}
 	}
 }
@@ -1709,44 +1724,21 @@ void sega_32x_device::_32x_render_videobuffer_to_screenbuffer_helper(int scanlin
 	}
 }
 
-int sega_32x_device::_32x_render_videobuffer_to_screenbuffer_lopri(int x, UINT16 &lineptr)
-{
-	int drawn = 0;
-
-	if (m_32x_displaymode != 0)
-	{
-		if (!m_32x_videopriority)
-		{
-			if (!(m_32x_linerender[x] & 0x8000))
-			{
-				lineptr = m_32x_linerender[x] & 0x7fff;
-				drawn = 1;
-			}
-		}
-		else
-		{
-			if (m_32x_linerender[x] & 0x8000)
-			{
-				lineptr = m_32x_linerender[x] & 0x7fff;
-				drawn = 1;
-			}
-		}
-	}
-
-	return drawn;
-}
-
-void sega_32x_device::_32x_render_videobuffer_to_screenbuffer_hipri(int x, UINT16 &lineptr)
+void sega_32x_device::_32x_render_videobuffer_to_screenbuffer(int x, UINT32 priority, UINT16 &lineptr)
 {
 	if (m_32x_displaymode != 0)
 	{
 		if (!m_32x_videopriority)
 		{
+			if (priority && !(m_32x_linerender[x] & 0x8000))
+				lineptr = m_32x_linerender[x] & 0x7fff;
 			if (m_32x_linerender[x] & 0x8000)
 				lineptr = m_32x_linerender[x] & 0x7fff;
 		}
 		else
 		{
+			if (priority && m_32x_linerender[x] & 0x8000)
+				lineptr = m_32x_linerender[x] & 0x7fff;
 			if (!(m_32x_linerender[x] & 0x8000))
 				lineptr = m_32x_linerender[x] & 0x7fff;
 		}
@@ -1908,6 +1900,8 @@ void sega_32x_device::device_reset()
 
 	m_lch_index_w = 0;
 	m_rch_index_w = 0;
+
+	m_total_scanlines = 262;
 
 // moved from init
 

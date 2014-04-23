@@ -443,8 +443,8 @@ space. This mapper uses 32KB sized banks.
 #include "emu.h"
 #include "rendlay.h"
 #include "includes/gb.h"
-#include "machine/gb_rom.h"
-#include "machine/gb_mbc.h"
+#include "bus/gameboy/rom.h"
+#include "bus/gameboy/mbc.h"
 
 
 /* Initial value of the cpu registers (hacks until we get bios dumps) */
@@ -595,7 +595,7 @@ static ADDRESS_MAP_START(gbc_map, AS_PROGRAM, 8, gb_state )
 	AM_RANGE(0xff10, 0xff26) AM_DEVREADWRITE("custom", gameboy_sound_device, sound_r, sound_w)      /* sound controller */
 	AM_RANGE(0xff27, 0xff2f) AM_NOP                     /* unused */
 	AM_RANGE(0xff30, 0xff3f) AM_DEVREADWRITE("custom", gameboy_sound_device, wave_r, wave_w)        /* Wave RAM */
-	AM_RANGE(0xff40, 0xff7f) AM_DEVREAD("lcd", cgb_lcd_device, video_r) AM_WRITE(gbc_io2_w)        /* Other I/O and video controller */
+	AM_RANGE(0xff40, 0xff7f) AM_READWRITE(gbc_io2_r, gbc_io2_w)        /* Other I/O and video controller */
 	AM_RANGE(0xff80, 0xfffe) AM_RAM                     /* high RAM */
 	AM_RANGE(0xffff, 0xffff) AM_READWRITE(gb_ie_r, gb_ie_w)        /* Interrupt enable register */
 ADDRESS_MAP_END
@@ -667,7 +667,7 @@ SLOT_INTERFACE_END
 
 
 
-static const unsigned char palette[] =
+static const unsigned char palette_gb[] =
 {
 	/* Simple black and white palette */
 	/*  0xFF,0xFF,0xFF,
@@ -696,13 +696,13 @@ static const unsigned char palette_megaduck[] = {
 PALETTE_INIT_MEMBER(gb_state, gb)
 {
 	for (int i = 0; i < 4; i++)
-		palette_set_color_rgb(machine(), i, palette[i * 3 + 0], palette[i * 3 + 1], palette[i * 3 + 2]);
+		palette.set_pen_color(i, palette_gb[i * 3 + 0], palette_gb[i * 3 + 1], palette_gb[i * 3 + 2]);
 }
 
 PALETTE_INIT_MEMBER(gb_state, gbp)
 {
 	for (int i = 0; i < 4; i++)
-		palette_set_color_rgb(machine(), i, palette[(i + 4) * 3 + 0], palette[(i + 4) * 3 + 1], palette[(i + 4) * 3 + 2]);
+		palette.set_pen_color(i, palette_gb[(i + 4) * 3 + 0], palette_gb[(i + 4) * 3 + 1], palette_gb[(i + 4) * 3 + 2]);
 }
 
 PALETTE_INIT_MEMBER(gb_state, sgb)
@@ -714,7 +714,7 @@ PALETTE_INIT_MEMBER(gb_state, sgb)
 		r = (i & 0x1F) << 3;
 		g = ((i >> 5) & 0x1F) << 3;
 		b = ((i >> 10) & 0x1F) << 3;
-		palette_set_color_rgb(machine(), i, r, g, b);
+		palette.set_pen_color(i, r, g, b);
 	}
 }
 
@@ -727,14 +727,14 @@ PALETTE_INIT_MEMBER(gb_state, gbc)
 		r = (i & 0x1F) << 3;
 		g = ((i >> 5) & 0x1F) << 3;
 		b = ((i >> 10) & 0x1F) << 3;
-		palette_set_color_rgb(machine(), i, r, g, b);
+		palette.set_pen_color(i, r, g, b);
 	}
 }
 
 PALETTE_INIT_MEMBER(megaduck_state, megaduck)
 {
 	for (int i = 0; i < 4; i++)
-		palette_set_color_rgb(machine(), i, palette_megaduck[i * 3 + 0], palette_megaduck[i * 3 + 1], palette_megaduck[i * 3 + 2]);
+		palette.set_pen_color(i, palette_megaduck[i * 3 + 0], palette_megaduck[i * 3 + 1], palette_megaduck[i * 3 + 2]);
 }
 
 
@@ -755,14 +755,16 @@ static MACHINE_CONFIG_START( gameboy, gb_state )
 	MCFG_SCREEN_REFRESH_RATE(DMG_FRAMES_PER_SECOND)
 	MCFG_SCREEN_VBLANK_TIME(0)
 	MCFG_SCREEN_UPDATE_DEVICE("lcd", gb_lcd_device, screen_update)
+	MCFG_SCREEN_PALETTE("palette")
+
 	MCFG_DEFAULT_LAYOUT(layout_lcd)
 //  MCFG_SCREEN_SIZE(20*8, 18*8)
 	MCFG_SCREEN_SIZE( 458, 154 )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 20*8-1, 0*8, 18*8-1)
 
-	MCFG_GFXDECODE(gb)
-	MCFG_PALETTE_LENGTH(4)
-	MCFG_PALETTE_INIT_OVERRIDE(gb_state,gb)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gb)
+	MCFG_PALETTE_ADD("palette", 4)
+	MCFG_PALETTE_INIT_OWNER(gb_state,gb)
 
 	MCFG_GB_LCD_DMG_ADD( "lcd" )
 
@@ -795,8 +797,10 @@ static MACHINE_CONFIG_DERIVED( supergb, gameboy )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_SIZE(32*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(gb_state,sgb)
+
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(32768)
+	MCFG_PALETTE_INIT_OWNER(gb_state,sgb)
 
 	MCFG_DEVICE_REMOVE("lcd")
 	MCFG_GB_LCD_SGB_ADD( "lcd" )
@@ -810,7 +814,9 @@ static MACHINE_CONFIG_DERIVED( gbpocket, gameboy )
 
 	MCFG_MACHINE_START_OVERRIDE(gb_state, gbpocket)
 	MCFG_MACHINE_RESET_OVERRIDE(gb_state, gbpocket)
-	MCFG_PALETTE_INIT_OVERRIDE(gb_state,gbp)
+
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_INIT_OWNER(gb_state,gbp)
 
 	MCFG_DEVICE_REMOVE("lcd")
 	MCFG_GB_LCD_MGB_ADD( "lcd" )
@@ -824,8 +830,9 @@ static MACHINE_CONFIG_DERIVED( gbcolor, gameboy )
 	MCFG_MACHINE_START_OVERRIDE(gb_state,gbc)
 	MCFG_MACHINE_RESET_OVERRIDE(gb_state,gbc)
 
-	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT_OVERRIDE(gb_state,gbc)
+	MCFG_PALETTE_MODIFY("palette")
+	MCFG_PALETTE_ENTRIES(32768)
+	MCFG_PALETTE_INIT_OWNER(gb_state,gbc)
 
 	MCFG_DEVICE_REMOVE("lcd")
 	MCFG_GB_LCD_CGB_ADD( "lcd" )
@@ -852,6 +859,8 @@ static MACHINE_CONFIG_START( megaduck, megaduck_state )
 	MCFG_SCREEN_ADD("screen", LCD)
 	MCFG_SCREEN_REFRESH_RATE(DMG_FRAMES_PER_SECOND)
 	MCFG_SCREEN_VBLANK_TIME(0)
+	MCFG_SCREEN_PALETTE("palette")
+
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_START_OVERRIDE(megaduck_state, megaduck )
@@ -862,9 +871,10 @@ static MACHINE_CONFIG_START( megaduck, megaduck_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 20*8-1, 0*8, 18*8-1)
 
 	MCFG_DEFAULT_LAYOUT(layout_lcd)
-	MCFG_GFXDECODE(gb)
-	MCFG_PALETTE_LENGTH(4)
-	MCFG_PALETTE_INIT_OVERRIDE(megaduck_state,megaduck)
+	MCFG_GFXDECODE_ADD("gfxdecode", "palette", gb)
+
+	MCFG_PALETTE_ADD("palette", 4)
+	MCFG_PALETTE_INIT_OWNER(megaduck_state,megaduck)
 
 	MCFG_GB_LCD_DMG_ADD( "lcd" )
 

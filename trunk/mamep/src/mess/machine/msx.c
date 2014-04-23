@@ -72,7 +72,7 @@ DEVICE_IMAGE_LOAD_MEMBER(msx_state,msx_cart)
 	int size_aligned;
 	UINT8 *mem;
 	int type = -1;
-	const char *extra = NULL;
+	astring extra;
 	char *sramfile;
 	slot_state *st;
 	int id = -1;
@@ -120,11 +120,12 @@ DEVICE_IMAGE_LOAD_MEMBER(msx_state,msx_cart)
 				{ "KONAMI-SCC",         SLOT_KONAMI_SCC },
 				{ "SUPERLODE",          SLOT_SUPERLODERUNNER },
 				{ "MAJUTSUSHI",         SLOT_MAJUTSUSHI },
+				{ "DISK_ROM",           SLOT_DISK_ROM },
 			};
 
 			for (int i = 0; i < ARRAY_LENGTH(mapper_types) && type < 0; i++)
 			{
-				if (!mame_stricmp(mapper, mapper_types[i].mapper_name))
+				if (!core_stricmp(mapper, mapper_types[i].mapper_name))
 					type = mapper_types[i].mapper_type;
 			}
 
@@ -178,21 +179,19 @@ DEVICE_IMAGE_LOAD_MEMBER(msx_state,msx_cart)
 		}
 
 		/* see if msx.crc will tell us more */
-		extra = hashfile_extrainfo(image);
-
-		if (!extra)
+		if (!hashfile_extrainfo(image, extra))
 		{
 			logerror("cart #%d: warning: no information in crc file\n", id);
 			type = -1;
 		}
 		else
-		if ((1 != sscanf(extra, "%d", &type) ) || type < 0 || type > SLOT_LAST_CARTRIDGE_TYPE)
+		if ((1 != sscanf(extra.cstr(), "%d", &type) ) || type < 0 || type > SLOT_LAST_CARTRIDGE_TYPE)
 		{
 			logerror("cart #%d: warning: information in crc file not valid\n", id);
 			type = -1;
 		}
 		else
-			logerror ("cart #%d: info: cart extra info: '%s' = %s\n", id, extra, msx_slot_list[type].name);
+			logerror ("cart #%d: info: cart extra info: '%s' = %s\n", id, extra.cstr(), msx_slot_list[type].name);
 
 		/* if not, attempt autodetection */
 		if (type < 0)
@@ -309,7 +308,7 @@ DEVICE_IMAGE_LOAD_MEMBER(msx_state,msx_cart)
 	memset (st, 0, sizeof (slot_state));
 
 	st->m_type = type;
-	sramfile = auto_alloc_array(machine(), char, strlen (image.filename () + 1));
+	sramfile = auto_alloc_array(machine(), char, strlen (image.filename ()) + 1);
 
 	if (sramfile)
 	{
@@ -520,7 +519,7 @@ DRIVER_INIT_MEMBER(msx_state,msx)
 
 	msx_memory_init();
 
-	z80_set_cycle_tables( m_maincpu, cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex );
+	m_maincpu->z80_set_cycle_tables( cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex );
 }
 
 TIMER_DEVICE_CALLBACK_MEMBER(msx_state::msx2_interrupt)
@@ -621,32 +620,6 @@ WRITE8_MEMBER(msx_state::msx_psg_port_b_w)
 	}
 
 	m_psg_b = data;
-}
-
-WRITE8_MEMBER(msx_state::msx_printer_strobe_w)
-{
-	m_centronics->strobe_w(BIT(data, 1));
-}
-
-WRITE8_MEMBER(msx_state::msx_printer_data_w)
-{
-	if (m_io_dsw->read() & 0x80)
-		/* SIMPL emulation */
-		m_dac->write_signed8(data);
-	else
-		m_centronics->write(space, 0, data);
-}
-
-READ8_MEMBER(msx_state::msx_printer_status_r)
-{
-	UINT8 result = 0xfd;
-
-	if (m_io_dsw->read() & 0x80)
-		return 0xff;
-
-	result |= m_centronics->busy_r() << 1;
-
-	return result;
 }
 
 WRITE8_MEMBER( msx_state::msx_fmpac_w )

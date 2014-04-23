@@ -9,7 +9,7 @@
 
 #include "audio/gb.h"
 #include "cpu/lr35902/lr35902.h"
-#include "machine/gb_slot.h"
+#include "bus/gameboy/gb_slot.h"
 #include "machine/ram.h"
 #include "video/gb_lcd.h"
 
@@ -52,7 +52,8 @@ public:
 		m_region_maincpu(*this, "maincpu"),
 		m_rambank(*this, "cgb_ram"),
 		m_inputs(*this, "INPUTS"),
-		m_ram(*this, RAM_TAG) { }
+		m_ram(*this, RAM_TAG),
+		m_lcd(*this, "lcd") { }
 
 	//gb_state driver_data;
 	UINT8       m_gb_io[0x10];
@@ -124,6 +125,7 @@ protected:
 	optional_memory_bank m_rambank;   // cgb
 	required_ioport m_inputs;
 	optional_device<ram_device> m_ram;
+	required_device<gb_lcd_device> m_lcd;
 
 	void gb_timer_increment();
 	void gb_timer_check_irq();
