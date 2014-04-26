@@ -182,15 +182,15 @@ void ui_menu::reset(ui_menu_reset_options options)
 	visitems = 0;
 	selected = 0;
 	astring backtext;
-	backtext.printf("Return to %s",emulator_info::get_capstartgamenoun());
+	backtext.printf(_("Return to %s"),emulator_info::get_capstartgamenoun());
 
 	// add an item to return
 	if (parent == NULL)
 		item_append(backtext.cstr(), NULL, 0, NULL);
 	else if (parent->is_special_main_menu())
-		item_append("Exit", NULL, 0, NULL);
+		item_append(_("Exit"), NULL, 0, NULL);
 	else
-		item_append("Return to Previous Menu", NULL, 0, NULL);
+		item_append(_("Return to Previous Menu"), NULL, 0, NULL);
 }
 
 

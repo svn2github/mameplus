@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    uilang.c
+    ui/lang.c
 
     Translation language functions for the user interface.
 

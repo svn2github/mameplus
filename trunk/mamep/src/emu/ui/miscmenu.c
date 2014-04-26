@@ -23,6 +23,13 @@
 #include <ctype.h>
 #include "imagedev/cassette.h"
 #include "imagedev/bitbngr.h"
+//#include "rendfont.h" // For convert_command_glyph
+//#ifdef CMD_LIST
+//#include "cmddata.h"
+//#endif /* CMD_LIST */
+//#ifdef USE_SCALE_EFFECTS
+//#include "osdscale.h"
+//#endif /* USE_SCALE_EFFECTS */
 
 
 
@@ -84,7 +91,7 @@ ui_menu_keyboard_mode::ui_menu_keyboard_mode(running_machine &machine, render_co
 void ui_menu_keyboard_mode::populate()
 {
 	bool natural = machine().ui().use_natural_keyboard();
-	item_append("Keyboard Mode:", natural ? "Natural" : "Emulated", natural ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, NULL);
+	item_append(_("Keyboard Mode:"), natural ? _("Natural") : _("Emulated"), natural ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, NULL);
 }
 
 ui_menu_keyboard_mode::~ui_menu_keyboard_mode()
@@ -257,7 +264,7 @@ void ui_menu_slot_devices::populate()
 		item_append(slot->device().tag()+1, option == NULL ? "------" : option->name(), (slot->fixed() || slot_get_length(slot) == 0) ? 0 : (MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW), (void *)slot);
 	}
 	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
-	item_append("Reset",  NULL, 0, NULL);
+	item_append(_("Reset"),  NULL, 0, NULL);
 }
 
 ui_menu_slot_devices::~ui_menu_slot_devices()
@@ -310,12 +317,12 @@ void ui_menu_bios_selection::populate()
 					val = ROM_GETHASHDATA(rom);
 				}
 			}
-			item_append(strcmp(device->tag(),":")==0 ? "driver" : device->tag()+1, val, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)device);
+			item_append(strcmp(device->tag(),":")==0 ? _("driver") : device->tag()+1, val, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)device);
 		}
 	}
 
 	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
-	item_append("Reset",  NULL, 0, NULL);
+	item_append(_("Reset"),  NULL, 0, NULL);
 }
 
 ui_menu_bios_selection::~ui_menu_bios_selection()
@@ -433,14 +440,14 @@ void ui_menu_input_groups::populate()
 	int player;
 
 	/* build up the menu */
-	item_append("User Interface", NULL, 0, (void *)(IPG_UI + 1));
+	item_append(_("User Interface"), NULL, 0, (void *)(IPG_UI + 1));
 	for (player = 0; player < MAX_PLAYERS; player++)
 	{
 		char buffer[40];
-		sprintf(buffer, "Player %d Controls", player + 1);
+		sprintf(buffer, _("Player %d Controls"), player + 1);
 		item_append(buffer, NULL, 0, (void *)(FPTR)(IPG_PLAYER1 + player + 1));
 	}
-	item_append("Other Controls", NULL, 0, (void *)(FPTR)(IPG_OTHER + 1));
+	item_append(_("Other Controls"), NULL, 0, (void *)(FPTR)(IPG_OTHER + 1));
 }
 
 ui_menu_input_groups::~ui_menu_input_groups()
@@ -763,9 +770,9 @@ void ui_menu_input::populate_and_sort(input_item_data *itemlist)
 
 	/* create a mini lookup table for name format based on type */
 	nameformat[INPUT_TYPE_DIGITAL] = "%s";
-	nameformat[INPUT_TYPE_ANALOG] = "%s Analog";
-	nameformat[INPUT_TYPE_ANALOG_INC] = "%s Analog Inc";
-	nameformat[INPUT_TYPE_ANALOG_DEC] = "%s Analog Dec";
+	nameformat[INPUT_TYPE_ANALOG] = _("%s Analog");
+	nameformat[INPUT_TYPE_ANALOG_INC] = _("%s Analog Inc");
+	nameformat[INPUT_TYPE_ANALOG_DEC] = _("%s Analog Dec");
 
 	/* first count the number of items */
 	for (item = itemlist; item != NULL; item = item->next)
@@ -787,7 +794,7 @@ void ui_menu_input::populate_and_sort(input_item_data *itemlist)
 		/* generate the name of the item itself, based off the base name and the type */
 		item = itemarray[curitem];
 		assert(nameformat[item->type] != NULL);
-		text.printf(nameformat[item->type], item->name);
+		text.printf(nameformat[item->type], _(item->name));
 
 		/* if we're polling this item, use some spaces with left/right arrows */
 		if (pollingref == item->ref)
@@ -804,7 +811,7 @@ void ui_menu_input::populate_and_sort(input_item_data *itemlist)
 		}
 
 		/* add the item */
-		item_append(text, subtext, flags, item);
+		item_append(_(text), _(subtext), flags, item);
 	}
 }
 
@@ -1214,7 +1221,7 @@ void ui_menu_analog::populate()
 						{
 							default:
 							case ANALOG_ITEM_KEYSPEED:
-								text.printf("%s Digital Speed", field->name());
+								text.printf(_("%s Digital Speed"), _(field->name()));
 								subtext.printf("%d", settings.delta);
 								data->min = 0;
 								data->max = 255;
@@ -1223,7 +1230,7 @@ void ui_menu_analog::populate()
 								break;
 
 							case ANALOG_ITEM_CENTERSPEED:
-								text.printf("%s Autocenter Speed", field->name());
+								text.printf(_("%s Autocenter Speed"), _(field->name()));
 								subtext.printf("%d", settings.centerdelta);
 								data->min = 0;
 								data->max = 255;
@@ -1232,8 +1239,8 @@ void ui_menu_analog::populate()
 								break;
 
 							case ANALOG_ITEM_REVERSE:
-								text.printf("%s Reverse", field->name());
-								subtext.cpy(settings.reverse ? "On" : "Off");
+								text.printf(_("%s Reverse"), _(field->name()));
+								subtext.cpy(settings.reverse ? _("On") : _("Off"));
 								data->min = 0;
 								data->max = 1;
 								data->cur = settings.reverse;
@@ -1241,7 +1248,7 @@ void ui_menu_analog::populate()
 								break;
 
 							case ANALOG_ITEM_SENSITIVITY:
-								text.printf("%s Sensitivity", field->name());
+								text.printf(_("%s Sensitivity"), _(field->name()));
 								subtext.printf("%d", settings.sensitivity);
 								data->min = 1;
 								data->max = 255;
@@ -1309,13 +1316,13 @@ void ui_menu_bookkeeping::populate()
 
 	/* show total time first */
 	if (prevtime.seconds >= 60 * 60)
-		tempstring.catprintf("Uptime: %d:%02d:%02d\n\n", prevtime.seconds / (60*60), (prevtime.seconds / 60) % 60, prevtime.seconds % 60);
+		tempstring.catprintf(_("Uptime: %d:%02d:%02d\n\n"), prevtime.seconds / (60*60), (prevtime.seconds / 60) % 60, prevtime.seconds % 60);
 	else
-		tempstring.catprintf("Uptime: %d:%02d\n\n", (prevtime.seconds / 60) % 60, prevtime.seconds % 60);
+		tempstring.catprintf(_("Uptime: %d:%02d\n\n"), (prevtime.seconds / 60) % 60, prevtime.seconds % 60);
 
 	/* show tickets at the top */
 	if (tickets > 0)
-		tempstring.catprintf("Tickets dispensed: %d\n\n", tickets);
+		tempstring.catprintf(_("Tickets dispensed: %d\n\n"), tickets);
 
 	/* loop over coin counters */
 	for (ctrnum = 0; ctrnum < COIN_COUNTERS; ctrnum++)
@@ -1323,17 +1330,17 @@ void ui_menu_bookkeeping::populate()
 		int count = coin_counter_get_count(machine(), ctrnum);
 
 		/* display the coin counter number */
-		tempstring.catprintf("Coin %c: ", ctrnum + 'A');
+		tempstring.catprintf(_("Coin %c: "), ctrnum + 'A');
 
 		/* display how many coins */
 		if (count == 0)
-			tempstring.cat("NA");
+			tempstring.cat(_("NA"));
 		else
 			tempstring.catprintf("%d", count);
 
 		/* display whether or not we are locked out */
 		if (coin_lockout_get_state(machine(), ctrnum))
-			tempstring.cat(" (locked)");
+			tempstring.cat(_(" (locked)"));
 		tempstring.cat("\n");
 	}
 
@@ -1426,7 +1433,7 @@ void ui_menu_cheat::handle()
 				case IPT_UI_DOWN:
 					string = curcheat->comment();
 					if (string != NULL && string[0] != 0)
-						popmessage("Cheat Comment:\n%s", string);
+						popmessage(_("Cheat Comment:\n%s"), string);
 					break;
 			}
 		}
@@ -1439,7 +1446,7 @@ void ui_menu_cheat::handle()
 
 			/* display the reloaded cheats */
 			reset(UI_MENU_RESET_REMEMBER_REF);
-			popmessage("All cheats reloaded");
+			popmessage(_("All cheats reloaded"));
 		}
 
 		/* if things changed, update */
@@ -1473,10 +1480,10 @@ void ui_menu_cheat::populate()
 	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
 
 	/* add a reset all option */
-	item_append("Reset All", NULL, 0, (void *)1);
+	item_append(_("Reset All"), NULL, 0, (void *)1);
 
 	/* add a reload all cheats option */
-	item_append("Reload All", NULL, 0, (void *)2);
+	item_append(_("Reload All"), NULL, 0, (void *)2);
 }
 
 ui_menu_cheat::~ui_menu_cheat()
@@ -1967,6 +1974,8 @@ void ui_menu_video_options::populate()
 	/* add items for each view */
 	for (viewnum = 0; ; viewnum++)
 	{
+		// mamep: return the localized name of the indexed view
+		//const char *name = target->translated_view_name(viewnum);
 		const char *name = target->view_name(viewnum);
 		if (name == NULL)
 			break;
@@ -1982,36 +1991,36 @@ void ui_menu_video_options::populate()
 	/* add a rotate item */
 	switch (target->orientation())
 	{
-		case ROT0:      subtext = "None";                   break;
-		case ROT90:     subtext = "CW 90" UTF8_DEGREES;     break;
-		case ROT180:    subtext = "180" UTF8_DEGREES;       break;
-		case ROT270:    subtext = "CCW 90" UTF8_DEGREES;    break;
+		case ROT0:      subtext = _("None");                   break;
+		case ROT90:     subtext = _("CW 90" UTF8_DEGREES);     break;
+		case ROT180:    subtext = _("180" UTF8_DEGREES);       break;
+		case ROT270:    subtext = _("CCW 90" UTF8_DEGREES);    break;
 	}
-	item_append("Rotate", subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_ROTATE);
+	item_append(_("Rotate"), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_ROTATE);
 
 	/* backdrop item */
 	enabled = target->backdrops_enabled();
-	item_append("Backdrops", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_BACKDROPS);
+	item_append(_("Backdrops"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_BACKDROPS);
 
 	/* overlay item */
 	enabled = target->overlays_enabled();
-	item_append("Overlays", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_OVERLAYS);
+	item_append(_("Overlays"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_OVERLAYS);
 
 	/* bezel item */
 	enabled = target->bezels_enabled();
-	item_append("Bezels", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_BEZELS);
+	item_append(_("Bezels"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_BEZELS);
 
 	/* cpanel item */
 	enabled = target->cpanels_enabled();
-	item_append("CPanels", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_CPANELS);
+	item_append(_("CPanels"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_CPANELS);
 
 	/* marquee item */
 	enabled = target->marquees_enabled();
-	item_append("Marquees", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_MARQUEES);
+	item_append(_("Marquees"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_MARQUEES);
 
 	/* cropping */
 	enabled = target->zoom_to_screen();
-	item_append("View", enabled ? "Cropped" : "Full", enabled ? MENU_FLAG_RIGHT_ARROW : MENU_FLAG_LEFT_ARROW, (void *)VIDEO_ITEM_ZOOM);
+	item_append(_("View"), enabled ? _("Cropped") : _("Full"), enabled ? MENU_FLAG_RIGHT_ARROW : MENU_FLAG_LEFT_ARROW, (void *)VIDEO_ITEM_ZOOM);
 }
 
 ui_menu_video_options::~ui_menu_video_options()
@@ -2166,8 +2175,8 @@ void ui_menu_crosshair::populate()
 				flags |= MENU_FLAG_RIGHT_ARROW;
 
 			/* add CROSSHAIR_ITEM_VIS menu */
-			sprintf(temp_text, "P%d Visibility", player + 1);
-			item_append(temp_text, vis_text[settings.mode], flags, data);
+			sprintf(temp_text, _("P%d Visibility"), player + 1);
+			item_append(temp_text, _(vis_text[settings.mode]), flags, data);
 
 			/* CROSSHAIR_ITEM_PIC - allocate a data item and fill it */
 			data = (crosshair_item_data *)m_pool_alloc(sizeof(*data));
@@ -2243,8 +2252,8 @@ void ui_menu_crosshair::populate()
 				flags |= MENU_FLAG_LEFT_ARROW;
 
 			/* add CROSSHAIR_ITEM_PIC menu */
-			sprintf(temp_text, "P%d Crosshair", player + 1);
-			item_append(temp_text, using_default ? "DEFAULT" : settings.name, flags, data);
+			sprintf(temp_text, _("P%d Crosshair"), player + 1);
+			item_append(temp_text, using_default ? _("DEFAULT") : settings.name, flags, data);
 		}
 	}
 	if (use_auto)
@@ -2268,7 +2277,7 @@ void ui_menu_crosshair::populate()
 
 		/* add CROSSHAIR_ITEM_AUTO_TIME menu */
 		sprintf(temp_text, "%d", settings.auto_time);
-		item_append("Visible Delay", temp_text, flags, data);
+		item_append(_("Visible Delay"), temp_text, flags, data);
 	}
 //  else
 //      /* leave a blank filler line when not in auto time so size does not rescale */

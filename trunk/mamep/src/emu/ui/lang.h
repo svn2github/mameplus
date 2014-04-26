@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    uilang.h
+    ui/lang.h
 
     Translation language functions for the user interface.
 

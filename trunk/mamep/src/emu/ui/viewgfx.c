@@ -1089,9 +1089,9 @@ static void tilemap_handle_keys(running_machine &machine, ui_gfx_state &state, i
 		state.tilemap.zoom--;
 		state.bitmap_dirty = true;
 		if (state.tilemap.zoom != 0)
-			popmessage("Zoom = %d", state.tilemap.zoom);
+			popmessage(_("Zoom = %d"), state.tilemap.zoom);
 		else
-			popmessage("Zoom Auto");
+			popmessage(_("Zoom Auto"));
 	}
 	if (ui_input_pressed(machine, IPT_UI_ZOOM_IN) && state.tilemap.zoom < 8)
 	{

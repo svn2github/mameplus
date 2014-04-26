@@ -638,7 +638,7 @@ COBJFLAGS += \
 # warnings only applicable to C++ compiles
 CPPONLYFLAGS += \
 	-Woverloaded-virtual
-	
+
 include $(SRC)/build/cc_detection.mak
 
 ifdef SANITIZE

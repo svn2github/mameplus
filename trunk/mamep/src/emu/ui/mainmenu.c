@@ -51,42 +51,48 @@ void ui_menu_main::populate()
 	astring menu_text;
 
 	/* add input menu items */
-	item_append("Input (general)", NULL, 0, (void *)INPUT_GROUPS);
+	item_append(_("Input (general)"), NULL, 0, (void *)INPUT_GROUPS);
 
-	menu_text.printf("Input (this %s)",emulator_info::get_capstartgamenoun());
+	menu_text.printf(_("Input (this %s)"),emulator_info::get_capstartgamenoun());
 	item_append(menu_text.cstr(), NULL, 0, (void *)INPUT_SPECIFIC);
+#ifdef USE_AUTOFIRE
+//	item_append(_("Autofire Setting"), NULL, 0, (void *)AUTOFIRE);
+#endif /* USE_AUTOFIRE */
+#ifdef USE_CUSTOM_BUTTON
+//	item_append(_("Custom Buttons"), NULL, 0, (void *)CUSTOM_BUTTON);
+#endif /* USE_CUSTOM_BUTTON */
 
 	/* add optional input-related menus */
 	if (machine().ioport().has_analog())
-		item_append("Analog Controls", NULL, 0, (void *)ANALOG);
+		item_append(_("Analog Controls"), NULL, 0, (void *)ANALOG);
 	if (machine().ioport().has_dips())
-		item_append("Dip Switches", NULL, 0, (void *)SETTINGS_DIP_SWITCHES);
+		item_append(_("Dip Switches"), NULL, 0, (void *)SETTINGS_DIP_SWITCHES);
 	if (machine().ioport().has_configs())
 	{
-		menu_text.printf("%s Configuration",emulator_info::get_capstartgamenoun());
+		menu_text.printf(_("%s Configuration"),emulator_info::get_capstartgamenoun());
 		item_append(menu_text.cstr(), NULL, 0, (void *)SETTINGS_DRIVER_CONFIG);
 	}
 
 	/* add bookkeeping menu */
-	item_append("Bookkeeping Info", NULL, 0, (void *)BOOKKEEPING);
+	item_append(_("Bookkeeping Info"), NULL, 0, (void *)BOOKKEEPING);
 
 	/* add game info menu */
-	menu_text.printf("%s Information",emulator_info::get_capstartgamenoun());
+	menu_text.printf(_("%s Information"),emulator_info::get_capstartgamenoun());
 	item_append(menu_text.cstr(), NULL, 0, (void *)GAME_INFO);
 
 	image_interface_iterator imgiter(machine().root_device());
 	if (imgiter.first() != NULL)
 	{
 		/* add image info menu */
-		item_append("Image Information", NULL, 0, (void *)IMAGE_MENU_IMAGE_INFO);
+		item_append(_("Image Information"), NULL, 0, (void *)IMAGE_MENU_IMAGE_INFO);
 
 		/* add file manager menu */
-		item_append("File Manager", NULL, 0, (void *)IMAGE_MENU_FILE_MANAGER);
+		item_append(_("File Manager"), NULL, 0, (void *)IMAGE_MENU_FILE_MANAGER);
 
 		/* add tape control menu */
 		cassette_device_iterator cassiter(machine().root_device());
 		if (cassiter.first() != NULL)
-			item_append("Tape Control", NULL, 0, (void *)MESS_MENU_TAPE_CONTROL);
+			item_append(_("Tape Control"), NULL, 0, (void *)MESS_MENU_TAPE_CONTROL);
 
 		/* add bitbanger control menu */
 		bitbanger_device_iterator bititer(machine().root_device());
@@ -95,53 +101,63 @@ void ui_menu_main::populate()
 	}
 
 	if (machine().ioport().has_bioses())
-		item_append("Bios Selection", NULL, 0, (void *)BIOS_SELECTION);
+		item_append(_("Bios Selection"), NULL, 0, (void *)BIOS_SELECTION);
 
 	slot_interface_iterator slotiter(machine().root_device());
 	if (slotiter.first() != NULL)
 	{
 		/* add slot info menu */
-		item_append("Slot Devices", NULL, 0, (void *)SLOT_DEVICES);
+		item_append(_("Slot Devices"), NULL, 0, (void *)SLOT_DEVICES);
 	}
 
 	barcode_reader_device_iterator bcriter(machine().root_device());
 	if (bcriter.first() != NULL)
 	{
 		/* add slot info menu */
-		item_append("Barcode Reader", NULL, 0, (void *)BARCODE_READ);
+		item_append(_("Barcode Reader"), NULL, 0, (void *)BARCODE_READ);
 	}
 
 	network_interface_iterator netiter(machine().root_device());
 	if (netiter.first() != NULL)
 	{
 		/* add image info menu */
-		item_append("Network Devices", NULL, 0, (void*)NETWORK_DEVICES);
+		item_append(_("Network Devices"), NULL, 0, (void*)NETWORK_DEVICES);
 	}
 
 	/* add keyboard mode menu */
 	if (machine().ioport().has_keyboard() && machine().ioport().natkeyboard().can_post())
-		item_append("Keyboard Mode", NULL, 0, (void *)KEYBOARD_MODE);
+		item_append(_("Keyboard Mode"), NULL, 0, (void *)KEYBOARD_MODE);
 
 	/* add sliders menu */
-	item_append("Slider Controls", NULL, 0, (void *)SLIDERS);
+	item_append(_("Slider Controls"), NULL, 0, (void *)SLIDERS);
 
 	/* add video options menu */
-	item_append("Video Options", NULL, 0, (machine().render().target_by_index(1) != NULL) ? (void *)VIDEO_TARGETS : (void *)VIDEO_OPTIONS);
+	item_append(_("Video Options"), NULL, 0, (machine().render().target_by_index(1) != NULL) ? (void *)VIDEO_TARGETS : (void *)VIDEO_OPTIONS);
+
+#ifdef USE_SCALE_EFFECTS
+	/* add image enhancement menu */
+	item_append(_("Image Enhancement"), NULL, 0, (void *)SCALE_EFFECT);
+#endif /* USE_SCALE_EFFECTS */
 
 	/* add crosshair options menu */
 	if (crosshair_get_usage(machine()))
-		item_append("Crosshair Options", NULL, 0, (void *)CROSSHAIR);
+		item_append(_("Crosshair Options"), NULL, 0, (void *)CROSSHAIR);
 
 	/* add cheat menu */
 	if (machine().options().cheat() && machine().cheat().first() != NULL)
-		item_append("Cheat", NULL, 0, (void *)CHEAT);
+		item_append(_("Cheat"), NULL, 0, (void *)CHEAT);
+
+#ifdef CMD_LIST
+	/* add command list menu */
+//	item_append(_("Show Command List"), NULL, 0, (void *)COMMAND);
+#endif /* CMD_LIST */
 
 	/* add memory card menu */
 	if (machine().config().m_memcard_handler != NULL)
 		item_append("Memory Card", NULL, 0, (void *)MEMORY_CARD);
 
 	/* add reset and exit menus */
-	menu_text.printf("Select New %s",emulator_info::get_capstartgamenoun());
+	menu_text.printf(_("Select New %s"),emulator_info::get_capstartgamenoun());
 	item_append(menu_text.cstr(), NULL, 0, (void *)SELECT_GAME);
 }
 
@@ -167,6 +183,18 @@ void ui_menu_main::handle()
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_input_specific(machine(), container)));
 			break;
 
+#ifdef USE_AUTOFIRE
+//		case AUTOFIRE:
+//			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_autofire(machine(), container)));
+//			break;
+
+#endif /* USE_AUTOFIRE */
+#ifdef USE_CUSTOM_BUTTON
+//		case CUSTOM_BUTTON:
+//			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_custom_button(machine(), container)));
+//			break;
+
+#endif /* USE_CUSTOM_BUTTON */
 		case SETTINGS_DIP_SWITCHES:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_settings_dip_switches(machine(), container)));
 			break;
@@ -227,6 +255,12 @@ void ui_menu_main::handle()
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_video_options(machine(), container, machine().render().first_target())));
 			break;
 
+#ifdef USE_SCALE_EFFECTS
+		case SCALE_EFFECT:
+			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_scale_effect(machine(), container)));
+			break;
+#endif /* USE_SCALE_EFFECTS */
+
 		case CROSSHAIR:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_crosshair(machine(), container)));
 			break;
@@ -234,6 +268,12 @@ void ui_menu_main::handle()
 		case CHEAT:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_cheat(machine(), container)));
 			break;
+
+#ifdef CMD_LIST
+//		case COMMAND:
+//			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command(machine(), container)));
+//			break;
+#endif /* CMD_LIST */
 
 		case MEMORY_CARD:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_memory_card(machine(), container)));

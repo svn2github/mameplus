@@ -128,8 +128,8 @@ void ui_menu_select_game::handle()
 	// if we're in an error state, overlay an error message
 	if (m_error)
 		machine().ui().draw_text_box(container,
-							"The selected game is missing one or more required ROM or CHD images. "
-							"Please select a different game.\n\nPress any key to continue.",
+							_("The selected game is missing one or more required ROM or CHD images. "
+							"Please select a different game.\n\nPress any key to continue."),
 							JUSTIFY_CENTER, 0.5f, 0.5f, UI_RED_COLOR);
 }
 
@@ -231,9 +231,9 @@ void ui_menu_select_game::populate()
 	if (matchcount == 0)
 	{
 		astring txt;
-		txt.printf("No %s found. Please check the rompath specified in the %s.ini file.\n\n"
+		txt.printf(_("No %s found. Please check the rompath specified in the %s.ini file.\n\n"
 					"If this is your first time using %s, please see the config.txt file in "
-					"the docs directory for information on configuring %s.",
+					"the docs directory for information on configuring %s."),
 					emulator_info::get_gamesnoun(),
 					emulator_info::get_configname(),
 					emulator_info::get_appname(),emulator_info::get_appname() );
@@ -262,7 +262,7 @@ void ui_menu_select_game::populate()
 	if (ui_menu::stack_has_special_main_menu())
 	{
 		item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
-		item_append("Configure General Inputs", NULL, 0, (void *)1);
+		item_append(_("Configure General Inputs"), NULL, 0, (void *)1);
 	}
 
 	// configure the custom rendering
@@ -288,7 +288,7 @@ void ui_menu_select_game::custom_render(void *selectedref, float top, float bott
 	if (m_search[0] != 0)
 		tempbuf[0].printf("Type name or select: %s_", m_search);
 	else
-		tempbuf[0].printf("Type name or select: (random)");
+		tempbuf[0].printf(_("Type name or select: (random)"));
 
 	// get the size of the text
 	machine().ui().draw_text_full(container, tempbuf[0], 0.0f, 0.0f, 1.0f, JUSTIFY_CENTER, WRAP_TRUNCATE,
@@ -322,9 +322,11 @@ void ui_menu_select_game::custom_render(void *selectedref, float top, float bott
 		const char *gfxstat, *soundstat;
 
 		// first line is game name
+		//tempbuf[0].printf("%-.100s", _LST(driver->description));
 		tempbuf[0].printf("%-.100s", driver->description);
 
 		// next line is year, manufacturer
+		//tempbuf[1].printf("%s, %-.100s", driver->year, _MANUFACT(driver->manufacturer));
 		tempbuf[1].printf("%s, %-.100s", driver->year, driver->manufacturer);
 
 		// next line source path
@@ -332,26 +334,26 @@ void ui_menu_select_game::custom_render(void *selectedref, float top, float bott
 
 		// next line is overall driver status
 		if (driver->flags & GAME_NOT_WORKING)
-			tempbuf[3].cpy("Overall: NOT WORKING");
+			tempbuf[3].cpy(_("Overall: NOT WORKING"));
 		else if (driver->flags & GAME_UNEMULATED_PROTECTION)
-			tempbuf[3].cpy("Overall: Unemulated Protection");
+			tempbuf[3].cpy(_("Overall: Unemulated Protection"));
 		else
-			tempbuf[3].cpy("Overall: Working");
+			tempbuf[3].cpy(_("Overall: Working"));
 
 		// next line is graphics, sound status
 		if (driver->flags & (GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS))
-			gfxstat = "Imperfect";
+			gfxstat = _("Imperfect");
 		else
-			gfxstat = "OK";
+			gfxstat = _("OK");
 
 		if (driver->flags & GAME_NO_SOUND)
-			soundstat = "Unimplemented";
+			soundstat = _("Unimplemented");
 		else if (driver->flags & GAME_IMPERFECT_SOUND)
-			soundstat = "Imperfect";
+			soundstat = _("Imperfect");
 		else
-			soundstat = "OK";
+			soundstat = _("OK");
 
-		tempbuf[4].printf("Gfx: %s, Sound: %s", gfxstat, soundstat);
+		tempbuf[4].printf(_("Gfx: %s, Sound: %s"), gfxstat, soundstat);
 	}
 	else
 	{

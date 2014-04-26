@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    uipal.h
+    ui/pal.h
 
     Palette functions for the user interface.
 

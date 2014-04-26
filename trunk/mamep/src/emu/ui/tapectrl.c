@@ -95,7 +95,7 @@ void ui_menu_mess_tape_control::populate()
 		state = current_device()->get_state();
 		item_append(
 			(state & CASSETTE_MASK_UISTATE) == CASSETTE_STOPPED
-				?   "stopped"
+				?   _("stopped")
 				:   ((state & CASSETTE_MASK_UISTATE) == CASSETTE_PLAY
 					? ((state & CASSETTE_MASK_MOTOR) == CASSETTE_MOTOR_ENABLED ? "playing" : "(playing)")
 					: ((state & CASSETTE_MASK_MOTOR) == CASSETTE_MOTOR_ENABLED ? "recording" : "(recording)")
@@ -105,24 +105,24 @@ void ui_menu_mess_tape_control::populate()
 			TAPECMD_SLIDER);
 
 		// pause or stop
-		item_append("Pause/Stop", NULL, 0, TAPECMD_STOP);
+		item_append(_("Pause/Stop"), NULL, 0, TAPECMD_STOP);
 
 		// play
-		item_append("Play", NULL, 0, TAPECMD_PLAY);
+		item_append(_("Play"), NULL, 0, TAPECMD_PLAY);
 
 		// record
-		item_append("Record", NULL, 0, TAPECMD_RECORD);
+		item_append(_("Record"), NULL, 0, TAPECMD_RECORD);
 
 		// rewind
-		item_append("Rewind", NULL, 0, TAPECMD_REWIND);
+		item_append(_("Rewind"), NULL, 0, TAPECMD_REWIND);
 
 		// fast forward
-		item_append("Fast Forward", NULL, 0, TAPECMD_FAST_FORWARD);
+		item_append(_("Fast Forward"), NULL, 0, TAPECMD_FAST_FORWARD);
 	}
 	else
 	{
 		// no tape loaded
-		item_append("No Tape Image loaded", NULL, flags, NULL);
+		item_append(_("No Tape Image loaded"), NULL, flags, NULL);
 	}
 }
 

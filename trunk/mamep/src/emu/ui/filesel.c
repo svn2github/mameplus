@@ -161,10 +161,10 @@ ui_menu_confirm_save_as::~ui_menu_confirm_save_as()
 
 void ui_menu_confirm_save_as::populate()
 {
-	item_append("File Already Exists - Override?", NULL, MENU_FLAG_DISABLE, NULL);
+	item_append(_("File Already Exists - Override?"), NULL, MENU_FLAG_DISABLE, NULL);
 	item_append(MENU_SEPARATOR_ITEM, NULL, MENU_FLAG_DISABLE, NULL);
-	item_append("No", NULL, 0, ITEMREF_NO);
-	item_append("Yes", NULL, 0, ITEMREF_YES);
+	item_append(_("No"), NULL, 0, ITEMREF_NO);
+	item_append(_("Yes"), NULL, 0, ITEMREF_YES);
 }
 
 //-------------------------------------------------
@@ -270,19 +270,19 @@ void ui_menu_file_create::populate()
 	{
 		new_image_name = m_filename_buffer;
 	}
-	item_append("New Image Name:", new_image_name, 0, ITEMREF_NEW_IMAGE_NAME);
+	item_append(_("New Image Name:"), new_image_name, 0, ITEMREF_NEW_IMAGE_NAME);
 
 	// do we support multiple formats?
 	format = m_image->formatlist();
 	if (ENABLE_FORMATS && (format != NULL))
 	{
-		item_append("Image Format:", m_current_format->description(), 0, ITEMREF_FORMAT);
+		item_append(_("Image Format:"), m_current_format->description(), 0, ITEMREF_FORMAT);
 		m_current_format = format;
 	}
 
 	// finish up the menu
 	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
-	item_append("Create", NULL, 0, ITEMREF_CREATE);
+	item_append(_("Create"), NULL, 0, ITEMREF_CREATE);
 
 	customtop = machine().ui().get_line_height() + 3.0f * UI_BOX_TB_BORDER;
 }
@@ -795,7 +795,7 @@ ui_menu_select_format::~ui_menu_select_format()
 
 void ui_menu_select_format::populate()
 {
-	item_append("Select image format", NULL, MENU_FLAG_DISABLE, NULL);
+	item_append(_("Select image format"), NULL, MENU_FLAG_DISABLE, NULL);
 	for (int i = 0; i < m_total_usable; i++)
 	{
 		const floppy_image_format_t *fmt = m_formats[i];
@@ -855,12 +855,12 @@ ui_menu_select_rw::~ui_menu_select_rw()
 
 void ui_menu_select_rw::populate()
 {
-	item_append("Select access mode", NULL, MENU_FLAG_DISABLE, NULL);
-	item_append("Read-only", 0, 0, (void *)READONLY);
-	if (m_can_in_place)
-		item_append("Read-write", 0, 0, (void *)READWRITE);
-	item_append("Read this image, write to another image", 0, 0, (void *)WRITE_OTHER);
-	item_append("Read this image, write to diff", 0, 0, (void *)WRITE_DIFF);
+	item_append(_("Select access mode"), NULL, MENU_FLAG_DISABLE, NULL);
+	item_append(_("Read-only"), 0, 0, (void *)READONLY);
+	if(m_can_in_place)
+		item_append(_("Read-write"), 0, 0, (void *)READWRITE);
+	item_append(_("Read this image, write to another image"), 0, 0, (void *)WRITE_OTHER);
+	item_append(_("Read this image, write to diff"), 0, 0, (void *)WRITE_DIFF);
 }
 
 
