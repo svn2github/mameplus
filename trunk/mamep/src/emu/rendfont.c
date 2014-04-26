@@ -136,18 +136,18 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 //mamep: allocate command glyph font
 void render_font::render_font_command_glyph()
 {
-	emu_file *ramfile = auto_alloc(m_manager.machine(), emu_file(OPEN_FLAG_READ));
+	return;
+	emu_file ramfile(OPEN_FLAG_READ);
 	file_error filerr;
 
 	if (m_height >= 14)
-		filerr = ramfile->open_ram(font_uicmd14, sizeof(font_uicmd14));
+		filerr = ramfile.open_ram(font_uicmd14, sizeof(font_uicmd14));
 	else
-		filerr = ramfile->open_ram(font_uicmd11, sizeof(font_uicmd11));
+		filerr = ramfile.open_ram(font_uicmd11, sizeof(font_uicmd11));
 
 	if (filerr == FILERR_NONE)
 	{
-		load_cached_cmd(*ramfile, 0);
-		auto_free(m_manager.machine(), ramfile);
+		load_cached_cmd(ramfile, 0);
 	}
 }
 
@@ -165,8 +165,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 		m_rawsize(0),
 		m_osdfont(NULL),
 		m_height_cmd(0),
-		m_yoffs_cmd(0),
-		m_rawdata_cmd(NULL)
+		m_yoffs_cmd(0)
 {
 	memset(m_glyphs, 0, sizeof(m_glyphs));
 	memset(m_glyphs_cmd, 0, sizeof(m_glyphs_cmd));
@@ -213,7 +212,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 	}
 
 	// load the raw data instead
-	emu_file *ramfile = auto_alloc(manager.machine(), emu_file(OPEN_FLAG_READ));
+	emu_file ramfile(OPEN_FLAG_READ);
 	file_error filerr;
 	//mamep: embedded CJK font
 	switch (lang_get_langcode())
@@ -222,17 +221,15 @@ render_font::render_font(render_manager &manager, const char *filename)
 	case UI_LANG_ZH_CN:
 	case UI_LANG_ZH_TW:
 	case UI_LANG_KO_KR:
-		filerr = ramfile->open_ram(font_uismall14, sizeof(font_uismall14));
+		filerr = ramfile.open_ram(font_uismall14, sizeof(font_uismall14));
 		break;
 
 	default:
-		filerr = ramfile->open_ram(font_uismall11, sizeof(font_uismall11));
+		filerr = ramfile.open_ram(font_uismall11, sizeof(font_uismall11));
 	}
 
 	if (filerr == FILERR_NONE)
-		load_cached(*ramfile, 0);
-
-	auto_free(manager.machine(), ramfile);
+		load_cached(ramfile, 0);
 
 	//mamep: allocate command glyph font
 	render_font_command_glyph();
@@ -255,17 +252,10 @@ render_font::~render_font()
 
 	//mamep: free command glyph font
 	for (int tablenum = 0; tablenum < 256; tablenum++)
-		if (m_glyphs_cmd[tablenum] != NULL)
+		for (int charnum = 0; charnum < m_glyphs_cmd[tablenum].count(); charnum++)
 		{
-			// loop over characters
-			for (int charnum = 0; charnum < 256; charnum++)
-			{
-				glyph &gl = m_glyphs_cmd[tablenum][charnum];
-				m_manager.texture_free(gl.texture);
-			}
-
-			// free the subtable itself
-			auto_free(m_manager.machine(), m_glyphs_cmd[tablenum]);
+			glyph &gl = m_glyphs_cmd[tablenum][charnum];
+			m_manager.texture_free(gl.texture);
 		}
 
 	// release the OSD font
@@ -821,16 +811,16 @@ bool render_font::load_cached_cmd(emu_file &file, UINT32 hash)
 	m_height_cmd = (header[8] << 8) | header[9];
 //	m_scale = 1.0f / (float)m_height;
 	m_yoffs_cmd = (INT16)((header[10] << 8) | header[11]);
-	int numchars = (header[12] << 24) | (header[13] << 16) | (header[14] << 8) | header[15];
+	UINT32 numchars = (header[12] << 24) | (header[13] << 16) | (header[14] << 8) | header[15];
 	if (filesize - CACHED_HEADER_SIZE < numchars * CACHED_CHAR_SIZE)
 		return false;
 
 	// now read the rest of the data
-	UINT8 *data = auto_alloc_array(m_manager.machine(), UINT8, filesize - CACHED_HEADER_SIZE);
-	bytes_read = file.read(data, filesize - CACHED_HEADER_SIZE);
+	m_rawdata_cmd.resize(filesize - CACHED_HEADER_SIZE);
+	bytes_read = file.read(m_rawdata_cmd, filesize - CACHED_HEADER_SIZE);
 	if (bytes_read != filesize - CACHED_HEADER_SIZE)
 	{
-		auto_free(m_manager.machine(), data);
+		m_rawdata_cmd.reset();
 		return false;
 	}
 
@@ -838,12 +828,12 @@ bool render_font::load_cached_cmd(emu_file &file, UINT32 hash)
 	UINT64 offset = numchars * CACHED_CHAR_SIZE;
 	for (int chindex = 0; chindex < numchars; chindex++)
 	{
-		const UINT8 *info = &data[chindex * CACHED_CHAR_SIZE];
+		const UINT8 *info = reinterpret_cast<UINT8 *>(&m_rawdata_cmd[chindex * CACHED_CHAR_SIZE]);
 		int chnum = (info[0] << 8) | info[1];
 
 		// if we don't have a subtable yet, make one
-		if (m_glyphs_cmd[chnum / 256] == NULL)
-			m_glyphs_cmd[chnum / 256] = auto_alloc_array_clear(m_manager.machine(), glyph, 256);
+		if (m_glyphs_cmd[chnum / 256].count() == 0)
+			m_glyphs_cmd[chnum / 256].resize(256);
 
 		// fill in the entry
 		glyph &gl = m_glyphs_cmd[chnum / 256][chnum % 256];
@@ -857,20 +847,19 @@ bool render_font::load_cached_cmd(emu_file &file, UINT32 hash)
 		gl.yoffs = (INT16)((info[6] << 8) | info[7]);
 		gl.bmwidth = (info[8] << 8) | info[9];
 		gl.bmheight = (info[10] << 8) | info[11];
-		gl.rawdata = (char *)data + offset;
+		gl.rawdata = (char *)m_rawdata_cmd + offset;
 
 		// advance the offset past the character
 		offset += (gl.bmwidth * gl.bmheight + 7) / 8;
 		if (offset > filesize - CACHED_HEADER_SIZE)
 		{
-			auto_free(m_manager.machine(), data);
+			m_rawdata_cmd.reset();
 			return false;
 		}
 	}
 
 	// reuse the chartable as a temporary buffer
 //	m_format = FF_CACHED;
-	m_rawdata_cmd = (char *)data;
 	return true;
 }
 

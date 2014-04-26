@@ -1269,11 +1269,11 @@ void video_manager::toggle_record_movie()
 	if (!is_recording())
 	{
 		begin_recording(NULL, video_manager::MF_MNG);
-		popmessage("REC START");
+		popmessage(_("REC START"));
 	}
 	else
 	{
 		end_recording();
-		popmessage("REC STOP");
+		popmessage(_("REC STOP"));
 	}
 }

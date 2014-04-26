@@ -242,19 +242,23 @@ int main(int argc, char *argv[])
 
 		// start with a header
 		if (!header_outputed)
+		{
 			printf("#include \"emu.h\"\n\n");
 			printf("#include \"drivenum.h\"\n\n");
+			header_outputed = true;
+		}
 
 		// output the list of externs first
-		for (int index = 0; index < drivlist.count(); index++)
-			printf("GAME_EXTERN(%s);\n", drivlist[index]);
+		for (int index = 0; index < extra_drivlist.count(); index++)
+			printf("GAME_EXTERN(%s);\n", extra_drivlist[index]);
 		printf("\n");
 
 		// then output the array
-		printf("const game_driver * const driver_switch::%sdrivers[%d] =\n", filename, extra_drivlist.count());
+		printf("const game_driver * const driver_switch::%sdrivers[%d] =\n", filename, extra_drivlist.count()+1);
 		printf("{\n");
 		for (int index = 0; index < extra_drivlist.count(); index++)
-			printf("\t&GAME_NAME(%s)%s\n", extra_drivlist[index], (index == extra_drivlist.count() - 1) ? "" : ",");
+			printf("\t&GAME_NAME(%s)%s\n", extra_drivlist[index], (index == extra_drivlist.count() - 1) ? "," : ",");
+		printf("0\n");
 		printf("};\n");
 		printf("\n");
 
@@ -277,8 +281,11 @@ int main(int argc, char *argv[])
 
 	// start with a header
 	if (!header_outputed)
+	{
 		printf("#include \"emu.h\"\n\n");
 		printf("#include \"drivenum.h\"\n\n");
+		header_outputed = true;
+	}
 
 	// output the list of externs first
 	for (int index = 0; index < drivlist.count(); index++)

@@ -626,7 +626,7 @@ static void ParseClose(void)
 	if (fp)
 	{
 		fp->close();
-		auto_free(*m_machine, fp);
+		global_free(fp);
 	}
 
 	fp = NULL;
@@ -643,7 +643,7 @@ static UINT8 ParseOpen(const char *pszFilename)
 	ParseClose();
 
 	/* Open file up in binary mode */
-	fp = auto_alloc(*m_machine, emu_file(OPEN_FLAG_READ));
+	fp = global_alloc(emu_file(OPEN_FLAG_READ));
 	filerr = fp->open(pszFilename);
 	if (filerr != FILERR_NONE)
 		return(FALSE);

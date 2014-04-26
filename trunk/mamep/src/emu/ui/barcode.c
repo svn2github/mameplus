@@ -97,7 +97,7 @@ void ui_menu_barcode_code::handle()
 					astring tmp_file(m_barcode_buffer);
 					//printf("code %s\n", m_barcode_buffer);
 					if (!m_reader->is_valid(tmp_file.len()))
-						machine().ui().popup_time(5, "Barcode length invalid!");
+						machine().ui().popup_time(5, _("Barcode length invalid!"));
 					else
 					{
 						m_reader->write_code(tmp_file.cstr(), tmp_file.len());

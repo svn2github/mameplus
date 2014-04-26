@@ -5465,3 +5465,52 @@ writes configuration to (driver).ini on exit
 # emu/clifront.c: 67
 year, manufacturer and full name
 
+
+#
+Barcode length invalid!
+
+
+#
+Please enter a file extension too
+
+
+#
+[empty slot]
+
+
+#
+[create]
+
+
+#
+[software list]
+
+
+#
+[DRIVE]
+
+
+#
+[DIR]
+
+
+#
+[FILE]
+
+
+#
+Error accessing %s
+
+
+#
+Are you sure you want to quit?\n\n
+
+
+#
+Press ''UI Select'' (default: Enter) to quit,\n
+
+
+#
+Press ''UI Cancel'' (default: Esc) to return to emulation.
+
+

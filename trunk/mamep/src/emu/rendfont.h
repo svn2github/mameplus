@@ -102,8 +102,8 @@ private:
 	//mamep: for command glyph
 	int                 m_height_cmd;       // height of the font, from ascent to descent
 	int                 m_yoffs_cmd;        // y offset from baseline to descent
-	glyph *             m_glyphs_cmd[256];  // array of glyph subtables
-	const char *        m_rawdata_cmd;      // pointer to the raw data for the font
+	dynamic_array<glyph> m_glyphs_cmd[256]; // array of glyph subtables
+	dynamic_array<char> m_rawdata_cmd;      // pointer to the raw data for the font
 
 	//mamep: allocate command glyph font
 	void render_font_command_glyph();

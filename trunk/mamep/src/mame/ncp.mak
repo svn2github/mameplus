@@ -77,6 +77,7 @@ MACHINES += TIMEKPR
 MACHINES += SCSI
 MACHINES += V3021
 MACHINES += PD4990A_OLD
+MACHINES += UPD1990A
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -115,6 +116,7 @@ $(MAMEOBJ)/capcom.a: \
 $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
 	$(DRIVERS)/pgm2.o \
+	$(MACHINE)/igs036crypt.o \
 	$(MACHINE)/pgmcrypt.o \
 	$(MACHINE)/pgmprot_orlegend.o \
 	$(MACHINE)/pgmprot_igs027a_type1.o \
@@ -142,14 +144,6 @@ $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 $(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
 
 $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
-
-
-
-#-------------------------------------------------
-# misc dependencies
-#-------------------------------------------------
-
-$(DRIVERS)/neogeo.o:    $(MAMESRC)/drivers/neogeo.inc
 
 #-------------------------------------------------
 # mamep: driver list dependencies

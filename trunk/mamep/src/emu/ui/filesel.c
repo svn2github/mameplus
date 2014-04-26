@@ -313,7 +313,7 @@ void ui_menu_file_create::handle()
 						ui_menu::stack_pop(machine());
 					}
 					else
-						machine().ui().popup_time(1, "Please enter a file extension too");
+						machine().ui().popup_time(1, _("Please enter a file extension too"));
 				}
 				break;
 
@@ -525,7 +525,7 @@ void ui_menu_file_selector::append_entry_menu_item(const file_selector_entry *en
 			subtext = "[FILE]";
 			break;
 	}
-	item_append(text, subtext, 0, (void *) entry);
+	item_append(text, _(subtext), 0, (void *) entry);
 }
 
 
@@ -659,7 +659,7 @@ void ui_menu_file_selector::handle()
 					if (err != FILERR_NONE)
 					{
 						// this path is problematic; present the user with an error and bail
-						machine().ui().popup_time(1, "Error accessing %s", entry->fullpath);
+						machine().ui().popup_time(1, _("Error accessing %s"), entry->fullpath);
 						break;
 					}
 					m_current_directory.cpy(entry->fullpath);

@@ -21,7 +21,17 @@
 #include "ui/mainmenu.h"
 #include "ui/miscmenu.h"
 #include "ui/viewgfx.h"
+#ifdef CMD_LIST
+#include "cmddata.h"
+#endif /* CMD_LIST */
 #include <ctype.h>
+#ifdef USE_SHOW_TIME
+#include <time.h>
+#endif /* USE_SHOW_TIME */
+
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
 
 
 /***************************************************************************
@@ -33,6 +43,14 @@ enum
 	LOADSAVE_NONE,
 	LOADSAVE_LOAD,
 	LOADSAVE_SAVE
+};
+
+//mamep: to render as fixed-width font
+enum
+{
+	CHAR_WIDTH_HALFWIDTH = 0,
+	CHAR_WIDTH_FULLWIDTH,
+	CHAR_WIDTH_UNKNOWN
 };
 
 
@@ -88,6 +106,32 @@ static const input_item_id non_char_keys[] =
     GLOBAL VARIABLES
 ***************************************************************************/
 
+#ifdef UI_COLOR_DISPLAY
+static rgb_t uifont_colortable[MAX_COLORTABLE];
+#endif /* UI_COLOR_DISPLAY */
+static rgb_t ui_bgcolor;
+static render_texture *bgtexture;
+static bitmap_argb32 *bgbitmap;
+
+static int multiline_text_box_visible_lines;
+static int multiline_text_box_target_lines;
+
+//mamep: to render as fixed-width font
+static int draw_text_fixed_mode;
+static int draw_text_scroll_offset;
+
+static int message_window_scroll;
+static int scroll_reset;
+
+#ifdef TRANS_UI
+static int ui_transparency;
+#endif /* TRANS_UI */
+
+#ifdef USE_SHOW_TIME
+static int show_time = 0;
+static int Show_Time_Position;
+#endif /* USE_SHOW_TIME */
+
 // messagebox buffer
 static astring messagebox_text;
 static rgb_t messagebox_backcolor;
@@ -95,6 +139,7 @@ static rgb_t messagebox_backcolor;
 // slider info
 static slider_state *slider_list;
 static slider_state *slider_current;
+
 
 
 /***************************************************************************
@@ -172,11 +217,145 @@ INLINE int is_breakable_char(unicode_char ch)
 	return FALSE;
 }
 
+//mamep: check fullwidth character.
+//mame core does not support surrogate pairs U+10000-U+10FFFF
+INLINE int is_fullwidth_char(unicode_char uchar)
+{
+	switch (uchar)
+	{
+	// Chars in Latin-1 Supplement
+	// font width depends on your font
+	case 0x00a7:
+	case 0x00a8:
+	case 0x00b0:
+	case 0x00b1:
+	case 0x00b4:
+	case 0x00b6:
+	case 0x00d7:
+	case 0x00f7:
+		return CHAR_WIDTH_UNKNOWN;
+	}
+
+	// Greek and Coptic
+	// font width depends on your font
+	if (uchar >= 0x0370 && uchar <= 0x03ff)
+		return CHAR_WIDTH_UNKNOWN;
+
+	// Cyrillic
+	// font width depends on your font
+	if (uchar >= 0x0400 && uchar <= 0x04ff)
+		return CHAR_WIDTH_UNKNOWN;
+
+	if (uchar < 0x1000)
+		return CHAR_WIDTH_HALFWIDTH;
+
+	// Halfwidth CJK Chars
+	if (uchar >= 0xff61 && uchar <= 0xffdc)
+		return CHAR_WIDTH_HALFWIDTH;
+
+	// Halfwidth Symbols Variants
+	if (uchar >= 0xffe8 && uchar <= 0xffee)
+		return CHAR_WIDTH_HALFWIDTH;
+
+	return CHAR_WIDTH_FULLWIDTH;
+}
+
 
 
 /***************************************************************************
     CORE IMPLEMENTATION
 ***************************************************************************/
+#ifdef UI_COLOR_DISPLAY
+/*-------------------------------------------------
+    setup_palette - set up the ui palette
+-------------------------------------------------*/
+
+void ui_manager::setup_palette()
+{
+	static struct
+	{
+		const char *name;
+		int color;
+		UINT8 defval[3];
+	} palette_decode_table[] =
+	{
+		{ OPTION_SYSTEM_BACKGROUND,     SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
+		{ OPTION_CURSOR_SELECTED_TEXT,  CURSOR_SELECTED_TEXT,     { 255,255,255 } },
+		{ OPTION_CURSOR_SELECTED_BG,    CURSOR_SELECTED_BG,       { 60,120,240 } },
+		{ OPTION_CURSOR_HOVER_TEXT,     CURSOR_HOVER_TEXT,        { 120,180,240 } },
+		{ OPTION_CURSOR_HOVER_BG,       CURSOR_HOVER_BG,          { 32,32,0 } },
+		{ OPTION_BUTTON_RED,            BUTTON_COLOR_RED,         { 255,64,64 } },
+		{ OPTION_BUTTON_YELLOW,         BUTTON_COLOR_YELLOW,      { 255,238,0 } },
+		{ OPTION_BUTTON_GREEN,          BUTTON_COLOR_GREEN,       { 0,255,64 } },
+		{ OPTION_BUTTON_BLUE,           BUTTON_COLOR_BLUE,        { 0,170,255 } },
+		{ OPTION_BUTTON_PURPLE,         BUTTON_COLOR_PURPLE,      { 170,0,255 } },
+		{ OPTION_BUTTON_PINK,           BUTTON_COLOR_PINK,        { 255,0,170 } },
+		{ OPTION_BUTTON_AQUA,           BUTTON_COLOR_AQUA,        { 0,255,204 } },
+		{ OPTION_BUTTON_SILVER,         BUTTON_COLOR_SILVER,      { 255,0,255 } },
+		{ OPTION_BUTTON_NAVY,           BUTTON_COLOR_NAVY,        { 255,160,0 } },
+		{ OPTION_BUTTON_LIME,           BUTTON_COLOR_LIME,        { 190,190,190 } },
+		{ NULL }
+	};
+
+	int i;
+
+#ifdef TRANS_UI
+	ui_transparency = 255;
+
+	ui_transparency = machine().options().int_value(OPTION_UI_TRANSPARENCY);
+	if (ui_transparency < 0 || ui_transparency > 255)
+	{
+		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, machine().options().value(OPTION_UI_TRANSPARENCY));
+		ui_transparency = 215;
+	}
+#endif /* TRANS_UI */
+
+	for (i = 0; palette_decode_table[i].name; i++)
+	{
+		const char *value = machine().options().value(palette_decode_table[i].name);
+		int col = palette_decode_table[i].color;
+		int r = palette_decode_table[i].defval[0];
+		int g = palette_decode_table[i].defval[1];
+		int b = palette_decode_table[i].defval[2];
+		int rate;
+
+		if (value)
+		{
+			int pal[3];
+
+			if (sscanf(value, "%d,%d,%d", &pal[0], &pal[1], &pal[2]) != 3 ||
+				pal[0] < 0 || pal[0] >= 256 ||
+				pal[1] < 0 || pal[1] >= 256 ||
+				pal[2] < 0 || pal[2] >= 256 )
+			{
+				mame_printf_error(_("error: invalid value for palette: %s\n"), value);
+				continue;
+			}
+
+			r = pal[0];
+			g = pal[1];
+			b = pal[2];
+		}
+
+		rate = 0xff;
+#ifdef TRANS_UI
+		if (col == UI_BACKGROUND_COLOR)
+			rate = ui_transparency;
+		else
+		if (col == CURSOR_SELECTED_BG)
+		{
+			rate = ui_transparency / 2;
+			if (rate < 128)
+				rate = 128; //cursor should be visible
+		}
+#endif /* TRANS_UI */
+
+		uifont_colortable[col] = rgb_t(rate, r, g, b);
+	}
+}
+#endif /* UI_COLOR_DISPLAY */
+
+
 
 static const UINT32 mouse_bitmap[] = {
 	0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,0x00ffffff,
@@ -221,9 +400,25 @@ static const UINT32 mouse_bitmap[] = {
 ui_manager::ui_manager(running_machine &machine)
 	: m_machine(machine)
 {
+#ifdef UI_COLOR_DISPLAY
+	setup_palette();
+#endif /* UI_COLOR_DISPLAY */
+	build_bgtexture();
+	ui_bgcolor = UI_BACKGROUND_COLOR;
+
 	// initialize the other UI bits
 	ui_menu::init(machine);
 	ui_gfx_init(machine);
+
+#ifdef CMD_LIST
+	datafile_init(machine, &machine.options());
+#endif /* CMD_LIST */
+
+#ifdef USE_SHOW_TIME
+	show_time = 0;
+	Show_Time_Position = 0;
+#endif /* USE_SHOW_TIME */
+
 
 	// reset instance variables
 	m_font = NULL;
@@ -297,6 +492,18 @@ UINT32 ui_manager::set_handler(ui_callback callback, UINT32 param)
 	return param;
 }
 
+#ifdef UI_COLOR_DISPLAY
+rgb_t ui_manager::get_rgb_color(rgb_t color)
+{
+	if (color < MAX_COLORTABLE)
+		return uifont_colortable[color];
+
+	return color;
+}
+#endif /* UI_COLOR_DISPLAY */
+
+
+
 
 //-------------------------------------------------
 //  display_startup_screens - display the
@@ -308,7 +515,7 @@ void ui_manager::display_startup_screens(bool first_time, bool show_disclaimer)
 	const int maxstate = 3;
 	int str = machine().options().seconds_to_run();
 	bool show_gameinfo = !machine().options().skip_gameinfo();
-	bool show_warnings = true;
+	bool show_warnings = !machine().options().skip_gameinfo();
 	int state;
 
 	// disable everything if we are using -str for 300 or fewer seconds, or if we're the empty driver,
@@ -478,6 +685,10 @@ float ui_manager::get_line_height()
 	float one_to_one_line_height;
 	float scale_factor;
 
+	/* mamep: to avoid division by zero */
+	if (target_pixel_height == 0)
+		return 0.0f;
+
 	// compute the font pixel height at the nominal size
 	one_to_one_line_height = (float)raw_font_pixel_height / (float)target_pixel_height;
 
@@ -519,6 +730,31 @@ float ui_manager::get_char_width(unicode_char ch)
 {
 	return get_font()->char_width(get_line_height(), machine().render().ui_aspect(), ch);
 }
+//mamep: to render as fixed-width font
+float ui_manager::get_char_width_no_margin(unicode_char ch)
+{
+	return get_font()->char_width_no_margin(get_line_height(), machine().render().ui_aspect(), ch);
+}
+
+
+float ui_manager::get_char_fixed_width(unicode_char uchar, double halfwidth, double fullwidth)
+{
+	float chwidth;
+
+	switch (is_fullwidth_char(uchar))
+	{
+	case CHAR_WIDTH_HALFWIDTH:
+		return halfwidth;
+
+	case CHAR_WIDTH_UNKNOWN:
+		chwidth = get_char_width_no_margin(uchar);
+		if (chwidth <= halfwidth)
+			return halfwidth;
+	}
+
+	return fullwidth;
+}
+
 
 
 //-------------------------------------------------
@@ -529,6 +765,22 @@ float ui_manager::get_char_width(unicode_char ch)
 float ui_manager::get_string_width(const char *s)
 {
 	return get_font()->utf8string_width(get_line_height(), machine().render().ui_aspect(), s);
+}
+
+
+//-------------------------------------------------
+//  ui_draw_box - add primitives to draw
+//  a box with the given background color
+//-------------------------------------------------
+
+void ui_manager::draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor)
+{
+#ifdef UI_COLOR_DISPLAY
+	if (backcolor == UI_BACKGROUND_COLOR)
+		container->add_quad(x0, y0, x1, y1, rgb_t(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	else
+#endif /* UI_COLOR_DISPLAY */
+		container->add_rect(x0, y0, x1, y1, backcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 
 
@@ -552,7 +804,7 @@ void ui_manager::draw_outlined_box(render_container *container, float x0, float 
 
 void ui_manager::draw_outlined_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t fgcolor, rgb_t bgcolor)
 {
-	container->add_rect(x0, y0, x1, y1, bgcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	draw_box(container, x0, y0, x1, y1, bgcolor);
 	container->add_line(x0, y0, x1, y0, UI_LINE_WIDTH, fgcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	container->add_line(x1, y0, x1, y1, UI_LINE_WIDTH, fgcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	container->add_line(x1, y1, x0, y1, UI_LINE_WIDTH, fgcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
@@ -586,6 +838,56 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 	float cury = y;
 	float maxwidth = 0;
 	float aspect = machine().render().ui_aspect();
+	const char *s_temp;
+	const char *up_arrow = NULL;
+	const char *down_arrow = _("(more)");
+
+	//mamep: control scrolling text
+	int curline = 0;
+
+	//mamep: render as fixed-width font
+	float fontwidth_halfwidth = 0.0f;
+	float fontwidth_fullwidth = 0.0f;
+
+	if (draw_text_fixed_mode)
+	{
+		int scharcount;
+		int len = strlen(origs);
+		int n;
+
+		for (n = 0; len > 0; n += scharcount, len -= scharcount)
+		{
+			unicode_char schar;
+			float scharwidth;
+
+			scharcount = uchar_from_utf8(&schar, &origs[n], len);
+			if (scharcount == -1)
+				break;
+
+			scharwidth = get_char_width_no_margin(schar);
+			if (is_fullwidth_char(schar))
+			{
+				if (fontwidth_fullwidth < scharwidth)
+					fontwidth_fullwidth = scharwidth;
+			}
+			else
+			{
+				if (fontwidth_halfwidth < scharwidth)
+					fontwidth_halfwidth = scharwidth;
+			}
+		}
+
+		if (fontwidth_fullwidth < fontwidth_halfwidth * 2.0f)
+			fontwidth_fullwidth = fontwidth_halfwidth * 2.0f;
+		if (fontwidth_halfwidth < fontwidth_fullwidth / 2.0f)
+			fontwidth_halfwidth = fontwidth_fullwidth / 2.0f;
+	}
+
+	//mamep: check if we are scrolling
+	if (draw_text_scroll_offset)
+		up_arrow = _("(more)");
+	if (draw_text_scroll_offset == multiline_text_box_target_lines - multiline_text_box_visible_lines)
+		down_arrow = NULL;
 
 	// if we don't want wrapping, guarantee a huge wrapwidth
 	if (wrap == WRAP_NEVER)
@@ -633,8 +935,13 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 			if (schar == '\n')
 				break;
 
-			// get the width of this character
-			chwidth = get_font()->char_width(lineheight, aspect, schar);
+			//mamep: render as fixed-width font
+			if (draw_text_fixed_mode)
+				chwidth = get_char_fixed_width(schar, fontwidth_halfwidth, fontwidth_fullwidth);
+			else
+				// get the width of this character
+				chwidth = get_font()->char_width(lineheight, aspect, schar);
+
 
 			// if we hit a space, remember the location and width *without* the space
 			if (schar == ' ')
@@ -678,7 +985,11 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 					if (scharcount == -1)
 						break;
 
-					curwidth -= get_font()->char_width(lineheight, aspect, schar);
+					//mamep: render as fixed-width font
+					if (draw_text_fixed_mode)
+						curwidth -= get_char_fixed_width(schar, fontwidth_halfwidth, fontwidth_fullwidth);
+					else
+						curwidth -= get_font()->char_width(lineheight, aspect, schar);
 				}
 			}
 
@@ -702,6 +1013,24 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 			}
 		}
 
+		//mamep: add scrolling arrow
+		if (draw != DRAW_NONE
+		 && ((curline == 0 && up_arrow)
+		 ||  (curline == multiline_text_box_visible_lines - 1 && down_arrow)))
+		{
+			if (curline == 0)
+				linestart = up_arrow;
+			else
+				linestart = down_arrow;
+
+			curwidth = get_string_width(linestart);
+			ends = linestart + strlen(linestart);
+			s_temp = ends;
+			line_justify = JUSTIFY_CENTER;
+		}
+		else
+			s_temp = s;
+
 		// align according to the justfication
 		if (line_justify == JUSTIFY_CENTER)
 			curx += (origwrapwidth - curwidth) * 0.5f;
@@ -714,10 +1043,10 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 
 		// if opaque, add a black box
 		if (draw == DRAW_OPAQUE)
-			container->add_rect(curx, cury, curx + curwidth, cury + lineheight, bgcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+			draw_box(container, curx, cury, curx + curwidth, cury + lineheight, bgcolor);
 
 		// loop from the line start and add the characters
-		while (linestart < s)
+		while (linestart < s_temp)
 		{
 			// get the current character
 			unicode_char linechar;
@@ -725,10 +1054,23 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 			if (linecharcount == -1)
 				break;
 
-			if (draw != DRAW_NONE)
+			//mamep: consume the offset lines
+			if (draw_text_scroll_offset == 0 && draw != DRAW_NONE)
 			{
-				container->add_char(curx, cury, lineheight, aspect, fgcolor, *get_font(), linechar);
-				curx += get_font()->char_width(lineheight, aspect, linechar);
+				//mamep: render as fixed-width font
+				if (draw_text_fixed_mode)
+				{
+					float width = get_char_fixed_width(linechar, fontwidth_halfwidth, fontwidth_fullwidth);
+					float xmargin = (width - get_char_width(linechar)) / 2.0f;
+
+					container->add_char(curx + xmargin, cury, lineheight, machine().render().ui_aspect(), fgcolor, *get_font(), linechar);
+					curx += width;
+				}
+				else
+				{
+					container->add_char(curx, cury, lineheight, aspect, fgcolor, *get_font(), linechar);
+					curx += get_font()->char_width(lineheight, aspect, linechar);
+				}
 			}
 			linestart += linecharcount;
 		}
@@ -748,8 +1090,23 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 		if (wrap != WRAP_WORD)
 			break;
 
+		//mamep: text scrolling
+		if (draw_text_scroll_offset > 0)
+			draw_text_scroll_offset--;
+		else
 		// advance by a row
-		cury += lineheight;
+		{
+			cury += lineheight;
+
+			//mamep: skip overflow text
+			//there's a bug when viewing the game information and bookkeeping,so we have to commet it
+ 			if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1 && down_arrow)
+				break;
+
+			//mamep: controll scrolling text
+			if (draw_text_scroll_offset == 0)
+				curline++;
+		}
 
 		// skip past any spaces at the beginning of the next line
 		scharcount = uchar_from_utf8(&schar, s, ends - s);
@@ -759,7 +1116,7 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 		if (schar == '\n')
 			s += scharcount;
 		else
-			while (*s && isspace(schar))
+			while (*s && (schar < 0x80) && isspace(schar))
 			{
 				s += scharcount;
 				scharcount = uchar_from_utf8(&schar, s, ends - s);
@@ -776,12 +1133,41 @@ void ui_manager::draw_text_full(render_container *container, const char *origs, 
 }
 
 
+int ui_manager::draw_text_set_fixed_width_mode(int mode)
+{
+	int mode_save = draw_text_fixed_mode;
+
+	draw_text_fixed_mode = mode;
+
+	return mode_save;
+}
+
+
+void ui_manager::draw_text_full_fixed_width(render_container *container, const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+{
+	int mode_save = draw_text_set_fixed_width_mode(TRUE);
+
+	draw_text_full(container, origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
+	draw_text_set_fixed_width_mode(mode_save);
+}
+
+
+void ui_manager::draw_text_full_scroll(render_container *container, const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+{
+	int offset_save = draw_text_scroll_offset;
+
+	draw_text_scroll_offset = offset;
+	draw_text_full(container, origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
+
+	draw_text_scroll_offset = offset_save;
+}
+
+
 //-------------------------------------------------
 //  draw_text_box - draw a multiline text
 //  message with a box around it
 //-------------------------------------------------
-
-void ui_manager::draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
+void ui_manager::draw_text_box_scroll(render_container *container, const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
 {
 	float line_height = get_line_height();
 	float max_width = 2.0f * ((xpos <= 0.5f) ? xpos : 1.0f - xpos) - 2.0f * UI_BOX_LR_BORDER;
@@ -810,8 +1196,11 @@ void ui_manager::draw_text_box(render_container *container, const char *text, in
 		// compute the multi-line target width/height
 		draw_text_full(container, text, target_x, target_y, target_width + 0.00001f,
 					justify, WRAP_WORD, DRAW_NONE, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, &target_width, &target_height);
+
+		multiline_text_box_target_lines = (int)(target_height / line_height + 0.5f);
 		if (target_height > 1.0f - 2.0f * UI_BOX_TB_BORDER)
 			target_height = floor((1.0f - 2.0f * UI_BOX_TB_BORDER) / line_height) * line_height;
+		multiline_text_box_visible_lines = (int)(target_height / line_height + 0.5f);
 
 		// if we match our last value, we're done
 		if (target_height == last_target_height)
@@ -824,8 +1213,126 @@ void ui_manager::draw_text_box(render_container *container, const char *text, in
 						target_y - UI_BOX_TB_BORDER,
 						target_x + target_width + UI_BOX_LR_BORDER,
 						target_y + target_height + UI_BOX_TB_BORDER, backcolor);
-	draw_text_full(container, text, target_x, target_y, target_width + 0.00001f,
+	draw_text_full_scroll(container, text, target_x, target_y, target_width + 0.00001f, offset,
 				justify, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
+}
+
+
+void ui_manager::draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
+{
+	draw_text_box_scroll(container, text, message_window_scroll, justify, xpos, ypos, backcolor);
+}
+
+
+#if defined(CMD_LIST) || defined(USE_SHOW_TIME)
+void ui_manager::draw_text_box_fixed_width(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
+{
+	int mode_save = draw_text_fixed_mode;
+
+	draw_text_fixed_mode = 1;
+	draw_text_box_scroll(container, text, message_window_scroll, justify, xpos, ypos, backcolor);
+
+	draw_text_fixed_mode = mode_save;
+}
+#endif /* CMD_LIST */
+
+
+int ui_manager::window_scroll_keys()
+{
+	static int counter = 0;
+	static int fast = 6;
+	int pan_lines;
+	int max_scroll;
+	int do_scroll = FALSE;
+
+	max_scroll = multiline_text_box_target_lines - multiline_text_box_visible_lines;
+	pan_lines = multiline_text_box_visible_lines - 2;
+
+	if (scroll_reset)
+	{
+		message_window_scroll = 0;
+		scroll_reset = 0;
+	}
+
+	/* up backs up by one item */
+	if (ui_input_pressed_repeat(machine(), IPT_UI_UP, fast))
+	{
+		message_window_scroll--;
+		do_scroll = TRUE;
+	}
+
+	/* down advances by one item */
+	if (ui_input_pressed_repeat(machine(), IPT_UI_DOWN, fast))
+	{
+		message_window_scroll++;
+		do_scroll = TRUE;
+	}
+
+	/* pan-up goes to previous page */
+	if (ui_input_pressed_repeat(machine(), IPT_UI_PAGE_UP,8))
+	{
+		message_window_scroll -= pan_lines;
+		do_scroll = TRUE;
+	}
+
+	/* pan-down goes to next page */
+	if (ui_input_pressed_repeat(machine(), IPT_UI_PAGE_DOWN,8))
+	{
+		message_window_scroll += pan_lines;
+		do_scroll = TRUE;
+	}
+
+	/* home goes to the start */
+	if (ui_input_pressed(machine(), IPT_UI_HOME))
+	{
+		message_window_scroll = 0;
+		do_scroll = TRUE;
+	}
+
+	/* end goes to the last */
+	if (ui_input_pressed(machine(), IPT_UI_END))
+	{
+		message_window_scroll = max_scroll;
+		do_scroll = TRUE;
+	}
+
+	if (message_window_scroll < 0)
+		message_window_scroll = 0;
+	if (message_window_scroll > max_scroll)
+		message_window_scroll = max_scroll;
+
+	if (machine().ioport().type_pressed(IPT_UI_UP,0) || machine().ioport().type_pressed(IPT_UI_DOWN,0))
+	{
+		if (++counter == 25)
+		{
+			fast--;
+			if (fast < 1)
+				fast = 0;
+
+			counter = 0;
+		}
+	}
+	else
+	{
+		fast = 6;
+		counter = 0;
+	}
+
+	if (do_scroll)
+		return -1;
+
+	if (ui_input_pressed(machine(), IPT_UI_SELECT))
+	{
+		message_window_scroll = 0;
+		return 1;
+	}
+	if (ui_input_pressed(machine(), IPT_UI_CANCEL))
+	{
+		message_window_scroll = 0;
+		return 2;
+	}
+
+	return 0;
 }
 
 
@@ -976,9 +1483,9 @@ bool ui_manager::is_menu_active(void)
 
 astring &ui_manager::disclaimer_string(astring &string)
 {
-	string.cpy("Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n");
-	string.catprintf("IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n", machine().system().description);
-	string.cat("Otherwise, type OK or move the joystick left then right to continue");
+	string.cpy(_("Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n"));
+	string.catprintf(_("IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n"), machine().system().description);
+	string.cat(_("Otherwise, type OK or move the joystick left then right to continue"));
 	return string;
 }
 
@@ -1011,9 +1518,9 @@ astring &ui_manager::warnings_string(astring &string)
 	// add a warning if any ROMs were loaded with warnings
 	if (rom_load_warnings(machine()) > 0)
 	{
-		string.cat("One or more ROMs/CHDs for this game are incorrect. The ");
+		string.cat(_("One or more ROMs/CHDs for this game are incorrect. The "));
 		string.cat(emulator_info::get_gamenoun());
-		string.cat(" may not run correctly.\n");
+		string.cat(_(" may not run correctly.\n"));
 		if (machine().system().flags & WARNING_FLAGS)
 			string.cat("\n");
 	}
@@ -1026,53 +1533,53 @@ astring &ui_manager::warnings_string(astring &string)
 	// if we have at least one warning flag, print the general header
 	if ((machine().system().flags & WARNING_FLAGS) || rom_load_knownbad(machine()) > 0)
 	{
-		string.cat("There are known problems with this ");
+		string.cat(_("There are known problems with this "));
 		string.cat(emulator_info::get_gamenoun());
 		string.cat("\n\n");
 
 		// add a warning if any ROMs are flagged BAD_DUMP/NO_DUMP
 		if (rom_load_knownbad(machine()) > 0) {
-			string.cat("One or more ROMs/CHDs for this ");
+			string.cat(_("One or more ROMs/CHDs for this "));
 			string.cat(emulator_info::get_gamenoun());
-			string.cat(" have not been correctly dumped.\n");
+			string.cat(_(" have not been correctly dumped.\n"));
 		}
 		// add one line per warning flag
 		if (machine().system().flags & GAME_IMPERFECT_KEYBOARD)
-			string.cat("The keyboard emulation may not be 100% accurate.\n");
+			string.cat(_("The keyboard emulation may not be 100% accurate.\n"));
 		if (machine().system().flags & GAME_IMPERFECT_COLORS)
-			string.cat("The colors aren't 100% accurate.\n");
+			string.cat(_("The colors aren't 100% accurate.\n"));
 		if (machine().system().flags & GAME_WRONG_COLORS)
-			string.cat("The colors are completely wrong.\n");
+			string.cat(_("The colors are completely wrong.\n"));
 		if (machine().system().flags & GAME_IMPERFECT_GRAPHICS)
-			string.cat("The video emulation isn't 100% accurate.\n");
+			string.cat(_("The video emulation isn't 100% accurate.\n"));
 		if (machine().system().flags & GAME_IMPERFECT_SOUND)
-			string.cat("The sound emulation isn't 100% accurate.\n");
+			string.cat(_("The sound emulation isn't 100% accurate.\n"));
 		if (machine().system().flags & GAME_NO_SOUND)
-			string.cat("The game lacks sound.\n");
+			string.cat(_("The game lacks sound.\n"));
 		if (machine().system().flags & GAME_NO_COCKTAIL)
-			string.cat("Screen flipping in cocktail mode is not supported.\n");
+			string.cat(_("Screen flipping in cocktail mode is not supported.\n"));
 
 		// check if external artwork is present before displaying this warning?
 		if (machine().system().flags & GAME_REQUIRES_ARTWORK)
-			string.cat("The game requires external artwork files\n");
+			string.cat(_("The game requires external artwork files\n"));
 
 		// if there's a NOT WORKING, UNEMULATED PROTECTION or GAME MECHANICAL warning, make it stronger
 		if (machine().system().flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_MECHANICAL))
 		{
 			// add the strings for these warnings
 			if (machine().system().flags & GAME_UNEMULATED_PROTECTION)
-				string.cat("The game has protection which isn't fully emulated.\n");
+				string.cat(_("The game has protection which isn't fully emulated.\n"));
 			if (machine().system().flags & GAME_NOT_WORKING) {
-				string.cat("\nTHIS ");
+				string.cat(_("\nTHIS "));
 				string.cat(emulator_info::get_capgamenoun());
-				string.cat(" DOESN'T WORK. The emulation for this game is not yet complete. "
-						"There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n");
+				string.cat(_(" DOESN'T WORK. The emulation for this game is not yet complete. "
+						"There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
 			}
 			if (machine().system().flags & GAME_MECHANICAL) {
-				string.cat("\nCertain elements of this ");
+				string.cat(_("\nCertain elements of this "));
 				string.cat(emulator_info::get_gamenoun());
-				string.cat(" cannot be emulated as it requires actual physical interaction or consists of mechanical devices. "
-						"It is not possible to fully play this ");
+				string.cat(_(" cannot be emulated as it requires actual physical interaction or consists of mechanical devices. "
+						"It is not possible to fully play this "));
 				string.cat(emulator_info::get_gamenoun());
 				string.cat(".\n");
 			}
@@ -1092,7 +1599,7 @@ astring &ui_manager::warnings_string(astring &string)
 					{
 						// this one works, add a header and display the name of the clone
 						if (!foundworking)
-							string.cat("\n\nThere are working clones of this game: ");
+							string.cat(_("\n\nThere are working clones of this game: "));
 						else
 							string.cat(", ");
 						string.cat(drivlist.driver().name);
@@ -1105,7 +1612,7 @@ astring &ui_manager::warnings_string(astring &string)
 	}
 
 	// add the 'press OK' string
-	string.cat("\n\nType OK or move the joystick left then right to continue");
+	string.cat(_("\n\nType OK or move the joystick left then right to continue"));
 	return string;
 }
 
@@ -1119,7 +1626,7 @@ astring &ui_manager::game_info_astring(astring &string)
 {
 	// print description, manufacturer, and CPU:
 	astring tempstr;
-	string.printf("%s\n%s %s\nDriver: %s\n\nCPU:\n", machine().system().description, machine().system().year, machine().system().manufacturer, core_filename_extract_base(tempstr, machine().system().source_file).cstr());
+	string.printf("%s\n%s %s\nDriver: %s\n\nCPU:\n", _LST(machine().system().description), machine().system().year, _MANUFACT(machine().system().manufacturer), core_filename_extract_base(tempstr, machine().system().source_file).cstr());
 
 	// loop over all CPUs
 	execute_interface_iterator execiter(machine().root_device());
@@ -1165,7 +1672,7 @@ astring &ui_manager::game_info_astring(astring &string)
 
 		// append the Sound: string
 		if (!found_sound)
-			string.cat("\nSound:\n");
+			string.cat(_("\nSound:\n"));
 		found_sound = true;
 
 		// count how many identical sound chips we have
@@ -1193,11 +1700,11 @@ astring &ui_manager::game_info_astring(astring &string)
 	}
 
 	// display screen information
-	string.cat("\nVideo:\n");
+	string.cat(_("\nVideo:\n"));
 	screen_device_iterator scriter(machine().root_device());
 	int scrcount = scriter.count();
 	if (scrcount == 0)
-		string.cat("None\n");
+		string.cat(_("None\n"));
 	else
 	{
 		for (screen_device *screen = scriter.first(); screen != NULL; screen = scriter.next())
@@ -1209,7 +1716,7 @@ astring &ui_manager::game_info_astring(astring &string)
 			}
 
 			if (screen->screen_type() == SCREEN_TYPE_VECTOR)
-				string.cat("Vector\n");
+				string.cat(_("Vector\n"));
 			else
 			{
 				const rectangle &visarea = screen->visible_area();
@@ -1280,19 +1787,25 @@ UINT32 ui_manager::handler_messagebox_ok(running_machine &machine, render_contai
 
 UINT32 ui_manager::handler_messagebox_anykey(running_machine &machine, render_container *container, UINT32 state)
 {
+	int res = machine.ui().window_scroll_keys();
+
 	// draw a standard message window
 	machine.ui().draw_text_box(container, messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
 	// if the user cancels, exit out completely
-	if (ui_input_pressed(machine, IPT_UI_CANCEL))
+	if (res == 2)
 	{
 		machine.schedule_exit();
 		state = UI_HANDLER_CANCEL;
 	}
 
-	// if any key is pressed, just exit
-	else if (machine.input().poll_switches() != INPUT_CODE_INVALID)
-		state = UI_HANDLER_CANCEL;
+	// if select key is pressed, just exit
+	if (res == 1)
+	{
+		// if any key is pressed, just exit
+		if (machine.input().poll_switches() != INPUT_CODE_INVALID)
+			state = UI_HANDLER_CANCEL;
+	}
 
 	return state;
 }
@@ -1440,6 +1953,133 @@ void ui_manager::image_handler_ingame()
 	}
 }
 
+#ifdef USE_SHOW_TIME
+
+#define DISPLAY_AMPM 0
+
+void ui_manager::display_time(render_container *container)
+{
+	char buf[20];
+#if DISPLAY_AMPM
+	char am_pm[] = "am";
+#endif /* DISPLAY_AMPM */
+	float width;
+	time_t ltime;
+	struct tm *today;
+	float line_height = get_line_height();
+
+	time(&ltime);
+	today = localtime(&ltime);
+
+#if DISPLAY_AMPM
+	if( today->tm_hour > 12 )
+	{
+		strcpy( am_pm, "pm" );
+		today->tm_hour -= 12;
+	}
+	if( today->tm_hour == 0 ) /* Adjust if midnight hour. */
+		today->tm_hour = 12;
+#endif /* DISPLAY_AMPM */
+
+#if DISPLAY_AMPM
+	sprintf(buf, "%02d:%02d:%02d %s", today->tm_hour, today->tm_min, today->tm_sec, am_pm);
+#else
+	sprintf(buf, "%02d:%02d:%02d", today->tm_hour, today->tm_min, today->tm_sec);
+#endif /* DISPLAY_AMPM */
+	width = get_string_width(buf) + UI_LINE_WIDTH * 2.0f;
+	switch(Show_Time_Position)
+	{
+		case 0:
+			draw_text_box_fixed_width(container, buf, JUSTIFY_LEFT, 1.0f - width, 1.0f - line_height, UI_BACKGROUND_COLOR);
+			break;
+
+		case 1:
+			draw_text_box_fixed_width(container, buf, JUSTIFY_LEFT, 1.0f - width, 0.0f, UI_BACKGROUND_COLOR);
+			break;
+
+		case 2:
+			draw_text_box_fixed_width(container, buf, JUSTIFY_LEFT, 0.0f + width, 0.0f, UI_BACKGROUND_COLOR);
+			break;
+
+		case 3:
+			draw_text_box_fixed_width(container, buf, JUSTIFY_LEFT, 0.0f + width, 1.0f - line_height, UI_BACKGROUND_COLOR);
+			break;
+	}
+}
+#endif /* USE_SHOW_TIME */
+
+#ifdef USE_SHOW_INPUT_LOG
+/*-------------------------------------------------
+    ui_display_input_log -
+    show popup message if input exist any log
+-------------------------------------------------*/
+
+void ui_manager::display_input_log(render_container *container)
+{
+	double time_now = machine().time().as_double();
+	double time_display = attotime::from_msec(1000).as_double();
+	double time_fadeout = attotime::from_msec(1000).as_double();
+	float curx;
+	int i;
+	struct ioport_manager::input_log *command_buffer = machine().ioport().command_buffer();
+
+	if (!command_buffer[0].code)
+		return;
+
+	// adjust time for load state
+	{
+		double max = 0.0f;
+		int i;
+
+		for (i = 0; command_buffer[i].code; i++)
+			if (max < command_buffer[i].time)
+				max = command_buffer[i].time;
+
+		if (max > time_now)
+		{
+			double adjust = max - time_now;
+
+			for (i = 0; command_buffer[i].code; i++)
+				command_buffer[i].time -= adjust;
+		}
+	}
+
+	// find position to start display
+	curx = 1.0f - UI_LINE_WIDTH;
+	for (i = 0; command_buffer[i].code; i++)
+		curx -= get_char_width(command_buffer[i].code);
+
+	for (i = 0; command_buffer[i].code; i++)
+	{
+		if (curx >= UI_LINE_WIDTH)
+			break;
+
+		curx += get_char_width(command_buffer[i].code);
+	}
+
+	draw_box(container, 0.0f, 1.0f - get_line_height(), 1.0f, 1.0f, UI_BACKGROUND_COLOR);
+
+	for (; command_buffer[i].code; i++)
+	{
+		double rate = time_now - command_buffer[i].time;
+
+		if (rate < time_display + time_fadeout)
+		{
+			int level = 255 - ((rate - time_display) / time_fadeout) * 255;
+			rgb_t fgcolor;
+
+			if (level > 255)
+				level = 255;
+
+			fgcolor = rgb_t(255, level, level, level);
+
+			container->add_char(curx, 1.0f - get_line_height(), get_line_height(), machine().render().ui_aspect(), fgcolor, *get_font(), command_buffer[i].code);
+		}
+		curx += get_char_width(command_buffer[i].code);
+	}
+}
+#endif /* USE_SHOW_INPUT_LOG */
+
 
 //-------------------------------------------------
 //  handler_ingame - in-game handler takes care
@@ -1454,7 +2094,7 @@ UINT32 ui_manager::handler_ingame(running_machine &machine, render_container *co
 	if (machine.ui().show_fps_counter())
 	{
 		astring tempstring;
-		machine.ui().draw_text_full(container, machine.video().speed_text(tempstring), 0.0f, 0.0f, 1.0f,
+		machine.ui().draw_text_full_fixed_width(container, machine.video().speed_text(tempstring), 0.0f, 0.0f, 1.0f,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 
@@ -1462,7 +2102,7 @@ UINT32 ui_manager::handler_ingame(running_machine &machine, render_container *co
 	if (machine.ui().show_profiler())
 	{
 		const char *text = g_profiler.text(machine);
-		machine.ui().draw_text_full(container, text, 0.0f, 0.0f, 1.0f, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
+		machine.ui().draw_text_full(container, text, 0.0f, 0.0f, 1.0f, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	}
 
 	// if we're single-stepping, pause now
@@ -1569,6 +2209,10 @@ UINT32 ui_manager::handler_ingame(running_machine &machine, render_container *co
 	if (ui_input_pressed(machine, IPT_UI_SNAPSHOT))
 		machine.video().save_active_screen_snapshots();
 
+#ifdef INP_CAPTION
+	machine.ioport().draw_caption(container);
+#endif /* INP_CAPTION */
+
 	// toggle pause
 	if (ui_input_pressed(machine, IPT_UI_PAUSE))
 	{
@@ -1581,6 +2225,42 @@ UINT32 ui_manager::handler_ingame(running_machine &machine, render_container *co
 		else
 			machine.toggle_pause();
 	}
+
+#ifdef USE_SHOW_TIME
+	if (ui_input_pressed(machine, IPT_UI_TIME))
+	{
+		if (show_time)
+		{
+			Show_Time_Position++;
+
+			if (Show_Time_Position > 3)
+			{
+				Show_Time_Position = 0;
+				show_time = 0;
+			}
+		}
+		else
+		{
+			Show_Time_Position = 0;
+			show_time = 1;
+		}
+	}
+
+	if (show_time)
+		machine.ui().display_time(container);
+#endif /* USE_SHOW_TIME */
+
+#ifdef USE_SHOW_INPUT_LOG
+	if (ui_input_pressed(machine, IPT_UI_SHOW_INPUT_LOG))
+	{
+		machine.ioport().show_input_log() ^= 1;
+		machine.ioport().command_buffer()[0].code = '\0';
+	}
+
+	/* show popup message if input exist any log */
+	if (machine.ioport().show_input_log())
+		machine.ui().display_input_log(container);
+#endif /* USE_SHOW_INPUT_LOG */
 
 	// handle a toggle cheats request
 	if (ui_input_pressed(machine, IPT_UI_TOGGLE_CHEAT))
@@ -1640,18 +2320,18 @@ UINT32 ui_manager::handler_load_save(running_machine &machine, render_container 
 
 	// okay, we're waiting for a key to select a slot; display a message
 	if (state == LOADSAVE_SAVE)
-		machine.ui().draw_message_window(container, "Select position to save to");
+		machine.ui().draw_message_window(container, _("Select position to save to"));
 	else
-		machine.ui().draw_message_window(container, "Select position to load from");
+		machine.ui().draw_message_window(container, _("Select position to load from"));
 
 	// check for cancel key
 	if (ui_input_pressed(machine, IPT_UI_CANCEL))
 	{
 		// display a popup indicating things were cancelled
 		if (state == LOADSAVE_SAVE)
-			popmessage("Save cancelled");
+			popmessage(_("Save cancelled"));
 		else
-			popmessage("Load cancelled");
+			popmessage(_("Load cancelled"));
 
 		// reset the state
 		machine.resume();
@@ -1677,12 +2357,12 @@ UINT32 ui_manager::handler_load_save(running_machine &machine, render_container 
 	sprintf(filename, "%c", file);
 	if (state == LOADSAVE_SAVE)
 	{
-		popmessage("Save to position %c", file);
+		popmessage(_("Save to position %c"), file);
 		machine.schedule_save(filename);
 	}
 	else
 	{
-		popmessage("Load from position %c", file);
+		popmessage(_("Load from position %c"), file);
 		machine.schedule_load(filename);
 	}
 
@@ -1712,9 +2392,9 @@ void ui_manager::request_quit()
 
 UINT32 ui_manager::handler_confirm_quit(running_machine &machine, render_container *container, UINT32 state)
 {
-	astring quit_message("Are you sure you want to quit?\n\n");
-	quit_message.cat("Press ''UI Select'' (default: Enter) to quit,\n");
-	quit_message.cat("Press ''UI Cancel'' (default: Esc) to return to emulation.");
+	astring quit_message(_("Are you sure you want to quit?\n\n"));
+	quit_message.cat(_("Press ''UI Select'' (default: Enter) to quit,\n"));
+	quit_message.cat(_("Press ''UI Cancel'' (default: Esc) to return to emulation."));
 
 	machine.ui().draw_text_box(container, quit_message, JUSTIFY_CENTER, 0.5f, 0.5f, UI_RED_COLOR);
 	machine.pause();
@@ -1784,7 +2464,7 @@ static slider_state *slider_init(running_machine &machine)
 	int item;
 
 	// add overall volume
-	*tailptr = slider_alloc(machine, "Master Volume", -32, 0, 0, 1, slider_volume, NULL);
+	*tailptr = slider_alloc(machine, _("Master Volume"), -32, 0, 0, 1, slider_volume, NULL);
 	tailptr = &(*tailptr)->next;
 
 	// add per-channel volume
@@ -1795,7 +2475,7 @@ static slider_state *slider_init(running_machine &machine)
 		INT32 defval = 1000;
 
 		info.stream->input_name(info.inputnum, string);
-		string.cat(" Volume");
+		string.cat(_(" Volume"));
 		*tailptr = slider_alloc(machine, string, 0, defval, maxval, 20, slider_mixervol, (void *)(FPTR)item);
 		tailptr = &(*tailptr)->next;
 	}
@@ -1817,8 +2497,9 @@ static slider_state *slider_init(running_machine &machine)
 		for (device_execute_interface *exec = iter.first(); exec != NULL; exec = iter.next())
 		{
 			void *param = (void *)&exec->device();
-			string.printf("Overclock CPU %s", exec->device().tag());
-			*tailptr = slider_alloc(machine, string, 10, 1000, 2000, 1, slider_overclock, param);
+			string.printf(_("Overclock CPU %s"), exec->device().tag());
+			//mamep: 4x overclock
+			*tailptr = slider_alloc(machine, string, 10, 1000, 4000, 50, slider_overclock, param);
 			tailptr = &(*tailptr)->next;
 		}
 	}
@@ -1836,33 +2517,33 @@ static slider_state *slider_init(running_machine &machine)
 		// add refresh rate tweaker
 		if (machine.options().cheat())
 		{
-			string.printf("%s Refresh Rate", slider_get_screen_desc(*screen));
-			*tailptr = slider_alloc(machine, string, -10000, 0, 10000, 1000, slider_refresh, param);
+			string.printf(_("%s Refresh Rate"), slider_get_screen_desc(*screen));
+			*tailptr = slider_alloc(machine, string, -33000, 0, 33000, 1000, slider_refresh, param);
 			tailptr = &(*tailptr)->next;
 		}
 
 		// add standard brightness/contrast/gamma controls per-screen
-		string.printf("%s Brightness", slider_get_screen_desc(*screen));
+		string.printf(_("%s Brightness"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 100, 1000, 2000, 10, slider_brightness, param);
 		tailptr = &(*tailptr)->next;
-		string.printf("%s Contrast", slider_get_screen_desc(*screen));
+		string.printf(_("%s Contrast"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 100, 1000, 2000, 50, slider_contrast, param);
 		tailptr = &(*tailptr)->next;
-		string.printf("%s Gamma", slider_get_screen_desc(*screen));
+		string.printf(_("%s Gamma"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 100, 1000, 3000, 50, slider_gamma, param);
 		tailptr = &(*tailptr)->next;
 
 		// add scale and offset controls per-screen
-		string.printf("%s Horiz Stretch", slider_get_screen_desc(*screen));
+		string.printf(_("%s Horiz Stretch"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 500, defxscale, 1500, 2, slider_xscale, param);
 		tailptr = &(*tailptr)->next;
-		string.printf("%s Horiz Position", slider_get_screen_desc(*screen));
+		string.printf(_("%s Horiz Position"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, -500, defxoffset, 500, 2, slider_xoffset, param);
 		tailptr = &(*tailptr)->next;
-		string.printf("%s Vert Stretch", slider_get_screen_desc(*screen));
+		string.printf(_("%s Vert Stretch"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 500, defyscale, 1500, 2, slider_yscale, param);
 		tailptr = &(*tailptr)->next;
-		string.printf("%s Vert Position", slider_get_screen_desc(*screen));
+		string.printf(_("%s Vert Position"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, -500, defyoffset, 500, 2, slider_yoffset, param);
 		tailptr = &(*tailptr)->next;
 	}
@@ -1880,16 +2561,16 @@ static slider_state *slider_init(running_machine &machine)
 			void *param = (void *)laserdisc;
 
 			// add scale and offset controls per-overlay
-			string.printf("Laserdisc '%s' Horiz Stretch", laserdisc->tag());
+			string.printf(_("Laserdisc '%s' Horiz Stretch"), laserdisc->tag());
 			*tailptr = slider_alloc(machine, string, 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_overxscale, param);
 			tailptr = &(*tailptr)->next;
-			string.printf("Laserdisc '%s' Horiz Position", laserdisc->tag());
+			string.printf(_("Laserdisc '%s' Horiz Position"), laserdisc->tag());
 			*tailptr = slider_alloc(machine, string, -500, defxoffset, 500, 2, slider_overxoffset, param);
 			tailptr = &(*tailptr)->next;
-			string.printf("Laserdisc '%s' Vert Stretch", laserdisc->tag());
+			string.printf(_("Laserdisc '%s' Vert Stretch"), laserdisc->tag());
 			*tailptr = slider_alloc(machine, string, 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_overyscale, param);
 			tailptr = &(*tailptr)->next;
-			string.printf("Laserdisc '%s' Vert Position", laserdisc->tag());
+			string.printf(_("Laserdisc '%s' Vert Position"), laserdisc->tag());
 			*tailptr = slider_alloc(machine, string, -500, defyoffset, 500, 2, slider_overyoffset, param);
 			tailptr = &(*tailptr)->next;
 		}
@@ -1898,9 +2579,9 @@ static slider_state *slider_init(running_machine &machine)
 		if (screen->screen_type() == SCREEN_TYPE_VECTOR)
 		{
 			// add flicker control
-			*tailptr = slider_alloc(machine, "Vector Flicker", 0, 0, 1000, 10, slider_flicker, NULL);
+			*tailptr = slider_alloc(machine, _("Vector Flicker"), 0, 0, 1000, 10, slider_flicker, NULL);
 			tailptr = &(*tailptr)->next;
-			*tailptr = slider_alloc(machine, "Beam Width", 10, 100, 1000, 10, slider_beam, NULL);
+			*tailptr = slider_alloc(machine, _("Beam Width"), 10, 100, 1000, 10, slider_beam, NULL);
 			tailptr = &(*tailptr)->next;
 			break;
 		}
@@ -1912,10 +2593,10 @@ static slider_state *slider_init(running_machine &machine)
 			if (field->crosshair_axis() != CROSSHAIR_AXIS_NONE && field->player() == 0)
 			{
 				void *param = (void *)field;
-				string.printf("Crosshair Scale %s", (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y");
+				string.printf(_("Crosshair Scale %s"), (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y");
 				*tailptr = slider_alloc(machine, string, -3000, 1000, 3000, 100, slider_crossscale, param);
 				tailptr = &(*tailptr)->next;
-				string.printf("Crosshair Offset %s", (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y");
+				string.printf(_("Crosshair Offset %s"), (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y");
 				*tailptr = slider_alloc(machine, string, -3000, 0, 3000, 100, slider_crossoffset, param);
 				tailptr = &(*tailptr)->next;
 			}
@@ -2308,9 +2989,9 @@ static char *slider_get_screen_desc(screen_device &screen)
 	static char descbuf[256];
 
 	if (scrcount > 1)
-		sprintf(descbuf, "Screen '%s'", screen.tag());
+		sprintf(descbuf, _("Screen '%s'"), screen.tag());
 	else
-		strcpy(descbuf, "Screen");
+		strcpy(descbuf, _("Screen"));
 
 	return descbuf;
 }
@@ -2328,7 +3009,7 @@ static INT32 slider_crossscale(running_machine &machine, void *arg, astring *str
 	if (newval != SLIDER_NOCHANGE)
 		field->set_crosshair_scale(float(newval) * 0.001);
 	if (string != NULL)
-		string->printf("%s %s %1.3f", "Crosshair Scale", (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y", float(newval) * 0.001f);
+		string->printf("%s %s %1.3f", _("Crosshair Scale"), (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y", float(newval) * 0.001f);
 	return floor(field->crosshair_scale() * 1000.0f + 0.5f);
 }
 #endif
@@ -2347,7 +3028,7 @@ static INT32 slider_crossoffset(running_machine &machine, void *arg, astring *st
 	if (newval != SLIDER_NOCHANGE)
 		field->set_crosshair_offset(float(newval) * 0.001f);
 	if (string != NULL)
-		string->printf("%s %s %1.3f", "Crosshair Offset", (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y", float(newval) * 0.001f);
+		string->printf("%s %s %1.3f", _("Crosshair Offset"), (field->crosshair_axis() == CROSSHAIR_AXIS_X) ? "X" : "Y", float(newval) * 0.001f);
 	return field->crosshair_offset();
 }
 #endif
@@ -2375,4 +3056,50 @@ void ui_manager::set_use_natural_keyboard(bool use_natural_keyboard)
 	astring error;
 	machine().options().set_value(OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE, error);
 	assert(!error);
+}
+
+
+void ui_manager::build_bgtexture()
+{
+#ifdef UI_COLOR_DISPLAY
+	float r = (float)uifont_colortable[UI_BACKGROUND_COLOR].r();
+	float g = (float)uifont_colortable[UI_BACKGROUND_COLOR].g();
+	float b = (float)uifont_colortable[UI_BACKGROUND_COLOR].b();
+#else /* UI_COLOR_DISPLAY */
+	UINT8 r = 0x10;
+	UINT8 g = 0x10;
+	UINT8 b = 0x30;
+#endif /* UI_COLOR_DISPLAY */
+	UINT8 a = 0xff;
+	int i;
+
+#ifdef TRANS_UI
+	a = ui_transparency;
+#endif /* TRANS_UI */
+
+	bgbitmap = auto_alloc(machine(), bitmap_argb32(1, 1024));
+	if (bgbitmap == NULL)
+		fatalerror("build_bgtexture failed");
+
+	for (i = 0; i < bgbitmap->height(); i++)
+	{
+		double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
+
+		if (gradual > 1.0f)
+			gradual = 1.0f;
+		else if (gradual < 0.1f)
+			gradual = 0.1f;
+
+		bgbitmap->pix32(i, 0) = rgb_t(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
+	}
+
+	bgtexture = machine().render().texture_alloc(render_texture::hq_scale);
+	bgtexture->set_bitmap(*bgbitmap, bgbitmap->cliprect(), TEXFORMAT_ARGB32);
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(ui_manager::free_bgtexture), this));
+}
+
+
+void ui_manager::free_bgtexture()
+{
+	machine().render().texture_free(bgtexture);
 }

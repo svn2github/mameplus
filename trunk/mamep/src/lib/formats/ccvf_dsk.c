@@ -90,21 +90,21 @@ bool ccvf_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 	const format &f = formats[0];
 
 	UINT64 size = io_generic_size(io);
-	UINT8 *img = global_alloc_array(UINT8, size);
+	dynamic_buffer img(size);
 	io_generic_read(io, img, 0, size);
 
-	astring ccvf = astring((const char *)img, size);
-	UINT8 *bytes = global_alloc_array(UINT8, 78720);
+	astring ccvf = astring((const char *)&img[0], size);
+	dynamic_buffer bytes(78720);
 
 	int start = 0, end = 0;
 	astring line;
 	offs_t byteoffs = 0;
 	char hex[3] = {0};
-	
+
 	do {
 		end = ccvf.chr(start, 10);
 		line.cpysubstr(ccvf, start, end);
-		if (line.find(0, "Compucolor Virtual Floppy Disk Image") &&	line.find(0, "Label") && line.find(0, "Track")) {
+		if (line.find(0, "Compucolor Virtual Floppy Disk Image") && line.find(0, "Label") && line.find(0, "Track")) {
 			for (int byte = 0; byte < 32; byte++) {
 				if (byteoffs==78720) break;
 				hex[0]=line[byte * 2];
@@ -115,13 +115,13 @@ bool ccvf_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 		start = end + 1;
 	} while (start > 0 && end != -1);
 
-	int pos = 0;
+	UINT64 pos = 0;
 	int total_size = 200000000/f.cell_size;
-	
+
 	for(int track=0; track < f.track_count; track++) {
-		UINT32 *buffer = global_alloc_array_clear(UINT32, total_size);
+		dynamic_array<UINT32> buffer(total_size);
 		int offset = 0;
-	
+
 		for (int i=0; i<1920 && pos<size; i++, pos++) {
 			for (int bit=0; bit<8; bit++) {
 				bit_w(buffer, offset++, BIT(bytes[pos], bit), f.cell_size);
@@ -137,7 +137,6 @@ bool ccvf_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 		}
 
 		generate_track_from_levels(track, 0, buffer, total_size, 0, image);
-		global_free(buffer);
 	}
 
 	image->set_variant(f.variant);

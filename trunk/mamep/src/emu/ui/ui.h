@@ -102,9 +102,9 @@ enum
     MACROS
 ***************************************************************************/
 
-#define ui_draw_message_window(c, text) ui_draw_text_box(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
+//#define draw_message_window(c, text) draw_text_box(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
 #ifdef CMD_LIST
-#define ui_draw_message_window_fixed_width(c, text) ui_draw_text_box_fixed_width(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
+//#define draw_message_window_fixed_width(c, text) draw_text_box_fixed_width(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
 #endif /* CMD_LIST */
 
 
@@ -158,15 +158,21 @@ public:
 	float get_line_height();
 	float get_char_width(unicode_char ch);
 	float get_string_width(const char *s);
+	float get_char_width_no_margin(unicode_char ch);
+	float get_char_fixed_width(unicode_char uchar, double halfwidth, double fullwidth);
 	void draw_outlined_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor);
 	void draw_outlined_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t fgcolor, rgb_t bgcolor);
 	void draw_text(render_container *container, const char *buf, float x, float y);
 	void draw_text_full(render_container *container, const char *origs, float x, float y, float origwrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth = NULL, float *totalheight = NULL);
 	void draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
+	void draw_text_box_scroll(render_container *container, const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor);
 	#ifdef CMD_LIST
 	void draw_text_box_fixed_width(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
 	#endif /* CMD_LIST */
+	void draw_text_full_fixed_width(render_container *container, const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight);
+	void draw_text_full_scroll(render_container *container, const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight);
 	void draw_message_window(render_container *container, const char *text);
+	int window_scroll_keys();
 
 	void CLIB_DECL popup_time(int seconds, const char *text, ...) ATTR_PRINTF(3,4);
 	void show_fps_temp(double seconds);
@@ -226,6 +232,19 @@ private:
 
 	// private methods
 	void exit();
+	void build_bgtexture();
+	void free_bgtexture();
+	#ifdef UI_COLOR_DISPLAY
+	void setup_palette();
+	#endif /* UI_COLOR_DISPLAY */
+	void draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor);
+	int draw_text_set_fixed_width_mode(int mode);
+	#ifdef USE_SHOW_TIME
+	void display_time(render_container *container);
+	#endif /* USE_SHOW_TIME */
+	#ifdef USE_SHOW_INPUT_LOG
+	void display_input_log(render_container *container);
+	#endif /* USE_SHOW_INPUT_LOG */
 };
 
 
