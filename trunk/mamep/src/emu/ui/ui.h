@@ -99,17 +99,6 @@ enum
 
 
 /***************************************************************************
-    MACROS
-***************************************************************************/
-
-//#define draw_message_window(c, text) draw_text_box(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
-#ifdef CMD_LIST
-//#define draw_message_window_fixed_width(c, text) draw_text_box_fixed_width(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
-#endif /* CMD_LIST */
-
-
-
-/***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
 
@@ -251,5 +240,16 @@ private:
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
+
+
+
+/***************************************************************************
+    MACROS
+***************************************************************************/
+
+#define draw_message_window(c, text) draw_text_box(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
+#ifdef CMD_LIST
+#define draw_message_window_fixed_width(c, text) draw_text_box_fixed_width(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
+#endif /* CMD_LIST */
 
 #endif  /* __USRINTRF_H__ */

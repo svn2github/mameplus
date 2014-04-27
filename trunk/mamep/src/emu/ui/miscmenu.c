@@ -23,13 +23,13 @@
 #include <ctype.h>
 #include "imagedev/cassette.h"
 #include "imagedev/bitbngr.h"
-//#include "rendfont.h" // For convert_command_glyph
-//#ifdef CMD_LIST
-//#include "cmddata.h"
-//#endif /* CMD_LIST */
-//#ifdef USE_SCALE_EFFECTS
-//#include "osdscale.h"
-//#endif /* USE_SCALE_EFFECTS */
+#include "rendfont.h" // For convert_command_glyph
+#ifdef CMD_LIST
+#include "cmddata.h"
+#endif /* CMD_LIST */
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
 
 
 
@@ -1374,6 +1374,91 @@ ui_menu_game_info::~ui_menu_game_info()
 {
 }
 
+#ifdef CMD_LIST
+/*-------------------------------------------------
+    menu_command - handle the command.dat
+    menu
+-------------------------------------------------*/
+
+ui_menu_command::ui_menu_command(running_machine &machine, render_container *container) : ui_menu(machine, container)
+{
+}
+
+ui_menu_command::~ui_menu_command()
+{
+}
+
+void ui_menu_command::populate()
+{
+	const char *item[256];
+	int menu_items;
+	int total = command_sub_menu(&machine().system(), item);
+		
+	if (total)
+	{
+		for (menu_items = 0; menu_items < total; menu_items++)
+			item_append(item[menu_items], NULL, 0, (void *)menu_items);
+	}
+
+
+}
+
+void ui_menu_command::handle()
+{
+	/* process the menu */
+	const ui_menu_event *menu_event = process(0);
+	if (menu_event != NULL && menu_event->iptkey == IPT_UI_SELECT)
+		ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command_content(machine(), container, int((long long)(menu_event->itemref)))));
+}
+
+ui_menu_command_content::ui_menu_command_content(running_machine &machine, render_container *container, int _param) : ui_menu_command(machine, container)
+{
+	param = _param;
+}
+
+ui_menu_command_content::~ui_menu_command_content()
+{
+}
+
+void ui_menu_command_content::handle()
+{
+	/* process the menu */
+	process(UI_MENU_PROCESS_CUSTOM_ONLY);
+}
+
+void ui_menu_command_content::populate()
+{
+	char commandbuf[64 * 1024]; // 64KB of command.dat buffer, enough for everything
+
+	int game_paused = machine().paused();
+
+	/* Disable sound to prevent strange sound*/
+	if (!game_paused)
+		machine().pause();
+
+	if (load_driver_command_ex(&machine().system(), commandbuf, ARRAY_LENGTH(commandbuf), (FPTR)param) == 0)
+	{
+		const game_driver *last_drv;
+		last_drv = &machine().system();
+		convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
+
+//		item_append(commandbuf, NULL, MENU_FLAG_MULTILINE, NULL);
+		machine().ui().draw_message_window_fixed_width(container, commandbuf);
+	}
+
+	if (!game_paused)
+		machine().resume();
+
+	if (machine().ui().window_scroll_keys() > 0)
+		ui_menu::stack_pop(machine());
+}
+
+void ui_menu_command_content::custom_render(void *selectedref, float top, float bottom, float x, float y, float x2, float y2)
+{
+}
+
+#endif /* CMD_LIST */
+
 /*-------------------------------------------------
     menu_cheat - handle the cheat menu
 -------------------------------------------------*/
@@ -2287,6 +2372,331 @@ void ui_menu_crosshair::populate()
 ui_menu_crosshair::~ui_menu_crosshair()
 {
 }
+
+#ifdef USE_SCALE_EFFECTS
+#define SCALE_ITEM_NONE 0
+/*-------------------------------------------------
+    menu_scale_effect - handle the scale effect
+    settings menu
+-------------------------------------------------*/
+
+ui_menu_scale_effect::ui_menu_scale_effect(running_machine &machine, render_container *container) : ui_menu(machine, container)
+{
+}
+
+ui_menu_scale_effect::~ui_menu_scale_effect()
+{
+}
+
+void ui_menu_scale_effect::handle()
+{
+	const ui_menu_event *menu_event = process(0);
+	bool changed = false;
+
+	/* process the menu */
+	if (menu_event != NULL && menu_event->iptkey == IPT_UI_SELECT && 
+		(FPTR)menu_event->itemref >= SCALE_ITEM_NONE)
+	{
+		screen_device *screen = machine().first_screen();
+		screen->video_exit_scale_effect();
+		scale_decode(scale_name((FPTR)menu_event->itemref - SCALE_ITEM_NONE));
+		screen->video_init_scale_effect();
+		changed = true;
+		mame_printf_verbose(_("scale effect: %s\n"), scale_name((FPTR)menu_event->itemref - SCALE_ITEM_NONE));
+	}
+
+	/* if something changed, rebuild the menu */
+	if (changed)
+		reset(UI_MENU_RESET_REMEMBER_REF);
+}
+
+
+/*-------------------------------------------------
+    menu_scale_effect_populate - populate the
+    scale effect menu
+-------------------------------------------------*/
+
+void ui_menu_scale_effect::populate()
+{
+	int scaler;
+	item_append(_("None"), NULL, 0, (void *)SCALE_ITEM_NONE);
+
+	/* add items for each scaler */
+	for (scaler = 1; ; scaler++)
+	{
+		const char *desc = scale_desc(scaler);
+		if (desc == NULL)
+			break;
+
+		/* create a string for the item */
+		item_append(desc, NULL, 0, (void *)(SCALE_ITEM_NONE + scaler));
+	}
+	selected = scale_effect.effect;
+}
+#undef SCALE_ITEM_NONE
+#endif /* USE_SCALE_EFFECTS */
+
+
+#ifdef USE_AUTOFIRE
+#define AUTOFIRE_ITEM_P1_DELAY 1
+/*-------------------------------------------------
+    menu_autofire - handle the autofire settings
+    menu
+-------------------------------------------------*/
+
+ui_menu_autofire::ui_menu_autofire(running_machine &machine, render_container *container) : ui_menu(machine, container)
+{
+}
+
+ui_menu_autofire::~ui_menu_autofire()
+{
+}
+
+void ui_menu_autofire::handle()
+{
+	bool changed = false;
+
+	/* process the menu */
+	const ui_menu_event *menu_event = process(0);
+	
+	/* handle events */
+	if (menu_event != NULL && menu_event->itemref != NULL)
+	{
+		if (menu_event->iptkey == IPT_UI_LEFT || menu_event->iptkey == IPT_UI_RIGHT)
+		{
+			int player = (int)(FPTR)menu_event->itemref - AUTOFIRE_ITEM_P1_DELAY;
+			//autofire delay
+			if (player >= 0 && player < MAX_PLAYERS)
+			{
+				int autofire_delay = machine().ioport().get_autofiredelay(player);
+
+				if (menu_event->iptkey == IPT_UI_LEFT)
+				{
+					autofire_delay--;
+					if (autofire_delay < 1)
+						autofire_delay = 1;
+				}
+				else
+				{
+					autofire_delay++;
+					if (autofire_delay > 99)
+						autofire_delay = 99;
+				}
+
+				machine().ioport().set_autofiredelay(player, autofire_delay);
+
+				changed = true;
+			}
+			//anything else is a toggle item
+			else
+			{
+				ioport_field *field = (ioport_field *)menu_event->itemref;
+				ioport_field::user_settings settings;
+				int selected_value;
+				field->get_user_settings(settings);
+				selected_value = settings.autofire;
+
+				if (menu_event->iptkey == IPT_UI_LEFT)
+				{
+					if (--selected_value < 0)
+					selected_value = 2;
+				}
+				else
+				{
+					if (++selected_value > 2)
+					selected_value = 0;	
+				}
+
+				settings.autofire = selected_value;
+				field->set_user_settings(settings);
+
+				changed = true;
+			}
+		}
+	}
+
+	/* if something changed, rebuild the menu */
+	if (changed)
+		reset(UI_MENU_RESET_REMEMBER_REF);
+}
+
+
+/*-------------------------------------------------
+    menu_autofire_populate - populate the autofire
+    menu
+-------------------------------------------------*/
+
+void ui_menu_autofire::populate()
+{
+	astring subtext;
+	astring text;
+	ioport_field *field;
+	ioport_port *port;
+	int players = 0;
+	int i;
+
+	/* iterate over the input ports and add autofire toggle items */
+	for (port = machine().ioport().first_port(); port != NULL; port = port->next())
+		for (field = port->first_field(); field != NULL; field = field->next())
+		{
+			const char *name = field->name();
+
+			if (name != NULL && (
+			    (field->type() >= IPT_BUTTON1 && field->type() < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+#ifdef USE_CUSTOM_BUTTON
+			    || (field->type() >= IPT_CUSTOM1 && field->type() < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+#endif /* USE_CUSTOM_BUTTON */
+			   ))
+			{
+				ioport_field::user_settings settings;
+				field->get_user_settings(settings);
+//				entry[menu_items] = field;
+
+				if (players < field->player() + 1)
+					players = field->player() + 1;
+
+				/* add an autofire item */
+				switch (settings.autofire)
+				{
+					case 0:	subtext.cpy(_("Off"));	break;
+					case 1:	subtext.cpy(_("On"));		break;
+					case 2:	subtext.cpy(_("Toggle"));	break;
+				}
+				item_append(_(field->name()), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)field);
+			}
+		}
+	
+	/* add autofire delay items */
+	for (i = 0; i < players; i++)
+	{
+		text.printf(_("P%d %s"), i + 1, _("Autofire Delay"));
+		subtext.printf("%d", machine().ioport().get_autofiredelay(i));
+
+		/* append a menu item */
+		item_append(text, subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)(i + AUTOFIRE_ITEM_P1_DELAY));
+	}
+}
+#undef AUTOFIRE_ITEM_P1_DELAY
+#endif /* USE_AUTOFIRE */
+
+
+#ifdef USE_CUSTOM_BUTTON
+/*-------------------------------------------------
+    menu_custom_button - handle the custom button
+    settings menu
+-------------------------------------------------*/
+
+ui_menu_custom_button::ui_menu_custom_button(running_machine &machine, render_container *container) : ui_menu(machine, container)
+{
+}
+
+ui_menu_custom_button::~ui_menu_custom_button()
+{
+}
+
+void ui_menu_custom_button::handle()
+{
+	const ui_menu_event *menu_event = process(0);
+	bool changed = false;
+	int custom_buttons_count = 0;
+	ioport_field *field;
+	ioport_port *port;
+
+	/* handle events */
+	if (menu_event != NULL && menu_event->itemref != NULL)
+	{
+		UINT16 *selected_custom_button = (UINT16 *)(FPTR)menu_event->itemref;
+		int i;
+		
+		//count the number of custom buttons
+		for (port = machine().ioport().first_port(); port != NULL; port = port->next())
+			for (field = port->first_field(); field != NULL; field = field->next())
+			{
+				int type = field->type();
+
+				if (type >= IPT_BUTTON1 && type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+				{
+					type -= IPT_BUTTON1;
+					if (type >= custom_buttons_count)
+						custom_buttons_count = type + 1;
+				}
+			}
+
+		input_item_id id = ITEM_ID_1;
+		for (i = 0; i < custom_buttons_count; i++, id++)
+		{
+			if (i == 9)
+				id = ITEM_ID_0;
+
+			//fixme: code_pressed_once() doesn't work well
+			if (machine().input().code_pressed_once(input_code(DEVICE_CLASS_KEYBOARD, 0, ITEM_CLASS_SWITCH, ITEM_MODIFIER_NONE, id)))
+			{
+				*selected_custom_button ^= 1 << i;
+				changed = true;
+				break;
+			}
+		}
+	}
+
+	/* if something changed, rebuild the menu */
+	if (changed)
+		reset(UI_MENU_RESET_REMEMBER_REF);
+}
+
+
+/*-------------------------------------------------
+    menu_custom_button_populate - populate the 
+    custom button menu
+-------------------------------------------------*/
+
+void ui_menu_custom_button::populate()
+{
+	astring subtext;
+	astring text;
+	ioport_field *field;
+	ioport_port *port;
+	int menu_items = 0;
+	int is_neogeo = !core_stricmp(machine().system().source_file+17, "neogeo.c");
+	int i;
+
+//	item_append(_("Press 1-9 to Config"), NULL, 0, NULL);
+//	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
+
+	/* loop over the input ports and add autofire toggle items */
+	for (port = machine().ioport().first_port(); port != NULL; port = port->next())
+		for (field = port->first_field(); field != NULL; field = field->next())
+		{
+			int player = field->player();
+			int type = field->type();
+			const char *name = field->name();
+
+			if (name != NULL && type >= IPT_CUSTOM1 && type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+			{
+				const char colorbutton1 = is_neogeo ? 'A' : 'a';
+				int n = 1;
+				static char commandbuf[256];
+
+				type -= IPT_CUSTOM1;
+				subtext.cpy("");
+
+				//unpack the custom button value
+				for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
+					if (machine().ioport().m_custom_button[player][type] & n)
+					{
+						if (subtext.len() > 0)
+							subtext.cat("_+");
+						subtext.catprintf("_%c", colorbutton1 + i);
+					}
+
+				strcpy(commandbuf, subtext);
+				convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
+				item_append(_(name), commandbuf, 0, (void *)(FPTR)&machine().ioport().m_custom_button[player][type]);
+
+				menu_items++;
+			}
+		}
+}
+#endif /* USE_CUSTOM_BUTTON */
 
 /*-------------------------------------------------
     menu_quit_game - handle the "menu" for

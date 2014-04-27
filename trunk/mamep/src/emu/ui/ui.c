@@ -1337,17 +1337,6 @@ int ui_manager::window_scroll_keys()
 
 
 //-------------------------------------------------
-//  draw_message_window - draw a multiline text
-//  message with a box around it
-//-------------------------------------------------
-
-void ui_manager::draw_message_window(render_container *container, const char *text)
-{
-	draw_text_box(container, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR);
-}
-
-
-//-------------------------------------------------
 //  popup_time - popup a message for a specific
 //  amount of time
 //-------------------------------------------------
@@ -3056,6 +3045,18 @@ void ui_manager::set_use_natural_keyboard(bool use_natural_keyboard)
 	astring error;
 	machine().options().set_value(OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE, error);
 	assert(!error);
+}
+
+
+//-------------------------------------------------
+//  draw_message_window - draw a multiline text
+//  message with a box around it
+//-------------------------------------------------
+
+#undef draw_message_window
+void ui_manager::draw_message_window(render_container *container, const char *text)
+{
+	draw_text_box(container, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR);
 }
 
 

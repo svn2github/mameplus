@@ -210,7 +210,7 @@ static void load_mmo(int msgcat)
 		p->mmo_index[i].wstr = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 3];
 	}
 
-	global_free(mmo_index_buf);
+	global_free_array(mmo_index_buf);
 
 	p->status = mmo::MMO_READY;
 	return;
@@ -218,13 +218,13 @@ static void load_mmo(int msgcat)
 mmo_readerr:
 	if (p->mmo_str)
 	{
-		global_free(p->mmo_str);
+		global_free_array(p->mmo_str);
 		p->mmo_str = NULL;
 	}
 
 	if (p->mmo_index)
 	{
-		global_free(p->mmo_index);
+		global_free_array(p->mmo_index);
 		p->mmo_index = NULL;
 	}
 
@@ -334,13 +334,13 @@ void ui_lang_shutdown(void)
 
 			if (p->mmo_index)
 			{
-				global_free(p->mmo_index);
+				global_free_array(p->mmo_index);
 				p->mmo_index = NULL;
 			}
 
 			if (p->mmo_str)
 			{
-				global_free(p->mmo_str);
+				global_free_array(p->mmo_str);
 				p->mmo_str = NULL;
 			}
 		}

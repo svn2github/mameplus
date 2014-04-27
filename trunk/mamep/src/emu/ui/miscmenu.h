@@ -320,56 +320,55 @@ public:
 private:
 };
 
-//#ifdef USE_AUTOFIRE
-//class ui_menu_autofire : public ui_menu {
-//public:
-//	ui_menu_autofire(running_machine &machine, render_container *container);
-//	virtual ~ui_menu_autofire();
-//	virtual void populate();
-//	virtual void handle();
-//};
-//#endif /* USE_AUTOFIRE */
+#ifdef USE_AUTOFIRE
+class ui_menu_autofire : public ui_menu {
+public:
+	ui_menu_autofire(running_machine &machine, render_container *container);
+	virtual ~ui_menu_autofire();
+	virtual void populate();
+	virtual void handle();
+};
+#endif /* USE_AUTOFIRE */
 
-//#ifdef USE_CUSTOM_BUTTON
-//class ui_menu_custom_button : public ui_menu {
-//public:
-//	ui_menu_custom_button(running_machine &machine, render_container *container);
-//	virtual ~ui_menu_custom_button();
-//	virtual void populate();
-//	virtual void handle();
-//};
-//#endif /* USE_CUSTOM_BUTTON */
+#ifdef USE_CUSTOM_BUTTON
+class ui_menu_custom_button : public ui_menu {
+public:
+	ui_menu_custom_button(running_machine &machine, render_container *container);
+	virtual ~ui_menu_custom_button();
+	virtual void populate();
+	virtual void handle();
+};
+#endif /* USE_CUSTOM_BUTTON */
 
-//#ifdef USE_SCALE_EFFECTS
-//class ui_menu_scale_effect : public ui_menu {
-//public:
-//	ui_menu_scale_effect(running_machine &machine, render_container *container);
-//	virtual ~ui_menu_scale_effect();
-//	virtual void populate();
-//	virtual void handle();
-//};
-//#endif /* USE_SCALE_EFFECTS */
+#ifdef USE_SCALE_EFFECTS
+class ui_menu_scale_effect : public ui_menu {
+public:
+	ui_menu_scale_effect(running_machine &machine, render_container *container);
+	virtual ~ui_menu_scale_effect();
+	virtual void populate();
+	virtual void handle();
+};
+#endif /* USE_SCALE_EFFECTS */
 
-//#ifdef CMD_LIST
-//class ui_menu_command : public ui_menu {
-//public:
-//	ui_menu_command(running_machine &machine, render_container *container);
-//	virtual ~ui_menu_command();
-//	virtual void populate();
-//	virtual void handle();
-//};
+#ifdef CMD_LIST
+class ui_menu_command : public ui_menu {
+public:
+	ui_menu_command(running_machine &machine, render_container *container);
+	virtual ~ui_menu_command();
+	virtual void populate();
+	virtual void handle();
+};
 
-//class ui_menu_command_content : public ui_menu_command {
-//public:
-//	ui_menu_command_content(running_machine &machine, render_container *container, int param);
-//	virtual ~ui_menu_command_content();
-//	virtual void populate();
-//	virtual void handle();
-//	virtual void custom_render(void *selectedref, float top, float bottom, float x, float y, float x2, float y2);
-
-//protected:
-//	int param;
-//};
-//#endif /* CMD_LIST */
+class ui_menu_command_content : public ui_menu_command {
+public:
+	ui_menu_command_content(running_machine &machine, render_container *container, int param);
+	virtual ~ui_menu_command_content();
+	virtual void populate();
+	virtual void handle();
+	virtual void custom_render(void *selectedref, float top, float bottom, float x, float y, float x2, float y2);
+protected:
+	int param;
+};
+#endif /* CMD_LIST */
 
 #endif  /* __UI_MISCMENU_H__ */

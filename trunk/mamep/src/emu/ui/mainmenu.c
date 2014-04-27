@@ -56,10 +56,10 @@ void ui_menu_main::populate()
 	menu_text.printf(_("Input (this %s)"),emulator_info::get_capstartgamenoun());
 	item_append(menu_text.cstr(), NULL, 0, (void *)INPUT_SPECIFIC);
 #ifdef USE_AUTOFIRE
-//	item_append(_("Autofire Setting"), NULL, 0, (void *)AUTOFIRE);
+	item_append(_("Autofire Setting"), NULL, 0, (void *)AUTOFIRE);
 #endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
-//	item_append(_("Custom Buttons"), NULL, 0, (void *)CUSTOM_BUTTON);
+	item_append(_("Custom Buttons"), NULL, 0, (void *)CUSTOM_BUTTON);
 #endif /* USE_CUSTOM_BUTTON */
 
 	/* add optional input-related menus */
@@ -149,7 +149,7 @@ void ui_menu_main::populate()
 
 #ifdef CMD_LIST
 	/* add command list menu */
-//	item_append(_("Show Command List"), NULL, 0, (void *)COMMAND);
+	item_append(_("Show Command List"), NULL, 0, (void *)COMMAND);
 #endif /* CMD_LIST */
 
 	/* add memory card menu */
@@ -184,15 +184,15 @@ void ui_menu_main::handle()
 			break;
 
 #ifdef USE_AUTOFIRE
-//		case AUTOFIRE:
-//			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_autofire(machine(), container)));
-//			break;
+		case AUTOFIRE:
+			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_autofire(machine(), container)));
+			break;
 
 #endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
-//		case CUSTOM_BUTTON:
-//			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_custom_button(machine(), container)));
-//			break;
+		case CUSTOM_BUTTON:
+			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_custom_button(machine(), container)));
+			break;
 
 #endif /* USE_CUSTOM_BUTTON */
 		case SETTINGS_DIP_SWITCHES:
@@ -270,9 +270,9 @@ void ui_menu_main::handle()
 			break;
 
 #ifdef CMD_LIST
-//		case COMMAND:
-//			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command(machine(), container)));
-//			break;
+		case COMMAND:
+			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command(machine(), container)));
+			break;
 #endif /* CMD_LIST */
 
 		case MEMORY_CARD:

@@ -506,7 +506,7 @@ int main(int argc, char *argv[])
 
 	// free symbols
 	symbols = NULL;
-	//ui_lang_shutdown();
+	ui_lang_shutdown();
 	return result;
 }
 
