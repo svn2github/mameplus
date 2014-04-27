@@ -167,9 +167,6 @@ render_font::render_font(render_manager &manager, const char *filename)
 		m_height_cmd(0),
 		m_yoffs_cmd(0)
 {
-	memset(m_glyphs, 0, sizeof(m_glyphs));
-	memset(m_glyphs_cmd, 0, sizeof(m_glyphs_cmd));
-
 	// if this is an OSD font, we're done
 	if (filename != NULL)
 	{

@@ -347,7 +347,7 @@ void ui_lang_shutdown(void)
 
 		if (!mmo_config[i].dont_free && mmo_config[i].filename)
 		{
-			global_free((char *)mmo_config[i].filename);
+			osd_free((char *)mmo_config[i].filename);
 			mmo_config[i].filename = NULL;
 		}
 	}
