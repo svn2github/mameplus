@@ -136,7 +136,6 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 //mamep: allocate command glyph font
 void render_font::render_font_command_glyph()
 {
-	return;
 	emu_file ramfile(OPEN_FLAG_READ);
 	file_error filerr;
 
