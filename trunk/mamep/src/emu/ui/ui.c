@@ -107,7 +107,7 @@ static const input_item_id non_char_keys[] =
 ***************************************************************************/
 
 #ifdef UI_COLOR_DISPLAY
-static rgb_t uifont_colortable[MAX_COLORTABLE];
+static dynamic_array<rgb_t> uifont_colortable;
 #endif /* UI_COLOR_DISPLAY */
 static rgb_t ui_bgcolor;
 static render_texture *bgtexture;
@@ -309,6 +309,8 @@ void ui_manager::setup_palette()
 		ui_transparency = 215;
 	}
 #endif /* TRANS_UI */
+
+	uifont_colortable.resize(MAX_COLORTABLE);
 
 	for (i = 0; palette_decode_table[i].name; i++)
 	{

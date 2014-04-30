@@ -135,6 +135,7 @@ int lang_get_langcode(void)
 void assign_msg_catategory(int msgcat, const char *name)
 {
 	mmo_config[msgcat].filename = core_strdup(name);
+	mmo_config[msgcat].dont_free = 0;
 }
 
 

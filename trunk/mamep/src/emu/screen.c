@@ -190,12 +190,11 @@ static void convert_32_to_15(bitmap_t &src, bitmap_t &dst, const rectangle &visa
 
 	for (y = visarea.min_y; y < visarea.max_y; y++)
 	{
-		//UINT16 *dst16 = &dst.pixt<UINT16>(y, visarea.min_x);
-		//UINT32 *src32 = &src.pixt<UINT32>(y, visarea.min_x);
+		UINT16 *dst16 = &dst.pixt<UINT16>(y, visarea.min_x);
+		UINT32 *src32 = &src.pixt<UINT32>(y, visarea.min_x);
 
-		//FIXME
 		for (x = visarea.min_x; x < visarea.max_x; x++)
-			; //*dst16++ = rgb_to_rgb15(*src32++);
+			*dst16++ = rgb_t(*src32++).as_rgb15();
 	}
 }
 

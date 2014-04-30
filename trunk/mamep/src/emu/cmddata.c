@@ -119,7 +119,7 @@ static void datafile_exit(running_machine &machine)
 
 	flush_index();
 
-	if (sorted_drivers == NULL)
+	if (sorted_drivers)
 	{
 		auto_free(*m_machine, sorted_drivers);
 		sorted_drivers = NULL;
@@ -866,6 +866,7 @@ static void free_menuidx(struct tMenuIndex **_index)
 		while(m_idx->menuitem != NULL)
 		{
 			auto_free(*m_machine, m_idx->menuitem);
+			m_idx->menuitem = NULL;
 			m_idx++;
 		}
 
@@ -972,7 +973,10 @@ static int find_command (const game_driver *drv)
 	int i;
 
 	if (menu_filename)
+	{
 		osd_free(menu_filename);
+		menu_filename = NULL;
+	}
 
 	for (where = 0; where <= FILE_ROOT; where += FILE_ROOT)
 	{
