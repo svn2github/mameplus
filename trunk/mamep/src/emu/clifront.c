@@ -1566,11 +1566,11 @@ void cli_frontend::romident(const char *filename)
 	if (ident.matches() == ident.total())
 		return;
 	else if (ident.matches() == ident.total() - ident.nonroms())
-		throw emu_fatalerror(MAMERR_IDENT_NONROMS, NULL);
+		throw emu_fatalerror(MAMERR_IDENT_NONROMS, "", NULL);
 	else if (ident.matches() > 0)
-		throw emu_fatalerror(MAMERR_IDENT_PARTIAL, NULL);
+		throw emu_fatalerror(MAMERR_IDENT_PARTIAL, "", NULL);
 	else
-		throw emu_fatalerror(MAMERR_IDENT_NONE, NULL);
+		throw emu_fatalerror(MAMERR_IDENT_NONE, "", NULL);
 }
 
 
@@ -1648,7 +1648,7 @@ void cli_frontend::listgames(const char *gamename)
 	if (count > 0)
 		return;
 	else
-		throw emu_fatalerror(MAMERR_NO_SUCH_GAME, NULL);
+		throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "", NULL);
 }
 
 
