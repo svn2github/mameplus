@@ -982,8 +982,11 @@ void MameDat::loadListXmlReadyReadStandardOutput()
 	QString buf = proc->readAllStandardOutput();
 	
 	//mamep: remove windows endl
-	buf.replace(QString("\r"), QString(""));
-	
+	buf.replace("\r", "");
+	//FIXME
+	buf.replace("\n", "");
+	buf.replace("\t", "");
+
 	numTotalGames += buf.count("<game name=");
 	mameOutputBuf += buf.toUtf8();
 

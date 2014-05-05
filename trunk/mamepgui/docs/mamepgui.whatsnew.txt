@@ -13,6 +13,18 @@ take Genesis for example:
 1. 设置rom路径: "选项 - 目录 - MESS 路径 - Genesis extra software"
 2. 在 "家用机 - genesis" 目录按F5
 
+1.5.9
+fixed buffer overflow (mamep 0.153 need more fix)
+
+1.5.8.1
+add support for "ume*.exe".
+remove device-drivers "emu/*/*.c" from "Drivers" filter.
+change cache-file flag.
+add .7z support. [ilyhacker @ ppxclub]
+fix some arcade with devices (CPS3 Games and etc) lists not in arcade game list. [CLARKH@ppxclub]
+fix when change options will not work right now (should click other option then press OK will work). [CLARKH@ppxclub]
+fix gamelist name show red text. [CLARKH@ppxclub]
+
 1.5.6
 fixed reading listxml (changed to QByteArray from QString)
 

@@ -48,7 +48,7 @@ bool isUME = false;
 
 QStringList validGuiSettings;
 
-#define MPGUI_VER "1.5.8.1"
+#define MPGUI_VER "1.5.9"
 
 void MainWindow::log(QString message)
 {
