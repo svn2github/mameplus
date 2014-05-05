@@ -18,6 +18,10 @@ hack
 4fun
 
 
+# T.V. 21
+A-1 Supply
+
+
 # Wizard (Ver 1.0)
 A.A.
 
@@ -166,6 +170,10 @@ Alba
 Alfa System
 
 
+# Street Burners [TTL]
+Alleid Leisure
+
+
 # Ace
 Allied Leisure
 
@@ -222,12 +230,16 @@ American Alpha
 American Laser Games
 
 
-# Krazy Bowl
+# Kero Kero Keroppi's Let's Play Together (USA, Version 2.0)
 American Sammy
 
 
 # Phoenix (Amstar)
 Amstar
+
+
+# American Music Poker (V1.4)
+Amusco
 
 
 # Logic Pro Adventure (Japan)
@@ -258,7 +270,7 @@ Apple
 Arachnid
 
 
-# Guilty Gear X (JPN)
+# Fist Of The North Star
 Arc System Works
 
 
@@ -298,7 +310,7 @@ Ashby Computers and Graphics Ltd.
 Associated Leisure
 
 
-# Top XXI (Version 1.2)
+# Cherry Wheel (Version 1.7)
 Assogiochi Assago
 
 
@@ -342,6 +354,10 @@ Atronic
 Avantime?
 
 
+# Star Sweep (Japan, STP1/VER.A)
+Axela
+
+
 # Galaxi (v2.0)
 B.R.L.
 
@@ -366,6 +382,10 @@ BMC
 BS Electronics
 
 
+# Fun Four (Set 1) [TTL]
+Bailey International
+
+
 # Attack From Mars (1.0)
 Bally
 
@@ -382,7 +402,7 @@ Bally Midway
 Bandai
 
 
-# Air Gallet (Europe)
+# Bang Bang Ball (v1.05)
 Banpresto
 
 
@@ -422,6 +442,10 @@ Bell Games
 Best System
 
 
+# The Big Apple (2131-13, U5-0)
+Big Apple Games
+
+
 # Codename: Blut Engel (060119, Homebrew)
 Blastar
 
@@ -438,7 +462,7 @@ Blitz Systems Inc.
 Bonanza Enterprises, Ltd
 
 
-# Butterfly Video Game (ver.U350C)
+# Butterfly Video Game (version U350C)
 Bordun International
 
 
@@ -554,6 +578,10 @@ Chaos
 Cheil Computer System
 
 
+# Destruction Derby [TTL]
+Chicago Coin
+
+
 # L'Hexagone
 Christian Tabart
 
@@ -606,7 +634,7 @@ Coinworld
 Comad
 
 
-# Fantasia (940429 PCB)
+# Fantasia (940429 PCB, set 1)
 Comad & New Japan System
 
 
@@ -618,6 +646,10 @@ Commodore Business Machines
 Compile
 
 
+# Cuatro en Linea
+Compumatic
+
+
 # Galaxy Game
 Computer Recreations, Inc
 
@@ -626,11 +658,11 @@ Computer Recreations, Inc
 Comsoft
 
 
-# Bar 7 (Concept)
+# Bar 7 (Concept) (set 1)
 Concept
 
 
-# Casino Bar X (Concept Games Ltd) (?)
+# Bar 7 (Concept Games Ltd) (?)
 Concept Games Ltd
 
 
@@ -694,7 +726,7 @@ Crystal?
 Current Technologies
 
 
-# Black Touch '96
+# Billard List
 D.G.R.M.
 
 
@@ -794,6 +826,10 @@ Digital Dreams
 Digital Soft
 
 
+# Mega Phoenix
+Dinamic
+
+
 # Connect 4
 Dolbeck Systems
 
@@ -882,7 +918,7 @@ EIM
 ELAM
 
 
-# Deluxe 5 (ver. 0107, 07/01/2000)
+# Deluxe 5 (ver. 0107, 07/01/2000, set 1)
 ESD
 
 
@@ -926,6 +962,10 @@ Ed Co. Ltd.
 Eighting
 
 
+# Avenger [TTL]
+Electra
+
+
 # Jan Jan Paradise 2
 Electro Design
 
@@ -942,7 +982,7 @@ Electrocoin
 Electronic Devices
 
 
-# Diver Boy
+# Fantasy Land (set 1)
 Electronic Devices Italy
 
 
@@ -1062,7 +1102,7 @@ Excel
 Excellent System
 
 
-# Car Polo
+# Attack [TTL]
 Exidy
 
 
@@ -1114,6 +1154,10 @@ Frael
 Fujic
 
 
+# Biplane 4 [TTL]
+Fun Games
+
+
 # Big Deal (Hungarian, set 1)
 Fun World
 
@@ -1131,7 +1175,7 @@ Fuuki
 
 
 # Border Down (Rev A) (GDL-0023A)
-G-Rev
+G.Rev
 
 
 # Lover Boy
@@ -1170,6 +1214,10 @@ Gaelco
 Gakken
 
 
+# Diver Boy
+Gamart
+
+
 # Table Tennis Champions (set 1)
 Gamart?
 
@@ -1186,6 +1234,10 @@ Game Refuge/Monaco Entertainment
 Game-A-Tron
 
 
+# Bingo
+Game-A-Tron?
+
+
 # Wheel Of Fortune (set 1)
 GameTek
 
@@ -1196,6 +1248,10 @@ Gameace
 
 # Flame Gunner
 Gaps Inc.
+
+
+# Air Gallet (Europe)
+Gazelle
 
 
 # Big Ghoulies (Gemini) (M1A/B) (set 1)
@@ -1334,6 +1390,10 @@ Home Data
 Home Data?
 
 
+# Shark JAWS [TTL]
+Horror Games
+
+
 # Cuby Bop (location test)
 Hot-B
 
@@ -1466,6 +1526,10 @@ Island Design
 Itisa
 
 
+# Crystal Colours (CMC hardware)
+J.C.D. srl
+
+
 # Crystals Colours (Ver 1.01)
 JCD srl
 
@@ -1518,7 +1582,7 @@ Jeutel
 Joyland
 
 
-# Jubilee Double-Up Poker
+# Double-Up Poker (Jubilee)
 Jubilee
 
 
@@ -1560,6 +1624,10 @@ Kasco
 
 # Poka Poka Satan (Japan)
 Kato Seisakujo Co., Ltd.
+
+
+# Indy 800 [TTL]
+Kee
 
 
 # Kimble Double HI-LO
@@ -1666,6 +1734,10 @@ M.M. - B.R.L.
 M.P.
 
 
+# Animal Basket
+MOSS
+
+
 # Catacomb
 MTM Games
 
@@ -1746,7 +1818,7 @@ Media
 Mega
 
 
-# Big Apple Games (2131-13, U5-0)
+# Casino Five (3315-02, U5-0)
 Merit
 
 
@@ -1782,7 +1854,7 @@ Micropin
 Microprose Games Inc.
 
 
-# Toffy
+# Super Toffy
 Midas
 
 
@@ -1874,15 +1946,11 @@ Monroe Bowling Co.
 Moov Generation
 
 
-# Raiden III (v2.01J)
-Moss Ltd
-
-
 # Dakar
 Mr Game
 
 
-# The Three Stooges In Brides Is Brides
+# The Three Stooges In Brides Is Brides (set 1)
 Mylstar
 
 
@@ -1908,10 +1976,6 @@ NMK
 
 # Hot Fire Birds
 NSM
-
-
-# Super-X (NTC)
-NTC
 
 
 # Mahjong Cafe Break
@@ -1986,7 +2050,7 @@ Nichibutsu USA
 Nichibutsu?
 
 
-# Dragon Bowl
+# Dragon Bowl (set 1, encrypted program)
 Nics
 
 
@@ -2116,6 +2180,10 @@ Orca
 
 # 1945k III
 Oriental Soft
+
+
+# G-Stream G2020
+Oriental Soft Japan
 
 
 # Magic Fly
@@ -2314,6 +2382,10 @@ Raizing
 RamTek
 
 
+# Baseball (Ramtek) [TTL]
+Ramtek
+
+
 # Battletoads
 Rare
 
@@ -2434,7 +2506,7 @@ Sammy USA
 Sammy USA Corporation
 
 
-# Gam*Boy II (Korea)
+# Gam*Boy I (Korea)
 Samsung
 
 
@@ -2562,7 +2634,7 @@ Shoei
 Shonan
 
 
-# Unknown Sidam Poker
+# unknown Sidam Poker
 Sidam
 
 
@@ -2592,6 +2664,10 @@ Simutrek
 
 # Erotictac/Tactic
 Sisteme
+
+
+# unknown Sisteme France Poker
+Sisteme France
 
 
 # Sleic Pin Ball
@@ -2750,7 +2826,7 @@ Sun Amusement
 Sun Electronics
 
 
-# Top Shooter
+# Puckman Pockimon (set 3)
 Sun Mixing
 
 
@@ -3090,6 +3166,10 @@ VR8 Inc.
 Valadon Automation
 
 
+# Fireball
+Valco
+
+
 # Spectra IV
 Valley
 
@@ -3310,7 +3390,7 @@ Yashica
 Yeno
 
 
-# Spectrum 2000 (Euro)
+# Spectrum 2000 (vertical)
 Yona Tech
 
 
@@ -3380,9 +3460,5 @@ hack by trap15
 
 # Adders & Ladders (Bwb / Barcrest) (MPU4) (ADD 1.0C, hack?, set 1)
 hack?
-
-
-# Fun House (unknown) (MPU4)
-unknown
 
 
