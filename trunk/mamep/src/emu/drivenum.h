@@ -165,11 +165,11 @@ class driver_switch
 protected:
 	// construction/destruction
 	driver_switch();
+	~driver_switch();
 
 public:
 	static void init_assign_drivers();
 	static void assign_drivers(emu_options &opts);
-	static void free_drivers();
 
 private:
 	// internal state

@@ -20,6 +20,10 @@ driver_switch::driver_switch()
 {
 }
 
+driver_switch::~driver_switch()
+{
+}
+
 void driver_switch::init_assign_drivers(void)
 {
 	//direct change protected member
@@ -108,10 +112,6 @@ void driver_switch::assign_drivers(emu_options &opts)
 	driver_list::s_driver_count = n;
 
 	qsort(driver_list::s_drivers_sorted, n, sizeof(*driver_list::s_drivers_sorted), driver_list::driver_sort_callback);
-}
-
-void driver_switch::free_drivers(void)
-{
 }
 #endif /* DRIVER_SWITCH */
 

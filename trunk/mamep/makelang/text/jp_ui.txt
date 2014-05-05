@@ -1,18 +1,6 @@
-# osd/winui/properties.c: 965
-%d colors 
-%d 色 
-
 # osd/winui/layout.c: 210 osd/winui/winui.c: 3660
 %d games
 %d ゲーム
-
-# osd/winui/properties.c: 876
-%d x %d (H) %f Hz (%d colors)\n
-%d x %d (横) %f Hz (%d 色)\n
-
-# osd/winui/properties.c: 869
-%d x %d (V) %f Hz (%d colors)\n
-%d x %d (縦) %f Hz (%d 色)\n
 
 # osd/winui/treeview.c: 1265
 %dx%d (H)
@@ -22,27 +10,27 @@
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 933
+# osd/winui/properties.c: 945
 %s (%d player)
 %s (%d プレイヤー)
 
-# osd/winui/properties.c: 944
+# osd/winui/properties.c: 956
 %s (%d player, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/properties.c: 942
+# osd/winui/properties.c: 954
 %s (%d player, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/properties.c: 930
+# osd/winui/properties.c: 942
 %s (%d players)
 %s (%d プレイヤー)
 
-# osd/winui/properties.c: 939
+# osd/winui/properties.c: 951
 %s (%d players, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/properties.c: 936
+# osd/winui/properties.c: 948
 %s (%d players, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
@@ -322,7 +310,7 @@ A sharing violation occurred.
 A&udit
 監査(&U)
 
-# osd/winui/properties.c: 915 osd/winui/treeview.c: 1392
+# osd/winui/properties.c: 927 osd/winui/treeview.c: 1392
 AD Stick
 アナログスティック
 
@@ -394,7 +382,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 フォルダに対してフィルタリングを設定します
 
-# osd/winui/properties.c: 3619
+# osd/winui/properties.c: 3631
 Anti-clockwise
 反時計回り
 
@@ -442,15 +430,15 @@ Audit items in this folder
 Audit the selected item
 選択した項目を監査
 
-# osd/winui/properties.c: 378, 409, 2772, 3038, 3044
+# osd/winui/properties.c: 378, 409, 2784, 3050, 3056
 Auto
 自動
 
-# osd/winui/properties.c: 3622
+# osd/winui/properties.c: 3634
 Auto anti-clockwise
 自動的に反時計回り
 
-# osd/winui/properties.c: 3621
+# osd/winui/properties.c: 3633
 Auto clockwise
 自動的に時計回り
 
@@ -482,11 +470,11 @@ Available fields:
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1096
+# osd/winui/properties.c: 1108
 BIOS missing
 BIOSがありません
 
-# osd/winui/properties.c: 1207
+# osd/winui/properties.c: 1219
 BIOS options\nCustom options used by all games in the %s
 グローバルBIOSオプションです。\n%sの全ゲームのカスタム設定として使用されます。
 
@@ -654,7 +642,7 @@ Checking Game %s - %s
 Checking...
 チェック中...
 
-# osd/winui/properties.c: 3618
+# osd/winui/properties.c: 3630
 Clockwise
 時計回り
 
@@ -678,11 +666,11 @@ Cocktail
 Coin lockout
 コイン投入数を制限する
 
-# osd/winui/properties.c: 999, 1052, 1123
+# osd/winui/properties.c: 1011, 1064, 1135
 Colors are completely wrong
 色が再現されない
 
-# osd/winui/properties.c: 1005, 1058, 1129
+# osd/winui/properties.c: 1017, 1070, 1141
 Colors aren't 100% accurate
 色の再現が不完全
 
@@ -854,7 +842,7 @@ Debugscript
 Decrypted
 暗号解除
 
-# osd/winui/properties.c: 3617, 3843, 3873
+# osd/winui/properties.c: 3629, 3855, 3885
 Default
 デフォルト
 
@@ -882,7 +870,7 @@ Delete
 Details
 詳細
 
-# osd/winui/properties.c: 917 osd/winui/treeview.c: 1394
+# osd/winui/properties.c: 929 osd/winui/treeview.c: 1394
 Dial
 ダイヤル
 
@@ -986,23 +974,23 @@ Double Joy 4-Way
 Double Joy 8-Way
 8方向デュアルスティック
 
-# osd/winui/properties.c: 913
+# osd/winui/properties.c: 925
 Double Joystick 16-Way
 16方向デュアルスティック
 
-# osd/winui/properties.c: 910
+# osd/winui/properties.c: 922
 Double Joystick 2-Way
 2方向デュアルスティック
 
-# osd/winui/properties.c: 914
+# osd/winui/properties.c: 926
 Double Joystick 2-Way Vertical
 2方向デュアルスティック 縦
 
-# osd/winui/properties.c: 911
+# osd/winui/properties.c: 923
 Double Joystick 4-Way
 4方向デュアルスティック
 
-# osd/winui/properties.c: 912
+# osd/winui/properties.c: 924
 Double Joystick 8-Way
 8方向デュアルスティック
 
@@ -1010,11 +998,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# osd/winui/properties.c: 3585
+# osd/winui/properties.c: 3597
 Draw every frame
 フレームスキップなし
 
-# osd/winui/properties.c: 1197
+# osd/winui/properties.c: 1209
 Driver options\nCustom options used by all games in the %s
 グローバルドライバオプションです。\n%sの全ゲームのカスタム設定として使用されます。
 
@@ -1114,7 +1102,7 @@ Enable the title tab
 Enforce aspect ratio
 表\示比率を固定
 
-# osd/winui/mui_audit.c: 102 osd/winui/properties.c: 584, 722, 1988
+# osd/winui/mui_audit.c: 102 osd/winui/properties.c: 584, 722, 2000
 Error
 エラー
 
@@ -1242,15 +1230,15 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 下記より選択された項目をリスト上非表\示にします
 
-# osd/winui/properties.c: 1017, 1070, 1141
+# osd/winui/properties.c: 1029, 1082, 1153
 Game lacks sound
 サウンドが未対応
 
-# osd/winui/properties.c: 993, 1046, 1117
+# osd/winui/properties.c: 1005, 1058, 1129
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
-# osd/winui/properties.c: 1035, 1088, 1159
+# osd/winui/properties.c: 1047, 1100, 1171
 Game requires external artwork files
 ゲームは外部のアートワークファイルが必要です
 
@@ -1294,7 +1282,7 @@ General
 Global game options\n
 グローバルゲームオプションです\n
 
-# osd/winui/properties.c: 1182
+# osd/winui/properties.c: 1194
 Global game options\nDefault options used by all games
 グローバルゲームオプションです。\n全ゲームのデフォルト設定として使用されます。
 
@@ -1338,7 +1326,7 @@ Homebrew
 Horizontal
 横型
 
-# osd/winui/properties.c: 1191
+# osd/winui/properties.c: 1203
 Horizontal options\nCustom options used by all games in the Horizontal
 グローバル縦型オプションです。\n縦型の全ゲームのカスタム設定として使用されます。
 
@@ -1406,6 +1394,10 @@ Input Files (*.inp)
 Input file format version mismatch
 入力ファイルの形式が間違っています
 
+# osd/winui/winui.c: 6584
+Input file invalid or in an older, unsupported format
+入力ファイルは無効であるかサポートされない古い形式です
+
 # osd/winui/winui.c: 6578
 Input file is corrupt or invalid (missing header)
 入力ファイルが壊れているか無効です(ヘッダが見つかりません)
@@ -1446,23 +1438,23 @@ Joy 8-Way
 Joystick
 ジョイスティック
 
-# osd/winui/properties.c: 908
+# osd/winui/properties.c: 920
 Joystick 16-Way
 16方向スティック
 
-# osd/winui/properties.c: 905
+# osd/winui/properties.c: 917
 Joystick 2-Way
 2方向スティック
 
-# osd/winui/properties.c: 909
+# osd/winui/properties.c: 921
 Joystick 2-Way Vertical
 2方向スティック 縦
 
-# osd/winui/properties.c: 906
+# osd/winui/properties.c: 918
 Joystick 4-Way
 4方向スティック
 
-# osd/winui/properties.c: 907
+# osd/winui/properties.c: 919
 Joystick 8-Way
 8方向スティック
 
@@ -1494,7 +1486,7 @@ Language Files
 Large Icons
 大きなアイコン
 
-# osd/winui/layout.c: 88 osd/winui/properties.c: 397, 919 osd/winui/treeview.c: 1396
+# osd/winui/layout.c: 88 osd/winui/properties.c: 397, 931 osd/winui/treeview.c: 1396
 Lightgun
 光線銃
 
@@ -1662,7 +1654,7 @@ Non Mechanical
 Non-Wor&king
 動作不可(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2906, 3620, 3701, 3830, 3839, 3869
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 340, 393, 2918, 3632, 3713, 3842, 3851, 3881
 None
 なし
 
@@ -1678,7 +1670,7 @@ Not Working
 Not found
 見つかりません
 
-# osd/winui/properties.c: 987, 1107
+# osd/winui/properties.c: 999, 1119
 Not working
 動作不可
 
@@ -1742,7 +1734,7 @@ PCB情報ファイル
 PCBs
 PCB
 
-# osd/winui/properties.c: 916 osd/winui/treeview.c: 1393
+# osd/winui/properties.c: 928 osd/winui/treeview.c: 1393
 Paddle
 パドル
 
@@ -1762,7 +1754,7 @@ Passed
 Pause Brightness
 ポーズ中の明るさ
 
-# osd/winui/properties.c: 920 osd/winui/treeview.c: 1397
+# osd/winui/properties.c: 932 osd/winui/treeview.c: 1397
 Pedal
 ペダル
 
@@ -1894,7 +1886,7 @@ ROM check:
 ROMs
 ROM
 
-# osd/winui/properties.c: 1098
+# osd/winui/properties.c: 1110
 ROMs missing
 ROMが見つかりません
 
@@ -2066,7 +2058,7 @@ Screen flip support is missing
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
-# osd/winui/properties.c: 1029, 1082, 1153
+# osd/winui/properties.c: 1041, 1094, 1165
 Screen flipping is not supported
 カクテルモードの画面反転に未対応
 
@@ -2078,7 +2070,7 @@ Screen setting
 Screen:
 画面サイズ:
 
-# osd/winui/properties.c: 859
+# osd/winui/properties.c: 863
 Screenless Game
 画面なしゲーム
 
@@ -2274,43 +2266,43 @@ Show or hide the toolbar
 Show these fields in this order:
 表\示設定済みフィールド:
 
-# osd/winui/properties.c: 3587
+# osd/winui/properties.c: 3599
 Skip 1 frame
 1フレームスキップ
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3617
 Skip 10 frames
 10フレームスキップ
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3601
 Skip 2 frames
 2フレームスキップ
 
-# osd/winui/properties.c: 3591
+# osd/winui/properties.c: 3603
 Skip 3 frames
 3フレームスキップ
 
-# osd/winui/properties.c: 3593
+# osd/winui/properties.c: 3605
 Skip 4 frames
 4フレームスキップ
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3607
 Skip 5 frames
 5フレームスキップ
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3609
 Skip 6 frames
 6フレームスキップ
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3611
 Skip 7 frames
 7フレームスキップ
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3613
 Skip 8 frames
 8フレームスキップ
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3615
 Skip 9 frames
 9フレームスキップ
 
@@ -2418,7 +2410,7 @@ Sort items by year
 Sound
 サウンド
 
-# osd/winui/properties.c: 1023, 1076, 1147
+# osd/winui/properties.c: 1035, 1088, 1159
 Sound emulation isn't 100% accurate
 音の再現が不完全
 
@@ -2458,7 +2450,7 @@ Stereo
 Story
 ストーリー
 
-# osd/winui/properties.c: 953 osd/winui/treeview.c: 1345
+# osd/winui/properties.c: 965 osd/winui/treeview.c: 1345
 Supported
 対応
 
@@ -2566,7 +2558,7 @@ Toggle full screen mode
 Total:
 合計:
 
-# osd/winui/layout.c: 87 osd/winui/properties.c: 918 osd/winui/treeview.c: 1395 osd/winui/winui.c: 884
+# osd/winui/layout.c: 87 osd/winui/properties.c: 930 osd/winui/treeview.c: 1395 osd/winui/winui.c: 884
 Trackball
 トラックボール
 
@@ -2670,7 +2662,7 @@ Unavailable
 Unemulated Protection
 プロテクトの再現が不完全
 
-# osd/winui/mui_audit.c: 511 osd/winui/properties.c: 927, 981 
+# osd/winui/mui_audit.c: 511 osd/winui/properties.c: 939, 993 
 Unknown
 不明
 
@@ -2678,7 +2670,7 @@ Unknown
 Unknown error.
 原因不明のエラーが発生しました。
 
-# osd/winui/properties.c: 955 osd/winui/treeview.c: 1346
+# osd/winui/properties.c: 967 osd/winui/treeview.c: 1346
 Unsupported
 未対応
 
@@ -2714,19 +2706,11 @@ Vector
 Vector (H)
 ベクタ (H)
 
-# osd/winui/properties.c: 851
-Vector (H) %f Hz (%d colors)
-ベクタ (横) %f Hz (%d 色)
-
 # osd/winui/treeview.c: 1228
 Vector (V)
 ベクタ (V)
 
-# osd/winui/properties.c: 846
-Vector (V) %f Hz (%d colors)
-ベクタ (縦) %f Hz (%d 色)
-
-# osd/winui/properties.c: 1185
+# osd/winui/properties.c: 1197
 Vector options\nCustom options used by all games in the Vector
 グローバルベクタオプションです。\nベクタの全ゲームのカスタム設定として使用されます。
 
@@ -2738,11 +2722,11 @@ Version 9
 Vertical
 縦型
 
-# osd/winui/properties.c: 1188
+# osd/winui/properties.c: 1200
 Vertical options\nCustom options used by all games in the Vertical
 グローバル横型オプションです。\n横型の全ゲームのカスタム設定として使用されます。
 
-# osd/winui/properties.c: 1011, 1064, 1135
+# osd/winui/properties.c: 1023, 1076, 1147
 Video emulation isn't 100% accurate
 ビデオの再現が不完全
 
@@ -2774,7 +2758,7 @@ Vsyncを待つ
 What's new in MAME
 MAMEの新しい機能\を表\示します
 
-# osd/winui/layout.c: 70 osd/winui/properties.c: 1040, 1111
+# osd/winui/layout.c: 70 osd/winui/properties.c: 1052, 1123
 Working
 動作可
 
@@ -2912,10 +2896,6 @@ Christopher Kirmse and the MAMEUI team
 
 # osd/winui/mameui.rc: 372
 Copyright (C) 1997-2011 The MAME Team
-
-
-# osd/winui/winui.c: 6584
-Input file invalid or in an older, unsupported format
 
 
 # osd/winui/winui.c: 3513, 3537

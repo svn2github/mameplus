@@ -2603,9 +2603,6 @@ static void Win32UI_exit()
 
 	free(sort_index);
 	free_driversw();
-#ifdef DRIVER_SWITCH
-	driver_switch::free_drivers();
-#endif /* DRIVER_SWITCH */
 	ui_lang_shutdown();
 	FreeTranslateBuffer();
 }

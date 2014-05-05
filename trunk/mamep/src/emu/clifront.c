@@ -111,17 +111,15 @@ cli_frontend::cli_frontend(cli_options &options, osd_interface &osd)
 
 cli_frontend::~cli_frontend()
 {
-#ifdef DRIVER_SWITCH
-	driver_switch::free_drivers();
-#endif /* DRIVER_SWITCH */
-
 	// nuke any device options since they will leak memory
 	m_options.remove_device_options();
 
 	// report any unfreed memory on clean exits
 	track_memory(false);
+#ifdef MAME_DEBUG
 	if (m_result == MAMERR_NONE)
 		dump_unfreed_mem(m_start_memory);
+#endif
 }
 
 
@@ -149,9 +147,6 @@ int cli_frontend::execute(int argc, char **argv)
 		}
 
 		setup_language(m_options);
-#if 0 //def DRIVER_SWITCH
-		driver_switch::init_assign_drivers();
-#endif /* DRIVER_SWITCH */
 
 		if (*(m_options.software_name()) != 0)
 		{
@@ -229,13 +224,6 @@ int cli_frontend::execute(int argc, char **argv)
 		}
 		if (option_errors)
 			printf(_("Error in command line:\n%s\n"), option_errors.trimspace().cstr());
-
-#if 0
-		//mamep: driver_config and language need the INIs parsed
-		m_options.parse_standard_inis(option_errors);
-		if (option_errors)
-			printf("%s\n", option_errors.cstr());
-#endif
 
 #ifdef DRIVER_SWITCH
 		driver_switch::assign_drivers(m_options);

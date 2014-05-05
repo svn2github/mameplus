@@ -34,7 +34,7 @@ Allumer
 Alpha Denshi Co.
 アルファ電子工業
 
-# Guilty Gear X (JPN)
+# Fist Of The North Star
 Arc System Works
 アークシステムワークス
 
@@ -54,7 +54,7 @@ Athena
 Atlus
 アトラス
 
-# Air Gallet (Europe)
+# Bang Bang Ball (v1.05)
 Banpresto
 バンプレスト
 
@@ -74,7 +74,7 @@ Central Denshi
 Chuo Co. Ltd
 中央リース販売
 
-# Fantasia (940429 PCB)
+# Fantasia (940429 PCB, set 1)
 Comad & New Japan System
 Comad & 新日本システム
 
@@ -158,7 +158,7 @@ Evoga
 Excellent System
 エクセレントシステム 
 
-# Car Polo
+# Attack [TTL]
 Exidy
 エキシディ
 
@@ -296,6 +296,10 @@ Nihon System
 
 # Aleck64 PIF BIOS
 Nintendo
+任天堂
+
+# Vs. Stroke & Match Golf (Men Version) (Japan, set GF3 B)
+Nintendo Co., Ltd.
 任天堂
 
 # Donkey Kong (US set 1)
@@ -514,6 +518,10 @@ Tekunon Kougyou
 Toaplan
 東亜プラン
 
+# HX-10
+Toshiba
+東芝
+
 # Ikaruga (GDL-0010)
 Treasure
 トレジャー
@@ -533,6 +541,10 @@ Universal
 # Chinese Casino [BET] (Japan)
 V-System Co.
 ビデオシステム
+
+# Wondermega M2 (Japan, NTSC)
+Victor
+ビクター
 
 # 3 On 3 Dunk Madness (US, prototype? 1997/02/04)
 Video System Co.
@@ -557,6 +569,10 @@ Yachiyo Denki
 # Mole Attack
 Yachiyo Electronics, Ltd.
 八千代電気
+
+# CX5M
+Yamaha
+ヤマハ
 
 # War of Aero - Project MEIOU
 Yang Cheng
@@ -590,8 +606,16 @@ bootleg?
 hack
 ハック
 
+# Adders & Ladders (Bwb / Barcrest) (MPU4) (ADD 1.0C, hack?, set 1)
+hack?
+ハック?
+
 # Grand Prix
 4fun
+
+
+# T.V. 21
+A-1 Supply
 
 
 # Wizard (Ver 1.0)
@@ -718,6 +742,10 @@ Ainsworth Nominees P.L.
 Al Alamiah
 
 
+# Street Burners [TTL]
+Alleid Leisure
+
+
 # Ace
 Allied Leisure
 
@@ -766,12 +794,16 @@ American Alpha
 American Laser Games
 
 
-# Krazy Bowl
+# Kero Kero Keroppi's Let's Play Together (USA, Version 2.0)
 American Sammy
 
 
 # Phoenix (Amstar)
 Amstar
+
+
+# American Music Poker (V1.4)
+Amusco
 
 
 # Logic Pro Adventure (Japan)
@@ -838,7 +870,7 @@ Ashby Computers and Graphics Ltd.
 Associated Leisure
 
 
-# Top XXI (Version 1.2)
+# Cherry Wheel (Version 1.7)
 Assogiochi Assago
 
 
@@ -866,6 +898,10 @@ Atronic
 Avantime?
 
 
+# Star Sweep (Japan, STP1/VER.A)
+Axela
+
+
 # Galaxi (v2.0)
 B.R.L.
 
@@ -888,6 +924,10 @@ BMC
 
 # Carrera (Version 6.7)
 BS Electronics
+
+
+# Fun Four (Set 1) [TTL]
+Bailey International
 
 
 # Attack From Mars (1.0)
@@ -942,6 +982,10 @@ Bell Games
 Best System
 
 
+# The Big Apple (2131-13, U5-0)
+Big Apple Games
+
+
 # Codename: Blut Engel (060119, Homebrew)
 Blastar
 
@@ -958,7 +1002,7 @@ Blitz Systems Inc.
 Bonanza Enterprises, Ltd
 
 
-# Butterfly Video Game (ver.U350C)
+# Butterfly Video Game (version U350C)
 Bordun International
 
 
@@ -1062,6 +1106,10 @@ Chaos
 Cheil Computer System
 
 
+# Destruction Derby [TTL]
+Chicago Coin
+
+
 # L'Hexagone
 Christian Tabart
 
@@ -1114,6 +1162,10 @@ Comad
 Commodore Business Machines
 
 
+# Cuatro en Linea
+Compumatic
+
+
 # Galaxy Game
 Computer Recreations, Inc
 
@@ -1122,11 +1174,11 @@ Computer Recreations, Inc
 Comsoft
 
 
-# Bar 7 (Concept)
+# Bar 7 (Concept) (set 1)
 Concept
 
 
-# Casino Bar X (Concept Games Ltd) (?)
+# Bar 7 (Concept Games Ltd) (?)
 Concept Games Ltd
 
 
@@ -1190,7 +1242,7 @@ Crystal?
 Current Technologies
 
 
-# Black Touch '96
+# Billard List
 D.G.R.M.
 
 
@@ -1260,6 +1312,10 @@ Digital Controls Inc.
 
 # Royal Card v2.0 Professional
 Digital Dreams
+
+
+# Mega Phoenix
+Dinamic
 
 
 # Connect 4
@@ -1338,7 +1394,7 @@ EIM
 ELAM
 
 
-# Deluxe 5 (ver. 0107, 07/01/2000)
+# Deluxe 5 (ver. 0107, 07/01/2000, set 1)
 ESD
 
 
@@ -1374,6 +1430,10 @@ Ecole Software
 Ed Co. Ltd.
 
 
+# Avenger [TTL]
+Electra
+
+
 # Draw Poker III / Dwarfs Den (Dwarf Gfx)
 Electro-Sport
 
@@ -1386,7 +1446,7 @@ Electrocoin
 Electronic Devices
 
 
-# Diver Boy
+# Fantasy Land (set 1)
 Electronic Devices Italy
 
 
@@ -1526,6 +1586,10 @@ Frael
 Fujic
 
 
+# Biplane 4 [TTL]
+Fun Games
+
+
 # Big Deal (Hungarian, set 1)
 Fun World
 
@@ -1539,7 +1603,7 @@ Funworld
 
 
 # Border Down (Rev A) (GDL-0023A)
-G-Rev
+G.Rev
 
 
 # Lover Boy
@@ -1574,6 +1638,10 @@ Gaelco
 Gakken
 
 
+# Diver Boy
+Gamart
+
+
 # Table Tennis Champions (set 1)
 Gamart?
 
@@ -1590,6 +1658,10 @@ Game Refuge/Monaco Entertainment
 Game-A-Tron
 
 
+# Bingo
+Game-A-Tron?
+
+
 # Wheel Of Fortune (set 1)
 GameTek
 
@@ -1600,6 +1672,10 @@ Gameace
 
 # Flame Gunner
 Gaps Inc.
+
+
+# Air Gallet (Europe)
+Gazelle
 
 
 # Big Ghoulies (Gemini) (M1A/B) (set 1)
@@ -1722,6 +1798,10 @@ Hollow Corp
 Home Data?
 
 
+# Shark JAWS [TTL]
+Horror Games
+
+
 # Cuby Bop (location test)
 Hot-B
 
@@ -1822,6 +1902,10 @@ Island Design
 Itisa
 
 
+# Crystal Colours (CMC hardware)
+J.C.D. srl
+
+
 # Crystals Colours (Ver 1.01)
 JCD srl
 
@@ -1870,7 +1954,7 @@ Jeutel
 Joyland
 
 
-# Jubilee Double-Up Poker
+# Double-Up Poker (Jubilee)
 Jubilee
 
 
@@ -1904,6 +1988,10 @@ Kasco
 
 # Poka Poka Satan (Japan)
 Kato Seisakujo Co., Ltd.
+
+
+# Indy 800 [TTL]
+Kee
 
 
 # Kimble Double HI-LO
@@ -1998,6 +2086,10 @@ M.M. - B.R.L.
 M.P.
 
 
+# Animal Basket
+MOSS
+
+
 # Catacomb
 MTM Games
 
@@ -2066,7 +2158,7 @@ Meadows Games, Inc.
 Media
 
 
-# Big Apple Games (2131-13, U5-0)
+# Casino Five (3315-02, U5-0)
 Merit
 
 
@@ -2098,7 +2190,7 @@ Micropin
 Microprose Games Inc.
 
 
-# Toffy
+# Super Toffy
 Midas
 
 
@@ -2182,15 +2274,11 @@ Monroe Bowling Co.
 Moov Generation
 
 
-# Raiden III (v2.01J)
-Moss Ltd
-
-
 # Dakar
 Mr Game
 
 
-# The Three Stooges In Brides Is Brides
+# The Three Stooges In Brides Is Brides (set 1)
 Mylstar
 
 
@@ -2216,10 +2304,6 @@ NMK
 
 # Hot Fire Birds
 NSM
-
-
-# Super-X (NTC)
-NTC
 
 
 # Mahjong Cafe Break
@@ -2284,10 +2368,6 @@ Nihon Game
 
 # Gals Ds - Three Dealers Casino House (bootleg?)
 Nihon System Corp.
-
-
-# Vs. Stroke & Match Golf (Men Version) (Japan, set GF3 B)
-Nintendo Co., Ltd.
 
 
 # Dream Crown (Set 1)
@@ -2376,6 +2456,10 @@ Omega System
 
 # 1945k III
 Oriental Soft
+
+
+# G-Stream G2020
+Oriental Soft Japan
 
 
 # Magic Fly
@@ -2566,6 +2650,10 @@ Rait Electronics Ltd
 RamTek
 
 
+# Baseball (Ramtek) [TTL]
+Ramtek
+
+
 # Vs. Slalom
 Rare Coin-It Inc.
 
@@ -2654,7 +2742,7 @@ Sai-Mate
 Sammy Industries Co.,Ltd.
 
 
-# Gam*Boy II (Korea)
+# Gam*Boy I (Korea)
 Samsung
 
 
@@ -2742,7 +2830,7 @@ Shinkai Inc.
 Shonan
 
 
-# Unknown Sidam Poker
+# unknown Sidam Poker
 Sidam
 
 
@@ -2768,6 +2856,10 @@ Simutrek
 
 # Erotictac/Tactic
 Sisteme
+
+
+# unknown Sisteme France Poker
+Sisteme France
 
 
 # Sleic Pin Ball
@@ -2902,7 +2994,7 @@ Summit Coin
 Sun
 
 
-# Top Shooter
+# Puckman Pockimon (set 3)
 Sun Mixing
 
 
@@ -3054,10 +3146,6 @@ Topis Corp
 Toptronic
 
 
-# HX-10
-Toshiba
-
-
 # Shooting Love 2007
 Triangle Service
 
@@ -3164,10 +3252,6 @@ Vesely Svet
 
 # Fight Fever (set 1)
 Viccom
-
-
-# Wondermega M2 (Japan, NTSC)
-Victor
 
 
 # Gridlee
@@ -3302,10 +3386,6 @@ XNauts
 Xex
 
 
-# CX5M
-Yamaha
-
-
 # Black Touch (Korea)
 Yang Gi Co Ltd.
 
@@ -3376,13 +3456,5 @@ hack by Bisboch and Aladar
 
 # DoDonPachi Arrange v1.1 (2012/02/12 Arrange Ver.)
 hack by trap15
-
-
-# Adders & Ladders (Bwb / Barcrest) (MPU4) (ADD 1.0C, hack?, set 1)
-hack?
-
-
-# Fun House (unknown) (MPU4)
-unknown
 
 
