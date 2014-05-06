@@ -211,7 +211,7 @@ static void hiscore_free (void)
 	while (mem_range)
 	{
 		memory_range *next = mem_range->next;
-		global_free(mem_range);
+		global_free_array(mem_range);
 		mem_range = next;
 	}
 	state.mem_range = NULL;
@@ -242,7 +242,7 @@ static void hiscore_load (running_machine &machine)
                         avoid memory trashing just in case */
 					f.read(data, mem_range->num_bytes);
 					copy_to_memory (machine,mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
-					global_free (data);
+					global_free_array(data);
 				}
 				mem_range = mem_range->next;
 			}
@@ -275,7 +275,7 @@ static void hiscore_save (running_machine &machine)
                         avoid memory trashing just in case */
 					copy_from_memory (machine, mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
 					f.write(data, mem_range->num_bytes);
-					global_free (data);
+					global_free_array(data);
 				}
 				mem_range = mem_range->next;
 			}
